@@ -2,94 +2,128 @@ Return-Path: <linux-trace-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A2A0C4332F
-	for <linux-trace-kernel@archiver.kernel.org>; Mon, 17 Oct 2022 21:39:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 88AC5C4332F
+	for <linux-trace-kernel@archiver.kernel.org>; Tue, 18 Oct 2022 15:48:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229732AbiJQVj2 (ORCPT
+        id S229660AbiJRPsm (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Mon, 17 Oct 2022 17:39:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44016 "EHLO
+        Tue, 18 Oct 2022 11:48:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52162 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230496AbiJQSEy (ORCPT
+        with ESMTP id S230111AbiJRPsl (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Mon, 17 Oct 2022 14:04:54 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1CD5F22B09;
-        Mon, 17 Oct 2022 11:04:52 -0700 (PDT)
+        Tue, 18 Oct 2022 11:48:41 -0400
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B7272C821C;
+        Tue, 18 Oct 2022 08:48:39 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 79DD8B819D9;
-        Mon, 17 Oct 2022 18:04:51 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6CA75C433D6;
-        Mon, 17 Oct 2022 18:04:49 +0000 (UTC)
-Date:   Mon, 17 Oct 2022 14:05:13 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Linux Trace Kernel <linux-trace-kernel@vger.kernel.org>
-Cc:     Masami Hiramatsu <mhiramat@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Anil S Keshavamurthy <anil.s.keshavamurthy@intel.com>,
-        "Naveen N. Rao" <naveen.n.rao@linux.ibm.com>,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: [PATCH] tracing: Update MAINTAINERS file for new patchwork and
- mailing list
-Message-ID: <20221017140513.14b9ce2e@gandalf.local.home>
-X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 6EA76B81BE1;
+        Tue, 18 Oct 2022 15:48:38 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 62EE7C433D7;
+        Tue, 18 Oct 2022 15:48:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1666108117;
+        bh=pO0jFVJ4UO7ZMjfoTjgr0/MJjcpLWwBFEgsVsAQtQjE=;
+        h=From:To:Cc:Subject:Date:From;
+        b=fPZSljBM9iYf3pgxYCNFfyVkWi59Cnv2wImor1EPqKCQi1WvvrtFsWGH2VlxbD3sD
+         HWOoOjSdd8lrrCibDjc8mJDFnytFQuyqFFGWHZM9g0i0y7OaPKUWZ6ZFMsec9H3EJT
+         TkQYDzchWY8p9DRwRktmi+hiXugDMa2u3InZUqWylP28H6VSy9K9UytB7dmXChR2Pf
+         HObrUxsCYNw58YBz8TyfmjdwxvHrzYTdUyaxXN5LkiQ0zeh8gPPxR9R65dmPDJIr8s
+         uD2RrfyZmacLL1eBdgyFnD2+WthgKrpDxPB0CtcRAAaFYbsLJXWkTHNKeDKmLNd1zP
+         VFdn8hxoU840w==
+From:   "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
+To:     Steven Rostedt <rostedt@goodmis.org>
+Cc:     Tom Zanussi <zanussi@kernel.org>,
+        linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v6 0/5] tracing/hist: Add percentage histogram suffixes
+Date:   Wed, 19 Oct 2022 00:48:33 +0900
+Message-Id: <166610811353.56030.10023036046735082272.stgit@devnote2>
+X-Mailer: git-send-email 2.25.1
+User-Agent: StGit/0.19
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
+Hi,
 
-The tracing subsystem now has its own mailing list (although patches
-should also be sent to LKML) as well as a new patchwork entry for kernel
-related tracing patches.
+Sorry, I forgot to update this series.
+Here is the 6th version of .percent and .graph suffixes for histogram
+trigger to show the value in percentage and in bar-graph respectively.
+The previous version is here;
 
-Update the MAINTAINERS file to reflect the changes.
+ https://lore.kernel.org/all/166226473132.223837.9011128463174539022.stgit@devnote2
 
-Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+This is just fixing to add my signed-off-by and Tom's reviewed/tested-by.
+No functional changes.
+
+Here shows an example of the percentage and the bar graph of
+the runtime of the running tasks without raw hitcount field.
+
+  # cd /sys/kernel/debug/tracing/
+  # echo hist:keys=pid:vals=hitcount.percent,hitcount.graph:sort=pid:NOHC > \
+        events/sched/sched_stat_runtime/trigger
+  # sleep 10
+  # cat events/sched/sched_stat_runtime/hist
+ # event histogram
+ #
+ # trigger info: hist:keys=pid:vals=hitcount.percent,hitcount.graph:sort=pid:size=2048:nohitcount [active]
+ #
+ 
+ { pid:         14 }  hitcount (%):   6.91  hitcount: ##                  
+ { pid:         16 }  hitcount (%):   1.13  hitcount:                     
+ { pid:         57 }  hitcount (%):   6.99  hitcount: ##                  
+ { pid:         61 }  hitcount (%):  55.28  hitcount: ####################
+ { pid:         67 }  hitcount (%):   5.52  hitcount: ##                  
+ { pid:         69 }  hitcount (%):  20.08  hitcount: #######             
+ { pid:         71 }  hitcount (%):   0.40  hitcount:                     
+ { pid:         77 }  hitcount (%):   0.97  hitcount:                     
+ { pid:         78 }  hitcount (%):   0.56  hitcount:                     
+ { pid:        145 }  hitcount (%):   1.13  hitcount:                     
+ { pid:        153 }  hitcount (%):   0.48  hitcount:                     
+ { pid:        154 }  hitcount (%):   0.48  hitcount:                     
+ 
+ Totals:
+     Hits: 1230
+     Entries: 12
+     Dropped: 0
+
+
+With the NOHC (or nohitcount) option, the histogram will skip
+display of raw hitcount, but it will allow to display percent
+and graph of hitcount.
+
+Trigger                      Result
+val=runtime               -> Show hitcount and runtime
+val=runtime:NOHC          -> Show runtime
+val=hitcount:NOHC         -> Error
+(noval)                   -> show hitcount
+(noval):NOHC              -> Error
+val=hitcount.parcent      -> show hitcount and hitcount%
+val=hitcount.parcent:NOHC -> show hitcount%
+
+Thank you,
+
 ---
- MAINTAINERS | 9 +++++++++
- 1 file changed, 9 insertions(+)
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index d95f5d3b4d37..6293cb4e46a1 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -8415,6 +8415,9 @@ FUNCTION HOOKS (FTRACE)
- M:	Steven Rostedt <rostedt@goodmis.org>
- M:	Masami Hiramatsu <mhiramat@kernel.org>
- R:	Mark Rutland <mark.rutland@arm.com>
-+L:	linux-kernel@vger.kernel.org
-+L:	linux-trace-kernel@vger.kernel.org
-+Q:	https://patchwork.kernel.org/project/linux-trace-kernel/list/
- S:	Maintained
- T:	git git://git.kernel.org/pub/scm/linux/kernel/git/trace/linux-trace.git
- F:	Documentation/trace/ftrace*
-@@ -11392,6 +11395,9 @@ M:	Naveen N. Rao <naveen.n.rao@linux.ibm.com>
- M:	Anil S Keshavamurthy <anil.s.keshavamurthy@intel.com>
- M:	"David S. Miller" <davem@davemloft.net>
- M:	Masami Hiramatsu <mhiramat@kernel.org>
-+L:	linux-kernel@vger.kernel.org
-+L:	linux-trace-kernel@vger.kernel.org
-+Q:	https://patchwork.kernel.org/project/linux-trace-kernel/list/
- S:	Maintained
- T:	git git://git.kernel.org/pub/scm/linux/kernel/git/trace/linux-trace.git
- F:	Documentation/trace/kprobes.rst
-@@ -20628,6 +20634,9 @@ F:	drivers/char/tpm/
- TRACING
- M:	Steven Rostedt <rostedt@goodmis.org>
- M:	Masami Hiramatsu <mhiramat@kernel.org>
-+L:	linux-kernel@vger.kernel.org
-+L:	linux-trace-kernel@vger.kernel.org
-+Q:	https://patchwork.kernel.org/project/linux-trace-kernel/list/
- S:	Maintained
- T:	git git://git.kernel.org/pub/scm/linux/kernel/git/trace/linux-trace.git
- F:	Documentation/trace/*
--- 
-2.35.1
+Masami Hiramatsu (Google) (4):
+      tracing: Add .percent suffix option to histogram values
+      tracing: Add .graph suffix option to histogram value
+      tracing: Add nohitcount option for suppressing display of raw hitcount
+      tracing: docs: Update histogram doc for .percent/.graph and 'nohitcount'
 
+Tom Zanussi (1):
+      tracing: Allow multiple hitcount values in histograms
+
+
+ Documentation/trace/histogram.rst |   10 ++
+ kernel/trace/trace.c              |    7 +
+ kernel/trace/trace_events_hist.c  |  177 ++++++++++++++++++++++++++++++++-----
+ 3 files changed, 169 insertions(+), 25 deletions(-)
+
+--
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
