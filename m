@@ -2,42 +2,30 @@ Return-Path: <linux-trace-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F71AC4332F
-	for <linux-trace-kernel@archiver.kernel.org>; Thu, 20 Oct 2022 22:21:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F27C5C4332F
+	for <linux-trace-kernel@archiver.kernel.org>; Thu, 20 Oct 2022 22:23:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229786AbiJTWVP (ORCPT
+        id S229621AbiJTWXs (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Thu, 20 Oct 2022 18:21:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36578 "EHLO
+        Thu, 20 Oct 2022 18:23:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41646 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229817AbiJTWVP (ORCPT
+        with ESMTP id S229541AbiJTWXs (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Thu, 20 Oct 2022 18:21:15 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C14AA167247;
-        Thu, 20 Oct 2022 15:21:11 -0700 (PDT)
+        Thu, 20 Oct 2022 18:23:48 -0400
+Received: from sin.source.kernel.org (sin.source.kernel.org [IPv6:2604:1380:40e1:4800::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7CAA321CD7F;
+        Thu, 20 Oct 2022 15:23:47 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 56BC9B82963;
-        Thu, 20 Oct 2022 22:21:10 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0289EC433D7;
-        Thu, 20 Oct 2022 22:21:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1666304469;
-        bh=+s0de9l8e0H+4Fr2UmKetsX8PYYA9HTQe45xIaD6/2M=;
-        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-        b=WKXzSrMXf77CXWQOiaLP4RH1R0/K3UwCe9an59b50CqWHxw7zYMWKv1xdYkYeRu38
-         BLV0Uc9k4IOyRelnUuZpnkrR172Ahn8cBzgRstIEOu2aVmJq+O9TkWJnc2s3vRRMfr
-         hx3vJ/FKwvzaFMEdcvK4sXq+xGFMyt9nBiLRU5HmUxULMrhIPwWGT/+TK4xKj2+ltq
-         KRldNytFh0iMcajMrOIMcCXw4RRrC3LSfxMQ+dtbyUa9zFWXeawBRg4NMa1jHYJZMu
-         dNWEGEZeb1p54U9Lq4/DLXIRZpwBgSTBlZuf1eUO/tNvXECUmfWrFsvelWEroX/siI
-         C9HYUz1wcGeyg==
-Received: by paulmck-ThinkPad-P17-Gen-1.home (Postfix, from userid 1000)
-        id A6C4B5C1109; Thu, 20 Oct 2022 15:21:08 -0700 (PDT)
-Date:   Thu, 20 Oct 2022 15:21:08 -0700
-From:   "Paul E. McKenney" <paulmck@kernel.org>
-To:     Steven Rostedt <rostedt@goodmis.org>
+        by sin.source.kernel.org (Postfix) with ESMTPS id 4FE9BCE25B7;
+        Thu, 20 Oct 2022 22:23:45 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AB709C433D6;
+        Thu, 20 Oct 2022 22:23:42 +0000 (UTC)
+Date:   Thu, 20 Oct 2022 18:23:47 -0400
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     "Paul E. McKenney" <paulmck@kernel.org>
 Cc:     LKML <linux-kernel@vger.kernel.org>,
         Linux Trace Kernel <linux-trace-kernel@vger.kernel.org>,
         Masami Hiramatsu <mhiramat@kernel.org>,
@@ -46,115 +34,32 @@ Cc:     LKML <linux-kernel@vger.kernel.org>,
         Joel Fernandes <joel@joelfernandes.org>,
         Tom Zanussi <zanussi@kernel.org>
 Subject: Re: [PATCH] tracing: Add trace_trigger kernel command line option
-Message-ID: <20221020222108.GZ5600@paulmck-ThinkPad-P17-Gen-1>
-Reply-To: paulmck@kernel.org
+Message-ID: <20221020182347.3c09f718@gandalf.local.home>
+In-Reply-To: <20221020222108.GZ5600@paulmck-ThinkPad-P17-Gen-1>
 References: <20221019200137.70343645@gandalf.local.home>
- <20221019200745.0152fc51@gandalf.local.home>
- <20221020155900.GM5600@paulmck-ThinkPad-P17-Gen-1>
- <20221020123357.0f90e823@gandalf.local.home>
- <20221020130528.5f7436c3@gandalf.local.home>
- <20221020175512.GT5600@paulmck-ThinkPad-P17-Gen-1>
- <20221020145340.5feef48f@gandalf.local.home>
+        <20221019200745.0152fc51@gandalf.local.home>
+        <20221020155900.GM5600@paulmck-ThinkPad-P17-Gen-1>
+        <20221020123357.0f90e823@gandalf.local.home>
+        <20221020130528.5f7436c3@gandalf.local.home>
+        <20221020175512.GT5600@paulmck-ThinkPad-P17-Gen-1>
+        <20221020145340.5feef48f@gandalf.local.home>
+        <20221020222108.GZ5600@paulmck-ThinkPad-P17-Gen-1>
+X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20221020145340.5feef48f@gandalf.local.home>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On Thu, Oct 20, 2022 at 02:53:40PM -0400, Steven Rostedt wrote:
-> On Thu, 20 Oct 2022 10:55:12 -0700
-> "Paul E. McKenney" <paulmck@kernel.org> wrote:
-> 
-> > > synchronize_rcu() {
-> > >     rcu_poll_gp_seq_start_unlocked() {
-> > > 	struct rcu_node *rnp = rcu_get_root();
-> > > 
-> > > 	if (rcu_init_invoked()) {
-> > > 		lockdep_assert_irqs_enabled();
-> > > 		raw_spin_lock_irq_rcu_node(rnp);
-> > > 	}
-> > > 	rcu_poll_gp_seq_start(snap);
-> > > 	if (rcu_init_invoked())
-> > > 		raw_spin_unlock_irq_rcu_node(rnp);  <<-- Interrupts enabled here
-> > >    }  
-> > 
-> > Thank you for digging into this!
-> > 
-> > Does the following help?
-> 
-> It does indeed!
-> 
-> I can remove the early_boot_irqs_disabled checks if you can add this to
-> this rc cycle and mark it stable.
+On Thu, 20 Oct 2022 15:21:08 -0700
+"Paul E. McKenney" <paulmck@kernel.org> wrote:
 
-My plan is to push it in after a bit of testing.  The Fixes tag should
-make the right -stable stuff happen.
+> My plan is to push it in after a bit of testing.  The Fixes tag should
+> make the right -stable stuff happen.
 
-							Thanx, Paul
+Great, thanks!
 
-------------------------------------------------------------------------
+I'll resend my patch without the synchronize_rcu() avoidance.
 
-commit 952643575669332565c77066fb42d67987680f12
-Author: Paul E. McKenney <paulmck@kernel.org>
-Date:   Thu Oct 20 10:58:14 2022 -0700
-
-    rcu: Keep synchronize_rcu() from enabling irqs in early boot
-    
-    Making polled RCU grace periods account for expedited grace periods
-    required acquiring the leaf rcu_node structure's lock during early boot,
-    but after rcu_init() was called.  This lock is irq-disabled, but the
-    code incorrectly assumes that irqs are always disabled when invoking
-    synchronize_rcu().  The exception is early boot before the scheduler has
-    started, which means that upon return from synchronize_rcu(), irqs will
-    be incorrectly enabled.
-    
-    This commit fixes this bug by using irqsave/irqrestore locking primitives.
-    
-    Fixes: bf95b2bc3e42 ("rcu: Switch polled grace-period APIs to ->gp_seq_polled")
-    
-    Reported-by: Steven Rostedt <rostedt@goodmis.org>
-    Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
-
-diff --git a/kernel/rcu/tree.c b/kernel/rcu/tree.c
-index abc615808b6e8..45ad9ef00d647 100644
---- a/kernel/rcu/tree.c
-+++ b/kernel/rcu/tree.c
-@@ -1425,30 +1425,32 @@ static void rcu_poll_gp_seq_end(unsigned long *snap)
- // where caller does not hold the root rcu_node structure's lock.
- static void rcu_poll_gp_seq_start_unlocked(unsigned long *snap)
- {
-+	unsigned long flags;
- 	struct rcu_node *rnp = rcu_get_root();
- 
- 	if (rcu_init_invoked()) {
- 		lockdep_assert_irqs_enabled();
--		raw_spin_lock_irq_rcu_node(rnp);
-+		raw_spin_lock_irqsave_rcu_node(rnp, flags);
- 	}
- 	rcu_poll_gp_seq_start(snap);
- 	if (rcu_init_invoked())
--		raw_spin_unlock_irq_rcu_node(rnp);
-+		raw_spin_unlock_irqrestore_rcu_node(rnp, flags);
- }
- 
- // Make the polled API aware of the end of a grace period, but where
- // caller does not hold the root rcu_node structure's lock.
- static void rcu_poll_gp_seq_end_unlocked(unsigned long *snap)
- {
-+	unsigned long flags;
- 	struct rcu_node *rnp = rcu_get_root();
- 
- 	if (rcu_init_invoked()) {
- 		lockdep_assert_irqs_enabled();
--		raw_spin_lock_irq_rcu_node(rnp);
-+		raw_spin_lock_irqsave_rcu_node(rnp, flags);
- 	}
- 	rcu_poll_gp_seq_end(snap);
- 	if (rcu_init_invoked())
--		raw_spin_unlock_irq_rcu_node(rnp);
-+		raw_spin_unlock_irqrestore_rcu_node(rnp, flags);
- }
- 
- /*
+-- Steve
