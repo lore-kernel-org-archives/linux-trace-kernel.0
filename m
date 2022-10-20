@@ -2,88 +2,108 @@ Return-Path: <linux-trace-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A9887C433FE
-	for <linux-trace-kernel@archiver.kernel.org>; Thu, 20 Oct 2022 15:21:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2AB1CC433FE
+	for <linux-trace-kernel@archiver.kernel.org>; Thu, 20 Oct 2022 15:59:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230255AbiJTPVC (ORCPT
+        id S230405AbiJTP7I (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Thu, 20 Oct 2022 11:21:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43368 "EHLO
+        Thu, 20 Oct 2022 11:59:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48836 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230004AbiJTPUv (ORCPT
+        with ESMTP id S230397AbiJTP7C (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Thu, 20 Oct 2022 11:20:51 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D7C50EC51E;
-        Thu, 20 Oct 2022 08:20:36 -0700 (PDT)
+        Thu, 20 Oct 2022 11:59:02 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E017F1B1574;
+        Thu, 20 Oct 2022 08:59:01 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 8BE91B827AE;
-        Thu, 20 Oct 2022 15:20:18 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5EEDBC433D7;
-        Thu, 20 Oct 2022 15:20:16 +0000 (UTC)
-Date:   Thu, 20 Oct 2022 11:20:20 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 7D1E761C54;
+        Thu, 20 Oct 2022 15:59:01 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D4632C433D6;
+        Thu, 20 Oct 2022 15:59:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1666281540;
+        bh=lLsjQ8odA6TMieWgMSl0zc7xfIvNSxiJ2vygOSe2c64=;
+        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+        b=H3rY1v8M4kh0CEKOLakCtpxmO/1RvJUYsVM5sotfYltMsxArrY4gbsbHGbvwgi8HN
+         2ALsOVMahBki0TCYq5OevYF4uOBD1ovJ1Cjqln+Qf/d/KwvC8bVYL+NhRdOMGantaV
+         jR03lzkjD/3AqdpSw2MvuP079LGnFacLvKKHFai1/6q+ALC3CTLcs0cES7hog7qBLf
+         V4+53Aqtok0C8mykqe45jQBkrQ7TBZmTN5mFrzl3xBpG/9ZOx7dw2F9KjSrS09tciR
+         Q/MZmJNANC409k9P/C063cr0UtRkODsxhMfJ/zi9GLXT4KDk8G0N5vnsSPFHuQ7ZbT
+         Ry/INN0oX1szw==
+Received: by paulmck-ThinkPad-P17-Gen-1.home (Postfix, from userid 1000)
+        id 71E805C04D0; Thu, 20 Oct 2022 08:59:00 -0700 (PDT)
+Date:   Thu, 20 Oct 2022 08:59:00 -0700
+From:   "Paul E. McKenney" <paulmck@kernel.org>
+To:     Steven Rostedt <rostedt@goodmis.org>
 Cc:     LKML <linux-kernel@vger.kernel.org>,
         Linux Trace Kernel <linux-trace-kernel@vger.kernel.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
         Andrew Morton <akpm@linux-foundation.org>,
         Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
         Joel Fernandes <joel@joelfernandes.org>,
         Tom Zanussi <zanussi@kernel.org>
 Subject: Re: [PATCH] tracing: Add trace_trigger kernel command line option
-Message-ID: <20221020112020.540d3b77@gandalf.local.home>
-In-Reply-To: <20221020233318.aa41f0b5bb123c87af881316@kernel.org>
+Message-ID: <20221020155900.GM5600@paulmck-ThinkPad-P17-Gen-1>
+Reply-To: paulmck@kernel.org
 References: <20221019200137.70343645@gandalf.local.home>
-        <20221020233318.aa41f0b5bb123c87af881316@kernel.org>
-X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+ <20221019200745.0152fc51@gandalf.local.home>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20221019200745.0152fc51@gandalf.local.home>
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On Thu, 20 Oct 2022 23:33:18 +0900
-Masami Hiramatsu (Google) <mhiramat@kernel.org> wrote:
-
+On Wed, Oct 19, 2022 at 08:07:45PM -0400, Steven Rostedt wrote:
 > On Wed, 19 Oct 2022 20:01:37 -0400
 > Steven Rostedt <rostedt@goodmis.org> wrote:
 > 
-> > From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
-> > 
-> > Allow triggers to be enabled at kernel boot up. For example:
-> > 
-> >   trace_trigger="sched_switch.stacktrace if prev_state == 2"
-> > 
-> > The above will enable the stacktrace trigger on top of the sched_switch
-> > event and only trigger if its prev_state is 2 (TASK_UNINTERRUPTIBLE). Then
-> > at boot up, a stacktrace will trigger and be recorded in the tracing ring
-> > buffer every time the sched_switch happens where the previous state is
-> > TASK_INTERRUPTIBLE.
-> > 
-> > As this calls into tracepoint logic during very early boot (before
-> > interrupts are enabled), a check has to be done to see if early boot
-> > interrupts are still disabled, and if so, avoid any call to RCU
-> > synchronization, as that will enable interrupts and cause boot up issues.  
+> > @@ -90,6 +90,10 @@ int unregister_tracepoint_module_notifier(struct notifier_block *nb)
+> >  #ifdef CONFIG_TRACEPOINTS
+> >  static inline void tracepoint_synchronize_unregister(void)
+> >  {
+> > +	/* Early updates do not need synchronization */
+> > +	if (early_boot_irqs_disabled)
+> > +		return;
+> > +
+> >  	synchronize_srcu(&tracepoint_srcu);
+> >  	synchronize_rcu();
 > 
-> Just out of curiousity, can you do it by boot-time tracer?
-> (Is it too late for your issue?)
+> I wonder if this check should be just moved to the RCU synchronization
+> code? That is, if early_boot_irqs_disabled is set, do nothing, as there
+> should be nothing to synchronize against.
 
-Yeah, I'm looking at adding triggers very early. I could even add
-"traceoff" trigger too here. I'm guessing that bootconf is done later in
-boot up? Especially since I needed to fix RCU calls to get this working.
+There already is a similar check, but it follows the lockdep check.
 
-> 
-> $ cat >> stacktrace.bconf
-> ftrace.event.sched.sched_switch.actions = "stacktrace if prev_state == 2"
-> ^D
-> $ bootconfig -a stacktrace.bconf initrd.img
-> 
+Does the following patch help?
 
-Not to mention, I'm doing this for Chromebooks where it's easy to update
-the command line (on dev devices), but not as easy to modify the kernel.
+							Thanx, Paul
 
--- Steve
+------------------------------------------------------------------------
+
+diff --git a/kernel/rcu/srcutree.c b/kernel/rcu/srcutree.c
+index ca4b5dcec675b..356ef70d5442c 100644
+--- a/kernel/rcu/srcutree.c
++++ b/kernel/rcu/srcutree.c
+@@ -1267,14 +1267,15 @@ static void __synchronize_srcu(struct srcu_struct *ssp, bool do_norm)
+ {
+ 	struct rcu_synchronize rcu;
+ 
++	if (rcu_scheduler_active == RCU_SCHEDULER_INACTIVE)
++		return;
++
+ 	RCU_LOCKDEP_WARN(lockdep_is_held(ssp) ||
+ 			 lock_is_held(&rcu_bh_lock_map) ||
+ 			 lock_is_held(&rcu_lock_map) ||
+ 			 lock_is_held(&rcu_sched_lock_map),
+ 			 "Illegal synchronize_srcu() in same-type SRCU (or in RCU) read-side critical section");
+ 
+-	if (rcu_scheduler_active == RCU_SCHEDULER_INACTIVE)
+-		return;
+ 	might_sleep();
+ 	check_init_srcu_struct(ssp);
+ 	init_completion(&rcu.completion);
