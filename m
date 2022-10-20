@@ -2,28 +2,28 @@ Return-Path: <linux-trace-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B9AEC433FE
-	for <linux-trace-kernel@archiver.kernel.org>; Thu, 20 Oct 2022 00:01:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A663C4332F
+	for <linux-trace-kernel@archiver.kernel.org>; Thu, 20 Oct 2022 00:07:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229958AbiJTABk (ORCPT
+        id S229935AbiJTAHt (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Wed, 19 Oct 2022 20:01:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56312 "EHLO
+        Wed, 19 Oct 2022 20:07:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44456 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229930AbiJTABj (ORCPT
+        with ESMTP id S229675AbiJTAHs (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Wed, 19 Oct 2022 20:01:39 -0400
+        Wed, 19 Oct 2022 20:07:48 -0400
 Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B1F6E169CC1;
-        Wed, 19 Oct 2022 17:01:37 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6CB011946E5;
+        Wed, 19 Oct 2022 17:07:45 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 67AD9B825B8;
-        Thu, 20 Oct 2022 00:01:36 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 37AADC433D6;
-        Thu, 20 Oct 2022 00:01:34 +0000 (UTC)
-Date:   Wed, 19 Oct 2022 20:01:37 -0400
+        by ams.source.kernel.org (Postfix) with ESMTPS id 2D806B82626;
+        Thu, 20 Oct 2022 00:07:44 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 21371C433C1;
+        Thu, 20 Oct 2022 00:07:42 +0000 (UTC)
+Date:   Wed, 19 Oct 2022 20:07:45 -0400
 From:   Steven Rostedt <rostedt@goodmis.org>
 To:     LKML <linux-kernel@vger.kernel.org>
 Cc:     Linux Trace Kernel <linux-trace-kernel@vger.kernel.org>,
@@ -33,8 +33,10 @@ Cc:     Linux Trace Kernel <linux-trace-kernel@vger.kernel.org>,
         "Paul E. McKenney" <paulmck@kernel.org>,
         Joel Fernandes <joel@joelfernandes.org>,
         Tom Zanussi <zanussi@kernel.org>
-Subject: [PATCH] tracing: Add trace_trigger kernel command line option
-Message-ID: <20221019200137.70343645@gandalf.local.home>
+Subject: Re: [PATCH] tracing: Add trace_trigger kernel command line option
+Message-ID: <20221019200745.0152fc51@gandalf.local.home>
+In-Reply-To: <20221019200137.70343645@gandalf.local.home>
+References: <20221019200137.70343645@gandalf.local.home>
 X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
@@ -43,215 +45,49 @@ Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
+On Wed, 19 Oct 2022 20:01:37 -0400
+Steven Rostedt <rostedt@goodmis.org> wrote:
 
-Allow triggers to be enabled at kernel boot up. For example:
+> @@ -90,6 +90,10 @@ int unregister_tracepoint_module_notifier(struct notifier_block *nb)
+>  #ifdef CONFIG_TRACEPOINTS
+>  static inline void tracepoint_synchronize_unregister(void)
+>  {
+> +	/* Early updates do not need synchronization */
+> +	if (early_boot_irqs_disabled)
+> +		return;
+> +
+>  	synchronize_srcu(&tracepoint_srcu);
+>  	synchronize_rcu();
 
-  trace_trigger="sched_switch.stacktrace if prev_state == 2"
+I wonder if this check should be just moved to the RCU synchronization
+code? That is, if early_boot_irqs_disabled is set, do nothing, as there
+should be nothing to synchronize against.
 
-The above will enable the stacktrace trigger on top of the sched_switch
-event and only trigger if its prev_state is 2 (TASK_UNINTERRUPTIBLE). Then
-at boot up, a stacktrace will trigger and be recorded in the tracing ring
-buffer every time the sched_switch happens where the previous state is
-TASK_INTERRUPTIBLE.
+It took me a bit to figure out why I was constantly getting:
 
-As this calls into tracepoint logic during very early boot (before
-interrupts are enabled), a check has to be done to see if early boot
-interrupts are still disabled, and if so, avoid any call to RCU
-synchronization, as that will enable interrupts and cause boot up issues.
+[    1.072013] rcu: srcu_init: Setting srcu_struct sizes based on contention.
+[    1.078888] ------------[ cut here ]------------
+[    1.083422] Interrupts were enabled early
+[    1.087399] WARNING: CPU: 0 PID: 0 at init/main.c:1061 start_kernel+0x36f/0x4e8
+[    1.094656] Modules linked in:
+[    1.097683] CPU: 0 PID: 0 Comm: swapper/0 Not tainted 6.1.0-rc1-test+ #461
+[    1.104509] Hardware name: Hewlett-Packard HP Compaq Pro 6300 SFF/339A, BIOS K01 v03.03 07/14/2016
+[    1.113411] RIP: 0010:start_kernel+0x36f/0x4e8
+[    1.117817] Code: 48 27 5f e8 fd 7b 03 00 e8 55 72 e5 fe e8 6b 05 03 00 ff 15 2a f9 89 ff 0f ba e0 09 73 0e 48 c7 c7 98 26 31 a0 e8 01 5b df fe <0f> 0b c6 05 c7 2c af ff 00 e8 da 36 47 fe ff 15 14 f9 89 ff e8 56
+[    1.136485] RSP: 0000:ffffffffa0603f30 EFLAGS: 00010286
+[    1.141670] RAX: 0000000000000000 RBX: 0000000000000000 RCX: 0000000000000000
+[    1.148754] RDX: 0000000000000002 RSI: 00000000ffffdfff RDI: 0000000000000001
+[    1.155840] RBP: 0000000000000000 R08: 0000000000000000 R09: ffffffffa0603dd8
+[    1.162926] R10: 0000000000000003 R11: ffffffffa0734168 R12: 000000000000180a
+[    1.170011] R13: 00000000010fecf0 R14: 0000000000000000 R15: 00000000d44e3018
+[    1.177097] FS:  0000000000000000(0000) GS:ffff91909aa00000(0000) knlGS:0000000000000000
+[    1.185131] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[    1.190835] CR2: ffff91909edff000 CR3: 000000007760a001 CR4: 00000000000606f0
+[    1.197924] Call Trace:
+[    1.200345]  <TASK>
 
-Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
----
- .../admin-guide/kernel-parameters.txt         | 19 ++++++
- include/linux/tracepoint.h                    |  4 ++
- kernel/trace/trace.c                          |  3 +-
- kernel/trace/trace_events.c                   | 63 ++++++++++++++++++-
- kernel/tracepoint.c                           |  6 ++
- 5 files changed, 92 insertions(+), 3 deletions(-)
 
-diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
-index a465d5242774..ccf91a4bf113 100644
---- a/Documentation/admin-guide/kernel-parameters.txt
-+++ b/Documentation/admin-guide/kernel-parameters.txt
-@@ -6257,6 +6257,25 @@
- 			See also Documentation/trace/ftrace.rst "trace options"
- 			section.
- 
-+	trace_trigger=[trigger-list]
-+			[FTRACE] Add a event trigger on specific events.
-+			Set a trigger on top of a specific event, with an optional
-+			filter.
-+
-+			The format is is "trace_trigger=<event>.<trigger>[ if <filter>],..."
-+			Where more than one trigger may be specified that are comma deliminated.
-+
-+			For example:
-+
-+			  trace_trigger="sched_switch.stacktrace if prev_state == 2"
-+
-+			The above will enable the "stacktrace" trigger on the "sched_switch"
-+			event but only trigger it if the "prev_state" of the "sched_switch"
-+			event is "2" (TASK_UNINTERUPTIBLE).
-+
-+			See also "Event triggers" in Documentation/trace/events.rst
-+
-+
- 	traceoff_on_warning
- 			[FTRACE] enable this option to disable tracing when a
- 			warning is hit. This turns off "tracing_on". Tracing can
-diff --git a/include/linux/tracepoint.h b/include/linux/tracepoint.h
-index 4b33b95eb8be..a5c6b5772897 100644
---- a/include/linux/tracepoint.h
-+++ b/include/linux/tracepoint.h
-@@ -90,6 +90,10 @@ int unregister_tracepoint_module_notifier(struct notifier_block *nb)
- #ifdef CONFIG_TRACEPOINTS
- static inline void tracepoint_synchronize_unregister(void)
- {
-+	/* Early updates do not need synchronization */
-+	if (early_boot_irqs_disabled)
-+		return;
-+
- 	synchronize_srcu(&tracepoint_srcu);
- 	synchronize_rcu();
- }
-diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
-index 47a44b055a1d..c03fd7037add 100644
---- a/kernel/trace/trace.c
-+++ b/kernel/trace/trace.c
-@@ -2749,7 +2749,8 @@ void trace_buffered_event_disable(void)
- 	preempt_enable();
- 
- 	/* Wait for all current users to finish */
--	synchronize_rcu();
-+	if (!early_boot_irqs_disabled)
-+		synchronize_rcu();
- 
- 	for_each_tracing_cpu(cpu) {
- 		free_page((unsigned long)per_cpu(trace_buffered_event, cpu));
-diff --git a/kernel/trace/trace_events.c b/kernel/trace/trace_events.c
-index 0356cae0cf74..06554939252c 100644
---- a/kernel/trace/trace_events.c
-+++ b/kernel/trace/trace_events.c
-@@ -2796,6 +2796,44 @@ trace_create_new_event(struct trace_event_call *call,
- 	return file;
- }
- 
-+#ifdef CONFIG_HIST_TRIGGERS
-+#define MAX_BOOT_TRIGGERS 32
-+
-+static struct boot_triggers {
-+	const char		*event;
-+	char			*trigger;
-+} bootup_triggers[MAX_BOOT_TRIGGERS];
-+
-+static char bootup_trigger_buf[COMMAND_LINE_SIZE];
-+static int nr_boot_triggers;
-+
-+static __init int setup_trace_triggers(char *str)
-+{
-+	char *trigger;
-+	char *buf;
-+	int i;
-+
-+	strlcpy(bootup_trigger_buf, str, COMMAND_LINE_SIZE);
-+	ring_buffer_expanded = true;
-+	disable_tracing_selftest("running event triggers");
-+
-+	buf = bootup_trigger_buf;
-+	for (i = 0; i < MAX_BOOT_TRIGGERS; i++) {
-+		trigger = strsep(&buf, ",");
-+		if (!trigger)
-+			break;
-+		bootup_triggers[i].event = strsep(&trigger, ".");
-+		bootup_triggers[i].trigger = strsep(&trigger, ".");
-+		if (!bootup_triggers[i].trigger)
-+			break;
-+	}
-+
-+	nr_boot_triggers = i;
-+	return 1;
-+}
-+__setup("trace_trigger=", setup_trace_triggers);
-+#endif
-+
- /* Add an event to a trace directory */
- static int
- __trace_add_new_event(struct trace_event_call *call, struct trace_array *tr)
-@@ -2822,12 +2860,32 @@ __trace_early_add_new_event(struct trace_event_call *call,
- 			    struct trace_array *tr)
- {
- 	struct trace_event_file *file;
-+	int ret;
-+	int i;
- 
- 	file = trace_create_new_event(call, tr);
- 	if (!file)
- 		return -ENOMEM;
- 
--	return event_define_fields(call);
-+	ret = event_define_fields(call);
-+	if (ret)
-+		return ret;
-+
-+#ifdef CONFIG_HIST_TRIGGERS
-+	for (i = 0; i < nr_boot_triggers; i++) {
-+		if (strcmp(trace_event_name(call), bootup_triggers[i].event))
-+			continue;
-+		mutex_lock(&event_mutex);
-+		ret = trigger_process_regex(file, bootup_triggers[i].trigger);
-+		mutex_unlock(&event_mutex);
-+		if (ret)
-+			pr_err("Failed to register trigger '%s' on event %s\n",
-+			       bootup_triggers[i].trigger,
-+			       bootup_triggers[i].event);
-+	}
-+#endif
-+
-+	return 0;
- }
- 
- struct ftrace_module_file_ops;
-@@ -3726,6 +3784,8 @@ static __init int event_trace_enable(void)
- 			list_add(&call->list, &ftrace_events);
- 	}
- 
-+	register_trigger_cmds();
-+
- 	/*
- 	 * We need the top trace array to have a working set of trace
- 	 * points at early init, before the debug files and directories
-@@ -3740,7 +3800,6 @@ static __init int event_trace_enable(void)
- 
- 	register_event_cmds();
- 
--	register_trigger_cmds();
- 
- 	return 0;
- }
-diff --git a/kernel/tracepoint.c b/kernel/tracepoint.c
-index f23144af5743..f6e4ee1e40b3 100644
---- a/kernel/tracepoint.c
-+++ b/kernel/tracepoint.c
-@@ -48,6 +48,9 @@ static void tp_rcu_get_state(enum tp_transition_sync sync)
- {
- 	struct tp_transition_snapshot *snapshot = &tp_transition_snapshot[sync];
- 
-+	if (early_boot_irqs_disabled)
-+		return;
-+
- 	/* Keep the latest get_state snapshot. */
- 	snapshot->rcu = get_state_synchronize_rcu();
- 	snapshot->srcu = start_poll_synchronize_srcu(&tracepoint_srcu);
-@@ -58,6 +61,9 @@ static void tp_rcu_cond_sync(enum tp_transition_sync sync)
- {
- 	struct tp_transition_snapshot *snapshot = &tp_transition_snapshot[sync];
- 
-+	if (early_boot_irqs_disabled)
-+		return;
-+
- 	if (!snapshot->ongoing)
- 		return;
- 	cond_synchronize_rcu(snapshot->rcu);
--- 
-2.35.1
+It was a bit of whack-a-mole in finding all the places that were calling
+synchronize RCU.
 
+-- Steve
