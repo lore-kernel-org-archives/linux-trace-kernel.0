@@ -2,36 +2,39 @@ Return-Path: <linux-trace-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 53325C433FE
-	for <linux-trace-kernel@archiver.kernel.org>; Tue, 18 Oct 2022 18:03:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B9AEC433FE
+	for <linux-trace-kernel@archiver.kernel.org>; Thu, 20 Oct 2022 00:01:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229914AbiJRSD6 (ORCPT
+        id S229958AbiJTABk (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Tue, 18 Oct 2022 14:03:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58264 "EHLO
+        Wed, 19 Oct 2022 20:01:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56312 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229453AbiJRSD6 (ORCPT
+        with ESMTP id S229930AbiJTABj (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Tue, 18 Oct 2022 14:03:58 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 528781147;
-        Tue, 18 Oct 2022 11:03:56 -0700 (PDT)
+        Wed, 19 Oct 2022 20:01:39 -0400
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B1F6E169CC1;
+        Wed, 19 Oct 2022 17:01:37 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id CBD51B82082;
-        Tue, 18 Oct 2022 18:03:54 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EE7F4C433C1;
-        Tue, 18 Oct 2022 18:03:52 +0000 (UTC)
-Date:   Tue, 18 Oct 2022 14:03:54 -0400
+        by ams.source.kernel.org (Postfix) with ESMTPS id 67AD9B825B8;
+        Thu, 20 Oct 2022 00:01:36 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 37AADC433D6;
+        Thu, 20 Oct 2022 00:01:34 +0000 (UTC)
+Date:   Wed, 19 Oct 2022 20:01:37 -0400
 From:   Steven Rostedt <rostedt@goodmis.org>
 To:     LKML <linux-kernel@vger.kernel.org>
-Cc:     Masami Hiramatsu <mhiramat@kernel.org>,
-        Valentin Schneider <vschneid@redhat.com>,
-        Linux Trace Kernel <linux-trace-kernel@vger.kernel.org>
-Subject: [PATCH v2] tracing: Add __cpumask to denote a trace event field
- that is a cpumask_t
-Message-ID: <20221018140354.18fffe79@gandalf.local.home>
+Cc:     Linux Trace Kernel <linux-trace-kernel@vger.kernel.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Tom Zanussi <zanussi@kernel.org>
+Subject: [PATCH] tracing: Add trace_trigger kernel command line option
+Message-ID: <20221019200137.70343645@gandalf.local.home>
 X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
@@ -42,390 +45,213 @@ X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
 From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
 
-The trace events have a __bitmask field that can be used for anything
-that requires bitmasks. Although currently it is only used for CPU
-masks, it could be used in the future for any type of bitmasks.
+Allow triggers to be enabled at kernel boot up. For example:
 
-There is some user space tooling that wants to know if a field is a CPU
-mask and not just some random unsigned long bitmask. Introduce
-"__cpumask()" helper functions that work the same as the current
-__bitmask() helpers but displays in the format file:
+  trace_trigger="sched_switch.stacktrace if prev_state == 2"
 
-  field:__data_loc cpumask_t *[] mask;    offset:36;      size:4; signed:0;
+The above will enable the stacktrace trigger on top of the sched_switch
+event and only trigger if its prev_state is 2 (TASK_UNINTERRUPTIBLE). Then
+at boot up, a stacktrace will trigger and be recorded in the tracing ring
+buffer every time the sched_switch happens where the previous state is
+TASK_INTERRUPTIBLE.
 
-Instead of:
+As this calls into tracepoint logic during very early boot (before
+interrupts are enabled), a check has to be done to see if early boot
+interrupts are still disabled, and if so, avoid any call to RCU
+synchronization, as that will enable interrupts and cause boot up issues.
 
-  field:__data_loc unsigned long[] mask;  offset:32;      size:4; signed:0;
-
-The main difference is the type. Instead of "unsigned long" it is
-"cpumask_t *". Note, this type field needs to be a real type in the
-__dynamic_array() logic that both __cpumask and__bitmask use, but the
-comparison field requires it to be a scalar type whereas cpumask_t is a
-structure (non-scalar). But everything works when making it a pointer.
-
-Valentin added changes to remove the need of passing in "nr_bits" and the
-__cpumask will always use nr_cpumask_bits as its size.
-
-Requested-by: Valentin Schneider <vschneid@redhat.com>
-Reviewed-by: Valentin Schneider <vschneid@redhat.com>
-Signed-off-by: Valentin Schneider <vschneid@redhat.com>
 Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
 ---
-Changes since v1: https://lkml.kernel.org/r/20221014080456.1d32b989@rorschach.local.home
+ .../admin-guide/kernel-parameters.txt         | 19 ++++++
+ include/linux/tracepoint.h                    |  4 ++
+ kernel/trace/trace.c                          |  3 +-
+ kernel/trace/trace_events.c                   | 63 ++++++++++++++++++-
+ kernel/tracepoint.c                           |  6 ++
+ 5 files changed, 92 insertions(+), 3 deletions(-)
 
- - Removed adding nr_bits to __cpumask() macro, and instead to just
-   use nr_cpumask_bits (Valentin Schneider).
-
- include/trace/bpf_probe.h                    |  6 ++++
- include/trace/perf.h                         |  6 ++++
- include/trace/stages/stage1_struct_define.h  |  6 ++++
- include/trace/stages/stage2_data_offsets.h   |  6 ++++
- include/trace/stages/stage3_trace_output.h   |  6 ++++
- include/trace/stages/stage4_event_fields.h   |  6 ++++
- include/trace/stages/stage5_get_offsets.h    |  6 ++++
- include/trace/stages/stage6_event_callback.h | 20 ++++++++++++
- include/trace/stages/stage7_class_define.h   |  2 ++
- samples/trace_events/trace-events-sample.c   |  2 +-
- samples/trace_events/trace-events-sample.h   | 34 +++++++++++++++-----
- 11 files changed, 91 insertions(+), 9 deletions(-)
-
-diff --git a/include/trace/bpf_probe.h b/include/trace/bpf_probe.h
-index 6a13220d2d27..155c495b89ea 100644
---- a/include/trace/bpf_probe.h
-+++ b/include/trace/bpf_probe.h
-@@ -21,6 +21,9 @@
- #undef __get_bitmask
- #define __get_bitmask(field) (char *)__get_dynamic_array(field)
+diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
+index a465d5242774..ccf91a4bf113 100644
+--- a/Documentation/admin-guide/kernel-parameters.txt
++++ b/Documentation/admin-guide/kernel-parameters.txt
+@@ -6257,6 +6257,25 @@
+ 			See also Documentation/trace/ftrace.rst "trace options"
+ 			section.
  
-+#undef __get_cpumask
-+#define __get_cpumask(field) (char *)__get_dynamic_array(field)
++	trace_trigger=[trigger-list]
++			[FTRACE] Add a event trigger on specific events.
++			Set a trigger on top of a specific event, with an optional
++			filter.
 +
- #undef __get_sockaddr
- #define __get_sockaddr(field) ((struct sockaddr *)__get_dynamic_array(field))
- 
-@@ -40,6 +43,9 @@
- #undef __get_rel_bitmask
- #define __get_rel_bitmask(field) (char *)__get_rel_dynamic_array(field)
- 
-+#undef __get_rel_cpumask
-+#define __get_rel_cpumask(field) (char *)__get_rel_dynamic_array(field)
++			The format is is "trace_trigger=<event>.<trigger>[ if <filter>],..."
++			Where more than one trigger may be specified that are comma deliminated.
 +
- #undef __get_rel_sockaddr
- #define __get_rel_sockaddr(field) ((struct sockaddr *)__get_rel_dynamic_array(field))
- 
-diff --git a/include/trace/perf.h b/include/trace/perf.h
-index 5800d13146c3..8f3bf1e17707 100644
---- a/include/trace/perf.h
-+++ b/include/trace/perf.h
-@@ -21,6 +21,9 @@
- #undef __get_bitmask
- #define __get_bitmask(field) (char *)__get_dynamic_array(field)
- 
-+#undef __get_cpumask
-+#define __get_cpumask(field) (char *)__get_dynamic_array(field)
++			For example:
 +
- #undef __get_sockaddr
- #define __get_sockaddr(field) ((struct sockaddr *)__get_dynamic_array(field))
- 
-@@ -41,6 +44,9 @@
- #undef __get_rel_bitmask
- #define __get_rel_bitmask(field) (char *)__get_rel_dynamic_array(field)
- 
-+#undef __get_rel_cpumask
-+#define __get_rel_cpumask(field) (char *)__get_rel_dynamic_array(field)
++			  trace_trigger="sched_switch.stacktrace if prev_state == 2"
 +
- #undef __get_rel_sockaddr
- #define __get_rel_sockaddr(field) ((struct sockaddr *)__get_rel_dynamic_array(field))
- 
-diff --git a/include/trace/stages/stage1_struct_define.h b/include/trace/stages/stage1_struct_define.h
-index 1b7bab60434c..69e0dae453bf 100644
---- a/include/trace/stages/stage1_struct_define.h
-+++ b/include/trace/stages/stage1_struct_define.h
-@@ -32,6 +32,9 @@
- #undef __bitmask
- #define __bitmask(item, nr_bits) __dynamic_array(char, item, -1)
- 
-+#undef __cpumask
-+#define __cpumask(item) __dynamic_array(char, item, -1)
++			The above will enable the "stacktrace" trigger on the "sched_switch"
++			event but only trigger it if the "prev_state" of the "sched_switch"
++			event is "2" (TASK_UNINTERUPTIBLE).
 +
- #undef __sockaddr
- #define __sockaddr(field, len) __dynamic_array(u8, field, len)
- 
-@@ -47,6 +50,9 @@
- #undef __rel_bitmask
- #define __rel_bitmask(item, nr_bits) __rel_dynamic_array(char, item, -1)
- 
-+#undef __rel_cpumask
-+#define __rel_cpumask(item) __rel_dynamic_array(char, item, -1)
++			See also "Event triggers" in Documentation/trace/events.rst
 +
- #undef __rel_sockaddr
- #define __rel_sockaddr(field, len) __rel_dynamic_array(u8, field, len)
- 
-diff --git a/include/trace/stages/stage2_data_offsets.h b/include/trace/stages/stage2_data_offsets.h
-index 1b7a8f764fdd..469b6a64293d 100644
---- a/include/trace/stages/stage2_data_offsets.h
-+++ b/include/trace/stages/stage2_data_offsets.h
-@@ -38,6 +38,9 @@
- #undef __bitmask
- #define __bitmask(item, nr_bits) __dynamic_array(unsigned long, item, -1)
- 
-+#undef __cpumask
-+#define __cpumask(item) __dynamic_array(unsigned long, item, -1)
 +
- #undef __sockaddr
- #define __sockaddr(field, len) __dynamic_array(u8, field, len)
- 
-@@ -53,5 +56,8 @@
- #undef __rel_bitmask
- #define __rel_bitmask(item, nr_bits) __rel_dynamic_array(unsigned long, item, -1)
- 
-+#undef __rel_cpumask
-+#define __rel_cpumask(item) __rel_dynamic_array(unsigned long, item, -1)
+ 	traceoff_on_warning
+ 			[FTRACE] enable this option to disable tracing when a
+ 			warning is hit. This turns off "tracing_on". Tracing can
+diff --git a/include/linux/tracepoint.h b/include/linux/tracepoint.h
+index 4b33b95eb8be..a5c6b5772897 100644
+--- a/include/linux/tracepoint.h
++++ b/include/linux/tracepoint.h
+@@ -90,6 +90,10 @@ int unregister_tracepoint_module_notifier(struct notifier_block *nb)
+ #ifdef CONFIG_TRACEPOINTS
+ static inline void tracepoint_synchronize_unregister(void)
+ {
++	/* Early updates do not need synchronization */
++	if (early_boot_irqs_disabled)
++		return;
 +
- #undef __rel_sockaddr
- #define __rel_sockaddr(field, len) __rel_dynamic_array(u8, field, len)
-diff --git a/include/trace/stages/stage3_trace_output.h b/include/trace/stages/stage3_trace_output.h
-index e3b183e9d18e..66374df61ed3 100644
---- a/include/trace/stages/stage3_trace_output.h
-+++ b/include/trace/stages/stage3_trace_output.h
-@@ -42,6 +42,9 @@
- 		trace_print_bitmask_seq(p, __bitmask, __bitmask_size);	\
- 	})
+ 	synchronize_srcu(&tracepoint_srcu);
+ 	synchronize_rcu();
+ }
+diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
+index 47a44b055a1d..c03fd7037add 100644
+--- a/kernel/trace/trace.c
++++ b/kernel/trace/trace.c
+@@ -2749,7 +2749,8 @@ void trace_buffered_event_disable(void)
+ 	preempt_enable();
  
-+#undef __get_cpumask
-+#define __get_cpumask(field) __get_bitmask(field)
-+
- #undef __get_rel_bitmask
- #define __get_rel_bitmask(field)						\
- 	({								\
-@@ -51,6 +54,9 @@
- 		trace_print_bitmask_seq(p, __bitmask, __bitmask_size);	\
- 	})
+ 	/* Wait for all current users to finish */
+-	synchronize_rcu();
++	if (!early_boot_irqs_disabled)
++		synchronize_rcu();
  
-+#undef __get_rel_cpumask
-+#define __get_rel_cpumask(field) __get_rel_bitmask(field)
-+
- #undef __get_sockaddr
- #define __get_sockaddr(field)	((struct sockaddr *)__get_dynamic_array(field))
- 
-diff --git a/include/trace/stages/stage4_event_fields.h b/include/trace/stages/stage4_event_fields.h
-index a8fb25f39a99..f2990d22313c 100644
---- a/include/trace/stages/stage4_event_fields.h
-+++ b/include/trace/stages/stage4_event_fields.h
-@@ -46,6 +46,9 @@
- #undef __bitmask
- #define __bitmask(item, nr_bits) __dynamic_array(unsigned long, item, -1)
- 
-+#undef __cpumask
-+#define __cpumask(item) __dynamic_array(cpumask_t *, item, -1)
-+
- #undef __sockaddr
- #define __sockaddr(field, len) __dynamic_array(u8, field, len)
- 
-@@ -64,5 +67,8 @@
- #undef __rel_bitmask
- #define __rel_bitmask(item, nr_bits) __rel_dynamic_array(unsigned long, item, -1)
- 
-+#undef __rel_cpumask
-+#define __rel_cpumask(item) __rel_dynamic_array(cpumask_t *, item, -1)
-+
- #undef __rel_sockaddr
- #define __rel_sockaddr(field, len) __rel_dynamic_array(u8, field, len)
-diff --git a/include/trace/stages/stage5_get_offsets.h b/include/trace/stages/stage5_get_offsets.h
-index fba4c24ed9e6..ac5c24d3beeb 100644
---- a/include/trace/stages/stage5_get_offsets.h
-+++ b/include/trace/stages/stage5_get_offsets.h
-@@ -82,10 +82,16 @@
- #define __bitmask(item, nr_bits) __dynamic_array(unsigned long, item,	\
- 					 __bitmask_size_in_longs(nr_bits))
- 
-+#undef __cpumask
-+#define __cpumask(item) __bitmask(item, nr_cpumask_bits)
-+
- #undef __rel_bitmask
- #define __rel_bitmask(item, nr_bits) __rel_dynamic_array(unsigned long, item,	\
- 					 __bitmask_size_in_longs(nr_bits))
- 
-+#undef __rel_cpumask
-+#define __rel_cpumask(item) __rel_bitmask(item, nr_cpumask_bits)
-+
- #undef __sockaddr
- #define __sockaddr(field, len) __dynamic_array(u8, field, len)
- 
-diff --git a/include/trace/stages/stage6_event_callback.h b/include/trace/stages/stage6_event_callback.h
-index 3c554a585320..49c32394b53f 100644
---- a/include/trace/stages/stage6_event_callback.h
-+++ b/include/trace/stages/stage6_event_callback.h
-@@ -57,6 +57,16 @@
- #define __assign_bitmask(dst, src, nr_bits)					\
- 	memcpy(__get_bitmask(dst), (src), __bitmask_size_in_bytes(nr_bits))
- 
-+#undef __cpumask
-+#define __cpumask(item) __dynamic_array(unsigned long, item, -1)
-+
-+#undef __get_cpumask
-+#define __get_cpumask(field) (char *)__get_dynamic_array(field)
-+
-+#undef __assign_cpumask
-+#define __assign_cpumask(dst, src)					\
-+	memcpy(__get_cpumask(dst), (src), __bitmask_size_in_bytes(nr_cpumask_bits))
-+
- #undef __sockaddr
- #define __sockaddr(field, len) __dynamic_array(u8, field, len)
- 
-@@ -98,6 +108,16 @@
- #define __assign_rel_bitmask(dst, src, nr_bits)					\
- 	memcpy(__get_rel_bitmask(dst), (src), __bitmask_size_in_bytes(nr_bits))
- 
-+#undef __rel_cpumask
-+#define __rel_cpumask(item) __rel_dynamic_array(unsigned long, item, -1)
-+
-+#undef __get_rel_cpumask
-+#define __get_rel_cpumask(field) (char *)__get_rel_dynamic_array(field)
-+
-+#undef __assign_rel_cpumask
-+#define __assign_rel_cpumask(dst, src)					\
-+	memcpy(__get_rel_cpumask(dst), (src), __bitmask_size_in_bytes(nr_cpumask_bits))
-+
- #undef __rel_sockaddr
- #define __rel_sockaddr(field, len) __rel_dynamic_array(u8, field, len)
- 
-diff --git a/include/trace/stages/stage7_class_define.h b/include/trace/stages/stage7_class_define.h
-index 8a7ec24c246d..8795429f388b 100644
---- a/include/trace/stages/stage7_class_define.h
-+++ b/include/trace/stages/stage7_class_define.h
-@@ -13,11 +13,13 @@
- #undef __get_dynamic_array_len
- #undef __get_str
- #undef __get_bitmask
-+#undef __get_cpumask
- #undef __get_sockaddr
- #undef __get_rel_dynamic_array
- #undef __get_rel_dynamic_array_len
- #undef __get_rel_str
- #undef __get_rel_bitmask
-+#undef __get_rel_cpumask
- #undef __get_rel_sockaddr
- #undef __print_array
- #undef __print_hex_dump
-diff --git a/samples/trace_events/trace-events-sample.c b/samples/trace_events/trace-events-sample.c
-index 608c4ae3b08a..ecc7db237f2e 100644
---- a/samples/trace_events/trace-events-sample.c
-+++ b/samples/trace_events/trace-events-sample.c
-@@ -50,7 +50,7 @@ static void do_simple_thread_func(int cnt, const char *fmt, ...)
- 
- 	trace_foo_with_template_print("I have to be different", cnt);
- 
--	trace_foo_rel_loc("Hello __rel_loc", cnt, bitmask);
-+	trace_foo_rel_loc("Hello __rel_loc", cnt, bitmask, current->cpus_ptr);
+ 	for_each_tracing_cpu(cpu) {
+ 		free_page((unsigned long)per_cpu(trace_buffered_event, cpu));
+diff --git a/kernel/trace/trace_events.c b/kernel/trace/trace_events.c
+index 0356cae0cf74..06554939252c 100644
+--- a/kernel/trace/trace_events.c
++++ b/kernel/trace/trace_events.c
+@@ -2796,6 +2796,44 @@ trace_create_new_event(struct trace_event_call *call,
+ 	return file;
  }
  
- static void simple_thread_func(int cnt)
-diff --git a/samples/trace_events/trace-events-sample.h b/samples/trace_events/trace-events-sample.h
-index 1a92226202fc..fb4548a44153 100644
---- a/samples/trace_events/trace-events-sample.h
-+++ b/samples/trace_events/trace-events-sample.h
-@@ -200,6 +200,16 @@
-  *
-  *         __assign_bitmask(target_cpus, cpumask_bits(bar), nr_cpumask_bits);
-  *
-+ *   __cpumask: This is pretty much the same as __bitmask but is specific for
-+ *         CPU masks. The type displayed to the user via the format files will
-+ *         be "cpumaks_t" such that user space may deal with them differently
-+ *         if they choose to do so, and the bits is always set to nr_cpumask_bits.
-+ *
-+ *         __cpumask(target_cpu)
-+ *
-+ *         To assign a cpumask, use the __assign_cpumask() helper macro.
-+ *
-+ *         __assign_cpumask(target_cpus, cpumask_bits(bar));
-  *
-  * fast_assign: This is a C like function that is used to store the items
-  *    into the ring buffer. A special variable called "__entry" will be the
-@@ -212,8 +222,8 @@
-  *    This is also used to print out the data from the trace files.
-  *    Again, the __entry macro is used to access the data from the ring buffer.
-  *
-- *    Note, __dynamic_array, __string, and __bitmask require special helpers
-- *       to access the data.
-+ *    Note, __dynamic_array, __string, __bitmask and __cpumask require special
-+ *       helpers to access the data.
-  *
-  *      For __dynamic_array(int, foo, bar) use __get_dynamic_array(foo)
-  *            Use __get_dynamic_array_len(foo) to get the length of the array
-@@ -226,6 +236,8 @@
-  *
-  *      For __bitmask(target_cpus, nr_cpumask_bits) use __get_bitmask(target_cpus)
-  *
-+ *      For __cpumask(target_cpus) use __get_cpumask(target_cpus)
-+ *
-  *
-  * Note, that for both the assign and the printk, __entry is the handler
-  * to the data structure in the ring buffer, and is defined by the
-@@ -288,6 +300,7 @@ TRACE_EVENT(foo_bar,
- 		__dynamic_array(int,	list,   __length_of(lst))
- 		__string(	str,	string			)
- 		__bitmask(	cpus,	num_possible_cpus()	)
-+		__cpumask(	cpum				)
- 		__vstring(	vstr,	fmt,	va		)
- 	),
++#ifdef CONFIG_HIST_TRIGGERS
++#define MAX_BOOT_TRIGGERS 32
++
++static struct boot_triggers {
++	const char		*event;
++	char			*trigger;
++} bootup_triggers[MAX_BOOT_TRIGGERS];
++
++static char bootup_trigger_buf[COMMAND_LINE_SIZE];
++static int nr_boot_triggers;
++
++static __init int setup_trace_triggers(char *str)
++{
++	char *trigger;
++	char *buf;
++	int i;
++
++	strlcpy(bootup_trigger_buf, str, COMMAND_LINE_SIZE);
++	ring_buffer_expanded = true;
++	disable_tracing_selftest("running event triggers");
++
++	buf = bootup_trigger_buf;
++	for (i = 0; i < MAX_BOOT_TRIGGERS; i++) {
++		trigger = strsep(&buf, ",");
++		if (!trigger)
++			break;
++		bootup_triggers[i].event = strsep(&trigger, ".");
++		bootup_triggers[i].trigger = strsep(&trigger, ".");
++		if (!bootup_triggers[i].trigger)
++			break;
++	}
++
++	nr_boot_triggers = i;
++	return 1;
++}
++__setup("trace_trigger=", setup_trace_triggers);
++#endif
++
+ /* Add an event to a trace directory */
+ static int
+ __trace_add_new_event(struct trace_event_call *call, struct trace_array *tr)
+@@ -2822,12 +2860,32 @@ __trace_early_add_new_event(struct trace_event_call *call,
+ 			    struct trace_array *tr)
+ {
+ 	struct trace_event_file *file;
++	int ret;
++	int i;
  
-@@ -299,9 +312,10 @@ TRACE_EVENT(foo_bar,
- 		__assign_str(str, string);
- 		__assign_vstr(vstr, fmt, va);
- 		__assign_bitmask(cpus, cpumask_bits(mask), num_possible_cpus());
-+		__assign_cpumask(cpum, cpumask_bits(mask));
- 	),
+ 	file = trace_create_new_event(call, tr);
+ 	if (!file)
+ 		return -ENOMEM;
  
--	TP_printk("foo %s %d %s %s %s %s (%s) %s", __entry->foo, __entry->bar,
-+	TP_printk("foo %s %d %s %s %s %s (%s) (%s) %s", __entry->foo, __entry->bar,
+-	return event_define_fields(call);
++	ret = event_define_fields(call);
++	if (ret)
++		return ret;
++
++#ifdef CONFIG_HIST_TRIGGERS
++	for (i = 0; i < nr_boot_triggers; i++) {
++		if (strcmp(trace_event_name(call), bootup_triggers[i].event))
++			continue;
++		mutex_lock(&event_mutex);
++		ret = trigger_process_regex(file, bootup_triggers[i].trigger);
++		mutex_unlock(&event_mutex);
++		if (ret)
++			pr_err("Failed to register trigger '%s' on event %s\n",
++			       bootup_triggers[i].trigger,
++			       bootup_triggers[i].event);
++	}
++#endif
++
++	return 0;
+ }
  
- /*
-  * Notice here the use of some helper functions. This includes:
-@@ -345,7 +359,8 @@ TRACE_EVENT(foo_bar,
- 		  __print_array(__get_dynamic_array(list),
- 				__get_dynamic_array_len(list) / sizeof(int),
- 				sizeof(int)),
--		  __get_str(str), __get_bitmask(cpus), __get_str(vstr))
-+		  __get_str(str), __get_bitmask(cpus), __get_cpumask(cpus),
-+		  __get_str(vstr))
- );
+ struct ftrace_module_file_ops;
+@@ -3726,6 +3784,8 @@ static __init int event_trace_enable(void)
+ 			list_add(&call->list, &ftrace_events);
+ 	}
  
- /*
-@@ -542,15 +557,16 @@ DEFINE_EVENT_PRINT(foo_template, foo_with_template_print,
++	register_trigger_cmds();
++
+ 	/*
+ 	 * We need the top trace array to have a working set of trace
+ 	 * points at early init, before the debug files and directories
+@@ -3740,7 +3800,6 @@ static __init int event_trace_enable(void)
  
- TRACE_EVENT(foo_rel_loc,
+ 	register_event_cmds();
  
--	TP_PROTO(const char *foo, int bar, unsigned long *mask),
-+	TP_PROTO(const char *foo, int bar, unsigned long *mask, const cpumask_t *cpus),
+-	register_trigger_cmds();
  
--	TP_ARGS(foo, bar, mask),
-+	TP_ARGS(foo, bar, mask, cpus),
+ 	return 0;
+ }
+diff --git a/kernel/tracepoint.c b/kernel/tracepoint.c
+index f23144af5743..f6e4ee1e40b3 100644
+--- a/kernel/tracepoint.c
++++ b/kernel/tracepoint.c
+@@ -48,6 +48,9 @@ static void tp_rcu_get_state(enum tp_transition_sync sync)
+ {
+ 	struct tp_transition_snapshot *snapshot = &tp_transition_snapshot[sync];
  
- 	TP_STRUCT__entry(
- 		__rel_string(	foo,	foo	)
- 		__field(	int,	bar	)
- 		__rel_bitmask(	bitmask,
- 			BITS_PER_BYTE * sizeof(unsigned long)	)
-+		__rel_cpumask(	cpumask )
- 	),
++	if (early_boot_irqs_disabled)
++		return;
++
+ 	/* Keep the latest get_state snapshot. */
+ 	snapshot->rcu = get_state_synchronize_rcu();
+ 	snapshot->srcu = start_poll_synchronize_srcu(&tracepoint_srcu);
+@@ -58,6 +61,9 @@ static void tp_rcu_cond_sync(enum tp_transition_sync sync)
+ {
+ 	struct tp_transition_snapshot *snapshot = &tp_transition_snapshot[sync];
  
- 	TP_fast_assign(
-@@ -558,10 +574,12 @@ TRACE_EVENT(foo_rel_loc,
- 		__entry->bar = bar;
- 		__assign_rel_bitmask(bitmask, mask,
- 			BITS_PER_BYTE * sizeof(unsigned long));
-+		__assign_rel_cpumask(cpumask, cpus);
- 	),
- 
--	TP_printk("foo_rel_loc %s, %d, %s", __get_rel_str(foo), __entry->bar,
--		  __get_rel_bitmask(bitmask))
-+	TP_printk("foo_rel_loc %s, %d, %s, %s", __get_rel_str(foo), __entry->bar,
-+		  __get_rel_bitmask(bitmask),
-+		  __get_rel_cpumask(cpumask))
- );
- #endif
- 
++	if (early_boot_irqs_disabled)
++		return;
++
+ 	if (!snapshot->ongoing)
+ 		return;
+ 	cond_synchronize_rcu(snapshot->rcu);
 -- 
 2.35.1
 
