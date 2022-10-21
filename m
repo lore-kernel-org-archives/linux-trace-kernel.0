@@ -2,39 +2,36 @@ Return-Path: <linux-trace-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BB1A3C433FE
-	for <linux-trace-kernel@archiver.kernel.org>; Fri, 21 Oct 2022 01:00:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CDE68C433FE
+	for <linux-trace-kernel@archiver.kernel.org>; Fri, 21 Oct 2022 03:14:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229933AbiJUBA4 (ORCPT
+        id S229678AbiJUDOr (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Thu, 20 Oct 2022 21:00:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36690 "EHLO
+        Thu, 20 Oct 2022 23:14:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49640 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229832AbiJUBAz (ORCPT
+        with ESMTP id S229968AbiJUDOk (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Thu, 20 Oct 2022 21:00:55 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F39CA1A16EA;
-        Thu, 20 Oct 2022 18:00:53 -0700 (PDT)
+        Thu, 20 Oct 2022 23:14:40 -0400
+Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2CF43B85C;
+        Thu, 20 Oct 2022 20:14:25 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 6DA1461D79;
-        Fri, 21 Oct 2022 01:00:53 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CA1C6C433D7;
-        Fri, 21 Oct 2022 01:00:51 +0000 (UTC)
-Date:   Thu, 20 Oct 2022 21:00:56 -0400
+        by ams.source.kernel.org (Postfix) with ESMTPS id 5AC3CB828B5;
+        Fri, 21 Oct 2022 03:14:24 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 790D6C433D6;
+        Fri, 21 Oct 2022 03:14:22 +0000 (UTC)
+Date:   Thu, 20 Oct 2022 23:14:27 -0400
 From:   Steven Rostedt <rostedt@goodmis.org>
-To:     LKML <linux-kernel@vger.kernel.org>
-Cc:     Linux Trace Kernel <linux-trace-kernel@vger.kernel.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
+To:     LKML <linux-kernel@vger.kernel.org>,
+        Linux Trace Kernel <linux-trace-kernel@vger.kernel.org>
+Cc:     Masami Hiramatsu <mhiramat@kernel.org>,
         Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        <paulmck@kernel.org>, Joel Fernandes <joel@joelfernandes.org>,
-        Tom Zanussi <zanussi@kernel.org>,
-        Ross Zwisler <zwisler@google.com>
-Subject: [PATCH v2] tracing: Add trace_trigger kernel command line option
-Message-ID: <20221020210056.0d8d0a5b@gandalf.local.home>
+        Primiano Tucci <primiano@google.com>
+Subject: [PATCH] tracing/ring-buffer: Have polling block on watermark
+Message-ID: <20221020231427.41be3f26@gandalf.local.home>
 X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
@@ -45,180 +42,183 @@ X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
 From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
 
-Allow triggers to be enabled at kernel boot up. For example:
+Currently the way polling works on the ring buffer is broken. It will
+return immediately if there's any data in the ring buffer whereas a read
+will block until the watermark (defined by the tracefs buffer_percent file)
+is hit.
 
-  trace_trigger="sched_switch.stacktrace if prev_state == 2"
+That is, a select() or poll() will return as if there's data available,
+but then the following read will block. This is broken for the way
+select()s and poll()s are supposed to work.
 
-The above will enable the stacktrace trigger on top of the sched_switch
-event and only trigger if its prev_state is 2 (TASK_UNINTERRUPTIBLE). Then
-at boot up, a stacktrace will trigger and be recorded in the tracing ring
-buffer every time the sched_switch happens where the previous state is
-TASK_INTERRUPTIBLE.
+Have the polling on the ring buffer also block the same way reads and
+splice does on the ring buffer.
 
-Another useful trigger would be "traceoff" which can stop tracing on an
-event if a field of the event matches a certain value defined by the
-filter ("if" statement).
-
+Cc: stable@vger.kernel.org
+Fixes: 1e0d6714aceb7 ("ring-buffer: Do not wake up a splice waiter when page is not full")
 Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
 ---
-Changes since v1: https://lore.kernel.org/all/20221019200137.70343645@gandalf.local.home/
+ include/linux/ring_buffer.h |  2 +-
+ kernel/trace/ring_buffer.c  | 55 ++++++++++++++++++++++++-------------
+ kernel/trace/trace.c        |  2 +-
+ 3 files changed, 38 insertions(+), 21 deletions(-)
 
- - Encapsulated trigger code better to get rid of warning of unused 'i'
-   variable (kernel-test-robot)
-
- - Removed synchronize_rcu() avoidance, as Paul McKenney will be updating it to
-   not cause issues: https://lore.kernel.org/all/20221020222108.GZ5600@paulmck-ThinkPad-P17-Gen-1/
-
- .../admin-guide/kernel-parameters.txt         | 19 +++++
- kernel/trace/trace_events.c                   | 72 ++++++++++++++++++-
- 2 files changed, 89 insertions(+), 2 deletions(-)
-
-diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
-index a465d5242774..ccf91a4bf113 100644
---- a/Documentation/admin-guide/kernel-parameters.txt
-+++ b/Documentation/admin-guide/kernel-parameters.txt
-@@ -6257,6 +6257,25 @@
- 			See also Documentation/trace/ftrace.rst "trace options"
- 			section.
+diff --git a/include/linux/ring_buffer.h b/include/linux/ring_buffer.h
+index 2504df9a0453..3c7d295746f6 100644
+--- a/include/linux/ring_buffer.h
++++ b/include/linux/ring_buffer.h
+@@ -100,7 +100,7 @@ __ring_buffer_alloc(unsigned long size, unsigned flags, struct lock_class_key *k
  
-+	trace_trigger=[trigger-list]
-+			[FTRACE] Add a event trigger on specific events.
-+			Set a trigger on top of a specific event, with an optional
-+			filter.
-+
-+			The format is is "trace_trigger=<event>.<trigger>[ if <filter>],..."
-+			Where more than one trigger may be specified that are comma deliminated.
-+
-+			For example:
-+
-+			  trace_trigger="sched_switch.stacktrace if prev_state == 2"
-+
-+			The above will enable the "stacktrace" trigger on the "sched_switch"
-+			event but only trigger it if the "prev_state" of the "sched_switch"
-+			event is "2" (TASK_UNINTERUPTIBLE).
-+
-+			See also "Event triggers" in Documentation/trace/events.rst
-+
-+
- 	traceoff_on_warning
- 			[FTRACE] enable this option to disable tracing when a
- 			warning is hit. This turns off "tracing_on". Tracing can
-diff --git a/kernel/trace/trace_events.c b/kernel/trace/trace_events.c
-index 0356cae0cf74..7372fffb8109 100644
---- a/kernel/trace/trace_events.c
-+++ b/kernel/trace/trace_events.c
-@@ -2796,6 +2796,44 @@ trace_create_new_event(struct trace_event_call *call,
- 	return file;
+ int ring_buffer_wait(struct trace_buffer *buffer, int cpu, int full);
+ __poll_t ring_buffer_poll_wait(struct trace_buffer *buffer, int cpu,
+-			  struct file *filp, poll_table *poll_table);
++			  struct file *filp, poll_table *poll_table, int full);
+ void ring_buffer_wake_waiters(struct trace_buffer *buffer, int cpu);
+ 
+ #define RING_BUFFER_ALL_CPUS -1
+diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
+index 199759c73519..b60047de897e 100644
+--- a/kernel/trace/ring_buffer.c
++++ b/kernel/trace/ring_buffer.c
+@@ -907,6 +907,21 @@ size_t ring_buffer_nr_dirty_pages(struct trace_buffer *buffer, int cpu)
+ 	return cnt - read;
  }
  
-+#ifdef CONFIG_HIST_TRIGGERS
-+#define MAX_BOOT_TRIGGERS 32
-+
-+static struct boot_triggers {
-+	const char		*event;
-+	char			*trigger;
-+} bootup_triggers[MAX_BOOT_TRIGGERS];
-+
-+static char bootup_trigger_buf[COMMAND_LINE_SIZE];
-+static int nr_boot_triggers;
-+
-+static __init int setup_trace_triggers(char *str)
++static __always_inline bool full_hit(struct trace_buffer *buffer, int cpu, int full)
 +{
-+	char *trigger;
-+	char *buf;
-+	int i;
++	struct ring_buffer_per_cpu *cpu_buffer = buffer->buffers[cpu];
++	size_t nr_pages;
++	size_t dirty;
 +
-+	strlcpy(bootup_trigger_buf, str, COMMAND_LINE_SIZE);
-+	ring_buffer_expanded = true;
-+	disable_tracing_selftest("running event triggers");
++	nr_pages = cpu_buffer->nr_pages;
++	if (!nr_pages || !full)
++		return true;
 +
-+	buf = bootup_trigger_buf;
-+	for (i = 0; i < MAX_BOOT_TRIGGERS; i++) {
-+		trigger = strsep(&buf, ",");
-+		if (!trigger)
-+			break;
-+		bootup_triggers[i].event = strsep(&trigger, ".");
-+		bootup_triggers[i].trigger = strsep(&trigger, ".");
-+		if (!bootup_triggers[i].trigger)
-+			break;
-+	}
++	dirty = ring_buffer_nr_dirty_pages(buffer, cpu);
 +
-+	nr_boot_triggers = i;
-+	return 1;
++	return (dirty * 100) > (full * nr_pages);
 +}
-+__setup("trace_trigger=", setup_trace_triggers);
-+#endif
-+
- /* Add an event to a trace directory */
- static int
- __trace_add_new_event(struct trace_event_call *call, struct trace_array *tr)
-@@ -2812,6 +2850,28 @@ __trace_add_new_event(struct trace_event_call *call, struct trace_array *tr)
- 		return event_define_fields(call);
- }
- 
-+#ifdef CONFIG_HIST_TRIGGERS
-+static void trace_early_triggers(struct trace_event_file *file, const char *name)
-+{
-+	int ret;
-+	int i;
-+
-+	for (i = 0; i < nr_boot_triggers; i++) {
-+		if (strcmp(name, bootup_triggers[i].event))
-+			continue;
-+		mutex_lock(&event_mutex);
-+		ret = trigger_process_regex(file, bootup_triggers[i].trigger);
-+		mutex_unlock(&event_mutex);
-+		if (ret)
-+			pr_err("Failed to register trigger '%s' on event %s\n",
-+			       bootup_triggers[i].trigger,
-+			       bootup_triggers[i].event);
-+	}
-+}
-+#else
-+static inline void trace_early_triggers(struct trace_event_file *file, const char *name) { }
-+#endif
 +
  /*
-  * Just create a descriptor for early init. A descriptor is required
-  * for enabling events at boot. We want to enable events before
-@@ -2822,12 +2882,19 @@ __trace_early_add_new_event(struct trace_event_call *call,
- 			    struct trace_array *tr)
+  * rb_wake_up_waiters - wake up tasks waiting for ring buffer input
+  *
+@@ -1035,22 +1050,20 @@ int ring_buffer_wait(struct trace_buffer *buffer, int cpu, int full)
+ 		    !ring_buffer_empty_cpu(buffer, cpu)) {
+ 			unsigned long flags;
+ 			bool pagebusy;
+-			size_t nr_pages;
+-			size_t dirty;
++			bool done;
+ 
+ 			if (!full)
+ 				break;
+ 
+ 			raw_spin_lock_irqsave(&cpu_buffer->reader_lock, flags);
+ 			pagebusy = cpu_buffer->reader_page == cpu_buffer->commit_page;
+-			nr_pages = cpu_buffer->nr_pages;
+-			dirty = ring_buffer_nr_dirty_pages(buffer, cpu);
++			done = !pagebusy && full_hit(buffer, cpu, full);
++
+ 			if (!cpu_buffer->shortest_full ||
+ 			    cpu_buffer->shortest_full > full)
+ 				cpu_buffer->shortest_full = full;
+ 			raw_spin_unlock_irqrestore(&cpu_buffer->reader_lock, flags);
+-			if (!pagebusy &&
+-			    (!nr_pages || (dirty * 100) > full * nr_pages))
++			if (done)
+ 				break;
+ 		}
+ 
+@@ -1076,6 +1089,7 @@ int ring_buffer_wait(struct trace_buffer *buffer, int cpu, int full)
+  * @cpu: the cpu buffer to wait on
+  * @filp: the file descriptor
+  * @poll_table: The poll descriptor
++ * @full: wait until the percentage of pages are available, if @cpu != RING_BUFFER_ALL_CPUS
+  *
+  * If @cpu == RING_BUFFER_ALL_CPUS then the task will wake up as soon
+  * as data is added to any of the @buffer's cpu buffers. Otherwise
+@@ -1085,14 +1099,15 @@ int ring_buffer_wait(struct trace_buffer *buffer, int cpu, int full)
+  * zero otherwise.
+  */
+ __poll_t ring_buffer_poll_wait(struct trace_buffer *buffer, int cpu,
+-			  struct file *filp, poll_table *poll_table)
++			  struct file *filp, poll_table *poll_table, int full)
  {
- 	struct trace_event_file *file;
-+	int ret;
+ 	struct ring_buffer_per_cpu *cpu_buffer;
+ 	struct rb_irq_work *work;
  
- 	file = trace_create_new_event(call, tr);
- 	if (!file)
- 		return -ENOMEM;
+-	if (cpu == RING_BUFFER_ALL_CPUS)
++	if (cpu == RING_BUFFER_ALL_CPUS) {
+ 		work = &buffer->irq_work;
+-	else {
++		full = 0;
++	} else {
+ 		if (!cpumask_test_cpu(cpu, buffer->cpumask))
+ 			return -EINVAL;
  
--	return event_define_fields(call);
-+	ret = event_define_fields(call);
-+	if (ret)
-+		return ret;
-+
-+	trace_early_triggers(file, trace_event_name(call));
-+
-+	return 0;
- }
- 
- struct ftrace_module_file_ops;
-@@ -3726,6 +3793,8 @@ static __init int event_trace_enable(void)
- 			list_add(&call->list, &ftrace_events);
+@@ -1100,8 +1115,14 @@ __poll_t ring_buffer_poll_wait(struct trace_buffer *buffer, int cpu,
+ 		work = &cpu_buffer->irq_work;
  	}
  
-+	register_trigger_cmds();
+-	poll_wait(filp, &work->waiters, poll_table);
+-	work->waiters_pending = true;
++	if (full) {
++		poll_wait(filp, &work->full_waiters, poll_table);
++		work->full_waiters_pending = true;
++	} else {
++		poll_wait(filp, &work->waiters, poll_table);
++		work->waiters_pending = true;
++	}
 +
  	/*
- 	 * We need the top trace array to have a working set of trace
- 	 * points at early init, before the debug files and directories
-@@ -3740,7 +3809,6 @@ static __init int event_trace_enable(void)
+ 	 * There's a tight race between setting the waiters_pending and
+ 	 * checking if the ring buffer is empty.  Once the waiters_pending bit
+@@ -1117,6 +1138,9 @@ __poll_t ring_buffer_poll_wait(struct trace_buffer *buffer, int cpu,
+ 	 */
+ 	smp_mb();
  
- 	register_event_cmds();
++	if (full)
++		return full_hit(buffer, cpu, full) ? EPOLLIN | EPOLLRDNORM : 0;
++
+ 	if ((cpu == RING_BUFFER_ALL_CPUS && !ring_buffer_empty(buffer)) ||
+ 	    (cpu != RING_BUFFER_ALL_CPUS && !ring_buffer_empty_cpu(buffer, cpu)))
+ 		return EPOLLIN | EPOLLRDNORM;
+@@ -3144,10 +3168,6 @@ static void rb_commit(struct ring_buffer_per_cpu *cpu_buffer,
+ static __always_inline void
+ rb_wakeups(struct trace_buffer *buffer, struct ring_buffer_per_cpu *cpu_buffer)
+ {
+-	size_t nr_pages;
+-	size_t dirty;
+-	size_t full;
+-
+ 	if (buffer->irq_work.waiters_pending) {
+ 		buffer->irq_work.waiters_pending = false;
+ 		/* irq_work_queue() supplies it's own memory barriers */
+@@ -3171,10 +3191,7 @@ rb_wakeups(struct trace_buffer *buffer, struct ring_buffer_per_cpu *cpu_buffer)
  
--	register_trigger_cmds();
+ 	cpu_buffer->last_pages_touch = local_read(&cpu_buffer->pages_touched);
  
- 	return 0;
+-	full = cpu_buffer->shortest_full;
+-	nr_pages = cpu_buffer->nr_pages;
+-	dirty = ring_buffer_nr_dirty_pages(buffer, cpu_buffer->cpu);
+-	if (full && nr_pages && (dirty * 100) <= full * nr_pages)
++	if (!full_hit(buffer, cpu_buffer->cpu, cpu_buffer->shortest_full))
+ 		return;
+ 
+ 	cpu_buffer->irq_work.wakeup_full = true;
+diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
+index 47a44b055a1d..c6c7a0af3ed2 100644
+--- a/kernel/trace/trace.c
++++ b/kernel/trace/trace.c
+@@ -6681,7 +6681,7 @@ trace_poll(struct trace_iterator *iter, struct file *filp, poll_table *poll_tabl
+ 		return EPOLLIN | EPOLLRDNORM;
+ 	else
+ 		return ring_buffer_poll_wait(iter->array_buffer->buffer, iter->cpu_file,
+-					     filp, poll_table);
++					     filp, poll_table, iter->tr->buffer_percent);
  }
+ 
+ static __poll_t
 -- 
 2.35.1
 
