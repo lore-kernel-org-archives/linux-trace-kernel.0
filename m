@@ -2,106 +2,69 @@ Return-Path: <linux-trace-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CE930C38A2D
-	for <linux-trace-kernel@archiver.kernel.org>; Mon, 24 Oct 2022 07:01:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 78396C38A2D
+	for <linux-trace-kernel@archiver.kernel.org>; Mon, 24 Oct 2022 16:10:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229679AbiJXHBV (ORCPT
+        id S232797AbiJXQKc (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Mon, 24 Oct 2022 03:01:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43364 "EHLO
+        Mon, 24 Oct 2022 12:10:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36684 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229874AbiJXHBT (ORCPT
+        with ESMTP id S233344AbiJXQHe (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Mon, 24 Oct 2022 03:01:19 -0400
-Received: from mail-wr1-x436.google.com (mail-wr1-x436.google.com [IPv6:2a00:1450:4864:20::436])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D4FF84B986;
-        Mon, 24 Oct 2022 00:01:17 -0700 (PDT)
-Received: by mail-wr1-x436.google.com with SMTP id l14so7461674wrw.2;
-        Mon, 24 Oct 2022 00:01:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=Qf30fYZResxam67c9aMaLSjwho0a6HRO04f+jUNDyZ8=;
-        b=iptHmJ3rI6G3ek/d9anqxtRcDGzTB9pEPgdn3tMNrY5Wywyham1lx2RcAEDdjzg0Y1
-         SWwuPwa8G8CAf/DwS0GGUF1N40r24Z9yvWTMnUGYdBKJSE3pujwVCp9Mj416DY0Lbo0h
-         fgXxxir+JHdff5nwNVl5BR7/q1GQ8pBJW+RJxKZJZLJ0F4KcvkeCEv/XAWriXAfzfcAq
-         fV0+nxtwTrC6GcUj2ADU0PIp+7htiMfB2ab7xjsZZtTGAoPLMA9UVU82uvTQdmdWCtQ8
-         R3bEUem3VZbTMJojnYyl/HoM3KZcPxijpTU4TDqsSYLjyQ01rVAJvb3eJ++LW7uAyMDJ
-         8jYg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Qf30fYZResxam67c9aMaLSjwho0a6HRO04f+jUNDyZ8=;
-        b=ChWKYZyZBckBMv2FMNo4gWC8xhGZdE1tx/PTHvN4WDnNdIZkyygv4RlNO2oWE6+rdE
-         cYVNjKq7C/OlVtRjJtmBgKXzzjvrNRLClF22Ue7HUkd6vcLBeGHLwKnqpzjS6jIoRIbl
-         zqyWqEyIDTa0MQa5g2wIpKtgoJ1GwDByBWyU8hFV0CTb/ra0mtV9RM7cWgk/m/3dXTW6
-         iThGIRwlwSQ3XHSqF/6VlbqtN7Uxzse9UcGrnLAObN0Rijk5xxeUEqQC/MvUXQ25K+bD
-         TAPPJh/JOUoTNIegO/q+KK1ADXpU64Vb8UbkUwvt6exbDXY/hIJ8hM05wyiBZ7L431dS
-         uJ+g==
-X-Gm-Message-State: ACrzQf3XcsvfNg8VR6AiQpzkO1QTKzBw7iWKYUkPzEYOXI4G1njdljWp
-        a/d5eIIpcBl99Dk8ZKyDiIVPnCaNdRo=
-X-Google-Smtp-Source: AMsMyM6uWrGzh1aJJti931dbc+eHQI+dWaI7zmjrEQl++CpXAvXRkCdbG4rXL/N1m9AP+jQe3OPOmA==
-X-Received: by 2002:a05:6000:1143:b0:236:5ede:cdad with SMTP id d3-20020a056000114300b002365edecdadmr6892673wrx.410.1666594876145;
-        Mon, 24 Oct 2022 00:01:16 -0700 (PDT)
-Received: from krava (2001-1ae9-1c2-4c00-8b88-53b7-c55c-8535.ip6.tmcz.cz. [2001:1ae9:1c2:4c00:8b88:53b7:c55c:8535])
-        by smtp.gmail.com with ESMTPSA id h16-20020adffd50000000b0022da3977ec5sm4157129wrs.113.2022.10.24.00.01.15
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 24 Oct 2022 00:01:15 -0700 (PDT)
-From:   Jiri Olsa <olsajiri@gmail.com>
-X-Google-Original-From: Jiri Olsa <jolsa@kernel.org>
-Date:   Mon, 24 Oct 2022 09:01:13 +0200
+        Mon, 24 Oct 2022 12:07:34 -0400
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0BD949A9D9;
+        Mon, 24 Oct 2022 07:59:18 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id CD6A3B81132;
+        Mon, 24 Oct 2022 14:58:03 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 29E9FC433D7;
+        Mon, 24 Oct 2022 14:58:02 +0000 (UTC)
+Date:   Mon, 24 Oct 2022 10:58:12 -0400
+From:   Steven Rostedt <rostedt@goodmis.org>
 To:     "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
 Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Linux Trace Kernel <linux-trace-kernel@vger.kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>
-Subject: Re: [PATCH] tracing/fprobe: Fix to check whether fprobe is
- registered correctly
-Message-ID: <Y1Y4OYrPl8E3rN8J@krava>
-References: <166653477373.988423.13256491425983587550.stgit@mhiramat.roam.corp.google.com>
+        Linux Trace Kernel <linux-trace-kernel@vger.kernel.org>
+Subject: Re: [PATCH] ring-buffer: Include dropped pages in counting dirty
+ patches
+Message-ID: <20221024105812.4ae304b0@gandalf.local.home>
+In-Reply-To: <20221024221328.91994cb956fcb7effcbdb97d@kernel.org>
+References: <20221021123013.55fb6055@gandalf.local.home>
+        <20221024221328.91994cb956fcb7effcbdb97d@kernel.org>
+X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <166653477373.988423.13256491425983587550.stgit@mhiramat.roam.corp.google.com>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On Sun, Oct 23, 2022 at 11:19:33PM +0900, Masami Hiramatsu (Google) wrote:
-> From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-> 
-> Since commit ab51e15d535e ("fprobe: Introduce FPROBE_FL_KPROBE_SHARED flag
-> for fprobe") introduced fprobe_kprobe_handler() for fprobe::f_op::func,
-> unregister_fprobe() fails to unregister the registered if user specifies
-> FPROBE_FL_KPROBE_SHARED flag.
-> To check it correctly, it should confirm the fprobe::f_op::func is either
-> fprobe_handler() or fprobe_kprobe_handler().
-> 
-> Fixes: ab51e15d535e ("fprobe: Introduce FPROBE_FL_KPROBE_SHARED flag for fprobe")
-> Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+On Mon, 24 Oct 2022 22:13:28 +0900
+Masami Hiramatsu (Google) <mhiramat@kernel.org> wrote:
 
-Acked-by: Jiri Olsa <jolsa@kernel.org>
-
-jirka
-
-> ---
->  kernel/trace/fprobe.c |    3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
+> > @@ -2020,6 +2029,7 @@ rb_remove_pages(struct ring_buffer_per_cpu *cpu_buffer, unsigned long nr_pages)
+> >  			 */
+> >  			local_add(page_entries, &cpu_buffer->overrun);
+> >  			local_sub(BUF_PAGE_SIZE, &cpu_buffer->entries_bytes);
+> > +			local_inc(&cpu_buffer->pages_lost);  
 > 
-> diff --git a/kernel/trace/fprobe.c b/kernel/trace/fprobe.c
-> index aac63ca9c3d1..9000d8ea6274 100644
-> --- a/kernel/trace/fprobe.c
-> +++ b/kernel/trace/fprobe.c
-> @@ -301,7 +301,8 @@ int unregister_fprobe(struct fprobe *fp)
->  {
->  	int ret;
->  
-> -	if (!fp || fp->ops.func != fprobe_handler)
-> +	if (!fp || (fp->ops.func != fprobe_handler &&
-> +		    fp->ops.func != fprobe_kprobe_handler))
->  		return -EINVAL;
->  
->  	/*
+> Maybe we can make this part a static helper function so that we don't
+> repeat it below?
+
+Makes sense. I'll send a v2.
+
+-- Steve
+
 > 
+> >  		}
+> >  
+> >  		/*
+> > @@ -2504,6 +2514,7 @@ rb_handle_head_page(struct ring_buffer_per_cpu *cpu_buffer,
+> >  		 */
+> >  		local_add(entries, &cpu_buffer->overrun);
+> >  		local_sub(BUF_PAGE_SIZE, &cpu_buffer->entries_bytes);
+> > +		local_inc(&cpu_buffer->pages_lost);  
+
