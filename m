@@ -2,82 +2,106 @@ Return-Path: <linux-trace-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 53723ECAAA1
-	for <linux-trace-kernel@archiver.kernel.org>; Sun, 23 Oct 2022 14:19:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CE930C38A2D
+	for <linux-trace-kernel@archiver.kernel.org>; Mon, 24 Oct 2022 07:01:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229728AbiJWOTt (ORCPT
+        id S229679AbiJXHBV (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Sun, 23 Oct 2022 10:19:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36272 "EHLO
+        Mon, 24 Oct 2022 03:01:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43364 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229987AbiJWOTq (ORCPT
+        with ESMTP id S229874AbiJXHBT (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Sun, 23 Oct 2022 10:19:46 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7C35A205EE;
-        Sun, 23 Oct 2022 07:19:39 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 459B7B80BA4;
-        Sun, 23 Oct 2022 14:19:38 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1D382C433D6;
-        Sun, 23 Oct 2022 14:19:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1666534777;
-        bh=BnCoxBwqfVc8mFv8C62qIS6ajfq0d32muTzGWdCbdAI=;
-        h=From:To:Cc:Subject:Date:From;
-        b=Y0L8rl4P597U5ntLRnqmjYUc1GxXaTJjP0slOO9rCSXIEeo6MM60IHlVlADpFBubO
-         AEjoaDrSL9R4//f7gEV/V4hqYIQ4yhIo06nUKzW1rX8xUsuJ2znO1WvrvZZCcI38fU
-         9YcLW144r6XxEiNdMEI7FloRu28GmFB/iRBWbfXHGEtsfMkb+WD3GZB5Mm+Kidlp/8
-         SOeMQI0XWZJXPbcnWqBacQhamrGQThrbUY5IQBdIvuBQHJ0lTzyALvv4w6Rgf/Bb7S
-         v2MZv7PAFofFAjNM81A0knT/lg7VequCzByU1ZJRFQBajhqjcmShNlIfQXLAYL39RL
-         7S9Ug7CNVlHKA==
-From:   "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
-To:     LKML <linux-kernel@vger.kernel.org>
-Cc:     Linux Trace Kernel <linux-trace-kernel@vger.kernel.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Jiri Olsa <jolsa@kernel.org>
-Subject: [PATCH] tracing/fprobe: Fix to check whether fprobe is registered correctly
-Date:   Sun, 23 Oct 2022 23:19:33 +0900
-Message-Id:  <166653477373.988423.13256491425983587550.stgit@mhiramat.roam.corp.google.com>
-X-Mailer: git-send-email 2.38.0.135.g90850a2211-goog
-User-Agent: StGit/0.19
+        Mon, 24 Oct 2022 03:01:19 -0400
+Received: from mail-wr1-x436.google.com (mail-wr1-x436.google.com [IPv6:2a00:1450:4864:20::436])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D4FF84B986;
+        Mon, 24 Oct 2022 00:01:17 -0700 (PDT)
+Received: by mail-wr1-x436.google.com with SMTP id l14so7461674wrw.2;
+        Mon, 24 Oct 2022 00:01:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=Qf30fYZResxam67c9aMaLSjwho0a6HRO04f+jUNDyZ8=;
+        b=iptHmJ3rI6G3ek/d9anqxtRcDGzTB9pEPgdn3tMNrY5Wywyham1lx2RcAEDdjzg0Y1
+         SWwuPwa8G8CAf/DwS0GGUF1N40r24Z9yvWTMnUGYdBKJSE3pujwVCp9Mj416DY0Lbo0h
+         fgXxxir+JHdff5nwNVl5BR7/q1GQ8pBJW+RJxKZJZLJ0F4KcvkeCEv/XAWriXAfzfcAq
+         fV0+nxtwTrC6GcUj2ADU0PIp+7htiMfB2ab7xjsZZtTGAoPLMA9UVU82uvTQdmdWCtQ8
+         R3bEUem3VZbTMJojnYyl/HoM3KZcPxijpTU4TDqsSYLjyQ01rVAJvb3eJ++LW7uAyMDJ
+         8jYg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Qf30fYZResxam67c9aMaLSjwho0a6HRO04f+jUNDyZ8=;
+        b=ChWKYZyZBckBMv2FMNo4gWC8xhGZdE1tx/PTHvN4WDnNdIZkyygv4RlNO2oWE6+rdE
+         cYVNjKq7C/OlVtRjJtmBgKXzzjvrNRLClF22Ue7HUkd6vcLBeGHLwKnqpzjS6jIoRIbl
+         zqyWqEyIDTa0MQa5g2wIpKtgoJ1GwDByBWyU8hFV0CTb/ra0mtV9RM7cWgk/m/3dXTW6
+         iThGIRwlwSQ3XHSqF/6VlbqtN7Uxzse9UcGrnLAObN0Rijk5xxeUEqQC/MvUXQ25K+bD
+         TAPPJh/JOUoTNIegO/q+KK1ADXpU64Vb8UbkUwvt6exbDXY/hIJ8hM05wyiBZ7L431dS
+         uJ+g==
+X-Gm-Message-State: ACrzQf3XcsvfNg8VR6AiQpzkO1QTKzBw7iWKYUkPzEYOXI4G1njdljWp
+        a/d5eIIpcBl99Dk8ZKyDiIVPnCaNdRo=
+X-Google-Smtp-Source: AMsMyM6uWrGzh1aJJti931dbc+eHQI+dWaI7zmjrEQl++CpXAvXRkCdbG4rXL/N1m9AP+jQe3OPOmA==
+X-Received: by 2002:a05:6000:1143:b0:236:5ede:cdad with SMTP id d3-20020a056000114300b002365edecdadmr6892673wrx.410.1666594876145;
+        Mon, 24 Oct 2022 00:01:16 -0700 (PDT)
+Received: from krava (2001-1ae9-1c2-4c00-8b88-53b7-c55c-8535.ip6.tmcz.cz. [2001:1ae9:1c2:4c00:8b88:53b7:c55c:8535])
+        by smtp.gmail.com with ESMTPSA id h16-20020adffd50000000b0022da3977ec5sm4157129wrs.113.2022.10.24.00.01.15
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 24 Oct 2022 00:01:15 -0700 (PDT)
+From:   Jiri Olsa <olsajiri@gmail.com>
+X-Google-Original-From: Jiri Olsa <jolsa@kernel.org>
+Date:   Mon, 24 Oct 2022 09:01:13 +0200
+To:     "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Linux Trace Kernel <linux-trace-kernel@vger.kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>
+Subject: Re: [PATCH] tracing/fprobe: Fix to check whether fprobe is
+ registered correctly
+Message-ID: <Y1Y4OYrPl8E3rN8J@krava>
+References: <166653477373.988423.13256491425983587550.stgit@mhiramat.roam.corp.google.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <166653477373.988423.13256491425983587550.stgit@mhiramat.roam.corp.google.com>
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+On Sun, Oct 23, 2022 at 11:19:33PM +0900, Masami Hiramatsu (Google) wrote:
+> From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+> 
+> Since commit ab51e15d535e ("fprobe: Introduce FPROBE_FL_KPROBE_SHARED flag
+> for fprobe") introduced fprobe_kprobe_handler() for fprobe::f_op::func,
+> unregister_fprobe() fails to unregister the registered if user specifies
+> FPROBE_FL_KPROBE_SHARED flag.
+> To check it correctly, it should confirm the fprobe::f_op::func is either
+> fprobe_handler() or fprobe_kprobe_handler().
+> 
+> Fixes: ab51e15d535e ("fprobe: Introduce FPROBE_FL_KPROBE_SHARED flag for fprobe")
+> Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 
-Since commit ab51e15d535e ("fprobe: Introduce FPROBE_FL_KPROBE_SHARED flag
-for fprobe") introduced fprobe_kprobe_handler() for fprobe::f_op::func,
-unregister_fprobe() fails to unregister the registered if user specifies
-FPROBE_FL_KPROBE_SHARED flag.
-To check it correctly, it should confirm the fprobe::f_op::func is either
-fprobe_handler() or fprobe_kprobe_handler().
+Acked-by: Jiri Olsa <jolsa@kernel.org>
 
-Fixes: ab51e15d535e ("fprobe: Introduce FPROBE_FL_KPROBE_SHARED flag for fprobe")
-Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
----
- kernel/trace/fprobe.c |    3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+jirka
 
-diff --git a/kernel/trace/fprobe.c b/kernel/trace/fprobe.c
-index aac63ca9c3d1..9000d8ea6274 100644
---- a/kernel/trace/fprobe.c
-+++ b/kernel/trace/fprobe.c
-@@ -301,7 +301,8 @@ int unregister_fprobe(struct fprobe *fp)
- {
- 	int ret;
- 
--	if (!fp || fp->ops.func != fprobe_handler)
-+	if (!fp || (fp->ops.func != fprobe_handler &&
-+		    fp->ops.func != fprobe_kprobe_handler))
- 		return -EINVAL;
- 
- 	/*
-
+> ---
+>  kernel/trace/fprobe.c |    3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
+> 
+> diff --git a/kernel/trace/fprobe.c b/kernel/trace/fprobe.c
+> index aac63ca9c3d1..9000d8ea6274 100644
+> --- a/kernel/trace/fprobe.c
+> +++ b/kernel/trace/fprobe.c
+> @@ -301,7 +301,8 @@ int unregister_fprobe(struct fprobe *fp)
+>  {
+>  	int ret;
+>  
+> -	if (!fp || fp->ops.func != fprobe_handler)
+> +	if (!fp || (fp->ops.func != fprobe_handler &&
+> +		    fp->ops.func != fprobe_kprobe_handler))
+>  		return -EINVAL;
+>  
+>  	/*
+> 
