@@ -2,38 +2,38 @@ Return-Path: <linux-trace-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 28636FA373F
-	for <linux-trace-kernel@archiver.kernel.org>; Mon, 24 Oct 2022 16:33:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C00DCFA3740
+	for <linux-trace-kernel@archiver.kernel.org>; Mon, 24 Oct 2022 16:50:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231398AbiJXQdj (ORCPT
+        id S232536AbiJXQsu (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Mon, 24 Oct 2022 12:33:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42830 "EHLO
+        Mon, 24 Oct 2022 12:48:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55754 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233607AbiJXQdM (ORCPT
+        with ESMTP id S231161AbiJXQrM (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Mon, 24 Oct 2022 12:33:12 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9F8DD642CE;
-        Mon, 24 Oct 2022 08:20:13 -0700 (PDT)
+        Mon, 24 Oct 2022 12:47:12 -0400
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2D0EF1BF876;
+        Mon, 24 Oct 2022 08:31:34 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 272DC61388;
-        Mon, 24 Oct 2022 14:22:22 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 07F64C433D7;
-        Mon, 24 Oct 2022 14:22:20 +0000 (UTC)
-Date:   Mon, 24 Oct 2022 10:22:30 -0400
+        by ams.source.kernel.org (Postfix) with ESMTPS id 27E30B815EB;
+        Mon, 24 Oct 2022 15:27:23 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DA4BFC433D6;
+        Mon, 24 Oct 2022 15:27:20 +0000 (UTC)
+Date:   Mon, 24 Oct 2022 11:27:30 -0400
 From:   Steven Rostedt <rostedt@goodmis.org>
-To:     "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Linux Trace Kernel <linux-trace-kernel@vger.kernel.org>,
-        Jiri Olsa <jolsa@kernel.org>
-Subject: Re: [PATCH] tracing/fprobe: Fix to check whether fprobe is
- registered correctly
-Message-ID: <20221024102230.6b02c978@gandalf.local.home>
-In-Reply-To: <166653477373.988423.13256491425983587550.stgit@mhiramat.roam.corp.google.com>
-References: <166653477373.988423.13256491425983587550.stgit@mhiramat.roam.corp.google.com>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Dave Hansen <dave.hansen@intel.com>, x86@kernel.org,
+        linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
+        keescook@chromium.org, Sean Christopherson <seanjc@google.com>,
+        Linux Trace Kernel <linux-trace-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2] x86/mm: Refuse W^X violations
+Message-ID: <20221024112730.180916b3@gandalf.local.home>
+In-Reply-To: <YwySW3ROc21hN7g9@hirez.programming.kicks-ass.net>
+References: <YwySW3ROc21hN7g9@hirez.programming.kicks-ass.net>
 X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
@@ -42,45 +42,77 @@ Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On Sun, 23 Oct 2022 23:19:33 +0900
-"Masami Hiramatsu (Google)" <mhiramat@kernel.org> wrote:
+On Mon, 29 Aug 2022 12:18:03 +0200
+Peter Zijlstra <peterz@infradead.org> wrote:
 
-> From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+> x86 has STRICT_*_RWX, but not even a warning when someone violates it.
 > 
-> Since commit ab51e15d535e ("fprobe: Introduce FPROBE_FL_KPROBE_SHARED flag
-> for fprobe") introduced fprobe_kprobe_handler() for fprobe::f_op::func,
-> unregister_fprobe() fails to unregister the registered if user specifies
-> FPROBE_FL_KPROBE_SHARED flag.
-> To check it correctly, it should confirm the fprobe::f_op::func is either
-> fprobe_handler() or fprobe_kprobe_handler().
+> Add this warning and fully refuse the transition.
 > 
-> Fixes: ab51e15d535e ("fprobe: Introduce FPROBE_FL_KPROBE_SHARED flag for fprobe")
-> Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-> ---
->  kernel/trace/fprobe.c |    3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
-> 
-> diff --git a/kernel/trace/fprobe.c b/kernel/trace/fprobe.c
-> index aac63ca9c3d1..9000d8ea6274 100644
-> --- a/kernel/trace/fprobe.c
-> +++ b/kernel/trace/fprobe.c
-> @@ -301,7 +301,8 @@ int unregister_fprobe(struct fprobe *fp)
->  {
->  	int ret;
->  
-> -	if (!fp || fp->ops.func != fprobe_handler)
-> +	if (!fp || (fp->ops.func != fprobe_handler &&
-> +		    fp->ops.func != fprobe_kprobe_handler))
->  		return -EINVAL;
->  
->  	/*
+> Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
 
-Should we make this more paranoid?
+So, this now triggers on enabling function tracing at boot up:
 
-	if (!fp ||
-	    (fprobe_shared_with_kprobes(fp) && fp->ops.func != fprobe_kprobe_handler) ||
-	    (!fprobe_shared_with_kprobes(fp) && fp->ops.func != fprobe_handler))
+  "ftrace=function"
 
-Or is that over-kill?
+This:
+
+SLUB: HWalign=64, Order=0-3, MinObjects=0, CPUs=4, Nodes=1
+Kernel/User page tables isolation: enabled
+ftrace: allocating 68738 entries in 269 pages
+ftrace: allocated 269 pages with 4 groups
+Starting tracer 'function'
+------------[ cut here ]------------
+CPA detected W^X violation: 8000000000000063 -> 0000000000000063 range: 0xffffffffc0013000 - 0xffffffffc0013fff PFN 10031b
+WARNING: CPU: 0 PID: 0 at arch/x86/mm/pat/set_memory.c:609 verify_rwx+0x61/0x6d
+Modules linked in:
+CPU: 0 PID: 0 Comm: swapper Not tainted 6.1.0-rc1-test+ #3
+Hardware name: MSI MS-7823/CSM-H87M-G43 (MS-7823), BIOS V1.6 02/22/2014
+RIP: 0010:verify_rwx+0x61/0x6d
+Code: e5 01 00 75 27 49 c1 e0 0c 48 89 d1 48 89 fe 48 c7 c7 5b b3 92 84 4e 8d 44 02 ff 48 89 da c6 05 71 29 e5 01 01 e8 35 90 e2 00 <0f> 0b 48 89 d8 5b 5d e9 6f 95 1a 01 0f 1f 44 00 00 55 48 89 e5 53
+RSP: 0000:ffffffff84c03b08 EFLAGS: 00010086
+RAX: 0000000000000000 RBX: 0000000000000063 RCX: 0000000000000003
+RDX: 0000000000000003 RSI: ffffffff84c039b0 RDI: 0000000000000001
+RBP: ffffffff84c03b10 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000025 R12: ffff8e730031c098
+R13: 000000000010031b R14: 800000010031b063 R15: 8000000000000063
+FS:  0000000000000000(0000) GS:ffff8e7416a00000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: ffff8e73fd801000 CR3: 00000001fcc22001 CR4: 00000000000606f0
+Call Trace:
+ <TASK>
+ __change_page_attr_set_clr+0x146/0x8a6
+ ? __mutex_unlock_slowpath+0x41/0x213
+ ? mutex_unlock+0x12/0x18
+ ? _vm_unmap_aliases+0x126/0x136
+ change_page_attr_set_clr+0x135/0x268
+ ? find_vmap_area+0x32/0x3e
+ ? __fentry__+0x10/0x10
+ change_page_attr_clear.constprop.0+0x16/0x1c
+ set_memory_x+0x2c/0x32
+ arch_ftrace_update_trampoline+0x218/0x2db
+ ? ftrace_caller_op_ptr+0x17/0x17
+ ftrace_update_trampoline+0x16/0xa1
+ ? tracing_gen_ctx+0x1c/0x1c
+ __register_ftrace_function+0x93/0xb2
+ ftrace_startup+0x21/0xf0
+ ? tracing_gen_ctx+0x1c/0x1c
+ register_ftrace_function_nolock+0x26/0x40
+ register_ftrace_function+0x4e/0x143
+ ? mutex_unlock+0x12/0x18
+ ? tracing_gen_ctx+0x1c/0x1c
+ function_trace_init+0x7d/0xc3
+ tracer_init+0x23/0x2c
+ tracing_set_tracer+0x1d5/0x206
+ register_tracer+0x1c0/0x1e4
+ init_function_trace+0x90/0x96
+ early_trace_init+0x25c/0x352
+ start_kernel+0x424/0x6e4
+ x86_64_start_reservations+0x24/0x2a
+ x86_64_start_kernel+0x8c/0x95
+ secondary_startup_64_no_verify+0xe0/0xeb
+ </TASK>
+---[ end trace 0000000000000000 ]---
+
 
 -- Steve
