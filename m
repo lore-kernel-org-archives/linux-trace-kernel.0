@@ -2,154 +2,277 @@ Return-Path: <linux-trace-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A6094C67871
-	for <linux-trace-kernel@archiver.kernel.org>; Mon, 24 Oct 2022 20:53:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E7737C67871
+	for <linux-trace-kernel@archiver.kernel.org>; Tue, 25 Oct 2022 00:36:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229956AbiJXUx3 (ORCPT
+        id S230175AbiJYAgp (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Mon, 24 Oct 2022 16:53:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50200 "EHLO
+        Mon, 24 Oct 2022 20:36:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33082 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235362AbiJXUxA (ORCPT
+        with ESMTP id S230071AbiJYAgP (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Mon, 24 Oct 2022 16:53:00 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A04AD24F05;
-        Mon, 24 Oct 2022 11:59:48 -0700 (PDT)
+        Mon, 24 Oct 2022 20:36:15 -0400
+Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C568683F15;
+        Mon, 24 Oct 2022 16:03:04 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id C6DDC61313;
-        Mon, 24 Oct 2022 13:13:32 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 160FDC433D6;
-        Mon, 24 Oct 2022 13:13:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1666617212;
-        bh=ohNOY7PVOk8diau+BBLDCln6tx4VXrKTyd2bspxgGMc=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=mDsoR2cZ+9A+NaCG7Hd2CADTcqiWzPKpjvCiqVXBPt0QUTJfOG+UQ2YII4pKnoFeq
-         1Yo8WmeGDLV/9RjjQStrVsDAVGXxVHW3Tiucd7l/3mv27Lko3L+4Y74k9SieISd538
-         WMXrILYMl0DB12ckL38SE56zaB2VFOMdwpo7eweARW7vCtwg6z0QxtZ/3DEZ2I7IEU
-         H5O2j0TdcHIOF6ApUMpfdjF0aJHzKRQoJnsz4x4q8ZH85qpWZds8Ep4oR0clnJZfnd
-         I3BqKjiE3i0PWxihE8r0rODo3/IchbTCV7neosqFxT3JtKVDqo91Ta4gxRS+dZfVbk
-         NYUABC82Uk6hw==
-Date:   Mon, 24 Oct 2022 22:13:28 +0900
-From:   Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To:     Steven Rostedt <rostedt@goodmis.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Linux Trace Kernel <linux-trace-kernel@vger.kernel.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>
-Subject: Re: [PATCH] ring-buffer: Include dropped pages in counting dirty
- patches
-Message-Id: <20221024221328.91994cb956fcb7effcbdb97d@kernel.org>
-In-Reply-To: <20221021123013.55fb6055@gandalf.local.home>
-References: <20221021123013.55fb6055@gandalf.local.home>
-X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
+        by ams.source.kernel.org (Postfix) with ESMTPS id 486AEB810B2;
+        Mon, 24 Oct 2022 23:03:03 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C80ECC433D7;
+        Mon, 24 Oct 2022 23:03:00 +0000 (UTC)
+Date:   Mon, 24 Oct 2022 19:03:11 -0400
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     LKML <linux-kernel@vger.kernel.org>,
+        "x86@kernel.org" <x86@kernel.org>,
+        Linux Trace Kernel <linux-trace-kernel@vger.kernel.org>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Kees Cook <keescook@chromium.org>,
+        Dave Hansen <dave.hansen@intel.com>,
+        Sean Christopherson <seanjc@google.com>,
+        linux-arch@vger.kernel.org
+Subject: [RFC PATCH] text_poke/ftrace/x86: Allow text_poke() to be called in
+ early boot
+Message-ID: <20221024190311.65b89ecb@gandalf.local.home>
+X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On Fri, 21 Oct 2022 12:30:13 -0400
-Steven Rostedt <rostedt@goodmis.org> wrote:
+From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
 
-> From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
-> 
-> The function ring_buffer_nr_dirty_pages() was created to find out how many
-> pages are filled in the ring buffer. There's two running counters. One is
-> incremented whenever a new page is touched (pages_touched) and the other
-> is whenever a page is read (pages_read). The dirty count is the number
-> touched minus the number read. This is used to determine if a blocked task
-> should be woken up if the percentage of the ring buffer it is waiting for
-> is hit.
-> 
-> The problem is that it does not take into account dropped pages (when the
-> new writes overwrite pages that were not read). And then the dirty pages
-> will always be greater than the percentage.
-> 
-> Add a new counter to keep track of lost pages, and include that in the
-> accounting of dirty pages so that it is actually accurate.
-> 
-> Fixes: 2c2b0a78b3739 ("ring-buffer: Add percentage of ring buffer full to wake up reader")
-> Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+Currently text_poke() just does a simple memcpy() on early boot because
+the kernel code is read writable at that time. But ftrace uses text_poke
+on the ftrace trampoline, which is not part of kernel text, and having non
+kernel text around that can be writable and executable causes several
+special cases where checks for system_state == SYSTEM_BOOTING needs to be
+done to ignore this special case. This is tricky and can lead to memory
+that can be kernel writable and executable after boot (due to bugs).
 
-This looks good to me. But I have just a nitpick below.
+By moving poking_init() to mm_init() which is called before ftrace_init(),
+this will allow ftrace to create its trampoline as read only, and the
+text_poke() will do its normal thing.
 
-Reviewed-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+This required some updates to fork and the maple_tree code to allow it to
+be called with enabling interrupts in the time when interrupts must remain
+disabled.
 
+text_poke() will still use memcpy() on kernel core text during boot up as
+it keeps things fast for all static_branch()es and such as well as
+modifying the ftrace locations at boot up too.
 
-> ---
->  kernel/trace/ring_buffer.c | 12 ++++++++++++
->  1 file changed, 12 insertions(+)
-> 
-> diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
-> index b60047de897e..f712006f6dd3 100644
-> --- a/kernel/trace/ring_buffer.c
-> +++ b/kernel/trace/ring_buffer.c
-> @@ -519,6 +519,7 @@ struct ring_buffer_per_cpu {
->  	local_t				committing;
->  	local_t				commits;
->  	local_t				pages_touched;
-> +	local_t				pages_lost;
->  	local_t				pages_read;
->  	long				last_pages_touch;
->  	size_t				shortest_full;
-> @@ -894,10 +895,18 @@ size_t ring_buffer_nr_pages(struct trace_buffer *buffer, int cpu)
->  size_t ring_buffer_nr_dirty_pages(struct trace_buffer *buffer, int cpu)
->  {
->  	size_t read;
-> +	size_t lost;
->  	size_t cnt;
->  
->  	read = local_read(&buffer->buffers[cpu]->pages_read);
-> +	lost = local_read(&buffer->buffers[cpu]->pages_lost);
->  	cnt = local_read(&buffer->buffers[cpu]->pages_touched);
-> +
-> +	if (WARN_ON_ONCE(cnt < lost))
-> +		return 0;
-> +
-> +	cnt -= lost;
-> +
->  	/* The reader can read an empty page, but not more than that */
->  	if (cnt < read) {
->  		WARN_ON_ONCE(read > cnt + 1);
-> @@ -2020,6 +2029,7 @@ rb_remove_pages(struct ring_buffer_per_cpu *cpu_buffer, unsigned long nr_pages)
->  			 */
->  			local_add(page_entries, &cpu_buffer->overrun);
->  			local_sub(BUF_PAGE_SIZE, &cpu_buffer->entries_bytes);
-> +			local_inc(&cpu_buffer->pages_lost);
+This removes the special code added around ftrace trampolines in x86 to be
+writable and executable during boot up.
 
-Maybe we can make this part a static helper function so that we don't
-repeat it below?
+Link: https://lore.kernel.org/r/20221024112730.180916b3@gandalf.local.home
 
->  		}
->  
->  		/*
-> @@ -2504,6 +2514,7 @@ rb_handle_head_page(struct ring_buffer_per_cpu *cpu_buffer,
->  		 */
->  		local_add(entries, &cpu_buffer->overrun);
->  		local_sub(BUF_PAGE_SIZE, &cpu_buffer->entries_bytes);
-> +		local_inc(&cpu_buffer->pages_lost);
+Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+---
 
-Thanks,
+ ** Note this may break other architectures. **
 
->  
->  		/*
->  		 * The entries will be zeroed out when we move the
-> @@ -5254,6 +5265,7 @@ rb_reset_cpu(struct ring_buffer_per_cpu *cpu_buffer)
->  	local_set(&cpu_buffer->committing, 0);
->  	local_set(&cpu_buffer->commits, 0);
->  	local_set(&cpu_buffer->pages_touched, 0);
-> +	local_set(&cpu_buffer->pages_lost, 0);
->  	local_set(&cpu_buffer->pages_read, 0);
->  	cpu_buffer->last_pages_touch = 0;
->  	cpu_buffer->shortest_full = 0;
-> -- 
-> 2.35.1
-> 
+ arch/x86/include/asm/ftrace.h |  6 ------
+ arch/x86/kernel/alternative.c |  6 ++++--
+ arch/x86/kernel/ftrace.c      | 29 +----------------------------
+ arch/x86/mm/init_64.c         |  2 --
+ init/main.c                   |  8 ++++----
+ kernel/fork.c                 |  8 +++++++-
+ lib/maple_tree.c              | 16 +++++++++++++++-
+ 7 files changed, 31 insertions(+), 44 deletions(-)
 
-
+diff --git a/arch/x86/include/asm/ftrace.h b/arch/x86/include/asm/ftrace.h
+index 908d99b127d3..b27cd4de3fb3 100644
+--- a/arch/x86/include/asm/ftrace.h
++++ b/arch/x86/include/asm/ftrace.h
+@@ -85,12 +85,6 @@ struct dyn_arch_ftrace {
+ 
+ #ifndef __ASSEMBLY__
+ 
+-#if defined(CONFIG_FUNCTION_TRACER) && defined(CONFIG_DYNAMIC_FTRACE)
+-extern void set_ftrace_ops_ro(void);
+-#else
+-static inline void set_ftrace_ops_ro(void) { }
+-#endif
+-
+ #define ARCH_HAS_SYSCALL_MATCH_SYM_NAME
+ static inline bool arch_syscall_match_sym_name(const char *sym, const char *name)
+ {
+diff --git a/arch/x86/kernel/alternative.c b/arch/x86/kernel/alternative.c
+index 5cadcea035e0..ef30a6b78837 100644
+--- a/arch/x86/kernel/alternative.c
++++ b/arch/x86/kernel/alternative.c
+@@ -1681,7 +1681,8 @@ void __ref text_poke_queue(void *addr, const void *opcode, size_t len, const voi
+ {
+ 	struct text_poke_loc *tp;
+ 
+-	if (unlikely(system_state == SYSTEM_BOOTING)) {
++	if (unlikely(system_state == SYSTEM_BOOTING &&
++		     core_kernel_text((unsigned long)addr))) {
+ 		text_poke_early(addr, opcode, len);
+ 		return;
+ 	}
+@@ -1707,7 +1708,8 @@ void __ref text_poke_bp(void *addr, const void *opcode, size_t len, const void *
+ {
+ 	struct text_poke_loc tp;
+ 
+-	if (unlikely(system_state == SYSTEM_BOOTING)) {
++	if (unlikely(system_state == SYSTEM_BOOTING &&
++		     core_kernel_text((unsigned long)addr))) {
+ 		text_poke_early(addr, opcode, len);
+ 		return;
+ 	}
+diff --git a/arch/x86/kernel/ftrace.c b/arch/x86/kernel/ftrace.c
+index bd165004776d..3aa4c02f63d2 100644
+--- a/arch/x86/kernel/ftrace.c
++++ b/arch/x86/kernel/ftrace.c
+@@ -415,8 +415,7 @@ create_trampoline(struct ftrace_ops *ops, unsigned int *tramp_size)
+ 
+ 	set_vm_flush_reset_perms(trampoline);
+ 
+-	if (likely(system_state != SYSTEM_BOOTING))
+-		set_memory_ro((unsigned long)trampoline, npages);
++	set_memory_ro((unsigned long)trampoline, npages);
+ 	set_memory_x((unsigned long)trampoline, npages);
+ 	return (unsigned long)trampoline;
+ fail:
+@@ -424,32 +423,6 @@ create_trampoline(struct ftrace_ops *ops, unsigned int *tramp_size)
+ 	return 0;
+ }
+ 
+-void set_ftrace_ops_ro(void)
+-{
+-	struct ftrace_ops *ops;
+-	unsigned long start_offset;
+-	unsigned long end_offset;
+-	unsigned long npages;
+-	unsigned long size;
+-
+-	do_for_each_ftrace_op(ops, ftrace_ops_list) {
+-		if (!(ops->flags & FTRACE_OPS_FL_ALLOC_TRAMP))
+-			continue;
+-
+-		if (ops->flags & FTRACE_OPS_FL_SAVE_REGS) {
+-			start_offset = (unsigned long)ftrace_regs_caller;
+-			end_offset = (unsigned long)ftrace_regs_caller_end;
+-		} else {
+-			start_offset = (unsigned long)ftrace_caller;
+-			end_offset = (unsigned long)ftrace_caller_end;
+-		}
+-		size = end_offset - start_offset;
+-		size = size + RET_SIZE + sizeof(void *);
+-		npages = DIV_ROUND_UP(size, PAGE_SIZE);
+-		set_memory_ro((unsigned long)ops->trampoline, npages);
+-	} while_for_each_ftrace_op(ops);
+-}
+-
+ static unsigned long calc_trampoline_call_offset(bool save_regs)
+ {
+ 	unsigned long start_offset;
+diff --git a/arch/x86/mm/init_64.c b/arch/x86/mm/init_64.c
+index 3f040c6e5d13..03ac9f914f28 100644
+--- a/arch/x86/mm/init_64.c
++++ b/arch/x86/mm/init_64.c
+@@ -1398,8 +1398,6 @@ void mark_rodata_ro(void)
+ 	all_end = roundup((unsigned long)_brk_end, PMD_SIZE);
+ 	set_memory_nx(text_end, (all_end - text_end) >> PAGE_SHIFT);
+ 
+-	set_ftrace_ops_ro();
+-
+ #ifdef CONFIG_CPA_DEBUG
+ 	printk(KERN_INFO "Testing CPA: undo %lx-%lx\n", start, end);
+ 	set_memory_rw(start, (end-start) >> PAGE_SHIFT);
+diff --git a/init/main.c b/init/main.c
+index aa21add5f7c5..e5f4ae2d4cca 100644
+--- a/init/main.c
++++ b/init/main.c
+@@ -860,6 +860,10 @@ static void __init mm_init(void)
+ 	/* Should be run after espfix64 is set up. */
+ 	pti_init();
+ 	kmsan_init_runtime();
++	proc_caches_init();
++	radix_tree_init();
++	maple_tree_init();
++	poking_init();
+ }
+ 
+ #ifdef CONFIG_RANDOMIZE_KSTACK_OFFSET
+@@ -1011,8 +1015,6 @@ asmlinkage __visible void __init __no_sanitize_address start_kernel(void)
+ 	if (WARN(!irqs_disabled(),
+ 		 "Interrupts were enabled *very* early, fixing it\n"))
+ 		local_irq_disable();
+-	radix_tree_init();
+-	maple_tree_init();
+ 
+ 	/*
+ 	 * Set up housekeeping before setting up workqueues to allow the unbound
+@@ -1117,7 +1119,6 @@ asmlinkage __visible void __init __no_sanitize_address start_kernel(void)
+ 	thread_stack_cache_init();
+ 	cred_init();
+ 	fork_init();
+-	proc_caches_init();
+ 	uts_ns_init();
+ 	key_init();
+ 	security_init();
+@@ -1134,7 +1135,6 @@ asmlinkage __visible void __init __no_sanitize_address start_kernel(void)
+ 	taskstats_init_early();
+ 	delayacct_init();
+ 
+-	poking_init();
+ 	check_bugs();
+ 
+ 	acpi_subsystem_init();
+diff --git a/kernel/fork.c b/kernel/fork.c
+index 08969f5aa38d..672967a9cbe9 100644
+--- a/kernel/fork.c
++++ b/kernel/fork.c
+@@ -702,7 +702,13 @@ static __latent_entropy int dup_mmap(struct mm_struct *mm,
+ 	mas_destroy(&mas);
+ out:
+ 	mmap_write_unlock(mm);
+-	flush_tlb_mm(oldmm);
++	/*
++	 * poking_init() calls into here at early boot up.
++	 * At that time, there's no need to flush the tlb.
++	 * If we do, it will enable interrupts and cause a bug.
++	 */
++	if (likely(!early_boot_irqs_disabled))
++		flush_tlb_mm(oldmm);
+ 	mmap_write_unlock(oldmm);
+ 	dup_userfaultfd_complete(&uf);
+ fail_uprobe_end:
+diff --git a/lib/maple_tree.c b/lib/maple_tree.c
+index e1743803c851..e32206e840f6 100644
+--- a/lib/maple_tree.c
++++ b/lib/maple_tree.c
+@@ -1253,7 +1253,21 @@ static inline void mas_alloc_nodes(struct ma_state *mas, gfp_t gfp)
+ 		}
+ 
+ 		max_req = min(requested, max_req);
+-		count = mt_alloc_bulk(gfp, max_req, slots);
++
++		/*
++		 * text_poke() can be called very early, and it
++		 * calls dup_mm() which eventually leads down to here.
++		 * In that case, mt_alloc_bulk() will call kmem_cache_alloc_bulk()
++		 * which must be called with interrupts enabled. To avoid
++		 * doing that in early bootup, where interrupts must remain
++		 * disabled, just allocate a single slot.
++		 */
++		if (unlikely(early_boot_irqs_disabled)) {
++			slots[0] = mt_alloc_one(gfp | GFP_ATOMIC);
++			count = slots[0] ? 1 : 0;
++		} else {
++			count = mt_alloc_bulk(gfp, max_req, slots);
++		}
+ 		if (!count)
+ 			goto nomem_bulk;
+ 
 -- 
-Masami Hiramatsu (Google) <mhiramat@kernel.org>
+2.35.1
+
