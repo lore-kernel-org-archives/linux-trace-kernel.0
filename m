@@ -2,88 +2,110 @@ Return-Path: <linux-trace-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A858FC04A95
-	for <linux-trace-kernel@archiver.kernel.org>; Tue, 25 Oct 2022 10:30:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C93EC04A95
+	for <linux-trace-kernel@archiver.kernel.org>; Tue, 25 Oct 2022 14:37:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231165AbiJYKaF (ORCPT
+        id S232501AbiJYOhk (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Tue, 25 Oct 2022 06:30:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60950 "EHLO
+        Tue, 25 Oct 2022 10:37:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42876 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231449AbiJYK3j (ORCPT
+        with ESMTP id S233130AbiJYOhB (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Tue, 25 Oct 2022 06:29:39 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B1AAD6DF88;
-        Tue, 25 Oct 2022 03:29:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=D/s8Mn3OZZreLwrO44Z3hxnh6P05RlWt/64fV0S8T78=; b=O7gPuYxYMhiiUSwpaMpT741mhG
-        JJ0PsBnILrhtc1Q+bqy0cFyTqDHOQjxPrvXCDO/4hySiss1hoUR/JxbubAOqny7ig3hqJifPZOFvl
-        r+pDAcJOuTQIB9wtw33Pph4PG5d/s2Rfzqq0NqcurYB6i30/iHn4UsIMIjU9Y4oUn8w7FE4ftN/4f
-        Oo9TqB32R6GGWnP1+3vu8cnsbyKyRLYJpfGC9KJ7vvEfChOxe1GQnX4gwZHtCbidqd/C+OwFnoHgu
-        n10uN35j1VePUIYesqnKrHPizQAhvLqhYv/X5tFUMNXA1pGjM2aMO0Mh81K0nMTMEovOP/2/iA2jJ
-        zHKe4Eow==;
-Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
-        by casper.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
-        id 1onHB7-00GBKE-Vo; Tue, 25 Oct 2022 10:29:02 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id D15DD30008D;
-        Tue, 25 Oct 2022 12:28:56 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id BB7972C431FA7; Tue, 25 Oct 2022 12:28:56 +0200 (CEST)
-Date:   Tue, 25 Oct 2022 12:28:56 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Steven Rostedt <rostedt@goodmis.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        "x86@kernel.org" <x86@kernel.org>,
+        Tue, 25 Oct 2022 10:37:01 -0400
+Received: from sin.source.kernel.org (sin.source.kernel.org [IPv6:2604:1380:40e1:4800::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A558A16DC34;
+        Tue, 25 Oct 2022 07:36:46 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by sin.source.kernel.org (Postfix) with ESMTPS id EEE97CE1D6F;
+        Tue, 25 Oct 2022 14:36:44 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DD88FC433D6;
+        Tue, 25 Oct 2022 14:36:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1666708603;
+        bh=Ry1myEvEooHC4WberZz2kmf54A7z45QuArv22A/8GmM=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=jPPnQ877LrhTPGx33Vbt9czG8fAS1PvLkma7344IC5nwRePxJH1NOYf0ASL7oYHKJ
+         XpDzRvlO+pzc0lBl1XBfHtowJP2Ip1/DifWSgrNEvX4puvb2IK3wxn2wHkYDKdOaqE
+         +iAi8Wezo94UojESzfs+Pmu8Vqij/PIvlyks/D8rJYhX3JKPBhRGEFdd5EStniFxpY
+         NP4gf7neq+RYS8i5zwn3z71zmz+bELFufgCeWXUjbwroSk97X9g022a3sSL+FoRFth
+         IZD/+j7n1mtgzG4AULnF66TE2EIunkuIFpA+3vcVhyc3usN3JG9U5050KO828brlF6
+         XAqIykZmp/CEQ==
+Date:   Tue, 25 Oct 2022 23:36:39 +0900
+From:   Masami Hiramatsu (Google) <mhiramat@kernel.org>
+To:     Steven Rostedt <rostedt@goodmis.org>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
         Linux Trace Kernel <linux-trace-kernel@vger.kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Dave Hansen <dave.hansen@intel.com>,
-        Sean Christopherson <seanjc@google.com>,
-        linux-arch@vger.kernel.org
-Subject: Re: [RFC PATCH] text_poke/ftrace/x86: Allow text_poke() to be called
- in early boot
-Message-ID: <Y1e6aOmOfXrSOB/u@hirez.programming.kicks-ass.net>
-References: <20221024190311.65b89ecb@gandalf.local.home>
- <CAHk-=wji4q7rGUWDLonnEnxq0ykNCcYGpMrNnZg89rAwOgyRKg@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAHk-=wji4q7rGUWDLonnEnxq0ykNCcYGpMrNnZg89rAwOgyRKg@mail.gmail.com>
+        Jiri Olsa <jolsa@kernel.org>
+Subject: Re: [PATCH] tracing/fprobe: Fix to check whether fprobe is
+ registered correctly
+Message-Id: <20221025233639.dcae9874bb27a3a7a9833300@kernel.org>
+In-Reply-To: <20221024102230.6b02c978@gandalf.local.home>
+References: <166653477373.988423.13256491425983587550.stgit@mhiramat.roam.corp.google.com>
+        <20221024102230.6b02c978@gandalf.local.home>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On Mon, Oct 24, 2022 at 05:11:13PM -0700, Linus Torvalds wrote:
+On Mon, 24 Oct 2022 10:22:30 -0400
+Steven Rostedt <rostedt@goodmis.org> wrote:
 
-> All of this comes from "poking_init()" being a steaming pile of bovine
-> excrement, doing random odd things, and having that special
-> "copy_init_mm()" helper that just makes things even worse. Nothing
-> else uses that, and it shouldn't have called "dup_mm()" in the first
-> place.
+> On Sun, 23 Oct 2022 23:19:33 +0900
+> "Masami Hiramatsu (Google)" <mhiramat@kernel.org> wrote:
+> 
+> > From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+> > 
+> > Since commit ab51e15d535e ("fprobe: Introduce FPROBE_FL_KPROBE_SHARED flag
+> > for fprobe") introduced fprobe_kprobe_handler() for fprobe::f_op::func,
+> > unregister_fprobe() fails to unregister the registered if user specifies
+> > FPROBE_FL_KPROBE_SHARED flag.
+> > To check it correctly, it should confirm the fprobe::f_op::func is either
+> > fprobe_handler() or fprobe_kprobe_handler().
+> > 
+> > Fixes: ab51e15d535e ("fprobe: Introduce FPROBE_FL_KPROBE_SHARED flag for fprobe")
+> > Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+> > ---
+> >  kernel/trace/fprobe.c |    3 ++-
+> >  1 file changed, 2 insertions(+), 1 deletion(-)
+> > 
+> > diff --git a/kernel/trace/fprobe.c b/kernel/trace/fprobe.c
+> > index aac63ca9c3d1..9000d8ea6274 100644
+> > --- a/kernel/trace/fprobe.c
+> > +++ b/kernel/trace/fprobe.c
+> > @@ -301,7 +301,8 @@ int unregister_fprobe(struct fprobe *fp)
+> >  {
+> >  	int ret;
+> >  
+> > -	if (!fp || fp->ops.func != fprobe_handler)
+> > +	if (!fp || (fp->ops.func != fprobe_handler &&
+> > +		    fp->ops.func != fprobe_kprobe_handler))
+> >  		return -EINVAL;
+> >  
+> >  	/*
+> 
+> Should we make this more paranoid?
+> 
+> 	if (!fp ||
+> 	    (fprobe_shared_with_kprobes(fp) && fp->ops.func != fprobe_kprobe_handler) ||
+> 	    (!fprobe_shared_with_kprobes(fp) && fp->ops.func != fprobe_handler))
+> 
+> Or is that over-kill?
 
-Agreed; dup_mm() makes no sense and it is easily removed, see my earlier
-patch. Perhaps it can be simplified further to:
+Yeah, I think it is over-kill since this is just for a safety check, like
+checking NULL in free(). Or, are there any way to check the ftrace_ops is
+registered?
 
-	__poking_mm = init_mm
+Thank you,
 
-omitting the mm_init() I retained, but I need to stare harder at all
-that.
+> 
+> -- Steve
 
-> I'm not even sure why "poking_mm" exists at all, and why it has
-> created a whole new copy of "init_mm", and why this code isn't just
-> using '&init_mm' like everything else that wants to just walk the
-> kernel page tables.
 
-Because it instantiates user-space page-tables in it, you really don't
-want those in init_mm.
-
-The whole (and sole) purpose of poking_mm is to contain the writable
-aliases. Only the CPU that has the poking_mm active has access to them.
+-- 
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
