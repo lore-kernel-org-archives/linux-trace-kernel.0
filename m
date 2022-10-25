@@ -2,87 +2,88 @@ Return-Path: <linux-trace-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CCBCC38A2D
-	for <linux-trace-kernel@archiver.kernel.org>; Tue, 25 Oct 2022 01:29:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A858FC04A95
+	for <linux-trace-kernel@archiver.kernel.org>; Tue, 25 Oct 2022 10:30:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229604AbiJYB3t (ORCPT
+        id S231165AbiJYKaF (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Mon, 24 Oct 2022 21:29:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33878 "EHLO
+        Tue, 25 Oct 2022 06:30:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60950 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231792AbiJYB3L (ORCPT
+        with ESMTP id S231449AbiJYK3j (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Mon, 24 Oct 2022 21:29:11 -0400
-Received: from mail-qt1-x82b.google.com (mail-qt1-x82b.google.com [IPv6:2607:f8b0:4864:20::82b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4AA1A6378
-        for <linux-trace-kernel@vger.kernel.org>; Mon, 24 Oct 2022 18:06:29 -0700 (PDT)
-Received: by mail-qt1-x82b.google.com with SMTP id f22so6705527qto.3
-        for <linux-trace-kernel@vger.kernel.org>; Mon, 24 Oct 2022 18:06:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=pMkA+r6Lkdb6N0+izztoT+4iCmOzMvt12DLQ8k8DOjg=;
-        b=ScwRDh+MFfI1jr0SDTqzUKqoKymOBLq+rBtnleXEd7FnoayNaCgt8/bry8tWtF4quS
-         vlUMiL9MvVQpsdZubFViwegHaiBuEb9Fzz9lSl3hPssMAW5+oHXehHGibXMovtdbIjWb
-         MLz4Qmuw2X0Yq/rYSIou7svOPMeIH/lEBJ5CQ=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=pMkA+r6Lkdb6N0+izztoT+4iCmOzMvt12DLQ8k8DOjg=;
-        b=kKNc6u6rp0oD5YzLp1fiK+CsiIKY+K6PLrQmLwfMPtAoN262E3skT2GB4Guzu4LeUg
-         sfzqa5KiaB6u7ZTVcyu9P3al1lvi1vkrA5Lz/kX2HdoZKCk89JwCIk11KYVqy/Q3ddV3
-         AvAWKCfycfsx6XWMDTJTdm0QWGKHwLkJmKZSvZw2DQ/8nALMntGBfLM1R19priZUbBSV
-         D0x3ip9DE9lHgWp+Rf45wf0uPR0QsZXqdPgILQKKEiilqfxV8rli2Zw1Z9BT6+1YzolN
-         0EhQMT9E8Q/hVnsVWQRYhnb1zuOVteKk+ZBEkXFYAFvtkiuRzAbVm/V15Bz+D6IbaedF
-         marQ==
-X-Gm-Message-State: ACrzQf2Txgp7cf9FVRE55OOkHvWSrDInvVH57/LzXI4FGs4dsBsJ+2pg
-        JUmTz7b/h9LnHAaVczmg/kAxlE91d3+kfQ==
-X-Google-Smtp-Source: AMsMyM4Eu94UryFOYeNTCoGSsw28akkcuIzP0ShjwcY+3OevO7LMIwI2eG6qrEJcA4HYQ5cU1E168Q==
-X-Received: by 2002:a05:622a:13:b0:39d:934:d4a2 with SMTP id x19-20020a05622a001300b0039d0934d4a2mr23560234qtw.398.1666659988337;
-        Mon, 24 Oct 2022 18:06:28 -0700 (PDT)
-Received: from mail-yw1-f179.google.com (mail-yw1-f179.google.com. [209.85.128.179])
-        by smtp.gmail.com with ESMTPSA id e10-20020a05622a110a00b0039cb9ef50b5sm848728qty.26.2022.10.24.18.06.26
-        for <linux-trace-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 24 Oct 2022 18:06:26 -0700 (PDT)
-Received: by mail-yw1-f179.google.com with SMTP id 00721157ae682-367b8adf788so100780627b3.2
-        for <linux-trace-kernel@vger.kernel.org>; Mon, 24 Oct 2022 18:06:26 -0700 (PDT)
-X-Received: by 2002:a81:114e:0:b0:36a:fc80:fa62 with SMTP id
- 75-20020a81114e000000b0036afc80fa62mr13959508ywr.58.1666659985851; Mon, 24
- Oct 2022 18:06:25 -0700 (PDT)
-MIME-Version: 1.0
-References: <20221024190311.65b89ecb@gandalf.local.home> <CAHk-=wji4q7rGUWDLonnEnxq0ykNCcYGpMrNnZg89rAwOgyRKg@mail.gmail.com>
- <20221024202133.38e0913e@gandalf.local.home> <CAHk-=wj_jxetFqMB8VWcJdtOt+CU0r_isyGV4AhEYFxA7YsU7Q@mail.gmail.com>
- <20221024210535.61174928@gandalf.local.home>
-In-Reply-To: <20221024210535.61174928@gandalf.local.home>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Mon, 24 Oct 2022 18:06:09 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wjdLGWaqw5udT-aZYM2+UjfjsFj=Pb48OGBv2anG=RLmQ@mail.gmail.com>
-Message-ID: <CAHk-=wjdLGWaqw5udT-aZYM2+UjfjsFj=Pb48OGBv2anG=RLmQ@mail.gmail.com>
-Subject: Re: [RFC PATCH] text_poke/ftrace/x86: Allow text_poke() to be called
- in early boot
-To:     Steven Rostedt <rostedt@goodmis.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Tue, 25 Oct 2022 06:29:39 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B1AAD6DF88;
+        Tue, 25 Oct 2022 03:29:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=D/s8Mn3OZZreLwrO44Z3hxnh6P05RlWt/64fV0S8T78=; b=O7gPuYxYMhiiUSwpaMpT741mhG
+        JJ0PsBnILrhtc1Q+bqy0cFyTqDHOQjxPrvXCDO/4hySiss1hoUR/JxbubAOqny7ig3hqJifPZOFvl
+        r+pDAcJOuTQIB9wtw33Pph4PG5d/s2Rfzqq0NqcurYB6i30/iHn4UsIMIjU9Y4oUn8w7FE4ftN/4f
+        Oo9TqB32R6GGWnP1+3vu8cnsbyKyRLYJpfGC9KJ7vvEfChOxe1GQnX4gwZHtCbidqd/C+OwFnoHgu
+        n10uN35j1VePUIYesqnKrHPizQAhvLqhYv/X5tFUMNXA1pGjM2aMO0Mh81K0nMTMEovOP/2/iA2jJ
+        zHKe4Eow==;
+Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
+        by casper.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
+        id 1onHB7-00GBKE-Vo; Tue, 25 Oct 2022 10:29:02 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id D15DD30008D;
+        Tue, 25 Oct 2022 12:28:56 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id BB7972C431FA7; Tue, 25 Oct 2022 12:28:56 +0200 (CEST)
+Date:   Tue, 25 Oct 2022 12:28:56 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Steven Rostedt <rostedt@goodmis.org>,
+        LKML <linux-kernel@vger.kernel.org>,
         "x86@kernel.org" <x86@kernel.org>,
         Linux Trace Kernel <linux-trace-kernel@vger.kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
         Kees Cook <keescook@chromium.org>,
         Dave Hansen <dave.hansen@intel.com>,
         Sean Christopherson <seanjc@google.com>,
         linux-arch@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Subject: Re: [RFC PATCH] text_poke/ftrace/x86: Allow text_poke() to be called
+ in early boot
+Message-ID: <Y1e6aOmOfXrSOB/u@hirez.programming.kicks-ass.net>
+References: <20221024190311.65b89ecb@gandalf.local.home>
+ <CAHk-=wji4q7rGUWDLonnEnxq0ykNCcYGpMrNnZg89rAwOgyRKg@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAHk-=wji4q7rGUWDLonnEnxq0ykNCcYGpMrNnZg89rAwOgyRKg@mail.gmail.com>
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On Mon, Oct 24, 2022 at 6:05 PM Steven Rostedt <rostedt@goodmis.org> wrote:
->
-> Something to look into. But I'm guessing that's best for the next merge
-> window, and not for the -rc releases?
+On Mon, Oct 24, 2022 at 05:11:13PM -0700, Linus Torvalds wrote:
 
-Yes., I just applied your v1 patch.
+> All of this comes from "poking_init()" being a steaming pile of bovine
+> excrement, doing random odd things, and having that special
+> "copy_init_mm()" helper that just makes things even worse. Nothing
+> else uses that, and it shouldn't have called "dup_mm()" in the first
+> place.
 
-               Linus
+Agreed; dup_mm() makes no sense and it is easily removed, see my earlier
+patch. Perhaps it can be simplified further to:
+
+	__poking_mm = init_mm
+
+omitting the mm_init() I retained, but I need to stare harder at all
+that.
+
+> I'm not even sure why "poking_mm" exists at all, and why it has
+> created a whole new copy of "init_mm", and why this code isn't just
+> using '&init_mm' like everything else that wants to just walk the
+> kernel page tables.
+
+Because it instantiates user-space page-tables in it, you really don't
+want those in init_mm.
+
+The whole (and sole) purpose of poking_mm is to contain the writable
+aliases. Only the CPU that has the poking_mm active has access to them.
