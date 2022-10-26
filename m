@@ -2,85 +2,114 @@ Return-Path: <linux-trace-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 84B81C38A2D
-	for <linux-trace-kernel@archiver.kernel.org>; Wed, 26 Oct 2022 09:34:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C9C47C38A2D
+	for <linux-trace-kernel@archiver.kernel.org>; Wed, 26 Oct 2022 15:42:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233332AbiJZJeL (ORCPT
+        id S233722AbiJZPmj (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Wed, 26 Oct 2022 05:34:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41118 "EHLO
+        Wed, 26 Oct 2022 11:42:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44282 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233345AbiJZJeH (ORCPT
+        with ESMTP id S232842AbiJZPmj (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Wed, 26 Oct 2022 05:34:07 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F0951B7EFF;
-        Wed, 26 Oct 2022 02:34:03 -0700 (PDT)
+        Wed, 26 Oct 2022 11:42:39 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B5197DD88F;
+        Wed, 26 Oct 2022 08:42:38 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 8B0A561DA6;
-        Wed, 26 Oct 2022 09:34:03 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CDDC7C433D7;
-        Wed, 26 Oct 2022 09:34:01 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 5BA8761FAD;
+        Wed, 26 Oct 2022 15:42:38 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CB704C433C1;
+        Wed, 26 Oct 2022 15:42:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1666776843;
-        bh=NPqoyo2EOn4aFcP88D3R4mf2259jJE0zw9hk+fICw9E=;
-        h=From:To:Cc:Subject:Date:From;
-        b=FHcMQU7pIFlCwU2b4+gB2ve/oe8vyzuXJa38tiAiy29WUvF03Pm0srnEXSbM0bKrk
-         J/jb+18H9g1erUgvRMBNYNYfFU9/7NaG9OQErAkqU4xpa36Rcb6yZPQyMDJYA0TimS
-         BKFZvYQCsmhu+8g51+SU95K1R/372Sia1mY2UQAri4D3V0jcpSJa+8qqoY/yQ9E+ra
-         ZXlWWpaHR3u2pz2sEv6CYchNWaWt6nL8cAHjMLE6xGewdHuhLPFXqbuEHcNd6R9je8
-         lWNoGUwl0Okev4lpeL7bxHRKPwjBKlLXNfHMtVy7+M+gA4NMbt+hmG1sY1tlzVpWrM
-         ah+/RdR/qIg+w==
-From:   "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
-To:     LKML <linux-kernel@vger.kernel.org>
-Cc:     Linux Trace Kernel <linux-trace-kernel@vger.kernel.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
+        s=k20201202; t=1666798957;
+        bh=JVjHGhtOduan1YHejgdu5cvny0hpSJ1Ttt+TrgSzmx0=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=QnBjOq5qqhBq2AHOTu1JO4o1st3C5s+ONPm4KBesyA4YS4EpKKrw9OXBaTaiWYXRb
+         cvsIo9twFbcblerwE5wRD6EZ0N/JpwoAdQb3l5jRjNwkJaaj+74USs51AJ10k/M93S
+         iOrXCrgmPtrvSoP93uqt1+syHxrUM1pZPIXXG8wUvEC9plnpeWoxkbXsmd2ZFOZ2h7
+         h9O6yG47mgiTVir4fRqgw37JB1FHgPki1AZ80bZ1/1ZNEpiCOe5VqfR+Rl3a9hNfHO
+         4yTDY5WWDdA4i+cHR0wrZPnMAudpeByOGGq3tY3wfKHt2gjRyWVuTzNcAHBDCxkQiM
+         SXxr7QKAMk/cQ==
+Date:   Thu, 27 Oct 2022 00:42:34 +0900
+From:   Masami Hiramatsu (Google) <mhiramat@kernel.org>
+To:     "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
         Steven Rostedt <rostedt@goodmis.org>,
-        Jiri Olsa <jolsa@kernel.org>
-Subject: [PATCH v2] tracing/fprobe: Fix to check whether fprobe is registered correctly
-Date:   Wed, 26 Oct 2022 18:33:59 +0900
-Message-Id: <166677683946.1459107.15997653945538644683.stgit@devnote3>
-X-Mailer: git-send-email 2.38.0.135.g90850a2211-goog
-User-Agent: StGit/0.19
-MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+        Linux Trace Kernel <linux-trace-kernel@vger.kernel.org>,
+        Primiano Tucci <primiano@google.com>
+Subject: Re: [PATCH 1/2] tracing/probes: Add symstr type for dynamic events
+Message-Id: <20221027004234.6f3097f4bf4a18dfddf9ae56@kernel.org>
+In-Reply-To: <166642073074.718058.9841757174640040227.stgit@mhiramat.roam.corp.google.com>
+References: <166642072204.718058.1479401089273534841.stgit@mhiramat.roam.corp.google.com>
+        <166642073074.718058.9841757174640040227.stgit@mhiramat.roam.corp.google.com>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+On Sat, 22 Oct 2022 15:38:50 +0900
+"Masami Hiramatsu (Google)" <mhiramat@kernel.org> wrote:
 
-Since commit ab51e15d535e ("fprobe: Introduce FPROBE_FL_KPROBE_SHARED flag
-for fprobe") introduced fprobe_kprobe_handler() for fprobe::ops::func,
-unregister_fprobe() fails to unregister the registered if user specifies
-FPROBE_FL_KPROBE_SHARED flag.
-Moreover, __register_ftrace_function() is possible to change the
-ftrace_ops::func, thus we have to check fprobe::ops::saved_func instead.
+> From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+> 
+> Add 'symstr' type for storing the kernel symbol as a string data
+> instead of the symbol address. This allows us to filter the
+> events by wildcard symbol name.
+> 
+> e.g.
+>   # echo 'e:wqfunc workqueue.workqueue_execute_start symname=$function:symstr' >> dynamic_events
+>   # cat events/eprobes/wqfunc/format
+>   name: wqfunc
+>   ID: 2110
+>   format:
+>   	field:unsigned short common_type;	offset:0;	size:2;	signed:0;
+>   	field:unsigned char common_flags;	offset:2;	size:1;	signed:0;
+>   	field:unsigned char common_preempt_count;	offset:3;	size:1;	signed:0;
+>   	field:int common_pid;	offset:4;	size:4;	signed:1;
+> 
+>   	field:__data_loc char[] symname;	offset:8;	size:4;	signed:1;
+> 
+>   print fmt: " symname=\"%s\"", __get_str(symname)
+> 
+> Note that there is already 'symbol' type which just change the
+> print format (so it still stores the symbol address in the tracing
+> ring buffer.) On the other hand, 'symstr' type stores the actual
+> "symbol+offset/size" data as a string.
+> 
+> Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+> ---
+[...]
+> diff --git a/kernel/trace/trace_probe_tmpl.h b/kernel/trace/trace_probe_tmpl.h
+> index b3bdb8ddb862..d57a3143929a 100644
+> --- a/kernel/trace/trace_probe_tmpl.h
+> +++ b/kernel/trace/trace_probe_tmpl.h
+> @@ -67,6 +67,37 @@ probe_mem_read(void *dest, void *src, size_t size);
+>  static nokprobe_inline int
+>  probe_mem_read_user(void *dest, void *src, size_t size);
+>  
+> +static nokprobe_inline int
+> +fetch_store_symstrlen(unsigned long addr)
+> +{
+> +	char namebuf[KSYM_SYMBOL_LEN];
+> +	int ret;
+> +
+> +	ret = sprint_symbol(namebuf, addr);
+> +	if (ret < 0)
+> +		return 0;
+> +
+> +	return strlen(namebuf) + 1;
 
-To check it correctly, it should confirm the fprobe::ops::saved_func is
-either fprobe_handler() or fprobe_kprobe_handler().
+Ah, sprint_symbol() returns the length. This strlen() is redundant.
+Let me update the patch.
 
-Fixes: cad9931f64dc ("fprobe: Add ftrace based probe APIs")
-Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
----
- kernel/trace/fprobe.c |    3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+Thank you,
 
-diff --git a/kernel/trace/fprobe.c b/kernel/trace/fprobe.c
-index 71614b2a67ff..e8143e368074 100644
---- a/kernel/trace/fprobe.c
-+++ b/kernel/trace/fprobe.c
-@@ -303,7 +303,8 @@ int unregister_fprobe(struct fprobe *fp)
- {
- 	int ret;
- 
--	if (!fp || fp->ops.func != fprobe_handler)
-+	if (!fp || (fp->ops.saved_func != fprobe_handler &&
-+		    fp->ops.saved_func != fprobe_kprobe_handler))
- 		return -EINVAL;
- 
- 	/*
 
+-- 
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
