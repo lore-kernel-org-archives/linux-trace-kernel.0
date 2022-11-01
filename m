@@ -2,44 +2,44 @@ Return-Path: <linux-trace-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C8D74C433FE
-	for <linux-trace-kernel@archiver.kernel.org>; Tue,  1 Nov 2022 06:41:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 277EFC433FE
+	for <linux-trace-kernel@archiver.kernel.org>; Tue,  1 Nov 2022 06:45:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229740AbiKAGlO (ORCPT
+        id S229475AbiKAGpJ (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Tue, 1 Nov 2022 02:41:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60002 "EHLO
+        Tue, 1 Nov 2022 02:45:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34926 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229714AbiKAGlL (ORCPT
+        with ESMTP id S229462AbiKAGpI (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Tue, 1 Nov 2022 02:41:11 -0400
-Received: from szxga03-in.huawei.com (szxga03-in.huawei.com [45.249.212.189])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 170B51005E;
-        Mon, 31 Oct 2022 23:41:10 -0700 (PDT)
-Received: from dggemv711-chm.china.huawei.com (unknown [172.30.72.57])
-        by szxga03-in.huawei.com (SkyGuard) with ESMTP id 4N1gMC57j7zJnM3;
-        Tue,  1 Nov 2022 14:38:15 +0800 (CST)
+        Tue, 1 Nov 2022 02:45:08 -0400
+Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AFF38109E;
+        Mon, 31 Oct 2022 23:45:05 -0700 (PDT)
+Received: from dggemv703-chm.china.huawei.com (unknown [172.30.72.53])
+        by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4N1gW13yxVzmVZp;
+        Tue,  1 Nov 2022 14:45:01 +0800 (CST)
 Received: from kwepemm600010.china.huawei.com (7.193.23.86) by
- dggemv711-chm.china.huawei.com (10.1.198.66) with Microsoft SMTP Server
+ dggemv703-chm.china.huawei.com (10.3.19.46) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.31; Tue, 1 Nov 2022 14:41:05 +0800
+ 15.1.2375.31; Tue, 1 Nov 2022 14:45:03 +0800
 Received: from ubuntu1804.huawei.com (10.67.174.174) by
  kwepemm600010.china.huawei.com (7.193.23.86) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.31; Tue, 1 Nov 2022 14:41:04 +0800
+ 15.1.2375.31; Tue, 1 Nov 2022 14:45:02 +0800
 From:   Li Huafei <lihuafei1@huawei.com>
 To:     <rostedt@goodmis.org>
 CC:     <mhiramat@kernel.org>, <mark.rutland@arm.com>,
         <linux-kernel@vger.kernel.org>,
         <linux-trace-kernel@vger.kernel.org>, <lihuafei1@huawei.com>
-Subject: [PATCH -next] ftrace: Fix use-after-free for dynamic ftrace_ops
-Date:   Tue, 1 Nov 2022 14:37:48 +0800
-Message-ID: <20221101063748.68490-1-lihuafei1@huawei.com>
+Subject: [PATCH] ftrace: Fix use-after-free for dynamic ftrace_ops
+Date:   Tue, 1 Nov 2022 14:41:46 +0800
+Message-ID: <20221101064146.69551-1-lihuafei1@huawei.com>
 X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
 Content-Type: text/plain
 X-Originating-IP: [10.67.174.174]
-X-ClientProxiedBy: dggems703-chm.china.huawei.com (10.3.19.180) To
+X-ClientProxiedBy: dggems704-chm.china.huawei.com (10.3.19.181) To
  kwepemm600010.china.huawei.com (7.193.23.86)
 X-CFilter-Loop: Reflected
 Precedence: bulk
