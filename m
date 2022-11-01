@@ -2,196 +2,107 @@ Return-Path: <linux-trace-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 305A9C433FE
-	for <linux-trace-kernel@archiver.kernel.org>; Tue,  1 Nov 2022 14:07:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9427EC4332F
+	for <linux-trace-kernel@archiver.kernel.org>; Tue,  1 Nov 2022 23:11:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229648AbiKAOHY (ORCPT
+        id S231519AbiKAXLz (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Tue, 1 Nov 2022 10:07:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60872 "EHLO
+        Tue, 1 Nov 2022 19:11:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44130 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229880AbiKAOHX (ORCPT
+        with ESMTP id S230492AbiKAXLm (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Tue, 1 Nov 2022 10:07:23 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6C2B31A80E;
-        Tue,  1 Nov 2022 07:07:22 -0700 (PDT)
+        Tue, 1 Nov 2022 19:11:42 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1C851222B8;
+        Tue,  1 Nov 2022 16:10:12 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 256EAB81DBF;
-        Tue,  1 Nov 2022 14:07:21 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C56E7C433C1;
-        Tue,  1 Nov 2022 14:07:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1667311639;
-        bh=qa2NiLkvwqh21P7yD2YxH/oo+2IG9kAry/2hB7aqHHE=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=BPr7RLqm09Zk2SCcceYlzd588wpwZzzCjLQ+HqeVic/FprOXymQgYV57sFd3tLTte
-         /+lVpFZRYrK5kfNM0YKZGYLQLK542ydckeL1393kJ7dyo1e4C87MibTVCA+SSx4no6
-         rdMCpVUiTxrEjzqAqbcJGhiYaB/LmtGPQOnoW+D+EkFR5okjUYLQiGFoEzdkr7sqHJ
-         Kf4EdTMpdz40LRP3a1P7g7Q20r+LYycytGZwg8VdBxTQL9v4juZLq9KlVVn+Ybo7FM
-         FUM8wIpjqSBHFtBQ7HGmxJjBsIqJpW5qeWYIL3b3k6ZBat88SruosPXGxVb8iJu0Cb
-         YIZ+slw6AcEsw==
-Date:   Tue, 1 Nov 2022 23:07:16 +0900
-From:   Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To:     Li Huafei <lihuafei1@huawei.com>
-Cc:     <rostedt@goodmis.org>, <mhiramat@kernel.org>,
-        <mark.rutland@arm.com>, <linux-kernel@vger.kernel.org>,
-        <linux-trace-kernel@vger.kernel.org>
-Subject: Re: [PATCH] ftrace: Fix use-after-free for dynamic ftrace_ops
-Message-Id: <20221101230716.22c7b52728990f6b192795c0@kernel.org>
-In-Reply-To: <20221101064146.69551-1-lihuafei1@huawei.com>
-References: <20221101064146.69551-1-lihuafei1@huawei.com>
-X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 808A16177D;
+        Tue,  1 Nov 2022 23:10:12 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9FE77C433D6;
+        Tue,  1 Nov 2022 23:10:11 +0000 (UTC)
+Date:   Tue, 1 Nov 2022 19:10:09 -0400
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     LKML <linux-kernel@vger.kernel.org>,
+        Linux trace kernel <linux-trace-kernel@vger.kernel.org>
+Cc:     Masami Hiramatsu <mhiramat@kernel.org>,
+        Roland Ruckerbauer <roland.rucky@gmail.com>,
+        Takashi Iwai <tiwai@suse.de>, regressions@lists.linux.dev,
+        Steven Noonan <steven.noonan@gmail.com>
+Subject: [PATCH] ring-buffer: Check for NULL cpu_buffer in
+ ring_buffer_wake_waiters()
+Message-ID: <20221101191009.1e7378c8@rorschach.local.home>
+X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On Tue, 1 Nov 2022 14:41:46 +0800
-Li Huafei <lihuafei1@huawei.com> wrote:
+From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
 
-> KASAN reported a use-after-free with ftrace ops [1]. It was found from
-> vmcore that perf had registered two ops with the same content
-> successively, both dynamic. After unregistering the second ops, a
-> use-after-free occurred.
-> 
-> In ftrace_shutdown(), when the second ops is unregistered, the
-> FTRACE_UPDATE_CALLS command is not set because there is another enabled
-> ops with the same content.  Also, both ops are dynamic and the ftrace
-> callback function is ftrace_ops_list_func, so the
-> FTRACE_UPDATE_TRACE_FUNC command will not be set. Eventually the value
-> of 'command' will be 0 and ftrace_shutdown() will skip the rcu
-> synchronization.
-> 
-> However, ftrace may be activated. When the ops is released, another CPU
-> may be accessing the ops.  Add the missing synchronization to fix this
-> problem.
-> 
-> [1]
-> BUG: KASAN: use-after-free in __ftrace_ops_list_func kernel/trace/ftrace.c:7020 [inline]
-> BUG: KASAN: use-after-free in ftrace_ops_list_func+0x2b0/0x31c kernel/trace/ftrace.c:7049
-> Read of size 8 at addr ffff56551965bbc8 by task syz-executor.2/14468
-> 
-> CPU: 1 PID: 14468 Comm: syz-executor.2 Not tainted 5.10.0 #7
-> Hardware name: linux,dummy-virt (DT)
-> Call trace:
->  dump_backtrace+0x0/0x40c arch/arm64/kernel/stacktrace.c:132
->  show_stack+0x30/0x40 arch/arm64/kernel/stacktrace.c:196
->  __dump_stack lib/dump_stack.c:77 [inline]
->  dump_stack+0x1b4/0x248 lib/dump_stack.c:118
->  print_address_description.constprop.0+0x28/0x48c mm/kasan/report.c:387
->  __kasan_report mm/kasan/report.c:547 [inline]
->  kasan_report+0x118/0x210 mm/kasan/report.c:564
->  check_memory_region_inline mm/kasan/generic.c:187 [inline]
->  __asan_load8+0x98/0xc0 mm/kasan/generic.c:253
->  __ftrace_ops_list_func kernel/trace/ftrace.c:7020 [inline]
->  ftrace_ops_list_func+0x2b0/0x31c kernel/trace/ftrace.c:7049
->  ftrace_graph_call+0x0/0x4
->  __might_sleep+0x8/0x100 include/linux/perf_event.h:1170
->  __might_fault mm/memory.c:5183 [inline]
->  __might_fault+0x58/0x70 mm/memory.c:5171
->  do_strncpy_from_user lib/strncpy_from_user.c:41 [inline]
->  strncpy_from_user+0x1f4/0x4b0 lib/strncpy_from_user.c:139
->  getname_flags+0xb0/0x31c fs/namei.c:149
->  getname+0x2c/0x40 fs/namei.c:209
->  [...]
-> 
-> Allocated by task 14445:
->  kasan_save_stack+0x24/0x50 mm/kasan/common.c:48
->  kasan_set_track mm/kasan/common.c:56 [inline]
->  __kasan_kmalloc mm/kasan/common.c:479 [inline]
->  __kasan_kmalloc.constprop.0+0x110/0x13c mm/kasan/common.c:449
->  kasan_kmalloc+0xc/0x14 mm/kasan/common.c:493
->  kmem_cache_alloc_trace+0x440/0x924 mm/slub.c:2950
->  kmalloc include/linux/slab.h:563 [inline]
->  kzalloc include/linux/slab.h:675 [inline]
->  perf_event_alloc.part.0+0xb4/0x1350 kernel/events/core.c:11230
->  perf_event_alloc kernel/events/core.c:11733 [inline]
->  __do_sys_perf_event_open kernel/events/core.c:11831 [inline]
->  __se_sys_perf_event_open+0x550/0x15f4 kernel/events/core.c:11723
->  __arm64_sys_perf_event_open+0x6c/0x80 kernel/events/core.c:11723
->  [...]
-> 
-> Freed by task 14445:
->  kasan_save_stack+0x24/0x50 mm/kasan/common.c:48
->  kasan_set_track+0x24/0x34 mm/kasan/common.c:56
->  kasan_set_free_info+0x20/0x40 mm/kasan/generic.c:358
->  __kasan_slab_free.part.0+0x11c/0x1b0 mm/kasan/common.c:437
->  __kasan_slab_free mm/kasan/common.c:445 [inline]
->  kasan_slab_free+0x2c/0x40 mm/kasan/common.c:446
->  slab_free_hook mm/slub.c:1569 [inline]
->  slab_free_freelist_hook mm/slub.c:1608 [inline]
->  slab_free mm/slub.c:3179 [inline]
->  kfree+0x12c/0xc10 mm/slub.c:4176
->  perf_event_alloc.part.0+0xa0c/0x1350 kernel/events/core.c:11434
->  perf_event_alloc kernel/events/core.c:11733 [inline]
->  __do_sys_perf_event_open kernel/events/core.c:11831 [inline]
->  __se_sys_perf_event_open+0x550/0x15f4 kernel/events/core.c:11723
->  [...]
-> 
+On some machines the number of listed CPUs may be bigger than the actual
+CPUs that exist. The tracing subsystem allocates a per_cpu directory with
+access to the per CPU ring buffer via a cpuX file. But to save space, the
+ring buffer will only allocate buffers for online CPUs, even though the
+CPU array will be as big as the nr_cpu_ids.
 
-Good catch! This should go stable tree too.
+With the addition of waking waiters on the ring buffer when closing the
+file, the ring_buffer_wake_waiters() now needs to make sure that the
+buffer is allocated (with the irq_work allocated with it) before trying to
+wake waiters, as it will cause a NULL pointer dereference.
+
+While debugging this, I added a NULL check for the buffer itself (which is
+OK to do), and also NULL pointer checks against buffer->buffers (which is
+not fine, and will WARN) as well as making sure the CPU number passed in
+is within the nr_cpu_ids (which is also not fine if it isn't).
+
+Link: https://lore.kernel.org/all/87h6zklb6n.wl-tiwai@suse.de/
+Link: https://lore.kernel.org/all/CAM6Wdxc0KRJMXVAA0Y=u6Jh2V=uWB-_Fn6M4xRuNppfXzL1mUg@mail.gmail.com/
 
 Cc: stable@vger.kernel.org
-Reviewed-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+Bugzilla: https://bugzilla.opensuse.org/show_bug.cgi?id=1204705
+Reported-by: Takashi Iwai <tiwai@suse.de>
+Reported-by: Roland Ruckerbauer <roland.rucky@gmail.com>
+Fixes: f3ddb74ad079 ("tracing: Wake up ring buffer waiters on closing of the file")
+Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+---
+ kernel/trace/ring_buffer.c | 11 +++++++++++
+ 1 file changed, 11 insertions(+)
 
-But I'm not sure what commit this is fixed. Maybe commit a4c35ed24112
-("ftrace: Fix synchronization location disabling and freeing ftrace_ops").
-Steve, can you add Fixed: ?
-
-Also, I found a typo below.
-
-> Signed-off-by: Li Huafei <lihuafei1@huawei.com>
-> ---
->  kernel/trace/ftrace.c | 14 +++++++++-----
->  1 file changed, 9 insertions(+), 5 deletions(-)
-> 
-> diff --git a/kernel/trace/ftrace.c b/kernel/trace/ftrace.c
-> index fbf2543111c0..4219cc2a04a6 100644
-> --- a/kernel/trace/ftrace.c
-> +++ b/kernel/trace/ftrace.c
-> @@ -3030,13 +3030,16 @@ int ftrace_shutdown(struct ftrace_ops *ops, int command)
->  
->  	if (!command || !ftrace_enabled) {
->  		/*
-> -		 * If these are dynamic or per_cpu ops, they still
-> -		 * need their data freed. Since, function tracing is
-> -		 * not currently active, we can just free them
-> -		 * without synchronizing all CPUs.
-> +		 * If these are dynamic, they still need their data freed. If
-> +		 * function tracing is currently active, we neet to synchronize
-                                                          ^need
-
-Thank you!
-
-> +		 * all CPUs before we can release them.
->  		 */
-> -		if (ops->flags & FTRACE_OPS_FL_DYNAMIC)
-> +		if (ops->flags & FTRACE_OPS_FL_DYNAMIC) {
-> +			if (ftrace_enabled)
-> +				goto sync_rcu;
-> +
->  			goto free_ops;
-> +		}
->  
->  		return 0;
->  	}
-> @@ -3083,6 +3086,7 @@ int ftrace_shutdown(struct ftrace_ops *ops, int command)
->  	 * ops.
->  	 */
->  	if (ops->flags & FTRACE_OPS_FL_DYNAMIC) {
-> + sync_rcu:
->  		/*
->  		 * We need to do a hard force of sched synchronization.
->  		 * This is because we use preempt_disable() to do RCU, but
-> -- 
-> 2.17.1
-> 
-
-
+diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
+index 199759c73519..9712083832f4 100644
+--- a/kernel/trace/ring_buffer.c
++++ b/kernel/trace/ring_buffer.c
+@@ -937,6 +937,9 @@ void ring_buffer_wake_waiters(struct trace_buffer *buffer, int cpu)
+ 	struct ring_buffer_per_cpu *cpu_buffer;
+ 	struct rb_irq_work *rbwork;
+ 
++	if (!buffer)
++		return;
++
+ 	if (cpu == RING_BUFFER_ALL_CPUS) {
+ 
+ 		/* Wake up individual ones too. One level recursion */
+@@ -945,7 +948,15 @@ void ring_buffer_wake_waiters(struct trace_buffer *buffer, int cpu)
+ 
+ 		rbwork = &buffer->irq_work;
+ 	} else {
++		if (WARN_ON_ONCE(!buffer->buffers))
++			return;
++		if (WARN_ON_ONCE(cpu >= nr_cpu_ids))
++			return;
++
+ 		cpu_buffer = buffer->buffers[cpu];
++		/* The CPU buffer may not have been initialized yet */
++		if (!cpu_buffer)
++			return;
+ 		rbwork = &cpu_buffer->irq_work;
+ 	}
+ 
 -- 
-Masami Hiramatsu (Google) <mhiramat@kernel.org>
+2.35.1
+
