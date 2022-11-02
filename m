@@ -2,71 +2,67 @@ Return-Path: <linux-trace-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A1CAC4332F
-	for <linux-trace-kernel@archiver.kernel.org>; Wed,  2 Nov 2022 16:01:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 58A02C43217
+	for <linux-trace-kernel@archiver.kernel.org>; Wed,  2 Nov 2022 20:01:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229487AbiKBQBY (ORCPT
+        id S230202AbiKBUB3 (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Wed, 2 Nov 2022 12:01:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40838 "EHLO
+        Wed, 2 Nov 2022 16:01:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37348 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230254AbiKBQBX (ORCPT
+        with ESMTP id S230371AbiKBUBY (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Wed, 2 Nov 2022 12:01:23 -0400
-Received: from mail-qk1-x72a.google.com (mail-qk1-x72a.google.com [IPv6:2607:f8b0:4864:20::72a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 887832BB1F
-        for <linux-trace-kernel@vger.kernel.org>; Wed,  2 Nov 2022 09:01:22 -0700 (PDT)
-Received: by mail-qk1-x72a.google.com with SMTP id v8so5537281qkg.12
-        for <linux-trace-kernel@vger.kernel.org>; Wed, 02 Nov 2022 09:01:22 -0700 (PDT)
+        Wed, 2 Nov 2022 16:01:24 -0400
+Received: from mail-wm1-x32b.google.com (mail-wm1-x32b.google.com [IPv6:2a00:1450:4864:20::32b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 85370194;
+        Wed,  2 Nov 2022 13:01:23 -0700 (PDT)
+Received: by mail-wm1-x32b.google.com with SMTP id m7-20020a05600c090700b003cf8a105d9eso119356wmp.5;
+        Wed, 02 Nov 2022 13:01:23 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ziepe.ca; s=google;
+        d=gmail.com; s=20210112;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=KwlCCdTf5peRjA9UdgWv3tidaRoMW8GdJ7qWVu6/mpQ=;
-        b=klk3CHlghwpcTSnxFenmxlF+94wvVJ41B276p+5LwLwthimJxA897yq85eitO6aX7l
-         v9r78DtcJzs8vR1IaLm1mqLPwGo50YN5ZvsA9xP0mCP3XaM6kAMiwadNEfyizalpgEy6
-         xpu/gQ6h1jDp5yNKpqqu97bUNooUtW3dy8rqI06GqcpWp1k+Tommq+Fdecr13d6nBG4a
-         HlPzIBU0PkdPiMO/pu6z93gk8OkHW1JUwAQpikk0aV9fEx1RLHpZ62KpPbX3Fzz1JSNt
-         Y8yj8QgJF4PbOmXe2muKlHyzTPiz6JzVapI4iOJkgTLQl0rPsJdJFsdmyH8upb1+vqqR
-         ACQA==
+        bh=XdmYTvu+zYpj7KgYKCU+/zaBOvuZZ8jatmz3kLIrPfg=;
+        b=LHTa4kwK97AZu9XWzAgU7Ru4ce6dgEG3bB7pKdLyPyFxbvs7RASuKfWO+c88RO3ZlA
+         NqhRNGXeRWleEUFpfrTUhDsQLYvN6WGBTtMCME0uragCWUKeaWcplcfGNWHoOUhYh+/F
+         ix2JnFTMt4TYs/5Fvw5DVvHkXhHQQXPjykKB3d3dkimwpu/ZseyEPfGewc64vFSLXqEf
+         hJQ47i/T69WUcpf5HIV5bDX1T7R2JovtVx0XRABVJ2921jzDrD5E1OgvWy20Tkk+1iA0
+         6NTe2blaQSPBPBz7wVwqFTlCh6OVdBOTu9NjsF07bLsb7oH8FlocZbZkNEBDbG2qg3JL
+         ToUQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=KwlCCdTf5peRjA9UdgWv3tidaRoMW8GdJ7qWVu6/mpQ=;
-        b=tZB7QlBBytu4Nn+1Ley6phnd+YKMVEaKhSf8ec7EyuElBX09bpXN5NbteOB/ydIPOO
-         q6Zj/cvMI2j0junIVZ6LTJTryTnYoJ3sidzYMyxh4UV2/rwWK8+0Wt6Ue6o9oDAVwuwA
-         nihj2gV05xMPRsdlbgKm3a+uzA8xyKM/5nLvG/X69KHTI0pTFdQYRLMwoDdPT9ZXwHSh
-         bHoCfg9N5EPbcDrxt53qOVly28bkldTmprgO1isX2f1MAojLGzXo4suphpsi1AAFrTgv
-         CLIoWGpUj6itjWPPLb5REbSAYB1EoBOwKJTgF/gAhsWXIw2NJWGPCRUeLpr+pMFy9jJ6
-         6CUg==
-X-Gm-Message-State: ACrzQf0bx5a7h7e36ngqwNeQyz9alSrPnLhXCCk9uua2ohudORwDE6ez
-        9pvX6OOgw54UOt7Qv7q2ppy1pg==
-X-Google-Smtp-Source: AMsMyM71i79h4m6uAcAPBmR6I+Ggmu3kDRaARfwlRupvZqKZ0lBCEAu8P0NHfif3Qu1mGGUg0tV7ng==
-X-Received: by 2002:a05:620a:91d:b0:6fa:442d:9a72 with SMTP id v29-20020a05620a091d00b006fa442d9a72mr8035077qkv.487.1667404881673;
-        Wed, 02 Nov 2022 09:01:21 -0700 (PDT)
-Received: from ziepe.ca (hlfxns017vw-47-55-122-23.dhcp-dynamic.fibreop.ns.bellaliant.net. [47.55.122.23])
-        by smtp.gmail.com with ESMTPSA id e1-20020ac84b41000000b00398ed306034sm6725636qts.81.2022.11.02.09.01.21
+        bh=XdmYTvu+zYpj7KgYKCU+/zaBOvuZZ8jatmz3kLIrPfg=;
+        b=8BDQZVjtsRP66LSLViXqDpn5KPAvpaW8aGAMIReHYuy24fFHLVA2gXA7D4YJwNRLUI
+         Zc4/ys9Ez3Xy6wd69Yr+Ihlx33s6ciuc//uV8W9XLPALJPJgijB9LVA7mjsUJw3XDliA
+         Zml3pTWY+d4GfRlki5ruw5WJI/eR+SO7ospA2uKUGAS4o3eRgR+TdGU9TZakuN5o4BjT
+         lSv1cbt1Txy/1E66kmHrYwoxnlsVETrM5F/U8ezxjDtrUJzOjRhQF/OW7r5HvOGz6sf3
+         IFTtZUMMKEXNixSNvsTQxTCxPbmyIZhUr7VEp8DUpQ9Zaz12xFTJS+S7TO+lOmsj1/2K
+         STnw==
+X-Gm-Message-State: ACrzQf083ke3h4rqcWwERYzjIpNlpAm2mkk3kE7hqEh1YzbfrHjsaPIw
+        PU9LfnVjsZt/L3gFeb8zPN+Cn5m5AmhQew==
+X-Google-Smtp-Source: AMsMyM6MbmWWEKKewgppk+dMC8e39nJ0CkTBH2iM6ZEo5pt5EirJqQdLGrpbKFuWKQLhHZxm+6CqpQ==
+X-Received: by 2002:a05:600c:6885:b0:3bd:d782:623c with SMTP id fn5-20020a05600c688500b003bdd782623cmr16703442wmb.102.1667419281857;
+        Wed, 02 Nov 2022 13:01:21 -0700 (PDT)
+Received: from leonid-Inspiron-3421 (93-172-205-151.bb.netvision.net.il. [93.172.205.151])
+        by smtp.gmail.com with ESMTPSA id z7-20020a05600c0a0700b003cf483ee8e0sm3649378wmp.24.2022.11.02.13.01.19
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 02 Nov 2022 09:01:21 -0700 (PDT)
-Received: from jgg by wakko with local (Exim 4.95)
-        (envelope-from <jgg@ziepe.ca>)
-        id 1oqGB6-005EuR-KY;
-        Wed, 02 Nov 2022 13:01:20 -0300
-Date:   Wed, 2 Nov 2022 13:01:20 -0300
-From:   Jason Gunthorpe <jgg@ziepe.ca>
+        Wed, 02 Nov 2022 13:01:20 -0700 (PDT)
+Date:   Wed, 2 Nov 2022 22:01:17 +0200
+From:   Leonid Ravich <lravich@gmail.com>
 To:     Steven Rostedt <rostedt@goodmis.org>
-Cc:     Leonid Ravich <leonid.ravich@toganetworks.com>,
+Cc:     Jason Gunthorpe <jgg@ziepe.ca>,
+        Leonid Ravich <leonid.ravich@toganetworks.com>,
         "mingo@redhat.com" <mingo@redhat.com>,
         "linux-rdma@vger.kernel.org" <linux-rdma@vger.kernel.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
         Yigal Korman <yigal.korman@toganetworks.com>,
         "linux-trace-kernel@vger.kernel.org" 
-        <linux-trace-kernel@vger.kernel.org>,
-        Leon Ravich <lravich@gmail.com>
+        <linux-trace-kernel@vger.kernel.org>
 Subject: Re: BUG:  ib_mad ftrace event unsupported migration
-Message-ID: <Y2KUUHWdp1xV3AAA@ziepe.ca>
+Message-ID: <Y2LMjYNAE5LwtcOp@leonid-Inspiron-3421>
 References: <VI1PR02MB623706DA8A01842834FC191089399@VI1PR02MB6237.eurprd02.prod.outlook.com>
  <20221102074457.08f538a8@rorschach.local.home>
  <Y2JqX3vC1mG/JDex@ziepe.ca>
@@ -83,7 +79,6 @@ Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On Wed, Nov 02, 2022 at 11:59:47AM -0400, Steven Rostedt wrote:
 > On Wed, 2 Nov 2022 11:24:20 -0300
 > Jason Gunthorpe <jgg@ziepe.ca> wrote:
 > 
@@ -97,9 +92,11 @@ On Wed, Nov 02, 2022 at 11:59:47AM -0400, Steven Rostedt wrote:
 > doesn't trigger a warning when preemption is disabled. But then again,
 > it would if you enabled DEBUG_PREEMPT and possibly LOCKDEP too. So, I chalk
 > this up to a lack of proper testing.
+>
 
-That makes sense, assuming it does trigger in those cases.
+disagree, without CONFIG_PREEMPTION (which is the default case in some
+destros) we will not get any warning, because there will not be
+preamption disable.
 
-It is interesting nobody has run those tracepoints on a debug kernel.
-
-Jason
+second issue I see and maybe it is only me, is that the assuption of
+atomicity in trace is not a common knowledge for trace users.     
