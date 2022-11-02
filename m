@@ -2,50 +2,37 @@ Return-Path: <linux-trace-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C7644C4332F
-	for <linux-trace-kernel@archiver.kernel.org>; Wed,  2 Nov 2022 22:19:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 680E1C4332F
+	for <linux-trace-kernel@archiver.kernel.org>; Wed,  2 Nov 2022 22:54:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229709AbiKBWTE (ORCPT
+        id S230292AbiKBWyS (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Wed, 2 Nov 2022 18:19:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36138 "EHLO
+        Wed, 2 Nov 2022 18:54:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46868 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231367AbiKBWTE (ORCPT
+        with ESMTP id S230513AbiKBWx7 (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Wed, 2 Nov 2022 18:19:04 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 36D6CAE42;
-        Wed,  2 Nov 2022 15:19:03 -0700 (PDT)
+        Wed, 2 Nov 2022 18:53:59 -0400
+Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8A0F2DF80;
+        Wed,  2 Nov 2022 15:53:53 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id CA46861C9A;
-        Wed,  2 Nov 2022 22:19:02 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DD76FC433D6;
-        Wed,  2 Nov 2022 22:19:01 +0000 (UTC)
-Date:   Wed, 2 Nov 2022 18:19:00 -0400
+        by ams.source.kernel.org (Postfix) with ESMTPS id 3AD8FB82521;
+        Wed,  2 Nov 2022 22:53:52 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AFB4AC433C1;
+        Wed,  2 Nov 2022 22:53:50 +0000 (UTC)
+Date:   Wed, 2 Nov 2022 18:53:48 -0400
 From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Leonid Ravich <lravich@gmail.com>
-Cc:     Jason Gunthorpe <jgg@ziepe.ca>,
-        Leonid Ravich <leonid.ravich@toganetworks.com>,
-        "mingo@redhat.com" <mingo@redhat.com>,
-        "linux-rdma@vger.kernel.org" <linux-rdma@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Yigal Korman <yigal.korman@toganetworks.com>,
-        "linux-trace-kernel@vger.kernel.org" 
+To:     Li Huafei <lihuafei1@huawei.com>
+Cc:     <mhiramat@kernel.org>, <mark.rutland@arm.com>,
+        <linux-kernel@vger.kernel.org>,
         <linux-trace-kernel@vger.kernel.org>
-Subject: Re: BUG:  ib_mad ftrace event unsupported migration
-Message-ID: <20221102181900.5bc9812f@rorschach.local.home>
-In-Reply-To: <Y2LMjYNAE5LwtcOp@leonid-Inspiron-3421>
-References: <VI1PR02MB623706DA8A01842834FC191089399@VI1PR02MB6237.eurprd02.prod.outlook.com>
-        <20221102074457.08f538a8@rorschach.local.home>
-        <Y2JqX3vC1mG/JDex@ziepe.ca>
-        <VI1PR02MB623731066685B6E249F71A3189399@VI1PR02MB6237.eurprd02.prod.outlook.com>
-        <Y2J4/NQMhRORqnZ0@ziepe.ca>
-        <20221102101719.6cbcca6b@rorschach.local.home>
-        <Y2J9lAqBvjjPUmJf@ziepe.ca>
-        <20221102115947.000897fa@rorschach.local.home>
-        <Y2LMjYNAE5LwtcOp@leonid-Inspiron-3421>
+Subject: Re: [PATCH] ftrace: Fix use-after-free for dynamic ftrace_ops
+Message-ID: <20221102185348.40f9deab@rorschach.local.home>
+In-Reply-To: <20221101064146.69551-1-lihuafei1@huawei.com>
+References: <20221101064146.69551-1-lihuafei1@huawei.com>
 X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
@@ -54,28 +41,61 @@ Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On Wed, 2 Nov 2022 22:01:17 +0200
-Leonid Ravich <lravich@gmail.com> wrote:
+On Tue, 1 Nov 2022 14:41:46 +0800
+Li Huafei <lihuafei1@huawei.com> wrote:
 
-> disagree, without CONFIG_PREEMPTION (which is the default case in some
-> destros) we will not get any warning, because there will not be
-> preamption disable.
 
-I test all for my code (NON_PREEMPT, VOLUNTEER_PREEMPT, PREEMPT) and
-with and without lockdep enabled.
+> diff --git a/kernel/trace/ftrace.c b/kernel/trace/ftrace.c
+> index fbf2543111c0..4219cc2a04a6 100644
+> --- a/kernel/trace/ftrace.c
+> +++ b/kernel/trace/ftrace.c
+> @@ -3030,13 +3030,16 @@ int ftrace_shutdown(struct ftrace_ops *ops, int command)
+>  
+>  	if (!command || !ftrace_enabled) {
 
-This would be a bug if you called kmalloc(X, GFP_KERNEL) in *any* non
-preempt section.
+ftrace_enabled is seldom not set. I don't think we even need to check
+it. It's just the value of /proc/sys/kernel/ftrace_enabled, where most
+people don't even know that file exists. I do want to get rid of it one
+day too. So let's not optimize for it.
 
-> 
-> second issue I see and maybe it is only me, is that the assuption of
-> atomicity in trace is not a common knowledge for trace users.     
+>  		/*
+> -		 * If these are dynamic or per_cpu ops, they still
+> -		 * need their data freed. Since, function tracing is
+> -		 * not currently active, we can just free them
+> -		 * without synchronizing all CPUs.
+> +		 * If these are dynamic, they still need their data freed. If
+> +		 * function tracing is currently active, we neet to synchronize
+> +		 * all CPUs before we can release them.
+>  		 */
+> -		if (ops->flags & FTRACE_OPS_FL_DYNAMIC)
+> +		if (ops->flags & FTRACE_OPS_FL_DYNAMIC) {
+> +			if (ftrace_enabled)
+> +				goto sync_rcu;
+> +
+>  			goto free_ops;
 
-Well, I suppose we could add more documentation. Would that help? Where
-would you see it? In the sample code?
+Change the above just to "goto out;"
 
-I advise not even grabbing locks in trace events, because in most cases
-lockdep will not catch any issues with them (it will be hidden unless
-the trace event is enabled).
+> +		}
+>  
+>  		return 0;
+>  	}
+> @@ -3083,6 +3086,7 @@ int ftrace_shutdown(struct ftrace_ops *ops, int command)
+>  	 * ops.
+>  	 */
+
+Add here:
+
+ out:
+
+>  	if (ops->flags & FTRACE_OPS_FL_DYNAMIC) {
+> + sync_rcu:
+>  		/*
+>  		 * We need to do a hard force of sched synchronization.
+>  		 * This is because we use preempt_disable() to do RCU, but
+
+And get rid of the labels in the if block.
+
+Thanks!
 
 -- Steve
