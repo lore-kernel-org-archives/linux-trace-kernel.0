@@ -2,123 +2,134 @@ Return-Path: <linux-trace-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 39469C4332F
-	for <linux-trace-kernel@archiver.kernel.org>; Thu,  3 Nov 2022 02:06:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B8B6C433FE
+	for <linux-trace-kernel@archiver.kernel.org>; Thu,  3 Nov 2022 02:54:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230481AbiKCCGn (ORCPT
+        id S231331AbiKCCys (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Wed, 2 Nov 2022 22:06:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51846 "EHLO
+        Wed, 2 Nov 2022 22:54:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43626 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230197AbiKCCGn (ORCPT
+        with ESMTP id S231393AbiKCCye (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Wed, 2 Nov 2022 22:06:43 -0400
-Received: from szxga03-in.huawei.com (szxga03-in.huawei.com [45.249.212.189])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2A10F12088;
-        Wed,  2 Nov 2022 19:06:42 -0700 (PDT)
-Received: from dggemv711-chm.china.huawei.com (unknown [172.30.72.57])
-        by szxga03-in.huawei.com (SkyGuard) with ESMTP id 4N2n9Y3kZnzJnQN;
-        Thu,  3 Nov 2022 10:03:45 +0800 (CST)
-Received: from kwepemm600010.china.huawei.com (7.193.23.86) by
- dggemv711-chm.china.huawei.com (10.1.198.66) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.31; Thu, 3 Nov 2022 10:06:34 +0800
-Received: from [10.67.110.237] (10.67.110.237) by
- kwepemm600010.china.huawei.com (7.193.23.86) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.31; Thu, 3 Nov 2022 10:06:33 +0800
-Subject: Re: [PATCH] ftrace: Fix use-after-free for dynamic ftrace_ops
+        Wed, 2 Nov 2022 22:54:34 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2A01A18E0E;
+        Wed,  2 Nov 2022 19:53:12 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id B667261CFE;
+        Thu,  3 Nov 2022 02:53:11 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 84508C433D6;
+        Thu,  3 Nov 2022 02:53:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1667443991;
+        bh=tHC19MIoBGE2+d3PdgbHi+j8F7t5gEgI/znPL5d61eI=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=dgP8e8dnzHCqau1QRm+eE/8fhILU1r4Kzcu0Rhkmo4kKgWGehofONHk6vdcfR9xuh
+         1OuQ/hLnapVsN+babK7USrSPVBdPiVzg22Mz2ystmu5iq+D7vPKrV+UbWci1zpV1CQ
+         KLyMYX/CcacNcbfk0RR/g8nabne0VkqNszAWSR1hS0hG52kZtdGiDb5pY4RKMya8YV
+         oAPPUJNmrZjxns7pIHxMobp+VgDTfh6/o5RBZYfu8/iYgwyY5ppjPxTBndbFu+SZ/v
+         fOgrDkLjbE5wfbgy8yXmylapilKPHsRT0ih4fJfylMMBJMarDlbm0i0H6rJqbbyIOZ
+         A740gT2+cBPgg==
+Date:   Thu, 3 Nov 2022 11:53:07 +0900
+From:   Masami Hiramatsu (Google) <mhiramat@kernel.org>
 To:     Steven Rostedt <rostedt@goodmis.org>
-CC:     <mhiramat@kernel.org>, <mark.rutland@arm.com>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-trace-kernel@vger.kernel.org>
-References: <20221101064146.69551-1-lihuafei1@huawei.com>
- <20221102185348.40f9deab@rorschach.local.home>
-From:   Li Huafei <lihuafei1@huawei.com>
-Message-ID: <f54ae16d-81e9-c4a6-00aa-63902111bfb9@huawei.com>
-Date:   Thu, 3 Nov 2022 10:06:33 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:78.0) Gecko/20100101
- Thunderbird/78.9.0
-MIME-Version: 1.0
-In-Reply-To: <20221102185348.40f9deab@rorschach.local.home>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Linux trace kernel <linux-trace-kernel@vger.kernel.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Roland Ruckerbauer <roland.rucky@gmail.com>,
+        Takashi Iwai <tiwai@suse.de>, regressions@lists.linux.dev,
+        Steven Noonan <steven.noonan@gmail.com>
+Subject: Re: [PATCH] ring-buffer: Check for NULL cpu_buffer in
+ ring_buffer_wake_waiters()
+Message-Id: <20221103115307.3d253be73d1259dfa6417b3c@kernel.org>
+In-Reply-To: <20221101191009.1e7378c8@rorschach.local.home>
+References: <20221101191009.1e7378c8@rorschach.local.home>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.67.110.237]
-X-ClientProxiedBy: dggems703-chm.china.huawei.com (10.3.19.180) To
- kwepemm600010.china.huawei.com (7.193.23.86)
-X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
+On Tue, 1 Nov 2022 19:10:09 -0400
+Steven Rostedt <rostedt@goodmis.org> wrote:
 
-
-On 2022/11/3 6:53, Steven Rostedt wrote:
-> On Tue, 1 Nov 2022 14:41:46 +0800
-> Li Huafei <lihuafei1@huawei.com> wrote:
+> From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
 > 
+> On some machines the number of listed CPUs may be bigger than the actual
+> CPUs that exist. The tracing subsystem allocates a per_cpu directory with
+> access to the per CPU ring buffer via a cpuX file. But to save space, the
+> ring buffer will only allocate buffers for online CPUs, even though the
+> CPU array will be as big as the nr_cpu_ids.
 > 
->> diff --git a/kernel/trace/ftrace.c b/kernel/trace/ftrace.c
->> index fbf2543111c0..4219cc2a04a6 100644
->> --- a/kernel/trace/ftrace.c
->> +++ b/kernel/trace/ftrace.c
->> @@ -3030,13 +3030,16 @@ int ftrace_shutdown(struct ftrace_ops *ops, int command)
->>  
->>  	if (!command || !ftrace_enabled) {
+> With the addition of waking waiters on the ring buffer when closing the
+> file, the ring_buffer_wake_waiters() now needs to make sure that the
+> buffer is allocated (with the irq_work allocated with it) before trying to
+> wake waiters, as it will cause a NULL pointer dereference.
 > 
-> ftrace_enabled is seldom not set. I don't think we even need to check
-> it. It's just the value of /proc/sys/kernel/ftrace_enabled, where most
-> people don't even know that file exists. I do want to get rid of it one
-> day too. So let's not optimize for it.
+> While debugging this, I added a NULL check for the buffer itself (which is
+> OK to do), and also NULL pointer checks against buffer->buffers (which is
+> not fine, and will WARN) as well as making sure the CPU number passed in
+> is within the nr_cpu_ids (which is also not fine if it isn't).
 > 
-
-Agree. The code will look much simpler this way.
-
->>  		/*
->> -		 * If these are dynamic or per_cpu ops, they still
->> -		 * need their data freed. Since, function tracing is
->> -		 * not currently active, we can just free them
->> -		 * without synchronizing all CPUs.
->> +		 * If these are dynamic, they still need their data freed. If
->> +		 * function tracing is currently active, we neet to synchronize
->> +		 * all CPUs before we can release them.
->>  		 */
->> -		if (ops->flags & FTRACE_OPS_FL_DYNAMIC)
->> +		if (ops->flags & FTRACE_OPS_FL_DYNAMIC) {
->> +			if (ftrace_enabled)
->> +				goto sync_rcu;
->> +
->>  			goto free_ops;
-> 
-> Change the above just to "goto out;"
-> 
->> +		}
->>  
->>  		return 0;
->>  	}
->> @@ -3083,6 +3086,7 @@ int ftrace_shutdown(struct ftrace_ops *ops, int command)
->>  	 * ops.
->>  	 */
-> 
-> Add here:
-> 
->  out:
-> 
->>  	if (ops->flags & FTRACE_OPS_FL_DYNAMIC) {
->> + sync_rcu:
->>  		/*
->>  		 * We need to do a hard force of sched synchronization.
->>  		 * This is because we use preempt_disable() to do RCU, but
-> 
-> And get rid of the labels in the if block.
+> Link: https://lore.kernel.org/all/87h6zklb6n.wl-tiwai@suse.de/
+> Link: https://lore.kernel.org/all/CAM6Wdxc0KRJMXVAA0Y=u6Jh2V=uWB-_Fn6M4xRuNppfXzL1mUg@mail.gmail.com/
 > 
 
-Will make the above changes in v2, thanks!
+This looks good to me.
 
-> Thanks!
+Reviewed-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+
+Thanks,
+
+> Cc: stable@vger.kernel.org
+> Bugzilla: https://bugzilla.opensuse.org/show_bug.cgi?id=1204705
+> Reported-by: Takashi Iwai <tiwai@suse.de>
+> Reported-by: Roland Ruckerbauer <roland.rucky@gmail.com>
+> Fixes: f3ddb74ad079 ("tracing: Wake up ring buffer waiters on closing of the file")
+> Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+> ---
+>  kernel/trace/ring_buffer.c | 11 +++++++++++
+>  1 file changed, 11 insertions(+)
 > 
-> -- Steve
+> diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
+> index 199759c73519..9712083832f4 100644
+> --- a/kernel/trace/ring_buffer.c
+> +++ b/kernel/trace/ring_buffer.c
+> @@ -937,6 +937,9 @@ void ring_buffer_wake_waiters(struct trace_buffer *buffer, int cpu)
+>  	struct ring_buffer_per_cpu *cpu_buffer;
+>  	struct rb_irq_work *rbwork;
+>  
+> +	if (!buffer)
+> +		return;
+> +
+>  	if (cpu == RING_BUFFER_ALL_CPUS) {
+>  
+>  		/* Wake up individual ones too. One level recursion */
+> @@ -945,7 +948,15 @@ void ring_buffer_wake_waiters(struct trace_buffer *buffer, int cpu)
+>  
+>  		rbwork = &buffer->irq_work;
+>  	} else {
+> +		if (WARN_ON_ONCE(!buffer->buffers))
+> +			return;
+> +		if (WARN_ON_ONCE(cpu >= nr_cpu_ids))
+> +			return;
+> +
+>  		cpu_buffer = buffer->buffers[cpu];
+> +		/* The CPU buffer may not have been initialized yet */
+> +		if (!cpu_buffer)
+> +			return;
+>  		rbwork = &cpu_buffer->irq_work;
+>  	}
+>  
+> -- 
+> 2.35.1
 > 
-> .
-> 
+
+
+-- 
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
