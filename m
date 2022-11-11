@@ -2,194 +2,87 @@ Return-Path: <linux-trace-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 068AAC4332F
-	for <linux-trace-kernel@archiver.kernel.org>; Fri, 11 Nov 2022 00:34:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 96AA6C4332F
+	for <linux-trace-kernel@archiver.kernel.org>; Fri, 11 Nov 2022 02:22:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231625AbiKKAex (ORCPT
+        id S229703AbiKKCWu (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Thu, 10 Nov 2022 19:34:53 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55456 "EHLO
+        Thu, 10 Nov 2022 21:22:50 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42576 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229932AbiKKAew (ORCPT
+        with ESMTP id S229601AbiKKCWt (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Thu, 10 Nov 2022 19:34:52 -0500
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C85837678;
-        Thu, 10 Nov 2022 16:34:51 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 834F0B822D7;
-        Fri, 11 Nov 2022 00:34:50 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DB5DDC433D6;
-        Fri, 11 Nov 2022 00:34:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1668126889;
-        bh=Ap1nvrhkIjs4qdg0qdCA2R2K/RdjZ1WeVKnB6c889EM=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=aCCwKaW+RrNixMTVePvLJyPPdmKGvTRaLcJBSTnm+oWhdzaTJjrLgjHx0AAHJlZhI
-         2oXGe4O2N+lbub5sBykp/6Ye5Y3YW3mN8VuUNxzcO+2H5rzgZVlrXkEXJuMtJ6g35C
-         T4QSBl1Za/R7rxr3EiVqsY8yY9tHAeb2LFDPxA8ai04T/qAjkv7trS36+QKfzERnCa
-         5fDqd9mLoQYf/Cdto+A04C0N7lFtZ37TvuXXk3bGFtB9q0+3YmNqXpXomE30PyKqPS
-         fRJSTsMyQzsnAQ6pjCNaFvkDF74Cr9te1MoSREEIl5IHSqx37TPK3lLY9yWgpYEkgZ
-         2tBWsId633jIg==
-Date:   Fri, 11 Nov 2022 09:34:45 +0900
-From:   Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To:     "Joel Fernandes (Google)" <joel@joelfernandes.org>
+        Thu, 10 Nov 2022 21:22:49 -0500
+Received: from mail-ej1-x636.google.com (mail-ej1-x636.google.com [IPv6:2a00:1450:4864:20::636])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A2FBF5E3D8
+        for <linux-trace-kernel@vger.kernel.org>; Thu, 10 Nov 2022 18:22:48 -0800 (PST)
+Received: by mail-ej1-x636.google.com with SMTP id ud5so9644837ejc.4
+        for <linux-trace-kernel@vger.kernel.org>; Thu, 10 Nov 2022 18:22:48 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=joelfernandes.org; s=google;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=jFmu26M8SbZRDoS5YncX03RVCQvtd0/Eme3Pt6/0vTc=;
+        b=xBRf/feYYm+kp976WAg44FNvoeTwplJR6I58eU/V1agJIFpdM7o0hwUh0crrMTP+t5
+         /69cFO0/olP3VleMRFP0d1ep7Y+WcocYnUE0AynnZV3aaafUVZaE63fyWa1UflBObeqP
+         9C6/vVoWTTWSNSjr9S3xDu3TbNJqORZqoV+gI=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=jFmu26M8SbZRDoS5YncX03RVCQvtd0/Eme3Pt6/0vTc=;
+        b=d7DNAyhCIawT1VHQiaZG1sGy0KGET4kdWUHE2Bqq57SE2+sIDmr+e3BYDNdO8wOpnj
+         LtoaDnc8RrC4XA9J9JsaM6GuqFeOTjWIgIdhFaPlMF1uoa0VoBksUHXwUDpxduealyuE
+         pmh9GG7P2l9flCrjMdt5xjLXARb4MywqMeYYu3+X3FFvmrHCeEPWNeQn1U4D39lTuJ7e
+         ZuWVaRdO51V3MeTGmT/zLf1TWfll+4vBihDBYV/wJKd+EO2En/EVjJydO/z36Ev75ZvD
+         18/I6b1gx3CE7b2YHL7C5UNFzzwr8OR2mJS7qr2ueAzlYcgY2e9qd3MH8Hr1S8ynL5qK
+         kONQ==
+X-Gm-Message-State: ANoB5plRWgggLGKYtpoStw2e+Gsk1I/pXIsTfU0/5dKJ8pbUPIXuI4jH
+        tPmmPlSN69a8mw+J8f+Gg9HwHTzJ/FPLa1g4belLjScKmtk=
+X-Google-Smtp-Source: AA0mqf6JlN0zqCrM0zok6UN2n7q/4i8TWD4tiOeQjLz1+mGyCJ9vrn6Imgul2AnfaLFZdIhpwzmeeQo9cLQq3ZRBi+I=
+X-Received: by 2002:a17:906:6592:b0:7ae:9677:d8dd with SMTP id
+ x18-20020a170906659200b007ae9677d8ddmr323080ejn.71.1668133367165; Thu, 10 Nov
+ 2022 18:22:47 -0800 (PST)
+MIME-Version: 1.0
+References: <20221110175959.3240475-1-joel@joelfernandes.org> <20221111093445.e195afe799822d5a7ffbaca4@kernel.org>
+In-Reply-To: <20221111093445.e195afe799822d5a7ffbaca4@kernel.org>
+From:   Joel Fernandes <joel@joelfernandes.org>
+Date:   Fri, 11 Nov 2022 02:22:36 +0000
+Message-ID: <CAEXW_YRtiwrWsJ8hMGMa5bKKhT163+P3OzR0T0feQROjzSJ1hQ@mail.gmail.com>
+Subject: Re: [PATCH v2] tracing: Dump instance traces into dmesg on ftrace_dump_on_oops
+To:     Masami Hiramatsu <mhiramat@kernel.org>
 Cc:     linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
-        rostedt@goodmis.org, mhiramat@kernel.org,
-        Ross Zwisler <zwisler@google.com>
-Subject: Re: [PATCH v2] tracing: Dump instance traces into dmesg on
- ftrace_dump_on_oops
-Message-Id: <20221111093445.e195afe799822d5a7ffbaca4@kernel.org>
-In-Reply-To: <20221110175959.3240475-1-joel@joelfernandes.org>
-References: <20221110175959.3240475-1-joel@joelfernandes.org>
-X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        rostedt@goodmis.org, Ross Zwisler <zwisler@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On Thu, 10 Nov 2022 17:59:59 +0000
-"Joel Fernandes (Google)" <joel@joelfernandes.org> wrote:
+On Fri, Nov 11, 2022 at 12:34 AM Masami Hiramatsu <mhiramat@kernel.org> wrote:
+>
+> On Thu, 10 Nov 2022 17:59:59 +0000
+> "Joel Fernandes (Google)" <joel@joelfernandes.org> wrote:
+>
+> > Currently ftrace only dumps the global trace buffer on an OOPs. For
+> > debugging a production usecase, I'd like to dump instance traces as
+> > well, into the kernel logs. The reason is we cannot use the global trace
+> > buffer as it may be used for other purposes.
+> >
+> > This patch adds support for dumping the trace buffer instances along
+> > with the global trace buffer.
+> >
+> > The instance traces are dumped first, and then the global trace buffer.
+> >
+>
+> This looks good to me.
+>
+> Reviewed-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 
-> Currently ftrace only dumps the global trace buffer on an OOPs. For
-> debugging a production usecase, I'd like to dump instance traces as
-> well, into the kernel logs. The reason is we cannot use the global trace
-> buffer as it may be used for other purposes.
-> 
-> This patch adds support for dumping the trace buffer instances along
-> with the global trace buffer.
-> 
-> The instance traces are dumped first, and then the global trace buffer.
-> 
+Thanks!
 
-This looks good to me.
-
-Reviewed-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-
-Thank you,
-
-> Cc: Ross Zwisler <zwisler@google.com>
-> Signed-off-by: Joel Fernandes (Google) <joel@joelfernandes.org>
-> ---
->  kernel/trace/trace.c | 67 ++++++++++++++++++++++++++------------------
->  1 file changed, 39 insertions(+), 28 deletions(-)
-> 
-> diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
-> index 47a44b055a1d..2cc75497d6d3 100644
-> --- a/kernel/trace/trace.c
-> +++ b/kernel/trace/trace.c
-> @@ -9914,12 +9914,12 @@ trace_printk_seq(struct trace_seq *s)
->  	trace_seq_init(s);
->  }
->  
-> -void trace_init_global_iter(struct trace_iterator *iter)
-> +void trace_init_iter_with_tr(struct trace_iterator *iter, struct trace_array *tr)
->  {
-> -	iter->tr = &global_trace;
-> +	iter->tr = tr;
->  	iter->trace = iter->tr->current_trace;
->  	iter->cpu_file = RING_BUFFER_ALL_CPUS;
-> -	iter->array_buffer = &global_trace.array_buffer;
-> +	iter->array_buffer = &tr->array_buffer;
->  
->  	if (iter->trace && iter->trace->open)
->  		iter->trace->open(iter);
-> @@ -9939,36 +9939,14 @@ void trace_init_global_iter(struct trace_iterator *iter)
->  	iter->fmt_size = STATIC_FMT_BUF_SIZE;
->  }
->  
-> -void ftrace_dump(enum ftrace_dump_mode oops_dump_mode)
-> +void ftrace_dump_one(struct trace_array *tr, enum ftrace_dump_mode oops_dump_mode)
->  {
-> -	/* use static because iter can be a bit big for the stack */
->  	static struct trace_iterator iter;
-> -	static atomic_t dump_running;
-> -	struct trace_array *tr = &global_trace;
->  	unsigned int old_userobj;
-> -	unsigned long flags;
->  	int cnt = 0, cpu;
->  
-> -	/* Only allow one dump user at a time. */
-> -	if (atomic_inc_return(&dump_running) != 1) {
-> -		atomic_dec(&dump_running);
-> -		return;
-> -	}
-> -
-> -	/*
-> -	 * Always turn off tracing when we dump.
-> -	 * We don't need to show trace output of what happens
-> -	 * between multiple crashes.
-> -	 *
-> -	 * If the user does a sysrq-z, then they can re-enable
-> -	 * tracing with echo 1 > tracing_on.
-> -	 */
-> -	tracing_off();
-> -
-> -	local_irq_save(flags);
-> -
->  	/* Simulate the iterator */
-> -	trace_init_global_iter(&iter);
-> +	trace_init_iter_with_tr(&iter, tr);
->  
->  	for_each_tracing_cpu(cpu) {
->  		atomic_inc(&per_cpu_ptr(iter.array_buffer->data, cpu)->disabled);
-> @@ -9993,7 +9971,10 @@ void ftrace_dump(enum ftrace_dump_mode oops_dump_mode)
->  		iter.cpu_file = RING_BUFFER_ALL_CPUS;
->  	}
->  
-> -	printk(KERN_TRACE "Dumping ftrace buffer:\n");
-> +	if (tr == &global_trace)
-> +		printk(KERN_TRACE "Dumping ftrace buffer:\n");
-> +	else
-> +		printk(KERN_TRACE "Dumping ftrace instance %s buffer:\n", tr->name);
->  
->  	/* Did function tracer already get disabled? */
->  	if (ftrace_is_dead()) {
-> @@ -10041,6 +10022,36 @@ void ftrace_dump(enum ftrace_dump_mode oops_dump_mode)
->  	for_each_tracing_cpu(cpu) {
->  		atomic_dec(&per_cpu_ptr(iter.array_buffer->data, cpu)->disabled);
->  	}
-> +}
-> +
-> +void ftrace_dump(enum ftrace_dump_mode oops_dump_mode)
-> +{
-> +	/* use static because iter can be a bit big for the stack */
-> +	static atomic_t dump_running;
-> +	struct trace_array *tr;
-> +	unsigned long flags;
-> +
-> +	/* Only allow one dump user at a time. */
-> +	if (atomic_inc_return(&dump_running) != 1) {
-> +		atomic_dec(&dump_running);
-> +		return;
-> +	}
-> +
-> +	/*
-> +	 * Always turn off tracing when we dump.
-> +	 * We don't need to show trace output of what happens
-> +	 * between multiple crashes.
-> +	 *
-> +	 * If the user does a sysrq-z, then they can re-enable
-> +	 * tracing with echo 1 > tracing_on.
-> +	 */
-> +	tracing_off();
-> +	local_irq_save(flags);
-> +
-> +	list_for_each_entry(tr, &ftrace_trace_arrays, list) {
-> +		ftrace_dump_one(tr, oops_dump_mode);
-> +	}
-> +
->  	atomic_dec(&dump_running);
->  	local_irq_restore(flags);
->  }
-> -- 
-> 2.38.1.493.g58b659f92b-goog
-> 
+ - Joel
 
 
--- 
-Masami Hiramatsu (Google) <mhiramat@kernel.org>
+
+  - Joel
