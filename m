@@ -2,105 +2,96 @@ Return-Path: <linux-trace-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 05896C4332F
-	for <linux-trace-kernel@archiver.kernel.org>; Fri, 11 Nov 2022 12:49:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F02AC4332F
+	for <linux-trace-kernel@archiver.kernel.org>; Sat, 12 Nov 2022 05:41:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231625AbiKKMs6 (ORCPT
+        id S231562AbiKLFlL (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Fri, 11 Nov 2022 07:48:58 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56682 "EHLO
+        Sat, 12 Nov 2022 00:41:11 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60206 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231564AbiKKMs5 (ORCPT
+        with ESMTP id S229991AbiKLFlL (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Fri, 11 Nov 2022 07:48:57 -0500
-Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 60FCA42F68;
-        Fri, 11 Nov 2022 04:48:56 -0800 (PST)
+        Sat, 12 Nov 2022 00:41:11 -0500
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 916B25B5B9;
+        Fri, 11 Nov 2022 21:41:10 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id DBB66B825FE;
-        Fri, 11 Nov 2022 12:48:54 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 32EC6C433D6;
-        Fri, 11 Nov 2022 12:48:52 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 50C58B828AD;
+        Sat, 12 Nov 2022 05:41:09 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7CD44C433D6;
+        Sat, 12 Nov 2022 05:41:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1668170933;
-        bh=mitaukNCb/hYAbTGvUtPs3BXT+tqSAvOYU4AGeN6OCM=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=IQPlqYJaTpOFi44ChAALquCTgyBXRwo6csMhPvf78cp7LsuwRqhhQGYJMfa0WDLSO
-         1vNcSjSBFeR3q6qfXxrbpkwP6YfRvTAyJji+b2lbwKU5V+qvI14shZql6XDpvgDvWS
-         g+a8yajtrFB7iXMRyERYAP3MzuAAd+aMAm2mAR+WcfV0kw0yh5F3YGBblMlnZZXx8+
-         oh8GyQlbyxlEZ8g9c6O3w67Y558n4JX0FSyaYDc32NfEG0UK+CM5hr3vB6y7sdiUPC
-         6p46hjqM7ouSdjWDY4KJxkI7003iDnOZhh2gS3GJqSDjWLvpXlr/Xuh5VOtAsXjNzo
-         tGO/TL+CQTAQg==
-Date:   Fri, 11 Nov 2022 21:48:49 +0900
-From:   Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To:     Aashish Sharma <shraash@google.com>
-Cc:     Steven Rostedt <rostedt@goodmis.org>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Arun Easi <aeasi@marvell.com>, linux-kernel@vger.kernel.org,
-        Linux Trace Kernel <linux-trace-kernel@vger.kernel.org>
-Subject: Re: [PATCH] tracing: Fix warning on variable 'struct trace_array'
-Message-Id: <20221111214849.895359f49037ec6cf21292a3@kernel.org>
-In-Reply-To: <20221107160556.2139463-1-shraash@google.com>
-References: <20221107160556.2139463-1-shraash@google.com>
-X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        s=k20201202; t=1668231668;
+        bh=h5v5hN9bTBwVsyIV+aYUcCjEowuSsRchhaboUL7kJ14=;
+        h=From:To:Cc:Subject:Date:From;
+        b=rr8H0yKFVtlPtqvDoEpveRSVQnF4aBh2sd1MG1GIGa51MMEj8d+HQusslaVzpisjB
+         Lux2qPQ8vloiIxGWmR6muh565u6I+tpZr+94VaqEsmf61BPashuRFvDBUd5g5fXOiH
+         GI67VwHs60c/w6qmHHioppd4f8VJErV7SdVqjvVdlpnXstmuRJtFSYnVv8EtKZb80i
+         LSxxqM9Tlvaq6OYO8zITVOnEipskvmlE+fTCMcw7t1st8tTdpNWTZ6HTOFalv3YDh9
+         3RqfRfj4oaS+pU0BWWK8W/buNkwDIkZOjtzJwdyKbIMM5iNa1h5aHpQXNhUQDx+xue
+         NgAf6tadiCQbA==
+From:   "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
+To:     Linux Trace Kernel <linux-trace-kernel@vger.kernel.org>
+Cc:     Rafael Mendonca <rafaelmendsr@gmail.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Tzvetomir Stoyanov <tz.stoyanov@gmail.com>
+Subject: [PATCH] tracing/eprobe: Fix eprobe filter to make a filter correctly
+Date:   Sat, 12 Nov 2022 14:41:04 +0900
+Message-Id: <166823166395.1385292.8931770640212414483.stgit@devnote3>
+X-Mailer: git-send-email 2.38.1.431.g37b22c650d-goog
+User-Agent: StGit/0.19
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On Mon,  7 Nov 2022 21:35:56 +0530
-Aashish Sharma <shraash@google.com> wrote:
+From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 
-> Move the declaration of 'struct trace_array' out of #ifdef
-> CONFIG_TRACING block, to fix the following warning when CONFIG_TRACING
-> is not set:
-> 
-> >> include/linux/trace.h:63:45: warning: 'struct trace_array' declared
-> inside parameter list will not be visible outside of this definition or
-> declaration
-> 
+Since the eprobe filter was defined based on the eprobe's trace event
+itself, it doesn't work correctly. Use the original trace event of
+the eprobe when making the filter so that the filter works correctly.
 
-This looks good to me.
+Without this fix:
 
-Acked-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+ # echo 'e syscalls/sys_enter_openat \
+	flags_rename=$flags:u32 if flags < 1000' >> dynamic_events
+ # echo 1 > events/eprobes/sys_enter_openat/enable
+[  114.551550] event trace: Could not enable event sys_enter_openat
+-bash: echo: write error: Invalid argument
 
-Thank you!
+With this fix:
+ # echo 'e syscalls/sys_enter_openat \
+	flags_rename=$flags:u32 if flags < 1000' >> dynamic_events
+ # echo 1 > events/eprobes/sys_enter_openat/enable
+ # tail trace
+cat-241     [000] ...1.   266.498449: sys_enter_openat: (syscalls.sys_enter_openat) flags_rename=0
+cat-242     [000] ...1.   266.977640: sys_enter_openat: (syscalls.sys_enter_openat) flags_rename=0
 
-> Fixes: 1a77dd1c2bb5 ("scsi: tracing: Fix compile error in trace_array calls when TRACING is disabled")
-> Cc: Arun Easi <aeasi@marvell.com>
-> Signed-off-by: Aashish Sharma <shraash@google.com>
-> ---
->  include/linux/trace.h | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/include/linux/trace.h b/include/linux/trace.h
-> index b5e16e438448..80ffda871749 100644
-> --- a/include/linux/trace.h
-> +++ b/include/linux/trace.h
-> @@ -26,13 +26,13 @@ struct trace_export {
->  	int flags;
->  };
->  
-> +struct trace_array;
-> +
->  #ifdef CONFIG_TRACING
->  
->  int register_ftrace_export(struct trace_export *export);
->  int unregister_ftrace_export(struct trace_export *export);
->  
-> -struct trace_array;
-> -
->  void trace_printk_init_buffers(void);
->  __printf(3, 4)
->  int trace_array_printk(struct trace_array *tr, unsigned long ip,
-> -- 
-> 2.38.1.431.g37b22c650d-goog
-> 
+Fixes: 752be5c5c910 ("tracing/eprobe: Add eprobe filter support")
+Reported-by: Rafael Mendonca <rafaelmendsr@gmail.com>
+Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+---
+ kernel/trace/trace_eprobe.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
+diff --git a/kernel/trace/trace_eprobe.c b/kernel/trace/trace_eprobe.c
+index fe4833a7b7b3..1c3096ab2fe7 100644
+--- a/kernel/trace/trace_eprobe.c
++++ b/kernel/trace/trace_eprobe.c
+@@ -643,7 +643,7 @@ new_eprobe_trigger(struct trace_eprobe *ep, struct trace_event_file *file)
+ 	INIT_LIST_HEAD(&trigger->list);
+ 
+ 	if (ep->filter_str) {
+-		ret = create_event_filter(file->tr, file->event_call,
++		ret = create_event_filter(file->tr, ep->event,
+ 					ep->filter_str, false, &filter);
+ 		if (ret)
+ 			goto error;
 
--- 
-Masami Hiramatsu (Google) <mhiramat@kernel.org>
