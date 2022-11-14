@@ -2,111 +2,101 @@ Return-Path: <linux-trace-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D1A3C433FE
-	for <linux-trace-kernel@archiver.kernel.org>; Mon, 14 Nov 2022 01:50:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 13D03C4332F
+	for <linux-trace-kernel@archiver.kernel.org>; Mon, 14 Nov 2022 10:46:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235633AbiKNBub (ORCPT
+        id S230441AbiKNKqQ (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Sun, 13 Nov 2022 20:50:31 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56028 "EHLO
+        Mon, 14 Nov 2022 05:46:16 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43380 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235579AbiKNBua (ORCPT
+        with ESMTP id S235997AbiKNKqP (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Sun, 13 Nov 2022 20:50:30 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EA3E7D91;
-        Sun, 13 Nov 2022 17:50:29 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 7A03460BD6;
-        Mon, 14 Nov 2022 01:50:29 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B0314C433D6;
-        Mon, 14 Nov 2022 01:50:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1668390628;
-        bh=4V9YbxChV9WUSpnF4+YUz3YrvsUYrk7aSD6B1Bbml2g=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=B0H+3SkDYeDKqrw3gQKlyCwSTTZijJGNBXftbJpzS37nmYznamsqrvYq8bvH2KG7W
-         bDF5dlgyYvuoJ5rqqp/bZ9QI8XGYgIW7usGyztc7bD8VJsuL3NIbTcDWzusL5EN9/f
-         9h87wozryv+ReIpGPXE1hC9w0+SE7heKja1kSErJUJEWzFV7xYpFNkgV4Y0D/MAQWR
-         hBtBaHDCPRg/qwWK81MYyyRIsaG7RmRpESgUD/oaC9vk/YnFjy/ke3WuFrokZdrPGm
-         fexWaAvxrzpb7QVLsIaP+ZOOVzHwjo5d8IUjRpLRl2AAfK9awjcfyhhVZq8UCrGmC0
-         5ma4TiG5i6Axw==
-Date:   Mon, 14 Nov 2022 10:50:25 +0900
-From:   Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To:     "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
-Cc:     Linux Trace Kernel <linux-trace-kernel@vger.kernel.org>,
-        Rafael Mendonca <rafaelmendsr@gmail.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Tzvetomir Stoyanov <tz.stoyanov@gmail.com>
-Subject: Re: [PATCH] tracing/eprobe: Fix eprobe filter to make a filter
- correctly
-Message-Id: <20221114105025.570082c976b24cc399bf693c@kernel.org>
-In-Reply-To: <166823166395.1385292.8931770640212414483.stgit@devnote3>
-References: <166823166395.1385292.8931770640212414483.stgit@devnote3>
-X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        Mon, 14 Nov 2022 05:46:15 -0500
+Received: from szxga08-in.huawei.com (szxga08-in.huawei.com [45.249.212.255])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BA162C2C;
+        Mon, 14 Nov 2022 02:46:13 -0800 (PST)
+Received: from dggpeml500021.china.huawei.com (unknown [172.30.72.55])
+        by szxga08-in.huawei.com (SkyGuard) with ESMTP id 4N9mDw3s1Wz15Mf2;
+        Mon, 14 Nov 2022 18:45:52 +0800 (CST)
+Received: from dggpeml100012.china.huawei.com (7.185.36.121) by
+ dggpeml500021.china.huawei.com (7.185.36.21) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2375.31; Mon, 14 Nov 2022 18:46:11 +0800
+Received: from localhost.localdomain (10.67.175.61) by
+ dggpeml100012.china.huawei.com (7.185.36.121) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2375.31; Mon, 14 Nov 2022 18:46:11 +0800
+From:   Zheng Yejian <zhengyejian1@huawei.com>
+To:     <rostedt@goodmis.org>, <mhiramat@kernel.org>
+CC:     <linux-kernel@vger.kernel.org>,
+        <linux-trace-kernel@vger.kernel.org>, <zhengyejian1@huawei.com>
+Subject: [PATCH] tracing: Fix potential null-pointer-access of entry in list 'tr->err_log'
+Date:   Mon, 14 Nov 2022 18:46:32 +0800
+Message-ID: <20221114104632.3547266-1-zhengyejian1@huawei.com>
+X-Mailer: git-send-email 2.25.1
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [10.67.175.61]
+X-ClientProxiedBy: dggems706-chm.china.huawei.com (10.3.19.183) To
+ dggpeml100012.china.huawei.com (7.185.36.121)
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-Hi Rafael,
+Entries in list 'tr->err_log' will be reused after entry number
+exceed TRACING_LOG_ERRS_MAX.
 
-Can you give me your Tested-by on this?
+The cmd string of the to be reused entry will be freed first then
+allocated a new one. If the allocation failed, then the entry will
+still be in list 'tr->err_log' but its 'cmd' field is set to be NULL,
+later access of 'cmd' is risky.
 
-Thank you,
+Currently above problem can cause the loss of 'cmd' information of first
+entry in 'tr->err_log'. When execute `cat /sys/kernel/tracing/error_log`,
+reproduce logs like:
+  [   37.495100] trace_kprobe: error: Maxactive is not for kprobe(null) ^
+  [   38.412517] trace_kprobe: error: Maxactive is not for kprobe
+    Command: p4:myprobe2 do_sys_openat2
+            ^
 
-On Sat, 12 Nov 2022 14:41:04 +0900
-"Masami Hiramatsu (Google)" <mhiramat@kernel.org> wrote:
+Fixes: 1581a884b7ca ("tracing: Remove size restriction on tracing_log_err cmd strings")
+Signed-off-by: Zheng Yejian <zhengyejian1@huawei.com>
+---
+ kernel/trace/trace.c | 9 +++++----
+ 1 file changed, 5 insertions(+), 4 deletions(-)
 
-> From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-> 
-> Since the eprobe filter was defined based on the eprobe's trace event
-> itself, it doesn't work correctly. Use the original trace event of
-> the eprobe when making the filter so that the filter works correctly.
-> 
-> Without this fix:
-> 
->  # echo 'e syscalls/sys_enter_openat \
-> 	flags_rename=$flags:u32 if flags < 1000' >> dynamic_events
->  # echo 1 > events/eprobes/sys_enter_openat/enable
-> [  114.551550] event trace: Could not enable event sys_enter_openat
-> -bash: echo: write error: Invalid argument
-> 
-> With this fix:
->  # echo 'e syscalls/sys_enter_openat \
-> 	flags_rename=$flags:u32 if flags < 1000' >> dynamic_events
->  # echo 1 > events/eprobes/sys_enter_openat/enable
->  # tail trace
-> cat-241     [000] ...1.   266.498449: sys_enter_openat: (syscalls.sys_enter_openat) flags_rename=0
-> cat-242     [000] ...1.   266.977640: sys_enter_openat: (syscalls.sys_enter_openat) flags_rename=0
-> 
-> Fixes: 752be5c5c910 ("tracing/eprobe: Add eprobe filter support")
-> Reported-by: Rafael Mendonca <rafaelmendsr@gmail.com>
-> Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-> ---
->  kernel/trace/trace_eprobe.c |    2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/kernel/trace/trace_eprobe.c b/kernel/trace/trace_eprobe.c
-> index fe4833a7b7b3..1c3096ab2fe7 100644
-> --- a/kernel/trace/trace_eprobe.c
-> +++ b/kernel/trace/trace_eprobe.c
-> @@ -643,7 +643,7 @@ new_eprobe_trigger(struct trace_eprobe *ep, struct trace_event_file *file)
->  	INIT_LIST_HEAD(&trigger->list);
->  
->  	if (ep->filter_str) {
-> -		ret = create_event_filter(file->tr, file->event_call,
-> +		ret = create_event_filter(file->tr, ep->event,
->  					ep->filter_str, false, &filter);
->  		if (ret)
->  			goto error;
-> 
-
-
+diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
+index 47a44b055a1d..5ae776598106 100644
+--- a/kernel/trace/trace.c
++++ b/kernel/trace/trace.c
+@@ -7802,6 +7802,7 @@ static struct tracing_log_err *get_tracing_log_err(struct trace_array *tr,
+ 						   int len)
+ {
+ 	struct tracing_log_err *err;
++	char *cmd;
+ 
+ 	if (tr->n_err_log_entries < TRACING_LOG_ERRS_MAX) {
+ 		err = alloc_tracing_log_err(len);
+@@ -7810,12 +7811,12 @@ static struct tracing_log_err *get_tracing_log_err(struct trace_array *tr,
+ 
+ 		return err;
+ 	}
+-
++	cmd = kzalloc(len, GFP_KERNEL);
++	if (!cmd)
++		return ERR_PTR(-ENOMEM);
+ 	err = list_first_entry(&tr->err_log, struct tracing_log_err, list);
+ 	kfree(err->cmd);
+-	err->cmd = kzalloc(len, GFP_KERNEL);
+-	if (!err->cmd)
+-		return ERR_PTR(-ENOMEM);
++	err->cmd = cmd;
+ 	list_del(&err->list);
+ 
+ 	return err;
 -- 
-Masami Hiramatsu (Google) <mhiramat@kernel.org>
+2.25.1
+
