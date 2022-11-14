@@ -2,123 +2,131 @@ Return-Path: <linux-trace-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EDF7BC433FE
-	for <linux-trace-kernel@archiver.kernel.org>; Mon, 14 Nov 2022 12:47:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BC19C4167B
+	for <linux-trace-kernel@archiver.kernel.org>; Mon, 14 Nov 2022 13:07:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237216AbiKNMrd (ORCPT
+        id S237820AbiKNNHB (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Mon, 14 Nov 2022 07:47:33 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39092 "EHLO
+        Mon, 14 Nov 2022 08:07:01 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33696 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237358AbiKNMrM (ORCPT
+        with ESMTP id S237891AbiKNNHB (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Mon, 14 Nov 2022 07:47:12 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3545B21A6;
-        Mon, 14 Nov 2022 04:46:53 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id BF6276113D;
-        Mon, 14 Nov 2022 12:46:52 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4A04CC433C1;
-        Mon, 14 Nov 2022 12:46:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1668430012;
-        bh=F+epNH5SqnmIUoQlpP4BNK1fKsgfSdgaSzTkz1qX9+Y=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=FH3AayK7SudHPtg1lwDrbn+jpO8Bl0MC6LshCNF58ACEbunH/kMoTZDUts4sL+WRw
-         W7XHnIqozrdswPQfccJfK3zp2M2MQjUn3i2YJiM3Fwq2GR2cY7V6sMR8SxdcqkD0Op
-         eVRqNiUInmXPl24zRyXl4iYTvYdoluPNtqGMg2tTdozB6bqn1taHnqIyQ4QXVXGq+n
-         Be5pTy2PbyhPrO9oZOTzQt6dl3wWm+md6+N9u3du86HlSvbtXTNYBy0+fEiC9NSB4W
-         xun6ZHaxdysW1EXmMnk89QBfODp3w4IatMGgluOFzQ1bU5xioe9rk93AawaJcM23Ff
-         XZmqcY7ni3EfA==
-Date:   Mon, 14 Nov 2022 21:46:49 +0900
-From:   Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To:     Zheng Yejian <zhengyejian1@huawei.com>
-Cc:     <rostedt@goodmis.org>, <linux-kernel@vger.kernel.org>,
-        <linux-trace-kernel@vger.kernel.org>
+        Mon, 14 Nov 2022 08:07:01 -0500
+Received: from szxga08-in.huawei.com (szxga08-in.huawei.com [45.249.212.255])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 935872AC71;
+        Mon, 14 Nov 2022 05:06:59 -0800 (PST)
+Received: from dggpeml500021.china.huawei.com (unknown [172.30.72.54])
+        by szxga08-in.huawei.com (SkyGuard) with ESMTP id 4N9qML5RsKz15MTK;
+        Mon, 14 Nov 2022 21:06:38 +0800 (CST)
+Received: from dggpeml100012.china.huawei.com (7.185.36.121) by
+ dggpeml500021.china.huawei.com (7.185.36.21) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2375.31; Mon, 14 Nov 2022 21:06:57 +0800
+Received: from [10.67.110.218] (10.67.110.218) by
+ dggpeml100012.china.huawei.com (7.185.36.121) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2375.31; Mon, 14 Nov 2022 21:06:57 +0800
+Message-ID: <d0a3ea62-e600-483c-a5d5-4584b9e464dd@huawei.com>
+Date:   Mon, 14 Nov 2022 21:06:57 +0800
+MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.0
 Subject: Re: [PATCH] tracing: Fix potential null-pointer-access of entry in
  list 'tr->err_log'
-Message-Id: <20221114214649.ecc18c3ee3f74377ce80e66d@kernel.org>
-In-Reply-To: <20221114104632.3547266-1-zhengyejian1@huawei.com>
+To:     "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
+CC:     <rostedt@goodmis.org>, <linux-kernel@vger.kernel.org>,
+        <linux-trace-kernel@vger.kernel.org>
 References: <20221114104632.3547266-1-zhengyejian1@huawei.com>
-X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+ <20221114214649.ecc18c3ee3f74377ce80e66d@kernel.org>
+From:   Zheng Yejian <zhengyejian1@huawei.com>
+In-Reply-To: <20221114214649.ecc18c3ee3f74377ce80e66d@kernel.org>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
 Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.67.110.218]
+X-ClientProxiedBy: dggems705-chm.china.huawei.com (10.3.19.182) To
+ dggpeml100012.china.huawei.com (7.185.36.121)
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On Mon, 14 Nov 2022 18:46:32 +0800
-Zheng Yejian <zhengyejian1@huawei.com> wrote:
 
-> Entries in list 'tr->err_log' will be reused after entry number
-> exceed TRACING_LOG_ERRS_MAX.
+
+On 2022/11/14 20:46, Masami Hiramatsu (Google) wrote:
+> On Mon, 14 Nov 2022 18:46:32 +0800
+> Zheng Yejian <zhengyejian1@huawei.com> wrote:
 > 
-> The cmd string of the to be reused entry will be freed first then
-> allocated a new one. If the allocation failed, then the entry will
-> still be in list 'tr->err_log' but its 'cmd' field is set to be NULL,
-> later access of 'cmd' is risky.
+>> Entries in list 'tr->err_log' will be reused after entry number
+>> exceed TRACING_LOG_ERRS_MAX.
+>>
+>> The cmd string of the to be reused entry will be freed first then
+>> allocated a new one. If the allocation failed, then the entry will
+>> still be in list 'tr->err_log' but its 'cmd' field is set to be NULL,
+>> later access of 'cmd' is risky.
+>>
+>> Currently above problem can cause the loss of 'cmd' information of first
+>> entry in 'tr->err_log'. When execute `cat /sys/kernel/tracing/error_log`,
+>> reproduce logs like:
+>>    [   37.495100] trace_kprobe: error: Maxactive is not for kprobe(null) ^
+>>    [   38.412517] trace_kprobe: error: Maxactive is not for kprobe
+>>      Command: p4:myprobe2 do_sys_openat2
+>>              ^
 > 
-> Currently above problem can cause the loss of 'cmd' information of first
-> entry in 'tr->err_log'. When execute `cat /sys/kernel/tracing/error_log`,
-> reproduce logs like:
->   [   37.495100] trace_kprobe: error: Maxactive is not for kprobe(null) ^
->   [   38.412517] trace_kprobe: error: Maxactive is not for kprobe
->     Command: p4:myprobe2 do_sys_openat2
->             ^
+> This looks good to me.
+> 
+> Acked-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 
-This looks good to me.
-
-Acked-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-
-BTW, I'm interested in how did you reproduce it. Did you inject a memory
-allocation failure to reproduce it?
-
-Thank you,
+Thanks!
 
 > 
-> Fixes: 1581a884b7ca ("tracing: Remove size restriction on tracing_log_err cmd strings")
-> Signed-off-by: Zheng Yejian <zhengyejian1@huawei.com>
-> ---
->  kernel/trace/trace.c | 9 +++++----
->  1 file changed, 5 insertions(+), 4 deletions(-)
-> 
-> diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
-> index 47a44b055a1d..5ae776598106 100644
-> --- a/kernel/trace/trace.c
-> +++ b/kernel/trace/trace.c
-> @@ -7802,6 +7802,7 @@ static struct tracing_log_err *get_tracing_log_err(struct trace_array *tr,
->  						   int len)
->  {
->  	struct tracing_log_err *err;
-> +	char *cmd;
->  
->  	if (tr->n_err_log_entries < TRACING_LOG_ERRS_MAX) {
->  		err = alloc_tracing_log_err(len);
-> @@ -7810,12 +7811,12 @@ static struct tracing_log_err *get_tracing_log_err(struct trace_array *tr,
->  
->  		return err;
->  	}
-> -
-> +	cmd = kzalloc(len, GFP_KERNEL);
-> +	if (!cmd)
-> +		return ERR_PTR(-ENOMEM);
->  	err = list_first_entry(&tr->err_log, struct tracing_log_err, list);
->  	kfree(err->cmd);
-> -	err->cmd = kzalloc(len, GFP_KERNEL);
-> -	if (!err->cmd)
-> -		return ERR_PTR(-ENOMEM);
-> +	err->cmd = cmd;
->  	list_del(&err->list);
->  
->  	return err;
-> -- 
-> 2.25.1
-> 
+> BTW, I'm interested in how did you reproduce it. Did you inject a memory
+> allocation failure to reproduce it?
 
+Yes. I happended to find this problem when I was looking at the code, 
+then I inject an allocation failure to proof it.
 
--- 
-Masami Hiramatsu (Google) <mhiramat@kernel.org>
+> 
+> Thank you,
+> 
+>>
+>> Fixes: 1581a884b7ca ("tracing: Remove size restriction on tracing_log_err cmd strings")
+>> Signed-off-by: Zheng Yejian <zhengyejian1@huawei.com>
+>> ---
+>>   kernel/trace/trace.c | 9 +++++----
+>>   1 file changed, 5 insertions(+), 4 deletions(-)
+>>
+>> diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
+>> index 47a44b055a1d..5ae776598106 100644
+>> --- a/kernel/trace/trace.c
+>> +++ b/kernel/trace/trace.c
+>> @@ -7802,6 +7802,7 @@ static struct tracing_log_err *get_tracing_log_err(struct trace_array *tr,
+>>   						   int len)
+>>   {
+>>   	struct tracing_log_err *err;
+>> +	char *cmd;
+>>   
+>>   	if (tr->n_err_log_entries < TRACING_LOG_ERRS_MAX) {
+>>   		err = alloc_tracing_log_err(len);
+>> @@ -7810,12 +7811,12 @@ static struct tracing_log_err *get_tracing_log_err(struct trace_array *tr,
+>>   
+>>   		return err;
+>>   	}
+>> -
+>> +	cmd = kzalloc(len, GFP_KERNEL);
+>> +	if (!cmd)
+>> +		return ERR_PTR(-ENOMEM);
+>>   	err = list_first_entry(&tr->err_log, struct tracing_log_err, list);
+>>   	kfree(err->cmd);
+>> -	err->cmd = kzalloc(len, GFP_KERNEL);
+>> -	if (!err->cmd)
+>> -		return ERR_PTR(-ENOMEM);
+>> +	err->cmd = cmd;
+>>   	list_del(&err->list);
+>>   
+>>   	return err;
+>> -- 
+>> 2.25.1
+>>
+> 
+> 
