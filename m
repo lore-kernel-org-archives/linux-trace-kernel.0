@@ -2,353 +2,203 @@ Return-Path: <linux-trace-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0712AC433FE
-	for <linux-trace-kernel@archiver.kernel.org>; Wed, 16 Nov 2022 12:22:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0805FC4332F
+	for <linux-trace-kernel@archiver.kernel.org>; Wed, 16 Nov 2022 19:26:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233200AbiKPMWu (ORCPT
+        id S230377AbiKPT0L (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Wed, 16 Nov 2022 07:22:50 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42204 "EHLO
+        Wed, 16 Nov 2022 14:26:11 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42524 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238864AbiKPMWS (ORCPT
+        with ESMTP id S232126AbiKPT0K (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Wed, 16 Nov 2022 07:22:18 -0500
-Received: from 189.cn (ptr.189.cn [183.61.185.103])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 2B68E2409C;
-        Wed, 16 Nov 2022 04:19:26 -0800 (PST)
-HMM_SOURCE_IP: 10.64.8.31:34780.1719992925
-HMM_ATTACHE_NUM: 0000
-HMM_SOURCE_TYPE: SMTP
-Received: from clientip-123.150.8.42 (unknown [10.64.8.31])
-        by 189.cn (HERMES) with SMTP id 3852B100236;
-        Wed, 16 Nov 2022 20:19:24 +0800 (CST)
-Received: from  ([123.150.8.42])
-        by gateway-153622-dep-787c977d48-v8sdr with ESMTP id 85b2a3a5754e41a8bbd25d8364e322fe for rostedt@goodmis.org;
-        Wed, 16 Nov 2022 20:19:25 CST
-X-Transaction-ID: 85b2a3a5754e41a8bbd25d8364e322fe
-X-Real-From: chensong_2000@189.cn
-X-Receive-IP: 123.150.8.42
-X-MEDUSA-Status: 0
-Sender: chensong_2000@189.cn
-From:   Song Chen <chensong_2000@189.cn>
-To:     rostedt@goodmis.org, mhiramat@kernel.org
-Cc:     linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
-        Song Chen <chensong_2000@189.cn>
-Subject: [PATCH 4/4] kernel/trace/uprobe: Use new APIs to process uprobe arguments
-Date:   Wed, 16 Nov 2022 20:25:39 +0800
-Message-Id: <1668601539-4422-1-git-send-email-chensong_2000@189.cn>
-X-Mailer: git-send-email 2.7.4
+        Wed, 16 Nov 2022 14:26:10 -0500
+Received: from mail-oa1-x34.google.com (mail-oa1-x34.google.com [IPv6:2001:4860:4864:20::34])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 294E42E9C3;
+        Wed, 16 Nov 2022 11:26:09 -0800 (PST)
+Received: by mail-oa1-x34.google.com with SMTP id 586e51a60fabf-141ca09c2fbso11679606fac.6;
+        Wed, 16 Nov 2022 11:26:09 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=N0wiStqSoT+QOxZQv7R/HenLizI45o2PTA9zLLh/ev8=;
+        b=gGbUWPpAiVSwFwgF33WUTuRMAtG+O8HEFi2Dv7Cx6iUghNNBAhk/JvuPhj92J37CqX
+         jQF/Japrf7u5hsfz+DO6SpWbAOYRgkMYxDft5ItE/0bzc53bicX1KLW04oRYyP2sKk7b
+         rVPGpbYnRAyrJ8vpwFPwCFfr9GlhQT/CDdiGh2rUaRT+OD2F90koTCObzxunoz7oaXjZ
+         IMIgXDPU9gBnB2Tqs3sUr8d2MsDS0cIj4UYuaBn3duyHkP3I+rXwt+S0dT+BHDFwXjH+
+         nuMH0YDWIhiz0947sJZBt4pPVFQCMOpLpmK39FETeWqp/3wse1AZh03CKFqShlWjIHl6
+         BKqQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=N0wiStqSoT+QOxZQv7R/HenLizI45o2PTA9zLLh/ev8=;
+        b=E74QYsnIkwgeD8ibnF9vn54wejLQB6t8LFmeuZWeXFh3S7umbtP8s4FRxtFusQNLNj
+         tzTblgG7ywFe7jNk60IFdXHUoHjf+zmAM6i0AzAjJrDY5wBFWvZcbZb0DLzGcbbAaRTJ
+         0hoMT752GSolNu7oLH9jyaLAHa0yLxKjGvauEGr3hzoBtbwK+htawLVVYV9mydAOuvPm
+         /1bU26UHQxPZ/r9bRYC4GTBBKBnwmZmBcvTwQI8A49EhRr9MHWy6SaKqL/okI0SvRD5j
+         i7oGMiFISoqnQZ/E60heCJT6ITWi5Lwh+jglUfLDxpZ+uPJOAEcmE3NbU28/iyM3W2iJ
+         orGw==
+X-Gm-Message-State: ANoB5pkKYinZeRUioNCYKpBU9kX8PEubkEi8s6AvjuAtfZsuSewQGpvy
+        wJEmzYFlxXZkgOL+vM1Y9jU=
+X-Google-Smtp-Source: AA0mqf6e8KWVX57BFNmqwgQtDKRztmzPjrRNugGMRBST+LLVavvr9EUnVvuFGkZV2aZDO3fgGqSiTQ==
+X-Received: by 2002:a05:6870:5b96:b0:132:2bef:f802 with SMTP id em22-20020a0568705b9600b001322beff802mr2715192oab.249.1668626767405;
+        Wed, 16 Nov 2022 11:26:07 -0800 (PST)
+Received: from macondo.. ([2804:431:e7cc:5fdd:4ced:7530:d9f1:360b])
+        by smtp.gmail.com with ESMTPSA id o39-20020a056870912700b0012d939eb0bfsm8414531oae.34.2022.11.16.11.26.05
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 16 Nov 2022 11:26:06 -0800 (PST)
+From:   Rafael Mendonca <rafaelmendsr@gmail.com>
+To:     Steven Rostedt <rostedt@goodmis.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        "Tzvetomir Stoyanov (VMware)" <tz.stoyanov@gmail.com>
+Cc:     Rafael Mendonca <rafaelmendsr@gmail.com>,
+        linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
+Subject: [PATCH] tracing/eprobe: Update cond flag before enabling trigger
+Date:   Wed, 16 Nov 2022 16:25:51 -0300
+Message-Id: <20221116192552.1066630-1-rafaelmendsr@gmail.com>
+X-Mailer: git-send-email 2.34.1
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-Trace probe introduces new APIs to process probe arguments, so
-eprobe shall remove old implementations and turn to those new
-APIs.
+The eprobe's trigger, for the event it is attached to, needs access to the
+trace record in order to perform its function. This need is indicated by
+the TRIGGER_COND flag and properly set by the update_cond_flag() function.
+Currently, the cond flag is set after calling
+trace_event_trigger_enable_disable(), which leaves a small time gap in
+which the eprobe's trigger could be invoked without a trace record, causing
+a NULL pointer dereference issue.
 
-Signed-off-by: Song Chen <chensong_2000@189.cn>
+This issue can be easily reproduced by enabling an event probe for
+kmem/mm_page_alloc using any of its fields as such:
+
+root@localhost:/sys/kernel/tracing# echo 'e kmem/mm_page_alloc $gfp_flags' > dynamic_events
+root@localhost:/sys/kernel/tracing# echo 1 > events/eprobes/enable
+[   30.847000] general protection fault, probably for non-canonical address 0xdffffc0000000003: 0000 [#1] PREEMPT SMP KASAN PTI
+[   30.848618] KASAN: null-ptr-deref in range [0x0000000000000018-0x000000000000001f]
+[   30.849498] CPU: 0 PID: 223 Comm: bash Not tainted 6.1.0-rc5+ #98
+[...] stripped
+[   30.850623] RIP: 0010:get_event_field.isra.0+0x1b8/0x3f0
+[...] stripped
+[   30.856173] Call Trace:
+[   30.856340]  <TASK>
+[   30.856489]  process_fetch_insn+0x1289/0x19b0
+[   30.856789]  ? write_comp_data+0x2f/0x90
+[   30.857061]  ? __sanitizer_cov_trace_pc+0x25/0x60
+[   30.857379]  ? __trace_eprobe_create+0x1d30/0x1d30
+[   30.857701]  ? __sanitizer_cov_trace_pc+0x25/0x60
+[   30.858019]  ? write_comp_data+0x2f/0x90
+[   30.858289]  ? write_comp_data+0x2f/0x90
+[   30.858562]  eprobe_trigger_func+0x1253/0x2180
+[   30.858867]  ? kasan_poison.part.0+0x3c/0x50
+[   30.859165]  ? process_fetch_insn+0x19b0/0x19b0
+[   30.859473]  ? get_page_from_freelist+0x10c1/0x29c0
+[   30.859806]  ? rcu_read_lock_bh_held+0xd0/0xd0
+[   30.860114]  ? write_comp_data+0x2f/0x90
+[   30.860387]  event_triggers_call+0x293/0x410
+[   30.860683]  __trace_trigger_soft_disabled+0xbb/0xe0
+[   30.861019]  trace_event_raw_event_mm_page_alloc+0xb5/0xc0
+[   30.861389]  __alloc_pages+0x4cd/0x760
+[   30.861651]  ? __alloc_pages_slowpath.constprop.0+0x2480/0x2480
+[   30.862047]  ? tracepoint_probe_register_prio_may_exist+0x100/0x100
+[   30.862464]  ? __sanitizer_cov_trace_pc+0x25/0x60
+[   30.862780]  ? write_comp_data+0x2f/0x90
+[   30.863055]  trace_buffered_event_enable+0xc6/0x440
+[   30.863381]  __ftrace_event_enable_disable+0x16a/0x880
+[   30.863728]  trace_event_enable_disable+0x2a/0x40
+[   30.864043]  trace_event_trigger_enable_disable.part.0+0x70/0x90
+[   30.864446]  trace_event_trigger_enable_disable+0x31/0xc0
+[   30.864806]  eprobe_register+0x49a/0xdf0
+[   30.865080]  ? disable_eprobe+0x370/0x370
+[   30.865360]  ? mutex_unlock+0x16/0x20
+[   30.865618]  ? write_comp_data+0x2f/0x90
+[   30.865897]  __ftrace_event_enable_disable+0x4c1/0x880
+[   30.866247]  __ftrace_set_clr_event_nolock+0x297/0x390
+[   30.866598]  __ftrace_set_clr_event+0x43/0x70
+[   30.866901]  system_enable_write+0x1f7/0x2a0
+[   30.867214]  ? event_enable_write+0x290/0x290
+[   30.867521]  ? rcu_read_lock_held+0xc0/0xc0
+[   30.867842]  ? write_comp_data+0x2f/0x90
+[   30.868176]  ? write_comp_data+0x2f/0x90
+[   30.868467]  vfs_write+0x311/0xe50
+[   30.868752]  ? event_enable_write+0x290/0x290
+[   30.869067]  ? kernel_write+0x5b0/0x5b0
+[   30.869329]  ? lockdep_hardirqs_on_prepare+0x410/0x410
+[   30.869675]  ? lock_is_held_type+0xaf/0x120
+[   30.869954]  ? close_fd+0x6e/0xb0
+[   30.870182]  ? write_comp_data+0x2f/0x90
+[   30.870453]  ? __sanitizer_cov_trace_pc+0x25/0x60
+[   30.870772]  ? write_comp_data+0x2f/0x90
+[   30.871043]  ? write_comp_data+0x2f/0x90
+[   30.871315]  ksys_write+0x158/0x2a0
+[   30.871558]  ? __ia32_sys_read+0xc0/0xc0
+[   30.871827]  ? syscall_enter_from_user_mode+0x25/0x70
+[   30.872169]  ? do_syscall_64+0x3b/0x90
+[   30.872432]  __x64_sys_write+0x7c/0xc0
+[   30.872691]  ? syscall_enter_from_user_mode+0x25/0x70
+[   30.873028]  do_syscall_64+0x60/0x90
+[   30.873279]  ? syscall_exit_to_user_mode+0x4a/0x60
+[   30.873597]  ? do_syscall_64+0x6d/0x90
+[   30.873857]  ? fpregs_assert_state_consistent+0x90/0xf0
+[   30.874214]  ? syscall_exit_to_user_mode+0x4a/0x60
+[   30.874535]  ? do_syscall_64+0x6d/0x90
+[   30.874794]  ? do_syscall_64+0x6d/0x90
+[   30.875118]  ? do_syscall_64+0x6d/0x90
+[   30.875379]  entry_SYSCALL_64_after_hwframe+0x63/0xcd
+[   30.875712] RIP: 0033:0x7f7cc14da8f3
+[...] stripped
+[   30.879875]  </TASK>
+[...] stripped
+[   30.881930] ---[ end trace 0000000000000000 ]---
+[   30.882237] RIP: 0010:get_event_field.isra.0+0x1b8/0x3f0
+[...] stripped
+[   30.887734] note: bash[223] exited with preempt_count 2
+
+That happens because enable_eprobe() will eventually trigger the
+kmem/mm_page_alloc trace event:
+
+- enable_eprobe [trace_eprobe.c]
+  - trace_event_trigger_enable_disable [trace_events_trigger.c]
+    - trace_event_enable_disable [trace_events.c]
+      - __ftrace_event_enable_disable [trace_events.c]
+        - trace_buffered_event_enable [trace.c]
+          - alloc_pages_node [gfp.h]
+	   ...
+            - __alloc_pages [page_alloc.c]
+              - trace_mm_page_alloc // eprobe event file without TRIGGER_COND bit set
+
+By the time kmem/mm_page_alloc trace event is hit, the eprobe event file
+does not have the TRIGGER_COND flag set yet, which causes the eprobe's
+trigger to be invoked (through the trace_trigger_soft_disabled() path)
+without a trace record, causing a NULL pointer dereference when fetching
+the event fields.
+
+Fix this by setting the cond flag beforehand when enabling the eprobe's
+trigger.
+
+Fixes: 7491e2c44278 ("tracing: Add a probe that attaches to trace events")
+Signed-off-by: Rafael Mendonca <rafaelmendsr@gmail.com>
 ---
- kernel/trace/trace_probe.c      |   5 +
- kernel/trace/trace_probe.h      |   6 ++
- kernel/trace/trace_probe_user.h |  13 +++
- kernel/trace/trace_uprobe.c     | 177 ++------------------------------
- 4 files changed, 31 insertions(+), 170 deletions(-)
+ kernel/trace/trace_eprobe.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/kernel/trace/trace_probe.c b/kernel/trace/trace_probe.c
-index 303f057bd2f7..56097d241290 100644
---- a/kernel/trace/trace_probe.c
-+++ b/kernel/trace/trace_probe.c
-@@ -1443,6 +1443,11 @@ process_fetch_insn(struct fetch_insn *code, void *rec, void *dest,
- 	case FETCH_OP_TP_ARG:
- 		val = get_event_field(code, rec);
- 		break;
-+#ifdef CONFIG_UPROBES
-+	case FETCH_OP_FOFFS:
-+		val = translate_user_vaddr(code->immediate);
-+		break;
-+#endif
- 	default:
- 		return -EILSEQ;
- 	}
-diff --git a/kernel/trace/trace_probe.h b/kernel/trace/trace_probe.h
-index 4f044047b748..918466087583 100644
---- a/kernel/trace/trace_probe.h
-+++ b/kernel/trace/trace_probe.h
-@@ -223,6 +223,12 @@ struct probe_arg {
- 	const struct fetch_type	*type;	/* Type of this argument */
- };
+diff --git a/kernel/trace/trace_eprobe.c b/kernel/trace/trace_eprobe.c
+index 5dd0617e5df6..5004c6f6f232 100644
+--- a/kernel/trace/trace_eprobe.c
++++ b/kernel/trace/trace_eprobe.c
+@@ -677,8 +677,8 @@ static int enable_eprobe(struct trace_eprobe *ep,
  
-+struct uprobe_dispatch_data {
-+	struct trace_uprobe	*tu;
-+	unsigned long		bp_addr;
-+	unsigned long		offset;
-+};
-+
- struct trace_uprobe_filter {
- 	rwlock_t		rwlock;
- 	int			nr_systemwide;
-diff --git a/kernel/trace/trace_probe_user.h b/kernel/trace/trace_probe_user.h
-index 2104ccb44d56..5a69b9074f3c 100644
---- a/kernel/trace/trace_probe_user.h
-+++ b/kernel/trace/trace_probe_user.h
-@@ -92,4 +92,17 @@ static unsigned long get_user_stack_nth(struct pt_regs *regs, unsigned int n)
- 	return ret;
+ 	list_add_tail_rcu(&trigger->list, &file->triggers);
+ 
+-	trace_event_trigger_enable_disable(file, 1);
+ 	update_cond_flag(file);
++	trace_event_trigger_enable_disable(file, 1);
+ 
+ 	return 0;
  }
- 
-+#ifdef CONFIG_UPROBES
-+static unsigned long translate_user_vaddr(unsigned long file_offset)
-+{
-+	unsigned long base_addr;
-+	struct uprobe_dispatch_data *udd;
-+
-+	udd = (void *) current->utask->vaddr;
-+
-+	base_addr = udd->bp_addr - udd->offset;
-+	return base_addr + file_offset;
-+}
-+#endif
-+
- #endif /* __TRACE_PROBE_USER_H_ */
-diff --git a/kernel/trace/trace_uprobe.c b/kernel/trace/trace_uprobe.c
-index fb58e86dd117..abce09295f05 100644
---- a/kernel/trace/trace_uprobe.c
-+++ b/kernel/trace/trace_uprobe.c
-@@ -20,7 +20,6 @@
- 
- #include "trace_dynevent.h"
- #include "trace_probe.h"
--#include "trace_probe_tmpl.h"
- 
- #define UPROBE_EVENT_SYSTEM	"uprobes"
- 
-@@ -88,174 +87,10 @@ static struct trace_uprobe *to_trace_uprobe(struct dyn_event *ev)
- static int register_uprobe_event(struct trace_uprobe *tu);
- static int unregister_uprobe_event(struct trace_uprobe *tu);
- 
--struct uprobe_dispatch_data {
--	struct trace_uprobe	*tu;
--	unsigned long		bp_addr;
--};
--
- static int uprobe_dispatcher(struct uprobe_consumer *con, struct pt_regs *regs);
- static int uretprobe_dispatcher(struct uprobe_consumer *con,
- 				unsigned long func, struct pt_regs *regs);
- 
--#ifdef CONFIG_STACK_GROWSUP
--static unsigned long adjust_stack_addr(unsigned long addr, unsigned int n)
--{
--	return addr - (n * sizeof(long));
--}
--#else
--static unsigned long adjust_stack_addr(unsigned long addr, unsigned int n)
--{
--	return addr + (n * sizeof(long));
--}
--#endif
--
--static unsigned long get_user_stack_nth(struct pt_regs *regs, unsigned int n)
--{
--	unsigned long ret;
--	unsigned long addr = user_stack_pointer(regs);
--
--	addr = adjust_stack_addr(addr, n);
--
--	if (copy_from_user(&ret, (void __force __user *) addr, sizeof(ret)))
--		return 0;
--
--	return ret;
--}
--
--/*
-- * Uprobes-specific fetch functions
-- */
--static nokprobe_inline int
--probe_mem_read(void *dest, void *src, size_t size)
--{
--	void __user *vaddr = (void __force __user *)src;
--
--	return copy_from_user(dest, vaddr, size) ? -EFAULT : 0;
--}
--
--static nokprobe_inline int
--probe_mem_read_user(void *dest, void *src, size_t size)
--{
--	return probe_mem_read(dest, src, size);
--}
--
--/*
-- * Fetch a null-terminated string. Caller MUST set *(u32 *)dest with max
-- * length and relative data location.
-- */
--static nokprobe_inline int
--fetch_store_string(unsigned long addr, void *dest, void *base)
--{
--	long ret;
--	u32 loc = *(u32 *)dest;
--	int maxlen  = get_loc_len(loc);
--	u8 *dst = get_loc_data(dest, base);
--	void __user *src = (void __force __user *) addr;
--
--	if (unlikely(!maxlen))
--		return -ENOMEM;
--
--	if (addr == FETCH_TOKEN_COMM)
--		ret = strlcpy(dst, current->comm, maxlen);
--	else
--		ret = strncpy_from_user(dst, src, maxlen);
--	if (ret >= 0) {
--		if (ret == maxlen)
--			dst[ret - 1] = '\0';
--		else
--			/*
--			 * Include the terminating null byte. In this case it
--			 * was copied by strncpy_from_user but not accounted
--			 * for in ret.
--			 */
--			ret++;
--		*(u32 *)dest = make_data_loc(ret, (void *)dst - base);
--	}
--
--	return ret;
--}
--
--static nokprobe_inline int
--fetch_store_string_user(unsigned long addr, void *dest, void *base)
--{
--	return fetch_store_string(addr, dest, base);
--}
--
--/* Return the length of string -- including null terminal byte */
--static nokprobe_inline int
--fetch_store_strlen(unsigned long addr)
--{
--	int len;
--	void __user *vaddr = (void __force __user *) addr;
--
--	if (addr == FETCH_TOKEN_COMM)
--		len = strlen(current->comm) + 1;
--	else
--		len = strnlen_user(vaddr, MAX_STRING_SIZE);
--
--	return (len > MAX_STRING_SIZE) ? 0 : len;
--}
--
--static nokprobe_inline int
--fetch_store_strlen_user(unsigned long addr)
--{
--	return fetch_store_strlen(addr);
--}
--
--static unsigned long translate_user_vaddr(unsigned long file_offset)
--{
--	unsigned long base_addr;
--	struct uprobe_dispatch_data *udd;
--
--	udd = (void *) current->utask->vaddr;
--
--	base_addr = udd->bp_addr - udd->tu->offset;
--	return base_addr + file_offset;
--}
--
--/* Note that we don't verify it, since the code does not come from user space */
--static int
--process_fetch_insn(struct fetch_insn *code, void *rec, void *dest,
--		   void *base)
--{
--	struct pt_regs *regs = rec;
--	unsigned long val;
--
--	/* 1st stage: get value from context */
--	switch (code->op) {
--	case FETCH_OP_REG:
--		val = regs_get_register(regs, code->param);
--		break;
--	case FETCH_OP_STACK:
--		val = get_user_stack_nth(regs, code->param);
--		break;
--	case FETCH_OP_STACKP:
--		val = user_stack_pointer(regs);
--		break;
--	case FETCH_OP_RETVAL:
--		val = regs_return_value(regs);
--		break;
--	case FETCH_OP_IMM:
--		val = code->immediate;
--		break;
--	case FETCH_OP_COMM:
--		val = FETCH_TOKEN_COMM;
--		break;
--	case FETCH_OP_DATA:
--		val = (unsigned long)code->data;
--		break;
--	case FETCH_OP_FOFFS:
--		val = translate_user_vaddr(code->immediate);
--		break;
--	default:
--		return -EILSEQ;
--	}
--	code++;
--
--	return process_fetch_insn_bottom(code, val, dest, base);
--}
--NOKPROBE_SYMBOL(process_fetch_insn)
--
- static inline void init_trace_uprobe_filter(struct trace_uprobe_filter *filter)
- {
- 	rwlock_init(&filter->rwlock);
-@@ -1041,7 +876,7 @@ print_uprobe_event(struct trace_iterator *iter, int flags, struct trace_event *e
- 		data = DATAOF_TRACE_ENTRY(entry, false);
- 	}
- 
--	if (print_probe_args(s, tu->tp.args, tu->tp.nr_args, data, entry) < 0)
-+	if (trace_probe_print_args(s, tu->tp.args, tu->tp.nr_args, data, entry) < 0)
- 		goto out;
- 
- 	trace_seq_putc(s, '\n');
-@@ -1485,6 +1320,7 @@ static int uprobe_dispatcher(struct uprobe_consumer *con, struct pt_regs *regs)
- 	tu->nhit++;
- 
- 	udd.tu = tu;
-+	udd.offset = tu->offset;
- 	udd.bp_addr = instruction_pointer(regs);
- 
- 	current->utask->vaddr = (unsigned long) &udd;
-@@ -1492,11 +1328,11 @@ static int uprobe_dispatcher(struct uprobe_consumer *con, struct pt_regs *regs)
- 	if (WARN_ON_ONCE(!uprobe_cpu_buffer))
- 		return 0;
- 
--	dsize = __get_data_size(&tu->tp, regs);
-+	dsize = trace_probe_get_data_size(&tu->tp, regs);
- 	esize = SIZEOF_TRACE_ENTRY(is_ret_probe(tu));
- 
- 	ucb = uprobe_buffer_get();
--	store_trace_args(ucb->buf, &tu->tp, regs, esize, dsize);
-+	trace_probe_store_args(ucb->buf, &tu->tp, regs, esize, dsize);
- 
- 	if (trace_probe_test_flag(&tu->tp, TP_FLAG_TRACE))
- 		ret |= uprobe_trace_func(tu, regs, ucb, dsize);
-@@ -1520,6 +1356,7 @@ static int uretprobe_dispatcher(struct uprobe_consumer *con,
- 	tu = container_of(con, struct trace_uprobe, consumer);
- 
- 	udd.tu = tu;
-+	udd.offset = tu->offset;
- 	udd.bp_addr = func;
- 
- 	current->utask->vaddr = (unsigned long) &udd;
-@@ -1527,11 +1364,11 @@ static int uretprobe_dispatcher(struct uprobe_consumer *con,
- 	if (WARN_ON_ONCE(!uprobe_cpu_buffer))
- 		return 0;
- 
--	dsize = __get_data_size(&tu->tp, regs);
-+	dsize = trace_probe_get_data_size(&tu->tp, regs);
- 	esize = SIZEOF_TRACE_ENTRY(is_ret_probe(tu));
- 
- 	ucb = uprobe_buffer_get();
--	store_trace_args(ucb->buf, &tu->tp, regs, esize, dsize);
-+	trace_probe_store_args(ucb->buf, &tu->tp, regs, esize, dsize);
- 
- 	if (trace_probe_test_flag(&tu->tp, TP_FLAG_TRACE))
- 		uretprobe_trace_func(tu, func, regs, ucb, dsize);
--- 
-2.25.1
 
