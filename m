@@ -2,55 +2,55 @@ Return-Path: <linux-trace-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E31E2C4332F
-	for <linux-trace-kernel@archiver.kernel.org>; Fri, 18 Nov 2022 12:38:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 32303C4332F
+	for <linux-trace-kernel@archiver.kernel.org>; Fri, 18 Nov 2022 12:40:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235188AbiKRMiZ (ORCPT
+        id S241650AbiKRMkQ (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Fri, 18 Nov 2022 07:38:25 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49984 "EHLO
+        Fri, 18 Nov 2022 07:40:16 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51732 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234711AbiKRMiY (ORCPT
+        with ESMTP id S234711AbiKRMkP (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Fri, 18 Nov 2022 07:38:24 -0500
-Received: from mail-oi1-x236.google.com (mail-oi1-x236.google.com [IPv6:2607:f8b0:4864:20::236])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1DDF1109A;
-        Fri, 18 Nov 2022 04:38:23 -0800 (PST)
-Received: by mail-oi1-x236.google.com with SMTP id q186so5171687oia.9;
-        Fri, 18 Nov 2022 04:38:23 -0800 (PST)
+        Fri, 18 Nov 2022 07:40:15 -0500
+Received: from mail-oa1-x34.google.com (mail-oa1-x34.google.com [IPv6:2001:4860:4864:20::34])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 458921571C;
+        Fri, 18 Nov 2022 04:40:14 -0800 (PST)
+Received: by mail-oa1-x34.google.com with SMTP id 586e51a60fabf-141ca09c2fbso5776127fac.6;
+        Fri, 18 Nov 2022 04:40:14 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=AnPNdGmx2+WfKEq5rCq9Je3jd3hTo4v6cL93WbUNslU=;
-        b=JawN7GOEUsICERcjgDs1t77di68kPIYA39tnTmek1x4qUCIFO4O3HrQ9uIU0gn/gAh
-         7hcLX4wxMyIGGXHMr3ayoD/tSIwxKvHsREd8oaEdFucJLl3E/aS7hG0NYEWml2z+zVS9
-         UjZQT2r3qsYTAsLq9wB1ycDW7+6XSomwY8D6gqtBxvUqNX1IKOtn77sW9ihDN11+7+kc
-         dm1D6CZxyHZTNmmO+8noBdwKFNeyVgZj/t1UCViHLvmU3B0BEAmlWGT0o/xrD1BaWmFQ
-         zKxx3td+AZzLZL4rGZwybEpSLLde6N1fnZNFuCYKh8qBBNP9Vh0LJ7fZ21N7F7U52Tfs
-         03KA==
+        bh=4aGgvpVBQS1++uw6n+xGXGUa91sdtxecLOzxy60SSl4=;
+        b=YVIha6qiPXqHoyKYb6aEZ9+3VlVDLVIXgsBP+1sLipzZrqa+O9JyNaY5BErBh4ibrh
+         /kY/XRoIRfHtRjEHBCpx+xhAK6UODZsMLjlgW/FOtDQ/2tQl2Hz8+R018mr6iSZkg5pZ
+         BauDuciY8iuNmjWKvAZfqACN1ck0kVOwjdJniACy+BQBJ0Go6/CtFAEwYyaiMTESW0RP
+         uPCTQ3IjMTPvHHU/TWyDuM+1ng8A+VTzLt3yv0GB0TBYid43io/vZDJ5AmjLSPbVOCa9
+         D83aDggeMYY4rVfRsIaAkQA8SYQFv+xMFQZlE367UFD63BldB9lz/PbSbnQRUiAKguWK
+         QF+g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=AnPNdGmx2+WfKEq5rCq9Je3jd3hTo4v6cL93WbUNslU=;
-        b=5t/4xYtr4dvpQ3USh5wH1O9bQxY/iaLOe6iEeMFh9VkLgG/vVvpm4MBFcxnXpWJM2y
-         I3ctX0xW9GyjoDjG1NEjyRwn8rtPRQVkIKn5+0limiEclqy4bhR0VQzBFAsfvy5XUBwj
-         CjQWVKOTR/wx09MPU+n0icrFEJXgOvB9uj3tLL1U+IAAhvk/OKyOYTaxujA8sZpdvzO7
-         QW8Lq8tcZyAQcR48mSpGZAxHiARNrbxTUX5WK5EnZ353qkIPjpP3nS8Jbn2tDEHn2jHh
-         gZYvjohJc3LF07KrGP8HBHy+LsgZUs6apVn/UjCK5DOCbXGXFNWPDuD+IMGX1o60LiyU
-         kzkw==
-X-Gm-Message-State: ANoB5pnfAksYrU2wYs9D+4tqiCYSA1HxqX7QcNZD5M4tlj6gPjpwdFxc
-        LqFrMCRvYhZ0UwTOnL0IxZXQQL6aqmWyvQ==
-X-Google-Smtp-Source: AA0mqf76AV630ZgdFbLGJijwxnwErGYrd0oiqRIR42NnOlWixexRkd+Mtx/vsdqa8kimPTMWC/8i8Q==
-X-Received: by 2002:a05:6808:81:b0:354:b67e:611d with SMTP id s1-20020a056808008100b00354b67e611dmr5951512oic.210.1668775102303;
-        Fri, 18 Nov 2022 04:38:22 -0800 (PST)
+        bh=4aGgvpVBQS1++uw6n+xGXGUa91sdtxecLOzxy60SSl4=;
+        b=RF/+ypm8Xw2XumdUAE5vXyfF/A1pTInmaomx4kj/Swgr0Ou5bJCkp4FvZJwZm3rSo7
+         HXR68zHRVg5MoiWi/iOj+XDO+blhj3OV3NL252QREtdQV8HZrYUImB9HOQWrTbksiddI
+         v9DKUdPk1SEADRxznAQXHpd3EUADrUa7AOJ6S6OlFLm30dddc7zcOwZrQrq6BEZa9oaJ
+         c6rdwAW7Ep1E/9EayZTMp6euQ9ROsj8R4RwVi5XEJDJ/ShhCM7snUmagb4JZTIlOD8oa
+         Dn8Gw07bFp0u6uAtBTzfTBp8A9Ko7/psQDqIuTLOipWzZnQL03LM+j+kyVxz22mL+c5j
+         aWdQ==
+X-Gm-Message-State: ANoB5pk3l5Z2i/T8Ppr12Js6+5VBtkNuQe2KnVz9TYKtYv7y62JZRRQC
+        jLPd9WJuC+b+eKB3sTh1VZc=
+X-Google-Smtp-Source: AA0mqf5hgu+Iy/4uUl7v7HjAQEc4bZtOxSOqIwOyh6+QgRAeyqIHMYoVf/u94aqS+bqihFxTUWNwSQ==
+X-Received: by 2002:a05:6870:2481:b0:13c:c5bd:c33e with SMTP id s1-20020a056870248100b0013cc5bdc33emr3709409oaq.244.1668775213420;
+        Fri, 18 Nov 2022 04:40:13 -0800 (PST)
 Received: from macondo ([2804:431:e7cc:5fdd:4170:7dca:de7e:f578])
-        by smtp.gmail.com with ESMTPSA id s25-20020a056830125900b00660d9afc216sm1502730otp.17.2022.11.18.04.38.20
+        by smtp.gmail.com with ESMTPSA id em22-20020a0568705b9600b00136a0143de8sm1882995oab.40.2022.11.18.04.40.11
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 18 Nov 2022 04:38:21 -0800 (PST)
-Date:   Fri, 18 Nov 2022 09:38:18 -0300
+        Fri, 18 Nov 2022 04:40:13 -0800 (PST)
+Date:   Fri, 18 Nov 2022 09:40:09 -0300
 From:   Rafael Mendonca <rafaelmendsr@gmail.com>
 To:     Steven Rostedt <rostedt@goodmis.org>
 Cc:     Masami Hiramatsu <mhiramat@kernel.org>,
@@ -58,78 +58,104 @@ Cc:     Masami Hiramatsu <mhiramat@kernel.org>,
         linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
         Tom Zanussi <zanussi@kernel.org>
 Subject: Re: [PATCH] tracing/eprobe: Update cond flag before enabling trigger
-Message-ID: <Y3d8uhHrvSYbFzUx@macondo>
+Message-ID: <Y3d9KcpcwrEUUYKT@macondo>
 References: <20221116192552.1066630-1-rafaelmendsr@gmail.com>
  <20221117211726.4bbbb96a@gandalf.local.home>
+ <20221117213109.6119750e@gandalf.local.home>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20221117211726.4bbbb96a@gandalf.local.home>
+In-Reply-To: <20221117213109.6119750e@gandalf.local.home>
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On Thu, Nov 17, 2022 at 09:17:26PM -0500, Steven Rostedt wrote:
-> On Wed, 16 Nov 2022 16:25:51 -0300
-> Rafael Mendonca <rafaelmendsr@gmail.com> wrote:
+On Thu, Nov 17, 2022 at 09:31:09PM -0500, Steven Rostedt wrote:
+> On Thu, 17 Nov 2022 21:17:26 -0500
+> Steven Rostedt <rostedt@goodmis.org> wrote:
 > 
-> > That happens because enable_eprobe() will eventually trigger the
-> > kmem/mm_page_alloc trace event:
+> > On Wed, 16 Nov 2022 16:25:51 -0300
+> > Rafael Mendonca <rafaelmendsr@gmail.com> wrote:
 > > 
-> > - enable_eprobe [trace_eprobe.c]
-> >   - trace_event_trigger_enable_disable [trace_events_trigger.c]
-> >     - trace_event_enable_disable [trace_events.c]
-> >       - __ftrace_event_enable_disable [trace_events.c]
-> >         - trace_buffered_event_enable [trace.c]
-> >           - alloc_pages_node [gfp.h]
-> > 	   ...
-> >             - __alloc_pages [page_alloc.c]
-> >               - trace_mm_page_alloc // eprobe event file without TRIGGER_COND bit set
+> > > That happens because enable_eprobe() will eventually trigger the
+> > > kmem/mm_page_alloc trace event:
+> > > 
+> > > - enable_eprobe [trace_eprobe.c]
+> > >   - trace_event_trigger_enable_disable [trace_events_trigger.c]
+> > >     - trace_event_enable_disable [trace_events.c]
+> > >       - __ftrace_event_enable_disable [trace_events.c]
+> > >         - trace_buffered_event_enable [trace.c]
+> > >           - alloc_pages_node [gfp.h]
+> > > 	   ...
+> > >             - __alloc_pages [page_alloc.c]
+> > >               - trace_mm_page_alloc // eprobe event file without TRIGGER_COND bit set
+> > > 
+> > > By the time kmem/mm_page_alloc trace event is hit, the eprobe event file
+> > > does not have the TRIGGER_COND flag set yet, which causes the eprobe's
+> > > trigger to be invoked (through the trace_trigger_soft_disabled() path)
+> > > without a trace record, causing a NULL pointer dereference when fetching
+> > > the event fields.
+> > > 
+> > > Fix this by setting the cond flag beforehand when enabling the eprobe's
+> > > trigger.
+> > > 
+> > > Fixes: 7491e2c44278 ("tracing: Add a probe that attaches to trace events")
+> > > Signed-off-by: Rafael Mendonca <rafaelmendsr@gmail.com>
+> > > ---  
 > > 
-> > By the time kmem/mm_page_alloc trace event is hit, the eprobe event file
-> > does not have the TRIGGER_COND flag set yet, which causes the eprobe's
-> > trigger to be invoked (through the trace_trigger_soft_disabled() path)
-> > without a trace record, causing a NULL pointer dereference when fetching
-> > the event fields.
+> > Thanks for the report, but I'm worried that this isn't enough because of
+> > how memory ordering can happen on different architectures. That is, just
+> > because you switch the order of updates, doesn't mean that the architecture
+> > will honor it.
 > > 
-> > Fix this by setting the cond flag beforehand when enabling the eprobe's
-> > trigger.
+> > I don't want to add memory barriers in the fast path, but instead we can
+> > simply check if rec is NULL in the handler.
 > > 
-> > Fixes: 7491e2c44278 ("tracing: Add a probe that attaches to trace events")
-> > Signed-off-by: Rafael Mendonca <rafaelmendsr@gmail.com>
-> > ---
+> > So basically:
+> > 
+> > 
+> > static void eprobe_trigger_func(struct event_trigger_data *data,
+> > 				struct trace_buffer *buffer, void *rec,
+> > 				struct ring_buffer_event *rbe)
+> > {
+> > 	struct eprobe_data *edata = data->private_data;
+> > 
+> > 	if (!rec)
+> > 		return;
+> > 
+> > 	__eprobe_trace_func(edata, rec);
+> > }
+> > 
+> > And this should be documented.
+> > 
 > 
-> Thanks for the report, but I'm worried that this isn't enough because of
-> how memory ordering can happen on different architectures. That is, just
-> because you switch the order of updates, doesn't mean that the architecture
-> will honor it.
-> 
-> I don't want to add memory barriers in the fast path, but instead we can
-> simply check if rec is NULL in the handler.
+> In fact, does this fix it for you?
 
-Ok. That was my first approach but then looking for the same pattern in
-trace_events_trigger.c and trace_events_hist.c I saw commit 4e4a4d75700d
-("tracing: Update cond flag when enabling or disabling a trigger") [1]
-and I thought the same would apply here without much thought.
-
-[1] https://lore.kernel.org/lkml/20151126022048.111221642@goodmis.org/
+It does. I found this while enabling eprobe for all events in my setup.
+Doing the same test wih the proposed patch it did not trigger any issue.
+Thanks.
 
 > 
-> So basically:
+> I'm going to take this patch and reference you as a reported-by, as I have
+> a lot of urgent code that needs to got upstream, and I need to start
+> testing it.
 > 
-> 
-> static void eprobe_trigger_func(struct event_trigger_data *data,
-> 				struct trace_buffer *buffer, void *rec,
-> 				struct ring_buffer_event *rbe)
-> {
-> 	struct eprobe_data *edata = data->private_data;
-> 
-> 	if (!rec)
-> 		return;
-> 
-> 	__eprobe_trace_func(edata, rec);
-> }
-> 
-> And this should be documented.
+> Thanks!
 > 
 > -- Steve
+> 
+> diff --git a/kernel/trace/trace_eprobe.c b/kernel/trace/trace_eprobe.c
+> index 5dd0617e5df6..6b31b74954d9 100644
+> --- a/kernel/trace/trace_eprobe.c
+> +++ b/kernel/trace/trace_eprobe.c
+> @@ -563,6 +563,9 @@ static void eprobe_trigger_func(struct event_trigger_data *data,
+>  {
+>  	struct eprobe_data *edata = data->private_data;
+>  
+> +	if (!rec)
+> +		return;
+> +
+>  	__eprobe_trace_func(edata, rec);
+>  }
+>  
+> 
