@@ -2,40 +2,38 @@ Return-Path: <linux-trace-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CFF60C4332F
-	for <linux-trace-kernel@archiver.kernel.org>; Fri, 18 Nov 2022 02:31:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C7B7EC4332F
+	for <linux-trace-kernel@archiver.kernel.org>; Fri, 18 Nov 2022 02:42:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240571AbiKRCbQ (ORCPT
+        id S229451AbiKRCm4 (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Thu, 17 Nov 2022 21:31:16 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51282 "EHLO
+        Thu, 17 Nov 2022 21:42:56 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54982 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S240831AbiKRCbP (ORCPT
+        with ESMTP id S232050AbiKRCmz (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Thu, 17 Nov 2022 21:31:15 -0500
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 829AD59849;
-        Thu, 17 Nov 2022 18:31:14 -0800 (PST)
+        Thu, 17 Nov 2022 21:42:55 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CC69E8DA4C;
+        Thu, 17 Nov 2022 18:42:54 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id F0D39B82246;
-        Fri, 18 Nov 2022 02:31:12 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EC240C433D6;
-        Fri, 18 Nov 2022 02:31:10 +0000 (UTC)
-Date:   Thu, 17 Nov 2022 21:31:09 -0500
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 67DAB6229D;
+        Fri, 18 Nov 2022 02:42:54 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 51B23C433D6;
+        Fri, 18 Nov 2022 02:42:52 +0000 (UTC)
+Date:   Thu, 17 Nov 2022 21:42:49 -0500
 From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Rafael Mendonca <rafaelmendsr@gmail.com>
+To:     LKML <linux-kernel@vger.kernel.org>,
+        Linux Trace Kernel <linux-trace-kernel@vger.kernel.org>
 Cc:     Masami Hiramatsu <mhiramat@kernel.org>,
-        "Tzvetomir Stoyanov (VMware)" <tz.stoyanov@gmail.com>,
-        linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+        Rafael Mendonca <rafaelmendsr@gmail.com>,
+        Tzvetomir Stoyanov <tz.stoyanov@gmail.com>,
         Tom Zanussi <zanussi@kernel.org>
-Subject: Re: [PATCH] tracing/eprobe: Update cond flag before enabling
- trigger
-Message-ID: <20221117213109.6119750e@gandalf.local.home>
-In-Reply-To: <20221117211726.4bbbb96a@gandalf.local.home>
-References: <20221116192552.1066630-1-rafaelmendsr@gmail.com>
-        <20221117211726.4bbbb96a@gandalf.local.home>
+Subject: [PATCH] tracing: Fix race where eprobes can be called before the
+ event
+Message-ID: <20221117214249.2addbe10@gandalf.local.home>
 X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
@@ -44,73 +42,25 @@ Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On Thu, 17 Nov 2022 21:17:26 -0500
-Steven Rostedt <rostedt@goodmis.org> wrote:
+From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
 
-> On Wed, 16 Nov 2022 16:25:51 -0300
-> Rafael Mendonca <rafaelmendsr@gmail.com> wrote:
-> 
-> > That happens because enable_eprobe() will eventually trigger the
-> > kmem/mm_page_alloc trace event:
-> > 
-> > - enable_eprobe [trace_eprobe.c]
-> >   - trace_event_trigger_enable_disable [trace_events_trigger.c]
-> >     - trace_event_enable_disable [trace_events.c]
-> >       - __ftrace_event_enable_disable [trace_events.c]
-> >         - trace_buffered_event_enable [trace.c]
-> >           - alloc_pages_node [gfp.h]
-> > 	   ...
-> >             - __alloc_pages [page_alloc.c]
-> >               - trace_mm_page_alloc // eprobe event file without TRIGGER_COND bit set
-> > 
-> > By the time kmem/mm_page_alloc trace event is hit, the eprobe event file
-> > does not have the TRIGGER_COND flag set yet, which causes the eprobe's
-> > trigger to be invoked (through the trace_trigger_soft_disabled() path)
-> > without a trace record, causing a NULL pointer dereference when fetching
-> > the event fields.
-> > 
-> > Fix this by setting the cond flag beforehand when enabling the eprobe's
-> > trigger.
-> > 
-> > Fixes: 7491e2c44278 ("tracing: Add a probe that attaches to trace events")
-> > Signed-off-by: Rafael Mendonca <rafaelmendsr@gmail.com>
-> > ---  
-> 
-> Thanks for the report, but I'm worried that this isn't enough because of
-> how memory ordering can happen on different architectures. That is, just
-> because you switch the order of updates, doesn't mean that the architecture
-> will honor it.
-> 
-> I don't want to add memory barriers in the fast path, but instead we can
-> simply check if rec is NULL in the handler.
-> 
-> So basically:
-> 
-> 
-> static void eprobe_trigger_func(struct event_trigger_data *data,
-> 				struct trace_buffer *buffer, void *rec,
-> 				struct ring_buffer_event *rbe)
-> {
-> 	struct eprobe_data *edata = data->private_data;
-> 
-> 	if (!rec)
-> 		return;
-> 
-> 	__eprobe_trace_func(edata, rec);
-> }
-> 
-> And this should be documented.
-> 
+The flag that tells the event to call its triggers after reading the event
+is set for eprobes after the eprobe is enabled. This leads to a race where
+the eprobe may be triggered at the beginning of the event where the record
+information is NULL. The eprobe then dereferences the NULL record causing
+a NULL kernel pointer bug.
 
-In fact, does this fix it for you?
+Test for a NULL record to keep this from happening.
 
-I'm going to take this patch and reference you as a reported-by, as I have
-a lot of urgent code that needs to got upstream, and I need to start
-testing it.
+Link: https://lore.kernel.org/linux-trace-kernel/20221116192552.1066630-1-rafaelmendsr@gmail.com/
 
-Thanks!
-
--- Steve
+Cc: stable@vger.kernel.org
+Fixes: 7491e2c442781 ("tracing: Add a probe that attaches to trace events")
+Reported-by: Rafael Mendonca <rafaelmendsr@gmail.com>
+Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+---
+ kernel/trace/trace_eprobe.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
 diff --git a/kernel/trace/trace_eprobe.c b/kernel/trace/trace_eprobe.c
 index 5dd0617e5df6..6b31b74954d9 100644
@@ -120,10 +70,12 @@ index 5dd0617e5df6..6b31b74954d9 100644
  {
  	struct eprobe_data *edata = data->private_data;
  
-+	if (!rec)
++	if (unlikely(!rec))
 +		return;
 +
  	__eprobe_trace_func(edata, rec);
  }
  
+-- 
+2.35.1
 
