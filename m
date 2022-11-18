@@ -2,174 +2,122 @@ Return-Path: <linux-trace-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DF493C4332F
-	for <linux-trace-kernel@archiver.kernel.org>; Fri, 18 Nov 2022 13:36:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F0D2AC4332F
+	for <linux-trace-kernel@archiver.kernel.org>; Fri, 18 Nov 2022 16:19:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S242234AbiKRNgr (ORCPT
+        id S235245AbiKRQTr (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Fri, 18 Nov 2022 08:36:47 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52858 "EHLO
+        Fri, 18 Nov 2022 11:19:47 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42572 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S242036AbiKRNgW (ORCPT
+        with ESMTP id S235084AbiKRQTp (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Fri, 18 Nov 2022 08:36:22 -0500
-Received: from mail-oo1-xc2f.google.com (mail-oo1-xc2f.google.com [IPv6:2607:f8b0:4864:20::c2f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D6C8696705;
-        Fri, 18 Nov 2022 05:34:45 -0800 (PST)
-Received: by mail-oo1-xc2f.google.com with SMTP id t15-20020a4a96cf000000b0049f7e18db0dso771736ooi.10;
-        Fri, 18 Nov 2022 05:34:45 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=CeypTGsSQ7hIMjMqb97acJUIT2o1NQ3MZu5l62YdM1U=;
-        b=GEHvLShAbIGmNaho6pyZ66GONWFROU14cnZomsWqLHcRDc1dbiHUynvkq6gM7tOPyb
-         NLtqglztFcPlZjGgUmIUxJ7rpcRYZotezE6E9B9n55PEMgDiMuLCbrBRprMyaVY2dfm4
-         AqcwbS9XbMqFw6QJDd0TnsMYUTFzMAVb3mNXA2G1ub9IfaCweCQ6atEiNmIo4ERlPRZW
-         Fo7X14u/99YWOwLoe0ZHkKPkJRhSe++WcmNCabvTyCB9Qz9AP4KEWtJOv762SX+6ufj2
-         6sER7Q4BtpwVEK51dSWUzbsuauxUmpPXxrnFGV2TLCmJ8mla2wsHXGRVAwYsJrIw6DL1
-         3wtQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=CeypTGsSQ7hIMjMqb97acJUIT2o1NQ3MZu5l62YdM1U=;
-        b=Vfwdz4fNaYL2cB2DO2Vbrn0snJytLHEJ6tmhrmvsL5K3i3NAIc9fiHk74242XTAWDp
-         BS+RrNLKciq2NlQM+51/g8q9IxPQVZsPLQ7iTMAw6uyKGBf0pcBnwJ3vjKGm/UEOaWU9
-         hJ2/Zw5T0jImqBfTpnykDL0hb2DmYu+ZT4DEV6xwXur0BG8Wt4r+2/tCNk2hEKzTFmVU
-         QOEE4/8BWAAEiLZ1z+GuqVjAhC2C89cOulODQa1rB1MO6l98B89fhKI7hrSmwe8Hn1er
-         fyQhmI8lEu03RrHBGCj0Q7kcwhyztZZEgoyet/oDZCrdzvBZb1b1uB+5/oqxcVYhdPgf
-         x0ZA==
-X-Gm-Message-State: ANoB5pnRnZ96N3Jh9YEYnJS1xpk1oW/7H7BvmRCaAuLx4t0sJl9o8fic
-        p3gHEd/rvxfLIq97Anovk/w=
-X-Google-Smtp-Source: AA0mqf6u6i/ixsmnk9uwXCGftLyUyxwBDWMAEKynfbXohFqLUX/wo+EiZ/dV82uGOn1RrcsTVQljPA==
-X-Received: by 2002:a4a:d404:0:b0:49f:69ab:4afd with SMTP id n4-20020a4ad404000000b0049f69ab4afdmr3483297oos.19.1668778485003;
-        Fri, 18 Nov 2022 05:34:45 -0800 (PST)
-Received: from macondo ([2804:431:e7cc:5fdd:4170:7dca:de7e:f578])
-        by smtp.gmail.com with ESMTPSA id 187-20020aca06c4000000b0035485b54caesm427421oig.28.2022.11.18.05.34.43
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 18 Nov 2022 05:34:44 -0800 (PST)
-Date:   Fri, 18 Nov 2022 10:34:40 -0300
-From:   Rafael Mendonca <rafaelmendsr@gmail.com>
-To:     Steven Rostedt <rostedt@goodmis.org>
+        Fri, 18 Nov 2022 11:19:45 -0500
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E6F766B3AF;
+        Fri, 18 Nov 2022 08:19:44 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id AC555B8243D;
+        Fri, 18 Nov 2022 16:19:43 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A7428C433C1;
+        Fri, 18 Nov 2022 16:19:41 +0000 (UTC)
+Date:   Fri, 18 Nov 2022 11:19:40 -0500
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     Rafael Mendonca <rafaelmendsr@gmail.com>
 Cc:     Masami Hiramatsu <mhiramat@kernel.org>,
         "Tzvetomir Stoyanov (VMware)" <tz.stoyanov@gmail.com>,
         linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
         Tom Zanussi <zanussi@kernel.org>
-Subject: Re: [PATCH] tracing/eprobe: Update cond flag before enabling trigger
-Message-ID: <Y3eJ8GiGnEvVd8/N@macondo>
+Subject: Re: [PATCH] tracing/eprobe: Update cond flag before enabling
+ trigger
+Message-ID: <20221118111940.1268da2b@gandalf.local.home>
+In-Reply-To: <Y3eJ8GiGnEvVd8/N@macondo>
 References: <20221116192552.1066630-1-rafaelmendsr@gmail.com>
- <20221117211726.4bbbb96a@gandalf.local.home>
- <20221117213109.6119750e@gandalf.local.home>
- <Y3d9KcpcwrEUUYKT@macondo>
+        <20221117211726.4bbbb96a@gandalf.local.home>
+        <20221117213109.6119750e@gandalf.local.home>
+        <Y3d9KcpcwrEUUYKT@macondo>
+        <Y3eJ8GiGnEvVd8/N@macondo>
+X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Y3d9KcpcwrEUUYKT@macondo>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On Fri, Nov 18, 2022 at 09:40:09AM -0300, Rafael Mendonca wrote:
-> On Thu, Nov 17, 2022 at 09:31:09PM -0500, Steven Rostedt wrote:
-> > On Thu, 17 Nov 2022 21:17:26 -0500
-> > Steven Rostedt <rostedt@goodmis.org> wrote:
-> > 
-> > > On Wed, 16 Nov 2022 16:25:51 -0300
-> > > Rafael Mendonca <rafaelmendsr@gmail.com> wrote:
-> > > 
-> > > > That happens because enable_eprobe() will eventually trigger the
-> > > > kmem/mm_page_alloc trace event:
-> > > > 
-> > > > - enable_eprobe [trace_eprobe.c]
-> > > >   - trace_event_trigger_enable_disable [trace_events_trigger.c]
-> > > >     - trace_event_enable_disable [trace_events.c]
-> > > >       - __ftrace_event_enable_disable [trace_events.c]
-> > > >         - trace_buffered_event_enable [trace.c]
-> > > >           - alloc_pages_node [gfp.h]
-> > > > 	   ...
-> > > >             - __alloc_pages [page_alloc.c]
-> > > >               - trace_mm_page_alloc // eprobe event file without TRIGGER_COND bit set
-> > > > 
-> > > > By the time kmem/mm_page_alloc trace event is hit, the eprobe event file
-> > > > does not have the TRIGGER_COND flag set yet, which causes the eprobe's
-> > > > trigger to be invoked (through the trace_trigger_soft_disabled() path)
-> > > > without a trace record, causing a NULL pointer dereference when fetching
-> > > > the event fields.
-> > > > 
-> > > > Fix this by setting the cond flag beforehand when enabling the eprobe's
-> > > > trigger.
-> > > > 
-> > > > Fixes: 7491e2c44278 ("tracing: Add a probe that attaches to trace events")
-> > > > Signed-off-by: Rafael Mendonca <rafaelmendsr@gmail.com>
-> > > > ---  
-> > > 
-> > > Thanks for the report, but I'm worried that this isn't enough because of
-> > > how memory ordering can happen on different architectures. That is, just
-> > > because you switch the order of updates, doesn't mean that the architecture
-> > > will honor it.
-> > > 
-> > > I don't want to add memory barriers in the fast path, but instead we can
-> > > simply check if rec is NULL in the handler.
-> > > 
-> > > So basically:
-> > > 
-> > > 
-> > > static void eprobe_trigger_func(struct event_trigger_data *data,
-> > > 				struct trace_buffer *buffer, void *rec,
-> > > 				struct ring_buffer_event *rbe)
-> > > {
-> > > 	struct eprobe_data *edata = data->private_data;
-> > > 
-> > > 	if (!rec)
-> > > 		return;
-> > > 
-> > > 	__eprobe_trace_func(edata, rec);
-> > > }
-> > > 
-> > > And this should be documented.
-> > > 
-> > 
-> > In fact, does this fix it for you?
+On Fri, 18 Nov 2022 10:34:40 -0300
+Rafael Mendonca <rafaelmendsr@gmail.com> wrote:
+
+> It did not trigger the NULL pointer issue to be more specific. When
+> creating event probe for all events I was unable to create any event for
+> the xhci-hcd system:
 > 
-> It does. I found this while enabling eprobe for all events in my setup.
-> Doing the same test wih the proposed patch it did not trigger any issue.
-> Thanks.
-
-It did not trigger the NULL pointer issue to be more specific. When
-creating event probe for all events I was unable to create any event for
-the xhci-hcd system:
-
-root@localhost:/sys/kernel/tracing# echo 'e xhci-hcd/xhci_add_endpoint' > dynamic_events 
--bash: echo: write error: Invalid argument
-
-Debugging the issue it seems that the problem is in the is_good_name()
-check, which returns false for "xhci-hcd". Should we sanitize it by
-converting '-' into '_'?
-
+> root@localhost:/sys/kernel/tracing# echo 'e xhci-hcd/xhci_add_endpoint' > dynamic_events 
+> -bash: echo: write error: Invalid argument
 > 
-> > 
-> > I'm going to take this patch and reference you as a reported-by, as I have
-> > a lot of urgent code that needs to got upstream, and I need to start
-> > testing it.
-> > 
-> > Thanks!
-> > 
-> > -- Steve
-> > 
-> > diff --git a/kernel/trace/trace_eprobe.c b/kernel/trace/trace_eprobe.c
-> > index 5dd0617e5df6..6b31b74954d9 100644
-> > --- a/kernel/trace/trace_eprobe.c
-> > +++ b/kernel/trace/trace_eprobe.c
-> > @@ -563,6 +563,9 @@ static void eprobe_trigger_func(struct event_trigger_data *data,
-> >  {
-> >  	struct eprobe_data *edata = data->private_data;
-> >  
-> > +	if (!rec)
-> > +		return;
-> > +
-> >  	__eprobe_trace_func(edata, rec);
-> >  }
-> >  
-> > 
+> Debugging the issue it seems that the problem is in the is_good_name()
+> check, which returns false for "xhci-hcd". Should we sanitize it by
+
+Ouch. I didn't realize that.
+
+> converting '-' into '_'?
+
+Actually, it's just the system name that's an issue. I tested this patch
+and it appears to work.
+
+-- Steve
+
+
+diff --git a/kernel/trace/trace.h b/kernel/trace/trace.h
+index 54ee5711c729..a16fb4c9642e 100644
+--- a/kernel/trace/trace.h
++++ b/kernel/trace/trace.h
+@@ -1955,17 +1955,30 @@ static __always_inline void trace_iterator_reset(struct trace_iterator *iter)
+ }
+ 
+ /* Check the name is good for event/group/fields */
+-static inline bool is_good_name(const char *name)
++static inline bool __is_good_name(const char *name, bool hash_ok)
+ {
+-	if (!isalpha(*name) && *name != '_')
++	if (!isalpha(*name) && *name != '_' && (!hash_ok || *name != '-'))
+ 		return false;
+ 	while (*++name != '\0') {
+-		if (!isalpha(*name) && !isdigit(*name) && *name != '_')
++		if (!isalpha(*name) && !isdigit(*name) && *name != '_' &&
++		    (!hash_ok || *name != '-'))
+ 			return false;
+ 	}
+ 	return true;
+ }
+ 
++/* Check the name is good for event/group/fields */
++static inline bool is_good_name(const char *name)
++{
++	return __is_good_name(name, false);
++}
++
++/* Check the name is good for system */
++static inline bool is_good_system_name(const char *name)
++{
++	return __is_good_name(name, true);
++}
++
+ /* Convert certain expected symbols into '_' when generating event names */
+ static inline void sanitize_event_name(char *name)
+ {
+diff --git a/kernel/trace/trace_probe.c b/kernel/trace/trace_probe.c
+index 36dff277de46..bb2f95d7175c 100644
+--- a/kernel/trace/trace_probe.c
++++ b/kernel/trace/trace_probe.c
+@@ -246,7 +246,7 @@ int traceprobe_parse_event_name(const char **pevent, const char **pgroup,
+ 			return -EINVAL;
+ 		}
+ 		strlcpy(buf, event, slash - event + 1);
+-		if (!is_good_name(buf)) {
++		if (!is_good_system_name(buf)) {
+ 			trace_probe_log_err(offset, BAD_GROUP_NAME);
+ 			return -EINVAL;
+ 		}
