@@ -2,122 +2,90 @@ Return-Path: <linux-trace-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F0D2AC4332F
-	for <linux-trace-kernel@archiver.kernel.org>; Fri, 18 Nov 2022 16:19:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 30214C43219
+	for <linux-trace-kernel@archiver.kernel.org>; Sun, 20 Nov 2022 20:07:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235245AbiKRQTr (ORCPT
+        id S229797AbiKTUHo (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Fri, 18 Nov 2022 11:19:47 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42572 "EHLO
+        Sun, 20 Nov 2022 15:07:44 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52668 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235084AbiKRQTp (ORCPT
+        with ESMTP id S229751AbiKTUHl (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Fri, 18 Nov 2022 11:19:45 -0500
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E6F766B3AF;
-        Fri, 18 Nov 2022 08:19:44 -0800 (PST)
+        Sun, 20 Nov 2022 15:07:41 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B6B391E729;
+        Sun, 20 Nov 2022 12:07:38 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id AC555B8243D;
-        Fri, 18 Nov 2022 16:19:43 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A7428C433C1;
-        Fri, 18 Nov 2022 16:19:41 +0000 (UTC)
-Date:   Fri, 18 Nov 2022 11:19:40 -0500
+        by dfw.source.kernel.org (Postfix) with ESMTPS id EDB4260D39;
+        Sun, 20 Nov 2022 20:07:36 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C6FD6C433D7;
+        Sun, 20 Nov 2022 20:07:36 +0000 (UTC)
+Received: from rostedt by gandalf.local.home with local (Exim 4.96)
+        (envelope-from <rostedt@goodmis.org>)
+        id 1owqbH-00Di9j-2x;
+        Sun, 20 Nov 2022 15:07:35 -0500
+Message-ID: <20221120200735.791518959@goodmis.org>
+User-Agent: quilt/0.66
+Date:   Sun, 20 Nov 2022 15:07:13 -0500
 From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Rafael Mendonca <rafaelmendsr@gmail.com>
+To:     linux-kernel@vger.kernel.org
 Cc:     Masami Hiramatsu <mhiramat@kernel.org>,
-        "Tzvetomir Stoyanov (VMware)" <tz.stoyanov@gmail.com>,
-        linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
-        Tom Zanussi <zanussi@kernel.org>
-Subject: Re: [PATCH] tracing/eprobe: Update cond flag before enabling
- trigger
-Message-ID: <20221118111940.1268da2b@gandalf.local.home>
-In-Reply-To: <Y3eJ8GiGnEvVd8/N@macondo>
-References: <20221116192552.1066630-1-rafaelmendsr@gmail.com>
-        <20221117211726.4bbbb96a@gandalf.local.home>
-        <20221117213109.6119750e@gandalf.local.home>
-        <Y3d9KcpcwrEUUYKT@macondo>
-        <Y3eJ8GiGnEvVd8/N@macondo>
-X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linux Trace Kernel <linux-trace-kernel@vger.kernel.org>,
+        Tzvetomir Stoyanov <tz.stoyanov@gmail.com>,
+        Tom Zanussi <zanussi@kernel.org>, stable@vger.kernel.org,
+        Rafael Mendonca <rafaelmendsr@gmail.com>
+Subject: [for-linus][PATCH 13/13] tracing: Fix race where eprobes can be called before the event
+References: <20221120200700.725968899@goodmis.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On Fri, 18 Nov 2022 10:34:40 -0300
-Rafael Mendonca <rafaelmendsr@gmail.com> wrote:
+From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
 
-> It did not trigger the NULL pointer issue to be more specific. When
-> creating event probe for all events I was unable to create any event for
-> the xhci-hcd system:
-> 
-> root@localhost:/sys/kernel/tracing# echo 'e xhci-hcd/xhci_add_endpoint' > dynamic_events 
-> -bash: echo: write error: Invalid argument
-> 
-> Debugging the issue it seems that the problem is in the is_good_name()
-> check, which returns false for "xhci-hcd". Should we sanitize it by
+The flag that tells the event to call its triggers after reading the event
+is set for eprobes after the eprobe is enabled. This leads to a race where
+the eprobe may be triggered at the beginning of the event where the record
+information is NULL. The eprobe then dereferences the NULL record causing
+a NULL kernel pointer bug.
 
-Ouch. I didn't realize that.
+Test for a NULL record to keep this from happening.
 
-> converting '-' into '_'?
+Link: https://lore.kernel.org/linux-trace-kernel/20221116192552.1066630-1-rafaelmendsr@gmail.com/
+Link: https://lore.kernel.org/linux-trace-kernel/20221117214249.2addbe10@gandalf.local.home
 
-Actually, it's just the system name that's an issue. I tested this patch
-and it appears to work.
+Cc: Linux Trace Kernel <linux-trace-kernel@vger.kernel.org>
+Cc: Tzvetomir Stoyanov <tz.stoyanov@gmail.com>
+Cc: Tom Zanussi <zanussi@kernel.org>
+Cc: stable@vger.kernel.org
+Fixes: 7491e2c442781 ("tracing: Add a probe that attaches to trace events")
+Acked-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+Reported-by: Rafael Mendonca <rafaelmendsr@gmail.com>
+Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+---
+ kernel/trace/trace_eprobe.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
--- Steve
-
-
-diff --git a/kernel/trace/trace.h b/kernel/trace/trace.h
-index 54ee5711c729..a16fb4c9642e 100644
---- a/kernel/trace/trace.h
-+++ b/kernel/trace/trace.h
-@@ -1955,17 +1955,30 @@ static __always_inline void trace_iterator_reset(struct trace_iterator *iter)
+diff --git a/kernel/trace/trace_eprobe.c b/kernel/trace/trace_eprobe.c
+index 5dd0617e5df6..9cda9a38422c 100644
+--- a/kernel/trace/trace_eprobe.c
++++ b/kernel/trace/trace_eprobe.c
+@@ -563,6 +563,9 @@ static void eprobe_trigger_func(struct event_trigger_data *data,
+ {
+ 	struct eprobe_data *edata = data->private_data;
+ 
++	if (unlikely(!rec))
++		return;
++
+ 	__eprobe_trace_func(edata, rec);
  }
  
- /* Check the name is good for event/group/fields */
--static inline bool is_good_name(const char *name)
-+static inline bool __is_good_name(const char *name, bool hash_ok)
- {
--	if (!isalpha(*name) && *name != '_')
-+	if (!isalpha(*name) && *name != '_' && (!hash_ok || *name != '-'))
- 		return false;
- 	while (*++name != '\0') {
--		if (!isalpha(*name) && !isdigit(*name) && *name != '_')
-+		if (!isalpha(*name) && !isdigit(*name) && *name != '_' &&
-+		    (!hash_ok || *name != '-'))
- 			return false;
- 	}
- 	return true;
- }
- 
-+/* Check the name is good for event/group/fields */
-+static inline bool is_good_name(const char *name)
-+{
-+	return __is_good_name(name, false);
-+}
-+
-+/* Check the name is good for system */
-+static inline bool is_good_system_name(const char *name)
-+{
-+	return __is_good_name(name, true);
-+}
-+
- /* Convert certain expected symbols into '_' when generating event names */
- static inline void sanitize_event_name(char *name)
- {
-diff --git a/kernel/trace/trace_probe.c b/kernel/trace/trace_probe.c
-index 36dff277de46..bb2f95d7175c 100644
---- a/kernel/trace/trace_probe.c
-+++ b/kernel/trace/trace_probe.c
-@@ -246,7 +246,7 @@ int traceprobe_parse_event_name(const char **pevent, const char **pgroup,
- 			return -EINVAL;
- 		}
- 		strlcpy(buf, event, slash - event + 1);
--		if (!is_good_name(buf)) {
-+		if (!is_good_system_name(buf)) {
- 			trace_probe_log_err(offset, BAD_GROUP_NAME);
- 			return -EINVAL;
- 		}
+-- 
+2.35.1
+
+
