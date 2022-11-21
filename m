@@ -2,253 +2,607 @@ Return-Path: <linux-trace-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E97B8C433FE
-	for <linux-trace-kernel@archiver.kernel.org>; Mon, 21 Nov 2022 11:18:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 53483C433FE
+	for <linux-trace-kernel@archiver.kernel.org>; Mon, 21 Nov 2022 22:01:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229685AbiKULSV (ORCPT
+        id S231804AbiKUWBw (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Mon, 21 Nov 2022 06:18:21 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46062 "EHLO
+        Mon, 21 Nov 2022 17:01:52 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48844 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231189AbiKULRv (ORCPT
+        with ESMTP id S231913AbiKUWBq (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Mon, 21 Nov 2022 06:17:51 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BB34E54B3A;
-        Mon, 21 Nov 2022 03:13:18 -0800 (PST)
+        Mon, 21 Nov 2022 17:01:46 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2C19BBFF76;
+        Mon, 21 Nov 2022 14:01:44 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id D578261024;
-        Mon, 21 Nov 2022 11:12:22 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D211CC433D7;
-        Mon, 21 Nov 2022 11:12:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-        s=korg; t=1669029142;
-        bh=uk2rVr0MKkL0xLjERYOwVS++vN0gM+f63wrYufP/hfI=;
-        h=Subject:To:Cc:From:Date:From;
-        b=yq0W+H+0elJxzHsy7Y6ASHDyBkYepTTVSbnWoLr2n7cgrv/tE2tfOJZkkLlK46m36
-         w0AH5CHd8cS9QsZ31VaHCz3UPOMyxxCtxXJ6MMm9tVc7I6laM7Kd4bnv+aCl0chLtM
-         IAb+xGPbXwu7Jpnh7f6iDVflEpgde61/S/rDz6/w=
-Subject: FAILED: patch "[PATCH] tracing/ring-buffer: Have polling block on watermark" failed to apply to 4.9-stable tree
-To:     rostedt@goodmis.org, linux-trace-kernel@vger.kernel.org,
-        mathieu.desnoyers@efficios.com, mhiramat@kernel.org,
-        primiano@google.com
-Cc:     <stable@vger.kernel.org>
-From:   <gregkh@linuxfoundation.org>
-Date:   Mon, 21 Nov 2022 12:12:12 +0100
-Message-ID: <1669029132100196@kroah.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=ANSI_X3.4-1968
-Content-Transfer-Encoding: 8bit
+        by dfw.source.kernel.org (Postfix) with ESMTPS id ADEAA6149B;
+        Mon, 21 Nov 2022 22:01:43 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 37775C433D6;
+        Mon, 21 Nov 2022 22:01:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1669068103;
+        bh=rwaBCvPHGgc7n+t3wpNam6RsNgSir7rTGgOchy2tEmE=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=ctEHQHMmLQ5f0JZIyPms35S8QlPBsYi2rJkp+nJZhkGp/4CJTa1Pw779CjBftFQwq
+         wNhYoZ/2JkMaas35aPwTM7ag9hV66XUa4lNN89TbD9NDXDvA4XkMFLs7ntq1kROalm
+         pfv81u0PxlS6aBd6SLb2XdIzn5h80jePovSWQfK83pFw/5D4sWHmIY/zMvUBMDCb6d
+         8jpQO/vxVNzHp4EvHP8yXTemKHqWQ0HIcUGFPinws2Hdx/4G94tyJN4QPo/KvOrKDN
+         04lMOR4XoEQnniX2Ondbqz72aUL/Mpzm0tEwhysixd4JAgfL3Ar9w3aVsG8gKps0wP
+         UUISAcC66/k+w==
+Date:   Tue, 22 Nov 2022 07:01:39 +0900
+From:   Masami Hiramatsu (Google) <mhiramat@kernel.org>
+To:     Song Chen <chensong_2000@189.cn>
+Cc:     rostedt@goodmis.org, linux-kernel@vger.kernel.org,
+        linux-trace-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/4] kernel/trace: Introduce new APIs to process probe
+ arguments
+Message-Id: <20221122070139.7c5006b290d76f012f1d977a@kernel.org>
+In-Reply-To: <1668601507-4289-1-git-send-email-chensong_2000@189.cn>
+References: <1668601507-4289-1-git-send-email-chensong_2000@189.cn>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
+Hi Song,
 
-The patch below does not apply to the 4.9-stable tree.
-If someone wants it applied there, or to any other stable or longterm
-tree, then please email the backport, including the original git commit
-id to <stable@vger.kernel.org>.
+On Wed, 16 Nov 2022 20:25:07 +0800
+Song Chen <chensong_2000@189.cn> wrote:
 
-Possible dependencies:
+> Introduce 3 new APIs:
+> 1. trace_probe_get_data_size: get arguments' data size
+> 2. trace_probe_store_args: store aruguments into ring buffer
+> 3. trace_probe_print_args: print arguments into trace file
 
-42fb0a1e84ff ("tracing/ring-buffer: Have polling block on watermark")
-7e9fbbb1b776 ("ring-buffer: Add ring_buffer_wake_waiters()")
-13292494379f ("tracing: Make struct ring_buffer less ambiguous")
-1c5eb4481e01 ("tracing: Rename trace_buffer to array_buffer")
-2d6425af6116 ("tracing: Declare newly exported APIs in include/linux/trace.h")
-a47b53e95acc ("tracing: Rename tracing_reset() to tracing_reset_cpu()")
-46cc0b44428d ("tracing/snapshot: Resize spare buffer if size changed")
-d2d8b146043a ("Merge tag 'trace-v5.2' of git://git.kernel.org/pub/scm/linux/kernel/git/rostedt/linux-trace")
+Ah, I meant that split the patches into
 
-thanks,
+Introduce trace_probe_get_data_size() and use it in *probes
+Introduce trace_probe_store_args() and use it in *probes
+Introduce trace_probe_print_args and use it in *probes
 
-greg k-h
+Then we can easily understand by its meaning.
 
------------------- original commit in Linus's tree ------------------
+Can you reform this series again?
 
-From 42fb0a1e84ff525ebe560e2baf9451ab69127e2b Mon Sep 17 00:00:00 2001
-From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
-Date: Thu, 20 Oct 2022 23:14:27 -0400
-Subject: [PATCH] tracing/ring-buffer: Have polling block on watermark
+Thank you,
 
-Currently the way polling works on the ring buffer is broken. It will
-return immediately if there's any data in the ring buffer whereas a read
-will block until the watermark (defined by the tracefs buffer_percent file)
-is hit.
+> 
+> Those APIs are going to merge similar implementations respectively
+> in kprobe/uprobe/eprobe.
+> 
+> Signed-off-by: Song Chen <chensong_2000@189.cn>
+> ---
+>  kernel/trace/trace_probe.c        | 305 ++++++++++++++++++++++++++++++
+>  kernel/trace/trace_probe.h        |   5 +
+>  kernel/trace/trace_probe_common.h |  69 +++++++
+>  kernel/trace/trace_probe_user.h   |  95 ++++++++++
+>  4 files changed, 474 insertions(+)
+>  create mode 100644 kernel/trace/trace_probe_common.h
+>  create mode 100644 kernel/trace/trace_probe_user.h
+> 
+> diff --git a/kernel/trace/trace_probe.c b/kernel/trace/trace_probe.c
+> index 36dff277de46..303f057bd2f7 100644
+> --- a/kernel/trace/trace_probe.c
+> +++ b/kernel/trace/trace_probe.c
+> @@ -12,6 +12,9 @@
+>  #define pr_fmt(fmt)	"trace_probe: " fmt
+>  
+>  #include "trace_probe.h"
+> +#include "trace_probe_kernel.h"
+> +#include "trace_probe_user.h"
+> +#include "trace_probe_common.h"
+>  
+>  #undef C
+>  #define C(a, b)		b
+> @@ -1218,3 +1221,305 @@ int trace_probe_create(const char *raw_command, int (*createfn)(int, const char
+>  
+>  	return ret;
+>  }
+> +
+> +/* From the 2nd stage, routine is same */
+> +static nokprobe_inline int
+> +process_fetch_insn_bottom(struct fetch_insn *code, unsigned long val,
+> +			   void *dest, void *base, int flags)
+> +{
+> +	struct fetch_insn *s3 = NULL;
+> +	int total = 0, ret = 0, i = 0;
+> +	u32 loc = 0;
+> +	unsigned long lval = val;
+> +	int is_uprobe = flags & TRACE_EVENT_FL_UPROBE;
+> +
+> +stage2:
+> +	/* 2nd stage: dereference memory if needed */
+> +	do {
+> +		if (code->op == FETCH_OP_DEREF) {
+> +			lval = val;
+> +			ret = probe_mem_read(&val, (void *)val + code->offset,
+> +					     sizeof(val));
+> +		} else if (code->op == FETCH_OP_UDEREF) {
+> +			lval = val;
+> +			ret = probe_mem_read_user(&val,
+> +				 (void *)val + code->offset, sizeof(val));
+> +		} else
+> +			break;
+> +		if (ret)
+> +			return ret;
+> +		code++;
+> +	} while (1);
+> +
+> +	s3 = code;
+> +stage3:
+> +	/* 3rd stage: store value to buffer */
+> +	if (unlikely(!dest)) {
+> +		if (code->op == FETCH_OP_ST_STRING) {
+> +			if (is_uprobe)
+> +				ret = user_fetch_store_strlen(val + code->offset);
+> +			else
+> +				ret = kern_fetch_store_strlen(val + code->offset);
+> +			code++;
+> +			goto array;
+> +		} else if (code->op == FETCH_OP_ST_USTRING) {
+> +			if (is_uprobe)
+> +				ret += user_fetch_store_strlen_user(val + code->offset);
+> +			else
+> +				ret += kern_fetch_store_strlen_user(val + code->offset);
+> +			code++;
+> +			goto array;
+> +		} else
+> +			return -EILSEQ;
+> +	}
+> +
+> +	switch (code->op) {
+> +	case FETCH_OP_ST_RAW:
+> +		fetch_store_raw(val, code, dest);
+> +		break;
+> +	case FETCH_OP_ST_MEM:
+> +		probe_mem_read(dest, (void *)val + code->offset, code->size);
+> +		break;
+> +	case FETCH_OP_ST_UMEM:
+> +		probe_mem_read_user(dest, (void *)val + code->offset, code->size);
+> +		break;
+> +	case FETCH_OP_ST_STRING:
+> +		loc = *(u32 *)dest;
+> +		if (is_uprobe)
+> +			ret = user_fetch_store_string(val + code->offset, dest, base);
+> +		else
+> +			ret = kern_fetch_store_string(val + code->offset, dest, base);
+> +		break;
+> +	case FETCH_OP_ST_USTRING:
+> +		loc = *(u32 *)dest;
+> +		if (is_uprobe)
+> +			ret = user_fetch_store_string_user(val + code->offset, dest, base);
+> +		else
+> +			ret = kern_fetch_store_string_user(val + code->offset, dest, base);
+> +		break;
+> +	default:
+> +		return -EILSEQ;
+> +	}
+> +	code++;
+> +
+> +	/* 4th stage: modify stored value if needed */
+> +	if (code->op == FETCH_OP_MOD_BF) {
+> +		fetch_apply_bitfield(code, dest);
+> +		code++;
+> +	}
+> +
+> +array:
+> +	/* the last stage: Loop on array */
+> +	if (code->op == FETCH_OP_LP_ARRAY) {
+> +		total += ret;
+> +		if (++i < code->param) {
+> +			code = s3;
+> +			if (s3->op != FETCH_OP_ST_STRING &&
+> +			    s3->op != FETCH_OP_ST_USTRING) {
+> +				dest += s3->size;
+> +				val += s3->size;
+> +				goto stage3;
+> +			}
+> +			code--;
+> +			val = lval + sizeof(char *);
+> +			if (dest) {
+> +				dest += sizeof(u32);
+> +				*(u32 *)dest = update_data_loc(loc, ret);
+> +			}
+> +			goto stage2;
+> +		}
+> +		code++;
+> +		ret = total;
+> +	}
+> +
+> +	return code->op == FETCH_OP_END ? ret : -EILSEQ;
+> +}
+> +
+> +static unsigned long get_event_field(struct fetch_insn *code, void *rec)
+> +{
+> +	struct ftrace_event_field *field = code->data;
+> +	unsigned long val;
+> +	void *addr;
+> +
+> +	addr = rec + field->offset;
+> +
+> +	if (is_string_field(field)) {
+> +		switch (field->filter_type) {
+> +		case FILTER_DYN_STRING:
+> +			val = (unsigned long)(rec + (*(unsigned int *)addr & 0xffff));
+> +			break;
+> +		case FILTER_RDYN_STRING:
+> +			val = (unsigned long)(addr + (*(unsigned int *)addr & 0xffff));
+> +			break;
+> +		case FILTER_STATIC_STRING:
+> +			val = (unsigned long)addr;
+> +			break;
+> +		case FILTER_PTR_STRING:
+> +			val = (unsigned long)(*(char *)addr);
+> +			break;
+> +		default:
+> +			WARN_ON_ONCE(1);
+> +			return 0;
+> +		}
+> +		return val;
+> +	}
+> +
+> +	switch (field->size) {
+> +	case 1:
+> +		if (field->is_signed)
+> +			val = *(char *)addr;
+> +		else
+> +			val = *(unsigned char *)addr;
+> +		break;
+> +	case 2:
+> +		if (field->is_signed)
+> +			val = *(short *)addr;
+> +		else
+> +			val = *(unsigned short *)addr;
+> +		break;
+> +	case 4:
+> +		if (field->is_signed)
+> +			val = *(int *)addr;
+> +		else
+> +			val = *(unsigned int *)addr;
+> +		break;
+> +	default:
+> +		if (field->is_signed)
+> +			val = *(long *)addr;
+> +		else
+> +			val = *(unsigned long *)addr;
+> +		break;
+> +	}
+> +	return val;
+> +}
+> +
+> +/* Note that we don't verify it, since the code does not come from user space */
+> +static int
+> +process_fetch_insn(struct fetch_insn *code, void *rec, void *dest,
+> +		   void *base, int flags)
+> +{
+> +	struct pt_regs *regs = rec;
+> +	unsigned long val;
+> +	int is_uprobe = flags & TRACE_EVENT_FL_UPROBE;
+> +
+> +retry:
+> +	/* 1st stage: get value from context */
+> +	switch (code->op) {
+> +	case FETCH_OP_REG:
+> +		val = regs_get_register(regs, code->param);
+> +		break;
+> +	case FETCH_OP_STACK:
+> +		if (is_uprobe)
+> +			val = get_user_stack_nth(regs, code->param);
+> +		else
+> +			val = regs_get_kernel_stack_nth(regs, code->param);
+> +		break;
+> +	case FETCH_OP_STACKP:
+> +		if (is_uprobe)
+> +			val = user_stack_pointer(regs);
+> +		else
+> +			val = kernel_stack_pointer(regs);
+> +		break;
+> +	case FETCH_OP_RETVAL:
+> +		val = regs_return_value(regs);
+> +		break;
+> +	case FETCH_OP_IMM:
+> +		val = code->immediate;
+> +		break;
+> +	case FETCH_OP_COMM:
+> +		val = (unsigned long)current->comm;
+> +		break;
+> +	case FETCH_OP_DATA:
+> +		val = (unsigned long)code->data;
+> +		break;
+> +#ifdef CONFIG_HAVE_FUNCTION_ARG_ACCESS_API
+> +	case FETCH_OP_ARG:
+> +		val = regs_get_kernel_argument(regs, code->param);
+> +		break;
+> +#endif
+> +	case FETCH_NOP_SYMBOL:	/* Ignore a place holder */
+> +		code++;
+> +		goto retry;
+> +	case FETCH_OP_TP_ARG:
+> +		val = get_event_field(code, rec);
+> +		break;
+> +	default:
+> +		return -EILSEQ;
+> +	}
+> +	code++;
+> +
+> +	return process_fetch_insn_bottom(code, val, dest, base, flags);
+> +}
+> +NOKPROBE_SYMBOL(process_fetch_insn)
+> +
+> +/* Sum up total data length for dynamic arrays (strings) */
+> +int trace_probe_get_data_size(struct trace_probe *tp, struct pt_regs *regs)
+> +{
+> +	struct probe_arg *arg;
+> +	int i, len, ret = 0;
+> +	struct trace_event_call *call = trace_probe_event_call(tp);
+> +
+> +	for (i = 0; i < tp->nr_args; i++) {
+> +		arg = tp->args + i;
+> +		if (unlikely(arg->dynamic)) {
+> +			len = process_fetch_insn(arg->code, regs, NULL, NULL, call->flags);
+> +			if (len > 0)
+> +				ret += len;
+> +		}
+> +	}
+> +
+> +	return ret;
+> +}
+> +
+> +void trace_probe_store_args(void *data, struct trace_probe *tp, void *rec,
+> +		 int header_size, int maxlen)
+> +{
+> +	struct probe_arg *arg;
+> +	void *base = data - header_size;
+> +	void *dyndata = data + tp->size;
+> +	u32 *dl;	/* Data location */
+> +	int ret, i;
+> +	struct trace_event_call *call = trace_probe_event_call(tp);
+> +
+> +	for (i = 0; i < tp->nr_args; i++) {
+> +		arg = tp->args + i;
+> +		dl = data + arg->offset;
+> +		/* Point the dynamic data area if needed */
+> +		if (unlikely(arg->dynamic))
+> +			*dl = make_data_loc(maxlen, dyndata - base);
+> +		ret = process_fetch_insn(arg->code, rec, dl, base, call->flags);
+> +		if (unlikely(ret < 0 && arg->dynamic)) {
+> +			*dl = make_data_loc(0, dyndata - base);
+> +		} else {
+> +			dyndata += ret;
+> +			maxlen -= ret;
+> +		}
+> +	}
+> +}
+> +
+> +int trace_probe_print_args(struct trace_seq *s, struct probe_arg *args, int nr_args,
+> +		 u8 *data, void *field)
+> +{
+> +	void *p;
+> +	int i, j;
+> +
+> +	for (i = 0; i < nr_args; i++) {
+> +		struct probe_arg *a = args + i;
+> +
+> +		trace_seq_printf(s, " %s=", a->name);
+> +		if (likely(!a->count)) {
+> +			if (!a->type->print(s, data + a->offset, field))
+> +				return -ENOMEM;
+> +			continue;
+> +		}
+> +		trace_seq_putc(s, '{');
+> +		p = data + a->offset;
+> +		for (j = 0; j < a->count; j++) {
+> +			if (!a->type->print(s, p, field))
+> +				return -ENOMEM;
+> +			trace_seq_putc(s, j == a->count - 1 ? '}' : ',');
+> +			p += a->type->size;
+> +		}
+> +	}
+> +	return 0;
+> +}
+> diff --git a/kernel/trace/trace_probe.h b/kernel/trace/trace_probe.h
+> index de38f1c03776..4f044047b748 100644
+> --- a/kernel/trace/trace_probe.h
+> +++ b/kernel/trace/trace_probe.h
+> @@ -343,6 +343,11 @@ int trace_probe_compare_arg_type(struct trace_probe *a, struct trace_probe *b);
+>  bool trace_probe_match_command_args(struct trace_probe *tp,
+>  				    int argc, const char **argv);
+>  int trace_probe_create(const char *raw_command, int (*createfn)(int, const char **));
+> +int trace_probe_get_data_size(struct trace_probe *tp, struct pt_regs *regs);
+> +void trace_probe_store_args(void *data, struct trace_probe *tp, void *rec,
+> +		 int header_size, int maxlen);
+> +int trace_probe_print_args(struct trace_seq *s, struct probe_arg *args, int nr_args,
+> +		 u8 *data, void *field);
+>  
+>  #define trace_probe_for_each_link(pos, tp)	\
+>  	list_for_each_entry(pos, &(tp)->event->files, list)
+> diff --git a/kernel/trace/trace_probe_common.h b/kernel/trace/trace_probe_common.h
+> new file mode 100644
+> index 000000000000..b8d77447fe0c
+> --- /dev/null
+> +++ b/kernel/trace/trace_probe_common.h
+> @@ -0,0 +1,69 @@
+> +/* SPDX-License-Identifier: GPL-2.0 */
+> +#ifndef __TRACE_PROBE_COMMON_H_
+> +#define __TRACE_PROBE_COMMON_H_
+> +
+> +#define FAULT_STRING "(fault)"
+> +
+> +static nokprobe_inline void
+> +fetch_store_raw(unsigned long val, struct fetch_insn *code, void *buf)
+> +{
+> +	switch (code->size) {
+> +	case 1:
+> +		*(u8 *)buf = (u8)val;
+> +		break;
+> +	case 2:
+> +		*(u16 *)buf = (u16)val;
+> +		break;
+> +	case 4:
+> +		*(u32 *)buf = (u32)val;
+> +		break;
+> +	case 8:
+> +		//TBD: 32bit signed
+> +		*(u64 *)buf = (u64)val;
+> +		break;
+> +	default:
+> +		*(unsigned long *)buf = val;
+> +	}
+> +}
+> +
+> +static nokprobe_inline void
+> +fetch_apply_bitfield(struct fetch_insn *code, void *buf)
+> +{
+> +	switch (code->basesize) {
+> +	case 1:
+> +		*(u8 *)buf <<= code->lshift;
+> +		*(u8 *)buf >>= code->rshift;
+> +		break;
+> +	case 2:
+> +		*(u16 *)buf <<= code->lshift;
+> +		*(u16 *)buf >>= code->rshift;
+> +		break;
+> +	case 4:
+> +		*(u32 *)buf <<= code->lshift;
+> +		*(u32 *)buf >>= code->rshift;
+> +		break;
+> +	case 8:
+> +		*(u64 *)buf <<= code->lshift;
+> +		*(u64 *)buf >>= code->rshift;
+> +		break;
+> +	}
+> +}
+> +
+> +static nokprobe_inline int
+> +probe_mem_read_user(void *dest, void *src, size_t size)
+> +{
+> +	const void __user *uaddr =  (__force const void __user *)src;
+> +
+> +	return copy_from_user_nofault(dest, uaddr, size);
+> +}
+> +
+> +static nokprobe_inline int
+> +probe_mem_read(void *dest, void *src, size_t size)
+> +{
+> +#ifdef CONFIG_ARCH_HAS_NON_OVERLAPPING_ADDRESS_SPACE
+> +	if ((unsigned long)src < TASK_SIZE)
+> +		return probe_mem_read_user(dest, src, size);
+> +#endif
+> +	return copy_from_kernel_nofault(dest, src, size);
+> +}
+> +#endif /* __TRACE_PROBE_COMMON_H_ */
+> diff --git a/kernel/trace/trace_probe_user.h b/kernel/trace/trace_probe_user.h
+> new file mode 100644
+> index 000000000000..2104ccb44d56
+> --- /dev/null
+> +++ b/kernel/trace/trace_probe_user.h
+> @@ -0,0 +1,95 @@
+> +/* SPDX-License-Identifier: GPL-2.0 */
+> +#ifndef __TRACE_PROBE_USER_H_
+> +#define __TRACE_PROBE_USER_H_
+> +
+> +#define FAULT_STRING "(fault)"
+> +
+> +/*
+> + * Fetch a null-terminated string. Caller MUST set *(u32 *)dest with max
+> + * length and relative data location.
+> + */
+> +static nokprobe_inline int
+> +user_fetch_store_string(unsigned long addr, void *dest, void *base)
+> +{
+> +	long ret;
+> +	u32 loc = *(u32 *)dest;
+> +	int maxlen  = get_loc_len(loc);
+> +	u8 *dst = get_loc_data(dest, base);
+> +	void __user *src = (void __force __user *) addr;
+> +
+> +	if (unlikely(!maxlen))
+> +		return -ENOMEM;
+> +
+> +	if (addr == FETCH_TOKEN_COMM)
+> +		ret = strlcpy(dst, current->comm, maxlen);
+> +	else
+> +		ret = strncpy_from_user(dst, src, maxlen);
+> +	if (ret >= 0) {
+> +		if (ret == maxlen)
+> +			dst[ret - 1] = '\0';
+> +		else
+> +			/*
+> +			 * Include the terminating null byte. In this case it
+> +			 * was copied by strncpy_from_user but not accounted
+> +			 * for in ret.
+> +			 */
+> +			ret++;
+> +		*(u32 *)dest = make_data_loc(ret, (void *)dst - base);
+> +	}
+> +
+> +	return ret;
+> +}
+> +
+> +static nokprobe_inline int
+> +user_fetch_store_string_user(unsigned long addr, void *dest, void *base)
+> +{
+> +	return user_fetch_store_string(addr, dest, base);
+> +}
+> +
+> +/* Return the length of string -- including null terminal byte */
+> +static nokprobe_inline int
+> +user_fetch_store_strlen(unsigned long addr)
+> +{
+> +	int len;
+> +	void __user *vaddr = (void __force __user *) addr;
+> +
+> +	if (addr == FETCH_TOKEN_COMM)
+> +		len = strlen(current->comm) + 1;
+> +	else
+> +		len = strnlen_user(vaddr, MAX_STRING_SIZE);
+> +
+> +	return (len > MAX_STRING_SIZE) ? 0 : len;
+> +}
+> +
+> +static nokprobe_inline int
+> +user_fetch_store_strlen_user(unsigned long addr)
+> +{
+> +	return user_fetch_store_strlen(addr);
+> +}
+> +
+> +#ifdef CONFIG_STACK_GROWSUP
+> +static unsigned long adjust_stack_addr(unsigned long addr, unsigned int n)
+> +{
+> +	return addr - (n * sizeof(long));
+> +}
+> +#else
+> +static unsigned long adjust_stack_addr(unsigned long addr, unsigned int n)
+> +{
+> +	return addr + (n * sizeof(long));
+> +}
+> +#endif
+> +
+> +static unsigned long get_user_stack_nth(struct pt_regs *regs, unsigned int n)
+> +{
+> +	unsigned long ret;
+> +	unsigned long addr = user_stack_pointer(regs);
+> +
+> +	addr = adjust_stack_addr(addr, n);
+> +
+> +	if (copy_from_user(&ret, (void __force __user *) addr, sizeof(ret)))
+> +		return 0;
+> +
+> +	return ret;
+> +}
+> +
+> +#endif /* __TRACE_PROBE_USER_H_ */
+> -- 
+> 2.25.1
+> 
 
-That is, a select() or poll() will return as if there's data available,
-but then the following read will block. This is broken for the way
-select()s and poll()s are supposed to work.
 
-Have the polling on the ring buffer also block the same way reads and
-splice does on the ring buffer.
-
-Link: https://lkml.kernel.org/r/20221020231427.41be3f26@gandalf.local.home
-
-Cc: Linux Trace Kernel <linux-trace-kernel@vger.kernel.org>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>
-Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Cc: Primiano Tucci <primiano@google.com>
-Cc: stable@vger.kernel.org
-Fixes: 1e0d6714aceb7 ("ring-buffer: Do not wake up a splice waiter when page is not full")
-Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
-
-diff --git a/include/linux/ring_buffer.h b/include/linux/ring_buffer.h
-index 2504df9a0453..3c7d295746f6 100644
---- a/include/linux/ring_buffer.h
-+++ b/include/linux/ring_buffer.h
-@@ -100,7 +100,7 @@ __ring_buffer_alloc(unsigned long size, unsigned flags, struct lock_class_key *k
- 
- int ring_buffer_wait(struct trace_buffer *buffer, int cpu, int full);
- __poll_t ring_buffer_poll_wait(struct trace_buffer *buffer, int cpu,
--			  struct file *filp, poll_table *poll_table);
-+			  struct file *filp, poll_table *poll_table, int full);
- void ring_buffer_wake_waiters(struct trace_buffer *buffer, int cpu);
- 
- #define RING_BUFFER_ALL_CPUS -1
-diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
-index 9712083832f4..089b1ec9cb3b 100644
---- a/kernel/trace/ring_buffer.c
-+++ b/kernel/trace/ring_buffer.c
-@@ -907,6 +907,21 @@ size_t ring_buffer_nr_dirty_pages(struct trace_buffer *buffer, int cpu)
- 	return cnt - read;
- }
- 
-+static __always_inline bool full_hit(struct trace_buffer *buffer, int cpu, int full)
-+{
-+	struct ring_buffer_per_cpu *cpu_buffer = buffer->buffers[cpu];
-+	size_t nr_pages;
-+	size_t dirty;
-+
-+	nr_pages = cpu_buffer->nr_pages;
-+	if (!nr_pages || !full)
-+		return true;
-+
-+	dirty = ring_buffer_nr_dirty_pages(buffer, cpu);
-+
-+	return (dirty * 100) > (full * nr_pages);
-+}
-+
- /*
-  * rb_wake_up_waiters - wake up tasks waiting for ring buffer input
-  *
-@@ -1046,22 +1061,20 @@ int ring_buffer_wait(struct trace_buffer *buffer, int cpu, int full)
- 		    !ring_buffer_empty_cpu(buffer, cpu)) {
- 			unsigned long flags;
- 			bool pagebusy;
--			size_t nr_pages;
--			size_t dirty;
-+			bool done;
- 
- 			if (!full)
- 				break;
- 
- 			raw_spin_lock_irqsave(&cpu_buffer->reader_lock, flags);
- 			pagebusy = cpu_buffer->reader_page == cpu_buffer->commit_page;
--			nr_pages = cpu_buffer->nr_pages;
--			dirty = ring_buffer_nr_dirty_pages(buffer, cpu);
-+			done = !pagebusy && full_hit(buffer, cpu, full);
-+
- 			if (!cpu_buffer->shortest_full ||
- 			    cpu_buffer->shortest_full > full)
- 				cpu_buffer->shortest_full = full;
- 			raw_spin_unlock_irqrestore(&cpu_buffer->reader_lock, flags);
--			if (!pagebusy &&
--			    (!nr_pages || (dirty * 100) > full * nr_pages))
-+			if (done)
- 				break;
- 		}
- 
-@@ -1087,6 +1100,7 @@ int ring_buffer_wait(struct trace_buffer *buffer, int cpu, int full)
-  * @cpu: the cpu buffer to wait on
-  * @filp: the file descriptor
-  * @poll_table: The poll descriptor
-+ * @full: wait until the percentage of pages are available, if @cpu != RING_BUFFER_ALL_CPUS
-  *
-  * If @cpu == RING_BUFFER_ALL_CPUS then the task will wake up as soon
-  * as data is added to any of the @buffer's cpu buffers. Otherwise
-@@ -1096,14 +1110,15 @@ int ring_buffer_wait(struct trace_buffer *buffer, int cpu, int full)
-  * zero otherwise.
-  */
- __poll_t ring_buffer_poll_wait(struct trace_buffer *buffer, int cpu,
--			  struct file *filp, poll_table *poll_table)
-+			  struct file *filp, poll_table *poll_table, int full)
- {
- 	struct ring_buffer_per_cpu *cpu_buffer;
- 	struct rb_irq_work *work;
- 
--	if (cpu == RING_BUFFER_ALL_CPUS)
-+	if (cpu == RING_BUFFER_ALL_CPUS) {
- 		work = &buffer->irq_work;
--	else {
-+		full = 0;
-+	} else {
- 		if (!cpumask_test_cpu(cpu, buffer->cpumask))
- 			return -EINVAL;
- 
-@@ -1111,8 +1126,14 @@ __poll_t ring_buffer_poll_wait(struct trace_buffer *buffer, int cpu,
- 		work = &cpu_buffer->irq_work;
- 	}
- 
--	poll_wait(filp, &work->waiters, poll_table);
--	work->waiters_pending = true;
-+	if (full) {
-+		poll_wait(filp, &work->full_waiters, poll_table);
-+		work->full_waiters_pending = true;
-+	} else {
-+		poll_wait(filp, &work->waiters, poll_table);
-+		work->waiters_pending = true;
-+	}
-+
- 	/*
- 	 * There's a tight race between setting the waiters_pending and
- 	 * checking if the ring buffer is empty.  Once the waiters_pending bit
-@@ -1128,6 +1149,9 @@ __poll_t ring_buffer_poll_wait(struct trace_buffer *buffer, int cpu,
- 	 */
- 	smp_mb();
- 
-+	if (full)
-+		return full_hit(buffer, cpu, full) ? EPOLLIN | EPOLLRDNORM : 0;
-+
- 	if ((cpu == RING_BUFFER_ALL_CPUS && !ring_buffer_empty(buffer)) ||
- 	    (cpu != RING_BUFFER_ALL_CPUS && !ring_buffer_empty_cpu(buffer, cpu)))
- 		return EPOLLIN | EPOLLRDNORM;
-@@ -3155,10 +3179,6 @@ static void rb_commit(struct ring_buffer_per_cpu *cpu_buffer,
- static __always_inline void
- rb_wakeups(struct trace_buffer *buffer, struct ring_buffer_per_cpu *cpu_buffer)
- {
--	size_t nr_pages;
--	size_t dirty;
--	size_t full;
--
- 	if (buffer->irq_work.waiters_pending) {
- 		buffer->irq_work.waiters_pending = false;
- 		/* irq_work_queue() supplies it's own memory barriers */
-@@ -3182,10 +3202,7 @@ rb_wakeups(struct trace_buffer *buffer, struct ring_buffer_per_cpu *cpu_buffer)
- 
- 	cpu_buffer->last_pages_touch = local_read(&cpu_buffer->pages_touched);
- 
--	full = cpu_buffer->shortest_full;
--	nr_pages = cpu_buffer->nr_pages;
--	dirty = ring_buffer_nr_dirty_pages(buffer, cpu_buffer->cpu);
--	if (full && nr_pages && (dirty * 100) <= full * nr_pages)
-+	if (!full_hit(buffer, cpu_buffer->cpu, cpu_buffer->shortest_full))
- 		return;
- 
- 	cpu_buffer->irq_work.wakeup_full = true;
-diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
-index 47a44b055a1d..c6c7a0af3ed2 100644
---- a/kernel/trace/trace.c
-+++ b/kernel/trace/trace.c
-@@ -6681,7 +6681,7 @@ trace_poll(struct trace_iterator *iter, struct file *filp, poll_table *poll_tabl
- 		return EPOLLIN | EPOLLRDNORM;
- 	else
- 		return ring_buffer_poll_wait(iter->array_buffer->buffer, iter->cpu_file,
--					     filp, poll_table);
-+					     filp, poll_table, iter->tr->buffer_percent);
- }
- 
- static __poll_t
-
+-- 
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
