@@ -2,42 +2,42 @@ Return-Path: <linux-trace-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 94398C43217
-	for <linux-trace-kernel@archiver.kernel.org>; Mon, 21 Nov 2022 11:17:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E97B8C433FE
+	for <linux-trace-kernel@archiver.kernel.org>; Mon, 21 Nov 2022 11:18:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230285AbiKULRb (ORCPT
+        id S229685AbiKULSV (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Mon, 21 Nov 2022 06:17:31 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46094 "EHLO
+        Mon, 21 Nov 2022 06:18:21 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46062 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231270AbiKULRH (ORCPT
+        with ESMTP id S231189AbiKULRv (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Mon, 21 Nov 2022 06:17:07 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B693E5F75;
-        Mon, 21 Nov 2022 03:12:27 -0800 (PST)
+        Mon, 21 Nov 2022 06:17:51 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BB34E54B3A;
+        Mon, 21 Nov 2022 03:13:18 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 4A31F6102E;
-        Mon, 21 Nov 2022 11:12:19 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 386D8C433D7;
-        Mon, 21 Nov 2022 11:12:17 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id D578261024;
+        Mon, 21 Nov 2022 11:12:22 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D211CC433D7;
+        Mon, 21 Nov 2022 11:12:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-        s=korg; t=1669029138;
-        bh=c5wgNoCtqv/ekV8V5uKsFsYjorOgMEMif9najx346a0=;
+        s=korg; t=1669029142;
+        bh=uk2rVr0MKkL0xLjERYOwVS++vN0gM+f63wrYufP/hfI=;
         h=Subject:To:Cc:From:Date:From;
-        b=1DFDhg7yLzKgj65B3wxDrEA8qSebu87JINDR4Psy+OYyDdag7nTHkRr9jLgBBhmk4
-         kAlI6RmLSFuSx9vtFPpUa7mcU50qRnpvxIxxUXsRIMIIC+diCMfhX1qA/tQ0fnHqVs
-         zv+Y3EQNmc+T9bF0Jdu9Be9E344N0I+Y3vyOJBF0=
-Subject: FAILED: patch "[PATCH] tracing/ring-buffer: Have polling block on watermark" failed to apply to 4.14-stable tree
+        b=yq0W+H+0elJxzHsy7Y6ASHDyBkYepTTVSbnWoLr2n7cgrv/tE2tfOJZkkLlK46m36
+         w0AH5CHd8cS9QsZ31VaHCz3UPOMyxxCtxXJ6MMm9tVc7I6laM7Kd4bnv+aCl0chLtM
+         IAb+xGPbXwu7Jpnh7f6iDVflEpgde61/S/rDz6/w=
+Subject: FAILED: patch "[PATCH] tracing/ring-buffer: Have polling block on watermark" failed to apply to 4.9-stable tree
 To:     rostedt@goodmis.org, linux-trace-kernel@vger.kernel.org,
         mathieu.desnoyers@efficios.com, mhiramat@kernel.org,
         primiano@google.com
 Cc:     <stable@vger.kernel.org>
 From:   <gregkh@linuxfoundation.org>
-Date:   Mon, 21 Nov 2022 12:12:10 +0100
-Message-ID: <16690291302061@kroah.com>
+Date:   Mon, 21 Nov 2022 12:12:12 +0100
+Message-ID: <1669029132100196@kroah.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=ANSI_X3.4-1968
 Content-Transfer-Encoding: 8bit
@@ -46,7 +46,7 @@ List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
 
-The patch below does not apply to the 4.14-stable tree.
+The patch below does not apply to the 4.9-stable tree.
 If someone wants it applied there, or to any other stable or longterm
 tree, then please email the backport, including the original git commit
 id to <stable@vger.kernel.org>.
