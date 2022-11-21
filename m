@@ -2,235 +2,157 @@ Return-Path: <linux-trace-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FA3AC4167E
-	for <linux-trace-kernel@archiver.kernel.org>; Sun, 20 Nov 2022 20:07:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DD51C4332F
+	for <linux-trace-kernel@archiver.kernel.org>; Mon, 21 Nov 2022 08:10:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229779AbiKTUHn (ORCPT
+        id S229949AbiKUIKj (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Sun, 20 Nov 2022 15:07:43 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52656 "EHLO
+        Mon, 21 Nov 2022 03:10:39 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42310 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229698AbiKTUHj (ORCPT
+        with ESMTP id S229893AbiKUIKi (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Sun, 20 Nov 2022 15:07:39 -0500
-Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DBBF11CB1B;
-        Sun, 20 Nov 2022 12:07:37 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id B08EBB80B09;
-        Sun, 20 Nov 2022 20:07:35 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5A846C433C1;
-        Sun, 20 Nov 2022 20:07:34 +0000 (UTC)
-Received: from rostedt by gandalf.local.home with local (Exim 4.96)
-        (envelope-from <rostedt@goodmis.org>)
-        id 1owqbF-00Di3m-1W;
-        Sun, 20 Nov 2022 15:07:33 -0500
-Message-ID: <20221120200733.336008061@goodmis.org>
-User-Agent: quilt/0.66
-Date:   Sun, 20 Nov 2022 15:07:01 -0500
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Masami Hiramatsu <mhiramat@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linux Trace Kernel <linux-trace-kernel@vger.kernel.org>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Primiano Tucci <primiano@google.com>, stable@vger.kernel.org
-Subject: [for-linus][PATCH 01/13] tracing/ring-buffer: Have polling block on watermark
-References: <20221120200700.725968899@goodmis.org>
+        Mon, 21 Nov 2022 03:10:38 -0500
+Received: from szxga03-in.huawei.com (szxga03-in.huawei.com [45.249.212.189])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 12904165B2;
+        Mon, 21 Nov 2022 00:10:35 -0800 (PST)
+Received: from dggpeml500026.china.huawei.com (unknown [172.30.72.54])
+        by szxga03-in.huawei.com (SkyGuard) with ESMTP id 4NG0Nm0qY6zFqT1;
+        Mon, 21 Nov 2022 16:07:20 +0800 (CST)
+Received: from dggpeml100012.china.huawei.com (7.185.36.121) by
+ dggpeml500026.china.huawei.com (7.185.36.106) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2375.31; Mon, 21 Nov 2022 16:10:33 +0800
+Received: from localhost.localdomain (10.67.175.61) by
+ dggpeml100012.china.huawei.com (7.185.36.121) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2375.31; Mon, 21 Nov 2022 16:10:33 +0800
+From:   Zheng Yejian <zhengyejian1@huawei.com>
+To:     <rostedt@goodmis.org>, <mhiramat@kernel.org>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-trace-kernel@vger.kernel.org>
+CC:     <zhengyejian1@huawei.com>
+Subject: [BUG] tracing: Possible data race on global variable 'trace_probe_log'
+Date:   Mon, 21 Nov 2022 16:11:03 +0800
+Message-ID: <20221121081103.3070449-1-zhengyejian1@huawei.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [10.67.175.61]
+X-ClientProxiedBy: dggems705-chm.china.huawei.com (10.3.19.182) To
+ dggpeml100012.china.huawei.com (7.185.36.121)
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
+Hi,
 
-Currently the way polling works on the ring buffer is broken. It will
-return immediately if there's any data in the ring buffer whereas a read
-will block until the watermark (defined by the tracefs buffer_percent file)
-is hit.
+I found a possible data race bug in trace probe log when looking into the
+code, I currently don't have a good solution but I'll be glad to fix it.
 
-That is, a select() or poll() will return as if there's data available,
-but then the following read will block. This is broken for the way
-select()s and poll()s are supposed to work.
+kprobe/uprobe/eprobe call below interfaces to print logs into 'error_log':
+  trace_probe_log_init()
+  trace_probe_log_clear()
+  trace_probe_log_set_index()
+  __trace_probe_log_err()
 
-Have the polling on the ring buffer also block the same way reads and
-splice does on the ring buffer.
+These interfaces access global variable 'trace_probe_log' without any
+concurrency protection, then concurrently access 'trace_probe_log.argv' in
+__trace_probe_log_err() may cause kernel oops [1] [2].
 
-Link: https://lkml.kernel.org/r/20221020231427.41be3f26@gandalf.local.home
+To solve this problem, we can add a mutex lock (see demo code below), but
+it doesn't look so good to add such a big lock just for log print.
 
-Cc: Linux Trace Kernel <linux-trace-kernel@vger.kernel.org>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>
-Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Cc: Primiano Tucci <primiano@google.com>
-Cc: stable@vger.kernel.org
-Fixes: 1e0d6714aceb7 ("ring-buffer: Do not wake up a splice waiter when page is not full")
-Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
----
- include/linux/ring_buffer.h |  2 +-
- kernel/trace/ring_buffer.c  | 55 ++++++++++++++++++++++++-------------
- kernel/trace/trace.c        |  2 +-
- 3 files changed, 38 insertions(+), 21 deletions(-)
+  diff --git a/kernel/trace/trace_probe.c b/kernel/trace/trace_probe.c
+  index 36dff277de46..e6e8e6002546 100644
+  --- a/kernel/trace/trace_probe.c
+  +++ b/kernel/trace/trace_probe.c
+  @@ -142,17 +142,22 @@ static const struct fetch_type *find_fetch_type(const char *type)
 
-diff --git a/include/linux/ring_buffer.h b/include/linux/ring_buffer.h
-index 2504df9a0453..3c7d295746f6 100644
---- a/include/linux/ring_buffer.h
-+++ b/include/linux/ring_buffer.h
-@@ -100,7 +100,7 @@ __ring_buffer_alloc(unsigned long size, unsigned flags, struct lock_class_key *k
- 
- int ring_buffer_wait(struct trace_buffer *buffer, int cpu, int full);
- __poll_t ring_buffer_poll_wait(struct trace_buffer *buffer, int cpu,
--			  struct file *filp, poll_table *poll_table);
-+			  struct file *filp, poll_table *poll_table, int full);
- void ring_buffer_wake_waiters(struct trace_buffer *buffer, int cpu);
- 
- #define RING_BUFFER_ALL_CPUS -1
-diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
-index 9712083832f4..089b1ec9cb3b 100644
---- a/kernel/trace/ring_buffer.c
-+++ b/kernel/trace/ring_buffer.c
-@@ -907,6 +907,21 @@ size_t ring_buffer_nr_dirty_pages(struct trace_buffer *buffer, int cpu)
- 	return cnt - read;
- }
- 
-+static __always_inline bool full_hit(struct trace_buffer *buffer, int cpu, int full)
-+{
-+	struct ring_buffer_per_cpu *cpu_buffer = buffer->buffers[cpu];
-+	size_t nr_pages;
-+	size_t dirty;
-+
-+	nr_pages = cpu_buffer->nr_pages;
-+	if (!nr_pages || !full)
-+		return true;
-+
-+	dirty = ring_buffer_nr_dirty_pages(buffer, cpu);
-+
-+	return (dirty * 100) > (full * nr_pages);
-+}
-+
- /*
-  * rb_wake_up_waiters - wake up tasks waiting for ring buffer input
-  *
-@@ -1046,22 +1061,20 @@ int ring_buffer_wait(struct trace_buffer *buffer, int cpu, int full)
- 		    !ring_buffer_empty_cpu(buffer, cpu)) {
- 			unsigned long flags;
- 			bool pagebusy;
--			size_t nr_pages;
--			size_t dirty;
-+			bool done;
- 
- 			if (!full)
- 				break;
- 
- 			raw_spin_lock_irqsave(&cpu_buffer->reader_lock, flags);
- 			pagebusy = cpu_buffer->reader_page == cpu_buffer->commit_page;
--			nr_pages = cpu_buffer->nr_pages;
--			dirty = ring_buffer_nr_dirty_pages(buffer, cpu);
-+			done = !pagebusy && full_hit(buffer, cpu, full);
-+
- 			if (!cpu_buffer->shortest_full ||
- 			    cpu_buffer->shortest_full > full)
- 				cpu_buffer->shortest_full = full;
- 			raw_spin_unlock_irqrestore(&cpu_buffer->reader_lock, flags);
--			if (!pagebusy &&
--			    (!nr_pages || (dirty * 100) > full * nr_pages))
-+			if (done)
- 				break;
- 		}
- 
-@@ -1087,6 +1100,7 @@ int ring_buffer_wait(struct trace_buffer *buffer, int cpu, int full)
-  * @cpu: the cpu buffer to wait on
-  * @filp: the file descriptor
-  * @poll_table: The poll descriptor
-+ * @full: wait until the percentage of pages are available, if @cpu != RING_BUFFER_ALL_CPUS
-  *
-  * If @cpu == RING_BUFFER_ALL_CPUS then the task will wake up as soon
-  * as data is added to any of the @buffer's cpu buffers. Otherwise
-@@ -1096,14 +1110,15 @@ int ring_buffer_wait(struct trace_buffer *buffer, int cpu, int full)
-  * zero otherwise.
-  */
- __poll_t ring_buffer_poll_wait(struct trace_buffer *buffer, int cpu,
--			  struct file *filp, poll_table *poll_table)
-+			  struct file *filp, poll_table *poll_table, int full)
- {
- 	struct ring_buffer_per_cpu *cpu_buffer;
- 	struct rb_irq_work *work;
- 
--	if (cpu == RING_BUFFER_ALL_CPUS)
-+	if (cpu == RING_BUFFER_ALL_CPUS) {
- 		work = &buffer->irq_work;
--	else {
-+		full = 0;
-+	} else {
- 		if (!cpumask_test_cpu(cpu, buffer->cpumask))
- 			return -EINVAL;
- 
-@@ -1111,8 +1126,14 @@ __poll_t ring_buffer_poll_wait(struct trace_buffer *buffer, int cpu,
- 		work = &cpu_buffer->irq_work;
- 	}
- 
--	poll_wait(filp, &work->waiters, poll_table);
--	work->waiters_pending = true;
-+	if (full) {
-+		poll_wait(filp, &work->full_waiters, poll_table);
-+		work->full_waiters_pending = true;
-+	} else {
-+		poll_wait(filp, &work->waiters, poll_table);
-+		work->waiters_pending = true;
-+	}
-+
- 	/*
- 	 * There's a tight race between setting the waiters_pending and
- 	 * checking if the ring buffer is empty.  Once the waiters_pending bit
-@@ -1128,6 +1149,9 @@ __poll_t ring_buffer_poll_wait(struct trace_buffer *buffer, int cpu,
- 	 */
- 	smp_mb();
- 
-+	if (full)
-+		return full_hit(buffer, cpu, full) ? EPOLLIN | EPOLLRDNORM : 0;
-+
- 	if ((cpu == RING_BUFFER_ALL_CPUS && !ring_buffer_empty(buffer)) ||
- 	    (cpu != RING_BUFFER_ALL_CPUS && !ring_buffer_empty_cpu(buffer, cpu)))
- 		return EPOLLIN | EPOLLRDNORM;
-@@ -3155,10 +3179,6 @@ static void rb_commit(struct ring_buffer_per_cpu *cpu_buffer,
- static __always_inline void
- rb_wakeups(struct trace_buffer *buffer, struct ring_buffer_per_cpu *cpu_buffer)
- {
--	size_t nr_pages;
--	size_t dirty;
--	size_t full;
--
- 	if (buffer->irq_work.waiters_pending) {
- 		buffer->irq_work.waiters_pending = false;
- 		/* irq_work_queue() supplies it's own memory barriers */
-@@ -3182,10 +3202,7 @@ rb_wakeups(struct trace_buffer *buffer, struct ring_buffer_per_cpu *cpu_buffer)
- 
- 	cpu_buffer->last_pages_touch = local_read(&cpu_buffer->pages_touched);
- 
--	full = cpu_buffer->shortest_full;
--	nr_pages = cpu_buffer->nr_pages;
--	dirty = ring_buffer_nr_dirty_pages(buffer, cpu_buffer->cpu);
--	if (full && nr_pages && (dirty * 100) <= full * nr_pages)
-+	if (!full_hit(buffer, cpu_buffer->cpu, cpu_buffer->shortest_full))
- 		return;
- 
- 	cpu_buffer->irq_work.wakeup_full = true;
-diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
-index 47a44b055a1d..c6c7a0af3ed2 100644
---- a/kernel/trace/trace.c
-+++ b/kernel/trace/trace.c
-@@ -6681,7 +6681,7 @@ trace_poll(struct trace_iterator *iter, struct file *filp, poll_table *poll_tabl
- 		return EPOLLIN | EPOLLRDNORM;
- 	else
- 		return ring_buffer_poll_wait(iter->array_buffer->buffer, iter->cpu_file,
--					     filp, poll_table);
-+					     filp, poll_table, iter->tr->buffer_percent);
- }
- 
- static __poll_t
--- 
-2.35.1
+   static struct trace_probe_log trace_probe_log;
 
+  +DEFINE_MUTEX(trace_probe_log_mutex);
+  +
+   void trace_probe_log_init(const char *subsystem, int argc, const char **argv)
+   {
+  +       mutex_lock(&trace_probe_log_mutex);
+          trace_probe_log.subsystem = subsystem;
+          trace_probe_log.argc = argc;
+          trace_probe_log.argv = argv;
+          trace_probe_log.index = 0;
+   }
+
+   void trace_probe_log_clear(void)
+   {
+          memset(&trace_probe_log, 0, sizeof(trace_probe_log));
+  +       mutex_unlock(&trace_probe_log_mutex);
+   }
+
+Another possible solution, we can define a stack varible to hold trace_probe_log
+arguments in __trace_{k,u,e}probe_create() then pass it to every caller of
+trace_probe_log_err(). But it may look a little ugly.
+
+[1] Shell script to reproduce:
+  # 'p4' is invalid command which make kernel run into trace_probe_log_err()
+  cd /sys/kernel/debug/tracing
+  while true; do
+    echo 'p4:myprobe1 do_sys_openat2 dfd=%ax filename=%dx flags=%cx mode=+4($stack)' >> kprobe_events &
+    echo 'p4:myprobe2 do_sys_openat2' >> kprobe_events &
+    echo 'p4:myprobe3 do_sys_openat2 dfd=%ax filename=%dx' >> kprobe_events &
+  done;
+
+[2] Reproduction log:
+general protection fault, probably for non-canonical address I
+[  407.244517] CPU: 6 PID: 20830 Comm: xx.sh Tainted: G        W          6.1.0-rc6 #143
+[  407.244517] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS rel-1.15.0-0-g2dd4
+[  407.244517] RIP: 0010:kfree+0x4b/0x110
+[  407.244517] Code: 80 48 01 e8 0f 82 d8 00 00 00 48 c7 c2 00 00 00 80 48 2b 15 37 70 3b 016
+[  407.244517] RSP: 0018:ffff936442d4bde0 EFLAGS: 00000207
+[  407.244517] RAX: 01b960a8019881c0 RBX: ffff89fa031068e8 RCX: 00000000000a6e86
+[  407.244517] RDX: 0000760680000000 RSI: ffffffff9dfc056d RDI: 6e656c6966207861
+[  407.244517] RBP: 6e656c6966207861 R08: 00000000ffffffea R09: 0000000000000000
+[  407.244517] R10: ffff89fa060aa4e8 R11: ffffc91e44153d08 R12: 00000000ffffffea
+[  407.244517] R13: ffffffff9d5a0240 R14: ffff89fa031f9000 R15: ffff89fa031f9000
+[  407.244517] FS:  00007f9f34691740(0000) GS:ffff89fa3dc00000(0000) knlGS:0000000000000000
+[  407.244517] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[  407.244517] CR2: 00007f9f3470a860 CR3: 0000000100b94000 CR4: 00000000000006e0
+[  407.244517] Call Trace:
+[  407.244517]  <TASK>
+[  407.244517]  argv_free+0xd/0x20
+[  407.244517]  ? print_kprobe_event+0x190/0x190
+[  407.244517]  trace_probe_create+0x4f/0x90
+[  407.244517]  create_or_delete_trace_kprobe+0x11/0x40
+[  407.244517]  trace_parse_run_command+0xaa/0x130
+[  407.244517]  vfs_write+0xc6/0x3c0
+[  407.244517]  ? __do_sys_newfstat+0x57/0x60
+[  407.244517]  ksys_write+0x5f/0xe0
+[  407.244517]  do_syscall_64+0x3b/0x90
+[  407.244517]  entry_SYSCALL_64_after_hwframe+0x63/0xcd
+[  407.244517] RIP: 0033:0x7f9f347a2077
+[  407.244517] Code: 64 89 02 48 c7 c0 ff ff ff ff eb bb 0f 1f 80 00 00 00 00 f3 0f 1e fa 644
+[  407.244517] RSP: 002b:00007ffd03965d18 EFLAGS: 00000246 ORIG_RAX: 0000000000000001
+[  407.244517] RAX: ffffffffffffffda RBX: 000000000000001b RCX: 00007f9f347a2077
+[  407.244517] RDX: 000000000000001b RSI: 0000563d529db570 RDI: 0000000000000001
+[  407.244517] RBP: 0000563d529db570 R08: 000000000000000a R09: 000000000000001a
+[  407.244517] R10: 0000563d51deb017 R11: 0000000000000246 R12: 000000000000001b
+[  407.244517] R13: 00007f9f348816a0 R14: 00007f9f3487d4a0 R15: 00007f9f3487c8a0
+[  407.244517]  </TASK>
+[  407.244517] Modules linked in:
+[  407.265327] ---[ end trace 0000000000000000 ]---
+[  407.267380] RIP: 0010:kfree+0x4b/0x110
+[  407.268251] Code: 80 48 01 e8 0f 82 d8 00 00 00 48 c7 c2 00 00 00 80 48 2b 15 37 70 3b 016
+[  407.269811] RSP: 0018:ffff936442d4bde0 EFLAGS: 00000207
+[  407.270239] RAX: 01b960a8019881c0 RBX: ffff89fa031068e8 RCX: 00000000000a6e86
+[  407.270885] RDX: 0000760680000000 RSI: ffffffff9dfc056d RDI: 6e656c6966207861
+[  407.272507] RBP: 6e656c6966207861 R08: 00000000ffffffea R09: 0000000000000000
+[  407.273110] R10: ffff89fa060aa4e8 R11: ffffc91e44153d08 R12: 00000000ffffffea
+[  407.273773] R13: ffffffff9d5a0240 R14: ffff89fa031f9000 R15: ffff89fa031f9000
+[  407.274161] FS:  00007f9f34691740(0000) GS:ffff89fa3dc00000(0000) knlGS:0000000000000000
+[  407.274806] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[  407.275201] CR2: 00007f9f3470a860 CR3: 0000000100b94000 CR4: 00000000000006e0
+[  407.276197] Kernel panic - not syncing: Fatal exception
+[  407.276792] Kernel Offset: 0x1c400000 from 0xffffffff81000000 (relocation range: 0xffffff)
+[  407.276792] ---[ end Kernel panic - not syncing: Fatal exception ]---
 
