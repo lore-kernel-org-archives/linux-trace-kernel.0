@@ -2,45 +2,45 @@ Return-Path: <linux-trace-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 53483C433FE
-	for <linux-trace-kernel@archiver.kernel.org>; Mon, 21 Nov 2022 22:01:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 03E08C4332F
+	for <linux-trace-kernel@archiver.kernel.org>; Mon, 21 Nov 2022 22:16:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231804AbiKUWBw (ORCPT
+        id S231428AbiKUWQM (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Mon, 21 Nov 2022 17:01:52 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48844 "EHLO
+        Mon, 21 Nov 2022 17:16:12 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57734 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231913AbiKUWBq (ORCPT
+        with ESMTP id S229501AbiKUWQL (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Mon, 21 Nov 2022 17:01:46 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2C19BBFF76;
-        Mon, 21 Nov 2022 14:01:44 -0800 (PST)
+        Mon, 21 Nov 2022 17:16:11 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9ED90D92EE;
+        Mon, 21 Nov 2022 14:16:09 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id ADEAA6149B;
-        Mon, 21 Nov 2022 22:01:43 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 37775C433D6;
-        Mon, 21 Nov 2022 22:01:42 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 2D380614BE;
+        Mon, 21 Nov 2022 22:16:09 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9E867C433C1;
+        Mon, 21 Nov 2022 22:16:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1669068103;
-        bh=rwaBCvPHGgc7n+t3wpNam6RsNgSir7rTGgOchy2tEmE=;
+        s=k20201202; t=1669068968;
+        bh=hVhQKai+VdaA84bL2hSqW8a4+HrJYhcbBcUxJxtcGrw=;
         h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=ctEHQHMmLQ5f0JZIyPms35S8QlPBsYi2rJkp+nJZhkGp/4CJTa1Pw779CjBftFQwq
-         wNhYoZ/2JkMaas35aPwTM7ag9hV66XUa4lNN89TbD9NDXDvA4XkMFLs7ntq1kROalm
-         pfv81u0PxlS6aBd6SLb2XdIzn5h80jePovSWQfK83pFw/5D4sWHmIY/zMvUBMDCb6d
-         8jpQO/vxVNzHp4EvHP8yXTemKHqWQ0HIcUGFPinws2Hdx/4G94tyJN4QPo/KvOrKDN
-         04lMOR4XoEQnniX2Ondbqz72aUL/Mpzm0tEwhysixd4JAgfL3Ar9w3aVsG8gKps0wP
-         UUISAcC66/k+w==
-Date:   Tue, 22 Nov 2022 07:01:39 +0900
+        b=N8T6+8rdFLYjRGmDtcHE0D6lAXLmyc8D2MhwVRHv+lMvikscMIlhAP6NWXSjcGDNr
+         4AE99qK5TiUJX9jgyYsxz7zvsZ1s/pNujn8K2IOJEmsi2+FW5DZ+o8DttTTgXxTQk9
+         JwTvXqk81s3pvOwlsttNcihGmEee4VzNNlZdMUS2ize4hye9j5Ez4n58Z1LWW6Eapc
+         T2YtBZ+ebOtIBzr6TAvOocFraXnL/8qfLkM7tNfKPdFVZA4y1rt5XeWASSBeSV6KIK
+         6l4Nl7QZLySI+dGD0vJivkrmyMI7YaKAQbiJf+DlOErm6oybAqGWzPRhF9f+upUofp
+         Ew7QAPl2LFoUQ==
+Date:   Tue, 22 Nov 2022 07:16:05 +0900
 From:   Masami Hiramatsu (Google) <mhiramat@kernel.org>
 To:     Song Chen <chensong_2000@189.cn>
 Cc:     rostedt@goodmis.org, linux-kernel@vger.kernel.org,
         linux-trace-kernel@vger.kernel.org
 Subject: Re: [PATCH 1/4] kernel/trace: Introduce new APIs to process probe
  arguments
-Message-Id: <20221122070139.7c5006b290d76f012f1d977a@kernel.org>
+Message-Id: <20221122071605.5f3d4e8247375657e908372b@kernel.org>
 In-Reply-To: <1668601507-4289-1-git-send-email-chensong_2000@189.cn>
 References: <1668601507-4289-1-git-send-email-chensong_2000@189.cn>
 X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
@@ -51,8 +51,6 @@ Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-Hi Song,
-
 On Wed, 16 Nov 2022 20:25:07 +0800
 Song Chen <chensong_2000@189.cn> wrote:
 
@@ -60,19 +58,6 @@ Song Chen <chensong_2000@189.cn> wrote:
 > 1. trace_probe_get_data_size: get arguments' data size
 > 2. trace_probe_store_args: store aruguments into ring buffer
 > 3. trace_probe_print_args: print arguments into trace file
-
-Ah, I meant that split the patches into
-
-Introduce trace_probe_get_data_size() and use it in *probes
-Introduce trace_probe_store_args() and use it in *probes
-Introduce trace_probe_print_args and use it in *probes
-
-Then we can easily understand by its meaning.
-
-Can you reform this series again?
-
-Thank you,
-
 > 
 > Those APIs are going to merge similar implementations respectively
 > in kprobe/uprobe/eprobe.
@@ -151,6 +136,16 @@ Thank you,
 > +				ret += user_fetch_store_strlen_user(val + code->offset);
 > +			else
 > +				ret += kern_fetch_store_strlen_user(val + code->offset);
+
+Also, I would not like to see this "is_uprobe" check in the code. That is useless
+when running this in the kernel. This is why I did this in trace_probe_tmpl.h as
+an inlined function.
+
+So, sorting print_args function is OK for me, but the process_fetch_insn* should be
+kept as inlined. Maybe some common code can be move to the trace_probe_tmpl.h as
+inlined functions?
+
+
 > +			code++;
 > +			goto array;
 > +		} else
@@ -298,6 +293,9 @@ Thank you,
 > +		else
 > +			val = regs_get_kernel_stack_nth(regs, code->param);
 > +		break;
+
+Ditto.
+
 > +	case FETCH_OP_STACKP:
 > +		if (is_uprobe)
 > +			val = user_stack_pointer(regs);
@@ -428,6 +426,9 @@ Thank you,
 > index 000000000000..b8d77447fe0c
 > --- /dev/null
 > +++ b/kernel/trace/trace_probe_common.h
+
+Please do not add an internal header file only just for 1 file. 
+
 > @@ -0,0 +1,69 @@
 > +/* SPDX-License-Identifier: GPL-2.0 */
 > +#ifndef __TRACE_PROBE_COMMON_H_
@@ -503,6 +504,11 @@ Thank you,
 > index 000000000000..2104ccb44d56
 > --- /dev/null
 > +++ b/kernel/trace/trace_probe_user.h
+
+Ditto.
+
+Thank you,
+
 > @@ -0,0 +1,95 @@
 > +/* SPDX-License-Identifier: GPL-2.0 */
 > +#ifndef __TRACE_PROBE_USER_H_
@@ -603,6 +609,7 @@ Thank you,
 > 2.25.1
 > 
 
+Thanks,
 
 -- 
 Masami Hiramatsu (Google) <mhiramat@kernel.org>
