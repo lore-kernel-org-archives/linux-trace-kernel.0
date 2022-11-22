@@ -2,35 +2,35 @@ Return-Path: <linux-trace-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6080FC433FE
-	for <linux-trace-kernel@archiver.kernel.org>; Tue, 22 Nov 2022 17:24:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1781CC4332F
+	for <linux-trace-kernel@archiver.kernel.org>; Tue, 22 Nov 2022 23:09:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232429AbiKVRYC (ORCPT
+        id S235190AbiKVXJR (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Tue, 22 Nov 2022 12:24:02 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43830 "EHLO
+        Tue, 22 Nov 2022 18:09:17 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35096 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234504AbiKVRXy (ORCPT
+        with ESMTP id S235214AbiKVXJP (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Tue, 22 Nov 2022 12:23:54 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6674B77208;
-        Tue, 22 Nov 2022 09:23:48 -0800 (PST)
+        Tue, 22 Nov 2022 18:09:15 -0500
+Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B6391C495A;
+        Tue, 22 Nov 2022 15:09:10 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 01FEF61765;
-        Tue, 22 Nov 2022 17:23:48 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EDEEBC433C1;
-        Tue, 22 Nov 2022 17:23:46 +0000 (UTC)
-Date:   Tue, 22 Nov 2022 12:23:45 -0500
+        by ams.source.kernel.org (Postfix) with ESMTPS id 461D0B81D4B;
+        Tue, 22 Nov 2022 23:09:09 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 923E5C433D6;
+        Tue, 22 Nov 2022 23:09:07 +0000 (UTC)
+Date:   Tue, 22 Nov 2022 18:09:05 -0500
 From:   Steven Rostedt <rostedt@goodmis.org>
 To:     LKML <linux-kernel@vger.kernel.org>,
         Linux Trace Kernel <linux-trace-kernel@vger.kernel.org>
 Cc:     Masami Hiramatsu <mhiramat@kernel.org>,
-        Rafael Mendonca <rafaelmendsr@gmail.com>
-Subject: [PATCH] tracing/probes: Handle system names with hyphens
-Message-ID: <20221122122345.160f5077@gandalf.local.home>
+        Song Shuai <suagrfillet@gmail.com>
+Subject: [PATCH] ftrace: Avoid needless updates of the ftrace function call
+Message-ID: <20221122180905.737b6f52@gandalf.local.home>
 X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
@@ -41,83 +41,72 @@ X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
 From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
 
-When creating probe names, a check is done to make sure it matches basic C
-standard variable naming standards. Basically, starts with alphabetic or
-underline, and then the rest of the characters have alpha-numeric or
-underline in them.
+Song Shuai reported:
 
-But system names do not have any true naming conventions, as they are
-created by the TRACE_SYSTEM macro and nothing tests to see what they are.
-The "xhci-hcd" trace events has a '-' in the system name. When trying to
-attach a eprobe to one of these trace points, it fails because the system
-name does not follow the variable naming convention because of the
-hyphen, and the eprobe checks fail on this.
+    The list func (ftrace_ops_list_func) will be patched first
+    before the transition between old and new calls are set,
+    which fixed the race described in this commit `59338f75`.
 
-Allow hyphens in the system name so that eprobes can attach to the
-"xhci-hcd" trace events.
+    While ftrace_trace_function changes from the list func to a
+    ftrace_ops func, like unregistering the klp_ops to leave the only
+    global_ops in ftrace_ops_list, the ftrace_[regs]_call will be
+    replaced with the list func although it already exists. So there
+    should be a condition to avoid this.
 
-Link: https://lore.kernel.org/all/Y3eJ8GiGnEvVd8%2FN@macondo/
+And suggested using another variable to keep track of what the ftrace
+function is set to. But this could be simplified by using a helper
+function that does the same with a static variable.
 
-Cc: stable@vger.kernel.org
-Fixes: 5b7a96220900e ("tracing/probe: Check event/group naming rule at parsing")
-Reported-by: Rafael Mendonca <rafaelmendsr@gmail.com>
+Link: https://lore.kernel.org/lkml/20221026132039.2236233-1-suagrfillet@gmail.com/
+
+Reported-by: Song Shuai <suagrfillet@gmail.com>
 Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
 ---
- kernel/trace/trace.h       | 19 ++++++++++++++++---
- kernel/trace/trace_probe.c |  2 +-
- 2 files changed, 17 insertions(+), 4 deletions(-)
+ kernel/trace/ftrace.c | 17 +++++++++++++++--
+ 1 file changed, 15 insertions(+), 2 deletions(-)
 
-diff --git a/kernel/trace/trace.h b/kernel/trace/trace.h
-index 54ee5711c729..a16fb4c9642e 100644
---- a/kernel/trace/trace.h
-+++ b/kernel/trace/trace.h
-@@ -1955,17 +1955,30 @@ static __always_inline void trace_iterator_reset(struct trace_iterator *iter)
+diff --git a/kernel/trace/ftrace.c b/kernel/trace/ftrace.c
+index 65a5d36463e0..d04552c0c275 100644
+--- a/kernel/trace/ftrace.c
++++ b/kernel/trace/ftrace.c
+@@ -2763,6 +2763,19 @@ void __weak ftrace_arch_code_modify_post_process(void)
+ {
  }
  
- /* Check the name is good for event/group/fields */
--static inline bool is_good_name(const char *name)
-+static inline bool __is_good_name(const char *name, bool hash_ok)
++static int update_ftrace_func(ftrace_func_t func)
++{
++	static ftrace_func_t save_func;
++
++	/* Avoid updating if it hasn't changed */
++	if (func == save_func)
++		return 0;
++
++	save_func = func;
++
++	return ftrace_update_ftrace_func(func);
++}
++
+ void ftrace_modify_all_code(int command)
  {
--	if (!isalpha(*name) && *name != '_')
-+	if (!isalpha(*name) && *name != '_' && (!hash_ok || *name != '-'))
- 		return false;
- 	while (*++name != '\0') {
--		if (!isalpha(*name) && !isdigit(*name) && *name != '_')
-+		if (!isalpha(*name) && !isdigit(*name) && *name != '_' &&
-+		    (!hash_ok || *name != '-'))
- 			return false;
+ 	int update = command & FTRACE_UPDATE_TRACE_FUNC;
+@@ -2783,7 +2796,7 @@ void ftrace_modify_all_code(int command)
+ 	 * traced.
+ 	 */
+ 	if (update) {
+-		err = ftrace_update_ftrace_func(ftrace_ops_list_func);
++		err = update_ftrace_func(ftrace_ops_list_func);
+ 		if (FTRACE_WARN_ON(err))
+ 			return;
  	}
- 	return true;
- }
- 
-+/* Check the name is good for event/group/fields */
-+static inline bool is_good_name(const char *name)
-+{
-+	return __is_good_name(name, false);
-+}
-+
-+/* Check the name is good for system */
-+static inline bool is_good_system_name(const char *name)
-+{
-+	return __is_good_name(name, true);
-+}
-+
- /* Convert certain expected symbols into '_' when generating event names */
- static inline void sanitize_event_name(char *name)
- {
-diff --git a/kernel/trace/trace_probe.c b/kernel/trace/trace_probe.c
-index 36dff277de46..bb2f95d7175c 100644
---- a/kernel/trace/trace_probe.c
-+++ b/kernel/trace/trace_probe.c
-@@ -246,7 +246,7 @@ int traceprobe_parse_event_name(const char **pevent, const char **pgroup,
- 			return -EINVAL;
- 		}
- 		strlcpy(buf, event, slash - event + 1);
--		if (!is_good_name(buf)) {
-+		if (!is_good_system_name(buf)) {
- 			trace_probe_log_err(offset, BAD_GROUP_NAME);
- 			return -EINVAL;
- 		}
+@@ -2799,7 +2812,7 @@ void ftrace_modify_all_code(int command)
+ 		/* If irqs are disabled, we are in stop machine */
+ 		if (!irqs_disabled())
+ 			smp_call_function(ftrace_sync_ipi, NULL, 1);
+-		err = ftrace_update_ftrace_func(ftrace_trace_function);
++		err = update_ftrace_func(ftrace_trace_function);
+ 		if (FTRACE_WARN_ON(err))
+ 			return;
+ 	}
 -- 
 2.35.1
 
