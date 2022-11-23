@@ -2,52 +2,77 @@ Return-Path: <linux-trace-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ED1F6C43219
-	for <linux-trace-kernel@archiver.kernel.org>; Wed, 23 Nov 2022 19:28:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E7BDC433FE
+	for <linux-trace-kernel@archiver.kernel.org>; Wed, 23 Nov 2022 21:02:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238590AbiKWT2W (ORCPT
+        id S235397AbiKWVCy (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Wed, 23 Nov 2022 14:28:22 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55794 "EHLO
+        Wed, 23 Nov 2022 16:02:54 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54944 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S240047AbiKWT1p (ORCPT
+        with ESMTP id S236590AbiKWVCw (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Wed, 23 Nov 2022 14:27:45 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BDBD712627;
-        Wed, 23 Nov 2022 11:27:43 -0800 (PST)
+        Wed, 23 Nov 2022 16:02:52 -0500
+Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0FDF22A96D;
+        Wed, 23 Nov 2022 13:02:51 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 582E361E79;
-        Wed, 23 Nov 2022 19:27:43 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B9537C433B5;
-        Wed, 23 Nov 2022 19:27:42 +0000 (UTC)
-Received: from rostedt by gandalf.local.home with local (Exim 4.96)
-        (envelope-from <rostedt@goodmis.org>)
-        id 1oxvPJ-000vyg-22;
-        Wed, 23 Nov 2022 14:27:41 -0500
-Message-ID: <20221123192556.738176467@goodmis.org>
-User-Agent: quilt/0.66
-Date:   Wed, 23 Nov 2022 14:25:56 -0500
+        by ams.source.kernel.org (Postfix) with ESMTPS id CA188B82488;
+        Wed, 23 Nov 2022 21:02:49 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C7C96C433C1;
+        Wed, 23 Nov 2022 21:02:47 +0000 (UTC)
+Date:   Wed, 23 Nov 2022 16:02:46 -0500
 From:   Steven Rostedt <rostedt@goodmis.org>
-To:     linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
-Cc:     Masami Hiramatsu <mhiramat@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Zheng Yejian <zhengyejian1@huawei.com>
-Subject: [PATCH 0/2] tracing: Prevent UAF on reused trace event type numbers
+To:     "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Linux Trace Kernel <linux-trace-kernel@vger.kernel.org>,
+        Rafael Mendonca <rafaelmendsr@gmail.com>,
+        Tzvetomir Stoyanov <tz.stoyanov@gmail.com>,
+        Tom Zanussi <zanussi@kernel.org>
+Subject: Re: [PATCH] tracing: Fix race where eprobes can be called before
+ the event
+Message-ID: <20221123160246.348c11b4@gandalf.local.home>
+In-Reply-To: <20221118211809.701d40c0f8a757b0df3c025a@kernel.org>
+References: <20221117214249.2addbe10@gandalf.local.home>
+        <20221118211809.701d40c0f8a757b0df3c025a@kernel.org>
+X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-Steven Rostedt (Google) (2):
-      tracing: Add tracing_reset_all_online_cpus_unlocked() function
-      tracing: Free buffers when a used dynamic event is removed
+On Fri, 18 Nov 2022 21:18:09 +0900
+Masami Hiramatsu (Google) <mhiramat@kernel.org> wrote:
 
-----
- kernel/trace/trace.c              | 11 ++++++++++-
- kernel/trace/trace.h              |  1 +
- kernel/trace/trace_dynevent.c     |  2 ++
- kernel/trace/trace_events.c       | 13 +++++++++++--
- kernel/trace/trace_events_synth.c |  2 --
- 5 files changed, 24 insertions(+), 5 deletions(-)
+> This looks good to me.
+> 
+> Acked-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+> 
+> BTW, would other trigger callbacks also need to add similar checks?
+
+I just checked, and yes, I think that histograms (the only other trigger
+that has EVENT_CMD_FL_NEEDS_REC set) has the same issue, and requires:
+
+diff --git a/kernel/trace/trace_events_hist.c b/kernel/trace/trace_events_hist.c
+index 087c19548049..1c82478e8dff 100644
+--- a/kernel/trace/trace_events_hist.c
++++ b/kernel/trace/trace_events_hist.c
+@@ -5143,6 +5143,9 @@ static void event_hist_trigger(struct event_trigger_data *data,
+ 	void *key = NULL;
+ 	unsigned int i;
+ 
++	if (unlikely(!rbe))
++		return;
++
+ 	memset(compound_key, 0, hist_data->key_size);
+ 
+ 	for_each_hist_key_field(i, hist_data) {
+
+
+I'll add that next.
+
+-- Steve
