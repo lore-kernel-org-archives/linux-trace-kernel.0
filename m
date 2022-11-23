@@ -2,273 +2,109 @@ Return-Path: <linux-trace-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E56B4C433FE
-	for <linux-trace-kernel@archiver.kernel.org>; Wed, 23 Nov 2022 22:43:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E46EC433FE
+	for <linux-trace-kernel@archiver.kernel.org>; Wed, 23 Nov 2022 23:39:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229842AbiKWWnC (ORCPT
+        id S229531AbiKWXjV (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Wed, 23 Nov 2022 17:43:02 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34568 "EHLO
+        Wed, 23 Nov 2022 18:39:21 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43026 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229840AbiKWWnA (ORCPT
+        with ESMTP id S229493AbiKWXjV (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Wed, 23 Nov 2022 17:43:00 -0500
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 218E19A5E0;
-        Wed, 23 Nov 2022 14:42:58 -0800 (PST)
+        Wed, 23 Nov 2022 18:39:21 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 628EDD5382;
+        Wed, 23 Nov 2022 15:39:20 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id B0CC2B82556;
-        Wed, 23 Nov 2022 22:42:56 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F2646C433D6;
-        Wed, 23 Nov 2022 22:42:53 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id F2BCA61F65;
+        Wed, 23 Nov 2022 23:39:19 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 432F7C433D6;
+        Wed, 23 Nov 2022 23:39:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1669243375;
-        bh=o8J7BU0lEG7DvNBEdtKGOdv3M3nGqE88WMgcMQtpHDg=;
+        s=k20201202; t=1669246759;
+        bh=6kodh2P7k6X62fYIdexaP2ea3dCieg1VAyeyZpkPx48=;
         h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=OBEWh+r5uFiIfmH6VtnZiN8D0eRaMSbOFpfOppk7wR8WzW498CO7fs6U+WOkQsI7W
-         LoS+FtBCEjs/I1xxI5OkibkbL2eAyzMgtuHy1nLNlUUtQ3rZAuxc46mwYI5kgIbOBo
-         4i4DWfSL7CMahBdYaFrCw24piyKEn6eZSvacSH0+COOGNfszINJt2ZoFVgzLlmfEXh
-         flYLNgSs7DB2LDoQp5PK/PHszUIrBwQdAlsgT887/jsoNfQr8IuI/2CdsWbUa0Eyn6
-         tnTG5EgryyX6aGAzr2s9Rf7z7Sv8wRAS8wKeRoZGgTss1j1PBJWqZZYqphZJSrQoSb
-         rjjbN88QijCug==
-Date:   Thu, 24 Nov 2022 07:42:52 +0900
+        b=J+UH/B0cbCB6vWMWCIvruNoqi02Fz59PKeuoaij/LzxBuyYO3RSZEFXV+hF/M+nxE
+         A9M5pXQqn8ceTzotMkcLqxTEkYIRj7mFrOCsB+XfnGb0TEQ83+dgqr5aAKDOcMveMn
+         hIyvmxjcGNef6oM0g6nH91g2v2dxE4QflvYsda8/kxfEHnpsyJIr3XgOA1b2E9UeiQ
+         9GocH9yY70xwaJ/gpjyAAfzomG1b73pkvNnG9mF78G0fzYoFGH/32bulDcK1DGq7ad
+         eYyHh1W/7AwD5JjFzLfMdYl1Q01qkqlw2QFe7vuqFK5JPSZFhxQ+C5Qa7Cvm3R7xPs
+         HhgnYywWZpiYA==
+Date:   Thu, 24 Nov 2022 08:39:16 +0900
 From:   Masami Hiramatsu (Google) <mhiramat@kernel.org>
 To:     Steven Rostedt <rostedt@goodmis.org>
-Cc:     linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Linux Trace Kernel <linux-trace-kernel@vger.kernel.org>,
         Masami Hiramatsu <mhiramat@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Zheng Yejian <zhengyejian1@huawei.com>, stable@vger.kernel.org,
-        Yujie Liu <yujie.liu@intel.com>
-Subject: Re: [PATCH 2/2] tracing: Free buffers when a used dynamic event is
- removed
-Message-Id: <20221124074252.1fced8fc9dd714acd0d6c1a5@kernel.org>
-In-Reply-To: <20221123192741.797436457@goodmis.org>
-References: <20221123192556.738176467@goodmis.org>
-        <20221123192741.797436457@goodmis.org>
+        Tom Zanussi <zanussi@kernel.org>
+Subject: Re: [PATCH] tracing: Fix race where histograms can be called before
+ the event
+Message-Id: <20221124083916.667a68cfe38f6fadd84000f4@kernel.org>
+In-Reply-To: <20221123164323.03450c3a@gandalf.local.home>
+References: <20221123164323.03450c3a@gandalf.local.home>
 X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On Wed, 23 Nov 2022 14:25:58 -0500
+On Wed, 23 Nov 2022 16:43:23 -0500
 Steven Rostedt <rostedt@goodmis.org> wrote:
 
 > From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
 > 
-> After 65536 dynamic events have been added and removed, the "type" field
-> of the event then uses the first type number that is available (not
-> currently used by other events). A type number is the identifier of the
-> binary blobs in the tracing ring buffer (known as events) to map them to
-> logic that can parse the binary blob.
+> commit 94eedf3dded5 ("tracing: Fix race where eprobes can be called before
+> the event") fixed an issue where if an event is soft disabled, and the
+> trigger is being added, there's a small window where the event sees that
+> there's a trigger but does not see that it requires reading the event yet,
+> and then calls the trigger with the record == NULL.
 > 
-> The issue is that if a dynamic event (like a kprobe event) is traced and
-> is in the ring buffer, and then that event is removed (because it is
-> dynamic, which means it can be created and destroyed), if another dynamic
-> event is created that has the same number that new event's logic on
-> parsing the binary blob will be used.
+> This could be solved with adding memory barriers in the hot path, or to
+> make sure that all the triggers requiring a record check for NULL. The
+> latter was chosen.
 > 
-> To show how this can be an issue, the following can crash the kernel:
+> Commit 94eedf3dded5 set the eprobe trigger handle to check for NULL, but
+> the same needs to be done with histograms.
 > 
->  # cd /sys/kernel/tracing
->  # for i in `seq 65536`; do
->      echo 'p:kprobes/foo do_sys_openat2 $arg1:u32' > kprobe_events
->  # done
+> Link: https://lore.kernel.org/linux-trace-kernel/20221118211809.701d40c0f8a757b0df3c025a@kernel.org/
 > 
-> For every iteration of the above, the writing to the kprobe_events will
-> remove the old event and create a new one (with the same format) and
-> increase the type number to the next available on until the type number
-> reaches over 65535 which is the max number for the 16 bit type. After it
-> reaches that number, the logic to allocate a new number simply looks for
-> the next available number. When an dynamic event is removed, that number
-> is then available to be reused by the next dynamic event created. That is,
-> once the above reaches the max number, the number assigned to the event in
-> that loop will remain the same.
-> 
-> Now that means deleting one dynamic event and created another will reuse
-> the previous events type number. This is where bad things can happen.
-> After the above loop finishes, the kprobes/foo event which reads the
-> do_sys_openat2 function call's first parameter as an integer.
-> 
->  # echo 1 > kprobes/foo/enable
->  # cat /etc/passwd > /dev/null
->  # cat trace
->              cat-2211    [005] ....  2007.849603: foo: (do_sys_openat2+0x0/0x130) arg1=4294967196
->              cat-2211    [005] ....  2007.849620: foo: (do_sys_openat2+0x0/0x130) arg1=4294967196
->              cat-2211    [005] ....  2007.849838: foo: (do_sys_openat2+0x0/0x130) arg1=4294967196
->              cat-2211    [005] ....  2007.849880: foo: (do_sys_openat2+0x0/0x130) arg1=4294967196
->  # echo 0 > kprobes/foo/enable
-> 
-> Now if we delete the kprobe and create a new one that reads a string:
-> 
->  # echo 'p:kprobes/foo do_sys_openat2 +0($arg2):string' > kprobe_events
-> 
-> And now we can the trace:
-> 
->  # cat trace
->         sendmail-1942    [002] .....   530.136320: foo: (do_sys_openat2+0x0/0x240) arg1=             cat-2046    [004] .....   530.930817: foo: (do_sys_openat2+0x0/0x240) arg1="������������������������������������������������������������������������������������������������"
->              cat-2046    [004] .....   530.930961: foo: (do_sys_openat2+0x0/0x240) arg1="������������������������������������������������������������������������������������������������"
->              cat-2046    [004] .....   530.934278: foo: (do_sys_openat2+0x0/0x240) arg1="������������������������������������������������������������������������������������������������"
->              cat-2046    [004] .....   530.934563: foo: (do_sys_openat2+0x0/0x240) arg1="������������������������������������������������������������������������������������������������"
->             bash-1515    [007] .....   534.299093: foo: (do_sys_openat2+0x0/0x240) arg1="kkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkk���������@��4Z����;Y�����U
+> Cc: stable@vger.kernel.org
+> Fixes: 7491e2c442781 ("tracing: Add a probe that attaches to trace events")
+> Reported-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+> Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
 
-Aah, right. Even if we remove one dynamic event, it was shown
-as unknown events.
-
-> 
-> And dmesg has:
-> 
-> ==================================================================
-> BUG: KASAN: use-after-free in string+0xd4/0x1c0
-> Read of size 1 at addr ffff88805fdbbfa0 by task cat/2049
-> 
->  CPU: 0 PID: 2049 Comm: cat Not tainted 6.1.0-rc6-test+ #641
->  Hardware name: Hewlett-Packard HP Compaq Pro 6300 SFF/339A, BIOS K01 v03.03 07/14/2016
->  Call Trace:
->   <TASK>
->   dump_stack_lvl+0x5b/0x77
->   print_report+0x17f/0x47b
->   kasan_report+0xad/0x130
->   string+0xd4/0x1c0
->   vsnprintf+0x500/0x840
->   seq_buf_vprintf+0x62/0xc0
->   trace_seq_printf+0x10e/0x1e0
->   print_type_string+0x90/0xa0
->   print_kprobe_event+0x16b/0x290
->   print_trace_line+0x451/0x8e0
->   s_show+0x72/0x1f0
->   seq_read_iter+0x58e/0x750
->   seq_read+0x115/0x160
->   vfs_read+0x11d/0x460
->   ksys_read+0xa9/0x130
->   do_syscall_64+0x3a/0x90
->   entry_SYSCALL_64_after_hwframe+0x63/0xcd
->  RIP: 0033:0x7fc2e972ade2
->  Code: c0 e9 b2 fe ff ff 50 48 8d 3d b2 3f 0a 00 e8 05 f0 01 00 0f 1f 44 00 00 f3 0f 1e fa 64 8b 04 25 18 00 00 00 85 c0 75 10 0f 05 <48> 3d 00 f0 ff ff 77 56 c3 0f 1f 44 00 00 48 83 ec 28 48 89 54 24
->  RSP: 002b:00007ffc64e687c8 EFLAGS: 00000246 ORIG_RAX: 0000000000000000
->  RAX: ffffffffffffffda RBX: 0000000000020000 RCX: 00007fc2e972ade2
->  RDX: 0000000000020000 RSI: 00007fc2e980d000 RDI: 0000000000000003
->  RBP: 00007fc2e980d000 R08: 00007fc2e980c010 R09: 0000000000000000
->  R10: 0000000000000022 R11: 0000000000000246 R12: 0000000000020f00
->  R13: 0000000000000003 R14: 0000000000020000 R15: 0000000000020000
->   </TASK>
-> 
->  The buggy address belongs to the physical page:
->  page:ffffea00017f6ec0 refcount:0 mapcount:0 mapping:0000000000000000 index:0x0 pfn:0x5fdbb
->  flags: 0xfffffc0000000(node=0|zone=1|lastcpupid=0x1fffff)
->  raw: 000fffffc0000000 0000000000000000 ffffea00017f6ec8 0000000000000000
->  raw: 0000000000000000 0000000000000000 00000000ffffffff 0000000000000000
->  page dumped because: kasan: bad access detected
-> 
->  Memory state around the buggy address:
->   ffff88805fdbbe80: ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
->   ffff88805fdbbf00: ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
->  >ffff88805fdbbf80: ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
->                                 ^
->   ffff88805fdbc000: ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
->   ffff88805fdbc080: ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
->  ==================================================================
-> 
-> This was found when Zheng Yejian sent a patch to convert the even type
-> number assignment to use IDA, which gives the next available number, and
-> this bug showed up in the fuzz testing by Yujie Liu and the kernel test
-> robot. But after further analysis, I found that this behavior is the same
-> as when the event type numbers go past the 16bit max (and the above shows
-> that).
-> 
-> As modules have a similar issue, but is dealt with by setting a
-> "WAS_ENABLED" flag when a module event is enabled, and when the module is
-> freed, if any of its events were enabled, the ring buffer that holds that
-> event is also cleared, to prevent reading stale events. The same can be
-> done for dynamic events.
-
-Indeed. If the dynamic event had not been enabled, there is no reason
-to clear the buffer.
-
-This looks good to me.
+I confirmed that other trigger callbacks only use the event_trigger_data,
+So this looks good to me.
 
 Acked-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 
 Thank you!
 
-> 
-> If any dynamic event that is being removed was enabled, then make sure the
-> buffers they were enabled in are now cleared.
-> 
-> Link: https://lore.kernel.org/all/20221110020319.1259291-1-zhengyejian1@huawei.com/
-> 
-> Cc: stable@vger.kernel.org
-> Depends-on: TBD ("tracing: Add tracing_reset_all_online_cpus_unlocked() function")
-> Depends-on: 5448d44c38557 ("tracing: Add unified dynamic event framework")
-> Depends-on: 6212dd29683ee ("tracing/kprobes: Use dyn_event framework for kprobe events")
-> Depends-on: 065e63f951432 ("tracing: Only have rmmod clear buffers that its events were active in")
-> Depends-on: 575380da8b469 ("tracing: Only clear trace buffer on module unload if event was traced")
-> Fixes: 77b44d1b7c283 ("tracing/kprobes: Rename Kprobe-tracer to kprobe-event")
-> Reported-by: Zheng Yejian <zhengyejian1@huawei.com>
-> Reported-by: Yujie Liu <yujie.liu@intel.com>
-> Reported-by: kernel test robot <yujie.liu@intel.com>
-> Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
 > ---
->  kernel/trace/trace_dynevent.c |  2 ++
->  kernel/trace/trace_events.c   | 11 ++++++++++-
->  2 files changed, 12 insertions(+), 1 deletion(-)
+>  kernel/trace/trace_events_hist.c | 3 +++
+>  1 file changed, 3 insertions(+)
 > 
-> diff --git a/kernel/trace/trace_dynevent.c b/kernel/trace/trace_dynevent.c
-> index 154996684fb5..4376887e0d8a 100644
-> --- a/kernel/trace/trace_dynevent.c
-> +++ b/kernel/trace/trace_dynevent.c
-> @@ -118,6 +118,7 @@ int dyn_event_release(const char *raw_command, struct dyn_event_operations *type
->  		if (ret)
->  			break;
->  	}
-> +	tracing_reset_all_online_cpus();
->  	mutex_unlock(&event_mutex);
->  out:
->  	argv_free(argv);
-> @@ -214,6 +215,7 @@ int dyn_events_release_all(struct dyn_event_operations *type)
->  			break;
->  	}
->  out:
-> +	tracing_reset_all_online_cpus();
->  	mutex_unlock(&event_mutex);
+> diff --git a/kernel/trace/trace_events_hist.c b/kernel/trace/trace_events_hist.c
+> index 087c19548049..1c82478e8dff 100644
+> --- a/kernel/trace/trace_events_hist.c
+> +++ b/kernel/trace/trace_events_hist.c
+> @@ -5143,6 +5143,9 @@ static void event_hist_trigger(struct event_trigger_data *data,
+>  	void *key = NULL;
+>  	unsigned int i;
 >  
->  	return ret;
-> diff --git a/kernel/trace/trace_events.c b/kernel/trace/trace_events.c
-> index 0449e3c7d327..3bfaf560ecc4 100644
-> --- a/kernel/trace/trace_events.c
-> +++ b/kernel/trace/trace_events.c
-> @@ -2947,7 +2947,10 @@ static int probe_remove_event_call(struct trace_event_call *call)
->  		 * TRACE_REG_UNREGISTER.
->  		 */
->  		if (file->flags & EVENT_FILE_FL_ENABLED)
-> -			return -EBUSY;
-> +			goto busy;
+> +	if (unlikely(!rbe))
+> +		return;
 > +
-> +		if (file->flags & EVENT_FILE_FL_WAS_ENABLED)
-> +			tr->clear_trace = true;
->  		/*
->  		 * The do_for_each_event_file_safe() is
->  		 * a double loop. After finding the call for this
-> @@ -2960,6 +2963,12 @@ static int probe_remove_event_call(struct trace_event_call *call)
->  	__trace_remove_event_call(call);
+>  	memset(compound_key, 0, hist_data->key_size);
 >  
->  	return 0;
-> + busy:
-> +	/* No need to clear the trace now */
-> +	list_for_each_entry(tr, &ftrace_trace_arrays, list) {
-> +		tr->clear_trace = false;
-> +	}
-> +	return -EBUSY;
->  }
->  
->  /* Remove an event_call */
+>  	for_each_hist_key_field(i, hist_data) {
 > -- 
 > 2.35.1
-> 
 > 
 
 
