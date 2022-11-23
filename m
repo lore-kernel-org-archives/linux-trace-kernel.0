@@ -2,187 +2,139 @@ Return-Path: <linux-trace-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 94DB6C47088
-	for <linux-trace-kernel@archiver.kernel.org>; Wed, 23 Nov 2022 13:48:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 594C1C4332F
+	for <linux-trace-kernel@archiver.kernel.org>; Wed, 23 Nov 2022 15:31:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238294AbiKWNsU (ORCPT
+        id S237852AbiKWPbi (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Wed, 23 Nov 2022 08:48:20 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33076 "EHLO
+        Wed, 23 Nov 2022 10:31:38 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43900 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237686AbiKWNrc (ORCPT
+        with ESMTP id S238862AbiKWPbU (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Wed, 23 Nov 2022 08:47:32 -0500
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A3C184733D;
-        Wed, 23 Nov 2022 05:37:18 -0800 (PST)
+        Wed, 23 Nov 2022 10:31:20 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 332B47648;
+        Wed, 23 Nov 2022 07:30:51 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 54F1CB81F31;
-        Wed, 23 Nov 2022 13:37:17 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 592C5C433D7;
-        Wed, 23 Nov 2022 13:37:15 +0000 (UTC)
-Date:   Wed, 23 Nov 2022 08:37:13 -0500
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Zheng Yejian <zhengyejian1@huawei.com>
-Cc:     <bpf@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <mhiramat@kernel.org>, <yujie.liu@intel.com>,
-        <linux-trace-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2] tracing: Optimize event type allocation with IDA
-Message-ID: <20221123083713.5e43d831@gandalf.local.home>
-In-Reply-To: <20221123080133.1128186-1-zhengyejian1@huawei.com>
-References: <20221122223258.10faaf4e@rorschach.local.home>
-        <20221123080133.1128186-1-zhengyejian1@huawei.com>
-X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
-MIME-Version: 1.0
+        by dfw.source.kernel.org (Postfix) with ESMTPS id C799C61DA1;
+        Wed, 23 Nov 2022 15:30:50 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4FF62C433D7;
+        Wed, 23 Nov 2022 15:30:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1669217450;
+        bh=qxiD6f09mDM/UjBI4O3tDzawaA36nwGekM2uCLPRvQ4=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=ZQ9uIIdNi/YxP6NOhvbUDULqC1WcioBOdMtNv6k4LhSAfk8iJA1ri9BqEaAlJGTii
+         1MKrsme+/dXJzBcXwLuaxHuzYuI/MjUv/1hILDuqymyjYeYgIeuC0fCikado4DKQ/Q
+         XCI5w9EXyDGoUgBSFAX7K1n8o0qZaqVu3lQRVMMzYK5pjb2rmfd3JIIAUWtqyOJBtC
+         HlP3i++EQixkiSvbuMwgcdNgRj3vaer0paptGvyMRiJDP94LeE2NO4fUNBx4B4a/Tf
+         zqddJHdd9kpIUCh8LPwutin+Pvey9F04tsZiTMd7lddx9LVQ12zxr0ixE5H/Vbbhzg
+         6tnrvEd4HK3rA==
+Date:   Thu, 24 Nov 2022 00:30:47 +0900
+From:   Masami Hiramatsu (Google) <mhiramat@kernel.org>
+To:     Steven Rostedt <rostedt@goodmis.org>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Linux Trace Kernel <linux-trace-kernel@vger.kernel.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Song Shuai <suagrfillet@gmail.com>
+Subject: Re: [PATCH] ftrace: Avoid needless updates of the ftrace function
+ call
+Message-Id: <20221124003047.827b6ef942b0dc529face3b9@kernel.org>
+In-Reply-To: <20221122180905.737b6f52@gandalf.local.home>
+References: <20221122180905.737b6f52@gandalf.local.home>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On Wed, 23 Nov 2022 16:01:33 +0800
-Zheng Yejian <zhengyejian1@huawei.com> wrote:
+On Tue, 22 Nov 2022 18:09:05 -0500
+Steven Rostedt <rostedt@goodmis.org> wrote:
 
-> But instead of clear tracing buffers, would it be better to just mark
-> that record invalid if we had a way of knowing that the format had changed?
+> From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
+> 
+> Song Shuai reported:
+> 
+>     The list func (ftrace_ops_list_func) will be patched first
+>     before the transition between old and new calls are set,
+>     which fixed the race described in this commit `59338f75`.
+> 
+>     While ftrace_trace_function changes from the list func to a
+>     ftrace_ops func, like unregistering the klp_ops to leave the only
+>     global_ops in ftrace_ops_list, the ftrace_[regs]_call will be
+>     replaced with the list func although it already exists. So there
+>     should be a condition to avoid this.
+> 
+> And suggested using another variable to keep track of what the ftrace
+> function is set to. But this could be simplified by using a helper
+> function that does the same with a static variable.
+> 
+> Link: https://lore.kernel.org/lkml/20221026132039.2236233-1-suagrfillet@gmail.com/
+> 
 
-We'd have to scan all ring buffers for the records. The only way to know
-what a binary blob in the ring buffer represents is this type.
+This looks good to me.
 
-But, I do the same for modules. And by hooking into that infrastructure, I
-can do the above commands again with the IDA patch included, and it works
-fine. If any dynamic event was enabled and then removed, it will reset the
-corresponding buffer where it was enabled in. This is needed regardless of
-your patch because once we get over 65536 types, the behavior of the type
-assignment is the same as the IDA logic. The IDA code didn't trigger a bug,
-it revealed an existing one.
+Reviewed-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 
-Care to test with the below patch added. I'll add this first (breaking it
-up a little) and then apply your patch.
+Thank you,
 
--- Steve
+> Reported-by: Song Shuai <suagrfillet@gmail.com>
+> Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+> ---
+>  kernel/trace/ftrace.c | 17 +++++++++++++++--
+>  1 file changed, 15 insertions(+), 2 deletions(-)
+> 
+> diff --git a/kernel/trace/ftrace.c b/kernel/trace/ftrace.c
+> index 65a5d36463e0..d04552c0c275 100644
+> --- a/kernel/trace/ftrace.c
+> +++ b/kernel/trace/ftrace.c
+> @@ -2763,6 +2763,19 @@ void __weak ftrace_arch_code_modify_post_process(void)
+>  {
+>  }
+>  
+> +static int update_ftrace_func(ftrace_func_t func)
+> +{
+> +	static ftrace_func_t save_func;
+> +
+> +	/* Avoid updating if it hasn't changed */
+> +	if (func == save_func)
+> +		return 0;
+> +
+> +	save_func = func;
+> +
+> +	return ftrace_update_ftrace_func(func);
+> +}
+> +
+>  void ftrace_modify_all_code(int command)
+>  {
+>  	int update = command & FTRACE_UPDATE_TRACE_FUNC;
+> @@ -2783,7 +2796,7 @@ void ftrace_modify_all_code(int command)
+>  	 * traced.
+>  	 */
+>  	if (update) {
+> -		err = ftrace_update_ftrace_func(ftrace_ops_list_func);
+> +		err = update_ftrace_func(ftrace_ops_list_func);
+>  		if (FTRACE_WARN_ON(err))
+>  			return;
+>  	}
+> @@ -2799,7 +2812,7 @@ void ftrace_modify_all_code(int command)
+>  		/* If irqs are disabled, we are in stop machine */
+>  		if (!irqs_disabled())
+>  			smp_call_function(ftrace_sync_ipi, NULL, 1);
+> -		err = ftrace_update_ftrace_func(ftrace_trace_function);
+> +		err = update_ftrace_func(ftrace_trace_function);
+>  		if (FTRACE_WARN_ON(err))
+>  			return;
+>  	}
+> -- 
+> 2.35.1
+> 
 
-diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
-index 6a47fed2f473..93a75a97118f 100644
---- a/kernel/trace/trace.c
-+++ b/kernel/trace/trace.c
-@@ -2180,10 +2180,12 @@ void tracing_reset_online_cpus(struct array_buffer *buf)
- }
- 
- /* Must have trace_types_lock held */
--void tracing_reset_all_online_cpus(void)
-+void tracing_reset_all_online_cpus_unlocked(void)
- {
- 	struct trace_array *tr;
- 
-+	lockdep_assert_held(&trace_types_lock);
-+
- 	list_for_each_entry(tr, &ftrace_trace_arrays, list) {
- 		if (!tr->clear_trace)
- 			continue;
-@@ -2195,6 +2197,13 @@ void tracing_reset_all_online_cpus(void)
- 	}
- }
- 
-+void tracing_reset_all_online_cpus(void)
-+{
-+	mutex_lock(&trace_types_lock);
-+	tracing_reset_all_online_cpus_unlocked();
-+	mutex_unlock(&trace_types_lock);
-+}
-+
- /*
-  * The tgid_map array maps from pid to tgid; i.e. the value stored at index i
-  * is the tgid last observed corresponding to pid=i.
-diff --git a/kernel/trace/trace.h b/kernel/trace/trace.h
-index d9b470a0adf2..48643f07bc01 100644
---- a/kernel/trace/trace.h
-+++ b/kernel/trace/trace.h
-@@ -580,6 +580,7 @@ int tracing_is_enabled(void);
- void tracing_reset_online_cpus(struct array_buffer *buf);
- void tracing_reset_current(int cpu);
- void tracing_reset_all_online_cpus(void);
-+void tracing_reset_all_online_cpus_unlocked(void);
- int tracing_open_generic(struct inode *inode, struct file *filp);
- int tracing_open_generic_tr(struct inode *inode, struct file *filp);
- bool tracing_is_disabled(void);
-diff --git a/kernel/trace/trace_dynevent.c b/kernel/trace/trace_dynevent.c
-index 154996684fb5..4376887e0d8a 100644
---- a/kernel/trace/trace_dynevent.c
-+++ b/kernel/trace/trace_dynevent.c
-@@ -118,6 +118,7 @@ int dyn_event_release(const char *raw_command, struct dyn_event_operations *type
- 		if (ret)
- 			break;
- 	}
-+	tracing_reset_all_online_cpus();
- 	mutex_unlock(&event_mutex);
- out:
- 	argv_free(argv);
-@@ -214,6 +215,7 @@ int dyn_events_release_all(struct dyn_event_operations *type)
- 			break;
- 	}
- out:
-+	tracing_reset_all_online_cpus();
- 	mutex_unlock(&event_mutex);
- 
- 	return ret;
-diff --git a/kernel/trace/trace_events.c b/kernel/trace/trace_events.c
-index 7372fffb8109..3bfaf560ecc4 100644
---- a/kernel/trace/trace_events.c
-+++ b/kernel/trace/trace_events.c
-@@ -2947,7 +2947,10 @@ static int probe_remove_event_call(struct trace_event_call *call)
- 		 * TRACE_REG_UNREGISTER.
- 		 */
- 		if (file->flags & EVENT_FILE_FL_ENABLED)
--			return -EBUSY;
-+			goto busy;
-+
-+		if (file->flags & EVENT_FILE_FL_WAS_ENABLED)
-+			tr->clear_trace = true;
- 		/*
- 		 * The do_for_each_event_file_safe() is
- 		 * a double loop. After finding the call for this
-@@ -2960,6 +2963,12 @@ static int probe_remove_event_call(struct trace_event_call *call)
- 	__trace_remove_event_call(call);
- 
- 	return 0;
-+ busy:
-+	/* No need to clear the trace now */
-+	list_for_each_entry(tr, &ftrace_trace_arrays, list) {
-+		tr->clear_trace = false;
-+	}
-+	return -EBUSY;
- }
- 
- /* Remove an event_call */
-@@ -3039,7 +3048,7 @@ static void trace_module_remove_events(struct module *mod)
- 	 * over from this module may be passed to the new module events and
- 	 * unexpected results may occur.
- 	 */
--	tracing_reset_all_online_cpus();
-+	tracing_reset_all_online_cpus_unlocked();
- }
- 
- static int trace_module_notify(struct notifier_block *self,
-diff --git a/kernel/trace/trace_events_synth.c b/kernel/trace/trace_events_synth.c
-index 29fbfb27c2b2..c3b582d19b62 100644
---- a/kernel/trace/trace_events_synth.c
-+++ b/kernel/trace/trace_events_synth.c
-@@ -1425,7 +1425,6 @@ int synth_event_delete(const char *event_name)
- 	mutex_unlock(&event_mutex);
- 
- 	if (mod) {
--		mutex_lock(&trace_types_lock);
- 		/*
- 		 * It is safest to reset the ring buffer if the module
- 		 * being unloaded registered any events that were
-@@ -1437,7 +1436,6 @@ int synth_event_delete(const char *event_name)
- 		 * occur.
- 		 */
- 		tracing_reset_all_online_cpus();
--		mutex_unlock(&trace_types_lock);
- 	}
- 
- 	return ret;
+
+-- 
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
