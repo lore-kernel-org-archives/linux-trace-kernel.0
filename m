@@ -2,34 +2,34 @@ Return-Path: <linux-trace-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BB26C4332F
-	for <linux-trace-kernel@archiver.kernel.org>; Wed, 23 Nov 2022 09:25:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 297F1C433FE
+	for <linux-trace-kernel@archiver.kernel.org>; Wed, 23 Nov 2022 09:37:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237514AbiKWJZt (ORCPT
+        id S237985AbiKWJhg (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Wed, 23 Nov 2022 04:25:49 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37132 "EHLO
+        Wed, 23 Nov 2022 04:37:36 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57734 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237517AbiKWJZd (ORCPT
+        with ESMTP id S238029AbiKWJhJ (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Wed, 23 Nov 2022 04:25:33 -0500
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3A8E226EF;
-        Wed, 23 Nov 2022 01:24:09 -0800 (PST)
+        Wed, 23 Nov 2022 04:37:09 -0500
+Received: from sin.source.kernel.org (sin.source.kernel.org [IPv6:2604:1380:40e1:4800::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B623864A3A;
+        Wed, 23 Nov 2022 01:34:32 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id E4EABB81EE5;
-        Wed, 23 Nov 2022 09:24:07 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1EDF5C433C1;
-        Wed, 23 Nov 2022 09:24:05 +0000 (UTC)
+        by sin.source.kernel.org (Postfix) with ESMTPS id 6FF2BCE0E1D;
+        Wed, 23 Nov 2022 09:34:30 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 45D4EC433D7;
+        Wed, 23 Nov 2022 09:34:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-        s=korg; t=1669195446;
-        bh=5Dxmk//3PQMX+XETAnqxYTqImGXetVOfadvJO6eHdrU=;
+        s=korg; t=1669196068;
+        bh=Fg3xb1nWkgm/mquTtLFY+ruDKPrdccGNSwqrzWLz6Rg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=TrUThuX0yRmMGjd/F+OP9/JstV6y1R8Dw9LOhfw5rtcSKSUGPECCNDV3RUiAAxr8/
-         bngqz79YC1jfeu02+M6voFnRaZtZrL1cBKDOTMU1ZcFwOVIbFjrXPdTZ90T7vfIG72
-         XzjHGy2Lntrjg46VmnZBJs7AXq7osVbVZcfuyPHY=
+        b=ifwVUpoTxPl0X1tG3O8VOrQSS/3q1nSadQUHJxy0oP9MxSldnhLMGo5Hf3DN1cKDM
+         Q+1Ccpw4rWG2PurCbu2Bv5rAnLZNrTs2LR0AoqjztwQstch7YH7YaS9h2+pxSUElPs
+         zOCr0hhnwz2iTyCtjZ0T+9xTmG0zsi3kjcp2SMOg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     stable@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
@@ -39,12 +39,12 @@ Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
         Primiano Tucci <primiano@google.com>,
         "Steven Rostedt (Google)" <rostedt@goodmis.org>
-Subject: [PATCH 5.10 086/149] tracing/ring-buffer: Have polling block on watermark
-Date:   Wed, 23 Nov 2022 09:51:09 +0100
-Message-Id: <20221123084601.076833504@linuxfoundation.org>
+Subject: [PATCH 5.15 111/181] tracing/ring-buffer: Have polling block on watermark
+Date:   Wed, 23 Nov 2022 09:51:14 +0100
+Message-Id: <20221123084607.133909424@linuxfoundation.org>
 X-Mailer: git-send-email 2.38.1
-In-Reply-To: <20221123084557.945845710@linuxfoundation.org>
-References: <20221123084557.945845710@linuxfoundation.org>
+In-Reply-To: <20221123084602.707860461@linuxfoundation.org>
+References: <20221123084602.707860461@linuxfoundation.org>
 User-Agent: quilt/0.67
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -87,7 +87,7 @@ Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 --- a/include/linux/ring_buffer.h
 +++ b/include/linux/ring_buffer.h
-@@ -99,7 +99,7 @@ __ring_buffer_alloc(unsigned long size,
+@@ -100,7 +100,7 @@ __ring_buffer_alloc(unsigned long size,
  
  int ring_buffer_wait(struct trace_buffer *buffer, int cpu, int full);
  __poll_t ring_buffer_poll_wait(struct trace_buffer *buffer, int cpu,
@@ -98,7 +98,7 @@ Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
  #define RING_BUFFER_ALL_CPUS -1
 --- a/kernel/trace/ring_buffer.c
 +++ b/kernel/trace/ring_buffer.c
-@@ -784,6 +784,21 @@ size_t ring_buffer_nr_dirty_pages(struct
+@@ -871,6 +871,21 @@ size_t ring_buffer_nr_dirty_pages(struct
  	return cnt - read;
  }
  
@@ -120,7 +120,7 @@ Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
  /*
   * rb_wake_up_waiters - wake up tasks waiting for ring buffer input
   *
-@@ -912,22 +927,20 @@ int ring_buffer_wait(struct trace_buffer
+@@ -1010,22 +1025,20 @@ int ring_buffer_wait(struct trace_buffer
  		    !ring_buffer_empty_cpu(buffer, cpu)) {
  			unsigned long flags;
  			bool pagebusy;
@@ -147,7 +147,7 @@ Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
  				break;
  		}
  
-@@ -953,6 +966,7 @@ int ring_buffer_wait(struct trace_buffer
+@@ -1051,6 +1064,7 @@ int ring_buffer_wait(struct trace_buffer
   * @cpu: the cpu buffer to wait on
   * @filp: the file descriptor
   * @poll_table: The poll descriptor
@@ -155,7 +155,7 @@ Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
   *
   * If @cpu == RING_BUFFER_ALL_CPUS then the task will wake up as soon
   * as data is added to any of the @buffer's cpu buffers. Otherwise
-@@ -962,14 +976,15 @@ int ring_buffer_wait(struct trace_buffer
+@@ -1060,14 +1074,15 @@ int ring_buffer_wait(struct trace_buffer
   * zero otherwise.
   */
  __poll_t ring_buffer_poll_wait(struct trace_buffer *buffer, int cpu,
@@ -174,7 +174,7 @@ Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
  		if (!cpumask_test_cpu(cpu, buffer->cpumask))
  			return -EINVAL;
  
-@@ -977,8 +992,14 @@ __poll_t ring_buffer_poll_wait(struct tr
+@@ -1075,8 +1090,14 @@ __poll_t ring_buffer_poll_wait(struct tr
  		work = &cpu_buffer->irq_work;
  	}
  
@@ -191,7 +191,7 @@ Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
  	/*
  	 * There's a tight race between setting the waiters_pending and
  	 * checking if the ring buffer is empty.  Once the waiters_pending bit
-@@ -994,6 +1015,9 @@ __poll_t ring_buffer_poll_wait(struct tr
+@@ -1092,6 +1113,9 @@ __poll_t ring_buffer_poll_wait(struct tr
  	 */
  	smp_mb();
  
@@ -201,7 +201,7 @@ Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
  	if ((cpu == RING_BUFFER_ALL_CPUS && !ring_buffer_empty(buffer)) ||
  	    (cpu != RING_BUFFER_ALL_CPUS && !ring_buffer_empty_cpu(buffer, cpu)))
  		return EPOLLIN | EPOLLRDNORM;
-@@ -3033,10 +3057,6 @@ static void rb_commit(struct ring_buffer
+@@ -3112,10 +3136,6 @@ static void rb_commit(struct ring_buffer
  static __always_inline void
  rb_wakeups(struct trace_buffer *buffer, struct ring_buffer_per_cpu *cpu_buffer)
  {
@@ -212,7 +212,7 @@ Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
  	if (buffer->irq_work.waiters_pending) {
  		buffer->irq_work.waiters_pending = false;
  		/* irq_work_queue() supplies it's own memory barriers */
-@@ -3060,10 +3080,7 @@ rb_wakeups(struct trace_buffer *buffer,
+@@ -3139,10 +3159,7 @@ rb_wakeups(struct trace_buffer *buffer,
  
  	cpu_buffer->last_pages_touch = local_read(&cpu_buffer->pages_touched);
  
@@ -226,7 +226,7 @@ Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
  	cpu_buffer->irq_work.wakeup_full = true;
 --- a/kernel/trace/trace.c
 +++ b/kernel/trace/trace.c
-@@ -6263,7 +6263,7 @@ trace_poll(struct trace_iterator *iter,
+@@ -6655,7 +6655,7 @@ trace_poll(struct trace_iterator *iter,
  		return EPOLLIN | EPOLLRDNORM;
  	else
  		return ring_buffer_poll_wait(iter->array_buffer->buffer, iter->cpu_file,
