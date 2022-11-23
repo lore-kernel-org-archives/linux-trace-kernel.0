@@ -2,97 +2,187 @@ Return-Path: <linux-trace-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 235D4C4332F
-	for <linux-trace-kernel@archiver.kernel.org>; Wed, 23 Nov 2022 10:01:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 94DB6C47088
+	for <linux-trace-kernel@archiver.kernel.org>; Wed, 23 Nov 2022 13:48:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236510AbiKWKBt (ORCPT
+        id S238294AbiKWNsU (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Wed, 23 Nov 2022 05:01:49 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56842 "EHLO
+        Wed, 23 Nov 2022 08:48:20 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33076 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236143AbiKWKAk (ORCPT
+        with ESMTP id S237686AbiKWNrc (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Wed, 23 Nov 2022 05:00:40 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2E8E963B8C;
-        Wed, 23 Nov 2022 01:53:03 -0800 (PST)
+        Wed, 23 Nov 2022 08:47:32 -0500
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A3C184733D;
+        Wed, 23 Nov 2022 05:37:18 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id CEDF461B87;
-        Wed, 23 Nov 2022 09:53:02 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CBCC0C433C1;
-        Wed, 23 Nov 2022 09:53:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-        s=korg; t=1669197182;
-        bh=r/KD+Loc1bRhvWnz5vxl9PaccKxnBDk2Ng7IRLJ8Wv0=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=DJwGAYMyEPVEhvPX6uALTtwJYkPWKOOkVB8ZSlYc9JgZAQFfenWLK21hdQf9a1swl
-         YVN8e8Sv7efNq2Imb6S3Hpwx4c8QVc8211cwGFyP8bEEWqxUKCEfSUrq2gd2QwFFy0
-         +BQ+WGqnxmfHpD0Piakp75S4bhjao16CsqMkxJFg=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     stable@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        patches@lists.linux.dev,
-        Linux Trace Kernel <linux-trace-kernel@vger.kernel.org>,
-        Tzvetomir Stoyanov <tz.stoyanov@gmail.com>,
-        Tom Zanussi <zanussi@kernel.org>,
-        "Masami Hiramatsu (Google)" <mhiramat@kernel.org>,
-        Rafael Mendonca <rafaelmendsr@gmail.com>,
-        "Steven Rostedt (Google)" <rostedt@goodmis.org>
-Subject: [PATCH 6.0 204/314] tracing: Fix race where eprobes can be called before the event
-Date:   Wed, 23 Nov 2022 09:50:49 +0100
-Message-Id: <20221123084634.797557114@linuxfoundation.org>
-X-Mailer: git-send-email 2.38.1
-In-Reply-To: <20221123084625.457073469@linuxfoundation.org>
-References: <20221123084625.457073469@linuxfoundation.org>
-User-Agent: quilt/0.67
+        by ams.source.kernel.org (Postfix) with ESMTPS id 54F1CB81F31;
+        Wed, 23 Nov 2022 13:37:17 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 592C5C433D7;
+        Wed, 23 Nov 2022 13:37:15 +0000 (UTC)
+Date:   Wed, 23 Nov 2022 08:37:13 -0500
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     Zheng Yejian <zhengyejian1@huawei.com>
+Cc:     <bpf@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <mhiramat@kernel.org>, <yujie.liu@intel.com>,
+        <linux-trace-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2] tracing: Optimize event type allocation with IDA
+Message-ID: <20221123083713.5e43d831@gandalf.local.home>
+In-Reply-To: <20221123080133.1128186-1-zhengyejian1@huawei.com>
+References: <20221122223258.10faaf4e@rorschach.local.home>
+        <20221123080133.1128186-1-zhengyejian1@huawei.com>
+X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-From: Steven Rostedt (Google) <rostedt@goodmis.org>
+On Wed, 23 Nov 2022 16:01:33 +0800
+Zheng Yejian <zhengyejian1@huawei.com> wrote:
 
-commit 94eedf3dded5fb472ce97bfaf3ac1c6c29c35d26 upstream.
+> But instead of clear tracing buffers, would it be better to just mark
+> that record invalid if we had a way of knowing that the format had changed?
 
-The flag that tells the event to call its triggers after reading the event
-is set for eprobes after the eprobe is enabled. This leads to a race where
-the eprobe may be triggered at the beginning of the event where the record
-information is NULL. The eprobe then dereferences the NULL record causing
-a NULL kernel pointer bug.
+We'd have to scan all ring buffers for the records. The only way to know
+what a binary blob in the ring buffer represents is this type.
 
-Test for a NULL record to keep this from happening.
+But, I do the same for modules. And by hooking into that infrastructure, I
+can do the above commands again with the IDA patch included, and it works
+fine. If any dynamic event was enabled and then removed, it will reset the
+corresponding buffer where it was enabled in. This is needed regardless of
+your patch because once we get over 65536 types, the behavior of the type
+assignment is the same as the IDA logic. The IDA code didn't trigger a bug,
+it revealed an existing one.
 
-Link: https://lore.kernel.org/linux-trace-kernel/20221116192552.1066630-1-rafaelmendsr@gmail.com/
-Link: https://lore.kernel.org/linux-trace-kernel/20221117214249.2addbe10@gandalf.local.home
+Care to test with the below patch added. I'll add this first (breaking it
+up a little) and then apply your patch.
 
-Cc: Linux Trace Kernel <linux-trace-kernel@vger.kernel.org>
-Cc: Tzvetomir Stoyanov <tz.stoyanov@gmail.com>
-Cc: Tom Zanussi <zanussi@kernel.org>
-Cc: stable@vger.kernel.org
-Fixes: 7491e2c442781 ("tracing: Add a probe that attaches to trace events")
-Acked-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-Reported-by: Rafael Mendonca <rafaelmendsr@gmail.com>
-Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- kernel/trace/trace_eprobe.c |    3 +++
- 1 file changed, 3 insertions(+)
+-- Steve
 
---- a/kernel/trace/trace_eprobe.c
-+++ b/kernel/trace/trace_eprobe.c
-@@ -560,6 +560,9 @@ static void eprobe_trigger_func(struct e
- {
- 	struct eprobe_data *edata = data->private_data;
- 
-+	if (unlikely(!rec))
-+		return;
-+
- 	__eprobe_trace_func(edata, rec);
+diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
+index 6a47fed2f473..93a75a97118f 100644
+--- a/kernel/trace/trace.c
++++ b/kernel/trace/trace.c
+@@ -2180,10 +2180,12 @@ void tracing_reset_online_cpus(struct array_buffer *buf)
  }
  
-
-
+ /* Must have trace_types_lock held */
+-void tracing_reset_all_online_cpus(void)
++void tracing_reset_all_online_cpus_unlocked(void)
+ {
+ 	struct trace_array *tr;
+ 
++	lockdep_assert_held(&trace_types_lock);
++
+ 	list_for_each_entry(tr, &ftrace_trace_arrays, list) {
+ 		if (!tr->clear_trace)
+ 			continue;
+@@ -2195,6 +2197,13 @@ void tracing_reset_all_online_cpus(void)
+ 	}
+ }
+ 
++void tracing_reset_all_online_cpus(void)
++{
++	mutex_lock(&trace_types_lock);
++	tracing_reset_all_online_cpus_unlocked();
++	mutex_unlock(&trace_types_lock);
++}
++
+ /*
+  * The tgid_map array maps from pid to tgid; i.e. the value stored at index i
+  * is the tgid last observed corresponding to pid=i.
+diff --git a/kernel/trace/trace.h b/kernel/trace/trace.h
+index d9b470a0adf2..48643f07bc01 100644
+--- a/kernel/trace/trace.h
++++ b/kernel/trace/trace.h
+@@ -580,6 +580,7 @@ int tracing_is_enabled(void);
+ void tracing_reset_online_cpus(struct array_buffer *buf);
+ void tracing_reset_current(int cpu);
+ void tracing_reset_all_online_cpus(void);
++void tracing_reset_all_online_cpus_unlocked(void);
+ int tracing_open_generic(struct inode *inode, struct file *filp);
+ int tracing_open_generic_tr(struct inode *inode, struct file *filp);
+ bool tracing_is_disabled(void);
+diff --git a/kernel/trace/trace_dynevent.c b/kernel/trace/trace_dynevent.c
+index 154996684fb5..4376887e0d8a 100644
+--- a/kernel/trace/trace_dynevent.c
++++ b/kernel/trace/trace_dynevent.c
+@@ -118,6 +118,7 @@ int dyn_event_release(const char *raw_command, struct dyn_event_operations *type
+ 		if (ret)
+ 			break;
+ 	}
++	tracing_reset_all_online_cpus();
+ 	mutex_unlock(&event_mutex);
+ out:
+ 	argv_free(argv);
+@@ -214,6 +215,7 @@ int dyn_events_release_all(struct dyn_event_operations *type)
+ 			break;
+ 	}
+ out:
++	tracing_reset_all_online_cpus();
+ 	mutex_unlock(&event_mutex);
+ 
+ 	return ret;
+diff --git a/kernel/trace/trace_events.c b/kernel/trace/trace_events.c
+index 7372fffb8109..3bfaf560ecc4 100644
+--- a/kernel/trace/trace_events.c
++++ b/kernel/trace/trace_events.c
+@@ -2947,7 +2947,10 @@ static int probe_remove_event_call(struct trace_event_call *call)
+ 		 * TRACE_REG_UNREGISTER.
+ 		 */
+ 		if (file->flags & EVENT_FILE_FL_ENABLED)
+-			return -EBUSY;
++			goto busy;
++
++		if (file->flags & EVENT_FILE_FL_WAS_ENABLED)
++			tr->clear_trace = true;
+ 		/*
+ 		 * The do_for_each_event_file_safe() is
+ 		 * a double loop. After finding the call for this
+@@ -2960,6 +2963,12 @@ static int probe_remove_event_call(struct trace_event_call *call)
+ 	__trace_remove_event_call(call);
+ 
+ 	return 0;
++ busy:
++	/* No need to clear the trace now */
++	list_for_each_entry(tr, &ftrace_trace_arrays, list) {
++		tr->clear_trace = false;
++	}
++	return -EBUSY;
+ }
+ 
+ /* Remove an event_call */
+@@ -3039,7 +3048,7 @@ static void trace_module_remove_events(struct module *mod)
+ 	 * over from this module may be passed to the new module events and
+ 	 * unexpected results may occur.
+ 	 */
+-	tracing_reset_all_online_cpus();
++	tracing_reset_all_online_cpus_unlocked();
+ }
+ 
+ static int trace_module_notify(struct notifier_block *self,
+diff --git a/kernel/trace/trace_events_synth.c b/kernel/trace/trace_events_synth.c
+index 29fbfb27c2b2..c3b582d19b62 100644
+--- a/kernel/trace/trace_events_synth.c
++++ b/kernel/trace/trace_events_synth.c
+@@ -1425,7 +1425,6 @@ int synth_event_delete(const char *event_name)
+ 	mutex_unlock(&event_mutex);
+ 
+ 	if (mod) {
+-		mutex_lock(&trace_types_lock);
+ 		/*
+ 		 * It is safest to reset the ring buffer if the module
+ 		 * being unloaded registered any events that were
+@@ -1437,7 +1436,6 @@ int synth_event_delete(const char *event_name)
+ 		 * occur.
+ 		 */
+ 		tracing_reset_all_online_cpus();
+-		mutex_unlock(&trace_types_lock);
+ 	}
+ 
+ 	return ret;
