@@ -2,74 +2,105 @@ Return-Path: <linux-trace-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0ECF7C4332F
-	for <linux-trace-kernel@archiver.kernel.org>; Wed, 23 Nov 2022 03:17:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 652B8C433FE
+	for <linux-trace-kernel@archiver.kernel.org>; Wed, 23 Nov 2022 05:32:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235267AbiKWDRS (ORCPT
+        id S235809AbiKWFcY (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Tue, 22 Nov 2022 22:17:18 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38490 "EHLO
+        Wed, 23 Nov 2022 00:32:24 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53002 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232723AbiKWDRR (ORCPT
+        with ESMTP id S235828AbiKWFcD (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Tue, 22 Nov 2022 22:17:17 -0500
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9630D8CBAC;
-        Tue, 22 Nov 2022 19:17:16 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 2B894B81CB2;
-        Wed, 23 Nov 2022 03:17:15 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 137EAC433D7;
-        Wed, 23 Nov 2022 03:17:12 +0000 (UTC)
-Date:   Tue, 22 Nov 2022 22:17:11 -0500
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Song Shuai <suagrfillet@gmail.com>
+        Wed, 23 Nov 2022 00:32:03 -0500
+Received: from mail-pg1-x535.google.com (mail-pg1-x535.google.com [IPv6:2607:f8b0:4864:20::535])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D2565ED720;
+        Tue, 22 Nov 2022 21:31:36 -0800 (PST)
+Received: by mail-pg1-x535.google.com with SMTP id q71so15874173pgq.8;
+        Tue, 22 Nov 2022 21:31:36 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=5QCt3Hc0DdWG2SFWo5TOdl096cfyVUT4sQj3R5lWjYc=;
+        b=i7Zsq+uIkpqATZusgTRS764we1OMv/xibQCzGnbyXAyFytjlIdIEhIYIJjaiVtEpup
+         xAlVg0Go0HQNjQaqYGVtNnMlU/AuRAXcB30Bheyk6TLhMQa6bob6rc4fCAFk4IsIzq8N
+         5CnTn/yDDmipP0LZn6re6GtqZbCbzWFNTUAnNdL600ssoH572+P3VcZZJpuX/aKblDMQ
+         +WSMIbeI9wAKviydar+0W3HEHHPufroQBFfLOpASF2LOYmQ9qt4jSga88JK/puDJ1JkN
+         VTHZXyReUglfswUdmhWn7M3tSVYLEOCDzIpOES5KUOra6ynYq6zdoygt3jhHYHxcJCPe
+         6s+Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=5QCt3Hc0DdWG2SFWo5TOdl096cfyVUT4sQj3R5lWjYc=;
+        b=W8O1oB4XpjJFDUyA3BRmgtkAVkH39fZptCdp0GoUBO+zTF13GGrsXqEib+ubmauefr
+         4cJ416M8HiV/NNNFraKvjdkFEHr1ziALp/WvhnVl6LnhpYsJm9OmBbz0qlnLH+ujJIMC
+         uHtTi2jFtp+nQDepBe5isZgdhqn8/ElJ+cwQkUA4I8o9MeIxH0bgQjHekvJdJH1LTVDy
+         hZFxmPCdSGZ1fWDhHTFoZtiW09+bNakbLN2ou8gwhofV+mkJ+izDqTt/uivgTImFZhZz
+         yshzXSYMOltNZmToqABuqbiBFsynXK5Z+WIF3rXgckmt9Oyl9+aY0RYj4kArW3VwHtYt
+         A0Ww==
+X-Gm-Message-State: ANoB5pksJxnUqB2mxmlcPFZxHQjIWpr/sEFWYsXFylBW2SW5RtVipLoJ
+        C/HfzHDBSDBhPoOIqDThr46XffcHsgzZqtd9nK8=
+X-Google-Smtp-Source: AA0mqf6NEBzeB0G000YRmycM71U2skP3+tFC/ZXDmhl/w6497td01SFJJukYTqmSYpimyKrxS2+a0THe2xg7c+z0fxs=
+X-Received: by 2002:a65:694e:0:b0:474:6749:407d with SMTP id
+ w14-20020a65694e000000b004746749407dmr5986576pgq.425.1669181496288; Tue, 22
+ Nov 2022 21:31:36 -0800 (PST)
+MIME-Version: 1.0
+References: <20221122180905.737b6f52@gandalf.local.home> <CAAYs2=jdy7zrRDyTidUW1tFbKDLycLOZjSDt0_Ra7CbB6O1L2Q@mail.gmail.com>
+ <20221122221711.402b360f@rorschach.local.home>
+In-Reply-To: <20221122221711.402b360f@rorschach.local.home>
+From:   Song Shuai <suagrfillet@gmail.com>
+Date:   Wed, 23 Nov 2022 05:31:24 +0000
+Message-ID: <CAAYs2=jHMLBApdU_VSaeh8ypi62T_dNCVSL0GKGRQgPhiRBQSg@mail.gmail.com>
+Subject: Re: [PATCH] ftrace: Avoid needless updates of the ftrace function call
+To:     Steven Rostedt <rostedt@goodmis.org>
 Cc:     LKML <linux-kernel@vger.kernel.org>,
         Linux Trace Kernel <linux-trace-kernel@vger.kernel.org>,
         Masami Hiramatsu <mhiramat@kernel.org>
-Subject: Re: [PATCH] ftrace: Avoid needless updates of the ftrace function
- call
-Message-ID: <20221122221711.402b360f@rorschach.local.home>
-In-Reply-To: <CAAYs2=jdy7zrRDyTidUW1tFbKDLycLOZjSDt0_Ra7CbB6O1L2Q@mail.gmail.com>
-References: <20221122180905.737b6f52@gandalf.local.home>
-        <CAAYs2=jdy7zrRDyTidUW1tFbKDLycLOZjSDt0_Ra7CbB6O1L2Q@mail.gmail.com>
-X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On Wed, 23 Nov 2022 10:29:28 +0800
-Song Shuai <suagrfillet@gmail.com> wrote:
-
-> > @@ -2783,7 +2796,7 @@ void ftrace_modify_all_code(int command)
-> >          * traced.
-> >          */
-> >         if (update) {
-> > -               err = ftrace_update_ftrace_func(ftrace_ops_list_func);
-> > +               err = update_ftrace_func(ftrace_ops_list_func);
-> >                 if (FTRACE_WARN_ON(err))
-> >                         return;
-> >         }
-> > @@ -2799,7 +2812,7 @@ void ftrace_modify_all_code(int command)
-> >                 /* If irqs are disabled, we are in stop machine */
-> >                 if (!irqs_disabled())
-> >                         smp_call_function(ftrace_sync_ipi, NULL, 1);
-> > -               err = ftrace_update_ftrace_func(ftrace_trace_function);
-> > +               err = update_ftrace_func(ftrace_trace_function);  
-> The helper function should only serve the ftrace_ops_list_func.
-> 
-> And ftrace_trace_function is always different in this function with
-> FTRACE_UPDATE_TRACE_FUNC command.
-> 
-> So this place should be left as it is.
-
-But it is needed to update the static variable. Without this change,
-then save_func will get set to ftrace_ops_list_func and never change
-after that and then the update to ftrace_ops_list_func will stop happening.
-
--- Steve
+Steven Rostedt <rostedt@goodmis.org> =E4=BA=8E2022=E5=B9=B411=E6=9C=8823=E6=
+=97=A5=E5=91=A8=E4=B8=89 03:17=E5=86=99=E9=81=93=EF=BC=9A
+>
+> On Wed, 23 Nov 2022 10:29:28 +0800
+> Song Shuai <suagrfillet@gmail.com> wrote:
+>
+> > > @@ -2783,7 +2796,7 @@ void ftrace_modify_all_code(int command)
+> > >          * traced.
+> > >          */
+> > >         if (update) {
+> > > -               err =3D ftrace_update_ftrace_func(ftrace_ops_list_fun=
+c);
+> > > +               err =3D update_ftrace_func(ftrace_ops_list_func);
+> > >                 if (FTRACE_WARN_ON(err))
+> > >                         return;
+> > >         }
+> > > @@ -2799,7 +2812,7 @@ void ftrace_modify_all_code(int command)
+> > >                 /* If irqs are disabled, we are in stop machine */
+> > >                 if (!irqs_disabled())
+> > >                         smp_call_function(ftrace_sync_ipi, NULL, 1);
+> > > -               err =3D ftrace_update_ftrace_func(ftrace_trace_functi=
+on);
+> > > +               err =3D update_ftrace_func(ftrace_trace_function);
+> > The helper function should only serve the ftrace_ops_list_func.
+> >
+> > And ftrace_trace_function is always different in this function with
+> > FTRACE_UPDATE_TRACE_FUNC command.
+> >
+> > So this place should be left as it is.
+>
+> But it is needed to update the static variable. Without this change,
+> then save_func will get set to ftrace_ops_list_func and never change
+> after that and then the update to ftrace_ops_list_func will stop happenin=
+g.
+>
+> -- Steve
+Yes, you're right. Thx for your explanation.
+-- Song
