@@ -2,111 +2,242 @@ Return-Path: <linux-trace-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E46EC433FE
-	for <linux-trace-kernel@archiver.kernel.org>; Wed, 23 Nov 2022 23:39:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E3B85C4332F
+	for <linux-trace-kernel@archiver.kernel.org>; Thu, 24 Nov 2022 04:56:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229531AbiKWXjV (ORCPT
+        id S229486AbiKXE4A convert rfc822-to-8bit (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Wed, 23 Nov 2022 18:39:21 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43026 "EHLO
+        Wed, 23 Nov 2022 23:56:00 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56446 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229493AbiKWXjV (ORCPT
+        with ESMTP id S229452AbiKXE4A (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Wed, 23 Nov 2022 18:39:21 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 628EDD5382;
-        Wed, 23 Nov 2022 15:39:20 -0800 (PST)
+        Wed, 23 Nov 2022 23:56:00 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 120C254B03;
+        Wed, 23 Nov 2022 20:55:59 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id F2BCA61F65;
-        Wed, 23 Nov 2022 23:39:19 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 432F7C433D6;
-        Wed, 23 Nov 2022 23:39:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1669246759;
-        bh=6kodh2P7k6X62fYIdexaP2ea3dCieg1VAyeyZpkPx48=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=J+UH/B0cbCB6vWMWCIvruNoqi02Fz59PKeuoaij/LzxBuyYO3RSZEFXV+hF/M+nxE
-         A9M5pXQqn8ceTzotMkcLqxTEkYIRj7mFrOCsB+XfnGb0TEQ83+dgqr5aAKDOcMveMn
-         hIyvmxjcGNef6oM0g6nH91g2v2dxE4QflvYsda8/kxfEHnpsyJIr3XgOA1b2E9UeiQ
-         9GocH9yY70xwaJ/gpjyAAfzomG1b73pkvNnG9mF78G0fzYoFGH/32bulDcK1DGq7ad
-         eYyHh1W/7AwD5JjFzLfMdYl1Q01qkqlw2QFe7vuqFK5JPSZFhxQ+C5Qa7Cvm3R7xPs
-         HhgnYywWZpiYA==
-Date:   Thu, 24 Nov 2022 08:39:16 +0900
-From:   Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To:     Steven Rostedt <rostedt@goodmis.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Linux Trace Kernel <linux-trace-kernel@vger.kernel.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Tom Zanussi <zanussi@kernel.org>
-Subject: Re: [PATCH] tracing: Fix race where histograms can be called before
- the event
-Message-Id: <20221124083916.667a68cfe38f6fadd84000f4@kernel.org>
-In-Reply-To: <20221123164323.03450c3a@gandalf.local.home>
-References: <20221123164323.03450c3a@gandalf.local.home>
-X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
+        by dfw.source.kernel.org (Postfix) with ESMTPS id ADA7A61F38;
+        Thu, 24 Nov 2022 04:55:58 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1DCF8C433C1;
+        Thu, 24 Nov 2022 04:55:57 +0000 (UTC)
+Date:   Wed, 23 Nov 2022 23:55:55 -0500
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     <gregkh@linuxfoundation.org>
+Cc:     linux-trace-kernel@vger.kernel.org, mathieu.desnoyers@efficios.com,
+        mhiramat@kernel.org, primiano@google.com, <stable@vger.kernel.org>
+Subject: Re: FAILED: patch "[PATCH] tracing/ring-buffer: Have polling block
+ on watermark" failed to apply to 5.4-stable tree
+Message-ID: <20221123235555.6791e1b4@rorschach.local.home>
+In-Reply-To: <16690291284651@kroah.com>
+References: <16690291284651@kroah.com>
+X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8BIT
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On Wed, 23 Nov 2022 16:43:23 -0500
-Steven Rostedt <rostedt@goodmis.org> wrote:
 
-> From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
-> 
-> commit 94eedf3dded5 ("tracing: Fix race where eprobes can be called before
-> the event") fixed an issue where if an event is soft disabled, and the
-> trigger is being added, there's a small window where the event sees that
-> there's a trigger but does not see that it requires reading the event yet,
-> and then calls the trigger with the record == NULL.
-> 
-> This could be solved with adding memory barriers in the hot path, or to
-> make sure that all the triggers requiring a record check for NULL. The
-> latter was chosen.
-> 
-> Commit 94eedf3dded5 set the eprobe trigger handle to check for NULL, but
-> the same needs to be done with histograms.
-> 
-> Link: https://lore.kernel.org/linux-trace-kernel/20221118211809.701d40c0f8a757b0df3c025a@kernel.org/
-> 
-> Cc: stable@vger.kernel.org
-> Fixes: 7491e2c442781 ("tracing: Add a probe that attaches to trace events")
-> Reported-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-> Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+After working on this, I believe the real Fixes tag should have been
 
-I confirmed that other trigger callbacks only use the event_trigger_data,
-So this looks good to me.
+2c2b0a78b3739 ("ring-buffer: Add percentage of ring buffer full to wake up reader")
 
-Acked-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+Which was added in 5.0, so this is the only release I'm backporting this to.
 
-Thank you!
-
-> ---
->  kernel/trace/trace_events_hist.c | 3 +++
->  1 file changed, 3 insertions(+)
-> 
-> diff --git a/kernel/trace/trace_events_hist.c b/kernel/trace/trace_events_hist.c
-> index 087c19548049..1c82478e8dff 100644
-> --- a/kernel/trace/trace_events_hist.c
-> +++ b/kernel/trace/trace_events_hist.c
-> @@ -5143,6 +5143,9 @@ static void event_hist_trigger(struct event_trigger_data *data,
->  	void *key = NULL;
->  	unsigned int i;
->  
-> +	if (unlikely(!rbe))
-> +		return;
-> +
->  	memset(compound_key, 0, hist_data->key_size);
->  
->  	for_each_hist_key_field(i, hist_data) {
-> -- 
-> 2.35.1
-> 
+-- Steve
 
 
--- 
-Masami Hiramatsu (Google) <mhiramat@kernel.org>
+------------------ original commit in Linus's tree ------------------
+
+From 42fb0a1e84ff525ebe560e2baf9451ab69127e2b Mon Sep 17 00:00:00 2001
+From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
+Date: Thu, 20 Oct 2022 23:14:27 -0400
+Subject: [PATCH] tracing/ring-buffer: Have polling block on watermark
+
+Currently the way polling works on the ring buffer is broken. It will
+return immediately if there's any data in the ring buffer whereas a read
+will block until the watermark (defined by the tracefs buffer_percent file)
+is hit.
+
+That is, a select() or poll() will return as if there's data available,
+but then the following read will block. This is broken for the way
+select()s and poll()s are supposed to work.
+
+Have the polling on the ring buffer also block the same way reads and
+splice does on the ring buffer.
+
+Link: https://lkml.kernel.org/r/20221020231427.41be3f26@gandalf.local.home
+
+Cc: Linux Trace Kernel <linux-trace-kernel@vger.kernel.org>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>
+Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Cc: Primiano Tucci <primiano@google.com>
+Cc: stable@vger.kernel.org
+Fixes: 1e0d6714aceb7 ("ring-buffer: Do not wake up a splice waiter when page is not full")
+Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+
+---
+ include/linux/ring_buffer.h |    2 -
+ kernel/trace/ring_buffer.c  |   54 ++++++++++++++++++++++++++++----------------
+ kernel/trace/trace.c        |    2 -
+ 3 files changed, 37 insertions(+), 21 deletions(-)
+
+Index: linux-test.git/include/linux/ring_buffer.h
+===================================================================
+--- linux-test.git.orig/include/linux/ring_buffer.h	2022-11-23 21:52:16.912916427 -0500
++++ linux-test.git/include/linux/ring_buffer.h	2022-11-23 21:52:39.400515404 -0500
+@@ -99,7 +99,7 @@ __ring_buffer_alloc(unsigned long size,
+ 
+ int ring_buffer_wait(struct ring_buffer *buffer, int cpu, int full);
+ __poll_t ring_buffer_poll_wait(struct ring_buffer *buffer, int cpu,
+-			  struct file *filp, poll_table *poll_table);
++			  struct file *filp, poll_table *poll_table, int full);
+ 
+ 
+ #define RING_BUFFER_ALL_CPUS -1
+Index: linux-test.git/kernel/trace/ring_buffer.c
+===================================================================
+--- linux-test.git.orig/kernel/trace/ring_buffer.c	2022-11-23 21:52:16.912916427 -0500
++++ linux-test.git/kernel/trace/ring_buffer.c	2022-11-23 22:40:37.013711581 -0500
+@@ -557,6 +557,21 @@ size_t ring_buffer_nr_dirty_pages(struct
+ 	return cnt - read;
+ }
+ 
++static __always_inline bool full_hit(struct ring_buffer *buffer, int cpu, int full)
++{
++	struct ring_buffer_per_cpu *cpu_buffer = buffer->buffers[cpu];
++	size_t nr_pages;
++	size_t dirty;
++
++	nr_pages = cpu_buffer->nr_pages;
++	if (!nr_pages || !full)
++		return true;
++
++	dirty = ring_buffer_nr_dirty_pages(buffer, cpu);
++
++	return (dirty * 100) > (full * nr_pages);
++}
++
+ /*
+  * rb_wake_up_waiters - wake up tasks waiting for ring buffer input
+  *
+@@ -652,22 +667,20 @@ int ring_buffer_wait(struct ring_buffer
+ 		    !ring_buffer_empty_cpu(buffer, cpu)) {
+ 			unsigned long flags;
+ 			bool pagebusy;
+-			size_t nr_pages;
+-			size_t dirty;
++			bool done;
+ 
+ 			if (!full)
+ 				break;
+ 
+ 			raw_spin_lock_irqsave(&cpu_buffer->reader_lock, flags);
+ 			pagebusy = cpu_buffer->reader_page == cpu_buffer->commit_page;
+-			nr_pages = cpu_buffer->nr_pages;
+-			dirty = ring_buffer_nr_dirty_pages(buffer, cpu);
++			done = !pagebusy && full_hit(buffer, cpu, full);
++
+ 			if (!cpu_buffer->shortest_full ||
+ 			    cpu_buffer->shortest_full > full)
+ 				cpu_buffer->shortest_full = full;
+ 			raw_spin_unlock_irqrestore(&cpu_buffer->reader_lock, flags);
+-			if (!pagebusy &&
+-			    (!nr_pages || (dirty * 100) > full * nr_pages))
++			if (done)
+ 				break;
+ 		}
+ 
+@@ -688,6 +701,7 @@ int ring_buffer_wait(struct ring_buffer
+  * @cpu: the cpu buffer to wait on
+  * @filp: the file descriptor
+  * @poll_table: The poll descriptor
++ * @full: wait until the percentage of pages are available, if @cpu != RING_BUFFER_ALL_CPUS
+  *
+  * If @cpu == RING_BUFFER_ALL_CPUS then the task will wake up as soon
+  * as data is added to any of the @buffer's cpu buffers. Otherwise
+@@ -697,14 +711,14 @@ int ring_buffer_wait(struct ring_buffer
+  * zero otherwise.
+  */
+ __poll_t ring_buffer_poll_wait(struct ring_buffer *buffer, int cpu,
+-			  struct file *filp, poll_table *poll_table)
++			  struct file *filp, poll_table *poll_table, int full)
+ {
+ 	struct ring_buffer_per_cpu *cpu_buffer;
+ 	struct rb_irq_work *work;
+ 
+-	if (cpu == RING_BUFFER_ALL_CPUS)
++	if (cpu == RING_BUFFER_ALL_CPUS) {
+ 		work = &buffer->irq_work;
+-	else {
++	} else {
+ 		if (!cpumask_test_cpu(cpu, buffer->cpumask))
+ 			return -EINVAL;
+ 
+@@ -712,8 +726,14 @@ __poll_t ring_buffer_poll_wait(struct ri
+ 		work = &cpu_buffer->irq_work;
+ 	}
+ 
+-	poll_wait(filp, &work->waiters, poll_table);
+-	work->waiters_pending = true;
++	if (full) {
++		poll_wait(filp, &work->full_waiters, poll_table);
++		work->full_waiters_pending = true;
++	} else {
++		poll_wait(filp, &work->waiters, poll_table);
++		work->waiters_pending = true;
++	}
++
+ 	/*
+ 	 * There's a tight race between setting the waiters_pending and
+ 	 * checking if the ring buffer is empty.  Once the waiters_pending bit
+@@ -729,6 +749,9 @@ __poll_t ring_buffer_poll_wait(struct ri
+ 	 */
+ 	smp_mb();
+ 
++	if (full)
++		return full_hit(buffer, cpu, full) ? EPOLLIN | EPOLLRDNORM : 0;
++
+ 	if ((cpu == RING_BUFFER_ALL_CPUS && !ring_buffer_empty(buffer)) ||
+ 	    (cpu != RING_BUFFER_ALL_CPUS && !ring_buffer_empty_cpu(buffer, cpu)))
+ 		return EPOLLIN | EPOLLRDNORM;
+@@ -2629,10 +2652,6 @@ static void rb_commit(struct ring_buffer
+ static __always_inline void
+ rb_wakeups(struct ring_buffer *buffer, struct ring_buffer_per_cpu *cpu_buffer)
+ {
+-	size_t nr_pages;
+-	size_t dirty;
+-	size_t full;
+-
+ 	if (buffer->irq_work.waiters_pending) {
+ 		buffer->irq_work.waiters_pending = false;
+ 		/* irq_work_queue() supplies it's own memory barriers */
+@@ -2656,10 +2675,7 @@ rb_wakeups(struct ring_buffer *buffer, s
+ 
+ 	cpu_buffer->last_pages_touch = local_read(&cpu_buffer->pages_touched);
+ 
+-	full = cpu_buffer->shortest_full;
+-	nr_pages = cpu_buffer->nr_pages;
+-	dirty = ring_buffer_nr_dirty_pages(buffer, cpu_buffer->cpu);
+-	if (full && nr_pages && (dirty * 100) <= full * nr_pages)
++	if (!full_hit(buffer, cpu_buffer->cpu, cpu_buffer->shortest_full))
+ 		return;
+ 
+ 	cpu_buffer->irq_work.wakeup_full = true;
+Index: linux-test.git/kernel/trace/trace.c
+===================================================================
+--- linux-test.git.orig/kernel/trace/trace.c	2022-11-23 21:52:16.912916427 -0500
++++ linux-test.git/kernel/trace/trace.c	2022-11-23 22:53:05.448304881 -0500
+@@ -5993,7 +5993,7 @@ trace_poll(struct trace_iterator *iter,
+ 		return EPOLLIN | EPOLLRDNORM;
+ 	else
+ 		return ring_buffer_poll_wait(iter->trace_buffer->buffer, iter->cpu_file,
+-					     filp, poll_table);
++					     filp, poll_table, iter->tr->buffer_percent);
+ }
+ 
+ static __poll_t
