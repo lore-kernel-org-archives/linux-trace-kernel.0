@@ -2,618 +2,625 @@ Return-Path: <linux-trace-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 74065C43217
-	for <linux-trace-kernel@archiver.kernel.org>; Fri, 25 Nov 2022 00:29:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CD61C4332F
+	for <linux-trace-kernel@archiver.kernel.org>; Fri, 25 Nov 2022 03:27:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229514AbiKYA3j (ORCPT
+        id S229529AbiKYD1D (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Thu, 24 Nov 2022 19:29:39 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43186 "EHLO
+        Thu, 24 Nov 2022 22:27:03 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49904 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229794AbiKYA3j (ORCPT
+        with ESMTP id S229468AbiKYD1C (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Thu, 24 Nov 2022 19:29:39 -0500
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 93E9173B9A;
-        Thu, 24 Nov 2022 16:29:37 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 2AA32B82950;
-        Fri, 25 Nov 2022 00:29:36 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E1267C433D6;
-        Fri, 25 Nov 2022 00:29:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1669336174;
-        bh=qmZHocx8EwOQF/osEWpoQhVP1xiaTgovlIp/gYwsj4Q=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=VdFxci7592sNJsfrGlkN6AebNKgWZxvEu24WCI+A9+BWiPeidP2xSIDjXBeNSPirv
-         8fXNR5tkZLiCqAu1bxQ1sVxfxjoplR3EMrqPYKRGFZ+tvs2ODGExQlPV8ZzKmAZlkK
-         0w0FxksbAXpCt394yw/LPOyFzv8+PEKu7+G6Cjr0kh/a9m6fXL9MRnUnoQAaDZmQ7s
-         dGDOwdZduMw9AwTqSfEb6RKp3Hye/OCAzmL34imjFLjLThpkD+tIQlUE+hDlncljY/
-         uZ4LxZUkRq1gtlnpr+UBkEzyKeN9xW7Cqm6aPwa21UKoOgpp8KGCymAd0eU9L5iCjT
-         rIh402N3OLpPQ==
-Date:   Fri, 25 Nov 2022 09:29:32 +0900
-From:   Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To:     Song Chen <chensong_2000@189.cn>
-Cc:     rostedt@goodmis.org, linux-kernel@vger.kernel.org,
-        linux-trace-kernel@vger.kernel.org
+        Thu, 24 Nov 2022 22:27:02 -0500
+Received: from 189.cn (ptr.189.cn [183.61.185.103])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 3CC952339C;
+        Thu, 24 Nov 2022 19:26:59 -0800 (PST)
+HMM_SOURCE_IP: 10.64.8.43:49060.617529776
+HMM_ATTACHE_NUM: 0000
+HMM_SOURCE_TYPE: SMTP
+Received: from clientip-123.150.8.42 (unknown [10.64.8.43])
+        by 189.cn (HERMES) with SMTP id EA9DA1002FD;
+        Fri, 25 Nov 2022 11:26:57 +0800 (CST)
+Received: from  ([123.150.8.42])
+        by gateway-153622-dep-6cffbd87dd-f7vjc with ESMTP id 2cba03f4a0944842842423a44b25942c for mhiramat@kernel.org;
+        Fri, 25 Nov 2022 11:26:57 CST
+X-Transaction-ID: 2cba03f4a0944842842423a44b25942c
+X-Real-From: chensong_2000@189.cn
+X-Receive-IP: 123.150.8.42
+X-MEDUSA-Status: 0
+Sender: chensong_2000@189.cn
+Message-ID: <12297a7f-7501-9b65-a279-80a2e0061fd8@189.cn>
+Date:   Fri, 25 Nov 2022 11:26:56 +0800
+MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.4.2
 Subject: Re: [PATCH v2 2/2] kernel/trace: Provide default impelentations
  defined in trace_probe_tmpl.h
-Message-Id: <20221125092932.ac68e715819a5aeb8afe4685@kernel.org>
-In-Reply-To: <1669190524-2894-1-git-send-email-chensong_2000@189.cn>
+To:     "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
+Cc:     rostedt@goodmis.org, linux-kernel@vger.kernel.org,
+        linux-trace-kernel@vger.kernel.org
 References: <1669190524-2894-1-git-send-email-chensong_2000@189.cn>
-X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+ <20221125092932.ac68e715819a5aeb8afe4685@kernel.org>
+Content-Language: en-US
+From:   Song Chen <chensong_2000@189.cn>
+In-Reply-To: <20221125092932.ac68e715819a5aeb8afe4685@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-Hi Song,
+Hi,
 
-On Wed, 23 Nov 2022 16:02:04 +0800
-Song Chen <chensong_2000@189.cn> wrote:
-
-> There are 7 function definitions in trace_probe_tmpl.h, they are:
+在 2022/11/25 08:29, Masami Hiramatsu (Google) 写道:
+> Hi Song,
 > 
-> 1, process_fetch_insn
-> 2, fetch_store_strlen
-> 3, fetch_store_string
-> 4, fetch_store_strlen_user
-> 5, fetch_store_string_user
-> 6, probe_mem_read
-> 7, probe_mem_read_user
+> On Wed, 23 Nov 2022 16:02:04 +0800
+> Song Chen <chensong_2000@189.cn> wrote:
 > 
-> Every C file which includes trace_probe_tmpl.h has to implement them,
-> otherwise it gets warnings and errors. However, some of them are identical,
-> like kprobe and eprobe, as a result, there is a lot redundant code in those
-> 2 files.
-
-Thank you for update! this direction looks good to me.
-
+>> There are 7 function definitions in trace_probe_tmpl.h, they are:
+>>
+>> 1, process_fetch_insn
+>> 2, fetch_store_strlen
+>> 3, fetch_store_string
+>> 4, fetch_store_strlen_user
+>> 5, fetch_store_string_user
+>> 6, probe_mem_read
+>> 7, probe_mem_read_user
+>>
+>> Every C file which includes trace_probe_tmpl.h has to implement them,
+>> otherwise it gets warnings and errors. However, some of them are identical,
+>> like kprobe and eprobe, as a result, there is a lot redundant code in those
+>> 2 files.
 > 
-> This patch would like to provide default behaviors for those functions
-> which kprobe and eprobe can share by just including trace_probe_kernel.h
-> with trace_probe_tmpl.h together.
+> Thank you for update! this direction looks good to me.
+>
+>>
+>> This patch would like to provide default behaviors for those functions
+>> which kprobe and eprobe can share by just including trace_probe_kernel.h
+>> with trace_probe_tmpl.h together.
+>>
+>> It removes redundant code, increases readability, and more importantly,
+>> makes it easier to introduce a new feature based on trace probe
+>> (it's possible).
 > 
-> It removes redundant code, increases readability, and more importantly,
-> makes it easier to introduce a new feature based on trace probe
-> (it's possible).
-
-OK, I have some comments, see below;
-
-> 
-> Signed-off-by: Song Chen <chensong_2000@189.cn>
-> ---
->  kernel/trace/trace_eprobe.c       | 144 ------------------------------
->  kernel/trace/trace_events_synth.c |   7 +-
->  kernel/trace/trace_kprobe.c       | 102 ---------------------
->  kernel/trace/trace_probe_kernel.h | 140 +++++++++++++++++++++++++++--
->  4 files changed, 138 insertions(+), 255 deletions(-)
-> 
-> diff --git a/kernel/trace/trace_eprobe.c b/kernel/trace/trace_eprobe.c
-> index bdb26eee7a0c..60ced4a7a25d 100644
-> --- a/kernel/trace/trace_eprobe.c
-> +++ b/kernel/trace/trace_eprobe.c
-> @@ -319,64 +319,6 @@ print_eprobe_event(struct trace_iterator *iter, int flags,
->  	return trace_handle_return(s);
->  }
->  
-> -static unsigned long get_event_field(struct fetch_insn *code, void *rec)
-> -{
-> -	struct ftrace_event_field *field = code->data;
-> -	unsigned long val;
-> -	void *addr;
-> -
-> -	addr = rec + field->offset;
-> -
-> -	if (is_string_field(field)) {
-> -		switch (field->filter_type) {
-> -		case FILTER_DYN_STRING:
-> -			val = (unsigned long)(rec + (*(unsigned int *)addr & 0xffff));
-> -			break;
-> -		case FILTER_RDYN_STRING:
-> -			val = (unsigned long)(addr + (*(unsigned int *)addr & 0xffff));
-> -			break;
-> -		case FILTER_STATIC_STRING:
-> -			val = (unsigned long)addr;
-> -			break;
-> -		case FILTER_PTR_STRING:
-> -			val = (unsigned long)(*(char *)addr);
-> -			break;
-> -		default:
-> -			WARN_ON_ONCE(1);
-> -			return 0;
-> -		}
-> -		return val;
-> -	}
-> -
-> -	switch (field->size) {
-> -	case 1:
-> -		if (field->is_signed)
-> -			val = *(char *)addr;
-> -		else
-> -			val = *(unsigned char *)addr;
-> -		break;
-> -	case 2:
-> -		if (field->is_signed)
-> -			val = *(short *)addr;
-> -		else
-> -			val = *(unsigned short *)addr;
-> -		break;
-> -	case 4:
-> -		if (field->is_signed)
-> -			val = *(int *)addr;
-> -		else
-> -			val = *(unsigned int *)addr;
-> -		break;
-> -	default:
-> -		if (field->is_signed)
-> -			val = *(long *)addr;
-> -		else
-> -			val = *(unsigned long *)addr;
-> -		break;
-> -	}
-> -	return val;
-> -}
-> -
->  static int get_eprobe_size(struct trace_probe *tp, void *rec)
->  {
->  	struct fetch_insn *code;
-> @@ -419,92 +361,6 @@ static int get_eprobe_size(struct trace_probe *tp, void *rec)
->  	return ret;
->  }
->  
-> -/* Kprobe specific fetch functions */
-> -
-> -/* Note that we don't verify it, since the code does not come from user space */
-> -static int
-> -process_fetch_insn(struct fetch_insn *code, void *rec, void *dest,
-> -		   void *base)
-> -{
-> -	unsigned long val;
-> -
-> - retry:
-> -	switch (code->op) {
-> -	case FETCH_OP_TP_ARG:
-> -		val = get_event_field(code, rec);
-> -		break;
-> -	case FETCH_OP_IMM:
-> -		val = code->immediate;
-> -		break;
-> -	case FETCH_OP_COMM:
-> -		val = (unsigned long)current->comm;
-> -		break;
-> -	case FETCH_OP_DATA:
-> -		val = (unsigned long)code->data;
-> -		break;
-> -	case FETCH_NOP_SYMBOL:	/* Ignore a place holder */
-> -		code++;
-> -		goto retry;
-> -	default:
-> -		return -EILSEQ;
-> -	}
-> -	code++;
-> -	return process_fetch_insn_bottom(code, val, dest, base);
-> -}
-> -NOKPROBE_SYMBOL(process_fetch_insn)
-> -
-> -/* Return the length of string -- including null terminal byte */
-> -static nokprobe_inline int
-> -fetch_store_strlen_user(unsigned long addr)
-> -{
-> -	return kern_fetch_store_strlen_user(addr);
-> -}
-> -
-> -/* Return the length of string -- including null terminal byte */
-> -static nokprobe_inline int
-> -fetch_store_strlen(unsigned long addr)
-> -{
-> -	return kern_fetch_store_strlen(addr);
-> -}
-> -
-> -/*
-> - * Fetch a null-terminated string from user. Caller MUST set *(u32 *)buf
-> - * with max length and relative data location.
-> - */
-> -static nokprobe_inline int
-> -fetch_store_string_user(unsigned long addr, void *dest, void *base)
-> -{
-> -	return kern_fetch_store_string_user(addr, dest, base);
-> -}
-> -
-> -/*
-> - * Fetch a null-terminated string. Caller MUST set *(u32 *)buf with max
-> - * length and relative data location.
-> - */
-> -static nokprobe_inline int
-> -fetch_store_string(unsigned long addr, void *dest, void *base)
-> -{
-> -	return kern_fetch_store_string(addr, dest, base);
-> -}
-> -
-> -static nokprobe_inline int
-> -probe_mem_read_user(void *dest, void *src, size_t size)
-> -{
-> -	const void __user *uaddr =  (__force const void __user *)src;
-> -
-> -	return copy_from_user_nofault(dest, uaddr, size);
-> -}
-> -
-> -static nokprobe_inline int
-> -probe_mem_read(void *dest, void *src, size_t size)
-> -{
-> -#ifdef CONFIG_ARCH_HAS_NON_OVERLAPPING_ADDRESS_SPACE
-> -	if ((unsigned long)src < TASK_SIZE)
-> -		return probe_mem_read_user(dest, src, size);
-> -#endif
-> -	return copy_from_kernel_nofault(dest, src, size);
-> -}
-> -
->  /* eprobe handler */
->  static inline void
->  __eprobe_trace_func(struct eprobe_data *edata, void *rec)
-> diff --git a/kernel/trace/trace_events_synth.c b/kernel/trace/trace_events_synth.c
-> index e310052dc83c..7460f18ba973 100644
-> --- a/kernel/trace/trace_events_synth.c
-> +++ b/kernel/trace/trace_events_synth.c
-> @@ -18,6 +18,7 @@
->  #include <linux/trace_events.h>
->  #include <trace/events/mmflags.h>
->  #include "trace_probe.h"
-> +#include "trace_probe_tmpl.h"
->  #include "trace_probe_kernel.h"
->  
->  #include "trace_synth.h"
-> @@ -420,12 +421,12 @@ static unsigned int trace_string(struct synth_trace_event *entry,
->  		data_offset += event->n_u64 * sizeof(u64);
->  		data_offset += data_size;
->  
-> -		len = kern_fetch_store_strlen((unsigned long)str_val);
-> +		len = fetch_store_strlen((unsigned long)str_val);
->  
->  		data_offset |= len << 16;
->  		*(u32 *)&entry->fields[*n_u64] = data_offset;
->  
-> -		ret = kern_fetch_store_string((unsigned long)str_val, &entry->fields[*n_u64], entry);
-> +		ret = fetch_store_string((unsigned long)str_val, &entry->fields[*n_u64], entry);
->  
->  		(*n_u64)++;
->  	} else {
-> @@ -473,7 +474,7 @@ static notrace void trace_event_raw_event_synth(void *__data,
->  		val_idx = var_ref_idx[field_pos];
->  		str_val = (char *)(long)var_ref_vals[val_idx];
->  
-> -		len = kern_fetch_store_strlen((unsigned long)str_val);
-> +		len = fetch_store_strlen((unsigned long)str_val);
->  
->  		fields_size += len;
->  	}
-> diff --git a/kernel/trace/trace_kprobe.c b/kernel/trace/trace_kprobe.c
-> index a4ffa864dbb7..c2e0b741ae82 100644
-> --- a/kernel/trace/trace_kprobe.c
-> +++ b/kernel/trace/trace_kprobe.c
-> @@ -1218,108 +1218,6 @@ static const struct file_operations kprobe_profile_ops = {
->  	.release        = seq_release,
->  };
->  
-> -/* Kprobe specific fetch functions */
-> -
-> -/* Return the length of string -- including null terminal byte */
-> -static nokprobe_inline int
-> -fetch_store_strlen_user(unsigned long addr)
-> -{
-> -	return kern_fetch_store_strlen_user(addr);
-> -}
-> -
-> -/* Return the length of string -- including null terminal byte */
-> -static nokprobe_inline int
-> -fetch_store_strlen(unsigned long addr)
-> -{
-> -	return kern_fetch_store_strlen(addr);
-> -}
-> -
-> -/*
-> - * Fetch a null-terminated string from user. Caller MUST set *(u32 *)buf
-> - * with max length and relative data location.
-> - */
-> -static nokprobe_inline int
-> -fetch_store_string_user(unsigned long addr, void *dest, void *base)
-> -{
-> -	return kern_fetch_store_string_user(addr, dest, base);
-> -}
-> -
-> -/*
-> - * Fetch a null-terminated string. Caller MUST set *(u32 *)buf with max
-> - * length and relative data location.
-> - */
-> -static nokprobe_inline int
-> -fetch_store_string(unsigned long addr, void *dest, void *base)
-> -{
-> -	return kern_fetch_store_string(addr, dest, base);
-> -}
-> -
-> -static nokprobe_inline int
-> -probe_mem_read_user(void *dest, void *src, size_t size)
-> -{
-> -	const void __user *uaddr =  (__force const void __user *)src;
-> -
-> -	return copy_from_user_nofault(dest, uaddr, size);
-> -}
-> -
-> -static nokprobe_inline int
-> -probe_mem_read(void *dest, void *src, size_t size)
-> -{
-> -#ifdef CONFIG_ARCH_HAS_NON_OVERLAPPING_ADDRESS_SPACE
-> -	if ((unsigned long)src < TASK_SIZE)
-> -		return probe_mem_read_user(dest, src, size);
-> -#endif
-> -	return copy_from_kernel_nofault(dest, src, size);
-> -}
-> -
-> -/* Note that we don't verify it, since the code does not come from user space */
-> -static int
-> -process_fetch_insn(struct fetch_insn *code, void *rec, void *dest,
-> -		   void *base)
-> -{
-> -	struct pt_regs *regs = rec;
-> -	unsigned long val;
-> -
-> -retry:
-> -	/* 1st stage: get value from context */
-> -	switch (code->op) {
-> -	case FETCH_OP_REG:
-> -		val = regs_get_register(regs, code->param);
-> -		break;
-> -	case FETCH_OP_STACK:
-> -		val = regs_get_kernel_stack_nth(regs, code->param);
-> -		break;
-> -	case FETCH_OP_STACKP:
-> -		val = kernel_stack_pointer(regs);
-> -		break;
-> -	case FETCH_OP_RETVAL:
-> -		val = regs_return_value(regs);
-> -		break;
-> -	case FETCH_OP_IMM:
-> -		val = code->immediate;
-> -		break;
-> -	case FETCH_OP_COMM:
-> -		val = (unsigned long)current->comm;
-> -		break;
-> -	case FETCH_OP_DATA:
-> -		val = (unsigned long)code->data;
-> -		break;
-> -#ifdef CONFIG_HAVE_FUNCTION_ARG_ACCESS_API
-> -	case FETCH_OP_ARG:
-> -		val = regs_get_kernel_argument(regs, code->param);
-> -		break;
-> -#endif
-> -	case FETCH_NOP_SYMBOL:	/* Ignore a place holder */
-> -		code++;
-> -		goto retry;
-> -	default:
-> -		return -EILSEQ;
-> -	}
-> -	code++;
-> -
-> -	return process_fetch_insn_bottom(code, val, dest, base);
-> -}
-> -NOKPROBE_SYMBOL(process_fetch_insn)
->  
->  /* Kprobe handler */
->  static nokprobe_inline void
-> diff --git a/kernel/trace/trace_probe_kernel.h b/kernel/trace/trace_probe_kernel.h
-> index 77dbd9ff9782..cee6078b1043 100644
-> --- a/kernel/trace/trace_probe_kernel.h
-> +++ b/kernel/trace/trace_probe_kernel.h
-
-OK, so for now, this header file is only for the kernel access events.
-
-> @@ -12,7 +12,7 @@
->   */
->  /* Return the length of string -- including null terminal byte */
->  static nokprobe_inline int
-> -kern_fetch_store_strlen_user(unsigned long addr)
-> +fetch_store_strlen_user(unsigned long addr)
->  {
->  	const void __user *uaddr =  (__force const void __user *)addr;
->  	int ret;
-> @@ -29,14 +29,14 @@ kern_fetch_store_strlen_user(unsigned long addr)
->  
->  /* Return the length of string -- including null terminal byte */
->  static nokprobe_inline int
-> -kern_fetch_store_strlen(unsigned long addr)
-> +fetch_store_strlen(unsigned long addr)
->  {
->  	int ret, len = 0;
->  	u8 c;
->  
->  #ifdef CONFIG_ARCH_HAS_NON_OVERLAPPING_ADDRESS_SPACE
->  	if (addr < TASK_SIZE)
-> -		return kern_fetch_store_strlen_user(addr);
-> +		return fetch_store_strlen_user(addr);
->  #endif
->  
->  	do {
-> @@ -63,7 +63,7 @@ static nokprobe_inline void set_data_loc(int ret, void *dest, void *__dest, void
->   * with max length and relative data location.
->   */
->  static nokprobe_inline int
-> -kern_fetch_store_string_user(unsigned long addr, void *dest, void *base)
-> +fetch_store_string_user(unsigned long addr, void *dest, void *base)
->  {
->  	const void __user *uaddr =  (__force const void __user *)addr;
->  	int maxlen = get_loc_len(*(u32 *)dest);
-> @@ -86,7 +86,7 @@ kern_fetch_store_string_user(unsigned long addr, void *dest, void *base)
->   * length and relative data location.
->   */
->  static nokprobe_inline int
-> -kern_fetch_store_string(unsigned long addr, void *dest, void *base)
-> +fetch_store_string(unsigned long addr, void *dest, void *base)
->  {
->  	int maxlen = get_loc_len(*(u32 *)dest);
->  	void *__dest;
-> @@ -94,7 +94,7 @@ kern_fetch_store_string(unsigned long addr, void *dest, void *base)
->  
->  #ifdef CONFIG_ARCH_HAS_NON_OVERLAPPING_ADDRESS_SPACE
->  	if ((unsigned long)addr < TASK_SIZE)
-> -		return kern_fetch_store_string_user(addr, dest, base);
-> +		return fetch_store_string_user(addr, dest, base);
->  #endif
->  
->  	if (unlikely(!maxlen))
-> @@ -112,4 +112,132 @@ kern_fetch_store_string(unsigned long addr, void *dest, void *base)
->  	return ret;
->  }
->  
-> +static nokprobe_inline int
-> +probe_mem_read_user(void *dest, void *src, size_t size)
-> +{
-> +	const void __user *uaddr =  (__force const void __user *)src;
-> +
-> +	return copy_from_user_nofault(dest, uaddr, size);
-> +}
-> +
-> +static nokprobe_inline int
-> +probe_mem_read(void *dest, void *src, size_t size)
-> +{
-> +#ifdef CONFIG_ARCH_HAS_NON_OVERLAPPING_ADDRESS_SPACE
-> +	if ((unsigned long)src < TASK_SIZE)
-> +		return probe_mem_read_user(dest, src, size);
-> +#endif
-> +	return copy_from_kernel_nofault(dest, src, size);
-> +}
-> +
-> +static unsigned long get_event_field(struct fetch_insn *code, void *rec)
-
-Please make all functions as "nokprobe_inline" in trace_probe_kernel.h
-because those can be used from kprobe context.
-
-
-> +{
-> +	struct ftrace_event_field *field = code->data;
-> +	unsigned long val;
-> +	void *addr;
-> +
-> +	addr = rec + field->offset;
-> +
-> +	if (is_string_field(field)) {
-> +		switch (field->filter_type) {
-> +		case FILTER_DYN_STRING:
-> +			val = (unsigned long)(rec + (*(unsigned int *)addr & 0xffff));
-> +			break;
-> +		case FILTER_RDYN_STRING:
-> +			val = (unsigned long)(addr + (*(unsigned int *)addr & 0xffff));
-> +			break;
-> +		case FILTER_STATIC_STRING:
-> +			val = (unsigned long)addr;
-> +			break;
-> +		case FILTER_PTR_STRING:
-> +			val = (unsigned long)(*(char *)addr);
-> +			break;
-> +		default:
-> +			WARN_ON_ONCE(1);
-> +			return 0;
-> +		}
-> +		return val;
-> +	}
-> +
-> +	switch (field->size) {
-> +	case 1:
-> +		if (field->is_signed)
-> +			val = *(char *)addr;
-> +		else
-> +			val = *(unsigned char *)addr;
-> +		break;
-> +	case 2:
-> +		if (field->is_signed)
-> +			val = *(short *)addr;
-> +		else
-> +			val = *(unsigned short *)addr;
-> +		break;
-> +	case 4:
-> +		if (field->is_signed)
-> +			val = *(int *)addr;
-> +		else
-> +			val = *(unsigned int *)addr;
-> +		break;
-> +	default:
-> +		if (field->is_signed)
-> +			val = *(long *)addr;
-> +		else
-> +			val = *(unsigned long *)addr;
-> +		break;
-> +	}
-> +	return val;
-> +}
-> +
-> +/* Note that we don't verify it, since the code does not come from user space */
-> +static int
-
-Ditto.
-
-> +process_fetch_insn(struct fetch_insn *code, void *rec, void *dest,
-> +		   void *base)
-> +{
-> +	struct pt_regs *regs = rec;
-> +	unsigned long val;
-> +
-> +retry:
-> +	/* 1st stage: get value from context */
-> +	switch (code->op) {
-> +	case FETCH_OP_REG:
-> +		val = regs_get_register(regs, code->param);
-> +		break;
-> +	case FETCH_OP_STACK:
-> +		val = regs_get_kernel_stack_nth(regs, code->param);
-> +		break;
-> +	case FETCH_OP_STACKP:
-> +		val = kernel_stack_pointer(regs);
-> +		break;
-> +	case FETCH_OP_RETVAL:
-> +		val = regs_return_value(regs);
-> +		break;
-> +	case FETCH_OP_IMM:
-> +		val = code->immediate;
-> +		break;
-> +	case FETCH_OP_COMM:
-> +		val = (unsigned long)current->comm;
-> +		break;
-> +	case FETCH_OP_DATA:
-> +		val = (unsigned long)code->data;
-> +		break;
-> +#ifdef CONFIG_HAVE_FUNCTION_ARG_ACCESS_API
-> +	case FETCH_OP_ARG:
-> +		val = regs_get_kernel_argument(regs, code->param);
-> +		break;
-> +#endif
-> +	case FETCH_NOP_SYMBOL:	/* Ignore a place holder */
-> +		code++;
-> +		goto retry;
-> +	case FETCH_OP_TP_ARG:
-> +		val = get_event_field(code, rec);
-> +		break;
-> +	default:
-> +		return -EILSEQ;
-> +	}
-> +	code++;
-> +
-> +	return process_fetch_insn_bottom(code, val, dest, base);
-> +}
-> +NOKPROBE_SYMBOL(process_fetch_insn)
-
-And this is not needed for the nokprobe_inline functions.
-
-Thank you!
-
-> +
->  #endif /* __TRACE_PROBE_KERNEL_H_ */
-> -- 
-> 2.25.1
+> OK, I have some comments, see below;
 > 
 
+I looked into below comments, in summary, only mark nokprobe_inline for 
+get_event_field. is it correct?
 
--- 
-Masami Hiramatsu (Google) <mhiramat@kernel.org>
+/Song
+
+>>
+>> Signed-off-by: Song Chen <chensong_2000@189.cn>
+>> ---
+>>   kernel/trace/trace_eprobe.c       | 144 ------------------------------
+>>   kernel/trace/trace_events_synth.c |   7 +-
+>>   kernel/trace/trace_kprobe.c       | 102 ---------------------
+>>   kernel/trace/trace_probe_kernel.h | 140 +++++++++++++++++++++++++++--
+>>   4 files changed, 138 insertions(+), 255 deletions(-)
+>>
+>> diff --git a/kernel/trace/trace_eprobe.c b/kernel/trace/trace_eprobe.c
+>> index bdb26eee7a0c..60ced4a7a25d 100644
+>> --- a/kernel/trace/trace_eprobe.c
+>> +++ b/kernel/trace/trace_eprobe.c
+>> @@ -319,64 +319,6 @@ print_eprobe_event(struct trace_iterator *iter, int flags,
+>>   	return trace_handle_return(s);
+>>   }
+>>   
+>> -static unsigned long get_event_field(struct fetch_insn *code, void *rec)
+>> -{
+>> -	struct ftrace_event_field *field = code->data;
+>> -	unsigned long val;
+>> -	void *addr;
+>> -
+>> -	addr = rec + field->offset;
+>> -
+>> -	if (is_string_field(field)) {
+>> -		switch (field->filter_type) {
+>> -		case FILTER_DYN_STRING:
+>> -			val = (unsigned long)(rec + (*(unsigned int *)addr & 0xffff));
+>> -			break;
+>> -		case FILTER_RDYN_STRING:
+>> -			val = (unsigned long)(addr + (*(unsigned int *)addr & 0xffff));
+>> -			break;
+>> -		case FILTER_STATIC_STRING:
+>> -			val = (unsigned long)addr;
+>> -			break;
+>> -		case FILTER_PTR_STRING:
+>> -			val = (unsigned long)(*(char *)addr);
+>> -			break;
+>> -		default:
+>> -			WARN_ON_ONCE(1);
+>> -			return 0;
+>> -		}
+>> -		return val;
+>> -	}
+>> -
+>> -	switch (field->size) {
+>> -	case 1:
+>> -		if (field->is_signed)
+>> -			val = *(char *)addr;
+>> -		else
+>> -			val = *(unsigned char *)addr;
+>> -		break;
+>> -	case 2:
+>> -		if (field->is_signed)
+>> -			val = *(short *)addr;
+>> -		else
+>> -			val = *(unsigned short *)addr;
+>> -		break;
+>> -	case 4:
+>> -		if (field->is_signed)
+>> -			val = *(int *)addr;
+>> -		else
+>> -			val = *(unsigned int *)addr;
+>> -		break;
+>> -	default:
+>> -		if (field->is_signed)
+>> -			val = *(long *)addr;
+>> -		else
+>> -			val = *(unsigned long *)addr;
+>> -		break;
+>> -	}
+>> -	return val;
+>> -}
+>> -
+>>   static int get_eprobe_size(struct trace_probe *tp, void *rec)
+>>   {
+>>   	struct fetch_insn *code;
+>> @@ -419,92 +361,6 @@ static int get_eprobe_size(struct trace_probe *tp, void *rec)
+>>   	return ret;
+>>   }
+>>   
+>> -/* Kprobe specific fetch functions */
+>> -
+>> -/* Note that we don't verify it, since the code does not come from user space */
+>> -static int
+>> -process_fetch_insn(struct fetch_insn *code, void *rec, void *dest,
+>> -		   void *base)
+>> -{
+>> -	unsigned long val;
+>> -
+>> - retry:
+>> -	switch (code->op) {
+>> -	case FETCH_OP_TP_ARG:
+>> -		val = get_event_field(code, rec);
+>> -		break;
+>> -	case FETCH_OP_IMM:
+>> -		val = code->immediate;
+>> -		break;
+>> -	case FETCH_OP_COMM:
+>> -		val = (unsigned long)current->comm;
+>> -		break;
+>> -	case FETCH_OP_DATA:
+>> -		val = (unsigned long)code->data;
+>> -		break;
+>> -	case FETCH_NOP_SYMBOL:	/* Ignore a place holder */
+>> -		code++;
+>> -		goto retry;
+>> -	default:
+>> -		return -EILSEQ;
+>> -	}
+>> -	code++;
+>> -	return process_fetch_insn_bottom(code, val, dest, base);
+>> -}
+>> -NOKPROBE_SYMBOL(process_fetch_insn)
+>> -
+>> -/* Return the length of string -- including null terminal byte */
+>> -static nokprobe_inline int
+>> -fetch_store_strlen_user(unsigned long addr)
+>> -{
+>> -	return kern_fetch_store_strlen_user(addr);
+>> -}
+>> -
+>> -/* Return the length of string -- including null terminal byte */
+>> -static nokprobe_inline int
+>> -fetch_store_strlen(unsigned long addr)
+>> -{
+>> -	return kern_fetch_store_strlen(addr);
+>> -}
+>> -
+>> -/*
+>> - * Fetch a null-terminated string from user. Caller MUST set *(u32 *)buf
+>> - * with max length and relative data location.
+>> - */
+>> -static nokprobe_inline int
+>> -fetch_store_string_user(unsigned long addr, void *dest, void *base)
+>> -{
+>> -	return kern_fetch_store_string_user(addr, dest, base);
+>> -}
+>> -
+>> -/*
+>> - * Fetch a null-terminated string. Caller MUST set *(u32 *)buf with max
+>> - * length and relative data location.
+>> - */
+>> -static nokprobe_inline int
+>> -fetch_store_string(unsigned long addr, void *dest, void *base)
+>> -{
+>> -	return kern_fetch_store_string(addr, dest, base);
+>> -}
+>> -
+>> -static nokprobe_inline int
+>> -probe_mem_read_user(void *dest, void *src, size_t size)
+>> -{
+>> -	const void __user *uaddr =  (__force const void __user *)src;
+>> -
+>> -	return copy_from_user_nofault(dest, uaddr, size);
+>> -}
+>> -
+>> -static nokprobe_inline int
+>> -probe_mem_read(void *dest, void *src, size_t size)
+>> -{
+>> -#ifdef CONFIG_ARCH_HAS_NON_OVERLAPPING_ADDRESS_SPACE
+>> -	if ((unsigned long)src < TASK_SIZE)
+>> -		return probe_mem_read_user(dest, src, size);
+>> -#endif
+>> -	return copy_from_kernel_nofault(dest, src, size);
+>> -}
+>> -
+>>   /* eprobe handler */
+>>   static inline void
+>>   __eprobe_trace_func(struct eprobe_data *edata, void *rec)
+>> diff --git a/kernel/trace/trace_events_synth.c b/kernel/trace/trace_events_synth.c
+>> index e310052dc83c..7460f18ba973 100644
+>> --- a/kernel/trace/trace_events_synth.c
+>> +++ b/kernel/trace/trace_events_synth.c
+>> @@ -18,6 +18,7 @@
+>>   #include <linux/trace_events.h>
+>>   #include <trace/events/mmflags.h>
+>>   #include "trace_probe.h"
+>> +#include "trace_probe_tmpl.h"
+>>   #include "trace_probe_kernel.h"
+>>   
+>>   #include "trace_synth.h"
+>> @@ -420,12 +421,12 @@ static unsigned int trace_string(struct synth_trace_event *entry,
+>>   		data_offset += event->n_u64 * sizeof(u64);
+>>   		data_offset += data_size;
+>>   
+>> -		len = kern_fetch_store_strlen((unsigned long)str_val);
+>> +		len = fetch_store_strlen((unsigned long)str_val);
+>>   
+>>   		data_offset |= len << 16;
+>>   		*(u32 *)&entry->fields[*n_u64] = data_offset;
+>>   
+>> -		ret = kern_fetch_store_string((unsigned long)str_val, &entry->fields[*n_u64], entry);
+>> +		ret = fetch_store_string((unsigned long)str_val, &entry->fields[*n_u64], entry);
+>>   
+>>   		(*n_u64)++;
+>>   	} else {
+>> @@ -473,7 +474,7 @@ static notrace void trace_event_raw_event_synth(void *__data,
+>>   		val_idx = var_ref_idx[field_pos];
+>>   		str_val = (char *)(long)var_ref_vals[val_idx];
+>>   
+>> -		len = kern_fetch_store_strlen((unsigned long)str_val);
+>> +		len = fetch_store_strlen((unsigned long)str_val);
+>>   
+>>   		fields_size += len;
+>>   	}
+>> diff --git a/kernel/trace/trace_kprobe.c b/kernel/trace/trace_kprobe.c
+>> index a4ffa864dbb7..c2e0b741ae82 100644
+>> --- a/kernel/trace/trace_kprobe.c
+>> +++ b/kernel/trace/trace_kprobe.c
+>> @@ -1218,108 +1218,6 @@ static const struct file_operations kprobe_profile_ops = {
+>>   	.release        = seq_release,
+>>   };
+>>   
+>> -/* Kprobe specific fetch functions */
+>> -
+>> -/* Return the length of string -- including null terminal byte */
+>> -static nokprobe_inline int
+>> -fetch_store_strlen_user(unsigned long addr)
+>> -{
+>> -	return kern_fetch_store_strlen_user(addr);
+>> -}
+>> -
+>> -/* Return the length of string -- including null terminal byte */
+>> -static nokprobe_inline int
+>> -fetch_store_strlen(unsigned long addr)
+>> -{
+>> -	return kern_fetch_store_strlen(addr);
+>> -}
+>> -
+>> -/*
+>> - * Fetch a null-terminated string from user. Caller MUST set *(u32 *)buf
+>> - * with max length and relative data location.
+>> - */
+>> -static nokprobe_inline int
+>> -fetch_store_string_user(unsigned long addr, void *dest, void *base)
+>> -{
+>> -	return kern_fetch_store_string_user(addr, dest, base);
+>> -}
+>> -
+>> -/*
+>> - * Fetch a null-terminated string. Caller MUST set *(u32 *)buf with max
+>> - * length and relative data location.
+>> - */
+>> -static nokprobe_inline int
+>> -fetch_store_string(unsigned long addr, void *dest, void *base)
+>> -{
+>> -	return kern_fetch_store_string(addr, dest, base);
+>> -}
+>> -
+>> -static nokprobe_inline int
+>> -probe_mem_read_user(void *dest, void *src, size_t size)
+>> -{
+>> -	const void __user *uaddr =  (__force const void __user *)src;
+>> -
+>> -	return copy_from_user_nofault(dest, uaddr, size);
+>> -}
+>> -
+>> -static nokprobe_inline int
+>> -probe_mem_read(void *dest, void *src, size_t size)
+>> -{
+>> -#ifdef CONFIG_ARCH_HAS_NON_OVERLAPPING_ADDRESS_SPACE
+>> -	if ((unsigned long)src < TASK_SIZE)
+>> -		return probe_mem_read_user(dest, src, size);
+>> -#endif
+>> -	return copy_from_kernel_nofault(dest, src, size);
+>> -}
+>> -
+>> -/* Note that we don't verify it, since the code does not come from user space */
+>> -static int
+>> -process_fetch_insn(struct fetch_insn *code, void *rec, void *dest,
+>> -		   void *base)
+>> -{
+>> -	struct pt_regs *regs = rec;
+>> -	unsigned long val;
+>> -
+>> -retry:
+>> -	/* 1st stage: get value from context */
+>> -	switch (code->op) {
+>> -	case FETCH_OP_REG:
+>> -		val = regs_get_register(regs, code->param);
+>> -		break;
+>> -	case FETCH_OP_STACK:
+>> -		val = regs_get_kernel_stack_nth(regs, code->param);
+>> -		break;
+>> -	case FETCH_OP_STACKP:
+>> -		val = kernel_stack_pointer(regs);
+>> -		break;
+>> -	case FETCH_OP_RETVAL:
+>> -		val = regs_return_value(regs);
+>> -		break;
+>> -	case FETCH_OP_IMM:
+>> -		val = code->immediate;
+>> -		break;
+>> -	case FETCH_OP_COMM:
+>> -		val = (unsigned long)current->comm;
+>> -		break;
+>> -	case FETCH_OP_DATA:
+>> -		val = (unsigned long)code->data;
+>> -		break;
+>> -#ifdef CONFIG_HAVE_FUNCTION_ARG_ACCESS_API
+>> -	case FETCH_OP_ARG:
+>> -		val = regs_get_kernel_argument(regs, code->param);
+>> -		break;
+>> -#endif
+>> -	case FETCH_NOP_SYMBOL:	/* Ignore a place holder */
+>> -		code++;
+>> -		goto retry;
+>> -	default:
+>> -		return -EILSEQ;
+>> -	}
+>> -	code++;
+>> -
+>> -	return process_fetch_insn_bottom(code, val, dest, base);
+>> -}
+>> -NOKPROBE_SYMBOL(process_fetch_insn)
+>>   
+>>   /* Kprobe handler */
+>>   static nokprobe_inline void
+>> diff --git a/kernel/trace/trace_probe_kernel.h b/kernel/trace/trace_probe_kernel.h
+>> index 77dbd9ff9782..cee6078b1043 100644
+>> --- a/kernel/trace/trace_probe_kernel.h
+>> +++ b/kernel/trace/trace_probe_kernel.h
+> 
+> OK, so for now, this header file is only for the kernel access events.
+> 
+>> @@ -12,7 +12,7 @@
+>>    */
+>>   /* Return the length of string -- including null terminal byte */
+>>   static nokprobe_inline int
+>> -kern_fetch_store_strlen_user(unsigned long addr)
+>> +fetch_store_strlen_user(unsigned long addr)
+>>   {
+>>   	const void __user *uaddr =  (__force const void __user *)addr;
+>>   	int ret;
+>> @@ -29,14 +29,14 @@ kern_fetch_store_strlen_user(unsigned long addr)
+>>   
+>>   /* Return the length of string -- including null terminal byte */
+>>   static nokprobe_inline int
+>> -kern_fetch_store_strlen(unsigned long addr)
+>> +fetch_store_strlen(unsigned long addr)
+>>   {
+>>   	int ret, len = 0;
+>>   	u8 c;
+>>   
+>>   #ifdef CONFIG_ARCH_HAS_NON_OVERLAPPING_ADDRESS_SPACE
+>>   	if (addr < TASK_SIZE)
+>> -		return kern_fetch_store_strlen_user(addr);
+>> +		return fetch_store_strlen_user(addr);
+>>   #endif
+>>   
+>>   	do {
+>> @@ -63,7 +63,7 @@ static nokprobe_inline void set_data_loc(int ret, void *dest, void *__dest, void
+>>    * with max length and relative data location.
+>>    */
+>>   static nokprobe_inline int
+>> -kern_fetch_store_string_user(unsigned long addr, void *dest, void *base)
+>> +fetch_store_string_user(unsigned long addr, void *dest, void *base)
+>>   {
+>>   	const void __user *uaddr =  (__force const void __user *)addr;
+>>   	int maxlen = get_loc_len(*(u32 *)dest);
+>> @@ -86,7 +86,7 @@ kern_fetch_store_string_user(unsigned long addr, void *dest, void *base)
+>>    * length and relative data location.
+>>    */
+>>   static nokprobe_inline int
+>> -kern_fetch_store_string(unsigned long addr, void *dest, void *base)
+>> +fetch_store_string(unsigned long addr, void *dest, void *base)
+>>   {
+>>   	int maxlen = get_loc_len(*(u32 *)dest);
+>>   	void *__dest;
+>> @@ -94,7 +94,7 @@ kern_fetch_store_string(unsigned long addr, void *dest, void *base)
+>>   
+>>   #ifdef CONFIG_ARCH_HAS_NON_OVERLAPPING_ADDRESS_SPACE
+>>   	if ((unsigned long)addr < TASK_SIZE)
+>> -		return kern_fetch_store_string_user(addr, dest, base);
+>> +		return fetch_store_string_user(addr, dest, base);
+>>   #endif
+>>   
+>>   	if (unlikely(!maxlen))
+>> @@ -112,4 +112,132 @@ kern_fetch_store_string(unsigned long addr, void *dest, void *base)
+>>   	return ret;
+>>   }
+>>   
+>> +static nokprobe_inline int
+>> +probe_mem_read_user(void *dest, void *src, size_t size)
+>> +{
+>> +	const void __user *uaddr =  (__force const void __user *)src;
+>> +
+>> +	return copy_from_user_nofault(dest, uaddr, size);
+>> +}
+>> +
+>> +static nokprobe_inline int
+>> +probe_mem_read(void *dest, void *src, size_t size)
+>> +{
+>> +#ifdef CONFIG_ARCH_HAS_NON_OVERLAPPING_ADDRESS_SPACE
+>> +	if ((unsigned long)src < TASK_SIZE)
+>> +		return probe_mem_read_user(dest, src, size);
+>> +#endif
+>> +	return copy_from_kernel_nofault(dest, src, size);
+>> +}
+>> +
+>> +static unsigned long get_event_field(struct fetch_insn *code, void *rec)
+> 
+> Please make all functions as "nokprobe_inline" in trace_probe_kernel.h
+> because those can be used from kprobe context.
+> 
+> 
+>> +{
+>> +	struct ftrace_event_field *field = code->data;
+>> +	unsigned long val;
+>> +	void *addr;
+>> +
+>> +	addr = rec + field->offset;
+>> +
+>> +	if (is_string_field(field)) {
+>> +		switch (field->filter_type) {
+>> +		case FILTER_DYN_STRING:
+>> +			val = (unsigned long)(rec + (*(unsigned int *)addr & 0xffff));
+>> +			break;
+>> +		case FILTER_RDYN_STRING:
+>> +			val = (unsigned long)(addr + (*(unsigned int *)addr & 0xffff));
+>> +			break;
+>> +		case FILTER_STATIC_STRING:
+>> +			val = (unsigned long)addr;
+>> +			break;
+>> +		case FILTER_PTR_STRING:
+>> +			val = (unsigned long)(*(char *)addr);
+>> +			break;
+>> +		default:
+>> +			WARN_ON_ONCE(1);
+>> +			return 0;
+>> +		}
+>> +		return val;
+>> +	}
+>> +
+>> +	switch (field->size) {
+>> +	case 1:
+>> +		if (field->is_signed)
+>> +			val = *(char *)addr;
+>> +		else
+>> +			val = *(unsigned char *)addr;
+>> +		break;
+>> +	case 2:
+>> +		if (field->is_signed)
+>> +			val = *(short *)addr;
+>> +		else
+>> +			val = *(unsigned short *)addr;
+>> +		break;
+>> +	case 4:
+>> +		if (field->is_signed)
+>> +			val = *(int *)addr;
+>> +		else
+>> +			val = *(unsigned int *)addr;
+>> +		break;
+>> +	default:
+>> +		if (field->is_signed)
+>> +			val = *(long *)addr;
+>> +		else
+>> +			val = *(unsigned long *)addr;
+>> +		break;
+>> +	}
+>> +	return val;
+>> +}
+>> +
+>> +/* Note that we don't verify it, since the code does not come from user space */
+>> +static int
+> 
+> Ditto.
+> 
+>> +process_fetch_insn(struct fetch_insn *code, void *rec, void *dest,
+>> +		   void *base)
+>> +{
+>> +	struct pt_regs *regs = rec;
+>> +	unsigned long val;
+>> +
+>> +retry:
+>> +	/* 1st stage: get value from context */
+>> +	switch (code->op) {
+>> +	case FETCH_OP_REG:
+>> +		val = regs_get_register(regs, code->param);
+>> +		break;
+>> +	case FETCH_OP_STACK:
+>> +		val = regs_get_kernel_stack_nth(regs, code->param);
+>> +		break;
+>> +	case FETCH_OP_STACKP:
+>> +		val = kernel_stack_pointer(regs);
+>> +		break;
+>> +	case FETCH_OP_RETVAL:
+>> +		val = regs_return_value(regs);
+>> +		break;
+>> +	case FETCH_OP_IMM:
+>> +		val = code->immediate;
+>> +		break;
+>> +	case FETCH_OP_COMM:
+>> +		val = (unsigned long)current->comm;
+>> +		break;
+>> +	case FETCH_OP_DATA:
+>> +		val = (unsigned long)code->data;
+>> +		break;
+>> +#ifdef CONFIG_HAVE_FUNCTION_ARG_ACCESS_API
+>> +	case FETCH_OP_ARG:
+>> +		val = regs_get_kernel_argument(regs, code->param);
+>> +		break;
+>> +#endif
+>> +	case FETCH_NOP_SYMBOL:	/* Ignore a place holder */
+>> +		code++;
+>> +		goto retry;
+>> +	case FETCH_OP_TP_ARG:
+>> +		val = get_event_field(code, rec);
+>> +		break;
+>> +	default:
+>> +		return -EILSEQ;
+>> +	}
+>> +	code++;
+>> +
+>> +	return process_fetch_insn_bottom(code, val, dest, base);
+>> +}
+>> +NOKPROBE_SYMBOL(process_fetch_insn)
+> 
+> And this is not needed for the nokprobe_inline functions.
+> 
+> Thank you!
+> 
+>> +
+>>   #endif /* __TRACE_PROBE_KERNEL_H_ */
+>> -- 
+>> 2.25.1
+>>
+> 
+> 
