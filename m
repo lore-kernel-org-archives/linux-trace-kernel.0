@@ -2,383 +2,627 @@ Return-Path: <linux-trace-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E81B1C47089
-	for <linux-trace-kernel@archiver.kernel.org>; Mon,  5 Dec 2022 16:34:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B8FBC4321E
+	for <linux-trace-kernel@archiver.kernel.org>; Mon,  5 Dec 2022 16:34:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232335AbiLEQe1 (ORCPT
+        id S232887AbiLEQe2 (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Mon, 5 Dec 2022 11:34:27 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56936 "EHLO
+        Mon, 5 Dec 2022 11:34:28 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56184 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232313AbiLEQdp (ORCPT
+        with ESMTP id S232323AbiLEQdp (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
         Mon, 5 Dec 2022 11:33:45 -0500
 Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5543DDF5F;
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 96E31DF67;
         Mon,  5 Dec 2022 08:33:30 -0800 (PST)
-Received: from pps.filterd (m0246632.ppops.net [127.0.0.1])
-        by mx0b-00069f02.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 2B5Fc1f8007848;
+Received: from pps.filterd (m0246630.ppops.net [127.0.0.1])
+        by mx0b-00069f02.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 2B5FhsIx018566;
         Mon, 5 Dec 2022 16:33:24 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
  subject : date : message-id : in-reply-to : references :
  content-transfer-encoding : content-type : mime-version; s=corp-2022-7-12;
- bh=l32MOUudC0t6Nqjg2Gti/mWtMRe+Rd58udSjs02jLB0=;
- b=FnjTjrhw6ZZVS7wunFu7sq9/RJjlylzmC6tFRO04sFIDdIC4LHHmO906ft/+58fUZF1U
- TvCBY5EnPkBd1edSe+F78Y/FDpw7BtFZIOITc8sxSXD9GEzncjy6Vx/tzJV6elvBe14z
- s/VAi2oCNVuthP04LKVG8qF1fzWzZsrEk80KQuvlk0884xqITM1WvmTAxrYgJLiRJ+tC
- Q0+pHF47q41Nq63MpN2MMnAXJbPRWkQrLilViJvhkY+XRMmTOkdElVsSq/DASLnNnM/F
- wvExj5HsZ3QZJq3bPPwMQ0Bmuxm+RvuDNndtupq36JspM0Kzx2N8nTszjUCIiavoWJTE GA== 
-Received: from phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta01.appoci.oracle.com [138.1.114.2])
-        by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3m7ybgmbgm-1
+ bh=9F/+18Uokw90L39bo1hOkJcegJluMpq3v31MmwEUqhw=;
+ b=NVroG4hZMYWMvhVeKPIFnny+aLEwlL7wopIDWEvF+fLDJOHN2MENnRglOqbprT/QFubt
+ c7ZTG5HAuNIpwfF43Tv77ClhdScx427dMNdjnsrnr2cevDUunwVuBF3N9xEy+8QcjrKA
+ EDQBUUybDAbifPo/fOgAjvHhxv2cZ08rmNBk7kPCuW8Xx50ENW5kWURWI16dd5Gx/MfU
+ +xP3IrzY/DN1PHLP6iRMRm9nxQeVjh/5274PkVGX3RFAE52VHmNBeDCag8qjaYjNnl16
+ YGj3PtHSWeyWu0mSx2p2cvS6NajSARrxUBN0/vdJ+iZzAeoeaEC4E4P6FtJURMtAXX11 lg== 
+Received: from iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta02.appoci.oracle.com [147.154.18.20])
+        by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3m7yb3c9su-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
         Mon, 05 Dec 2022 16:33:24 +0000
-Received: from pps.filterd (phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
-        by phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (8.17.1.5/8.17.1.5) with ESMTP id 2B5GQwoR012906;
+Received: from pps.filterd (iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
+        by iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (8.17.1.5/8.17.1.5) with ESMTP id 2B5GQu6m027839;
         Mon, 5 Dec 2022 16:33:23 GMT
-Received: from nam12-mw2-obe.outbound.protection.outlook.com (mail-mw2nam12lp2042.outbound.protection.outlook.com [104.47.66.42])
-        by phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 3m8u925434-1
+Received: from nam12-dm6-obe.outbound.protection.outlook.com (mail-dm6nam12lp2172.outbound.protection.outlook.com [104.47.59.172])
+        by iadpaimrmta02.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 3m8ua9dpwh-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
         Mon, 05 Dec 2022 16:33:23 +0000
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=L2j1FZShRWvajJQKP6XQqo1yXBm+c/WCymlu5IpChuEMV0BYap8truf3e+jzkLKLUHeu1phRnm2PV/iY9s3yukLMXnjbxMrt0fMh7+FaNocJMHciCqao/BCbX2M/3vtzuAy7tioPvqjGbmx9/dAT2FNUOqQwIi3u6thSqzpXEZ2xbX5zxtLLvUKsGwlu9HNmWBH1cZpsG7VEf/eoVEAh8Til8eAfdd2weDt2cMm7fkV0XHbPNxskhJX1DHYyP6RTNFVXlSgu05zkhOez27UjYymnWwClb0AYweQFG2OSiQOJynGqW0+yQi2nOYqDmbVriqjDdX0kjg3nXNQ5PRPGng==
+ b=bbm9JFuSJo5oxlOUFDh+a5FQWGYsDL/hCyr/lGwg3uEBx7Opawi31ECywY/JAs/srcvmCyJsRvGhNoB9G3FxaXyQpcSIdwMEZqbw1CYEZ4DASeEW+p3hJ9es1+En058IVIH0VHWdLZ0dPt9U/S2BoL5/RycSLsUFVACLTkepsL15+VgDbJ5Zp39JLN23ClCPDsMXkPEgX8EKJHUMdChkXwVWNTX57EqvLZAI941z6oNWIUALEDw5zz7rHBPO2L/KMQ/2G+TdGxzxKKVkZNKkE+aIEjWFYu1qSlBX3Yc7cXjIGlpwzsWXe/BSMO+v0JpDurC98tRfqngi7P99zRdz1w==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=l32MOUudC0t6Nqjg2Gti/mWtMRe+Rd58udSjs02jLB0=;
- b=MhLhZEbU/kOuAejsGAM+Apd/bse7s+OkCok+iGb7R5kZmhZrcJdzKv7KYzME9JzD0YOWy84mQf0B7uLKAsWybsZAhLY9YFCD6Uh9uvPBfcp+aYA29/TYDQFZEro5UjsumWbtSFLN2DhbhNL6wRT14sOJaYQvkn01PotV3oDMFp6Zuz2exs+zaxx4UUqJZlEXS0lxWRDWpnzawN0ItawIOZAAEPJgFzJzzETM7LvYigoJKzi316uAh5pHOrNqy2872WP5TZQLMY2OuOinHtdGXAtMzvc1tB9ZMtzIA6OJqrOFEKJbpySOwCED38IiFXu7wQ2vEeScKntk8BFQpgb52w==
+ bh=9F/+18Uokw90L39bo1hOkJcegJluMpq3v31MmwEUqhw=;
+ b=RqI9GCfyCQ3o2uK3UBeQP6vWMYbN2YuH0WT2lrDhBcaGFunjeyTSmU7eKN6ei2vFsKTRCwzvJfhu0x0GJcKrvu4aBD5uue20jvuwF4Eq0jkUv3dqnLfwCqZbTGNokdR5fQ2uzdHVmBioWelxfVwiYm7B559A0pyqpjkLChPsy/EsWc7IWS44baAs97AM35U5I20fm5a+PBJDoOmKM+Z+6+MSi6qVOLMhcc01hiJTdtq90hq5hDrsPKNFTlhreMaZolCyc3/vzQcNRyZuQmbqEey3fYmLaxsNVNt39okHbQ07Jl89V4S+PjQ1CyjT595Qvak+GoPrNmCiEn9GGlMvOw==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
  dkim=pass header.d=oracle.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
  d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=l32MOUudC0t6Nqjg2Gti/mWtMRe+Rd58udSjs02jLB0=;
- b=WRM8/aTcaAqmV4ps9VYsD6lCemay6DYxpmbeD+N+CPslK9RhpRIzOyVI+XlM4Kd/F0hlaLihLrFaXbgnaMLqo8fnSpO0/0uPAPd5xOaS1UbNa5BJzOXmRpkAgjn7nlYynB1MAlFS6AP07usRS4/XvuTlzPELWXKhNgymSi4AtaM=
+ bh=9F/+18Uokw90L39bo1hOkJcegJluMpq3v31MmwEUqhw=;
+ b=nrvLkK9Z1dgudoLULqjmLx6P2LZhLvZs5H2tlxJHz4XC1eNy0W7QIse7wyPUJGma1AJgxcYw7/toyJsZfsA+JHS8BS5xy+T6ClTbx2jfjcRnz/liB777tCE2azolHg8wOZDVKjMS5UU/w7hMhRBfMmGBB8xshADIf0NNH7UqLG8=
 Received: from DS0PR10MB6798.namprd10.prod.outlook.com (2603:10b6:8:13c::20)
- by DS7PR10MB7324.namprd10.prod.outlook.com (2603:10b6:8:ec::22) with
+ by PH7PR10MB5721.namprd10.prod.outlook.com (2603:10b6:510:130::8) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5880.14; Mon, 5 Dec
- 2022 16:32:47 +0000
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5880.13; Mon, 5 Dec
+ 2022 16:33:21 +0000
 Received: from DS0PR10MB6798.namprd10.prod.outlook.com
  ([fe80::6e94:e2a2:ca1f:2a7]) by DS0PR10MB6798.namprd10.prod.outlook.com
  ([fe80::6e94:e2a2:ca1f:2a7%9]) with mapi id 15.20.5880.014; Mon, 5 Dec 2022
- 16:32:47 +0000
+ 16:33:21 +0000
 From:   Nick Alcock <nick.alcock@oracle.com>
 To:     mcgrof@kernel.org, masahiroy@kernel.org
 Cc:     linux-modules@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
         linux-kernel@vger.kernel.org, arnd@arndb.de,
         akpm@linux-foundation.org, eugene.loh@oracle.com,
         kris.van.hees@oracle.com
-Subject: [PATCH v10 08/13] kbuild: make address ranges map work with IBT
-Date:   Mon,  5 Dec 2022 16:31:52 +0000
-Message-Id: <20221205163157.269335-9-nick.alcock@oracle.com>
+Subject: [PATCH v10 10/13] kallsyms: optimize .kallsyms_modules*
+Date:   Mon,  5 Dec 2022 16:31:54 +0000
+Message-Id: <20221205163157.269335-11-nick.alcock@oracle.com>
 X-Mailer: git-send-email 2.38.0.266.g481848f278
 In-Reply-To: <20221205163157.269335-1-nick.alcock@oracle.com>
 References: <20221205163157.269335-1-nick.alcock@oracle.com>
 Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
-X-ClientProxiedBy: LO4P123CA0019.GBRP123.PROD.OUTLOOK.COM
- (2603:10a6:600:151::6) To DS0PR10MB6798.namprd10.prod.outlook.com
+X-ClientProxiedBy: LO4P302CA0002.GBRP302.PROD.OUTLOOK.COM
+ (2603:10a6:600:2c2::8) To DS0PR10MB6798.namprd10.prod.outlook.com
  (2603:10b6:8:13c::20)
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DS0PR10MB6798:EE_|DS7PR10MB7324:EE_
-X-MS-Office365-Filtering-Correlation-Id: 4bcffff0-422e-4ff2-9438-08dad6de57e8
+X-MS-TrafficTypeDiagnostic: DS0PR10MB6798:EE_|PH7PR10MB5721:EE_
+X-MS-Office365-Filtering-Correlation-Id: 615acd7d-2005-477f-1276-08dad6de5cb5
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: fiGrfpBp+9hmdKnmwg+GWVbkEAz7NjEeqK75kNfgxuXLGjyzKoOUcY1RzCaI9Ud70aUL8cHcrYVMpUHT0lIgplALqp52vxIgqm8sswZ6xsVx5JiLt+uRgiYeR9cdh2hHZgk3XdnRbMLhiNOWQUvxyjEHEYDq5WxL1pEnIwReR9QJCnpA37XBVu8vmBrZ6d2QudJmbkFEtahTLUpFfh5vRDj6zjhZSEptCw+tN1X9GjAWznd2IdP2j4bkKYqG8BU6SxdylZwYHL/ZzEN4itUk0gF/9qQmKFE8jJBOMBxYsZYioMmzlMi6BI7QgPmBDh8I02x8DIqMXIkCLLlGyDcHdD1WLO1jPn3z1bEycw1H9f73iedu/aIdSgX732W9T5EEUTN23oCqgn8RnPztA4IM2MCHc6a/LY7MysHgCbiPOd6+DgjvVJI2btpA35VKIQos8fvJ2+T5zCVD3QwDvB8SAbe4OSbQRpr3W4EgtEz5UWSjRFR4OZ/yxEWev/glenu9U0u0GIhWaOH5KtIAfbw8CH+uIr4j5D1oYWUM1WTQ8Sh5D3TSMvHrmKLLrRscKGL8Eq5XsuyHm2XFrM9UlQtPpQ7jXMDhClEgxcAIj6m26sQaTVRtpjCPVPDmocySX1450AcqV0iTFAUaenpD6JYtoA==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS0PR10MB6798.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230022)(346002)(366004)(136003)(39860400002)(396003)(376002)(451199015)(86362001)(36756003)(1076003)(2616005)(41300700001)(66946007)(4326008)(66476007)(66556008)(8676002)(44832011)(8936002)(5660300002)(6506007)(6486002)(107886003)(478600001)(6666004)(316002)(186003)(6512007)(38100700002)(83380400001)(2906002);DIR:OUT;SFP:1101;
+X-Microsoft-Antispam-Message-Info: zIGz6JQ50rhB5Qb5znSlWjv6YKt4jAUhIlil4/JR+J52yOKUoOlf+sAQFaFd3tSTkMXKmDTBC40eb/zPfZEYvZbZEHdzDF//6ngu5PCMkQtksSa+JSOaXFDU7mDYG0W9rQzgdosaBQHp4TPDpRbCLo146ydJxWe4wo0tR9TTcSIE03tyTC5SrfbFU79JhmeuNsapptvIF9E7CLX0dJ1fj11EO5K7o/iyicAbEKurXliIgEM2G9NnARGvTEJqCGPPeHizKQard3W7APMNweL+fIXh/OVg64pPEBO5CBN4Qj93/xbfedR1wWmd8HT/Cu8O2HhGpnVCtW5w6Yynlxndg7rK+3szQDxrr7lDgp4gh4s3KbHz8qgkfUIKvg92HVOkGkXaoaBwTKPKaRxNJUHAarfCeA7ak+gxOsX8isKfPag7lpEp7InKNNi7wClZIEmr1uopfxfN4qXJXalkNEbMshsK7cxdsGUXPBiKdTJxnv864hCCd3bS74WJUImfV6C96b9UWaY2gW8zGx8eVQcndvuLTY/qK2s9EjZkxRaDRWW9qJvI5Ktmf3JGmbaxeKyZcKBv6kCu7Q4NtjlwZEa1h7y4XTYu0Y1+hNj3vaSitYlHUNA3IvmxX6wuuNmQAJp/Fr9yYafoGSy5/xcn35Wh2JcLdZqIyxxXElauAY8yIr4in6vNJPEX9mZJrLZaCCq0
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS0PR10MB6798.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230022)(376002)(366004)(136003)(346002)(396003)(39860400002)(451199015)(316002)(6486002)(107886003)(478600001)(6666004)(6506007)(6512007)(66946007)(8676002)(4326008)(66476007)(66556008)(83380400001)(30864003)(8936002)(5660300002)(44832011)(186003)(41300700001)(2906002)(1076003)(36756003)(2616005)(38100700002)(86362001)(142923001);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?k0ZbPkUzWPFSxT9bUKsNwHWDlFP7WDegH/640c/xWeSK9smdMAUYjl+Nt/DP?=
- =?us-ascii?Q?05yTSQ0Aua1uaJTcN0i5pR75vkeyWm1sIUdzBhNNZmIv3YpjcW39qtOwl29A?=
- =?us-ascii?Q?BLWTpr+2pznkdNIjJXM1oQHBfOTpmiumdGHVhjmeKNreTpmCoV6kTUv2EOW8?=
- =?us-ascii?Q?gEL1sv6m8CDsD5t1wqzqGtcIIAu3ddtL6Qi7cbOLIRj1HCBKFvxWGY4ZSllG?=
- =?us-ascii?Q?yrQxXNPD6hdvcvD4I9r447Xr1gsk1qM7x5lzC2D3koNkOPyosh9ODD8AaDfr?=
- =?us-ascii?Q?okQpoefl8rHBOAGmXAoSDeypAw0hZQrv90MB2Kzabuzd6IvQylxLFF8dLo7A?=
- =?us-ascii?Q?7eiPPopBssjulTOqYY6bcmVKWvzIeKgoxS+FbBxcGgb6cAtaCw/pF9cmO3Pe?=
- =?us-ascii?Q?8RULe1dvVc8n8zGfEJV9ubFma3+10ONEniS7L/NhAy0sYZSe6DgU8B8tFRw6?=
- =?us-ascii?Q?aAc+fj1vQw4VKIprrPasqSdZrPq3/MspIDB59aYnnq0ShrG7DH3i3PZ0I6UN?=
- =?us-ascii?Q?OVydkxJ5PdeexmXMBvGLhYxGo/GaF+fTkCly1IHk6Xac8RgLgX3hcu770mlK?=
- =?us-ascii?Q?dYgZgNUXXuVxyrGHVDdZNFMFrYc7m80pNVOYTz0yGbnfESyA8tdAg27jbc95?=
- =?us-ascii?Q?lhdqW0oRV8YE15pw/QJZeowurJGGZNwOHM36qBo1ak1erFjhXfWDfbLS0cjL?=
- =?us-ascii?Q?z3+kIaoVh1NQ4S0QrLjfWmVQFwaQezOI1nHAk1Fiqg1+2uZIeYWmUa7hJd0k?=
- =?us-ascii?Q?y9fofYsWqn6GsxqPAzfts0x5AUFeX1wt1s3i2IcPKtHMoR4dhQPm87WfS7L6?=
- =?us-ascii?Q?pIW/7Ut2vNy1c4drI7Z7k8Kd1lNvina7aXjycIGA+xGH7tNbvpdz5fjfbHSq?=
- =?us-ascii?Q?vP8/6VEhkI3tGpDGGcNH+rYfijCiytRwdlLA0e3O3Wf2sQvjwGW3ar0RIpCg?=
- =?us-ascii?Q?+Tu1P7sLTWBD4EDeX1upbqEUrJrzVwzgjKmLCLxh3eYPtAUq3cW4jZlvtt02?=
- =?us-ascii?Q?+LY7OwR686xO97jzLnSTOsm1xq0UF8VCs1b5PqONfDv5MT0zo7YvwuhtP2Hw?=
- =?us-ascii?Q?ToZybU6lRW7zgQ88KIYZgk5yADntylQXfFf2Zxnbf26JQSRzfVbTiHcgRK03?=
- =?us-ascii?Q?gV4SZfeRCdRTLpDhwjOhoMUbqjNbxbzMifxaLpTJ5d42TSWX/tXDsEDWFpyQ?=
- =?us-ascii?Q?fKHVR7PiSX0PI0Uvcjgp42P1opTN2pvZT4UiLWWKRwgBNs76n6YR3IIm4dWo?=
- =?us-ascii?Q?KcwJGh903hPlbdlOl3xpjedVo9pOmhgrPyODkasLV+B+eCYZBmOe2FsGFJYH?=
- =?us-ascii?Q?pewleMaUkWPmnn8PaJmDFmrAzUn68L0IwEMpy+WE7N5qRptMKXwydVXieJYX?=
- =?us-ascii?Q?QkseFMZuS+PrLga7+9Eb0SGM5r4GSjO6+Rqw8EG771nmNDq/+VkHBmeb0j81?=
- =?us-ascii?Q?G5ZtfiT9ph/8PS7HgFjJipjEZNCGObZUWDwC8lfMbCsKX+wp7D3b0HImLAQH?=
- =?us-ascii?Q?WQRHEqQVDor6Qf0GijvMLptp5oULX37ouTMgPgXNoP4oqntV/Xr3+7/aJB/3?=
- =?us-ascii?Q?mGQznUEWykGaj53Z2ruiiZLFCOEADgXVnvim+APwJ2W4y0ddWwCruFUVZTpe?=
- =?us-ascii?Q?DA=3D=3D?=
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?cDeQ7vIJ8NU3niMj9fCUX+MR7ZLLvWAMPAbsjnaOacKmxi+ICVlHF5y9+ji8?=
+ =?us-ascii?Q?Vr2EK2Ucn4SOJjYd0fzGDc7z99d8TK3ikbCe++teRke2YNFa4n8GLAeCoALc?=
+ =?us-ascii?Q?5LlOEC5pFLpsulgKuqmxi7Q5ZcRcy/rbY7Jvo/LYM6bPEy8UWcu7SL1WgJjB?=
+ =?us-ascii?Q?iqByU+qPsFx/AZOuNq5FbpO7r4/fKqTQ9j3yaYkjhop4gmcHOjcJevXRDuIW?=
+ =?us-ascii?Q?k3KBV1zZHPNmB5EsbszBn4mzq+2UgUNsH5envC7NLO3bU/Ttpqw9LH8zylfi?=
+ =?us-ascii?Q?GGXnndbTwGSTrypYUqmLD253tl75+OrUjhAD8ipF45B8YdWA7z4oxVUdJC/v?=
+ =?us-ascii?Q?c7sxOl8O7svs2V5dVRh5UkMsYMQowCGjjy0XI7zH/lOsab2GK3zKTO8DlfUs?=
+ =?us-ascii?Q?AGdeRAWhzzL7B6MVYybdxFTktm6Wx66cPAnxXY2cynZhwG7ASSl4ICR5yVgp?=
+ =?us-ascii?Q?BmJOj+d3ImnN06Iyw0bjziiS9zgikBL7D9jtbM5Wgvvgz2+6rb7IumUgAcot?=
+ =?us-ascii?Q?qc84DMYiL5ci+WhdHrrDcV38bBfYwWcHTKmK07P6xQ1M+ZNKO7neNaCWxaO9?=
+ =?us-ascii?Q?k2IA0VemrqEoxBeMO0LEuNZMD9SvWQ6a+s9+GL4rZBbXC7qJkdzMKGaDME//?=
+ =?us-ascii?Q?ttJ76UbhgiGNFOIfum0YTKEGciugCwkji21bBAufn6j2oWfTjDiIJdpm3T8P?=
+ =?us-ascii?Q?XwOWbtQ3sz5nsbxH9i6OdiFxaYFJbIFjx+KYGwTMnUw11Apyo9OhUadN7xuA?=
+ =?us-ascii?Q?NMA4fFaZW0YFd0g0Rx/DCEhxDmFinv2ATjsWA+pTNve15gW8y8+pi4q9B5Nu?=
+ =?us-ascii?Q?UdxfHJ/7gbeya/84JGtOAxkbKLVRTASm/gWhtXS42EyylGZXLn6dPoSbkmFh?=
+ =?us-ascii?Q?rsGji4SmNVLMfI5UZccWbPDuCS0GlaNoA0LdV+S8TKE7NTlEjS4VAn9jo+Fd?=
+ =?us-ascii?Q?W4mM8AWQQ8lSdgjmuRK841cEzR5NWNlDVoU71sViwG7tYv4jXh+UVIUIeV0Q?=
+ =?us-ascii?Q?/Udb1lyeE5QCnLt5Fx2nOlFd4jRLmhcEolAibmEoiWzrF6O4P8p2kcUYi30H?=
+ =?us-ascii?Q?vqzYcc5qkj9+R9Y5kx9PnNk5OiTxi+A+aGkdwm93e9i+K9qgI0nJFWMuq5n3?=
+ =?us-ascii?Q?0+gpVvQxM94V6T5wAG7Fen0WV7vK0maK6jc0u2ztcq850cdFRgZY8lTiyr+m?=
+ =?us-ascii?Q?WdVf3cyL02EqgGSLaarYCrxRzAyHsy+txocL1ZfoUFntXUU8opeuO2EX33YK?=
+ =?us-ascii?Q?z0Evj7Jiw4rVukLc1ZDB1BR1OwlmLKd9gpa94XZ7nS9eJvA8ZITRvmVasoQ4?=
+ =?us-ascii?Q?8A9/a4liHxU+s40mrDFRM3LeWqX9HczP6WT04/VwFpIk1lpM9KBT2xWoc4T+?=
+ =?us-ascii?Q?DXpbaGEwJ6uBOqBeZvvYAqduSXucb4cbfwtlvBODDCng1xST09vP6aJoPwTG?=
+ =?us-ascii?Q?V34PmmMRs5ASBWRZCgySl7rbhqW4J6weHVczyuCqMCA6udDVpDuwjfhb4sRt?=
+ =?us-ascii?Q?y0j7+7NXXXX5qc0Qa9547kOLcT/w9fpVvFinH6WM07+32krcw82TMm7syxQO?=
+ =?us-ascii?Q?uemHZJmdv1pMtyQrSvk9EzNblK7nkLUbmCHE9rQEPNhycWyg6PbYW5Ezn7zt?=
+ =?us-ascii?Q?tg=3D=3D?=
 X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0: =?us-ascii?Q?YlueLCXaVtvidwBjRfCgqNmylUCmDK9n02wIZWZKhdjUR3Jiqs1rdJLtOJwi?=
- =?us-ascii?Q?hO7Qrniow/5IykLU+c0l5dtclgm+E1FlEAnkII2fNBVxfRbI6u1JYQkvR3FH?=
- =?us-ascii?Q?frkEZdN9EsPkiYyqCkW0h23ORBciruoa+RpP992Xl8A26eP0Hng5XYVg8gJA?=
- =?us-ascii?Q?KM/fGIqvQIRm680cTdF9TR8kW0vjeWFMyUeOPmGEj6GZhWovwtcojh3iFQPG?=
- =?us-ascii?Q?nwbY4r/xxuxo5eoiMkgCxkn1f0qH8xhbZbxuqE0HgFgxNE0+w3iFu+JKJpuj?=
- =?us-ascii?Q?wtr8SU328/hC9zIOnu+uzqW67ouoc/F5vAyu2EDINefZRSP0qQP3ZJ8LPP9k?=
- =?us-ascii?Q?KATV5JN1cDSOW3KPXXHBMjBpj4tVq09xsW4IvG+GMfdYX/geSu/4qb5rOFeM?=
- =?us-ascii?Q?ubLRhefytDgytDLrSE4EhYeQOJKwdg3HDaLphLqHsZTtTXxb0TQOTx9rBq9R?=
- =?us-ascii?Q?6PF0UaD3QDO2yZtbi+ZwJ/spHxVJNFCTdC6+5Uu8iNgJZf1Hp1bwiq6gF7pF?=
- =?us-ascii?Q?dGUFkNEXk0950fDiqsphQfkxDSDgemQjKeGBEFUYWJQMT5c5+hZ6eQFaKjUE?=
- =?us-ascii?Q?vuir0mnciUVdiYS0eczw8J4pdHqDLPcsr5DHW0yUaq3kQhFppxcX9HvW/6kb?=
- =?us-ascii?Q?gfzC/waypLvZSHZzZ8o6jinXQYExF79K7XEdSTJBt1YnX0pJ94Oz64pilfZ4?=
- =?us-ascii?Q?5J9AZLnsd6zlqWXSrr5IFznPwSXbE2MDEoxKjCfF0w4DqMtN5PutEVesJm7g?=
- =?us-ascii?Q?PTQUEKlCsb3WXDKJsL+OX9vXhaljxCRbbwrvGXCi2Rr8HyLjgwDKJjQK2X8v?=
- =?us-ascii?Q?h/+UuKlW/+cg0NRiiKSEbh+LQlvCUHmSz43NTt3LnVbfUHK85dbvQeA6R5dk?=
- =?us-ascii?Q?aM1YiciLBv8Eh8Sp6q2G1hGuhFQzOWTvx4uzmP/BKt389qBnx7mIVauNU4H9?=
- =?us-ascii?Q?pVbQ5jr+nPPtGRozsx59CDwCPj7tZiz5vpT88G4391g=3D?=
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0: =?us-ascii?Q?dgCQsu4r/M34W39t0Fo4/yHGrf57YRQtRAtodlXB50uM9kOxingRALtdraFn?=
+ =?us-ascii?Q?RqFA9pk9x4FOSiEQozA05B6PcV4nOW1Dnl95WZgqOCXDKhtIx+YvNl0oGxw/?=
+ =?us-ascii?Q?5X5dKe4owGSoxKylNucv49wt+RI5VOZi13VjoIYcdopLYxN9ExDJwxsQWqu0?=
+ =?us-ascii?Q?t48vE+bQ58U2eBotEYPSaSR4i3/Nnv8ByOoSfM4SnqPNMERrM4Wj8cV1vmU5?=
+ =?us-ascii?Q?qWhmAxyqQrrGTTtATzTEjjd6DSbryk+IQU5EczneKi/mECWToBiCFyLsCNlb?=
+ =?us-ascii?Q?6e8NSnY4cAXu3XwCJu1z0xC2PBEfHmnxvt8kX0s/DyoMtPX/8uRMMb8LH7gw?=
+ =?us-ascii?Q?jgNxAWimcMOpErawjX1wWLdazvGYNMaWr6e4KoOSdAeqnoghAeJ2s3Zun2Fa?=
+ =?us-ascii?Q?d/71pL5Q62v6RN1dGxMx/nDliMvcFiXAAEeCap5XuYjCA7mNr3dwDq/BJMoa?=
+ =?us-ascii?Q?LBXN/Lxd6zUF3ij73gNjzB3KpRK62+IvtXeQvLlQwCLstjvsfFOsvh5SiNox?=
+ =?us-ascii?Q?Y7NIZxPE13i6DOOFwJRopXfMH28vI+l5E87wCfm0agLRQN3UjwmFX9r/kS3h?=
+ =?us-ascii?Q?OfeE1ulX4oktm0+IET69poRg+3g6WygsVWxDp+4VUtCGUbxMLz2UwnMdEzkv?=
+ =?us-ascii?Q?XZNwtho+2LI5ssgf3AexDRTjV0oScNbkIyFgrKSyZteIxDyKQLCCkRv6J+eh?=
+ =?us-ascii?Q?3XtJFNjehRNeErKbrsq0ye4ktORGvFAy0y5rVcWu3KV8X3PKmAXKxN4S4NrX?=
+ =?us-ascii?Q?h3SlWX6rXTjmp4blxqopX0T0Melj8maDh4RXDf4KOS71+xtn5vhvkEUmk/1e?=
+ =?us-ascii?Q?Ubrqq+dw3aN5Ris/0Szz0TjkTt+BN/5a6zzjRx2bQSxCL3qLLDHLZuOFevLF?=
+ =?us-ascii?Q?mZcpxT89vWL/8DiXFMokbm/qx/eifMt5DWesjR0/Xpuj5B0o1sp2h37BGm1U?=
+ =?us-ascii?Q?W3B7tLBVvoVpjv0LjJanSyyNv5I7ZraO9TxmgdTXcPQ=3D?=
 X-OriginatorOrg: oracle.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 4bcffff0-422e-4ff2-9438-08dad6de57e8
+X-MS-Exchange-CrossTenant-Network-Message-Id: 615acd7d-2005-477f-1276-08dad6de5cb5
 X-MS-Exchange-CrossTenant-AuthSource: DS0PR10MB6798.namprd10.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 05 Dec 2022 16:32:47.4009
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 05 Dec 2022 16:32:55.4676
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: HLymWR2t2NS95oTOeRFI4D3Y7c6hEDcB2jCst36RQHs35WYEXu1G5p30ZjbdhC7Q3ytBWGxKNrzjADCac9pv4w==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS7PR10MB7324
+X-MS-Exchange-CrossTenant-UserPrincipalName: +pHEMiVPmVVTJnYRqpfE5eFYysvi5qDwImlh3nO1L5UNpB7ufARIHR//T55l6rHtVPdQQOEwvkb/W8e5lHc4yA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7PR10MB5721
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.205,Aquarius:18.0.923,Hydra:6.0.545,FMLib:17.11.122.1
  definitions=2022-12-05_01,2022-12-05_01,2022-06-22_01
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 bulkscore=0 mlxscore=0
- mlxlogscore=999 spamscore=0 phishscore=0 suspectscore=0 malwarescore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2210170000
- definitions=main-2212050138
-X-Proofpoint-ORIG-GUID: sdWb27LiDak7CaaLZk5OpDM3BDmeRPYe
-X-Proofpoint-GUID: sdWb27LiDak7CaaLZk5OpDM3BDmeRPYe
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 adultscore=0
+ malwarescore=0 bulkscore=0 mlxscore=0 spamscore=0 phishscore=0
+ mlxlogscore=999 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2210170000 definitions=main-2212050138
+X-Proofpoint-ORIG-GUID: C4E9OcYX2-g9Y0-NzDQpP2A-z_uC3ePK
+X-Proofpoint-GUID: C4E9OcYX2-g9Y0-NzDQpP2A-z_uC3ePK
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-The previous commit emits .tmp_vmlinux.ranges, which maps address
-range/size pairs in vmlinux to the object files which make them up; this
-is used by kallmodsyms to let us associate symbols with object file
-names and kernel module names at address-range granularity (i.e.,
-space-efficiently).
+These symbols are terribly inefficiently stored at the moment.  Add a
+simple optimizer which fuses obj2mod_elem entries and uses this to
+implement three cheap optimizations:
 
-But the previous commit only works if the final linker runs directly on
-the input .o files from the kernel build: if an intermediate ld -r is
-done, the final link emits a mapfile containing only the name of the
-intermediate ld -r (vmlinux.o), which messes up .tmp_vmlinux.ranges and
-makes kallmodsyms attribute all symbols to {vmlinux.o} which isn't much
-use for disambiguation. vmlinux.o has the object file names we need, but
-the addresses are all wrong so we can't use that either.
+ - duplicate names are eliminated from .kallsyms_module_names.
 
-This commit fixes that by extracting the addresses from the final
-vmlinux mapfile (or one of the intermediate kallsyms mapfiles) and using
-them to adjust the address/objfile name pairs extracted from the
-vmlinux.o mapfile, giving us a ranges map with the right addresses and
-the right names.  It's a bit painful because the addresses are often
-large numbers, and awk is... not good at handling them (GNU awk can use
-large integers, but the feature is at risk of removal).  So we emit a
-slightly different file format with a pair of hex values (the address in
-vmlinux.o and section address from the final mapfile), then pipe it
-through a tiny new C filter (scripts/addaddrs) whose only purpose is to
-add those two numbers together!
+ - entries in .kallsyms_modules which point at single-file modules which
+   also appear in a multi-module list are redirected to point inside
+   that list, and the single-file entry is dropped from
+   .kallsyms_module_names.  Thus, modules which contain some object
+   files shared with other modules and some object files exclusive to
+   them do not double up the module name.  (There might still be some
+   duplication between multiple multi-module lists, but this is an
+   extremely marginal size effect, and resolving it would require an
+   extra layer of lookup tables which would be even more complex, and
+   incompressible to boot).
 
-One niggle is that .hot/.cold stuff is no longer correctly attributed to
-its object file any more -- it seems to not appear in any of the
-mapfiles at all (only in System.map), so I don't see any way to fix
-this.
+ - Entries in .kallsyms_modules that would contain the same value after
+   the above optimizations are fused together, along with their
+   corresponding .kallsyms_module_addresses/offsets entries.  Due to
+   this fusion process, and because object files can be split apart into
+   multiple parts by the linker for hot/cold partitioning and the like,
+   entries in .kallsyms_module_addresses/offsets no longer correspond
+   1:1 to object files, but more to some contiguous range of addresses
+   which are guaranteed to belong to a single built-in module, but which
+   may well stretch over multiple object files.
 
-(This possibly makes it work with clang LTO too, but I haven't tested
-it, and if the mapfile format differs it will fail until that's fixed.
-But this definitely overcomes *one* of the roadblocks preventing clang
-LTO from working with kallmodsyms.)
+The optimizer's time complexity is O(log n) in the number of objfiles at
+most (and probably much lower), so, given the relatively low number of
+objfiles, its runtime overhead is in the noise.
+
+Optimization reduces the overhead of the kallmodsyms tables by about
+7500 items, dropping the .tmp_kallsyms2.o object file size by about
+33KiB, leaving it 8672 bytes larger than before: a gain of .4%.
+
+The vmlinux size is not yet affected because the variables are not used
+and are eliminated by the linker: but if they were used (after the next
+commit but one), the size impact of all of this on the final kernel is
+minimal: in my testing, vmlinux grew by 0.17% (10824 bytes), and the
+compressed vmlinux only grew by 0.08% (7552 bytes): though this is very
+configuration-dependent, it seems likely to scale roughly with the
+kernel as a whole.  (The next commit changes these numbers a bit, but not
+much.)
 
 Signed-off-by: Nick Alcock <nick.alcock@oracle.com>
 Reviewed-by: Kris Van Hees <kris.van.hees@oracle.com>
 ---
 
 Notes:
-    v10: new.
+    v9: Fix a bug in optimize_obj2mod that prevented proper reuse of
+        module names for object files appearing in both multimodule
+        modules and single-module modules.  Adjustments to allow for
+        objfile support.  Tiny style fixes.
+    v10: Slight conflict adjustments.
 
- Documentation/dontdiff     |  1 +
- init/Kconfig               | 10 ++++++++++
- scripts/.gitignore         |  1 +
- scripts/Makefile           |  1 +
- scripts/Makefile.vmlinux_o |  6 +++++-
- scripts/addaddrs.c         | 28 ++++++++++++++++++++++++++++
- scripts/link-vmlinux.sh    | 34 +++++++++++++++++++++++++---------
- 7 files changed, 71 insertions(+), 10 deletions(-)
- create mode 100644 scripts/addaddrs.c
+ scripts/kallsyms.c | 297 +++++++++++++++++++++++++++++++++++++++++++--
+ 1 file changed, 288 insertions(+), 9 deletions(-)
 
-diff --git a/Documentation/dontdiff b/Documentation/dontdiff
-index 17686f59039c..72c089eea111 100644
---- a/Documentation/dontdiff
-+++ b/Documentation/dontdiff
-@@ -79,6 +79,7 @@ SCCS
- System.map*
- TAGS
- aconf
-+addaddrs
- af_names.h
- aic7*reg.h*
- aic7*reg_print.c*
-diff --git a/init/Kconfig b/init/Kconfig
-index c45935cd2f1f..160ec1370594 100644
---- a/init/Kconfig
-+++ b/init/Kconfig
-@@ -1570,6 +1570,16 @@ config POSIX_TIMERS
+diff --git a/scripts/kallsyms.c b/scripts/kallsyms.c
+index 48bf4661bd09..4d8289040ad5 100644
+--- a/scripts/kallsyms.c
++++ b/scripts/kallsyms.c
+@@ -104,6 +104,17 @@ static unsigned int strhash(const char *s)
+ 	return hash;
+ }
  
- 	  If unsure say y.
- 
-+config KALLMODSYMS
-+	default y
-+	bool "Enable support for /proc/kallmodsyms" if EXPERT
-+	depends on KALLSYMS
-+	select VMLINUX_MAP
-+	help
-+	  This option enables the /proc/kallmodsyms file, which unambiguously
-+	  maps built-in kernel symbols and their associated object files and
-+	  modules to addresses.
-+
- config PRINTK
- 	default y
- 	bool "Enable support for printk" if EXPERT
-diff --git a/scripts/.gitignore b/scripts/.gitignore
-index b7aec8eb1bd4..d042f0e3d13f 100644
---- a/scripts/.gitignore
-+++ b/scripts/.gitignore
-@@ -1,4 +1,5 @@
- # SPDX-License-Identifier: GPL-2.0-only
-+/addaddrs
- /asn1_compiler
- /bin2c
- /generate_rust_target
-diff --git a/scripts/Makefile b/scripts/Makefile
-index 1575af84d557..356cafcd313d 100644
---- a/scripts/Makefile
-+++ b/scripts/Makefile
-@@ -5,6 +5,7 @@
- 
- hostprogs-always-$(CONFIG_BUILD_BIN2C)			+= bin2c
- hostprogs-always-$(CONFIG_KALLSYMS)			+= kallsyms
-+hostprogs-always-$(CONFIG_KALLMODSYMS)			+= addaddrs
- hostprogs-always-$(BUILD_C_RECORDMCOUNT)		+= recordmcount
- hostprogs-always-$(CONFIG_BUILDTIME_TABLE_SORT)		+= sorttable
- hostprogs-always-$(CONFIG_ASN1)				+= asn1_compiler
-diff --git a/scripts/Makefile.vmlinux_o b/scripts/Makefile.vmlinux_o
-index 9b4ca83f0695..94c2ec366b91 100644
---- a/scripts/Makefile.vmlinux_o
-+++ b/scripts/Makefile.vmlinux_o
-@@ -27,6 +27,10 @@ ifdef CONFIG_LTO_CLANG
- initcalls-lds := .tmp_initcalls.lds
- endif
- 
-+ifneq ($(CONFIG_VMLINUX_MAP)$(CONFIG_KALLMODSYMS),)
-+KBUILD_MAPFLAGS = -Map=$@.map
-+endif
-+
- # objtool for vmlinux.o
- # ---------------------------------------------------------------------------
- #
-@@ -47,7 +51,7 @@ objtool-args = $(vmlinux-objtool-args-y) --link
- quiet_cmd_ld_vmlinux.o = LD      $@
-       cmd_ld_vmlinux.o = \
- 	$(LD) ${KBUILD_LDFLAGS} -r -o $@ \
--	$(addprefix -T , $(initcalls-lds)) \
-+	$(KBUILD_MAPFLAGS) $(addprefix -T , $(initcalls-lds)) \
- 	--whole-archive vmlinux.a --no-whole-archive \
- 	--start-group $(KBUILD_VMLINUX_LIBS) --end-group \
- 	$(cmd_objtool)
-diff --git a/scripts/addaddrs.c b/scripts/addaddrs.c
-new file mode 100644
-index 000000000000..d15cbbf8d262
---- /dev/null
-+++ b/scripts/addaddrs.c
-@@ -0,0 +1,28 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+
-+/* Used only by link-vmlinux.sh */
-+
-+#include <stdio.h>
-+#include <stdlib.h>
-+#include <inttypes.h>
-+
-+int main (void)
++static unsigned int memhash(char *s, size_t len)
 +{
-+	int i = 0;
-+	while (!feof(stdin)) {
-+		uint64_t a, b;
-+		int ret;
-+		char *rest = NULL;
++	/* fnv32 hash */
++	unsigned int hash = 2166136261U;
++	size_t i;
 +
-+		i++;
-+		if ((ret = scanf("%" SCNx64 " %" SCNx64 " %m[^\n]\n", &a, &b, &rest)) < 3) {
-+			fprintf(stderr,
-+				"Syntax error: invalid line %i found in rangefile generation: at least three fields expected, %i converted\n", i, ret);
-+			exit(1);
++	for (i = 0; i < len; i++)
++		hash = (hash ^ *(s + i)) * 0x01000193;
++	return hash;
++}
++
+ #define OBJ2MOD_BITS 10
+ #define OBJ2MOD_N (1 << OBJ2MOD_BITS)
+ #define OBJ2MOD_MASK (OBJ2MOD_N - 1)
+@@ -113,14 +124,35 @@ struct obj2mod_elem {
+ 	size_t nmods;		/* number of modules in "mods" */
+ 	size_t mods_size;	/* size of all mods together */
+ 	int mod_offset;		/* offset of module name in .kallsyms_mod_objnames */
++
++	/*
++	 * Hash values of all module names in this elem, combined: used for
++	 * rapid comparisons.  Populated quite late, at optimize_obj2mod time.
++	 */
++	unsigned int modhash;
++
++	/*
++	 * If set at emission time, this points at another obj2mod entry that
++	 * contains the module name we need (possibly at a slightly later
++	 * offset, if the entry is for an objfile that appears in many modules).
++	 */
++	struct obj2mod_elem *xref;
++
++	/*
++	 * Chain links for object -> module and module->object mappings.
++	 */
+ 	struct obj2mod_elem *obj2mod_next;
++	struct obj2mod_elem *mod2obj_next;
+ };
+ 
+ /*
+- * Map from object files to obj2mod entries (a unique mapping).
++ * Map from object files to obj2mod entries (a unique mapping), and vice versa
++ * (not unique, but entries for objfiles in more than one module in this hash
++ * are ignored).
+  */
+ 
+ static struct obj2mod_elem *obj2mod[OBJ2MOD_N];
++static struct obj2mod_elem *mod2obj[OBJ2MOD_N];
+ static size_t num_objfiles;
+ 
+ /*
+@@ -164,6 +196,8 @@ static void obj2mod_add(char *obj, char *mod)
+ 
+ 	elem = obj2mod_get(obj);
+ 	if (!elem) {
++		int j = strhash(mod) & OBJ2MOD_MASK;
++
+ 		elem = malloc(sizeof(struct obj2mod_elem));
+ 		if (!elem)
+ 			goto oom;
+@@ -177,8 +211,15 @@ static void obj2mod_add(char *obj, char *mod)
+ 
+ 		elem->obj2mod_next = obj2mod[i];
+ 		obj2mod[i] = elem;
++		elem->mod2obj_next = mod2obj[j];
++		mod2obj[j] = elem;
+ 		num_objfiles++;
+ 	} else {
++		/*
++		 * objfile appears in multiple modules.  mod2obj for this entry
++		 * will be ignored from now on, except insofar as it is needed
++		 * to maintain the hash chain.
++		 */
+ 		elem->mods = realloc(elem->mods, elem->mods_size +
+ 				     strlen(mod) + 1);
+ 		if (!elem->mods)
+@@ -198,6 +239,162 @@ static void obj2mod_add(char *obj, char *mod)
+ 	fprintf(stderr, "kallsyms: out of memory\n");
+ 	exit(1);
+ }
++
++static int qstrcmp(const void *a, const void *b)
++{
++	return strcmp((const char *) a, (const char *) b);
++}
++
++static int qmodhash(const void *a, const void *b)
++{
++	struct obj2mod_elem * const *el_a = a;
++	struct obj2mod_elem * const *el_b = b;
++	if ((*el_a)->modhash < (*el_b)->modhash)
++		return -1;
++	else if ((*el_a)->modhash > (*el_b)->modhash)
++		return 1;
++	return 0;
++}
++
++/*
++ * Associate all object files in obj2mod which refer to the same module with a
++ * single obj2mod entry for emission, preferring to point into the module list
++ * in a multi-module objfile.
++ */
++static void optimize_obj2mod(void)
++{
++	size_t i;
++	size_t n = 0;
++	struct obj2mod_elem *elem;
++	struct obj2mod_elem *dedup;
++
++	/* An array of all obj2mod_elems, later sorted by hashval.  */
++	struct obj2mod_elem **uniq;
++	struct obj2mod_elem *last;
++
++	/*
++	 * Canonicalize all module lists by sorting them, then compute their
++	 * hash values.
++	 */
++	uniq = malloc(sizeof(struct obj2mod_elem *) * num_objfiles);
++	if (uniq == NULL)
++		goto oom;
++
++	for (i = 0; i < OBJ2MOD_N; i++) {
++		for (elem = obj2mod[i]; elem; elem = elem->obj2mod_next) {
++			if (elem->nmods >= 2) {
++				char **sorter;
++				char *walk;
++				char *tmp_mods;
++				size_t j;
++
++				tmp_mods = malloc(elem->mods_size);
++				sorter = malloc(sizeof(char *) * elem->nmods);
++				if (sorter == NULL || tmp_mods == NULL)
++					goto oom;
++				memcpy(tmp_mods, elem->mods, elem->mods_size);
++
++				for (j = 0, walk = tmp_mods; j < elem->nmods;
++				     j++) {
++					sorter[j] = walk;
++					walk += strlen(walk) + 1;
++				}
++				qsort(sorter, elem->nmods, sizeof (char *),
++				      qstrcmp);
++				for (j = 0, walk = elem->mods; j < elem->nmods;
++				     j++) {
++					strcpy(walk, sorter[j]);
++					walk += strlen(walk) + 1;
++				}
++				free(tmp_mods);
++				free(sorter);
++			}
++
++			uniq[n] = elem;
++			uniq[n]->modhash = memhash(elem->mods, elem->mods_size);
++			n++;
++		}
++	}
++
++	qsort(uniq, num_objfiles, sizeof (struct obj2mod_elem *), qmodhash);
++
++	/*
++	 * Work over multimodule entries.  These must be emitted into
++	 * .kallsyms_mod_objnames as a unit, but we can still optimize by
++	 * reusing some other identical entry.  Single-file modules are amenable
++	 * to the same optimization, but we avoid doing it for now so that we
++	 * can prefer to point them directly inside a multimodule entry.
++	 */
++	for (i = 0, last = NULL; i < num_objfiles; i++) {
++		const char *onemod;
++		size_t j;
++
++		if (uniq[i]->nmods < 2)
++			continue;
++
++		/* Duplicate multimodule.  Reuse the first we saw.  */
++		if (last != NULL && last->modhash == uniq[i]->modhash &&
++			memcmp(uniq[i]->mods, last->mods,
++			       uniq[i]->mods_size) == 0) {
++			uniq[i]->xref = last;
++			continue;
 +		}
 +
-+		printf("0x%018" PRIx64 " %s\n", a+b, rest);
-+		free(rest);
++		/*
++		 * Single-module entries relating to modules also emitted as
++		 * part of this multimodule entry can refer to it: later, we
++		 * will hunt down the right specific module name within this
++		 * multimodule entry and point directly to it.
++		 */
++		onemod = uniq[i]->mods;
++		for (j = uniq[i]->nmods; j > 0; j--) {
++			int h = strhash(onemod) & OBJ2MOD_MASK;
++
++			for (dedup = mod2obj[h]; dedup;
++			     dedup = dedup->mod2obj_next) {
++				if (dedup->nmods > 1)
++					continue;
++
++				if (strcmp(dedup->mods, onemod) != 0)
++					continue;
++				dedup->xref = uniq[i];
++				assert(uniq[i]->xref == NULL);
++			}
++			onemod += strlen(onemod) + 1;
++		}
++
++		last = uniq[i];
 +	}
-+	exit(0);
++
++	/*
++	 * Now traverse all single-module entries, xreffing every one that
++	 * relates to a given module to the first one we saw that refers to that
++	 * module.
++	 */
++	for (i = 0, last = NULL; i < num_objfiles; i++) {
++		if (uniq[i]->nmods > 1)
++			continue;
++
++		if (uniq[i]->xref != NULL)
++			continue;
++
++		/* Duplicate module name.  Reuse the first we saw.  */
++		if (last != NULL && last->modhash == uniq[i]->modhash &&
++		    memcmp(uniq[i]->mods, last->mods, uniq[i]->mods_size) == 0) {
++			uniq[i]->xref = last;
++			assert(last->xref == NULL);
++			continue;
++		}
++		last = uniq[i];
++	}
++
++	free(uniq);
++
++	return;
++oom:
++	fprintf(stderr, "kallsyms: out of memory optimizing module list\n");
++	exit(EXIT_FAILURE);
 +}
-diff --git a/scripts/link-vmlinux.sh b/scripts/link-vmlinux.sh
-index a40d372b1289..3b3ea6214062 100755
---- a/scripts/link-vmlinux.sh
-+++ b/scripts/link-vmlinux.sh
-@@ -60,10 +60,7 @@ vmlinux_link()
- 	# skip output file argument
- 	shift
+ #endif /* CONFIG_KALLMODSYMS */
  
--	# kallmodsyms needs a linker mapfile that contains original object
--	# file names, so cannot use this optimization.
--	if { is_enabled CONFIG_LTO_CLANG || is_enabled CONFIG_X86_KERNEL_IBT; } && \
--	   ! is_enabled CONFIG_KALLMODSYMS; then
-+	if is_enabled CONFIG_LTO_CLANG || is_enabled CONFIG_X86_KERNEL_IBT; then
- 		# Use vmlinux.o instead of performing the slow LTO link again.
- 		objs=vmlinux.o
- 		libs=
-@@ -153,12 +150,31 @@ kallsyms()
- 	#       - but sometimes there is a line break after the first field
- 	#   - start reading at "Linker script and memory map"
- 	#   - stop reading at ".brk"
-+	# if there is a vmlinux.o.map and LTO_CLANG or KERNEL_IBT are
-+	# turned on, we have used a vmlinux -r'ed .o for linking: use this
-+	# as our primary information source, but acquire section addresses
-+	# from the (later) linker map we were passed in.  This makes things
-+	# a bit more complex, since we have to recognize and eliminate
-+	# sections elided by the linker, and add together numbers larger
-+	# than awk can portably handle.
- 	if is_enabled CONFIG_KALLMODSYMS; then
--		${AWK} '
--		    /\.o$/ && start==1 { print $(NF-2), $(NF-1), $NF }
--		    /^Linker script and memory map/ { start = 1 }
--		    /^\.brk/ { exit(0) }
--		' ${3} | sort > .tmp_vmlinux.ranges
-+		if is_enabled CONFIG_LTO_CLANG || is_enabled CONFIG_X86_KERNEL_IBT; then
-+			${AWK} 'BEGIN { addresses = 1 }
-+			    /^Linker script and memory map/ { start = 1 }
-+			    !start { next }
-+			    { got_section = 0 }
-+			    /^ \./ { section = $1; got_section = 1; if (NF == 1) { getline }}
-+			    addresses && got_section && !(section in addrs) { addrs[section] = $2 }
-+			    !addresses && got_section && section in addrs { print $(NF-2), addrs[section], $(NF-1), $NF }
-+			    /^\.brk/ || /^\.bss\.\.brk/ { addresses = 0; start = 0; nextfile }
-+			' ${3} vmlinux.o.map | scripts/addaddrs | sort > .tmp_vmlinux.ranges
-+		else
-+			${AWK} '
-+			    start && /\.o$/ { print $(NF-2), $(NF-1), $NF }
-+			    /^Linker script and memory map/ { start = 1 }
-+			    /^\.brk/ { exit(0) }
-+			' ${3} | sort > .tmp_vmlinux.ranges
-+		fi
- 	fi
+ static void usage(void)
+@@ -509,8 +706,8 @@ static void output_kallmodsyms_mod_objnames(void)
+ 	size_t i;
  
- 	# get kallsyms options
+ 	/*
+-	 * Traverse and emit, updating mod_offset accordingly.  Emit a single \0
+-	 * at the start, to encode non-modular objfiles.
++	 * Traverse and emit, chasing xref and updating mod_offset accordingly.
++	 * Emit a single \0 at the start, to encode non-modular objfiles.
+ 	 */
+ 	output_label("kallsyms_mod_objnames");
+ 	printf("\t.byte\t0\n");
+@@ -519,9 +716,25 @@ static void output_kallmodsyms_mod_objnames(void)
+ 		     elem = elem->obj2mod_next) {
+ 			const char *onemod;
+ 			size_t i;
++			struct obj2mod_elem *out_elem = elem;
+ 
+-			elem->mod_offset = offset;
+-			onemod = elem->mods;
++			/*
++			 * Single-module ref to a multimodule: will be emitted
++			 * as a whole, so avoid emitting pieces of it (which
++			 * would go unreferenced in any case).
++			 */
++			if (elem->xref &&
++			    elem->nmods == 1 && elem->xref->nmods > 1)
++				continue;
++
++			if (elem->xref)
++				out_elem = elem->xref;
++
++			if (out_elem->mod_offset != 0)
++				continue;	/* Already emitted.  */
++
++			out_elem->mod_offset = offset;
++			onemod = out_elem->mods;
+ 
+ 			/*
+ 			 * Technically this is a waste of space: we could just
+@@ -530,13 +743,14 @@ static void output_kallmodsyms_mod_objnames(void)
+ 			 * entry, but doing it this way makes it more obvious
+ 			 * when an entry is a multimodule entry.
+ 			 */
+-			if (elem->nmods != 1) {
++			if (out_elem->nmods != 1) {
+ 				printf("\t.byte\t0\n");
+-				printf("\t.byte\t%zi\n", elem->nmods);
++				printf("\t.byte\t%zi\n", out_elem->nmods);
+ 				offset += 2;
+ 			}
+ 
+-			for (i = elem->nmods; i > 0; i--) {
++			for (i = out_elem->nmods; i > 0; i--) {
++				printf("/* 0x%lx */\n", offset);
+ 				printf("\t.asciz\t\"%s\"\n", onemod);
+ 				offset += strlen(onemod) + 1;
+ 				onemod += strlen(onemod) + 1;
+@@ -563,6 +777,13 @@ static void output_kallmodsyms_objfiles(void)
+ 		long long offset;
+ 		int overflow;
+ 
++                /*
++                 * Fuse consecutive address ranges citing the same object file
++                 * into one.
++                 */
++                if (i > 0 && addrmap[i-1].objfile == addrmap[i].objfile)
++                        continue;
++
+ 		if (base_relative) {
+ 			if (!absolute_percpu) {
+ 				offset = addrmap[i].addr - relative_base;
+@@ -588,6 +809,13 @@ static void output_kallmodsyms_objfiles(void)
+ 
+ 	for (i = 0; i < addrmap_num; i++) {
+ 		struct obj2mod_elem *elem = addrmap[i].objfile;
++		int orig_nmods;
++		const char *orig_modname;
++		int mod_offset;
++
++		if (i > 0 && addrmap[i-1].objfile == addrmap[i].objfile)
++			continue;
++
+ 		/*
+ 		 * Address range cites no modular object file: point at 0, the
+ 		 * built-in module.
+@@ -598,13 +826,63 @@ static void output_kallmodsyms_objfiles(void)
+ 			continue;
+ 		}
+ 
++		orig_nmods = elem->nmods;
++		orig_modname = elem->mods;
++
++		/*
++		 * Chase down xrefs, if need be.  There can only be one layer of
++		 * these: from single-module entry to other single-module
++		 * entry, or from single- or multi-module entry to another
++		 * multi-module entry.  Single -> single and multi -> multi
++		 * always points at the start of the xref target, so its offset
++		 * can be used as is.
++		 */
++		if (elem->xref)
++			elem = elem->xref;
++
++		if (elem->nmods == 1 || orig_nmods > 1) {
++
++			if (elem->nmods == 1)
++				printf("/* 0x%llx--0x%llx: module %s */\n",
++				       addrmap[i].addr, addrmap[i].end_addr,
++				       elem->mods);
++			else
++				printf("/* 0x%llx--0x%llx: multimodule */\n",
++				       addrmap[i].addr, addrmap[i].end_addr);
++
++			mod_offset = elem->mod_offset;
++		} else {
++			/*
++			 * If this is a reference from a single-module entry to
++			 * a multi-module entry, hunt down the offset to this
++			 * specific module's name (which is guaranteed to be
++			 * present: see optimize_obj2mod).
++			 */
++
++			size_t j = elem->nmods;
++			const char *onemod = elem->mods;
++			mod_offset = elem->mod_offset;
++
++			for (; j > 0; j--) {
++				if (strcmp(orig_modname, onemod) == 0)
++					break;
++				onemod += strlen(onemod) + 1;
++			}
++			assert(j > 0);
++			/*
++			 * +2 to skip the null byte and count at the start of
++			 * the multimodule entry.
++			 */
++			mod_offset += onemod - elem->mods + 2;
++		}
++
+ 		/*
+ 		 * Zero offset is the initial \0, there to catch uninitialized
+ 		 * obj2mod entries, and is forbidden.
+ 		 */
+ 		assert(elem->mod_offset != 0);
+ 
+-		printf("\t.long\t0x%x\n", elem->mod_offset);
++		printf("\t.long\t0x%x\n", mod_offset);
+ 		emitted_objfiles++;
+ 	}
+ 
+@@ -1217,6 +1495,7 @@ static void read_modules(const char *modules_builtin)
+ 
+ 	free(module_name);
+ 	modules_builtin_iter_free(i);
++	optimize_obj2mod();
+ 
+ 	/*
+ 	 * Read linker map.
 -- 
 2.38.0.266.g481848f278
 
