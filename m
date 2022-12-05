@@ -2,60 +2,84 @@ Return-Path: <linux-trace-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 77D5FC4321E
-	for <linux-trace-kernel@archiver.kernel.org>; Sun,  4 Dec 2022 15:41:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 540B5C4321E
+	for <linux-trace-kernel@archiver.kernel.org>; Mon,  5 Dec 2022 08:22:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230138AbiLDPlw (ORCPT
+        id S231292AbiLEIWw (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Sun, 4 Dec 2022 10:41:52 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50328 "EHLO
+        Mon, 5 Dec 2022 03:22:52 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45422 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230144AbiLDPlu (ORCPT
+        with ESMTP id S231453AbiLEIWv (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Sun, 4 Dec 2022 10:41:50 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C0AC813E02;
-        Sun,  4 Dec 2022 07:41:49 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 55AAD60DE0;
-        Sun,  4 Dec 2022 15:41:49 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 69746C433D6;
-        Sun,  4 Dec 2022 15:41:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-        s=korg; t=1670168508;
-        bh=nsLGE+9nzj0MY4xQL+zl7yrSBLDxnEPZOV0snAd0dAc=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=VzvyAz+CJ98VdMd3OEPxZ/Ybw4VugYP0Y5CcsrtsLCtQon5+/0H0nO1aZMBgWcxTP
-         fcyRp5Up9jLSBgBoGySACVAFk6yxpM3NPzGIbK+EU7rHKL2y3zRkAY6/lUbD5HKmYY
-         DYCb5TtO75R2lTJhsQWwV55XbdcW1WM7gaMhwk1M=
-Date:   Sun, 4 Dec 2022 16:41:45 +0100
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Steven Rostedt <rostedt@goodmis.org>
-Cc:     linux-trace-kernel@vger.kernel.org, mathieu.desnoyers@efficios.com,
-        mhiramat@kernel.org, primiano@google.com, stable@vger.kernel.org
-Subject: Re: FAILED: patch "[PATCH] tracing/ring-buffer: Have polling block
- on watermark" failed to apply to 5.4-stable tree
-Message-ID: <Y4y/uVWvF7FJvdzd@kroah.com>
-References: <16690291284651@kroah.com>
- <20221123235555.6791e1b4@rorschach.local.home>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20221123235555.6791e1b4@rorschach.local.home>
+        Mon, 5 Dec 2022 03:22:51 -0500
+Received: from 189.cn (ptr.189.cn [183.61.185.101])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 69EB86147;
+        Mon,  5 Dec 2022 00:22:45 -0800 (PST)
+HMM_SOURCE_IP: 10.64.8.43:44912.801624490
+HMM_ATTACHE_NUM: 0000
+HMM_SOURCE_TYPE: SMTP
+Received: from clientip-123.150.8.42 (unknown [10.64.8.43])
+        by 189.cn (HERMES) with SMTP id DC2B71002CF;
+        Mon,  5 Dec 2022 16:22:43 +0800 (CST)
+Received: from  ([123.150.8.42])
+        by gateway-153622-dep-6cffbd87dd-f7vjc with ESMTP id 9e96ef7c3352454ab22033a3810357f5 for rostedt@goodmis.org;
+        Mon, 05 Dec 2022 16:22:43 CST
+X-Transaction-ID: 9e96ef7c3352454ab22033a3810357f5
+X-Real-From: chensong_2000@189.cn
+X-Receive-IP: 123.150.8.42
+X-MEDUSA-Status: 0
+Sender: chensong_2000@189.cn
+From:   Song Chen <chensong_2000@189.cn>
+To:     rostedt@goodmis.org, mhiramat@kernel.org, arnd@arndb.de
+Cc:     linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+        linux-arch@vger.kernel.org, Song Chen <chensong_2000@189.cn>
+Subject: [PATCH v3 0/4] reorganize trace_peobe_tmpl.h
+Date:   Mon,  5 Dec 2022 16:29:32 +0800
+Message-Id: <1670228972-3934-1-git-send-email-chensong_2000@189.cn>
+X-Mailer: git-send-email 2.7.4
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On Wed, Nov 23, 2022 at 11:55:55PM -0500, Steven Rostedt wrote:
-> 
-> After working on this, I believe the real Fixes tag should have been
-> 
-> 2c2b0a78b3739 ("ring-buffer: Add percentage of ring buffer full to wake up reader")
-> 
-> Which was added in 5.0, so this is the only release I'm backporting this to.
+Hi,
 
-Thanks, now queued up.
+In the first patchset, my intension was to remove trace_probe_tmpl.h,
+just keep a unified process_fetch_insn and process_fetch_insn_bottom
+in trace_probe.c for all *probes. is_uprobe was the most important
+move to approach. If it was not accepted, the whole patchset couldn't
+stand.
 
-greg k-h
+Then I change my goal to at least no warnings or errors when impelenting
+a new feature based on trace probe if it includes trace_probe_tmpl.h by
+provideing default behaviors. What's more, it also removes redundant
+code in kprobe and eprobe.
+
+---
+v2:
+1, mark nokprobe_inline for get_event_field
+2, remove warnings reported from kernel test robot
+3, fix errors reported from kernel test robot
+
+Song Chen (4):
+  kernel/trace: Introduce trace_probe_print_args and use it in *probes
+  kernel/trace: Provide default impelentations defined in
+    trace_probe_tmpl.h
+  include/asm-generic/io.h: remove performing pointer arithmetic on a
+    null pointer
+  kernel/trace: remove calling regs_* when compiling HEXAGON
+
+ include/asm-generic/io.h          |  45 ++++++---
+ kernel/trace/trace_eprobe.c       | 146 +--------------------------
+ kernel/trace/trace_events_synth.c |   7 +-
+ kernel/trace/trace_kprobe.c       | 106 +-------------------
+ kernel/trace/trace_probe.c        |  27 +++++
+ kernel/trace/trace_probe.h        |   2 +
+ kernel/trace/trace_probe_kernel.h | 158 ++++++++++++++++++++++++++++--
+ kernel/trace/trace_probe_tmpl.h   |  28 ------
+ kernel/trace/trace_uprobe.c       |   2 +-
+ 9 files changed, 222 insertions(+), 299 deletions(-)
+
+-- 
+2.25.1
+
