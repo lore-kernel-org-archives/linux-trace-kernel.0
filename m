@@ -2,114 +2,76 @@ Return-Path: <linux-trace-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 27578C352A1
-	for <linux-trace-kernel@archiver.kernel.org>; Tue,  6 Dec 2022 14:23:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AFC4AC636F9
+	for <linux-trace-kernel@archiver.kernel.org>; Tue,  6 Dec 2022 16:21:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234949AbiLFOXV (ORCPT
+        id S234339AbiLFQVy (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Tue, 6 Dec 2022 09:23:21 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35186 "EHLO
+        Tue, 6 Dec 2022 11:21:54 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35836 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230230AbiLFOXU (ORCPT
+        with ESMTP id S235429AbiLFQVf (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Tue, 6 Dec 2022 09:23:20 -0500
-Received: from out2-smtp.messagingengine.com (out2-smtp.messagingengine.com [66.111.4.26])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 526C92196;
-        Tue,  6 Dec 2022 06:23:20 -0800 (PST)
-Received: from compute6.internal (compute6.nyi.internal [10.202.2.47])
-        by mailout.nyi.internal (Postfix) with ESMTP id BECC95C0124;
-        Tue,  6 Dec 2022 09:23:19 -0500 (EST)
-Received: from imap51 ([10.202.2.101])
-  by compute6.internal (MEProxy); Tue, 06 Dec 2022 09:23:19 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
-        :cc:content-transfer-encoding:content-type:date:date:from:from
-        :in-reply-to:in-reply-to:message-id:mime-version:references
-        :reply-to:sender:subject:subject:to:to; s=fm1; t=1670336599; x=
-        1670422999; bh=1i9KAnaualAN3RJiLZ4IkdDGmbffUXeErCmYosOp25c=; b=s
-        FxqxZVccTvrAXSJixF7mmB3bOZevz2gn7d7/ecmiVOiUj4PZApFqKuz07m5BNO1i
-        Dd5Ei4Wkofmh2veGKJ28UtevrrNaU24BL62h722Nur4mVuJsut28ik9HN+QNZkjx
-        0p5u6Qo+TioisMJ5wSZYeKsiaF8qUvqcZKu527LUuIyrcmGj5HDnlXNPYm1tU4Rl
-        U6JNn8C6ojR3YXa6p1cAUWM1rHjx617nihG/pefdZx/mSrP6qWtlJESR6W1X0T97
-        3ZeW9hZFRGOUePrjdn2wxtEQDD33hDivqaOIb9lcBiMQaARVwTo6jpMLBgGtUZtV
-        l2cr4iK/DCg47BFWwjlcw==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:cc:content-transfer-encoding
-        :content-type:date:date:feedback-id:feedback-id:from:from
-        :in-reply-to:in-reply-to:message-id:mime-version:references
-        :reply-to:sender:subject:subject:to:to:x-me-proxy:x-me-proxy
-        :x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=1670336599; x=
-        1670422999; bh=1i9KAnaualAN3RJiLZ4IkdDGmbffUXeErCmYosOp25c=; b=s
-        OcEyCaMR7pMIDNeW/OfFpIFAHOryMp/U1ACR1PAvrcAIeiofmNK0THWI0dF8hYzq
-        JRD/QwC8uF64Y3XRhGY5i3sS6rwPJ9/BJg8XfjEw2j5KPf/9Mi5WuQ7lG8aYoFMK
-        Zij6PBJBo6o/sJ895NMdWZhMvJQreND80fk4b+2eprgJvkNAo9qOkMGoLCgD2RfB
-        GQ7EZxvYkDUS7bc8gleWz3xCdIek120pFyWL8PtB51hPQm2r2KviW3AW1SH3MQOQ
-        dJiHDLCNKk84FzfZ4OMSj0ZJuztJwkBZuRYiOpaqDJnCQ21GyCxH/kKdkCFvTQ19
-        /cfP9TfN+rCo+xVuC/rxA==
-X-ME-Sender: <xms:V1CPY_v67UVpdFYyqaoX45LVPwOvO2sCO6YLAEwAAuqdOGZMEh-Lsw>
-    <xme:V1CPYwd7K-ed--dV1upm4MXkG3N5D6FAq6FhMUZZwlut9bdaStVdHgxOfCusrmuoL
-    Z6-EVYMQi12Cipwij8>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvhedrudeigdeifecutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
-    fjughrpefofgggkfgjfhffhffvvefutgfgsehtqhertderreejnecuhfhrohhmpedftehr
-    nhguuceuvghrghhmrghnnhdfuceorghrnhgusegrrhhnuggsrdguvgeqnecuggftrfgrth
-    htvghrnhepgeefjeehvdelvdffieejieejiedvvdfhleeivdelveehjeelteegudektdfg
-    jeevnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomheprg
-    hrnhgusegrrhhnuggsrdguvg
-X-ME-Proxy: <xmx:V1CPYywE4PFZf7AKSy4CU27sjoyxJ147xXmp6o7U_aHIlEnrZxC7eg>
-    <xmx:V1CPY-O6lIV-T5zQzXQGSV_Vem1I0q0Z8-ahB100ypDRaBTJomvPxA>
-    <xmx:V1CPY_9Iw9_DAUtuRjcHYbD34NiCdD6r8ZRQzWj2zl_t0YKMWPQCYg>
-    <xmx:V1CPY7b75rBLN83RJeL2KIHZGBK0tlvQcrdqbl1cvg8YSXi4iWl5Gg>
-Feedback-ID: i56a14606:Fastmail
-Received: by mailuser.nyi.internal (Postfix, from userid 501)
-        id 37ED9B60086; Tue,  6 Dec 2022 09:23:19 -0500 (EST)
-X-Mailer: MessagingEngine.com Webmail Interface
-User-Agent: Cyrus-JMAP/3.7.0-alpha0-1115-g8b801eadce-fm-20221102.001-g8b801ead
-Mime-Version: 1.0
-Message-Id: <43fda82a-f3df-42c8-9eb2-23cf2dce8628@app.fastmail.com>
-In-Reply-To: <0903321f-e0cf-fd7b-bbdd-fc4fdc0f05a0@189.cn>
-References: <1670229006-4063-1-git-send-email-chensong_2000@189.cn>
- <2a3d3359-a5fd-453b-81f1-35c7a35fc12d@app.fastmail.com>
- <0903321f-e0cf-fd7b-bbdd-fc4fdc0f05a0@189.cn>
-Date:   Tue, 06 Dec 2022 15:22:58 +0100
-From:   "Arnd Bergmann" <arnd@arndb.de>
-To:     "Song Chen" <chensong_2000@189.cn>,
-        "Steven Rostedt" <rostedt@goodmis.org>,
-        "Masami Hiramatsu" <mhiramat@kernel.org>,
-        "Niklas Schnelle" <schnelle@linux.ibm.com>
-Cc:     linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
-        Linux-Arch <linux-arch@vger.kernel.org>
-Subject: Re: [PATCH v3 3/4] include/asm-generic/io.h: remove performing pointer
- arithmetic on a null pointer
-Content-Type: text/plain;charset=utf-8
+        Tue, 6 Dec 2022 11:21:35 -0500
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1AE4F10B2
+        for <linux-trace-kernel@vger.kernel.org>; Tue,  6 Dec 2022 08:20:24 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1670343623;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=R4kfpb8umYXrHKV3k9viGcdT7q/SXeMQNxvudhX/XS8=;
+        b=aRgX27Yxp46eLOJa+bN6NpmdrS4/bQepSwYqba9h39dCxacxr3dMMYUhsfa7p73SrL3iJz
+        jK9phyXF7d/ggo0VG/L5SiD1gIeinnx4ts1hDWxiMCcf+agS8WyJFzwPmsQaQLJ0eNmdSK
+        kRhpYQABxYqWRbN1tJG4InYCtbT6KsY=
+Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
+ [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-208-lQMZKWMtML28_jwRx5z9-A-1; Tue, 06 Dec 2022 11:20:20 -0500
+X-MC-Unique: lQMZKWMtML28_jwRx5z9-A-1
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.rdu2.redhat.com [10.11.54.8])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id AECD2185A7A3;
+        Tue,  6 Dec 2022 16:20:19 +0000 (UTC)
+Received: from warthog.procyon.org.uk (unknown [10.33.36.17])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 0DC60C15BA5;
+        Tue,  6 Dec 2022 16:20:18 +0000 (UTC)
+Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
+        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
+        Kingdom.
+        Registered in England and Wales under Company Registration No. 3798903
+From:   David Howells <dhowells@redhat.com>
+In-Reply-To: <20221206225859.de7c2f68e9e50a65ac7c7c30@kernel.org>
+References: <20221206225859.de7c2f68e9e50a65ac7c7c30@kernel.org> <20221206221813.3c7cfa0c6e51b551869912b3@kernel.org> <167023571258.382307.15314866482834835192.stgit@warthog.procyon.org.uk> <998783.1670333070@warthog.procyon.org.uk>
+To:     Masami Hiramatsu (Google) <mhiramat@kernel.org>
+Cc:     dhowells@redhat.com, rostedt@goodmis.org,
+        linux-kernel@vger.kernel.org,
+        Linux Trace Kernel <linux-trace-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2] trace: Fix some checker warnings
+MIME-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <1158739.1670343616.1@warthog.procyon.org.uk>
 Content-Transfer-Encoding: quoted-printable
+Date:   Tue, 06 Dec 2022 16:20:16 +0000
+Message-ID: <1158740.1670343616@warthog.procyon.org.uk>
+X-Scanned-By: MIMEDefang 3.1 on 10.11.54.8
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On Tue, Dec 6, 2022, at 07:01, Song Chen wrote:
-> =E5=9C=A8 2022/12/5 18:04, Arnd Bergmann =E5=86=99=E9=81=93:
->> On Mon, Dec 5, 2022, at 09:30, Song Chen wrote:
->>=20
->> We have discussed this bit multiple times, and Niklas Schnelle
->> last posted his series to fix this as an RFC in [1].
->>=20
->
-> Trace triggers the warning accidentally by including io.h indirectly=20
-> because of the absence of PCI_IOBASE in hexagon. So what trace can do =
-in=20
-> this case is either to suppress warning or just ignore it, the warning=20
-> will go away as long as hexagon has put PCI_IOBASE in place or=20
-> implemented its own inb() etc, i think they will do it sooner or later.
+Masami Hiramatsu (Google) <mhiramat@kernel.org> wrote:
 
-hexagon/riscv/s390 should not implement inb(), there is no reason
-for that because no hardware uses it. Half of the other architectures
-that currently implement inb() should not do so either.
+> > Is there a tracing tree this can go through?
+> =
 
-> Introducing HAS_IOPORT to trace seems no necessary and too much impact.
+> Yes, you can find it in MAINTAINERS file.
+> We are using git://git.kernel.org/pub/scm/linux/kernel/git/trace/linux-t=
+race.git
 
-I don't think that trace has anything to do with it, the asm-generic
-header should just not provde the inb() interface on architectures
-that don't use it.
+Okay - is there someone who can apply it to that tree?
 
-    Arnd
+David
+
