@@ -2,105 +2,143 @@ Return-Path: <linux-trace-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 66D71C3A5A7
-	for <linux-trace-kernel@archiver.kernel.org>; Tue,  6 Dec 2022 09:11:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3781FC4708E
+	for <linux-trace-kernel@archiver.kernel.org>; Tue,  6 Dec 2022 13:18:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231887AbiLFJLg (ORCPT
+        id S230480AbiLFNST (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Tue, 6 Dec 2022 04:11:36 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55964 "EHLO
+        Tue, 6 Dec 2022 08:18:19 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57048 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233865AbiLFJLX (ORCPT
+        with ESMTP id S231272AbiLFNSS (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Tue, 6 Dec 2022 04:11:23 -0500
-Received: from mail-qk1-f172.google.com (mail-qk1-f172.google.com [209.85.222.172])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8B7031EEF8;
-        Tue,  6 Dec 2022 01:11:22 -0800 (PST)
-Received: by mail-qk1-f172.google.com with SMTP id m5so5458164qkg.0;
-        Tue, 06 Dec 2022 01:11:22 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=xecAIxqgdkhlDnskCgGkdXEsAstHBuFzAgEKe0CMxQ0=;
-        b=KfytAYO9F49g5s9lztaqU/5+UzgojlMqCadE0j1zY2ueTk6LROKwr5e33ADEK4LLk1
-         0UJPo6tv4wt996NNvu4vvqbeIIQwOnsaj3WOjxY4bqL82SbHCHI16oGbfCrgTcf8tu4o
-         0GoHJucXkWyDrsB7OpRZrf/yK4M080sQSuypDRy8cNkvbYg/bTLYCc5u7Te0ciA+TeV2
-         q3872gY3q65/BFJUPqV5/p62sGm9HHFLhr3SfnxMvmRhG2IEFa2ebXaD3jFzZmUUoTz8
-         zPdjixlvlJSreK6ZgRLXfWgrXz1KpEMZddeP5OIqZ0u1L79FPPq65qnT5GZldNvYtTow
-         BcWA==
-X-Gm-Message-State: ANoB5pnZWKs1UoL/d+jHzPrRTQ4AxqblNmU0fX0SKenPNw/Vvqm3lTOO
-        RsKAoFp1pawCvpcmwntuC9+VrRtgi3+Osw==
-X-Google-Smtp-Source: AA0mqf7F/AAPhAhlvFo0AEEAXp2XGpuf5b+N+NcFZN/nHPHXqTC4IxZHT3gT5UyEcc/XDQAExGWKwg==
-X-Received: by 2002:a05:620a:1398:b0:6fa:1d51:74a1 with SMTP id k24-20020a05620a139800b006fa1d5174a1mr59677651qki.688.1670317881311;
-        Tue, 06 Dec 2022 01:11:21 -0800 (PST)
-Received: from mail-yb1-f172.google.com (mail-yb1-f172.google.com. [209.85.219.172])
-        by smtp.gmail.com with ESMTPSA id o13-20020ac85a4d000000b003a68fe872a5sm2305892qta.96.2022.12.06.01.11.20
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 06 Dec 2022 01:11:20 -0800 (PST)
-Received: by mail-yb1-f172.google.com with SMTP id s11so3280889ybe.2;
-        Tue, 06 Dec 2022 01:11:20 -0800 (PST)
-X-Received: by 2002:a25:9:0:b0:6f9:29ef:a5ee with SMTP id 9-20020a250009000000b006f929efa5eemr28698201yba.380.1670317880298;
- Tue, 06 Dec 2022 01:11:20 -0800 (PST)
-MIME-Version: 1.0
-References: <20221205163157.269335-1-nick.alcock@oracle.com> <20221205163157.269335-6-nick.alcock@oracle.com>
-In-Reply-To: <20221205163157.269335-6-nick.alcock@oracle.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Tue, 6 Dec 2022 10:11:08 +0100
-X-Gmail-Original-Message-ID: <CAMuHMdVrP1sLGRS999q=2L-5JhxXwcjBLkQREdcJhDerg70OtA@mail.gmail.com>
-Message-ID: <CAMuHMdVrP1sLGRS999q=2L-5JhxXwcjBLkQREdcJhDerg70OtA@mail.gmail.com>
-Subject: Re: [PATCH v10 05/13] kbuild: remove MODULE_LICENSE/AUTHOR/DESCRIPTION
- in non-modules
-To:     Nick Alcock <nick.alcock@oracle.com>
-Cc:     mcgrof@kernel.org, masahiroy@kernel.org,
-        linux-modules@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
-        linux-kernel@vger.kernel.org, arnd@arndb.de,
-        akpm@linux-foundation.org, eugene.loh@oracle.com,
-        kris.van.hees@oracle.com
-Content-Type: text/plain; charset="UTF-8"
+        Tue, 6 Dec 2022 08:18:18 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AC649D6F;
+        Tue,  6 Dec 2022 05:18:17 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 234E36174A;
+        Tue,  6 Dec 2022 13:18:17 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 92DE9C433C1;
+        Tue,  6 Dec 2022 13:18:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1670332696;
+        bh=yWnHX7kQZN3gZ80y4mJxNlC5EcUmNw+ipJWVjMmo7Oc=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=S+rTSqM3V6kujMp9fWQUrJBGViad5OIG53s08rYSOh/Nozo/q+0cXlAAYMtNMlnOs
+         o5JhxfzlHnFbW2UUroCJ5Yjo4UdNO8afIBOQvdTsqhuyRr+vRl6s0Z409wKnPsGEoK
+         inwjUKp+MMR0D9Tm/BPtiN7RqCIfzy5U0X61qOe+LGaLlpd2AG97p74p1nTVHEEhEB
+         EV0B2/VvwzuKczykBD1AbAe86tcL1KROo74nvAzRl2NEDLgwujill6DUc4ql5cefsM
+         AqvTH8RGNaLyBqoFZPeKjby4sAsGLW031rqBlEWhHRAYlRuCPp94SxI70/S/ZuI7nZ
+         gb1M6+CJCSb6Q==
+Date:   Tue, 6 Dec 2022 22:18:13 +0900
+From:   Masami Hiramatsu (Google) <mhiramat@kernel.org>
+To:     David Howells <dhowells@redhat.com>
+Cc:     rostedt@goodmis.org, linux-kernel@vger.kernel.org,
+        Linux Trace Kernel <linux-trace-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2] trace: Fix some checker warnings
+Message-Id: <20221206221813.3c7cfa0c6e51b551869912b3@kernel.org>
+In-Reply-To: <167023571258.382307.15314866482834835192.stgit@warthog.procyon.org.uk>
+References: <167023571258.382307.15314866482834835192.stgit@warthog.procyon.org.uk>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-Hi Nick,
+On Mon, 05 Dec 2022 10:21:52 +0000
+David Howells <dhowells@redhat.com> wrote:
 
-Thanks for your patch!
+> Fix some checker warnings in the trace code by adding __printf attributes
+> to a number of trace functions and their declarations.
+> 
+> Changes:
+> ========
+> ver #2)
+>  - Dropped the fix for the unconditional tracing_max_lat_fops decl[1].
+> 
 
-On Mon, Dec 5, 2022 at 5:34 PM Nick Alcock <nick.alcock@oracle.com> wrote:
-> Since commit 8b41fc4454e ("kbuild: create modules.builtin without
-> Makefile.modbuiltin or tristate.conf"), MODULE_LICENSE declarations in
-> non-modules will cause modprobe to misidentify their containing object
-> file as a module when it is not, which might cause it to spuriously fail
-> when trying to load something that is built in to the kernel.  They
-> also cause misconstruction of modules.builtin.objs, leading to incorrect
-> output in kallmodsyms (notating things as being in modules when they
-> actually cannot be built as a module at all).
->
-> Automatically identified with the new tristate checker, and purged with
-> sed and a subsequent make allmodconfig to double-check.
->
-> Signed-off-by: Nick Alcock <nick.alcock@oracle.com>
+Acked-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 
-I can (sort of) agree with the MODULE_LICENSE(), as it duplicates the
-SPDX-License-Identifier at the top.
-However, you don't explain why it is a good thing to remove the
-MODULE_{AUTHOR,DESCRIPTION}, too.  This is useful information, in an
-easy-to-parse format.
+Thank you!
 
-Moreover, many of the affected drivers might be converted into modules
-in the near or far future.
+> Signed-off-by: David Howells <dhowells@redhat.com>
+> cc: Steven Rostedt <rostedt@goodmis.org>
+> cc: Masami Hiramatsu <mhiramat@kernel.org>
+> Link: https://lore.kernel.org/r/20221205180617.9b9d3971cbe06ee536603523@kernel.org/ [1]
+> Link: https://lore.kernel.org/r/166992525941.1716618.13740663757583361463.stgit@warthog.procyon.org.uk/ # v1
+> ---
+> 
+>  include/linux/trace_events.h |    3 ++-
+>  include/linux/trace_seq.h    |    3 ++-
+>  kernel/trace/trace.h         |    2 +-
+>  kernel/trace/trace_output.c  |    5 +++--
+>  4 files changed, 8 insertions(+), 5 deletions(-)
+> 
+> diff --git a/include/linux/trace_events.h b/include/linux/trace_events.h
+> index 20749bd9db71..112b08ca2c5c 100644
+> --- a/include/linux/trace_events.h
+> +++ b/include/linux/trace_events.h
+> @@ -235,7 +235,8 @@ void tracing_record_taskinfo_sched_switch(struct task_struct *prev,
+>  void tracing_record_cmdline(struct task_struct *task);
+>  void tracing_record_tgid(struct task_struct *task);
+>  
+> -int trace_output_call(struct trace_iterator *iter, char *name, char *fmt, ...);
+> +int trace_output_call(struct trace_iterator *iter, char *name, char *fmt, ...)
+> +	 __printf(3, 4);
+>  
+>  struct event_filter;
+>  
+> diff --git a/include/linux/trace_seq.h b/include/linux/trace_seq.h
+> index 5a2c650d9e1c..0c4c7587d6c3 100644
+> --- a/include/linux/trace_seq.h
+> +++ b/include/linux/trace_seq.h
+> @@ -97,7 +97,8 @@ extern int trace_seq_hex_dump(struct trace_seq *s, const char *prefix_str,
+>  			      const void *buf, size_t len, bool ascii);
+>  
+>  #else /* CONFIG_TRACING */
+> -static inline void trace_seq_printf(struct trace_seq *s, const char *fmt, ...)
+> +static inline __printf(2, 3)
+> +void trace_seq_printf(struct trace_seq *s, const char *fmt, ...)
+>  {
+>  }
+>  static inline void
+> diff --git a/kernel/trace/trace.h b/kernel/trace/trace.h
+> index d42e24507152..ecc6120116da 100644
+> --- a/kernel/trace/trace.h
+> +++ b/kernel/trace/trace.h
+> @@ -615,7 +615,7 @@ void trace_buffer_unlock_commit_nostack(struct trace_buffer *buffer,
+>  bool trace_is_tracepoint_string(const char *str);
+>  const char *trace_event_format(struct trace_iterator *iter, const char *fmt);
+>  void trace_check_vprintf(struct trace_iterator *iter, const char *fmt,
+> -			 va_list ap);
+> +			 va_list ap) __printf(2, 0);
+>  
+>  int trace_empty(struct trace_iterator *iter);
+>  
+> diff --git a/kernel/trace/trace_output.c b/kernel/trace/trace_output.c
+> index 67f47ea27921..7039cd883c8b 100644
+> --- a/kernel/trace/trace_output.c
+> +++ b/kernel/trace/trace_output.c
+> @@ -323,8 +323,9 @@ void trace_event_printf(struct trace_iterator *iter, const char *fmt, ...)
+>  }
+>  EXPORT_SYMBOL(trace_event_printf);
+>  
+> -static int trace_output_raw(struct trace_iterator *iter, char *name,
+> -			    char *fmt, va_list ap)
+> +static __printf(3, 0)
+> +int trace_output_raw(struct trace_iterator *iter, char *name,
+> +		     char *fmt, va_list ap)
+>  {
+>  	struct trace_seq *s = &iter->seq;
+>  
+> 
+> 
 
-If the presence of these causes issues for the tooling, perhaps the
-tooling can be fixed instead?
 
-Gr{oetje,eeting}s,
-
-                        Geert
-
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+-- 
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
