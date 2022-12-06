@@ -2,237 +2,119 @@ Return-Path: <linux-trace-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 37C25C47090
-	for <linux-trace-kernel@archiver.kernel.org>; Mon,  5 Dec 2022 19:49:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 52C1DC3A5A7
+	for <linux-trace-kernel@archiver.kernel.org>; Tue,  6 Dec 2022 06:02:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235127AbiLETtG (ORCPT
+        id S230182AbiLFGCG (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Mon, 5 Dec 2022 14:49:06 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56884 "EHLO
+        Tue, 6 Dec 2022 01:02:06 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46122 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235037AbiLETs1 (ORCPT
+        with ESMTP id S233084AbiLFGCC (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Mon, 5 Dec 2022 14:48:27 -0500
-Received: from sin.source.kernel.org (sin.source.kernel.org [145.40.73.55])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 33DAF24BEF;
-        Mon,  5 Dec 2022 11:45:36 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by sin.source.kernel.org (Postfix) with ESMTPS id 9CF2DCE13A4;
-        Mon,  5 Dec 2022 19:45:34 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5B36FC433C1;
-        Mon,  5 Dec 2022 19:45:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-        s=korg; t=1670269532;
-        bh=nlls+mMrGod18/annYo2/2Pvmx0nt3SzhU3hi2vvX+k=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=K+EcMIXBR+X1DIDnUZYShPRFVQmu/F5dpPS7mzdVzNP0F6gg3+h1E2BdUvuFQzQjL
-         31OiMaDPP42yHjR5KhPbC3kzBpvu+g7Hu+uqnkhTuw7JjYz8z/Qeb7+qkvoCjPWmfF
-         xU+f9XiV/M0qtBYxMV7+db8FIOd+j5d5Eekm+VaA=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     stable@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        patches@lists.linux.dev,
-        Linux Trace Kernel <linux-trace-kernel@vger.kernel.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Primiano Tucci <primiano@google.com>,
-        "Steven Rostedt (Google)" <rostedt@goodmis.org>
-Subject: [PATCH 5.4 141/153] tracing/ring-buffer: Have polling block on watermark
-Date:   Mon,  5 Dec 2022 20:11:05 +0100
-Message-Id: <20221205190812.669520495@linuxfoundation.org>
-X-Mailer: git-send-email 2.38.1
-In-Reply-To: <20221205190808.733996403@linuxfoundation.org>
-References: <20221205190808.733996403@linuxfoundation.org>
-User-Agent: quilt/0.67
+        Tue, 6 Dec 2022 01:02:02 -0500
+Received: from 189.cn (ptr.189.cn [183.61.185.102])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 7519527157;
+        Mon,  5 Dec 2022 22:01:57 -0800 (PST)
+HMM_SOURCE_IP: 10.64.8.43:55518.1873184978
+HMM_ATTACHE_NUM: 0000
+HMM_SOURCE_TYPE: SMTP
+Received: from clientip-123.150.8.42 (unknown [10.64.8.43])
+        by 189.cn (HERMES) with SMTP id 25246100302;
+        Tue,  6 Dec 2022 14:01:54 +0800 (CST)
+Received: from  ([123.150.8.42])
+        by gateway-153622-dep-6cffbd87dd-f7vjc with ESMTP id 5f66b60e48754f84901a8e6e8468e94a for arnd@arndb.de;
+        Tue, 06 Dec 2022 14:01:55 CST
+X-Transaction-ID: 5f66b60e48754f84901a8e6e8468e94a
+X-Real-From: chensong_2000@189.cn
+X-Receive-IP: 123.150.8.42
+X-MEDUSA-Status: 0
+Sender: chensong_2000@189.cn
+Message-ID: <0903321f-e0cf-fd7b-bbdd-fc4fdc0f05a0@189.cn>
+Date:   Tue, 6 Dec 2022 14:01:53 +0800
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.4.2
+Subject: Re: [PATCH v3 3/4] include/asm-generic/io.h: remove performing
+ pointer arithmetic on a null pointer
+To:     Arnd Bergmann <arnd@arndb.de>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Niklas Schnelle <schnelle@linux.ibm.com>
+Cc:     linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+        Linux-Arch <linux-arch@vger.kernel.org>
+References: <1670229006-4063-1-git-send-email-chensong_2000@189.cn>
+ <2a3d3359-a5fd-453b-81f1-35c7a35fc12d@app.fastmail.com>
+Content-Language: en-US
+From:   Song Chen <chensong_2000@189.cn>
+In-Reply-To: <2a3d3359-a5fd-453b-81f1-35c7a35fc12d@app.fastmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-From: Steven Rostedt (Google) <rostedt@goodmis.org>
+Hi,
 
-commit 42fb0a1e84ff525ebe560e2baf9451ab69127e2b upstream.
+在 2022/12/5 18:04, Arnd Bergmann 写道:
+> On Mon, Dec 5, 2022, at 09:30, Song Chen wrote:
+>> kernel test robot reports below warnings:
+>>
+>>     In file included from kernel/trace/trace_events_synth.c:18:
+>>     In file included from include/linux/trace_events.h:9:
+>>     In file included from include/linux/hardirq.h:11:
+>>     In file included from ./arch/hexagon/include/generated/asm/hardirq.h:1:
+>>     In file included from include/asm-generic/hardirq.h:17:
+>>     In file included from include/linux/irq.h:20:
+>>     In file included from include/linux/io.h:13:
+>>     In file included from arch/hexagon/include/asm/io.h:334:
+>>     include/asm-generic/io.h:547:31: warning: performing pointer arithmetic
+>> 	on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
+>>             val = __raw_readb(PCI_IOBASE + addr);
+>>                               ~~~~~~~~~~ ^
+>>     include/asm-generic/io.h:560:61: warning: performing pointer arithmetic
+>> 	on a null pointer has undefined behavior [-Wnull-pointer-arithmetic]
+>>             val = __le16_to_cpu((__le16 __force)__raw_readw(PCI_IOBASE + addr));
+>>                                                             ~~~~~~~~~~ ^
+>>     include/uapi/linux/byteorder/little_endian.h:37:51: note:
+>> 		expanded from macro '__le16_to_cpu'
+>>     #define __le16_to_cpu(x) ((__force __u16)(__le16)(x))
+>>
+>> The reason could be constant literal zero converted to any pointer type decays
+>> into the null pointer constant.
+>>
+>> I'm not sure why those warnings are only triggered when building hexagon instead
+>> of x86 or arm, but anyway, i found a work around:
+>>
+>> 	void *pci_iobase = PCI_IOBASE;
+>> 	val = __raw_readb(pci_iobase + addr);
+>>
+>> The pointer is not evaluated at compile time, so the warnings are removed.
+>>
+>> Signed-off-by: Song Chen <chensong_2000@189.cn>
+>> Reported-by: kernel test robot <lkp@intel.com>
+> 
+> The code is still wrong, you just hide the warning, so no, this is
+> not a correct fix. When PCI_IOBASE is NULL, any call to
+> inb() etc is a NULL pointer dereference that immediately crashes
+> the kernel, so the correct solution is to not allow building code
+> that uses port I/O on kernels that are configured not to
+> support port I/O.
+> 
+> We have discussed this bit multiple times, and Niklas Schnelle
+> last posted his series to fix this as an RFC in [1].
+> 
+>        Arnd
+> 
+> [1] https://lore.kernel.org/lkml/20220429135108.2781579-1-schnelle@linux.ibm.com/
+> 
 
-Currently the way polling works on the ring buffer is broken. It will
-return immediately if there's any data in the ring buffer whereas a read
-will block until the watermark (defined by the tracefs buffer_percent file)
-is hit.
+Trace triggers the warning accidentally by including io.h indirectly 
+because of the absence of PCI_IOBASE in hexagon. So what trace can do in 
+this case is either to suppress warning or just ignore it, the warning 
+will go away as long as hexagon has put PCI_IOBASE in place or 
+implemented its own inb() etc, i think they will do it sooner or later.
 
-That is, a select() or poll() will return as if there's data available,
-but then the following read will block. This is broken for the way
-select()s and poll()s are supposed to work.
+Introducing HAS_IOPORT to trace seems no necessary and too much impact.
 
-Have the polling on the ring buffer also block the same way reads and
-splice does on the ring buffer.
-
-Link: https://lkml.kernel.org/r/20221020231427.41be3f26@gandalf.local.home
-
-Cc: Linux Trace Kernel <linux-trace-kernel@vger.kernel.org>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>
-Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Cc: Primiano Tucci <primiano@google.com>
-Cc: stable@vger.kernel.org
-Fixes: 1e0d6714aceb7 ("ring-buffer: Do not wake up a splice waiter when page is not full")
-Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- include/linux/ring_buffer.h |    2 -
- kernel/trace/ring_buffer.c  |   54 ++++++++++++++++++++++++++++----------------
- kernel/trace/trace.c        |    2 -
- 3 files changed, 37 insertions(+), 21 deletions(-)
-
---- a/include/linux/ring_buffer.h
-+++ b/include/linux/ring_buffer.h
-@@ -99,7 +99,7 @@ __ring_buffer_alloc(unsigned long size,
- 
- int ring_buffer_wait(struct ring_buffer *buffer, int cpu, int full);
- __poll_t ring_buffer_poll_wait(struct ring_buffer *buffer, int cpu,
--			  struct file *filp, poll_table *poll_table);
-+			  struct file *filp, poll_table *poll_table, int full);
- 
- 
- #define RING_BUFFER_ALL_CPUS -1
---- a/kernel/trace/ring_buffer.c
-+++ b/kernel/trace/ring_buffer.c
-@@ -566,6 +566,21 @@ size_t ring_buffer_nr_dirty_pages(struct
- 	return cnt - read;
- }
- 
-+static __always_inline bool full_hit(struct ring_buffer *buffer, int cpu, int full)
-+{
-+	struct ring_buffer_per_cpu *cpu_buffer = buffer->buffers[cpu];
-+	size_t nr_pages;
-+	size_t dirty;
-+
-+	nr_pages = cpu_buffer->nr_pages;
-+	if (!nr_pages || !full)
-+		return true;
-+
-+	dirty = ring_buffer_nr_dirty_pages(buffer, cpu);
-+
-+	return (dirty * 100) > (full * nr_pages);
-+}
-+
- /*
-  * rb_wake_up_waiters - wake up tasks waiting for ring buffer input
-  *
-@@ -661,22 +676,20 @@ int ring_buffer_wait(struct ring_buffer
- 		    !ring_buffer_empty_cpu(buffer, cpu)) {
- 			unsigned long flags;
- 			bool pagebusy;
--			size_t nr_pages;
--			size_t dirty;
-+			bool done;
- 
- 			if (!full)
- 				break;
- 
- 			raw_spin_lock_irqsave(&cpu_buffer->reader_lock, flags);
- 			pagebusy = cpu_buffer->reader_page == cpu_buffer->commit_page;
--			nr_pages = cpu_buffer->nr_pages;
--			dirty = ring_buffer_nr_dirty_pages(buffer, cpu);
-+			done = !pagebusy && full_hit(buffer, cpu, full);
-+
- 			if (!cpu_buffer->shortest_full ||
- 			    cpu_buffer->shortest_full > full)
- 				cpu_buffer->shortest_full = full;
- 			raw_spin_unlock_irqrestore(&cpu_buffer->reader_lock, flags);
--			if (!pagebusy &&
--			    (!nr_pages || (dirty * 100) > full * nr_pages))
-+			if (done)
- 				break;
- 		}
- 
-@@ -697,6 +710,7 @@ int ring_buffer_wait(struct ring_buffer
-  * @cpu: the cpu buffer to wait on
-  * @filp: the file descriptor
-  * @poll_table: The poll descriptor
-+ * @full: wait until the percentage of pages are available, if @cpu != RING_BUFFER_ALL_CPUS
-  *
-  * If @cpu == RING_BUFFER_ALL_CPUS then the task will wake up as soon
-  * as data is added to any of the @buffer's cpu buffers. Otherwise
-@@ -706,14 +720,14 @@ int ring_buffer_wait(struct ring_buffer
-  * zero otherwise.
-  */
- __poll_t ring_buffer_poll_wait(struct ring_buffer *buffer, int cpu,
--			  struct file *filp, poll_table *poll_table)
-+			  struct file *filp, poll_table *poll_table, int full)
- {
- 	struct ring_buffer_per_cpu *cpu_buffer;
- 	struct rb_irq_work *work;
- 
--	if (cpu == RING_BUFFER_ALL_CPUS)
-+	if (cpu == RING_BUFFER_ALL_CPUS) {
- 		work = &buffer->irq_work;
--	else {
-+	} else {
- 		if (!cpumask_test_cpu(cpu, buffer->cpumask))
- 			return -EINVAL;
- 
-@@ -721,8 +735,14 @@ __poll_t ring_buffer_poll_wait(struct ri
- 		work = &cpu_buffer->irq_work;
- 	}
- 
--	poll_wait(filp, &work->waiters, poll_table);
--	work->waiters_pending = true;
-+	if (full) {
-+		poll_wait(filp, &work->full_waiters, poll_table);
-+		work->full_waiters_pending = true;
-+	} else {
-+		poll_wait(filp, &work->waiters, poll_table);
-+		work->waiters_pending = true;
-+	}
-+
- 	/*
- 	 * There's a tight race between setting the waiters_pending and
- 	 * checking if the ring buffer is empty.  Once the waiters_pending bit
-@@ -738,6 +758,9 @@ __poll_t ring_buffer_poll_wait(struct ri
- 	 */
- 	smp_mb();
- 
-+	if (full)
-+		return full_hit(buffer, cpu, full) ? EPOLLIN | EPOLLRDNORM : 0;
-+
- 	if ((cpu == RING_BUFFER_ALL_CPUS && !ring_buffer_empty(buffer)) ||
- 	    (cpu != RING_BUFFER_ALL_CPUS && !ring_buffer_empty_cpu(buffer, cpu)))
- 		return EPOLLIN | EPOLLRDNORM;
-@@ -2640,10 +2663,6 @@ static void rb_commit(struct ring_buffer
- static __always_inline void
- rb_wakeups(struct ring_buffer *buffer, struct ring_buffer_per_cpu *cpu_buffer)
- {
--	size_t nr_pages;
--	size_t dirty;
--	size_t full;
--
- 	if (buffer->irq_work.waiters_pending) {
- 		buffer->irq_work.waiters_pending = false;
- 		/* irq_work_queue() supplies it's own memory barriers */
-@@ -2667,10 +2686,7 @@ rb_wakeups(struct ring_buffer *buffer, s
- 
- 	cpu_buffer->last_pages_touch = local_read(&cpu_buffer->pages_touched);
- 
--	full = cpu_buffer->shortest_full;
--	nr_pages = cpu_buffer->nr_pages;
--	dirty = ring_buffer_nr_dirty_pages(buffer, cpu_buffer->cpu);
--	if (full && nr_pages && (dirty * 100) <= full * nr_pages)
-+	if (!full_hit(buffer, cpu_buffer->cpu, cpu_buffer->shortest_full))
- 		return;
- 
- 	cpu_buffer->irq_work.wakeup_full = true;
---- a/kernel/trace/trace.c
-+++ b/kernel/trace/trace.c
-@@ -5993,7 +5993,7 @@ trace_poll(struct trace_iterator *iter,
- 		return EPOLLIN | EPOLLRDNORM;
- 	else
- 		return ring_buffer_poll_wait(iter->trace_buffer->buffer, iter->cpu_file,
--					     filp, poll_table);
-+					     filp, poll_table, iter->tr->buffer_percent);
- }
- 
- static __poll_t
-
-
+/Song
