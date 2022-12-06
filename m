@@ -2,64 +2,175 @@ Return-Path: <linux-trace-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AE1ABC352A1
-	for <linux-trace-kernel@archiver.kernel.org>; Tue,  6 Dec 2022 16:48:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B92DC352A1
+	for <linux-trace-kernel@archiver.kernel.org>; Tue,  6 Dec 2022 19:12:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235615AbiLFQst (ORCPT
+        id S229449AbiLFTMg (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Tue, 6 Dec 2022 11:48:49 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32886 "EHLO
+        Tue, 6 Dec 2022 14:12:36 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48966 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235582AbiLFQsQ (ORCPT
+        with ESMTP id S229595AbiLFTMe (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Tue, 6 Dec 2022 11:48:16 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 83BA4E005;
-        Tue,  6 Dec 2022 08:47:55 -0800 (PST)
+        Tue, 6 Dec 2022 14:12:34 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C43AC2D1C3;
+        Tue,  6 Dec 2022 11:12:31 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 2A056617E9;
-        Tue,  6 Dec 2022 16:47:55 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D634AC433C1;
-        Tue,  6 Dec 2022 16:47:53 +0000 (UTC)
-Date:   Tue, 6 Dec 2022 11:47:52 -0500
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 58CEE616C6;
+        Tue,  6 Dec 2022 19:12:31 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BF729C433D6;
+        Tue,  6 Dec 2022 19:12:30 +0000 (UTC)
+Received: from rostedt by gandalf.local.home with local (Exim 4.96)
+        (envelope-from <rostedt@goodmis.org>)
+        id 1p2dMj-0004Qr-2Z;
+        Tue, 06 Dec 2022 14:12:29 -0500
+Message-ID: <20221206191229.656244029@goodmis.org>
+User-Agent: quilt/0.66
+Date:   Tue, 06 Dec 2022 14:12:02 -0500
 From:   Steven Rostedt <rostedt@goodmis.org>
-To:     David Howells <dhowells@redhat.com>
-Cc:     "Masami Hiramatsu (Google)" <mhiramat@kernel.org>,
-        linux-kernel@vger.kernel.org,
-        Linux Trace Kernel <linux-trace-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2] trace: Fix some checker warnings
-Message-ID: <20221206114752.2b5c14c4@gandalf.local.home>
-In-Reply-To: <1158740.1670343616@warthog.procyon.org.uk>
-References: <20221206225859.de7c2f68e9e50a65ac7c7c30@kernel.org>
-        <20221206221813.3c7cfa0c6e51b551869912b3@kernel.org>
-        <167023571258.382307.15314866482834835192.stgit@warthog.procyon.org.uk>
-        <998783.1670333070@warthog.procyon.org.uk>
-        <1158740.1670343616@warthog.procyon.org.uk>
-X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+To:     linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
+Cc:     Masami Hiramatsu <mhiramat@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Karol Herbst <karolherbst@gmail.com>,
+        Pekka Paalanen <ppaalanen@gmail.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        x86@kernel.org
+Subject: [PATCH 1/2] x86/mm/kmmio: Switch to arch_spin_lock()
+References: <20221206191201.217838841@goodmis.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On Tue, 06 Dec 2022 16:20:16 +0000
-David Howells <dhowells@redhat.com> wrote:
+From: Steven Rostedt <rostedt@goodmis.org>
 
-> Masami Hiramatsu (Google) <mhiramat@kernel.org> wrote:
-> 
-> > > Is there a tracing tree this can go through?  
-> > 
-> > Yes, you can find it in MAINTAINERS file.
-> > We are using git://git.kernel.org/pub/scm/linux/kernel/git/trace/linux-trace.git  
-> 
-> Okay - is there someone who can apply it to that tree?
-> 
+The mmiotrace tracer is "special". The purpose is to help reverse engineer
+binary drivers by removing the memory allocated by the driver and when the
+driver goes to access it, a fault occurs, the mmiotracer will record what
+the driver was doing and then do the work on its behalf by single stepping
+through the process.
 
-Yes, I'll do it this week, after testing. I'm redoing my testing
-infrastructure (to give it to Masami), so I'm a bit behind.
+But to achieve this ability, it must do some special things. One is it
+needs to grab a lock while in the breakpoint handler. This is considered
+an NMI state, and then lockdep warns that the lock is being held in both
+an NMI state (really a breakpoint handler) and also in normal context.
 
--- Steve
+As the breakpoint/NMI state only happens when the driver is accessing
+memory, there's no concern of a race condition against the setup and
+tear-down of mmiotracer.
+
+To make lockdep and mmiotrace work together, convert the locks used in the
+breakpoint handler into arch_spin_lock().
+
+Link: https://lore.kernel.org/lkml/20221201213126.620b7dd3@gandalf.local.home/
+
+Suggested-by: Thomas Gleixner <tglx@linutronix.de>
+Signed-off-by: Steven Rostedt <rostedt@goodmis.org>
+---
+ arch/x86/mm/kmmio.c | 31 ++++++++++++++++++++++---------
+ 1 file changed, 22 insertions(+), 9 deletions(-)
+
+diff --git a/arch/x86/mm/kmmio.c b/arch/x86/mm/kmmio.c
+index d3efbc5b3449..edb486450158 100644
+--- a/arch/x86/mm/kmmio.c
++++ b/arch/x86/mm/kmmio.c
+@@ -62,7 +62,13 @@ struct kmmio_context {
+ 	int active;
+ };
+ 
+-static DEFINE_SPINLOCK(kmmio_lock);
++/*
++ * The kmmio_lock is taken in int3 context, which is treated as NMI context.
++ * This causes lockdep to complain about it bein in both NMI and normal
++ * context. Hide it from lockdep, as it should not have any other locks
++ * taken under it, and this is only enabled for debugging mmio anyway.
++ */
++static arch_spinlock_t kmmio_lock = __ARCH_SPIN_LOCK_UNLOCKED;
+ 
+ /* Protected by kmmio_lock */
+ unsigned int kmmio_count;
+@@ -346,10 +352,10 @@ static int post_kmmio_handler(unsigned long condition, struct pt_regs *regs)
+ 		ctx->probe->post_handler(ctx->probe, condition, regs);
+ 
+ 	/* Prevent racing against release_kmmio_fault_page(). */
+-	spin_lock(&kmmio_lock);
++	arch_spin_lock(&kmmio_lock);
+ 	if (ctx->fpage->count)
+ 		arm_kmmio_fault_page(ctx->fpage);
+-	spin_unlock(&kmmio_lock);
++	arch_spin_unlock(&kmmio_lock);
+ 
+ 	regs->flags &= ~X86_EFLAGS_TF;
+ 	regs->flags |= ctx->saved_flags;
+@@ -440,7 +446,8 @@ int register_kmmio_probe(struct kmmio_probe *p)
+ 	unsigned int l;
+ 	pte_t *pte;
+ 
+-	spin_lock_irqsave(&kmmio_lock, flags);
++	local_irq_save(flags);
++	arch_spin_lock(&kmmio_lock);
+ 	if (get_kmmio_probe(addr)) {
+ 		ret = -EEXIST;
+ 		goto out;
+@@ -460,7 +467,9 @@ int register_kmmio_probe(struct kmmio_probe *p)
+ 		size += page_level_size(l);
+ 	}
+ out:
+-	spin_unlock_irqrestore(&kmmio_lock, flags);
++	arch_spin_unlock(&kmmio_lock);
++	local_irq_restore(flags);
++
+ 	/*
+ 	 * XXX: What should I do here?
+ 	 * Here was a call to global_flush_tlb(), but it does not exist
+@@ -494,7 +503,8 @@ static void remove_kmmio_fault_pages(struct rcu_head *head)
+ 	struct kmmio_fault_page **prevp = &dr->release_list;
+ 	unsigned long flags;
+ 
+-	spin_lock_irqsave(&kmmio_lock, flags);
++	local_irq_save(flags);
++	arch_spin_lock(&kmmio_lock);
+ 	while (f) {
+ 		if (!f->count) {
+ 			list_del_rcu(&f->list);
+@@ -506,7 +516,8 @@ static void remove_kmmio_fault_pages(struct rcu_head *head)
+ 		}
+ 		f = *prevp;
+ 	}
+-	spin_unlock_irqrestore(&kmmio_lock, flags);
++	arch_spin_unlock(&kmmio_lock);
++	local_irq_restore(flags);
+ 
+ 	/* This is the real RCU destroy call. */
+ 	call_rcu(&dr->rcu, rcu_free_kmmio_fault_pages);
+@@ -540,14 +551,16 @@ void unregister_kmmio_probe(struct kmmio_probe *p)
+ 	if (!pte)
+ 		return;
+ 
+-	spin_lock_irqsave(&kmmio_lock, flags);
++	local_irq_save(flags);
++	arch_spin_lock(&kmmio_lock);
+ 	while (size < size_lim) {
+ 		release_kmmio_fault_page(addr + size, &release_list);
+ 		size += page_level_size(l);
+ 	}
+ 	list_del_rcu(&p->list);
+ 	kmmio_count--;
+-	spin_unlock_irqrestore(&kmmio_lock, flags);
++	arch_spin_unlock(&kmmio_lock);
++	local_irq_restore(flags);
+ 
+ 	if (!release_list)
+ 		return;
+-- 
+2.35.1
+
 
