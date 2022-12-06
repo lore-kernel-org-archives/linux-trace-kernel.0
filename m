@@ -2,34 +2,34 @@ Return-Path: <linux-trace-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E52F1C4708C
-	for <linux-trace-kernel@archiver.kernel.org>; Tue,  6 Dec 2022 19:12:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C5EF2C352A1
+	for <linux-trace-kernel@archiver.kernel.org>; Tue,  6 Dec 2022 19:12:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229601AbiLFTMh (ORCPT
+        id S229611AbiLFTMl (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Tue, 6 Dec 2022 14:12:37 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49312 "EHLO
+        Tue, 6 Dec 2022 14:12:41 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49452 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229623AbiLFTMf (ORCPT
+        with ESMTP id S229616AbiLFTMj (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Tue, 6 Dec 2022 14:12:35 -0500
+        Tue, 6 Dec 2022 14:12:39 -0500
 Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0FAA8211;
-        Tue,  6 Dec 2022 11:12:33 -0800 (PST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D0C73B1F;
+        Tue,  6 Dec 2022 11:12:34 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 2587DB81AE1;
+        by ams.source.kernel.org (Postfix) with ESMTPS id 56EB9B81B2A;
+        Tue,  6 Dec 2022 19:12:33 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 03B3FC433D6;
         Tue,  6 Dec 2022 19:12:32 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C0750C433C1;
-        Tue,  6 Dec 2022 19:12:30 +0000 (UTC)
 Received: from rostedt by gandalf.local.home with local (Exim 4.96)
         (envelope-from <rostedt@goodmis.org>)
-        id 1p2dMj-0004QL-23;
+        id 1p2dMj-0004RL-33;
         Tue, 06 Dec 2022 14:12:29 -0500
-Message-ID: <20221206191201.217838841@goodmis.org>
+Message-ID: <20221206191229.813199661@goodmis.org>
 User-Agent: quilt/0.66
-Date:   Tue, 06 Dec 2022 14:12:01 -0500
+Date:   Tue, 06 Dec 2022 14:12:03 -0500
 From:   Steven Rostedt <rostedt@goodmis.org>
 To:     linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
 Cc:     Masami Hiramatsu <mhiramat@kernel.org>,
@@ -41,12 +41,16 @@ Cc:     Masami Hiramatsu <mhiramat@kernel.org>,
         Peter Zijlstra <peterz@infradead.org>,
         Thomas Gleixner <tglx@linutronix.de>,
         Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        x86@kernel.org
-Subject: [PATCH 0/2] x86/mm/kmmio: Have mmiotracer play nice with lockdep
+        x86@kernel.org, "Paul E. McKenney" <paulmck@kernel.org>
+Subject: [PATCH 2/2] x86/mm/kmmio: Remove rcu_read_lock()
+References: <20221206191201.217838841@goodmis.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
+From: Steven Rostedt <rostedt@goodmis.org>
 
 The mmiotrace tracer is "special". The purpose is to help reverse engineer
 binary drivers by removing the memory allocated by the driver and when the
@@ -55,28 +59,52 @@ the driver was doing and then do the work on its behalf by single stepping
 through the process.
 
 But to achieve this ability, it must do some special things. One is it
-needs to grab a lock while in the breakpoint handler. This is considered
-an NMI state, and then lockdep warns that the lock is being held in both
-an NMI state (really a breakpoint handler) and also in normal context.
+take the rcu_read_lock() when the fault occurs, and then release it in the
+breakpoint that in the single stepping. This makes lockdep unhappy, as it
+changes the state of RCU from within an exception that is not contained in
+that exception, and we get a nasty splat from lockdep.
 
-As the breakpoint/NMI state only happens when the driver is accessing
-memory, there's no concern of a race condition against the setup and
-tear-down of mmiotracer.
+As it also disables preemption everywhere rcu_read_lock() is taken, and
+enables preemption everywhere rcu_read_unlock(), and does not enable
+preemption in between, it is the same as synchronize_rcu_sched(). But as
+the RCU sched variant has the same grace period as normal RCU, there's no
+reason to take the rcu_read_lock(). Simply remove it.
 
-To make lockdep and mmiotrace work together, convert the locks used in the
-breakpoint handler into arch_spin_lock().
+Cc: "Paul E. McKenney" <paulmck@kernel.org>
+Signed-off-by: Steven Rostedt <rostedt@goodmis.org>
+---
+ arch/x86/mm/kmmio.c | 3 ---
+ 1 file changed, 3 deletions(-)
 
-It also takes the rcu_read_lock() at the fault, and releases it in
-the single step breakpoint. This makes lockdep sad. Luckily, it also
-disables preemption when taking the rcu_read_lock() and enables it when
-releasing the rcu_read_lock(). As now the sched RCU variant is basically
-the same as the "normal" RCU variant, there's no reason to take
-the rcu_read_lock(), so just remove it.
+diff --git a/arch/x86/mm/kmmio.c b/arch/x86/mm/kmmio.c
+index edb486450158..e15e3aaaf94c 100644
+--- a/arch/x86/mm/kmmio.c
++++ b/arch/x86/mm/kmmio.c
+@@ -254,7 +254,6 @@ int kmmio_handler(struct pt_regs *regs, unsigned long addr)
+ 	 * again.
+ 	 */
+ 	preempt_disable();
+-	rcu_read_lock();
+ 
+ 	faultpage = get_kmmio_fault_page(page_base);
+ 	if (!faultpage) {
+@@ -323,7 +322,6 @@ int kmmio_handler(struct pt_regs *regs, unsigned long addr)
+ 	return 1; /* fault handled */
+ 
+ no_kmmio:
+-	rcu_read_unlock();
+ 	preempt_enable_no_resched();
+ 	return ret;
+ }
+@@ -363,7 +361,6 @@ static int post_kmmio_handler(unsigned long condition, struct pt_regs *regs)
+ 	/* These were acquired in kmmio_handler(). */
+ 	ctx->active--;
+ 	BUG_ON(ctx->active);
+-	rcu_read_unlock();
+ 	preempt_enable_no_resched();
+ 
+ 	/*
+-- 
+2.35.1
 
-Steven Rostedt (2):
-      x86/mm/kmmio: Switch to arch_spin_lock()
-      x86/mm/kmmio: Remove rcu_read_lock()
 
-----
- arch/x86/mm/kmmio.c | 34 ++++++++++++++++++++++------------
- 1 file changed, 22 insertions(+), 12 deletions(-)
