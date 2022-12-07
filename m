@@ -2,121 +2,129 @@ Return-Path: <linux-trace-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E8DA1C4708E
-	for <linux-trace-kernel@archiver.kernel.org>; Wed,  7 Dec 2022 13:52:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 57DD3C352A1
+	for <linux-trace-kernel@archiver.kernel.org>; Wed,  7 Dec 2022 17:36:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229586AbiLGNwo (ORCPT
+        id S229778AbiLGRgZ (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Wed, 7 Dec 2022 08:52:44 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49040 "EHLO
+        Wed, 7 Dec 2022 12:36:25 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42350 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229741AbiLGNwn (ORCPT
+        with ESMTP id S229479AbiLGRgX (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Wed, 7 Dec 2022 08:52:43 -0500
-Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C705D6344;
-        Wed,  7 Dec 2022 05:52:39 -0800 (PST)
-Received: from dggpeml100012.china.huawei.com (unknown [172.30.72.55])
-        by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4NRzBy0p85zqSqk;
-        Wed,  7 Dec 2022 21:48:26 +0800 (CST)
-Received: from localhost.localdomain (10.67.175.61) by
- dggpeml100012.china.huawei.com (7.185.36.121) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.31; Wed, 7 Dec 2022 21:52:36 +0800
-From:   Zheng Yejian <zhengyejian1@huawei.com>
-To:     <rostedt@goodmis.org>, <mhiramat@kernel.org>, <zanussi@kernel.org>
-CC:     <linux-kernel@vger.kernel.org>,
-        <linux-trace-kernel@vger.kernel.org>, <zhengyejian1@huawei.com>
-Subject: [PATCH] tracing/hist: Fix issue of losting command info in error_log
-Date:   Wed, 7 Dec 2022 21:53:26 +0800
-Message-ID: <20221207135326.3483216-1-zhengyejian1@huawei.com>
-X-Mailer: git-send-email 2.25.1
+        Wed, 7 Dec 2022 12:36:23 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 173565B862;
+        Wed,  7 Dec 2022 09:36:23 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id A2F7961B7F;
+        Wed,  7 Dec 2022 17:36:22 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E3B8BC433C1;
+        Wed,  7 Dec 2022 17:36:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1670434582;
+        bh=59zA4/AaIIK3K2fxEdDUzEgmFLigV6Fq1Sp+QlfZskc=;
+        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+        b=F76qL7uFYLbtkgV6a5GxwhUguopJT0WuOAVl3K+fKDIAtvdCnBLl4GSn6O1C6mEck
+         zYlXtg7KCDGi9DEAh0ai76lQcQZ5AXAdQtMjCQ1YTuVcJDuJf/mi7oMMGRLXdNmVcN
+         sOPhdGT0yftmqfidjv+sJxDtXm168fivn6yqwZ0ZHkocpLv9tP6BQtqhfNRdZ/QemZ
+         CibXmUFj1+l7+hiC8T0eJNBV6UpVX27OUvhpv/dpx0QoLLUJaZE+6NHEJNf3sCXaBN
+         ilr5foful0qeXaeP1swsq+MP7q0AIP5q5kFqNdLNFgNxdTLHuTDzF/OvFPZsMdelHZ
+         9kcDMVd0meuyw==
+Received: by paulmck-ThinkPad-P17-Gen-1.home (Postfix, from userid 1000)
+        id 7AE9C5C0AFC; Wed,  7 Dec 2022 09:36:21 -0800 (PST)
+Date:   Wed, 7 Dec 2022 09:36:21 -0800
+From:   "Paul E. McKenney" <paulmck@kernel.org>
+To:     Steven Rostedt <rostedt@goodmis.org>
+Cc:     linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Karol Herbst <karolherbst@gmail.com>,
+        Pekka Paalanen <ppaalanen@gmail.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        x86@kernel.org
+Subject: Re: [PATCH 2/2] x86/mm/kmmio: Remove rcu_read_lock()
+Message-ID: <20221207173621.GF4001@paulmck-ThinkPad-P17-Gen-1>
+Reply-To: paulmck@kernel.org
+References: <20221206191201.217838841@goodmis.org>
+ <20221206191229.813199661@goodmis.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [10.67.175.61]
-X-ClientProxiedBy: dggems705-chm.china.huawei.com (10.3.19.182) To
- dggpeml100012.china.huawei.com (7.185.36.121)
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20221206191229.813199661@goodmis.org>
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-When input some constructed invalid 'trigger' command, command info
-in 'error_log' are lost [1].
+On Tue, Dec 06, 2022 at 02:12:03PM -0500, Steven Rostedt wrote:
+> From: Steven Rostedt <rostedt@goodmis.org>
+> 
+> The mmiotrace tracer is "special". The purpose is to help reverse engineer
+> binary drivers by removing the memory allocated by the driver and when the
+> driver goes to access it, a fault occurs, the mmiotracer will record what
+> the driver was doing and then do the work on its behalf by single stepping
+> through the process.
+> 
+> But to achieve this ability, it must do some special things. One is it
+> take the rcu_read_lock() when the fault occurs, and then release it in the
+> breakpoint that in the single stepping. This makes lockdep unhappy, as it
+> changes the state of RCU from within an exception that is not contained in
+> that exception, and we get a nasty splat from lockdep.
+> 
+> As it also disables preemption everywhere rcu_read_lock() is taken, and
+> enables preemption everywhere rcu_read_unlock(), and does not enable
+> preemption in between, it is the same as synchronize_rcu_sched(). But as
+> the RCU sched variant has the same grace period as normal RCU, there's no
+> reason to take the rcu_read_lock(). Simply remove it.
+> 
+> Cc: "Paul E. McKenney" <paulmck@kernel.org>
+> Signed-off-by: Steven Rostedt <rostedt@goodmis.org>
 
-The root cause is that there is a path that event_hist_trigger_parse()
-is recursely called once and 'last_cmd' which save origin command is
-cleared, then later calling of hist_err() will no longer record origin
-command info:
+Might be worth adding a comment saying that others are using this
+preempt_disable() to block an RCU grace period, but that is up to
+you guys.  I will let you and your future selves be the judges.
 
-  event_hist_trigger_parse() {
-    last_cmd_set()  // <1> 'last_cmd' save origin command here at first
-    create_actions() {
-      onmatch_create() {
-        action_create() {
-          trace_action_create() {
-            trace_action_create_field_var() {
-              create_field_var_hist() {
-                event_hist_trigger_parse() {  // <2> recursely called once
-                  hist_err_clear()  // <3> 'last_cmd' is cleared here
-                }
-                hist_err()  // <4> No longer find origin command!!!
+Acked-by: Paul E. McKenney <paulmck@kernel.org>
 
-Since 'glob' is empty string while running into the recurse call, we
-can trickly check it and bypass the call of hist_err_clear() to solve it.
-
-[1]
- # cd /sys/kernel/tracing
- # echo "my_synth_event int v1; int v2; int v3;" >> synthetic_events
- # echo 'hist:keys=pid' >> events/sched/sched_waking/trigger
- # echo "hist:keys=next_pid:onmatch(sched.sched_waking).my_synth_event(\
-pid,pid1)" >> events/sched/sched_switch/trigger
- # cat error_log
-[  8.405018] hist:sched:sched_switch: error: Couldn't find synthetic event
-  Command:
-hist:keys=next_pid:onmatch(sched.sched_waking).my_synth_event(pid,pid1)
-                                                          ^
-[  8.816902] hist:sched:sched_switch: error: Couldn't find field
-  Command:
-hist:keys=next_pid:onmatch(sched.sched_waking).my_synth_event(pid,pid1)
-                          ^
-[  8.816902] hist:sched:sched_switch: error: Couldn't parse field variable
-  Command:
-hist:keys=next_pid:onmatch(sched.sched_waking).my_synth_event(pid,pid1)
-                          ^
-[  8.999880] : error: Couldn't find field
-  Command:
-           ^
-[  8.999880] : error: Couldn't parse field variable
-  Command:
-           ^
-[  8.999880] : error: Couldn't find field
-  Command:
-           ^
-[  8.999880] : error: Couldn't create histogram for field
-  Command:
-           ^
-
-Fixes: f404da6e1d46 ("tracing: Add 'last error' error facility for hist triggers")
-Signed-off-by: Zheng Yejian <zhengyejian1@huawei.com>
----
- kernel/trace/trace_events_hist.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/kernel/trace/trace_events_hist.c b/kernel/trace/trace_events_hist.c
-index 1c82478e8dff..b6e5724a9ea3 100644
---- a/kernel/trace/trace_events_hist.c
-+++ b/kernel/trace/trace_events_hist.c
-@@ -6438,7 +6438,7 @@ static int event_hist_trigger_parse(struct event_command *cmd_ops,
- 	if (se)
- 		se->ref++;
-  out:
--	if (ret == 0)
-+	if (ret == 0 && glob[0])
- 		hist_err_clear();
- 
- 	return ret;
--- 
-2.25.1
-
+> ---
+>  arch/x86/mm/kmmio.c | 3 ---
+>  1 file changed, 3 deletions(-)
+> 
+> diff --git a/arch/x86/mm/kmmio.c b/arch/x86/mm/kmmio.c
+> index edb486450158..e15e3aaaf94c 100644
+> --- a/arch/x86/mm/kmmio.c
+> +++ b/arch/x86/mm/kmmio.c
+> @@ -254,7 +254,6 @@ int kmmio_handler(struct pt_regs *regs, unsigned long addr)
+>  	 * again.
+>  	 */
+>  	preempt_disable();
+> -	rcu_read_lock();
+>  
+>  	faultpage = get_kmmio_fault_page(page_base);
+>  	if (!faultpage) {
+> @@ -323,7 +322,6 @@ int kmmio_handler(struct pt_regs *regs, unsigned long addr)
+>  	return 1; /* fault handled */
+>  
+>  no_kmmio:
+> -	rcu_read_unlock();
+>  	preempt_enable_no_resched();
+>  	return ret;
+>  }
+> @@ -363,7 +361,6 @@ static int post_kmmio_handler(unsigned long condition, struct pt_regs *regs)
+>  	/* These were acquired in kmmio_handler(). */
+>  	ctx->active--;
+>  	BUG_ON(ctx->active);
+> -	rcu_read_unlock();
+>  	preempt_enable_no_resched();
+>  
+>  	/*
+> -- 
+> 2.35.1
+> 
+> 
