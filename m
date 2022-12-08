@@ -2,129 +2,105 @@ Return-Path: <linux-trace-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 57DD3C352A1
-	for <linux-trace-kernel@archiver.kernel.org>; Wed,  7 Dec 2022 17:36:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 73172C4332F
+	for <linux-trace-kernel@archiver.kernel.org>; Thu,  8 Dec 2022 22:27:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229778AbiLGRgZ (ORCPT
+        id S229621AbiLHW1c (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Wed, 7 Dec 2022 12:36:25 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42350 "EHLO
+        Thu, 8 Dec 2022 17:27:32 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55202 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229479AbiLGRgX (ORCPT
+        with ESMTP id S230159AbiLHW1a (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Wed, 7 Dec 2022 12:36:23 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 173565B862;
-        Wed,  7 Dec 2022 09:36:23 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id A2F7961B7F;
-        Wed,  7 Dec 2022 17:36:22 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E3B8BC433C1;
-        Wed,  7 Dec 2022 17:36:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1670434582;
-        bh=59zA4/AaIIK3K2fxEdDUzEgmFLigV6Fq1Sp+QlfZskc=;
-        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-        b=F76qL7uFYLbtkgV6a5GxwhUguopJT0WuOAVl3K+fKDIAtvdCnBLl4GSn6O1C6mEck
-         zYlXtg7KCDGi9DEAh0ai76lQcQZ5AXAdQtMjCQ1YTuVcJDuJf/mi7oMMGRLXdNmVcN
-         sOPhdGT0yftmqfidjv+sJxDtXm168fivn6yqwZ0ZHkocpLv9tP6BQtqhfNRdZ/QemZ
-         CibXmUFj1+l7+hiC8T0eJNBV6UpVX27OUvhpv/dpx0QoLLUJaZE+6NHEJNf3sCXaBN
-         ilr5foful0qeXaeP1swsq+MP7q0AIP5q5kFqNdLNFgNxdTLHuTDzF/OvFPZsMdelHZ
-         9kcDMVd0meuyw==
-Received: by paulmck-ThinkPad-P17-Gen-1.home (Postfix, from userid 1000)
-        id 7AE9C5C0AFC; Wed,  7 Dec 2022 09:36:21 -0800 (PST)
-Date:   Wed, 7 Dec 2022 09:36:21 -0800
-From:   "Paul E. McKenney" <paulmck@kernel.org>
+        Thu, 8 Dec 2022 17:27:30 -0500
+Received: from mail-pj1-x102a.google.com (mail-pj1-x102a.google.com [IPv6:2607:f8b0:4864:20::102a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8171880A3A
+        for <linux-trace-kernel@vger.kernel.org>; Thu,  8 Dec 2022 14:27:19 -0800 (PST)
+Received: by mail-pj1-x102a.google.com with SMTP id u15-20020a17090a3fcf00b002191825cf02so3008023pjm.2
+        for <linux-trace-kernel@vger.kernel.org>; Thu, 08 Dec 2022 14:27:19 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=IQR25hXZloAZorduWX7OmeRW/OBJ2WK3euXwD9n9+OE=;
+        b=jPWrXunVIw6xvwvb4APnqTacxKN8+MZTMZkPycGpLzVR9FwAdZtA7UpOUL7aRe6YXN
+         nqULpExYr9dskSVj6kTkQDgo/gG+dW7WcPiYnZ0jKWPcG1Ri3o9BCskGQVC41G2LFFxM
+         FjhYO449k6XP1vOsWydY5gc6Iz6eBa4fVKIaAz3ZwN5fXghuLUotRr31csVdNVWKUB4V
+         WCbCSsZWweOWfFgw3js1GcWVoqpQ4wJ/uoK1NgFw21wA9vl/6gzV1lrXb74Q4OC2Z8aR
+         4NwNBQYl5KhAH6UZgU4wCGsBplT6Q8fHQgwbpTKZ3nquUz2+hma/jaZlBivR7k5lrKW/
+         q1uQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=IQR25hXZloAZorduWX7OmeRW/OBJ2WK3euXwD9n9+OE=;
+        b=OZCU82NXaCSwYPT4YfOmU07vbJutlWfokvwlJOymehojiFPkc06cga4QTgIfxwbla5
+         uCdOFnXYHOTbkmW++n8U12ngi33f/DqWhmc0I/gdlYzQ6e3W1i3boIaxuL+ANAi59iXg
+         v+ZpXRwCbmnbq8wgHM/cWXjcrfw7I+uIN5RnswlhwzMxUPSRmCj2TFyB1P2ubErc+Ulj
+         gzoUCOddKWCwuXtya4Kr6ietU6uGF9x5T1OdVXv5CFe3dzEWdfzqoApFvywZTcKyE2S+
+         UafDMdzvHP5cdZthL69iGz00SdwXbvSlOEJd0rw6xMgfp7jtnk3LNYmWKQurkSpE7zCS
+         jxcw==
+X-Gm-Message-State: ANoB5pmX9c2qpKs0XaUzId8mq3imk0fKoVEYphzmFgGP8Yj94ucSUZ5U
+        wZxaYVNPQ9wZDAmOKL+AR/lFGcSk1PCZ6rc5gstVkg==
+X-Google-Smtp-Source: AA0mqf60mwXumrk4UCOpMfT9176Le5R3jMXkA3oyK0ZTsWhXOXgDFL3X4Sj0SNL7lP9IAszx/ccNAveyoVuDKUZD9X0=
+X-Received: by 2002:a17:902:7682:b0:182:6c84:7ff4 with SMTP id
+ m2-20020a170902768200b001826c847ff4mr86056876pll.25.1670538438538; Thu, 08
+ Dec 2022 14:27:18 -0800 (PST)
+MIME-Version: 1.0
+References: <20221020210056.0d8d0a5b@gandalf.local.home>
+In-Reply-To: <20221020210056.0d8d0a5b@gandalf.local.home>
+From:   Ross Zwisler <zwisler@google.com>
+Date:   Thu, 8 Dec 2022 15:27:07 -0700
+Message-ID: <CAGRrVHw2ABuBtb+6BtES0WPNpbtu3p6vfZ-pADjtYYxm9kWZ4g@mail.gmail.com>
+Subject: Re: [PATCH v2] tracing: Add trace_trigger kernel command line option
 To:     Steven Rostedt <rostedt@goodmis.org>
-Cc:     linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Linux Trace Kernel <linux-trace-kernel@vger.kernel.org>,
         Masami Hiramatsu <mhiramat@kernel.org>,
         Andrew Morton <akpm@linux-foundation.org>,
-        Karol Herbst <karolherbst@gmail.com>,
-        Pekka Paalanen <ppaalanen@gmail.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        x86@kernel.org
-Subject: Re: [PATCH 2/2] x86/mm/kmmio: Remove rcu_read_lock()
-Message-ID: <20221207173621.GF4001@paulmck-ThinkPad-P17-Gen-1>
-Reply-To: paulmck@kernel.org
-References: <20221206191201.217838841@goodmis.org>
- <20221206191229.813199661@goodmis.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20221206191229.813199661@goodmis.org>
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        paulmck@kernel.org, Joel Fernandes <joel@joelfernandes.org>,
+        Tom Zanussi <zanussi@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On Tue, Dec 06, 2022 at 02:12:03PM -0500, Steven Rostedt wrote:
-> From: Steven Rostedt <rostedt@goodmis.org>
-> 
-> The mmiotrace tracer is "special". The purpose is to help reverse engineer
-> binary drivers by removing the memory allocated by the driver and when the
-> driver goes to access it, a fault occurs, the mmiotracer will record what
-> the driver was doing and then do the work on its behalf by single stepping
-> through the process.
-> 
-> But to achieve this ability, it must do some special things. One is it
-> take the rcu_read_lock() when the fault occurs, and then release it in the
-> breakpoint that in the single stepping. This makes lockdep unhappy, as it
-> changes the state of RCU from within an exception that is not contained in
-> that exception, and we get a nasty splat from lockdep.
-> 
-> As it also disables preemption everywhere rcu_read_lock() is taken, and
-> enables preemption everywhere rcu_read_unlock(), and does not enable
-> preemption in between, it is the same as synchronize_rcu_sched(). But as
-> the RCU sched variant has the same grace period as normal RCU, there's no
-> reason to take the rcu_read_lock(). Simply remove it.
-> 
-> Cc: "Paul E. McKenney" <paulmck@kernel.org>
-> Signed-off-by: Steven Rostedt <rostedt@goodmis.org>
+On Thu, Oct 20, 2022 at 7:00 PM Steven Rostedt <rostedt@goodmis.org> wrote:
+>
+> From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
+>
+> Allow triggers to be enabled at kernel boot up. For example:
+>
+>   trace_trigger="sched_switch.stacktrace if prev_state == 2"
+>
+> The above will enable the stacktrace trigger on top of the sched_switch
+> event and only trigger if its prev_state is 2 (TASK_UNINTERRUPTIBLE). Then
+> at boot up, a stacktrace will trigger and be recorded in the tracing ring
+> buffer every time the sched_switch happens where the previous state is
+> TASK_INTERRUPTIBLE.
+>
+> Another useful trigger would be "traceoff" which can stop tracing on an
+> event if a field of the event matches a certain value defined by the
+> filter ("if" statement).
+>
+> Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
 
-Might be worth adding a comment saying that others are using this
-preempt_disable() to block an RCU grace period, but that is up to
-you guys.  I will let you and your future selves be the judges.
+<>
 
-Acked-by: Paul E. McKenney <paulmck@kernel.org>
+> +#ifdef CONFIG_HIST_TRIGGERS
 
-> ---
->  arch/x86/mm/kmmio.c | 3 ---
->  1 file changed, 3 deletions(-)
-> 
-> diff --git a/arch/x86/mm/kmmio.c b/arch/x86/mm/kmmio.c
-> index edb486450158..e15e3aaaf94c 100644
-> --- a/arch/x86/mm/kmmio.c
-> +++ b/arch/x86/mm/kmmio.c
-> @@ -254,7 +254,6 @@ int kmmio_handler(struct pt_regs *regs, unsigned long addr)
->  	 * again.
->  	 */
->  	preempt_disable();
-> -	rcu_read_lock();
->  
->  	faultpage = get_kmmio_fault_page(page_base);
->  	if (!faultpage) {
-> @@ -323,7 +322,6 @@ int kmmio_handler(struct pt_regs *regs, unsigned long addr)
->  	return 1; /* fault handled */
->  
->  no_kmmio:
-> -	rcu_read_unlock();
->  	preempt_enable_no_resched();
->  	return ret;
->  }
-> @@ -363,7 +361,6 @@ static int post_kmmio_handler(unsigned long condition, struct pt_regs *regs)
->  	/* These were acquired in kmmio_handler(). */
->  	ctx->active--;
->  	BUG_ON(ctx->active);
-> -	rcu_read_unlock();
->  	preempt_enable_no_resched();
->  
->  	/*
-> -- 
-> 2.35.1
-> 
-> 
+Can you help me understand why this is only available if
+CONFIG_HIST_TRIGGERS is selected in the kernel config?  AFAICT this
+code doesn't depend on the histogram code, and the run-time selection
+of triggers is usable without CONFIG_HIST_TRIGGERS.
+
+Thanks!
+
+> +static void trace_early_triggers(struct trace_event_file *file, const char *name)
+> +{
+> +       int ret;
+> +       int i;
+
+<>
