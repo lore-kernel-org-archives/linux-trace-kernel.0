@@ -2,48 +2,39 @@ Return-Path: <linux-trace-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D0A52C4332F
-	for <linux-trace-kernel@archiver.kernel.org>; Fri,  9 Dec 2022 18:10:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B730FC4332F
+	for <linux-trace-kernel@archiver.kernel.org>; Fri,  9 Dec 2022 18:14:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229580AbiLISKE (ORCPT
+        id S229674AbiLISOE (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Fri, 9 Dec 2022 13:10:04 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40846 "EHLO
+        Fri, 9 Dec 2022 13:14:04 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43204 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229482AbiLISKC (ORCPT
+        with ESMTP id S229554AbiLISOD (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Fri, 9 Dec 2022 13:10:02 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 20D609B2B1;
-        Fri,  9 Dec 2022 10:10:02 -0800 (PST)
+        Fri, 9 Dec 2022 13:14:03 -0500
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7A311A431B;
+        Fri,  9 Dec 2022 10:14:02 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id B390F622EB;
-        Fri,  9 Dec 2022 18:10:01 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A1D17C433EF;
-        Fri,  9 Dec 2022 18:09:59 +0000 (UTC)
-Date:   Fri, 9 Dec 2022 13:09:58 -0500
+        by ams.source.kernel.org (Postfix) with ESMTPS id 3089AB828A7;
+        Fri,  9 Dec 2022 18:14:01 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 30E59C433EF;
+        Fri,  9 Dec 2022 18:13:59 +0000 (UTC)
+Date:   Fri, 9 Dec 2022 13:13:57 -0500
 From:   Steven Rostedt <rostedt@goodmis.org>
-To:     "Paul E. McKenney" <paulmck@kernel.org>
-Cc:     linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+To:     Ross Zwisler <zwisler@google.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Linux Trace Kernel <linux-trace-kernel@vger.kernel.org>,
         Masami Hiramatsu <mhiramat@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Karol Herbst <karolherbst@gmail.com>,
-        Pekka Paalanen <ppaalanen@gmail.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        x86@kernel.org
-Subject: Re: [PATCH 2/2] x86/mm/kmmio: Remove rcu_read_lock()
-Message-ID: <20221209130958.4f1d3057@gandalf.local.home>
-In-Reply-To: <20221209130334.487b63aa@gandalf.local.home>
-References: <20221206191201.217838841@goodmis.org>
-        <20221206191229.813199661@goodmis.org>
-        <20221207173621.GF4001@paulmck-ThinkPad-P17-Gen-1>
-        <20221209130334.487b63aa@gandalf.local.home>
+        Andrew Morton <akpm@linux-foundation.org>
+Subject: Re: [PATCH] ring-buffer: Handle resize in early boot up
+Message-ID: <20221209131357.5e4f6d01@gandalf.local.home>
+In-Reply-To: <Y5NpDF0AnY9ibwEl@google.com>
+References: <20221209101151.1fec1167@gandalf.local.home>
+        <Y5NpDF0AnY9ibwEl@google.com>
 X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
@@ -52,21 +43,36 @@ Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On Fri, 9 Dec 2022 13:03:34 -0500
-Steven Rostedt <rostedt@goodmis.org> wrote:
+On Fri, 9 Dec 2022 09:57:48 -0700
+Ross Zwisler <zwisler@google.com> wrote:
 
-> On Wed, 7 Dec 2022 09:36:21 -0800
-> "Paul E. McKenney" <paulmck@kernel.org> wrote:
+> > +			if (cpu_id == smp_processor_id()) {
+> > +				rb_update_pages(cpu_buffer);
+> > +				migrate_enable();
+> > +			} else {
+> > +				migrate_enable();
+> > +				schedule_work_on(cpu_id,
+> > +						 &cpu_buffer->update_pages_work);
+> > +				wait_for_completion(&cpu_buffer->update_done);  
 > 
-> > > Cc: "Paul E. McKenney" <paulmck@kernel.org>
-> > > Signed-off-by: Steven Rostedt <rostedt@goodmis.org>    
-> > 
-> > Might be worth adding a comment saying that others are using this
-> > preempt_disable() to block an RCU grace period, but that is up to
-> > you guys.  I will let you and your future selves be the judges.  
+> I ran with this patch on my test VM and hit the same Oops from the original
+> report.
 > 
-> Good point. I'll add a comment in v2.
+> I think the problem is that we're still trying to enable interrupts via
+> wait_for_completion():
+> 
+> wait_for_completion()
+>   wait_for_common()
+>     __wait_for_common()
+>       raw_spin_unlock_irq()
+>         _raw_spin_unlock_irq()
+>           __raw_spin_unlock_irq()
+>             local_irq_enable()
+> 
+> I'm testing on a QEMU VM with 4 virtual CPUs, if that helps WRT where work is
+> being scheduled (cpu_id == smp_processor_id).
 
-Actually, rcu_read_lock_sched_notrace() may work instead. Let me test it.
+Can you show the backtrace with that. Because when I triggered it, the
+other CPUs were not up and running. I'm testing this on a VM with 8 CPUs.
 
 -- Steve
