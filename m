@@ -2,45 +2,36 @@ Return-Path: <linux-trace-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 219DDC4332F
-	for <linux-trace-kernel@archiver.kernel.org>; Fri,  9 Dec 2022 05:29:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 70C31C4708D
+	for <linux-trace-kernel@archiver.kernel.org>; Fri,  9 Dec 2022 15:12:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229488AbiLIF3n (ORCPT
+        id S230071AbiLIPMS (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Fri, 9 Dec 2022 00:29:43 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51450 "EHLO
+        Fri, 9 Dec 2022 10:12:18 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59498 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229460AbiLIF3m (ORCPT
+        with ESMTP id S230246AbiLIPL6 (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Fri, 9 Dec 2022 00:29:42 -0500
-Received: from sin.source.kernel.org (sin.source.kernel.org [145.40.73.55])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AB8597125E;
-        Thu,  8 Dec 2022 21:29:40 -0800 (PST)
+        Fri, 9 Dec 2022 10:11:58 -0500
+Received: from sin.source.kernel.org (sin.source.kernel.org [IPv6:2604:1380:40e1:4800::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4146084B5E;
+        Fri,  9 Dec 2022 07:11:57 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by sin.source.kernel.org (Postfix) with ESMTPS id 19EA6CE27D3;
-        Fri,  9 Dec 2022 05:29:39 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0BA67C433D2;
-        Fri,  9 Dec 2022 05:29:35 +0000 (UTC)
-Date:   Fri, 9 Dec 2022 00:29:32 -0500
+        by sin.source.kernel.org (Postfix) with ESMTPS id 8C3D0CE28AF;
+        Fri,  9 Dec 2022 15:11:55 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0E9C8C433F1;
+        Fri,  9 Dec 2022 15:11:52 +0000 (UTC)
+Date:   Fri, 9 Dec 2022 10:11:51 -0500
 From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Ross Zwisler <zwisler@google.com>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Linux Trace Kernel <linux-trace-kernel@vger.kernel.org>,
+To:     LKML <linux-kernel@vger.kernel.org>
+Cc:     Linux Trace Kernel <linux-trace-kernel@vger.kernel.org>,
         Masami Hiramatsu <mhiramat@kernel.org>,
         Andrew Morton <akpm@linux-foundation.org>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        paulmck@kernel.org, Joel Fernandes <joel@joelfernandes.org>,
-        Tom Zanussi <zanussi@kernel.org>
-Subject: Re: [PATCH v2] tracing: Add trace_trigger kernel command line
- option
-Message-ID: <20221209002932.2e9e89e2@gandalf.local.home>
-In-Reply-To: <Y5J/CajlNh1gexvo@google.com>
-References: <20221020210056.0d8d0a5b@gandalf.local.home>
-        <CAGRrVHw2ABuBtb+6BtES0WPNpbtu3p6vfZ-pADjtYYxm9kWZ4g@mail.gmail.com>
-        <20221208183945.1de18843@gandalf.local.home>
-        <Y5J/CajlNh1gexvo@google.com>
+        Ross Zwisler <zwisler@google.com>
+Subject: [PATCH] ring-buffer: Handle resize in early boot up
+Message-ID: <20221209101151.1fec1167@gandalf.local.home>
 X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
@@ -49,73 +40,36 @@ Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On Thu, 8 Dec 2022 17:19:21 -0700
-Ross Zwisler <zwisler@google.com> wrote:
+From: Steven Rostedt <rostedt@goodmis.org>
 
-> I think that this is because the code to allocate the snapshot buffer uses
-> workqueues (ring_buffer_resize() calls schedule_work_on() then
-> wait_for_completion()), but at this point during the init process the
-> workqueues are up enough that we can enqueue entries, but they are not yet
-> doing work.
+With the new command line option that allows trace event triggers to be
+added at boot, the "snapshot" trigger will allocate the snapshot buffer
+very early, when interrupts can not be enabled. Allocating the ring buffer
+is not the problem, but it also resizes it, which is, as the resize code
+does synchronization that can not be preformed at early boot.
 
-Thanks for the report.
-> 
-> start_kernel() {
-> ...
-> 
->   /*
->    * Allow workqueue creation and work item queueing/cancelling
->    * early.  Work item execution depends on kthreads and starts after
->    * workqueue_init().
->    */
->   workqueue_init_early();
->   ...
-> 
->   /* Trace events are available after this */
->   trace_init();  // here is where we try and allocate the snapshot
-> 
->   ...
-> 
->   arch_call_rest_init();
->     rest_init()
->       kernel_init()
->         kernel_init_freeable()
->           workqueue_init()
-> }
-> 
-> I'm guessing the best we can do here is just disallow snapshot triggers via
-> the command line option, so that others don't cut themselves on this sharp
-> corner?  Other ideas?
+To handle this, first change the raw_spin_lock_irq() in rb_insert_pages()
+to raw_spin_lock_irqsave(), such that the unlocking of that spin lock will
+not enable interrupts.
 
-After debugging it, it's because that code path expects to be called with
-interrupts enabled, but this early in boot up, interrupts haven't been
-enabled yet and should not be.
+Next, where it calls schedule_work_on(), disable migration and check if
+the CPU to update is the current CPU, and if so, perform the work
+directly, otherwise re-enable migration and call the schedule_work_on() to
+the CPU that is being updated. The rb_insert_pages() just needs to be run
+on the CPU that it is updating, and does not need preemption nor
+interrupts disabled when calling it.
 
-> [    0.178253]  </#DF>
-> [    0.178253]  <TASK>
-> [    0.178254]  ? _raw_spin_unlock_irq+0x11/0x40
+Link: https://lore.kernel.org/lkml/Y5J%2FCajlNh1gexvo@google.com/
 
-raw_spin_lock_irq() enables interrupts regardless.
-
-
-> [    0.178256]  ? wait_for_completion+0x7e/0x160
-> [    0.178258]  ? ring_buffer_resize+0x320/0x450
-> [    0.178262]  ? resize_buffer_duplicate_size+0x38/0xe0
-> [    0.178264]  ? tracing_alloc_snapshot_instance+0x23/0x40
-> [    0.178266]  ? register_snapshot_trigger+0x16/0x40
-> [    0.178269]  ? event_trigger_parse+0x113/0x160
-> [    0.178272]  ? trigger_process_regex+0xb8/0x100
-> [    0.178274]  ? __trace_early_add_events+0xb8/0x140
-> [    0.178275]  ? trace_event_init+0xcc/0x2dd
-> [    0.178278]  ? start_kernel+0x4a9/0x713
-> [    0.178281]  ? secondary_startup_64_no_verify+0xce/0xdb
-
-This appears to fix it.
-
--- Steve
+Fixes: a01fdc897fa5 ("tracing: Add trace_trigger kernel command line option")
+Reported-by: Ross Zwisler <zwisler@google.com>
+Signed-off-by: Steven Rostedt <rostedt@goodmis.org>
+---
+ kernel/trace/ring_buffer.c | 32 +++++++++++++++++++++++++-------
+ 1 file changed, 25 insertions(+), 7 deletions(-)
 
 diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
-index 843818ee4814..ef4da331ff61 100644
+index 843818ee4814..c366a0a9ddba 100644
 --- a/kernel/trace/ring_buffer.c
 +++ b/kernel/trace/ring_buffer.c
 @@ -2062,8 +2062,10 @@ rb_insert_pages(struct ring_buffer_per_cpu *cpu_buffer)
@@ -125,7 +79,7 @@ index 843818ee4814..ef4da331ff61 100644
 +	unsigned long flags;
  
 -	raw_spin_lock_irq(&cpu_buffer->reader_lock);
-+	/* Can be called at early boot up, where interrupts have not been enabled */
++	/* Can be called at early boot up, where interrupts must not been enabled */
 +	raw_spin_lock_irqsave(&cpu_buffer->reader_lock, flags);
  	/*
  	 * We are holding the reader lock, so the reader page won't be swapped
@@ -139,53 +93,39 @@ index 843818ee4814..ef4da331ff61 100644
  
  	/* free pages if they weren't inserted */
  	if (!success) {
-@@ -2171,6 +2173,7 @@ int ring_buffer_resize(struct trace_buffer *buffer, unsigned long size,
- {
- 	struct ring_buffer_per_cpu *cpu_buffer;
- 	unsigned long nr_pages;
-+	unsigned long flags;
- 	int cpu, err;
- 
- 	/*
-@@ -2248,8 +2251,19 @@ int ring_buffer_resize(struct trace_buffer *buffer, unsigned long size,
+@@ -2248,8 +2250,16 @@ int ring_buffer_resize(struct trace_buffer *buffer, unsigned long size,
  				rb_update_pages(cpu_buffer);
  				cpu_buffer->nr_pages_to_update = 0;
  			} else {
 -				schedule_work_on(cpu,
 -						&cpu_buffer->update_pages_work);
-+				/*
-+				 * Run directly if possible.
-+				 * Save flags as this can be called at early boot up.
-+				 */
-+				local_irq_save(flags);
++				/* Run directly if possible. */
++				migrate_disable();
 +				if (cpu != smp_processor_id()) {
-+					local_irq_restore(flags);
++					migrate_enable();
 +					schedule_work_on(cpu,
 +							 &cpu_buffer->update_pages_work);
 +				} else {
 +					update_pages_handler(&cpu_buffer->update_pages_work);
-+					local_irq_restore(flags);
++					migrate_enable();
 +				}
  			}
  		}
  
-@@ -2298,9 +2312,20 @@ int ring_buffer_resize(struct trace_buffer *buffer, unsigned long size,
+@@ -2298,9 +2308,17 @@ int ring_buffer_resize(struct trace_buffer *buffer, unsigned long size,
  		if (!cpu_online(cpu_id))
  			rb_update_pages(cpu_buffer);
  		else {
 -			schedule_work_on(cpu_id,
 -					 &cpu_buffer->update_pages_work);
 -			wait_for_completion(&cpu_buffer->update_done);
-+			/*
-+			 * Run directly if possible.
-+			 * Save flags as this can be called at early boot up.
-+			 */
-+			local_irq_save(flags);
++			/* Run directly if possible. */
++			migrate_disable();
 +			if (cpu_id == smp_processor_id()) {
-+				update_pages_handler(&cpu_buffer->update_pages_work);
-+				local_irq_restore(flags);
++				rb_update_pages(cpu_buffer);
++				migrate_enable();
 +			} else {
-+				local_irq_restore(flags);
++				migrate_enable();
 +				schedule_work_on(cpu_id,
 +						 &cpu_buffer->update_pages_work);
 +				wait_for_completion(&cpu_buffer->update_done);
@@ -193,3 +133,6 @@ index 843818ee4814..ef4da331ff61 100644
  		}
  
  		cpu_buffer->nr_pages_to_update = 0;
+-- 
+2.35.1
+
