@@ -2,39 +2,36 @@ Return-Path: <linux-trace-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BBA82C4332F
-	for <linux-trace-kernel@archiver.kernel.org>; Fri,  9 Dec 2022 15:53:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ED16FC4332F
+	for <linux-trace-kernel@archiver.kernel.org>; Fri,  9 Dec 2022 15:56:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230465AbiLIPxH (ORCPT
+        id S230283AbiLIP4r (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Fri, 9 Dec 2022 10:53:07 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42726 "EHLO
+        Fri, 9 Dec 2022 10:56:47 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44768 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230389AbiLIPxB (ORCPT
+        with ESMTP id S230320AbiLIP4q (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Fri, 9 Dec 2022 10:53:01 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DD65822BFD;
-        Fri,  9 Dec 2022 07:52:50 -0800 (PST)
+        Fri, 9 Dec 2022 10:56:46 -0500
+Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 28D4520F41;
+        Fri,  9 Dec 2022 07:56:45 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 769A862292;
-        Fri,  9 Dec 2022 15:52:50 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D7550C433F0;
-        Fri,  9 Dec 2022 15:52:48 +0000 (UTC)
-Date:   Fri, 9 Dec 2022 10:52:47 -0500
+        by ams.source.kernel.org (Postfix) with ESMTPS id BCED7B82896;
+        Fri,  9 Dec 2022 15:56:43 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E9F96C433D2;
+        Fri,  9 Dec 2022 15:56:41 +0000 (UTC)
+Date:   Fri, 9 Dec 2022 10:56:40 -0500
 From:   Steven Rostedt <rostedt@goodmis.org>
 To:     LKML <linux-kernel@vger.kernel.org>,
         Linux Trace Kernel <linux-trace-kernel@vger.kernel.org>
 Cc:     Masami Hiramatsu <mhiramat@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "x86@kernel.org" <x86@kernel.org>, Borislav Petkov <bp@alien8.de>,
-        Ingo Molnar <mingo@kernel.org>
-Subject: [PATCH] ftrace/x86: Add back ftrace_expected for ftrace bug reports
-Message-ID: <20221209105247.01d4e51d@gandalf.local.home>
+        Andrew Morton <akpm@linux-foundation.org>
+Subject: [PATCH] ftrace: Fix print_ip_ins() to print only two digits per
+ byte
+Message-ID: <20221209105640.6d5eda0e@gandalf.local.home>
 X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
@@ -45,37 +42,36 @@ X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
 From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
 
-After someone reported a bug report with a failed modification due to the
-expected value not matching what was found, it came to my attention that
-the ftrace_expected is no longer set when that happens. This makes for
-debugging the issue a bit more difficult.
+Fix print_ip_ins() to use unsigned char, as:
 
-Set ftrace_expected to the expected code before calling ftrace_bug, so
-that it shows what was expected and why it failed.
+	e9:2b:b6:0d:18
+
+is easier to understand than
+
+	ffffffe9:2b:ffffffb6:0d:18
 
 Link: https://lore.kernel.org/all/CA+wXwBQ-VhK+hpBtYtyZP-NiX4g8fqRRWithFOHQW-0coQ3vLg@mail.gmail.com/
 
 Cc: stable@vger.kernel.org
-Fixes: 768ae4406a5c ("x86/ftrace: Use text_poke()")
+Fixes: 6c14133d2d3f7 ("ftrace: Do not blindly read the ip address in ftrace_bug()")
 Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
 ---
- arch/x86/kernel/ftrace.c | 2 ++
- 1 file changed, 2 insertions(+)
+ kernel/trace/ftrace.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/x86/kernel/ftrace.c b/arch/x86/kernel/ftrace.c
-index bd165004776d..e07234ec7e23 100644
---- a/arch/x86/kernel/ftrace.c
-+++ b/arch/x86/kernel/ftrace.c
-@@ -217,7 +217,9 @@ void ftrace_replace_code(int enable)
+diff --git a/kernel/trace/ftrace.c b/kernel/trace/ftrace.c
+index d04552c0c275..32fc1600d596 100644
+--- a/kernel/trace/ftrace.c
++++ b/kernel/trace/ftrace.c
+@@ -2028,7 +2028,7 @@ static int ftrace_hash_ipmodify_update(struct ftrace_ops *ops,
  
- 		ret = ftrace_verify_code(rec->ip, old);
- 		if (ret) {
-+			ftrace_expected = old;
- 			ftrace_bug(ret, rec);
-+			ftrace_expected = NULL;
- 			return;
- 		}
- 	}
+ static void print_ip_ins(const char *fmt, const unsigned char *p)
+ {
+-	char ins[MCOUNT_INSN_SIZE];
++	unsigned char ins[MCOUNT_INSN_SIZE];
+ 
+ 	if (copy_from_kernel_nofault(ins, p, MCOUNT_INSN_SIZE)) {
+ 		printk(KERN_CONT "%s[FAULT] %px\n", fmt, p);
 -- 
 2.35.1
 
