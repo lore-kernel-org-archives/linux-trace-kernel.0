@@ -2,112 +2,91 @@ Return-Path: <linux-trace-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2EAFDC4332F
-	for <linux-trace-kernel@archiver.kernel.org>; Fri,  9 Dec 2022 18:41:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EEA4BC4332F
+	for <linux-trace-kernel@archiver.kernel.org>; Sat, 10 Dec 2022 04:12:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230001AbiLISly (ORCPT
+        id S229723AbiLJEM3 (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Fri, 9 Dec 2022 13:41:54 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59660 "EHLO
+        Fri, 9 Dec 2022 23:12:29 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54788 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230023AbiLISlv (ORCPT
+        with ESMTP id S229481AbiLJEM1 (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Fri, 9 Dec 2022 13:41:51 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9BE98663CA;
-        Fri,  9 Dec 2022 10:41:48 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 3233062300;
-        Fri,  9 Dec 2022 18:41:48 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4FFE7C433D2;
-        Fri,  9 Dec 2022 18:41:46 +0000 (UTC)
-Date:   Fri, 9 Dec 2022 13:41:44 -0500
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     LKML <linux-kernel@vger.kernel.org>,
-        Linux Trace Kernel <linux-trace-kernel@vger.kernel.org>
-Cc:     Masami Hiramatsu <mhiramat@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Karol Herbst <karolherbst@gmail.com>,
-        Pekka Paalanen <ppaalanen@gmail.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@kernel.org>, Borislav Petkov <bp@alien8.de>,
-        "Paul E. McKenney" <paulmck@kernel.org>
-Subject: [PATCH v2] x86/mm/kmmio: Use rcu_read_lock_sched_notrace()
-Message-ID: <20221209134144.04f33626@gandalf.local.home>
-X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+        Fri, 9 Dec 2022 23:12:27 -0500
+Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9556B70BAD;
+        Fri,  9 Dec 2022 20:12:25 -0800 (PST)
+Received: from dggpeml100012.china.huawei.com (unknown [172.30.72.55])
+        by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4NTZFr4b0wzRpqd;
+        Sat, 10 Dec 2022 12:11:28 +0800 (CST)
+Received: from [10.67.110.218] (10.67.110.218) by
+ dggpeml100012.china.huawei.com (7.185.36.121) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2375.31; Sat, 10 Dec 2022 12:12:23 +0800
+Message-ID: <d585e629-92ea-3ba4-876f-4fda11c5c055@huawei.com>
+Date:   Sat, 10 Dec 2022 12:12:23 +0800
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.0
+Subject: Re: [PATCH] ftrace: Fix print_ip_ins() to print only two digits per
+ byte
+To:     Steven Rostedt <rostedt@goodmis.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linux Trace Kernel <linux-trace-kernel@vger.kernel.org>
+CC:     Masami Hiramatsu <mhiramat@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>
+References: <20221209105640.6d5eda0e@gandalf.local.home>
+From:   Zheng Yejian <zhengyejian1@huawei.com>
+In-Reply-To: <20221209105640.6d5eda0e@gandalf.local.home>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
 Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.67.110.218]
+X-ClientProxiedBy: dggems702-chm.china.huawei.com (10.3.19.179) To
+ dggpeml100012.china.huawei.com (7.185.36.121)
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-From: Steven Rostedt <rostedt@goodmis.org>
 
-The mmiotrace tracer is "special". The purpose is to help reverse engineer
-binary drivers by removing the memory allocated by the driver and when the
-driver goes to access it, a fault occurs, the mmiotracer will record what
-the driver was doing and then do the work on its behalf by single stepping
-through the process.
+On 2022/12/9 23:56, Steven Rostedt wrote:
+> From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
+> 
+> Fix print_ip_ins() to use unsigned char, as:
+> 
+> 	e9:2b:b6:0d:18
+> 
+> is easier to understand than
+> 
+> 	ffffffe9:2b:ffffffb6:0d:18
+> 
+> Link: https://lore.kernel.org/all/CA+wXwBQ-VhK+hpBtYtyZP-NiX4g8fqRRWithFOHQW-0coQ3vLg@mail.gmail.com/
+> 
+> Cc: stable@vger.kernel.org
+> Fixes: 6c14133d2d3f7 ("ftrace: Do not blindly read the ip address in ftrace_bug()")
+> Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+> ---
+>   kernel/trace/ftrace.c | 2 +-
+>   1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/kernel/trace/ftrace.c b/kernel/trace/ftrace.c
+> index d04552c0c275..32fc1600d596 100644
+> --- a/kernel/trace/ftrace.c
+> +++ b/kernel/trace/ftrace.c
+> @@ -2028,7 +2028,7 @@ static int ftrace_hash_ipmodify_update(struct ftrace_ops *ops,
+>   
+>   static void print_ip_ins(const char *fmt, const unsigned char *p)
+>   {
+> -	char ins[MCOUNT_INSN_SIZE];
+> +	unsigned char ins[MCOUNT_INSN_SIZE];
+>   
+>   	if (copy_from_kernel_nofault(ins, p, MCOUNT_INSN_SIZE)) {
+>   		printk(KERN_CONT "%s[FAULT] %px\n", fmt, p);
 
-But to achieve this ability, it must do some special things. One is to
-take the rcu_read_lock() when the fault occurs, and then release it in the
-breakpoint that is single stepping. This makes lockdep unhappy, as it
-changes the state of RCU from within an exception that is not contained in
-that exception, and we get a nasty splat from lockdep.
+Hi, Steve,
 
-Instead, switch to rcu_read_lock_sched_notrace() as the RCU sched variant
-has the same grace period as normal RCU. This is basically the same as
-rcu_read_lock() but does not make lockdep complain about it.
+commit 30f7d1cac2aa ("ftrace: Fix char print issue in print_ip_ins()")
+has solved this issue.
 
-Note, the preempt_disable() is still needed as it uses preempt_enable_no_resched().
-
-Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
----
-Changes since v1: https://lore.kernel.org/linux-trace-kernel/20221206191229.813199661@goodmis.org
-  (also called [PATCH 2/2] x86/mm/kmmio: Remove rcu_read_lock())
-
-  - Instead of simply removing rcu_read_lock() call rcu_read_lock_sched_notrace()
-
- arch/x86/mm/kmmio.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
-
-diff --git a/arch/x86/mm/kmmio.c b/arch/x86/mm/kmmio.c
-index edb486450158..853c49877c16 100644
---- a/arch/x86/mm/kmmio.c
-+++ b/arch/x86/mm/kmmio.c
-@@ -254,7 +254,7 @@ int kmmio_handler(struct pt_regs *regs, unsigned long addr)
- 	 * again.
- 	 */
- 	preempt_disable();
--	rcu_read_lock();
-+	rcu_read_lock_sched_notrace();
- 
- 	faultpage = get_kmmio_fault_page(page_base);
- 	if (!faultpage) {
-@@ -323,7 +323,7 @@ int kmmio_handler(struct pt_regs *regs, unsigned long addr)
- 	return 1; /* fault handled */
- 
- no_kmmio:
--	rcu_read_unlock();
-+	rcu_read_unlock_sched_notrace();
- 	preempt_enable_no_resched();
- 	return ret;
- }
-@@ -363,7 +363,7 @@ static int post_kmmio_handler(unsigned long condition, struct pt_regs *regs)
- 	/* These were acquired in kmmio_handler(). */
- 	ctx->active--;
- 	BUG_ON(ctx->active);
--	rcu_read_unlock();
-+	rcu_read_unlock_sched_notrace();
- 	preempt_enable_no_resched();
- 
- 	/*
--- 
-2.35.1
-
+Link: 
+https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=30f7d1cac2aab8fec560a388ad31ca5e5d04a822
