@@ -2,40 +2,38 @@ Return-Path: <linux-trace-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 546CCC4332F
-	for <linux-trace-kernel@archiver.kernel.org>; Tue, 13 Dec 2022 00:32:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 53E8DC4332F
+	for <linux-trace-kernel@archiver.kernel.org>; Tue, 13 Dec 2022 00:39:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234021AbiLMAcG (ORCPT
+        id S232817AbiLMAih (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Mon, 12 Dec 2022 19:32:06 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52904 "EHLO
+        Mon, 12 Dec 2022 19:38:37 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57146 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234227AbiLMAbi (ORCPT
+        with ESMTP id S233696AbiLMAiV (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Mon, 12 Dec 2022 19:31:38 -0500
+        Mon, 12 Dec 2022 19:38:21 -0500
 Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C46542702;
-        Mon, 12 Dec 2022 16:30:43 -0800 (PST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 258BCFD08;
+        Mon, 12 Dec 2022 16:38:20 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 18E266119B;
-        Tue, 13 Dec 2022 00:30:43 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BC665C433EF;
-        Tue, 13 Dec 2022 00:30:41 +0000 (UTC)
-Date:   Mon, 12 Dec 2022 19:30:40 -0500
+        by dfw.source.kernel.org (Postfix) with ESMTPS id B75B9612D0;
+        Tue, 13 Dec 2022 00:38:19 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 60E75C433D2;
+        Tue, 13 Dec 2022 00:38:18 +0000 (UTC)
+Date:   Mon, 12 Dec 2022 19:38:14 -0500
 From:   Steven Rostedt <rostedt@goodmis.org>
-To:     "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Linux Trace Kernel <linux-trace-kernel@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
+To:     LKML <linux-kernel@vger.kernel.org>,
+        Linux Trace Kernel <linux-trace-kernel@vger.kernel.org>
+Cc:     Masami Hiramatsu <mhiramat@kernel.org>,
         Douglas Raillard <douglas.raillard@arm.com>,
-        Valentin Schneider <vschneid@redhat.com>
-Subject: Re: [PATCH] tracing: Remove pointer (asterisk) from cpumask_t field
-Message-ID: <20221212193040.1ac6c163@gandalf.local.home>
-In-Reply-To: <20221213090411.676021b8fff2c9bc95fba53f@kernel.org>
-References: <20221212130352.606d7ce2@gandalf.local.home>
-        <20221213090411.676021b8fff2c9bc95fba53f@kernel.org>
+        Valentin Schneider <vschneid@redhat.com>,
+        Andrew Morton <akpm@linux-foundation.org>
+Subject: [PATCH v3] tracing: Remove pointer (asterisk) and brackets from
+ cpumask_t field
+Message-ID: <20221212193814.0e3f1e43@gandalf.local.home>
 X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
@@ -44,13 +42,77 @@ Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On Tue, 13 Dec 2022 09:04:11 +0900
-Masami Hiramatsu (Google) <mhiramat@kernel.org> wrote:
+From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
 
-> What about renaming it as __dynamic_array_struct(), because the root issue
-> is that we can not pass the data structure to is_signed_tyep() macro?
+To differentiate between long arrays and cpumasks, the __cpumask() field
+was created. Part of the TRACE_EVENT() macros test if the type is signed
+or not by using the is_signed_type() macro. The __cpumask() field used the
+__dynamic_array() helper but because cpumask_t is a structure, it could
+not be used in the is_signed_type() macro as that would fail to build, so
+instead it passed in the pointer to cpumask_t.
 
-Actually, I updated this patch where __cpumask() will be its own macro.
-Will post it soon.
+Unfortunately, that creates in the format file:
 
--- Steve
+  field:__data_loc cpumask_t *[] mask;    offset:36;      size:4; signed:0;
+
+Which looks like an array of pointers to cpumask_t and not a cpumask_t
+type, which is misleading to user space parsers.
+
+Douglas Raillard pointed out that the "[]" are also misleading, as
+cpumask_t is not an array.
+
+Since cpumask() hasn't been created yet, and the parsers currently fail on
+it (but will still produce the raw output), make it be:
+
+  field:__data_loc cpumask_t mask;    offset:36;      size:4; signed:0;
+
+Which is the correct type of the field.
+
+Then the parsers can be updated to handle this.
+
+Link: https://lore.kernel.org/lkml/6dda5e1d-9416-b55e-88f3-31d148bc925f@arm.com/
+
+Fixes: 8230f27b1ccc ("tracing: Add __cpumask to denote a trace event field that is a cpumask_t")
+Reported-by: Douglas Raillard <douglas.raillard@arm.com>
+Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+---
+Changes since v2: https://lore.kernel.org/linux-trace-kernel/20221212150453.1df47ddf@gandalf.local.home
+
+ - Remove the '[]' from the field, as it is not an array, but is dynamically allocated.
+
+ - also handle the __rel_cpumask() macro, which was missed in the previous patches.
+
+ include/trace/stages/stage4_event_fields.h | 10 ++++++++--
+ 1 file changed, 8 insertions(+), 2 deletions(-)
+
+diff --git a/include/trace/stages/stage4_event_fields.h b/include/trace/stages/stage4_event_fields.h
+index f2990d22313c..affd541fd25e 100644
+--- a/include/trace/stages/stage4_event_fields.h
++++ b/include/trace/stages/stage4_event_fields.h
+@@ -47,7 +47,10 @@
+ #define __bitmask(item, nr_bits) __dynamic_array(unsigned long, item, -1)
+ 
+ #undef __cpumask
+-#define __cpumask(item) __dynamic_array(cpumask_t *, item, -1)
++#define __cpumask(item) {						\
++	.type = "__data_loc cpumask_t", .name = #item,			\
++	.size = 4, .align = 4,						\
++	.is_signed = 0, .filter_type = FILTER_OTHER },
+ 
+ #undef __sockaddr
+ #define __sockaddr(field, len) __dynamic_array(u8, field, len)
+@@ -68,7 +71,10 @@
+ #define __rel_bitmask(item, nr_bits) __rel_dynamic_array(unsigned long, item, -1)
+ 
+ #undef __rel_cpumask
+-#define __rel_cpumask(item) __rel_dynamic_array(cpumask_t *, item, -1)
++#define __rel_cpumask(item) {						\
++	.type = "__rel_loc cpumask_t", .name = #item,			\
++	.size = 4, .align = 4,						\
++	.is_signed = 0, .filter_type = FILTER_OTHER },
+ 
+ #undef __rel_sockaddr
+ #define __rel_sockaddr(field, len) __rel_dynamic_array(u8, field, len)
+-- 
+2.35.1
+
