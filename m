@@ -2,137 +2,220 @@ Return-Path: <linux-trace-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 04D9AC4332F
-	for <linux-trace-kernel@archiver.kernel.org>; Thu, 15 Dec 2022 17:25:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 47B0AC4167B
+	for <linux-trace-kernel@archiver.kernel.org>; Thu, 15 Dec 2022 18:45:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229789AbiLORZZ (ORCPT
+        id S230232AbiLOSp6 (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Thu, 15 Dec 2022 12:25:25 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44078 "EHLO
+        Thu, 15 Dec 2022 13:45:58 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41660 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229549AbiLORZY (ORCPT
+        with ESMTP id S230287AbiLOSpm (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Thu, 15 Dec 2022 12:25:24 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 47F61BC3A;
-        Thu, 15 Dec 2022 09:25:23 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id CBFE561E60;
-        Thu, 15 Dec 2022 17:25:22 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2247AC433F0;
-        Thu, 15 Dec 2022 17:25:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1671125122;
-        bh=X37v7XzNueR/5gBOowSK8raHMO6tLmlUx+Zxhxvy/7s=;
-        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-        b=FoAFnjsu8+Vn6ME9VVL4TVeoLCUvwCQF693hy5q5W0HE859uMZ1nb/XDk5yN8KGMB
-         wzKP5QVzoy2qAWhM1RyipI/HBSqnOD6bC1Ns1f9IxotEoC+uTxW10/yYVT100//SVu
-         FHnlVW+4KrE5AvHiNnc0dBYVLrcTOfJmC6g3du4PR1ih373piUBBIVGyH64V2Twakb
-         u965GSfCtFc45qVLbZpaGkuvgtJV4jREenwgCYxkDEphfOKUGp7KjIdBLfzBQzyfYG
-         ZUZZMMl8Hb4Lb0dfeC9JJcaQZyOGkGDpNAeTTxX8MU7s/m8/ePDFSU4eSWO59B1iz3
-         pqa+knD2npRbQ==
-Received: by paulmck-ThinkPad-P17-Gen-1.home (Postfix, from userid 1000)
-        id C05B15C09D0; Thu, 15 Dec 2022 09:25:21 -0800 (PST)
-Date:   Thu, 15 Dec 2022 09:25:21 -0800
-From:   "Paul E. McKenney" <paulmck@kernel.org>
+        Thu, 15 Dec 2022 13:45:42 -0500
+Received: from mail-qt1-x82e.google.com (mail-qt1-x82e.google.com [IPv6:2607:f8b0:4864:20::82e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9C8732738
+        for <linux-trace-kernel@vger.kernel.org>; Thu, 15 Dec 2022 10:45:39 -0800 (PST)
+Received: by mail-qt1-x82e.google.com with SMTP id c7so275776qtw.8
+        for <linux-trace-kernel@vger.kernel.org>; Thu, 15 Dec 2022 10:45:39 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=joelfernandes.org; s=google;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=+8kdbca7RYmzghu3wrDFH9WKgOWAt7+jGRtzBcbGXvg=;
+        b=RDxuf4vWN8ZO5ssFcc25XiKKo/4GxNXFK5YWWvzMeoCeWVtkwg58xezK7KBo9Ss9xz
+         cRmdZLa3PiR4GXoO+r7xTAIKFue3kCyWjSE9qpLAFUpETnMGbso2nsUUG+D7ToOMdWMt
+         aeuSy8tbFKDtZg9a5LPo8i60QdC0Nq7oz1EM8=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=+8kdbca7RYmzghu3wrDFH9WKgOWAt7+jGRtzBcbGXvg=;
+        b=Fzy3E08HZbuD6f4lHZwCfA/MGbApvfFBc2ubcFJTTzB8uFuOvcnQD2DC+UkLr6AC7H
+         Vz/0TbWsGc39XSJ5qEpudJ88LOU9SWjKejp0ULYQCpso5f6tpD8DwTkB6BIUR/Z3+2Aj
+         ubRZEo+Z48lMmpoF7S/RsMP5kJMnri7fQdtRMFSOZqKL72NyWuUvv6h14EtMGNyg+ta6
+         +93mU2v1ofZD9Jxw5KMvzfuFyToWmH9QaW0YEimdAmuxbssDpf3plE9bg1GC0OUWAWwf
+         UQmn3M/W7wp+dt3PfIWp6WcdR7ZxwdbJBMbiRuDOn/ut6ZxKOF5RUHrZ48Zn+WUzs6gW
+         KXmg==
+X-Gm-Message-State: AFqh2kp6/rjgMNwss9td+LyeObQLhsIJ8DBdQAcTV1LNMmj87Trelgfr
+        xajlM9Uzh1d6cIuvynquBiESnA==
+X-Google-Smtp-Source: AMrXdXtKc1qXGEu1lpOg9q/lsex/RBhHmz2vLTrGw4eI73/gi/6Pee1y9Cx54AsGsN+fgApbcwCoyQ==
+X-Received: by 2002:ac8:668d:0:b0:3a9:1ada:930f with SMTP id d13-20020ac8668d000000b003a91ada930fmr4932696qtp.23.1671129938658;
+        Thu, 15 Dec 2022 10:45:38 -0800 (PST)
+Received: from localhost (228.221.150.34.bc.googleusercontent.com. [34.150.221.228])
+        by smtp.gmail.com with ESMTPSA id w5-20020a05620a444500b006eed75805a2sm13009205qkp.126.2022.12.15.10.45.37
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 15 Dec 2022 10:45:37 -0800 (PST)
+Date:   Thu, 15 Dec 2022 18:45:37 +0000
+From:   Joel Fernandes <joel@joelfernandes.org>
 To:     Steven Rostedt <rostedt@goodmis.org>
-Cc:     Masami Hiramatsu <mhiramat@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
+Cc:     LKML <linux-kernel@vger.kernel.org>,
         Linux Trace Kernel <linux-trace-kernel@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Subject: Re: [PATCH] tracing: Do not synchronize freeing of trigger filter on
- boot up
-Message-ID: <20221215172521.GA2325254@paulmck-ThinkPad-P17-Gen-1>
-Reply-To: paulmck@kernel.org
-References: <20221213172429.7774f4ba@gandalf.local.home>
- <20221214084954.e759647a2f5f1a38bc78b371@kernel.org>
- <20221214200333.GA3208104@paulmck-ThinkPad-P17-Gen-1>
- <20221215100241.73a30da8@gandalf.local.home>
- <20221215170256.GG4001@paulmck-ThinkPad-P17-Gen-1>
+        linux-acpi@vger.kernel.org,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Len Brown <lenb@kernel.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Brian Norris <briannorris@chromium.org>,
+        Ross Zwisler <zwisler@google.com>,
+        Ching-lin Yu <chinglinyu@google.com>
+Subject: Re: [RFC][PATCH] ACPI: tracing: Have ACPI debug go to tracing ring
+ buffer
+Message-ID: <Y5trUep9IvCv1Uwy@google.com>
+References: <20221214233106.69b2c01b@gandalf.local.home>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20221215170256.GG4001@paulmck-ThinkPad-P17-Gen-1>
+In-Reply-To: <20221214233106.69b2c01b@gandalf.local.home>
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On Thu, Dec 15, 2022 at 09:02:56AM -0800, Paul E. McKenney wrote:
-> On Thu, Dec 15, 2022 at 10:02:41AM -0500, Steven Rostedt wrote:
-> > On Wed, 14 Dec 2022 12:03:33 -0800
-> > "Paul E. McKenney" <paulmck@kernel.org> wrote:
-> > 
-> > > > > Avoid calling the synchronization function when system_state is
-> > > > > SYSTEM_BOOTING.  
-> > > > 
-> > > > Shouldn't this be done inside tracepoint_synchronize_unregister()?
-> > > > Then, it will prevent similar warnings if we expand boot time feature.  
-> > > 
-> > > How about the following wide-spectrum fix within RCU_LOCKDEP_WARN()?
-> > > Just in case there are ever additional issues of this sort?
-> > 
-> > Adding more tracing command line parameters is triggering this more. I now
-> > hit:
+Hi Steve,
+
+On Wed, Dec 14, 2022 at 11:31:06PM -0500, Steven Rostedt wrote:
+> From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
 > 
-> Fair point, and apologies for the hassle.
+> While debugging some firmware that was taking a bit of time to initialize,
+> I enabled ACPI_DEBUG and added a bit too much info to the debug_layer and
+> debug_level acpi command line options, and it made the computer not be
+> able to boot (too much info! or too much printk).
 > 
-> Any chance of getting an official "it is now late enough in boot to
-> safely invoke lockdep" API?  ;-)
+> I decided that this would be easier to handle if the acpi output was
+> written instead into the trace buffer. This also has the added benefit of
+> adding other trace events and seeing how ACPI interacts with the rest of
+> the system.
 > 
-> In the meantime, does the (untested and quite crude) patch at the end
-> of this message help?
+> Ideally, the ACPI trace should have proper trace events where data can be
+> stored more efficiently and be filtered and parsed better. But for now,
+> just writing the debug string into the buffer will suffice.  This makes it
+> possible to enable all ACPI output (setting triggers on other events to
+> stop tracing, to not lose the data you are looking for).
+> 
+> Even with all APCI debugging enable, the system continues to run perfectly
+> fine.
+> 
+> Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+> ---
+> 
+>  drivers/acpi/Kconfig        | 13 +++++++++++++
+>  drivers/acpi/osl.c          |  9 ++++++++-
+>  include/trace/events/acpi.h | 30 ++++++++++++++++++++++++++++++
+>  3 files changed, 51 insertions(+), 1 deletion(-)
+>  create mode 100644 include/trace/events/acpi.h
+> 
+> diff --git a/drivers/acpi/Kconfig b/drivers/acpi/Kconfig
+> index 473241b5193f..2dfeb3bf79a7 100644
+> --- a/drivers/acpi/Kconfig
+> +++ b/drivers/acpi/Kconfig
+> @@ -389,6 +389,19 @@ config ACPI_DEBUG
+>  	  Documentation/admin-guide/kernel-parameters.rst to control the type and
+>  	  amount of debug output.
+>  
+> +config ACPI_TRACE_PRINT
+> +	bool "Write debug into trace buffer"
+> +	depends on ACPI_DEBUG
+> +	help
+> +	  Instead of writing to the console, write to the trace ring buffer.
+> +	  This is much faster than writing to the console, and can handle
+> +	  all events.
+> +
+> +	  Use the acpi.debug_layer and acpi.debug_level kernel command-line
+> +	  parameters documented in Documentation/firmware-guide/acpi/debug.rst and
+> +	  Documentation/admin-guide/kernel-parameters.rst to control the type and
+> +	  amount of debug output.
+> +
+>  config ACPI_PCI_SLOT
+>  	bool "PCI slot detection driver"
+>  	depends on SYSFS && PCI
+> diff --git a/drivers/acpi/osl.c b/drivers/acpi/osl.c
+> index 3269a888fb7a..eeed5fd782ab 100644
+> --- a/drivers/acpi/osl.c
+> +++ b/drivers/acpi/osl.c
+> @@ -35,6 +35,9 @@
+>  #include <linux/uaccess.h>
+>  #include <linux/io-64-nonatomic-lo-hi.h>
+>  
+> +#define CREATE_TRACE_POINTS
+> +#include <trace/events/acpi.h>
+> +
+>  #include "acpica/accommon.h"
+>  #include "internal.h"
+>  
+> @@ -158,6 +161,8 @@ void acpi_os_vprintf(const char *fmt, va_list args)
+>  #ifdef ENABLE_DEBUGGER
+>  	if (acpi_in_debugger) {
+>  		kdb_printf("%s", buffer);
+> +	} else if (IS_ENABLED(CONFIG_ACPI_TRACE_PRINT)) {
+> +		trace_acpi_print(buffer);
 
-OK, I was clearly not yet awake.  :-/
+Wouldn't it be better to also check trace_acpi_print_enabled() here in the
+else if() condition, along with IS_ENABLED()? That way if the CONFIG is
+enabled but the tracepoint is not enabled, at least the messages will go to
+dmesg instead of skipped.
 
-The more targeted (but still untested) patch below might be more
-appropriate...
+>  	} else {
+>  		if (printk_get_level(buffer))
+>  			printk("%s", buffer);
+> @@ -165,7 +170,9 @@ void acpi_os_vprintf(const char *fmt, va_list args)
+>  			printk(KERN_CONT "%s", buffer);
+>  	}
+>  #else
+> -	if (acpi_debugger_write_log(buffer) < 0) {
+> +	if (IS_ENABLED(CONFIG_ACPI_TRACE_PRINT)) {
+> +		trace_acpi_print(buffer);
+> +	} else if (acpi_debugger_write_log(buffer) < 0) {
 
-							Thanx, Paul
+Ditto.
 
-------------------------------------------------------------------------
 
-diff --git a/kernel/rcu/tree.c b/kernel/rcu/tree.c
-index ee8a6a711719a..f627888715dca 100644
---- a/kernel/rcu/tree.c
-+++ b/kernel/rcu/tree.c
-@@ -1314,7 +1314,7 @@ static void rcu_poll_gp_seq_start(unsigned long *snap)
- {
- 	struct rcu_node *rnp = rcu_get_root();
- 
--	if (rcu_init_invoked())
-+	if (rcu_scheduler_active != RCU_SCHEDULER_INACTIVE)
- 		raw_lockdep_assert_held_rcu_node(rnp);
- 
- 	// If RCU was idle, note beginning of GP.
-@@ -1330,7 +1330,7 @@ static void rcu_poll_gp_seq_end(unsigned long *snap)
- {
- 	struct rcu_node *rnp = rcu_get_root();
- 
--	if (rcu_init_invoked())
-+	if (rcu_scheduler_active != RCU_SCHEDULER_INACTIVE)
- 		raw_lockdep_assert_held_rcu_node(rnp);
- 
- 	// If the previously noted GP is still in effect, record the
-@@ -1353,7 +1353,8 @@ static void rcu_poll_gp_seq_start_unlocked(unsigned long *snap)
- 	struct rcu_node *rnp = rcu_get_root();
- 
- 	if (rcu_init_invoked()) {
--		lockdep_assert_irqs_enabled();
-+		if (rcu_scheduler_active != RCU_SCHEDULER_INACTIVE)
-+			lockdep_assert_irqs_enabled();
- 		raw_spin_lock_irqsave_rcu_node(rnp, flags);
- 	}
- 	rcu_poll_gp_seq_start(snap);
-@@ -1369,7 +1370,8 @@ static void rcu_poll_gp_seq_end_unlocked(unsigned long *snap)
- 	struct rcu_node *rnp = rcu_get_root();
- 
- 	if (rcu_init_invoked()) {
--		lockdep_assert_irqs_enabled();
-+		if (rcu_scheduler_active != RCU_SCHEDULER_INACTIVE)
-+			lockdep_assert_irqs_enabled();
- 		raw_spin_lock_irqsave_rcu_node(rnp, flags);
- 	}
- 	rcu_poll_gp_seq_end(snap);
+Reviewed-by: Joel Fernandes (Google) <joel@joelfernandes.org>
+
+thanks,
+
+ - Joel
+
+
+
+>  		if (printk_get_level(buffer))
+>  			printk("%s", buffer);
+>  		else
+> diff --git a/include/trace/events/acpi.h b/include/trace/events/acpi.h
+> new file mode 100644
+> index 000000000000..dab4dd42b5d7
+> --- /dev/null
+> +++ b/include/trace/events/acpi.h
+> @@ -0,0 +1,30 @@
+> +/* SPDX-License-Identifier: GPL-2.0+ */
+> +#undef TRACE_SYSTEM
+> +#define TRACE_SYSTEM acpi
+> +
+> +#if !defined(_TRACE_ACPI_H) || defined(TRACE_HEADER_MULTI_READ)
+> +#define _TRACE_ACPI_H
+> +
+> +#include <linux/tracepoint.h>
+> +
+> +TRACE_EVENT(acpi_print,
+> +
+> +	TP_PROTO(const char *buffer),
+> +
+> +	TP_ARGS(buffer),
+> +
+> +	TP_STRUCT__entry(
+> +		__string(buffer, buffer)
+> +	),
+> +
+> +	TP_fast_assign(
+> +		__assign_str(buffer, buffer);
+> +	),
+> +
+> +	TP_printk("%s", __get_str(buffer))
+> +);
+> +
+> +#endif /* _TRACE_SOCK_H */
+> +
+> +/* This part must be outside protection */
+> +#include <trace/define_trace.h>
+> -- 
+> 2.35.1
+> 
