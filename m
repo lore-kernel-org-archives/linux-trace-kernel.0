@@ -2,98 +2,174 @@ Return-Path: <linux-trace-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB342C4332F
-	for <linux-trace-kernel@archiver.kernel.org>; Wed, 14 Dec 2022 23:45:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CE8EC4332F
+	for <linux-trace-kernel@archiver.kernel.org>; Thu, 15 Dec 2022 04:31:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229484AbiLNXpI (ORCPT
+        id S229645AbiLOEbU (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Wed, 14 Dec 2022 18:45:08 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38916 "EHLO
+        Wed, 14 Dec 2022 23:31:20 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34560 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229462AbiLNXpG (ORCPT
+        with ESMTP id S229451AbiLOEbL (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Wed, 14 Dec 2022 18:45:06 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F27502B274;
-        Wed, 14 Dec 2022 15:44:56 -0800 (PST)
+        Wed, 14 Dec 2022 23:31:11 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 99929303FE;
+        Wed, 14 Dec 2022 20:31:10 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 8E01261C5B;
-        Wed, 14 Dec 2022 23:44:56 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DBFF3C433D2;
-        Wed, 14 Dec 2022 23:44:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1671061495;
-        bh=dno/KTeTyb5v+fsRxXhmOmKiQ+bTbNy80KwqOVca13Y=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=cxAXhixOxGX7A99DGgtMoWzff3/+EXOa8iyHEfLn22srI5A6FpMpu6ZnnFH5/zMT/
-         2KcCYkYvyQTHJ0n3LzjiJQqml6WlegRTkecmSAf140l+EQEzWVtz8Yk5bfAIpH5Tax
-         3qC9pMU+9d8PlTPafFLB9yW874cSf4IgQ77AxYs8OsWSAUvZHXadS39ZO2YAH3Got9
-         yBD+hmEh2Ntrw1Gv6kNDswrgizgcSo/OiAYSF6u0d8ZGD7dJNrc0FhMEgbAuwzRHu7
-         ex1zP4bQUFZdzttinOCIL3UbIDxa1AfoVPg8eUSY7paDAJo9D4N5M5mOgjlfZeBoki
-         OkeE8L3KQLX3w==
-Date:   Thu, 15 Dec 2022 08:44:53 +0900
-From:   Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To:     Steven Rostedt <rostedt@goodmis.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
+        by dfw.source.kernel.org (Postfix) with ESMTPS id D621661C54;
+        Thu, 15 Dec 2022 04:31:09 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 181D0C433EF;
+        Thu, 15 Dec 2022 04:31:07 +0000 (UTC)
+Date:   Wed, 14 Dec 2022 23:31:06 -0500
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     LKML <linux-kernel@vger.kernel.org>,
         Linux Trace Kernel <linux-trace-kernel@vger.kernel.org>,
+        linux-acpi@vger.kernel.org,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Len Brown <lenb@kernel.org>,
         Masami Hiramatsu <mhiramat@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>
-Subject: Re: [PATCH] tracing: Fix cpumask() example typo
-Message-Id: <20221215084453.0de77bfacc9e739e3accaae2@kernel.org>
-In-Reply-To: <20221213221227.56560374@gandalf.local.home>
-References: <20221213221227.56560374@gandalf.local.home>
-X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
+        Brian Norris <briannorris@chromium.org>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Ross Zwisler <zwisler@google.com>,
+        Ching-lin Yu <chinglinyu@google.com>
+Subject: [RFC][PATCH] ACPI: tracing: Have ACPI debug go to tracing ring
+ buffer
+Message-ID: <20221214233106.69b2c01b@gandalf.local.home>
+X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On Tue, 13 Dec 2022 22:12:27 -0500
-Steven Rostedt <rostedt@goodmis.org> wrote:
+From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
 
-> From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
-> 
-> The sample code for using cpumask used the wrong field for the
-> __get_cpumask() helper. It used "cpus" which is the bitmask (but would
-> still give a proper example) instead of the "cpum" that was there to be
-> used.
-> 
-> Although it produces the same output, fix it, because it's an example and
-> is confusing in how to properly use the cpumask() macro.
-> 
+While debugging some firmware that was taking a bit of time to initialize,
+I enabled ACPI_DEBUG and added a bit too much info to the debug_layer and
+debug_level acpi command line options, and it made the computer not be
+able to boot (too much info! or too much printk).
 
-Looks good to me.
+I decided that this would be easier to handle if the acpi output was
+written instead into the trace buffer. This also has the added benefit of
+adding other trace events and seeing how ACPI interacts with the rest of
+the system.
 
-Acked-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+Ideally, the ACPI trace should have proper trace events where data can be
+stored more efficiently and be filtered and parsed better. But for now,
+just writing the debug string into the buffer will suffice.  This makes it
+possible to enable all ACPI output (setting triggers on other events to
+stop tracing, to not lose the data you are looking for).
 
-Thanks,
+Even with all APCI debugging enable, the system continues to run perfectly
+fine.
 
-> Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
-> ---
->  samples/trace_events/trace-events-sample.h | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/samples/trace_events/trace-events-sample.h b/samples/trace_events/trace-events-sample.h
-> index fb4548a44153..1c6b843b8c4e 100644
-> --- a/samples/trace_events/trace-events-sample.h
-> +++ b/samples/trace_events/trace-events-sample.h
-> @@ -359,7 +359,7 @@ TRACE_EVENT(foo_bar,
->  		  __print_array(__get_dynamic_array(list),
->  				__get_dynamic_array_len(list) / sizeof(int),
->  				sizeof(int)),
-> -		  __get_str(str), __get_bitmask(cpus), __get_cpumask(cpus),
-> +		  __get_str(str), __get_bitmask(cpus), __get_cpumask(cpum),
->  		  __get_str(vstr))
->  );
->  
-> -- 
-> 2.35.1
-> 
+Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+---
 
+ drivers/acpi/Kconfig        | 13 +++++++++++++
+ drivers/acpi/osl.c          |  9 ++++++++-
+ include/trace/events/acpi.h | 30 ++++++++++++++++++++++++++++++
+ 3 files changed, 51 insertions(+), 1 deletion(-)
+ create mode 100644 include/trace/events/acpi.h
 
+diff --git a/drivers/acpi/Kconfig b/drivers/acpi/Kconfig
+index 473241b5193f..2dfeb3bf79a7 100644
+--- a/drivers/acpi/Kconfig
++++ b/drivers/acpi/Kconfig
+@@ -389,6 +389,19 @@ config ACPI_DEBUG
+ 	  Documentation/admin-guide/kernel-parameters.rst to control the type and
+ 	  amount of debug output.
+ 
++config ACPI_TRACE_PRINT
++	bool "Write debug into trace buffer"
++	depends on ACPI_DEBUG
++	help
++	  Instead of writing to the console, write to the trace ring buffer.
++	  This is much faster than writing to the console, and can handle
++	  all events.
++
++	  Use the acpi.debug_layer and acpi.debug_level kernel command-line
++	  parameters documented in Documentation/firmware-guide/acpi/debug.rst and
++	  Documentation/admin-guide/kernel-parameters.rst to control the type and
++	  amount of debug output.
++
+ config ACPI_PCI_SLOT
+ 	bool "PCI slot detection driver"
+ 	depends on SYSFS && PCI
+diff --git a/drivers/acpi/osl.c b/drivers/acpi/osl.c
+index 3269a888fb7a..eeed5fd782ab 100644
+--- a/drivers/acpi/osl.c
++++ b/drivers/acpi/osl.c
+@@ -35,6 +35,9 @@
+ #include <linux/uaccess.h>
+ #include <linux/io-64-nonatomic-lo-hi.h>
+ 
++#define CREATE_TRACE_POINTS
++#include <trace/events/acpi.h>
++
+ #include "acpica/accommon.h"
+ #include "internal.h"
+ 
+@@ -158,6 +161,8 @@ void acpi_os_vprintf(const char *fmt, va_list args)
+ #ifdef ENABLE_DEBUGGER
+ 	if (acpi_in_debugger) {
+ 		kdb_printf("%s", buffer);
++	} else if (IS_ENABLED(CONFIG_ACPI_TRACE_PRINT)) {
++		trace_acpi_print(buffer);
+ 	} else {
+ 		if (printk_get_level(buffer))
+ 			printk("%s", buffer);
+@@ -165,7 +170,9 @@ void acpi_os_vprintf(const char *fmt, va_list args)
+ 			printk(KERN_CONT "%s", buffer);
+ 	}
+ #else
+-	if (acpi_debugger_write_log(buffer) < 0) {
++	if (IS_ENABLED(CONFIG_ACPI_TRACE_PRINT)) {
++		trace_acpi_print(buffer);
++	} else if (acpi_debugger_write_log(buffer) < 0) {
+ 		if (printk_get_level(buffer))
+ 			printk("%s", buffer);
+ 		else
+diff --git a/include/trace/events/acpi.h b/include/trace/events/acpi.h
+new file mode 100644
+index 000000000000..dab4dd42b5d7
+--- /dev/null
++++ b/include/trace/events/acpi.h
+@@ -0,0 +1,30 @@
++/* SPDX-License-Identifier: GPL-2.0+ */
++#undef TRACE_SYSTEM
++#define TRACE_SYSTEM acpi
++
++#if !defined(_TRACE_ACPI_H) || defined(TRACE_HEADER_MULTI_READ)
++#define _TRACE_ACPI_H
++
++#include <linux/tracepoint.h>
++
++TRACE_EVENT(acpi_print,
++
++	TP_PROTO(const char *buffer),
++
++	TP_ARGS(buffer),
++
++	TP_STRUCT__entry(
++		__string(buffer, buffer)
++	),
++
++	TP_fast_assign(
++		__assign_str(buffer, buffer);
++	),
++
++	TP_printk("%s", __get_str(buffer))
++);
++
++#endif /* _TRACE_SOCK_H */
++
++/* This part must be outside protection */
++#include <trace/define_trace.h>
 -- 
-Masami Hiramatsu (Google) <mhiramat@kernel.org>
+2.35.1
+
