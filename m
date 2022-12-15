@@ -2,42 +2,42 @@ Return-Path: <linux-trace-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CE8EC4332F
-	for <linux-trace-kernel@archiver.kernel.org>; Thu, 15 Dec 2022 04:31:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BAC8C4332F
+	for <linux-trace-kernel@archiver.kernel.org>; Thu, 15 Dec 2022 15:02:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229645AbiLOEbU (ORCPT
+        id S229514AbiLOPCs (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Wed, 14 Dec 2022 23:31:20 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34560 "EHLO
+        Thu, 15 Dec 2022 10:02:48 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34138 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229451AbiLOEbL (ORCPT
+        with ESMTP id S229484AbiLOPCr (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Wed, 14 Dec 2022 23:31:11 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 99929303FE;
-        Wed, 14 Dec 2022 20:31:10 -0800 (PST)
+        Thu, 15 Dec 2022 10:02:47 -0500
+Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 31322C76D;
+        Thu, 15 Dec 2022 07:02:46 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id D621661C54;
-        Thu, 15 Dec 2022 04:31:09 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 181D0C433EF;
-        Thu, 15 Dec 2022 04:31:07 +0000 (UTC)
-Date:   Wed, 14 Dec 2022 23:31:06 -0500
+        by ams.source.kernel.org (Postfix) with ESMTPS id B78C7B81BAD;
+        Thu, 15 Dec 2022 15:02:44 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B5B57C433D2;
+        Thu, 15 Dec 2022 15:02:42 +0000 (UTC)
+Date:   Thu, 15 Dec 2022 10:02:41 -0500
 From:   Steven Rostedt <rostedt@goodmis.org>
-To:     LKML <linux-kernel@vger.kernel.org>,
+To:     "Paul E. McKenney" <paulmck@kernel.org>
+Cc:     Masami Hiramatsu <mhiramat@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
         Linux Trace Kernel <linux-trace-kernel@vger.kernel.org>,
-        linux-acpi@vger.kernel.org,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Len Brown <lenb@kernel.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Brian Norris <briannorris@chromium.org>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Ross Zwisler <zwisler@google.com>,
-        Ching-lin Yu <chinglinyu@google.com>
-Subject: [RFC][PATCH] ACPI: tracing: Have ACPI debug go to tracing ring
- buffer
-Message-ID: <20221214233106.69b2c01b@gandalf.local.home>
+        Andrew Morton <akpm@linux-foundation.org>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Subject: Re: [PATCH] tracing: Do not synchronize freeing of trigger filter
+ on boot up
+Message-ID: <20221215100241.73a30da8@gandalf.local.home>
+In-Reply-To: <20221214200333.GA3208104@paulmck-ThinkPad-P17-Gen-1>
+References: <20221213172429.7774f4ba@gandalf.local.home>
+        <20221214084954.e759647a2f5f1a38bc78b371@kernel.org>
+        <20221214200333.GA3208104@paulmck-ThinkPad-P17-Gen-1>
 X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
@@ -46,130 +46,78 @@ Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
+On Wed, 14 Dec 2022 12:03:33 -0800
+"Paul E. McKenney" <paulmck@kernel.org> wrote:
 
-While debugging some firmware that was taking a bit of time to initialize,
-I enabled ACPI_DEBUG and added a bit too much info to the debug_layer and
-debug_level acpi command line options, and it made the computer not be
-able to boot (too much info! or too much printk).
+> > > Avoid calling the synchronization function when system_state is
+> > > SYSTEM_BOOTING.  
+> > 
+> > Shouldn't this be done inside tracepoint_synchronize_unregister()?
+> > Then, it will prevent similar warnings if we expand boot time feature.  
+> 
+> How about the following wide-spectrum fix within RCU_LOCKDEP_WARN()?
+> Just in case there are ever additional issues of this sort?
 
-I decided that this would be easier to handle if the acpi output was
-written instead into the trace buffer. This also has the added benefit of
-adding other trace events and seeing how ACPI interacts with the rest of
-the system.
+Adding more tracing command line parameters is triggering this more. I now
+hit:
 
-Ideally, the ACPI trace should have proper trace events where data can be
-stored more efficiently and be filtered and parsed better. But for now,
-just writing the debug string into the buffer will suffice.  This makes it
-possible to enable all ACPI output (setting triggers on other events to
-stop tracing, to not lose the data you are looking for).
+[    0.213442] rcu: RCU calculated value of scheduler-enlistment delay is 25 jiffies.
+[    0.214653] rcu: Adjusting geometry for rcu_fanout_leaf=16, nr_cpu_ids=8
+[    0.232023] ------------[ cut here ]------------
+[    0.232704] WARNING: CPU: 0 PID: 0 at kernel/rcu/tree.c:1410 rcu_poll_gp_seq_start_unlocked+0x8a/0xa0
+[    0.234241] Modules linked in:
+[    0.234715] CPU: 0 PID: 0 Comm: swapper/0 Not tainted 6.1.0-rc6-test-00046-ga0ca17bfe724-dirty #63
+[    0.236069] Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.0-debian-1.16.0-4 04/01/2014
+[    0.237549] RIP: 0010:rcu_poll_gp_seq_start_unlocked+0x8a/0xa0
+[    0.238495] Code: 02 0f 0b 48 89 ee 5b 48 c7 c7 00 ca b1 b3 5d e9 cc 0f c1 00 65 8b 05 85 f3 dd 4d 85 c0 75 a1 65 8b 05 d6 f0 dd 4d 85 c0 75 96 <0f> 0b eb 92 5b 5d e9 eb 18 fc 00 66 66 2e 0f 1f 84 00 00 00 00 00
+[    0.241433] RSP: 0000:ffffffffb3a03d28 EFLAGS: 00010046
+[    0.242289] RAX: 0000000000000000 RBX: ffffffffb3bcfc48 RCX: 0000000000000001
+[    0.243355] RDX: 0000000080000001 RSI: 0000000000000001 RDI: ffffffffb3bcfc48
+[    0.244421] RBP: 0000000000000000 R08: ffff97a3c012b8f8 R09: fffffffffffffffe
+[    0.245569] R10: ffffffffb3a03e78 R11: 00000000ffffffff R12: 0000000000000040
+[    0.246752] R13: ffffffffb3a30500 R14: ffffffffb3be6180 R15: ffff97a3c0355d10
+[    0.247826] FS:  0000000000000000(0000) GS:ffff97a537c00000(0000) knlGS:0000000000000000
+[    0.249084] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[    0.250012] CR2: ffff97a51e201000 CR3: 000000025c826001 CR4: 00000000000606b0
+[    0.251122] Call Trace:
+[    0.251491]  <TASK>
+[    0.251810]  synchronize_rcu+0xb6/0x1e0
+[    0.252393]  ? smp_call_function_many_cond+0x36d/0x3b0
+[    0.253243]  ? enable_trace_buffered_event+0x10/0x10
+[    0.254021]  trace_buffered_event_disable+0x7c/0x140
+[    0.254786]  __ftrace_event_enable_disable+0x11c/0x250
+[    0.255559]  __ftrace_set_clr_event_nolock+0xe3/0x130
+[    0.256321]  ftrace_set_clr_event+0x9a/0xe0
+[    0.256976]  early_enable_events+0x64/0xa8
+[    0.257647]  trace_event_init+0xd6/0x2dd
+[    0.258305]  start_kernel+0x760/0x9e0
+[    0.258862]  secondary_startup_64_no_verify+0xe5/0xeb
+[    0.259634]  </TASK>
+[    0.259966] irq event stamp: 0
+[    0.260427] hardirqs last  enabled at (0): [<0000000000000000>] 0x0
+[    0.261448] hardirqs last disabled at (0): [<0000000000000000>] 0x0
+[    0.262424] softirqs last  enabled at (0): [<0000000000000000>] 0x0
+[    0.263402] softirqs last disabled at (0): [<0000000000000000>] 0x0
+[    0.264345] ---[ end trace 0000000000000000 ]---
+[    0.265088] ------------[ cut here ]------------
 
-Even with all APCI debugging enable, the system continues to run perfectly
-fine.
+Where kernel/rcu/tree.c:1410 is at:
 
-Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
----
+// Make the polled API aware of the beginning of a grace period, but
+// where caller does not hold the root rcu_node structure's lock.
+static void rcu_poll_gp_seq_start_unlocked(unsigned long *snap)
+{
+	unsigned long flags;
+	struct rcu_node *rnp = rcu_get_root();
 
- drivers/acpi/Kconfig        | 13 +++++++++++++
- drivers/acpi/osl.c          |  9 ++++++++-
- include/trace/events/acpi.h | 30 ++++++++++++++++++++++++++++++
- 3 files changed, 51 insertions(+), 1 deletion(-)
- create mode 100644 include/trace/events/acpi.h
+	if (rcu_init_invoked()) {
+		lockdep_assert_irqs_enabled(); <<-------------- 1410
+		raw_spin_lock_irqsave_rcu_node(rnp, flags);
+	}
+	rcu_poll_gp_seq_start(snap);
+	if (rcu_init_invoked())
+		raw_spin_unlock_irqrestore_rcu_node(rnp, flags);
+}
 
-diff --git a/drivers/acpi/Kconfig b/drivers/acpi/Kconfig
-index 473241b5193f..2dfeb3bf79a7 100644
---- a/drivers/acpi/Kconfig
-+++ b/drivers/acpi/Kconfig
-@@ -389,6 +389,19 @@ config ACPI_DEBUG
- 	  Documentation/admin-guide/kernel-parameters.rst to control the type and
- 	  amount of debug output.
- 
-+config ACPI_TRACE_PRINT
-+	bool "Write debug into trace buffer"
-+	depends on ACPI_DEBUG
-+	help
-+	  Instead of writing to the console, write to the trace ring buffer.
-+	  This is much faster than writing to the console, and can handle
-+	  all events.
-+
-+	  Use the acpi.debug_layer and acpi.debug_level kernel command-line
-+	  parameters documented in Documentation/firmware-guide/acpi/debug.rst and
-+	  Documentation/admin-guide/kernel-parameters.rst to control the type and
-+	  amount of debug output.
-+
- config ACPI_PCI_SLOT
- 	bool "PCI slot detection driver"
- 	depends on SYSFS && PCI
-diff --git a/drivers/acpi/osl.c b/drivers/acpi/osl.c
-index 3269a888fb7a..eeed5fd782ab 100644
---- a/drivers/acpi/osl.c
-+++ b/drivers/acpi/osl.c
-@@ -35,6 +35,9 @@
- #include <linux/uaccess.h>
- #include <linux/io-64-nonatomic-lo-hi.h>
- 
-+#define CREATE_TRACE_POINTS
-+#include <trace/events/acpi.h>
-+
- #include "acpica/accommon.h"
- #include "internal.h"
- 
-@@ -158,6 +161,8 @@ void acpi_os_vprintf(const char *fmt, va_list args)
- #ifdef ENABLE_DEBUGGER
- 	if (acpi_in_debugger) {
- 		kdb_printf("%s", buffer);
-+	} else if (IS_ENABLED(CONFIG_ACPI_TRACE_PRINT)) {
-+		trace_acpi_print(buffer);
- 	} else {
- 		if (printk_get_level(buffer))
- 			printk("%s", buffer);
-@@ -165,7 +170,9 @@ void acpi_os_vprintf(const char *fmt, va_list args)
- 			printk(KERN_CONT "%s", buffer);
- 	}
- #else
--	if (acpi_debugger_write_log(buffer) < 0) {
-+	if (IS_ENABLED(CONFIG_ACPI_TRACE_PRINT)) {
-+		trace_acpi_print(buffer);
-+	} else if (acpi_debugger_write_log(buffer) < 0) {
- 		if (printk_get_level(buffer))
- 			printk("%s", buffer);
- 		else
-diff --git a/include/trace/events/acpi.h b/include/trace/events/acpi.h
-new file mode 100644
-index 000000000000..dab4dd42b5d7
---- /dev/null
-+++ b/include/trace/events/acpi.h
-@@ -0,0 +1,30 @@
-+/* SPDX-License-Identifier: GPL-2.0+ */
-+#undef TRACE_SYSTEM
-+#define TRACE_SYSTEM acpi
-+
-+#if !defined(_TRACE_ACPI_H) || defined(TRACE_HEADER_MULTI_READ)
-+#define _TRACE_ACPI_H
-+
-+#include <linux/tracepoint.h>
-+
-+TRACE_EVENT(acpi_print,
-+
-+	TP_PROTO(const char *buffer),
-+
-+	TP_ARGS(buffer),
-+
-+	TP_STRUCT__entry(
-+		__string(buffer, buffer)
-+	),
-+
-+	TP_fast_assign(
-+		__assign_str(buffer, buffer);
-+	),
-+
-+	TP_printk("%s", __get_str(buffer))
-+);
-+
-+#endif /* _TRACE_SOCK_H */
-+
-+/* This part must be outside protection */
-+#include <trace/define_trace.h>
--- 
-2.35.1
 
+-- Steve
