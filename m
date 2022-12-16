@@ -2,88 +2,116 @@ Return-Path: <linux-trace-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EA5E6C4332F
-	for <linux-trace-kernel@archiver.kernel.org>; Fri, 16 Dec 2022 11:08:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DF7FC4332F
+	for <linux-trace-kernel@archiver.kernel.org>; Fri, 16 Dec 2022 13:43:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229636AbiLPLIU (ORCPT
+        id S229742AbiLPNnF (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Fri, 16 Dec 2022 06:08:20 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51080 "EHLO
+        Fri, 16 Dec 2022 08:43:05 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33002 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229583AbiLPLIS (ORCPT
+        with ESMTP id S229627AbiLPNnF (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Fri, 16 Dec 2022 06:08:18 -0500
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 09441EA0;
-        Fri, 16 Dec 2022 03:08:15 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 9C760B81D2A;
-        Fri, 16 Dec 2022 11:08:14 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 94EF1C433D2;
-        Fri, 16 Dec 2022 11:08:12 +0000 (UTC)
-Date:   Fri, 16 Dec 2022 06:08:10 -0500
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     "Paul E. McKenney" <paulmck@kernel.org>
-Cc:     Masami Hiramatsu <mhiramat@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
+        Fri, 16 Dec 2022 08:43:05 -0500
+Received: from smtp-fw-6001.amazon.com (smtp-fw-6001.amazon.com [52.95.48.154])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 396C5167E7;
+        Fri, 16 Dec 2022 05:43:03 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=amazon.de; i=@amazon.de; q=dns/txt; s=amazon201209;
+  t=1671198183; x=1702734183;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=NBqV0S/NrkjAjfsbG61ehP8Z4OJavtUZCdDZHryrRTM=;
+  b=fkZHRSxWv7XXPQBU8AZSBWuUPFcpMC8ExNX2jwBq+ks86M/RWD1i2rXi
+   PshPFs+7/C3jIfeFRw3rZoNFcYq3g3odlYZ1KG+hqpeKor+laxIvBmsvM
+   wZVJiMwwn8h13FDzosaLUtSWlHD1QIT6WYgVSo7bQgFo43+vgc5v7BOEZ
+   4=;
+X-IronPort-AV: E=Sophos;i="5.96,249,1665446400"; 
+   d="scan'208";a="279704532"
+Received: from iad12-co-svc-p1-lb1-vlan2.amazon.com (HELO email-inbound-relay-pdx-2c-m6i4x-94edd59b.us-west-2.amazon.com) ([10.43.8.2])
+  by smtp-border-fw-6001.iad6.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Dec 2022 13:43:00 +0000
+Received: from EX13D50EUB003.ant.amazon.com (pdx1-ws-svc-p6-lb9-vlan3.pdx.amazon.com [10.236.137.198])
+        by email-inbound-relay-pdx-2c-m6i4x-94edd59b.us-west-2.amazon.com (Postfix) with ESMTPS id 0138541B19;
+        Fri, 16 Dec 2022 13:42:58 +0000 (UTC)
+Received: from EX19D028EUB002.ant.amazon.com (10.252.61.43) by
+ EX13D50EUB003.ant.amazon.com (10.43.166.146) with Microsoft SMTP Server (TLS)
+ id 15.0.1497.42; Fri, 16 Dec 2022 13:42:57 +0000
+Received: from dev-dsk-ptyadav-1c-37607b33.eu-west-1.amazon.com
+ (10.43.161.114) by EX19D028EUB002.ant.amazon.com (10.252.61.43) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.2.1118.20; Fri, 16 Dec
+ 2022 13:42:54 +0000
+From:   Pratyush Yadav <ptyadav@amazon.de>
+To:     <stable@vger.kernel.org>
+CC:     Pratyush Yadav <ptyadav@amazon.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        <patches@lists.linux.dev>,
         Linux Trace Kernel <linux-trace-kernel@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Subject: Re: [PATCH] tracing: Do not synchronize freeing of trigger filter
- on boot up
-Message-ID: <20221216060810.4e541bc4@gandalf.local.home>
-In-Reply-To: <20221216044022.GA2467686@paulmck-ThinkPad-P17-Gen-1>
-References: <20221214084954.e759647a2f5f1a38bc78b371@kernel.org>
-        <20221214200333.GA3208104@paulmck-ThinkPad-P17-Gen-1>
-        <20221215100241.73a30da8@gandalf.local.home>
-        <20221215170256.GG4001@paulmck-ThinkPad-P17-Gen-1>
-        <20221215135102.556ee076@gandalf.local.home>
-        <20221215190158.GK4001@paulmck-ThinkPad-P17-Gen-1>
-        <20221215173913.5432bfbf@gandalf.local.home>
-        <20221215231027.GS4001@paulmck-ThinkPad-P17-Gen-1>
-        <20221215184202.7ebb3055@gandalf.local.home>
-        <20221216010118.GU4001@paulmck-ThinkPad-P17-Gen-1>
-        <20221216044022.GA2467686@paulmck-ThinkPad-P17-Gen-1>
-X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Primiano Tucci <primiano@google.com>,
+        "Steven Rostedt (Google)" <rostedt@goodmis.org>
+Subject: [PATCH 5.4] tracing/ring-buffer: Only do full wait when cpu != RING_BUFFER_ALL_CPUS
+Date:   Fri, 16 Dec 2022 14:42:41 +0100
+Message-ID: <20221216134241.81381-1-ptyadav@amazon.de>
+X-Mailer: git-send-email 2.38.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+X-Originating-IP: [10.43.161.114]
+X-ClientProxiedBy: EX13D36UWB001.ant.amazon.com (10.43.161.84) To
+ EX19D028EUB002.ant.amazon.com (10.252.61.43)
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On Thu, 15 Dec 2022 20:40:22 -0800
-"Paul E. McKenney" <paulmck@kernel.org> wrote:
+full_hit() directly uses cpu as an array index. Since
+RING_BUFFER_ALL_CPUS == -1, calling full_hit() with cpu ==
+RING_BUFFER_ALL_CPUS will cause an invalid memory access.
 
-> On Thu, Dec 15, 2022 at 05:01:18PM -0800, Paul E. McKenney wrote:
-> > On Thu, Dec 15, 2022 at 06:42:02PM -0500, Steven Rostedt wrote:  
-> > > On Thu, 15 Dec 2022 15:10:27 -0800
-> > > "Paul E. McKenney" <paulmck@kernel.org> wrote:
-> > >   
-> > > > The nice thing about the current placement of rcu_scheduler_starting()
-> > > > is that there is not yet any other task to switch to.  ;-)  
-> > > 
-> > > Fair enough. Anyway the last patch appears to do the job.
-> > > 
-> > > Reported-by: Steven Rostedt (Google) <rostedt@goodmis.org>
-> > > Tested-by: Steven Rostedt (Google) <rostedt@goodmis.org>  
-> > 
-> > Applied, thank you!  
-> 
-> And I should have checked up on urgency.  Normal process would hold this
-> one until the v6.3 merge window, but please let me know if you would
-> like it in v6.2.  It is after all a bug fix.
-> 
+The upstream commit 42fb0a1e84ff ("tracing/ring-buffer: Have polling
+block on watermark") already does this. This was missed when backporting
+to v5.4.y.
 
-Yes, any fix that fixes a lockdep splat is considered urgent and should be
-pushed ASAP. As it makes finding other lockdep splats more difficult (as
-the first splat shuts down lockdep).
+This bug was discovered and resolved using Coverity Static Analysis
+Security Testing (SAST) by Synopsys, Inc.
 
-Please send this during the merge window, as I have to carry it internally
-until it makes it into mainline.
+Fixes: e65ac2bdda54 ("tracing/ring-buffer: Have polling block on watermark")
+Signed-off-by: Pratyush Yadav <ptyadav@amazon.de>
+---
 
-Thanks!
+I am not familiar with this code. This was just pointed out by our
+static analysis tool and I wrote a quick patch fixing this. Only
+compile-tested.
 
--- Steve
+ kernel/trace/ring_buffer.c | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
+index 176d858903bd..11e8189dd8ae 100644
+--- a/kernel/trace/ring_buffer.c
++++ b/kernel/trace/ring_buffer.c
+@@ -727,6 +727,7 @@ __poll_t ring_buffer_poll_wait(struct ring_buffer *buffer, int cpu,
+
+ 	if (cpu == RING_BUFFER_ALL_CPUS) {
+ 		work = &buffer->irq_work;
++		full = 0;
+ 	} else {
+ 		if (!cpumask_test_cpu(cpu, buffer->cpumask))
+ 			return -EINVAL;
+--
+2.38.1
+
+
+
+
+Amazon Development Center Germany GmbH
+Krausenstr. 38
+10117 Berlin
+Geschaeftsfuehrung: Christian Schlaeger, Jonathan Weiss
+Eingetragen am Amtsgericht Charlottenburg unter HRB 149173 B
+Sitz: Berlin
+Ust-ID: DE 289 237 879
+
+
+
