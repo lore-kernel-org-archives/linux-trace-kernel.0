@@ -2,138 +2,93 @@ Return-Path: <linux-trace-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 46FB3C10F1B
-	for <linux-trace-kernel@archiver.kernel.org>; Mon, 19 Dec 2022 18:35:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BE467C4332F
+	for <linux-trace-kernel@archiver.kernel.org>; Mon, 19 Dec 2022 20:57:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232571AbiLSSfK (ORCPT
+        id S231972AbiLSU53 (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Mon, 19 Dec 2022 13:35:10 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45496 "EHLO
+        Mon, 19 Dec 2022 15:57:29 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37976 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232655AbiLSSe3 (ORCPT
+        with ESMTP id S232470AbiLSU5Z (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Mon, 19 Dec 2022 13:34:29 -0500
-Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A565213FAB;
-        Mon, 19 Dec 2022 10:32:17 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 60C1FB80F6F;
-        Mon, 19 Dec 2022 18:32:16 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2CF6BC4339B;
-        Mon, 19 Dec 2022 18:32:15 +0000 (UTC)
-Received: from rostedt by gandalf.local.home with local (Exim 4.96)
-        (envelope-from <rostedt@goodmis.org>)
-        id 1p7Kvu-0005TZ-0g;
-        Mon, 19 Dec 2022 13:32:14 -0500
-Message-ID: <20221219183214.075559302@goodmis.org>
-User-Agent: quilt/0.66
-Date:   Mon, 19 Dec 2022 13:31:08 -0500
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
-Cc:     Masami Hiramatsu <mhiramat@kernel.org>,
+        Mon, 19 Dec 2022 15:57:25 -0500
+Received: from mail-il1-x12a.google.com (mail-il1-x12a.google.com [IPv6:2607:f8b0:4864:20::12a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 70D18DF78
+        for <linux-trace-kernel@vger.kernel.org>; Mon, 19 Dec 2022 12:57:24 -0800 (PST)
+Received: by mail-il1-x12a.google.com with SMTP id o8so4035917ilq.6
+        for <linux-trace-kernel@vger.kernel.org>; Mon, 19 Dec 2022 12:57:24 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20210112;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=BHLoLmIiSoPJZR4YAxyoxo6homLq85o/pXatGwtOBd4=;
+        b=M5IvWyti2zneCdkihUCbhFIXnDGpDURNdh8G/pL8UOONPP0dpLk1YETOXcgQIif9ZW
+         Iz3kYjieWW69i7MLTSxbSqvsbTfeoxTLPrjS9/RWd6rtn2bMANtZMWpBpPAmh4SEbt+Y
+         eEwigiKbpnSeXluNX5eIPfyGXFWs1luPa4IKI8SufRfSZRYcSQbysLRRyL2oVHXoXGFp
+         lJQ3XLTawpGMvNhdKZPqaIlbGYocFgYVRPngsJXxrc7uN0xsyK7BrUmK8KR59U0Rp5N8
+         uMi5V412Rqgp7t7GkDWE2gZpxd1FZ4DrMlYBUxiPCxKSWJD3XOwLgve+7ljuezEbnxAJ
+         MWHA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=BHLoLmIiSoPJZR4YAxyoxo6homLq85o/pXatGwtOBd4=;
+        b=prI8/sopiHJMq4xAyP83kcpcLUIwqxiB3PHZrztbSxAop8uopEd+tpJnpQvi4D/bRi
+         rRV5WgqCHZzfkGTNmRBlIKtkLA0WPGEzixyuVL1Rr9Z9ZXp7UPXt+iYPzAwPam+bBaof
+         AZ2GzIchOE3TlHsLhajGFGZDlahU08QgzsZ7a9i8Je4p93TM8/itZvJRcqi5o5wY9P0T
+         616Ji+GQke5Xonp7ZiFtgyvTXVcST0hRZKihWVWT6Gd5NmKEaSgGhpuRZMx+AnaOL0xq
+         DyJpyTZJkDEM0i3c4TtaiQgqIHAEdlFl/ybNhyR7aQ4ztHuUZcZ3MmUC45v4bA5aKm6f
+         aR4g==
+X-Gm-Message-State: AFqh2kpL+3SAxMG1Rbq1jckVCz9rEFgbdiR2S0OFoucgsBCXynqfwYgF
+        XB0+ISx2iNM9/n86lfSsO4ICHw==
+X-Google-Smtp-Source: AMrXdXuDDYR+DHPnYc6sGD78qAsLbyttwkWPBjanNGn40a8uT3LNC2mXQyhlFqcHpqZJ3pL9mxe8+w==
+X-Received: by 2002:a05:6e02:512:b0:302:c07e:49f8 with SMTP id d18-20020a056e02051200b00302c07e49f8mr7541450ils.32.1671483443381;
+        Mon, 19 Dec 2022 12:57:23 -0800 (PST)
+Received: from google.com ([2620:15c:183:200:6550:fd9a:e118:25dc])
+        by smtp.gmail.com with ESMTPSA id v25-20020a02b919000000b0038a5af5e831sm3965386jan.100.2022.12.19.12.57.22
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 19 Dec 2022 12:57:22 -0800 (PST)
+Date:   Mon, 19 Dec 2022 13:57:18 -0700
+From:   Ross Zwisler <zwisler@google.com>
+To:     Steven Rostedt <rostedt@goodmis.org>
+Cc:     linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+        Masami Hiramatsu <mhiramat@kernel.org>,
         Andrew Morton <akpm@linux-foundation.org>,
-        Ross Zwisler <zwisler@google.com>,
         Tom Zanussi <zanussi@kernel.org>,
-        Zheng Yejian <zhengyejian1@huawei.com>,
-        Shuah Khan <shuah@kernel.org>,
-        Shuah Khan <skhan@linuxfoundation.org>,
-        linux-kselftest@vger.kernel.org
-Subject: [PATCH 2/2] tracing/selftests: Add test for event filtering on function name
+        Zheng Yejian <zhengyejian1@huawei.com>
+Subject: Re: [PATCH 1/2] tracing: Add a way to filter function addresses to
+ function names
+Message-ID: <Y6DQLgVYHedPB+F+@google.com>
 References: <20221219183106.518341498@goodmis.org>
+ <20221219183213.916833763@goodmis.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20221219183213.916833763@goodmis.org>
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
+On Mon, Dec 19, 2022 at 01:31:07PM -0500, Steven Rostedt wrote:
+> From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
+> 
+> There's been several times where an event records a function address in
+> its field and I needed to filter on that address for a specific function
+> name. It required looking up the function in kallsyms, finding its size,
+> and doing a compare of "field >= function_start && field < function_end".
+> 
+> But this would change from boot to boot and is unreliable in scripts.
+> Also, it is useful to have this at boot up, where the addresses will not
+> be known. For example, on the boot command line:
+> 
+>   trace_trigger="initcall_finish.traceoff if func.function == acpi_init"
+> 
+> To implement this, add a ".function" prefix, that will check that the
+> field is of size long, and the only operations allowed (so far) are "=="
+> and "!=".
+> 
+> Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
 
-With the new filter logic of passing in the name of a function to match an
-instruction pointer (or the address of the function), add a test to make
-sure that it is functional.
-
-This is also the first test to test plain filtering. The filtering has
-been tested via the trigger logic, which uses the same code, but there was
-nothing to test just the event filter, so this test is the first to add
-such a case.
-
-Cc: Shuah Khan <shuah@kernel.org>
-Cc: Shuah Khan <skhan@linuxfoundation.org>
-Cc: linux-kselftest@vger.kernel.org
-Suggested-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
----
- .../test.d/filter/event-filter-function.tc    | 58 +++++++++++++++++++
- 1 file changed, 58 insertions(+)
- create mode 100644 tools/testing/selftests/ftrace/test.d/filter/event-filter-function.tc
-
-diff --git a/tools/testing/selftests/ftrace/test.d/filter/event-filter-function.tc b/tools/testing/selftests/ftrace/test.d/filter/event-filter-function.tc
-new file mode 100644
-index 000000000000..e2ff3bf4df80
---- /dev/null
-+++ b/tools/testing/selftests/ftrace/test.d/filter/event-filter-function.tc
-@@ -0,0 +1,58 @@
-+#!/bin/sh
-+# SPDX-License-Identifier: GPL-2.0
-+# description: event filter function - test event filtering on functions
-+# requires: set_event events/kmem/kmem_cache_free/filter
-+# flags: instance
-+
-+fail() { #msg
-+    echo $1
-+    exit_fail
-+}
-+
-+echo "Test event filter function name"
-+echo 0 > tracing_on
-+echo 0 > events/enable
-+echo > trace
-+echo 'call_site.function == exit_mmap' > events/kmem/kmem_cache_free/filter
-+echo 1 > events/kmem/kmem_cache_free/enable
-+echo 1 > tracing_on
-+ls > /dev/null
-+echo 0 > events/kmem/kmem_cache_free/enable
-+
-+hitcnt=`grep kmem_cache_free trace| grep exit_mmap | wc -l`
-+misscnt=`grep kmem_cache_free trace| grep -v exit_mmap | wc -l`
-+
-+if [ $hitcnt -eq 0 ]; then
-+	exit_fail
-+fi
-+
-+if [ $misscnt -gt 0 ]; then
-+	exit_fail
-+fi
-+
-+address=`grep ' exit_mmap$' /proc/kallsyms | cut -d' ' -f1`
-+
-+echo "Test event filter function address"
-+echo 0 > tracing_on
-+echo 0 > events/enable
-+echo > trace
-+echo "call_site.function == 0x$address" > events/kmem/kmem_cache_free/filter
-+echo 1 > events/kmem/kmem_cache_free/enable
-+echo 1 > tracing_on
-+sleep 1
-+echo 0 > events/kmem/kmem_cache_free/enable
-+
-+hitcnt=`grep kmem_cache_free trace| grep exit_mmap | wc -l`
-+misscnt=`grep kmem_cache_free trace| grep -v exit_mmap | wc -l`
-+
-+if [ $hitcnt -eq 0 ]; then
-+	exit_fail
-+fi
-+
-+if [ $misscnt -gt 0 ]; then
-+	exit_fail
-+fi
-+
-+reset_events_filter
-+
-+exit 0
--- 
-2.35.1
-
-
+Reviewed-by: Ross Zwisler <zwisler@google.com>
