@@ -2,79 +2,79 @@ Return-Path: <linux-trace-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BDCECC4332F
-	for <linux-trace-kernel@archiver.kernel.org>; Mon, 19 Dec 2022 18:21:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 71EDAC4332F
+	for <linux-trace-kernel@archiver.kernel.org>; Mon, 19 Dec 2022 18:35:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231531AbiLSSVM (ORCPT
+        id S232465AbiLSSfH (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Mon, 19 Dec 2022 13:21:12 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40112 "EHLO
+        Mon, 19 Dec 2022 13:35:07 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45130 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231401AbiLSSVL (ORCPT
+        with ESMTP id S232568AbiLSSe3 (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Mon, 19 Dec 2022 13:21:11 -0500
-Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E3F6F2DD8;
-        Mon, 19 Dec 2022 10:21:07 -0800 (PST)
+        Mon, 19 Dec 2022 13:34:29 -0500
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A1AF11176;
+        Mon, 19 Dec 2022 10:32:17 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id A1DA3B80ED7;
-        Mon, 19 Dec 2022 18:21:06 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7A31EC433EF;
-        Mon, 19 Dec 2022 18:21:04 +0000 (UTC)
-Date:   Mon, 19 Dec 2022 13:21:02 -0500
+        by ams.source.kernel.org (Postfix) with ESMTPS id 58697B80F62;
+        Mon, 19 Dec 2022 18:32:16 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F3C30C433D2;
+        Mon, 19 Dec 2022 18:32:14 +0000 (UTC)
+Received: from rostedt by gandalf.local.home with local (Exim 4.96)
+        (envelope-from <rostedt@goodmis.org>)
+        id 1p7Kvt-0005SZ-2r;
+        Mon, 19 Dec 2022 13:32:13 -0500
+Message-ID: <20221219183106.518341498@goodmis.org>
+User-Agent: quilt/0.66
+Date:   Mon, 19 Dec 2022 13:31:06 -0500
 From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Zheng Yejian <zhengyejian1@huawei.com>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Linux Trace Kernel <linux-trace-kernel@vger.kernel.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
+To:     linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
+Cc:     Masami Hiramatsu <mhiramat@kernel.org>,
         Andrew Morton <akpm@linux-foundation.org>,
         Ross Zwisler <zwisler@google.com>,
-        Tom Zanussi <zanussi@kernel.org>
-Subject: Re: [PATCH] tracing: Add a way to filter function addresses to
- function names
-Message-ID: <20221219132102.0dc6b7b9@gandalf.local.home>
-In-Reply-To: <68fa6a9d-7a7f-00ba-e5a2-9b64f0aa7db3@huawei.com>
-References: <20221214125209.09d736dd@gandalf.local.home>
-        <68fa6a9d-7a7f-00ba-e5a2-9b64f0aa7db3@huawei.com>
-X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        Tom Zanussi <zanussi@kernel.org>,
+        Zheng Yejian <zhengyejian1@huawei.com>
+Subject: [PATCH 0/2] tracing: Add a way to filter function addresses to function names
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On Mon, 19 Dec 2022 10:38:50 +0800
-Zheng Yejian <zhengyejian1@huawei.com> wrote:
+There's been several times where an event records a function address in
+its field and I needed to filter on that address for a specific function
+name. It required looking up the function in kallsyms, finding its size,
+and doing a compare of "field >= function_start && field < function_end".
 
-> > diff --git a/kernel/trace/trace_events.c b/kernel/trace/trace_events.c
-> > index 33e0b4f8ebe6..db6e2f399440 100644
-> > --- a/kernel/trace/trace_events.c
-> > +++ b/kernel/trace/trace_events.c
-> > @@ -2822,7 +2822,7 @@ static __init int setup_trace_triggers(char *str)
-> >   		if (!trigger)
-> >   			break;
-> >   		bootup_triggers[i].event = strsep(&trigger, ".");
-> > -		bootup_triggers[i].trigger = strsep(&trigger, ".");
-> > +		bootup_triggers[i].trigger = strsep(&trigger, "");  
-> 
-> Would it be better to change to:
-> 
->       bootup_triggers[i].trigger = trigger;
-> 
+But this would change from boot to boot and is unreliable in scripts.
+Also, it is useful to have this at boot up, where the addresses will not
+be known. For example, on the boot command line:
 
-Sure, I'll make the update.
+  trace_trigger="initcall_finish.traceoff if func.function == acpi_init"
 
-> Because there is unnecessary loop if call strsep(s, "") :-)
->    strsep(s, ct) {
->      strpbrk(cs, ct) {
->        // when 'ct' is empty string, here will always return NULL
->        // after traversing string 'cs'
+To implement this, add a ".function" prefix, that will check that the
+field is of size long, and the only operations allowed (so far) are "=="
+and "!=".
 
-I'm not sure what you mean about an extra loop.
+Changes since v1: https://lore.kernel.org/linux-trace-kernel/20221214125209.09d736dd@gandalf.local.home/
 
-Thanks,
+ - Fix commit log "initcall_finish.function" to "func.function" (Ross Zwisler)
 
--- Steve
+ - Fixed processing of address (Ross Zwisler)
+
+ - Added selftest (Masami Hiramatsu)
+
+ - Just use "trigger" instead of "strsep(&trigger, "")" (Zheng Yejian)
+
+Steven Rostedt (Google) (2):
+      tracing: Add a way to filter function addresses to function names
+      tracing/selftests: Add test for event filtering on function name
+
+----
+ Documentation/trace/events.rst                     | 12 +++
+ kernel/trace/trace_events.c                        |  2 +-
+ kernel/trace/trace_events_filter.c                 | 93 +++++++++++++++++++++-
+ .../ftrace/test.d/filter/event-filter-function.tc  | 58 ++++++++++++++
+ 4 files changed, 163 insertions(+), 2 deletions(-)
+ create mode 100644 tools/testing/selftests/ftrace/test.d/filter/event-filter-function.tc
