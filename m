@@ -2,64 +2,57 @@ Return-Path: <linux-trace-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B02F8C4332F
-	for <linux-trace-kernel@archiver.kernel.org>; Sun, 18 Dec 2022 01:37:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 882FBC4332F
+	for <linux-trace-kernel@archiver.kernel.org>; Mon, 19 Dec 2022 02:39:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229932AbiLRBho (ORCPT
+        id S230481AbiLSCi7 (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Sat, 17 Dec 2022 20:37:44 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54920 "EHLO
+        Sun, 18 Dec 2022 21:38:59 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57102 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229480AbiLRBhn (ORCPT
+        with ESMTP id S229957AbiLSCix (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Sat, 17 Dec 2022 20:37:43 -0500
-Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E8DAAC75E;
-        Sat, 17 Dec 2022 17:37:41 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 91826B80B32;
-        Sun, 18 Dec 2022 01:37:40 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D46B8C433D2;
-        Sun, 18 Dec 2022 01:37:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1671327459;
-        bh=sKHU/fAJPUmVv2ocnyFAS0lc9qCVTuQMrs4sxilAG8A=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=FKJxk/39ZxubCE1djFaKluonV6+b0mYhqKzz0qZS3LZdpaJ2HYwPJ//mXQ6ub57cV
-         8fvElQcMj+NPtW1ZInz8vj5AtwwqWKzZtKT1LlW3maXx4079+d38DxxX2NS519ELrN
-         jkCv0fmng4uwlLxegyLIjvuQw6rEQLW4BiTjzQfcwdNSy8RjszOrSHjdNUE+hMhZBf
-         zAFdvFWm/ZgJQ+oayRMfFFKFNL6sow8f0bpRfE5TjqRHyYIh5EHHCo+784rQ+ZJ9FF
-         lHVYzmPKtFok7XaMnJDTV6HxNOvpDSwAJxpfxivXZys5JtScE5VkzCticVxQvnjk4+
-         NS3TYZEF95Dvw==
-Date:   Sun, 18 Dec 2022 10:37:35 +0900
-From:   Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To:     Steven Rostedt <rostedt@goodmis.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Linux Trace Kernel <linux-trace-kernel@vger.kernel.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
+        Sun, 18 Dec 2022 21:38:53 -0500
+Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4E183B1F6;
+        Sun, 18 Dec 2022 18:38:52 -0800 (PST)
+Received: from dggpeml100012.china.huawei.com (unknown [172.30.72.53])
+        by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4Nb3lY3Q9CzmWdh;
+        Mon, 19 Dec 2022 10:37:45 +0800 (CST)
+Received: from [10.67.110.218] (10.67.110.218) by
+ dggpeml100012.china.huawei.com (7.185.36.121) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2375.34; Mon, 19 Dec 2022 10:38:50 +0800
+Message-ID: <68fa6a9d-7a7f-00ba-e5a2-9b64f0aa7db3@huawei.com>
+Date:   Mon, 19 Dec 2022 10:38:50 +0800
+MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.6.0
+Subject: Re: [PATCH] tracing: Add a way to filter function addresses to
+ function names
+To:     Steven Rostedt <rostedt@goodmis.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linux Trace Kernel <linux-trace-kernel@vger.kernel.org>
+CC:     Masami Hiramatsu <mhiramat@kernel.org>,
         Andrew Morton <akpm@linux-foundation.org>,
         Ross Zwisler <zwisler@google.com>,
         Tom Zanussi <zanussi@kernel.org>
-Subject: Re: [PATCH] tracing: Add a way to filter function addresses to
- function names
-Message-Id: <20221218103735.bb9bb37529e5fb489bca3a75@kernel.org>
-In-Reply-To: <20221214125209.09d736dd@gandalf.local.home>
 References: <20221214125209.09d736dd@gandalf.local.home>
-X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+From:   Zheng Yejian <zhengyejian1@huawei.com>
+In-Reply-To: <20221214125209.09d736dd@gandalf.local.home>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.67.110.218]
+X-ClientProxiedBy: dggems705-chm.china.huawei.com (10.3.19.182) To
+ dggpeml100012.china.huawei.com (7.185.36.121)
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-Hi Steve,
 
-On Wed, 14 Dec 2022 12:52:09 -0500
-Steven Rostedt <rostedt@goodmis.org> wrote:
 
+在 2022/12/15 01:52, Steven Rostedt 写道:
 > From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
 > 
 > There's been several times where an event records a function address in
@@ -71,36 +64,30 @@ Steven Rostedt <rostedt@goodmis.org> wrote:
 > Also, it is useful to have this at boot up, where the addresses will not
 > be known. For example, on the boot command line:
 > 
->   trace_trigger="initcall_finish.traceoff if initcall_finish.function == acpi_init"
+>    trace_trigger="initcall_finish.traceoff if initcall_finish.function == acpi_init"
 > 
 > To implement this, add a ".function" prefix, that will check that the
 > field is of size long, and the only operations allowed (so far) are "=="
 > and "!=".
-
-This looks nice! BTW, can you also add a test case for this feature?
-Thus we can ensure this works both with symbols or function addresses.
-
-Thank you,
-
 > 
 > Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
 > ---
 > [ Resending due to claws-mail messing up the format of the
->   original patch ]
+>    original patch ]
 > 
->  Documentation/trace/events.rst     | 12 +++++
->  kernel/trace/trace_events.c        |  2 +-
->  kernel/trace/trace_events_filter.c | 79 +++++++++++++++++++++++++++++-
->  3 files changed, 91 insertions(+), 2 deletions(-)
+>   Documentation/trace/events.rst     | 12 +++++
+>   kernel/trace/trace_events.c        |  2 +-
+>   kernel/trace/trace_events_filter.c | 79 +++++++++++++++++++++++++++++-
+>   3 files changed, 91 insertions(+), 2 deletions(-)
 > 
 > diff --git a/Documentation/trace/events.rst b/Documentation/trace/events.rst
 > index c47f381d0c00..d0fd5c7220b7 100644
 > --- a/Documentation/trace/events.rst
 > +++ b/Documentation/trace/events.rst
 > @@ -207,6 +207,18 @@ field name::
->  As the kernel will have to know how to retrieve the memory that the pointer
->  is at from user space.
->  
+>   As the kernel will have to know how to retrieve the memory that the pointer
+>   is at from user space.
+>   
 > +You can convert any long type to a function address and search by function name::
 > +
 > +  call_site.function == security_prepare_creds
@@ -113,54 +100,69 @@ Thank you,
 > +The ".function" postfix can only be attached to values of size long, and can only
 > +be compared with "==" or "!=".
 > +
->  5.2 Setting filters
->  -------------------
->  
+>   5.2 Setting filters
+>   -------------------
+>   
 > diff --git a/kernel/trace/trace_events.c b/kernel/trace/trace_events.c
 > index 33e0b4f8ebe6..db6e2f399440 100644
 > --- a/kernel/trace/trace_events.c
 > +++ b/kernel/trace/trace_events.c
 > @@ -2822,7 +2822,7 @@ static __init int setup_trace_triggers(char *str)
->  		if (!trigger)
->  			break;
->  		bootup_triggers[i].event = strsep(&trigger, ".");
+>   		if (!trigger)
+>   			break;
+>   		bootup_triggers[i].event = strsep(&trigger, ".");
 > -		bootup_triggers[i].trigger = strsep(&trigger, ".");
 > +		bootup_triggers[i].trigger = strsep(&trigger, "");
->  		if (!bootup_triggers[i].trigger)
->  			break;
->  	}
+
+Would it be better to change to:
+
+      bootup_triggers[i].trigger = trigger;
+
+Because there is unnecessary loop if call strsep(s, "") :-)
+   strsep(s, ct) {
+     strpbrk(cs, ct) {
+       // when 'ct' is empty string, here will always return NULL
+       // after traversing string 'cs'
+
+--
+Best regards,
+Zheng Yejian
+
+>   		if (!bootup_triggers[i].trigger)
+>   			break;
+>   	}
 > diff --git a/kernel/trace/trace_events_filter.c b/kernel/trace/trace_events_filter.c
 > index 96acc2b71ac7..eef6426051bb 100644
 > --- a/kernel/trace/trace_events_filter.c
 > +++ b/kernel/trace/trace_events_filter.c
 > @@ -64,6 +64,7 @@ enum filter_pred_fn {
->  	FILTER_PRED_FN_PCHAR_USER,
->  	FILTER_PRED_FN_PCHAR,
->  	FILTER_PRED_FN_CPU,
+>   	FILTER_PRED_FN_PCHAR_USER,
+>   	FILTER_PRED_FN_PCHAR,
+>   	FILTER_PRED_FN_CPU,
 > +	FILTER_PRED_FN_FUNCTION,
->  	FILTER_PRED_FN_,
->  	FILTER_PRED_TEST_VISITED,
->  };
+>   	FILTER_PRED_FN_,
+>   	FILTER_PRED_TEST_VISITED,
+>   };
 > @@ -71,6 +72,7 @@ enum filter_pred_fn {
->  struct filter_pred {
->  	enum filter_pred_fn 	fn_num;
->  	u64 			val;
+>   struct filter_pred {
+>   	enum filter_pred_fn 	fn_num;
+>   	u64 			val;
 > +	u64 			val2;
->  	struct regex		regex;
->  	unsigned short		*ops;
->  	struct ftrace_event_field *field;
+>   	struct regex		regex;
+>   	unsigned short		*ops;
+>   	struct ftrace_event_field *field;
 > @@ -103,6 +105,7 @@ struct filter_pred {
->  	C(INVALID_FILTER,	"Meaningless filter expression"),	\
->  	C(IP_FIELD_ONLY,	"Only 'ip' field is supported for function trace"), \
->  	C(INVALID_VALUE,	"Invalid value (did you forget quotes)?"), \
+>   	C(INVALID_FILTER,	"Meaningless filter expression"),	\
+>   	C(IP_FIELD_ONLY,	"Only 'ip' field is supported for function trace"), \
+>   	C(INVALID_VALUE,	"Invalid value (did you forget quotes)?"), \
 > +	C(NO_FUNCTION,		"Function not found"),			\
->  	C(ERRNO,		"Error"),				\
->  	C(NO_FILTER,		"No filter found")
->  
+>   	C(ERRNO,		"Error"),				\
+>   	C(NO_FILTER,		"No filter found")
+>   
 > @@ -876,6 +879,17 @@ static int filter_pred_comm(struct filter_pred *pred, void *event)
->  	return cmp ^ pred->not;
->  }
->  
+>   	return cmp ^ pred->not;
+>   }
+>   
 > +/* Filter predicate for functions. */
 > +static int filter_pred_function(struct filter_pred *pred, void *event)
 > +{
@@ -172,49 +174,49 @@ Thank you,
 > +	return pred->op == OP_EQ ? ret : !ret;
 > +}
 > +
->  /*
->   * regex_match_foo - Basic regex callbacks
->   *
+>   /*
+>    * regex_match_foo - Basic regex callbacks
+>    *
 > @@ -1335,6 +1349,8 @@ static int filter_pred_fn_call(struct filter_pred *pred, void *event)
->  		return filter_pred_pchar(pred, event);
->  	case FILTER_PRED_FN_CPU:
->  		return filter_pred_cpu(pred, event);
+>   		return filter_pred_pchar(pred, event);
+>   	case FILTER_PRED_FN_CPU:
+>   		return filter_pred_cpu(pred, event);
 > +	case FILTER_PRED_FN_FUNCTION:
 > +		return filter_pred_function(pred, event);
->  	case FILTER_PRED_TEST_VISITED:
->  		return test_pred_visited_fn(pred, event);
->  	default:
+>   	case FILTER_PRED_TEST_VISITED:
+>   		return test_pred_visited_fn(pred, event);
+>   	default:
 > @@ -1350,8 +1366,13 @@ static int parse_pred(const char *str, void *data,
->  	struct trace_event_call *call = data;
->  	struct ftrace_event_field *field;
->  	struct filter_pred *pred = NULL;
+>   	struct trace_event_call *call = data;
+>   	struct ftrace_event_field *field;
+>   	struct filter_pred *pred = NULL;
 > +	unsigned long offset;
 > +	unsigned long size;
 > +	unsigned long ip;
->  	char num_buf[24];	/* Big enough to hold an address */
->  	char *field_name;
+>   	char num_buf[24];	/* Big enough to hold an address */
+>   	char *field_name;
 > +	char *name;
 > +	bool function = false;
->  	bool ustring = false;
->  	char q;
->  	u64 val;
+>   	bool ustring = false;
+>   	char q;
+>   	u64 val;
 > @@ -1393,6 +1414,12 @@ static int parse_pred(const char *str, void *data,
->  		i += len;
->  	}
->  
+>   		i += len;
+>   	}
+>   
 > +	/* See if the field is a user space string */
 > +	if ((len = str_has_prefix(str + i, ".function"))) {
 > +		function = true;
 > +		i += len;
 > +	}
 > +
->  	while (isspace(str[i]))
->  		i++;
->  
+>   	while (isspace(str[i]))
+>   		i++;
+>   
 > @@ -1423,7 +1450,57 @@ static int parse_pred(const char *str, void *data,
->  	pred->offset = field->offset;
->  	pred->op = op;
->  
+>   	pred->offset = field->offset;
+>   	pred->op = op;
+>   
 > -	if (ftrace_event_is_function(call)) {
 > +	if (function) {
 > +		/* The field must be the same size as long */
@@ -267,13 +269,6 @@ Thank you,
 > +		pred->val2 = pred->val + size;
 > +
 > +	} else if (ftrace_event_is_function(call)) {
->  		/*
->  		 * Perf does things different with function events.
->  		 * It only allows an "ip" field, and expects a string.
-> -- 
-> 2.35.1
-> 
-
-
--- 
-Masami Hiramatsu (Google) <mhiramat@kernel.org>
+>   		/*
+>   		 * Perf does things different with function events.
+>   		 * It only allows an "ip" field, and expects a string.
