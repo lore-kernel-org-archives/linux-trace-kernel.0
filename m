@@ -2,104 +2,79 @@ Return-Path: <linux-trace-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DD77C4332F
-	for <linux-trace-kernel@archiver.kernel.org>; Mon, 19 Dec 2022 12:22:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BDCECC4332F
+	for <linux-trace-kernel@archiver.kernel.org>; Mon, 19 Dec 2022 18:21:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231158AbiLSMWU (ORCPT
+        id S231531AbiLSSVM (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Mon, 19 Dec 2022 07:22:20 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36156 "EHLO
+        Mon, 19 Dec 2022 13:21:12 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40112 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231835AbiLSMWP (ORCPT
+        with ESMTP id S231401AbiLSSVL (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Mon, 19 Dec 2022 07:22:15 -0500
+        Mon, 19 Dec 2022 13:21:11 -0500
 Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E0B9CDEDA;
-        Mon, 19 Dec 2022 04:22:08 -0800 (PST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E3F6F2DD8;
+        Mon, 19 Dec 2022 10:21:07 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 78801B80DD2;
-        Mon, 19 Dec 2022 12:22:07 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E1298C433D2;
-        Mon, 19 Dec 2022 12:22:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-        s=korg; t=1671452526;
-        bh=+mZzLUqj6zXEyvMlVq+uk5m4h/YoNfw8u2BUFwZG1Xw=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=wPE7tgTbWcsrCsY41lyXjH+1/9nedIQiju7r2JuAglUwVUGi45eYWUXdEslCqmMVf
-         qYAB3UPzYySZB7wD9oQb59EC0orFbX5XPFsphrKBBr0SkIS8bJ2mOrIaeG1k9Tm8ig
-         aSxlUe1bhOjmW3+9jANyIcPJhqgauAmfeMvGWGEk=
-Date:   Mon, 19 Dec 2022 13:21:47 +0100
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Steven Rostedt <rostedt@goodmis.org>
-Cc:     Pratyush Yadav <ptyadav@amazon.de>, stable@vger.kernel.org,
-        patches@lists.linux.dev,
+        by ams.source.kernel.org (Postfix) with ESMTPS id A1DA3B80ED7;
+        Mon, 19 Dec 2022 18:21:06 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7A31EC433EF;
+        Mon, 19 Dec 2022 18:21:04 +0000 (UTC)
+Date:   Mon, 19 Dec 2022 13:21:02 -0500
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     Zheng Yejian <zhengyejian1@huawei.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
         Linux Trace Kernel <linux-trace-kernel@vger.kernel.org>,
         Masami Hiramatsu <mhiramat@kernel.org>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Primiano Tucci <primiano@google.com>
-Subject: Re: [PATCH 5.4] tracing/ring-buffer: Only do full wait when cpu !=
- RING_BUFFER_ALL_CPUS
-Message-ID: <Y6BXW+dY6D95QfXG@kroah.com>
-References: <20221216134241.81381-1-ptyadav@amazon.de>
- <20221216091533.6a74d5c5@gandalf.local.home>
+        Andrew Morton <akpm@linux-foundation.org>,
+        Ross Zwisler <zwisler@google.com>,
+        Tom Zanussi <zanussi@kernel.org>
+Subject: Re: [PATCH] tracing: Add a way to filter function addresses to
+ function names
+Message-ID: <20221219132102.0dc6b7b9@gandalf.local.home>
+In-Reply-To: <68fa6a9d-7a7f-00ba-e5a2-9b64f0aa7db3@huawei.com>
+References: <20221214125209.09d736dd@gandalf.local.home>
+        <68fa6a9d-7a7f-00ba-e5a2-9b64f0aa7db3@huawei.com>
+X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20221216091533.6a74d5c5@gandalf.local.home>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On Fri, Dec 16, 2022 at 09:15:33AM -0500, Steven Rostedt wrote:
-> On Fri, 16 Dec 2022 14:42:41 +0100
-> Pratyush Yadav <ptyadav@amazon.de> wrote:
-> 
-> > full_hit() directly uses cpu as an array index. Since
-> > RING_BUFFER_ALL_CPUS == -1, calling full_hit() with cpu ==
-> > RING_BUFFER_ALL_CPUS will cause an invalid memory access.
-> > 
-> > The upstream commit 42fb0a1e84ff ("tracing/ring-buffer: Have polling
-> > block on watermark") already does this. This was missed when backporting
-> > to v5.4.y.
-> > 
-> > This bug was discovered and resolved using Coverity Static Analysis
-> > Security Testing (SAST) by Synopsys, Inc.
-> 
-> Nice.
-> 
-> > 
-> > Fixes: e65ac2bdda54 ("tracing/ring-buffer: Have polling block on watermark")
-> > Signed-off-by: Pratyush Yadav <ptyadav@amazon.de>
-> > ---
-> > 
-> > I am not familiar with this code. This was just pointed out by our
-> > static analysis tool and I wrote a quick patch fixing this. Only
-> > compile-tested.
-> > 
-> >  kernel/trace/ring_buffer.c | 1 +
-> >  1 file changed, 1 insertion(+)
-> > 
-> > diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
-> > index 176d858903bd..11e8189dd8ae 100644
-> > --- a/kernel/trace/ring_buffer.c
-> > +++ b/kernel/trace/ring_buffer.c
-> > @@ -727,6 +727,7 @@ __poll_t ring_buffer_poll_wait(struct ring_buffer *buffer, int cpu,
-> > 
-> >  	if (cpu == RING_BUFFER_ALL_CPUS) {
-> >  		work = &buffer->irq_work;
-> > +		full = 0;
-> 
-> Good catch. This was indeed missed in the backport. The backported patch
-> even added the comment:
-> 
->  * @full: wait until the percentage of pages are available, if @cpu != RING_BUFFER_ALL_CPUS
-> 
-> Greg, please take this patch.
-> 
-> Acked-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+On Mon, 19 Dec 2022 10:38:50 +0800
+Zheng Yejian <zhengyejian1@huawei.com> wrote:
 
-Now queued up, thanks.
+> > diff --git a/kernel/trace/trace_events.c b/kernel/trace/trace_events.c
+> > index 33e0b4f8ebe6..db6e2f399440 100644
+> > --- a/kernel/trace/trace_events.c
+> > +++ b/kernel/trace/trace_events.c
+> > @@ -2822,7 +2822,7 @@ static __init int setup_trace_triggers(char *str)
+> >   		if (!trigger)
+> >   			break;
+> >   		bootup_triggers[i].event = strsep(&trigger, ".");
+> > -		bootup_triggers[i].trigger = strsep(&trigger, ".");
+> > +		bootup_triggers[i].trigger = strsep(&trigger, "");  
+> 
+> Would it be better to change to:
+> 
+>       bootup_triggers[i].trigger = trigger;
+> 
 
-greg k-h
+Sure, I'll make the update.
+
+> Because there is unnecessary loop if call strsep(s, "") :-)
+>    strsep(s, ct) {
+>      strpbrk(cs, ct) {
+>        // when 'ct' is empty string, here will always return NULL
+>        // after traversing string 'cs'
+
+I'm not sure what you mean about an extra loop.
+
+Thanks,
+
+-- Steve
