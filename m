@@ -2,222 +2,94 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A14F2C10F1B
-	for <linux-trace-kernel@archiver.kernel.org>; Fri, 30 Dec 2022 11:29:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D6AEDC4167B
+	for <linux-trace-kernel@archiver.kernel.org>; Fri, 30 Dec 2022 15:52:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234937AbiL3L3M (ORCPT
+        id S235164AbiL3Pwy (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Fri, 30 Dec 2022 06:29:12 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36388 "EHLO
+        Fri, 30 Dec 2022 10:52:54 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59758 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234788AbiL3L2u (ORCPT
+        with ESMTP id S229527AbiL3Pwx (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Fri, 30 Dec 2022 06:28:50 -0500
-Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 767631AD95;
-        Fri, 30 Dec 2022 03:28:49 -0800 (PST)
-Received: from dggpemm500006.china.huawei.com (unknown [172.30.72.53])
-        by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4Nk2zb1xwpzRqJn;
-        Fri, 30 Dec 2022 19:27:23 +0800 (CST)
-Received: from thunder-town.china.huawei.com (10.174.178.55) by
- dggpemm500006.china.huawei.com (7.185.36.236) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.34; Fri, 30 Dec 2022 19:28:46 +0800
-From:   Zhen Lei <thunder.leizhen@huawei.com>
-To:     Josh Poimboeuf <jpoimboe@kernel.org>,
-        Jiri Kosina <jikos@kernel.org>,
-        Miroslav Benes <mbenes@suse.cz>,
-        Petr Mladek <pmladek@suse.com>,
-        Joe Lawrence <joe.lawrence@redhat.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Andrii Nakryiko <andrii@kernel.org>,
-        Martin KaFai Lau <martin.lau@linux.dev>,
-        Song Liu <song@kernel.org>, Yonghong Song <yhs@fb.com>,
-        John Fastabend <john.fastabend@gmail.com>,
-        KP Singh <kpsingh@kernel.org>,
-        Stanislav Fomichev <sdf@google.com>,
-        Hao Luo <haoluo@google.com>, Jiri Olsa <jolsa@kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>, <bpf@vger.kernel.org>,
-        <linux-trace-kernel@vger.kernel.org>,
-        <live-patching@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        <linux-modules@vger.kernel.org>
-CC:     Zhen Lei <thunder.leizhen@huawei.com>
-Subject: [PATCH 1/3] livepatch: Improve the search performance of module_kallsyms_on_each_symbol()
-Date:   Fri, 30 Dec 2022 19:27:27 +0800
-Message-ID: <20221230112729.351-2-thunder.leizhen@huawei.com>
-X-Mailer: git-send-email 2.37.3.windows.1
-In-Reply-To: <20221230112729.351-1-thunder.leizhen@huawei.com>
-References: <20221230112729.351-1-thunder.leizhen@huawei.com>
+        Fri, 30 Dec 2022 10:52:53 -0500
+Received: from mail-io1-f43.google.com (mail-io1-f43.google.com [209.85.166.43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D6D85178BE;
+        Fri, 30 Dec 2022 07:52:52 -0800 (PST)
+Received: by mail-io1-f43.google.com with SMTP id i83so11263601ioa.11;
+        Fri, 30 Dec 2022 07:52:52 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=IMhrVDylLdSSZiiGal6d5OdoolcBpjlvVV/YDpmQ7VU=;
+        b=Ziao3QSV6HLqXT5s8OmszhM5Am86trE6Xo9QP9Wplr36PwL+CPVa32w/XvqOFH9JA7
+         4LE+PAd6Wp3IopDyqFPM29E8nqPym2JaEsBLVuTVBDSFCjq3fn4FxHehcl5+TSg6prtV
+         nzUrc3wMBoHyYq8J5FNjA5PGpeFVkmfUCrNgkjebGK8Mf0jWcG5H3BsHdLkM3sQtYDiT
+         iJCftmiTs8b3WmzHYnKIwLkV2LqimmUFfHUuHv9PKJ8+KAGrK3AEK141lWzxH91GRhPK
+         YD5rOkJwoFCvT96Ggu/Vsx4zk1+Uceg9hXXjJcch//B0BF7528OzHWrm5frtsp/h7LEC
+         a4FA==
+X-Gm-Message-State: AFqh2kqq5YiYCyZMEWmI3lJKvEBJXPfaYlRcUJt9fqVhMyQZTLOJoFmU
+        oxg2EWzClSwNQZEQ9yFzR4rosBsEInTv0LoD5BSrYTP2
+X-Google-Smtp-Source: AMrXdXvpAT6YjQ1nFxmbN0JScsZwmWSZj8k0RnFLb5ZBFiFYx+MhcFMACLWS+pIETR4njRRbXgw/tFMgL5UNRgb5+WA=
+X-Received: by 2002:a05:6638:8d:b0:38a:3357:8a4 with SMTP id
+ v13-20020a056638008d00b0038a335708a4mr2559982jao.53.1672415572137; Fri, 30
+ Dec 2022 07:52:52 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [10.174.178.55]
-X-ClientProxiedBy: dggems702-chm.china.huawei.com (10.3.19.179) To
- dggpemm500006.china.huawei.com (7.185.36.236)
-X-CFilter-Loop: Reflected
+References: <20221214233106.69b2c01b@gandalf.local.home> <Y5trUep9IvCv1Uwy@google.com>
+ <20221215141146.6ceb7cf2@gandalf.local.home> <CAEXW_YQLtK=4LMJ+LHPVWU0wbV-027HJoCEKTjZvBZ6krrn6vw@mail.gmail.com>
+ <20221215151333.49af5442@gandalf.local.home>
+In-Reply-To: <20221215151333.49af5442@gandalf.local.home>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Fri, 30 Dec 2022 16:52:36 +0100
+Message-ID: <CAJZ5v0iNdLyOpAxsCTTq-zqRfWDrJ5_c2DUcJYE5ZFn7u+2qdQ@mail.gmail.com>
+Subject: Re: [RFC][PATCH] ACPI: tracing: Have ACPI debug go to tracing ring buffer
+To:     Steven Rostedt <rostedt@goodmis.org>
+Cc:     Joel Fernandes <joel@joelfernandes.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linux Trace Kernel <linux-trace-kernel@vger.kernel.org>,
+        linux-acpi@vger.kernel.org,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Len Brown <lenb@kernel.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Brian Norris <briannorris@chromium.org>,
+        Ross Zwisler <zwisler@google.com>,
+        Ching-lin Yu <chinglinyu@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-Currently we traverse all symbols of all modules to find the specified
-function for the specified module. But in reality, we just need to find
-the given module and then traverse all the symbols in it.
+On Thu, Dec 15, 2022 at 9:13 PM Steven Rostedt <rostedt@goodmis.org> wrote:
+>
+> On Thu, 15 Dec 2022 14:52:48 -0500
+> Joel Fernandes <joel@joelfernandes.org> wrote:
+>
+> > Another approach could be to always enable the trace event by default,
+> > if the CONFIG is turned on. Or do a printk() telling the user about
+> > the event to enable, so they know why their trace buffer is empty.
+>
+> Yeah, that is another option.
+>
+> And, yes I need to document it better. I started to, but then decided to
+> hold off until I get some feedback in case this is rejected.
+>
+> >
+> > Up to you and the ACPI maintainers. ;-)
+>
+> I'm going to guess I may not hear back until the new year. I'm fine with
+> that :-)
 
-Let's add a new parameter 'const char *modname' to function
-module_kallsyms_on_each_symbol(), then we can compare the module names
-directly in this function and call hook 'fn' after matching. If 'modname'
-is NULL, the symbols of all modules are still traversed for compatibility
-with other usage cases.
+It's just a couple of days, but still.
 
-Phase1: mod1-->mod2..(subsequent modules do not need to be compared)
-                |
-Phase2:          -->f1-->f2-->f3
+Personally, I would use a command line option to control the behavior
+and the Kconfig option to provide its default value.
 
-Assuming that there are m modules, each module has n symbols on average,
-then the time complexity is reduced from O(m * n) to O(m) + O(n).
+This way it can be flipped without rebuilding the kernel if need be.
 
-Signed-off-by: Zhen Lei <thunder.leizhen@huawei.com>
----
- include/linux/module.h   |  6 ++++--
- kernel/livepatch/core.c  | 10 +---------
- kernel/module/kallsyms.c | 13 ++++++++++++-
- kernel/trace/bpf_trace.c |  2 +-
- kernel/trace/ftrace.c    |  2 +-
- 5 files changed, 19 insertions(+), 14 deletions(-)
+I would also make the ACPI debug output go into the trace buffer so
+long as the Kconfig option is not changed or the command line option
+is not flipped.
 
-diff --git a/include/linux/module.h b/include/linux/module.h
-index 8c5909c0076c6e1..514bc81568c5220 100644
---- a/include/linux/module.h
-+++ b/include/linux/module.h
-@@ -879,11 +879,13 @@ static inline bool module_sig_ok(struct module *module)
- #endif	/* CONFIG_MODULE_SIG */
- 
- #if defined(CONFIG_MODULES) && defined(CONFIG_KALLSYMS)
--int module_kallsyms_on_each_symbol(int (*fn)(void *, const char *,
-+int module_kallsyms_on_each_symbol(const char *modname,
-+				   int (*fn)(void *, const char *,
- 					     struct module *, unsigned long),
- 				   void *data);
- #else
--static inline int module_kallsyms_on_each_symbol(int (*fn)(void *, const char *,
-+static inline int module_kallsyms_on_each_symbol(const char *modname,
-+						 int (*fn)(void *, const char *,
- 						 struct module *, unsigned long),
- 						 void *data)
- {
-diff --git a/kernel/livepatch/core.c b/kernel/livepatch/core.c
-index 201f0c0482fb56d..c973ed9e42f8177 100644
---- a/kernel/livepatch/core.c
-+++ b/kernel/livepatch/core.c
-@@ -118,7 +118,6 @@ static struct klp_object *klp_find_object(struct klp_patch *patch,
- }
- 
- struct klp_find_arg {
--	const char *objname;
- 	const char *name;
- 	unsigned long addr;
- 	unsigned long count;
-@@ -148,15 +147,9 @@ static int klp_find_callback(void *data, const char *name,
- {
- 	struct klp_find_arg *args = data;
- 
--	if ((mod && !args->objname) || (!mod && args->objname))
--		return 0;
--
- 	if (strcmp(args->name, name))
- 		return 0;
- 
--	if (args->objname && strcmp(args->objname, mod->name))
--		return 0;
--
- 	return klp_match_callback(data, addr);
- }
- 
-@@ -164,7 +157,6 @@ static int klp_find_object_symbol(const char *objname, const char *name,
- 				  unsigned long sympos, unsigned long *addr)
- {
- 	struct klp_find_arg args = {
--		.objname = objname,
- 		.name = name,
- 		.addr = 0,
- 		.count = 0,
-@@ -172,7 +164,7 @@ static int klp_find_object_symbol(const char *objname, const char *name,
- 	};
- 
- 	if (objname)
--		module_kallsyms_on_each_symbol(klp_find_callback, &args);
-+		module_kallsyms_on_each_symbol(objname, klp_find_callback, &args);
- 	else
- 		kallsyms_on_each_match_symbol(klp_match_callback, name, &args);
- 
-diff --git a/kernel/module/kallsyms.c b/kernel/module/kallsyms.c
-index 4523f99b03589e3..ab2376a1be88e7e 100644
---- a/kernel/module/kallsyms.c
-+++ b/kernel/module/kallsyms.c
-@@ -494,7 +494,8 @@ unsigned long module_kallsyms_lookup_name(const char *name)
- 	return ret;
- }
- 
--int module_kallsyms_on_each_symbol(int (*fn)(void *, const char *,
-+int module_kallsyms_on_each_symbol(const char *modname,
-+				   int (*fn)(void *, const char *,
- 					     struct module *, unsigned long),
- 				   void *data)
- {
-@@ -509,6 +510,9 @@ int module_kallsyms_on_each_symbol(int (*fn)(void *, const char *,
- 		if (mod->state == MODULE_STATE_UNFORMED)
- 			continue;
- 
-+		if (modname && strcmp(modname, mod->name))
-+			continue;
-+
- 		/* Use rcu_dereference_sched() to remain compliant with the sparse tool */
- 		preempt_disable();
- 		kallsyms = rcu_dereference_sched(mod->kallsyms);
-@@ -525,6 +529,13 @@ int module_kallsyms_on_each_symbol(int (*fn)(void *, const char *,
- 			if (ret != 0)
- 				goto out;
- 		}
-+
-+		/*
-+		 * The given module is found, the subsequent modules do not
-+		 * need to be compared.
-+		 */
-+		if (modname)
-+			break;
- 	}
- out:
- 	mutex_unlock(&module_mutex);
-diff --git a/kernel/trace/bpf_trace.c b/kernel/trace/bpf_trace.c
-index 3bbd3f0c810c895..5f3be4bc16403a5 100644
---- a/kernel/trace/bpf_trace.c
-+++ b/kernel/trace/bpf_trace.c
-@@ -2737,7 +2737,7 @@ static int get_modules_for_addrs(struct module ***mods, unsigned long *addrs, u3
- 	int err;
- 
- 	/* We return either err < 0 in case of error, ... */
--	err = module_kallsyms_on_each_symbol(module_callback, &args);
-+	err = module_kallsyms_on_each_symbol(NULL, module_callback, &args);
- 	if (err) {
- 		kprobe_multi_put_modules(args.mods, args.mods_cnt);
- 		kfree(args.mods);
-diff --git a/kernel/trace/ftrace.c b/kernel/trace/ftrace.c
-index 442438b93fe9804..d249a55d9005765 100644
---- a/kernel/trace/ftrace.c
-+++ b/kernel/trace/ftrace.c
-@@ -8324,7 +8324,7 @@ int ftrace_lookup_symbols(const char **sorted_syms, size_t cnt, unsigned long *a
- 	found_all = kallsyms_on_each_symbol(kallsyms_callback, &args);
- 	if (found_all)
- 		return 0;
--	found_all = module_kallsyms_on_each_symbol(kallsyms_callback, &args);
-+	found_all = module_kallsyms_on_each_symbol(NULL, kallsyms_callback, &args);
- 	return found_all ? 0 : -ESRCH;
- }
- 
--- 
-2.25.1
-
+Cheers!
