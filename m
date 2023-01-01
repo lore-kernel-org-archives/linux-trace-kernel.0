@@ -2,94 +2,82 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D6AEDC4167B
-	for <linux-trace-kernel@archiver.kernel.org>; Fri, 30 Dec 2022 15:52:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CCF6CC4167B
+	for <linux-trace-kernel@archiver.kernel.org>; Sun,  1 Jan 2023 19:09:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235164AbiL3Pwy (ORCPT
+        id S229870AbjAATJv (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Fri, 30 Dec 2022 10:52:54 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59758 "EHLO
+        Sun, 1 Jan 2023 14:09:51 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38418 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229527AbiL3Pwx (ORCPT
+        with ESMTP id S229496AbjAATJu (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Fri, 30 Dec 2022 10:52:53 -0500
-Received: from mail-io1-f43.google.com (mail-io1-f43.google.com [209.85.166.43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D6D85178BE;
-        Fri, 30 Dec 2022 07:52:52 -0800 (PST)
-Received: by mail-io1-f43.google.com with SMTP id i83so11263601ioa.11;
-        Fri, 30 Dec 2022 07:52:52 -0800 (PST)
+        Sun, 1 Jan 2023 14:09:50 -0500
+Received: from mail-qv1-xf29.google.com (mail-qv1-xf29.google.com [IPv6:2607:f8b0:4864:20::f29])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E64A3D9E;
+        Sun,  1 Jan 2023 11:09:47 -0800 (PST)
+Received: by mail-qv1-xf29.google.com with SMTP id qb7so3606499qvb.5;
+        Sun, 01 Jan 2023 11:09:47 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=Nh1q6xtrBgKc1fDe5/d8D5jFIgt5LSbfJ1iE1tY4NY0=;
+        b=UwnH9hRCSaQXMD1ekBRj4n3jdugn6p5ha+kj9QMceWZP0PAzvDMSmcio2VlXTquVF/
+         6BRBS7KRqzFq4u1ymXaetY42vnR/h/VUewl41NzcwBzQXsc7CpxR47vXsClj5Fm4wAkh
+         T3awI2+sJTn6bFCvwm0K+GDxNW2l2VmI+Ea5W9ASfOVEwW7XpPMyIxyLGnEJnf7ONsF4
+         YMV9b1otZKL/jxE9pnEEFRge+Uh3wwh4ZyXXqKBE8+LtlP0uU+iHMu0HrhSl06mS5ekt
+         w+jfvwtfh6VGcX4EGVkaVBTtwnW3bgYOYlVy5Y8hxCwRZ0FIx2g75vOqkZdE3A+YL7kf
+         iTrg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=IMhrVDylLdSSZiiGal6d5OdoolcBpjlvVV/YDpmQ7VU=;
-        b=Ziao3QSV6HLqXT5s8OmszhM5Am86trE6Xo9QP9Wplr36PwL+CPVa32w/XvqOFH9JA7
-         4LE+PAd6Wp3IopDyqFPM29E8nqPym2JaEsBLVuTVBDSFCjq3fn4FxHehcl5+TSg6prtV
-         nzUrc3wMBoHyYq8J5FNjA5PGpeFVkmfUCrNgkjebGK8Mf0jWcG5H3BsHdLkM3sQtYDiT
-         iJCftmiTs8b3WmzHYnKIwLkV2LqimmUFfHUuHv9PKJ8+KAGrK3AEK141lWzxH91GRhPK
-         YD5rOkJwoFCvT96Ggu/Vsx4zk1+Uceg9hXXjJcch//B0BF7528OzHWrm5frtsp/h7LEC
-         a4FA==
-X-Gm-Message-State: AFqh2kqq5YiYCyZMEWmI3lJKvEBJXPfaYlRcUJt9fqVhMyQZTLOJoFmU
-        oxg2EWzClSwNQZEQ9yFzR4rosBsEInTv0LoD5BSrYTP2
-X-Google-Smtp-Source: AMrXdXvpAT6YjQ1nFxmbN0JScsZwmWSZj8k0RnFLb5ZBFiFYx+MhcFMACLWS+pIETR4njRRbXgw/tFMgL5UNRgb5+WA=
-X-Received: by 2002:a05:6638:8d:b0:38a:3357:8a4 with SMTP id
- v13-20020a056638008d00b0038a335708a4mr2559982jao.53.1672415572137; Fri, 30
- Dec 2022 07:52:52 -0800 (PST)
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Nh1q6xtrBgKc1fDe5/d8D5jFIgt5LSbfJ1iE1tY4NY0=;
+        b=FfszfJVKGHDvEsFDGxHdY9x70C6lWugbxyAOoQ1rmnGwUPqrpXMLYIr79IbRrNrWxC
+         5g+GDkT40pxB26yMXNOSleCXHFLbQLsOu2P7jeJStb8JtbuEsyAqE0BRXdOxgfZDoia7
+         lY5glvMm/lA/w1y7vtYyWotfQBNfzaIwd3WYFHyJ6+QpxvSDiljvb9jJEQE1t/aGFfJs
+         aiGCP02T9gcp90hHZ3kBUm5hBWtAvH7PdIP1upI2SvskSdkrNiWieiZcIsW4z+GgyouW
+         /DEA7rh7fGXs6oue60bfbHhd7K554f6b4eC9y7TsSlir0/pXd6DDjzdCfLqIv2fue/9X
+         dQHg==
+X-Gm-Message-State: AFqh2kpB+a+TYtdqB1eIwkwy+cOtfv1AKJn9B6QwP7W7f5VPSGa5eT8q
+        XgtUp2+pr8lLx+qda5q7l3U=
+X-Google-Smtp-Source: AMrXdXuRwZ8m1kj+aK33hY6Z1Z1I7ASwAwEcox5pdWzF+iOPu8vspUPvseIArGH7bK8IissbSDrhsg==
+X-Received: by 2002:a05:6214:3713:b0:531:bb5a:3418 with SMTP id np19-20020a056214371300b00531bb5a3418mr9262906qvb.13.1672600187088;
+        Sun, 01 Jan 2023 11:09:47 -0800 (PST)
+Received: from localhost ([2600:1700:65a0:ab60:bccc:52d4:da14:f94d])
+        by smtp.gmail.com with ESMTPSA id p18-20020ac87412000000b003a4c3c4d2d4sm16459391qtq.49.2023.01.01.11.09.45
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 01 Jan 2023 11:09:46 -0800 (PST)
+Date:   Sun, 1 Jan 2023 11:09:45 -0800
+From:   Cong Wang <xiyou.wangcong@gmail.com>
+To:     Yunhui Cui <cuiyunhui@bytedance.com>
+Cc:     edumazet@google.com, rostedt@goodmis.org, mhiramat@kernel.org,
+        davem@davemloft.net, yoshfuji@linux-ipv6.org, dsahern@kernel.org,
+        kuba@kernel.org, pabeni@redhat.com, duanxiongchun@bytedance.com,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-trace-kernel@vger.kernel.org
+Subject: Re: [PATCH] tcp/udp: add tracepoint for send recv length
+Message-ID: <Y7HaeTkNtfb3oIP4@pop-os.localdomain>
+References: <20221229080207.1029-1-cuiyunhui@bytedance.com>
 MIME-Version: 1.0
-References: <20221214233106.69b2c01b@gandalf.local.home> <Y5trUep9IvCv1Uwy@google.com>
- <20221215141146.6ceb7cf2@gandalf.local.home> <CAEXW_YQLtK=4LMJ+LHPVWU0wbV-027HJoCEKTjZvBZ6krrn6vw@mail.gmail.com>
- <20221215151333.49af5442@gandalf.local.home>
-In-Reply-To: <20221215151333.49af5442@gandalf.local.home>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Fri, 30 Dec 2022 16:52:36 +0100
-Message-ID: <CAJZ5v0iNdLyOpAxsCTTq-zqRfWDrJ5_c2DUcJYE5ZFn7u+2qdQ@mail.gmail.com>
-Subject: Re: [RFC][PATCH] ACPI: tracing: Have ACPI debug go to tracing ring buffer
-To:     Steven Rostedt <rostedt@goodmis.org>
-Cc:     Joel Fernandes <joel@joelfernandes.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Linux Trace Kernel <linux-trace-kernel@vger.kernel.org>,
-        linux-acpi@vger.kernel.org,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Len Brown <lenb@kernel.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Brian Norris <briannorris@chromium.org>,
-        Ross Zwisler <zwisler@google.com>,
-        Ching-lin Yu <chinglinyu@google.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20221229080207.1029-1-cuiyunhui@bytedance.com>
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On Thu, Dec 15, 2022 at 9:13 PM Steven Rostedt <rostedt@goodmis.org> wrote:
->
-> On Thu, 15 Dec 2022 14:52:48 -0500
-> Joel Fernandes <joel@joelfernandes.org> wrote:
->
-> > Another approach could be to always enable the trace event by default,
-> > if the CONFIG is turned on. Or do a printk() telling the user about
-> > the event to enable, so they know why their trace buffer is empty.
->
-> Yeah, that is another option.
->
-> And, yes I need to document it better. I started to, but then decided to
-> hold off until I get some feedback in case this is rejected.
->
-> >
-> > Up to you and the ACPI maintainers. ;-)
->
-> I'm going to guess I may not hear back until the new year. I'm fine with
-> that :-)
+On Thu, Dec 29, 2022 at 04:02:07PM +0800, Yunhui Cui wrote:
+> From: Xiongchun Duan <duanxiongchun@bytedance.com>
+> 
+> Add a tracepoint for capturing TCP segments with
+> a send or receive length. This makes it easy to obtain
+> the packet sending and receiving information of each process
+> in the user mode, such as the netatop tool.
 
-It's just a couple of days, but still.
+You can obtain the same information with kretprobe:
+https://www.gcardone.net/2020-07-31-per-process-bandwidth-monitoring-on-Linux-with-bpftrace/
 
-Personally, I would use a command line option to control the behavior
-and the Kconfig option to provide its default value.
-
-This way it can be flipped without rebuilding the kernel if need be.
-
-I would also make the ACPI debug output go into the trace buffer so
-long as the Kconfig option is not changed or the command line option
-is not flipped.
-
-Cheers!
+Thanks.
