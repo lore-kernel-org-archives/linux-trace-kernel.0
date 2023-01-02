@@ -2,82 +2,100 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CCF6CC4167B
-	for <linux-trace-kernel@archiver.kernel.org>; Sun,  1 Jan 2023 19:09:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C5F0AC3DA7A
+	for <linux-trace-kernel@archiver.kernel.org>; Mon,  2 Jan 2023 16:08:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229870AbjAATJv (ORCPT
+        id S232796AbjABQIJ (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Sun, 1 Jan 2023 14:09:51 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38418 "EHLO
+        Mon, 2 Jan 2023 11:08:09 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54062 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229496AbjAATJu (ORCPT
+        with ESMTP id S236603AbjABQIC (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Sun, 1 Jan 2023 14:09:50 -0500
-Received: from mail-qv1-xf29.google.com (mail-qv1-xf29.google.com [IPv6:2607:f8b0:4864:20::f29])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E64A3D9E;
-        Sun,  1 Jan 2023 11:09:47 -0800 (PST)
-Received: by mail-qv1-xf29.google.com with SMTP id qb7so3606499qvb.5;
-        Sun, 01 Jan 2023 11:09:47 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=Nh1q6xtrBgKc1fDe5/d8D5jFIgt5LSbfJ1iE1tY4NY0=;
-        b=UwnH9hRCSaQXMD1ekBRj4n3jdugn6p5ha+kj9QMceWZP0PAzvDMSmcio2VlXTquVF/
-         6BRBS7KRqzFq4u1ymXaetY42vnR/h/VUewl41NzcwBzQXsc7CpxR47vXsClj5Fm4wAkh
-         T3awI2+sJTn6bFCvwm0K+GDxNW2l2VmI+Ea5W9ASfOVEwW7XpPMyIxyLGnEJnf7ONsF4
-         YMV9b1otZKL/jxE9pnEEFRge+Uh3wwh4ZyXXqKBE8+LtlP0uU+iHMu0HrhSl06mS5ekt
-         w+jfvwtfh6VGcX4EGVkaVBTtwnW3bgYOYlVy5Y8hxCwRZ0FIx2g75vOqkZdE3A+YL7kf
-         iTrg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Nh1q6xtrBgKc1fDe5/d8D5jFIgt5LSbfJ1iE1tY4NY0=;
-        b=FfszfJVKGHDvEsFDGxHdY9x70C6lWugbxyAOoQ1rmnGwUPqrpXMLYIr79IbRrNrWxC
-         5g+GDkT40pxB26yMXNOSleCXHFLbQLsOu2P7jeJStb8JtbuEsyAqE0BRXdOxgfZDoia7
-         lY5glvMm/lA/w1y7vtYyWotfQBNfzaIwd3WYFHyJ6+QpxvSDiljvb9jJEQE1t/aGFfJs
-         aiGCP02T9gcp90hHZ3kBUm5hBWtAvH7PdIP1upI2SvskSdkrNiWieiZcIsW4z+GgyouW
-         /DEA7rh7fGXs6oue60bfbHhd7K554f6b4eC9y7TsSlir0/pXd6DDjzdCfLqIv2fue/9X
-         dQHg==
-X-Gm-Message-State: AFqh2kpB+a+TYtdqB1eIwkwy+cOtfv1AKJn9B6QwP7W7f5VPSGa5eT8q
-        XgtUp2+pr8lLx+qda5q7l3U=
-X-Google-Smtp-Source: AMrXdXuRwZ8m1kj+aK33hY6Z1Z1I7ASwAwEcox5pdWzF+iOPu8vspUPvseIArGH7bK8IissbSDrhsg==
-X-Received: by 2002:a05:6214:3713:b0:531:bb5a:3418 with SMTP id np19-20020a056214371300b00531bb5a3418mr9262906qvb.13.1672600187088;
-        Sun, 01 Jan 2023 11:09:47 -0800 (PST)
-Received: from localhost ([2600:1700:65a0:ab60:bccc:52d4:da14:f94d])
-        by smtp.gmail.com with ESMTPSA id p18-20020ac87412000000b003a4c3c4d2d4sm16459391qtq.49.2023.01.01.11.09.45
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 01 Jan 2023 11:09:46 -0800 (PST)
-Date:   Sun, 1 Jan 2023 11:09:45 -0800
-From:   Cong Wang <xiyou.wangcong@gmail.com>
-To:     Yunhui Cui <cuiyunhui@bytedance.com>
-Cc:     edumazet@google.com, rostedt@goodmis.org, mhiramat@kernel.org,
-        davem@davemloft.net, yoshfuji@linux-ipv6.org, dsahern@kernel.org,
-        kuba@kernel.org, pabeni@redhat.com, duanxiongchun@bytedance.com,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-trace-kernel@vger.kernel.org
-Subject: Re: [PATCH] tcp/udp: add tracepoint for send recv length
-Message-ID: <Y7HaeTkNtfb3oIP4@pop-os.localdomain>
-References: <20221229080207.1029-1-cuiyunhui@bytedance.com>
+        Mon, 2 Jan 2023 11:08:02 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 67D8EB7C2;
+        Mon,  2 Jan 2023 08:07:58 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id E7E7C60C2A;
+        Mon,  2 Jan 2023 16:07:57 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id ABB6CC433EF;
+        Mon,  2 Jan 2023 16:07:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1672675677;
+        bh=AO3Ixc0TR11NeS3MBCzLhmAhDwnDKeJ/27og6j1PuYM=;
+        h=From:To:Cc:Subject:Date:From;
+        b=gDRaFyOHdrdRw8JvQAgaQ3UkwUJGEFtMQyT3fDX9inWxwCXnFxV4Oj35qM87PjeP7
+         4IiGHpaOVpM9BRytyMeQeCmn8ybG3xGtVKC2lVBvNiOWqL8Hk3Z/Q8+ESQFcSUO0UG
+         dig9tg9miI8hw6mNtsgTDqJMvAA2i2EL+2eZa5UosoQ1wrSKeoMj0NSXFEUFlGSfL4
+         MS+Cm3dUcgcOg3FrRf4j4LdNbczf9fHEhxKZ9taF9e0yeVw/D0GtkwNnI+F9KM9Xnt
+         Md4VrHmsWfgc4yVmWOVfoKqTwV5bBXp16YEyc1yZL3Ry7uMtLi8Xtx9LIBw/4WrzyC
+         QMZYEJmpyH3Hg==
+From:   =?UTF-8?q?Bj=C3=B6rn=20T=C3=B6pel?= <bjorn@kernel.org>
+To:     Paul Walmsley <paul.walmsley@sifive.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        linux-riscv@lists.infradead.org, Guo Ren <guoren@kernel.org>
+Cc:     =?UTF-8?q?Bj=C3=B6rn=20T=C3=B6pel?= <bjorn@rivosinc.com>,
+        linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
+Subject: [PATCH] riscv, kprobes: Stricter c.jr/c.jalr decoding
+Date:   Mon,  2 Jan 2023 17:07:48 +0100
+Message-Id: <20230102160748.1307289-1-bjorn@kernel.org>
+X-Mailer: git-send-email 2.37.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20221229080207.1029-1-cuiyunhui@bytedance.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On Thu, Dec 29, 2022 at 04:02:07PM +0800, Yunhui Cui wrote:
-> From: Xiongchun Duan <duanxiongchun@bytedance.com>
-> 
-> Add a tracepoint for capturing TCP segments with
-> a send or receive length. This makes it easy to obtain
-> the packet sending and receiving information of each process
-> in the user mode, such as the netatop tool.
+From: Björn Töpel <bjorn@rivosinc.com>
 
-You can obtain the same information with kretprobe:
-https://www.gcardone.net/2020-07-31-per-process-bandwidth-monitoring-on-Linux-with-bpftrace/
+In the compressed instruction extension, c.jr, c.jalr, c.mv, and c.add
+is encoded the following way (each instruction is 16b):
 
-Thanks.
+---+-+-----------+-----------+--
+100 0 rs1[4:0]!=0       00000 10 : c.jr
+100 1 rs1[4:0]!=0       00000 10 : c.jalr
+100 0  rd[4:0]!=0 rs2[4:0]!=0 10 : c.mv
+100 1  rd[4:0]!=0 rs2[4:0]!=0 10 : c.add
+
+The following logic is used to decode c.jr and c.jalr:
+
+  insn & 0xf007 == 0x8002 => instruction is an c.jr
+  insn & 0xf007 == 0x9002 => instruction is an c.jalr
+
+When 0xf007 is used to mask the instruction, c.mv can be incorrectly
+decoded as c.jr, and c.add as c.jalr.
+
+Correct the decoding by changing the mask from 0xf007 to 0xf07f.
+
+Fixes: c22b0bcb1dd0 ("riscv: Add kprobes supported")
+Signed-off-by: Björn Töpel <bjorn@rivosinc.com>
+---
+ arch/riscv/kernel/probes/simulate-insn.h | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/arch/riscv/kernel/probes/simulate-insn.h b/arch/riscv/kernel/probes/simulate-insn.h
+index cb6ff7dccb92..de8474146a9b 100644
+--- a/arch/riscv/kernel/probes/simulate-insn.h
++++ b/arch/riscv/kernel/probes/simulate-insn.h
+@@ -31,9 +31,9 @@ __RISCV_INSN_FUNCS(fence,	0x7f, 0x0f);
+ 	} while (0)
+ 
+ __RISCV_INSN_FUNCS(c_j,		0xe003, 0xa001);
+-__RISCV_INSN_FUNCS(c_jr,	0xf007, 0x8002);
++__RISCV_INSN_FUNCS(c_jr,	0xf07f, 0x8002);
+ __RISCV_INSN_FUNCS(c_jal,	0xe003, 0x2001);
+-__RISCV_INSN_FUNCS(c_jalr,	0xf007, 0x9002);
++__RISCV_INSN_FUNCS(c_jalr,	0xf07f, 0x9002);
+ __RISCV_INSN_FUNCS(c_beqz,	0xe003, 0xc001);
+ __RISCV_INSN_FUNCS(c_bnez,	0xe003, 0xe001);
+ __RISCV_INSN_FUNCS(c_ebreak,	0xffff, 0x9002);
+
+base-commit: 1b929c02afd37871d5afb9d498426f83432e71c2
+-- 
+2.37.2
+
