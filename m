@@ -2,145 +2,126 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FC54C3DA7D
-	for <linux-trace-kernel@archiver.kernel.org>; Tue,  3 Jan 2023 06:44:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 29085C46467
+	for <linux-trace-kernel@archiver.kernel.org>; Tue,  3 Jan 2023 09:59:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230306AbjACGo5 (ORCPT
+        id S233084AbjACJ7v (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Tue, 3 Jan 2023 01:44:57 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35348 "EHLO
+        Tue, 3 Jan 2023 04:59:51 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38264 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230107AbjACGo4 (ORCPT
+        with ESMTP id S233070AbjACJ7u (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Tue, 3 Jan 2023 01:44:56 -0500
+        Tue, 3 Jan 2023 04:59:50 -0500
 Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EF0DDCFF;
-        Mon,  2 Jan 2023 22:44:54 -0800 (PST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D5923E0D9;
+        Tue,  3 Jan 2023 01:59:49 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 5DB3AB80E15;
-        Tue,  3 Jan 2023 06:44:53 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 85993C433D2;
-        Tue,  3 Jan 2023 06:44:51 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 8A4CDB80E80;
+        Tue,  3 Jan 2023 09:59:48 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3DFDCC43392;
+        Tue,  3 Jan 2023 09:59:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1672728292;
-        bh=/5lMFYxeFk4tjVM5Sh1D4dpCcs4gKL4U7mbXKFl9Uh8=;
-        h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-        b=XZ/vpsOESYRh8ZWz0uxpiUANHiIBRN71wk6PU5xY4tprr93vWqFQlUKy3GQS9ryA3
-         aN4b16a9Lo9jjGmWnl9abxUjVJzve6Rhy0a45zfdoNuJCbxvYlKH6y/8vHnTbxAHsG
-         286P8RV389ST+mFodfka7ZfNAgIko5hR6IOYE8SJRaEX/AYDFK16fXbihXO3oj/sWN
-         XvrU0EZqstjhw9egLIFzD8Wk43BXu2c3K44OvFkA7M/nQmekRyw9Y1nwnkTxGl3xKv
-         TBoMcEFYbWc62ULPdu4TWxAJ7fZl81ZX4jkP2yEKOCbbQg28N2v6p7OHSCw6j6Ckse
-         YlB7iYDZnikvg==
-From:   =?utf-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn@kernel.org>
-To:     Conor Dooley <conor@kernel.org>
+        s=k20201202; t=1672739987;
+        bh=K3GNdh0iSKVs4cxHbbMFC6QCnRMk4vyTA2omm3ALejE=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=s1knHPqbkH7hlnM/m2D9Hj1wBaYLROgZ0vWB17OegTZcHFUhfFTMGjijqVogryHkf
+         PwIYftn7jclRTnQmNvitI578qvf3d8l2U1GW9YCcQ1g0cc1ZxzpIi4uormiWctxVd8
+         4ijcD1hwqub9bvsMEiA65wZb9ZFrV/xupotZCIIzelvY5/dreDDYVrB3jMHTS1fBjP
+         QZo7YCgdHhEly2Qov/UlMKbuL/glPxUYdFUvgclP1agwJDf/3/yQhreMoigbXgkQTN
+         723b29wsh137zszJDNpjRK9aCUcVBx8ErN13PHlVkUx864RMcN5k88znh2jHNTQW7N
+         xCGR9zDycUJLA==
+Received: by mail-ej1-f44.google.com with SMTP id gh17so72429258ejb.6;
+        Tue, 03 Jan 2023 01:59:47 -0800 (PST)
+X-Gm-Message-State: AFqh2ko3Jam+ddPzpfMqz7PX984POdy57AljLDuddsNLOGlE4BE/ak/E
+        U91jRBS0UL2U18UCRsXfaNbtwcZn+QYSKmLzqLM=
+X-Google-Smtp-Source: AMrXdXs6X1KS2ScftLdukmy7fbm+oYnh2kNUOaxOawhAHpBi8S0P7w9c/T56eT42XKAb8tDbpox74vUvReqk46aTokU=
+X-Received: by 2002:a17:906:33d4:b0:7c0:f7af:7c5e with SMTP id
+ w20-20020a17090633d400b007c0f7af7c5emr2862143eja.406.1672739985408; Tue, 03
+ Jan 2023 01:59:45 -0800 (PST)
+MIME-Version: 1.0
+References: <20230102160748.1307289-1-bjorn@kernel.org>
+In-Reply-To: <20230102160748.1307289-1-bjorn@kernel.org>
+From:   Guo Ren <guoren@kernel.org>
+Date:   Tue, 3 Jan 2023 17:59:33 +0800
+X-Gmail-Original-Message-ID: <CAJF2gTTF9_J__Qk+ppg5c1V+1PeFbZ-xf7DEbo=DXBRpQu1L=A@mail.gmail.com>
+Message-ID: <CAJF2gTTF9_J__Qk+ppg5c1V+1PeFbZ-xf7DEbo=DXBRpQu1L=A@mail.gmail.com>
+Subject: Re: [PATCH] riscv, kprobes: Stricter c.jr/c.jalr decoding
+To:     =?UTF-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn@kernel.org>
 Cc:     Paul Walmsley <paul.walmsley@sifive.com>,
         Palmer Dabbelt <palmer@dabbelt.com>,
         Albert Ou <aou@eecs.berkeley.edu>,
-        linux-riscv@lists.infradead.org, Guo Ren <guoren@kernel.org>,
-        =?utf-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn@rivosinc.com>,
+        linux-riscv@lists.infradead.org,
+        =?UTF-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn@rivosinc.com>,
         linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
-Subject: Re: [PATCH] riscv, kprobes: Stricter c.jr/c.jalr decoding
-In-Reply-To: <Y7M/HlcF3u0qWIDJ@spud>
-References: <20230102160748.1307289-1-bjorn@kernel.org> <Y7M/HlcF3u0qWIDJ@spud>
-Date:   Tue, 03 Jan 2023 07:44:49 +0100
-Message-ID: <87sfgsp15q.fsf@all.your.base.are.belong.to.us>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-Conor Dooley <conor@kernel.org> writes:
+Thx for catching it.
 
-> Hey Bjorn,
+On Tue, Jan 3, 2023 at 12:07 AM Bj=C3=B6rn T=C3=B6pel <bjorn@kernel.org> wr=
+ote:
 >
-> On Mon, Jan 02, 2023 at 05:07:48PM +0100, Bj=C3=B6rn T=C3=B6pel wrote:
->> From: Bj=C3=B6rn T=C3=B6pel <bjorn@rivosinc.com>
->>=20
->> In the compressed instruction extension, c.jr, c.jalr, c.mv, and c.add
->> is encoded the following way (each instruction is 16b):
->>=20
->> ---+-+-----------+-----------+--
->> 100 0 rs1[4:0]!=3D0       00000 10 : c.jr
->> 100 1 rs1[4:0]!=3D0       00000 10 : c.jalr
->> 100 0  rd[4:0]!=3D0 rs2[4:0]!=3D0 10 : c.mv
->> 100 1  rd[4:0]!=3D0 rs2[4:0]!=3D0 10 : c.add
->>=20
->> The following logic is used to decode c.jr and c.jalr:
->>=20
->>   insn & 0xf007 =3D=3D 0x8002 =3D> instruction is an c.jr
->>   insn & 0xf007 =3D=3D 0x9002 =3D> instruction is an c.jalr
->>=20
->> When 0xf007 is used to mask the instruction, c.mv can be incorrectly
->> decoded as c.jr, and c.add as c.jalr.
->>=20
->> Correct the decoding by changing the mask from 0xf007 to 0xf07f.
->>=20
->> Fixes: c22b0bcb1dd0 ("riscv: Add kprobes supported")
->> Signed-off-by: Bj=C3=B6rn T=C3=B6pel <bjorn@rivosinc.com>
->> ---
->>  arch/riscv/kernel/probes/simulate-insn.h | 4 ++--
->>  1 file changed, 2 insertions(+), 2 deletions(-)
->>=20
->> diff --git a/arch/riscv/kernel/probes/simulate-insn.h b/arch/riscv/kerne=
-l/probes/simulate-insn.h
->> index cb6ff7dccb92..de8474146a9b 100644
->> --- a/arch/riscv/kernel/probes/simulate-insn.h
->> +++ b/arch/riscv/kernel/probes/simulate-insn.h
->> @@ -31,9 +31,9 @@ __RISCV_INSN_FUNCS(fence,	0x7f, 0x0f);
->>  	} while (0)
->>=20=20
->>  __RISCV_INSN_FUNCS(c_j,		0xe003, 0xa001);
->> -__RISCV_INSN_FUNCS(c_jr,	0xf007, 0x8002);
+> From: Bj=C3=B6rn T=C3=B6pel <bjorn@rivosinc.com>
 >
-> Hmm, I wonder where the mask originally came from!
-
-I think it's just a simple bug -- missing that "rs2" must be zero.
-
-> I had a look at the compressed spec, of which the version google gave to
-> me was v1.9 [1], and Table 1.6 in that (Instruction listing for RVC,
-> Quadrant 2) seems to list them all together.
-> Tedious it may be, but future instruction decoding bits probably need
-> more scrutiny as Drew found another clearly wrong bit a few weeks ago
-> [2].
+> In the compressed instruction extension, c.jr, c.jalr, c.mv, and c.add
+> is encoded the following way (each instruction is 16b):
 >
-> Anyways, I checked against the doc and the new versions look good to
-> me. How'd you spot this, and did you check the other masks?
+> ---+-+-----------+-----------+--
+> 100 0 rs1[4:0]!=3D0       00000 10 : c.jr
+> 100 1 rs1[4:0]!=3D0       00000 10 : c.jalr
+> 100 0  rd[4:0]!=3D0 rs2[4:0]!=3D0 10 : c.mv
+> 100 1  rd[4:0]!=3D0 rs2[4:0]!=3D0 10 : c.add
+Yes, I forgot the c.mv & c.add effect.
 
-I got hit by it when testing the optprobe series (c.mv was rejected as
-c.jr).
+Reviewed-by: Guo Ren <guoren@kernel.org>
 
-Skimmed the other masks quickly, but will take another look.
-
-> Reviewed-by: Conor Dooley <conor.dooley@microchip.com>
 >
-> [1] -
-> https://riscv.org/wp-content/uploads/2015/11/riscv-compressed-spec-v1.9.p=
-df
-
-C-ext is part of the unpriv spec:
-https://github.com/riscv/riscv-isa-manual/releases
-
-> [2] - https://lore.kernel.org/linux-riscv/20221223221332.4127602-2-heiko@=
-sntech.de/
+> The following logic is used to decode c.jr and c.jalr:
 >
->> +__RISCV_INSN_FUNCS(c_jr,	0xf07f, 0x8002);
->>  __RISCV_INSN_FUNCS(c_jal,	0xe003, 0x2001);
->> -__RISCV_INSN_FUNCS(c_jalr,	0xf007, 0x9002);
->> +__RISCV_INSN_FUNCS(c_jalr,	0xf07f, 0x9002);
->>  __RISCV_INSN_FUNCS(c_beqz,	0xe003, 0xc001);
->>  __RISCV_INSN_FUNCS(c_bnez,	0xe003, 0xe001);
->>  __RISCV_INSN_FUNCS(c_ebreak,	0xffff, 0x9002);
+>   insn & 0xf007 =3D=3D 0x8002 =3D> instruction is an c.jr
+>   insn & 0xf007 =3D=3D 0x9002 =3D> instruction is an c.jalr
 >
-> Worth noting that this code is gone in riscv/for-next thanks to Heiko's
-> de-duplication:
-> https://lore.kernel.org/linux-riscv/20221223221332.4127602-7-heiko@sntech=
-.de/
+> When 0xf007 is used to mask the instruction, c.mv can be incorrectly
+> decoded as c.jr, and c.add as c.jalr.
+>
+> Correct the decoding by changing the mask from 0xf007 to 0xf07f.
+>
+> Fixes: c22b0bcb1dd0 ("riscv: Add kprobes supported")
+> Signed-off-by: Bj=C3=B6rn T=C3=B6pel <bjorn@rivosinc.com>
+> ---
+>  arch/riscv/kernel/probes/simulate-insn.h | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+>
+> diff --git a/arch/riscv/kernel/probes/simulate-insn.h b/arch/riscv/kernel=
+/probes/simulate-insn.h
+> index cb6ff7dccb92..de8474146a9b 100644
+> --- a/arch/riscv/kernel/probes/simulate-insn.h
+> +++ b/arch/riscv/kernel/probes/simulate-insn.h
+> @@ -31,9 +31,9 @@ __RISCV_INSN_FUNCS(fence,     0x7f, 0x0f);
+>         } while (0)
+>
+>  __RISCV_INSN_FUNCS(c_j,                0xe003, 0xa001);
+> -__RISCV_INSN_FUNCS(c_jr,       0xf007, 0x8002);
+> +__RISCV_INSN_FUNCS(c_jr,       0xf07f, 0x8002);
+>  __RISCV_INSN_FUNCS(c_jal,      0xe003, 0x2001);
+> -__RISCV_INSN_FUNCS(c_jalr,     0xf007, 0x9002);
+> +__RISCV_INSN_FUNCS(c_jalr,     0xf07f, 0x9002);
+>  __RISCV_INSN_FUNCS(c_beqz,     0xe003, 0xc001);
+>  __RISCV_INSN_FUNCS(c_bnez,     0xe003, 0xe001);
+>  __RISCV_INSN_FUNCS(c_ebreak,   0xffff, 0x9002);
+>
+> base-commit: 1b929c02afd37871d5afb9d498426f83432e71c2
+> --
+> 2.37.2
+>
 
-Yay!
 
-
-Bj=C3=B6rn
+--=20
+Best Regards
+ Guo Ren
