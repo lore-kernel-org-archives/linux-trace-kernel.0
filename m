@@ -2,446 +2,195 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 51231C54EBE
-	for <linux-trace-kernel@archiver.kernel.org>; Wed,  4 Jan 2023 14:57:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B5431C4708E
+	for <linux-trace-kernel@archiver.kernel.org>; Wed,  4 Jan 2023 15:30:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239265AbjADO4t (ORCPT
+        id S239434AbjADPaW (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Wed, 4 Jan 2023 09:56:49 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45424 "EHLO
+        Wed, 4 Jan 2023 10:30:22 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35920 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S239173AbjADO4f (ORCPT
+        with ESMTP id S229499AbjADPaV (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Wed, 4 Jan 2023 09:56:35 -0500
-Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DA80810B54;
-        Wed,  4 Jan 2023 06:56:33 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 6BE9FB816A7;
-        Wed,  4 Jan 2023 14:56:32 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EFDE2C433D2;
-        Wed,  4 Jan 2023 14:56:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1672844191;
-        bh=dNrPLvxsR5d1IkaspHRwKdcsBUv5Lz6TkhiBfBIaftg=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=bw5T07uMug/lXC+WK6wVRh3N98xouemgErXe1LwaI1cTXkHySz+xVlwdAkMWLNHVR
-         c2J1JJELGGt5IsGlyj9EXeDeBWGYGfe8vQrExOH0/gUj3Ym1JTp4DmhEfVYZDLdyuT
-         r1t3tfKPTSM3p+J4O3AZlS4r0AgqrxnEq1GP7RtzIQ5cqpUTgzT5Sy3m6hJiRcomtx
-         3kTkJnMmq+EEVMP0bH5ccEWXeWCILtkbCl/X8fT0N7my3PR9193l8Yt/u97+/Yh8NR
-         3EMv0+AiUPM7C4teuDwaoNQ+XXvppk0BX41B58eDbccB8OY5ORWGI+NOpwUJZh1E8h
-         lG0RtEZ1+hmXw==
-Date:   Wed, 4 Jan 2023 23:56:28 +0900
-From:   Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To:     Mark Rutland <mark.rutland@arm.com>
-Cc:     linux-kernel@vger.kernel.org, mhiramat@kernel.org,
-        revest@chromium.org, rostedt@goodmis.org,
-        linux-trace-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 3/3] ftrace: Add sample with custom ops
-Message-Id: <20230104235628.2cfdd844f2bac9486635d3b3@kernel.org>
-In-Reply-To: <20230103124912.2948963-4-mark.rutland@arm.com>
+        Wed, 4 Jan 2023 10:30:21 -0500
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 8F4A11B9DD;
+        Wed,  4 Jan 2023 07:30:20 -0800 (PST)
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 14DF4165C;
+        Wed,  4 Jan 2023 07:31:02 -0800 (PST)
+Received: from FVFF77S0Q05N (unknown [10.57.37.146])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 601133F23F;
+        Wed,  4 Jan 2023 07:30:19 -0800 (PST)
+Date:   Wed, 4 Jan 2023 15:30:16 +0000
+From:   Mark Rutland <mark.rutland@arm.com>
+To:     Masami Hiramatsu <mhiramat@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, revest@chromium.org,
+        rostedt@goodmis.org, linux-trace-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 2/3] ftrace: Export ftrace_free_filter() to modules
+Message-ID: <Y7WbiBXwdhwCMrEz@FVFF77S0Q05N>
 References: <20230103124912.2948963-1-mark.rutland@arm.com>
-        <20230103124912.2948963-4-mark.rutland@arm.com>
-X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+ <20230103124912.2948963-3-mark.rutland@arm.com>
+ <20230104235149.2416d0b57f6fba0f2f31ba77@kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230104235149.2416d0b57f6fba0f2f31ba77@kernel.org>
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On Tue,  3 Jan 2023 12:49:12 +0000
-Mark Rutland <mark.rutland@arm.com> wrote:
+On Wed, Jan 04, 2023 at 11:51:49PM +0900, Masami Hiramatsu wrote:
+> On Tue,  3 Jan 2023 12:49:11 +0000
+> Mark Rutland <mark.rutland@arm.com> wrote:
+> 
+> > Setting filters on an ftrace ops results in some memory being allocated
+> > for the filter hashes, which must be freed before the ops can be freed.
+> > This can be done by removing every individual element of the hash by
+> > calling ftrace_set_filter_ip() or ftrace_set_filter_ips() with `remove`
+> > set, but this is somewhat error prone as it's easy to forget to remove
+> > an element.
+> > 
+> > Make it easier to clean this up by exporting ftrace_free_filter(), which
+> > can be used to clean up all of the filter hashes after an ftrace_ops has
+> > been unregistered.
+> > 
+> > Using this, fix the ftrace-direct* samples to free hashes prior to being
+> > unloaded. All other code either removes individual filters explicitly or
+> > is built-in and already calls ftrace_free_filter().
+> 
+> So, it seems to fix memory leaks. Then, it may need to go to stable.
+> 
+> Fixes: e1067a07cfbc ("ftrace/samples: Add module to test multi direct modify interface")
+> Fixes: 5fae941b9a6f ("ftrace/samples: Add multi direct interface test module")
+> Cc: stable@vger.kernel.org
+> 
+> And 
+> 
+> Reviewed-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+> 
+> Thanks!
 
-> When reworking core ftrace code or architectural ftrace code, it's often
-> necessary to test/analyse/benchmark a number of ftrace_ops
-> configurations. This patch adds a module which can be used to explore
-> some of those configurations.
-> 
-> I'm using this to benchmark various options for changing the way
-> trampolines and handling of ftrace_ops work on arm64, and ensuring other
-> architectures aren't adversely affected.
-> 
-> For example, in a QEMU+KVM VM running on a 2GHz Xeon E5-2660
-> workstation, loading the module in various configurations produces:
-> 
-> | # insmod ftrace-ops.ko
-> | ftrace_ops: registering:
-> |   relevant ops: 1
-> |     tracee: tracee_relevant [ftrace_ops]
-> |     tracer: ops_func_nop [ftrace_ops]
-> |   irrelevant ops: 0
-> |     tracee: tracee_irrelevant [ftrace_ops]
-> |     tracer: ops_func_nop [ftrace_ops]
-> |   saving registers: NO
-> |   assist recursion: NO
-> |   assist RCU: NO
-> | ftrace_ops: Attempted 100000 calls to tracee_relevant [ftrace_ops] in 1681558ns (16ns / call)
-> 
-> | # insmod ftrace-ops.ko nr_ops_irrelevant=5
-> | ftrace_ops: registering:
-> |   relevant ops: 1
-> |     tracee: tracee_relevant [ftrace_ops]
-> |     tracer: ops_func_nop [ftrace_ops]
-> |   irrelevant ops: 5
-> |     tracee: tracee_irrelevant [ftrace_ops]
-> |     tracer: ops_func_nop [ftrace_ops]
-> |   saving registers: NO
-> |   assist recursion: NO
-> |   assist RCU: NO
-> | ftrace_ops: Attempted 100000 calls to tracee_relevant [ftrace_ops] in 1693042ns (16ns / call)
-> 
-> | # insmod ftrace-ops.ko nr_ops_relevant=2
-> | ftrace_ops: registering:
-> |   relevant ops: 2
-> |     tracee: tracee_relevant [ftrace_ops]
-> |     tracer: ops_func_nop [ftrace_ops]
-> |   irrelevant ops: 0
-> |     tracee: tracee_irrelevant [ftrace_ops]
-> |     tracer: ops_func_nop [ftrace_ops]
-> |   saving registers: NO
-> |   assist recursion: NO
-> |   assist RCU: NO
-> | ftrace_ops: Attempted 100000 calls to tracee_relevant [ftrace_ops] in 11965582ns (119ns / call)
-> 
-> | # insmod ftrace-ops.ko save_regs=true
-> | ftrace_ops: registering:
-> |   relevant ops: 1
-> |     tracee: tracee_relevant [ftrace_ops]
-> |     tracer: ops_func_nop [ftrace_ops]
-> |   irrelevant ops: 0
-> |     tracee: tracee_irrelevant [ftrace_ops]
-> |     tracer: ops_func_nop [ftrace_ops]
-> |   saving registers: YES
-> |   assist recursion: NO
-> |   assist RCU: NO
-> | ftrace_ops: Attempted 100000 calls to tracee_relevant [ftrace_ops] in 4459624ns (44ns / call)
-> 
-> Signed-off-by: Mark Rutland <mark.rutland@arm.com>
-> Cc: Florent Revest <revest@chromium.org>
-> Cc: Masami Hiramatsu <mhiramat@kernel.org>
-> Cc: Steven Rostedt <rostedt@goodmis.org>
+Thanks!
 
-Thanks for this useful micro benchmark module :)
-This looks good to me.
+Assuming Steve is also happy with the series, I assume one of you two will pick
+this up and fold those in.
 
-Acked-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+I've folded all those tags in my local branch (and pushed that to my
+ftrace/ops-sample branch on kernel.org), so if you'd prefer I post a v3 with
+those I'm quite happy to do so.
 
+Thanks,
+Mark.
 
-> ---
->  samples/Kconfig             |   7 +
->  samples/Makefile            |   1 +
->  samples/ftrace/Makefile     |   1 +
->  samples/ftrace/ftrace-ops.c | 252 ++++++++++++++++++++++++++++++++++++
->  4 files changed, 261 insertions(+)
->  create mode 100644 samples/ftrace/ftrace-ops.c
 > 
-> diff --git a/samples/Kconfig b/samples/Kconfig
-> index 0d81c00289ee3..daf14c35f071d 100644
-> --- a/samples/Kconfig
-> +++ b/samples/Kconfig
-> @@ -46,6 +46,13 @@ config SAMPLE_FTRACE_DIRECT_MULTI
->  	  that hooks to wake_up_process and schedule, and prints
->  	  the function addresses.
->  
-> +config SAMPLE_FTRACE_OPS
-> +	tristate "Build custom ftrace ops example"
-> +	depends on FUNCTION_TRACER
-> +	help
-> +	  This builds an ftrace ops example that hooks two functions and
-> +	  measures the time taken to invoke one function a number of times.
-> +
->  config SAMPLE_TRACE_ARRAY
->          tristate "Build sample module for kernel access to Ftrace instancess"
->  	depends on EVENT_TRACING && m
-> diff --git a/samples/Makefile b/samples/Makefile
-> index 9832ef3f8fcba..7cb632ef88eeb 100644
-> --- a/samples/Makefile
-> +++ b/samples/Makefile
-> @@ -24,6 +24,7 @@ obj-$(CONFIG_SAMPLE_TRACE_CUSTOM_EVENTS) += trace_events/
->  obj-$(CONFIG_SAMPLE_TRACE_PRINTK)	+= trace_printk/
->  obj-$(CONFIG_SAMPLE_FTRACE_DIRECT)	+= ftrace/
->  obj-$(CONFIG_SAMPLE_FTRACE_DIRECT_MULTI) += ftrace/
-> +obj-$(CONFIG_SAMPLE_FTRACE_OPS)		+= ftrace/
->  obj-$(CONFIG_SAMPLE_TRACE_ARRAY)	+= ftrace/
->  subdir-$(CONFIG_SAMPLE_UHID)		+= uhid
->  obj-$(CONFIG_VIDEO_PCI_SKELETON)	+= v4l/
-> diff --git a/samples/ftrace/Makefile b/samples/ftrace/Makefile
-> index faf8cdb79c5f4..589baf2ec4e3d 100644
-> --- a/samples/ftrace/Makefile
-> +++ b/samples/ftrace/Makefile
-> @@ -5,6 +5,7 @@ obj-$(CONFIG_SAMPLE_FTRACE_DIRECT) += ftrace-direct-too.o
->  obj-$(CONFIG_SAMPLE_FTRACE_DIRECT) += ftrace-direct-modify.o
->  obj-$(CONFIG_SAMPLE_FTRACE_DIRECT_MULTI) += ftrace-direct-multi.o
->  obj-$(CONFIG_SAMPLE_FTRACE_DIRECT_MULTI) += ftrace-direct-multi-modify.o
-> +obj-$(CONFIG_SAMPLE_FTRACE_OPS) += ftrace-ops.o
->  
->  CFLAGS_sample-trace-array.o := -I$(src)
->  obj-$(CONFIG_SAMPLE_TRACE_ARRAY) += sample-trace-array.o
-> diff --git a/samples/ftrace/ftrace-ops.c b/samples/ftrace/ftrace-ops.c
-> new file mode 100644
-> index 0000000000000..24deb51c72618
-> --- /dev/null
-> +++ b/samples/ftrace/ftrace-ops.c
-> @@ -0,0 +1,252 @@
-> +// SPDX-License-Identifier: GPL-2.0-only
-> +
-> +#define pr_fmt(fmt)       KBUILD_MODNAME ": " fmt
-> +
-> +#include <linux/ftrace.h>
-> +#include <linux/ktime.h>
-> +#include <linux/module.h>
-> +
-> +#include <asm/barrier.h>
-> +
-> +/*
-> + * Arbitrary large value chosen to be sufficiently large to minimize noise but
-> + * sufficiently small to complete quickly.
-> + */
-> +unsigned int nr_function_calls = 100000;
-> +module_param(nr_function_calls, uint, 0);
-> +MODULE_PARM_DESC(nr_function_calls, "How many times to call the relevant tracee");
-> +
-> +/*
-> + * The number of ops associated with a call site affects whether a tracer can
-> + * be called directly or whether it's necessary to go via the list func, which
-> + * can be significantly more expensive.
-> + */
-> +unsigned int nr_ops_relevant = 1;
-> +module_param(nr_ops_relevant, uint, 0);
-> +MODULE_PARM_DESC(nr_ops_relevant, "How many ftrace_ops to associate with the relevant tracee");
-> +
-> +/*
-> + * On architectures where all call sites share the same trampoline, having
-> + * tracers enabled for distinct functions can force the use of the list func
-> + * and incur overhead for all call sites.
-> + */
-> +unsigned int nr_ops_irrelevant = 0;
-> +module_param(nr_ops_irrelevant, uint, 0);
-> +MODULE_PARM_DESC(nr_ops_irrelevant, "How many ftrace_ops to associate with the irrelevant tracee");
-> +
-> +/*
-> + * On architectures with DYNAMIC_FTRACE_WITH_REGS, saving the full pt_regs can
-> + * be more expensive than only saving the minimal necessary regs.
-> + */
-> +bool save_regs = false;
-> +module_param(save_regs, bool, 0);
-> +MODULE_PARM_DESC(save_regs, "Register ops with FTRACE_OPS_FL_SAVE_REGS (save all registers in the trampoline)");
-> +
-> +bool assist_recursion = false;
-> +module_param(assist_recursion, bool, 0);
-> +MODULE_PARM_DESC(assist_reursion, "Register ops with FTRACE_OPS_FL_RECURSION");
-> +
-> +bool assist_rcu = false;
-> +module_param(assist_rcu, bool, 0);
-> +MODULE_PARM_DESC(assist_reursion, "Register ops with FTRACE_OPS_FL_RCU");
-> +
-> +/*
-> + * By default, a trivial tracer is used which immediately returns to mimimize
-> + * overhead. Sometimes a consistency check using a more expensive tracer is
-> + * desireable.
-> + */
-> +bool check_count = false;
-> +module_param(check_count, bool, 0);
-> +MODULE_PARM_DESC(check_count, "Check that tracers are called the expected number of times\n");
-> +
-> +/*
-> + * Usually it's not interesting to leave the ops registered after the test
-> + * runs, but sometimes it can be useful to leave them registered so that they
-> + * can be inspected through the tracefs 'enabled_functions' file.
-> + */
-> +bool persist = false;
-> +module_param(persist, bool, 0);
-> +MODULE_PARM_DESC(persist, "Successfully load module and leave ftrace ops registered after test completes\n");
-> +
-> +/*
-> + * Marked as noinline to ensure that an out-of-line traceable copy is
-> + * generated by the compiler.
-> + *
-> + * The barrier() ensures the compiler won't elide calls by determining there
-> + * are no side-effects.
-> + */
-> +static noinline void tracee_relevant(void)
-> +{
-> +	barrier();
-> +}
-> +
-> +/*
-> + * Marked as noinline to ensure that an out-of-line traceable copy is
-> + * generated by the compiler.
-> + *
-> + * The barrier() ensures the compiler won't elide calls by determining there
-> + * are no side-effects.
-> + */
-> +static noinline void tracee_irrelevant(void)
-> +{
-> +	barrier();
-> +}
-> +
-> +struct sample_ops {
-> +	struct ftrace_ops ops;
-> +	unsigned int count;
-> +};
-> +
-> +static void ops_func_nop(unsigned long ip, unsigned long parent_ip,
-> +			 struct ftrace_ops *op,
-> +			 struct ftrace_regs *fregs)
-> +{
-> +	/* do nothing */
-> +}
-> +
-> +static void ops_func_count(unsigned long ip, unsigned long parent_ip,
-> +			   struct ftrace_ops *op,
-> +			   struct ftrace_regs *fregs)
-> +{
-> +	struct sample_ops *self;
-> +
-> +	self = container_of(op, struct sample_ops, ops);
-> +	self->count++;
-> +}
-> +
-> +struct sample_ops *ops_relevant;
-> +struct sample_ops *ops_irrelevant;
-> +
-> +static struct sample_ops *ops_alloc_init(void *tracee, ftrace_func_t func,
-> +					 unsigned long flags, int nr)
-> +{
-> +	struct sample_ops *ops;
-> +
-> +	ops = kcalloc(nr, sizeof(*ops), GFP_KERNEL);
-> +	if (WARN_ON_ONCE(!ops))
-> +		return NULL;
-> +
-> +	for (unsigned int i = 0; i < nr; i++) {
-> +		ops[i].ops.func = func;
-> +		ops[i].ops.flags = flags;
-> +		WARN_ON_ONCE(ftrace_set_filter_ip(&ops[i].ops, (unsigned long)tracee, 0, 0));
-> +		WARN_ON_ONCE(register_ftrace_function(&ops[i].ops));
-> +	}
-> +
-> +	return ops;
-> +}
-> +
-> +static void ops_destroy(struct sample_ops *ops, int nr)
-> +{
-> +	if (!ops)
-> +		return;
-> +
-> +	for (unsigned int i = 0; i < nr; i++) {
-> +		WARN_ON_ONCE(unregister_ftrace_function(&ops[i].ops));
-> +		ftrace_free_filter(&ops[i].ops);
-> +	}
-> +
-> +	kfree(ops);
-> +}
-> +
-> +static void ops_check(struct sample_ops *ops, int nr,
-> +		      unsigned int expected_count)
-> +{
-> +	if (!ops || !check_count)
-> +		return;
-> +
-> +	for (unsigned int i = 0; i < nr; i++) {
-> +		if (ops->count == expected_count)
-> +			continue;
-> +		pr_warn("Counter called %u times (expected %u)\n",
-> +			ops->count, expected_count);
-> +	}
-> +}
-> +
-> +ftrace_func_t tracer_relevant = ops_func_nop;
-> +ftrace_func_t tracer_irrelevant = ops_func_nop;
-> +
-> +static int __init ftrace_ops_sample_init(void)
-> +{
-> +	unsigned long flags = 0;
-> +	ktime_t start, end;
-> +	u64 period;
-> +
-> +	if (!IS_ENABLED(CONFIG_DYNAMIC_FTRACE_WITH_REGS) && save_regs) {
-> +		pr_info("this kernel does not support saving registers\n");
-> +		save_regs = false;
-> +	} else if (save_regs) {
-> +		flags |= FTRACE_OPS_FL_SAVE_REGS;
-> +	}
-> +
-> +	if (assist_recursion)
-> +		flags |= FTRACE_OPS_FL_RECURSION;
-> +
-> +	if (assist_rcu)
-> +		flags |= FTRACE_OPS_FL_RCU;
-> +
-> +	if (check_count) {
-> +		tracer_relevant = ops_func_count;
-> +		tracer_irrelevant = ops_func_count;
-> +	}
-> +
-> +	pr_info("registering:\n"
-> +		"  relevant ops: %u\n"
-> +		"    tracee: %ps\n"
-> +		"    tracer: %ps\n"
-> +		"  irrelevant ops: %u\n"
-> +		"    tracee: %ps\n"
-> +		"    tracer: %ps\n"
-> +		"  saving registers: %s\n"
-> +		"  assist recursion: %s\n"
-> +		"  assist RCU: %s\n",
-> +		nr_ops_relevant, tracee_relevant, tracer_relevant,
-> +		nr_ops_irrelevant, tracee_irrelevant, tracer_irrelevant,
-> +		save_regs ? "YES" : "NO",
-> +		assist_recursion ? "YES" : "NO",
-> +		assist_rcu ? "YES" : "NO");
-> +
-> +	ops_relevant = ops_alloc_init(tracee_relevant, tracer_relevant,
-> +				      flags, nr_ops_relevant);
-> +	ops_irrelevant = ops_alloc_init(tracee_irrelevant, tracer_irrelevant,
-> +					flags, nr_ops_irrelevant);
-> +
-> +	start = ktime_get();
-> +	for (unsigned int i = 0; i < nr_function_calls; i++)
-> +		tracee_relevant();
-> +	end = ktime_get();
-> +
-> +	ops_check(ops_relevant, nr_ops_relevant, nr_function_calls);
-> +	ops_check(ops_irrelevant, nr_ops_irrelevant, 0);
-> +
-> +	period = ktime_to_ns(ktime_sub(end, start));
-> +
-> +	pr_info("Attempted %u calls to %ps in %lluns (%lluns / call)\n",
-> +		nr_function_calls, tracee_relevant,
-> +		period, period / nr_function_calls);
-> +
-> +	if (persist)
-> +		return 0;
-> +
-> +	ops_destroy(ops_relevant, nr_ops_relevant);
-> +	ops_destroy(ops_irrelevant, nr_ops_irrelevant);
-> +
-> +	/*
-> +	 * The benchmark completed sucessfully, but there's no reason to keep
-> +	 * the module around. Return an error do the user doesn't have to
-> +	 * manually unload the module.
-> +	 */
-> +	return -EINVAL;
-> +}
-> +module_init(ftrace_ops_sample_init);
-> +
-> +static void __exit ftrace_ops_sample_exit(void)
-> +{
-> +	ops_destroy(ops_relevant, nr_ops_relevant);
-> +	ops_destroy(ops_irrelevant, nr_ops_irrelevant);
-> +}
-> +module_exit(ftrace_ops_sample_exit);
-> +
-> +MODULE_AUTHOR("Mark Rutland");
-> +MODULE_DESCRIPTION("Example of using custom ftrace_ops");
-> +MODULE_LICENSE("GPL");
+> > 
+> > Signed-off-by: Mark Rutland <mark.rutland@arm.com>
+> > Reviewed-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+> > Cc: Florent Revest <revest@chromium.org>
+> > Cc: Masami Hiramatsu <mhiramat@kernel.org>
+> > ---
+> >  kernel/trace/ftrace.c                       | 23 ++++++++++++++++++++-
+> >  samples/ftrace/ftrace-direct-multi-modify.c |  1 +
+> >  samples/ftrace/ftrace-direct-multi.c        |  1 +
+> >  3 files changed, 24 insertions(+), 1 deletion(-)
+> > 
+> > diff --git a/kernel/trace/ftrace.c b/kernel/trace/ftrace.c
+> > index 442438b93fe98..750aa3f08b25a 100644
+> > --- a/kernel/trace/ftrace.c
+> > +++ b/kernel/trace/ftrace.c
+> > @@ -1248,12 +1248,17 @@ static void free_ftrace_hash_rcu(struct ftrace_hash *hash)
+> >  	call_rcu(&hash->rcu, __free_ftrace_hash_rcu);
+> >  }
+> >  
+> > +/**
+> > + * ftrace_free_filter - remove all filters for an ftrace_ops
+> > + * @ops - the ops to remove the filters from
+> > + */
+> >  void ftrace_free_filter(struct ftrace_ops *ops)
+> >  {
+> >  	ftrace_ops_init(ops);
+> >  	free_ftrace_hash(ops->func_hash->filter_hash);
+> >  	free_ftrace_hash(ops->func_hash->notrace_hash);
+> >  }
+> > +EXPORT_SYMBOL_GPL(ftrace_free_filter);
+> >  
+> >  static struct ftrace_hash *alloc_ftrace_hash(int size_bits)
+> >  {
+> > @@ -5839,6 +5844,10 @@ EXPORT_SYMBOL_GPL(modify_ftrace_direct_multi);
+> >   *
+> >   * Filters denote which functions should be enabled when tracing is enabled
+> >   * If @ip is NULL, it fails to update filter.
+> > + *
+> > + * This can allocate memory which must be freed before @ops can be freed,
+> > + * either by removing each filtered addr or by using
+> > + * ftrace_free_filter(@ops).
+> >   */
+> >  int ftrace_set_filter_ip(struct ftrace_ops *ops, unsigned long ip,
+> >  			 int remove, int reset)
+> > @@ -5858,7 +5867,11 @@ EXPORT_SYMBOL_GPL(ftrace_set_filter_ip);
+> >   *
+> >   * Filters denote which functions should be enabled when tracing is enabled
+> >   * If @ips array or any ip specified within is NULL , it fails to update filter.
+> > - */
+> > + *
+> > + * This can allocate memory which must be freed before @ops can be freed,
+> > + * either by removing each filtered addr or by using
+> > + * ftrace_free_filter(@ops).
+> > +*/
+> >  int ftrace_set_filter_ips(struct ftrace_ops *ops, unsigned long *ips,
+> >  			  unsigned int cnt, int remove, int reset)
+> >  {
+> > @@ -5900,6 +5913,10 @@ ftrace_set_regex(struct ftrace_ops *ops, unsigned char *buf, int len,
+> >   *
+> >   * Filters denote which functions should be enabled when tracing is enabled.
+> >   * If @buf is NULL and reset is set, all functions will be enabled for tracing.
+> > + *
+> > + * This can allocate memory which must be freed before @ops can be freed,
+> > + * either by removing each filtered addr or by using
+> > + * ftrace_free_filter(@ops).
+> >   */
+> >  int ftrace_set_filter(struct ftrace_ops *ops, unsigned char *buf,
+> >  		       int len, int reset)
+> > @@ -5919,6 +5936,10 @@ EXPORT_SYMBOL_GPL(ftrace_set_filter);
+> >   * Notrace Filters denote which functions should not be enabled when tracing
+> >   * is enabled. If @buf is NULL and reset is set, all functions will be enabled
+> >   * for tracing.
+> > + *
+> > + * This can allocate memory which must be freed before @ops can be freed,
+> > + * either by removing each filtered addr or by using
+> > + * ftrace_free_filter(@ops).
+> >   */
+> >  int ftrace_set_notrace(struct ftrace_ops *ops, unsigned char *buf,
+> >  			int len, int reset)
+> > diff --git a/samples/ftrace/ftrace-direct-multi-modify.c b/samples/ftrace/ftrace-direct-multi-modify.c
+> > index d52370cad0b6e..a825dbd2c9cfd 100644
+> > --- a/samples/ftrace/ftrace-direct-multi-modify.c
+> > +++ b/samples/ftrace/ftrace-direct-multi-modify.c
+> > @@ -152,6 +152,7 @@ static void __exit ftrace_direct_multi_exit(void)
+> >  {
+> >  	kthread_stop(simple_tsk);
+> >  	unregister_ftrace_direct_multi(&direct, my_tramp);
+> > +	ftrace_free_filter(&direct);
+> >  }
+> >  
+> >  module_init(ftrace_direct_multi_init);
+> > diff --git a/samples/ftrace/ftrace-direct-multi.c b/samples/ftrace/ftrace-direct-multi.c
+> > index ec1088922517d..d955a26506053 100644
+> > --- a/samples/ftrace/ftrace-direct-multi.c
+> > +++ b/samples/ftrace/ftrace-direct-multi.c
+> > @@ -79,6 +79,7 @@ static int __init ftrace_direct_multi_init(void)
+> >  static void __exit ftrace_direct_multi_exit(void)
+> >  {
+> >  	unregister_ftrace_direct_multi(&direct, (unsigned long) my_tramp);
+> > +	ftrace_free_filter(&direct);
+> >  }
+> >  
+> >  module_init(ftrace_direct_multi_init);
+> > -- 
+> > 2.30.2
+> > 
+> 
+> 
 > -- 
-> 2.30.2
-> 
-
-
--- 
-Masami Hiramatsu (Google) <mhiramat@kernel.org>
+> Masami Hiramatsu (Google) <mhiramat@kernel.org>
