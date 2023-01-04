@@ -2,195 +2,94 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B5431C4708E
-	for <linux-trace-kernel@archiver.kernel.org>; Wed,  4 Jan 2023 15:30:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 08414C4332F
+	for <linux-trace-kernel@archiver.kernel.org>; Wed,  4 Jan 2023 15:36:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239434AbjADPaW (ORCPT
+        id S235207AbjADPgd (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Wed, 4 Jan 2023 10:30:22 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35920 "EHLO
+        Wed, 4 Jan 2023 10:36:33 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38500 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229499AbjADPaV (ORCPT
+        with ESMTP id S230420AbjADPgc (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Wed, 4 Jan 2023 10:30:21 -0500
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 8F4A11B9DD;
-        Wed,  4 Jan 2023 07:30:20 -0800 (PST)
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 14DF4165C;
-        Wed,  4 Jan 2023 07:31:02 -0800 (PST)
-Received: from FVFF77S0Q05N (unknown [10.57.37.146])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 601133F23F;
-        Wed,  4 Jan 2023 07:30:19 -0800 (PST)
-Date:   Wed, 4 Jan 2023 15:30:16 +0000
-From:   Mark Rutland <mark.rutland@arm.com>
-To:     Masami Hiramatsu <mhiramat@kernel.org>
-Cc:     linux-kernel@vger.kernel.org, revest@chromium.org,
-        rostedt@goodmis.org, linux-trace-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 2/3] ftrace: Export ftrace_free_filter() to modules
-Message-ID: <Y7WbiBXwdhwCMrEz@FVFF77S0Q05N>
-References: <20230103124912.2948963-1-mark.rutland@arm.com>
- <20230103124912.2948963-3-mark.rutland@arm.com>
- <20230104235149.2416d0b57f6fba0f2f31ba77@kernel.org>
+        Wed, 4 Jan 2023 10:36:32 -0500
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [IPv6:2001:67c:2178:6::1c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 94C54167EF;
+        Wed,  4 Jan 2023 07:36:31 -0800 (PST)
+Received: from relay2.suse.de (relay2.suse.de [149.44.160.134])
+        by smtp-out1.suse.de (Postfix) with ESMTP id 4D1873FBE0;
+        Wed,  4 Jan 2023 15:36:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
+        t=1672846590; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=Y3eRToaXVdN3AVocHxVVeVyr8FyHyxT3hbSrQcFTokM=;
+        b=Z8o1DceIPDjGkidYTGzhocEhLkBXzXqqcguZQC+zUMSqmtR1isNtL7jsRs2WGOlbP41GoT
+        Vw2CcOg1XWYvqtEXK0Ge9hfVYay6Fxwdzh8y3d9hs4SusTG8QNm5RshQFPkhA0IfXb2+ZJ
+        7e+oRqulsuvmHTT1QxbrpVaTIsLC3MU=
+Received: from suse.cz (unknown [10.100.208.146])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by relay2.suse.de (Postfix) with ESMTPS id D36CD2C141;
+        Wed,  4 Jan 2023 15:36:29 +0000 (UTC)
+Date:   Wed, 4 Jan 2023 16:36:28 +0100
+From:   Petr Mladek <pmladek@suse.com>
+To:     Zhen Lei <thunder.leizhen@huawei.com>
+Cc:     Josh Poimboeuf <jpoimboe@kernel.org>,
+        Jiri Kosina <jikos@kernel.org>,
+        Miroslav Benes <mbenes@suse.cz>,
+        Joe Lawrence <joe.lawrence@redhat.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Andrii Nakryiko <andrii@kernel.org>,
+        Martin KaFai Lau <martin.lau@linux.dev>,
+        Song Liu <song@kernel.org>, Yonghong Song <yhs@fb.com>,
+        John Fastabend <john.fastabend@gmail.com>,
+        KP Singh <kpsingh@kernel.org>,
+        Stanislav Fomichev <sdf@google.com>,
+        Hao Luo <haoluo@google.com>, Jiri Olsa <jolsa@kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>, bpf@vger.kernel.org,
+        linux-trace-kernel@vger.kernel.org, live-patching@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Luis Chamberlain <mcgrof@kernel.org>,
+        linux-modules@vger.kernel.org
+Subject: Re: [PATCH 1/3] livepatch: Improve the search performance of
+ module_kallsyms_on_each_symbol()
+Message-ID: <Y7Wc/G8a+pv6iV7G@alley>
+References: <20221230112729.351-1-thunder.leizhen@huawei.com>
+ <20221230112729.351-2-thunder.leizhen@huawei.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20230104235149.2416d0b57f6fba0f2f31ba77@kernel.org>
+In-Reply-To: <20221230112729.351-2-thunder.leizhen@huawei.com>
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On Wed, Jan 04, 2023 at 11:51:49PM +0900, Masami Hiramatsu wrote:
-> On Tue,  3 Jan 2023 12:49:11 +0000
-> Mark Rutland <mark.rutland@arm.com> wrote:
+On Fri 2022-12-30 19:27:27, Zhen Lei wrote:
+> Currently we traverse all symbols of all modules to find the specified
+> function for the specified module. But in reality, we just need to find
+> the given module and then traverse all the symbols in it.
 > 
-> > Setting filters on an ftrace ops results in some memory being allocated
-> > for the filter hashes, which must be freed before the ops can be freed.
-> > This can be done by removing every individual element of the hash by
-> > calling ftrace_set_filter_ip() or ftrace_set_filter_ips() with `remove`
-> > set, but this is somewhat error prone as it's easy to forget to remove
-> > an element.
-> > 
-> > Make it easier to clean this up by exporting ftrace_free_filter(), which
-> > can be used to clean up all of the filter hashes after an ftrace_ops has
-> > been unregistered.
-> > 
-> > Using this, fix the ftrace-direct* samples to free hashes prior to being
-> > unloaded. All other code either removes individual filters explicitly or
-> > is built-in and already calls ftrace_free_filter().
+> Let's add a new parameter 'const char *modname' to function
+> module_kallsyms_on_each_symbol(), then we can compare the module names
+> directly in this function and call hook 'fn' after matching. If 'modname'
+> is NULL, the symbols of all modules are still traversed for compatibility
+> with other usage cases.
 > 
-> So, it seems to fix memory leaks. Then, it may need to go to stable.
+> Phase1: mod1-->mod2..(subsequent modules do not need to be compared)
+>                 |
+> Phase2:          -->f1-->f2-->f3
 > 
-> Fixes: e1067a07cfbc ("ftrace/samples: Add module to test multi direct modify interface")
-> Fixes: 5fae941b9a6f ("ftrace/samples: Add multi direct interface test module")
-> Cc: stable@vger.kernel.org
+> Assuming that there are m modules, each module has n symbols on average,
+> then the time complexity is reduced from O(m * n) to O(m) + O(n).
 > 
-> And 
-> 
-> Reviewed-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-> 
-> Thanks!
+> Signed-off-by: Zhen Lei <thunder.leizhen@huawei.com>
 
-Thanks!
+Looks good to me:
 
-Assuming Steve is also happy with the series, I assume one of you two will pick
-this up and fold those in.
+Reviewed-by: Petr Mladek <pmladek@suse.com>
 
-I've folded all those tags in my local branch (and pushed that to my
-ftrace/ops-sample branch on kernel.org), so if you'd prefer I post a v3 with
-those I'm quite happy to do so.
-
-Thanks,
-Mark.
-
-> 
-> > 
-> > Signed-off-by: Mark Rutland <mark.rutland@arm.com>
-> > Reviewed-by: Steven Rostedt (Google) <rostedt@goodmis.org>
-> > Cc: Florent Revest <revest@chromium.org>
-> > Cc: Masami Hiramatsu <mhiramat@kernel.org>
-> > ---
-> >  kernel/trace/ftrace.c                       | 23 ++++++++++++++++++++-
-> >  samples/ftrace/ftrace-direct-multi-modify.c |  1 +
-> >  samples/ftrace/ftrace-direct-multi.c        |  1 +
-> >  3 files changed, 24 insertions(+), 1 deletion(-)
-> > 
-> > diff --git a/kernel/trace/ftrace.c b/kernel/trace/ftrace.c
-> > index 442438b93fe98..750aa3f08b25a 100644
-> > --- a/kernel/trace/ftrace.c
-> > +++ b/kernel/trace/ftrace.c
-> > @@ -1248,12 +1248,17 @@ static void free_ftrace_hash_rcu(struct ftrace_hash *hash)
-> >  	call_rcu(&hash->rcu, __free_ftrace_hash_rcu);
-> >  }
-> >  
-> > +/**
-> > + * ftrace_free_filter - remove all filters for an ftrace_ops
-> > + * @ops - the ops to remove the filters from
-> > + */
-> >  void ftrace_free_filter(struct ftrace_ops *ops)
-> >  {
-> >  	ftrace_ops_init(ops);
-> >  	free_ftrace_hash(ops->func_hash->filter_hash);
-> >  	free_ftrace_hash(ops->func_hash->notrace_hash);
-> >  }
-> > +EXPORT_SYMBOL_GPL(ftrace_free_filter);
-> >  
-> >  static struct ftrace_hash *alloc_ftrace_hash(int size_bits)
-> >  {
-> > @@ -5839,6 +5844,10 @@ EXPORT_SYMBOL_GPL(modify_ftrace_direct_multi);
-> >   *
-> >   * Filters denote which functions should be enabled when tracing is enabled
-> >   * If @ip is NULL, it fails to update filter.
-> > + *
-> > + * This can allocate memory which must be freed before @ops can be freed,
-> > + * either by removing each filtered addr or by using
-> > + * ftrace_free_filter(@ops).
-> >   */
-> >  int ftrace_set_filter_ip(struct ftrace_ops *ops, unsigned long ip,
-> >  			 int remove, int reset)
-> > @@ -5858,7 +5867,11 @@ EXPORT_SYMBOL_GPL(ftrace_set_filter_ip);
-> >   *
-> >   * Filters denote which functions should be enabled when tracing is enabled
-> >   * If @ips array or any ip specified within is NULL , it fails to update filter.
-> > - */
-> > + *
-> > + * This can allocate memory which must be freed before @ops can be freed,
-> > + * either by removing each filtered addr or by using
-> > + * ftrace_free_filter(@ops).
-> > +*/
-> >  int ftrace_set_filter_ips(struct ftrace_ops *ops, unsigned long *ips,
-> >  			  unsigned int cnt, int remove, int reset)
-> >  {
-> > @@ -5900,6 +5913,10 @@ ftrace_set_regex(struct ftrace_ops *ops, unsigned char *buf, int len,
-> >   *
-> >   * Filters denote which functions should be enabled when tracing is enabled.
-> >   * If @buf is NULL and reset is set, all functions will be enabled for tracing.
-> > + *
-> > + * This can allocate memory which must be freed before @ops can be freed,
-> > + * either by removing each filtered addr or by using
-> > + * ftrace_free_filter(@ops).
-> >   */
-> >  int ftrace_set_filter(struct ftrace_ops *ops, unsigned char *buf,
-> >  		       int len, int reset)
-> > @@ -5919,6 +5936,10 @@ EXPORT_SYMBOL_GPL(ftrace_set_filter);
-> >   * Notrace Filters denote which functions should not be enabled when tracing
-> >   * is enabled. If @buf is NULL and reset is set, all functions will be enabled
-> >   * for tracing.
-> > + *
-> > + * This can allocate memory which must be freed before @ops can be freed,
-> > + * either by removing each filtered addr or by using
-> > + * ftrace_free_filter(@ops).
-> >   */
-> >  int ftrace_set_notrace(struct ftrace_ops *ops, unsigned char *buf,
-> >  			int len, int reset)
-> > diff --git a/samples/ftrace/ftrace-direct-multi-modify.c b/samples/ftrace/ftrace-direct-multi-modify.c
-> > index d52370cad0b6e..a825dbd2c9cfd 100644
-> > --- a/samples/ftrace/ftrace-direct-multi-modify.c
-> > +++ b/samples/ftrace/ftrace-direct-multi-modify.c
-> > @@ -152,6 +152,7 @@ static void __exit ftrace_direct_multi_exit(void)
-> >  {
-> >  	kthread_stop(simple_tsk);
-> >  	unregister_ftrace_direct_multi(&direct, my_tramp);
-> > +	ftrace_free_filter(&direct);
-> >  }
-> >  
-> >  module_init(ftrace_direct_multi_init);
-> > diff --git a/samples/ftrace/ftrace-direct-multi.c b/samples/ftrace/ftrace-direct-multi.c
-> > index ec1088922517d..d955a26506053 100644
-> > --- a/samples/ftrace/ftrace-direct-multi.c
-> > +++ b/samples/ftrace/ftrace-direct-multi.c
-> > @@ -79,6 +79,7 @@ static int __init ftrace_direct_multi_init(void)
-> >  static void __exit ftrace_direct_multi_exit(void)
-> >  {
-> >  	unregister_ftrace_direct_multi(&direct, (unsigned long) my_tramp);
-> > +	ftrace_free_filter(&direct);
-> >  }
-> >  
-> >  module_init(ftrace_direct_multi_init);
-> > -- 
-> > 2.30.2
-> > 
-> 
-> 
-> -- 
-> Masami Hiramatsu (Google) <mhiramat@kernel.org>
+Best Regards,
+Petr
