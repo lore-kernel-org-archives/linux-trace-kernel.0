@@ -2,36 +2,48 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 69C7EC46467
-	for <linux-trace-kernel@archiver.kernel.org>; Wed,  4 Jan 2023 21:14:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 336E6C53210
+	for <linux-trace-kernel@archiver.kernel.org>; Wed,  4 Jan 2023 21:39:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231197AbjADVOS (ORCPT
+        id S233514AbjADVjW (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Wed, 4 Jan 2023 16:14:18 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56922 "EHLO
+        Wed, 4 Jan 2023 16:39:22 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47736 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229616AbjADVOS (ORCPT
+        with ESMTP id S230073AbjADVjV (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Wed, 4 Jan 2023 16:14:18 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 723A71CB24;
-        Wed,  4 Jan 2023 13:14:17 -0800 (PST)
+        Wed, 4 Jan 2023 16:39:21 -0500
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2556D1C130;
+        Wed,  4 Jan 2023 13:39:19 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 0E43D61826;
-        Wed,  4 Jan 2023 21:14:17 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 078F6C433EF;
-        Wed,  4 Jan 2023 21:14:15 +0000 (UTC)
-Date:   Wed, 4 Jan 2023 16:14:12 -0500
+        by ams.source.kernel.org (Postfix) with ESMTPS id B1F6AB818FE;
+        Wed,  4 Jan 2023 21:39:17 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 626DCC433F1;
+        Wed,  4 Jan 2023 21:39:15 +0000 (UTC)
+Date:   Wed, 4 Jan 2023 16:39:13 -0500
 From:   Steven Rostedt <rostedt@goodmis.org>
-To:     LKML <linux-kernel@vger.kernel.org>,
-        Linux Trace Kernel <linux-trace-kernel@vger.kernel.org>
-Cc:     Masami Hiramatsu <mhiramat@kernel.org>,
-        Joel Fernandes <joel@joelfernandes.org>
-Subject: [PATCH] tracing: Make sure trace_printk() can output as soon as it
- can be used
-Message-ID: <20230104161412.019f6c55@gandalf.local.home>
+To:     "Rafael J. Wysocki" <rafael@kernel.org>
+Cc:     Joel Fernandes <joel@joelfernandes.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linux Trace Kernel <linux-trace-kernel@vger.kernel.org>,
+        linux-acpi@vger.kernel.org, Len Brown <lenb@kernel.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Brian Norris <briannorris@chromium.org>,
+        Ross Zwisler <zwisler@google.com>,
+        Ching-lin Yu <chinglinyu@google.com>
+Subject: Re: [RFC][PATCH] ACPI: tracing: Have ACPI debug go to tracing ring
+ buffer
+Message-ID: <20230104163913.7b13cd68@gandalf.local.home>
+In-Reply-To: <CAJZ5v0iNdLyOpAxsCTTq-zqRfWDrJ5_c2DUcJYE5ZFn7u+2qdQ@mail.gmail.com>
+References: <20221214233106.69b2c01b@gandalf.local.home>
+        <Y5trUep9IvCv1Uwy@google.com>
+        <20221215141146.6ceb7cf2@gandalf.local.home>
+        <CAEXW_YQLtK=4LMJ+LHPVWU0wbV-027HJoCEKTjZvBZ6krrn6vw@mail.gmail.com>
+        <20221215151333.49af5442@gandalf.local.home>
+        <CAJZ5v0iNdLyOpAxsCTTq-zqRfWDrJ5_c2DUcJYE5ZFn7u+2qdQ@mail.gmail.com>
 X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
@@ -40,80 +52,22 @@ Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
+On Fri, 30 Dec 2022 16:52:36 +0100
+"Rafael J. Wysocki" <rafael@kernel.org> wrote:
 
-Currently trace_printk() can be used as soon as early_trace_init() is
-called from start_kernel(). But if a crash happens, and
-"ftrace_dump_on_oops" is set on the kernel command line, all you get will
-be:
+> Personally, I would use a command line option to control the behavior
+> and the Kconfig option to provide its default value.
+> 
 
-  [    0.456075]   <idle>-0         0dN.2. 347519us : Unknown type 6
-  [    0.456075]   <idle>-0         0dN.2. 353141us : Unknown type 6
-  [    0.456075]   <idle>-0         0dN.2. 358684us : Unknown type 6
+I can add that.
 
-This is because the trace_printk() event (type 6) hasn't been registered
-yet. That gets done via an early_initcall(), which may be early, but not
-early enough.
+> This way it can be flipped without rebuilding the kernel if need be.
+> 
+> I would also make the ACPI debug output go into the trace buffer so
+> long as the Kconfig option is not changed or the command line option
+> is not flipped.
 
-Instead of registering the trace_printk() event (and other ftrace events,
-which are not trace events) via an early_initcall(), have them registered at
-the same time that trace_printk() can be used. This way, if there is a
-crash before early_initcall(), then the trace_printk()s will actually be
-useful.
+Not sure what you mean by the above? You mean to make going to both as the
+default?
 
-Cc: stable@vger.kernel.org
-Reported-by: "Joel Fernandes (Google)" <joel@joelfernandes.org>
-Fixes: e725c731e3bb1 ("tracing: Split tracing initialization into two for early initialization")
-Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
----
- kernel/trace/trace.c        | 2 ++
- kernel/trace/trace.h        | 1 +
- kernel/trace/trace_output.c | 3 +--
- 3 files changed, 4 insertions(+), 2 deletions(-)
-
-diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
-index d3005279165d..80de338f1277 100644
---- a/kernel/trace/trace.c
-+++ b/kernel/trace/trace.c
-@@ -10196,6 +10196,8 @@ void __init early_trace_init(void)
- 			static_key_enable(&tracepoint_printk_key.key);
- 	}
- 	tracer_alloc_buffers();
-+
-+	init_events();
- }
- 
- void __init trace_init(void)
-diff --git a/kernel/trace/trace.h b/kernel/trace/trace.h
-index 900e75d96c84..11c4918ff202 100644
---- a/kernel/trace/trace.h
-+++ b/kernel/trace/trace.h
-@@ -1504,6 +1504,7 @@ extern void trace_event_enable_cmd_record(bool enable);
- extern void trace_event_enable_tgid_record(bool enable);
- 
- extern int event_trace_init(void);
-+extern int init_events(void);
- extern int event_trace_add_tracer(struct dentry *parent, struct trace_array *tr);
- extern int event_trace_del_tracer(struct trace_array *tr);
- extern void __trace_early_add_events(struct trace_array *tr);
-diff --git a/kernel/trace/trace_output.c b/kernel/trace/trace_output.c
-index 67f47ea27921..5cd4fb656306 100644
---- a/kernel/trace/trace_output.c
-+++ b/kernel/trace/trace_output.c
-@@ -1568,7 +1568,7 @@ static struct trace_event *events[] __initdata = {
- 	NULL
- };
- 
--__init static int init_events(void)
-+__init int init_events(void)
- {
- 	struct trace_event *event;
- 	int i, ret;
-@@ -1581,4 +1581,3 @@ __init static int init_events(void)
- 
- 	return 0;
- }
--early_initcall(init_events);
--- 
-2.35.1
-
+-- Steve
