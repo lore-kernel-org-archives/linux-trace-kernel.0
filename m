@@ -2,84 +2,102 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 08030C3DA7A
-	for <linux-trace-kernel@archiver.kernel.org>; Thu,  5 Jan 2023 14:56:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 36245C3DA7D
+	for <linux-trace-kernel@archiver.kernel.org>; Thu,  5 Jan 2023 17:49:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232967AbjAEO4F (ORCPT
+        id S234788AbjAERtf (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Thu, 5 Jan 2023 09:56:05 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54862 "EHLO
+        Thu, 5 Jan 2023 12:49:35 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57816 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234427AbjAEOzu (ORCPT
+        with ESMTP id S235195AbjAERt1 (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Thu, 5 Jan 2023 09:55:50 -0500
-Received: from mail-ej1-f50.google.com (mail-ej1-f50.google.com [209.85.218.50])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C3A1D13D4F;
-        Thu,  5 Jan 2023 06:55:49 -0800 (PST)
-Received: by mail-ej1-f50.google.com with SMTP id u9so90772059ejo.0;
-        Thu, 05 Jan 2023 06:55:49 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=BuOfy85ZwvCfFAcvAn2erozThPTjz6H5x5dkC5MKj30=;
-        b=VWPQmb7CKrojM+/15SVqg9cRFL31QXG04D998UUlL78TRKJjfPVis/w0j3wtO6pSy+
-         Ni3t9CZqDfFDDdUwte7gp6M4ZVVo1IpHvxi46mDMKXDYGtV9z+aPz1BY7T/pWorEzwhw
-         6JYud7StqYFBTz+P9WCD+RJw18zVOTC6ap5zhab9fPcFB9y1mZEy+thBkU2mV+2Ci1Id
-         QsfxzRpuA0p8344tiC1mEbQg0mSThE/puhQey6dqb2hqV6atsMI8iqq6uWOV9qhALwCN
-         3QLUlqHLRRF/VisUzceSPX98nwgpoH4We0dEysionIniZVyuX+i8BYHfOH8DbB8KrXYX
-         sycg==
-X-Gm-Message-State: AFqh2kqt5NizVDl17mFxXUPxnCgBQkbstHBk6BoT0BCI9nIEIPaiN0q5
-        +C13nERhrjx4+dfrhppZRLCeu+97BYYWgsz9S4w=
-X-Google-Smtp-Source: AMrXdXv486tEDcDIfpsnRI+CN8Q3/XCClxaX1CsTCMwkE+Hi2BixnvVL0GgrHDV3E2M3VsmwpTTS+RH+W9IZCTtAsSI=
-X-Received: by 2002:a17:906:50c:b0:836:9bcf:1702 with SMTP id
- j12-20020a170906050c00b008369bcf1702mr6583874eja.509.1672930548305; Thu, 05
- Jan 2023 06:55:48 -0800 (PST)
+        Thu, 5 Jan 2023 12:49:27 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 520B550051;
+        Thu,  5 Jan 2023 09:49:26 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id E06A761AC9;
+        Thu,  5 Jan 2023 17:49:25 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 51771C433D2;
+        Thu,  5 Jan 2023 17:49:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1672940965;
+        bh=5TSkYg+2VQLbcORpvH9lpgB7lm5DQeZfI2Us2iHw7U0=;
+        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+        b=KKHkVHlPfkdfeDtxEPgHKmZaAhRHO5pyEBeWnCwqwjnGfSdD/VyOBQfT9HKNRQFod
+         NSEOKGbdBdIkb7DDZvYr85k7NQfSi/FiKu8iCqhGsAuGD3dT/9Vx3Jig38OxEHjzQX
+         YEz+53lE1s2+ijrmOnH5zRjV9D101DTPuauA2Ytn+nUAY+ahy1KtgUzfMebLhOP5l4
+         PCCZpiIt92olf/cxg1lRY2SMZOLocdgcwG3ub3Y02aUR0MNSWCKESkhhzur0kPZsjR
+         PdQbgCbE3kpDIF+yrNoJwWkDV3jyYwymfF588hkRiDi7Dv3xMCtdo0SlZyMBvFxyPy
+         e6FkF8wqUr4kw==
+Received: by paulmck-ThinkPad-P17-Gen-1.home (Postfix, from userid 1000)
+        id EA8B45C0544; Thu,  5 Jan 2023 09:49:24 -0800 (PST)
+Date:   Thu, 5 Jan 2023 09:49:24 -0800
+From:   "Paul E. McKenney" <paulmck@kernel.org>
+To:     yang.yang29@zte.com.cn
+Cc:     rostedt@goodmis.org, mhiramat@kernel.org,
+        linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+        xu.panda@zte.com.cn
+Subject: Re: [PATCH linux-next] rcu/trace: use strscpy() to instead of
+ strncpy()
+Message-ID: <20230105174924.GD4028633@paulmck-ThinkPad-P17-Gen-1>
+Reply-To: paulmck@kernel.org
+References: <202301052017571305723@zte.com.cn>
 MIME-Version: 1.0
-References: <20221214233106.69b2c01b@gandalf.local.home> <Y5trUep9IvCv1Uwy@google.com>
- <20221215141146.6ceb7cf2@gandalf.local.home> <CAEXW_YQLtK=4LMJ+LHPVWU0wbV-027HJoCEKTjZvBZ6krrn6vw@mail.gmail.com>
- <20221215151333.49af5442@gandalf.local.home> <CAJZ5v0iNdLyOpAxsCTTq-zqRfWDrJ5_c2DUcJYE5ZFn7u+2qdQ@mail.gmail.com>
- <20230104163913.7b13cd68@gandalf.local.home>
-In-Reply-To: <20230104163913.7b13cd68@gandalf.local.home>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Thu, 5 Jan 2023 15:55:33 +0100
-Message-ID: <CAJZ5v0ib+Xg_tXb9yURFt91kJ9cFT48KzLaOjJ94gefRHCMbag@mail.gmail.com>
-Subject: Re: [RFC][PATCH] ACPI: tracing: Have ACPI debug go to tracing ring buffer
-To:     Steven Rostedt <rostedt@goodmis.org>
-Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Linux Trace Kernel <linux-trace-kernel@vger.kernel.org>,
-        linux-acpi@vger.kernel.org, Len Brown <lenb@kernel.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Brian Norris <briannorris@chromium.org>,
-        Ross Zwisler <zwisler@google.com>,
-        Ching-lin Yu <chinglinyu@google.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <202301052017571305723@zte.com.cn>
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On Wed, Jan 4, 2023 at 10:39 PM Steven Rostedt <rostedt@goodmis.org> wrote:
->
-> On Fri, 30 Dec 2022 16:52:36 +0100
-> "Rafael J. Wysocki" <rafael@kernel.org> wrote:
->
-> > Personally, I would use a command line option to control the behavior
-> > and the Kconfig option to provide its default value.
-> >
->
-> I can add that.
->
-> > This way it can be flipped without rebuilding the kernel if need be.
-> >
-> > I would also make the ACPI debug output go into the trace buffer so
-> > long as the Kconfig option is not changed or the command line option
-> > is not flipped.
->
-> Not sure what you mean by the above? You mean to make going to both as the
-> default?
+On Thu, Jan 05, 2023 at 08:17:57PM +0800, yang.yang29@zte.com.cn wrote:
+> From: Xu Panda <xu.panda@zte.com.cn>
+> 
+> The implementation of strscpy() is more robust and safer.
+> That's now the recommended way to copy NUL-terminated strings.
+> 
+> Signed-off-by: Xu Panda <xu.panda@zte.com.cn>
+> Signed-off-by: Yang Yang <yang.yang29@zte.com.cn>
 
-No, just send them to the trace buffer alone unless specifically told
-to printk() them.
+Queued for testing and additional review, thank you!
+
+Please see below for the traditional wordsmithing and please let me
+know if I messed anything up.
+
+							Thanx, Paul
+
+------------------------------------------------------------------------
+
+commit 4034fe140e75d6e51b72d1fd16805e053b9b633c
+Author: Xu Panda <xu.panda@zte.com.cn>
+Date:   Thu Jan 5 20:17:57 2023 +0800
+
+    rcu/trace: use strscpy() to instead of strncpy()
+    
+    This commit saves a line of code by switching from strncpy() to strscpy()
+    by permitting the later NUL assignment to be removed.  While in the area,
+    save another line by taking advantage of 100 characters.
+    
+    Signed-off-by: Xu Panda <xu.panda@zte.com.cn>
+    Signed-off-by: Yang Yang <yang.yang29@zte.com.cn>
+    Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
+
+diff --git a/include/trace/events/rcu.h b/include/trace/events/rcu.h
+index 90b2fb0292cb1..c19ac1fa8a607 100644
+--- a/include/trace/events/rcu.h
++++ b/include/trace/events/rcu.h
+@@ -776,9 +776,7 @@ TRACE_EVENT_RCU(rcu_torture_read,
+ 	),
+ 
+ 	TP_fast_assign(
+-		strncpy(__entry->rcutorturename, rcutorturename,
+-			RCUTORTURENAME_LEN);
+-		__entry->rcutorturename[RCUTORTURENAME_LEN - 1] = 0;
++		strscpy(__entry->rcutorturename, rcutorturename, RCUTORTURENAME_LEN);
+ 		__entry->rhp = rhp;
+ 		__entry->secs = secs;
+ 		__entry->c_old = c_old;
