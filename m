@@ -2,81 +2,143 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E1A8C53210
-	for <linux-trace-kernel@archiver.kernel.org>; Thu,  5 Jan 2023 12:18:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 95291C3DA7A
+	for <linux-trace-kernel@archiver.kernel.org>; Thu,  5 Jan 2023 14:08:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232575AbjAEMSS (ORCPT
+        id S232917AbjAEOIy (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Thu, 5 Jan 2023 07:18:18 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53558 "EHLO
+        Thu, 5 Jan 2023 09:08:54 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51802 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233118AbjAEMSE (ORCPT
+        with ESMTP id S234740AbjAEOIa (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Thu, 5 Jan 2023 07:18:04 -0500
-Received: from mxhk.zte.com.cn (mxhk.zte.com.cn [63.216.63.35])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5785C4FCE1;
-        Thu,  5 Jan 2023 04:18:03 -0800 (PST)
-Received: from mse-fl2.zte.com.cn (unknown [10.5.228.133])
+        Thu, 5 Jan 2023 09:08:30 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1B29E19295;
+        Thu,  5 Jan 2023 06:08:12 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mxhk.zte.com.cn (FangMail) with ESMTPS id 4NnlqF4skCz6FK2Q;
-        Thu,  5 Jan 2023 20:18:01 +0800 (CST)
-Received: from szxlzmapp05.zte.com.cn ([10.5.230.85])
-        by mse-fl2.zte.com.cn with SMTP id 305CHs0m064884;
-        Thu, 5 Jan 2023 20:17:54 +0800 (+08)
-        (envelope-from yang.yang29@zte.com.cn)
-Received: from mapi (szxlzmapp01[null])
-        by mapi (Zmail) with MAPI id mid14;
-        Thu, 5 Jan 2023 20:17:57 +0800 (CST)
-Date:   Thu, 5 Jan 2023 20:17:57 +0800 (CST)
-X-Zmail-TransId: 2b0363b6bff5ffffffff94a6df4f
-X-Mailer: Zmail v1.0
-Message-ID: <202301052017571305723@zte.com.cn>
-Mime-Version: 1.0
-From:   <yang.yang29@zte.com.cn>
-To:     <rostedt@goodmis.org>
-Cc:     <mhiramat@kernel.org>, <paulmck@kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-trace-kernel@vger.kernel.org>, <xu.panda@zte.com.cn>,
-        <yang.yang29@zte.com.cn>
-Subject: =?UTF-8?B?W1BBVENIIGxpbnV4LW5leHRdIHJjdS90cmFjZTogdXNlIHN0cnNjcHkoKSB0byBpbnN0ZWFkIG9mIHN0cm5jcHkoKQ==?=
-Content-Type: text/plain;
-        charset="UTF-8"
-X-MAIL: mse-fl2.zte.com.cn 305CHs0m064884
-X-Fangmail-Gw-Spam-Type: 0
-X-FangMail-Miltered: at cgslv5.04-192.168.250.138.novalocal with ID 63B6BFF9.000 by FangMail milter!
-X-FangMail-Envelope: 1672921081/4NnlqF4skCz6FK2Q/63B6BFF9.000/10.5.228.133/[10.5.228.133]/mse-fl2.zte.com.cn/<yang.yang29@zte.com.cn>
-X-Fangmail-Anti-Spam-Filtered: true
-X-Fangmail-MID-QID: 63B6BFF9.000/4NnlqF4skCz6FK2Q
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 8E39E618DB;
+        Thu,  5 Jan 2023 14:08:12 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BF708C433EF;
+        Thu,  5 Jan 2023 14:08:10 +0000 (UTC)
+Date:   Thu, 5 Jan 2023 09:08:07 -0500
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     Yunhui Cui <cuiyunhui@bytedance.com>
+Cc:     mhiramat@kernel.org, davem@davemloft.net, edumazet@google.com,
+        kuba@kernel.org, pabeni@redhat.com, duanxiongchun@bytedance.com,
+        kuniyu@amazon.com, linux-kernel@vger.kernel.org,
+        linux-trace-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] sock: add tracepoint for send recv length
+Message-ID: <20230105090807.51213cea@gandalf.local.home>
+In-Reply-To: <20230105100014.1935-1-cuiyunhui@bytedance.com>
+References: <20230105100014.1935-1-cuiyunhui@bytedance.com>
+X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-From: Xu Panda <xu.panda@zte.com.cn>
+On Thu,  5 Jan 2023 18:00:14 +0800
+Yunhui Cui <cuiyunhui@bytedance.com> wrote:
 
-The implementation of strscpy() is more robust and safer.
-That's now the recommended way to copy NUL-terminated strings.
+> @@ -715,6 +716,10 @@ static inline int sock_sendmsg_nosec(struct socket *sock, struct msghdr *msg)
+>  				     inet_sendmsg, sock, msg,
+>  				     msg_data_left(msg));
+>  	BUG_ON(ret == -EIOCBQUEUED);
+> +
+> +	trace_sock_sendmsg_length(sock->sk, sock->sk->sk_family,
+> +				  sock->sk->sk_protocol,
+> +				  ret > 0 ? ret : 0, ret > 0 ? 0 : ret, 0);
 
-Signed-off-by: Xu Panda <xu.panda@zte.com.cn>
-Signed-off-by: Yang Yang <yang.yang29@zte.com.cn>
----
- include/trace/events/rcu.h | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+The length and error seem confusing. Basically, length is ret > 0 and error
+is ret < 0, right?
 
-diff --git a/include/trace/events/rcu.h b/include/trace/events/rcu.h
-index 90b2fb0292cb..2703992edecd 100644
---- a/include/trace/events/rcu.h
-+++ b/include/trace/events/rcu.h
-@@ -776,9 +776,8 @@ TRACE_EVENT_RCU(rcu_torture_read,
- 	),
+That means we don't need both. We could simply have:
 
- 	TP_fast_assign(
--		strncpy(__entry->rcutorturename, rcutorturename,
-+		strscpy(__entry->rcutorturename, rcutorturename,
- 			RCUTORTURENAME_LEN);
--		__entry->rcutorturename[RCUTORTURENAME_LEN - 1] = 0;
- 		__entry->rhp = rhp;
- 		__entry->secs = secs;
- 		__entry->c_old = c_old;
--- 
-2.15.2
+> +	TP_ARGS(sk, family, protocol, length, error, flags),
+
+	TP_ARGS(sk, family, protocol, ret, flags)
+
+> +
+> +	TP_STRUCT__entry(
+> +		__field(void *, sk)
+> +		__field(__u16, family)
+> +		__field(__u16, protocol)
+> +		__field(int, length)
+> +		__field(int, error)
+> +		__field(int, flags)
+> +	),
+> +
+> +	TP_fast_assign(
+> +		__entry->sk = sk;
+> +		__entry->family = sk->sk_family;
+> +		__entry->protocol = sk->sk_protocol;
+> +		__entry->length = length;
+
+		__entry->length = ret > 0 ? ret : 0;
+
+> +		__entry->error = error;
+
+		__entry->error = ret < 0 ? ret : 0;
+
+> +		__entry->flags = flags;
+> +	),
+> +
+
+>  	return ret;
+>  }
+>  
+> @@ -992,9 +997,17 @@ INDIRECT_CALLABLE_DECLARE(int inet6_recvmsg(struct socket *, struct msghdr *,
+>  static inline int sock_recvmsg_nosec(struct socket *sock, struct msghdr *msg,
+>  				     int flags)
+>  {
+> -	return INDIRECT_CALL_INET(sock->ops->recvmsg, inet6_recvmsg,
+> +	int ret = INDIRECT_CALL_INET(sock->ops->recvmsg, inet6_recvmsg,
+>  				  inet_recvmsg, sock, msg, msg_data_left(msg),
+>  				  flags);
+> +
+> +	trace_sock_recvmsg_length(sock->sk, sock->sk->sk_family,
+> +				  sock->sk->sk_protocol,
+> +				  (ret > 0 && !(flags & MSG_PEEK)) ?
+> +				  ret : 0,
+> +				  (ret > 0 && !(flags & MSG_PEEK)) ? 0 : ret,
+
+Since both length and error are zero when flags has MSG_PEEK set:
+
+	trace_sock_recvmsg_length(sock->sk, sock->sk->sk_family,
+				  sock->sk->sk_protocol,
+				  !(flags & MSG_PEEK) ? ret : 0,
+
+-- Steve
+
+> +				  flags);
+> +	return ret;
+>  }
+>  
+>  /**
+> @@ -1044,6 +1057,7 @@ static ssize_t sock_sendpage(struct file *file, struct page *page,
+>  {
+>  	struct socket *sock;
+>  	int flags;
+> +	int ret;
+>  
+>  	sock = file->private_data;
+>  
+> @@ -1051,7 +1065,12 @@ static ssize_t sock_sendpage(struct file *file, struct page *page,
+>  	/* more is a combination of MSG_MORE and MSG_SENDPAGE_NOTLAST */
+>  	flags |= more;
+>  
+> -	return kernel_sendpage(sock, page, offset, size, flags);
+> +	ret = kernel_sendpage(sock, page, offset, size, flags);
+> +
+> +	trace_sock_sendmsg_length(sock->sk, sock->sk->sk_family,
+> +				  sock->sk->sk_protocol,
+> +				  ret > 0 ? ret : 0, ret > 0 ? 0 : ret, 0);
+> +	return ret;
+>  }
+>  
+>  static ssize_t sock_splice_read(struct file *file, loff_t *ppos,
