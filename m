@@ -2,143 +2,84 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 95291C3DA7A
-	for <linux-trace-kernel@archiver.kernel.org>; Thu,  5 Jan 2023 14:08:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 08030C3DA7A
+	for <linux-trace-kernel@archiver.kernel.org>; Thu,  5 Jan 2023 14:56:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232917AbjAEOIy (ORCPT
+        id S232967AbjAEO4F (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Thu, 5 Jan 2023 09:08:54 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51802 "EHLO
+        Thu, 5 Jan 2023 09:56:05 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54862 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234740AbjAEOIa (ORCPT
+        with ESMTP id S234427AbjAEOzu (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Thu, 5 Jan 2023 09:08:30 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1B29E19295;
-        Thu,  5 Jan 2023 06:08:12 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 8E39E618DB;
-        Thu,  5 Jan 2023 14:08:12 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BF708C433EF;
-        Thu,  5 Jan 2023 14:08:10 +0000 (UTC)
-Date:   Thu, 5 Jan 2023 09:08:07 -0500
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Yunhui Cui <cuiyunhui@bytedance.com>
-Cc:     mhiramat@kernel.org, davem@davemloft.net, edumazet@google.com,
-        kuba@kernel.org, pabeni@redhat.com, duanxiongchun@bytedance.com,
-        kuniyu@amazon.com, linux-kernel@vger.kernel.org,
-        linux-trace-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] sock: add tracepoint for send recv length
-Message-ID: <20230105090807.51213cea@gandalf.local.home>
-In-Reply-To: <20230105100014.1935-1-cuiyunhui@bytedance.com>
-References: <20230105100014.1935-1-cuiyunhui@bytedance.com>
-X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+        Thu, 5 Jan 2023 09:55:50 -0500
+Received: from mail-ej1-f50.google.com (mail-ej1-f50.google.com [209.85.218.50])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C3A1D13D4F;
+        Thu,  5 Jan 2023 06:55:49 -0800 (PST)
+Received: by mail-ej1-f50.google.com with SMTP id u9so90772059ejo.0;
+        Thu, 05 Jan 2023 06:55:49 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=BuOfy85ZwvCfFAcvAn2erozThPTjz6H5x5dkC5MKj30=;
+        b=VWPQmb7CKrojM+/15SVqg9cRFL31QXG04D998UUlL78TRKJjfPVis/w0j3wtO6pSy+
+         Ni3t9CZqDfFDDdUwte7gp6M4ZVVo1IpHvxi46mDMKXDYGtV9z+aPz1BY7T/pWorEzwhw
+         6JYud7StqYFBTz+P9WCD+RJw18zVOTC6ap5zhab9fPcFB9y1mZEy+thBkU2mV+2Ci1Id
+         QsfxzRpuA0p8344tiC1mEbQg0mSThE/puhQey6dqb2hqV6atsMI8iqq6uWOV9qhALwCN
+         3QLUlqHLRRF/VisUzceSPX98nwgpoH4We0dEysionIniZVyuX+i8BYHfOH8DbB8KrXYX
+         sycg==
+X-Gm-Message-State: AFqh2kqt5NizVDl17mFxXUPxnCgBQkbstHBk6BoT0BCI9nIEIPaiN0q5
+        +C13nERhrjx4+dfrhppZRLCeu+97BYYWgsz9S4w=
+X-Google-Smtp-Source: AMrXdXv486tEDcDIfpsnRI+CN8Q3/XCClxaX1CsTCMwkE+Hi2BixnvVL0GgrHDV3E2M3VsmwpTTS+RH+W9IZCTtAsSI=
+X-Received: by 2002:a17:906:50c:b0:836:9bcf:1702 with SMTP id
+ j12-20020a170906050c00b008369bcf1702mr6583874eja.509.1672930548305; Thu, 05
+ Jan 2023 06:55:48 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+References: <20221214233106.69b2c01b@gandalf.local.home> <Y5trUep9IvCv1Uwy@google.com>
+ <20221215141146.6ceb7cf2@gandalf.local.home> <CAEXW_YQLtK=4LMJ+LHPVWU0wbV-027HJoCEKTjZvBZ6krrn6vw@mail.gmail.com>
+ <20221215151333.49af5442@gandalf.local.home> <CAJZ5v0iNdLyOpAxsCTTq-zqRfWDrJ5_c2DUcJYE5ZFn7u+2qdQ@mail.gmail.com>
+ <20230104163913.7b13cd68@gandalf.local.home>
+In-Reply-To: <20230104163913.7b13cd68@gandalf.local.home>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Thu, 5 Jan 2023 15:55:33 +0100
+Message-ID: <CAJZ5v0ib+Xg_tXb9yURFt91kJ9cFT48KzLaOjJ94gefRHCMbag@mail.gmail.com>
+Subject: Re: [RFC][PATCH] ACPI: tracing: Have ACPI debug go to tracing ring buffer
+To:     Steven Rostedt <rostedt@goodmis.org>
+Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linux Trace Kernel <linux-trace-kernel@vger.kernel.org>,
+        linux-acpi@vger.kernel.org, Len Brown <lenb@kernel.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Brian Norris <briannorris@chromium.org>,
+        Ross Zwisler <zwisler@google.com>,
+        Ching-lin Yu <chinglinyu@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On Thu,  5 Jan 2023 18:00:14 +0800
-Yunhui Cui <cuiyunhui@bytedance.com> wrote:
+On Wed, Jan 4, 2023 at 10:39 PM Steven Rostedt <rostedt@goodmis.org> wrote:
+>
+> On Fri, 30 Dec 2022 16:52:36 +0100
+> "Rafael J. Wysocki" <rafael@kernel.org> wrote:
+>
+> > Personally, I would use a command line option to control the behavior
+> > and the Kconfig option to provide its default value.
+> >
+>
+> I can add that.
+>
+> > This way it can be flipped without rebuilding the kernel if need be.
+> >
+> > I would also make the ACPI debug output go into the trace buffer so
+> > long as the Kconfig option is not changed or the command line option
+> > is not flipped.
+>
+> Not sure what you mean by the above? You mean to make going to both as the
+> default?
 
-> @@ -715,6 +716,10 @@ static inline int sock_sendmsg_nosec(struct socket *sock, struct msghdr *msg)
->  				     inet_sendmsg, sock, msg,
->  				     msg_data_left(msg));
->  	BUG_ON(ret == -EIOCBQUEUED);
-> +
-> +	trace_sock_sendmsg_length(sock->sk, sock->sk->sk_family,
-> +				  sock->sk->sk_protocol,
-> +				  ret > 0 ? ret : 0, ret > 0 ? 0 : ret, 0);
-
-The length and error seem confusing. Basically, length is ret > 0 and error
-is ret < 0, right?
-
-That means we don't need both. We could simply have:
-
-> +	TP_ARGS(sk, family, protocol, length, error, flags),
-
-	TP_ARGS(sk, family, protocol, ret, flags)
-
-> +
-> +	TP_STRUCT__entry(
-> +		__field(void *, sk)
-> +		__field(__u16, family)
-> +		__field(__u16, protocol)
-> +		__field(int, length)
-> +		__field(int, error)
-> +		__field(int, flags)
-> +	),
-> +
-> +	TP_fast_assign(
-> +		__entry->sk = sk;
-> +		__entry->family = sk->sk_family;
-> +		__entry->protocol = sk->sk_protocol;
-> +		__entry->length = length;
-
-		__entry->length = ret > 0 ? ret : 0;
-
-> +		__entry->error = error;
-
-		__entry->error = ret < 0 ? ret : 0;
-
-> +		__entry->flags = flags;
-> +	),
-> +
-
->  	return ret;
->  }
->  
-> @@ -992,9 +997,17 @@ INDIRECT_CALLABLE_DECLARE(int inet6_recvmsg(struct socket *, struct msghdr *,
->  static inline int sock_recvmsg_nosec(struct socket *sock, struct msghdr *msg,
->  				     int flags)
->  {
-> -	return INDIRECT_CALL_INET(sock->ops->recvmsg, inet6_recvmsg,
-> +	int ret = INDIRECT_CALL_INET(sock->ops->recvmsg, inet6_recvmsg,
->  				  inet_recvmsg, sock, msg, msg_data_left(msg),
->  				  flags);
-> +
-> +	trace_sock_recvmsg_length(sock->sk, sock->sk->sk_family,
-> +				  sock->sk->sk_protocol,
-> +				  (ret > 0 && !(flags & MSG_PEEK)) ?
-> +				  ret : 0,
-> +				  (ret > 0 && !(flags & MSG_PEEK)) ? 0 : ret,
-
-Since both length and error are zero when flags has MSG_PEEK set:
-
-	trace_sock_recvmsg_length(sock->sk, sock->sk->sk_family,
-				  sock->sk->sk_protocol,
-				  !(flags & MSG_PEEK) ? ret : 0,
-
--- Steve
-
-> +				  flags);
-> +	return ret;
->  }
->  
->  /**
-> @@ -1044,6 +1057,7 @@ static ssize_t sock_sendpage(struct file *file, struct page *page,
->  {
->  	struct socket *sock;
->  	int flags;
-> +	int ret;
->  
->  	sock = file->private_data;
->  
-> @@ -1051,7 +1065,12 @@ static ssize_t sock_sendpage(struct file *file, struct page *page,
->  	/* more is a combination of MSG_MORE and MSG_SENDPAGE_NOTLAST */
->  	flags |= more;
->  
-> -	return kernel_sendpage(sock, page, offset, size, flags);
-> +	ret = kernel_sendpage(sock, page, offset, size, flags);
-> +
-> +	trace_sock_sendmsg_length(sock->sk, sock->sk->sk_family,
-> +				  sock->sk->sk_protocol,
-> +				  ret > 0 ? ret : 0, ret > 0 ? 0 : ret, 0);
-> +	return ret;
->  }
->  
->  static ssize_t sock_splice_read(struct file *file, loff_t *ppos,
+No, just send them to the trace buffer alone unless specifically told
+to printk() them.
