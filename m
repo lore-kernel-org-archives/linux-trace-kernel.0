@@ -2,52 +2,52 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AA5CAC3DA7A
-	for <linux-trace-kernel@archiver.kernel.org>; Thu,  5 Jan 2023 12:16:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E1A8C53210
+	for <linux-trace-kernel@archiver.kernel.org>; Thu,  5 Jan 2023 12:18:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229839AbjAEMQf (ORCPT
+        id S232575AbjAEMSS (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Thu, 5 Jan 2023 07:16:35 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50830 "EHLO
+        Thu, 5 Jan 2023 07:18:18 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53558 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231869AbjAEMQ1 (ORCPT
+        with ESMTP id S233118AbjAEMSE (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Thu, 5 Jan 2023 07:16:27 -0500
-Received: from mxct.zte.com.cn (mxct.zte.com.cn [183.62.165.209])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 70F6C44C5B;
-        Thu,  5 Jan 2023 04:16:24 -0800 (PST)
+        Thu, 5 Jan 2023 07:18:04 -0500
+Received: from mxhk.zte.com.cn (mxhk.zte.com.cn [63.216.63.35])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5785C4FCE1;
+        Thu,  5 Jan 2023 04:18:03 -0800 (PST)
 Received: from mse-fl2.zte.com.cn (unknown [10.5.228.133])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mxct.zte.com.cn (FangMail) with ESMTPS id 4NnlnK6gRTz501Qw;
-        Thu,  5 Jan 2023 20:16:21 +0800 (CST)
-Received: from szxlzmapp01.zte.com.cn ([10.5.231.85])
-        by mse-fl2.zte.com.cn with SMTP id 305CGAi6064280;
-        Thu, 5 Jan 2023 20:16:10 +0800 (+08)
+        by mxhk.zte.com.cn (FangMail) with ESMTPS id 4NnlqF4skCz6FK2Q;
+        Thu,  5 Jan 2023 20:18:01 +0800 (CST)
+Received: from szxlzmapp05.zte.com.cn ([10.5.230.85])
+        by mse-fl2.zte.com.cn with SMTP id 305CHs0m064884;
+        Thu, 5 Jan 2023 20:17:54 +0800 (+08)
         (envelope-from yang.yang29@zte.com.cn)
 Received: from mapi (szxlzmapp01[null])
         by mapi (Zmail) with MAPI id mid14;
-        Thu, 5 Jan 2023 20:16:13 +0800 (CST)
-Date:   Thu, 5 Jan 2023 20:16:13 +0800 (CST)
-X-Zmail-TransId: 2b0363b6bf8dffffffffd846a38d
+        Thu, 5 Jan 2023 20:17:57 +0800 (CST)
+Date:   Thu, 5 Jan 2023 20:17:57 +0800 (CST)
+X-Zmail-TransId: 2b0363b6bff5ffffffff94a6df4f
 X-Mailer: Zmail v1.0
-Message-ID: <202301052016131375697@zte.com.cn>
+Message-ID: <202301052017571305723@zte.com.cn>
 Mime-Version: 1.0
 From:   <yang.yang29@zte.com.cn>
-To:     <axboe@kernel.dk>
-Cc:     <rostedt@goodmis.org>, <mhiramat@kernel.org>,
-        <linux-block@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+To:     <rostedt@goodmis.org>
+Cc:     <mhiramat@kernel.org>, <paulmck@kernel.org>,
+        <linux-kernel@vger.kernel.org>,
         <linux-trace-kernel@vger.kernel.org>, <xu.panda@zte.com.cn>,
         <yang.yang29@zte.com.cn>
-Subject: =?UTF-8?B?W1BBVENIIGxpbnV4LW5leHRdIGJsa3RyYWNlOiB1c2Ugc3Ryc2NweSgpIHRvIGluc3RlYWQgb2Ygc3RybmNweSgp?=
+Subject: =?UTF-8?B?W1BBVENIIGxpbnV4LW5leHRdIHJjdS90cmFjZTogdXNlIHN0cnNjcHkoKSB0byBpbnN0ZWFkIG9mIHN0cm5jcHkoKQ==?=
 Content-Type: text/plain;
         charset="UTF-8"
-X-MAIL: mse-fl2.zte.com.cn 305CGAi6064280
+X-MAIL: mse-fl2.zte.com.cn 305CHs0m064884
 X-Fangmail-Gw-Spam-Type: 0
-X-FangMail-Miltered: at cgslv5.04-192.168.251.13.novalocal with ID 63B6BF95.000 by FangMail milter!
-X-FangMail-Envelope: 1672920981/4NnlnK6gRTz501Qw/63B6BF95.000/10.5.228.133/[10.5.228.133]/mse-fl2.zte.com.cn/<yang.yang29@zte.com.cn>
+X-FangMail-Miltered: at cgslv5.04-192.168.250.138.novalocal with ID 63B6BFF9.000 by FangMail milter!
+X-FangMail-Envelope: 1672921081/4NnlqF4skCz6FK2Q/63B6BFF9.000/10.5.228.133/[10.5.228.133]/mse-fl2.zte.com.cn/<yang.yang29@zte.com.cn>
 X-Fangmail-Anti-Spam-Filtered: true
-X-Fangmail-MID-QID: 63B6BF95.000/4NnlnK6gRTz501Qw
+X-Fangmail-MID-QID: 63B6BFF9.000/4NnlqF4skCz6FK2Q
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -60,22 +60,23 @@ That's now the recommended way to copy NUL-terminated strings.
 Signed-off-by: Xu Panda <xu.panda@zte.com.cn>
 Signed-off-by: Yang Yang <yang.yang29@zte.com.cn>
 ---
- kernel/trace/blktrace.c | 3 +--
+ include/trace/events/rcu.h | 3 +--
  1 file changed, 1 insertion(+), 2 deletions(-)
 
-diff --git a/kernel/trace/blktrace.c b/kernel/trace/blktrace.c
-index 918a7d12df8f..ff0cc68d7667 100644
---- a/kernel/trace/blktrace.c
-+++ b/kernel/trace/blktrace.c
-@@ -524,8 +524,7 @@ static int do_blk_trace_setup(struct request_queue *q, char *name, dev_t dev,
- 	if (!buts->buf_size || !buts->buf_nr)
- 		return -EINVAL;
+diff --git a/include/trace/events/rcu.h b/include/trace/events/rcu.h
+index 90b2fb0292cb..2703992edecd 100644
+--- a/include/trace/events/rcu.h
++++ b/include/trace/events/rcu.h
+@@ -776,9 +776,8 @@ TRACE_EVENT_RCU(rcu_torture_read,
+ 	),
 
--	strncpy(buts->name, name, BLKTRACE_BDEV_SIZE);
--	buts->name[BLKTRACE_BDEV_SIZE - 1] = '\0';
-+	strscpy(buts->name, name, BLKTRACE_BDEV_SIZE);
-
- 	/*
- 	 * some device names have larger paths - convert the slashes
+ 	TP_fast_assign(
+-		strncpy(__entry->rcutorturename, rcutorturename,
++		strscpy(__entry->rcutorturename, rcutorturename,
+ 			RCUTORTURENAME_LEN);
+-		__entry->rcutorturename[RCUTORTURENAME_LEN - 1] = 0;
+ 		__entry->rhp = rhp;
+ 		__entry->secs = secs;
+ 		__entry->c_old = c_old;
 -- 
 2.15.2
