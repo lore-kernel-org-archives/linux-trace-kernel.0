@@ -2,119 +2,80 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F937C3DA7D
-	for <linux-trace-kernel@archiver.kernel.org>; Thu,  5 Jan 2023 12:03:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AA5CAC3DA7A
+	for <linux-trace-kernel@archiver.kernel.org>; Thu,  5 Jan 2023 12:16:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232548AbjAEMDv (ORCPT
+        id S229839AbjAEMQf (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Thu, 5 Jan 2023 07:03:51 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45020 "EHLO
+        Thu, 5 Jan 2023 07:16:35 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50830 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232547AbjAEMDp (ORCPT
+        with ESMTP id S231869AbjAEMQ1 (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Thu, 5 Jan 2023 07:03:45 -0500
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 54C02559CA
-        for <linux-trace-kernel@vger.kernel.org>; Thu,  5 Jan 2023 04:02:59 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1672920178;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=ibf9GZdDPhkI3jtaNrknERTEYTDccCkdl8H694RjOIU=;
-        b=RvhAkBHREsb1Tub7Aeg015FCVhcE6sH98eiz6AhLuaf6M/Q9uiKHW1/aw5kkh/9Dxifu7F
-        o0spwinT1XrtCvcozMBmB80m8bKS8zldlpgRABYbKAttuWZGZOlDgS9wfykfEYfL9vvLWK
-        g7xzCoi6JY1jPmTs5qKVUk9/BhEGoL8=
-Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
- [209.85.128.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_128_GCM_SHA256) id
- us-mta-320-hfBEtmlYOWavTt6O3M8TVQ-1; Thu, 05 Jan 2023 07:02:57 -0500
-X-MC-Unique: hfBEtmlYOWavTt6O3M8TVQ-1
-Received: by mail-wm1-f70.google.com with SMTP id p34-20020a05600c1da200b003d990064285so896544wms.8
-        for <linux-trace-kernel@vger.kernel.org>; Thu, 05 Jan 2023 04:02:57 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:mime-version:user-agent:references
-         :in-reply-to:date:to:from:subject:message-id:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=ibf9GZdDPhkI3jtaNrknERTEYTDccCkdl8H694RjOIU=;
-        b=Fk50zs73raEJ2jT6aZ0y4HBWavjNkH/ERz3oXgdUd81ZMAGrs8Gqc0oASz1onZat1Q
-         CcnEH1y3nv8ZmvIMjOS9szxDXd5lD6ZK3F+eNyKUZI7djKRx0V7f+sEzA2GZvhq7Fhvy
-         AasmXs0qqkdrpYcrFi84I3ANeBAOZlSs+L/2k7BuAn6Q2XGK4bwiaXuEFOZemE68fCbp
-         rKmdBmT43nhoaMCd1vNSk6z863oYYnsFsWdu5sIDbgFC5KokCl/73Fuf0Ll3qK9r9SYr
-         iOIjgkzjQLvX0uuFZB9Xflarr3pg037vqhJdxLDhhPjfCY73RZ67LtKGCZ19LBAvdhHP
-         kGTQ==
-X-Gm-Message-State: AFqh2koYsJw1IB72QI69QGqnsV7XP3aJX9HPKEVYoAYznXyecST0vE6+
-        H6StrAF+PGwNQssct3tHeE7fZhXPpywWuuGeAXUWwxyiqBAgMHF7TQMLvCjCv4tqt2M0fq7qcar
-        N32IAXZOpXhAtwjy15x2EuDOzU2xUtMhQ
-X-Received: by 2002:a5d:6049:0:b0:2a6:4dfb:80c8 with SMTP id j9-20020a5d6049000000b002a64dfb80c8mr3170982wrt.19.1672920176276;
-        Thu, 05 Jan 2023 04:02:56 -0800 (PST)
-X-Google-Smtp-Source: AMrXdXupEqgUE2fErAUl67ZowlprXL7LFVObbJvJUg0S8UgOgxyazUFwvvm3lz728p9Sr5H0r2kwpA==
-X-Received: by 2002:a5d:6049:0:b0:2a6:4dfb:80c8 with SMTP id j9-20020a5d6049000000b002a64dfb80c8mr3170957wrt.19.1672920175976;
-        Thu, 05 Jan 2023 04:02:55 -0800 (PST)
-Received: from gerbillo.redhat.com (146-241-105-31.dyn.eolo.it. [146.241.105.31])
-        by smtp.gmail.com with ESMTPSA id b14-20020a05600010ce00b0023c8026841csm36155877wrx.23.2023.01.05.04.02.54
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 05 Jan 2023 04:02:55 -0800 (PST)
-Message-ID: <a8540626a36339bbac8603559b9200a08e4de9ed.camel@redhat.com>
-Subject: Re: [PATCH v2] sock: add tracepoint for send recv length
-From:   Paolo Abeni <pabeni@redhat.com>
-To:     Yunhui Cui <cuiyunhui@bytedance.com>, rostedt@goodmis.org,
-        mhiramat@kernel.org, davem@davemloft.net, edumazet@google.com,
-        kuba@kernel.org, duanxiongchun@bytedance.com, kuniyu@amazon.com,
-        linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
-Date:   Thu, 05 Jan 2023 13:02:53 +0100
-In-Reply-To: <20230105100014.1935-1-cuiyunhui@bytedance.com>
-References: <20230105100014.1935-1-cuiyunhui@bytedance.com>
-User-Agent: Evolution 3.42.4 (3.42.4-2.fc35)
-MIME-Version: 1.0
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
+        Thu, 5 Jan 2023 07:16:27 -0500
+Received: from mxct.zte.com.cn (mxct.zte.com.cn [183.62.165.209])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 70F6C44C5B;
+        Thu,  5 Jan 2023 04:16:24 -0800 (PST)
+Received: from mse-fl2.zte.com.cn (unknown [10.5.228.133])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mxct.zte.com.cn (FangMail) with ESMTPS id 4NnlnK6gRTz501Qw;
+        Thu,  5 Jan 2023 20:16:21 +0800 (CST)
+Received: from szxlzmapp01.zte.com.cn ([10.5.231.85])
+        by mse-fl2.zte.com.cn with SMTP id 305CGAi6064280;
+        Thu, 5 Jan 2023 20:16:10 +0800 (+08)
+        (envelope-from yang.yang29@zte.com.cn)
+Received: from mapi (szxlzmapp01[null])
+        by mapi (Zmail) with MAPI id mid14;
+        Thu, 5 Jan 2023 20:16:13 +0800 (CST)
+Date:   Thu, 5 Jan 2023 20:16:13 +0800 (CST)
+X-Zmail-TransId: 2b0363b6bf8dffffffffd846a38d
+X-Mailer: Zmail v1.0
+Message-ID: <202301052016131375697@zte.com.cn>
+Mime-Version: 1.0
+From:   <yang.yang29@zte.com.cn>
+To:     <axboe@kernel.dk>
+Cc:     <rostedt@goodmis.org>, <mhiramat@kernel.org>,
+        <linux-block@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-trace-kernel@vger.kernel.org>, <xu.panda@zte.com.cn>,
+        <yang.yang29@zte.com.cn>
+Subject: =?UTF-8?B?W1BBVENIIGxpbnV4LW5leHRdIGJsa3RyYWNlOiB1c2Ugc3Ryc2NweSgpIHRvIGluc3RlYWQgb2Ygc3RybmNweSgp?=
+Content-Type: text/plain;
+        charset="UTF-8"
+X-MAIL: mse-fl2.zte.com.cn 305CGAi6064280
+X-Fangmail-Gw-Spam-Type: 0
+X-FangMail-Miltered: at cgslv5.04-192.168.251.13.novalocal with ID 63B6BF95.000 by FangMail milter!
+X-FangMail-Envelope: 1672920981/4NnlnK6gRTz501Qw/63B6BF95.000/10.5.228.133/[10.5.228.133]/mse-fl2.zte.com.cn/<yang.yang29@zte.com.cn>
+X-Fangmail-Anti-Spam-Filtered: true
+X-Fangmail-MID-QID: 63B6BF95.000/4NnlnK6gRTz501Qw
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On Thu, 2023-01-05 at 18:00 +0800, Yunhui Cui wrote:
-> Add 2 tracepoints to monitor the tcp/udp traffic
-> of per process and per cgroup.
-> 
-> Regarding monitoring the tcp/udp traffic of each process, the existing
-> implementation is https://www.atoptool.nl/netatop.php.
-> This solution is implemented by registering the hook function at the hook
-> point provided by the netfilter framework.
-> 
-> These hook functions may be in the soft interrupt context and cannot
-> directly obtain the pid. Some data structures are added to bind packets
-> and processes. For example, struct taskinfobucket, struct taskinfo ...
-> 
-> Every time the process sends and receives packets it needs multiple
-> hashmaps,resulting in low performance and it has the problem fo inaccurate
-> tcp/udp traffic statistics(for example: multiple threads share sockets).
-> 
-> Based on these 2 tracepoints, we have optimized and tested performance.
-> Time Per Request as an indicator, without monitoring: 50.95ms,
-> netatop: 63.27 ms, Hook on these tracepoints: 52.24ms.
-> The performance has been improved 10 times. The tcp/udp traffic of each
-> process has also been accurately counted.
-> 
-> We can obtain the information with kretprobe, but as we know, kprobe gets
-> the result by trappig in an exception, which loses performance compared
-> to tracepoint. We did a test for performance comparison. The results are
-> as follows. Time per request, sock_sendmsg(k,kr):  12.382ms,
-> tcp_send_length(tracepoint): 11.887ms，without hook：11.222ms
+From: Xu Panda <xu.panda@zte.com.cn>
 
-12 ms per packet? I hope there is a an error in the unit of
-measurement.
+The implementation of strscpy() is more robust and safer.
+That's now the recommended way to copy NUL-terminated strings.
 
-I'm unsure the delta wrt kreprobe justifies this change.
+Signed-off-by: Xu Panda <xu.panda@zte.com.cn>
+Signed-off-by: Yang Yang <yang.yang29@zte.com.cn>
+---
+ kernel/trace/blktrace.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-In any case you need to include the netdev ML into the recipients list,
-and even Cong Wang, as he provided feedback on v1.
+diff --git a/kernel/trace/blktrace.c b/kernel/trace/blktrace.c
+index 918a7d12df8f..ff0cc68d7667 100644
+--- a/kernel/trace/blktrace.c
++++ b/kernel/trace/blktrace.c
+@@ -524,8 +524,7 @@ static int do_blk_trace_setup(struct request_queue *q, char *name, dev_t dev,
+ 	if (!buts->buf_size || !buts->buf_nr)
+ 		return -EINVAL;
 
-Thanks,
+-	strncpy(buts->name, name, BLKTRACE_BDEV_SIZE);
+-	buts->name[BLKTRACE_BDEV_SIZE - 1] = '\0';
++	strscpy(buts->name, name, BLKTRACE_BDEV_SIZE);
 
-Paolo
-
+ 	/*
+ 	 * some device names have larger paths - convert the slashes
+-- 
+2.15.2
