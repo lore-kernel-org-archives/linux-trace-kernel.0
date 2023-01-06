@@ -2,195 +2,132 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F0BB9C54EBD
-	for <linux-trace-kernel@archiver.kernel.org>; Fri,  6 Jan 2023 09:47:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E5ADCC63797
+	for <linux-trace-kernel@archiver.kernel.org>; Fri,  6 Jan 2023 21:59:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229672AbjAFJrK (ORCPT
+        id S235610AbjAFV7U (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Fri, 6 Jan 2023 04:47:10 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39050 "EHLO
+        Fri, 6 Jan 2023 16:59:20 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42304 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233742AbjAFJqT (ORCPT
+        with ESMTP id S231531AbjAFV7R (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Fri, 6 Jan 2023 04:46:19 -0500
-Received: from mail-wm1-x32b.google.com (mail-wm1-x32b.google.com [IPv6:2a00:1450:4864:20::32b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 698D869B3B;
-        Fri,  6 Jan 2023 01:45:45 -0800 (PST)
-Received: by mail-wm1-x32b.google.com with SMTP id c65-20020a1c3544000000b003cfffd00fc0so3167204wma.1;
-        Fri, 06 Jan 2023 01:45:45 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=PN8//UfAoVwKaLm31eaWicz8hNpiTUFBXEnuGYY6upA=;
-        b=FlwDESQyeNbwEOF9phOaSdZuMcQArQruAlYMTIIZ6+wSGyki259+Z+Sbg2rCI+BVQt
-         sn9X3mES4FYL0nwejFeAt+UGU5KL6LpEanaT9TjhL8UDHNtgsndEgp/y8K1EIX3vxA3n
-         Z4RlkGCMmQa9J5f+NxM8mSeSlbHjY6+DRna3iodggUIwdycTIXd5f1/VV/VOMKpN4dh3
-         4HAHYShdm7RrVrqqnLISKJ9Mp+f0ysYmVu0Q5RJ39oG+0QOQMCFeTmNbH5ljcGBn7WTx
-         nOER6ELX9ikWuNZjskCtbq5SEpXtds8xMJ05K3DiU/V5OZy7YAob2+UaBkXAWzBuQVux
-         bA2A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=PN8//UfAoVwKaLm31eaWicz8hNpiTUFBXEnuGYY6upA=;
-        b=QRL2oqrjWWXNKZxBt/9+IJ0LvXHs4UYKnoysqqykq+rxLGfbVQGzr7BPZ6NYSWWE4u
-         VvAnLgyrRDrHOlS4derW8ACDjB+1wIAXKM+GgeJWwSLmTpAIzGQNmy1o76R8gN37MW8Q
-         pBgaQkH1qC5NQ6bSoEFuA8HDusjq5tAq8tt/ntqUzIGETfT6c0N4k/HQufEiRjSmYHq6
-         u1tNyHV08dJm67xxCcpBmWno7j2Pih1lRqo4u8DmK8XMbPm/N6PindTP2XmZs0y8KJ91
-         eDa5tSidOIwNXr/ZVSUiFzTeaAtFyGMSW6IIqjDe/t/n4xHcsU1Trl0LGhx6SLMT5nED
-         psdQ==
-X-Gm-Message-State: AFqh2krhoYSkvJPFBC7fQkrVWEKWZQ0THZ3q1l0K7quawcv+Jbp2He6u
-        QgAAS8p6mqZr0IgscFfrMw0=
-X-Google-Smtp-Source: AMrXdXvGEs46DZ+1Nu9hdjrmPn0yZt8DrEET0vDFvTytRbxXI3AghL6OK5+dJLdJNIH2WxrVI2eIew==
-X-Received: by 2002:a05:600c:3ca2:b0:3d9:a5a2:65fa with SMTP id bg34-20020a05600c3ca200b003d9a5a265famr17725332wmb.7.1672998343858;
-        Fri, 06 Jan 2023 01:45:43 -0800 (PST)
-Received: from krava (2001-1ae9-1c2-4c00-726e-c10f-8833-ff22.ip6.tmcz.cz. [2001:1ae9:1c2:4c00:726e:c10f:8833:ff22])
-        by smtp.gmail.com with ESMTPSA id bg24-20020a05600c3c9800b003cfa3a12660sm13739987wmb.1.2023.01.06.01.45.42
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 06 Jan 2023 01:45:43 -0800 (PST)
-From:   Jiri Olsa <olsajiri@gmail.com>
-X-Google-Original-From: Jiri Olsa <jolsa@kernel.org>
-Date:   Fri, 6 Jan 2023 10:45:40 +0100
-To:     Jiri Olsa <olsajiri@gmail.com>
-Cc:     Zhen Lei <thunder.leizhen@huawei.com>,
-        Petr Mladek <pmladek@suse.com>,
-        Josh Poimboeuf <jpoimboe@kernel.org>,
-        Jiri Kosina <jikos@kernel.org>,
-        Miroslav Benes <mbenes@suse.cz>,
-        Joe Lawrence <joe.lawrence@redhat.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Andrii Nakryiko <andrii@kernel.org>,
-        Martin KaFai Lau <martin.lau@linux.dev>,
-        Song Liu <song@kernel.org>, Yonghong Song <yhs@fb.com>,
-        John Fastabend <john.fastabend@gmail.com>,
-        KP Singh <kpsingh@kernel.org>,
-        Stanislav Fomichev <sdf@google.com>,
-        Hao Luo <haoluo@google.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>, bpf@vger.kernel.org,
-        linux-trace-kernel@vger.kernel.org, live-patching@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Luis Chamberlain <mcgrof@kernel.org>,
-        linux-modules@vger.kernel.org
-Subject: Re: [PATCH 2/3] bpf: Optimize get_modules_for_addrs()
-Message-ID: <Y7ftxIiV35Wd75lZ@krava>
-References: <20221230112729.351-1-thunder.leizhen@huawei.com>
- <20221230112729.351-3-thunder.leizhen@huawei.com>
- <Y7WoZARt37xGpjXD@alley>
- <Y7dBoII5kZnHGFdL@krava>
+        Fri, 6 Jan 2023 16:59:17 -0500
+Received: from mga07.intel.com (mga07.intel.com [134.134.136.100])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 63B8A6B5F0;
+        Fri,  6 Jan 2023 13:59:16 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1673042356; x=1704578356;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=FTUwp6vti/6MjCft69xiR34bTAXHpf/OAp2V3llnAHs=;
+  b=D1tQDPo9TrhOYvZa93zi7L81VmQS9VqWkH6CGSaWBfGStkJpwd1u6ecF
+   TchpRB6A3AKwqgIxqWBIBlPbsdTw4o1LHEspKokxyCZ7fbhmJs5qVzlpU
+   1YNZGOyZHBITUfnqC+9Vfmczekl9PB89RbWs4tC77F6YjSR1tPYefy/xL
+   eHggPprNBhIacdKcj3By/z0NwhapEPlWKFsKiJS0fixvs0Po6hjsC9xjk
+   Px/5NLVLCnWyyCoSmACWYSUPUebYJvxdsHPlsRmgqFJ5ohGoO51VGhLbz
+   /tvo3XPcyaAS7VdMpL5zZNVd676wsRioB3GwUJ6euR3C0MUMYyHg84HY3
+   Q==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10582"; a="387030696"
+X-IronPort-AV: E=Sophos;i="5.96,306,1665471600"; 
+   d="scan'208";a="387030696"
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Jan 2023 13:59:15 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6500,9779,10582"; a="763652873"
+X-IronPort-AV: E=Sophos;i="5.96,306,1665471600"; 
+   d="scan'208";a="763652873"
+Received: from avenkata-desk0.sc.intel.com ([172.25.112.60])
+  by fmsmga002.fm.intel.com with ESMTP; 06 Jan 2023 13:59:15 -0800
+From:   Anirudh Venkataramanan <anirudh.venkataramanan@intel.com>
+To:     netdev@vger.kernel.org
+Cc:     linux-pci@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-mips@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+        sparclinux@vger.kernel.org,
+        Anirudh Venkataramanan <anirudh.venkataramanan@intel.com>,
+        Leon Romanovsky <leon@kernel.org>
+Subject: [PATCH net-next 0/7] Remove three Sun net drivers
+Date:   Fri,  6 Jan 2023 14:00:13 -0800
+Message-Id: <20230106220020.1820147-1-anirudh.venkataramanan@intel.com>
+X-Mailer: git-send-email 2.37.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Y7dBoII5kZnHGFdL@krava>
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On Thu, Jan 05, 2023 at 10:31:12PM +0100, Jiri Olsa wrote:
-> On Wed, Jan 04, 2023 at 05:25:08PM +0100, Petr Mladek wrote:
-> > On Fri 2022-12-30 19:27:28, Zhen Lei wrote:
-> > > Function __module_address() can quickly return the pointer of the module
-> > > to which an address belongs. We do not need to traverse the symbols of all
-> > > modules to check whether each address in addrs[] is the start address of
-> > > the corresponding symbol, because register_fprobe_ips() will do this check
-> > > later.
-> 
-> hum, for some reason I can see only replies to this patch and
-> not the actual patch.. I'll dig it out of the lore I guess
-> 
-> > > 
-> > > Assuming that there are m modules, each module has n symbols on average,
-> > > and the number of addresses 'addrs_cnt' is abbreviated as K. Then the time
-> > > complexity of the original method is O(K * log(K)) + O(m * n * log(K)),
-> > > and the time complexity of current method is O(K * (log(m) + M)), M <= m.
-> > > (m * n * log(K)) / (K * m) ==> n / log2(K). Even if n is 10 and K is 128,
-> > > the ratio is still greater than 1. Therefore, the new method will
-> > > generally have better performance.
-> 
-> could you try to benchmark that? I tried something similar but was not
-> able to get better performance
+This series removes the Sun Cassini, LDOM vswitch and sunvnet drivers.
 
-hm looks like I tried the smilar thing (below) like you did,
-but wasn't able to get better performace
+In a recent patch series that touched these drivers [1], it was suggested
+that these drivers should be removed completely. git logs suggest that
+there hasn't been any significant feature addition, improvement or fixes
+to user-visible bugs in a while. A web search didn't indicate any recent
+discussions or any evidence that there are users out there who care about
+these drivers.
 
-I guess your goal is to get rid of the module arg in
-module_kallsyms_on_each_symbol callback that we use?
-I'm ok with the change if the performace is not worse
+The idea behind putting out this series is to either establish that these
+drivers are used and should be maintained, or remove them.
 
-jirka
+While the bulk of the code removal is in the networking s, and so
+multiple subsystem lists are cc'd. Here's a quick breakdown:
+
+  - patches 1/7 and 5/7 remove the drivers (netdev)
+  - patch 2/7 removes Sun device IDs from pci_ids.h (linux-pci)
+  - patch 3/7 changes ppc6xx_defconfig (linuxppc)
+  - patch 4/7 changes MIPS mtx1_defconfig (linux-mips)
+  - patch 6/7 removes the event tracing header sunvnet.h (linux-trace)
+  - patch 7/7 changes sparc64_defconfig (sparclinux)
+
+This series was compile tested as follows:
+
+make O=b1 ARCH=mips CROSS_COMPILE=mips64-linux-gnu- defconfig
+make -j$(nproc) O=b1 ARCH=mips CROSS_COMPILE=mips64-linux-gnu- all
+
+make O=b2 ARCH=sparc64 CROSS_COMPILE=sparc64-linux-gnu- defconfig
+make -j$(nproc) O=b2 ARCH=sparc64 CROSS_COMPILE=sparc64-linux-gnu- all
+
+make O=b3 ARCH=powerpc CROSS_COMPILE=ppc64-linux-gnu- ppc6xx_defconfig
+make -j$(nproc) O=b3 ARCH=powerpc CROSS_COMPILE=ppc64-linux-gnu- all
+
+[1] https://lore.kernel.org/netdev/99629223-ac1b-0f82-50b8-ea307b3b0197@intel.com/T/#t
+
+Suggested-by: Leon Romanovsky <leon@kernel.org>
+Signed-off-by: Anirudh Venkataramanan <anirudh.venkataramanan@intel.com>
+
+Anirudh Venkataramanan (7):
+  ethernet: Remove the Sun Cassini driver
+  PCI: Remove PCI IDs used by the Sun Cassini driver
+  powerpc: configs: Remove reference to CONFIG_CASSINI
+  mips: configs: Remove reference to CONFIG_CASSINI
+  ethernet: Remove the Sun LDOM vswitch and sunvnet drivers
+  sunvnet: Remove event tracing file
+  sparc: configs: Remove references to CONFIG_SUNVNET and CONFIG_LDMVSW
+
+ arch/mips/configs/mtx1_defconfig          |    1 -
+ arch/powerpc/configs/ppc6xx_defconfig     |    1 -
+ arch/sparc/configs/sparc64_defconfig      |    2 -
+ drivers/net/ethernet/sun/Kconfig          |   35 -
+ drivers/net/ethernet/sun/Makefile         |    4 -
+ drivers/net/ethernet/sun/cassini.c        | 5215 ---------------------
+ drivers/net/ethernet/sun/cassini.h        | 2900 ------------
+ drivers/net/ethernet/sun/ldmvsw.c         |  476 --
+ drivers/net/ethernet/sun/sunvnet.c        |  567 ---
+ drivers/net/ethernet/sun/sunvnet_common.c | 1813 -------
+ drivers/net/ethernet/sun/sunvnet_common.h |  157 -
+ include/linux/pci_ids.h                   |    2 -
+ include/trace/events/sunvnet.h            |  140 -
+ 13 files changed, 11313 deletions(-)
+ delete mode 100644 drivers/net/ethernet/sun/cassini.c
+ delete mode 100644 drivers/net/ethernet/sun/cassini.h
+ delete mode 100644 drivers/net/ethernet/sun/ldmvsw.c
+ delete mode 100644 drivers/net/ethernet/sun/sunvnet.c
+ delete mode 100644 drivers/net/ethernet/sun/sunvnet_common.c
+ delete mode 100644 drivers/net/ethernet/sun/sunvnet_common.h
+ delete mode 100644 include/trace/events/sunvnet.h
 
 
----
-diff --git a/kernel/trace/bpf_trace.c b/kernel/trace/bpf_trace.c
-index 5b9008bc597b..3280c22009f1 100644
---- a/kernel/trace/bpf_trace.c
-+++ b/kernel/trace/bpf_trace.c
-@@ -2692,23 +2692,16 @@ struct module_addr_args {
- 	int mods_cap;
- };
- 
--static int module_callback(void *data, const char *name,
--			   struct module *mod, unsigned long addr)
-+static int add_module(struct module_addr_args *args, struct module *mod)
- {
--	struct module_addr_args *args = data;
- 	struct module **mods;
- 
--	/* We iterate all modules symbols and for each we:
--	 * - search for it in provided addresses array
--	 * - if found we check if we already have the module pointer stored
--	 *   (we iterate modules sequentially, so we can check just the last
--	 *   module pointer)
-+	/* We iterate sorted addresses and for each within module we:
-+	 * - check if we already have the module pointer stored for it
-+	 *   (we iterate sorted addresses sequentially, so we can check
-+	 *   just the last module pointer)
- 	 * - take module reference and store it
- 	 */
--	if (!bsearch(&addr, args->addrs, args->addrs_cnt, sizeof(addr),
--		       bpf_kprobe_multi_addrs_cmp))
--		return 0;
--
- 	if (args->mods && args->mods[args->mods_cnt - 1] == mod)
- 		return 0;
- 
-@@ -2734,10 +2727,24 @@ static int get_modules_for_addrs(struct module ***mods, unsigned long *addrs, u3
- 		.addrs     = addrs,
- 		.addrs_cnt = addrs_cnt,
- 	};
--	int err;
-+	u32 i, err = 0;
-+
-+	for (i = 0; !err && i < addrs_cnt; i++) {
-+		struct module *mod;
-+		bool found = false;
-+
-+		preempt_disable();
-+		mod = __module_text_address(addrs[i]);
-+		found = mod && try_module_get(mod);
-+		preempt_enable();
-+
-+		if (found) {
-+			err = add_module(&args, mod);
-+			module_put(mod);
-+		}
-+	}
- 
- 	/* We return either err < 0 in case of error, ... */
--	err = module_kallsyms_on_each_symbol(module_callback, &args);
- 	if (err) {
- 		kprobe_multi_put_modules(args.mods, args.mods_cnt);
- 		kfree(args.mods);
-@@ -2862,7 +2869,8 @@ int bpf_kprobe_multi_link_attach(const union bpf_attr *attr, struct bpf_prog *pr
- 	} else {
- 		/*
- 		 * We need to sort addrs array even if there are no cookies
--		 * provided, to allow bsearch in get_modules_for_addrs.
-+		 * provided, to allow sequential address walk in
-+		 * get_modules_for_addrs.
- 		 */
- 		sort(addrs, cnt, sizeof(*addrs),
- 		       bpf_kprobe_multi_addrs_cmp, NULL);
+base-commit: 6bd4755c7c499dbcef46eaaeafa1a319da583b29
+-- 
+2.37.2
+
