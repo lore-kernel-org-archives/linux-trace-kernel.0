@@ -2,94 +2,83 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 23901C54EBD
-	for <linux-trace-kernel@archiver.kernel.org>; Sat,  7 Jan 2023 12:25:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AC923C46467
+	for <linux-trace-kernel@archiver.kernel.org>; Sat,  7 Jan 2023 13:32:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232007AbjAGMZw (ORCPT
+        id S229974AbjAGNcJ (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Sat, 7 Jan 2023 07:25:52 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44358 "EHLO
+        Sat, 7 Jan 2023 08:32:09 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56824 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231835AbjAGMZu (ORCPT
+        with ESMTP id S229475AbjAGNcI (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Sat, 7 Jan 2023 07:25:50 -0500
-Received: from mail-wm1-x330.google.com (mail-wm1-x330.google.com [IPv6:2a00:1450:4864:20::330])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6C0489B;
-        Sat,  7 Jan 2023 04:25:49 -0800 (PST)
-Received: by mail-wm1-x330.google.com with SMTP id ay40so2784548wmb.2;
-        Sat, 07 Jan 2023 04:25:49 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=4COzEezxUwScBdBUCQmXBfkEZMLwyu6bk+7AMynRWyg=;
-        b=I5VR5+vkAsCwsaI6ASMeQWrTa120CyUxdOBt5Y9vBflQ04CpFbUXl/oT0b0dwXCY89
-         kJi0N1tFqkEzvTZZHaJt9I8RKT8splcT/Zl+lL0fKC/eZO89ND0RfB0FU/lCzYUhj+60
-         fDvkXsinZrgSvUeZXCEUDeFOrQpES84p7A+qQNd2bdPQzG6dAK8oZ7w0w/pWMik2LjnZ
-         bEHwTw3gu37tVxD8H/8geT2VanX+56vAOao3rGJidMAZaaH01FZSARVT2kerssmrYvsU
-         zbgM7sxddq6O9884XayiWnbtM5y15B1WGXNX8h5Ey3dY3gWTDuuIdvPNK6JbH2SaiIKU
-         Ww8A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=4COzEezxUwScBdBUCQmXBfkEZMLwyu6bk+7AMynRWyg=;
-        b=bsBBrXqGtF2p5FiJCV62ytukP4Gft+4lvSaMi/IxIN31ZcnE4IQG3EZINSZkk3UXO8
-         Nbnp3dgtSPaQZnxAfCAlTk9f4QSzTbqWpSNne3twQcKUkOzakDz3aMo753IdfXxqslS0
-         9vsOJ17puLEm22Ltf1WSnobAf+xofg9t2JRSE1lzTYkehkrdvSjKEMIDt+Q3jOAjmKzB
-         SQ7NlVnhRCQJr85fjNUKiIuENFRVLRQACwR+Z/m0oebcaxtvuwk8511rRYzBWggnD4F3
-         PohwIzmweOFCewdtHFfsshz87xZlUCMGR5OXpJuz7jL3Gq30PcdcglKDIKp2K2eXx8ds
-         23nQ==
-X-Gm-Message-State: AFqh2kpZWlTX1P2yOmJb+skOUdSeLUAYKcfjwze6/qxzoFD9PERKzPya
-        3Uek9nfmxSgPK184TOdOH8j/Rfab2yYq3Q5DIak=
-X-Google-Smtp-Source: AMrXdXuoxk+kSH4s4jQ1Y0U/fOWreciZvBdhze/y2hpfixFDrnEwat9Yno2iIxYY6rxJOYP7almCdI7xoruT/azd9Gw=
-X-Received: by 2002:a05:600c:4153:b0:3c6:c182:b125 with SMTP id
- h19-20020a05600c415300b003c6c182b125mr3835738wmm.145.1673094347954; Sat, 07
- Jan 2023 04:25:47 -0800 (PST)
+        Sat, 7 Jan 2023 08:32:08 -0500
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2D17C5B17E;
+        Sat,  7 Jan 2023 05:32:06 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id D7ED1B810AC;
+        Sat,  7 Jan 2023 13:32:04 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DD0A3C433EF;
+        Sat,  7 Jan 2023 13:32:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1673098323;
+        bh=/hMzieqMHtR6JL4OjdNz+jKYqIqXve8DlL6+sdK1Zp8=;
+        h=From:To:Cc:Subject:Date:From;
+        b=nYTcphcFaaiv8O0/i/lFw29bgNkIjCxdNE2l2Uita+0docZBafbt2ajhEYjybEXsZ
+         vMzXUVj+ZBLxy0M99RXAYemqMMmnJZdV3JoNMuvqs+A+HgOXYJOW3g2TIqyOkbsH1D
+         NHb/RK+wRJ34usc5cczOwszVxqzOgYtRK3OkW81Y/7H9OW82mcC7cjcGMVRcRs24f5
+         R1YKqwjCRlul+Ae5lbTUvNftEtsAgM7psqjieiEAOBLTzfojKZICcmdUCOdsGPt74N
+         9U3Jl3AyyQs9fjGOihNo3f4VM8G2d5UHkLHpIadyWogvVYpd35U/gcy8sP+uSR2tnw
+         5EDsXAV4qvZFg==
+From:   "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
+To:     Shuah Khan <shuah@kernel.org>, Steven Rostedt <rostedt@goodmis.org>
+Cc:     Masami Hiramatsu <mhiramat@kernel.org>,
+        linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+        linux-kselftest@vger.kernel.org
+Subject: [PATCH 0/3] selftests/tracing: Fix some testcases for recent change
+Date:   Sat,  7 Jan 2023 22:31:59 +0900
+Message-Id: <167309831957.640391.3123812522556713267.stgit@devnote3>
+X-Mailer: git-send-email 2.39.0.314.g84b9a713c41-goog
+User-Agent: StGit/0.19
 MIME-Version: 1.0
-References: <20230106220020.1820147-1-anirudh.venkataramanan@intel.com> <20230106220020.1820147-2-anirudh.venkataramanan@intel.com>
-In-Reply-To: <20230106220020.1820147-2-anirudh.venkataramanan@intel.com>
-From:   Anatoly Pugachev <matorola@gmail.com>
-Date:   Sat, 7 Jan 2023 15:25:36 +0300
-Message-ID: <CADxRZqw2K1QT2cEa6U_4DUxgYrwMiZzU4Qy6iXVm2WRTYVa=xw@mail.gmail.com>
-Subject: Re: [PATCH net-next 1/7] ethernet: Remove the Sun Cassini driver
-To:     Anirudh Venkataramanan <anirudh.venkataramanan@intel.com>
-Cc:     netdev@vger.kernel.org, linux-pci@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, linux-mips@vger.kernel.org,
-        linux-trace-kernel@vger.kernel.org, sparclinux@vger.kernel.org,
-        Leon Romanovsky <leon@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On Sat, Jan 7, 2023 at 1:00 AM Anirudh Venkataramanan
-<anirudh.venkataramanan@intel.com> wrote:
->
-> In a recent patch series that touched this driver [1], it was suggested
-> that this driver should be removed completely. git logs suggest that
-> there hasn't been any significant feature addition, improvement or fixes to
-> user-visible bugs in a while. A web search didn't indicate any recent
-> discussions or any evidence that there are users out there who care about
-> this driver. Thus, remove this driver.
->
-> Notes:
->
-> checkpatch complains "WARNING: added, moved or deleted file(s), does
-> MAINTAINERS need updating?". The files being removed don't have their
-> own entries in the MAINTAINERS file, so there's nothing to remove.
->
-> checkpatch also complains about the long lore link below.
->
-> [1] https://lore.kernel.org/netdev/99629223-ac1b-0f82-50b8-ea307b3b0197@intel.com/T/#t
->
-> Suggested-by: Leon Romanovsky <leon@kernel.org>
-> Signed-off-by: Anirudh Venkataramanan <anirudh.venkataramanan@intel.com>
+This includes some patches to fix 2 issues on ftrace selftests.
 
-Do we drop/delete a working functionality by only taking in account
-git activity ?
+- eprobe filter and eprobe syntax test case were introduced but it
+  doesn't check whether the kernel supports eprobe filter. Thus the
+  new test case fails on the kernel which has eprobe but not support
+  eprobe filter. To solve this issue, add a filter description to
+  README file [1/3] and run the filter syntax error test only if the
+  description is found in the README file [2/3].
 
-What is a proper way to decline patch series (vs Acked-by) ?
+- Recently objtool adds prefix symbols for the function padding nops,
+  and the probepoint test case fails because this probepoint test case
+  tests whether the kprobe event can probe the target function and the
+  functions next to the target function. But the prefix symbols can not
+  be probed. Thus these prefix symbols must be skipped [3/3].
 
-Thanks.
+Thank you,
+
+---
+
+Masami Hiramatsu (Google) (3):
+      tracing/eprobe: Fix to add filter on eprobe description in README file
+      selftests/ftrace: Fix eprobe syntax test case to check filter support
+      selftests/ftrace: Fix probepoint testcase to ignore __pfx_* symbols
+
+
+ kernel/trace/trace.c                               |    2 +-
+ .../test.d/dynevent/eprobes_syntax_errors.tc       |    4 +++-
+ .../selftests/ftrace/test.d/kprobe/probepoint.tc   |    2 +-
+ 3 files changed, 5 insertions(+), 3 deletions(-)
+
+--
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
