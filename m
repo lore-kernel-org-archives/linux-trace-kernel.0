@@ -2,124 +2,96 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A67D0C54EBE
-	for <linux-trace-kernel@archiver.kernel.org>; Sat,  7 Jan 2023 08:50:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 17117C54EBC
+	for <linux-trace-kernel@archiver.kernel.org>; Sat,  7 Jan 2023 12:14:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229897AbjAGIuU (ORCPT
+        id S230258AbjAGMOs (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Sat, 7 Jan 2023 03:50:20 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56794 "EHLO
+        Sat, 7 Jan 2023 07:14:48 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42382 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229550AbjAGIuT (ORCPT
+        with ESMTP id S229671AbjAGMOr (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Sat, 7 Jan 2023 03:50:19 -0500
-X-Greylist: delayed 451 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Sat, 07 Jan 2023 00:50:18 PST
-Received: from smtp.smtpout.orange.fr (smtp-18.smtpout.orange.fr [80.12.242.18])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 8F0C361457
-        for <linux-trace-kernel@vger.kernel.org>; Sat,  7 Jan 2023 00:50:18 -0800 (PST)
-Received: from [192.168.1.18] ([86.243.100.34])
-        by smtp.orange.fr with ESMTPA
-        id E4mmphZiSo7FNE4mmpsxLZ; Sat, 07 Jan 2023 09:42:42 +0100
-X-ME-Helo: [192.168.1.18]
-X-ME-Auth: Y2hyaXN0b3BoZS5qYWlsbGV0QHdhbmFkb28uZnI=
-X-ME-Date: Sat, 07 Jan 2023 09:42:42 +0100
-X-ME-IP: 86.243.100.34
-Message-ID: <30dd32b4-cd74-77a1-d9ad-84e361680dac@wanadoo.fr>
-Date:   Sat, 7 Jan 2023 09:42:40 +0100
+        Sat, 7 Jan 2023 07:14:47 -0500
+Received: from mail-wm1-x335.google.com (mail-wm1-x335.google.com [IPv6:2a00:1450:4864:20::335])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2642F5C93E;
+        Sat,  7 Jan 2023 04:14:46 -0800 (PST)
+Received: by mail-wm1-x335.google.com with SMTP id g25-20020a7bc4d9000000b003d97c8d4941so5311625wmk.4;
+        Sat, 07 Jan 2023 04:14:46 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=exh5jhWBBK17Ph+CgJeghRyiOswfcgQCDbeTM4nzuso=;
+        b=qNyf3HCSTkCM2x51VV2Cu+6OyAqRfd3jq35pM1Vfsm6rY9XiBPdBC19GjNMmyH+5Ac
+         KveKhsFbTtt0aLipgmXmkd1KYHATxwb5Y+Yy4n6P5LtmnqydS3mSKNTnwZa0JPVezlLK
+         cJhnUkNNunEbsezDZehWHy2KR1Fgshy/NnetM18edQqr7sruoBq+4zxdzVHJv7FOVYpx
+         I7ZwyGGcYuaL+zZx4C1mS0bAWd12tOy3It0EolG+fIFfrFZPcM7PkHOJKCUFp+H0OIuT
+         iW4T667dq+pFqkLJaeWAt+slyrQd16MQjDAzZrp9W+GA4R3MLCqrdrlh7+KSA+UqXlVJ
+         byPw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=exh5jhWBBK17Ph+CgJeghRyiOswfcgQCDbeTM4nzuso=;
+        b=cci1SgEZHsRU25kW9ohgxTiLvoTpDs+2HEJBlwoTrEFQ+2Hl79gUsFevJ/eSEuujdf
+         qojrwTHdMS113wYGcvR+jT8vVMO/LA5vTXP9xk8pmShSI0M0hvCi2njARw5lhUUnIf+Q
+         rPugtvpKBYos1D/dO0VlGqSL3xgpipseu3cL2co2CuXzi4x6J8aCZcsaNNwpA4J07zPW
+         BJXM4kAGfSqtBaMbKk4EOJy1iuIBQjSCfBmSa+fQOx5iNzgQfzGQSz/Cv/y++9jTD2Kc
+         dw95j3iE34oGzkQl9Ep/ashYJhNojeDg+kjfogkCUUFQ2wvvAYX05w/HIhFNwevmKtP9
+         09Gw==
+X-Gm-Message-State: AFqh2kpImrBmKHB9Gy3MokH+7sIzzFhQotVD9d2d6Oo67oZjVy+CbYPj
+        2Is2q4zUjd/l8IyX/KtlkfTNJtahGjz+8n4lPoQNSKmy
+X-Google-Smtp-Source: AMrXdXuztG0SNmH495gPDbzRStX/IndQDUj9OP9rAgDAGEkVoZow/doVDExFB34qKIecc3mpSz3O88mTcRxeBil0l94=
+X-Received: by 2002:a05:600c:4b1b:b0:3b4:a6c4:70fb with SMTP id
+ i27-20020a05600c4b1b00b003b4a6c470fbmr2999894wmp.79.1673093684612; Sat, 07
+ Jan 2023 04:14:44 -0800 (PST)
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.4.2
-Subject: Re: [PATCH] tracing/eprobe: Replace kzalloc with kmalloc
-To:     Quanfa Fu <quanfafu@gmail.com>, rostedt@goodmis.org,
-        mhiramat@kernel.org
-Cc:     linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
-References: <20230107034557.1156022-1-quanfafu@gmail.com>
-Content-Language: fr, en-US
-From:   Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-In-Reply-To: <20230107034557.1156022-1-quanfafu@gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+References: <20230106220020.1820147-1-anirudh.venkataramanan@intel.com> <20230106220020.1820147-8-anirudh.venkataramanan@intel.com>
+In-Reply-To: <20230106220020.1820147-8-anirudh.venkataramanan@intel.com>
+From:   Anatoly Pugachev <matorola@gmail.com>
+Date:   Sat, 7 Jan 2023 15:14:33 +0300
+Message-ID: <CADxRZqwkv=FyzyMvPf_Ou3nMQWOZ1jmAwOT22=9tigVVWfB3Gg@mail.gmail.com>
+Subject: Re: [PATCH net-next 7/7] sparc: configs: Remove references to
+ CONFIG_SUNVNET and CONFIG_LDMVSW
+To:     Anirudh Venkataramanan <anirudh.venkataramanan@intel.com>
+Cc:     netdev@vger.kernel.org, linux-pci@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, linux-mips@vger.kernel.org,
+        linux-trace-kernel@vger.kernel.org, sparclinux@vger.kernel.org,
+        Leon Romanovsky <leon@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-Le 07/01/2023 à 04:45, Quanfa Fu a écrit :
-> Since this memory will be filled soon below, I feel that there is
-> no need for a memory of all zeros here. 'snprintf' does not return
-> negative num according to ISO C99, so I feel that no judgment is
-> needed here.
-> 
-> No functional change intended.
-> 
-> Signed-off-by: Quanfa Fu <quanfafu@gmail.com>
+On Sat, Jan 7, 2023 at 1:00 AM Anirudh Venkataramanan
+<anirudh.venkataramanan@intel.com> wrote:
+>
+> An earlier patch removed the Sun LDOM vswitch and sunvnet drivers. Remove
+> references to CONFIG_SUNVNET and CONFIG_LDMVSW from the sparc64 defconfig.
+>
+> Cc: Leon Romanovsky <leon@kernel.org>
+> Signed-off-by: Anirudh Venkataramanan <anirudh.venkataramanan@intel.com>
 > ---
->   kernel/trace/trace_eprobe.c | 4 +---
->   1 file changed, 1 insertion(+), 3 deletions(-)
-> 
-> diff --git a/kernel/trace/trace_eprobe.c b/kernel/trace/trace_eprobe.c
-> index 352b65e2b910..cd1d271a74e7 100644
-> --- a/kernel/trace/trace_eprobe.c
-> +++ b/kernel/trace/trace_eprobe.c
-> @@ -917,15 +917,13 @@ static int trace_eprobe_parse_filter(struct trace_eprobe *ep, int argc, const ch
->   	for (i = 0; i < argc; i++)
->   		len += strlen(argv[i]) + 1;
->   
-> -	ep->filter_str = kzalloc(len, GFP_KERNEL);
-> +	ep->filter_str = kmalloc(len, GFP_KERNEL);
->   	if (!ep->filter_str)
->   		return -ENOMEM;
->   
->   	p = ep->filter_str;
->   	for (i = 0; i < argc; i++) {
->   		ret = snprintf(p, len, "%s ", argv[i]);
-> -		if (ret < 0)
-> -			goto error;
->   		if (ret > len) {
+>  arch/sparc/configs/sparc64_defconfig | 2 --
+>  1 file changed, 2 deletions(-)
+>
+> diff --git a/arch/sparc/configs/sparc64_defconfig b/arch/sparc/configs/sparc64_defconfig
+> index 1809909..a2c76e8 100644
+> --- a/arch/sparc/configs/sparc64_defconfig
+> +++ b/arch/sparc/configs/sparc64_defconfig
+> @@ -95,8 +95,6 @@ CONFIG_MII=m
+>  CONFIG_SUNLANCE=m
+>  CONFIG_HAPPYMEAL=y
+>  CONFIG_SUNGEM=m
+> -CONFIG_SUNVNET=m
+> -CONFIG_LDMVSW=m
+>  CONFIG_NET_PCI=y
+>  CONFIG_E1000=m
+>  CONFIG_E1000E=m
 
-Hi,
-
-as per [1]:
-  * The return value is the number of characters which would be
-  * generated for the given input, excluding the trailing null,
-  * as per ISO C99.  If the return is greater than *or equal* to
-  * @size, the resulting string is truncated.
-
-So, should this test be:
-     if (ret >= len)
-            ~~~~
-
-
-Also, isn't the p[-1] = '\0' after the loop eating the last character?
-    argc = 1;
-    argv[0] = "a";
-
-    Before the loop:
-    ===============
-    len = 1 + 1 = 2;
-    ep->filter_str = 0x00 0x00
-                     ^
-                     |___ p
-
-    After the loop:
-    ===============
-    ep->filter_str = 0x61 0x00
-                          ^
-                          |___ p
-    len = 1;
-
-    After p[-1]:
-    ============
-    ep->filter_str = 0x00 0x00
-                       ~~ ^
-                          |___ p
-
-Did I miss something obvious?
-I don't know the intent here, or if it is an issue at all, but it looks odd.
-
-CJ
-
-
-[1]: https://elixir.bootlin.com/linux/v6.2-rc1/source/lib/vsprintf.c#L2925
->   			ret = -E2BIG;
->   			goto error;
-
+I wonder what is the reason for removing the perfectly working sunvnet
+driver which is used in LDOMs under sun hardware hypervisor?
+Can we please not remove drivers which are actually used? Or either
+drop sparc32/sparc64 (whole arch) from linux kernel as well. Thanks.
