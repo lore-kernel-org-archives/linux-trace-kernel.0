@@ -2,80 +2,133 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10F89C54EBC
-	for <linux-trace-kernel@archiver.kernel.org>; Sat,  7 Jan 2023 13:33:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 87FE4C46467
+	for <linux-trace-kernel@archiver.kernel.org>; Sat,  7 Jan 2023 14:09:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232611AbjAGNdI (ORCPT
+        id S232604AbjAGOJD (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Sat, 7 Jan 2023 08:33:08 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57462 "EHLO
+        Sat, 7 Jan 2023 09:09:03 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43842 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232342AbjAGNcl (ORCPT
+        with ESMTP id S232649AbjAGOI4 (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Sat, 7 Jan 2023 08:32:41 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0B1305E0B7;
-        Sat,  7 Jan 2023 05:32:41 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 9B1E960C08;
-        Sat,  7 Jan 2023 13:32:40 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6B7D7C433EF;
-        Sat,  7 Jan 2023 13:32:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1673098360;
-        bh=QQjmgf5W/T/Kzs3A2mqRoW9fGZAadyb1nwhZ/JNs3Uo=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=u5v0ZpD7GrnovovNTeycO7D8G9AusoUDyOmMLdWFRQXW2hGZat6+XCcMYZlvUIkcr
-         3Si5qSbWy8UEMjnx2xg7tuPr4jsi2uaBf67bpkW0xmc+kGAUUDNVQ7xpGCayNWXlFj
-         7fV2ib8aRBgK1Ke1cZZFM0N8y1sMS89yuTJKvRZMMCbMynFiAuZjCi4vjoEPyRP0lI
-         pkwq2Jpme+73ahSaxONYJ7Wbi9aRRhYrCgshZxV/39CTOqBQ+9ZivZ3yzD7hWqI5Vc
-         mKR908XXakWA0rznLWnDbW+DrZ0nghg7Wr6JPBqAyRmn5+OZxVKFByLJkaryo9D/DC
-         vGOoyXIfw6NCQ==
-From:   "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
-To:     Shuah Khan <shuah@kernel.org>, Steven Rostedt <rostedt@goodmis.org>
-Cc:     Masami Hiramatsu <mhiramat@kernel.org>,
-        linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
-        linux-kselftest@vger.kernel.org
-Subject: [PATCH 3/3] selftests/ftrace: Fix probepoint testcase to ignore __pfx_* symbols
-Date:   Sat,  7 Jan 2023 22:32:36 +0900
-Message-Id: <167309835609.640500.9664678940260305746.stgit@devnote3>
-X-Mailer: git-send-email 2.39.0.314.g84b9a713c41-goog
-In-Reply-To: <167309832823.640500.13244630381161014364.stgit@devnote3>
-References: <167309832823.640500.13244630381161014364.stgit@devnote3>
-User-Agent: StGit/0.19
+        Sat, 7 Jan 2023 09:08:56 -0500
+Received: from smtp.smtpout.orange.fr (smtp-11.smtpout.orange.fr [80.12.242.11])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C3C10656D
+        for <linux-trace-kernel@vger.kernel.org>; Sat,  7 Jan 2023 06:08:54 -0800 (PST)
+Received: from [192.168.1.18] ([86.243.100.34])
+        by smtp.orange.fr with ESMTPA
+        id E9sRpKyqPRTYIE9sRpsN7c; Sat, 07 Jan 2023 15:08:53 +0100
+X-ME-Helo: [192.168.1.18]
+X-ME-Auth: Y2hyaXN0b3BoZS5qYWlsbGV0QHdhbmFkb28uZnI=
+X-ME-Date: Sat, 07 Jan 2023 15:08:53 +0100
+X-ME-IP: 86.243.100.34
+Message-ID: <340cf324-29a1-a0c4-638d-b820f6cb3473@wanadoo.fr>
+Date:   Sat, 7 Jan 2023 15:08:51 +0100
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.4.2
+Subject: Re: [PATCH] tracing/eprobe: Replace kzalloc with kmalloc
+Content-Language: fr
+To:     Quanfa Fu <quanfafu@gmail.com>
+Cc:     rostedt@goodmis.org, mhiramat@kernel.org,
+        linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
+References: <20230107034557.1156022-1-quanfafu@gmail.com>
+ <30dd32b4-cd74-77a1-d9ad-84e361680dac@wanadoo.fr>
+ <CAM4UoyqAGUbLaaoDyvFSTKvgpq9Oz7HuxKLMf3ryOsjHofcpVw@mail.gmail.com>
+From:   Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+In-Reply-To: <CAM4UoyqAGUbLaaoDyvFSTKvgpq9Oz7HuxKLMf3ryOsjHofcpVw@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+Le 07/01/2023 à 13:23, Quanfa Fu a écrit :
+> On Sat, Jan 7, 2023 at 4:42 PM Christophe JAILLET
+> <christophe.jaillet@wanadoo.fr> wrote:
+>>
+>> Le 07/01/2023 à 04:45, Quanfa Fu a écrit :
+>>> Since this memory will be filled soon below, I feel that there is
+>>> no need for a memory of all zeros here. 'snprintf' does not return
+>>> negative num according to ISO C99, so I feel that no judgment is
+>>> needed here.
+>>>
+>>> No functional change intended.
+>>>
+>>> Signed-off-by: Quanfa Fu <quanfafu@gmail.com>
+>>> ---
+>>>    kernel/trace/trace_eprobe.c | 4 +---
+>>>    1 file changed, 1 insertion(+), 3 deletions(-)
+>>>
+>>> diff --git a/kernel/trace/trace_eprobe.c b/kernel/trace/trace_eprobe.c
+>>> index 352b65e2b910..cd1d271a74e7 100644
+>>> --- a/kernel/trace/trace_eprobe.c
+>>> +++ b/kernel/trace/trace_eprobe.c
+>>> @@ -917,15 +917,13 @@ static int trace_eprobe_parse_filter(struct trace_eprobe *ep, int argc, const ch
+>>>        for (i = 0; i < argc; i++)
+>>>                len += strlen(argv[i]) + 1;
+>>>
+>>> -     ep->filter_str = kzalloc(len, GFP_KERNEL);
+>>> +     ep->filter_str = kmalloc(len, GFP_KERNEL);
+>>>        if (!ep->filter_str)
+>>>                return -ENOMEM;
+>>>
+>>>        p = ep->filter_str;
+>>>        for (i = 0; i < argc; i++) {
+>>>                ret = snprintf(p, len, "%s ", argv[i]);
+>>> -             if (ret < 0)
+>>> -                     goto error;
+>>>                if (ret > len) {
+>>
+> 
+> I think that:
+> 
+> for example, argc = 2, argv = {"a", "b"};
+> 
+> Before the loop
+> ===============
+> len = (1 + 1) + (1 + 1) = 4;
+> ep->filter_str = 0x00 0x00 0x00 0x00
+>                         ^
+>                          |__ p
+> 
+> After the loop:
+> ===============
+> i = 1, snprintf write: 'a' and ' ', so ret = 2
+> i = 2, snprintf write: 'b' and ' ', so ret = 2
+> ===============
 
-Fix kprobe probepoint testcase to ignore __pfx_* prefix symbols. Those are
-introduced by commit b341b20d648b ("x86: Add prefix symbols for function
-padding") for identifying PADDING_BYTES of NOPs. Since kprobe events can
-not probe these prefix symbols, this testcase has to skip those symbols.
+Ok, I missed the space after the %s.
 
-Fixes: b341b20d648b ("x86: Add prefix symbols for function padding")
-Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
----
- .../selftests/ftrace/test.d/kprobe/probepoint.tc   |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Sorry for the noise.
 
-diff --git a/tools/testing/selftests/ftrace/test.d/kprobe/probepoint.tc b/tools/testing/selftests/ftrace/test.d/kprobe/probepoint.tc
-index 624269c8d534..68425987a5dd 100644
---- a/tools/testing/selftests/ftrace/test.d/kprobe/probepoint.tc
-+++ b/tools/testing/selftests/ftrace/test.d/kprobe/probepoint.tc
-@@ -21,7 +21,7 @@ set_offs() { # prev target next
- 
- # We have to decode symbol addresses to get correct offsets.
- # If the offset is not an instruction boundary, it cause -EILSEQ.
--set_offs `grep -A1 -B1 ${TARGET_FUNC} /proc/kallsyms | cut -f 1 -d " " | xargs`
-+set_offs `grep -v __pfx_ /proc/kallsyms | grep -A1 -B1 ${TARGET_FUNC} | cut -f 1 -d " " | xargs`
- 
- UINT_TEST=no
- # printf "%x" -1 returns (unsigned long)-1.
+>   Since the length of the last argv is not enough
+> to write, the space is replaced by null
+> 
+> ep->filter_str = 0x61 0x20 0x62 0x00
+>                                                            ^
+>                                                            |__ p
+> p = ep->fiter_str + 2 (ret1) +2 (ret2) = ep->filter_str + 4
+> ===============
+> so After p[-1] = *(ep->filter_str + 3) = '\0';
+> ep->filter_str = 0x61 0x20 0x62 0x00
+> 
+> According to ISO C99: " If the output was truncated due to this limit
+> then the return value is the number of characters (excluding the
+> terminating null byte) which would have been written to the final
+> string if enough  space  had been available"
+> 
+> The last snprintf will end with 'NULL', so I think p[-1] = '\0' can
+> also be deleted
+
+Hmm, now that I see it, I think that it is there to remove the last 
+space (even if there shouldn't be any because the last snprintf will be 
+truncated).
+
+Code LGTM as-is, even if puzzling.
+
+CJ
+
+> 
 
