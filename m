@@ -2,186 +2,94 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D3E19C46467
-	for <linux-trace-kernel@archiver.kernel.org>; Sat,  7 Jan 2023 12:24:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 23901C54EBD
+	for <linux-trace-kernel@archiver.kernel.org>; Sat,  7 Jan 2023 12:25:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230113AbjAGMYM (ORCPT
+        id S232007AbjAGMZw (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Sat, 7 Jan 2023 07:24:12 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43464 "EHLO
+        Sat, 7 Jan 2023 07:25:52 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44358 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229475AbjAGMYL (ORCPT
+        with ESMTP id S231835AbjAGMZu (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Sat, 7 Jan 2023 07:24:11 -0500
-Received: from mail-yw1-x1130.google.com (mail-yw1-x1130.google.com [IPv6:2607:f8b0:4864:20::1130])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4183760CE0;
-        Sat,  7 Jan 2023 04:24:09 -0800 (PST)
-Received: by mail-yw1-x1130.google.com with SMTP id 00721157ae682-4b718cab0e4so55626657b3.9;
-        Sat, 07 Jan 2023 04:24:09 -0800 (PST)
+        Sat, 7 Jan 2023 07:25:50 -0500
+Received: from mail-wm1-x330.google.com (mail-wm1-x330.google.com [IPv6:2a00:1450:4864:20::330])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6C0489B;
+        Sat,  7 Jan 2023 04:25:49 -0800 (PST)
+Received: by mail-wm1-x330.google.com with SMTP id ay40so2784548wmb.2;
+        Sat, 07 Jan 2023 04:25:49 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=bjlh/y4ujWrlLj4f+D4wuvbyCFuV7BwnHdo20MJ4gnE=;
-        b=LbS0b9zD5+ZsN/uxd7ehSsSqvJpNP7iADK/9yo6qGTPrCwoKuy0FqjYDDG9YTHS7yB
-         dQA3PAsRow5BQBV6XqIJBIzMQPn9R/n6X2n4bq2gZYezB+KM1ooDPjYgmKET61QynJX7
-         /J5b+15XUWLK6kqERVLhLD7y6GNnL3JsZ1Y5flvjzc2EjC9BwG9k/GN2bZ0JFfg0Y1lS
-         hZrHOle9KZ8eui734mS/Dmt8mRvhagWmRNQFzLUI2toyOVeze6qJK7TqyOrohRjC31Is
-         ZnyLjselJtIvQ4sWAE6PqkUTvjxwvsKCAgPSckoK67bDP7++V4XE4bdZPf+9+TJxPvgc
-         4aSw==
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=4COzEezxUwScBdBUCQmXBfkEZMLwyu6bk+7AMynRWyg=;
+        b=I5VR5+vkAsCwsaI6ASMeQWrTa120CyUxdOBt5Y9vBflQ04CpFbUXl/oT0b0dwXCY89
+         kJi0N1tFqkEzvTZZHaJt9I8RKT8splcT/Zl+lL0fKC/eZO89ND0RfB0FU/lCzYUhj+60
+         fDvkXsinZrgSvUeZXCEUDeFOrQpES84p7A+qQNd2bdPQzG6dAK8oZ7w0w/pWMik2LjnZ
+         bEHwTw3gu37tVxD8H/8geT2VanX+56vAOao3rGJidMAZaaH01FZSARVT2kerssmrYvsU
+         zbgM7sxddq6O9884XayiWnbtM5y15B1WGXNX8h5Ey3dY3gWTDuuIdvPNK6JbH2SaiIKU
+         Ww8A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=bjlh/y4ujWrlLj4f+D4wuvbyCFuV7BwnHdo20MJ4gnE=;
-        b=RD1jsU1w+cWDigpJf64g/Yow7Wf/bru4wNjQheXLEqQHh+D/22CWqGQP/8m3o0TeK6
-         LgDSksUHdsVNL5/cc/MujgSSFeuBZhJrK+8jCxdFamKV99qZQCVRNkin+ez2Qm8QlpXf
-         dldmDp6jGzQeJay76TgQ4ZL6DA/t43JiI1IJbeXo4aNmxmdMURhNGFQemK4QBo8/S1vP
-         zaSkxFTatHdqB2HiCnA93ktZ52XfsvGpOxovvZ/9eVA5tSeZjO+Pcp8FXd3yoQ2DOCuy
-         GvOCP/t3I//QALrkMI1wTF3e6qMo/80IIKDaqFBv/kU+lZnKPpgArxR1X2Yqg8rrSxjk
-         ENZQ==
-X-Gm-Message-State: AFqh2ko3d+iXxeSmoknrQGKYnxqTXjl9caqxAS3lFxHIJ8ah9IYV4laM
-        8LvlS2uQ5vzqR6zY+/tA/vFS26qPvO1Tocz3DfvkxMWA5Rk=
-X-Google-Smtp-Source: AMrXdXvj03+QNFlwghM7LrKQ08KhCNVoUEYXpOEhBslBtXf8OmWT+FXOZXf4h4w5+VEgNrvSc+cUiwVnKSlqqtMYIV8=
-X-Received: by 2002:a0d:ea47:0:b0:47d:d0f4:3c92 with SMTP id
- t68-20020a0dea47000000b0047dd0f43c92mr4787543ywe.500.1673094248462; Sat, 07
- Jan 2023 04:24:08 -0800 (PST)
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=4COzEezxUwScBdBUCQmXBfkEZMLwyu6bk+7AMynRWyg=;
+        b=bsBBrXqGtF2p5FiJCV62ytukP4Gft+4lvSaMi/IxIN31ZcnE4IQG3EZINSZkk3UXO8
+         Nbnp3dgtSPaQZnxAfCAlTk9f4QSzTbqWpSNne3twQcKUkOzakDz3aMo753IdfXxqslS0
+         9vsOJ17puLEm22Ltf1WSnobAf+xofg9t2JRSE1lzTYkehkrdvSjKEMIDt+Q3jOAjmKzB
+         SQ7NlVnhRCQJr85fjNUKiIuENFRVLRQACwR+Z/m0oebcaxtvuwk8511rRYzBWggnD4F3
+         PohwIzmweOFCewdtHFfsshz87xZlUCMGR5OXpJuz7jL3Gq30PcdcglKDIKp2K2eXx8ds
+         23nQ==
+X-Gm-Message-State: AFqh2kpZWlTX1P2yOmJb+skOUdSeLUAYKcfjwze6/qxzoFD9PERKzPya
+        3Uek9nfmxSgPK184TOdOH8j/Rfab2yYq3Q5DIak=
+X-Google-Smtp-Source: AMrXdXuoxk+kSH4s4jQ1Y0U/fOWreciZvBdhze/y2hpfixFDrnEwat9Yno2iIxYY6rxJOYP7almCdI7xoruT/azd9Gw=
+X-Received: by 2002:a05:600c:4153:b0:3c6:c182:b125 with SMTP id
+ h19-20020a05600c415300b003c6c182b125mr3835738wmm.145.1673094347954; Sat, 07
+ Jan 2023 04:25:47 -0800 (PST)
 MIME-Version: 1.0
-References: <20230107034557.1156022-1-quanfafu@gmail.com> <30dd32b4-cd74-77a1-d9ad-84e361680dac@wanadoo.fr>
-In-Reply-To: <30dd32b4-cd74-77a1-d9ad-84e361680dac@wanadoo.fr>
-From:   Quanfa Fu <quanfafu@gmail.com>
-Date:   Sat, 7 Jan 2023 20:23:57 +0800
-Message-ID: <CAM4UoyqAGUbLaaoDyvFSTKvgpq9Oz7HuxKLMf3ryOsjHofcpVw@mail.gmail.com>
-Subject: Re: [PATCH] tracing/eprobe: Replace kzalloc with kmalloc
-To:     Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-Cc:     rostedt@goodmis.org, mhiramat@kernel.org,
-        linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
+References: <20230106220020.1820147-1-anirudh.venkataramanan@intel.com> <20230106220020.1820147-2-anirudh.venkataramanan@intel.com>
+In-Reply-To: <20230106220020.1820147-2-anirudh.venkataramanan@intel.com>
+From:   Anatoly Pugachev <matorola@gmail.com>
+Date:   Sat, 7 Jan 2023 15:25:36 +0300
+Message-ID: <CADxRZqw2K1QT2cEa6U_4DUxgYrwMiZzU4Qy6iXVm2WRTYVa=xw@mail.gmail.com>
+Subject: Re: [PATCH net-next 1/7] ethernet: Remove the Sun Cassini driver
+To:     Anirudh Venkataramanan <anirudh.venkataramanan@intel.com>
+Cc:     netdev@vger.kernel.org, linux-pci@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, linux-mips@vger.kernel.org,
+        linux-trace-kernel@vger.kernel.org, sparclinux@vger.kernel.org,
+        Leon Romanovsky <leon@kernel.org>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On Sat, Jan 7, 2023 at 4:42 PM Christophe JAILLET
-<christophe.jaillet@wanadoo.fr> wrote:
+On Sat, Jan 7, 2023 at 1:00 AM Anirudh Venkataramanan
+<anirudh.venkataramanan@intel.com> wrote:
 >
-> Le 07/01/2023 =C3=A0 04:45, Quanfa Fu a =C3=A9crit :
-> > Since this memory will be filled soon below, I feel that there is
-> > no need for a memory of all zeros here. 'snprintf' does not return
-> > negative num according to ISO C99, so I feel that no judgment is
-> > needed here.
-> >
-> > No functional change intended.
-> >
-> > Signed-off-by: Quanfa Fu <quanfafu@gmail.com>
-> > ---
-> >   kernel/trace/trace_eprobe.c | 4 +---
-> >   1 file changed, 1 insertion(+), 3 deletions(-)
-> >
-> > diff --git a/kernel/trace/trace_eprobe.c b/kernel/trace/trace_eprobe.c
-> > index 352b65e2b910..cd1d271a74e7 100644
-> > --- a/kernel/trace/trace_eprobe.c
-> > +++ b/kernel/trace/trace_eprobe.c
-> > @@ -917,15 +917,13 @@ static int trace_eprobe_parse_filter(struct trace=
-_eprobe *ep, int argc, const ch
-> >       for (i =3D 0; i < argc; i++)
-> >               len +=3D strlen(argv[i]) + 1;
-> >
-> > -     ep->filter_str =3D kzalloc(len, GFP_KERNEL);
-> > +     ep->filter_str =3D kmalloc(len, GFP_KERNEL);
-> >       if (!ep->filter_str)
-> >               return -ENOMEM;
-> >
-> >       p =3D ep->filter_str;
-> >       for (i =3D 0; i < argc; i++) {
-> >               ret =3D snprintf(p, len, "%s ", argv[i]);
-> > -             if (ret < 0)
-> > -                     goto error;
-> >               if (ret > len) {
+> In a recent patch series that touched this driver [1], it was suggested
+> that this driver should be removed completely. git logs suggest that
+> there hasn't been any significant feature addition, improvement or fixes to
+> user-visible bugs in a while. A web search didn't indicate any recent
+> discussions or any evidence that there are users out there who care about
+> this driver. Thus, remove this driver.
 >
-> Hi,
+> Notes:
 >
-> as per [1]:
->   * The return value is the number of characters which would be
->   * generated for the given input, excluding the trailing null,
->   * as per ISO C99.  If the return is greater than *or equal* to
->   * @size, the resulting string is truncated.
+> checkpatch complains "WARNING: added, moved or deleted file(s), does
+> MAINTAINERS need updating?". The files being removed don't have their
+> own entries in the MAINTAINERS file, so there's nothing to remove.
 >
-> So, should this test be:
->      if (ret >=3D len)
->             ~~~~
+> checkpatch also complains about the long lore link below.
 >
+> [1] https://lore.kernel.org/netdev/99629223-ac1b-0f82-50b8-ea307b3b0197@intel.com/T/#t
 >
-> Also, isn't the p[-1] =3D '\0' after the loop eating the last character?
->     argc =3D 1;
->     argv[0] =3D "a";
->
->     Before the loop:
->     =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
->     len =3D 1 + 1 =3D 2;
->     ep->filter_str =3D 0x00 0x00
->                      ^
->                      |___ p
->
->     After the loop:
->     =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
->     ep->filter_str =3D 0x61 0x00
->                           ^
->                           |___ p
->     len =3D 1;
->
->     After p[-1]:
->     =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
->     ep->filter_str =3D 0x00 0x00
->                        ~~ ^
->                           |___ p
->
-> Did I miss something obvious?
-> I don't know the intent here, or if it is an issue at all, but it looks o=
-dd.
->
-> CJ
->
->
-> [1]: https://elixir.bootlin.com/linux/v6.2-rc1/source/lib/vsprintf.c#L292=
-5
-> >                       ret =3D -E2BIG;
-> >                       goto error;
->
+> Suggested-by: Leon Romanovsky <leon@kernel.org>
+> Signed-off-by: Anirudh Venkataramanan <anirudh.venkataramanan@intel.com>
 
-I think that:
+Do we drop/delete a working functionality by only taking in account
+git activity ?
 
-for example, argc =3D 2, argv =3D {"a", "b"};
+What is a proper way to decline patch series (vs Acked-by) ?
 
-Before the loop
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-len =3D (1 + 1) + (1 + 1) =3D 4;
-ep->filter_str =3D 0x00 0x00 0x00 0x00
-                       ^
-                        |__ p
-
-After the loop:
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-i =3D 1, snprintf write: 'a' and ' ', so ret =3D 2
-i =3D 2, snprintf write: 'b' and ' ', so ret =3D 2
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
- Since the length of the last argv is not enough
-to write, the space is replaced by null
-
-ep->filter_str =3D 0x61 0x20 0x62 0x00
-                                                          ^
-                                                          |__ p
-p =3D ep->fiter_str + 2 (ret1) +2 (ret2) =3D ep->filter_str + 4
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-so After p[-1] =3D *(ep->filter_str + 3) =3D '\0';
-ep->filter_str =3D 0x61 0x20 0x62 0x00
-
-According to ISO C99: " If the output was truncated due to this limit
-then the return value is the number of characters (excluding the
-terminating null byte) which would have been written to the final
-string if enough  space  had been available"
-
-The last snprintf will end with 'NULL', so I think p[-1] =3D '\0' can
-also be deleted
+Thanks.
