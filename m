@@ -2,133 +2,103 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 87FE4C46467
-	for <linux-trace-kernel@archiver.kernel.org>; Sat,  7 Jan 2023 14:09:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EB6EEC54EBC
+	for <linux-trace-kernel@archiver.kernel.org>; Sat,  7 Jan 2023 16:01:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232604AbjAGOJD (ORCPT
+        id S232207AbjAGQBd (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Sat, 7 Jan 2023 09:09:03 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43842 "EHLO
+        Sat, 7 Jan 2023 11:01:33 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49316 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232649AbjAGOI4 (ORCPT
+        with ESMTP id S229695AbjAGQBc (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Sat, 7 Jan 2023 09:08:56 -0500
-Received: from smtp.smtpout.orange.fr (smtp-11.smtpout.orange.fr [80.12.242.11])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C3C10656D
-        for <linux-trace-kernel@vger.kernel.org>; Sat,  7 Jan 2023 06:08:54 -0800 (PST)
-Received: from [192.168.1.18] ([86.243.100.34])
-        by smtp.orange.fr with ESMTPA
-        id E9sRpKyqPRTYIE9sRpsN7c; Sat, 07 Jan 2023 15:08:53 +0100
-X-ME-Helo: [192.168.1.18]
-X-ME-Auth: Y2hyaXN0b3BoZS5qYWlsbGV0QHdhbmFkb28uZnI=
-X-ME-Date: Sat, 07 Jan 2023 15:08:53 +0100
-X-ME-IP: 86.243.100.34
-Message-ID: <340cf324-29a1-a0c4-638d-b820f6cb3473@wanadoo.fr>
-Date:   Sat, 7 Jan 2023 15:08:51 +0100
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.4.2
-Subject: Re: [PATCH] tracing/eprobe: Replace kzalloc with kmalloc
-Content-Language: fr
+        Sat, 7 Jan 2023 11:01:32 -0500
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C551F4FCC1;
+        Sat,  7 Jan 2023 08:01:30 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 87107B80951;
+        Sat,  7 Jan 2023 16:01:28 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 56549C433D2;
+        Sat,  7 Jan 2023 16:01:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1673107287;
+        bh=QUKH+nV5nAM3iDCayBAyCxMO7h1lYJlWIjFspuYJpUE=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=EAyJeXWzaLvdJOHtdfLorpHZj8CCjtm/i+sWNtvPHKiCNQRahEj0cBPeLSi2UetKV
+         InQvd+jra/TGcuKZ8iGMdI/cqO4/2EF8ja7FOPkJZy5XPPX/n1pvpK+/WcV0nZ/B7C
+         La5D8CpvS0Jzd3DZHy9gxVX++CJJoU6jt9c1itx70uz6MG9fl2yWdMTAmfLLhoHLpe
+         84d5Mh4RDrkmoI4NQysZSTAEMhZFwgz5BZcxLkrbi1hgx1CVdP8zt06Zq/mDUWWtgI
+         LIu0+XFnJUsf/enixCl/Ud0vXAIxPE190NUy/UyMF4ZIblTWadMw+3DZIsxyxBhvSb
+         qatJ80Cre6QJg==
+Date:   Sun, 8 Jan 2023 01:01:24 +0900
+From:   Masami Hiramatsu (Google) <mhiramat@kernel.org>
 To:     Quanfa Fu <quanfafu@gmail.com>
-Cc:     rostedt@goodmis.org, mhiramat@kernel.org,
-        linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
+Cc:     rostedt@goodmis.org, linux-kernel@vger.kernel.org,
+        linux-trace-kernel@vger.kernel.org
+Subject: Re: [PATCH] tracing/eprobe: Replace kzalloc with kmalloc
+Message-Id: <20230108010124.96e4ceb68b8dfb8e291f501d@kernel.org>
+In-Reply-To: <20230107034557.1156022-1-quanfafu@gmail.com>
 References: <20230107034557.1156022-1-quanfafu@gmail.com>
- <30dd32b4-cd74-77a1-d9ad-84e361680dac@wanadoo.fr>
- <CAM4UoyqAGUbLaaoDyvFSTKvgpq9Oz7HuxKLMf3ryOsjHofcpVw@mail.gmail.com>
-From:   Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-In-Reply-To: <CAM4UoyqAGUbLaaoDyvFSTKvgpq9Oz7HuxKLMf3ryOsjHofcpVw@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-Le 07/01/2023 à 13:23, Quanfa Fu a écrit :
-> On Sat, Jan 7, 2023 at 4:42 PM Christophe JAILLET
-> <christophe.jaillet@wanadoo.fr> wrote:
->>
->> Le 07/01/2023 à 04:45, Quanfa Fu a écrit :
->>> Since this memory will be filled soon below, I feel that there is
->>> no need for a memory of all zeros here. 'snprintf' does not return
->>> negative num according to ISO C99, so I feel that no judgment is
->>> needed here.
->>>
->>> No functional change intended.
->>>
->>> Signed-off-by: Quanfa Fu <quanfafu@gmail.com>
->>> ---
->>>    kernel/trace/trace_eprobe.c | 4 +---
->>>    1 file changed, 1 insertion(+), 3 deletions(-)
->>>
->>> diff --git a/kernel/trace/trace_eprobe.c b/kernel/trace/trace_eprobe.c
->>> index 352b65e2b910..cd1d271a74e7 100644
->>> --- a/kernel/trace/trace_eprobe.c
->>> +++ b/kernel/trace/trace_eprobe.c
->>> @@ -917,15 +917,13 @@ static int trace_eprobe_parse_filter(struct trace_eprobe *ep, int argc, const ch
->>>        for (i = 0; i < argc; i++)
->>>                len += strlen(argv[i]) + 1;
->>>
->>> -     ep->filter_str = kzalloc(len, GFP_KERNEL);
->>> +     ep->filter_str = kmalloc(len, GFP_KERNEL);
->>>        if (!ep->filter_str)
->>>                return -ENOMEM;
->>>
->>>        p = ep->filter_str;
->>>        for (i = 0; i < argc; i++) {
->>>                ret = snprintf(p, len, "%s ", argv[i]);
->>> -             if (ret < 0)
->>> -                     goto error;
->>>                if (ret > len) {
->>
-> 
-> I think that:
-> 
-> for example, argc = 2, argv = {"a", "b"};
-> 
-> Before the loop
-> ===============
-> len = (1 + 1) + (1 + 1) = 4;
-> ep->filter_str = 0x00 0x00 0x00 0x00
->                         ^
->                          |__ p
-> 
-> After the loop:
-> ===============
-> i = 1, snprintf write: 'a' and ' ', so ret = 2
-> i = 2, snprintf write: 'b' and ' ', so ret = 2
-> ===============
+On Sat,  7 Jan 2023 11:45:57 +0800
+Quanfa Fu <quanfafu@gmail.com> wrote:
 
-Ok, I missed the space after the %s.
-
-Sorry for the noise.
-
->   Since the length of the last argv is not enough
-> to write, the space is replaced by null
+> Since this memory will be filled soon below, I feel that there is
+> no need for a memory of all zeros here. 'snprintf' does not return
+> negative num according to ISO C99, so I feel that no judgment is
+> needed here.
 > 
-> ep->filter_str = 0x61 0x20 0x62 0x00
->                                                            ^
->                                                            |__ p
-> p = ep->fiter_str + 2 (ret1) +2 (ret2) = ep->filter_str + 4
-> ===============
-> so After p[-1] = *(ep->filter_str + 3) = '\0';
-> ep->filter_str = 0x61 0x20 0x62 0x00
-> 
-> According to ISO C99: " If the output was truncated due to this limit
-> then the return value is the number of characters (excluding the
-> terminating null byte) which would have been written to the final
-> string if enough  space  had been available"
-> 
-> The last snprintf will end with 'NULL', so I think p[-1] = '\0' can
-> also be deleted
-
-Hmm, now that I see it, I think that it is there to remove the last 
-space (even if there shouldn't be any because the last snprintf will be 
-truncated).
-
-Code LGTM as-is, even if puzzling.
-
-CJ
-
+> No functional change intended.
 > 
 
+Ah, good catch. I didn't notice that snprintf() doesn't return
+error code. (I confirmed that the linux internal snprintf() also
+doesn't return the error code)
+
+Acked-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+
+Thank you!
+
+> Signed-off-by: Quanfa Fu <quanfafu@gmail.com>
+> ---
+>  kernel/trace/trace_eprobe.c | 4 +---
+>  1 file changed, 1 insertion(+), 3 deletions(-)
+> 
+> diff --git a/kernel/trace/trace_eprobe.c b/kernel/trace/trace_eprobe.c
+> index 352b65e2b910..cd1d271a74e7 100644
+> --- a/kernel/trace/trace_eprobe.c
+> +++ b/kernel/trace/trace_eprobe.c
+> @@ -917,15 +917,13 @@ static int trace_eprobe_parse_filter(struct trace_eprobe *ep, int argc, const ch
+>  	for (i = 0; i < argc; i++)
+>  		len += strlen(argv[i]) + 1;
+>  
+> -	ep->filter_str = kzalloc(len, GFP_KERNEL);
+> +	ep->filter_str = kmalloc(len, GFP_KERNEL);
+>  	if (!ep->filter_str)
+>  		return -ENOMEM;
+>  
+>  	p = ep->filter_str;
+>  	for (i = 0; i < argc; i++) {
+>  		ret = snprintf(p, len, "%s ", argv[i]);
+> -		if (ret < 0)
+> -			goto error;
+>  		if (ret > len) {
+>  			ret = -E2BIG;
+>  			goto error;
+> -- 
+> 2.31.1
+> 
+
+
+-- 
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
