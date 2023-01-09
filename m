@@ -2,114 +2,198 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A5082C5479D
-	for <linux-trace-kernel@archiver.kernel.org>; Mon,  9 Jan 2023 04:24:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BB31AC5479D
+	for <linux-trace-kernel@archiver.kernel.org>; Mon,  9 Jan 2023 04:30:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230334AbjAIEYB (ORCPT
+        id S236539AbjAIEae (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Sun, 8 Jan 2023 23:24:01 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38976 "EHLO
+        Sun, 8 Jan 2023 23:30:34 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40368 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236575AbjAIEWr (ORCPT
+        with ESMTP id S234101AbjAIE3v (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Sun, 8 Jan 2023 23:22:47 -0500
-Received: from mail-yw1-x1130.google.com (mail-yw1-x1130.google.com [IPv6:2607:f8b0:4864:20::1130])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A4B671403A;
-        Sun,  8 Jan 2023 20:08:37 -0800 (PST)
-Received: by mail-yw1-x1130.google.com with SMTP id 00721157ae682-4c186ff0506so98552227b3.6;
-        Sun, 08 Jan 2023 20:08:37 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=lfUhAfUe0FxJ8Sp+tdCY6dlywrY7VMCs/cNi7AdgZBE=;
-        b=FWZ9Jaav4qQ3xMFoOzE5o/da//oWHKnPxg6us77lQFCo1YP3pYLcDR4Z75IO8BrD+n
-         TddMH92Kef6dWP+gU82sQFPKp6s3a6XYLsKiGhC+gZLzrr8Fhr9Msbfhvw1+SuPqVLb9
-         iIYtbv+W1g/Y08C9QDGfcRtKMzOpK1cScTQRVHhJXFxDUFa0h2AQpN9o1+GaJ0xcCM04
-         gNCnJAXJkh4Kco+3o1DmB8GFNMw37hcHmEOcqleQAU8gdcei0AQKkHQEYkvrTb56lNHP
-         GbIc5aLoNbMzWH9m9PAtiRuNX2LMwzcPt0EaHEEEFDXPk+aEpfn6BYuEpGmPjvyb2nMr
-         J35w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=lfUhAfUe0FxJ8Sp+tdCY6dlywrY7VMCs/cNi7AdgZBE=;
-        b=XaUvZzYhI27vuxqh5va6vcf2b4pUJOrmWx0H0ZadfE73J9NZmVMlCa/UeSMLvC4VZL
-         X9/uLg1brPKPJ81X+03/Z+UJaWfEivZMzGhxtEafOZ0X4EUil1YrBxCFCmXqHzXN+yVF
-         iqUhUKJSpEIN/Xoq/hBe21tTwLFe8ynOuJwu5VUCfLs0MAX/iLLgZNfsCwfWcGVAlZ54
-         l0/Fus0G3ypRFMGESEheRxCHGXOx67wy+tQC0O884LS+Q8jkqGzlkg/dtSamzTwq6c6v
-         nHLYh22DONze0GiBc7tK3xfQeZSI7Onfj8LxRcvgohsjC2ZO2MfSJXg8pZFT74uh3TCn
-         /T0w==
-X-Gm-Message-State: AFqh2kpkDunGwR+l3DG6YmsBe4VoO3Z9piouwvKS4q6RRJBO/7UPdd8Q
-        DpiJGDTnrYYV4xQPzXdzU12CEYkRLp7VAPsQ7JY4PtXM
-X-Google-Smtp-Source: AMrXdXtAV3XuYW9EwESQWJEEqwtYRsWSm5opH/aqm4YBdqrG5C4OL/1TuMY6Nf2In1l9GHy+AjrI0T5h+ksji3FvR3s=
-X-Received: by 2002:a81:a53:0:b0:3b9:3977:596c with SMTP id
- 80-20020a810a53000000b003b93977596cmr1515431ywk.271.1673237257372; Sun, 08
- Jan 2023 20:07:37 -0800 (PST)
+        Sun, 8 Jan 2023 23:29:51 -0500
+Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 82A8612758;
+        Sun,  8 Jan 2023 20:11:08 -0800 (PST)
+Received: from dggpemm500006.china.huawei.com (unknown [172.30.72.56])
+        by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4Nr0nz6yY1zJrLk;
+        Mon,  9 Jan 2023 12:09:43 +0800 (CST)
+Received: from [10.174.178.55] (10.174.178.55) by
+ dggpemm500006.china.huawei.com (7.185.36.236) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2375.34; Mon, 9 Jan 2023 12:10:59 +0800
+Subject: Re: [PATCH 2/3] bpf: Optimize get_modules_for_addrs()
+To:     Petr Mladek <pmladek@suse.com>
+CC:     Josh Poimboeuf <jpoimboe@kernel.org>,
+        Jiri Kosina <jikos@kernel.org>,
+        Miroslav Benes <mbenes@suse.cz>,
+        Joe Lawrence <joe.lawrence@redhat.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Andrii Nakryiko <andrii@kernel.org>,
+        Martin KaFai Lau <martin.lau@linux.dev>,
+        Song Liu <song@kernel.org>, Yonghong Song <yhs@fb.com>,
+        John Fastabend <john.fastabend@gmail.com>,
+        KP Singh <kpsingh@kernel.org>,
+        Stanislav Fomichev <sdf@google.com>,
+        Hao Luo <haoluo@google.com>, Jiri Olsa <jolsa@kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>, <bpf@vger.kernel.org>,
+        <linux-trace-kernel@vger.kernel.org>,
+        <live-patching@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        <linux-modules@vger.kernel.org>
+References: <20221230112729.351-1-thunder.leizhen@huawei.com>
+ <20221230112729.351-3-thunder.leizhen@huawei.com> <Y7WoZARt37xGpjXD@alley>
+ <Y7aZMkgVgl28Jgmv@alley>
+From:   "Leizhen (ThunderTown)" <thunder.leizhen@huawei.com>
+Message-ID: <dbb556d0-cede-63ac-4afa-2c52baef7960@huawei.com>
+Date:   Mon, 9 Jan 2023 12:10:58 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-References: <20230109033213.3220884-1-quanfafu@gmail.com> <20230108225229.1cef1a67@rorschach.local.home>
-In-Reply-To: <20230108225229.1cef1a67@rorschach.local.home>
-From:   Quanfa Fu <quanfafu@gmail.com>
-Date:   Mon, 9 Jan 2023 12:07:26 +0800
-Message-ID: <CAM4UoyqtOBXRD29x_M==KJtnryC87FhTs2tW65AnDxCc7XgY7g@mail.gmail.com>
-Subject: Re: [PATCH v2] tracing/eprobe: Replace snprintf with memcpy
-To:     Steven Rostedt <rostedt@goodmis.org>
-Cc:     mhiramat@kernel.org, linux-kernel@vger.kernel.org,
-        linux-trace-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <Y7aZMkgVgl28Jgmv@alley>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.174.178.55]
+X-ClientProxiedBy: dggems705-chm.china.huawei.com (10.3.19.182) To
+ dggpemm500006.china.huawei.com (7.185.36.236)
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-Thanks, I'll check it out.
-Thanks !!
 
-On Mon, Jan 9, 2023 at 11:52 AM Steven Rostedt <rostedt@goodmis.org> wrote:
->
-> On Mon,  9 Jan 2023 11:32:13 +0800
-> Quanfa Fu <quanfafu@gmail.com> wrote:
->
-> > @@ -923,17 +923,17 @@ static int trace_eprobe_parse_filter(struct trace_eprobe *ep, int argc, const ch
-> >
-> >       p = ep->filter_str;
-> >       for (i = 0; i < argc; i++) {
-> > -             ret = snprintf(p, len, "%s ", argv[i]);
-> > -             if (ret < 0)
-> > -                     goto error;
-> > -             if (ret > len) {
-> > -                     ret = -E2BIG;
-> > -                     goto error;
-> > -             }
-> > -             p += ret;
-> > -             len -= ret;
-> > +             arg_len = strlen(argv[i]);
-> > +             memcpy((void *)p, argv[i], arg_len);
-> > +
-> > +             if (i == argc - 1)
-> > +                     p[arg_len] = '\0';
-> > +             else
-> > +                     p[arg_len] = ' ';
-> > +
-> > +             p += arg_len + 1;
-> > +             len -= arg_len + 1;
-> >       }
->
-> The above is too complex. I mentioned strncat() but you could still
-> just keep snprintf() too, which adds the '\0';
->
->         for (i = 0; i < argc; i++) {
->                 if (i)
->                         ret = snprintf(p, len, " %s", argv[i]);
->                 else
->                         ret = snprintf(p, len, "%s", argv[i]);
->                 p += ret;
->                 len -= ret;
->         }
->
-> -- Steve
->
-> > -     p[-1] = '\0';
-> >
-> >       /*
-> >        * Ensure the filter string can be parsed correctly. Note, this
+
+On 2023/1/5 17:32, Petr Mladek wrote:
+> On Wed 2023-01-04 17:25:08, Petr Mladek wrote:
+>> On Fri 2022-12-30 19:27:28, Zhen Lei wrote:
+>>> Function __module_address() can quickly return the pointer of the module
+>>> to which an address belongs. We do not need to traverse the symbols of all
+>>> modules to check whether each address in addrs[] is the start address of
+>>> the corresponding symbol, because register_fprobe_ips() will do this check
+>>> later.
+>>>
+>>> Assuming that there are m modules, each module has n symbols on average,
+>>> and the number of addresses 'addrs_cnt' is abbreviated as K. Then the time
+>>> complexity of the original method is O(K * log(K)) + O(m * n * log(K)),
+>>> and the time complexity of current method is O(K * (log(m) + M)), M <= m.
+>>> (m * n * log(K)) / (K * m) ==> n / log2(K). Even if n is 10 and K is 128,
+>>> the ratio is still greater than 1. Therefore, the new method will
+>>> generally have better performance.
+>>>
+>>> Signed-off-by: Zhen Lei <thunder.leizhen@huawei.com>
+>>> ---
+>>>  kernel/trace/bpf_trace.c | 101 ++++++++++++++++-----------------------
+>>>  1 file changed, 40 insertions(+), 61 deletions(-)
+>>>
+>>> diff --git a/kernel/trace/bpf_trace.c b/kernel/trace/bpf_trace.c
+>>> index 5f3be4bc16403a5..0ff9037098bd241 100644
+>>> --- a/kernel/trace/bpf_trace.c
+>>> +++ b/kernel/trace/bpf_trace.c
+>>> @@ -2684,69 +2684,55 @@ static void symbols_swap_r(void *a, void *b, int size, const void *priv)
+>>>  	}
+>>>  }
+>>>  
+>>> -struct module_addr_args {
+>>> -	unsigned long *addrs;
+>>> -	u32 addrs_cnt;
+>>> -	struct module **mods;
+>>> -	int mods_cnt;
+>>> -	int mods_cap;
+>>> -};
+>>> -
+>>> -static int module_callback(void *data, const char *name,
+>>> -			   struct module *mod, unsigned long addr)
+>>> +static int get_modules_for_addrs(struct module ***out_mods, unsigned long *addrs, u32 addrs_cnt)
+>>>  {
+>>> -	struct module_addr_args *args = data;
+>>> -	struct module **mods;
+>>> -
+>>> -	/* We iterate all modules symbols and for each we:
+>>> -	 * - search for it in provided addresses array
+>>> -	 * - if found we check if we already have the module pointer stored
+>>> -	 *   (we iterate modules sequentially, so we can check just the last
+>>> -	 *   module pointer)
+>>> -	 * - take module reference and store it
+>>> -	 */
+>>> -	if (!bsearch(&addr, args->addrs, args->addrs_cnt, sizeof(addr),
+>>> -		       bpf_kprobe_multi_addrs_cmp))
+>>> -		return 0;
+>>> +	int i, j, err;
+>>> +	int mods_cnt = 0;
+>>> +	int mods_cap = 0;
+>>> +	struct module *mod;
+>>> +	struct module **mods = NULL;
+>>>  
+>>> -	if (args->mods && args->mods[args->mods_cnt - 1] == mod)
+>>> -		return 0;
+>>> +	for (i = 0; i < addrs_cnt; i++) {
+>>> +		mod = __module_address(addrs[i]);
+>>
+>> This must be called under module_mutex to make sure that the module
+>> would not disappear.
+>>
+>>> +		if (!mod)
+>>> +			continue;
+>>>  
+>>> -	if (args->mods_cnt == args->mods_cap) {
+>>> -		args->mods_cap = max(16, args->mods_cap * 3 / 2);
+>>> -		mods = krealloc_array(args->mods, args->mods_cap, sizeof(*mods), GFP_KERNEL);
+>>> -		if (!mods)
+>>> -			return -ENOMEM;
+>>> -		args->mods = mods;
+>>> -	}
+>>> +		/* check if we already have the module pointer stored */
+>>> +		for (j = 0; j < mods_cnt; j++) {
+>>> +			if (mods[j] == mod)
+>>> +				break;
+>>> +		}
+>>
+>> This might get optimized like the original code.
+>>
+>> My understanding is that the addresses are sorted in "addrs" array.
+>> So, the address is either part of the last found module or it belongs
+>> to a completely new module.
+> 
+> I thought more about it and I think that I was wrong, see below.
+> 
+>> 	for (i = 0; i < addrs_cnt; i++) {
+>> 		/*
+>> 		 * The adresses are sorted. The adress either belongs
+>> 		 * to the last found module or a new one.
+>> 		 *
+>> 		 * This is safe because we already have reference
+>> 		 * on the found modules.
+>> 		 */
+>> 		 if (mods_cnt && within_module(addrs[i], mods[mods_cnt - 1]))
+>> 			continue;
+> 
+> within_module() checks two sections (init and core). They are
+> allocated separately, see module_alloc() called in move_module().
+> 
+> There might be a section from another modules between the init
+> and core section of a module.
+> 
+> The optimization worked in the original code because
+> module_kallsyms_on_each_symbol() always iterated over all
+> symbols from a module.
+> 
+> That said, I am not sure if bpf trace might be added for
+> symbols in the module init section. But it might be
+> better to stay on the safe side.
+
+Yes.
+
+> 
+> Best Regards,
+> Petr
+> .
+> 
+
+-- 
+Regards,
+  Zhen Lei
