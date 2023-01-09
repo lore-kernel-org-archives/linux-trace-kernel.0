@@ -2,120 +2,143 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 483D5C5479D
-	for <linux-trace-kernel@archiver.kernel.org>; Mon,  9 Jan 2023 03:33:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C02BC5479D
+	for <linux-trace-kernel@archiver.kernel.org>; Mon,  9 Jan 2023 03:45:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233618AbjAIDdz (ORCPT
+        id S234101AbjAIDpA (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Sun, 8 Jan 2023 22:33:55 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36616 "EHLO
+        Sun, 8 Jan 2023 22:45:00 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41746 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233780AbjAIDdw (ORCPT
+        with ESMTP id S233682AbjAIDo7 (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Sun, 8 Jan 2023 22:33:52 -0500
-Received: from mail-pj1-x102f.google.com (mail-pj1-x102f.google.com [IPv6:2607:f8b0:4864:20::102f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 63DE765AC;
-        Sun,  8 Jan 2023 19:33:51 -0800 (PST)
-Received: by mail-pj1-x102f.google.com with SMTP id c8-20020a17090a4d0800b00225c3614161so11415773pjg.5;
-        Sun, 08 Jan 2023 19:33:51 -0800 (PST)
+        Sun, 8 Jan 2023 22:44:59 -0500
+Received: from mail-yw1-x1131.google.com (mail-yw1-x1131.google.com [IPv6:2607:f8b0:4864:20::1131])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8436C93;
+        Sun,  8 Jan 2023 19:44:58 -0800 (PST)
+Received: by mail-yw1-x1131.google.com with SMTP id 00721157ae682-4c131bede4bso98129177b3.5;
+        Sun, 08 Jan 2023 19:44:58 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=dKPIVV+yleqWH2PtdMd1KwqVVqdXC+JKz6r5k8c0PzE=;
-        b=V3/tp5znzXs078BgTLmcjKpnI2N2TC5CZhfJ/JilbaJaFJxJzSNaAFpX25smTKMBLq
-         CZfPHn1djIs23uhm8aWLyBnsdkqnaS82azZhvcWbo92Q5iYzhMk1uzVTgQWZsORMICm/
-         EZPTzrxHbzZYX4ECUrp1dhMAf9yrgNCGDpNwcRQNhYsEP0FsmDmdbqgxMxVVwGSYDrln
-         DaxrzYbUuuBtg9u0+AZ3Hzop/F3NxDK1YMTjT6u0BZXQj8peGOPx5kj02vs/2Y0im6II
-         yw+hOIfwL5YxvKoE0ei03s0wd8HHNjMjriDmtp4ul1Tncs9Z4Qr/aG786cbIQYqAZE5B
-         LRIA==
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=yPfhgfBbYjtzQBCr9FbRdf6V8hXDk+MB1+uIqccKz80=;
+        b=PiiGV0orIUzNoytUmWK2Hk73V6GvrZ3mOGmdtD9JJPyyTFyqd4rbXbxD9f9lrKyWWw
+         fevi+ntk5KxbxDVOrrigfB7ckGVd/czt9oXOvvgaqNQVUCgbTpNXG0jSVXIjn/dTm2/E
+         YfcTRFjPOmk/detqDhf6DFzwhIndaROuQ3hd6qr2nEHQJLoaZSjYwXcrwCHTYTEqIXyU
+         oHHdEK9rJEhUNzEU9OVVAbsVMnCji8bsM/2TUrQ8857sQ7yIa/EGPhoINwwCB+0KicAV
+         2IF/k4mYcy1ubSd6H9jxYduRSxMyuhAVWWf9BdOpYd0Db1IsN7kFvX+nrDSy4CSjztRm
+         PI5w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=dKPIVV+yleqWH2PtdMd1KwqVVqdXC+JKz6r5k8c0PzE=;
-        b=yBpX6f+nZqysC8Hfvc7mM62LJ8ebPFCQdEokIQbF6muLk2vDgpWrujr/fM61FNzAuC
-         Yj/+6Qs5dy0ZfDjj9/0jRdrXW8CTJvETnYlCj8hQCM7TZNJ/MGYOMSDD+SoNOVmpXzKy
-         QN6FcVL2UttQoIyE106C34iTY6e95aRpAL+3dk/k2G4HuxPiMOSkB4LHyAIX7OC4oIcG
-         TaI1KjFxHtStYou4iKJPy22GPOUG9bXAtXqLzU3UStlI1HVFNhC72PQ4uoPAoYYrniUo
-         AMWXnNcoE8Je4IAeuZrOLizKbtIN+0LC20DEHYUnfQpjs1nsyAOuas5Hu8tXT/ixNz5d
-         INcQ==
-X-Gm-Message-State: AFqh2kpef42s21ZK1hc2wZMccjy0473/8ZcVG2691tWEC9WDcjxTMZA5
-        wHlpaeATRuuraYHVl5uy7OjmmfJyH5k=
-X-Google-Smtp-Source: AMrXdXsrBEb6z5H3fodpDhtJDnG3BndRrwViBgeXkkNojR66sJV2HfQ0XyrQpyuDq8N2E9k6JjL2rA==
-X-Received: by 2002:a05:6a20:c112:b0:ad:e904:f247 with SMTP id bh18-20020a056a20c11200b000ade904f247mr69929474pzb.29.1673235230885;
-        Sun, 08 Jan 2023 19:33:50 -0800 (PST)
-Received: from localhost.localdomain ([43.132.141.8])
-        by smtp.gmail.com with ESMTPSA id z7-20020a63e547000000b00476d1385265sm4147301pgj.25.2023.01.08.19.33.49
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 08 Jan 2023 19:33:50 -0800 (PST)
-From:   Quanfa Fu <quanfafu@gmail.com>
-To:     rostedt@goodmis.org, mhiramat@kernel.org
-Cc:     linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
-        Quanfa Fu <quanfafu@gmail.com>
-Subject: [PATCH v2] tracing/eprobe: Replace snprintf with memcpy
-Date:   Mon,  9 Jan 2023 11:32:13 +0800
-Message-Id: <20230109033213.3220884-1-quanfafu@gmail.com>
-X-Mailer: git-send-email 2.31.1
+        bh=yPfhgfBbYjtzQBCr9FbRdf6V8hXDk+MB1+uIqccKz80=;
+        b=3bPJ7pzJLQQFPexPGE8dE1jB/bLJsT5rUncFpm4cb0aPBo4p+OIO/ubggrVUijjwpf
+         ffsxqE2ywcB4QXJNfx65PRmbUr8WujwNfMAwXQCCQqCxKPzRN3jgydDAWNNZdhxGoC7P
+         bHupryLysBu3qvBVxISKqoKZJFjSzeMzJXH+GNFWAz0pVTYPnAOj5KfvkcJi2zem6+oC
+         Qzdw74yoQ9RUPBO1WZR6toqyNXKYtzH7gib96I9q+O7Tv9oH9Ct8Zk/jL4lPWQNBkuN8
+         J9X7+RxKocazwiBvnaP/vzSeU2HCa43tYFSggrmwtwGOd1usbgAZyBICAQlj6v2Jy9kk
+         9FxA==
+X-Gm-Message-State: AFqh2krae5ZUwGgnfmA3gSmrfekGnoZNk66svavYuVIpJOT7jWx5ucLb
+        ZThhF0AncSk1ZkAP6ImphICtrqEw/50SLfKt5yM=
+X-Google-Smtp-Source: AMrXdXsDvyB+kfguSnDk3YNKre75CBBnxUmhkZfZUpHXwZlk+A/0xmrM63HVggKfy6yP7iiU9zkufkJCVZ7mtM5K6DM=
+X-Received: by 2002:a81:8942:0:b0:36f:d045:417 with SMTP id
+ z63-20020a818942000000b0036fd0450417mr907888ywf.385.1673235897760; Sun, 08
+ Jan 2023 19:44:57 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20230107034335.1154374-1-quanfafu@gmail.com> <20230108162222.146d136f@rorschach.local.home>
+In-Reply-To: <20230108162222.146d136f@rorschach.local.home>
+From:   Quanfa Fu <quanfafu@gmail.com>
+Date:   Mon, 9 Jan 2023 11:44:46 +0800
+Message-ID: <CAM4UoypG3c2TDKs7GDTkzP+uFVAzWSE2bdSFH5mLWud6tigCRg@mail.gmail.com>
+Subject: Re: [PATCH] tracing/eprobe: Replace kzalloc with kmalloc
+To:     Steven Rostedt <rostedt@goodmis.org>
+Cc:     rostedt@goodmis.or, mhiramat@kernel.org,
+        linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-No need to check for negative return value from snprintf() as the
-code does not return negative values. Replace snprintf with memcpy.
+Thanks a lot. Learned a lot from here.
 
-Signed-off-by: Quanfa Fu <quanfafu@gmail.com>
+I replaced snprintf with memcpy in Patchv2
 
------
-V1 -> V2: memory allc uses kzalloc and replace snprintf with memcpy
----
- kernel/trace/trace_eprobe.c | 22 +++++++++++-----------
- 1 file changed, 11 insertions(+), 11 deletions(-)
 
-diff --git a/kernel/trace/trace_eprobe.c b/kernel/trace/trace_eprobe.c
-index 352b65e2b910..56eb39f495f6 100644
---- a/kernel/trace/trace_eprobe.c
-+++ b/kernel/trace/trace_eprobe.c
-@@ -905,7 +905,7 @@ static int trace_eprobe_tp_update_arg(struct trace_eprobe *ep, const char *argv[
- static int trace_eprobe_parse_filter(struct trace_eprobe *ep, int argc, const char *argv[])
- {
- 	struct event_filter *dummy = NULL;
--	int i, ret, len = 0;
-+	int i, ret, arg_len, len = 0;
- 	char *p;
- 
- 	if (argc == 0) {
-@@ -923,17 +923,17 @@ static int trace_eprobe_parse_filter(struct trace_eprobe *ep, int argc, const ch
- 
- 	p = ep->filter_str;
- 	for (i = 0; i < argc; i++) {
--		ret = snprintf(p, len, "%s ", argv[i]);
--		if (ret < 0)
--			goto error;
--		if (ret > len) {
--			ret = -E2BIG;
--			goto error;
--		}
--		p += ret;
--		len -= ret;
-+		arg_len = strlen(argv[i]);
-+		memcpy((void *)p, argv[i], arg_len);
-+
-+		if (i == argc - 1)
-+			p[arg_len] = '\0';
-+		else
-+			p[arg_len] = ' ';
-+
-+		p += arg_len + 1;
-+		len -= arg_len + 1;
- 	}
--	p[-1] = '\0';
- 
- 	/*
- 	 * Ensure the filter string can be parsed correctly. Note, this
--- 
-2.31.1
-
+On Mon, Jan 9, 2023 at 5:22 AM Steven Rostedt <rostedt@goodmis.org> wrote:
+>
+> On Sat,  7 Jan 2023 11:43:35 +0800
+> Quanfa Fu <quanfafu@gmail.com> wrote:
+>
+> > Since this memory will be filled soon below, I feel that there is
+>
+> kzalloc() is also used as a safety measure to make sure nothing is
+> accidentally exposed. I rather keep it for safety. Just because it
+> doesn't need to be here doesn't mean it should be removed. There is no
+> benefit to making this kmalloc(), as this is far from a fast path.
+>
+> > no need for a memory of all zeros here. 'snprintf' does not return
+> > negative num according to ISO C99, so I feel that no judgment is
+> > needed here.
+>
+> Also, it's best to remove "feelings" from change logs. Code updates are
+> not made due to how one feels about something (at least it shouldn't
+> be), but about having technical reasons for doing so. I do agree
+> there's no reason to check snprintf() from returning negative, as
+> looking at its implementation, there is no negative return. Thus, the
+> change log should be:
+>
+>  "No need to check for negative return value from snprintf() as the
+>  code does not return negative values."
+>
+> >
+> > No functional change intended.
+>
+> And this does have functional changes. If the output of a compiler is
+> different for a function, then that's a functional change. What we
+> consider non functional changes is if functions get moved around, or
+> possibly code in a function is moved into a helper function where the
+> compiler *should* end up with the same assembly.
+>
+> Changing what malloc is called is definitely a functional change.
+>
+> >
+> > Signed-off-by: Quanfa Fu <quanfafu@gmail.com>
+> > ---
+> >  kernel/trace/trace_eprobe.c | 4 +---
+> >  1 file changed, 1 insertion(+), 3 deletions(-)
+> >
+> > diff --git a/kernel/trace/trace_eprobe.c b/kernel/trace/trace_eprobe.c
+> > index 352b65e2b910..cd1d271a74e7 100644
+> > --- a/kernel/trace/trace_eprobe.c
+> > +++ b/kernel/trace/trace_eprobe.c
+> > @@ -917,15 +917,13 @@ static int trace_eprobe_parse_filter(struct trace_eprobe *ep, int argc, const ch
+> >       for (i = 0; i < argc; i++)
+> >               len += strlen(argv[i]) + 1;
+> >
+> > -     ep->filter_str = kzalloc(len, GFP_KERNEL);
+> > +     ep->filter_str = kmalloc(len, GFP_KERNEL);
+> >       if (!ep->filter_str)
+> >               return -ENOMEM;
+> >
+> >       p = ep->filter_str;
+> >       for (i = 0; i < argc; i++) {
+> >               ret = snprintf(p, len, "%s ", argv[i]);
+>
+> I wonder if this should be a strncat() instead?
+>
+> > -             if (ret < 0)
+> > -                     goto error;
+> >               if (ret > len) {
+> >                       ret = -E2BIG;
+> >                       goto error;
+>
+>         for (i = 0; i < arcc, i++)
+>                 strncat(ep->filter_str, argv[i], len);
+>
+> I mean, before this code we have that loop already determining what len
+> is, do we really need to check if it is going to be -E2BIG?
+>
+> -- Steve
