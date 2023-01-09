@@ -2,68 +2,72 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 02203C678D5
-	for <linux-trace-kernel@archiver.kernel.org>; Mon,  9 Jan 2023 15:14:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 169A8C678D8
+	for <linux-trace-kernel@archiver.kernel.org>; Mon,  9 Jan 2023 15:14:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229769AbjAIPOG (ORCPT
+        id S237106AbjAIPOG (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
         Mon, 9 Jan 2023 10:14:06 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56014 "EHLO
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53910 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237122AbjAIPNP (ORCPT
+        with ESMTP id S237040AbjAIPNH (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Mon, 9 Jan 2023 10:13:15 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EAC463753F;
-        Mon,  9 Jan 2023 07:12:29 -0800 (PST)
+        Mon, 9 Jan 2023 10:13:07 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 85B311A1;
+        Mon,  9 Jan 2023 07:12:18 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 593A56118B;
-        Mon,  9 Jan 2023 15:12:29 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3C0A2C433D2;
-        Mon,  9 Jan 2023 15:12:28 +0000 (UTC)
-Date:   Mon, 9 Jan 2023 10:12:26 -0500
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
-Cc:     Quanfa Fu <quanfafu@gmail.com>, linux-kernel@vger.kernel.org,
-        linux-trace-kernel@vger.kernel.org
-Subject: Re: [PATCH v3] tracing/eprobe: no need to check for negative ret
- value for snprintf
-Message-ID: <20230109101226.7f75fc0e@gandalf.local.home>
-In-Reply-To: <20230109235913.8ac99d54cff8b7c3fc5dcfa4@kernel.org>
-References: <20230109040625.3259642-1-quanfafu@gmail.com>
-        <20230109235913.8ac99d54cff8b7c3fc5dcfa4@kernel.org>
-X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 222726117E;
+        Mon,  9 Jan 2023 15:12:18 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EB33AC433D2;
+        Mon,  9 Jan 2023 15:12:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1673277137;
+        bh=uo7fc0mmKrGkfOcf5guy0Az6XhMXNwAy01tztDAqFu8=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=ARs3SeRseq7l2W5O8NbAsxmyFUlrz1czglO2P2+kEicK8nHKYaOIVANWlGwMoV1mw
+         uzXrhYeu+GFOZlGCDpCfh9UBE7wNzouby1DViZuJ+GhDWSZlIjijOceg810VWTNoaZ
+         4tZSVsqLkojuUS13ntWYF+PGXnu/DW9cg47uPLJFDpl6oC+TwaTSTDdDsaEl5U25t7
+         adKPRoSm2Z8k3F8RfnlQ0vP+2XfauwiedH1Kf/pUBTq9lJgb9LR0d05GK/FKolJQDe
+         JV4j00zhxAwW5S+KJcq+9cudh3nO6hPeSSGWzFrhg9RCmAEK0qaRNgdosxLnIe5rd+
+         CVqd0OL0jZ2rQ==
+Date:   Mon, 9 Jan 2023 08:12:13 -0700
+From:   Keith Busch <kbusch@kernel.org>
+To:     David Howells <dhowells@redhat.com>
+Cc:     Christoph Hellwig <hch@lst.de>, Keith Busch <kbusch@meta.com>,
+        linux-kernel@vger.kernel.org,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Jens Axboe <axboe@kernel.dk>, linux-aio@kvack.org,
+        linux-fsdevel@vger.kernel.org, io-uring@vger.kernel.org,
+        Pavel Begunkov <asml.silence@gmail.com>,
+        Eric Dumazet <edumazet@google.com>,
+        Steven Rostedt <rostedt@goodmis.org>, davem@davemloft.net,
+        Jakub Kicinski <kuba@kernel.org>,
+        Paolo Abeni <pabeni@redhat.com>,
+        Jarkko Sakkinen <jarkko@kernel.org>,
+        Paul Moore <paul@paul-moore.com>, keyrings@vger.kernel.org,
+        linux-security-module@vger.kernel.org,
+        linux-trace-kernel@vger.kernel.org, linux-block@vger.kernel.org,
+        netdev@vger.kernel.org
+Subject: Re: [PATCHv2 00/12] iov_iter: replace import_single_range with ubuf
+Message-ID: <Y7wuzaXhypvExrNF@kbusch-mbp>
+References: <20230108171241.GA20314@lst.de>
+ <20230105190741.2405013-1-kbusch@meta.com>
+ <1880281.1673256668@warthog.procyon.org.uk>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1880281.1673256668@warthog.procyon.org.uk>
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On Mon, 9 Jan 2023 23:59:13 +0900
-Masami Hiramatsu (Google) <mhiramat@kernel.org> wrote:
-
-> On Mon,  9 Jan 2023 12:06:25 +0800
-> Quanfa Fu <quanfafu@gmail.com> wrote:
+On Mon, Jan 09, 2023 at 09:31:08AM +0000, David Howells wrote:
+> lore.kernel.org doesn't seem to have the patches.
 > 
-> > No need to check for negative return value from snprintf() as the
-> > code does not return negative values.
-> >   
-> 
-> Thanks for simplifying, this looks good to me.
-> 
-> Acked-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+> https://lore.kernel.org/lkml/20230105190741.2405013-1-kbusch@meta.com/
 
-Reviewed-by: Steven Rostedt (Google) <rostedt@goodmis.org>
-
-Masami, do you want to take it into the probes branch, or do you want me to
-take it into the tracing branch?
-
--- Steve
-
-
-> 
-> > Signed-off-by: Quanfa Fu <quanfafu@gmail.com>
-> > 
+That's frustrating. Seems like an email setup problem on my end. I'll
+split this series up and resend.
