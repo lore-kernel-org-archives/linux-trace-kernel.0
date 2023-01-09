@@ -2,105 +2,89 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F2CABC54EBD
-	for <linux-trace-kernel@archiver.kernel.org>; Mon,  9 Jan 2023 14:59:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A6E7C54EBD
+	for <linux-trace-kernel@archiver.kernel.org>; Mon,  9 Jan 2023 15:09:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231319AbjAIO7W (ORCPT
+        id S232069AbjAIPJF (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Mon, 9 Jan 2023 09:59:22 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46242 "EHLO
+        Mon, 9 Jan 2023 10:09:05 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52948 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234795AbjAIO7S (ORCPT
+        with ESMTP id S236956AbjAIPIk (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Mon, 9 Jan 2023 09:59:18 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E88AA17068;
-        Mon,  9 Jan 2023 06:59:17 -0800 (PST)
+        Mon, 9 Jan 2023 10:08:40 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7B6231A07F;
+        Mon,  9 Jan 2023 07:08:37 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 70E3161165;
-        Mon,  9 Jan 2023 14:59:17 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C3939C433D2;
-        Mon,  9 Jan 2023 14:59:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1673276356;
-        bh=WSuuqqqC0VC3G+Vlaj/ghfDY3b0eTRSPadxQXC50zlw=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=I1b2s5nMSnLEEL88uWjemd2TSZy/f9oNaEt8W2BhUyDbWJuNm2iRcJYpcyPbS8TUo
-         BY7tqUzCcfCp/AsAbhkA37dxGq4hZtjES27t07dqyu/mcqidkOLKpZqlD30JjDYGYk
-         +PcObFtb2K1+3j9ZDhUuo6WLB+egCARAcliFrvsEyVk3q6R31A8P/lRbJaDujaHyqx
-         QsdkI5LcLzdog3NNSdywtbKuFPnDym+M0UvGWoHFMyLVprvHESrnuzeMhwUHYXeQZl
-         0CUq/uG5EEwAGSWPeoIGjEHcZIlPINDJ5/79tHPeUhLdQtNdUiIMAEwDGOD+Eo2FBF
-         Bh6Luq/ZPfhOg==
-Date:   Mon, 9 Jan 2023 23:59:13 +0900
-From:   Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To:     Quanfa Fu <quanfafu@gmail.com>
-Cc:     rostedt@goodmis.org, linux-kernel@vger.kernel.org,
-        linux-trace-kernel@vger.kernel.org
-Subject: Re: [PATCH v3] tracing/eprobe: no need to check for negative ret
- value for snprintf
-Message-Id: <20230109235913.8ac99d54cff8b7c3fc5dcfa4@kernel.org>
-In-Reply-To: <20230109040625.3259642-1-quanfafu@gmail.com>
-References: <20230109040625.3259642-1-quanfafu@gmail.com>
-X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 21FA66118C;
+        Mon,  9 Jan 2023 15:08:37 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4023AC433EF;
+        Mon,  9 Jan 2023 15:08:35 +0000 (UTC)
+Date:   Mon, 9 Jan 2023 10:08:33 -0500
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     Eric Dumazet <edumazet@google.com>
+Cc:     =?UTF-8?B?6L+Q6L6J5bSU?= <cuiyunhui@bytedance.com>,
+        mhiramat@kernel.org, davem@davemloft.net, kuba@kernel.org,
+        pabeni@redhat.com, kuniyu@amazon.com, xiyou.wangcong@gmail.com,
+        duanxiongchun@bytedance.com, linux-kernel@vger.kernel.org,
+        linux-trace-kernel@vger.kernel.org, netdev@vger.kernel.org
+Subject: Re: [External] Re: [PATCH v4] sock: add tracepoint for send recv
+ length
+Message-ID: <20230109100833.03f4d4b1@gandalf.local.home>
+In-Reply-To: <CANn89iKY5gOC97NobXkhYv6d9ik=ks5ZEwVe=6H-VTwux=BwGQ@mail.gmail.com>
+References: <20230108025545.338-1-cuiyunhui@bytedance.com>
+        <CANn89i+W__5-jDUdM=_97jzQy9Wq+n9KBEuOGjUi=Fxe_ntqbg@mail.gmail.com>
+        <CAEEQ3wnoKqN+uTmMmUDJ9pp+YVaLmKnv42RApzPbNOGg6CRmnA@mail.gmail.com>
+        <CANn89iKY5gOC97NobXkhYv6d9ik=ks5ZEwVe=6H-VTwux=BwGQ@mail.gmail.com>
+X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On Mon,  9 Jan 2023 12:06:25 +0800
-Quanfa Fu <quanfafu@gmail.com> wrote:
+On Mon, 9 Jan 2023 15:54:38 +0100
+Eric Dumazet <edumazet@google.com> wrote:
 
-> No need to check for negative return value from snprintf() as the
-> code does not return negative values.
+> > static inline int sock_sendmsg_nosec(struct socket *sock, struct msghdr *msg)
+> > {
+> >         int ret = INDIRECT_CALL_INET(sock->ops->sendmsg, inet6_sendmsg,
+> >                                      inet_sendmsg, sock, msg,
+> >                                      msg_data_left(msg));
+> >         BUG_ON(ret == -EIOCBQUEUED);
+> >
+> >         if (trace_sock_send_length_enabled()) {  
 > 
-
-Thanks for simplifying, this looks good to me.
-
-Acked-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-
-> Signed-off-by: Quanfa Fu <quanfafu@gmail.com>
+> A barrier() is needed here, with the current state of affairs.
 > 
-> -----
-> V2 -> V3: continue to use snprintf
-> V1 -> V2: memory allc uses kzalloc and replace snprintf with memcpy
-> ---
->  kernel/trace/trace_eprobe.c | 12 ++++--------
->  1 file changed, 4 insertions(+), 8 deletions(-)
-> 
-> diff --git a/kernel/trace/trace_eprobe.c b/kernel/trace/trace_eprobe.c
-> index 352b65e2b910..594ac1d086aa 100644
-> --- a/kernel/trace/trace_eprobe.c
-> +++ b/kernel/trace/trace_eprobe.c
-> @@ -923,17 +923,13 @@ static int trace_eprobe_parse_filter(struct trace_eprobe *ep, int argc, const ch
->  
->  	p = ep->filter_str;
->  	for (i = 0; i < argc; i++) {
-> -		ret = snprintf(p, len, "%s ", argv[i]);
-> -		if (ret < 0)
-> -			goto error;
-> -		if (ret > len) {
-> -			ret = -E2BIG;
-> -			goto error;
-> -		}
-> +		if (i)
-> +			ret = snprintf(p, len, " %s", argv[i]);
-> +		else
-> +			ret = snprintf(p, len, "%s", argv[i]);
->  		p += ret;
->  		len -= ret;
->  	}
-> -	p[-1] = '\0';
->  
->  	/*
->  	 * Ensure the filter string can be parsed correctly. Note, this
-> -- 
-> 2.31.1
-> 
+> IMO, ftrace/x86 experts should take care of this generic issue ?
 
+trace_*_enabled() is a static_branch() (aka. jump label).
 
--- 
-Masami Hiramatsu (Google) <mhiramat@kernel.org>
+It's a nop, where the if block is in the out-of-line code and skipped. When
+the tracepoint is enabled, it gets turned into a jump to the if block
+(which returns back to this location).
+
+That is, when the tracepoint in the block gets enabled so does the above
+branch. Sure, there could be a race between the two being enabled, but I
+don't see any issue if there is. But the process to modify the jump labels,
+does a bunch of synchronization between the CPUs.
+
+What barrier are you expecting?
+
+-- Steve
+
+> 
+> 
+> 
+> >                 call_trace_sock_send_length(sock->sk, sock->sk->sk_family,
+> >                                             sock->sk->sk_protocol, ret, 0);
+> >         }
+> >         return ret;
+> > }
+> >
+> > What do you think?
