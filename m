@@ -2,79 +2,314 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D8F03C63797
-	for <linux-trace-kernel@archiver.kernel.org>; Mon,  9 Jan 2023 09:32:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 57DC7C67871
+	for <linux-trace-kernel@archiver.kernel.org>; Mon,  9 Jan 2023 09:59:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232800AbjAIJcV (ORCPT
+        id S233738AbjAIJ7B (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Mon, 9 Jan 2023 04:32:21 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59206 "EHLO
+        Mon, 9 Jan 2023 04:59:01 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49416 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233468AbjAIJcR (ORCPT
+        with ESMTP id S233862AbjAIJ6d (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Mon, 9 Jan 2023 04:32:17 -0500
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C4F8B2BF3
-        for <linux-trace-kernel@vger.kernel.org>; Mon,  9 Jan 2023 01:31:19 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1673256678;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=BJS8ger7BTpdH0Zhir+ATtsgZEkWNY0AkL185k+a0FI=;
-        b=DJAZC3iJGc+j1I4WcLXIk0dw6OH+M9YeqMJ1uoOCw1wQiyAdtl6l6z0TRA1RmPmmq+YEds
-        7KZYN/V59Wt/+ozGMtm7ANYCrg6/66qfZIfIlBTHEDv3Wmu67fcMy1H0X7ExWBnS8qBJmf
-        vJKEGJTCgNpT+XVrfTKW2sCk8kvk5Fk=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-625-RiSvjASXMw-KMNZD3ZDwmA-1; Mon, 09 Jan 2023 04:31:15 -0500
-X-MC-Unique: RiSvjASXMw-KMNZD3ZDwmA-1
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.rdu2.redhat.com [10.11.54.8])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 3B338101A52E;
-        Mon,  9 Jan 2023 09:31:14 +0000 (UTC)
-Received: from warthog.procyon.org.uk (unknown [10.33.36.87])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 0753BC16026;
-        Mon,  9 Jan 2023 09:31:09 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
-        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
-        Kingdom.
-        Registered in England and Wales under Company Registration No. 3798903
-From:   David Howells <dhowells@redhat.com>
-In-Reply-To: <20230108171241.GA20314@lst.de>
-References: <20230108171241.GA20314@lst.de> <20230105190741.2405013-1-kbusch@meta.com>
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     dhowells@redhat.com, Keith Busch <kbusch@meta.com>,
-        linux-kernel@vger.kernel.org,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Jens Axboe <axboe@kernel.dk>, linux-aio@kvack.org,
-        linux-fsdevel@vger.kernel.org, io-uring@vger.kernel.org,
-        Pavel Begunkov <asml.silence@gmail.com>,
-        Eric Dumazet <edumazet@google.com>,
-        Steven Rostedt <rostedt@goodmis.org>, davem@davemloft.net,
-        Jakub Kicinski <kuba@kernel.org>,
-        Paolo Abeni <pabeni@redhat.com>,
-        Jarkko Sakkinen <jarkko@kernel.org>,
-        Paul Moore <paul@paul-moore.com>, keyrings@vger.kernel.org,
-        linux-security-module@vger.kernel.org,
-        linux-trace-kernel@vger.kernel.org, linux-block@vger.kernel.org,
-        netdev@vger.kernel.org, Keith Busch <kbusch@kernel.org>
-Subject: Re: [PATCHv2 00/12] iov_iter: replace import_single_range with ubuf
+        Mon, 9 Jan 2023 04:58:33 -0500
+Received: from mail-yb1-xb2f.google.com (mail-yb1-xb2f.google.com [IPv6:2607:f8b0:4864:20::b2f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DB90214D23
+        for <linux-trace-kernel@vger.kernel.org>; Mon,  9 Jan 2023 01:56:16 -0800 (PST)
+Received: by mail-yb1-xb2f.google.com with SMTP id 194so5736363ybf.8
+        for <linux-trace-kernel@vger.kernel.org>; Mon, 09 Jan 2023 01:56:16 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=SfDaq2ASpiM1zBb2WHSIhwQSieUxoxDNWuYmU52fBIY=;
+        b=blauc+qxWSvrWJvnw8ziranzXegXkmdq5J/cb3W9GtJvc/dXWfk6uMqzpTrVAp7sPu
+         e8alsyX/smcZ+MwKh+qUCW3SzuHbm1CzZxqQ0aonQXNSsN1JEmU5jMsOg9QaZF+ke9gB
+         A06wBYBMfhnhMlD2utylI4UP1KWDH6TiCGyaVYgUJyW2n+wbYdoAvEntaj7AkuAAnrQS
+         Go1sto9NClzKe1oAKmxAasjn21RR/Wjbml2qG3P4+2n/Uts9TvZ2OvmFrKqeZaT3ChiN
+         1QQ8C8ql32/V8INuDNgoRlWlN9ecMGoP84PgzRplF5qgNERvXjpQxZPn9H3VRWeP4LIe
+         eaXw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=SfDaq2ASpiM1zBb2WHSIhwQSieUxoxDNWuYmU52fBIY=;
+        b=mH/v/XHnFTIx5aC3tZtrwFNGJC/lfYjtyTFHZMJ81/LJjx21rBMSakYG9tUw6OETOk
+         A5sH5hIFYKUzsxjj7+0GwDgjD9i/lcC+rA7tL9QqT9B27zHXGRVG/iNZZ3XClxf7qMK/
+         cB4+zMmX1Dz6WIpauuzoVhq/uV5ueViOvuJ1cb/SSTwl7krAWEHjFT7t6tI7KnVt7qXL
+         RMshokj9obcj8FyPADKxr3EgADIA47FQmRtQpFhuHHGP9FdBkg544/XrBzSzNc8X3kFh
+         2IyBele5D7Tfpqu5YtPNYTt9Zsx943+qPqcIORPkQY7ZR4IxJyN0aS6ezlg/3uUSvEsC
+         xW/A==
+X-Gm-Message-State: AFqh2kqNf09ftCjEB4KL8C34yKhfbZ0yB5H8QgzPu7IkA+Zq8A7665TZ
+        7Wjd6SS0zBYw83ZPE4WjZpCsIGO52/McyBTqxGPGAg==
+X-Google-Smtp-Source: AMrXdXsHHnAEm3fH4gz1NO9LoZFtdEIsaXJ4YeYcnXGDlU9/SzIYVGbyu7x7LN0IqTlQ0oQNGt4wIYD/KERNa/pZsSk=
+X-Received: by 2002:a25:8f89:0:b0:7b3:bb8:9daf with SMTP id
+ u9-20020a258f89000000b007b30bb89dafmr1033768ybl.427.1673258175757; Mon, 09
+ Jan 2023 01:56:15 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <1880280.1673256668.1@warthog.procyon.org.uk>
-Date:   Mon, 09 Jan 2023 09:31:08 +0000
-Message-ID: <1880281.1673256668@warthog.procyon.org.uk>
-X-Scanned-By: MIMEDefang 3.1 on 10.11.54.8
+References: <20230108025545.338-1-cuiyunhui@bytedance.com>
+In-Reply-To: <20230108025545.338-1-cuiyunhui@bytedance.com>
+From:   Eric Dumazet <edumazet@google.com>
+Date:   Mon, 9 Jan 2023 10:56:04 +0100
+Message-ID: <CANn89i+W__5-jDUdM=_97jzQy9Wq+n9KBEuOGjUi=Fxe_ntqbg@mail.gmail.com>
+Subject: Re: [PATCH v4] sock: add tracepoint for send recv length
+To:     Yunhui Cui <cuiyunhui@bytedance.com>
+Cc:     rostedt@goodmis.org, mhiramat@kernel.org, davem@davemloft.net,
+        kuba@kernel.org, pabeni@redhat.com, kuniyu@amazon.com,
+        xiyou.wangcong@gmail.com, duanxiongchun@bytedance.com,
+        linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+        netdev@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-lore.kernel.org doesn't seem to have the patches.
+On Sun, Jan 8, 2023 at 3:56 AM Yunhui Cui <cuiyunhui@bytedance.com> wrote:
+>
+> Add 2 tracepoints to monitor the tcp/udp traffic
+> of per process and per cgroup.
+>
+> Regarding monitoring the tcp/udp traffic of each process, there are two
+> existing solutions, the first one is https://www.atoptool.nl/netatop.php.
+> The second is via kprobe/kretprobe.
+>
+> Netatop solution is implemented by registering the hook function at the
+> hook point provided by the netfilter framework.
+>
+> These hook functions may be in the soft interrupt context and cannot
+> directly obtain the pid. Some data structures are added to bind packets
+> and processes. For example, struct taskinfobucket, struct taskinfo ...
+>
+> Every time the process sends and receives packets it needs multiple
+> hashmaps,resulting in low performance and it has the problem fo inaccurate
+> tcp/udp traffic statistics(for example: multiple threads share sockets).
+>
+> We can obtain the information with kretprobe, but as we know, kprobe gets
+> the result by trappig in an exception, which loses performance compared
+> to tracepoint.
+>
+> We compared the performance of tracepoints with the above two methods, and
+> the results are as follows:
+>
+> ab -n 1000000 -c 1000 -r http://127.0.0.1/index.html
+> without trace:
+> Time per request: 39.660 [ms] (mean)
+> Time per request: 0.040 [ms] (mean, across all concurrent requests)
+>
+> netatop:
+> Time per request: 50.717 [ms] (mean)
+> Time per request: 0.051 [ms] (mean, across all concurrent requests)
+>
+> kr:
+> Time per request: 43.168 [ms] (mean)
+> Time per request: 0.043 [ms] (mean, across all concurrent requests)
+>
+> tracepoint:
+> Time per request: 41.004 [ms] (mean)
+> Time per request: 0.041 [ms] (mean, across all concurrent requests
+>
+> It can be seen that tracepoint has better performance.
+>
+> Signed-off-by: Yunhui Cui <cuiyunhui@bytedance.com>
+> Signed-off-by: Xiongchun Duan <duanxiongchun@bytedance.com>
+> ---
+>  include/trace/events/sock.h | 48 +++++++++++++++++++++++++++++++++++++
+>  net/socket.c                | 23 ++++++++++++++----
+>  2 files changed, 67 insertions(+), 4 deletions(-)
+>
+> diff --git a/include/trace/events/sock.h b/include/trace/events/sock.h
+> index 777ee6cbe933..d00a5b272404 100644
+> --- a/include/trace/events/sock.h
+> +++ b/include/trace/events/sock.h
+> @@ -263,6 +263,54 @@ TRACE_EVENT(inet_sk_error_report,
+>                   __entry->error)
+>  );
+>
+> +/*
+> + * sock send/recv msg length
+> + */
+> +DECLARE_EVENT_CLASS(sock_msg_length,
+> +
+> +       TP_PROTO(struct sock *sk, __u16 family, __u16 protocol, int ret,
+> +                int flags),
+> +
+> +       TP_ARGS(sk, family, protocol, ret, flags),
+> +
+> +       TP_STRUCT__entry(
+> +               __field(void *, sk)
+> +               __field(__u16, family)
+> +               __field(__u16, protocol)
+> +               __field(int, length)
+> +               __field(int, error)
+> +               __field(int, flags)
+> +       ),
+> +
+> +       TP_fast_assign(
+> +               __entry->sk = sk;
+> +               __entry->family = sk->sk_family;
+> +               __entry->protocol = sk->sk_protocol;
+> +               __entry->length = ret > 0 ? ret : 0;
+> +               __entry->error = ret < 0 ? ret : 0;
+> +               __entry->flags = flags;
+> +       ),
+> +
+> +       TP_printk("sk address = %p, family = %s protocol = %s, length = %d, error = %d, flags = 0x%x",
+> +                 __entry->sk, show_family_name(__entry->family),
+> +                 show_inet_protocol_name(__entry->protocol),
+> +                 __entry->length,
+> +                 __entry->error, __entry->flags)
+> +);
+> +
+> +DEFINE_EVENT(sock_msg_length, sock_send_length,
+> +       TP_PROTO(struct sock *sk, __u16 family, __u16 protocol, int ret,
+> +                int flags),
+> +
+> +       TP_ARGS(sk, family, protocol, ret, flags)
+> +);
+> +
+> +DEFINE_EVENT(sock_msg_length, sock_recv_length,
+> +       TP_PROTO(struct sock *sk, __u16 family, __u16 protocol, int ret,
+> +                int flags),
+> +
+> +       TP_ARGS(sk, family, protocol, ret, flags)
+> +);
+>  #endif /* _TRACE_SOCK_H */
+>
+>  /* This part must be outside protection */
+> diff --git a/net/socket.c b/net/socket.c
+> index 888cd618a968..60a1ff95b4b1 100644
+> --- a/net/socket.c
+> +++ b/net/socket.c
+> @@ -106,6 +106,7 @@
+>  #include <net/busy_poll.h>
+>  #include <linux/errqueue.h>
+>  #include <linux/ptp_clock_kernel.h>
+> +#include <trace/events/sock.h>
+>
+>  #ifdef CONFIG_NET_RX_BUSY_POLL
+>  unsigned int sysctl_net_busy_read __read_mostly;
+> @@ -715,6 +716,9 @@ static inline int sock_sendmsg_nosec(struct socket *sock, struct msghdr *msg)
+>                                      inet_sendmsg, sock, msg,
+>                                      msg_data_left(msg));
+>         BUG_ON(ret == -EIOCBQUEUED);
+> +
+> +       trace_sock_send_length(sock->sk, sock->sk->sk_family,
+> +                              sock->sk->sk_protocol, ret, 0);
 
-https://lore.kernel.org/lkml/20230105190741.2405013-1-kbusch@meta.com/
+Note: At least for CONFIG_RETPOLINE=y and gcc 12.2, compiler adds many
+additional instructions (and additional memory reads),
+even when the trace point is not enabled.
 
-David
+Contrary to some belief, adding a tracepoint is not always 'free'.
+tail calls for example are replaced with normal calls.
 
+sock_recvmsg_nosec:
+        pushq   %r12    #
+        movl    %edx, %r12d     # tmp123, flags
+        pushq   %rbp    #
+# net/socket.c:999:     int ret =
+INDIRECT_CALL_INET(sock->ops->recvmsg, inet6_recvmsg,
+        movl    %r12d, %ecx     # flags,
+# net/socket.c:998: {
+        movq    %rdi, %rbp      # tmp121, sock
+        pushq   %rbx    #
+# net/socket.c:999:     int ret =
+INDIRECT_CALL_INET(sock->ops->recvmsg, inet6_recvmsg,
+        movq    32(%rdi), %rax  # sock_19(D)->ops, sock_19(D)->ops
+# ./include/linux/uio.h:270:    return i->count;
+        movq    32(%rsi), %rdx  # MEM[(const struct iov_iter
+*)msg_20(D) + 16B].count, pretmp_48
+# net/socket.c:999:     int ret =
+INDIRECT_CALL_INET(sock->ops->recvmsg, inet6_recvmsg,
+        movq    144(%rax), %rax # _1->recvmsg, _2
+        cmpq    $inet6_recvmsg, %rax    #, _2
+        jne     .L107   #,
+        call    inet6_recvmsg   #
+        movl    %eax, %ebx      # tmp124, <retval>
+.L108:
+# net/socket.c:1003:    trace_sock_recv_length(sock->sk, sock->sk->sk_family,
+        xorl    %r8d, %r8d      # tmp127
+        testl   %ebx, %ebx      # <retval>
+# net/socket.c:1004:                           sock->sk->sk_protocol,
+        movq    24(%rbp), %rsi  # sock_19(D)->sk, _10
+# net/socket.c:1003:    trace_sock_recv_length(sock->sk, sock->sk->sk_family,
+        cmovle  %ebx, %r8d      # <retval>,, tmp119
+        testb   $2, %r12b       #, flags
+# net/socket.c:1004:                           sock->sk->sk_protocol,
+        movzwl  516(%rsi), %ecx # _10->sk_protocol,
+# net/socket.c:1003:    trace_sock_recv_length(sock->sk, sock->sk->sk_family,
+        movzwl  16(%rsi), %edx  # _10->__sk_common.skc_family,
+# net/socket.c:1003:    trace_sock_recv_length(sock->sk, sock->sk->sk_family,
+        cmove   %ebx, %r8d      # tmp119,, <retval>, iftmp.54_16
+# ./arch/x86/include/asm/jump_label.h:27:       asm_volatile_goto("1:"
+#APP
+# 27 "./arch/x86/include/asm/jump_label.h" 1
+        1:jmp .L111 # objtool NOPs this         #
+        .pushsection __jump_table,  "aw"
+         .balign 8
+        .long 1b - .
+        .long .L111 - .         #
+         .quad __tracepoint_sock_recv_length+8 + 2 - .  #,
+        .popsection
+
+# 0 "" 2
+#NO_APP
+.L106:
+# net/socket.c:1008: }
+        movl    %ebx, %eax      # <retval>,
+        popq    %rbx    #
+        popq    %rbp    #
+        popq    %r12    #
+        ret
+.L111:
+# ./include/trace/events/sock.h:308: DEFINE_EVENT(sock_msg_length,
+sock_recv_length,
+
+
+>         return ret;
+>  }
+>
+> @@ -992,9 +996,15 @@ INDIRECT_CALLABLE_DECLARE(int inet6_recvmsg(struct socket *, struct msghdr *,
+>  static inline int sock_recvmsg_nosec(struct socket *sock, struct msghdr *msg,
+>                                      int flags)
+>  {
+> -       return INDIRECT_CALL_INET(sock->ops->recvmsg, inet6_recvmsg,
+> -                                 inet_recvmsg, sock, msg, msg_data_left(msg),
+> -                                 flags);
+> +       int ret = INDIRECT_CALL_INET(sock->ops->recvmsg, inet6_recvmsg,
+> +                                    inet_recvmsg, sock, msg,
+> +                                    msg_data_left(msg), flags);
+> +
+> +       trace_sock_recv_length(sock->sk, sock->sk->sk_family,
+> +                              sock->sk->sk_protocol,
+> +                              !(flags & MSG_PEEK) ? ret :
+> +                              (ret < 0 ? ret : 0), flags);
+> +       return ret;
+>  }
+>
+>  /**
+> @@ -1044,6 +1054,7 @@ static ssize_t sock_sendpage(struct file *file, struct page *page,
+>  {
+>         struct socket *sock;
+>         int flags;
+> +       int ret;
+>
+>         sock = file->private_data;
+>
+> @@ -1051,7 +1062,11 @@ static ssize_t sock_sendpage(struct file *file, struct page *page,
+>         /* more is a combination of MSG_MORE and MSG_SENDPAGE_NOTLAST */
+>         flags |= more;
+>
+> -       return kernel_sendpage(sock, page, offset, size, flags);
+> +       ret = kernel_sendpage(sock, page, offset, size, flags);
+> +
+> +       trace_sock_send_length(sock->sk, sock->sk->sk_family,
+> +                              sock->sk->sk_protocol, ret, 0);
+> +       return ret;
+>  }
+>
+>  static ssize_t sock_splice_read(struct file *file, loff_t *ppos,
+> --
+> 2.20.1
+>
