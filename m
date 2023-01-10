@@ -2,83 +2,132 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E10FDC54EBC
-	for <linux-trace-kernel@archiver.kernel.org>; Tue, 10 Jan 2023 15:27:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C774BC67871
+	for <linux-trace-kernel@archiver.kernel.org>; Tue, 10 Jan 2023 15:44:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238989AbjAJP1D (ORCPT
+        id S239019AbjAJPog (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Tue, 10 Jan 2023 10:27:03 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33216 "EHLO
+        Tue, 10 Jan 2023 10:44:36 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48880 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238918AbjAJP0p (ORCPT
+        with ESMTP id S238799AbjAJPo0 (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Tue, 10 Jan 2023 10:26:45 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9E4BC8B536;
-        Tue, 10 Jan 2023 07:26:09 -0800 (PST)
+        Tue, 10 Jan 2023 10:44:26 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1274448CE6;
+        Tue, 10 Jan 2023 07:44:22 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 0910D6178E;
-        Tue, 10 Jan 2023 15:26:09 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 282FDC433D2;
-        Tue, 10 Jan 2023 15:26:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1673364368;
-        bh=i8m6nnObUjQAxVsR4ErMApSFIjYm0i6e8LmsHTc+RzI=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=aN1C5tuhxBq0HXkvxafm6eDrBiqlZObX9jGntIfkU2YFvTz31cTWAzfBQdkMxNvhu
-         RugL5b0ZhmQqd87cotoEzdTTZhnI8efCiGumaEjdht+GBaSLL7BZzsaZqE/ZGF0IHC
-         9VczJ/WT+PyDjYOoDfYM7DhwOnmcNgV8ei0atpHfANoKCU+RlMwfcg9KfgkMu7AxQB
-         A3qIt+vw3iC+/W+D1yzz6cm7hL2a++O8lStMtk4R+aKazbPR6Pz+ND6/VYfzaF1UPr
-         IfMG1O1ndu2S4XQ9YaZpDB2b+ItQMCpvYholdLIQSqoM9nzG3z0n3Vwcr4rrMLFaW5
-         bEKiSZmHVwvZg==
-Date:   Tue, 10 Jan 2023 09:26:06 -0600
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Anirudh Venkataramanan <anirudh.venkataramanan@intel.com>
-Cc:     netdev@vger.kernel.org, linux-pci@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, linux-mips@vger.kernel.org,
-        linux-trace-kernel@vger.kernel.org, sparclinux@vger.kernel.org,
-        Leon Romanovsky <leon@kernel.org>
-Subject: Re: [PATCH net-next 2/7] PCI: Remove PCI IDs used by the Sun Cassini
- driver
-Message-ID: <20230110152606.GA1504608@bhelgaas>
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 8D10461796;
+        Tue, 10 Jan 2023 15:44:22 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AFAEBC433D2;
+        Tue, 10 Jan 2023 15:44:20 +0000 (UTC)
+Date:   Tue, 10 Jan 2023 10:44:19 -0500
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     Eric Dumazet <edumazet@google.com>
+Cc:     Yunhui Cui <cuiyunhui@bytedance.com>, mhiramat@kernel.org,
+        davem@davemloft.net, kuba@kernel.org, pabeni@redhat.com,
+        kuniyu@amazon.com, xiyou.wangcong@gmail.com,
+        duanxiongchun@bytedance.com, linux-kernel@vger.kernel.org,
+        linux-trace-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        dust.li@linux.alibaba.com
+Subject: Re: [PATCH v5] sock: add tracepoint for send recv length
+Message-ID: <20230110104419.67294691@gandalf.local.home>
+In-Reply-To: <CANn89i+Wh2krOy4YFWvBsEx-s_JgQ0HixHAVJwGw18dVPeyiqw@mail.gmail.com>
+References: <20230110091356.1524-1-cuiyunhui@bytedance.com>
+        <CANn89i+Wh2krOy4YFWvBsEx-s_JgQ0HixHAVJwGw18dVPeyiqw@mail.gmail.com>
+X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230106220020.1820147-3-anirudh.venkataramanan@intel.com>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On Fri, Jan 06, 2023 at 02:00:15PM -0800, Anirudh Venkataramanan wrote:
-> The previous patch removed the Cassini driver (drivers/net/ethernet/sun).
-> With this, PCI_DEVICE_ID_NS_SATURN and PCI_DEVICE_ID_SUN_CASSINI are
-> unused. Remove them.
-> 
-> Cc: Leon Romanovsky <leon@kernel.org>
-> Signed-off-by: Anirudh Venkataramanan <anirudh.venkataramanan@intel.com>
-> ---
->  include/linux/pci_ids.h | 2 --
->  1 file changed, 2 deletions(-)
-> 
-> diff --git a/include/linux/pci_ids.h b/include/linux/pci_ids.h
-> index b362d90..eca2340 100644
-> --- a/include/linux/pci_ids.h
-> +++ b/include/linux/pci_ids.h
-> @@ -433,7 +433,6 @@
->  #define PCI_DEVICE_ID_NS_CS5535_AUDIO	0x002e
->  #define PCI_DEVICE_ID_NS_CS5535_USB	0x002f
->  #define PCI_DEVICE_ID_NS_GX_VIDEO	0x0030
-> -#define PCI_DEVICE_ID_NS_SATURN		0x0035
->  #define PCI_DEVICE_ID_NS_SCx200_BRIDGE	0x0500
->  #define PCI_DEVICE_ID_NS_SCx200_SMI	0x0501
->  #define PCI_DEVICE_ID_NS_SCx200_IDE	0x0502
-> @@ -1047,7 +1046,6 @@
->  #define PCI_DEVICE_ID_SUN_SABRE		0xa000
->  #define PCI_DEVICE_ID_SUN_HUMMINGBIRD	0xa001
->  #define PCI_DEVICE_ID_SUN_TOMATILLO	0xa801
-> -#define PCI_DEVICE_ID_SUN_CASSINI	0xabba
+On Tue, 10 Jan 2023 12:49:30 +0100
+Eric Dumazet <edumazet@google.com> wrote:
 
-I don't think there's value in removing these definitions.  I would
-just leave them alone.
+> > +static noinline void call_trace_sock_recv_length(struct sock *sk, int ret, int flags)
+> > +{
+> > +       trace_sock_recv_length(sk, !(flags & MSG_PEEK) ? ret :
+> > +                              (ret < 0 ? ret : 0), flags);  
+> 
+> Maybe we should only 'fast assign' the two fields (ret and flags),
+> and let this logic happen later at 'print' time ?
+> 
+> This would reduce storage by one integer, and make fast path really fast.
+> 
+> This also could potentially remove the need for the peculiar construct with
+> these noinline helpers.
+
+I noticed that the trace_sock_send_length() doesn't have this logic, and
+they are both DEFINE_EVENT() of the same DECLARE_EVENT_CLASS(). But we
+could change this too, by the following:
+
+/*
+ * sock send/recv msg length
+ */
+DECLARE_EVENT_CLASS(sock_msg_length,
+
+	TP_PROTO(struct sock *sk, int ret, int flags),
+
+	TP_ARGS(sk, ret, flags),
+
+	TP_STRUCT__entry(
+		__field(void *, sk)
+		__field(__u16, family)
+		__field(__u16, protocol)
+		__field(int, ret)
+		__field(int, flags)
+	),
+
+	TP_fast_assign(
+		__entry->sk = sk;
+		__entry->family = sk->sk_family;
+		__entry->protocol = sk->sk_protocol;
+		__entry->length = ret > 0 ? ret : 0;
+		__entry->error = ret < 0 ? ret : 0;
+		__entry->flags = flags;
+	),
+
+	TP_printk("sk address = %p, family = %s protocol = %s, length = %d, error = %d, flags = 0x%x",
+		  __entry->sk, show_family_name(__entry->family),
+		  show_inet_protocol_name(__entry->protocol),
+		  __entry->ret > 0 ? ret : 0, __entry->ret < 0 ? ret : 0,
+		  __entry->flags)
+);
+
+DEFINE_EVENT(sock_msg_length, sock_send_length,
+	TP_PROTO(struct sock *sk, int ret, int flags),
+
+	TP_ARGS(sk, ret, flags)
+);
+
+DEFINE_EVENT_PRINT(sock_msg_length, sock_recv_length,
+	TP_PROTO(struct sock *sk, int ret, int flags),
+
+	TP_ARGS(sk, ret, flags)
+
+	TP_printk("sk address = %p, family = %s protocol = %s, length = %d, error = %d, flags = 0x%x",
+		  __entry->sk, show_family_name(__entry->family),
+		  show_inet_protocol_name(__entry->protocol),
+		  !(__entry->flags & MSG_PEEK) ? __entry->ret : __entry->ret > 0 ? ret : 0,
+		  __entry->ret < 0 ? ret : 0,
+		  __entry->flags)
+);
+#endif /* _TRACE_SOCK_H */
+
+As DEFINE_EVENT_PRINT() uses the class template, but overrides the
+TP_printk() portion (still saving memory).
+
+And then both calls can just do:
+
+	trace_sock_send_length(sk, ret, 0);
+
+	trace_sock_recv_length(sock->sk, ret, flags);
+
+And I bet that will also solve all the gcc being smart waste.
+
+-- Steve
+
