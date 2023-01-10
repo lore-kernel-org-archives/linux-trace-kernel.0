@@ -2,163 +2,262 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 54F23C54EBC
-	for <linux-trace-kernel@archiver.kernel.org>; Tue, 10 Jan 2023 11:50:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E58D2C46467
+	for <linux-trace-kernel@archiver.kernel.org>; Tue, 10 Jan 2023 13:01:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232052AbjAJLuS (ORCPT
+        id S233295AbjAJNBm (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Tue, 10 Jan 2023 06:50:18 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42128 "EHLO
+        Tue, 10 Jan 2023 08:01:42 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35214 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238153AbjAJLtn (ORCPT
+        with ESMTP id S231727AbjAJNBl (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Tue, 10 Jan 2023 06:49:43 -0500
-Received: from mail-yw1-x1131.google.com (mail-yw1-x1131.google.com [IPv6:2607:f8b0:4864:20::1131])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BE00E4D4BD
-        for <linux-trace-kernel@vger.kernel.org>; Tue, 10 Jan 2023 03:49:42 -0800 (PST)
-Received: by mail-yw1-x1131.google.com with SMTP id 00721157ae682-4d19b2686a9so23112487b3.6
-        for <linux-trace-kernel@vger.kernel.org>; Tue, 10 Jan 2023 03:49:42 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=gvbUlZbRkizbNLG13i/TrEMaNfYnnm+tdXnbq4eQJHE=;
-        b=cVgRNtqYIixuNnDAzzPFynB0ej+czZZDE01Jr9Mymv37ApAjz8e+v0nc53E16TmoNF
-         hnXTrsfxPUoOc1VKP8mrf/cSI20DjnU61BvQ6MB4oisGUfXAy8OiPB7RP6yT6HILLhAi
-         DQRu9aLKR/bZjGqtghxWVocK//SXMG5GxPC9ak5M90RtbnuYibg6uo0YTSF6awsS+HYA
-         I/5rKYE/EcgiKBk9xplqTvSV1wJ7LOKj03T9iPWx0vRWd8Rz1KGOj/mmAZNSvq36aLCp
-         eEQxIyYc1NzRVdKO13tnGbY1PqAcgV42kukI4r7qYB6bcvTcfSTy9WANZb98LsiRJM4c
-         GfuQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=gvbUlZbRkizbNLG13i/TrEMaNfYnnm+tdXnbq4eQJHE=;
-        b=GbXOFb1PcCpIJNKBuWeD/isJNw4g+m82rAFgsYOkSAHMXvKGzILoVCutJn4uzjdiAC
-         tElegDwRAVxpsJwQRRS7HvtQQSLtJ+0EJUXNvaaiorMH4tBZ+bgfFHE6qs00PlWzmW03
-         lhROEZ3PAXg7YiXmNdkYo0HpxzIHv3gv/1ca85a/jIm/thll0XxsNAEoSSD8j4kBhXjz
-         MHw4QWnADrZ18IA6qqwL11fapi+SEAKMQKaZ0QdixDrnLS8+Z2FPIiDvkXBFxtr3C8yS
-         Tv0hGZUkJzmOEjoTZ6Oix45YVuVIUp/yw/+omd1sGp3+Fski7flPIrc4zsU/PuIi5eZA
-         OMRQ==
-X-Gm-Message-State: AFqh2ko4RDs3tSHEZc1+62mk1FiYBqlURr2Y7HadptYSu5FnG0zVP62t
-        KooFrEsbdlmSkrOuEgfQn/9608LufjBub/AGcr9WvQ==
-X-Google-Smtp-Source: AMrXdXvT9+Wig9vRLkuuqpK4LpWwK1/ehVCRfNWr58Xawzlgx+Qrr0rwJJYbJ5ikuZxBLOaV+Hk6fZMDbdwKgOBEG28=
-X-Received: by 2002:a05:690c:b05:b0:467:2f6:4de5 with SMTP id
- cj5-20020a05690c0b0500b0046702f64de5mr2220727ywb.278.1673351381761; Tue, 10
- Jan 2023 03:49:41 -0800 (PST)
+        Tue, 10 Jan 2023 08:01:41 -0500
+Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 07F3543A02;
+        Tue, 10 Jan 2023 05:01:39 -0800 (PST)
+Received: from dggpemm500006.china.huawei.com (unknown [172.30.72.57])
+        by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4NrrRh3gWzzqTsX;
+        Tue, 10 Jan 2023 20:56:48 +0800 (CST)
+Received: from thunder-town.china.huawei.com (10.174.178.55) by
+ dggpemm500006.china.huawei.com (7.185.36.236) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2375.34; Tue, 10 Jan 2023 21:01:33 +0800
+From:   Zhen Lei <thunder.leizhen@huawei.com>
+To:     Josh Poimboeuf <jpoimboe@kernel.org>,
+        Jiri Kosina <jikos@kernel.org>,
+        Miroslav Benes <mbenes@suse.cz>,
+        Petr Mladek <pmladek@suse.com>,
+        Joe Lawrence <joe.lawrence@redhat.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Andrii Nakryiko <andrii@kernel.org>,
+        Martin KaFai Lau <martin.lau@linux.dev>,
+        Song Liu <song@kernel.org>, Yonghong Song <yhs@fb.com>,
+        John Fastabend <john.fastabend@gmail.com>,
+        KP Singh <kpsingh@kernel.org>,
+        Stanislav Fomichev <sdf@google.com>,
+        Hao Luo <haoluo@google.com>, Jiri Olsa <jolsa@kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>, <bpf@vger.kernel.org>,
+        <linux-trace-kernel@vger.kernel.org>,
+        <live-patching@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        <linux-modules@vger.kernel.org>
+CC:     Zhen Lei <thunder.leizhen@huawei.com>
+Subject: [PATCH v3] kallsyms: Remove the performance test from kallsyms_selftest.c
+Date:   Tue, 10 Jan 2023 21:01:21 +0800
+Message-ID: <20230110130121.1279-1-thunder.leizhen@huawei.com>
+X-Mailer: git-send-email 2.37.3.windows.1
 MIME-Version: 1.0
-References: <20230110091356.1524-1-cuiyunhui@bytedance.com>
-In-Reply-To: <20230110091356.1524-1-cuiyunhui@bytedance.com>
-From:   Eric Dumazet <edumazet@google.com>
-Date:   Tue, 10 Jan 2023 12:49:30 +0100
-Message-ID: <CANn89i+Wh2krOy4YFWvBsEx-s_JgQ0HixHAVJwGw18dVPeyiqw@mail.gmail.com>
-Subject: Re: [PATCH v5] sock: add tracepoint for send recv length
-To:     Yunhui Cui <cuiyunhui@bytedance.com>
-Cc:     rostedt@goodmis.org, mhiramat@kernel.org, davem@davemloft.net,
-        kuba@kernel.org, pabeni@redhat.com, kuniyu@amazon.com,
-        xiyou.wangcong@gmail.com, duanxiongchun@bytedance.com,
-        linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
-        netdev@vger.kernel.org, dust.li@linux.alibaba.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [10.174.178.55]
+X-ClientProxiedBy: dggems703-chm.china.huawei.com (10.3.19.180) To
+ dggpemm500006.china.huawei.com (7.185.36.236)
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On Tue, Jan 10, 2023 at 10:15 AM Yunhui Cui <cuiyunhui@bytedance.com> wrote:
->
-> Add 2 tracepoints to monitor the tcp/udp traffic
-> of per process and per cgroup.
->
-> Regarding monitoring the tcp/udp traffic of each process, there are two
-> existing solutions, the first one is https://www.atoptool.nl/netatop.php.
-> The second is via kprobe/kretprobe.
->
-> Netatop solution is implemented by registering the hook function at the
-> hook point provided by the netfilter framework.
->
-> These hook functions may be in the soft interrupt context and cannot
-> directly obtain the pid. Some data structures are added to bind packets
-> and processes. For example, struct taskinfobucket, struct taskinfo ...
->
-> Every time the process sends and receives packets it needs multiple
-> hashmaps,resulting in low performance and it has the problem fo inaccurate
-> tcp/udp traffic statistics(for example: multiple threads share sockets).
->
-> We can obtain the information with kretprobe, but as we know, kprobe gets
-> the result by trappig in an exception, which loses performance compared
-> to tracepoint.
->
-> We compared the performance of tracepoints with the above two methods, and
-> the results are as follows:
->
-> ab -n 1000000 -c 1000 -r http://127.0.0.1/index.html
-> without trace:
-> Time per request: 39.660 [ms] (mean)
-> Time per request: 0.040 [ms] (mean, across all concurrent requests)
->
-> netatop:
-> Time per request: 50.717 [ms] (mean)
-> Time per request: 0.051 [ms] (mean, across all concurrent requests)
->
-> kr:
-> Time per request: 43.168 [ms] (mean)
-> Time per request: 0.043 [ms] (mean, across all concurrent requests)
->
-> tracepoint:
-> Time per request: 41.004 [ms] (mean)
-> Time per request: 0.041 [ms] (mean, across all concurrent requests
->
-> It can be seen that tracepoint has better performance.
->
-> Signed-off-by: Yunhui Cui <cuiyunhui@bytedance.com>
-> Signed-off-by: Xiongchun Duan <duanxiongchun@bytedance.com>
-> ---
->  include/trace/events/sock.h | 44 +++++++++++++++++++++++++++++++++++++
->  net/socket.c                | 36 ++++++++++++++++++++++++++----
->  2 files changed, 76 insertions(+), 4 deletions(-)
->
+[T58] BUG: sleeping function called from invalid context at kernel/kallsyms.c:305
+[T58] in_atomic(): 0, irqs_disabled(): 128, non_block: 0, pid: 58, name: kallsyms_test
+[T58] preempt_count: 0, expected: 0
+[T58] RCU nest depth: 0, expected: 0
+[T58] no locks held by kallsyms_test/58.
+[T58] irq event stamp: 18899904
+[T58] hardirqs last enabled at (18899903): finish_task_switch.isra.0 (core.c:?)
+[T58] hardirqs last disabled at (18899904): test_perf_kallsyms_on_each_symbol (kallsyms_selftest.c:?)
+[T58] softirqs last enabled at (18899886): __do_softirq (??:?)
+[T58] softirqs last disabled at (18899879): ____do_softirq (irq.c:?)
+[T58] CPU: 0 PID: 58 Comm: kallsyms_test Tainted: G T  6.1.0-next-20221215 #2
+[T58] Hardware name: linux,dummy-virt (DT)
+[T58] Call trace:
+[T58] dump_backtrace (??:?)
+[T58] show_stack (??:?)
+[T58] dump_stack_lvl (??:?)
+[T58] dump_stack (??:?)
+[T58] __might_resched (??:?)
+[T58] kallsyms_on_each_symbol (??:?)
+[T58] test_perf_kallsyms_on_each_symbol (kallsyms_selftest.c:?)
+[T58] test_entry (kallsyms_selftest.c:?)
+[T58] kthread (kthread.c:?)
+[T58] ret_from_fork (??:?)
+[T58] kallsyms_selftest: kallsyms_on_each_symbol() traverse all: 5744310840 ns
+[T58] kallsyms_selftest: kallsyms_on_each_match_symbol() traverse all: 1164580 ns
+[T58] kallsyms_selftest: finish
 
-...
+Functions kallsyms_on_each_symbol() and kallsyms_on_each_match_symbol()
+call the user-registered hook function for each symbol that meets the
+requirements. Because it is uncertain how long that hook function will
+execute, they call cond_resched() to avoid consuming CPU resources for a
+long time. Therefore, they cannot be called with irqs disabled.
 
-> +static noinline void call_trace_sock_recv_length(struct sock *sk, int ret, int flags)
-> +{
-> +       trace_sock_recv_length(sk, !(flags & MSG_PEEK) ? ret :
-> +                              (ret < 0 ? ret : 0), flags);
+Given that people don't care about the performance of kallsyms, let's
+simply remove it.
 
-Maybe we should only 'fast assign' the two fields (ret and flags),
-and let this logic happen later at 'print' time ?
+Fixes: 30f3bb09778d ("kallsyms: Add self-test facility")
+Reported-by: Anders Roxell <anders.roxell@linaro.org>
+Suggested-by: Petr Mladek <pmladek@suse.com>
+Signed-off-by: Zhen Lei <thunder.leizhen@huawei.com>
+---
+ kernel/kallsyms_selftest.c | 88 +-------------------------------------
+ 1 file changed, 1 insertion(+), 87 deletions(-)
 
-This would reduce storage by one integer, and make fast path really fast.
+v1 --> v2:
+1. Keep calling cond_resched() when CONFIG_KALLSYMS_SELFTEST=y. Instead,
+   function kallsyms_on_each_match_symbol() and kallsyms_on_each_symbol()
+   are not protected by local_irq_save() in kallsyms_selftest.c.
 
-This also could potentially remove the need for the peculiar construct with
-these noinline helpers.
+v2 --> v3:
+1. Remove the performance test functions.
 
-> +}
-> +
->  static inline int sock_recvmsg_nosec(struct socket *sock, struct msghdr *msg,
->                                      int flags)
+[v2] https://lkml.org/lkml/2022/12/27/762
 
+diff --git a/kernel/kallsyms_selftest.c b/kernel/kallsyms_selftest.c
+index f35d9cc1aab1544..79c42d80b8f69a1 100644
+--- a/kernel/kallsyms_selftest.c
++++ b/kernel/kallsyms_selftest.c
+@@ -12,9 +12,9 @@
+ #include <linux/init.h>
+ #include <linux/module.h>
+ #include <linux/kallsyms.h>
++#include <linux/kthread.h>
+ #include <linux/random.h>
+ #include <linux/sched/clock.h>
+-#include <linux/kthread.h>
+ #include <linux/vmalloc.h>
+ 
+ #include "kallsyms_internal.h"
+@@ -93,7 +93,6 @@ static struct test_item test_items[] = {
+ #endif
+ };
+ 
+-static char stub_name[KSYM_NAME_LEN];
+ 
+ static int stat_symbol_len(void *data, const char *name, struct module *mod, unsigned long addr)
+ {
+@@ -109,16 +108,6 @@ static void test_kallsyms_compression_ratio(void)
+ 
+ 	kallsyms_on_each_symbol(stat_symbol_len, &total_len);
+ 
+-	/*
+-	 * A symbol name cannot start with a number. This stub name helps us
+-	 * traverse the entire symbol table without finding a match. It's used
+-	 * for subsequent performance tests, and its length is the average
+-	 * length of all symbol names.
+-	 */
+-	memset(stub_name, '4', sizeof(stub_name));
+-	pos = total_len / kallsyms_num_syms;
+-	stub_name[pos] = 0;
+-
+ 	pos = 0;
+ 	num = 0;
+ 	off = 0;
+@@ -154,43 +143,6 @@ static void test_kallsyms_compression_ratio(void)
+ 	pr_info(" ---------------------------------------------------------\n");
+ }
+ 
+-static int lookup_name(void *data, const char *name, struct module *mod, unsigned long addr)
+-{
+-	u64 t0, t1, t;
+-	unsigned long flags;
+-	struct test_stat *stat = (struct test_stat *)data;
+-
+-	local_irq_save(flags);
+-	t0 = sched_clock();
+-	(void)kallsyms_lookup_name(name);
+-	t1 = sched_clock();
+-	local_irq_restore(flags);
+-
+-	t = t1 - t0;
+-	if (t < stat->min)
+-		stat->min = t;
+-
+-	if (t > stat->max)
+-		stat->max = t;
+-
+-	stat->real_cnt++;
+-	stat->sum += t;
+-
+-	return 0;
+-}
+-
+-static void test_perf_kallsyms_lookup_name(void)
+-{
+-	struct test_stat stat;
+-
+-	memset(&stat, 0, sizeof(stat));
+-	stat.min = INT_MAX;
+-	kallsyms_on_each_symbol(lookup_name, &stat);
+-	pr_info("kallsyms_lookup_name() looked up %d symbols\n", stat.real_cnt);
+-	pr_info("The time spent on each symbol is (ns): min=%d, max=%d, avg=%lld\n",
+-		stat.min, stat.max, div_u64(stat.sum, stat.real_cnt));
+-}
+-
+ static bool match_cleanup_name(const char *s, const char *name)
+ {
+ 	char *p;
+@@ -231,24 +183,6 @@ static int find_symbol(void *data, const char *name, struct module *mod, unsigne
+ 	return 0;
+ }
+ 
+-static void test_perf_kallsyms_on_each_symbol(void)
+-{
+-	u64 t0, t1;
+-	unsigned long flags;
+-	struct test_stat stat;
+-
+-	memset(&stat, 0, sizeof(stat));
+-	stat.max = INT_MAX;
+-	stat.name = stub_name;
+-	stat.perf = 1;
+-	local_irq_save(flags);
+-	t0 = sched_clock();
+-	kallsyms_on_each_symbol(find_symbol, &stat);
+-	t1 = sched_clock();
+-	local_irq_restore(flags);
+-	pr_info("kallsyms_on_each_symbol() traverse all: %lld ns\n", t1 - t0);
+-}
+-
+ static int match_symbol(void *data, unsigned long addr)
+ {
+ 	struct test_stat *stat = (struct test_stat *)data;
+@@ -267,23 +201,6 @@ static int match_symbol(void *data, unsigned long addr)
+ 	return 0;
+ }
+ 
+-static void test_perf_kallsyms_on_each_match_symbol(void)
+-{
+-	u64 t0, t1;
+-	unsigned long flags;
+-	struct test_stat stat;
+-
+-	memset(&stat, 0, sizeof(stat));
+-	stat.max = INT_MAX;
+-	stat.name = stub_name;
+-	local_irq_save(flags);
+-	t0 = sched_clock();
+-	kallsyms_on_each_match_symbol(match_symbol, stat.name, &stat);
+-	t1 = sched_clock();
+-	local_irq_restore(flags);
+-	pr_info("kallsyms_on_each_match_symbol() traverse all: %lld ns\n", t1 - t0);
+-}
+-
+ static int test_kallsyms_basic_function(void)
+ {
+ 	int i, j, ret;
+@@ -460,9 +377,6 @@ static int test_entry(void *p)
+ 	}
+ 
+ 	test_kallsyms_compression_ratio();
+-	test_perf_kallsyms_lookup_name();
+-	test_perf_kallsyms_on_each_symbol();
+-	test_perf_kallsyms_on_each_match_symbol();
+ 	pr_info("finish\n");
+ 
+ 	return 0;
+-- 
+2.25.1
 
->  {
-> -       return INDIRECT_CALL_INET(sock->ops->recvmsg, inet6_recvmsg,
-> -                                 inet_recvmsg, sock, msg, msg_data_left(msg),
-> -                                 flags);
-> +       int ret = INDIRECT_CALL_INET(sock->ops->recvmsg, inet6_recvmsg,
-> +                                    inet_recvmsg, sock, msg,
-> +                                    msg_data_left(msg), flags);
-> +
-> +       if (trace_sock_recv_length_enabled())
-> +               call_trace_sock_recv_length(sock->sk, !(flags & MSG_PEEK) ?
-> +                                           ret : (ret < 0 ? ret : 0), flags);
-> +       return ret;
->  }
-
-Maybe you meant :
-
-  if (trace_sock_recv_length_enabled())
-      call_trace_sock_recv_length(sock->sk, ret, flags);
-
-?
-
-Please make sure to test your patches.
