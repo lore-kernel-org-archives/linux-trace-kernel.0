@@ -2,48 +2,49 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 511B5C5479D
-	for <linux-trace-kernel@archiver.kernel.org>; Tue, 10 Jan 2023 00:04:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 77033C54EBD
+	for <linux-trace-kernel@archiver.kernel.org>; Tue, 10 Jan 2023 00:29:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235560AbjAJAD7 (ORCPT
+        id S234576AbjAJA3K (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Mon, 9 Jan 2023 19:03:59 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50562 "EHLO
+        Mon, 9 Jan 2023 19:29:10 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59454 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234480AbjAJAD6 (ORCPT
+        with ESMTP id S230233AbjAJA3J (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Mon, 9 Jan 2023 19:03:58 -0500
-Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9E6F81095;
-        Mon,  9 Jan 2023 16:03:57 -0800 (PST)
+        Mon, 9 Jan 2023 19:29:09 -0500
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BAC9B3E0CB;
+        Mon,  9 Jan 2023 16:29:08 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 4EC1DB807E9;
-        Tue, 10 Jan 2023 00:03:56 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5EE06C433D2;
-        Tue, 10 Jan 2023 00:03:53 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 7BB29B80FA1;
+        Tue, 10 Jan 2023 00:29:07 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 30FE3C433EF;
+        Tue, 10 Jan 2023 00:29:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1673309035;
-        bh=OaLzYnvyIIb5IEz5HQgHMyamldsrvh2YVOvR3GSiTMo=;
+        s=k20201202; t=1673310546;
+        bh=nlwMVqdfyfWGqSrdKjFN0jOOqL7rpv3P5eTI+FHk55U=;
         h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=omxAb8kWHSVWvLrdP8zDS3ppGYk/t5v2pIbPHqv2ELf5hrjgTvWjBzCflENYCgbjU
-         K99w7QGJ2j+Tc/XwdtSFbqTNA36Bs6MoWCTzmpla3o/c56f+e44Tfgz9wSt1OMlBuO
-         3lAREFhf8EcPenIScZbf/c8BRp2HHgEzwNnDlHTwiY/gVyfB/oInDRWSSTfaCUfGoB
-         o/cB/vKOJM7HP8D18Xe/+EXJJLtoZ0Pm/t0UONFug1bI/1ZMAkf4f19Y5xajAklPWV
-         Ho5mC+Kw0ranX6eEQFkJTFKGgDlzLaHh2mGHu2uUEBG+oMBmrmpoS9Jz3IMM3AXOeF
-         QqOn68Yfd8NKw==
-Date:   Tue, 10 Jan 2023 09:03:51 +0900
+        b=kLuxQz7M66TCkH49qiE6uAu7QyKYieIVc/O/dN943nh0Wt1VOvPareWYsew9btg5c
+         1/aKQCgJpbRkEqjWfoPjAAQDeTeQDffrOB2gJWhsk8tXm0Vh3ihu9T3fRzgh99TGO6
+         jhWGqxc0/3gAUkLzbFuGBQcvNQA4rYFAKAmb0gefuYKt7tW+R6BOx5u6jtzCX33VNB
+         qNZYPYRbZ/2wSFFMRXGIVpVfCPPDUqOXh3zrl9FEVA49iaSQhDNA/FPZuDhpB0QpRJ
+         A5stgSB3NCQFKbqs2DuRarWKW6oBSyELmTavmI8w4dhi9MukVsjBahE3eVBDyrLGhl
+         aXPII9JJoqUxA==
+Date:   Tue, 10 Jan 2023 09:29:03 +0900
 From:   Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To:     <yang.yang29@zte.com.cn>
-Cc:     <rostedt@goodmis.org>, <mhiramat@kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-trace-kernel@vger.kernel.org>, <xu.panda@zte.com.cn>
-Subject: Re: [PATCH linux-next] tracing: use strscpy() to instead of
- strncpy()
-Message-Id: <20230110090351.e3c80a1f7a36ac897ddc3746@kernel.org>
-In-Reply-To: <202301091939219689840@zte.com.cn>
-References: <202301091939219689840@zte.com.cn>
+To:     Steven Rostedt <rostedt@goodmis.org>
+Cc:     Quanfa Fu <quanfafu@gmail.com>, linux-kernel@vger.kernel.org,
+        linux-trace-kernel@vger.kernel.org
+Subject: Re: [PATCH v3] tracing/eprobe: no need to check for negative ret
+ value for snprintf
+Message-Id: <20230110092903.e499c42d9a3c443c20419c70@kernel.org>
+In-Reply-To: <20230109101226.7f75fc0e@gandalf.local.home>
+References: <20230109040625.3259642-1-quanfafu@gmail.com>
+        <20230109235913.8ac99d54cff8b7c3fc5dcfa4@kernel.org>
+        <20230109101226.7f75fc0e@gandalf.local.home>
 X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Mime-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
@@ -52,43 +53,39 @@ Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On Mon, 9 Jan 2023 19:39:21 +0800 (CST)
-<yang.yang29@zte.com.cn> wrote:
+On Mon, 9 Jan 2023 10:12:26 -0500
+Steven Rostedt <rostedt@goodmis.org> wrote:
 
-> From: Xu Panda <xu.panda@zte.com.cn>
+> On Mon, 9 Jan 2023 23:59:13 +0900
+> Masami Hiramatsu (Google) <mhiramat@kernel.org> wrote:
 > 
-> The implementation of strscpy() is more robust and safer.
-> That's now the recommended way to copy NUL-terminated strings.
+> > On Mon,  9 Jan 2023 12:06:25 +0800
+> > Quanfa Fu <quanfafu@gmail.com> wrote:
+> > 
+> > > No need to check for negative return value from snprintf() as the
+> > > code does not return negative values.
+> > >   
+> > 
+> > Thanks for simplifying, this looks good to me.
+> > 
+> > Acked-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+> 
+> Reviewed-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+> 
+> Masami, do you want to take it into the probes branch, or do you want me to
+> take it into the tracing branch?
 
-This looks good to me.
+Yes, I'll take it to probe/for-next.
 
-Acked-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-
-Thank you,
+Thank you!
 
 > 
-> Signed-off-by: Xu Panda <xu.panda@zte.com.cn>
-> Signed-off-by: Yang Yang <yang.yang29@zte.com.cn>
-> ---
->  kernel/trace/trace_events_synth.c | 3 +--
->  1 file changed, 1 insertion(+), 2 deletions(-)
+> -- Steve
 > 
-> diff --git a/kernel/trace/trace_events_synth.c b/kernel/trace/trace_events_synth.c
-> index 67592eed0be8..cd636edd045e 100644
-> --- a/kernel/trace/trace_events_synth.c
-> +++ b/kernel/trace/trace_events_synth.c
-> @@ -195,8 +195,7 @@ static int synth_field_string_size(char *type)
->  	if (len == 0)
->  		return 0; /* variable-length string */
 > 
-> -	strncpy(buf, start, len);
-> -	buf[len] = '\0';
-> +	strscpy(buf, start, len + 1);
-> 
->  	err = kstrtouint(buf, 0, &size);
->  	if (err)
-> -- 
-> 2.15.2
+> > 
+> > > Signed-off-by: Quanfa Fu <quanfafu@gmail.com>
+> > > 
 
 
 -- 
