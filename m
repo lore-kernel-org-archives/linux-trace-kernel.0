@@ -2,106 +2,260 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 86F6AC67871
-	for <linux-trace-kernel@archiver.kernel.org>; Tue, 10 Jan 2023 09:01:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 14401C6379F
+	for <linux-trace-kernel@archiver.kernel.org>; Tue, 10 Jan 2023 09:15:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238194AbjAJJBD (ORCPT
+        id S231674AbjAJJPn (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Tue, 10 Jan 2023 04:01:03 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48042 "EHLO
+        Tue, 10 Jan 2023 04:15:43 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60384 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231425AbjAJI7y (ORCPT
+        with ESMTP id S231783AbjAJJPW (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Tue, 10 Jan 2023 03:59:54 -0500
-Received: from mail-wm1-x330.google.com (mail-wm1-x330.google.com [IPv6:2a00:1450:4864:20::330])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 501BF574EE
-        for <linux-trace-kernel@vger.kernel.org>; Tue, 10 Jan 2023 00:58:49 -0800 (PST)
-Received: by mail-wm1-x330.google.com with SMTP id l26so8229250wme.5
-        for <linux-trace-kernel@vger.kernel.org>; Tue, 10 Jan 2023 00:58:49 -0800 (PST)
+        Tue, 10 Jan 2023 04:15:22 -0500
+Received: from mail-pf1-x42b.google.com (mail-pf1-x42b.google.com [IPv6:2607:f8b0:4864:20::42b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 56E5B50F4B
+        for <linux-trace-kernel@vger.kernel.org>; Tue, 10 Jan 2023 01:15:20 -0800 (PST)
+Received: by mail-pf1-x42b.google.com with SMTP id c26so3875688pfp.10
+        for <linux-trace-kernel@vger.kernel.org>; Tue, 10 Jan 2023 01:15:20 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=bytedance-com.20210112.gappssmtp.com; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=3+knuQydFBSdXCzPBUm1wNWUOfzUCjvanxuabDgK1gw=;
-        b=Vwsl/VitKXsjcFz1KYmcE983i6kgsxLO3q7CQ7b7PdZx3ibrn+X9o5JUrRrnrBHugy
-         pzycvCwJ02EP/7RDyNObaKSV+y+uuYoK7cW8saBFKs1pds86xYXZ9QQQTifdYFX9VWp2
-         1THyM/CrZw/izNVOqgh01Bnf04RZiZcd3ppMjfDC1B7/ppRKAJ6w13vX2qXMxZoNk75M
-         NfSzaseLCJ+j5CZfN5geOd5+sq7qQySvQoGIEJN9efn2Rlm2Y3BePe7xpmbiX1M1D127
-         KsZ2Zsk/xUp6QREU+YWGqJngQOaP9sW55fSGCDYZOfOfYN13Vw3svExxYl3TI9g+BSil
-         5rbg==
+        h=content-transfer-encoding:mime-version:message-id:date:subject:to
+         :from:from:to:cc:subject:date:message-id:reply-to;
+        bh=+xfZbEYbh/Q29ZJ4Nqg9QA8hyR4QarYUB/yXo5iriLM=;
+        b=U3OKDoBTw4gnRy+Me/WwUJW4mTaUx8JyyvaTKsVBwMwrmKP1a7q9VzBRIQtdU5RdOm
+         nEbsOA4OLakNcandN4kvkZyJ9t0C+HZo7FShk/OPeD46UoqzafDEwlTD2zu4cM96s4VW
+         /+qEFVqlbh/y6JLicdA/feO/lyH5djLwq9U0sPS8HxjSqghCbBA5ThpigmXBq6NkvXVv
+         oSF2aYwAGREx7PeZbtADxEVd10cd/LR1Jpx8XRPYYTSuLuE6Bk5K3fr/zOaoA7h8cY+l
+         0xGkWoJj/gEpY3v7d9mPns9NcDJdZ0vBkE9cS8vy7OWwquL4TRgAgk4c6U9HHYNXNarS
+         aiDw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=3+knuQydFBSdXCzPBUm1wNWUOfzUCjvanxuabDgK1gw=;
-        b=Krs+yVCTMMWFElIfM3Iab6HoCjSJKa5EDVuH/YVUho0Fq3WRBhMj2ql06W8qONOljY
-         nD9tZLsP98WEseBzP0k7AOKAPdZE6E1pL0J5FRT3Tkf3vrpCpljErglfdEJoBm1Nqdeh
-         eH1ma6L0q3RUJ3ahEhps6g5nX8+QXPpGL0dszlnje9Q9Dqi5WDJ4lSbojqBOznbR2vHz
-         r/DM8mnopo10avjQjmMlAHiV+2n6CyvrMVX92QC2cIqjM5Et9qmvSGR/0Q9Erg42BKCZ
-         kVWRnijgOY3H7w+hdUJwAQoKj7eLlaZY0365HwH5avkyM77Zn4gwaxt6pnfWNqYFL/y1
-         Thzw==
-X-Gm-Message-State: AFqh2kriExZTaFeJm5BwRqmwoIT3QLOwVmIZlZBjPg4N8J+7zEcl6AOf
-        a2Bt428Nx4nqZ8bUdkHXDp0SnFeHD+Wx/qXmB7o7DQ==
-X-Google-Smtp-Source: AMrXdXv8OA/a7Bzm1igJ9GaWS1l61b2HMCdSBanChN+V/gF0j2WiaQrSNFuB+mtRV3KwSXUhrLK8ux5RtUDldLL24DQ=
-X-Received: by 2002:a05:600c:47cf:b0:3cf:ecdb:bcb7 with SMTP id
- l15-20020a05600c47cf00b003cfecdbbcb7mr2935722wmo.180.1673341127770; Tue, 10
- Jan 2023 00:58:47 -0800 (PST)
-MIME-Version: 1.0
-References: <20230108025545.338-1-cuiyunhui@bytedance.com> <CANn89i+W__5-jDUdM=_97jzQy9Wq+n9KBEuOGjUi=Fxe_ntqbg@mail.gmail.com>
- <CAEEQ3wnoKqN+uTmMmUDJ9pp+YVaLmKnv42RApzPbNOGg6CRmnA@mail.gmail.com>
- <CANn89iKY5gOC97NobXkhYv6d9ik=ks5ZEwVe=6H-VTwux=BwGQ@mail.gmail.com>
- <20230109100833.03f4d4b1@gandalf.local.home> <CANn89iJwBkCsuNH9vih30xy_Ur6+0dtbfs8wmsA4s7r8=J3cBw@mail.gmail.com>
- <20230109103922.656eb286@gandalf.local.home>
-In-Reply-To: <20230109103922.656eb286@gandalf.local.home>
-From:   =?UTF-8?B?6L+Q6L6J5bSU?= <cuiyunhui@bytedance.com>
-Date:   Tue, 10 Jan 2023 16:58:36 +0800
-Message-ID: <CAEEQ3w=ZyzamCKtYA76EksYiHM=-=mS5jaWwH5mk9nz-T0up4w@mail.gmail.com>
-Subject: Re: [External] Re: [PATCH v4] sock: add tracepoint for send recv length
-To:     Steven Rostedt <rostedt@goodmis.org>
-Cc:     Eric Dumazet <edumazet@google.com>, mhiramat@kernel.org,
-        davem@davemloft.net, kuba@kernel.org, pabeni@redhat.com,
+        h=content-transfer-encoding:mime-version:message-id:date:subject:to
+         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=+xfZbEYbh/Q29ZJ4Nqg9QA8hyR4QarYUB/yXo5iriLM=;
+        b=xF0CdkQla1adUL1pZTWkIgjRTCJGotd7WP1sGqZ8Y7MnsN6diIQ87HFKlm60Le3Kge
+         OerqLC5PXmXqe5Y9dozMKjpuOnDE5RxfveeualdK8usPMd5mD60nqMT53X07vZwqg5mC
+         DHKtUmOmQty7Hu2F1OnRWYQLNNWQXyTeG880Bmo5tFRlFFL3nI2OauM0vMnfNyW5Vp/R
+         qfuC92dchIMQ61Et0w+HqdyQIXSzIvb1S7VNwGqmAzKT9+o2zXGYpKpzMXIB9Msd3cKL
+         MPu37F0NhOaWxH4IV/S3uB49iGA5QgOPLLezao3iMm4StmAUWAQwIO0tqWmG0VSKf6uJ
+         +FmQ==
+X-Gm-Message-State: AFqh2kpgp0FOckoxJa7/fpdqL7mDq07FYr8olrDLKOxvu6JBbDJXV3bk
+        aoJRsNJ+aX0SJJjjAf+0+zYzMg==
+X-Google-Smtp-Source: AMrXdXtDUYsVu0U7Q8RRUGUSejDjcY0xJ5Fb2ueK+CHB4hvfEQHr3eZeP6ANT/6UyImFqWjLSchBaA==
+X-Received: by 2002:a62:1d97:0:b0:578:ac9f:79a9 with SMTP id d145-20020a621d97000000b00578ac9f79a9mr63359945pfd.15.1673342119808;
+        Tue, 10 Jan 2023 01:15:19 -0800 (PST)
+Received: from PF2E59YH-BKX.inc.bytedance.com ([61.213.176.5])
+        by smtp.gmail.com with ESMTPSA id z5-20020aa79f85000000b00575fbe1cf2esm7562856pfr.109.2023.01.10.01.15.15
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 10 Jan 2023 01:15:19 -0800 (PST)
+From:   Yunhui Cui <cuiyunhui@bytedance.com>
+To:     rostedt@goodmis.org, mhiramat@kernel.org, davem@davemloft.net,
+        edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
         kuniyu@amazon.com, xiyou.wangcong@gmail.com,
-        duanxiongchun@bytedance.com, linux-kernel@vger.kernel.org,
-        linux-trace-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        dust.li@linux.alibaba.com
-Content-Type: text/plain; charset="UTF-8"
+        duanxiongchun@bytedance.com, cuiyunhui@bytedance.com,
+        linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+        netdev@vger.kernel.org, dust.li@linux.alibaba.com
+Subject: [PATCH v5] sock: add tracepoint for send recv length
+Date:   Tue, 10 Jan 2023 17:13:56 +0800
+Message-Id: <20230110091356.1524-1-cuiyunhui@bytedance.com>
+X-Mailer: git-send-email 2.37.3.windows.1
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On Mon, Jan 9, 2023 at 11:39 PM Steven Rostedt <rostedt@goodmis.org> wrote:
+Add 2 tracepoints to monitor the tcp/udp traffic
+of per process and per cgroup.
 
->
-> But looking at this tracepoint again, I see a issue that can help with the
-> dereferencing.
->
-> Why is family and protocol passed in?
->
-> +       trace_sock_send_length(sock->sk, sock->sk->sk_family,
-> +                              sock->sk->sk_protocol, ret, 0);
->
->
-> Where the TP_fast_assign() is:
->
-> +       TP_fast_assign(
-> +               __entry->sk = sk;
-> +               __entry->family = sk->sk_family;
-> +               __entry->protocol = sk->sk_protocol;
-> +               __entry->length = ret > 0 ? ret : 0;
-> +               __entry->error = ret < 0 ? ret : 0;
-> +               __entry->flags = flags;
-> +       ),
->
-> The family and protocol is taken from the sk, and not the parameters. I bet
-> dropping those would help.
->
-> -- Steve
->
+Regarding monitoring the tcp/udp traffic of each process, there are two
+existing solutions, the first one is https://www.atoptool.nl/netatop.php.
+The second is via kprobe/kretprobe.
 
-Many thanks to Eric and Steven for your discussions and suggestions, I
-will update on v5.
+Netatop solution is implemented by registering the hook function at the
+hook point provided by the netfilter framework.
 
+These hook functions may be in the soft interrupt context and cannot
+directly obtain the pid. Some data structures are added to bind packets
+and processes. For example, struct taskinfobucket, struct taskinfo ...
 
-Thanks,
-Yunhui
+Every time the process sends and receives packets it needs multiple
+hashmaps,resulting in low performance and it has the problem fo inaccurate
+tcp/udp traffic statistics(for example: multiple threads share sockets).
+
+We can obtain the information with kretprobe, but as we know, kprobe gets
+the result by trappig in an exception, which loses performance compared
+to tracepoint.
+
+We compared the performance of tracepoints with the above two methods, and
+the results are as follows:
+
+ab -n 1000000 -c 1000 -r http://127.0.0.1/index.html
+without trace:
+Time per request: 39.660 [ms] (mean)
+Time per request: 0.040 [ms] (mean, across all concurrent requests)
+
+netatop:
+Time per request: 50.717 [ms] (mean)
+Time per request: 0.051 [ms] (mean, across all concurrent requests)
+
+kr:
+Time per request: 43.168 [ms] (mean)
+Time per request: 0.043 [ms] (mean, across all concurrent requests)
+
+tracepoint:
+Time per request: 41.004 [ms] (mean)
+Time per request: 0.041 [ms] (mean, across all concurrent requests
+
+It can be seen that tracepoint has better performance.
+
+Signed-off-by: Yunhui Cui <cuiyunhui@bytedance.com>
+Signed-off-by: Xiongchun Duan <duanxiongchun@bytedance.com>
+---
+ include/trace/events/sock.h | 44 +++++++++++++++++++++++++++++++++++++
+ net/socket.c                | 36 ++++++++++++++++++++++++++----
+ 2 files changed, 76 insertions(+), 4 deletions(-)
+
+diff --git a/include/trace/events/sock.h b/include/trace/events/sock.h
+index 777ee6cbe933..2c380cb110a3 100644
+--- a/include/trace/events/sock.h
++++ b/include/trace/events/sock.h
+@@ -263,6 +263,50 @@ TRACE_EVENT(inet_sk_error_report,
+ 		  __entry->error)
+ );
+ 
++/*
++ * sock send/recv msg length
++ */
++DECLARE_EVENT_CLASS(sock_msg_length,
++
++	TP_PROTO(struct sock *sk, int ret, int flags),
++
++	TP_ARGS(sk, ret, flags),
++
++	TP_STRUCT__entry(
++		__field(void *, sk)
++		__field(__u16, family)
++		__field(__u16, protocol)
++		__field(int, length)
++		__field(int, error)
++		__field(int, flags)
++	),
++
++	TP_fast_assign(
++		__entry->sk = sk;
++		__entry->family = sk->sk_family;
++		__entry->protocol = sk->sk_protocol;
++		__entry->length = ret > 0 ? ret : 0;
++		__entry->error = ret < 0 ? ret : 0;
++		__entry->flags = flags;
++	),
++
++	TP_printk("sk address = %p, family = %s protocol = %s, length = %d, error = %d, flags = 0x%x",
++		  __entry->sk, show_family_name(__entry->family),
++		  show_inet_protocol_name(__entry->protocol),
++		  __entry->length, __entry->error, __entry->flags)
++);
++
++DEFINE_EVENT(sock_msg_length, sock_send_length,
++	TP_PROTO(struct sock *sk, int ret, int flags),
++
++	TP_ARGS(sk, ret, flags)
++);
++
++DEFINE_EVENT(sock_msg_length, sock_recv_length,
++	TP_PROTO(struct sock *sk, int ret, int flags),
++
++	TP_ARGS(sk, ret, flags)
++);
+ #endif /* _TRACE_SOCK_H */
+ 
+ /* This part must be outside protection */
+diff --git a/net/socket.c b/net/socket.c
+index 888cd618a968..6180d0ad47f9 100644
+--- a/net/socket.c
++++ b/net/socket.c
+@@ -106,6 +106,7 @@
+ #include <net/busy_poll.h>
+ #include <linux/errqueue.h>
+ #include <linux/ptp_clock_kernel.h>
++#include <trace/events/sock.h>
+ 
+ #ifdef CONFIG_NET_RX_BUSY_POLL
+ unsigned int sysctl_net_busy_read __read_mostly;
+@@ -709,12 +710,22 @@ INDIRECT_CALLABLE_DECLARE(int inet_sendmsg(struct socket *, struct msghdr *,
+ 					   size_t));
+ INDIRECT_CALLABLE_DECLARE(int inet6_sendmsg(struct socket *, struct msghdr *,
+ 					    size_t));
++
++static noinline void call_trace_sock_send_length(struct sock *sk, int ret,
++						 int flags)
++{
++	trace_sock_send_length(sk, ret, 0);
++}
++
+ static inline int sock_sendmsg_nosec(struct socket *sock, struct msghdr *msg)
+ {
+ 	int ret = INDIRECT_CALL_INET(sock->ops->sendmsg, inet6_sendmsg,
+ 				     inet_sendmsg, sock, msg,
+ 				     msg_data_left(msg));
+ 	BUG_ON(ret == -EIOCBQUEUED);
++
++	if (trace_sock_send_length_enabled())
++		call_trace_sock_send_length(sock->sk, ret, 0);
+ 	return ret;
+ }
+ 
+@@ -989,12 +1000,24 @@ INDIRECT_CALLABLE_DECLARE(int inet_recvmsg(struct socket *, struct msghdr *,
+ 					   size_t, int));
+ INDIRECT_CALLABLE_DECLARE(int inet6_recvmsg(struct socket *, struct msghdr *,
+ 					    size_t, int));
++
++static noinline void call_trace_sock_recv_length(struct sock *sk, int ret, int flags)
++{
++	trace_sock_recv_length(sk, !(flags & MSG_PEEK) ? ret :
++			       (ret < 0 ? ret : 0), flags);
++}
++
+ static inline int sock_recvmsg_nosec(struct socket *sock, struct msghdr *msg,
+ 				     int flags)
+ {
+-	return INDIRECT_CALL_INET(sock->ops->recvmsg, inet6_recvmsg,
+-				  inet_recvmsg, sock, msg, msg_data_left(msg),
+-				  flags);
++	int ret = INDIRECT_CALL_INET(sock->ops->recvmsg, inet6_recvmsg,
++				     inet_recvmsg, sock, msg,
++				     msg_data_left(msg), flags);
++
++	if (trace_sock_recv_length_enabled())
++		call_trace_sock_recv_length(sock->sk, !(flags & MSG_PEEK) ?
++					    ret : (ret < 0 ? ret : 0), flags);
++	return ret;
+ }
+ 
+ /**
+@@ -1044,6 +1067,7 @@ static ssize_t sock_sendpage(struct file *file, struct page *page,
+ {
+ 	struct socket *sock;
+ 	int flags;
++	int ret;
+ 
+ 	sock = file->private_data;
+ 
+@@ -1051,7 +1075,11 @@ static ssize_t sock_sendpage(struct file *file, struct page *page,
+ 	/* more is a combination of MSG_MORE and MSG_SENDPAGE_NOTLAST */
+ 	flags |= more;
+ 
+-	return kernel_sendpage(sock, page, offset, size, flags);
++	ret = kernel_sendpage(sock, page, offset, size, flags);
++
++	if (trace_sock_send_length_enabled())
++		call_trace_sock_send_length(sock->sk, ret, 0);
++	return ret;
+ }
+ 
+ static ssize_t sock_splice_read(struct file *file, loff_t *ppos,
+-- 
+2.20.1
+
