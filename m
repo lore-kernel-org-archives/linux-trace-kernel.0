@@ -2,67 +2,93 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 94F15C63797
-	for <linux-trace-kernel@archiver.kernel.org>; Wed, 11 Jan 2023 14:59:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 508F3C54EBC
+	for <linux-trace-kernel@archiver.kernel.org>; Wed, 11 Jan 2023 16:33:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232134AbjAKO7G (ORCPT
+        id S230375AbjAKQdz (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Wed, 11 Jan 2023 09:59:06 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35082 "EHLO
+        Wed, 11 Jan 2023 11:33:55 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43024 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S239528AbjAKO6q (ORCPT
+        with ESMTP id S239296AbjAKQdg (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Wed, 11 Jan 2023 09:58:46 -0500
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F1EF0A1A3;
-        Wed, 11 Jan 2023 06:58:45 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id AD272B81C0B;
-        Wed, 11 Jan 2023 14:58:44 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6E0F0C433EF;
-        Wed, 11 Jan 2023 14:58:43 +0000 (UTC)
-Received: from rostedt by gandalf.local.home with local (Exim 4.96)
-        (envelope-from <rostedt@goodmis.org>)
-        id 1pFcYs-000M6f-17;
-        Wed, 11 Jan 2023 09:58:42 -0500
-Message-ID: <20230111145636.450953217@goodmis.org>
-User-Agent: quilt/0.66
-Date:   Wed, 11 Jan 2023 09:56:36 -0500
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
+        Wed, 11 Jan 2023 11:33:36 -0500
+Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:3::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3B48EB86;
+        Wed, 11 Jan 2023 08:33:36 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
+        Content-Type:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
+        Message-ID:Sender:Reply-To:Content-ID:Content-Description;
+        bh=XMF+LeDwuEJP2w3SL8oJxpqNjxtnGRPrPmivq/NK3Dc=; b=PmGF9AZcNMhaUvYUCXcIunoZim
+        vruEM0eiCV6da15xCq/c6wWoSFSmxch6EuKsJ1gzAsIUYf6Yjy+E15JRom9APGCc+k2OueRPxBqkB
+        eMBOq4s2YYyoj+iO/Tz15/s//H6Vp5iq2piuMNBo2yILWfhL/ks8sM8fLkTpkBVsyMxOdOJGKm9mq
+        dc2umH3RamjYa+WHxtSnRE9KE2MKON2zaqqiu9aHuz59cHtd535M1daZeOFB4aVR2e4XuOZsr/rKX
+        6pFAZA90ayXHThWW7qW0Q+OkbAC/gQ4Ek4XncQA3Uosk9P5ufDyF5MROnSWtuOLmOP5re2HhoFwN3
+        6iR0id7g==;
+Received: from [2601:1c2:d80:3110::9307]
+        by bombadil.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
+        id 1pFe2g-00CBTi-C3; Wed, 11 Jan 2023 16:33:34 +0000
+Message-ID: <50a3b4ab-781a-e37f-49ad-cb4bbfcb4eac@infradead.org>
+Date:   Wed, 11 Jan 2023 08:33:33 -0800
+MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.6.1
+Subject: Re: [PATCH 1/4] tracing: Add creation of instances at boot command
+ line
+Content-Language: en-US
+To:     Steven Rostedt <rostedt@goodmis.org>, linux-kernel@vger.kernel.org,
+        linux-trace-kernel@vger.kernel.org
 Cc:     Masami Hiramatsu <mhiramat@kernel.org>,
         Andrew Morton <akpm@linux-foundation.org>,
         Ross Zwisler <zwisler@google.com>
-Subject: [PATCH 0/4] tracing: Addition of tracing instances via kernel command line
+References: <20230111145636.450953217@goodmis.org>
+ <20230111145842.376427803@goodmis.org>
+From:   Randy Dunlap <rdunlap@infradead.org>
+In-Reply-To: <20230111145842.376427803@goodmis.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-Instance creation can happen with the bootconfig but there's currently
-no way to create and enable instances via the normal command line.
-
-This series fixes that.
-
- trace_instance=foo,sched_switch,sched_waking ftrace_boot_snapshot=foo
-
-The above creates a "foo" instance at early start up and enables
-the sched_switch and sched_waking events. Then at the end of boot up
-a snapshot is taken so that user space does not overwrite the boot
-up data.
 
 
-Steven Rostedt (Google) (4):
-      tracing: Add creation of instances at boot command line
-      tracing: Add enabling of events to boot instances
-      tracing: Add trace_array_puts() to write into instance
-      tracing: Allow boot instances to have snapshot buffers
+On 1/11/23 06:56, Steven Rostedt wrote:
+> From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
+> 
+> Add kernel command line to add tracing instances. This only creates
+> instances at boot but still does not enable any events to them. Later
+> changes will extend this command line to add enabling of events, filters,
+> and triggers. As well as possibly redirecting trace_printk()!
+> 
+> Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+> ---
+>  .../admin-guide/kernel-parameters.txt         |  6 +++
+>  kernel/trace/trace.c                          | 51 +++++++++++++++++++
+>  2 files changed, 57 insertions(+)
+> 
+> diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
+> index 6cfa6e3996cf..cec486217ccc 100644
+> --- a/Documentation/admin-guide/kernel-parameters.txt
+> +++ b/Documentation/admin-guide/kernel-parameters.txt
+> @@ -6272,6 +6272,12 @@
+>  			comma-separated list of trace events to enable. See
+>  			also Documentation/trace/events.rst
+>  
+> +	trace_instance=[instance-info]
+> +			[FTRACE] Create an ring buffer instance early in boot up.
 
-----
- Documentation/admin-guide/kernel-parameters.txt |  29 +++++
- include/linux/trace.h                           |  13 ++
- kernel/trace/trace.c                            | 159 +++++++++++++++++++++---
- kernel/trace/trace.h                            |   2 +
- kernel/trace/trace_events.c                     |   9 +-
- 5 files changed, 190 insertions(+), 22 deletions(-)
+s/an/a/
+
+> +			This will be listed in:
+> +
+> +				/sys/kernel/tracing/instances
+> +
+>  	trace_options=[option-list]
+>  			[FTRACE] Enable or disable tracer options at boot.
+>  			The option-list is a comma delimited list of options
+
+
+-- 
+~Randy
