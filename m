@@ -2,177 +2,95 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E8456C5479D
-	for <linux-trace-kernel@archiver.kernel.org>; Wed, 11 Jan 2023 03:53:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B6F5BC5479D
+	for <linux-trace-kernel@archiver.kernel.org>; Wed, 11 Jan 2023 04:12:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229713AbjAKDx6 (ORCPT
+        id S230234AbjAKEML convert rfc822-to-8bit (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Tue, 10 Jan 2023 22:53:58 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49240 "EHLO
+        Tue, 10 Jan 2023 23:12:11 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57796 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230015AbjAKDx5 (ORCPT
+        with ESMTP id S231655AbjAKEMI (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Tue, 10 Jan 2023 22:53:57 -0500
-Received: from mail-wr1-x435.google.com (mail-wr1-x435.google.com [IPv6:2a00:1450:4864:20::435])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B446AFD2E
-        for <linux-trace-kernel@vger.kernel.org>; Tue, 10 Jan 2023 19:53:36 -0800 (PST)
-Received: by mail-wr1-x435.google.com with SMTP id j7so8805122wrn.9
-        for <linux-trace-kernel@vger.kernel.org>; Tue, 10 Jan 2023 19:53:36 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bytedance-com.20210112.gappssmtp.com; s=20210112;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=VQOEXukn20hgpPjJ+OLqtGzuCJHE3pnunV9JohjE5Tc=;
-        b=XkN9DGFQRtzmQXS8sE2gm0e69v1OxxFkqEZ2dZbFKJxPhuYhDSk3Rzj4nxJqgDP/x4
-         mFvqA32CcyapU+ZKOhga2o7c/v3i+vdOT2rY6ev2S2U96Fx9EqqxF29ijBvVgFt3rnjf
-         LsJIakdCBeJoaAT2Gi9NmI3t1AeB7PgAeQMiX0GTSYYdMVhFEoPxyMsSx96i1uVW/Xgs
-         thaM0wIFAvYZ0/aueVXBOnKrDtY5q91WQ0IowrBit1xnGTpjtbFhwRgjiF+Pu47W6uBL
-         eQ/bne9H7fNYjqZByJizcovVpvPWC+QZydxhOxzOsMxsZdS80DrW755B3H5VBu4vJ1Tt
-         M+sw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=VQOEXukn20hgpPjJ+OLqtGzuCJHE3pnunV9JohjE5Tc=;
-        b=um/RXJAp2XuRDTEy7IBagH+Vd1nJskslr6i3gtjz0PXuMgN2J10jzcrTFkAV4qjR2Z
-         kXo0C6Od+ePAw6O+vxjyZWSvFpCi/CSvF3NfTxHUnDz4/HLc8SeTexyM2VcZni5Ooa0G
-         +JhM2Yw98Sm2S9DsdGtKIuAMvJbTFNGWAqByiajxLg6Ph9cfftPQbAdQSzXxj32tEqJj
-         h/YocQV2zCs4sS7nBNkv/IBSlZq4VB4/2PNKfaIHrzO5auVk7dLIZ19eIgLDsoEZ+F+D
-         gocMZvmUkr09Li6hkWALDq0ElqcBYJO65X48E+TtwGhqvZgscOpsUz+pXSsg6GcC4fjk
-         4bFw==
-X-Gm-Message-State: AFqh2krP3iVUiTj72vJdokle5+FoKzfY5oGewN81k44nVTgsWwJSR1uF
-        jHAUGzf5UwddLTdvmNihmuSxGnHAk7rf9bXQL0pG1A==
-X-Google-Smtp-Source: AMrXdXtnOF6DYyWFuiXwm86I3OwtS9EwrrNE5SzwEC3i4dBVo641rdM1fvMb8XqwDiyWnTX/4nS9yOzzL5Ri7E1tpdc=
-X-Received: by 2002:a5d:6207:0:b0:242:2748:be7a with SMTP id
- y7-20020a5d6207000000b002422748be7amr4436775wru.116.1673409215323; Tue, 10
- Jan 2023 19:53:35 -0800 (PST)
-MIME-Version: 1.0
-References: <20230110091356.1524-1-cuiyunhui@bytedance.com>
- <CANn89i+Wh2krOy4YFWvBsEx-s_JgQ0HixHAVJwGw18dVPeyiqw@mail.gmail.com> <20230110104419.67294691@gandalf.local.home>
-In-Reply-To: <20230110104419.67294691@gandalf.local.home>
-From:   =?UTF-8?B?6L+Q6L6J5bSU?= <cuiyunhui@bytedance.com>
-Date:   Wed, 11 Jan 2023 11:53:24 +0800
-Message-ID: <CAEEQ3w=aU3siD-ubhPB3+Wv10ARfUeR=cUHmvdEp2q+y105vAw@mail.gmail.com>
-Subject: Re: [External] Re: [PATCH v5] sock: add tracepoint for send recv length
-To:     Steven Rostedt <rostedt@goodmis.org>
+        Tue, 10 Jan 2023 23:12:08 -0500
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 63BC712AE3;
+        Tue, 10 Jan 2023 20:12:07 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 11A40B81AAE;
+        Wed, 11 Jan 2023 04:12:06 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F32B2C433D2;
+        Wed, 11 Jan 2023 04:12:02 +0000 (UTC)
+Date:   Tue, 10 Jan 2023 23:12:01 -0500
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     =?UTF-8?B?6L+Q6L6J5bSU?= <cuiyunhui@bytedance.com>
 Cc:     Eric Dumazet <edumazet@google.com>, mhiramat@kernel.org,
         davem@davemloft.net, kuba@kernel.org, pabeni@redhat.com,
         kuniyu@amazon.com, xiyou.wangcong@gmail.com,
         duanxiongchun@bytedance.com, linux-kernel@vger.kernel.org,
         linux-trace-kernel@vger.kernel.org, netdev@vger.kernel.org,
         dust.li@linux.alibaba.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Subject: Re: [External] Re: [PATCH v5] sock: add tracepoint for send recv
+ length
+Message-ID: <20230110231201.5eddb889@gandalf.local.home>
+In-Reply-To: <CAEEQ3w=aU3siD-ubhPB3+Wv10ARfUeR=cUHmvdEp2q+y105vAw@mail.gmail.com>
+References: <20230110091356.1524-1-cuiyunhui@bytedance.com>
+        <CANn89i+Wh2krOy4YFWvBsEx-s_JgQ0HixHAVJwGw18dVPeyiqw@mail.gmail.com>
+        <20230110104419.67294691@gandalf.local.home>
+        <CAEEQ3w=aU3siD-ubhPB3+Wv10ARfUeR=cUHmvdEp2q+y105vAw@mail.gmail.com>
+X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On Tue, Jan 10, 2023 at 11:44 PM Steven Rostedt <rostedt@goodmis.org> wrote=
-:
->
->
->         TP_printk("sk address =3D %p, family =3D %s protocol =3D %s, leng=
-th =3D %d, error =3D %d, flags =3D 0x%x",
+On Wed, 11 Jan 2023 11:53:24 +0800
+运辉崔 <cuiyunhui@bytedance.com> wrote:
+
+> Hi Steve, Based on your suggestion, can we use the following code
+> instead of using DEFINE_EVENT_PRINT ？
+
+I only suggested it because you didn't have that logic for the
+sock_send_length trace event. But if you don't care about that one, then
+sure, use it for both.
+
+-- Steve
+
+
+> 
+> DECLARE_EVENT_CLASS(sock_msg_length,
+> 
+>         TP_PROTO(struct sock *sk, int ret, int flags),
+> 
+>         TP_ARGS(sk, ret, flags),
+> 
+>         TP_STRUCT__entry(
+>                 __field(void *, sk)
+>                 __field(__u16, family)
+>                 __field(__u16, protocol)
+>                 __field(int, ret)
+>                 __field(int, flags)
+>         ),
+> 
+>         TP_fast_assign(
+>                 __entry->sk = sk;
+>                 __entry->family = sk->sk_family;
+>                 __entry->protocol = sk->sk_protocol;
+>                 __entry->ret = ret;
+>                 __entry->flags = flags;
+>         ),
+> 
+>         TP_printk("sk address = %p, family = %s protocol = %s, length
+> = %d, error = %d, flags = 0x%x",
 >                   __entry->sk, show_family_name(__entry->family),
 >                   show_inet_protocol_name(__entry->protocol),
->                   __entry->ret > 0 ? ret : 0, __entry->ret < 0 ? ret : 0,
+>                   !(__entry->flags & MSG_PEEK) ?
+>                   (__entry->ret > 0 ? __entry->ret : 0) : 0,
+>                   __entry->ret < 0 ? __entry->ret : 0,
 >                   __entry->flags)
 > );
->
-> DEFINE_EVENT(sock_msg_length, sock_send_length,
->         TP_PROTO(struct sock *sk, int ret, int flags),
->
->         TP_ARGS(sk, ret, flags)
-> );
->
-> DEFINE_EVENT_PRINT(sock_msg_length, sock_recv_length,
->         TP_PROTO(struct sock *sk, int ret, int flags),
->
->         TP_ARGS(sk, ret, flags)
->
->         TP_printk("sk address =3D %p, family =3D %s protocol =3D %s, leng=
-th =3D %d, error =3D %d, flags =3D 0x%x",
->                   __entry->sk, show_family_name(__entry->family),
->                   show_inet_protocol_name(__entry->protocol),
->                   !(__entry->flags & MSG_PEEK) ? __entry->ret : __entry->=
-ret > 0 ? ret : 0,
->                   __entry->ret < 0 ? ret : 0,
->                   __entry->flags)
-> );
-> #endif /* _TRACE_SOCK_H */
->
-> As DEFINE_EVENT_PRINT() uses the class template, but overrides the
-> TP_printk() portion (still saving memory).
->
 
-Hi Steve, Based on your suggestion, can we use the following code
-instead of using DEFINE_EVENT_PRINT =EF=BC=9F
-
-DECLARE_EVENT_CLASS(sock_msg_length,
-
-        TP_PROTO(struct sock *sk, int ret, int flags),
-
-        TP_ARGS(sk, ret, flags),
-
-        TP_STRUCT__entry(
-                __field(void *, sk)
-                __field(__u16, family)
-                __field(__u16, protocol)
-                __field(int, ret)
-                __field(int, flags)
-        ),
-
-        TP_fast_assign(
-                __entry->sk =3D sk;
-                __entry->family =3D sk->sk_family;
-                __entry->protocol =3D sk->sk_protocol;
-                __entry->ret =3D ret;
-                __entry->flags =3D flags;
-        ),
-
-        TP_printk("sk address =3D %p, family =3D %s protocol =3D %s, length
-=3D %d, error =3D %d, flags =3D 0x%x",
-                  __entry->sk, show_family_name(__entry->family),
-                  show_inet_protocol_name(__entry->protocol),
-                  !(__entry->flags & MSG_PEEK) ?
-                  (__entry->ret > 0 ? __entry->ret : 0) : 0,
-                  __entry->ret < 0 ? __entry->ret : 0,
-                  __entry->flags)
-);
-
-DEFINE_EVENT(sock_msg_length, sock_send_length,
-        TP_PROTO(struct sock *sk, int ret, int flags),
-
-        TP_ARGS(sk, ret, flags)
-);
-
-DEFINE_EVENT(sock_msg_length, sock_recv_length,
-        TP_PROTO(struct sock *sk, int ret, int flags),
-
-        TP_ARGS(sk, ret, flags)
-);
-
-
-> And then both calls can just do:
->
->         trace_sock_send_length(sk, ret, 0);
->
->         trace_sock_recv_length(sock->sk, ret, flags);
->
-> And I bet that will also solve all the gcc being smart waste.
->
-> -- Steve
->
-
-Btw,  we still need noinline helpers, right?
-Otherwise the following code would be inlined into sock_recvmsg:
-mov    0x18(%r13),%rsi
-mov    %gs:0x7e832d87(%rip),%eax        # 0x2e68c <pcpu_hot+12>
-mov    %eax,%eax
-bt     %rax,0xdca591(%rip)        # 0xffffffff825c5ea0 <__cpu_online_mask>
-
-
-Thanks,
-Yunhui
