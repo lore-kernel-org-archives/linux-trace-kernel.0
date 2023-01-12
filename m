@@ -2,160 +2,84 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CC93BC54EBE
-	for <linux-trace-kernel@archiver.kernel.org>; Thu, 12 Jan 2023 23:24:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F3866C54EBE
+	for <linux-trace-kernel@archiver.kernel.org>; Thu, 12 Jan 2023 23:25:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231833AbjALXYZ (ORCPT
+        id S230451AbjALXZB (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Thu, 12 Jan 2023 18:24:25 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40208 "EHLO
+        Thu, 12 Jan 2023 18:25:01 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40476 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231911AbjALXYY (ORCPT
+        with ESMTP id S231934AbjALXY7 (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Thu, 12 Jan 2023 18:24:24 -0500
-Received: from mail-il1-x12d.google.com (mail-il1-x12d.google.com [IPv6:2607:f8b0:4864:20::12d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 95D32625CD
-        for <linux-trace-kernel@vger.kernel.org>; Thu, 12 Jan 2023 15:24:23 -0800 (PST)
-Received: by mail-il1-x12d.google.com with SMTP id u8so10140075ilg.0
-        for <linux-trace-kernel@vger.kernel.org>; Thu, 12 Jan 2023 15:24:23 -0800 (PST)
+        Thu, 12 Jan 2023 18:24:59 -0500
+Received: from mail-il1-x133.google.com (mail-il1-x133.google.com [IPv6:2607:f8b0:4864:20::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1CBC5625D0
+        for <linux-trace-kernel@vger.kernel.org>; Thu, 12 Jan 2023 15:24:58 -0800 (PST)
+Received: by mail-il1-x133.google.com with SMTP id u8so10093654ilq.13
+        for <linux-trace-kernel@vger.kernel.org>; Thu, 12 Jan 2023 15:24:58 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20210112;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=bhef6biThhIg08+giamdbkzTkDklC4TxoeMkTSe0/Dc=;
-        b=FNb9+ZvbuccPQcYTlohtzkbXWuxCeJdfkyMePlSXRClbTL2OgY6QoL0ZfCAPpqkHg1
-         oIlqDB44VEBYv6Elq+YzB9WxJScUPrbjQKYlUSZsKKJWsSelgB3k4r1WJkCc04Pfm0Fc
-         5JRWbrdYq31Xu3CAChYwDFXzqfwpKZW6ppAdB6oy1w04G85dAjWyYWHnVgyoijYy7hUD
-         ZCyOghwjEDZ7dqjtqko5OE9kJON34FD7OFT1NuyOY3SYLY0aR28zL/b2QHGAjQIyf8LD
-         0YZr111FWHGlqckjT2cpeXX+T9nxtI3sK4nDXV2aayyVXlllvPCmFs3H2iAzDYgAF4hb
-         2mXA==
+        bh=lhPs+38t8N3EH680V7YHANpRORT0aYGCh7p0Fkn2BAI=;
+        b=fG4GbZyVdfCmXUqY5hS5XkbOTTIEDtjjqVnH11RywslEKwvGvGa5VpqSt0eLcj6IJG
+         ImYGZWJUkahGo0GBnX/YQQJuTc0ielKfxjbODOM0akxJcJ5WDe73cueDgsYM9YuJIXo8
+         QkT14Sm4O59GjQZ8SrYF7fgDAIRk/EQNqUX3CC6D93SoEvbTnP9FKDSC/cpTzs9p0r2x
+         0wsGURFNpDVBNi5swfF40KNUHysel31WKyJKtdzrOTv2Q2ljvO/57MWEdrPsA481C61S
+         WneCtZvXD7U4P/4g4c5v3nFt4GBFFyYXIubX4rNW4fPEZO5/0ICoPPqQ/qszmXVvj0no
+         qwpw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=bhef6biThhIg08+giamdbkzTkDklC4TxoeMkTSe0/Dc=;
-        b=xb5DlTafoNQXEYqc3wbSknKNfzkfxJPUSGJIdSdQq4qe8uAemcDxR59bSQqh6mXpAp
-         R8QGO6wc14QnJczK2JaMvswhNOJluMmhraH5behP6WX/Mge0+OQb+h1iIH3CaYUe9Zst
-         gas4N6QbsjlbaIlagvX2sGOqP34eFa1GHbX6VHVDXosA365OQPd1NbN5ranh55/rnarK
-         N6t2meNPafmpEvkNmxIhjy8APx2n0Up/xiCUhOGs7sPZGAwIckTw8BTKBoM2ipInQDMr
-         c+svZN75H0aHIRUaY2W3Usgpg62MuoxjyI7r3xI4UYGQctgWBlH5rNtTKEdqznQFbPBq
-         F6MA==
-X-Gm-Message-State: AFqh2kpC/ehZr6OSshecBoyeWTjo/0p6Rtw6cZ/Qy6utAKL9Z8b8a1cj
-        WfYZhaIzzrCb6rPUZc5CIBYKeA==
-X-Google-Smtp-Source: AMrXdXtFqIENP2E50l44zzwovmHsdpY2JEjWKfHvP4D/tZQ3oLNziEOmke4rXx5m8SDweE1b8sj/lA==
-X-Received: by 2002:a92:c10b:0:b0:30d:c792:5c12 with SMTP id p11-20020a92c10b000000b0030dc7925c12mr4644326ile.5.1673565862689;
-        Thu, 12 Jan 2023 15:24:22 -0800 (PST)
+        bh=lhPs+38t8N3EH680V7YHANpRORT0aYGCh7p0Fkn2BAI=;
+        b=JRKkVL1k82BKYTm2hBEnKtloU5ukqQrOSgkj12z0nSrFY8Az67DXX2iw+/+T/IWgtE
+         yvvS+tVkiMqs2OJIgJqGk07mX5lCDtJC2hAtROBvqw6fMHRnLJ4a6rp9cK7uKFlsTWM8
+         5qSNPzPwO5jnmCpIzRMlwd+146TCxnm8szSo7gV+Y/DJFB2McXUC8zg1GY+58xriDG+M
+         d92UWruWtuyFdFZ/5UE6Z+6g/yWXBhCPLbL1Nm970UQMD/s3PsqwlMPM00OZ2+WI15BR
+         6UBQE4L9EbG0wPKzYVzm4h7PNm6TPxoR/+wZkGIIrxmcKnAkvgWLNZhYzgibp9LB/nQJ
+         tu5Q==
+X-Gm-Message-State: AFqh2kqIPeVpjBWwwjEZM5eG8JhKbSZ48jCUJKSzMx4xVfEOyGaz0Hzk
+        g1D38zVw0mRPHZpYC6uv/jHuw4fA8m90ay+a
+X-Google-Smtp-Source: AMrXdXs/q6biaY3OJcyqisY7aL5lr9U3a8916S3Mchaoa/8ifgqeAmVu5Lp0aR5TdMcoUZpn1v4IIA==
+X-Received: by 2002:a92:b74c:0:b0:30d:a576:8342 with SMTP id c12-20020a92b74c000000b0030da5768342mr13444165ilm.11.1673565897239;
+        Thu, 12 Jan 2023 15:24:57 -0800 (PST)
 Received: from google.com ([2620:15c:183:200:4a23:5fbb:9bb3:1279])
-        by smtp.gmail.com with ESMTPSA id c2-20020a023f42000000b0039decb5b452sm5692176jaf.65.2023.01.12.15.24.21
+        by smtp.gmail.com with ESMTPSA id a6-20020a056e020e0600b0030edd1501a0sm165652ilk.74.2023.01.12.15.24.56
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 12 Jan 2023 15:24:22 -0800 (PST)
-Date:   Thu, 12 Jan 2023 16:24:17 -0700
+        Thu, 12 Jan 2023 15:24:56 -0800 (PST)
+Date:   Thu, 12 Jan 2023 16:24:53 -0700
 From:   Ross Zwisler <zwisler@google.com>
 To:     Steven Rostedt <rostedt@goodmis.org>
 Cc:     linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
         Masami Hiramatsu <mhiramat@kernel.org>,
         Andrew Morton <akpm@linux-foundation.org>
-Subject: Re: [PATCH 1/4] tracing: Add creation of instances at boot command
- line
-Message-ID: <Y8CWodcFALp3MEBM@google.com>
+Subject: Re: [PATCH 2/4] tracing: Add enabling of events to boot instances
+Message-ID: <Y8CWxbg8NOh9MKSF@google.com>
 References: <20230111145636.450953217@goodmis.org>
- <20230111145842.376427803@goodmis.org>
+ <20230111145842.534011158@goodmis.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20230111145842.376427803@goodmis.org>
+In-Reply-To: <20230111145842.534011158@goodmis.org>
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On Wed, Jan 11, 2023 at 09:56:37AM -0500, Steven Rostedt wrote:
+On Wed, Jan 11, 2023 at 09:56:38AM -0500, Steven Rostedt wrote:
 > From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
 > 
-> Add kernel command line to add tracing instances. This only creates
-> instances at boot but still does not enable any events to them. Later
-> changes will extend this command line to add enabling of events, filters,
-> and triggers. As well as possibly redirecting trace_printk()!
+> Add the format of:
+> 
+>   trace_instance=foo,sched:sched_switch,irq_handler_entry,initcall
+> 
+> That will create the "foo" instance and enable the sched_switch event
+> (here were the "sched" system is explicitly specified), the
+> irq_handler_entry event, and all events under the system initcall.
 > 
 > Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
-> ---
->  .../admin-guide/kernel-parameters.txt         |  6 +++
->  kernel/trace/trace.c                          | 51 +++++++++++++++++++
->  2 files changed, 57 insertions(+)
-> 
-> diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
-> index 6cfa6e3996cf..cec486217ccc 100644
-> --- a/Documentation/admin-guide/kernel-parameters.txt
-> +++ b/Documentation/admin-guide/kernel-parameters.txt
-> @@ -6272,6 +6272,12 @@
->  			comma-separated list of trace events to enable. See
->  			also Documentation/trace/events.rst
->  
-> +	trace_instance=[instance-info]
-> +			[FTRACE] Create an ring buffer instance early in boot up.
-> +			This will be listed in:
-> +
-> +				/sys/kernel/tracing/instances
 
-Should this be "/sys/kernel/debug/tracing/instances"?
-
-Ditto for the text for 'ftrace_boot_snapshot':
-
-	ftrace_boot_snapshot
-			[FTRACE] On boot up, a snapshot will be taken of the
-			ftrace ring buffer that can be read at:
-			/sys/kernel/tracing/snapshot.
-
-Everywhere else we use /sys/kernel/debug/tracing, though we do use
-/sys/kernel/tracing in Documentation/trace/ftrace.txt ?
-
-I guess either works, but having just 1 or the other will help us not confuse
-users.
-
-> +
->  	trace_options=[option-list]
->  			[FTRACE] Enable or disable tracer options at boot.
->  			The option-list is a comma delimited list of options
-> diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
-> index a555a861b978..34ed504ffca9 100644
-> --- a/kernel/trace/trace.c
-> +++ b/kernel/trace/trace.c
-> @@ -48,6 +48,9 @@
->  #include <linux/fsnotify.h>
->  #include <linux/irq_work.h>
->  #include <linux/workqueue.h>
-> +#include <linux/workqueue.h>
-
-Duplicate include 1 line above.
-
-> +
-> +#include <asm/setup.h> /* COMMAND_LINE_SIZE */
->  
->  #include "trace.h"
->  #include "trace_output.h"
-> @@ -186,6 +189,9 @@ static char *default_bootup_tracer;
->  static bool allocate_snapshot;
->  static bool snapshot_at_boot;
->  
-> +static char boot_instance_info[COMMAND_LINE_SIZE] __initdata;
-> +static int boot_instance_index;
-> +
->  static int __init set_cmdline_ftrace(char *str)
->  {
->  	strlcpy(bootup_tracer_buf, str, MAX_TRACER_SIZE);
-> @@ -239,6 +245,23 @@ static int __init boot_snapshot(char *str)
->  __setup("ftrace_boot_snapshot", boot_snapshot);
->  
->  
-> +static int __init boot_instance(char *str)
-> +{
-> +	char *slot = boot_instance_info + boot_instance_index;
-> +	int left = COMMAND_LINE_SIZE - boot_instance_index;
-
-A bit safer to use sizeof(boot_instance_info) instead of COMMAND_LINE_SIZE,
-so we can change the allocation size of boot_instance_info without having to
-keep them in sync.
-
-These are mostly nits, you can add:
-
+You can add: 
 Reviewed-by: Ross Zwisler <zwisler@google.com>
