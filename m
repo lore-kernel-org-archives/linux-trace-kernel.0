@@ -2,45 +2,44 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ED52CC678D6
-	for <linux-trace-kernel@archiver.kernel.org>; Thu, 12 Jan 2023 20:06:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A860C71130
+	for <linux-trace-kernel@archiver.kernel.org>; Thu, 12 Jan 2023 20:06:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240980AbjALUGp (ORCPT
+        id S232500AbjALUGq (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Thu, 12 Jan 2023 15:06:45 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44228 "EHLO
+        Thu, 12 Jan 2023 15:06:46 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44220 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232500AbjALT7N (ORCPT
+        with ESMTP id S238082AbjALT7U (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Thu, 12 Jan 2023 14:59:13 -0500
-Received: from desiato.infradead.org (desiato.infradead.org [IPv6:2001:8b0:10b:1:d65d:64ff:fe57:4e05])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4DE0BDF5;
-        Thu, 12 Jan 2023 11:58:06 -0800 (PST)
+        Thu, 12 Jan 2023 14:59:20 -0500
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 112523880;
+        Thu, 12 Jan 2023 11:58:13 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=desiato.20200630; h=Content-Type:MIME-Version:References:
+        d=infradead.org; s=casper.20170209; h=Content-Type:MIME-Version:References:
         Subject:Cc:To:From:Date:Message-ID:Sender:Reply-To:Content-Transfer-Encoding:
         Content-ID:Content-Description:In-Reply-To;
-        bh=NQmAgIg3861PdWRPD/+8zQmqygF5xIi/7qaj1X27QYY=; b=FKLIwXsLqSMTkfdrjYpRPs50iC
-        /dZ8/rA7866IY1bP7MOMwGhQbwW0iJuXrxREmjWWzVcbzOSaZlDGTrUePB2nwarC2Yh1+X6s4N3V9
-        6cu76+LFHrZw0YNXmRxk7duxL9iqjz4iP0/30O/+/kXmWBYebdlus1yGQHEgBjwu8/3IhcMSjrE1/
-        5igyOlZ7sKcztcJOY8on0ND65FJOhkbkvb0J6fFhWMzAqiflihKu/CriWYb93+MxlnQrAbdaq6Dkq
-        GjWpP25XbP5Xvw0SdnOMreWPCRBsKKxhe+LwtJ+c/LTLhtbM/XP+ep478hFz3O2SEuR/27ZTMra+B
-        xSlHMQYQ==;
+        bh=ljNIHChdlymEt0s4DtY+Ji5/5ZFr1jFKrzucPLjcAFA=; b=UFhO8sQycbOykP9WLmHLr8syH1
+        9tKpgf+RH4+2oIWu+p1NsZyG1ZQUQEWQKyB7rZeJqKLqT/EpPMTLJSHpi/eniYQI6kNhYX80bC7rp
+        v4DYtLIywV5PM3hyi+6d9VreCBIfyUq0bOE4EJwgP1PAPqwc5ULRKbQuNPzHKcYXFJ+bhA18Sk3BK
+        0SHi+ZzW5d72kp/7epWf2U0Zao67mw1W6KZFzu9PuzdtQCB/RZo73P/7KFSV/9Z+EgMtlu14sgzCt
+        LY3p+teRO7dsISyeJIOJS/fTB2tiC6ZycPsflBP3cBseh7aef5nb+O7jgwPbkvWsd95ol/bFuNb6B
+        77LSYyRg==;
 Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
-        by desiato.infradead.org with esmtpsa (Exim 4.96 #2 (Red Hat Linux))
-        id 1pG3hD-0045oJ-2G;
-        Thu, 12 Jan 2023 19:57:08 +0000
+        by casper.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
+        id 1pG3hv-005P8k-EI; Thu, 12 Jan 2023 19:57:51 +0000
 Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange X25519 server-signature RSA-PSS (4096 bits))
         (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 26A3330340D;
-        Thu, 12 Jan 2023 20:57:13 +0100 (CET)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 2E622303478;
+        Thu, 12 Jan 2023 20:57:14 +0100 (CET)
 Received: by hirez.programming.kicks-ass.net (Postfix, from userid 0)
-        id BF3F52CCF1F5E; Thu, 12 Jan 2023 20:57:07 +0100 (CET)
-Message-ID: <20230112195540.068981667@infradead.org>
+        id 68B912CD066DC; Thu, 12 Jan 2023 20:57:08 +0100 (CET)
+Message-ID: <20230112195542.151174682@infradead.org>
 User-Agent: quilt/0.66
-Date:   Thu, 12 Jan 2023 20:43:26 +0100
+Date:   Thu, 12 Jan 2023 20:44:00 +0100
 From:   Peter Zijlstra <peterz@infradead.org>
 To:     peterz@infradead.org
 Cc:     richard.henderson@linaro.org, ink@jurassic.park.msu.ru,
@@ -107,7 +106,7 @@ Cc:     richard.henderson@linaro.org, ink@jurassic.park.msu.ru,
         linux-trace-kernel@vger.kernel.org, kasan-dev@googlegroups.com,
         "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
         Ulf Hansson <ulf.hansson@linaro.org>
-Subject: [PATCH v3 12/51] cpuidle,dt: Push RCU-idle into driver
+Subject: [PATCH v3 46/51] arm64,riscv,perf: Remove RCU_NONIDLE() usage
 References: <20230112194314.845371875@infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -115,11 +114,8 @@ Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-Doing RCU-idle outside the driver, only to then temporarily enable it
-again before going idle is daft.
-
-Notably: this converts all dt_init_idle_driver() and
-__CPU_PM_CPU_IDLE_ENTER() users for they are inextrably intertwined.
+The PM notifiers should no longer be ran with RCU disabled (per the
+previous patches), as such this hack is no longer required either.
 
 Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
 Acked-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
@@ -127,85 +123,48 @@ Acked-by: Frederic Weisbecker <frederic@kernel.org>
 Tested-by: Tony Lindgren <tony@atomide.com>
 Tested-by: Ulf Hansson <ulf.hansson@linaro.org>
 ---
- drivers/acpi/processor_idle.c        |    2 ++
- drivers/cpuidle/cpuidle-arm.c        |    1 +
- drivers/cpuidle/cpuidle-big_little.c |    8 ++++++--
- drivers/cpuidle/cpuidle-psci.c       |    1 +
- drivers/cpuidle/cpuidle-qcom-spm.c   |    1 +
- drivers/cpuidle/cpuidle-riscv-sbi.c  |    1 +
- drivers/cpuidle/dt_idle_states.c     |    2 +-
- include/linux/cpuidle.h              |    2 ++
- 8 files changed, 15 insertions(+), 3 deletions(-)
+ drivers/perf/arm_pmu.c       |   11 +----------
+ drivers/perf/riscv_pmu_sbi.c |    8 +-------
+ 2 files changed, 2 insertions(+), 17 deletions(-)
 
---- a/drivers/acpi/processor_idle.c
-+++ b/drivers/acpi/processor_idle.c
-@@ -1219,6 +1219,8 @@ static int acpi_processor_setup_lpi_stat
- 		state->target_residency = lpi->min_residency;
- 		if (lpi->arch_flags)
- 			state->flags |= CPUIDLE_FLAG_TIMER_STOP;
-+		if (i != 0 && lpi->entry_method == ACPI_CSTATE_FFH)
-+			state->flags |= CPUIDLE_FLAG_RCU_IDLE;
- 		state->enter = acpi_idle_lpi_enter;
- 		drv->safe_state_index = i;
- 	}
---- a/drivers/cpuidle/cpuidle-big_little.c
-+++ b/drivers/cpuidle/cpuidle-big_little.c
-@@ -64,7 +64,8 @@ static struct cpuidle_driver bl_idle_lit
- 		.enter			= bl_enter_powerdown,
- 		.exit_latency		= 700,
- 		.target_residency	= 2500,
--		.flags			= CPUIDLE_FLAG_TIMER_STOP,
-+		.flags			= CPUIDLE_FLAG_TIMER_STOP |
-+					  CPUIDLE_FLAG_RCU_IDLE,
- 		.name			= "C1",
- 		.desc			= "ARM little-cluster power down",
- 	},
-@@ -85,7 +86,8 @@ static struct cpuidle_driver bl_idle_big
- 		.enter			= bl_enter_powerdown,
- 		.exit_latency		= 500,
- 		.target_residency	= 2000,
--		.flags			= CPUIDLE_FLAG_TIMER_STOP,
-+		.flags			= CPUIDLE_FLAG_TIMER_STOP |
-+					  CPUIDLE_FLAG_RCU_IDLE,
- 		.name			= "C1",
- 		.desc			= "ARM big-cluster power down",
- 	},
-@@ -124,11 +126,13 @@ static int bl_enter_powerdown(struct cpu
- 				struct cpuidle_driver *drv, int idx)
- {
- 	cpu_pm_enter();
-+	ct_idle_enter();
- 
- 	cpu_suspend(0, bl_powerdown_finisher);
- 
- 	/* signals the MCPM core that CPU is out of low power state */
- 	mcpm_cpu_powered_up();
-+	ct_idle_exit();
- 
- 	cpu_pm_exit();
- 
---- a/drivers/cpuidle/dt_idle_states.c
-+++ b/drivers/cpuidle/dt_idle_states.c
-@@ -77,7 +77,7 @@ static int init_state_node(struct cpuidl
- 	if (err)
- 		desc = state_node->name;
- 
--	idle_state->flags = 0;
-+	idle_state->flags = CPUIDLE_FLAG_RCU_IDLE;
- 	if (of_property_read_bool(state_node, "local-timer-stop"))
- 		idle_state->flags |= CPUIDLE_FLAG_TIMER_STOP;
- 	/*
---- a/include/linux/cpuidle.h
-+++ b/include/linux/cpuidle.h
-@@ -289,7 +289,9 @@ extern s64 cpuidle_governor_latency_req(
- 	if (!is_retention)						\
- 		__ret =  cpu_pm_enter();				\
- 	if (!__ret) {							\
-+		ct_idle_enter();					\
- 		__ret = low_level_idle_enter(state);			\
-+		ct_idle_exit();						\
- 		if (!is_retention)					\
- 			cpu_pm_exit();					\
- 	}								\
+--- a/drivers/perf/arm_pmu.c
++++ b/drivers/perf/arm_pmu.c
+@@ -762,17 +762,8 @@ static void cpu_pm_pmu_setup(struct arm_
+ 		case CPU_PM_ENTER_FAILED:
+ 			 /*
+ 			  * Restore and enable the counter.
+-			  * armpmu_start() indirectly calls
+-			  *
+-			  * perf_event_update_userpage()
+-			  *
+-			  * that requires RCU read locking to be functional,
+-			  * wrap the call within RCU_NONIDLE to make the
+-			  * RCU subsystem aware this cpu is not idle from
+-			  * an RCU perspective for the armpmu_start() call
+-			  * duration.
+ 			  */
+-			RCU_NONIDLE(armpmu_start(event, PERF_EF_RELOAD));
++			armpmu_start(event, PERF_EF_RELOAD);
+ 			break;
+ 		default:
+ 			break;
+--- a/drivers/perf/riscv_pmu_sbi.c
++++ b/drivers/perf/riscv_pmu_sbi.c
+@@ -747,14 +747,8 @@ static int riscv_pm_pmu_notify(struct no
+ 		case CPU_PM_ENTER_FAILED:
+ 			/*
+ 			 * Restore and enable the counter.
+-			 *
+-			 * Requires RCU read locking to be functional,
+-			 * wrap the call within RCU_NONIDLE to make the
+-			 * RCU subsystem aware this cpu is not idle from
+-			 * an RCU perspective for the riscv_pmu_start() call
+-			 * duration.
+ 			 */
+-			RCU_NONIDLE(riscv_pmu_start(event, PERF_EF_RELOAD));
++			riscv_pmu_start(event, PERF_EF_RELOAD);
+ 			break;
+ 		default:
+ 			break;
 
 
