@@ -2,101 +2,164 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3872DC54EBE
-	for <linux-trace-kernel@archiver.kernel.org>; Thu, 12 Jan 2023 23:26:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 50106C54EBE
+	for <linux-trace-kernel@archiver.kernel.org>; Thu, 12 Jan 2023 23:59:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232713AbjALX0d (ORCPT
+        id S233079AbjALX7c (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Thu, 12 Jan 2023 18:26:33 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41276 "EHLO
+        Thu, 12 Jan 2023 18:59:32 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52080 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232772AbjALX0c (ORCPT
+        with ESMTP id S234657AbjALX7a (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Thu, 12 Jan 2023 18:26:32 -0500
-Received: from mail-il1-x12c.google.com (mail-il1-x12c.google.com [IPv6:2607:f8b0:4864:20::12c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 94B9E625CE
-        for <linux-trace-kernel@vger.kernel.org>; Thu, 12 Jan 2023 15:26:31 -0800 (PST)
-Received: by mail-il1-x12c.google.com with SMTP id v6so591388ilq.3
-        for <linux-trace-kernel@vger.kernel.org>; Thu, 12 Jan 2023 15:26:31 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20210112;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=YN3h+2e9LlRoJQY+cOQKqTDFq1o3A0FXklNmBBS/AyM=;
-        b=LnxiIFu/sY1fEVR8odODwZns74Rl8nliou+v/w6/x1c6VKUkA5bVFR9MH2FVz0cFO/
-         eaDPayWxgN7VRO70B8Ha+BLMaSOL9F2CyXmz6/LbWirqKC+f9mgnWEwvamiSaqpWJMXw
-         nbztvveZlAWIr0AueERPTiid7jR7CyMbL7CjvEC6OinxhSGuPs2o+0iO/BCOc4p2In89
-         ERrXVMSLSo7ejrP5rhobFVpPFiRcUBJNyyMqoBMpvBcDc9lkGDwwNXyo9xmZ0VpC9oJ8
-         nLhsMtcOBSp804qg3mdNzSpAgu8vQ2DSnOnQ9f8T6aUwtNRW6Jg/JQaW93cZL9qsAN26
-         38QA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=YN3h+2e9LlRoJQY+cOQKqTDFq1o3A0FXklNmBBS/AyM=;
-        b=aICJuFB+lVShCSXdasN1mGvKfd8H3FxXO3rjJ+09BvmkI7jMa/k9WDHc0m3PAbCCzJ
-         kWyuetWI6MUEjPka1x9I4zvZ3jddL0WvkTCkW8EPuOJ6GywsyutWghjFvJZ0+i+QDdKl
-         Zyii41rWjY72aQ1sgBlfelGkk9Zay6lmrbXzB2u8P4rEM/UoW3vs6H9xBXk/iDXDoWgM
-         i2LEyTJSJlttoqr6BE/Gn0DH3UqOA2L4znS27cJgwpGoEohnMJPIeAUSaez/jhKHwvwX
-         bVgfmM8g9+ERgQv0gy6Lqg2lH0oCY8ROzlBG7bG453Ul7a/zFgWIYuqNc59s4p4z08YM
-         8m0w==
-X-Gm-Message-State: AFqh2kr0zGNjLs5gWp+H2XcyzQmr7r5qIZXKHAr1pXYgu7jgzmpRBLpb
-        vmrjK98dZ1svdFpncjWpJ0jLag==
-X-Google-Smtp-Source: AMrXdXv9IgLxOVnLwFFqLWzmkmQcYUw4SLMTSgux4s5U1J6WQ02IqXCVxyo8hYXgISlmjatSk/RpZg==
-X-Received: by 2002:a92:cd8d:0:b0:30e:d7f3:216b with SMTP id r13-20020a92cd8d000000b0030ed7f3216bmr2327206ilb.8.1673565990785;
-        Thu, 12 Jan 2023 15:26:30 -0800 (PST)
-Received: from google.com ([2620:15c:183:200:4a23:5fbb:9bb3:1279])
-        by smtp.gmail.com with ESMTPSA id p2-20020a92d682000000b0030ceac941dcsm5578481iln.17.2023.01.12.15.26.30
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 12 Jan 2023 15:26:30 -0800 (PST)
-Date:   Thu, 12 Jan 2023 16:26:27 -0700
-From:   Ross Zwisler <zwisler@google.com>
-To:     Steven Rostedt <rostedt@goodmis.org>
+        Thu, 12 Jan 2023 18:59:30 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 12CDF65B0;
+        Thu, 12 Jan 2023 15:59:29 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 9E1F0621DE;
+        Thu, 12 Jan 2023 23:59:28 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 59626C433D2;
+        Thu, 12 Jan 2023 23:59:27 +0000 (UTC)
+Date:   Thu, 12 Jan 2023 18:59:25 -0500
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     Ross Zwisler <zwisler@google.com>
 Cc:     linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
         Masami Hiramatsu <mhiramat@kernel.org>,
         Andrew Morton <akpm@linux-foundation.org>
-Subject: Re: [PATCH 3/4] tracing: Add trace_array_puts() to write into
- instance
-Message-ID: <Y8CXI1h9hsPeiu6u@google.com>
+Subject: Re: [PATCH 1/4] tracing: Add creation of instances at boot command
+ line
+Message-ID: <20230112185925.5a51843e@gandalf.local.home>
+In-Reply-To: <Y8CWodcFALp3MEBM@google.com>
 References: <20230111145636.450953217@goodmis.org>
- <20230111145842.694147820@goodmis.org>
+        <20230111145842.376427803@goodmis.org>
+        <Y8CWodcFALp3MEBM@google.com>
+X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230111145842.694147820@goodmis.org>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On Wed, Jan 11, 2023 at 09:56:39AM -0500, Steven Rostedt wrote:
-> From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
-> 
-> Add a generic trace_array_puts() that can be used to "trace_puts()" into
-> an allocated trace_array instance. This is just another variant of
-> trace_array_printk().
-> 
-> Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
-> ---
->  include/linux/trace.h | 13 +++++++++++++
->  kernel/trace/trace.c  | 27 +++++++++++++++++----------
->  2 files changed, 30 insertions(+), 10 deletions(-)
-> 
-> diff --git a/include/linux/trace.h b/include/linux/trace.h
-> index 80ffda871749..afe61949e83a 100644
-> --- a/include/linux/trace.h
-> +++ b/include/linux/trace.h
-> @@ -33,6 +33,19 @@ struct trace_array;
->  int register_ftrace_export(struct trace_export *export);
->  int unregister_ftrace_export(struct trace_export *export);
->  
-> +/**
-> + * trace_array_puts - write a constant string into the trace buffer.
-> + * @tr:    The trace array to write to
-> + * @ip:	   The address of the caller
+On Thu, 12 Jan 2023 16:24:17 -0700
+Ross Zwisler <zwisler@google.com> wrote:
 
-@ip is not an arg to trace_array_puts(), an can be dropped from the comment.
+> On Wed, Jan 11, 2023 at 09:56:37AM -0500, Steven Rostedt wrote:
+> > From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
+> > 
+> > Add kernel command line to add tracing instances. This only creates
+> > instances at boot but still does not enable any events to them. Later
+> > changes will extend this command line to add enabling of events, filters,
+> > and triggers. As well as possibly redirecting trace_printk()!
+> > 
+> > Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+> > ---
+> >  .../admin-guide/kernel-parameters.txt         |  6 +++
+> >  kernel/trace/trace.c                          | 51 +++++++++++++++++++
+> >  2 files changed, 57 insertions(+)
+> > 
+> > diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
+> > index 6cfa6e3996cf..cec486217ccc 100644
+> > --- a/Documentation/admin-guide/kernel-parameters.txt
+> > +++ b/Documentation/admin-guide/kernel-parameters.txt
+> > @@ -6272,6 +6272,12 @@
+> >  			comma-separated list of trace events to enable. See
+> >  			also Documentation/trace/events.rst
+> >  
+> > +	trace_instance=[instance-info]
+> > +			[FTRACE] Create an ring buffer instance early in boot up.
+> > +			This will be listed in:
+> > +
+> > +				/sys/kernel/tracing/instances  
+> 
+> Should this be "/sys/kernel/debug/tracing/instances"?
 
-Other than that, you can add:
+No, the /sys/kernel/debug/tracing is deprecated. It only exists for
+backward compatibility. If it's still in documentation, it should be
+updated.
 
-Reviewed-by: Ross Zwisler <zwisler@google.com>
+> 
+> Ditto for the text for 'ftrace_boot_snapshot':
+> 
+> 	ftrace_boot_snapshot
+> 			[FTRACE] On boot up, a snapshot will be taken of the
+> 			ftrace ring buffer that can be read at:
+> 			/sys/kernel/tracing/snapshot.
+> 
+> Everywhere else we use /sys/kernel/debug/tracing, though we do use
+> /sys/kernel/tracing in Documentation/trace/ftrace.txt ?
+
+Right, that's because it was missed when I was updating it ;-)
+
+All documentation that references /sys/kernel/debug/tracing should be
+replaced with /sys/kernel/tracing.
+
+> 
+> I guess either works, but having just 1 or the other will help us not confuse
+> users.
+
+Agreed. Want to send a clean up patch? ;-)
+
+> 
+> > +
+> >  	trace_options=[option-list]
+> >  			[FTRACE] Enable or disable tracer options at boot.
+> >  			The option-list is a comma delimited list of options
+> > diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
+> > index a555a861b978..34ed504ffca9 100644
+> > --- a/kernel/trace/trace.c
+> > +++ b/kernel/trace/trace.c
+> > @@ -48,6 +48,9 @@
+> >  #include <linux/fsnotify.h>
+> >  #include <linux/irq_work.h>
+> >  #include <linux/workqueue.h>
+> > +#include <linux/workqueue.h>  
+> 
+> Duplicate include 1 line above.
+
+Good catch.
+
+> 
+> > +
+> > +#include <asm/setup.h> /* COMMAND_LINE_SIZE */
+> >  
+> >  #include "trace.h"
+> >  #include "trace_output.h"
+> > @@ -186,6 +189,9 @@ static char *default_bootup_tracer;
+> >  static bool allocate_snapshot;
+> >  static bool snapshot_at_boot;
+> >  
+> > +static char boot_instance_info[COMMAND_LINE_SIZE] __initdata;
+> > +static int boot_instance_index;
+> > +
+> >  static int __init set_cmdline_ftrace(char *str)
+> >  {
+> >  	strlcpy(bootup_tracer_buf, str, MAX_TRACER_SIZE);
+> > @@ -239,6 +245,23 @@ static int __init boot_snapshot(char *str)
+> >  __setup("ftrace_boot_snapshot", boot_snapshot);
+> >  
+> >  
+> > +static int __init boot_instance(char *str)
+> > +{
+> > +	char *slot = boot_instance_info + boot_instance_index;
+> > +	int left = COMMAND_LINE_SIZE - boot_instance_index;  
+> 
+> A bit safer to use sizeof(boot_instance_info) instead of COMMAND_LINE_SIZE,
+> so we can change the allocation size of boot_instance_info without having to
+> keep them in sync.
+
+Either way is fine. I wouldn't make this change if it was the only thing I
+needed to fix, but as I need to get rid of the extra "workqueue.h", I can
+make this change too.
+
+> 
+> These are mostly nits, you can add:
+> 
+> Reviewed-by: Ross Zwisler <zwisler@google.com>
+
+Thanks!
+
+-- Steve
