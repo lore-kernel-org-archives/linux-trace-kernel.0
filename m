@@ -2,129 +2,144 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 37DB5C54EBC
-	for <linux-trace-kernel@archiver.kernel.org>; Thu, 12 Jan 2023 13:21:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 586EAC54EBD
+	for <linux-trace-kernel@archiver.kernel.org>; Thu, 12 Jan 2023 13:33:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230451AbjALNV2 (ORCPT
+        id S232384AbjALNdI (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Thu, 12 Jan 2023 08:21:28 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59620 "EHLO
+        Thu, 12 Jan 2023 08:33:08 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37232 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230247AbjALNV0 (ORCPT
+        with ESMTP id S231659AbjALNc7 (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Thu, 12 Jan 2023 08:21:26 -0500
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 574D134D63;
-        Thu, 12 Jan 2023 05:21:25 -0800 (PST)
-Received: from pps.filterd (m0098399.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 30CCLflV032465;
-        Thu, 12 Jan 2023 13:21:21 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=date : from : subject :
- to : cc : references : in-reply-to : mime-version : message-id :
- content-type : content-transfer-encoding; s=pp1;
- bh=K40yMyX1ANOmsef0yTBp2kOq+kQYFQ5LqJLXfoJ/PSg=;
- b=Ng7PsHt84l+iwpe6tPXGDXH1qa10G6vWnpNpQJ0SY7xRHABP1EhaLfHKXmi8zGLXq6Xm
- aeHV33qQN4zJdpogtLO1A/BimSmIjPe4EvkyAXrUq7YK9HDAjIauz/wcF9fd+5aDOu+P
- OopiQuXjcU4ZSlUU2kt7HSRG60obDjoX4NVQrTunItwsIAam6PBYyMcxw9FEgPK7kFtS
- 3HWwtJZ5Rodu1DmQFsw2FYh/ihyZZO7rhQmqEAVVYpsSZoySMBys87JbvPAjvoTTYa3m
- RnH3t0boLtMVu2xZnW5KX0l3qCMVeycRZ5vZ7ScyoYkMhfsVPEewM3dSROPKvfOl/5AL jw== 
-Received: from ppma06ams.nl.ibm.com (66.31.33a9.ip4.static.sl-reverse.com [169.51.49.102])
-        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3n2j54s73e-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 12 Jan 2023 13:21:21 +0000
-Received: from pps.filterd (ppma06ams.nl.ibm.com [127.0.0.1])
-        by ppma06ams.nl.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 30C3RLE3004503;
-        Thu, 12 Jan 2023 13:21:19 GMT
-Received: from smtprelay02.fra02v.mail.ibm.com ([9.218.2.226])
-        by ppma06ams.nl.ibm.com (PPS) with ESMTPS id 3n1kkytgun-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 12 Jan 2023 13:21:18 +0000
-Received: from smtpav03.fra02v.mail.ibm.com (smtpav03.fra02v.mail.ibm.com [10.20.54.102])
-        by smtprelay02.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 30CDLGav43712912
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 12 Jan 2023 13:21:16 GMT
-Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 78D1020043;
-        Thu, 12 Jan 2023 13:21:16 +0000 (GMT)
-Received: from smtpav03.fra02v.mail.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 059CF2004B;
-        Thu, 12 Jan 2023 13:21:16 +0000 (GMT)
-Received: from localhost (unknown [9.43.40.9])
-        by smtpav03.fra02v.mail.ibm.com (Postfix) with ESMTP;
-        Thu, 12 Jan 2023 13:21:15 +0000 (GMT)
-Date:   Thu, 12 Jan 2023 18:51:14 +0530
-From:   "Naveen N. Rao" <naveen.n.rao@linux.vnet.ibm.com>
-Subject: Re: [PATCH] selftests/ftrace: Extend multiple_kprobes.tc to add
- multiple consecutive probes in a function
-To:     Akanksha J N <akanksha@linux.ibm.com>,
-        linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
-        linux-trace-kernel@vger.kernel.org
-Cc:     mhiramat@kernel.org, rostedt@goodmis.org, shuah@kernel.org
-References: <20230112095600.37665-1-akanksha@linux.ibm.com>
-In-Reply-To: <20230112095600.37665-1-akanksha@linux.ibm.com>
+        Thu, 12 Jan 2023 08:32:59 -0500
+Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id DB6F91901F;
+        Thu, 12 Jan 2023 05:32:54 -0800 (PST)
+Received: from loongson.cn (unknown [113.200.148.30])
+        by gateway (Coremail) with SMTP id _____8DxCeoEDMBjHz0BAA--.3675S3;
+        Thu, 12 Jan 2023 21:32:52 +0800 (CST)
+Received: from [10.130.0.135] (unknown [113.200.148.30])
+        by localhost.localdomain (Coremail) with SMTP id AQAAf8Cxf+QDDMBjim8YAA--.9397S3;
+        Thu, 12 Jan 2023 21:32:52 +0800 (CST)
+Subject: Re: kernel hangs when kprobe memcpy
+To:     Masami Hiramatsu <mhiramat@kernel.org>,
+        "Naveen N. Rao" <naveen.n.rao@linux.ibm.com>,
+        Anil S Keshavamurthy <anil.s.keshavamurthy@intel.com>,
+        "David S. Miller" <davem@davemloft.net>
+References: <d179086d-78d8-d0e3-e113-9072cffa55f4@loongson.cn>
+Cc:     linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org
+From:   Tiezhu Yang <yangtiezhu@loongson.cn>
+Message-ID: <19666c03-4bf6-7aac-3f1d-cd31ab7de2d5@loongson.cn>
+Date:   Thu, 12 Jan 2023 21:32:51 +0800
+User-Agent: Mozilla/5.0 (X11; Linux mips64; rv:45.0) Gecko/20100101
+ Thunderbird/45.4.0
 MIME-Version: 1.0
-User-Agent: astroid/4d6b06ad (https://github.com/astroidmail/astroid)
-Message-Id: <1673529279.3c5f8oes3z.naveen@linux.ibm.com>
+In-Reply-To: <d179086d-78d8-d0e3-e113-9072cffa55f4@loongson.cn>
 Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: quoted-printable
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: yEPNKWwEZrt2YvFuhPkrkL6Wgw5aZrLl
-X-Proofpoint-ORIG-GUID: yEPNKWwEZrt2YvFuhPkrkL6Wgw5aZrLl
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.219,Aquarius:18.0.923,Hydra:6.0.545,FMLib:17.11.122.1
- definitions=2023-01-12_08,2023-01-12_01,2022-06-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1011 phishscore=0
- spamscore=0 bulkscore=0 suspectscore=0 malwarescore=0 lowpriorityscore=0
- priorityscore=1501 mlxscore=0 mlxlogscore=781 adultscore=0 impostorscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2212070000
- definitions=main-2301120093
+Content-Transfer-Encoding: 7bit
+X-CM-TRANSID: AQAAf8Cxf+QDDMBjim8YAA--.9397S3
+X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
+X-Coremail-Antispam: 1Uk129KBjvJXoWxWw1UXF13GFy3uF4rZF13Jwb_yoW5GF4kp3
+        ZIyw45trs5Jw1YgFy7Jw48WFyI9r1kArWUAr1kC345Aa4jqr95JF4Iva1Ut398Wr9F9w1a
+        qF18try7JrW7AaDanT9S1TB71UUUUUJqnTZGkaVYY2UrUUUUj1kv1TuYvTs0mT0YCTnIWj
+        qI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUIcSsGvfJTRUUU
+        bfkYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E6xAIw20EY4v20xvaj40_Wr0E3s
+        1l1IIY67AEw4v_Jrv_JF1l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xv
+        wVC0I7IYx2IY67AKxVWUCVW8JwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVWUJVW8JwA2z4
+        x0Y4vEx4A2jsIE14v26r4UJVWxJr1l84ACjcxK6I8E87Iv6xkF7I0E14v26F4UJVW0owAa
+        w2AFwI0_Jrv_JF1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0cIa020Ex4CE44
+        I27wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jrv_JF1lYx0Ex4A2
+        jsIE14v26r4j6F4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvEwIxGrwCYjI0SjxkI62
+        AI1cAE67vIY487MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMxCIbckI
+        1I0E14v26r1Y6r17MI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_Jr
+        Wlx4CE17CEb7AF67AKxVWUAVWUtwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j
+        6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVWUJVW8JwCI42IY6xAIw20EY4v20xvaj40_Jr
+        0_JF4lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVWUJVW8JbIY
+        CTnIWIevJa73UjIFyTuYvjxU4s2-UUUUU
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-Akanksha J N wrote:
-> Commit 97f88a3d723162 ("powerpc/kprobes: Fix null pointer reference in
-> arch_prepare_kprobe()") fixed a recent kernel oops that was caused as
-> ftrace-based kprobe does not generate kprobe::ainsn::insn and it gets
-> set to NULL.
-> Extend multiple kprobes test to add kprobes on first 256 bytes within a
-> function, to be able to test potential issues with kprobes on
-> successive instructions.
-> The '|| true' is added with the echo statement to ignore errors that are
-> caused by trying to add kprobes to non probeable lines and continue with
-> the test.
->=20
-> Signed-off-by: Akanksha J N <akanksha@linux.ibm.com>
-> ---
->  .../selftests/ftrace/test.d/kprobe/multiple_kprobes.tc        | 4 ++++
->  1 file changed, 4 insertions(+)
-
-Thanks for adding this test!
-
->=20
-> diff --git a/tools/testing/selftests/ftrace/test.d/kprobe/multiple_kprobe=
-s.tc b/tools/testing/selftests/ftrace/test.d/kprobe/multiple_kprobes.tc
-> index be754f5bcf79..f005c2542baa 100644
-> --- a/tools/testing/selftests/ftrace/test.d/kprobe/multiple_kprobes.tc
-> +++ b/tools/testing/selftests/ftrace/test.d/kprobe/multiple_kprobes.tc
-> @@ -25,6 +25,10 @@ if [ $L -ne 256 ]; then
->    exit_fail
->  fi
->=20
-> +for i in `seq 0 255`; do
-> +  echo p $FUNCTION_FORK+${i} >> kprobe_events || true
-> +done
-> +
->  cat kprobe_events >> $testlog
->=20
->  echo 1 > events/kprobes/enable
-
-Thinking about this more, I wonder if we should add an explicit fork=20
-after enabling the events, similar to kprobe_args.tc:
-	( echo "forked" )
-
-That will ensure we hit all the probes we added. With that change:
-Acked-by: Naveen N. Rao <naveen.n.rao@linux.vnet.ibm.com>
 
 
-- Naveen
+On 01/11/2023 07:38 PM, Tiezhu Yang wrote:
+> Hi all,
+>
+> (1) I have the following test environment, kernel hangs when kprobe memcpy:
+>
+> system: x86_64 fedora 36
+> kernel version: Linux 5.7 (compile and update)
+> test case: modprobe kprobe_example symbol="memcpy"
+> (CONFIG_SAMPLE_KPROBES=m)
+>
+> In order to fix build errors, it needs to unset CONFIG_NFP and do the
+> following changes:
+> commit 52a9dab6d892 ("libsubcmd: Fix use-after-free for realloc(..., 0)")
+> commit de979c83574a ("x86/entry: Build thunk_$(BITS) only if
+> CONFIG_PREEMPTION=y")
+>
+> (2) Using the latest upstream mainline kernel, no hang problem due to the
+> commit e3a9e681adb7 ("x86/entry: Fixup bad_iret vs noinstr") to prohibit
+> probing memcpy which is put into the .noinstr.text section.
+>
+>   # modprobe kprobe_example symbol="memcpy"
+>   modprobe: ERROR: could not insert 'kprobe_example': Invalid argument
+>
+> In my opinion, according to the commit message, the above commit is not
+> intended to fix the memcpy hang problem, the problem was fixed by accident.
+>
+> (3) If make handler_pre() and handler_post() as empty functions in the 5.7
+> kernel code, the above hang problem does not exist.
+>
+> diff --git a/samples/kprobes/kprobe_example.c
+> b/samples/kprobes/kprobe_example.c
+> index fd346f58ddba..c194171d8a46 100644
+> --- a/samples/kprobes/kprobe_example.c
+> +++ b/samples/kprobes/kprobe_example.c
+> @@ -28,8 +28,6 @@ static struct kprobe kp = {
+>  static int __kprobes handler_pre(struct kprobe *p, struct pt_regs *regs)
+>  {
+>  #ifdef CONFIG_X86
+> -    pr_info("<%s> p->addr = 0x%p, ip = %lx, flags = 0x%lx\n",
+> -        p->symbol_name, p->addr, regs->ip, regs->flags);
+>  #endif
+>  #ifdef CONFIG_PPC
+>      pr_info("<%s> p->addr = 0x%p, nip = 0x%lx, msr = 0x%lx\n",
+> @@ -65,8 +63,6 @@ static void __kprobes handler_post(struct kprobe *p,
+> struct pt_regs *regs,
+>                  unsigned long flags)
+>  {
+>  #ifdef CONFIG_X86
+> -    pr_info("<%s> p->addr = 0x%p, flags = 0x%lx\n",
+> -        p->symbol_name, p->addr, regs->flags);
+>  #endif
+>  #ifdef CONFIG_PPC
+>      pr_info("<%s> p->addr = 0x%p, msr = 0x%lx\n",
+>
+> I want to know what is the real reason of the hang problem when kprobe
+> memcpy,
+> I guess it may be kprobe recursion, what do you think? Thank you.
+>
+> By the way, kprobe memset has no problem whether or not handler_pre() and
+> handler_post() are empty functions.
+>
+> Thanks,
+> Tiezhu
+
+I find out the following call trace:
+
+handler_pre()
+   pr_info()
+     printk()
+       _printk()
+         vprintk()
+           vprintk_store()
+             memcpy()
+
+I think it may cause recursive exceptions, so we should
+mark memcpy as non-kprobe-able, right?
+
+Thanks,
+Tiezhu
+
