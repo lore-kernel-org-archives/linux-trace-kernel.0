@@ -2,144 +2,154 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 586EAC54EBD
-	for <linux-trace-kernel@archiver.kernel.org>; Thu, 12 Jan 2023 13:33:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C2E64C54EBD
+	for <linux-trace-kernel@archiver.kernel.org>; Thu, 12 Jan 2023 14:50:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232384AbjALNdI (ORCPT
+        id S239923AbjALOuN (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Thu, 12 Jan 2023 08:33:08 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37232 "EHLO
+        Thu, 12 Jan 2023 09:50:13 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43444 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231659AbjALNc7 (ORCPT
+        with ESMTP id S239946AbjALOtt (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Thu, 12 Jan 2023 08:32:59 -0500
-Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id DB6F91901F;
-        Thu, 12 Jan 2023 05:32:54 -0800 (PST)
-Received: from loongson.cn (unknown [113.200.148.30])
-        by gateway (Coremail) with SMTP id _____8DxCeoEDMBjHz0BAA--.3675S3;
-        Thu, 12 Jan 2023 21:32:52 +0800 (CST)
-Received: from [10.130.0.135] (unknown [113.200.148.30])
-        by localhost.localdomain (Coremail) with SMTP id AQAAf8Cxf+QDDMBjim8YAA--.9397S3;
-        Thu, 12 Jan 2023 21:32:52 +0800 (CST)
-Subject: Re: kernel hangs when kprobe memcpy
-To:     Masami Hiramatsu <mhiramat@kernel.org>,
-        "Naveen N. Rao" <naveen.n.rao@linux.ibm.com>,
+        Thu, 12 Jan 2023 09:49:49 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9C14811801;
+        Thu, 12 Jan 2023 06:36:34 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id EDDDF62026;
+        Thu, 12 Jan 2023 14:36:33 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F03A8C433D2;
+        Thu, 12 Jan 2023 14:36:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1673534193;
+        bh=9nDQCiy4ZhBYJG7V8fAABcpXbz/cL2INS6RnNTWpn5c=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=lIZz+Qk2uhEmNImMBalk6jfCkyNFYOU2j7KgJZiyd7J4KZdb8Q6kep+cMExbNqLBS
+         WzD41YJiJE0EwV8JTbfn1OvywR7eYFmvVN2Y6HHX4L+JFnhmXQyodBTI0xn2mZc1Fa
+         89ZkX0W8VnZ7ccWoRv1VkOauwq1UT25Zbi28lMNhaX40Zt32KTZz/VA7DoTXuFuM/G
+         VyZFrylrtkkYkrbyue6jV9N3smPm4POG7PePSVsMS+/8izNdhpWz+Vw75WRd8t2KA6
+         PnN565yEY+H6dySMGTQtQMc8j05MSwWlr/UwuWhxYEn6Lm4Qt5YTI7iJb8HID3c5jV
+         yFXK44DuowCPA==
+Date:   Thu, 12 Jan 2023 23:36:29 +0900
+From:   Masami Hiramatsu (Google) <mhiramat@kernel.org>
+To:     Tiezhu Yang <yangtiezhu@loongson.cn>
+Cc:     "Naveen N. Rao" <naveen.n.rao@linux.ibm.com>,
         Anil S Keshavamurthy <anil.s.keshavamurthy@intel.com>,
-        "David S. Miller" <davem@davemloft.net>
+        "David S. Miller" <davem@davemloft.net>,
+        linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: kernel hangs when kprobe memcpy
+Message-Id: <20230112233629.fafdbbe07dddf364f8078df6@kernel.org>
+In-Reply-To: <19666c03-4bf6-7aac-3f1d-cd31ab7de2d5@loongson.cn>
 References: <d179086d-78d8-d0e3-e113-9072cffa55f4@loongson.cn>
-Cc:     linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org
-From:   Tiezhu Yang <yangtiezhu@loongson.cn>
-Message-ID: <19666c03-4bf6-7aac-3f1d-cd31ab7de2d5@loongson.cn>
-Date:   Thu, 12 Jan 2023 21:32:51 +0800
-User-Agent: Mozilla/5.0 (X11; Linux mips64; rv:45.0) Gecko/20100101
- Thunderbird/45.4.0
-MIME-Version: 1.0
-In-Reply-To: <d179086d-78d8-d0e3-e113-9072cffa55f4@loongson.cn>
-Content-Type: text/plain; charset=utf-8; format=flowed
+        <19666c03-4bf6-7aac-3f1d-cd31ab7de2d5@loongson.cn>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-CM-TRANSID: AQAAf8Cxf+QDDMBjim8YAA--.9397S3
-X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
-X-Coremail-Antispam: 1Uk129KBjvJXoWxWw1UXF13GFy3uF4rZF13Jwb_yoW5GF4kp3
-        ZIyw45trs5Jw1YgFy7Jw48WFyI9r1kArWUAr1kC345Aa4jqr95JF4Iva1Ut398Wr9F9w1a
-        qF18try7JrW7AaDanT9S1TB71UUUUUJqnTZGkaVYY2UrUUUUj1kv1TuYvTs0mT0YCTnIWj
-        qI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUIcSsGvfJTRUUU
-        bfkYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E6xAIw20EY4v20xvaj40_Wr0E3s
-        1l1IIY67AEw4v_Jrv_JF1l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xv
-        wVC0I7IYx2IY67AKxVWUCVW8JwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVWUJVW8JwA2z4
-        x0Y4vEx4A2jsIE14v26r4UJVWxJr1l84ACjcxK6I8E87Iv6xkF7I0E14v26F4UJVW0owAa
-        w2AFwI0_Jrv_JF1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0cIa020Ex4CE44
-        I27wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jrv_JF1lYx0Ex4A2
-        jsIE14v26r4j6F4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvEwIxGrwCYjI0SjxkI62
-        AI1cAE67vIY487MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMxCIbckI
-        1I0E14v26r1Y6r17MI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_Jr
-        Wlx4CE17CEb7AF67AKxVWUAVWUtwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j
-        6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVWUJVW8JwCI42IY6xAIw20EY4v20xvaj40_Jr
-        0_JF4lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVWUJVW8JbIY
-        CTnIWIevJa73UjIFyTuYvjxU4s2-UUUUU
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
+Hi Tiezhu,
+
+On Thu, 12 Jan 2023 21:32:51 +0800
+Tiezhu Yang <yangtiezhu@loongson.cn> wrote:
+
+> 
+> 
+> On 01/11/2023 07:38 PM, Tiezhu Yang wrote:
+> > Hi all,
+> >
+> > (1) I have the following test environment, kernel hangs when kprobe memcpy:
+> >
+> > system: x86_64 fedora 36
+> > kernel version: Linux 5.7 (compile and update)
+> > test case: modprobe kprobe_example symbol="memcpy"
+> > (CONFIG_SAMPLE_KPROBES=m)
+> >
+> > In order to fix build errors, it needs to unset CONFIG_NFP and do the
+> > following changes:
+> > commit 52a9dab6d892 ("libsubcmd: Fix use-after-free for realloc(..., 0)")
+> > commit de979c83574a ("x86/entry: Build thunk_$(BITS) only if
+> > CONFIG_PREEMPTION=y")
+> >
+> > (2) Using the latest upstream mainline kernel, no hang problem due to the
+> > commit e3a9e681adb7 ("x86/entry: Fixup bad_iret vs noinstr") to prohibit
+> > probing memcpy which is put into the .noinstr.text section.
+> >
+> >   # modprobe kprobe_example symbol="memcpy"
+> >   modprobe: ERROR: could not insert 'kprobe_example': Invalid argument
+> >
+> > In my opinion, according to the commit message, the above commit is not
+> > intended to fix the memcpy hang problem, the problem was fixed by accident.
+> >
+> > (3) If make handler_pre() and handler_post() as empty functions in the 5.7
+> > kernel code, the above hang problem does not exist.
 
 
-On 01/11/2023 07:38 PM, Tiezhu Yang wrote:
-> Hi all,
->
-> (1) I have the following test environment, kernel hangs when kprobe memcpy:
->
-> system: x86_64 fedora 36
-> kernel version: Linux 5.7 (compile and update)
-> test case: modprobe kprobe_example symbol="memcpy"
-> (CONFIG_SAMPLE_KPROBES=m)
->
-> In order to fix build errors, it needs to unset CONFIG_NFP and do the
-> following changes:
-> commit 52a9dab6d892 ("libsubcmd: Fix use-after-free for realloc(..., 0)")
-> commit de979c83574a ("x86/entry: Build thunk_$(BITS) only if
-> CONFIG_PREEMPTION=y")
->
-> (2) Using the latest upstream mainline kernel, no hang problem due to the
-> commit e3a9e681adb7 ("x86/entry: Fixup bad_iret vs noinstr") to prohibit
-> probing memcpy which is put into the .noinstr.text section.
->
->   # modprobe kprobe_example symbol="memcpy"
->   modprobe: ERROR: could not insert 'kprobe_example': Invalid argument
->
-> In my opinion, according to the commit message, the above commit is not
-> intended to fix the memcpy hang problem, the problem was fixed by accident.
->
-> (3) If make handler_pre() and handler_post() as empty functions in the 5.7
-> kernel code, the above hang problem does not exist.
->
-> diff --git a/samples/kprobes/kprobe_example.c
-> b/samples/kprobes/kprobe_example.c
-> index fd346f58ddba..c194171d8a46 100644
-> --- a/samples/kprobes/kprobe_example.c
-> +++ b/samples/kprobes/kprobe_example.c
-> @@ -28,8 +28,6 @@ static struct kprobe kp = {
->  static int __kprobes handler_pre(struct kprobe *p, struct pt_regs *regs)
->  {
->  #ifdef CONFIG_X86
-> -    pr_info("<%s> p->addr = 0x%p, ip = %lx, flags = 0x%lx\n",
-> -        p->symbol_name, p->addr, regs->ip, regs->flags);
->  #endif
->  #ifdef CONFIG_PPC
->      pr_info("<%s> p->addr = 0x%p, nip = 0x%lx, msr = 0x%lx\n",
-> @@ -65,8 +63,6 @@ static void __kprobes handler_post(struct kprobe *p,
-> struct pt_regs *regs,
->                  unsigned long flags)
->  {
->  #ifdef CONFIG_X86
-> -    pr_info("<%s> p->addr = 0x%p, flags = 0x%lx\n",
-> -        p->symbol_name, p->addr, regs->flags);
->  #endif
->  #ifdef CONFIG_PPC
->      pr_info("<%s> p->addr = 0x%p, msr = 0x%lx\n",
->
-> I want to know what is the real reason of the hang problem when kprobe
-> memcpy,
-> I guess it may be kprobe recursion, what do you think? Thank you.
->
-> By the way, kprobe memset has no problem whether or not handler_pre() and
-> handler_post() are empty functions.
->
-> Thanks,
-> Tiezhu
+> >
+> > diff --git a/samples/kprobes/kprobe_example.c
+> > b/samples/kprobes/kprobe_example.c
+> > index fd346f58ddba..c194171d8a46 100644
+> > --- a/samples/kprobes/kprobe_example.c
+> > +++ b/samples/kprobes/kprobe_example.c
+> > @@ -28,8 +28,6 @@ static struct kprobe kp = {
+> >  static int __kprobes handler_pre(struct kprobe *p, struct pt_regs *regs)
+> >  {
+> >  #ifdef CONFIG_X86
+> > -    pr_info("<%s> p->addr = 0x%p, ip = %lx, flags = 0x%lx\n",
+> > -        p->symbol_name, p->addr, regs->ip, regs->flags);
+> >  #endif
+> >  #ifdef CONFIG_PPC
+> >      pr_info("<%s> p->addr = 0x%p, nip = 0x%lx, msr = 0x%lx\n",
+> > @@ -65,8 +63,6 @@ static void __kprobes handler_post(struct kprobe *p,
+> > struct pt_regs *regs,
+> >                  unsigned long flags)
+> >  {
+> >  #ifdef CONFIG_X86
+> > -    pr_info("<%s> p->addr = 0x%p, flags = 0x%lx\n",
+> > -        p->symbol_name, p->addr, regs->flags);
+> >  #endif
+> >  #ifdef CONFIG_PPC
+> >      pr_info("<%s> p->addr = 0x%p, msr = 0x%lx\n",
+> >
+> > I want to know what is the real reason of the hang problem when kprobe
+> > memcpy,
+> > I guess it may be kprobe recursion, what do you think? Thank you.
+> >
+> > By the way, kprobe memset has no problem whether or not handler_pre() and
+> > handler_post() are empty functions.
+> >
+> > Thanks,
+> > Tiezhu
+> 
+> I find out the following call trace:
+> 
+> handler_pre()
+>    pr_info()
+>      printk()
+>        _printk()
+>          vprintk()
+>            vprintk_store()
+>              memcpy()
+> 
+> I think it may cause recursive exceptions, so we should
+> mark memcpy as non-kprobe-able, right?
 
-I find out the following call trace:
+Yes, and the .noinstr.text (noinstr function attribute) is including
+non-kprobe-able (nokprobe function attribute). I a function is nokprobe
+and notrace, it should be noinstr. "NOKPROBE_SYMBOL" is used for the
+symbol which is called in the kprobe processing path (e.g. x86 int3
+handler etc.).
 
-handler_pre()
-   pr_info()
-     printk()
-       _printk()
-         vprintk()
-           vprintk_store()
-             memcpy()
+BTW, that the bug you reported is interesting. Even if another kprobe
+is called inside kprobe pre/post handler, it must be skipped.
+If you can share your kconfig, I can try to reproduce it.
 
-I think it may cause recursive exceptions, so we should
-mark memcpy as non-kprobe-able, right?
+Thank you,
 
-Thanks,
-Tiezhu
-
+-- 
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
