@@ -2,113 +2,160 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 90489C61DB3
-	for <linux-trace-kernel@archiver.kernel.org>; Thu, 12 Jan 2023 20:52:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CC93BC54EBE
+	for <linux-trace-kernel@archiver.kernel.org>; Thu, 12 Jan 2023 23:24:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231997AbjALUwu convert rfc822-to-8bit (ORCPT
+        id S231833AbjALXYZ (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Thu, 12 Jan 2023 15:52:50 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52920 "EHLO
+        Thu, 12 Jan 2023 18:24:25 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40208 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230135AbjALUw3 (ORCPT
+        with ESMTP id S231911AbjALXYY (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Thu, 12 Jan 2023 15:52:29 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1FE296698E;
-        Thu, 12 Jan 2023 12:24:11 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 3D20B62177;
-        Thu, 12 Jan 2023 20:24:11 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 52CBBC433D2;
-        Thu, 12 Jan 2023 20:24:09 +0000 (UTC)
-Date:   Thu, 12 Jan 2023 15:24:07 -0500
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Yunhui Cui <cuiyunhui@bytedance.com>
-Cc:     mhiramat@kernel.org, davem@davemloft.net, edumazet@google.com,
-        kuba@kernel.org, pabeni@redhat.com, kuniyu@amazon.com,
-        xiyou.wangcong@gmail.com, duanxiongchun@bytedance.com,
-        linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
-        netdev@vger.kernel.org, dust.li@linux.alibaba.com
-Subject: Re: [PATCH v6] sock: add tracepoint for send recv length
-Message-ID: <20230112152407.7acad054@gandalf.local.home>
-In-Reply-To: <20230111065930.1494-1-cuiyunhui@bytedance.com>
-References: <20230111065930.1494-1-cuiyunhui@bytedance.com>
-X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+        Thu, 12 Jan 2023 18:24:24 -0500
+Received: from mail-il1-x12d.google.com (mail-il1-x12d.google.com [IPv6:2607:f8b0:4864:20::12d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 95D32625CD
+        for <linux-trace-kernel@vger.kernel.org>; Thu, 12 Jan 2023 15:24:23 -0800 (PST)
+Received: by mail-il1-x12d.google.com with SMTP id u8so10140075ilg.0
+        for <linux-trace-kernel@vger.kernel.org>; Thu, 12 Jan 2023 15:24:23 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20210112;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=bhef6biThhIg08+giamdbkzTkDklC4TxoeMkTSe0/Dc=;
+        b=FNb9+ZvbuccPQcYTlohtzkbXWuxCeJdfkyMePlSXRClbTL2OgY6QoL0ZfCAPpqkHg1
+         oIlqDB44VEBYv6Elq+YzB9WxJScUPrbjQKYlUSZsKKJWsSelgB3k4r1WJkCc04Pfm0Fc
+         5JRWbrdYq31Xu3CAChYwDFXzqfwpKZW6ppAdB6oy1w04G85dAjWyYWHnVgyoijYy7hUD
+         ZCyOghwjEDZ7dqjtqko5OE9kJON34FD7OFT1NuyOY3SYLY0aR28zL/b2QHGAjQIyf8LD
+         0YZr111FWHGlqckjT2cpeXX+T9nxtI3sK4nDXV2aayyVXlllvPCmFs3H2iAzDYgAF4hb
+         2mXA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=bhef6biThhIg08+giamdbkzTkDklC4TxoeMkTSe0/Dc=;
+        b=xb5DlTafoNQXEYqc3wbSknKNfzkfxJPUSGJIdSdQq4qe8uAemcDxR59bSQqh6mXpAp
+         R8QGO6wc14QnJczK2JaMvswhNOJluMmhraH5behP6WX/Mge0+OQb+h1iIH3CaYUe9Zst
+         gas4N6QbsjlbaIlagvX2sGOqP34eFa1GHbX6VHVDXosA365OQPd1NbN5ranh55/rnarK
+         N6t2meNPafmpEvkNmxIhjy8APx2n0Up/xiCUhOGs7sPZGAwIckTw8BTKBoM2ipInQDMr
+         c+svZN75H0aHIRUaY2W3Usgpg62MuoxjyI7r3xI4UYGQctgWBlH5rNtTKEdqznQFbPBq
+         F6MA==
+X-Gm-Message-State: AFqh2kpC/ehZr6OSshecBoyeWTjo/0p6Rtw6cZ/Qy6utAKL9Z8b8a1cj
+        WfYZhaIzzrCb6rPUZc5CIBYKeA==
+X-Google-Smtp-Source: AMrXdXtFqIENP2E50l44zzwovmHsdpY2JEjWKfHvP4D/tZQ3oLNziEOmke4rXx5m8SDweE1b8sj/lA==
+X-Received: by 2002:a92:c10b:0:b0:30d:c792:5c12 with SMTP id p11-20020a92c10b000000b0030dc7925c12mr4644326ile.5.1673565862689;
+        Thu, 12 Jan 2023 15:24:22 -0800 (PST)
+Received: from google.com ([2620:15c:183:200:4a23:5fbb:9bb3:1279])
+        by smtp.gmail.com with ESMTPSA id c2-20020a023f42000000b0039decb5b452sm5692176jaf.65.2023.01.12.15.24.21
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 12 Jan 2023 15:24:22 -0800 (PST)
+Date:   Thu, 12 Jan 2023 16:24:17 -0700
+From:   Ross Zwisler <zwisler@google.com>
+To:     Steven Rostedt <rostedt@goodmis.org>
+Cc:     linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>
+Subject: Re: [PATCH 1/4] tracing: Add creation of instances at boot command
+ line
+Message-ID: <Y8CWodcFALp3MEBM@google.com>
+References: <20230111145636.450953217@goodmis.org>
+ <20230111145842.376427803@goodmis.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230111145842.376427803@goodmis.org>
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On Wed, 11 Jan 2023 14:59:30 +0800
-Yunhui Cui <cuiyunhui@bytedance.com> wrote:
-
-> Signed-off-by: Yunhui Cui <cuiyunhui@bytedance.com>
-> Signed-off-by: Xiongchun Duan <duanxiongchun@bytedance.com>
-> ---
->  include/trace/events/sock.h | 45 +++++++++++++++++++++++++++++++++++++
->  net/socket.c                | 33 +++++++++++++++++++++++----
->  2 files changed, 74 insertions(+), 4 deletions(-)
+On Wed, Jan 11, 2023 at 09:56:37AM -0500, Steven Rostedt wrote:
+> From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
 > 
-> diff --git a/include/trace/events/sock.h b/include/trace/events/sock.h
-> index 777ee6cbe933..71492e8276da 100644
-> --- a/include/trace/events/sock.h
-> +++ b/include/trace/events/sock.h
-> @@ -263,6 +263,51 @@ TRACE_EVENT(inet_sk_error_report,
->  		  __entry->error)
->  );
+> Add kernel command line to add tracing instances. This only creates
+> instances at boot but still does not enable any events to them. Later
+> changes will extend this command line to add enabling of events, filters,
+> and triggers. As well as possibly redirecting trace_printk()!
+> 
+> Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+> ---
+>  .../admin-guide/kernel-parameters.txt         |  6 +++
+>  kernel/trace/trace.c                          | 51 +++++++++++++++++++
+>  2 files changed, 57 insertions(+)
+> 
+> diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
+> index 6cfa6e3996cf..cec486217ccc 100644
+> --- a/Documentation/admin-guide/kernel-parameters.txt
+> +++ b/Documentation/admin-guide/kernel-parameters.txt
+> @@ -6272,6 +6272,12 @@
+>  			comma-separated list of trace events to enable. See
+>  			also Documentation/trace/events.rst
 >  
-> +/*
-> + * sock send/recv msg length
-> + */
-> +DECLARE_EVENT_CLASS(sock_msg_length,
+> +	trace_instance=[instance-info]
+> +			[FTRACE] Create an ring buffer instance early in boot up.
+> +			This will be listed in:
 > +
-> +	TP_PROTO(struct sock *sk, int ret, int flags),
-> +
-> +	TP_ARGS(sk, ret, flags),
-> +
-> +	TP_STRUCT__entry(
-> +		__field(void *, sk)
-> +		__field(__u16, family)
-> +		__field(__u16, protocol)
-> +		__field(int, ret)
-> +		__field(int, flags)
-> +	),
-> +
-> +	TP_fast_assign(
-> +		__entry->sk = sk;
-> +		__entry->family = sk->sk_family;
-> +		__entry->protocol = sk->sk_protocol;
-> +		__entry->ret = ret;
-> +		__entry->flags = flags;
-> +	),
-> +
-> +	TP_printk("sk address = %p, family = %s protocol = %s, length = %d, error = %d, flags = 0x%x",
-> +		  __entry->sk, show_family_name(__entry->family),
-> +		  show_inet_protocol_name(__entry->protocol),
-> +		  !(__entry->flags & MSG_PEEK) ?
-> +		  (__entry->ret > 0 ? __entry->ret : 0) : 0,
-> +		  __entry->ret < 0 ? __entry->ret : 0,
-> +		  __entry->flags)
-> +);
-> +
-> +DEFINE_EVENT(sock_msg_length, sock_send_length,
-> +	TP_PROTO(struct sock *sk, int ret, int flags),
-> +
-> +	TP_ARGS(sk, ret, flags)
-> +);
-> +
-> +DEFINE_EVENT(sock_msg_length, sock_recv_length,
-> +	TP_PROTO(struct sock *sk, int ret, int flags),
-> +
-> +	TP_ARGS(sk, ret, flags)
-> +);
+> +				/sys/kernel/tracing/instances
 
-From the tracing POV:
+Should this be "/sys/kernel/debug/tracing/instances"?
 
-Reviewed-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+Ditto for the text for 'ftrace_boot_snapshot':
 
--- Steve
+	ftrace_boot_snapshot
+			[FTRACE] On boot up, a snapshot will be taken of the
+			ftrace ring buffer that can be read at:
+			/sys/kernel/tracing/snapshot.
+
+Everywhere else we use /sys/kernel/debug/tracing, though we do use
+/sys/kernel/tracing in Documentation/trace/ftrace.txt ?
+
+I guess either works, but having just 1 or the other will help us not confuse
+users.
+
+> +
+>  	trace_options=[option-list]
+>  			[FTRACE] Enable or disable tracer options at boot.
+>  			The option-list is a comma delimited list of options
+> diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
+> index a555a861b978..34ed504ffca9 100644
+> --- a/kernel/trace/trace.c
+> +++ b/kernel/trace/trace.c
+> @@ -48,6 +48,9 @@
+>  #include <linux/fsnotify.h>
+>  #include <linux/irq_work.h>
+>  #include <linux/workqueue.h>
+> +#include <linux/workqueue.h>
+
+Duplicate include 1 line above.
+
+> +
+> +#include <asm/setup.h> /* COMMAND_LINE_SIZE */
+>  
+>  #include "trace.h"
+>  #include "trace_output.h"
+> @@ -186,6 +189,9 @@ static char *default_bootup_tracer;
+>  static bool allocate_snapshot;
+>  static bool snapshot_at_boot;
+>  
+> +static char boot_instance_info[COMMAND_LINE_SIZE] __initdata;
+> +static int boot_instance_index;
+> +
+>  static int __init set_cmdline_ftrace(char *str)
+>  {
+>  	strlcpy(bootup_tracer_buf, str, MAX_TRACER_SIZE);
+> @@ -239,6 +245,23 @@ static int __init boot_snapshot(char *str)
+>  __setup("ftrace_boot_snapshot", boot_snapshot);
+>  
+>  
+> +static int __init boot_instance(char *str)
+> +{
+> +	char *slot = boot_instance_info + boot_instance_index;
+> +	int left = COMMAND_LINE_SIZE - boot_instance_index;
+
+A bit safer to use sizeof(boot_instance_info) instead of COMMAND_LINE_SIZE,
+so we can change the allocation size of boot_instance_info without having to
+keep them in sync.
+
+These are mostly nits, you can add:
+
+Reviewed-by: Ross Zwisler <zwisler@google.com>
