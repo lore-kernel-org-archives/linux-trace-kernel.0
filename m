@@ -2,62 +2,70 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A605C6379F
-	for <linux-trace-kernel@archiver.kernel.org>; Fri, 13 Jan 2023 19:48:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AB607C677F1
+	for <linux-trace-kernel@archiver.kernel.org>; Fri, 13 Jan 2023 23:23:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229768AbjAMTsr (ORCPT
+        id S231269AbjAMXX6 (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Fri, 13 Jan 2023 14:48:47 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34224 "EHLO
+        Fri, 13 Jan 2023 18:23:58 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36840 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230455AbjAMTsl (ORCPT
+        with ESMTP id S230193AbjAMXX4 (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Fri, 13 Jan 2023 14:48:41 -0500
-Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BEE60149E8;
-        Fri, 13 Jan 2023 11:48:39 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 6E911B821D4;
-        Fri, 13 Jan 2023 19:48:38 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6A91BC433D2;
-        Fri, 13 Jan 2023 19:48:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1673639317;
-        bh=dEa1FyCgbAjv9xYhXVkI/5nSgOJkvHr+IX3k5eDJk5I=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=Ur+Z8glLx18dTQfYrZNs4J8kSLQjukrQNxplQqS564D8K6XPIp/bq5IJuzhk8bYr8
-         TxnKyT8AP3hootJ6PENoWOb/PCEBOU1pdQRXnHYbIi3wa6qrzzA7N3YgbtR3bNOIjd
-         zO+jguOf3HPjUoKn76zFJEVEJsta8cX7kNRD2jP7KaFrdkmPIKrR+tszuoPvpCsGDD
-         gN+vtJCNaebhzMSU2CXVKb5zUsD9jBDJqHcWISNp/ir1+7kVRqQqPBWfejnq2Ksor7
-         02LG19UkdAAjBWfcAcWkWk8rK6uwcg0I1t7qMSpj0be7/yxKE3yiMm4+kGYoZbaRtw
-         9p/y79O8kIHew==
-Date:   Fri, 13 Jan 2023 11:48:35 -0800
-From:   Jakub Kicinski <kuba@kernel.org>
-To:     Yunhui Cui <cuiyunhui@bytedance.com>
-Cc:     rostedt@goodmis.org, mhiramat@kernel.org, davem@davemloft.net,
-        edumazet@google.com, pabeni@redhat.com, kuniyu@amazon.com,
-        xiyou.wangcong@gmail.com, duanxiongchun@bytedance.com,
-        linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
-        netdev@vger.kernel.org, dust.li@linux.alibaba.com
-Subject: Re: [PATCH v6] sock: add tracepoint for send recv length
-Message-ID: <20230113114835.33b7db5c@kernel.org>
-In-Reply-To: <20230111065930.1494-1-cuiyunhui@bytedance.com>
-References: <20230111065930.1494-1-cuiyunhui@bytedance.com>
+        Fri, 13 Jan 2023 18:23:56 -0500
+Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:3::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3960A6719A;
+        Fri, 13 Jan 2023 15:23:56 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20210309; h=Sender:In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=uo0wRiUMsv1attXrd3ti/SMjYXEvY7sRfF3P5n6hjy4=; b=eHWl7lsza7bgtbnqAvN1J3bq1g
+        DUrk7ERX7EEh4J3gB8cw9WMHNaggBGcSmfLA7HrkBfZQa5BJBMFjQMaB7UmaQu/ineehsEae0tXwd
+        s5XTBCLtHnkziGdmguP5koz3LomIjOTwdvW8A7MkURcQTSU42bdyt0gHZGif0EatHjwegnzdPn8IN
+        X4N1RtTPMO9ZH5KLcLzzTv7EhSfdgClgo5y7p3l0bOAQ3YjjnClCmjr/iMdz+Hv7Lw18+JYRedOkB
+        Q/xNjGundNi1aBMwhvHSLNgc7F3sG+5jtAUYVcCiU4+jrkYrxWffMlUJlN3GRlKJbSF+799RfIA07
+        zCEnT9iw==;
+Received: from mcgrof by bombadil.infradead.org with local (Exim 4.94.2 #2 (Red Hat Linux))
+        id 1pGTOW-004oWc-EH; Fri, 13 Jan 2023 23:23:34 +0000
+Date:   Fri, 13 Jan 2023 15:23:32 -0800
+From:   Luis Chamberlain <mcgrof@kernel.org>
+To:     Zhen Lei <thunder.leizhen@huawei.com>
+Cc:     Josh Poimboeuf <jpoimboe@kernel.org>,
+        Jiri Kosina <jikos@kernel.org>,
+        Miroslav Benes <mbenes@suse.cz>,
+        Petr Mladek <pmladek@suse.com>,
+        Joe Lawrence <joe.lawrence@redhat.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Andrii Nakryiko <andrii@kernel.org>,
+        Martin KaFai Lau <martin.lau@linux.dev>,
+        Song Liu <song@kernel.org>, Yonghong Song <yhs@fb.com>,
+        John Fastabend <john.fastabend@gmail.com>,
+        KP Singh <kpsingh@kernel.org>,
+        Stanislav Fomichev <sdf@google.com>,
+        Hao Luo <haoluo@google.com>, Jiri Olsa <jolsa@kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>, bpf@vger.kernel.org,
+        linux-trace-kernel@vger.kernel.org, live-patching@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-modules@vger.kernel.org
+Subject: Re: [PATCH v3] kallsyms: Remove the performance test from
+ kallsyms_selftest.c
+Message-ID: <Y8Hn9Bd7XFGkBnWO@bombadil.infradead.org>
+References: <20230110130121.1279-1-thunder.leizhen@huawei.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230110130121.1279-1-thunder.leizhen@huawei.com>
+Sender: Luis Chamberlain <mcgrof@infradead.org>
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On Wed, 11 Jan 2023 14:59:30 +0800 Yunhui Cui wrote:
-> Add 2 tracepoints to monitor the tcp/udp traffic
-> of per process and per cgroup.
-> 
-> Regarding monitoring the tcp/udp traffic of each process, there are two
-> existing solutions, the first one is https://www.atoptool.nl/netatop.php.
-> The second is via kprobe/kretprobe.
+On Tue, Jan 10, 2023 at 09:01:21PM +0800, Zhen Lei wrote:
+> Suggested-by: Petr Mladek <pmladek@suse.com>
 
-Applied, thanks!
+I've dropped this in favor of Nick's fix and pushed to Linus.
+
+  Luis
