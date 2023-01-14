@@ -2,139 +2,92 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 257D5C3DA78
-	for <linux-trace-kernel@archiver.kernel.org>; Sat, 14 Jan 2023 00:08:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 704C9C46467
+	for <linux-trace-kernel@archiver.kernel.org>; Sat, 14 Jan 2023 04:04:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229536AbjANAIR (ORCPT
+        id S230040AbjANEEQ (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Fri, 13 Jan 2023 19:08:17 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51924 "EHLO
+        Fri, 13 Jan 2023 23:04:16 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46536 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229559AbjANAIQ (ORCPT
+        with ESMTP id S231166AbjANEEM (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Fri, 13 Jan 2023 19:08:16 -0500
-Received: from mail-il1-x12c.google.com (mail-il1-x12c.google.com [IPv6:2607:f8b0:4864:20::12c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 450808CD2C
-        for <linux-trace-kernel@vger.kernel.org>; Fri, 13 Jan 2023 16:08:14 -0800 (PST)
-Received: by mail-il1-x12c.google.com with SMTP id h11so545341ilc.1
-        for <linux-trace-kernel@vger.kernel.org>; Fri, 13 Jan 2023 16:08:14 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20210112;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=GncgTa9MHdkyN8z/wlCSEEO7c/owOku0bBu1ulxLWXE=;
-        b=cEDYrD8E1z5PrKNynxNg0lrFYo5k2HwT7OuOmQfPxS4iEn30Ac4F4UEPBiP/ja0rKl
-         qvPN+/gCNo8kkL4OYZA79EzqRDRAnPFDyniOtzoE44i8J90AiFG4gXwVVljxoxgmAUou
-         dhKIe/yt4QVfEOg+pmlFzuJlF9jko/uDMuryWbveRtTRrpAsOHHzNnNBbgqpIxVDUSjR
-         RYq0ITSX9x/rrcavawBDpSj1/6UdayRdH8TxrIvsPZGw276fywqubVfuWN5oFx6C/bT2
-         3eoqN0c4LqwjupALW1U3n+OcpXPuarHksSOs2b3NyqYdRZHJ4gIDpNAsl8mdr+Ep+XhR
-         EAOg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=GncgTa9MHdkyN8z/wlCSEEO7c/owOku0bBu1ulxLWXE=;
-        b=QFk+wQKs3Ou1gack1whubiYwQobBLXeTMegbLB6NrA6iNyMt03RpuomXIHXitX7T64
-         YvRjLttdpjxmEBcgflOA1PC3n9An2h8q8Pu2b0OkW3lqc5+X49kPNHXBvMZiddgsBll/
-         V9oK5jPcVzNPG5GSHy/6e4uqMjroRw3Wb4RCvAXsTjdCXniq+nRYVX0vRuJ1umpULdUB
-         jfUI+3GREmrc6NsxqDpQS08fhew4G+0+xr9VxIdtcw2HZzjTI96FLK4P+Ur6ZHQ4QA+N
-         g7ZYd3Q/LMPCLkFq8BdicoSKR8TGe4xAhfIRrabor4OWxbKiaRh4zmWTqkjiSXJjbnWl
-         TJPg==
-X-Gm-Message-State: AFqh2koc+DyRN2XOCsgiqgwiE1n1WbnirWNkKEmM7oFIxL6s5CeVyR2O
-        xytq2eSzAYMnBywz/6xHc/tVMw==
-X-Google-Smtp-Source: AMrXdXvHyaCuHgbFtXhiMlsxn34c/LvkxHzfnXWjt6YTc9PmB5ryPQ+1cdxQLwC2kyWfwWbOiSYvtg==
-X-Received: by 2002:a05:6e02:ef3:b0:30d:91e9:4540 with SMTP id j19-20020a056e020ef300b0030d91e94540mr19147763ilk.22.1673654893369;
-        Fri, 13 Jan 2023 16:08:13 -0800 (PST)
-Received: from google.com ([2620:15c:183:200:8579:d15f:baaf:1133])
-        by smtp.gmail.com with ESMTPSA id a12-20020a92d10c000000b002eb3b43cd63sm6429851ilb.18.2023.01.13.16.08.12
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 13 Jan 2023 16:08:12 -0800 (PST)
-Date:   Fri, 13 Jan 2023 17:08:09 -0700
-From:   Ross Zwisler <zwisler@google.com>
-To:     Steven Rostedt <rostedt@goodmis.org>
+        Fri, 13 Jan 2023 23:04:12 -0500
+Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 60FDE9C;
+        Fri, 13 Jan 2023 20:04:11 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 19A48B800C1;
+        Sat, 14 Jan 2023 04:04:10 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 12D56C433EF;
+        Sat, 14 Jan 2023 04:04:07 +0000 (UTC)
+Date:   Fri, 13 Jan 2023 23:04:06 -0500
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     Ross Zwisler <zwisler@google.com>
 Cc:     linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
         Masami Hiramatsu <mhiramat@kernel.org>,
         Andrew Morton <akpm@linux-foundation.org>
 Subject: Re: [PATCH 4/4] tracing: Allow boot instances to have snapshot
  buffers
-Message-ID: <Y8HyaeNeWvDlBshg@google.com>
+Message-ID: <20230113230406.6a8cd992@gandalf.local.home>
+In-Reply-To: <Y8HyaeNeWvDlBshg@google.com>
 References: <20230111145636.450953217@goodmis.org>
- <20230111145842.847715402@goodmis.org>
+        <20230111145842.847715402@goodmis.org>
+        <Y8HyaeNeWvDlBshg@google.com>
+X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230111145842.847715402@goodmis.org>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On Wed, Jan 11, 2023 at 09:56:40AM -0500, Steven Rostedt wrote:
-> From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
+On Fri, 13 Jan 2023 17:08:09 -0700
+Ross Zwisler <zwisler@google.com> wrote:
+
+> > +++ b/kernel/trace/trace.c
+> > @@ -192,6 +192,9 @@ static bool snapshot_at_boot;
+> >  static char boot_instance_info[COMMAND_LINE_SIZE] __initdata;
+> >  static int boot_instance_index;
+> >  
+> > +static char boot_snapshot_info[COMMAND_LINE_SIZE] __initdata;  
 > 
-> Add to ftrace_boot_snapshot, "=<instance>" name, where the instance will
-> get a snapshot buffer, and will take a snapshot at the end of boot (which
-> will save the boot traces).
+> For x86 machines at least COMMAND_LINE_SIZE is pretty big (2048), so between
+> boot_instance_info and boot_snapshot_info we are using an entire 4k of memory.
+> It seems unlikely that any user would need a string this long for these
+> options.  Should we trim this down to something smaller?
+
+They are both empty (BSS) and initdata. So they get allocated at boot up
+and freed at the end of boot.
+
 > 
-> Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
-> ---
->  .../admin-guide/kernel-parameters.txt         |  9 +++
->  kernel/trace/trace.c                          | 77 +++++++++++++++++--
->  2 files changed, 79 insertions(+), 7 deletions(-)
+> > +static int boot_snapshot_index;
+> > +
+> >  static int __init set_cmdline_ftrace(char *str)
+> >  {
+> >  	strlcpy(bootup_tracer_buf, str, MAX_TRACER_SIZE);
+> > @@ -228,9 +231,22 @@ __setup("traceoff_on_warning", stop_trace_on_warning);
+> >  
+> >  static int __init boot_alloc_snapshot(char *str)
+> >  {
+> > -	allocate_snapshot = true;
+> > -	/* We also need the main ring buffer expanded */
+> > -	ring_buffer_expanded = true;
+> > +	char *slot = boot_snapshot_info + boot_snapshot_index;
+> > +	int left = COMMAND_LINE_SIZE - boot_snapshot_index;  
 > 
-> diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
-> index 7a7f41652719..f4e87b17427f 100644
-> --- a/Documentation/admin-guide/kernel-parameters.txt
-> +++ b/Documentation/admin-guide/kernel-parameters.txt
-> @@ -1532,6 +1532,15 @@
->  			boot up that is likely to be overridden by user space
->  			start up functionality.
->  
-> +			Optionally, the snapshot can also be defined for a tracing
-> +			instance that was created by the trace_instance= command
-> +			line parameter.
-> +
-> +			trace_instance=foo,sched_switch ftrace_boot_snapshot=foo
-> +
-> +			The above will cause the "foo" tracing instance to trigger
-> +			a snapshot at the end of boot up.
-> +
->  	ftrace_dump_on_oops[=orig_cpu]
->  			[FTRACE] will dump the trace buffers on oops.
->  			If no parameter is passed, ftrace will dump
-> diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
-> index 3cb9bbc0f076..d445789dc247 100644
-> --- a/kernel/trace/trace.c
-> +++ b/kernel/trace/trace.c
-> @@ -192,6 +192,9 @@ static bool snapshot_at_boot;
->  static char boot_instance_info[COMMAND_LINE_SIZE] __initdata;
->  static int boot_instance_index;
->  
-> +static char boot_snapshot_info[COMMAND_LINE_SIZE] __initdata;
+> sizeof(boot_snapshot_info) is a bit safer than COMMAND_LINE_SIZE so they don't
+> get out of sync, plus we may also want to shrink it a bit as mentioned above.
 
-For x86 machines at least COMMAND_LINE_SIZE is pretty big (2048), so between
-boot_instance_info and boot_snapshot_info we are using an entire 4k of memory.
-It seems unlikely that any user would need a string this long for these
-options.  Should we trim this down to something smaller?
+Yeah, I'm willing to do this (as mentioned before).
 
-> +static int boot_snapshot_index;
-> +
->  static int __init set_cmdline_ftrace(char *str)
->  {
->  	strlcpy(bootup_tracer_buf, str, MAX_TRACER_SIZE);
-> @@ -228,9 +231,22 @@ __setup("traceoff_on_warning", stop_trace_on_warning);
->  
->  static int __init boot_alloc_snapshot(char *str)
->  {
-> -	allocate_snapshot = true;
-> -	/* We also need the main ring buffer expanded */
-> -	ring_buffer_expanded = true;
-> +	char *slot = boot_snapshot_info + boot_snapshot_index;
-> +	int left = COMMAND_LINE_SIZE - boot_snapshot_index;
+> 
+> Just two nits, other than that you can add:
+> 
+> Reviewed-by: Ross Zwisler <zwisler@google.com>
 
-sizeof(boot_snapshot_info) is a bit safer than COMMAND_LINE_SIZE so they don't
-get out of sync, plus we may also want to shrink it a bit as mentioned above.
+Thanks!
 
-Just two nits, other than that you can add:
-
-Reviewed-by: Ross Zwisler <zwisler@google.com>
+-- Steve
