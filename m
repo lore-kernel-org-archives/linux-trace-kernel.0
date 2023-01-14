@@ -2,70 +2,139 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AB607C677F1
-	for <linux-trace-kernel@archiver.kernel.org>; Fri, 13 Jan 2023 23:23:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 257D5C3DA78
+	for <linux-trace-kernel@archiver.kernel.org>; Sat, 14 Jan 2023 00:08:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231269AbjAMXX6 (ORCPT
+        id S229536AbjANAIR (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Fri, 13 Jan 2023 18:23:58 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36840 "EHLO
+        Fri, 13 Jan 2023 19:08:17 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51924 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230193AbjAMXX4 (ORCPT
+        with ESMTP id S229559AbjANAIQ (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Fri, 13 Jan 2023 18:23:56 -0500
-Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:3::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3960A6719A;
-        Fri, 13 Jan 2023 15:23:56 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20210309; h=Sender:In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=uo0wRiUMsv1attXrd3ti/SMjYXEvY7sRfF3P5n6hjy4=; b=eHWl7lsza7bgtbnqAvN1J3bq1g
-        DUrk7ERX7EEh4J3gB8cw9WMHNaggBGcSmfLA7HrkBfZQa5BJBMFjQMaB7UmaQu/ineehsEae0tXwd
-        s5XTBCLtHnkziGdmguP5koz3LomIjOTwdvW8A7MkURcQTSU42bdyt0gHZGif0EatHjwegnzdPn8IN
-        X4N1RtTPMO9ZH5KLcLzzTv7EhSfdgClgo5y7p3l0bOAQ3YjjnClCmjr/iMdz+Hv7Lw18+JYRedOkB
-        Q/xNjGundNi1aBMwhvHSLNgc7F3sG+5jtAUYVcCiU4+jrkYrxWffMlUJlN3GRlKJbSF+799RfIA07
-        zCEnT9iw==;
-Received: from mcgrof by bombadil.infradead.org with local (Exim 4.94.2 #2 (Red Hat Linux))
-        id 1pGTOW-004oWc-EH; Fri, 13 Jan 2023 23:23:34 +0000
-Date:   Fri, 13 Jan 2023 15:23:32 -0800
-From:   Luis Chamberlain <mcgrof@kernel.org>
-To:     Zhen Lei <thunder.leizhen@huawei.com>
-Cc:     Josh Poimboeuf <jpoimboe@kernel.org>,
-        Jiri Kosina <jikos@kernel.org>,
-        Miroslav Benes <mbenes@suse.cz>,
-        Petr Mladek <pmladek@suse.com>,
-        Joe Lawrence <joe.lawrence@redhat.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Andrii Nakryiko <andrii@kernel.org>,
-        Martin KaFai Lau <martin.lau@linux.dev>,
-        Song Liu <song@kernel.org>, Yonghong Song <yhs@fb.com>,
-        John Fastabend <john.fastabend@gmail.com>,
-        KP Singh <kpsingh@kernel.org>,
-        Stanislav Fomichev <sdf@google.com>,
-        Hao Luo <haoluo@google.com>, Jiri Olsa <jolsa@kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
+        Fri, 13 Jan 2023 19:08:16 -0500
+Received: from mail-il1-x12c.google.com (mail-il1-x12c.google.com [IPv6:2607:f8b0:4864:20::12c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 450808CD2C
+        for <linux-trace-kernel@vger.kernel.org>; Fri, 13 Jan 2023 16:08:14 -0800 (PST)
+Received: by mail-il1-x12c.google.com with SMTP id h11so545341ilc.1
+        for <linux-trace-kernel@vger.kernel.org>; Fri, 13 Jan 2023 16:08:14 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20210112;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=GncgTa9MHdkyN8z/wlCSEEO7c/owOku0bBu1ulxLWXE=;
+        b=cEDYrD8E1z5PrKNynxNg0lrFYo5k2HwT7OuOmQfPxS4iEn30Ac4F4UEPBiP/ja0rKl
+         qvPN+/gCNo8kkL4OYZA79EzqRDRAnPFDyniOtzoE44i8J90AiFG4gXwVVljxoxgmAUou
+         dhKIe/yt4QVfEOg+pmlFzuJlF9jko/uDMuryWbveRtTRrpAsOHHzNnNBbgqpIxVDUSjR
+         RYq0ITSX9x/rrcavawBDpSj1/6UdayRdH8TxrIvsPZGw276fywqubVfuWN5oFx6C/bT2
+         3eoqN0c4LqwjupALW1U3n+OcpXPuarHksSOs2b3NyqYdRZHJ4gIDpNAsl8mdr+Ep+XhR
+         EAOg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=GncgTa9MHdkyN8z/wlCSEEO7c/owOku0bBu1ulxLWXE=;
+        b=QFk+wQKs3Ou1gack1whubiYwQobBLXeTMegbLB6NrA6iNyMt03RpuomXIHXitX7T64
+         YvRjLttdpjxmEBcgflOA1PC3n9An2h8q8Pu2b0OkW3lqc5+X49kPNHXBvMZiddgsBll/
+         V9oK5jPcVzNPG5GSHy/6e4uqMjroRw3Wb4RCvAXsTjdCXniq+nRYVX0vRuJ1umpULdUB
+         jfUI+3GREmrc6NsxqDpQS08fhew4G+0+xr9VxIdtcw2HZzjTI96FLK4P+Ur6ZHQ4QA+N
+         g7ZYd3Q/LMPCLkFq8BdicoSKR8TGe4xAhfIRrabor4OWxbKiaRh4zmWTqkjiSXJjbnWl
+         TJPg==
+X-Gm-Message-State: AFqh2koc+DyRN2XOCsgiqgwiE1n1WbnirWNkKEmM7oFIxL6s5CeVyR2O
+        xytq2eSzAYMnBywz/6xHc/tVMw==
+X-Google-Smtp-Source: AMrXdXvHyaCuHgbFtXhiMlsxn34c/LvkxHzfnXWjt6YTc9PmB5ryPQ+1cdxQLwC2kyWfwWbOiSYvtg==
+X-Received: by 2002:a05:6e02:ef3:b0:30d:91e9:4540 with SMTP id j19-20020a056e020ef300b0030d91e94540mr19147763ilk.22.1673654893369;
+        Fri, 13 Jan 2023 16:08:13 -0800 (PST)
+Received: from google.com ([2620:15c:183:200:8579:d15f:baaf:1133])
+        by smtp.gmail.com with ESMTPSA id a12-20020a92d10c000000b002eb3b43cd63sm6429851ilb.18.2023.01.13.16.08.12
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 13 Jan 2023 16:08:12 -0800 (PST)
+Date:   Fri, 13 Jan 2023 17:08:09 -0700
+From:   Ross Zwisler <zwisler@google.com>
+To:     Steven Rostedt <rostedt@goodmis.org>
+Cc:     linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
         Masami Hiramatsu <mhiramat@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>, bpf@vger.kernel.org,
-        linux-trace-kernel@vger.kernel.org, live-patching@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-modules@vger.kernel.org
-Subject: Re: [PATCH v3] kallsyms: Remove the performance test from
- kallsyms_selftest.c
-Message-ID: <Y8Hn9Bd7XFGkBnWO@bombadil.infradead.org>
-References: <20230110130121.1279-1-thunder.leizhen@huawei.com>
+        Andrew Morton <akpm@linux-foundation.org>
+Subject: Re: [PATCH 4/4] tracing: Allow boot instances to have snapshot
+ buffers
+Message-ID: <Y8HyaeNeWvDlBshg@google.com>
+References: <20230111145636.450953217@goodmis.org>
+ <20230111145842.847715402@goodmis.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20230110130121.1279-1-thunder.leizhen@huawei.com>
-Sender: Luis Chamberlain <mcgrof@infradead.org>
+In-Reply-To: <20230111145842.847715402@goodmis.org>
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On Tue, Jan 10, 2023 at 09:01:21PM +0800, Zhen Lei wrote:
-> Suggested-by: Petr Mladek <pmladek@suse.com>
+On Wed, Jan 11, 2023 at 09:56:40AM -0500, Steven Rostedt wrote:
+> From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
+> 
+> Add to ftrace_boot_snapshot, "=<instance>" name, where the instance will
+> get a snapshot buffer, and will take a snapshot at the end of boot (which
+> will save the boot traces).
+> 
+> Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+> ---
+>  .../admin-guide/kernel-parameters.txt         |  9 +++
+>  kernel/trace/trace.c                          | 77 +++++++++++++++++--
+>  2 files changed, 79 insertions(+), 7 deletions(-)
+> 
+> diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
+> index 7a7f41652719..f4e87b17427f 100644
+> --- a/Documentation/admin-guide/kernel-parameters.txt
+> +++ b/Documentation/admin-guide/kernel-parameters.txt
+> @@ -1532,6 +1532,15 @@
+>  			boot up that is likely to be overridden by user space
+>  			start up functionality.
+>  
+> +			Optionally, the snapshot can also be defined for a tracing
+> +			instance that was created by the trace_instance= command
+> +			line parameter.
+> +
+> +			trace_instance=foo,sched_switch ftrace_boot_snapshot=foo
+> +
+> +			The above will cause the "foo" tracing instance to trigger
+> +			a snapshot at the end of boot up.
+> +
+>  	ftrace_dump_on_oops[=orig_cpu]
+>  			[FTRACE] will dump the trace buffers on oops.
+>  			If no parameter is passed, ftrace will dump
+> diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
+> index 3cb9bbc0f076..d445789dc247 100644
+> --- a/kernel/trace/trace.c
+> +++ b/kernel/trace/trace.c
+> @@ -192,6 +192,9 @@ static bool snapshot_at_boot;
+>  static char boot_instance_info[COMMAND_LINE_SIZE] __initdata;
+>  static int boot_instance_index;
+>  
+> +static char boot_snapshot_info[COMMAND_LINE_SIZE] __initdata;
 
-I've dropped this in favor of Nick's fix and pushed to Linus.
+For x86 machines at least COMMAND_LINE_SIZE is pretty big (2048), so between
+boot_instance_info and boot_snapshot_info we are using an entire 4k of memory.
+It seems unlikely that any user would need a string this long for these
+options.  Should we trim this down to something smaller?
 
-  Luis
+> +static int boot_snapshot_index;
+> +
+>  static int __init set_cmdline_ftrace(char *str)
+>  {
+>  	strlcpy(bootup_tracer_buf, str, MAX_TRACER_SIZE);
+> @@ -228,9 +231,22 @@ __setup("traceoff_on_warning", stop_trace_on_warning);
+>  
+>  static int __init boot_alloc_snapshot(char *str)
+>  {
+> -	allocate_snapshot = true;
+> -	/* We also need the main ring buffer expanded */
+> -	ring_buffer_expanded = true;
+> +	char *slot = boot_snapshot_info + boot_snapshot_index;
+> +	int left = COMMAND_LINE_SIZE - boot_snapshot_index;
+
+sizeof(boot_snapshot_info) is a bit safer than COMMAND_LINE_SIZE so they don't
+get out of sync, plus we may also want to shrink it a bit as mentioned above.
+
+Just two nits, other than that you can add:
+
+Reviewed-by: Ross Zwisler <zwisler@google.com>
