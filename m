@@ -2,37 +2,37 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F743C678DD
-	for <linux-trace-kernel@archiver.kernel.org>; Mon, 16 Jan 2023 13:07:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D20F4C63797
+	for <linux-trace-kernel@archiver.kernel.org>; Mon, 16 Jan 2023 13:07:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231436AbjAPNHD (ORCPT
+        id S231472AbjAPNHE (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Mon, 16 Jan 2023 08:07:03 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56848 "EHLO
+        Mon, 16 Jan 2023 08:07:04 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55526 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231478AbjAPNGk (ORCPT
+        with ESMTP id S230213AbjAPNGu (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Mon, 16 Jan 2023 08:06:40 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8CEF146AD;
-        Mon, 16 Jan 2023 05:06:31 -0800 (PST)
+        Mon, 16 Jan 2023 08:06:50 -0500
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E3164A5E5;
+        Mon, 16 Jan 2023 05:06:49 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 298E360F8C;
-        Mon, 16 Jan 2023 13:06:31 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C5839C433EF;
-        Mon, 16 Jan 2023 13:06:29 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 9DA52B80D31;
+        Mon, 16 Jan 2023 13:06:48 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 84A50C433EF;
+        Mon, 16 Jan 2023 13:06:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1673874390;
-        bh=IB+veTmklBKw7PiVo8v/NfpEJifNCfbu55nd+mTVPUg=;
+        s=k20201202; t=1673874407;
+        bh=JlISh7ZpJM1JouHMtly+4IcB63O1MxsyN1Eywkp8Wsg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Zq1PeBxWasNH9Dc8TC5hkRkJlGnfrUF4cWKlF4/fG9vW4QUdGsdaxsghZtSzGekgL
-         Ql33dt1b+c8IiQ26vu0nGPhqhXCrfk9adXxFZXDxdtwDHR4x6iJ3SaSyZYBepeCwBZ
-         Kc1h7HaqLwA7JpvpcHUpLHDiYeVw/LVwcm3Qkh0MIpAuak9cURPQnFRsQWsR/l+0Yk
-         wUKGvViiPRzzYkrTDFpzf2TnxIG8excmNjlptAdTQM7ps0xm/RB3itb2zPmaoGw6tz
-         ZlhHeHiLEOPWtUTi0h9Lawmhs2MdwmLgHHbEwdPoDN5CS39q3fayP03G9NKAQ6Vrgl
-         DHhkfMNo2J7fQ==
+        b=aEBoKJSxCjguG2DHqyA7O8qM4GE3x282g/b/CwTfZAS4zWD4B6wASQ+jEB5v/9zR/
+         ghrEPqNMvev2QZmBhfekV3oRIuWjuTMKqu+Tzfqn8kldJwTA8QYAxUbuyHvhGL80BM
+         QdA4d1/nx3Ly5CVTs3zgz2eyIgWBsTZ5eAcizz+q/laOZkFfW1DiI9wgCVeZrkKahJ
+         +g3SoDr4gJw/IVa0yBpVcsJEhstqA9mYnolCld9y2SO7DzLDOhhyLv3ueEl/plNU8I
+         RLCCMIed/IZ9bzeQdgF5gf/J2ek6Vtx4EP26J7GKfgPLdqlLQWH17T/t1+hT8LCDHf
+         vrmptUx/xttaw==
 From:   Leon Romanovsky <leon@kernel.org>
 To:     Jason Gunthorpe <jgg@nvidia.com>
 Cc:     Israel Rukshin <israelr@nvidia.com>,
@@ -52,9 +52,9 @@ Cc:     Israel Rukshin <israelr@nvidia.com>,
         Steven Rostedt <rostedt@goodmis.org>,
         Vishnu Dasa <vdasa@vmware.com>,
         Yishai Hadas <yishaih@nvidia.com>
-Subject: [PATCH rdma-next 07/13] RDMA/core: Add support for creating crypto enabled QPs
-Date:   Mon, 16 Jan 2023 15:05:54 +0200
-Message-Id: <7a772388d517a28052fa5f0b8ea507cb3fe471fe.1673873422.git.leon@kernel.org>
+Subject: [PATCH rdma-next 11/13] nvme: Introduce a local variable
+Date:   Mon, 16 Jan 2023 15:05:58 +0200
+Message-Id: <cf5bc542e014f465f7ae443e52e70def2993aef1.1673873422.git.leon@kernel.org>
 X-Mailer: git-send-email 2.39.0
 In-Reply-To: <cover.1673873422.git.leon@kernel.org>
 References: <cover.1673873422.git.leon@kernel.org>
@@ -66,81 +66,53 @@ X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
 From: Israel Rukshin <israelr@nvidia.com>
 
-Add a list of crypto MRs and introduce a crypto WR type to post
-on those QPs.
+The patch doesn't change any logic.
 
 Signed-off-by: Israel Rukshin <israelr@nvidia.com>
 Signed-off-by: Leon Romanovsky <leon@kernel.org>
 ---
- drivers/infiniband/core/verbs.c |  3 +++
- include/rdma/ib_verbs.h         | 12 +++++++++++-
- 2 files changed, 14 insertions(+), 1 deletion(-)
+ drivers/nvme/host/core.c | 7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/infiniband/core/verbs.c b/drivers/infiniband/core/verbs.c
-index 61473fee4b54..01aefff6760e 100644
---- a/drivers/infiniband/core/verbs.c
-+++ b/drivers/infiniband/core/verbs.c
-@@ -1223,6 +1223,7 @@ static struct ib_qp *create_qp(struct ib_device *dev, struct ib_pd *pd,
- 	spin_lock_init(&qp->mr_lock);
- 	INIT_LIST_HEAD(&qp->rdma_mrs);
- 	INIT_LIST_HEAD(&qp->sig_mrs);
-+	INIT_LIST_HEAD(&qp->crypto_mrs);
+diff --git a/drivers/nvme/host/core.c b/drivers/nvme/host/core.c
+index 7be562a4e1aa..51a9880db6ce 100644
+--- a/drivers/nvme/host/core.c
++++ b/drivers/nvme/host/core.c
+@@ -1870,6 +1870,7 @@ static void nvme_update_disk_info(struct gendisk *disk,
+ 	sector_t capacity = nvme_lba_to_sect(ns, le64_to_cpu(id->nsze));
+ 	unsigned short bs = 1 << ns->lba_shift;
+ 	u32 atomic_bs, phys_bs, io_opt = 0;
++	struct nvme_ctrl *ctrl = ns->ctrl;
  
- 	qp->send_cq = attr->send_cq;
- 	qp->recv_cq = attr->recv_cq;
-@@ -1363,6 +1364,8 @@ struct ib_qp *ib_create_qp_kernel(struct ib_pd *pd,
- 				 device->attrs.max_sge_rd);
- 	if (qp_init_attr->create_flags & IB_QP_CREATE_INTEGRITY_EN)
- 		qp->integrity_en = true;
-+	if (qp_init_attr->create_flags & IB_QP_CREATE_CRYPTO_EN)
-+		qp->crypto_en = true;
- 
- 	return qp;
- 
-diff --git a/include/rdma/ib_verbs.h b/include/rdma/ib_verbs.h
-index 7507661c78d0..1770cd30c0f0 100644
---- a/include/rdma/ib_verbs.h
-+++ b/include/rdma/ib_verbs.h
-@@ -1175,6 +1175,8 @@ enum ib_qp_create_flags {
- 	IB_QP_CREATE_INTEGRITY_EN		= 1ULL << 34,
- 	/* Create an accelerated UD QP */
- 	IB_QP_CREATE_NETDEV_USE			= 1ULL << 35,
-+	/* The created QP can carry out cryptographic handover operations */
-+	IB_QP_CREATE_CRYPTO_EN			= 1ULL << 36,
- };
- 
- /*
-@@ -1352,6 +1354,12 @@ enum ib_wr_opcode {
- 	/* These are kernel only and can not be issued by userspace */
- 	IB_WR_REG_MR = 0x20,
- 	IB_WR_REG_MR_INTEGRITY,
-+	/*
-+	 * It is used to assign crypto properties to a MKey. Use the MKey in
-+	 * any RDMA transaction (SEND/RECV/READ/WRITE) to encrypt/decrypt data
-+	 * on-the-fly.
-+	 */
-+	IB_WR_REG_MR_CRYPTO,
- 
- 	/* reserve values for low level drivers' internal use.
- 	 * These values will not be used at all in the ib core layer.
-@@ -1800,6 +1808,7 @@ struct ib_qp {
- 	int			mrs_used;
- 	struct list_head	rdma_mrs;
- 	struct list_head	sig_mrs;
-+	struct list_head	crypto_mrs;
- 	struct ib_srq	       *srq;
- 	struct ib_xrcd	       *xrcd; /* XRC TGT QPs only */
- 	struct list_head	xrcd_list;
-@@ -1822,7 +1831,8 @@ struct ib_qp {
- 	struct ib_qp_security  *qp_sec;
- 	u32			port;
- 
--	bool			integrity_en;
-+	u8			integrity_en:1;
-+	u8			crypto_en:1;
  	/*
- 	 * Implementation details of the RDMA core, don't use in drivers:
- 	 */
+ 	 * The block layer can't support LBA sizes larger than the page size
+@@ -1892,7 +1893,7 @@ static void nvme_update_disk_info(struct gendisk *disk,
+ 		if (id->nsfeat & NVME_NS_FEAT_ATOMICS && id->nawupf)
+ 			atomic_bs = (1 + le16_to_cpu(id->nawupf)) * bs;
+ 		else
+-			atomic_bs = (1 + ns->ctrl->subsys->awupf) * bs;
++			atomic_bs = (1 + ctrl->subsys->awupf) * bs;
+ 	}
+ 
+ 	if (id->nsfeat & NVME_NS_FEAT_IO_OPT) {
+@@ -1922,7 +1923,7 @@ static void nvme_update_disk_info(struct gendisk *disk,
+ 		if (IS_ENABLED(CONFIG_BLK_DEV_INTEGRITY) &&
+ 		    (ns->features & NVME_NS_METADATA_SUPPORTED))
+ 			nvme_init_integrity(disk, ns,
+-					    ns->ctrl->max_integrity_segments);
++					    ctrl->max_integrity_segments);
+ 		else if (!nvme_ns_has_pi(ns))
+ 			capacity = 0;
+ 	}
+@@ -1931,7 +1932,7 @@ static void nvme_update_disk_info(struct gendisk *disk,
+ 
+ 	nvme_config_discard(disk, ns);
+ 	blk_queue_max_write_zeroes_sectors(disk->queue,
+-					   ns->ctrl->max_zeroes_sectors);
++					   ctrl->max_zeroes_sectors);
+ }
+ 
+ static bool nvme_ns_is_readonly(struct nvme_ns *ns, struct nvme_ns_info *info)
 -- 
 2.39.0
 
