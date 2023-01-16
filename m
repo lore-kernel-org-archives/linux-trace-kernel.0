@@ -2,37 +2,37 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 49D5DC678D7
-	for <linux-trace-kernel@archiver.kernel.org>; Mon, 16 Jan 2023 13:07:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 94FF5C63797
+	for <linux-trace-kernel@archiver.kernel.org>; Mon, 16 Jan 2023 13:07:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231563AbjAPNHQ (ORCPT
+        id S231579AbjAPNHT (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Mon, 16 Jan 2023 08:07:16 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56720 "EHLO
+        Mon, 16 Jan 2023 08:07:19 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55576 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231420AbjAPNHB (ORCPT
+        with ESMTP id S229817AbjAPNGx (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Mon, 16 Jan 2023 08:07:01 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EAA661710;
-        Mon, 16 Jan 2023 05:07:00 -0800 (PST)
+        Mon, 16 Jan 2023 08:06:53 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5A2803A90;
+        Mon, 16 Jan 2023 05:06:52 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 645F660F9B;
-        Mon, 16 Jan 2023 13:07:00 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DA0DFC433F1;
-        Mon, 16 Jan 2023 13:06:58 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id E4F1060F97;
+        Mon, 16 Jan 2023 13:06:51 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 88B85C433D2;
+        Mon, 16 Jan 2023 13:06:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1673874419;
-        bh=Z9+KomyeN4vAjModCpaAbKOjkyqP4m8dRccCmgRLn8k=;
+        s=k20201202; t=1673874411;
+        bh=yXankd3ADXRZerTodbpyETr0H4Qj01JdsQgtwpw0Dpo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=OPeQnGdMKL0qvPIWYWzLqm//vIJ6xVrQ+zSrw9NRNMJnbSzuJa9VEEYupUejVnt06
-         HRNhIbjJVVOzzBSXSeoUjnDrYIDLqtF3CjSOmEgHFu37MIVWOwUbq/DFyGfdnJ++Yg
-         BvhvBUhhKztQYlOb92vy7VS8Uiq44148kyxwVg4auh30C5QonsBIXdBs6dnWQlVAaH
-         p/08idib6ImCyqQwz1xJ8CyMsMgn2pwOnLcSRdNel6waQkTHTGQTYUJsOWFJsf4Ywz
-         ++JUX3bjsvRlVxxLqSrPNBs7farZKtwyKf2xjpumDEoLbmQvbxXcM2CM0TkhY3sduc
-         8JxubTZg4TsUw==
+        b=fgIjibUjt1g+aWE/ux7w8lldiqti9MPTOYrg664GTgeLLIko4iPlQIWTchtK4PPS2
+         E/Nj7bdo+U8PXiZB22s69BYxYSo2jkj8gYzgB/2jWsva2ntMUuI2Aq3657DptC5dE5
+         4Jr0jMc+OseLWn678RNGP/CbyWwuU5rWZ4YS+wtBZ9xex7dzm7e7WMNr0g149oyV5g
+         bV1mGiJJ9b8fsOyoNu+nM/BzhRhn01fxJYL0KHLx7WVH9RdBd24jGTRwxpOzoj8iDi
+         A66sE/zByovan3DalETwgdA4lfwZfOcUxm25T0qqmVAvszBo4pnTSvZLqnjof6c1O+
+         WQcxe4oVbyRIg==
 From:   Leon Romanovsky <leon@kernel.org>
 To:     Jason Gunthorpe <jgg@nvidia.com>
 Cc:     Israel Rukshin <israelr@nvidia.com>,
@@ -52,9 +52,9 @@ Cc:     Israel Rukshin <israelr@nvidia.com>,
         Steven Rostedt <rostedt@goodmis.org>,
         Vishnu Dasa <vdasa@vmware.com>,
         Yishai Hadas <yishaih@nvidia.com>
-Subject: [PATCH rdma-next 12/13] nvme: Add crypto profile at nvme controller
-Date:   Mon, 16 Jan 2023 15:05:59 +0200
-Message-Id: <efc8dc5952baa096a14db1761f84a5ab2e76654a.1673873422.git.leon@kernel.org>
+Subject: [PATCH rdma-next 08/13] RDMA/mlx5: Add cryptographic device capabilities
+Date:   Mon, 16 Jan 2023 15:05:55 +0200
+Message-Id: <39ba2f3cd1786e47f2541f4a7be59cc5af4b03c7.1673873422.git.leon@kernel.org>
 X-Mailer: git-send-email 2.39.0
 In-Reply-To: <cover.1673873422.git.leon@kernel.org>
 References: <cover.1673873422.git.leon@kernel.org>
@@ -66,53 +66,133 @@ X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
 From: Israel Rukshin <israelr@nvidia.com>
 
-The crypto profile will be filled by the transport drivers. This
-is a preparation patch for adding support of inline encryption
-at nvme-rdma driver.
+The capabilities provide information on general cryptographic support,
+maximum number of DEKs and status for RDMA devices. Also, they include
+the supported cryptographic engines and their import method (wrapped or
+plaintext). Wrapped crypto operational flag indicates the import method
+mode that can be used. For now, add only AES-XTS cryptographic support.
 
 Signed-off-by: Israel Rukshin <israelr@nvidia.com>
 Signed-off-by: Leon Romanovsky <leon@kernel.org>
 ---
- drivers/nvme/host/core.c | 3 +++
- drivers/nvme/host/nvme.h | 4 ++++
- 2 files changed, 7 insertions(+)
+ drivers/infiniband/hw/mlx5/Makefile  |  1 +
+ drivers/infiniband/hw/mlx5/crypto.c  | 31 ++++++++++++++++++++++++++++
+ drivers/infiniband/hw/mlx5/crypto.h  | 11 ++++++++++
+ drivers/infiniband/hw/mlx5/main.c    |  5 +++++
+ drivers/infiniband/hw/mlx5/mlx5_ib.h |  2 ++
+ 5 files changed, 50 insertions(+)
+ create mode 100644 drivers/infiniband/hw/mlx5/crypto.c
+ create mode 100644 drivers/infiniband/hw/mlx5/crypto.h
 
-diff --git a/drivers/nvme/host/core.c b/drivers/nvme/host/core.c
-index 51a9880db6ce..f09e4e0216b3 100644
---- a/drivers/nvme/host/core.c
-+++ b/drivers/nvme/host/core.c
-@@ -1928,6 +1928,9 @@ static void nvme_update_disk_info(struct gendisk *disk,
- 			capacity = 0;
- 	}
- 
-+	if (ctrl->crypto_enable)
-+		blk_crypto_register(&ctrl->crypto_profile, disk->queue);
+diff --git a/drivers/infiniband/hw/mlx5/Makefile b/drivers/infiniband/hw/mlx5/Makefile
+index 612ee8190a2d..d6ae1a08b5b2 100644
+--- a/drivers/infiniband/hw/mlx5/Makefile
++++ b/drivers/infiniband/hw/mlx5/Makefile
+@@ -6,6 +6,7 @@ mlx5_ib-y := ah.o \
+ 	     cong.o \
+ 	     counters.o \
+ 	     cq.o \
++	     crypto.o \
+ 	     dm.o \
+ 	     doorbell.o \
+ 	     gsi.o \
+diff --git a/drivers/infiniband/hw/mlx5/crypto.c b/drivers/infiniband/hw/mlx5/crypto.c
+new file mode 100644
+index 000000000000..6fad9084877e
+--- /dev/null
++++ b/drivers/infiniband/hw/mlx5/crypto.c
+@@ -0,0 +1,31 @@
++// SPDX-License-Identifier: GPL-2.0 OR Linux-OpenIB
++/* Copyright (c) 2022, NVIDIA CORPORATION & AFFILIATES. */
 +
- 	set_capacity_and_notify(disk, capacity);
- 
- 	nvme_config_discard(disk, ns);
-diff --git a/drivers/nvme/host/nvme.h b/drivers/nvme/host/nvme.h
-index 424c8a467a0c..591380f53744 100644
---- a/drivers/nvme/host/nvme.h
-+++ b/drivers/nvme/host/nvme.h
-@@ -16,6 +16,7 @@
- #include <linux/rcupdate.h>
- #include <linux/wait.h>
- #include <linux/t10-pi.h>
-+#include <linux/blk-crypto-profile.h>
- 
- #include <trace/events/block.h>
- 
-@@ -374,6 +375,9 @@ struct nvme_ctrl {
- 
- 	enum nvme_ctrl_type cntrltype;
- 	enum nvme_dctype dctype;
++#include "crypto.h"
 +
-+	bool crypto_enable;
-+	struct blk_crypto_profile crypto_profile;
- };
++void mlx5r_crypto_caps_init(struct mlx5_ib_dev *dev)
++{
++	struct ib_crypto_caps *caps = &dev->crypto_caps;
++	struct mlx5_core_dev *mdev = dev->mdev;
++
++	if (!(MLX5_CAP_GEN_64(dev->mdev, general_obj_types) &
++	      MLX5_HCA_CAP_GENERAL_OBJECT_TYPES_ENCRYPTION_KEY))
++		return;
++
++	if (!MLX5_CAP_GEN(mdev, aes_xts_multi_block_le_tweak) &&
++	    !MLX5_CAP_GEN(mdev, aes_xts_multi_block_be_tweak))
++		return;
++
++	if (MLX5_CAP_CRYPTO(mdev, wrapped_import_method) &
++	    MLX5_CRYPTO_WRAPPED_IMPORT_METHOD_CAP_AES_XTS)
++		return;
++
++	if (MLX5_CAP_CRYPTO(mdev, failed_selftests)) {
++		mlx5_ib_warn(dev, "crypto self-tests failed with error 0x%x\n",
++			     MLX5_CAP_CRYPTO(mdev, failed_selftests));
++		return;
++	}
++
++	caps->crypto_engines |= IB_CRYPTO_ENGINES_CAP_AES_XTS;
++	caps->max_num_deks = 1 << MLX5_CAP_CRYPTO(mdev, log_max_num_deks);
++}
+diff --git a/drivers/infiniband/hw/mlx5/crypto.h b/drivers/infiniband/hw/mlx5/crypto.h
+new file mode 100644
+index 000000000000..8686ac6fb0b0
+--- /dev/null
++++ b/drivers/infiniband/hw/mlx5/crypto.h
+@@ -0,0 +1,11 @@
++/* SPDX-License-Identifier: GPL-2.0 OR Linux-OpenIB */
++/* Copyright (c) 2022, NVIDIA CORPORATION & AFFILIATES. */
++
++#ifndef _MLX5_IB_CRYPTO_H
++#define _MLX5_IB_CRYPTO_H
++
++#include "mlx5_ib.h"
++
++void mlx5r_crypto_caps_init(struct mlx5_ib_dev *dev);
++
++#endif /* _MLX5_IB_CRYPTO_H */
+diff --git a/drivers/infiniband/hw/mlx5/main.c b/drivers/infiniband/hw/mlx5/main.c
+index fb0d97bd4074..10f12e9a4dc3 100644
+--- a/drivers/infiniband/hw/mlx5/main.c
++++ b/drivers/infiniband/hw/mlx5/main.c
+@@ -39,6 +39,7 @@
+ #include "srq.h"
+ #include "qp.h"
+ #include "wr.h"
++#include "crypto.h"
+ #include "restrack.h"
+ #include "counters.h"
+ #include "umr.h"
+@@ -989,6 +990,7 @@ static int mlx5_ib_query_device(struct ib_device *ibdev,
+ 	props->max_ah = INT_MAX;
+ 	props->hca_core_clock = MLX5_CAP_GEN(mdev, device_frequency_khz);
+ 	props->timestamp_mask = 0x7FFFFFFFFFFFFFFFULL;
++	props->crypto_caps = dev->crypto_caps;
  
- enum nvme_iopolicy {
+ 	if (IS_ENABLED(CONFIG_INFINIBAND_ON_DEMAND_PAGING)) {
+ 		if (dev->odp_caps.general_caps & IB_ODP_SUPPORT)
+@@ -3826,6 +3828,9 @@ static int mlx5_ib_stage_caps_init(struct mlx5_ib_dev *dev)
+ 	if (MLX5_CAP_GEN(mdev, xrc))
+ 		ib_set_device_ops(&dev->ib_dev, &mlx5_ib_dev_xrc_ops);
+ 
++	if (MLX5_CAP_GEN(mdev, crypto))
++		mlx5r_crypto_caps_init(dev);
++
+ 	if (MLX5_CAP_DEV_MEM(mdev, memic) ||
+ 	    MLX5_CAP_GEN_64(dev->mdev, general_obj_types) &
+ 	    MLX5_GENERAL_OBJ_TYPES_CAP_SW_ICM)
+diff --git a/drivers/infiniband/hw/mlx5/mlx5_ib.h b/drivers/infiniband/hw/mlx5/mlx5_ib.h
+index 295502692da2..8f6850539542 100644
+--- a/drivers/infiniband/hw/mlx5/mlx5_ib.h
++++ b/drivers/infiniband/hw/mlx5/mlx5_ib.h
+@@ -1100,6 +1100,8 @@ struct mlx5_ib_dev {
+ 	struct mlx5_ib_delay_drop	delay_drop;
+ 	const struct mlx5_ib_profile	*profile;
+ 
++	struct ib_crypto_caps		crypto_caps;
++
+ 	struct mlx5_ib_lb_state		lb;
+ 	u8			umr_fence;
+ 	struct list_head	ib_dev_list;
 -- 
 2.39.0
 
