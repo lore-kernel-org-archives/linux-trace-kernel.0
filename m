@@ -2,201 +2,144 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA3FFC54EBE
-	for <linux-trace-kernel@archiver.kernel.org>; Mon, 16 Jan 2023 08:32:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 336ECC54EBE
+	for <linux-trace-kernel@archiver.kernel.org>; Mon, 16 Jan 2023 13:06:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232023AbjAPIcY (ORCPT
+        id S230508AbjAPNG4 (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Mon, 16 Jan 2023 03:32:24 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49936 "EHLO
+        Mon, 16 Jan 2023 08:06:56 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55128 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232078AbjAPIcX (ORCPT
+        with ESMTP id S231209AbjAPNGi (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Mon, 16 Jan 2023 03:32:23 -0500
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 81B1144B9;
-        Mon, 16 Jan 2023 00:32:22 -0800 (PST)
-Received: from pps.filterd (m0098399.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 30G5phDE024176;
-        Mon, 16 Jan 2023 08:32:11 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=date : from : subject :
- to : cc : references : in-reply-to : message-id : content-type :
- content-transfer-encoding : mime-version; s=pp1;
- bh=cNQBmWTp5okDMaJ+iwK67PR7Z6647nKho7OPtuocnEg=;
- b=rmQkgq4FopF4FF9X9XY43KAufTXiSsg6BcS4/VBr/h/xTFJjfI4QjIJ6f2M34zpWok/P
- TCdz5o1B3EpqHq10c5z9LG7JWjk2I0d7YDNsk21zS1+C0er0f6V4wm4nQ/aJsoMBzILn
- 43kHBSzzcosoiR/l9wW9vUq+DXU5CNu6y1zCy8H0+4F0dKwTJC8s9UlZ+k0WkCuyDrSx
- CHd00JZ6YWl+LCmm04jCnJtXsOYA/DDWe23kiKtcxMYCmzMAHYC3+16LgAwzf7Bbjvm8
- j+kodc26zEHDYqRQPYAMqIB3xinkxhEFvbLj4nscIy9OA/c94F/kSZTnxQJO7b5wa4ev KA== 
-Received: from ppma03fra.de.ibm.com (6b.4a.5195.ip4.static.sl-reverse.com [149.81.74.107])
-        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3n4fqpt8hd-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 16 Jan 2023 08:32:11 +0000
-Received: from pps.filterd (ppma03fra.de.ibm.com [127.0.0.1])
-        by ppma03fra.de.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 30FJjHvE007302;
-        Mon, 16 Jan 2023 08:32:08 GMT
-Received: from smtprelay07.fra02v.mail.ibm.com ([9.218.2.229])
-        by ppma03fra.de.ibm.com (PPS) with ESMTPS id 3n3m16hhwj-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 16 Jan 2023 08:32:08 +0000
-Received: from smtpav04.fra02v.mail.ibm.com (smtpav04.fra02v.mail.ibm.com [10.20.54.103])
-        by smtprelay07.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 30G8W6Ml30278002
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 16 Jan 2023 08:32:06 GMT
-Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 174A520043;
-        Mon, 16 Jan 2023 08:32:06 +0000 (GMT)
-Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id BD57520040;
-        Mon, 16 Jan 2023 08:32:05 +0000 (GMT)
-Received: from localhost (unknown [9.124.31.239])
-        by smtpav04.fra02v.mail.ibm.com (Postfix) with ESMTP;
-        Mon, 16 Jan 2023 08:32:05 +0000 (GMT)
-Date:   Mon, 16 Jan 2023 14:02:04 +0530
-From:   "Naveen N. Rao" <naveen.n.rao@linux.vnet.ibm.com>
-Subject: Re: [PATCH] selftests/ftrace: Extend multiple_kprobes.tc to add
- multiple consecutive probes in a function
-To:     Masami Hiramatsu <mhiramat@kernel.org>
-Cc:     Akanksha J N <akanksha@linux.ibm.com>,
-        linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
-        linux-trace-kernel@vger.kernel.org, rostedt@goodmis.org,
-        shuah@kernel.org
-References: <20230112095600.37665-1-akanksha@linux.ibm.com>
-        <1673529279.3c5f8oes3z.naveen@linux.ibm.com>
-        <20230113005153.c6ca2f75b9d12627eb63308a@kernel.org>
-        <1673601511.tq30r5phea.naveen@linux.ibm.com>
-        <20230114002126.a37640f815b74e9e78259a9f@kernel.org>
-In-Reply-To: <20230114002126.a37640f815b74e9e78259a9f@kernel.org>
-User-Agent: astroid/4d6b06ad (https://github.com/astroidmail/astroid)
-Message-Id: <1673856229.a7tekgas75.naveen@linux.ibm.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: JnwrrQiQIEf4CwyE70Xus10rYvdQdGN8
-X-Proofpoint-GUID: JnwrrQiQIEf4CwyE70Xus10rYvdQdGN8
-Content-Transfer-Encoding: quoted-printable
-X-Proofpoint-UnRewURL: 0 URL was un-rewritten
+        Mon, 16 Jan 2023 08:06:38 -0500
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 819283ABB;
+        Mon, 16 Jan 2023 05:06:08 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 320BBB80E37;
+        Mon, 16 Jan 2023 13:06:07 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1E9ECC433EF;
+        Mon, 16 Jan 2023 13:06:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1673874365;
+        bh=rNdp8EhsRlR5Ld3e2m1Ss4Ma8PuD1081i4b85L/XLws=;
+        h=From:To:Cc:Subject:Date:From;
+        b=IEbq92PfyqWg1QDwxKyyWT4dZQl4cCMHxgcSytzpU6C+EQ8kHuwbL/i4b4s4lSHe9
+         6AWMyv617QjAgpBTPasIqxYjGgeR9wh0T5T3rerp3l4jTTm8vgaIT8iznUz38gMp9j
+         ifQqOFD4SdOOTenk2PqaNWRPr6HRr6t9scWWpkCFDaA/vIH11jBcQPDGoKFY3dQTOy
+         L+2Ok+ApFxP6iVtXTZcfVNYq+DWhcWBN9fHzlLD79cN3fGbOFxslD8InNf+KGMTKgU
+         2BqHGnr9Z1r1MmJyR4JIH8tWicS/dLAKXcPBA2SykiC/XFWCR0jjNiqHAGDKTHfJq1
+         9Ggv8K4bc352Q==
+From:   Leon Romanovsky <leon@kernel.org>
+To:     Jason Gunthorpe <jgg@nvidia.com>
+Cc:     Bryan Tan <bryantan@vmware.com>, Christoph Hellwig <hch@lst.de>,
+        Eric Dumazet <edumazet@google.com>,
+        Israel Rukshin <israelr@nvidia.com>,
+        Jakub Kicinski <kuba@kernel.org>, Jens Axboe <axboe@fb.com>,
+        Keith Busch <kbusch@kernel.org>, linux-kernel@vger.kernel.org,
+        linux-nvme@lists.infradead.org, linux-rdma@vger.kernel.org,
+        linux-trace-kernel@vger.kernel.org,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Max Gurtovoy <mgurtovoy@nvidia.com>, netdev@vger.kernel.org,
+        Paolo Abeni <pabeni@redhat.com>,
+        Saeed Mahameed <saeedm@nvidia.com>,
+        Sagi Grimberg <sagi@grimberg.me>,
+        Selvin Xavier <selvin.xavier@broadcom.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Vishnu Dasa <vdasa@vmware.com>,
+        Yishai Hadas <yishaih@nvidia.com>
+Subject: [PATCH rdma-next 00/13] Add RDMA inline crypto support
+Date:   Mon, 16 Jan 2023 15:05:47 +0200
+Message-Id: <cover.1673873422.git.leon@kernel.org>
+X-Mailer: git-send-email 2.39.0
 MIME-Version: 1.0
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.219,Aquarius:18.0.923,Hydra:6.0.562,FMLib:17.11.122.1
- definitions=2023-01-16_06,2023-01-13_02,2022-06-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 bulkscore=0
- adultscore=0 lowpriorityscore=0 impostorscore=0 phishscore=0 spamscore=0
- suspectscore=0 malwarescore=0 clxscore=1015 mlxlogscore=958
- priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2212070000 definitions=main-2301160062
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-Masami Hiramatsu wrote:
-> Hi Naveen,
->=20
-> On Fri, 13 Jan 2023 14:59:51 +0530
-> "Naveen N. Rao" <naveen.n.rao@linux.vnet.ibm.com> wrote:
->=20
->> Masami Hiramatsu wrote:
->> > On Thu, 12 Jan 2023 18:51:14 +0530
->> > "Naveen N. Rao" <naveen.n.rao@linux.vnet.ibm.com> wrote:
->> >=20
->> >> Akanksha J N wrote:
->> >> > Commit 97f88a3d723162 ("powerpc/kprobes: Fix null pointer reference=
- in
->> >> > arch_prepare_kprobe()") fixed a recent kernel oops that was caused =
-as
->> >> > ftrace-based kprobe does not generate kprobe::ainsn::insn and it ge=
-ts
->> >> > set to NULL.
->> >> > Extend multiple kprobes test to add kprobes on first 256 bytes with=
-in a
->> >> > function, to be able to test potential issues with kprobes on
->> >> > successive instructions.
->> >=20
->> > What is the purpose of that test? If you intended to add a kprobe even=
-ts
->> > with some offset so that it becomes ftrace-based kprobe, it should be
->> > a different test case, because
->>=20
->> This is a follow up to:
->> http://lore.kernel.org/1664530538.ke6dp49pwh.naveen@linux.ibm.com
->>=20
->> The intent is to add consecutive probes covering KPROBES_ON_FTRACE,=20
->> vanilla trap-based kprobes as well as optprobes to ensure all of those=20
->> and their interactions are good.
->=20
-> Hmm, that should be implemented for each architecture with specific
-> knowledge instead of random offset, so that we can ensure the kprobe
-> is on ftrace/optimized or using trap. Also, it should check the
-> debugfs/kprobes/list file.
+From Israel,
 
-...
+The purpose of this patchset is to add support for inline
+encryption/decryption of the data at storage protocols like nvmf over
+RDMA (at a similar way like integrity is used via unique mkey).
 
->=20
->>=20
->> >=20
->> >  - This is a test case for checking multiple (at least 256) kprobe eve=
-nts
->> >   can be defined and enabled.
->> >=20
->> >  - If you want to check the ftrace-based kprobe, it should be near the
->> >    function entry, maybe within 16 bytes or so.
->> >=20
->> >  - Also, you don't need to enable it at once (and should not for this =
-case).
->> >=20
->> >> > The '|| true' is added with the echo statement to ignore errors tha=
-t are
->> >> > caused by trying to add kprobes to non probeable lines and continue=
- with
->> >> > the test.
->> >=20
->> > Can you add another test case for that? (and send it to the MLs which =
-Cc'd
->> > to this mail)
->> > e.g.=20
->> >=20
->> >    for i in `seq 0 16`; do
->> >      echo p:testprobe $FUNCTION_FORK+${i} >> kprobe_events || continue
->> >      echo 1 > events/kprobes/testprobe/enable
->> >      ( echo "forked" )
->> >      echo 0 > events/kprobes/testprobe/enable
->> >      echo > kprobe_events
->> >    done
->>=20
->> The current test to add multiple kprobes within a function also falls=20
->> under the purview of multiple_kprobes.tc, but it can be split into a=20
->> separate multiple_kprobes_func.tc if you think that will be better.
->>=20
->=20
-> Yes, please make it separate, this test case is for checking whether
-> the ftrace can define/enable/disable multiple kprobe events. Not for
-> checking kprobe with different types, nor checking interactions among
-> different types of kprobes.
->=20
-> (BTW, if you want to test optprobe on x86, you can not put the probes
->  within the jump instruction (+5 bytes). It will unoptimize existing
->  optimized kprobe in that case)
+This patchset adds support for plaintext keys. The patches were tested
+on BF-3 HW with fscrypt tool to test this feature, which showed reduce
+in CPU utilization when comparing at 64k or more IO size. The CPU utilization
+was improved by more than 50% comparing to the SW only solution at this case.
 
-Ok, I can see why we won't be able to optimize any of the probes on x86=20
-with this approach. But, we should be able to do so on powerpc and arm,=20
-the only other architectures supporting OPTPROBES at this time. For x86,=20
-we may have to extend the test to check kprobes/list.
+How to configure fscrypt to enable plaintext keys:
+ # mkfs.ext4 -O encrypt /dev/nvme0n1
+ # mount /dev/nvme0n1 /mnt/crypto -o inlinecrypt
+ # head -c 64 /dev/urandom > /tmp/master_key
+ # fscryptctl add_key /mnt/crypto/ < /tmp/master_key
+ # mkdir /mnt/crypto/test1
+ # fscryptctl set_policy 152c41b2ea39fa3d90ea06448456e7fb /mnt/crypto/test1
+   ** “152c41b2ea39fa3d90ea06448456e7fb” is the output of the
+      “fscryptctl add_key” command.
+ # echo foo > /mnt/crypto/test1/foo
 
-Crucially, I think trying to place a probe at each byte can still=20
-exercize interactions across KPROBES_ON_FTRACE and normal kprobes, so=20
-this test is still a good start. In addition, we get to ensure that=20
-kprobes infrastructure is rejecting placing probes at non-instruction=20
-boundaries.
+Notes:
+ - At plaintext mode only, the user set a master key and the fscrypt
+   driver derived from it the DEK and the key identifier.
+ - 152c41b2ea39fa3d90ea06448456e7fb is the derived key identifier
+ - Only on the first IO, nvme-rdma gets a callback to load the derived DEK. 
 
->=20
-> And do you really need to run "multiple" kprobes at once?
-> I think what you need is 'kprobe_opt_types.tc'.
+There is no special configuration to support crypto at nvme modules.
 
-Yes, enabling those probes is a good stress test to ensure we are only=20
-accepting valid probe locations.
+Thanks
 
-multiple_kprobe_types.tc ? :)
+Israel Rukshin (13):
+  net/mlx5: Introduce crypto IFC bits and structures
+  net/mlx5: Introduce crypto capabilities macro
+  RDMA: Split kernel-only create QP flags from uverbs create QP flags
+  RDMA/core: Add cryptographic device capabilities
+  RDMA/core: Add DEK management API
+  RDMA/core: Introduce MR type for crypto operations
+  RDMA/core: Add support for creating crypto enabled QPs
+  RDMA/mlx5: Add cryptographic device capabilities
+  RDMA/mlx5: Add DEK management API
+  RDMA/mlx5: Add AES-XTS crypto support
+  nvme: Introduce a local variable
+  nvme: Add crypto profile at nvme controller
+  nvme-rdma: Add inline encryption support
 
+ drivers/infiniband/core/device.c              |   3 +
+ drivers/infiniband/core/mr_pool.c             |   2 +
+ drivers/infiniband/core/uverbs_std_types_qp.c |  12 +-
+ drivers/infiniband/core/verbs.c               |  91 ++++++-
+ drivers/infiniband/hw/bnxt_re/ib_verbs.c      |   2 +-
+ drivers/infiniband/hw/mlx4/mlx4_ib.h          |   4 +-
+ drivers/infiniband/hw/mlx4/qp.c               |   4 +-
+ drivers/infiniband/hw/mlx5/Makefile           |   1 +
+ drivers/infiniband/hw/mlx5/crypto.c           | 115 +++++++++
+ drivers/infiniband/hw/mlx5/crypto.h           |  46 ++++
+ drivers/infiniband/hw/mlx5/main.c             |   5 +
+ drivers/infiniband/hw/mlx5/mlx5_ib.h          |   5 +-
+ drivers/infiniband/hw/mlx5/mr.c               |  33 +++
+ drivers/infiniband/hw/mlx5/qp.c               |  15 +-
+ drivers/infiniband/hw/mlx5/wr.c               | 164 +++++++++++-
+ drivers/infiniband/hw/vmw_pvrdma/pvrdma_qp.c  |   2 +-
+ drivers/net/ethernet/mellanox/mlx5/core/fw.c  |   6 +
+ .../net/ethernet/mellanox/mlx5/core/main.c    |   1 +
+ drivers/nvme/host/core.c                      |  10 +-
+ drivers/nvme/host/nvme.h                      |   4 +
+ drivers/nvme/host/rdma.c                      | 236 +++++++++++++++++-
+ include/linux/mlx5/device.h                   |   4 +
+ include/linux/mlx5/mlx5_ifc.h                 |  36 ++-
+ include/rdma/crypto.h                         | 118 +++++++++
+ include/rdma/ib_verbs.h                       |  46 +++-
+ include/trace/events/rdma_core.h              |  33 +++
+ 26 files changed, 954 insertions(+), 44 deletions(-)
+ create mode 100644 drivers/infiniband/hw/mlx5/crypto.c
+ create mode 100644 drivers/infiniband/hw/mlx5/crypto.h
+ create mode 100644 include/rdma/crypto.h
 
-Thanks,
-Naveen
+-- 
+2.39.0
 
