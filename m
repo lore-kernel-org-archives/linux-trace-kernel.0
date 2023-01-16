@@ -2,38 +2,38 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F3E51C46467
-	for <linux-trace-kernel@archiver.kernel.org>; Sat, 14 Jan 2023 13:46:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B3800C46467
+	for <linux-trace-kernel@archiver.kernel.org>; Mon, 16 Jan 2023 06:41:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229565AbjANNqp (ORCPT
+        id S231658AbjAPGld (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Sat, 14 Jan 2023 08:46:45 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50426 "EHLO
+        Mon, 16 Jan 2023 01:41:33 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33488 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230200AbjANNq3 (ORCPT
+        with ESMTP id S231616AbjAPGlc (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Sat, 14 Jan 2023 08:46:29 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 794F383F9;
-        Sat, 14 Jan 2023 05:46:02 -0800 (PST)
+        Mon, 16 Jan 2023 01:41:32 -0500
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B7D0283D6;
+        Sun, 15 Jan 2023 22:41:30 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 1494A60B43;
-        Sat, 14 Jan 2023 13:46:02 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3C60EC433EF;
-        Sat, 14 Jan 2023 13:46:00 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 67EAEB80D0B;
+        Mon, 16 Jan 2023 06:41:29 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 939FDC433D2;
+        Mon, 16 Jan 2023 06:41:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1673703961;
-        bh=FBTqS5C0vpzX8K3CrTPD4Sh29BdTUohvKieosm8VPHE=;
+        s=k20201202; t=1673851288;
+        bh=vxB4hgvvq627D1GhOvSCHeoYC0e4WMhyfKKnraRhV4k=;
         h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=N2VpF+UcL1UcKZEl3Ka9iPE7fHWM/Q1QOEe3DgbhZml4p42ix5eV7W5xxZr5k3t32
-         7Gbt1OXZGTmtHn4iBCdV6O7BJvxnioriYX8661/+FEIlV68/frlQ5ZCiy1CDvJAU3t
-         huQIAjGk2drEHwEDOTH+GNRIgNQHVkYt3wRaZQ9h95nAEnfTSevhJXVBcuDdEStG04
-         1BQC6WEWlIqWxOaVzLhf0SooYJQYW3x4urYuKC4+ErigaTfhHysz3+Tl+YdMaeuB14
-         XUFKOMCkp0CSUAne2BQVdqjrF6haJj2omJ2rXA+gxPr5oJZ1aTCfeP3F2Fo8Y/QJJc
-         fNm1HKIDnGgfw==
-Date:   Sat, 14 Jan 2023 22:45:58 +0900
+        b=dZ56rODpD4CgQ/qC/beZ23LRaanSycqHyi/na0VCHVyCUbp2JrX1Tnk9adi7mYKXl
+         Xjx7lzX1xFRLmY+7SwK4oxJnHbFOdXYMKNINTudQ1+V3CIfyXwLS0A9ReANwuH1T6p
+         hsMoQ4I8aOZkUVkBW2vv/auxqH0nL+R5mu6nSd34XUInZ8OkxSTMvWFDbF/4TfIjQl
+         G2EXxpxH5jr7o/nf9O9CVXcQbzCPkg0rofgVmW862DV4zQAixYucladTlKPmBCAF1c
+         0BncvOX3fCapcCavMmv0ePE8Y3EHyu2tKY9JZlioghZTbziyn3fL9suNzNlY6GMGxD
+         kSZty1rCtEMpA==
+Date:   Mon, 16 Jan 2023 15:41:23 +0900
 From:   Masami Hiramatsu (Google) <mhiramat@kernel.org>
 To:     Tiezhu Yang <yangtiezhu@loongson.cn>
 Cc:     "Naveen N. Rao" <naveen.n.rao@linux.ibm.com>,
@@ -41,7 +41,7 @@ Cc:     "Naveen N. Rao" <naveen.n.rao@linux.ibm.com>,
         "David S. Miller" <davem@davemloft.net>,
         linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org
 Subject: Re: kernel hangs when kprobe memcpy
-Message-Id: <20230114224558.63bc010f06f67e2e534db9fe@kernel.org>
+Message-Id: <20230116154123.a0ff8d6deaff3fe87b48461b@kernel.org>
 In-Reply-To: <b20cfc27-0e46-7e3b-e4f1-2e185ea516ab@loongson.cn>
 References: <d179086d-78d8-d0e3-e113-9072cffa55f4@loongson.cn>
         <19666c03-4bf6-7aac-3f1d-cd31ab7de2d5@loongson.cn>
@@ -56,6 +56,8 @@ Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
+
+Hi Tiezhu,
 
 On Sat, 14 Jan 2023 14:53:21 +0800
 Tiezhu Yang <yangtiezhu@loongson.cn> wrote:
@@ -221,108 +223,119 @@ Tiezhu Yang <yangtiezhu@loongson.cn> wrote:
 > already marked as noinstr. But for the kernel without the above commit,
 > like kernel 5.7, it has problem.
 
-Hmm, indeed. At least that should be backported to the stable kernels.
-If we can reproduce it on 5.4 or older stable kernel, we have to backport
-it or mark memcpy at least nokprobe.
+I've confirmed that kernel 5.4.228 (the latest stable tree) did not have
+this issue (it already rejects the memcpy). Since 5.7 is not a stable
+(maintained) tree, we can not send a patch to it.
+Anyway, it is better to add a test case for the recursed probe function.
+I made a patch below. Can your loongarch port pass this test case?
 
-Thank you,
+Thank you, 
 
-> 
-> >
-> >>
-> >> I do the following changes on LoongArch, could you please take a look
-> >> whether the code itself and the commit message are proper? Thank you.
-> >
-> > Yeah, this direction is good to me.
-> >
-> 
-> Thank you very much.
-> 
-> >>
-> >> LoongArch: Mark some assembler symbols as non-kprobe-able
-> >>
-> >> Some assembler symbols are not kprobe safe, such as handle_syscall
-> >> (used as syscall exception handler), *memcpy* (may cause recursive
-> >> exceptions), they can not be instrumented, just blacklist them for
-> >> kprobing.
-> >>
-> >> diff --git a/arch/loongarch/include/asm/asm.h
-> >> b/arch/loongarch/include/asm/asm.h
-> >> index 40eea6aa469e..c51a0914fc99 100644
-> >> --- a/arch/loongarch/include/asm/asm.h
-> >> +++ b/arch/loongarch/include/asm/asm.h
-> >> @@ -188,4 +188,14 @@
-> >>   #define PTRLOG		3
-> >>   #endif
-> >>
-> >> +/* Annotate a function as being unsuitable for kprobes. */
-> >> +#ifdef CONFIG_KPROBES
-> >> +#define ASM_NOKPROBE(name)				\
-> >
-> > As same as other archs, can you rename it _ASM_NOKPROBE()?
-> 
-> OK, will modify it in the normal patch.
-> 
-> >
-> > Others look good to me.
-> 
-> Thanks,
-> Tiezhu
-> 
-> >
-> > Thanks!
-> >
-> >> +	.pushsection "_kprobe_blacklist", "aw";		\
-> >> +	.quad	name;					\
-> >> +	.popsection;
-> >> +#else
-> >> +#define ASM_NOKPROBE(name)
-> >> +#endif
-> >> +
-> >>   #endif /* __ASM_ASM_H */
-> >> diff --git a/arch/loongarch/kernel/entry.S b/arch/loongarch/kernel/entry.S
-> >> index d53b631c9022..05696bf7b69d 100644
-> >> --- a/arch/loongarch/kernel/entry.S
-> >> +++ b/arch/loongarch/kernel/entry.S
-> >> @@ -67,6 +67,7 @@ SYM_FUNC_START(handle_syscall)
-> >>
-> >>   	RESTORE_ALL_AND_RET
-> >>   SYM_FUNC_END(handle_syscall)
-> >> +ASM_NOKPROBE(handle_syscall)
-> >>
-> >>   SYM_CODE_START(ret_from_fork)
-> >>   	bl	schedule_tail		# a0 = struct task_struct *prev
-> >> diff --git a/arch/loongarch/lib/memcpy.S b/arch/loongarch/lib/memcpy.S
-> >> index 7c07d595ee89..b32dd25ce3a4 100644
-> >> --- a/arch/loongarch/lib/memcpy.S
-> >> +++ b/arch/loongarch/lib/memcpy.S
-> >> @@ -17,6 +17,7 @@ SYM_FUNC_START(memcpy)
-> >>   	ALTERNATIVE	"b __memcpy_generic", \
-> >>   			"b __memcpy_fast", CPU_FEATURE_UAL
-> >>   SYM_FUNC_END(memcpy)
-> >> +ASM_NOKPROBE(memcpy)
-> >>
-> >>   EXPORT_SYMBOL(memcpy)
-> >>
-> >> @@ -41,6 +42,7 @@ SYM_FUNC_START(__memcpy_generic)
-> >>   2:	move	a0, a3
-> >>   	jr	ra
-> >>   SYM_FUNC_END(__memcpy_generic)
-> >> +ASM_NOKPROBE(__memcpy_generic)
-> >>
-> >>   /*
-> >>    * void *__memcpy_fast(void *dst, const void *src, size_t n)
-> >> @@ -93,3 +95,4 @@ SYM_FUNC_START(__memcpy_fast)
-> >>   3:	move	a0, a3
-> >>   	jr	ra
-> >>   SYM_FUNC_END(__memcpy_fast)
-> >> +ASM_NOKPROBE(__memcpy_fast)
-> >>
-> >> Thanks,
-> >> Tiezhu
-> >
-> >
-> 
+From: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
+Date: Mon, 16 Jan 2023 15:19:52 +0900
+Subject: [PATCH] test_kprobes: Add recursed kprobe test case
+
+Add a recursed kprobe test case to the KUnit test module for kprobes.
+This will probe a function which is called from the pre_handler and
+post_handler itself. If the kprobe is correctly implemented, the recursed
+kprobe handlers will be skipped and the number of skipped kprobe will
+be counted on kprobe::nmissed.
+
+Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+---
+ lib/test_kprobes.c | 39 +++++++++++++++++++++++++++++++++++++--
+ 1 file changed, 37 insertions(+), 2 deletions(-)
+
+diff --git a/lib/test_kprobes.c b/lib/test_kprobes.c
+index 1c95e5719802..0648f7154f5c 100644
+--- a/lib/test_kprobes.c
++++ b/lib/test_kprobes.c
+@@ -14,6 +14,7 @@
+ 
+ static u32 rand1, preh_val, posth_val;
+ static u32 (*target)(u32 value);
++static u32 (*recursed_target)(u32 value);
+ static u32 (*target2)(u32 value);
+ static struct kunit *current_test;
+ 
+@@ -27,18 +28,27 @@ static noinline u32 kprobe_target(u32 value)
+ 	return (value / div_factor);
+ }
+ 
++static noinline u32 kprobe_recursed_target(u32 value)
++{
++	return (value / div_factor);
++}
++
+ static int kp_pre_handler(struct kprobe *p, struct pt_regs *regs)
+ {
+ 	KUNIT_EXPECT_FALSE(current_test, preemptible());
+-	preh_val = (rand1 / div_factor);
++
++	preh_val = recursed_target(rand1);
+ 	return 0;
+ }
+ 
+ static void kp_post_handler(struct kprobe *p, struct pt_regs *regs,
+ 		unsigned long flags)
+ {
++	u32 expval = recursed_target(rand1);
++
+ 	KUNIT_EXPECT_FALSE(current_test, preemptible());
+-	KUNIT_EXPECT_EQ(current_test, preh_val, (rand1 / div_factor));
++	KUNIT_EXPECT_EQ(current_test, preh_val, expval);
++
+ 	posth_val = preh_val + div_factor;
+ }
+ 
+@@ -136,6 +146,29 @@ static void test_kprobes(struct kunit *test)
+ 	unregister_kprobes(kps, 2);
+ }
+ 
++static struct kprobe kp_missed = {
++	.symbol_name = "kprobe_recursed_target",
++	.pre_handler = kp_pre_handler,
++	.post_handler = kp_post_handler,
++};
++
++static void test_kprobe_missed(struct kunit *test)
++{
++	current_test = test;
++	preh_val = 0;
++	posth_val = 0;
++
++	KUNIT_EXPECT_EQ(test, 0, register_kprobe(&kp_missed));
++
++	recursed_target(rand1);
++
++	KUNIT_EXPECT_EQ(test, 2, kp_missed.nmissed);
++	KUNIT_EXPECT_NE(test, 0, preh_val);
++	KUNIT_EXPECT_NE(test, 0, posth_val);
++
++	unregister_kprobe(&kp_missed);
++}
++
+ #ifdef CONFIG_KRETPROBES
+ static u32 krph_val;
+ 
+@@ -336,6 +369,7 @@ static int kprobes_test_init(struct kunit *test)
+ {
+ 	target = kprobe_target;
+ 	target2 = kprobe_target2;
++	recursed_target = kprobe_recursed_target;
+ 	stacktrace_target = kprobe_stacktrace_target;
+ 	internal_target = kprobe_stacktrace_internal_target;
+ 	stacktrace_driver = kprobe_stacktrace_driver;
+@@ -346,6 +380,7 @@ static int kprobes_test_init(struct kunit *test)
+ static struct kunit_case kprobes_testcases[] = {
+ 	KUNIT_CASE(test_kprobe),
+ 	KUNIT_CASE(test_kprobes),
++	KUNIT_CASE(test_kprobe_missed),
+ #ifdef CONFIG_KRETPROBES
+ 	KUNIT_CASE(test_kretprobe),
+ 	KUNIT_CASE(test_kretprobes),
+-- 
+2.39.0.246.g2a6d74b583-goog
 
 
 -- 
