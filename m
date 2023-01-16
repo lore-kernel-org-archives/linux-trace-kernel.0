@@ -2,341 +2,201 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B3800C46467
-	for <linux-trace-kernel@archiver.kernel.org>; Mon, 16 Jan 2023 06:41:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA3FFC54EBE
+	for <linux-trace-kernel@archiver.kernel.org>; Mon, 16 Jan 2023 08:32:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231658AbjAPGld (ORCPT
+        id S232023AbjAPIcY (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Mon, 16 Jan 2023 01:41:33 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33488 "EHLO
+        Mon, 16 Jan 2023 03:32:24 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49936 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231616AbjAPGlc (ORCPT
+        with ESMTP id S232078AbjAPIcX (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Mon, 16 Jan 2023 01:41:32 -0500
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B7D0283D6;
-        Sun, 15 Jan 2023 22:41:30 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 67EAEB80D0B;
-        Mon, 16 Jan 2023 06:41:29 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 939FDC433D2;
-        Mon, 16 Jan 2023 06:41:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1673851288;
-        bh=vxB4hgvvq627D1GhOvSCHeoYC0e4WMhyfKKnraRhV4k=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=dZ56rODpD4CgQ/qC/beZ23LRaanSycqHyi/na0VCHVyCUbp2JrX1Tnk9adi7mYKXl
-         Xjx7lzX1xFRLmY+7SwK4oxJnHbFOdXYMKNINTudQ1+V3CIfyXwLS0A9ReANwuH1T6p
-         hsMoQ4I8aOZkUVkBW2vv/auxqH0nL+R5mu6nSd34XUInZ8OkxSTMvWFDbF/4TfIjQl
-         G2EXxpxH5jr7o/nf9O9CVXcQbzCPkg0rofgVmW862DV4zQAixYucladTlKPmBCAF1c
-         0BncvOX3fCapcCavMmv0ePE8Y3EHyu2tKY9JZlioghZTbziyn3fL9suNzNlY6GMGxD
-         kSZty1rCtEMpA==
-Date:   Mon, 16 Jan 2023 15:41:23 +0900
-From:   Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To:     Tiezhu Yang <yangtiezhu@loongson.cn>
-Cc:     "Naveen N. Rao" <naveen.n.rao@linux.ibm.com>,
-        Anil S Keshavamurthy <anil.s.keshavamurthy@intel.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: kernel hangs when kprobe memcpy
-Message-Id: <20230116154123.a0ff8d6deaff3fe87b48461b@kernel.org>
-In-Reply-To: <b20cfc27-0e46-7e3b-e4f1-2e185ea516ab@loongson.cn>
-References: <d179086d-78d8-d0e3-e113-9072cffa55f4@loongson.cn>
-        <19666c03-4bf6-7aac-3f1d-cd31ab7de2d5@loongson.cn>
-        <20230112233629.fafdbbe07dddf364f8078df6@kernel.org>
-        <d0484b6e-c8a3-65c8-2157-0da95c17b061@loongson.cn>
-        <20230114143859.7ccc45c1c5d9ce302113ab0a@kernel.org>
-        <b20cfc27-0e46-7e3b-e4f1-2e185ea516ab@loongson.cn>
-X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        Mon, 16 Jan 2023 03:32:23 -0500
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 81B1144B9;
+        Mon, 16 Jan 2023 00:32:22 -0800 (PST)
+Received: from pps.filterd (m0098399.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 30G5phDE024176;
+        Mon, 16 Jan 2023 08:32:11 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=date : from : subject :
+ to : cc : references : in-reply-to : message-id : content-type :
+ content-transfer-encoding : mime-version; s=pp1;
+ bh=cNQBmWTp5okDMaJ+iwK67PR7Z6647nKho7OPtuocnEg=;
+ b=rmQkgq4FopF4FF9X9XY43KAufTXiSsg6BcS4/VBr/h/xTFJjfI4QjIJ6f2M34zpWok/P
+ TCdz5o1B3EpqHq10c5z9LG7JWjk2I0d7YDNsk21zS1+C0er0f6V4wm4nQ/aJsoMBzILn
+ 43kHBSzzcosoiR/l9wW9vUq+DXU5CNu6y1zCy8H0+4F0dKwTJC8s9UlZ+k0WkCuyDrSx
+ CHd00JZ6YWl+LCmm04jCnJtXsOYA/DDWe23kiKtcxMYCmzMAHYC3+16LgAwzf7Bbjvm8
+ j+kodc26zEHDYqRQPYAMqIB3xinkxhEFvbLj4nscIy9OA/c94F/kSZTnxQJO7b5wa4ev KA== 
+Received: from ppma03fra.de.ibm.com (6b.4a.5195.ip4.static.sl-reverse.com [149.81.74.107])
+        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3n4fqpt8hd-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 16 Jan 2023 08:32:11 +0000
+Received: from pps.filterd (ppma03fra.de.ibm.com [127.0.0.1])
+        by ppma03fra.de.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 30FJjHvE007302;
+        Mon, 16 Jan 2023 08:32:08 GMT
+Received: from smtprelay07.fra02v.mail.ibm.com ([9.218.2.229])
+        by ppma03fra.de.ibm.com (PPS) with ESMTPS id 3n3m16hhwj-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 16 Jan 2023 08:32:08 +0000
+Received: from smtpav04.fra02v.mail.ibm.com (smtpav04.fra02v.mail.ibm.com [10.20.54.103])
+        by smtprelay07.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 30G8W6Ml30278002
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 16 Jan 2023 08:32:06 GMT
+Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 174A520043;
+        Mon, 16 Jan 2023 08:32:06 +0000 (GMT)
+Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id BD57520040;
+        Mon, 16 Jan 2023 08:32:05 +0000 (GMT)
+Received: from localhost (unknown [9.124.31.239])
+        by smtpav04.fra02v.mail.ibm.com (Postfix) with ESMTP;
+        Mon, 16 Jan 2023 08:32:05 +0000 (GMT)
+Date:   Mon, 16 Jan 2023 14:02:04 +0530
+From:   "Naveen N. Rao" <naveen.n.rao@linux.vnet.ibm.com>
+Subject: Re: [PATCH] selftests/ftrace: Extend multiple_kprobes.tc to add
+ multiple consecutive probes in a function
+To:     Masami Hiramatsu <mhiramat@kernel.org>
+Cc:     Akanksha J N <akanksha@linux.ibm.com>,
+        linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
+        linux-trace-kernel@vger.kernel.org, rostedt@goodmis.org,
+        shuah@kernel.org
+References: <20230112095600.37665-1-akanksha@linux.ibm.com>
+        <1673529279.3c5f8oes3z.naveen@linux.ibm.com>
+        <20230113005153.c6ca2f75b9d12627eb63308a@kernel.org>
+        <1673601511.tq30r5phea.naveen@linux.ibm.com>
+        <20230114002126.a37640f815b74e9e78259a9f@kernel.org>
+In-Reply-To: <20230114002126.a37640f815b74e9e78259a9f@kernel.org>
+User-Agent: astroid/4d6b06ad (https://github.com/astroidmail/astroid)
+Message-Id: <1673856229.a7tekgas75.naveen@linux.ibm.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: JnwrrQiQIEf4CwyE70Xus10rYvdQdGN8
+X-Proofpoint-GUID: JnwrrQiQIEf4CwyE70Xus10rYvdQdGN8
+Content-Transfer-Encoding: quoted-printable
+X-Proofpoint-UnRewURL: 0 URL was un-rewritten
+MIME-Version: 1.0
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.219,Aquarius:18.0.923,Hydra:6.0.562,FMLib:17.11.122.1
+ definitions=2023-01-16_06,2023-01-13_02,2022-06-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 bulkscore=0
+ adultscore=0 lowpriorityscore=0 impostorscore=0 phishscore=0 spamscore=0
+ suspectscore=0 malwarescore=0 clxscore=1015 mlxlogscore=958
+ priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2212070000 definitions=main-2301160062
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-Hi Tiezhu,
+Masami Hiramatsu wrote:
+> Hi Naveen,
+>=20
+> On Fri, 13 Jan 2023 14:59:51 +0530
+> "Naveen N. Rao" <naveen.n.rao@linux.vnet.ibm.com> wrote:
+>=20
+>> Masami Hiramatsu wrote:
+>> > On Thu, 12 Jan 2023 18:51:14 +0530
+>> > "Naveen N. Rao" <naveen.n.rao@linux.vnet.ibm.com> wrote:
+>> >=20
+>> >> Akanksha J N wrote:
+>> >> > Commit 97f88a3d723162 ("powerpc/kprobes: Fix null pointer reference=
+ in
+>> >> > arch_prepare_kprobe()") fixed a recent kernel oops that was caused =
+as
+>> >> > ftrace-based kprobe does not generate kprobe::ainsn::insn and it ge=
+ts
+>> >> > set to NULL.
+>> >> > Extend multiple kprobes test to add kprobes on first 256 bytes with=
+in a
+>> >> > function, to be able to test potential issues with kprobes on
+>> >> > successive instructions.
+>> >=20
+>> > What is the purpose of that test? If you intended to add a kprobe even=
+ts
+>> > with some offset so that it becomes ftrace-based kprobe, it should be
+>> > a different test case, because
+>>=20
+>> This is a follow up to:
+>> http://lore.kernel.org/1664530538.ke6dp49pwh.naveen@linux.ibm.com
+>>=20
+>> The intent is to add consecutive probes covering KPROBES_ON_FTRACE,=20
+>> vanilla trap-based kprobes as well as optprobes to ensure all of those=20
+>> and their interactions are good.
+>=20
+> Hmm, that should be implemented for each architecture with specific
+> knowledge instead of random offset, so that we can ensure the kprobe
+> is on ftrace/optimized or using trap. Also, it should check the
+> debugfs/kprobes/list file.
 
-On Sat, 14 Jan 2023 14:53:21 +0800
-Tiezhu Yang <yangtiezhu@loongson.cn> wrote:
+...
 
-> 
-> 
-> On 01/14/2023 01:38 PM, Masami Hiramatsu (Google) wrote:
-> > Hi Tiezhu,
-> >
-> > On Fri, 13 Jan 2023 14:26:52 +0800
-> > Tiezhu Yang <yangtiezhu@loongson.cn> wrote:
-> >
-> >>
-> >>
-> >> On 01/12/2023 10:36 PM, Masami Hiramatsu (Google) wrote:
-> >>> Hi Tiezhu,
-> >>>
-> >>> On Thu, 12 Jan 2023 21:32:51 +0800
-> >>> Tiezhu Yang <yangtiezhu@loongson.cn> wrote:
-> >>>
-> >>>>
-> >>>>
-> >>>> On 01/11/2023 07:38 PM, Tiezhu Yang wrote:
-> >>>>> Hi all,
-> >>>>>
-> >>>>> (1) I have the following test environment, kernel hangs when kprobe memcpy:
-> >>>>>
-> >>>>> system: x86_64 fedora 36
-> >>>>> kernel version: Linux 5.7 (compile and update)
-> >>>>> test case: modprobe kprobe_example symbol="memcpy"
-> >>>>> (CONFIG_SAMPLE_KPROBES=m)
-> >>>>>
-> >>>>> In order to fix build errors, it needs to unset CONFIG_NFP and do the
-> >>>>> following changes:
-> >>>>> commit 52a9dab6d892 ("libsubcmd: Fix use-after-free for realloc(..., 0)")
-> >>>>> commit de979c83574a ("x86/entry: Build thunk_$(BITS) only if
-> >>>>> CONFIG_PREEMPTION=y")
-> >>>>>
-> >>>>> (2) Using the latest upstream mainline kernel, no hang problem due to the
-> >>>>> commit e3a9e681adb7 ("x86/entry: Fixup bad_iret vs noinstr") to prohibit
-> >>>>> probing memcpy which is put into the .noinstr.text section.
-> >>>>>
-> >>>>>   # modprobe kprobe_example symbol="memcpy"
-> >>>>>   modprobe: ERROR: could not insert 'kprobe_example': Invalid argument
-> >>>>>
-> >>>>> In my opinion, according to the commit message, the above commit is not
-> >>>>> intended to fix the memcpy hang problem, the problem was fixed by accident.
-> >>>>>
-> >>>>> (3) If make handler_pre() and handler_post() as empty functions in the 5.7
-> >>>>> kernel code, the above hang problem does not exist.
-> >>>
-> >>>
-> >>>>>
-> >>>>> diff --git a/samples/kprobes/kprobe_example.c
-> >>>>> b/samples/kprobes/kprobe_example.c
-> >>>>> index fd346f58ddba..c194171d8a46 100644
-> >>>>> --- a/samples/kprobes/kprobe_example.c
-> >>>>> +++ b/samples/kprobes/kprobe_example.c
-> >>>>> @@ -28,8 +28,6 @@ static struct kprobe kp = {
-> >>>>>  static int __kprobes handler_pre(struct kprobe *p, struct pt_regs *regs)
-> >>>>>  {
-> >>>>>  #ifdef CONFIG_X86
-> >>>>> -    pr_info("<%s> p->addr = 0x%p, ip = %lx, flags = 0x%lx\n",
-> >>>>> -        p->symbol_name, p->addr, regs->ip, regs->flags);
-> >>>>>  #endif
-> >>>>>  #ifdef CONFIG_PPC
-> >>>>>      pr_info("<%s> p->addr = 0x%p, nip = 0x%lx, msr = 0x%lx\n",
-> >>>>> @@ -65,8 +63,6 @@ static void __kprobes handler_post(struct kprobe *p,
-> >>>>> struct pt_regs *regs,
-> >>>>>                  unsigned long flags)
-> >>>>>  {
-> >>>>>  #ifdef CONFIG_X86
-> >>>>> -    pr_info("<%s> p->addr = 0x%p, flags = 0x%lx\n",
-> >>>>> -        p->symbol_name, p->addr, regs->flags);
-> >>>>>  #endif
-> >>>>>  #ifdef CONFIG_PPC
-> >>>>>      pr_info("<%s> p->addr = 0x%p, msr = 0x%lx\n",
-> >>>>>
-> >>>>> I want to know what is the real reason of the hang problem when kprobe
-> >>>>> memcpy,
-> >>>>> I guess it may be kprobe recursion, what do you think? Thank you.
-> >>>>>
-> >>>>> By the way, kprobe memset has no problem whether or not handler_pre() and
-> >>>>> handler_post() are empty functions.
-> >>>>>
-> >>>>> Thanks,
-> >>>>> Tiezhu
-> >>>>
-> >>>> I find out the following call trace:
-> >>>>
-> >>>> handler_pre()
-> >>>>    pr_info()
-> >>>>      printk()
-> >>>>        _printk()
-> >>>>          vprintk()
-> >>>>            vprintk_store()
-> >>>>              memcpy()
-> >>>>
-> >>>> I think it may cause recursive exceptions, so we should
-> >>>> mark memcpy as non-kprobe-able, right?
-> >>>
-> >>> Yes, and the .noinstr.text (noinstr function attribute) is including
-> >>> non-kprobe-able (nokprobe function attribute). I a function is nokprobe
-> >>> and notrace, it should be noinstr. "NOKPROBE_SYMBOL" is used for the
-> >>> symbol which is called in the kprobe processing path (e.g. x86 int3
-> >>> handler etc.).
-> >>>
-> >>> BTW, that the bug you reported is interesting. Even if another kprobe
-> >>> is called inside kprobe pre/post handler, it must be skipped.
-> >>> If you can share your kconfig, I can try to reproduce it.
-> >>>
-> >>> Thank you,
-> >>>
-> >>
-> >> Hi Masami,
-> >>
-> >> Thank you very much for your reply.
-> >>
-> >> Please use the attached config and diff file, here are the steps
-> >> to reproduce kernel hangs when kprobe memcpy on x86_64 fedora 36:
-> >>
-> >> (1) kernel 5.7
-> >> $ wget --no-check-certificate
-> >> https://git.kernel.org/torvalds/t/linux-5.7.tar.gz
-> >> $ ls
-> >> 5.7.config  5.7.diff  linux-5.7.tar.gz
-> >> $ tar xf linux-5.7.tar.gz
-> >> $ cd linux-5.7/
-> >> $ patch -p1 < ../5.7.diff
-> >> $ cp ../5.7.config .config
-> >> $ make -j8
-> >> # make modules_install -j8
-> >> # make install
-> >> # set the default kernel and reboot
-> >> # modprobe kprobe_example symbol="memcpy"
-> >>
-> >> (2) kernel 6.2-rc1
-> >> $ wget --no-check-certificate
-> >> https://git.kernel.org/torvalds/t/linux-6.2-rc1.tar.gz
-> >> $ ls
-> >> 6.2-rc1.config  6.2-rc1.diff  linux-6.2-rc1.tar.gz
-> >> $ tar xf linux-6.2-rc1.tar.gz
-> >> $ cd linux-6.2-rc1/
-> >> $ patch -p1 < ../6.2-rc1.diff
-> >> $ cp ../6.2-rc1.config .config
-> >> $ make -j8
-> >> # make modules_install -j8
-> >> # make install
-> >> # set the default kernel and reboot
-> >> # modprobe kprobe_example symbol="memcpy"
-> >>
-> >> By the way, I am developing and testing kprobe on LoongArch, I met the
-> >> same hang problems when probe some symbols, such as (1) handle_syscall,
-> >> like entry_SYSCALL_64 in arch/x86/entry/entry_64.S, used as syscall
-> >> exception handler, (2) memcpy, it may cause recursive exceptions like
-> >> x86.
-> >
-> > If you saw that without any change, please report it. At least
-> > memcpy is already marked as noinstr.
-> 
-> The current upstream mainline kernel has no problem, because it includes
-> commit e3a9e681adb7 ("x86/entry: Fixup bad_iret vs noinstr"), memcpy is
-> already marked as noinstr. But for the kernel without the above commit,
-> like kernel 5.7, it has problem.
+>=20
+>>=20
+>> >=20
+>> >  - This is a test case for checking multiple (at least 256) kprobe eve=
+nts
+>> >   can be defined and enabled.
+>> >=20
+>> >  - If you want to check the ftrace-based kprobe, it should be near the
+>> >    function entry, maybe within 16 bytes or so.
+>> >=20
+>> >  - Also, you don't need to enable it at once (and should not for this =
+case).
+>> >=20
+>> >> > The '|| true' is added with the echo statement to ignore errors tha=
+t are
+>> >> > caused by trying to add kprobes to non probeable lines and continue=
+ with
+>> >> > the test.
+>> >=20
+>> > Can you add another test case for that? (and send it to the MLs which =
+Cc'd
+>> > to this mail)
+>> > e.g.=20
+>> >=20
+>> >    for i in `seq 0 16`; do
+>> >      echo p:testprobe $FUNCTION_FORK+${i} >> kprobe_events || continue
+>> >      echo 1 > events/kprobes/testprobe/enable
+>> >      ( echo "forked" )
+>> >      echo 0 > events/kprobes/testprobe/enable
+>> >      echo > kprobe_events
+>> >    done
+>>=20
+>> The current test to add multiple kprobes within a function also falls=20
+>> under the purview of multiple_kprobes.tc, but it can be split into a=20
+>> separate multiple_kprobes_func.tc if you think that will be better.
+>>=20
+>=20
+> Yes, please make it separate, this test case is for checking whether
+> the ftrace can define/enable/disable multiple kprobe events. Not for
+> checking kprobe with different types, nor checking interactions among
+> different types of kprobes.
+>=20
+> (BTW, if you want to test optprobe on x86, you can not put the probes
+>  within the jump instruction (+5 bytes). It will unoptimize existing
+>  optimized kprobe in that case)
 
-I've confirmed that kernel 5.4.228 (the latest stable tree) did not have
-this issue (it already rejects the memcpy). Since 5.7 is not a stable
-(maintained) tree, we can not send a patch to it.
-Anyway, it is better to add a test case for the recursed probe function.
-I made a patch below. Can your loongarch port pass this test case?
+Ok, I can see why we won't be able to optimize any of the probes on x86=20
+with this approach. But, we should be able to do so on powerpc and arm,=20
+the only other architectures supporting OPTPROBES at this time. For x86,=20
+we may have to extend the test to check kprobes/list.
 
-Thank you, 
+Crucially, I think trying to place a probe at each byte can still=20
+exercize interactions across KPROBES_ON_FTRACE and normal kprobes, so=20
+this test is still a good start. In addition, we get to ensure that=20
+kprobes infrastructure is rejecting placing probes at non-instruction=20
+boundaries.
 
-From: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
-Date: Mon, 16 Jan 2023 15:19:52 +0900
-Subject: [PATCH] test_kprobes: Add recursed kprobe test case
+>=20
+> And do you really need to run "multiple" kprobes at once?
+> I think what you need is 'kprobe_opt_types.tc'.
 
-Add a recursed kprobe test case to the KUnit test module for kprobes.
-This will probe a function which is called from the pre_handler and
-post_handler itself. If the kprobe is correctly implemented, the recursed
-kprobe handlers will be skipped and the number of skipped kprobe will
-be counted on kprobe::nmissed.
+Yes, enabling those probes is a good stress test to ensure we are only=20
+accepting valid probe locations.
 
-Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
----
- lib/test_kprobes.c | 39 +++++++++++++++++++++++++++++++++++++--
- 1 file changed, 37 insertions(+), 2 deletions(-)
-
-diff --git a/lib/test_kprobes.c b/lib/test_kprobes.c
-index 1c95e5719802..0648f7154f5c 100644
---- a/lib/test_kprobes.c
-+++ b/lib/test_kprobes.c
-@@ -14,6 +14,7 @@
- 
- static u32 rand1, preh_val, posth_val;
- static u32 (*target)(u32 value);
-+static u32 (*recursed_target)(u32 value);
- static u32 (*target2)(u32 value);
- static struct kunit *current_test;
- 
-@@ -27,18 +28,27 @@ static noinline u32 kprobe_target(u32 value)
- 	return (value / div_factor);
- }
- 
-+static noinline u32 kprobe_recursed_target(u32 value)
-+{
-+	return (value / div_factor);
-+}
-+
- static int kp_pre_handler(struct kprobe *p, struct pt_regs *regs)
- {
- 	KUNIT_EXPECT_FALSE(current_test, preemptible());
--	preh_val = (rand1 / div_factor);
-+
-+	preh_val = recursed_target(rand1);
- 	return 0;
- }
- 
- static void kp_post_handler(struct kprobe *p, struct pt_regs *regs,
- 		unsigned long flags)
- {
-+	u32 expval = recursed_target(rand1);
-+
- 	KUNIT_EXPECT_FALSE(current_test, preemptible());
--	KUNIT_EXPECT_EQ(current_test, preh_val, (rand1 / div_factor));
-+	KUNIT_EXPECT_EQ(current_test, preh_val, expval);
-+
- 	posth_val = preh_val + div_factor;
- }
- 
-@@ -136,6 +146,29 @@ static void test_kprobes(struct kunit *test)
- 	unregister_kprobes(kps, 2);
- }
- 
-+static struct kprobe kp_missed = {
-+	.symbol_name = "kprobe_recursed_target",
-+	.pre_handler = kp_pre_handler,
-+	.post_handler = kp_post_handler,
-+};
-+
-+static void test_kprobe_missed(struct kunit *test)
-+{
-+	current_test = test;
-+	preh_val = 0;
-+	posth_val = 0;
-+
-+	KUNIT_EXPECT_EQ(test, 0, register_kprobe(&kp_missed));
-+
-+	recursed_target(rand1);
-+
-+	KUNIT_EXPECT_EQ(test, 2, kp_missed.nmissed);
-+	KUNIT_EXPECT_NE(test, 0, preh_val);
-+	KUNIT_EXPECT_NE(test, 0, posth_val);
-+
-+	unregister_kprobe(&kp_missed);
-+}
-+
- #ifdef CONFIG_KRETPROBES
- static u32 krph_val;
- 
-@@ -336,6 +369,7 @@ static int kprobes_test_init(struct kunit *test)
- {
- 	target = kprobe_target;
- 	target2 = kprobe_target2;
-+	recursed_target = kprobe_recursed_target;
- 	stacktrace_target = kprobe_stacktrace_target;
- 	internal_target = kprobe_stacktrace_internal_target;
- 	stacktrace_driver = kprobe_stacktrace_driver;
-@@ -346,6 +380,7 @@ static int kprobes_test_init(struct kunit *test)
- static struct kunit_case kprobes_testcases[] = {
- 	KUNIT_CASE(test_kprobe),
- 	KUNIT_CASE(test_kprobes),
-+	KUNIT_CASE(test_kprobe_missed),
- #ifdef CONFIG_KRETPROBES
- 	KUNIT_CASE(test_kretprobe),
- 	KUNIT_CASE(test_kretprobes),
--- 
-2.39.0.246.g2a6d74b583-goog
+multiple_kprobe_types.tc ? :)
 
 
--- 
-Masami Hiramatsu (Google) <mhiramat@kernel.org>
+Thanks,
+Naveen
+
