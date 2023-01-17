@@ -2,91 +2,102 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 001ECC3DA78
-	for <linux-trace-kernel@archiver.kernel.org>; Tue, 17 Jan 2023 16:16:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E3E2CC3DA78
+	for <linux-trace-kernel@archiver.kernel.org>; Tue, 17 Jan 2023 16:44:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230363AbjAQQQn (ORCPT
+        id S230352AbjAQQoj (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Tue, 17 Jan 2023 11:16:43 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36550 "EHLO
+        Tue, 17 Jan 2023 11:44:39 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53296 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230268AbjAQQQm (ORCPT
+        with ESMTP id S232517AbjAQQoh (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Tue, 17 Jan 2023 11:16:42 -0500
-Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C17363BDBF;
-        Tue, 17 Jan 2023 08:16:40 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 6873FB81889;
-        Tue, 17 Jan 2023 16:16:39 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9918AC433D2;
-        Tue, 17 Jan 2023 16:16:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-        s=korg; t=1673972198;
-        bh=JDdKiExkdHHBvFjl0JAbqgCBVMtsUjtunEQuXNFiEeA=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=hFIokIh8FPRI/MDifDwqLBbv7xE/Si8Fa9gf7NcCFI0/pWqu81fykNf9Y8T3MrlwT
-         KoJb79OKvPyjjiUFWAusoeIS2ZjlZ3BemvdsRCVWs6giySdiKVmdd0sel35e2iHIX7
-         1jvRyKtCqVSWS43YgQHD7UESDBj4X9y8PB7T7ziM=
-Date:   Tue, 17 Jan 2023 17:16:35 +0100
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     WritePaper <clangllvm@126.com>
-Cc:     ast@kernel.org, daniel@iogearbox.net, andrii@kernel.org,
-        martin.lau@linux.dev, song@kernel.org, yhs@fb.com,
-        john.fastabend@gmail.com, kpsingh@kernel.org, sdf@google.com,
+        Tue, 17 Jan 2023 11:44:37 -0500
+X-Greylist: delayed 3614 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Tue, 17 Jan 2023 08:44:31 PST
+Received: from m126.mail.126.com (m126.mail.126.com [123.126.96.241])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id B6C7C83C1;
+        Tue, 17 Jan 2023 08:44:31 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=126.com;
+        s=s110527; h=From:Subject:Date:Message-Id:MIME-Version; bh=/vQ8l
+        ujlHPAo719eQYKpSHLJgqfRyeZVINfTpIv8RRI=; b=IJwoZLL7c8DMPqFF7jwD0
+        v18p8zoctNbIYtJCYPi/qnQ80uIcGLuYDtx7mR63nG3e38JyIZuNtDwjz7HLmg49
+        fjstzRUUE/et2D9Rz4GjMSDHRzw+McGg0lVC6HnBXjLq9RnP3JLOG2O4lX3XRoCK
+        0J/f/SOnFtrKx2LihA0BVI=
+Received: from localhost.localdomain (unknown [202.112.238.191])
+        by smtp12 (Coremail) with SMTP id fORpCgA33XT9usZjkqGZAA--.64291S4;
+        Tue, 17 Jan 2023 23:13:02 +0800 (CST)
+From:   WritePaper <clangllvm@126.com>
+To:     ast@kernel.org, daniel@iogearbox.net, andrii@kernel.org,
+        martin.lau@linux.dev, song@kernel.org, yhs@fb.com
+Cc:     john.fastabend@gmail.com, kpsingh@kernel.org, sdf@google.com,
         haoluo@google.com, jolsa@kernel.org, rostedt@goodmis.org,
-        mhiramat@kernel.org, bpf@vger.kernel.org,
+        mhiramat@kernel.org, clangllvm@126.com, bpf@vger.kernel.org,
         linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
-Subject: Re: [PATCH] bpf: security enhancement by limiting the offensive eBPF
- helpers
-Message-ID: <Y8bJ48Q5mcDOxS3c@kroah.com>
-References: <20230117151256.605977-1-clangllvm@126.com>
+Subject: [PATCH] bpf: security enhancement by limiting the offensive eBPF helpers
+Date:   Tue, 17 Jan 2023 23:12:56 +0800
+Message-Id: <20230117151256.605977-1-clangllvm@126.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230117151256.605977-1-clangllvm@126.com>
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID: fORpCgA33XT9usZjkqGZAA--.64291S4
+X-Coremail-Antispam: 1Uf129KBjvJXoW7Kr1xJrWDCw1kXw48Ww47CFg_yoW8ZrWDpF
+        yDGFZrArZ7JF42gr9rJr1xCrWrA398WrW7WFWDWa18ZrnrXr4jqr4UKF4IkF1rZrZxGrW7
+        ua129FZ0kF12ga7anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+        9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x0ziiIDxUUUUU=
+X-Originating-IP: [202.112.238.191]
+X-CM-SenderInfo: xfod0wpooyzqqrswhudrp/1tbiLR-5y1pEAlbwcwAAsJ
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On Tue, Jan 17, 2023 at 11:12:56PM +0800, WritePaper wrote:
-> The bpf_send_singal and bpf_override_return is similar to
-> bpf_write_user and can affect userspace processes. Thus, these two
-> helpers should also be constraint by security lockdown.
-> 
-> Signed-off-by: WritePaper <clangllvm@126.com>
-> ---
->  include/linux/security.h | 3 +++
->  kernel/trace/bpf_trace.c | 6 ++++--
->  2 files changed, 7 insertions(+), 2 deletions(-)
-> 
+The bpf_send_singal and bpf_override_return is similar to
+bpf_write_user and can affect userspace processes. Thus, these two
+helpers should also be constraint by security lockdown.
 
-Hi,
+Signed-off-by: WritePaper <clangllvm@126.com>
+---
+ include/linux/security.h | 3 +++
+ kernel/trace/bpf_trace.c | 6 ++++--
+ 2 files changed, 7 insertions(+), 2 deletions(-)
 
-This is the friendly patch-bot of Greg Kroah-Hartman.  You have sent him
-a patch that has triggered this response.  He used to manually respond
-to these common problems, but in order to save his sanity (he kept
-writing the same thing over and over, yet to different people), I was
-created.  Hopefully you will not take offence and will fix the problem
-in your patch and resubmit it so that it can be accepted into the Linux
-kernel tree.
+diff --git a/include/linux/security.h b/include/linux/security.h
+index 5b67f208f..cb90b2860 100644
+--- a/include/linux/security.h
++++ b/include/linux/security.h
+@@ -123,6 +123,9 @@ enum lockdown_reason {
+ 	LOCKDOWN_DEBUGFS,
+ 	LOCKDOWN_XMON_WR,
+ 	LOCKDOWN_BPF_WRITE_USER,
++	LOCKDOWN_BPF_SEND_SIGNAL,
++	LOCKDOWN_BPF_OVERRIDE_RETURN,
++	LOCKDOWN_OFFENSIVE_BPF_MAX,
+ 	LOCKDOWN_DBG_WRITE_KERNEL,
+ 	LOCKDOWN_RTAS_ERROR_INJECTION,
+ 	LOCKDOWN_INTEGRITY_MAX,
+diff --git a/kernel/trace/bpf_trace.c b/kernel/trace/bpf_trace.c
+index 3bbd3f0c8..3a80f4b6f 100644
+--- a/kernel/trace/bpf_trace.c
++++ b/kernel/trace/bpf_trace.c
+@@ -1463,7 +1463,8 @@ bpf_tracing_func_proto(enum bpf_func_id func_id, const struct bpf_prog *prog)
+ 		return &bpf_cgrp_storage_delete_proto;
+ #endif
+ 	case BPF_FUNC_send_signal:
+-		return &bpf_send_signal_proto;
++		return security_locked_down(LOCKDOWN_BPF_SEND_SIGNAL) < 0 ?
++		       NULL : &bpf_send_signal_proto;
+ 	case BPF_FUNC_send_signal_thread:
+ 		return &bpf_send_signal_thread_proto;
+ 	case BPF_FUNC_perf_event_read_value:
+@@ -1531,7 +1532,8 @@ kprobe_prog_func_proto(enum bpf_func_id func_id, const struct bpf_prog *prog)
+ 		return &bpf_get_stack_proto;
+ #ifdef CONFIG_BPF_KPROBE_OVERRIDE
+ 	case BPF_FUNC_override_return:
+-		return &bpf_override_return_proto;
++		return security_locked_down(LOCKDOWN_BPF_OVERRIDE_RETURN) < 0 ?
++		       NULL : &bpf_override_return_proto;
+ #endif
+ 	case BPF_FUNC_get_func_ip:
+ 		return prog->expected_attach_type == BPF_TRACE_KPROBE_MULTI ?
+-- 
+2.25.1
 
-You are receiving this message because of the following common error(s)
-as indicated below:
-
-- It looks like you did not use your "real" name for the patch on either
-  the Signed-off-by: line, or the From: line (both of which have to
-  match).  Please read the kernel file,
-  Documentation/process/submitting-patches.rst for how to do this
-  correctly.
-
-If you wish to discuss this problem further, or you have questions about
-how to resolve this issue, please feel free to respond to this email and
-Greg will reply once he has dug out from the pending patches received
-from other developers.
-
-thanks,
-
-greg k-h's patch email bot
