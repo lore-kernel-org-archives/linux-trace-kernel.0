@@ -2,163 +2,201 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E137BC46467
-	for <linux-trace-kernel@archiver.kernel.org>; Tue, 17 Jan 2023 00:33:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C503C678DC
+	for <linux-trace-kernel@archiver.kernel.org>; Tue, 17 Jan 2023 04:25:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232972AbjAQAdG (ORCPT
+        id S235403AbjAQEZX (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Mon, 16 Jan 2023 19:33:06 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58502 "EHLO
+        Mon, 16 Jan 2023 23:25:23 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55980 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234697AbjAQAdE (ORCPT
+        with ESMTP id S234808AbjAQEZN (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Mon, 16 Jan 2023 19:33:04 -0500
-Received: from NAM10-BN7-obe.outbound.protection.outlook.com (mail-bn7nam10on2072.outbound.protection.outlook.com [40.107.92.72])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 516A82A145;
-        Mon, 16 Jan 2023 16:33:01 -0800 (PST)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=RXPWWaOgJclINj+HCL3IscILcbh5sdIFhHD43Q98j7r+XDfXQu9wXcaSWrif0lby4J9J2d63ECo7AeYPEsHONIeTpwJaCYuGP3h8ub+cuYE2yzLYCCy8/P+UxDiGS/G0n13vogimbhYIjRAcIpANgwBBzhH/FneYWiAgchInuGj5Rg+zRE3/OMT6KzuJWMtDyxdhDduTFl7jUcjyUvOP/hUr2zJoABJT75K50VGN1zdte15izxPaiGvImP6v3scfNPhDOdJJa/7l9WRUiIJ9wwZwEynmSDJmGz3S/WQMjTVVv72uP6RTwzWMUK0UGkdCJTPZq/aXxwQB2FvIWl92Mg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=LeO6BRRgbB97O2Q2C3oBmrQdi8ULJsoXXm1jTu5FUwI=;
- b=ZLwLj+xu7E+jqia0ZHQSVFQnthiU7GS5umUej2fD9Gei8spVEq42ENiQoSvqWX5R/K845Mek/LA1c3VF0FXGJpOn/baSrLidIRlNiwcwIRntLF7o53w7tuxyV8ZjFQkzJIpQyOFe4Ti31HiA0voswY4VdtyK7cIQhae8/jP/Vx5Bc8Wf1HL/pYqj3AnzwqPil1yaFARk8Q9rzJ39WHlULM+p0OGJ5fm+a6oQHFJvvo37nPkt6X0fj1LyjPIUGdWhL7A+dJwcPssCY6q2f1/VWSt8Yl0g9no7byeQnDqnwL2zqWiQ5ZKIj8vDEB/vsC0bv7DzDqySw5WNCtbuh5OVKA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=LeO6BRRgbB97O2Q2C3oBmrQdi8ULJsoXXm1jTu5FUwI=;
- b=SbkK0lxh/rTN2sBi3brGfXNug2PnnkrfixeDA9h0a1NpfFxTYYGl1VYWuuqsYHgHYg5VCwsxxlStZj9Hp7TKw2f+SroHjr+9cQDY6J4QLzvVl0xhqM2NkZLcflAxDCEWVHwdDeuApRHV8DxDGiRYMOeqBWkHsp5xd4TtU4nfqjq/6TyyUSEZW8qNz6fseVgeFxhywg7UimO2SsS64MwmTiwSfBdZEbplEZY61EtmzcsPbLMmDufRPlTBK5sWt7dT27e5quajJ/1QyjcSzCZ02gc6KNTusLM9t3Xc3iLxJ2LubziRkKV91WgD41IjjOjSRkXpg4n9zW/iEqAde4KmpA==
-Received: from MW2PR12MB4667.namprd12.prod.outlook.com (2603:10b6:302:12::28)
- by DM4PR12MB5390.namprd12.prod.outlook.com (2603:10b6:5:389::15) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6002.13; Tue, 17 Jan
- 2023 00:32:59 +0000
-Received: from MW2PR12MB4667.namprd12.prod.outlook.com
- ([fe80::b84c:b6e:dc0:8d7]) by MW2PR12MB4667.namprd12.prod.outlook.com
- ([fe80::b84c:b6e:dc0:8d7%2]) with mapi id 15.20.5986.022; Tue, 17 Jan 2023
- 00:32:59 +0000
-From:   Chaitanya Kulkarni <chaitanyak@nvidia.com>
-To:     Leon Romanovsky <leon@kernel.org>, Jason Gunthorpe <jgg@nvidia.com>
-CC:     Israel Rukshin <israelr@nvidia.com>,
-        Bryan Tan <bryantan@vmware.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Eric Dumazet <edumazet@google.com>,
-        Jakub Kicinski <kuba@kernel.org>, Jens Axboe <axboe@fb.com>,
-        Keith Busch <kbusch@kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-nvme@lists.infradead.org" <linux-nvme@lists.infradead.org>,
-        "linux-rdma@vger.kernel.org" <linux-rdma@vger.kernel.org>,
-        "linux-trace-kernel@vger.kernel.org" 
-        <linux-trace-kernel@vger.kernel.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Max Gurtovoy <mgurtovoy@nvidia.com>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        Paolo Abeni <pabeni@redhat.com>,
-        Saeed Mahameed <saeedm@nvidia.com>,
-        Sagi Grimberg <sagi@grimberg.me>,
-        Selvin Xavier <selvin.xavier@broadcom.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Vishnu Dasa <vdasa@vmware.com>,
-        Yishai Hadas <yishaih@nvidia.com>
-Subject: Re: [PATCH rdma-next 11/13] nvme: Introduce a local variable
-Thread-Topic: [PATCH rdma-next 11/13] nvme: Introduce a local variable
-Thread-Index: AQHZKaxHVD5zkyAsbECelDFns/Z2ka6hwyeA
-Date:   Tue, 17 Jan 2023 00:32:59 +0000
-Message-ID: <c095c9a9-0e77-c8ab-d34e-f4ab42b11938@nvidia.com>
-References: <cover.1673873422.git.leon@kernel.org>
- <cf5bc542e014f465f7ae443e52e70def2993aef1.1673873422.git.leon@kernel.org>
-In-Reply-To: <cf5bc542e014f465f7ae443e52e70def2993aef1.1673873422.git.leon@kernel.org>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-user-agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.9.0
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nvidia.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: MW2PR12MB4667:EE_|DM4PR12MB5390:EE_
-x-ms-office365-filtering-correlation-id: 9edea2fe-6b61-475f-84c6-08daf82262c6
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: b65imYg05CXSnDvYIgqOdJ3Tpa7wbtlbqzCtQk04gBHjk8H5cgtu2ri8F0KxCVGccx9zGtGN0L2eONSY7zQC1SbR5UgASjKN+v0p0xxx2fICulVDvXxcdyQi/r4VpDHC+jUqNP97wTcW51L3B/3SZOG+oeHMTb1pmk6Sa4h2sEukN1noRRWhtynbbvIJ+CydkvA52rPtMCUNUGtiEMAO1/lmk8kWiNdiJcBEpwBnbXdo3WPJMM9iJDUSo6cW4zpMEZXAbZwffovJhUNCrrwf2H3bzc1APKDdaKK4dm0KucnDVk91CbBsZ5bc+s/YETmNyAzPsNKzLFy/P+ExZQg7s9Z32j0Up+JvhojRQ2kFcymuCCL7/MH2sDujbPOvp0ZWWhXStDNn2TzZKj0CgfPoINp66A7Rg62BuDVX9nqr7lelbNECm4FlP0wTc0MFSXanbEI3Z5Z9toBMpAqZ7uaLpLgTAap/U0wmDSPnjSqSnsUVXlqwsm7r+OwMld1AExWd07RhEQ3O7ZM7ZTPgnT/1+sWSev9HGbfZa2/OkgclEnhTAqvMgNXlL4ro4SOVioicKTEdai7FhaDRf8PjFXxNXVZ16x1ANlF1O1NAY56GqrIx+ZSpKta7+MyBZD6r46J+bmyCaqaMrdu/dfszz9/nc9L5diGjBLbO95s1PLW0NpjkM9XHMzBV/vXRAd2LivgnJVTYqbLynOcR3P69RAKPGQ+HhD0s7o0F9VbzUnzqHoIEhwMdqme33Agt2C+RSm6JNrhzI42/6hir723tzzCMFw==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MW2PR12MB4667.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230022)(4636009)(396003)(136003)(346002)(39860400002)(366004)(376002)(451199015)(7416002)(36756003)(2906002)(107886003)(6506007)(53546011)(76116006)(122000001)(5660300002)(8676002)(31686004)(4744005)(4326008)(8936002)(91956017)(64756008)(83380400001)(66446008)(6636002)(38100700002)(6512007)(478600001)(41300700001)(38070700005)(6486002)(186003)(66476007)(66946007)(31696002)(66556008)(71200400001)(54906003)(2616005)(86362001)(316002)(110136005)(45980500001)(43740500002);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?utf-8?B?UU5Ecm4zbCtkSG4xYm9qRDdyZ3NCbnZ1ajc0OGZ1ZFBIUVJvd2M0cGg5KzhG?=
- =?utf-8?B?K25mWkhNcFpJSzhzQVl2U3pORktIMllheDhqZHFCdGVUdHUvejdTdFpBS1R2?=
- =?utf-8?B?TkMydVVwdWFaK0s2bXowY2VyQW1Ma3g1OTI2eEFRMHZLb3gzRklLZjYrdXpI?=
- =?utf-8?B?VlMrTFJYMC9CaHE0T01kclpBRSsrWGdGZ0VqY0k3UHJSQzZ0a1lkQkV6WHl1?=
- =?utf-8?B?c3BTSzFUTFhtcjdiV25iNjY1am9YaUtlOVpqNnhWUTJhOUxNNDkzWXBOcG85?=
- =?utf-8?B?RXhFNFhtNmR4RlFwcW1VbU55K3p0TEF5OFoxNy9aYXI4OUtoOUIxeDQrVFR2?=
- =?utf-8?B?UHY5ckVvRUFGUnNacGVodW0yZzdwMUR3eHpxaGNzVk9mN1NiakRSdkhZOFNW?=
- =?utf-8?B?eEhWMjlub3dyQ21WQ3VRWW5CZ3k5TDk1c3Fod3A2bVVjQ0U2T2txcnZpMnk2?=
- =?utf-8?B?Z3FPWTBhQVh0MUxhbmVOYXZEdGRVbHVWRjQvdUw5MjdPczRHVkdZZUh5QitB?=
- =?utf-8?B?OXYrQUo2aXdNVmJsblowVmY4TnZkZG0wenAvMFpYN1RsQ00wT0dYemltb1hr?=
- =?utf-8?B?ZDQyVUtOMnhUOEhqSkNDeFZEYzMwSE1kS3hZcmdpa1dtM2JqT3hCWFkyTVpP?=
- =?utf-8?B?K3F3aXJKZW0yc25oWGtkWWl3b3czZmtEcTd0b1ZYcFBCV0kxRDIvY09DZm1J?=
- =?utf-8?B?VGhybGxSd25oR2dSeEFJN3VOS0ZQZ1FGbFRMS3RJVmVWNnhnTzk5SmNtOEhG?=
- =?utf-8?B?OUZIR2VkdEFyYk1PQk9NdUJGMEZsUWVJWVBGeXhORzkwVXkrYXl5RlhiWnFO?=
- =?utf-8?B?b3prR0d6alFGTnJnY2JMRy9ReGRZSG0rVmVOR1ZsbTdKRjFzQ2pFaUVVSHlQ?=
- =?utf-8?B?UGRpdW9GU3o5bHRWVTJybzRHZ2hxaGx0aW05SnVXUDhQUGdvWHo0Y0xscUlo?=
- =?utf-8?B?cEtJM2Y4aytjNDU5cEh4YkI2RmUvVW8reXN6K1RQMDBxQ00wNnZISi9jY1Vm?=
- =?utf-8?B?MXk1d1BqdXNtQ05BdGtqb3VjRFYrRHRlZVQ4QXJJWFdJQk5UcTVrMTFzZTJR?=
- =?utf-8?B?S3FwQUo3TitYRFp3RlFCbWRLTHVxcjM3alhva25wVXliQ2xFYnl0RlpZU1U5?=
- =?utf-8?B?L2RyVTdrd3F0V0x5Rzh6UTlqN0RpcHZpdkVpaFNra3FFZTZSaGVvN2dTUkVT?=
- =?utf-8?B?U3VpaXZjQlh2S21sd1o3ZXVJd0lzdmZJenR3M202aTlRa1NpZlpEVW1Md2ds?=
- =?utf-8?B?Yk1hbGkvVFd4bk1EMmd1Um84WkNrMVpWckpPbjhpNUdLcjVWOEtkK0lTU0VR?=
- =?utf-8?B?d0hOSlNFUHdhRDN4dHppdWs0MjFrZ2pEV1hyb1ljenpUZlp0VjRvV3M4dDN0?=
- =?utf-8?B?am1ON0ZyUE5KSWRRelZyc0VEb3hVL2t6QjVMOEdiTFJRcU84eXJXNnFka1hI?=
- =?utf-8?B?MngzOGJRK0pxZXBYWktXZ0x0a1h2WUlwb29SK2k3YzROeDIwNEdyUGI0MHBm?=
- =?utf-8?B?UXA4VTV1dEIrUlRVZjVyVlJyQ0RrQWp5Z1Q1TWRvbTU5blNEcnNHYVZmd3Yr?=
- =?utf-8?B?SkZWMjlSa3FSVGVrZmtUVVcyWVRPTHNyR0RYTS95N3J0WEhiRmVJWkJHS1RO?=
- =?utf-8?B?bG5YQXFkYmdBQ2l6WmxHdnFkbFRJS2RuSG1WL2loR2pCNU9MVWVoQThpczhk?=
- =?utf-8?B?VVU0OUlOMUFPckxNQXBCNWpsSUJ6MkM1R3o0QVhGaTBsYlZydGxjKzAzZnMy?=
- =?utf-8?B?YVVvMmx1QlV6eUthTWgrblBpNzlPKzI4UTBxdURyYmV6L201V3pMUUFEK2Qz?=
- =?utf-8?B?bHFNMGJGYytpSjRXd3hlUFREOWtmYXJZeHd0U1N6alVJV1hFR2wxbFhBS0Nx?=
- =?utf-8?B?YjlXTnE4Z0tvZHdDbWVwbHVkZDkyclc4SkhTT01MMG5yRU5BTjhQbWd5dTlZ?=
- =?utf-8?B?anpxQWJHeVF6Y1RSaDZLb1hmLzVjOXNTWkNxYTBUM3YxTFBlRHVTUkt1Q0Jh?=
- =?utf-8?B?MHZhcW9HR3VTZ1VuQ1dlbVRZalkyKzZUR1ZQaG9IRThVUHgySnlZdWVXWXpF?=
- =?utf-8?B?SEFWVHRsL3U2eDNSYllwY2UzcXVSTzg0TS96ejVNKzZzblR4VHF3aFFLU2Z4?=
- =?utf-8?B?dDN3MDZsRWJFU3VGV3Fta25oNi9MRmRrdkQ1YVdMaXprMWc4UlR5THNyRkJw?=
- =?utf-8?B?MFE9PQ==?=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <835BEEC0E72A5943AE3BFF7EE05AED0B@namprd12.prod.outlook.com>
-Content-Transfer-Encoding: base64
-MIME-Version: 1.0
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: MW2PR12MB4667.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 9edea2fe-6b61-475f-84c6-08daf82262c6
-X-MS-Exchange-CrossTenant-originalarrivaltime: 17 Jan 2023 00:32:59.5787
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: q7JRV1qOyyndDLMlraLaxsqhYfBL9zDsMHoX5Fn2jFz/gwIK1Y/8AUk2zzejCLjgVl5PhlgFriSzf8XREv5oDA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM4PR12MB5390
+        Mon, 16 Jan 2023 23:25:13 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 25E1B12F2F;
+        Mon, 16 Jan 2023 20:25:12 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 8B38D611B3;
+        Tue, 17 Jan 2023 04:25:11 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B0701C433EF;
+        Tue, 17 Jan 2023 04:24:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1673929510;
+        bh=LKPfAbcdavLMCpifQk05Aqw+1tD2xg5qsuB6VorVVnI=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=rvDfVQk7Tsas4+LZFK04iCV/SqfYXmqYXLFi42JOngYW1dOP0QSo6CLiBkpjYosKx
+         nKUcD4fx6Lu1RT5hJ5yblHd47Jqpvv59kmEAKtriWUWkTZ7hmC4Za3q3BgpEtr891G
+         Uhe5azCk4FahsTTDCEc3lE2+MzsUQWKU5CAcTO6IYBsGKCz8NivYw+lk7qeBhykDxt
+         x23XNA0A5LxituWhIHyg6sCe7NTSUKsY2ON6C3g6I/nFT8i/VEH7jmIvKLWoo8AYZN
+         JlOlRfIFLAGKs5+FVWy9q/WwqqbuzK/Mvbqfsgyxm4gYqDdXx2B1Vx+ckQBMj8vEfk
+         ICBnmkeUNpdwg==
+Date:   Tue, 17 Jan 2023 13:24:46 +0900
+From:   Masami Hiramatsu (Google) <mhiramat@kernel.org>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     richard.henderson@linaro.org, ink@jurassic.park.msu.ru,
+        mattst88@gmail.com, vgupta@kernel.org, linux@armlinux.org.uk,
+        nsekhar@ti.com, brgl@bgdev.pl, ulli.kroll@googlemail.com,
+        linus.walleij@linaro.org, shawnguo@kernel.org,
+        Sascha Hauer <s.hauer@pengutronix.de>, kernel@pengutronix.de,
+        festevam@gmail.com, linux-imx@nxp.com, tony@atomide.com,
+        khilman@kernel.org, krzysztof.kozlowski@linaro.org,
+        alim.akhtar@samsung.com, catalin.marinas@arm.com, will@kernel.org,
+        guoren@kernel.org, bcain@quicinc.com, chenhuacai@kernel.org,
+        kernel@xen0n.name, geert@linux-m68k.org, sammy@sammy.net,
+        monstr@monstr.eu, tsbogend@alpha.franken.de, dinguyen@kernel.org,
+        jonas@southpole.se, stefan.kristiansson@saunalahti.fi,
+        shorne@gmail.com, James.Bottomley@HansenPartnership.com,
+        deller@gmx.de, mpe@ellerman.id.au, npiggin@gmail.com,
+        christophe.leroy@csgroup.eu, paul.walmsley@sifive.com,
+        palmer@dabbelt.com, aou@eecs.berkeley.edu, hca@linux.ibm.com,
+        gor@linux.ibm.com, agordeev@linux.ibm.com,
+        borntraeger@linux.ibm.com, svens@linux.ibm.com,
+        ysato@users.sourceforge.jp, dalias@libc.org, davem@davemloft.net,
+        richard@nod.at, anton.ivanov@cambridgegreys.com,
+        johannes@sipsolutions.net, tglx@linutronix.de, mingo@redhat.com,
+        bp@alien8.de, dave.hansen@linux.intel.com, x86@kernel.org,
+        hpa@zytor.com, acme@kernel.org, mark.rutland@arm.com,
+        alexander.shishkin@linux.intel.com, jolsa@kernel.org,
+        namhyung@kernel.org, jgross@suse.com, srivatsa@csail.mit.edu,
+        amakhalov@vmware.com, pv-drivers@vmware.com,
+        boris.ostrovsky@oracle.com, chris@zankel.net, jcmvbkbc@gmail.com,
+        rafael@kernel.org, lenb@kernel.org, pavel@ucw.cz,
+        gregkh@linuxfoundation.org, mturquette@baylibre.com,
+        sboyd@kernel.org, daniel.lezcano@linaro.org, lpieralisi@kernel.org,
+        sudeep.holla@arm.com, agross@kernel.org, andersson@kernel.org,
+        konrad.dybcio@linaro.org, anup@brainfault.org,
+        thierry.reding@gmail.com, jonathanh@nvidia.com,
+        jacob.jun.pan@linux.intel.com, atishp@atishpatra.org,
+        Arnd Bergmann <arnd@arndb.de>, yury.norov@gmail.com,
+        andriy.shevchenko@linux.intel.com, linux@rasmusvillemoes.dk,
+        dennis@kernel.org, tj@kernel.org, cl@linux.com,
+        rostedt@goodmis.org, mhiramat@kernel.org, frederic@kernel.org,
+        paulmck@kernel.org, pmladek@suse.com, senozhatsky@chromium.org,
+        john.ogness@linutronix.de, juri.lelli@redhat.com,
+        vincent.guittot@linaro.org, dietmar.eggemann@arm.com,
+        bsegall@google.com, mgorman@suse.de, bristot@redhat.com,
+        vschneid@redhat.com, ryabinin.a.a@gmail.com, glider@google.com,
+        andreyknvl@gmail.com, dvyukov@google.com,
+        vincenzo.frascino@arm.com,
+        Andrew Morton <akpm@linux-foundation.org>, jpoimboe@kernel.org,
+        linux-alpha@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-snps-arc@lists.infradead.org, linux-omap@vger.kernel.org,
+        linux-samsung-soc@vger.kernel.org, linux-csky@vger.kernel.org,
+        linux-hexagon@vger.kernel.org, linux-ia64@vger.kernel.org,
+        loongarch@lists.linux.dev, linux-m68k@lists.linux-m68k.org,
+        linux-mips@vger.kernel.org, openrisc@lists.librecores.org,
+        linux-parisc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org,
+        linux-sh@vger.kernel.org, sparclinux@vger.kernel.org,
+        linux-um@lists.infradead.org, linux-perf-users@vger.kernel.org,
+        virtualization@lists.linux-foundation.org,
+        linux-xtensa@linux-xtensa.org, linux-acpi@vger.kernel.org,
+        linux-pm@vger.kernel.org, linux-clk@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, linux-tegra@vger.kernel.org,
+        linux-arch@vger.kernel.org, linux-mm@kvack.org,
+        linux-trace-kernel@vger.kernel.org, kasan-dev@googlegroups.com
+Subject: Re: [PATCH v3 35/51] trace,hardirq: No moar _rcuidle() tracing
+Message-Id: <20230117132446.02ec12e4c10718de27790900@kernel.org>
+In-Reply-To: <20230112195541.477416709@infradead.org>
+References: <20230112194314.845371875@infradead.org>
+        <20230112195541.477416709@infradead.org>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-T24gMS8xNi8yMyAwNTowNSwgTGVvbiBSb21hbm92c2t5IHdyb3RlOg0KPiBGcm9tOiBJc3JhZWwg
-UnVrc2hpbiA8aXNyYWVsckBudmlkaWEuY29tPg0KPiANCj4gVGhlIHBhdGNoIGRvZXNuJ3QgY2hh
-bmdlIGFueSBsb2dpYy4NCj4gDQo+IFNpZ25lZC1vZmYtYnk6IElzcmFlbCBSdWtzaGluIDxpc3Jh
-ZWxyQG52aWRpYS5jb20+DQo+IFNpZ25lZC1vZmYtYnk6IExlb24gUm9tYW5vdnNreSA8bGVvbkBr
-ZXJuZWwub3JnPg0KPiAtLS0NCj4gICBkcml2ZXJzL252bWUvaG9zdC9jb3JlLmMgfCA3ICsrKyst
-LS0NCj4gICAxIGZpbGUgY2hhbmdlZCwgNCBpbnNlcnRpb25zKCspLCAzIGRlbGV0aW9ucygtKQ0K
-PiANCj4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvbnZtZS9ob3N0L2NvcmUuYyBiL2RyaXZlcnMvbnZt
-ZS9ob3N0L2NvcmUuYw0KPiBpbmRleCA3YmU1NjJhNGUxYWEuLjUxYTk4ODBkYjZjZSAxMDA2NDQN
-Cj4gLS0tIGEvZHJpdmVycy9udm1lL2hvc3QvY29yZS5jDQo+ICsrKyBiL2RyaXZlcnMvbnZtZS9o
-b3N0L2NvcmUuYw0KPiBAQCAtMTg3MCw2ICsxODcwLDcgQEAgc3RhdGljIHZvaWQgbnZtZV91cGRh
-dGVfZGlza19pbmZvKHN0cnVjdCBnZW5kaXNrICpkaXNrLA0KPiAgIAlzZWN0b3JfdCBjYXBhY2l0
-eSA9IG52bWVfbGJhX3RvX3NlY3QobnMsIGxlNjRfdG9fY3B1KGlkLT5uc3plKSk7DQo+ICAgCXVu
-c2lnbmVkIHNob3J0IGJzID0gMSA8PCBucy0+bGJhX3NoaWZ0Ow0KPiAgIAl1MzIgYXRvbWljX2Jz
-LCBwaHlzX2JzLCBpb19vcHQgPSAwOw0KPiArCXN0cnVjdCBudm1lX2N0cmwgKmN0cmwgPSBucy0+
-Y3RybDsNCj4gICANCg0KSSBkb24ndCB0aGluayB0aGlzIHBhdGNoIGlzIG5lZWRlZCwgZXhpc3Rp
-bmcgY29kZSBpcyBtb3JlIHJlYWRhYmxlIGFuZA0KZ2l2ZXMgbXVjaCBjbGFyaXR5IHRoYXQgd2Ug
-YXJlIGFjY2Vzc2luZyBjdHJsIGZyb20gbmFtZXNwYWNlIHNpbmNlIHdlDQphcmUgaW4gbnZtZV91
-cGRhdGVfZGlza19pbmZvKCkgd2hpY2ggaXMgbmFtZXNwYWNlIGJhc2VkLg0KDQotY2sNCg0K
+Hi Peter,
+
+On Thu, 12 Jan 2023 20:43:49 +0100
+Peter Zijlstra <peterz@infradead.org> wrote:
+
+> Robot reported that trace_hardirqs_{on,off}() tickle the forbidden
+> _rcuidle() tracepoint through local_irq_{en,dis}able().
+> 
+> For 'sane' configs, these calls will only happen with RCU enabled and
+> as such can use the regular tracepoint. This also means it's possible
+> to trace them from NMI context again.
+> 
+> Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+
+The code looks good to me. I just have a question about comment.
+
+> ---
+>  kernel/trace/trace_preemptirq.c |   21 +++++++++++++--------
+>  1 file changed, 13 insertions(+), 8 deletions(-)
+> 
+> --- a/kernel/trace/trace_preemptirq.c
+> +++ b/kernel/trace/trace_preemptirq.c
+> @@ -20,6 +20,15 @@
+>  static DEFINE_PER_CPU(int, tracing_irq_cpu);
+>  
+>  /*
+> + * ...
+
+Is this intended? Wouldn't you leave any comment here?
+
+Thank you,
+
+> + */
+> +#ifdef CONFIG_ARCH_WANTS_NO_INSTR
+> +#define trace(point)	trace_##point
+> +#else
+> +#define trace(point)	if (!in_nmi()) trace_##point##_rcuidle
+> +#endif
+> +
+> +/*
+>   * Like trace_hardirqs_on() but without the lockdep invocation. This is
+>   * used in the low level entry code where the ordering vs. RCU is important
+>   * and lockdep uses a staged approach which splits the lockdep hardirq
+> @@ -28,8 +37,7 @@ static DEFINE_PER_CPU(int, tracing_irq_c
+>  void trace_hardirqs_on_prepare(void)
+>  {
+>  	if (this_cpu_read(tracing_irq_cpu)) {
+> -		if (!in_nmi())
+> -			trace_irq_enable(CALLER_ADDR0, CALLER_ADDR1);
+> +		trace(irq_enable)(CALLER_ADDR0, CALLER_ADDR1);
+>  		tracer_hardirqs_on(CALLER_ADDR0, CALLER_ADDR1);
+>  		this_cpu_write(tracing_irq_cpu, 0);
+>  	}
+> @@ -40,8 +48,7 @@ NOKPROBE_SYMBOL(trace_hardirqs_on_prepar
+>  void trace_hardirqs_on(void)
+>  {
+>  	if (this_cpu_read(tracing_irq_cpu)) {
+> -		if (!in_nmi())
+> -			trace_irq_enable_rcuidle(CALLER_ADDR0, CALLER_ADDR1);
+> +		trace(irq_enable)(CALLER_ADDR0, CALLER_ADDR1);
+>  		tracer_hardirqs_on(CALLER_ADDR0, CALLER_ADDR1);
+>  		this_cpu_write(tracing_irq_cpu, 0);
+>  	}
+> @@ -63,8 +70,7 @@ void trace_hardirqs_off_finish(void)
+>  	if (!this_cpu_read(tracing_irq_cpu)) {
+>  		this_cpu_write(tracing_irq_cpu, 1);
+>  		tracer_hardirqs_off(CALLER_ADDR0, CALLER_ADDR1);
+> -		if (!in_nmi())
+> -			trace_irq_disable(CALLER_ADDR0, CALLER_ADDR1);
+> +		trace(irq_disable)(CALLER_ADDR0, CALLER_ADDR1);
+>  	}
+>  
+>  }
+> @@ -78,8 +84,7 @@ void trace_hardirqs_off(void)
+>  	if (!this_cpu_read(tracing_irq_cpu)) {
+>  		this_cpu_write(tracing_irq_cpu, 1);
+>  		tracer_hardirqs_off(CALLER_ADDR0, CALLER_ADDR1);
+> -		if (!in_nmi())
+> -			trace_irq_disable_rcuidle(CALLER_ADDR0, CALLER_ADDR1);
+> +		trace(irq_disable)(CALLER_ADDR0, CALLER_ADDR1);
+>  	}
+>  }
+>  EXPORT_SYMBOL(trace_hardirqs_off);
+> 
+> 
+
+
+-- 
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
