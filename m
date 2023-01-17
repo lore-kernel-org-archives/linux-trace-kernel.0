@@ -2,131 +2,149 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A241C3DA78
-	for <linux-trace-kernel@archiver.kernel.org>; Tue, 17 Jan 2023 04:47:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 530EAC6379F
+	for <linux-trace-kernel@archiver.kernel.org>; Tue, 17 Jan 2023 08:54:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232024AbjAQErH (ORCPT
+        id S236139AbjAQIys (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Mon, 16 Jan 2023 23:47:07 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33594 "EHLO
+        Tue, 17 Jan 2023 03:54:48 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57046 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235235AbjAQErF (ORCPT
+        with ESMTP id S235927AbjAQIyk (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Mon, 16 Jan 2023 23:47:05 -0500
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D04182448D;
-        Mon, 16 Jan 2023 20:47:03 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id E11F7B80DF6;
-        Tue, 17 Jan 2023 04:45:31 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 76EA7C433EF;
-        Tue, 17 Jan 2023 04:45:29 +0000 (UTC)
-Date:   Mon, 16 Jan 2023 23:45:28 -0500
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
-Cc:     Masami Hiramatsu <mhiramat@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Ross Zwisler <zwisler@google.com>,
-        Tom Zanussi <zanussi@kernel.org>
-Subject: Re: [PATCH 0/5] tracing/histograms: Pass stacktrace from synthetic
- start event to end event
-Message-ID: <20230116234528.40646b2a@rorschach.local.home>
-In-Reply-To: <20230117044010.838685230@goodmis.org>
-References: <20230117044010.838685230@goodmis.org>
-X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+        Tue, 17 Jan 2023 03:54:40 -0500
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CA4213C07;
+        Tue, 17 Jan 2023 00:54:38 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=82O7MPpmKDKH/y6naoktZs3WQBLC/PHyEl3Wjqd7/dM=; b=Ke5GdVNvGDwhG+k46q7dng0FmD
+        4svqJ3BuhIzpCyRd3d34EzrwpAYhtIPNP9U0JudPObAhyc7mKDDB2ufRnVUe8NMuF1emh9A0PNWIH
+        p1R0fL14Y4BiUEbkIt1kuIDfTIDr+dtl1B0SONy0L6U6H9msSNXgpTQM8WUKpqJC+XOMDTKkpqJUy
+        A0FDeq5XRHSYeh/RQjtt4CQSF65Phgmx7FmreCSehAcpaORvkTTe37Nk1Kd9I9heUV3/iILob+ev7
+        j5Jfjn7noy51S9Ufs13OCaNuk4vpeID6Jvr5f0ui2whQba0QF6a+wxAzj0g5CzDexgL5+ikNTlFRJ
+        Sa81nPeg==;
+Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
+        by casper.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
+        id 1pHhjP-009Wew-5Z; Tue, 17 Jan 2023 08:54:11 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 99EF1302D60;
+        Tue, 17 Jan 2023 09:53:52 +0100 (CET)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 46751201ABB3C; Tue, 17 Jan 2023 09:53:52 +0100 (CET)
+Date:   Tue, 17 Jan 2023 09:53:52 +0100
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Masami Hiramatsu <mhiramat@kernel.org>
+Cc:     richard.henderson@linaro.org, ink@jurassic.park.msu.ru,
+        mattst88@gmail.com, vgupta@kernel.org, linux@armlinux.org.uk,
+        nsekhar@ti.com, brgl@bgdev.pl, ulli.kroll@googlemail.com,
+        linus.walleij@linaro.org, shawnguo@kernel.org,
+        Sascha Hauer <s.hauer@pengutronix.de>, kernel@pengutronix.de,
+        festevam@gmail.com, linux-imx@nxp.com, tony@atomide.com,
+        khilman@kernel.org, krzysztof.kozlowski@linaro.org,
+        alim.akhtar@samsung.com, catalin.marinas@arm.com, will@kernel.org,
+        guoren@kernel.org, bcain@quicinc.com, chenhuacai@kernel.org,
+        kernel@xen0n.name, geert@linux-m68k.org, sammy@sammy.net,
+        monstr@monstr.eu, tsbogend@alpha.franken.de, dinguyen@kernel.org,
+        jonas@southpole.se, stefan.kristiansson@saunalahti.fi,
+        shorne@gmail.com, James.Bottomley@hansenpartnership.com,
+        deller@gmx.de, mpe@ellerman.id.au, npiggin@gmail.com,
+        christophe.leroy@csgroup.eu, paul.walmsley@sifive.com,
+        palmer@dabbelt.com, aou@eecs.berkeley.edu, hca@linux.ibm.com,
+        gor@linux.ibm.com, agordeev@linux.ibm.com,
+        borntraeger@linux.ibm.com, svens@linux.ibm.com,
+        ysato@users.sourceforge.jp, dalias@libc.org, davem@davemloft.net,
+        richard@nod.at, anton.ivanov@cambridgegreys.com,
+        johannes@sipsolutions.net, tglx@linutronix.de, mingo@redhat.com,
+        bp@alien8.de, dave.hansen@linux.intel.com, x86@kernel.org,
+        hpa@zytor.com, acme@kernel.org, mark.rutland@arm.com,
+        alexander.shishkin@linux.intel.com, jolsa@kernel.org,
+        namhyung@kernel.org, jgross@suse.com, srivatsa@csail.mit.edu,
+        amakhalov@vmware.com, pv-drivers@vmware.com,
+        boris.ostrovsky@oracle.com, chris@zankel.net, jcmvbkbc@gmail.com,
+        rafael@kernel.org, lenb@kernel.org, pavel@ucw.cz,
+        gregkh@linuxfoundation.org, mturquette@baylibre.com,
+        sboyd@kernel.org, daniel.lezcano@linaro.org, lpieralisi@kernel.org,
+        sudeep.holla@arm.com, agross@kernel.org, andersson@kernel.org,
+        konrad.dybcio@linaro.org, anup@brainfault.org,
+        thierry.reding@gmail.com, jonathanh@nvidia.com,
+        jacob.jun.pan@linux.intel.com, atishp@atishpatra.org,
+        Arnd Bergmann <arnd@arndb.de>, yury.norov@gmail.com,
+        andriy.shevchenko@linux.intel.com, linux@rasmusvillemoes.dk,
+        dennis@kernel.org, tj@kernel.org, cl@linux.com,
+        rostedt@goodmis.org, frederic@kernel.org, paulmck@kernel.org,
+        pmladek@suse.com, senozhatsky@chromium.org,
+        john.ogness@linutronix.de, juri.lelli@redhat.com,
+        vincent.guittot@linaro.org, dietmar.eggemann@arm.com,
+        bsegall@google.com, mgorman@suse.de, bristot@redhat.com,
+        vschneid@redhat.com, ryabinin.a.a@gmail.com, glider@google.com,
+        andreyknvl@gmail.com, dvyukov@google.com,
+        vincenzo.frascino@arm.com,
+        Andrew Morton <akpm@linux-foundation.org>, jpoimboe@kernel.org,
+        linux-alpha@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-snps-arc@lists.infradead.org, linux-omap@vger.kernel.org,
+        linux-samsung-soc@vger.kernel.org, linux-csky@vger.kernel.org,
+        linux-hexagon@vger.kernel.org, linux-ia64@vger.kernel.org,
+        loongarch@lists.linux.dev, linux-m68k@lists.linux-m68k.org,
+        linux-mips@vger.kernel.org, openrisc@lists.librecores.org,
+        linux-parisc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org,
+        linux-sh@vger.kernel.org, sparclinux@vger.kernel.org,
+        linux-um@lists.infradead.org, linux-perf-users@vger.kernel.org,
+        virtualization@lists.linux-foundation.org,
+        linux-xtensa@linux-xtensa.org, linux-acpi@vger.kernel.org,
+        linux-pm@vger.kernel.org, linux-clk@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, linux-tegra@vger.kernel.org,
+        linux-arch@vger.kernel.org, linux-mm@kvack.org,
+        linux-trace-kernel@vger.kernel.org, kasan-dev@googlegroups.com
+Subject: Re: [PATCH v3 35/51] trace,hardirq: No moar _rcuidle() tracing
+Message-ID: <Y8ZiIMHyXX/yW1EI@hirez.programming.kicks-ass.net>
+References: <20230112194314.845371875@infradead.org>
+ <20230112195541.477416709@infradead.org>
+ <20230117132446.02ec12e4c10718de27790900@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230117132446.02ec12e4c10718de27790900@kernel.org>
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-
-Bah, I forgot to Cc, Tom.
-
-Tom, here's the lore link:
-
-  https://lore.kernel.org/linux-trace-kernel/20230117044010.838685230@goodmis.org/T/#m116ab617cc475b68589f42a0cfd6c1b2029b0e39
-
--- Steve
-
-
-On Mon, 16 Jan 2023 23:40:10 -0500
-Steven Rostedt <rostedt@goodmis.org> wrote:
-
-> I finally got around to implementing what I've been wanting to do for a long
-> time! That is to pass stacktraces from the start to the end event of a
-> synthetic event. Specifically, I need to get the stacktrace of a task as it
-> schedules out, but I don't want to see it until it schedules back in and I
-> check the timings to show that it is longer than normal. That is now done
-> with:
+On Tue, Jan 17, 2023 at 01:24:46PM +0900, Masami Hiramatsu wrote:
+> Hi Peter,
 > 
->  # echo 's:block_lat pid_t pid; u64 delta; unsigned long[] stack;' > dynamic_events
->  # echo 'hist:keys=next_pid:ts=common_timestamp.usecs,st=stacktrace  if prev_state == 2' >> events/sched/sched_switch/trigger
->  # echo 'hist:keys=prev_pid:delta=common_timestamp.usecs-$ts,s=$st:onmax($delta).trace(block_lat,prev_pid,$delta,$s)' >> events/sched/sched_switch/trigger
+> On Thu, 12 Jan 2023 20:43:49 +0100
+> Peter Zijlstra <peterz@infradead.org> wrote:
 > 
-> The above creates a synthetic event that will trigger on the max delta of a
-> task blocked in an uninterruptible state. It will show you the stack trace
-> of where that occurred!
+> > Robot reported that trace_hardirqs_{on,off}() tickle the forbidden
+> > _rcuidle() tracepoint through local_irq_{en,dis}able().
+> > 
+> > For 'sane' configs, these calls will only happen with RCU enabled and
+> > as such can use the regular tracepoint. This also means it's possible
+> > to trace them from NMI context again.
+> > 
+> > Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
 > 
->  # echo 1 > events/synthetic/block_lat/enable
->  # ls -lR > /dev/null
->  # cat trace
+> The code looks good to me. I just have a question about comment.
 > 
-> # tracer: nop
-> #
-> # entries-in-buffer/entries-written: 2/2   #P:8
-> #
-> #                                _-----=> irqs-off/BH-disabled
-> #                               / _----=> need-resched
-> #                              | / _---=> hardirq/softirq
-> #                              || / _--=> preempt-depth
-> #                              ||| / _-=> migrate-disable
-> #                              |||| /     delay
-> #           TASK-PID     CPU#  |||||  TIMESTAMP  FUNCTION
-> #              | |         |   |||||     |         |
->           <idle>-0       [005] d..4.   521.164922: block_lat: pid=0 delta=8322 stack=STACK:
-> => __schedule+0x448/0x7b0
-> => schedule+0x5a/0xb0
-> => io_schedule+0x42/0x70
-> => bit_wait_io+0xd/0x60
-> => __wait_on_bit+0x4b/0x140
-> => out_of_line_wait_on_bit+0x91/0xb0
-> => jbd2_journal_commit_transaction+0x1679/0x1a70
-> => kjournald2+0xa9/0x280
-> => kthread+0xe9/0x110
-> => ret_from_fork+0x2c/0x50  
+> > ---
+> >  kernel/trace/trace_preemptirq.c |   21 +++++++++++++--------
+> >  1 file changed, 13 insertions(+), 8 deletions(-)
+> > 
+> > --- a/kernel/trace/trace_preemptirq.c
+> > +++ b/kernel/trace/trace_preemptirq.c
+> > @@ -20,6 +20,15 @@
+> >  static DEFINE_PER_CPU(int, tracing_irq_cpu);
+> >  
+> >  /*
+> > + * ...
 > 
->            <...>-2       [004] d..4.   525.184257: block_lat: pid=2 delta=76 stack=STACK:
-> => __schedule+0x448/0x7b0
-> => schedule+0x5a/0xb0
-> => schedule_timeout+0x11a/0x150
-> => wait_for_completion_killable+0x144/0x1f0
-> => __kthread_create_on_node+0xe7/0x1e0
-> => kthread_create_on_node+0x51/0x70
-> => create_worker+0xcc/0x1a0
-> => worker_thread+0x2ad/0x380
-> => kthread+0xe9/0x110
-> => ret_from_fork+0x2c/0x50  
-> 
-> Steven Rostedt (Google) (5):
->       tracing: Simplify calculating entry size using struct_size()
->       tracing: Allow stacktraces to be saved as histogram variables
->       tracing: Allow synthetic events to pass around stacktraces
->       tracing/histogram: Document variable stacktrace
->       tracing/histogram: Add simple tests for stacktrace usage of synthetic events
-> 
-> ----
->  Documentation/trace/histogram.rst                  | 49 +++++++++++++
->  kernel/trace/trace.c                               |  2 +-
->  kernel/trace/trace.h                               |  4 ++
->  kernel/trace/trace_events_hist.c                   | 42 ++++++++---
->  kernel/trace/trace_events_synth.c                  | 83 +++++++++++++++++++++-
->  kernel/trace/trace_synth.h                         |  1 +
->  .../inter-event/trigger-synthetic-event-stack.tc   | 24 +++++++
->  .../inter-event/trigger-synthetic-event-syntax.tc  |  6 ++
->  8 files changed, 196 insertions(+), 15 deletions(-)
->  create mode 100644 tools/testing/selftests/ftrace/test.d/trigger/inter-event/trigger-synthetic-event-stack.tc
+> Is this intended? Wouldn't you leave any comment here?
 
+I indeed forgot to write the comment before posting, my bad :/ Ingo fixed
+it up when he applied.
