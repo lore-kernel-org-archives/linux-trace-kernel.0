@@ -2,34 +2,34 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A26BC3DA78
-	for <linux-trace-kernel@archiver.kernel.org>; Tue, 17 Jan 2023 15:22:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F03FC678D4
+	for <linux-trace-kernel@archiver.kernel.org>; Tue, 17 Jan 2023 15:22:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230326AbjAQPWn (ORCPT
+        id S229460AbjAQPWp (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Tue, 17 Jan 2023 10:22:43 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57514 "EHLO
+        Tue, 17 Jan 2023 10:22:45 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57570 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230134AbjAQPWj (ORCPT
+        with ESMTP id S230455AbjAQPWk (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Tue, 17 Jan 2023 10:22:39 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 51A9B3C39;
-        Tue, 17 Jan 2023 07:22:38 -0800 (PST)
+        Tue, 17 Jan 2023 10:22:40 -0500
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 643AC302A0;
+        Tue, 17 Jan 2023 07:22:39 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id C606D61484;
-        Tue, 17 Jan 2023 15:22:37 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 363BBC4339E;
-        Tue, 17 Jan 2023 15:22:37 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 21C01B8164F;
+        Tue, 17 Jan 2023 15:22:38 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C17B7C433EF;
+        Tue, 17 Jan 2023 15:22:36 +0000 (UTC)
 Received: from rostedt by gandalf.local.home with local (Exim 4.96)
         (envelope-from <rostedt@goodmis.org>)
-        id 1pHnnI-001vj9-0y;
-        Tue, 17 Jan 2023 10:22:36 -0500
-Message-ID: <20230117152236.167046397@goodmis.org>
+        id 1pHnnH-001vhB-2A;
+        Tue, 17 Jan 2023 10:22:35 -0500
+Message-ID: <20230117152125.268986282@goodmis.org>
 User-Agent: quilt/0.66
-Date:   Tue, 17 Jan 2023 10:21:29 -0500
+Date:   Tue, 17 Jan 2023 10:21:25 -0500
 From:   Steven Rostedt <rostedt@goodmis.org>
 To:     linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
 Cc:     Masami Hiramatsu <mhiramat@kernel.org>,
@@ -37,38 +37,86 @@ Cc:     Masami Hiramatsu <mhiramat@kernel.org>,
         Tom Zanussi <zanussi@kernel.org>,
         Ross Zwisler <zwisler@google.com>,
         Ching-lin Yu <chinglinyu@google.com>
-Subject: [PATCH 4/6 v2] tracing/histogram: Add stacktrace type
-References: <20230117152125.268986282@goodmis.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Subject: [PATCH 0/6 v2] tracing/histograms: Pass stacktrace from synthetic start event to end event
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
+I finally got around to implementing what I've been wanting to do for a long
+time! That is to pass stacktraces from the start to the end event of a
+synthetic event. Specifically, I need to get the stacktrace of a task as it
+schedules out, but I don't want to see it until it schedules back in and I
+check the timings to show that it is longer than normal. That is now done
+with:
 
-Now that stacktraces can be part of synthetic events, allow a key to be
-typed as a stacktrace.
+ # echo 's:block_lat pid_t pid; u64 delta; unsigned long[] stack;' > dynamic_events
+ # echo 'hist:keys=next_pid:ts=common_timestamp.usecs,st=stacktrace  if prev_state == 2' >> events/sched/sched_switch/trigger
+ # echo 'hist:keys=prev_pid:delta=common_timestamp.usecs-$ts,s=$st:onmax($delta).trace(block_lat,prev_pid,$delta,$s)' >> events/sched/sched_switch/trigger
 
-  # cd /sys/kernel/tracing
-  # echo 's:block_lat u64 delta; unsigned long stack[];' >> dynamic_events
-  # echo 'hist:keys=next_pid:ts=common_timestamp.usecs,st=stacktrace if prev_state == 2' >> events/sched/sched_switch/trigger
-  # echo 'hist:keys=prev_pid:delta=common_timestamp.usecs-$ts,st2=$st:onmatch(sched.sched_switch).trace(block_lat,$delta,$st2)' >> events/sched/sched_switch/trigger
-  # echo 'hist:keys=delta.buckets=100,stack.stacktrace:sort=delta' > events/synthetic/block_lat/trigger
+The above creates a synthetic event that will trigger on the max delta of a
+task blocked in an uninterruptible state. It will show you the stack trace
+of where that occurred!
 
+ # echo 1 > events/synthetic/block_lat/enable
+ # ls -lR > /dev/null
+ # cat trace
+
+# tracer: nop
+#
+# entries-in-buffer/entries-written: 2/2   #P:8
+#
+#                                _-----=> irqs-off/BH-disabled
+#                               / _----=> need-resched
+#                              | / _---=> hardirq/softirq
+#                              || / _--=> preempt-depth
+#                              ||| / _-=> migrate-disable
+#                              |||| /     delay
+#           TASK-PID     CPU#  |||||  TIMESTAMP  FUNCTION
+#              | |         |   |||||     |         |
+          <idle>-0       [005] d..4.   521.164922: block_lat: pid=0 delta=8322 stack=STACK:
+=> __schedule+0x448/0x7b0
+=> schedule+0x5a/0xb0
+=> io_schedule+0x42/0x70
+=> bit_wait_io+0xd/0x60
+=> __wait_on_bit+0x4b/0x140
+=> out_of_line_wait_on_bit+0x91/0xb0
+=> jbd2_journal_commit_transaction+0x1679/0x1a70
+=> kjournald2+0xa9/0x280
+=> kthread+0xe9/0x110
+=> ret_from_fork+0x2c/0x50  
+
+           <...>-2       [004] d..4.   525.184257: block_lat: pid=2 delta=76 stack=STACK:
+=> __schedule+0x448/0x7b0
+=> schedule+0x5a/0xb0
+=> schedule_timeout+0x11a/0x150
+=> wait_for_completion_killable+0x144/0x1f0
+=> __kthread_create_on_node+0xe7/0x1e0
+=> kthread_create_on_node+0x51/0x70
+=> create_worker+0xcc/0x1a0
+=> worker_thread+0x2ad/0x380
+=> kthread+0xe9/0x110
+=> ret_from_fork+0x2c/0x50
+
+Changes since v1: https://lore.kernel.org/linux-trace-kernel/20230117044010.838685230@goodmis.org/
+
+- Fixed an issue with passing a stacktrace variable to another variable.
+
+- Can now use the stacktrace in the histogram as well:
+
+  # echo 'hist:delta.buckets=100,stack.stacktrace:sort=delta' > events/synthetic/block_lat/trigger
   # cat events/synthetic/block_lat/hist
-
+  
   # event histogram
-  #
+  # 
   # trigger info: hist:keys=delta.buckets=100,stacktrace:vals=hitcount:sort=delta.buckets=100:size=2048 [active]
-  #
-
-  { delta: ~ 0-99, stacktrace:
+  # 
+    
+  { delta: ~ 0-99, stacktrace:      
            event_hist_trigger+0x464/0x480
            event_triggers_call+0x52/0xe0
            trace_event_buffer_commit+0x193/0x250
            trace_event_raw_event_sched_switch+0xfc/0x150
-           __traceiter_sched_switch+0x41/0x60
+           __traceiter_sched_switch+0x41/0x60 
            __schedule+0x448/0x7b0
            schedule_idle+0x26/0x40
            cpu_startup_entry+0x19/0x20
@@ -89,31 +137,7 @@ typed as a stacktrace.
            start_kernel+0x964/0x98d
            secondary_startup_64_no_verify+0xe0/0xeb
   } hitcount:          3
-  { delta: ~ 0-99, stacktrace:
-           event_hist_trigger+0x464/0x480
-           event_triggers_call+0x52/0xe0
-           trace_event_buffer_commit+0x193/0x250
-           trace_event_raw_event_sched_switch+0xfc/0x150
-           __traceiter_sched_switch+0x41/0x60
-           __schedule+0x448/0x7b0
-           schedule+0x5a/0xb0
-           worker_thread+0xaf/0x380
-           kthread+0xe9/0x110
-           ret_from_fork+0x2c/0x50
-  } hitcount:          1
-  { delta: ~ 100-199, stacktrace:
-           event_hist_trigger+0x464/0x480
-           event_triggers_call+0x52/0xe0
-           trace_event_buffer_commit+0x193/0x250
-           trace_event_raw_event_sched_switch+0xfc/0x150
-           __traceiter_sched_switch+0x41/0x60
-           __schedule+0x448/0x7b0
-           schedule_idle+0x26/0x40
-           cpu_startup_entry+0x19/0x20
-           start_secondary+0xed/0xf0
-           secondary_startup_64_no_verify+0xe0/0xeb
-  } hitcount:         15
-  [..]
+[..]
   { delta: ~ 8500-8599, stacktrace:
            event_hist_trigger+0x464/0x480
            event_triggers_call+0x52/0xe0
@@ -128,38 +152,28 @@ typed as a stacktrace.
   } hitcount:          1
 
   Totals:
-      Hits: 89
+      Hits: 89 
       Entries: 11
       Dropped: 0
 
-Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
----
- kernel/trace/trace_events_hist.c | 4 ++++
- 1 file changed, 4 insertions(+)
-
-diff --git a/kernel/trace/trace_events_hist.c b/kernel/trace/trace_events_hist.c
-index 599c056b6048..888b7a394ce5 100644
---- a/kernel/trace/trace_events_hist.c
-+++ b/kernel/trace/trace_events_hist.c
-@@ -1716,6 +1716,8 @@ static const char *get_hist_field_flags(struct hist_field *hist_field)
- 		flags_str = "percent";
- 	else if (hist_field->flags & HIST_FIELD_FL_GRAPH)
- 		flags_str = "graph";
-+	else if (hist_field->flags & HIST_FIELD_FL_STACKTRACE)
-+		flags_str = "stacktrace";
- 
- 	return flags_str;
- }
-@@ -2312,6 +2314,8 @@ parse_field(struct hist_trigger_data *hist_data, struct trace_event_file *file,
- 			*flags |= HIST_FIELD_FL_EXECNAME;
- 		else if (strcmp(modifier, "syscall") == 0)
- 			*flags |= HIST_FIELD_FL_SYSCALL;
-+		else if (strcmp(modifier, "stacktrace") == 0)
-+			*flags |= HIST_FIELD_FL_STACKTRACE;
- 		else if (strcmp(modifier, "log2") == 0)
- 			*flags |= HIST_FIELD_FL_LOG2;
- 		else if (strcmp(modifier, "usecs") == 0)
--- 
-2.39.0
 
 
+Steven Rostedt (Google) (6):
+      tracing: Simplify calculating entry size using struct_size()
+      tracing: Allow stacktraces to be saved as histogram variables
+      tracing: Allow synthetic events to pass around stacktraces
+      tracing/histogram: Add stacktrace type
+      tracing/histogram: Document variable stacktrace
+      tracing/histogram: Add simple tests for stacktrace usage of synthetic events
+
+----
+ Documentation/trace/histogram.rst                  | 129 +++++++++++++++++++++
+ kernel/trace/trace.c                               |   2 +-
+ kernel/trace/trace.h                               |   4 +
+ kernel/trace/trace_events_hist.c                   |  63 +++++++---
+ kernel/trace/trace_events_synth.c                  |  83 ++++++++++++-
+ kernel/trace/trace_synth.h                         |   1 +
+ .../inter-event/trigger-synthetic-event-stack.tc   |  24 ++++
+ .../inter-event/trigger-synthetic-event-syntax.tc  |   6 +
+ 8 files changed, 294 insertions(+), 18 deletions(-)
+ create mode 100644 tools/testing/selftests/ftrace/test.d/trigger/inter-event/trigger-synthetic-event-stack.tc
