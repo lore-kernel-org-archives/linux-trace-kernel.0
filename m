@@ -2,123 +2,192 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 41A69C63797
-	for <linux-trace-kernel@archiver.kernel.org>; Tue, 17 Jan 2023 14:35:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E70BC63797
+	for <linux-trace-kernel@archiver.kernel.org>; Tue, 17 Jan 2023 15:22:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232700AbjAQOfD (ORCPT
+        id S230429AbjAQPWl (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Tue, 17 Jan 2023 09:35:03 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54896 "EHLO
+        Tue, 17 Jan 2023 10:22:41 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57500 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232766AbjAQOeb (ORCPT
+        with ESMTP id S229880AbjAQPWj (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Tue, 17 Jan 2023 09:34:31 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 22F84A25D;
-        Tue, 17 Jan 2023 06:34:22 -0800 (PST)
+        Tue, 17 Jan 2023 10:22:39 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EF60C212B;
+        Tue, 17 Jan 2023 07:22:37 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id B723D6147F;
-        Tue, 17 Jan 2023 14:34:21 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 86555C433EF;
-        Tue, 17 Jan 2023 14:34:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1673966061;
-        bh=Fz/P1XZDGupDtqAJSEnp0rEfUZAKbWxcCPbBc58E86o=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Zd/8A4ZSHTYkosiDKj1TO0FVHt7VXMMtyD28nA+OIKNWV0uToO4VZUsV04f+85zsK
-         NPAqR1E4a1Q0CqivGIOi81y5puPNQKSjGzt83iuk9+arxT2fS1FYGXhGrqyY0pos+Z
-         OcLCxPp7ys9ubCVCxeMxzYmYNy77ccvTqq24OSgfB3I1ANleDm9EcAC5SJFVPc92BV
-         82ZrOmcDrcd12x/w57ND2bTpnoX2P/SLRY7hVBHhu05Shda5VwcyAjC1oJ0Zq2EiV+
-         jmFS5CVk+gGXWQSHF1NbuqizTD6yrXxEWa4GU13nqxj7Wk2j8qhBhnUxjl4nGJ/QXE
-         mk7N0mBa6Ynxg==
-Date:   Tue, 17 Jan 2023 16:34:17 +0200
-From:   Leon Romanovsky <leon@kernel.org>
-To:     Jason Gunthorpe <jgg@nvidia.com>
-Cc:     Israel Rukshin <israelr@nvidia.com>,
-        Bryan Tan <bryantan@vmware.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Eric Dumazet <edumazet@google.com>,
-        Jakub Kicinski <kuba@kernel.org>, Jens Axboe <axboe@fb.com>,
-        Keith Busch <kbusch@kernel.org>, linux-kernel@vger.kernel.org,
-        linux-nvme@lists.infradead.org, linux-rdma@vger.kernel.org,
-        linux-trace-kernel@vger.kernel.org,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Max Gurtovoy <mgurtovoy@nvidia.com>, netdev@vger.kernel.org,
-        Paolo Abeni <pabeni@redhat.com>,
-        Saeed Mahameed <saeedm@nvidia.com>,
-        Sagi Grimberg <sagi@grimberg.me>,
-        Selvin Xavier <selvin.xavier@broadcom.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Vishnu Dasa <vdasa@vmware.com>,
-        Yishai Hadas <yishaih@nvidia.com>
-Subject: Re: [PATCH rdma-next 03/13] RDMA: Split kernel-only create QP flags
- from uverbs create QP flags
-Message-ID: <Y8ax6ZD6hhyD41pA@unreal>
-References: <cover.1673873422.git.leon@kernel.org>
- <6e46859a58645d9f16a63ff76592487aabc9971d.1673873422.git.leon@kernel.org>
- <Y8WL2gQqqeZdMvr6@nvidia.com>
- <Y8aOe68Q49lvsjv8@unreal>
- <Y8anaBBZDOGF471q@nvidia.com>
- <Y8atPjQ1x75tBdib@unreal>
- <Y8au3ni8NVBPI5hu@nvidia.com>
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 7740F61478;
+        Tue, 17 Jan 2023 15:22:37 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D6B9CC433D2;
+        Tue, 17 Jan 2023 15:22:36 +0000 (UTC)
+Received: from rostedt by gandalf.local.home with local (Exim 4.96)
+        (envelope-from <rostedt@goodmis.org>)
+        id 1pHnnH-001viB-3C;
+        Tue, 17 Jan 2023 10:22:35 -0500
+Message-ID: <20230117152235.856323729@goodmis.org>
+User-Agent: quilt/0.66
+Date:   Tue, 17 Jan 2023 10:21:27 -0500
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
+Cc:     Masami Hiramatsu <mhiramat@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Tom Zanussi <zanussi@kernel.org>,
+        Ross Zwisler <zwisler@google.com>,
+        Ching-lin Yu <chinglinyu@google.com>
+Subject: [PATCH 2/6 v2] tracing: Allow stacktraces to be saved as histogram variables
+References: <20230117152125.268986282@goodmis.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Y8au3ni8NVBPI5hu@nvidia.com>
+Content-Type: text/plain; charset=UTF-8
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On Tue, Jan 17, 2023 at 10:21:18AM -0400, Jason Gunthorpe wrote:
-> On Tue, Jan 17, 2023 at 04:14:22PM +0200, Leon Romanovsky wrote:
-> > On Tue, Jan 17, 2023 at 09:49:28AM -0400, Jason Gunthorpe wrote:
-> > > On Tue, Jan 17, 2023 at 02:03:07PM +0200, Leon Romanovsky wrote:
-> > > > On Mon, Jan 16, 2023 at 01:39:38PM -0400, Jason Gunthorpe wrote:
-> > > > > On Mon, Jan 16, 2023 at 03:05:50PM +0200, Leon Romanovsky wrote:
-> > > > > 
-> > > > > > diff --git a/drivers/infiniband/hw/mlx4/mlx4_ib.h b/drivers/infiniband/hw/mlx4/mlx4_ib.h
-> > > > > > index 17fee1e73a45..c553bf0eb257 100644
-> > > > > > --- a/drivers/infiniband/hw/mlx4/mlx4_ib.h
-> > > > > > +++ b/drivers/infiniband/hw/mlx4/mlx4_ib.h
-> > > > > > @@ -184,7 +184,7 @@ enum mlx4_ib_qp_flags {
-> > > > > >  	/* Mellanox specific flags start from IB_QP_CREATE_RESERVED_START */
-> > > > > >  	MLX4_IB_ROCE_V2_GSI_QP = MLX4_IB_QP_CREATE_ROCE_V2_GSI,
-> > > > > >  	MLX4_IB_SRIOV_TUNNEL_QP = 1 << 30,
-> > > > > > -	MLX4_IB_SRIOV_SQP = 1 << 31,
-> > > > > > +	MLX4_IB_SRIOV_SQP = 1ULL << 31,
-> > > > > >  };
-> > > > > 
-> > > > > These should be moved to a uapi if we are saying they are userspace
-> > > > > available
-> > > > > 
-> > > > > But I'm not sure they are?
-> > > > 
-> > > > I don't think so.
-> > > 
-> > > Then they should be > 32 bits right?
-> > 
-> > Right now, they are in reserved range:
-> >         /* reserve bits 26-31 for low level drivers' internal use */
-> >         IB_QP_CREATE_RESERVED_START             = 1 << 26,
-> >         IB_QP_CREATE_RESERVED_END               = 1ULL << 31,
-> > 
-> > If we move them to kernel part, we will need to define reserved range
-> > there too. So we just "burn" extra bits just for mlx4, also I don't see
-> > any reason to promote mlx4 bits to be general ones.
-> 
-> Is the reserved range kernel only? It would be nice to clarify that
-> detail
-> 
-> If yes we should move it so that userspace cannot set it. Do we have a
-> bug here already?
+From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
 
-No, we always checked that users can't provide these bits and fail create QP.
+Allow to save stacktraces into a histogram variable. This will be used by
+synthetic events to allow a stacktrace from one event to be passed and
+displayed by another event.
 
-It means that we can safely move that range too.
+The special keyword "stacktrace" is to be used to trigger a stack
+trace for the event that the histogram trigger is attached to.
 
-Thanks
+  echo 'hist:keys=pid:st=stacktrace" > events/sched/sched_waking/trigger
 
-> 
-> Jason
+Currently nothing can get access to the "$st" variable above that contains
+the stack trace, but that will soon change.
+
+Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+---
+ kernel/trace/trace_events_hist.c | 52 ++++++++++++++++++++++++++------
+ 1 file changed, 42 insertions(+), 10 deletions(-)
+
+diff --git a/kernel/trace/trace_events_hist.c b/kernel/trace/trace_events_hist.c
+index fcaf226b7744..bd67e7c3f258 100644
+--- a/kernel/trace/trace_events_hist.c
++++ b/kernel/trace/trace_events_hist.c
+@@ -1360,6 +1360,8 @@ static const char *hist_field_name(struct hist_field *field,
+ 			field_name = field->name;
+ 	} else if (field->flags & HIST_FIELD_FL_TIMESTAMP)
+ 		field_name = "common_timestamp";
++	else if (field->flags & HIST_FIELD_FL_STACKTRACE)
++		field_name = "stacktrace";
+ 	else if (field->flags & HIST_FIELD_FL_HITCOUNT)
+ 		field_name = "hitcount";
+ 
+@@ -1980,6 +1982,10 @@ static struct hist_field *create_hist_field(struct hist_trigger_data *hist_data,
+ 
+ 	if (flags & HIST_FIELD_FL_STACKTRACE) {
+ 		hist_field->fn_num = HIST_FIELD_FN_NOP;
++		hist_field->size = HIST_STACKTRACE_SIZE;
++		hist_field->type = kstrdup_const("unsigned long[]", GFP_KERNEL);
++		if (!hist_field->type)
++			goto free;
+ 		goto out;
+ 	}
+ 
+@@ -2349,6 +2355,8 @@ parse_field(struct hist_trigger_data *hist_data, struct trace_event_file *file,
+ 		hist_data->enable_timestamps = true;
+ 		if (*flags & HIST_FIELD_FL_TIMESTAMP_USECS)
+ 			hist_data->attrs->ts_in_usecs = true;
++	} else if (strcmp(field_name, "stacktrace") == 0) {
++		*flags |= HIST_FIELD_FL_STACKTRACE;
+ 	} else if (strcmp(field_name, "common_cpu") == 0)
+ 		*flags |= HIST_FIELD_FL_CPU;
+ 	else if (strcmp(field_name, "hitcount") == 0)
+@@ -3117,13 +3125,24 @@ static inline void __update_field_vars(struct tracing_map_elt *elt,
+ 		var_val = hist_fn_call(val, elt, buffer, rbe, rec);
+ 		var_idx = var->var.idx;
+ 
+-		if (val->flags & HIST_FIELD_FL_STRING) {
++		if (val->flags & (HIST_FIELD_FL_STRING |
++				  HIST_FIELD_FL_STACKTRACE)) {
+ 			char *str = elt_data->field_var_str[j++];
+ 			char *val_str = (char *)(uintptr_t)var_val;
+ 			unsigned int size;
+ 
+-			size = min(val->size, STR_VAR_LEN_MAX);
+-			strscpy(str, val_str, size);
++			if (val->flags & HIST_FIELD_FL_STRING) {
++				size = min(val->size, STR_VAR_LEN_MAX);
++				strscpy(str, val_str, size);
++			} else {
++				int e;
++
++				e = stack_trace_save((void *)str,
++						     HIST_STACKTRACE_DEPTH,
++						     HIST_STACKTRACE_SKIP);
++				if (e < HIST_STACKTRACE_DEPTH - 1)
++					((unsigned long *)str)[e] = 0;
++			}
+ 			var_val = (u64)(uintptr_t)str;
+ 		}
+ 		tracing_map_set_var(elt, var_idx, var_val);
+@@ -3822,7 +3841,8 @@ static void save_field_var(struct hist_trigger_data *hist_data,
+ {
+ 	hist_data->field_vars[hist_data->n_field_vars++] = field_var;
+ 
+-	if (field_var->val->flags & HIST_FIELD_FL_STRING)
++	/* Stack traces are saved in the string storage too */
++	if (field_var->val->flags & (HIST_FIELD_FL_STRING | HIST_FIELD_FL_STACKTRACE))
+ 		hist_data->n_field_var_str++;
+ }
+ 
+@@ -4101,7 +4121,8 @@ static int action_create(struct hist_trigger_data *hist_data,
+ 			}
+ 
+ 			hist_data->save_vars[hist_data->n_save_vars++] = field_var;
+-			if (field_var->val->flags & HIST_FIELD_FL_STRING)
++			if (field_var->val->flags &
++			    (HIST_FIELD_FL_STRING | HIST_FIELD_FL_STACKTRACE))
+ 				hist_data->n_save_var_str++;
+ 			kfree(param);
+ 		}
+@@ -4349,7 +4370,8 @@ static int create_var_field(struct hist_trigger_data *hist_data,
+ 	if (!ret && hist_data->fields[val_idx]->flags & HIST_FIELD_FL_EXECNAME)
+ 		update_var_execname(hist_data->fields[val_idx]);
+ 
+-	if (!ret && hist_data->fields[val_idx]->flags & HIST_FIELD_FL_STRING)
++	if (!ret && hist_data->fields[val_idx]->flags &
++	    (HIST_FIELD_FL_STRING | HIST_FIELD_FL_STACKTRACE))
+ 		hist_data->fields[val_idx]->var_str_idx = hist_data->n_var_str++;
+ 
+ 	return ret;
+@@ -5090,7 +5112,8 @@ static void hist_trigger_elt_update(struct hist_trigger_data *hist_data,
+ 		if (hist_field->flags & HIST_FIELD_FL_VAR) {
+ 			var_idx = hist_field->var.idx;
+ 
+-			if (hist_field->flags & HIST_FIELD_FL_STRING) {
++			if (hist_field->flags &
++			    (HIST_FIELD_FL_STRING | HIST_FIELD_FL_STACKTRACE)) {
+ 				unsigned int str_start, var_str_idx, idx;
+ 				char *str, *val_str;
+ 				unsigned int size;
+@@ -5103,9 +5126,18 @@ static void hist_trigger_elt_update(struct hist_trigger_data *hist_data,
+ 				str = elt_data->field_var_str[idx];
+ 				val_str = (char *)(uintptr_t)hist_val;
+ 
+-				size = min(hist_field->size, STR_VAR_LEN_MAX);
+-				strscpy(str, val_str, size);
+-
++				if (hist_field->flags & HIST_FIELD_FL_STRING) {
++					size = min(hist_field->size, STR_VAR_LEN_MAX);
++					strscpy(str, val_str, size);
++				} else {
++					int e;
++
++					e = stack_trace_save((void *)str,
++							     HIST_STACKTRACE_DEPTH,
++							     HIST_STACKTRACE_SKIP);
++					if (e < HIST_STACKTRACE_DEPTH - 1)
++						((unsigned long *)str)[e] = 0;
++				}
+ 				hist_val = (u64)(uintptr_t)str;
+ 			}
+ 			tracing_map_set_var(elt, var_idx, hist_val);
+-- 
+2.39.0
+
+
