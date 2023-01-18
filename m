@@ -2,140 +2,171 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 970EAC32793
-	for <linux-trace-kernel@archiver.kernel.org>; Wed, 18 Jan 2023 12:33:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C3824C46467
+	for <linux-trace-kernel@archiver.kernel.org>; Wed, 18 Jan 2023 14:32:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230089AbjARMdA (ORCPT
+        id S231165AbjAROco (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Wed, 18 Jan 2023 07:33:00 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35410 "EHLO
+        Wed, 18 Jan 2023 09:32:44 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33264 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230096AbjARMcm (ORCPT
+        with ESMTP id S230405AbjAROc3 (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Wed, 18 Jan 2023 07:32:42 -0500
-X-Greylist: delayed 1805 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Wed, 18 Jan 2023 03:49:53 PST
-Received: from m126.mail.126.com (m126.mail.126.com [123.126.96.242])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 644295A375;
-        Wed, 18 Jan 2023 03:49:52 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=126.com;
-        s=s110527; h=From:Subject:Date:Message-Id:MIME-Version; bh=z3knI
-        4o7Y51dXHG8FRsTjca3hUpw5Zs0AgfUz081W6I=; b=PjLcNMP6y9SVUHnX1xO8F
-        ivhmX/D8wAQQRyo3GB7iuuQmH56wATfTaFvy59q4G+msk6gTrFmounEzQ0dcvdMx
-        QEPFKB5spDTAd6erpjLVg4ln0ud4ynhGVkhagDVq7WHK/XIk0fR/kxUxXa0OJBqS
-        sEYmuAGDsqZEiMZJDqswJM=
-Received: from localhost.localdomain (unknown [202.112.238.191])
-        by smtp12 (Coremail) with SMTP id fORpCgA3FHSf1cdj8fmvAA--.15435S4;
-        Wed, 18 Jan 2023 19:18:56 +0800 (CST)
-From:   Yi He <clangllvm@126.com>
-To:     daniel@iogearbox.net
-Cc:     andrii@kernel.org, ast@kernel.org, bpf@vger.kernel.org,
-        clangllvm@126.com, haoluo@google.com, john.fastabend@gmail.com,
-        jolsa@kernel.org, kpsingh@kernel.org, linux-kernel@vger.kernel.org,
-        linux-trace-kernel@vger.kernel.org, martin.lau@linux.dev,
-        mhiramat@kernel.org, rostedt@goodmis.org, sdf@google.com,
-        song@kernel.org, yhs@fb.com, yhs@meta.com,
-        linux-security-module@vger.kernel.org
-Subject: [PATCH V2] bpf: security enhancement by limiting the offensive eBPF helpers
-Date:   Wed, 18 Jan 2023 19:18:54 +0800
-Message-Id: <20230118111854.744810-1-clangllvm@126.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <ef9b8445-b02b-3f6a-a566-587695f322b7@iogearbox.net>
-References: <ef9b8445-b02b-3f6a-a566-587695f322b7@iogearbox.net>
+        Wed, 18 Jan 2023 09:32:29 -0500
+Received: from NAM02-DM3-obe.outbound.protection.outlook.com (mail-dm3nam02on2056.outbound.protection.outlook.com [40.107.95.56])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D3FC63C29D;
+        Wed, 18 Jan 2023 06:20:39 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=cGMCFC6QF50qnq+l8jTr8PsTpM1qsM/7x9aS1E7FJ4E52Ep72h7MpKQCECfaNDFPkEtk95CO7EWDxxza4+Em0nYQplgD6B8CmltTfyU8LQNgde4+xb6ojoetE5dxLONViMHymQKNxl+Ef+bE0FOXHos5CJRbU4ktP+r6nkAFS4qmU/gFnOH0PKW7lJ6DMDUgq8HE9CRCHuv+1NmZiCEhbItf9tp5tMaTZDwUdW6feeTI9+kNKtq8B9CZ/coDKXlIbQNOki0HLoX2bAWBx8cauArwP7ZBL85MA/sLw9yW1z5xbNqsQNga7yplthp9U54qUSqTL7g0Mme6M2NPoakE3g==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=2DImGXTFklUh486i6aV6dtFC1amhb4zg5fM5iwiDMA0=;
+ b=aljgRJ4qCx3Yr/rxVmpBwpufqBrd49ijweeNoupyJuSwrRBVXGZsVwB9H1yo3DaGP7+/Qqk8VyyaJCAKbbo4skG3ESRm/hiyKZyGMiWqfa6LHCMhalaYF2ur2i4OjvR988EJkWBtmZh0TRL6RXJyDsT0sF87TT8cveGXZYkH55PhvryZNlpjbJ5k3cidihnRIsnn8ANi7qMdsY3Swsj2y8YASrH9PrWu2EWO8ER1S9tE8w7Rws9E6tbwQET56/YTQGsNCjjJ4u2s9kyEaYEdlHXsCFie0AydDtOcT2Zf8EYk1HWXStD0FJsvkEdUF8bFOrRKfL29p4UnBjoo9XI26g==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=2DImGXTFklUh486i6aV6dtFC1amhb4zg5fM5iwiDMA0=;
+ b=QjPhqJGjH4ji/TTGI2OwrJw7oY+jhPDJg6MnuMy2JP5opqintck47jTHnFw0otnwTMpC1+3pCa+YauRPqf9m68i/q69iL8qyjY3+9u6zkOaq5tMz3I4JdRdxO6k96MvvdGQjbb6ao1l0LE0htNMtvu4t1GtkwOo3j17zjEyrorNTA4f3nra+KzTEh/RnoeLeRmaeR9qFrCKHRrF3KlCKNIXSU4rP/Br8LMyX56ckHyliCEWLCCAXluSilPYvGrU3HFEng9/vIco3ZDtI4GYggVhANVzhzUreN9YhL231eLw9rHUYaBZvnOSUQHZ92gk8Ac/sgKEdvzaCUYULF/FCdA==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nvidia.com;
+Received: from DM4PR12MB5040.namprd12.prod.outlook.com (2603:10b6:5:38b::19)
+ by LV2PR12MB5846.namprd12.prod.outlook.com (2603:10b6:408:175::6) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5986.23; Wed, 18 Jan
+ 2023 14:20:38 +0000
+Received: from DM4PR12MB5040.namprd12.prod.outlook.com
+ ([fe80::9444:21e0:2a65:da95]) by DM4PR12MB5040.namprd12.prod.outlook.com
+ ([fe80::9444:21e0:2a65:da95%6]) with mapi id 15.20.6002.024; Wed, 18 Jan 2023
+ 14:20:37 +0000
+Message-ID: <ac48766a-b861-4fc0-3171-7b23f175c672@nvidia.com>
+Date:   Wed, 18 Jan 2023 16:20:27 +0200
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.6.1
+Subject: Re: [PATCH rdma-next 00/13] Add RDMA inline crypto support
+Content-Language: en-US
+To:     Christoph Hellwig <hch@lst.de>, Leon Romanovsky <leon@kernel.org>
+Cc:     Jason Gunthorpe <jgg@nvidia.com>, Bryan Tan <bryantan@vmware.com>,
+        Eric Dumazet <edumazet@google.com>,
+        Israel Rukshin <israelr@nvidia.com>,
+        Jakub Kicinski <kuba@kernel.org>, Jens Axboe <axboe@fb.com>,
+        Keith Busch <kbusch@kernel.org>, linux-kernel@vger.kernel.org,
+        linux-nvme@lists.infradead.org, linux-rdma@vger.kernel.org,
+        linux-trace-kernel@vger.kernel.org,
+        Masami Hiramatsu <mhiramat@kernel.org>, netdev@vger.kernel.org,
+        Paolo Abeni <pabeni@redhat.com>,
+        Saeed Mahameed <saeedm@nvidia.com>,
+        Sagi Grimberg <sagi@grimberg.me>,
+        Selvin Xavier <selvin.xavier@broadcom.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Vishnu Dasa <vdasa@vmware.com>,
+        Yishai Hadas <yishaih@nvidia.com>
+References: <cover.1673873422.git.leon@kernel.org>
+ <20230118073654.GC27048@lst.de>
+From:   Max Gurtovoy <mgurtovoy@nvidia.com>
+In-Reply-To: <20230118073654.GC27048@lst.de>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: LO4P123CA0194.GBRP123.PROD.OUTLOOK.COM
+ (2603:10a6:600:1a4::19) To DM4PR12MB5040.namprd12.prod.outlook.com
+ (2603:10b6:5:38b::19)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID: fORpCgA3FHSf1cdj8fmvAA--.15435S4
-X-Coremail-Antispam: 1Uf129KBjvJXoWxXFy3tw13XF48uF4xZr18Krg_yoWrZw45pF
-        WDGF93CrZ7JF4IgrsrJ34xGFWrA3y5WrW7GFWDKw18Za9Fqr4Yqr47tF4a93Z5ZrZxW3y2
-        qa12vFZ0yF1qga7anT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-        9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x0zRb_-PUUUUU=
-X-Originating-IP: [202.112.238.191]
-X-CM-SenderInfo: xfod0wpooyzqqrswhudrp/1tbiqB36y1pD-eYBBwABsB
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DM4PR12MB5040:EE_|LV2PR12MB5846:EE_
+X-MS-Office365-Filtering-Correlation-Id: 0465538a-5bc5-4ef5-5468-08daf95f2b56
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: KKmDwBeIxjOPrHXbGh/82f+ScXfqiLzsFzMjXaEUNuJZgMdsCNRpehqmx3TVt5O+6pZqiOUqSc7GjCqmUDK7J4uwxTscHJtBkD5yoREX/662KgvbkQOEDEJn7/wfpsQEDjqYrEidDiNdUcE/mGyeFq1Q2ni95+gLQyMKj+4lR5mi6FIsUKqfOJT7pLaPuXxtBRm7VVTxo55PVMrtAKggq5mTDr9BE1rLXFID/MVmYUGEYHCM3rVZMeIn76r/izP4lzH8IexaHm1xJ6LyWdwk9xVBdf6od/GiRPYn6rpCGiMvy/K+KErX+JMgLHkCB3ZWNS/sVWbXbgJ/g27DuTzlj4aM8qB8tQGwDBBQWMiOa6dx3XQasAtK2z4wAR9W0KFpHsiW2hSFAwH968oJoRrZki1blgL28IZ4nlVG7YxCbmh7F1NYVr3ZV/oZys1GjSxbsV8OPY4EbwIb7u6B/IIDQHC6shJ3iKKCPmad1BV2/GSwZHbDoHuYuaW8hf/v5hnpnDhJGTO1Y8gyHHmvyv8AAq4KO5a5rZMXfZq+ZDgQofy5yP09ADNP2hvuWy+tKm9rwRoSB06iiDKVy0mOa1GJOFpuKdjaEaQ0QlSeao24ayQ6Q/fAvAwY8PmQk0owkX7hdyh5TDpddhAjym2wggdiTqauUvdzNEJtaL/uyYVbxxKZYcuMRYFWmt4NKDuUVsBq8m3R0XqKgddn4K1Gt90Y8exOV6XeCHf+gpYHKNvwN7s=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM4PR12MB5040.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230022)(4636009)(366004)(39860400002)(346002)(396003)(136003)(376002)(451199015)(83380400001)(38100700002)(5660300002)(2906002)(86362001)(4326008)(66476007)(66946007)(8676002)(66556008)(7416002)(8936002)(31696002)(2616005)(478600001)(26005)(53546011)(186003)(6506007)(6512007)(107886003)(316002)(54906003)(6486002)(110136005)(6666004)(41300700001)(31686004)(66899015)(36756003)(45980500001)(43740500002);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?eFR5bFVSNUxvbHBMSU1ac3IrNVYwQmNDUTZjOUFVNE82bUsyYVJiNWZUVHF5?=
+ =?utf-8?B?OEpkNnRYUmNtRitjWlBianlrU2kyTnFMNlNaR0VhZkhZY2NFRndHUzZTYjFh?=
+ =?utf-8?B?NDFOVTdiWmZDVUhUc1BYS2hHQjlOWllSS09IQWxOVlpMUG54VlNZYVh6VXY3?=
+ =?utf-8?B?UFNqR1JpeWVzRDRST29ENlR4blR0WmZvMTNzY1h5ajRpTmlkNk0xMTFFOUNQ?=
+ =?utf-8?B?MjByRDFTZDZmRzVPanltaVlLSUtIN0Z4T3B2dnJXbFkzUzR0Nm9lNmFQcTZU?=
+ =?utf-8?B?OFZWcjJ1OU9QWVRGRE81UEd4NVRnQWZpRTduQ0F6b3A1VWliMmNXYmx0S04v?=
+ =?utf-8?B?SkZTOWVsK0VlaWRHWlcrdWRCdHF4eG9zNGpNVEZvbXFFWllOL3hIL09SU1Ft?=
+ =?utf-8?B?N2VNTmVpbTM3cnBRM2s5bHhQb1pHRDVZaTdwSEpUT092aHlGODZFMXRHRWVZ?=
+ =?utf-8?B?RlpzMTZheFN4UWhwTHJpcHgxdTNxK3ZZWVpuTkZodkgzZk5vZm9Rbmg1aEVE?=
+ =?utf-8?B?N3Z4VXFPak9pZytudElMRmhMaTVTbzlvRmlFckFrL2RZRkhmdGpiUmpJdFhu?=
+ =?utf-8?B?dnBCVmtQQlo1YkNsdFI3M3gzM3NBamEvQkNuU0J4Zk5iMEdJbHQxMjU5SVAr?=
+ =?utf-8?B?dUZOaFZjMkRCdE8rOHkyR0ZDcmN1bWk0Y1Y4NU9DcklHTjdsT2lubVlocXFZ?=
+ =?utf-8?B?dUU1MDk0N3lZYzZtMVI4cmgyYWpsdmRkektvZE5JK3orSXBraE9GeXg0bGhE?=
+ =?utf-8?B?TVgrc0dXNWc2UlhhRVBOcjNFQnFqbUlTR2Z4WHJFMzVqWHRXb0ZIUWVVTU9B?=
+ =?utf-8?B?NkplSkxKRGJSNmxuRisvRU5UMlg5VlNybXVpU3VuZnQrY3BYamMxWExoRXdC?=
+ =?utf-8?B?OS9uWlQ3dDB2MVhWSElWdVNpSEZSU1VrV3NxNEJUUHBGU3dMYTl3dmlNNFNF?=
+ =?utf-8?B?K0ROZEZRUmF2aWh3ckNOU2loUDhOSUpsL0R3UzNTRVBza2RYaFJyMDkxVHpK?=
+ =?utf-8?B?Zm0yRXU0R2ozR2RlOXpMWlBpaWVrZTRSMG9KZzU1Tjd3bnBTOWhVb2YwOCtY?=
+ =?utf-8?B?M0hyT29PR2hQN1FmT3NWTGQyYkVLMWptT0xuZ0N0eHpoQzNhdDVBYnlIVERC?=
+ =?utf-8?B?blVOOVN3RDBpVGdyZy9kTytnQVJEd2p4ZmVPT1RCdTI4eGZWU2xJOW1QdlZl?=
+ =?utf-8?B?YkRwcWdHdG1BeW8wN3FKend6WTg3MlF2Mys3VnJXOXFnYWVNdHpmSFl6Rndp?=
+ =?utf-8?B?ZDlLZ1Y2WUU3YXRqS0hBZXpRelQzRDhwQmIvZlhWVVRVdkxCcTg2dUV5SXVu?=
+ =?utf-8?B?cnVPMjd3TnluNUJWdGVUSUNkSmFXbEk4R2k4c1RrdFNlZnlONzVZN084VkpC?=
+ =?utf-8?B?RHYwUHVZVlZURnB3VXJXSUtiMjBXbXRYVW15RURXc0ZUdWxZWHR3MlVSNThE?=
+ =?utf-8?B?dUFTUDJpT3ZVZWJoYzgxUVFpV1Mvcmlqd204MU9zUnkyQmpBanBzQzlsSUZz?=
+ =?utf-8?B?ZjB4U0V3VmsxVUJvWHlUZ2JDcHI5UUM0ZnRtbUNCdTF3U2tCaUNNejBja21M?=
+ =?utf-8?B?VGpoWU02TW9BeHhrMnJreHpkeEJFRWFYNjNoVnBmT3lRZ3NOSHBzSklxZEdx?=
+ =?utf-8?B?V3pQaHBlbFZlRjIzTWlNdkV1amZZckZJS2RCRS9yNmVycWZ0S1A3cWlqbTlw?=
+ =?utf-8?B?L0E3d2pqdEVXblYvME55bmFWSmdSSTJFb3llbUNLbEcveDYrd3Z3aTlsM2lI?=
+ =?utf-8?B?K2FpanlRL2Q1RTAxUzIxMWdUb25JaWVRNzV4cTVHQitJMDlIb24xYXE4R0gz?=
+ =?utf-8?B?a0JPb3NjeTltSDB4b0ZDaWNxckNCbzJ3SUUwSWduMXJMM0ZQYzhrcmRQRWxi?=
+ =?utf-8?B?cTJJSzN0RzBVaEoweHp0WlU0NFlxV3RhdzVNditYSit5QlhlZHlTUkFhbTgr?=
+ =?utf-8?B?Wmk2T3VUUy9UM3lmejAyZVhEL21ydk1Kb1pZV0FpbzBSMWJpZVNQUzdaOC9i?=
+ =?utf-8?B?dVJoR0F3VzNBOEVSODFvbE10MHpycTl4SXBXOGpsWEtlSEwwTzZReTJiMHFP?=
+ =?utf-8?B?ZUNGKys5aklaR2NNTHJBanJXN1dUcmI5b1NNZ0VQais5U3pFbTdRcE5nRDIr?=
+ =?utf-8?B?V1E2VkxGdzVRdVB6WTZjVi9LZ3pQSUZaZWpiMy9VK2FaVnZqUWpZMkE5R3VL?=
+ =?utf-8?B?eUE9PQ==?=
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 0465538a-5bc5-4ef5-5468-08daf95f2b56
+X-MS-Exchange-CrossTenant-AuthSource: DM4PR12MB5040.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 18 Jan 2023 14:20:37.4519
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: mON4edscv0JRPJmX8BQSu/hP3sHmPbUQLbMY5tQb1I64bA0DTlRFy0lZehOWKQNHgyRCfDEtxm4ftCn+ofsoaw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: LV2PR12MB5846
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-The bpf_send_singal, bpf_send_singal_thread and bpf_override_return
-is similar to bpf_write_user and can affect userspace processes.
-Thus, these three helpers should also be restricted by security lockdown.
 
-Signed-off-by: Yi He <clangllvm@126.com>
----
+On 18/01/2023 9:36, Christoph Hellwig wrote:
+> On Mon, Jan 16, 2023 at 03:05:47PM +0200, Leon Romanovsky wrote:
+>> >From Israel,
+>>
+>> The purpose of this patchset is to add support for inline
+>> encryption/decryption of the data at storage protocols like nvmf over
+>> RDMA (at a similar way like integrity is used via unique mkey).
+>>
+>> This patchset adds support for plaintext keys. The patches were tested
+>> on BF-3 HW with fscrypt tool to test this feature, which showed reduce
+>> in CPU utilization when comparing at 64k or more IO size. The CPU utilization
+>> was improved by more than 50% comparing to the SW only solution at this case.
+> One thing that needs to be solved before we can look into this is the
+> interaction with protection information (or integrity data in Linux
+> terms).  Currently inline encryption and protection information are
+> mutally incompatible.
 
-Thanks for your feedback.
+Well, for sure this should be solved. Not sure that it should be done 
+before this series.
 
-This patch aims to mitigate the offensive eBPF problem which has been dicussed since 2019 [1]. Recently, we find that enable eBPF in container environemnt can lead to container escape or cross-nodes attacks (which may compromise mutiple VMs) in the Kubernetes [2]. Since lots of eBPF based tools are used in containers, mutiple containers have the CAP_SYS_ADMIN needed by eBPF which may be abused by untrusted eBPF code. 
+This patch set doesn't break/change existing behavior of PI and 
+Encryption offloads so the above can be done incrementally.
+It's already big enough series and 2 subsystems are involved.
 
-We are still working for a better fine-grained eBPF permission model which add capability fitler bits to control the permissions of different eBPF program types and helper functions of a processes [3].
+Today, if one would like to run both features using a capable device 
+then the PI will be offloaded (no SW fallback) and the Encryption will 
+be using SW fallback.
+There should be a serious instrumentation in the block layer to make 
+both operations offloaded.
+We'll start looking into it. Any suggestions and designs are welcomed.
 
-Security lockdown seems to be a simple way to mitigate this problem. It only restrict all the offensive features and enable other eBPF features needed by benign eBPF program such as Cillium (which do not use these offensive features but only need bpf_read_user).
-
-> I'm not applying this.. i) this means by default you effectively remove these
-> helpers from existing users in the wild given integrity mode is default for
-> secure boot, but also ii) should we lock-down and remove the ability for other
-> privileged entities like processes to send signals, seccomp to ret_kill, ptrace,
-> etc given they all "can affect userspace processes"
-
-It does not affect other privielge processes (e.g., ptrace) to kill process. Seccomp is classic bpf does not use this eBPF helper [4].
-
->  check out already existing FUNCTION_ERROR_INJECTION kernel config.
-We do not think the FUNCTION_ERROR_INJECTION  config can solve this problem as this option is default enable in many linux distributions such as debian/ubuntu. All the syscall are in allowlist of error injection and can be attacked by evil eBPF via eBPF override return.
-
-We hop you can rethink this problem. 
-
-[1]. J. Dileo. Evil eBPF: Practical Abuses of an In-Kernel Bytecode Runtime. DEFCON 27
-[2]. https://rolandorange.zone/report.html
-[3]. https://lore.kernel.org/bpf/CAADnVQK4ucv=LugqZ3He9ubwdxDu6ohaBKr2E=TX0UT65+7WpQ@mail.gmail.com/T/ 
-[4]. https://elixir.bootlin.com/linux/v6.2-rc4/source/kernel/seccomp.c#L1304
-
-
- V1 -> V2: add security lockdown to bpf_send_singal_thread and remove 
-	the unused LOCKDOWN_OFFENSIVE_BPF_MAX.
-
- include/linux/security.h | 2 ++
- kernel/trace/bpf_trace.c | 9 ++++++---
- 2 files changed, 8 insertions(+), 3 deletions(-)
-
-diff --git a/include/linux/security.h b/include/linux/security.h
-index 5b67f208f..42420e620 100644
---- a/include/linux/security.h
-+++ b/include/linux/security.h
-@@ -123,6 +123,8 @@ enum lockdown_reason {
- 	LOCKDOWN_DEBUGFS,
- 	LOCKDOWN_XMON_WR,
- 	LOCKDOWN_BPF_WRITE_USER,
-+	LOCKDOWN_BPF_SEND_SIGNAL,
-+	LOCKDOWN_BPF_OVERRIDE_RETURN,
- 	LOCKDOWN_DBG_WRITE_KERNEL,
- 	LOCKDOWN_RTAS_ERROR_INJECTION,
- 	LOCKDOWN_INTEGRITY_MAX,
-diff --git a/kernel/trace/bpf_trace.c b/kernel/trace/bpf_trace.c
-index 3bbd3f0c8..fdb94868d 100644
---- a/kernel/trace/bpf_trace.c
-+++ b/kernel/trace/bpf_trace.c
-@@ -1463,9 +1463,11 @@ bpf_tracing_func_proto(enum bpf_func_id func_id, const struct bpf_prog *prog)
- 		return &bpf_cgrp_storage_delete_proto;
- #endif
- 	case BPF_FUNC_send_signal:
--		return &bpf_send_signal_proto;
-+		return security_locked_down(LOCKDOWN_BPF_SEND_SIGNAL) < 0 ?
-+		       NULL : &bpf_send_signal_proto;
- 	case BPF_FUNC_send_signal_thread:
--		return &bpf_send_signal_thread_proto;
-+		return security_locked_down(LOCKDOWN_BPF_SEND_SIGNAL) < 0 ?
-+		       NULL : &bpf_send_signal_thread_proto;
- 	case BPF_FUNC_perf_event_read_value:
- 		return &bpf_perf_event_read_value_proto;
- 	case BPF_FUNC_get_ns_current_pid_tgid:
-@@ -1531,7 +1533,8 @@ kprobe_prog_func_proto(enum bpf_func_id func_id, const struct bpf_prog *prog)
- 		return &bpf_get_stack_proto;
- #ifdef CONFIG_BPF_KPROBE_OVERRIDE
- 	case BPF_FUNC_override_return:
--		return &bpf_override_return_proto;
-+		return security_locked_down(LOCKDOWN_BPF_OVERRIDE_RETURN) < 0 ?
-+		       NULL : &bpf_override_return_proto;
- #endif
- 	case BPF_FUNC_get_func_ip:
- 		return prog->expected_attach_type == BPF_TRACE_KPROBE_MULTI ?
--- 
-2.25.1
+We also prepared patches to extend the blk lavel encryption (in addition 
+to fscrypt exist today).
 
