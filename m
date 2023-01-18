@@ -2,113 +2,376 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1ABDCC32793
-	for <linux-trace-kernel@archiver.kernel.org>; Wed, 18 Jan 2023 15:36:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F9ADC38147
+	for <linux-trace-kernel@archiver.kernel.org>; Wed, 18 Jan 2023 22:43:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229928AbjARPgs (ORCPT
+        id S229653AbjARWnj (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Wed, 18 Jan 2023 10:36:48 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42530 "EHLO
+        Wed, 18 Jan 2023 17:43:39 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42650 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231530AbjARPgg (ORCPT
+        with ESMTP id S229463AbjARWni (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Wed, 18 Jan 2023 10:36:36 -0500
-Received: from mail-vs1-xe35.google.com (mail-vs1-xe35.google.com [IPv6:2607:f8b0:4864:20::e35])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3EA5435B9;
-        Wed, 18 Jan 2023 07:36:34 -0800 (PST)
-Received: by mail-vs1-xe35.google.com with SMTP id t10so25521324vsr.3;
-        Wed, 18 Jan 2023 07:36:34 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=4k1MyFwiLDNIcgELLI1pyHSb8UiFg9DjutwEkM/zD8k=;
-        b=SA9i4YhM/XnAJb3VGSeE7hQXEDCMMTn1QNNAeUvN3HhBsJkcWCwTFv0WPJ1mNJvmz8
-         XiB/HIo9OOnIsfqtrd4uZmabT7nKKZ3+LzRXdeW2uag0Pye2Ist2SglHa+HXXZHf4IVK
-         q65U0W+22MqWPSD1THSo2pOAQ5SCOlMnCczYtZK0PDXN5GM6kDgu2C28zVgl3lsOBuKJ
-         vux8kN/UOyY1hxxvFLUPHvLQFK27xwzXwmzHDMbouvboMii1usp1jZWYssAOPse/jaBe
-         7KxFN5YxvF5He+TGLCu5KnJcevTaYKPPUR9DeQFO5SdPa+iJ6n2FPBxEwvVr9sR+FM3W
-         v4uA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=4k1MyFwiLDNIcgELLI1pyHSb8UiFg9DjutwEkM/zD8k=;
-        b=xnMi8qYy/72sOV6wU8jYZbZO7rkeuE/9AvPiJ4UNi1VQONW+cQyjCX/xKuYJ/eys3d
-         Rlx175j6leeAMBOQNTYZ2rtuZy7YwNgGVNRokoVSJuEgZ9oZ+atlx+DmkYhHng8/GnPF
-         4FTgdAf93c3OS/tzrlmX/ELjklyGZlFhPSM4GvVfz+PipUZGpV7/WmqfwjlsYmu88z3N
-         NOYoCHBgn53mgICqkiGSFrE8s3rlfP37OcjbAgeVq2CLRbHXFWqLBoO42gfMLI940ELy
-         83+sU+canJ0s9guKTMb2vtbaHC6u/vAr4iALfS7TDfApqPu+sEH6/ZsE8lJIMUpjWl5X
-         SxtA==
-X-Gm-Message-State: AFqh2koxKOBbeR1JWnjamCR7kAVg8xgBvs+rm+mmqkw5qblDEOkVuR7l
-        hKMCUzID4G4SDisH8m4/GKDlIdb6S6qfRNf6QXE=
-X-Google-Smtp-Source: AMrXdXuIttqD3ycI2753x+4UmQ94cs+FZCJ9kfvdrJsGv3ZSprB6yLjIZJOM2pId1lEpXm1IWrCFljVfux9kskm8FAU=
-X-Received: by 2002:a67:bb02:0:b0:3d4:53d:9320 with SMTP id
- m2-20020a67bb02000000b003d4053d9320mr801095vsn.21.1674056193355; Wed, 18 Jan
- 2023 07:36:33 -0800 (PST)
+        Wed, 18 Jan 2023 17:43:38 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 20D655EF81;
+        Wed, 18 Jan 2023 14:43:37 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id B76AB61A81;
+        Wed, 18 Jan 2023 22:43:36 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7047DC433EF;
+        Wed, 18 Jan 2023 22:43:35 +0000 (UTC)
+Date:   Wed, 18 Jan 2023 17:43:33 -0500
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
+Cc:     linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Florent Revest <revest@chromium.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Will Deacon <will@kernel.org>
+Subject: Re: [RFC PATCH 9/9] tracing/probes: Add fprobe-events
+Message-ID: <20230118174333.3b301d2e@gandalf.local.home>
+In-Reply-To: <166792263423.919356.14181339761424544980.stgit@devnote3>
+References: <166792255429.919356.14116090269057513181.stgit@devnote3>
+        <166792263423.919356.14181339761424544980.stgit@devnote3>
+X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-References: <ef9b8445-b02b-3f6a-a566-587695f322b7@iogearbox.net> <20230118111854.744810-1-clangllvm@126.com>
-In-Reply-To: <20230118111854.744810-1-clangllvm@126.com>
-From:   Djalal Harouni <tixxdz@gmail.com>
-Date:   Wed, 18 Jan 2023 16:36:06 +0100
-Message-ID: <CAEiveUd_N8qHy54AS0q90FuUSQ=7mePm8FL88Aw-sY7fT7NqFQ@mail.gmail.com>
-Subject: Re: [PATCH V2] bpf: security enhancement by limiting the offensive
- eBPF helpers
-To:     Yi He <clangllvm@126.com>
-Cc:     daniel@iogearbox.net, andrii@kernel.org, ast@kernel.org,
-        bpf@vger.kernel.org, haoluo@google.com, john.fastabend@gmail.com,
-        jolsa@kernel.org, kpsingh@kernel.org, linux-kernel@vger.kernel.org,
-        linux-trace-kernel@vger.kernel.org, martin.lau@linux.dev,
-        mhiramat@kernel.org, rostedt@goodmis.org, sdf@google.com,
-        song@kernel.org, yhs@fb.com, yhs@meta.com,
-        linux-security-module@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On Wed, Jan 18, 2023 at 1:38 PM Yi He <clangllvm@126.com> wrote:
-[...]
-> Thanks for your feedback.
->
-> This patch aims to mitigate the offensive eBPF problem which has been dic=
-ussed since 2019 [1]. Recently, we find that enable eBPF in container envir=
-onemnt can lead to container escape or cross-nodes attacks (which may compr=
-omise mutiple VMs) in the Kubernetes [2]. Since lots of eBPF based tools ar=
-e used in containers, mutiple containers have the CAP_SYS_ADMIN needed by e=
-BPF which may be abused by untrusted eBPF code.
+On Wed,  9 Nov 2022 00:50:34 +0900
+"Masami Hiramatsu (Google)" <mhiramat@kernel.org> wrote:
 
-Then solution should be toward restricting eBPF in container, there is alre=
-ady
-sysctl, per process seccomp, LSM + bpf LSM for that.
+> From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+> 
+> Add fprobe events for tracing function entry and exit.
+> 
+> The fprobe event is a new dynamic events which is only for the
+> function (symbol) entry and exit. This event accepts non
+> register fetch arguments so that user can trace the function
+> arguments and return values.
+> 
+> The fprobe events syntax is here;
+> 
+>  f[:[GRP/][EVENT]] FUNCTION [FETCHARGS]
+>  f[MAXACTIVE][:[GRP/][EVENT]] FUNCTION%return [FETCHARGS]
+> 
+> E.g.
+> 
+>  # echo 'f vfs_read $arg1'  >> dynamic_events
+>  # echo 'f vfs_read%return $retval'  >> dynamic_events
+>  # cat dynamic_events
+>  f:fprobes/vfs_read_entry vfs_read arg1=$arg1
+>  f:fprobes/vfs_read_exit vfs_read%return arg1=$retval
+>  # echo 1 > events/fprobes/enable
 
-...
-> > I'm not applying this.. i) this means by default you effectively remove=
- these
-> > helpers from existing users in the wild given integrity mode is default=
- for
-> > secure boot, but also ii) should we lock-down and remove the ability fo=
-r other
-> > privileged entities like processes to send signals, seccomp to ret_kill=
-, ptrace,
-> > etc given they all "can affect userspace processes"
->
-> It does not affect other privielge processes (e.g., ptrace) to kill proce=
-ss. Seccomp is classic bpf does not use this eBPF helper [4].
+So what exactly is the advantage of this over a normal kprobe event?
 
-Those are more or less same as bpf sending signal. Supervisors are using
-seccomp to ret kill process and/or sending signals. Where will you draw the
-line? should we go restrict those too? IMHO this does not relate to lockdow=
-n.
+Less overhead?
 
-This reasoning will kill any effort to improve sandbox mechanisms that are
-moving some functionality from seccomp ret kill to a more flexible and
-transparent bpf-LSM model where privileged installs the sandbox. Actually,
-we are already doing this and beside eBPF flexibility and transparency
-(change policy at runtime without restart) from a _user perspective_
-I don't see that much difference between a seccomp kill and ebpf signal.
+>  # head -n 20 trace | tail
+>  #           TASK-PID     CPU#  |||||  TIMESTAMP  FUNCTION
+>  #              | |         |   |||||     |         |
+>               sh-142     [005] ...1.   448.386420: vfs_read_entry: (vfs_read+0x4/0x340) arg1=0xffff888007f7c540
+>               sh-142     [005] .....   448.386436: vfs_read_exit: (ksys_read+0x75/0x100 <- vfs_read) arg1=0x1
+>               sh-142     [005] ...1.   448.386451: vfs_read_entry: (vfs_read+0x4/0x340) arg1=0xffff888007f7c540
+>               sh-142     [005] .....   448.386458: vfs_read_exit: (ksys_read+0x75/0x100 <- vfs_read) arg1=0x1
+>               sh-142     [005] ...1.   448.386469: vfs_read_entry: (vfs_read+0x4/0x340) arg1=0xffff888007f7c540
+>               sh-142     [005] .....   448.386476: vfs_read_exit: (ksys_read+0x75/0x100 <- vfs_read) arg1=0x1
+>               sh-142     [005] ...1.   448.602073: vfs_read_entry: (vfs_read+0x4/0x340) arg1=0xffff888007f7c540
+>               sh-142     [005] .....   448.602089: vfs_read_exit: (ksys_read+0x75/0x100 <- vfs_read) arg1=0x1
+> 
+> 
+> Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+> ---
+> 
 
-Thanks!
+
+> +static int __trace_fprobe_create(int argc, const char *argv[])
+> +{
+> +	/*
+> +	 * Argument syntax:
+> +	 *  - Add fentry probe:
+> +	 *      f[:[GRP/][EVENT]] [MOD:]KSYM [FETCHARGS]
+> +	 *  - Add fexit probe:
+> +	 *      f[N][:[GRP/][EVENT]] [MOD:]KSYM%return [FETCHARGS]
+> +	 *
+> +	 * Fetch args:
+> +	 *  $retval	: fetch return value
+> +	 *  $stack	: fetch stack address
+> +	 *  $stackN	: fetch Nth entry of stack (N:0-)
+> +	 *  $argN	: fetch Nth argument (N:1-)
+> +	 *  $comm       : fetch current task comm
+> +	 *  @ADDR	: fetch memory at ADDR (ADDR should be in kernel)
+> +	 *  @SYM[+|-offs] : fetch memory at SYM +|- offs (SYM is a data symbol)
+> +	 * Dereferencing memory fetch:
+> +	 *  +|-offs(ARG) : fetch memory at ARG +|- offs address.
+> +	 * Alias name of args:
+> +	 *  NAME=FETCHARG : set NAME as alias of FETCHARG.
+> +	 * Type of args:
+> +	 *  FETCHARG:TYPE : use TYPE instead of unsigned long.
+> +	 */
+> +	struct trace_fprobe *tf = NULL;
+> +	int i, len, ret = 0;
+> +	bool is_return = false;
+> +	char *symbol = NULL, *tmp = NULL;
+> +	const char *event = NULL, *group = FPROBE_EVENT_SYSTEM;
+> +	int maxactive = 0;
+> +	char buf[MAX_EVENT_NAME_LEN];
+> +	char gbuf[MAX_EVENT_NAME_LEN];
+> +	unsigned int flags = TPARG_FL_KERNEL;
+> +
+
+To make it easier to understand, I would add:
+
+	char *first = argv[0];
+	char *second = argv[1];
+
+And then you could have:
+
+	if (first[0] != 'f' || argc < 2)
+
+Which is easier to read.
+
+> +	if (argv[0][0] != 'f' || argc < 2)
+> +		return -ECANCELED;
+> +
+> +	trace_probe_log_init("trace_fprobe", argc, argv);
+> +
+> +	event = strchr(&argv[0][1], ':');
+> +	if (event)
+> +		event++;
+> +
+> +	if (isdigit(argv[0][1])) {
+
+	if (isdigit(second[1])) {
+
+Or some other name that is perhaps more understandable.
+
+-- Steve
+
+> +		if (event)
+> +			len = event - &argv[0][1] - 1;
+> +		else
+> +			len = strlen(&argv[0][1]);
+> +		if (len > MAX_EVENT_NAME_LEN - 1) {
+> +			trace_probe_log_err(1, BAD_MAXACT);
+> +			goto parse_error;
+> +		}
+> +		memcpy(buf, &argv[0][1], len);
+> +		buf[len] = '\0';
+> +		ret = kstrtouint(buf, 0, &maxactive);
+> +		if (ret || !maxactive) {
+> +			trace_probe_log_err(1, BAD_MAXACT);
+> +			goto parse_error;
+> +		}
+> +		/* fprobe rethook instances are iterated over via a list. The
+> +		 * maximum should stay reasonable.
+> +		 */
+> +		if (maxactive > RETHOOK_MAXACTIVE_MAX) {
+> +			trace_probe_log_err(1, MAXACT_TOO_BIG);
+> +			goto parse_error;
+> +		}
+> +	}
+> +
+> +	trace_probe_log_set_index(1);
+> +
+> +	/* a symbol specified */
+> +	symbol = kstrdup(argv[1], GFP_KERNEL);
+> +	if (!symbol)
+> +		return -ENOMEM;
+> +
+> +	tmp = strchr(symbol, '%');
+> +	if (tmp) {
+> +		if (!strcmp(tmp, "%return")) {
+> +			*tmp = '\0';
+> +			is_return = true;
+> +		} else {
+> +			trace_probe_log_err(tmp - symbol, BAD_ADDR_SUFFIX);
+> +			goto parse_error;
+> +		}
+> +	}
+> +
+> +	flags |= TPARG_FL_FENTRY;
+> +	if (is_return)
+> +		flags |= TPARG_FL_RETURN;
+> +
+> +	trace_probe_log_set_index(0);
+> +	if (event) {
+> +		ret = traceprobe_parse_event_name(&event, &group, gbuf,
+> +						  event - argv[0]);
+> +		if (ret)
+> +			goto parse_error;
+> +	}
+> +
+> +	if (!event) {
+> +		/* Make a new event name */
+> +		snprintf(buf, MAX_EVENT_NAME_LEN, "%s_%s", symbol,
+> +			 is_return ? "exit" : "entry");
+> +		sanitize_event_name(buf);
+> +		event = buf;
+> +	}
+> +
+> +	/* setup a probe */
+> +	tf = alloc_trace_fprobe(group, event, symbol, maxactive,
+> +			       argc - 2, is_return);
+> +	if (IS_ERR(tf)) {
+> +		ret = PTR_ERR(tf);
+> +		/* This must return -ENOMEM, else there is a bug */
+> +		WARN_ON_ONCE(ret != -ENOMEM);
+> +		goto out;	/* We know tf is not allocated */
+> +	}
+> +	argc -= 2; argv += 2;
+> +
+> +	/* parse arguments */
+> +	for (i = 0; i < argc && i < MAX_TRACE_ARGS; i++) {
+> +		trace_probe_log_set_index(i + 2);
+> +		ret = traceprobe_parse_probe_arg(&tf->tp, i, argv[i], flags);
+> +		if (ret)
+> +			goto error;	/* This can be -ENOMEM */
+> +	}
+> +
+> +	ret = traceprobe_set_print_fmt(&tf->tp,
+> +			is_return ? PROBE_PRINT_RETURN : PROBE_PRINT_NORMAL);
+> +	if (ret < 0)
+> +		goto error;
+> +
+> +	ret = register_trace_fprobe(tf);
+> +	if (ret) {
+> +		trace_probe_log_set_index(1);
+> +		if (ret == -EILSEQ)
+> +			trace_probe_log_err(0, BAD_INSN_BNDRY);
+> +		else if (ret == -ENOENT)
+> +			trace_probe_log_err(0, BAD_PROBE_ADDR);
+> +		else if (ret != -ENOMEM && ret != -EEXIST)
+> +			trace_probe_log_err(0, FAIL_REG_PROBE);
+> +		goto error;
+> +	}
+> +
+> +out:
+> +	trace_probe_log_clear();
+> +	kfree(symbol);
+> +	return ret;
+> +
+> +parse_error:
+> +	ret = -EINVAL;
+> +error:
+> +	free_trace_fprobe(tf);
+> +	goto out;
+> +}
+> +
+> +static int trace_fprobe_create(const char *raw_command)
+> +{
+> +	return trace_probe_create(raw_command, __trace_fprobe_create);
+> +}
+> +
+> +static int trace_fprobe_release(struct dyn_event *ev)
+> +{
+> +	struct trace_fprobe *tf = to_trace_fprobe(ev);
+> +	int ret = unregister_trace_fprobe(tf);
+> +
+> +	if (!ret)
+> +		free_trace_fprobe(tf);
+> +	return ret;
+> +}
+> +
+> +static int trace_fprobe_show(struct seq_file *m, struct dyn_event *ev)
+> +{
+> +	struct trace_fprobe *tf = to_trace_fprobe(ev);
+> +	int i;
+> +
+> +	seq_putc(m, 'f');
+> +	if (trace_fprobe_is_return(tf) && tf->fp.nr_maxactive)
+> +		seq_printf(m, "%d", tf->fp.nr_maxactive);
+> +	seq_printf(m, ":%s/%s", trace_probe_group_name(&tf->tp),
+> +				trace_probe_name(&tf->tp));
+> +
+> +	seq_printf(m, " %s%s", trace_fprobe_symbol(tf),
+> +			       trace_fprobe_is_return(tf) ? "%return" : "");
+> +
+> +	for (i = 0; i < tf->tp.nr_args; i++)
+> +		seq_printf(m, " %s=%s", tf->tp.args[i].name, tf->tp.args[i].comm);
+> +	seq_putc(m, '\n');
+> +
+> +	return 0;
+> +}
+> +
+> +/*
+> + * called by perf_trace_init() or __ftrace_set_clr_event() under event_mutex.
+> + */
+> +static int fprobe_register(struct trace_event_call *event,
+> +			   enum trace_reg type, void *data)
+> +{
+> +	struct trace_event_file *file = data;
+> +
+> +	switch (type) {
+> +	case TRACE_REG_REGISTER:
+> +		return enable_trace_fprobe(event, file);
+> +	case TRACE_REG_UNREGISTER:
+> +		return disable_trace_fprobe(event, file);
+> +
+> +#ifdef CONFIG_PERF_EVENTS
+> +	case TRACE_REG_PERF_REGISTER:
+> +		return enable_trace_fprobe(event, NULL);
+> +	case TRACE_REG_PERF_UNREGISTER:
+> +		return disable_trace_fprobe(event, NULL);
+> +	case TRACE_REG_PERF_OPEN:
+> +	case TRACE_REG_PERF_CLOSE:
+> +	case TRACE_REG_PERF_ADD:
+> +	case TRACE_REG_PERF_DEL:
+> +		return 0;
+> +#endif
+> +	}
+> +	return 0;
+> +}
+> +
+> +/*
+> + * Register dynevent at core_initcall. This allows kernel to setup fprobe
+> + * events in postcore_initcall without tracefs.
+> + */
+> +static __init int init_fprobe_trace_early(void)
+> +{
+> +	int ret;
+> +
+> +	ret = dyn_event_register(&trace_fprobe_ops);
+> +	if (ret)
+> +		return ret;
+> +
+> +	return 0;
+> +}
+> +core_initcall(init_fprobe_trace_early);
+> diff --git a/kernel/trace/trace_probe.c b/kernel/trace/trace_probe.c
+> index 36dff277de46..df7fb60b40b6 100644
+> --- a/kernel/trace/trace_probe.c
+> +++ b/kernel/trace/trace_probe.c
+> @@ -384,8 +384,8 @@ parse_probe_arg(char *arg, const struct fetch_type *type,
+>  		break;
+>  
+>  	case '%':	/* named register */
+> -		if (flags & TPARG_FL_TPOINT) {
+> -			/* eprobes do not handle registers */
+> +		if (flags & (TPARG_FL_TPOINT || TPARG_FL_FPROBE)) {
+> +			/* eprobe and fprobe do not handle registers */
+>  			trace_probe_log_err(offs, BAD_VAR);
+>  			break;
+>  		}
+> diff --git a/kernel/trace/trace_probe.h b/kernel/trace/trace_probe.h
+> index de38f1c03776..b316b1254583 100644
+> --- a/kernel/trace/trace_probe.h
+> +++ b/kernel/trace/trace_probe.h
+> @@ -353,7 +353,9 @@ int trace_probe_create(const char *raw_command, int (*createfn)(int, const char
+>  #define TPARG_FL_KERNEL BIT(1)
+>  #define TPARG_FL_FENTRY BIT(2)
+>  #define TPARG_FL_TPOINT BIT(3)
+> -#define TPARG_FL_MASK	GENMASK(3, 0)
+> +#define TPARG_FL_USER   BIT(4)
+> +#define TPARG_FL_FPROBE BIT(5)
+> +#define TPARG_FL_MASK	GENMASK(5, 0)
+>  
+>  extern int traceprobe_parse_probe_arg(struct trace_probe *tp, int i,
+>  				const char *argv, unsigned int flags);
+
