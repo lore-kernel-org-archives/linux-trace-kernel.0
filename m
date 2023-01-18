@@ -2,25 +2,40 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B2D5C32793
-	for <linux-trace-kernel@archiver.kernel.org>; Wed, 18 Jan 2023 08:08:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B0F2CC38159
+	for <linux-trace-kernel@archiver.kernel.org>; Wed, 18 Jan 2023 09:05:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229646AbjARIIn (ORCPT
+        id S230050AbjARJFT (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Wed, 18 Jan 2023 03:08:43 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60122 "EHLO
+        Wed, 18 Jan 2023 04:05:19 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33776 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230264AbjARICX (ORCPT
+        with ESMTP id S230051AbjARJES (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Wed, 18 Jan 2023 03:02:23 -0500
-Received: from verein.lst.de (verein.lst.de [213.95.11.211])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9B0855DC1D;
-        Tue, 17 Jan 2023 23:36:59 -0800 (PST)
-Received: by verein.lst.de (Postfix, from userid 2407)
-        id CE78267373; Wed, 18 Jan 2023 08:36:54 +0100 (CET)
-Date:   Wed, 18 Jan 2023 08:36:54 +0100
-From:   Christoph Hellwig <hch@lst.de>
-To:     Leon Romanovsky <leon@kernel.org>
+        Wed, 18 Jan 2023 04:04:18 -0500
+Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6569C303F8;
+        Wed, 18 Jan 2023 00:22:38 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 26EC4B81BA2;
+        Wed, 18 Jan 2023 08:22:37 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0C176C433EF;
+        Wed, 18 Jan 2023 08:22:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1674030155;
+        bh=J3P2jLNBlTxVtW6CzAaV5JkcOWy8oIduGW1AIFf0FvM=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=RrmsUcrdRqqVIlnk7HhrT7HkNkthDZLdAmJAbvi5YDXIY/MF7FZv7NLBXeF4D5emv
+         5L2jF3QW8mYDpL17de3mblOvmVPuLZWT1KBQnnv6nLLYB7DdBp4hkmmA3n7yCBr8Et
+         2abB0rQoHKGYzfmSFbLBBVVVZ4W68YsQ5XUcPY1n9Zv26lgCb7KN3n3SsJB6cI9q8v
+         TXOSpovnW+MSNrF/HvLcd7jYv4u/vgbv9yuRPaOm7JQ8kQt5JVGfg464elsybVphlM
+         GJILETQ0yFevJ5Bb7NB0QBJ5g6k0Qy0BpmbwvOwlvxvlybJIQdIILu94VA0iNGYJLN
+         zZfXJgAM2Cg6Q==
+Date:   Wed, 18 Jan 2023 10:22:31 +0200
+From:   Leon Romanovsky <leon@kernel.org>
+To:     Eric Biggers <ebiggers@kernel.org>
 Cc:     Jason Gunthorpe <jgg@nvidia.com>, Bryan Tan <bryantan@vmware.com>,
         Christoph Hellwig <hch@lst.de>,
         Eric Dumazet <edumazet@google.com>,
@@ -39,30 +54,65 @@ Cc:     Jason Gunthorpe <jgg@nvidia.com>, Bryan Tan <bryantan@vmware.com>,
         Vishnu Dasa <vdasa@vmware.com>,
         Yishai Hadas <yishaih@nvidia.com>
 Subject: Re: [PATCH rdma-next 00/13] Add RDMA inline crypto support
-Message-ID: <20230118073654.GC27048@lst.de>
+Message-ID: <Y8esR55x5ozo1tV6@unreal>
 References: <cover.1673873422.git.leon@kernel.org>
+ <Y8eWEPZahIFAfnoI@sol.localdomain>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <cover.1673873422.git.leon@kernel.org>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <Y8eWEPZahIFAfnoI@sol.localdomain>
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On Mon, Jan 16, 2023 at 03:05:47PM +0200, Leon Romanovsky wrote:
-> >From Israel,
+On Tue, Jan 17, 2023 at 10:47:44PM -0800, Eric Biggers wrote:
+> Hi Leon,
 > 
-> The purpose of this patchset is to add support for inline
-> encryption/decryption of the data at storage protocols like nvmf over
-> RDMA (at a similar way like integrity is used via unique mkey).
+> On Mon, Jan 16, 2023 at 03:05:47PM +0200, Leon Romanovsky wrote:
+> > >From Israel,
+> > 
+> > The purpose of this patchset is to add support for inline
+> > encryption/decryption of the data at storage protocols like nvmf over
+> > RDMA (at a similar way like integrity is used via unique mkey).
+> > 
+> > This patchset adds support for plaintext keys. The patches were tested
+> > on BF-3 HW with fscrypt tool to test this feature, which showed reduce
+> > in CPU utilization when comparing at 64k or more IO size. The CPU utilization
+> > was improved by more than 50% comparing to the SW only solution at this case.
+> > 
+> > How to configure fscrypt to enable plaintext keys:
+> >  # mkfs.ext4 -O encrypt /dev/nvme0n1
+> >  # mount /dev/nvme0n1 /mnt/crypto -o inlinecrypt
+> >  # head -c 64 /dev/urandom > /tmp/master_key
+> >  # fscryptctl add_key /mnt/crypto/ < /tmp/master_key
+> >  # mkdir /mnt/crypto/test1
+> >  # fscryptctl set_policy 152c41b2ea39fa3d90ea06448456e7fb /mnt/crypto/test1
+> >    ** “152c41b2ea39fa3d90ea06448456e7fb” is the output of the
+> >       “fscryptctl add_key” command.
+> >  # echo foo > /mnt/crypto/test1/foo
+> > 
+> > Notes:
+> >  - At plaintext mode only, the user set a master key and the fscrypt
+> >    driver derived from it the DEK and the key identifier.
+> >  - 152c41b2ea39fa3d90ea06448456e7fb is the derived key identifier
+> >  - Only on the first IO, nvme-rdma gets a callback to load the derived DEK. 
+> > 
+> > There is no special configuration to support crypto at nvme modules.
+> > 
+> > Thanks
 > 
-> This patchset adds support for plaintext keys. The patches were tested
-> on BF-3 HW with fscrypt tool to test this feature, which showed reduce
-> in CPU utilization when comparing at 64k or more IO size. The CPU utilization
-> was improved by more than 50% comparing to the SW only solution at this case.
+> Very interesting work!  Can you Cc me on future versions?
 
-One thing that needs to be solved before we can look into this is the
-interaction with protection information (or integrity data in Linux
-terms).  Currently inline encryption and protection information are
-mutally incompatible.
+Sure
+
+> 
+> I'm glad to see that this hardware allows all 16 IV bytes to be specified.
+> 
+> Does it also handle programming and evicting keys efficiently?
+
+"efficiently" is a very subjective term. We are using FW command
+interface to program keys and this interface can do hundreds/thousands
+commands per-second.
+
+Thanks
