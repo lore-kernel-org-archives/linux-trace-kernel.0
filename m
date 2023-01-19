@@ -2,376 +2,175 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F9ADC38147
-	for <linux-trace-kernel@archiver.kernel.org>; Wed, 18 Jan 2023 22:43:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 54C66C38142
+	for <linux-trace-kernel@archiver.kernel.org>; Thu, 19 Jan 2023 05:03:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229653AbjARWnj (ORCPT
+        id S229739AbjASFDf (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Wed, 18 Jan 2023 17:43:39 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42650 "EHLO
+        Thu, 19 Jan 2023 00:03:35 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43960 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229463AbjARWni (ORCPT
+        with ESMTP id S229749AbjASFC4 (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Wed, 18 Jan 2023 17:43:38 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 20D655EF81;
-        Wed, 18 Jan 2023 14:43:37 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id B76AB61A81;
-        Wed, 18 Jan 2023 22:43:36 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7047DC433EF;
-        Wed, 18 Jan 2023 22:43:35 +0000 (UTC)
-Date:   Wed, 18 Jan 2023 17:43:33 -0500
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
-Cc:     linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Florent Revest <revest@chromium.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Will Deacon <will@kernel.org>
-Subject: Re: [RFC PATCH 9/9] tracing/probes: Add fprobe-events
-Message-ID: <20230118174333.3b301d2e@gandalf.local.home>
-In-Reply-To: <166792263423.919356.14181339761424544980.stgit@devnote3>
-References: <166792255429.919356.14116090269057513181.stgit@devnote3>
-        <166792263423.919356.14181339761424544980.stgit@devnote3>
-X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+        Thu, 19 Jan 2023 00:02:56 -0500
+X-Greylist: delayed 1810 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Wed, 18 Jan 2023 20:56:52 PST
+Received: from m126.mail.126.com (m126.mail.126.com [220.181.12.29])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 18FFEDB;
+        Wed, 18 Jan 2023 20:56:50 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=126.com;
+        s=s110527; h=From:Subject:Date:Message-Id:MIME-Version:
+        Content-Type; bh=ZQ//IA0NhKdNE+rYfKAyp7+VVDgWEzVXpQLE2095Tpg=;
+        b=f5bVgdyhOtYwDtdjvRtO78ken69rCoTHl+ndTtW+Kki+il066LR1BgJoPsvZqL
+        QqRf+r9qzbp976qfwSri6WkJ8/ufyENSUBcd+QrTtxYJwW/yHw/0VkCchUSyPdcB
+        K8/3SU5D+xSc0s6VCZ97ZA8udMXxCl8xRTDhVL+uppokM=
+Received: from localhost.localdomain (unknown [202.112.238.191])
+        by zwqz-smtp-mta-g0-0 (Coremail) with SMTP id _____wA3B2qWxchjSVC7AA--.61981S4;
+        Thu, 19 Jan 2023 12:22:48 +0800 (CST)
+From:   Yi He <clangllvm@126.com>
+To:     tixxdz@gmail.com
+Cc:     andrii@kernel.org, ast@kernel.org, bpf@vger.kernel.org,
+        clangllvm@126.com, daniel@iogearbox.net, haoluo@google.com,
+        john.fastabend@gmail.com, jolsa@kernel.org, kpsingh@kernel.org,
+        linux-kernel@vger.kernel.org,
+        linux-security-module@vger.kernel.org,
+        linux-trace-kernel@vger.kernel.org, martin.lau@linux.dev,
+        mhiramat@kernel.org, rostedt@goodmis.org, sdf@google.com,
+        song@kernel.org, yhs@fb.com, yhs@meta.com
+Subject: [PATCH V2] bpf: security enhancement by limiting the offensive eBPF helpers
+Date:   Thu, 19 Jan 2023 12:22:44 +0800
+Message-Id: <20230119042244.763779-1-clangllvm@126.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <CAEiveUd_N8qHy54AS0q90FuUSQ=7mePm8FL88Aw-sY7fT7NqFQ@mail.gmail.com>
+References: <CAEiveUd_N8qHy54AS0q90FuUSQ=7mePm8FL88Aw-sY7fT7NqFQ@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID: _____wA3B2qWxchjSVC7AA--.61981S4
+X-Coremail-Antispam: 1Uf129KBjvJXoW3Gw1DZr4DZF13Cr48Aw4rGrg_yoW7ur45pF
+        WDKry3Ar4kJr4Ik347J3yxWF4Fy3y5WrW7Gan5K3y8ZanxJr40gr1fKF4a9Fn5ZrZ8G3ya
+        q39FvrZ8Aa1Dua7anT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+        9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x0zRb_-PUUUUU=
+X-Originating-IP: [202.112.238.191]
+X-CM-SenderInfo: xfod0wpooyzqqrswhudrp/1tbiYBn7y1pEKC6rqwAAsR
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On Wed,  9 Nov 2022 00:50:34 +0900
-"Masami Hiramatsu (Google)" <mhiramat@kernel.org> wrote:
+The bpf_send_singal, bpf_send_singal_thread and bpf_override_return
+is similar to bpf_write_user and can affect userspace processes.
+Thus, these three helpers should also be restricted by security lockdown.
 
-> From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-> 
-> Add fprobe events for tracing function entry and exit.
-> 
-> The fprobe event is a new dynamic events which is only for the
-> function (symbol) entry and exit. This event accepts non
-> register fetch arguments so that user can trace the function
-> arguments and return values.
-> 
-> The fprobe events syntax is here;
-> 
->  f[:[GRP/][EVENT]] FUNCTION [FETCHARGS]
->  f[MAXACTIVE][:[GRP/][EVENT]] FUNCTION%return [FETCHARGS]
-> 
-> E.g.
-> 
->  # echo 'f vfs_read $arg1'  >> dynamic_events
->  # echo 'f vfs_read%return $retval'  >> dynamic_events
->  # cat dynamic_events
->  f:fprobes/vfs_read_entry vfs_read arg1=$arg1
->  f:fprobes/vfs_read_exit vfs_read%return arg1=$retval
->  # echo 1 > events/fprobes/enable
+Signed-off-by: Yi He <clangllvm@126.com>
+---
 
-So what exactly is the advantage of this over a normal kprobe event?
+Thanks for you reply.
 
-Less overhead?
+I have studied this problem for months. I would like to give more details to
+ clarify why these two helpers can break the INTEGRITY and should be lockdown.
 
->  # head -n 20 trace | tail
->  #           TASK-PID     CPU#  |||||  TIMESTAMP  FUNCTION
->  #              | |         |   |||||     |         |
->               sh-142     [005] ...1.   448.386420: vfs_read_entry: (vfs_read+0x4/0x340) arg1=0xffff888007f7c540
->               sh-142     [005] .....   448.386436: vfs_read_exit: (ksys_read+0x75/0x100 <- vfs_read) arg1=0x1
->               sh-142     [005] ...1.   448.386451: vfs_read_entry: (vfs_read+0x4/0x340) arg1=0xffff888007f7c540
->               sh-142     [005] .....   448.386458: vfs_read_exit: (ksys_read+0x75/0x100 <- vfs_read) arg1=0x1
->               sh-142     [005] ...1.   448.386469: vfs_read_entry: (vfs_read+0x4/0x340) arg1=0xffff888007f7c540
->               sh-142     [005] .....   448.386476: vfs_read_exit: (ksys_read+0x75/0x100 <- vfs_read) arg1=0x1
->               sh-142     [005] ...1.   448.602073: vfs_read_entry: (vfs_read+0x4/0x340) arg1=0xffff888007f7c540
->               sh-142     [005] .....   448.602089: vfs_read_exit: (ksys_read+0x75/0x100 <- vfs_read) arg1=0x1
-> 
-> 
-> Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-> ---
-> 
+First, this helpers are only for eBPF tracing programs. LSM-bpf and seccomp do 
+not need them. The documents say the two functions are experimental. 
+Now the eBPF products (e.g., Cillium, Falco) seldom use them but the evil eBPF 
+can abuse them.
 
+Second, override_return is similar to bpf_write_user can defintely break the 
+INTEGRITY by altering other processes' system call or kernel functions 
+(KProbe)'s return code.
 
-> +static int __trace_fprobe_create(int argc, const char *argv[])
-> +{
-> +	/*
-> +	 * Argument syntax:
-> +	 *  - Add fentry probe:
-> +	 *      f[:[GRP/][EVENT]] [MOD:]KSYM [FETCHARGS]
-> +	 *  - Add fexit probe:
-> +	 *      f[N][:[GRP/][EVENT]] [MOD:]KSYM%return [FETCHARGS]
-> +	 *
-> +	 * Fetch args:
-> +	 *  $retval	: fetch return value
-> +	 *  $stack	: fetch stack address
-> +	 *  $stackN	: fetch Nth entry of stack (N:0-)
-> +	 *  $argN	: fetch Nth argument (N:1-)
-> +	 *  $comm       : fetch current task comm
-> +	 *  @ADDR	: fetch memory at ADDR (ADDR should be in kernel)
-> +	 *  @SYM[+|-offs] : fetch memory at SYM +|- offs (SYM is a data symbol)
-> +	 * Dereferencing memory fetch:
-> +	 *  +|-offs(ARG) : fetch memory at ARG +|- offs address.
-> +	 * Alias name of args:
-> +	 *  NAME=FETCHARG : set NAME as alias of FETCHARG.
-> +	 * Type of args:
-> +	 *  FETCHARG:TYPE : use TYPE instead of unsigned long.
-> +	 */
-> +	struct trace_fprobe *tf = NULL;
-> +	int i, len, ret = 0;
-> +	bool is_return = false;
-> +	char *symbol = NULL, *tmp = NULL;
-> +	const char *event = NULL, *group = FPROBE_EVENT_SYSTEM;
-> +	int maxactive = 0;
-> +	char buf[MAX_EVENT_NAME_LEN];
-> +	char gbuf[MAX_EVENT_NAME_LEN];
-> +	unsigned int flags = TPARG_FL_KERNEL;
-> +
+> Then solution should be toward restricting eBPF in container, there is already
+> sysctl, per process seccomp, LSM + bpf LSM for that.
+Yes, the solution is for restricting eBPF in container. But a fine-gained access 
+control is required, such as assigning different eBPF privilege to various containers, 
+rather than just disable eBPF in a container. 
+ 
+The mechanisms you mententioned do not properly sovle the problem.
+sysctl can only disable the unprivielge
+users to access eBPF via the kernel.unprivileged_bpf_disabled flag. The untrusted eBPF
+are installed by privielge users inside a container but can harm the whole system and 
+other shared-kernel containers.
+seccomp also can only disable the bpf system call to totally disable eBPF while we may 
+need to selectively enable the benign features of eBPF and disallow the offensive features
+which may be abused.
+LSM + bpf LSM can implement this functionality. However, it is difficult to identify 
+a process from a container [1] as at many LSM hooks, we can only get a process's pid and
+ name which can be forged by the mailicous program. A correct way is to use the inode number
+ to set policy for benign processes. Moreover, the LSM bpf's overhead is unacceptable.
 
-To make it easier to understand, I would add:
+[1]. https://blog.doyensec.com/2022/10/11/ebpf-bypass-security-monitoring.html
 
-	char *first = argv[0];
-	char *second = argv[1];
+> Those are more or less same as bpf sending signal. Supervisors are using
+> seccomp to ret kill process and/or sending signals. Where will you draw the
+> line? should we go restrict those too? IMHO this does not relate to lockdown.
+> I don't see that much difference between a seccomp kill and ebpf signal.
 
-And then you could have:
+The bpf_send_singal is different to any other signal sending functions as it 
+enables a eBPF tracing program from a container to kill any processes 
+(even the privielge proceess) of the host or other containers. 
+Supervisors and seccomp can only kill its child process. Other signal sending 
+do not need to be restricted as they can not be used inside a container to kill 
+any processes outside of a container. 
 
-	if (first[0] != 'f' || argc < 2)
+> This reasoning will kill any effort to improve sandbox mechanisms that are
+> moving some functionality from seccomp ret kill to a more flexible and
+> transparent bpf-LSM model where privileged installs the sandbox. Actually,
+> we are already doing this and beside eBPF flexibility and transparency
+> (change policy at runtime without restart) from a _user perspective_
+We will try to implement alternative mechanisms for constrained eBPF 
+features only since the LSM-bpf have shortages in both flexibility and
+ performance. 
 
-Which is easier to read.
+This patch is only for blocking the offensive features of eBPF and avoiding them 
+affecting the INTEGRITY of the container, given that the evil eBPF can abuse these
+helpers to affect any processes running in inside or outside of the container, 
+sharing the same kernel.
 
-> +	if (argv[0][0] != 'f' || argc < 2)
-> +		return -ECANCELED;
-> +
-> +	trace_probe_log_init("trace_fprobe", argc, argv);
-> +
-> +	event = strchr(&argv[0][1], ':');
-> +	if (event)
-> +		event++;
-> +
-> +	if (isdigit(argv[0][1])) {
+[1]. https://github.com/Gui774ume/krie/blob/master/ebpf/krie/hooks/lsm.h
 
-	if (isdigit(second[1])) {
+ include/linux/security.h | 2 ++
+ kernel/trace/bpf_trace.c | 9 ++++++---
+ 2 files changed, 8 insertions(+), 3 deletions(-)
 
-Or some other name that is perhaps more understandable.
-
--- Steve
-
-> +		if (event)
-> +			len = event - &argv[0][1] - 1;
-> +		else
-> +			len = strlen(&argv[0][1]);
-> +		if (len > MAX_EVENT_NAME_LEN - 1) {
-> +			trace_probe_log_err(1, BAD_MAXACT);
-> +			goto parse_error;
-> +		}
-> +		memcpy(buf, &argv[0][1], len);
-> +		buf[len] = '\0';
-> +		ret = kstrtouint(buf, 0, &maxactive);
-> +		if (ret || !maxactive) {
-> +			trace_probe_log_err(1, BAD_MAXACT);
-> +			goto parse_error;
-> +		}
-> +		/* fprobe rethook instances are iterated over via a list. The
-> +		 * maximum should stay reasonable.
-> +		 */
-> +		if (maxactive > RETHOOK_MAXACTIVE_MAX) {
-> +			trace_probe_log_err(1, MAXACT_TOO_BIG);
-> +			goto parse_error;
-> +		}
-> +	}
-> +
-> +	trace_probe_log_set_index(1);
-> +
-> +	/* a symbol specified */
-> +	symbol = kstrdup(argv[1], GFP_KERNEL);
-> +	if (!symbol)
-> +		return -ENOMEM;
-> +
-> +	tmp = strchr(symbol, '%');
-> +	if (tmp) {
-> +		if (!strcmp(tmp, "%return")) {
-> +			*tmp = '\0';
-> +			is_return = true;
-> +		} else {
-> +			trace_probe_log_err(tmp - symbol, BAD_ADDR_SUFFIX);
-> +			goto parse_error;
-> +		}
-> +	}
-> +
-> +	flags |= TPARG_FL_FENTRY;
-> +	if (is_return)
-> +		flags |= TPARG_FL_RETURN;
-> +
-> +	trace_probe_log_set_index(0);
-> +	if (event) {
-> +		ret = traceprobe_parse_event_name(&event, &group, gbuf,
-> +						  event - argv[0]);
-> +		if (ret)
-> +			goto parse_error;
-> +	}
-> +
-> +	if (!event) {
-> +		/* Make a new event name */
-> +		snprintf(buf, MAX_EVENT_NAME_LEN, "%s_%s", symbol,
-> +			 is_return ? "exit" : "entry");
-> +		sanitize_event_name(buf);
-> +		event = buf;
-> +	}
-> +
-> +	/* setup a probe */
-> +	tf = alloc_trace_fprobe(group, event, symbol, maxactive,
-> +			       argc - 2, is_return);
-> +	if (IS_ERR(tf)) {
-> +		ret = PTR_ERR(tf);
-> +		/* This must return -ENOMEM, else there is a bug */
-> +		WARN_ON_ONCE(ret != -ENOMEM);
-> +		goto out;	/* We know tf is not allocated */
-> +	}
-> +	argc -= 2; argv += 2;
-> +
-> +	/* parse arguments */
-> +	for (i = 0; i < argc && i < MAX_TRACE_ARGS; i++) {
-> +		trace_probe_log_set_index(i + 2);
-> +		ret = traceprobe_parse_probe_arg(&tf->tp, i, argv[i], flags);
-> +		if (ret)
-> +			goto error;	/* This can be -ENOMEM */
-> +	}
-> +
-> +	ret = traceprobe_set_print_fmt(&tf->tp,
-> +			is_return ? PROBE_PRINT_RETURN : PROBE_PRINT_NORMAL);
-> +	if (ret < 0)
-> +		goto error;
-> +
-> +	ret = register_trace_fprobe(tf);
-> +	if (ret) {
-> +		trace_probe_log_set_index(1);
-> +		if (ret == -EILSEQ)
-> +			trace_probe_log_err(0, BAD_INSN_BNDRY);
-> +		else if (ret == -ENOENT)
-> +			trace_probe_log_err(0, BAD_PROBE_ADDR);
-> +		else if (ret != -ENOMEM && ret != -EEXIST)
-> +			trace_probe_log_err(0, FAIL_REG_PROBE);
-> +		goto error;
-> +	}
-> +
-> +out:
-> +	trace_probe_log_clear();
-> +	kfree(symbol);
-> +	return ret;
-> +
-> +parse_error:
-> +	ret = -EINVAL;
-> +error:
-> +	free_trace_fprobe(tf);
-> +	goto out;
-> +}
-> +
-> +static int trace_fprobe_create(const char *raw_command)
-> +{
-> +	return trace_probe_create(raw_command, __trace_fprobe_create);
-> +}
-> +
-> +static int trace_fprobe_release(struct dyn_event *ev)
-> +{
-> +	struct trace_fprobe *tf = to_trace_fprobe(ev);
-> +	int ret = unregister_trace_fprobe(tf);
-> +
-> +	if (!ret)
-> +		free_trace_fprobe(tf);
-> +	return ret;
-> +}
-> +
-> +static int trace_fprobe_show(struct seq_file *m, struct dyn_event *ev)
-> +{
-> +	struct trace_fprobe *tf = to_trace_fprobe(ev);
-> +	int i;
-> +
-> +	seq_putc(m, 'f');
-> +	if (trace_fprobe_is_return(tf) && tf->fp.nr_maxactive)
-> +		seq_printf(m, "%d", tf->fp.nr_maxactive);
-> +	seq_printf(m, ":%s/%s", trace_probe_group_name(&tf->tp),
-> +				trace_probe_name(&tf->tp));
-> +
-> +	seq_printf(m, " %s%s", trace_fprobe_symbol(tf),
-> +			       trace_fprobe_is_return(tf) ? "%return" : "");
-> +
-> +	for (i = 0; i < tf->tp.nr_args; i++)
-> +		seq_printf(m, " %s=%s", tf->tp.args[i].name, tf->tp.args[i].comm);
-> +	seq_putc(m, '\n');
-> +
-> +	return 0;
-> +}
-> +
-> +/*
-> + * called by perf_trace_init() or __ftrace_set_clr_event() under event_mutex.
-> + */
-> +static int fprobe_register(struct trace_event_call *event,
-> +			   enum trace_reg type, void *data)
-> +{
-> +	struct trace_event_file *file = data;
-> +
-> +	switch (type) {
-> +	case TRACE_REG_REGISTER:
-> +		return enable_trace_fprobe(event, file);
-> +	case TRACE_REG_UNREGISTER:
-> +		return disable_trace_fprobe(event, file);
-> +
-> +#ifdef CONFIG_PERF_EVENTS
-> +	case TRACE_REG_PERF_REGISTER:
-> +		return enable_trace_fprobe(event, NULL);
-> +	case TRACE_REG_PERF_UNREGISTER:
-> +		return disable_trace_fprobe(event, NULL);
-> +	case TRACE_REG_PERF_OPEN:
-> +	case TRACE_REG_PERF_CLOSE:
-> +	case TRACE_REG_PERF_ADD:
-> +	case TRACE_REG_PERF_DEL:
-> +		return 0;
-> +#endif
-> +	}
-> +	return 0;
-> +}
-> +
-> +/*
-> + * Register dynevent at core_initcall. This allows kernel to setup fprobe
-> + * events in postcore_initcall without tracefs.
-> + */
-> +static __init int init_fprobe_trace_early(void)
-> +{
-> +	int ret;
-> +
-> +	ret = dyn_event_register(&trace_fprobe_ops);
-> +	if (ret)
-> +		return ret;
-> +
-> +	return 0;
-> +}
-> +core_initcall(init_fprobe_trace_early);
-> diff --git a/kernel/trace/trace_probe.c b/kernel/trace/trace_probe.c
-> index 36dff277de46..df7fb60b40b6 100644
-> --- a/kernel/trace/trace_probe.c
-> +++ b/kernel/trace/trace_probe.c
-> @@ -384,8 +384,8 @@ parse_probe_arg(char *arg, const struct fetch_type *type,
->  		break;
->  
->  	case '%':	/* named register */
-> -		if (flags & TPARG_FL_TPOINT) {
-> -			/* eprobes do not handle registers */
-> +		if (flags & (TPARG_FL_TPOINT || TPARG_FL_FPROBE)) {
-> +			/* eprobe and fprobe do not handle registers */
->  			trace_probe_log_err(offs, BAD_VAR);
->  			break;
->  		}
-> diff --git a/kernel/trace/trace_probe.h b/kernel/trace/trace_probe.h
-> index de38f1c03776..b316b1254583 100644
-> --- a/kernel/trace/trace_probe.h
-> +++ b/kernel/trace/trace_probe.h
-> @@ -353,7 +353,9 @@ int trace_probe_create(const char *raw_command, int (*createfn)(int, const char
->  #define TPARG_FL_KERNEL BIT(1)
->  #define TPARG_FL_FENTRY BIT(2)
->  #define TPARG_FL_TPOINT BIT(3)
-> -#define TPARG_FL_MASK	GENMASK(3, 0)
-> +#define TPARG_FL_USER   BIT(4)
-> +#define TPARG_FL_FPROBE BIT(5)
-> +#define TPARG_FL_MASK	GENMASK(5, 0)
->  
->  extern int traceprobe_parse_probe_arg(struct trace_probe *tp, int i,
->  				const char *argv, unsigned int flags);
+diff --git a/include/linux/security.h b/include/linux/security.h
+index 5b67f208f..42420e620 100644
+--- a/include/linux/security.h
++++ b/include/linux/security.h
+@@ -123,6 +123,8 @@ enum lockdown_reason {
+ 	LOCKDOWN_DEBUGFS,
+ 	LOCKDOWN_XMON_WR,
+ 	LOCKDOWN_BPF_WRITE_USER,
++	LOCKDOWN_BPF_SEND_SIGNAL,
++	LOCKDOWN_BPF_OVERRIDE_RETURN,
+ 	LOCKDOWN_DBG_WRITE_KERNEL,
+ 	LOCKDOWN_RTAS_ERROR_INJECTION,
+ 	LOCKDOWN_INTEGRITY_MAX,
+diff --git a/kernel/trace/bpf_trace.c b/kernel/trace/bpf_trace.c
+index 3bbd3f0c8..fdb94868d 100644
+--- a/kernel/trace/bpf_trace.c
++++ b/kernel/trace/bpf_trace.c
+@@ -1463,9 +1463,11 @@ bpf_tracing_func_proto(enum bpf_func_id func_id, const struct bpf_prog *prog)
+ 		return &bpf_cgrp_storage_delete_proto;
+ #endif
+ 	case BPF_FUNC_send_signal:
+-		return &bpf_send_signal_proto;
++		return security_locked_down(LOCKDOWN_BPF_SEND_SIGNAL) < 0 ?
++		       NULL : &bpf_send_signal_proto;
+ 	case BPF_FUNC_send_signal_thread:
+-		return &bpf_send_signal_thread_proto;
++		return security_locked_down(LOCKDOWN_BPF_SEND_SIGNAL) < 0 ?
++		       NULL : &bpf_send_signal_thread_proto;
+ 	case BPF_FUNC_perf_event_read_value:
+ 		return &bpf_perf_event_read_value_proto;
+ 	case BPF_FUNC_get_ns_current_pid_tgid:
+@@ -1531,7 +1533,8 @@ kprobe_prog_func_proto(enum bpf_func_id func_id, const struct bpf_prog *prog)
+ 		return &bpf_get_stack_proto;
+ #ifdef CONFIG_BPF_KPROBE_OVERRIDE
+ 	case BPF_FUNC_override_return:
+-		return &bpf_override_return_proto;
++		return security_locked_down(LOCKDOWN_BPF_OVERRIDE_RETURN) < 0 ?
++		       NULL : &bpf_override_return_proto;
+ #endif
+ 	case BPF_FUNC_get_func_ip:
+ 		return prog->expected_attach_type == BPF_TRACE_KPROBE_MULTI ?
+-- 
+2.25.1
 
