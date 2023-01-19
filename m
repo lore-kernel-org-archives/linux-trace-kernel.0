@@ -2,229 +2,150 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A5B2DC678D4
-	for <linux-trace-kernel@archiver.kernel.org>; Fri, 20 Jan 2023 00:27:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 90F56C678DC
+	for <linux-trace-kernel@archiver.kernel.org>; Fri, 20 Jan 2023 04:28:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229567AbjATA1J (ORCPT
+        id S229988AbjATE2h (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Thu, 19 Jan 2023 19:27:09 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40072 "EHLO
+        Thu, 19 Jan 2023 23:28:37 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40694 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229561AbjATA1H (ORCPT
+        with ESMTP id S229915AbjATE23 (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Thu, 19 Jan 2023 19:27:07 -0500
-Received: from sin.source.kernel.org (sin.source.kernel.org [145.40.73.55])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9C8E9A297E
-        for <linux-trace-kernel@vger.kernel.org>; Thu, 19 Jan 2023 16:27:05 -0800 (PST)
+        Thu, 19 Jan 2023 23:28:29 -0500
+Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2A072AED9D;
+        Thu, 19 Jan 2023 20:28:24 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by sin.source.kernel.org (Postfix) with ESMTPS id BB223CE12DB
-        for <linux-trace-kernel@vger.kernel.org>; Fri, 20 Jan 2023 00:27:03 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EFFF2C4339E
-        for <linux-trace-kernel@vger.kernel.org>; Fri, 20 Jan 2023 00:27:01 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 391BEB82591;
+        Thu, 19 Jan 2023 15:33:13 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2592EC433F0;
+        Thu, 19 Jan 2023 15:33:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1674174422;
-        bh=ROdLTe3LexbexnDR/PGA5NONfhz+ix0AhBH64LjX+J8=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=uVCeHyrsJEQ8IWopSBnf8u4tb3O3luBDdgeTUGFkJU4OGy5gqAT7xBhTyt/jtoL3e
-         H+Ye4r4WcP1RXbkbCogFlsoB+7XqOzMPgrRN3vU1rrsj1bOx9lnR+/AevJRm5PLh/I
-         arWE9PjDtWwT/y6EKH4M6eAiwY7LnZIoGKUlw81x1VuKOwkEfGGi9ysYaI7h2enYri
-         2cGzBPaEnOdCtcWeeyaqmuE8STvMGMYRl0N9u5+/eHtPL9YjNDovTFibfoVgZvu6rB
-         RRJRwSS19W+H0q4eYuFbweMN5aCBpqbymPlwrb50ZvSyfuQBl8xTabgM2vkqqc5QFJ
-         /9YxzNLx3O2IA==
-Received: by mail-ej1-f53.google.com with SMTP id v6so10117388ejg.6
-        for <linux-trace-kernel@vger.kernel.org>; Thu, 19 Jan 2023 16:27:01 -0800 (PST)
-X-Gm-Message-State: AFqh2kqaK7TOg/8fbQYbm8l8zjm3LVC19DsYyZqTFzzrxVpSmnAvgH4m
-        kptWwkvz6r7VG5+i9Yyp1D9klKxWd0CnTqb0pAs7eA==
-X-Google-Smtp-Source: AMrXdXvQH4nrvVw+xUNYF/o795gSMWU8pL1Yf+iSGHGdXk9VA3BPp09x29rUk7QtWvAa9pzCpDmTYoEDEmNbE/i61tc=
-X-Received: by 2002:a17:906:b788:b0:871:3103:a6aa with SMTP id
- dt8-20020a170906b78800b008713103a6aamr1132859ejb.88.1674174420059; Thu, 19
- Jan 2023 16:27:00 -0800 (PST)
+        s=k20201202; t=1674142391;
+        bh=4e9cU3XBF+njXHs+pBSJ/+9iR11GsQtP644znMOpRCQ=;
+        h=From:To:Subject:Date:From;
+        b=G+e4arH4OfCYHRXWwufncZh+jDrE3WtcxlJNWepbCKPMuesaVoGoMuHVcL1xoRD01
+         uWqJYHsG7etX41q3vAt2QWsGKVPwx24YFWbKDHsZ7+N804l2xEb5lQ4n2c06bO5xuw
+         +IHYMyNCAKd0JsGt4OGqLg1g+n+Mc7tzM6SIIHHF9LxF/uRGYk4D/JlkVRXkLHnei4
+         i3pq3ErykfgV2MIwJ4/dbausFxGsbJOMAlOzHro7QeST7XTAh+WUA2fly4/N1Mpcmd
+         0a8bgIFPzwezZE4jNb2eiGbniG4Wkm3L/ztAjA/ftGyhZW8KouR9AHhscxygIZItOx
+         0dtwS8HRqRYWQ==
+From:   "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
+To:     linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] test_kprobes: Add recursed kprobe test case
+Date:   Fri, 20 Jan 2023 00:33:07 +0900
+Message-Id: <167414238758.2301956.258548940194352895.stgit@devnote3>
+X-Mailer: git-send-email 2.39.0.246.g2a6d74b583-goog
+User-Agent: StGit/0.19
 MIME-Version: 1.0
-References: <CAEiveUd_N8qHy54AS0q90FuUSQ=7mePm8FL88Aw-sY7fT7NqFQ@mail.gmail.com>
- <20230119042244.763779-1-clangllvm@126.com>
-In-Reply-To: <20230119042244.763779-1-clangllvm@126.com>
-From:   KP Singh <kpsingh@kernel.org>
-Date:   Fri, 20 Jan 2023 01:26:49 +0100
-X-Gmail-Original-Message-ID: <CACYkzJ4Wu1DCY=r2OW8X2JsEJQq3Dt=baXKhUcZiAHqaa9dptg@mail.gmail.com>
-Message-ID: <CACYkzJ4Wu1DCY=r2OW8X2JsEJQq3Dt=baXKhUcZiAHqaa9dptg@mail.gmail.com>
-Subject: Re: [PATCH V2] bpf: security enhancement by limiting the offensive
- eBPF helpers
-To:     Yi He <clangllvm@126.com>
-Cc:     tixxdz@gmail.com, andrii@kernel.org, ast@kernel.org,
-        bpf@vger.kernel.org, daniel@iogearbox.net, haoluo@google.com,
-        john.fastabend@gmail.com, jolsa@kernel.org,
-        linux-kernel@vger.kernel.org,
-        linux-security-module@vger.kernel.org,
-        linux-trace-kernel@vger.kernel.org, martin.lau@linux.dev,
-        mhiramat@kernel.org, rostedt@goodmis.org, sdf@google.com,
-        song@kernel.org, yhs@fb.com, yhs@meta.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On Thu, Jan 19, 2023 at 5:25 AM Yi He <clangllvm@126.com> wrote:
->
-> The bpf_send_singal, bpf_send_singal_thread and bpf_override_return
-> is similar to bpf_write_user and can affect userspace processes.
-> Thus, these three helpers should also be restricted by security lockdown.
->
-> Signed-off-by: Yi He <clangllvm@126.com>
-> ---
->
-> Thanks for you reply.
->
-> I have studied this problem for months. I would like to give more details to
->  clarify why these two helpers can break the INTEGRITY and should be lockdown.
->
-> First, this helpers are only for eBPF tracing programs. LSM-bpf and seccomp do
-> not need them. The documents say the two functions are experimental.
-> Now the eBPF products (e.g., Cillium, Falco) seldom use them but the evil eBPF
-> can abuse them.
+From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 
-This has got nothing to do with breaking integrity.
+Add a recursed kprobe test case to the KUnit test module for kprobes.
+This will probe a function which is called from the pre_handler and
+post_handler itself. If the kprobe is correctly implemented, the recursed
+kprobe handlers will be skipped and the number of skipped kprobe will
+be counted on kprobe::nmissed.
 
->
-> Second, override_return is similar to bpf_write_user can defintely break the
-> INTEGRITY by altering other processes' system call or kernel functions
-> (KProbe)'s return code.
+Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+---
+ lib/test_kprobes.c |   39 +++++++++++++++++++++++++++++++++++++--
+ 1 file changed, 37 insertions(+), 2 deletions(-)
 
-Then any fault injection can break integrity? This is another can of
-worms waiting to be opened here. It's not productive and doesn't help.
-Let's focus on a better / flexible MAC policy here.
+diff --git a/lib/test_kprobes.c b/lib/test_kprobes.c
+index 1c95e5719802..0648f7154f5c 100644
+--- a/lib/test_kprobes.c
++++ b/lib/test_kprobes.c
+@@ -14,6 +14,7 @@
+ 
+ static u32 rand1, preh_val, posth_val;
+ static u32 (*target)(u32 value);
++static u32 (*recursed_target)(u32 value);
+ static u32 (*target2)(u32 value);
+ static struct kunit *current_test;
+ 
+@@ -27,18 +28,27 @@ static noinline u32 kprobe_target(u32 value)
+ 	return (value / div_factor);
+ }
+ 
++static noinline u32 kprobe_recursed_target(u32 value)
++{
++	return (value / div_factor);
++}
++
+ static int kp_pre_handler(struct kprobe *p, struct pt_regs *regs)
+ {
+ 	KUNIT_EXPECT_FALSE(current_test, preemptible());
+-	preh_val = (rand1 / div_factor);
++
++	preh_val = recursed_target(rand1);
+ 	return 0;
+ }
+ 
+ static void kp_post_handler(struct kprobe *p, struct pt_regs *regs,
+ 		unsigned long flags)
+ {
++	u32 expval = recursed_target(rand1);
++
+ 	KUNIT_EXPECT_FALSE(current_test, preemptible());
+-	KUNIT_EXPECT_EQ(current_test, preh_val, (rand1 / div_factor));
++	KUNIT_EXPECT_EQ(current_test, preh_val, expval);
++
+ 	posth_val = preh_val + div_factor;
+ }
+ 
+@@ -136,6 +146,29 @@ static void test_kprobes(struct kunit *test)
+ 	unregister_kprobes(kps, 2);
+ }
+ 
++static struct kprobe kp_missed = {
++	.symbol_name = "kprobe_recursed_target",
++	.pre_handler = kp_pre_handler,
++	.post_handler = kp_post_handler,
++};
++
++static void test_kprobe_missed(struct kunit *test)
++{
++	current_test = test;
++	preh_val = 0;
++	posth_val = 0;
++
++	KUNIT_EXPECT_EQ(test, 0, register_kprobe(&kp_missed));
++
++	recursed_target(rand1);
++
++	KUNIT_EXPECT_EQ(test, 2, kp_missed.nmissed);
++	KUNIT_EXPECT_NE(test, 0, preh_val);
++	KUNIT_EXPECT_NE(test, 0, posth_val);
++
++	unregister_kprobe(&kp_missed);
++}
++
+ #ifdef CONFIG_KRETPROBES
+ static u32 krph_val;
+ 
+@@ -336,6 +369,7 @@ static int kprobes_test_init(struct kunit *test)
+ {
+ 	target = kprobe_target;
+ 	target2 = kprobe_target2;
++	recursed_target = kprobe_recursed_target;
+ 	stacktrace_target = kprobe_stacktrace_target;
+ 	internal_target = kprobe_stacktrace_internal_target;
+ 	stacktrace_driver = kprobe_stacktrace_driver;
+@@ -346,6 +380,7 @@ static int kprobes_test_init(struct kunit *test)
+ static struct kunit_case kprobes_testcases[] = {
+ 	KUNIT_CASE(test_kprobe),
+ 	KUNIT_CASE(test_kprobes),
++	KUNIT_CASE(test_kprobe_missed),
+ #ifdef CONFIG_KRETPROBES
+ 	KUNIT_CASE(test_kretprobe),
+ 	KUNIT_CASE(test_kretprobes),
 
->
-> > Then solution should be toward restricting eBPF in container, there is already
-> > sysctl, per process seccomp, LSM + bpf LSM for that.
-> Yes, the solution is for restricting eBPF in container. But a fine-gained access
-> control is required, such as assigning different eBPF privilege to various containers,
-> rather than just disable eBPF in a container.
->
-You might want to reconsider your threat model about allowing partial
-unprivileged access to eBPF, even if it's partial access. What you are
-eventually going to run into is side channel attacks (please look at
-the recent side channel issues exploited with unprivileged eBPF and
-you don't need "offensive helpers" for these).
-
-> The mechanisms you mententioned do not properly sovle the problem.
-> sysctl can only disable the unprivielge
-> users to access eBPF via the kernel.unprivileged_bpf_disabled flag. The untrusted eBPF
-> are installed by privielge users inside a container but can harm the whole system and
-> other shared-kernel containers.
-> seccomp also can only disable the bpf system call to totally disable eBPF while we may
-> need to selectively enable the benign features of eBPF and disallow the offensive features
-> which may be abused.
-> LSM + bpf LSM can implement this functionality. However, it is difficult to identify
-> a process from a container [1] as at many LSM hooks, we can only get a process's pid and
-
-It's not difficult. The core primitive is that the container manager
-generates a unique ID per process and sets it on the task blob / local
-storage (this can be flexible on what a definition of a container is
-in your runtime [i.e a mix and match of different namespace ids)].
-This can then be passed on the subprocesses via LSM hooks
-
->  name which can be forged by the mailicous program. A correct way is to use the inode number
->  to set policy for benign processes. Moreover, the LSM bpf's overhead is unacceptable.
-
-BPF LSM is the worst case, but all LSMs have overhead.  I hear you and
-here's my series to address this overhead.
-
-https://lore.kernel.org/bpf/20230119231033.1307221-1-kpsingh@kernel.org/T/#t
-[hasn't been delivered fully by vger yet] so I resent it as
-https://lore.kernel.org/linux-security-module/20230120000818.1324170-3-kpsingh@kernel.org/T/#t
-and, as of now, between them they have most of the patches.
-
->
-> [1]. https://blog.doyensec.com/2022/10/11/ebpf-bypass-security-monitoring.html
->
-> > Those are more or less same as bpf sending signal. Supervisors are using
-> > seccomp to ret kill process and/or sending signals. Where will you draw the
-> > line? should we go restrict those too? IMHO this does not relate to lockdown.
-> > I don't see that much difference between a seccomp kill and ebpf signal.
->
-> The bpf_send_singal is different to any other signal sending functions as it
-> enables a eBPF tracing program from a container to kill any processes
-> (even the privielge proceess) of the host or other containers.
-> Supervisors and seccomp can only kill its child process. Other signal sending
-> do not need to be restricted as they can not be used inside a container to kill
-> any processes outside of a container.
->
-> > This reasoning will kill any effort to improve sandbox mechanisms that are
-> > moving some functionality from seccomp ret kill to a more flexible and
-> > transparent bpf-LSM model where privileged installs the sandbox. Actually,
-> > we are already doing this and beside eBPF flexibility and transparency
-> > (change policy at runtime without restart) from a _user perspective_
-> We will try to implement alternative mechanisms for constrained eBPF
-> features only since the LSM-bpf have shortages in both flexibility and
->  performance.
->
-> This patch is only for blocking the offensive features of eBPF and avoiding them
-> affecting the INTEGRITY of the container, given that the evil eBPF can abuse these
-> helpers to affect any processes running in inside or outside of the container,
-> sharing the same kernel.
-
-This has got nothing to do with kernel integrity. Please don't try to
-shoe-horn your policy requirements into integrity.
-
-If you really want to go with your threat model and allow partially
-available unprivileged BPF, this should be done via BPF LSM. The
-kernel should not try to adjust its definition of integrity based on a
-rather questionable threat model. Let's fix the LSM overhead and
-unblock flexibility for your use-case.
-
-- KP
-
-
->
-> [1]. https://github.com/Gui774ume/krie/blob/master/ebpf/krie/hooks/lsm.h
->
->  include/linux/security.h | 2 ++
->  kernel/trace/bpf_trace.c | 9 ++++++---
->  2 files changed, 8 insertions(+), 3 deletions(-)
->
-> diff --git a/include/linux/security.h b/include/linux/security.h
-> index 5b67f208f..42420e620 100644
-> --- a/include/linux/security.h
-> +++ b/include/linux/security.h
-> @@ -123,6 +123,8 @@ enum lockdown_reason {
->         LOCKDOWN_DEBUGFS,
->         LOCKDOWN_XMON_WR,
->         LOCKDOWN_BPF_WRITE_USER,
-> +       LOCKDOWN_BPF_SEND_SIGNAL,
-> +       LOCKDOWN_BPF_OVERRIDE_RETURN,
->         LOCKDOWN_DBG_WRITE_KERNEL,
->         LOCKDOWN_RTAS_ERROR_INJECTION,
->         LOCKDOWN_INTEGRITY_MAX,
-> diff --git a/kernel/trace/bpf_trace.c b/kernel/trace/bpf_trace.c
-> index 3bbd3f0c8..fdb94868d 100644
-> --- a/kernel/trace/bpf_trace.c
-> +++ b/kernel/trace/bpf_trace.c
-> @@ -1463,9 +1463,11 @@ bpf_tracing_func_proto(enum bpf_func_id func_id, const struct bpf_prog *prog)
->                 return &bpf_cgrp_storage_delete_proto;
->  #endif
->         case BPF_FUNC_send_signal:
-> -               return &bpf_send_signal_proto;
-> +               return security_locked_down(LOCKDOWN_BPF_SEND_SIGNAL) < 0 ?
-> +                      NULL : &bpf_send_signal_proto;
->         case BPF_FUNC_send_signal_thread:
-> -               return &bpf_send_signal_thread_proto;
-> +               return security_locked_down(LOCKDOWN_BPF_SEND_SIGNAL) < 0 ?
-> +                      NULL : &bpf_send_signal_thread_proto;
->         case BPF_FUNC_perf_event_read_value:
->                 return &bpf_perf_event_read_value_proto;
->         case BPF_FUNC_get_ns_current_pid_tgid:
-> @@ -1531,7 +1533,8 @@ kprobe_prog_func_proto(enum bpf_func_id func_id, const struct bpf_prog *prog)
->                 return &bpf_get_stack_proto;
->  #ifdef CONFIG_BPF_KPROBE_OVERRIDE
->         case BPF_FUNC_override_return:
-> -               return &bpf_override_return_proto;
-> +               return security_locked_down(LOCKDOWN_BPF_OVERRIDE_RETURN) < 0 ?
-> +                      NULL : &bpf_override_return_proto;
->  #endif
->         case BPF_FUNC_get_func_ip:
->                 return prog->expected_attach_type == BPF_TRACE_KPROBE_MULTI ?
-> --
-> 2.25.1
->
