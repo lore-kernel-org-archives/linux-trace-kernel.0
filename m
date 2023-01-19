@@ -2,115 +2,116 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D951C00A5A
-	for <linux-trace-kernel@archiver.kernel.org>; Thu, 19 Jan 2023 15:46:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 71C0EC004D4
+	for <linux-trace-kernel@archiver.kernel.org>; Thu, 19 Jan 2023 16:25:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230436AbjASPqX (ORCPT
+        id S229804AbjASQZI (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Thu, 19 Jan 2023 10:46:23 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44988 "EHLO
+        Thu, 19 Jan 2023 11:25:08 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49118 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231326AbjASPqO (ORCPT
+        with ESMTP id S230259AbjASQYj (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Thu, 19 Jan 2023 10:46:14 -0500
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C4F0486ED2;
-        Thu, 19 Jan 2023 07:46:03 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=jhvtngKBeAgm0UEGoU0G2NmyFhttBS3hhRWFEdNmOPE=; b=rbPSIr6h2eeFKrbPmtUCev05v1
-        njPF7zxdL7Y8WQWKrTNEIWwJV+7j5abZ1RhVfIFF4hhGFVSWunsAUGl1oX6JInadEbtHktJCMtzyE
-        KeaSQtL8Z1v0lMMe+dO+Cwbd6GTA3SLfhManQxk7INRkf5rtPkWvvP+c5zwtXlQjE8FYDfBR2jyAv
-        AyEMbhPCvDXJgGIvpoRaTxY59b1vt59hpFx0Ifwbf84js48TGws6hdvrsCzw2Cr5f3DC9Xh8t/HUL
-        4eXSjjfGfwEZEHNp8vBfU3aOOMIY/I9prXp0sgfF2Vs+eZvEdopl2CQ/KSNL6czH1IAMzgmEwlGg+
-        uYl83/qw==;
-Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
-        by casper.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
-        id 1pIX6s-0016EM-SW; Thu, 19 Jan 2023 15:45:51 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (4096 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 85FC0300348;
-        Thu, 19 Jan 2023 16:45:49 +0100 (CET)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id D564D20DC0EA0; Thu, 19 Jan 2023 16:45:49 +0100 (CET)
-Date:   Thu, 19 Jan 2023 16:45:49 +0100
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     kernel test robot <oliver.sang@intel.com>
-Cc:     oe-lkp@lists.linux.dev, lkp@intel.com,
-        linux-kernel@vger.kernel.org, x86@kernel.org,
+        Thu, 19 Jan 2023 11:24:39 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 706F48A0F4;
+        Thu, 19 Jan 2023 08:24:38 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 0D43961CAF;
+        Thu, 19 Jan 2023 16:24:38 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A06A1C433EF;
+        Thu, 19 Jan 2023 16:24:36 +0000 (UTC)
+Date:   Thu, 19 Jan 2023 11:24:33 -0500
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     kernel test robot <oliver.sang@intel.com>, oe-lkp@lists.linux.dev,
+        lkp@intel.com, linux-kernel@vger.kernel.org, x86@kernel.org,
         Ingo Molnar <mingo@kernel.org>,
-        linux-trace-kernel@vger.kernel.org,
-        Steven Rostedt <rostedt@goodmis.org>
+        linux-trace-kernel@vger.kernel.org
 Subject: Re: [tip:sched/core] [tracing, hardirq]  9aedeaed6f:
  WARNING:suspicious_RCU_usage
-Message-ID: <Y8llrdNT6RD/0dbq@hirez.programming.kicks-ass.net>
+Message-ID: <20230119112433.611fa273@gandalf.local.home>
+In-Reply-To: <Y8llrdNT6RD/0dbq@hirez.programming.kicks-ass.net>
 References: <202301192148.58ece903-oliver.sang@intel.com>
+        <Y8llrdNT6RD/0dbq@hirez.programming.kicks-ass.net>
+X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <202301192148.58ece903-oliver.sang@intel.com>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On Thu, Jan 19, 2023 at 10:06:21PM +0800, kernel test robot wrote:
-> 
-> Greeting,
-> 
-> FYI, we noticed WARNING:suspicious_RCU_usage due to commit (built with gcc-11):
-> 
-> commit: 9aedeaed6fc6fe8452b9b8225e95cc2b8631ff91 ("tracing, hardirq: No moar _rcuidle() tracing")
-> https://git.kernel.org/cgit/linux/kernel/git/tip/tip.git sched/core
-> 
-> [test failed on linux-next/master f3381a7baf5ccbd091eb2c4fd2afd84266fcef24]
-> 
-> in testcase: kernel-selftests
-> version: kernel-selftests-x86_64-d4cf28ee-1_20230110
-> with following parameters:
-> 
-> 	group: ftrace
+On Thu, 19 Jan 2023 16:45:49 +0100
+Peter Zijlstra <peterz@infradead.org> wrote:
 
-Moo, so I've had these patches in my git tree for months :/
+> Steve, what's the easiest way to figure out what triggers this? Put a
+> printk() in prepare_ftrace_return() or so?
 
-The thing that seems to shut it up is the below, but I'm not entirely
-sure how we get there, all the code should be cpuidle/noinstr, which
-implies notrace.
+Does it only trigger if all functions are enabled when running function
+graph tracer?
 
-Steve, what's the easiest way to figure out what triggers this? Put a
-printk() in prepare_ftrace_return() or so?
+That is, if you just trace one function, say "schedule" does it
+have an issue?
 
----
+ trace-cmd start -p function_graph -l schedule
 
-diff --git a/include/linux/cpuidle.h b/include/linux/cpuidle.h
-index 3183aeb7f5b4..fecdf0bb3bc4 100644
---- a/include/linux/cpuidle.h
-+++ b/include/linux/cpuidle.h
-@@ -15,6 +15,7 @@
- #include <linux/list.h>
- #include <linux/hrtimer.h>
- #include <linux/context_tracking.h>
-+#include <linux/ftrace.h>
- 
- #define CPUIDLE_STATE_MAX	10
- #define CPUIDLE_NAME_LEN	16
-@@ -119,6 +120,7 @@ DECLARE_PER_CPU(struct cpuidle_device, cpuidle_dev);
- static __always_inline void ct_cpuidle_enter(void)
- {
- 	lockdep_assert_irqs_disabled();
-+	pause_graph_tracing();
- 	/*
- 	 * Idle is allowed to (temporary) enable IRQs. It
- 	 * will return with IRQs disabled.
-@@ -143,6 +145,7 @@ static __always_inline void ct_cpuidle_exit(void)
- 	lockdep_hardirqs_off(_RET_IP_);
- 	ct_idle_exit();
- 	instrumentation_begin();
-+	unpause_graph_tracing();
- }
- 
- /****************************
+And then run your code, and it doesn't trigger, but:
 
+
+ trace-cmd reset # make sure schedule is no longer filtered
+ trace-cmd start -p function_graph
+
+does trigger the issue, you can then bisect the functions with the script:
+
+  scripts/tracing/ftrace-bisect.sh
+
+in the kernel tree.
+
+I need to update this script, because I've optimized it with the "number"
+trick. That is, instead echoing in the names of functions, you echo in the
+location of were they exist in the available_filter_functions file.
+
+That is: echo 5 > set_ftrace_filter
+
+Will enable the fifth function in available_filter_functions. The reason
+for this is because this is an O(1) operation. And echoing in thousands of
+these numbers is an O(n) operation where n is the number of functions you
+echo in. But by doing it via names, its an O(n*m) operation, where m is the
+number of *all* functions, and this can take several minutes to complete,
+were as the "number" version usually takes less than a second.
+
+Here's what you can do (ignore the instructions in the script, as that
+needs to be updated):
+
+ # cd /sys/kernel/tracing
+ # seq `wc -l available_filter_functions | cut -d' ' -f1` > ~/full-file
+ # /path/to/ftrace-bisect ~/full-file ~/test-file ~/non-test-file
+ # cat ~/test-file > set_ftrace_filter
+
+run your tests. If they don't fail (bisect good), then, you can assume that
+the bad function is in ~/non-test-file
+
+ # /path/to/ftrace-bisect ~/non-test-file ~/test-file.1 ~/non-test-file.1
+
+And repeat:
+
+ # cat ~/test-file.1 > set_ftrace_filter
+
+I suggest appending the ".1", ".2", etc, in case something goes wrong and
+you want to go back (basically a bisect log).
+
+If the test fails, then you use the first file:
+
+ # /path/to/ftrace-bisect ~/test-file.1 ~/test-file.2 ~/non-test-file.2
+
+Keep going until you find a single function that causes the issue.
+
+Always cat the "test-file*" into the set_ftrace_filter.
+
+If it works use the "non-test-file*" for the next iteration. If it fails,
+use the "test-file*" for the next iteration.
+
+-- Steve
