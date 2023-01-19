@@ -2,116 +2,78 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 71C0EC004D4
-	for <linux-trace-kernel@archiver.kernel.org>; Thu, 19 Jan 2023 16:25:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 67974C46467
+	for <linux-trace-kernel@archiver.kernel.org>; Thu, 19 Jan 2023 23:36:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229804AbjASQZI (ORCPT
+        id S229831AbjASXga (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Thu, 19 Jan 2023 11:25:08 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49118 "EHLO
+        Thu, 19 Jan 2023 18:36:30 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42832 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230259AbjASQYj (ORCPT
+        with ESMTP id S229637AbjASXga (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Thu, 19 Jan 2023 11:24:39 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 706F48A0F4;
-        Thu, 19 Jan 2023 08:24:38 -0800 (PST)
+        Thu, 19 Jan 2023 18:36:30 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3414C93734;
+        Thu, 19 Jan 2023 15:36:29 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 0D43961CAF;
-        Thu, 19 Jan 2023 16:24:38 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A06A1C433EF;
-        Thu, 19 Jan 2023 16:24:36 +0000 (UTC)
-Date:   Thu, 19 Jan 2023 11:24:33 -0500
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     kernel test robot <oliver.sang@intel.com>, oe-lkp@lists.linux.dev,
-        lkp@intel.com, linux-kernel@vger.kernel.org, x86@kernel.org,
-        Ingo Molnar <mingo@kernel.org>,
+        by dfw.source.kernel.org (Postfix) with ESMTPS id CA82761DA8;
+        Thu, 19 Jan 2023 23:36:28 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 03692C433D2;
+        Thu, 19 Jan 2023 23:36:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1674171388;
+        bh=6wxt7VnSObIZRqbgbFy9W3NyiZJxqTvxvpfGrf1eeYA=;
+        h=From:To:Cc:Subject:Date:From;
+        b=YCjvRfvX2p69GRCNIO6S1FQgKbxFW8OEDujWOsRI4uW6EDmPwMfOY8sOhYFP+W70H
+         cB/KxyhfTO8H2WDUYuwz0TDojtmPNsNiUIUXl+wUqLptJNGQmbHc6rR0ohqKY8wl+8
+         5Q97DlTrnW39jK0FqoiVyg7D7cbXAIbmHnunB9Fd/qOqPdk+m5ysjOkK91V81h6YZ7
+         RLlCOs43PYEsVUBJdrDybRB0yDv2ZgWskpd2g5I/ubddgCjLfFl4y/VsNck7DUTO2S
+         Ln7G/etNY/EJbMkGkSSVic3snGvW5G8OBxgVIpSiE3PUUNg2nJAc1SeSJr2kRSfNl9
+         MdWWdtHWAzE7A==
+From:   "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Masami Hiramatsu <mhiramat@kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
         linux-trace-kernel@vger.kernel.org
-Subject: Re: [tip:sched/core] [tracing, hardirq]  9aedeaed6f:
- WARNING:suspicious_RCU_usage
-Message-ID: <20230119112433.611fa273@gandalf.local.home>
-In-Reply-To: <Y8llrdNT6RD/0dbq@hirez.programming.kicks-ass.net>
-References: <202301192148.58ece903-oliver.sang@intel.com>
-        <Y8llrdNT6RD/0dbq@hirez.programming.kicks-ass.net>
-X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+Subject: [PATCH] bootconfig: Update MAINTAINERS file to add tree and mailing list
+Date:   Fri, 20 Jan 2023 08:36:24 +0900
+Message-Id: <167417138436.2333752.6988808113120359923.stgit@devnote3>
+X-Mailer: git-send-email 2.39.0.246.g2a6d74b583-goog
+User-Agent: StGit/0.19
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On Thu, 19 Jan 2023 16:45:49 +0100
-Peter Zijlstra <peterz@infradead.org> wrote:
+From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 
-> Steve, what's the easiest way to figure out what triggers this? Put a
-> printk() in prepare_ftrace_return() or so?
+Since the bootconfig related changes will be handled on linux-trace
+tree, add the tree and mailing lists for EXTRA BOOT CONFIG.
 
-Does it only trigger if all functions are enabled when running function
-graph tracer?
+Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+---
+ MAINTAINERS |    4 ++++
+ 1 file changed, 4 insertions(+)
 
-That is, if you just trace one function, say "schedule" does it
-have an issue?
+diff --git a/MAINTAINERS b/MAINTAINERS
+index ea941dc469fa..bba571b2ec1e 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -7895,7 +7895,11 @@ F:	include/linux/extcon/
+ 
+ EXTRA BOOT CONFIG
+ M:	Masami Hiramatsu <mhiramat@kernel.org>
++L:	linux-kernel@vger.kernel.org
++L:	linux-trace-kernel@vger.kernel.org
++Q:	https://patchwork.kernel.org/project/linux-trace-kernel/list/
+ S:	Maintained
++T:	git git://git.kernel.org/pub/scm/linux/kernel/git/trace/linux-trace.git
+ F:	Documentation/admin-guide/bootconfig.rst
+ F:	fs/proc/bootconfig.c
+ F:	include/linux/bootconfig.h
 
- trace-cmd start -p function_graph -l schedule
-
-And then run your code, and it doesn't trigger, but:
-
-
- trace-cmd reset # make sure schedule is no longer filtered
- trace-cmd start -p function_graph
-
-does trigger the issue, you can then bisect the functions with the script:
-
-  scripts/tracing/ftrace-bisect.sh
-
-in the kernel tree.
-
-I need to update this script, because I've optimized it with the "number"
-trick. That is, instead echoing in the names of functions, you echo in the
-location of were they exist in the available_filter_functions file.
-
-That is: echo 5 > set_ftrace_filter
-
-Will enable the fifth function in available_filter_functions. The reason
-for this is because this is an O(1) operation. And echoing in thousands of
-these numbers is an O(n) operation where n is the number of functions you
-echo in. But by doing it via names, its an O(n*m) operation, where m is the
-number of *all* functions, and this can take several minutes to complete,
-were as the "number" version usually takes less than a second.
-
-Here's what you can do (ignore the instructions in the script, as that
-needs to be updated):
-
- # cd /sys/kernel/tracing
- # seq `wc -l available_filter_functions | cut -d' ' -f1` > ~/full-file
- # /path/to/ftrace-bisect ~/full-file ~/test-file ~/non-test-file
- # cat ~/test-file > set_ftrace_filter
-
-run your tests. If they don't fail (bisect good), then, you can assume that
-the bad function is in ~/non-test-file
-
- # /path/to/ftrace-bisect ~/non-test-file ~/test-file.1 ~/non-test-file.1
-
-And repeat:
-
- # cat ~/test-file.1 > set_ftrace_filter
-
-I suggest appending the ".1", ".2", etc, in case something goes wrong and
-you want to go back (basically a bisect log).
-
-If the test fails, then you use the first file:
-
- # /path/to/ftrace-bisect ~/test-file.1 ~/test-file.2 ~/non-test-file.2
-
-Keep going until you find a single function that causes the issue.
-
-Always cat the "test-file*" into the set_ftrace_filter.
-
-If it works use the "non-test-file*" for the next iteration. If it fails,
-use the "test-file*" for the next iteration.
-
--- Steve
