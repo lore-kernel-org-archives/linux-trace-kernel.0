@@ -2,149 +2,103 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DAEAC38159
-	for <linux-trace-kernel@archiver.kernel.org>; Fri, 20 Jan 2023 04:50:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F7FAC05027
+	for <linux-trace-kernel@archiver.kernel.org>; Fri, 20 Jan 2023 09:52:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230290AbjATEu2 (ORCPT
+        id S229524AbjATJwI (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Thu, 19 Jan 2023 23:50:28 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35354 "EHLO
+        Fri, 20 Jan 2023 04:52:08 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42532 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230463AbjATEtz (ORCPT
+        with ESMTP id S229520AbjATJwI (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Thu, 19 Jan 2023 23:49:55 -0500
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1B434CE886;
-        Thu, 19 Jan 2023 20:43:41 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id E86F1B81A58;
-        Fri, 20 Jan 2023 03:48:05 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 38030C433D2;
-        Fri, 20 Jan 2023 03:48:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1674186484;
-        bh=vF+13EJkM+VvfWqJtIzQTln5eOgraOwRw64dpc0BZ38=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=Tj+2gXJ3+H95TbD1lRYYmL+eDE5A8BTKid48k20z6UEJqF3N9s9zob7nK73mQRvP/
-         elP4CO4NGMB45kgQ+N73Wu0scotHWMXavh8jFMq4OhvnygxDGH3JZ1YdPLMsCW/S1J
-         EKV38wphwPA7Qy2MfR13eF/08bmnN5tOY0i7sBk5Q+MLbtt73oSTrXytQhl4ERcJG5
-         XxOmXFasPHqLpah2CttYUyiWx9nAwe6oURkt6nBX7SY9SID9EN0HuthiakYYJ/DQGb
-         yIZoQdPsKjnHMpGIKNlWY0EzIxmsU6o4rrgbonp/4Bq876udSxL7HXkiesM2B6dWcL
-         FzwyAV+qScUDQ==
-Date:   Fri, 20 Jan 2023 12:48:01 +0900
-From:   Masami Hiramatsu (Google) <mhiramat@kernel.org>
+        Fri, 20 Jan 2023 04:52:08 -0500
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 78BBFA5CFF;
+        Fri, 20 Jan 2023 01:51:44 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=NXj6U+8rYRpDaWLV8kgbTbPFTvM3jXfrajkYp/fZG0U=; b=dVQS34+x8iFkZumz6p35uxZSD0
+        f67QJmMNy6x2BCpTi7MARlbQNW/MAUmFq0j9xSA6PSa+uGIqQL1g9fvsqGsd6mNhCNNwmhx8m48RP
+        lgS5IRpACgwXX3fUK6siLwzmvGgX5O423D5R6HAn7S75500I1jz9uYeR7w2chZZ2jcLg7HGITY2id
+        aj+QF5/fdnIZuvS1o6qLDikF/H/N4sgunP2Fikb68wKaFZus2zI4d4dZdH5wimOjpEBen91Wz5MbI
+        nBZ3/2/HU0Tvb7RwbrBxvomrTsMe+FkzYjkj+duS8y7cX8yi/kBKYT5+rtFdFM2cOk+KBDcNvp/MW
+        +9ENBfJQ==;
+Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
+        by casper.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
+        id 1pIo3N-001pwh-Q5; Fri, 20 Jan 2023 09:51:22 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 012DD30036B;
+        Fri, 20 Jan 2023 10:51:18 +0100 (CET)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 49F032133D201; Fri, 20 Jan 2023 10:51:18 +0100 (CET)
+Date:   Fri, 20 Jan 2023 10:51:18 +0100
+From:   Peter Zijlstra <peterz@infradead.org>
 To:     Steven Rostedt <rostedt@goodmis.org>
-Cc:     linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Florent Revest <revest@chromium.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Will Deacon <will@kernel.org>
-Subject: Re: [RFC PATCH 1/9] fprobe: Pass entry_data to handlers
-Message-Id: <20230120124801.558a5ce3b5513749997c7d99@kernel.org>
-In-Reply-To: <20230117204309.1cd8f20f@gandalf.local.home>
-References: <166792255429.919356.14116090269057513181.stgit@devnote3>
-        <166792256330.919356.14776044963704066797.stgit@devnote3>
-        <20230117204309.1cd8f20f@gandalf.local.home>
-X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Cc:     kernel test robot <oliver.sang@intel.com>, oe-lkp@lists.linux.dev,
+        lkp@intel.com, linux-kernel@vger.kernel.org, x86@kernel.org,
+        Ingo Molnar <mingo@kernel.org>,
+        linux-trace-kernel@vger.kernel.org
+Subject: Re: [tip:sched/core] [tracing, hardirq]  9aedeaed6f:
+ WARNING:suspicious_RCU_usage
+Message-ID: <Y8pkFhi32XhvCVOo@hirez.programming.kicks-ass.net>
+References: <202301192148.58ece903-oliver.sang@intel.com>
+ <Y8llrdNT6RD/0dbq@hirez.programming.kicks-ass.net>
+ <20230119112433.611fa273@gandalf.local.home>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230119112433.611fa273@gandalf.local.home>
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On Tue, 17 Jan 2023 20:43:09 -0500
-Steven Rostedt <rostedt@goodmis.org> wrote:
-
-> On Wed,  9 Nov 2022 00:49:23 +0900
-> "Masami Hiramatsu (Google)" <mhiramat@kernel.org> wrote:
+On Thu, Jan 19, 2023 at 11:24:33AM -0500, Steven Rostedt wrote:
+> On Thu, 19 Jan 2023 16:45:49 +0100
+> Peter Zijlstra <peterz@infradead.org> wrote:
 > 
-> > diff --git a/kernel/trace/fprobe.c b/kernel/trace/fprobe.c
-> > index e8143e368074..fa25d09c9d57 100644
-> > --- a/kernel/trace/fprobe.c
-> > +++ b/kernel/trace/fprobe.c
-> > @@ -17,14 +17,16 @@
-> >  struct fprobe_rethook_node {
-> >  	struct rethook_node node;
-> >  	unsigned long entry_ip;
-> > +	char data[];
-> >  };
-> >  
-> >  static void fprobe_handler(unsigned long ip, unsigned long parent_ip,
-> >  			   struct ftrace_ops *ops, struct ftrace_regs *fregs)
-> >  {
-> >  	struct fprobe_rethook_node *fpr;
-> > -	struct rethook_node *rh;
-> > +	struct rethook_node *rh = NULL;
-> >  	struct fprobe *fp;
-> > +	void *entry_data = NULL;
-> >  	int bit;
-> >  
-> >  	fp = container_of(ops, struct fprobe, ops);
-> > @@ -37,9 +39,6 @@ static void fprobe_handler(unsigned long ip, unsigned long parent_ip,
-> >  		return;
-> >  	}
-> >  
-> > -	if (fp->entry_handler)
-> > -		fp->entry_handler(fp, ip, ftrace_get_regs(fregs));
-> > -
-> >  	if (fp->exit_handler) {
-> >  		rh = rethook_try_get(fp->rethook);
-> >  		if (!rh) {
-> > @@ -48,9 +47,16 @@ static void fprobe_handler(unsigned long ip, unsigned long parent_ip,
-> >  		}
-> >  		fpr = container_of(rh, struct fprobe_rethook_node, node);
-> >  		fpr->entry_ip = ip;
-> > -		rethook_hook(rh, ftrace_get_regs(fregs), true);
-> > +		if (fp->entry_data_size)
-> > +			entry_data = fpr->data;
-> >  	}
-> >  
-> > +	if (fp->entry_handler)
-> > +		fp->entry_handler(fp, ip, ftrace_get_regs(fregs), entry_data);
-> > +
-> > +	if (rh)
-> > +		rethook_hook(rh, ftrace_get_regs(fregs), true);
-> > +
-> >  out:
-> >  	ftrace_test_recursion_unlock(bit);
-> >  }
-> > @@ -81,7 +87,8 @@ static void fprobe_exit_handler(struct rethook_node *rh, void *data,
-> >  
-> >  	fpr = container_of(rh, struct fprobe_rethook_node, node);
-> >  
-> > -	fp->exit_handler(fp, fpr->entry_ip, regs);
-> > +	fp->exit_handler(fp, fpr->entry_ip, regs,
-> > +			 fp->entry_data_size ? (void *)fpr->data : NULL);
-> >  }
-> >  NOKPROBE_SYMBOL(fprobe_exit_handler);
-> >  
-> > @@ -146,7 +153,7 @@ static int fprobe_init_rethook(struct fprobe *fp, int num)
-> >  	for (i = 0; i < size; i++) {
-> >  		struct fprobe_rethook_node *node;
-> >  
-> > -		node = kzalloc(sizeof(*node), GFP_KERNEL);
-> > +		node = kzalloc(sizeof(*node) + fp->entry_data_size, GFP_KERNEL);
+> > Steve, what's the easiest way to figure out what triggers this? Put a
+> > printk() in prepare_ftrace_return() or so?
 > 
-> 		node = kzalloc(struct_size(node, data, fp->entry_data_size), GFP_KERNEL);
+> Does it only trigger if all functions are enabled when running function
+> graph tracer?
 > 
-> Should use struct_size() for any tail structure allocations.
-
-OK, I'll use that.
-
-Thank you!
-
+> That is, if you just trace one function, say "schedule" does it
+> have an issue?
 > 
-> -- Steve
+>  trace-cmd start -p function_graph -l schedule
+> 
+> And then run your code, and it doesn't trigger, but:
 > 
 > 
-> >  		if (!node) {
-> >  			rethook_free(fp->rethook);
-> >  			fp->rethook = NULL;
-> > diff --git a/lib/test_fprobe.c b/lib/test_fprobe.c
-> > index e0381b3ec410..34fa5a5bbda1 100644
+>  trace-cmd reset # make sure schedule is no longer filtered
+>  trace-cmd start -p function_graph
+> 
+> does trigger the issue, you can then bisect the functions with the script:
+> 
+>   scripts/tracing/ftrace-bisect.sh
 
+Pff, that all sounds like actual work :-)
 
--- 
-Masami Hiramatsu (Google) <mhiramat@kernel.org>
+Instead I did me the below hack and added my early_printk() hacks and
+that got me a usable backtrace.
+
+diff --git a/arch/x86/kernel/ftrace.c b/arch/x86/kernel/ftrace.c
+index 5e7ead52cfdb..7defc6e24f8f 100644
+--- a/arch/x86/kernel/ftrace.c
++++ b/arch/x86/kernel/ftrace.c
+@@ -646,6 +646,9 @@ void prepare_ftrace_return(unsigned long ip, unsigned long *parent,
+ 	if (unlikely(atomic_read(&current->tracing_graph_pause)))
+ 		return;
+ 
++	if (WARN_ONCE(!rcu_is_watching(), "RCU not on for: %pS\n", (void *)ip))
++		return;
++
+ 	bit = ftrace_test_recursion_trylock(ip, *parent);
+ 	if (bit < 0)
+ 		return;
