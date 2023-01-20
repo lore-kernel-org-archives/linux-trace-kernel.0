@@ -2,150 +2,149 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 90F56C678DC
-	for <linux-trace-kernel@archiver.kernel.org>; Fri, 20 Jan 2023 04:28:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DAEAC38159
+	for <linux-trace-kernel@archiver.kernel.org>; Fri, 20 Jan 2023 04:50:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229988AbjATE2h (ORCPT
+        id S230290AbjATEu2 (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Thu, 19 Jan 2023 23:28:37 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40694 "EHLO
+        Thu, 19 Jan 2023 23:50:28 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35354 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229915AbjATE23 (ORCPT
+        with ESMTP id S230463AbjATEtz (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Thu, 19 Jan 2023 23:28:29 -0500
-Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2A072AED9D;
-        Thu, 19 Jan 2023 20:28:24 -0800 (PST)
+        Thu, 19 Jan 2023 23:49:55 -0500
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1B434CE886;
+        Thu, 19 Jan 2023 20:43:41 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 391BEB82591;
-        Thu, 19 Jan 2023 15:33:13 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2592EC433F0;
-        Thu, 19 Jan 2023 15:33:10 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id E86F1B81A58;
+        Fri, 20 Jan 2023 03:48:05 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 38030C433D2;
+        Fri, 20 Jan 2023 03:48:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1674142391;
-        bh=4e9cU3XBF+njXHs+pBSJ/+9iR11GsQtP644znMOpRCQ=;
-        h=From:To:Subject:Date:From;
-        b=G+e4arH4OfCYHRXWwufncZh+jDrE3WtcxlJNWepbCKPMuesaVoGoMuHVcL1xoRD01
-         uWqJYHsG7etX41q3vAt2QWsGKVPwx24YFWbKDHsZ7+N804l2xEb5lQ4n2c06bO5xuw
-         +IHYMyNCAKd0JsGt4OGqLg1g+n+Mc7tzM6SIIHHF9LxF/uRGYk4D/JlkVRXkLHnei4
-         i3pq3ErykfgV2MIwJ4/dbausFxGsbJOMAlOzHro7QeST7XTAh+WUA2fly4/N1Mpcmd
-         0a8bgIFPzwezZE4jNb2eiGbniG4Wkm3L/ztAjA/ftGyhZW8KouR9AHhscxygIZItOx
-         0dtwS8HRqRYWQ==
-From:   "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
-To:     linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] test_kprobes: Add recursed kprobe test case
-Date:   Fri, 20 Jan 2023 00:33:07 +0900
-Message-Id: <167414238758.2301956.258548940194352895.stgit@devnote3>
-X-Mailer: git-send-email 2.39.0.246.g2a6d74b583-goog
-User-Agent: StGit/0.19
-MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+        s=k20201202; t=1674186484;
+        bh=vF+13EJkM+VvfWqJtIzQTln5eOgraOwRw64dpc0BZ38=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=Tj+2gXJ3+H95TbD1lRYYmL+eDE5A8BTKid48k20z6UEJqF3N9s9zob7nK73mQRvP/
+         elP4CO4NGMB45kgQ+N73Wu0scotHWMXavh8jFMq4OhvnygxDGH3JZ1YdPLMsCW/S1J
+         EKV38wphwPA7Qy2MfR13eF/08bmnN5tOY0i7sBk5Q+MLbtt73oSTrXytQhl4ERcJG5
+         XxOmXFasPHqLpah2CttYUyiWx9nAwe6oURkt6nBX7SY9SID9EN0HuthiakYYJ/DQGb
+         yIZoQdPsKjnHMpGIKNlWY0EzIxmsU6o4rrgbonp/4Bq876udSxL7HXkiesM2B6dWcL
+         FzwyAV+qScUDQ==
+Date:   Fri, 20 Jan 2023 12:48:01 +0900
+From:   Masami Hiramatsu (Google) <mhiramat@kernel.org>
+To:     Steven Rostedt <rostedt@goodmis.org>
+Cc:     linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Florent Revest <revest@chromium.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Will Deacon <will@kernel.org>
+Subject: Re: [RFC PATCH 1/9] fprobe: Pass entry_data to handlers
+Message-Id: <20230120124801.558a5ce3b5513749997c7d99@kernel.org>
+In-Reply-To: <20230117204309.1cd8f20f@gandalf.local.home>
+References: <166792255429.919356.14116090269057513181.stgit@devnote3>
+        <166792256330.919356.14776044963704066797.stgit@devnote3>
+        <20230117204309.1cd8f20f@gandalf.local.home>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+On Tue, 17 Jan 2023 20:43:09 -0500
+Steven Rostedt <rostedt@goodmis.org> wrote:
 
-Add a recursed kprobe test case to the KUnit test module for kprobes.
-This will probe a function which is called from the pre_handler and
-post_handler itself. If the kprobe is correctly implemented, the recursed
-kprobe handlers will be skipped and the number of skipped kprobe will
-be counted on kprobe::nmissed.
+> On Wed,  9 Nov 2022 00:49:23 +0900
+> "Masami Hiramatsu (Google)" <mhiramat@kernel.org> wrote:
+> 
+> > diff --git a/kernel/trace/fprobe.c b/kernel/trace/fprobe.c
+> > index e8143e368074..fa25d09c9d57 100644
+> > --- a/kernel/trace/fprobe.c
+> > +++ b/kernel/trace/fprobe.c
+> > @@ -17,14 +17,16 @@
+> >  struct fprobe_rethook_node {
+> >  	struct rethook_node node;
+> >  	unsigned long entry_ip;
+> > +	char data[];
+> >  };
+> >  
+> >  static void fprobe_handler(unsigned long ip, unsigned long parent_ip,
+> >  			   struct ftrace_ops *ops, struct ftrace_regs *fregs)
+> >  {
+> >  	struct fprobe_rethook_node *fpr;
+> > -	struct rethook_node *rh;
+> > +	struct rethook_node *rh = NULL;
+> >  	struct fprobe *fp;
+> > +	void *entry_data = NULL;
+> >  	int bit;
+> >  
+> >  	fp = container_of(ops, struct fprobe, ops);
+> > @@ -37,9 +39,6 @@ static void fprobe_handler(unsigned long ip, unsigned long parent_ip,
+> >  		return;
+> >  	}
+> >  
+> > -	if (fp->entry_handler)
+> > -		fp->entry_handler(fp, ip, ftrace_get_regs(fregs));
+> > -
+> >  	if (fp->exit_handler) {
+> >  		rh = rethook_try_get(fp->rethook);
+> >  		if (!rh) {
+> > @@ -48,9 +47,16 @@ static void fprobe_handler(unsigned long ip, unsigned long parent_ip,
+> >  		}
+> >  		fpr = container_of(rh, struct fprobe_rethook_node, node);
+> >  		fpr->entry_ip = ip;
+> > -		rethook_hook(rh, ftrace_get_regs(fregs), true);
+> > +		if (fp->entry_data_size)
+> > +			entry_data = fpr->data;
+> >  	}
+> >  
+> > +	if (fp->entry_handler)
+> > +		fp->entry_handler(fp, ip, ftrace_get_regs(fregs), entry_data);
+> > +
+> > +	if (rh)
+> > +		rethook_hook(rh, ftrace_get_regs(fregs), true);
+> > +
+> >  out:
+> >  	ftrace_test_recursion_unlock(bit);
+> >  }
+> > @@ -81,7 +87,8 @@ static void fprobe_exit_handler(struct rethook_node *rh, void *data,
+> >  
+> >  	fpr = container_of(rh, struct fprobe_rethook_node, node);
+> >  
+> > -	fp->exit_handler(fp, fpr->entry_ip, regs);
+> > +	fp->exit_handler(fp, fpr->entry_ip, regs,
+> > +			 fp->entry_data_size ? (void *)fpr->data : NULL);
+> >  }
+> >  NOKPROBE_SYMBOL(fprobe_exit_handler);
+> >  
+> > @@ -146,7 +153,7 @@ static int fprobe_init_rethook(struct fprobe *fp, int num)
+> >  	for (i = 0; i < size; i++) {
+> >  		struct fprobe_rethook_node *node;
+> >  
+> > -		node = kzalloc(sizeof(*node), GFP_KERNEL);
+> > +		node = kzalloc(sizeof(*node) + fp->entry_data_size, GFP_KERNEL);
+> 
+> 		node = kzalloc(struct_size(node, data, fp->entry_data_size), GFP_KERNEL);
+> 
+> Should use struct_size() for any tail structure allocations.
 
-Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
----
- lib/test_kprobes.c |   39 +++++++++++++++++++++++++++++++++++++--
- 1 file changed, 37 insertions(+), 2 deletions(-)
+OK, I'll use that.
 
-diff --git a/lib/test_kprobes.c b/lib/test_kprobes.c
-index 1c95e5719802..0648f7154f5c 100644
---- a/lib/test_kprobes.c
-+++ b/lib/test_kprobes.c
-@@ -14,6 +14,7 @@
- 
- static u32 rand1, preh_val, posth_val;
- static u32 (*target)(u32 value);
-+static u32 (*recursed_target)(u32 value);
- static u32 (*target2)(u32 value);
- static struct kunit *current_test;
- 
-@@ -27,18 +28,27 @@ static noinline u32 kprobe_target(u32 value)
- 	return (value / div_factor);
- }
- 
-+static noinline u32 kprobe_recursed_target(u32 value)
-+{
-+	return (value / div_factor);
-+}
-+
- static int kp_pre_handler(struct kprobe *p, struct pt_regs *regs)
- {
- 	KUNIT_EXPECT_FALSE(current_test, preemptible());
--	preh_val = (rand1 / div_factor);
-+
-+	preh_val = recursed_target(rand1);
- 	return 0;
- }
- 
- static void kp_post_handler(struct kprobe *p, struct pt_regs *regs,
- 		unsigned long flags)
- {
-+	u32 expval = recursed_target(rand1);
-+
- 	KUNIT_EXPECT_FALSE(current_test, preemptible());
--	KUNIT_EXPECT_EQ(current_test, preh_val, (rand1 / div_factor));
-+	KUNIT_EXPECT_EQ(current_test, preh_val, expval);
-+
- 	posth_val = preh_val + div_factor;
- }
- 
-@@ -136,6 +146,29 @@ static void test_kprobes(struct kunit *test)
- 	unregister_kprobes(kps, 2);
- }
- 
-+static struct kprobe kp_missed = {
-+	.symbol_name = "kprobe_recursed_target",
-+	.pre_handler = kp_pre_handler,
-+	.post_handler = kp_post_handler,
-+};
-+
-+static void test_kprobe_missed(struct kunit *test)
-+{
-+	current_test = test;
-+	preh_val = 0;
-+	posth_val = 0;
-+
-+	KUNIT_EXPECT_EQ(test, 0, register_kprobe(&kp_missed));
-+
-+	recursed_target(rand1);
-+
-+	KUNIT_EXPECT_EQ(test, 2, kp_missed.nmissed);
-+	KUNIT_EXPECT_NE(test, 0, preh_val);
-+	KUNIT_EXPECT_NE(test, 0, posth_val);
-+
-+	unregister_kprobe(&kp_missed);
-+}
-+
- #ifdef CONFIG_KRETPROBES
- static u32 krph_val;
- 
-@@ -336,6 +369,7 @@ static int kprobes_test_init(struct kunit *test)
- {
- 	target = kprobe_target;
- 	target2 = kprobe_target2;
-+	recursed_target = kprobe_recursed_target;
- 	stacktrace_target = kprobe_stacktrace_target;
- 	internal_target = kprobe_stacktrace_internal_target;
- 	stacktrace_driver = kprobe_stacktrace_driver;
-@@ -346,6 +380,7 @@ static int kprobes_test_init(struct kunit *test)
- static struct kunit_case kprobes_testcases[] = {
- 	KUNIT_CASE(test_kprobe),
- 	KUNIT_CASE(test_kprobes),
-+	KUNIT_CASE(test_kprobe_missed),
- #ifdef CONFIG_KRETPROBES
- 	KUNIT_CASE(test_kretprobe),
- 	KUNIT_CASE(test_kretprobes),
+Thank you!
 
+> 
+> -- Steve
+> 
+> 
+> >  		if (!node) {
+> >  			rethook_free(fp->rethook);
+> >  			fp->rethook = NULL;
+> > diff --git a/lib/test_fprobe.c b/lib/test_fprobe.c
+> > index e0381b3ec410..34fa5a5bbda1 100644
+
+
+-- 
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
