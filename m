@@ -2,101 +2,82 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6007CC27C76
-	for <linux-trace-kernel@archiver.kernel.org>; Sat, 21 Jan 2023 14:31:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C6FB6C004D4
+	for <linux-trace-kernel@archiver.kernel.org>; Sat, 21 Jan 2023 16:49:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229919AbjAUObl (ORCPT
+        id S229714AbjAUQtL (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Sat, 21 Jan 2023 09:31:41 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60412 "EHLO
+        Sat, 21 Jan 2023 11:49:11 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38688 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229840AbjAUObe (ORCPT
+        with ESMTP id S229493AbjAUQtK (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Sat, 21 Jan 2023 09:31:34 -0500
-Received: from mail-wr1-x42e.google.com (mail-wr1-x42e.google.com [IPv6:2a00:1450:4864:20::42e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F0D5F392BC
-        for <linux-trace-kernel@vger.kernel.org>; Sat, 21 Jan 2023 06:31:32 -0800 (PST)
-Received: by mail-wr1-x42e.google.com with SMTP id h16so7124114wrz.12
-        for <linux-trace-kernel@vger.kernel.org>; Sat, 21 Jan 2023 06:31:32 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=smile-fr.20210112.gappssmtp.com; s=20210112;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=rarW0C3V0LVCbRSxn5OZzPRQcVqqpTUYjlstsxkGCnQ=;
-        b=XsCu29i8Z1oc6uq5sN0yrMDgSjJpECZK4tV/ZSWpv7Uv/K2PEwE5UMbv20VjjgyxlY
-         vg8bhcorENStwyLLUyjey9dNr++wfIekEVSst6gupetTukZG9rMpYTpYHfbIHuk66jam
-         iKAWboGyzIl6Ep6fEHRYZXEmB+YB3H0ucf7nvQKEWidcjOusrcuCYpG6FtbisyPCE8Gc
-         gWBRQ8HqXvNuHuNu5A6i/9gh7TNaC+jl+3hEqOHUdIDAypMszBN08bnuRVw0l6qhzGDP
-         dfEjDWnOY0WCx9R8ODnSCGEPQ3dGmxqMEcp64N7ymD7xgAyUanO++dHng7c2mD6BN2qh
-         xG8w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=rarW0C3V0LVCbRSxn5OZzPRQcVqqpTUYjlstsxkGCnQ=;
-        b=L3Ok+Vib48T1nWNfJ0LtA2MtXBeExXQ4LeYLhokIyogwDkGR40I4tGPzCvOSwKkTqN
-         x/ppv+5+EXI5/dQK2eozb5jo4kZ2S7ZbqMQJN1VWjzh4TdSXqBnT3Ke4LlHc1NAIVjA7
-         29LxMTi2NU3lt5qnwA2ezqeZZ/4vnfqjWZ2tYl480YsoXXbed/qat6PtiCS1IAkVFpok
-         AtnCUiW8ocCBGwuOhz8nevQ/BUCTYdE3INnhCLxLkULACT0zhpabs2bxjJXm9NA0A9jc
-         bCZ0kxocxKbkiOyQ+YnjXWaZzr4vWiDsGqnaNVNWiuNJVhmcU+VrT/KicYB1mTzZsIQL
-         DecQ==
-X-Gm-Message-State: AFqh2krQKwGF348/Ts9F1tC+AzcfdlEr+5H9paMG7MUHuhHBADrFlDXb
-        47ymcMXEH+hqzV1L1v5QYOaepwKSip09pP5N
-X-Google-Smtp-Source: AMrXdXvFZMIUXANWl+eYIekkOFr+wSSWg8hb1mKA3uO8qLOhdES9+Kt8xsHL6GIfJpTslkJ2YxykPw==
-X-Received: by 2002:a5d:4d4b:0:b0:2be:9945:8112 with SMTP id a11-20020a5d4d4b000000b002be99458112mr4332624wru.41.1674311491377;
-        Sat, 21 Jan 2023 06:31:31 -0800 (PST)
-Received: from P-ASN-ECS-830T8C3.mpl.intranet (89-159-1-53.rev.numericable.fr. [89.159.1.53])
-        by smtp.gmail.com with ESMTPSA id p8-20020a5d4588000000b002bdfb97e029sm16314604wrq.19.2023.01.21.06.31.30
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 21 Jan 2023 06:31:31 -0800 (PST)
-From:   Yoann Congal <yoann.congal@smile.fr>
-To:     linux-trace-kernel@vger.kernel.org
-Cc:     Yoann Congal <yoann.congal@smile.fr>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Jonathan Corbet <corbet@lwn.net>, linux-kernel@vger.kernel.org,
-        linux-doc@vger.kernel.org
-Subject: [PATCH v2 3/3] Documentation: kprobetrace: Split paragraphs
-Date:   Sat, 21 Jan 2023 15:31:10 +0100
-Message-Id: <20230121143110.1706962-3-yoann.congal@smile.fr>
-X-Mailer: git-send-email 2.30.2
-In-Reply-To: <20230121142242.1706081-1-yoann.congal@smile.fr>
-References: <20230121143110.1706962-1-yoann.congal@smile.fr>
+        Sat, 21 Jan 2023 11:49:10 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EF2D128D27;
+        Sat, 21 Jan 2023 08:49:08 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 8A819601BC;
+        Sat, 21 Jan 2023 16:49:08 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 00EF2C433D2;
+        Sat, 21 Jan 2023 16:49:06 +0000 (UTC)
+Date:   Sat, 21 Jan 2023 11:49:04 -0500
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     kernel test robot <oliver.sang@intel.com>, oe-lkp@lists.linux.dev,
+        lkp@intel.com, linux-kernel@vger.kernel.org, x86@kernel.org,
+        Ingo Molnar <mingo@kernel.org>,
+        linux-trace-kernel@vger.kernel.org
+Subject: Re: [tip:sched/core] [tracing, hardirq]  9aedeaed6f:
+ WARNING:suspicious_RCU_usage
+Message-ID: <20230121114904.13d6825d@gandalf.local.home>
+In-Reply-To: <Y8pkFhi32XhvCVOo@hirez.programming.kicks-ass.net>
+References: <202301192148.58ece903-oliver.sang@intel.com>
+        <Y8llrdNT6RD/0dbq@hirez.programming.kicks-ass.net>
+        <20230119112433.611fa273@gandalf.local.home>
+        <Y8pkFhi32XhvCVOo@hirez.programming.kicks-ass.net>
+X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-Add an empty line to force the output to split paragraphs like it is
-splitin the REST source.
+On Fri, 20 Jan 2023 10:51:18 +0100
+Peter Zijlstra <peterz@infradead.org> wrote:
 
-Signed-off-by: Yoann Congal <yoann.congal@smile.fr>
----
- Documentation/trace/kprobetrace.rst | 2 ++
- 1 file changed, 2 insertions(+)
+> > does trigger the issue, you can then bisect the functions with the script:
+> > 
+> >   scripts/tracing/ftrace-bisect.sh  
+> 
+> Pff, that all sounds like actual work :-)
+> 
+> Instead I did me the below hack and added my early_printk() hacks and
+> that got me a usable backtrace.
 
-diff --git a/Documentation/trace/kprobetrace.rst b/Documentation/trace/kprobetrace.rst
-index ad18c2fdbd153..99251bcdeb13d 100644
---- a/Documentation/trace/kprobetrace.rst
-+++ b/Documentation/trace/kprobetrace.rst
-@@ -74,12 +74,14 @@ respectively. 'x' prefix implies it is unsigned. Traced arguments are shown
- in decimal ('s' and 'u') or hexadecimal ('x'). Without type casting, 'x32'
- or 'x64' is used depends on the architecture (e.g. x86-32 uses x32, and
- x86-64 uses x64).
-+
- These value types can be an array. To record array data, you can add '[N]'
- (where N is a fixed number, less than 64) to the base type.
- E.g. 'x16[4]' means an array of x16 (2-bytes hex) with 4 elements.
- Note that the array can be applied to memory type fetchargs, you can not
- apply it to registers/stack-entries etc. (for example, '$stack1:x8[8]' is
- wrong, but '+8($stack):x8[8]' is OK.)
-+
- String type is a special type, which fetches a "null-terminated" string from
- kernel space. This means it will fail and store NULL if the string container
- has been paged out. "ustring" type is an alternative of string for user-space.
--- 
-2.30.2
+Well, if you system is still running after the issue, then sure. I created
+this when it would cause a triple fault reboot. In which case, there was no
+real debugging output to use.
+
+-- Steve
+
+
+> 
+> diff --git a/arch/x86/kernel/ftrace.c b/arch/x86/kernel/ftrace.c
+> index 5e7ead52cfdb..7defc6e24f8f 100644
+> --- a/arch/x86/kernel/ftrace.c
+> +++ b/arch/x86/kernel/ftrace.c
+> @@ -646,6 +646,9 @@ void prepare_ftrace_return(unsigned long ip, unsigned long *parent,
+>  	if (unlikely(atomic_read(&current->tracing_graph_pause)))
+>  		return;
+>  
+> +	if (WARN_ONCE(!rcu_is_watching(), "RCU not on for: %pS\n", (void *)ip))
+> +		return;
+> +
+>  	bit = ftrace_test_recursion_trylock(ip, *parent);
+>  	if (bit < 0)
+>  		return;
 
