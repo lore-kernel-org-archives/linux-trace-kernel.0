@@ -2,136 +2,248 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B52BC54E94
-	for <linux-trace-kernel@archiver.kernel.org>; Sun, 22 Jan 2023 17:08:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A16BEC25B4E
+	for <linux-trace-kernel@archiver.kernel.org>; Sun, 22 Jan 2023 18:45:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231488AbjAVRIK (ORCPT
+        id S230074AbjAVSpm (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Sun, 22 Jan 2023 12:08:10 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60126 "EHLO
+        Sun, 22 Jan 2023 13:45:42 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38626 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231504AbjAVRIH (ORCPT
+        with ESMTP id S229566AbjAVSpm (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Sun, 22 Jan 2023 12:08:07 -0500
-Received: from DM4PR02CU001-vft-obe.outbound.protection.outlook.com (mail-centralusazon11012002.outbound.protection.outlook.com [52.101.63.2])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DF46F1B55B;
-        Sun, 22 Jan 2023 09:07:48 -0800 (PST)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=LvjjuEhikORm+ebne1JxdanJ7DbrPni/Dv3I8/S1k95P5V2dNs6FhYJbXFFwPy5kgtoUzlGTuuOUC0ETvlQPP/sgcHbJrYGeXX0kScuoMOvftkgddbQSDpUz09B13v+24kEboqeazQ9zFVS/6lOy9Oni9vWvZmERMXyIzwPPy0HG/qr2C54l0jBgRB81KrO8hNtNT6s9DGu2NDonPKjUsfmfyhYDN0lntXdy5skLPUHqUSfxgrlVlskTZrEJdCHyE9FkDzxr8zu+54NLCQYMorGyqbkcygAlYRgzZY7yduBrKEh3xhI5CQAqm28IFroiHHB372Vth1LndwESfcQDlw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=/9bJZBhDGoVQYhe4Qb7KJMhyc6DKqVDiQnXQ1+l6dVs=;
- b=eh5OxC3SQnrYQRyI4dn/LPLU9MqC76wTddpvQayMU+BpsgpotI1UTaIaRbrugZk14hg9rPlMQJUQpkppOxnOusFAUsEQK1jpx+cOp//8l4UGRA5ebg4r6hgUiPaNb4WDzjIox9gWNvEe0/Hw8cHBRKQVlf9vnZiWrmw9rG/Si60/yLGHuwizZfvafRj1AS2agS8nNPFYZTD8SvTfwzqlRUkRy806HTyXKMtzW9kH5U1ChcugKghwnn6Gv4pefvRR7XOXdoulpOgBhKqGm2WjXnaEUI4dUxFyemrkyW6bbn9n4Ki3jrB5+0pu+1ypsOCD/Ykb+vIDtqdbrzRyfI+V3w==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=vmware.com; dmarc=pass action=none header.from=vmware.com;
- dkim=pass header.d=vmware.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=vmware.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=/9bJZBhDGoVQYhe4Qb7KJMhyc6DKqVDiQnXQ1+l6dVs=;
- b=nRgEJu4ckOm1afrdl0mT1X/7nI/nXVoWq/LxdXxbl9M7lLjIoz50yUnnt3rtteMLz/asvB0cy8cWtodAFjced90ia1YTzuj5V3KMm8O0fp05AyA2BsoHMXVZp3wvPkBEEFDj84N9tmTjfRVcjmxPR3ZOSgQoPihinDUfVRFo/Nk=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=vmware.com;
-Received: from PH0PR05MB8703.namprd05.prod.outlook.com (2603:10b6:510:bd::5)
- by MW4PR05MB9322.namprd05.prod.outlook.com (2603:10b6:303:1ec::19) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6002.25; Sun, 22 Jan
- 2023 17:07:38 +0000
-Received: from PH0PR05MB8703.namprd05.prod.outlook.com
- ([fe80::e710:a9a8:3bc8:d0b0]) by PH0PR05MB8703.namprd05.prod.outlook.com
- ([fe80::e710:a9a8:3bc8:d0b0%3]) with mapi id 15.20.6002.031; Sun, 22 Jan 2023
- 17:07:38 +0000
-From:   Ajay Kaher <akaher@vmware.com>
-To:     rostedt@goodmis.org, mhiramat@kernel.org
-Cc:     linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
-        chinglinyu@google.com, namit@vmware.com, srivatsab@vmware.com,
-        srivatsa@csail.mit.edu, amakhalov@vmware.com,
-        vsirnapalli@vmware.com, tkundu@vmware.com, er.ajay.kaher@gmail.com,
-        Ajay Kaher <akaher@vmware.com>
-Subject: [PATCH 0/8] tracing: introducing eventfs
-Date:   Sun, 22 Jan 2023 22:37:08 +0530
-Message-Id: <1674407228-49109-9-git-send-email-akaher@vmware.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1674407228-49109-1-git-send-email-akaher@vmware.com>
-References: <1674407228-49109-1-git-send-email-akaher@vmware.com>
-Content-Type: text/plain
-X-ClientProxiedBy: SJ0PR05CA0074.namprd05.prod.outlook.com
- (2603:10b6:a03:332::19) To PH0PR05MB8703.namprd05.prod.outlook.com
- (2603:10b6:510:bd::5)
+        Sun, 22 Jan 2023 13:45:42 -0500
+Received: from mga04.intel.com (mga04.intel.com [192.55.52.120])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3C6051E9DE;
+        Sun, 22 Jan 2023 10:45:41 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1674413141; x=1705949141;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=ZsdBIVJSpwqo9ISApdqTQZhbBMJUyzNjQdS1k1m53l4=;
+  b=doVTVtbmrYDdrtOIBqj9yofCWx77Z204YBfqXhCKcyUf4QRJzEqicQdd
+   06HlKt68lVjuIamwN2w5qVFoFbnQPeGcEzRAHKw33qCof1HtfrgHwt3HH
+   h5IrYj2Fr4gI5olDxinaKOj/QfI+bpIZqY3rXVNo2EavSnvSSO3H0rUKN
+   CN+2Xk7r8cqLN9dmW+nKcBhW8ebULcXGRRmpwuKZdOfDaEXncUemQOsOb
+   ObATmo/tniqFu2m1ZHghkqupkdt7PpQVlPUEeQVLA3UuBXm2jytyeJz6m
+   pOCE+u9ND2NWwevp4gtAe1wAu36xMMLR4GZtOAWrD9pgvHDszB10a+8b8
+   A==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10598"; a="324611372"
+X-IronPort-AV: E=Sophos;i="5.97,237,1669104000"; 
+   d="scan'208";a="324611372"
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Jan 2023 10:45:40 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6500,9779,10598"; a="724800909"
+X-IronPort-AV: E=Sophos;i="5.97,237,1669104000"; 
+   d="scan'208";a="724800909"
+Received: from lkp-server01.sh.intel.com (HELO 5646d64e7320) ([10.239.97.150])
+  by fmsmga008.fm.intel.com with ESMTP; 22 Jan 2023 10:45:37 -0800
+Received: from kbuild by 5646d64e7320 with local (Exim 4.96)
+        (envelope-from <lkp@intel.com>)
+        id 1pJfLT-0005BY-31;
+        Sun, 22 Jan 2023 18:45:35 +0000
+Date:   Mon, 23 Jan 2023 02:45:08 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     Ajay Kaher <akaher@vmware.com>, rostedt@goodmis.org,
+        mhiramat@kernel.org
+Cc:     oe-kbuild-all@lists.linux.dev, linux-kernel@vger.kernel.org,
+        linux-trace-kernel@vger.kernel.org, chinglinyu@google.com,
+        namit@vmware.com, srivatsab@vmware.com, srivatsa@csail.mit.edu,
+        amakhalov@vmware.com, vsirnapalli@vmware.com, tkundu@vmware.com,
+        er.ajay.kaher@gmail.com, Ajay Kaher <akaher@vmware.com>
+Subject: Re: [PATCH 5/8] eventfs: adding functions to create eventfs files
+ and directories
+Message-ID: <202301230242.aRNYHDz2-lkp@intel.com>
+References: <1674407228-49109-5-git-send-email-akaher@vmware.com>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PH0PR05MB8703:EE_|MW4PR05MB9322:EE_
-X-MS-Office365-Filtering-Correlation-Id: cfbf9280-4028-4ec6-ff3a-08dafc9b29fc
-X-LD-Processed: b39138ca-3cee-4b4a-a4d6-cd83d9dd62f0,ExtAddr
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: sfZnylaZqGyjw1W6AJ9kYQkA5VdpTbgCEUtMnT4R+bNAZXW6q346T88m/HShYEmj/VjGFEigWBk1wyVQhK2912dkk9g04Hjjq2A8ETWtAx/H9M8CoUQcH+4ohJM8XtjPpetrAycx6UggFQt2fuZ18p0d+GodnopwM1IozUO2pRWw/66+Z71MGpQLWdq7T2V2OSbQ9p4NgN7ehQmF2ugGf0XPpAjtUEpRvQ31pyP3vhagJktpEVI0GcIF8Umk2Pd17LHvQCyVEhG63yWz5uB5TYBXIIPDRQ89CU3HZhESaMan5E2cenEn0XYiCMqpV4nbmV5eXpUAMl00FQ0+jOG/5H3DtmRARBCUQ8J+Q4HEfq1XfqUUqwwH5qyWdlT8Z+pggM+zsvpWThLufsDuwQzVA1lDaHCko9wm2jKTPzau3YpQKYAa8623JFLLBVm9+o4gU/rOxZOmgc4vRubChXkC2LfzXfo7kVacJQMt/eVsH/YSQYRlBzX07Ys6AvpY8mEwLguEPEXpSyCnQcntyQ+TjTd9R8Co0QX4gc1oNeooGvl8W4Xs6IKvJB0SxRhJ5dPpmifu+PFmTUu5AoTIenoKjlwTci/QVtTq7n3/Uo0fqQ0lOXnEDRnvrzkFfyi57uKxdNGNAAbFCj3TOVGs8cJSuXRgV9M7K5P6Rf/NLCLbJb2F8+R+3a385xR40VJT+8232Nh5QtPd7cvNUmVkPVvgqA==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH0PR05MB8703.namprd05.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230022)(4636009)(396003)(376002)(136003)(346002)(39860400002)(366004)(451199015)(36756003)(8676002)(478600001)(2616005)(4326008)(66556008)(66476007)(6512007)(41300700001)(186003)(66946007)(26005)(2906002)(86362001)(83380400001)(6506007)(107886003)(316002)(6666004)(52116002)(6486002)(5660300002)(8936002)(38350700002)(38100700002);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?EPSZWXta1m4xBz3pM21XqxM0nGIIrBUqJd3TSFt0G9PcW70CoNV4ogBOcyTx?=
- =?us-ascii?Q?UhYfttg1wSlCyPzL/EJFWV5hcpOmH+5dTFGX5B8fWuA8qydohL7GjIEw8AML?=
- =?us-ascii?Q?FBCaon7UIdsrg78F+WzHOAqbO0iQGLsgc8OfO8eSyoL11bdlPdUKJ74frYcz?=
- =?us-ascii?Q?3/Um+sleWudcGPBU0vDpgnDBjtsfat6hfogDxGTgGEVoX92J4D7iF+GNw+2r?=
- =?us-ascii?Q?Rl4Tl/Ify9TalgRaWSiM/70jb8QqYPbBi/6X2O1cIJugeM/tuWYIFJvKJs8j?=
- =?us-ascii?Q?jqGYsgfdF+Lwbm/zwkc/l/3l9z+L9FnMsd+PyjB/tn9/DcJwlXm+GKR035bi?=
- =?us-ascii?Q?YVfob5ceSIIja48/SzLXrbdqD/88oBeDONDcXKozuIUIroRiTZ82Vk4H0uIp?=
- =?us-ascii?Q?wu+DO1F1EZl25wI6BOmmdGHJp+RT9lviyIXUdnoFBkv5pfnQjHuttaCdQgLT?=
- =?us-ascii?Q?mgg0CRiMvsjcPLnZ2OLsYgruPVUy9R/PtEbksslAV8AbRwxBn1lj1HWs58Uj?=
- =?us-ascii?Q?4UD8pnCFL7v/xZpzZbKmjk9zNPZjmhBmr+Bzjnf54Yxis5CWR7uD8I7R+jdZ?=
- =?us-ascii?Q?dC1bVts4847IR1AnKLKKjNTXMRzcIFSAkdC+2CDbhae9dnxI8UsZxkDon1MK?=
- =?us-ascii?Q?G2QGuxIF5F+52DfnzSkJtvIh6oh+ZxVXcA4oFdexswO2ofOBthThJMczyvi1?=
- =?us-ascii?Q?xx0IZx7A+VbyJtEuTIjzo9ssIV8xa2WEq8p8gKNdVQoLCB5WnuD1fb6CKBXU?=
- =?us-ascii?Q?XpR5/dHVNmYJLGeQwdtAxvETwRi1DLHHmDIsbkg0vlZrZ0N6rV1fEh+vYU4A?=
- =?us-ascii?Q?ssXiHVC/XZ56ov2XrvGhjAeLAGfd0BozWvqsNtQpRh0SzioPvC1V1VBK4NVL?=
- =?us-ascii?Q?K989dugp01iVd4W35YJpUfo2RF0WBpPi5PxuDYM5ubOxOuZvM96AG3KvIUG1?=
- =?us-ascii?Q?ik6yU40J54mFKAE3waBnpDr7pB7rh5xabkyrXw623cs1Cc8fX6CMf1rc+OGc?=
- =?us-ascii?Q?QWqnUJZwjzGnHjhj6CqecTOXq82dPpmpKhepJwI+RHXL4srmgWBAPkBOyybm?=
- =?us-ascii?Q?4HscEv/lHS30g+hI5OcG0iJBtplLcSO64NKfNDd+WL3IMLAuh3MxrHNQRUDc?=
- =?us-ascii?Q?YJtXuw0D+vm9ajBvj8jJfUsaR5OxKx56di2JAsIfe9hWCcbrtou6L9X+x1jk?=
- =?us-ascii?Q?EekrlgMQFGYpRZl3AkcUBIqQunoGbLu/RyCzNxuimdisEpKL6lBNFryOOgHp?=
- =?us-ascii?Q?afGmQtOPkLYsGj/DFkCD7Hv1+4kK2hOTBNU3s/mY455hqqTH/yf90WySmil1?=
- =?us-ascii?Q?TAKR9lVC7sfKyhEPPDVaDgYKKS6ap2CVjJtqzhc6cy0LInAiUo6ZjJmI0I55?=
- =?us-ascii?Q?7kKoq9s4ZOdgN4G6crUr8OUgE3M3qO6fOwcpWqJ4F812bfaKVL+TDPP7MF4w?=
- =?us-ascii?Q?ezh/HYscMrG2TsdbkO6sGZvWAw629cAH8j/Eq2d3CbKjkcAAV/2Iy+Wn8eOf?=
- =?us-ascii?Q?PUzHXm/RY/eQWZZZsUYAaDuvSNx5lcamKD3JOVTBYfNeVpUZR8a3DaWXD+rx?=
- =?us-ascii?Q?8DkU8l1035yS+ZV4yLFh+uS6MrJR+C3ayyqpBq6Y?=
-X-OriginatorOrg: vmware.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: cfbf9280-4028-4ec6-ff3a-08dafc9b29fc
-X-MS-Exchange-CrossTenant-AuthSource: PH0PR05MB8703.namprd05.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 22 Jan 2023 17:07:38.2465
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: b39138ca-3cee-4b4a-a4d6-cd83d9dd62f0
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: NpHmqAKaVt6/bS9A/pSXHYfEnddHhLqKIaOH5Vhwm/1LNmy20zNx2bpkj0GbUS9TfyPqoxyMhfKf4+PO1/OorQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW4PR05MB9322
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1674407228-49109-5-git-send-email-akaher@vmware.com>
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-Events Tracing infrastructure contains lot of files, directories
-(internally in terms of inodes, dentries). And ends up by consuming
-memory in MBs. We can have multiple events of Events Tracing, which
-further requires more memory.
+Hi Ajay,
 
-Instead of creating inodes/dentries, eventfs could keep meta-data and
-skip the creation of inodes/dentries. As and when require, eventfs will
-create the inodes/dentries only for required files/directories.
-Also eventfs would delete the inodes/dentries once no more requires
-but preserve the meta data.
+Thank you for the patch! Perhaps something to improve:
 
-Tracing events took ~9MB, with this approach it took ~4.5MB
-for ~10K files/dir.
+[auto build test WARNING on linus/master]
+[also build test WARNING on v6.2-rc5 next-20230120]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
-[PATCH 1/8]: Introducing struct tracefs_inode
-[PATCH 2/8]: Adding eventfs-dir-add functions
-[PATCH 3/8]: Adding eventfs-file-add function
-[PATCH 4/8]: Adding eventfs-file-directory-remove function
-[PATCH 5/8]: Adding functions to create-eventfs-files
-[PATCH 6/8]: Adding eventfs lookup, read, open functions
-[PATCH 7/8]: Creating tracefs_inode_cache
-[PATCH 8/8]: Moving tracing events to eventfs
+url:    https://github.com/intel-lab-lkp/linux/commits/Ajay-Kaher/eventfs-adding-eventfs-dir-add-functions/20230123-010956
+patch link:    https://lore.kernel.org/r/1674407228-49109-5-git-send-email-akaher%40vmware.com
+patch subject: [PATCH 5/8] eventfs: adding functions to create eventfs files and directories
+config: arc-defconfig (https://download.01.org/0day-ci/archive/20230123/202301230242.aRNYHDz2-lkp@intel.com/config)
+compiler: arc-elf-gcc (GCC) 12.1.0
+reproduce (this is a W=1 build):
+        wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
+        chmod +x ~/bin/make.cross
+        # https://github.com/intel-lab-lkp/linux/commit/950ac8561471b622eac5555b4a7502bcd8c20663
+        git remote add linux-review https://github.com/intel-lab-lkp/linux
+        git fetch --no-tags linux-review Ajay-Kaher/eventfs-adding-eventfs-dir-add-functions/20230123-010956
+        git checkout 950ac8561471b622eac5555b4a7502bcd8c20663
+        # save the config file
+        mkdir build_dir && cp config build_dir/.config
+        COMPILER_INSTALL_PATH=$HOME/0day COMPILER=gcc-12.1.0 make.cross W=1 O=build_dir ARCH=arc olddefconfig
+        COMPILER_INSTALL_PATH=$HOME/0day COMPILER=gcc-12.1.0 make.cross W=1 O=build_dir ARCH=arc SHELL=/bin/bash fs/tracefs/ kernel/trace/
 
+If you fix the issue, kindly add following tag where applicable
+| Reported-by: kernel test robot <lkp@intel.com>
+
+All warnings (new ones prefixed by >>):
+
+>> fs/tracefs/event_inode.c:48:16: warning: no previous prototype for 'eventfs_create_file' [-Wmissing-prototypes]
+      48 | struct dentry *eventfs_create_file(const char *name, umode_t mode,
+         |                ^~~~~~~~~~~~~~~~~~~
+>> fs/tracefs/event_inode.c:117:16: warning: no previous prototype for 'eventfs_create_dir' [-Wmissing-prototypes]
+     117 | struct dentry *eventfs_create_dir(const char *name, umode_t mode,
+         |                ^~~~~~~~~~~~~~~~~~
+
+
+vim +/eventfs_create_file +48 fs/tracefs/event_inode.c
+
+    23	
+    24	/**
+    25	 * eventfs_create_file - create a file in the tracefs filesystem
+    26	 * @name: a pointer to a string containing the name of the file to create.
+    27	 * @mode: the permission that the file should have.
+    28	 * @parent: a pointer to the parent dentry for this file.  This should be a
+    29	 *          directory dentry if set.  If this parameter is NULL, then the
+    30	 *          file will be created in the root of the tracefs filesystem.
+    31	 * @data: a pointer to something that the caller will want to get to later
+    32	 *        on.  The inode.i_private pointer will point to this value on
+    33	 *        the open() call.
+    34	 * @fops: a pointer to a struct file_operations that should be used for
+    35	 *        this file.
+    36	 *
+    37	 * This is the basic "create a file" function for tracefs.  It allows for a
+    38	 * wide range of flexibility in creating a file.
+    39	 *
+    40	 * This function will return a pointer to a dentry if it succeeds.  This
+    41	 * pointer must be passed to the tracefs_remove() function when the file is
+    42	 * to be removed (no automatic cleanup happens if your module is unloaded,
+    43	 * you are responsible here.)  If an error occurs, %NULL will be returned.
+    44	 *
+    45	 * If tracefs is not enabled in the kernel, the value -%ENODEV will be
+    46	 * returned.
+    47	 */
+  > 48	struct dentry *eventfs_create_file(const char *name, umode_t mode,
+    49					   struct dentry *parent, void *data,
+    50					   const struct file_operations *fop,
+    51					   bool anon)
+    52	{
+    53		struct tracefs_inode *ti;
+    54		struct dentry *dentry;
+    55		struct inode *inode;
+    56	
+    57		if (security_locked_down(LOCKDOWN_TRACEFS))
+    58			return NULL;
+    59	
+    60		if (!(mode & S_IFMT))
+    61			mode |= S_IFREG;
+    62	
+    63		if (WARN_ON_ONCE(!S_ISREG(mode)))
+    64			return NULL;
+    65	
+    66		dentry = eventfs_start_creating(name, parent);
+    67	
+    68		if (IS_ERR(dentry))
+    69			return dentry;
+    70	
+    71		inode = tracefs_get_inode(dentry->d_sb);
+    72		if (unlikely(!inode))
+    73			return eventfs_failed_creating(dentry);
+    74	
+    75		inode->i_mode = mode;
+    76		inode->i_fop = fop;
+    77		inode->i_private = data;
+    78	
+    79		ti = get_tracefs(inode);
+    80		ti->flags |= TRACEFS_EVENT_INODE;
+    81	
+    82		if (anon)
+    83			d_instantiate_anon(dentry, inode);
+    84		else
+    85			d_instantiate(dentry, inode);
+    86	
+    87		fsnotify_create(dentry->d_parent->d_inode, dentry);
+    88		return eventfs_end_creating(dentry);
+    89	}
+    90	
+    91	/**
+    92	 * eventfs_create_dir - create a dir in the tracefs filesystem
+    93	 * @name: a pointer to a string containing the name of the file to create.
+    94	 * @mode: the permission that the file should have.
+    95	 * @parent: a pointer to the parent dentry for this file.  This should be a
+    96	 *          directory dentry if set.  If this parameter is NULL, then the
+    97	 *          file will be created in the root of the tracefs filesystem.
+    98	 * @data: a pointer to something that the caller will want to get to later
+    99	 *        on.  The inode.i_private pointer will point to this value on
+   100	 *        the open() call.
+   101	 * @fop: a pointer to a struct file_operations that should be used for
+   102	 *        this dir.
+   103	 * @iop: a pointer to a struct inode_operations that should be used for
+   104	 *        this dir.
+   105	 *
+   106	 * This is the basic "create a dir" function for eventfs.  It allows for a
+   107	 * wide range of flexibility in creating a dir.
+   108	 *
+   109	 * This function will return a pointer to a dentry if it succeeds.  This
+   110	 * pointer must be passed to the tracefs_remove() function when the file is
+   111	 * to be removed (no automatic cleanup happens if your module is unloaded,
+   112	 * you are responsible here.)  If an error occurs, %NULL will be returned.
+   113	 *
+   114	 * If tracefs is not enabled in the kernel, the value -%ENODEV will be
+   115	 * returned.
+   116	 */
+ > 117	struct dentry *eventfs_create_dir(const char *name, umode_t mode,
+   118					  struct dentry *parent, void *data,
+   119					  const struct file_operations *fop,
+   120					  const struct inode_operations *iop,
+   121					  bool anon)
+   122	{
+   123		struct tracefs_inode *ti;
+   124		struct dentry *dentry;
+   125		struct inode *inode;
+   126	
+   127		if (security_locked_down(LOCKDOWN_TRACEFS))
+   128			return NULL;
+   129	
+   130		WARN_ON(!S_ISDIR(mode));
+   131	
+   132		dentry = eventfs_start_creating(name, parent);
+   133	
+   134		if (IS_ERR(dentry))
+   135			return dentry;
+   136	
+   137		inode = tracefs_get_inode(dentry->d_sb);
+   138		if (unlikely(!inode))
+   139			return eventfs_failed_creating(dentry);
+   140	
+   141		inode->i_mode = mode;
+   142		inode->i_op = iop;
+   143		inode->i_fop = fop;
+   144		inode->i_private = data;
+   145	
+   146		ti = get_tracefs(inode);
+   147		ti->flags |= TRACEFS_EVENT_INODE;
+   148	
+   149		inc_nlink(inode);
+   150		if (anon)
+   151			d_instantiate_anon(dentry, inode);
+   152		else
+   153			d_instantiate(dentry, inode);
+   154		inc_nlink(dentry->d_parent->d_inode);
+   155		fsnotify_mkdir(dentry->d_parent->d_inode, dentry);
+   156		return eventfs_end_creating(dentry);
+   157	}
+   158	
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests
