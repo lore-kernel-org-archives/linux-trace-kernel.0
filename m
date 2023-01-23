@@ -2,138 +2,101 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ECD47C54E94
-	for <linux-trace-kernel@archiver.kernel.org>; Mon, 23 Jan 2023 13:24:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5CEDCC38142
+	for <linux-trace-kernel@archiver.kernel.org>; Mon, 23 Jan 2023 14:15:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231614AbjAWNYL (ORCPT
+        id S231614AbjAWOPV (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Mon, 23 Jan 2023 08:24:11 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48960 "EHLO
+        Mon, 23 Jan 2023 09:15:21 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33566 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230224AbjAWNYK (ORCPT
+        with ESMTP id S231650AbjAWOPU (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Mon, 23 Jan 2023 08:24:10 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CF5C6241C8;
-        Mon, 23 Jan 2023 05:24:09 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 6A6DB60EFF;
-        Mon, 23 Jan 2023 13:24:09 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5AF69C433EF;
-        Mon, 23 Jan 2023 13:24:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1674480248;
-        bh=ArZD+vzGLsVKJI7cX9BEAFuLvKvwj6sORjWsvS6pqDY=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=fBqyZ45W9RDORnHHWkcJApD07rBcF6Te6kro7wkwFYiJ6mJb2WXxF4a5i18695iQ0
-         s+kkDouQvzHK2jqsjI+hhmRroRIzc2dupO364dDPduQki+DIFqDnbGcjRBv5i7pVrJ
-         d+mZfLlj/UJROXrRP1AOEH+W8HrLp8LZfuwOq27kM+LYBB1sWkWUnp3v83hkaJgPju
-         Kh1igjcEJsvJLjeQPfA+pKRhHEzFCDuM6b5XCMNb2RS/B3LmYWsO7YUZwA0BU+8aDy
-         Nd+dIM87/TBbEHwehBi4LTPD4dYAuCDXOjh0K/u/OreAnWsJVRJTyvOv+eLMPjmF/1
-         CdLLUk6EHw38Q==
-From:   "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
-To:     linux-trace-kernel@vger.kernel.org
-Cc:     Pengfei Xu <pengfei.xu@intel.com>, mhiramat@kernel.org,
-        linux-kernel@vger.kernel.org, peterz@infradead.org,
-        heng.su@intel.com, "Naveen N . Rao" <naveen.n.rao@linux.ibm.com>,
-        Steven Rostedt <rostedt@goodmis.org>
-Subject: [PATCH] kprobes: Fix to handle forcibly unoptimized kprobes on freeing_list
-Date:   Mon, 23 Jan 2023 22:24:05 +0900
-Message-Id: <167448024501.3253718.13037333683110512967.stgit@devnote3>
-X-Mailer: git-send-email 2.39.0.246.g2a6d74b583-goog
-In-Reply-To: <Y8URdIfVr3pq2X8w@xpf.sh.intel.com>
-References: <Y8URdIfVr3pq2X8w@xpf.sh.intel.com>
-User-Agent: StGit/0.19
+        Mon, 23 Jan 2023 09:15:20 -0500
+Received: from mga12.intel.com (mga12.intel.com [192.55.52.136])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 368B52102;
+        Mon, 23 Jan 2023 06:15:19 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1674483319; x=1706019319;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=IqakT/2J0dDhvy2SNVfHSHZL1lUMq/nSz9xNQeZG9Pk=;
+  b=Jy7LDTxzwCEU2ZXcf2xP/D0w/9IjXknnPTXroGback4/kSUhbIezDutZ
+   2B1CjqCabB2kTizksM3MVU7CcHoTxYS0p4TgypquuWL8TMqqMKZ2QEqTL
+   PvqmlSlkSVPGZ+pGJciiZtLpBjzJ0ywu++AuUSQk9t+8gjbGxNf/OibaA
+   FW1sALw8GHs+4nloq42Dll0cqku7Q2eJmoq8bE1mb5fXEGKPEfZusZhpH
+   hvJInNmLm8MydE9/7BkPvKrG8SVV6G+U6cDmaqseLyD9MV6mnxP3JTodk
+   B8V0AVU8TdLrVcTL2ECtsWSSU4pZSav3S9NfcO291DH/nUt3VE0aq4DHu
+   g==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10598"; a="305706207"
+X-IronPort-AV: E=Sophos;i="5.97,239,1669104000"; 
+   d="scan'208";a="305706207"
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jan 2023 06:15:18 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6500,9779,10598"; a="692167646"
+X-IronPort-AV: E=Sophos;i="5.97,239,1669104000"; 
+   d="scan'208";a="692167646"
+Received: from lkp-server01.sh.intel.com (HELO 5646d64e7320) ([10.239.97.150])
+  by orsmga008.jf.intel.com with ESMTP; 23 Jan 2023 06:15:15 -0800
+Received: from kbuild by 5646d64e7320 with local (Exim 4.96)
+        (envelope-from <lkp@intel.com>)
+        id 1pJxbJ-0005gZ-0q;
+        Mon, 23 Jan 2023 14:15:09 +0000
+Date:   Mon, 23 Jan 2023 22:14:28 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     Ajay Kaher <akaher@vmware.com>, rostedt@goodmis.org,
+        mhiramat@kernel.org
+Cc:     oe-kbuild-all@lists.linux.dev, linux-kernel@vger.kernel.org,
+        linux-trace-kernel@vger.kernel.org, chinglinyu@google.com,
+        namit@vmware.com, srivatsab@vmware.com, srivatsa@csail.mit.edu,
+        amakhalov@vmware.com, vsirnapalli@vmware.com, tkundu@vmware.com,
+        er.ajay.kaher@gmail.com, Ajay Kaher <akaher@vmware.com>
+Subject: Re: [PATCH 8/8] eventfs: moving tracing/events to eventfs
+Message-ID: <202301232157.pdReWpfg-lkp@intel.com>
+References: <1674407228-49109-8-git-send-email-akaher@vmware.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1674407228-49109-8-git-send-email-akaher@vmware.com>
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+Hi Ajay,
 
-Sinec forcibly unoptimized kprobes will be put on the freeing_list directly
-in the unoptimize_kprobe(), do_unoptimize_kprobes() must continue to check
-the freeing_list even if unoptimizing_list is empty.
+Thank you for the patch! Perhaps something to improve:
 
-This bug can be happen if a kprobe is put in an instruction which is in the
-middle of the jump-replaced instruction sequence of an optprobe, *and* the
-optprobe is recently unregistered and queued on unoptimizing_list.
-In this case, the optprobe will be unoptimized forcibly (means immediately)
-and put it into the freeing_list, expecting the optprobe will be handled in
-do_unoptimize_kprobe().
-But if there is no other optprobes on the unoptimizing_list, current code
-returns from the do_unoptimize_kprobe() soon and do not handle the optprobe
-which is on the freeing_list, and it will hit the WARN_ON_ONCE() in the
-do_free_cleaned_kprobes(), because it is not handled in the latter loop of
-the do_unoptimize_kprobe().
+[auto build test WARNING on linus/master]
+[also build test WARNING on v6.2-rc5 next-20230123]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
-To solve this issue, do not return from do_unoptimize_kprobes() immediately
-even if unoptimizing_list is empty.
+url:    https://github.com/intel-lab-lkp/linux/commits/Ajay-Kaher/eventfs-adding-eventfs-dir-add-functions/20230123-010956
+patch link:    https://lore.kernel.org/r/1674407228-49109-8-git-send-email-akaher%40vmware.com
+patch subject: [PATCH 8/8] eventfs: moving tracing/events to eventfs
+config: x86_64-randconfig-s022 (https://download.01.org/0day-ci/archive/20230123/202301232157.pdReWpfg-lkp@intel.com/config)
+compiler: gcc-11 (Debian 11.3.0-8) 11.3.0
+reproduce:
+        # apt-get install sparse
+        # sparse version: v0.6.4-39-gce1a6720-dirty
+        # https://github.com/intel-lab-lkp/linux/commit/be995c36ba2232edcd4fa64e4581b9a6763c75e6
+        git remote add linux-review https://github.com/intel-lab-lkp/linux
+        git fetch --no-tags linux-review Ajay-Kaher/eventfs-adding-eventfs-dir-add-functions/20230123-010956
+        git checkout be995c36ba2232edcd4fa64e4581b9a6763c75e6
+        # save the config file
+        mkdir build_dir && cp config build_dir/.config
+        make W=1 C=1 CF='-fdiagnostic-prefix -D__CHECK_ENDIAN__' O=build_dir ARCH=x86_64 olddefconfig
+        make W=1 C=1 CF='-fdiagnostic-prefix -D__CHECK_ENDIAN__' O=build_dir ARCH=x86_64 SHELL=/bin/bash fs/tracefs/
 
-Moreover, this change affects another case. kill_optimized_kprobes() expects
-kprobe_optimizer() will just free the optprobe on freeing_list.
-So I changed it to just do list_move() to freeing_list if optprobes are on
-unoptimizing list. And the do_unoptimize_kprobe() will skip
-arch_disarm_kprobe() if the probe on freeing_list has gone flag.
+If you fix the issue, kindly add following tag where applicable
+| Reported-by: kernel test robot <lkp@intel.com>
 
-Link: https://lore.kernel.org/all/Y8URdIfVr3pq2X8w@xpf.sh.intel.com/
+sparse warnings: (new ones prefixed by >>)
+>> fs/tracefs/inode.c:390:32: sparse: sparse: symbol 'tracefs_dentry_operations' was not declared. Should it be static?
 
-Fixes: e4add247789e ("kprobes: Fix optimize_kprobe()/unoptimize_kprobe() cancellation logic")
-Reported-by: Pengfei Xu <pengfei.xu@intel.com>
-Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
----
- kernel/kprobes.c |   23 ++++++++++-------------
- 1 file changed, 10 insertions(+), 13 deletions(-)
-
-diff --git a/kernel/kprobes.c b/kernel/kprobes.c
-index 1c18ecf9f98b..73b150fad936 100644
---- a/kernel/kprobes.c
-+++ b/kernel/kprobes.c
-@@ -555,17 +555,15 @@ static void do_unoptimize_kprobes(void)
- 	/* See comment in do_optimize_kprobes() */
- 	lockdep_assert_cpus_held();
- 
--	/* Unoptimization must be done anytime */
--	if (list_empty(&unoptimizing_list))
--		return;
-+	if (!list_empty(&unoptimizing_list))
-+		arch_unoptimize_kprobes(&unoptimizing_list, &freeing_list);
- 
--	arch_unoptimize_kprobes(&unoptimizing_list, &freeing_list);
--	/* Loop on 'freeing_list' for disarming */
-+	/* Loop on 'freeing_list' for disarming and removing from kprobe hash list */
- 	list_for_each_entry_safe(op, tmp, &freeing_list, list) {
- 		/* Switching from detour code to origin */
- 		op->kp.flags &= ~KPROBE_FLAG_OPTIMIZED;
--		/* Disarm probes if marked disabled */
--		if (kprobe_disabled(&op->kp))
-+		/* Disarm probes if marked disabled and not gone */
-+		if (kprobe_disabled(&op->kp) && !kprobe_gone(&op->kp))
- 			arch_disarm_kprobe(&op->kp);
- 		if (kprobe_unused(&op->kp)) {
- 			/*
-@@ -797,14 +795,13 @@ static void kill_optimized_kprobe(struct kprobe *p)
- 	op->kp.flags &= ~KPROBE_FLAG_OPTIMIZED;
- 
- 	if (kprobe_unused(p)) {
--		/* Enqueue if it is unused */
--		list_add(&op->list, &freeing_list);
- 		/*
--		 * Remove unused probes from the hash list. After waiting
--		 * for synchronization, this probe is reclaimed.
--		 * (reclaiming is done by do_free_cleaned_kprobes().)
-+		 * Unused kprobe is on unoptimizing or freeing list. We move it
-+		 * to freeing_list and let the kprobe_optimizer() removes it from
-+		 * the kprobe hash list and frees it.
- 		 */
--		hlist_del_rcu(&op->kp.hlist);
-+		if (optprobe_queued_unopt(op))
-+			list_move(&op->list, &freeing_list);
- 	}
- 
- 	/* Don't touch the code, because it is already freed. */
-
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests
