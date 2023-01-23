@@ -2,30 +2,30 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FDC8C25B50
-	for <linux-trace-kernel@archiver.kernel.org>; Mon, 23 Jan 2023 18:01:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E932C25B50
+	for <linux-trace-kernel@archiver.kernel.org>; Mon, 23 Jan 2023 18:02:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233265AbjAWSB2 (ORCPT
+        id S233380AbjAWSCK (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Mon, 23 Jan 2023 13:01:28 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39902 "EHLO
+        Mon, 23 Jan 2023 13:02:10 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40412 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233266AbjAWSB1 (ORCPT
+        with ESMTP id S233329AbjAWSCH (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Mon, 23 Jan 2023 13:01:27 -0500
+        Mon, 23 Jan 2023 13:02:07 -0500
 Received: from 66-220-144-178.mail-mxout.facebook.com (66-220-144-178.mail-mxout.facebook.com [66.220.144.178])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 68DE923DA5
-        for <linux-trace-kernel@vger.kernel.org>; Mon, 23 Jan 2023 10:01:26 -0800 (PST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B764E303EB
+        for <linux-trace-kernel@vger.kernel.org>; Mon, 23 Jan 2023 10:02:05 -0800 (PST)
 Received: by dev0134.prn3.facebook.com (Postfix, from userid 425415)
-        id 41C5F5616BD3; Mon, 23 Jan 2023 09:37:56 -0800 (PST)
+        id 6F5EE5616BE9; Mon, 23 Jan 2023 09:37:56 -0800 (PST)
 From:   Stefan Roesch <shr@devkernel.io>
 To:     linux-mm@kvack.org
 Cc:     shr@devkernel.io, linux-doc@vger.kernel.org,
         linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
         linux-kselftest@vger.kernel.org, linux-trace-kernel@vger.kernel.org
-Subject: [RESEND RFC PATCH v1 01/20] mm: add new flag to enable ksm per process
-Date:   Mon, 23 Jan 2023 09:37:29 -0800
-Message-Id: <20230123173748.1734238-2-shr@devkernel.io>
+Subject: [RESEND RFC PATCH v1 12/20] mm: add ksm_merge_type() function
+Date:   Mon, 23 Jan 2023 09:37:40 -0800
+Message-Id: <20230123173748.1734238-13-shr@devkernel.io>
 X-Mailer: git-send-email 2.30.2
 In-Reply-To: <20230123173748.1734238-1-shr@devkernel.io>
 References: <20230123173748.1734238-1-shr@devkernel.io>
@@ -35,26 +35,51 @@ Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-This introduces the new flag MMF_VM_MERGE_ANY flag. When this flag is
-set, kernel samepage merging (ksm) gets enabled for all vma's of a
-process.
+This adds the ksm_merge_type function. The function returns the merge
+type for the process. For madvise it returns "madvise", for prctl it
+returns "process" and otherwise it returns "none".
 
 Signed-off-by: Stefan Roesch <shr@devkernel.io>
 ---
- include/linux/sched/coredump.h | 1 +
- 1 file changed, 1 insertion(+)
+ include/linux/ksm.h |  1 +
+ mm/ksm.c            | 11 +++++++++++
+ 2 files changed, 12 insertions(+)
 
-diff --git a/include/linux/sched/coredump.h b/include/linux/sched/coredum=
-p.h
-index 8270ad7ae14c..0e0de5b7469f 100644
---- a/include/linux/sched/coredump.h
-+++ b/include/linux/sched/coredump.h
-@@ -86,4 +86,5 @@ static inline int get_dumpable(struct mm_struct *mm)
- #define MMF_INIT_MASK		(MMF_DUMPABLE_MASK | MMF_DUMP_FILTER_MASK |\
- 				 MMF_DISABLE_THP_MASK)
+diff --git a/include/linux/ksm.h b/include/linux/ksm.h
+index a18cd03efcfb..d5f69f18ee5a 100644
+--- a/include/linux/ksm.h
++++ b/include/linux/ksm.h
+@@ -57,6 +57,7 @@ void folio_migrate_ksm(struct folio *newfolio, struct f=
+olio *folio);
 =20
-+#define MMF_VM_MERGE_ANY	29
- #endif /* _LINUX_SCHED_COREDUMP_H */
+ #ifdef CONFIG_PROC_FS
+ long ksm_process_profit(struct mm_struct *);
++const char *ksm_merge_type(struct mm_struct *mm);
+ #endif /* CONFIG_PROC_FS */
+=20
+ #else  /* !CONFIG_KSM */
+diff --git a/mm/ksm.c b/mm/ksm.c
+index 288689b59527..57183deaf529 100644
+--- a/mm/ksm.c
++++ b/mm/ksm.c
+@@ -2941,6 +2941,17 @@ long ksm_process_profit(struct mm_struct *mm)
+ 	return (long)mm->ksm_merging_pages * PAGE_SIZE -
+ 		mm->ksm_rmap_items * sizeof(struct ksm_rmap_item);
+ }
++
++/* Return merge type name as string. */
++const char *ksm_merge_type(struct mm_struct *mm)
++{
++	if (test_bit(MMF_VM_MERGE_ANY, &mm->flags))
++		return "process";
++	else if (test_bit(MMF_VM_MERGEABLE, &mm->flags))
++		return "madvise";
++	else
++		return "none";
++}
+ #endif /* CONFIG_PROC_FS */
+=20
+ #ifdef CONFIG_SYSFS
 --=20
 2.30.2
 
