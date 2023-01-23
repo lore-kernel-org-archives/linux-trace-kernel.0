@@ -2,195 +2,138 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 45D4BC05027
-	for <linux-trace-kernel@archiver.kernel.org>; Mon, 23 Jan 2023 12:57:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ECD47C54E94
+	for <linux-trace-kernel@archiver.kernel.org>; Mon, 23 Jan 2023 13:24:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231918AbjAWM54 (ORCPT
+        id S231614AbjAWNYL (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Mon, 23 Jan 2023 07:57:56 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60868 "EHLO
+        Mon, 23 Jan 2023 08:24:11 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48960 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231917AbjAWM54 (ORCPT
+        with ESMTP id S230224AbjAWNYK (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Mon, 23 Jan 2023 07:57:56 -0500
-Received: from NAM10-MW2-obe.outbound.protection.outlook.com (mail-mw2nam10on2041.outbound.protection.outlook.com [40.107.94.41])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D87526E91;
-        Mon, 23 Jan 2023 04:57:31 -0800 (PST)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=LZ7hmf9aIEDjBTsURem33U/6cCSPc+mwQM7zdXzsry1zl8yHbMHZQVmBqnk/D4LL2rP6yJY+4LyagMn9HrCkzDShh4VdlK9ikMxRjZbUrMKel1ngvqhAk+q3pSbhLFs7STb1+Ka2n8gnyVDlaJxS4QZLtcSeKm4qCTGdtKc4cyp8LBR5hbdZ2sjo/KbOq4u41U7Wn92F8L4rBSRq+Ks3+ejKUQOqTjYW5TBhfiPy9TWENpMaOl6bWi0ZlUJn6R30j1I25jBBMKAX3TmcpO2BClcA+AmEjBKKHghedIonixi7z+IxoQ/wdaXRisJSqOSveJoCmJCq+ReSFVD2u6jYIA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=8oH81ja54IaX+Zu/3u41kSiSAeCse4yAf5fOkQMZdbE=;
- b=f8VajZ5j4pfbNdWX4lQLq/91nBK5HAYnh3vumnMS/AusPZGd/ehNY8pCQg39cxKDkWouLSZ6yjaG5nHR7GweVo7he9vPSIzcs7fpPlk+Q4ifBhXnKwiYYbFExR2mk+u1eEP1hwHPgRiG1SFNyclhq5WwL7P84WpbPSgQJfykvSbXwvNnF28Wua3upaG4jx3ecZUIIZ3nhTVvYr0tR01EG/efkmiEoNGnwztYwLDYQZV6rX/rf54jfl3S+OZzOQCMCOdxQbECFN1m753mlNbw0zi1d2Dc8y5cmQCMmLWc9nKCkReNWTpY2HtyoRnnBOSySPTrQVysrOSGeQOgD05NWA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=8oH81ja54IaX+Zu/3u41kSiSAeCse4yAf5fOkQMZdbE=;
- b=rV/9xDED0pqJqp/kEh+TzpTyGmJgfU16Ck0LzVqdRjMvm8WbtZaevGCx3hHILeTWlD4qYmhV1wLXI1x60xK3+zu7RTGq3QRNd6Zl7GL0A7a26cBni0PIdHwlEs4s8IQEsf5wAhDCxSddLMnfkJbo4EOqtM1BlIV1IYdVgq0kk3rrVifjfodbV4XaAZjFwmVjOa3KV80uce7SZfd9XEWIz7rh0Gm6nISRoPVKs7OE+XtOlamzzBNgyuhQhB/p4BWPYRbWw9yX5Z6ZzmnSXLDo3HlzeLjfgwEEPraUA20PAt9O86eLTebGxIuJfcBinoVho1gMhuj6qng7DJ8aKbTNBg==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nvidia.com;
-Received: from MW3PR12MB4409.namprd12.prod.outlook.com (2603:10b6:303:2d::23)
- by SJ0PR12MB5438.namprd12.prod.outlook.com (2603:10b6:a03:3ba::23) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6002.33; Mon, 23 Jan
- 2023 12:57:30 +0000
-Received: from MW3PR12MB4409.namprd12.prod.outlook.com
- ([fe80::f803:f951:a68f:663a]) by MW3PR12MB4409.namprd12.prod.outlook.com
- ([fe80::f803:f951:a68f:663a%6]) with mapi id 15.20.6002.033; Mon, 23 Jan 2023
- 12:57:30 +0000
-Message-ID: <e37fe712-4e0e-229a-a07e-52a0d486819c@nvidia.com>
-Date:   Mon, 23 Jan 2023 14:57:18 +0200
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.6.1
-Subject: Re: [PATCH rdma-next 00/13] Add RDMA inline crypto support
-To:     Sagi Grimberg <sagi@grimberg.me>,
-        Leon Romanovsky <leon@kernel.org>,
-        Jason Gunthorpe <jgg@nvidia.com>
-Cc:     Bryan Tan <bryantan@vmware.com>, Christoph Hellwig <hch@lst.de>,
-        Eric Dumazet <edumazet@google.com>,
-        Jakub Kicinski <kuba@kernel.org>, Jens Axboe <axboe@fb.com>,
-        Keith Busch <kbusch@kernel.org>, linux-kernel@vger.kernel.org,
-        linux-nvme@lists.infradead.org, linux-rdma@vger.kernel.org,
-        linux-trace-kernel@vger.kernel.org,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Max Gurtovoy <mgurtovoy@nvidia.com>, netdev@vger.kernel.org,
-        Paolo Abeni <pabeni@redhat.com>,
-        Saeed Mahameed <saeedm@nvidia.com>,
-        Selvin Xavier <selvin.xavier@broadcom.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Vishnu Dasa <vdasa@vmware.com>,
-        Yishai Hadas <yishaih@nvidia.com>
-References: <cover.1673873422.git.leon@kernel.org>
- <6f9da88c-f01e-156b-eb19-0b275c46c6b5@grimberg.me>
-Content-Language: en-US
-From:   Israel Rukshin <israelr@nvidia.com>
-In-Reply-To: <6f9da88c-f01e-156b-eb19-0b275c46c6b5@grimberg.me>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: LO4P265CA0194.GBRP265.PROD.OUTLOOK.COM
- (2603:10a6:600:318::9) To MW3PR12MB4409.namprd12.prod.outlook.com
- (2603:10b6:303:2d::23)
+        Mon, 23 Jan 2023 08:24:10 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CF5C6241C8;
+        Mon, 23 Jan 2023 05:24:09 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 6A6DB60EFF;
+        Mon, 23 Jan 2023 13:24:09 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5AF69C433EF;
+        Mon, 23 Jan 2023 13:24:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1674480248;
+        bh=ArZD+vzGLsVKJI7cX9BEAFuLvKvwj6sORjWsvS6pqDY=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=fBqyZ45W9RDORnHHWkcJApD07rBcF6Te6kro7wkwFYiJ6mJb2WXxF4a5i18695iQ0
+         s+kkDouQvzHK2jqsjI+hhmRroRIzc2dupO364dDPduQki+DIFqDnbGcjRBv5i7pVrJ
+         d+mZfLlj/UJROXrRP1AOEH+W8HrLp8LZfuwOq27kM+LYBB1sWkWUnp3v83hkaJgPju
+         Kh1igjcEJsvJLjeQPfA+pKRhHEzFCDuM6b5XCMNb2RS/B3LmYWsO7YUZwA0BU+8aDy
+         Nd+dIM87/TBbEHwehBi4LTPD4dYAuCDXOjh0K/u/OreAnWsJVRJTyvOv+eLMPjmF/1
+         CdLLUk6EHw38Q==
+From:   "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
+To:     linux-trace-kernel@vger.kernel.org
+Cc:     Pengfei Xu <pengfei.xu@intel.com>, mhiramat@kernel.org,
+        linux-kernel@vger.kernel.org, peterz@infradead.org,
+        heng.su@intel.com, "Naveen N . Rao" <naveen.n.rao@linux.ibm.com>,
+        Steven Rostedt <rostedt@goodmis.org>
+Subject: [PATCH] kprobes: Fix to handle forcibly unoptimized kprobes on freeing_list
+Date:   Mon, 23 Jan 2023 22:24:05 +0900
+Message-Id: <167448024501.3253718.13037333683110512967.stgit@devnote3>
+X-Mailer: git-send-email 2.39.0.246.g2a6d74b583-goog
+In-Reply-To: <Y8URdIfVr3pq2X8w@xpf.sh.intel.com>
+References: <Y8URdIfVr3pq2X8w@xpf.sh.intel.com>
+User-Agent: StGit/0.19
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: MW3PR12MB4409:EE_|SJ0PR12MB5438:EE_
-X-MS-Office365-Filtering-Correlation-Id: b6380cc0-602c-4a8b-1dbe-08dafd41629e
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: 3kGmea4HoiMh+ozNWXEnjTOfINt84hZOx8ZmXsaf4cBWmwViOiAs/CcMV/uP5R3bcV4IaFml7vGf7fJzom/u5+y7gBvc14Zcdvxv7r+gN3x/f6nL82hE5kOo36MxIbVfJF7gPSwLFKDmBoWdHksXfuYZ9y7At6HkcUbSyj0uKBObteIwXwx2lr8ITmcEjqJeAAw6PkPtONITiXvbv5ZlYiO2WD3RtFAB1MPAkvwvYxuW+vke8+hNDosdFPgi7iGRFB2DDRVjTmmkzpDb0I79dJ8Kb7bDMe5r+ddkIjbqjXI+VGdBqa5tVMXMbiJJ1B/cPduCCVxiZkJ9XV9YCzygu1JdLQgu3W1n3JX9nJRmhqNSAnVGEyb/QqM6XUKKpqEVhVzXi4k19PYqN7pdnAZcsdgpi0jsvtZF4AHZ7u1F37I3wb6X6YvQ3vy5Kzd38zQQVfrvRweuH6S4sSD2ic+p0ipYQ0AV+NOOJQ5bmf3n37XAHjp3YT71+3qMMVoKtlAEq9JmLw576Ygb3M/StmDt2fe4XZIiIG2HI9gP6HNFlWsALPqGFbPaVKlUhgyCqooGUZENHYTWA1eEso8NFpUBrnYkZPPuP3kbOxBcuYD6cRe0yEDj43ZJfY74UlTsHJN2ik8DrbHpqyKY1hryvcJAxyT+5dBQNkOblSsqAeFH62P8/eTQtYHv7obntakCjEcNVYhkCSBKdhQdpdPe96T/sz5ylqqMTqh5M9CofoQdBCw=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MW3PR12MB4409.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230022)(4636009)(366004)(39860400002)(396003)(346002)(136003)(376002)(451199015)(31686004)(36756003)(86362001)(66556008)(66476007)(8676002)(2906002)(5660300002)(66946007)(4326008)(7416002)(31696002)(8936002)(38100700002)(6666004)(478600001)(107886003)(316002)(54906003)(110136005)(6636002)(6486002)(41300700001)(53546011)(26005)(6512007)(83380400001)(186003)(2616005)(6506007)(43740500002)(45980500001);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?R0VzSjlXN0VsbUtwclF0c1AyZGJnQTJrUFlGN1FoNGZzMGd5SlBFZUpMQTFk?=
- =?utf-8?B?OURvZ1pjTTh0VGJtNnR2bEIrUHlkNGppQjd2VXVTOEMxa0pWRDh5Tm1xNXBa?=
- =?utf-8?B?LzdiaFBScU1ycCtqcW5XZk5TdVZkT2wxT2M0U1cwN0hvQllySC9jbVFVK3JV?=
- =?utf-8?B?T1l0d1RlU0duMWV2ajFjZVBRSzFuRUxtK3p4bExaWFAwOG9DbEpwZllTY3Za?=
- =?utf-8?B?cWxNSDc5THBNdXR4b25Db05KeHB4b0RyWGFXd1JEdzFOVXVUS3pVU01KS0FV?=
- =?utf-8?B?eWQvcVlidEV0Z2JDc1pxWUZxdGxtd052TlBybm5qK08zZHJmYW8weFl2aGxN?=
- =?utf-8?B?aG92aVdnRDJudk9rK0s0RkdBUTQzaVZsZVMyRXlXbXlsODFWdHp0K3lhQjdq?=
- =?utf-8?B?SFUzN1d5dlRYN2NxUStrQ2VZQUFjaXkyaHpER0pGbkc2YmJhODluYVk2d1Vh?=
- =?utf-8?B?bnA2NHN3dlRFYXBWbWhHODVOZExHdHFwRFhCVjdnMDJWMVNTaFo1Ky9ha2k1?=
- =?utf-8?B?QlZCVHI0SXdIQ2t5UWpCUFgrbGVCL0IzR3JUSk9Kd1BzQURReG0rK3Buam9o?=
- =?utf-8?B?RzBMUk96bXJrNWJaVFRLeVFXNm1UQllMeWRjQzhlR1ZIazdDYlFpZU1TTHl6?=
- =?utf-8?B?Lys4cDRFKzRSRFJxR3JuRXhOU1VmRVRRMW1QcUdDME5lYnNJRkRKQUQ3RFRO?=
- =?utf-8?B?TERBcnZwZGR6OTdIb2hZRHVHdDgvY2swMjV0U3htc3BDdHhvUUdhUkh4WXlJ?=
- =?utf-8?B?bXNTUmVxVnErQ1V6emlBa0ZLZzNPYWUyR0toa0lhRThXNEdMaGJmSXlQU0Nr?=
- =?utf-8?B?dExWTVFqVFBCcThoV1d2bVhlWnpEQkRNeW02YTZxa0F1RVBNMlYzd2pQWEZB?=
- =?utf-8?B?eWwwMVpCZFJ0V1NwRWpkOEdORG5tZTRKanVZb2NUM0wrMFpuNmpRUXRFQmI5?=
- =?utf-8?B?YnIwamtIQlVuMHFia1BkdzliZmVjRVNEMkxBZ0tIOHNZZVdSVUk3NzhFdStE?=
- =?utf-8?B?VDFkdUtXYmJSQXRCem9sUWpRSTFCWlVVajdQVEVrZmtYMnhMSTdHZ2s4dHlM?=
- =?utf-8?B?M1I0RU45RmEvZTFnT05naUFBd1E0dTVLNmVoaTJNMFo1cEJNQkxXMmlUNTJz?=
- =?utf-8?B?RjFYQ2w1TUE4VWVFd0M2RnBXYzhYbzZJK3RVaStUQktYSERjdmxZVlA0V2Qr?=
- =?utf-8?B?QUNrNXozVnNjYTlMU3k2NFNaNGMxYm5vOXd2dTBoK01LU0J3QWpoMFVGYWtu?=
- =?utf-8?B?cmJSdmd5YkxVRmVCV2diSk56Q3cxakxnVUdkY01jSmFwL1NNQlptUEQ5dVpU?=
- =?utf-8?B?MWxHbCtVTGZCekZCaEo1TGhVYUpSWGtrTHBQdjNCVmVWWXVKKzlXNGg5eC8z?=
- =?utf-8?B?TkxCdUNzcklaUjlVRW9TVVNXdVp4VCtrWXl4N29vWWx4SjlSNEYxdGhrcXJh?=
- =?utf-8?B?TXVKNFNjb0RIdUpBbXZ6TWd4QXpPZk1zWHRKSVZ5eTMrUTJTczRMQkp3L3Nz?=
- =?utf-8?B?WjBjdUx1d2lGUHFOWnErQ3B6VWFSS20yVjhjRGJLQUhDRXprRnkraS9SY21T?=
- =?utf-8?B?bGhIeng3K0lPbTZXQXRjdDNRSTkvVWFhbzdtWHc5dTJaWDA4cStlOTZHMUdS?=
- =?utf-8?B?VG16NzRxblg0ejYxY25nQzQxZm9HSnlSZzlLbkUzTUU3cW5FYlNtRzhrL3ZV?=
- =?utf-8?B?RGhPclk4MUdGZUZ5c21qaDRvTHJkdnYzc3pHSzlia1hFTlFSTFJ6bDJ0U1pX?=
- =?utf-8?B?dVpEY25zR1V6aTVRcjJmQ0g5dDZCbUt1c3pkK2tCN0htR1ZsdGlhTkNuNlR0?=
- =?utf-8?B?OU9wUzNFZFlCYVNoTHNRYnlqOVBkcS9JTVk1NGF4TW5wU0ZVMEdXbTcwKy9z?=
- =?utf-8?B?eWp5WkhRaWtqQ255RisrcU9RazJjUHU1ZFBWZy9QYmNyaUpXY2luc0VLL3hz?=
- =?utf-8?B?NFA1TmlFeWR2ZU9XNklrZVBENUExdnNuS3dkMVdvdnhhcHZnQSs3UmI1aEps?=
- =?utf-8?B?QXlJblNLbjNVZTI4ZWUxRmhYOVpLMlpZNVVHQk44RHFueE93TkxMK2FTWEZv?=
- =?utf-8?B?dVlQb3llOU9PYlZqVWR4Tld4UTNSTWpTT1VzMFhZUHlyTTNoV2x0RHRCalAr?=
- =?utf-8?Q?p1ZrOtVKx6m2O0KpptCXRmnDu?=
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: b6380cc0-602c-4a8b-1dbe-08dafd41629e
-X-MS-Exchange-CrossTenant-AuthSource: MW3PR12MB4409.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 23 Jan 2023 12:57:30.0108
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: gXI5E2EUx/sl4Q7tXzvGLBcxsyOJZpPcPYYi5ldrRXHlKWn8a0YKfselsVnifixPznHCQiVANqPBrmGcQFZpvg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ0PR12MB5438
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-Hi Sagi,
+From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 
-On 1/23/2023 1:27 PM, Sagi Grimberg wrote:
->
->>  From Israel,
->>
->> The purpose of this patchset is to add support for inline
->> encryption/decryption of the data at storage protocols like nvmf over
->> RDMA (at a similar way like integrity is used via unique mkey).
->>
->> This patchset adds support for plaintext keys. The patches were tested
->> on BF-3 HW with fscrypt tool to test this feature, which showed reduce
->> in CPU utilization when comparing at 64k or more IO size. The CPU 
->> utilization
->> was improved by more than 50% comparing to the SW only solution at 
->> this case.
->>
->> How to configure fscrypt to enable plaintext keys:
->>   # mkfs.ext4 -O encrypt /dev/nvme0n1
->>   # mount /dev/nvme0n1 /mnt/crypto -o inlinecrypt
->>   # head -c 64 /dev/urandom > /tmp/master_key
->>   # fscryptctl add_key /mnt/crypto/ < /tmp/master_key
->>   # mkdir /mnt/crypto/test1
->>   # fscryptctl set_policy 152c41b2ea39fa3d90ea06448456e7fb 
->> /mnt/crypto/test1
->>     ** “152c41b2ea39fa3d90ea06448456e7fb” is the output of the
->>        “fscryptctl add_key” command.
->>   # echo foo > /mnt/crypto/test1/foo
->>
->> Notes:
->>   - At plaintext mode only, the user set a master key and the fscrypt
->>     driver derived from it the DEK and the key identifier.
->>   - 152c41b2ea39fa3d90ea06448456e7fb is the derived key identifier
->>   - Only on the first IO, nvme-rdma gets a callback to load the 
->> derived DEK.
->>
->> There is no special configuration to support crypto at nvme modules.
->
-> Hey, this looks sane to me in a very first glance.
->
-> Few high level questions:
-> - what happens with multipathing? when if not all devices are
-> capable. SW fallback?
-SW fallback happens every time the device doesn't support the specific 
-crypto request (which include data-unit-size, mode and dun_bytes).
-So with multipathing, one path uses the HW crypto offload and the other 
-one uses the SW fallback.
-> - Does the crypt stuff stay intact when bio is requeued?
-Yes, the crypto ctx is copied when cloning the bio.
->
-> I'm assuming you tested this with multipathing? This is not very
-> useful if it is incompatible with it.
-Yes, sure.
-You can see the call to  blk_crypto_reprogram_all_keys(), which is 
-called when the controller was reconnected after port toggling.
+Sinec forcibly unoptimized kprobes will be put on the freeing_list directly
+in the unoptimize_kprobe(), do_unoptimize_kprobes() must continue to check
+the freeing_list even if unoptimizing_list is empty.
 
-- Israel
+This bug can be happen if a kprobe is put in an instruction which is in the
+middle of the jump-replaced instruction sequence of an optprobe, *and* the
+optprobe is recently unregistered and queued on unoptimizing_list.
+In this case, the optprobe will be unoptimized forcibly (means immediately)
+and put it into the freeing_list, expecting the optprobe will be handled in
+do_unoptimize_kprobe().
+But if there is no other optprobes on the unoptimizing_list, current code
+returns from the do_unoptimize_kprobe() soon and do not handle the optprobe
+which is on the freeing_list, and it will hit the WARN_ON_ONCE() in the
+do_free_cleaned_kprobes(), because it is not handled in the latter loop of
+the do_unoptimize_kprobe().
 
+To solve this issue, do not return from do_unoptimize_kprobes() immediately
+even if unoptimizing_list is empty.
+
+Moreover, this change affects another case. kill_optimized_kprobes() expects
+kprobe_optimizer() will just free the optprobe on freeing_list.
+So I changed it to just do list_move() to freeing_list if optprobes are on
+unoptimizing list. And the do_unoptimize_kprobe() will skip
+arch_disarm_kprobe() if the probe on freeing_list has gone flag.
+
+Link: https://lore.kernel.org/all/Y8URdIfVr3pq2X8w@xpf.sh.intel.com/
+
+Fixes: e4add247789e ("kprobes: Fix optimize_kprobe()/unoptimize_kprobe() cancellation logic")
+Reported-by: Pengfei Xu <pengfei.xu@intel.com>
+Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+---
+ kernel/kprobes.c |   23 ++++++++++-------------
+ 1 file changed, 10 insertions(+), 13 deletions(-)
+
+diff --git a/kernel/kprobes.c b/kernel/kprobes.c
+index 1c18ecf9f98b..73b150fad936 100644
+--- a/kernel/kprobes.c
++++ b/kernel/kprobes.c
+@@ -555,17 +555,15 @@ static void do_unoptimize_kprobes(void)
+ 	/* See comment in do_optimize_kprobes() */
+ 	lockdep_assert_cpus_held();
+ 
+-	/* Unoptimization must be done anytime */
+-	if (list_empty(&unoptimizing_list))
+-		return;
++	if (!list_empty(&unoptimizing_list))
++		arch_unoptimize_kprobes(&unoptimizing_list, &freeing_list);
+ 
+-	arch_unoptimize_kprobes(&unoptimizing_list, &freeing_list);
+-	/* Loop on 'freeing_list' for disarming */
++	/* Loop on 'freeing_list' for disarming and removing from kprobe hash list */
+ 	list_for_each_entry_safe(op, tmp, &freeing_list, list) {
+ 		/* Switching from detour code to origin */
+ 		op->kp.flags &= ~KPROBE_FLAG_OPTIMIZED;
+-		/* Disarm probes if marked disabled */
+-		if (kprobe_disabled(&op->kp))
++		/* Disarm probes if marked disabled and not gone */
++		if (kprobe_disabled(&op->kp) && !kprobe_gone(&op->kp))
+ 			arch_disarm_kprobe(&op->kp);
+ 		if (kprobe_unused(&op->kp)) {
+ 			/*
+@@ -797,14 +795,13 @@ static void kill_optimized_kprobe(struct kprobe *p)
+ 	op->kp.flags &= ~KPROBE_FLAG_OPTIMIZED;
+ 
+ 	if (kprobe_unused(p)) {
+-		/* Enqueue if it is unused */
+-		list_add(&op->list, &freeing_list);
+ 		/*
+-		 * Remove unused probes from the hash list. After waiting
+-		 * for synchronization, this probe is reclaimed.
+-		 * (reclaiming is done by do_free_cleaned_kprobes().)
++		 * Unused kprobe is on unoptimizing or freeing list. We move it
++		 * to freeing_list and let the kprobe_optimizer() removes it from
++		 * the kprobe hash list and frees it.
+ 		 */
+-		hlist_del_rcu(&op->kp.hlist);
++		if (optprobe_queued_unopt(op))
++			list_move(&op->list, &freeing_list);
+ 	}
+ 
+ 	/* Don't touch the code, because it is already freed. */
 
