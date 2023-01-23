@@ -2,139 +2,133 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E92D0C25B50
-	for <linux-trace-kernel@archiver.kernel.org>; Mon, 23 Jan 2023 17:59:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F377C54EAA
+	for <linux-trace-kernel@archiver.kernel.org>; Mon, 23 Jan 2023 17:59:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233073AbjAWR7e (ORCPT
+        id S233114AbjAWR7e (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
         Mon, 23 Jan 2023 12:59:34 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37816 "EHLO
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37818 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232340AbjAWR7d (ORCPT
+        with ESMTP id S233082AbjAWR7d (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
         Mon, 23 Jan 2023 12:59:33 -0500
 Received: from 66-220-144-178.mail-mxout.facebook.com (66-220-144-178.mail-mxout.facebook.com [66.220.144.178])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 05B092CFC1
-        for <linux-trace-kernel@vger.kernel.org>; Mon, 23 Jan 2023 09:59:28 -0800 (PST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B1EA323D88
+        for <linux-trace-kernel@vger.kernel.org>; Mon, 23 Jan 2023 09:59:29 -0800 (PST)
 Received: by dev0134.prn3.facebook.com (Postfix, from userid 425415)
-        id 8864D5616BF7; Mon, 23 Jan 2023 09:37:56 -0800 (PST)
+        id 3F89A5616BD1; Mon, 23 Jan 2023 09:37:56 -0800 (PST)
 From:   Stefan Roesch <shr@devkernel.io>
 To:     linux-mm@kvack.org
 Cc:     shr@devkernel.io, linux-doc@vger.kernel.org,
         linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
         linux-kselftest@vger.kernel.org, linux-trace-kernel@vger.kernel.org
-Subject: [RESEND RFC PATCH v1 18/20] selftests/vm: add KSM get merge type test
-Date:   Mon, 23 Jan 2023 09:37:46 -0800
-Message-Id: <20230123173748.1734238-19-shr@devkernel.io>
+Subject: [RESEND RFC PATCH v1 00/20] mm: process/cgroup ksm support
+Date:   Mon, 23 Jan 2023 09:37:28 -0800
+Message-Id: <20230123173748.1734238-1-shr@devkernel.io>
 X-Mailer: git-send-email 2.30.2
-In-Reply-To: <20230123173748.1734238-1-shr@devkernel.io>
-References: <20230123173748.1734238-1-shr@devkernel.io>
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-This adds the -G flag to the ksm_tests to query if prctl has been used
-to enable ksm merging.
+So far KSM can only be enabled by calling madvise for memory regions. Wha=
+t is
+required to enable KSM for more workloads is to enable / disable it at th=
+e
+process / cgroup level.
 
-Signed-off-by: Stefan Roesch <shr@devkernel.io>
----
- tools/testing/selftests/vm/ksm_tests.c | 37 ++++++++++++++++++++++++--
- 1 file changed, 35 insertions(+), 2 deletions(-)
+1. New options for prctl system command
+This patch series adds two new options to the prctl system call. The firs=
+t
+one allows to enable KSM at the process level and the second one to query=
+ the
+setting.
 
-diff --git a/tools/testing/selftests/vm/ksm_tests.c b/tools/testing/selft=
-ests/vm/ksm_tests.c
-index 386a0929c8a3..9667cb3b8c6a 100644
---- a/tools/testing/selftests/vm/ksm_tests.c
-+++ b/tools/testing/selftests/vm/ksm_tests.c
-@@ -45,6 +45,7 @@ enum ksm_merge_type {
- enum ksm_test_name {
- 	CHECK_KSM_MERGE,
- 	CHECK_KSM_UNMERGE,
-+	CHECK_KSM_GET_MERGE_TYPE,
- 	CHECK_KSM_ZERO_PAGE_MERGE,
- 	CHECK_KSM_NUMA_MERGE,
- 	KSM_MERGE_TIME,
-@@ -124,7 +125,8 @@ static void print_help(void)
- 	       " -D evaluate unmerging time and speed when disabling KSM.\n"
- 	       "    For this test, the size of duplicated memory area (in MiB)\=
-n"
- 	       "    must be provided using -s option\n"
--	       " -C evaluate the time required to break COW of merged pages.\n\=
-n");
-+	       " -C evaluate the time required to break COW of merged pages.\n"
-+	       " -G query merge mode\n\n");
-=20
- 	printf(" -a: specify the access protections of pages.\n"
- 	       "     <prot> must be of the form [rwx].\n"
-@@ -323,6 +325,31 @@ static int check_ksm_merge(int merge_type, int mappi=
-ng, int prot,
- 	return KSFT_FAIL;
- }
-=20
-+static int check_ksm_get_merge_type(void)
-+{
-+	if (prctl(PR_SET_MEMORY_MERGE, 1)) {
-+		perror("prctl set");
-+		return 1;
-+	}
-+
-+	int is_on =3D prctl(PR_GET_MEMORY_MERGE, 0);
-+
-+	if (prctl(PR_SET_MEMORY_MERGE, 0)) {
-+		perror("prctl set");
-+		return 1;
-+	}
-+
-+	int is_off =3D prctl(PR_GET_MEMORY_MERGE, 0);
-+
-+	if (is_on && is_off) {
-+		printf("OK\n");
-+		return KSFT_PASS;
-+	}
-+
-+	printf("Not OK\n");
-+	return KSFT_FAIL;
-+}
-+
- static int check_ksm_unmerge(int merge_type, int mapping, int prot, int =
-timeout, size_t page_size)
- {
- 	void *map_ptr;
-@@ -733,7 +760,7 @@ int main(int argc, char *argv[])
- 	bool merge_across_nodes =3D KSM_MERGE_ACROSS_NODES_DEFAULT;
- 	long size_MB =3D 0;
-=20
--	while ((opt =3D getopt(argc, argv, "ha:p:l:z:m:s:t:MUZNPCHD")) !=3D -1)=
- {
-+	while ((opt =3D getopt(argc, argv, "ha:p:l:z:m:s:t:GMUZNPCHD")) !=3D -1=
-) {
- 		switch (opt) {
- 		case 'a':
- 			prot =3D str_to_prot(optarg);
-@@ -792,6 +819,9 @@ int main(int argc, char *argv[])
- 		case 'Z':
- 			test_name =3D CHECK_KSM_ZERO_PAGE_MERGE;
- 			break;
-+		case 'G':
-+			test_name =3D CHECK_KSM_GET_MERGE_TYPE;
-+			break;
- 		case 'N':
- 			test_name =3D CHECK_KSM_NUMA_MERGE;
- 			break;
-@@ -841,6 +871,9 @@ int main(int argc, char *argv[])
- 		ret =3D check_ksm_unmerge(merge_type, MAP_PRIVATE | MAP_ANONYMOUS, pro=
-t,
- 					ksm_scan_limit_sec, page_size);
- 		break;
-+	case CHECK_KSM_GET_MERGE_TYPE:
-+		ret =3D check_ksm_get_merge_type();
-+		break;
- 	case CHECK_KSM_ZERO_PAGE_MERGE:
- 		ret =3D check_ksm_zero_page_merge(merge_type, MAP_PRIVATE | MAP_ANONYM=
-OUS, prot,
- 						page_count, ksm_scan_limit_sec, use_zero_pages,
+The setting will be inherited by child processes.
+
+With the above setting, KSM can be enabled for the seed process of a cgro=
+up
+and all processes in the cgroup will inherit the setting.
+
+2. Changes to KSM processing
+When KSM is enabled at the process level, the KSM code will iterate over =
+all
+the VMA's and enable KSM for the eligible VMA's.
+
+When forking a process that has KSM enabled, the setting will be inherite=
+d by
+the new child process.
+
+In addition when KSM is disabled for a process, KSM will be disabled for =
+the
+VMA's where KSM has been enabled.
+
+3. Add tracepoints to KSM
+Currently KSM has no tracepoints. This adds tracepoints to the key KSM fu=
+nctions
+to make it easier to debug KSM.
+
+4. Add general_profit metric
+The general_profit metric of KSM is specified in the documentation, but n=
+ot
+calculated. This adds the general profit metric to /sys/kernel/debug/mm/k=
+sm.
+
+5. Add more metrics to ksm_stat
+This adds the process profit and ksm type metric to /proc/<pid>/ksm_stat.
+
+6. Add more tests to ksm_tests
+This adds an option to specify the merge type to the ksm_tests. This allo=
+ws to
+test madvise and prctl KSM. It also adds a new option to query if prctl K=
+SM has
+been enabled. It adds a fork test to verify that the KSM process setting =
+is
+inherited by client processes.
+
+
+Stefan Roesch (20):
+  mm: add new flag to enable ksm per process
+  mm: add flag to __ksm_enter
+  mm: add flag to __ksm_exit call
+  mm: invoke madvise for all vmas in scan_get_next_rmap_item
+  mm: support disabling of ksm for a process
+  mm: add new prctl option to get and set ksm for a process
+  mm: add tracepoints to ksm
+  mm: split off pages_volatile function
+  mm: expose general_profit metric
+  docs: document general_profit sysfs knob
+  mm: calculate ksm process profit metric
+  mm: add ksm_merge_type() function
+  mm: expose ksm process profit metric in ksm_stat
+  mm: expose ksm merge type in ksm_stat
+  docs: document new procfs ksm knobs
+  tools: add new prctl flags to prctl in tools dir
+  selftests/vm: add KSM prctl merge test
+  selftests/vm: add KSM get merge type test
+  selftests/vm: add KSM fork test
+  selftests/vm: add two functions for debugging merge outcome
+
+ Documentation/ABI/testing/sysfs-kernel-mm-ksm |   8 +
+ Documentation/admin-guide/mm/ksm.rst          |   8 +-
+ MAINTAINERS                                   |   1 +
+ fs/proc/base.c                                |   5 +
+ include/linux/ksm.h                           |  19 +-
+ include/linux/sched/coredump.h                |   1 +
+ include/trace/events/ksm.h                    | 257 ++++++++++++++++++
+ include/uapi/linux/prctl.h                    |   2 +
+ kernel/sys.c                                  |  29 ++
+ mm/ksm.c                                      | 134 ++++++++-
+ tools/include/uapi/linux/prctl.h              |   2 +
+ tools/testing/selftests/vm/Makefile           |   3 +-
+ tools/testing/selftests/vm/ksm_tests.c        | 254 ++++++++++++++---
+ 13 files changed, 665 insertions(+), 58 deletions(-)
+ create mode 100644 include/trace/events/ksm.h
+
+
+base-commit: c1649ec55708ae42091a2f1bca1ab49ecd722d55
 --=20
 2.30.2
 
