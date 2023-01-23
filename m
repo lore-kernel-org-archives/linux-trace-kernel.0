@@ -2,45 +2,45 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D271DC25B50
-	for <linux-trace-kernel@archiver.kernel.org>; Mon, 23 Jan 2023 20:58:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C0464C61DA0
+	for <linux-trace-kernel@archiver.kernel.org>; Mon, 23 Jan 2023 20:58:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232680AbjAWU6y (ORCPT
+        id S232786AbjAWU66 (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Mon, 23 Jan 2023 15:58:54 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58972 "EHLO
+        Mon, 23 Jan 2023 15:58:58 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59234 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232606AbjAWU6q (ORCPT
+        with ESMTP id S232660AbjAWU6r (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Mon, 23 Jan 2023 15:58:46 -0500
+        Mon, 23 Jan 2023 15:58:47 -0500
 Received: from desiato.infradead.org (desiato.infradead.org [IPv6:2001:8b0:10b:1:d65d:64ff:fe57:4e05])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AB48912F3E;
-        Mon, 23 Jan 2023 12:58:23 -0800 (PST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 43A2834C29;
+        Mon, 23 Jan 2023 12:58:26 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=desiato.20200630; h=Subject:Cc:To:From:Date:Message-ID:
-        Sender:Reply-To:MIME-Version:Content-Type:Content-Transfer-Encoding:
-        Content-ID:Content-Description:In-Reply-To:References;
-        bh=uxgezMurEELpCVJJhX20ZUHEfgwrZWcqXDjzle4mol8=; b=beZJPCIEffSubL1uEDVNCpWWAv
-        P0dQItdbWMXkLzvxqxN2izB1koNs5fAWWajHR2whTbqKJ6BCHjRsJxhiPEu78EZrEYO9VnUzNs1jV
-        ISCv4kk2PMiS1y+R0god9Q2UshUhc3v+9E1D8c/KhMmjB3VcrO2lD+rGXzF9ErdSbJeUfypKgj/gA
-        uGlpDbbAacQ59wsPz0YUScLGqeC92KD9yrgIa+OQNAEnr9+y9dkwjhEcoMbSrLGc9te1y5cfctcbZ
-        UiRYbMe0Uh7uSmNQAD5X0ax22AZZpnQSUguxrDFywdb9EDSq/d75ve4YkvjKrlhktiiG/LSojvFy3
-        ULB3MkPQ==;
+        d=infradead.org; s=desiato.20200630; h=Content-Type:MIME-Version:References:
+        Subject:Cc:To:From:Date:Message-ID:Sender:Reply-To:Content-Transfer-Encoding:
+        Content-ID:Content-Description:In-Reply-To;
+        bh=DwNtSkSaGTU0TFqzb2/WMPSb8JYwGKCIYZsmeR/P6pc=; b=FueaaZb7VWO4atG18KkGUgcSzQ
+        FI5cJ88LeuzKk95B4T/ujA5RntI3Q5IOg661T+Nx6Jg1ofr+WaQ3jBAlstIFsm10tCM3ugdjreIdw
+        jekc2aQYG/Zbaa+emGpeAz4Lv6QTZxYV0c5nx4gqJLGh7FKawVx+Ru+OgUlQzQ74ginyYEH3WP7dw
+        5txleE63/CC3gyBWdpXXfg+uTfS6QliMubretWIhRomQhaeRWZ4/+Y6MJMCwfLlvq3DfaoQCRPIFH
+        +KxmdhhfRE4vj/Ol3tLiIZOlGF2SQI84vVc0Rt8I4gS0JE1bOVgjV0eJCIaInsyf0I1LAQCcZ89zG
+        l5gK1P0g==;
 Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
         by desiato.infradead.org with esmtpsa (Exim 4.96 #2 (Red Hat Linux))
-        id 1pK3sA-001dtn-07;
+        id 1pK3sB-001dto-1f;
         Mon, 23 Jan 2023 20:57:02 +0000
 Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange X25519 server-signature RSA-PSS (4096 bits))
         (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 6266B300673;
-        Mon, 23 Jan 2023 21:57:24 +0100 (CET)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 6AB39300BCB;
+        Mon, 23 Jan 2023 21:57:27 +0100 (CET)
 Received: by hirez.programming.kicks-ass.net (Postfix, from userid 0)
-        id BEE12207579DF; Mon, 23 Jan 2023 21:57:24 +0100 (CET)
-Message-ID: <20230123205009.790550642@infradead.org>
+        id D952B2075A6F8; Mon, 23 Jan 2023 21:57:24 +0100 (CET)
+Message-ID: <20230123205515.233366796@infradead.org>
 User-Agent: quilt/0.66
-Date:   Mon, 23 Jan 2023 21:50:09 +0100
+Date:   Mon, 23 Jan 2023 21:50:15 +0100
 From:   Peter Zijlstra <peterz@infradead.org>
 To:     mingo@kernel.org
 Cc:     will@kernel.org, peterz@infradead.org, boqun.feng@gmail.com,
@@ -56,34 +56,59 @@ Cc:     will@kernel.org, peterz@infradead.org, boqun.feng@gmail.com,
         bsegall@google.com, mgorman@suse.de, bristot@redhat.com,
         vschneid@redhat.com, linux-kernel@vger.kernel.org,
         kvm@vger.kernel.org, virtualization@lists.linux-foundation.org,
-        linux-trace-kernel@vger.kernel.org, linux-pm@vger.kernel.org
-Subject: [PATCH 0/6] A few cpuidle vs rcu fixes
+        linux-trace-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
+        kernel test robot <oliver.sang@intel.com>
+Subject: [PATCH 6/6] cpuidle: Fix poll_idle() noinstr annotation
+References: <20230123205009.790550642@infradead.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-0-day robot reported graph-tracing made the cpuidle-vs-rcu rework go splat.
+The instrumentation_begin()/end() annotations in poll_idle() were
+complete nonsense. Specifically they caused tracing to happen in the
+middle of noinstr code, resulting in RCU splats.
 
-These patches appear to cure this, the ftrace selftest now runs to completion
-without spamming scary messages to dmesg.
+Now that local_clock() is noinstr, mark up the rest and let it rip.
 
+Fixes: 00717eb8c955 ("cpuidle: Annotate poll_idle()")
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Reported-by: kernel test robot <oliver.sang@intel.com>
+Link: https://lore.kernel.org/oe-lkp/202301192148.58ece903-oliver.sang@intel.com
 ---
- arch/x86/include/asm/atomic64_32.h | 44 +++++++++++++++++++-------------------
- arch/x86/include/asm/atomic64_64.h | 36 +++++++++++++++----------------
- arch/x86/include/asm/kvmclock.h    |  2 +-
- arch/x86/include/asm/paravirt.h    |  2 +-
- arch/x86/include/asm/pvclock.h     |  3 ++-
- arch/x86/kernel/cpu/vmware.c       |  2 +-
- arch/x86/kernel/ftrace.c           |  3 +++
- arch/x86/kernel/kvmclock.c         |  6 +++---
- arch/x86/kernel/pvclock.c          | 22 +++++++++++++------
- arch/x86/kernel/tsc.c              |  7 +++---
- arch/x86/xen/time.c                | 12 +++++++++--
- drivers/cpuidle/cpuidle.c          |  2 +-
- drivers/cpuidle/poll_state.c       |  2 --
- include/linux/math64.h             |  4 ++--
- include/linux/sched/clock.h        |  8 +++----
- kernel/sched/clock.c               | 27 +++++++++++++++++------
- 16 files changed, 107 insertions(+), 75 deletions(-)
+ drivers/cpuidle/cpuidle.c    |    2 +-
+ drivers/cpuidle/poll_state.c |    2 --
+ 2 files changed, 1 insertion(+), 3 deletions(-)
+
+--- a/drivers/cpuidle/cpuidle.c
++++ b/drivers/cpuidle/cpuidle.c
+@@ -426,7 +426,7 @@ void cpuidle_reflect(struct cpuidle_devi
+  * @dev:   the cpuidle device
+  *
+  */
+-u64 cpuidle_poll_time(struct cpuidle_driver *drv,
++__cpuidle u64 cpuidle_poll_time(struct cpuidle_driver *drv,
+ 		      struct cpuidle_device *dev)
+ {
+ 	int i;
+--- a/drivers/cpuidle/poll_state.c
++++ b/drivers/cpuidle/poll_state.c
+@@ -15,7 +15,6 @@ static int __cpuidle poll_idle(struct cp
+ {
+ 	u64 time_start;
+ 
+-	instrumentation_begin();
+ 	time_start = local_clock();
+ 
+ 	dev->poll_time_limit = false;
+@@ -42,7 +41,6 @@ static int __cpuidle poll_idle(struct cp
+ 	raw_local_irq_disable();
+ 
+ 	current_clr_polling();
+-	instrumentation_end();
+ 
+ 	return index;
+ }
 
 
