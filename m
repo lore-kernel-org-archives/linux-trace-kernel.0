@@ -2,93 +2,84 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E20DAC25B50
-	for <linux-trace-kernel@archiver.kernel.org>; Mon, 23 Jan 2023 17:45:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 43757C38142
+	for <linux-trace-kernel@archiver.kernel.org>; Mon, 23 Jan 2023 17:58:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230489AbjAWRpt (ORCPT
+        id S232223AbjAWR64 (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Mon, 23 Jan 2023 12:45:49 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54748 "EHLO
+        Mon, 23 Jan 2023 12:58:56 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37092 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229791AbjAWRps (ORCPT
+        with ESMTP id S232041AbjAWR64 (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Mon, 23 Jan 2023 12:45:48 -0500
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id F27D91E5FD;
-        Mon, 23 Jan 2023 09:45:44 -0800 (PST)
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 58C02C14;
-        Mon, 23 Jan 2023 09:46:26 -0800 (PST)
-Received: from FVFF77S0Q05N (unknown [10.57.12.6])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id C14F23F71E;
-        Mon, 23 Jan 2023 09:45:43 -0800 (PST)
-Date:   Mon, 23 Jan 2023 17:45:41 +0000
-From:   Mark Rutland <mark.rutland@arm.com>
-To:     Steven Rostedt <rostedt@goodmis.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Linux Trace Kernel <linux-trace-kernel@vger.kernel.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>
-Subject: Re: [PATCH] ftrace/scripts: Update the instructions for
- ftrace-bisect.sh
-Message-ID: <Y87HxUN/mcC99Xj6@FVFF77S0Q05N>
-References: <20230123112252.022003dd@gandalf.local.home>
- <Y869C8HcHownYfII@FVFF77S0Q05N>
- <20230123121147.341b0992@gandalf.local.home>
+        Mon, 23 Jan 2023 12:58:56 -0500
+X-Greylist: delayed 107 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Mon, 23 Jan 2023 09:58:54 PST
+Received: from 66-220-144-178.mail-mxout.facebook.com (66-220-144-178.mail-mxout.facebook.com [66.220.144.178])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8A8A423D81
+        for <linux-trace-kernel@vger.kernel.org>; Mon, 23 Jan 2023 09:58:54 -0800 (PST)
+Received: by dev0134.prn3.facebook.com (Postfix, from userid 425415)
+        id 6B83A5616BE7; Mon, 23 Jan 2023 09:37:56 -0800 (PST)
+From:   Stefan Roesch <shr@devkernel.io>
+To:     linux-mm@kvack.org
+Cc:     shr@devkernel.io, linux-doc@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-kselftest@vger.kernel.org, linux-trace-kernel@vger.kernel.org
+Subject: [RESEND RFC PATCH v1 11/20] mm: calculate ksm process profit metric
+Date:   Mon, 23 Jan 2023 09:37:39 -0800
+Message-Id: <20230123173748.1734238-12-shr@devkernel.io>
+X-Mailer: git-send-email 2.30.2
+In-Reply-To: <20230123173748.1734238-1-shr@devkernel.io>
+References: <20230123173748.1734238-1-shr@devkernel.io>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230123121147.341b0992@gandalf.local.home>
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On Mon, Jan 23, 2023 at 12:11:47PM -0500, Steven Rostedt wrote:
-> On Mon, 23 Jan 2023 16:59:55 +0000
-> Mark Rutland <mark.rutland@arm.com> wrote:
-> 
-> > > +# The old (slow) way, for kernels before v5.1.
-> > > +#
-> > > +# [old-way] # cat available_filter_functions > ~/full-file
-> > > +#
-> > > +# [old-way] *** Note *** this will take several minutes. Setting multiple
-> > > +# [old-way] functions is an O(n^2) operation, and we are dealing with thousands
-> > > +# [old-way] of functions. So go have  coffee, talk with your coworkers, read
-> > > +# [old-way] facebook. And eventually, this operation will end.  
-> > 
-> > Super-trivial nit, but the above step isn't actually that expensive, and it's
-> > the subsequent write to set_ftrace_filter that's going to be slow.
-> 
-> How about:
-> 
->  "*** Note *** this process will take several minutes to update the filters." 
+The ksm documentation mentions the process profit metric and how to
+calculate it. This adds the calculation of the metric.
 
-Sounds good to me! :)
+Signed-off-by: Stefan Roesch <shr@devkernel.io>
+---
+ include/linux/ksm.h | 4 ++++
+ mm/ksm.c            | 8 ++++++++
+ 2 files changed, 12 insertions(+)
 
-FWIW, with that:
+diff --git a/include/linux/ksm.h b/include/linux/ksm.h
+index d38a05a36298..a18cd03efcfb 100644
+--- a/include/linux/ksm.h
++++ b/include/linux/ksm.h
+@@ -55,6 +55,10 @@ struct page *ksm_might_need_to_copy(struct page *page,
+ void rmap_walk_ksm(struct folio *folio, struct rmap_walk_control *rwc);
+ void folio_migrate_ksm(struct folio *newfolio, struct folio *folio);
+=20
++#ifdef CONFIG_PROC_FS
++long ksm_process_profit(struct mm_struct *);
++#endif /* CONFIG_PROC_FS */
++
+ #else  /* !CONFIG_KSM */
+=20
+ static inline int ksm_fork(struct mm_struct *mm, struct mm_struct *oldmm=
+)
+diff --git a/mm/ksm.c b/mm/ksm.c
+index d29454a802a0..288689b59527 100644
+--- a/mm/ksm.c
++++ b/mm/ksm.c
+@@ -2935,6 +2935,14 @@ static void wait_while_offlining(void)
+ }
+ #endif /* CONFIG_MEMORY_HOTREMOVE */
+=20
++#ifdef CONFIG_PROC_FS
++long ksm_process_profit(struct mm_struct *mm)
++{
++	return (long)mm->ksm_merging_pages * PAGE_SIZE -
++		mm->ksm_rmap_items * sizeof(struct ksm_rmap_item);
++}
++#endif /* CONFIG_PROC_FS */
++
+ #ifdef CONFIG_SYSFS
+ /*
+  * This all compiles without CONFIG_SYSFS, but is a waste of space.
+--=20
+2.30.2
 
-Acked-by: Mark Rutland <mark.rutland@arm.com>
-
-> > That double spacing in 'go have  coffee' looks odd; is that an old error from
-> > reformatting a line break, and/or a missing 'a' ?
-> 
-> I can fix that.
-
-Thanks!
-
-> > How about:
-> > 
-> > # [old-way] *** Note *** writing function names to set_ftrace_filter will take
-> > # [old-way] several minutes. Setting multiple functions is an O(n^2) operation,
-> > # [old-way] and we will set thousands of functions. So for subsequent steps,
-> > # [old-way] go have a coffee, talk with your coworkers, read facebook. And
-> > # [old-way] eventually, this operation will end.
-> > 
-> > ... or leave this in place below, and add "If using [old-way] ..." to the start?
-> 
-> I wanted to explicitly show that the above is only a reference to the old
-> way, and leave no doubt about it. It was either doing this or deleting it
-> completely. I chose to keep it.
-
-Fair enough!
-
-Mark.
