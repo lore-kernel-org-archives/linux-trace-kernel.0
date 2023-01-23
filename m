@@ -2,80 +2,152 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A1B3C05027
-	for <linux-trace-kernel@archiver.kernel.org>; Mon, 23 Jan 2023 18:38:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 83FD0C25B50
+	for <linux-trace-kernel@archiver.kernel.org>; Mon, 23 Jan 2023 18:39:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232385AbjAWSi0 (ORCPT
+        id S232602AbjAWSjk (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Mon, 23 Jan 2023 13:38:26 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50032 "EHLO
+        Mon, 23 Jan 2023 13:39:40 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50526 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231788AbjAWSi0 (ORCPT
+        with ESMTP id S231788AbjAWSjj (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Mon, 23 Jan 2023 13:38:26 -0500
-Received: from 66-220-144-178.mail-mxout.facebook.com (66-220-144-178.mail-mxout.facebook.com [66.220.144.178])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 11F5B22DC8
-        for <linux-trace-kernel@vger.kernel.org>; Mon, 23 Jan 2023 10:38:24 -0800 (PST)
-Received: by dev0134.prn3.facebook.com (Postfix, from userid 425415)
-        id 7BBE85616BF1; Mon, 23 Jan 2023 09:37:56 -0800 (PST)
-From:   Stefan Roesch <shr@devkernel.io>
-To:     linux-mm@kvack.org
-Cc:     shr@devkernel.io, linux-doc@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-kselftest@vger.kernel.org, linux-trace-kernel@vger.kernel.org
-Subject: [RESEND RFC PATCH v1 15/20] docs: document new procfs ksm knobs
-Date:   Mon, 23 Jan 2023 09:37:43 -0800
-Message-Id: <20230123173748.1734238-16-shr@devkernel.io>
-X-Mailer: git-send-email 2.30.2
-In-Reply-To: <20230123173748.1734238-1-shr@devkernel.io>
-References: <20230123173748.1734238-1-shr@devkernel.io>
+        Mon, 23 Jan 2023 13:39:39 -0500
+Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 49D3622A22;
+        Mon, 23 Jan 2023 10:39:38 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id E20AFB80DA4;
+        Mon, 23 Jan 2023 18:39:36 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 354E2C433D2;
+        Mon, 23 Jan 2023 18:39:34 +0000 (UTC)
+Date:   Mon, 23 Jan 2023 13:39:31 -0500
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
+Cc:     linux-trace-kernel@vger.kernel.org,
+        Pengfei Xu <pengfei.xu@intel.com>,
+        linux-kernel@vger.kernel.org, peterz@infradead.org,
+        heng.su@intel.com, "Naveen N . Rao" <naveen.n.rao@linux.ibm.com>
+Subject: Re: [PATCH] kprobes: Fix to handle forcibly unoptimized kprobes on
+ freeing_list
+Message-ID: <20230123133931.6f6a711d@gandalf.local.home>
+In-Reply-To: <167448024501.3253718.13037333683110512967.stgit@devnote3>
+References: <Y8URdIfVr3pq2X8w@xpf.sh.intel.com>
+        <167448024501.3253718.13037333683110512967.stgit@devnote3>
+X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-This documents the ksm_process_profit and ksm_merge_type settings in
-ksm_stat.
+On Mon, 23 Jan 2023 22:24:05 +0900
+"Masami Hiramatsu (Google)" <mhiramat@kernel.org> wrote:
 
-Signed-off-by: Stefan Roesch <shr@devkernel.io>
----
- Documentation/admin-guide/mm/ksm.rst | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+> From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+> 
+> Sinec forcibly unoptimized kprobes will be put on the freeing_list directly
 
-diff --git a/Documentation/admin-guide/mm/ksm.rst b/Documentation/admin-g=
-uide/mm/ksm.rst
-index 72189bf1283e..70896f01d641 100644
---- a/Documentation/admin-guide/mm/ksm.rst
-+++ b/Documentation/admin-guide/mm/ksm.rst
-@@ -211,7 +211,8 @@ several times, which are unprofitable memory consumed=
-.
- 			  ksm_rmap_items * sizeof(rmap_item).
-=20
-    where ksm_merging_pages is shown under the directory ``/proc/<pid>/``=
-,
--   and ksm_rmap_items is shown in ``/proc/<pid>/ksm_stat``.
-+   and ksm_rmap_items is shown in ``/proc/<pid>/ksm_stat``. The process =
-profit
-+   is also shown in ``/proc/<pid>/ksm_stat`` as ksm_process_profit.
-=20
- From the perspective of application, a high ratio of ``ksm_rmap_items`` =
-to
- ``ksm_merging_pages`` means a bad madvise-applied policy, so developers =
-or
-@@ -222,6 +223,9 @@ so if the ``ksm_rmap_items/ksm_merging_pages`` ratio =
-exceeds 64 on 64-bit CPU
- or exceeds 128 on 32-bit CPU, then the app's madvise policy should be dr=
-opped,
- because the ksm profit is approximately zero or negative.
-=20
-+The ksm_merge_type in ``/proc/<pid>/ksm_stat`` shows the merge type of t=
-he
-+process. Valid values are ``none``, ``madvise`` and ``process``.
-+
- Monitoring KSM events
- =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-=20
---=20
-2.30.2
+"Since"
 
+> in the unoptimize_kprobe(), do_unoptimize_kprobes() must continue to check
+> the freeing_list even if unoptimizing_list is empty.
+> 
+> This bug can be happen if a kprobe is put in an instruction which is in the
+
+"This bug can happen if"
+
+> middle of the jump-replaced instruction sequence of an optprobe, *and* the
+> optprobe is recently unregistered and queued on unoptimizing_list.
+> In this case, the optprobe will be unoptimized forcibly (means immediately)
+> and put it into the freeing_list, expecting the optprobe will be handled in
+> do_unoptimize_kprobe().
+> But if there is no other optprobes on the unoptimizing_list, current code
+> returns from the do_unoptimize_kprobe() soon and do not handle the optprobe
+
+                                              "and does not handle'
+
+> which is on the freeing_list, and it will hit the WARN_ON_ONCE() in the
+> do_free_cleaned_kprobes(), because it is not handled in the latter loop of
+> the do_unoptimize_kprobe().
+> 
+> To solve this issue, do not return from do_unoptimize_kprobes() immediately
+> even if unoptimizing_list is empty.
+> 
+> Moreover, this change affects another case. kill_optimized_kprobes() expects
+> kprobe_optimizer() will just free the optprobe on freeing_list.
+> So I changed it to just do list_move() to freeing_list if optprobes are on
+> unoptimizing list. And the do_unoptimize_kprobe() will skip
+> arch_disarm_kprobe() if the probe on freeing_list has gone flag.
+> 
+> Link: https://lore.kernel.org/all/Y8URdIfVr3pq2X8w@xpf.sh.intel.com/
+> 
+> Fixes: e4add247789e ("kprobes: Fix optimize_kprobe()/unoptimize_kprobe() cancellation logic")
+> Reported-by: Pengfei Xu <pengfei.xu@intel.com>
+> Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+> ---
+>  kernel/kprobes.c |   23 ++++++++++-------------
+>  1 file changed, 10 insertions(+), 13 deletions(-)
+> 
+> diff --git a/kernel/kprobes.c b/kernel/kprobes.c
+> index 1c18ecf9f98b..73b150fad936 100644
+> --- a/kernel/kprobes.c
+> +++ b/kernel/kprobes.c
+> @@ -555,17 +555,15 @@ static void do_unoptimize_kprobes(void)
+>  	/* See comment in do_optimize_kprobes() */
+>  	lockdep_assert_cpus_held();
+>  
+> -	/* Unoptimization must be done anytime */
+> -	if (list_empty(&unoptimizing_list))
+> -		return;
+> +	if (!list_empty(&unoptimizing_list))
+> +		arch_unoptimize_kprobes(&unoptimizing_list, &freeing_list);
+>  
+> -	arch_unoptimize_kprobes(&unoptimizing_list, &freeing_list);
+> -	/* Loop on 'freeing_list' for disarming */
+> +	/* Loop on 'freeing_list' for disarming and removing from kprobe hash list */
+>  	list_for_each_entry_safe(op, tmp, &freeing_list, list) {
+>  		/* Switching from detour code to origin */
+>  		op->kp.flags &= ~KPROBE_FLAG_OPTIMIZED;
+> -		/* Disarm probes if marked disabled */
+> -		if (kprobe_disabled(&op->kp))
+> +		/* Disarm probes if marked disabled and not gone */
+> +		if (kprobe_disabled(&op->kp) && !kprobe_gone(&op->kp))
+>  			arch_disarm_kprobe(&op->kp);
+>  		if (kprobe_unused(&op->kp)) {
+>  			/*
+> @@ -797,14 +795,13 @@ static void kill_optimized_kprobe(struct kprobe *p)
+>  	op->kp.flags &= ~KPROBE_FLAG_OPTIMIZED;
+>  
+>  	if (kprobe_unused(p)) {
+> -		/* Enqueue if it is unused */
+> -		list_add(&op->list, &freeing_list);
+>  		/*
+> -		 * Remove unused probes from the hash list. After waiting
+> -		 * for synchronization, this probe is reclaimed.
+> -		 * (reclaiming is done by do_free_cleaned_kprobes().)
+> +		 * Unused kprobe is on unoptimizing or freeing list. We move it
+> +		 * to freeing_list and let the kprobe_optimizer() removes it from
+
+                                                                 "remove it"
+
+> +		 * the kprobe hash list and frees it.
+
+                                        "and free it."
+
+>  		 */
+> -		hlist_del_rcu(&op->kp.hlist);
+> +		if (optprobe_queued_unopt(op))
+> +			list_move(&op->list, &freeing_list);
+>  	}
+>  
+>  	/* Don't touch the code, because it is already freed. */
+
+Other than the spelling issues,
+
+Acked-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+
+-- Steve
