@@ -2,73 +2,77 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 52100C05027
-	for <linux-trace-kernel@archiver.kernel.org>; Mon, 23 Jan 2023 15:33:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DEC1BC38142
+	for <linux-trace-kernel@archiver.kernel.org>; Mon, 23 Jan 2023 15:45:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232195AbjAWPdu (ORCPT
+        id S232844AbjAWPpl convert rfc822-to-8bit (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Mon, 23 Jan 2023 10:33:50 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40078 "EHLO
+        Mon, 23 Jan 2023 10:45:41 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52076 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231724AbjAWPdt (ORCPT
+        with ESMTP id S232714AbjAWPpk (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Mon, 23 Jan 2023 10:33:49 -0500
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8AD22113D8;
-        Mon, 23 Jan 2023 07:33:48 -0800 (PST)
+        Mon, 23 Jan 2023 10:45:40 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 831E3E04B;
+        Mon, 23 Jan 2023 07:45:39 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 3FFE3B80CA9;
-        Mon, 23 Jan 2023 15:33:47 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 26BBAC433D2;
-        Mon, 23 Jan 2023 15:33:45 +0000 (UTC)
-Date:   Mon, 23 Jan 2023 10:33:41 -0500
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 205F360F7A;
+        Mon, 23 Jan 2023 15:45:39 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 35C4AC433A0;
+        Mon, 23 Jan 2023 15:45:34 +0000 (UTC)
+Date:   Mon, 23 Jan 2023 10:45:30 -0500
 From:   Steven Rostedt <rostedt@goodmis.org>
-To:     "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
-Cc:     Yoann Congal <yoann.congal@smile.fr>,
-        linux-trace-kernel@vger.kernel.org,
-        Jonathan Corbet <corbet@lwn.net>, linux-kernel@vger.kernel.org,
-        linux-doc@vger.kernel.org
-Subject: Re: [PATCH v3 0/3] Documentation: kprobetrace: Improve readability
-Message-ID: <20230123103341.56f42e72@gandalf.local.home>
-In-Reply-To: <20230122083138.300ab49e15c7b3de13f0f121@kernel.org>
-References: <20230121225304.1711635-1-yoann.congal@smile.fr>
-        <20230122083138.300ab49e15c7b3de13f0f121@kernel.org>
+To:     Stefan Roesch <shr@devkernel.io>
+Cc:     kernel-team@fb.com, acme@redhat.com, akpm@linux-foundation.org,
+        bobwxc@email.cn, brauner@kernel.org, brho@google.com,
+        broonie@kernel.org, catalin.marinas@arm.com, cgel.zte@gmail.com,
+        corbet@lwn.net, dave@stgolabs.net, ebiederm@xmission.com,
+        eugenis@google.com, hannes@cmpxchg.org, linmiaohe@huawei.com,
+        mhiramat@kernel.org, mhocko@suse.com, ran.xiaokai@zte.com.cn,
+        rppt@kernel.org, shuah@kernel.org, shy828301@gmail.com,
+        song@kernel.org, Vincenzo.Frascino@arm.com, will@kernel.org,
+        willy@infradead.org, yang.yang29@zte.com.cn,
+        zhengqi.arch@bytedance.com, linux-doc@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-kselftest@vger.kernel.org, linux-mm@kvack.org,
+        linux-trace-kernel@vger.kernel.org
+Subject: Re: [RESEND RFC PATCH v1 07/20] mm: add tracepoints to ksm
+Message-ID: <20230123104530.4ec0aeb4@gandalf.local.home>
+In-Reply-To: <20230123050042.1752641-8-shr@devkernel.io>
+References: <20230123050042.1752641-1-shr@devkernel.io>
+        <20230123050042.1752641-8-shr@devkernel.io>
 X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8BIT
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On Sun, 22 Jan 2023 08:31:38 +0900
-Masami Hiramatsu (Google) <mhiramat@kernel.org> wrote:
+On Sun, 22 Jan 2023 21:00:29 -0800
+Stefan Roesch <shr@devkernel.io> wrote:
 
-> On Sat, 21 Jan 2023 23:53:02 +0100
-> Yoann Congal <yoann.congal@smile.fr> wrote:
+> This adds the following tracepoints to ksm:
+> - start / stop scan
+> - ksm enter / exit
+> - merge a page
+> - merge a page with ksm
+> - remove a page
+> - remove a rmap item
 > 
-> > Hi,
-> > 
-> > Version 3 of this series of small readability fixes on kprobetrace.rst.
-> > 
-> > v1: https://lore.kernel.org/linux-doc/20220915153358.813993-1-yoann.congal@smile.fr/  
-> 
-> Thanks for fixing document!
-> 
-> This series looks good to me.
-> 
-> Acked-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-> 
-> for this series.
-> 
->
+> Signed-off-by: Stefan Roesch <shr@devkernel.io>
+> ---
+>  MAINTAINERS                |   1 +
+>  include/trace/events/ksm.h | 257 +++++++++++++++++++++++++++++++++++++
+>  mm/ksm.c                   |  20 ++-
+>  3 files changed, 276 insertions(+), 2 deletions(-)
+>  create mode 100644 include/trace/events/ksm.h
+
+From the tracing pov:
 
 Reviewed-by: Steven Rostedt (Google) <rostedt@goodmis.org>
-
-Jon, care to take this series through your tree?
-
-Thanks,
 
 -- Steve
