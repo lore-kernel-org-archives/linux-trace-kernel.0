@@ -2,30 +2,30 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 47A4FC25B50
-	for <linux-trace-kernel@archiver.kernel.org>; Mon, 23 Jan 2023 18:04:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CBCE1C25B50
+	for <linux-trace-kernel@archiver.kernel.org>; Mon, 23 Jan 2023 18:04:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233580AbjAWSEW (ORCPT
+        id S233719AbjAWSEg (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Mon, 23 Jan 2023 13:04:22 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44132 "EHLO
+        Mon, 23 Jan 2023 13:04:36 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44392 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233516AbjAWSEV (ORCPT
+        with ESMTP id S233666AbjAWSEc (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Mon, 23 Jan 2023 13:04:21 -0500
+        Mon, 23 Jan 2023 13:04:32 -0500
 Received: from 66-220-144-178.mail-mxout.facebook.com (66-220-144-178.mail-mxout.facebook.com [66.220.144.178])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 31E70305DA
-        for <linux-trace-kernel@vger.kernel.org>; Mon, 23 Jan 2023 10:04:05 -0800 (PST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2080F305D3
+        for <linux-trace-kernel@vger.kernel.org>; Mon, 23 Jan 2023 10:04:27 -0800 (PST)
 Received: by dev0134.prn3.facebook.com (Postfix, from userid 425415)
-        id 67ABE5616BE5; Mon, 23 Jan 2023 09:37:56 -0800 (PST)
+        id 7FBAC5616BF3; Mon, 23 Jan 2023 09:37:56 -0800 (PST)
 From:   Stefan Roesch <shr@devkernel.io>
 To:     linux-mm@kvack.org
 Cc:     shr@devkernel.io, linux-doc@vger.kernel.org,
         linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
         linux-kselftest@vger.kernel.org, linux-trace-kernel@vger.kernel.org
-Subject: [RESEND RFC PATCH v1 10/20] docs: document general_profit sysfs knob
-Date:   Mon, 23 Jan 2023 09:37:38 -0800
-Message-Id: <20230123173748.1734238-11-shr@devkernel.io>
+Subject: [RESEND RFC PATCH v1 16/20] tools: add new prctl flags to prctl in tools dir
+Date:   Mon, 23 Jan 2023 09:37:44 -0800
+Message-Id: <20230123173748.1734238-17-shr@devkernel.io>
 X-Mailer: git-send-email 2.30.2
 In-Reply-To: <20230123173748.1734238-1-shr@devkernel.io>
 References: <20230123173748.1734238-1-shr@devkernel.io>
@@ -35,48 +35,26 @@ Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-This adds documentation for the new /sys/kernel/mm/ksm/general_profit
-knob.
+This adds the new prctl flags to the include file prct.h in the tools
+directory. This makes sure they are available for testing.
 
 Signed-off-by: Stefan Roesch <shr@devkernel.io>
 ---
- Documentation/ABI/testing/sysfs-kernel-mm-ksm | 8 ++++++++
- Documentation/admin-guide/mm/ksm.rst          | 2 ++
- 2 files changed, 10 insertions(+)
+ tools/include/uapi/linux/prctl.h | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/Documentation/ABI/testing/sysfs-kernel-mm-ksm b/Documentatio=
-n/ABI/testing/sysfs-kernel-mm-ksm
-index d244674a9480..7768e90f7a8f 100644
---- a/Documentation/ABI/testing/sysfs-kernel-mm-ksm
-+++ b/Documentation/ABI/testing/sysfs-kernel-mm-ksm
-@@ -51,3 +51,11 @@ Description:	Control merging pages across different NU=
-MA nodes.
+diff --git a/tools/include/uapi/linux/prctl.h b/tools/include/uapi/linux/=
+prctl.h
+index a5e06dcbba13..b8ba85f18e43 100644
+--- a/tools/include/uapi/linux/prctl.h
++++ b/tools/include/uapi/linux/prctl.h
+@@ -284,4 +284,6 @@ struct prctl_mm_map {
+ #define PR_SET_VMA		0x53564d41
+ # define PR_SET_VMA_ANON_NAME		0
 =20
- 		When it is set to 0 only pages from the same node are merged,
- 		otherwise pages from all nodes can be merged together (default).
-+
-+What:		/sys/kernel/mm/ksm/general_profit
-+Date:		January 2023
-+KernelVersion:  6.1
-+Contact:	Linux memory management mailing list <linux-mm@kvack.org>
-+Description:	Measure how effective KSM is.
-+		general_profit: how effective is KSM. The formula for the
-+		calculation is in Documentation/admin-guide/mm/ksm.rst.
-diff --git a/Documentation/admin-guide/mm/ksm.rst b/Documentation/admin-g=
-uide/mm/ksm.rst
-index fb6ba2002a4b..72189bf1283e 100644
---- a/Documentation/admin-guide/mm/ksm.rst
-+++ b/Documentation/admin-guide/mm/ksm.rst
-@@ -159,6 +159,8 @@ stable_node_chains_prune_millisecs
-=20
- The effectiveness of KSM and MADV_MERGEABLE is shown in ``/sys/kernel/mm=
-/ksm/``:
-=20
-+general_profit
-+        how effective is KSM. The calculation is explained below.
- pages_shared
-         how many shared pages are being used
- pages_sharing
++#define PR_SET_MEMORY_MERGE		65
++#define PR_GET_MEMORY_MERGE		66
+ #endif /* _LINUX_PRCTL_H */
 --=20
 2.30.2
 
