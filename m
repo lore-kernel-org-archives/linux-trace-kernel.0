@@ -2,112 +2,105 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 97C6AC25B50
-	for <linux-trace-kernel@archiver.kernel.org>; Mon, 23 Jan 2023 11:27:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F2A71C05027
+	for <linux-trace-kernel@archiver.kernel.org>; Mon, 23 Jan 2023 11:50:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231579AbjAWL1R (ORCPT
+        id S231478AbjAWLuL (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Mon, 23 Jan 2023 06:27:17 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60254 "EHLO
+        Mon, 23 Jan 2023 06:50:11 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43746 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229557AbjAWL1Q (ORCPT
+        with ESMTP id S230344AbjAWLuL (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Mon, 23 Jan 2023 06:27:16 -0500
-Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 04D60233FD;
-        Mon, 23 Jan 2023 03:27:15 -0800 (PST)
-Received: by mail-wm1-f43.google.com with SMTP id d4-20020a05600c3ac400b003db1de2aef0so8294471wms.2;
-        Mon, 23 Jan 2023 03:27:14 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=4yTdcDBJTrs5Cb/iupgl8JwyhPAoj/hrBf//3NRcvVg=;
-        b=lVec4DTVF5z/qPr2zRKruSAD81T/QgRBukIE1vI/EBKwcPV79CP1utJcaQs6Qdvnjr
-         otAzdUu1bFw4vtKJqwqkOUYvZOkhJ+bfbrx6jPNM/5exoNVV1BflpImODESZVXCScr3c
-         tVxtYHPU6M5NwfgICzzLFoI6E1OfEuGSA27uto9jsrzfaKEpfgk7i1GVNt0IkrIYHzLH
-         9r+HKdCxfWfLDlsPYtQy9SOHiDjheEHhDc3NimxI/v3JgsJCMvHejHSLJRJQo4UOLabu
-         YgVqYnRwHE/4frs2/kmI4a91wpGpcPQFQp44+b5lOH2JWv/X62iXLl37dseIYXFqdsIN
-         z8zA==
-X-Gm-Message-State: AFqh2koAdau4LYRGE2PQ6OSQldiT7n2D/0Pbh5RCcF3jPc1OfC0sfirZ
-        TdmOlDdDC4pD1IyByYZ+W98=
-X-Google-Smtp-Source: AMrXdXvdjw20Lv7I4+W+Hg4dvw9yXtwgL3LEooExW5vSfd6qFA+Kr64gkQWRX15yiaon5VnaaEWpJA==
-X-Received: by 2002:a05:600c:3551:b0:3d2:813:138a with SMTP id i17-20020a05600c355100b003d20813138amr31584379wmq.35.1674473233474;
-        Mon, 23 Jan 2023 03:27:13 -0800 (PST)
-Received: from [192.168.64.80] (bzq-219-42-90.isdn.bezeqint.net. [62.219.42.90])
-        by smtp.gmail.com with ESMTPSA id q7-20020a05600c46c700b003c6bbe910fdsm13400157wmo.9.2023.01.23.03.27.10
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 23 Jan 2023 03:27:12 -0800 (PST)
-Message-ID: <6f9da88c-f01e-156b-eb19-0b275c46c6b5@grimberg.me>
-Date:   Mon, 23 Jan 2023 13:27:10 +0200
+        Mon, 23 Jan 2023 06:50:11 -0500
+Received: from mga11.intel.com (mga11.intel.com [192.55.52.93])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0345D23659;
+        Mon, 23 Jan 2023 03:50:10 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1674474609; x=1706010609;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=up4w9zbb43XdXWG+36x0EW9amqocH5GpAHlVrZaV0vU=;
+  b=HPOAfXBnwK5u++C3U6+xrOZtZHSkahmIuxpPGW9K6EXtRUZxEc7Zxqti
+   lzBi0Kmg+MKx5CwpYLSCZXaHE82sv8HUh1eV/KcV6Td0VKGjyXeNcnp5V
+   o8OZ+WTZYgLKsmR83FGH1+zI+gxdlkcrOqMkXZWwDVFbUBfDsfwYF3JDT
+   K/k8QUo16a2h+q4UtMw/T98VbQGpmlk6ibi6Jg21nwoZInUiGOopulHSU
+   3LnZ2mhh0hIyftfuYnLuVJJz2e5OcxQ0N3v/wCiCcNI9XCMAyAitp12Or
+   UAdkAEeJT6jePiEJjAQSMtZgOvLbbtkVCvtzosfzVovaOcyvv6bzdTXI2
+   Q==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10598"; a="323714024"
+X-IronPort-AV: E=Sophos;i="5.97,239,1669104000"; 
+   d="scan'208";a="323714024"
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jan 2023 03:50:09 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6500,9779,10598"; a="804072057"
+X-IronPort-AV: E=Sophos;i="5.97,239,1669104000"; 
+   d="scan'208";a="804072057"
+Received: from lkp-server01.sh.intel.com (HELO 5646d64e7320) ([10.239.97.150])
+  by fmsmga001.fm.intel.com with ESMTP; 23 Jan 2023 03:50:05 -0800
+Received: from kbuild by 5646d64e7320 with local (Exim 4.96)
+        (envelope-from <lkp@intel.com>)
+        id 1pJvKv-0005c4-0i;
+        Mon, 23 Jan 2023 11:50:05 +0000
+Date:   Mon, 23 Jan 2023 19:49:59 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     Ajay Kaher <akaher@vmware.com>, rostedt@goodmis.org,
+        mhiramat@kernel.org
+Cc:     oe-kbuild-all@lists.linux.dev, linux-kernel@vger.kernel.org,
+        linux-trace-kernel@vger.kernel.org, chinglinyu@google.com,
+        namit@vmware.com, srivatsab@vmware.com, srivatsa@csail.mit.edu,
+        amakhalov@vmware.com, vsirnapalli@vmware.com, tkundu@vmware.com,
+        er.ajay.kaher@gmail.com, Ajay Kaher <akaher@vmware.com>
+Subject: Re: [PATCH 6/8] eventfs: adding eventfs lookup, read, open functions
+Message-ID: <202301231952.hO83QgH2-lkp@intel.com>
+References: <1674407228-49109-6-git-send-email-akaher@vmware.com>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.4.2
-Subject: Re: [PATCH rdma-next 00/13] Add RDMA inline crypto support
-Content-Language: en-US
-To:     Leon Romanovsky <leon@kernel.org>, Jason Gunthorpe <jgg@nvidia.com>
-Cc:     Bryan Tan <bryantan@vmware.com>, Christoph Hellwig <hch@lst.de>,
-        Eric Dumazet <edumazet@google.com>,
-        Israel Rukshin <israelr@nvidia.com>,
-        Jakub Kicinski <kuba@kernel.org>, Jens Axboe <axboe@fb.com>,
-        Keith Busch <kbusch@kernel.org>, linux-kernel@vger.kernel.org,
-        linux-nvme@lists.infradead.org, linux-rdma@vger.kernel.org,
-        linux-trace-kernel@vger.kernel.org,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Max Gurtovoy <mgurtovoy@nvidia.com>, netdev@vger.kernel.org,
-        Paolo Abeni <pabeni@redhat.com>,
-        Saeed Mahameed <saeedm@nvidia.com>,
-        Selvin Xavier <selvin.xavier@broadcom.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Vishnu Dasa <vdasa@vmware.com>,
-        Yishai Hadas <yishaih@nvidia.com>
-References: <cover.1673873422.git.leon@kernel.org>
-From:   Sagi Grimberg <sagi@grimberg.me>
-In-Reply-To: <cover.1673873422.git.leon@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1674407228-49109-6-git-send-email-akaher@vmware.com>
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
+Hi Ajay,
 
->  From Israel,
-> 
-> The purpose of this patchset is to add support for inline
-> encryption/decryption of the data at storage protocols like nvmf over
-> RDMA (at a similar way like integrity is used via unique mkey).
-> 
-> This patchset adds support for plaintext keys. The patches were tested
-> on BF-3 HW with fscrypt tool to test this feature, which showed reduce
-> in CPU utilization when comparing at 64k or more IO size. The CPU utilization
-> was improved by more than 50% comparing to the SW only solution at this case.
-> 
-> How to configure fscrypt to enable plaintext keys:
->   # mkfs.ext4 -O encrypt /dev/nvme0n1
->   # mount /dev/nvme0n1 /mnt/crypto -o inlinecrypt
->   # head -c 64 /dev/urandom > /tmp/master_key
->   # fscryptctl add_key /mnt/crypto/ < /tmp/master_key
->   # mkdir /mnt/crypto/test1
->   # fscryptctl set_policy 152c41b2ea39fa3d90ea06448456e7fb /mnt/crypto/test1
->     ** “152c41b2ea39fa3d90ea06448456e7fb” is the output of the
->        “fscryptctl add_key” command.
->   # echo foo > /mnt/crypto/test1/foo
-> 
-> Notes:
->   - At plaintext mode only, the user set a master key and the fscrypt
->     driver derived from it the DEK and the key identifier.
->   - 152c41b2ea39fa3d90ea06448456e7fb is the derived key identifier
->   - Only on the first IO, nvme-rdma gets a callback to load the derived DEK.
-> 
-> There is no special configuration to support crypto at nvme modules.
+Thank you for the patch! Perhaps something to improve:
 
-Hey, this looks sane to me in a very first glance.
+[auto build test WARNING on linus/master]
+[also build test WARNING on v6.2-rc5 next-20230123]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
-Few high level questions:
-- what happens with multipathing? when if not all devices are
-capable. SW fallback?
-- Does the crypt stuff stay intact when bio is requeued?
+url:    https://github.com/intel-lab-lkp/linux/commits/Ajay-Kaher/eventfs-adding-eventfs-dir-add-functions/20230123-010956
+patch link:    https://lore.kernel.org/r/1674407228-49109-6-git-send-email-akaher%40vmware.com
+patch subject: [PATCH 6/8] eventfs: adding eventfs lookup, read, open functions
+config: x86_64-randconfig-s022 (https://download.01.org/0day-ci/archive/20230123/202301231952.hO83QgH2-lkp@intel.com/config)
+compiler: gcc-11 (Debian 11.3.0-8) 11.3.0
+reproduce:
+        # apt-get install sparse
+        # sparse version: v0.6.4-39-gce1a6720-dirty
+        # https://github.com/intel-lab-lkp/linux/commit/bdfb24dc39f183eda75dc7c6ad54798181ad4a94
+        git remote add linux-review https://github.com/intel-lab-lkp/linux
+        git fetch --no-tags linux-review Ajay-Kaher/eventfs-adding-eventfs-dir-add-functions/20230123-010956
+        git checkout bdfb24dc39f183eda75dc7c6ad54798181ad4a94
+        # save the config file
+        mkdir build_dir && cp config build_dir/.config
+        make W=1 C=1 CF='-fdiagnostic-prefix -D__CHECK_ENDIAN__' O=build_dir ARCH=x86_64 olddefconfig
+        make W=1 C=1 CF='-fdiagnostic-prefix -D__CHECK_ENDIAN__' O=build_dir ARCH=x86_64 SHELL=/bin/bash fs/tracefs/
 
-I'm assuming you tested this with multipathing? This is not very
-useful if it is incompatible with it.
+If you fix the issue, kindly add following tag where applicable
+| Reported-by: kernel test robot <lkp@intel.com>
+
+sparse warnings: (new ones prefixed by >>)
+   fs/tracefs/event_inode.c:48:15: sparse: sparse: symbol 'eventfs_create_file' was not declared. Should it be static?
+   fs/tracefs/event_inode.c:117:15: sparse: sparse: symbol 'eventfs_create_dir' was not declared. Should it be static?
+>> fs/tracefs/event_inode.c:192:6: sparse: sparse: symbol 'eventfs_post_create_dir' was not declared. Should it be static?
+>> fs/tracefs/event_inode.c:291:5: sparse: sparse: symbol 'dcache_dir_open_wrapper' was not declared. Should it be static?
+   fs/tracefs/event_inode.c:340:31: sparse: sparse: symbol 'eventfs_root_dir_inode_operations' was not declared. Should it be static?
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests
