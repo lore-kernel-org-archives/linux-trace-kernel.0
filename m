@@ -2,30 +2,30 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 112C5C54EED
-	for <linux-trace-kernel@archiver.kernel.org>; Mon, 23 Jan 2023 18:00:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7522EC05027
+	for <linux-trace-kernel@archiver.kernel.org>; Mon, 23 Jan 2023 18:00:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233191AbjAWSAl (ORCPT
+        id S233100AbjAWSAr (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Mon, 23 Jan 2023 13:00:41 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38716 "EHLO
+        Mon, 23 Jan 2023 13:00:47 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38802 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233228AbjAWSAa (ORCPT
+        with ESMTP id S231716AbjAWSAm (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Mon, 23 Jan 2023 13:00:30 -0500
+        Mon, 23 Jan 2023 13:00:42 -0500
 Received: from 66-220-144-178.mail-mxout.facebook.com (66-220-144-178.mail-mxout.facebook.com [66.220.144.178])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 90049301B2
-        for <linux-trace-kernel@vger.kernel.org>; Mon, 23 Jan 2023 10:00:29 -0800 (PST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CF6842CFC5
+        for <linux-trace-kernel@vger.kernel.org>; Mon, 23 Jan 2023 10:00:41 -0800 (PST)
 Received: by dev0134.prn3.facebook.com (Postfix, from userid 425415)
-        id 5F7EA5616BE1; Mon, 23 Jan 2023 09:37:56 -0800 (PST)
+        id 4EC195616BD9; Mon, 23 Jan 2023 09:37:56 -0800 (PST)
 From:   Stefan Roesch <shr@devkernel.io>
 To:     linux-mm@kvack.org
 Cc:     shr@devkernel.io, linux-doc@vger.kernel.org,
         linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
         linux-kselftest@vger.kernel.org, linux-trace-kernel@vger.kernel.org
-Subject: [RESEND RFC PATCH v1 08/20] mm: split off pages_volatile function
-Date:   Mon, 23 Jan 2023 09:37:36 -0800
-Message-Id: <20230123173748.1734238-9-shr@devkernel.io>
+Subject: [RESEND RFC PATCH v1 04/20] mm: invoke madvise for all vmas in scan_get_next_rmap_item
+Date:   Mon, 23 Jan 2023 09:37:32 -0800
+Message-Id: <20230123173748.1734238-5-shr@devkernel.io>
 X-Mailer: git-send-email 2.30.2
 In-Reply-To: <20230123173748.1734238-1-shr@devkernel.io>
 References: <20230123173748.1734238-1-shr@devkernel.io>
@@ -35,46 +35,79 @@ Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-This splits off the pages_volatile function. The next patch will use
-this function.
+If the new flag MMF_VM_MERGE_ANY has been set for a process, iterate
+over all the vmas and enable ksm if possible. For the vmas that can be
+ksm enabled this is only done once.
 
 Signed-off-by: Stefan Roesch <shr@devkernel.io>
 ---
- mm/ksm.c | 12 +++++++++---
- 1 file changed, 9 insertions(+), 3 deletions(-)
+ mm/ksm.c | 27 ++++++++++++++++++++++++++-
+ 1 file changed, 26 insertions(+), 1 deletion(-)
 
 diff --git a/mm/ksm.c b/mm/ksm.c
-index 88a969849955..19f434f97dc1 100644
+index 83796328574c..967eda719fab 100644
 --- a/mm/ksm.c
 +++ b/mm/ksm.c
-@@ -3182,8 +3182,7 @@ static ssize_t pages_unshared_show(struct kobject *=
-kobj,
+@@ -1013,6 +1013,7 @@ static int unmerge_and_remove_all_rmap_items(void)
+=20
+ 			mm_slot_free(mm_slot_cache, mm_slot);
+ 			clear_bit(MMF_VM_MERGEABLE, &mm->flags);
++			clear_bit(MMF_VM_MERGE_ANY, &mm->flags);
+ 			mmdrop(mm);
+ 		} else
+ 			spin_unlock(&ksm_mmlist_lock);
+@@ -2243,6 +2244,17 @@ static struct ksm_rmap_item *get_next_rmap_item(st=
+ruct ksm_mm_slot *mm_slot,
+ 	return rmap_item;
  }
- KSM_ATTR_RO(pages_unshared);
 =20
--static ssize_t pages_volatile_show(struct kobject *kobj,
--				   struct kobj_attribute *attr, char *buf)
-+static long pages_volatile(void)
- {
- 	long ksm_pages_volatile;
-=20
-@@ -3195,7 +3194,14 @@ static ssize_t pages_volatile_show(struct kobject =
-*kobj,
- 	 */
- 	if (ksm_pages_volatile < 0)
- 		ksm_pages_volatile =3D 0;
--	return sysfs_emit(buf, "%ld\n", ksm_pages_volatile);
++static bool vma_ksm_mergeable(struct vm_area_struct *vma)
++{
++	if (vma->vm_flags & VM_MERGEABLE)
++		return true;
 +
-+	return ksm_pages_volatile;
++	if (test_bit(MMF_VM_MERGE_ANY, &vma->vm_mm->flags))
++		return true;
++
++	return false;
 +}
 +
-+static ssize_t pages_volatile_show(struct kobject *kobj,
-+				   struct kobj_attribute *attr, char *buf)
-+{
-+	return sysfs_emit(buf, "%ld\n", pages_volatile());
- }
- KSM_ATTR_RO(pages_volatile);
+ static struct ksm_rmap_item *scan_get_next_rmap_item(struct page **page)
+ {
+ 	struct mm_struct *mm;
+@@ -2319,8 +2331,20 @@ static struct ksm_rmap_item *scan_get_next_rmap_it=
+em(struct page **page)
+ 		goto no_vmas;
 =20
+ 	for_each_vma(vmi, vma) {
+-		if (!(vma->vm_flags & VM_MERGEABLE))
++		if (!vma_ksm_mergeable(vma))
+ 			continue;
++		if (!(vma->vm_flags & VM_MERGEABLE)) {
++			unsigned long flags =3D vma->vm_flags;
++
++			/* madvise failed, use next vma */
++			if (ksm_madvise(vma, vma->vm_start, vma->vm_end, MADV_MERGEABLE, &fla=
+gs))
++				continue;
++			/* vma, not supported as being mergeable */
++			if (!(flags & VM_MERGEABLE))
++				continue;
++
++			vma->vm_flags =3D flags;
++		}
+ 		if (ksm_scan.address < vma->vm_start)
+ 			ksm_scan.address =3D vma->vm_start;
+ 		if (!vma->anon_vma)
+@@ -2389,6 +2413,7 @@ static struct ksm_rmap_item *scan_get_next_rmap_ite=
+m(struct page **page)
+=20
+ 		mm_slot_free(mm_slot_cache, mm_slot);
+ 		clear_bit(MMF_VM_MERGEABLE, &mm->flags);
++		clear_bit(MMF_VM_MERGE_ANY, &mm->flags);
+ 		mmap_read_unlock(mm);
+ 		mmdrop(mm);
+ 	} else {
 --=20
 2.30.2
 
