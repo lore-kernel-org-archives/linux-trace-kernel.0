@@ -2,79 +2,66 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 29618C61DA0
-	for <linux-trace-kernel@archiver.kernel.org>; Tue, 24 Jan 2023 19:06:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 98AD7C54EED
+	for <linux-trace-kernel@archiver.kernel.org>; Tue, 24 Jan 2023 20:25:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234581AbjAXTGw (ORCPT
+        id S232680AbjAXUZV (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Tue, 24 Jan 2023 14:06:52 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42508 "EHLO
+        Tue, 24 Jan 2023 15:25:21 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39320 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234626AbjAXTGk (ORCPT
+        with ESMTP id S231827AbjAXUZU (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Tue, 24 Jan 2023 14:06:40 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 393E14F34C;
-        Tue, 24 Jan 2023 11:06:21 -0800 (PST)
+        Tue, 24 Jan 2023 15:25:20 -0500
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7DAAC83E9;
+        Tue, 24 Jan 2023 12:25:19 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id CDE356132A;
-        Tue, 24 Jan 2023 19:06:20 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 73557C433EF;
-        Tue, 24 Jan 2023 19:06:19 +0000 (UTC)
-Date:   Tue, 24 Jan 2023 14:06:17 -0500
+        by ams.source.kernel.org (Postfix) with ESMTPS id 3A51AB816AD;
+        Tue, 24 Jan 2023 20:25:18 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E49CFC433EF;
+        Tue, 24 Jan 2023 20:25:16 +0000 (UTC)
+Received: from rostedt by gandalf.local.home with local (Exim 4.96)
+        (envelope-from <rostedt@goodmis.org>)
+        id 1pKPr1-003dz3-2D;
+        Tue, 24 Jan 2023 15:25:15 -0500
+Message-ID: <20230124202238.563854686@goodmis.org>
+User-Agent: quilt/0.66
+Date:   Tue, 24 Jan 2023 15:22:38 -0500
 From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Mark Rutland <mark.rutland@arm.com>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Linux Trace Kernel <linux-trace-kernel@vger.kernel.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>, chriscli@google.com
-Subject: Re: [PATCH] ftrace: Show a list of all functions that have ever
- been enabled
-Message-ID: <20230124140617.4a4fe106@gandalf.local.home>
-In-Reply-To: <Y9AG63mgkyzSEbSa@FVFF77S0Q05N>
-References: <20230124095653.6fd1640e@gandalf.local.home>
-        <Y9AG63mgkyzSEbSa@FVFF77S0Q05N>
-X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+To:     linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
+Cc:     Masami Hiramatsu <mhiramat@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linyu Yuan <quic_linyyuan@quicinc.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>, bpf@vger.kernel.org
+Subject: [PATCH 0/2] tracing: Have bpf and perf reuse the tracefs TRACE_EVENT macros
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On Tue, 24 Jan 2023 16:27:23 +0000
-Mark Rutland <mark.rutland@arm.com> wrote:
+When reviewing Linyu Yuan patches[1] where the change was to move most
+the macros from perf and bpf into stages, I realized that the macros
+that makes up perf and bpf events are duplicated from the tracefs
+macros that were moved into the stages directory. One reason to move
+them into that directory was to remove duplicate code.
 
-> > [
-> >   This patch will conflict with Mark's patch that is going through the ARM
-> >   tree. I will hold off pulling this patch until the next merge window, and
-> >   rebase it on top of the changes when the tracing tree merges with upstream
-> >   that has the changes from the ARM tree.
-> > ]  
-> 
-> Sorry for the conflict!
+Remove the macros that are duplicated in the bpf and perf code and use
+stage 6, which is the macros used to build the data needed to record
+the TRACE_EVENT() TP_fast_assign() into the trace. This will mean they
+will pick up bug fixes, as well as any enhacements that are added.
 
-No problem. This was more to help us debug something, and we are currently
-just backporting it for now to our kernels in order to help with the
-crashes we are seeing. No rush to get it upstream. But I figured that if it
-can help us, it can also help others.
+[1] https://lore.kernel.org/lkml/1671181385-5719-1-git-send-email-quic_linyyuan@quicinc.com/
 
-> 
-> The patch looks good to me; I just gave it a spin on arm64 (resolving the
-> conflcit with my changes by moving FTRCE_FL_TOUCHED to bit 20, and
-> FTRACE_REF_MAX_SHIFT down to 20), and from a naive test that seems happy:
-> 
-> | # cat /sys/kernel/tracing/touched_functions 
-> | # echo do_el0_svc > /sys/kernel/tracing/set_ftrace_filter 
-> | # echo function_graph > /sys/kernel/tracing/current_tracer 
-> | # cat /sys/kernel/tracing/touched_functions 
-> | do_el0_svc (1)       O  ops: graph_ops+0x0/0xb8 (ftrace_graph_func+0x0/0x58)
-> | # echo nop > /sys/kernel/tracing/current_tracer 
-> | # cat /sys/kernel/tracing/touched_functions 
-> | do_el0_svc (0) 
+Steven Rostedt (Google) (2):
+      perf/tracing: Use stage6 of tracing to not duplicate macros
+      bpf/tracing: Use stage6 of tracing to not duplicate macros
 
-Thanks for testing! I guess I can add a "tested-by" from you?
-
--- Steve
+----
+ include/trace/bpf_probe.h                    | 45 +--------------------------
+ include/trace/perf.h                         | 46 +---------------------------
+ include/trace/stages/stage6_event_callback.h |  3 ++
+ 3 files changed, 5 insertions(+), 89 deletions(-)
