@@ -2,151 +2,94 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CC53C61DA0
-	for <linux-trace-kernel@archiver.kernel.org>; Tue, 24 Jan 2023 20:25:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EA997C54EED
+	for <linux-trace-kernel@archiver.kernel.org>; Tue, 24 Jan 2023 21:11:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233239AbjAXUZW (ORCPT
+        id S234670AbjAXVLw (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Tue, 24 Jan 2023 15:25:22 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39320 "EHLO
+        Tue, 24 Jan 2023 16:11:52 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40456 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233101AbjAXUZV (ORCPT
+        with ESMTP id S234660AbjAXVLv (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Tue, 24 Jan 2023 15:25:21 -0500
-Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A7FEE113FF;
-        Tue, 24 Jan 2023 12:25:19 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 497B3B816B7;
-        Tue, 24 Jan 2023 20:25:18 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E7B5BC433D2;
-        Tue, 24 Jan 2023 20:25:16 +0000 (UTC)
-Received: from rostedt by gandalf.local.home with local (Exim 4.96)
-        (envelope-from <rostedt@goodmis.org>)
-        id 1pKPr1-003dzZ-2k;
-        Tue, 24 Jan 2023 15:25:15 -0500
-Message-ID: <20230124202515.716458410@goodmis.org>
-User-Agent: quilt/0.66
-Date:   Tue, 24 Jan 2023 15:22:39 -0500
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
-Cc:     Masami Hiramatsu <mhiramat@kernel.org>,
+        Tue, 24 Jan 2023 16:11:51 -0500
+Received: from mail-ej1-x633.google.com (mail-ej1-x633.google.com [IPv6:2a00:1450:4864:20::633])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 884B34A1D6;
+        Tue, 24 Jan 2023 13:11:41 -0800 (PST)
+Received: by mail-ej1-x633.google.com with SMTP id kt14so42570620ejc.3;
+        Tue, 24 Jan 2023 13:11:41 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=6VLfWvMIE+0MYnxjr0DPm0a1hmaojHme2AR9a6gv5+A=;
+        b=TxOBUUSdgIBLJ02hrTJoaxJq2/1uCBG0yLSvLao+h7ARu3iM7HKAt8bYX57MtVtlVm
+         Rxab8x5xMRxOIEcaphlyXgZfJsHtZJXLWxem2UNO4Waqg28SsVAsRx6Z6+1y+K8mhKdo
+         ubrYaM7PQM5pzCdWqQrmOC1NxmwogNM4FIfe8fHcQNbM7nTBQVS+ExBkf3R3uB+2bynX
+         TF8UGlf4ykumgDFGytruc0ywGYA6DwfwuCDZPhUk+tq9Q0GKU9W9xmjK6ue0/iL0Hyc4
+         hEF9dC/FF7QTjzIw+Ac1tb6AiQQFZ7rlQPgI6O7FbOluQ08sgTS7lunVW64dyRLZwCAb
+         BX6Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=6VLfWvMIE+0MYnxjr0DPm0a1hmaojHme2AR9a6gv5+A=;
+        b=T+gqNjDn2zKZp6RuCYkFb7/hsoAjhRuEGsPaDqB012IqV2pIVZRHYHiLQJ9SP+iwEB
+         qz7KpXHoWMvmh1rodG67rR3HXcB05rYR2nPBweTpT8r5XDPnaB3/JDVxqV/fZa7ydE8k
+         eYgpoDZFxcNhCjWHsAR+B2kyrJLbQ79ncPWRm3yTdXx6FccHt/u5lE0jx88CG1K1cd4I
+         vPWnzlzab0gK1U55edRR6PVJp/8M/x9T7ti0bOlHeeMv9qgHAwJSsF9bt5kiUQJTr47+
+         U62Cc9P0x1PEgjbTJqbJ6qsoJqyGh531CXLL5QR44VIUjbaEyunYksg4nLNApL9dVJUD
+         5Hlg==
+X-Gm-Message-State: AFqh2kpUW3FRxkcqfPiRzMHsqqy8+hTM1hlpjZ6GK6OaFO5hW3t0c+Y/
+        eRq3U7RdrrA8Gq448Uaq63sl4LxSmbgpkAkLfW0=
+X-Google-Smtp-Source: AMrXdXvKgaepUMdT61pPhe51PlugSdTDtzOGQT/sKSMMKBNvfvNuiMFxSRoAI0f8ihee41LKPEnzzmXexTDZjo/9NOg=
+X-Received: by 2002:a17:906:5a94:b0:84d:3b9a:e2b3 with SMTP id
+ l20-20020a1709065a9400b0084d3b9ae2b3mr2622670ejq.318.1674594700019; Tue, 24
+ Jan 2023 13:11:40 -0800 (PST)
+MIME-Version: 1.0
+References: <20230124202238.563854686@goodmis.org> <20230124202515.873075730@goodmis.org>
+In-Reply-To: <20230124202515.873075730@goodmis.org>
+From:   Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Date:   Tue, 24 Jan 2023 13:11:28 -0800
+Message-ID: <CAADnVQ+fJEtHVA6FhqtP1iMNfO7wQserFG_bRvuZcvQSY=kV2Q@mail.gmail.com>
+Subject: Re: [PATCH 2/2] bpf/tracing: Use stage6 of tracing to not duplicate macros
+To:     Steven Rostedt <rostedt@goodmis.org>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        linux-trace-kernel@vger.kernel.org,
+        Masami Hiramatsu <mhiramat@kernel.org>,
         Andrew Morton <akpm@linux-foundation.org>,
         Linyu Yuan <quic_linyyuan@quicinc.com>,
         Peter Zijlstra <peterz@infradead.org>,
         Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>, bpf@vger.kernel.org,
-        Frederic Weisbecker <fweisbec@gmail.com>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Peter Zijlstra <a.p.zijlstra@chello.nl>,
-        Ingo Molnar <mingo@elte.hu>
-Subject: [PATCH 1/2] perf/tracing: Use stage6 of tracing to not duplicate macros
-References: <20230124202238.563854686@goodmis.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+        Daniel Borkmann <daniel@iogearbox.net>,
+        bpf <bpf@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
+On Tue, Jan 24, 2023 at 12:25 PM Steven Rostedt <rostedt@goodmis.org> wrote:
+>
+> From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
+>
+> The bpf events are created by the same macro magic as tracefs trace
+> events are. But to hook into bpf, it has its own code. It duplicates many
+> of the same macros as the tracefs macros and this is an issue because it
+> misses bug fixes as well as any new enhancements that come with the other
+> trace macros.
+>
+> As the trace macros have been put into their own staging files, have bpf
+> take advantage of this and use the tracefs stage 6 macros that the "fast
+> ssign" portion of the trace event macro uses.
+>
+> Link: https://lore.kernel.org/lkml/1671181385-5719-1-git-send-email-quic_linyyuan@quicinc.com/
+>
+> Cc: bpf@vger.kernel.org
+> Cc: Alexei Starovoitov <ast@kernel.org>
+> Cc: Daniel Borkmann <daniel@iogearbox.net>
+> Reported-by: Linyu Yuan <quic_linyyuan@quicinc.com>
+> Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
 
-The perf events are created by the same macro magic as tracefs trace
-events are. But to hook into perf, it has its own code. It duplicates many
-of the same macros as the tracefs macros and this is an issue because it
-misses bug fixes as well as any new enhancements that come with the other
-trace macros.
-
-As the trace macros have been put into their own staging files, have perf
-take advantage of this and use the tracefs stage 6 macros that the "fast
-assign" portion of the trace event macro uses.
-
-Link: https://lore.kernel.org/lkml/1671181385-5719-1-git-send-email-quic_linyyuan@quicinc.com/
-
-Cc: Frederic Weisbecker <fweisbec@gmail.com>
-Cc: Arnaldo Carvalho de Melo <acme@redhat.com>
-Cc: Peter Zijlstra <a.p.zijlstra@chello.nl>
-Cc: Ingo Molnar <mingo@elte.hu>
-Reported-by: Linyu Yuan <quic_linyyuan@quicinc.com>
-Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
----
- include/trace/perf.h                         | 46 +-------------------
- include/trace/stages/stage6_event_callback.h |  3 ++
- 2 files changed, 4 insertions(+), 45 deletions(-)
-
-diff --git a/include/trace/perf.h b/include/trace/perf.h
-index 8f3bf1e17707..2c11181c82e0 100644
---- a/include/trace/perf.h
-+++ b/include/trace/perf.h
-@@ -4,51 +4,7 @@
- 
- #ifdef CONFIG_PERF_EVENTS
- 
--#undef __entry
--#define __entry entry
--
--#undef __get_dynamic_array
--#define __get_dynamic_array(field)	\
--		((void *)__entry + (__entry->__data_loc_##field & 0xffff))
--
--#undef __get_dynamic_array_len
--#define __get_dynamic_array_len(field)	\
--		((__entry->__data_loc_##field >> 16) & 0xffff)
--
--#undef __get_str
--#define __get_str(field) ((char *)__get_dynamic_array(field))
--
--#undef __get_bitmask
--#define __get_bitmask(field) (char *)__get_dynamic_array(field)
--
--#undef __get_cpumask
--#define __get_cpumask(field) (char *)__get_dynamic_array(field)
--
--#undef __get_sockaddr
--#define __get_sockaddr(field) ((struct sockaddr *)__get_dynamic_array(field))
--
--#undef __get_rel_dynamic_array
--#define __get_rel_dynamic_array(field)	\
--		((void *)__entry +					\
--		 offsetof(typeof(*__entry), __rel_loc_##field) +	\
--		 sizeof(__entry->__rel_loc_##field) +			\
--		 (__entry->__rel_loc_##field & 0xffff))
--
--#undef __get_rel_dynamic_array_len
--#define __get_rel_dynamic_array_len(field)	\
--		((__entry->__rel_loc_##field >> 16) & 0xffff)
--
--#undef __get_rel_str
--#define __get_rel_str(field) ((char *)__get_rel_dynamic_array(field))
--
--#undef __get_rel_bitmask
--#define __get_rel_bitmask(field) (char *)__get_rel_dynamic_array(field)
--
--#undef __get_rel_cpumask
--#define __get_rel_cpumask(field) (char *)__get_rel_dynamic_array(field)
--
--#undef __get_rel_sockaddr
--#define __get_rel_sockaddr(field) ((struct sockaddr *)__get_rel_dynamic_array(field))
-+#include "stages/stage6_event_callback.h"
- 
- #undef __perf_count
- #define __perf_count(c)	(__count = (c))
-diff --git a/include/trace/stages/stage6_event_callback.h b/include/trace/stages/stage6_event_callback.h
-index 49c32394b53f..919b1a4da980 100644
---- a/include/trace/stages/stage6_event_callback.h
-+++ b/include/trace/stages/stage6_event_callback.h
-@@ -2,6 +2,9 @@
- 
- /* Stage 6 definitions for creating trace events */
- 
-+/* Reuse some of the stage 3 macros */
-+#include "stage3_trace_output.h"
-+
- #undef __entry
- #define __entry entry
- 
--- 
-2.39.0
-
-
+Nice cleanup.
+Acked-by: Alexei Starovoitov <ast@kernel.org>
