@@ -2,83 +2,126 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FB1FC54EAA
-	for <linux-trace-kernel@archiver.kernel.org>; Tue, 24 Jan 2023 17:12:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DB746C54E94
+	for <linux-trace-kernel@archiver.kernel.org>; Tue, 24 Jan 2023 17:17:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234319AbjAXRMY (ORCPT
+        id S233205AbjAXRRK (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Tue, 24 Jan 2023 12:12:24 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46710 "EHLO
+        Tue, 24 Jan 2023 12:17:10 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51152 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234142AbjAXRMX (ORCPT
+        with ESMTP id S234624AbjAXRRJ (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Tue, 24 Jan 2023 12:12:23 -0500
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 996E42D72;
-        Tue, 24 Jan 2023 09:12:22 -0800 (PST)
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 122154B3;
-        Tue, 24 Jan 2023 09:13:04 -0800 (PST)
-Received: from FVFF77S0Q05N (unknown [10.57.11.85])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 119773F64C;
-        Tue, 24 Jan 2023 09:12:16 -0800 (PST)
-Date:   Tue, 24 Jan 2023 17:12:14 +0000
-From:   Mark Rutland <mark.rutland@arm.com>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Steven Rostedt <rostedt@goodmis.org>, mingo@kernel.org,
-        will@kernel.org, boqun.feng@gmail.com, tglx@linutronix.de,
-        bp@alien8.de, dave.hansen@linux.intel.com, x86@kernel.org,
-        hpa@zytor.com, seanjc@google.com, pbonzini@redhat.com,
-        jgross@suse.com, srivatsa@csail.mit.edu, amakhalov@vmware.com,
-        pv-drivers@vmware.com, mhiramat@kernel.org, wanpengli@tencent.com,
-        vkuznets@redhat.com, boris.ostrovsky@oracle.com, rafael@kernel.org,
-        daniel.lezcano@linaro.org, juri.lelli@redhat.com,
-        vincent.guittot@linaro.org, dietmar.eggemann@arm.com,
-        bsegall@google.com, mgorman@suse.de, bristot@redhat.com,
-        vschneid@redhat.com, linux-kernel@vger.kernel.org,
-        kvm@vger.kernel.org, virtualization@lists.linux-foundation.org,
-        linux-trace-kernel@vger.kernel.org, linux-pm@vger.kernel.org
-Subject: Re: [PATCH 3/6] ftrace/x86: Warn and ignore graph tracing when RCU
- is disabled
-Message-ID: <Y9ARbgtYhxSuOIlZ@FVFF77S0Q05N>
-References: <20230123205009.790550642@infradead.org>
- <20230123205515.059999893@infradead.org>
- <20230123165304.370121e7@gandalf.local.home>
- <20230123170753.7ac9419e@gandalf.local.home>
- <Y8/u00WHGElMDjoo@hirez.programming.kicks-ass.net>
+        Tue, 24 Jan 2023 12:17:09 -0500
+Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4BB3322000;
+        Tue, 24 Jan 2023 09:17:08 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id E9D3DB815E6;
+        Tue, 24 Jan 2023 17:17:06 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 03A2EC433D2;
+        Tue, 24 Jan 2023 17:17:04 +0000 (UTC)
+Date:   Tue, 24 Jan 2023 12:17:03 -0500
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     <yang.yang29@zte.com.cn>
+Cc:     <mhiramat@kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-trace-kernel@vger.kernel.org>, <xu.panda@zte.com.cn>
+Subject: Re: [PATCH linux-next] tracing: use strscpy() to instead of
+ strncpy()
+Message-ID: <20230124121703.1e3a1ac4@gandalf.local.home>
+In-Reply-To: <202301091939219689840@zte.com.cn>
+References: <202301091939219689840@zte.com.cn>
+X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Y8/u00WHGElMDjoo@hirez.programming.kicks-ass.net>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On Tue, Jan 24, 2023 at 03:44:35PM +0100, Peter Zijlstra wrote:
-> On Mon, Jan 23, 2023 at 05:07:53PM -0500, Steven Rostedt wrote:
-> 
-> > Actually, perhaps we can just add this, and all you need to do is create
-> > and set CONFIG_NO_RCU_TRACING (or some other name).
-> 
-> Elsewhere I've used CONFIG_ARCH_WANTS_NO_INSTR for this.
+On Mon, 9 Jan 2023 19:39:21 +0800 (CST)
+<yang.yang29@zte.com.cn> wrote:
 
-Yes please; if we use CONFIG_ARCH_WANTS_NO_INSTR then arm64 will get this "for
-free" once we add the missing checks (which I assume we need) in our ftrace_prepare_return().
+> From: Xu Panda <xu.panda@zte.com.cn>
+> 
+> The implementation of strscpy() is more robust and safer.
+> That's now the recommended way to copy NUL-terminated strings.
 
-> Anyway, I took it for a spin and it .... doesn't seems to do the job.
-> 
-> With my patch the first splat is
-> 
->   "RCU not on for: cpuidle_poll_time+0x0/0x70"
-> 
-> While with yours I seems to get the endless:
-> 
->   "WARNING: suspicious RCU usage"
-> 
-> thing. Let me see if I can figure out where it goes side-ways.
+But the string being copied is *not* NUL-terminated! And this change causes
+a bug.
 
-Hmmm... for WARN_ONCE() don't we need to wake RCU first also? I thought we
-needed that at least for the printk machinery?
+This is the 3rd patch I've seen that blindly converts strncpy() to
+strscpy() and causes a bug in doing so. Not very safe if you ask me.
 
-Thanks,
-Mark.
+> 
+> Signed-off-by: Xu Panda <xu.panda@zte.com.cn>
+> Signed-off-by: Yang Yang <yang.yang29@zte.com.cn>
+> ---
+>  kernel/trace/trace_events_synth.c | 3 +--
+>  1 file changed, 1 insertion(+), 2 deletions(-)
+> 
+> diff --git a/kernel/trace/trace_events_synth.c b/kernel/trace/trace_events_synth.c
+> index 67592eed0be8..cd636edd045e 100644
+> --- a/kernel/trace/trace_events_synth.c
+> +++ b/kernel/trace/trace_events_synth.c
+> @@ -195,8 +195,7 @@ static int synth_field_string_size(char *type)
+>  	if (len == 0)
+>  		return 0; /* variable-length string */
+> 
+> -	strncpy(buf, start, len);
+> -	buf[len] = '\0';
+> +	strscpy(buf, start, len + 1);
+> 
+>  	err = kstrtouint(buf, 0, &size);
+>  	if (err)
+
+
+Here's the code being affected:
+
+static int synth_field_string_size(char *type)
+{
+	char buf[4], *end, *start;
+	unsigned int len;
+	int size, err;
+
+	start = strstr(type, "char[");
+	if (start == NULL)
+		return -EINVAL;
+	start += sizeof("char[") - 1;
+
+	end = strchr(type, ']');
+	if (!end || end < start || type + strlen(type) > end + 1)
+		return -EINVAL;
+
+	len = end - start;
+	if (len > 3)
+		return -EINVAL;
+
+	if (len == 0)
+		return 0; /* variable-length string */
+
+	strncpy(buf, start, len);
+	buf[len] = '\0';
+
+And you are replacing the above two lines with just:
+
+	strscpy(buf, start, len + 1);
+
+
+If you noticed, the string being placed into buf is:
+
+  "char[123]"
+
+Where we want to copy that "123" into buf.
+
+strscpy() expects the source to be nul terminated, or it will return -E2BIG.
+
+So the above will *always* return -E2BIG *and* not end buf[] with '\0' as
+if strscpy() returns -E2BIG, then buf[] is not guaranteed to be
+NUL-terminated.
+
+  NACK!
+
+-- Steve
