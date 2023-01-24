@@ -2,139 +2,116 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ADD42C25B4E
-	for <linux-trace-kernel@archiver.kernel.org>; Tue, 24 Jan 2023 04:09:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BF13C25B4E
+	for <linux-trace-kernel@archiver.kernel.org>; Tue, 24 Jan 2023 14:25:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231921AbjAXEJr (ORCPT
+        id S234171AbjAXOZL (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Mon, 23 Jan 2023 23:09:47 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38574 "EHLO
+        Tue, 24 Jan 2023 09:25:11 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36698 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231787AbjAXEJq (ORCPT
+        with ESMTP id S233644AbjAXOZH (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Mon, 23 Jan 2023 23:09:46 -0500
-Received: from mail-pl1-x62a.google.com (mail-pl1-x62a.google.com [IPv6:2607:f8b0:4864:20::62a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4CEAB4EF1;
-        Mon, 23 Jan 2023 20:09:45 -0800 (PST)
-Received: by mail-pl1-x62a.google.com with SMTP id p24so13519390plw.11;
-        Mon, 23 Jan 2023 20:09:45 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=1CiC6L/MPz8ZmBhU93JAZAVZyRDaJoENCcWkRf+ufm4=;
-        b=bdqWNXxaEAoHIX04bpEVSBIbEFxFmKE+NKUP+75biPBPRZHWfgH7gcbZuKt1OP9hOZ
-         /vSdWxVYknC7sKp0ZSuaz1umVtqStNug+gJmIq5Q7Z54DDJ7YaG+qv728xcN+biUJ6cx
-         /xndsgVYkazdnHPxfq0R2gEDJkxA4HBtk6f/RnpDhTdQRKKlUztkzRdhmQ/eaVmMkRcF
-         i3XS5Lm6XwJQU68T64CCiS5tMPlSpREhvDTaDQ8kcqdGTPOBHwP6yt6udcIFeldEfw6U
-         Exf37LEFu0wdqZ9LKjcCh43EaJZz8nPFptguv9BH8ETcoyeaTtt5jT5aa/lqBoDvURay
-         sKJA==
+        Tue, 24 Jan 2023 09:25:07 -0500
+Received: from mail-ej1-f43.google.com (mail-ej1-f43.google.com [209.85.218.43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6899346174;
+        Tue, 24 Jan 2023 06:25:06 -0800 (PST)
+Received: by mail-ej1-f43.google.com with SMTP id az20so39502988ejc.1;
+        Tue, 24 Jan 2023 06:25:06 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=1CiC6L/MPz8ZmBhU93JAZAVZyRDaJoENCcWkRf+ufm4=;
-        b=WihfXxiUesJuFTm1Tr6YxOnzn3kAnSnZgjAh4W3ZHr88tOK4hE0bSlPzzy0PrXe6dO
-         FKuAG+xd65pqFDzWyQCBadyPZ3k8XIx+BbuIUXQXFTdvPrAkdh2XTo0/+Vps0+xOlqj0
-         sC6O/nX5J5u8macVRJbt6JIzFY61pa0Qse+jKiVVQN0LQhNuqWAdvU4af0muD9zNCkNi
-         RdDKnd4VIwWOOcpgOu3uunTENOTvIl1SCz6a/gj83PnYiQJaghf/fED+gU/JKi1NdSR6
-         nSj9NsrYv6hjiSseDSzYTqfNa4ixDFopgO0Ws3e9cdc431Ei/AAIVuGJKTljYxQLwRtP
-         R0CQ==
-X-Gm-Message-State: AFqh2kqe6mHAHF95JLE9b79/wKERRHx8dDaJF+pobb0EjtCfNU0BVR1F
-        QHYawO5bsZ3LOjLuNAjFBQnJVHoLVacctA==
-X-Google-Smtp-Source: AMrXdXvZt1un5aXiFJAX4vKuY9CQmfzHY67G3vdATIaA7xHuJXH9BYTDB/1ELClrg0gcDiebTJXDZA==
-X-Received: by 2002:a05:6a20:6592:b0:a4:8725:fdcd with SMTP id p18-20020a056a20659200b000a48725fdcdmr27632969pzh.15.1674533384795;
-        Mon, 23 Jan 2023 20:09:44 -0800 (PST)
-Received: from debian.me (subs03-180-214-233-91.three.co.id. [180.214.233.91])
-        by smtp.gmail.com with ESMTPSA id i127-20020a639d85000000b00478162d9923sm336384pgd.13.2023.01.23.20.09.43
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 23 Jan 2023 20:09:44 -0800 (PST)
-Received: by debian.me (Postfix, from userid 1000)
-        id D22F7105170; Tue, 24 Jan 2023 11:09:41 +0700 (WIB)
-Date:   Tue, 24 Jan 2023 11:09:41 +0700
-From:   Bagas Sanjaya <bagasdotme@gmail.com>
-To:     Stefan Roesch <shr@devkernel.io>, linux-mm@kvack.org
-Cc:     linux-doc@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
-        linux-trace-kernel@vger.kernel.org
-Subject: Re: [RESEND RFC PATCH v1 15/20] docs: document new procfs ksm knobs
-Message-ID: <Y89aBXuPrbjrFAmC@debian.me>
-References: <20230123173748.1734238-1-shr@devkernel.io>
- <20230123173748.1734238-16-shr@devkernel.io>
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=HFiY49QSpECHmg3/XnIBpM7+6TWXqD6hxAB2tKV4uVM=;
+        b=trKfX0QKqQCcAFesVGpTCQrZJiut5jfyIjysJCeZjnSzDYYyWMBCxJ4a7MRMIY7nez
+         9KrA6eAHK44775RsvUKck63XA6W0+JffAYwRfd65Y7wOwJaPk+uovk6lZJvUkeAMHUbV
+         UAipStfZYzkBeBBkYFRYzG+kVlWfBPg9e3/7bwCKTi8QJ8HNU+r7iRK6y/ZgSWNKfa8o
+         5UpxenUmhZqPF3r9DArqM0Z0ew2fHjX+rT/y8kJcpvnYt+YfqIq92uv0V6QPtiR1aWb3
+         IkiSW60GjGMiMkSHo9Y4iHMIfo6rC2zgBZxZXFPefEF08XciMu5s9qSOnqBX4H9pc42W
+         n4Dg==
+X-Gm-Message-State: AFqh2kqNJBNsmmwdzZMX3z9ulUSlXyVuaXy3gB99vbPfwhh6Hsk0hO1H
+        J188Xw77bRSBWQWtVW/5wkYDSSbsLVs4FCLg5iM=
+X-Google-Smtp-Source: AMrXdXuJpYU/fVjzod6h2/vaXZp4NAt4KpSzd9J+SqARc7LgKOGgdEnk0S9WeDDl/G8RAbK5Y/RXyWsg2NY+LUrUB/o=
+X-Received: by 2002:a17:907:2b23:b0:877:8b1d:354e with SMTP id
+ gc35-20020a1709072b2300b008778b1d354emr2505342ejc.309.1674570304853; Tue, 24
+ Jan 2023 06:25:04 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="XX6agEIUzIpHNuNV"
-Content-Disposition: inline
-In-Reply-To: <20230123173748.1734238-16-shr@devkernel.io>
+References: <20230123205009.790550642@infradead.org> <20230123205515.233366796@infradead.org>
+In-Reply-To: <20230123205515.233366796@infradead.org>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Tue, 24 Jan 2023 15:24:53 +0100
+Message-ID: <CAJZ5v0jnmyWDQw=VXcViZLUfjjVgkP8TYKg3nS62jANT2qr-mg@mail.gmail.com>
+Subject: Re: [PATCH 6/6] cpuidle: Fix poll_idle() noinstr annotation
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     mingo@kernel.org, will@kernel.org, boqun.feng@gmail.com,
+        mark.rutland@arm.com, tglx@linutronix.de, bp@alien8.de,
+        dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com,
+        seanjc@google.com, pbonzini@redhat.com, jgross@suse.com,
+        srivatsa@csail.mit.edu, amakhalov@vmware.com,
+        pv-drivers@vmware.com, rostedt@goodmis.org, mhiramat@kernel.org,
+        wanpengli@tencent.com, vkuznets@redhat.com,
+        boris.ostrovsky@oracle.com, rafael@kernel.org,
+        daniel.lezcano@linaro.org, juri.lelli@redhat.com,
+        vincent.guittot@linaro.org, dietmar.eggemann@arm.com,
+        bsegall@google.com, mgorman@suse.de, bristot@redhat.com,
+        vschneid@redhat.com, linux-kernel@vger.kernel.org,
+        kvm@vger.kernel.org, virtualization@lists.linux-foundation.org,
+        linux-trace-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
+        kernel test robot <oliver.sang@intel.com>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
+On Mon, Jan 23, 2023 at 9:58 PM Peter Zijlstra <peterz@infradead.org> wrote:
+>
+> The instrumentation_begin()/end() annotations in poll_idle() were
+> complete nonsense. Specifically they caused tracing to happen in the
+> middle of noinstr code, resulting in RCU splats.
+>
+> Now that local_clock() is noinstr, mark up the rest and let it rip.
+>
+> Fixes: 00717eb8c955 ("cpuidle: Annotate poll_idle()")
+> Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+> Reported-by: kernel test robot <oliver.sang@intel.com>
+> Link: https://lore.kernel.org/oe-lkp/202301192148.58ece903-oliver.sang@intel.com
 
---XX6agEIUzIpHNuNV
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Acked-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 
-On Mon, Jan 23, 2023 at 09:37:43AM -0800, Stefan Roesch wrote:
-> This documents the ksm_process_profit and ksm_merge_type settings in
-> ksm_stat.
-
-"Document both ksm_process_profit and ksm_merge_type proc settings."
-
->=20
-> Signed-off-by: Stefan Roesch <shr@devkernel.io>
 > ---
->  Documentation/admin-guide/mm/ksm.rst | 6 +++++-
->  1 file changed, 5 insertions(+), 1 deletion(-)
->=20
-> diff --git a/Documentation/admin-guide/mm/ksm.rst b/Documentation/admin-g=
-uide/mm/ksm.rst
-> index 72189bf1283e..70896f01d641 100644
-> --- a/Documentation/admin-guide/mm/ksm.rst
-> +++ b/Documentation/admin-guide/mm/ksm.rst
-> @@ -211,7 +211,8 @@ several times, which are unprofitable memory consumed.
->  			  ksm_rmap_items * sizeof(rmap_item).
-> =20
->     where ksm_merging_pages is shown under the directory ``/proc/<pid>/``,
-> -   and ksm_rmap_items is shown in ``/proc/<pid>/ksm_stat``.
-> +   and ksm_rmap_items is shown in ``/proc/<pid>/ksm_stat``. The process =
-profit
-> +   is also shown in ``/proc/<pid>/ksm_stat`` as ksm_process_profit.
-> =20
->  From the perspective of application, a high ratio of ``ksm_rmap_items`` =
-to
->  ``ksm_merging_pages`` means a bad madvise-applied policy, so developers =
-or
-> @@ -222,6 +223,9 @@ so if the ``ksm_rmap_items/ksm_merging_pages`` ratio =
-exceeds 64 on 64-bit CPU
->  or exceeds 128 on 32-bit CPU, then the app's madvise policy should be dr=
-opped,
->  because the ksm profit is approximately zero or negative.
-> =20
-> +The ksm_merge_type in ``/proc/<pid>/ksm_stat`` shows the merge type of t=
-he
-> +process. Valid values are ``none``, ``madvise`` and ``process``.
-> +
->  Monitoring KSM events
->  =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-> =20
-
-The change LGTM.
-
---=20
-An old man doll... just what I always wanted! - Clara
-
---XX6agEIUzIpHNuNV
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEARYKAB0WIQSSYQ6Cy7oyFNCHrUH2uYlJVVFOowUCY89aBQAKCRD2uYlJVVFO
-o5VVAQDUTWIM8oin7v2bLz8Fg+xjQgz6v0OLJxT0G5Q0oiQeuAEAtVt3/yWMls24
-CeYG0s/x1NbG/nXXj/D9+N7HeZvVSwY=
-=O4Jm
------END PGP SIGNATURE-----
-
---XX6agEIUzIpHNuNV--
+>  drivers/cpuidle/cpuidle.c    |    2 +-
+>  drivers/cpuidle/poll_state.c |    2 --
+>  2 files changed, 1 insertion(+), 3 deletions(-)
+>
+> --- a/drivers/cpuidle/cpuidle.c
+> +++ b/drivers/cpuidle/cpuidle.c
+> @@ -426,7 +426,7 @@ void cpuidle_reflect(struct cpuidle_devi
+>   * @dev:   the cpuidle device
+>   *
+>   */
+> -u64 cpuidle_poll_time(struct cpuidle_driver *drv,
+> +__cpuidle u64 cpuidle_poll_time(struct cpuidle_driver *drv,
+>                       struct cpuidle_device *dev)
+>  {
+>         int i;
+> --- a/drivers/cpuidle/poll_state.c
+> +++ b/drivers/cpuidle/poll_state.c
+> @@ -15,7 +15,6 @@ static int __cpuidle poll_idle(struct cp
+>  {
+>         u64 time_start;
+>
+> -       instrumentation_begin();
+>         time_start = local_clock();
+>
+>         dev->poll_time_limit = false;
+> @@ -42,7 +41,6 @@ static int __cpuidle poll_idle(struct cp
+>         raw_local_irq_disable();
+>
+>         current_clr_polling();
+> -       instrumentation_end();
+>
+>         return index;
+>  }
+>
+>
