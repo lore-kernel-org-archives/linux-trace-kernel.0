@@ -2,94 +2,60 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EA997C54EED
-	for <linux-trace-kernel@archiver.kernel.org>; Tue, 24 Jan 2023 21:11:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E47FC54EED
+	for <linux-trace-kernel@archiver.kernel.org>; Tue, 24 Jan 2023 22:01:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234670AbjAXVLw (ORCPT
+        id S234466AbjAXWBP (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Tue, 24 Jan 2023 16:11:52 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40456 "EHLO
+        Tue, 24 Jan 2023 17:01:15 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39150 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234660AbjAXVLv (ORCPT
+        with ESMTP id S234450AbjAXWBO (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Tue, 24 Jan 2023 16:11:51 -0500
-Received: from mail-ej1-x633.google.com (mail-ej1-x633.google.com [IPv6:2a00:1450:4864:20::633])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 884B34A1D6;
-        Tue, 24 Jan 2023 13:11:41 -0800 (PST)
-Received: by mail-ej1-x633.google.com with SMTP id kt14so42570620ejc.3;
-        Tue, 24 Jan 2023 13:11:41 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=6VLfWvMIE+0MYnxjr0DPm0a1hmaojHme2AR9a6gv5+A=;
-        b=TxOBUUSdgIBLJ02hrTJoaxJq2/1uCBG0yLSvLao+h7ARu3iM7HKAt8bYX57MtVtlVm
-         Rxab8x5xMRxOIEcaphlyXgZfJsHtZJXLWxem2UNO4Waqg28SsVAsRx6Z6+1y+K8mhKdo
-         ubrYaM7PQM5pzCdWqQrmOC1NxmwogNM4FIfe8fHcQNbM7nTBQVS+ExBkf3R3uB+2bynX
-         TF8UGlf4ykumgDFGytruc0ywGYA6DwfwuCDZPhUk+tq9Q0GKU9W9xmjK6ue0/iL0Hyc4
-         hEF9dC/FF7QTjzIw+Ac1tb6AiQQFZ7rlQPgI6O7FbOluQ08sgTS7lunVW64dyRLZwCAb
-         BX6Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=6VLfWvMIE+0MYnxjr0DPm0a1hmaojHme2AR9a6gv5+A=;
-        b=T+gqNjDn2zKZp6RuCYkFb7/hsoAjhRuEGsPaDqB012IqV2pIVZRHYHiLQJ9SP+iwEB
-         qz7KpXHoWMvmh1rodG67rR3HXcB05rYR2nPBweTpT8r5XDPnaB3/JDVxqV/fZa7ydE8k
-         eYgpoDZFxcNhCjWHsAR+B2kyrJLbQ79ncPWRm3yTdXx6FccHt/u5lE0jx88CG1K1cd4I
-         vPWnzlzab0gK1U55edRR6PVJp/8M/x9T7ti0bOlHeeMv9qgHAwJSsF9bt5kiUQJTr47+
-         U62Cc9P0x1PEgjbTJqbJ6qsoJqyGh531CXLL5QR44VIUjbaEyunYksg4nLNApL9dVJUD
-         5Hlg==
-X-Gm-Message-State: AFqh2kpUW3FRxkcqfPiRzMHsqqy8+hTM1hlpjZ6GK6OaFO5hW3t0c+Y/
-        eRq3U7RdrrA8Gq448Uaq63sl4LxSmbgpkAkLfW0=
-X-Google-Smtp-Source: AMrXdXvKgaepUMdT61pPhe51PlugSdTDtzOGQT/sKSMMKBNvfvNuiMFxSRoAI0f8ihee41LKPEnzzmXexTDZjo/9NOg=
-X-Received: by 2002:a17:906:5a94:b0:84d:3b9a:e2b3 with SMTP id
- l20-20020a1709065a9400b0084d3b9ae2b3mr2622670ejq.318.1674594700019; Tue, 24
- Jan 2023 13:11:40 -0800 (PST)
+        Tue, 24 Jan 2023 17:01:14 -0500
+Received: from ms.lwn.net (ms.lwn.net [IPv6:2600:3c01:e000:3a1::42])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BA7CE4FCC6
+        for <linux-trace-kernel@vger.kernel.org>; Tue, 24 Jan 2023 14:01:11 -0800 (PST)
+Received: from localhost (unknown [IPv6:2601:281:8300:73::5f6])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ms.lwn.net (Postfix) with ESMTPSA id 8361599C;
+        Tue, 24 Jan 2023 22:01:06 +0000 (UTC)
+DKIM-Filter: OpenDKIM Filter v2.11.0 ms.lwn.net 8361599C
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lwn.net; s=20201203;
+        t=1674597666; bh=MRcXfRT3encc2WhT9wUAe6vr0xv440A2voNd+2qi1gQ=;
+        h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+        b=dzT7X2HcbGjWTXJwTXhHK/5++x2j1Q/Vo7JmOsccGZQ16qdCf9eev73fgEp/ESkeT
+         ISMSKuWKtLfGZ7RMVH39t7ch8E61ap5Xo2k6fajsRNZdL24sZmbEnQnW4FAteNMGID
+         YK5MRokishBudR5uVNCla5Z7guqTb3mZjZHBE8iF0iY8WSBrYN1xve8fuWaDyeIcxJ
+         wrNtnNFKeLcOujBE8fb/HjUHIL68fBczkbpIDr/U1rrdJ3xPnyLb8VWt8JmvkaQQsW
+         PEWODXn65japhyyuPrgzwvtBy3qag9hAUPefHLoraeXtE46ATzVALGuxxNU75f706i
+         qePSjhiyxNKxQ==
+From:   Jonathan Corbet <corbet@lwn.net>
+To:     Steven Rostedt <rostedt@goodmis.org>,
+        "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
+Cc:     Yoann Congal <yoann.congal@smile.fr>,
+        linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-doc@vger.kernel.org
+Subject: Re: [PATCH v3 0/3] Documentation: kprobetrace: Improve readability
+In-Reply-To: <20230123103341.56f42e72@gandalf.local.home>
+References: <20230121225304.1711635-1-yoann.congal@smile.fr>
+ <20230122083138.300ab49e15c7b3de13f0f121@kernel.org>
+ <20230123103341.56f42e72@gandalf.local.home>
+Date:   Tue, 24 Jan 2023 15:01:05 -0700
+Message-ID: <87v8kvfv8e.fsf@meer.lwn.net>
 MIME-Version: 1.0
-References: <20230124202238.563854686@goodmis.org> <20230124202515.873075730@goodmis.org>
-In-Reply-To: <20230124202515.873075730@goodmis.org>
-From:   Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Date:   Tue, 24 Jan 2023 13:11:28 -0800
-Message-ID: <CAADnVQ+fJEtHVA6FhqtP1iMNfO7wQserFG_bRvuZcvQSY=kV2Q@mail.gmail.com>
-Subject: Re: [PATCH 2/2] bpf/tracing: Use stage6 of tracing to not duplicate macros
-To:     Steven Rostedt <rostedt@goodmis.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        linux-trace-kernel@vger.kernel.org,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linyu Yuan <quic_linyyuan@quicinc.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        bpf <bpf@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On Tue, Jan 24, 2023 at 12:25 PM Steven Rostedt <rostedt@goodmis.org> wrote:
->
-> From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
->
-> The bpf events are created by the same macro magic as tracefs trace
-> events are. But to hook into bpf, it has its own code. It duplicates many
-> of the same macros as the tracefs macros and this is an issue because it
-> misses bug fixes as well as any new enhancements that come with the other
-> trace macros.
->
-> As the trace macros have been put into their own staging files, have bpf
-> take advantage of this and use the tracefs stage 6 macros that the "fast
-> ssign" portion of the trace event macro uses.
->
-> Link: https://lore.kernel.org/lkml/1671181385-5719-1-git-send-email-quic_linyyuan@quicinc.com/
->
-> Cc: bpf@vger.kernel.org
-> Cc: Alexei Starovoitov <ast@kernel.org>
-> Cc: Daniel Borkmann <daniel@iogearbox.net>
-> Reported-by: Linyu Yuan <quic_linyyuan@quicinc.com>
-> Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+Steven Rostedt <rostedt@goodmis.org> writes:
 
-Nice cleanup.
-Acked-by: Alexei Starovoitov <ast@kernel.org>
+> Reviewed-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+>
+> Jon, care to take this series through your tree?
+
+Done, thanks.
+
+jon
