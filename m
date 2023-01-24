@@ -2,138 +2,81 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A8A7C54E94
-	for <linux-trace-kernel@archiver.kernel.org>; Tue, 24 Jan 2023 18:16:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 87FFDC25B4E
+	for <linux-trace-kernel@archiver.kernel.org>; Tue, 24 Jan 2023 18:16:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233161AbjAXSQL (ORCPT
+        id S233992AbjAXSQy (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Tue, 24 Jan 2023 13:16:11 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59890 "EHLO
+        Tue, 24 Jan 2023 13:16:54 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32922 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232517AbjAXSQL (ORCPT
+        with ESMTP id S234085AbjAXSQx (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Tue, 24 Jan 2023 13:16:11 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7BDAD4A210;
-        Tue, 24 Jan 2023 10:16:04 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 1799E61312;
-        Tue, 24 Jan 2023 18:16:04 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E8F37C433D2;
-        Tue, 24 Jan 2023 18:16:02 +0000 (UTC)
-Date:   Tue, 24 Jan 2023 13:16:01 -0500
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     LKML <linux-kernel@vger.kernel.org>,
-        Linux Trace Kernel <linux-trace-kernel@vger.kernel.org>
-Cc:     Masami Hiramatsu <mhiramat@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>
-Subject: [PATCH v2] ftrace/scripts: Update the instructions for
- ftrace-bisect.sh
-Message-ID: <20230124131601.1506b286@gandalf.local.home>
-X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+        Tue, 24 Jan 2023 13:16:53 -0500
+Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:3::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 52DD74DE2F;
+        Tue, 24 Jan 2023 10:16:49 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
+        MIME-Version:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:
+        Content-ID:Content-Description:In-Reply-To:References;
+        bh=udUpLgayI0SdNW12BCKKvCoh/6uaxuELj1ZkskTToMw=; b=xjAtajNIaLTa81A4ZM07krYwIi
+        Sbku/EETtE1MA5+8k0vPJ3JaCU0HXAy1cTU8zsbOonywMZHxE6CAX5NCpeTYEn4P+n9fOh7IwKPMX
+        qn3X066C+JBLVXGc3zsb/Nfrj/dCrmQyBbGrNpalO8RLVb7vzlgJ6ulB7F199haLSIfshp2uuBqMv
+        ZRm1S8XsZwCkJTtfVbTQ72s5161qMcxjtkmPECsniP59EUxyR+hhbnY5aT4sbT+2Xm4XzpHNqez9h
+        ECIAkJknXcDXpgdrohymX0nPZXK6DH2bG+bqYI8R41Ce5wCjhZN4xM/7Yllw4VyELO+jz7gtzhddg
+        TgTv9XoQ==;
+Received: from [2601:1c2:d80:3110::9307] (helo=bombadil.infradead.org)
+        by bombadil.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
+        id 1pKNqi-004vab-93; Tue, 24 Jan 2023 18:16:48 +0000
+From:   Randy Dunlap <rdunlap@infradead.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Randy Dunlap <rdunlap@infradead.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        linux-trace-kernel@vger.kernel.org
+Subject: [PATCH] trace: Kconfig: fix spelling/grammar/punctuation
+Date:   Tue, 24 Jan 2023 10:16:47 -0800
+Message-Id: <20230124181647.15902-1-rdunlap@infradead.org>
+X-Mailer: git-send-email 2.39.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
+Fix some editorial nits in trace Kconfig.
 
-The instructions for the ftrace-bisect.sh script, which is used to find
-what function is being traced that is causing a kernel crash, and possibly
-a triple fault reboot, uses the old method. In 5.1, a new feature was
-added that let the user write in the index into available_filter_functions
-that maps to the function a user wants to set in set_ftrace_filter (or
-set_ftrace_notrace). This takes O(1) to set, as suppose to writing a
-function name, which takes O(n) (where n is the number of functions in
-available_filter_functions).
-
-The ftrace-bisect.sh requires setting half of the functions in
-available_filter_functions, which is O(n^2) using the name method to enable
-and can take several minutes to complete. The number method is O(n) which
-takes less than a second to complete. Using the number method for any
-kernel 5.1 and after is the proper way to do the bisect.
-
-Update the usage to reflect the new change, as well as using the
-/sys/kernel/tracing path instead of the obsolete debugfs path.
-
-Cc: stable@vger.kernel.org
+Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
+Cc: Steven Rostedt <rostedt@goodmis.org>
 Cc: Masami Hiramatsu <mhiramat@kernel.org>
-Acked-by: Mark Rutland <mark.rutland@arm.com>
-Fixes: f79b3f338564e ("ftrace: Allow enabling of filters via index of available_filter_functions")
-Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+Cc: linux-trace-kernel@vger.kernel.org
 ---
-Changes since v1: https://lkml.kernel.org/r/20230123112252.022003dd@gandalf.local.home
+ kernel/trace/Kconfig |    8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
- - Slight rewrote the "Note" section. (Mark Rutland)
-
- scripts/tracing/ftrace-bisect.sh | 34 ++++++++++++++++++++++++--------
- 1 file changed, 26 insertions(+), 8 deletions(-)
-
-diff --git a/scripts/tracing/ftrace-bisect.sh b/scripts/tracing/ftrace-bisect.sh
-index 926701162bc8..bb4f59262bbe 100755
---- a/scripts/tracing/ftrace-bisect.sh
-+++ b/scripts/tracing/ftrace-bisect.sh
-@@ -12,7 +12,7 @@
- #   (note, if this is a problem with function_graph tracing, then simply
- #    replace "function" with "function_graph" in the following steps).
- #
--#  # cd /sys/kernel/debug/tracing
-+#  # cd /sys/kernel/tracing
- #  # echo schedule > set_ftrace_filter
- #  # echo function > current_tracer
- #
-@@ -20,22 +20,40 @@
- #
- #  # echo nop > current_tracer
- #
--#  # cat available_filter_functions > ~/full-file
-+# Starting with v5.1 this can be done with numbers, making it much faster:
-+#
-+# The old (slow) way, for kernels before v5.1.
-+#
-+# [old-way] # cat available_filter_functions > ~/full-file
-+#
-+# [old-way] *** Note ***  this process will take several minutes to update the
-+# [old-way] filters. Setting multiple functions is an O(n^2) operation, and we
-+# [old-way] are dealing with thousands of functions. So go have coffee, talk
-+# [old-way] with your coworkers, read facebook. And eventually, this operation
-+# [old-way] will end.
-+#
-+# The new way (using numbers) is an O(n) operation, and usually takes less than a second.
-+#
-+# seq `wc -l available_filter_functions | cut -d' ' -f1` > ~/full-file
-+#
-+# This will create a sequence of numbers that match the functions in
-+# available_filter_functions, and when echoing in a number into the
-+# set_ftrace_filter file, it will enable the corresponding function in
-+# O(1) time. Making enabling all functions O(n) where n is the number of
-+# functions to enable.
-+#
-+# For either the new or old way, the rest of the operations remain the same.
-+#
- #  # ftrace-bisect ~/full-file ~/test-file ~/non-test-file
- #  # cat ~/test-file > set_ftrace_filter
- #
--# *** Note *** this will take several minutes. Setting multiple functions is
--# an O(n^2) operation, and we are dealing with thousands of functions. So go
--# have  coffee, talk with your coworkers, read facebook. And eventually, this
--# operation will end.
--#
- #  # echo function > current_tracer
- #
- # If it crashes, we know that ~/test-file has a bad function.
- #
- #   Reboot back to test kernel.
- #
--#     # cd /sys/kernel/debug/tracing
-+#     # cd /sys/kernel/tracing
- #     # mv ~/test-file ~/full-file
- #
- # If it didn't crash.
--- 
-2.39.0
-
+diff -- a/kernel/trace/Kconfig b/kernel/trace/Kconfig
+--- a/kernel/trace/Kconfig
++++ b/kernel/trace/Kconfig
+@@ -933,8 +933,8 @@ config RING_BUFFER_RECORD_RECURSION
+ 	default y
+ 	help
+ 	  The ring buffer has its own internal recursion. Although when
+-	  recursion happens it wont cause harm because of the protection,
+-	  but it does cause an unwanted overhead. Enabling this option will
++	  recursion happens it won't cause harm because of the protection,
++	  but it does cause unwanted overhead. Enabling this option will
+ 	  place where recursion was detected into the ftrace "recursed_functions"
+ 	  file.
+ 
+@@ -1017,8 +1017,8 @@ config RING_BUFFER_STARTUP_TEST
+ 	 The test runs for 10 seconds. This will slow your boot time
+ 	 by at least 10 more seconds.
+ 
+-	 At the end of the test, statics and more checks are done.
+-	 It will output the stats of each per cpu buffer. What
++	 At the end of the test, statistics and more checks are done.
++	 It will output the stats of each per cpu buffer: What
+ 	 was written, the sizes, what was read, what was lost, and
+ 	 other similar details.
+ 
