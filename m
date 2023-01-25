@@ -2,103 +2,80 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 01ED6C54E94
-	for <linux-trace-kernel@archiver.kernel.org>; Wed, 25 Jan 2023 19:36:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A4E4C54E94
+	for <linux-trace-kernel@archiver.kernel.org>; Wed, 25 Jan 2023 22:53:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230329AbjAYTgJ (ORCPT
+        id S234493AbjAYWxv (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Wed, 25 Jan 2023 14:36:09 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43628 "EHLO
+        Wed, 25 Jan 2023 17:53:51 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48012 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234613AbjAYTgJ (ORCPT
+        with ESMTP id S229668AbjAYWxu (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Wed, 25 Jan 2023 14:36:09 -0500
-X-Greylist: delayed 1036 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Wed, 25 Jan 2023 11:36:07 PST
-Received: from shelob.surriel.com (shelob.surriel.com [96.67.55.147])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C92FC4AA41;
-        Wed, 25 Jan 2023 11:36:07 -0800 (PST)
-Received: from imladris.home.surriel.com ([10.0.13.28] helo=imladris.surriel.com)
-        by shelob.surriel.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_ECDSA_WITH_AES_256_GCM_SHA384
-        (Exim 4.96)
-        (envelope-from <riel@shelob.surriel.com>)
-        id 1pKkjm-0002iB-37;
-        Wed, 25 Jan 2023 13:43:10 -0500
-Message-ID: <4fe0e2eb6a3e2d7e0838f177706f1be13d61375c.camel@surriel.com>
-Subject: Re: [RESEND RFC PATCH v1 00/20] mm: process/cgroup ksm support
-From:   Rik van Riel <riel@surriel.com>
-To:     Michal Hocko <mhocko@suse.com>,
-        David Hildenbrand <david@redhat.com>
-Cc:     Stefan Roesch <shr@devkernel.io>, linux-mm@kvack.org,
-        linux-doc@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
-        linux-trace-kernel@vger.kernel.org, CGEL <cgel.zte@gmail.com>,
-        Jann Horn <jannh@google.com>
-Date:   Wed, 25 Jan 2023 13:43:09 -0500
-In-Reply-To: <Y9EoJ0jlXMeuJzuY@dhcp22.suse.cz>
-References: <20230123173748.1734238-1-shr@devkernel.io>
-         <5844ee9f-1992-a62a-2141-3b694a1e1915@redhat.com>
-         <qvqwbkmnj014.fsf@dev0134.prn3.facebook.com>
-         <a391e98c-88af-886c-0426-c41c9980afa1@redhat.com>
-         <Y9EoJ0jlXMeuJzuY@dhcp22.suse.cz>
-Content-Type: multipart/signed; micalg="pgp-sha256";
-        protocol="application/pgp-signature"; boundary="=-fHtooTLBHokjrlt3AOkT"
-User-Agent: Evolution 3.42.4 (3.42.4-2.fc35) 
+        Wed, 25 Jan 2023 17:53:50 -0500
+Received: from mail-pj1-x102f.google.com (mail-pj1-x102f.google.com [IPv6:2607:f8b0:4864:20::102f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 484A04609C
+        for <linux-trace-kernel@vger.kernel.org>; Wed, 25 Jan 2023 14:53:49 -0800 (PST)
+Received: by mail-pj1-x102f.google.com with SMTP id e10-20020a17090a630a00b0022bedd66e6dso3654215pjj.1
+        for <linux-trace-kernel@vger.kernel.org>; Wed, 25 Jan 2023 14:53:49 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=pzKJd/pAr8vlH5fq51CxhfYmuwDJzJDL/ZN0MVn2ctw=;
+        b=N8qZ3TIjLd1a1cyOwf5gSPSSoGeQOP1dsNx4uUe2iAmggItX87WNxmDbTDqyeVffl2
+         ohOD5WmwPSmpgrUeP7JIs3zqBdDbegt64g9rht2hiS6y82dDW+DAxPzC8OYK+5PCR1BN
+         aNSfLZRnJOKoDKCi4DvtcRAWEH2RaSukX5O6FfUthDhH3vLPaPFrHlIFr82p2DKPoJ5q
+         AuyRPt6en5R2iaevUBEa0D0xFzLd6VyAVmJu/FCBPVTyPAjKz1nY5u2cxDKqWQGwBUln
+         q7aIDu67F+R+Z9PyxYhVeIeGX8cDoHxyOWChbAuPhkrCCRX6XZXHcD0vA3mH8NIGWOGw
+         /mEQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=pzKJd/pAr8vlH5fq51CxhfYmuwDJzJDL/ZN0MVn2ctw=;
+        b=t5oj7kcUOXTqXZke0E/s9F45w58whcT8QczawvMrFJy51efzHgntC/nvjqDr/dc7i+
+         LFawufoEITyEigG7BRTg2zrMrqSqEsuQ3KIUcuuUNRlTOFABFKMSSk2WHGQz7FOMFc+e
+         QypF7O6RLskI9do2tM3iAom3vzhkssEtigLaSXvO+ReSWdg6vW4v8yNPw7Rm98k6+6Jx
+         bF9S4QH9cbn0READLBvCQ6IRUDSXiVhwSAWb1gKmf5/WHPtkDoQklGMDzH2n2jD2r/Kd
+         OLeXkpNzOuq7lhSJ5Xoj60pawgVyHzqebRfVhg9+1CW61hEJQPbWDfXRsX1DqXFO7NRk
+         uKEg==
+X-Gm-Message-State: AO0yUKVR+en7SqQPoNtOIU9XMbcCN0cNB7O7QvhU8sP121FibHywQo7o
+        InPIev+60sTzWcBbQvke19DIqrapQERPrmDjBneI+w==
+X-Google-Smtp-Source: AK7set+D/kkg3tME1AaRlECOzc1VlwZnKyZA5Duza9+E/vvU/S92E7RSlmhiVDLZ9NqaZuvI9LXL+0T6TqrlsWzS9uY=
+X-Received: by 2002:a17:90a:6e4d:b0:22b:ee57:725b with SMTP id
+ s13-20020a17090a6e4d00b0022bee57725bmr1486529pjm.159.1674687228484; Wed, 25
+ Jan 2023 14:53:48 -0800 (PST)
 MIME-Version: 1.0
-Sender: riel@shelob.surriel.com
+References: <20230124095653.6fd1640e@gandalf.local.home> <Y9AG63mgkyzSEbSa@FVFF77S0Q05N>
+ <20230124140617.4a4fe106@gandalf.local.home>
+In-Reply-To: <20230124140617.4a4fe106@gandalf.local.home>
+From:   Chris Li <chriscli@google.com>
+Date:   Wed, 25 Jan 2023 14:53:35 -0800
+Message-ID: <CAF8kJuNXo+cDTVWY+pDa-Py3zAbQCi3gs=M0UX2AsEPDyKrC2g@mail.gmail.com>
+Subject: Re: [PATCH] ftrace: Show a list of all functions that have ever been enabled
+To:     Steven Rostedt <rostedt@goodmis.org>
+Cc:     Mark Rutland <mark.rutland@arm.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linux Trace Kernel <linux-trace-kernel@vger.kernel.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
+On Tue, Jan 24, 2023 at 11:06 AM Steven Rostedt <rostedt@goodmis.org> wrote:
+>
+> No problem. This was more to help us debug something, and we are currently
+> just backporting it for now to our kernels in order to help with the
+> crashes we are seeing. No rush to get it upstream. But I figured that if it
+> can help us, it can also help others.
 
---=-fHtooTLBHokjrlt3AOkT
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+I just tested it against the tip of the kernel git repo. Works fine for me.
+Feel free to add:
 
-On Wed, 2023-01-25 at 14:01 +0100, Michal Hocko wrote:
->=20
-> I have read through your cover letter and it talks about the
-> interface
-> but it doesn't really talk about usecases and how they are supposed
-> to
-> use this feature - except the prctl based flag gets inherited. So
-> could
-> you elaborate some more about those usecases please?
+Tested-by: Chris Li <chriscli@google.com>
 
-I can explain a little about the use case. There are people
-who use forked (rather than threaded) servers for certain
-workloads, from a garbage collected language without pointers,
-which means madvise simply cannot be made available in that
-language.
-
-The people running that workload have experimented with uKSM
-in the past, and seen about a 20% capacity increase from
-doing that.
-
-Because madvise is not possible in that programming language,
-and the addresses of data keep moving around as things get
-garbage collected, KSM sharing needs to be enabled "from the
-outside" for that workload.
-
-prctl seems like a good way to do that.
-
---=20
-All Rights Reversed.
-
---=-fHtooTLBHokjrlt3AOkT
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-Content-Transfer-Encoding: 7bit
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCAAdFiEEKR73pCCtJ5Xj3yADznnekoTE3oMFAmPReD0ACgkQznnekoTE
-3oOf6Qf+OZdpabz5qPJU/62BiPgM4Iz1Ih3vwmzqU4gPC6zRlgHsqxQ9unGulcc5
-u9IIstoDUDaZRtbvJas1YO3wlaBgyIag+J0yR0Vflg6KWnBrYz+AKa0f8rfi4I0H
-MPavada+vlPdaIM/duOza4Je/nUkKenXaknZ3ng/j17JfWTPDNbtF/0Qne0t4nnf
-pM0i49ZgGNPAAqeT6FI1jf07BN+01QVjDKellwxGx5s8MjNKkEsmvpXT2ePTJQhK
-YXhsdf1sP3C9ftRKOBBzp0izIjvwnSuKcauOdhckdmX69SLbVSgxUgaTVxBUa2Ur
-RUUcMqJMaSgPERS3K+TdPHAaIJYY8Q==
-=k7TU
------END PGP SIGNATURE-----
-
---=-fHtooTLBHokjrlt3AOkT--
+Chris
