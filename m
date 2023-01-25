@@ -2,197 +2,115 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 664B4C27C76
-	for <linux-trace-kernel@archiver.kernel.org>; Wed, 25 Jan 2023 11:33:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F1DBEC27C76
+	for <linux-trace-kernel@archiver.kernel.org>; Wed, 25 Jan 2023 13:01:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235049AbjAYLci (ORCPT
+        id S235254AbjAYNBl (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Wed, 25 Jan 2023 06:32:38 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51348 "EHLO
+        Wed, 25 Jan 2023 08:01:41 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43736 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235532AbjAYLcP (ORCPT
+        with ESMTP id S235222AbjAYNBa (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Wed, 25 Jan 2023 06:32:15 -0500
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 35A932B291;
-        Wed, 25 Jan 2023 03:32:13 -0800 (PST)
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A8B784B3;
-        Wed, 25 Jan 2023 03:32:54 -0800 (PST)
-Received: from FVFF77S0Q05N (unknown [10.57.9.209])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id C58083F71E;
-        Wed, 25 Jan 2023 03:32:07 -0800 (PST)
-Date:   Wed, 25 Jan 2023 11:32:04 +0000
-From:   Mark Rutland <mark.rutland@arm.com>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Steven Rostedt <rostedt@goodmis.org>, mingo@kernel.org,
-        will@kernel.org, boqun.feng@gmail.com, tglx@linutronix.de,
-        bp@alien8.de, dave.hansen@linux.intel.com, x86@kernel.org,
-        hpa@zytor.com, seanjc@google.com, pbonzini@redhat.com,
-        jgross@suse.com, srivatsa@csail.mit.edu, amakhalov@vmware.com,
-        pv-drivers@vmware.com, mhiramat@kernel.org, wanpengli@tencent.com,
-        vkuznets@redhat.com, boris.ostrovsky@oracle.com, rafael@kernel.org,
-        daniel.lezcano@linaro.org, juri.lelli@redhat.com,
-        vincent.guittot@linaro.org, dietmar.eggemann@arm.com,
-        bsegall@google.com, mgorman@suse.de, bristot@redhat.com,
-        vschneid@redhat.com, linux-kernel@vger.kernel.org,
-        kvm@vger.kernel.org, virtualization@lists.linux-foundation.org,
-        linux-trace-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
-        Paul McKenney <paulmck@kernel.org>,
-        Frederic Weisbecker <fweisbec@gmail.com>
-Subject: Re: [PATCH 3/6] ftrace/x86: Warn and ignore graph tracing when RCU
- is disabled
-Message-ID: <Y9ETNHyE2NgrPJJL@FVFF77S0Q05N>
-References: <20230123205009.790550642@infradead.org>
- <20230123205515.059999893@infradead.org>
- <20230123165304.370121e7@gandalf.local.home>
- <20230123170753.7ac9419e@gandalf.local.home>
- <Y8/u00WHGElMDjoo@hirez.programming.kicks-ass.net>
- <Y9ARbgtYhxSuOIlZ@FVFF77S0Q05N>
- <Y9EI0Gn/NUJt6GEk@hirez.programming.kicks-ass.net>
+        Wed, 25 Jan 2023 08:01:30 -0500
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.220.28])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5C30846730;
+        Wed, 25 Jan 2023 05:01:29 -0800 (PST)
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+        (No client certificate requested)
+        by smtp-out1.suse.de (Postfix) with ESMTPS id 1995121A38;
+        Wed, 25 Jan 2023 13:01:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
+        t=1674651688; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=ZHPUEmgHN9HHsele0Ce3YewvjVaFUupPCQ2N9ydCuzU=;
+        b=r+QImpXSov56FLm1H+hELmnDF3ba33PDw9X+GNnrXwjl2eQ+ZuX3YhWChiKOdofziQIIEm
+        lXbb2vLp56dhnNJ7EOBz3awHc1j72nCdmCZWUEIjOJydKML1zstPO/PSZz0O5XA4flp7vX
+        J2LJKE4EyuI1Ln1V1xiBggPmq3RuK7Y=
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+        (No client certificate requested)
+        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id EF07E1339E;
+        Wed, 25 Jan 2023 13:01:27 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([192.168.254.65])
+        by imap2.suse-dmz.suse.de with ESMTPSA
+        id uoscOCco0WNBGAAAMHmgww
+        (envelope-from <mhocko@suse.com>); Wed, 25 Jan 2023 13:01:27 +0000
+Date:   Wed, 25 Jan 2023 14:01:27 +0100
+From:   Michal Hocko <mhocko@suse.com>
+To:     David Hildenbrand <david@redhat.com>
+Cc:     Stefan Roesch <shr@devkernel.io>, linux-mm@kvack.org,
+        linux-doc@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
+        linux-trace-kernel@vger.kernel.org, CGEL <cgel.zte@gmail.com>,
+        Jann Horn <jannh@google.com>
+Subject: Re: [RESEND RFC PATCH v1 00/20] mm: process/cgroup ksm support
+Message-ID: <Y9EoJ0jlXMeuJzuY@dhcp22.suse.cz>
+References: <20230123173748.1734238-1-shr@devkernel.io>
+ <5844ee9f-1992-a62a-2141-3b694a1e1915@redhat.com>
+ <qvqwbkmnj014.fsf@dev0134.prn3.facebook.com>
+ <a391e98c-88af-886c-0426-c41c9980afa1@redhat.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <Y9EI0Gn/NUJt6GEk@hirez.programming.kicks-ass.net>
+In-Reply-To: <a391e98c-88af-886c-0426-c41c9980afa1@redhat.com>
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On Wed, Jan 25, 2023 at 11:47:44AM +0100, Peter Zijlstra wrote:
-> On Tue, Jan 24, 2023 at 05:12:14PM +0000, Mark Rutland wrote:
-> > On Tue, Jan 24, 2023 at 03:44:35PM +0100, Peter Zijlstra wrote:
-> > > On Mon, Jan 23, 2023 at 05:07:53PM -0500, Steven Rostedt wrote:
-> > > 
-> > > > Actually, perhaps we can just add this, and all you need to do is create
-> > > > and set CONFIG_NO_RCU_TRACING (or some other name).
-> > > 
-> > > Elsewhere I've used CONFIG_ARCH_WANTS_NO_INSTR for this.
-> > 
-> > Yes please; if we use CONFIG_ARCH_WANTS_NO_INSTR then arm64 will get this "for
-> > free" once we add the missing checks (which I assume we need) in our ftrace_prepare_return().
-> > 
-> > > Anyway, I took it for a spin and it .... doesn't seems to do the job.
-> > > 
-> > > With my patch the first splat is
-> > > 
-> > >   "RCU not on for: cpuidle_poll_time+0x0/0x70"
-> > > 
-> > > While with yours I seems to get the endless:
-> > > 
-> > >   "WARNING: suspicious RCU usage"
-> > > 
-> > > thing. Let me see if I can figure out where it goes side-ways.
-> > 
-> > Hmmm... for WARN_ONCE() don't we need to wake RCU first also? I thought we
-> > needed that at least for the printk machinery?
+On Tue 24-01-23 19:01:49, David Hildenbrand wrote:
+> [...]
 > 
-> OK, the below seems to work nice for me -- although I'm still on a
-> hacked up printk, but the recursive RCU not watching fail seems to be
-> tamed.
-
-FWIW, I gave that a spin on arm64 with the ftrace selftests, and I see no
-splats, so it looks good on that front.
-
-Currently arm64's BUG/WARN exception handling does the usual
-lockdep/rcu/whatever stuff before getting to report_bug(), so that bit should
-be redundant (and any WARN() or BUG() early in the entry code is likely to lead
-to a stack overflow and kill the kernel), but it shouldn't be harmful.
-
-> Ofc. Paul might have an opinion on this glorious bodge ;-)
-
-I'll leave that to Paul. ;)
-
-Thanks,
-Mark.
-
+> > > I'm going to point out the security aspect, and that e.g., Windows used to
+> > > enable it system-wide before getting taught by security experts otherwise.
+> > > Details on KSM and security aspects can be found in that thread.
+> > > 
+> > If I'm not mistaken the security aspect exists today. When KSM is
+> > enabled with madvise this is the same.
 > 
-> ---
+> Yes, and we mostly only use it for virtual machines -- and to be precise,
+> guest memory only -- where it has to be enabled explicitly on a well
+> documented basis ...
 > 
-> diff --git a/include/linux/trace_recursion.h b/include/linux/trace_recursion.h
-> index c303f7a114e9..d48cd92d2364 100644
-> --- a/include/linux/trace_recursion.h
-> +++ b/include/linux/trace_recursion.h
-> @@ -135,6 +135,21 @@ extern void ftrace_record_recursion(unsigned long ip, unsigned long parent_ip);
->  # define do_ftrace_record_recursion(ip, pip)	do { } while (0)
->  #endif
->  
-> +#ifdef CONFIG_ARCH_WANTS_NO_INSTR
-> +# define trace_warn_on_no_rcu(ip)					\
-> +	({								\
-> +		bool __ret = !rcu_is_watching();			\
-> +		if (__ret && !trace_recursion_test(TRACE_RECORD_RECURSION_BIT)) { \
-> +			trace_recursion_set(TRACE_RECORD_RECURSION_BIT); \
-> +			WARN_ONCE(true, "RCU not on for: %pS\n", (void *)ip); \
-> +			trace_recursion_clear(TRACE_RECORD_RECURSION_BIT); \
-> +		}							\
-> +		__ret;							\
-> +	})
-> +#else
-> +# define trace_warn_on_no_rcu(ip)	false
-> +#endif
-> +
->  /*
->   * Preemption is promised to be disabled when return bit >= 0.
->   */
-> @@ -144,6 +159,9 @@ static __always_inline int trace_test_and_set_recursion(unsigned long ip, unsign
->  	unsigned int val = READ_ONCE(current->trace_recursion);
->  	int bit;
->  
-> +	if (trace_warn_on_no_rcu(ip))
-> +		return -1;
-> +
->  	bit = trace_get_context_bit() + start;
->  	if (unlikely(val & (1 << bit))) {
->  		/*
-> diff --git a/lib/bug.c b/lib/bug.c
-> index c223a2575b72..0a10643ea168 100644
-> --- a/lib/bug.c
-> +++ b/lib/bug.c
-> @@ -47,6 +47,7 @@
->  #include <linux/sched.h>
->  #include <linux/rculist.h>
->  #include <linux/ftrace.h>
-> +#include <linux/context_tracking.h>
->  
->  extern struct bug_entry __start___bug_table[], __stop___bug_table[];
->  
-> @@ -153,7 +154,7 @@ struct bug_entry *find_bug(unsigned long bugaddr)
->  	return module_find_bug(bugaddr);
->  }
->  
-> -enum bug_trap_type report_bug(unsigned long bugaddr, struct pt_regs *regs)
-> +static enum bug_trap_type __report_bug(unsigned long bugaddr, struct pt_regs *regs)
->  {
->  	struct bug_entry *bug;
->  	const char *file;
-> @@ -209,6 +210,30 @@ enum bug_trap_type report_bug(unsigned long bugaddr, struct pt_regs *regs)
->  	return BUG_TRAP_TYPE_BUG;
->  }
->  
-> +enum bug_trap_type report_bug(unsigned long bugaddr, struct pt_regs *regs)
-> +{
-> +	enum bug_trap_type ret;
-> +	bool rcu = false;
-> +
-> +#ifdef CONFIG_CONTEXT_TRACKING_IDLE
-> +	/*
-> +	 * Horrible hack to shut up recursive RCU isn't watching fail since
-> +	 * lots of the actual reporting also relies on RCU.
-> +	 */
-> +	if (!rcu_is_watching()) {
-> +		rcu = true;
-> +		ct_state_inc(RCU_DYNTICKS_IDX);
-> +	}
-> +#endif
-> +
-> +	ret = __report_bug(bugaddr, regs);
-> +
-> +	if (rcu)
-> +		ct_state_inc(RCU_DYNTICKS_IDX);
-> +
-> +	return ret;
-> +}
-> +
->  static void clear_once_table(struct bug_entry *start, struct bug_entry *end)
->  {
->  	struct bug_entry *bug;
+> Impossible for an admin to force it on other parts of the hypervisor process
+> that might be more security sensitive. Or on other arbitrary applications,
+> for now.
+> 
+> > 
+> > > Long story short: one has to be very careful with that and only enable it for
+> > > very carefully selected worklads. Letting a workload opt-in on a VMA level is
+> > > most probably safer than an admin blindly turning this on for random processes
+> > > ... >>
+> [...]
+> 
+> > > 
+> > > [1] https://lore.kernel.org/all/20220517092701.1662641-1-xu.xin16@zte.com.cn/
+> > > [2] https://lore.kernel.org/all/20220609055658.703472-1-xu.xin16@zte.com.cn/
+> > > 
+> > My understanding is that there were problems with the patch and how it
+> > exposed KSM. The other objection was the enable-all configuration
+> > option.
+> 
+> I don't remember all the discussions, but one concern was how to handle
+> processes that deliberately want to disable it on some parts of memory.
+> 
+> Anyhow, I cc'ed the relevant parties already.
+
+Thanks! I do not remember all the details from the past discussion
+except it was /proc and later global setting. Neither really were great
+choices. We have discussed pidfd_madvise and prctl IIRC. For the latter
+there was no real argument about when it is desirable to apply merging
+on all existing vmas (e.g. is it really desirable on stack/brk or malloc
+arenas or would user need to opt out for those).
+
+I have read through your cover letter and it talks about the interface
+but it doesn't really talk about usecases and how they are supposed to
+use this feature - except the prctl based flag gets inherited. So could
+you elaborate some more about those usecases please?
+-- 
+Michal Hocko
+SUSE Labs
