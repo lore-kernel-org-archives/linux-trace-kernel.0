@@ -2,80 +2,142 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A4E4C54E94
-	for <linux-trace-kernel@archiver.kernel.org>; Wed, 25 Jan 2023 22:53:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A21AC27C76
+	for <linux-trace-kernel@archiver.kernel.org>; Wed, 25 Jan 2023 22:54:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234493AbjAYWxv (ORCPT
+        id S235861AbjAYWyl (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Wed, 25 Jan 2023 17:53:51 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48012 "EHLO
+        Wed, 25 Jan 2023 17:54:41 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48882 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229668AbjAYWxu (ORCPT
+        with ESMTP id S234493AbjAYWyk (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Wed, 25 Jan 2023 17:53:50 -0500
-Received: from mail-pj1-x102f.google.com (mail-pj1-x102f.google.com [IPv6:2607:f8b0:4864:20::102f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 484A04609C
-        for <linux-trace-kernel@vger.kernel.org>; Wed, 25 Jan 2023 14:53:49 -0800 (PST)
-Received: by mail-pj1-x102f.google.com with SMTP id e10-20020a17090a630a00b0022bedd66e6dso3654215pjj.1
-        for <linux-trace-kernel@vger.kernel.org>; Wed, 25 Jan 2023 14:53:49 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=pzKJd/pAr8vlH5fq51CxhfYmuwDJzJDL/ZN0MVn2ctw=;
-        b=N8qZ3TIjLd1a1cyOwf5gSPSSoGeQOP1dsNx4uUe2iAmggItX87WNxmDbTDqyeVffl2
-         ohOD5WmwPSmpgrUeP7JIs3zqBdDbegt64g9rht2hiS6y82dDW+DAxPzC8OYK+5PCR1BN
-         aNSfLZRnJOKoDKCi4DvtcRAWEH2RaSukX5O6FfUthDhH3vLPaPFrHlIFr82p2DKPoJ5q
-         AuyRPt6en5R2iaevUBEa0D0xFzLd6VyAVmJu/FCBPVTyPAjKz1nY5u2cxDKqWQGwBUln
-         q7aIDu67F+R+Z9PyxYhVeIeGX8cDoHxyOWChbAuPhkrCCRX6XZXHcD0vA3mH8NIGWOGw
-         /mEQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=pzKJd/pAr8vlH5fq51CxhfYmuwDJzJDL/ZN0MVn2ctw=;
-        b=t5oj7kcUOXTqXZke0E/s9F45w58whcT8QczawvMrFJy51efzHgntC/nvjqDr/dc7i+
-         LFawufoEITyEigG7BRTg2zrMrqSqEsuQ3KIUcuuUNRlTOFABFKMSSk2WHGQz7FOMFc+e
-         QypF7O6RLskI9do2tM3iAom3vzhkssEtigLaSXvO+ReSWdg6vW4v8yNPw7Rm98k6+6Jx
-         bF9S4QH9cbn0READLBvCQ6IRUDSXiVhwSAWb1gKmf5/WHPtkDoQklGMDzH2n2jD2r/Kd
-         OLeXkpNzOuq7lhSJ5Xoj60pawgVyHzqebRfVhg9+1CW61hEJQPbWDfXRsX1DqXFO7NRk
-         uKEg==
-X-Gm-Message-State: AO0yUKVR+en7SqQPoNtOIU9XMbcCN0cNB7O7QvhU8sP121FibHywQo7o
-        InPIev+60sTzWcBbQvke19DIqrapQERPrmDjBneI+w==
-X-Google-Smtp-Source: AK7set+D/kkg3tME1AaRlECOzc1VlwZnKyZA5Duza9+E/vvU/S92E7RSlmhiVDLZ9NqaZuvI9LXL+0T6TqrlsWzS9uY=
-X-Received: by 2002:a17:90a:6e4d:b0:22b:ee57:725b with SMTP id
- s13-20020a17090a6e4d00b0022bee57725bmr1486529pjm.159.1674687228484; Wed, 25
- Jan 2023 14:53:48 -0800 (PST)
+        Wed, 25 Jan 2023 17:54:40 -0500
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7185146D6B;
+        Wed, 25 Jan 2023 14:54:39 -0800 (PST)
+Received: from pps.filterd (m0098396.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 30PMq4Um009177;
+        Wed, 25 Jan 2023 22:54:24 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
+ : date : message-id : in-reply-to : references : content-transfer-encoding
+ : mime-version; s=pp1; bh=JGXQ6ZIgY9+wq8n00lHSkg0g8qdUPMuE2aJ0GSV82oE=;
+ b=Da9MX4ISNVH+aRd6OaAaeHRdBWxd44iMGdCLft64jtdsrV+r9iqAfoRdNsIh/tnxtOMa
+ BnooW/k0xrG6uS4DyhnUigiNwjQn9IsR403o5jStsL/oe9NaRzaHZ10ueuP5vwTePhCf
+ pY3kojHwijBAbnGEgfkM7DUFvhfCHOb3Al5KcBOuurjAweoJpkImomJFDLJisFhMZ8Ru
+ WnJ9Y+hMeLFBFcuNW7KeBgZOUIkYA3gQWSNOptbXaenH25b8+sFnI8DQ1myIFAcms0xK
+ Q23gkgfJqj8QoqaPTOLVwbF0L0cRmicBr0nGfCmRj93jupsN5MA9crXZy/qRFniUI4NM BA== 
+Received: from ppma04dal.us.ibm.com (7a.29.35a9.ip4.static.sl-reverse.com [169.53.41.122])
+        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3nbdke02px-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 25 Jan 2023 22:54:24 +0000
+Received: from pps.filterd (ppma04dal.us.ibm.com [127.0.0.1])
+        by ppma04dal.us.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 30PJqIJp019885;
+        Wed, 25 Jan 2023 22:54:22 GMT
+Received: from smtprelay06.wdc07v.mail.ibm.com ([9.208.129.118])
+        by ppma04dal.us.ibm.com (PPS) with ESMTPS id 3n87p7gvwa-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 25 Jan 2023 22:54:22 +0000
+Received: from smtpav01.wdc07v.mail.ibm.com (smtpav01.wdc07v.mail.ibm.com [10.39.53.228])
+        by smtprelay06.wdc07v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 30PMsLCn6357746
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 25 Jan 2023 22:54:21 GMT
+Received: from smtpav01.wdc07v.mail.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 3B0D958065;
+        Wed, 25 Jan 2023 22:54:21 +0000 (GMT)
+Received: from smtpav01.wdc07v.mail.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 64CF35804B;
+        Wed, 25 Jan 2023 22:54:19 +0000 (GMT)
+Received: from slate16.aus.stglabs.ibm.com (unknown [9.77.150.21])
+        by smtpav01.wdc07v.mail.ibm.com (Postfix) with ESMTP;
+        Wed, 25 Jan 2023 22:54:19 +0000 (GMT)
+From:   Eddie James <eajames@linux.ibm.com>
+To:     linux-fsi@lists.ozlabs.org
+Cc:     linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        mhiramat@kernel.org, rostedt@goodmis.org, alistair@popple.id.au,
+        joel@jms.id.au, jk@ozlabs.org, andrew@aj.id.au,
+        devicetree@vger.kernel.org, robh+dt@kernel.org,
+        krzysztof.kozlowski+dt@linaro.org, eajames@linux.ibm.com
+Subject: [PATCH v2 1/2] dt-bindings: fsi: Document the IBM I2C Responder virtual FSI master
+Date:   Wed, 25 Jan 2023 16:54:15 -0600
+Message-Id: <20230125225416.4074040-2-eajames@linux.ibm.com>
+X-Mailer: git-send-email 2.31.1
+In-Reply-To: <20230125225416.4074040-1-eajames@linux.ibm.com>
+References: <20230125225416.4074040-1-eajames@linux.ibm.com>
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: kSOOYgWDy8O8nncf1lF0VFBXtiL_klMa
+X-Proofpoint-ORIG-GUID: kSOOYgWDy8O8nncf1lF0VFBXtiL_klMa
+Content-Transfer-Encoding: 8bit
+X-Proofpoint-UnRewURL: 0 URL was un-rewritten
 MIME-Version: 1.0
-References: <20230124095653.6fd1640e@gandalf.local.home> <Y9AG63mgkyzSEbSa@FVFF77S0Q05N>
- <20230124140617.4a4fe106@gandalf.local.home>
-In-Reply-To: <20230124140617.4a4fe106@gandalf.local.home>
-From:   Chris Li <chriscli@google.com>
-Date:   Wed, 25 Jan 2023 14:53:35 -0800
-Message-ID: <CAF8kJuNXo+cDTVWY+pDa-Py3zAbQCi3gs=M0UX2AsEPDyKrC2g@mail.gmail.com>
-Subject: Re: [PATCH] ftrace: Show a list of all functions that have ever been enabled
-To:     Steven Rostedt <rostedt@goodmis.org>
-Cc:     Mark Rutland <mark.rutland@arm.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Linux Trace Kernel <linux-trace-kernel@vger.kernel.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>
-Content-Type: text/plain; charset="UTF-8"
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.219,Aquarius:18.0.930,Hydra:6.0.562,FMLib:17.11.122.1
+ definitions=2023-01-25_13,2023-01-25_01,2022-06-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0
+ priorityscore=1501 mlxscore=0 lowpriorityscore=0 spamscore=0
+ impostorscore=0 bulkscore=0 phishscore=0 suspectscore=0 malwarescore=0
+ clxscore=1015 mlxlogscore=999 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-2212070000 definitions=main-2301250200
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On Tue, Jan 24, 2023 at 11:06 AM Steven Rostedt <rostedt@goodmis.org> wrote:
->
-> No problem. This was more to help us debug something, and we are currently
-> just backporting it for now to our kernels in order to help with the
-> crashes we are seeing. No rush to get it upstream. But I figured that if it
-> can help us, it can also help others.
+The I2C Responder translates I2C commands to CFAM or SCOM operations,
+effectively implementing an FSI master.
 
-I just tested it against the tip of the kernel git repo. Works fine for me.
-Feel free to add:
+Signed-off-by: Eddie James <eajames@linux.ibm.com>
+---
+ .../bindings/fsi/ibm,i2cr-fsi-master.yaml     | 41 +++++++++++++++++++
+ 1 file changed, 41 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/fsi/ibm,i2cr-fsi-master.yaml
 
-Tested-by: Chris Li <chriscli@google.com>
+diff --git a/Documentation/devicetree/bindings/fsi/ibm,i2cr-fsi-master.yaml b/Documentation/devicetree/bindings/fsi/ibm,i2cr-fsi-master.yaml
+new file mode 100644
+index 000000000000..fa768e773adc
+--- /dev/null
++++ b/Documentation/devicetree/bindings/fsi/ibm,i2cr-fsi-master.yaml
+@@ -0,0 +1,41 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/fsi/ibm,i2cr.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: IBM I2C Responder virtual FSI master
++
++maintainers:
++  - Eddie James <eajames@linux.ibm.com>
++
++description: |
++  The I2C Responder (I2CR) is a an I2C device that's connected to an FSI CFAM
++  (see fsi.txt). The I2CR translates I2C bus operations to FSI CFAM reads and
++  writes or SCOM operations, thereby acting as an FSI master.
++
++properties:
++  compatible:
++    enum:
++      - ibm,i2cr-fsi-master
++
++  reg:
++    maxItems: 1
++
++required:
++  - compatible
++  - reg
++
++additionalProperties: false
++
++examples:
++ - |
++    i2c {
++      #address-cells = <1>;
++      #size-cells = <0>;
++
++      i2cr@20 {
++        compatible = "ibm,i2cr-fsi-master";
++        reg = <0x20>;
++      };
++    };
+-- 
+2.31.1
 
-Chris
