@@ -2,115 +2,185 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F1DBEC27C76
-	for <linux-trace-kernel@archiver.kernel.org>; Wed, 25 Jan 2023 13:01:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C55B4C27C76
+	for <linux-trace-kernel@archiver.kernel.org>; Wed, 25 Jan 2023 15:20:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235254AbjAYNBl (ORCPT
+        id S235562AbjAYPUW (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Wed, 25 Jan 2023 08:01:41 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43736 "EHLO
+        Wed, 25 Jan 2023 10:20:22 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45258 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235222AbjAYNBa (ORCPT
+        with ESMTP id S235306AbjAYPUW (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Wed, 25 Jan 2023 08:01:30 -0500
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.220.28])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5C30846730;
-        Wed, 25 Jan 2023 05:01:29 -0800 (PST)
-Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
-        (No client certificate requested)
-        by smtp-out1.suse.de (Postfix) with ESMTPS id 1995121A38;
-        Wed, 25 Jan 2023 13:01:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
-        t=1674651688; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=ZHPUEmgHN9HHsele0Ce3YewvjVaFUupPCQ2N9ydCuzU=;
-        b=r+QImpXSov56FLm1H+hELmnDF3ba33PDw9X+GNnrXwjl2eQ+ZuX3YhWChiKOdofziQIIEm
-        lXbb2vLp56dhnNJ7EOBz3awHc1j72nCdmCZWUEIjOJydKML1zstPO/PSZz0O5XA4flp7vX
-        J2LJKE4EyuI1Ln1V1xiBggPmq3RuK7Y=
-Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
-        (No client certificate requested)
-        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id EF07E1339E;
-        Wed, 25 Jan 2023 13:01:27 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([192.168.254.65])
-        by imap2.suse-dmz.suse.de with ESMTPSA
-        id uoscOCco0WNBGAAAMHmgww
-        (envelope-from <mhocko@suse.com>); Wed, 25 Jan 2023 13:01:27 +0000
-Date:   Wed, 25 Jan 2023 14:01:27 +0100
-From:   Michal Hocko <mhocko@suse.com>
-To:     David Hildenbrand <david@redhat.com>
-Cc:     Stefan Roesch <shr@devkernel.io>, linux-mm@kvack.org,
-        linux-doc@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
-        linux-trace-kernel@vger.kernel.org, CGEL <cgel.zte@gmail.com>,
-        Jann Horn <jannh@google.com>
-Subject: Re: [RESEND RFC PATCH v1 00/20] mm: process/cgroup ksm support
-Message-ID: <Y9EoJ0jlXMeuJzuY@dhcp22.suse.cz>
-References: <20230123173748.1734238-1-shr@devkernel.io>
- <5844ee9f-1992-a62a-2141-3b694a1e1915@redhat.com>
- <qvqwbkmnj014.fsf@dev0134.prn3.facebook.com>
- <a391e98c-88af-886c-0426-c41c9980afa1@redhat.com>
+        Wed, 25 Jan 2023 10:20:22 -0500
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 07F6218AA8;
+        Wed, 25 Jan 2023 07:20:21 -0800 (PST)
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 7DF144B3;
+        Wed, 25 Jan 2023 07:21:02 -0800 (PST)
+Received: from FVFF77S0Q05N.cambridge.arm.com (FVFF77S0Q05N.cambridge.arm.com [10.1.31.176])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 7EEAD3F71E;
+        Wed, 25 Jan 2023 07:20:16 -0800 (PST)
+Date:   Wed, 25 Jan 2023 15:20:08 +0000
+From:   Mark Rutland <mark.rutland@arm.com>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     mingo@kernel.org, will@kernel.org, boqun.feng@gmail.com,
+        tglx@linutronix.de, bp@alien8.de, dave.hansen@linux.intel.com,
+        x86@kernel.org, hpa@zytor.com, seanjc@google.com,
+        pbonzini@redhat.com, jgross@suse.com, srivatsa@csail.mit.edu,
+        amakhalov@vmware.com, pv-drivers@vmware.com, rostedt@goodmis.org,
+        mhiramat@kernel.org, wanpengli@tencent.com, vkuznets@redhat.com,
+        boris.ostrovsky@oracle.com, rafael@kernel.org,
+        daniel.lezcano@linaro.org, juri.lelli@redhat.com,
+        vincent.guittot@linaro.org, dietmar.eggemann@arm.com,
+        bsegall@google.com, mgorman@suse.de, bristot@redhat.com,
+        vschneid@redhat.com, linux-kernel@vger.kernel.org,
+        kvm@vger.kernel.org, virtualization@lists.linux-foundation.org,
+        linux-trace-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
+        Lorenzo Pieralisi <lpieralisi@kernel.org>
+Subject: Re: [PATCH 0/6] A few cpuidle vs rcu fixes
+Message-ID: <Y9FIqD21+DZU2kjV@FVFF77S0Q05N.cambridge.arm.com>
+References: <20230123205009.790550642@infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <a391e98c-88af-886c-0426-c41c9980afa1@redhat.com>
+In-Reply-To: <20230123205009.790550642@infradead.org>
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On Tue 24-01-23 19:01:49, David Hildenbrand wrote:
-> [...]
-> 
-> > > I'm going to point out the security aspect, and that e.g., Windows used to
-> > > enable it system-wide before getting taught by security experts otherwise.
-> > > Details on KSM and security aspects can be found in that thread.
-> > > 
-> > If I'm not mistaken the security aspect exists today. When KSM is
-> > enabled with madvise this is the same.
-> 
-> Yes, and we mostly only use it for virtual machines -- and to be precise,
-> guest memory only -- where it has to be enabled explicitly on a well
-> documented basis ...
-> 
-> Impossible for an admin to force it on other parts of the hypervisor process
-> that might be more security sensitive. Or on other arbitrary applications,
-> for now.
-> 
-> > 
-> > > Long story short: one has to be very careful with that and only enable it for
-> > > very carefully selected worklads. Letting a workload opt-in on a VMA level is
-> > > most probably safer than an admin blindly turning this on for random processes
-> > > ... >>
-> [...]
-> 
-> > > 
-> > > [1] https://lore.kernel.org/all/20220517092701.1662641-1-xu.xin16@zte.com.cn/
-> > > [2] https://lore.kernel.org/all/20220609055658.703472-1-xu.xin16@zte.com.cn/
-> > > 
-> > My understanding is that there were problems with the patch and how it
-> > exposed KSM. The other objection was the enable-all configuration
-> > option.
-> 
-> I don't remember all the discussions, but one concern was how to handle
-> processes that deliberately want to disable it on some parts of memory.
-> 
-> Anyhow, I cc'ed the relevant parties already.
+Hi Peter,
 
-Thanks! I do not remember all the details from the past discussion
-except it was /proc and later global setting. Neither really were great
-choices. We have discussed pidfd_madvise and prctl IIRC. For the latter
-there was no real argument about when it is desirable to apply merging
-on all existing vmas (e.g. is it really desirable on stack/brk or malloc
-arenas or would user need to opt out for those).
+On Mon, Jan 23, 2023 at 09:50:09PM +0100, Peter Zijlstra wrote:
+> 0-day robot reported graph-tracing made the cpuidle-vs-rcu rework go splat.
+> 
+> These patches appear to cure this, the ftrace selftest now runs to completion
+> without spamming scary messages to dmesg.
 
-I have read through your cover letter and it talks about the interface
-but it doesn't really talk about usecases and how they are supposed to
-use this feature - except the prctl based flag gets inherited. So could
-you elaborate some more about those usecases please?
+In addition to the other bits for arm64, we'll need the following patch. Are
+you happy to add that to the start of this series?
+
+I've tested this on an arm64 Juno board with a full-fat ftrace config,
+CONFIG_PROVE_LOCKING + CONFIG_DEBUG_LOCKDEP, and CONFIG_DEBUG_VIRTUAL=y, and
+build tested for 32-bit arm.
+
+Thanks,
+Mark.
+
+---->8----
+From 30ab9eba19e952cb51c9f599d2ac9b8a302cb63d Mon Sep 17 00:00:00 2001
+From: Mark Rutland <mark.rutland@arm.com>
+Date: Wed, 25 Jan 2023 14:20:49 +0000
+Subject: [PATCH] drivers: firmware: psci: don't instrument suspend code
+
+The PSCI suspend code is currently instrumentable, which is not safe as
+instrumentation (e.g. ftrace) may try to make use of RCU during idle
+periods when RCU is not watching.
+
+To fix this we need to ensure that psci_suspend_finisher() and anything
+it calls are not instrumented. We can do this fairly simply by marking
+psci_suspend_finisher() and the psci*_cpu_suspend() functions as
+noinstr, and the underlying helper functions as __always_inline.
+
+When CONFIG_DEBUG_VIRTUAL=y, __pa_symbol() can expand to an out-of-line
+instrumented function, so we must use __pa_symbol_nodebug() within
+psci_suspend_finisher().
+
+The raw SMCCC invocation functions are written in assembly, and are not
+subject to compiler instrumentation.
+
+Signed-off-by: Mark Rutland <mark.rutland@arm.com>
+Cc: Lorenzo Pieralisi <lpieralisi@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+---
+ drivers/firmware/psci/psci.c | 31 +++++++++++++++++++------------
+ 1 file changed, 19 insertions(+), 12 deletions(-)
+
+diff --git a/drivers/firmware/psci/psci.c b/drivers/firmware/psci/psci.c
+index f3a044fa4652a..c12847b4736de 100644
+--- a/drivers/firmware/psci/psci.c
++++ b/drivers/firmware/psci/psci.c
+@@ -108,9 +108,10 @@ bool psci_power_state_is_valid(u32 state)
+ 	return !(state & ~valid_mask);
+ }
+ 
+-static unsigned long __invoke_psci_fn_hvc(unsigned long function_id,
+-			unsigned long arg0, unsigned long arg1,
+-			unsigned long arg2)
++static __always_inline unsigned long
++__invoke_psci_fn_hvc(unsigned long function_id,
++		     unsigned long arg0, unsigned long arg1,
++		     unsigned long arg2)
+ {
+ 	struct arm_smccc_res res;
+ 
+@@ -118,9 +119,10 @@ static unsigned long __invoke_psci_fn_hvc(unsigned long function_id,
+ 	return res.a0;
+ }
+ 
+-static unsigned long __invoke_psci_fn_smc(unsigned long function_id,
+-			unsigned long arg0, unsigned long arg1,
+-			unsigned long arg2)
++static __always_inline unsigned long
++__invoke_psci_fn_smc(unsigned long function_id,
++		     unsigned long arg0, unsigned long arg1,
++		     unsigned long arg2)
+ {
+ 	struct arm_smccc_res res;
+ 
+@@ -128,7 +130,7 @@ static unsigned long __invoke_psci_fn_smc(unsigned long function_id,
+ 	return res.a0;
+ }
+ 
+-static int psci_to_linux_errno(int errno)
++static __always_inline int psci_to_linux_errno(int errno)
+ {
+ 	switch (errno) {
+ 	case PSCI_RET_SUCCESS:
+@@ -169,7 +171,8 @@ int psci_set_osi_mode(bool enable)
+ 	return psci_to_linux_errno(err);
+ }
+ 
+-static int __psci_cpu_suspend(u32 fn, u32 state, unsigned long entry_point)
++static __always_inline int
++__psci_cpu_suspend(u32 fn, u32 state, unsigned long entry_point)
+ {
+ 	int err;
+ 
+@@ -177,13 +180,15 @@ static int __psci_cpu_suspend(u32 fn, u32 state, unsigned long entry_point)
+ 	return psci_to_linux_errno(err);
+ }
+ 
+-static int psci_0_1_cpu_suspend(u32 state, unsigned long entry_point)
++static __always_inline int
++psci_0_1_cpu_suspend(u32 state, unsigned long entry_point)
+ {
+ 	return __psci_cpu_suspend(psci_0_1_function_ids.cpu_suspend,
+ 				  state, entry_point);
+ }
+ 
+-static int psci_0_2_cpu_suspend(u32 state, unsigned long entry_point)
++static __always_inline int
++psci_0_2_cpu_suspend(u32 state, unsigned long entry_point)
+ {
+ 	return __psci_cpu_suspend(PSCI_FN_NATIVE(0_2, CPU_SUSPEND),
+ 				  state, entry_point);
+@@ -447,10 +452,12 @@ late_initcall(psci_debugfs_init)
+ #endif
+ 
+ #ifdef CONFIG_CPU_IDLE
+-static int psci_suspend_finisher(unsigned long state)
++static noinstr int psci_suspend_finisher(unsigned long state)
+ {
+ 	u32 power_state = state;
+-	phys_addr_t pa_cpu_resume = __pa_symbol(cpu_resume);
++	phys_addr_t pa_cpu_resume;
++
++	pa_cpu_resume = __pa_symbol_nodebug((unsigned long)cpu_resume);
+ 
+ 	return psci_ops.cpu_suspend(power_state, pa_cpu_resume);
+ }
 -- 
-Michal Hocko
-SUSE Labs
+2.30.2
+
