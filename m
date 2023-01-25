@@ -2,96 +2,87 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A5C5C27C76
-	for <linux-trace-kernel@archiver.kernel.org>; Wed, 25 Jan 2023 07:58:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F3D0C27C76
+	for <linux-trace-kernel@archiver.kernel.org>; Wed, 25 Jan 2023 09:17:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234655AbjAYH6y (ORCPT
+        id S235018AbjAYJRG (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Wed, 25 Jan 2023 02:58:54 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47392 "EHLO
+        Wed, 25 Jan 2023 04:17:06 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40184 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234171AbjAYH6x (ORCPT
+        with ESMTP id S229646AbjAYJRF (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Wed, 25 Jan 2023 02:58:53 -0500
-Received: from mail-wm1-x332.google.com (mail-wm1-x332.google.com [IPv6:2a00:1450:4864:20::332])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A3E9945BEB
-        for <linux-trace-kernel@vger.kernel.org>; Tue, 24 Jan 2023 23:58:51 -0800 (PST)
-Received: by mail-wm1-x332.google.com with SMTP id c4-20020a1c3504000000b003d9e2f72093so644397wma.1
-        for <linux-trace-kernel@vger.kernel.org>; Tue, 24 Jan 2023 23:58:51 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=smile-fr.20210112.gappssmtp.com; s=20210112;
-        h=content-transfer-encoding:in-reply-to:organization:from:references
-         :cc:to:content-language:subject:user-agent:mime-version:date
-         :message-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=jC6pU+sGbtpoB7ethShoVXn+Chr0YG8N/LtDw3sEIK0=;
-        b=Lfvx+d6cL/XnfSt7+z4Ob5aulUk0jxtb56S0J4kri453gt+pmKjnTQlmYSEeC+1Qxv
-         +Y0qb+1KqO7YMETgUHSjAh02IDtT0PzDeEDWEefvDvE7jXvrBqw7wqDPs31YJROI4kbd
-         f2j3AUMXIoENJ7cyjZ0Rg11tMkUIOkUgEhIev4KCj/mo4iCJLzR4ZJqlMzBvUqU6Nih3
-         b6zdRMlty83RFfXyiDrFmZ9ehtWQ7HV7jfNrHZaciYHTnKJ3OvFm+b+N9otCmpqjIVLy
-         r/Xao64KM7miZvRWr/vvB0j1uDb7Eohbkg8s/lO0oeZwNqIdXQ7vNTDPtjVyeeoO2MCr
-         KqXg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:in-reply-to:organization:from:references
-         :cc:to:content-language:subject:user-agent:mime-version:date
-         :message-id:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=jC6pU+sGbtpoB7ethShoVXn+Chr0YG8N/LtDw3sEIK0=;
-        b=yfqu+a2LUwz9+RpfNs1zGjLSJHfUSD9JTW4aPXeQdr0wMEfTwEvfTrPCKv85bT5PWp
-         ilEly4iid5OpDhZOQnJ2beYrrJGB2CkJUGMKq7ECvVMocSqftiGjc6Xiwme7IVqyf0Q5
-         nniYyKIyd2OEj2k1isKtP5tnscViu8nFhz8UDUyvvKeg9y5XbUTHuWMpIN6SZUet3gtx
-         1WguaPlQFdYdB8iDrw5gxTvw0cQlSJ8aRyPj6bsHV8Pf8UawcgzqAEMrnMrSaFIMjxiy
-         06sEkUGUuOqNQUZt9UtVxwD9Fke12kAC8wnUlpOF3Lcm1BFtyJadkKHdFzEdlDFoNZ3j
-         GzXA==
-X-Gm-Message-State: AFqh2kohpZsYXSmcsriMEpgYDrfQYAuX1zEKWTPmqYESiLDs+GdfITh3
-        U8RnfbhB73MPnqa8d+ww9N+kSOCE9LDzHq5SJEs=
-X-Google-Smtp-Source: AMrXdXuDMs4P5amijj2D20nKFk7M/g6g2ayWIBrOteD8b+TEV46COKKWFpqjcchSxNEGAmR2v+HcVw==
-X-Received: by 2002:a05:600c:3d14:b0:3da:f793:fff6 with SMTP id bh20-20020a05600c3d1400b003daf793fff6mr30419532wmb.16.1674633530203;
-        Tue, 24 Jan 2023 23:58:50 -0800 (PST)
-Received: from ?IPV6:2a04:cec0:11f9:b9e5:f1e5:d9fa:43ee:3db9? ([2a04:cec0:11f9:b9e5:f1e5:d9fa:43ee:3db9])
-        by smtp.gmail.com with ESMTPSA id g23-20020a05600c4c9700b003d358beab9dsm975568wmp.47.2023.01.24.23.58.49
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 24 Jan 2023 23:58:49 -0800 (PST)
-Message-ID: <f4f33c59-73d2-4e82-fc07-adc21b22384a@smile.fr>
-Date:   Wed, 25 Jan 2023 08:58:48 +0100
+        Wed, 25 Jan 2023 04:17:05 -0500
+Received: from desiato.infradead.org (desiato.infradead.org [IPv6:2001:8b0:10b:1:d65d:64ff:fe57:4e05])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 28CFA42DCF;
+        Wed, 25 Jan 2023 01:17:05 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=v4+Ubjw7AoXhgXeA4YKb/blLYieE36zolgnmCKDWMaQ=; b=PWZuXTBiSc8LCj9cdn0+AnFvjN
+        zB0glAj0lJcTES3hfB7UtJlzSluJ8M4Yvt4oh6waOtOum2+4ZBzbPnjNSXADhOfB7s9Vbqpmc1P49
+        j658tOcZkbmVBMSgCorIbPwiBerE4zHleGY4BJQ9/NNhoXk/wYH4ZU+MCeaettZlSCheoGSW2GMVr
+        2+9lrL7caIC1r3xxRVoPDsFyYiSSvNfuOhO8nlzJYKbQPxAhGsQB+ajtO4ioX1QpSXst9aobE1kU6
+        vrpdN3L4Ct2CFXS+UyK2hr4kfk8ys3R2p0VrT0loTxqhh85S1kHg3OT+LKst/Ibf6YxvnrGA+tuQ3
+        Z+5eQ3CA==;
+Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
+        by desiato.infradead.org with esmtpsa (Exim 4.96 #2 (Red Hat Linux))
+        id 1pKbt0-0026uI-0x;
+        Wed, 25 Jan 2023 09:16:07 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (4096 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 0F593300137;
+        Wed, 25 Jan 2023 10:16:35 +0100 (CET)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id D728A2C5B6905; Wed, 25 Jan 2023 10:16:35 +0100 (CET)
+Date:   Wed, 25 Jan 2023 10:16:35 +0100
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Steven Rostedt <rostedt@goodmis.org>
+Cc:     linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linyu Yuan <quic_linyyuan@quicinc.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>, bpf@vger.kernel.org,
+        Frederic Weisbecker <fweisbec@gmail.com>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Ingo Molnar <mingo@elte.hu>
+Subject: Re: [PATCH 1/2] perf/tracing: Use stage6 of tracing to not duplicate
+ macros
+Message-ID: <Y9Dzczg7xZTTAnyp@hirez.programming.kicks-ass.net>
+References: <20230124202238.563854686@goodmis.org>
+ <20230124202515.716458410@goodmis.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.5.0
-Subject: Re: [PATCH v3 0/3] Documentation: kprobetrace: Improve readability
-Content-Language: en-US
-To:     Jonathan Corbet <corbet@lwn.net>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        "Masami Hiramatsu (Google)" <mhiramat@kernel.org>,
-        bagasdotme@gmail.com
-Cc:     linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-doc@vger.kernel.org
-References: <20230121225304.1711635-1-yoann.congal@smile.fr>
- <20230122083138.300ab49e15c7b3de13f0f121@kernel.org>
- <20230123103341.56f42e72@gandalf.local.home> <87v8kvfv8e.fsf@meer.lwn.net>
-From:   Yoann Congal <yoann.congal@smile.fr>
-Organization: Smile ECS
-In-Reply-To: <87v8kvfv8e.fsf@meer.lwn.net>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230124202515.716458410@goodmis.org>
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-Hi,
-
-On 1/24/23 23:01, Jonathan Corbet wrote:
-> Steven Rostedt <rostedt@goodmis.org> writes:
+On Tue, Jan 24, 2023 at 03:22:39PM -0500, Steven Rostedt wrote:
+> From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
 > 
->> Reviewed-by: Steven Rostedt (Google) <rostedt@goodmis.org>
->>
->> Jon, care to take this series through your tree?
+> The perf events are created by the same macro magic as tracefs trace
+> events are. But to hook into perf, it has its own code. It duplicates many
+> of the same macros as the tracefs macros and this is an issue because it
+> misses bug fixes as well as any new enhancements that come with the other
+> trace macros.
 > 
-> Done, thanks.
+> As the trace macros have been put into their own staging files, have perf
+> take advantage of this and use the tracefs stage 6 macros that the "fast
+> assign" portion of the trace event macro uses.
+> 
+> Link: https://lore.kernel.org/lkml/1671181385-5719-1-git-send-email-quic_linyyuan@quicinc.com/
+> 
+> Cc: Frederic Weisbecker <fweisbec@gmail.com>
+> Cc: Arnaldo Carvalho de Melo <acme@redhat.com>
+> Cc: Peter Zijlstra <a.p.zijlstra@chello.nl>
+> Cc: Ingo Molnar <mingo@elte.hu>
+> Reported-by: Linyu Yuan <quic_linyyuan@quicinc.com>
+> Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
 
-
-Thank you for ack'ing, reviewing and merging :)
-
-Regards,
--- 
-Yoann Congal
-Smile ECS - Tech Expert
+Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
