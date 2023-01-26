@@ -2,114 +2,142 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 69420C54EAA
-	for <linux-trace-kernel@archiver.kernel.org>; Thu, 26 Jan 2023 20:43:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 36569C54EAA
+	for <linux-trace-kernel@archiver.kernel.org>; Thu, 26 Jan 2023 21:31:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232764AbjAZUnS (ORCPT
+        id S232979AbjAZVbs (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Thu, 26 Jan 2023 15:43:18 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49718 "EHLO
+        Thu, 26 Jan 2023 16:31:48 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53526 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229448AbjAZUnR (ORCPT
+        with ESMTP id S229964AbjAZVbr (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Thu, 26 Jan 2023 15:43:17 -0500
-Received: from mail-il1-x131.google.com (mail-il1-x131.google.com [IPv6:2607:f8b0:4864:20::131])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6737F59B4D
-        for <linux-trace-kernel@vger.kernel.org>; Thu, 26 Jan 2023 12:43:16 -0800 (PST)
-Received: by mail-il1-x131.google.com with SMTP id m8so1295174ili.7
-        for <linux-trace-kernel@vger.kernel.org>; Thu, 26 Jan 2023 12:43:16 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=9SlJgdiGbpLH2OCrekdQ+HXRQAFULLWTJy3ISycRFo8=;
-        b=ezYBzhGea1B+COmIaV8EpE0m9F1KFEE6si+x1qFz4sa4s2bAp8+/KTss6Fma/YBKSI
-         0RMuaZLmiKnz0UViiF+gaE/lHWWCori2Rx2NbUv2YPO9E46uPC5BTFlC8cG6GohQoxZW
-         V3pB+LrnRfeIdwZOtexodsOuH+eC+iHXpcI6w=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=9SlJgdiGbpLH2OCrekdQ+HXRQAFULLWTJy3ISycRFo8=;
-        b=ZJgWS+Rh3Jlrv9eWFs8pF3ofMgS13FXsle1PSqgQi59+ZcobFTnxQdnvHGOcPVahax
-         KT8ZbwnNP8s8zv0DNbwgJGb4ZhdmIKsQ32B0mOS28freV6K7N9WJ2vIVjhg7fb3mDMc0
-         YWlL8SOpzYdgsFQrLpy2xegeRv909y1RJnn/ij4kebSOBReLW3oFeX+PpyueI5roi0UJ
-         i2VKD/Iyxm+gOFPrEQUOvr02ivaBRj2qX92PxRnEl7luOTvTjj7lhS6Qb8R1KXLQRniN
-         +X7XmZCD89YPN+bX/6hTrBpQKpYr4zeuAY1TJIozu2ngZPXQgFJ28+iI1YenUm2SdYBp
-         4lbg==
-X-Gm-Message-State: AO0yUKXFBDHo79NlyTgNCU+FH9eziH9GkuuCKw+VZDVXdIYh/kWLkGsg
-        ks6XNAzpJ0/k0iDoYeYzNqyHUg==
-X-Google-Smtp-Source: AK7set+njbIDB3ZxHZTssVgUai6JBZ8bzyJhMxiqmjkKmEuPGk/ixDcO9wDAGU1diuyOQmov0iV7cA==
-X-Received: by 2002:a92:c68e:0:b0:310:9a08:ac86 with SMTP id o14-20020a92c68e000000b003109a08ac86mr1672299ilg.2.1674765795672;
-        Thu, 26 Jan 2023 12:43:15 -0800 (PST)
-Received: from [192.168.1.128] ([38.15.45.1])
-        by smtp.gmail.com with ESMTPSA id k16-20020a056e02135000b00310bde806e8sm399028ilr.12.2023.01.26.12.43.14
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 26 Jan 2023 12:43:14 -0800 (PST)
-Message-ID: <350d21a9-ac48-7da8-aa5e-d51ad794730a@linuxfoundation.org>
-Date:   Thu, 26 Jan 2023 13:43:13 -0700
+        Thu, 26 Jan 2023 16:31:47 -0500
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 689C2D520;
+        Thu, 26 Jan 2023 13:31:46 -0800 (PST)
+Received: from pps.filterd (m0127361.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 30QLMTWv031328;
+        Thu, 26 Jan 2023 21:31:28 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
+ : date : message-id : in-reply-to : references : content-transfer-encoding
+ : mime-version; s=pp1; bh=1H1+b8FWI14SN/GJs2wObEIevnbBa8C9WpCufC2z/GM=;
+ b=MZo9rKQN0Dmyx2SGCbjVofk/txouBAmYqUTAszNfA9T8/9EeOYm3vH9Tk11cbbPhIXvr
+ YVahzdbNFLxr5qd1GjaTQaFergWGaYgrAW+3+JGaFH3sWwJ6NrzTgfwPMLJ8jekxJ+wZ
+ hksYPxSnFR9+uX4M068KAWtvH7n7lnIngU2LT0G4UBFikMBOEKCfsqiEovhnJzwuLdaV
+ CVXGU1+FYFsTQ695Zumv2fpN68dubCaQ5M0FsxUfEAsTbnLKxI7a9HRH3wiKiCUW2pqO
+ 7+7ArAwUr1UwPypxeKFxU43Dfe9BW5z+6ENhai34DXApCPKK2Kx4KiphZj99RxcS81s3 VQ== 
+Received: from ppma03wdc.us.ibm.com (ba.79.3fa9.ip4.static.sl-reverse.com [169.63.121.186])
+        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3nc1cm05sh-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 26 Jan 2023 21:31:28 +0000
+Received: from pps.filterd (ppma03wdc.us.ibm.com [127.0.0.1])
+        by ppma03wdc.us.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 30QJq32A006849;
+        Thu, 26 Jan 2023 21:31:27 GMT
+Received: from smtprelay01.wdc07v.mail.ibm.com ([9.208.129.119])
+        by ppma03wdc.us.ibm.com (PPS) with ESMTPS id 3n87p7qbjt-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 26 Jan 2023 21:31:27 +0000
+Received: from smtpav06.dal12v.mail.ibm.com (smtpav06.dal12v.mail.ibm.com [10.241.53.105])
+        by smtprelay01.wdc07v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 30QLVQa430671280
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 26 Jan 2023 21:31:26 GMT
+Received: from smtpav06.dal12v.mail.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 89DC558043;
+        Thu, 26 Jan 2023 21:31:26 +0000 (GMT)
+Received: from smtpav06.dal12v.mail.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 304F058059;
+        Thu, 26 Jan 2023 21:31:25 +0000 (GMT)
+Received: from slate16.aus.stglabs.ibm.com (unknown [9.160.3.213])
+        by smtpav06.dal12v.mail.ibm.com (Postfix) with ESMTP;
+        Thu, 26 Jan 2023 21:31:25 +0000 (GMT)
+From:   Eddie James <eajames@linux.ibm.com>
+To:     linux-fsi@lists.ozlabs.org
+Cc:     linux-trace-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, mhiramat@kernel.org,
+        rostedt@goodmis.org, eajames@linux.ibm.com, alistair@popple.id.au,
+        joel@jms.id.au, jk@ozlabs.org, andrew@aj.id.au, robh+dt@kernel.org,
+        krzysztof.kozlowski+dt@linaro.org
+Subject: [PATCH v3 1/2] dt-bindings: fsi: Document the IBM I2C Responder virtual FSI master
+Date:   Thu, 26 Jan 2023 15:31:22 -0600
+Message-Id: <20230126213123.884125-2-eajames@linux.ibm.com>
+X-Mailer: git-send-email 2.31.1
+In-Reply-To: <20230126213123.884125-1-eajames@linux.ibm.com>
+References: <20230126213123.884125-1-eajames@linux.ibm.com>
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: HMBziLVKuzpB70olzR9J-3dHiRj6PBWs
+X-Proofpoint-GUID: HMBziLVKuzpB70olzR9J-3dHiRj6PBWs
+Content-Transfer-Encoding: 8bit
+X-Proofpoint-UnRewURL: 0 URL was un-rewritten
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.4.2
-Subject: Re: [PATCH 0/3] selftests/tracing: Fix some testcases for recent
- change
-Content-Language: en-US
-To:     Steven Rostedt <rostedt@goodmis.org>,
-        "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
-Cc:     Shuah Khan <shuah@kernel.org>, linux-kernel@vger.kernel.org,
-        linux-trace-kernel@vger.kernel.org,
-        linux-kselftest@vger.kernel.org,
-        Shuah Khan <skhan@linuxfoundation.org>
-References: <167309832823.640500.13244630381161014364.stgit@devnote3>
- <20230108163128.2860894d@rorschach.local.home>
-From:   Shuah Khan <skhan@linuxfoundation.org>
-In-Reply-To: <20230108163128.2860894d@rorschach.local.home>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.219,Aquarius:18.0.930,Hydra:6.0.562,FMLib:17.11.122.1
+ definitions=2023-01-26_09,2023-01-26_01,2022-06-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 suspectscore=0
+ priorityscore=1501 malwarescore=0 mlxlogscore=999 clxscore=1015
+ phishscore=0 spamscore=0 lowpriorityscore=0 impostorscore=0 mlxscore=0
+ bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2212070000 definitions=main-2301260198
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On 1/8/23 14:31, Steven Rostedt wrote:
-> On Sat,  7 Jan 2023 22:32:08 +0900
-> "Masami Hiramatsu (Google)" <mhiramat@kernel.org> wrote:
-> 
->> This includes some patches to fix 2 issues on ftrace selftests.
->>
->> - eprobe filter and eprobe syntax test case were introduced but it
->>    doesn't check whether the kernel supports eprobe filter. Thus the
->>    new test case fails on the kernel which has eprobe but not support
->>    eprobe filter. To solve this issue, add a filter description to
->>    README file [1/3] and run the filter syntax error test only if the
->>    description is found in the README file [2/3].
->>
->> - Recently objtool adds prefix symbols for the function padding nops,
->>    and the probepoint test case fails because this probepoint test case
->>    tests whether the kprobe event can probe the target function and the
->>    functions next to the target function. But the prefix symbols can not
->>    be probed. Thus these prefix symbols must be skipped [3/3].
->>
->> Thank you,
->>
->> ---
->>
->> Masami Hiramatsu (Google) (3):
->>        tracing/eprobe: Fix to add filter on eprobe description in README file
->>        selftests/ftrace: Fix eprobe syntax test case to check filter support
->>        selftests/ftrace: Fix probepoint testcase to ignore __pfx_* symbols
->>
->>
-> 
-> Reviewed-by: Steven Rostedt (Google) <rostedt@goodmis.org>
-> 
-> -- Steve
-> 
+The I2C Responder translates I2C commands to CFAM or SCOM operations,
+effectively implementing an FSI master.
 
-For selftest patches in the series: (Assuming patches 2&3 depend on patch 1.)
+Signed-off-by: Eddie James <eajames@linux.ibm.com>
+---
+ .../bindings/fsi/ibm,i2cr-fsi-master.yaml     | 41 +++++++++++++++++++
+ 1 file changed, 41 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/fsi/ibm,i2cr-fsi-master.yaml
 
-Acked-by: Shuah Khan <skhan@linuxfoundation.org>
+diff --git a/Documentation/devicetree/bindings/fsi/ibm,i2cr-fsi-master.yaml b/Documentation/devicetree/bindings/fsi/ibm,i2cr-fsi-master.yaml
+new file mode 100644
+index 000000000000..442cecdc57cb
+--- /dev/null
++++ b/Documentation/devicetree/bindings/fsi/ibm,i2cr-fsi-master.yaml
+@@ -0,0 +1,41 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/fsi/ibm,i2cr-fsi-master.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: IBM I2C Responder virtual FSI master
++
++maintainers:
++  - Eddie James <eajames@linux.ibm.com>
++
++description: |
++  The I2C Responder (I2CR) is a an I2C device that's connected to an FSI CFAM
++  (see fsi.txt). The I2CR translates I2C bus operations to FSI CFAM reads and
++  writes or SCOM operations, thereby acting as an FSI master.
++
++properties:
++  compatible:
++    enum:
++      - ibm,i2cr-fsi-master
++
++  reg:
++    maxItems: 1
++
++required:
++  - compatible
++  - reg
++
++additionalProperties: false
++
++examples:
++  - |
++    i2c {
++      #address-cells = <1>;
++      #size-cells = <0>;
++
++      i2cr@20 {
++        compatible = "ibm,i2cr-fsi-master";
++        reg = <0x20>;
++      };
++    };
+-- 
+2.31.1
 
-thanks,
--- Shuah
