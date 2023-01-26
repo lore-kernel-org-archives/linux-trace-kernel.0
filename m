@@ -2,432 +2,229 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F7DCC61DA2
-	for <linux-trace-kernel@archiver.kernel.org>; Thu, 26 Jan 2023 15:15:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D575C05027
+	for <linux-trace-kernel@archiver.kernel.org>; Thu, 26 Jan 2023 17:02:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232406AbjAZPP5 (ORCPT
+        id S230480AbjAZRCg (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Thu, 26 Jan 2023 10:15:57 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49464 "EHLO
+        Thu, 26 Jan 2023 12:02:36 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39428 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232192AbjAZPPn (ORCPT
+        with ESMTP id S231718AbjAZRCe (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Thu, 26 Jan 2023 10:15:43 -0500
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4E31A69507;
-        Thu, 26 Jan 2023 07:15:41 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=Content-Type:MIME-Version:References:
-        Subject:Cc:To:From:Date:Message-ID:Sender:Reply-To:Content-Transfer-Encoding:
-        Content-ID:Content-Description:In-Reply-To;
-        bh=8Hefq63R1A5T8+z/XoUnS+Yx/XIKnxRs3D+68vKhmj0=; b=rZBipzsPL4s6miWDMDZYmYaZGU
-        PHLxorDJi+6hGe8Q3LLKHAwCMpV2H4JLqliA+fFQatbJ1ylL0pQUkgZ4RWG2qF0s75mBjZWX3Z17p
-        /X3D5F8s72VQTIwrOGSQIsWj19UxfdsXzqj3DGJjwfYEnFjBzfjteYEDv0bLT0qY1/nCNtGLEJjVe
-        Xil3uNQ7bYRWRV6G4GE9s2p8z+oIghO821WdPOiqvrVth/HlIgFXHdUV8T0hwkNoik8GRf3rLTJ4a
-        V/ZCpsd31khg5aVvvqj/hIohR82WXiPVoj3AthJcVLVOI91ZiIQZV1gRuJHxdajHZisZRQxrO+5Vd
-        DKNeV4ag==;
-Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
-        by casper.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
-        id 1pL3xn-006qUQ-F3; Thu, 26 Jan 2023 15:14:56 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (4096 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 88EA1302D4A;
-        Thu, 26 Jan 2023 16:14:54 +0100 (CET)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 0)
-        id 1A98E2084C4AA; Thu, 26 Jan 2023 16:14:53 +0100 (CET)
-Message-ID: <20230126151323.585115019@infradead.org>
-User-Agent: quilt/0.66
-Date:   Thu, 26 Jan 2023 16:08:34 +0100
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     mingo@kernel.org
-Cc:     will@kernel.org, peterz@infradead.org, boqun.feng@gmail.com,
-        mark.rutland@arm.com, tglx@linutronix.de, mingo@redhat.com,
-        bp@alien8.de, dave.hansen@linux.intel.com, x86@kernel.org,
-        hpa@zytor.com, seanjc@google.com, pbonzini@redhat.com,
-        jgross@suse.com, srivatsa@csail.mit.edu, amakhalov@vmware.com,
-        pv-drivers@vmware.com, wanpengli@tencent.com, vkuznets@redhat.com,
-        boris.ostrovsky@oracle.com, rafael@kernel.org,
-        daniel.lezcano@linaro.org, lpieralisi@kernel.org,
-        frederic@kernel.org, paulmck@kernel.org, rostedt@goodmis.org,
-        mhiramat@kernel.org, longman@redhat.com, juri.lelli@redhat.com,
-        vincent.guittot@linaro.org, dietmar.eggemann@arm.com,
-        bsegall@google.com, mgorman@suse.de, bristot@redhat.com,
-        vschneid@redhat.com, linux-kernel@vger.kernel.org,
-        kvm@vger.kernel.org, virtualization@lists.linux-foundation.org,
-        linux-pm@vger.kernel.org, linux-trace-kernel@vger.kernel.org
-Subject: [PATCH v2 5/9] x86: Always inline arch_atomic64
-References: <20230126150829.087606759@infradead.org>
+        Thu, 26 Jan 2023 12:02:34 -0500
+Received: from NAM10-DM6-obe.outbound.protection.outlook.com (mail-dm6nam10on2061.outbound.protection.outlook.com [40.107.93.61])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7B4CB627AB;
+        Thu, 26 Jan 2023 09:02:22 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=G74Wccb1vKJ1+e5iQggM1j8q6OUwERHI66smmJRIwA94lVaV0YXEL4EQeHj2/t+ZLnoq6mNkN4oKpGRySrxueT3Nw2fzRIvN28l/X8Ui8Zq+mRzXJ00ujBWccaVbx3ncYVfcK6dGwFpzATmCI48G8JzAahsN0yqCA0syphRRePleZr9fxumxh1wh1MF9HersKhiOqTq5Repq+Vf4y7138p9yHLUx047ztgURhYyUmJ/m1nlFAXervz3suRoDEkzolSl5dhP353o+STbMdO5QzHmVEYP3Wa2jWMT3D+4wOU2N6OCsDmJ/6eTQ1n6FAazat2/4Otlvi0EjhSD9JkAFpw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=8XGSeSqpbeKmuOlOmAqvCcULsRstgABL80DNrjXF1a4=;
+ b=E+dGpTqLR4TAdT/IZQ+6U6K+56VQBGQJbS8bR3fUsQ4+OlKAHCGl4+2aoh7G8V6Qq/FVm6BrEyFlZ2f6dLqIpkwi1MFPGc1pOdhWg2GA2m0dqlPNH8vChSF53eVCZz8jzjaOC4WKjlaLhABhXg04nphJ7d7bd8x/PSiIu0jWWgzX4XcsMOWbGUtFXgDISlMZ3QhpMiZdq+bEYvwjqFNZ0HP5qTFMqJSJvKGpJWSnX8sYDfIEsg7i6QEY/1JZW/QwdqfXFBi5nHV9xRwUKU9Edw3KNhsH1XGqbkQgL2r/LguP/zF/9kuio9Xl2qj7Z6I09RwmwQ0sZADScGj1RGUuAg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 216.228.117.160) smtp.rcpttodomain=davemloft.net smtp.mailfrom=nvidia.com;
+ dmarc=pass (p=reject sp=reject pct=100) action=none header.from=nvidia.com;
+ dkim=none (message not signed); arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=8XGSeSqpbeKmuOlOmAqvCcULsRstgABL80DNrjXF1a4=;
+ b=Ah0OzJUKlNTCInhibvKo7PQ1eaAIyVJJYkQffymbeDqlkC5fq3rqGjtPPpbBylZxJf/rOuk3NEaNKt4RscDng9Uio9Dn0gIpR7jTHgIpFZtFluC5yZ/5O6xCC80zmcNnUU6jHJodJCmInvvD2DfgYzYBQTjk8FkZ3EXq8l5oHXJqo+8XAA6wGg6dsflu1bfkwe7hnCZc7cOsBWBwEv/DNQfdYrGt8nAh3WrJ6Q86R091XKwiPTEitTW2OQWym26ENWYK4sqywntot/pFXpPP4eX55ccQkXhl3/JvtK6wkkP6Kr9ViXcmeAACIZcDJjRDIpf1eSlWWNcqzDsWgk3Hnw==
+Received: from MW4PR03CA0304.namprd03.prod.outlook.com (2603:10b6:303:dd::9)
+ by SA1PR12MB6993.namprd12.prod.outlook.com (2603:10b6:806:24c::22) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6002.33; Thu, 26 Jan
+ 2023 17:02:20 +0000
+Received: from CO1NAM11FT071.eop-nam11.prod.protection.outlook.com
+ (2603:10b6:303:dd:cafe::a1) by MW4PR03CA0304.outlook.office365.com
+ (2603:10b6:303:dd::9) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6043.22 via Frontend
+ Transport; Thu, 26 Jan 2023 17:02:20 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.117.160)
+ smtp.mailfrom=nvidia.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=nvidia.com;
+Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
+ 216.228.117.160 as permitted sender) receiver=protection.outlook.com;
+ client-ip=216.228.117.160; helo=mail.nvidia.com; pr=C
+Received: from mail.nvidia.com (216.228.117.160) by
+ CO1NAM11FT071.mail.protection.outlook.com (10.13.175.56) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.6043.17 via Frontend Transport; Thu, 26 Jan 2023 17:02:20 +0000
+Received: from rnnvmail201.nvidia.com (10.129.68.8) by mail.nvidia.com
+ (10.129.200.66) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.986.36; Thu, 26 Jan
+ 2023 09:02:07 -0800
+Received: from localhost.localdomain (10.126.231.37) by rnnvmail201.nvidia.com
+ (10.129.68.8) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.986.36; Thu, 26 Jan
+ 2023 09:02:04 -0800
+From:   Petr Machata <petrm@nvidia.com>
+To:     "David S. Miller" <davem@davemloft.net>,
+        Eric Dumazet <edumazet@google.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Paolo Abeni <pabeni@redhat.com>,
+        Roopa Prabhu <roopa@nvidia.com>,
+        Nikolay Aleksandrov <razor@blackwall.org>,
+        <netdev@vger.kernel.org>
+CC:     <bridge@lists.linux-foundation.org>,
+        Petr Machata <petrm@nvidia.com>,
+        "Ido Schimmel" <idosch@nvidia.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        <linux-trace-kernel@vger.kernel.org>
+Subject: [PATCH net-next 06/16] net: bridge: Add a tracepoint for MDB overflows
+Date:   Thu, 26 Jan 2023 18:01:14 +0100
+Message-ID: <ed2e2e305dd49423745b62c0152a0b85bc84a767.1674752051.git.petrm@nvidia.com>
+X-Mailer: git-send-email 2.39.0
+In-Reply-To: <cover.1674752051.git.petrm@nvidia.com>
+References: <cover.1674752051.git.petrm@nvidia.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Originating-IP: [10.126.231.37]
+X-ClientProxiedBy: rnnvmail202.nvidia.com (10.129.68.7) To
+ rnnvmail201.nvidia.com (10.129.68.8)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CO1NAM11FT071:EE_|SA1PR12MB6993:EE_
+X-MS-Office365-Filtering-Correlation-Id: 1da694ef-b6c2-4002-1131-08daffbf164a
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: 4Dzp+IkgyhcQLEktxPtUPFbXNF55jHs/MuIrsR5e/SpCsGYHs2JWVOkdXv78UBSZPH8sat7ujombZbzP04Nj4W848jU2beUDmnEvBOrWQYo1WTFfiq5E3aGiL9MSiwb2YlAenNSPLI1kMPqgewX3+CZJ8RuIJj1qIpf3Ne7uYgsuMzBQ77K1cWYON19xCTaxIk3Du9WmQJq4RzyHdTw97l8LuWYBs6jKgNPn12wimOKTMqpEsmzDfLi1iNpMJPGK3Xfi83e1+MfAvSRibJbvOUoBk6ie7hp8+Ovb7WGHOApyJuhk/WxxHbknRtHxHHYb+jFSxBJhTlo9K3wkG7RfhE5j/0LEi9DzQPuFOhMcpLVz0whNkZPtdwjzadl6FLy4P8owVfoDbCCnhjMP1tlsE9sriiS84EsXFrVjUsbwlkdGaEyx5/Ls3RZuXyJ/8uNn1KJKdj1Hmx1gqevGPizzexciZ661969/jkcFDNy/943lFxeme1y9EDZij1gqlk7aQurhEroKmJXD8N2FVDxRjbItDl8ykmn5hZ9ukjsVdLFu08YrXT6HrfG8Ulw+N5s1fKwn8QxeLCOJgZNa09isKnv6TZCQ9IeGHj7FZtYGzAEqFSk24FRlKLiVf5gjYjHwbsatr9ODh0K3HWQtUFX7R/mKfEcfrEN3n/ZDRTAzkp2Nii1NPIwZlCDfNp0fo3eo/8nCi+vFfGhtSao2xj9h0Q==
+X-Forefront-Antispam-Report: CIP:216.228.117.160;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:dc6edge1.nvidia.com;CAT:NONE;SFS:(13230025)(4636009)(376002)(346002)(396003)(39860400002)(136003)(451199018)(46966006)(40470700004)(36840700001)(16526019)(70586007)(41300700001)(426003)(2616005)(8936002)(47076005)(86362001)(8676002)(478600001)(2906002)(316002)(4326008)(36860700001)(82310400005)(336012)(6666004)(5660300002)(54906003)(36756003)(186003)(110136005)(26005)(70206006)(40460700003)(7636003)(356005)(82740400003)(83380400001)(40480700001);DIR:OUT;SFP:1101;
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 26 Jan 2023 17:02:20.2573
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 1da694ef-b6c2-4002-1131-08daffbf164a
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.117.160];Helo=[mail.nvidia.com]
+X-MS-Exchange-CrossTenant-AuthSource: CO1NAM11FT071.eop-nam11.prod.protection.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA1PR12MB6993
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-As already done for regular arch_atomic, always inline arch_atomic64.
+The following patch will add two more maximum MDB allowances to the global
+one, mcast_hash_max, that exists today. In all these cases, attempts to add
+MDB entries above the configured maximums through netlink, fail noisily and
+obviously. Such visibility is missing when adding entries through the
+control plane traffic, by IGMP or MLD packets.
 
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+To improve visibility in those cases, add a trace point that reports the
+violation, including the relevant netdevice (be it a slave or the bridge
+itself), and the MDB entry parameters:
+
+	# perf record -e bridge:br_mdb_full &
+	# [...]
+	# perf script | cut -d: -f4-
+	 dev v2 af 2 src 192.0.2.1/:: grp 239.1.1.1/::/00:00:00:00:00:00 vid 0
+	 dev v2 af 10 src 0.0.0.0/2001:db8:1::1 grp 0.0.0.0/ff0e::1/00:00:00:00:00:00 vid 0
+	 dev v2 af 2 src 192.0.2.1/:: grp 239.1.1.1/::/00:00:00:00:00:00 vid 10
+	 dev v2 af 10 src 0.0.0.0/2001:db8:1::1 grp 0.0.0.0/ff0e::1/00:00:00:00:00:00 vid 10
+
+CC: Steven Rostedt <rostedt@goodmis.org>
+CC: linux-trace-kernel@vger.kernel.org
+Signed-off-by: Petr Machata <petrm@nvidia.com>
+Reviewed-by: Ido Schimmel <idosch@nvidia.com>
 ---
- arch/x86/include/asm/atomic64_32.h |   44 ++++++++++++++++++-------------------
- arch/x86/include/asm/atomic64_64.h |   36 +++++++++++++++---------------
- 2 files changed, 40 insertions(+), 40 deletions(-)
+ include/trace/events/bridge.h | 67 +++++++++++++++++++++++++++++++++++
+ net/core/net-traces.c         |  1 +
+ 2 files changed, 68 insertions(+)
 
---- a/arch/x86/include/asm/atomic64_32.h
-+++ b/arch/x86/include/asm/atomic64_32.h
-@@ -71,7 +71,7 @@ ATOMIC64_DECL(add_unless);
-  * the old value.
-  */
+diff --git a/include/trace/events/bridge.h b/include/trace/events/bridge.h
+index 6b200059c2c5..00d5e2dcb3ad 100644
+--- a/include/trace/events/bridge.h
++++ b/include/trace/events/bridge.h
+@@ -122,6 +122,73 @@ TRACE_EVENT(br_fdb_update,
+ 		  __entry->flags)
+ );
  
--static inline s64 arch_atomic64_cmpxchg(atomic64_t *v, s64 o, s64 n)
-+static __always_inline s64 arch_atomic64_cmpxchg(atomic64_t *v, s64 o, s64 n)
- {
- 	return arch_cmpxchg64(&v->counter, o, n);
- }
-@@ -85,7 +85,7 @@ static inline s64 arch_atomic64_cmpxchg(
-  * Atomically xchgs the value of @v to @n and returns
-  * the old value.
-  */
--static inline s64 arch_atomic64_xchg(atomic64_t *v, s64 n)
-+static __always_inline s64 arch_atomic64_xchg(atomic64_t *v, s64 n)
- {
- 	s64 o;
- 	unsigned high = (unsigned)(n >> 32);
-@@ -104,7 +104,7 @@ static inline s64 arch_atomic64_xchg(ato
-  *
-  * Atomically sets the value of @v to @n.
-  */
--static inline void arch_atomic64_set(atomic64_t *v, s64 i)
-+static __always_inline void arch_atomic64_set(atomic64_t *v, s64 i)
- {
- 	unsigned high = (unsigned)(i >> 32);
- 	unsigned low = (unsigned)i;
-@@ -119,7 +119,7 @@ static inline void arch_atomic64_set(ato
-  *
-  * Atomically reads the value of @v and returns it.
-  */
--static inline s64 arch_atomic64_read(const atomic64_t *v)
-+static __always_inline s64 arch_atomic64_read(const atomic64_t *v)
- {
- 	s64 r;
- 	alternative_atomic64(read, "=&A" (r), "c" (v) : "memory");
-@@ -133,7 +133,7 @@ static inline s64 arch_atomic64_read(con
-  *
-  * Atomically adds @i to @v and returns @i + *@v
-  */
--static inline s64 arch_atomic64_add_return(s64 i, atomic64_t *v)
-+static __always_inline s64 arch_atomic64_add_return(s64 i, atomic64_t *v)
- {
- 	alternative_atomic64(add_return,
- 			     ASM_OUTPUT2("+A" (i), "+c" (v)),
-@@ -145,7 +145,7 @@ static inline s64 arch_atomic64_add_retu
- /*
-  * Other variants with different arithmetic operators:
-  */
--static inline s64 arch_atomic64_sub_return(s64 i, atomic64_t *v)
-+static __always_inline s64 arch_atomic64_sub_return(s64 i, atomic64_t *v)
- {
- 	alternative_atomic64(sub_return,
- 			     ASM_OUTPUT2("+A" (i), "+c" (v)),
-@@ -154,7 +154,7 @@ static inline s64 arch_atomic64_sub_retu
- }
- #define arch_atomic64_sub_return arch_atomic64_sub_return
++TRACE_EVENT(br_mdb_full,
++
++	TP_PROTO(const struct net_device *dev,
++		 const struct br_ip *group),
++
++	TP_ARGS(dev, group),
++
++	TP_STRUCT__entry(
++		__string(dev, dev->name)
++		__field(int, af)
++		__field(u16, vid)
++		__array(__u8, src4, 4)
++		__array(__u8, src6, 16)
++		__array(__u8, grp4, 4)
++		__array(__u8, grp6, 16)
++		__array(__u8, grpmac, ETH_ALEN) /* For af == 0. */
++	),
++
++	TP_fast_assign(
++		__assign_str(dev, dev->name);
++		__entry->vid = group->vid;
++
++		if (!group->proto) {
++			__entry->af = 0;
++
++			memset(__entry->src4, 0, sizeof(__entry->src4));
++			memset(__entry->src6, 0, sizeof(__entry->src6));
++			memset(__entry->grp4, 0, sizeof(__entry->grp4));
++			memset(__entry->grp6, 0, sizeof(__entry->grp6));
++			memcpy(__entry->grpmac, group->dst.mac_addr, ETH_ALEN);
++		} else if (group->proto == htons(ETH_P_IP)) {
++			__be32 *p32;
++
++			__entry->af = AF_INET;
++
++			p32 = (__be32 *) __entry->src4;
++			*p32 = group->src.ip4;
++
++			p32 = (__be32 *) __entry->grp4;
++			*p32 = group->dst.ip4;
++
++			memset(__entry->src6, 0, sizeof(__entry->src6));
++			memset(__entry->grp6, 0, sizeof(__entry->grp6));
++			memset(__entry->grpmac, 0, ETH_ALEN);
++#if IS_ENABLED(CONFIG_IPV6)
++		} else {
++			struct in6_addr *in6;
++
++			__entry->af = AF_INET6;
++
++			in6 = (struct in6_addr *)__entry->src6;
++			*in6 = group->src.ip6;
++
++			in6 = (struct in6_addr *)__entry->grp6;
++			*in6 = group->dst.ip6;
++
++			memset(__entry->src4, 0, sizeof(__entry->src4));
++			memset(__entry->grp4, 0, sizeof(__entry->grp4));
++			memset(__entry->grpmac, 0, ETH_ALEN);
++#endif
++		}
++	),
++
++	TP_printk("dev %s af %u src %pI4/%pI6c grp %pI4/%pI6c/%pM vid %u",
++		  __get_str(dev), __entry->af, __entry->src4, __entry->src6,
++		  __entry->grp4, __entry->grp6, __entry->grpmac, __entry->vid)
++);
  
--static inline s64 arch_atomic64_inc_return(atomic64_t *v)
-+static __always_inline s64 arch_atomic64_inc_return(atomic64_t *v)
- {
- 	s64 a;
- 	alternative_atomic64(inc_return, "=&A" (a),
-@@ -163,7 +163,7 @@ static inline s64 arch_atomic64_inc_retu
- }
- #define arch_atomic64_inc_return arch_atomic64_inc_return
+ #endif /* _TRACE_BRIDGE_H */
  
--static inline s64 arch_atomic64_dec_return(atomic64_t *v)
-+static __always_inline s64 arch_atomic64_dec_return(atomic64_t *v)
- {
- 	s64 a;
- 	alternative_atomic64(dec_return, "=&A" (a),
-@@ -179,7 +179,7 @@ static inline s64 arch_atomic64_dec_retu
-  *
-  * Atomically adds @i to @v.
-  */
--static inline s64 arch_atomic64_add(s64 i, atomic64_t *v)
-+static __always_inline s64 arch_atomic64_add(s64 i, atomic64_t *v)
- {
- 	__alternative_atomic64(add, add_return,
- 			       ASM_OUTPUT2("+A" (i), "+c" (v)),
-@@ -194,7 +194,7 @@ static inline s64 arch_atomic64_add(s64
-  *
-  * Atomically subtracts @i from @v.
-  */
--static inline s64 arch_atomic64_sub(s64 i, atomic64_t *v)
-+static __always_inline s64 arch_atomic64_sub(s64 i, atomic64_t *v)
- {
- 	__alternative_atomic64(sub, sub_return,
- 			       ASM_OUTPUT2("+A" (i), "+c" (v)),
-@@ -208,7 +208,7 @@ static inline s64 arch_atomic64_sub(s64
-  *
-  * Atomically increments @v by 1.
-  */
--static inline void arch_atomic64_inc(atomic64_t *v)
-+static __always_inline void arch_atomic64_inc(atomic64_t *v)
- {
- 	__alternative_atomic64(inc, inc_return, /* no output */,
- 			       "S" (v) : "memory", "eax", "ecx", "edx");
-@@ -221,7 +221,7 @@ static inline void arch_atomic64_inc(ato
-  *
-  * Atomically decrements @v by 1.
-  */
--static inline void arch_atomic64_dec(atomic64_t *v)
-+static __always_inline void arch_atomic64_dec(atomic64_t *v)
- {
- 	__alternative_atomic64(dec, dec_return, /* no output */,
- 			       "S" (v) : "memory", "eax", "ecx", "edx");
-@@ -237,7 +237,7 @@ static inline void arch_atomic64_dec(ato
-  * Atomically adds @a to @v, so long as it was not @u.
-  * Returns non-zero if the add was done, zero otherwise.
-  */
--static inline int arch_atomic64_add_unless(atomic64_t *v, s64 a, s64 u)
-+static __always_inline int arch_atomic64_add_unless(atomic64_t *v, s64 a, s64 u)
- {
- 	unsigned low = (unsigned)u;
- 	unsigned high = (unsigned)(u >> 32);
-@@ -248,7 +248,7 @@ static inline int arch_atomic64_add_unle
- }
- #define arch_atomic64_add_unless arch_atomic64_add_unless
+diff --git a/net/core/net-traces.c b/net/core/net-traces.c
+index ee7006bbe49b..805b7385dd8d 100644
+--- a/net/core/net-traces.c
++++ b/net/core/net-traces.c
+@@ -41,6 +41,7 @@ EXPORT_TRACEPOINT_SYMBOL_GPL(br_fdb_add);
+ EXPORT_TRACEPOINT_SYMBOL_GPL(br_fdb_external_learn_add);
+ EXPORT_TRACEPOINT_SYMBOL_GPL(fdb_delete);
+ EXPORT_TRACEPOINT_SYMBOL_GPL(br_fdb_update);
++EXPORT_TRACEPOINT_SYMBOL_GPL(br_mdb_full);
+ #endif
  
--static inline int arch_atomic64_inc_not_zero(atomic64_t *v)
-+static __always_inline int arch_atomic64_inc_not_zero(atomic64_t *v)
- {
- 	int r;
- 	alternative_atomic64(inc_not_zero, "=&a" (r),
-@@ -257,7 +257,7 @@ static inline int arch_atomic64_inc_not_
- }
- #define arch_atomic64_inc_not_zero arch_atomic64_inc_not_zero
- 
--static inline s64 arch_atomic64_dec_if_positive(atomic64_t *v)
-+static __always_inline s64 arch_atomic64_dec_if_positive(atomic64_t *v)
- {
- 	s64 r;
- 	alternative_atomic64(dec_if_positive, "=&A" (r),
-@@ -269,7 +269,7 @@ static inline s64 arch_atomic64_dec_if_p
- #undef alternative_atomic64
- #undef __alternative_atomic64
- 
--static inline void arch_atomic64_and(s64 i, atomic64_t *v)
-+static __always_inline void arch_atomic64_and(s64 i, atomic64_t *v)
- {
- 	s64 old, c = 0;
- 
-@@ -277,7 +277,7 @@ static inline void arch_atomic64_and(s64
- 		c = old;
- }
- 
--static inline s64 arch_atomic64_fetch_and(s64 i, atomic64_t *v)
-+static __always_inline s64 arch_atomic64_fetch_and(s64 i, atomic64_t *v)
- {
- 	s64 old, c = 0;
- 
-@@ -288,7 +288,7 @@ static inline s64 arch_atomic64_fetch_an
- }
- #define arch_atomic64_fetch_and arch_atomic64_fetch_and
- 
--static inline void arch_atomic64_or(s64 i, atomic64_t *v)
-+static __always_inline void arch_atomic64_or(s64 i, atomic64_t *v)
- {
- 	s64 old, c = 0;
- 
-@@ -296,7 +296,7 @@ static inline void arch_atomic64_or(s64
- 		c = old;
- }
- 
--static inline s64 arch_atomic64_fetch_or(s64 i, atomic64_t *v)
-+static __always_inline s64 arch_atomic64_fetch_or(s64 i, atomic64_t *v)
- {
- 	s64 old, c = 0;
- 
-@@ -307,7 +307,7 @@ static inline s64 arch_atomic64_fetch_or
- }
- #define arch_atomic64_fetch_or arch_atomic64_fetch_or
- 
--static inline void arch_atomic64_xor(s64 i, atomic64_t *v)
-+static __always_inline void arch_atomic64_xor(s64 i, atomic64_t *v)
- {
- 	s64 old, c = 0;
- 
-@@ -315,7 +315,7 @@ static inline void arch_atomic64_xor(s64
- 		c = old;
- }
- 
--static inline s64 arch_atomic64_fetch_xor(s64 i, atomic64_t *v)
-+static __always_inline s64 arch_atomic64_fetch_xor(s64 i, atomic64_t *v)
- {
- 	s64 old, c = 0;
- 
-@@ -326,7 +326,7 @@ static inline s64 arch_atomic64_fetch_xo
- }
- #define arch_atomic64_fetch_xor arch_atomic64_fetch_xor
- 
--static inline s64 arch_atomic64_fetch_add(s64 i, atomic64_t *v)
-+static __always_inline s64 arch_atomic64_fetch_add(s64 i, atomic64_t *v)
- {
- 	s64 old, c = 0;
- 
---- a/arch/x86/include/asm/atomic64_64.h
-+++ b/arch/x86/include/asm/atomic64_64.h
-@@ -17,7 +17,7 @@
-  * Atomically reads the value of @v.
-  * Doesn't imply a read memory barrier.
-  */
--static inline s64 arch_atomic64_read(const atomic64_t *v)
-+static __always_inline s64 arch_atomic64_read(const atomic64_t *v)
- {
- 	return __READ_ONCE((v)->counter);
- }
-@@ -29,7 +29,7 @@ static inline s64 arch_atomic64_read(con
-  *
-  * Atomically sets the value of @v to @i.
-  */
--static inline void arch_atomic64_set(atomic64_t *v, s64 i)
-+static __always_inline void arch_atomic64_set(atomic64_t *v, s64 i)
- {
- 	__WRITE_ONCE(v->counter, i);
- }
-@@ -55,7 +55,7 @@ static __always_inline void arch_atomic6
-  *
-  * Atomically subtracts @i from @v.
-  */
--static inline void arch_atomic64_sub(s64 i, atomic64_t *v)
-+static __always_inline void arch_atomic64_sub(s64 i, atomic64_t *v)
- {
- 	asm volatile(LOCK_PREFIX "subq %1,%0"
- 		     : "=m" (v->counter)
-@@ -71,7 +71,7 @@ static inline void arch_atomic64_sub(s64
-  * true if the result is zero, or false for all
-  * other cases.
-  */
--static inline bool arch_atomic64_sub_and_test(s64 i, atomic64_t *v)
-+static __always_inline bool arch_atomic64_sub_and_test(s64 i, atomic64_t *v)
- {
- 	return GEN_BINARY_RMWcc(LOCK_PREFIX "subq", v->counter, e, "er", i);
- }
-@@ -113,7 +113,7 @@ static __always_inline void arch_atomic6
-  * returns true if the result is 0, or false for all other
-  * cases.
-  */
--static inline bool arch_atomic64_dec_and_test(atomic64_t *v)
-+static __always_inline bool arch_atomic64_dec_and_test(atomic64_t *v)
- {
- 	return GEN_UNARY_RMWcc(LOCK_PREFIX "decq", v->counter, e);
- }
-@@ -127,7 +127,7 @@ static inline bool arch_atomic64_dec_and
-  * and returns true if the result is zero, or false for all
-  * other cases.
-  */
--static inline bool arch_atomic64_inc_and_test(atomic64_t *v)
-+static __always_inline bool arch_atomic64_inc_and_test(atomic64_t *v)
- {
- 	return GEN_UNARY_RMWcc(LOCK_PREFIX "incq", v->counter, e);
- }
-@@ -142,7 +142,7 @@ static inline bool arch_atomic64_inc_and
-  * if the result is negative, or false when
-  * result is greater than or equal to zero.
-  */
--static inline bool arch_atomic64_add_negative(s64 i, atomic64_t *v)
-+static __always_inline bool arch_atomic64_add_negative(s64 i, atomic64_t *v)
- {
- 	return GEN_BINARY_RMWcc(LOCK_PREFIX "addq", v->counter, s, "er", i);
- }
-@@ -161,25 +161,25 @@ static __always_inline s64 arch_atomic64
- }
- #define arch_atomic64_add_return arch_atomic64_add_return
- 
--static inline s64 arch_atomic64_sub_return(s64 i, atomic64_t *v)
-+static __always_inline s64 arch_atomic64_sub_return(s64 i, atomic64_t *v)
- {
- 	return arch_atomic64_add_return(-i, v);
- }
- #define arch_atomic64_sub_return arch_atomic64_sub_return
- 
--static inline s64 arch_atomic64_fetch_add(s64 i, atomic64_t *v)
-+static __always_inline s64 arch_atomic64_fetch_add(s64 i, atomic64_t *v)
- {
- 	return xadd(&v->counter, i);
- }
- #define arch_atomic64_fetch_add arch_atomic64_fetch_add
- 
--static inline s64 arch_atomic64_fetch_sub(s64 i, atomic64_t *v)
-+static __always_inline s64 arch_atomic64_fetch_sub(s64 i, atomic64_t *v)
- {
- 	return xadd(&v->counter, -i);
- }
- #define arch_atomic64_fetch_sub arch_atomic64_fetch_sub
- 
--static inline s64 arch_atomic64_cmpxchg(atomic64_t *v, s64 old, s64 new)
-+static __always_inline s64 arch_atomic64_cmpxchg(atomic64_t *v, s64 old, s64 new)
- {
- 	return arch_cmpxchg(&v->counter, old, new);
- }
-@@ -191,13 +191,13 @@ static __always_inline bool arch_atomic6
- }
- #define arch_atomic64_try_cmpxchg arch_atomic64_try_cmpxchg
- 
--static inline s64 arch_atomic64_xchg(atomic64_t *v, s64 new)
-+static __always_inline s64 arch_atomic64_xchg(atomic64_t *v, s64 new)
- {
- 	return arch_xchg(&v->counter, new);
- }
- #define arch_atomic64_xchg arch_atomic64_xchg
- 
--static inline void arch_atomic64_and(s64 i, atomic64_t *v)
-+static __always_inline void arch_atomic64_and(s64 i, atomic64_t *v)
- {
- 	asm volatile(LOCK_PREFIX "andq %1,%0"
- 			: "+m" (v->counter)
-@@ -205,7 +205,7 @@ static inline void arch_atomic64_and(s64
- 			: "memory");
- }
- 
--static inline s64 arch_atomic64_fetch_and(s64 i, atomic64_t *v)
-+static __always_inline s64 arch_atomic64_fetch_and(s64 i, atomic64_t *v)
- {
- 	s64 val = arch_atomic64_read(v);
- 
-@@ -215,7 +215,7 @@ static inline s64 arch_atomic64_fetch_an
- }
- #define arch_atomic64_fetch_and arch_atomic64_fetch_and
- 
--static inline void arch_atomic64_or(s64 i, atomic64_t *v)
-+static __always_inline void arch_atomic64_or(s64 i, atomic64_t *v)
- {
- 	asm volatile(LOCK_PREFIX "orq %1,%0"
- 			: "+m" (v->counter)
-@@ -223,7 +223,7 @@ static inline void arch_atomic64_or(s64
- 			: "memory");
- }
- 
--static inline s64 arch_atomic64_fetch_or(s64 i, atomic64_t *v)
-+static __always_inline s64 arch_atomic64_fetch_or(s64 i, atomic64_t *v)
- {
- 	s64 val = arch_atomic64_read(v);
- 
-@@ -233,7 +233,7 @@ static inline s64 arch_atomic64_fetch_or
- }
- #define arch_atomic64_fetch_or arch_atomic64_fetch_or
- 
--static inline void arch_atomic64_xor(s64 i, atomic64_t *v)
-+static __always_inline void arch_atomic64_xor(s64 i, atomic64_t *v)
- {
- 	asm volatile(LOCK_PREFIX "xorq %1,%0"
- 			: "+m" (v->counter)
-@@ -241,7 +241,7 @@ static inline void arch_atomic64_xor(s64
- 			: "memory");
- }
- 
--static inline s64 arch_atomic64_fetch_xor(s64 i, atomic64_t *v)
-+static __always_inline s64 arch_atomic64_fetch_xor(s64 i, atomic64_t *v)
- {
- 	s64 val = arch_atomic64_read(v);
- 
-
+ #if IS_ENABLED(CONFIG_PAGE_POOL)
+-- 
+2.39.0
 
