@@ -2,199 +2,114 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 54618C52D11
-	for <linux-trace-kernel@archiver.kernel.org>; Thu, 26 Jan 2023 17:53:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 69420C54EAA
+	for <linux-trace-kernel@archiver.kernel.org>; Thu, 26 Jan 2023 20:43:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231993AbjAZRxx (ORCPT
+        id S232764AbjAZUnS (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Thu, 26 Jan 2023 12:53:53 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52192 "EHLO
+        Thu, 26 Jan 2023 15:43:18 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49718 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229496AbjAZRxw (ORCPT
+        with ESMTP id S229448AbjAZUnR (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Thu, 26 Jan 2023 12:53:52 -0500
-Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D28FCEB5C;
-        Thu, 26 Jan 2023 09:53:50 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 65E4BB81EB7;
-        Thu, 26 Jan 2023 17:53:49 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id ACD70C433D2;
-        Thu, 26 Jan 2023 17:53:46 +0000 (UTC)
-Date:   Thu, 26 Jan 2023 12:53:44 -0500
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Petr Machata <petrm@nvidia.com>
-Cc:     "David S. Miller" <davem@davemloft.net>,
-        Eric Dumazet <edumazet@google.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Paolo Abeni <pabeni@redhat.com>,
-        Roopa Prabhu <roopa@nvidia.com>,
-        Nikolay Aleksandrov <razor@blackwall.org>,
-        <netdev@vger.kernel.org>, <bridge@lists.linux-foundation.org>,
-        "Ido Schimmel" <idosch@nvidia.com>,
-        <linux-trace-kernel@vger.kernel.org>
-Subject: Re: [PATCH net-next 06/16] net: bridge: Add a tracepoint for MDB
- overflows
-Message-ID: <20230126125344.1b7b34e2@gandalf.local.home>
-In-Reply-To: <ed2e2e305dd49423745b62c0152a0b85bc84a767.1674752051.git.petrm@nvidia.com>
-References: <cover.1674752051.git.petrm@nvidia.com>
-        <ed2e2e305dd49423745b62c0152a0b85bc84a767.1674752051.git.petrm@nvidia.com>
-X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+        Thu, 26 Jan 2023 15:43:17 -0500
+Received: from mail-il1-x131.google.com (mail-il1-x131.google.com [IPv6:2607:f8b0:4864:20::131])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6737F59B4D
+        for <linux-trace-kernel@vger.kernel.org>; Thu, 26 Jan 2023 12:43:16 -0800 (PST)
+Received: by mail-il1-x131.google.com with SMTP id m8so1295174ili.7
+        for <linux-trace-kernel@vger.kernel.org>; Thu, 26 Jan 2023 12:43:16 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linuxfoundation.org; s=google;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=9SlJgdiGbpLH2OCrekdQ+HXRQAFULLWTJy3ISycRFo8=;
+        b=ezYBzhGea1B+COmIaV8EpE0m9F1KFEE6si+x1qFz4sa4s2bAp8+/KTss6Fma/YBKSI
+         0RMuaZLmiKnz0UViiF+gaE/lHWWCori2Rx2NbUv2YPO9E46uPC5BTFlC8cG6GohQoxZW
+         V3pB+LrnRfeIdwZOtexodsOuH+eC+iHXpcI6w=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=9SlJgdiGbpLH2OCrekdQ+HXRQAFULLWTJy3ISycRFo8=;
+        b=ZJgWS+Rh3Jlrv9eWFs8pF3ofMgS13FXsle1PSqgQi59+ZcobFTnxQdnvHGOcPVahax
+         KT8ZbwnNP8s8zv0DNbwgJGb4ZhdmIKsQ32B0mOS28freV6K7N9WJ2vIVjhg7fb3mDMc0
+         YWlL8SOpzYdgsFQrLpy2xegeRv909y1RJnn/ij4kebSOBReLW3oFeX+PpyueI5roi0UJ
+         i2VKD/Iyxm+gOFPrEQUOvr02ivaBRj2qX92PxRnEl7luOTvTjj7lhS6Qb8R1KXLQRniN
+         +X7XmZCD89YPN+bX/6hTrBpQKpYr4zeuAY1TJIozu2ngZPXQgFJ28+iI1YenUm2SdYBp
+         4lbg==
+X-Gm-Message-State: AO0yUKXFBDHo79NlyTgNCU+FH9eziH9GkuuCKw+VZDVXdIYh/kWLkGsg
+        ks6XNAzpJ0/k0iDoYeYzNqyHUg==
+X-Google-Smtp-Source: AK7set+njbIDB3ZxHZTssVgUai6JBZ8bzyJhMxiqmjkKmEuPGk/ixDcO9wDAGU1diuyOQmov0iV7cA==
+X-Received: by 2002:a92:c68e:0:b0:310:9a08:ac86 with SMTP id o14-20020a92c68e000000b003109a08ac86mr1672299ilg.2.1674765795672;
+        Thu, 26 Jan 2023 12:43:15 -0800 (PST)
+Received: from [192.168.1.128] ([38.15.45.1])
+        by smtp.gmail.com with ESMTPSA id k16-20020a056e02135000b00310bde806e8sm399028ilr.12.2023.01.26.12.43.14
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 26 Jan 2023 12:43:14 -0800 (PST)
+Message-ID: <350d21a9-ac48-7da8-aa5e-d51ad794730a@linuxfoundation.org>
+Date:   Thu, 26 Jan 2023 13:43:13 -0700
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.4.2
+Subject: Re: [PATCH 0/3] selftests/tracing: Fix some testcases for recent
+ change
+Content-Language: en-US
+To:     Steven Rostedt <rostedt@goodmis.org>,
+        "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
+Cc:     Shuah Khan <shuah@kernel.org>, linux-kernel@vger.kernel.org,
+        linux-trace-kernel@vger.kernel.org,
+        linux-kselftest@vger.kernel.org,
+        Shuah Khan <skhan@linuxfoundation.org>
+References: <167309832823.640500.13244630381161014364.stgit@devnote3>
+ <20230108163128.2860894d@rorschach.local.home>
+From:   Shuah Khan <skhan@linuxfoundation.org>
+In-Reply-To: <20230108163128.2860894d@rorschach.local.home>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On Thu, 26 Jan 2023 18:01:14 +0100
-Petr Machata <petrm@nvidia.com> wrote:
-
-> The following patch will add two more maximum MDB allowances to the global
-> one, mcast_hash_max, that exists today. In all these cases, attempts to add
-> MDB entries above the configured maximums through netlink, fail noisily and
-> obviously. Such visibility is missing when adding entries through the
-> control plane traffic, by IGMP or MLD packets.
+On 1/8/23 14:31, Steven Rostedt wrote:
+> On Sat,  7 Jan 2023 22:32:08 +0900
+> "Masami Hiramatsu (Google)" <mhiramat@kernel.org> wrote:
 > 
-> To improve visibility in those cases, add a trace point that reports the
-> violation, including the relevant netdevice (be it a slave or the bridge
-> itself), and the MDB entry parameters:
+>> This includes some patches to fix 2 issues on ftrace selftests.
+>>
+>> - eprobe filter and eprobe syntax test case were introduced but it
+>>    doesn't check whether the kernel supports eprobe filter. Thus the
+>>    new test case fails on the kernel which has eprobe but not support
+>>    eprobe filter. To solve this issue, add a filter description to
+>>    README file [1/3] and run the filter syntax error test only if the
+>>    description is found in the README file [2/3].
+>>
+>> - Recently objtool adds prefix symbols for the function padding nops,
+>>    and the probepoint test case fails because this probepoint test case
+>>    tests whether the kprobe event can probe the target function and the
+>>    functions next to the target function. But the prefix symbols can not
+>>    be probed. Thus these prefix symbols must be skipped [3/3].
+>>
+>> Thank you,
+>>
+>> ---
+>>
+>> Masami Hiramatsu (Google) (3):
+>>        tracing/eprobe: Fix to add filter on eprobe description in README file
+>>        selftests/ftrace: Fix eprobe syntax test case to check filter support
+>>        selftests/ftrace: Fix probepoint testcase to ignore __pfx_* symbols
+>>
+>>
 > 
-> 	# perf record -e bridge:br_mdb_full &
-> 	# [...]
-> 	# perf script | cut -d: -f4-
-> 	 dev v2 af 2 src 192.0.2.1/:: grp 239.1.1.1/::/00:00:00:00:00:00 vid 0
-> 	 dev v2 af 10 src 0.0.0.0/2001:db8:1::1 grp 0.0.0.0/ff0e::1/00:00:00:00:00:00 vid 0
-> 	 dev v2 af 2 src 192.0.2.1/:: grp 239.1.1.1/::/00:00:00:00:00:00 vid 10
-> 	 dev v2 af 10 src 0.0.0.0/2001:db8:1::1 grp 0.0.0.0/ff0e::1/00:00:00:00:00:00 vid 10
+> Reviewed-by: Steven Rostedt (Google) <rostedt@goodmis.org>
 > 
-> CC: Steven Rostedt <rostedt@goodmis.org>
-> CC: linux-trace-kernel@vger.kernel.org
-> Signed-off-by: Petr Machata <petrm@nvidia.com>
-> Reviewed-by: Ido Schimmel <idosch@nvidia.com>
-> ---
->  include/trace/events/bridge.h | 67 +++++++++++++++++++++++++++++++++++
->  net/core/net-traces.c         |  1 +
->  2 files changed, 68 insertions(+)
+> -- Steve
 > 
-> diff --git a/include/trace/events/bridge.h b/include/trace/events/bridge.h
-> index 6b200059c2c5..00d5e2dcb3ad 100644
-> --- a/include/trace/events/bridge.h
-> +++ b/include/trace/events/bridge.h
-> @@ -122,6 +122,73 @@ TRACE_EVENT(br_fdb_update,
->  		  __entry->flags)
->  );
->  
-> +TRACE_EVENT(br_mdb_full,
-> +
-> +	TP_PROTO(const struct net_device *dev,
-> +		 const struct br_ip *group),
-> +
-> +	TP_ARGS(dev, group),
-> +
-> +	TP_STRUCT__entry(
-> +		__string(dev, dev->name)
-> +		__field(int, af)
-> +		__field(u16, vid)
-> +		__array(__u8, src4, 4)
-> +		__array(__u8, src6, 16)
-> +		__array(__u8, grp4, 4)
-> +		__array(__u8, grp6, 16)
-> +		__array(__u8, grpmac, ETH_ALEN) /* For af == 0. */
 
-Instead of wasting ring buffer space, why not just have:
+For selftest patches in the series: (Assuming patches 2&3 depend on patch 1.)
 
-		__array(__u8, src, 16)
-		__array(__u8, grp, 16)
+Acked-by: Shuah Khan <skhan@linuxfoundation.org>
 
-
-> +	),
-> +
-> +	TP_fast_assign(
-> +		__assign_str(dev, dev->name);
-> +		__entry->vid = group->vid;
-> +
-> +		if (!group->proto) {
-> +			__entry->af = 0;
-> +
-> +			memset(__entry->src4, 0, sizeof(__entry->src4));
-> +			memset(__entry->src6, 0, sizeof(__entry->src6));
-> +			memset(__entry->grp4, 0, sizeof(__entry->grp4));
-> +			memset(__entry->grp6, 0, sizeof(__entry->grp6));
-> +			memcpy(__entry->grpmac, group->dst.mac_addr, ETH_ALEN);
-> +		} else if (group->proto == htons(ETH_P_IP)) {
-> +			__be32 *p32;
-> +
-> +			__entry->af = AF_INET;
-> +
-> +			p32 = (__be32 *) __entry->src4;
-> +			*p32 = group->src.ip4;
-> +
-> +			p32 = (__be32 *) __entry->grp4;
-> +			*p32 = group->dst.ip4;
-
-			struct in6_addr *in6;
-
-			in6 = (struct in6_addr *)__entry->src;
-			ipv6_addr_set_v4mapped(group->src.ip4, in6);
-
-			in6 = (struct in6_addr *)__entry->grp;
-			ipv6_addr_set_v4mapped(group->grp.ip4, in6);
-
-> +
-> +			memset(__entry->src6, 0, sizeof(__entry->src6));
-> +			memset(__entry->grp6, 0, sizeof(__entry->grp6));
-> +			memset(__entry->grpmac, 0, ETH_ALEN);
-> +#if IS_ENABLED(CONFIG_IPV6)
-> +		} else {
-> +			struct in6_addr *in6;
-> +
-> +			__entry->af = AF_INET6;
-> +
-> +			in6 = (struct in6_addr *)__entry->src6;
-> +			*in6 = group->src.ip6;
-> +
-> +			in6 = (struct in6_addr *)__entry->grp6;
-> +			*in6 = group->dst.ip6;
-> +
-> +			memset(__entry->src4, 0, sizeof(__entry->src4));
-> +			memset(__entry->grp4, 0, sizeof(__entry->grp4));
-> +			memset(__entry->grpmac, 0, ETH_ALEN);
-> +#endif
-> +		}
-> +	),
-> +
-> +	TP_printk("dev %s af %u src %pI4/%pI6c grp %pI4/%pI6c/%pM vid %u",
-> +		  __get_str(dev), __entry->af, __entry->src4, __entry->src6,
-> +		  __entry->grp4, __entry->grp6, __entry->grpmac, __entry->vid)
-
-And just have: 
-
-	TP_printk("dev %s af %u src %pI6c grp %pI6c/%pM vid %u",
-		  __get_str(dev), __entry->af, __entry->src, __entry->grp,
-		  __entry->grpmac, __entry->vid)
-
-As the %pI6c should detect that it's a ipv4 address and show that.
-
--- Steve
-
-
-> +);
->  
->  #endif /* _TRACE_BRIDGE_H */
->  
-> diff --git a/net/core/net-traces.c b/net/core/net-traces.c
-> index ee7006bbe49b..805b7385dd8d 100644
-> --- a/net/core/net-traces.c
-> +++ b/net/core/net-traces.c
-> @@ -41,6 +41,7 @@ EXPORT_TRACEPOINT_SYMBOL_GPL(br_fdb_add);
->  EXPORT_TRACEPOINT_SYMBOL_GPL(br_fdb_external_learn_add);
->  EXPORT_TRACEPOINT_SYMBOL_GPL(fdb_delete);
->  EXPORT_TRACEPOINT_SYMBOL_GPL(br_fdb_update);
-> +EXPORT_TRACEPOINT_SYMBOL_GPL(br_mdb_full);
->  #endif
->  
->  #if IS_ENABLED(CONFIG_PAGE_POOL)
-
+thanks,
+-- Shuah
