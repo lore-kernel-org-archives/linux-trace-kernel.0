@@ -2,125 +2,102 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 346C3C27C76
-	for <linux-trace-kernel@archiver.kernel.org>; Thu, 26 Jan 2023 02:31:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CB694C54E94
+	for <linux-trace-kernel@archiver.kernel.org>; Thu, 26 Jan 2023 02:54:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229576AbjAZCbn (ORCPT
+        id S235065AbjAZCyf (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Wed, 25 Jan 2023 21:31:43 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34144 "EHLO
+        Wed, 25 Jan 2023 21:54:35 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38796 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229491AbjAZCbn (ORCPT
+        with ESMTP id S229576AbjAZCye (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Wed, 25 Jan 2023 21:31:43 -0500
-Received: from mail-pg1-x535.google.com (mail-pg1-x535.google.com [IPv6:2607:f8b0:4864:20::535])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4629E611DB;
-        Wed, 25 Jan 2023 18:31:42 -0800 (PST)
-Received: by mail-pg1-x535.google.com with SMTP id s67so274111pgs.3;
-        Wed, 25 Jan 2023 18:31:42 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=WIQM+I4lgk9cQtbdYSLbHFLgtpBx+yHsfP7MUvofRag=;
-        b=UhzOKdpEuDB+o7lBK7giJW280mz8gzSF2PhZNymYEQjD4DCId7dJ180EqV141jnpMS
-         0RbkrkwV+aaLWoimH4nb+HObgI7aDCylkkCIEMskfhQlqJxWmKeSh0finEQ3cetn7Rm3
-         uO6QHgxsFwYnWjelAg9PZoFnaAJdSJnuzqYoe8WkSaRDgp8/JO4MewAGh4eRl4WA9n7Z
-         XsRBEPYTQNiogV0hyNP3wYIoQS0NgudyOP1ha3/EteFCNhHY4GNzOUYvhPRQmYUQcheM
-         Q3eyN8qUKsbMMMbNyrAW7SV2YoIHDjAEUzTn7nFlhI64ulIvuSeLKUaZO9fnAO2dbNoo
-         gOnQ==
+        Wed, 25 Jan 2023 21:54:34 -0500
+Received: from mail-ot1-f48.google.com (mail-ot1-f48.google.com [209.85.210.48])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4BDC56469A;
+        Wed, 25 Jan 2023 18:54:33 -0800 (PST)
+Received: by mail-ot1-f48.google.com with SMTP id t7-20020a05683014c700b006864760b1caso373833otq.0;
+        Wed, 25 Jan 2023 18:54:33 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=WIQM+I4lgk9cQtbdYSLbHFLgtpBx+yHsfP7MUvofRag=;
-        b=WWMwT9szuGLPIbkgXDYrXK+gTm/n0dCjEyNwOjnEA6JUNSeH+87u8SKiBBdNt0Otav
-         VGviHmIvuiyA2cjabMhYnrV4TSCgYaL4FZNhJP/hISoc7l8Ijfb662w7ivhtb5ha6wpv
-         FQ6Rry7oTl7eDr/620/Dvc4RF4Y7cC/Nx3M7/DbkT5TUyWDRHdZZSCe+L/rM3eg/OtTB
-         lbDgvSErGuf5CjaQS6JUT2bo4hW5TXCGdaePJs0b97xcq6QXqULo2AbbLrZIxt9P4jLi
-         mVJTVPiLqjbl367PKowEdG0LsBJWtGAXvlJU1cyjiIi+fhqEbYGulOj3xTjqMCw8F1lG
-         FZdw==
-X-Gm-Message-State: AO0yUKUxglTdCF0ZhICsN4QPv3zPkx+D2qlsymyEPY4GmgEfsRg0zdeL
-        2ieIPqEhYUPkoc1Y8/QngFE=
-X-Google-Smtp-Source: AK7set/Air5s1n/z/81QIW4ftdUCbe5RsVyIv4AWaM53nZ1DFEGlUQ7O21P2igmVpu9gQzyPrysHKg==
-X-Received: by 2002:aa7:85c9:0:b0:590:65f7:da5a with SMTP id z9-20020aa785c9000000b0059065f7da5amr2383493pfn.22.1674700301813;
-        Wed, 25 Jan 2023 18:31:41 -0800 (PST)
-Received: from debian.me (subs02-180-214-232-30.three.co.id. [180.214.232.30])
-        by smtp.gmail.com with ESMTPSA id f20-20020a056a0022d400b005877d374069sm4476690pfj.10.2023.01.25.18.31.40
+        h=date:subject:message-id:references:in-reply-to:cc:to:from
+         :mime-version:content-transfer-encoding:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=8QcPXEvT1pedH9u1w6Jhv/1gc0FF4O/dQCeQVTVS8ME=;
+        b=zbYmbZAJBHoLJ/Cx1gYC0txJsN3eVyRVtScxdGfGu/WPbIQHE3b84nIZyxNjmXB7KV
+         ORHA7RNxFMkQi0v5vXh9q5ckZq/ljIvXEIzds3xwMhtHIgW/MIlH9ym+EHSPCVEvnMg1
+         nrY4TO2Y4jTK1IJAiDr3V2czKVZCkxufzG4SePCatbmoeEc2YV4/8N9RbrO2D5i7o/oG
+         KPrCa5JcUWIMukrzZ/oqFgAXRXttn51CiFU738iXqSWOQAZv+IKQjpwkO5anXdaBWV1o
+         bB3Gy4exGrD0SltiOEEN92p/jLcUu6gQNwRo02A5XW5bbrEJpYJq3oHRYUggp3wKCRZM
+         2mug==
+X-Gm-Message-State: AFqh2ko5axw2BHu2f35VBcVHzgkAI9ms7g2sgVUutu5KRAatS89tQYWp
+        FWRcwgd0svEmGjRsIjB0kHThmhrNdg==
+X-Google-Smtp-Source: AMrXdXvjBV1/2RxdzlYJsd0JJW8lxTIISk3b0T72zFoE7XSt8A8SwGrjWMs7+1eHfgQnVsPCoE15hA==
+X-Received: by 2002:a9d:4b19:0:b0:66e:c78e:9ac0 with SMTP id q25-20020a9d4b19000000b0066ec78e9ac0mr15986269otf.31.1674701672508;
+        Wed, 25 Jan 2023 18:54:32 -0800 (PST)
+Received: from robh_at_kernel.org (66-90-144-107.dyn.grandenetworks.net. [66.90.144.107])
+        by smtp.gmail.com with ESMTPSA id 8-20020a9d0108000000b00684d5bd56dbsm2872550otu.66.2023.01.25.18.54.31
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 25 Jan 2023 18:31:41 -0800 (PST)
-Received: by debian.me (Postfix, from userid 1000)
-        id 2560010544A; Thu, 26 Jan 2023 09:31:38 +0700 (WIB)
-Date:   Thu, 26 Jan 2023 09:31:37 +0700
-From:   Bagas Sanjaya <bagasdotme@gmail.com>
-To:     Jonathan Corbet <corbet@lwn.net>, Stefan Roesch <shr@devkernel.io>,
-        linux-mm@kvack.org
-Cc:     linux-doc@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
-        linux-trace-kernel@vger.kernel.org
-Subject: Re: [RESEND RFC PATCH v1 10/20] docs: document general_profit sysfs
- knob
-Message-ID: <Y9HmCY5zEiD/yCPi@debian.me>
-References: <20230123173748.1734238-1-shr@devkernel.io>
- <20230123173748.1734238-11-shr@devkernel.io>
- <Y89Zko/TWYcphmJA@debian.me>
- <87h6wfhpi8.fsf@meer.lwn.net>
+        Wed, 25 Jan 2023 18:54:32 -0800 (PST)
+Received: (nullmailer pid 75020 invoked by uid 1000);
+        Thu, 26 Jan 2023 02:54:29 -0000
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="yNjPRXiGv58sTMBT"
-Content-Disposition: inline
-In-Reply-To: <87h6wfhpi8.fsf@meer.lwn.net>
+From:   Rob Herring <robh@kernel.org>
+To:     Eddie James <eajames@linux.ibm.com>
+Cc:     linux-trace-kernel@vger.kernel.org, jk@ozlabs.org, joel@jms.id.au,
+        rostedt@goodmis.org, mhiramat@kernel.org, alistair@popple.id.au,
+        robh+dt@kernel.org, linux-kernel@vger.kernel.org, andrew@aj.id.au,
+        linux-fsi@lists.ozlabs.org, krzysztof.kozlowski+dt@linaro.org,
+        devicetree@vger.kernel.org
+In-Reply-To: <20230125225416.4074040-2-eajames@linux.ibm.com>
+References: <20230125225416.4074040-1-eajames@linux.ibm.com>
+ <20230125225416.4074040-2-eajames@linux.ibm.com>
+Message-Id: <167470157981.71746.7854932259135609750.robh@kernel.org>
+Subject: Re: [PATCH v2 1/2] dt-bindings: fsi: Document the IBM I2C Responder
+ virtual FSI master
+Date:   Wed, 25 Jan 2023 20:54:29 -0600
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
 
---yNjPRXiGv58sTMBT
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On Wed, 25 Jan 2023 16:54:15 -0600, Eddie James wrote:
+> The I2C Responder translates I2C commands to CFAM or SCOM operations,
+> effectively implementing an FSI master.
+> 
+> Signed-off-by: Eddie James <eajames@linux.ibm.com>
+> ---
+>  .../bindings/fsi/ibm,i2cr-fsi-master.yaml     | 41 +++++++++++++++++++
+>  1 file changed, 41 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/fsi/ibm,i2cr-fsi-master.yaml
+> 
 
-On Tue, Jan 24, 2023 at 09:21:51AM -0700, Jonathan Corbet wrote:
-> Bagas Sanjaya <bagasdotme@gmail.com> writes:
->=20
-> > Seems like the wording is confusing me, so I write the improv:
-> >
-> > ---- >8 ----
-> > diff --git a/Documentation/ABI/testing/sysfs-kernel-mm-ksm b/Documentat=
-ion/ABI/testing/sysfs-kernel-mm-ksm
-> > index 7768e90f7a8fef..5309a912ab679b 100644
-> > --- a/Documentation/ABI/testing/sysfs-kernel-mm-ksm
-> > +++ b/Documentation/ABI/testing/sysfs-kernel-mm-ksm
-> > @@ -56,6 +56,6 @@ What:		/sys/kernel/mm/ksm/general_profit
-> >  Date:		January 2023
-> >  KernelVersion:  6.1
-> >  Contact:	Linux memory management mailing list <linux-mm@kvack.org>
-> > -Description:	Measure how effective KSM is.
-> > -		general_profit: how effective is KSM. The formula for the
-> > -		calculation is in Documentation/admin-guide/mm/ksm.rst.
-> > +Description:	Measure the KSM profit. See
-> > +		:ref:`KSM documentation <monitoring-ksm-profit>` for details
-> > +		on the calculated formula.
->=20
-> So the original at least attempted to tell us what "KSM profit" is; the
-> "improved" version makes no such effort.  I don't think that is actually
-> better.
+My bot found errors running 'make DT_CHECKER_FLAGS=-m dt_binding_check'
+on your patch (DT_CHECKER_FLAGS is new in v5.13):
 
-I overlooked that, thanks!
+yamllint warnings/errors:
+./Documentation/devicetree/bindings/fsi/ibm,i2cr-fsi-master.yaml:32:2: [warning] wrong indentation: expected 2 but found 1 (indentation)
 
---=20
-An old man doll... just what I always wanted! - Clara
+dtschema/dtc warnings/errors:
+./Documentation/devicetree/bindings/fsi/ibm,i2cr-fsi-master.yaml: $id: relative path/filename doesn't match actual path or filename
+	expected: http://devicetree.org/schemas/fsi/ibm,i2cr-fsi-master.yaml#
 
---yNjPRXiGv58sTMBT
-Content-Type: application/pgp-signature; name="signature.asc"
+doc reference errors (make refcheckdocs):
 
------BEGIN PGP SIGNATURE-----
+See https://patchwork.ozlabs.org/project/devicetree-bindings/patch/20230125225416.4074040-2-eajames@linux.ibm.com
 
-iHUEABYKAB0WIQSSYQ6Cy7oyFNCHrUH2uYlJVVFOowUCY9HmCQAKCRD2uYlJVVFO
-o47gAP9Pr/JO3RwPkqRmtfmLZ7BhyCG3fv7UG8NSuCjLg7nthQD/bpZeTPQb+WXZ
-5VZo8azAg6zACdVjLL40ChkmXlNWPQg=
-=FWAf
------END PGP SIGNATURE-----
+The base for the series is generally the latest rc1. A different dependency
+should be noted in *this* patch.
 
---yNjPRXiGv58sTMBT--
+If you already ran 'make dt_binding_check' and didn't see the above
+error(s), then make sure 'yamllint' is installed and dt-schema is up to
+date:
+
+pip3 install dtschema --upgrade
+
+Please check and re-submit after running the above command yourself. Note
+that DT_SCHEMA_FILES can be set to your schema file to speed up checking
+your schema. However, it must be unset to test all examples with your schema.
+
