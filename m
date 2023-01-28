@@ -2,281 +2,125 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A5B43C27C76
-	for <linux-trace-kernel@archiver.kernel.org>; Sat, 28 Jan 2023 19:12:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 058CEC6379F
+	for <linux-trace-kernel@archiver.kernel.org>; Sat, 28 Jan 2023 20:30:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233440AbjA1TMF (ORCPT
+        id S234950AbjA1Ua3 (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Sat, 28 Jan 2023 14:12:05 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36022 "EHLO
+        Sat, 28 Jan 2023 15:30:29 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57328 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231350AbjA1TME (ORCPT
+        with ESMTP id S233816AbjA1UaV (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Sat, 28 Jan 2023 14:12:04 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D16992367B;
-        Sat, 28 Jan 2023 11:12:03 -0800 (PST)
+        Sat, 28 Jan 2023 15:30:21 -0500
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 51E9E1C305;
+        Sat, 28 Jan 2023 12:30:19 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 765EE60C43;
-        Sat, 28 Jan 2023 19:12:03 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A6D15C433D2;
-        Sat, 28 Jan 2023 19:12:02 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 3F85DB80BEC;
+        Sat, 28 Jan 2023 20:30:18 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPS id AA46EC4339C;
+        Sat, 28 Jan 2023 20:30:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1674933122;
-        bh=JAvpqv7sY2XasJq2OWk4z5tSXd/xoeBkzfwvLfdegFg=;
-        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-        b=eV+YdRsoynZR5swD26PeqL/0k2eP0QoJM7/n+Wh6moGSSbQ6Leyu+3cyHT/tiAAdL
-         bGDKvdNzSEZnzKCD488xCPmT24p0FF3Kgh6rj3ymXn2C3b9N3lQEdAHmL2FEH4Y7yk
-         evwN+yIdGLYItTagvHiw3waJkXlIS+jMiprLRhQq0DA/Dk071qFs1xA7jAUtS8ocsE
-         7+BwLuA0Jrtu7A2Ze87BUL7v3pQv50Tudp6VBQ4bRgVYGFEXeGcB+03nh9KKVta2Zg
-         /awmWDP1XQdTYMXPM6rtOfAlI5Te6QNHmu1xnkp5gU49fYdxKZdcxUUvemo318drKQ
-         AoPYr/dLDj4CA==
-Received: by paulmck-ThinkPad-P17-Gen-1.home (Postfix, from userid 1000)
-        id 4B0425C089F; Sat, 28 Jan 2023 11:12:02 -0800 (PST)
-Date:   Sat, 28 Jan 2023 11:12:02 -0800
-From:   "Paul E. McKenney" <paulmck@kernel.org>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Mark Rutland <mark.rutland@arm.com>,
-        Steven Rostedt <rostedt@goodmis.org>, mingo@kernel.org,
-        will@kernel.org, boqun.feng@gmail.com, tglx@linutronix.de,
-        bp@alien8.de, dave.hansen@linux.intel.com, x86@kernel.org,
-        hpa@zytor.com, seanjc@google.com, pbonzini@redhat.com,
-        jgross@suse.com, srivatsa@csail.mit.edu, amakhalov@vmware.com,
-        pv-drivers@vmware.com, mhiramat@kernel.org, wanpengli@tencent.com,
-        vkuznets@redhat.com, boris.ostrovsky@oracle.com, rafael@kernel.org,
-        daniel.lezcano@linaro.org, juri.lelli@redhat.com,
-        vincent.guittot@linaro.org, dietmar.eggemann@arm.com,
-        bsegall@google.com, mgorman@suse.de, bristot@redhat.com,
-        vschneid@redhat.com, linux-kernel@vger.kernel.org,
-        kvm@vger.kernel.org, virtualization@lists.linux-foundation.org,
-        linux-trace-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
-        Frederic Weisbecker <fweisbec@gmail.com>
-Subject: Re: [PATCH 3/6] ftrace/x86: Warn and ignore graph tracing when RCU
- is disabled
-Message-ID: <20230128191202.GB2948950@paulmck-ThinkPad-P17-Gen-1>
-Reply-To: paulmck@kernel.org
-References: <20230123205009.790550642@infradead.org>
- <20230123205515.059999893@infradead.org>
- <20230123165304.370121e7@gandalf.local.home>
- <20230123170753.7ac9419e@gandalf.local.home>
- <Y8/u00WHGElMDjoo@hirez.programming.kicks-ass.net>
- <Y9ARbgtYhxSuOIlZ@FVFF77S0Q05N>
- <Y9EI0Gn/NUJt6GEk@hirez.programming.kicks-ass.net>
- <20230125184658.GL2948950@paulmck-ThinkPad-P17-Gen-1>
- <Y9JH0/Z06254ZJ2g@hirez.programming.kicks-ass.net>
+        s=k20201202; t=1674937816;
+        bh=NyfyYmvHuYCep7B9YHaipGsiO9fFZKxd2hw/3QQJwqQ=;
+        h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+        b=LEOdKD+xVK+ChdUeMYF7EWUBmGq14I7a4s4JCxsX0Z2pbDfy98ZnOQg9LaM70RuVC
+         9xRu4+lF+DVHmBGVHpWV6C3DKQnB6htlyuiQ1J3mBpVE0Cta4vW2RE/BXmcJavx0so
+         NpT9ZM/k0gp3REittQZbOAE5Pu2nnNW4ZzWWewKaFAFD3E6WwCsC+zOFh5CoV4HfQe
+         lQLG294nW9w5VbGq5Yt6s9D6T/oia27mZXgUwJMw43HV8z7gJz+N1dbAJrJr5rDjld
+         W58/LuDYy+LQisFZsbodjJ+lGQoGjrCfyPfOcghY/B7T6gUkoFPJyIGFHljP3NeW1j
+         sFiy6/39HdTbA==
+Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
+        by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 76D09E52504;
+        Sat, 28 Jan 2023 20:30:16 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Y9JH0/Z06254ZJ2g@hirez.programming.kicks-ass.net>
+Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH 00/35] Documentation: correct lots of spelling errors (series
+ 1)
+From:   patchwork-bot+netdevbpf@kernel.org
+Message-Id: <167493781647.31903.18128774325127042067.git-patchwork-notify@kernel.org>
+Date:   Sat, 28 Jan 2023 20:30:16 +0000
+References: <20230127064005.1558-1-rdunlap@infradead.org>
+In-Reply-To: <20230127064005.1558-1-rdunlap@infradead.org>
+To:     Randy Dunlap <rdunlap@infradead.org>
+Cc:     linux-kernel@vger.kernel.org, corbet@lwn.net,
+        catalin.marinas@arm.com, will@kernel.org, linux@armlinux.org.uk,
+        axboe@kernel.dk, andrii@kernel.org, ast@kernel.org,
+        daniel@iogearbox.net, olteanv@gmail.com,
+        steffen.klassert@secunet.com, daniel.m.jordan@oracle.com,
+        akinobu.mita@gmail.com, deller@gmx.de, rafael@kernel.org,
+        jikos@kernel.org, benjamin.tissoires@redhat.com,
+        srinivas.pandruvada@linux.intel.com, wsa@kernel.org,
+        dmitry.torokhov@gmail.com, rydberg@bitmath.org,
+        isdn@linux-pingi.de, pavel@ucw.cz, lee@kernel.org,
+        jpoimboe@kernel.org, mbenes@suse.cz, pmladek@suse.com,
+        peterz@infradead.org, mingo@redhat.com, jglisse@redhat.com,
+        naoya.horiguchi@nec.com, linmiaohe@huawei.com, jonas@southpole.se,
+        stefan.kristiansson@saunalahti.fi, shorne@gmail.com,
+        bhelgaas@google.com, lpieralisi@kernel.org, maz@kernel.org,
+        mpe@ellerman.id.au, len.brown@intel.com, hca@linux.ibm.com,
+        gor@linux.ibm.com, agordeev@linux.ibm.com, juri.lelli@redhat.com,
+        vincent.guittot@linaro.org, dhowells@redhat.com, jarkko@kernel.org,
+        paul@paul-moore.com, jmorris@namei.org, serge@hallyn.com,
+        perex@perex.cz, tiwai@suse.com, broonie@kernel.org,
+        martin.petersen@oracle.com, bristot@kernel.org,
+        rostedt@goodmis.org, gregkh@linuxfoundation.org,
+        mhiramat@kernel.org, mathieu.poirier@linaro.org,
+        suzuki.poulose@arm.com, zbr@ioremap.net, fenghua.yu@intel.com,
+        reinette.chatre@intel.com, tglx@linutronix.de, bp@alien8.de,
+        chris@zankel.net, jcmvbkbc@gmail.com, alsa-devel@alsa-project.org,
+        coresight@lists.linaro.org, bpf@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, isdn4linux@listserv.isdn4linux.de,
+        keyrings@vger.kernel.org, linux-acpi@vger.kernel.org,
+        linux-block@vger.kernel.org, linux-crypto@vger.kernel.org,
+        linux-doc@vger.kernel.org, linux-fbdev@vger.kernel.org,
+        linux-i2c@vger.kernel.org, linux-input@vger.kernel.org,
+        linux-leds@vger.kernel.org, linux-pci@vger.kernel.org,
+        linux-s390@vger.kernel.org, linux-scsi@vger.kernel.org,
+        linux-sgx@vger.kernel.org, linux-spi@vger.kernel.org,
+        linux-trace-devel@vger.kernel.org,
+        linux-trace-kernel@vger.kernel.org, live-patching@vger.kernel.org,
+        linux-pm@vger.kernel.org, linux-security-module@vger.kernel.org,
+        linux-usb@vger.kernel.org, netdev@vger.kernel.org,
+        target-devel@vger.kernel.org, linux-mm@kvack.org,
+        openrisc@lists.librecores.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-xtensa@linux-xtensa.org, linuxppc-dev@lists.ozlabs.org,
+        x86@kernel.org
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On Thu, Jan 26, 2023 at 10:28:51AM +0100, Peter Zijlstra wrote:
-> On Wed, Jan 25, 2023 at 10:46:58AM -0800, Paul E. McKenney wrote:
-> 
-> > > Ofc. Paul might have an opinion on this glorious bodge ;-)
-> > 
-> > For some definition of the word "glorious", to be sure.  ;-)
-> > 
-> > Am I correct that you have two things happening here?  (1) Preventing
-> > trace recursion and (2) forcing RCU to pay attention when needed.
-> 
-> Mostly just (1), we're in an error situation, I'm not too worried about
-> (2).
-> 
-> > I cannot resist pointing out that you have re-invented RCU_NONIDLE(),
-> > though avoiding much of the overhead when not needed.  ;-)
-> 
-> Yeah, this was the absolute minimal bodge I could come up with that
-> shuts up the rcu_derefence warning thing.
-> 
-> > I would have objections if this ever leaks out onto a non-error code path.
-> 
-> Agreed.
-> 
-> > There are things that need doing when RCU starts and stops watching,
-> > and this approach omits those things.  Which again is OK in this case,
-> > where this code is only ever executed when something is already broken,
-> > but definitely *not* OK when things are not already broken.
-> 
-> And agreed.
-> 
-> Current version of the bodge looks like so (will repost the whole series
-> a little later today).
-> 
-> I managed to tickle the recursion so that it was a test-case for the
-> stack guard...
-> 
-> With this on, it prints just the one WARN and lives.
-> 
-> ---
-> Subject: bug: Disable rcu_is_watching() during WARN/BUG
-> From: Peter Zijlstra <peterz@infradead.org>
-> Date: Wed Jan 25 13:57:49 CET 2023
-> 
-> In order to avoid WARN/BUG from generating nested or even recursive
-> warnings, force rcu_is_watching() true during
-> WARN/lockdep_rcu_suspicious().
-> 
-> Notably things like unwinding the stack can trigger rcu_dereference()
-> warnings, which then triggers more unwinding which then triggers more
-> warnings etc..
-> 
-> Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Hello:
 
-From an RCU perspective:
+This series was applied to bpf/bpf-next.git (master)
+by Alexei Starovoitov <ast@kernel.org>:
 
-Acked-by: Paul E. McKenney <paulmck@kernel.org>
-
-> ---
->  include/linux/context_tracking.h |   27 +++++++++++++++++++++++++++
->  kernel/locking/lockdep.c         |    3 +++
->  kernel/panic.c                   |    5 +++++
->  lib/bug.c                        |   15 ++++++++++++++-
->  4 files changed, 49 insertions(+), 1 deletion(-)
+On Thu, 26 Jan 2023 22:39:30 -0800 you wrote:
+> Correct many spelling errors in Documentation/ as reported by codespell.
 > 
-> --- a/include/linux/context_tracking.h
-> +++ b/include/linux/context_tracking.h
-> @@ -130,9 +130,36 @@ static __always_inline unsigned long ct_
->  	return arch_atomic_add_return(incby, this_cpu_ptr(&context_tracking.state));
->  }
->  
-> +static __always_inline bool warn_rcu_enter(void)
-> +{
-> +	bool ret = false;
-> +
-> +	/*
-> +	 * Horrible hack to shut up recursive RCU isn't watching fail since
-> +	 * lots of the actual reporting also relies on RCU.
-> +	 */
-> +	preempt_disable_notrace();
-> +	if (rcu_dynticks_curr_cpu_in_eqs()) {
-> +		ret = true;
-> +		ct_state_inc(RCU_DYNTICKS_IDX);
-> +	}
-> +
-> +	return ret;
-> +}
-> +
-> +static __always_inline void warn_rcu_exit(bool rcu)
-> +{
-> +	if (rcu)
-> +		ct_state_inc(RCU_DYNTICKS_IDX);
-> +	preempt_enable_notrace();
-> +}
-> +
->  #else
->  static inline void ct_idle_enter(void) { }
->  static inline void ct_idle_exit(void) { }
-> +
-> +static __always_inline bool warn_rcu_enter(void) { return false; }
-> +static __always_inline void warn_rcu_exit(bool rcu) { }
->  #endif /* !CONFIG_CONTEXT_TRACKING_IDLE */
->  
->  #endif
-> --- a/kernel/locking/lockdep.c
-> +++ b/kernel/locking/lockdep.c
-> @@ -55,6 +55,7 @@
->  #include <linux/rcupdate.h>
->  #include <linux/kprobes.h>
->  #include <linux/lockdep.h>
-> +#include <linux/context_tracking.h>
->  
->  #include <asm/sections.h>
->  
-> @@ -6555,6 +6556,7 @@ void lockdep_rcu_suspicious(const char *
->  {
->  	struct task_struct *curr = current;
->  	int dl = READ_ONCE(debug_locks);
-> +	bool rcu = warn_rcu_enter();
->  
->  	/* Note: the following can be executed concurrently, so be careful. */
->  	pr_warn("\n");
-> @@ -6595,5 +6597,6 @@ void lockdep_rcu_suspicious(const char *
->  	lockdep_print_held_locks(curr);
->  	pr_warn("\nstack backtrace:\n");
->  	dump_stack();
-> +	warn_rcu_exit(rcu);
->  }
->  EXPORT_SYMBOL_GPL(lockdep_rcu_suspicious);
-> --- a/kernel/panic.c
-> +++ b/kernel/panic.c
-> @@ -34,6 +34,7 @@
->  #include <linux/ratelimit.h>
->  #include <linux/debugfs.h>
->  #include <linux/sysfs.h>
-> +#include <linux/context_tracking.h>
->  #include <trace/events/error_report.h>
->  #include <asm/sections.h>
->  
-> @@ -679,6 +680,7 @@ void __warn(const char *file, int line,
->  void warn_slowpath_fmt(const char *file, int line, unsigned taint,
->  		       const char *fmt, ...)
->  {
-> +	bool rcu = warn_rcu_enter();
->  	struct warn_args args;
->  
->  	pr_warn(CUT_HERE);
-> @@ -693,11 +695,13 @@ void warn_slowpath_fmt(const char *file,
->  	va_start(args.args, fmt);
->  	__warn(file, line, __builtin_return_address(0), taint, NULL, &args);
->  	va_end(args.args);
-> +	warn_rcu_exit(rcu);
->  }
->  EXPORT_SYMBOL(warn_slowpath_fmt);
->  #else
->  void __warn_printk(const char *fmt, ...)
->  {
-> +	bool rcu = warn_rcu_enter();
->  	va_list args;
->  
->  	pr_warn(CUT_HERE);
-> @@ -705,6 +709,7 @@ void __warn_printk(const char *fmt, ...)
->  	va_start(args, fmt);
->  	vprintk(fmt, args);
->  	va_end(args);
-> +	warn_rcu_exit(rcu);
->  }
->  EXPORT_SYMBOL(__warn_printk);
->  #endif
-> --- a/lib/bug.c
-> +++ b/lib/bug.c
-> @@ -47,6 +47,7 @@
->  #include <linux/sched.h>
->  #include <linux/rculist.h>
->  #include <linux/ftrace.h>
-> +#include <linux/context_tracking.h>
->  
->  extern struct bug_entry __start___bug_table[], __stop___bug_table[];
->  
-> @@ -153,7 +154,7 @@ struct bug_entry *find_bug(unsigned long
->  	return module_find_bug(bugaddr);
->  }
->  
-> -enum bug_trap_type report_bug(unsigned long bugaddr, struct pt_regs *regs)
-> +static enum bug_trap_type __report_bug(unsigned long bugaddr, struct pt_regs *regs)
->  {
->  	struct bug_entry *bug;
->  	const char *file;
-> @@ -209,6 +210,18 @@ enum bug_trap_type report_bug(unsigned l
->  	return BUG_TRAP_TYPE_BUG;
->  }
->  
-> +enum bug_trap_type report_bug(unsigned long bugaddr, struct pt_regs *regs)
-> +{
-> +	enum bug_trap_type ret;
-> +	bool rcu = false;
-> +
-> +	rcu = warn_rcu_enter();
-> +	ret = __report_bug(bugaddr, regs);
-> +	warn_rcu_exit(rcu);
-> +
-> +	return ret;
-> +}
-> +
->  static void clear_once_table(struct bug_entry *start, struct bug_entry *end)
->  {
->  	struct bug_entry *bug;
+> Maintainers of specific kernel subsystems are only Cc-ed on their
+> respective patches, not the entire series. [if all goes well]
+> 
+> These patches are based on linux-next-20230125.
+> 
+> [...]
+
+Here is the summary with links:
+  - [04/35] Documentation: bpf: correct spelling
+    https://git.kernel.org/bpf/bpf-next/c/1d3cab43f4c7
+  - [05/35] Documentation: core-api: correct spelling
+    (no matching commit)
+  - [13/35] Documentation: isdn: correct spelling
+    (no matching commit)
+
+You are awesome, thank you!
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
+
+
