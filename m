@@ -2,158 +2,170 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E531BC54EAA
-	for <linux-trace-kernel@archiver.kernel.org>; Sat, 28 Jan 2023 01:16:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AD99AC636BD
+	for <linux-trace-kernel@archiver.kernel.org>; Sat, 28 Jan 2023 10:49:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233254AbjA1BQb (ORCPT
+        id S234377AbjA1KtD (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Fri, 27 Jan 2023 20:16:31 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46368 "EHLO
+        Sat, 28 Jan 2023 05:49:03 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51328 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231648AbjA1BQa (ORCPT
+        with ESMTP id S234320AbjA1Ksy (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Fri, 27 Jan 2023 20:16:30 -0500
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4A74D222D4;
-        Fri, 27 Jan 2023 17:16:29 -0800 (PST)
+        Sat, 28 Jan 2023 05:48:54 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4F9837963E;
+        Sat, 28 Jan 2023 02:48:38 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 094FCB82209;
-        Sat, 28 Jan 2023 01:16:28 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3C029C433D2;
-        Sat, 28 Jan 2023 01:16:25 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id C60C360B49;
+        Sat, 28 Jan 2023 10:48:37 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F057DC433D2;
+        Sat, 28 Jan 2023 10:48:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1674868586;
-        bh=1mj5p1JqgSFAq91cMLICU1M15Cyqj+sAG9pB3DcSdwQ=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=DFtZUVSmOLI6M/fPc52KBzKQHWGiJSlvc7BOtEQstW2NWxrlEzfA9G8x5qkfMPgZQ
-         i+ACRAQWAn+c26cm35PnmQ6HRayFlrr2UWlgLhUaHl4sUAUMbpRJwv4lDyI/uvdjF0
-         plU5coibpOyOPUe60YVNowsL3PF9MKvMYPZbQEHqUk6IxK639cIpUauuFoXBdcEG2y
-         94VY+gOtRJEaE1070i7L9SCnpBgEuT7nOfhAsFrRvzRJuuxJ0SqR6VJpiKO32yrFp9
-         rfWVX3FzjaKg6Pwfc5Q/FYMT+DAs7iPGmAkAhn1QuEbjobqpUBItZGIAL0tQ93SpPP
-         U5w63hiEBAtAg==
-Date:   Sat, 28 Jan 2023 10:16:22 +0900
-From:   Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To:     "Naveen N. Rao" <naveen.n.rao@linux.vnet.ibm.com>
-Cc:     Akanksha J N <akanksha@linux.ibm.com>,
-        linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
-        linux-trace-kernel@vger.kernel.org, rostedt@goodmis.org,
-        shuah@kernel.org
-Subject: Re: [PATCH] selftests/ftrace: Extend multiple_kprobes.tc to add
- multiple consecutive probes in a function
-Message-Id: <20230128101622.ce6f8e64d929e29d36b08b73@kernel.org>
-In-Reply-To: <1674629944.vwzovyd4lk.naveen@linux.ibm.com>
-References: <20230112095600.37665-1-akanksha@linux.ibm.com>
-        <1673529279.3c5f8oes3z.naveen@linux.ibm.com>
-        <20230113005153.c6ca2f75b9d12627eb63308a@kernel.org>
-        <1673601511.tq30r5phea.naveen@linux.ibm.com>
-        <20230114002126.a37640f815b74e9e78259a9f@kernel.org>
-        <1673856229.a7tekgas75.naveen@linux.ibm.com>
-        <20230120085554.ab4dc1b72990a4957c4c88e2@kernel.org>
-        <1674629944.vwzovyd4lk.naveen@linux.ibm.com>
-X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+        s=k20201202; t=1674902917;
+        bh=Y432cQgFP5F34pSdT8J5cN2U4/Abh03N/7/nnZFsfgA=;
+        h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
+        b=ucQIwNrYn1j82n5kEO9WaLijY1byLMow61bm47krLw9/rm4ppKVrlbLz6phB9zNbS
+         qYY9lfErpOzRey8+JWhrlP2K20ge8aTXRGAB1RaAXSma5mb3gsVcM7JjsMlaYHRq6p
+         5Sc6Wb+I4Y9+t6nEP7exbyKAI00PmKAmlmdPi+RpRtLkxQxgwEsoweOc60InbgtjXH
+         FqvZ8MvQZkaZTFpjHfucUR24TwuTg8tFdRbslI7LaInKzs0Rwp3ur5+5MyfOIl4uaR
+         6DEA3qekp8dP3oIUZTw+yBhAfVg6biPer6tOhWjPLMuQk2/uOpgUZPcQmhGK5/Sihz
+         AcjSu+HZd6TdA==
+From:   Mark Brown <broonie@kernel.org>
+To:     linux-kernel@vger.kernel.org, Randy Dunlap <rdunlap@infradead.org>
+Cc:     Jonathan Corbet <corbet@lwn.net>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Russell King <linux@armlinux.org.uk>,
+        Jens Axboe <axboe@kernel.dk>,
+        Andrii Nakryiko <andrii@kernel.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Vladimir Oltean <olteanv@gmail.com>,
+        Steffen Klassert <steffen.klassert@secunet.com>,
+        Daniel Jordan <daniel.m.jordan@oracle.com>,
+        Akinobu Mita <akinobu.mita@gmail.com>,
+        Helge Deller <deller@gmx.de>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Jiri Kosina <jikos@kernel.org>,
+        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
+        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+        Wolfram Sang <wsa@kernel.org>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Henrik Rydberg <rydberg@bitmath.org>,
+        Karsten Keil <isdn@linux-pingi.de>,
+        Pavel Machek <pavel@ucw.cz>, Lee Jones <lee@kernel.org>,
+        Josh Poimboeuf <jpoimboe@kernel.org>,
+        Miroslav Benes <mbenes@suse.cz>,
+        Petr Mladek <pmladek@suse.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        =?utf-8?q?J=C3=A9r=C3=B4me_Glisse?= <jglisse@redhat.com>,
+        Naoya Horiguchi <naoya.horiguchi@nec.com>,
+        Miaohe Lin <linmiaohe@huawei.com>,
+        Jonas Bonn <jonas@southpole.se>,
+        Stefan Kristiansson <stefan.kristiansson@saunalahti.fi>,
+        Stafford Horne <shorne@gmail.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Lorenzo Pieralisi <lpieralisi@kernel.org>,
+        Marc Zyngier <maz@kernel.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Len Brown <len.brown@intel.com>,
+        Heiko Carstens <hca@linux.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Alexander Gordeev <agordeev@linux.ibm.com>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        David Howells <dhowells@redhat.com>,
+        Jarkko Sakkinen <jarkko@kernel.org>,
+        Paul Moore <paul@paul-moore.com>,
+        James Morris <jmorris@namei.org>,
+        "Serge E. Hallyn" <serge@hallyn.com>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Daniel Bristot de Oliveira <bristot@kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Evgeniy Polyakov <zbr@ioremap.net>,
+        Fenghua Yu <fenghua.yu@intel.com>,
+        Reinette Chatre <reinette.chatre@intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Borislav Petkov <bp@alien8.de>,
+        Chris Zankel <chris@zankel.net>,
+        Max Filippov <jcmvbkbc@gmail.com>, alsa-devel@alsa-project.org,
+        coresight@lists.linaro.org, bpf@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, isdn4linux@listserv.isdn4linux.de,
+        keyrings@vger.kernel.org, linux-acpi@vger.kernel.org,
+        linux-block@vger.kernel.org, linux-crypto@vger.kernel.org,
+        linux-doc@vger.kernel.org, linux-fbdev@vger.kernel.org,
+        linux-i2c@vger.kernel.org, linux-input@vger.kernel.org,
+        linux-leds@vger.kernel.org, linux-pci@vger.kernel.org,
+        linux-s390@vger.kernel.org, linux-scsi@vger.kernel.org,
+        linux-sgx@vger.kernel.org, linux-spi@vger.kernel.org,
+        linux-trace-devel@vger.kernel.org,
+        linux-trace-kernel@vger.kernel.org, live-patching@vger.kernel.org,
+        linux-pm@vger.kernel.org, linux-security-module@vger.kernel.org,
+        linux-usb@vger.kernel.org, netdev@vger.kernel.org,
+        target-devel@vger.kernel.org, linux-mm@kvack.org,
+        openrisc@lists.librecores.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-xtensa@linux-xtensa.org, linuxppc-dev@lists.ozlabs.org,
+        x86@kernel.org
+In-Reply-To: <20230127064005.1558-1-rdunlap@infradead.org>
+References: <20230127064005.1558-1-rdunlap@infradead.org>
+Subject: Re: (subset) [PATCH 00/35] Documentation: correct lots of spelling
+ errors (series 1)
+Message-Id: <167490289567.2145989.15703368734300500078.b4-ty@kernel.org>
+Date:   Sat, 28 Jan 2023 10:48:15 +0000
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
+X-Mailer: b4 0.12.0
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On Wed, 25 Jan 2023 12:39:36 +0530
-"Naveen N. Rao" <naveen.n.rao@linux.vnet.ibm.com> wrote:
+On Thu, 26 Jan 2023 22:39:30 -0800, Randy Dunlap wrote:
+> Correct many spelling errors in Documentation/ as reported by codespell.
+> 
+> Maintainers of specific kernel subsystems are only Cc-ed on their
+> respective patches, not the entire series. [if all goes well]
+> 
+> These patches are based on linux-next-20230125.
+> 
+> [...]
 
-> Hi Masami,
-> 
-> Masami Hiramatsu wrote:
-> >> > 
-> >> > Yes, please make it separate, this test case is for checking whether
-> >> > the ftrace can define/enable/disable multiple kprobe events. Not for
-> >> > checking kprobe with different types, nor checking interactions among
-> >> > different types of kprobes.
-> >> > 
-> >> > (BTW, if you want to test optprobe on x86, you can not put the probes
-> >> >  within the jump instruction (+5 bytes). It will unoptimize existing
-> >> >  optimized kprobe in that case)
-> >> 
-> >> Ok, I can see why we won't be able to optimize any of the probes on x86 
-> >> with this approach. But, we should be able to do so on powerpc and arm, 
-> >> the only other architectures supporting OPTPROBES at this time. For x86, 
-> >> we may have to extend the test to check kprobes/list.
-> > 
-> > Are there any instruction type specific limitation on those arch for
-> > using optprobe? I guess the 'call' (branch with link register) will not
-> > able to be optimized because it leaves the trampoline address on the
-> > stack.
-> 
-> Yes, at least on powerpc, we only optimize ALU instructions and do not 
-> optimize load/store instructions, among many others. This is the reason 
-> we try to put a probe uptil 256 offset into a function in the proposed 
-> test, which will almost certainly catch an instruction that can be 
-> optimized.
-> 
-> > 
-> >> 
-> >> Crucially, I think trying to place a probe at each byte can still 
-> >> exercize interactions across KPROBES_ON_FTRACE and normal kprobes, so 
-> >> this test is still a good start. In addition, we get to ensure that 
-> >> kprobes infrastructure is rejecting placing probes at non-instruction 
-> >> boundaries.
-> > 
-> > The interfere between probes can be happen between kprobes and optprobe
-> > (*only on x86*), but not with KPORBES_ON_FTRACE. The ftrace replaced NOP
-> > will be handled as one instruction. 
-> 
-> Yes.
-> 
-> > 
-> >> > And do you really need to run "multiple" kprobes at once?
-> >> > I think what you need is 'kprobe_opt_types.tc'.
-> >> 
-> >> Yes, enabling those probes is a good stress test to ensure we are only 
-> >> accepting valid probe locations.
-> >> 
-> >> multiple_kprobe_types.tc ? :)
-> > 
-> > Please don't mixed it with the concept of 'multiple' probe test.
-> > It is different that
-> >  - kprobes can put probes on each instruction boundary.
-> >  - kprobes can allocate and enable multiple probes at the same time.
-> > 
-> > What the multiple_kprobes.tc tests is the latter one.
-> > (This is the reason why it chooses different functions so as not to
-> >  interfere with each other.)
-> 
-> Ok, I was coming from the point of view that both tests end up 
-> installing "multiple" kprobes, but I do see your point.
-> 
-> How about adding two new tests:
-> 1. The same test as has been proposed in this thread: trying to add a 
-> kprobe at every byte within $FUNCTION_FORK upto an offset of 256 bytes. 
-> We can probably call it kprobe_insn_boundary.tc
+Applied to
 
-OK.
+   broonie/spi.git for-next
 
-> 2. A new test to ensure we can add different kprobe types 
-> (kprobe_opt_types.tc). This test will need to enable and check if each 
-> probe has been optimized or not and needs arch-specific knowledge so 
-> that we can take care of x86.
+Thanks!
 
-OK, this should be only for x86. 
+[27/35] Documentation: spi: correct spelling
+        commit: 0f6d2cee58f1ff2ebf66f0bceb113d79f66ecb07
 
-> 
-> Would that be ok?
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.
 
-Yes, this sounds good to me. 
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
 
-Thank you!
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
 
-> 
-> 
-> Thanks,
-> Naveen
-> 
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
 
+Thanks,
+Mark
 
--- 
-Masami Hiramatsu (Google) <mhiramat@kernel.org>
