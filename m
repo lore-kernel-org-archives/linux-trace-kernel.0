@@ -2,125 +2,267 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 058CEC6379F
-	for <linux-trace-kernel@archiver.kernel.org>; Sat, 28 Jan 2023 20:30:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E699C61D97
+	for <linux-trace-kernel@archiver.kernel.org>; Sun, 29 Jan 2023 03:14:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234950AbjA1Ua3 (ORCPT
+        id S233616AbjA2DOM (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Sat, 28 Jan 2023 15:30:29 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57328 "EHLO
+        Sat, 28 Jan 2023 22:14:12 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40516 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233816AbjA1UaV (ORCPT
+        with ESMTP id S229513AbjA2DOL (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Sat, 28 Jan 2023 15:30:21 -0500
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 51E9E1C305;
-        Sat, 28 Jan 2023 12:30:19 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 3F85DB80BEC;
-        Sat, 28 Jan 2023 20:30:18 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPS id AA46EC4339C;
-        Sat, 28 Jan 2023 20:30:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1674937816;
-        bh=NyfyYmvHuYCep7B9YHaipGsiO9fFZKxd2hw/3QQJwqQ=;
-        h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-        b=LEOdKD+xVK+ChdUeMYF7EWUBmGq14I7a4s4JCxsX0Z2pbDfy98ZnOQg9LaM70RuVC
-         9xRu4+lF+DVHmBGVHpWV6C3DKQnB6htlyuiQ1J3mBpVE0Cta4vW2RE/BXmcJavx0so
-         NpT9ZM/k0gp3REittQZbOAE5Pu2nnNW4ZzWWewKaFAFD3E6WwCsC+zOFh5CoV4HfQe
-         lQLG294nW9w5VbGq5Yt6s9D6T/oia27mZXgUwJMw43HV8z7gJz+N1dbAJrJr5rDjld
-         W58/LuDYy+LQisFZsbodjJ+lGQoGjrCfyPfOcghY/B7T6gUkoFPJyIGFHljP3NeW1j
-         sFiy6/39HdTbA==
-Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-        by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 76D09E52504;
-        Sat, 28 Jan 2023 20:30:16 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
+        Sat, 28 Jan 2023 22:14:11 -0500
+Received: from mail-pg1-x536.google.com (mail-pg1-x536.google.com [IPv6:2607:f8b0:4864:20::536])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5E2841B6;
+        Sat, 28 Jan 2023 19:14:10 -0800 (PST)
+Received: by mail-pg1-x536.google.com with SMTP id g68so5534892pgc.11;
+        Sat, 28 Jan 2023 19:14:10 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=CZWIfOEaYPhJKU3uAxkJJryS3uLGTPx1f0G7P/O8xfA=;
+        b=WNpfUUtjioQ7kbQwRs/e5HS06UBNyLnUU0Z2Dqk6FvQXeD+YPMQ0e/7WbavugqWBM7
+         vV9QWqu3mzPmSWNoKc+1MB416Cf7pgoK79SLKEXJyKnrFBGr4T2gcL//iutBQRQHro3u
+         3Z14uzkYY71/OxXqz14+KUhYBrSOIuELkL7Pj70hkSANuG9dxnAqyJeeenMc91n5XJ8d
+         wtdFzTI/Dqs9Az60aiA4d3NVMZNOohY8ibEdbaZEbj9QeGnDvdCt7Gp5ASMNkm6pyRmd
+         U/zmJcUwUxUgUlSSuKOBAPEotuVdwsI2mt3L0djcAuNumJ84jO22eVsf05WXkJGTT3vj
+         4ukA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=CZWIfOEaYPhJKU3uAxkJJryS3uLGTPx1f0G7P/O8xfA=;
+        b=poYtGzNfocDn98jUqQFF0aB86E33q7ZHGlkL3q3kb8eFke+fqKjNnhMiz0+YRUHxde
+         jxmztf7S8aZgAKuuMdduP/nQbmCK3TckcnTPB1feBdhgwZFWmBwjYiAouNijVQB+ztI2
+         iKXBOg4FkcF8/ukG4wOhthpfYoB+rI3r/IDLzDNsSkQZWCVpYS5umWl8OeHrgT3VOQHq
+         0K5ERW2EmlYQzunhuEwPUnFTuZLPm97722ReLCgFy52tFqvMaSGSH0h1rZk12S29SINE
+         ynn1INvpaoG+2MecY1Ypvl3zly5HtZNfocqLyMfLC+jXBbxTne3RSTD3L5ySI0s3CEKn
+         8LfQ==
+X-Gm-Message-State: AO0yUKVc3t68IDByAlbzPQKQS45h+2rkVbZ5UnNDIWQuoDFkrNE0FjoR
+        Hny80tPnwYsKANFYMIv+XlM=
+X-Google-Smtp-Source: AK7set8It5HDkuU/IH+p/AnTbUXdQClIONT4vEI41tjUgkq31bcodnJSex2RmdNoFV0piIjoj0hEBQ==
+X-Received: by 2002:a05:6a00:2301:b0:593:98cb:e6f6 with SMTP id h1-20020a056a00230100b0059398cbe6f6mr3557449pfh.9.1674962049726;
+        Sat, 28 Jan 2023 19:14:09 -0800 (PST)
+Received: from debian.me (subs03-180-214-233-76.three.co.id. [180.214.233.76])
+        by smtp.gmail.com with ESMTPSA id s23-20020a056a00179700b0058a0e61136asm4932972pfg.66.2023.01.28.19.14.08
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 28 Jan 2023 19:14:09 -0800 (PST)
+Received: by debian.me (Postfix, from userid 1000)
+        id 2D27C1030A1; Sun, 29 Jan 2023 10:14:04 +0700 (WIB)
+From:   Bagas Sanjaya <bagasdotme@gmail.com>
+To:     linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+        linux-doc@vger.kernel.org, oe-kbuild-all@lists.linux.dev
+Cc:     Steven Rostedt <rostedt@goodmis.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Bagas Sanjaya <bagasdotme@gmail.com>,
+        kernel test robot <lkp@intel.com>
+Subject: [PATCH] tracing/histogram: Wrap remaining shell snippets in code blocks
+Date:   Sun, 29 Jan 2023 10:14:02 +0700
+Message-Id: <20230129031402.47420-1-bagasdotme@gmail.com>
+X-Mailer: git-send-email 2.39.1
+In-Reply-To: <202301290253.LU5yIxcJ-lkp@intel.com>
+References: <202301290253.LU5yIxcJ-lkp@intel.com>
 MIME-Version: 1.0
+X-Developer-Signature: v=1; a=openpgp-sha256; l=9477; i=bagasdotme@gmail.com; h=from:subject; bh=eozoBhTf5UehsPlfrwO8Lxlu62cib0XpQG2AKe/JQHA=; b=owGbwMvMwCX2bWenZ2ig32LG02pJDMlXn5RkFWoGmWhlvHDZNeFA2Z/g3vrElVbxT2Sn5fXW5n8J DOPpKGVhEONikBVTZJmUyNd0epeRyIX2tY4wc1iZQIYwcHEKwESMBBgZXu+RKsv54vv1iXEtW3SjgH zI4hUz/zrdVDvnmf/w9O5rqgx/eBzihX/vNN58/kaiCsPp9G0mF5MPbLyrblDPEzad0f4RPwA=
+X-Developer-Key: i=bagasdotme@gmail.com; a=openpgp; fpr=701B806FDCA5D3A58FFB8F7D7C276C64A5E44A1D
 Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH 00/35] Documentation: correct lots of spelling errors (series
- 1)
-From:   patchwork-bot+netdevbpf@kernel.org
-Message-Id: <167493781647.31903.18128774325127042067.git-patchwork-notify@kernel.org>
-Date:   Sat, 28 Jan 2023 20:30:16 +0000
-References: <20230127064005.1558-1-rdunlap@infradead.org>
-In-Reply-To: <20230127064005.1558-1-rdunlap@infradead.org>
-To:     Randy Dunlap <rdunlap@infradead.org>
-Cc:     linux-kernel@vger.kernel.org, corbet@lwn.net,
-        catalin.marinas@arm.com, will@kernel.org, linux@armlinux.org.uk,
-        axboe@kernel.dk, andrii@kernel.org, ast@kernel.org,
-        daniel@iogearbox.net, olteanv@gmail.com,
-        steffen.klassert@secunet.com, daniel.m.jordan@oracle.com,
-        akinobu.mita@gmail.com, deller@gmx.de, rafael@kernel.org,
-        jikos@kernel.org, benjamin.tissoires@redhat.com,
-        srinivas.pandruvada@linux.intel.com, wsa@kernel.org,
-        dmitry.torokhov@gmail.com, rydberg@bitmath.org,
-        isdn@linux-pingi.de, pavel@ucw.cz, lee@kernel.org,
-        jpoimboe@kernel.org, mbenes@suse.cz, pmladek@suse.com,
-        peterz@infradead.org, mingo@redhat.com, jglisse@redhat.com,
-        naoya.horiguchi@nec.com, linmiaohe@huawei.com, jonas@southpole.se,
-        stefan.kristiansson@saunalahti.fi, shorne@gmail.com,
-        bhelgaas@google.com, lpieralisi@kernel.org, maz@kernel.org,
-        mpe@ellerman.id.au, len.brown@intel.com, hca@linux.ibm.com,
-        gor@linux.ibm.com, agordeev@linux.ibm.com, juri.lelli@redhat.com,
-        vincent.guittot@linaro.org, dhowells@redhat.com, jarkko@kernel.org,
-        paul@paul-moore.com, jmorris@namei.org, serge@hallyn.com,
-        perex@perex.cz, tiwai@suse.com, broonie@kernel.org,
-        martin.petersen@oracle.com, bristot@kernel.org,
-        rostedt@goodmis.org, gregkh@linuxfoundation.org,
-        mhiramat@kernel.org, mathieu.poirier@linaro.org,
-        suzuki.poulose@arm.com, zbr@ioremap.net, fenghua.yu@intel.com,
-        reinette.chatre@intel.com, tglx@linutronix.de, bp@alien8.de,
-        chris@zankel.net, jcmvbkbc@gmail.com, alsa-devel@alsa-project.org,
-        coresight@lists.linaro.org, bpf@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, isdn4linux@listserv.isdn4linux.de,
-        keyrings@vger.kernel.org, linux-acpi@vger.kernel.org,
-        linux-block@vger.kernel.org, linux-crypto@vger.kernel.org,
-        linux-doc@vger.kernel.org, linux-fbdev@vger.kernel.org,
-        linux-i2c@vger.kernel.org, linux-input@vger.kernel.org,
-        linux-leds@vger.kernel.org, linux-pci@vger.kernel.org,
-        linux-s390@vger.kernel.org, linux-scsi@vger.kernel.org,
-        linux-sgx@vger.kernel.org, linux-spi@vger.kernel.org,
-        linux-trace-devel@vger.kernel.org,
-        linux-trace-kernel@vger.kernel.org, live-patching@vger.kernel.org,
-        linux-pm@vger.kernel.org, linux-security-module@vger.kernel.org,
-        linux-usb@vger.kernel.org, netdev@vger.kernel.org,
-        target-devel@vger.kernel.org, linux-mm@kvack.org,
-        openrisc@lists.librecores.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-xtensa@linux-xtensa.org, linuxppc-dev@lists.ozlabs.org,
-        x86@kernel.org
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-Hello:
+Most shell command snippets (echo/cat) and their output are already in
+literal code blocks. However a few still isn't wrapped, in which the
+htmldocs output is ugly.
 
-This series was applied to bpf/bpf-next.git (master)
-by Alexei Starovoitov <ast@kernel.org>:
+Wrap the remaining unwrapped snippets, while also fix recent kernel test
+robot warnings.
 
-On Thu, 26 Jan 2023 22:39:30 -0800 you wrote:
-> Correct many spelling errors in Documentation/ as reported by codespell.
-> 
-> Maintainers of specific kernel subsystems are only Cc-ed on their
-> respective patches, not the entire series. [if all goes well]
-> 
-> These patches are based on linux-next-20230125.
-> 
-> [...]
+Link: https://lore.kernel.org/linux-doc/202301290253.LU5yIxcJ-lkp@intel.com/
+Fixes: 88238513bb2671 ("tracing/histogram: Document variable stacktrace")
+Reported-by: kernel test robot <lkp@intel.com>
+Signed-off-by: Bagas Sanjaya <bagasdotme@gmail.com>
+---
+ Documentation/trace/histogram.rst | 93 ++++++++++++++++---------------
+ 1 file changed, 47 insertions(+), 46 deletions(-)
 
-Here is the summary with links:
-  - [04/35] Documentation: bpf: correct spelling
-    https://git.kernel.org/bpf/bpf-next/c/1d3cab43f4c7
-  - [05/35] Documentation: core-api: correct spelling
-    (no matching commit)
-  - [13/35] Documentation: isdn: correct spelling
-    (no matching commit)
+diff --git a/Documentation/trace/histogram.rst b/Documentation/trace/histogram.rst
+index 5c391328b9bb41..8e95295e39b65c 100644
+--- a/Documentation/trace/histogram.rst
++++ b/Documentation/trace/histogram.rst
+@@ -1864,7 +1864,7 @@ A histogram can now be defined for the new synthetic event::
+ The above shows the latency "lat" in a power of 2 grouping.
+ 
+ Like any other event, once a histogram is enabled for the event, the
+-output can be displayed by reading the event's 'hist' file.
++output can be displayed by reading the event's 'hist' file::
+ 
+   # cat /sys/kernel/debug/tracing/events/synthetic/wakeup_latency/hist
+ 
+@@ -1911,7 +1911,7 @@ output can be displayed by reading the event's 'hist' file.
+ 
+ 
+ The latency values can also be grouped linearly by a given size with
+-the ".buckets" modifier and specify a size (in this case groups of 10).
++the ".buckets" modifier and specify a size (in this case groups of 10)::
+ 
+   # echo 'hist:keys=pid,prio,lat.buckets=10:sort=lat' >> \
+         /sys/kernel/debug/tracing/events/synthetic/wakeup_latency/trigger
+@@ -1945,7 +1945,7 @@ the ".buckets" modifier and specify a size (in this case groups of 10).
+ 
+ To save stacktraces, create a synthetic event with a field of type "unsigned long[]"
+ or even just "long[]". For example, to see how long a task is blocked in an
+-uninterruptible state:
++uninterruptible state::
+ 
+   # cd /sys/kernel/tracing
+   # echo 's:block_lat pid_t pid; u64 delta; unsigned long[] stack;' > dynamic_events
+@@ -1990,7 +1990,8 @@ uninterruptible state:
+   => kthread+0xe9/0x110
+   => ret_from_fork+0x2c/0x50
+ 
+-A synthetic event that has a stacktrace field may use it as a key in histogram:
++A synthetic event that has a stacktrace field may use it as a key in
++histogram::
+ 
+   # echo 'hist:delta.buckets=100,stack.stacktrace:sort=delta' > events/synthetic/block_lat/trigger
+   # cat events/synthetic/block_lat/hist
+@@ -2183,11 +2184,11 @@ The following commonly-used handler.action pairs are available:
+               wakeup_new_test($testpid) if comm=="cyclictest"' >> \
+               /sys/kernel/debug/tracing/events/sched/sched_wakeup_new/trigger
+ 
+-    Or, equivalently, using the 'trace' keyword syntax:
++    Or, equivalently, using the 'trace' keyword syntax::
+ 
+-    # echo 'hist:keys=$testpid:testpid=pid:onmatch(sched.sched_wakeup_new).\
+-            trace(wakeup_new_test,$testpid) if comm=="cyclictest"' >> \
+-            /sys/kernel/debug/tracing/events/sched/sched_wakeup_new/trigger
++      # echo 'hist:keys=$testpid:testpid=pid:onmatch(sched.sched_wakeup_new).\
++              trace(wakeup_new_test,$testpid) if comm=="cyclictest"' >> \
++              /sys/kernel/debug/tracing/events/sched/sched_wakeup_new/trigger
+ 
+     Creating and displaying a histogram based on those events is now
+     just a matter of using the fields and new synthetic event in the
+@@ -2320,48 +2321,48 @@ The following commonly-used handler.action pairs are available:
+     resulting latency, stored in wakeup_lat, exceeds the current
+     maximum latency, a snapshot is taken.  As part of the setup, all
+     the scheduler events are also enabled, which are the events that
+-    will show up in the snapshot when it is taken at some point:
++    will show up in the snapshot when it is taken at some point::
+ 
+-    # echo 1 > /sys/kernel/debug/tracing/events/sched/enable
++      # echo 1 > /sys/kernel/debug/tracing/events/sched/enable
+ 
+-    # echo 'hist:keys=pid:ts0=common_timestamp.usecs \
+-            if comm=="cyclictest"' >> \
+-            /sys/kernel/debug/tracing/events/sched/sched_waking/trigger
++      # echo 'hist:keys=pid:ts0=common_timestamp.usecs \
++              if comm=="cyclictest"' >> \
++              /sys/kernel/debug/tracing/events/sched/sched_waking/trigger
+ 
+-    # echo 'hist:keys=next_pid:wakeup_lat=common_timestamp.usecs-$ts0: \
+-            onmax($wakeup_lat).save(next_prio,next_comm,prev_pid,prev_prio, \
+-	    prev_comm):onmax($wakeup_lat).snapshot() \
+-	    if next_comm=="cyclictest"' >> \
+-	    /sys/kernel/debug/tracing/events/sched/sched_switch/trigger
++      # echo 'hist:keys=next_pid:wakeup_lat=common_timestamp.usecs-$ts0: \
++              onmax($wakeup_lat).save(next_prio,next_comm,prev_pid,prev_prio, \
++	      prev_comm):onmax($wakeup_lat).snapshot() \
++	      if next_comm=="cyclictest"' >> \
++	      /sys/kernel/debug/tracing/events/sched/sched_switch/trigger
+ 
+     When the histogram is displayed, for each bucket the max value
+     and the saved values corresponding to the max are displayed
+     following the rest of the fields.
+ 
+     If a snapshot was taken, there is also a message indicating that,
+-    along with the value and event that triggered the global maximum:
++    along with the value and event that triggered the global maximum::
+ 
+-    # cat /sys/kernel/debug/tracing/events/sched/sched_switch/hist
+-      { next_pid:       2101 } hitcount:        200
+-	max:         52  next_prio:        120  next_comm: cyclictest \
+-        prev_pid:          0  prev_prio:        120  prev_comm: swapper/6
++      # cat /sys/kernel/debug/tracing/events/sched/sched_switch/hist
++        { next_pid:       2101 } hitcount:        200
++	  max:         52  next_prio:        120  next_comm: cyclictest \
++          prev_pid:          0  prev_prio:        120  prev_comm: swapper/6
+ 
+-      { next_pid:       2103 } hitcount:       1326
+-	max:        572  next_prio:         19  next_comm: cyclictest \
+-        prev_pid:          0  prev_prio:        120  prev_comm: swapper/1
++        { next_pid:       2103 } hitcount:       1326
++	  max:        572  next_prio:         19  next_comm: cyclictest \
++          prev_pid:          0  prev_prio:        120  prev_comm: swapper/1
+ 
+-      { next_pid:       2102 } hitcount:       1982 \
+-	max:         74  next_prio:         19  next_comm: cyclictest \
+-        prev_pid:          0  prev_prio:        120  prev_comm: swapper/5
++        { next_pid:       2102 } hitcount:       1982 \
++	  max:         74  next_prio:         19  next_comm: cyclictest \
++          prev_pid:          0  prev_prio:        120  prev_comm: swapper/5
+ 
+-    Snapshot taken (see tracing/snapshot).  Details:
+-	triggering value { onmax($wakeup_lat) }:        572	\
+-	triggered by event with key: { next_pid:       2103 }
++      Snapshot taken (see tracing/snapshot).  Details:
++	  triggering value { onmax($wakeup_lat) }:        572	\
++	  triggered by event with key: { next_pid:       2103 }
+ 
+-    Totals:
+-        Hits: 3508
+-        Entries: 3
+-        Dropped: 0
++      Totals:
++          Hits: 3508
++          Entries: 3
++          Dropped: 0
+ 
+     In the above case, the event that triggered the global maximum has
+     the key with next_pid == 2103.  If you look at the bucket that has
+@@ -2439,15 +2440,15 @@ The following commonly-used handler.action pairs are available:
+     $cwnd variable.  If the value has changed, a snapshot is taken.
+     As part of the setup, all the scheduler and tcp events are also
+     enabled, which are the events that will show up in the snapshot
+-    when it is taken at some point:
++    when it is taken at some point::
+ 
+-    # echo 1 > /sys/kernel/debug/tracing/events/sched/enable
+-    # echo 1 > /sys/kernel/debug/tracing/events/tcp/enable
++      # echo 1 > /sys/kernel/debug/tracing/events/sched/enable
++      # echo 1 > /sys/kernel/debug/tracing/events/tcp/enable
+ 
+-    # echo 'hist:keys=dport:cwnd=snd_cwnd: \
+-            onchange($cwnd).save(snd_wnd,srtt,rcv_wnd): \
+-	    onchange($cwnd).snapshot()' >> \
+-	    /sys/kernel/debug/tracing/events/tcp/tcp_probe/trigger
++      # echo 'hist:keys=dport:cwnd=snd_cwnd: \
++              onchange($cwnd).save(snd_wnd,srtt,rcv_wnd): \
++	      onchange($cwnd).snapshot()' >> \
++	      /sys/kernel/debug/tracing/events/tcp/tcp_probe/trigger
+ 
+     When the histogram is displayed, for each bucket the tracked value
+     and the saved values corresponding to that value are displayed
+@@ -2470,10 +2471,10 @@ The following commonly-used handler.action pairs are available:
+       { dport:        443 } hitcount:        211
+ 	changed:         10  snd_wnd:      26960  srtt:      17379  rcv_wnd:      28800
+ 
+-    Snapshot taken (see tracing/snapshot).  Details::
++      Snapshot taken (see tracing/snapshot).  Details:
+ 
+-        triggering value { onchange($cwnd) }:         10
+-        triggered by event with key: { dport:         80 }
++          triggering value { onchange($cwnd) }:         10
++          triggered by event with key: { dport:         80 }
+ 
+       Totals:
+           Hits: 414
 
-You are awesome, thank you!
+base-commit: 9f712417e1fc7d3db042941524e59573e02a55c7
 -- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
-
+An old man doll... just what I always wanted! - Clara
 
