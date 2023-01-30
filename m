@@ -2,73 +2,63 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 28E58C636D7
-	for <linux-trace-kernel@archiver.kernel.org>; Mon, 30 Jan 2023 18:20:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FD4DC54EAA
+	for <linux-trace-kernel@archiver.kernel.org>; Mon, 30 Jan 2023 18:20:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237588AbjA3ST7 (ORCPT
+        id S237514AbjA3SUA (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Mon, 30 Jan 2023 13:19:59 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51458 "EHLO
+        Mon, 30 Jan 2023 13:20:00 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51784 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237463AbjA3STp (ORCPT
+        with ESMTP id S237667AbjA3STs (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Mon, 30 Jan 2023 13:19:45 -0500
-Received: from mail-il1-x134.google.com (mail-il1-x134.google.com [IPv6:2607:f8b0:4864:20::134])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CDB9CB75E
-        for <linux-trace-kernel@vger.kernel.org>; Mon, 30 Jan 2023 10:19:42 -0800 (PST)
-Received: by mail-il1-x134.google.com with SMTP id l15so1656103ilj.5
-        for <linux-trace-kernel@vger.kernel.org>; Mon, 30 Jan 2023 10:19:42 -0800 (PST)
+        Mon, 30 Jan 2023 13:19:48 -0500
+Received: from mail-il1-x132.google.com (mail-il1-x132.google.com [IPv6:2607:f8b0:4864:20::132])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 515CA37F34
+        for <linux-trace-kernel@vger.kernel.org>; Mon, 30 Jan 2023 10:19:45 -0800 (PST)
+Received: by mail-il1-x132.google.com with SMTP id h18so2709446ilj.6
+        for <linux-trace-kernel@vger.kernel.org>; Mon, 30 Jan 2023 10:19:45 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=6koqDjZbLyO9e1ckF7lYpikWSuT8kthbS112BT2kLaE=;
-        b=ifDpYfM+MpeGfdjW6klRzaRavBq0sIIz7Hd2fiCXrFP8adChcc8SpalRsUjcXiMUGY
-         fg8p0OrTwfF8K/d3G9n5y6vusimHlTbi3tbYVi3QhcqogijZ/OMtFjl1N3SoE+Arlli1
-         qK76R8vQjsSbFi/RzLaVajjwIHuOl6vZugDTc=
+        bh=5wxgSxSbB5Zk2REp2cxLJz/oBwzWiBxlC3Q9YLCtBp0=;
+        b=U7mVx7EzS1yrwU2P3yJCFPbOxhUhYMyue5ugqwlqBzMAWGhJp/ZcnJ5LAvCCjChwqy
+         47CGNCJ6W2hhzUKfjuleCoW0qvFzcmy96ylKq+qjamUZs0sP8W+lWn949ru912sUju2v
+         kb6hb0iu6cc++EFMCnCck8CjESUAvMzyqlZq8=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=6koqDjZbLyO9e1ckF7lYpikWSuT8kthbS112BT2kLaE=;
-        b=A7lRfe6ZMJt0UllOZuCMAa5xgD0niFBI9hT+GKFVV/EewBUKlTkjcqsbtesAtfg3No
-         WrRUMEpMtucj09WPheUQM2oxtHAn0+J4WBMFQXKXKFPlSGli8SuUtvQqR97B2hJF/z7Q
-         FvpqL5Q51buIvDhp8a6tHpzUd2HUrNrt2IJSKcAnGedxMJCkp+U45bXPXnTTcTbdHqE9
-         0ptaNTuDu20Tqr+Tlm3CIBAiQtRvaUIdM90/tqmOGRrkLq7jcrvK1LvJMpYZ0b+/xe4U
-         R0IAfNPEaQkEY/zkvYnehOtLXXaNgJ0ylIQqIchHMEk2i25WfPHwBysB9Bm7wjCrXjIj
-         91Rw==
-X-Gm-Message-State: AO0yUKX5Egq+MCUiNrBcwHkXl7fG4TLUsFIpcFeewUg/9fPDa0QObsG/
-        noJ+CillzjI4ENW8q8VBR0SOFg==
-X-Google-Smtp-Source: AK7set8VCoxtmUCYeDMWu/WDVDGuySHRa2a43ZmUy9ljwyAym3RoiQUMue1sHzV4ZeKUz+/rB5U+5Q==
-X-Received: by 2002:a05:6e02:170e:b0:310:ff6b:51d0 with SMTP id u14-20020a056e02170e00b00310ff6b51d0mr2347546ill.11.1675102782161;
-        Mon, 30 Jan 2023 10:19:42 -0800 (PST)
+        bh=5wxgSxSbB5Zk2REp2cxLJz/oBwzWiBxlC3Q9YLCtBp0=;
+        b=YGw22KcP2YnyWhQ7cUsIGjU+ATynCj58qQNIM91FUJrclObTj5M/WxlDcNGe0xogeT
+         3v5fyvWIg0eTQtLuoxof4LoNhGHDN7zpq1Sip/gKph1VEEn6pU+D+aigl+/hKzPXq2eV
+         AQjr8/9jL+VDHxBeEwYc7gZT7Zoy4dDNzkfknCbADnrbXozG7MlTLN+KBPybgd5NHchs
+         xX1dhOxcqAxrIXQZo/5tBNSVT8j0SUINibYP0r0c2wFXWg/6XuiEEj1stGIV4z+6KOV5
+         acVynyuB9RMredQqS6g5MfrnLL27or3XXc9IVJ6c7tpbGGj/ELA3ofozNOjCekWoDFjQ
+         bgiw==
+X-Gm-Message-State: AO0yUKUTG68FbZi/y222HCgNb2KP1a1iufamyIYOHeMArSqXT3H0fOkh
+        Tkgwep7FPZeYY1ovbe0TlULzXKvb2Es+oB9L
+X-Google-Smtp-Source: AK7set9OTHPr7LKtPzs3v501iP4cToy0c5RMq+2KAtzEJ4vKLeWYV/L2SKkPk0ThRJGdjrofBXwgTg==
+X-Received: by 2002:a05:6e02:1c83:b0:310:e1f6:4a73 with SMTP id w3-20020a056e021c8300b00310e1f64a73mr7318629ill.24.1675102784653;
+        Mon, 30 Jan 2023 10:19:44 -0800 (PST)
 Received: from ravnica.bld.corp.google.com ([2620:15c:183:200:fc8a:dd2f:5914:df14])
-        by smtp.gmail.com with ESMTPSA id o16-20020a056e02115000b002f139ba4135sm4189801ill.86.2023.01.30.10.19.41
+        by smtp.gmail.com with ESMTPSA id o16-20020a056e02115000b002f139ba4135sm4189801ill.86.2023.01.30.10.19.44
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 30 Jan 2023 10:19:41 -0800 (PST)
+        Mon, 30 Jan 2023 10:19:44 -0800 (PST)
 From:   Ross Zwisler <zwisler@chromium.org>
 X-Google-Original-From: Ross Zwisler <zwisler@google.com>
 To:     linux-kernel@vger.kernel.org
 Cc:     Ross Zwisler <zwisler@google.com>,
-        Alexei Starovoitov <ast@kernel.org>,
         Steven Rostedt <rostedt@goodmis.org>,
         linux-trace-kernel@vger.kernel.org,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Andrii Nakryiko <andrii@kernel.org>,
-        Martin KaFai Lau <martin.lau@linux.dev>,
-        Song Liu <song@kernel.org>, Yonghong Song <yhs@fb.com>,
-        John Fastabend <john.fastabend@gmail.com>,
-        KP Singh <kpsingh@kernel.org>,
-        Stanislav Fomichev <sdf@google.com>,
-        Hao Luo <haoluo@google.com>, Jiri Olsa <jolsa@kernel.org>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Leon Romanovsky <leon@kernel.org>, bpf@vger.kernel.org,
-        linux-rdma@vger.kernel.org
-Subject: [PATCH 2/9] bpf: use canonical ftrace path
-Date:   Mon, 30 Jan 2023 11:19:08 -0700
-Message-Id: <20230130181915.1113313-3-zwisler@google.com>
+        Todd E Brandt <todd.e.brandt@linux.intel.com>,
+        Huang Rui <ray.huang@amd.com>, linux-pm@vger.kernel.org
+Subject: [PATCH 5/9] tools/power: use canonical ftrace path
+Date:   Mon, 30 Jan 2023 11:19:11 -0700
+Message-Id: <20230130181915.1113313-6-zwisler@google.com>
 X-Mailer: git-send-email 2.39.1.456.gfc5497dd1b-goog
 In-Reply-To: <20230130181915.1113313-1-zwisler@google.com>
 References: <20230130181915.1113313-1-zwisler@google.com>
@@ -89,213 +79,103 @@ But, from Documentation/trace/ftrace.rst:
 
   /sys/kernel/debug/tracing
 
-Many comments and samples in the bpf code still refer to this older
-debugfs path, so let's update them to avoid confusion.  There are a few
-spots where the bpf code explicitly checks both tracefs and debugfs
-(tools/bpf/bpftool/tracelog.c and tools/lib/api/fs/fs.c) and I've left
-those alone so that the tools can continue to work with both paths.
+A few scripts in tools/power still refer to this older debugfs path, so
+let's update them to avoid confusion.
 
 Signed-off-by: Ross Zwisler <zwisler@google.com>
 ---
- include/uapi/linux/bpf.h            | 8 ++++----
- samples/bpf/cpustat_kern.c          | 4 ++--
- samples/bpf/hbm.c                   | 4 ++--
- samples/bpf/ibumad_kern.c           | 4 ++--
- samples/bpf/lwt_len_hist.sh         | 2 +-
- samples/bpf/offwaketime_kern.c      | 2 +-
- samples/bpf/task_fd_query_user.c    | 4 ++--
- samples/bpf/test_lwt_bpf.sh         | 2 +-
- samples/bpf/test_overhead_tp_kern.c | 4 ++--
- tools/include/uapi/linux/bpf.h      | 8 ++++----
- 10 files changed, 21 insertions(+), 21 deletions(-)
+ tools/power/pm-graph/sleepgraph.py                     |  4 ++--
+ tools/power/x86/amd_pstate_tracer/amd_pstate_trace.py  |  4 ++--
+ .../x86/intel_pstate_tracer/intel_pstate_tracer.py     | 10 +++++-----
+ 3 files changed, 9 insertions(+), 9 deletions(-)
 
-diff --git a/include/uapi/linux/bpf.h b/include/uapi/linux/bpf.h
-index 51b9aa640ad2..9110163dfd70 100644
---- a/include/uapi/linux/bpf.h
-+++ b/include/uapi/linux/bpf.h
-@@ -1634,17 +1634,17 @@ union bpf_attr {
-  * 	Description
-  * 		This helper is a "printk()-like" facility for debugging. It
-  * 		prints a message defined by format *fmt* (of size *fmt_size*)
-- * 		to file *\/sys/kernel/debug/tracing/trace* from DebugFS, if
-+ * 		to file *\/sys/kernel/tracing/trace* from TraceFS, if
-  * 		available. It can take up to three additional **u64**
-  * 		arguments (as an eBPF helpers, the total number of arguments is
-  * 		limited to five).
-  *
-  * 		Each time the helper is called, it appends a line to the trace.
-- * 		Lines are discarded while *\/sys/kernel/debug/tracing/trace* is
-- * 		open, use *\/sys/kernel/debug/tracing/trace_pipe* to avoid this.
-+ * 		Lines are discarded while *\/sys/kernel/tracing/trace* is
-+ * 		open, use *\/sys/kernel/tracing/trace_pipe* to avoid this.
-  * 		The format of the trace is customizable, and the exact output
-  * 		one will get depends on the options set in
-- * 		*\/sys/kernel/debug/tracing/trace_options* (see also the
-+ * 		*\/sys/kernel/tracing/trace_options* (see also the
-  * 		*README* file under the same directory). However, it usually
-  * 		defaults to something like:
-  *
-diff --git a/samples/bpf/cpustat_kern.c b/samples/bpf/cpustat_kern.c
-index 5aefd19cdfa1..944f13fe164a 100644
---- a/samples/bpf/cpustat_kern.c
-+++ b/samples/bpf/cpustat_kern.c
-@@ -76,8 +76,8 @@ struct {
+diff --git a/tools/power/pm-graph/sleepgraph.py b/tools/power/pm-graph/sleepgraph.py
+index cfe343306e08..eddf8101ddf6 100755
+--- a/tools/power/pm-graph/sleepgraph.py
++++ b/tools/power/pm-graph/sleepgraph.py
+@@ -120,9 +120,9 @@ class SystemValues:
+ 	cgexp = False
+ 	testdir = ''
+ 	outdir = ''
+-	tpath = '/sys/kernel/debug/tracing/'
++	tpath = '/sys/kernel/tracing/'
+ 	fpdtpath = '/sys/firmware/acpi/tables/FPDT'
+-	epath = '/sys/kernel/debug/tracing/events/power/'
++	epath = '/sys/kernel/tracing/events/power/'
+ 	pmdpath = '/sys/power/pm_debug_messages'
+ 	s0ixpath = '/sys/module/intel_pmc_core/parameters/warn_on_s0ix_failures'
+ 	s0ixres = '/sys/devices/system/cpu/cpuidle/low_power_idle_system_residency_us'
+diff --git a/tools/power/x86/amd_pstate_tracer/amd_pstate_trace.py b/tools/power/x86/amd_pstate_tracer/amd_pstate_trace.py
+index 2dea4032ac56..904df0ea0a1e 100755
+--- a/tools/power/x86/amd_pstate_tracer/amd_pstate_trace.py
++++ b/tools/power/x86/amd_pstate_tracer/amd_pstate_trace.py
+@@ -248,7 +248,7 @@ def signal_handler(signal, frame):
+         ipt.free_trace_buffer()
+         sys.exit(0)
  
- /*
-  * The trace events for cpu_idle and cpu_frequency are taken from:
-- * /sys/kernel/debug/tracing/events/power/cpu_idle/format
-- * /sys/kernel/debug/tracing/events/power/cpu_frequency/format
-+ * /sys/kernel/tracing/events/power/cpu_idle/format
-+ * /sys/kernel/tracing/events/power/cpu_frequency/format
-  *
-  * These two events have same format, so define one common structure.
-  */
-diff --git a/samples/bpf/hbm.c b/samples/bpf/hbm.c
-index 516fbac28b71..ff58ec43f56a 100644
---- a/samples/bpf/hbm.c
-+++ b/samples/bpf/hbm.c
-@@ -65,7 +65,7 @@ static void Usage(void);
- static void read_trace_pipe2(void);
- static void do_error(char *msg, bool errno_flag);
+-trace_file = "/sys/kernel/debug/tracing/events/amd_cpu/enable"
++trace_file = "/sys/kernel/tracing/events/amd_cpu/enable"
+ signal.signal(signal.SIGINT, signal_handler)
  
--#define DEBUGFS "/sys/kernel/debug/tracing/"
-+#define TRACEFS "/sys/kernel/tracing/"
+ interval = ""
+@@ -319,7 +319,7 @@ print(cur_version)
+ cleanup_data_files()
  
- static struct bpf_program *bpf_prog;
- static struct bpf_object *obj;
-@@ -77,7 +77,7 @@ static void read_trace_pipe2(void)
- 	FILE *outf;
- 	char *outFname = "hbm_out.log";
+ if interval:
+-    file_name = "/sys/kernel/debug/tracing/trace"
++    file_name = "/sys/kernel/tracing/trace"
+     ipt.clear_trace_file()
+     ipt.set_trace_buffer_size(memory)
+     ipt.enable_trace(trace_file)
+diff --git a/tools/power/x86/intel_pstate_tracer/intel_pstate_tracer.py b/tools/power/x86/intel_pstate_tracer/intel_pstate_tracer.py
+index b46e9eb8f5aa..ec3323100e1a 100755
+--- a/tools/power/x86/intel_pstate_tracer/intel_pstate_tracer.py
++++ b/tools/power/x86/intel_pstate_tracer/intel_pstate_tracer.py
+@@ -373,7 +373,7 @@ def clear_trace_file():
+     """ Clear trace file """
  
--	trace_fd = open(DEBUGFS "trace_pipe", O_RDONLY, 0);
-+	trace_fd = open(TRACEFS "trace_pipe", O_RDONLY, 0);
- 	if (trace_fd < 0) {
- 		printf("Error opening trace_pipe\n");
- 		return;
-diff --git a/samples/bpf/ibumad_kern.c b/samples/bpf/ibumad_kern.c
-index 9b193231024a..f07474c72525 100644
---- a/samples/bpf/ibumad_kern.c
-+++ b/samples/bpf/ibumad_kern.c
-@@ -39,8 +39,8 @@ struct {
- /* Taken from the current format defined in
-  * include/trace/events/ib_umad.h
-  * and
-- * /sys/kernel/debug/tracing/events/ib_umad/ib_umad_read/format
-- * /sys/kernel/debug/tracing/events/ib_umad/ib_umad_write/format
-+ * /sys/kernel/tracing/events/ib_umad/ib_umad_read/format
-+ * /sys/kernel/tracing/events/ib_umad/ib_umad_write/format
-  */
- struct ib_umad_rw_args {
- 	u64 pad;
-diff --git a/samples/bpf/lwt_len_hist.sh b/samples/bpf/lwt_len_hist.sh
-index 0eda9754f50b..11fa0a087db6 100755
---- a/samples/bpf/lwt_len_hist.sh
-+++ b/samples/bpf/lwt_len_hist.sh
-@@ -5,7 +5,7 @@ NS1=lwt_ns1
- VETH0=tst_lwt1a
- VETH1=tst_lwt1b
+     try:
+-        f_handle = open('/sys/kernel/debug/tracing/trace', 'w')
++        f_handle = open('/sys/kernel/tracing/trace', 'w')
+         f_handle.close()
+     except:
+         print('IO error clearing trace file ')
+@@ -401,7 +401,7 @@ def set_trace_buffer_size(memory):
+     """ Set trace buffer size """
  
--TRACE_ROOT=/sys/kernel/debug/tracing
-+TRACE_ROOT=/sys/kernel/tracing
+     try:
+-       with open('/sys/kernel/debug/tracing/buffer_size_kb', 'w') as fp:
++       with open('/sys/kernel/tracing/buffer_size_kb', 'w') as fp:
+           fp.write(memory)
+     except:
+        print('IO error setting trace buffer size ')
+@@ -411,7 +411,7 @@ def free_trace_buffer():
+     """ Free the trace buffer memory """
  
- function cleanup {
- 	# To reset saved histogram, remove pinned map
-diff --git a/samples/bpf/offwaketime_kern.c b/samples/bpf/offwaketime_kern.c
-index eb4d94742e6b..23f12b47e9e5 100644
---- a/samples/bpf/offwaketime_kern.c
-+++ b/samples/bpf/offwaketime_kern.c
-@@ -110,7 +110,7 @@ static inline int update_counts(void *ctx, u32 pid, u64 delta)
- }
+     try:
+-       open('/sys/kernel/debug/tracing/buffer_size_kb'
++       open('/sys/kernel/tracing/buffer_size_kb'
+                  , 'w').write("1")
+     except:
+         print('IO error freeing trace buffer ')
+@@ -495,7 +495,7 @@ def signal_handler(signal, frame):
+         sys.exit(0)
  
- #if 1
--/* taken from /sys/kernel/debug/tracing/events/sched/sched_switch/format */
-+/* taken from /sys/kernel/tracing/events/sched/sched_switch/format */
- struct sched_switch_args {
- 	unsigned long long pad;
- 	char prev_comm[TASK_COMM_LEN];
-diff --git a/samples/bpf/task_fd_query_user.c b/samples/bpf/task_fd_query_user.c
-index a33d74bd3a4b..1e61f2180470 100644
---- a/samples/bpf/task_fd_query_user.c
-+++ b/samples/bpf/task_fd_query_user.c
-@@ -235,7 +235,7 @@ static int test_debug_fs_uprobe(char *binary_path, long offset, bool is_return)
- 	struct bpf_link *link;
- 	ssize_t bytes;
+ if __name__ == "__main__":
+-    trace_file = "/sys/kernel/debug/tracing/events/power/pstate_sample/enable"
++    trace_file = "/sys/kernel/tracing/events/power/pstate_sample/enable"
+     signal.signal(signal.SIGINT, signal_handler)
  
--	snprintf(buf, sizeof(buf), "/sys/kernel/debug/tracing/%s_events",
-+	snprintf(buf, sizeof(buf), "/sys/kernel/tracing/%s_events",
- 		 event_type);
- 	kfd = open(buf, O_WRONLY | O_TRUNC, 0);
- 	CHECK_PERROR_RET(kfd < 0);
-@@ -252,7 +252,7 @@ static int test_debug_fs_uprobe(char *binary_path, long offset, bool is_return)
- 	close(kfd);
- 	kfd = -1;
+     interval = ""
+@@ -569,7 +569,7 @@ if __name__ == "__main__":
+     cleanup_data_files()
  
--	snprintf(buf, sizeof(buf), "/sys/kernel/debug/tracing/events/%ss/%s/id",
-+	snprintf(buf, sizeof(buf), "/sys/kernel/tracing/events/%ss/%s/id",
- 		 event_type, event_alias);
- 	efd = open(buf, O_RDONLY, 0);
- 	CHECK_PERROR_RET(efd < 0);
-diff --git a/samples/bpf/test_lwt_bpf.sh b/samples/bpf/test_lwt_bpf.sh
-index 65a976058dd3..db5691e6637f 100755
---- a/samples/bpf/test_lwt_bpf.sh
-+++ b/samples/bpf/test_lwt_bpf.sh
-@@ -19,7 +19,7 @@ IPVETH3="192.168.111.2"
- 
- IP_LOCAL="192.168.99.1"
- 
--TRACE_ROOT=/sys/kernel/debug/tracing
-+TRACE_ROOT=/sys/kernel/tracing
- 
- function lookup_mac()
- {
-diff --git a/samples/bpf/test_overhead_tp_kern.c b/samples/bpf/test_overhead_tp_kern.c
-index 80edadacb692..a1d53b0d8476 100644
---- a/samples/bpf/test_overhead_tp_kern.c
-+++ b/samples/bpf/test_overhead_tp_kern.c
-@@ -8,7 +8,7 @@
- #include <uapi/linux/bpf.h>
- #include <bpf/bpf_helpers.h>
- 
--/* from /sys/kernel/debug/tracing/events/task/task_rename/format */
-+/* from /sys/kernel/tracing/events/task/task_rename/format */
- struct task_rename {
- 	__u64 pad;
- 	__u32 pid;
-@@ -22,7 +22,7 @@ int prog(struct task_rename *ctx)
- 	return 0;
- }
- 
--/* from /sys/kernel/debug/tracing/events/random/urandom_read/format */
-+/* from /sys/kernel/tracing/events/random/urandom_read/format */
- struct urandom_read {
- 	__u64 pad;
- 	int got_bits;
-diff --git a/tools/include/uapi/linux/bpf.h b/tools/include/uapi/linux/bpf.h
-index 51b9aa640ad2..9110163dfd70 100644
---- a/tools/include/uapi/linux/bpf.h
-+++ b/tools/include/uapi/linux/bpf.h
-@@ -1634,17 +1634,17 @@ union bpf_attr {
-  * 	Description
-  * 		This helper is a "printk()-like" facility for debugging. It
-  * 		prints a message defined by format *fmt* (of size *fmt_size*)
-- * 		to file *\/sys/kernel/debug/tracing/trace* from DebugFS, if
-+ * 		to file *\/sys/kernel/tracing/trace* from TraceFS, if
-  * 		available. It can take up to three additional **u64**
-  * 		arguments (as an eBPF helpers, the total number of arguments is
-  * 		limited to five).
-  *
-  * 		Each time the helper is called, it appends a line to the trace.
-- * 		Lines are discarded while *\/sys/kernel/debug/tracing/trace* is
-- * 		open, use *\/sys/kernel/debug/tracing/trace_pipe* to avoid this.
-+ * 		Lines are discarded while *\/sys/kernel/tracing/trace* is
-+ * 		open, use *\/sys/kernel/tracing/trace_pipe* to avoid this.
-  * 		The format of the trace is customizable, and the exact output
-  * 		one will get depends on the options set in
-- * 		*\/sys/kernel/debug/tracing/trace_options* (see also the
-+ * 		*\/sys/kernel/tracing/trace_options* (see also the
-  * 		*README* file under the same directory). However, it usually
-  * 		defaults to something like:
-  *
+     if interval:
+-        filename = "/sys/kernel/debug/tracing/trace"
++        filename = "/sys/kernel/tracing/trace"
+         clear_trace_file()
+         set_trace_buffer_size(memory)
+         enable_trace(trace_file)
 -- 
 2.39.1.456.gfc5497dd1b-goog
 
