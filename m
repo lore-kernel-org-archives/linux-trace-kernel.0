@@ -2,68 +2,64 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AF461C54EED
-	for <linux-trace-kernel@archiver.kernel.org>; Mon, 30 Jan 2023 18:20:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 733CDC54EAA
+	for <linux-trace-kernel@archiver.kernel.org>; Mon, 30 Jan 2023 18:20:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237629AbjA3SUD (ORCPT
+        id S237479AbjA3SUF (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Mon, 30 Jan 2023 13:20:03 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51780 "EHLO
+        Mon, 30 Jan 2023 13:20:05 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51536 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237655AbjA3STs (ORCPT
+        with ESMTP id S237808AbjA3STv (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Mon, 30 Jan 2023 13:19:48 -0500
-Received: from mail-il1-x131.google.com (mail-il1-x131.google.com [IPv6:2607:f8b0:4864:20::131])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8C45A113C4
-        for <linux-trace-kernel@vger.kernel.org>; Mon, 30 Jan 2023 10:19:44 -0800 (PST)
-Received: by mail-il1-x131.google.com with SMTP id h18so2709433ilj.6
-        for <linux-trace-kernel@vger.kernel.org>; Mon, 30 Jan 2023 10:19:44 -0800 (PST)
+        Mon, 30 Jan 2023 13:19:51 -0500
+Received: from mail-il1-x129.google.com (mail-il1-x129.google.com [IPv6:2607:f8b0:4864:20::129])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4CC533CE3F
+        for <linux-trace-kernel@vger.kernel.org>; Mon, 30 Jan 2023 10:19:47 -0800 (PST)
+Received: by mail-il1-x129.google.com with SMTP id k12so451765ilv.10
+        for <linux-trace-kernel@vger.kernel.org>; Mon, 30 Jan 2023 10:19:47 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=jp7aHBUW1jeQF5BaTlNM3qh6OpGZbn+TcSkRCqi1rpA=;
-        b=JlFJKGfQVP+ZJ4ZfNW/30qCZgXd85FdLu28kwHbW4K1QjzS8W8lPA1dmvs5YOKPx6i
-         g1rcxZPr0uXfhgIhiLKW8LXNCCrvkBLjT4uSE+KGpkgENyGFJ+6UWb7/TicE8j2x4K5X
-         uq8913H01SJ5Bpwu5jHe99aWe8Tt7mzxcAlH0=
+        bh=MFIqgVTcMIkkVJ93WrMRe7xk5hOeBy6iHYq/c2dnAus=;
+        b=BOXkMcmV7Kg852E/lMV7VPR9bxQHwZJ1VHOqpllPBP1SPusf47QZzPxzqalItFJl+E
+         h6nY4dhdr/HYhYO0zqlz9dGhFYDJIhs8qJoibnsTiBOqLYIthHpGfkJc3OH6cH/UfAL+
+         CYsejaXnNlcgjAXUTVlZ9/Ibodd9dneGfTxTc=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=jp7aHBUW1jeQF5BaTlNM3qh6OpGZbn+TcSkRCqi1rpA=;
-        b=sJVV9ZQFK6iRVBYcI1tjG2msSRzSbYEWc5K81OYQIQ+5NXoJDmtGt36Kkc4I64ScuC
-         mBegY7ZftsBsNYQIZCx+klNolGhpXA1VxBO5H0bn4GvsWnIpf0Q7R1g+UBccPPcQRamK
-         rm/tl7E+qvI2cYF98hLMBF+qqJLJ0XgFBKnuJ4rPXXKnzwxew0Lyb4B4qD68uRvJ4WUV
-         QWk71yBrHJijWr8HflhHMn3uZxBN4ai1cWInXLtCdSlsQ2Rmq7lUYrQBS9OKhfrDE2qj
-         BKOKbMiCfA1HsNvVPL7WGF8G8HTsiFR190cw9Gh/TnPPPotGrU8hEX22iGBhLhp0GND9
-         tG0g==
-X-Gm-Message-State: AFqh2krF6lavJIjGmk5KG7ChmuEsMmh9zpPRTM0IbEKXPNyfT54ROOJD
-        fLTSxbLzUZ38TxTsyyKhaN4s7A==
-X-Google-Smtp-Source: AMrXdXtNYZmSI/B6owkdukXiEncZXYpEnMelEao+FAikw603ox7t8fW0hkOpMTlEEpNU5qPt5EQaHQ==
-X-Received: by 2002:a92:de09:0:b0:30e:f1e5:3e4a with SMTP id x9-20020a92de09000000b0030ef1e53e4amr33574012ilm.28.1675102783894;
-        Mon, 30 Jan 2023 10:19:43 -0800 (PST)
+        bh=MFIqgVTcMIkkVJ93WrMRe7xk5hOeBy6iHYq/c2dnAus=;
+        b=F+sNaQY+BgNIH0pqRpFoCC8QmbUQN4zm67BNgYC/RyZ/2PTxRKw84ir8BLeH1kIeBO
+         UFmosfgv1Zmv3ZGSnIfND+U7O+BTNnzpBNJGxSA1FJcXl85jVntBHwWwlVSQolHSSouC
+         O8i3SDAgvCIGtJyBSZ2wCQVD7STx/5O1iAC/gbC1RbPbr6MOocsY31T1lUV7ptBYFeHO
+         QX7i/1PCCGaK3bypMnHQp4bCEJW93VUQQtoTSynoRaTTvIRUWTsykmcTtbbtduLJO6nh
+         uOAXICyM0hYhir6AasFrhp99xFDzSzEtlAWpj5Cv0HpqMRYlKtmy2VNmRd63lwUjOUkr
+         nQSA==
+X-Gm-Message-State: AO0yUKWoM4cWPylBh1cwiZmwX6iFl9Y7yFax3d16MwWZkuFPnf6IaadE
+        jyKYySUaYlBcSyxji7IE03262A==
+X-Google-Smtp-Source: AK7set8M9u01+a5gnWBWumGHfQfWw+OV0WvXprCsJSsUeNjRozqjV2EnxgHWdTQxe8fVrDNFccalzA==
+X-Received: by 2002:a92:b301:0:b0:310:be1e:78e6 with SMTP id p1-20020a92b301000000b00310be1e78e6mr7959753ilh.26.1675102786604;
+        Mon, 30 Jan 2023 10:19:46 -0800 (PST)
 Received: from ravnica.bld.corp.google.com ([2620:15c:183:200:fc8a:dd2f:5914:df14])
-        by smtp.gmail.com with ESMTPSA id o16-20020a056e02115000b002f139ba4135sm4189801ill.86.2023.01.30.10.19.43
+        by smtp.gmail.com with ESMTPSA id o16-20020a056e02115000b002f139ba4135sm4189801ill.86.2023.01.30.10.19.46
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 30 Jan 2023 10:19:43 -0800 (PST)
+        Mon, 30 Jan 2023 10:19:46 -0800 (PST)
 From:   Ross Zwisler <zwisler@chromium.org>
 X-Google-Original-From: Ross Zwisler <zwisler@google.com>
 To:     linux-kernel@vger.kernel.org
 Cc:     Ross Zwisler <zwisler@google.com>,
-        Peter Zijlstra <peterz@infradead.org>,
+        "Tobin C. Harding" <me@tobin.cc>,
         Steven Rostedt <rostedt@goodmis.org>,
-        linux-trace-kernel@vger.kernel.org, Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        linux-perf-users@vger.kernel.org
-Subject: [PATCH 4/9] perf docs: use canonical ftrace path
-Date:   Mon, 30 Jan 2023 11:19:10 -0700
-Message-Id: <20230130181915.1113313-5-zwisler@google.com>
+        linux-trace-kernel@vger.kernel.org,
+        Tycho Andersen <tycho@tycho.pizza>,
+        linux-hardening@vger.kernel.org
+Subject: [PATCH 8/9] leaking_addresses: also skip canonical ftrace path
+Date:   Mon, 30 Jan 2023 11:19:14 -0700
+Message-Id: <20230130181915.1113313-9-zwisler@google.com>
 X-Mailer: git-send-email 2.39.1.456.gfc5497dd1b-goog
 In-Reply-To: <20230130181915.1113313-1-zwisler@google.com>
 References: <20230130181915.1113313-1-zwisler@google.com>
@@ -84,64 +80,26 @@ But, from Documentation/trace/ftrace.rst:
 
   /sys/kernel/debug/tracing
 
-A few spots in the perf docs still refer to this older debugfs path, so
-let's update them to avoid confusion.
+scripts/leaking_addresses.pl only skipped this older debugfs path, so
+let's add the canonical path as well.
 
 Signed-off-by: Ross Zwisler <zwisler@google.com>
 ---
- tools/perf/Documentation/perf-list.txt          | 2 +-
- tools/perf/Documentation/perf-script-perl.txt   | 2 +-
- tools/perf/Documentation/perf-script-python.txt | 4 ++--
- 3 files changed, 4 insertions(+), 4 deletions(-)
+ scripts/leaking_addresses.pl | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/tools/perf/Documentation/perf-list.txt b/tools/perf/Documentation/perf-list.txt
-index 57384a97c04f..6c83459d3192 100644
---- a/tools/perf/Documentation/perf-list.txt
-+++ b/tools/perf/Documentation/perf-list.txt
-@@ -228,7 +228,7 @@ This can be overridden by setting the kernel.perf_event_paranoid
- sysctl to -1, which allows non root to use these events.
+diff --git a/scripts/leaking_addresses.pl b/scripts/leaking_addresses.pl
+index 8f636a23bc3f..e695634d153d 100755
+--- a/scripts/leaking_addresses.pl
++++ b/scripts/leaking_addresses.pl
+@@ -61,6 +61,7 @@ my @skip_abs = (
+ 	'/proc/device-tree',
+ 	'/proc/1/syscall',
+ 	'/sys/firmware/devicetree',
++	'/sys/kernel/tracing/trace_pipe',
+ 	'/sys/kernel/debug/tracing/trace_pipe',
+ 	'/sys/kernel/security/apparmor/revision');
  
- For accessing trace point events perf needs to have read access to
--/sys/kernel/debug/tracing, even when perf_event_paranoid is in a relaxed
-+/sys/kernel/tracing, even when perf_event_paranoid is in a relaxed
- setting.
- 
- TRACING
-diff --git a/tools/perf/Documentation/perf-script-perl.txt b/tools/perf/Documentation/perf-script-perl.txt
-index fa4f39d305a7..5b479f5e62ff 100644
---- a/tools/perf/Documentation/perf-script-perl.txt
-+++ b/tools/perf/Documentation/perf-script-perl.txt
-@@ -55,7 +55,7 @@ Traces meant to be processed using a script should be recorded with
- the above option: -a to enable system-wide collection.
- 
- The format file for the sched_wakeup event defines the following fields
--(see /sys/kernel/debug/tracing/events/sched/sched_wakeup/format):
-+(see /sys/kernel/tracing/events/sched/sched_wakeup/format):
- 
- ----
-  format:
-diff --git a/tools/perf/Documentation/perf-script-python.txt b/tools/perf/Documentation/perf-script-python.txt
-index cf4b7f4b625a..6a8581012e16 100644
---- a/tools/perf/Documentation/perf-script-python.txt
-+++ b/tools/perf/Documentation/perf-script-python.txt
-@@ -319,7 +319,7 @@ So those are the essential steps in writing and running a script.  The
- process can be generalized to any tracepoint or set of tracepoints
- you're interested in - basically find the tracepoint(s) you're
- interested in by looking at the list of available events shown by
--'perf list' and/or look in /sys/kernel/debug/tracing/events/ for
-+'perf list' and/or look in /sys/kernel/tracing/events/ for
- detailed event and field info, record the corresponding trace data
- using 'perf record', passing it the list of interesting events,
- generate a skeleton script using 'perf script -g python' and modify the
-@@ -449,7 +449,7 @@ Traces meant to be processed using a script should be recorded with
- the above option: -a to enable system-wide collection.
- 
- The format file for the sched_wakeup event defines the following fields
--(see /sys/kernel/debug/tracing/events/sched/sched_wakeup/format):
-+(see /sys/kernel/tracing/events/sched/sched_wakeup/format):
- 
- ----
-  format:
 -- 
 2.39.1.456.gfc5497dd1b-goog
 
