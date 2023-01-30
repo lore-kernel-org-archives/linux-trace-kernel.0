@@ -2,82 +2,217 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 97E13C54EAA
-	for <linux-trace-kernel@archiver.kernel.org>; Mon, 30 Jan 2023 13:07:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E285C54EED
+	for <linux-trace-kernel@archiver.kernel.org>; Mon, 30 Jan 2023 13:15:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231127AbjA3NHo (ORCPT
+        id S236029AbjA3NPj (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Mon, 30 Jan 2023 08:07:44 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59276 "EHLO
+        Mon, 30 Jan 2023 08:15:39 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37240 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230416AbjA3NHn (ORCPT
+        with ESMTP id S235989AbjA3NPj (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Mon, 30 Jan 2023 08:07:43 -0500
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 6DA1C6E91;
-        Mon, 30 Jan 2023 05:07:40 -0800 (PST)
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 3FE181758;
-        Mon, 30 Jan 2023 05:08:22 -0800 (PST)
-Received: from FVFF77S0Q05N (unknown [10.57.11.245])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 1DE043F885;
-        Mon, 30 Jan 2023 05:07:38 -0800 (PST)
-Date:   Mon, 30 Jan 2023 13:07:32 +0000
-From:   Mark Rutland <mark.rutland@arm.com>
-To:     Arnd Bergmann <arnd@kernel.org>
-Cc:     Steven Rostedt <rostedt@goodmis.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>, linux-kernel@vger.kernel.org,
-        linux-trace-kernel@vger.kernel.org
-Subject: Re: [PATCH] ftrace: sample: avoid open-coded 64-bit division
-Message-ID: <Y9fBFKeJ1zMBtv4b@FVFF77S0Q05N>
-References: <20230130130246.247537-1-arnd@kernel.org>
+        Mon, 30 Jan 2023 08:15:39 -0500
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F143A1167D;
+        Mon, 30 Jan 2023 05:15:37 -0800 (PST)
+Received: from pps.filterd (m0279868.ppops.net [127.0.0.1])
+        by mx0a-0031df01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 30UBOr8a003745;
+        Mon, 30 Jan 2023 13:15:33 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=message-id : date :
+ mime-version : from : subject : to : cc : references : in-reply-to :
+ content-type : content-transfer-encoding; s=qcppdkim1;
+ bh=JnLlhli1VXmVZTlNuU4xDDq71lJUtL1G7CheKas9FKk=;
+ b=jI2r9YLc/cH7KsC8qVqwtJAuaAIAFCz150jE4jyy+O1IQpyii4d0V25i3cH84plH3rrj
+ QF97VnodO7WchdSFkGhvMWMYQd5L2Ah5L+hfcCZPbbJoFPfkbDWYg20X4L55/I/NXGdd
+ Muds/CXhcLtoyj4CQB3oMqChkkoq9J3NcuUa+OqcEb+xbU+sKM50ZiaW4eOm7rMcjA76
+ eWMuJNPPJN0NMijTCEs4Al4hkDvpYh8z4Ea0Br/Zem00oNv/6nBtnr6VkvHdX4eHorI8
+ xXMne2UvblIq6JiV1MFoMZGjnWF7W3J2YdsxBiSIYlRJWQp25X0h7RSByG49B5ZhRvxK Ow== 
+Received: from nalasppmta02.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+        by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3ncu1tv0jg-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 30 Jan 2023 13:15:33 +0000
+Received: from nalasex01b.na.qualcomm.com (nalasex01b.na.qualcomm.com [10.47.209.197])
+        by NALASPPMTA02.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 30UDFWd3002172
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 30 Jan 2023 13:15:32 GMT
+Received: from [10.253.10.209] (10.80.80.8) by nalasex01b.na.qualcomm.com
+ (10.47.209.197) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.986.36; Mon, 30 Jan
+ 2023 05:15:31 -0800
+Message-ID: <28cd9aca-1945-ceed-2756-162132d576ef@quicinc.com>
+Date:   Mon, 30 Jan 2023 21:14:01 +0800
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230130130246.247537-1-arnd@kernel.org>
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.6.1
+From:   Linyu Yuan <quic_linyyuan@quicinc.com>
+Subject: Re: [PATCH v5] trace: acquire buffer from temparary trace sequence
+To:     Steven Rostedt <rostedt@goodmis.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>
+CC:     <linux-kernel@vger.kernel.org>,
+        <linux-trace-kernel@vger.kernel.org>
+References: <1675065249-23368-1-git-send-email-quic_linyyuan@quicinc.com>
+Content-Language: en-US
+In-Reply-To: <1675065249-23368-1-git-send-email-quic_linyyuan@quicinc.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.80.80.8]
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nalasex01b.na.qualcomm.com (10.47.209.197)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: VEozPtO-Kxex201uv30qrgLcHdVr-1d_
+X-Proofpoint-ORIG-GUID: VEozPtO-Kxex201uv30qrgLcHdVr-1d_
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.219,Aquarius:18.0.930,Hydra:6.0.562,FMLib:17.11.122.1
+ definitions=2023-01-30_12,2023-01-30_01,2022-06-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ adultscore=0 lowpriorityscore=0 spamscore=0 bulkscore=0 phishscore=0
+ mlxscore=0 mlxlogscore=999 impostorscore=0 suspectscore=0 clxscore=1015
+ malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2212070000 definitions=main-2301300127
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On Mon, Jan 30, 2023 at 02:02:37PM +0100, Arnd Bergmann wrote:
-> From: Arnd Bergmann <arnd@arndb.de>
-> 
-> Calculating the average period requires a 64-bit division that leads
-> to a link failure on 32-bit architectures:
-> 
-> x86_64-linux-ld: samples/ftrace/ftrace-ops.o: in function `ftrace_ops_sample_init':
-> ftrace-ops.c:(.init.text+0x23b): undefined reference to `__udivdi3'
 
-Whoops; sorry about that.
+@Steven current design is not safe, as user still can write to buffer 
+which have no enough space.
 
-> Use the div_u64() helper to do this instead. Since this is an init function that
-> is not called frequently, the runtime overhead is going to be acceptable.
-> 
-> Fixes: b56c68f705ca ("ftrace: Add sample with custom ops")
-> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+do you think it is better to improve dwc3 trace in fast assign path ?
 
-Acked-by: Mark Rutland <mark.rutland@arm.com>
 
-Mark.
-
+On 1/30/2023 3:54 PM, Linyu Yuan wrote:
+> there is one dwc3 trace event declare as below,
+> DECLARE_EVENT_CLASS(dwc3_log_event,
+> 	TP_PROTO(u32 event, struct dwc3 *dwc),
+> 	TP_ARGS(event, dwc),
+> 	TP_STRUCT__entry(
+> 		__field(u32, event)
+> 		__field(u32, ep0state)
+> 		__dynamic_array(char, str, DWC3_MSG_MAX)
+> 	),
+> 	TP_fast_assign(
+> 		__entry->event = event;
+> 		__entry->ep0state = dwc->ep0state;
+> 	),
+> 	TP_printk("event (%08x): %s", __entry->event,
+> 			dwc3_decode_event(__get_str(str), DWC3_MSG_MAX,
+> 				__entry->event, __entry->ep0state))
+> );
+> the problem is when trace function called, it will allocate up to
+> DWC3_MSG_MAX bytes from trace event buffer, but never fill the buffer
+> during fast assignment, it only fill the buffer when output function are
+> called, so this means if output function are not called, the buffer will
+> never used.
+>
+> add __get_buf(len) which acquiree buffer from iter->tmp_seq when trace
+> output function called, it allow user write string to acquired buffer.
+>
+> the mentioned dwc3 trace event will changed as below,
+> DECLARE_EVENT_CLASS(dwc3_log_event,
+> 	TP_PROTO(u32 event, struct dwc3 *dwc),
+> 	TP_ARGS(event, dwc),
+> 	TP_STRUCT__entry(
+> 		__field(u32, event)
+> 		__field(u32, ep0state)
+> 	),
+> 	TP_fast_assign(
+> 		__entry->event = event;
+> 		__entry->ep0state = dwc->ep0state;
+> 	),
+> 	TP_printk("event (%08x): %s", __entry->event,
+> 		dwc3_decode_event(__get_buf(DWC3_MSG_MAX), DWC3_MSG_MAX,
+> 				__entry->event, __entry->ep0state))
+> );.
+>
+> Signed-off-by: Linyu Yuan <quic_linyyuan@quicinc.com>
 > ---
->  samples/ftrace/ftrace-ops.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/samples/ftrace/ftrace-ops.c b/samples/ftrace/ftrace-ops.c
-> index 24deb51c7261..0c8da87ff5c3 100644
-> --- a/samples/ftrace/ftrace-ops.c
-> +++ b/samples/ftrace/ftrace-ops.c
-> @@ -223,7 +223,7 @@ static int __init ftrace_ops_sample_init(void)
->  
->  	pr_info("Attempted %u calls to %ps in %lluns (%lluns / call)\n",
->  		nr_function_calls, tracee_relevant,
-> -		period, period / nr_function_calls);
-> +		period, div_u64(period, nr_function_calls));
->  
->  	if (persist)
->  		return 0;
-> -- 
-> 2.39.0
-> 
+>
+> v5: move WARN_ON_ONCE into function
+> v4: no change
+> v3: fix comment from maintainer in v2
+>
+>   include/linux/trace_seq.h                  |  5 +++++
+>   include/trace/stages/stage3_trace_output.h |  3 +++
+>   include/trace/stages/stage7_class_define.h |  1 +
+>   kernel/trace/trace_seq.c                   | 23 +++++++++++++++++++++++
+>   4 files changed, 32 insertions(+)
+>
+> diff --git a/include/linux/trace_seq.h b/include/linux/trace_seq.h
+> index 0c4c758..6be92bf 100644
+> --- a/include/linux/trace_seq.h
+> +++ b/include/linux/trace_seq.h
+> @@ -95,6 +95,7 @@ extern void trace_seq_bitmask(struct trace_seq *s, const unsigned long *maskp,
+>   extern int trace_seq_hex_dump(struct trace_seq *s, const char *prefix_str,
+>   			      int prefix_type, int rowsize, int groupsize,
+>   			      const void *buf, size_t len, bool ascii);
+> +char *trace_seq_acquire(struct trace_seq *s, unsigned int len);
+>   
+>   #else /* CONFIG_TRACING */
+>   static inline __printf(2, 3)
+> @@ -139,6 +140,10 @@ static inline int trace_seq_path(struct trace_seq *s, const struct path *path)
+>   {
+>   	return 0;
+>   }
+> +static inline char *trace_seq_acquire(struct trace_seq *s, unsigned int len)
+> +{
+> +	return NULL;
+> +}
+>   #endif /* CONFIG_TRACING */
+>   
+>   #endif /* _LINUX_TRACE_SEQ_H */
+> diff --git a/include/trace/stages/stage3_trace_output.h b/include/trace/stages/stage3_trace_output.h
+> index 66374df..c1fb135 100644
+> --- a/include/trace/stages/stage3_trace_output.h
+> +++ b/include/trace/stages/stage3_trace_output.h
+> @@ -139,3 +139,6 @@
+>   		u64 ____val = (u64)(value);		\
+>   		(u32) do_div(____val, NSEC_PER_SEC);	\
+>   	})
+> +
+> +#undef __get_buf
+> +#define __get_buf(len)		trace_seq_acquire(p, (len))
+> diff --git a/include/trace/stages/stage7_class_define.h b/include/trace/stages/stage7_class_define.h
+> index 8795429..bcb960d 100644
+> --- a/include/trace/stages/stage7_class_define.h
+> +++ b/include/trace/stages/stage7_class_define.h
+> @@ -23,6 +23,7 @@
+>   #undef __get_rel_sockaddr
+>   #undef __print_array
+>   #undef __print_hex_dump
+> +#undef __get_buf
+>   
+>   /*
+>    * The below is not executed in the kernel. It is only what is
+> diff --git a/kernel/trace/trace_seq.c b/kernel/trace/trace_seq.c
+> index 9c90b3a..e5e2992 100644
+> --- a/kernel/trace/trace_seq.c
+> +++ b/kernel/trace/trace_seq.c
+> @@ -403,3 +403,26 @@ int trace_seq_hex_dump(struct trace_seq *s, const char *prefix_str,
+>   	return 1;
+>   }
+>   EXPORT_SYMBOL(trace_seq_hex_dump);
+> +
+> +/*
+> + * trace_seq_acquire - acquire seq buffer with size len
+> + * @s: trace sequence descriptor
+> + * @len: size of buffer to be acquired
+> + *
+> + * acquire buffer with size of @len from trace_seq for output usage,
+> + * user can fill string into that buffer.
+> + *
+> + * Returns start address of acquired buffer.
+> + *
+> + * it allow multiple usage in one trace output function call.
+> + */
+> +char *trace_seq_acquire(struct trace_seq *s, unsigned int len)
+> +{
+> +	char *ret = trace_seq_buffer_ptr(s);
+> +
+> +	if (!WARN_ON_ONCE(seq_buf_buffer_left(&s->seq) < len))
+> +		seq_buf_commit(&s->seq, len);
+> +
+> +	return ret;
+> +}
+> +EXPORT_SYMBOL(trace_seq_acquire);
