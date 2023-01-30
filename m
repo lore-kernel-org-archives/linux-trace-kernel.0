@@ -2,136 +2,147 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 59E8BC54EED
-	for <linux-trace-kernel@archiver.kernel.org>; Mon, 30 Jan 2023 04:15:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 80B0DC54EED
+	for <linux-trace-kernel@archiver.kernel.org>; Mon, 30 Jan 2023 06:43:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229878AbjA3EPi (ORCPT
+        id S235690AbjA3Gno (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Sun, 29 Jan 2023 23:15:38 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60620 "EHLO
+        Mon, 30 Jan 2023 01:43:44 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54168 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229704AbjA3EPh (ORCPT
+        with ESMTP id S235797AbjA3Gnl (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Sun, 29 Jan 2023 23:15:37 -0500
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A7DA3559A;
-        Sun, 29 Jan 2023 20:15:32 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Transfer-Encoding:
-        Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:
-        Sender:Reply-To:Content-ID:Content-Description;
-        bh=JApqLJSlREJfto41HrlaOE5znyfw3ipMqIEA/E2Edb0=; b=G+S7c9c/3tN2UkizZ1Sdw6MiTM
-        FmmV8PcPcJujF+Kx31seWO9uUgLdt0aXWrYtMKxm3saYvt9Fl6qyxZeqkuezm8hfITWH9x04TM7B4
-        Jwsu7S0JyfRBpEj7gSLKI7J/ylIfBYDhse2HdRaf5h18zkX2xKg2G1fzK+GG5oXjXwJ+HHdyVUKX3
-        IajDnctjB09FW1M0HuRdibQ1HbjC1i7raE884dLQ1EFIbG8WklyGEFsDG0IC+cjaBDvF5hBqmEFJJ
-        m347XYOkj983QX5XVL1SeCz/aA2EZ7HTcdpQJk5DxDSULYmQCewfhtc57gzcp/Uimeq/Bi5S9sOmu
-        RLJ0q1+w==;
-Received: from willy by casper.infradead.org with local (Exim 4.94.2 #2 (Red Hat Linux))
-        id 1pMLZV-00A1lP-Q6; Mon, 30 Jan 2023 04:15:09 +0000
-Date:   Mon, 30 Jan 2023 04:15:09 +0000
-From:   Matthew Wilcox <willy@infradead.org>
-To:     kernel test robot <oliver.sang@intel.com>
-Cc:     Shakeel Butt <shakeelb@google.com>, oe-lkp@lists.linux.dev,
-        lkp@intel.com, linux-kernel@vger.kernel.org,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        linux-mm@kvack.org, linux-trace-kernel@vger.kernel.org,
-        ying.huang@intel.com, feng.tang@intel.com,
-        zhengjun.xing@linux.intel.com, fengwei.yin@intel.com
-Subject: Re: [linus:master] [mm]  f1a7941243:  unixbench.score -19.2%
- regression
-Message-ID: <Y9dETROtv9Bld9TI@casper.infradead.org>
-References: <202301301057.e55dad5b-oliver.sang@intel.com>
+        Mon, 30 Jan 2023 01:43:41 -0500
+Received: from BL0PR02CU005-vft-obe.outbound.protection.outlook.com (mail-eastusazon11012008.outbound.protection.outlook.com [52.101.53.8])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AEBB627491;
+        Sun, 29 Jan 2023 22:43:36 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=bwL6kVO8350w6cU3hi+iAyKf6xz4eTeHG4B+2NIL7au4g8WBrxSPT+98UuqX1AptLJpTVr3lqmg6o4/fD7JjgZjx3n97niOHQjkwVu4Woo00vwrUyaZhEMozCamN6NhCV6fg67Xz/cdACuBq6OHNthfsLgq4JUFWFvVA51nM1PJ7/FV/Ckcxp+qFN/hGI3qXZCrtKDOf0odGdoBhzUingj2N60FfMaaWmEKydVXYAaUXPiqv6c7Qo/1p20WQWhv50+jKJIaojwOL+0k5nMNeYpClIGzQv9DmHnD/zf/BLLRrnnEbfcL21OlUaJcdVyuFmSevMtWBk+8Bk7Jc7CUb0w==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=+bswSPHL/XwpsNDopC9YXxjfq9RwkZWESzA4wA6hKW8=;
+ b=JOTmGcEL7hOhTON3t9Ttx6n0pTgha0Or94HERSUbk4VdnOghpRzmxp5MTGRo0rwqUfqm0FD515+AKXVOh3taiLvlsdWdNOMgwsx23J9rm22VUcpeFLFxSQZBBJEteV7ULWG8v4HsIP23utPqBE378nsGkW2anq32BMPLbb8CXjkFjiKQ8OdbVWm8bMPUtDbgMa9b6YIilMJxxcvg4l9y//3IzNcnu73HVWDSdOu82bsbnJeBvP9b8/utBs+/oEn7mU5F7B52OfU1WtuK00B3b+IysndWdyS639kNxGyMl5w2PRY7dJOwvl8WfUJCfPOzAajQlNVu2xoJGCJ4KxUJ7A==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=vmware.com; dmarc=pass action=none header.from=vmware.com;
+ dkim=pass header.d=vmware.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=vmware.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=+bswSPHL/XwpsNDopC9YXxjfq9RwkZWESzA4wA6hKW8=;
+ b=n74ZaUvx9VWk8f0/TI7WbqtSgehqGMHUNxZBBb8twttgdtc830iA3h0891HscdZ3vTf9u/26wa/zop11gnEyLoEG2Q9kP87XpdEgEjAACiNWFuuiKfor4O3JuwBl8ly8YhLlMn0LUrtux1XubZV1raXnQpDqtmZPoy0OEz6pXas=
+Received: from BY3PR05MB8531.namprd05.prod.outlook.com (2603:10b6:a03:3ce::6)
+ by PH0PR05MB8654.namprd05.prod.outlook.com (2603:10b6:510:ba::14) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6043.36; Mon, 30 Jan
+ 2023 06:43:33 +0000
+Received: from BY3PR05MB8531.namprd05.prod.outlook.com
+ ([fe80::624:f4e4:128b:fa0a]) by BY3PR05MB8531.namprd05.prod.outlook.com
+ ([fe80::624:f4e4:128b:fa0a%6]) with mapi id 15.20.6043.036; Mon, 30 Jan 2023
+ 06:43:33 +0000
+From:   Nadav Amit <namit@vmware.com>
+To:     Ajay Kaher <akaher@vmware.com>
+CC:     Steven Rostedt <rostedt@goodmis.org>,
+        "mhiramat@kernel.org" <mhiramat@kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-trace-kernel@vger.kernel.org" 
+        <linux-trace-kernel@vger.kernel.org>,
+        "chinglinyu@google.com" <chinglinyu@google.com>,
+        Srivatsa Bhat <srivatsab@vmware.com>,
+        "srivatsa@csail.mit.edu" <srivatsa@csail.mit.edu>,
+        Alexey Makhalov <amakhalov@vmware.com>,
+        Vasavi Sirnapalli <vsirnapalli@vmware.com>,
+        Tapas Kundu <tkundu@vmware.com>,
+        "er.ajay.kaher@gmail.com" <er.ajay.kaher@gmail.com>
+Subject: Re: [PATCH 0/8] tracing: introducing eventfs
+Thread-Topic: [PATCH 0/8] tracing: introducing eventfs
+Thread-Index: AQHZLoQIY+66B+0gV0mn71NP5aiSw66sOL8AgAmDUoCAANMvAA==
+Date:   Mon, 30 Jan 2023 06:43:33 +0000
+Message-ID: <2DD82DF9-3409-43E9-957D-CB296E3FD7D6@vmware.com>
+References: <1674407228-49109-1-git-send-email-akaher@vmware.com>
+ <1674407228-49109-9-git-send-email-akaher@vmware.com>
+ <20230123115108.7dab91f3@gandalf.local.home>
+ <223F3594-6BFF-48AF-B0BB-6BF050C8207E@vmware.com>
+In-Reply-To: <223F3594-6BFF-48AF-B0BB-6BF050C8207E@vmware.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-mailer: Apple Mail (2.3731.300.101.1.3)
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=vmware.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: BY3PR05MB8531:EE_|PH0PR05MB8654:EE_
+x-ms-office365-filtering-correlation-id: c514d3dd-8d32-43ad-b182-08db028d4e9d
+x-ld-processed: b39138ca-3cee-4b4a-a4d6-cd83d9dd62f0,ExtAddr
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: OxX4OOvv5h6mxqrc9KQKviUTliL4mC0XpRNHkbYZxtVqioPruOnkPz9QEYKBSmrlRNOxEGQkmmhkKQ1hXiIw13A32I66DR2WyRydLMaCvgkGw6FvNiXZ1WV93OQQ/gXqsQdCzZRUCKHX2t7XNnuATT5b8rJ9vQgzznBfiF1oejoX6SgunDCc4bulXQYMSeIyP6Nxm5wd9zhN78RoJ+TyBrEiH/9ETzdb5ZjNFbEUHKvuSR/VG4gaj/VULNi8ugu6PlPC94paLbTGx6AyHwr/afbwsiVk/v+hwWrNhjU5+77UZY1SIApuKLuFkY0Cpl/2b86NX5dxM3Xqt745Cs1w0yJc6eCmN8AoJd9Lucpbn2xX4hW0fisHwH2i4b2nH83KuHPwI+q/oWzQMaY01s87L++1Gb10K3E9Ot6juX5OYQ9bpnJRnbBPyxetJ6wuPXnqqQwAxsCUtFoNhKuIz3szG9yUy3K6PWx4SZQesiPb9ZYED8LBll3Q0MAZABgPdFkshMpYdHrwZBGtP3YbmdFIuqzYw0kNUv2Eb9yefT5NQmHVcoTnaRO1AVcbLme4M/TXxogOpYVhnV/cqW0gkOFzKOp4ZTxYyWVRJDV5mm+s/DkCW/9FVbtLj76878+H1D0ZFK/CFR6J16yXY3Tf2BN+Jc+qG7kf0mTmgx1Pw+lzm5TTPReKssLgdodjWWcMpeKC27tL6BlHyi5ghP2JoFxIYOccdVdXlD7V3A1H8La4wtb5VPdgCPhqhFTqGaenG++9tPQpgVwQ+pvw4++8a82C+g==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BY3PR05MB8531.namprd05.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230025)(4636009)(376002)(396003)(366004)(346002)(136003)(39860400002)(451199018)(54906003)(6636002)(53546011)(5660300002)(26005)(186003)(6512007)(36756003)(2906002)(71200400001)(6486002)(478600001)(33656002)(4744005)(6506007)(91956017)(122000001)(38100700002)(64756008)(66476007)(66556008)(66446008)(66946007)(4326008)(76116006)(8676002)(2616005)(316002)(86362001)(8936002)(6862004)(37006003)(38070700005)(41300700001)(45980500001);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0: =?utf-8?B?amVpQzVGMjhQUjhKMndiQWgraHl4N1NLMzFnU2ZMbnNkZnk2cS90d0R6WFhx?=
+ =?utf-8?B?ditZK1creW1jeTlDWW1NM2hjQzJtNUlvcXdKM1MvUm8xQ1FHU04zYjZYYU5H?=
+ =?utf-8?B?ay9yYjlwYmMyQ2E3OTZka2ZpNU9wUUNIYU8xaWdFU0JJU3FVc05BZjBKblZC?=
+ =?utf-8?B?cmZ5bXJ3aDNPRlVZRjRPZ2YxMkY2V1dwTXFxM0E3am80NVlMOEYrYndkbEc3?=
+ =?utf-8?B?Y0FKUFZZeldVdHU2NU1DcGxOSVRpVUp5UVFZdDJhREtTL3JnOXA2Y3ZZNVB1?=
+ =?utf-8?B?L1VuWkREcjE1ZjFXaGZBb3Y4S3BLK3AwaHFVTEZHNVdTTkJISDZGVTNWSERC?=
+ =?utf-8?B?Y3Q2UTV5blQxcXhVNk5aL1JMWkRNdU5YNFVZTHd6eVVSSWsxQjFLSEFld2Ro?=
+ =?utf-8?B?bE45cEMyREI2V1RWUE93WUp0UGVRcDJUZnNta3BkTTBiQTh4RCtiekFGUkV3?=
+ =?utf-8?B?VG1kanBPbUdlQWFoLzZrSkNuZW9hWGdUei94dGFsWmFmVDFaMXQ1b3habEYw?=
+ =?utf-8?B?eURmallGTTNtMHhzOUU1VGg4U0tRclpHVDhvSTI5K0JwVUFtdjhSc1Y0TUoz?=
+ =?utf-8?B?K2IzNGpOdEt2Z2gvd1RZdFE1S3pQV0tZK1pHNVdhVTF6b3hJdmFzS1h2OExF?=
+ =?utf-8?B?UWszcW1hWXZ3SHpqSEkyNitQOW5RY0I4cnJSdmxsRjVEVEhWazdJUmFpZUU5?=
+ =?utf-8?B?b1AveTZVU2Q3OURZOG5iMW5qSHJZUG8xL3NIY1dGeEFUSVFpdDFlaWdNNWFJ?=
+ =?utf-8?B?ZXBCTVpCbDdUcVM3YzFkY3VreVJKN3FIeERpN0FHaUxvM2NkT3BGR0pnSXpY?=
+ =?utf-8?B?Z3RZa0FLTW9PQ0c5YVpxU0JTcmpXV0FSTm9BZCswMmxtVCtIelJGeUpVNCtj?=
+ =?utf-8?B?UVBZS1ZUenZ4QldDNlBGdTlnMCtleFBDK01kNTJBc1dhMmtrTlhIMFdkK2dB?=
+ =?utf-8?B?Qlhia0pHenExbytvdThuZ3pBcGs3UExRampabmI5TzhCZ1ducDMvRWtoWDBP?=
+ =?utf-8?B?OUI2MnBQRjBObGxab0hYQ0hNNEphZklHTHhMUEpmdUcwR2FEQ1l3QkF0bDZD?=
+ =?utf-8?B?eEozalh2TXRKbFBRcEFyYyt3Ym5RVExTWEZkQ0c5WHpnZml0RVE4WWNOVkxl?=
+ =?utf-8?B?VWhKRDUvWTZhZm5yckp5M29FU05tNUdmVXNKRDRmTDlCMzNjclVFaXZCOFV3?=
+ =?utf-8?B?TWNNRVNaRm16Y1hFcGpjekwzTE9oNUhlU1NRVk11dkYxdlY2ZHNXK2wzcm5F?=
+ =?utf-8?B?MzR6bXlQSTRyQmlHMWNUYU5PLzdwQ050NU8ybVRSb2xrVllSMUlmbGxEMklp?=
+ =?utf-8?B?WUR0aHdYbnkvUm5sTWJDRWxBK09IT0x3RVdkRFV0ZkkwMUI5Z2JNM0d2ZFI4?=
+ =?utf-8?B?Z3hHNU5EdUtOS0EzUFlNemdVV1oyV2pxOVVrU2FvdVc1SytjcWxvaE8rWUdC?=
+ =?utf-8?B?TnZ5MGU2ckxQd0JHbDJCcDdTZG9pQWdtWFB2TFVwNVdHK3ZhVjcybmVOMUZx?=
+ =?utf-8?B?T1RhK2FqNjJVcS83aStRSCtlZzNLTlNxelZBN3JRbkJOdGRDOEpsN2VCbFRK?=
+ =?utf-8?B?cTFBU1ZFWXBzRElsMEhWMVp1cHJBY3lLSTEyMUxCVXdPQXF3SGQ3YVA4Znhq?=
+ =?utf-8?B?bnE4RjR5Sjl3S1ozRzVpOERlcWhKK3RHWjlvSVRWRkFnMk5EVFJObkM1alZO?=
+ =?utf-8?B?MDZrQUVQYlZCNHNUcGRjT09heG4vUEpsZ3NHWjFUQm1kNkJCb2xWWC9KK1U1?=
+ =?utf-8?B?dDdsUjE1Ti91UlBKWkx5c0cxYmltb3ZYTWJydk5hWTNqYWtFSjBEOGdNemJy?=
+ =?utf-8?B?YW1oLzk4a2JIS3FCNkwwZEN4ejB5VHVlYXNON2ZTRDNkbEd0dUNZbmx0YXFK?=
+ =?utf-8?B?dkM2L1lLWjFKYkNVODVrTUp5eFJpUFF5NnhiNVlwTU9sZFpGTmd2R0ZGZ0NK?=
+ =?utf-8?B?MXA0QmlMc1V6aGp4ajdIK0tvVmhCaStBRUtmSXdqdldqWjB2am1senFnNmVD?=
+ =?utf-8?B?cTFHVjJwS2dLdXdlRzlPRjZqbjlFT2wrYzBHL1ErS1NkQ3JqclhiUjdoK3gr?=
+ =?utf-8?B?bXZKNzYzOFJCbEs1L0tQYTZVdVpGUGZDeTE4NkNySTA0cmo2VFlPRmtUY3lE?=
+ =?utf-8?Q?1VSkfry2/jLO5lbNL4KL59O/D?=
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <08BED1121310414FA35EFA7995ED120C@namprd05.prod.outlook.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <202301301057.e55dad5b-oliver.sang@intel.com>
+X-OriginatorOrg: vmware.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: BY3PR05MB8531.namprd05.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: c514d3dd-8d32-43ad-b182-08db028d4e9d
+X-MS-Exchange-CrossTenant-originalarrivaltime: 30 Jan 2023 06:43:33.5346
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: b39138ca-3cee-4b4a-a4d6-cd83d9dd62f0
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: prXkoxtsuCMXvdCnEBQvxmD/Gpytm0xjsrkDOPiXsY8a4q0nLVCZ5vj/rGgsvyGP0eQbl4SC9aDs648lnNXebA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH0PR05MB8654
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On Mon, Jan 30, 2023 at 10:32:56AM +0800, kernel test robot wrote:
-> FYI, we noticed a -19.2% regression of unixbench.score due to commit:
-> 
-> commit: f1a7941243c102a44e8847e3b94ff4ff3ec56f25 ("mm: convert mm's rss stats into percpu_counter")
-> https://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git master
-> 
-> in testcase: unixbench
-> on test machine: 128 threads 4 sockets Intel(R) Xeon(R) Gold 6338 CPU @ 2.00GHz (Ice Lake) with 256G memory
-> with following parameters:
-> 
-> 	runtime: 300s
-> 	nr_task: 30%
-> 	test: spawn
-> 	cpufreq_governor: performance
-
-...
-
-> 9cd6ffa60256e931 f1a7941243c102a44e8847e3b94 
-> ---------------- --------------------------- 
->          %stddev     %change         %stddev
->              \          |                \  
->      11110           -19.2%       8974        unixbench.score
->    1090843           -12.2%     957314        unixbench.time.involuntary_context_switches
->    4243909 ±  6%     -32.4%    2867136 ±  5%  unixbench.time.major_page_faults
->      10547           -12.6%       9216        unixbench.time.maximum_resident_set_size
->  9.913e+08           -19.6%  7.969e+08        unixbench.time.minor_page_faults
->       5638           +19.1%       6714        unixbench.time.system_time
->       5502           -20.7%       4363        unixbench.time.user_time
-
-So we're spending a lot more time in the kernel and correspondingly less
-time in userspace.
-
->   67991885           -16.9%   56507507        unixbench.time.voluntary_context_switches
->   46198768           -19.1%   37355723        unixbench.workload
->  1.365e+08           -12.5%  1.195e+08 ±  7%  cpuidle..usage
->    1220612 ±  4%     -38.0%     757009 ± 28%  meminfo.Active
->    1220354 ±  4%     -38.0%     756754 ± 28%  meminfo.Active(anon)
->       0.50 ±  2%      -0.1        0.45 ±  4%  mpstat.cpu.all.soft%
->       1.73            -0.2        1.52 ±  2%  mpstat.cpu.all.usr%
->     532266           -18.4%     434559        vmstat.system.cs
->     495826           -12.2%     435455 ±  8%  vmstat.system.in
->   1.36e+08           -13.2%   1.18e+08 ±  9%  turbostat.C1
->      68.80            +0.8       69.60        turbostat.C1%
->  1.663e+08           -12.1%  1.462e+08 ±  8%  turbostat.IRQ
->      15.54 ± 20%     -49.0%       7.93 ± 24%  sched_debug.cfs_rq:/.runnable_avg.min
->      13.26 ± 19%     -46.6%       7.08 ± 29%  sched_debug.cfs_rq:/.util_avg.min
->      48.96 ±  8%     +51.5%      74.20 ± 13%  sched_debug.cfs_rq:/.util_est_enqueued.avg
->     138.00 ±  5%     +28.9%     177.87 ±  7%  sched_debug.cfs_rq:/.util_est_enqueued.stddev
->     228060 ±  3%     +13.3%     258413 ±  4%  sched_debug.cpu.avg_idle.stddev
->     432533 ±  5%     -16.4%     361517 ±  4%  sched_debug.cpu.nr_switches.min
->  2.665e+08           -18.9%  2.162e+08        numa-numastat.node0.local_node
->  2.666e+08           -18.9%  2.163e+08        numa-numastat.node0.numa_hit
->  2.746e+08           -20.9%  2.172e+08        numa-numastat.node1.local_node
->  2.747e+08           -20.9%  2.172e+08        numa-numastat.node1.numa_hit
->  2.602e+08           -17.4%  2.149e+08        numa-numastat.node2.local_node
->  2.603e+08           -17.4%  2.149e+08        numa-numastat.node2.numa_hit
->  2.423e+08           -15.0%   2.06e+08        numa-numastat.node3.local_node
->  2.424e+08           -15.0%  2.061e+08        numa-numastat.node3.numa_hit
-
-So we're going off-node a lot more for ... something.
-
->  2.666e+08           -18.9%  2.163e+08        numa-vmstat.node0.numa_hit
->  2.665e+08           -18.9%  2.162e+08        numa-vmstat.node0.numa_local
->  2.747e+08           -20.9%  2.172e+08        numa-vmstat.node1.numa_hit
->  2.746e+08           -20.9%  2.172e+08        numa-vmstat.node1.numa_local
->  2.603e+08           -17.4%  2.149e+08        numa-vmstat.node2.numa_hit
->  2.602e+08           -17.4%  2.149e+08        numa-vmstat.node2.numa_local
->  2.424e+08           -15.0%  2.061e+08        numa-vmstat.node3.numa_hit
->  2.423e+08           -15.0%   2.06e+08        numa-vmstat.node3.numa_local
->     304947 ±  4%     -38.0%     189144 ± 28%  proc-vmstat.nr_active_anon
-
-Umm.  Are we running vmstat a lot during this test?  The commit says:
-
-    At the
-    moment the readers are either procfs interface, oom_killer and memory
-    reclaim which I think are not performance critical and should be ok with
-    slow read.  However I think we can make that change in a separate patch.
-
-This would explain the increased cross-NUMA references (we're going to
-the other nodes to collect the stats), and the general slowdown.  But I
-don't think it reflects a real workload; it's reflecting that the
-monitoring of this workload that we're doing is now more accurate and
-more expensive.
-
+DQo+IE9uIEphbiAyOSwgMjAyMywgYXQgODowNyBQTSwgQWpheSBLYWhlciA8YWthaGVyQHZtd2Fy
+ZS5jb20+IHdyb3RlOg0KPiANCj4+IEhpIEFqYXksDQo+PiANCj4+IFRoYW5rcyBhIGxvdCBmb3Ig
+c2VuZGluZyB0aGVzZSBvdXQuDQo+PiANCj4+IE5vdGUsIHNvbWV0aGluZyB3ZW50IHdyb25nIHdp
+dGggeW91ciB0aHJlYWRpbmcsIGFzIGFsbCB0aGUgcGF0Y2hlcyBzaG91bGQNCj4+IGJlIGEgcmVw
+bHkgdG8gdGhpcyBvbmUsIGJ1dCBpbnN0ZWFkLCB0aGV5IGFsbCAoaW5jbHVkaW5nIHRoaXMgZW1h
+aWwpIGFyZSBhDQo+PiByZXBseSB0byBwYXRjaCAxID8/DQo+IA0KPiBOb3Qgc3VyZSB3aHkgdGhp
+cyBpcyBoYXBwZW5uaW5nLCBidXQgSSB3aWxsIHRyeSB0byBmaXggaW4gdjIuDQoNCkkgc3VzcGVj
+dCBpdCBoYXBwZW5zIHNpbmNlIHlvdSBjcmVhdGUgdGhlIGNvdmVyIGxldHRlciBtYW51YWxseS4N
+Cg0KSWYgdGhhdCBpcyB0aGUgY2FzZSwgaW5zdGVhZCB1c2UgJ2dpdCBmb3JtYXQtcGF0Y2ggLS1j
+b3Zlci1sZXR0ZXIg4oCm4oCZLg0KDQo=
