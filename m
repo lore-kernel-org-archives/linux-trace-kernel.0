@@ -2,64 +2,63 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C531DC636D0
-	for <linux-trace-kernel@archiver.kernel.org>; Mon, 30 Jan 2023 18:20:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 11CDEC636D3
+	for <linux-trace-kernel@archiver.kernel.org>; Mon, 30 Jan 2023 18:20:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237898AbjA3SUB (ORCPT
+        id S237900AbjA3SUC (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Mon, 30 Jan 2023 13:20:01 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51814 "EHLO
+        Mon, 30 Jan 2023 13:20:02 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51806 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237757AbjA3STs (ORCPT
+        with ESMTP id S237713AbjA3STs (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
         Mon, 30 Jan 2023 13:19:48 -0500
-Received: from mail-il1-x134.google.com (mail-il1-x134.google.com [IPv6:2607:f8b0:4864:20::134])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 638BF3BD80
-        for <linux-trace-kernel@vger.kernel.org>; Mon, 30 Jan 2023 10:19:46 -0800 (PST)
-Received: by mail-il1-x134.google.com with SMTP id l15so1656201ilj.5
-        for <linux-trace-kernel@vger.kernel.org>; Mon, 30 Jan 2023 10:19:46 -0800 (PST)
+Received: from mail-il1-x132.google.com (mail-il1-x132.google.com [IPv6:2607:f8b0:4864:20::132])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EA0C831E39
+        for <linux-trace-kernel@vger.kernel.org>; Mon, 30 Jan 2023 10:19:45 -0800 (PST)
+Received: by mail-il1-x132.google.com with SMTP id i17so5326451ils.11
+        for <linux-trace-kernel@vger.kernel.org>; Mon, 30 Jan 2023 10:19:45 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=mDBpxnP3WW9swXg1k4cZKHfZtZE3TZaenciQ4HYVSSE=;
-        b=X/CZ32PzybOGyUPFRfQEvln6em78Y8z7fw7dS0qUVAcPU0jM24vCrdyAXpMX86E3v4
-         rwqns0iXGjl9lJsiwE0GiiN1qMHr/Zp87SiMsYzz7MjQdYBd90sqIBWVY4pNOJJvMqkO
-         KDvBdv6kyx3gXmruz3ypb7S4kkpkOKtEgKFUE=
+        bh=tgFT+IL5bcCj7J23e5lu6CYNi7LTiunoNwjje3GvFYg=;
+        b=Mq8KtW55EljioiViKDgF8PzaF6ZoQGnyoe2RRses0f4mgf5MIpiCriGT+IifaZfwon
+         X9gCElvVuCs7mc8cR3RJwpKr2/rhpjPfH3EMST7OBev+p4E1ZR9kPbKZSLFahZXq2u5O
+         J2miOwkGMz+dINzvWVyw1PJ51UBnR2WUJXLvs=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=mDBpxnP3WW9swXg1k4cZKHfZtZE3TZaenciQ4HYVSSE=;
-        b=UT8r0zg3F7H5edxzRSKmK80iRxmZuVNcmA/Rke1nOdwHzUKm23ln3dRpiDKVYFTmcK
-         1QbgUjpkEekoOAngLxzWMB0WIBISSsSy1qOtxUU30+Q8LGyZhiaf2A5FuzISPR8nTegN
-         rBZe+pb02zIu2+7UZPX0GHqMTjQvMp21SQdpiYuWPI8ligmxs5Xgqiw2OnjrfF7eAXkW
-         gyMvVExEF2wtRO1RWLxdCoronGFRFZo+MBmlurCNbXVgShvtuAnt/6EVQDThlIz7hzrT
-         xhnCzKTiLr3gp8wXfmnTKDciuLzzU+CLMz50TSjX/GGH1HZaBxvQiaYzAf8FEuX+aZuY
-         wk2w==
-X-Gm-Message-State: AO0yUKU86hR0X85ydofnRTKtwZIbjkzI8abVV+29lmdJSBYWSDRVp9O+
-        EZf7QmE8e427qnXGavOHbCBfdA==
-X-Google-Smtp-Source: AK7set+JK0jrnU7jJ0V7j6pBAtQRf+/FzY8gPrCgkQmJMoSWDMUaoOXgAWkdKZFezB6o8YO50+0VuA==
-X-Received: by 2002:a05:6e02:16cc:b0:311:27d:f81d with SMTP id 12-20020a056e0216cc00b00311027df81dmr2065954ilx.28.1675102785983;
+        bh=tgFT+IL5bcCj7J23e5lu6CYNi7LTiunoNwjje3GvFYg=;
+        b=bc4MefQP4B8W4VSeJfw1Csas3OquOCcH82tZvUeSm+bop3JjC47C+sBSv/gezbPsyg
+         cqfXUu5Zp9uw9smKEKYZTyf9gP5SNKtkKWu+jZRqJb7plUED8QlTgHtdmGGFAznws/v1
+         hvkSSTuVTU7lPUTn8Y1g39B3d3y2GKHtAoKPWjG//jMwJ0Nwk5UOq3xei70Ro/jUSSUm
+         vg/ecV4AYhnpQtpeB6OGeH0g3wXXOuPdVk473YgJMBorIC7NaSSdmwHCmo3B3jIj7mbL
+         Kj6tiD/HRLsk7zDaRSp+WGz+jXDeMrDkNJzkzLRS6Gl6DdTf4gtoMPfklarADNhlo99Q
+         vn9Q==
+X-Gm-Message-State: AO0yUKX8/iW9l8Zpo23AyRDItDbmHEEC60AZMQOyPiVrknOSXpP1ddwy
+        QLgGQsiFJGehARBNbGEfp0CRiw==
+X-Google-Smtp-Source: AK7set8Yf1vmtP2krbFokO0Bn2Jo9liICFpI/GrHXPPM8ng0Ggp+ndGSIwsJUjW/xnrBNESNxA7g7w==
+X-Received: by 2002:a05:6e02:1886:b0:310:a0a3:f614 with SMTP id o6-20020a056e02188600b00310a0a3f614mr19626648ilu.13.1675102785344;
         Mon, 30 Jan 2023 10:19:45 -0800 (PST)
 Received: from ravnica.bld.corp.google.com ([2620:15c:183:200:fc8a:dd2f:5914:df14])
-        by smtp.gmail.com with ESMTPSA id o16-20020a056e02115000b002f139ba4135sm4189801ill.86.2023.01.30.10.19.45
+        by smtp.gmail.com with ESMTPSA id o16-20020a056e02115000b002f139ba4135sm4189801ill.86.2023.01.30.10.19.44
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
         Mon, 30 Jan 2023 10:19:45 -0800 (PST)
 From:   Ross Zwisler <zwisler@chromium.org>
 X-Google-Original-From: Ross Zwisler <zwisler@google.com>
 To:     linux-kernel@vger.kernel.org
-Cc:     Ross Zwisler <zwisler@google.com>,
-        "Michael S. Tsirkin" <mst@redhat.com>,
+Cc:     Ross Zwisler <zwisler@google.com>, Shuah Khan <shuah@kernel.org>,
         Steven Rostedt <rostedt@goodmis.org>,
         linux-trace-kernel@vger.kernel.org,
-        Jason Wang <jasowang@redhat.com>,
-        virtualization@lists.linux-foundation.org
-Subject: [PATCH 7/9] tools/virtio: use canonical ftrace path
-Date:   Mon, 30 Jan 2023 11:19:13 -0700
-Message-Id: <20230130181915.1113313-8-zwisler@google.com>
+        Andrew Morton <akpm@linux-foundation.org>,
+        linux-kselftest@vger.kernel.org, linux-mm@kvack.org
+Subject: [PATCH 6/9] selftests: use canonical ftrace path
+Date:   Mon, 30 Jan 2023 11:19:12 -0700
+Message-Id: <20230130181915.1113313-7-zwisler@google.com>
 X-Mailer: git-send-email 2.39.1.456.gfc5497dd1b-goog
 In-Reply-To: <20230130181915.1113313-1-zwisler@google.com>
 References: <20230130181915.1113313-1-zwisler@google.com>
@@ -80,40 +79,91 @@ But, from Documentation/trace/ftrace.rst:
 
   /sys/kernel/debug/tracing
 
-A few spots in tools/virtio still refer to this older debugfs
+A few spots in tools/testing/selftests still refer to this older debugfs
 path, so let's update them to avoid confusion.
 
 Signed-off-by: Ross Zwisler <zwisler@google.com>
 ---
- tools/virtio/virtio-trace/README        | 2 +-
- tools/virtio/virtio-trace/trace-agent.c | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
+ tools/testing/selftests/user_events/dyn_test.c    |  2 +-
+ tools/testing/selftests/user_events/ftrace_test.c | 10 +++++-----
+ tools/testing/selftests/user_events/perf_test.c   |  8 ++++----
+ tools/testing/selftests/vm/protection_keys.c      |  4 ++--
+ 4 files changed, 12 insertions(+), 12 deletions(-)
 
-diff --git a/tools/virtio/virtio-trace/README b/tools/virtio/virtio-trace/README
-index b64845b823ab..cea29a2a4c0a 100644
---- a/tools/virtio/virtio-trace/README
-+++ b/tools/virtio/virtio-trace/README
-@@ -95,7 +95,7 @@ Run
+diff --git a/tools/testing/selftests/user_events/dyn_test.c b/tools/testing/selftests/user_events/dyn_test.c
+index d6265d14cd51..8879a7b04c6a 100644
+--- a/tools/testing/selftests/user_events/dyn_test.c
++++ b/tools/testing/selftests/user_events/dyn_test.c
+@@ -16,7 +16,7 @@
  
- 1) Enable ftrace in the guest
-  <Example>
--	# echo 1 > /sys/kernel/debug/tracing/events/sched/enable
-+	# echo 1 > /sys/kernel/tracing/events/sched/enable
+ #include "../kselftest_harness.h"
  
- 2) Run trace agent in the guest
-  This agent must be operated as root.
-diff --git a/tools/virtio/virtio-trace/trace-agent.c b/tools/virtio/virtio-trace/trace-agent.c
-index cdfe77c2b4c8..805942d02e9f 100644
---- a/tools/virtio/virtio-trace/trace-agent.c
-+++ b/tools/virtio/virtio-trace/trace-agent.c
-@@ -19,7 +19,7 @@
- #define PIPE_MIN_SIZE		(PAGE_SIZE*PIPE_DEF_BUFS)
- #define PIPE_MAX_SIZE		(1024*1024)
- #define READ_PATH_FMT	\
--		"/sys/kernel/debug/tracing/per_cpu/cpu%d/trace_pipe_raw"
-+		"/sys/kernel/tracing/per_cpu/cpu%d/trace_pipe_raw"
- #define WRITE_PATH_FMT		"/dev/virtio-ports/trace-path-cpu%d"
- #define CTL_PATH		"/dev/virtio-ports/agent-ctl-path"
+-const char *dyn_file = "/sys/kernel/debug/tracing/dynamic_events";
++const char *dyn_file = "/sys/kernel/tracing/dynamic_events";
+ const char *clear = "!u:__test_event";
+ 
+ static int Append(const char *value)
+diff --git a/tools/testing/selftests/user_events/ftrace_test.c b/tools/testing/selftests/user_events/ftrace_test.c
+index 404a2713dcae..a0b2c96eb252 100644
+--- a/tools/testing/selftests/user_events/ftrace_test.c
++++ b/tools/testing/selftests/user_events/ftrace_test.c
+@@ -16,11 +16,11 @@
+ 
+ #include "../kselftest_harness.h"
+ 
+-const char *data_file = "/sys/kernel/debug/tracing/user_events_data";
+-const char *status_file = "/sys/kernel/debug/tracing/user_events_status";
+-const char *enable_file = "/sys/kernel/debug/tracing/events/user_events/__test_event/enable";
+-const char *trace_file = "/sys/kernel/debug/tracing/trace";
+-const char *fmt_file = "/sys/kernel/debug/tracing/events/user_events/__test_event/format";
++const char *data_file = "/sys/kernel/tracing/user_events_data";
++const char *status_file = "/sys/kernel/tracing/user_events_status";
++const char *enable_file = "/sys/kernel/tracing/events/user_events/__test_event/enable";
++const char *trace_file = "/sys/kernel/tracing/trace";
++const char *fmt_file = "/sys/kernel/tracing/events/user_events/__test_event/format";
+ 
+ static inline int status_check(char *status_page, int status_bit)
+ {
+diff --git a/tools/testing/selftests/user_events/perf_test.c b/tools/testing/selftests/user_events/perf_test.c
+index 8b4c7879d5a7..31505642aa9b 100644
+--- a/tools/testing/selftests/user_events/perf_test.c
++++ b/tools/testing/selftests/user_events/perf_test.c
+@@ -18,10 +18,10 @@
+ 
+ #include "../kselftest_harness.h"
+ 
+-const char *data_file = "/sys/kernel/debug/tracing/user_events_data";
+-const char *status_file = "/sys/kernel/debug/tracing/user_events_status";
+-const char *id_file = "/sys/kernel/debug/tracing/events/user_events/__test_event/id";
+-const char *fmt_file = "/sys/kernel/debug/tracing/events/user_events/__test_event/format";
++const char *data_file = "/sys/kernel/tracing/user_events_data";
++const char *status_file = "/sys/kernel/tracing/user_events_status";
++const char *id_file = "/sys/kernel/tracing/events/user_events/__test_event/id";
++const char *fmt_file = "/sys/kernel/tracing/events/user_events/__test_event/format";
+ 
+ struct event {
+ 	__u32 index;
+diff --git a/tools/testing/selftests/vm/protection_keys.c b/tools/testing/selftests/vm/protection_keys.c
+index 291bc1e07842..0d421015fbc1 100644
+--- a/tools/testing/selftests/vm/protection_keys.c
++++ b/tools/testing/selftests/vm/protection_keys.c
+@@ -97,7 +97,7 @@ int tracing_root_ok(void)
+ void tracing_on(void)
+ {
+ #if CONTROL_TRACING > 0
+-#define TRACEDIR "/sys/kernel/debug/tracing"
++#define TRACEDIR "/sys/kernel/tracing"
+ 	char pidstr[32];
+ 
+ 	if (!tracing_root_ok())
+@@ -123,7 +123,7 @@ void tracing_off(void)
+ #if CONTROL_TRACING > 0
+ 	if (!tracing_root_ok())
+ 		return;
+-	cat_into_file("0", "/sys/kernel/debug/tracing/tracing_on");
++	cat_into_file("0", "/sys/kernel/tracing/tracing_on");
+ #endif
+ }
  
 -- 
 2.39.1.456.gfc5497dd1b-goog
