@@ -2,64 +2,73 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 733CDC54EAA
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BA803C636D7
 	for <linux-trace-kernel@archiver.kernel.org>; Mon, 30 Jan 2023 18:20:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237479AbjA3SUF (ORCPT
+        id S237808AbjA3SUG (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Mon, 30 Jan 2023 13:20:05 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51536 "EHLO
+        Mon, 30 Jan 2023 13:20:06 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51600 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237808AbjA3STv (ORCPT
+        with ESMTP id S237575AbjA3STq (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Mon, 30 Jan 2023 13:19:51 -0500
-Received: from mail-il1-x129.google.com (mail-il1-x129.google.com [IPv6:2607:f8b0:4864:20::129])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4CC533CE3F
-        for <linux-trace-kernel@vger.kernel.org>; Mon, 30 Jan 2023 10:19:47 -0800 (PST)
-Received: by mail-il1-x129.google.com with SMTP id k12so451765ilv.10
-        for <linux-trace-kernel@vger.kernel.org>; Mon, 30 Jan 2023 10:19:47 -0800 (PST)
+        Mon, 30 Jan 2023 13:19:46 -0500
+Received: from mail-il1-x135.google.com (mail-il1-x135.google.com [IPv6:2607:f8b0:4864:20::135])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BECD338647
+        for <linux-trace-kernel@vger.kernel.org>; Mon, 30 Jan 2023 10:19:43 -0800 (PST)
+Received: by mail-il1-x135.google.com with SMTP id u8so5469576ilq.13
+        for <linux-trace-kernel@vger.kernel.org>; Mon, 30 Jan 2023 10:19:43 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=MFIqgVTcMIkkVJ93WrMRe7xk5hOeBy6iHYq/c2dnAus=;
-        b=BOXkMcmV7Kg852E/lMV7VPR9bxQHwZJ1VHOqpllPBP1SPusf47QZzPxzqalItFJl+E
-         h6nY4dhdr/HYhYO0zqlz9dGhFYDJIhs8qJoibnsTiBOqLYIthHpGfkJc3OH6cH/UfAL+
-         CYsejaXnNlcgjAXUTVlZ9/Ibodd9dneGfTxTc=
+        bh=a8GX0Wkc/Q+y5CtnCubAeAM7A8kJEXpZOTfFdtPApYY=;
+        b=Fg3lU9wH1mI2ZQOlkoNVREVl34mm09TwXfzNvgtyh4leDB1b4UAR9PvjAG6xGyMwcv
+         oZTwlycNAaxdx+gWUlIqWowBQlqBgSNFG7tswHZh+/K2hvKrHAvfuoT7TKLEnLTBn/4U
+         FJaexkgBDmkWVUATraM/oVpHdiWbydCfky4lU=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=MFIqgVTcMIkkVJ93WrMRe7xk5hOeBy6iHYq/c2dnAus=;
-        b=F+sNaQY+BgNIH0pqRpFoCC8QmbUQN4zm67BNgYC/RyZ/2PTxRKw84ir8BLeH1kIeBO
-         UFmosfgv1Zmv3ZGSnIfND+U7O+BTNnzpBNJGxSA1FJcXl85jVntBHwWwlVSQolHSSouC
-         O8i3SDAgvCIGtJyBSZ2wCQVD7STx/5O1iAC/gbC1RbPbr6MOocsY31T1lUV7ptBYFeHO
-         QX7i/1PCCGaK3bypMnHQp4bCEJW93VUQQtoTSynoRaTTvIRUWTsykmcTtbbtduLJO6nh
-         uOAXICyM0hYhir6AasFrhp99xFDzSzEtlAWpj5Cv0HpqMRYlKtmy2VNmRd63lwUjOUkr
-         nQSA==
-X-Gm-Message-State: AO0yUKWoM4cWPylBh1cwiZmwX6iFl9Y7yFax3d16MwWZkuFPnf6IaadE
-        jyKYySUaYlBcSyxji7IE03262A==
-X-Google-Smtp-Source: AK7set8M9u01+a5gnWBWumGHfQfWw+OV0WvXprCsJSsUeNjRozqjV2EnxgHWdTQxe8fVrDNFccalzA==
-X-Received: by 2002:a92:b301:0:b0:310:be1e:78e6 with SMTP id p1-20020a92b301000000b00310be1e78e6mr7959753ilh.26.1675102786604;
-        Mon, 30 Jan 2023 10:19:46 -0800 (PST)
+        bh=a8GX0Wkc/Q+y5CtnCubAeAM7A8kJEXpZOTfFdtPApYY=;
+        b=mc9s2rC0lPLXmhlFubxolLlbAh9lN+Ho31RSW131SpgiC8VHyeaYkJhNTtTQe0jDuM
+         ONtipKRfR0KeDv2zGutxFWNPM+qbr310DTcYhdngbnljf7NQINZaivKlTA82ySmh1uQI
+         0dbS0aEu+Tdz1au1AFNz7dcjKVMXup3+rfdzWDSgZ9kNnCinisynn4bUJE62DXi+8eue
+         EBHKkXLUTqgrmpa59ZIIkVXPun0qwVgykabnN/NXaGpseVmJ9cAyvo4bZ1LtkJoGGHzV
+         8dL3yTUuw3mOPlyaaSOEN5zYdI5bsxh/7o/FJlQquI1eddeJxAue/HzG4KSSvM1plsLS
+         E8Gg==
+X-Gm-Message-State: AO0yUKVY+GnPxRh1vPXS2pi4FNhUj0niptpalKPmjoOl+9F0L4Os9TeV
+        igticetkbYGeqDCEvuP+aK6QEQ==
+X-Google-Smtp-Source: AK7set+QENDfYDRT6I5+SqzDBq5LX7wHInhqO1KyMSbNn0tWkB0Z/osyYboUCBeBHuBoNxf9lXEXxQ==
+X-Received: by 2002:a05:6e02:1c22:b0:310:e499:274e with SMTP id m2-20020a056e021c2200b00310e499274emr8094546ilh.18.1675102783165;
+        Mon, 30 Jan 2023 10:19:43 -0800 (PST)
 Received: from ravnica.bld.corp.google.com ([2620:15c:183:200:fc8a:dd2f:5914:df14])
-        by smtp.gmail.com with ESMTPSA id o16-20020a056e02115000b002f139ba4135sm4189801ill.86.2023.01.30.10.19.46
+        by smtp.gmail.com with ESMTPSA id o16-20020a056e02115000b002f139ba4135sm4189801ill.86.2023.01.30.10.19.42
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 30 Jan 2023 10:19:46 -0800 (PST)
+        Mon, 30 Jan 2023 10:19:42 -0800 (PST)
 From:   Ross Zwisler <zwisler@chromium.org>
 X-Google-Original-From: Ross Zwisler <zwisler@google.com>
 To:     linux-kernel@vger.kernel.org
 Cc:     Ross Zwisler <zwisler@google.com>,
-        "Tobin C. Harding" <me@tobin.cc>,
+        Andrii Nakryiko <andrii@kernel.org>,
         Steven Rostedt <rostedt@goodmis.org>,
         linux-trace-kernel@vger.kernel.org,
-        Tycho Andersen <tycho@tycho.pizza>,
-        linux-hardening@vger.kernel.org
-Subject: [PATCH 8/9] leaking_addresses: also skip canonical ftrace path
-Date:   Mon, 30 Jan 2023 11:19:14 -0700
-Message-Id: <20230130181915.1113313-9-zwisler@google.com>
+        Mykola Lysenko <mykolal@fb.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Martin KaFai Lau <martin.lau@linux.dev>,
+        Song Liu <song@kernel.org>, Yonghong Song <yhs@fb.com>,
+        John Fastabend <john.fastabend@gmail.com>,
+        KP Singh <kpsingh@kernel.org>,
+        Stanislav Fomichev <sdf@google.com>,
+        Hao Luo <haoluo@google.com>, Jiri Olsa <jolsa@kernel.org>,
+        Shuah Khan <shuah@kernel.org>, bpf@vger.kernel.org,
+        linux-kselftest@vger.kernel.org
+Subject: [PATCH 3/9] selftests/bpf: use canonical ftrace path
+Date:   Mon, 30 Jan 2023 11:19:09 -0700
+Message-Id: <20230130181915.1113313-4-zwisler@google.com>
 X-Mailer: git-send-email 2.39.1.456.gfc5497dd1b-goog
 In-Reply-To: <20230130181915.1113313-1-zwisler@google.com>
 References: <20230130181915.1113313-1-zwisler@google.com>
@@ -80,25 +89,189 @@ But, from Documentation/trace/ftrace.rst:
 
   /sys/kernel/debug/tracing
 
-scripts/leaking_addresses.pl only skipped this older debugfs path, so
-let's add the canonical path as well.
+Many tests in the bpf selftest code still refer to this older debugfs
+path, so let's update them to avoid confusion.
 
 Signed-off-by: Ross Zwisler <zwisler@google.com>
 ---
- scripts/leaking_addresses.pl | 1 +
- 1 file changed, 1 insertion(+)
+ tools/testing/selftests/bpf/get_cgroup_id_user.c          | 2 +-
+ .../testing/selftests/bpf/prog_tests/kprobe_multi_test.c  | 2 +-
+ tools/testing/selftests/bpf/prog_tests/task_fd_query_tp.c | 2 +-
+ tools/testing/selftests/bpf/prog_tests/tp_attach_query.c  | 2 +-
+ tools/testing/selftests/bpf/prog_tests/trace_printk.c     | 2 +-
+ tools/testing/selftests/bpf/prog_tests/trace_vprintk.c    | 2 +-
+ tools/testing/selftests/bpf/progs/test_stacktrace_map.c   | 2 +-
+ tools/testing/selftests/bpf/progs/test_tracepoint.c       | 2 +-
+ tools/testing/selftests/bpf/test_ftrace.sh                | 2 +-
+ tools/testing/selftests/bpf/test_tunnel.sh                | 8 ++++----
+ tools/testing/selftests/bpf/trace_helpers.c               | 4 ++--
+ 11 files changed, 15 insertions(+), 15 deletions(-)
 
-diff --git a/scripts/leaking_addresses.pl b/scripts/leaking_addresses.pl
-index 8f636a23bc3f..e695634d153d 100755
---- a/scripts/leaking_addresses.pl
-+++ b/scripts/leaking_addresses.pl
-@@ -61,6 +61,7 @@ my @skip_abs = (
- 	'/proc/device-tree',
- 	'/proc/1/syscall',
- 	'/sys/firmware/devicetree',
-+	'/sys/kernel/tracing/trace_pipe',
- 	'/sys/kernel/debug/tracing/trace_pipe',
- 	'/sys/kernel/security/apparmor/revision');
+diff --git a/tools/testing/selftests/bpf/get_cgroup_id_user.c b/tools/testing/selftests/bpf/get_cgroup_id_user.c
+index 156743cf5870..478e080128be 100644
+--- a/tools/testing/selftests/bpf/get_cgroup_id_user.c
++++ b/tools/testing/selftests/bpf/get_cgroup_id_user.c
+@@ -87,7 +87,7 @@ int main(int argc, char **argv)
+ 	bpf_map_update_elem(pidmap_fd, &key, &pid, 0);
+ 
+ 	snprintf(buf, sizeof(buf),
+-		 "/sys/kernel/debug/tracing/events/%s/id", probe_name);
++		 "/sys/kernel/tracing/events/%s/id", probe_name);
+ 	efd = open(buf, O_RDONLY, 0);
+ 	if (CHECK(efd < 0, "open", "err %d errno %d\n", efd, errno))
+ 		goto close_prog;
+diff --git a/tools/testing/selftests/bpf/prog_tests/kprobe_multi_test.c b/tools/testing/selftests/bpf/prog_tests/kprobe_multi_test.c
+index d457a55ff408..9eaf16e9ff6e 100644
+--- a/tools/testing/selftests/bpf/prog_tests/kprobe_multi_test.c
++++ b/tools/testing/selftests/bpf/prog_tests/kprobe_multi_test.c
+@@ -338,7 +338,7 @@ static int get_syms(char ***symsp, size_t *cntp)
+ 	 * Filtering out duplicates by using hashmap__add, which won't
+ 	 * add existing entry.
+ 	 */
+-	f = fopen("/sys/kernel/debug/tracing/available_filter_functions", "r");
++	f = fopen("/sys/kernel/tracing/available_filter_functions", "r");
+ 	if (!f)
+ 		return -EINVAL;
+ 
+diff --git a/tools/testing/selftests/bpf/prog_tests/task_fd_query_tp.c b/tools/testing/selftests/bpf/prog_tests/task_fd_query_tp.c
+index c717741bf8b6..6d70559fc19b 100644
+--- a/tools/testing/selftests/bpf/prog_tests/task_fd_query_tp.c
++++ b/tools/testing/selftests/bpf/prog_tests/task_fd_query_tp.c
+@@ -18,7 +18,7 @@ static void test_task_fd_query_tp_core(const char *probe_name,
+ 		goto close_prog;
+ 
+ 	snprintf(buf, sizeof(buf),
+-		 "/sys/kernel/debug/tracing/events/%s/id", probe_name);
++		 "/sys/kernel/tracing/events/%s/id", probe_name);
+ 	efd = open(buf, O_RDONLY, 0);
+ 	if (CHECK(efd < 0, "open", "err %d errno %d\n", efd, errno))
+ 		goto close_prog;
+diff --git a/tools/testing/selftests/bpf/prog_tests/tp_attach_query.c b/tools/testing/selftests/bpf/prog_tests/tp_attach_query.c
+index a479080533db..4308e3a828d8 100644
+--- a/tools/testing/selftests/bpf/prog_tests/tp_attach_query.c
++++ b/tools/testing/selftests/bpf/prog_tests/tp_attach_query.c
+@@ -17,7 +17,7 @@ void serial_test_tp_attach_query(void)
+ 		obj[i] = NULL;
+ 
+ 	snprintf(buf, sizeof(buf),
+-		 "/sys/kernel/debug/tracing/events/sched/sched_switch/id");
++		 "/sys/kernel/tracing/events/sched/sched_switch/id");
+ 	efd = open(buf, O_RDONLY, 0);
+ 	if (CHECK(efd < 0, "open", "err %d errno %d\n", efd, errno))
+ 		return;
+diff --git a/tools/testing/selftests/bpf/prog_tests/trace_printk.c b/tools/testing/selftests/bpf/prog_tests/trace_printk.c
+index cade7f12315f..ff50a928cb98 100644
+--- a/tools/testing/selftests/bpf/prog_tests/trace_printk.c
++++ b/tools/testing/selftests/bpf/prog_tests/trace_printk.c
+@@ -5,7 +5,7 @@
+ 
+ #include "trace_printk.lskel.h"
+ 
+-#define TRACEBUF	"/sys/kernel/debug/tracing/trace_pipe"
++#define TRACEBUF	"/sys/kernel/tracing/trace_pipe"
+ #define SEARCHMSG	"testing,testing"
+ 
+ void serial_test_trace_printk(void)
+diff --git a/tools/testing/selftests/bpf/prog_tests/trace_vprintk.c b/tools/testing/selftests/bpf/prog_tests/trace_vprintk.c
+index 7a4e313e8558..e568d7f247ec 100644
+--- a/tools/testing/selftests/bpf/prog_tests/trace_vprintk.c
++++ b/tools/testing/selftests/bpf/prog_tests/trace_vprintk.c
+@@ -5,7 +5,7 @@
+ 
+ #include "trace_vprintk.lskel.h"
+ 
+-#define TRACEBUF	"/sys/kernel/debug/tracing/trace_pipe"
++#define TRACEBUF	"/sys/kernel/tracing/trace_pipe"
+ #define SEARCHMSG	"1,2,3,4,5,6,7,8,9,10"
+ 
+ void serial_test_trace_vprintk(void)
+diff --git a/tools/testing/selftests/bpf/progs/test_stacktrace_map.c b/tools/testing/selftests/bpf/progs/test_stacktrace_map.c
+index 728dbd39eff0..47568007b668 100644
+--- a/tools/testing/selftests/bpf/progs/test_stacktrace_map.c
++++ b/tools/testing/selftests/bpf/progs/test_stacktrace_map.c
+@@ -38,7 +38,7 @@ struct {
+ 	__type(value, stack_trace_t);
+ } stack_amap SEC(".maps");
+ 
+-/* taken from /sys/kernel/debug/tracing/events/sched/sched_switch/format */
++/* taken from /sys/kernel/tracing/events/sched/sched_switch/format */
+ struct sched_switch_args {
+ 	unsigned long long pad;
+ 	char prev_comm[TASK_COMM_LEN];
+diff --git a/tools/testing/selftests/bpf/progs/test_tracepoint.c b/tools/testing/selftests/bpf/progs/test_tracepoint.c
+index 43bd7a20cc50..4cb8bbb6a320 100644
+--- a/tools/testing/selftests/bpf/progs/test_tracepoint.c
++++ b/tools/testing/selftests/bpf/progs/test_tracepoint.c
+@@ -4,7 +4,7 @@
+ #include <vmlinux.h>
+ #include <bpf/bpf_helpers.h>
+ 
+-/* taken from /sys/kernel/debug/tracing/events/sched/sched_switch/format */
++/* taken from /sys/kernel/tracing/events/sched/sched_switch/format */
+ struct sched_switch_args {
+ 	unsigned long long pad;
+ 	char prev_comm[TASK_COMM_LEN];
+diff --git a/tools/testing/selftests/bpf/test_ftrace.sh b/tools/testing/selftests/bpf/test_ftrace.sh
+index 20de7bb873bc..e3e2328a1b65 100755
+--- a/tools/testing/selftests/bpf/test_ftrace.sh
++++ b/tools/testing/selftests/bpf/test_ftrace.sh
+@@ -1,6 +1,6 @@
+ #!/bin/bash
+ 
+-TR=/sys/kernel/debug/tracing/
++TR=/sys/kernel/tracing/
+ clear_trace() { # reset trace output
+     echo > $TR/trace
+ }
+diff --git a/tools/testing/selftests/bpf/test_tunnel.sh b/tools/testing/selftests/bpf/test_tunnel.sh
+index e9ebc67d73f7..6927e586a3a2 100755
+--- a/tools/testing/selftests/bpf/test_tunnel.sh
++++ b/tools/testing/selftests/bpf/test_tunnel.sh
+@@ -542,7 +542,7 @@ setup_xfrm_tunnel()
+ test_xfrm_tunnel()
+ {
+ 	config_device
+-	> /sys/kernel/debug/tracing/trace
++	> /sys/kernel/tracing/trace
+ 	setup_xfrm_tunnel
+ 	mkdir -p ${BPF_PIN_TUNNEL_DIR}
+ 	bpftool prog loadall ./test_tunnel_kern.o ${BPF_PIN_TUNNEL_DIR}
+@@ -551,11 +551,11 @@ test_xfrm_tunnel()
+ 		${BPF_PIN_TUNNEL_DIR}/xfrm_get_state
+ 	ip netns exec at_ns0 ping $PING_ARG 10.1.1.200
+ 	sleep 1
+-	grep "reqid 1" /sys/kernel/debug/tracing/trace
++	grep "reqid 1" /sys/kernel/tracing/trace
+ 	check_err $?
+-	grep "spi 0x1" /sys/kernel/debug/tracing/trace
++	grep "spi 0x1" /sys/kernel/tracing/trace
+ 	check_err $?
+-	grep "remote ip 0xac100164" /sys/kernel/debug/tracing/trace
++	grep "remote ip 0xac100164" /sys/kernel/tracing/trace
+ 	check_err $?
+ 	cleanup
+ 
+diff --git a/tools/testing/selftests/bpf/trace_helpers.c b/tools/testing/selftests/bpf/trace_helpers.c
+index 9c4be2cdb21a..65895f5fb562 100644
+--- a/tools/testing/selftests/bpf/trace_helpers.c
++++ b/tools/testing/selftests/bpf/trace_helpers.c
+@@ -12,7 +12,7 @@
+ #include <sys/mman.h>
+ #include "trace_helpers.h"
+ 
+-#define DEBUGFS "/sys/kernel/debug/tracing/"
++#define TRACEFS "/sys/kernel/tracing/"
+ 
+ #define MAX_SYMS 300000
+ static struct ksym syms[MAX_SYMS];
+@@ -130,7 +130,7 @@ void read_trace_pipe(void)
+ {
+ 	int trace_fd;
+ 
+-	trace_fd = open(DEBUGFS "trace_pipe", O_RDONLY, 0);
++	trace_fd = open(TRACEFS "trace_pipe", O_RDONLY, 0);
+ 	if (trace_fd < 0)
+ 		return;
  
 -- 
 2.39.1.456.gfc5497dd1b-goog
