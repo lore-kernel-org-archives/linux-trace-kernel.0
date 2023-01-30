@@ -2,63 +2,68 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 11CDEC636D3
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AF461C54EED
 	for <linux-trace-kernel@archiver.kernel.org>; Mon, 30 Jan 2023 18:20:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237900AbjA3SUC (ORCPT
+        id S237629AbjA3SUD (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Mon, 30 Jan 2023 13:20:02 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51806 "EHLO
+        Mon, 30 Jan 2023 13:20:03 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51780 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237713AbjA3STs (ORCPT
+        with ESMTP id S237655AbjA3STs (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
         Mon, 30 Jan 2023 13:19:48 -0500
-Received: from mail-il1-x132.google.com (mail-il1-x132.google.com [IPv6:2607:f8b0:4864:20::132])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EA0C831E39
-        for <linux-trace-kernel@vger.kernel.org>; Mon, 30 Jan 2023 10:19:45 -0800 (PST)
-Received: by mail-il1-x132.google.com with SMTP id i17so5326451ils.11
-        for <linux-trace-kernel@vger.kernel.org>; Mon, 30 Jan 2023 10:19:45 -0800 (PST)
+Received: from mail-il1-x131.google.com (mail-il1-x131.google.com [IPv6:2607:f8b0:4864:20::131])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8C45A113C4
+        for <linux-trace-kernel@vger.kernel.org>; Mon, 30 Jan 2023 10:19:44 -0800 (PST)
+Received: by mail-il1-x131.google.com with SMTP id h18so2709433ilj.6
+        for <linux-trace-kernel@vger.kernel.org>; Mon, 30 Jan 2023 10:19:44 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=tgFT+IL5bcCj7J23e5lu6CYNi7LTiunoNwjje3GvFYg=;
-        b=Mq8KtW55EljioiViKDgF8PzaF6ZoQGnyoe2RRses0f4mgf5MIpiCriGT+IifaZfwon
-         X9gCElvVuCs7mc8cR3RJwpKr2/rhpjPfH3EMST7OBev+p4E1ZR9kPbKZSLFahZXq2u5O
-         J2miOwkGMz+dINzvWVyw1PJ51UBnR2WUJXLvs=
+        bh=jp7aHBUW1jeQF5BaTlNM3qh6OpGZbn+TcSkRCqi1rpA=;
+        b=JlFJKGfQVP+ZJ4ZfNW/30qCZgXd85FdLu28kwHbW4K1QjzS8W8lPA1dmvs5YOKPx6i
+         g1rcxZPr0uXfhgIhiLKW8LXNCCrvkBLjT4uSE+KGpkgENyGFJ+6UWb7/TicE8j2x4K5X
+         uq8913H01SJ5Bpwu5jHe99aWe8Tt7mzxcAlH0=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=tgFT+IL5bcCj7J23e5lu6CYNi7LTiunoNwjje3GvFYg=;
-        b=bc4MefQP4B8W4VSeJfw1Csas3OquOCcH82tZvUeSm+bop3JjC47C+sBSv/gezbPsyg
-         cqfXUu5Zp9uw9smKEKYZTyf9gP5SNKtkKWu+jZRqJb7plUED8QlTgHtdmGGFAznws/v1
-         hvkSSTuVTU7lPUTn8Y1g39B3d3y2GKHtAoKPWjG//jMwJ0Nwk5UOq3xei70Ro/jUSSUm
-         vg/ecV4AYhnpQtpeB6OGeH0g3wXXOuPdVk473YgJMBorIC7NaSSdmwHCmo3B3jIj7mbL
-         Kj6tiD/HRLsk7zDaRSp+WGz+jXDeMrDkNJzkzLRS6Gl6DdTf4gtoMPfklarADNhlo99Q
-         vn9Q==
-X-Gm-Message-State: AO0yUKX8/iW9l8Zpo23AyRDItDbmHEEC60AZMQOyPiVrknOSXpP1ddwy
-        QLgGQsiFJGehARBNbGEfp0CRiw==
-X-Google-Smtp-Source: AK7set8Yf1vmtP2krbFokO0Bn2Jo9liICFpI/GrHXPPM8ng0Ggp+ndGSIwsJUjW/xnrBNESNxA7g7w==
-X-Received: by 2002:a05:6e02:1886:b0:310:a0a3:f614 with SMTP id o6-20020a056e02188600b00310a0a3f614mr19626648ilu.13.1675102785344;
-        Mon, 30 Jan 2023 10:19:45 -0800 (PST)
+        bh=jp7aHBUW1jeQF5BaTlNM3qh6OpGZbn+TcSkRCqi1rpA=;
+        b=sJVV9ZQFK6iRVBYcI1tjG2msSRzSbYEWc5K81OYQIQ+5NXoJDmtGt36Kkc4I64ScuC
+         mBegY7ZftsBsNYQIZCx+klNolGhpXA1VxBO5H0bn4GvsWnIpf0Q7R1g+UBccPPcQRamK
+         rm/tl7E+qvI2cYF98hLMBF+qqJLJ0XgFBKnuJ4rPXXKnzwxew0Lyb4B4qD68uRvJ4WUV
+         QWk71yBrHJijWr8HflhHMn3uZxBN4ai1cWInXLtCdSlsQ2Rmq7lUYrQBS9OKhfrDE2qj
+         BKOKbMiCfA1HsNvVPL7WGF8G8HTsiFR190cw9Gh/TnPPPotGrU8hEX22iGBhLhp0GND9
+         tG0g==
+X-Gm-Message-State: AFqh2krF6lavJIjGmk5KG7ChmuEsMmh9zpPRTM0IbEKXPNyfT54ROOJD
+        fLTSxbLzUZ38TxTsyyKhaN4s7A==
+X-Google-Smtp-Source: AMrXdXtNYZmSI/B6owkdukXiEncZXYpEnMelEao+FAikw603ox7t8fW0hkOpMTlEEpNU5qPt5EQaHQ==
+X-Received: by 2002:a92:de09:0:b0:30e:f1e5:3e4a with SMTP id x9-20020a92de09000000b0030ef1e53e4amr33574012ilm.28.1675102783894;
+        Mon, 30 Jan 2023 10:19:43 -0800 (PST)
 Received: from ravnica.bld.corp.google.com ([2620:15c:183:200:fc8a:dd2f:5914:df14])
-        by smtp.gmail.com with ESMTPSA id o16-20020a056e02115000b002f139ba4135sm4189801ill.86.2023.01.30.10.19.44
+        by smtp.gmail.com with ESMTPSA id o16-20020a056e02115000b002f139ba4135sm4189801ill.86.2023.01.30.10.19.43
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 30 Jan 2023 10:19:45 -0800 (PST)
+        Mon, 30 Jan 2023 10:19:43 -0800 (PST)
 From:   Ross Zwisler <zwisler@chromium.org>
 X-Google-Original-From: Ross Zwisler <zwisler@google.com>
 To:     linux-kernel@vger.kernel.org
-Cc:     Ross Zwisler <zwisler@google.com>, Shuah Khan <shuah@kernel.org>,
+Cc:     Ross Zwisler <zwisler@google.com>,
+        Peter Zijlstra <peterz@infradead.org>,
         Steven Rostedt <rostedt@goodmis.org>,
-        linux-trace-kernel@vger.kernel.org,
-        Andrew Morton <akpm@linux-foundation.org>,
-        linux-kselftest@vger.kernel.org, linux-mm@kvack.org
-Subject: [PATCH 6/9] selftests: use canonical ftrace path
-Date:   Mon, 30 Jan 2023 11:19:12 -0700
-Message-Id: <20230130181915.1113313-7-zwisler@google.com>
+        linux-trace-kernel@vger.kernel.org, Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        linux-perf-users@vger.kernel.org
+Subject: [PATCH 4/9] perf docs: use canonical ftrace path
+Date:   Mon, 30 Jan 2023 11:19:10 -0700
+Message-Id: <20230130181915.1113313-5-zwisler@google.com>
 X-Mailer: git-send-email 2.39.1.456.gfc5497dd1b-goog
 In-Reply-To: <20230130181915.1113313-1-zwisler@google.com>
 References: <20230130181915.1113313-1-zwisler@google.com>
@@ -79,92 +84,64 @@ But, from Documentation/trace/ftrace.rst:
 
   /sys/kernel/debug/tracing
 
-A few spots in tools/testing/selftests still refer to this older debugfs
-path, so let's update them to avoid confusion.
+A few spots in the perf docs still refer to this older debugfs path, so
+let's update them to avoid confusion.
 
 Signed-off-by: Ross Zwisler <zwisler@google.com>
 ---
- tools/testing/selftests/user_events/dyn_test.c    |  2 +-
- tools/testing/selftests/user_events/ftrace_test.c | 10 +++++-----
- tools/testing/selftests/user_events/perf_test.c   |  8 ++++----
- tools/testing/selftests/vm/protection_keys.c      |  4 ++--
- 4 files changed, 12 insertions(+), 12 deletions(-)
+ tools/perf/Documentation/perf-list.txt          | 2 +-
+ tools/perf/Documentation/perf-script-perl.txt   | 2 +-
+ tools/perf/Documentation/perf-script-python.txt | 4 ++--
+ 3 files changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/tools/testing/selftests/user_events/dyn_test.c b/tools/testing/selftests/user_events/dyn_test.c
-index d6265d14cd51..8879a7b04c6a 100644
---- a/tools/testing/selftests/user_events/dyn_test.c
-+++ b/tools/testing/selftests/user_events/dyn_test.c
-@@ -16,7 +16,7 @@
+diff --git a/tools/perf/Documentation/perf-list.txt b/tools/perf/Documentation/perf-list.txt
+index 57384a97c04f..6c83459d3192 100644
+--- a/tools/perf/Documentation/perf-list.txt
++++ b/tools/perf/Documentation/perf-list.txt
+@@ -228,7 +228,7 @@ This can be overridden by setting the kernel.perf_event_paranoid
+ sysctl to -1, which allows non root to use these events.
  
- #include "../kselftest_harness.h"
+ For accessing trace point events perf needs to have read access to
+-/sys/kernel/debug/tracing, even when perf_event_paranoid is in a relaxed
++/sys/kernel/tracing, even when perf_event_paranoid is in a relaxed
+ setting.
  
--const char *dyn_file = "/sys/kernel/debug/tracing/dynamic_events";
-+const char *dyn_file = "/sys/kernel/tracing/dynamic_events";
- const char *clear = "!u:__test_event";
+ TRACING
+diff --git a/tools/perf/Documentation/perf-script-perl.txt b/tools/perf/Documentation/perf-script-perl.txt
+index fa4f39d305a7..5b479f5e62ff 100644
+--- a/tools/perf/Documentation/perf-script-perl.txt
++++ b/tools/perf/Documentation/perf-script-perl.txt
+@@ -55,7 +55,7 @@ Traces meant to be processed using a script should be recorded with
+ the above option: -a to enable system-wide collection.
  
- static int Append(const char *value)
-diff --git a/tools/testing/selftests/user_events/ftrace_test.c b/tools/testing/selftests/user_events/ftrace_test.c
-index 404a2713dcae..a0b2c96eb252 100644
---- a/tools/testing/selftests/user_events/ftrace_test.c
-+++ b/tools/testing/selftests/user_events/ftrace_test.c
-@@ -16,11 +16,11 @@
+ The format file for the sched_wakeup event defines the following fields
+-(see /sys/kernel/debug/tracing/events/sched/sched_wakeup/format):
++(see /sys/kernel/tracing/events/sched/sched_wakeup/format):
  
- #include "../kselftest_harness.h"
+ ----
+  format:
+diff --git a/tools/perf/Documentation/perf-script-python.txt b/tools/perf/Documentation/perf-script-python.txt
+index cf4b7f4b625a..6a8581012e16 100644
+--- a/tools/perf/Documentation/perf-script-python.txt
++++ b/tools/perf/Documentation/perf-script-python.txt
+@@ -319,7 +319,7 @@ So those are the essential steps in writing and running a script.  The
+ process can be generalized to any tracepoint or set of tracepoints
+ you're interested in - basically find the tracepoint(s) you're
+ interested in by looking at the list of available events shown by
+-'perf list' and/or look in /sys/kernel/debug/tracing/events/ for
++'perf list' and/or look in /sys/kernel/tracing/events/ for
+ detailed event and field info, record the corresponding trace data
+ using 'perf record', passing it the list of interesting events,
+ generate a skeleton script using 'perf script -g python' and modify the
+@@ -449,7 +449,7 @@ Traces meant to be processed using a script should be recorded with
+ the above option: -a to enable system-wide collection.
  
--const char *data_file = "/sys/kernel/debug/tracing/user_events_data";
--const char *status_file = "/sys/kernel/debug/tracing/user_events_status";
--const char *enable_file = "/sys/kernel/debug/tracing/events/user_events/__test_event/enable";
--const char *trace_file = "/sys/kernel/debug/tracing/trace";
--const char *fmt_file = "/sys/kernel/debug/tracing/events/user_events/__test_event/format";
-+const char *data_file = "/sys/kernel/tracing/user_events_data";
-+const char *status_file = "/sys/kernel/tracing/user_events_status";
-+const char *enable_file = "/sys/kernel/tracing/events/user_events/__test_event/enable";
-+const char *trace_file = "/sys/kernel/tracing/trace";
-+const char *fmt_file = "/sys/kernel/tracing/events/user_events/__test_event/format";
+ The format file for the sched_wakeup event defines the following fields
+-(see /sys/kernel/debug/tracing/events/sched/sched_wakeup/format):
++(see /sys/kernel/tracing/events/sched/sched_wakeup/format):
  
- static inline int status_check(char *status_page, int status_bit)
- {
-diff --git a/tools/testing/selftests/user_events/perf_test.c b/tools/testing/selftests/user_events/perf_test.c
-index 8b4c7879d5a7..31505642aa9b 100644
---- a/tools/testing/selftests/user_events/perf_test.c
-+++ b/tools/testing/selftests/user_events/perf_test.c
-@@ -18,10 +18,10 @@
- 
- #include "../kselftest_harness.h"
- 
--const char *data_file = "/sys/kernel/debug/tracing/user_events_data";
--const char *status_file = "/sys/kernel/debug/tracing/user_events_status";
--const char *id_file = "/sys/kernel/debug/tracing/events/user_events/__test_event/id";
--const char *fmt_file = "/sys/kernel/debug/tracing/events/user_events/__test_event/format";
-+const char *data_file = "/sys/kernel/tracing/user_events_data";
-+const char *status_file = "/sys/kernel/tracing/user_events_status";
-+const char *id_file = "/sys/kernel/tracing/events/user_events/__test_event/id";
-+const char *fmt_file = "/sys/kernel/tracing/events/user_events/__test_event/format";
- 
- struct event {
- 	__u32 index;
-diff --git a/tools/testing/selftests/vm/protection_keys.c b/tools/testing/selftests/vm/protection_keys.c
-index 291bc1e07842..0d421015fbc1 100644
---- a/tools/testing/selftests/vm/protection_keys.c
-+++ b/tools/testing/selftests/vm/protection_keys.c
-@@ -97,7 +97,7 @@ int tracing_root_ok(void)
- void tracing_on(void)
- {
- #if CONTROL_TRACING > 0
--#define TRACEDIR "/sys/kernel/debug/tracing"
-+#define TRACEDIR "/sys/kernel/tracing"
- 	char pidstr[32];
- 
- 	if (!tracing_root_ok())
-@@ -123,7 +123,7 @@ void tracing_off(void)
- #if CONTROL_TRACING > 0
- 	if (!tracing_root_ok())
- 		return;
--	cat_into_file("0", "/sys/kernel/debug/tracing/tracing_on");
-+	cat_into_file("0", "/sys/kernel/tracing/tracing_on");
- #endif
- }
- 
+ ----
+  format:
 -- 
 2.39.1.456.gfc5497dd1b-goog
 
