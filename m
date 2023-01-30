@@ -2,100 +2,74 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B80B2C54EAA
-	for <linux-trace-kernel@archiver.kernel.org>; Mon, 30 Jan 2023 19:27:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D6AF2C636D3
+	for <linux-trace-kernel@archiver.kernel.org>; Mon, 30 Jan 2023 19:27:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238275AbjA3T1m (ORCPT
+        id S237667AbjA3T1r (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Mon, 30 Jan 2023 14:27:42 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55224 "EHLO
+        Mon, 30 Jan 2023 14:27:47 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55166 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238070AbjA3T1b (ORCPT
+        with ESMTP id S238200AbjA3T1h (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Mon, 30 Jan 2023 14:27:31 -0500
+        Mon, 30 Jan 2023 14:27:37 -0500
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 325A13EC57
-        for <linux-trace-kernel@vger.kernel.org>; Mon, 30 Jan 2023 11:26:17 -0800 (PST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A421614EB6
+        for <linux-trace-kernel@vger.kernel.org>; Mon, 30 Jan 2023 11:26:50 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1675106776;
+        s=mimecast20190719; t=1675106809;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          in-reply-to:in-reply-to:references:references;
-        bh=lxRPh/paZX5a/mJDhNvLvYnOtz1Fnppz2zZO/ehY1gY=;
-        b=U95HQXeZxqsPumu/gpogtkGnTWlCU6P0uDMv4GK8KFAqXDEc+BHTxHRGR1kPaBSKjyBUV4
-        20hbiHYgE3QUe3sBA6DWfNsDKxjEAgCHl9ONaNGtyMbzJAVZkMoWhRnyEKxfhPt8ho5wjr
-        rlVsiSgQMfkoCYp6nf9y+PQZM9GByoE=
-Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
- [209.85.221.72]) by relay.mimecast.com with ESMTP with STARTTLS
+        bh=3zReAwY9Qd1mvDcwb5xa4eZkleNP48xcTFspo+kBenI=;
+        b=dWlUD+2fsd8XQ9Cu22pfjNX6xbwxft8xtXyFJDsHbQ2q6biqDdBztn7nMaB4CmJDdkw/XI
+        H1e/F1HR5WB+fYzCq6Djqwhta5GEZkirb3SM4WACR5DtmxH3yzLCJrIz+aEwDLnvoVae0J
+        sMA5V7yjyTi1mFB0znFWgicTf4u5+ww=
+Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
+ [209.85.128.69]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_128_GCM_SHA256) id
- us-mta-450-LvY11bUrNhCE37c5J3je_w-1; Mon, 30 Jan 2023 14:26:15 -0500
-X-MC-Unique: LvY11bUrNhCE37c5J3je_w-1
-Received: by mail-wr1-f72.google.com with SMTP id u10-20020a5d6daa000000b002bfc2f61048so2191663wrs.23
-        for <linux-trace-kernel@vger.kernel.org>; Mon, 30 Jan 2023 11:26:15 -0800 (PST)
+ us-mta-608-GE84EKvkNO2BVy7BlJlpNw-1; Mon, 30 Jan 2023 14:26:48 -0500
+X-MC-Unique: GE84EKvkNO2BVy7BlJlpNw-1
+Received: by mail-wm1-f69.google.com with SMTP id l5-20020a1ced05000000b003db300f2e1cso4819458wmh.0
+        for <linux-trace-kernel@vger.kernel.org>; Mon, 30 Jan 2023 11:26:48 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=lxRPh/paZX5a/mJDhNvLvYnOtz1Fnppz2zZO/ehY1gY=;
-        b=xuJ4JqsmF23+OUz1a/1zljIhebX5a3coj+HE7ihc8pKYf7FT1RQs9s7/xEIiVJgA92
-         p965PrfdRQE6m2/UKqDEltG1JjE4oZJlMlSLwh5OCBVogw9K8+9he96jP64W/HyC6QfP
-         ukOOoGPOrnvB0RxnwhR9xwPUYZhG3hxV9X0SNVrtLLMLXDkaGnTXKr3mNXsEKJAF32Z7
-         9034X7z48pjDkQL56AluOMqiojXwTbi/PBgVt6cGHiuoXGy/UpIO0vI3UjqGBlyXxVQu
-         mV60mk9K3TJWe9nK1/xCZJ+9Nq/cF/m+uZugLdfD2JoijAyl+n5TD5ZsEpVHUg+jSMx2
-         Xhbw==
-X-Gm-Message-State: AO0yUKXs1BdTHOEyILoGkr7e1FWvQ9Ox0UFqcW6VFJwzeCxcP5yNRjbv
-        I4R2ZbtgTU1SrRbrNwcXXiGkEGf8tftc6k2p4UOsE6kuxldAdQ8o4D1LVK1cMzZW6tSRc59snhO
-        KhZSFHiT9hx2ckp7zC8cDRSZ4ftSNUnH3
-X-Received: by 2002:a5d:5908:0:b0:2bf:f027:3c30 with SMTP id v8-20020a5d5908000000b002bff0273c30mr3314166wrd.56.1675106774181;
-        Mon, 30 Jan 2023 11:26:14 -0800 (PST)
-X-Google-Smtp-Source: AK7set+eycYJ8p0mkRD8mPxEc0uaHr5C6uQOIksxyy+K6HKOMMdutlQSlkQGNzjc/g2dbWuMCMCRzg==
-X-Received: by 2002:a5d:5908:0:b0:2bf:f027:3c30 with SMTP id v8-20020a5d5908000000b002bff0273c30mr3314130wrd.56.1675106773965;
-        Mon, 30 Jan 2023 11:26:13 -0800 (PST)
+        bh=3zReAwY9Qd1mvDcwb5xa4eZkleNP48xcTFspo+kBenI=;
+        b=AAG/zF4lWa/fD9SgN7B10WZZr4eWIu77ROPnuY5bAfjqYZDKMJYrtNOi90fLZKcr4U
+         5AYneWfVHXCgXq0s+b7mAm25S9K8dcsEGmbwXM9ZF+F643pLyN/hSCddCyMEtZdAVYtt
+         nQ/JAgX9ngfEdKBT5E1D92WRzes/PMiYb2LeE0OrmRgkFFBQ1lGDg+OrLTWSVhFfvrQ2
+         43kiCvf6By/BrBuEUVdEddZiImaSV+cR5nDjFOyOVrABkc3SN5/mSJ4JZTxQQb6sJsqT
+         jyd+k6ufc8glLV6PRXrOdADHR0IEXix820Y1qoNZfnPtVYbX6xZ7XZDZVMYjczeK7iWQ
+         LUng==
+X-Gm-Message-State: AO0yUKVh2GeJTxwec2MiFK/XAUwcddyQ400qn60mjVeeBeZBA+TtbfYb
+        TgB5SpOrBTzh+BwwqBg3IiyXrQh56eSat+WyzDwU3/Qnq2Vb49NWlG8QehKORk/Z3nOjQstxyQj
+        DxLpBi8X0+NTh3MTrS0apOqxxP+++xAML
+X-Received: by 2002:a05:600c:2043:b0:3dc:5622:5ded with SMTP id p3-20020a05600c204300b003dc56225dedmr5615007wmg.12.1675106807284;
+        Mon, 30 Jan 2023 11:26:47 -0800 (PST)
+X-Google-Smtp-Source: AK7set+HKEF9qcmjdJeRfPmi1S0Zd9e5l2jeadeqVtxapSUKMx1q9Jxjx+GC52FTU98gwddsnpi9XA==
+X-Received: by 2002:a05:600c:2043:b0:3dc:5622:5ded with SMTP id p3-20020a05600c204300b003dc56225dedmr5615000wmg.12.1675106807099;
+        Mon, 30 Jan 2023 11:26:47 -0800 (PST)
 Received: from redhat.com ([2.52.144.173])
-        by smtp.gmail.com with ESMTPSA id c17-20020adffb11000000b002bc8130cca7sm12742836wrr.23.2023.01.30.11.26.08
+        by smtp.gmail.com with ESMTPSA id v6-20020a05600c444600b003db09692364sm18781196wmn.11.2023.01.30.11.26.45
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 30 Jan 2023 11:26:13 -0800 (PST)
-Date:   Mon, 30 Jan 2023 14:26:06 -0500
+        Mon, 30 Jan 2023 11:26:46 -0800 (PST)
+Date:   Mon, 30 Jan 2023 14:26:43 -0500
 From:   "Michael S. Tsirkin" <mst@redhat.com>
 To:     Ross Zwisler <zwisler@chromium.org>
 Cc:     linux-kernel@vger.kernel.org, Ross Zwisler <zwisler@google.com>,
-        "Tobin C. Harding" <me@tobin.cc>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Andrii Nakryiko <andrii@kernel.org>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Hao Luo <haoluo@google.com>, Huang Rui <ray.huang@amd.com>,
-        Ingo Molnar <mingo@redhat.com>, Jason Gunthorpe <jgg@ziepe.ca>,
-        Jason Wang <jasowang@redhat.com>, Jiri Olsa <jolsa@kernel.org>,
-        John Fastabend <john.fastabend@gmail.com>,
-        KP Singh <kpsingh@kernel.org>,
-        Leon Romanovsky <leon@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Martin KaFai Lau <martin.lau@linux.dev>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Mykola Lysenko <mykolal@fb.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Shuah Khan <shuah@kernel.org>, Song Liu <song@kernel.org>,
-        Stanislav Fomichev <sdf@google.com>,
         Steven Rostedt <rostedt@goodmis.org>,
-        Todd E Brandt <todd.e.brandt@linux.intel.com>,
-        Tycho Andersen <tycho@tycho.pizza>, Yonghong Song <yhs@fb.com>,
-        bpf@vger.kernel.org, kvm@vger.kernel.org,
-        linux-hardening@vger.kernel.org, linux-kselftest@vger.kernel.org,
-        linux-mm@kvack.org, linux-perf-users@vger.kernel.org,
-        linux-pm@vger.kernel.org, linux-rdma@vger.kernel.org,
-        virtualization@lists.linux-foundation.org,
-        linux-trace-kernel@vger.kernel.org
-Subject: Re: [PATCH 0/9] use canonical ftrace path whenever possible
-Message-ID: <20230130142555-mutt-send-email-mst@kernel.org>
+        linux-trace-kernel@vger.kernel.org,
+        Jason Wang <jasowang@redhat.com>,
+        virtualization@lists.linux-foundation.org
+Subject: Re: [PATCH 7/9] tools/virtio: use canonical ftrace path
+Message-ID: <20230130142616-mutt-send-email-mst@kernel.org>
 References: <20230130181915.1113313-1-zwisler@google.com>
+ <20230130181915.1113313-8-zwisler@google.com>
 MIME-Version: 1.0
-In-Reply-To: <20230130181915.1113313-1-zwisler@google.com>
+In-Reply-To: <20230130181915.1113313-8-zwisler@google.com>
 X-Mimecast-Spam-Score: 0
 X-Mimecast-Originator: redhat.com
 Content-Type: text/plain; charset=us-ascii
@@ -104,12 +78,9 @@ Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On Mon, Jan 30, 2023 at 11:19:06AM -0700, Ross Zwisler wrote:
+On Mon, Jan 30, 2023 at 11:19:13AM -0700, Ross Zwisler wrote:
 > The canonical location for the tracefs filesystem is at /sys/kernel/tracing.
-
-
-Acked-by: Michael S. Tsirkin <mst@redhat.com>
-
+> 
 > But, from Documentation/trace/ftrace.rst:
 > 
 >   Before 4.1, all ftrace tracing control files were within the debugfs
@@ -119,75 +90,44 @@ Acked-by: Michael S. Tsirkin <mst@redhat.com>
 > 
 >   /sys/kernel/debug/tracing
 > 
-> There are many places where this older debugfs path is still used in
-> code comments, selftests, examples and tools, so let's update them to
-> avoid confusion.
+> A few spots in tools/virtio still refer to this older debugfs
+> path, so let's update them to avoid confusion.
 > 
-> I've broken up the series as best I could by maintainer or directory,
-> and I've only sent people the patches that I think they care about to
-> avoid spamming everyone.
+> Signed-off-by: Ross Zwisler <zwisler@google.com>
+> ---
+>  tools/virtio/virtio-trace/README        | 2 +-
+>  tools/virtio/virtio-trace/trace-agent.c | 2 +-
+>  2 files changed, 2 insertions(+), 2 deletions(-)
 > 
-> Ross Zwisler (9):
->   tracing: always use canonical ftrace path
->   bpf: use canonical ftrace path
->   selftests/bpf: use canonical ftrace path
->   perf docs: use canonical ftrace path
->   tools/power: use canonical ftrace path
->   selftests: use canonical ftrace path
->   tools/virtio: use canonical ftrace path
->   leaking_addresses: also skip canonical ftrace path
->   tools/kvm_stat: use canonical ftrace path
-> 
->  include/linux/kernel.h                        |  2 +-
->  include/linux/tracepoint.h                    |  4 ++--
->  include/uapi/linux/bpf.h                      |  8 ++++----
->  kernel/trace/Kconfig                          | 20 +++++++++----------
->  kernel/trace/kprobe_event_gen_test.c          |  2 +-
->  kernel/trace/ring_buffer.c                    |  2 +-
->  kernel/trace/synth_event_gen_test.c           |  2 +-
->  kernel/trace/trace.c                          |  2 +-
->  samples/bpf/cpustat_kern.c                    |  4 ++--
->  samples/bpf/hbm.c                             |  4 ++--
->  samples/bpf/ibumad_kern.c                     |  4 ++--
->  samples/bpf/lwt_len_hist.sh                   |  2 +-
->  samples/bpf/offwaketime_kern.c                |  2 +-
->  samples/bpf/task_fd_query_user.c              |  4 ++--
->  samples/bpf/test_lwt_bpf.sh                   |  2 +-
->  samples/bpf/test_overhead_tp_kern.c           |  4 ++--
->  samples/user_events/example.c                 |  4 ++--
->  scripts/leaking_addresses.pl                  |  1 +
->  scripts/tracing/draw_functrace.py             |  6 +++---
->  scripts/tracing/ftrace-bisect.sh              |  4 ++--
->  tools/include/uapi/linux/bpf.h                |  8 ++++----
->  tools/kvm/kvm_stat/kvm_stat                   |  2 +-
->  tools/lib/api/fs/tracing_path.c               |  4 ++--
->  tools/lib/traceevent/event-parse.c            |  8 ++++----
->  tools/perf/Documentation/perf-list.txt        |  2 +-
->  tools/perf/Documentation/perf-script-perl.txt |  2 +-
->  .../perf/Documentation/perf-script-python.txt |  4 ++--
->  tools/power/pm-graph/sleepgraph.py            |  4 ++--
->  .../x86/amd_pstate_tracer/amd_pstate_trace.py |  4 ++--
->  .../intel_pstate_tracer.py                    | 10 +++++-----
->  .../selftests/bpf/get_cgroup_id_user.c        |  2 +-
->  .../bpf/prog_tests/kprobe_multi_test.c        |  2 +-
->  .../bpf/prog_tests/task_fd_query_tp.c         |  2 +-
->  .../bpf/prog_tests/tp_attach_query.c          |  2 +-
->  .../selftests/bpf/prog_tests/trace_printk.c   |  2 +-
->  .../selftests/bpf/prog_tests/trace_vprintk.c  |  2 +-
->  .../selftests/bpf/progs/test_stacktrace_map.c |  2 +-
->  .../selftests/bpf/progs/test_tracepoint.c     |  2 +-
->  tools/testing/selftests/bpf/test_ftrace.sh    |  2 +-
->  tools/testing/selftests/bpf/test_tunnel.sh    |  8 ++++----
->  tools/testing/selftests/bpf/trace_helpers.c   |  4 ++--
->  .../testing/selftests/user_events/dyn_test.c  |  2 +-
->  .../selftests/user_events/ftrace_test.c       | 10 +++++-----
->  .../testing/selftests/user_events/perf_test.c |  8 ++++----
->  tools/testing/selftests/vm/protection_keys.c  |  4 ++--
->  tools/tracing/latency/latency-collector.c     |  2 +-
->  tools/virtio/virtio-trace/README              |  2 +-
->  tools/virtio/virtio-trace/trace-agent.c       |  2 +-
->  48 files changed, 96 insertions(+), 95 deletions(-)
-> 
+> diff --git a/tools/virtio/virtio-trace/README b/tools/virtio/virtio-trace/README
+> index b64845b823ab..cea29a2a4c0a 100644
+> --- a/tools/virtio/virtio-trace/README
+> +++ b/tools/virtio/virtio-trace/README
+> @@ -95,7 +95,7 @@ Run
+>  
+>  1) Enable ftrace in the guest
+>   <Example>
+> -	# echo 1 > /sys/kernel/debug/tracing/events/sched/enable
+> +	# echo 1 > /sys/kernel/tracing/events/sched/enable
+>  
+>  2) Run trace agent in the guest
+>   This agent must be operated as root.
+> diff --git a/tools/virtio/virtio-trace/trace-agent.c b/tools/virtio/virtio-trace/trace-agent.c
+> index cdfe77c2b4c8..805942d02e9f 100644
+> --- a/tools/virtio/virtio-trace/trace-agent.c
+> +++ b/tools/virtio/virtio-trace/trace-agent.c
+> @@ -19,7 +19,7 @@
+>  #define PIPE_MIN_SIZE		(PAGE_SIZE*PIPE_DEF_BUFS)
+>  #define PIPE_MAX_SIZE		(1024*1024)
+>  #define READ_PATH_FMT	\
+> -		"/sys/kernel/debug/tracing/per_cpu/cpu%d/trace_pipe_raw"
+> +		"/sys/kernel/tracing/per_cpu/cpu%d/trace_pipe_raw"
+
+Should we try both old and new path then?
+
+>  #define WRITE_PATH_FMT		"/dev/virtio-ports/trace-path-cpu%d"
+>  #define CTL_PATH		"/dev/virtio-ports/agent-ctl-path"
+>  
 > -- 
 > 2.39.1.456.gfc5497dd1b-goog
 
