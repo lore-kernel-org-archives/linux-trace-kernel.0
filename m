@@ -2,50 +2,47 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0851EC636D3
-	for <linux-trace-kernel@archiver.kernel.org>; Tue, 31 Jan 2023 15:36:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 91426C636CC
+	for <linux-trace-kernel@archiver.kernel.org>; Tue, 31 Jan 2023 15:38:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232308AbjAaPgm (ORCPT
+        id S233354AbjAaPh7 (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Tue, 31 Jan 2023 10:36:42 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47118 "EHLO
+        Tue, 31 Jan 2023 10:37:59 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48696 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233340AbjAaPgl (ORCPT
+        with ESMTP id S232958AbjAaPh7 (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Tue, 31 Jan 2023 10:36:41 -0500
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9136B4DCCA;
-        Tue, 31 Jan 2023 07:36:39 -0800 (PST)
+        Tue, 31 Jan 2023 10:37:59 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 215779EDE;
+        Tue, 31 Jan 2023 07:37:57 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id AFDE3B81D6C;
-        Tue, 31 Jan 2023 15:36:37 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2283FC433D2;
-        Tue, 31 Jan 2023 15:36:34 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 731E561565;
+        Tue, 31 Jan 2023 15:37:57 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B2238C433EF;
+        Tue, 31 Jan 2023 15:37:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1675179396;
-        bh=QH4sAw+QrLozn4NsAExFtDNNpxCjPzE+cVXH25vlvbc=;
+        s=k20201202; t=1675179476;
+        bh=qVm5ApfnManH1Eoamx0qsmCbirxrEbIbD52NXuiTZHg=;
         h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=PftTUX1KsnzRuJFutnCWxI8tixzL1lMTIWfWt2UECOjfKQJPH7t4OazUS3hpqCGrV
-         CHOTnmysnGtcBxWomu7Pw3wekr8XQdNCos2cyvb9hM31DipHiO0Zwglx+CuQ6A+ide
-         vsjOCiXMzRhFu2LCtuyvC9Ak6D74Bw3JBKR8VphAtG8DEY2y6i5+Rb5hZqnOfI1F7m
-         8tVqsSo55Bo74wxldxQX3tCh+cy55kTa3VjZi0cHz98TZri0vr2Li5e1LPmn2zJRFH
-         ufdth9PiOzCT7zE3qzD3dDg71jKD259OQTgXZSctPja+098rkgBx8oisBjunLI6a9Z
-         vrZEvsQlcZ/pg==
-Date:   Wed, 1 Feb 2023 00:36:33 +0900
+        b=pdjzxqPg3W+VVRwONLLbzQtXJZnJdppTmgO2vPLUJcpeFVlQeJ6s3bCQOgBPFB3Ek
+         Z0dFhTyFVjYs8+0QXvWlmh/meDW9V+ELiDXVl6UGIjzlTucvBfyq9mQliBLkS1YD7j
+         CXeZJshU5hKenH5x2Y1xP+Wr602k7lPvBWWwqOwJK9gH+r9lQb0N4eX8q42YbftwB6
+         HXjM59iBkOi/rQszYD15bfrNT4+9me/oVRDO8vRGD1Am5OMUA3FWAdVR/CeaTA7X0q
+         XG7w8Z1FvchlYN0rlTmm0/DzsI8NxEpKFCkDAfWTHflXvkmjeiP83qaxnHKL2uN1Cb
+         AChlpkTno+abA==
+Date:   Wed, 1 Feb 2023 00:37:53 +0900
 From:   Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To:     Steven Rostedt <rostedt@goodmis.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Linux Trace Kernel <linux-trace-kernel@vger.kernel.org>,
+To:     Anton Gusev <aagusev@ispras.ru>
+Cc:     Steven Rostedt <rostedt@goodmis.org>,
         Masami Hiramatsu <mhiramat@kernel.org>,
-        Tom Zanussi <zanussi@kernel.org>,
-        kernel test robot <lkp@intel.com>
-Subject: Re: [PATCH] tracing: Fix trace_event_raw_event_synth() if else
- statement
-Message-Id: <20230201003633.8db1a08b508a2203d69fa918@kernel.org>
-In-Reply-To: <20230131095237.63e3ca8d@gandalf.local.home>
-References: <20230131095237.63e3ca8d@gandalf.local.home>
+        linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
+Subject: Re: [PATCH] tracing: Fix wrong return in kprobe_event_gen_test.c
+Message-Id: <20230201003753.d844d26d902169ee64b979d4@kernel.org>
+In-Reply-To: <20230131075818.5322-1-aagusev@ispras.ru>
+References: <20230131075818.5322-1-aagusev@ispras.ru>
 X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Mime-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
@@ -54,63 +51,51 @@ Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On Tue, 31 Jan 2023 09:52:37 -0500
-Steven Rostedt <rostedt@goodmis.org> wrote:
+On Tue, 31 Jan 2023 10:58:18 +0300
+Anton Gusev <aagusev@ispras.ru> wrote:
 
-> From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
+> Overwriting the error code with the deletion result may cause the
+> function to return 0 despite encountering an error. Commit b111545d26c0
+> ("tracing: Remove the useless value assignment in
+> test_create_synth_event()") solves a similar issue by
+> returning the original error code, so this patch does the same.
 > 
-> The test to check if the field is a stack is to be done if it is not a
-> string. But the code had:
+> Found by Linux Verification Center (linuxtesting.org) with SVACE.
 > 
->     } if (event->fields[i]->is_stack) {
-> 
-> and not
-> 
->    } else if (event->fields[i]->is_stack) {
-> 
-> which would cause it to always be tested. Worse yet, this also included an
-> "else" statement that was only to be called if the field was not a string
-> and a stack, but this code allows it to be called if it was a string (and
-> not a stack).
-> 
-> Also fixed some whitespace issues.
-> 
+> Signed-off-by: Anton Gusev <aagusev@ispras.ru>
 
-Looks good to me.
+Oops, thanks for the fix!
 
 Acked-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 
-Hmm, I need to add more tests for syntax events...
-
-Thanks!
-
-
-> Link: https://lore.kernel.org/all/202301302110.mEtNwkBD-lkp@intel.com/
-> 
-> Fixes: 00cf3d672a9d ("tracing: Allow synthetic events to pass around stacktraces")
-> Reported-by: kernel test robot <lkp@intel.com>
-> Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
 > ---
->  kernel/trace/trace_events_synth.c | 4 ++--
+>  kernel/trace/kprobe_event_gen_test.c | 4 ++--
 >  1 file changed, 2 insertions(+), 2 deletions(-)
 > 
-> diff --git a/kernel/trace/trace_events_synth.c b/kernel/trace/trace_events_synth.c
-> index adb630633f31..306c89e0ce55 100644
-> --- a/kernel/trace/trace_events_synth.c
-> +++ b/kernel/trace/trace_events_synth.c
-> @@ -564,8 +564,8 @@ static notrace void trace_event_raw_event_synth(void *__data,
->  					   event->fields[i]->is_dynamic,
->  					   data_size, &n_u64);
->  			data_size += len; /* only dynamic string increments */
-> -		} if (event->fields[i]->is_stack) {
-> -		        long *stack = (long *)(long)var_ref_vals[val_idx];
-> +		} else if (event->fields[i]->is_stack) {
-> +			long *stack = (long *)(long)var_ref_vals[val_idx];
+> diff --git a/kernel/trace/kprobe_event_gen_test.c b/kernel/trace/kprobe_event_gen_test.c
+> index c736487fc0e4..e0c420eb0b2b 100644
+> --- a/kernel/trace/kprobe_event_gen_test.c
+> +++ b/kernel/trace/kprobe_event_gen_test.c
+> @@ -146,7 +146,7 @@ static int __init test_gen_kprobe_cmd(void)
+>  	if (trace_event_file_is_valid(gen_kprobe_test))
+>  		gen_kprobe_test = NULL;
+>  	/* We got an error after creating the event, delete it */
+> -	ret = kprobe_event_delete("gen_kprobe_test");
+> +	kprobe_event_delete("gen_kprobe_test");
+>  	goto out;
+>  }
 >  
->  			len = trace_stack(entry, event, stack,
->  					   data_size, &n_u64);
+> @@ -211,7 +211,7 @@ static int __init test_gen_kretprobe_cmd(void)
+>  	if (trace_event_file_is_valid(gen_kretprobe_test))
+>  		gen_kretprobe_test = NULL;
+>  	/* We got an error after creating the event, delete it */
+> -	ret = kprobe_event_delete("gen_kretprobe_test");
+> +	kprobe_event_delete("gen_kretprobe_test");
+>  	goto out;
+>  }
+>  
 > -- 
-> 2.39.0
+> 2.39.1
 > 
 
 
