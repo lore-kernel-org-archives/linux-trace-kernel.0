@@ -2,104 +2,109 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CB748C636CC
-	for <linux-trace-kernel@archiver.kernel.org>; Tue, 31 Jan 2023 18:27:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 80AC7C38142
+	for <linux-trace-kernel@archiver.kernel.org>; Tue, 31 Jan 2023 19:50:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231167AbjAaS1F (ORCPT
+        id S231311AbjAaTuz (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Tue, 31 Jan 2023 13:27:05 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51824 "EHLO
+        Tue, 31 Jan 2023 14:50:55 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54180 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230481AbjAaS1E (ORCPT
+        with ESMTP id S230522AbjAaTuy (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Tue, 31 Jan 2023 13:27:04 -0500
-Received: from mail-yb1-xb35.google.com (mail-yb1-xb35.google.com [IPv6:2607:f8b0:4864:20::b35])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D29D33EFCA
-        for <linux-trace-kernel@vger.kernel.org>; Tue, 31 Jan 2023 10:27:03 -0800 (PST)
-Received: by mail-yb1-xb35.google.com with SMTP id e15so19255611ybn.10
-        for <linux-trace-kernel@vger.kernel.org>; Tue, 31 Jan 2023 10:27:03 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=HkHNPqnVxAIY/tqIt7qZnRTR4WfHWVZtazfgEEVLA1k=;
-        b=tQEMNZ1+yeDZEj71B07fcjB50jM1i6aOuywWS/FEjrOnp3EcR69hAad3lu7vZn711m
-         rWFCK+MRQGo98+OX7Z5YJLQhXxWxcbseEzjAKbTV3mnOpdwwmNbpFwvbdi+eNLV/KuMk
-         sNXJc8FHml2fwt05JkbGF5OXq5QschNyjjqDrAvpuG6zFZbmRhPSLQnUptA+sed4s+4u
-         /ShnkTt4PmvgX5jmo1mCcs2pWa08grni3e3ApLv3uhCKCxfacTcGLbncAhJRnWaiVYSm
-         tdI+8rQTbvf6cG+WE0yUEx2Rdr8MDao7T3rRNVqVLCHHtQydcDhp9f9RmGWkoukyc4Oq
-         rcuw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=HkHNPqnVxAIY/tqIt7qZnRTR4WfHWVZtazfgEEVLA1k=;
-        b=mk022hwQyOcQ4/LeUKEi/4MT+/DpyBIFgMROzLbppsUDvFJN0r60vA+/xqjfPvrDqt
-         OIjFBJfnlabjl6OM7m2AlZyOW1DyOvdihHDTW1ZtCMQ1Bcof5kdbXfnvlhgc2UOEyGks
-         32drhfSxxzLCGJf82xska7mtzHWEN60+pdLhQHsg6mzj0yiwObUjstePMqZorsaO7xRb
-         yWtclYqBYYee5RyZxG0MdYEhD65wR3IrNRB3WwjBmSRiZCxYX5qZ4/bYdxXZQiUKHvmS
-         25aC0XqxF5lVLDxn84nN8fa2GzWgC3qVGl+7xIvHvtIOMezl2VkrAw25gkuBBus5Na1c
-         RETQ==
-X-Gm-Message-State: AO0yUKUDf2rcprtDiN8MdFChCQrw710zjN7N4oXG1Po+OzdJoJSFLVY/
-        M88xEH056RpXezLrMV4DJdiKaldVHw9w0bQwy/2rVw==
-X-Google-Smtp-Source: AK7set9Wi/SxOYBU/ud8H+po+UJzdx1g7/5fVkPjA4w3dbgGjnozI/UIgrAp4ux9zJMjoCX+yuiExNDq7TyEEr9b0cI=
-X-Received: by 2002:a25:bfc4:0:b0:80b:877c:7a56 with SMTP id
- q4-20020a25bfc4000000b0080b877c7a56mr2044611ybm.368.1675189622981; Tue, 31
- Jan 2023 10:27:02 -0800 (PST)
+        Tue, 31 Jan 2023 14:50:54 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 31FD7530C8;
+        Tue, 31 Jan 2023 11:50:53 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id C1A8B616C2;
+        Tue, 31 Jan 2023 19:50:52 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3C923C433EF;
+        Tue, 31 Jan 2023 19:50:50 +0000 (UTC)
+Date:   Tue, 31 Jan 2023 14:50:48 -0500
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Cc:     Ross Zwisler <zwisler@chromium.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Ross Zwisler <zwisler@google.com>,
+        Andrii Nakryiko <andrii@kernel.org>,
+        linux-trace-kernel@vger.kernel.org,
+        Mykola Lysenko <mykolal@fb.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Martin KaFai Lau <martin.lau@linux.dev>,
+        Song Liu <song@kernel.org>, Yonghong Song <yhs@fb.com>,
+        John Fastabend <john.fastabend@gmail.com>,
+        KP Singh <kpsingh@kernel.org>,
+        Stanislav Fomichev <sdf@google.com>,
+        Hao Luo <haoluo@google.com>, Jiri Olsa <jolsa@kernel.org>,
+        Shuah Khan <shuah@kernel.org>, bpf <bpf@vger.kernel.org>,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>
+Subject: Re: [PATCH 3/9] selftests/bpf: use canonical ftrace path
+Message-ID: <20230131145048.6fac87d3@gandalf.local.home>
+In-Reply-To: <20230131005315.phdnhkeeconxxm3e@macbook-pro-6.dhcp.thefacebook.com>
+References: <20230130181915.1113313-1-zwisler@google.com>
+        <20230130181915.1113313-4-zwisler@google.com>
+        <CAADnVQJ7KxEK92qOz0Ya4MrACHpxngSpG4W38xuGEgZmXEG-vQ@mail.gmail.com>
+        <20230130145932.37cf6b73@gandalf.local.home>
+        <CAADnVQ+F3Z70mu3-QyyNFyJ2qCkDXnMJCW-o+fcnZo=LWj5d9g@mail.gmail.com>
+        <20230130183419.0626dc21@gandalf.local.home>
+        <20230131005315.phdnhkeeconxxm3e@macbook-pro-6.dhcp.thefacebook.com>
+X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-References: <202301301057.e55dad5b-oliver.sang@intel.com> <Y9dETROtv9Bld9TI@casper.infradead.org>
- <20230131052352.5qnqegzwmt7akk7t@google.com> <Y9iq8fRT4sDgIwQN@casper.infradead.org>
- <20230131055743.tsilxx5vfl6gx4dj@google.com>
-In-Reply-To: <20230131055743.tsilxx5vfl6gx4dj@google.com>
-From:   Shakeel Butt <shakeelb@google.com>
-Date:   Tue, 31 Jan 2023 10:26:52 -0800
-Message-ID: <CALvZod7TuaJ7pCc2nJKehwGkcuvsvjdL+4hs6qC3bZsOmGzXzg@mail.gmail.com>
-Subject: Re: [linus:master] [mm] f1a7941243: unixbench.score -19.2% regression
-To:     Matthew Wilcox <willy@infradead.org>, Tejun Heo <tj@kernel.org>,
-        Dennis Zhou <dennis@kernel.org>
-Cc:     kernel test robot <oliver.sang@intel.com>, oe-lkp@lists.linux.dev,
-        lkp@intel.com, linux-kernel@vger.kernel.org,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        linux-mm@kvack.org, linux-trace-kernel@vger.kernel.org,
-        ying.huang@intel.com, feng.tang@intel.com,
-        zhengjun.xing@linux.intel.com, fengwei.yin@intel.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-+per-cpu memory maintainers for FYI.
+On Mon, 30 Jan 2023 16:53:15 -0800
+Alexei Starovoitov <alexei.starovoitov@gmail.com> wrote:
 
-Thread started at
-https://lore.kernel.org/linux-mm/202301301057.e55dad5b-oliver.sang@intel.com/
+> I don't think /sys/kernel/debug/tracing can ever be deprecated.
+> There are plenty of user space applications (not bpf related at all) that
+> expect it to be in that location.
+> 
+> Quick search shows:
+> 
+> android profiler:
+> https://android.googlesource.com/platform/external/perfetto/+/refs/heads/master/src/tools/dump_ftrace_stats/main.cc#60
+> 
+> java profiler:
+> https://github.com/jvm-profiling-tools/async-profiler/blob/master/src/perfEvents_linux.cpp#L85
 
-On Mon, Jan 30, 2023 at 9:57 PM Shakeel Butt <shakeelb@google.com> wrote:
->
-[...]
-> >
-> > We could cut down the number of calls to pcpu_alloc() by a factor of 4
-> > by having a pcpu_alloc_bulk() that would allocate all four RSS counters
-> > at once.
-> >
-> > Just throwing out ideas ...
->
-> Thanks, I will take a stab at pcpu_alloc_bulk() and will share the
-> result tomorrow.
->
+These can easily be changed. We have deprecated stuff in the past, by
+making sure all the affected code is updated properly.
 
-OK, not a one day effort.
+One way is to start adding printks when used. Then update to WARN() to get
+people to complain. Yes, the burden is on us (me and others) to go out and
+fix the issues. But it is possible to do, as I've done it before.
 
-Andrew, which option do you prefer?
+> 
+> > If anything, leaving hardcoded calls like that forces the user to mount
+> > debugfs when they may not want to. The entire point of tracefs was to allow
+> > users to have access to the trace events without having to expose debugfs
+> > and all the crud it brings with it. This was requested several times before
+> > it was added.  
+> 
+> All makes sense.
+> 
+> > What is your technical reason for not modifying the code to look for
+> > tracefs in /sys/kernel/tracing and if it's not there try
+> > /sys/kernel/debug/tracing, and if both are not found, try mounting it.  
+> 
+> libbpf already has code to probe both locations.
+> The point that full deprecation of /sys/kernel/debug/tracing is not possible,
+> hence no point doing the diff:
+> 48 files changed, 96 insertions(+), 95 deletions(-)
+> It doesn't move the needle. Just a code churn.
 
-1. Keep the patches as the test workload (fork ping pong) is not a
-representative of real world workload and work on improving
-pcpu_alloc() for 6.4+.
+As code in the Linux kernel is used as examples for future work, it should
+not be using an interface that is obsolete. That's enough rational for code
+churn. This "we can never deprecated so we won't even try" BS is not an
+answer.
 
-2. Revert the patches for now, improve pcpu_alloc() and re-introduce
-the patches once we confirm that fork-ping-pong is not regressed
-anymore.
-
-thanks,
-Shakeel
+-- Steve
