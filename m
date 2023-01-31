@@ -2,37 +2,40 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C3075C636CC
-	for <linux-trace-kernel@archiver.kernel.org>; Tue, 31 Jan 2023 15:40:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A0C4C636CC
+	for <linux-trace-kernel@archiver.kernel.org>; Tue, 31 Jan 2023 15:42:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231591AbjAaPkq (ORCPT
+        id S232009AbjAaPmI (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Tue, 31 Jan 2023 10:40:46 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52222 "EHLO
+        Tue, 31 Jan 2023 10:42:08 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53586 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230417AbjAaPko (ORCPT
+        with ESMTP id S232213AbjAaPmI (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Tue, 31 Jan 2023 10:40:44 -0500
-Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3272653574;
-        Tue, 31 Jan 2023 07:40:14 -0800 (PST)
+        Tue, 31 Jan 2023 10:42:08 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C2412199FC;
+        Tue, 31 Jan 2023 07:42:06 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 1375EB81D63;
-        Tue, 31 Jan 2023 15:39:40 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1FD43C433D2;
-        Tue, 31 Jan 2023 15:39:38 +0000 (UTC)
-Date:   Tue, 31 Jan 2023 10:39:35 -0500
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 1E71E61569;
+        Tue, 31 Jan 2023 15:42:06 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DD65FC433EF;
+        Tue, 31 Jan 2023 15:42:04 +0000 (UTC)
+Date:   Tue, 31 Jan 2023 10:42:03 -0500
 From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Mark Rutland <mark.rutland@arm.com>
-Cc:     Tom Rix <trix@redhat.com>, mhiramat@kernel.org,
-        linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
-Subject: Re: [PATCH] samples: ftrace: make some global variables static
-Message-ID: <20230131103935.4966c46e@gandalf.local.home>
-In-Reply-To: <Y9jo1SJpsBRTb2M5@FVFF77S0Q05N>
-References: <20230130193708.1378108-1-trix@redhat.com>
-        <Y9jo1SJpsBRTb2M5@FVFF77S0Q05N>
+To:     "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Linux Trace Kernel <linux-trace-kernel@vger.kernel.org>,
+        Tom Zanussi <zanussi@kernel.org>,
+        kernel test robot <lkp@intel.com>
+Subject: Re: [PATCH] tracing: Fix trace_event_raw_event_synth() if else
+ statement
+Message-ID: <20230131104203.55d2d151@gandalf.local.home>
+In-Reply-To: <20230201003633.8db1a08b508a2203d69fa918@kernel.org>
+References: <20230131095237.63e3ca8d@gandalf.local.home>
+        <20230201003633.8db1a08b508a2203d69fa918@kernel.org>
 X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
@@ -41,41 +44,15 @@ Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On Tue, 31 Jan 2023 10:09:25 +0000
-Mark Rutland <mark.rutland@arm.com> wrote:
+On Wed, 1 Feb 2023 00:36:33 +0900
+Masami Hiramatsu (Google) <mhiramat@kernel.org> wrote:
 
-> On Mon, Jan 30, 2023 at 11:37:08AM -0800, Tom Rix wrote:
-> > smatch reports this representative issue
-> > samples/ftrace/ftrace-ops.c:15:14: warning: symbol 'nr_function_calls' was not declared. Should it be static?
-> > 
-> > The nr_functions_calls and several other global variables are only
-> > used in ftrace-ops.c, so they should be static.  
+> Looks good to me.
 > 
-> This makes sense to me.
+> Acked-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 > 
-> > Remove the instances of initializing static int to 0.  
-> 
-> I appreciate that static variables get implicitly zero initialized, but
-> dropping the initialization is inconsistent with the other control variables,
-> and IMO it's quite confusing, so I'd prefer to keep that for clarity. I note
-> you've also dropped the initialization of a bool to false, whereas the above
-> just mentions int.
-> 
-> I'd prefer to keep the initialization, but I'll defre to Steve if he thinks
-> differently. :)
+> Hmm, I need to add more tests for syntax events...
 
-Yeah, I'm fine with dropping the initialization of even bool (I don't
-initialize bool to false either). Everything in the BSS section is always
-initialized to zero, and in C, false is the same as zero.
-
-> 
-> > Signed-off-by: Tom Rix <trix@redhat.com>  
-> 
-> With the above taken into account:
-> 
-> Acked-by: Mark Rutland <mark.rutland@arm.com>
-
-Thanks,
+I was thinking the same thing, as they should have caught this ;-)
 
 -- Steve
-
