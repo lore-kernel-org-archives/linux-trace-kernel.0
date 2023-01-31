@@ -2,63 +2,81 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 15FA0C636CD
-	for <linux-trace-kernel@archiver.kernel.org>; Tue, 31 Jan 2023 06:19:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C6887C38142
+	for <linux-trace-kernel@archiver.kernel.org>; Tue, 31 Jan 2023 07:58:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229686AbjAaGTl (ORCPT
+        id S230514AbjAaH6y (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Tue, 31 Jan 2023 01:19:41 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57896 "EHLO
+        Tue, 31 Jan 2023 02:58:54 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57954 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229646AbjAaGTk (ORCPT
+        with ESMTP id S229559AbjAaH6x (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Tue, 31 Jan 2023 01:19:40 -0500
-Received: from out30-118.freemail.mail.aliyun.com (out30-118.freemail.mail.aliyun.com [115.124.30.118])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AB307C64F;
-        Mon, 30 Jan 2023 22:19:39 -0800 (PST)
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R151e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018046050;MF=yang.lee@linux.alibaba.com;NM=1;PH=DS;RN=6;SR=0;TI=SMTPD_---0VaVQrZk_1675145976;
-Received: from localhost(mailfrom:yang.lee@linux.alibaba.com fp:SMTPD_---0VaVQrZk_1675145976)
-          by smtp.aliyun-inc.com;
-          Tue, 31 Jan 2023 14:19:37 +0800
-From:   Yang Li <yang.lee@linux.alibaba.com>
-To:     rostedt@goodmis.org
-Cc:     mhiramat@kernel.org, linux-kernel@vger.kernel.org,
-        linux-trace-kernel@vger.kernel.org,
-        Yang Li <yang.lee@linux.alibaba.com>,
-        Abaci Robot <abaci@linux.alibaba.com>
-Subject: [PATCH -next] tracing: clean up some inconsistent indentings
-Date:   Tue, 31 Jan 2023 14:19:35 +0800
-Message-Id: <20230131061935.53453-1-yang.lee@linux.alibaba.com>
-X-Mailer: git-send-email 2.20.1.7.g153144c
+        Tue, 31 Jan 2023 02:58:53 -0500
+Received: from mail.ispras.ru (mail.ispras.ru [83.149.199.84])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5D67240BE7;
+        Mon, 30 Jan 2023 23:58:52 -0800 (PST)
+Received: from localhost.hse.ru (unknown [89.175.18.189])
+        by mail.ispras.ru (Postfix) with ESMTPSA id 4DF7340D403D;
+        Tue, 31 Jan 2023 07:58:47 +0000 (UTC)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mail.ispras.ru 4DF7340D403D
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ispras.ru;
+        s=default; t=1675151927;
+        bh=VSnYDxdcyGmtaDCzkcokBqEpatPFN9DVbiQ+CDtfkSQ=;
+        h=From:To:Cc:Subject:Date:From;
+        b=K2nrPwD7wTKlWfVK4Mw0xxce36pEelcSixpgxcUOGODyQwuSbB6Fe0kbtLkVTeFf5
+         YaSqCPB5UOP3nAfWObND2iVnsL8GIDd5Yt1y6wKpN/kGH2a3J2scypFLafP4awwskn
+         RP3KX6fHwWE+LHpy8JvKFpc26p/aRfu2bK/1q3UU=
+From:   Anton Gusev <aagusev@ispras.ru>
+To:     Steven Rostedt <rostedt@goodmis.org>
+Cc:     Anton Gusev <aagusev@ispras.ru>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
+Subject: [PATCH] tracing: Fix wrong return in kprobe_event_gen_test.c
+Date:   Tue, 31 Jan 2023 10:58:18 +0300
+Message-Id: <20230131075818.5322-1-aagusev@ispras.ru>
+X-Mailer: git-send-email 2.39.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-kernel/trace/trace_events_synth.c:567 trace_event_raw_event_synth() warn: inconsistent indenting
+Overwriting the error code with the deletion result may cause the
+function to return 0 despite encountering an error. Commit b111545d26c0
+("tracing: Remove the useless value assignment in
+test_create_synth_event()") solves a similar issue by
+returning the original error code, so this patch does the same.
 
-Reported-by: Abaci Robot <abaci@linux.alibaba.com>
-Link: https://bugzilla.openanolis.cn/show_bug.cgi?id=3892
-Signed-off-by: Yang Li <yang.lee@linux.alibaba.com>
+Found by Linux Verification Center (linuxtesting.org) with SVACE.
+
+Signed-off-by: Anton Gusev <aagusev@ispras.ru>
 ---
- kernel/trace/trace_events_synth.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ kernel/trace/kprobe_event_gen_test.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/kernel/trace/trace_events_synth.c b/kernel/trace/trace_events_synth.c
-index adb630633f31..949d4cbe3f82 100644
---- a/kernel/trace/trace_events_synth.c
-+++ b/kernel/trace/trace_events_synth.c
-@@ -564,7 +564,8 @@ static notrace void trace_event_raw_event_synth(void *__data,
- 					   event->fields[i]->is_dynamic,
- 					   data_size, &n_u64);
- 			data_size += len; /* only dynamic string increments */
--		} if (event->fields[i]->is_stack) {
-+		}
-+		if (event->fields[i]->is_stack) {
- 		        long *stack = (long *)(long)var_ref_vals[val_idx];
+diff --git a/kernel/trace/kprobe_event_gen_test.c b/kernel/trace/kprobe_event_gen_test.c
+index c736487fc0e4..e0c420eb0b2b 100644
+--- a/kernel/trace/kprobe_event_gen_test.c
++++ b/kernel/trace/kprobe_event_gen_test.c
+@@ -146,7 +146,7 @@ static int __init test_gen_kprobe_cmd(void)
+ 	if (trace_event_file_is_valid(gen_kprobe_test))
+ 		gen_kprobe_test = NULL;
+ 	/* We got an error after creating the event, delete it */
+-	ret = kprobe_event_delete("gen_kprobe_test");
++	kprobe_event_delete("gen_kprobe_test");
+ 	goto out;
+ }
  
- 			len = trace_stack(entry, event, stack,
+@@ -211,7 +211,7 @@ static int __init test_gen_kretprobe_cmd(void)
+ 	if (trace_event_file_is_valid(gen_kretprobe_test))
+ 		gen_kretprobe_test = NULL;
+ 	/* We got an error after creating the event, delete it */
+-	ret = kprobe_event_delete("gen_kretprobe_test");
++	kprobe_event_delete("gen_kretprobe_test");
+ 	goto out;
+ }
+ 
 -- 
-2.20.1.7.g153144c
+2.39.1
 
