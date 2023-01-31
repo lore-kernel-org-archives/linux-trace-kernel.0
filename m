@@ -2,107 +2,101 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A1E0C61DA4
-	for <linux-trace-kernel@archiver.kernel.org>; Tue, 31 Jan 2023 02:49:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D0085C38142
+	for <linux-trace-kernel@archiver.kernel.org>; Tue, 31 Jan 2023 03:38:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230062AbjAaCtv (ORCPT
+        id S229723AbjAaDit (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Mon, 30 Jan 2023 21:49:51 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60724 "EHLO
+        Mon, 30 Jan 2023 22:38:49 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53516 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229542AbjAaCtu (ORCPT
+        with ESMTP id S229511AbjAaDit (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Mon, 30 Jan 2023 21:49:50 -0500
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E917425287;
-        Mon, 30 Jan 2023 18:49:48 -0800 (PST)
-Received: from pps.filterd (m0279872.ppops.net [127.0.0.1])
-        by mx0a-0031df01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 30V2V3UM021098;
-        Tue, 31 Jan 2023 02:49:42 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=message-id : date :
- mime-version : subject : to : cc : references : from : in-reply-to :
- content-type : content-transfer-encoding; s=qcppdkim1;
- bh=BWcjC5DZ3idQSQAxRdqK3fIUmKR0z6P+iv+wHKcKKZU=;
- b=DiybgHbJhd8hyJF5ju2xguD+IYjdJ3r9uG3KkWvK8rl0AaMQ250mREgEdDlcx6PsBJaz
- EzyRlLPxlOwDbLaQvv13JuhCYMffrn0t1Rva40cWcnLa2SgIXomVJyy2YR1xzLlXjQEh
- vHw7rtyPrz5Hpcx7VuHBkp1xWsxdkwF0QhX51iFnBmlg5l7BhhyO/yDgc3Z1Omwdct8y
- BExas+jnR6pmUS+WKmdpN8vvkD86AWEdIxIs4EdePc5tpyS2MtOKTp3VMKMt77JGIF4Y
- yD2W6BxV0QAHbxnSTMYWzE5GfGvM+3TKSpXknh/7OK52/FBJzMMhShWjgXMRXOccMG16 yQ== 
-Received: from nalasppmta03.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-        by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3nejdm0uah-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 31 Jan 2023 02:49:42 +0000
-Received: from nalasex01b.na.qualcomm.com (nalasex01b.na.qualcomm.com [10.47.209.197])
-        by NALASPPMTA03.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 30V2nfAJ016448
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 31 Jan 2023 02:49:41 GMT
-Received: from [10.239.154.244] (10.80.80.8) by nalasex01b.na.qualcomm.com
- (10.47.209.197) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.986.36; Mon, 30 Jan
- 2023 18:49:40 -0800
-Message-ID: <5f37bdef-5447-8def-7bb0-a498879abc4c@quicinc.com>
-Date:   Tue, 31 Jan 2023 10:49:37 +0800
+        Mon, 30 Jan 2023 22:38:49 -0500
+Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id DDFB810405;
+        Mon, 30 Jan 2023 19:38:45 -0800 (PST)
+Received: from loongson.cn (unknown [113.200.148.30])
+        by gateway (Coremail) with SMTP id _____8AxmOlEjdhj+jwKAA--.17447S3;
+        Tue, 31 Jan 2023 11:38:44 +0800 (CST)
+Received: from [10.130.0.135] (unknown [113.200.148.30])
+        by localhost.localdomain (Coremail) with SMTP id AQAAf8Bxc+VCjdhjlColAA--.39283S3;
+        Tue, 31 Jan 2023 11:38:42 +0800 (CST)
+Subject: Re: kernel hangs when kprobe memcpy
+To:     "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
+References: <d179086d-78d8-d0e3-e113-9072cffa55f4@loongson.cn>
+ <19666c03-4bf6-7aac-3f1d-cd31ab7de2d5@loongson.cn>
+ <20230112233629.fafdbbe07dddf364f8078df6@kernel.org>
+ <d0484b6e-c8a3-65c8-2157-0da95c17b061@loongson.cn>
+ <20230114143859.7ccc45c1c5d9ce302113ab0a@kernel.org>
+ <b20cfc27-0e46-7e3b-e4f1-2e185ea516ab@loongson.cn>
+ <20230116154123.a0ff8d6deaff3fe87b48461b@kernel.org>
+Cc:     "Naveen N. Rao" <naveen.n.rao@linux.ibm.com>,
+        Anil S Keshavamurthy <anil.s.keshavamurthy@intel.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org
+From:   Tiezhu Yang <yangtiezhu@loongson.cn>
+Message-ID: <357a5386-f588-f3c6-96de-42fcbb36a535@loongson.cn>
+Date:   Tue, 31 Jan 2023 11:38:41 +0800
+User-Agent: Mozilla/5.0 (X11; Linux mips64; rv:45.0) Gecko/20100101
+ Thunderbird/45.4.0
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.6.1
-Subject: Re: [PATCH v5] trace: acquire buffer from temparary trace sequence
-Content-Language: en-US
-To:     Steven Rostedt <rostedt@goodmis.org>
-CC:     Masami Hiramatsu <mhiramat@kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-trace-kernel@vger.kernel.org>
-References: <1675065249-23368-1-git-send-email-quic_linyyuan@quicinc.com>
- <28cd9aca-1945-ceed-2756-162132d576ef@quicinc.com>
- <20230130143041.713c4c7b@gandalf.local.home>
- <e2735a3a-4a9b-8b3a-0671-b3f56187cbe2@quicinc.com>
- <20230130213735.72cdcee4@gandalf.local.home>
-From:   Linyu Yuan <quic_linyyuan@quicinc.com>
-In-Reply-To: <20230130213735.72cdcee4@gandalf.local.home>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
+In-Reply-To: <20230116154123.a0ff8d6deaff3fe87b48461b@kernel.org>
+Content-Type: text/plain; charset=windows-1252; format=flowed
 Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.80.80.8]
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nalasex01b.na.qualcomm.com (10.47.209.197)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: VC6qKWC0c4KKGGg27GVlldL-4Sgg7LDf
-X-Proofpoint-GUID: VC6qKWC0c4KKGGg27GVlldL-4Sgg7LDf
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.219,Aquarius:18.0.930,Hydra:6.0.562,FMLib:17.11.122.1
- definitions=2023-01-30_19,2023-01-30_01,2022-06-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 phishscore=0
- priorityscore=1501 spamscore=0 suspectscore=0 lowpriorityscore=0
- adultscore=0 mlxlogscore=748 bulkscore=0 mlxscore=0 impostorscore=0
- clxscore=1015 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2212070000 definitions=main-2301310023
+X-CM-TRANSID: AQAAf8Bxc+VCjdhjlColAA--.39283S3
+X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
+X-Coremail-Antispam: 1Uk129KBjvdXoW7XFyrAr48ZrykWw4DGFW5GFg_yoWDXrcEyF
+        4UKrykC3yUXr4UAwn7Krn3ZFnxCFWfKFykAw47Xa97twn8Xay0gFsakFn5Xw1kGFs5Jrnr
+        ZFsavwnYkr1IvjkaLaAFLSUrUUUU1b8apTn2vfkv8UJUUUU8wcxFpf9Il3svdxBIdaVrn0
+        xqx4xG64xvF2IEw4CE5I8CrVC2j2Jv73VFW2AGmfu7bjvjm3AaLaJ3UjIYCTnIWjp_UUUY
+        W7kC6x804xWl14x267AKxVWUJVW8JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0rVWrJVCq3w
+        AFIxvE14AKwVWUXVWUAwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK021l84ACjcxK
+        6xIIjxv20xvE14v26r1I6r4UM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r1j6r4UM28EF7
+        xvwVC2z280aVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gr1j6F4UJwAa
+        w2AFwI0_Jrv_JF1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0cIa020Ex4CE44
+        I27wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Jrv_JF1lYx0Ex4A2
+        jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvEwIxGrwCYjI0SjxkI62
+        AI1cAE67vIY487MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMxCIbckI
+        1I0E14v26r1Y6r17MI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_Jr
+        Wlx4CE17CEb7AF67AKxVWUAVWUtwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j
+        6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVWUJVW8JwCI42IY6xAIw20EY4v20xvaj40_Jr
+        0_JF4lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVWUJVW8JbIY
+        CTnIWIevJa73UjIFyTuYvjxU2MKZDUUUU
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
 
-On 1/31/2023 10:37 AM, Steven Rostedt wrote:
-> On Tue, 31 Jan 2023 10:06:22 +0800
-> Linyu Yuan <quic_linyyuan@quicinc.com> wrote:
+
+On 01/16/2023 02:41 PM, Masami Hiramatsu (Google) wrote:
+> Hi Tiezhu,
 >
->> yes, agree it will be safe for dwc3, but i don't know if any possible
->> hacker,
+> On Sat, 14 Jan 2023 14:53:21 +0800
+> Tiezhu Yang <yangtiezhu@loongson.cn> wrote:
+
+...
+
+>>> If you saw that without any change, please report it. At least
+>>> memcpy is already marked as noinstr.
 >>
->> as the function always return a valid pointer even when hacker input a
->> large size.
-> But gives a nice big warning if that's the case. This is not something that
-> can be modified by user input. We do not need to worry about
-> kernel implementations that could overflow (and trigger a WARN_ON() when
-> they do). Especially since the max size is greater than the max size of the
-> content of an event.
+>> The current upstream mainline kernel has no problem, because it includes
+>> commit e3a9e681adb7 ("x86/entry: Fixup bad_iret vs noinstr"), memcpy is
+>> already marked as noinstr. But for the kernel without the above commit,
+>> like kernel 5.7, it has problem.
 >
-> A lot of systems that worry about hackers enable "panic_on_warn" which
-> means that if the WARN_ON() triggers, the machine will crash, which will at
-> most cause a DOS, but not something people can use to hack into the machine
-> with.
+> I've confirmed that kernel 5.4.228 (the latest stable tree) did not have
+> this issue (it already rejects the memcpy).
 
+I just tested the stable kernel 5.4.230 on x86_64 fedora 36,
+without any change, kernel hangs when execute cmd:
+modprobe kprobe_example symbol="memcpy"
 
-thanks, please help review the change.
+https://cdn.kernel.org/pub/linux/kernel/v5.x/linux-5.4.230.tar.xz
 
+Am I missing something? Since 5.4 is a stable tree, should we do 
+something to fix it?
 
->
-> -- Steve
+Thanks,
+Tiezhu
+
