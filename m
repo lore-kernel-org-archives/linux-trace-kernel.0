@@ -2,102 +2,80 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 91426C636CC
-	for <linux-trace-kernel@archiver.kernel.org>; Tue, 31 Jan 2023 15:38:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C3075C636CC
+	for <linux-trace-kernel@archiver.kernel.org>; Tue, 31 Jan 2023 15:40:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233354AbjAaPh7 (ORCPT
+        id S231591AbjAaPkq (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Tue, 31 Jan 2023 10:37:59 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48696 "EHLO
+        Tue, 31 Jan 2023 10:40:46 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52222 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232958AbjAaPh7 (ORCPT
+        with ESMTP id S230417AbjAaPko (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Tue, 31 Jan 2023 10:37:59 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 215779EDE;
-        Tue, 31 Jan 2023 07:37:57 -0800 (PST)
+        Tue, 31 Jan 2023 10:40:44 -0500
+Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3272653574;
+        Tue, 31 Jan 2023 07:40:14 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 731E561565;
-        Tue, 31 Jan 2023 15:37:57 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B2238C433EF;
-        Tue, 31 Jan 2023 15:37:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1675179476;
-        bh=qVm5ApfnManH1Eoamx0qsmCbirxrEbIbD52NXuiTZHg=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=pdjzxqPg3W+VVRwONLLbzQtXJZnJdppTmgO2vPLUJcpeFVlQeJ6s3bCQOgBPFB3Ek
-         Z0dFhTyFVjYs8+0QXvWlmh/meDW9V+ELiDXVl6UGIjzlTucvBfyq9mQliBLkS1YD7j
-         CXeZJshU5hKenH5x2Y1xP+Wr602k7lPvBWWwqOwJK9gH+r9lQb0N4eX8q42YbftwB6
-         HXjM59iBkOi/rQszYD15bfrNT4+9me/oVRDO8vRGD1Am5OMUA3FWAdVR/CeaTA7X0q
-         XG7w8Z1FvchlYN0rlTmm0/DzsI8NxEpKFCkDAfWTHflXvkmjeiP83qaxnHKL2uN1Cb
-         AChlpkTno+abA==
-Date:   Wed, 1 Feb 2023 00:37:53 +0900
-From:   Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To:     Anton Gusev <aagusev@ispras.ru>
-Cc:     Steven Rostedt <rostedt@goodmis.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
+        by ams.source.kernel.org (Postfix) with ESMTPS id 1375EB81D63;
+        Tue, 31 Jan 2023 15:39:40 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1FD43C433D2;
+        Tue, 31 Jan 2023 15:39:38 +0000 (UTC)
+Date:   Tue, 31 Jan 2023 10:39:35 -0500
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     Mark Rutland <mark.rutland@arm.com>
+Cc:     Tom Rix <trix@redhat.com>, mhiramat@kernel.org,
         linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
-Subject: Re: [PATCH] tracing: Fix wrong return in kprobe_event_gen_test.c
-Message-Id: <20230201003753.d844d26d902169ee64b979d4@kernel.org>
-In-Reply-To: <20230131075818.5322-1-aagusev@ispras.ru>
-References: <20230131075818.5322-1-aagusev@ispras.ru>
-X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
+Subject: Re: [PATCH] samples: ftrace: make some global variables static
+Message-ID: <20230131103935.4966c46e@gandalf.local.home>
+In-Reply-To: <Y9jo1SJpsBRTb2M5@FVFF77S0Q05N>
+References: <20230130193708.1378108-1-trix@redhat.com>
+        <Y9jo1SJpsBRTb2M5@FVFF77S0Q05N>
+X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On Tue, 31 Jan 2023 10:58:18 +0300
-Anton Gusev <aagusev@ispras.ru> wrote:
+On Tue, 31 Jan 2023 10:09:25 +0000
+Mark Rutland <mark.rutland@arm.com> wrote:
 
-> Overwriting the error code with the deletion result may cause the
-> function to return 0 despite encountering an error. Commit b111545d26c0
-> ("tracing: Remove the useless value assignment in
-> test_create_synth_event()") solves a similar issue by
-> returning the original error code, so this patch does the same.
+> On Mon, Jan 30, 2023 at 11:37:08AM -0800, Tom Rix wrote:
+> > smatch reports this representative issue
+> > samples/ftrace/ftrace-ops.c:15:14: warning: symbol 'nr_function_calls' was not declared. Should it be static?
+> > 
+> > The nr_functions_calls and several other global variables are only
+> > used in ftrace-ops.c, so they should be static.  
 > 
-> Found by Linux Verification Center (linuxtesting.org) with SVACE.
+> This makes sense to me.
 > 
-> Signed-off-by: Anton Gusev <aagusev@ispras.ru>
-
-Oops, thanks for the fix!
-
-Acked-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-
-> ---
->  kernel/trace/kprobe_event_gen_test.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
+> > Remove the instances of initializing static int to 0.  
 > 
-> diff --git a/kernel/trace/kprobe_event_gen_test.c b/kernel/trace/kprobe_event_gen_test.c
-> index c736487fc0e4..e0c420eb0b2b 100644
-> --- a/kernel/trace/kprobe_event_gen_test.c
-> +++ b/kernel/trace/kprobe_event_gen_test.c
-> @@ -146,7 +146,7 @@ static int __init test_gen_kprobe_cmd(void)
->  	if (trace_event_file_is_valid(gen_kprobe_test))
->  		gen_kprobe_test = NULL;
->  	/* We got an error after creating the event, delete it */
-> -	ret = kprobe_event_delete("gen_kprobe_test");
-> +	kprobe_event_delete("gen_kprobe_test");
->  	goto out;
->  }
->  
-> @@ -211,7 +211,7 @@ static int __init test_gen_kretprobe_cmd(void)
->  	if (trace_event_file_is_valid(gen_kretprobe_test))
->  		gen_kretprobe_test = NULL;
->  	/* We got an error after creating the event, delete it */
-> -	ret = kprobe_event_delete("gen_kretprobe_test");
-> +	kprobe_event_delete("gen_kretprobe_test");
->  	goto out;
->  }
->  
-> -- 
-> 2.39.1
+> I appreciate that static variables get implicitly zero initialized, but
+> dropping the initialization is inconsistent with the other control variables,
+> and IMO it's quite confusing, so I'd prefer to keep that for clarity. I note
+> you've also dropped the initialization of a bool to false, whereas the above
+> just mentions int.
 > 
+> I'd prefer to keep the initialization, but I'll defre to Steve if he thinks
+> differently. :)
 
+Yeah, I'm fine with dropping the initialization of even bool (I don't
+initialize bool to false either). Everything in the BSS section is always
+initialized to zero, and in C, false is the same as zero.
 
--- 
-Masami Hiramatsu (Google) <mhiramat@kernel.org>
+> 
+> > Signed-off-by: Tom Rix <trix@redhat.com>  
+> 
+> With the above taken into account:
+> 
+> Acked-by: Mark Rutland <mark.rutland@arm.com>
+
+Thanks,
+
+-- Steve
+
