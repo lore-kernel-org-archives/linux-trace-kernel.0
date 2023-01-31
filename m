@@ -2,124 +2,94 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F72FC636CC
-	for <linux-trace-kernel@archiver.kernel.org>; Tue, 31 Jan 2023 08:56:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E3FCC636CD
+	for <linux-trace-kernel@archiver.kernel.org>; Tue, 31 Jan 2023 09:36:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232187AbjAaI4X (ORCPT
+        id S230494AbjAaJg5 (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Tue, 31 Jan 2023 03:56:23 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47364 "EHLO
+        Tue, 31 Jan 2023 04:36:57 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34956 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231697AbjAaI4A (ORCPT
+        with ESMTP id S232045AbjAaJg4 (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Tue, 31 Jan 2023 03:56:00 -0500
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 615664B764;
-        Tue, 31 Jan 2023 00:51:27 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=dIxm+aCWThEzSn6DIW8FvWBq3c9pv2ibQNS0mHEtmHY=; b=P99yUkPKlFO6Em1noB0wAC0mbH
-        VVTyTjchkZs8oTDX6DrLsSDzY4w1iEM7Eq83RPSTC6hbJWvJvsD7eNhZ6CKLRYtCAAjCdFdS+HfI1
-        aX4w//t5QEWYp1BLw0UGYf+SnVlyPZDFZr+8ujXvuZH/6C0CnmipvNW6SUlpSmcuGWKGNZMwyJ/C8
-        osew0SUGCAOdIAXP1ZD/FUbFzZME+QADr0FIX1E5t0otYJ4Dusdj+9abhDnbB2ZqoTh+qFCJmYY3R
-        D1CwEnmecBYG7aaYsUp+dFCskwvnPYeyrAx9mqsIK0clEyzBgdS0EIpPCyxgDKlzHyzLEU+GDj/kH
-        qNiRlCmQ==;
-Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
-        by casper.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
-        id 1pMmLe-00BA4r-Iv; Tue, 31 Jan 2023 08:50:39 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (4096 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id BDED43002BF;
-        Tue, 31 Jan 2023 09:50:36 +0100 (CET)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id A1741208358FD; Tue, 31 Jan 2023 09:50:36 +0100 (CET)
-Date:   Tue, 31 Jan 2023 09:50:36 +0100
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     mingo@kernel.org
-Cc:     will@kernel.org, boqun.feng@gmail.com, mark.rutland@arm.com,
-        tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
-        dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com,
-        seanjc@google.com, pbonzini@redhat.com, jgross@suse.com,
-        srivatsa@csail.mit.edu, amakhalov@vmware.com,
-        pv-drivers@vmware.com, wanpengli@tencent.com, vkuznets@redhat.com,
-        boris.ostrovsky@oracle.com, rafael@kernel.org,
-        daniel.lezcano@linaro.org, lpieralisi@kernel.org,
-        frederic@kernel.org, paulmck@kernel.org, rostedt@goodmis.org,
-        mhiramat@kernel.org, longman@redhat.com, juri.lelli@redhat.com,
-        vincent.guittot@linaro.org, dietmar.eggemann@arm.com,
-        bsegall@google.com, mgorman@suse.de, bristot@redhat.com,
-        vschneid@redhat.com, linux-kernel@vger.kernel.org,
-        kvm@vger.kernel.org, virtualization@lists.linux-foundation.org,
-        linux-pm@vger.kernel.org, linux-trace-kernel@vger.kernel.org
-Subject: [PATCH v2.1 4/9] tracing, preempt: Squash _rcuidle tracing
-Message-ID: <Y9jWXKgkxY5EZVwW@hirez.programming.kicks-ass.net>
-References: <20230126150829.087606759@infradead.org>
- <20230126151323.526275416@infradead.org>
+        Tue, 31 Jan 2023 04:36:56 -0500
+Received: from sin.source.kernel.org (sin.source.kernel.org [IPv6:2604:1380:40e1:4800::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E7D292ED7C;
+        Tue, 31 Jan 2023 01:36:51 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by sin.source.kernel.org (Postfix) with ESMTPS id D500DCE1BDB;
+        Tue, 31 Jan 2023 09:36:49 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 44056C433D2;
+        Tue, 31 Jan 2023 09:36:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1675157808;
+        bh=GavFmW+1c8ztCVeGwDutDoxHL37vN4T5JEoOXRXcG/c=;
+        h=From:To:Cc:Subject:Date:From;
+        b=MYUxqJEHhG2PVvygty4+eT+DQJwk+ibpguGCqWoCRG4+eOid1YCReeKvC8mKIZQhk
+         5FJXELMy6JtDWeOmUrNvevujG0i7RRlSzsyY+9wP6Qm8mbNGGsqWXxi3Qxna6enJ/b
+         J1l2t2uf97D0dFgE6DrGpv9Wa5PlwOm6rr647iD0acBP3Hhco5WMI6/c4TiR/xQ/7J
+         ZB6Eh2OhV5hW8sLCVuZiJzEHO8Y4YPCZBbNzkzFYIq5gi9VEjV3JBPh1IJaFrJjpY9
+         Kxjoyl1Iw7QI8BrT3l5JdFSi2BBiwuoUooBKwhn8ZOtQzDGlp44vA3FrWU3iL8+Yba
+         Bny4Al+KU+xOA==
+From:   Arnd Bergmann <arnd@kernel.org>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Arnd Bergmann <arnd@arndb.de>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Josh Poimboeuf <jpoimboe@kernel.org>,
+        linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
+Subject: [PATCH] ftrace,kcfi: Define ftrace_stub_graph conditionally
+Date:   Tue, 31 Jan 2023 10:36:30 +0100
+Message-Id: <20230131093643.3850272-1-arnd@kernel.org>
+X-Mailer: git-send-email 2.39.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230126151323.526275416@infradead.org>
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
+From: Arnd Bergmann <arnd@arndb.de>
 
-Extend commit 9aedeaed6fc6 ("tracing, hardirq: No moar _rcuidle()
-tracing") to also cover trace_preempt_{on,off}() which were
-mysteriously untouched.
+When CONFIG_FUNCTION_GRAPH_TRACER is disabled, __kcfi_typeid_ftrace_stub_graph
+is missing, causing a link failure:
 
-Fixes: 9aedeaed6fc6 ("tracing, hardirq: No moar _rcuidle() tracing")
-Reported-by: Mark Rutland <mark.rutland@arm.com>
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Tested-by: Mark Rutland <mark.rutland@arm.com>
-Link: https://lkml.kernel.org/r/Y9D5AfnOukWNOZ5q@hirez.programming.kicks-ass.net
+ ld.lld: error: undefined symbol: __kcfi_typeid_ftrace_stub_graph
+ referenced by arch/x86/kernel/ftrace_64.o:(__cfi_ftrace_stub_graph) in archive vmlinux.a
+
+Mark the reference to it as conditional on the same symbol, as
+is done on arm64.
+
+Fixes: 883bbbffa5a4 ("ftrace,kcfi: Separate ftrace_stub() and ftrace_stub_graph()")
+See-also: 2598ac6ec493 ("arm64: ftrace: Define ftrace_stub_graph only with FUNCTION_GRAPH_TRACER")
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 ---
- kernel/trace/trace_preemptirq.c |   14 ++++++--------
- 1 file changed, 6 insertions(+), 8 deletions(-)
+ arch/x86/kernel/ftrace_64.S | 2 ++
+ 1 file changed, 2 insertions(+)
 
---- a/kernel/trace/trace_preemptirq.c
-+++ b/kernel/trace/trace_preemptirq.c
-@@ -15,10 +15,6 @@
- #define CREATE_TRACE_POINTS
- #include <trace/events/preemptirq.h>
+diff --git a/arch/x86/kernel/ftrace_64.S b/arch/x86/kernel/ftrace_64.S
+index 1265ad519249..fb4f1e01b64a 100644
+--- a/arch/x86/kernel/ftrace_64.S
++++ b/arch/x86/kernel/ftrace_64.S
+@@ -136,10 +136,12 @@ SYM_TYPED_FUNC_START(ftrace_stub)
+ 	RET
+ SYM_FUNC_END(ftrace_stub)
  
--#ifdef CONFIG_TRACE_IRQFLAGS
--/* Per-cpu variable to prevent redundant calls when IRQs already off */
--static DEFINE_PER_CPU(int, tracing_irq_cpu);
--
- /*
-  * Use regular trace points on architectures that implement noinstr
-  * tooling: these calls will only happen with RCU enabled, which can
-@@ -33,6 +29,10 @@ static DEFINE_PER_CPU(int, tracing_irq_c
- #define trace(point)	if (!in_nmi()) trace_##point##_rcuidle
- #endif
++#ifdef CONFIG_FUNCTION_GRAPH_TRACER
+ SYM_TYPED_FUNC_START(ftrace_stub_graph)
+ 	CALL_DEPTH_ACCOUNT
+ 	RET
+ SYM_FUNC_END(ftrace_stub_graph)
++#endif
  
-+#ifdef CONFIG_TRACE_IRQFLAGS
-+/* Per-cpu variable to prevent redundant calls when IRQs already off */
-+static DEFINE_PER_CPU(int, tracing_irq_cpu);
-+
- /*
-  * Like trace_hardirqs_on() but without the lockdep invocation. This is
-  * used in the low level entry code where the ordering vs. RCU is important
-@@ -100,15 +100,13 @@ NOKPROBE_SYMBOL(trace_hardirqs_off);
+ #ifdef CONFIG_DYNAMIC_FTRACE
  
- void trace_preempt_on(unsigned long a0, unsigned long a1)
- {
--	if (!in_nmi())
--		trace_preempt_enable_rcuidle(a0, a1);
-+	trace(preempt_enable)(a0, a1);
- 	tracer_preempt_on(a0, a1);
- }
- 
- void trace_preempt_off(unsigned long a0, unsigned long a1)
- {
--	if (!in_nmi())
--		trace_preempt_disable_rcuidle(a0, a1);
-+	trace(preempt_disable)(a0, a1);
- 	tracer_preempt_off(a0, a1);
- }
- #endif
+-- 
+2.39.0
+
