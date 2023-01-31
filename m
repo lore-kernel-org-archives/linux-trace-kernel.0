@@ -2,165 +2,82 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 78501C38142
-	for <linux-trace-kernel@archiver.kernel.org>; Tue, 31 Jan 2023 10:10:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9131BC636CC
+	for <linux-trace-kernel@archiver.kernel.org>; Tue, 31 Jan 2023 12:02:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229518AbjAaKKH (ORCPT
+        id S229680AbjAaMCB (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Tue, 31 Jan 2023 05:10:07 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38372 "EHLO
+        Tue, 31 Jan 2023 07:02:01 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55990 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230404AbjAaKJj (ORCPT
+        with ESMTP id S229468AbjAaMCA (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Tue, 31 Jan 2023 05:09:39 -0500
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 530476A63;
-        Tue, 31 Jan 2023 02:09:32 -0800 (PST)
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id CFF1D1713;
-        Tue, 31 Jan 2023 02:10:13 -0800 (PST)
-Received: from FVFF77S0Q05N (unknown [10.57.12.254])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id C210A3F64C;
-        Tue, 31 Jan 2023 02:09:30 -0800 (PST)
-Date:   Tue, 31 Jan 2023 10:09:25 +0000
-From:   Mark Rutland <mark.rutland@arm.com>
-To:     Tom Rix <trix@redhat.com>
-Cc:     rostedt@goodmis.org, mhiramat@kernel.org,
-        linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
-Subject: Re: [PATCH] samples: ftrace: make some global variables static
-Message-ID: <Y9jo1SJpsBRTb2M5@FVFF77S0Q05N>
-References: <20230130193708.1378108-1-trix@redhat.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230130193708.1378108-1-trix@redhat.com>
+        Tue, 31 Jan 2023 07:02:00 -0500
+Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 43E07193D7;
+        Tue, 31 Jan 2023 04:01:57 -0800 (PST)
+Received: from loongson.cn (unknown [113.200.148.30])
+        by gateway (Coremail) with SMTP id _____8CxIfA0A9ljG4UKAA--.22086S3;
+        Tue, 31 Jan 2023 20:01:56 +0800 (CST)
+Received: from linux.localdomain (unknown [113.200.148.30])
+        by localhost.localdomain (Coremail) with SMTP id AQAAf8DxK74zA9ljNHklAA--.8415S2;
+        Tue, 31 Jan 2023 20:01:56 +0800 (CST)
+From:   Tiezhu Yang <yangtiezhu@loongson.cn>
+To:     Steven Rostedt <rostedt@goodmis.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        naveen.n.rao@linux.ibm.com, anil.s.keshavamurthy@intel.com,
+        davem@davemloft.net
+Cc:     linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] kprobes: Replace memcpy() with direct assignment
+Date:   Tue, 31 Jan 2023 20:01:50 +0800
+Message-Id: <1675166510-7798-1-git-send-email-yangtiezhu@loongson.cn>
+X-Mailer: git-send-email 2.1.0
+X-CM-TRANSID: AQAAf8DxK74zA9ljNHklAA--.8415S2
+X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
+X-Coremail-Antispam: 1Uk129KBjvdXoWruFWDKr17trWxZF4UGr13twb_yoW3twc_Aw
+        1jvryDGw4jkrW5Zwn8tw4fXFZFq3yqvF48ur9rKrWUJ34Utw15XFWkWFy3u395Kan7GFWD
+        Ar4Dur9Fga1xujkaLaAFLSUrUUUU1b8apTn2vfkv8UJUUUU8wcxFpf9Il3svdxBIdaVrn0
+        xqx4xG64xvF2IEw4CE5I8CrVC2j2Jv73VFW2AGmfu7bjvjm3AaLaJ3UjIYCTnIWjp_UUUY
+        q7kC6x804xWl14x267AKxVWUJVW8JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0rVWrJVCq3w
+        AFIxvE14AKwVWUGVWUXwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK021l84ACjcxK
+        6xIIjxv20xvE14v26r1j6r1xM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r1j6r4UM28EF7
+        xvwVC2z280aVAFwI0_Cr1j6rxdM28EF7xvwVC2z280aVCY1x0267AKxVWxJr0_GcWln4kS
+        14v26r1Y6r17M2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6xACxx
+        1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1Y6r17McIj6I8E87Iv
+        67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41l42xK82IYc2
+        Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1l4IxYO2xFxVAFwI0_Jrv_JF1lx2IqxVAq
+        x4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r126r
+        1DMIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF
+        7I0E14v26r1j6r4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxV
+        WUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjxU
+        2G-eUUUUU
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On Mon, Jan 30, 2023 at 11:37:08AM -0800, Tom Rix wrote:
-> smatch reports this representative issue
-> samples/ftrace/ftrace-ops.c:15:14: warning: symbol 'nr_function_calls' was not declared. Should it be static?
-> 
-> The nr_functions_calls and several other global variables are only
-> used in ftrace-ops.c, so they should be static.
+Just do a direct assignment, then give a chance to probe memcpy()
+for some archs or kernel versions which do not blacklist memcpy().
 
-This makes sense to me.
+Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
+---
+ kernel/kprobes.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-> Remove the instances of initializing static int to 0.
+diff --git a/kernel/kprobes.c b/kernel/kprobes.c
+index 1c18ecf..5a3cf9f 100644
+--- a/kernel/kprobes.c
++++ b/kernel/kprobes.c
+@@ -407,8 +407,8 @@ static inline bool kprobe_unused(struct kprobe *p)
+ /* Keep all fields in the kprobe consistent. */
+ static inline void copy_kprobe(struct kprobe *ap, struct kprobe *p)
+ {
+-	memcpy(&p->opcode, &ap->opcode, sizeof(kprobe_opcode_t));
+-	memcpy(&p->ainsn, &ap->ainsn, sizeof(struct arch_specific_insn));
++	p->opcode = ap->opcode;
++	p->ainsn = ap->ainsn;
+ }
+ 
+ #ifdef CONFIG_OPTPROBES
+-- 
+2.1.0
 
-I appreciate that static variables get implicitly zero initialized, but
-dropping the initialization is inconsistent with the other control variables,
-and IMO it's quite confusing, so I'd prefer to keep that for clarity. I note
-you've also dropped the initialization of a bool to false, whereas the above
-just mentions int.
-
-I'd prefer to keep the initialization, but I'll defre to Steve if he thinks
-differently. :)
-
-> Signed-off-by: Tom Rix <trix@redhat.com>
-
-With the above taken into account:
-
-Acked-by: Mark Rutland <mark.rutland@arm.com>
-
-Thanks,
-Mark.
-
-> ---
->  samples/ftrace/ftrace-ops.c | 24 ++++++++++++------------
->  1 file changed, 12 insertions(+), 12 deletions(-)
-> 
-> diff --git a/samples/ftrace/ftrace-ops.c b/samples/ftrace/ftrace-ops.c
-> index 24deb51c7261..5e891a995dd3 100644
-> --- a/samples/ftrace/ftrace-ops.c
-> +++ b/samples/ftrace/ftrace-ops.c
-> @@ -12,7 +12,7 @@
->   * Arbitrary large value chosen to be sufficiently large to minimize noise but
->   * sufficiently small to complete quickly.
->   */
-> -unsigned int nr_function_calls = 100000;
-> +static unsigned int nr_function_calls = 100000;
->  module_param(nr_function_calls, uint, 0);
->  MODULE_PARM_DESC(nr_function_calls, "How many times to call the relevant tracee");
->  
-> @@ -21,7 +21,7 @@ MODULE_PARM_DESC(nr_function_calls, "How many times to call the relevant tracee"
->   * be called directly or whether it's necessary to go via the list func, which
->   * can be significantly more expensive.
->   */
-> -unsigned int nr_ops_relevant = 1;
-> +static unsigned int nr_ops_relevant = 1;
->  module_param(nr_ops_relevant, uint, 0);
->  MODULE_PARM_DESC(nr_ops_relevant, "How many ftrace_ops to associate with the relevant tracee");
->  
-> @@ -30,7 +30,7 @@ MODULE_PARM_DESC(nr_ops_relevant, "How many ftrace_ops to associate with the rel
->   * tracers enabled for distinct functions can force the use of the list func
->   * and incur overhead for all call sites.
->   */
-> -unsigned int nr_ops_irrelevant = 0;
-> +static unsigned int nr_ops_irrelevant;
->  module_param(nr_ops_irrelevant, uint, 0);
->  MODULE_PARM_DESC(nr_ops_irrelevant, "How many ftrace_ops to associate with the irrelevant tracee");
->  
-> @@ -38,15 +38,15 @@ MODULE_PARM_DESC(nr_ops_irrelevant, "How many ftrace_ops to associate with the i
->   * On architectures with DYNAMIC_FTRACE_WITH_REGS, saving the full pt_regs can
->   * be more expensive than only saving the minimal necessary regs.
->   */
-> -bool save_regs = false;
-> +static bool save_regs;
->  module_param(save_regs, bool, 0);
->  MODULE_PARM_DESC(save_regs, "Register ops with FTRACE_OPS_FL_SAVE_REGS (save all registers in the trampoline)");
->  
-> -bool assist_recursion = false;
-> +static bool assist_recursion;
->  module_param(assist_recursion, bool, 0);
->  MODULE_PARM_DESC(assist_reursion, "Register ops with FTRACE_OPS_FL_RECURSION");
->  
-> -bool assist_rcu = false;
-> +static bool assist_rcu;
->  module_param(assist_rcu, bool, 0);
->  MODULE_PARM_DESC(assist_reursion, "Register ops with FTRACE_OPS_FL_RCU");
->  
-> @@ -55,7 +55,7 @@ MODULE_PARM_DESC(assist_reursion, "Register ops with FTRACE_OPS_FL_RCU");
->   * overhead. Sometimes a consistency check using a more expensive tracer is
->   * desireable.
->   */
-> -bool check_count = false;
-> +static bool check_count;
->  module_param(check_count, bool, 0);
->  MODULE_PARM_DESC(check_count, "Check that tracers are called the expected number of times\n");
->  
-> @@ -64,7 +64,7 @@ MODULE_PARM_DESC(check_count, "Check that tracers are called the expected number
->   * runs, but sometimes it can be useful to leave them registered so that they
->   * can be inspected through the tracefs 'enabled_functions' file.
->   */
-> -bool persist = false;
-> +static bool persist;
->  module_param(persist, bool, 0);
->  MODULE_PARM_DESC(persist, "Successfully load module and leave ftrace ops registered after test completes\n");
->  
-> @@ -114,8 +114,8 @@ static void ops_func_count(unsigned long ip, unsigned long parent_ip,
->  	self->count++;
->  }
->  
-> -struct sample_ops *ops_relevant;
-> -struct sample_ops *ops_irrelevant;
-> +static struct sample_ops *ops_relevant;
-> +static struct sample_ops *ops_irrelevant;
->  
->  static struct sample_ops *ops_alloc_init(void *tracee, ftrace_func_t func,
->  					 unsigned long flags, int nr)
-> @@ -163,8 +163,8 @@ static void ops_check(struct sample_ops *ops, int nr,
->  	}
->  }
->  
-> -ftrace_func_t tracer_relevant = ops_func_nop;
-> -ftrace_func_t tracer_irrelevant = ops_func_nop;
-> +static ftrace_func_t tracer_relevant = ops_func_nop;
-> +static ftrace_func_t tracer_irrelevant = ops_func_nop;
->  
->  static int __init ftrace_ops_sample_init(void)
->  {
-> -- 
-> 2.26.3
-> 
