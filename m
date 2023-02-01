@@ -2,87 +2,275 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 53547C636CC
-	for <linux-trace-kernel@archiver.kernel.org>; Wed,  1 Feb 2023 00:05:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C4E7C38142
+	for <linux-trace-kernel@archiver.kernel.org>; Wed,  1 Feb 2023 07:28:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231564AbjBAAFa (ORCPT
+        id S231829AbjBAH2R (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Tue, 31 Jan 2023 19:05:30 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50968 "EHLO
+        Wed, 1 Feb 2023 02:28:17 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59198 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231529AbjBAAF3 (ORCPT
+        with ESMTP id S231478AbjBAH2R (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Tue, 31 Jan 2023 19:05:29 -0500
-Received: from mail-pg1-x52e.google.com (mail-pg1-x52e.google.com [IPv6:2607:f8b0:4864:20::52e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DD42D1284F
-        for <linux-trace-kernel@vger.kernel.org>; Tue, 31 Jan 2023 16:05:27 -0800 (PST)
-Received: by mail-pg1-x52e.google.com with SMTP id d10so11252697pgm.13
-        for <linux-trace-kernel@vger.kernel.org>; Tue, 31 Jan 2023 16:05:27 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=w8A9vBT/khKMaGZggBlfcaoxdg/zaX7WQ2GHlPfZ9xs=;
-        b=BiSpvB811IcBJct74KPKQULQwFcRN0Wg6Ar62bSSgLA3zig9AYd/fuex8mOqSUPSJ5
-         Ziod9DDVVIQgSwvdnd6FioMZH2mxYqPmSkXelMU6CCiIp8HRvw1tog/oKIgQnrhpMIZw
-         aBUu8itI0Sq+J8QKloY6eNIDrpdFjkXefbQ0uuFK7QW12BgBk0n0oNX68PmfFUDStSe2
-         wIVNM2FYkwp4klqPWgCgMtXJIEZDyxZndFyilZ10JPT0SS1S1orCP13X222wVTHKrPWO
-         g2Iw0peEIoMgZSWbrfkkaAAZAYt3YkysTEQ2FC9IOpLb5BQUJyaAcOyjLu9wpjM53cyk
-         nBtw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=w8A9vBT/khKMaGZggBlfcaoxdg/zaX7WQ2GHlPfZ9xs=;
-        b=eVzZzEBP5kdfSrO3VUT/HFocQMC92WvNpUivtVgSh1v0RHUveNJeWcC+QpjuLylm3z
-         m+7cT4toIVeHNHIkocznPTG3moDwqvwhNNdp2moLuf5YDilbJOQQANpoe3DObu9HTdJl
-         jn3wv3BwWcmVlprrq8iDIwfdzQEJQXsB8ys4xV4bLmmoYUTzBbp6unGp+NOfSmz2dKF7
-         o08atKYt2W5XOKcFcwVbvfUhamIrA8BXV2G9YobU0azpCTAoGRpoc1gG5BwuDc1Xjd5t
-         /sys0xyRy8I1QWQtqGIZQCMQu4iS463L6KHYJD57VDqilWuMjqLtKzQeYb8HdLUeZXoT
-         SreQ==
-X-Gm-Message-State: AO0yUKW16Ep0Xx665342ufdDeIqmMGEIfQyS20hLrZLPq2iDgb7wMirh
-        s3Q6D3trJpqGMNo1dEEJq8qEMSqTpYN8CazNE4/I7w==
-X-Google-Smtp-Source: AK7set9l/4wp/xKINl4PM5P7x4+dC0lcSiZC7hllzJdRw5eYtA9+kDO5qRjUUrC9bYnufKTMSSBDyeVqchrW61Oiww8=
-X-Received: by 2002:a05:6a00:a18:b0:58b:506d:d6ae with SMTP id
- p24-20020a056a000a1800b0058b506dd6aemr77372pfh.24.1675209926940; Tue, 31 Jan
- 2023 16:05:26 -0800 (PST)
+        Wed, 1 Feb 2023 02:28:17 -0500
+Received: from mga07.intel.com (mga07.intel.com [134.134.136.100])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DC4E9193DC;
+        Tue, 31 Jan 2023 23:28:15 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1675236495; x=1706772495;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=NVZy1yN3menuLCDwawETeI1gdhzzBc96J45uZDahNK8=;
+  b=k+FqtiYRTEEM6UtsM1bgknjz8iH62Be8tXB7092oJ+2VZQXlR6dmkV1v
+   MZWh5zjGGQPN8r44t2y/GprA5xAXa3IE+HGQrcYboDW89w58NzV3Y6vAC
+   /SolmwfTy16JWSJr6vUoyrs9DkLZ0+mMnhu4wCS0Oc4wa8tD2yRFZkzew
+   fgexa16WUiekF/R3tTgovktHce2RvHIpeWsurELAjbW+TXjC2Me8EBC3E
+   5fyLRQdZrbnqQ1PHn42bfTSmJ06XrZrzCYGIWD8alvCGEft81BHxizKa6
+   NWoCAoRdnjsuSEyun77TKdIH8oC4sVkmU8RDFJpP741EHvwpuj5qRocvy
+   A==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10607"; a="392650521"
+X-IronPort-AV: E=Sophos;i="5.97,263,1669104000"; 
+   d="scan'208";a="392650521"
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 31 Jan 2023 23:28:15 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6500,9779,10607"; a="666822957"
+X-IronPort-AV: E=Sophos;i="5.97,263,1669104000"; 
+   d="scan'208";a="666822957"
+Received: from lkp-server01.sh.intel.com (HELO ffa7f14d1d0f) ([10.239.97.150])
+  by fmsmga007.fm.intel.com with ESMTP; 31 Jan 2023 23:28:13 -0800
+Received: from kbuild by ffa7f14d1d0f with local (Exim 4.96)
+        (envelope-from <lkp@intel.com>)
+        id 1pN7XQ-0005D8-1P;
+        Wed, 01 Feb 2023 07:28:12 +0000
+Date:   Wed, 1 Feb 2023 15:27:49 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     "Masami Hiramatsu (Google)" <mhiramat@kernel.org>,
+        linux-trace-kernel@vger.kernel.org
+Cc:     llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
+        linux-kernel@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>,
+        mhiramat@kernel.org, Florent Revest <revest@chromium.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Will Deacon <will@kernel.org>
+Subject: Re: [PATCH v2 09/10] tracing/probes: Add fprobe events for tracing
+ function entry and exit.
+Message-ID: <202302011530.7vm4O8Ro-lkp@intel.com>
+References: <167518178446.336834.4654027409699647726.stgit@mhiramat.roam.corp.google.com>
 MIME-Version: 1.0
-References: <20230130181915.1113313-1-zwisler@google.com> <20230130181915.1113313-4-zwisler@google.com>
- <CAADnVQJ7KxEK92qOz0Ya4MrACHpxngSpG4W38xuGEgZmXEG-vQ@mail.gmail.com>
- <20230130145932.37cf6b73@gandalf.local.home> <CAADnVQ+F3Z70mu3-QyyNFyJ2qCkDXnMJCW-o+fcnZo=LWj5d9g@mail.gmail.com>
- <20230130183419.0626dc21@gandalf.local.home> <20230131005315.phdnhkeeconxxm3e@macbook-pro-6.dhcp.thefacebook.com>
- <20230131145048.6fac87d3@gandalf.local.home> <CAADnVQKpkuBdQWWGDBh13NCrx2WMPs4fVUyVujF4L-6XnjXFpg@mail.gmail.com>
-In-Reply-To: <CAADnVQKpkuBdQWWGDBh13NCrx2WMPs4fVUyVujF4L-6XnjXFpg@mail.gmail.com>
-From:   Ross Zwisler <zwisler@google.com>
-Date:   Tue, 31 Jan 2023 17:05:15 -0700
-Message-ID: <CAGRrVHzNcWx4Rws6GVi2UPRG1ZyzowBJQSqaS83WhsNVymU0Ww@mail.gmail.com>
-Subject: Re: [PATCH 3/9] selftests/bpf: use canonical ftrace path
-To:     Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Cc:     Steven Rostedt <rostedt@goodmis.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Andrii Nakryiko <andrii@kernel.org>,
-        linux-trace-kernel@vger.kernel.org,
-        Mykola Lysenko <mykolal@fb.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Martin KaFai Lau <martin.lau@linux.dev>,
-        Song Liu <song@kernel.org>, Yonghong Song <yhs@fb.com>,
-        John Fastabend <john.fastabend@gmail.com>,
-        KP Singh <kpsingh@kernel.org>,
-        Stanislav Fomichev <sdf@google.com>,
-        Hao Luo <haoluo@google.com>, Jiri Olsa <jolsa@kernel.org>,
-        Shuah Khan <shuah@kernel.org>, bpf <bpf@vger.kernel.org>,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <167518178446.336834.4654027409699647726.stgit@mhiramat.roam.corp.google.com>
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On Tue, Jan 31, 2023 at 4:26 PM Alexei Starovoitov
-<alexei.starovoitov@gmail.com> wrote:
-> Fair enough. Please resubmit these two patches towards bpf-next
-> with [PATCH bpf-next] subj, so that BPF CI can chew on it.
+Hi Masami,
 
-Will do, thanks.
+Thank you for the patch! Perhaps something to improve:
+
+[auto build test WARNING on bpf-next/master]
+[also build test WARNING on bpf/master shuah-kselftest/next shuah-kselftest/fixes linus/master v6.2-rc6]
+[cannot apply to rostedt-trace/for-next rostedt-trace/for-next-urgent]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
+
+url:    https://github.com/intel-lab-lkp/linux/commits/Masami-Hiramatsu-Google/fprobe-Pass-entry_data-to-handlers/20230201-001911
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/bpf/bpf-next.git master
+patch link:    https://lore.kernel.org/r/167518178446.336834.4654027409699647726.stgit%40mhiramat.roam.corp.google.com
+patch subject: [PATCH v2 09/10] tracing/probes: Add fprobe events for tracing function entry and exit.
+config: x86_64-rhel-8.3-rust (https://download.01.org/0day-ci/archive/20230201/202302011530.7vm4O8Ro-lkp@intel.com/config)
+compiler: clang version 14.0.6 (https://github.com/llvm/llvm-project f28c006a5895fc0e329fe15fead81e37457cb1d1)
+reproduce (this is a W=1 build):
+        wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
+        chmod +x ~/bin/make.cross
+        # https://github.com/intel-lab-lkp/linux/commit/90de2b114484f12e2645d2beb964b7d230c9c705
+        git remote add linux-review https://github.com/intel-lab-lkp/linux
+        git fetch --no-tags linux-review Masami-Hiramatsu-Google/fprobe-Pass-entry_data-to-handlers/20230201-001911
+        git checkout 90de2b114484f12e2645d2beb964b7d230c9c705
+        # save the config file
+        mkdir build_dir && cp config build_dir/.config
+        COMPILER_INSTALL_PATH=$HOME/0day COMPILER=clang make.cross W=1 O=build_dir ARCH=x86_64 olddefconfig
+        COMPILER_INSTALL_PATH=$HOME/0day COMPILER=clang make.cross W=1 O=build_dir ARCH=x86_64 SHELL=/bin/bash kernel/trace/
+
+If you fix the issue, kindly add following tag where applicable
+| Reported-by: kernel test robot <lkp@intel.com>
+
+All warnings (new ones prefixed by >>):
+
+>> kernel/trace/trace_probe.c:394:32: warning: use of logical '||' with constant operand [-Wconstant-logical-operand]
+                   if (flags & (TPARG_FL_TPOINT || TPARG_FL_FPROBE)) {
+                                                ^  ~~~~~~~~~~~~~~~
+   kernel/trace/trace_probe.c:394:32: note: use '|' for a bitwise operation
+                   if (flags & (TPARG_FL_TPOINT || TPARG_FL_FPROBE)) {
+                                                ^~
+                                                |
+   1 warning generated.
+
+
+vim +394 kernel/trace/trace_probe.c
+
+   374	
+   375	/* Recursive argument parser */
+   376	static int
+   377	parse_probe_arg(char *arg, const struct fetch_type *type,
+   378			struct fetch_insn **pcode, struct fetch_insn *end,
+   379			unsigned int flags, int offs)
+   380	{
+   381		struct fetch_insn *code = *pcode;
+   382		unsigned long param;
+   383		int deref = FETCH_OP_DEREF;
+   384		long offset = 0;
+   385		char *tmp;
+   386		int ret = 0;
+   387	
+   388		switch (arg[0]) {
+   389		case '$':
+   390			ret = parse_probe_vars(arg + 1, type, code, flags, offs);
+   391			break;
+   392	
+   393		case '%':	/* named register */
+ > 394			if (flags & (TPARG_FL_TPOINT || TPARG_FL_FPROBE)) {
+   395				/* eprobe and fprobe do not handle registers */
+   396				trace_probe_log_err(offs, BAD_VAR);
+   397				break;
+   398			}
+   399			ret = regs_query_register_offset(arg + 1);
+   400			if (ret >= 0) {
+   401				code->op = FETCH_OP_REG;
+   402				code->param = (unsigned int)ret;
+   403				ret = 0;
+   404			} else
+   405				trace_probe_log_err(offs, BAD_REG_NAME);
+   406			break;
+   407	
+   408		case '@':	/* memory, file-offset or symbol */
+   409			if (isdigit(arg[1])) {
+   410				ret = kstrtoul(arg + 1, 0, &param);
+   411				if (ret) {
+   412					trace_probe_log_err(offs, BAD_MEM_ADDR);
+   413					break;
+   414				}
+   415				/* load address */
+   416				code->op = FETCH_OP_IMM;
+   417				code->immediate = param;
+   418			} else if (arg[1] == '+') {
+   419				/* kprobes don't support file offsets */
+   420				if (flags & TPARG_FL_KERNEL) {
+   421					trace_probe_log_err(offs, FILE_ON_KPROBE);
+   422					return -EINVAL;
+   423				}
+   424				ret = kstrtol(arg + 2, 0, &offset);
+   425				if (ret) {
+   426					trace_probe_log_err(offs, BAD_FILE_OFFS);
+   427					break;
+   428				}
+   429	
+   430				code->op = FETCH_OP_FOFFS;
+   431				code->immediate = (unsigned long)offset;  // imm64?
+   432			} else {
+   433				/* uprobes don't support symbols */
+   434				if (!(flags & TPARG_FL_KERNEL)) {
+   435					trace_probe_log_err(offs, SYM_ON_UPROBE);
+   436					return -EINVAL;
+   437				}
+   438				/* Preserve symbol for updating */
+   439				code->op = FETCH_NOP_SYMBOL;
+   440				code->data = kstrdup(arg + 1, GFP_KERNEL);
+   441				if (!code->data)
+   442					return -ENOMEM;
+   443				if (++code == end) {
+   444					trace_probe_log_err(offs, TOO_MANY_OPS);
+   445					return -EINVAL;
+   446				}
+   447				code->op = FETCH_OP_IMM;
+   448				code->immediate = 0;
+   449			}
+   450			/* These are fetching from memory */
+   451			if (++code == end) {
+   452				trace_probe_log_err(offs, TOO_MANY_OPS);
+   453				return -EINVAL;
+   454			}
+   455			*pcode = code;
+   456			code->op = FETCH_OP_DEREF;
+   457			code->offset = offset;
+   458			break;
+   459	
+   460		case '+':	/* deref memory */
+   461		case '-':
+   462			if (arg[1] == 'u') {
+   463				deref = FETCH_OP_UDEREF;
+   464				arg[1] = arg[0];
+   465				arg++;
+   466			}
+   467			if (arg[0] == '+')
+   468				arg++;	/* Skip '+', because kstrtol() rejects it. */
+   469			tmp = strchr(arg, '(');
+   470			if (!tmp) {
+   471				trace_probe_log_err(offs, DEREF_NEED_BRACE);
+   472				return -EINVAL;
+   473			}
+   474			*tmp = '\0';
+   475			ret = kstrtol(arg, 0, &offset);
+   476			if (ret) {
+   477				trace_probe_log_err(offs, BAD_DEREF_OFFS);
+   478				break;
+   479			}
+   480			offs += (tmp + 1 - arg) + (arg[0] != '-' ? 1 : 0);
+   481			arg = tmp + 1;
+   482			tmp = strrchr(arg, ')');
+   483			if (!tmp) {
+   484				trace_probe_log_err(offs + strlen(arg),
+   485						    DEREF_OPEN_BRACE);
+   486				return -EINVAL;
+   487			} else {
+   488				const struct fetch_type *t2 = find_fetch_type(NULL, flags);
+   489	
+   490				*tmp = '\0';
+   491				ret = parse_probe_arg(arg, t2, &code, end, flags, offs);
+   492				if (ret)
+   493					break;
+   494				if (code->op == FETCH_OP_COMM ||
+   495				    code->op == FETCH_OP_DATA) {
+   496					trace_probe_log_err(offs, COMM_CANT_DEREF);
+   497					return -EINVAL;
+   498				}
+   499				if (++code == end) {
+   500					trace_probe_log_err(offs, TOO_MANY_OPS);
+   501					return -EINVAL;
+   502				}
+   503				*pcode = code;
+   504	
+   505				code->op = deref;
+   506				code->offset = offset;
+   507			}
+   508			break;
+   509		case '\\':	/* Immediate value */
+   510			if (arg[1] == '"') {	/* Immediate string */
+   511				ret = __parse_imm_string(arg + 2, &tmp, offs + 2);
+   512				if (ret)
+   513					break;
+   514				code->op = FETCH_OP_DATA;
+   515				code->data = tmp;
+   516			} else {
+   517				ret = str_to_immediate(arg + 1, &code->immediate);
+   518				if (ret)
+   519					trace_probe_log_err(offs + 1, BAD_IMM);
+   520				else
+   521					code->op = FETCH_OP_IMM;
+   522			}
+   523			break;
+   524		}
+   525		if (!ret && code->op == FETCH_OP_NOP) {
+   526			/* Parsed, but do not find fetch method */
+   527			trace_probe_log_err(offs, BAD_FETCH_ARG);
+   528			ret = -EINVAL;
+   529		}
+   530		return ret;
+   531	}
+   532	
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests
