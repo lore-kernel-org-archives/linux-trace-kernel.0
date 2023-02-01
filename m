@@ -2,342 +2,244 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 63DA1C636D7
-	for <linux-trace-kernel@archiver.kernel.org>; Wed,  1 Feb 2023 16:36:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E6DCC05027
+	for <linux-trace-kernel@archiver.kernel.org>; Wed,  1 Feb 2023 16:48:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232816AbjBAQgB (ORCPT
+        id S231200AbjBAQsm (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Wed, 1 Feb 2023 11:36:01 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41114 "EHLO
+        Wed, 1 Feb 2023 11:48:42 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50420 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232432AbjBAQfs (ORCPT
+        with ESMTP id S230094AbjBAQsl (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Wed, 1 Feb 2023 11:35:48 -0500
-Received: from mail-wm1-x329.google.com (mail-wm1-x329.google.com [IPv6:2a00:1450:4864:20::329])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AED5668AC0
-        for <linux-trace-kernel@vger.kernel.org>; Wed,  1 Feb 2023 08:35:34 -0800 (PST)
-Received: by mail-wm1-x329.google.com with SMTP id f47-20020a05600c492f00b003dc584a7b7eso1827793wmp.3
-        for <linux-trace-kernel@vger.kernel.org>; Wed, 01 Feb 2023 08:35:34 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=dDqx7ldh5sGOgDsQIvKZBz9tRbOKRXiGSQRucIDUJVg=;
-        b=J54wQ4LdJPNiFkmWlYnjOwU/5oAaLycrib7NWTRHHuK6LMI3Oh32ersiqtFKxfcDbf
-         bB6OiooeswDyNYnjN3aY6RBtQR6dJmPIK0aKZ+9s0YM5RuF6lyeC+gyvairavzp9M7YA
-         N5I7wrCbCmBvjNwadTlPK7Y0aM+0Hxi4Dk35E=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=dDqx7ldh5sGOgDsQIvKZBz9tRbOKRXiGSQRucIDUJVg=;
-        b=fci26bVEQHCbWQfucEskPe/8zMLTk4YRWysARMDJ1pjz9NZ1wWSFsz4KAleR49jsLz
-         MpRhq3sPaMEjt2WrcX+PjWyCR+M+Nw4E1MvLMFPosrxN8evSHiiJyTSGl6lq6KjtgouU
-         ILNfqHSYRn0XuLX7FcCgyib/qZ4AC9tw+w9vmgm4CPcvriDo+U94Pc/aezRWsTaj20V7
-         s7Qba5MskOTzhBr9Qvq+SkA9Zp8prR97z7ru69jurD9QZmD6J6KdDVH50BspRH4bWvoj
-         WlAnGKDCXZrZButwl4bz/St4ttXzw21hH6Bpt9wN4nOwEOp9cFkkmT8nNXKuCKEJDCiY
-         S2qw==
-X-Gm-Message-State: AO0yUKUJjOBrtPmWuqXLdJkVxG2Hvv7xz0gR8RRbroP6/SvHj0QR4KnI
-        d0htbMSbVYuwLNOxSDP9C7yNoBkyx5NwuHiwjZo=
-X-Google-Smtp-Source: AK7set9psF+XRxldeHUztWWScErtmaNpX1AHOLYMxaxlE9Y/phclTgMu2MScoA737D6nu3Ph+lOKWg==
-X-Received: by 2002:a05:600c:4fd2:b0:3dc:523c:22b4 with SMTP id o18-20020a05600c4fd200b003dc523c22b4mr2671866wmq.27.1675269334144;
-        Wed, 01 Feb 2023 08:35:34 -0800 (PST)
-Received: from revest.zrh.corp.google.com ([2a00:79e0:9d:6:4399:89a1:4a86:9630])
-        by smtp.gmail.com with ESMTPSA id r38-20020a05600c322600b003dd7edcc960sm2058522wmp.45.2023.02.01.08.35.32
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 01 Feb 2023 08:35:33 -0800 (PST)
-From:   Florent Revest <revest@chromium.org>
-To:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-trace-kernel@vger.kernel.org, bpf@vger.kernel.org
-Cc:     catalin.marinas@arm.com, will@kernel.org, rostedt@goodmis.org,
-        mhiramat@kernel.org, mark.rutland@arm.com, ast@kernel.org,
-        daniel@iogearbox.net, andrii@kernel.org, kpsingh@kernel.org,
-        jolsa@kernel.org, xukuohai@huaweicloud.com,
-        Florent Revest <revest@chromium.org>
-Subject: [PATCH 8/8] arm64: ftrace: Add direct called trampoline samples support
-Date:   Wed,  1 Feb 2023 17:34:20 +0100
-Message-Id: <20230201163420.1579014-9-revest@chromium.org>
-X-Mailer: git-send-email 2.39.1.519.gcb327c4b5f-goog
-In-Reply-To: <20230201163420.1579014-1-revest@chromium.org>
-References: <20230201163420.1579014-1-revest@chromium.org>
+        Wed, 1 Feb 2023 11:48:41 -0500
+Received: from mga14.intel.com (mga14.intel.com [192.55.52.115])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3D0D92CFDC;
+        Wed,  1 Feb 2023 08:48:40 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1675270120; x=1706806120;
+  h=date:from:to:cc:subject:message-id:mime-version:
+   content-transfer-encoding;
+  bh=w8u8eB3i+g2hkKrWZ3XNuqr4Dla5g1T+NGLU/nuIyQE=;
+  b=PrtaoZX8ZCJ7x2Cyton289gVADuuPoQasiq0/j0dJwSZjWLmUcRqXNbK
+   d7Sn3+K2KV9d+DvIMv5jTG/9tWGUu6BnJxRtFUS9NrStOum4YCt1O6yrC
+   Jpm6HvCgfWqKYk2W8nlMIQkbT2lan3e7EP3/xPdu8Wwme21FOz8eYyrMm
+   CajGgTNe/TKxnIn/jVzAqFdBh4qUd5n2WlZF/cAgfQeEydUSPFHOUVWEf
+   OcR1HaB3coJiVupkeQu9Q4sP7grBl5M98G2BuHYiJP1Sm7ueSIRYWyxTt
+   OFkah9x+PoHQnlaRPQcvog5YTanaE5Q7x42EUDy6dSy7u0sx2A2TmaArO
+   Q==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10608"; a="328211394"
+X-IronPort-AV: E=Sophos;i="5.97,263,1669104000"; 
+   d="scan'208";a="328211394"
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Feb 2023 08:48:39 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6500,9779,10608"; a="733637729"
+X-IronPort-AV: E=Sophos;i="5.97,263,1669104000"; 
+   d="scan'208";a="733637729"
+Received: from lkp-server01.sh.intel.com (HELO ffa7f14d1d0f) ([10.239.97.150])
+  by fmsmga004.fm.intel.com with ESMTP; 01 Feb 2023 08:48:36 -0800
+Received: from kbuild by ffa7f14d1d0f with local (Exim 4.96)
+        (envelope-from <lkp@intel.com>)
+        id 1pNGHj-0005aq-35;
+        Wed, 01 Feb 2023 16:48:35 +0000
+Date:   Thu, 02 Feb 2023 00:47:49 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     Andrew Morton <akpm@linux-foundation.org>
+Cc:     linux-trace-kernel@vger.kernel.org,
+        linux-riscv@lists.infradead.org, linux-aspeed@lists.ozlabs.org,
+        linux-arm-msm@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev,
+        kvmarm@lists.cs.columbia.edu, devicetree@vger.kernel.org,
+        amd-gfx@lists.freedesktop.org,
+        Linux Memory Management List <linux-mm@kvack.org>
+Subject: [linux-next:master] BUILD REGRESSION
+ 66eee64b235411d512bed4d672c2d00683239daf
+Message-ID: <63da97b5.3V1HSQEat507LFIr%lkp@intel.com>
+User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-The ftrace samples need per-architecture trampoline implementations
-to save and restore argument registers around the calls to
-my_direct_func* and to restore polluted registers (eg: x30).
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git master
+branch HEAD: 66eee64b235411d512bed4d672c2d00683239daf  Add linux-next specific files for 20230201
 
-These samples also include <asm/nospec-branch.h> which does not exist on
-arm64 and <asm/asm-offsets.h> which, on arm64, is not necessary and
-redefines previously defined macros (resulting in warnings) so these
-includes are guarded by !CONFIG_ARM64.
+Error/Warning reports:
 
-Signed-off-by: Florent Revest <revest@chromium.org>
----
- arch/arm64/Kconfig                          |  2 ++
- samples/ftrace/ftrace-direct-modify.c       | 32 ++++++++++++++++++
- samples/ftrace/ftrace-direct-multi-modify.c | 36 +++++++++++++++++++++
- samples/ftrace/ftrace-direct-multi.c        | 22 +++++++++++++
- samples/ftrace/ftrace-direct-too.c          | 25 ++++++++++++++
- samples/ftrace/ftrace-direct.c              | 23 +++++++++++++
- 6 files changed, 140 insertions(+)
+https://lore.kernel.org/oe-kbuild-all/202301300743.bp7Dpazv-lkp@intel.com
+https://lore.kernel.org/oe-kbuild-all/202301301801.y5O08tQx-lkp@intel.com
+https://lore.kernel.org/oe-kbuild-all/202301302110.mEtNwkBD-lkp@intel.com
+https://lore.kernel.org/oe-kbuild-all/202301310939.TAgCOEZb-lkp@intel.com
+https://lore.kernel.org/oe-kbuild-all/202302011836.kA3BxqdY-lkp@intel.com
 
-diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
-index 7deafd653c42..5480ef8eaa2a 100644
---- a/arch/arm64/Kconfig
-+++ b/arch/arm64/Kconfig
-@@ -194,6 +194,8 @@ config ARM64
- 		if (DYNAMIC_FTRACE_WITH_ARGS && !CFI_CLANG)
- 	select FTRACE_MCOUNT_USE_PATCHABLE_FUNCTION_ENTRY \
- 		if DYNAMIC_FTRACE_WITH_ARGS
-+	select HAVE_SAMPLE_FTRACE_DIRECT
-+	select HAVE_SAMPLE_FTRACE_DIRECT_MULTI
- 	select HAVE_EFFICIENT_UNALIGNED_ACCESS
- 	select HAVE_FAST_GUP
- 	select HAVE_FTRACE_MCOUNT_RECORD
-diff --git a/samples/ftrace/ftrace-direct-modify.c b/samples/ftrace/ftrace-direct-modify.c
-index 0f1b8859e1e1..944b327e130c 100644
---- a/samples/ftrace/ftrace-direct-modify.c
-+++ b/samples/ftrace/ftrace-direct-modify.c
-@@ -2,8 +2,10 @@
- #include <linux/module.h>
- #include <linux/kthread.h>
- #include <linux/ftrace.h>
-+#ifndef CONFIG_ARM64
- #include <asm/asm-offsets.h>
- #include <asm/nospec-branch.h>
-+#endif
- 
- extern void my_direct_func1(void);
- extern void my_direct_func2(void);
-@@ -96,6 +98,36 @@ asm (
- 
- #endif /* CONFIG_S390 */
- 
-+#ifdef CONFIG_ARM64
-+
-+asm (
-+"	.pushsection    .text, \"ax\", @progbits\n"
-+"	.type		my_tramp1, @function\n"
-+"	.globl		my_tramp1\n"
-+"   my_tramp1:"
-+"	sub	sp, sp, #16\n"
-+"	stp	x9, x30, [sp]\n"
-+"	bl	my_direct_func1\n"
-+"	ldp	x30, x9, [sp]\n"
-+"	add	sp, sp, #16\n"
-+"	ret	x9\n"
-+"	.size		my_tramp1, .-my_tramp1\n"
-+
-+"	.type		my_tramp2, @function\n"
-+"	.globl		my_tramp2\n"
-+"   my_tramp2:"
-+"	sub	sp, sp, #16\n"
-+"	stp	x9, x30, [sp]\n"
-+"	bl	my_direct_func2\n"
-+"	ldp	x30, x9, [sp]\n"
-+"	add	sp, sp, #16\n"
-+"	ret	x9\n"
-+"	.size		my_tramp2, .-my_tramp2\n"
-+"	.popsection\n"
-+);
-+
-+#endif /* CONFIG_ARM64 */
-+
- static struct ftrace_ops direct;
- 
- static unsigned long my_tramp = (unsigned long)my_tramp1;
-diff --git a/samples/ftrace/ftrace-direct-multi-modify.c b/samples/ftrace/ftrace-direct-multi-modify.c
-index 407c56325e65..ae1f97271d1a 100644
---- a/samples/ftrace/ftrace-direct-multi-modify.c
-+++ b/samples/ftrace/ftrace-direct-multi-modify.c
-@@ -2,8 +2,10 @@
- #include <linux/module.h>
- #include <linux/kthread.h>
- #include <linux/ftrace.h>
-+#ifndef CONFIG_ARM64
- #include <asm/asm-offsets.h>
- #include <asm/nospec-branch.h>
-+#endif
- 
- extern void my_direct_func1(unsigned long ip);
- extern void my_direct_func2(unsigned long ip);
-@@ -103,6 +105,40 @@ asm (
- 
- #endif /* CONFIG_S390 */
- 
-+#ifdef CONFIG_ARM64
-+
-+asm (
-+"	.pushsection    .text, \"ax\", @progbits\n"
-+"	.type		my_tramp1, @function\n"
-+"	.globl		my_tramp1\n"
-+"   my_tramp1:"
-+"	sub	sp, sp, #32\n"
-+"	stp	x9, x30, [sp]\n"
-+"	str	x0, [sp, #16]\n"
-+"	bl	my_direct_func1\n"
-+"	ldp	x30, x9, [sp]\n"
-+"	ldr	x0, [sp, #16]\n"
-+"	add	sp, sp, #32\n"
-+"	ret	x9\n"
-+"	.size		my_tramp1, .-my_tramp1\n"
-+
-+"	.type		my_tramp2, @function\n"
-+"	.globl		my_tramp2\n"
-+"   my_tramp2:"
-+"	sub	sp, sp, #32\n"
-+"	stp	x9, x30, [sp]\n"
-+"	str	x0, [sp, #16]\n"
-+"	bl	my_direct_func2\n"
-+"	ldp	x30, x9, [sp]\n"
-+"	ldr	x0, [sp, #16]\n"
-+"	add	sp, sp, #32\n"
-+"	ret	x9\n"
-+"	.size		my_tramp2, .-my_tramp2\n"
-+"	.popsection\n"
-+);
-+
-+#endif /* CONFIG_ARM64 */
-+
- static unsigned long my_tramp = (unsigned long)my_tramp1;
- static unsigned long tramps[2] = {
- 	(unsigned long)my_tramp1,
-diff --git a/samples/ftrace/ftrace-direct-multi.c b/samples/ftrace/ftrace-direct-multi.c
-index 42a94806a446..84713fe28b74 100644
---- a/samples/ftrace/ftrace-direct-multi.c
-+++ b/samples/ftrace/ftrace-direct-multi.c
-@@ -4,8 +4,10 @@
- #include <linux/mm.h> /* for handle_mm_fault() */
- #include <linux/ftrace.h>
- #include <linux/sched/stat.h>
-+#ifndef CONFIG_ARM64
- #include <asm/asm-offsets.h>
- #include <asm/nospec-branch.h>
-+#endif
- 
- extern void my_direct_func(unsigned long ip);
- 
-@@ -66,6 +68,26 @@ asm (
- 
- #endif /* CONFIG_S390 */
- 
-+#ifdef CONFIG_ARM64
-+
-+asm (
-+"	.pushsection	.text, \"ax\", @progbits\n"
-+"	.type		my_tramp, @function\n"
-+"	.globl		my_tramp\n"
-+"   my_tramp:"
-+"	sub	sp, sp, #32\n"
-+"	stp	x9, x30, [sp]\n"
-+"	str	x0, [sp, #16]\n"
-+"	bl	my_direct_func\n"
-+"	ldp	x30, x9, [sp]\n"
-+"	ldr	x0, [sp, #16]\n"
-+"	add	sp, sp, #32\n"
-+"	ret	x9\n"
-+"	.size		my_tramp, .-my_tramp\n"
-+"	.popsection\n"
-+);
-+
-+#endif /* CONFIG_ARM64 */
- static struct ftrace_ops direct;
- 
- static int __init ftrace_direct_multi_init(void)
-diff --git a/samples/ftrace/ftrace-direct-too.c b/samples/ftrace/ftrace-direct-too.c
-index 7ee5dd3cc61d..f46ee08caa2b 100644
---- a/samples/ftrace/ftrace-direct-too.c
-+++ b/samples/ftrace/ftrace-direct-too.c
-@@ -3,8 +3,10 @@
- 
- #include <linux/mm.h> /* for handle_mm_fault() */
- #include <linux/ftrace.h>
-+#ifndef CONFIG_ARM64
- #include <asm/asm-offsets.h>
- #include <asm/nospec-branch.h>
-+#endif
- 
- extern void my_direct_func(struct vm_area_struct *vma,
- 			   unsigned long address, unsigned int flags);
-@@ -70,6 +72,29 @@ asm (
- 
- #endif /* CONFIG_S390 */
- 
-+#ifdef CONFIG_ARM64
-+
-+asm (
-+"	.pushsection	.text, \"ax\", @progbits\n"
-+"	.type		my_tramp, @function\n"
-+"	.globl		my_tramp\n"
-+"   my_tramp:"
-+"	sub	sp, sp, #48\n"
-+"	stp	x9, x30, [sp]\n"
-+"	stp	x0, x1, [sp, #16]\n"
-+"	str	x2, [sp, #32]\n"
-+"	bl	my_direct_func\n"
-+"	ldp	x30, x9, [sp]\n"
-+"	ldp	x0, x1, [sp, #16]\n"
-+"	ldr	x2, [sp, #32]\n"
-+"	add	sp, sp, #48\n"
-+"	ret	x9\n"
-+"	.size		my_tramp, .-my_tramp\n"
-+"	.popsection\n"
-+);
-+
-+#endif /* CONFIG_ARM64 */
-+
- static struct ftrace_ops direct;
- 
- static int __init ftrace_direct_init(void)
-diff --git a/samples/ftrace/ftrace-direct.c b/samples/ftrace/ftrace-direct.c
-index 5ffce87fa83e..e37e8d9e855c 100644
---- a/samples/ftrace/ftrace-direct.c
-+++ b/samples/ftrace/ftrace-direct.c
-@@ -3,8 +3,10 @@
- 
- #include <linux/sched.h> /* for wake_up_process() */
- #include <linux/ftrace.h>
-+#ifndef CONFIG_ARM64
- #include <asm/asm-offsets.h>
- #include <asm/nospec-branch.h>
-+#endif
- 
- extern void my_direct_func(struct task_struct *p);
- 
-@@ -63,6 +65,27 @@ asm (
- 
- #endif /* CONFIG_S390 */
- 
-+#ifdef CONFIG_ARM64
-+
-+asm (
-+"	.pushsection	.text, \"ax\", @progbits\n"
-+"	.type		my_tramp, @function\n"
-+"	.globl		my_tramp\n"
-+"   my_tramp:"
-+"	sub	sp, sp, #32\n"
-+"	stp	x9, x30, [sp]\n"
-+"	str	x0, [sp, #16]\n"
-+"	bl	my_direct_func\n"
-+"	ldp	x30, x9, [sp]\n"
-+"	ldr	x0, [sp, #16]\n"
-+"	add	sp, sp, #32\n"
-+"	ret	x9\n"
-+"	.size		my_tramp, .-my_tramp\n"
-+"	.popsection\n"
-+);
-+
-+#endif /* CONFIG_ARM64 */
-+
- static struct ftrace_ops direct;
- 
- static int __init ftrace_direct_init(void)
+Error/Warning: (recently discovered and may have been fixed)
+
+Documentation/riscv/uabi.rst:24: WARNING: Enumerated list ends without a blank line; unexpected unindent.
+ERROR: modpost: "devm_platform_ioremap_resource" [drivers/dma/fsl-edma.ko] undefined!
+ERROR: modpost: "devm_platform_ioremap_resource" [drivers/dma/idma64.ko] undefined!
+arch/arm64/kvm/arm.c:2206: warning: expecting prototype for Initialize Hyp(). Prototype was for kvm_arm_init() instead
+drivers/gpu/drm/amd/amdgpu/../display/amdgpu_dm/amdgpu_dm.h:62:10: fatal error: mod_info_packet.h: No such file or directory
+drivers/gpu/drm/amd/amdgpu/../display/dc/link/accessories/link_dp_trace.c:148:6: warning: no previous prototype for 'link_dp_trace_set_edp_power_timestamp' [-Wmissing-prototypes]
+drivers/gpu/drm/amd/amdgpu/../display/dc/link/accessories/link_dp_trace.c:158:10: warning: no previous prototype for 'link_dp_trace_get_edp_poweron_timestamp' [-Wmissing-prototypes]
+drivers/gpu/drm/amd/amdgpu/../display/dc/link/accessories/link_dp_trace.c:163:10: warning: no previous prototype for 'link_dp_trace_get_edp_poweroff_timestamp' [-Wmissing-prototypes]
+drivers/gpu/drm/amd/amdgpu/../display/dc/link/protocols/link_dp_capability.c:1295:32: warning: variable 'result_write_min_hblank' set but not used [-Wunused-but-set-variable]
+drivers/gpu/drm/amd/amdgpu/../display/dc/link/protocols/link_dp_capability.c:279:42: warning: variable 'ds_port' set but not used [-Wunused-but-set-variable]
+drivers/gpu/drm/amd/amdgpu/../display/dc/link/protocols/link_dp_training.c:1585:38: warning: variable 'result' set but not used [-Wunused-but-set-variable]
+ftrace-ops.c:(.init.text+0x2c3): undefined reference to `__udivdi3'
+idma64.c:(.text+0x1696): undefined reference to `devm_platform_ioremap_resource'
+
+Unverified Error/Warning (likely false positive, please contact us if interested):
+
+drivers/crypto/aspeed/aspeed-acry.c:295:37: sparse: sparse: incorrect type in assignment (different base types)
+drivers/crypto/aspeed/aspeed-acry.c:305:28: sparse: sparse: cast removes address space '__iomem' of expression
+drivers/crypto/aspeed/aspeed-acry.c:606:24: sparse: sparse: symbol 'aspeed_acry_akcipher_algs' was not declared. Should it be static?
+drivers/nvmem/imx-ocotp.c:599:21: sparse: sparse: symbol 'imx_ocotp_layout' was not declared. Should it be static?
+drivers/nvmem/layouts/sl28vpd.c:143:21: sparse: sparse: symbol 'sl28vpd_layout' was not declared. Should it be static?
+drivers/of/platform.c:570:2-23: WARNING: Function "for_each_node_by_type" should have of_node_put() before break around line 575.
+drivers/thermal/qcom/tsens-v0_1.c:106:40: sparse: sparse: symbol 'tsens_9607_nvmem' was not declared. Should it be static?
+drivers/thermal/qcom/tsens-v0_1.c:26:40: sparse: sparse: symbol 'tsens_8916_nvmem' was not declared. Should it be static?
+drivers/thermal/qcom/tsens-v0_1.c:42:40: sparse: sparse: symbol 'tsens_8939_nvmem' was not declared. Should it be static?
+drivers/thermal/qcom/tsens-v0_1.c:62:40: sparse: sparse: symbol 'tsens_8974_nvmem' was not declared. Should it be static?
+drivers/thermal/qcom/tsens-v0_1.c:84:40: sparse: sparse: symbol 'tsens_8974_backup_nvmem' was not declared. Should it be static?
+drivers/thermal/qcom/tsens-v1.c:24:40: sparse: sparse: symbol 'tsens_qcs404_nvmem' was not declared. Should it be static?
+drivers/thermal/qcom/tsens-v1.c:45:40: sparse: sparse: symbol 'tsens_8976_nvmem' was not declared. Should it be static?
+
+Error/Warning ids grouped by kconfigs:
+
+gcc_recent_errors
+|-- alpha-allyesconfig
+|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-accessories-link_dp_trace.c:warning:no-previous-prototype-for-link_dp_trace_get_edp_poweroff_timestamp
+|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-accessories-link_dp_trace.c:warning:no-previous-prototype-for-link_dp_trace_get_edp_poweron_timestamp
+|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-accessories-link_dp_trace.c:warning:no-previous-prototype-for-link_dp_trace_set_edp_power_timestamp
+|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-protocols-link_dp_capability.c:warning:variable-ds_port-set-but-not-used
+|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-protocols-link_dp_capability.c:warning:variable-result_write_min_hblank-set-but-not-used
+|   `-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-protocols-link_dp_training.c:warning:variable-result-set-but-not-used
+|-- alpha-randconfig-r026-20230129
+|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-accessories-link_dp_trace.c:warning:no-previous-prototype-for-link_dp_trace_get_edp_poweroff_timestamp
+|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-accessories-link_dp_trace.c:warning:no-previous-prototype-for-link_dp_trace_get_edp_poweron_timestamp
+|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-accessories-link_dp_trace.c:warning:no-previous-prototype-for-link_dp_trace_set_edp_power_timestamp
+|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-protocols-link_dp_capability.c:warning:variable-ds_port-set-but-not-used
+|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-protocols-link_dp_capability.c:warning:variable-result_write_min_hblank-set-but-not-used
+|   `-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-protocols-link_dp_training.c:warning:variable-result-set-but-not-used
+|-- alpha-randconfig-s032-20230129
+|   `-- drivers-nvmem-layouts-sl28vpd.c:sparse:sparse:symbol-sl28vpd_layout-was-not-declared.-Should-it-be-static
+|-- arc-allyesconfig
+|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-accessories-link_dp_trace.c:warning:no-previous-prototype-for-link_dp_trace_get_edp_poweroff_timestamp
+|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-accessories-link_dp_trace.c:warning:no-previous-prototype-for-link_dp_trace_get_edp_poweron_timestamp
+|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-accessories-link_dp_trace.c:warning:no-previous-prototype-for-link_dp_trace_set_edp_power_timestamp
+|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-protocols-link_dp_capability.c:warning:variable-ds_port-set-but-not-used
+|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-protocols-link_dp_capability.c:warning:variable-result_write_min_hblank-set-but-not-used
+|   `-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-protocols-link_dp_training.c:warning:variable-result-set-but-not-used
+|-- arc-randconfig-r001-20230130
+|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-accessories-link_dp_trace.c:warning:no-previous-prototype-for-link_dp_trace_get_edp_poweroff_timestamp
+|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-accessories-link_dp_trace.c:warning:no-previous-prototype-for-link_dp_trace_get_edp_poweron_timestamp
+|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-accessories-link_dp_trace.c:warning:no-previous-prototype-for-link_dp_trace_set_edp_power_timestamp
+|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-protocols-link_dp_capability.c:warning:variable-ds_port-set-but-not-used
+|   `-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-protocols-link_dp_capability.c:warning:variable-result_write_min_hblank-set-but-not-used
+|-- arm-allyesconfig
+|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-accessories-link_dp_trace.c:warning:no-previous-prototype-for-link_dp_trace_get_edp_poweroff_timestamp
+|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-accessories-link_dp_trace.c:warning:no-previous-prototype-for-link_dp_trace_get_edp_poweron_timestamp
+|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-accessories-link_dp_trace.c:warning:no-previous-prototype-for-link_dp_trace_set_edp_power_timestamp
+|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-protocols-link_dp_capability.c:warning:variable-ds_port-set-but-not-used
+|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-protocols-link_dp_capability.c:warning:variable-result_write_min_hblank-set-but-not-used
+|   `-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-protocols-link_dp_training.c:warning:variable-result-set-but-not-used
+|-- arm64-allyesconfig
+|   |-- arch-arm64-kvm-arm.c:warning:expecting-prototype-for-Initialize-Hyp().-Prototype-was-for-kvm_arm_init()-instead
+|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-accessories-link_dp_trace.c:warning:no-previous-prototype-for-link_dp_trace_get_edp_poweroff_timestamp
+|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-accessories-link_dp_trace.c:warning:no-previous-prototype-for-link_dp_trace_get_edp_poweron_timestamp
+|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-accessories-link_dp_trace.c:warning:no-previous-prototype-for-link_dp_trace_set_edp_power_timestamp
+|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-protocols-link_dp_capability.c:warning:variable-ds_port-set-but-not-used
+|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-protocols-link_dp_capability.c:warning:variable-result_write_min_hblank-set-but-not-used
+|   `-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-protocols-link_dp_training.c:warning:variable-result-set-but-not-used
+|-- i386-allyesconfig
+|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-accessories-link_dp_trace.c:warning:no-previous-prototype-for-link_dp_trace_get_edp_poweroff_timestamp
+|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-accessories-link_dp_trace.c:warning:no-previous-prototype-for-link_dp_trace_get_edp_poweron_timestamp
+|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-accessories-link_dp_trace.c:warning:no-previous-prototype-for-link_dp_trace_set_edp_power_timestamp
+|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-protocols-link_dp_capability.c:warning:variable-ds_port-set-but-not-used
+|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-protocols-link_dp_capability.c:warning:variable-result_write_min_hblank-set-but-not-used
+
+elapsed time: 722m
+
+configs tested: 69
+configs skipped: 2
+
+gcc tested configs:
+x86_64                          rhel-8.3-func
+x86_64                    rhel-8.3-kselftests
+ia64                             allmodconfig
+x86_64                            allnoconfig
+um                             i386_defconfig
+um                           x86_64_defconfig
+arc                                 defconfig
+i386                                defconfig
+x86_64                              defconfig
+alpha                               defconfig
+arm                                 defconfig
+mips                             allyesconfig
+x86_64                           rhel-8.3-syz
+x86_64               randconfig-a001-20230130
+x86_64                         rhel-8.3-kunit
+x86_64               randconfig-a003-20230130
+x86_64                           rhel-8.3-bpf
+powerpc                           allnoconfig
+x86_64               randconfig-a004-20230130
+x86_64                               rhel-8.3
+x86_64               randconfig-a002-20230130
+powerpc                          allmodconfig
+sh                               allmodconfig
+x86_64               randconfig-a006-20230130
+x86_64                           allyesconfig
+i386                          randconfig-a001
+x86_64                           rhel-8.3-kvm
+i386                          randconfig-a003
+x86_64               randconfig-a005-20230130
+arm64                            allyesconfig
+i386                             allyesconfig
+i386                          randconfig-a005
+arc                  randconfig-r043-20230129
+i386                          randconfig-c001
+arm                              allyesconfig
+s390                                defconfig
+s390                             allmodconfig
+arm                  randconfig-r046-20230129
+arm                  randconfig-r046-20230130
+s390                             allyesconfig
+arc                  randconfig-r043-20230130
+m68k                             allyesconfig
+m68k                             allmodconfig
+alpha                            allyesconfig
+arc                              allyesconfig
+
+clang tested configs:
+x86_64                          rhel-8.3-rust
+x86_64               randconfig-a012-20230130
+x86_64               randconfig-a013-20230130
+x86_64               randconfig-a011-20230130
+x86_64               randconfig-a014-20230130
+i386                 randconfig-a013-20230130
+i386                          randconfig-a002
+i386                 randconfig-a012-20230130
+i386                 randconfig-a014-20230130
+i386                          randconfig-a004
+x86_64               randconfig-a015-20230130
+i386                 randconfig-a015-20230130
+x86_64               randconfig-a016-20230130
+i386                 randconfig-a011-20230130
+hexagon              randconfig-r041-20230129
+i386                 randconfig-a016-20230130
+riscv                randconfig-r042-20230129
+i386                          randconfig-a006
+riscv                randconfig-r042-20230130
+hexagon              randconfig-r045-20230130
+hexagon              randconfig-r041-20230130
+hexagon              randconfig-r045-20230129
+s390                 randconfig-r044-20230129
+s390                 randconfig-r044-20230130
+
 -- 
-2.39.1.519.gcb327c4b5f-goog
-
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests
