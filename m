@@ -2,244 +2,226 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E6DCC05027
-	for <linux-trace-kernel@archiver.kernel.org>; Wed,  1 Feb 2023 16:48:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BA60DC38142
+	for <linux-trace-kernel@archiver.kernel.org>; Wed,  1 Feb 2023 17:29:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231200AbjBAQsm (ORCPT
+        id S232100AbjBAR36 (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Wed, 1 Feb 2023 11:48:42 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50420 "EHLO
+        Wed, 1 Feb 2023 12:29:58 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52722 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230094AbjBAQsl (ORCPT
+        with ESMTP id S231974AbjBAR3q (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Wed, 1 Feb 2023 11:48:41 -0500
-Received: from mga14.intel.com (mga14.intel.com [192.55.52.115])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3D0D92CFDC;
-        Wed,  1 Feb 2023 08:48:40 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1675270120; x=1706806120;
-  h=date:from:to:cc:subject:message-id:mime-version:
-   content-transfer-encoding;
-  bh=w8u8eB3i+g2hkKrWZ3XNuqr4Dla5g1T+NGLU/nuIyQE=;
-  b=PrtaoZX8ZCJ7x2Cyton289gVADuuPoQasiq0/j0dJwSZjWLmUcRqXNbK
-   d7Sn3+K2KV9d+DvIMv5jTG/9tWGUu6BnJxRtFUS9NrStOum4YCt1O6yrC
-   Jpm6HvCgfWqKYk2W8nlMIQkbT2lan3e7EP3/xPdu8Wwme21FOz8eYyrMm
-   CajGgTNe/TKxnIn/jVzAqFdBh4qUd5n2WlZF/cAgfQeEydUSPFHOUVWEf
-   OcR1HaB3coJiVupkeQu9Q4sP7grBl5M98G2BuHYiJP1Sm7ueSIRYWyxTt
-   OFkah9x+PoHQnlaRPQcvog5YTanaE5Q7x42EUDy6dSy7u0sx2A2TmaArO
-   Q==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10608"; a="328211394"
-X-IronPort-AV: E=Sophos;i="5.97,263,1669104000"; 
-   d="scan'208";a="328211394"
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Feb 2023 08:48:39 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6500,9779,10608"; a="733637729"
-X-IronPort-AV: E=Sophos;i="5.97,263,1669104000"; 
-   d="scan'208";a="733637729"
-Received: from lkp-server01.sh.intel.com (HELO ffa7f14d1d0f) ([10.239.97.150])
-  by fmsmga004.fm.intel.com with ESMTP; 01 Feb 2023 08:48:36 -0800
-Received: from kbuild by ffa7f14d1d0f with local (Exim 4.96)
-        (envelope-from <lkp@intel.com>)
-        id 1pNGHj-0005aq-35;
-        Wed, 01 Feb 2023 16:48:35 +0000
-Date:   Thu, 02 Feb 2023 00:47:49 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     Andrew Morton <akpm@linux-foundation.org>
-Cc:     linux-trace-kernel@vger.kernel.org,
-        linux-riscv@lists.infradead.org, linux-aspeed@lists.ozlabs.org,
-        linux-arm-msm@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev,
-        kvmarm@lists.cs.columbia.edu, devicetree@vger.kernel.org,
-        amd-gfx@lists.freedesktop.org,
-        Linux Memory Management List <linux-mm@kvack.org>
-Subject: [linux-next:master] BUILD REGRESSION
- 66eee64b235411d512bed4d672c2d00683239daf
-Message-ID: <63da97b5.3V1HSQEat507LFIr%lkp@intel.com>
-User-Agent: Heirloom mailx 12.5 6/20/10
+        Wed, 1 Feb 2023 12:29:46 -0500
+Received: from NAM04-BN8-obe.outbound.protection.outlook.com (mail-bn8nam04on2086.outbound.protection.outlook.com [40.107.100.86])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 19C5A7642F;
+        Wed,  1 Feb 2023 09:29:40 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=BPWuhXraanKTH8HKsw/SlSgR+OatjUo+GyMdwofw2gtrutqOqbj/z+trnp9W+KWg24jVVhsg4NKN7pnTq8AKfoT+8uqYvLDZakzSvEjX0GuHt1OfFulNkGwnCmBZO7lysXWjLZlfG4vzQCVSqRQlfKC7LiutZYy0VRX0wXvDPFGHbUosu9V38KN1apTvpu9MsH/i4slXl4d+5TsA9eadWd7FqFFxG5f68gQ1dYZ1u4SDD6sgg27cTvJ5yE1Cjbm4v8Iwst2XgQ50N6fTvQm3Cifk1L2uaXvT3rPeCUsCiTOhZ7ErgA3b1JlPJsTOLV7icR8PJQy4ah68j/dMRthsnw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=WtyG76Sjp31H3X92EqJlwwB5OXXJLBKMJptF4lhixlo=;
+ b=JHxfIkQ/NjMkWDHpos7h6HEFqyywamB1lh7aCs1pT5zIuTfe/LEt+3sBFLzcNoa5tmlY61pyYOSjiKSo3xL77MR5SMnK2ORs34jvp9CUjSioQF0edQfePZk9zPhQpjGlpbAB037bE7zRo1E1h54fUqOkfD7YOoJdD3BMjQcQkZQcmJirqRmmLZfVpWPvu+X7hF8cXim3CWjNBNoORIX4yVeTtnXcu+b3vFVdgXC9Y6clN9XDiqDppUNMMrixS3dfWDbnozEaVq/sSm4ra/XhCuzOiJffFRR6mnLTYERCLo6Y8Jcu7YR4D8dTBHQlsLgagzTL52hsBWOZ9S18rRy7Pw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 216.228.117.160) smtp.rcpttodomain=davemloft.net smtp.mailfrom=nvidia.com;
+ dmarc=pass (p=reject sp=reject pct=100) action=none header.from=nvidia.com;
+ dkim=none (message not signed); arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=WtyG76Sjp31H3X92EqJlwwB5OXXJLBKMJptF4lhixlo=;
+ b=U32P2LhkbERxLqqG7f/zSaTOXFNLhyZKMtSdcaxZThQYkmBpFIeiVMzEJ+RpiWOllEZCyDtRG0uLyVt5RXXyICUnw/cXXLvF3gV8RKSXvuDpoT4tlsUxMrkpZb3QmNHRmTur89SXSLO8BlXWnmkvlvsqovKQNnOS193aRw1qpXlqkqUQw9ug9gxAeiOH5whZJUR67zoxbm2Ot+Y5rsMKlK/A9J4bSO+r2eoMD+5YRL5DPholAFvJjlLQLElaYUvrDvnzbMW7t1hdbHI5aiZZ6NgxqrAnDlP5K7fSKxEQC5/JfybhQDUpFzcWcbNgBqlCWneTs2OkUjbrxnNOEiz5ng==
+Received: from BLAPR03CA0165.namprd03.prod.outlook.com (2603:10b6:208:32f::9)
+ by PH7PR12MB5620.namprd12.prod.outlook.com (2603:10b6:510:137::5) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6043.36; Wed, 1 Feb
+ 2023 17:29:37 +0000
+Received: from BL02EPF000108EA.namprd05.prod.outlook.com
+ (2603:10b6:208:32f:cafe::7f) by BLAPR03CA0165.outlook.office365.com
+ (2603:10b6:208:32f::9) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6043.38 via Frontend
+ Transport; Wed, 1 Feb 2023 17:29:37 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.117.160)
+ smtp.mailfrom=nvidia.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=nvidia.com;
+Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
+ 216.228.117.160 as permitted sender) receiver=protection.outlook.com;
+ client-ip=216.228.117.160; helo=mail.nvidia.com; pr=C
+Received: from mail.nvidia.com (216.228.117.160) by
+ BL02EPF000108EA.mail.protection.outlook.com (10.167.241.203) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.6064.21 via Frontend Transport; Wed, 1 Feb 2023 17:29:37 +0000
+Received: from rnnvmail201.nvidia.com (10.129.68.8) by mail.nvidia.com
+ (10.129.200.66) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.986.36; Wed, 1 Feb 2023
+ 09:29:24 -0800
+Received: from localhost.localdomain (10.126.230.37) by rnnvmail201.nvidia.com
+ (10.129.68.8) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.986.36; Wed, 1 Feb 2023
+ 09:29:21 -0800
+From:   Petr Machata <petrm@nvidia.com>
+To:     "David S. Miller" <davem@davemloft.net>,
+        Eric Dumazet <edumazet@google.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Paolo Abeni <pabeni@redhat.com>,
+        Roopa Prabhu <roopa@nvidia.com>,
+        Nikolay Aleksandrov <razor@blackwall.org>,
+        <netdev@vger.kernel.org>
+CC:     <bridge@lists.linux-foundation.org>,
+        Petr Machata <petrm@nvidia.com>,
+        "Ido Schimmel" <idosch@nvidia.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        <linux-trace-kernel@vger.kernel.org>
+Subject: [PATCH net-next mlxsw v2 06/16] net: bridge: Add a tracepoint for MDB overflows
+Date:   Wed, 1 Feb 2023 18:28:39 +0100
+Message-ID: <008620de41985a3a757c7099bc712ae75739db27.1675271084.git.petrm@nvidia.com>
+X-Mailer: git-send-email 2.39.0
+In-Reply-To: <cover.1675271084.git.petrm@nvidia.com>
+References: <cover.1675271084.git.petrm@nvidia.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Originating-IP: [10.126.230.37]
+X-ClientProxiedBy: rnnvmail201.nvidia.com (10.129.68.8) To
+ rnnvmail201.nvidia.com (10.129.68.8)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: BL02EPF000108EA:EE_|PH7PR12MB5620:EE_
+X-MS-Office365-Filtering-Correlation-Id: 0d803dbf-b6a8-468d-22c7-08db0479e476
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: GTTOHb8Ugy0xIiQyoSZA2Cb1NOVry+wqDt5nmgr1gPosZzoZFSMRqUfTK7bxWY7WbZlLFI2AMptPbovQ6Gv5CFoa5Xx7r+dDBvr6Hiawt9OMVx+DrQhGFtev+S0xONRjSrfOMc+7owQx8Fm9va5QhoDu1RdOEwqOlttxTtedANPBQOPXdJJflBBTW69Zghoi311eGXokzDPIB5uEDOzuXh0WkJ9k6TK5SaOjgveGAXBVY8rjazSMOfOfu9N0EuGliVh3rDLyc8DPqx4cMBHhTdCmBdPBj6iHuk4iezcSj7xR/2Hu66DOEmqpHwFr+JlX1NfqyP0Htw32kQxryUdsXMuhAuRrm7YpyIJTarT/L3KI8TRrxF56xMwq1Gn0VLsEpHENcG3titIGRzJJ0BWLg0uS6qQMlBsEAgSiLD+9bzOE6AMz/8a7Pl9yXrnkjXBKrmJsbwnUr839mhh7bsDzI6DhElQFEzX3ZJ1IeyHnOzvB74/3zzdekj3Im/qvqv0T2XJDJS/iiAmA3mRS42HCg+6NRLszbS1wpXKM6YVEWoUo4FcEOA65ExUuE0d8JbwJkTF7gm43m190cKmi+V3QJPLV1VLYFFN0nksGeysPbmqVYqY0U7hw8/YpjVn+/nSrPD7t4qkBDhzuzlJrKfLlD2PrQ2j9bgKD05QvJBwcZLtPSRBbfeoG8bIOUEuK6D7gI+HNAgxxPlybUqNWTk87Sw==
+X-Forefront-Antispam-Report: CIP:216.228.117.160;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:dc6edge1.nvidia.com;CAT:NONE;SFS:(13230025)(4636009)(346002)(396003)(39860400002)(136003)(376002)(451199018)(40470700004)(36840700001)(46966006)(41300700001)(4326008)(8676002)(110136005)(8936002)(316002)(70586007)(70206006)(40480700001)(5660300002)(6666004)(54906003)(83380400001)(40460700003)(36860700001)(26005)(478600001)(16526019)(186003)(426003)(2906002)(36756003)(47076005)(336012)(86362001)(2616005)(356005)(82740400003)(82310400005)(7636003);DIR:OUT;SFP:1101;
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 01 Feb 2023 17:29:37.1527
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 0d803dbf-b6a8-468d-22c7-08db0479e476
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.117.160];Helo=[mail.nvidia.com]
+X-MS-Exchange-CrossTenant-AuthSource: BL02EPF000108EA.namprd05.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7PR12MB5620
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git master
-branch HEAD: 66eee64b235411d512bed4d672c2d00683239daf  Add linux-next specific files for 20230201
+The following patch will add two more maximum MDB allowances to the global
+one, mcast_hash_max, that exists today. In all these cases, attempts to add
+MDB entries above the configured maximums through netlink, fail noisily and
+obviously. Such visibility is missing when adding entries through the
+control plane traffic, by IGMP or MLD packets.
 
-Error/Warning reports:
+To improve visibility in those cases, add a trace point that reports the
+violation, including the relevant netdevice (be it a slave or the bridge
+itself), and the MDB entry parameters:
 
-https://lore.kernel.org/oe-kbuild-all/202301300743.bp7Dpazv-lkp@intel.com
-https://lore.kernel.org/oe-kbuild-all/202301301801.y5O08tQx-lkp@intel.com
-https://lore.kernel.org/oe-kbuild-all/202301302110.mEtNwkBD-lkp@intel.com
-https://lore.kernel.org/oe-kbuild-all/202301310939.TAgCOEZb-lkp@intel.com
-https://lore.kernel.org/oe-kbuild-all/202302011836.kA3BxqdY-lkp@intel.com
+	# perf record -e bridge:br_mdb_full &
+	# [...]
+	# perf script | cut -d: -f4-
+	 dev v2 af 2 src ::ffff:0.0.0.0 grp ::ffff:239.1.1.112/00:00:00:00:00:00 vid 0
+	 dev v2 af 10 src :: grp ff0e::112/00:00:00:00:00:00 vid 0
+	 dev v2 af 2 src ::ffff:0.0.0.0 grp ::ffff:239.1.1.112/00:00:00:00:00:00 vid 10
+	 dev v2 af 10 src 2001:db8:1::1 grp ff0e::1/00:00:00:00:00:00 vid 10
+	 dev v2 af 2 src ::ffff:192.0.2.1 grp ::ffff:239.1.1.1/00:00:00:00:00:00 vid 10
 
-Error/Warning: (recently discovered and may have been fixed)
+CC: Steven Rostedt <rostedt@goodmis.org>
+CC: linux-trace-kernel@vger.kernel.org
+Signed-off-by: Petr Machata <petrm@nvidia.com>
+---
 
-Documentation/riscv/uabi.rst:24: WARNING: Enumerated list ends without a blank line; unexpected unindent.
-ERROR: modpost: "devm_platform_ioremap_resource" [drivers/dma/fsl-edma.ko] undefined!
-ERROR: modpost: "devm_platform_ioremap_resource" [drivers/dma/idma64.ko] undefined!
-arch/arm64/kvm/arm.c:2206: warning: expecting prototype for Initialize Hyp(). Prototype was for kvm_arm_init() instead
-drivers/gpu/drm/amd/amdgpu/../display/amdgpu_dm/amdgpu_dm.h:62:10: fatal error: mod_info_packet.h: No such file or directory
-drivers/gpu/drm/amd/amdgpu/../display/dc/link/accessories/link_dp_trace.c:148:6: warning: no previous prototype for 'link_dp_trace_set_edp_power_timestamp' [-Wmissing-prototypes]
-drivers/gpu/drm/amd/amdgpu/../display/dc/link/accessories/link_dp_trace.c:158:10: warning: no previous prototype for 'link_dp_trace_get_edp_poweron_timestamp' [-Wmissing-prototypes]
-drivers/gpu/drm/amd/amdgpu/../display/dc/link/accessories/link_dp_trace.c:163:10: warning: no previous prototype for 'link_dp_trace_get_edp_poweroff_timestamp' [-Wmissing-prototypes]
-drivers/gpu/drm/amd/amdgpu/../display/dc/link/protocols/link_dp_capability.c:1295:32: warning: variable 'result_write_min_hblank' set but not used [-Wunused-but-set-variable]
-drivers/gpu/drm/amd/amdgpu/../display/dc/link/protocols/link_dp_capability.c:279:42: warning: variable 'ds_port' set but not used [-Wunused-but-set-variable]
-drivers/gpu/drm/amd/amdgpu/../display/dc/link/protocols/link_dp_training.c:1585:38: warning: variable 'result' set but not used [-Wunused-but-set-variable]
-ftrace-ops.c:(.init.text+0x2c3): undefined reference to `__udivdi3'
-idma64.c:(.text+0x1696): undefined reference to `devm_platform_ioremap_resource'
+Notes:
+    v2:
+    - Report IPv4 as an IPv6-mapped address through the IPv6 buffer
+      as well, to save ring buffer space.
 
-Unverified Error/Warning (likely false positive, please contact us if interested):
+ include/trace/events/bridge.h | 58 +++++++++++++++++++++++++++++++++++
+ net/core/net-traces.c         |  1 +
+ 2 files changed, 59 insertions(+)
 
-drivers/crypto/aspeed/aspeed-acry.c:295:37: sparse: sparse: incorrect type in assignment (different base types)
-drivers/crypto/aspeed/aspeed-acry.c:305:28: sparse: sparse: cast removes address space '__iomem' of expression
-drivers/crypto/aspeed/aspeed-acry.c:606:24: sparse: sparse: symbol 'aspeed_acry_akcipher_algs' was not declared. Should it be static?
-drivers/nvmem/imx-ocotp.c:599:21: sparse: sparse: symbol 'imx_ocotp_layout' was not declared. Should it be static?
-drivers/nvmem/layouts/sl28vpd.c:143:21: sparse: sparse: symbol 'sl28vpd_layout' was not declared. Should it be static?
-drivers/of/platform.c:570:2-23: WARNING: Function "for_each_node_by_type" should have of_node_put() before break around line 575.
-drivers/thermal/qcom/tsens-v0_1.c:106:40: sparse: sparse: symbol 'tsens_9607_nvmem' was not declared. Should it be static?
-drivers/thermal/qcom/tsens-v0_1.c:26:40: sparse: sparse: symbol 'tsens_8916_nvmem' was not declared. Should it be static?
-drivers/thermal/qcom/tsens-v0_1.c:42:40: sparse: sparse: symbol 'tsens_8939_nvmem' was not declared. Should it be static?
-drivers/thermal/qcom/tsens-v0_1.c:62:40: sparse: sparse: symbol 'tsens_8974_nvmem' was not declared. Should it be static?
-drivers/thermal/qcom/tsens-v0_1.c:84:40: sparse: sparse: symbol 'tsens_8974_backup_nvmem' was not declared. Should it be static?
-drivers/thermal/qcom/tsens-v1.c:24:40: sparse: sparse: symbol 'tsens_qcs404_nvmem' was not declared. Should it be static?
-drivers/thermal/qcom/tsens-v1.c:45:40: sparse: sparse: symbol 'tsens_8976_nvmem' was not declared. Should it be static?
-
-Error/Warning ids grouped by kconfigs:
-
-gcc_recent_errors
-|-- alpha-allyesconfig
-|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-accessories-link_dp_trace.c:warning:no-previous-prototype-for-link_dp_trace_get_edp_poweroff_timestamp
-|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-accessories-link_dp_trace.c:warning:no-previous-prototype-for-link_dp_trace_get_edp_poweron_timestamp
-|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-accessories-link_dp_trace.c:warning:no-previous-prototype-for-link_dp_trace_set_edp_power_timestamp
-|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-protocols-link_dp_capability.c:warning:variable-ds_port-set-but-not-used
-|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-protocols-link_dp_capability.c:warning:variable-result_write_min_hblank-set-but-not-used
-|   `-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-protocols-link_dp_training.c:warning:variable-result-set-but-not-used
-|-- alpha-randconfig-r026-20230129
-|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-accessories-link_dp_trace.c:warning:no-previous-prototype-for-link_dp_trace_get_edp_poweroff_timestamp
-|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-accessories-link_dp_trace.c:warning:no-previous-prototype-for-link_dp_trace_get_edp_poweron_timestamp
-|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-accessories-link_dp_trace.c:warning:no-previous-prototype-for-link_dp_trace_set_edp_power_timestamp
-|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-protocols-link_dp_capability.c:warning:variable-ds_port-set-but-not-used
-|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-protocols-link_dp_capability.c:warning:variable-result_write_min_hblank-set-but-not-used
-|   `-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-protocols-link_dp_training.c:warning:variable-result-set-but-not-used
-|-- alpha-randconfig-s032-20230129
-|   `-- drivers-nvmem-layouts-sl28vpd.c:sparse:sparse:symbol-sl28vpd_layout-was-not-declared.-Should-it-be-static
-|-- arc-allyesconfig
-|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-accessories-link_dp_trace.c:warning:no-previous-prototype-for-link_dp_trace_get_edp_poweroff_timestamp
-|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-accessories-link_dp_trace.c:warning:no-previous-prototype-for-link_dp_trace_get_edp_poweron_timestamp
-|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-accessories-link_dp_trace.c:warning:no-previous-prototype-for-link_dp_trace_set_edp_power_timestamp
-|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-protocols-link_dp_capability.c:warning:variable-ds_port-set-but-not-used
-|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-protocols-link_dp_capability.c:warning:variable-result_write_min_hblank-set-but-not-used
-|   `-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-protocols-link_dp_training.c:warning:variable-result-set-but-not-used
-|-- arc-randconfig-r001-20230130
-|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-accessories-link_dp_trace.c:warning:no-previous-prototype-for-link_dp_trace_get_edp_poweroff_timestamp
-|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-accessories-link_dp_trace.c:warning:no-previous-prototype-for-link_dp_trace_get_edp_poweron_timestamp
-|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-accessories-link_dp_trace.c:warning:no-previous-prototype-for-link_dp_trace_set_edp_power_timestamp
-|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-protocols-link_dp_capability.c:warning:variable-ds_port-set-but-not-used
-|   `-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-protocols-link_dp_capability.c:warning:variable-result_write_min_hblank-set-but-not-used
-|-- arm-allyesconfig
-|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-accessories-link_dp_trace.c:warning:no-previous-prototype-for-link_dp_trace_get_edp_poweroff_timestamp
-|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-accessories-link_dp_trace.c:warning:no-previous-prototype-for-link_dp_trace_get_edp_poweron_timestamp
-|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-accessories-link_dp_trace.c:warning:no-previous-prototype-for-link_dp_trace_set_edp_power_timestamp
-|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-protocols-link_dp_capability.c:warning:variable-ds_port-set-but-not-used
-|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-protocols-link_dp_capability.c:warning:variable-result_write_min_hblank-set-but-not-used
-|   `-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-protocols-link_dp_training.c:warning:variable-result-set-but-not-used
-|-- arm64-allyesconfig
-|   |-- arch-arm64-kvm-arm.c:warning:expecting-prototype-for-Initialize-Hyp().-Prototype-was-for-kvm_arm_init()-instead
-|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-accessories-link_dp_trace.c:warning:no-previous-prototype-for-link_dp_trace_get_edp_poweroff_timestamp
-|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-accessories-link_dp_trace.c:warning:no-previous-prototype-for-link_dp_trace_get_edp_poweron_timestamp
-|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-accessories-link_dp_trace.c:warning:no-previous-prototype-for-link_dp_trace_set_edp_power_timestamp
-|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-protocols-link_dp_capability.c:warning:variable-ds_port-set-but-not-used
-|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-protocols-link_dp_capability.c:warning:variable-result_write_min_hblank-set-but-not-used
-|   `-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-protocols-link_dp_training.c:warning:variable-result-set-but-not-used
-|-- i386-allyesconfig
-|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-accessories-link_dp_trace.c:warning:no-previous-prototype-for-link_dp_trace_get_edp_poweroff_timestamp
-|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-accessories-link_dp_trace.c:warning:no-previous-prototype-for-link_dp_trace_get_edp_poweron_timestamp
-|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-accessories-link_dp_trace.c:warning:no-previous-prototype-for-link_dp_trace_set_edp_power_timestamp
-|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-protocols-link_dp_capability.c:warning:variable-ds_port-set-but-not-used
-|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-protocols-link_dp_capability.c:warning:variable-result_write_min_hblank-set-but-not-used
-
-elapsed time: 722m
-
-configs tested: 69
-configs skipped: 2
-
-gcc tested configs:
-x86_64                          rhel-8.3-func
-x86_64                    rhel-8.3-kselftests
-ia64                             allmodconfig
-x86_64                            allnoconfig
-um                             i386_defconfig
-um                           x86_64_defconfig
-arc                                 defconfig
-i386                                defconfig
-x86_64                              defconfig
-alpha                               defconfig
-arm                                 defconfig
-mips                             allyesconfig
-x86_64                           rhel-8.3-syz
-x86_64               randconfig-a001-20230130
-x86_64                         rhel-8.3-kunit
-x86_64               randconfig-a003-20230130
-x86_64                           rhel-8.3-bpf
-powerpc                           allnoconfig
-x86_64               randconfig-a004-20230130
-x86_64                               rhel-8.3
-x86_64               randconfig-a002-20230130
-powerpc                          allmodconfig
-sh                               allmodconfig
-x86_64               randconfig-a006-20230130
-x86_64                           allyesconfig
-i386                          randconfig-a001
-x86_64                           rhel-8.3-kvm
-i386                          randconfig-a003
-x86_64               randconfig-a005-20230130
-arm64                            allyesconfig
-i386                             allyesconfig
-i386                          randconfig-a005
-arc                  randconfig-r043-20230129
-i386                          randconfig-c001
-arm                              allyesconfig
-s390                                defconfig
-s390                             allmodconfig
-arm                  randconfig-r046-20230129
-arm                  randconfig-r046-20230130
-s390                             allyesconfig
-arc                  randconfig-r043-20230130
-m68k                             allyesconfig
-m68k                             allmodconfig
-alpha                            allyesconfig
-arc                              allyesconfig
-
-clang tested configs:
-x86_64                          rhel-8.3-rust
-x86_64               randconfig-a012-20230130
-x86_64               randconfig-a013-20230130
-x86_64               randconfig-a011-20230130
-x86_64               randconfig-a014-20230130
-i386                 randconfig-a013-20230130
-i386                          randconfig-a002
-i386                 randconfig-a012-20230130
-i386                 randconfig-a014-20230130
-i386                          randconfig-a004
-x86_64               randconfig-a015-20230130
-i386                 randconfig-a015-20230130
-x86_64               randconfig-a016-20230130
-i386                 randconfig-a011-20230130
-hexagon              randconfig-r041-20230129
-i386                 randconfig-a016-20230130
-riscv                randconfig-r042-20230129
-i386                          randconfig-a006
-riscv                randconfig-r042-20230130
-hexagon              randconfig-r045-20230130
-hexagon              randconfig-r041-20230130
-hexagon              randconfig-r045-20230129
-s390                 randconfig-r044-20230129
-s390                 randconfig-r044-20230130
-
+diff --git a/include/trace/events/bridge.h b/include/trace/events/bridge.h
+index 6b200059c2c5..a6b3a4e409f0 100644
+--- a/include/trace/events/bridge.h
++++ b/include/trace/events/bridge.h
+@@ -122,6 +122,64 @@ TRACE_EVENT(br_fdb_update,
+ 		  __entry->flags)
+ );
+ 
++TRACE_EVENT(br_mdb_full,
++
++	TP_PROTO(const struct net_device *dev,
++		 const struct br_ip *group),
++
++	TP_ARGS(dev, group),
++
++	TP_STRUCT__entry(
++		__string(dev, dev->name)
++		__field(int, af)
++		__field(u16, vid)
++		__array(__u8, src, 16)
++		__array(__u8, grp, 16)
++		__array(__u8, grpmac, ETH_ALEN) /* For af == 0. */
++	),
++
++	TP_fast_assign(
++		struct in6_addr *in6;
++
++		__assign_str(dev, dev->name);
++		__entry->vid = group->vid;
++
++		if (!group->proto) {
++			__entry->af = 0;
++
++			memset(__entry->src, 0, sizeof(__entry->src));
++			memset(__entry->grp, 0, sizeof(__entry->grp));
++			memcpy(__entry->grpmac, group->dst.mac_addr, ETH_ALEN);
++		} else if (group->proto == htons(ETH_P_IP)) {
++			__entry->af = AF_INET;
++
++			in6 = (struct in6_addr *)__entry->src;
++			ipv6_addr_set_v4mapped(group->src.ip4, in6);
++
++			in6 = (struct in6_addr *)__entry->grp;
++			ipv6_addr_set_v4mapped(group->dst.ip4, in6);
++
++			memset(__entry->grpmac, 0, ETH_ALEN);
++
++#if IS_ENABLED(CONFIG_IPV6)
++		} else {
++			__entry->af = AF_INET6;
++
++			in6 = (struct in6_addr *)__entry->src;
++			*in6 = group->src.ip6;
++
++			in6 = (struct in6_addr *)__entry->grp;
++			*in6 = group->dst.ip6;
++
++			memset(__entry->grpmac, 0, ETH_ALEN);
++#endif
++		}
++	),
++
++	TP_printk("dev %s af %u src %pI6c grp %pI6c/%pM vid %u",
++		  __get_str(dev), __entry->af, __entry->src, __entry->grp,
++		  __entry->grpmac, __entry->vid)
++);
+ 
+ #endif /* _TRACE_BRIDGE_H */
+ 
+diff --git a/net/core/net-traces.c b/net/core/net-traces.c
+index c40cd8dd75c7..c6820ad2183f 100644
+--- a/net/core/net-traces.c
++++ b/net/core/net-traces.c
+@@ -41,6 +41,7 @@ EXPORT_TRACEPOINT_SYMBOL_GPL(br_fdb_add);
+ EXPORT_TRACEPOINT_SYMBOL_GPL(br_fdb_external_learn_add);
+ EXPORT_TRACEPOINT_SYMBOL_GPL(fdb_delete);
+ EXPORT_TRACEPOINT_SYMBOL_GPL(br_fdb_update);
++EXPORT_TRACEPOINT_SYMBOL_GPL(br_mdb_full);
+ #endif
+ 
+ #if IS_ENABLED(CONFIG_PAGE_POOL)
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests
+2.39.0
+
