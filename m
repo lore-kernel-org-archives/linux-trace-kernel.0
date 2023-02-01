@@ -2,52 +2,52 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C2970C636CD
-	for <linux-trace-kernel@archiver.kernel.org>; Wed,  1 Feb 2023 16:35:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1964CC05027
+	for <linux-trace-kernel@archiver.kernel.org>; Wed,  1 Feb 2023 16:35:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232605AbjBAQfu (ORCPT
+        id S232477AbjBAQfv (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Wed, 1 Feb 2023 11:35:50 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40736 "EHLO
+        Wed, 1 Feb 2023 11:35:51 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41054 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232476AbjBAQfr (ORCPT
+        with ESMTP id S232387AbjBAQfr (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
         Wed, 1 Feb 2023 11:35:47 -0500
-Received: from mail-wm1-x333.google.com (mail-wm1-x333.google.com [IPv6:2a00:1450:4864:20::333])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2321FEF95
-        for <linux-trace-kernel@vger.kernel.org>; Wed,  1 Feb 2023 08:35:31 -0800 (PST)
-Received: by mail-wm1-x333.google.com with SMTP id m16-20020a05600c3b1000b003dc4050c94aso1921130wms.4
-        for <linux-trace-kernel@vger.kernel.org>; Wed, 01 Feb 2023 08:35:31 -0800 (PST)
+Received: from mail-wm1-x32f.google.com (mail-wm1-x32f.google.com [IPv6:2a00:1450:4864:20::32f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BC8B45898B
+        for <linux-trace-kernel@vger.kernel.org>; Wed,  1 Feb 2023 08:35:32 -0800 (PST)
+Received: by mail-wm1-x32f.google.com with SMTP id bg13-20020a05600c3c8d00b003d9712b29d2so1835881wmb.2
+        for <linux-trace-kernel@vger.kernel.org>; Wed, 01 Feb 2023 08:35:32 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=V920tXDgaE7z8bCeiKLUkBejFiJJs4xj6S06IJdrTDo=;
-        b=DYuGfqui4JmugKay/2snlgInuN8NoSZVoexURJTLb8Kn8f4JIyvQgTexs4woxHNsnz
-         wO8Z6dafnQ/XbyCE2eZZeApXulDjM44aq8GV5zcg7oNuhHSxUTyM5itzgz5nZpMAO8jf
-         QGTjtSgg4ehtaz3yn7QunU2caI+VvbmJ2wS54=
+        bh=4h7L/6sUB2KnxbssfPmMIi6qgi9N82FF7O8XsVF6WqE=;
+        b=eO7ef0lbntzUy8m51n14OyG3x4x9Mi3sefAioFTJImzU5ZFg5Vs78dtPVoYekbT3pk
+         Cg3uxLoGda0UZ7Xy5jaLG8tClEL1RJYhO9a8twyYmoUmUPMXXAoMJjtxTKVjATmXRm3i
+         jc39euXLJjlYSDkRk5RHgqVAXCCYmDq7Le2k8=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=V920tXDgaE7z8bCeiKLUkBejFiJJs4xj6S06IJdrTDo=;
-        b=TD3JQ3yiyN1eH/oyHyGO990Ekk524CvQyt14ehIkc5mUuZH1Q5T2r6f0oVoUb/DtrT
-         i8sIQ7om5WQTg5vQF0twUyroQZvVIXV14c62V+gGty8r/WGILnMPtGUMGDRO8xkI9xjz
-         UgV/Qd3NnUh/cHgS67pMJTntPPRiSy30LCyH9gLa6FIFpP2e+L/MykTOhDw+6kjDkApb
-         WSfsfe0P72+jQ2lYDKpJz7jdc1KfUacQ4ag41gNCMdAcLQPITe+7W7FseTHUrMnt0Cba
-         iNopLv73z57KirU2xbOPQLndD9uUKFB6C+ipzvUwZGNXbQasJaKGTYAMENOJg9v3WAyU
-         TG4Q==
-X-Gm-Message-State: AO0yUKV6+kUUvHvFMiUkBG9b/kvq+H4dFeaNqOo2hQMTAAPAA6o5+Edm
-        EZyFDyCpW94BqBhtZ0dHSABfNg==
-X-Google-Smtp-Source: AK7set/w1a9aVC2lSJ1aNaktqbPxU7ogYk690xUJ/cBVHkXalBaadY++SDNwkAXdZxgSJMASgFFFGQ==
-X-Received: by 2002:a05:600c:2e06:b0:3dd:dd46:1274 with SMTP id o6-20020a05600c2e0600b003dddd461274mr2822832wmf.4.1675269329591;
-        Wed, 01 Feb 2023 08:35:29 -0800 (PST)
+        bh=4h7L/6sUB2KnxbssfPmMIi6qgi9N82FF7O8XsVF6WqE=;
+        b=TGAOeV9VKUZ1/Y4rBhqg+ELtQkIlqN/NK1ms2oWEp3oLBftkkzOz6MNFKn/xYmm0XJ
+         Pir+alEiRG1tGHg63N9LpwisT/TEXnTbAqlj36wyNsThrHw4KJyqFUL43Ed/VLMBZ+Rz
+         y+NnKlC8TWwfEpPC3h9mj51j72k5Vm2ltenejDwEFbB+34bMMvemLtBc2tk9Ks1Le64R
+         xNl22U4AKdu+EM0X6eAXvpyupXc3lniXocwhsJI3t5M7fvZkBSvBDJAY37D19+0vJ7Mw
+         NELGuoGrq5wEE2j/srzyIOggkKXQpY50kWy+IhPeRsYZlNEbde1IjMvlUgSrwQUoDdJs
+         0cFw==
+X-Gm-Message-State: AO0yUKWUf6giQ/90NZwBNBYJ5o+MoZ7TngH3jB5cYwzHL0DDlnpMRZaY
+        P3iwR5tBOgTN5Z/KvzPGUyNI8g==
+X-Google-Smtp-Source: AK7set/s4PL//844ITpXCCvWBv/H9BGkGF1snDf6k8ign1+tNi1Gp86Z60+eLs40rYOD38/iM9jfmg==
+X-Received: by 2002:a05:600c:4f12:b0:3de:271:7b24 with SMTP id l18-20020a05600c4f1200b003de02717b24mr2802649wmq.16.1675269331250;
+        Wed, 01 Feb 2023 08:35:31 -0800 (PST)
 Received: from revest.zrh.corp.google.com ([2a00:79e0:9d:6:4399:89a1:4a86:9630])
-        by smtp.gmail.com with ESMTPSA id r38-20020a05600c322600b003dd7edcc960sm2058522wmp.45.2023.02.01.08.35.28
+        by smtp.gmail.com with ESMTPSA id r38-20020a05600c322600b003dd7edcc960sm2058522wmp.45.2023.02.01.08.35.29
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 01 Feb 2023 08:35:29 -0800 (PST)
+        Wed, 01 Feb 2023 08:35:30 -0800 (PST)
 From:   Florent Revest <revest@chromium.org>
 To:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
         linux-trace-kernel@vger.kernel.org, bpf@vger.kernel.org
@@ -55,10 +55,12 @@ Cc:     catalin.marinas@arm.com, will@kernel.org, rostedt@goodmis.org,
         mhiramat@kernel.org, mark.rutland@arm.com, ast@kernel.org,
         daniel@iogearbox.net, andrii@kernel.org, kpsingh@kernel.org,
         jolsa@kernel.org, xukuohai@huaweicloud.com,
+        Xu Kuohai <xukuohai@huawei.com>,
+        Li Huafei <lihuafei1@huawei.com>,
         Florent Revest <revest@chromium.org>
-Subject: [PATCH 5/8] ftrace: Make DIRECT_CALLS work WITH_ARGS and !WITH_REGS
-Date:   Wed,  1 Feb 2023 17:34:17 +0100
-Message-Id: <20230201163420.1579014-6-revest@chromium.org>
+Subject: [PATCH 6/8] ftrace: Fix dead loop caused by direct call in ftrace selftest
+Date:   Wed,  1 Feb 2023 17:34:18 +0100
+Message-Id: <20230201163420.1579014-7-revest@chromium.org>
 X-Mailer: git-send-email 2.39.1.519.gcb327c4b5f-goog
 In-Reply-To: <20230201163420.1579014-1-revest@chromium.org>
 References: <20230201163420.1579014-1-revest@chromium.org>
@@ -68,51 +70,99 @@ Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-Direct called trampolines can be called in two ways:
-- either from the ftrace callsite. In this case, they do not access any
-  struct ftrace_regs nor pt_regs
-- Or, if a ftrace ops is also attached, from the end of a ftrace
-  trampoline. In this case, the call_direct_funcs ops is in charge of
-  setting the direct call trampoline's address in a struct ftrace_regs
+From: Xu Kuohai <xukuohai@huawei.com>
 
-Since "ftrace: pass fregs to arch_ftrace_set_direct_caller()", the later
-case no longer requires a full pt_regs. It only needs a struct
-ftrace_regs so DIRECT_CALLS can work with both WITH_ARGS or WITH_REGS.
-With architectures like arm64 already abandoning WITH_REGS in favor of
-WITH_ARGS, it's important to have DIRECT_CALLS work WITH_ARGS only.
+After direct call is enabled for arm64, ftrace selftest enters a
+dead loop:
 
+<trace_selftest_dynamic_test_func>:
+00  bti     c
+01  mov     x9, x30                            <trace_direct_tramp>:
+02  bl      <trace_direct_tramp>    ---------->     ret
+                                                     |
+                                         lr/x30 is 03, return to 03
+                                                     |
+03  mov     w0, #0x0   <-----------------------------|
+     |                                               |
+     |                   dead loop!                  |
+     |                                               |
+04  ret   ---- lr/x30 is still 03, go back to 03 ----|
+
+The reason is that when the direct caller trace_direct_tramp() returns
+to the patched function trace_selftest_dynamic_test_func(), lr is still
+the address after the instrumented instruction in the patched function,
+so when the patched function exits, it returns to itself!
+
+To fix this issue, we need to restore lr before trace_direct_tramp()
+exits, so use a dedicated trace_direct_tramp() for arm64.
+
+Reported-by: Li Huafei <lihuafei1@huawei.com>
+Signed-off-by: Xu Kuohai <xukuohai@huawei.com>
+Acked-by: Steven Rostedt (Google) <rostedt@goodmis.org>
 Signed-off-by: Florent Revest <revest@chromium.org>
 ---
- kernel/trace/Kconfig  | 2 +-
- kernel/trace/ftrace.c | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
+ arch/arm64/include/asm/ftrace.h  |  7 +++++++
+ arch/arm64/kernel/entry-ftrace.S | 10 ++++++++++
+ kernel/trace/trace_selftest.c    |  2 ++
+ 3 files changed, 19 insertions(+)
 
-diff --git a/kernel/trace/Kconfig b/kernel/trace/Kconfig
-index 5df427a2321d..4496a7c69810 100644
---- a/kernel/trace/Kconfig
-+++ b/kernel/trace/Kconfig
-@@ -257,7 +257,7 @@ config DYNAMIC_FTRACE_WITH_REGS
+diff --git a/arch/arm64/include/asm/ftrace.h b/arch/arm64/include/asm/ftrace.h
+index 1c2672bbbf37..cf6d9c42ff36 100644
+--- a/arch/arm64/include/asm/ftrace.h
++++ b/arch/arm64/include/asm/ftrace.h
+@@ -168,6 +168,13 @@ static inline bool arch_syscall_match_sym_name(const char *sym,
+ 	 */
+ 	return !strcmp(sym + 8, name);
+ }
++
++#if defined(CONFIG_DYNAMIC_FTRACE_WITH_DIRECT_CALLS) && \
++    defined(CONFIG_FTRACE_SELFTEST)
++extern void ftrace_dummy_tramp(void);
++#define trace_direct_tramp ftrace_dummy_tramp
++#endif
++
+ #endif /* ifndef __ASSEMBLY__ */
  
- config DYNAMIC_FTRACE_WITH_DIRECT_CALLS
- 	def_bool y
--	depends on DYNAMIC_FTRACE_WITH_REGS
-+	depends on DYNAMIC_FTRACE_WITH_REGS || DYNAMIC_FTRACE_WITH_ARGS
- 	depends on HAVE_DYNAMIC_FTRACE_WITH_DIRECT_CALLS
+ #endif /* __ASM_FTRACE_H */
+diff --git a/arch/arm64/kernel/entry-ftrace.S b/arch/arm64/kernel/entry-ftrace.S
+index 350ed81324ac..9869debd22fb 100644
+--- a/arch/arm64/kernel/entry-ftrace.S
++++ b/arch/arm64/kernel/entry-ftrace.S
+@@ -118,6 +118,16 @@ SYM_INNER_LABEL(ftrace_call, SYM_L_GLOBAL)
+ 	ret	x9
+ SYM_CODE_END(ftrace_caller)
  
- config DYNAMIC_FTRACE_WITH_CALL_OPS
-diff --git a/kernel/trace/ftrace.c b/kernel/trace/ftrace.c
-index b0426de11c45..73b6f6489ba1 100644
---- a/kernel/trace/ftrace.c
-+++ b/kernel/trace/ftrace.c
-@@ -5282,7 +5282,7 @@ static LIST_HEAD(ftrace_direct_funcs);
++#if defined(CONFIG_DYNAMIC_FTRACE_WITH_DIRECT_CALLS) && \
++    defined(CONFIG_FTRACE_SELFTEST)
++SYM_CODE_START(ftrace_dummy_tramp)
++	bti c
++	mov x10, x30
++	mov x30, x9
++	ret x10
++SYM_CODE_END(ftrace_dummy_tramp)
++#endif /* CONFIG_DYNAMIC_FTRACE_WITH_DIRECT_CALLS */
++
+ #else /* CONFIG_DYNAMIC_FTRACE_WITH_ARGS */
  
- static int register_ftrace_function_nolock(struct ftrace_ops *ops);
+ /*
+diff --git a/kernel/trace/trace_selftest.c b/kernel/trace/trace_selftest.c
+index 06218fc9374b..f9f5d4e8ab50 100644
+--- a/kernel/trace/trace_selftest.c
++++ b/kernel/trace/trace_selftest.c
+@@ -789,11 +789,13 @@ static struct fgraph_ops fgraph_ops __initdata  = {
+ #define CALL_DEPTH_ACCOUNT ""
+ #endif
  
--#define MULTI_FLAGS (FTRACE_OPS_FL_DIRECT | FTRACE_OPS_FL_SAVE_REGS)
-+#define MULTI_FLAGS (FTRACE_OPS_FL_DIRECT)
- 
- static int check_direct_multi(struct ftrace_ops *ops)
++#ifndef trace_direct_tramp
+ noinline __noclone static void trace_direct_tramp(void)
  {
+ 	asm(CALL_DEPTH_ACCOUNT);
+ }
+ #endif
++#endif
+ 
+ /*
+  * Pretty much the same than for the function tracer from which the selftest
 -- 
 2.39.1.519.gcb327c4b5f-goog
 
