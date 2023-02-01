@@ -2,46 +2,46 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3145AC636CD
-	for <linux-trace-kernel@archiver.kernel.org>; Wed,  1 Feb 2023 15:57:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ADB05C05027
+	for <linux-trace-kernel@archiver.kernel.org>; Wed,  1 Feb 2023 15:57:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232540AbjBAP5M (ORCPT
+        id S232680AbjBAP5Y (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Wed, 1 Feb 2023 10:57:12 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35942 "EHLO
+        Wed, 1 Feb 2023 10:57:24 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35962 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232918AbjBAP5B (ORCPT
+        with ESMTP id S232735AbjBAP5N (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Wed, 1 Feb 2023 10:57:01 -0500
-Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D974D76403;
-        Wed,  1 Feb 2023 07:56:43 -0800 (PST)
+        Wed, 1 Feb 2023 10:57:13 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7BDC54C29;
+        Wed,  1 Feb 2023 07:56:51 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 835C6B821CA;
-        Wed,  1 Feb 2023 15:56:42 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id ECC7AC433EF;
-        Wed,  1 Feb 2023 15:56:39 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 0F0696183B;
+        Wed,  1 Feb 2023 15:56:51 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E819BC433D2;
+        Wed,  1 Feb 2023 15:56:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1675267001;
-        bh=uzTNf0cgLlGLZxT0DAIJxvZ2bm17NBEQobBAKutMPqg=;
+        s=k20201202; t=1675267010;
+        bh=wZT4Dx1G5sQKe7woMdQS0Dh9raDFOrBfH90F6GkZi2k=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=G2Th+4WaQg+nFVcTc1L6/Xuofs64gEdqzrZjHLNqtABoRYizIGhAV+biFniSLR6CI
-         kNwUoVLVSVb6bmJ8uVeU2qXmLr6dnK5V+FrCbevvYcDJWNVMrNhikwZENWYYtcsu3I
-         9RORQi1wO6HZIKrFjoCF/S81DEzlSLROJR0qwtIjupmAOTn2uEbp/e7NvUBuDF5c9V
-         TTfH8XkxI7iauY/eJ4WTk0Nz4lxOtR501a8ZlpinVmjc0RG2+FB1J6IzgKTcm9ApNP
-         SCqW3xhurJAOIv8LpyQoHhgw7X053kFRwD3/HWguYvQiqNOdTRytGCzfgvV9J3MTFb
-         ZfP04IrYJ8IeA==
+        b=diYW6kQiUKZ5o8oKwviyJS7ZLRIDv/rKfZhFjNlTsZYEpn4VjUZZXwFRuIJohvV8S
+         ZbYrQVu8qceD6ND6ej61ScLqk57o8h9XbXJk02XRro6eg+tpiB7LtBcTHI6UnGdU84
+         soUWo9//edTQCGqnTaKWReLmKR0EPsbu+eb6uHDJhBYqXmd2dya0UT4HVs9naeIzm9
+         Wf5pPbUAtY1/udEXD8pnMmXO6+rL4wYpi5A1/c0mVrcudc9uhiSGHiiH/QFYujBncC
+         bzkl3dwPCi9E/ptQNklcp3upACpck+PtVPMk1ryvjYACHBmvZDPA82yDawGU5b1lCR
+         mQjTWXOBzepvA==
 From:   "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
 To:     linux-trace-kernel@vger.kernel.org
 Cc:     linux-kernel@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>,
         mhiramat@kernel.org, Florent Revest <revest@chromium.org>,
         Mark Rutland <mark.rutland@arm.com>,
         Will Deacon <will@kernel.org>
-Subject: [PATCH v3 05/10] fprobe: Skip exit_handler if entry_handler returns !0
-Date:   Thu,  2 Feb 2023 00:56:38 +0900
-Message-Id:  <167526699798.433354.10998365726830117303.stgit@mhiramat.roam.corp.google.com>
+Subject: [PATCH v3 06/10] lib/test_fprobe: Add a testcase for skipping exit_handler
+Date:   Thu,  2 Feb 2023 00:56:46 +0900
+Message-Id:  <167526700658.433354.12922388040490848613.stgit@mhiramat.roam.corp.google.com>
 X-Mailer: git-send-email 2.39.1.456.gfc5497dd1b-goog
 In-Reply-To:  <167526695292.433354.8949652607331707144.stgit@mhiramat.roam.corp.google.com>
 References:  <167526695292.433354.8949652607331707144.stgit@mhiramat.roam.corp.google.com>
@@ -55,160 +55,70 @@ X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
 From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 
-Skip hooking function return and calling exit_handler if the
-entry_handler() returns !0.
+Add a testcase for skipping exit_handler if entry_handler
+returns !0.
 
 Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 ---
- include/linux/fprobe.h          |    4 ++--
- kernel/trace/bpf_trace.c        |   15 +++++++++++++--
- kernel/trace/fprobe.c           |   14 +++++++++-----
- lib/test_fprobe.c               |    7 +++++--
- samples/fprobe/fprobe_example.c |    5 +++--
- 5 files changed, 32 insertions(+), 13 deletions(-)
+ lib/test_fprobe.c |   26 +++++++++++++++++++++++++-
+ 1 file changed, 25 insertions(+), 1 deletion(-)
 
-diff --git a/include/linux/fprobe.h b/include/linux/fprobe.h
-index 678f741a7b33..47fefc7f363b 100644
---- a/include/linux/fprobe.h
-+++ b/include/linux/fprobe.h
-@@ -34,8 +34,8 @@ struct fprobe {
- 	size_t			entry_data_size;
- 	int			nr_maxactive;
- 
--	void (*entry_handler)(struct fprobe *fp, unsigned long entry_ip,
--			      struct pt_regs *regs, void *entry_data);
-+	int (*entry_handler)(struct fprobe *fp, unsigned long entry_ip,
-+			     struct pt_regs *regs, void *entry_data);
- 	void (*exit_handler)(struct fprobe *fp, unsigned long entry_ip,
- 			     struct pt_regs *regs, void *entry_data);
- };
-diff --git a/kernel/trace/bpf_trace.c b/kernel/trace/bpf_trace.c
-index 834c0a7efcdb..b2567670ca42 100644
---- a/kernel/trace/bpf_trace.c
-+++ b/kernel/trace/bpf_trace.c
-@@ -2647,12 +2647,23 @@ kprobe_multi_link_prog_run(struct bpf_kprobe_multi_link *link,
- 	return err;
- }
- 
--static void
-+static int
- kprobe_multi_link_handler(struct fprobe *fp, unsigned long fentry_ip,
- 			  struct pt_regs *regs, void *data)
- {
- 	struct bpf_kprobe_multi_link *link;
- 
-+	link = container_of(fp, struct bpf_kprobe_multi_link, fp);
-+	kprobe_multi_link_prog_run(link, get_entry_ip(fentry_ip), regs);
-+	return 0;
-+}
-+
-+static void
-+kprobe_multi_link_exit_handler(struct fprobe *fp, unsigned long fentry_ip,
-+			       struct pt_regs *regs, void *data)
-+{
-+	struct bpf_kprobe_multi_link *link;
-+
- 	link = container_of(fp, struct bpf_kprobe_multi_link, fp);
- 	kprobe_multi_link_prog_run(link, get_entry_ip(fentry_ip), regs);
- }
-@@ -2843,7 +2854,7 @@ int bpf_kprobe_multi_link_attach(const union bpf_attr *attr, struct bpf_prog *pr
- 		goto error;
- 
- 	if (flags & BPF_F_KPROBE_MULTI_RETURN)
--		link->fp.exit_handler = kprobe_multi_link_handler;
-+		link->fp.exit_handler = kprobe_multi_link_exit_handler;
- 	else
- 		link->fp.entry_handler = kprobe_multi_link_handler;
- 
-diff --git a/kernel/trace/fprobe.c b/kernel/trace/fprobe.c
-index f222848571f2..9abb3905bc8e 100644
---- a/kernel/trace/fprobe.c
-+++ b/kernel/trace/fprobe.c
-@@ -27,7 +27,7 @@ static void fprobe_handler(unsigned long ip, unsigned long parent_ip,
- 	struct rethook_node *rh = NULL;
- 	struct fprobe *fp;
- 	void *entry_data = NULL;
--	int bit;
-+	int bit, ret;
- 
- 	fp = container_of(ops, struct fprobe, ops);
- 	if (fprobe_disabled(fp))
-@@ -52,11 +52,15 @@ static void fprobe_handler(unsigned long ip, unsigned long parent_ip,
- 	}
- 
- 	if (fp->entry_handler)
--		fp->entry_handler(fp, ip, ftrace_get_regs(fregs), entry_data);
--
--	if (rh)
--		rethook_hook(rh, ftrace_get_regs(fregs), true);
-+		ret = fp->entry_handler(fp, ip, ftrace_get_regs(fregs), entry_data);
- 
-+	/* If entry_handler returns !0, nmissed is not counted. */
-+	if (rh) {
-+		if (ret)
-+			rethook_recycle(rh);
-+		else
-+			rethook_hook(rh, ftrace_get_regs(fregs), true);
-+	}
- out:
- 	ftrace_test_recursion_unlock(bit);
- }
 diff --git a/lib/test_fprobe.c b/lib/test_fprobe.c
-index 4b37d7022f35..9fa2ac9eda83 100644
+index 9fa2ac9eda83..0fe5273e960b 100644
 --- a/lib/test_fprobe.c
 +++ b/lib/test_fprobe.c
-@@ -37,7 +37,7 @@ static noinline u32 fprobe_selftest_nest_target(u32 value, u32 (*nest)(u32))
- 	return nest(value + 2);
- }
+@@ -21,6 +21,7 @@ static u32 (*target_nest)(u32 value, u32 (*nest)(u32));
+ static unsigned long target_ip;
+ static unsigned long target2_ip;
+ static unsigned long target_nest_ip;
++static int entry_return_value;
  
--static notrace void fp_entry_handler(struct fprobe *fp, unsigned long ip,
-+static notrace int fp_entry_handler(struct fprobe *fp, unsigned long ip,
- 				     struct pt_regs *regs, void *data)
+ static noinline u32 fprobe_selftest_target(u32 value)
  {
- 	KUNIT_EXPECT_FALSE(current_test, preemptible());
-@@ -51,6 +51,8 @@ static notrace void fp_entry_handler(struct fprobe *fp, unsigned long ip,
- 			*(u32 *)data = entry_val;
+@@ -52,7 +53,7 @@ static notrace int fp_entry_handler(struct fprobe *fp, unsigned long ip,
  	} else
  		KUNIT_EXPECT_NULL(current_test, data);
-+
-+	return 0;
+ 
+-	return 0;
++	return entry_return_value;
  }
  
  static notrace void fp_exit_handler(struct fprobe *fp, unsigned long ip,
-@@ -74,10 +76,11 @@ static notrace void fp_exit_handler(struct fprobe *fp, unsigned long ip,
- 		KUNIT_EXPECT_NULL(current_test, data);
+@@ -205,6 +206,28 @@ static void test_fprobe_nest(struct kunit *test)
+ 	KUNIT_EXPECT_EQ(test, 0, unregister_fprobe(&fp));
  }
  
--static notrace void nest_entry_handler(struct fprobe *fp, unsigned long ip,
-+static notrace int nest_entry_handler(struct fprobe *fp, unsigned long ip,
- 				     struct pt_regs *regs, void *data)
++static void test_fprobe_skip(struct kunit *test)
++{
++	struct fprobe fp = {
++		.entry_handler = fp_entry_handler,
++		.exit_handler = fp_exit_handler,
++	};
++
++	current_test = test;
++	KUNIT_EXPECT_EQ(test, 0, register_fprobe(&fp, "fprobe_selftest_target", NULL));
++
++	entry_return_value = 1;
++	entry_val = 0;
++	exit_val = 0;
++	target(rand1);
++	KUNIT_EXPECT_NE(test, 0, entry_val);
++	KUNIT_EXPECT_EQ(test, 0, exit_val);
++	KUNIT_EXPECT_EQ(test, 0, fp.nmissed);
++	entry_return_value = 0;
++
++	KUNIT_EXPECT_EQ(test, 0, unregister_fprobe(&fp));
++}
++
+ static unsigned long get_ftrace_location(void *func)
  {
- 	KUNIT_EXPECT_FALSE(current_test, preemptible());
-+	return 0;
- }
+ 	unsigned long size, addr = (unsigned long)func;
+@@ -234,6 +257,7 @@ static struct kunit_case fprobe_testcases[] = {
+ 	KUNIT_CASE(test_fprobe_syms),
+ 	KUNIT_CASE(test_fprobe_data),
+ 	KUNIT_CASE(test_fprobe_nest),
++	KUNIT_CASE(test_fprobe_skip),
+ 	{}
+ };
  
- static notrace void nest_exit_handler(struct fprobe *fp, unsigned long ip,
-diff --git a/samples/fprobe/fprobe_example.c b/samples/fprobe/fprobe_example.c
-index dd794990ad7e..4efc8feb6277 100644
---- a/samples/fprobe/fprobe_example.c
-+++ b/samples/fprobe/fprobe_example.c
-@@ -48,8 +48,8 @@ static void show_backtrace(void)
- 	stack_trace_print(stacks, len, 24);
- }
- 
--static void sample_entry_handler(struct fprobe *fp, unsigned long ip,
--				 struct pt_regs *regs, void *data)
-+static int sample_entry_handler(struct fprobe *fp, unsigned long ip,
-+				struct pt_regs *regs, void *data)
- {
- 	if (use_trace)
- 		/*
-@@ -62,6 +62,7 @@ static void sample_entry_handler(struct fprobe *fp, unsigned long ip,
- 	nhit++;
- 	if (stackdump)
- 		show_backtrace();
-+	return 0;
- }
- 
- static void sample_exit_handler(struct fprobe *fp, unsigned long ip, struct pt_regs *regs,
 
