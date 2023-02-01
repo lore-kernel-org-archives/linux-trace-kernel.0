@@ -2,195 +2,133 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 33DF2C05027
-	for <linux-trace-kernel@archiver.kernel.org>; Wed,  1 Feb 2023 15:58:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A25DC38142
+	for <linux-trace-kernel@archiver.kernel.org>; Wed,  1 Feb 2023 16:35:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231296AbjBAP6T (ORCPT
+        id S231285AbjBAQfe (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Wed, 1 Feb 2023 10:58:19 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35960 "EHLO
+        Wed, 1 Feb 2023 11:35:34 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40542 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232515AbjBAP5w (ORCPT
+        with ESMTP id S232156AbjBAQfd (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Wed, 1 Feb 2023 10:57:52 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7A00873752;
-        Wed,  1 Feb 2023 07:57:30 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 11DF66183B;
-        Wed,  1 Feb 2023 15:57:26 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4DC98C433D2;
-        Wed,  1 Feb 2023 15:57:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1675267045;
-        bh=Rr6xQgk50Y4ZGBCzUd1zUs+X3lNoqxnJIVxDwxiF6LU=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=S9hM3PSgw2xQ8NrrvyHoLvjrqw+xtqDYuFeO5C/LZ0dith3kFFmuGtWvPupCkwjH6
-         LlyqhNIUGmBMrSSzenycAk7/qO03URNdHC/hTsibQ3ml1KeWhDgUEaR/l9HX8bVDYn
-         oY9ouWjaisRD2ospJEl5ddWJYH7WcNLFqHdjDiwDdXOXLN8tt0FJzG7kM/WxvPX/wT
-         RLCgJ03I3ABafqd3V5xv2wKogVaPSr3j4shxgrNy6/FezQfeT6ksEjVE7fOUJTvYsE
-         diswP+Mel8e+q3A5JA6SdZiTjqXIH4MVT4sl85A6P7zvxidXChhgzB9Ze/dW3EZAnQ
-         qXK2Fi3d2EXDQ==
-From:   "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
-To:     linux-trace-kernel@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>,
-        mhiramat@kernel.org, Florent Revest <revest@chromium.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Will Deacon <will@kernel.org>
-Subject: [PATCH v3 10/10] selftests/ftrace: Add fprobe related testcases
-Date:   Thu,  2 Feb 2023 00:57:22 +0900
-Message-Id:  <167526704224.433354.8983341945538583280.stgit@mhiramat.roam.corp.google.com>
-X-Mailer: git-send-email 2.39.1.456.gfc5497dd1b-goog
-In-Reply-To:  <167526695292.433354.8949652607331707144.stgit@mhiramat.roam.corp.google.com>
-References:  <167526695292.433354.8949652607331707144.stgit@mhiramat.roam.corp.google.com>
-User-Agent: StGit/0.19
+        Wed, 1 Feb 2023 11:35:33 -0500
+Received: from mail-wm1-x331.google.com (mail-wm1-x331.google.com [IPv6:2a00:1450:4864:20::331])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E267E70D7A
+        for <linux-trace-kernel@vger.kernel.org>; Wed,  1 Feb 2023 08:35:23 -0800 (PST)
+Received: by mail-wm1-x331.google.com with SMTP id j32-20020a05600c1c2000b003dc4fd6e61dso1822070wms.5
+        for <linux-trace-kernel@vger.kernel.org>; Wed, 01 Feb 2023 08:35:23 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=ogquxG5XLdGczboibIaLv1v+sI1rVWj8OVZyg325S98=;
+        b=OqDLJPqNgNTjv+tJkw0JVlEEnytMVwnS/r+9V/2FKWOtmXea2c1oNHkbLhHfsaoPb6
+         ABgxtqiJR2l1iWo/91F2ArCyfyfFlfeXEwvW1djmxV3bWjU1UFqd2xWtLD+JHZVZKkyB
+         OqVr5X6HRQ+fiPdrTztgkFSF+oMEz0W9GIOS0=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=ogquxG5XLdGczboibIaLv1v+sI1rVWj8OVZyg325S98=;
+        b=gid/yHxALlHwAJkA9SuP5Z2DoaTnYT3JVDoMzN68Quk4lxKhUtqWvND+XD7+6UGy2/
+         tUgF/foJUjaPFhmQLADOl1uwUNL4/iZsF+PwYteEnEqi28JsbXxpUh+mca9fElS/n5Os
+         vTkZkU93TjJuHccYk9vXwyhskPVJAr09RqcxVoLTuv/QHCNMCCvANM/o1nKKHR2nVE5r
+         54EWwu5kwwN+QlG9346gIuWifD4ySPJG9F2JrsGohzQ7R3I6dR3z/CQsrGhK+q/vCp86
+         N2PwXm734aRaftaCSJUVPyQWyHe4uLaxiFVn+6b8uA+/GAX5qzrrnySMPqwyCvFOXzGm
+         ARiw==
+X-Gm-Message-State: AO0yUKXp5IxF6ZU1BXZzUorthToAR4rh7Lzne43FdHe43FvUH7aJSgvt
+        WKmbQwLIECwTNbDBWuaD1sioBg==
+X-Google-Smtp-Source: AK7set8qjoGgTsYwyJ3LRLtxhldsGEurrzyEfjQAtmQT56+MJE4pgQklXhOB5XitFcad606GvpR/fQ==
+X-Received: by 2002:a05:600c:6018:b0:3dc:1ad6:55fd with SMTP id az24-20020a05600c601800b003dc1ad655fdmr2743120wmb.32.1675269322418;
+        Wed, 01 Feb 2023 08:35:22 -0800 (PST)
+Received: from revest.zrh.corp.google.com ([2a00:79e0:9d:6:4399:89a1:4a86:9630])
+        by smtp.gmail.com with ESMTPSA id r38-20020a05600c322600b003dd7edcc960sm2058522wmp.45.2023.02.01.08.35.20
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 01 Feb 2023 08:35:21 -0800 (PST)
+From:   Florent Revest <revest@chromium.org>
+To:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-trace-kernel@vger.kernel.org, bpf@vger.kernel.org
+Cc:     catalin.marinas@arm.com, will@kernel.org, rostedt@goodmis.org,
+        mhiramat@kernel.org, mark.rutland@arm.com, ast@kernel.org,
+        daniel@iogearbox.net, andrii@kernel.org, kpsingh@kernel.org,
+        jolsa@kernel.org, xukuohai@huaweicloud.com,
+        Florent Revest <revest@chromium.org>
+Subject: [PATCH 0/8] Add ftrace direct call for arm64
+Date:   Wed,  1 Feb 2023 17:34:12 +0100
+Message-Id: <20230201163420.1579014-1-revest@chromium.org>
+X-Mailer: git-send-email 2.39.1.519.gcb327c4b5f-goog
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+This series adds ftrace direct call support to arm64.
+This makes BPF tracing programs (fentry/fexit/fmod_ret/lsm) work on arm64.
 
-Add syntax error testcase and add-remove testcase for fprobe events.
-This ensures that the fprobe events can be added/removed and parser
-handles syntax errors correctly.
+It is meant to apply on top of the arm64 tree which contains Mark Rutland's
+series on CALL_OPS [1] under the for-next/ftrace tag.
 
-Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
----
- .../ftrace/test.d/dynevent/add_remove_fprobe.tc    |   26 ++++++
- .../ftrace/test.d/dynevent/fprobe_syntax_errors.tc |   88 ++++++++++++++++++++
- 2 files changed, 114 insertions(+)
- create mode 100644 tools/testing/selftests/ftrace/test.d/dynevent/add_remove_fprobe.tc
- create mode 100644 tools/testing/selftests/ftrace/test.d/dynevent/fprobe_syntax_errors.tc
+The first three patches consolidate the two existing ftrace APIs for registering
+direct calls. They are split to make the reviewers lives easier but if it'd be a
+preferred style, I'd be happy to squash them in the next revision.
+Currently, there is both a _ftrace_direct and _ftrace_direct_multi API. Apart
+from samples and selftests, there are no users of the _ftrace_direct API left
+in-tree so this deletes it and renames the _ftrace_direct_multi API to
+_ftrace_direct for simplicity.
 
-diff --git a/tools/testing/selftests/ftrace/test.d/dynevent/add_remove_fprobe.tc b/tools/testing/selftests/ftrace/test.d/dynevent/add_remove_fprobe.tc
-new file mode 100644
-index 000000000000..53e0d5671687
---- /dev/null
-+++ b/tools/testing/selftests/ftrace/test.d/dynevent/add_remove_fprobe.tc
-@@ -0,0 +1,26 @@
-+#!/bin/sh
-+# SPDX-License-Identifier: GPL-2.0
-+# description: Generic dynamic event - add/remove fprobe events
-+# requires: dynamic_events "f[:[<group>/][<event>]] <func-name>[%return] [<args>]": README
-+
-+echo 0 > events/enable
-+echo > dynamic_events
-+
-+PLACE=$FUNCTION_FORK
-+
-+echo "f:myevent1 $PLACE" >> dynamic_events
-+echo "f:myevent2 $PLACE%return" >> dynamic_events
-+
-+grep -q myevent1 dynamic_events
-+grep -q myevent2 dynamic_events
-+test -d events/fprobes/myevent1
-+test -d events/fprobes/myevent2
-+
-+echo "-:myevent2" >> dynamic_events
-+
-+grep -q myevent1 dynamic_events
-+! grep -q myevent2 dynamic_events
-+
-+echo > dynamic_events
-+
-+clear_trace
-diff --git a/tools/testing/selftests/ftrace/test.d/dynevent/fprobe_syntax_errors.tc b/tools/testing/selftests/ftrace/test.d/dynevent/fprobe_syntax_errors.tc
-new file mode 100644
-index 000000000000..549daa162d84
---- /dev/null
-+++ b/tools/testing/selftests/ftrace/test.d/dynevent/fprobe_syntax_errors.tc
-@@ -0,0 +1,88 @@
-+#!/bin/sh
-+# SPDX-License-Identifier: GPL-2.0
-+# description: Fprobe event parser error log check
-+# requires: dynamic_events "f[:[<group>/][<event>]] <func-name>[%return] [<args>]": README
-+
-+check_error() { # command-with-error-pos-by-^
-+    ftrace_errlog_check 'trace_fprobe' "$1" 'dynamic_events'
-+}
-+
-+check_error 'f^100 vfs_read'		# MAXACT_NO_KPROBE
-+check_error 'f^1a111 vfs_read'		# BAD_MAXACT
-+check_error 'f^100000 vfs_read'		# MAXACT_TOO_BIG
-+
-+check_error 'f ^non_exist_func'		# BAD_PROBE_ADDR (enoent)
-+check_error 'f ^vfs_read+10'		# BAD_PROBE_ADDR
-+check_error 'f:^/bar vfs_read'		# NO_GROUP_NAME
-+check_error 'f:^12345678901234567890123456789012345678901234567890123456789012345/bar vfs_read'	# GROUP_TOO_LONG
-+
-+check_error 'f:^foo.1/bar vfs_read'	# BAD_GROUP_NAME
-+check_error 'f:^ vfs_read'		# NO_EVENT_NAME
-+check_error 'f:foo/^12345678901234567890123456789012345678901234567890123456789012345 vfs_read'	# EVENT_TOO_LONG
-+check_error 'f:foo/^bar.1 vfs_read'	# BAD_EVENT_NAME
-+
-+check_error 'f vfs_read ^$retval'	# RETVAL_ON_PROBE
-+check_error 'f vfs_read ^$stack10000'	# BAD_STACK_NUM
-+
-+check_error 'f vfs_read ^$arg10000'	# BAD_ARG_NUM
-+
-+check_error 'f vfs_read ^$none_var'	# BAD_VAR
-+check_error 'f vfs_read ^%rax'		# BAD_VAR
-+
-+check_error 'f vfs_read ^@12345678abcde'	# BAD_MEM_ADDR
-+check_error 'f vfs_read ^@+10'		# FILE_ON_KPROBE
-+
-+grep -q "imm-value" README && \
-+check_error 'f vfs_read arg1=\^x'	# BAD_IMM
-+grep -q "imm-string" README && \
-+check_error 'f vfs_read arg1=\"abcd^'	# IMMSTR_NO_CLOSE
-+
-+check_error 'f vfs_read ^+0@0)'		# DEREF_NEED_BRACE
-+check_error 'f vfs_read ^+0ab1(@0)'	# BAD_DEREF_OFFS
-+check_error 'f vfs_read +0(+0(@0^)'	# DEREF_OPEN_BRACE
-+
-+if grep -A1 "fetcharg:" README | grep -q '\$comm' ; then
-+check_error 'f vfs_read +0(^$comm)'	# COMM_CANT_DEREF
-+fi
-+
-+check_error 'f vfs_read ^&1'		# BAD_FETCH_ARG
-+
-+
-+# We've introduced this limitation with array support
-+if grep -q ' <type>\\\[<array-size>\\\]' README; then
-+check_error 'f vfs_read +0(^+0(+0(+0(+0(+0(+0(+0(+0(+0(+0(+0(+0(+0(@0))))))))))))))'	# TOO_MANY_OPS?
-+check_error 'f vfs_read +0(@11):u8[10^'		# ARRAY_NO_CLOSE
-+check_error 'f vfs_read +0(@11):u8[10]^a'	# BAD_ARRAY_SUFFIX
-+check_error 'f vfs_read +0(@11):u8[^10a]'	# BAD_ARRAY_NUM
-+check_error 'f vfs_read +0(@11):u8[^256]'	# ARRAY_TOO_BIG
-+fi
-+
-+check_error 'f vfs_read @11:^unknown_type'	# BAD_TYPE
-+check_error 'f vfs_read $stack0:^string'	# BAD_STRING
-+check_error 'f vfs_read @11:^b10@a/16'		# BAD_BITFIELD
-+
-+check_error 'f vfs_read ^arg123456789012345678901234567890=@11'	# ARG_NAME_TOO_LOG
-+check_error 'f vfs_read ^=@11'			# NO_ARG_NAME
-+check_error 'f vfs_read ^var.1=@11'		# BAD_ARG_NAME
-+check_error 'f vfs_read var1=@11 ^var1=@12'	# USED_ARG_NAME
-+check_error 'f vfs_read ^+1234567(+1234567(+1234567(+1234567(+1234567(+1234567(@1234))))))'	# ARG_TOO_LONG
-+check_error 'f vfs_read arg1=^'			# NO_ARG_BODY
-+
-+
-+# multiprobe errors
-+if grep -q "Create/append/" README && grep -q "imm-value" README; then
-+echo "f:fprobes/testevent $FUNCTION_FORK" > dynamic_events
-+check_error '^f:fprobes/testevent do_exit%return'	# DIFF_PROBE_TYPE
-+
-+# Explicitly use printf "%s" to not interpret \1
-+printf "%s" "f:fprobes/testevent $FUNCTION_FORK abcd=\\1" > dynamic_events
-+check_error "f:fprobes/testevent $FUNCTION_FORK ^bcd=\\1"	# DIFF_ARG_TYPE
-+check_error "f:fprobes/testevent $FUNCTION_FORK ^abcd=\\1:u8"	# DIFF_ARG_TYPE
-+check_error "f:fprobes/testevent $FUNCTION_FORK ^abcd=\\\"foo\"" # DIFF_ARG_TYPE
-+check_error "^f:fprobes/testevent $FUNCTION_FORK abcd=\\1"	# SAME_PROBE
-+fi
-+
-+# %return suffix errors
-+check_error 'f vfs_read^%hoge'		# BAD_ADDR_SUFFIX
-+
-+exit 0
+The main benefit of this refactoring is that, with the API that's left, an
+ftrace_ops backing a direct call will only ever point to one direct call. We can
+therefore store the direct called trampoline address in the ops (patch 4) and
+look it up from the ftrace trampoline on arm64 (patch 7) in the case when the
+destination would be out of reach of a BL instruction at the ftrace callsite.
+(in this case, ftrace_caller acts as a lightweight intermediary trampoline)
+
+This series has been tested on both arm64 and x86_64 with:
+1- CONFIG_FTRACE_SELFTEST (cf: patch 6)
+2- samples/ftrace/*.ko (cf: patch 8)
+3- tools/testing/selftests/bpf/test_progs (both -t lsm and -t fentry_fexit)
+
+This follows up on prior art by Xu Kuohai [2].
+The implementation here is totally different but the fix for ftrace selftests
+(patch 6) is a trivial rebase of a patch originally by Xu so I kept his
+authorship and trailers untouched on that patch, I hope that's ok.
+
+1: https://lore.kernel.org/all/20230123134603.1064407-1-mark.rutland@arm.com/
+2: https://lore.kernel.org/bpf/20220913162732.163631-1-xukuohai@huaweicloud.com/
+
+Florent Revest (7):
+  ftrace: Replace uses of _ftrace_direct APIs with _ftrace_direct_multi
+  ftrace: Remove the legacy _ftrace_direct API
+  ftrace: Rename _ftrace_direct_multi APIs to _ftrace_direct APIs
+  ftrace: Store direct called addresses in their ops
+  ftrace: Make DIRECT_CALLS work WITH_ARGS and !WITH_REGS
+  arm64: ftrace: Add direct call support
+  arm64: ftrace: Add direct called trampoline samples support
+
+Xu Kuohai (1):
+  ftrace: Fix dead loop caused by direct call in ftrace selftest
+
+ arch/arm64/Kconfig                          |   4 +
+ arch/arm64/include/asm/ftrace.h             |  24 ++
+ arch/arm64/kernel/asm-offsets.c             |   6 +
+ arch/arm64/kernel/entry-ftrace.S            |  70 +++-
+ arch/arm64/kernel/ftrace.c                  |  36 +-
+ include/linux/ftrace.h                      |  51 +--
+ kernel/bpf/trampoline.c                     |  14 +-
+ kernel/trace/Kconfig                        |   2 +-
+ kernel/trace/ftrace.c                       | 433 +-------------------
+ kernel/trace/trace_selftest.c               |  14 +-
+ samples/Kconfig                             |   2 +-
+ samples/ftrace/ftrace-direct-modify.c       |  41 +-
+ samples/ftrace/ftrace-direct-multi-modify.c |  44 +-
+ samples/ftrace/ftrace-direct-multi.c        |  28 +-
+ samples/ftrace/ftrace-direct-too.c          |  35 +-
+ samples/ftrace/ftrace-direct.c              |  33 +-
+ 16 files changed, 333 insertions(+), 504 deletions(-)
+
+-- 
+2.39.1.519.gcb327c4b5f-goog
 
