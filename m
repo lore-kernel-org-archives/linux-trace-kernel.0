@@ -2,76 +2,87 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E2E3C636D4
-	for <linux-trace-kernel@archiver.kernel.org>; Thu,  2 Feb 2023 18:15:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8147BC05027
+	for <linux-trace-kernel@archiver.kernel.org>; Thu,  2 Feb 2023 18:18:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231510AbjBBSO7 (ORCPT
+        id S232234AbjBBSST (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Thu, 2 Feb 2023 13:14:59 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53360 "EHLO
+        Thu, 2 Feb 2023 13:18:19 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55674 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232360AbjBBSOw (ORCPT
+        with ESMTP id S232056AbjBBSSS (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Thu, 2 Feb 2023 13:14:52 -0500
-Received: from ms.lwn.net (ms.lwn.net [IPv6:2600:3c01:e000:3a1::42])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5BB371CAF5;
-        Thu,  2 Feb 2023 10:14:52 -0800 (PST)
-Received: from localhost (unknown [IPv6:2601:281:8300:73::5f6])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ms.lwn.net (Postfix) with ESMTPSA id DCA467F9;
-        Thu,  2 Feb 2023 18:14:51 +0000 (UTC)
-DKIM-Filter: OpenDKIM Filter v2.11.0 ms.lwn.net DCA467F9
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lwn.net; s=20201203;
-        t=1675361692; bh=URykxkm+B/bxSKxIteGcBEDebNhTkwcRj+Ep2GbWutc=;
-        h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-        b=hMkB7+phsvoliGTNRAUXnOVBoYG4oOuCE15coZT8YaYoC+RnyOexi+x4zku0Z19WR
-         cTslskjsB4DD919V8r2RfJkWe/quQYjY7Qv12fiGl1nu8gq4NM6saxDUl7Ys+2I6b7
-         1PILPoEz2EvZ/y8hgymNjF+TBOUyJ/65lj4JFnbl4lqFOPjn4APlAXL4byhqnCzjWf
-         Lm3ERlmmM6aOJ+lj1OcmVSABx+JZJ8JYy4WzXIrbFM1uka51/02QYGAjEpUtbKe39X
-         oaMDWjJged1lc+eHZQqhzZ7Sx4EGXdep/JBtR8kdpeTQSyyXK/6wK5rxfPx+yKymZJ
-         xXzE2NlvAbDFw==
-From:   Jonathan Corbet <corbet@lwn.net>
-To:     Bagas Sanjaya <bagasdotme@gmail.com>, linux-kernel@vger.kernel.org,
-        linux-trace-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
-        oe-kbuild-all@lists.linux.dev
-Cc:     Steven Rostedt <rostedt@goodmis.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Bagas Sanjaya <bagasdotme@gmail.com>,
-        kernel test robot <lkp@intel.com>
-Subject: Re: [PATCH] tracing/histogram: Wrap remaining shell snippets in
- code blocks
-In-Reply-To: <20230129031402.47420-1-bagasdotme@gmail.com>
-References: <202301290253.LU5yIxcJ-lkp@intel.com>
- <20230129031402.47420-1-bagasdotme@gmail.com>
-Date:   Thu, 02 Feb 2023 11:14:51 -0700
-Message-ID: <871qn8vsro.fsf@meer.lwn.net>
+        Thu, 2 Feb 2023 13:18:18 -0500
+Received: from mail-pf1-x42a.google.com (mail-pf1-x42a.google.com [IPv6:2607:f8b0:4864:20::42a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9746845880
+        for <linux-trace-kernel@vger.kernel.org>; Thu,  2 Feb 2023 10:18:17 -0800 (PST)
+Received: by mail-pf1-x42a.google.com with SMTP id w20so1818359pfn.4
+        for <linux-trace-kernel@vger.kernel.org>; Thu, 02 Feb 2023 10:18:17 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=L7icPoQV0+1TADmGSuaIAYzPqVrS9LznmgHWsZ0YqHU=;
+        b=S09i0i6E6NeqKHUKJRzq9SbeBUrkUks0KwsEdwlNV2s4XhoPD4a0u2/4V1ejKmAGt0
+         8Dv7PJHssfMBI3x/lspBaI8qh0S1VBhqDgwWhGl69EUkYqxYgWrTPwlVjqLtObkdJlVs
+         1hTyoMvRuvgNiXGPX8OSl2t0YL4nxh3CxxiI0=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=L7icPoQV0+1TADmGSuaIAYzPqVrS9LznmgHWsZ0YqHU=;
+        b=TnbtvFDl34sjhrlWW6AyAglhBqpkN7k6z/BUOarSPYTXUDR0YJd3hpdbAI3lwyrd+O
+         alZYHOaToQ+ut6KMGlO+8qREPhxmwTlJJQxTusSPVAlCJY/4LNis0FfDOVZP5CfB/ZbO
+         X/duwkozx4KvYbM/pD5IHhTHS4Wz1u6GZAaC1N4enIN2K3UAfOry2OZ4uINb3MPhepUB
+         mzKPWXz9fk426W8c6Y6FrUU9QZK23cPocItIhMp+i4j8D0dZtwPUgkj7axMoo4NJ6SdR
+         m6GYkvA562WDnLYdCwE6a5hJ49i2c2eJPt23dXJoxcyy55pkqTlubwc4JaRX37uxEXas
+         aVxA==
+X-Gm-Message-State: AO0yUKWxXnJSjBzw71cBYNe7mttGggzM9jdle5sKdI0hKNyJUDeAQ2Z4
+        zQMbAYHXzl9MJ7cMz1BBbqE8CzG+p1sL7Xcg+lT0ZQ==
+X-Google-Smtp-Source: AK7set9q0tI/J6IQRKg4GVehPEW0rTa05ZubWhegS631JBzSLxYn4lgMk46uikvk3M9/sXKOpd4Gr5H00U0DKfR/vAI=
+X-Received: by 2002:a05:6a00:1a92:b0:593:e2fd:ca4f with SMTP id
+ e18-20020a056a001a9200b00593e2fdca4fmr1703061pfv.0.1675361896917; Thu, 02 Feb
+ 2023 10:18:16 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain
+References: <20230201163420.1579014-1-revest@chromium.org> <20230201163420.1579014-6-revest@chromium.org>
+ <Y9vcua0+JzjmTICO@FVFF77S0Q05N.cambridge.arm.com>
+In-Reply-To: <Y9vcua0+JzjmTICO@FVFF77S0Q05N.cambridge.arm.com>
+From:   Florent Revest <revest@chromium.org>
+Date:   Thu, 2 Feb 2023 19:18:05 +0100
+Message-ID: <CABRcYmK1ns1escBFa4edjZtbykms-sfhsTL3HKs+Ljx3xOUwWQ@mail.gmail.com>
+Subject: Re: [PATCH 5/8] ftrace: Make DIRECT_CALLS work WITH_ARGS and !WITH_REGS
+To:     Mark Rutland <mark.rutland@arm.com>
+Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-trace-kernel@vger.kernel.org, bpf@vger.kernel.org,
+        catalin.marinas@arm.com, will@kernel.org, rostedt@goodmis.org,
+        mhiramat@kernel.org, ast@kernel.org, daniel@iogearbox.net,
+        andrii@kernel.org, kpsingh@kernel.org, jolsa@kernel.org,
+        xukuohai@huaweicloud.com
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-Bagas Sanjaya <bagasdotme@gmail.com> writes:
-
-> Most shell command snippets (echo/cat) and their output are already in
-> literal code blocks. However a few still isn't wrapped, in which the
-> htmldocs output is ugly.
+On Thu, Feb 2, 2023 at 4:54 PM Mark Rutland <mark.rutland@arm.com> wrote:
 >
-> Wrap the remaining unwrapped snippets, while also fix recent kernel test
-> robot warnings.
+> On Wed, Feb 01, 2023 at 05:34:17PM +0100, Florent Revest wrote:
+> > Direct called trampolines can be called in two ways:
+> > - either from the ftrace callsite. In this case, they do not access any
+> >   struct ftrace_regs nor pt_regs
+> > - Or, if a ftrace ops is also attached, from the end of a ftrace
+> >   trampoline. In this case, the call_direct_funcs ops is in charge of
+> >   setting the direct call trampoline's address in a struct ftrace_regs
+> >
+> > Since "ftrace: pass fregs to arch_ftrace_set_direct_caller()", the later
+> > case no longer requires a full pt_regs.
 >
-> Link: https://lore.kernel.org/linux-doc/202301290253.LU5yIxcJ-lkp@intel.com/
-> Fixes: 88238513bb2671 ("tracing/histogram: Document variable stacktrace")
-> Reported-by: kernel test robot <lkp@intel.com>
-> Signed-off-by: Bagas Sanjaya <bagasdotme@gmail.com>
-> ---
->  Documentation/trace/histogram.rst | 93 ++++++++++++++++---------------
->  1 file changed, 47 insertions(+), 46 deletions(-)
+> Minor nit, but could we please have the commit ID, e.g.
+>
+> | Since commit:
+> |
+> |   9705bc70960459ae ("ftrace: pass fregs to arch_ftrace_set_direct_caller()")
+> |
+> | The latter case no longer requires a full pt_regs.
 
-So this is a good cleanup and I'd like to apply it, but it doesn't come
-close to applying to docs-next.  Which tree did you do this against?
-
-Thanks,
-
-jon
+Sure thing, will do!
