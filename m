@@ -2,123 +2,204 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E4597C61DA4
-	for <linux-trace-kernel@archiver.kernel.org>; Thu,  2 Feb 2023 08:37:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C2BDBC05027
+	for <linux-trace-kernel@archiver.kernel.org>; Thu,  2 Feb 2023 10:20:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231629AbjBBIhQ (ORCPT
+        id S231932AbjBBKUK (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Thu, 2 Feb 2023 03:37:16 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53466 "EHLO
+        Thu, 2 Feb 2023 05:20:10 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54806 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230207AbjBBIhP (ORCPT
+        with ESMTP id S231819AbjBBKUJ (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Thu, 2 Feb 2023 03:37:15 -0500
-Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C288766ED4;
-        Thu,  2 Feb 2023 00:36:46 -0800 (PST)
-Received: from kwepemi500013.china.huawei.com (unknown [172.30.72.54])
-        by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4P6sZg1zLqzfZ9N;
-        Thu,  2 Feb 2023 16:36:27 +0800 (CST)
-Received: from [10.67.111.192] (10.67.111.192) by
- kwepemi500013.china.huawei.com (7.221.188.120) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.34; Thu, 2 Feb 2023 16:36:37 +0800
-Message-ID: <85af713d-00fe-b113-1331-1a44480c016f@huawei.com>
-Date:   Thu, 2 Feb 2023 16:36:36 +0800
+        Thu, 2 Feb 2023 05:20:09 -0500
+Received: from mail-pl1-x630.google.com (mail-pl1-x630.google.com [IPv6:2607:f8b0:4864:20::630])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6A0731E1F2;
+        Thu,  2 Feb 2023 02:20:08 -0800 (PST)
+Received: by mail-pl1-x630.google.com with SMTP id b5so1354899plz.5;
+        Thu, 02 Feb 2023 02:20:08 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=WYdPpwB4cqZ09UY9AZTmULgMrRnwA57uYIK5ZvUq9NU=;
+        b=mPlOmdm9vhkfzx6sATpU11XjmAB9Jd4VDBNA4NNbhNiSqRoHVs+6tciuiIiI/DDJvF
+         MDN1wuxqj5+CCRc95w4jdG1q4cXXOrISMucmzFglKkOICRQDyNplcxpU8uOPpqHCXbnp
+         Y5Ad3S3rzZ5pEhOsdk1WJjOQ0GAo3iEDfK98FmljLHXViQ8oIKP3lvJiFk/T5hjC0KgY
+         ZyC0NYUcF5bkTiCUWpW3SEsbqcgRP7XRwxygDf4BHyl11HzbHctQGuGkU7iR9qke9zsq
+         CtgfjEj6XFVzVyXD1EsDyAr4lR8cq476iFqTIJX++7bVUTNvJ0IJXoF2ckfUylU/OlrI
+         KTnA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=WYdPpwB4cqZ09UY9AZTmULgMrRnwA57uYIK5ZvUq9NU=;
+        b=q5bvlO6mwcq1tp99xwPjxkZiWWRD59+0hG6IcfhqKd4X7Nc5B2Ip2ejeG36q5wBjdN
+         bJ55ByDBMFE+bN4TPuprnQIaOtXOSDW8UB31ROfSrUz3wtw1jwlvZpnsVCyCSZshbHzR
+         Wx6amr1jwCaRWC2lQSvb1rtOtK4szg5Nf9WmQXmpikN+LgA6wi18ejwKw4ClFD523M2z
+         EkQ5DBx9pFcC7oxI7sckae/7oWn/4mh0p69s/syKUWhrpHTgovRKBe01pcA+vVZFvzbc
+         jx6G62Xxy0Hxjf1SOFHrJ9IhPVgiCIvED62198ksgunMc/KqlDC5UoPBEiyU4mvb1zjG
+         ShlA==
+X-Gm-Message-State: AO0yUKVPG2aWBtfRDRCtHYLbRXu67LsoLR947vDQvFlf5R7z/cs+uU6H
+        jLo4BYylBootJwQLAVHgV1pTHGl7ZnWmCL3uz7o=
+X-Google-Smtp-Source: AK7set+/K0rn/HVvqn2fa9nmIEccZGasOamMEDNIKr0wT4QD6tc6FxdYOIl3uEH/jmSpfYTavUd3q73RPh4Kb8f4ZtU=
+X-Received: by 2002:a17:90b:228a:b0:22b:ed00:176a with SMTP id
+ kx10-20020a17090b228a00b0022bed00176amr443109pjb.87.1675333207750; Thu, 02
+ Feb 2023 02:20:07 -0800 (PST)
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
- Thunderbird/91.9.0
-Subject: Re: [PATCH 0/8] Add ftrace direct call for arm64
-Content-Language: en-US
-To:     Florent Revest <revest@chromium.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-trace-kernel@vger.kernel.org>, <bpf@vger.kernel.org>
-CC:     <catalin.marinas@arm.com>, <will@kernel.org>,
-        <rostedt@goodmis.org>, <mhiramat@kernel.org>,
-        <mark.rutland@arm.com>, <ast@kernel.org>, <daniel@iogearbox.net>,
-        <andrii@kernel.org>, <kpsingh@kernel.org>, <jolsa@kernel.org>,
-        <xukuohai@huaweicloud.com>
-References: <20230201163420.1579014-1-revest@chromium.org>
-From:   Xu Kuohai <xukuohai@huawei.com>
-In-Reply-To: <20230201163420.1579014-1-revest@chromium.org>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.67.111.192]
-X-ClientProxiedBy: dggems705-chm.china.huawei.com (10.3.19.182) To
- kwepemi500013.china.huawei.com (7.221.188.120)
-X-CFilter-Loop: Reflected
+References: <20230130085954.647845-1-suagrfillet@gmail.com>
+In-Reply-To: <20230130085954.647845-1-suagrfillet@gmail.com>
+From:   Song Shuai <suagrfillet@gmail.com>
+Date:   Thu, 2 Feb 2023 10:19:46 +0000
+Message-ID: <CAAYs2=jq9j9j-Qa+fexfDX_e=pETfL5j1-n4iy5=0CgDKrYukg@mail.gmail.com>
+Subject: Re: [PATCH] samples: ftrace: Include the nospec-branch.h only for x86
+To:     rostedt@goodmis.org, mhiramat@kernel.org, mark.rutland@arm.com,
+        peterz@infradead.org, jpoimboe@kernel.org, tglx@linutronix.de
+Cc:     linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On 2/2/2023 12:34 AM, Florent Revest wrote:
-> This series adds ftrace direct call support to arm64.
-> This makes BPF tracing programs (fentry/fexit/fmod_ret/lsm) work on arm64.
-> 
-> It is meant to apply on top of the arm64 tree which contains Mark Rutland's
-> series on CALL_OPS [1] under the for-next/ftrace tag.
-> > The first three patches consolidate the two existing ftrace APIs for registering
-> direct calls. They are split to make the reviewers lives easier but if it'd be a
-> preferred style, I'd be happy to squash them in the next revision.
-> Currently, there is both a _ftrace_direct and _ftrace_direct_multi API. Apart
-> from samples and selftests, there are no users of the _ftrace_direct API left
-> in-tree so this deletes it and renames the _ftrace_direct_multi API to
-> _ftrace_direct for simplicity.
-> 
-> The main benefit of this refactoring is that, with the API that's left, an
-> ftrace_ops backing a direct call will only ever point to one direct call. We can
-> therefore store the direct called trampoline address in the ops (patch 4) and
-> look it up from the ftrace trampoline on arm64 (patch 7) in the case when the
-> destination would be out of reach of a BL instruction at the ftrace callsite.
-> (in this case, ftrace_caller acts as a lightweight intermediary trampoline)
-> 
-> This series has been tested on both arm64 and x86_64 with:
-> 1- CONFIG_FTRACE_SELFTEST (cf: patch 6)
-> 2- samples/ftrace/*.ko (cf: patch 8)
-> 3- tools/testing/selftests/bpf/test_progs (both -t lsm and -t fentry_fexit)
+Ping...
 
-so it's time to update DENYLIST.aarch64 to unblock tests that failed due to lack of direct call.
+Song Shuai <suagrfillet@gmail.com> =E4=BA=8E2023=E5=B9=B41=E6=9C=8830=E6=97=
+=A5=E5=91=A8=E4=B8=80 09:00=E5=86=99=E9=81=93=EF=BC=9A
+>
+> When other architectures without the nospec functionality write their
+> direct-call functions of samples/ftrace/*.c, the including of
+> asm/nospec-branch.h must be taken care to fix the no header file found
+> error in building process.
+>
+> This commit (ee3e2469b346 "x86/ftrace: Make it call depth tracking aware"=
+)
+> file-globally includes asm/nospec-branch.h providing CALL_DEPTH_ACCOUNT
+> for only x86 direct-call functions.
+>
+> It seems better to move the including to `#ifdef CONFIG_X86_64`.
+>
+> Signed-off-by: Song Shuai <suagrfillet@gmail.com>
+> ---
+>  samples/ftrace/ftrace-direct-modify.c       | 2 +-
+>  samples/ftrace/ftrace-direct-multi-modify.c | 2 +-
+>  samples/ftrace/ftrace-direct-multi.c        | 2 +-
+>  samples/ftrace/ftrace-direct-too.c          | 2 +-
+>  samples/ftrace/ftrace-direct.c              | 2 +-
+>  5 files changed, 5 insertions(+), 5 deletions(-)
+>
+> diff --git a/samples/ftrace/ftrace-direct-modify.c b/samples/ftrace/ftrac=
+e-direct-modify.c
+> index de5a0f67f320..d93abbcb1f4c 100644
+> --- a/samples/ftrace/ftrace-direct-modify.c
+> +++ b/samples/ftrace/ftrace-direct-modify.c
+> @@ -3,7 +3,6 @@
+>  #include <linux/kthread.h>
+>  #include <linux/ftrace.h>
+>  #include <asm/asm-offsets.h>
+> -#include <asm/nospec-branch.h>
+>
+>  extern void my_direct_func1(void);
+>  extern void my_direct_func2(void);
+> @@ -26,6 +25,7 @@ static unsigned long my_ip =3D (unsigned long)schedule;
+>  #ifdef CONFIG_X86_64
+>
+>  #include <asm/ibt.h>
+> +#include <asm/nospec-branch.h>
+>
+>  asm (
+>  "      .pushsection    .text, \"ax\", @progbits\n"
+> diff --git a/samples/ftrace/ftrace-direct-multi-modify.c b/samples/ftrace=
+/ftrace-direct-multi-modify.c
+> index a825dbd2c9cf..b58c594efb51 100644
+> --- a/samples/ftrace/ftrace-direct-multi-modify.c
+> +++ b/samples/ftrace/ftrace-direct-multi-modify.c
+> @@ -3,7 +3,6 @@
+>  #include <linux/kthread.h>
+>  #include <linux/ftrace.h>
+>  #include <asm/asm-offsets.h>
+> -#include <asm/nospec-branch.h>
+>
+>  extern void my_direct_func1(unsigned long ip);
+>  extern void my_direct_func2(unsigned long ip);
+> @@ -24,6 +23,7 @@ extern void my_tramp2(void *);
+>  #ifdef CONFIG_X86_64
+>
+>  #include <asm/ibt.h>
+> +#include <asm/nospec-branch.h>
+>
+>  asm (
+>  "      .pushsection    .text, \"ax\", @progbits\n"
+> diff --git a/samples/ftrace/ftrace-direct-multi.c b/samples/ftrace/ftrace=
+-direct-multi.c
+> index d955a2650605..c27cf130c319 100644
+> --- a/samples/ftrace/ftrace-direct-multi.c
+> +++ b/samples/ftrace/ftrace-direct-multi.c
+> @@ -5,7 +5,6 @@
+>  #include <linux/ftrace.h>
+>  #include <linux/sched/stat.h>
+>  #include <asm/asm-offsets.h>
+> -#include <asm/nospec-branch.h>
+>
+>  extern void my_direct_func(unsigned long ip);
+>
+> @@ -19,6 +18,7 @@ extern void my_tramp(void *);
+>  #ifdef CONFIG_X86_64
+>
+>  #include <asm/ibt.h>
+> +#include <asm/nospec-branch.h>
+>
+>  asm (
+>  "      .pushsection    .text, \"ax\", @progbits\n"
+> diff --git a/samples/ftrace/ftrace-direct-too.c b/samples/ftrace/ftrace-d=
+irect-too.c
+> index e13fb59a2b47..8139dce2a31c 100644
+> --- a/samples/ftrace/ftrace-direct-too.c
+> +++ b/samples/ftrace/ftrace-direct-too.c
+> @@ -4,7 +4,6 @@
+>  #include <linux/mm.h> /* for handle_mm_fault() */
+>  #include <linux/ftrace.h>
+>  #include <asm/asm-offsets.h>
+> -#include <asm/nospec-branch.h>
+>
+>  extern void my_direct_func(struct vm_area_struct *vma,
+>                            unsigned long address, unsigned int flags);
+> @@ -21,6 +20,7 @@ extern void my_tramp(void *);
+>  #ifdef CONFIG_X86_64
+>
+>  #include <asm/ibt.h>
+> +#include <asm/nospec-branch.h>
+>
+>  asm (
+>  "      .pushsection    .text, \"ax\", @progbits\n"
+> diff --git a/samples/ftrace/ftrace-direct.c b/samples/ftrace/ftrace-direc=
+t.c
+> index 1f769d0db20f..1d3d307ca33d 100644
+> --- a/samples/ftrace/ftrace-direct.c
+> +++ b/samples/ftrace/ftrace-direct.c
+> @@ -4,7 +4,6 @@
+>  #include <linux/sched.h> /* for wake_up_process() */
+>  #include <linux/ftrace.h>
+>  #include <asm/asm-offsets.h>
+> -#include <asm/nospec-branch.h>
+>
+>  extern void my_direct_func(struct task_struct *p);
+>
+> @@ -18,6 +17,7 @@ extern void my_tramp(void *);
+>  #ifdef CONFIG_X86_64
+>
+>  #include <asm/ibt.h>
+> +#include <asm/nospec-branch.h>
+>
+>  asm (
+>  "      .pushsection    .text, \"ax\", @progbits\n"
+> --
+> 2.20.1
+>
 
-> 
-> This follows up on prior art by Xu Kuohai [2].
-> The implementation here is totally different but the fix for ftrace selftests
-> (patch 6) is a trivial rebase of a patch originally by Xu so I kept his
-> authorship and trailers untouched on that patch, I hope that's ok. >
 
-that's ok for me, thanks.
-
-> 1: https://lore.kernel.org/all/20230123134603.1064407-1-mark.rutland@arm.com/
-> 2: https://lore.kernel.org/bpf/20220913162732.163631-1-xukuohai@huaweicloud.com/
-> 
-> Florent Revest (7):
->    ftrace: Replace uses of _ftrace_direct APIs with _ftrace_direct_multi
->    ftrace: Remove the legacy _ftrace_direct API
->    ftrace: Rename _ftrace_direct_multi APIs to _ftrace_direct APIs
->    ftrace: Store direct called addresses in their ops
->    ftrace: Make DIRECT_CALLS work WITH_ARGS and !WITH_REGS
->    arm64: ftrace: Add direct call support
->    arm64: ftrace: Add direct called trampoline samples support
-> 
-> Xu Kuohai (1):
->    ftrace: Fix dead loop caused by direct call in ftrace selftest
-> 
->   arch/arm64/Kconfig                          |   4 +
->   arch/arm64/include/asm/ftrace.h             |  24 ++
->   arch/arm64/kernel/asm-offsets.c             |   6 +
->   arch/arm64/kernel/entry-ftrace.S            |  70 +++-
->   arch/arm64/kernel/ftrace.c                  |  36 +-
->   include/linux/ftrace.h                      |  51 +--
->   kernel/bpf/trampoline.c                     |  14 +-
->   kernel/trace/Kconfig                        |   2 +-
->   kernel/trace/ftrace.c                       | 433 +-------------------
->   kernel/trace/trace_selftest.c               |  14 +-
->   samples/Kconfig                             |   2 +-
->   samples/ftrace/ftrace-direct-modify.c       |  41 +-
->   samples/ftrace/ftrace-direct-multi-modify.c |  44 +-
->   samples/ftrace/ftrace-direct-multi.c        |  28 +-
->   samples/ftrace/ftrace-direct-too.c          |  35 +-
->   samples/ftrace/ftrace-direct.c              |  33 +-
->   16 files changed, 333 insertions(+), 504 deletions(-)
-> 
-
+--=20
+Thanks,
+Song
