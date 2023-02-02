@@ -2,131 +2,253 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F3E6C05027
-	for <linux-trace-kernel@archiver.kernel.org>; Thu,  2 Feb 2023 18:24:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C8B3FC05027
+	for <linux-trace-kernel@archiver.kernel.org>; Thu,  2 Feb 2023 19:03:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231836AbjBBSYA (ORCPT
+        id S232389AbjBBTDa (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Thu, 2 Feb 2023 13:24:00 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57884 "EHLO
+        Thu, 2 Feb 2023 14:03:30 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42968 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231695AbjBBSX7 (ORCPT
+        with ESMTP id S232258AbjBBTD3 (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Thu, 2 Feb 2023 13:23:59 -0500
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AC50C65F02;
-        Thu,  2 Feb 2023 10:23:57 -0800 (PST)
-Received: from lhrpeml500006.china.huawei.com (unknown [172.18.147.200])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4P76XB6ZHdz67bmq;
-        Fri,  3 Feb 2023 02:20:10 +0800 (CST)
-Received: from P_UKIT01-A7bmah.china.huawei.com (10.48.151.167) by
- lhrpeml500006.china.huawei.com (7.191.161.198) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.34; Thu, 2 Feb 2023 18:23:55 +0000
-From:   <shiju.jose@huawei.com>
-To:     <mchehab@kernel.org>, <linux-edac@vger.kernel.org>
-CC:     <rostedt@goodmis.org>, <mhiramat@kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-trace-kernel@vger.kernel.org>, <tanxiaofei@huawei.com>,
-        <jonathan.cameron@huawei.com>, <linuxarm@huawei.com>,
-        <shiju.jose@huawei.com>
-Subject: [RFC PATCH 1/1] rasdaemon: Fix poll() on per_cpu trace_pipe_raw do not retun
-Date:   Thu, 2 Feb 2023 18:23:51 +0000
-Message-ID: <20230202182352.792-1-shiju.jose@huawei.com>
-X-Mailer: git-send-email 2.26.0.windows.1
+        Thu, 2 Feb 2023 14:03:29 -0500
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 72D62305E6;
+        Thu,  2 Feb 2023 11:03:27 -0800 (PST)
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 2C1F7C14;
+        Thu,  2 Feb 2023 11:04:09 -0800 (PST)
+Received: from FVFF77S0Q05N.cambridge.arm.com (FVFF77S0Q05N.cambridge.arm.com [10.1.27.141])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id D0E293F8D6;
+        Thu,  2 Feb 2023 11:03:24 -0800 (PST)
+Date:   Thu, 2 Feb 2023 19:03:19 +0000
+From:   Mark Rutland <mark.rutland@arm.com>
+To:     Florent Revest <revest@chromium.org>
+Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-trace-kernel@vger.kernel.org, bpf@vger.kernel.org,
+        catalin.marinas@arm.com, will@kernel.org, rostedt@goodmis.org,
+        mhiramat@kernel.org, ast@kernel.org, daniel@iogearbox.net,
+        andrii@kernel.org, kpsingh@kernel.org, jolsa@kernel.org,
+        xukuohai@huaweicloud.com, Xu Kuohai <xukuohai@huawei.com>,
+        Li Huafei <lihuafei1@huawei.com>
+Subject: Re: [PATCH 6/8] ftrace: Fix dead loop caused by direct call in
+ ftrace selftest
+Message-ID: <Y9wI93m2frDFGFez@FVFF77S0Q05N.cambridge.arm.com>
+References: <20230201163420.1579014-1-revest@chromium.org>
+ <20230201163420.1579014-7-revest@chromium.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [10.48.151.167]
-X-ClientProxiedBy: lhrpeml100006.china.huawei.com (7.191.160.224) To
- lhrpeml500006.china.huawei.com (7.191.161.198)
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230201163420.1579014-7-revest@chromium.org>
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-From: Shiju Jose <shiju.jose@huawei.com>
+On Wed, Feb 01, 2023 at 05:34:18PM +0100, Florent Revest wrote:
+> From: Xu Kuohai <xukuohai@huawei.com>
+> 
+> After direct call is enabled for arm64, ftrace selftest enters a
+> dead loop:
+> 
+> <trace_selftest_dynamic_test_func>:
+> 00  bti     c
+> 01  mov     x9, x30                            <trace_direct_tramp>:
+> 02  bl      <trace_direct_tramp>    ---------->     ret
+>                                                      |
+>                                          lr/x30 is 03, return to 03
+>                                                      |
+> 03  mov     w0, #0x0   <-----------------------------|
+>      |                                               |
+>      |                   dead loop!                  |
+>      |                                               |
+> 04  ret   ---- lr/x30 is still 03, go back to 03 ----|
+> 
+> The reason is that when the direct caller trace_direct_tramp() returns
+> to the patched function trace_selftest_dynamic_test_func(), lr is still
+> the address after the instrumented instruction in the patched function,
+> so when the patched function exits, it returns to itself!
+> 
+> To fix this issue, we need to restore lr before trace_direct_tramp()
+> exits, so use a dedicated trace_direct_tramp() for arm64.
+> 
+> Reported-by: Li Huafei <lihuafei1@huawei.com>
+> Signed-off-by: Xu Kuohai <xukuohai@huawei.com>
+> Acked-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+> Signed-off-by: Florent Revest <revest@chromium.org>
 
-The error events are not received in the rasdaemon since kernel 6.1-rc6.
-This issue is firstly detected and reported, when testing the CXL error
-events in the rasdaemon.
+Looking at this, I don't think that the existing trace_direct_tramp makes
+sense -- in general a C function doesn't follow the direct call trampoline
+calling convention, and cannot be used as a direct call trampoline.
 
-Debugging showed, poll() on trace_pipe_raw in the ras-events.c do not return.
-and this issue is seen after the commit
-42fb0a1e84ff525ebe560e2baf9451ab69127e2b ("tracing/ring-buffer: Have
-polling block on watermark").
+Looking further, there's a distinct latent issue on s390, where the mismatch
+between their regular calling convention and their direct call trampoline
+calling convention means that trace_direct_tramp() returns into the *caller* of
+the instrumented function, skipping that entirely (verified locally with QEMU
+and printk()s added to DYN_FTRACE_TEST_NAME() / DYN_FTRACE_TEST_NAME2()
+functions).
 
-This also verified using the test application for poll()
-and select() on trace_pipe_raw.
+I think it'd be much better to do something like the below as a preparatory
+cleanup (tested on s390 under QEMU).
 
-There is also a bug reported on this issue, 
-https://lore.kernel.org/all/31eb3b12-3350-90a4-a0d9-d1494db7cf74@oracle.com/
+Thanks,
+Mark.
 
-This issue occurs for the per_cpu case, when calling the ring_buffer_poll_wait(),
-in kernel/trace/ring_buffer.c, with the buffer_percent > 0 and then wait until the
-percentage of pages are available. The default value set for the buffer_percent is 50
-in the kernel/trace/trace.c.
+---->8----
+From 3b3abc89fe014ea49282622c4312521b710d1463 Mon Sep 17 00:00:00 2001
+From: Mark Rutland <mark.rutland@arm.com>
+Date: Thu, 2 Feb 2023 18:37:40 +0000
+Subject: [PATCH] ftrace: selftest: remove broken trace_direct_tramp
 
-As a fix, rasdaemon set buffer_percent = 0 through the
-/sys/kernel/debug/tracing/instances/rasdaemon/buffer_percent, then the task will
-wake up as soon as data is added to any of the specific cpu buffer and
-poll() on per_cpu/cpuX/trace_pipe_raw does not block indefinitely.
+The ftrace selftest code has a trace_direct_tramp() function which it
+uses as a direct call trampoline. This happens to work on x86, since the
+direct call's return address is in the usual place, and can be returned
+to via a RET, but in general the calling convention for direct calls is
+different from regular function calls, and requires a trampoline written
+in assembly.
 
-Depends on kernel patch
-tracing: Fix poll() and select() do not work on per_cpu trace_pipe and trace_pipe_raw
+On s390, regular function calls place the return address in %r14, and an
+ftrace patch-site in an instrumented function places the trampoline's
+return address (which is within the instrumented function) in %r0,
+preserving the original %r14 value in-place. As a regular C function
+will return to the address in %r14, using a C function as the trampoline
+results in the trampoline returning to the caller of the instrumented
+function, skipping the body of the instrumented function.
 
-Signed-off-by: Shiju Jose <shiju.jose@huawei.com>
+Note that the s390 issue is not detcted by the ftrace selftest code, as
+the instrumented function is trivial, and returning back into the caller
+happens to be equivalent.
+
+On arm64, regular function calls place the return address in x30, and
+an ftrace patch-site in an instrumented function saves this into r9
+and places the trampoline's return address (within the instrumented
+function) in x30. A regular C function will return to the address in
+x30, but will not restore x9 into x30. Consequently, using a C function
+as the trampoline results in returning to the trampoline's return
+address having corrupted x30, such that when the instrumented function
+returns, it will return back into itself.
+
+To avoid future issues in this area, remove the trace_direct_tramp()
+function, and require that each architecture with direct calls provides
+a stub trampoline, named ftrace_stub_direct_tramp. This can be written
+to handle the architecture's trampoline calling convention, and in
+future could be used elsewhere (e.g. in the ftrace ops sample, to
+measure the overhead of direct calls), so we may as well always build it
+in.
+
+Signed-off-by: Mark Rutland <mark.rutland@arm.com>
+Cc: Li Huafei <lihuafei1@huawei.com>
+Cc: Xu Kuohai <xukuohai@huawei.com>
+Cc: Steven Rostedt (Google) <rostedt@goodmis.org>
+Cc: Florent Revest <revest@chromium.org>
 ---
- ras-events.c | 29 +++++++++++++++++++++++++++++
- 1 file changed, 29 insertions(+)
+ arch/s390/kernel/mcount.S     |  5 +++++
+ arch/x86/kernel/ftrace_32.S   |  5 +++++
+ arch/x86/kernel/ftrace_64.S   |  4 ++++
+ include/linux/ftrace.h        |  2 ++
+ kernel/trace/trace_selftest.c | 15 ++-------------
+ 5 files changed, 18 insertions(+), 13 deletions(-)
 
-diff --git a/ras-events.c b/ras-events.c
-index 3691311..72225a9 100644
---- a/ras-events.c
-+++ b/ras-events.c
-@@ -383,6 +383,8 @@ static int read_ras_event_all_cpus(struct pthread_data *pdata,
- 	int warnonce[n_cpus];
- 	char pipe_raw[PATH_MAX];
- 	int legacy_kernel = 0;
-+	int fd;
-+	char buf[2];
- #if 0
- 	int need_sleep = 0;
- #endif
-@@ -402,6 +404,33 @@ static int read_ras_event_all_cpus(struct pthread_data *pdata,
- 		return -ENOMEM;
- 	}
+diff --git a/arch/s390/kernel/mcount.S b/arch/s390/kernel/mcount.S
+index 4786bfe02144..ad13a0e2c307 100644
+--- a/arch/s390/kernel/mcount.S
++++ b/arch/s390/kernel/mcount.S
+@@ -32,6 +32,11 @@ ENTRY(ftrace_stub)
+ 	BR_EX	%r14
+ ENDPROC(ftrace_stub)
  
-+	/* Fix for poll() do not return on per_cpu trace_pipe and
-+	 * trace_pipe_raw with the default buffer_percent in the kernel trace,
-+	 * introduced by the following change in the kernel
-+	 * https://lore.kernel.org/all/20221020231427.41be3f26@gandalf.local.home/T/#u.
-+	 * Set buffer_percent to 0 so that poll() returned immediately
-+	 * when the trace data is available in the ras per_cpu trace pipe_raw */
-+	fd = open_trace(pdata[0].ras, "buffer_percent", O_RDWR);
-+	if (fd < 0) {
-+		log(TERM, LOG_ERR, "Can't open trace buffer_percent\n");
-+		return -1;
-+	}
-+	size = write(fd, "0", 1);
-+	if (size <= 0) {
-+		log(TERM, LOG_ERR, "Can't set rasdaemon trace buffer_percent\n");
-+		return -1;
-+	}
-+	size = read(fd, buf, 1);
-+	if (size <= 0) {
-+		log(TERM, LOG_ERR, "Can't read rasdaemon trace buffer_percent\n");
-+		return -1;
-+	}
-+	if (atoi(buf) != 0) {
-+		log(TERM, LOG_ERR, "Can't verify rasdaemon trace buffer_percent\n");
-+		return -1;
-+	}
-+	close(fd);
++SYM_CODE_START(ftrace_stub_direct_tramp)
++	lgr	%r1, %r0
++	BR_EX	%r1
++SYM_CODE_END(ftrace_stub_direct_tramp)
 +
- 	for (i = 0; i < (n_cpus + 1); i++)
- 		fds[i].fd = -1;
+ 	.macro	ftrace_regs_entry, allregs=0
+ 	stg	%r14,(__SF_GPRS+8*8)(%r15)	# save traced function caller
+ 
+diff --git a/arch/x86/kernel/ftrace_32.S b/arch/x86/kernel/ftrace_32.S
+index a0ed0e4a2c0c..0d9a14528176 100644
+--- a/arch/x86/kernel/ftrace_32.S
++++ b/arch/x86/kernel/ftrace_32.S
+@@ -163,6 +163,11 @@ SYM_INNER_LABEL(ftrace_regs_call, SYM_L_GLOBAL)
+ 	jmp	.Lftrace_ret
+ SYM_CODE_END(ftrace_regs_caller)
+ 
++SYM_FUNC_START(ftrace_stub_direct_tramp)
++	CALL_DEPTH_ACCOUNT
++	RET
++SYM_FUNC_END(ftrace_stub_direct_tramp)
++
+ #ifdef CONFIG_FUNCTION_GRAPH_TRACER
+ SYM_CODE_START(ftrace_graph_caller)
+ 	pushl	%eax
+diff --git a/arch/x86/kernel/ftrace_64.S b/arch/x86/kernel/ftrace_64.S
+index 1265ad519249..8fc77e3e039c 100644
+--- a/arch/x86/kernel/ftrace_64.S
++++ b/arch/x86/kernel/ftrace_64.S
+@@ -307,6 +307,10 @@ SYM_INNER_LABEL(ftrace_regs_caller_end, SYM_L_GLOBAL)
+ SYM_FUNC_END(ftrace_regs_caller)
+ STACK_FRAME_NON_STANDARD_FP(ftrace_regs_caller)
+ 
++SYM_FUNC_START(ftrace_stub_direct_tramp)
++	CALL_DEPTH_ACCOUNT
++	RET
++SYM_FUNC_END(ftrace_stub_direct_tramp)
+ 
+ #else /* ! CONFIG_DYNAMIC_FTRACE */
+ 
+diff --git a/include/linux/ftrace.h b/include/linux/ftrace.h
+index 3d2156e335d7..a9836b40630e 100644
+--- a/include/linux/ftrace.h
++++ b/include/linux/ftrace.h
+@@ -412,6 +412,8 @@ int unregister_ftrace_direct(struct ftrace_ops *ops, unsigned long addr);
+ int modify_ftrace_direct(struct ftrace_ops *ops, unsigned long addr);
+ int modify_ftrace_direct_nolock(struct ftrace_ops *ops, unsigned long addr);
+ 
++void ftrace_stub_direct_tramp(void *);
++
+ #else
+ struct ftrace_ops;
+ # define ftrace_direct_func_count 0
+diff --git a/kernel/trace/trace_selftest.c b/kernel/trace/trace_selftest.c
+index 06218fc9374b..e6530b7b42e4 100644
+--- a/kernel/trace/trace_selftest.c
++++ b/kernel/trace/trace_selftest.c
+@@ -784,17 +784,6 @@ static struct fgraph_ops fgraph_ops __initdata  = {
+ 	.retfunc		= &trace_graph_return,
+ };
+ 
+-#ifdef CONFIG_DYNAMIC_FTRACE_WITH_DIRECT_CALLS
+-#ifndef CALL_DEPTH_ACCOUNT
+-#define CALL_DEPTH_ACCOUNT ""
+-#endif
+-
+-noinline __noclone static void trace_direct_tramp(void)
+-{
+-	asm(CALL_DEPTH_ACCOUNT);
+-}
+-#endif
+-
+ /*
+  * Pretty much the same than for the function tracer from which the selftest
+  * has been borrowed.
+@@ -875,7 +864,7 @@ trace_selftest_startup_function_graph(struct tracer *trace,
+ 	 */
+ 	ftrace_set_filter_ip(&direct, (unsigned long)DYN_FTRACE_TEST_NAME, 0, 0);
+ 	ret = register_ftrace_direct(&direct,
+-				     (unsigned long)trace_direct_tramp);
++				     (unsigned long)ftrace_stub_direct_tramp);
+ 	if (ret)
+ 		goto out;
+ 
+@@ -896,7 +885,7 @@ trace_selftest_startup_function_graph(struct tracer *trace,
+ 	unregister_ftrace_graph(&fgraph_ops);
+ 
+ 	ret = unregister_ftrace_direct(&direct,
+-				       (unsigned long)trace_direct_tramp);
++				       (unsigned long)ftrace_stub_direct_tramp);
+ 	if (ret)
+ 		goto out;
  
 -- 
-2.25.1
+2.30.2
 
