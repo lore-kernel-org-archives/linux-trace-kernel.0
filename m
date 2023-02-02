@@ -2,195 +2,143 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DCCBC636D3
-	for <linux-trace-kernel@archiver.kernel.org>; Thu,  2 Feb 2023 01:08:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D7C99C636CD
+	for <linux-trace-kernel@archiver.kernel.org>; Thu,  2 Feb 2023 01:24:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229616AbjBBBIY (ORCPT
+        id S230131AbjBBBY3 (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Wed, 1 Feb 2023 20:08:24 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54616 "EHLO
+        Wed, 1 Feb 2023 20:24:29 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38242 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230203AbjBBBIW (ORCPT
+        with ESMTP id S231129AbjBBBY2 (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Wed, 1 Feb 2023 20:08:22 -0500
-Received: from wout5-smtp.messagingengine.com (wout5-smtp.messagingengine.com [64.147.123.21])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A3D27EB4A;
-        Wed,  1 Feb 2023 17:08:16 -0800 (PST)
-Received: from compute6.internal (compute6.nyi.internal [10.202.2.47])
-        by mailout.west.internal (Postfix) with ESMTP id B62BD3200A7A;
-        Wed,  1 Feb 2023 20:08:14 -0500 (EST)
-Received: from imap50 ([10.202.2.100])
-  by compute6.internal (MEProxy); Wed, 01 Feb 2023 20:08:15 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aj.id.au; h=cc
-        :cc:content-type:date:date:from:from:in-reply-to:in-reply-to
-        :message-id:mime-version:references:reply-to:sender:subject
-        :subject:to:to; s=fm2; t=1675300094; x=1675386494; bh=393xPKJKfY
-        /8d1G07ko6nYGhFyfE4P61UQ4EPe1PY0w=; b=DGpYVDqYZoAir7gS/jBBw7RMQe
-        MWS+ar1T1io/UJfQBy+Gig54QMqc6BFeTXAZeb4JXMVmVDGNdDRUEZ7NLq/rjskn
-        UaQLoepSVu44fZhSAgrIBQ7Bp60u4RR94kM4YBjazEPBdZgjfJzQY9f3YMUgLMiZ
-        kvb5umEAFmogtCLw1Yw/bamxfFQY+UG6jTFp+TTQBuJyDyZkMgpExHkKD/nbFUgj
-        Mx7Nbky/hQMvWgBtOgi9c0n96fhy/9RBy3sxuP+YQhSCER5qKBWEVR8hv3at5CP1
-        6/cPA6k3eiFaaMTKMcC1tm05MfKS639sxmxBCN622efS87YIoejQB/vK6pxQ==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:cc:content-type:date:date:feedback-id
-        :feedback-id:from:from:in-reply-to:in-reply-to:message-id
-        :mime-version:references:reply-to:sender:subject:subject:to:to
-        :x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
-        fm3; t=1675300094; x=1675386494; bh=393xPKJKfY/8d1G07ko6nYGhFyfE
-        4P61UQ4EPe1PY0w=; b=JxfzcEDWHIN6iT/UW/DKNncolyHFNGsUoobadPvAiNBx
-        4jUTq3HDzq0H1uHud5xlo1KHDjJFlKGA1Cz00rxctqcpd3ZTIXHwb4Skss/ujDp2
-        +b0qpjOnNlnhuMbzLLtA9l1at0yy9RdAL7W1W9TgpiV6A/fjTfuTlxpvS1krvEj8
-        IHQRAtdDEntR/XBxMBSJiAACHR7q9laCn2sZ1ql8wuvrzKR5raDqbC2aZqYnZ6PB
-        e6mSXx4S5uBW5fbxqT6YdAG6jtZXKKOcqArVsVGfxxAHnY3j7PRS0guWAsEGTSqz
-        w2MGzfM4/hRs7CNKxbeU/cYn2omGWGWoQDXyqV8YwA==
-X-ME-Sender: <xms:_QzbY-WTlRjVicya1zrlXA1b12oygeUMtzMLZlK4K-_NZq89jz7KJQ>
-    <xme:_QzbY6nSoQ8uQatMd5fJScpCenw_AZ1BeyfFRU5WmrwpeeNawkEeQd2DZLEv06InB
-    52C-pJWMeMGjzSkYw>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvhedrudefjedgfeefucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepofgfggfkjghffffhvfevufgtsehttdertderredtnecuhfhrohhmpedftehn
-    ughrvgifucflvghffhgvrhihfdcuoegrnhgurhgvfiesrghjrdhiugdrrghuqeenucggtf
-    frrghtthgvrhhnpeelgfejleeuleefvdefieetgfeghedutdfftdekgeekhfdvueegfedv
-    feegveeiueenucffohhmrghinhepkhgvrhhnvghlrdhorhhgpdhgihhthhhusgdrtghomh
-    enucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpegrnhgu
-    rhgvfiesrghjrdhiugdrrghu
-X-ME-Proxy: <xmx:_QzbYybgVsSI2-T2X1ZgHkWom-ZjJ1v15qYY7_HdsQs785vD4Jf0cw>
-    <xmx:_QzbY1UAS4J6T6menWKwt-VloKmyO0X-guJrpDvJS_dT72S7IX8aew>
-    <xmx:_QzbY4lG2xwwSfADF-4IXcqUXr1X_si0uI0_Zqe-iLI9ns3muBGfAA>
-    <xmx:_gzbYxeNtPB-IcBuKujXA1mLxFWMTf35Xmw_Bw75jV6QTvLOl7gM7A>
-Feedback-ID: idfb84289:Fastmail
-Received: by mailuser.nyi.internal (Postfix, from userid 501)
-        id 4DE401700090; Wed,  1 Feb 2023 20:08:13 -0500 (EST)
-X-Mailer: MessagingEngine.com Webmail Interface
-User-Agent: Cyrus-JMAP/3.9.0-alpha0-107-g82c3c54364-fm-20230131.002-g82c3c543
-Mime-Version: 1.0
-Message-Id: <76f4dea0-9a39-4238-a213-0167477f5d54@app.fastmail.com>
-In-Reply-To: <63da97b5.3V1HSQEat507LFIr%lkp@intel.com>
-References: <63da97b5.3V1HSQEat507LFIr%lkp@intel.com>
-Date:   Thu, 02 Feb 2023 11:37:20 +1030
-From:   "Andrew Jeffery" <andrew@aj.id.au>
-To:     "Neal Liu" <neal_liu@aspeedtech.com>
-Cc:     "kbuild test robot" <lkp@intel.com>,
-        "Andrew Morton" <akpm@linux-foundation.org>,
-        devicetree@vger.kernel.org, linux-aspeed@lists.ozlabs.org,
-        linux-arm-msm@vger.kernel.org, amd-gfx@lists.freedesktop.org,
-        "Linux Memory Management List" <linux-mm@kvack.org>,
-        kvmarm@lists.linux.dev, linux-riscv@lists.infradead.org,
-        kvmarm@lists.cs.columbia.edu, linux-arm-kernel@lists.infradead.org,
-        linux-trace-kernel@vger.kernel.org
-Subject: Re: [linux-next:master] BUILD REGRESSION
- 66eee64b235411d512bed4d672c2d00683239daf
-Content-Type: text/plain
+        Wed, 1 Feb 2023 20:24:28 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 478B36953C;
+        Wed,  1 Feb 2023 17:24:25 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id C8723619A5;
+        Thu,  2 Feb 2023 01:24:24 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 06833C433D2;
+        Thu,  2 Feb 2023 01:24:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1675301064;
+        bh=0olKIEXlGYrwFqAEVWyZ4+1JT7fDrX0LKVYxyS71g94=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=CdFpLw1Eolk1Uo6H6TSxuS+L3IciPSn7VYzv1ZUKrYTX1irXDQeUUZjDLnTLhZ4Ar
+         Nmc1iQbxgLFYf5Rt7uj+ZLYCvz0BUP/K6XbEaZPYg1kE7k2pGXAlAJbPVrKwqTAQZ4
+         Zq3ABZ4p8xjAtumTCoJvz9lVdOFeJ16iZa6bFTDwuVRDnHj8THZg0YpXCpkyTDaUN+
+         e0CUu/lMKA+5tYTRmJRf2JGoAc10uGFn//eEh5xi3TukMumfEMKCwP1OpzJ7pUfv8z
+         s+stTvX5DqzWZ71kYEddlIGJhcNj7KF78ms3f0+k5VqfzsoUlfgZNTrda8KfD6Ffc8
+         byMvqTaRV19FQ==
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id 86159405BE; Wed,  1 Feb 2023 22:24:21 -0300 (-03)
+Date:   Wed, 1 Feb 2023 22:24:21 -0300
+From:   Arnaldo Carvalho de Melo <acme@kernel.org>
+To:     Ross Zwisler <zwisler@chromium.org>
+Cc:     linux-kernel@vger.kernel.org, Ross Zwisler <zwisler@google.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        linux-trace-kernel@vger.kernel.org, Ingo Molnar <mingo@redhat.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        linux-perf-users@vger.kernel.org
+Subject: Re: [PATCH 4/9] perf docs: use canonical ftrace path
+Message-ID: <Y9sQxX70vviNj+mn@kernel.org>
+References: <20230130181915.1113313-1-zwisler@google.com>
+ <20230130181915.1113313-5-zwisler@google.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230130181915.1113313-5-zwisler@google.com>
+X-Url:  http://acmel.wordpress.com
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-Hi Neal,
+Em Mon, Jan 30, 2023 at 11:19:10AM -0700, Ross Zwisler escreveu:
+> The canonical location for the tracefs filesystem is at /sys/kernel/tracing.
+> 
+> But, from Documentation/trace/ftrace.rst:
+> 
+>   Before 4.1, all ftrace tracing control files were within the debugfs
+>   file system, which is typically located at /sys/kernel/debug/tracing.
+>   For backward compatibility, when mounting the debugfs file system,
+>   the tracefs file system will be automatically mounted at:
+> 
+>   /sys/kernel/debug/tracing
+> 
+> A few spots in the perf docs still refer to this older debugfs path, so
+> let's update them to avoid confusion.
 
-On Thu, 2 Feb 2023, at 03:17, kernel test robot wrote:
-> tree/branch: 
-> https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git 
-> master
-> branch HEAD: 66eee64b235411d512bed4d672c2d00683239daf  Add linux-next 
-> specific files for 20230201
->
->
-> Unverified Error/Warning (likely false positive, please contact us if 
-> interested):
->
-> drivers/crypto/aspeed/aspeed-acry.c:295:37: sparse: sparse: incorrect 
-> type in assignment (different base types)
-> drivers/crypto/aspeed/aspeed-acry.c:305:28: sparse: sparse: cast 
-> removes address space '__iomem' of expression
-> drivers/crypto/aspeed/aspeed-acry.c:606:24: sparse: sparse: symbol 
-> 'aspeed_acry_akcipher_algs' was not declared. Should it be static?
+Thanks, applied.
 
-Can you please look into these issues with the ACRY driver?
+- Arnaldo
 
-Cheers,
-
-Andrew
-
->
-> elapsed time: 722m
->
-> configs tested: 69
-> configs skipped: 2
->
-> gcc tested configs:
-> x86_64                          rhel-8.3-func
-> x86_64                    rhel-8.3-kselftests
-> ia64                             allmodconfig
-> x86_64                            allnoconfig
-> um                             i386_defconfig
-> um                           x86_64_defconfig
-> arc                                 defconfig
-> i386                                defconfig
-> x86_64                              defconfig
-> alpha                               defconfig
-> arm                                 defconfig
-> mips                             allyesconfig
-> x86_64                           rhel-8.3-syz
-> x86_64               randconfig-a001-20230130
-> x86_64                         rhel-8.3-kunit
-> x86_64               randconfig-a003-20230130
-> x86_64                           rhel-8.3-bpf
-> powerpc                           allnoconfig
-> x86_64               randconfig-a004-20230130
-> x86_64                               rhel-8.3
-> x86_64               randconfig-a002-20230130
-> powerpc                          allmodconfig
-> sh                               allmodconfig
-> x86_64               randconfig-a006-20230130
-> x86_64                           allyesconfig
-> i386                          randconfig-a001
-> x86_64                           rhel-8.3-kvm
-> i386                          randconfig-a003
-> x86_64               randconfig-a005-20230130
-> arm64                            allyesconfig
-> i386                             allyesconfig
-> i386                          randconfig-a005
-> arc                  randconfig-r043-20230129
-> i386                          randconfig-c001
-> arm                              allyesconfig
-> s390                                defconfig
-> s390                             allmodconfig
-> arm                  randconfig-r046-20230129
-> arm                  randconfig-r046-20230130
-> s390                             allyesconfig
-> arc                  randconfig-r043-20230130
-> m68k                             allyesconfig
-> m68k                             allmodconfig
-> alpha                            allyesconfig
-> arc                              allyesconfig
->
-> clang tested configs:
-> x86_64                          rhel-8.3-rust
-> x86_64               randconfig-a012-20230130
-> x86_64               randconfig-a013-20230130
-> x86_64               randconfig-a011-20230130
-> x86_64               randconfig-a014-20230130
-> i386                 randconfig-a013-20230130
-> i386                          randconfig-a002
-> i386                 randconfig-a012-20230130
-> i386                 randconfig-a014-20230130
-> i386                          randconfig-a004
-> x86_64               randconfig-a015-20230130
-> i386                 randconfig-a015-20230130
-> x86_64               randconfig-a016-20230130
-> i386                 randconfig-a011-20230130
-> hexagon              randconfig-r041-20230129
-> i386                 randconfig-a016-20230130
-> riscv                randconfig-r042-20230129
-> i386                          randconfig-a006
-> riscv                randconfig-r042-20230130
-> hexagon              randconfig-r045-20230130
-> hexagon              randconfig-r041-20230130
-> hexagon              randconfig-r045-20230129
-> s390                 randconfig-r044-20230129
-> s390                 randconfig-r044-20230130
->
+ 
+> Signed-off-by: Ross Zwisler <zwisler@google.com>
+> ---
+>  tools/perf/Documentation/perf-list.txt          | 2 +-
+>  tools/perf/Documentation/perf-script-perl.txt   | 2 +-
+>  tools/perf/Documentation/perf-script-python.txt | 4 ++--
+>  3 files changed, 4 insertions(+), 4 deletions(-)
+> 
+> diff --git a/tools/perf/Documentation/perf-list.txt b/tools/perf/Documentation/perf-list.txt
+> index 57384a97c04f..6c83459d3192 100644
+> --- a/tools/perf/Documentation/perf-list.txt
+> +++ b/tools/perf/Documentation/perf-list.txt
+> @@ -228,7 +228,7 @@ This can be overridden by setting the kernel.perf_event_paranoid
+>  sysctl to -1, which allows non root to use these events.
+>  
+>  For accessing trace point events perf needs to have read access to
+> -/sys/kernel/debug/tracing, even when perf_event_paranoid is in a relaxed
+> +/sys/kernel/tracing, even when perf_event_paranoid is in a relaxed
+>  setting.
+>  
+>  TRACING
+> diff --git a/tools/perf/Documentation/perf-script-perl.txt b/tools/perf/Documentation/perf-script-perl.txt
+> index fa4f39d305a7..5b479f5e62ff 100644
+> --- a/tools/perf/Documentation/perf-script-perl.txt
+> +++ b/tools/perf/Documentation/perf-script-perl.txt
+> @@ -55,7 +55,7 @@ Traces meant to be processed using a script should be recorded with
+>  the above option: -a to enable system-wide collection.
+>  
+>  The format file for the sched_wakeup event defines the following fields
+> -(see /sys/kernel/debug/tracing/events/sched/sched_wakeup/format):
+> +(see /sys/kernel/tracing/events/sched/sched_wakeup/format):
+>  
+>  ----
+>   format:
+> diff --git a/tools/perf/Documentation/perf-script-python.txt b/tools/perf/Documentation/perf-script-python.txt
+> index cf4b7f4b625a..6a8581012e16 100644
+> --- a/tools/perf/Documentation/perf-script-python.txt
+> +++ b/tools/perf/Documentation/perf-script-python.txt
+> @@ -319,7 +319,7 @@ So those are the essential steps in writing and running a script.  The
+>  process can be generalized to any tracepoint or set of tracepoints
+>  you're interested in - basically find the tracepoint(s) you're
+>  interested in by looking at the list of available events shown by
+> -'perf list' and/or look in /sys/kernel/debug/tracing/events/ for
+> +'perf list' and/or look in /sys/kernel/tracing/events/ for
+>  detailed event and field info, record the corresponding trace data
+>  using 'perf record', passing it the list of interesting events,
+>  generate a skeleton script using 'perf script -g python' and modify the
+> @@ -449,7 +449,7 @@ Traces meant to be processed using a script should be recorded with
+>  the above option: -a to enable system-wide collection.
+>  
+>  The format file for the sched_wakeup event defines the following fields
+> -(see /sys/kernel/debug/tracing/events/sched/sched_wakeup/format):
+> +(see /sys/kernel/tracing/events/sched/sched_wakeup/format):
+>  
+>  ----
+>   format:
 > -- 
-> 0-DAY CI Kernel Test Service
-> https://github.com/intel/lkp-tests
+> 2.39.1.456.gfc5497dd1b-goog
+> 
+
+-- 
+
+- Arnaldo
