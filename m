@@ -2,143 +2,162 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D7C99C636CD
-	for <linux-trace-kernel@archiver.kernel.org>; Thu,  2 Feb 2023 01:24:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B85B0C636CD
+	for <linux-trace-kernel@archiver.kernel.org>; Thu,  2 Feb 2023 02:59:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230131AbjBBBY3 (ORCPT
+        id S231479AbjBBC7d (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Wed, 1 Feb 2023 20:24:29 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38242 "EHLO
+        Wed, 1 Feb 2023 21:59:33 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40146 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231129AbjBBBY2 (ORCPT
+        with ESMTP id S231371AbjBBC7b (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Wed, 1 Feb 2023 20:24:28 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 478B36953C;
-        Wed,  1 Feb 2023 17:24:25 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id C8723619A5;
-        Thu,  2 Feb 2023 01:24:24 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 06833C433D2;
-        Thu,  2 Feb 2023 01:24:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1675301064;
-        bh=0olKIEXlGYrwFqAEVWyZ4+1JT7fDrX0LKVYxyS71g94=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=CdFpLw1Eolk1Uo6H6TSxuS+L3IciPSn7VYzv1ZUKrYTX1irXDQeUUZjDLnTLhZ4Ar
-         Nmc1iQbxgLFYf5Rt7uj+ZLYCvz0BUP/K6XbEaZPYg1kE7k2pGXAlAJbPVrKwqTAQZ4
-         Zq3ABZ4p8xjAtumTCoJvz9lVdOFeJ16iZa6bFTDwuVRDnHj8THZg0YpXCpkyTDaUN+
-         e0CUu/lMKA+5tYTRmJRf2JGoAc10uGFn//eEh5xi3TukMumfEMKCwP1OpzJ7pUfv8z
-         s+stTvX5DqzWZ71kYEddlIGJhcNj7KF78ms3f0+k5VqfzsoUlfgZNTrda8KfD6Ffc8
-         byMvqTaRV19FQ==
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 86159405BE; Wed,  1 Feb 2023 22:24:21 -0300 (-03)
-Date:   Wed, 1 Feb 2023 22:24:21 -0300
-From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Ross Zwisler <zwisler@chromium.org>
-Cc:     linux-kernel@vger.kernel.org, Ross Zwisler <zwisler@google.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        linux-trace-kernel@vger.kernel.org, Ingo Molnar <mingo@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH 4/9] perf docs: use canonical ftrace path
-Message-ID: <Y9sQxX70vviNj+mn@kernel.org>
-References: <20230130181915.1113313-1-zwisler@google.com>
- <20230130181915.1113313-5-zwisler@google.com>
+        Wed, 1 Feb 2023 21:59:31 -0500
+Received: from APC01-TYZ-obe.outbound.protection.outlook.com (mail-tyzapc01on2106.outbound.protection.outlook.com [40.107.117.106])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CB42A39B91;
+        Wed,  1 Feb 2023 18:59:21 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=DU7gUFgkMJDkBY2ZpMxKbdKHtWCvyVw1wFkO0mSqVxSHcPd7Avka6hz87s4kvO+c49XchoJg+cFSJ7gHEDdqiHWHuQ1i2HBkzhjA5OYqRt5YK3vq1OjVLNXyuXIAfSb5g4ihj86BQefvCQ37CNaKnLDKdAIu01xXcRTFDWjKR8ib5F/2zA+/wKkpOzyozqH4k1ZlW7yI2ko9KS+DAy8bCHtMysyjubiNMCxBRlOmoLmy3JdupcvHrIW3kKL/8Ji0I3TETsU1iGrp0/XgZBFRcQT0wND9wnn4ybV8UkbkyCLG23MlayJ1Q6k3qvvMlIUXmRLAvzQ7AoW2TonMpsYksw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=NwmYgmsvrXVf/ye8fcTFO0/kkTAM3I7aGPkv3SAs1w0=;
+ b=Va9tgY7wUexHhx9/AMa6K+vgMusZCr5AgtAcufStaHuul9IZbmbbZGcZx0gKHxUNK+0A5Soy57Xpd2XGWNRHE8krYT6buEm2oAOtw5sJZmrMuvFSHGIIWRQXqKshnCx7pQa3G5sR/SWMdnb6NpHm9F2jwcjQpgigjfsd8ufNqRxibfBVEyz0d1umVtNk8EUxIO4g8A7+FqqKFdYZaWrdxN1YPHP5bwKxT9SUKSbmpY0kMnP7AkDhXLv5szCx/s7aG7AKc39ycG6U8s+auEeQdBQalUYUlTSjfQLZsXHeN4/8R38j708k8H/+bgf+c2+YY0Up49lddittl9q4GQt69A==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=aspeedtech.com; dmarc=pass action=none
+ header.from=aspeedtech.com; dkim=pass header.d=aspeedtech.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aspeedtech.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=NwmYgmsvrXVf/ye8fcTFO0/kkTAM3I7aGPkv3SAs1w0=;
+ b=zjdz91GTH3Zv9l0lUjneMtU2oZ/q4WWLy3kTC4u66qJ12lglC3WQlQWF3i0LRm1TFW+HJ8xnpTOdOtGj1NZlRl5FkoyytPrZDkbtW5iE9jV4EzTR9BAn/UORYawFjBeqqEOAVD2YlPJZUuVNHGPOae7BmVsLYsb3aIkQ1tSzS0xJXgWAlPaOTP3UvtMcZqJrnIApa5V/LaGXff4K0//fcf6kxLcStVFcgy3HaQso0xxqo3a7bUKg0c2etgnUtUmUT6y6CG7BS/9ukervD8LBIEOCQzbw36IiynII3SZQdP5K2jUcWPK9FUVld6aBXUWDYnz7IW+wwX1T8C49x03Vgg==
+Received: from TY2PR06MB3213.apcprd06.prod.outlook.com (2603:1096:404:97::16)
+ by SI2PR06MB3929.apcprd06.prod.outlook.com (2603:1096:4:f9::13) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6086.7; Thu, 2 Feb
+ 2023 02:59:19 +0000
+Received: from TY2PR06MB3213.apcprd06.prod.outlook.com
+ ([fe80::b113:70f9:7dc9:543f]) by TY2PR06MB3213.apcprd06.prod.outlook.com
+ ([fe80::b113:70f9:7dc9:543f%7]) with mapi id 15.20.6064.022; Thu, 2 Feb 2023
+ 02:59:19 +0000
+From:   Neal Liu <neal_liu@aspeedtech.com>
+To:     Andrew Jeffery <andrew@aj.id.au>
+CC:     kbuild test robot <lkp@intel.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-aspeed@lists.ozlabs.org" <linux-aspeed@lists.ozlabs.org>,
+        "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>,
+        "amd-gfx@lists.freedesktop.org" <amd-gfx@lists.freedesktop.org>,
+        Linux Memory Management List <linux-mm@kvack.org>,
+        "kvmarm@lists.linux.dev" <kvmarm@lists.linux.dev>,
+        "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>,
+        "kvmarm@lists.cs.columbia.edu" <kvmarm@lists.cs.columbia.edu>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-trace-kernel@vger.kernel.org" 
+        <linux-trace-kernel@vger.kernel.org>
+Subject: RE: [linux-next:master] BUILD REGRESSION
+ 66eee64b235411d512bed4d672c2d00683239daf
+Thread-Topic: [linux-next:master] BUILD REGRESSION
+ 66eee64b235411d512bed4d672c2d00683239daf
+Thread-Index: AQHZNqLYPleILitAVkyvMXcyMi0fNa669sTw
+Date:   Thu, 2 Feb 2023 02:59:18 +0000
+Message-ID: <TY2PR06MB321334CFD4ED1BD4AF97965380D69@TY2PR06MB3213.apcprd06.prod.outlook.com>
+References: <63da97b5.3V1HSQEat507LFIr%lkp@intel.com>
+ <76f4dea0-9a39-4238-a213-0167477f5d54@app.fastmail.com>
+In-Reply-To: <76f4dea0-9a39-4238-a213-0167477f5d54@app.fastmail.com>
+Accept-Language: en-US
+Content-Language: zh-TW
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=aspeedtech.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: TY2PR06MB3213:EE_|SI2PR06MB3929:EE_
+x-ms-office365-filtering-correlation-id: 0000665a-9487-4af9-31d1-08db04c97a6c
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: BKb/ldn1nm1OAwkJG1HF270esNNM7v92acGqv7wuSpZHAd2NtqCjUneNWbyPOoVEE7l/CfVix4kpFhjsdZUYMw0BxCqkcvbnaiiJY3Vq92r3RffwV/8r8wEjVeOcs+3wf/+8/U/imFn0UhlGrzUzsMGQFOD8gwSOrxHJYwXbFzk+KB6dM6Ehct5VjH3ypj9T2ICr8+oAqgUDRJ4pcJ8Wx6mXn6OzrGT6ck6RtUZYPT0XMKcqOHrdPjc2Q8U4q5tPfHyg8dMEG9nU7iDEadup0BZYynv5OWxCnwE5zYCf97BWz8hNnWVHMg6Za5ya411L8JD6IYc+0OyFJ2btp+iiAHJA9J1RqFvRPtuG5YrooLZZEpC018mKFSpYor1xd9d1CEzvSuXA6Oj9XFoNSSsBz+mmbfqRYdZGQhR053c3GuN6DdGTsuUBDDFLBuYeZRAVWsQEjwAQ6vCbNyLAJYdHHPvdrOPkck/Q6HewWlgindNTeajNXYQLwSoN2aCgnnUuO7M1RuMz4lxDPxHeZWq/653ltHLjLA6/YeMrdLrvy02ycEpH1kzPdCDjyRzOEa1ndIFFclmjlz9Rko5p0TMVSmNZaX21zTqWmEFT0J5lHOu20QcO4T8jHba/Ey/2uCNio+gfe9ugF8tB8itlAJYqqipMDlKt2txKDZwx/DSatVxmXdLJKO+2RvNtmBpaqmLcWGnugd03Mw55K3VgDnGatPcqtQuRiV8KMppU+PiVDVg=
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:TY2PR06MB3213.apcprd06.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230025)(136003)(346002)(376002)(396003)(39850400004)(366004)(451199018)(6916009)(8676002)(4326008)(41300700001)(64756008)(66446008)(66556008)(66946007)(66476007)(76116006)(86362001)(38070700005)(54906003)(8936002)(38100700002)(5660300002)(122000001)(7416002)(52536014)(33656002)(316002)(55016003)(9686003)(26005)(71200400001)(186003)(7696005)(2906002)(966005)(83380400001)(478600001)(6506007);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0: =?us-ascii?Q?ElUlFQ0BxtxBRmDV5JTfD1Yp/0OgzJIB1GxO0twWmXi+D82QwQ1wpiuurf3y?=
+ =?us-ascii?Q?Pc5b2kgVDI0oVuvs6CEvgn7hqsDMTSC4xU5wGUB7YPWzG+xJhMrPtzDsbWTC?=
+ =?us-ascii?Q?yCGjQ8Vu90sGEs7I2T/f0INspMZZWviH2AS27HNZtPtz7Zn7ex2bgnFRJ1TB?=
+ =?us-ascii?Q?lvZO49JsU/BGUeq453+mk17NLB+F97FsE4L2FXf7mk+7uHQW6z3Ef8oD7Bdb?=
+ =?us-ascii?Q?QpAh0m+V3IeVN/HBPv0Wvy3kLJiwKFVlN0HeweUSB5pBRwlAgpdhKQxWMQGm?=
+ =?us-ascii?Q?/8R+Q1VUcl/+CuBt6rXrPg3THhtOoC2GFemU3BSQ/rJCo5eQFQB0iGWVO5by?=
+ =?us-ascii?Q?DLXbjx+LqWDDMLg2MHa4nstjmJreDpo4B/3Pl79QdjL/TmfvOeEHAbNv56jz?=
+ =?us-ascii?Q?3DMoKpOMWeffgjOPrOzYlXzE8SbHFHf9pAowEuvNVjvHwKrHGgXnKAEhDNHj?=
+ =?us-ascii?Q?YeGE9VwEki9P44nTkpz8+xOLIm7IEy5t1uulZhDGBMRkCfZkRHiwqzoXBsfY?=
+ =?us-ascii?Q?AVKGXPPsjNPRl/agfccuid9X/Dt5k+1VLYqlYKDyrGzi7nrkZz0/dn6DduHS?=
+ =?us-ascii?Q?FBmHKEgJofTrrtPekwg1iPw+kwvXr/Bbian0zkMvKkfaClf4mCzuVMHiDg5S?=
+ =?us-ascii?Q?P4JObLzkqxIgQchXq7+oDD5zLKSNehXGSQ+avDbws4S3zvyhwg/QlsnGVS0Z?=
+ =?us-ascii?Q?c4JSmzPJDmIIBfDuaHMLjf1nPVKvDUTSnQUgoSkxNw6Bq4crJAE6Hk86vTTx?=
+ =?us-ascii?Q?JguY04ozKr6KuqJ3KqajDoj7gQZlDeV2tDhXvevaBl0ECtz8PEz1GaJaiF3W?=
+ =?us-ascii?Q?pf5sFMudFH2kgpQBqOvAZ7aWcB9kIpkDA/406yUI+kFp1rpLwqaoTztQ0MEw?=
+ =?us-ascii?Q?jozUmq5DNG3ADAUnMV3JBEFTrkkAUiRAguBMp4FuhRqfMkn9J9vYdww7MZDT?=
+ =?us-ascii?Q?hTueL2Mnz1GZSPd1tCpX9pUQdf/DCXpLGMnUeU1NaMeOOzpj1Z4+PWcZH04Z?=
+ =?us-ascii?Q?J6vqsx2tfvgzCgoz6LyfSn9yI/qz86XOgpabKghDnjUQ8jo5f55kwL02Ppm6?=
+ =?us-ascii?Q?yBVdbyDVfvOmTZav2t4Ue8lH/mSLgstylxZW+GTUG8ZfFvYg6msdhOMsJ+ZB?=
+ =?us-ascii?Q?hw30U1hPsqkm2brR7a6GSt+tpuL7MTLIw3SY19yPi1oEo0fNVb01wOXAY7CV?=
+ =?us-ascii?Q?d+ehLh+XS+2oD8Z3TrYbGnJZnbA/ve05ZGdgzwrIj+KiFK6o9tyJx3dYXTzq?=
+ =?us-ascii?Q?eOFec54oIcQsdp6NdIFal8b1kyo7kpoPhyc1EGEvLjK/0+n/Il8f2BuNuSix?=
+ =?us-ascii?Q?EsGahXMmYR4DPfY8J5LtkSMig0ECxriuwkEbbDzO3/g4plK2KdPAcjf9RChO?=
+ =?us-ascii?Q?K0sCfrzCmQqm8SdIpPIHk2o4p6ophqjbIiGfiisf9CiVVLatzDCebPZrMgeP?=
+ =?us-ascii?Q?ozKdP4XqxF/3K31B8QuDyYNdIjEoxp5ggGKbZ5tPiKp1fQCKm+WWJ3jekr6r?=
+ =?us-ascii?Q?1ZAg/1hvC8KH1So8GHKBCKrfmqWYH9MQmlVVfKGbh0EO+LnlDIcaCA0lHtQY?=
+ =?us-ascii?Q?bvQmhs/ue8o93QAceZtCQt4KSbhLaW9V4UA1ZPry?=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230130181915.1113313-5-zwisler@google.com>
-X-Url:  http://acmel.wordpress.com
+X-OriginatorOrg: aspeedtech.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: TY2PR06MB3213.apcprd06.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 0000665a-9487-4af9-31d1-08db04c97a6c
+X-MS-Exchange-CrossTenant-originalarrivaltime: 02 Feb 2023 02:59:19.1437
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 43d4aa98-e35b-4575-8939-080e90d5a249
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: Zi3FHqtDe6U3xsU9SGyghQmZl5G1QkFgVNgiBJgiosg03YiIbL4vAZtIRQdTTM4CbmblJjjWH635XwZsdReyPw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SI2PR06MB3929
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-Em Mon, Jan 30, 2023 at 11:19:10AM -0700, Ross Zwisler escreveu:
-> The canonical location for the tracefs filesystem is at /sys/kernel/tracing.
-> 
-> But, from Documentation/trace/ftrace.rst:
-> 
->   Before 4.1, all ftrace tracing control files were within the debugfs
->   file system, which is typically located at /sys/kernel/debug/tracing.
->   For backward compatibility, when mounting the debugfs file system,
->   the tracefs file system will be automatically mounted at:
-> 
->   /sys/kernel/debug/tracing
-> 
-> A few spots in the perf docs still refer to this older debugfs path, so
-> let's update them to avoid confusion.
+> Hi Neal,
+>=20
+> On Thu, 2 Feb 2023, at 03:17, kernel test robot wrote:
+> > tree/branch:
+> > https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git
+> > master
+> > branch HEAD: 66eee64b235411d512bed4d672c2d00683239daf  Add
+> linux-next
+> > specific files for 20230201
+> >
+> >
+> > Unverified Error/Warning (likely false positive, please contact us if
+> > interested):
+> >
+> > drivers/crypto/aspeed/aspeed-acry.c:295:37: sparse: sparse: incorrect
+> > type in assignment (different base types)
+> > drivers/crypto/aspeed/aspeed-acry.c:305:28: sparse: sparse: cast
+> > removes address space '__iomem' of expression
+> > drivers/crypto/aspeed/aspeed-acry.c:606:24: sparse: sparse: symbol
+> > 'aspeed_acry_akcipher_algs' was not declared. Should it be static?
+>=20
+> Can you please look into these issues with the ACRY driver?
+>=20
+> Cheers,
+>=20
+> Andrew
 
-Thanks, applied.
+I just send patch to fix the first 2 warnings, and the last one warning is =
+already fixed by another patch.
+[PATCH-next] crypto: aspeed: fix type warnings
+https://patchwork.ozlabs.org/project/linux-aspeed/patch/20230119014859.1900=
+136-1-yangyingliang@huawei.com/
+Thanks
 
-- Arnaldo
-
- 
-> Signed-off-by: Ross Zwisler <zwisler@google.com>
-> ---
->  tools/perf/Documentation/perf-list.txt          | 2 +-
->  tools/perf/Documentation/perf-script-perl.txt   | 2 +-
->  tools/perf/Documentation/perf-script-python.txt | 4 ++--
->  3 files changed, 4 insertions(+), 4 deletions(-)
-> 
-> diff --git a/tools/perf/Documentation/perf-list.txt b/tools/perf/Documentation/perf-list.txt
-> index 57384a97c04f..6c83459d3192 100644
-> --- a/tools/perf/Documentation/perf-list.txt
-> +++ b/tools/perf/Documentation/perf-list.txt
-> @@ -228,7 +228,7 @@ This can be overridden by setting the kernel.perf_event_paranoid
->  sysctl to -1, which allows non root to use these events.
->  
->  For accessing trace point events perf needs to have read access to
-> -/sys/kernel/debug/tracing, even when perf_event_paranoid is in a relaxed
-> +/sys/kernel/tracing, even when perf_event_paranoid is in a relaxed
->  setting.
->  
->  TRACING
-> diff --git a/tools/perf/Documentation/perf-script-perl.txt b/tools/perf/Documentation/perf-script-perl.txt
-> index fa4f39d305a7..5b479f5e62ff 100644
-> --- a/tools/perf/Documentation/perf-script-perl.txt
-> +++ b/tools/perf/Documentation/perf-script-perl.txt
-> @@ -55,7 +55,7 @@ Traces meant to be processed using a script should be recorded with
->  the above option: -a to enable system-wide collection.
->  
->  The format file for the sched_wakeup event defines the following fields
-> -(see /sys/kernel/debug/tracing/events/sched/sched_wakeup/format):
-> +(see /sys/kernel/tracing/events/sched/sched_wakeup/format):
->  
->  ----
->   format:
-> diff --git a/tools/perf/Documentation/perf-script-python.txt b/tools/perf/Documentation/perf-script-python.txt
-> index cf4b7f4b625a..6a8581012e16 100644
-> --- a/tools/perf/Documentation/perf-script-python.txt
-> +++ b/tools/perf/Documentation/perf-script-python.txt
-> @@ -319,7 +319,7 @@ So those are the essential steps in writing and running a script.  The
->  process can be generalized to any tracepoint or set of tracepoints
->  you're interested in - basically find the tracepoint(s) you're
->  interested in by looking at the list of available events shown by
-> -'perf list' and/or look in /sys/kernel/debug/tracing/events/ for
-> +'perf list' and/or look in /sys/kernel/tracing/events/ for
->  detailed event and field info, record the corresponding trace data
->  using 'perf record', passing it the list of interesting events,
->  generate a skeleton script using 'perf script -g python' and modify the
-> @@ -449,7 +449,7 @@ Traces meant to be processed using a script should be recorded with
->  the above option: -a to enable system-wide collection.
->  
->  The format file for the sched_wakeup event defines the following fields
-> -(see /sys/kernel/debug/tracing/events/sched/sched_wakeup/format):
-> +(see /sys/kernel/tracing/events/sched/sched_wakeup/format):
->  
->  ----
->   format:
-> -- 
-> 2.39.1.456.gfc5497dd1b-goog
-> 
-
--- 
-
-- Arnaldo
+-Neal
