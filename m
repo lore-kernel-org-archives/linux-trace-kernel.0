@@ -2,142 +2,167 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 36A43C05027
-	for <linux-trace-kernel@archiver.kernel.org>; Thu,  2 Feb 2023 10:52:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A5A59C05027
+	for <linux-trace-kernel@archiver.kernel.org>; Thu,  2 Feb 2023 12:50:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232675AbjBBKwH (ORCPT
+        id S232234AbjBBMuv (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Thu, 2 Feb 2023 05:52:07 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52504 "EHLO
+        Thu, 2 Feb 2023 07:50:51 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51450 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232822AbjBBKwD (ORCPT
+        with ESMTP id S230233AbjBBMuu (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Thu, 2 Feb 2023 05:52:03 -0500
-Received: from www62.your-server.de (www62.your-server.de [213.133.104.62])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8CAEC8A7EA;
-        Thu,  2 Feb 2023 02:51:31 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=iogearbox.net; s=default2302; h=Content-Transfer-Encoding:Content-Type:
-        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
-        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID;
-        bh=Z9tFqTf2Ygy2QKomIll6AMhCHGv+ELQEI5/5r7xbC98=; b=B7BCJJTSa/NJ20xZKC4ZGqFelI
-        hh0+teQkrP82TPAepMGQtXBKSjSPAemWCh1aSnHNq0X0y4UaIn9iah2oOAxc1TOM2Excq27JpmOCa
-        NNPSEkUB2cLwst1l3kYB/v2kMN9MWj0zrEZOaAV5FRxomHpUweq8IM6+qzhLPANSbjTGWfRzV+z2u
-        8OkiMKuBTSqxWjqJ3j4jX8t2jILK1iUkwtgDlUrO6apJKSfr6k/MGZpdZqtCfLBPQNSnAwRu2uoUg
-        +towGE9bBCbv2LxMS9tWJrzgs9Y4xdTbZe0M0wrclnj6KEIGG8XI80LbjHd1i3j5wiA7okmjr6ClC
-        6RuAx+3g==;
-Received: from sslproxy03.your-server.de ([88.198.220.132])
-        by www62.your-server.de with esmtpsa  (TLS1.3) tls TLS_AES_256_GCM_SHA384
-        (Exim 4.94.2)
-        (envelope-from <daniel@iogearbox.net>)
-        id 1pNXAg-000EyE-56; Thu, 02 Feb 2023 11:50:26 +0100
-Received: from [85.1.206.226] (helo=linux.home)
-        by sslproxy03.your-server.de with esmtpsa (TLSv1.3:TLS_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <daniel@iogearbox.net>)
-        id 1pNXAf-000O2J-Ci; Thu, 02 Feb 2023 11:50:25 +0100
-Subject: Re: [PATCH 0/8] Add ftrace direct call for arm64
-To:     Xu Kuohai <xukuohai@huawei.com>,
-        Florent Revest <revest@chromium.org>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-trace-kernel@vger.kernel.org, bpf@vger.kernel.org
-Cc:     catalin.marinas@arm.com, will@kernel.org, rostedt@goodmis.org,
-        mhiramat@kernel.org, mark.rutland@arm.com, ast@kernel.org,
-        andrii@kernel.org, kpsingh@kernel.org, jolsa@kernel.org,
-        xukuohai@huaweicloud.com
-References: <20230201163420.1579014-1-revest@chromium.org>
- <85af713d-00fe-b113-1331-1a44480c016f@huawei.com>
-From:   Daniel Borkmann <daniel@iogearbox.net>
-Message-ID: <eacfbd23-da92-3572-7f57-3de425117c8a@iogearbox.net>
-Date:   Thu, 2 Feb 2023 11:50:24 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        Thu, 2 Feb 2023 07:50:50 -0500
+Received: from mail-wm1-x32d.google.com (mail-wm1-x32d.google.com [IPv6:2a00:1450:4864:20::32d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 29C3540D2
+        for <linux-trace-kernel@vger.kernel.org>; Thu,  2 Feb 2023 04:50:49 -0800 (PST)
+Received: by mail-wm1-x32d.google.com with SMTP id bg13-20020a05600c3c8d00b003d9712b29d2so3651468wmb.2
+        for <linux-trace-kernel@vger.kernel.org>; Thu, 02 Feb 2023 04:50:49 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=wUjgR4xHlaACr4TQRqFooxU8k+EYMOnvAtOsfvgaNvM=;
+        b=Pnet4SXIg9jq/fxFR7ECFSKcefF5q3TM/kUH+NVSyJgFg7kB3bvTSmZ+JJivhifa4k
+         6R1g3NvnAkZGKCmqGtz7HrjSHRv8xAMQZaGjI14aPdCKfgAS6J0rebTWqmCGWriCmdSg
+         SbsmR5GmJapD6fxtxovg0t+yLKq62BNHZsUADyC9jf8AJn5AHtrDRj9lwGjtlIBufYhW
+         hz4ELUKCQsHOv9MGmY++pDBUcIPQoYKPdhc4UBi7qtpBxm54iIL//4OiGRKZ2pkoyNcY
+         WZzH5lTcQELvq3/UVyvYSCXDd248qniLQ7g4MYdDSBP60pv3TufnADlZrZWWO4vfYf8L
+         3o8w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=wUjgR4xHlaACr4TQRqFooxU8k+EYMOnvAtOsfvgaNvM=;
+        b=DOyvEiXUVExUMDJk3AZmRkxafIt1O7ag13Zlce24wSEPp7jmWHPuY7DdopnvifZvUi
+         2a5yXvYw87ewJ7q2LA+YZ0hhMN3b8HbOoIyq2qg5+BSgtFSLTQiUjk39tSxQkSkbAGJw
+         eMSTLkwzIBR+8qbwGI8erhFDQ+WNqHxDf2on/oaps2AcVgFVdcqiyWztHdVTO9XXvtlH
+         yT4R+ckTbvBt4osrb38AZe2K9ujMrMs0zlk2rOJ4iviHC9aAtESwVF6NDjIbjmk6atPb
+         MBjEsjEyf4VDFIBTKYSYKTN+QmqtRprjZgPZT0BIbfoVM9mdr2DjbMxd/F8/e84upJFv
+         iKBg==
+X-Gm-Message-State: AO0yUKUGamw2C3W/lx7NGIejFXhgGYDdcbXLfSagZ/YH0lp59pjABnyD
+        t04C0XzOwsbnu0d//od5zD6fMFtlSQU=
+X-Google-Smtp-Source: AK7set8Npdom/6Ab01rx/ZQwXV6xEXnCB6T8XBiXq12kydnC71iL3vOvk2mGVCIYTt9NkXGqMxXaeg==
+X-Received: by 2002:a05:600c:4f10:b0:3dc:58b9:83f7 with SMTP id l16-20020a05600c4f1000b003dc58b983f7mr5976636wmq.35.1675342247692;
+        Thu, 02 Feb 2023 04:50:47 -0800 (PST)
+Received: from localhost ([102.36.222.112])
+        by smtp.gmail.com with ESMTPSA id t22-20020a05600c41d600b003de664d4c14sm4526945wmh.36.2023.02.02.04.50.40
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 02 Feb 2023 04:50:47 -0800 (PST)
+Date:   Thu, 2 Feb 2023 15:50:20 +0300
+From:   Dan Carpenter <error27@gmail.com>
+To:     rostedt@goodmis.org
+Cc:     linux-trace-kernel@vger.kernel.org
+Subject: [bug report] tracing: Allow synthetic events to pass around
+ stacktraces
+Message-ID: <Y9uxjD7jwHbjJB1G@kili>
 MIME-Version: 1.0
-In-Reply-To: <85af713d-00fe-b113-1331-1a44480c016f@huawei.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-Authenticated-Sender: daniel@iogearbox.net
-X-Virus-Scanned: Clear (ClamAV 0.103.7/26800/Thu Feb  2 09:47:56 2023)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On 2/2/23 9:36 AM, Xu Kuohai wrote:
-> On 2/2/2023 12:34 AM, Florent Revest wrote:
->> This series adds ftrace direct call support to arm64.
->> This makes BPF tracing programs (fentry/fexit/fmod_ret/lsm) work on arm64.
->>
->> It is meant to apply on top of the arm64 tree which contains Mark Rutland's
->> series on CALL_OPS [1] under the for-next/ftrace tag.
->> > The first three patches consolidate the two existing ftrace APIs for registering
->> direct calls. They are split to make the reviewers lives easier but if it'd be a
->> preferred style, I'd be happy to squash them in the next revision.
->> Currently, there is both a _ftrace_direct and _ftrace_direct_multi API. Apart
->> from samples and selftests, there are no users of the _ftrace_direct API left
->> in-tree so this deletes it and renames the _ftrace_direct_multi API to
->> _ftrace_direct for simplicity.
->>
->> The main benefit of this refactoring is that, with the API that's left, an
->> ftrace_ops backing a direct call will only ever point to one direct call. We can
->> therefore store the direct called trampoline address in the ops (patch 4) and
->> look it up from the ftrace trampoline on arm64 (patch 7) in the case when the
->> destination would be out of reach of a BL instruction at the ftrace callsite.
->> (in this case, ftrace_caller acts as a lightweight intermediary trampoline)
->>
->> This series has been tested on both arm64 and x86_64 with:
->> 1- CONFIG_FTRACE_SELFTEST (cf: patch 6)
->> 2- samples/ftrace/*.ko (cf: patch 8)
->> 3- tools/testing/selftests/bpf/test_progs (both -t lsm and -t fentry_fexit)
+Hello Steven Rostedt (Google),
 
-Thanks a ton for working on this!
+The patch 00cf3d672a9d: "tracing: Allow synthetic events to pass
+around stacktraces" from Jan 17, 2023, leads to the following Smatch
+static checker warning:
 
-> so it's time to update DENYLIST.aarch64 to unblock tests that failed due to lack of direct call.
+	kernel/trace/trace_events_synth.c:567 trace_event_raw_event_synth()
+	warn: inconsistent indenting
 
-+1, with regards to logistics, if possible it might be nice to eventually gets
-this into a feature branch on arm64 tree, then we could pull it too from there
-for bpf-next and hash out the BPF CI bits for arm64 in the meantime.
+kernel/trace/trace_events_synth.c
+    515 static notrace void trace_event_raw_event_synth(void *__data,
+    516                                                 u64 *var_ref_vals,
+    517                                                 unsigned int *var_ref_idx)
+    518 {
+    519         unsigned int i, n_u64, val_idx, len, data_size = 0;
+    520         struct trace_event_file *trace_file = __data;
+    521         struct synth_trace_event *entry;
+    522         struct trace_event_buffer fbuffer;
+    523         struct trace_buffer *buffer;
+    524         struct synth_event *event;
+    525         int fields_size = 0;
+    526 
+    527         event = trace_file->event_call->data;
+    528 
+    529         if (trace_trigger_soft_disabled(trace_file))
+    530                 return;
+    531 
+    532         fields_size = event->n_u64 * sizeof(u64);
+    533 
+    534         for (i = 0; i < event->n_dynamic_fields; i++) {
+    535                 unsigned int field_pos = event->dynamic_fields[i]->field_pos;
+    536                 char *str_val;
+    537 
+    538                 val_idx = var_ref_idx[field_pos];
+    539                 str_val = (char *)(long)var_ref_vals[val_idx];
+    540 
+    541                 len = kern_fetch_store_strlen((unsigned long)str_val);
+    542 
+    543                 fields_size += len;
+    544         }
+    545 
+    546         /*
+    547          * Avoid ring buffer recursion detection, as this event
+    548          * is being performed within another event.
+    549          */
+    550         buffer = trace_file->tr->array_buffer.buffer;
+    551         ring_buffer_nest_start(buffer);
+    552 
+    553         entry = trace_event_buffer_reserve(&fbuffer, trace_file,
+    554                                            sizeof(*entry) + fields_size);
+    555         if (!entry)
+    556                 goto out;
+    557 
+    558         for (i = 0, n_u64 = 0; i < event->n_fields; i++) {
+    559                 val_idx = var_ref_idx[i];
+    560                 if (event->fields[i]->is_string) {
+    561                         char *str_val = (char *)(long)var_ref_vals[val_idx];
+    562 
+    563                         len = trace_string(entry, event, str_val,
+    564                                            event->fields[i]->is_dynamic,
+    565                                            data_size, &n_u64);
+    566                         data_size += len; /* only dynamic string increments */
+--> 567                 } if (event->fields[i]->is_stack) {
 
->> This follows up on prior art by Xu Kuohai [2].
->> The implementation here is totally different but the fix for ftrace selftests
->> (patch 6) is a trivial rebase of a patch originally by Xu so I kept his
->> authorship and trailers untouched on that patch, I hope that's ok. >
-> 
-> that's ok for me, thanks.
-> 
->> 1: https://lore.kernel.org/all/20230123134603.1064407-1-mark.rutland@arm.com/
->> 2: https://lore.kernel.org/bpf/20220913162732.163631-1-xukuohai@huaweicloud.com/
->>
->> Florent Revest (7):
->>    ftrace: Replace uses of _ftrace_direct APIs with _ftrace_direct_multi
->>    ftrace: Remove the legacy _ftrace_direct API
->>    ftrace: Rename _ftrace_direct_multi APIs to _ftrace_direct APIs
->>    ftrace: Store direct called addresses in their ops
->>    ftrace: Make DIRECT_CALLS work WITH_ARGS and !WITH_REGS
->>    arm64: ftrace: Add direct call support
->>    arm64: ftrace: Add direct called trampoline samples support
->>
->> Xu Kuohai (1):
->>    ftrace: Fix dead loop caused by direct call in ftrace selftest
->>
->>   arch/arm64/Kconfig                          |   4 +
->>   arch/arm64/include/asm/ftrace.h             |  24 ++
->>   arch/arm64/kernel/asm-offsets.c             |   6 +
->>   arch/arm64/kernel/entry-ftrace.S            |  70 +++-
->>   arch/arm64/kernel/ftrace.c                  |  36 +-
->>   include/linux/ftrace.h                      |  51 +--
->>   kernel/bpf/trampoline.c                     |  14 +-
->>   kernel/trace/Kconfig                        |   2 +-
->>   kernel/trace/ftrace.c                       | 433 +-------------------
->>   kernel/trace/trace_selftest.c               |  14 +-
->>   samples/Kconfig                             |   2 +-
->>   samples/ftrace/ftrace-direct-modify.c       |  41 +-
->>   samples/ftrace/ftrace-direct-multi-modify.c |  44 +-
->>   samples/ftrace/ftrace-direct-multi.c        |  28 +-
->>   samples/ftrace/ftrace-direct-too.c          |  35 +-
->>   samples/ftrace/ftrace-direct.c              |  33 +-
->>   16 files changed, 333 insertions(+), 504 deletions(-)
->>
-> 
+else if intended?
 
+    568                         long *stack = (long *)(long)var_ref_vals[val_idx];
+    569 
+    570                         len = trace_stack(entry, event, stack,
+    571                                            data_size, &n_u64);
+    572                         data_size += len;
+    573                 } else {
+    574                         struct synth_field *field = event->fields[i];
+    575                         u64 val = var_ref_vals[val_idx];
+    576 
+    577                         switch (field->size) {
+    578                         case 1:
+    579                                 *(u8 *)&entry->fields[n_u64] = (u8)val;
+    580                                 break;
+    581 
+    582                         case 2:
+    583                                 *(u16 *)&entry->fields[n_u64] = (u16)val;
+    584                                 break;
+    585 
+    586                         case 4:
+    587                                 *(u32 *)&entry->fields[n_u64] = (u32)val;
+    588                                 break;
+    589 
+    590                         default:
+    591                                 entry->fields[n_u64] = val;
+    592                                 break;
+    593                         }
+    594                         n_u64++;
+    595                 }
+    596         }
+    597 
+    598         trace_event_buffer_commit(&fbuffer);
+    599 out:
+    600         ring_buffer_nest_end(buffer);
+    601 }
+
+regards,
+dan carpenter
