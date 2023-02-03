@@ -2,119 +2,86 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 32DE9C63797
-	for <linux-trace-kernel@archiver.kernel.org>; Fri,  3 Feb 2023 08:58:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9870DC636CC
+	for <linux-trace-kernel@archiver.kernel.org>; Fri,  3 Feb 2023 09:21:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232234AbjBCI6T (ORCPT
+        id S232616AbjBCJVh (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Fri, 3 Feb 2023 03:58:19 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54420 "EHLO
+        Fri, 3 Feb 2023 04:21:37 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37898 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232124AbjBCI6R (ORCPT
+        with ESMTP id S232661AbjBCJUu (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Fri, 3 Feb 2023 03:58:17 -0500
-Received: from mail-ed1-x52c.google.com (mail-ed1-x52c.google.com [IPv6:2a00:1450:4864:20::52c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 496772196E
-        for <linux-trace-kernel@vger.kernel.org>; Fri,  3 Feb 2023 00:58:15 -0800 (PST)
-Received: by mail-ed1-x52c.google.com with SMTP id f7so4490172edw.5
-        for <linux-trace-kernel@vger.kernel.org>; Fri, 03 Feb 2023 00:58:15 -0800 (PST)
+        Fri, 3 Feb 2023 04:20:50 -0500
+Received: from mail-pl1-x62d.google.com (mail-pl1-x62d.google.com [IPv6:2607:f8b0:4864:20::62d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 50F3D95D24;
+        Fri,  3 Feb 2023 01:19:47 -0800 (PST)
+Received: by mail-pl1-x62d.google.com with SMTP id jh15so4629913plb.8;
+        Fri, 03 Feb 2023 01:19:47 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=blackwall-org.20210112.gappssmtp.com; s=20210112;
+        d=gmail.com; s=20210112;
         h=content-transfer-encoding:in-reply-to:from:references:cc:to
          :content-language:subject:user-agent:mime-version:date:message-id
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=1z40xBZl1s88AVKBaaMT4kPg0/IWGeDII88qOAQgOrM=;
-        b=ugJ1ZUxXgqF6M2ADHF0b7CSoiPxc2idiHZ2fRCEKjinDPuJE2buPQtrAgjDPb3eklH
-         yExCa7ATGFczL1g330HeaNsvJYxp3uMmFmpgZ5scL1Gv8BDXq+CM8vi+Yy6zCybrbEE1
-         yvEnkc+NXR+ivXGx61+N8VusLuYKcwoRKlBJC2qLYRuGCA8ylN4rd7Dusa8F29f1tkss
-         DATUANszgU8rquTfwekSlBTrURvimxxPLYMUDnzTjX3g9e5taFjOLQuY2fUcQVY5dnv2
-         8vAW/OmHtlY200qBn0iNM/CgVbxDZ8ErDa3qfQMqjybVpO87MwGol2ISPhewfHnDAgQO
-         wz/Q==
+        bh=B/K5nwMA8gvVa10PeMZSw77e4QnQnF6l8GwdE0FA3W4=;
+        b=luBjfbvqSaQ7qCAtGVFiqUWy8FH5HsgUOP8afdGlDZAq+nE0K4nyTcB+gtX8x2nCs5
+         /NBt9Kzh0EJeREIj7zfZ64jlel4aobpLlESPqAxQKaU5zr3heb1V4UciwZcbGrmlkI/a
+         TSIZRo51WZ77BufXUtTZ1FACt665zphwXLclJHSripRXRenn9DRJW5eHsECYU7DMafUI
+         6F8ln1JwqcmNqtKmDeC/vOcT+SnT7ukwgEuUoe40aStBjojhXq6gvkvBiHySWwLHq4y5
+         78hRysrNaQXBLo8eUfi3g8pjwHiX+YfCnuKvxSv1x+EY021w5mbIXJrwf/xRmxaI6gJq
+         LOyg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=content-transfer-encoding:in-reply-to:from:references:cc:to
          :content-language:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=1z40xBZl1s88AVKBaaMT4kPg0/IWGeDII88qOAQgOrM=;
-        b=gedVxBM2ct919G8y2rYma4JX+Mk5gmuRvt3wS6tvRs5MP8VKbboufTIzlcdqBRr8OF
-         EVw/UhtRbk+AJLjv0ZzSOn328xxD1aXMVNrXcSYCqEEh40wv9hvdc3oerA7UwD6lmUSf
-         lLoxWHKWN4yVEEOHKLfqadMJwmXUIuOwa9L/pCERd39IDSlhm30VFGS8SC3V+kHOTs+F
-         YIm0QwRKzcT3lj4cq8Jwd0GUnkxJelFMTwsFW86sOWJJUNQEOJekvK5e5MB26n8AZM53
-         /rJ2V1fhJvQr/TfcgdDEU6pLCIV7aNa4gPGWE5P8F8j4Jk/vy0ECOm11WMbL7LB/uPT0
-         ZrYA==
-X-Gm-Message-State: AO0yUKVYytPILiH0pcRGyv2oPIKdXwX6GS5dSsw9DGmyOc3VVjhykNJc
-        Rfr8rzJhbFXYLVzl4xcBhiUAzA==
-X-Google-Smtp-Source: AK7set/ZmQCxv0xQUirdGsWOY06LUA2AkD+Yj31SlUyBsvKXs195QxZ3dTLxR/WJF3JVqpCmSNj+gA==
-X-Received: by 2002:a05:6402:3647:b0:49e:eb5:ed05 with SMTP id em7-20020a056402364700b0049e0eb5ed05mr9680658edb.9.1675414693697;
-        Fri, 03 Feb 2023 00:58:13 -0800 (PST)
-Received: from [192.168.0.161] (62-73-72-43.ip.btc-net.bg. [62.73.72.43])
-        by smtp.gmail.com with ESMTPSA id k3-20020a056402048300b00499b6b50419sm813274edv.11.2023.02.03.00.58.12
+        bh=B/K5nwMA8gvVa10PeMZSw77e4QnQnF6l8GwdE0FA3W4=;
+        b=Da8j3e6JN3MRkbEHGqohYbhRSEAc87Kqhep5JaMNsH5z2s7pkxPlKngFKFovvbbesU
+         UDZe3j6MmrGVV2lrYNZ3vAPGh8TMgliHFfGeoTbkMWTJX/FC0a73ConFxgxS7u9fbTiP
+         TeoaNWjsVdJm+zKeVCArJFuhztshlStSkn57bxeORVdM4l/vgl1VQM+BFVcX+U9/dnr/
+         I28+2xKL0eE/ZIRRVB3OxJsyUeXavgncAkBT0RE8Chlb2NXKKf48umaSDyCr+IEXhRmm
+         ABGytmLuBe4LMdX8THabEf6FPeu2Vd5tW2nyscrIa7GEzGIQGaBt47i62kkDrmkKeqwR
+         1PCw==
+X-Gm-Message-State: AO0yUKXnPKTPiJYBv2qopAl/WNvI0W0Kx1Jj+WEs4fGlmgaWTyLXfYXE
+        uNrh7eCL878z7A2oHVIhOcI=
+X-Google-Smtp-Source: AK7set//VeLBQllO4lSM/GQi7Dl1r/947yKqKjU+0e76B/DeM4FjHh/tIjcVf6py4FWhAU1xPv7NZA==
+X-Received: by 2002:a17:902:f2d4:b0:197:8f72:aed8 with SMTP id h20-20020a170902f2d400b001978f72aed8mr7116572plc.5.1675415986633;
+        Fri, 03 Feb 2023 01:19:46 -0800 (PST)
+Received: from [192.168.43.80] (subs03-180-214-233-91.three.co.id. [180.214.233.91])
+        by smtp.gmail.com with ESMTPSA id z3-20020a170902ee0300b001960441f604sm1084907plb.277.2023.02.03.01.19.44
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 03 Feb 2023 00:58:13 -0800 (PST)
-Message-ID: <6e50c1ac-9182-0d86-24fb-afcc2c63db85@blackwall.org>
-Date:   Fri, 3 Feb 2023 10:58:12 +0200
+        Fri, 03 Feb 2023 01:19:46 -0800 (PST)
+Message-ID: <7370dc9a-8a14-4c38-028e-f44cd099dbaf@gmail.com>
+Date:   Fri, 3 Feb 2023 16:19:41 +0700
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.6.0
-Subject: Re: [PATCH net-next v3 06/16] net: bridge: Add a tracepoint for MDB
- overflows
+ Thunderbird/102.6.1
+Subject: Re: [PATCH] tracing/histogram: Wrap remaining shell snippets in code
+ blocks
 Content-Language: en-US
-To:     Petr Machata <petrm@nvidia.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Eric Dumazet <edumazet@google.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Paolo Abeni <pabeni@redhat.com>,
-        Roopa Prabhu <roopa@nvidia.com>, netdev@vger.kernel.org
-Cc:     bridge@lists.linux-foundation.org,
-        Ido Schimmel <idosch@nvidia.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        linux-trace-kernel@vger.kernel.org
-References: <cover.1675359453.git.petrm@nvidia.com>
- <a01c188bcbbb0f5f53e333ed9175f938eb2736be.1675359453.git.petrm@nvidia.com>
-From:   Nikolay Aleksandrov <razor@blackwall.org>
-In-Reply-To: <a01c188bcbbb0f5f53e333ed9175f938eb2736be.1675359453.git.petrm@nvidia.com>
+To:     Jonathan Corbet <corbet@lwn.net>, linux-kernel@vger.kernel.org,
+        linux-trace-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
+        oe-kbuild-all@lists.linux.dev
+Cc:     Steven Rostedt <rostedt@goodmis.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        kernel test robot <lkp@intel.com>
+References: <202301290253.LU5yIxcJ-lkp@intel.com>
+ <20230129031402.47420-1-bagasdotme@gmail.com> <871qn8vsro.fsf@meer.lwn.net>
+From:   Bagas Sanjaya <bagasdotme@gmail.com>
+In-Reply-To: <871qn8vsro.fsf@meer.lwn.net>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On 02/02/2023 19:59, Petr Machata wrote:
-> The following patch will add two more maximum MDB allowances to the global
-> one, mcast_hash_max, that exists today. In all these cases, attempts to add
-> MDB entries above the configured maximums through netlink, fail noisily and
-> obviously. Such visibility is missing when adding entries through the
-> control plane traffic, by IGMP or MLD packets.
-> 
-> To improve visibility in those cases, add a trace point that reports the
-> violation, including the relevant netdevice (be it a slave or the bridge
-> itself), and the MDB entry parameters:
-> 
-> 	# perf record -e bridge:br_mdb_full &
-> 	# [...]
-> 	# perf script | cut -d: -f4-
-> 	 dev v2 af 2 src ::ffff:0.0.0.0 grp ::ffff:239.1.1.112/00:00:00:00:00:00 vid 0
-> 	 dev v2 af 10 src :: grp ff0e::112/00:00:00:00:00:00 vid 0
-> 	 dev v2 af 2 src ::ffff:0.0.0.0 grp ::ffff:239.1.1.112/00:00:00:00:00:00 vid 10
-> 	 dev v2 af 10 src 2001:db8:1::1 grp ff0e::1/00:00:00:00:00:00 vid 10
-> 	 dev v2 af 2 src ::ffff:192.0.2.1 grp ::ffff:239.1.1.1/00:00:00:00:00:00 vid 10
-> 
-> CC: Steven Rostedt <rostedt@goodmis.org>
-> CC: linux-trace-kernel@vger.kernel.org
-> Signed-off-by: Petr Machata <petrm@nvidia.com>
-> Reviewed-by: Steven Rostedt (Google) <rostedt@goodmis.org>
-> ---
-> 
-> Notes:
->     v2:
->     - Report IPv4 as an IPv6-mapped address through the IPv6 buffer
->       as well, to save ring buffer space.
-> 
->  include/trace/events/bridge.h | 58 +++++++++++++++++++++++++++++++++++
->  net/core/net-traces.c         |  1 +
->  2 files changed, 59 insertions(+)
+On 2/3/23 01:14, Jonathan Corbet wrote:
+> So this is a good cleanup and I'd like to apply it, but it doesn't come
+> close to applying to docs-next.  Which tree did you do this against?
 > 
 
-Acked-by: Nikolay Aleksandrov <razor@blackwall.org>
+for-next branch (linux-trace tree).
 
+-- 
+An old man doll... just what I always wanted! - Clara
 
