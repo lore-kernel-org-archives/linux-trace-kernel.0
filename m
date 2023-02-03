@@ -2,225 +2,103 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 49A51C05027
-	for <linux-trace-kernel@archiver.kernel.org>; Fri,  3 Feb 2023 15:37:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A3400C61DA4
+	for <linux-trace-kernel@archiver.kernel.org>; Fri,  3 Feb 2023 16:57:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231663AbjBCPhz (ORCPT
+        id S233383AbjBCQ5Y (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Fri, 3 Feb 2023 10:37:55 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51502 "EHLO
+        Fri, 3 Feb 2023 11:57:24 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47324 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231889AbjBCPhy (ORCPT
+        with ESMTP id S233739AbjBCQ5F (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Fri, 3 Feb 2023 10:37:54 -0500
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id DE2B96C10B;
-        Fri,  3 Feb 2023 07:37:52 -0800 (PST)
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D9D0CC14;
-        Fri,  3 Feb 2023 07:38:34 -0800 (PST)
-Received: from FVFF77S0Q05N (unknown [10.57.90.37])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 16A553F71E;
-        Fri,  3 Feb 2023 07:37:49 -0800 (PST)
-Date:   Fri, 3 Feb 2023 15:37:47 +0000
-From:   Mark Rutland <mark.rutland@arm.com>
-To:     Florent Revest <revest@chromium.org>
-Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-trace-kernel@vger.kernel.org, bpf@vger.kernel.org,
-        catalin.marinas@arm.com, will@kernel.org, rostedt@goodmis.org,
-        mhiramat@kernel.org, ast@kernel.org, daniel@iogearbox.net,
-        andrii@kernel.org, kpsingh@kernel.org, jolsa@kernel.org,
-        xukuohai@huaweicloud.com, Xu Kuohai <xukuohai@huawei.com>,
-        Li Huafei <lihuafei1@huawei.com>
-Subject: Re: [PATCH 6/8] ftrace: Fix dead loop caused by direct call in
- ftrace selftest
-Message-ID: <Y90qS5jTog2m6YhQ@FVFF77S0Q05N>
-References: <20230201163420.1579014-1-revest@chromium.org>
- <20230201163420.1579014-7-revest@chromium.org>
- <Y9wI93m2frDFGFez@FVFF77S0Q05N.cambridge.arm.com>
- <CABRcYmKRoDeFecvj7e+0SUaoinUa7FdtG1fmYqkRS3YPXVw4-w@mail.gmail.com>
+        Fri, 3 Feb 2023 11:57:05 -0500
+Received: from mail-il1-x133.google.com (mail-il1-x133.google.com [IPv6:2607:f8b0:4864:20::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 93DC2A9D7E
+        for <linux-trace-kernel@vger.kernel.org>; Fri,  3 Feb 2023 08:56:53 -0800 (PST)
+Received: by mail-il1-x133.google.com with SMTP id u8so2286043ilq.13
+        for <linux-trace-kernel@vger.kernel.org>; Fri, 03 Feb 2023 08:56:53 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linuxfoundation.org; s=google;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=r6dU/MLK19R27v5TumqJxeFfIoPB7aII2OkV9V6qrvA=;
+        b=HiWjdHnBDoeXnKH6lL2kguYnHVGDxzJXoSOcg8NeZz4ZdmP3SHj9YySZKNujyeUDQp
+         KXiEfpUuaX+bxRCty364k+H9dFIUpgmPL3kOOXnuDkCQVWHqdEAQN+SGfj4JEv/CTnog
+         coSWTS/11nF87rzoMpJNsjOhdTV+opofoKF04=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=r6dU/MLK19R27v5TumqJxeFfIoPB7aII2OkV9V6qrvA=;
+        b=iqA8smblX3Y5XlFy8tLs0VSY/jL/jMqFcpajvGEuJ9P7YyOk/EIesakqmx6q+7BlIR
+         I0dVmbsm20GzK1BfWJPJGCPM8PtBtDpyFs0YZ0ymxHkTlT65JLIF4oEyzl+UFHGP85F2
+         6KCW0YXbePa46AqBDPhyT0mRJSnkJutWGmq+TmL0TJnDR5/m8hrSar4nwOLscpoNJdzp
+         doR2BJVV/gF5bF0no67xxmcWjafLR0ec1tAz9cDdRpoNUVkEcajTyU/GE6KQMit9xVB6
+         Pleq78w/b8dVVljx0E4UGBjoio4JEJ7ZvKgv1OIg/9j1U/96nxoEWFfUm8eU0NwSTEUW
+         OW4Q==
+X-Gm-Message-State: AO0yUKVC+QlVIuj7nrTjeKxzkgOw/bZSF9xzJJq+KLCoj2Uuef7rAJyd
+        hTiDktYC0LA1D9WHcdpbIBh/Eg==
+X-Google-Smtp-Source: AK7set/Jrl89jWi4wJJZHkXYIVCz+HKbR2LJVPcbUot7rENhrH80xbnluC31AjAunmEtL9Xj0QUe/g==
+X-Received: by 2002:a92:ce06:0:b0:310:8c56:d7de with SMTP id b6-20020a92ce06000000b003108c56d7demr5886170ilo.0.1675443412851;
+        Fri, 03 Feb 2023 08:56:52 -0800 (PST)
+Received: from [192.168.1.128] ([38.15.45.1])
+        by smtp.gmail.com with ESMTPSA id 18-20020a056e0211b200b0030bfd384821sm884381ilj.81.2023.02.03.08.56.51
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 03 Feb 2023 08:56:52 -0800 (PST)
+Message-ID: <de935b11-f5b7-9217-b73c-aef32c19c3c7@linuxfoundation.org>
+Date:   Fri, 3 Feb 2023 09:56:51 -0700
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CABRcYmKRoDeFecvj7e+0SUaoinUa7FdtG1fmYqkRS3YPXVw4-w@mail.gmail.com>
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.4.2
+Subject: Re: [PATCH] selftests/ftrace: Fix bash specific "==" operator
+Content-Language: en-US
+To:     Steven Rostedt <rostedt@goodmis.org>,
+        "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
+Cc:     Shuah Khan <shuah@kernel.org>, Yipeng Zou <zouyipeng@huawei.com>,
+        linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+        linux-kselftest@vger.kernel.org,
+        Shuah Khan <skhan@linuxfoundation.org>
+References: <167434397083.3069767.14730152459198287532.stgit@devnote3>
+ <20230124191637.0b2b8785@gandalf.local.home>
+From:   Shuah Khan <skhan@linuxfoundation.org>
+In-Reply-To: <20230124191637.0b2b8785@gandalf.local.home>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On Fri, Feb 03, 2023 at 01:35:00PM +0100, Florent Revest wrote:
-> On Thu, Feb 2, 2023 at 8:03 PM Mark Rutland <mark.rutland@arm.com> wrote:
-> > I think it'd be much better to do something like the below as a preparatory
-> > cleanup (tested on s390 under QEMU).
+On 1/24/23 17:16, Steven Rostedt wrote:
+> On Sun, 22 Jan 2023 08:32:50 +0900
+> "Masami Hiramatsu (Google)" <mhiramat@kernel.org> wrote:
 > 
-> Thanks, that looks great to me. I'll make it a part of the series in v2 then.
-> Unless it's preferred that this gets merged separately?
-
-I reckon put it in the series for v2, and if Steve or Masami want to pick it up
-beforehand, they can choose to do so from there?
-
-Since it's not currently exploding, I suspect it's not urgent.
-
-Mark.
-
+>> From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+>>
+>> Since commit a1d6cd88c897 ("selftests/ftrace: event_triggers: wait
+>> longer for test_event_enable") introduced bash specific "=="
+>> comparation operator, that test will fail when we run it on a
+>> posix-shell. `checkbashisms` warned it as below.
+>>
+>> possible bashism in ftrace/func_event_triggers.tc line 45 (should be 'b = a'):
+>>          if [ "$e" == $val ]; then
+>>
+>> This replaces it with "=".
+>>
+>> Fixes: a1d6cd88c897 ("selftests/ftrace: event_triggers: wait longer for test_event_enable")
+>> Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 > 
-> > Thanks,
-> > Mark.
-> >
-> > ---->8----
-> > From 3b3abc89fe014ea49282622c4312521b710d1463 Mon Sep 17 00:00:00 2001
-> > From: Mark Rutland <mark.rutland@arm.com>
-> > Date: Thu, 2 Feb 2023 18:37:40 +0000
-> > Subject: [PATCH] ftrace: selftest: remove broken trace_direct_tramp
-> >
-> > The ftrace selftest code has a trace_direct_tramp() function which it
-> > uses as a direct call trampoline. This happens to work on x86, since the
-> > direct call's return address is in the usual place, and can be returned
-> > to via a RET, but in general the calling convention for direct calls is
-> > different from regular function calls, and requires a trampoline written
-> > in assembly.
-> >
-> > On s390, regular function calls place the return address in %r14, and an
-> > ftrace patch-site in an instrumented function places the trampoline's
-> > return address (which is within the instrumented function) in %r0,
-> > preserving the original %r14 value in-place. As a regular C function
-> > will return to the address in %r14, using a C function as the trampoline
-> > results in the trampoline returning to the caller of the instrumented
-> > function, skipping the body of the instrumented function.
-> >
-> > Note that the s390 issue is not detcted by the ftrace selftest code, as
-> > the instrumented function is trivial, and returning back into the caller
-> > happens to be equivalent.
-> >
-> > On arm64, regular function calls place the return address in x30, and
-> > an ftrace patch-site in an instrumented function saves this into r9
-> > and places the trampoline's return address (within the instrumented
-> > function) in x30. A regular C function will return to the address in
-> > x30, but will not restore x9 into x30. Consequently, using a C function
-> > as the trampoline results in returning to the trampoline's return
-> > address having corrupted x30, such that when the instrumented function
-> > returns, it will return back into itself.
-> >
-> > To avoid future issues in this area, remove the trace_direct_tramp()
-> > function, and require that each architecture with direct calls provides
-> > a stub trampoline, named ftrace_stub_direct_tramp. This can be written
-> > to handle the architecture's trampoline calling convention, and in
-> > future could be used elsewhere (e.g. in the ftrace ops sample, to
-> > measure the overhead of direct calls), so we may as well always build it
-> > in.
-> >
-> > Signed-off-by: Mark Rutland <mark.rutland@arm.com>
-> > Cc: Li Huafei <lihuafei1@huawei.com>
-> > Cc: Xu Kuohai <xukuohai@huawei.com>
-> > Cc: Steven Rostedt (Google) <rostedt@goodmis.org>
-> > Cc: Florent Revest <revest@chromium.org>
-> > ---
-> >  arch/s390/kernel/mcount.S     |  5 +++++
-> >  arch/x86/kernel/ftrace_32.S   |  5 +++++
-> >  arch/x86/kernel/ftrace_64.S   |  4 ++++
-> >  include/linux/ftrace.h        |  2 ++
-> >  kernel/trace/trace_selftest.c | 15 ++-------------
-> >  5 files changed, 18 insertions(+), 13 deletions(-)
-> >
-> > diff --git a/arch/s390/kernel/mcount.S b/arch/s390/kernel/mcount.S
-> > index 4786bfe02144..ad13a0e2c307 100644
-> > --- a/arch/s390/kernel/mcount.S
-> > +++ b/arch/s390/kernel/mcount.S
-> > @@ -32,6 +32,11 @@ ENTRY(ftrace_stub)
-> >         BR_EX   %r14
-> >  ENDPROC(ftrace_stub)
-> >
-> > +SYM_CODE_START(ftrace_stub_direct_tramp)
-> > +       lgr     %r1, %r0
-> > +       BR_EX   %r1
-> > +SYM_CODE_END(ftrace_stub_direct_tramp)
-> > +
-> >         .macro  ftrace_regs_entry, allregs=0
-> >         stg     %r14,(__SF_GPRS+8*8)(%r15)      # save traced function caller
-> >
-> > diff --git a/arch/x86/kernel/ftrace_32.S b/arch/x86/kernel/ftrace_32.S
-> > index a0ed0e4a2c0c..0d9a14528176 100644
-> > --- a/arch/x86/kernel/ftrace_32.S
-> > +++ b/arch/x86/kernel/ftrace_32.S
-> > @@ -163,6 +163,11 @@ SYM_INNER_LABEL(ftrace_regs_call, SYM_L_GLOBAL)
-> >         jmp     .Lftrace_ret
-> >  SYM_CODE_END(ftrace_regs_caller)
-> >
-> > +SYM_FUNC_START(ftrace_stub_direct_tramp)
-> > +       CALL_DEPTH_ACCOUNT
-> > +       RET
-> > +SYM_FUNC_END(ftrace_stub_direct_tramp)
-> > +
-> >  #ifdef CONFIG_FUNCTION_GRAPH_TRACER
-> >  SYM_CODE_START(ftrace_graph_caller)
-> >         pushl   %eax
-> > diff --git a/arch/x86/kernel/ftrace_64.S b/arch/x86/kernel/ftrace_64.S
-> > index 1265ad519249..8fc77e3e039c 100644
-> > --- a/arch/x86/kernel/ftrace_64.S
-> > +++ b/arch/x86/kernel/ftrace_64.S
-> > @@ -307,6 +307,10 @@ SYM_INNER_LABEL(ftrace_regs_caller_end, SYM_L_GLOBAL)
-> >  SYM_FUNC_END(ftrace_regs_caller)
-> >  STACK_FRAME_NON_STANDARD_FP(ftrace_regs_caller)
-> >
-> > +SYM_FUNC_START(ftrace_stub_direct_tramp)
-> > +       CALL_DEPTH_ACCOUNT
-> > +       RET
-> > +SYM_FUNC_END(ftrace_stub_direct_tramp)
-> >
-> >  #else /* ! CONFIG_DYNAMIC_FTRACE */
-> >
-> > diff --git a/include/linux/ftrace.h b/include/linux/ftrace.h
-> > index 3d2156e335d7..a9836b40630e 100644
-> > --- a/include/linux/ftrace.h
-> > +++ b/include/linux/ftrace.h
-> > @@ -412,6 +412,8 @@ int unregister_ftrace_direct(struct ftrace_ops *ops, unsigned long addr);
-> >  int modify_ftrace_direct(struct ftrace_ops *ops, unsigned long addr);
-> >  int modify_ftrace_direct_nolock(struct ftrace_ops *ops, unsigned long addr);
-> >
-> > +void ftrace_stub_direct_tramp(void *);
-> > +
-> >  #else
-> >  struct ftrace_ops;
-> >  # define ftrace_direct_func_count 0
-> > diff --git a/kernel/trace/trace_selftest.c b/kernel/trace/trace_selftest.c
-> > index 06218fc9374b..e6530b7b42e4 100644
-> > --- a/kernel/trace/trace_selftest.c
-> > +++ b/kernel/trace/trace_selftest.c
-> > @@ -784,17 +784,6 @@ static struct fgraph_ops fgraph_ops __initdata  = {
-> >         .retfunc                = &trace_graph_return,
-> >  };
-> >
-> > -#ifdef CONFIG_DYNAMIC_FTRACE_WITH_DIRECT_CALLS
-> > -#ifndef CALL_DEPTH_ACCOUNT
-> > -#define CALL_DEPTH_ACCOUNT ""
-> > -#endif
-> > -
-> > -noinline __noclone static void trace_direct_tramp(void)
-> > -{
-> > -       asm(CALL_DEPTH_ACCOUNT);
-> > -}
-> > -#endif
-> > -
-> >  /*
-> >   * Pretty much the same than for the function tracer from which the selftest
-> >   * has been borrowed.
-> > @@ -875,7 +864,7 @@ trace_selftest_startup_function_graph(struct tracer *trace,
-> >          */
-> >         ftrace_set_filter_ip(&direct, (unsigned long)DYN_FTRACE_TEST_NAME, 0, 0);
-> >         ret = register_ftrace_direct(&direct,
-> > -                                    (unsigned long)trace_direct_tramp);
-> > +                                    (unsigned long)ftrace_stub_direct_tramp);
-> >         if (ret)
-> >                 goto out;
-> >
-> > @@ -896,7 +885,7 @@ trace_selftest_startup_function_graph(struct tracer *trace,
-> >         unregister_ftrace_graph(&fgraph_ops);
-> >
-> >         ret = unregister_ftrace_direct(&direct,
-> > -                                      (unsigned long)trace_direct_tramp);
-> > +                                      (unsigned long)ftrace_stub_direct_tramp);
-> >         if (ret)
-> >                 goto out;
-> >
-> > --
-> > 2.30.2
-> >
+> Reviewed-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+> 
+> Shuah,
+> 
+> Care to pull this through your tree?
+> 
+
+Yes. Will appear shortly in linux-kselftest next.
+
+thanks,
+-- Shuah
+
