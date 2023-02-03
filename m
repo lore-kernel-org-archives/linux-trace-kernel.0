@@ -2,192 +2,146 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CCAEC636D3
-	for <linux-trace-kernel@archiver.kernel.org>; Fri,  3 Feb 2023 01:22:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D16C7C61DA4
+	for <linux-trace-kernel@archiver.kernel.org>; Fri,  3 Feb 2023 03:54:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230343AbjBCBWr (ORCPT
+        id S230140AbjBCDyT (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Thu, 2 Feb 2023 20:22:47 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50864 "EHLO
+        Thu, 2 Feb 2023 22:54:19 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36814 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229881AbjBCBWr (ORCPT
+        with ESMTP id S229662AbjBCDyS (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Thu, 2 Feb 2023 20:22:47 -0500
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B98BF83957;
-        Thu,  2 Feb 2023 17:22:45 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 77B28B828EE;
-        Fri,  3 Feb 2023 01:22:44 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AD45BC433EF;
-        Fri,  3 Feb 2023 01:22:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1675387363;
-        bh=9oIiUfLPZHJQsT36yxAbWs6LV4LruxL2jZsGEw9mMQc=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=NfCZTRs2rHo89KMxohEMFzqqU3FnDlkn1RrdRIYEFXB8+gWh8d1yORNycGN07obJI
-         b3Hdlqv+928mZkxmtrVmwR0T7p8Z8W/dZPTVx5KCRQB5W7G5JeCfMUr3GsRyAfYbUI
-         kZZR0pUdXsFGqR03fUTMAzsvPSBl/hKC3SdBsPiZJ6XFzG/9RUBGBkmUHoZ4Xu51AP
-         wverwAy35VO30OLOUlFTgOXWNiVvMh8D+l4Ql9HURqxTdPCaf1+PqbFPQdpQJU6ye4
-         ecA469pfAHmyWACuDjX+QOsU3loEwzPFNgxKDn03JCEoTz7Kx2OkKrcVNLa6cTE8vj
-         GpRmcO06cKMpw==
-Date:   Fri, 3 Feb 2023 10:22:39 +0900
-From:   Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To:     Song Shuai <suagrfillet@gmail.com>
-Cc:     rostedt@goodmis.org, mark.rutland@arm.com, peterz@infradead.org,
-        jpoimboe@kernel.org, tglx@linutronix.de,
-        linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
-Subject: Re: [PATCH] samples: ftrace: Include the nospec-branch.h only for
- x86
-Message-Id: <20230203102239.7a5bd7c431978faa0d9201e6@kernel.org>
-In-Reply-To: <20230130085954.647845-1-suagrfillet@gmail.com>
-References: <20230130085954.647845-1-suagrfillet@gmail.com>
-X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        Thu, 2 Feb 2023 22:54:18 -0500
+Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 887B92366C;
+        Thu,  2 Feb 2023 19:54:16 -0800 (PST)
+Received: from dggpeml100012.china.huawei.com (unknown [172.30.72.56])
+        by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4P7MDZ47vszJsDg;
+        Fri,  3 Feb 2023 11:52:30 +0800 (CST)
+Received: from localhost.localdomain (10.67.175.61) by
+ dggpeml100012.china.huawei.com (7.185.36.121) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2375.34; Fri, 3 Feb 2023 11:54:07 +0800
+From:   Zheng Yejian <zhengyejian1@huawei.com>
+To:     <rostedt@goodmis.org>
+CC:     <mhiramat@kernel.org>, <zanussi@kernel.org>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-trace-kernel@vger.kernel.org>, <zhengyejian1@huawei.com>,
+        <wanghai38@huawei.com>
+Subject: [bug report] WARNINGs in rb_check_pages() and rb_handle_head_page()
+Date:   Fri, 3 Feb 2023 11:56:08 +0800
+Message-ID: <20230203035608.2336906-1-zhengyejian1@huawei.com>
+X-Mailer: git-send-email 2.25.1
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [10.67.175.61]
+X-ClientProxiedBy: dggems701-chm.china.huawei.com (10.3.19.178) To
+ dggpeml100012.china.huawei.com (7.185.36.121)
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On Mon, 30 Jan 2023 16:59:54 +0800
-Song Shuai <suagrfillet@gmail.com> wrote:
+Hi, steve
 
-> When other architectures without the nospec functionality write their
-> direct-call functions of samples/ftrace/*.c, the including of
-> asm/nospec-branch.h must be taken care to fix the no header file found
-> error in building process.
-> 
-> This commit (ee3e2469b346 "x86/ftrace: Make it call depth tracking aware")
-> file-globally includes asm/nospec-branch.h providing CALL_DEPTH_ACCOUNT
-> for only x86 direct-call functions.
-> 
-> It seems better to move the including to `#ifdef CONFIG_X86_64`.
-> 
-> Signed-off-by: Song Shuai <suagrfillet@gmail.com>
+I happened to get two WARNINGs [1] [2] at same time when testing v5.10 with
+testcase 'func_profiler.tc':
+Link: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git/tree/tools/testing/selftests/ftrace/test.d/ftrace/func_profiler.tc
 
-This looks good to me since nospec-branch.h is used only for x86 asm macro.
-(s390 also has "nospec-branch.h" file but that doesn't provide such macro,
-so this change will not affect it.)
+It seems a data race between ring_buffer writing and integrity checking.
+That is, head_page is moving when buffer is full and RB_FLAG is updating,
+however at same time RB_FLAG was cleared when doing integrity check:
+  rb_check_pages()            rb_handle_head_page():
+  --------                    --------
+  rb_head_page_deactivate()
+                              rb_head_page_set_normal()
+  rb_head_page_activate()
 
-Reviewed-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+Mainline kernel seems have this problem as well, see the constructed
+testcase 'repro.sh' [3] and reproduction log [4].
 
-Thank you,
+Integrity checking of ring_buffer on closing "trace" file seems not a good
+point, do you have any idea, steve?
 
-> ---
->  samples/ftrace/ftrace-direct-modify.c       | 2 +-
->  samples/ftrace/ftrace-direct-multi-modify.c | 2 +-
->  samples/ftrace/ftrace-direct-multi.c        | 2 +-
->  samples/ftrace/ftrace-direct-too.c          | 2 +-
->  samples/ftrace/ftrace-direct.c              | 2 +-
->  5 files changed, 5 insertions(+), 5 deletions(-)
-> 
-> diff --git a/samples/ftrace/ftrace-direct-modify.c b/samples/ftrace/ftrace-direct-modify.c
-> index de5a0f67f320..d93abbcb1f4c 100644
-> --- a/samples/ftrace/ftrace-direct-modify.c
-> +++ b/samples/ftrace/ftrace-direct-modify.c
-> @@ -3,7 +3,6 @@
->  #include <linux/kthread.h>
->  #include <linux/ftrace.h>
->  #include <asm/asm-offsets.h>
-> -#include <asm/nospec-branch.h>
->  
->  extern void my_direct_func1(void);
->  extern void my_direct_func2(void);
-> @@ -26,6 +25,7 @@ static unsigned long my_ip = (unsigned long)schedule;
->  #ifdef CONFIG_X86_64
->  
->  #include <asm/ibt.h>
-> +#include <asm/nospec-branch.h>
->  
->  asm (
->  "	.pushsection    .text, \"ax\", @progbits\n"
-> diff --git a/samples/ftrace/ftrace-direct-multi-modify.c b/samples/ftrace/ftrace-direct-multi-modify.c
-> index a825dbd2c9cf..b58c594efb51 100644
-> --- a/samples/ftrace/ftrace-direct-multi-modify.c
-> +++ b/samples/ftrace/ftrace-direct-multi-modify.c
-> @@ -3,7 +3,6 @@
->  #include <linux/kthread.h>
->  #include <linux/ftrace.h>
->  #include <asm/asm-offsets.h>
-> -#include <asm/nospec-branch.h>
->  
->  extern void my_direct_func1(unsigned long ip);
->  extern void my_direct_func2(unsigned long ip);
-> @@ -24,6 +23,7 @@ extern void my_tramp2(void *);
->  #ifdef CONFIG_X86_64
->  
->  #include <asm/ibt.h>
-> +#include <asm/nospec-branch.h>
->  
->  asm (
->  "	.pushsection    .text, \"ax\", @progbits\n"
-> diff --git a/samples/ftrace/ftrace-direct-multi.c b/samples/ftrace/ftrace-direct-multi.c
-> index d955a2650605..c27cf130c319 100644
-> --- a/samples/ftrace/ftrace-direct-multi.c
-> +++ b/samples/ftrace/ftrace-direct-multi.c
-> @@ -5,7 +5,6 @@
->  #include <linux/ftrace.h>
->  #include <linux/sched/stat.h>
->  #include <asm/asm-offsets.h>
-> -#include <asm/nospec-branch.h>
->  
->  extern void my_direct_func(unsigned long ip);
->  
-> @@ -19,6 +18,7 @@ extern void my_tramp(void *);
->  #ifdef CONFIG_X86_64
->  
->  #include <asm/ibt.h>
-> +#include <asm/nospec-branch.h>
->  
->  asm (
->  "	.pushsection    .text, \"ax\", @progbits\n"
-> diff --git a/samples/ftrace/ftrace-direct-too.c b/samples/ftrace/ftrace-direct-too.c
-> index e13fb59a2b47..8139dce2a31c 100644
-> --- a/samples/ftrace/ftrace-direct-too.c
-> +++ b/samples/ftrace/ftrace-direct-too.c
-> @@ -4,7 +4,6 @@
->  #include <linux/mm.h> /* for handle_mm_fault() */
->  #include <linux/ftrace.h>
->  #include <asm/asm-offsets.h>
-> -#include <asm/nospec-branch.h>
->  
->  extern void my_direct_func(struct vm_area_struct *vma,
->  			   unsigned long address, unsigned int flags);
-> @@ -21,6 +20,7 @@ extern void my_tramp(void *);
->  #ifdef CONFIG_X86_64
->  
->  #include <asm/ibt.h>
-> +#include <asm/nospec-branch.h>
->  
->  asm (
->  "	.pushsection    .text, \"ax\", @progbits\n"
-> diff --git a/samples/ftrace/ftrace-direct.c b/samples/ftrace/ftrace-direct.c
-> index 1f769d0db20f..1d3d307ca33d 100644
-> --- a/samples/ftrace/ftrace-direct.c
-> +++ b/samples/ftrace/ftrace-direct.c
-> @@ -4,7 +4,6 @@
->  #include <linux/sched.h> /* for wake_up_process() */
->  #include <linux/ftrace.h>
->  #include <asm/asm-offsets.h>
-> -#include <asm/nospec-branch.h>
->  
->  extern void my_direct_func(struct task_struct *p);
->  
-> @@ -18,6 +17,7 @@ extern void my_tramp(void *);
->  #ifdef CONFIG_X86_64
->  
->  #include <asm/ibt.h>
-> +#include <asm/nospec-branch.h>
->  
->  asm (
->  "	.pushsection    .text, \"ax\", @progbits\n"
-> -- 
-> 2.20.1
-> 
+1:
+One WARNING happened at
+Link: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git/tree/kernel/trace/ring_buffer.c?h=linux-5.10.y#n1492
+  Call Trace:
+   rb_check_pages
+   ring_buffer_read_finish
+   tracing_release
 
+2:
+The other WARNING happened at
+Link: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git/tree/kernel/trace/ring_buffer.c?h=linux-5.10.y#n2507
+  Call Trace:
+   rb_handle_head_page
+   rb_move_tail
+   __rb_reserve_next
+   rb_reserve_next_event
+   ring_buffer_lock_reserve
+   __trace_buffer_lock_reserve
+   trace_function
+   function_trace_call
 
--- 
-Masami Hiramatsu (Google) <mhiramat@kernel.org>
+3:
+``` read_trace.sh
+  while true;
+  do
+    # the "trace" file is closed after read
+    head -1 /sys/kernel/tracing/trace > /dev/null
+  done
+```
+``` repro.sh
+  # function tracer will writing enough data into ring_buffer
+  echo function > /sys/kernel/tracing/current_tracer
+  ./read_trace.sh &
+  ./read_trace.sh &
+  ./read_trace.sh &
+  ./read_trace.sh &
+  ./read_trace.sh &
+  ./read_trace.sh &
+  ./read_trace.sh &
+  ./read_trace.sh &
+```
+
+4:
+------------[ cut here ]------------
+WARNING: CPU: 9 PID: 62 at kernel/trace/ring_buffer.c:2653 rb_move_tail+0x450/0x470
+Modules linked in:
+CPU: 9 PID: 62 Comm: ksoftirqd/9 Tainted: G        W          6.2.0-rc6+ #261
+Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS rel-1.15.0-0-g2dd4b9b3f840-prebuilt.qemu.org 04/01/2014
+RIP: 0010:rb_move_tail+0x450/0x470
+Code: ff ff 4c 89 c8 f0 4d 0f b1 02 48 89 c2 48 83 e2 fc 49 39 d0 75 24 83 e0 03 83 f8 02 0f 84 e1 fb ff ff 48 8b 57 10 f0 ff 42 08 <0f> 0b 83 f8 02 0f 84 ce fb ff ff e9 db
+RSP: 0018:ffffb5564089bd00 EFLAGS: 00000203
+RAX: 0000000000000000 RBX: ffff9db385a2bf81 RCX: ffffb5564089bd18
+RDX: ffff9db281110100 RSI: 0000000000000fe4 RDI: ffff9db380145400
+RBP: ffff9db385a2bf80 R08: ffff9db385a2bfc0 R09: ffff9db385a2bfc2
+R10: ffff9db385a6c000 R11: ffff9db385a2bf80 R12: 0000000000000000
+R13: 00000000000003e8 R14: ffff9db281110100 R15: ffffffffbb006108
+FS:  0000000000000000(0000) GS:ffff9db3bdcc0000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00005602323024c8 CR3: 0000000022e0c000 CR4: 00000000000006e0
+Call Trace:
+ <TASK>
+ ring_buffer_lock_reserve+0x136/0x360
+ ? __do_softirq+0x287/0x2df
+ ? __pfx_rcu_softirq_qs+0x10/0x10
+ trace_function+0x21/0x110
+ ? __pfx_rcu_softirq_qs+0x10/0x10
+ ? __do_softirq+0x287/0x2df
+ function_trace_call+0xf6/0x120
+ 0xffffffffc038f097
+ ? rcu_softirq_qs+0x5/0x140
+ rcu_softirq_qs+0x5/0x140
+ __do_softirq+0x287/0x2df
+ run_ksoftirqd+0x2a/0x30
+ smpboot_thread_fn+0x188/0x220
+ ? __pfx_smpboot_thread_fn+0x10/0x10
+ kthread+0xe7/0x110
+ ? __pfx_kthread+0x10/0x10
+ ret_from_fork+0x2c/0x50
+ </TASK>
+---[ end trace 0000000000000000 ]---
