@@ -2,103 +2,219 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A3400C61DA4
-	for <linux-trace-kernel@archiver.kernel.org>; Fri,  3 Feb 2023 16:57:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 59842C636CC
+	for <linux-trace-kernel@archiver.kernel.org>; Fri,  3 Feb 2023 18:36:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233383AbjBCQ5Y (ORCPT
+        id S232601AbjBCSgm (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Fri, 3 Feb 2023 11:57:24 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47324 "EHLO
+        Fri, 3 Feb 2023 13:36:42 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60838 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233739AbjBCQ5F (ORCPT
+        with ESMTP id S233606AbjBCSgl (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Fri, 3 Feb 2023 11:57:05 -0500
-Received: from mail-il1-x133.google.com (mail-il1-x133.google.com [IPv6:2607:f8b0:4864:20::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 93DC2A9D7E
-        for <linux-trace-kernel@vger.kernel.org>; Fri,  3 Feb 2023 08:56:53 -0800 (PST)
-Received: by mail-il1-x133.google.com with SMTP id u8so2286043ilq.13
-        for <linux-trace-kernel@vger.kernel.org>; Fri, 03 Feb 2023 08:56:53 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=r6dU/MLK19R27v5TumqJxeFfIoPB7aII2OkV9V6qrvA=;
-        b=HiWjdHnBDoeXnKH6lL2kguYnHVGDxzJXoSOcg8NeZz4ZdmP3SHj9YySZKNujyeUDQp
-         KXiEfpUuaX+bxRCty364k+H9dFIUpgmPL3kOOXnuDkCQVWHqdEAQN+SGfj4JEv/CTnog
-         coSWTS/11nF87rzoMpJNsjOhdTV+opofoKF04=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=r6dU/MLK19R27v5TumqJxeFfIoPB7aII2OkV9V6qrvA=;
-        b=iqA8smblX3Y5XlFy8tLs0VSY/jL/jMqFcpajvGEuJ9P7YyOk/EIesakqmx6q+7BlIR
-         I0dVmbsm20GzK1BfWJPJGCPM8PtBtDpyFs0YZ0ymxHkTlT65JLIF4oEyzl+UFHGP85F2
-         6KCW0YXbePa46AqBDPhyT0mRJSnkJutWGmq+TmL0TJnDR5/m8hrSar4nwOLscpoNJdzp
-         doR2BJVV/gF5bF0no67xxmcWjafLR0ec1tAz9cDdRpoNUVkEcajTyU/GE6KQMit9xVB6
-         Pleq78w/b8dVVljx0E4UGBjoio4JEJ7ZvKgv1OIg/9j1U/96nxoEWFfUm8eU0NwSTEUW
-         OW4Q==
-X-Gm-Message-State: AO0yUKVC+QlVIuj7nrTjeKxzkgOw/bZSF9xzJJq+KLCoj2Uuef7rAJyd
-        hTiDktYC0LA1D9WHcdpbIBh/Eg==
-X-Google-Smtp-Source: AK7set/Jrl89jWi4wJJZHkXYIVCz+HKbR2LJVPcbUot7rENhrH80xbnluC31AjAunmEtL9Xj0QUe/g==
-X-Received: by 2002:a92:ce06:0:b0:310:8c56:d7de with SMTP id b6-20020a92ce06000000b003108c56d7demr5886170ilo.0.1675443412851;
-        Fri, 03 Feb 2023 08:56:52 -0800 (PST)
-Received: from [192.168.1.128] ([38.15.45.1])
-        by smtp.gmail.com with ESMTPSA id 18-20020a056e0211b200b0030bfd384821sm884381ilj.81.2023.02.03.08.56.51
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 03 Feb 2023 08:56:52 -0800 (PST)
-Message-ID: <de935b11-f5b7-9217-b73c-aef32c19c3c7@linuxfoundation.org>
-Date:   Fri, 3 Feb 2023 09:56:51 -0700
+        Fri, 3 Feb 2023 13:36:41 -0500
+Received: from mga06.intel.com (mga06b.intel.com [134.134.136.31])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EFCBA9EF6;
+        Fri,  3 Feb 2023 10:36:38 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1675449399; x=1706985399;
+  h=date:from:to:cc:subject:message-id:mime-version:
+   content-transfer-encoding;
+  bh=sBr4gbtJ0rHs80U4nER/Ux24bKez/zclcRpEf7y7Qs8=;
+  b=BtYgaxRY6rtpRz/1nYs6HPj+kjiuQV4kV6w4nk2lM4cpF0yrXAbT4wal
+   VGW3Sk1yU4FQQ79XdzlBGTFiN0oPIbEviX2SdSh/7xmAVkUZNu/LyZ1fc
+   nHScHSCvG8yUxwCJgLTvFbFXIH8nBiyDSxC3ahbFE3MfVTUYrYoY80ddf
+   wxAllBrkshFBbjt+LR05sKDEZls5/zaypM6RuE5j7CeyGGFkfodzR0l56
+   ZqR40n1c9JI1H3Ql3Og1tmiCAxjyoWUAFpaVZe2Y2wwtFYFaUjKtL9QMk
+   Xg8L4lPp+mcp/Kaf8vuXNZQ2UmZpHGXJkFCN9ngzeX/NbPwYf7FgqVgEh
+   w==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10610"; a="391212838"
+X-IronPort-AV: E=Sophos;i="5.97,271,1669104000"; 
+   d="scan'208";a="391212838"
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Feb 2023 10:36:15 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6500,9779,10610"; a="667731283"
+X-IronPort-AV: E=Sophos;i="5.97,271,1669104000"; 
+   d="scan'208";a="667731283"
+Received: from lkp-server01.sh.intel.com (HELO 4455601a8d94) ([10.239.97.150])
+  by fmsmga007.fm.intel.com with ESMTP; 03 Feb 2023 10:36:12 -0800
+Received: from kbuild by 4455601a8d94 with local (Exim 4.96)
+        (envelope-from <lkp@intel.com>)
+        id 1pO0uy-0000hV-07;
+        Fri, 03 Feb 2023 18:36:12 +0000
+Date:   Sat, 04 Feb 2023 02:35:52 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     Andrew Morton <akpm@linux-foundation.org>
+Cc:     linux-trace-kernel@vger.kernel.org, linux-mips@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev,
+        kvmarm@lists.cs.columbia.edu, amd-gfx@lists.freedesktop.org,
+        Linux Memory Management List <linux-mm@kvack.org>
+Subject: [linux-next:master] BUILD REGRESSION
+ 4fafd96910add124586b549ad005dcd179de8a18
+Message-ID: <63dd5408.DXu9FfX9ZxM1BSRX%lkp@intel.com>
+User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.4.2
-Subject: Re: [PATCH] selftests/ftrace: Fix bash specific "==" operator
-Content-Language: en-US
-To:     Steven Rostedt <rostedt@goodmis.org>,
-        "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
-Cc:     Shuah Khan <shuah@kernel.org>, Yipeng Zou <zouyipeng@huawei.com>,
-        linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
-        linux-kselftest@vger.kernel.org,
-        Shuah Khan <skhan@linuxfoundation.org>
-References: <167434397083.3069767.14730152459198287532.stgit@devnote3>
- <20230124191637.0b2b8785@gandalf.local.home>
-From:   Shuah Khan <skhan@linuxfoundation.org>
-In-Reply-To: <20230124191637.0b2b8785@gandalf.local.home>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset=us-ascii
 Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On 1/24/23 17:16, Steven Rostedt wrote:
-> On Sun, 22 Jan 2023 08:32:50 +0900
-> "Masami Hiramatsu (Google)" <mhiramat@kernel.org> wrote:
-> 
->> From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
->>
->> Since commit a1d6cd88c897 ("selftests/ftrace: event_triggers: wait
->> longer for test_event_enable") introduced bash specific "=="
->> comparation operator, that test will fail when we run it on a
->> posix-shell. `checkbashisms` warned it as below.
->>
->> possible bashism in ftrace/func_event_triggers.tc line 45 (should be 'b = a'):
->>          if [ "$e" == $val ]; then
->>
->> This replaces it with "=".
->>
->> Fixes: a1d6cd88c897 ("selftests/ftrace: event_triggers: wait longer for test_event_enable")
->> Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-> 
-> Reviewed-by: Steven Rostedt (Google) <rostedt@goodmis.org>
-> 
-> Shuah,
-> 
-> Care to pull this through your tree?
-> 
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git master
+branch HEAD: 4fafd96910add124586b549ad005dcd179de8a18  Add linux-next specific files for 20230203
 
-Yes. Will appear shortly in linux-kselftest next.
+Error/Warning reports:
 
-thanks,
--- Shuah
+https://lore.kernel.org/oe-kbuild-all/202301301801.y5O08tQx-lkp@intel.com
+https://lore.kernel.org/oe-kbuild-all/202301302110.mEtNwkBD-lkp@intel.com
+https://lore.kernel.org/oe-kbuild-all/202301310939.TAgCOEZb-lkp@intel.com
 
+Error/Warning: (recently discovered and may have been fixed)
+
+ERROR: modpost: "devm_platform_ioremap_resource" [drivers/dma/fsl-edma.ko] undefined!
+ERROR: modpost: "devm_platform_ioremap_resource" [drivers/dma/idma64.ko] undefined!
+FAILED: load BTF from vmlinux: No data available
+arch/arm64/kvm/arm.c:2206: warning: expecting prototype for Initialize Hyp(). Prototype was for kvm_arm_init() instead
+drivers/gpu/drm/amd/amdgpu/../display/dc/link/accessories/link_dp_trace.c:148:6: warning: no previous prototype for 'link_dp_trace_set_edp_power_timestamp' [-Wmissing-prototypes]
+drivers/gpu/drm/amd/amdgpu/../display/dc/link/accessories/link_dp_trace.c:158:10: warning: no previous prototype for 'link_dp_trace_get_edp_poweron_timestamp' [-Wmissing-prototypes]
+drivers/gpu/drm/amd/amdgpu/../display/dc/link/accessories/link_dp_trace.c:163:10: warning: no previous prototype for 'link_dp_trace_get_edp_poweroff_timestamp' [-Wmissing-prototypes]
+drivers/gpu/drm/amd/amdgpu/../display/dc/link/protocols/link_dp_capability.c:1295:32: warning: variable 'result_write_min_hblank' set but not used [-Wunused-but-set-variable]
+drivers/gpu/drm/amd/amdgpu/../display/dc/link/protocols/link_dp_capability.c:279:42: warning: variable 'ds_port' set but not used [-Wunused-but-set-variable]
+drivers/gpu/drm/amd/amdgpu/../display/dc/link/protocols/link_dp_training.c:1585:38: warning: variable 'result' set but not used [-Wunused-but-set-variable]
+ftrace-ops.c:(.init.text+0x2c3): undefined reference to `__udivdi3'
+libbpf: failed to find '.BTF' ELF section in vmlinux
+
+Unverified Error/Warning (likely false positive, please contact us if interested):
+
+drivers/clk/ingenic/jz4760-cgu.c:80 jz4760_cgu_calc_m_n_od() error: uninitialized symbol 'od'.
+
+Error/Warning ids grouped by kconfigs:
+
+gcc_recent_errors
+|-- alpha-allyesconfig
+|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-accessories-link_dp_trace.c:warning:no-previous-prototype-for-link_dp_trace_get_edp_poweroff_timestamp
+|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-accessories-link_dp_trace.c:warning:no-previous-prototype-for-link_dp_trace_get_edp_poweron_timestamp
+|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-accessories-link_dp_trace.c:warning:no-previous-prototype-for-link_dp_trace_set_edp_power_timestamp
+|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-protocols-link_dp_capability.c:warning:variable-ds_port-set-but-not-used
+|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-protocols-link_dp_capability.c:warning:variable-result_write_min_hblank-set-but-not-used
+|   `-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-protocols-link_dp_training.c:warning:variable-result-set-but-not-used
+|-- arc-allyesconfig
+|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-accessories-link_dp_trace.c:warning:no-previous-prototype-for-link_dp_trace_get_edp_poweroff_timestamp
+|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-accessories-link_dp_trace.c:warning:no-previous-prototype-for-link_dp_trace_get_edp_poweron_timestamp
+|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-accessories-link_dp_trace.c:warning:no-previous-prototype-for-link_dp_trace_set_edp_power_timestamp
+|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-protocols-link_dp_capability.c:warning:variable-ds_port-set-but-not-used
+|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-protocols-link_dp_capability.c:warning:variable-result_write_min_hblank-set-but-not-used
+|   `-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-protocols-link_dp_training.c:warning:variable-result-set-but-not-used
+|-- arc-randconfig-r003-20230202
+|   |-- FAILED:load-BTF-from-vmlinux:No-data-available
+|   `-- libbpf:failed-to-find-.BTF-ELF-section-in-vmlinux
+|-- arm-allyesconfig
+|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-accessories-link_dp_trace.c:warning:no-previous-prototype-for-link_dp_trace_get_edp_poweroff_timestamp
+|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-accessories-link_dp_trace.c:warning:no-previous-prototype-for-link_dp_trace_get_edp_poweron_timestamp
+|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-accessories-link_dp_trace.c:warning:no-previous-prototype-for-link_dp_trace_set_edp_power_timestamp
+|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-protocols-link_dp_capability.c:warning:variable-ds_port-set-but-not-used
+|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-protocols-link_dp_capability.c:warning:variable-result_write_min_hblank-set-but-not-used
+|   `-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-protocols-link_dp_training.c:warning:variable-result-set-but-not-used
+|-- arm64-allyesconfig
+|   |-- arch-arm64-kvm-arm.c:warning:expecting-prototype-for-Initialize-Hyp().-Prototype-was-for-kvm_arm_init()-instead
+|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-accessories-link_dp_trace.c:warning:no-previous-prototype-for-link_dp_trace_get_edp_poweroff_timestamp
+|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-accessories-link_dp_trace.c:warning:no-previous-prototype-for-link_dp_trace_get_edp_poweron_timestamp
+|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-accessories-link_dp_trace.c:warning:no-previous-prototype-for-link_dp_trace_set_edp_power_timestamp
+|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-protocols-link_dp_capability.c:warning:variable-ds_port-set-but-not-used
+|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-protocols-link_dp_capability.c:warning:variable-result_write_min_hblank-set-but-not-used
+|   `-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-protocols-link_dp_training.c:warning:variable-result-set-but-not-used
+|-- i386-allyesconfig
+|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-accessories-link_dp_trace.c:warning:no-previous-prototype-for-link_dp_trace_get_edp_poweroff_timestamp
+|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-accessories-link_dp_trace.c:warning:no-previous-prototype-for-link_dp_trace_get_edp_poweron_timestamp
+|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-accessories-link_dp_trace.c:warning:no-previous-prototype-for-link_dp_trace_set_edp_power_timestamp
+|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-protocols-link_dp_capability.c:warning:variable-ds_port-set-but-not-used
+|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-protocols-link_dp_capability.c:warning:variable-result_write_min_hblank-set-but-not-used
+|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-protocols-link_dp_training.c:warning:variable-result-set-but-not-used
+|   `-- ftrace-ops.c:(.init.text):undefined-reference-to-__udivdi3
+|-- i386-randconfig-m021
+|   `-- kernel-trace-trace_events_synth.c-trace_event_raw_event_synth()-warn:inconsistent-indenting
+|-- ia64-allmodconfig
+|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-accessories-link_dp_trace.c:warning:no-previous-prototype-for-link_dp_trace_get_edp_poweroff_timestamp
+|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-accessories-link_dp_trace.c:warning:no-previous-prototype-for-link_dp_trace_get_edp_poweron_timestamp
+|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-accessories-link_dp_trace.c:warning:no-previous-prototype-for-link_dp_trace_set_edp_power_timestamp
+|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-protocols-link_dp_capability.c:warning:variable-ds_port-set-but-not-used
+|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-protocols-link_dp_capability.c:warning:variable-result_write_min_hblank-set-but-not-used
+|   `-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-protocols-link_dp_training.c:warning:variable-result-set-but-not-used
+|-- ia64-randconfig-r026-20230202
+
+elapsed time: 920m
+
+configs tested: 62
+configs skipped: 2
+
+gcc tested configs:
+x86_64                            allnoconfig
+um                           x86_64_defconfig
+um                             i386_defconfig
+arc                                 defconfig
+s390                             allmodconfig
+alpha                               defconfig
+s390                                defconfig
+s390                             allyesconfig
+i386                          randconfig-a001
+i386                          randconfig-a003
+powerpc                          allmodconfig
+i386                          randconfig-a005
+powerpc                           allnoconfig
+i386                                defconfig
+x86_64                              defconfig
+arm                                 defconfig
+x86_64                        randconfig-a013
+x86_64                               rhel-8.3
+x86_64                        randconfig-a011
+x86_64                          rhel-8.3-func
+x86_64                    rhel-8.3-kselftests
+x86_64                        randconfig-a015
+x86_64                        randconfig-a004
+i386                             allyesconfig
+x86_64                        randconfig-a002
+i386                          randconfig-a014
+ia64                             allmodconfig
+arm64                            allyesconfig
+i386                          randconfig-a012
+arm                              allyesconfig
+x86_64                           allyesconfig
+i386                          randconfig-a016
+x86_64                        randconfig-a006
+riscv                randconfig-r042-20230202
+s390                 randconfig-r044-20230202
+arc                  randconfig-r043-20230202
+x86_64                           rhel-8.3-syz
+x86_64                         rhel-8.3-kunit
+x86_64                           rhel-8.3-kvm
+x86_64                           rhel-8.3-bpf
+alpha                            allyesconfig
+arc                              allyesconfig
+m68k                             allyesconfig
+sh                               allmodconfig
+mips                             allyesconfig
+m68k                             allmodconfig
+
+clang tested configs:
+x86_64                          rhel-8.3-rust
+i386                          randconfig-a002
+i386                          randconfig-a004
+i386                          randconfig-a006
+x86_64                        randconfig-a012
+x86_64                        randconfig-a014
+i386                          randconfig-a013
+x86_64                        randconfig-a016
+x86_64                        randconfig-a001
+arm                  randconfig-r046-20230202
+x86_64                        randconfig-a003
+hexagon              randconfig-r045-20230202
+hexagon              randconfig-r041-20230202
+i386                          randconfig-a015
+x86_64                        randconfig-a005
+i386                          randconfig-a011
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests
