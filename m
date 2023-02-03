@@ -2,146 +2,119 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D16C7C61DA4
-	for <linux-trace-kernel@archiver.kernel.org>; Fri,  3 Feb 2023 03:54:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 32DE9C63797
+	for <linux-trace-kernel@archiver.kernel.org>; Fri,  3 Feb 2023 08:58:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230140AbjBCDyT (ORCPT
+        id S232234AbjBCI6T (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Thu, 2 Feb 2023 22:54:19 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36814 "EHLO
+        Fri, 3 Feb 2023 03:58:19 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54420 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229662AbjBCDyS (ORCPT
+        with ESMTP id S232124AbjBCI6R (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Thu, 2 Feb 2023 22:54:18 -0500
-Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 887B92366C;
-        Thu,  2 Feb 2023 19:54:16 -0800 (PST)
-Received: from dggpeml100012.china.huawei.com (unknown [172.30.72.56])
-        by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4P7MDZ47vszJsDg;
-        Fri,  3 Feb 2023 11:52:30 +0800 (CST)
-Received: from localhost.localdomain (10.67.175.61) by
- dggpeml100012.china.huawei.com (7.185.36.121) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.34; Fri, 3 Feb 2023 11:54:07 +0800
-From:   Zheng Yejian <zhengyejian1@huawei.com>
-To:     <rostedt@goodmis.org>
-CC:     <mhiramat@kernel.org>, <zanussi@kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-trace-kernel@vger.kernel.org>, <zhengyejian1@huawei.com>,
-        <wanghai38@huawei.com>
-Subject: [bug report] WARNINGs in rb_check_pages() and rb_handle_head_page()
-Date:   Fri, 3 Feb 2023 11:56:08 +0800
-Message-ID: <20230203035608.2336906-1-zhengyejian1@huawei.com>
-X-Mailer: git-send-email 2.25.1
+        Fri, 3 Feb 2023 03:58:17 -0500
+Received: from mail-ed1-x52c.google.com (mail-ed1-x52c.google.com [IPv6:2a00:1450:4864:20::52c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 496772196E
+        for <linux-trace-kernel@vger.kernel.org>; Fri,  3 Feb 2023 00:58:15 -0800 (PST)
+Received: by mail-ed1-x52c.google.com with SMTP id f7so4490172edw.5
+        for <linux-trace-kernel@vger.kernel.org>; Fri, 03 Feb 2023 00:58:15 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=blackwall-org.20210112.gappssmtp.com; s=20210112;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=1z40xBZl1s88AVKBaaMT4kPg0/IWGeDII88qOAQgOrM=;
+        b=ugJ1ZUxXgqF6M2ADHF0b7CSoiPxc2idiHZ2fRCEKjinDPuJE2buPQtrAgjDPb3eklH
+         yExCa7ATGFczL1g330HeaNsvJYxp3uMmFmpgZ5scL1Gv8BDXq+CM8vi+Yy6zCybrbEE1
+         yvEnkc+NXR+ivXGx61+N8VusLuYKcwoRKlBJC2qLYRuGCA8ylN4rd7Dusa8F29f1tkss
+         DATUANszgU8rquTfwekSlBTrURvimxxPLYMUDnzTjX3g9e5taFjOLQuY2fUcQVY5dnv2
+         8vAW/OmHtlY200qBn0iNM/CgVbxDZ8ErDa3qfQMqjybVpO87MwGol2ISPhewfHnDAgQO
+         wz/Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=1z40xBZl1s88AVKBaaMT4kPg0/IWGeDII88qOAQgOrM=;
+        b=gedVxBM2ct919G8y2rYma4JX+Mk5gmuRvt3wS6tvRs5MP8VKbboufTIzlcdqBRr8OF
+         EVw/UhtRbk+AJLjv0ZzSOn328xxD1aXMVNrXcSYCqEEh40wv9hvdc3oerA7UwD6lmUSf
+         lLoxWHKWN4yVEEOHKLfqadMJwmXUIuOwa9L/pCERd39IDSlhm30VFGS8SC3V+kHOTs+F
+         YIm0QwRKzcT3lj4cq8Jwd0GUnkxJelFMTwsFW86sOWJJUNQEOJekvK5e5MB26n8AZM53
+         /rJ2V1fhJvQr/TfcgdDEU6pLCIV7aNa4gPGWE5P8F8j4Jk/vy0ECOm11WMbL7LB/uPT0
+         ZrYA==
+X-Gm-Message-State: AO0yUKVYytPILiH0pcRGyv2oPIKdXwX6GS5dSsw9DGmyOc3VVjhykNJc
+        Rfr8rzJhbFXYLVzl4xcBhiUAzA==
+X-Google-Smtp-Source: AK7set/ZmQCxv0xQUirdGsWOY06LUA2AkD+Yj31SlUyBsvKXs195QxZ3dTLxR/WJF3JVqpCmSNj+gA==
+X-Received: by 2002:a05:6402:3647:b0:49e:eb5:ed05 with SMTP id em7-20020a056402364700b0049e0eb5ed05mr9680658edb.9.1675414693697;
+        Fri, 03 Feb 2023 00:58:13 -0800 (PST)
+Received: from [192.168.0.161] (62-73-72-43.ip.btc-net.bg. [62.73.72.43])
+        by smtp.gmail.com with ESMTPSA id k3-20020a056402048300b00499b6b50419sm813274edv.11.2023.02.03.00.58.12
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 03 Feb 2023 00:58:13 -0800 (PST)
+Message-ID: <6e50c1ac-9182-0d86-24fb-afcc2c63db85@blackwall.org>
+Date:   Fri, 3 Feb 2023 10:58:12 +0200
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [10.67.175.61]
-X-ClientProxiedBy: dggems701-chm.china.huawei.com (10.3.19.178) To
- dggpeml100012.china.huawei.com (7.185.36.121)
-X-CFilter-Loop: Reflected
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.6.0
+Subject: Re: [PATCH net-next v3 06/16] net: bridge: Add a tracepoint for MDB
+ overflows
+Content-Language: en-US
+To:     Petr Machata <petrm@nvidia.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Eric Dumazet <edumazet@google.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Paolo Abeni <pabeni@redhat.com>,
+        Roopa Prabhu <roopa@nvidia.com>, netdev@vger.kernel.org
+Cc:     bridge@lists.linux-foundation.org,
+        Ido Schimmel <idosch@nvidia.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        linux-trace-kernel@vger.kernel.org
+References: <cover.1675359453.git.petrm@nvidia.com>
+ <a01c188bcbbb0f5f53e333ed9175f938eb2736be.1675359453.git.petrm@nvidia.com>
+From:   Nikolay Aleksandrov <razor@blackwall.org>
+In-Reply-To: <a01c188bcbbb0f5f53e333ed9175f938eb2736be.1675359453.git.petrm@nvidia.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-Hi, steve
+On 02/02/2023 19:59, Petr Machata wrote:
+> The following patch will add two more maximum MDB allowances to the global
+> one, mcast_hash_max, that exists today. In all these cases, attempts to add
+> MDB entries above the configured maximums through netlink, fail noisily and
+> obviously. Such visibility is missing when adding entries through the
+> control plane traffic, by IGMP or MLD packets.
+> 
+> To improve visibility in those cases, add a trace point that reports the
+> violation, including the relevant netdevice (be it a slave or the bridge
+> itself), and the MDB entry parameters:
+> 
+> 	# perf record -e bridge:br_mdb_full &
+> 	# [...]
+> 	# perf script | cut -d: -f4-
+> 	 dev v2 af 2 src ::ffff:0.0.0.0 grp ::ffff:239.1.1.112/00:00:00:00:00:00 vid 0
+> 	 dev v2 af 10 src :: grp ff0e::112/00:00:00:00:00:00 vid 0
+> 	 dev v2 af 2 src ::ffff:0.0.0.0 grp ::ffff:239.1.1.112/00:00:00:00:00:00 vid 10
+> 	 dev v2 af 10 src 2001:db8:1::1 grp ff0e::1/00:00:00:00:00:00 vid 10
+> 	 dev v2 af 2 src ::ffff:192.0.2.1 grp ::ffff:239.1.1.1/00:00:00:00:00:00 vid 10
+> 
+> CC: Steven Rostedt <rostedt@goodmis.org>
+> CC: linux-trace-kernel@vger.kernel.org
+> Signed-off-by: Petr Machata <petrm@nvidia.com>
+> Reviewed-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+> ---
+> 
+> Notes:
+>     v2:
+>     - Report IPv4 as an IPv6-mapped address through the IPv6 buffer
+>       as well, to save ring buffer space.
+> 
+>  include/trace/events/bridge.h | 58 +++++++++++++++++++++++++++++++++++
+>  net/core/net-traces.c         |  1 +
+>  2 files changed, 59 insertions(+)
+> 
 
-I happened to get two WARNINGs [1] [2] at same time when testing v5.10 with
-testcase 'func_profiler.tc':
-Link: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git/tree/tools/testing/selftests/ftrace/test.d/ftrace/func_profiler.tc
+Acked-by: Nikolay Aleksandrov <razor@blackwall.org>
 
-It seems a data race between ring_buffer writing and integrity checking.
-That is, head_page is moving when buffer is full and RB_FLAG is updating,
-however at same time RB_FLAG was cleared when doing integrity check:
-  rb_check_pages()            rb_handle_head_page():
-  --------                    --------
-  rb_head_page_deactivate()
-                              rb_head_page_set_normal()
-  rb_head_page_activate()
 
-Mainline kernel seems have this problem as well, see the constructed
-testcase 'repro.sh' [3] and reproduction log [4].
-
-Integrity checking of ring_buffer on closing "trace" file seems not a good
-point, do you have any idea, steve?
-
-1:
-One WARNING happened at
-Link: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git/tree/kernel/trace/ring_buffer.c?h=linux-5.10.y#n1492
-  Call Trace:
-   rb_check_pages
-   ring_buffer_read_finish
-   tracing_release
-
-2:
-The other WARNING happened at
-Link: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git/tree/kernel/trace/ring_buffer.c?h=linux-5.10.y#n2507
-  Call Trace:
-   rb_handle_head_page
-   rb_move_tail
-   __rb_reserve_next
-   rb_reserve_next_event
-   ring_buffer_lock_reserve
-   __trace_buffer_lock_reserve
-   trace_function
-   function_trace_call
-
-3:
-``` read_trace.sh
-  while true;
-  do
-    # the "trace" file is closed after read
-    head -1 /sys/kernel/tracing/trace > /dev/null
-  done
-```
-``` repro.sh
-  # function tracer will writing enough data into ring_buffer
-  echo function > /sys/kernel/tracing/current_tracer
-  ./read_trace.sh &
-  ./read_trace.sh &
-  ./read_trace.sh &
-  ./read_trace.sh &
-  ./read_trace.sh &
-  ./read_trace.sh &
-  ./read_trace.sh &
-  ./read_trace.sh &
-```
-
-4:
-------------[ cut here ]------------
-WARNING: CPU: 9 PID: 62 at kernel/trace/ring_buffer.c:2653 rb_move_tail+0x450/0x470
-Modules linked in:
-CPU: 9 PID: 62 Comm: ksoftirqd/9 Tainted: G        W          6.2.0-rc6+ #261
-Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS rel-1.15.0-0-g2dd4b9b3f840-prebuilt.qemu.org 04/01/2014
-RIP: 0010:rb_move_tail+0x450/0x470
-Code: ff ff 4c 89 c8 f0 4d 0f b1 02 48 89 c2 48 83 e2 fc 49 39 d0 75 24 83 e0 03 83 f8 02 0f 84 e1 fb ff ff 48 8b 57 10 f0 ff 42 08 <0f> 0b 83 f8 02 0f 84 ce fb ff ff e9 db
-RSP: 0018:ffffb5564089bd00 EFLAGS: 00000203
-RAX: 0000000000000000 RBX: ffff9db385a2bf81 RCX: ffffb5564089bd18
-RDX: ffff9db281110100 RSI: 0000000000000fe4 RDI: ffff9db380145400
-RBP: ffff9db385a2bf80 R08: ffff9db385a2bfc0 R09: ffff9db385a2bfc2
-R10: ffff9db385a6c000 R11: ffff9db385a2bf80 R12: 0000000000000000
-R13: 00000000000003e8 R14: ffff9db281110100 R15: ffffffffbb006108
-FS:  0000000000000000(0000) GS:ffff9db3bdcc0000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 00005602323024c8 CR3: 0000000022e0c000 CR4: 00000000000006e0
-Call Trace:
- <TASK>
- ring_buffer_lock_reserve+0x136/0x360
- ? __do_softirq+0x287/0x2df
- ? __pfx_rcu_softirq_qs+0x10/0x10
- trace_function+0x21/0x110
- ? __pfx_rcu_softirq_qs+0x10/0x10
- ? __do_softirq+0x287/0x2df
- function_trace_call+0xf6/0x120
- 0xffffffffc038f097
- ? rcu_softirq_qs+0x5/0x140
- rcu_softirq_qs+0x5/0x140
- __do_softirq+0x287/0x2df
- run_ksoftirqd+0x2a/0x30
- smpboot_thread_fn+0x188/0x220
- ? __pfx_smpboot_thread_fn+0x10/0x10
- kthread+0xe7/0x110
- ? __pfx_kthread+0x10/0x10
- ret_from_fork+0x2c/0x50
- </TASK>
----[ end trace 0000000000000000 ]---
