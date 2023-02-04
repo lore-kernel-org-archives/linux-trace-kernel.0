@@ -2,219 +2,132 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 59842C636CC
-	for <linux-trace-kernel@archiver.kernel.org>; Fri,  3 Feb 2023 18:36:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 27DFAC61DA4
+	for <linux-trace-kernel@archiver.kernel.org>; Sat,  4 Feb 2023 19:34:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232601AbjBCSgm (ORCPT
+        id S230297AbjBDTd7 (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Fri, 3 Feb 2023 13:36:42 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60838 "EHLO
+        Sat, 4 Feb 2023 14:33:59 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40998 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233606AbjBCSgl (ORCPT
+        with ESMTP id S229746AbjBDTd6 (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Fri, 3 Feb 2023 13:36:41 -0500
-Received: from mga06.intel.com (mga06b.intel.com [134.134.136.31])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EFCBA9EF6;
-        Fri,  3 Feb 2023 10:36:38 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1675449399; x=1706985399;
-  h=date:from:to:cc:subject:message-id:mime-version:
-   content-transfer-encoding;
-  bh=sBr4gbtJ0rHs80U4nER/Ux24bKez/zclcRpEf7y7Qs8=;
-  b=BtYgaxRY6rtpRz/1nYs6HPj+kjiuQV4kV6w4nk2lM4cpF0yrXAbT4wal
-   VGW3Sk1yU4FQQ79XdzlBGTFiN0oPIbEviX2SdSh/7xmAVkUZNu/LyZ1fc
-   nHScHSCvG8yUxwCJgLTvFbFXIH8nBiyDSxC3ahbFE3MfVTUYrYoY80ddf
-   wxAllBrkshFBbjt+LR05sKDEZls5/zaypM6RuE5j7CeyGGFkfodzR0l56
-   ZqR40n1c9JI1H3Ql3Og1tmiCAxjyoWUAFpaVZe2Y2wwtFYFaUjKtL9QMk
-   Xg8L4lPp+mcp/Kaf8vuXNZQ2UmZpHGXJkFCN9ngzeX/NbPwYf7FgqVgEh
-   w==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10610"; a="391212838"
-X-IronPort-AV: E=Sophos;i="5.97,271,1669104000"; 
-   d="scan'208";a="391212838"
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Feb 2023 10:36:15 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6500,9779,10610"; a="667731283"
-X-IronPort-AV: E=Sophos;i="5.97,271,1669104000"; 
-   d="scan'208";a="667731283"
-Received: from lkp-server01.sh.intel.com (HELO 4455601a8d94) ([10.239.97.150])
-  by fmsmga007.fm.intel.com with ESMTP; 03 Feb 2023 10:36:12 -0800
-Received: from kbuild by 4455601a8d94 with local (Exim 4.96)
-        (envelope-from <lkp@intel.com>)
-        id 1pO0uy-0000hV-07;
-        Fri, 03 Feb 2023 18:36:12 +0000
-Date:   Sat, 04 Feb 2023 02:35:52 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     Andrew Morton <akpm@linux-foundation.org>
-Cc:     linux-trace-kernel@vger.kernel.org, linux-mips@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev,
-        kvmarm@lists.cs.columbia.edu, amd-gfx@lists.freedesktop.org,
-        Linux Memory Management List <linux-mm@kvack.org>
-Subject: [linux-next:master] BUILD REGRESSION
- 4fafd96910add124586b549ad005dcd179de8a18
-Message-ID: <63dd5408.DXu9FfX9ZxM1BSRX%lkp@intel.com>
-User-Agent: Heirloom mailx 12.5 6/20/10
+        Sat, 4 Feb 2023 14:33:58 -0500
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BCD2C2B090;
+        Sat,  4 Feb 2023 11:33:53 -0800 (PST)
+Received: from lhrpeml500006.china.huawei.com (unknown [172.18.147.207])
+        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4P8Mzq6hCkz67K2n;
+        Sun,  5 Feb 2023 03:29:59 +0800 (CST)
+Received: from P_UKIT01-A7bmah.china.huawei.com (10.195.244.18) by
+ lhrpeml500006.china.huawei.com (7.191.161.198) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.17; Sat, 4 Feb 2023 19:33:50 +0000
+From:   <shiju.jose@huawei.com>
+To:     <mchehab@kernel.org>, <linux-edac@vger.kernel.org>
+CC:     <rostedt@goodmis.org>, <mhiramat@kernel.org>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-trace-kernel@vger.kernel.org>, <tanxiaofei@huawei.com>,
+        <jonathan.cameron@huawei.com>, <linuxarm@huawei.com>,
+        <shiju.jose@huawei.com>
+Subject: [RFC PATCH V2 1/1] rasdaemon: Fix poll() on per_cpu trace_pipe_raw blocks indefinitely
+Date:   Sat, 4 Feb 2023 19:33:45 +0000
+Message-ID: <20230204193345.842-1-shiju.jose@huawei.com>
+X-Mailer: git-send-email 2.26.0.windows.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [10.195.244.18]
+X-ClientProxiedBy: lhrpeml500004.china.huawei.com (7.191.163.9) To
+ lhrpeml500006.china.huawei.com (7.191.161.198)
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git master
-branch HEAD: 4fafd96910add124586b549ad005dcd179de8a18  Add linux-next specific files for 20230203
+From: Shiju Jose <shiju.jose@huawei.com>
 
-Error/Warning reports:
+The error events are not received in the rasdaemon since kernel 6.1-rc6.
+This issue is firstly detected and reported, when testing the CXL error
+events in the rasdaemon.
 
-https://lore.kernel.org/oe-kbuild-all/202301301801.y5O08tQx-lkp@intel.com
-https://lore.kernel.org/oe-kbuild-all/202301302110.mEtNwkBD-lkp@intel.com
-https://lore.kernel.org/oe-kbuild-all/202301310939.TAgCOEZb-lkp@intel.com
+Debugging showed, poll() on trace_pipe_raw in the ras-events.c do not
+return and this issue is seen after the commit
+42fb0a1e84ff525ebe560e2baf9451ab69127e2b ("tracing/ring-buffer: Have
+polling block on watermark").
 
-Error/Warning: (recently discovered and may have been fixed)
+This also verified using a test application for poll()
+and select() on trace_pipe_raw.
 
-ERROR: modpost: "devm_platform_ioremap_resource" [drivers/dma/fsl-edma.ko] undefined!
-ERROR: modpost: "devm_platform_ioremap_resource" [drivers/dma/idma64.ko] undefined!
-FAILED: load BTF from vmlinux: No data available
-arch/arm64/kvm/arm.c:2206: warning: expecting prototype for Initialize Hyp(). Prototype was for kvm_arm_init() instead
-drivers/gpu/drm/amd/amdgpu/../display/dc/link/accessories/link_dp_trace.c:148:6: warning: no previous prototype for 'link_dp_trace_set_edp_power_timestamp' [-Wmissing-prototypes]
-drivers/gpu/drm/amd/amdgpu/../display/dc/link/accessories/link_dp_trace.c:158:10: warning: no previous prototype for 'link_dp_trace_get_edp_poweron_timestamp' [-Wmissing-prototypes]
-drivers/gpu/drm/amd/amdgpu/../display/dc/link/accessories/link_dp_trace.c:163:10: warning: no previous prototype for 'link_dp_trace_get_edp_poweroff_timestamp' [-Wmissing-prototypes]
-drivers/gpu/drm/amd/amdgpu/../display/dc/link/protocols/link_dp_capability.c:1295:32: warning: variable 'result_write_min_hblank' set but not used [-Wunused-but-set-variable]
-drivers/gpu/drm/amd/amdgpu/../display/dc/link/protocols/link_dp_capability.c:279:42: warning: variable 'ds_port' set but not used [-Wunused-but-set-variable]
-drivers/gpu/drm/amd/amdgpu/../display/dc/link/protocols/link_dp_training.c:1585:38: warning: variable 'result' set but not used [-Wunused-but-set-variable]
-ftrace-ops.c:(.init.text+0x2c3): undefined reference to `__udivdi3'
-libbpf: failed to find '.BTF' ELF section in vmlinux
+There is also a bug reported on this issue,
+https://lore.kernel.org/all/31eb3b12-3350-90a4-a0d9-d1494db7cf74@oracle.com/
 
-Unverified Error/Warning (likely false positive, please contact us if interested):
+This issue occurs for the per_cpu case, which calls the
+ring_buffer_poll_wait(), in kernel/trace/ring_buffer.c, with the
+buffer_percent > 0 and then wait until the percentage of pages are
+available.The default value set for the buffer_percent is 50 in the
+kernel/trace/trace.c. However poll() does not return even met the percentage
+of pages condition.
 
-drivers/clk/ingenic/jz4760-cgu.c:80 jz4760_cgu_calc_m_n_od() error: uninitialized symbol 'od'.
+As a fix, rasdaemon set buffer_percent as 0 through the
+/sys/kernel/debug/tracing/instances/rasdaemon/buffer_percent, then the
+task will wake up as soon as data is added to any of the specific cpu
+buffer and poll() on per_cpu/cpuX/trace_pipe_raw does not block
+indefinitely.
 
-Error/Warning ids grouped by kconfigs:
+Dependency on the kernel RFC patch
+tracing: Fix poll() and select() do not work on per_cpu trace_pipe and trace_pipe_raw
 
-gcc_recent_errors
-|-- alpha-allyesconfig
-|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-accessories-link_dp_trace.c:warning:no-previous-prototype-for-link_dp_trace_get_edp_poweroff_timestamp
-|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-accessories-link_dp_trace.c:warning:no-previous-prototype-for-link_dp_trace_get_edp_poweron_timestamp
-|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-accessories-link_dp_trace.c:warning:no-previous-prototype-for-link_dp_trace_set_edp_power_timestamp
-|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-protocols-link_dp_capability.c:warning:variable-ds_port-set-but-not-used
-|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-protocols-link_dp_capability.c:warning:variable-result_write_min_hblank-set-but-not-used
-|   `-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-protocols-link_dp_training.c:warning:variable-result-set-but-not-used
-|-- arc-allyesconfig
-|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-accessories-link_dp_trace.c:warning:no-previous-prototype-for-link_dp_trace_get_edp_poweroff_timestamp
-|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-accessories-link_dp_trace.c:warning:no-previous-prototype-for-link_dp_trace_get_edp_poweron_timestamp
-|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-accessories-link_dp_trace.c:warning:no-previous-prototype-for-link_dp_trace_set_edp_power_timestamp
-|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-protocols-link_dp_capability.c:warning:variable-ds_port-set-but-not-used
-|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-protocols-link_dp_capability.c:warning:variable-result_write_min_hblank-set-but-not-used
-|   `-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-protocols-link_dp_training.c:warning:variable-result-set-but-not-used
-|-- arc-randconfig-r003-20230202
-|   |-- FAILED:load-BTF-from-vmlinux:No-data-available
-|   `-- libbpf:failed-to-find-.BTF-ELF-section-in-vmlinux
-|-- arm-allyesconfig
-|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-accessories-link_dp_trace.c:warning:no-previous-prototype-for-link_dp_trace_get_edp_poweroff_timestamp
-|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-accessories-link_dp_trace.c:warning:no-previous-prototype-for-link_dp_trace_get_edp_poweron_timestamp
-|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-accessories-link_dp_trace.c:warning:no-previous-prototype-for-link_dp_trace_set_edp_power_timestamp
-|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-protocols-link_dp_capability.c:warning:variable-ds_port-set-but-not-used
-|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-protocols-link_dp_capability.c:warning:variable-result_write_min_hblank-set-but-not-used
-|   `-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-protocols-link_dp_training.c:warning:variable-result-set-but-not-used
-|-- arm64-allyesconfig
-|   |-- arch-arm64-kvm-arm.c:warning:expecting-prototype-for-Initialize-Hyp().-Prototype-was-for-kvm_arm_init()-instead
-|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-accessories-link_dp_trace.c:warning:no-previous-prototype-for-link_dp_trace_get_edp_poweroff_timestamp
-|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-accessories-link_dp_trace.c:warning:no-previous-prototype-for-link_dp_trace_get_edp_poweron_timestamp
-|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-accessories-link_dp_trace.c:warning:no-previous-prototype-for-link_dp_trace_set_edp_power_timestamp
-|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-protocols-link_dp_capability.c:warning:variable-ds_port-set-but-not-used
-|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-protocols-link_dp_capability.c:warning:variable-result_write_min_hblank-set-but-not-used
-|   `-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-protocols-link_dp_training.c:warning:variable-result-set-but-not-used
-|-- i386-allyesconfig
-|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-accessories-link_dp_trace.c:warning:no-previous-prototype-for-link_dp_trace_get_edp_poweroff_timestamp
-|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-accessories-link_dp_trace.c:warning:no-previous-prototype-for-link_dp_trace_get_edp_poweron_timestamp
-|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-accessories-link_dp_trace.c:warning:no-previous-prototype-for-link_dp_trace_set_edp_power_timestamp
-|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-protocols-link_dp_capability.c:warning:variable-ds_port-set-but-not-used
-|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-protocols-link_dp_capability.c:warning:variable-result_write_min_hblank-set-but-not-used
-|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-protocols-link_dp_training.c:warning:variable-result-set-but-not-used
-|   `-- ftrace-ops.c:(.init.text):undefined-reference-to-__udivdi3
-|-- i386-randconfig-m021
-|   `-- kernel-trace-trace_events_synth.c-trace_event_raw_event_synth()-warn:inconsistent-indenting
-|-- ia64-allmodconfig
-|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-accessories-link_dp_trace.c:warning:no-previous-prototype-for-link_dp_trace_get_edp_poweroff_timestamp
-|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-accessories-link_dp_trace.c:warning:no-previous-prototype-for-link_dp_trace_get_edp_poweron_timestamp
-|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-accessories-link_dp_trace.c:warning:no-previous-prototype-for-link_dp_trace_set_edp_power_timestamp
-|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-protocols-link_dp_capability.c:warning:variable-ds_port-set-but-not-used
-|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-protocols-link_dp_capability.c:warning:variable-result_write_min_hblank-set-but-not-used
-|   `-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-protocols-link_dp_training.c:warning:variable-result-set-but-not-used
-|-- ia64-randconfig-r026-20230202
+Signed-off-by: Shiju Jose <shiju.jose@huawei.com>
 
-elapsed time: 920m
+Changes:
+RFC V1 -> RFC V2
+1. Rename the patch header subject.
+2. Changes for the backward compatability to the old kernels.
+---
+ ras-events.c | 22 ++++++++++++++++++++++
+ 1 file changed, 22 insertions(+)
 
-configs tested: 62
-configs skipped: 2
-
-gcc tested configs:
-x86_64                            allnoconfig
-um                           x86_64_defconfig
-um                             i386_defconfig
-arc                                 defconfig
-s390                             allmodconfig
-alpha                               defconfig
-s390                                defconfig
-s390                             allyesconfig
-i386                          randconfig-a001
-i386                          randconfig-a003
-powerpc                          allmodconfig
-i386                          randconfig-a005
-powerpc                           allnoconfig
-i386                                defconfig
-x86_64                              defconfig
-arm                                 defconfig
-x86_64                        randconfig-a013
-x86_64                               rhel-8.3
-x86_64                        randconfig-a011
-x86_64                          rhel-8.3-func
-x86_64                    rhel-8.3-kselftests
-x86_64                        randconfig-a015
-x86_64                        randconfig-a004
-i386                             allyesconfig
-x86_64                        randconfig-a002
-i386                          randconfig-a014
-ia64                             allmodconfig
-arm64                            allyesconfig
-i386                          randconfig-a012
-arm                              allyesconfig
-x86_64                           allyesconfig
-i386                          randconfig-a016
-x86_64                        randconfig-a006
-riscv                randconfig-r042-20230202
-s390                 randconfig-r044-20230202
-arc                  randconfig-r043-20230202
-x86_64                           rhel-8.3-syz
-x86_64                         rhel-8.3-kunit
-x86_64                           rhel-8.3-kvm
-x86_64                           rhel-8.3-bpf
-alpha                            allyesconfig
-arc                              allyesconfig
-m68k                             allyesconfig
-sh                               allmodconfig
-mips                             allyesconfig
-m68k                             allmodconfig
-
-clang tested configs:
-x86_64                          rhel-8.3-rust
-i386                          randconfig-a002
-i386                          randconfig-a004
-i386                          randconfig-a006
-x86_64                        randconfig-a012
-x86_64                        randconfig-a014
-i386                          randconfig-a013
-x86_64                        randconfig-a016
-x86_64                        randconfig-a001
-arm                  randconfig-r046-20230202
-x86_64                        randconfig-a003
-hexagon              randconfig-r045-20230202
-hexagon              randconfig-r041-20230202
-i386                          randconfig-a015
-x86_64                        randconfig-a005
-i386                          randconfig-a011
-
+diff --git a/ras-events.c b/ras-events.c
+index 3691311..e505a0e 100644
+--- a/ras-events.c
++++ b/ras-events.c
+@@ -383,6 +383,8 @@ static int read_ras_event_all_cpus(struct pthread_data *pdata,
+ 	int warnonce[n_cpus];
+ 	char pipe_raw[PATH_MAX];
+ 	int legacy_kernel = 0;
++	int fd;
++	char buf[10];
+ #if 0
+ 	int need_sleep = 0;
+ #endif
+@@ -402,6 +404,26 @@ static int read_ras_event_all_cpus(struct pthread_data *pdata,
+ 		return -ENOMEM;
+ 	}
+ 
++	/* Fix for poll() on the per_cpu trace_pipe and trace_pipe_raw blocks
++	 * indefinitely with the default buffer_percent in the kernel trace system,
++	 * which is introduced by the following change in the kernel.
++	 * https://lore.kernel.org/all/20221020231427.41be3f26@gandalf.local.home/T/#u.
++	 * Set buffer_percent to 0 so that poll() will return immediately
++	 * when the trace data is available in the ras per_cpu trace pipe_raw
++	 */
++	fd = open_trace(pdata[0].ras, "buffer_percent", O_WRONLY);
++	if (fd >= 0) {
++		/* For the backward compatabilty to the old kernel, do not return
++		 * if fail to set the buffer_percent.
++		 */
++		snprintf(buf, sizeof(buf), "0");
++		size = write(fd, buf, strlen(buf));
++		if (size <= 0)
++			log(TERM, LOG_WARNING, "can't write to buffer_percent\n");
++		close(fd);
++	} else
++		log(TERM, LOG_WARNING, "Can't open buffer_percent\n");
++
+ 	for (i = 0; i < (n_cpus + 1); i++)
+ 		fds[i].fd = -1;
+ 
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests
+2.25.1
+
