@@ -2,132 +2,96 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 27DFAC61DA4
-	for <linux-trace-kernel@archiver.kernel.org>; Sat,  4 Feb 2023 19:34:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 092FAC61DA4
+	for <linux-trace-kernel@archiver.kernel.org>; Sat,  4 Feb 2023 23:17:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230297AbjBDTd7 (ORCPT
+        id S230175AbjBDXRJ (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Sat, 4 Feb 2023 14:33:59 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40998 "EHLO
+        Sat, 4 Feb 2023 18:17:09 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33252 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229746AbjBDTd6 (ORCPT
+        with ESMTP id S229547AbjBDXRI (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Sat, 4 Feb 2023 14:33:58 -0500
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BCD2C2B090;
-        Sat,  4 Feb 2023 11:33:53 -0800 (PST)
-Received: from lhrpeml500006.china.huawei.com (unknown [172.18.147.207])
-        by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4P8Mzq6hCkz67K2n;
-        Sun,  5 Feb 2023 03:29:59 +0800 (CST)
-Received: from P_UKIT01-A7bmah.china.huawei.com (10.195.244.18) by
- lhrpeml500006.china.huawei.com (7.191.161.198) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.17; Sat, 4 Feb 2023 19:33:50 +0000
-From:   <shiju.jose@huawei.com>
-To:     <mchehab@kernel.org>, <linux-edac@vger.kernel.org>
-CC:     <rostedt@goodmis.org>, <mhiramat@kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-trace-kernel@vger.kernel.org>, <tanxiaofei@huawei.com>,
-        <jonathan.cameron@huawei.com>, <linuxarm@huawei.com>,
-        <shiju.jose@huawei.com>
-Subject: [RFC PATCH V2 1/1] rasdaemon: Fix poll() on per_cpu trace_pipe_raw blocks indefinitely
-Date:   Sat, 4 Feb 2023 19:33:45 +0000
-Message-ID: <20230204193345.842-1-shiju.jose@huawei.com>
-X-Mailer: git-send-email 2.26.0.windows.1
+        Sat, 4 Feb 2023 18:17:08 -0500
+Received: from mail-pj1-f52.google.com (mail-pj1-f52.google.com [209.85.216.52])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 89DBC19F16;
+        Sat,  4 Feb 2023 15:17:07 -0800 (PST)
+Received: by mail-pj1-f52.google.com with SMTP id t12-20020a17090aae0c00b00229f4cff534so10498042pjq.1;
+        Sat, 04 Feb 2023 15:17:07 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=YCjib6YGp7oCe4br7XrH4tA0fTB0xh2BzncxrSSXIus=;
+        b=Tq8L01qXQl2Y0sLgGBw49V2beSkReHvJSIj/L/TWWpLNLcOvtK7iuDRCUOxogCKyW9
+         +EqFz7TOPpzgW2smELjgWqKNxGUVVMr1Ms8EMUoM7ytCyAFDaMxc4BlPBkv/kCOjKg96
+         m1sG4jswYR6xB9no3xGptckzLF8IQUYZtxOebSxM8MM2HUugi0x5UEVxutLJQ4juZ1TC
+         9WQt2jUmaMYzRmPVN3uSeszK2kS/TApkZQlu1N1g3CRbI3W+yN3kQl90nQ9lixigRHCu
+         NXRcHP/FE6avumoEfd00IIyedDpWoLsokTTm5mFg2goBJwCc/OAWz/UfQBcQrM0Yd397
+         Ec7Q==
+X-Gm-Message-State: AO0yUKXloNLx7LmxBlF1UUWpBNapVkhLt6gdTh02FvC37S/6/itRouoW
+        Q1s3esbP4+yXb0rNQ1x7obc=
+X-Google-Smtp-Source: AK7set+1FvYxFJNsmodSe7ia7v6qf3RFt43H8C2JcL56/7ekAK7EZyR0rrWQUao+vJHlsv+vm3gn3g==
+X-Received: by 2002:a05:6a20:3a96:b0:bf:ae32:5ea8 with SMTP id d22-20020a056a203a9600b000bfae325ea8mr9372685pzh.11.1675552626837;
+        Sat, 04 Feb 2023 15:17:06 -0800 (PST)
+Received: from [192.168.3.219] ([98.51.102.78])
+        by smtp.gmail.com with ESMTPSA id u12-20020a17090a1d4c00b0022c90b7e3efsm6963281pju.50.2023.02.04.15.17.05
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sat, 04 Feb 2023 15:17:05 -0800 (PST)
+Message-ID: <3ad1c3b3-f54d-4b0e-2441-ab348d099f3f@acm.org>
+Date:   Sat, 4 Feb 2023 15:17:04 -0800
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [10.195.244.18]
-X-ClientProxiedBy: lhrpeml500004.china.huawei.com (7.191.163.9) To
- lhrpeml500006.china.huawei.com (7.191.161.198)
-X-CFilter-Loop: Reflected
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.6.1
+Subject: Re: [PATCH] trace/blktrace: fix memory leak with using
+ debugfs_lookup()
+Content-Language: en-US
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-trace-kernel@vger.kernel.org
+Cc:     Jens Axboe <axboe@kernel.dk>, Steven Rostedt <rostedt@goodmis.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20230202141956.2299521-1-gregkh@linuxfoundation.org>
+From:   Bart Van Assche <bvanassche@acm.org>
+In-Reply-To: <20230202141956.2299521-1-gregkh@linuxfoundation.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-From: Shiju Jose <shiju.jose@huawei.com>
+On 2/2/23 06:19, Greg Kroah-Hartman wrote:
+> When calling debugfs_lookup() the result must have dput() called on it,
+> otherwise the memory will leak over time.  To make things simpler, just
+> call debugfs_lookup_and_remove() instead which handles all of the logic
+> at once.
+> 
+> Cc: Jens Axboe <axboe@kernel.dk>
+> Cc: Steven Rostedt <rostedt@goodmis.org>
+> Cc: Masami Hiramatsu <mhiramat@kernel.org>
+> Cc: linux-block@vger.kernel.org
+> Cc: linux-kernel@vger.kernel.org
+> Cc: linux-trace-kernel@vger.kernel.org
+> Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> ---
+>   kernel/trace/blktrace.c | 4 ++--
+>   1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/kernel/trace/blktrace.c b/kernel/trace/blktrace.c
+> index 918a7d12df8f..5743be559415 100644
+> --- a/kernel/trace/blktrace.c
+> +++ b/kernel/trace/blktrace.c
+> @@ -320,8 +320,8 @@ static void blk_trace_free(struct request_queue *q, struct blk_trace *bt)
+>   	 * under 'q->debugfs_dir', thus lookup and remove them.
+>   	 */
+>   	if (!bt->dir) {
+> -		debugfs_remove(debugfs_lookup("dropped", q->debugfs_dir));
+> -		debugfs_remove(debugfs_lookup("msg", q->debugfs_dir));
+> +		debugfs_lookup_and_remove("dropped", q->debugfs_dir);
+> +		debugfs_lookup_and_remove("msg", q->debugfs_dir);
+>   	} else {
+>   		debugfs_remove(bt->dir);
+>   	}
 
-The error events are not received in the rasdaemon since kernel 6.1-rc6.
-This issue is firstly detected and reported, when testing the CXL error
-events in the rasdaemon.
-
-Debugging showed, poll() on trace_pipe_raw in the ras-events.c do not
-return and this issue is seen after the commit
-42fb0a1e84ff525ebe560e2baf9451ab69127e2b ("tracing/ring-buffer: Have
-polling block on watermark").
-
-This also verified using a test application for poll()
-and select() on trace_pipe_raw.
-
-There is also a bug reported on this issue,
-https://lore.kernel.org/all/31eb3b12-3350-90a4-a0d9-d1494db7cf74@oracle.com/
-
-This issue occurs for the per_cpu case, which calls the
-ring_buffer_poll_wait(), in kernel/trace/ring_buffer.c, with the
-buffer_percent > 0 and then wait until the percentage of pages are
-available.The default value set for the buffer_percent is 50 in the
-kernel/trace/trace.c. However poll() does not return even met the percentage
-of pages condition.
-
-As a fix, rasdaemon set buffer_percent as 0 through the
-/sys/kernel/debug/tracing/instances/rasdaemon/buffer_percent, then the
-task will wake up as soon as data is added to any of the specific cpu
-buffer and poll() on per_cpu/cpuX/trace_pipe_raw does not block
-indefinitely.
-
-Dependency on the kernel RFC patch
-tracing: Fix poll() and select() do not work on per_cpu trace_pipe and trace_pipe_raw
-
-Signed-off-by: Shiju Jose <shiju.jose@huawei.com>
-
-Changes:
-RFC V1 -> RFC V2
-1. Rename the patch header subject.
-2. Changes for the backward compatability to the old kernels.
----
- ras-events.c | 22 ++++++++++++++++++++++
- 1 file changed, 22 insertions(+)
-
-diff --git a/ras-events.c b/ras-events.c
-index 3691311..e505a0e 100644
---- a/ras-events.c
-+++ b/ras-events.c
-@@ -383,6 +383,8 @@ static int read_ras_event_all_cpus(struct pthread_data *pdata,
- 	int warnonce[n_cpus];
- 	char pipe_raw[PATH_MAX];
- 	int legacy_kernel = 0;
-+	int fd;
-+	char buf[10];
- #if 0
- 	int need_sleep = 0;
- #endif
-@@ -402,6 +404,26 @@ static int read_ras_event_all_cpus(struct pthread_data *pdata,
- 		return -ENOMEM;
- 	}
- 
-+	/* Fix for poll() on the per_cpu trace_pipe and trace_pipe_raw blocks
-+	 * indefinitely with the default buffer_percent in the kernel trace system,
-+	 * which is introduced by the following change in the kernel.
-+	 * https://lore.kernel.org/all/20221020231427.41be3f26@gandalf.local.home/T/#u.
-+	 * Set buffer_percent to 0 so that poll() will return immediately
-+	 * when the trace data is available in the ras per_cpu trace pipe_raw
-+	 */
-+	fd = open_trace(pdata[0].ras, "buffer_percent", O_WRONLY);
-+	if (fd >= 0) {
-+		/* For the backward compatabilty to the old kernel, do not return
-+		 * if fail to set the buffer_percent.
-+		 */
-+		snprintf(buf, sizeof(buf), "0");
-+		size = write(fd, buf, strlen(buf));
-+		if (size <= 0)
-+			log(TERM, LOG_WARNING, "can't write to buffer_percent\n");
-+		close(fd);
-+	} else
-+		log(TERM, LOG_WARNING, "Can't open buffer_percent\n");
-+
- 	for (i = 0; i < (n_cpus + 1); i++)
- 		fds[i].fd = -1;
- 
--- 
-2.25.1
-
+Reviewed-by: Bart Van Assche <bvanassche@acm.org>
