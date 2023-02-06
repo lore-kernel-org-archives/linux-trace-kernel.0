@@ -2,96 +2,85 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 092FAC61DA4
-	for <linux-trace-kernel@archiver.kernel.org>; Sat,  4 Feb 2023 23:17:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CD1E1C05027
+	for <linux-trace-kernel@archiver.kernel.org>; Mon,  6 Feb 2023 16:25:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230175AbjBDXRJ (ORCPT
+        id S229811AbjBFQZl (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Sat, 4 Feb 2023 18:17:09 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33252 "EHLO
+        Mon, 6 Feb 2023 11:25:41 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38192 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229547AbjBDXRI (ORCPT
+        with ESMTP id S229573AbjBFQZk (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Sat, 4 Feb 2023 18:17:08 -0500
-Received: from mail-pj1-f52.google.com (mail-pj1-f52.google.com [209.85.216.52])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 89DBC19F16;
-        Sat,  4 Feb 2023 15:17:07 -0800 (PST)
-Received: by mail-pj1-f52.google.com with SMTP id t12-20020a17090aae0c00b00229f4cff534so10498042pjq.1;
-        Sat, 04 Feb 2023 15:17:07 -0800 (PST)
+        Mon, 6 Feb 2023 11:25:40 -0500
+Received: from mail-pg1-x529.google.com (mail-pg1-x529.google.com [IPv6:2607:f8b0:4864:20::529])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B11911F480
+        for <linux-trace-kernel@vger.kernel.org>; Mon,  6 Feb 2023 08:25:39 -0800 (PST)
+Received: by mail-pg1-x529.google.com with SMTP id 78so8546578pgb.8
+        for <linux-trace-kernel@vger.kernel.org>; Mon, 06 Feb 2023 08:25:39 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=kFQxaP144S9AVJ5XJTXyEhWUpy1ufPfXJtGU2agH1J0=;
+        b=ipHxCMjhGQl12luICsGCj+oY1Y6BRiVxfo1c4DBrKjyhbmY1Z5sGl55irNZjIBh3la
+         Eu4qQV1MSbXUarEwlGjFdzb7oLKQu4hzSXyPjWwkhX0Y1MjTPj3inOBxUvXsfVgwFDJw
+         tEvFLoIleDZ2ScYG8AxEMgzse7itQDeEAIl4U=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=YCjib6YGp7oCe4br7XrH4tA0fTB0xh2BzncxrSSXIus=;
-        b=Tq8L01qXQl2Y0sLgGBw49V2beSkReHvJSIj/L/TWWpLNLcOvtK7iuDRCUOxogCKyW9
-         +EqFz7TOPpzgW2smELjgWqKNxGUVVMr1Ms8EMUoM7ytCyAFDaMxc4BlPBkv/kCOjKg96
-         m1sG4jswYR6xB9no3xGptckzLF8IQUYZtxOebSxM8MM2HUugi0x5UEVxutLJQ4juZ1TC
-         9WQt2jUmaMYzRmPVN3uSeszK2kS/TApkZQlu1N1g3CRbI3W+yN3kQl90nQ9lixigRHCu
-         NXRcHP/FE6avumoEfd00IIyedDpWoLsokTTm5mFg2goBJwCc/OAWz/UfQBcQrM0Yd397
-         Ec7Q==
-X-Gm-Message-State: AO0yUKXloNLx7LmxBlF1UUWpBNapVkhLt6gdTh02FvC37S/6/itRouoW
-        Q1s3esbP4+yXb0rNQ1x7obc=
-X-Google-Smtp-Source: AK7set+1FvYxFJNsmodSe7ia7v6qf3RFt43H8C2JcL56/7ekAK7EZyR0rrWQUao+vJHlsv+vm3gn3g==
-X-Received: by 2002:a05:6a20:3a96:b0:bf:ae32:5ea8 with SMTP id d22-20020a056a203a9600b000bfae325ea8mr9372685pzh.11.1675552626837;
-        Sat, 04 Feb 2023 15:17:06 -0800 (PST)
-Received: from [192.168.3.219] ([98.51.102.78])
-        by smtp.gmail.com with ESMTPSA id u12-20020a17090a1d4c00b0022c90b7e3efsm6963281pju.50.2023.02.04.15.17.05
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 04 Feb 2023 15:17:05 -0800 (PST)
-Message-ID: <3ad1c3b3-f54d-4b0e-2441-ab348d099f3f@acm.org>
-Date:   Sat, 4 Feb 2023 15:17:04 -0800
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=kFQxaP144S9AVJ5XJTXyEhWUpy1ufPfXJtGU2agH1J0=;
+        b=vvB4Hb/VYiygpXCjmT4A7Nyh8kDdts/klGarCR2nBXPA2hj2EyKvE4/TBomOggXn6e
+         6d09Fwc+Sj4o5zSlWG3li3C9Fr9kEqVDbFZX7q/xcF6c0JKLZrT/5JyxZ0nlm0zdwdF5
+         70/yMvTVEA19sHu0htOWM9L11U3OKRlBgH/iKIGZ0P2RbEcX+mqvWgY7kEW6OPnGk1go
+         7WfBhMKXbmEQOvb3OHjgnVnisX/i5Gq7SkCtbfG2dTjAjtOlTXnrhcECtwHLkmthI4zM
+         hEotlB4dlGpuTOde2VVp2xh/KPNqDXRVDBBAWQORxciN46RGDkQkxKExJXUwi2OF4jFl
+         P40Q==
+X-Gm-Message-State: AO0yUKV3JATBCNqAQl7L1/kU+eBd7OWEq/IjCvO92Murarp8oSIYhG/7
+        Gelb2C4D68iZA21jdkPgzZiVvIWGM8DApFvdi04Yyw==
+X-Google-Smtp-Source: AK7set+coOXre5Bf+rKkNBx/EUFNbeN32jSTpfQbb6BUdHV0Na+yutvq8fVnnBYQ3nokoBmkHBrR+Obe+cEnNzLdptM=
+X-Received: by 2002:a62:3808:0:b0:5a6:5841:6570 with SMTP id
+ f8-20020a623808000000b005a658416570mr270391pfa.51.1675700739133; Mon, 06 Feb
+ 2023 08:25:39 -0800 (PST)
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.6.1
-Subject: Re: [PATCH] trace/blktrace: fix memory leak with using
- debugfs_lookup()
-Content-Language: en-US
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-trace-kernel@vger.kernel.org
-Cc:     Jens Axboe <axboe@kernel.dk>, Steven Rostedt <rostedt@goodmis.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20230202141956.2299521-1-gregkh@linuxfoundation.org>
-From:   Bart Van Assche <bvanassche@acm.org>
-In-Reply-To: <20230202141956.2299521-1-gregkh@linuxfoundation.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+References: <20230201163420.1579014-1-revest@chromium.org> <20230201163420.1579014-7-revest@chromium.org>
+ <Y9wI93m2frDFGFez@FVFF77S0Q05N.cambridge.arm.com> <CABRcYmKRoDeFecvj7e+0SUaoinUa7FdtG1fmYqkRS3YPXVw4-w@mail.gmail.com>
+ <Y90qS5jTog2m6YhQ@FVFF77S0Q05N>
+In-Reply-To: <Y90qS5jTog2m6YhQ@FVFF77S0Q05N>
+From:   Florent Revest <revest@chromium.org>
+Date:   Mon, 6 Feb 2023 17:25:28 +0100
+Message-ID: <CABRcYm+3U+Pb=fNt38_MsCS+vVGcN4cHhEv415yGJ4QHac6KFA@mail.gmail.com>
+Subject: Re: [PATCH 6/8] ftrace: Fix dead loop caused by direct call in ftrace selftest
+To:     Mark Rutland <mark.rutland@arm.com>
+Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-trace-kernel@vger.kernel.org, bpf@vger.kernel.org,
+        catalin.marinas@arm.com, will@kernel.org, rostedt@goodmis.org,
+        mhiramat@kernel.org, ast@kernel.org, daniel@iogearbox.net,
+        andrii@kernel.org, kpsingh@kernel.org, jolsa@kernel.org,
+        xukuohai@huaweicloud.com, Xu Kuohai <xukuohai@huawei.com>,
+        Li Huafei <lihuafei1@huawei.com>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On 2/2/23 06:19, Greg Kroah-Hartman wrote:
-> When calling debugfs_lookup() the result must have dput() called on it,
-> otherwise the memory will leak over time.  To make things simpler, just
-> call debugfs_lookup_and_remove() instead which handles all of the logic
-> at once.
-> 
-> Cc: Jens Axboe <axboe@kernel.dk>
-> Cc: Steven Rostedt <rostedt@goodmis.org>
-> Cc: Masami Hiramatsu <mhiramat@kernel.org>
-> Cc: linux-block@vger.kernel.org
-> Cc: linux-kernel@vger.kernel.org
-> Cc: linux-trace-kernel@vger.kernel.org
-> Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> ---
->   kernel/trace/blktrace.c | 4 ++--
->   1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/kernel/trace/blktrace.c b/kernel/trace/blktrace.c
-> index 918a7d12df8f..5743be559415 100644
-> --- a/kernel/trace/blktrace.c
-> +++ b/kernel/trace/blktrace.c
-> @@ -320,8 +320,8 @@ static void blk_trace_free(struct request_queue *q, struct blk_trace *bt)
->   	 * under 'q->debugfs_dir', thus lookup and remove them.
->   	 */
->   	if (!bt->dir) {
-> -		debugfs_remove(debugfs_lookup("dropped", q->debugfs_dir));
-> -		debugfs_remove(debugfs_lookup("msg", q->debugfs_dir));
-> +		debugfs_lookup_and_remove("dropped", q->debugfs_dir);
-> +		debugfs_lookup_and_remove("msg", q->debugfs_dir);
->   	} else {
->   		debugfs_remove(bt->dir);
->   	}
+On Fri, Feb 3, 2023 at 4:37 PM Mark Rutland <mark.rutland@arm.com> wrote:
+>
+> On Fri, Feb 03, 2023 at 01:35:00PM +0100, Florent Revest wrote:
+> > On Thu, Feb 2, 2023 at 8:03 PM Mark Rutland <mark.rutland@arm.com> wrote:
+> > > I think it'd be much better to do something like the below as a preparatory
+> > > cleanup (tested on s390 under QEMU).
+> >
+> > Thanks, that looks great to me. I'll make it a part of the series in v2 then.
+> > Unless it's preferred that this gets merged separately?
+>
+> I reckon put it in the series for v2, and if Steve or Masami want to pick it up
+> beforehand, they can choose to do so from there?
+>
+> Since it's not currently exploding, I suspect it's not urgent.
+>
+> Mark.
 
-Reviewed-by: Bart Van Assche <bvanassche@acm.org>
+Ack
