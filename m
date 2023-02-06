@@ -2,225 +2,92 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 59F62C636D4
-	for <linux-trace-kernel@archiver.kernel.org>; Mon,  6 Feb 2023 16:25:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 85E91C05027
+	for <linux-trace-kernel@archiver.kernel.org>; Mon,  6 Feb 2023 16:29:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229923AbjBFQZ5 (ORCPT
+        id S229776AbjBFQ3y (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Mon, 6 Feb 2023 11:25:57 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38518 "EHLO
+        Mon, 6 Feb 2023 11:29:54 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42242 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229942AbjBFQZy (ORCPT
+        with ESMTP id S230033AbjBFQ3r (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Mon, 6 Feb 2023 11:25:54 -0500
-Received: from mail-pg1-x531.google.com (mail-pg1-x531.google.com [IPv6:2607:f8b0:4864:20::531])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E065F20D0A
-        for <linux-trace-kernel@vger.kernel.org>; Mon,  6 Feb 2023 08:25:52 -0800 (PST)
-Received: by mail-pg1-x531.google.com with SMTP id n2so5980195pgb.2
-        for <linux-trace-kernel@vger.kernel.org>; Mon, 06 Feb 2023 08:25:52 -0800 (PST)
+        Mon, 6 Feb 2023 11:29:47 -0500
+Received: from mail-io1-xd2a.google.com (mail-io1-xd2a.google.com [IPv6:2607:f8b0:4864:20::d2a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 11D3A274A0
+        for <linux-trace-kernel@vger.kernel.org>; Mon,  6 Feb 2023 08:29:46 -0800 (PST)
+Received: by mail-io1-xd2a.google.com with SMTP id l7so4645068ioa.7
+        for <linux-trace-kernel@vger.kernel.org>; Mon, 06 Feb 2023 08:29:46 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=id8fSN6nCpuUHUWrLfLtNoBqG5vqrIF4k085X9FJUls=;
-        b=EX1ehNIQKPbapcqwRXobBlBRI7Qc4WA0fHQ9k+98pKJp3/u8dYmBjgB/AL6ucgYTJf
-         1IiQHxDMYBTymfbbe8J2vYQ+kIrFZK9kpmWsguhMrJ2ldVORBk6iJ844AuKcV0LXD9rb
-         T/kIoLjhL8KgvAi4NhGoCkI/o/kMWczy2bCDE=
+        d=kernel-dk.20210112.gappssmtp.com; s=20210112;
+        h=content-transfer-encoding:mime-version:date:message-id:subject
+         :references:in-reply-to:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=o0wSgKUacGM7xvS2cBdhx6arq2ihGPco/pYthVvg21s=;
+        b=Ou0qdNl+W/3pD5Mbs69QEZlUJxBjbP/Ce2eJ6WniAHlvyInm8n3xyoJdQ7XiDRXg0b
+         xzZ92HBKHjYYbeYiJJJj4s5iSyPy5+Mfg4cQJPYD9Tl60e4vs5/Dr9XKIcToo1npe2QS
+         foTxzyzukpuC6bz1ZWMoN/FfogeZMd0u7BbuOIoGYuCzrCg44AfTaIznrEdvwkfOsZaY
+         j6Ao57G3NoDmclo2trDIPF1bKhSpWRy6tk/PCurQgUlTXEJYkFjOO7s2dxMIFA3gz7gK
+         XLIZplBWMHRpG1maWxefNiqFF6YN7iH5r25xPkNabqNbX+yCZDk4dbs1UITOUgenXHqd
+         +Zww==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=id8fSN6nCpuUHUWrLfLtNoBqG5vqrIF4k085X9FJUls=;
-        b=Kf6C2GOTd6Imf+LMLZbTbit/RGKr8iLlR/n2g3eVH48VQgsogNK5SueYbtLm1lP2a6
-         tFlwEm0b5R0lNRMPKahCmyfrTv+bXPAqJPL4MKClloKMUw23EskyI8kWGDe2WMb1tPd9
-         xiNOcwmU2lHZNWPkSzP/HuEZKjnkn4DtRqZBIOqdNO5/yUTsnHbfTUGcYIgECaecGi9u
-         8VEQm5d7pXe9u/oLmFmXNPecYhrLMojeh10fjwG9o+l19b7BCZTjp54qRzwyYzseUgsj
-         tUNTvvxuMLbiyR6t14IySq9K7bmvrAyT0Y5FQvaUUK2De1I3dZfhR1eKoycb2wlPSpkt
-         CZJw==
-X-Gm-Message-State: AO0yUKVRlByGGUCInpivoIU03Bw29JRLKFcIUBWn1IJl3+fQYqF17vgd
-        PLyS5E866YTnY40Cn6rnKz6kA+5d8MljYoLfLFHI3g==
-X-Google-Smtp-Source: AK7set8zr0sS3lchCBKdSsYYwPtgNlfSunzSdRe+cJ0M5xjqOUyQ9+E8UhmyFdPu1nxSCQsMND4O2fS4n864oFLqMNQ=
-X-Received: by 2002:aa7:8f27:0:b0:593:e2fd:ca4f with SMTP id
- y7-20020aa78f27000000b00593e2fdca4fmr37380pfr.0.1675700752311; Mon, 06 Feb
- 2023 08:25:52 -0800 (PST)
+        h=content-transfer-encoding:mime-version:date:message-id:subject
+         :references:in-reply-to:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=o0wSgKUacGM7xvS2cBdhx6arq2ihGPco/pYthVvg21s=;
+        b=jFT7dr6m26TnEdthPFqD9XMko1Hokw8kjiewLl5UuFcTifoIqHXZfBG6O3aanG/sSF
+         fIWMaAgJNgzpmljdcO1BaFvMSi7LyxH0ra1b8DuIU/T5W4so9bNuxY1QNYy6wZ9B7Xdd
+         ypNuxibELiYfwj8Ng+Cmo4qIiBycEWYRbhh9WDtk/iKOuimhqQrwfzNf8yRZafBpVJbc
+         F4XeI4bhg6l8ZtJY8oilzUDgWer13R099DIrSfFTj5wMukXffJ5dizkleo36zJmts9ec
+         XBwH7ZF83a2uWxHPP6lm/zQ+WUSzMagFpFd8dE1j8xBIt8Zz80Uc+DuanzQPvtDDtf7s
+         hOgw==
+X-Gm-Message-State: AO0yUKVyFMSyEDFnAheDy2vo00wad4WxvOd7dQPpA/n2PRExDnVkv5t6
+        dlFJkP4ZDoABJkH5OuQLvRCb/Q==
+X-Google-Smtp-Source: AK7set9bUNSjke79Got4lwtiThY2fA3KOJf/RNpPFWIB2xPST2fTtzAuMaafu5jj49Tkp0IAgPgvyQ==
+X-Received: by 2002:a6b:7808:0:b0:71d:63e5:7b5f with SMTP id j8-20020a6b7808000000b0071d63e57b5fmr13132135iom.2.1675700985321;
+        Mon, 06 Feb 2023 08:29:45 -0800 (PST)
+Received: from [127.0.0.1] ([96.43.243.2])
+        by smtp.gmail.com with ESMTPSA id dl6-20020a056638278600b003a60b0b09d1sm3575949jab.5.2023.02.06.08.29.44
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 06 Feb 2023 08:29:44 -0800 (PST)
+From:   Jens Axboe <axboe@kernel.dk>
+To:     linux-trace-kernel@vger.kernel.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Steven Rostedt <rostedt@goodmis.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org
+In-Reply-To: <20230202141956.2299521-1-gregkh@linuxfoundation.org>
+References: <20230202141956.2299521-1-gregkh@linuxfoundation.org>
+Subject: Re: [PATCH] trace/blktrace: fix memory leak with using
+ debugfs_lookup()
+Message-Id: <167570098443.24242.14188383758966607556.b4-ty@kernel.dk>
+Date:   Mon, 06 Feb 2023 09:29:44 -0700
 MIME-Version: 1.0
-References: <20230201163420.1579014-1-revest@chromium.org> <20230201163420.1579014-8-revest@chromium.org>
- <Y90phLJfnz06Ilb+@FVFF77S0Q05N>
-In-Reply-To: <Y90phLJfnz06Ilb+@FVFF77S0Q05N>
-From:   Florent Revest <revest@chromium.org>
-Date:   Mon, 6 Feb 2023 17:25:41 +0100
-Message-ID: <CABRcYmJ7v0r+Pi5podwX0=zJQPY3S1mWWAdTdtFDVTCVy_PqiQ@mail.gmail.com>
-Subject: Re: [PATCH 7/8] arm64: ftrace: Add direct call support
-To:     Mark Rutland <mark.rutland@arm.com>
-Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-trace-kernel@vger.kernel.org, bpf@vger.kernel.org,
-        catalin.marinas@arm.com, will@kernel.org, rostedt@goodmis.org,
-        mhiramat@kernel.org, ast@kernel.org, daniel@iogearbox.net,
-        andrii@kernel.org, kpsingh@kernel.org, jolsa@kernel.org,
-        xukuohai@huaweicloud.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Mailer: b4 0.12.0
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On Fri, Feb 3, 2023 at 4:34 PM Mark Rutland <mark.rutland@arm.com> wrote:
->
-> On Wed, Feb 01, 2023 at 05:34:19PM +0100, Florent Revest wrote:
-> > This builds up on the CALL_OPS work which extends the ftrace patchsite
-> > on arm64 with an ops pointer usable by the ftrace trampoline.
-> >
-> > This ops pointer is valid at all time. Indeed, it is either pointing to
-> > ftrace_list_ops or to the single ops which should be called from that
-> > patchsite.
-> >
-> > There are a few cases to distinguish:
-> > - If a direct call ops is the only one tracing a function:
-> >   - If the direct called trampoline is within the reach of a BL
-> >     instruction
-> >      -> the ftrace patchsite jumps to the trampoline
-> >   - Else
-> >      -> the ftrace patchsite jumps to the ftrace_caller trampoline which
-> >         reads the ops pointer in the patchsite and jumps to the direct
-> >         call address stored in the ops
-> > - Else
-> >   -> the ftrace patchsite jumps to the ftrace_caller trampoline and its
-> >      ops literal points to ftrace_list_ops so it iterates over all
-> >      registered ftrace ops, including the direct call ops and calls its
-> >      call_direct_funcs handler which stores the direct called
-> >      trampoline's address in the ftrace_regs and the ftrace_caller
-> >      trampoline will return to that address instead of returning to the
-> >      traced function
->
-> This looks pretty good!
->
-> Overall I think this is the right shape, but I have a few minor comments that
-> lead to a bit of churn. I've noted those below, and I've also pushed out a
-> branch with suggested fixups (as discrete patches) to my
-> arm64/ftrace/direct-call-testing branch, which you can find at:
->
->   https://git.kernel.org/pub/scm/linux/kernel/git/mark/linux.git
->   git://git.kernel.org/pub/scm/linux/kernel/git/mark/linux.git
->
-> Note that's based on a merge of the arm64 tree's for-next/ftrace branch and the
-> trace tree's trace/for-next branch, and there were a couple of trivial
-> conflicts I had to fix up when first picking this series (which I've noted in
-> the affected patches)
->
-> Those trees are at:
->
->   # arm64
->   https://git.kernel.org/pub/scm/linux/kernel/git/arm64/linux.git
->   git://git.kernel.org/pub/scm/linux/kernel/git/arm64/linux.git
->
->   # trace
->   https://git.kernel.org/pub/scm/linux/kernel/git/trace/linux-trace.git
->   git://git.kernel.org/pub/scm/linux/kernel/git/trace/linux-trace.git
->
 
-Thanks for taking the time to publish these, that helps a lot.
+On Thu, 02 Feb 2023 15:19:56 +0100, Greg Kroah-Hartman wrote:
+> When calling debugfs_lookup() the result must have dput() called on it,
+> otherwise the memory will leak over time.  To make things simpler, just
+> call debugfs_lookup_and_remove() instead which handles all of the logic
+> at once.
+> 
+> 
 
-> > @@ -80,6 +80,10 @@ struct ftrace_regs {
-> >
-> >       unsigned long sp;
-> >       unsigned long pc;
-> > +
-> > +#ifdef CONFIG_DYNAMIC_FTRACE_WITH_DIRECT_CALLS
-> > +     unsigned long custom_tramp;
->
-> Minor nit, but could we please s/custom_tramp/direct_tramp/?
+Applied, thanks!
 
-Yes, that's better
+[1/1] trace/blktrace: fix memory leak with using debugfs_lookup()
+      commit: 83e8864fee26f63a7435e941b7c36a20fd6fe93e
 
-> I forgot to add a comment here, but we require that sizeof(struct ftrace_regs)
-> is a multiple of 16, as the AAPCS requires that the stack is 16-byte aligned at
-> function call boundaries (and on arm64 we currently assume that it's *always*
-> aligned).
->
-> I'd suggest we make this:
->
-> | /*
-> |  * Note: sizeof(struct ftrace_regs) must be a multiple of 16 to ensure correct
-> |  * stack alignment
-> |  */
-> | struct ftrace_regs {
-> |       /* x0 - x8 */
-> |       unsigned long regs[9];
-> |
-> | #ifdef CONFIG_DYNAMIC_FTRACE_WITH_DIRECT_CALLS
-> |       unsigned long direct_tramp;
-> | #else
-> |       unsigned long __unused;
-> | #endif
-> |
-> |       unsigned long fp;
-> |       unsigned long lr;
-> |
-> |       unsigned long sp;
-> |       unsigned long pc;
-> | };
+Best regards,
+-- 
+Jens Axboe
 
-Oh good catch, that was easy to miss. I'm surprised I didn't hit
-horrible bugs when testing this in qemu.
 
-> For branching to the direct call trampoline, it would be better to use a
-> forward branch (i.e. BR), as that won't unbalance return stack predictors.
-> That'll need to use x16 or x17 to be compatible with a `BTI C` landing pad.
->
-> I'd also prefer if we could move the direct call invocation to a stub at the
-> end of ftrace_caller, e.g.
->
-> | SYM_CODE_START(ftrace_caller)
-> |       ... discover ops pointer here ...
-> |
-> |       ldr     w17, [x11, #FTRACE_OPS_DIRECT_CALL]
-> |       cbnz    ftrace_caller_direct
-> |
-> |       ... usual save and handling logic here ...
-> |
-> |       // just prior to return
-> |       ldr     x17, [sp, #FREGS_DIRECT_CALL]
-> |       cbnz    ftrace_caller_direct_late
-> |
-> |       ...  usual restore logic here ...
-> |
-> |       ret     x9
-> |
-> | SYM_INNER_LABEL(ftrace_caller_direct_late, SYM_L_LOCAL)
-> |
-> |       ... shuffle registers for the trampoline here ...
-> |
-> |       // fallthrough to the usual invocation
-> | SYM_INNER_LABEL(ftrace_caller_direct, SYM_L_LOCAL)
-> |       br      x17
-> | SYM_CODE_END(ftrace_caller)
 
-Agreed, it makes things a lot easier to read and your branch makes
-restoring LR and PC more sane too. I squashed your change in and will
-send it as part of v2.
-
-> > @@ -220,14 +227,21 @@ static bool ftrace_find_callable_addr(struct dyn_ftrace *rec,
-> >                                     unsigned long *addr)
-> >  {
-> >       unsigned long pc = rec->ip;
-> > -     long offset = (long)*addr - (long)pc;
-> >       struct plt_entry *plt;
-> >
-> > +     /*
-> > +      * If a custom trampoline is unreachable, rely on the ftrace_caller
-> > +      * trampoline which knows how to indirectly reach that trampoline
-> > +      * through ops->direct_call.
-> > +      */
-> > +     if (*addr != FTRACE_ADDR && !reachable_by_bl(*addr, pc))
-> > +             *addr = FTRACE_ADDR;
-> > +
->
-> With this, the check in get_ftrace_plt() is now redundant, since that's always
-> called with FTRACE_ADDR as the 'addr' argument. We could probably clean that
-> up, but I'm happy to leave that for now and handle that as a follow-up, since
-> I think that'll imply making some other structural changes, which qould obscure
-> the bulk of this patch.
-
-Fair enough, I'll add an extra patch for this in v2. It's fairly
-simple and if other maintainers think it's too much for the scope of
-the series, we can always pick it up later and merge it separately.
