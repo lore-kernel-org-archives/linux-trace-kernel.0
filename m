@@ -2,71 +2,93 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E8653C636CC
-	for <linux-trace-kernel@archiver.kernel.org>; Tue,  7 Feb 2023 15:35:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C89BEC636D6
+	for <linux-trace-kernel@archiver.kernel.org>; Tue,  7 Feb 2023 16:19:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232004AbjBGPf1 (ORCPT
+        id S232697AbjBGQTc (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Tue, 7 Feb 2023 10:35:27 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42240 "EHLO
+        Tue, 7 Feb 2023 11:19:32 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41784 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230153AbjBGPf0 (ORCPT
+        with ESMTP id S232679AbjBGQTb (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Tue, 7 Feb 2023 10:35:26 -0500
-Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D3ECBC17F;
-        Tue,  7 Feb 2023 07:35:25 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 7A134B819F0;
-        Tue,  7 Feb 2023 15:35:24 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7F11EC433D2;
-        Tue,  7 Feb 2023 15:35:21 +0000 (UTC)
-Date:   Tue, 7 Feb 2023 10:35:19 -0500
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Florent Revest <revest@chromium.org>
+        Tue, 7 Feb 2023 11:19:31 -0500
+Received: from mail-pf1-x42b.google.com (mail-pf1-x42b.google.com [IPv6:2607:f8b0:4864:20::42b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6B55326852
+        for <linux-trace-kernel@vger.kernel.org>; Tue,  7 Feb 2023 08:19:30 -0800 (PST)
+Received: by mail-pf1-x42b.google.com with SMTP id b1so509114pft.1
+        for <linux-trace-kernel@vger.kernel.org>; Tue, 07 Feb 2023 08:19:30 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=RlSiKVYitHXZrK+MPuhrh3DUz6tNwiqlJs7cik50spA=;
+        b=hxkUF7IJQKTCWwX0hcn7zpX/5nQj+y+GbwSoUJNewmfW1dCYjU+zo8xNG2mW9a9Tv4
+         j1+c+GB7a2uk1a23oO0b0lYBFkK4+yUhGaSEw8VJ+chXhRvZbRuy6QzlV4GFowV4BfVi
+         5ZCCM2MoD9dRz+sdAwNO7SlUDjrgnzg3jCRyI=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=RlSiKVYitHXZrK+MPuhrh3DUz6tNwiqlJs7cik50spA=;
+        b=58FV8gsbfpmkRn+srYpzDYQocsEIJQ6XdmTBayJbLjy6kjsUk+v/06PFHHrzR1Cy/Y
+         Ede5IAonf4O23uDZ0k1vQyc/IZXlAgB8CR/SocUm12F7R0Gu/6AS8w8TSD+CrijdDJy7
+         oLcWgNMBkEE2TlNRI1//8K5UrriNkuf/czeg2deEhiiOZNRnNH11DWPtWH8rMCMpAcTB
+         vMmsMhTzC34C22ym7xmu3/Mh3bDYSitF/2ZOzUq+gVBsaMUd+NjbItTyV3ATJtsg647c
+         XjJGTu3LPK4bXezxC9qK882gD/VTrN9je2D27eA/aqmGQUeQrCvED0c7TK5khSknlrMN
+         dcng==
+X-Gm-Message-State: AO0yUKXcyUXhJfx3GVZjju+Mj7nu5+d0M7Ea/dg1LdMCIW4FhV9opaT0
+        5nBqNuyVdN+SHJ/mibAs79vUX5xQTL0r0xtTLNSOaQ==
+X-Google-Smtp-Source: AK7set8QApAe5LqnuLywRCcIgA1Kw2RoXeF3miD2dWA1oV2FQwTn96+upFkZJB415Y9E8hNLaCZRsXhbYygWyhc6oVU=
+X-Received: by 2002:a62:3808:0:b0:5a6:5841:6570 with SMTP id
+ f8-20020a623808000000b005a658416570mr977619pfa.51.1675786769835; Tue, 07 Feb
+ 2023 08:19:29 -0800 (PST)
+MIME-Version: 1.0
+References: <20230201163420.1579014-1-revest@chromium.org> <20230201163420.1579014-2-revest@chromium.org>
+ <Y9vPAdFBJF/gKXaO@FVFF77S0Q05N.cambridge.arm.com> <CABRcYmLrYXuP-yio0dy4WskENn81Qw2WS0ArMp=rdHuiGyjYhQ@mail.gmail.com>
+ <CABRcYmL7exDGnBTzj-DHLSf49_tz6bSDfjn9CDLO9ZEbfFyh-w@mail.gmail.com> <20230207103519.1f0ef013@gandalf.local.home>
+In-Reply-To: <20230207103519.1f0ef013@gandalf.local.home>
+From:   Florent Revest <revest@chromium.org>
+Date:   Tue, 7 Feb 2023 17:19:18 +0100
+Message-ID: <CABRcYmJQUPp=0TGKACX8-c69hgf8xuLAiLVO3oCFn3i1FCXUfw@mail.gmail.com>
+Subject: Re: [PATCH 1/8] ftrace: Replace uses of _ftrace_direct APIs with _ftrace_direct_multi
+To:     Steven Rostedt <rostedt@goodmis.org>
 Cc:     Mark Rutland <mark.rutland@arm.com>,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
         linux-trace-kernel@vger.kernel.org, bpf@vger.kernel.org,
         catalin.marinas@arm.com, will@kernel.org, mhiramat@kernel.org,
         ast@kernel.org, daniel@iogearbox.net, andrii@kernel.org,
         kpsingh@kernel.org, jolsa@kernel.org, xukuohai@huaweicloud.com
-Subject: Re: [PATCH 1/8] ftrace: Replace uses of _ftrace_direct APIs with
- _ftrace_direct_multi
-Message-ID: <20230207103519.1f0ef013@gandalf.local.home>
-In-Reply-To: <CABRcYmL7exDGnBTzj-DHLSf49_tz6bSDfjn9CDLO9ZEbfFyh-w@mail.gmail.com>
-References: <20230201163420.1579014-1-revest@chromium.org>
-        <20230201163420.1579014-2-revest@chromium.org>
-        <Y9vPAdFBJF/gKXaO@FVFF77S0Q05N.cambridge.arm.com>
-        <CABRcYmLrYXuP-yio0dy4WskENn81Qw2WS0ArMp=rdHuiGyjYhQ@mail.gmail.com>
-        <CABRcYmL7exDGnBTzj-DHLSf49_tz6bSDfjn9CDLO9ZEbfFyh-w@mail.gmail.com>
-X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On Tue, 7 Feb 2023 16:21:49 +0100
-Florent Revest <revest@chromium.org> wrote:
+On Tue, Feb 7, 2023 at 4:35 PM Steven Rostedt <rostedt@goodmis.org> wrote:
+>
+> On Tue, 7 Feb 2023 16:21:49 +0100
+> Florent Revest <revest@chromium.org> wrote:
+>
+> > Actually, I'm not sure anymore if we should delete the !multi samples...
+> >
+> > I realized that they are also used as part of the ftrace selftests in:
+> > - tools/testing/selftests/ftrace/test.d/direct/ftrace-direct.tc
+> > - tools/testing/selftests/ftrace/test.d/direct/kprobe-direct.tc
+> >
+> > It does not really make sense to use the ftrace-direct-muti sample as
+> > a drop-in replacement for the ftrace-direct sample there since they
+> > don't really do the same thing so we would either need to change the
+> > test a bit or the multi sample.
+> > Also, we would still need to adapt the ftrace-direct-too sample since
+> > it has no multi equivalent and is required there.
+>
+> Let's not delete the samples, and they do test slightly different use cases
+> (although the code may be somewhat the same). I rather still keep that test
+> coverage.
+>
+> -- Steve
 
-> Actually, I'm not sure anymore if we should delete the !multi samples...
-> 
-> I realized that they are also used as part of the ftrace selftests in:
-> - tools/testing/selftests/ftrace/test.d/direct/ftrace-direct.tc
-> - tools/testing/selftests/ftrace/test.d/direct/kprobe-direct.tc
-> 
-> It does not really make sense to use the ftrace-direct-muti sample as
-> a drop-in replacement for the ftrace-direct sample there since they
-> don't really do the same thing so we would either need to change the
-> test a bit or the multi sample.
-> Also, we would still need to adapt the ftrace-direct-too sample since
-> it has no multi equivalent and is required there.
+Ack :) Thanks Steve!
 
-Let's not delete the samples, and they do test slightly different use cases
-(although the code may be somewhat the same). I rather still keep that test
-coverage.
-
--- Steve
+I'll undo the work I've started to do on this and send a v2 shortly afterward.
