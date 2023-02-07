@@ -2,279 +2,152 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 14D46C636CC
-	for <linux-trace-kernel@archiver.kernel.org>; Tue,  7 Feb 2023 18:21:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A6891C636D4
+	for <linux-trace-kernel@archiver.kernel.org>; Tue,  7 Feb 2023 18:22:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232449AbjBGSVS (ORCPT
+        id S231934AbjBGSWq (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Tue, 7 Feb 2023 13:21:18 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40946 "EHLO
+        Tue, 7 Feb 2023 13:22:46 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46852 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231896AbjBGSU5 (ORCPT
+        with ESMTP id S232038AbjBGSWd (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Tue, 7 Feb 2023 13:20:57 -0500
-Received: from mga06.intel.com (mga06b.intel.com [134.134.136.31])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5BB0C410AE;
-        Tue,  7 Feb 2023 10:20:07 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1675794007; x=1707330007;
-  h=date:from:to:cc:subject:message-id:mime-version:
-   content-transfer-encoding;
-  bh=zwoDr1wPKNYQiCl8mRwM1UPgx4ddKwyU+8/uwG8BezI=;
-  b=UcDuonBkv8EMLYUs6paDAXWYjJIaQ3ecMZozEMh9RcMM4JQKUFwkXxnx
-   8jbdhFDEB4oLOY1xjUOphn9a2BFfbsDKktH+dnOywfzljt5B+DUjYcJf2
-   gn+NagYQeE6kgrGolVJVnlyMaK78rx0UT/4phKjmYdsmXPnD7vUb5WBnV
-   f/n4LcNIuNi4nU9rJhyMsDpNpeqv4JwDEtsAEscXangnzG/17htO/nnXJ
-   YKxxUpr2a94DxyTOMbj5r44NAKWjk23iegl6B9obV4v4RLTu0knzmnZhT
-   jUiZI6AJTnOWO9KshM3rBGhmJRHFqOq10NOYFp08fs4UWAobi94mceTu4
-   g==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10614"; a="391983044"
-X-IronPort-AV: E=Sophos;i="5.97,278,1669104000"; 
-   d="scan'208";a="391983044"
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Feb 2023 10:18:29 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6500,9779,10614"; a="730547125"
-X-IronPort-AV: E=Sophos;i="5.97,278,1669104000"; 
-   d="scan'208";a="730547125"
-Received: from lkp-server01.sh.intel.com (HELO 4455601a8d94) ([10.239.97.150])
-  by fmsmga008.fm.intel.com with ESMTP; 07 Feb 2023 10:18:26 -0800
-Received: from kbuild by 4455601a8d94 with local (Exim 4.96)
-        (envelope-from <lkp@intel.com>)
-        id 1pPSXx-0003li-1E;
-        Tue, 07 Feb 2023 18:18:25 +0000
-Date:   Wed, 08 Feb 2023 02:18:24 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     Andrew Morton <akpm@linux-foundation.org>
-Cc:     linux-usb@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
-        linux-riscv@lists.infradead.org, linux-media@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev,
-        kvmarm@lists.cs.columbia.edu, kvm@vger.kernel.org,
-        intel-gfx@lists.freedesktop.org, amd-gfx@lists.freedesktop.org,
-        alsa-devel@alsa-project.org,
-        Linux Memory Management List <linux-mm@kvack.org>
-Subject: [linux-next:master] BUILD REGRESSION
- 49a8133221c71b935f36a7c340c0271c2a9ee2db
-Message-ID: <63e295f0.u1bD0VjqG0iQsm1w%lkp@intel.com>
-User-Agent: Heirloom mailx 12.5 6/20/10
+        Tue, 7 Feb 2023 13:22:33 -0500
+Received: from mail-wm1-x331.google.com (mail-wm1-x331.google.com [IPv6:2a00:1450:4864:20::331])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A3642BBAE
+        for <linux-trace-kernel@vger.kernel.org>; Tue,  7 Feb 2023 10:22:01 -0800 (PST)
+Received: by mail-wm1-x331.google.com with SMTP id l37-20020a05600c1d2500b003dfe46a9801so10694004wms.0
+        for <linux-trace-kernel@vger.kernel.org>; Tue, 07 Feb 2023 10:22:01 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=BPGxlRJ9ItK95pG3qxT0FtHt32aGKUoX/1BboanRbq8=;
+        b=Yqv6j338RUp7g0MUxWQki0lWU9i1bVwT9yl9yff3Egv6DDyoizhDSVWZuN/Fdfn9N4
+         4yc+0X2KBTxmHpm1cgXSbOXnYeQ+EuHtSg9rOnUMIgq+yNRqiyBgxRR7Wcav5IZjOTQI
+         JoPWNnnrH4g7Xc7XI4zXyI0eC2Lq3LuFnPvdk=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=BPGxlRJ9ItK95pG3qxT0FtHt32aGKUoX/1BboanRbq8=;
+        b=6M78Ejm6p3AkcEtNPtpyMpESBmhEPjzzYHXc3gJ6st09xWEDsunE25izWvWVFdrxy5
+         QU66wJoNK0LyN1fylGRQG4w1cTQ2HNeu/tuN4CHh80zdrPJFuTaP4C00KokaYy7L7ZIX
+         IlocGUC7NDGcrZH1NmkrwUIsG5TAOLje+JIti1TxVXD5bfZGNWLakCeV5UQVOq46fDSQ
+         g1QjDMyjr0RHYXFFdUAM3wGqiEMea93oDIG6U0Ro+sVfwK1+Zngn9hBIxu8WF6F72BPY
+         Kss5XVCi4EeK5mWMGXu6dJDP/kJnKSuJPRYYfQanhBWV2nfjcLRijC+Atm35Fyf6phfh
+         hpSg==
+X-Gm-Message-State: AO0yUKUKMiXLFo3WJo2dLtlfHsudCQOaEgX5MkafHuLMLA59IOqptMcd
+        nhNMHgg+FJSZ+L9RmaKgIrtZ9A==
+X-Google-Smtp-Source: AK7set8yvKzsPzd1NqHPmYe3Bs4uyOrcz69GoXhyQgH7RR75m6SdTWtnYOE7HjpEWd5FEYzEcVCv6Q==
+X-Received: by 2002:a05:600c:1d8b:b0:3dc:198c:dde with SMTP id p11-20020a05600c1d8b00b003dc198c0ddemr3770794wms.41.1675794120175;
+        Tue, 07 Feb 2023 10:22:00 -0800 (PST)
+Received: from revest.zrh.corp.google.com ([2a00:79e0:9d:6:5307:c0c0:ff97:80de])
+        by smtp.gmail.com with ESMTPSA id n6-20020a05600c4f8600b003daf672a616sm15578369wmq.22.2023.02.07.10.21.58
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 07 Feb 2023 10:21:59 -0800 (PST)
+From:   Florent Revest <revest@chromium.org>
+To:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-trace-kernel@vger.kernel.org, bpf@vger.kernel.org
+Cc:     catalin.marinas@arm.com, will@kernel.org, rostedt@goodmis.org,
+        mhiramat@kernel.org, mark.rutland@arm.com, ast@kernel.org,
+        daniel@iogearbox.net, andrii@kernel.org, kpsingh@kernel.org,
+        jolsa@kernel.org, xukuohai@huaweicloud.com, lihuafei1@huawei.com,
+        Florent Revest <revest@chromium.org>
+Subject: [PATCH v2 00/10] Add ftrace direct call for arm64
+Date:   Tue,  7 Feb 2023 19:21:25 +0100
+Message-Id: <20230207182135.2671106-1-revest@chromium.org>
+X-Mailer: git-send-email 2.39.1.519.gcb327c4b5f-goog
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git master
-branch HEAD: 49a8133221c71b935f36a7c340c0271c2a9ee2db  Add linux-next specific files for 20230207
+This series adds ftrace direct call support to arm64.
+This makes BPF tracing programs (fentry/fexit/fmod_ret/lsm) work on arm64.
 
-Error/Warning reports:
+It is meant to apply on top of the arm64 tree which contains Mark Rutland's
+series on CALL_OPS [1] under the for-next/ftrace tag.
+  https://git.kernel.org/pub/scm/linux/kernel/git/arm64/linux.git/
+  git://git.kernel.org/pub/scm/linux/kernel/git/arm64/linux.git
 
-https://lore.kernel.org/oe-kbuild-all/202301230743.Xnut0Zvc-lkp@intel.com
-https://lore.kernel.org/oe-kbuild-all/202301300743.bp7Dpazv-lkp@intel.com
-https://lore.kernel.org/oe-kbuild-all/202301301801.y5O08tQx-lkp@intel.com
-https://lore.kernel.org/oe-kbuild-all/202301302110.mEtNwkBD-lkp@intel.com
-https://lore.kernel.org/oe-kbuild-all/202301310939.TAgCOEZb-lkp@intel.com
-https://lore.kernel.org/oe-kbuild-all/202302011836.kA3BxqdY-lkp@intel.com
-https://lore.kernel.org/oe-kbuild-all/202302061911.C7xvHX9v-lkp@intel.com
-https://lore.kernel.org/oe-kbuild-all/202302062224.ByzeTXh1-lkp@intel.com
-https://lore.kernel.org/oe-kbuild-all/202302072055.odjDVd5V-lkp@intel.com
+The first three patches consolidate the two existing ftrace APIs for registering
+direct calls. They are split to make the reviewers lives easier but if it'd be a
+preferred style, I'd be happy to squash them in the next revision.
+Currently, there is both a _ftrace_direct and _ftrace_direct_multi API. Apart
+from samples and selftests, there are no users of the _ftrace_direct API left
+in-tree so this deletes it and renames the _ftrace_direct_multi API to
+_ftrace_direct for simplicity.
 
-Error/Warning: (recently discovered and may have been fixed)
+The main benefit of this refactoring is that, with the API that's left, an
+ftrace_ops backing a direct call will only ever point to one direct call. We can
+therefore store the direct called trampoline address in the ops (patch 4) and
+look it up from the ftrace trampoline on arm64 (patch 7) in the case when the
+destination would be out of reach of a BL instruction at the ftrace callsite.
+(in this case, ftrace_caller acts as a lightweight intermediary trampoline)
 
-Documentation/riscv/uabi.rst:24: WARNING: Enumerated list ends without a blank line; unexpected unindent.
-ERROR: modpost: "devm_platform_ioremap_resource" [drivers/dma/fsl-edma.ko] undefined!
-ERROR: modpost: "devm_platform_ioremap_resource" [drivers/dma/idma64.ko] undefined!
-FAILED: load BTF from vmlinux: No data available
-arch/arm64/kvm/arm.c:2207: warning: expecting prototype for Initialize Hyp(). Prototype was for kvm_arm_init() instead
-drivers/clk/qcom/gcc-sa8775p.c:313:32: warning: unused variable 'gcc_parent_map_10' [-Wunused-const-variable]
-drivers/clk/qcom/gcc-sa8775p.c:318:37: warning: unused variable 'gcc_parent_data_10' [-Wunused-const-variable]
-drivers/clk/qcom/gcc-sa8775p.c:333:32: warning: unused variable 'gcc_parent_map_12' [-Wunused-const-variable]
-drivers/clk/qcom/gcc-sa8775p.c:338:37: warning: unused variable 'gcc_parent_data_12' [-Wunused-const-variable]
-drivers/gpu/drm/amd/amdgpu/../display/amdgpu_dm/amdgpu_dm.h:62:10: fatal error: mod_info_packet.h: No such file or directory
-drivers/gpu/drm/amd/amdgpu/../display/dc/dcn31/dcn31_hubbub.c:1011:6: warning: no previous prototype for 'hubbub31_init' [-Wmissing-prototypes]
-drivers/gpu/drm/amd/amdgpu/../display/dc/dcn32/dcn32_hubbub.c:948:6: warning: no previous prototype for 'hubbub32_init' [-Wmissing-prototypes]
-drivers/gpu/drm/amd/amdgpu/../display/dc/dcn32/dcn32_hubp.c:158:6: warning: no previous prototype for 'hubp32_init' [-Wmissing-prototypes]
-drivers/gpu/drm/amd/amdgpu/../display/dc/dcn32/dcn32_resource_helpers.c:62:18: warning: variable 'cursor_bpp' set but not used [-Wunused-but-set-variable]
-drivers/gpu/drm/amd/amdgpu/../display/dc/link/accessories/link_dp_trace.c:148:6: warning: no previous prototype for 'link_dp_trace_set_edp_power_timestamp' [-Wmissing-prototypes]
-drivers/gpu/drm/amd/amdgpu/../display/dc/link/accessories/link_dp_trace.c:158:10: warning: no previous prototype for 'link_dp_trace_get_edp_poweron_timestamp' [-Wmissing-prototypes]
-drivers/gpu/drm/amd/amdgpu/../display/dc/link/accessories/link_dp_trace.c:163:10: warning: no previous prototype for 'link_dp_trace_get_edp_poweroff_timestamp' [-Wmissing-prototypes]
-drivers/gpu/drm/amd/amdgpu/../display/dc/link/protocols/link_dp_capability.c:1295:32: warning: variable 'result_write_min_hblank' set but not used [-Wunused-but-set-variable]
-drivers/gpu/drm/amd/amdgpu/../display/dc/link/protocols/link_dp_capability.c:279:42: warning: variable 'ds_port' set but not used [-Wunused-but-set-variable]
-drivers/gpu/drm/amd/amdgpu/../display/dc/link/protocols/link_dp_training.c:1585:38: warning: variable 'result' set but not used [-Wunused-but-set-variable]
-ftrace-ops.c:(.init.text+0x2c3): undefined reference to `__udivdi3'
-libbpf: failed to find '.BTF' ELF section in vmlinux
+This series has been tested on both arm64 and x86_64 with:
+1- CONFIG_FTRACE_SELFTEST (cf: patch 6)
+2- samples/ftrace/*.ko (cf: patch 9)
+3- tools/testing/selftests/bpf/test_progs (cf: patch 10)
 
-Unverified Error/Warning (likely false positive, please contact us if interested):
+Changes since v1 [2]:
+- Updated the bpf selftests denylist according to newly passing tests
+- Refactored the ftrace_caller assembly according to Mark's feedback
+- Replaced Xu's stub trampoline patch for selftests with Mark's take on this
+- Fixed direct calls on arch WITH_REGS=y and WITH_ARGS=n (x86 32-bit)
+- Fixed the ftrace_regs stack alignment
+- Simplified get_ftrace_plt() (cf: patch 8)
+- Fixed a possible race when writing ops->direct_call
+- Renamed "custom_tramp" to "direct_tramp"
+- Referenced the commit id when mentioning a previous commit
+- Linked the arm64 tree in the cover letter
 
-drivers/media/i2c/max9286.c:802 max9286_s_stream() error: buffer overflow 'priv->fmt' 4 <= 32
-drivers/thermal/qcom/tsens-v0_1.c:106:40: sparse: sparse: symbol 'tsens_9607_nvmem' was not declared. Should it be static?
-drivers/thermal/qcom/tsens-v0_1.c:26:40: sparse: sparse: symbol 'tsens_8916_nvmem' was not declared. Should it be static?
-drivers/thermal/qcom/tsens-v0_1.c:42:40: sparse: sparse: symbol 'tsens_8939_nvmem' was not declared. Should it be static?
-drivers/thermal/qcom/tsens-v0_1.c:62:40: sparse: sparse: symbol 'tsens_8974_nvmem' was not declared. Should it be static?
-drivers/thermal/qcom/tsens-v0_1.c:84:40: sparse: sparse: symbol 'tsens_8974_backup_nvmem' was not declared. Should it be static?
-drivers/thermal/qcom/tsens-v1.c:24:40: sparse: sparse: symbol 'tsens_qcs404_nvmem' was not declared. Should it be static?
-drivers/thermal/qcom/tsens-v1.c:45:40: sparse: sparse: symbol 'tsens_8976_nvmem' was not declared. Should it be static?
-drivers/usb/gadget/composite.c:2082:33: sparse: sparse: restricted __le16 degrades to integer
-sound/firewire/amdtp-stream.c:1187 process_rx_packets() error: uninitialized symbol 'curr_cycle_time'.
+This followed up on prior series by Xu Kuohai [3] and a RFC by me [4].
 
-Error/Warning ids grouped by kconfigs:
+1: https://lore.kernel.org/all/20230123134603.1064407-1-mark.rutland@arm.com/
+2: https://lore.kernel.org/all/20230201163420.1579014-1-revest@chromium.org/
+3: https://lore.kernel.org/all/20220913162732.163631-1-xukuohai@huaweicloud.com/
+4: https://lore.kernel.org/all/20221108220651.24492-1-revest@chromium.org/
 
-gcc_recent_errors
-|-- alpha-allyesconfig
-|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-accessories-link_dp_trace.c:warning:no-previous-prototype-for-link_dp_trace_get_edp_poweroff_timestamp
-|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-accessories-link_dp_trace.c:warning:no-previous-prototype-for-link_dp_trace_get_edp_poweron_timestamp
-|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-accessories-link_dp_trace.c:warning:no-previous-prototype-for-link_dp_trace_set_edp_power_timestamp
-|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-protocols-link_dp_capability.c:warning:variable-ds_port-set-but-not-used
-|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-protocols-link_dp_capability.c:warning:variable-result_write_min_hblank-set-but-not-used
-|   `-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-protocols-link_dp_training.c:warning:variable-result-set-but-not-used
-|-- arc-allyesconfig
-|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-accessories-link_dp_trace.c:warning:no-previous-prototype-for-link_dp_trace_get_edp_poweroff_timestamp
-|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-accessories-link_dp_trace.c:warning:no-previous-prototype-for-link_dp_trace_get_edp_poweron_timestamp
-|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-accessories-link_dp_trace.c:warning:no-previous-prototype-for-link_dp_trace_set_edp_power_timestamp
-|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-protocols-link_dp_capability.c:warning:variable-ds_port-set-but-not-used
-|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-protocols-link_dp_capability.c:warning:variable-result_write_min_hblank-set-but-not-used
-|   `-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-protocols-link_dp_training.c:warning:variable-result-set-but-not-used
-|-- arm-allyesconfig
-|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-accessories-link_dp_trace.c:warning:no-previous-prototype-for-link_dp_trace_get_edp_poweroff_timestamp
-|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-accessories-link_dp_trace.c:warning:no-previous-prototype-for-link_dp_trace_get_edp_poweron_timestamp
-|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-accessories-link_dp_trace.c:warning:no-previous-prototype-for-link_dp_trace_set_edp_power_timestamp
-|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-protocols-link_dp_capability.c:warning:variable-ds_port-set-but-not-used
-|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-protocols-link_dp_capability.c:warning:variable-result_write_min_hblank-set-but-not-used
-|   `-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-protocols-link_dp_training.c:warning:variable-result-set-but-not-used
-|-- arm64-allyesconfig
-|   |-- arch-arm64-kvm-arm.c:warning:expecting-prototype-for-Initialize-Hyp().-Prototype-was-for-kvm_arm_init()-instead
-|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-dcn31-dcn31_hubbub.c:warning:no-previous-prototype-for-hubbub31_init
-|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-dcn32-dcn32_hubbub.c:warning:no-previous-prototype-for-hubbub32_init
-|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-dcn32-dcn32_hubp.c:warning:no-previous-prototype-for-hubp32_init
-|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-dcn32-dcn32_resource_helpers.c:warning:variable-cursor_bpp-set-but-not-used
-|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-accessories-link_dp_trace.c:warning:no-previous-prototype-for-link_dp_trace_get_edp_poweroff_timestamp
-|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-accessories-link_dp_trace.c:warning:no-previous-prototype-for-link_dp_trace_get_edp_poweron_timestamp
-|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-accessories-link_dp_trace.c:warning:no-previous-prototype-for-link_dp_trace_set_edp_power_timestamp
-|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-protocols-link_dp_capability.c:warning:variable-ds_port-set-but-not-used
-|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-protocols-link_dp_capability.c:warning:variable-result_write_min_hblank-set-but-not-used
-|   `-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-protocols-link_dp_training.c:warning:variable-result-set-but-not-used
-|-- arm64-randconfig-c023-20230205
-|   `-- arch-arm64-kvm-arm.c:warning:expecting-prototype-for-Initialize-Hyp().-Prototype-was-for-kvm_arm_init()-instead
-|-- arm64-randconfig-s042-20230205
-|   |-- arch-arm64-kvm-arm.c:warning:expecting-prototype-for-Initialize-Hyp().-Prototype-was-for-kvm_arm_init()-instead
-|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-dcn31-dcn31_hubbub.c:warning:no-previous-prototype-for-hubbub31_init
-|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-dcn32-dcn32_hubbub.c:warning:no-previous-prototype-for-hubbub32_init
-|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-dcn32-dcn32_hubp.c:warning:no-previous-prototype-for-hubp32_init
-|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-dcn32-dcn32_resource_helpers.c:warning:variable-cursor_bpp-set-but-not-used
-|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-accessories-link_dp_trace.c:warning:no-previous-prototype-for-link_dp_trace_get_edp_poweroff_timestamp
-|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-accessories-link_dp_trace.c:warning:no-previous-prototype-for-link_dp_trace_get_edp_poweron_timestamp
-|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-accessories-link_dp_trace.c:warning:no-previous-prototype-for-link_dp_trace_set_edp_power_timestamp
-|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-protocols-link_dp_capability.c:warning:variable-ds_port-set-but-not-used
-|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-protocols-link_dp_capability.c:warning:variable-result_write_min_hblank-set-but-not-used
-|   |-- drivers-thermal-qcom-tsens-v0_1.c:sparse:sparse:symbol-tsens_8916_nvmem-was-not-declared.-Should-it-be-static
-|   |-- drivers-thermal-qcom-tsens-v0_1.c:sparse:sparse:symbol-tsens_8939_nvmem-was-not-declared.-Should-it-be-static
-|   |-- drivers-thermal-qcom-tsens-v0_1.c:sparse:sparse:symbol-tsens_8974_backup_nvmem-was-not-declared.-Should-it-be-static
-|   |-- drivers-thermal-qcom-tsens-v0_1.c:sparse:sparse:symbol-tsens_8974_nvmem-was-not-declared.-Should-it-be-static
-clang_recent_errors
-`-- riscv-randconfig-r003-20230204
-    |-- drivers-clk-qcom-gcc-sa8775p.c:warning:unused-variable-gcc_parent_data_10
-    |-- drivers-clk-qcom-gcc-sa8775p.c:warning:unused-variable-gcc_parent_data_12
-    |-- drivers-clk-qcom-gcc-sa8775p.c:warning:unused-variable-gcc_parent_map_10
-    `-- drivers-clk-qcom-gcc-sa8775p.c:warning:unused-variable-gcc_parent_map_12
+Florent Revest (9):
+  ftrace: Replace uses of _ftrace_direct APIs with _ftrace_direct_multi
+  ftrace: Remove the legacy _ftrace_direct API
+  ftrace: Rename _ftrace_direct_multi APIs to _ftrace_direct APIs
+  ftrace: Store direct called addresses in their ops
+  ftrace: Make DIRECT_CALLS work WITH_ARGS and !WITH_REGS
+  arm64: ftrace: Add direct call support
+  arm64: ftrace: Simplify get_ftrace_plt
+  arm64: ftrace: Add direct call trampoline samples support
+  selftests/bpf: Update the tests deny list on aarch64
 
-elapsed time: 726m
+Mark Rutland (1):
+  ftrace: selftest: remove broken trace_direct_tramp
 
-configs tested: 87
-configs skipped: 3
-
-gcc tested configs:
-x86_64                            allnoconfig
-x86_64                          rhel-8.3-func
-x86_64                    rhel-8.3-kselftests
-um                             i386_defconfig
-i386                                defconfig
-um                           x86_64_defconfig
-powerpc                           allnoconfig
-x86_64                              defconfig
-arc                                 defconfig
-s390                             allmodconfig
-i386                 randconfig-a011-20230206
-sh                               allmodconfig
-i386                             allyesconfig
-x86_64               randconfig-a014-20230206
-x86_64                               rhel-8.3
-alpha                               defconfig
-ia64                             allmodconfig
-mips                             allyesconfig
-x86_64                           rhel-8.3-bpf
-m68k                             allyesconfig
-x86_64                           rhel-8.3-syz
-m68k                             allmodconfig
-x86_64                         rhel-8.3-kunit
-arc                              allyesconfig
-x86_64               randconfig-a013-20230206
-powerpc                          allmodconfig
-x86_64                           rhel-8.3-kvm
-i386                 randconfig-a014-20230206
-x86_64               randconfig-a011-20230206
-i386                 randconfig-a012-20230206
-i386                 randconfig-a016-20230206
-alpha                            allyesconfig
-sh                          rsk7203_defconfig
-arm                                 defconfig
-s390                                defconfig
-x86_64               randconfig-a015-20230206
-s390                             allyesconfig
-m68k                          amiga_defconfig
-x86_64               randconfig-a012-20230206
-x86_64                           allyesconfig
-i386                 randconfig-a013-20230206
-xtensa                           alldefconfig
-i386                 randconfig-a015-20230206
-x86_64               randconfig-a016-20230206
-s390                 randconfig-r044-20230206
-arc                  randconfig-r043-20230205
-arm64                            allyesconfig
-arm                  randconfig-r046-20230205
-arc                  randconfig-r043-20230206
-arm                              allyesconfig
-riscv                randconfig-r042-20230206
-arm                            mps2_defconfig
-arm                           h3600_defconfig
-m68k                       bvme6000_defconfig
-sh                            hp6xx_defconfig
-powerpc                      tqm8xx_defconfig
-sh                        sh7785lcr_defconfig
-sh                          urquell_defconfig
-arm                         nhk8815_defconfig
-powerpc                     rainier_defconfig
-arm                         axm55xx_defconfig
-powerpc                       maple_defconfig
-sh                           se7705_defconfig
-i386                          randconfig-c001
-
-clang tested configs:
-x86_64                          rhel-8.3-rust
-x86_64               randconfig-a001-20230206
-x86_64               randconfig-a005-20230206
-x86_64               randconfig-a002-20230206
-x86_64               randconfig-a004-20230206
-x86_64               randconfig-a003-20230206
-hexagon              randconfig-r041-20230205
-x86_64               randconfig-a006-20230206
-arm                         mv78xx0_defconfig
-riscv                randconfig-r042-20230205
-hexagon              randconfig-r045-20230206
-i386                 randconfig-a005-20230206
-hexagon              randconfig-r041-20230206
-i386                 randconfig-a004-20230206
-i386                 randconfig-a003-20230206
-i386                 randconfig-a001-20230206
-i386                 randconfig-a002-20230206
-arm                  randconfig-r046-20230206
-s390                 randconfig-r044-20230205
-hexagon              randconfig-r045-20230205
-i386                 randconfig-a006-20230206
-powerpc                 mpc8315_rdb_defconfig
-x86_64                        randconfig-k001
+ arch/arm64/Kconfig                           |   4 +
+ arch/arm64/include/asm/ftrace.h              |  22 +
+ arch/arm64/kernel/asm-offsets.c              |   6 +
+ arch/arm64/kernel/entry-ftrace.S             |  90 +++-
+ arch/arm64/kernel/ftrace.c                   |  46 +-
+ arch/s390/kernel/mcount.S                    |   5 +
+ arch/x86/kernel/ftrace_32.S                  |   5 +
+ arch/x86/kernel/ftrace_64.S                  |   4 +
+ include/linux/ftrace.h                       |  59 +--
+ kernel/bpf/trampoline.c                      |  14 +-
+ kernel/trace/Kconfig                         |   2 +-
+ kernel/trace/ftrace.c                        | 433 +------------------
+ kernel/trace/trace_selftest.c                |  23 +-
+ samples/Kconfig                              |   2 +-
+ samples/ftrace/ftrace-direct-modify.c        |  42 +-
+ samples/ftrace/ftrace-direct-multi-modify.c  |  44 +-
+ samples/ftrace/ftrace-direct-multi.c         |  26 +-
+ samples/ftrace/ftrace-direct-too.c           |  35 +-
+ samples/ftrace/ftrace-direct.c               |  33 +-
+ tools/testing/selftests/bpf/DENYLIST.aarch64 |  82 +---
+ 20 files changed, 382 insertions(+), 595 deletions(-)
 
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests
+2.39.1.519.gcb327c4b5f-goog
+
