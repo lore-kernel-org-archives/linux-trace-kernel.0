@@ -2,342 +2,74 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 14E69C636CC
-	for <linux-trace-kernel@archiver.kernel.org>; Tue,  7 Feb 2023 18:23:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A30CC636D4
+	for <linux-trace-kernel@archiver.kernel.org>; Tue,  7 Feb 2023 18:51:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232580AbjBGSX3 (ORCPT
+        id S231491AbjBGSv6 (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Tue, 7 Feb 2023 13:23:29 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47542 "EHLO
+        Tue, 7 Feb 2023 13:51:58 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44830 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232585AbjBGSWv (ORCPT
+        with ESMTP id S232361AbjBGSvz (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Tue, 7 Feb 2023 13:22:51 -0500
-Received: from mail-wm1-x333.google.com (mail-wm1-x333.google.com [IPv6:2a00:1450:4864:20::333])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2D5ED4108C
-        for <linux-trace-kernel@vger.kernel.org>; Tue,  7 Feb 2023 10:22:19 -0800 (PST)
-Received: by mail-wm1-x333.google.com with SMTP id bg26so11695748wmb.0
-        for <linux-trace-kernel@vger.kernel.org>; Tue, 07 Feb 2023 10:22:18 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=EBlMmyhPG63Pvz4tbDgUIXvpdQEk55YVINwq7a2FyW4=;
-        b=Yr4NbQJKN4Nx+k35zGr92vmBv6LJNG2wHEb4dlxgN+QFxIabAKjvMCLZ1uUais0bMK
-         dNVFdpzXH0yGuFiwLbM9xlOUeyZnsG0dD60aAO0ZO4TzJAFcJly8OvXRPxUFAVrYWFz1
-         qzFFueM9+ceHN89VHoLUxs0qQSpATd9h8a2Og=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=EBlMmyhPG63Pvz4tbDgUIXvpdQEk55YVINwq7a2FyW4=;
-        b=ZwGk0ZAo1+LeIHz9IvutLa000lrm1yj7qxvJaT/pCOUJayQuz9FhxQT5IRJcy6QalG
-         WrwVv9YUU6a+PLd2I3ItGSvCqOjiJJijWZ13AHgnukunC53FkTmJLy/lrwu8GYchuogP
-         n1CFnHPj1ME/LUgg4FOoGFSUmlTqbPAGzCm+qOI5njXuNUu/TCfYqflXeUVsTIcSrSKg
-         xYAxJuv1LLB0xX13MmKiCJLlEJONKlLOhJXnyf3d8b45IUKs24LUHWr4uWnvhIYqHT3g
-         UCu1viZAwkZhfF8zLyKcQ8R9kDZKV+jF5IOGJQNTUX0d4yAzWfC4rTi/6YRdNCSeTXq5
-         PNuQ==
-X-Gm-Message-State: AO0yUKXCTjFx3iunZW42Lxhubzz7hsjO2KjkavoGOrazRzf7yqa/ZzUP
-        UnEWwUhW3s/qA0xDRZ4moBSqQg==
-X-Google-Smtp-Source: AK7set9Gf/TXJwIQxles6vw8IIkk1NLDMuEyWjEgs1Kk2ZhMGTWDfO+Axy3lfWS9rFYTFHPw929Lrw==
-X-Received: by 2002:a05:600c:1716:b0:3dd:1ac2:989 with SMTP id c22-20020a05600c171600b003dd1ac20989mr2392196wmn.39.1675794134367;
-        Tue, 07 Feb 2023 10:22:14 -0800 (PST)
-Received: from revest.zrh.corp.google.com ([2a00:79e0:9d:6:5307:c0c0:ff97:80de])
-        by smtp.gmail.com with ESMTPSA id n6-20020a05600c4f8600b003daf672a616sm15578369wmq.22.2023.02.07.10.22.12
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 07 Feb 2023 10:22:13 -0800 (PST)
-From:   Florent Revest <revest@chromium.org>
-To:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-trace-kernel@vger.kernel.org, bpf@vger.kernel.org
-Cc:     catalin.marinas@arm.com, will@kernel.org, rostedt@goodmis.org,
-        mhiramat@kernel.org, mark.rutland@arm.com, ast@kernel.org,
-        daniel@iogearbox.net, andrii@kernel.org, kpsingh@kernel.org,
-        jolsa@kernel.org, xukuohai@huaweicloud.com, lihuafei1@huawei.com,
-        Florent Revest <revest@chromium.org>
-Subject: [PATCH v2 09/10] arm64: ftrace: Add direct call trampoline samples support
-Date:   Tue,  7 Feb 2023 19:21:34 +0100
-Message-Id: <20230207182135.2671106-10-revest@chromium.org>
-X-Mailer: git-send-email 2.39.1.519.gcb327c4b5f-goog
-In-Reply-To: <20230207182135.2671106-1-revest@chromium.org>
-References: <20230207182135.2671106-1-revest@chromium.org>
+        Tue, 7 Feb 2023 13:51:55 -0500
+Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 270B317CFE;
+        Tue,  7 Feb 2023 10:51:53 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 9E688B81AB7;
+        Tue,  7 Feb 2023 18:51:52 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 89E53C433EF;
+        Tue,  7 Feb 2023 18:51:50 +0000 (UTC)
+Date:   Tue, 7 Feb 2023 13:51:47 -0500
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     LKML <linux-kernel@vger.kernel.org>,
+        Linux Trace Kernel <linux-trace-kernel@vger.kernel.org>
+Cc:     Masami Hiramatsu <mhiramat@kernel.org>,
+        Shuah Khan <shuah@kernel.org>,
+        Shuah Khan <skhan@linuxfoundation.org>,
+        Peter Zijlstra <peterz@infradead.org>
+Subject: [PATCH] tracing/selftests: Ignore __pfx_ symbols in kprobe test
+Message-ID: <20230207135147.5ce618d6@gandalf.local.home>
+X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-The ftrace samples need per-architecture trampoline implementations
-to save and restore argument registers around the calls to
-my_direct_func* and to restore polluted registers (eg: x30).
+From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
 
-These samples also include <asm/nospec-branch.h> which does not exist on
-arm64 and <asm/asm-offsets.h> which, on arm64, is not necessary and
-redefines previously defined macros (resulting in warnings) so these
-includes are guarded by !CONFIG_ARM64.
+The kprobe probepoint.tc test started failing because of the added __pfx_
+symbols that were added because of -fpatchable-function-entry=X,Y causing
+unwinders to see them as part of the previous functions. But kprobes can
+not be added on top of them. The selftest looks for tracefs_create_dir and
+picks it and the previous and following functions to add at their address.
+This caused it to include __pfx_tracefs_create_dir which is invalid to
+attach a kprobe to and caused the test to fail.
 
-Signed-off-by: Florent Revest <revest@chromium.org>
+Fixes: 9f2899fe36a62 ("objtool: Add option to generate prefix symbols")
+Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
 ---
- arch/arm64/Kconfig                          |  2 ++
- samples/ftrace/ftrace-direct-modify.c       | 32 ++++++++++++++++++
- samples/ftrace/ftrace-direct-multi-modify.c | 36 +++++++++++++++++++++
- samples/ftrace/ftrace-direct-multi.c        | 22 +++++++++++++
- samples/ftrace/ftrace-direct-too.c          | 25 ++++++++++++++
- samples/ftrace/ftrace-direct.c              | 23 +++++++++++++
- 6 files changed, 140 insertions(+)
+ tools/testing/selftests/ftrace/test.d/kprobe/probepoint.tc | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
-index 7deafd653c42..5480ef8eaa2a 100644
---- a/arch/arm64/Kconfig
-+++ b/arch/arm64/Kconfig
-@@ -194,6 +194,8 @@ config ARM64
- 		if (DYNAMIC_FTRACE_WITH_ARGS && !CFI_CLANG)
- 	select FTRACE_MCOUNT_USE_PATCHABLE_FUNCTION_ENTRY \
- 		if DYNAMIC_FTRACE_WITH_ARGS
-+	select HAVE_SAMPLE_FTRACE_DIRECT
-+	select HAVE_SAMPLE_FTRACE_DIRECT_MULTI
- 	select HAVE_EFFICIENT_UNALIGNED_ACCESS
- 	select HAVE_FAST_GUP
- 	select HAVE_FTRACE_MCOUNT_RECORD
-diff --git a/samples/ftrace/ftrace-direct-modify.c b/samples/ftrace/ftrace-direct-modify.c
-index 150c06b489ee..0178554c55f2 100644
---- a/samples/ftrace/ftrace-direct-modify.c
-+++ b/samples/ftrace/ftrace-direct-modify.c
-@@ -2,8 +2,10 @@
- #include <linux/module.h>
- #include <linux/kthread.h>
- #include <linux/ftrace.h>
-+#ifndef CONFIG_ARM64
- #include <asm/asm-offsets.h>
- #include <asm/nospec-branch.h>
-+#endif
+diff --git a/tools/testing/selftests/ftrace/test.d/kprobe/probepoint.tc b/tools/testing/selftests/ftrace/test.d/kprobe/probepoint.tc
+index 624269c8d534..e1b7506c1b11 100644
+--- a/tools/testing/selftests/ftrace/test.d/kprobe/probepoint.tc
++++ b/tools/testing/selftests/ftrace/test.d/kprobe/probepoint.tc
+@@ -21,7 +21,7 @@ set_offs() { # prev target next
  
- extern void my_direct_func1(void);
- extern void my_direct_func2(void);
-@@ -96,6 +98,36 @@ asm (
+ # We have to decode symbol addresses to get correct offsets.
+ # If the offset is not an instruction boundary, it cause -EILSEQ.
+-set_offs `grep -A1 -B1 ${TARGET_FUNC} /proc/kallsyms | cut -f 1 -d " " | xargs`
++set_offs `grep -v __pfx_ /proc/kallsyms | grep -A1 -B1 ${TARGET_FUNC} |  cut -f 1 -d " " | xargs`
  
- #endif /* CONFIG_S390 */
- 
-+#ifdef CONFIG_ARM64
-+
-+asm (
-+"	.pushsection    .text, \"ax\", @progbits\n"
-+"	.type		my_tramp1, @function\n"
-+"	.globl		my_tramp1\n"
-+"   my_tramp1:"
-+"	sub	sp, sp, #16\n"
-+"	stp	x9, x30, [sp]\n"
-+"	bl	my_direct_func1\n"
-+"	ldp	x30, x9, [sp]\n"
-+"	add	sp, sp, #16\n"
-+"	ret	x9\n"
-+"	.size		my_tramp1, .-my_tramp1\n"
-+
-+"	.type		my_tramp2, @function\n"
-+"	.globl		my_tramp2\n"
-+"   my_tramp2:"
-+"	sub	sp, sp, #16\n"
-+"	stp	x9, x30, [sp]\n"
-+"	bl	my_direct_func2\n"
-+"	ldp	x30, x9, [sp]\n"
-+"	add	sp, sp, #16\n"
-+"	ret	x9\n"
-+"	.size		my_tramp2, .-my_tramp2\n"
-+"	.popsection\n"
-+);
-+
-+#endif /* CONFIG_ARM64 */
-+
- static struct ftrace_ops direct;
- 
- static unsigned long my_tramp = (unsigned long)my_tramp1;
-diff --git a/samples/ftrace/ftrace-direct-multi-modify.c b/samples/ftrace/ftrace-direct-multi-modify.c
-index 407c56325e65..ae1f97271d1a 100644
---- a/samples/ftrace/ftrace-direct-multi-modify.c
-+++ b/samples/ftrace/ftrace-direct-multi-modify.c
-@@ -2,8 +2,10 @@
- #include <linux/module.h>
- #include <linux/kthread.h>
- #include <linux/ftrace.h>
-+#ifndef CONFIG_ARM64
- #include <asm/asm-offsets.h>
- #include <asm/nospec-branch.h>
-+#endif
- 
- extern void my_direct_func1(unsigned long ip);
- extern void my_direct_func2(unsigned long ip);
-@@ -103,6 +105,40 @@ asm (
- 
- #endif /* CONFIG_S390 */
- 
-+#ifdef CONFIG_ARM64
-+
-+asm (
-+"	.pushsection    .text, \"ax\", @progbits\n"
-+"	.type		my_tramp1, @function\n"
-+"	.globl		my_tramp1\n"
-+"   my_tramp1:"
-+"	sub	sp, sp, #32\n"
-+"	stp	x9, x30, [sp]\n"
-+"	str	x0, [sp, #16]\n"
-+"	bl	my_direct_func1\n"
-+"	ldp	x30, x9, [sp]\n"
-+"	ldr	x0, [sp, #16]\n"
-+"	add	sp, sp, #32\n"
-+"	ret	x9\n"
-+"	.size		my_tramp1, .-my_tramp1\n"
-+
-+"	.type		my_tramp2, @function\n"
-+"	.globl		my_tramp2\n"
-+"   my_tramp2:"
-+"	sub	sp, sp, #32\n"
-+"	stp	x9, x30, [sp]\n"
-+"	str	x0, [sp, #16]\n"
-+"	bl	my_direct_func2\n"
-+"	ldp	x30, x9, [sp]\n"
-+"	ldr	x0, [sp, #16]\n"
-+"	add	sp, sp, #32\n"
-+"	ret	x9\n"
-+"	.size		my_tramp2, .-my_tramp2\n"
-+"	.popsection\n"
-+);
-+
-+#endif /* CONFIG_ARM64 */
-+
- static unsigned long my_tramp = (unsigned long)my_tramp1;
- static unsigned long tramps[2] = {
- 	(unsigned long)my_tramp1,
-diff --git a/samples/ftrace/ftrace-direct-multi.c b/samples/ftrace/ftrace-direct-multi.c
-index 46cf1873fda7..52bf238fcd7e 100644
---- a/samples/ftrace/ftrace-direct-multi.c
-+++ b/samples/ftrace/ftrace-direct-multi.c
-@@ -4,8 +4,10 @@
- #include <linux/mm.h> /* for handle_mm_fault() */
- #include <linux/ftrace.h>
- #include <linux/sched/stat.h>
-+#ifndef CONFIG_ARM64
- #include <asm/asm-offsets.h>
- #include <asm/nospec-branch.h>
-+#endif
- 
- extern void my_direct_func(unsigned long ip);
- 
-@@ -66,6 +68,26 @@ asm (
- 
- #endif /* CONFIG_S390 */
- 
-+#ifdef CONFIG_ARM64
-+
-+asm (
-+"	.pushsection	.text, \"ax\", @progbits\n"
-+"	.type		my_tramp, @function\n"
-+"	.globl		my_tramp\n"
-+"   my_tramp:"
-+"	sub	sp, sp, #32\n"
-+"	stp	x9, x30, [sp]\n"
-+"	str	x0, [sp, #16]\n"
-+"	bl	my_direct_func\n"
-+"	ldp	x30, x9, [sp]\n"
-+"	ldr	x0, [sp, #16]\n"
-+"	add	sp, sp, #32\n"
-+"	ret	x9\n"
-+"	.size		my_tramp, .-my_tramp\n"
-+"	.popsection\n"
-+);
-+
-+#endif /* CONFIG_ARM64 */
- static struct ftrace_ops direct;
- 
- static int __init ftrace_direct_multi_init(void)
-diff --git a/samples/ftrace/ftrace-direct-too.c b/samples/ftrace/ftrace-direct-too.c
-index 7ee5dd3cc61d..f46ee08caa2b 100644
---- a/samples/ftrace/ftrace-direct-too.c
-+++ b/samples/ftrace/ftrace-direct-too.c
-@@ -3,8 +3,10 @@
- 
- #include <linux/mm.h> /* for handle_mm_fault() */
- #include <linux/ftrace.h>
-+#ifndef CONFIG_ARM64
- #include <asm/asm-offsets.h>
- #include <asm/nospec-branch.h>
-+#endif
- 
- extern void my_direct_func(struct vm_area_struct *vma,
- 			   unsigned long address, unsigned int flags);
-@@ -70,6 +72,29 @@ asm (
- 
- #endif /* CONFIG_S390 */
- 
-+#ifdef CONFIG_ARM64
-+
-+asm (
-+"	.pushsection	.text, \"ax\", @progbits\n"
-+"	.type		my_tramp, @function\n"
-+"	.globl		my_tramp\n"
-+"   my_tramp:"
-+"	sub	sp, sp, #48\n"
-+"	stp	x9, x30, [sp]\n"
-+"	stp	x0, x1, [sp, #16]\n"
-+"	str	x2, [sp, #32]\n"
-+"	bl	my_direct_func\n"
-+"	ldp	x30, x9, [sp]\n"
-+"	ldp	x0, x1, [sp, #16]\n"
-+"	ldr	x2, [sp, #32]\n"
-+"	add	sp, sp, #48\n"
-+"	ret	x9\n"
-+"	.size		my_tramp, .-my_tramp\n"
-+"	.popsection\n"
-+);
-+
-+#endif /* CONFIG_ARM64 */
-+
- static struct ftrace_ops direct;
- 
- static int __init ftrace_direct_init(void)
-diff --git a/samples/ftrace/ftrace-direct.c b/samples/ftrace/ftrace-direct.c
-index 5ffce87fa83e..e37e8d9e855c 100644
---- a/samples/ftrace/ftrace-direct.c
-+++ b/samples/ftrace/ftrace-direct.c
-@@ -3,8 +3,10 @@
- 
- #include <linux/sched.h> /* for wake_up_process() */
- #include <linux/ftrace.h>
-+#ifndef CONFIG_ARM64
- #include <asm/asm-offsets.h>
- #include <asm/nospec-branch.h>
-+#endif
- 
- extern void my_direct_func(struct task_struct *p);
- 
-@@ -63,6 +65,27 @@ asm (
- 
- #endif /* CONFIG_S390 */
- 
-+#ifdef CONFIG_ARM64
-+
-+asm (
-+"	.pushsection	.text, \"ax\", @progbits\n"
-+"	.type		my_tramp, @function\n"
-+"	.globl		my_tramp\n"
-+"   my_tramp:"
-+"	sub	sp, sp, #32\n"
-+"	stp	x9, x30, [sp]\n"
-+"	str	x0, [sp, #16]\n"
-+"	bl	my_direct_func\n"
-+"	ldp	x30, x9, [sp]\n"
-+"	ldr	x0, [sp, #16]\n"
-+"	add	sp, sp, #32\n"
-+"	ret	x9\n"
-+"	.size		my_tramp, .-my_tramp\n"
-+"	.popsection\n"
-+);
-+
-+#endif /* CONFIG_ARM64 */
-+
- static struct ftrace_ops direct;
- 
- static int __init ftrace_direct_init(void)
+ UINT_TEST=no
+ # printf "%x" -1 returns (unsigned long)-1.
 -- 
-2.39.1.519.gcb327c4b5f-goog
+2.39.0
 
