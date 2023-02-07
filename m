@@ -2,162 +2,101 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7329CC636CD
-	for <linux-trace-kernel@archiver.kernel.org>; Tue,  7 Feb 2023 11:27:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 90261C636D6
+	for <linux-trace-kernel@archiver.kernel.org>; Tue,  7 Feb 2023 15:22:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229565AbjBGL06 (ORCPT
+        id S232388AbjBGPWO (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Tue, 7 Feb 2023 06:26:58 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47272 "EHLO
+        Tue, 7 Feb 2023 10:22:14 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33258 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231167AbjBGL05 (ORCPT
+        with ESMTP id S231222AbjBGPWM (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Tue, 7 Feb 2023 06:26:57 -0500
-Received: from szxga08-in.huawei.com (szxga08-in.huawei.com [45.249.212.255])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9505186BB;
-        Tue,  7 Feb 2023 03:26:53 -0800 (PST)
-Received: from dggpeml100012.china.huawei.com (unknown [172.30.72.53])
-        by szxga08-in.huawei.com (SkyGuard) with ESMTP id 4PB14S4rmXz16NRF;
-        Tue,  7 Feb 2023 19:24:40 +0800 (CST)
-Received: from [10.67.110.218] (10.67.110.218) by
- dggpeml100012.china.huawei.com (7.185.36.121) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.34; Tue, 7 Feb 2023 19:26:50 +0800
-Message-ID: <c94b7dc4-7cea-7c07-b4b3-a224660444b4@huawei.com>
-Date:   Tue, 7 Feb 2023 19:26:42 +0800
+        Tue, 7 Feb 2023 10:22:12 -0500
+Received: from mail-pg1-x529.google.com (mail-pg1-x529.google.com [IPv6:2607:f8b0:4864:20::529])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5EB4437B5E
+        for <linux-trace-kernel@vger.kernel.org>; Tue,  7 Feb 2023 07:22:02 -0800 (PST)
+Received: by mail-pg1-x529.google.com with SMTP id 7so10656634pgh.7
+        for <linux-trace-kernel@vger.kernel.org>; Tue, 07 Feb 2023 07:22:02 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=MoFBSQBzSf0fT1cCkVolLoLGiXS5UnRqIR10/tmIk94=;
+        b=RoIqDNrJkIIHVHTPel0ZaBUhNb0n/kA5KK7s0gplBhuaQyxi1cPqqzpFkQdoZzZsp+
+         YvpEiGr1gDnoPafg9nmE0w9Jo7j4ev+mDF7i4pwC/nsXygGihj6arBE3wRR7F7tDLUUP
+         xn5QiX9oFg3htVkVXflhc9/qEh5Igqmp7X66k=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=MoFBSQBzSf0fT1cCkVolLoLGiXS5UnRqIR10/tmIk94=;
+        b=MnmnTVYLxs+gwVJE7S0Qrb5MbbcLzPGWVmwId6ZH7QBvqbV9yqnhgJjVjs7x4LYaIC
+         5IqBGgR8qQGUpn3lS1+R+HBm1Rf3/5GdlZi5Cn2Mt3bLRmSK7x3C1Bty3vdYIk6ZuCQL
+         w8qj4qCFd6H126Wis0H+llc3QC/dyNkjeqqMH9KkI1dT6U4fXtvRRve5mXfxA2WebX/r
+         E1/5o7PsXVgVGW8+ExahphkVF6Y5yVNcA7mIYn5wttzQv51uTpSN6rxyVnMaqYBbB32U
+         avKT+NZnVkxjvGFcffGNv6Fs8UqcJqote7+yTuEZoNyTT4fQwb9OzqQVUk049xLVI1Ea
+         9HPw==
+X-Gm-Message-State: AO0yUKWZnG8GlytZTHLDTwFmquwsgSY1eNWMkHyiwaewkeNeRUkfpvXQ
+        mn/jLp0aEmZn0rQEjTaRWXImRc13I39b2w4P+ongzw==
+X-Google-Smtp-Source: AK7set/0dDymGJs4u4sgWflAsdvJCYNyuErraEjKyIDbTpV24ZUFw+mbiYTq1CpYkfoC+9AvD31u1QIn1095Vh9xPOA=
+X-Received: by 2002:a62:3808:0:b0:5a6:5841:6570 with SMTP id
+ f8-20020a623808000000b005a658416570mr923337pfa.51.1675783321117; Tue, 07 Feb
+ 2023 07:22:01 -0800 (PST)
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.6.0
-Subject: Re: [bug report] WARNINGs in rb_check_pages() and
- rb_handle_head_page()
-Content-Language: en-US
-To:     <rostedt@goodmis.org>
-CC:     <mhiramat@kernel.org>, <zanussi@kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-trace-kernel@vger.kernel.org>, <wanghai38@huawei.com>
-References: <20230203035608.2336906-1-zhengyejian1@huawei.com>
-From:   Zheng Yejian <zhengyejian1@huawei.com>
-In-Reply-To: <20230203035608.2336906-1-zhengyejian1@huawei.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.67.110.218]
-X-ClientProxiedBy: dggems701-chm.china.huawei.com (10.3.19.178) To
- dggpeml100012.china.huawei.com (7.185.36.121)
-X-CFilter-Loop: Reflected
+References: <20230201163420.1579014-1-revest@chromium.org> <20230201163420.1579014-2-revest@chromium.org>
+ <Y9vPAdFBJF/gKXaO@FVFF77S0Q05N.cambridge.arm.com> <CABRcYmLrYXuP-yio0dy4WskENn81Qw2WS0ArMp=rdHuiGyjYhQ@mail.gmail.com>
+In-Reply-To: <CABRcYmLrYXuP-yio0dy4WskENn81Qw2WS0ArMp=rdHuiGyjYhQ@mail.gmail.com>
+From:   Florent Revest <revest@chromium.org>
+Date:   Tue, 7 Feb 2023 16:21:49 +0100
+Message-ID: <CABRcYmL7exDGnBTzj-DHLSf49_tz6bSDfjn9CDLO9ZEbfFyh-w@mail.gmail.com>
+Subject: Re: [PATCH 1/8] ftrace: Replace uses of _ftrace_direct APIs with _ftrace_direct_multi
+To:     Mark Rutland <mark.rutland@arm.com>
+Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-trace-kernel@vger.kernel.org, bpf@vger.kernel.org,
+        catalin.marinas@arm.com, will@kernel.org, rostedt@goodmis.org,
+        mhiramat@kernel.org, ast@kernel.org, daniel@iogearbox.net,
+        andrii@kernel.org, kpsingh@kernel.org, jolsa@kernel.org,
+        xukuohai@huaweicloud.com
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On 2023/2/3 11:56, Zheng Yejian wrote:
-> Hi, steve
-> 
-> I happened to get two WARNINGs [1] [2] at same time when testing v5.10 with
-> testcase 'func_profiler.tc':
-> Link: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git/tree/tools/testing/selftests/ftrace/test.d/ftrace/func_profiler.tc
-> 
-> It seems a data race between ring_buffer writing and integrity checking.
-> That is, head_page is moving when buffer is full and RB_FLAG is updating,
-> however at same time RB_FLAG was cleared when doing integrity check:
->    rb_check_pages()            rb_handle_head_page():
->    --------                    --------
->    rb_head_page_deactivate()
->                                rb_head_page_set_normal()
->    rb_head_page_activate()
-> 
-> Mainline kernel seems have this problem as well, see the constructed
-> testcase 'repro.sh' [3] and reproduction log [4].
-> 
-> Integrity checking of ring_buffer on closing "trace" file seems not a good
-> point, do you have any idea, steve?
-> 
-> 1:
-> One WARNING happened at
-> Link: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git/tree/kernel/trace/ring_buffer.c?h=linux-5.10.y#n1492
->    Call Trace:
->     rb_check_pages
->     ring_buffer_read_finish
->     tracing_release
-> 
-> 2:
-> The other WARNING happened at
-> Link: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git/tree/kernel/trace/ring_buffer.c?h=linux-5.10.y#n2507
->    Call Trace:
->     rb_handle_head_page
->     rb_move_tail
->     __rb_reserve_next
->     rb_reserve_next_event
->     ring_buffer_lock_reserve
->     __trace_buffer_lock_reserve
->     trace_function
->     function_trace_call
-> 
-> 3:
-> ``` read_trace.sh
->    while true;
->    do
->      # the "trace" file is closed after read
->      head -1 /sys/kernel/tracing/trace > /dev/null
->    done
-> ```
-> ``` repro.sh
->    # function tracer will writing enough data into ring_buffer
->    echo function > /sys/kernel/tracing/current_tracer
->    ./read_trace.sh &
->    ./read_trace.sh &
->    ./read_trace.sh &
->    ./read_trace.sh &
->    ./read_trace.sh &
->    ./read_trace.sh &
->    ./read_trace.sh &
->    ./read_trace.sh &
-> ```
-> 
+On Thu, Feb 2, 2023 at 6:37 PM Florent Revest <revest@chromium.org> wrote:
+>
+> On Thu, Feb 2, 2023 at 4:02 PM Mark Rutland <mark.rutland@arm.com> wrote:
+> > Looking at samples/ftrace/, as of this patch we have a few samples that are
+> > almost identical, modulo the function being traced, and some different register
+> > shuffling for arguments:
+> >
+> > * ftrace-direct.c and ftrace-direct-multi.c
+> > * ftrace-direct-modify.c and ftrace-direct-modify
+> >
+> > ... perhaps it would be better to just delete the !multi versions ?
+>
+> The multi versions hook two functions and the !multi hook just one but
+> I agree that this granularity in coverage is probably just a
+> maintenance burden and doesn't help with much! :)
+> I'll delete the !multi in v2, as part of the patch 2 and patch 1 will
+> just migrate the selftest to use the multi API.
 
-Kindly ping :)
-Above testcase seems common, but after warning happened, ring buffer
-would be disabled, so this is a problem. Would it be ok to move the
-ring buffer integrity check before tracing on or after tracing off?
+Actually, I'm not sure anymore if we should delete the !multi samples...
 
---
+I realized that they are also used as part of the ftrace selftests in:
+- tools/testing/selftests/ftrace/test.d/direct/ftrace-direct.tc
+- tools/testing/selftests/ftrace/test.d/direct/kprobe-direct.tc
 
-Best regards,
-Zheng Yejian
+It does not really make sense to use the ftrace-direct-muti sample as
+a drop-in replacement for the ftrace-direct sample there since they
+don't really do the same thing so we would either need to change the
+test a bit or the multi sample.
+Also, we would still need to adapt the ftrace-direct-too sample since
+it has no multi equivalent and is required there.
 
-> 4:
-> ------------[ cut here ]------------
-> WARNING: CPU: 9 PID: 62 at kernel/trace/ring_buffer.c:2653 rb_move_tail+0x450/0x470
-> Modules linked in:
-> CPU: 9 PID: 62 Comm: ksoftirqd/9 Tainted: G        W          6.2.0-rc6+ #261
-> Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS rel-1.15.0-0-g2dd4b9b3f840-prebuilt.qemu.org 04/01/2014
-> RIP: 0010:rb_move_tail+0x450/0x470
-> Code: ff ff 4c 89 c8 f0 4d 0f b1 02 48 89 c2 48 83 e2 fc 49 39 d0 75 24 83 e0 03 83 f8 02 0f 84 e1 fb ff ff 48 8b 57 10 f0 ff 42 08 <0f> 0b 83 f8 02 0f 84 ce fb ff ff e9 db
-> RSP: 0018:ffffb5564089bd00 EFLAGS: 00000203
-> RAX: 0000000000000000 RBX: ffff9db385a2bf81 RCX: ffffb5564089bd18
-> RDX: ffff9db281110100 RSI: 0000000000000fe4 RDI: ffff9db380145400
-> RBP: ffff9db385a2bf80 R08: ffff9db385a2bfc0 R09: ffff9db385a2bfc2
-> R10: ffff9db385a6c000 R11: ffff9db385a2bf80 R12: 0000000000000000
-> R13: 00000000000003e8 R14: ffff9db281110100 R15: ffffffffbb006108
-> FS:  0000000000000000(0000) GS:ffff9db3bdcc0000(0000) knlGS:0000000000000000
-> CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> CR2: 00005602323024c8 CR3: 0000000022e0c000 CR4: 00000000000006e0
-> Call Trace:
->   <TASK>
->   ring_buffer_lock_reserve+0x136/0x360
->   ? __do_softirq+0x287/0x2df
->   ? __pfx_rcu_softirq_qs+0x10/0x10
->   trace_function+0x21/0x110
->   ? __pfx_rcu_softirq_qs+0x10/0x10
->   ? __do_softirq+0x287/0x2df
->   function_trace_call+0xf6/0x120
->   0xffffffffc038f097
->   ? rcu_softirq_qs+0x5/0x140
->   rcu_softirq_qs+0x5/0x140
->   __do_softirq+0x287/0x2df
->   run_ksoftirqd+0x2a/0x30
->   smpboot_thread_fn+0x188/0x220
->   ? __pfx_smpboot_thread_fn+0x10/0x10
->   kthread+0xe7/0x110
->   ? __pfx_kthread+0x10/0x10
->   ret_from_fork+0x2c/0x50
->   </TASK>
-> ---[ end trace 0000000000000000 ]--
+It's certainly doable but now it feels to me like going one step too
+far with the refactoring within the scope of this series. Do you think
+it's worth it ? I have 70% of that work done already so I'm happy to
+finish it but I thought I should check back before sending a v2 that's
+more complex than anticipated.
