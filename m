@@ -2,163 +2,251 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E1E96C05027
-	for <linux-trace-kernel@archiver.kernel.org>; Wed,  8 Feb 2023 09:06:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FDA1C636CC
+	for <linux-trace-kernel@archiver.kernel.org>; Wed,  8 Feb 2023 16:36:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230393AbjBHJGX (ORCPT
+        id S230331AbjBHQgP (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Wed, 8 Feb 2023 04:06:23 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52118 "EHLO
+        Wed, 8 Feb 2023 11:36:15 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43772 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229490AbjBHJGV (ORCPT
+        with ESMTP id S229559AbjBHQgP (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Wed, 8 Feb 2023 04:06:21 -0500
-Received: from szxga03-in.huawei.com (szxga03-in.huawei.com [45.249.212.189])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 122031CAF9;
-        Wed,  8 Feb 2023 01:06:18 -0800 (PST)
-Received: from dggpeml100012.china.huawei.com (unknown [172.30.72.53])
-        by szxga03-in.huawei.com (SkyGuard) with ESMTP id 4PBYs03BbRzJqyM;
-        Wed,  8 Feb 2023 17:01:40 +0800 (CST)
-Received: from localhost.localdomain (10.67.175.61) by
- dggpeml100012.china.huawei.com (7.185.36.121) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.34; Wed, 8 Feb 2023 17:06:16 +0800
-From:   Zheng Yejian <zhengyejian1@huawei.com>
-To:     <rostedt@goodmis.org>, <mhiramat@kernel.org>
-CC:     <linux-kernel@vger.kernel.org>,
-        <linux-trace-kernel@vger.kernel.org>, <zhengyejian1@huawei.com>,
-        <wanghai38@huawei.com>
-Subject: [PATCH] tracing/ring-buffer: Remove integrity check at end of iter read
-Date:   Wed, 8 Feb 2023 17:08:14 +0800
-Message-ID: <20230208090814.869242-1-zhengyejian1@huawei.com>
-X-Mailer: git-send-email 2.25.1
+        Wed, 8 Feb 2023 11:36:15 -0500
+Received: from mga17.intel.com (mga17.intel.com [192.55.52.151])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8518016ACF;
+        Wed,  8 Feb 2023 08:36:13 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1675874173; x=1707410173;
+  h=date:from:to:cc:subject:message-id:mime-version:
+   content-transfer-encoding;
+  bh=z0IUoGq44Ie/D98tP3PnKFsEfCc3lnBcoW+pcHZVejk=;
+  b=LxZyXQOJ2XZBNEFok+VhKdiSYcXZczNT5qD1C0HKvjV6sumE+s6H27UF
+   5KECUbKfe8VdrxN149SUrZTDGCF9gXc5mlHePRY9/QaqvK1loR41nnMTc
+   mqsAmDNBTEtN9bZplTQX46s30XOIZUUwzmP+5suPyWAVatB7MZtdJLNIr
+   kuMccoqpwaA3YH6wDQoQNn/bIXBiGs8QayT1mAwwn5jHoE4GJ9npfiVEu
+   2nkUHeCUx9hbeomfQaSamfjpjkAkHqjFUB/0x5M4UqKwBpdjh6LDHBUBr
+   t9WrE+rDDhLvN0ubCfxkSaZCuAgrjD/WeE2/quI7QjilTgibGiIE/D2qF
+   g==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10615"; a="310205618"
+X-IronPort-AV: E=Sophos;i="5.97,281,1669104000"; 
+   d="scan'208";a="310205618"
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Feb 2023 08:36:12 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6500,9779,10615"; a="699704461"
+X-IronPort-AV: E=Sophos;i="5.97,281,1669104000"; 
+   d="scan'208";a="699704461"
+Received: from lkp-server01.sh.intel.com (HELO 4455601a8d94) ([10.239.97.150])
+  by orsmga001.jf.intel.com with ESMTP; 08 Feb 2023 08:36:09 -0800
+Received: from kbuild by 4455601a8d94 with local (Exim 4.96)
+        (envelope-from <lkp@intel.com>)
+        id 1pPnQW-0004YA-1k;
+        Wed, 08 Feb 2023 16:36:08 +0000
+Date:   Thu, 09 Feb 2023 00:35:28 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     Andrew Morton <akpm@linux-foundation.org>
+Cc:     linux-trace-kernel@vger.kernel.org, linux-s390@vger.kernel.org,
+        linux-riscv@lists.infradead.org, linux-can@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev,
+        kvmarm@lists.cs.columbia.edu, amd-gfx@lists.freedesktop.org,
+        Linux Memory Management List <linux-mm@kvack.org>
+Subject: [linux-next:master] BUILD REGRESSION
+ 38d2b86a665b5e86371a1a30228bce259aa6c101
+Message-ID: <63e3cf50.D71+8M3OXb6sK1SD%lkp@intel.com>
+User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [10.67.175.61]
-X-ClientProxiedBy: dggems702-chm.china.huawei.com (10.3.19.179) To
- dggpeml100012.china.huawei.com (7.185.36.121)
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-Concurrently closing "trace" file and writing into ring buffer [1] can
-cause WARNINGs [2]. It has been reported in
-Link: https://lore.kernel.org/all/20230203035608.2336906-1-zhengyejian1@huawei.com/
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git master
+branch HEAD: 38d2b86a665b5e86371a1a30228bce259aa6c101  Add linux-next specific files for 20230208
 
-It seems a data race between ring_buffer writing and integrity check.
-That is, RB_FLAG of head_page is been updating, while at same time RB_FLAG
-was cleared when doing integrity check:
-  rb_check_pages()            rb_handle_head_page():
-  --------                    --------
-  rb_head_page_deactivate()
-                              rb_head_page_set_normal()
-  rb_head_page_activate()
+Error/Warning reports:
 
-Integrity check at end of iter read was added since commit 659f451ff213
-("ring-buffer: Add integrity check at end of iter read"). As it's commit
-message said:
-  > As reading via an iterator requires disabling the ring buffer, it
-  > is a perfect place to have it.
-However, since commit 1039221cc278 ("ring-buffer: Do not disable recording
-when there is an iterator"), ring buffer was not disabled at that place,
-so that integrity check should be removed.
+https://lore.kernel.org/oe-kbuild-all/202301300743.bp7Dpazv-lkp@intel.com
+https://lore.kernel.org/oe-kbuild-all/202301301801.y5O08tQx-lkp@intel.com
+https://lore.kernel.org/oe-kbuild-all/202301302110.mEtNwkBD-lkp@intel.com
+https://lore.kernel.org/oe-kbuild-all/202301310939.TAgCOEZb-lkp@intel.com
+https://lore.kernel.org/oe-kbuild-all/202302011836.kA3BxqdY-lkp@intel.com
+https://lore.kernel.org/oe-kbuild-all/202302061911.C7xvHX9v-lkp@intel.com
+https://lore.kernel.org/oe-kbuild-all/202302062224.ByzeTXh1-lkp@intel.com
 
-1:
-``` read_trace.sh
-  while true;
-  do
-    # the "trace" file is closed after read
-    head -1 /sys/kernel/tracing/trace > /dev/null
-  done
-```
-``` repro.sh
-  sysctl -w kernel.panic_on_warn=1
-  # function tracer will writing enough data into ring_buffer
-  echo function > /sys/kernel/tracing/current_tracer
-  ./read_trace.sh &
-  ./read_trace.sh &
-  ./read_trace.sh &
-  ./read_trace.sh &
-  ./read_trace.sh &
-  ./read_trace.sh &
-  ./read_trace.sh &
-  ./read_trace.sh &
-```
+Error/Warning: (recently discovered and may have been fixed)
 
-2:
-------------[ cut here ]------------
-WARNING: CPU: 9 PID: 62 at kernel/trace/ring_buffer.c:2653
-rb_move_tail+0x450/0x470
-Modules linked in:
-CPU: 9 PID: 62 Comm: ksoftirqd/9 Tainted: G        W          6.2.0-rc6+
-Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS
-rel-1.15.0-0-g2dd4b9b3f840-prebuilt.qemu.org 04/01/2014
-RIP: 0010:rb_move_tail+0x450/0x470
-Code: ff ff 4c 89 c8 f0 4d 0f b1 02 48 89 c2 48 83 e2 fc 49 39 d0 75 24
-83 e0 03 83 f8 02 0f 84 e1 fb ff ff 48 8b 57 10 f0 ff 42 08 <0f> 0b 83
-f8 02 0f 84 ce fb ff ff e9 db
-RSP: 0018:ffffb5564089bd00 EFLAGS: 00000203
-RAX: 0000000000000000 RBX: ffff9db385a2bf81 RCX: ffffb5564089bd18
-RDX: ffff9db281110100 RSI: 0000000000000fe4 RDI: ffff9db380145400
-RBP: ffff9db385a2bf80 R08: ffff9db385a2bfc0 R09: ffff9db385a2bfc2
-R10: ffff9db385a6c000 R11: ffff9db385a2bf80 R12: 0000000000000000
-R13: 00000000000003e8 R14: ffff9db281110100 R15: ffffffffbb006108
-FS:  0000000000000000(0000) GS:ffff9db3bdcc0000(0000)
-knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 00005602323024c8 CR3: 0000000022e0c000 CR4: 00000000000006e0
-Call Trace:
- <TASK>
- ring_buffer_lock_reserve+0x136/0x360
- ? __do_softirq+0x287/0x2df
- ? __pfx_rcu_softirq_qs+0x10/0x10
- trace_function+0x21/0x110
- ? __pfx_rcu_softirq_qs+0x10/0x10
- ? __do_softirq+0x287/0x2df
- function_trace_call+0xf6/0x120
- 0xffffffffc038f097
- ? rcu_softirq_qs+0x5/0x140
- rcu_softirq_qs+0x5/0x140
- __do_softirq+0x287/0x2df
- run_ksoftirqd+0x2a/0x30
- smpboot_thread_fn+0x188/0x220
- ? __pfx_smpboot_thread_fn+0x10/0x10
- kthread+0xe7/0x110
- ? __pfx_kthread+0x10/0x10
- ret_from_fork+0x2c/0x50
- </TASK>
----[ end trace 0000000000000000 ]---
+Documentation/riscv/uabi.rst:24: WARNING: Enumerated list ends without a blank line; unexpected unindent.
+ERROR: modpost: "devm_platform_ioremap_resource" [drivers/dma/fsl-edma.ko] undefined!
+ERROR: modpost: "devm_platform_ioremap_resource" [drivers/dma/idma64.ko] undefined!
+FAILED: load BTF from vmlinux: No data available
+arch/arm64/kvm/arm.c:2207: warning: expecting prototype for Initialize Hyp(). Prototype was for kvm_arm_init() instead
+drivers/gpu/drm/amd/amdgpu/../display/amdgpu_dm/amdgpu_dm.h:62:10: fatal error: mod_info_packet.h: No such file or directory
+drivers/gpu/drm/amd/amdgpu/../display/dc/dcn31/dcn31_hubbub.c:1011:6: warning: no previous prototype for 'hubbub31_init' [-Wmissing-prototypes]
+drivers/gpu/drm/amd/amdgpu/../display/dc/dcn32/dcn32_hubbub.c:948:6: warning: no previous prototype for 'hubbub32_init' [-Wmissing-prototypes]
+drivers/gpu/drm/amd/amdgpu/../display/dc/dcn32/dcn32_hubp.c:158:6: warning: no previous prototype for 'hubp32_init' [-Wmissing-prototypes]
+drivers/gpu/drm/amd/amdgpu/../display/dc/dcn32/dcn32_resource_helpers.c:62:18: warning: variable 'cursor_bpp' set but not used [-Wunused-but-set-variable]
+drivers/gpu/drm/amd/amdgpu/../display/dc/link/accessories/link_dp_trace.c:148:6: warning: no previous prototype for 'link_dp_trace_set_edp_power_timestamp' [-Wmissing-prototypes]
+drivers/gpu/drm/amd/amdgpu/../display/dc/link/accessories/link_dp_trace.c:158:10: warning: no previous prototype for 'link_dp_trace_get_edp_poweron_timestamp' [-Wmissing-prototypes]
+drivers/gpu/drm/amd/amdgpu/../display/dc/link/accessories/link_dp_trace.c:163:10: warning: no previous prototype for 'link_dp_trace_get_edp_poweroff_timestamp' [-Wmissing-prototypes]
+drivers/gpu/drm/amd/amdgpu/../display/dc/link/protocols/link_dp_capability.c:1295:32: warning: variable 'result_write_min_hblank' set but not used [-Wunused-but-set-variable]
+drivers/gpu/drm/amd/amdgpu/../display/dc/link/protocols/link_dp_capability.c:279:42: warning: variable 'ds_port' set but not used [-Wunused-but-set-variable]
+drivers/gpu/drm/amd/amdgpu/../display/dc/link/protocols/link_dp_training.c:1585:38: warning: variable 'result' set but not used [-Wunused-but-set-variable]
+drivers/net/can/dev/bittiming.c:145:24: error: too many arguments to function 'can_calc_bittiming'
+drivers/net/can/dev/bittiming.c:79:24: error: too many arguments to function 'can_calc_bittiming'
+ftrace-ops.c:(.init.text+0x2b8): undefined reference to `__udivdi3'
+libbpf: failed to find '.BTF' ELF section in vmlinux
 
-Fixes: 1039221cc278 ("ring-buffer: Do not disable recording when there is an iterator")
-Signed-off-by: Zheng Yejian <zhengyejian1@huawei.com>
----
- kernel/trace/ring_buffer.c | 11 -----------
- 1 file changed, 11 deletions(-)
+Unverified Error/Warning (likely false positive, please contact us if interested):
 
-diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
-index c366a0a9ddba..34e955bd1e59 100644
---- a/kernel/trace/ring_buffer.c
-+++ b/kernel/trace/ring_buffer.c
-@@ -5203,17 +5203,6 @@ void
- ring_buffer_read_finish(struct ring_buffer_iter *iter)
- {
- 	struct ring_buffer_per_cpu *cpu_buffer = iter->cpu_buffer;
--	unsigned long flags;
--
--	/*
--	 * Ring buffer is disabled from recording, here's a good place
--	 * to check the integrity of the ring buffer.
--	 * Must prevent readers from trying to read, as the check
--	 * clears the HEAD page and readers require it.
--	 */
--	raw_spin_lock_irqsave(&cpu_buffer->reader_lock, flags);
--	rb_check_pages(cpu_buffer);
--	raw_spin_unlock_irqrestore(&cpu_buffer->reader_lock, flags);
- 
- 	atomic_dec(&cpu_buffer->resize_disabled);
- 	kfree(iter->event);
+arch/s390/boot/vmem.c:256 setup_vmem() error: uninitialized symbol 'start'.
+arch/s390/boot/vmem.c:258 setup_vmem() error: uninitialized symbol 'end'.
+arch/s390/include/asm/mem_detect.h:86 get_mem_detect_end() error: uninitialized symbol 'end'.
+
+Error/Warning ids grouped by kconfigs:
+
+gcc_recent_errors
+|-- alpha-allyesconfig
+|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-accessories-link_dp_trace.c:warning:no-previous-prototype-for-link_dp_trace_get_edp_poweroff_timestamp
+|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-accessories-link_dp_trace.c:warning:no-previous-prototype-for-link_dp_trace_get_edp_poweron_timestamp
+|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-accessories-link_dp_trace.c:warning:no-previous-prototype-for-link_dp_trace_set_edp_power_timestamp
+|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-protocols-link_dp_capability.c:warning:variable-ds_port-set-but-not-used
+|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-protocols-link_dp_capability.c:warning:variable-result_write_min_hblank-set-but-not-used
+|   `-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-protocols-link_dp_training.c:warning:variable-result-set-but-not-used
+|-- alpha-randconfig-r005-20230205
+|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-accessories-link_dp_trace.c:warning:no-previous-prototype-for-link_dp_trace_get_edp_poweroff_timestamp
+|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-accessories-link_dp_trace.c:warning:no-previous-prototype-for-link_dp_trace_get_edp_poweron_timestamp
+|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-accessories-link_dp_trace.c:warning:no-previous-prototype-for-link_dp_trace_set_edp_power_timestamp
+|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-protocols-link_dp_capability.c:warning:variable-ds_port-set-but-not-used
+|   `-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-protocols-link_dp_capability.c:warning:variable-result_write_min_hblank-set-but-not-used
+|-- alpha-randconfig-r031-20230208
+|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-accessories-link_dp_trace.c:warning:no-previous-prototype-for-link_dp_trace_get_edp_poweroff_timestamp
+|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-accessories-link_dp_trace.c:warning:no-previous-prototype-for-link_dp_trace_get_edp_poweron_timestamp
+|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-accessories-link_dp_trace.c:warning:no-previous-prototype-for-link_dp_trace_set_edp_power_timestamp
+|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-protocols-link_dp_capability.c:warning:variable-ds_port-set-but-not-used
+|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-protocols-link_dp_capability.c:warning:variable-result_write_min_hblank-set-but-not-used
+|   `-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-protocols-link_dp_training.c:warning:variable-result-set-but-not-used
+|-- arc-allyesconfig
+|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-accessories-link_dp_trace.c:warning:no-previous-prototype-for-link_dp_trace_get_edp_poweroff_timestamp
+|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-accessories-link_dp_trace.c:warning:no-previous-prototype-for-link_dp_trace_get_edp_poweron_timestamp
+|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-accessories-link_dp_trace.c:warning:no-previous-prototype-for-link_dp_trace_set_edp_power_timestamp
+|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-protocols-link_dp_capability.c:warning:variable-ds_port-set-but-not-used
+|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-protocols-link_dp_capability.c:warning:variable-result_write_min_hblank-set-but-not-used
+|   `-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-protocols-link_dp_training.c:warning:variable-result-set-but-not-used
+|-- arm-allyesconfig
+|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-accessories-link_dp_trace.c:warning:no-previous-prototype-for-link_dp_trace_get_edp_poweroff_timestamp
+|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-accessories-link_dp_trace.c:warning:no-previous-prototype-for-link_dp_trace_get_edp_poweron_timestamp
+|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-accessories-link_dp_trace.c:warning:no-previous-prototype-for-link_dp_trace_set_edp_power_timestamp
+|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-protocols-link_dp_capability.c:warning:variable-ds_port-set-but-not-used
+|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-protocols-link_dp_capability.c:warning:variable-result_write_min_hblank-set-but-not-used
+|   `-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-protocols-link_dp_training.c:warning:variable-result-set-but-not-used
+|-- arm64-allyesconfig
+|   |-- arch-arm64-kvm-arm.c:warning:expecting-prototype-for-Initialize-Hyp().-Prototype-was-for-kvm_arm_init()-instead
+|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-dcn31-dcn31_hubbub.c:warning:no-previous-prototype-for-hubbub31_init
+|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-dcn32-dcn32_hubbub.c:warning:no-previous-prototype-for-hubbub32_init
+|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-dcn32-dcn32_hubp.c:warning:no-previous-prototype-for-hubp32_init
+|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-dcn32-dcn32_resource_helpers.c:warning:variable-cursor_bpp-set-but-not-used
+|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-accessories-link_dp_trace.c:warning:no-previous-prototype-for-link_dp_trace_get_edp_poweroff_timestamp
+|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-accessories-link_dp_trace.c:warning:no-previous-prototype-for-link_dp_trace_get_edp_poweron_timestamp
+|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-accessories-link_dp_trace.c:warning:no-previous-prototype-for-link_dp_trace_set_edp_power_timestamp
+|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-protocols-link_dp_capability.c:warning:variable-ds_port-set-but-not-used
+|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-protocols-link_dp_capability.c:warning:variable-result_write_min_hblank-set-but-not-used
+|   `-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-protocols-link_dp_training.c:warning:variable-result-set-but-not-used
+|-- csky-randconfig-r023-20230205
+|   `-- drivers-gpu-drm-amd-amdgpu-..-display-amdgpu_dm-amdgpu_dm.h:fatal-error:mod_info_packet.h:No-such-file-or-directory
+|-- i386-allyesconfig
+|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-dcn31-dcn31_hubbub.c:warning:no-previous-prototype-for-hubbub31_init
+
+elapsed time: 734m
+
+configs tested: 79
+configs skipped: 3
+
+gcc tested configs:
+um                           x86_64_defconfig
+arc                                 defconfig
+um                             i386_defconfig
+powerpc                           allnoconfig
+alpha                               defconfig
+x86_64                            allnoconfig
+x86_64                              defconfig
+x86_64                          rhel-8.3-func
+s390                                defconfig
+x86_64                    rhel-8.3-kselftests
+s390                             allmodconfig
+m68k                             allyesconfig
+x86_64                               rhel-8.3
+m68k                             allmodconfig
+arc                              allyesconfig
+s390                             allyesconfig
+arm                                 defconfig
+i386                 randconfig-a011-20230206
+x86_64               randconfig-a013-20230206
+x86_64                           allyesconfig
+x86_64               randconfig-a011-20230206
+alpha                            allyesconfig
+i386                 randconfig-a014-20230206
+x86_64               randconfig-a015-20230206
+x86_64               randconfig-a012-20230206
+x86_64               randconfig-a016-20230206
+i386                 randconfig-a012-20230206
+x86_64                           rhel-8.3-bpf
+i386                 randconfig-a016-20230206
+x86_64                           rhel-8.3-syz
+i386                 randconfig-a013-20230206
+x86_64                         rhel-8.3-kunit
+i386                                defconfig
+x86_64                           rhel-8.3-kvm
+sh                               allmodconfig
+x86_64               randconfig-a014-20230206
+ia64                             allmodconfig
+i386                 randconfig-a015-20230206
+mips                             allyesconfig
+arm64                            allyesconfig
+powerpc                          allmodconfig
+arm                              allyesconfig
+i386                             allyesconfig
+s390                 randconfig-r044-20230206
+arc                  randconfig-r043-20230205
+arm                  randconfig-r046-20230205
+arc                  randconfig-r043-20230206
+riscv                randconfig-r042-20230206
+i386                          randconfig-c001
+powerpc                      cm5200_defconfig
+mips                        vocore2_defconfig
+powerpc                  iss476-smp_defconfig
+sh                          r7785rp_defconfig
+sh                        edosk7705_defconfig
+arm                         at91_dt_defconfig
+ia64                         bigsur_defconfig
+
+clang tested configs:
+x86_64                          rhel-8.3-rust
+i386                 randconfig-a002-20230206
+i386                 randconfig-a003-20230206
+i386                 randconfig-a001-20230206
+x86_64               randconfig-a002-20230206
+x86_64               randconfig-a004-20230206
+x86_64               randconfig-a003-20230206
+x86_64               randconfig-a001-20230206
+x86_64               randconfig-a005-20230206
+x86_64               randconfig-a006-20230206
+i386                 randconfig-a004-20230206
+hexagon              randconfig-r041-20230205
+i386                 randconfig-a005-20230206
+riscv                randconfig-r042-20230205
+i386                 randconfig-a006-20230206
+hexagon              randconfig-r045-20230206
+hexagon              randconfig-r041-20230206
+arm                  randconfig-r046-20230206
+s390                 randconfig-r044-20230205
+hexagon              randconfig-r045-20230205
+powerpc                 mpc836x_rdk_defconfig
+arm                     davinci_all_defconfig
+mips                        qi_lb60_defconfig
+
 -- 
-2.25.1
-
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests
