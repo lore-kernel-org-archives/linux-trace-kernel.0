@@ -2,251 +2,82 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FDA1C636CC
-	for <linux-trace-kernel@archiver.kernel.org>; Wed,  8 Feb 2023 16:36:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 538C2C636D3
+	for <linux-trace-kernel@archiver.kernel.org>; Wed,  8 Feb 2023 18:05:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230331AbjBHQgP (ORCPT
+        id S231904AbjBHSFo (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Wed, 8 Feb 2023 11:36:15 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43772 "EHLO
+        Wed, 8 Feb 2023 13:05:44 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44302 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229559AbjBHQgP (ORCPT
+        with ESMTP id S231484AbjBHSFi (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Wed, 8 Feb 2023 11:36:15 -0500
-Received: from mga17.intel.com (mga17.intel.com [192.55.52.151])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8518016ACF;
-        Wed,  8 Feb 2023 08:36:13 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1675874173; x=1707410173;
-  h=date:from:to:cc:subject:message-id:mime-version:
-   content-transfer-encoding;
-  bh=z0IUoGq44Ie/D98tP3PnKFsEfCc3lnBcoW+pcHZVejk=;
-  b=LxZyXQOJ2XZBNEFok+VhKdiSYcXZczNT5qD1C0HKvjV6sumE+s6H27UF
-   5KECUbKfe8VdrxN149SUrZTDGCF9gXc5mlHePRY9/QaqvK1loR41nnMTc
-   mqsAmDNBTEtN9bZplTQX46s30XOIZUUwzmP+5suPyWAVatB7MZtdJLNIr
-   kuMccoqpwaA3YH6wDQoQNn/bIXBiGs8QayT1mAwwn5jHoE4GJ9npfiVEu
-   2nkUHeCUx9hbeomfQaSamfjpjkAkHqjFUB/0x5M4UqKwBpdjh6LDHBUBr
-   t9WrE+rDDhLvN0ubCfxkSaZCuAgrjD/WeE2/quI7QjilTgibGiIE/D2qF
-   g==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10615"; a="310205618"
-X-IronPort-AV: E=Sophos;i="5.97,281,1669104000"; 
-   d="scan'208";a="310205618"
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Feb 2023 08:36:12 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6500,9779,10615"; a="699704461"
-X-IronPort-AV: E=Sophos;i="5.97,281,1669104000"; 
-   d="scan'208";a="699704461"
-Received: from lkp-server01.sh.intel.com (HELO 4455601a8d94) ([10.239.97.150])
-  by orsmga001.jf.intel.com with ESMTP; 08 Feb 2023 08:36:09 -0800
-Received: from kbuild by 4455601a8d94 with local (Exim 4.96)
-        (envelope-from <lkp@intel.com>)
-        id 1pPnQW-0004YA-1k;
-        Wed, 08 Feb 2023 16:36:08 +0000
-Date:   Thu, 09 Feb 2023 00:35:28 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     Andrew Morton <akpm@linux-foundation.org>
-Cc:     linux-trace-kernel@vger.kernel.org, linux-s390@vger.kernel.org,
-        linux-riscv@lists.infradead.org, linux-can@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev,
-        kvmarm@lists.cs.columbia.edu, amd-gfx@lists.freedesktop.org,
-        Linux Memory Management List <linux-mm@kvack.org>
-Subject: [linux-next:master] BUILD REGRESSION
- 38d2b86a665b5e86371a1a30228bce259aa6c101
-Message-ID: <63e3cf50.D71+8M3OXb6sK1SD%lkp@intel.com>
-User-Agent: Heirloom mailx 12.5 6/20/10
+        Wed, 8 Feb 2023 13:05:38 -0500
+Received: from desiato.infradead.org (desiato.infradead.org [IPv6:2001:8b0:10b:1:d65d:64ff:fe57:4e05])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E11D515C80;
+        Wed,  8 Feb 2023 10:05:16 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=zh9nqswjJhdYhMpPDVI5AF8aOHrT+4BnIbjtTEcH+O0=; b=SEHP3kAZWo30fFZLD9KrQHCMl0
+        bLAWo0pWw5A9KbZ7EwaJqZJ0MTWOn+etMoT+6xM8m/yOsGn2PpbJe/AB2Cdb4spjK2DSJ8vxQChQb
+        F7Qv7a8Np/U+3nC0Gv1o9VMxn76bKxlnPJcEZsejTqEK0pXM7gPb6iFN2elhvfNphNpmhWIDbbt4h
+        vNd5zOTmi8ThrcjgZuYSra5CpVL6sQEpVB0kjbfMHRlHljUxnRBo9DAE0BAZJb6s7GFXYwE6B03zG
+        XTZZ8Q4/RrBo0DWBnLfndhzsEJb8LdoEcsgU08W3S3pf8/1J30gL0a4yH4kpA6luINam4VyBdbzv+
+        Ogf17kHg==;
+Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
+        by desiato.infradead.org with esmtpsa (Exim 4.96 #2 (Red Hat Linux))
+        id 1pPoo2-007Ws6-02;
+        Wed, 08 Feb 2023 18:04:30 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (4096 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 766F73001E4;
+        Wed,  8 Feb 2023 19:05:08 +0100 (CET)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 2427F20F05D4E; Wed,  8 Feb 2023 19:05:08 +0100 (CET)
+Date:   Wed, 8 Feb 2023 19:05:08 +0100
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Steven Rostedt <rostedt@goodmis.org>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Linux Trace Kernel <linux-trace-kernel@vger.kernel.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Shuah Khan <shuah@kernel.org>,
+        Shuah Khan <skhan@linuxfoundation.org>
+Subject: Re: [PATCH] tracing/selftests: Ignore __pfx_ symbols in kprobe test
+Message-ID: <Y+PkVD1+myADYns+@hirez.programming.kicks-ass.net>
+References: <20230207135147.5ce618d6@gandalf.local.home>
+ <20230207135402.38f73bb6@gandalf.local.home>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+In-Reply-To: <20230207135402.38f73bb6@gandalf.local.home>
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git master
-branch HEAD: 38d2b86a665b5e86371a1a30228bce259aa6c101  Add linux-next specific files for 20230208
+On Tue, Feb 07, 2023 at 01:54:02PM -0500, Steven Rostedt wrote:
+> On Tue, 7 Feb 2023 13:51:47 -0500
+> Steven Rostedt <rostedt@goodmis.org> wrote:
+> 
+> > From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
+> > 
+> > The kprobe probepoint.tc test started failing because of the added __pfx_
+> > symbols that were added because of -fpatchable-function-entry=X,Y causing
+> > unwinders to see them as part of the previous functions. But kprobes can
+> > not be added on top of them. The selftest looks for tracefs_create_dir and
+> > picks it and the previous and following functions to add at their address.
+> > This caused it to include __pfx_tracefs_create_dir which is invalid to
+> > attach a kprobe to and caused the test to fail.
+> > 
+> > Fixes: 9f2899fe36a62 ("objtool: Add option to generate prefix symbols")
+> > Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+> 
+> This is assuming that kprobes can not be added on top of these. But another
+> solution could be to have kprobes just pick the function the __pfx_ is for.
+> Would that be a better solution?
 
-Error/Warning reports:
-
-https://lore.kernel.org/oe-kbuild-all/202301300743.bp7Dpazv-lkp@intel.com
-https://lore.kernel.org/oe-kbuild-all/202301301801.y5O08tQx-lkp@intel.com
-https://lore.kernel.org/oe-kbuild-all/202301302110.mEtNwkBD-lkp@intel.com
-https://lore.kernel.org/oe-kbuild-all/202301310939.TAgCOEZb-lkp@intel.com
-https://lore.kernel.org/oe-kbuild-all/202302011836.kA3BxqdY-lkp@intel.com
-https://lore.kernel.org/oe-kbuild-all/202302061911.C7xvHX9v-lkp@intel.com
-https://lore.kernel.org/oe-kbuild-all/202302062224.ByzeTXh1-lkp@intel.com
-
-Error/Warning: (recently discovered and may have been fixed)
-
-Documentation/riscv/uabi.rst:24: WARNING: Enumerated list ends without a blank line; unexpected unindent.
-ERROR: modpost: "devm_platform_ioremap_resource" [drivers/dma/fsl-edma.ko] undefined!
-ERROR: modpost: "devm_platform_ioremap_resource" [drivers/dma/idma64.ko] undefined!
-FAILED: load BTF from vmlinux: No data available
-arch/arm64/kvm/arm.c:2207: warning: expecting prototype for Initialize Hyp(). Prototype was for kvm_arm_init() instead
-drivers/gpu/drm/amd/amdgpu/../display/amdgpu_dm/amdgpu_dm.h:62:10: fatal error: mod_info_packet.h: No such file or directory
-drivers/gpu/drm/amd/amdgpu/../display/dc/dcn31/dcn31_hubbub.c:1011:6: warning: no previous prototype for 'hubbub31_init' [-Wmissing-prototypes]
-drivers/gpu/drm/amd/amdgpu/../display/dc/dcn32/dcn32_hubbub.c:948:6: warning: no previous prototype for 'hubbub32_init' [-Wmissing-prototypes]
-drivers/gpu/drm/amd/amdgpu/../display/dc/dcn32/dcn32_hubp.c:158:6: warning: no previous prototype for 'hubp32_init' [-Wmissing-prototypes]
-drivers/gpu/drm/amd/amdgpu/../display/dc/dcn32/dcn32_resource_helpers.c:62:18: warning: variable 'cursor_bpp' set but not used [-Wunused-but-set-variable]
-drivers/gpu/drm/amd/amdgpu/../display/dc/link/accessories/link_dp_trace.c:148:6: warning: no previous prototype for 'link_dp_trace_set_edp_power_timestamp' [-Wmissing-prototypes]
-drivers/gpu/drm/amd/amdgpu/../display/dc/link/accessories/link_dp_trace.c:158:10: warning: no previous prototype for 'link_dp_trace_get_edp_poweron_timestamp' [-Wmissing-prototypes]
-drivers/gpu/drm/amd/amdgpu/../display/dc/link/accessories/link_dp_trace.c:163:10: warning: no previous prototype for 'link_dp_trace_get_edp_poweroff_timestamp' [-Wmissing-prototypes]
-drivers/gpu/drm/amd/amdgpu/../display/dc/link/protocols/link_dp_capability.c:1295:32: warning: variable 'result_write_min_hblank' set but not used [-Wunused-but-set-variable]
-drivers/gpu/drm/amd/amdgpu/../display/dc/link/protocols/link_dp_capability.c:279:42: warning: variable 'ds_port' set but not used [-Wunused-but-set-variable]
-drivers/gpu/drm/amd/amdgpu/../display/dc/link/protocols/link_dp_training.c:1585:38: warning: variable 'result' set but not used [-Wunused-but-set-variable]
-drivers/net/can/dev/bittiming.c:145:24: error: too many arguments to function 'can_calc_bittiming'
-drivers/net/can/dev/bittiming.c:79:24: error: too many arguments to function 'can_calc_bittiming'
-ftrace-ops.c:(.init.text+0x2b8): undefined reference to `__udivdi3'
-libbpf: failed to find '.BTF' ELF section in vmlinux
-
-Unverified Error/Warning (likely false positive, please contact us if interested):
-
-arch/s390/boot/vmem.c:256 setup_vmem() error: uninitialized symbol 'start'.
-arch/s390/boot/vmem.c:258 setup_vmem() error: uninitialized symbol 'end'.
-arch/s390/include/asm/mem_detect.h:86 get_mem_detect_end() error: uninitialized symbol 'end'.
-
-Error/Warning ids grouped by kconfigs:
-
-gcc_recent_errors
-|-- alpha-allyesconfig
-|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-accessories-link_dp_trace.c:warning:no-previous-prototype-for-link_dp_trace_get_edp_poweroff_timestamp
-|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-accessories-link_dp_trace.c:warning:no-previous-prototype-for-link_dp_trace_get_edp_poweron_timestamp
-|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-accessories-link_dp_trace.c:warning:no-previous-prototype-for-link_dp_trace_set_edp_power_timestamp
-|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-protocols-link_dp_capability.c:warning:variable-ds_port-set-but-not-used
-|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-protocols-link_dp_capability.c:warning:variable-result_write_min_hblank-set-but-not-used
-|   `-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-protocols-link_dp_training.c:warning:variable-result-set-but-not-used
-|-- alpha-randconfig-r005-20230205
-|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-accessories-link_dp_trace.c:warning:no-previous-prototype-for-link_dp_trace_get_edp_poweroff_timestamp
-|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-accessories-link_dp_trace.c:warning:no-previous-prototype-for-link_dp_trace_get_edp_poweron_timestamp
-|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-accessories-link_dp_trace.c:warning:no-previous-prototype-for-link_dp_trace_set_edp_power_timestamp
-|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-protocols-link_dp_capability.c:warning:variable-ds_port-set-but-not-used
-|   `-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-protocols-link_dp_capability.c:warning:variable-result_write_min_hblank-set-but-not-used
-|-- alpha-randconfig-r031-20230208
-|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-accessories-link_dp_trace.c:warning:no-previous-prototype-for-link_dp_trace_get_edp_poweroff_timestamp
-|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-accessories-link_dp_trace.c:warning:no-previous-prototype-for-link_dp_trace_get_edp_poweron_timestamp
-|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-accessories-link_dp_trace.c:warning:no-previous-prototype-for-link_dp_trace_set_edp_power_timestamp
-|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-protocols-link_dp_capability.c:warning:variable-ds_port-set-but-not-used
-|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-protocols-link_dp_capability.c:warning:variable-result_write_min_hblank-set-but-not-used
-|   `-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-protocols-link_dp_training.c:warning:variable-result-set-but-not-used
-|-- arc-allyesconfig
-|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-accessories-link_dp_trace.c:warning:no-previous-prototype-for-link_dp_trace_get_edp_poweroff_timestamp
-|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-accessories-link_dp_trace.c:warning:no-previous-prototype-for-link_dp_trace_get_edp_poweron_timestamp
-|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-accessories-link_dp_trace.c:warning:no-previous-prototype-for-link_dp_trace_set_edp_power_timestamp
-|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-protocols-link_dp_capability.c:warning:variable-ds_port-set-but-not-used
-|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-protocols-link_dp_capability.c:warning:variable-result_write_min_hblank-set-but-not-used
-|   `-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-protocols-link_dp_training.c:warning:variable-result-set-but-not-used
-|-- arm-allyesconfig
-|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-accessories-link_dp_trace.c:warning:no-previous-prototype-for-link_dp_trace_get_edp_poweroff_timestamp
-|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-accessories-link_dp_trace.c:warning:no-previous-prototype-for-link_dp_trace_get_edp_poweron_timestamp
-|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-accessories-link_dp_trace.c:warning:no-previous-prototype-for-link_dp_trace_set_edp_power_timestamp
-|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-protocols-link_dp_capability.c:warning:variable-ds_port-set-but-not-used
-|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-protocols-link_dp_capability.c:warning:variable-result_write_min_hblank-set-but-not-used
-|   `-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-protocols-link_dp_training.c:warning:variable-result-set-but-not-used
-|-- arm64-allyesconfig
-|   |-- arch-arm64-kvm-arm.c:warning:expecting-prototype-for-Initialize-Hyp().-Prototype-was-for-kvm_arm_init()-instead
-|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-dcn31-dcn31_hubbub.c:warning:no-previous-prototype-for-hubbub31_init
-|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-dcn32-dcn32_hubbub.c:warning:no-previous-prototype-for-hubbub32_init
-|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-dcn32-dcn32_hubp.c:warning:no-previous-prototype-for-hubp32_init
-|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-dcn32-dcn32_resource_helpers.c:warning:variable-cursor_bpp-set-but-not-used
-|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-accessories-link_dp_trace.c:warning:no-previous-prototype-for-link_dp_trace_get_edp_poweroff_timestamp
-|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-accessories-link_dp_trace.c:warning:no-previous-prototype-for-link_dp_trace_get_edp_poweron_timestamp
-|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-accessories-link_dp_trace.c:warning:no-previous-prototype-for-link_dp_trace_set_edp_power_timestamp
-|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-protocols-link_dp_capability.c:warning:variable-ds_port-set-but-not-used
-|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-protocols-link_dp_capability.c:warning:variable-result_write_min_hblank-set-but-not-used
-|   `-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-protocols-link_dp_training.c:warning:variable-result-set-but-not-used
-|-- csky-randconfig-r023-20230205
-|   `-- drivers-gpu-drm-amd-amdgpu-..-display-amdgpu_dm-amdgpu_dm.h:fatal-error:mod_info_packet.h:No-such-file-or-directory
-|-- i386-allyesconfig
-|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-dcn31-dcn31_hubbub.c:warning:no-previous-prototype-for-hubbub31_init
-
-elapsed time: 734m
-
-configs tested: 79
-configs skipped: 3
-
-gcc tested configs:
-um                           x86_64_defconfig
-arc                                 defconfig
-um                             i386_defconfig
-powerpc                           allnoconfig
-alpha                               defconfig
-x86_64                            allnoconfig
-x86_64                              defconfig
-x86_64                          rhel-8.3-func
-s390                                defconfig
-x86_64                    rhel-8.3-kselftests
-s390                             allmodconfig
-m68k                             allyesconfig
-x86_64                               rhel-8.3
-m68k                             allmodconfig
-arc                              allyesconfig
-s390                             allyesconfig
-arm                                 defconfig
-i386                 randconfig-a011-20230206
-x86_64               randconfig-a013-20230206
-x86_64                           allyesconfig
-x86_64               randconfig-a011-20230206
-alpha                            allyesconfig
-i386                 randconfig-a014-20230206
-x86_64               randconfig-a015-20230206
-x86_64               randconfig-a012-20230206
-x86_64               randconfig-a016-20230206
-i386                 randconfig-a012-20230206
-x86_64                           rhel-8.3-bpf
-i386                 randconfig-a016-20230206
-x86_64                           rhel-8.3-syz
-i386                 randconfig-a013-20230206
-x86_64                         rhel-8.3-kunit
-i386                                defconfig
-x86_64                           rhel-8.3-kvm
-sh                               allmodconfig
-x86_64               randconfig-a014-20230206
-ia64                             allmodconfig
-i386                 randconfig-a015-20230206
-mips                             allyesconfig
-arm64                            allyesconfig
-powerpc                          allmodconfig
-arm                              allyesconfig
-i386                             allyesconfig
-s390                 randconfig-r044-20230206
-arc                  randconfig-r043-20230205
-arm                  randconfig-r046-20230205
-arc                  randconfig-r043-20230206
-riscv                randconfig-r042-20230206
-i386                          randconfig-c001
-powerpc                      cm5200_defconfig
-mips                        vocore2_defconfig
-powerpc                  iss476-smp_defconfig
-sh                          r7785rp_defconfig
-sh                        edosk7705_defconfig
-arm                         at91_dt_defconfig
-ia64                         bigsur_defconfig
-
-clang tested configs:
-x86_64                          rhel-8.3-rust
-i386                 randconfig-a002-20230206
-i386                 randconfig-a003-20230206
-i386                 randconfig-a001-20230206
-x86_64               randconfig-a002-20230206
-x86_64               randconfig-a004-20230206
-x86_64               randconfig-a003-20230206
-x86_64               randconfig-a001-20230206
-x86_64               randconfig-a005-20230206
-x86_64               randconfig-a006-20230206
-i386                 randconfig-a004-20230206
-hexagon              randconfig-r041-20230205
-i386                 randconfig-a005-20230206
-riscv                randconfig-r042-20230205
-i386                 randconfig-a006-20230206
-hexagon              randconfig-r045-20230206
-hexagon              randconfig-r041-20230206
-arm                  randconfig-r046-20230206
-s390                 randconfig-r044-20230205
-hexagon              randconfig-r045-20230205
-powerpc                 mpc836x_rdk_defconfig
-arm                     davinci_all_defconfig
-mips                        qi_lb60_defconfig
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests
+Simply refusing them is simplest. I don't see a compelling reason to
+make this complicated.
