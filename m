@@ -2,189 +2,250 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DF5D3C05027
-	for <linux-trace-kernel@archiver.kernel.org>; Thu,  9 Feb 2023 14:41:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 994E4C636D6
+	for <linux-trace-kernel@archiver.kernel.org>; Thu,  9 Feb 2023 16:17:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229834AbjBIOlX (ORCPT
+        id S229997AbjBIQR4 (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Thu, 9 Feb 2023 09:41:23 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35906 "EHLO
+        Thu, 9 Feb 2023 11:17:56 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35170 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229910AbjBIOlW (ORCPT
+        with ESMTP id S229973AbjBIQRx (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Thu, 9 Feb 2023 09:41:22 -0500
-Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 82944EB58;
-        Thu,  9 Feb 2023 06:41:21 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 15881B82186;
-        Thu,  9 Feb 2023 14:41:20 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E462EC433EF;
-        Thu,  9 Feb 2023 14:41:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1675953678;
-        bh=TZ5nyh/Nz50g4Ou5F8th8cMJcRG25BNPZLtFN7x2xjI=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=pu76DWdLkYzQE4D2cP0ZWJoo2y3ROVjnMDorXBkWR8B6ATdHFA257whhlSlz/AhHA
-         b2cJ4XWmTYB+ZmVYFv9aVr/+r/yjTgvEIqQTZHysD5C2MkIqTw6N8cMn3MHXOCxW6a
-         iFA51/QtcqndrrFScWobLMkChiOonDL8tkTf94HRhHXaQX9BeKHl7xZsAyr5fhrIpm
-         s40oKdIgZhgoVOoVTtLLvQEiBWAhm4ZidNZqUyLwpX0Lh8Ejw98F55rSWMgl99tkRi
-         MFG1/Ba5jDfjo4HmeQvAABpbET3+GWAngv9w3xZlzuoltr8FzvbvAenfvMbNZW3d1o
-         Q8EBt8SxRoNGQ==
-Date:   Thu, 9 Feb 2023 23:41:13 +0900
-From:   Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To:     Randy Dunlap <rdunlap@infradead.org>
-Cc:     linux-kernel@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Daniel Bristot de Oliveira <bristot@kernel.org>,
-        linux-trace-kernel@vger.kernel.org,
-        Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        coresight@lists.linaro.org, linux-arm-kernel@lists.infradead.org,
-        Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org,
-        Mukesh Ojha <quic_mojha@quicinc.com>
-Subject: Re: [PATCH 21/24] Documentation: trace: correct spelling
-Message-Id: <20230209234113.47c44d04f81204a692f387d3@kernel.org>
-In-Reply-To: <20230209071400.31476-22-rdunlap@infradead.org>
-References: <20230209071400.31476-1-rdunlap@infradead.org>
-        <20230209071400.31476-22-rdunlap@infradead.org>
-X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+        Thu, 9 Feb 2023 11:17:53 -0500
+Received: from mga05.intel.com (mga05.intel.com [192.55.52.43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BCBC746BA;
+        Thu,  9 Feb 2023 08:17:51 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1675959471; x=1707495471;
+  h=date:from:to:cc:subject:message-id:mime-version:
+   content-transfer-encoding;
+  bh=a/E7KSmtv3G539B0tt8tIVjLISlpbH9X9w1Ki9UW8Zk=;
+  b=di7yWCOgvPbsTmyXpdESVGzEY8C13Vv1hQonW5jqaqqIvAM5TJ7GNqVP
+   58Q5LDvj/h9s1TesUpOPj36quXCN1TnlHIaEZv4MknYlOE/n3XvscHj9z
+   lumS9FV/Z9GKh6bE1ekok9pRJnH9H8mfU51YuCpDU+dm5RpA5soPEuI5k
+   UblFEBOUyofegmye1VT8LNIa1EN2a7d5AFMIG6rYOuCwI1qHqRn1IUWD5
+   uzPZ7aDe97wyS8SndaKk090sME+40AEAfK0znT9hp1ODTAElpz9gxZNlO
+   UcrRmbLCG8XEvVqdmILm6HAxJpLb/hJGJoHd7MM6M160L8UMKidIpFZYZ
+   g==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10615"; a="416370166"
+X-IronPort-AV: E=Sophos;i="5.97,284,1669104000"; 
+   d="scan'208";a="416370166"
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Feb 2023 08:17:51 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6500,9779,10615"; a="669628646"
+X-IronPort-AV: E=Sophos;i="5.97,284,1669104000"; 
+   d="scan'208";a="669628646"
+Received: from lkp-server01.sh.intel.com (HELO 4455601a8d94) ([10.239.97.150])
+  by fmsmga007.fm.intel.com with ESMTP; 09 Feb 2023 08:17:48 -0800
+Received: from kbuild by 4455601a8d94 with local (Exim 4.96)
+        (envelope-from <lkp@intel.com>)
+        id 1pQ9cK-0005AC-08;
+        Thu, 09 Feb 2023 16:17:48 +0000
+Date:   Fri, 10 Feb 2023 00:17:42 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     Andrew Morton <akpm@linux-foundation.org>
+Cc:     linux-usb@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+        linux-serial@vger.kernel.org, linux-doc@vger.kernel.org,
+        linux-can@vger.kernel.org, amd-gfx@lists.freedesktop.org,
+        alsa-devel@alsa-project.org,
+        Linux Memory Management List <linux-mm@kvack.org>
+Subject: [linux-next:master] BUILD REGRESSION
+ 20f513df926fac0594a3b65f79d856bd64251861
+Message-ID: <63e51ca6.38vYfMSoflHo1I8c%lkp@intel.com>
+User-Agent: Heirloom mailx 12.5 6/20/10
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
 Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On Wed,  8 Feb 2023 23:13:57 -0800
-Randy Dunlap <rdunlap@infradead.org> wrote:
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git master
+branch HEAD: 20f513df926fac0594a3b65f79d856bd64251861  Add linux-next specific files for 20230209
 
-> Correct spelling problems for Documentation/trace/ as reported
-> by codespell.
-> 
-> Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
-> Cc: Steven Rostedt <rostedt@goodmis.org>
-> Cc: Masami Hiramatsu <mhiramat@kernel.org>
-> Cc: Daniel Bristot de Oliveira <bristot@kernel.org>
-> Cc: linux-trace-kernel@vger.kernel.org
-> Cc: Mathieu Poirier <mathieu.poirier@linaro.org>
-> Cc: Suzuki K Poulose <suzuki.poulose@arm.com>
-> Cc: coresight@lists.linaro.org
-> Cc: linux-arm-kernel@lists.infradead.org
-> Cc: Jonathan Corbet <corbet@lwn.net>
-> Cc: linux-doc@vger.kernel.org
-> Reviewed-by: Mukesh Ojha <quic_mojha@quicinc.com>
-> Acked-by: Steven Rostedt (Google) <rostedt@goodmis.org>
-> Acked-by: Suzuki K Poulose <suzuki.poulose@arm.com> # for coresight
+Error/Warning reports:
 
-Looks good to me.
+https://lore.kernel.org/oe-kbuild-all/202301302110.mEtNwkBD-lkp@intel.com
+https://lore.kernel.org/oe-kbuild-all/202301310939.TAgCOEZb-lkp@intel.com
+https://lore.kernel.org/oe-kbuild-all/202302061911.C7xvHX9v-lkp@intel.com
+https://lore.kernel.org/oe-kbuild-all/202302062224.ByzeTXh1-lkp@intel.com
+https://lore.kernel.org/oe-kbuild-all/202302092211.54EYDhYH-lkp@intel.com
 
-Acked-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+Error/Warning: (recently discovered and may have been fixed)
 
-Thanks,
+Documentation/sphinx/templates/kernel-toc.html: 1:36 Invalid token: #}
+ERROR: modpost: "devm_platform_ioremap_resource" [drivers/dma/fsl-edma.ko] undefined!
+ERROR: modpost: "devm_platform_ioremap_resource" [drivers/dma/idma64.ko] undefined!
+FAILED: load BTF from vmlinux: No data available
+drivers/gpu/drm/amd/amdgpu/../display/dc/dcn31/dcn31_hubbub.c:1011:6: warning: no previous prototype for 'hubbub31_init' [-Wmissing-prototypes]
+drivers/gpu/drm/amd/amdgpu/../display/dc/dcn32/dcn32_hubbub.c:948:6: warning: no previous prototype for 'hubbub32_init' [-Wmissing-prototypes]
+drivers/gpu/drm/amd/amdgpu/../display/dc/dcn32/dcn32_hubp.c:158:6: warning: no previous prototype for 'hubp32_init' [-Wmissing-prototypes]
+drivers/gpu/drm/amd/amdgpu/../display/dc/dcn32/dcn32_resource_helpers.c:62:18: warning: variable 'cursor_bpp' set but not used [-Wunused-but-set-variable]
+drivers/gpu/drm/amd/amdgpu/../display/dc/link/protocols/link_dp_capability.c:1296:32: warning: variable 'result_write_min_hblank' set but not used [-Wunused-but-set-variable]
+drivers/gpu/drm/amd/amdgpu/../display/dc/link/protocols/link_dp_capability.c:280:42: warning: variable 'ds_port' set but not used [-Wunused-but-set-variable]
+drivers/gpu/drm/amd/amdgpu/../display/dc/link/protocols/link_dp_training.c:1586:38: warning: variable 'result' set but not used [-Wunused-but-set-variable]
+drivers/net/can/dev/bittiming.c:145:24: error: too many arguments to function 'can_calc_bittiming'
+ftrace-ops.c:(.init.text+0x2c3): undefined reference to `__udivdi3'
+libbpf: failed to find '.BTF' ELF section in vmlinux
 
-> ---
->  Documentation/trace/coresight/coresight-etm4x-reference.rst |    2 +-
->  Documentation/trace/events.rst                              |    6 +++---
->  Documentation/trace/fprobe.rst                              |    2 +-
->  Documentation/trace/ftrace-uses.rst                         |    2 +-
->  Documentation/trace/hwlat_detector.rst                      |    2 +-
->  Documentation/trace/uprobetracer.rst                        |    2 +-
->  7 files changed, 9 insertions(+), 9 deletions(-)
-> 
-> diff -- a/Documentation/trace/coresight/coresight-etm4x-reference.rst b/Documentation/trace/coresight/coresight-etm4x-reference.rst
-> --- a/Documentation/trace/coresight/coresight-etm4x-reference.rst
-> +++ b/Documentation/trace/coresight/coresight-etm4x-reference.rst
-> @@ -675,7 +675,7 @@ Bit assignments shown below:-
->      reconstructed using only conditional branches.
->  
->      There is currently no support in Perf for supplying modified binaries to the decoder, so this
-> -    feature is only inteded to be used for debugging purposes or with a 3rd party tool.
-> +    feature is only intended to be used for debugging purposes or with a 3rd party tool.
->  
->      Choosing this option will result in a significant increase in the amount of trace generated -
->      possible danger of overflows, or fewer instructions covered. Note, that this option also
-> diff -- a/Documentation/trace/events.rst b/Documentation/trace/events.rst
-> --- a/Documentation/trace/events.rst
-> +++ b/Documentation/trace/events.rst
-> @@ -903,7 +903,7 @@ functions can be used.
->  
->  To create a kprobe event, an empty or partially empty kprobe event
->  should first be created using kprobe_event_gen_cmd_start().  The name
-> -of the event and the probe location should be specfied along with one
-> +of the event and the probe location should be specified along with one
->  or args each representing a probe field should be supplied to this
->  function.  Before calling kprobe_event_gen_cmd_start(), the user
->  should create and initialize a dynevent_cmd object using
-> @@ -983,7 +983,7 @@ The basic idea is simple and amounts to
->  layer that can be used to generate trace event commands.  The
->  generated command strings can then be passed to the command-parsing
->  and event creation code that already exists in the trace event
-> -subystem for creating the corresponding trace events.
-> +subsystem for creating the corresponding trace events.
->  
->  In a nutshell, the way it works is that the higher-level interface
->  code creates a struct dynevent_cmd object, then uses a couple
-> @@ -1056,7 +1056,7 @@ to add an operator between the pair (her
->  appended onto the end of the arg pair (here ';').
->  
->  There's also a dynevent_str_add() function that can be used to simply
-> -add a string as-is, with no spaces, delimeters, or arg check.
-> +add a string as-is, with no spaces, delimiters, or arg check.
->  
->  Any number of dynevent_*_add() calls can be made to build up the string
->  (until its length surpasses cmd->maxlen).  When all the arguments have
-> diff -- a/Documentation/trace/fprobe.rst b/Documentation/trace/fprobe.rst
-> --- a/Documentation/trace/fprobe.rst
-> +++ b/Documentation/trace/fprobe.rst
-> @@ -111,7 +111,7 @@ saved at function entry and passed to ex
->          the instruction pointer of @regs may be different from the @entry_ip
->          in the entry_handler. If you need traced instruction pointer, you need
->          to use @entry_ip. On the other hand, in the exit_handler, the instruction
-> -        pointer of @regs is set to the currect return address.
-> +        pointer of @regs is set to the correct return address.
->  
->  Share the callbacks with kprobes
->  ================================
-> diff -- a/Documentation/trace/ftrace-uses.rst b/Documentation/trace/ftrace-uses.rst
-> --- a/Documentation/trace/ftrace-uses.rst
-> +++ b/Documentation/trace/ftrace-uses.rst
-> @@ -193,7 +193,7 @@ FTRACE_OPS_FL_RECURSION
->  	Not, if this flag is set, then the callback will always be called
->  	with preemption disabled. If it is not set, then it is possible
->  	(but not guaranteed) that the callback will be called in
-> -	preemptable context.
-> +	preemptible context.
->  
->  FTRACE_OPS_FL_IPMODIFY
->  	Requires FTRACE_OPS_FL_SAVE_REGS set. If the callback is to "hijack"
-> diff -- a/Documentation/trace/hwlat_detector.rst b/Documentation/trace/hwlat_detector.rst
-> --- a/Documentation/trace/hwlat_detector.rst
-> +++ b/Documentation/trace/hwlat_detector.rst
-> @@ -14,7 +14,7 @@ originally written for use by the "RT" p
->  kernel is highly latency sensitive.
->  
->  SMIs are not serviced by the Linux kernel, which means that it does not
-> -even know that they are occuring. SMIs are instead set up by BIOS code
-> +even know that they are occurring. SMIs are instead set up by BIOS code
->  and are serviced by BIOS code, usually for "critical" events such as
->  management of thermal sensors and fans. Sometimes though, SMIs are used for
->  other tasks and those tasks can spend an inordinate amount of time in the
-> diff -- a/Documentation/trace/uprobetracer.rst b/Documentation/trace/uprobetracer.rst
-> --- a/Documentation/trace/uprobetracer.rst
-> +++ b/Documentation/trace/uprobetracer.rst
-> @@ -55,7 +55,7 @@ Synopsis of uprobe_tracer
->  
->    (\*1) only for return probe.
->    (\*2) this is useful for fetching a field of data structures.
-> -  (\*3) Unlike kprobe event, "u" prefix will just be ignored, becuse uprobe
-> +  (\*3) Unlike kprobe event, "u" prefix will just be ignored, because uprobe
->          events can access only user-space memory.
->  
->  Types
+Unverified Error/Warning (likely false positive, please contact us if interested):
 
+drivers/tty/serial/8250/8250_dfl.c:63 dfl_uart_get_params() error: uninitialized symbol 'clk_freq'.
+drivers/tty/serial/8250/8250_dfl.c:69 dfl_uart_get_params() error: uninitialized symbol 'fifo_len'.
+drivers/tty/serial/8250/8250_dfl.c:90 dfl_uart_get_params() error: uninitialized symbol 'reg_layout'.
+drivers/usb/gadget/composite.c:2082:33: sparse: sparse: restricted __le16 degrades to integer
+drivers/usb/gadget/function/uvc_configfs.c:537:2-8: preceding lock on line 528
+drivers/usb/gadget/udc/renesas_usbf.c:2284:37: sparse:    left side has type unsigned short
+drivers/usb/gadget/udc/renesas_usbf.c:2284:37: sparse:    right side has type restricted __le16
+drivers/usb/gadget/udc/renesas_usbf.c:2284:37: sparse: sparse: invalid assignment: |=
+drivers/usb/gadget/udc/renesas_usbf.c:2325:31: sparse: sparse: restricted __le16 degrades to integer
+drivers/usb/host/xhci-plat.c:371 xhci_generic_plat_probe() error: we previously assumed 'sysdev' could be null (see line 361)
+sound/firewire/amdtp-stream.c:1187 process_rx_packets() error: uninitialized symbol 'curr_cycle_time'.
+
+Error/Warning ids grouped by kconfigs:
+
+gcc_recent_errors
+|-- alpha-allyesconfig
+|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-protocols-link_dp_capability.c:warning:variable-ds_port-set-but-not-used
+|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-protocols-link_dp_capability.c:warning:variable-result_write_min_hblank-set-but-not-used
+|   `-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-protocols-link_dp_training.c:warning:variable-result-set-but-not-used
+|-- alpha-randconfig-s043-20230209
+|   `-- drivers-usb-gadget-composite.c:sparse:sparse:restricted-__le16-degrades-to-integer
+|-- arc-allyesconfig
+|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-protocols-link_dp_capability.c:warning:variable-ds_port-set-but-not-used
+|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-protocols-link_dp_capability.c:warning:variable-result_write_min_hblank-set-but-not-used
+|   `-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-protocols-link_dp_training.c:warning:variable-result-set-but-not-used
+|-- arm-allyesconfig
+|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-protocols-link_dp_capability.c:warning:variable-ds_port-set-but-not-used
+|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-protocols-link_dp_capability.c:warning:variable-result_write_min_hblank-set-but-not-used
+|   `-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-protocols-link_dp_training.c:warning:variable-result-set-but-not-used
+|-- arm-randconfig-r046-20230209
+|   `-- drivers-net-can-dev-bittiming.c:error:too-many-arguments-to-function-can_calc_bittiming
+|-- arm64-allyesconfig
+|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-dcn31-dcn31_hubbub.c:warning:no-previous-prototype-for-hubbub31_init
+|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-dcn32-dcn32_hubbub.c:warning:no-previous-prototype-for-hubbub32_init
+|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-dcn32-dcn32_hubp.c:warning:no-previous-prototype-for-hubp32_init
+|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-dcn32-dcn32_resource_helpers.c:warning:variable-cursor_bpp-set-but-not-used
+|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-protocols-link_dp_capability.c:warning:variable-ds_port-set-but-not-used
+|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-protocols-link_dp_capability.c:warning:variable-result_write_min_hblank-set-but-not-used
+|   `-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-protocols-link_dp_training.c:warning:variable-result-set-but-not-used
+|-- csky-randconfig-m041-20230209
+|   |-- drivers-usb-host-xhci-plat.c-xhci_generic_plat_probe()-error:we-previously-assumed-sysdev-could-be-null-(see-line-)
+|   `-- sound-firewire-amdtp-stream.c-process_rx_packets()-error:uninitialized-symbol-curr_cycle_time-.
+|-- i386-allyesconfig
+|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-dcn31-dcn31_hubbub.c:warning:no-previous-prototype-for-hubbub31_init
+|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-dcn32-dcn32_hubbub.c:warning:no-previous-prototype-for-hubbub32_init
+|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-dcn32-dcn32_hubp.c:warning:no-previous-prototype-for-hubp32_init
+|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-dcn32-dcn32_resource_helpers.c:warning:variable-cursor_bpp-set-but-not-used
+|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-protocols-link_dp_capability.c:warning:variable-ds_port-set-but-not-used
+|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-protocols-link_dp_capability.c:warning:variable-result_write_min_hblank-set-but-not-used
+|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-protocols-link_dp_training.c:warning:variable-result-set-but-not-used
+|   `-- ftrace-ops.c:(.init.text):undefined-reference-to-__udivdi3
+|-- i386-randconfig-m021
+|   `-- kernel-trace-trace_events_synth.c-trace_event_raw_event_synth()-warn:inconsistent-indenting
+|-- ia64-allmodconfig
+|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-protocols-link_dp_capability.c:warning:variable-ds_port-set-but-not-used
+|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-protocols-link_dp_capability.c:warning:variable-result_write_min_hblank-set-but-not-used
+|   `-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-protocols-link_dp_training.c:warning:variable-result-set-but-not-used
+|-- microblaze-randconfig-r013-20230209
+|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-protocols-link_dp_capability.c:warning:variable-ds_port-set-but-not-used
+|   `-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-protocols-link_dp_capability.c:warning:variable-result_write_min_hblank-set-but-not-used
+|-- mips-allyesconfig
+|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-protocols-link_dp_capability.c:warning:variable-ds_port-set-but-not-used
+|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-protocols-link_dp_capability.c:warning:variable-result_write_min_hblank-set-but-not-used
+|   `-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-protocols-link_dp_training.c:warning:variable-result-set-but-not-used
+|-- nios2-randconfig-c031-20230209
+clang_recent_errors
+`-- s390-randconfig-r022-20230209
+    `-- ERROR:devm_platform_ioremap_resource-drivers-dma-idma64.ko-undefined
+
+elapsed time: 725m
+
+configs tested: 75
+configs skipped: 4
+
+gcc tested configs:
+um                           x86_64_defconfig
+um                             i386_defconfig
+x86_64                            allnoconfig
+arc                                 defconfig
+alpha                               defconfig
+i386                                defconfig
+s390                             allmodconfig
+s390                                defconfig
+i386                          randconfig-a001
+i386                          randconfig-a003
+s390                             allyesconfig
+x86_64                        randconfig-a004
+i386                             allyesconfig
+x86_64                        randconfig-a002
+x86_64                              defconfig
+arm                                 defconfig
+arm                           u8500_defconfig
+i386                          randconfig-a005
+nios2                               defconfig
+powerpc                           allnoconfig
+x86_64                          rhel-8.3-func
+powerpc                          allmodconfig
+x86_64                        randconfig-a013
+x86_64                    rhel-8.3-kselftests
+x86_64                               rhel-8.3
+x86_64                           rhel-8.3-bpf
+parisc                generic-64bit_defconfig
+x86_64                        randconfig-a006
+mips                             allyesconfig
+riscv             nommu_k210_sdcard_defconfig
+x86_64                           rhel-8.3-syz
+powerpc                  storcenter_defconfig
+sh                               allmodconfig
+powerpc                      pcm030_defconfig
+x86_64                         rhel-8.3-kunit
+x86_64                           rhel-8.3-kvm
+arc                  randconfig-r043-20230209
+ia64                             allmodconfig
+arm                  randconfig-r046-20230209
+x86_64                        randconfig-a011
+m68k                             allmodconfig
+x86_64                        randconfig-a015
+alpha                            allyesconfig
+x86_64                           allyesconfig
+m68k                             allyesconfig
+arm                              allyesconfig
+arc                              allyesconfig
+arm64                            allyesconfig
+i386                          randconfig-a014
+sh                   sh7724_generic_defconfig
+sh                        edosk7760_defconfig
+sh                        sh7785lcr_defconfig
+xtensa                          iss_defconfig
+sh                          landisk_defconfig
+sh                         microdev_defconfig
+mips                         cobalt_defconfig
+sh                          rsk7269_defconfig
+
+clang tested configs:
+x86_64                          rhel-8.3-rust
+i386                          randconfig-a002
+i386                          randconfig-a006
+x86_64                        randconfig-a005
+x86_64                        randconfig-a001
+i386                          randconfig-a004
+x86_64                        randconfig-a016
+x86_64                        randconfig-a003
+hexagon              randconfig-r041-20230209
+hexagon              randconfig-r045-20230209
+x86_64                        randconfig-a012
+s390                 randconfig-r044-20230209
+x86_64                        randconfig-a014
+riscv                randconfig-r042-20230209
+i386                          randconfig-a013
+powerpc                   bluestone_defconfig
+mips                      pic32mzda_defconfig
+powerpc                      ppc64e_defconfig
 
 -- 
-Masami Hiramatsu (Google) <mhiramat@kernel.org>
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests
