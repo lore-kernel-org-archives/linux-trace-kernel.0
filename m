@@ -2,270 +2,235 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 163B9C636CD
-	for <linux-trace-kernel@archiver.kernel.org>; Fri, 10 Feb 2023 15:23:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B34A5C636CD
+	for <linux-trace-kernel@archiver.kernel.org>; Fri, 10 Feb 2023 15:59:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232641AbjBJPXk (ORCPT
+        id S232871AbjBJP7y (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Fri, 10 Feb 2023 10:23:40 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53236 "EHLO
+        Fri, 10 Feb 2023 10:59:54 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51688 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232705AbjBJPXj (ORCPT
+        with ESMTP id S232940AbjBJP7s (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Fri, 10 Feb 2023 10:23:39 -0500
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4400975F59;
-        Fri, 10 Feb 2023 07:23:14 -0800 (PST)
-Received: from pps.filterd (m0279864.ppops.net [127.0.0.1])
-        by mx0a-0031df01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 31AEeJDE009736;
-        Fri, 10 Feb 2023 15:23:08 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=from : to : cc :
- subject : date : message-id : in-reply-to : references : mime-version :
- content-type; s=qcppdkim1;
- bh=SVsPGEtyQHE68QBQ00pydMfX0HSjV7Hx3EtuykeQ8Ok=;
- b=nst7GPrndJtlwM8G9q/4ytnIe0mDBjcZJXFlx25b6BJNGc4yc3HYq8jIsd9Af8ZbayoW
- GmDtfm0OqA/+L9+ViWY6syvFeP0oXG/bExOQ3Miz/o6JcimFSQPOKekzBuSUFF/rXsQZ
- catB/6OHXf6C3tmdBsZTgIUcUvmFEz30HaqX7Fl7b4UHn/4pQ3u7DJaEIW8DFVPB2CQD
- p5Loqa1we9IKpjX5g74FR2jbVG27hCrgUbJe2EgklvbXX28KagTFXVjX5uO/4Ey/Gxbj
- YyHYGdAZDzWwn1nistkzQJZNKNdY62SOBIyLm0CZ6ndBHhPfAGlCT2ZNAA7tY3XMyZTM 0g== 
-Received: from nasanppmta02.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-        by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3nncxtshbu-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 10 Feb 2023 15:23:08 +0000
-Received: from nasanex01c.na.qualcomm.com (nasanex01c.na.qualcomm.com [10.45.79.139])
-        by NASANPPMTA02.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 31AFN771007702
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 10 Feb 2023 15:23:07 GMT
-Received: from hu-mojha-hyd.qualcomm.com (10.80.80.8) by
- nasanex01c.na.qualcomm.com (10.45.79.139) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.986.36; Fri, 10 Feb 2023 07:23:05 -0800
-From:   Mukesh Ojha <quic_mojha@quicinc.com>
-To:     <rostedt@goodmis.org>, <zhengyejian1@huawei.com>
-CC:     <linux-kernel@vger.kernel.org>,
-        <linux-trace-kernel@vger.kernel.org>, <wanghai38@huawei.com>
-Subject: Re: [PATCH] tracing/ring-buffer: Remove integrity check at end of iter read
-Date:   Fri, 10 Feb 2023 20:52:36 +0530
-Message-ID: <1676042556-737-1-git-send-email-quic_mojha@quicinc.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <20230208090814.869242-1-zhengyejian1@huawei.com>
-References: <20230208090814.869242-1-zhengyejian1@huawei.com>
+        Fri, 10 Feb 2023 10:59:48 -0500
+Received: from mail-pj1-x102a.google.com (mail-pj1-x102a.google.com [IPv6:2607:f8b0:4864:20::102a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8278578D6E;
+        Fri, 10 Feb 2023 07:59:29 -0800 (PST)
+Received: by mail-pj1-x102a.google.com with SMTP id nn4-20020a17090b38c400b00233a6f118d0so3234339pjb.2;
+        Fri, 10 Feb 2023 07:59:29 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=/2yZsou7AT3LrMXyTCd+FTdTvhKynWuAdyAqvzx2oio=;
+        b=OE1gNB2U9IG5FxBDrs2PSL5SrsKcq92aM2lfBfMi6y3r9UMgvLxcfGC774dNfOlOX8
+         h9MdLawItbwCnmPZY/0HOc759mnKLI6SIThEtCxq9sVw0FcxumE8u2ZM9Y6wcG+gx0Ey
+         I3c4vPBIia2ZMR/GzhShIYCMe/ASgdODKEVF8CsRnJkTvGFZfsiJh7prbg/bdu11fNrm
+         A4oMZDa+1rJ6VT6FiVuf9qkf16ELu9Qi4ZxhNh4OSTtECoD3G1IlgslGXSfp+tlbUWu3
+         sQoZLdZVVjV2oe4oB5rEbHOudAdohCLLx/KlMicpz8oydiB6Fh8O7vP8ELQAvl8sWYmJ
+         mYGA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=/2yZsou7AT3LrMXyTCd+FTdTvhKynWuAdyAqvzx2oio=;
+        b=0fv+W21vTe7XA3B7mqh/p9XNPnA4R3BIJtQDITPaIa8l2OKCb9fW6tMN8x8+7qHnpN
+         dv28u9trlT9ff+IYwYBl5KjrDDw/s/7FJUlRg4yFmuiukdOqIS5++Ywrh4Ux02ycmLMq
+         kRKiapzIb2jreVB881qV8R9vNG3e/gMJ2D9H6150YyNJY41l9lAQcxrnt6iyNjjRA0V3
+         UfvjsvEj5YACgRtBzctig+WRyDXTyEZKvYrruAyDjhe/cthSXHttiaJFwBAcqW2Kweex
+         +nGA/kL59YriTGoHz398769PW9C021V4EY+BMzggjchoxo92mTM5QsMiVDRd114tnBGQ
+         0uCA==
+X-Gm-Message-State: AO0yUKUoDXVByFfq+2xx5+6jOgQqOzK8F8R1GsLcvP2lwF2g/CZekE43
+        lVFPIU7JzekLQhP/jFxkR98=
+X-Google-Smtp-Source: AK7set9iwZ3F0t4fKaGDqF1cHBT7zMho1KP7lsqsOEmvqebRDq8QmZUpT9aj84IEu1nrp4GaHLd6FA==
+X-Received: by 2002:a17:90a:1908:b0:230:7a2b:da9c with SMTP id 8-20020a17090a190800b002307a2bda9cmr17294693pjg.30.1676044766961;
+        Fri, 10 Feb 2023 07:59:26 -0800 (PST)
+Received: from vultr.guest ([2001:19f0:7001:2f6a:5400:4ff:fe4c:e050])
+        by smtp.gmail.com with ESMTPSA id v13-20020a17090ac90d00b00232cd5171e1sm3252891pjt.52.2023.02.10.07.59.24
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 10 Feb 2023 07:59:26 -0800 (PST)
+From:   Yafang Shao <laoar.shao@gmail.com>
+To:     rostedt@goodmis.org, mhiramat@kernel.org
+Cc:     linux-trace-kernel@vger.kernel.org,
+        Yafang Shao <laoar.shao@gmail.com>,
+        John Stultz <jstultz@google.com>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Alexei Starovoitov <alexei.starovoitov@gmail.com>,
+        Kajetan Puchalski <kajetan.puchalski@arm.com>,
+        stable@vger.kernel.org
+Subject: [PATCH -trace] trace: fix TASK_COMM_LEN in trace event format file
+Date:   Fri, 10 Feb 2023 15:59:21 +0000
+Message-Id: <20230210155921.4610-1-laoar.shao@gmail.com>
+X-Mailer: git-send-email 2.39.0
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.80.80.8]
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nasanex01c.na.qualcomm.com (10.45.79.139)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: Rt8k2DVqn6vmtpmVku4xngE8WSNeX-K_
-X-Proofpoint-GUID: Rt8k2DVqn6vmtpmVku4xngE8WSNeX-K_
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.219,Aquarius:18.0.930,Hydra:6.0.562,FMLib:17.11.170.22
- definitions=2023-02-10_09,2023-02-09_03,2023-02-09_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- impostorscore=0 malwarescore=0 lowpriorityscore=0 mlxlogscore=831
- clxscore=1011 bulkscore=0 adultscore=0 mlxscore=0 spamscore=0
- suspectscore=0 phishscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-2212070000 definitions=main-2302100127
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On 2023/2/9 06:36, Steven Rostedt wrote:
->> On Wed, 8 Feb 2023 17:08:14 +0800
->> Zheng Yejian <zhengyejian1@huawei.com> wrote:
->> 
->>> Concurrently closing "trace" file and writing into ring buffer [1] can
->>> cause WARNINGs [2]. It has been reported in
->>> Link: https://lore.kernel.org/all/20230203035608.2336906-1-zhengyejian1@huawei.com/
->>>
->>> It seems a data race between ring_buffer writing and integrity check.
->>> That is, RB_FLAG of head_page is been updating, while at same time RB_FLAG
->>> was cleared when doing integrity check:
->>>    rb_check_pages()            rb_handle_head_page():
->>>    --------                    --------
->>>    rb_head_page_deactivate()
->>>                                rb_head_page_set_normal()
->>>    rb_head_page_activate()
->>>
->> 
->> Good catch!
->
->Thanks!
->
->> 
->>> Integrity check at end of iter read was added since commit 659f451ff213
->>> ("ring-buffer: Add integrity check at end of iter read"). As it's commit
->>> message said:
->>>    > As reading via an iterator requires disabling the ring buffer, it
->>>    > is a perfect place to have it.
->>> However, since commit 1039221cc278 ("ring-buffer: Do not disable recording
->>> when there is an iterator"), ring buffer was not disabled at that place,
->>> so that integrity check should be removed.
->>>
->>> 1:
->>> ``` read_trace.sh
->>>    while true;
->>>    do
->>>      # the "trace" file is closed after read
->>>      head -1 /sys/kernel/tracing/trace > /dev/null
->>>    done
->>> ```
->>> ``` repro.sh
->>>    sysctl -w kernel.panic_on_warn=1
->>>    # function tracer will writing enough data into ring_buffer
->>>    echo function > /sys/kernel/tracing/current_tracer
->>>    ./read_trace.sh &
->>>    ./read_trace.sh &
->>>    ./read_trace.sh &
->>>    ./read_trace.sh &
->>>    ./read_trace.sh &
->>>    ./read_trace.sh &
->>>    ./read_trace.sh &
->>>    ./read_trace.sh &
->>> ```
->>>
->> 
->> 
->>> Fixes: 1039221cc278 ("ring-buffer: Do not disable recording when there is an iterator")
->>> Signed-off-by: Zheng Yejian <zhengyejian1@huawei.com>
->>> ---
->>>   kernel/trace/ring_buffer.c | 11 -----------
->>>   1 file changed, 11 deletions(-)
->>>
->>> diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
->>> index c366a0a9ddba..34e955bd1e59 100644
->>> --- a/kernel/trace/ring_buffer.c
->>> +++ b/kernel/trace/ring_buffer.c
->>> @@ -5203,17 +5203,6 @@ void
->>>   ring_buffer_read_finish(struct ring_buffer_iter *iter)
->>>   {
->>>   	struct ring_buffer_per_cpu *cpu_buffer = iter->cpu_buffer;
->>> -	unsigned long flags;
->>> -
->>> -	/*
->>> -	 * Ring buffer is disabled from recording, here's a good place
->>> -	 * to check the integrity of the ring buffer.
->>> -	 * Must prevent readers from trying to read, as the check
->>> -	 * clears the HEAD page and readers require it.
->>> -	 */
->>> -	raw_spin_lock_irqsave(&cpu_buffer->reader_lock, flags);
->>> -	rb_check_pages(cpu_buffer);
->>> -	raw_spin_unlock_irqrestore(&cpu_buffer->reader_lock, flags);
->> 
->> I would rather find a way to make this still work than just removing it.
->
->Yes, we can try to find the way.
->
->> 
->> Perhaps there's no reason to clear the flags, and change rb_check_pages()
->> to mask them out before testing. Something like:
->> 
->> static int rb_check_pages(struct ring_buffer_per_cpu *cpu_buffer)
->> {
->> 	struct list_head *head = cpu_buffer->pages;
->> 	struct buffer_page *bpage, *tmp;
->> 
->> 	if (RB_WARN_ON(cpu_buffer, rb_list_head(rb_list_head(head->next)->prev) != head))
->> 		return -1;
->> 	if (RB_WARN_ON(cpu_buffer, rb_list_head(rb_list_head(head->prev)->next) != head))
->> 		return -1;
->> 
->> 	if (rb_check_list(cpu_buffer, head))
->
->rb_check_list() expect to check a page with RB_FLAG being cleared,
->but in this solution, rb_head_page_deactivate() is not called before,
->so we may not call it directly? The same problem with below check for
->"bpage->list".
+After commit 3087c61ed2c4 ("tools/testing/selftests/bpf: replace open-coded 16 with TASK_COMM_LEN"),
+the content of the format file under
+/sys/kernel/debug/tracing/events/task/task_newtask was changed from
+  field:char comm[16];    offset:12;    size:16;    signed:0;
+to
+  field:char comm[TASK_COMM_LEN];    offset:12;    size:16;    signed:0;
 
-Correct.
+John reported that this change breaks older versions of perfetto.
+Then Mathieu pointed out that this behavioral change was caused by the
+use of __stringify(_len), which happens to work on macros, but not on enum
+labels. And he also gave the suggestion on how to fix it:
+  :One possible solution to make this more robust would be to extend
+  :struct trace_event_fields with one more field that indicates the length
+  :of an array as an actual integer, without storing it in its stringified
+  :form in the type, and do the formatting in f_show where it belongs.
 
+The result as follows after this change,
+$ cat /sys/kernel/debug/tracing/events/task/task_newtask/format
+        field:char comm[16];    offset:12;      size:16;        signed:0;
 
->> 		return -1;
->> 
->> 	list_for_each_entry_safe(bpage, tmp, head, list) {
->
->I'd like to know if there is a case that "head" happens to be a
->"reader_page", and the ring buffer is not exactly being traversed?
+Fixes: 3087c61ed2c4 ("tools/testing/selftests/bpf: replace open-coded 16 with TASK_COMM_LEN")
+Reported-by: John Stultz <jstultz@google.com>
+Debugged-by: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Suggested-by: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Signed-off-by: Yafang Shao <laoar.shao@gmail.com>
+Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Cc: Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Cc: Kajetan Puchalski <kajetan.puchalski@arm.com>
+Cc: Steven Rostedt <rostedt@goodmis.org>
+Cc: John Stultz <jstultz@google.com>
+Cc: stable@vger.kernel.org # v5.17+
+---
+ include/linux/trace_events.h               |  1 +
+ include/trace/stages/stage4_event_fields.h |  3 ++-
+ kernel/trace/trace.h                       |  1 +
+ kernel/trace/trace_events.c                | 24 ++++++++++++++++--------
+ 4 files changed, 20 insertions(+), 9 deletions(-)
 
-In my issue, i see below callstack and it seem to be spinning inside rb_list_head_clear() as
-cpu_buffer->pages has duplicate entry in the list.
+diff --git a/include/linux/trace_events.h b/include/linux/trace_events.h
+index 4342e99..0e37322 100644
+--- a/include/linux/trace_events.h
++++ b/include/linux/trace_events.h
+@@ -270,6 +270,7 @@ struct trace_event_fields {
+ 			const int  align;
+ 			const int  is_signed;
+ 			const int  filter_type;
++			const int  len;
+ 		};
+ 		int (*define_fields)(struct trace_event_call *);
+ 	};
+diff --git a/include/trace/stages/stage4_event_fields.h b/include/trace/stages/stage4_event_fields.h
+index affd541..306f39a 100644
+--- a/include/trace/stages/stage4_event_fields.h
++++ b/include/trace/stages/stage4_event_fields.h
+@@ -26,7 +26,8 @@
+ #define __array(_type, _item, _len) {					\
+ 	.type = #_type"["__stringify(_len)"]", .name = #_item,		\
+ 	.size = sizeof(_type[_len]), .align = ALIGN_STRUCTFIELD(_type),	\
+-	.is_signed = is_signed_type(_type), .filter_type = FILTER_OTHER },
++	.is_signed = is_signed_type(_type), .filter_type = FILTER_OTHER, \
++	.len = _len},
+ 
+ #undef __dynamic_array
+ #define __dynamic_array(_type, _item, _len) {				\
+diff --git a/kernel/trace/trace.h b/kernel/trace/trace.h
+index e46a492..19caf15 100644
+--- a/kernel/trace/trace.h
++++ b/kernel/trace/trace.h
+@@ -1282,6 +1282,7 @@ struct ftrace_event_field {
+ 	int			offset;
+ 	int			size;
+ 	int			is_signed;
++	int			len;
+ };
+ 
+ struct prog_entry;
+diff --git a/kernel/trace/trace_events.c b/kernel/trace/trace_events.c
+index 33e0b4f..70f6725 100644
+--- a/kernel/trace/trace_events.c
++++ b/kernel/trace/trace_events.c
+@@ -114,7 +114,7 @@ struct ftrace_event_field *
+ 
+ static int __trace_define_field(struct list_head *head, const char *type,
+ 				const char *name, int offset, int size,
+-				int is_signed, int filter_type)
++				int is_signed, int filter_type, int len)
+ {
+ 	struct ftrace_event_field *field;
+ 
+@@ -133,6 +133,7 @@ static int __trace_define_field(struct list_head *head, const char *type,
+ 	field->offset = offset;
+ 	field->size = size;
+ 	field->is_signed = is_signed;
++	field->len = len;
+ 
+ 	list_add(&field->link, head);
+ 
+@@ -150,14 +151,14 @@ int trace_define_field(struct trace_event_call *call, const char *type,
+ 
+ 	head = trace_get_fields(call);
+ 	return __trace_define_field(head, type, name, offset, size,
+-				    is_signed, filter_type);
++				    is_signed, filter_type, 0);
+ }
+ EXPORT_SYMBOL_GPL(trace_define_field);
+ 
+ #define __generic_field(type, item, filter_type)			\
+ 	ret = __trace_define_field(&ftrace_generic_fields, #type,	\
+ 				   #item, 0, 0, is_signed_type(type),	\
+-				   filter_type);			\
++				   filter_type, 0);			\
+ 	if (ret)							\
+ 		return ret;
+ 
+@@ -166,7 +167,7 @@ int trace_define_field(struct trace_event_call *call, const char *type,
+ 				   "common_" #item,			\
+ 				   offsetof(typeof(ent), item),		\
+ 				   sizeof(ent.item),			\
+-				   is_signed_type(type), FILTER_OTHER);	\
++				   is_signed_type(type), FILTER_OTHER, 0);	\
+ 	if (ret)							\
+ 		return ret;
+ 
+@@ -1589,10 +1590,10 @@ static int f_show(struct seq_file *m, void *v)
+ 			   field->type, field->name, field->offset,
+ 			   field->size, !!field->is_signed);
+ 	else
+-		seq_printf(m, "\tfield:%.*s %s%s;\toffset:%u;\tsize:%u;\tsigned:%d;\n",
++		seq_printf(m, "\tfield:%.*s %s[%d];\toffset:%u;\tsize:%u;\tsigned:%d;\n",
+ 			   (int)(array_descriptor - field->type),
+ 			   field->type, field->name,
+-			   array_descriptor, field->offset,
++			   field->len, field->offset,
+ 			   field->size, !!field->is_signed);
+ 
+ 	return 0;
+@@ -2371,6 +2372,7 @@ static int ftrace_event_release(struct inode *inode, struct file *file)
+ 	if (list_empty(head)) {
+ 		struct trace_event_fields *field = call->class->fields_array;
+ 		unsigned int offset = sizeof(struct trace_entry);
++		struct list_head *head;
+ 
+ 		for (; field->type; field++) {
+ 			if (field->type == TRACE_FUNCTION_TYPE) {
+@@ -2379,9 +2381,15 @@ static int ftrace_event_release(struct inode *inode, struct file *file)
+ 			}
+ 
+ 			offset = ALIGN(offset, field->align);
+-			ret = trace_define_field(call, field->type, field->name,
++			if (WARN_ON(!call->class)) {
++				offset += field->size;
++				continue;
++			}
++			head = trace_get_fields(call);
++			ret = __trace_define_field(head, field->type, field->name,
+ 						 offset, field->size,
+-						 field->is_signed, field->filter_type);
++						 field->is_signed, field->filter_type,
++						 field->len);
+ 			if (WARN_ON_ONCE(ret)) {
+ 				pr_err("error code is %d\n", ret);
+ 				break;
+-- 
+1.8.3.1
 
--00 |rb_list_head_clear(inline)
--00 |rb_head_page_deactivate(inline)
--00 |rb_check_pages(cpu_buffer = 0xFFFFFF89E0C3B200)
--01 |atomic_try_cmpxchg_acquire(inline)
--01 |queued_spin_lock(inline)
--01 |do_raw_spin_lock_flags(inline)
--01 |__raw_spin_lock_irqsave(inline)
--01 |_raw_spin_lock_irqsave(inline)
--01 |ring_buffer_read_finish(iter = 0xFFFFFF8006FE3780)
--02 |cpumask_next(inline)
--02 |tracing_release(inode = ?, file = 0xFFFFFF8A53A63F00)
--03 |__fput(file = 0xFFFFFF8A53A63F00)
--04 |____fput(work = ?)
--05 |_raw_spin_unlock_irq(inline)
--05 |task_work_run()
--06 |tracehook_notify_resume(inline)
--06 |do_notify_resume(regs = 0xFFFFFFC06ADC8EB0, thread_flags = 67108868)
--07 |prepare_exit_to_user_mode(inline)
--07 |exit_to_user_mode(inline)
--07 |el0_svc(regs = 0xFFFFFFC06ADC8EB0)
--08 |el0t_64_sync_handler(regs = ?)
--09 |el0t_64_sync(asm)
-
-...
-..
-ffffff80359eeb00 --> Duplicate entry 
-ffffff80359ee300
-ffffff80359ee180
-ffffff80359eeec0
-ffffff80359eec00
-ffffff80359ee800 -- Tail page
-ffffff80359eedc0 -- Head page
-ffffff80359ee640
-ffffff80359ee080
-ffffff80359ee700
-ffffff80359ee7c0
-ffffff80359eed80
-ffffff80359ee900
-ffffff80359ee9c0
-ffffff80359eea00
-ffffff80359eea80
-ffffff80359eec80
-ffffff80359ee240
-ffffff80359ee6c0
-ffffff80359ee0c0
-ffffff80359ee8c0
-ffffff80359ee940
-ffffff80359eee00
-ffffff80359ee000
-ffffff80359eeb00 ---> Duplicate entry 
-
-
--Mukesh
-
->
->> 		if (RB_WARN_ON(cpu_buffer,
->> 		     rb_list_head(rb_list_head(bpage->list.next)->prev) != &bpage->list))
->> 			return -1;
->> 		if (RB_WARN_ON(cpu_buffer,
->> 		     rb_list_head(rb_list_head(bpage->list.prev)->next) != &bpage->list))
->> 			return -1;
->> 		if (rb_check_list(cpu_buffer, &bpage->list))
->> 			return -1;
->> 	}
->> 
->> 	return 0;
->> }
->> 
->> I haven't tested the above.
->> 
->> ?
->> 
->> -- Steve
->> 
->> 
->>>   
->>>   	atomic_dec(&cpu_buffer->resize_disabled);
->>>   	kfree(iter->event);
