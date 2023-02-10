@@ -2,235 +2,186 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B34A5C636CD
-	for <linux-trace-kernel@archiver.kernel.org>; Fri, 10 Feb 2023 15:59:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DDD8BC636CD
+	for <linux-trace-kernel@archiver.kernel.org>; Fri, 10 Feb 2023 16:21:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232871AbjBJP7y (ORCPT
+        id S232516AbjBJQV5 (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Fri, 10 Feb 2023 10:59:54 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51688 "EHLO
+        Fri, 10 Feb 2023 11:21:57 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42914 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232940AbjBJP7s (ORCPT
+        with ESMTP id S231882AbjBJQV5 (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Fri, 10 Feb 2023 10:59:48 -0500
-Received: from mail-pj1-x102a.google.com (mail-pj1-x102a.google.com [IPv6:2607:f8b0:4864:20::102a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8278578D6E;
-        Fri, 10 Feb 2023 07:59:29 -0800 (PST)
-Received: by mail-pj1-x102a.google.com with SMTP id nn4-20020a17090b38c400b00233a6f118d0so3234339pjb.2;
-        Fri, 10 Feb 2023 07:59:29 -0800 (PST)
+        Fri, 10 Feb 2023 11:21:57 -0500
+Received: from mail-qt1-x833.google.com (mail-qt1-x833.google.com [IPv6:2607:f8b0:4864:20::833])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D7723113D0
+        for <linux-trace-kernel@vger.kernel.org>; Fri, 10 Feb 2023 08:21:54 -0800 (PST)
+Received: by mail-qt1-x833.google.com with SMTP id c2so6326322qtw.5
+        for <linux-trace-kernel@vger.kernel.org>; Fri, 10 Feb 2023 08:21:54 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=/2yZsou7AT3LrMXyTCd+FTdTvhKynWuAdyAqvzx2oio=;
-        b=OE1gNB2U9IG5FxBDrs2PSL5SrsKcq92aM2lfBfMi6y3r9UMgvLxcfGC774dNfOlOX8
-         h9MdLawItbwCnmPZY/0HOc759mnKLI6SIThEtCxq9sVw0FcxumE8u2ZM9Y6wcG+gx0Ey
-         I3c4vPBIia2ZMR/GzhShIYCMe/ASgdODKEVF8CsRnJkTvGFZfsiJh7prbg/bdu11fNrm
-         A4oMZDa+1rJ6VT6FiVuf9qkf16ELu9Qi4ZxhNh4OSTtECoD3G1IlgslGXSfp+tlbUWu3
-         sQoZLdZVVjV2oe4oB5rEbHOudAdohCLLx/KlMicpz8oydiB6Fh8O7vP8ELQAvl8sWYmJ
-         mYGA==
+        d=soleen.com; s=google;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=Q3mcvpqnGRzxZSmag23CWJUdjs1NpsRhnyJmXgB+2LI=;
+        b=cDO/ltH9oba2g7m81sHGlz0cBIBBu9U6Y0R4QWT3HoFKc3NTV8+aFwvlkqAIWcOhEr
+         UGt4UCdDpHWAJ0SUEqjNFUp/15BKrduZCAlc4syxNlr+MtSjMrmkOS5daqaAMhvQw5Xg
+         1fw7wdz/uB+dshxZ098absfclhWw7PkpV5uS9ISBzbAk0H1jixdK0jZVLy5/TReJiM0c
+         lj9te1QyiuH+6f+kC1tAPcXXaoKeT2U+BrTBjlUsgwkP7XtCUuPuQ6RXJDFtRiiB/hdQ
+         GpBuxkLYggD8zZXK4vXV5EiegQdXfkUPWRCTp6XMKUHP3AY2GwkERs3JIDZ+fD7akOWP
+         NLZg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=/2yZsou7AT3LrMXyTCd+FTdTvhKynWuAdyAqvzx2oio=;
-        b=0fv+W21vTe7XA3B7mqh/p9XNPnA4R3BIJtQDITPaIa8l2OKCb9fW6tMN8x8+7qHnpN
-         dv28u9trlT9ff+IYwYBl5KjrDDw/s/7FJUlRg4yFmuiukdOqIS5++Ywrh4Ux02ycmLMq
-         kRKiapzIb2jreVB881qV8R9vNG3e/gMJ2D9H6150YyNJY41l9lAQcxrnt6iyNjjRA0V3
-         UfvjsvEj5YACgRtBzctig+WRyDXTyEZKvYrruAyDjhe/cthSXHttiaJFwBAcqW2Kweex
-         +nGA/kL59YriTGoHz398769PW9C021V4EY+BMzggjchoxo92mTM5QsMiVDRd114tnBGQ
-         0uCA==
-X-Gm-Message-State: AO0yUKUoDXVByFfq+2xx5+6jOgQqOzK8F8R1GsLcvP2lwF2g/CZekE43
-        lVFPIU7JzekLQhP/jFxkR98=
-X-Google-Smtp-Source: AK7set9iwZ3F0t4fKaGDqF1cHBT7zMho1KP7lsqsOEmvqebRDq8QmZUpT9aj84IEu1nrp4GaHLd6FA==
-X-Received: by 2002:a17:90a:1908:b0:230:7a2b:da9c with SMTP id 8-20020a17090a190800b002307a2bda9cmr17294693pjg.30.1676044766961;
-        Fri, 10 Feb 2023 07:59:26 -0800 (PST)
-Received: from vultr.guest ([2001:19f0:7001:2f6a:5400:4ff:fe4c:e050])
-        by smtp.gmail.com with ESMTPSA id v13-20020a17090ac90d00b00232cd5171e1sm3252891pjt.52.2023.02.10.07.59.24
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 10 Feb 2023 07:59:26 -0800 (PST)
-From:   Yafang Shao <laoar.shao@gmail.com>
-To:     rostedt@goodmis.org, mhiramat@kernel.org
-Cc:     linux-trace-kernel@vger.kernel.org,
-        Yafang Shao <laoar.shao@gmail.com>,
-        John Stultz <jstultz@google.com>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Alexei Starovoitov <alexei.starovoitov@gmail.com>,
-        Kajetan Puchalski <kajetan.puchalski@arm.com>,
-        stable@vger.kernel.org
-Subject: [PATCH -trace] trace: fix TASK_COMM_LEN in trace event format file
-Date:   Fri, 10 Feb 2023 15:59:21 +0000
-Message-Id: <20230210155921.4610-1-laoar.shao@gmail.com>
-X-Mailer: git-send-email 2.39.0
+        bh=Q3mcvpqnGRzxZSmag23CWJUdjs1NpsRhnyJmXgB+2LI=;
+        b=GpgoUtseUKcLP4nswebLISQWfdHto96gC3C42KxNTERBoOCGvBWVx01S3WxA6vTcQE
+         IaUqhzG1Ns3rl7XBPFAIXPSj5uLi5okE9pzmvQF4jOhQYQAGOT+3YOy1GlM3nh5oxtmB
+         Og1t8tAcVv9hLH0S1hP7wgYGJU22nXgm6YQ6jH4NsLNqzXHMX2ZsAZuGGIOCgKuXNQzX
+         KvWvdz2w4BOdTFlxqzd77X3Kor7ZpF1J2M3kJj1bMQkhj7Xpy+T7N0hxIAHffxdQZjIP
+         RcGr2M+21elkUnNLrDwVSnWBt+BPlq15tVjUxPMOH9ecSoAVUrLH60dYwv7PTfYnRZu4
+         EsiQ==
+X-Gm-Message-State: AO0yUKU9Ipn9f4StmcueeJ9b+U7R7FNf54+g9XKVY9tmzFxDnXGBDKti
+        nzt4qNh3mI3ben1ZU7UEZeAteiuXDF4BaCtfCmoEIQ==
+X-Google-Smtp-Source: AK7set+L6NzhA8suon4TylHNK1DlDLEyOXcc0AMap3AYzq+uL59ZF8RYF/vEPW58PuLQG6/K4kNdvBPwVDipZHv+bVc=
+X-Received: by 2002:a05:622a:110f:b0:3b8:67d3:343c with SMTP id
+ e15-20020a05622a110f00b003b867d3343cmr2507820qty.301.1676046113869; Fri, 10
+ Feb 2023 08:21:53 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20230207035139.272707-1-shiyn.lin@gmail.com> <CA+CK2bBt0Gujv9BdhghVkbFRirAxCYXbpH-nquccPsKGnGwOBQ@mail.gmail.com>
+ <CANOhDtU3J8SUCzKtKvPPPrUHyo+LV5npNObHtYP_AK4W3LomDw@mail.gmail.com>
+In-Reply-To: <CANOhDtU3J8SUCzKtKvPPPrUHyo+LV5npNObHtYP_AK4W3LomDw@mail.gmail.com>
+From:   Pasha Tatashin <pasha.tatashin@soleen.com>
+Date:   Fri, 10 Feb 2023 11:21:16 -0500
+Message-ID: <CA+CK2bAWnzqKDTjBbxXOvURwr7nWmf8q-mzD1x-ztwbWVQBQKA@mail.gmail.com>
+Subject: Re: [PATCH v4 00/14] Introduce Copy-On-Write to Page Table
+To:     Chih-En Lin <shiyn.lin@gmail.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Qi Zheng <zhengqi.arch@bytedance.com>,
+        David Hildenbrand <david@redhat.com>,
+        "Matthew Wilcox (Oracle)" <willy@infradead.org>,
+        Christophe Leroy <christophe.leroy@csgroup.eu>,
+        John Hubbard <jhubbard@nvidia.com>,
+        Nadav Amit <namit@vmware.com>, Barry Song <baohua@kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Yang Shi <shy828301@gmail.com>, Peter Xu <peterx@redhat.com>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        "Zach O'Keefe" <zokeefe@google.com>,
+        Yun Zhou <yun.zhou@windriver.com>,
+        Hugh Dickins <hughd@google.com>,
+        Suren Baghdasaryan <surenb@google.com>,
+        Yu Zhao <yuzhao@google.com>, Juergen Gross <jgross@suse.com>,
+        Tong Tiangen <tongtiangen@huawei.com>,
+        Liu Shixin <liushixin2@huawei.com>,
+        Anshuman Khandual <anshuman.khandual@arm.com>,
+        Li kunyu <kunyu@nfschina.com>,
+        Minchan Kim <minchan@kernel.org>,
+        Miaohe Lin <linmiaohe@huawei.com>,
+        Gautam Menghani <gautammenghani201@gmail.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Mark Brown <broonie@kernel.org>, Will Deacon <will@kernel.org>,
+        Vincenzo Frascino <Vincenzo.Frascino@arm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        "Liam R. Howlett" <Liam.Howlett@oracle.com>,
+        Fenghua Yu <fenghua.yu@intel.com>,
+        Andrei Vagin <avagin@gmail.com>,
+        Barret Rhoden <brho@google.com>,
+        Michal Hocko <mhocko@suse.com>,
+        "Jason A. Donenfeld" <Jason@zx2c4.com>,
+        Alexey Gladkov <legion@kernel.org>,
+        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-mm@kvack.org, linux-trace-kernel@vger.kernel.org,
+        linux-perf-users@vger.kernel.org,
+        Dinglan Peng <peng301@purdue.edu>,
+        Pedro Fonseca <pfonseca@purdue.edu>,
+        Jim Huang <jserv@ccns.ncku.edu.tw>,
+        Huichun Feng <foxhoundsk.tw@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-After commit 3087c61ed2c4 ("tools/testing/selftests/bpf: replace open-coded 16 with TASK_COMM_LEN"),
-the content of the format file under
-/sys/kernel/debug/tracing/events/task/task_newtask was changed from
-  field:char comm[16];    offset:12;    size:16;    signed:0;
-to
-  field:char comm[TASK_COMM_LEN];    offset:12;    size:16;    signed:0;
+> > > Currently, copy-on-write is only used for the mapped memory; the child
+> > > process still needs to copy the entire page table from the parent
+> > > process during forking. The parent process might take a lot of time and
+> > > memory to copy the page table when the parent has a big page table
+> > > allocated. For example, the memory usage of a process after forking with
+> > > 1 GB mapped memory is as follows:
+> >
+> > For some reason, I was not able to reproduce performance improvements
+> > with a simple fork() performance measurement program. The results that
+> > I saw are the following:
+> >
+> > Base:
+> > Fork latency per gigabyte: 0.004416 seconds
+> > Fork latency per gigabyte: 0.004382 seconds
+> > Fork latency per gigabyte: 0.004442 seconds
+> > COW kernel:
+> > Fork latency per gigabyte: 0.004524 seconds
+> > Fork latency per gigabyte: 0.004764 seconds
+> > Fork latency per gigabyte: 0.004547 seconds
+> >
+> > AMD EPYC 7B12 64-Core Processor
+> > Base:
+> > Fork latency per gigabyte: 0.003923 seconds
+> > Fork latency per gigabyte: 0.003909 seconds
+> > Fork latency per gigabyte: 0.003955 seconds
+> > COW kernel:
+> > Fork latency per gigabyte: 0.004221 seconds
+> > Fork latency per gigabyte: 0.003882 seconds
+> > Fork latency per gigabyte: 0.003854 seconds
+> >
+> > Given, that page table for child is not copied, I was expecting the
+> > performance to be better with COW kernel, and also not to depend on
+> > the size of the parent.
+>
+> Yes, the child won't duplicate the page table, but fork will still
+> traverse all the page table entries to do the accounting.
+> And, since this patch expends the COW to the PTE table level, it's not
+> the mapped page (page table entry) grained anymore, so we have to
+> guarantee that all the mapped page is available to do COW mapping in
+> the such page table.
+> This kind of checking also costs some time.
+> As a result, since the accounting and the checking, the COW PTE fork
+> still depends on the size of the parent so the improvement might not
+> be significant.
 
-John reported that this change breaks older versions of perfetto.
-Then Mathieu pointed out that this behavioral change was caused by the
-use of __stringify(_len), which happens to work on macros, but not on enum
-labels. And he also gave the suggestion on how to fix it:
-  :One possible solution to make this more robust would be to extend
-  :struct trace_event_fields with one more field that indicates the length
-  :of an array as an actual integer, without storing it in its stringified
-  :form in the type, and do the formatting in f_show where it belongs.
+The current version of the series does not provide any performance
+improvements for fork(). I would recommend removing claims from the
+cover letter about better fork() performance, as this may be
+misleading for those looking for a way to speed up forking. In my
+case, I was looking to speed up Redis OSS, which relies on fork() to
+create consistent snapshots for driving replicates/backups. The O(N)
+per-page operation causes fork() to be slow, so I was hoping that this
+series, which does not duplicate the VA during fork(), would make the
+operation much quicker.
 
-The result as follows after this change,
-$ cat /sys/kernel/debug/tracing/events/task/task_newtask/format
-        field:char comm[16];    offset:12;      size:16;        signed:0;
+> Actually, at the RFC v1 and v2, we proposed the version of skipping
+> those works, and we got a significant improvement. You can see the
+> number from RFC v2 cover letter [1]:
+> "In short, with 512 MB mapped memory, COW PTE decreases latency by 93%
+> for normal fork"
 
-Fixes: 3087c61ed2c4 ("tools/testing/selftests/bpf: replace open-coded 16 with TASK_COMM_LEN")
-Reported-by: John Stultz <jstultz@google.com>
-Debugged-by: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Suggested-by: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Signed-off-by: Yafang Shao <laoar.shao@gmail.com>
-Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Cc: Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Cc: Kajetan Puchalski <kajetan.puchalski@arm.com>
-Cc: Steven Rostedt <rostedt@goodmis.org>
-Cc: John Stultz <jstultz@google.com>
-Cc: stable@vger.kernel.org # v5.17+
----
- include/linux/trace_events.h               |  1 +
- include/trace/stages/stage4_event_fields.h |  3 ++-
- kernel/trace/trace.h                       |  1 +
- kernel/trace/trace_events.c                | 24 ++++++++++++++++--------
- 4 files changed, 20 insertions(+), 9 deletions(-)
+I suspect the 93% improvement (when the mapcount was not updated) was
+only for VAs with 4K pages. With 2M mappings this series did not
+provide any benefit is this correct?
 
-diff --git a/include/linux/trace_events.h b/include/linux/trace_events.h
-index 4342e99..0e37322 100644
---- a/include/linux/trace_events.h
-+++ b/include/linux/trace_events.h
-@@ -270,6 +270,7 @@ struct trace_event_fields {
- 			const int  align;
- 			const int  is_signed;
- 			const int  filter_type;
-+			const int  len;
- 		};
- 		int (*define_fields)(struct trace_event_call *);
- 	};
-diff --git a/include/trace/stages/stage4_event_fields.h b/include/trace/stages/stage4_event_fields.h
-index affd541..306f39a 100644
---- a/include/trace/stages/stage4_event_fields.h
-+++ b/include/trace/stages/stage4_event_fields.h
-@@ -26,7 +26,8 @@
- #define __array(_type, _item, _len) {					\
- 	.type = #_type"["__stringify(_len)"]", .name = #_item,		\
- 	.size = sizeof(_type[_len]), .align = ALIGN_STRUCTFIELD(_type),	\
--	.is_signed = is_signed_type(_type), .filter_type = FILTER_OTHER },
-+	.is_signed = is_signed_type(_type), .filter_type = FILTER_OTHER, \
-+	.len = _len},
- 
- #undef __dynamic_array
- #define __dynamic_array(_type, _item, _len) {				\
-diff --git a/kernel/trace/trace.h b/kernel/trace/trace.h
-index e46a492..19caf15 100644
---- a/kernel/trace/trace.h
-+++ b/kernel/trace/trace.h
-@@ -1282,6 +1282,7 @@ struct ftrace_event_field {
- 	int			offset;
- 	int			size;
- 	int			is_signed;
-+	int			len;
- };
- 
- struct prog_entry;
-diff --git a/kernel/trace/trace_events.c b/kernel/trace/trace_events.c
-index 33e0b4f..70f6725 100644
---- a/kernel/trace/trace_events.c
-+++ b/kernel/trace/trace_events.c
-@@ -114,7 +114,7 @@ struct ftrace_event_field *
- 
- static int __trace_define_field(struct list_head *head, const char *type,
- 				const char *name, int offset, int size,
--				int is_signed, int filter_type)
-+				int is_signed, int filter_type, int len)
- {
- 	struct ftrace_event_field *field;
- 
-@@ -133,6 +133,7 @@ static int __trace_define_field(struct list_head *head, const char *type,
- 	field->offset = offset;
- 	field->size = size;
- 	field->is_signed = is_signed;
-+	field->len = len;
- 
- 	list_add(&field->link, head);
- 
-@@ -150,14 +151,14 @@ int trace_define_field(struct trace_event_call *call, const char *type,
- 
- 	head = trace_get_fields(call);
- 	return __trace_define_field(head, type, name, offset, size,
--				    is_signed, filter_type);
-+				    is_signed, filter_type, 0);
- }
- EXPORT_SYMBOL_GPL(trace_define_field);
- 
- #define __generic_field(type, item, filter_type)			\
- 	ret = __trace_define_field(&ftrace_generic_fields, #type,	\
- 				   #item, 0, 0, is_signed_type(type),	\
--				   filter_type);			\
-+				   filter_type, 0);			\
- 	if (ret)							\
- 		return ret;
- 
-@@ -166,7 +167,7 @@ int trace_define_field(struct trace_event_call *call, const char *type,
- 				   "common_" #item,			\
- 				   offsetof(typeof(ent), item),		\
- 				   sizeof(ent.item),			\
--				   is_signed_type(type), FILTER_OTHER);	\
-+				   is_signed_type(type), FILTER_OTHER, 0);	\
- 	if (ret)							\
- 		return ret;
- 
-@@ -1589,10 +1590,10 @@ static int f_show(struct seq_file *m, void *v)
- 			   field->type, field->name, field->offset,
- 			   field->size, !!field->is_signed);
- 	else
--		seq_printf(m, "\tfield:%.*s %s%s;\toffset:%u;\tsize:%u;\tsigned:%d;\n",
-+		seq_printf(m, "\tfield:%.*s %s[%d];\toffset:%u;\tsize:%u;\tsigned:%d;\n",
- 			   (int)(array_descriptor - field->type),
- 			   field->type, field->name,
--			   array_descriptor, field->offset,
-+			   field->len, field->offset,
- 			   field->size, !!field->is_signed);
- 
- 	return 0;
-@@ -2371,6 +2372,7 @@ static int ftrace_event_release(struct inode *inode, struct file *file)
- 	if (list_empty(head)) {
- 		struct trace_event_fields *field = call->class->fields_array;
- 		unsigned int offset = sizeof(struct trace_entry);
-+		struct list_head *head;
- 
- 		for (; field->type; field++) {
- 			if (field->type == TRACE_FUNCTION_TYPE) {
-@@ -2379,9 +2381,15 @@ static int ftrace_event_release(struct inode *inode, struct file *file)
- 			}
- 
- 			offset = ALIGN(offset, field->align);
--			ret = trace_define_field(call, field->type, field->name,
-+			if (WARN_ON(!call->class)) {
-+				offset += field->size;
-+				continue;
-+			}
-+			head = trace_get_fields(call);
-+			ret = __trace_define_field(head, field->type, field->name,
- 						 offset, field->size,
--						 field->is_signed, field->filter_type);
-+						 field->is_signed, field->filter_type,
-+						 field->len);
- 			if (WARN_ON_ONCE(ret)) {
- 				pr_err("error code is %d\n", ret);
- 				break;
--- 
-1.8.3.1
+>
+> However, it might break the existing logic of the refcount/mapcount of
+> the page and destabilize the system.
 
+This makes sense.
+
+> [1] https://lore.kernel.org/linux-mm/20220927162957.270460-1-shiyn.lin@gmail.com/T/#me2340d963c2758a2561c39cb3baf42c478dfe548
+> [2] https://lore.kernel.org/linux-mm/20220927162957.270460-1-shiyn.lin@gmail.com/T/#mbc33221f00c7cf3d71839b45fc23862a5dac3014
