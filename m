@@ -2,115 +2,125 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 00F95C636CC
-	for <linux-trace-kernel@archiver.kernel.org>; Sat, 11 Feb 2023 11:13:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 752F7C636CC
+	for <linux-trace-kernel@archiver.kernel.org>; Sat, 11 Feb 2023 16:37:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229460AbjBKLNv (ORCPT
+        id S229671AbjBKQhR (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Sat, 11 Feb 2023 06:13:51 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40914 "EHLO
+        Sat, 11 Feb 2023 11:37:17 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42116 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229455AbjBKLNu (ORCPT
+        with ESMTP id S229830AbjBKQhM (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Sat, 11 Feb 2023 06:13:50 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 233B130B0D;
-        Sat, 11 Feb 2023 03:13:50 -0800 (PST)
+        Sat, 11 Feb 2023 11:37:12 -0500
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 137B7234CB;
+        Sat, 11 Feb 2023 08:37:05 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 8C56060C21;
-        Sat, 11 Feb 2023 11:13:49 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EBE89C4339B;
-        Sat, 11 Feb 2023 11:13:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1676114029;
-        bh=NjE3Eyb+C+hkqgUe0KLLukECmuxsFhs3nDfcZcPPkGY=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=W1ZB9Uvy0fiLCE4ZKxiTmP9EBDIqNMofolxUf5Xia4MDDJMMhqBMwhmKRK6qgWGT/
-         G/0md16badfaiZ8L8XRUs0OQ9ax4AUxPsS1xgIIikvhbHcY11wK4LKOUdaPhLxNffh
-         tlaf3lgGXNWMwQWz+RyI851FddBHEgenE6ufOUL6MFQJ60iTDrLhxcMfdmu4RFmhwg
-         g+t0v9of1T8xIKCg7VrFs/x62kEGyYvsitzKc2aHbQ5MmytEoj932WfodthbH7MXhd
-         84XpJxndu8kZZ9xv7GX3bHSrjRKHt+RpN0n86MHQTrJ13Z3fk5Ys094dhYXZDQQO+W
-         W+HaKNnaPuJYA==
-Received: by mail-ej1-f43.google.com with SMTP id sa10so21600065ejc.9;
-        Sat, 11 Feb 2023 03:13:48 -0800 (PST)
-X-Gm-Message-State: AO0yUKWUpZA8enOHdQ8fW/zA5gYvBZHzXK9/owLllR1skttNPdJo5mmD
-        37eUapVOLOrgqCNCCNV6kSZWibmMNnlSzOBtBOg=
-X-Google-Smtp-Source: AK7set85xcodPtw94mhUbxtkXRV4/+VJyaXjUbLoInfjGhosAJ7j0Pj/OOG4oMdQcYunFqRpWxEY/eiQ3pA95B1DQEE=
-X-Received: by 2002:a17:906:1182:b0:88d:77e5:defb with SMTP id
- n2-20020a170906118200b0088d77e5defbmr2145900eja.1.1676114027165; Sat, 11 Feb
- 2023 03:13:47 -0800 (PST)
+        by ams.source.kernel.org (Postfix) with ESMTPS id A97CFB80952;
+        Sat, 11 Feb 2023 16:37:04 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D2D7FC433A0;
+        Sat, 11 Feb 2023 16:37:02 +0000 (UTC)
+Date:   Sat, 11 Feb 2023 11:37:00 -0500
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     Mukesh Ojha <quic_mojha@quicinc.com>
+Cc:     <zhengyejian1@huawei.com>, <linux-kernel@vger.kernel.org>,
+        <linux-trace-kernel@vger.kernel.org>, <wanghai38@huawei.com>
+Subject: Re: [PATCH] tracing/ring-buffer: Remove integrity check at end of
+ iter read
+Message-ID: <20230211113700.40728a05@gandalf.local.home>
+In-Reply-To: <1676042556-737-1-git-send-email-quic_mojha@quicinc.com>
+References: <20230208090814.869242-1-zhengyejian1@huawei.com>
+        <1676042556-737-1-git-send-email-quic_mojha@quicinc.com>
+X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-References: <20230211084346.25941-1-zhangqing@loongson.cn>
-In-Reply-To: <20230211084346.25941-1-zhangqing@loongson.cn>
-From:   Huacai Chen <chenhuacai@kernel.org>
-Date:   Sat, 11 Feb 2023 19:13:34 +0800
-X-Gmail-Original-Message-ID: <CAAhV-H49_49t40UoS+uwDDS1ZSaDaZ9ruXtmx46svxoL9eHuAg@mail.gmail.com>
-Message-ID: <CAAhV-H49_49t40UoS+uwDDS1ZSaDaZ9ruXtmx46svxoL9eHuAg@mail.gmail.com>
-Subject: Re: [PATCH] selftests/ftrace: add LoongArch support for kprobe args
- string tests
-To:     Qing Zhang <zhangqing@loongson.cn>
-Cc:     Steven Rostedt <rostedt@goodmis.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Shuah Khan <shuah@kernel.org>, WANG Xuerui <kernel@xen0n.name>,
-        Jiaxun Yang <jiaxun.yang@flygoat.com>,
-        loongarch@lists.linux.dev, linux-kernel@vger.kernel.org,
-        linux-trace-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-Queued, thanks.
+On Fri, 10 Feb 2023 20:52:36 +0530
+Mukesh Ojha <quic_mojha@quicinc.com> wrote:
 
-Huacai
+> >> 		return -1;
+> >> 
+> >> 	list_for_each_entry_safe(bpage, tmp, head, list) {  
+> >
+> >I'd like to know if there is a case that "head" happens to be a
+> >"reader_page", and the ring buffer is not exactly being traversed?  
 
-On Sat, Feb 11, 2023 at 4:43 PM Qing Zhang <zhangqing@loongson.cn> wrote:
->
-> before:
-> [5] Kprobe event string type argument   [UNTESTED]
-> [7] Kprobe event argument syntax        [UNTESTED]
-> after:
-> [5] Kprobe event string type argument   [PASS]
-> [7] Kprobe event argument syntax        [PASS]
->
-> Signed-off-by: Qing Zhang <zhangqing@loongson.cn>
-> ---
->  .../selftests/ftrace/test.d/kprobe/kprobe_args_string.tc      | 3 +++
->  .../selftests/ftrace/test.d/kprobe/kprobe_args_syntax.tc      | 4 ++++
->  2 files changed, 7 insertions(+)
->
-> diff --git a/tools/testing/selftests/ftrace/test.d/kprobe/kprobe_args_string.tc b/tools/testing/selftests/ftrace/test.d/kprobe/kprobe_args_string.tc
-> index 459741565222..a4f8e7c53c1f 100644
-> --- a/tools/testing/selftests/ftrace/test.d/kprobe/kprobe_args_string.tc
-> +++ b/tools/testing/selftests/ftrace/test.d/kprobe/kprobe_args_string.tc
-> @@ -28,6 +28,9 @@ s390*)
->  mips*)
->    ARG1=%r4
->  ;;
-> +loongarch*)
-> +  ARG1=%r4
-> +;;
->  *)
->    echo "Please implement other architecture here"
->    exit_untested
-> diff --git a/tools/testing/selftests/ftrace/test.d/kprobe/kprobe_args_syntax.tc b/tools/testing/selftests/ftrace/test.d/kprobe/kprobe_args_syntax.tc
-> index d4662c8cf407..1df61e13a812 100644
-> --- a/tools/testing/selftests/ftrace/test.d/kprobe/kprobe_args_syntax.tc
-> +++ b/tools/testing/selftests/ftrace/test.d/kprobe/kprobe_args_syntax.tc
-> @@ -40,6 +40,10 @@ mips*)
->    GOODREG=%r4
->    BADREG=%r12
->  ;;
-> +loongarch*)
-> +  GOODREG=%r4
-> +  BADREG=%r12
-> +;;
->  *)
->    echo "Please implement other architecture here"
->    exit_untested
-> --
-> 2.36.0
->
->
+No, the way it works is that the reader page is found by searching for the
+head pointer, and then it is set when swapped. Basically, the pseudo code
+is:
+
+  reader->next = head_page | HEAD_FLAG
+  val = head_page->prev->next
+  val &= ~FLAGS
+  val |= HEAD_FLAG
+  cmpxchg(head_page->prev->next, val, reader)
+
+The HEAD_FLAG is always on the pointer that points to the head page that
+gets swapped. This will never point to the reader page, as that would mean
+the writer has access to it.
+
+> 
+> In my issue, i see below callstack and it seem to be spinning inside rb_list_head_clear() as
+> cpu_buffer->pages has duplicate entry in the list.
+> 
+> -00 |rb_list_head_clear(inline)
+> -00 |rb_head_page_deactivate(inline)
+> -00 |rb_check_pages(cpu_buffer = 0xFFFFFF89E0C3B200)
+> -01 |atomic_try_cmpxchg_acquire(inline)
+> -01 |queued_spin_lock(inline)
+> -01 |do_raw_spin_lock_flags(inline)
+> -01 |__raw_spin_lock_irqsave(inline)
+> -01 |_raw_spin_lock_irqsave(inline)
+> -01 |ring_buffer_read_finish(iter = 0xFFFFFF8006FE3780)
+> -02 |cpumask_next(inline)
+> -02 |tracing_release(inode = ?, file = 0xFFFFFF8A53A63F00)
+> -03 |__fput(file = 0xFFFFFF8A53A63F00)
+> -04 |____fput(work = ?)
+> -05 |_raw_spin_unlock_irq(inline)
+> -05 |task_work_run()
+> -06 |tracehook_notify_resume(inline)
+> -06 |do_notify_resume(regs = 0xFFFFFFC06ADC8EB0, thread_flags = 67108868)
+> -07 |prepare_exit_to_user_mode(inline)
+> -07 |exit_to_user_mode(inline)
+> -07 |el0_svc(regs = 0xFFFFFFC06ADC8EB0)
+> -08 |el0t_64_sync_handler(regs = ?)
+> -09 |el0t_64_sync(asm)
+> 
+> ...
+> ..
+> ffffff80359eeb00 --> Duplicate entry 
+> ffffff80359ee300
+> ffffff80359ee180
+> ffffff80359eeec0
+> ffffff80359eec00
+> ffffff80359ee800 -- Tail page
+> ffffff80359eedc0 -- Head page
+> ffffff80359ee640
+> ffffff80359ee080
+> ffffff80359ee700
+> ffffff80359ee7c0
+> ffffff80359eed80
+> ffffff80359ee900
+> ffffff80359ee9c0
+> ffffff80359eea00
+> ffffff80359eea80
+> ffffff80359eec80
+> ffffff80359ee240
+> ffffff80359ee6c0
+> ffffff80359ee0c0
+> ffffff80359ee8c0
+> ffffff80359ee940
+> ffffff80359eee00
+> ffffff80359ee000
+> ffffff80359eeb00 ---> Duplicate entry 
+
+So this is a separate issue where the ring buffer is corrupted?
+
+-- Steve
