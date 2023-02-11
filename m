@@ -2,38 +2,44 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 752F7C636CC
-	for <linux-trace-kernel@archiver.kernel.org>; Sat, 11 Feb 2023 16:37:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CCF0C61DA4
+	for <linux-trace-kernel@archiver.kernel.org>; Sat, 11 Feb 2023 19:28:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229671AbjBKQhR (ORCPT
+        id S229566AbjBKT2W (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Sat, 11 Feb 2023 11:37:17 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42116 "EHLO
+        Sat, 11 Feb 2023 14:28:22 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55590 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229830AbjBKQhM (ORCPT
+        with ESMTP id S229480AbjBKT2W (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Sat, 11 Feb 2023 11:37:12 -0500
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 137B7234CB;
-        Sat, 11 Feb 2023 08:37:05 -0800 (PST)
+        Sat, 11 Feb 2023 14:28:22 -0500
+Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EF8C915C8A;
+        Sat, 11 Feb 2023 11:28:19 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id A97CFB80952;
-        Sat, 11 Feb 2023 16:37:04 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D2D7FC433A0;
-        Sat, 11 Feb 2023 16:37:02 +0000 (UTC)
-Date:   Sat, 11 Feb 2023 11:37:00 -0500
+        by ams.source.kernel.org (Postfix) with ESMTPS id 9CF21B80AB1;
+        Sat, 11 Feb 2023 19:28:18 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 49F85C433D2;
+        Sat, 11 Feb 2023 19:28:16 +0000 (UTC)
+Date:   Sat, 11 Feb 2023 14:28:13 -0500
 From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Mukesh Ojha <quic_mojha@quicinc.com>
-Cc:     <zhengyejian1@huawei.com>, <linux-kernel@vger.kernel.org>,
-        <linux-trace-kernel@vger.kernel.org>, <wanghai38@huawei.com>
-Subject: Re: [PATCH] tracing/ring-buffer: Remove integrity check at end of
- iter read
-Message-ID: <20230211113700.40728a05@gandalf.local.home>
-In-Reply-To: <1676042556-737-1-git-send-email-quic_mojha@quicinc.com>
-References: <20230208090814.869242-1-zhengyejian1@huawei.com>
-        <1676042556-737-1-git-send-email-quic_mojha@quicinc.com>
+To:     Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Cc:     Kajetan Puchalski <kajetan.puchalski@arm.com>,
+        Yafang Shao <laoar.shao@gmail.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        linux-trace-kernel@vger.kernel.org,
+        John Stultz <jstultz@google.com>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        stable <stable@vger.kernel.org>
+Subject: Re: [PATCH -trace] trace: fix TASK_COMM_LEN in trace event format
+ file
+Message-ID: <20230211142813.103b1643@gandalf.local.home>
+In-Reply-To: <CAADnVQ+iAx8OL_KP3Ae2GhDGrhdQ1wujG-B0=5ZpfQJuEnRQTg@mail.gmail.com>
+References: <20230210155921.4610-1-laoar.shao@gmail.com>
+        <Y+aJIGig4r/Dqui5@e126311.manchester.arm.com>
+        <CAADnVQ+iAx8OL_KP3Ae2GhDGrhdQ1wujG-B0=5ZpfQJuEnRQTg@mail.gmail.com>
 X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
@@ -42,85 +48,81 @@ Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On Fri, 10 Feb 2023 20:52:36 +0530
-Mukesh Ojha <quic_mojha@quicinc.com> wrote:
+On Fri, 10 Feb 2023 14:32:13 -0800
+Alexei Starovoitov <alexei.starovoitov@gmail.com> wrote:
 
-> >> 		return -1;
-> >> 
-> >> 	list_for_each_entry_safe(bpage, tmp, head, list) {  
-> >
-> >I'd like to know if there is a case that "head" happens to be a
-> >"reader_page", and the ring buffer is not exactly being traversed?  
+> fwiw I don't mind reverting commit 3087c61ed2c4.
+> For the record it didn't go through the bpf tree.
+> It went through mm.
 
-No, the way it works is that the reader page is found by searching for the
-head pointer, and then it is set when swapped. Basically, the pseudo code
-is:
-
-  reader->next = head_page | HEAD_FLAG
-  val = head_page->prev->next
-  val &= ~FLAGS
-  val |= HEAD_FLAG
-  cmpxchg(head_page->prev->next, val, reader)
-
-The HEAD_FLAG is always on the pointer that points to the head page that
-gets swapped. This will never point to the reader page, as that would mean
-the writer has access to it.
+I think the solution being presented can work, but still needs some work.
 
 > 
-> In my issue, i see below callstack and it seem to be spinning inside rb_list_head_clear() as
-> cpu_buffer->pages has duplicate entry in the list.
-> 
-> -00 |rb_list_head_clear(inline)
-> -00 |rb_head_page_deactivate(inline)
-> -00 |rb_check_pages(cpu_buffer = 0xFFFFFF89E0C3B200)
-> -01 |atomic_try_cmpxchg_acquire(inline)
-> -01 |queued_spin_lock(inline)
-> -01 |do_raw_spin_lock_flags(inline)
-> -01 |__raw_spin_lock_irqsave(inline)
-> -01 |_raw_spin_lock_irqsave(inline)
-> -01 |ring_buffer_read_finish(iter = 0xFFFFFF8006FE3780)
-> -02 |cpumask_next(inline)
-> -02 |tracing_release(inode = ?, file = 0xFFFFFF8A53A63F00)
-> -03 |__fput(file = 0xFFFFFF8A53A63F00)
-> -04 |____fput(work = ?)
-> -05 |_raw_spin_unlock_irq(inline)
-> -05 |task_work_run()
-> -06 |tracehook_notify_resume(inline)
-> -06 |do_notify_resume(regs = 0xFFFFFFC06ADC8EB0, thread_flags = 67108868)
-> -07 |prepare_exit_to_user_mode(inline)
-> -07 |exit_to_user_mode(inline)
-> -07 |el0_svc(regs = 0xFFFFFFC06ADC8EB0)
-> -08 |el0t_64_sync_handler(regs = ?)
-> -09 |el0t_64_sync(asm)
-> 
-> ...
-> ..
-> ffffff80359eeb00 --> Duplicate entry 
-> ffffff80359ee300
-> ffffff80359ee180
-> ffffff80359eeec0
-> ffffff80359eec00
-> ffffff80359ee800 -- Tail page
-> ffffff80359eedc0 -- Head page
-> ffffff80359ee640
-> ffffff80359ee080
-> ffffff80359ee700
-> ffffff80359ee7c0
-> ffffff80359eed80
-> ffffff80359ee900
-> ffffff80359ee9c0
-> ffffff80359eea00
-> ffffff80359eea80
-> ffffff80359eec80
-> ffffff80359ee240
-> ffffff80359ee6c0
-> ffffff80359ee0c0
-> ffffff80359ee8c0
-> ffffff80359ee940
-> ffffff80359eee00
-> ffffff80359ee000
-> ffffff80359eeb00 ---> Duplicate entry 
+> But first we need to define which part of ftrace format is an abi.
+> I think it's a format of tracing/event/foo/format file
+> and not the contents of it.
+> The tracepoints come and go. Their arguments get changed too.
+> So the contents of ftrace format files change.
 
-So this is a separate issue where the ring buffer is corrupted?
+As Linus always says. The abi is what user space uses. ;-)
+
+> 
+> In this case Perfetto stumbled on parsing
+> field:char comm[TASK_COMM_LEN];    offset:8;
+
+Perfetto always expected that to be a number, so it must remain one.
+
+> 
+> We probably should define that 'field: value  offset: value'
+> is an abi, but value-s can change.
+> Say offset:8 becomes offset:+8, for whatever reason.
+> If Perfetto fails to parse it, it's a Perfetto bug.
+> 
+> In this case it failed to parse char comm[TASK_COMM_LEN];
+> But that's not the only such "field:".
+> These three were there for a long time.
+>     field:u32 rates[NUM_NL80211_BANDS];    offset:16;    size:24;
+>     field:int mcast_rate[NUM_NL80211_BANDS];    offset:60;    size:24;
+>     field:int mcast_rate[NUM_NL80211_BANDS];    offset:108;    size:24;
+> 
+> I suspect Perfetto didn't have a use case to parse them,
+> so the bug stayed dormant and a change in TASK_COMM_LEN triggered it.
+
+Correct. Perfetto picks and chooses what events it needs. It does not parse
+all events. So it wouldn't notice these. In fact, some tools require these
+fields to be numbers and have used the TRACE_EVENT_ENUM() to convert them.
+
+But with this change, we can likely also remove the parsing of the fields
+on boot up. Which is a good thing.
+
+
+> 
+> We can use Yafang's patch to do:
+> -field:%.*s %s%s;
+> +field:%.*s %s[%d];
+> but it will affect both TASK_COMM_LEN and NUM_NL80211_BANDS.
+
+Nothing appears to care about the NUM_NL80211_BANDS being there. It's
+basically useless information. If nothing complains about it changing, then
+it isn't a breakage of user space.
+
+Remember, Linus's rule is not "do not modify user space interfaces", it is
+"don't break user space". If a user space interface changes and no user
+space tool notices, did it really break? The tree in a forest analogy.
+
+> 
+> In summary the TASK_COMM_LEN change from #define to enum didn't
+> introduce anything new in the kind of "value"s being printed
+> in ftrace files. Hence I'm arguing there is no abi breakage.
+> 
+> There was a question why change from #define to enum is useful
+> to bpf. The reason is that #define-s are not seen in dwarf
+> whereas enums and their values are. bpf tooling has ways to extract
+> that data and auto-adjust bpf programs when enum-s disappear
+> or their values change.
+
+In most cases, having all the [xxx] turn into useful numbers is what we
+want. There's a few things broken with the current patch, but I can help
+fix those.
 
 -- Steve
