@@ -2,176 +2,111 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 023D0C636D4
-	for <linux-trace-kernel@archiver.kernel.org>; Fri, 10 Feb 2023 23:08:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 55506C678D4
+	for <linux-trace-kernel@archiver.kernel.org>; Sat, 11 Feb 2023 00:30:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229584AbjBJXIE (ORCPT
+        id S229584AbjBKAa0 (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Fri, 10 Feb 2023 18:08:04 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58528 "EHLO
+        Fri, 10 Feb 2023 19:30:26 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52614 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229461AbjBJXID (ORCPT
+        with ESMTP id S229473AbjBKAaY (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Fri, 10 Feb 2023 18:08:03 -0500
-Received: from mga04.intel.com (mga04.intel.com [192.55.52.120])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7CA5D7A7D3;
-        Fri, 10 Feb 2023 15:08:02 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1676070482; x=1707606482;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=7sQU3qLBarJwbOltvPK0DlyIvdrrHZ36gjP2djkEoxE=;
-  b=TKDM7YZ6TxPmwtMNXYj/aLO3SOtmw5Qw43Q23v32KornjUacdzIDFwF/
-   5+lkkzCAej9g5w/981+mGUOC7Kc049JD2uzg+y0iya16k1JRLChC/uqPG
-   nZkHHOZkM4Sp92sfk68vhsWuamtpvl+3IyqM5kVIwG25jEzfbVoXCwc6k
-   toC3WKgIapV/9hyvwIxvoFVQ8Qx9bBQF1EuDfYCGx4lo0y8KkjJngKiqy
-   VkKPuUG2jnf+xJsrJwsOeSxWmKgsK3kVrVKnFkN5O3GGCjoKxhL3iUq4R
-   PYoTK66DetcDHHDqQ54fRA9OnGbpP0GCP3RHqWBBEPl9p9t252Sg3PFDq
-   A==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10617"; a="329181039"
-X-IronPort-AV: E=Sophos;i="5.97,287,1669104000"; 
-   d="scan'208";a="329181039"
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Feb 2023 15:07:52 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6500,9779,10617"; a="618045959"
-X-IronPort-AV: E=Sophos;i="5.97,287,1669104000"; 
-   d="scan'208";a="618045959"
-Received: from lkp-server01.sh.intel.com (HELO 4455601a8d94) ([10.239.97.150])
-  by orsmga003.jf.intel.com with ESMTP; 10 Feb 2023 15:07:50 -0800
-Received: from kbuild by 4455601a8d94 with local (Exim 4.96)
-        (envelope-from <lkp@intel.com>)
-        id 1pQcUf-00066n-1G;
-        Fri, 10 Feb 2023 23:07:49 +0000
-Date:   Sat, 11 Feb 2023 07:07:02 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     Tom Zanussi <zanussi@kernel.org>, rostedt@goodmis.org
-Cc:     oe-kbuild-all@lists.linux.dev, mhiramat@kernel.org,
-        linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
-        akpm@linux-foundation.org, zwisler@google.com,
-        chinglinyu@google.com
-Subject: Re: [PATCH 3/4] tracing/histogram: Fix stacktrace key
-Message-ID: <202302110636.O2hlhbxt-lkp@intel.com>
-References: <11aa614c82976adbfa4ea763dbe885b5fb01d59c.1676063532.git.zanussi@kernel.org>
+        Fri, 10 Feb 2023 19:30:24 -0500
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 30284FB;
+        Fri, 10 Feb 2023 16:30:23 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id DA162B82654;
+        Sat, 11 Feb 2023 00:30:21 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPS id A2D29C4339C;
+        Sat, 11 Feb 2023 00:30:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1676075420;
+        bh=XEnPFOJ4CxMJH7vgfkFyQKY4s2/0EUC8Eknfpc5jk+s=;
+        h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+        b=ax5Fd5J1UIn8ED+GyB4f+E8hJ9LztVDn7UWC4mXnOgmf1KRe9qg37VcP6B98kKnsO
+         LZzZNA4MyyMSEIeG7mqIPLuzuz9GmmbPPuWcsDH0Kn9CG/IJyeHa00w9d6VJpmGmI4
+         NXRL4d9rj/vrxhHmcYkuvvsfAImKsX22nRKpEN6IZm/ArT43ezp69CpPKFWLzONl7c
+         8gCOQZrkyi8vqNwPvy5MhnCJYm+ujIZHdOmgGLEGxaUbIkSFrVEqOIZ1FTpVoog4RF
+         TTYadPmdXwwh9e6QDAyw5jGTuEaFaEB2cc1S76SGjrhSDxS3EsrNV3ZLEUNm5ahnDy
+         xyu+Hg0HqKq8Q==
+Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
+        by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 740A6E21EC7;
+        Sat, 11 Feb 2023 00:30:20 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <11aa614c82976adbfa4ea763dbe885b5fb01d59c.1676063532.git.zanussi@kernel.org>
+Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH 00/24 v2] Documentation: correct lots of spelling errors
+ (series 1)
+From:   patchwork-bot+netdevbpf@kernel.org
+Message-Id: <167607542046.32477.11523239261636548840.git-patchwork-notify@kernel.org>
+Date:   Sat, 11 Feb 2023 00:30:20 +0000
+References: <20230209071400.31476-1-rdunlap@infradead.org>
+In-Reply-To: <20230209071400.31476-1-rdunlap@infradead.org>
+To:     Randy Dunlap <rdunlap@infradead.org>
+Cc:     linux-kernel@vger.kernel.org, corbet@lwn.net,
+        linux@armlinux.org.uk, axboe@kernel.dk, olteanv@gmail.com,
+        steffen.klassert@secunet.com, daniel.m.jordan@oracle.com,
+        akinobu.mita@gmail.com, deller@gmx.de, dmitry.torokhov@gmail.com,
+        rydberg@bitmath.org, isdn@linux-pingi.de, jikos@kernel.org,
+        mbenes@suse.cz, pmladek@suse.com, jpoimboe@kernel.org,
+        peterz@infradead.org, mingo@redhat.com, will@kernel.org,
+        jglisse@redhat.com, naoya.horiguchi@nec.com, linmiaohe@huawei.com,
+        jonas@southpole.se, stefan.kristiansson@saunalahti.fi,
+        shorne@gmail.com, bhelgaas@google.com, lpieralisi@kernel.org,
+        maz@kernel.org, mpe@ellerman.id.au, hca@linux.ibm.com,
+        gor@linux.ibm.com, agordeev@linux.ibm.com, juri.lelli@redhat.com,
+        vincent.guittot@linaro.org, dhowells@redhat.com, jarkko@kernel.org,
+        paul@paul-moore.com, jmorris@namei.org, serge@hallyn.com,
+        bristot@kernel.org, rostedt@goodmis.org, mhiramat@kernel.org,
+        mathieu.poirier@linaro.org, suzuki.poulose@arm.com,
+        zbr@ioremap.net, fenghua.yu@intel.com, reinette.chatre@intel.com,
+        tglx@linutronix.de, bp@alien8.de, chris@zankel.net,
+        jcmvbkbc@gmail.com, coresight@lists.linaro.org,
+        dri-devel@lists.freedesktop.org, keyrings@vger.kernel.org,
+        linux-block@vger.kernel.org, linux-crypto@vger.kernel.org,
+        linux-doc@vger.kernel.org, linux-fbdev@vger.kernel.org,
+        linux-input@vger.kernel.org, linux-pci@vger.kernel.org,
+        linux-s390@vger.kernel.org, linux-scsi@vger.kernel.org,
+        linux-sgx@vger.kernel.org, linux-trace-devel@vger.kernel.org,
+        linux-trace-kernel@vger.kernel.org, live-patching@vger.kernel.org,
+        linux-security-module@vger.kernel.org, linux-usb@vger.kernel.org,
+        netdev@vger.kernel.org, linux-mm@kvack.org,
+        openrisc@lists.librecores.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-xtensa@linux-xtensa.org, linuxppc-dev@lists.ozlabs.org,
+        x86@kernel.org
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-Hi Tom,
+Hello:
 
-Thank you for the patch! Perhaps something to improve:
+This series was applied to netdev/net-next.git (master)
+by Jakub Kicinski <kuba@kernel.org>:
 
-[auto build test WARNING on next-20230210]
-[cannot apply to linus/master rostedt-trace/for-next rostedt-trace/for-next-urgent v6.2-rc7 v6.2-rc6 v6.2-rc5 v6.2-rc7]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+On Wed,  8 Feb 2023 23:13:36 -0800 you wrote:
+> Correct many spelling errors in Documentation/ as reported by codespell.
+> 
+> Maintainers of specific kernel subsystems are only Cc-ed on their
+> respective patches, not the entire series.
+> 
+> These patches are based on linux-next-20230209.
+> 
+> [...]
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Tom-Zanussi/tracing-histogram-Don-t-use-strlen-to-find-length-of-stacktrace-variables/20230211-053647
-patch link:    https://lore.kernel.org/r/11aa614c82976adbfa4ea763dbe885b5fb01d59c.1676063532.git.zanussi%40kernel.org
-patch subject: [PATCH 3/4] tracing/histogram: Fix stacktrace key
-config: parisc-allyesconfig (https://download.01.org/0day-ci/archive/20230211/202302110636.O2hlhbxt-lkp@intel.com/config)
-compiler: hppa-linux-gcc (GCC) 12.1.0
-reproduce (this is a W=1 build):
-        wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
-        chmod +x ~/bin/make.cross
-        # https://github.com/intel-lab-lkp/linux/commit/797160b4aa615acf656dc6c8ef6fe41b3c2b84a2
-        git remote add linux-review https://github.com/intel-lab-lkp/linux
-        git fetch --no-tags linux-review Tom-Zanussi/tracing-histogram-Don-t-use-strlen-to-find-length-of-stacktrace-variables/20230211-053647
-        git checkout 797160b4aa615acf656dc6c8ef6fe41b3c2b84a2
-        # save the config file
-        mkdir build_dir && cp config build_dir/.config
-        COMPILER_INSTALL_PATH=$HOME/0day COMPILER=gcc-12.1.0 make.cross W=1 O=build_dir ARCH=parisc olddefconfig
-        COMPILER_INSTALL_PATH=$HOME/0day COMPILER=gcc-12.1.0 make.cross W=1 O=build_dir ARCH=parisc SHELL=/bin/bash kernel/trace/
+Here is the summary with links:
+  - [03/24] Documentation: core-api: correct spelling
+    (no matching commit)
+  - [08/24] Documentation: isdn: correct spelling
+    https://git.kernel.org/netdev/net-next/c/d12f9ad02806
 
-If you fix the issue, kindly add following tag where applicable
-| Reported-by: kernel test robot <lkp@intel.com>
-| Link: https://lore.kernel.org/oe-kbuild-all/202302110636.O2hlhbxt-lkp@intel.com/
-
-All warnings (new ones prefixed by >>):
-
-   kernel/trace/trace_events_hist.c: In function 'event_hist_trigger':
->> kernel/trace/trace_events_hist.c:5261:41: warning: cast to pointer from integer of different size [-Wint-to-pointer-cast]
-    5261 |                                 stack = (unsigned long *)field_contents;
-         |                                         ^
-
-
-vim +5261 kernel/trace/trace_events_hist.c
-
-  5231	
-  5232	static void event_hist_trigger(struct event_trigger_data *data,
-  5233				       struct trace_buffer *buffer, void *rec,
-  5234				       struct ring_buffer_event *rbe)
-  5235	{
-  5236		struct hist_trigger_data *hist_data = data->private_data;
-  5237		bool use_compound_key = (hist_data->n_keys > 1);
-  5238		unsigned long entries[HIST_STACKTRACE_DEPTH];
-  5239		u64 var_ref_vals[TRACING_MAP_VARS_MAX];
-  5240		char compound_key[HIST_KEY_SIZE_MAX];
-  5241		struct tracing_map_elt *elt = NULL;
-  5242		struct hist_field *key_field;
-  5243		u64 field_contents;
-  5244		void *key = NULL;
-  5245		unsigned int i;
-  5246	
-  5247		if (unlikely(!rbe))
-  5248			return;
-  5249	
-  5250		memset(compound_key, 0, hist_data->key_size);
-  5251	
-  5252		for_each_hist_key_field(i, hist_data) {
-  5253			key_field = hist_data->fields[i];
-  5254	
-  5255			if (key_field->flags & HIST_FIELD_FL_STACKTRACE) {
-  5256				memset(entries, 0, HIST_STACKTRACE_SIZE);
-  5257				if (key_field->field) {
-  5258					unsigned long *stack, n_entries;
-  5259	
-  5260					field_contents = hist_fn_call(key_field, elt, buffer, rbe, rec);
-> 5261					stack = (unsigned long *)field_contents;
-  5262					n_entries = *stack;
-  5263					memcpy(entries, ++stack, n_entries * sizeof(unsigned long));
-  5264				} else {
-  5265					stack_trace_save(entries, HIST_STACKTRACE_DEPTH,
-  5266							 HIST_STACKTRACE_SKIP);
-  5267				}
-  5268				key = entries;
-  5269			} else {
-  5270				field_contents = hist_fn_call(key_field, elt, buffer, rbe, rec);
-  5271				if (key_field->flags & HIST_FIELD_FL_STRING) {
-  5272					key = (void *)(unsigned long)field_contents;
-  5273					use_compound_key = true;
-  5274				} else
-  5275					key = (void *)&field_contents;
-  5276			}
-  5277	
-  5278			if (use_compound_key)
-  5279				add_to_key(compound_key, key, key_field, rec);
-  5280		}
-  5281	
-  5282		if (use_compound_key)
-  5283			key = compound_key;
-  5284	
-  5285		if (hist_data->n_var_refs &&
-  5286		    !resolve_var_refs(hist_data, key, var_ref_vals, false))
-  5287			return;
-  5288	
-  5289		elt = tracing_map_insert(hist_data->map, key);
-  5290		if (!elt)
-  5291			return;
-  5292	
-  5293		hist_trigger_elt_update(hist_data, elt, buffer, rec, rbe, var_ref_vals);
-  5294	
-  5295		if (resolve_var_refs(hist_data, key, var_ref_vals, true))
-  5296			hist_trigger_actions(hist_data, elt, buffer, rec, rbe, key, var_ref_vals);
-  5297	}
-  5298	
-
+You are awesome, thank you!
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
+
+
