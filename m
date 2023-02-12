@@ -2,219 +2,261 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DB1BC05027
-	for <linux-trace-kernel@archiver.kernel.org>; Sun, 12 Feb 2023 15:33:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E36DC636D3
+	for <linux-trace-kernel@archiver.kernel.org>; Sun, 12 Feb 2023 22:38:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229735AbjBLPdY (ORCPT
+        id S229644AbjBLWiz (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Sun, 12 Feb 2023 10:33:24 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36182 "EHLO
+        Sun, 12 Feb 2023 17:38:55 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54528 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229712AbjBLPdO (ORCPT
+        with ESMTP id S229574AbjBLWiz (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Sun, 12 Feb 2023 10:33:14 -0500
-Received: from mail-wm1-x349.google.com (mail-wm1-x349.google.com [IPv6:2a00:1450:4864:20::349])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1A3D6C65D
-        for <linux-trace-kernel@vger.kernel.org>; Sun, 12 Feb 2023 07:33:10 -0800 (PST)
-Received: by mail-wm1-x349.google.com with SMTP id k17-20020a05600c1c9100b003dd41ad974bso5404279wms.3
-        for <linux-trace-kernel@vger.kernel.org>; Sun, 12 Feb 2023 07:33:09 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20210112;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=M+d4ipAHpReLmFZk9nFLE2xPZqTKQlJEwK1FQJWisIY=;
-        b=bPDmQfdCZw8lNqkinMZjF8xpczDSiTRYQgdspyJY8Vf5QPMuk36Z0VU7JJThODDPWf
-         vlySehWqGwFR1EG95l6sJg0Eh6UNcQx1u8uOn5KZXDA3SRdUKHzyzcjA7KmhRijKJDDk
-         tXxtgR+W7Zw6QBTTz4E6dTH7+GHKtjGGNVqMbLGKulERjMwSDk34nPk3Qv9GFzktEY6L
-         fhD0Rd4Dtb4w0Aa2FKG8Lpk8I2jxs797I04cwrMRIocF8nKPyUNk9Lnx6y3hm1NTOZd7
-         1T0e13BQBz1GCug+pcPpAOP8Sy3eQIO1ekH4D3hJrp8Y1xraoZ/HkSuEUtDS39nD5TUi
-         mvhA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=M+d4ipAHpReLmFZk9nFLE2xPZqTKQlJEwK1FQJWisIY=;
-        b=S7sS/Clc0GwUsYJh3NCSd4onZN/6RQHSIA0cqaToFumYQvEQ6pzQYR3WwzSi673gMr
-         PjkZFMoKGGayUTqpaL8KuuaFPex3YmTDKI7ikG63gCm62ng4jI7FDXI12zl5nihwRy2j
-         vltnKdlBY3c6sOcjV6WLkNToFwsTA2egc5vBIQCGDugOxoJdD38CaqPsVSUoZVCg3lb7
-         RHdDsx854FQjiyOMMWz6jafFogNewIqgIiRMg9qD0QMj1E1MKp5p4JssyDj7Gy1lGzNT
-         r1Xpknia5Jm91YLIhF0T81KrGVdqnHGwdE6+nh1DwwEwvqc+keCIqEHJGtr4WS0lwOMX
-         7K/w==
-X-Gm-Message-State: AO0yUKVdLZ3tzId4J9ZVCkIk8O8/lNL/hj41I04jYQtuXOn+6mWYWDnN
-        FfUx8bXOEbmvk6dRUuElaoBi1gi7kC+90uie
-X-Google-Smtp-Source: AK7set9HzQqLLwTBhCUfaS347mT3tH0TTlTVjXRiHOtP9X/USfmu8A7LMFbYHs3kJctWE2Hvss1QMZLLh7Qntj8u
-X-Received: from vdonnefort.c.googlers.com ([fda3:e722:ac3:cc00:28:9cb1:c0a8:2eea])
- (user=vdonnefort job=sendgmr) by 2002:a05:600c:1c81:b0:3db:105:85a4 with SMTP
- id k1-20020a05600c1c8100b003db010585a4mr1282764wms.124.1676215988772; Sun, 12
- Feb 2023 07:33:08 -0800 (PST)
-Date:   Sun, 12 Feb 2023 15:32:50 +0000
-In-Reply-To: <20230212153250.1099136-1-vdonnefort@google.com>
+        Sun, 12 Feb 2023 17:38:55 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A4E6D9EE0;
+        Sun, 12 Feb 2023 14:38:52 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 3FBD260DF5;
+        Sun, 12 Feb 2023 22:38:52 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CAC61C433EF;
+        Sun, 12 Feb 2023 22:38:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1676241531;
+        bh=tHRqEvegtXFcgQT+AiyfDkrbLeeEV21tpa5G9byREZo=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=EQoeuV/JEYA33BRQ64FK9cUwB+krvVWrbhVL6Qlc54EZjqJfWbxIXF4eQ9a7jmxkC
+         5ODG9y5qCb3uAHrrYT7w7kAgYOQ9nGaVZwQBCqiEPhF/w/sCe2BeLK7/Ee+dYHbSR6
+         GlgkRD8c8zlxobTqbtCtmawJmGn86kkPLyMyqaprUDI7UmDIrjuCIB/UuuhgEjf50h
+         1ALv32N3qJSnZ5dt2oo5XhWUcc9bgXK8G+V+sbMSu8qEIWE/YwR/lCorjvg1CcsFB9
+         F/TxgO+pxMaRIWrcXfD3g6tdD66uYOmkVqQJUqwFdpjUhJ4eEB3QN1R+CedwYyp7rV
+         9b8ak5ZWQtdLw==
+Date:   Mon, 13 Feb 2023 07:38:47 +0900
+From:   Masami Hiramatsu (Google) <mhiramat@kernel.org>
+To:     Yafang Shao <laoar.shao@gmail.com>
+Cc:     rostedt@goodmis.org, linux-trace-kernel@vger.kernel.org,
+        John Stultz <jstultz@google.com>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Alexei Starovoitov <alexei.starovoitov@gmail.com>,
+        Kajetan Puchalski <kajetan.puchalski@arm.com>,
+        Qais Yousef <qyousef@layalina.io>, stable@vger.kernel.org
+Subject: Re: [PATCH -trace v2] trace: fix TASK_COMM_LEN in trace event
+ format file
+Message-Id: <20230213073847.35c140ed3e23585169b6fcaf@kernel.org>
+In-Reply-To: <20230212151303.12353-1-laoar.shao@gmail.com>
+References: <20230212151303.12353-1-laoar.shao@gmail.com>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Mime-Version: 1.0
-References: <20230212153250.1099136-1-vdonnefort@google.com>
-X-Mailer: git-send-email 2.39.1.581.gbfd45094c4-goog
-Message-ID: <20230212153250.1099136-3-vdonnefort@google.com>
-Subject: [RFC PATCH 2/2] tracing: Allow user-space mapping of the ring-buffer
-From:   Vincent Donnefort <vdonnefort@google.com>
-To:     rostedt@goodmis.org, mhiramat@kernel.org,
-        linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
-Cc:     kernel-team@android.com, Vincent Donnefort <vdonnefort@google.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-Currently, user-space extracts data from the ring-buffer via splice,
-which is handy for storage or network sharing. However, due to splice
-limitations, it is not possible to do real-time analysis without a copy.
+On Sun, 12 Feb 2023 15:13:03 +0000
+Yafang Shao <laoar.shao@gmail.com> wrote:
 
-A solution for that problem is to let the user-space map the ring-buffer
-directly.
+> After commit 3087c61ed2c4 ("tools/testing/selftests/bpf: replace open-coded 16 with TASK_COMM_LEN"),
+> the content of the format file under
+> /sys/kernel/debug/tracing/events/task/task_newtask was changed from
+>   field:char comm[16];    offset:12;    size:16;    signed:0;
+> to
+>   field:char comm[TASK_COMM_LEN];    offset:12;    size:16;    signed:0;
+> 
+> John reported that this change breaks older versions of perfetto.
+> Then Mathieu pointed out that this behavioral change was caused by the
+> use of __stringify(_len), which happens to work on macros, but not on enum
+> labels. And he also gave the suggestion on how to fix it:
+>   :One possible solution to make this more robust would be to extend
+>   :struct trace_event_fields with one more field that indicates the length
+>   :of an array as an actual integer, without storing it in its stringified
+>   :form in the type, and do the formatting in f_show where it belongs.
+> 
+> The result as follows after this change,
+> $ cat /sys/kernel/debug/tracing/events/task/task_newtask/format
+>         field:char comm[16];    offset:12;      size:16;        signed:0;
+> 
+> Fixes: 3087c61ed2c4 ("tools/testing/selftests/bpf: replace open-coded 16 with TASK_COMM_LEN")
+> Reported-by: John Stultz <jstultz@google.com>
+> Debugged-by: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+> Suggested-by: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+> Suggested-by: Steven Rostedt <rostedt@goodmis.org>
+> Signed-off-by: Yafang Shao <laoar.shao@gmail.com>
+> Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+> Cc: Alexei Starovoitov <alexei.starovoitov@gmail.com>
+> Cc: Kajetan Puchalski <kajetan.puchalski@arm.com>
+> Cc: Steven Rostedt <rostedt@goodmis.org>
+> CC: Qais Yousef <qyousef@layalina.io>
+> Cc: John Stultz <jstultz@google.com>
+> Cc: stable@vger.kernel.org # v5.17+
 
-The mapping exposed via the per-CPU file trace_pipe_raw. The first page
-is the meta-page and is followed by each page of the ring-buffer,
-ordered by their unique page ID. It is therefore easy to translate a
-page-ID to an offset into the mapping.
+This looks good to me. 
 
-  * Meta-page -- include/uapi/linux/trace_mmap.h for a description
-  * Page ID 0
-  * Page ID 1
-     ...
+Reviewed-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 
-The mapper must then do what use to be the kernel jobs: swap the reader
-with the head. This is done with a newly introduced ioctl:
-TRACE_MMAP_IOCTL_GET_READER_PAGE.
+Thanks!
 
-To avoid putting to much work on the writer, the meta-page is not
-automatically updated. User-space must query an update before reading
-with another ioctl: TRACE_MMAP_IOCTL_UPDATE_META_PAGE.
+> ---
+>  include/linux/trace_events.h               |  1 +
+>  include/trace/stages/stage4_event_fields.h |  3 ++-
+>  kernel/trace/trace.h                       |  1 +
+>  kernel/trace/trace_events.c                | 39 +++++++++++++++++++++++-------
+>  kernel/trace/trace_export.c                |  3 ++-
+>  5 files changed, 36 insertions(+), 11 deletions(-)
+> 
+> diff --git a/include/linux/trace_events.h b/include/linux/trace_events.h
+> index 4342e99..0e37322 100644
+> --- a/include/linux/trace_events.h
+> +++ b/include/linux/trace_events.h
+> @@ -270,6 +270,7 @@ struct trace_event_fields {
+>  			const int  align;
+>  			const int  is_signed;
+>  			const int  filter_type;
+> +			const int  len;
+>  		};
+>  		int (*define_fields)(struct trace_event_call *);
+>  	};
+> diff --git a/include/trace/stages/stage4_event_fields.h b/include/trace/stages/stage4_event_fields.h
+> index affd541..b6f679a 100644
+> --- a/include/trace/stages/stage4_event_fields.h
+> +++ b/include/trace/stages/stage4_event_fields.h
+> @@ -26,7 +26,8 @@
+>  #define __array(_type, _item, _len) {					\
+>  	.type = #_type"["__stringify(_len)"]", .name = #_item,		\
+>  	.size = sizeof(_type[_len]), .align = ALIGN_STRUCTFIELD(_type),	\
+> -	.is_signed = is_signed_type(_type), .filter_type = FILTER_OTHER },
+> +	.is_signed = is_signed_type(_type), .filter_type = FILTER_OTHER,\
+> +	.len = _len },
+>  
+>  #undef __dynamic_array
+>  #define __dynamic_array(_type, _item, _len) {				\
+> diff --git a/kernel/trace/trace.h b/kernel/trace/trace.h
+> index e46a492..19caf15 100644
+> --- a/kernel/trace/trace.h
+> +++ b/kernel/trace/trace.h
+> @@ -1282,6 +1282,7 @@ struct ftrace_event_field {
+>  	int			offset;
+>  	int			size;
+>  	int			is_signed;
+> +	int			len;
+>  };
+>  
+>  struct prog_entry;
+> diff --git a/kernel/trace/trace_events.c b/kernel/trace/trace_events.c
+> index 33e0b4f..6a46967 100644
+> --- a/kernel/trace/trace_events.c
+> +++ b/kernel/trace/trace_events.c
+> @@ -114,7 +114,7 @@ struct ftrace_event_field *
+>  
+>  static int __trace_define_field(struct list_head *head, const char *type,
+>  				const char *name, int offset, int size,
+> -				int is_signed, int filter_type)
+> +				int is_signed, int filter_type, int len)
+>  {
+>  	struct ftrace_event_field *field;
+>  
+> @@ -133,6 +133,7 @@ static int __trace_define_field(struct list_head *head, const char *type,
+>  	field->offset = offset;
+>  	field->size = size;
+>  	field->is_signed = is_signed;
+> +	field->len = len;
+>  
+>  	list_add(&field->link, head);
+>  
+> @@ -150,14 +151,28 @@ int trace_define_field(struct trace_event_call *call, const char *type,
+>  
+>  	head = trace_get_fields(call);
+>  	return __trace_define_field(head, type, name, offset, size,
+> -				    is_signed, filter_type);
+> +				    is_signed, filter_type, 0);
+>  }
+>  EXPORT_SYMBOL_GPL(trace_define_field);
+>  
+> +int trace_define_field_ext(struct trace_event_call *call, const char *type,
+> +		       const char *name, int offset, int size, int is_signed,
+> +		       int filter_type, int len)
+> +{
+> +	struct list_head *head;
+> +
+> +	if (WARN_ON(!call->class))
+> +		return 0;
+> +
+> +	head = trace_get_fields(call);
+> +	return __trace_define_field(head, type, name, offset, size,
+> +				    is_signed, filter_type, len);
+> +}
+> +
+>  #define __generic_field(type, item, filter_type)			\
+>  	ret = __trace_define_field(&ftrace_generic_fields, #type,	\
+>  				   #item, 0, 0, is_signed_type(type),	\
+> -				   filter_type);			\
+> +				   filter_type, 0);			\
+>  	if (ret)							\
+>  		return ret;
+>  
+> @@ -166,7 +181,7 @@ int trace_define_field(struct trace_event_call *call, const char *type,
+>  				   "common_" #item,			\
+>  				   offsetof(typeof(ent), item),		\
+>  				   sizeof(ent.item),			\
+> -				   is_signed_type(type), FILTER_OTHER);	\
+> +				   is_signed_type(type), FILTER_OTHER, 0);	\
+>  	if (ret)							\
+>  		return ret;
+>  
+> @@ -1588,12 +1603,17 @@ static int f_show(struct seq_file *m, void *v)
+>  		seq_printf(m, "\tfield:%s %s;\toffset:%u;\tsize:%u;\tsigned:%d;\n",
+>  			   field->type, field->name, field->offset,
+>  			   field->size, !!field->is_signed);
+> -	else
+> -		seq_printf(m, "\tfield:%.*s %s%s;\toffset:%u;\tsize:%u;\tsigned:%d;\n",
+> +	else if (field->len)
+> +		seq_printf(m, "\tfield:%.*s %s[%d];\toffset:%u;\tsize:%u;\tsigned:%d;\n",
+>  			   (int)(array_descriptor - field->type),
+>  			   field->type, field->name,
+> -			   array_descriptor, field->offset,
+> +			   field->len, field->offset,
+>  			   field->size, !!field->is_signed);
+> +	else
+> +		seq_printf(m, "\tfield:%.*s %s[];\toffset:%u;\tsize:%u;\tsigned:%d;\n",
+> +				(int)(array_descriptor - field->type),
+> +				field->type, field->name,
+> +				field->offset, field->size, !!field->is_signed);
+>  
+>  	return 0;
+>  }
+> @@ -2379,9 +2399,10 @@ static int ftrace_event_release(struct inode *inode, struct file *file)
+>  			}
+>  
+>  			offset = ALIGN(offset, field->align);
+> -			ret = trace_define_field(call, field->type, field->name,
+> +			ret = trace_define_field_ext(call, field->type, field->name,
+>  						 offset, field->size,
+> -						 field->is_signed, field->filter_type);
+> +						 field->is_signed, field->filter_type,
+> +						 field->len);
+>  			if (WARN_ON_ONCE(ret)) {
+>  				pr_err("error code is %d\n", ret);
+>  				break;
+> diff --git a/kernel/trace/trace_export.c b/kernel/trace/trace_export.c
+> index d960f6b..58f3946 100644
+> --- a/kernel/trace/trace_export.c
+> +++ b/kernel/trace/trace_export.c
+> @@ -111,7 +111,8 @@ struct ____ftrace_##name {						\
+>  #define __array(_type, _item, _len) {					\
+>  	.type = #_type"["__stringify(_len)"]", .name = #_item,		\
+>  	.size = sizeof(_type[_len]), .align = __alignof__(_type),	\
+> -	is_signed_type(_type), .filter_type = FILTER_OTHER },
+> +	is_signed_type(_type), .filter_type = FILTER_OTHER,			\
+> +	.len = _len },
+>  
+>  #undef __array_desc
+>  #define __array_desc(_type, _container, _item, _len) __array(_type, _item, _len)
+> -- 
+> 1.8.3.1
+> 
 
-Signed-off-by: Vincent Donnefort <vdonnefort@google.com>
 
-diff --git a/include/uapi/linux/trace_mmap.h b/include/uapi/linux/trace_mmap.h
-index 0f3282fa1a94..fe3bbe02e571 100644
---- a/include/uapi/linux/trace_mmap.h
-+++ b/include/uapi/linux/trace_mmap.h
-@@ -11,4 +11,7 @@ struct ring_buffer_meta_page {
- 	__u32		data_pages[];
- };
- 
-+#define TRACE_MMAP_IOCTL_GET_READER_PAGE	_IO('T', 0x1)
-+#define TRACE_MMAP_IOCTL_UPDATE_META_PAGE	_IO('T', 0x2)
-+
- #endif /* _UAPI_TRACE_MMAP_H_ */
-diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
-index 78ed5f1baa8c..e7d999499dde 100644
---- a/kernel/trace/trace.c
-+++ b/kernel/trace/trace.c
-@@ -6351,7 +6351,7 @@ static void tracing_set_nop(struct trace_array *tr)
- {
- 	if (tr->current_trace == &nop_trace)
- 		return;
--	
-+
- 	tr->current_trace->enabled--;
- 
- 	if (tr->current_trace->reset)
-@@ -8384,15 +8384,27 @@ tracing_buffers_splice_read(struct file *file, loff_t *ppos,
- 	return ret;
- }
- 
--/* An ioctl call with cmd 0 to the ring buffer file will wake up all waiters */
- static long tracing_buffers_ioctl(struct file *file, unsigned int cmd, unsigned long arg)
- {
- 	struct ftrace_buffer_info *info = file->private_data;
- 	struct trace_iterator *iter = &info->iter;
- 
-+	switch (cmd) {
-+	case TRACE_MMAP_IOCTL_GET_READER_PAGE:
-+		return ring_buffer_get_reader_page(iter->array_buffer->buffer,
-+						   iter->cpu_file);
-+	case TRACE_MMAP_IOCTL_UPDATE_META_PAGE:
-+		return ring_buffer_update_meta_page(iter->array_buffer->buffer,
-+						    iter->cpu_file);
-+	}
-+
- 	if (cmd)
--		return -ENOIOCTLCMD;
-+		return -ENOTTY;
- 
-+	/*
-+	 * An ioctl call with cmd 0 to the ring buffer file will wake up all
-+	 * waiters
-+	 */
- 	mutex_lock(&trace_types_lock);
- 
- 	iter->wait_index++;
-@@ -8405,6 +8417,61 @@ static long tracing_buffers_ioctl(struct file *file, unsigned int cmd, unsigned
- 	return 0;
- }
- 
-+static vm_fault_t tracing_buffers_mmap_fault(struct vm_fault *vmf)
-+{
-+	struct ftrace_buffer_info *info = vmf->vma->vm_file->private_data;
-+	struct trace_iterator *iter = &info->iter;
-+	vm_fault_t ret = VM_FAULT_SIGBUS;
-+	struct page *page;
-+
-+	page = ring_buffer_map_fault(iter->array_buffer->buffer, iter->cpu_file,
-+				     vmf->pgoff);
-+	if (!page)
-+		return ret;
-+
-+	get_page(page);
-+	vmf->page = page;
-+
-+	return 0;
-+}
-+
-+static void tracing_buffers_mmap_close(struct vm_area_struct *vma)
-+{
-+	struct ftrace_buffer_info *info = vma->vm_file->private_data;
-+	struct trace_iterator *iter = &info->iter;
-+
-+	ring_buffer_unmap(iter->array_buffer->buffer, iter->cpu_file);
-+}
-+
-+static void tracing_buffers_mmap_open(struct vm_area_struct *vma)
-+{
-+	struct ftrace_buffer_info *info = vma->vm_file->private_data;
-+	struct trace_iterator *iter = &info->iter;
-+
-+	WARN_ON(ring_buffer_map(iter->array_buffer->buffer, iter->cpu_file));
-+}
-+
-+static const struct vm_operations_struct tracing_buffers_vmops = {
-+	.open		= tracing_buffers_mmap_open,
-+	.close		= tracing_buffers_mmap_close,
-+	.fault		= tracing_buffers_mmap_fault,
-+};
-+
-+static int tracing_buffers_mmap(struct file *filp, struct vm_area_struct *vma)
-+{
-+	struct ftrace_buffer_info *info = filp->private_data;
-+	struct trace_iterator *iter = &info->iter;
-+
-+	if (vma->vm_flags & VM_WRITE)
-+		return -EPERM;
-+
-+	vma->vm_flags |= VM_DONTCOPY | VM_DONTDUMP;
-+	vma->vm_flags &= ~VM_MAYWRITE;
-+	vma->vm_ops = &tracing_buffers_vmops;
-+
-+	return ring_buffer_map(iter->array_buffer->buffer, iter->cpu_file);
-+}
-+
- static const struct file_operations tracing_buffers_fops = {
- 	.open		= tracing_buffers_open,
- 	.read		= tracing_buffers_read,
-@@ -8413,6 +8480,7 @@ static const struct file_operations tracing_buffers_fops = {
- 	.splice_read	= tracing_buffers_splice_read,
- 	.unlocked_ioctl = tracing_buffers_ioctl,
- 	.llseek		= no_llseek,
-+	.mmap		= tracing_buffers_mmap,
- };
- 
- static ssize_t
 -- 
-2.39.1.581.gbfd45094c4-goog
-
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
