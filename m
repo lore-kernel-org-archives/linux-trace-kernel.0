@@ -2,52 +2,50 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A5632C636D3
-	for <linux-trace-kernel@archiver.kernel.org>; Sun, 12 Feb 2023 23:29:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 64903C636CC
+	for <linux-trace-kernel@archiver.kernel.org>; Mon, 13 Feb 2023 15:24:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229499AbjBLX30 (ORCPT
+        id S229688AbjBMPYY (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Sun, 12 Feb 2023 18:29:26 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40496 "EHLO
+        Mon, 13 Feb 2023 10:24:24 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38126 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229476AbjBLX3Z (ORCPT
+        with ESMTP id S229588AbjBMPYX (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Sun, 12 Feb 2023 18:29:25 -0500
-Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0138BF750;
-        Sun, 12 Feb 2023 15:29:23 -0800 (PST)
+        Mon, 13 Feb 2023 10:24:23 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D7CD1558E;
+        Mon, 13 Feb 2023 07:24:22 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 9AC10B80D26;
-        Sun, 12 Feb 2023 23:29:22 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6CCCDC433D2;
-        Sun, 12 Feb 2023 23:29:19 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 726D96117A;
+        Mon, 13 Feb 2023 15:24:22 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3E4B2C433D2;
+        Mon, 13 Feb 2023 15:24:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1676244561;
-        bh=N5j1gNb+Re0EUJllz+g3X981RTaDhkZJEQX4YsWLntg=;
+        s=k20201202; t=1676301861;
+        bh=U7/h4PcTTuCP83D457yoOt5YF99KmnT1gMD+1Gv9zu8=;
         h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=qZvbsejPY7adVJe/ylm0jXSnqaQjBr4gMjdLu7HD0MicyRS5mc87LmWeT1h4PFwai
-         7USe/MSYrrzYUoZRYEX28j9afBhTU1UThttTUFEAn+TcO0+vgDUDXQg+FixduVUzMy
-         zhQzmuKPl0Tx6tNTKkeWen10KCXMEsgSzIQpDxbC4J2ADHwSx1ou49wzJuMm6ZwMvq
-         90Ocx4edd8lNZatpDUJhk9EOQP0SCjULewWLzS3pV5RSb0UQbt1sbP0wQIqMkMB/sN
-         2kNrOf//yu/DW+uTrAN4jaMO+ttHdpRyDOq96yZIkFwbSvOojXhAdduIyFQCNDpLsA
-         5FDJjB1cfqttw==
-Date:   Mon, 13 Feb 2023 08:29:17 +0900
+        b=WSeKozxjmCZSrIOiZjQSNIY7gNPXnrv+gAWu8A67aNA1zez2cpOQx6cIg0D3AIlSH
+         nQlvKfiVfnSsYaHZdVUd0fSiWCXsr51Al0KcqqkrXlow9DNJ5PhrFdrV/zI/SLrJHw
+         hXYAlsBbwEP+PdRZUM15/MWobMl6JVjUpCCNXtiQTuyNt+ogVYw2xdiLhf0wB04ZO5
+         tHLBpw8/dFOAbWoOzm4M+2oLZIZuMc/mBun77faH6TOrRY8K5rqJxzfgSe6VSvj+NX
+         c6Njr5wlmD9YUebD4aq/Q3KywBT3VsDysa3EFDudMsHufUvCqsEWR9wN8gpd4y0yfI
+         rnD1ub70DGIhg==
+Date:   Tue, 14 Feb 2023 00:24:18 +0900
 From:   Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To:     Qing Zhang <zhangqing@loongson.cn>
-Cc:     Steven Rostedt <rostedt@goodmis.org>,
-        Shuah Khan <shuah@kernel.org>,
-        Huacai Chen <chenhuacai@kernel.org>,
-        WANG Xuerui <kernel@xen0n.name>,
-        Jiaxun Yang <jiaxun.yang@flygoat.com>,
-        loongarch@lists.linux.dev, linux-kernel@vger.kernel.org,
-        linux-trace-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org
-Subject: Re: [PATCH] selftests/ftrace: add LoongArch support for kprobe args
- string tests
-Message-Id: <20230213082917.68a4fde41f1143fd32c6111b@kernel.org>
-In-Reply-To: <20230211084346.25941-1-zhangqing@loongson.cn>
-References: <20230211084346.25941-1-zhangqing@loongson.cn>
+To:     Tom Zanussi <zanussi@kernel.org>
+Cc:     rostedt@goodmis.org, mhiramat@kernel.org,
+        linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+        akpm@linux-foundation.org, zwisler@google.com,
+        chinglinyu@google.com
+Subject: Re: [PATCH 1/4] tracing/histogram: Don't use strlen to find length
+ of stacktrace variables
+Message-Id: <20230214002418.0103b9e765d3e5c374d2aa7d@kernel.org>
+In-Reply-To: <1ed6906cd9d6477ef2bd8e63c61de20a9ffe64d7.1676063532.git.zanussi@kernel.org>
+References: <cover.1676063532.git.zanussi@kernel.org>
+        <1ed6906cd9d6477ef2bd8e63c61de20a9ffe64d7.1676063532.git.zanussi@kernel.org>
 X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Mime-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
@@ -56,58 +54,99 @@ Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On Sat, 11 Feb 2023 16:43:46 +0800
-Qing Zhang <zhangqing@loongson.cn> wrote:
+On Fri, 10 Feb 2023 15:33:03 -0600
+Tom Zanussi <zanussi@kernel.org> wrote:
 
-> before:
-> [5] Kprobe event string type argument	[UNTESTED]
-> [7] Kprobe event argument syntax	[UNTESTED]
-> after:
-> [5] Kprobe event string type argument	[PASS]
-> [7] Kprobe event argument syntax	[PASS]
+> Because stacktraces are saved in dynamic strings,
+> trace_event_raw_event_synth() uses strlen to determine the length of
+> the stack.  Stacktraces may contain 0-bytes, though, in the saved
+> addresses, so the length found and passed to reserve() will be too
+> small.
+
+Good catch!
+
 > 
-
-Thanks for updating the test!
-
-Reviewed-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-
-> Signed-off-by: Qing Zhang <zhangqing@loongson.cn>
+> Fix this by using the first unsigned long in the stack variables to
+> store the actual number of elements in the stack and have
+> trace_event_raw_event_synth() use that to determine the length of the
+> stack.
+> 
+> Signed-off-by: Tom Zanussi <zanussi@kernel.org>
 > ---
->  .../selftests/ftrace/test.d/kprobe/kprobe_args_string.tc      | 3 +++
->  .../selftests/ftrace/test.d/kprobe/kprobe_args_syntax.tc      | 4 ++++
->  2 files changed, 7 insertions(+)
+>  kernel/trace/trace_events_hist.c  | 12 ++++++++----
+>  kernel/trace/trace_events_synth.c |  7 ++++++-
+>  2 files changed, 14 insertions(+), 5 deletions(-)
 > 
-> diff --git a/tools/testing/selftests/ftrace/test.d/kprobe/kprobe_args_string.tc b/tools/testing/selftests/ftrace/test.d/kprobe/kprobe_args_string.tc
-> index 459741565222..a4f8e7c53c1f 100644
-> --- a/tools/testing/selftests/ftrace/test.d/kprobe/kprobe_args_string.tc
-> +++ b/tools/testing/selftests/ftrace/test.d/kprobe/kprobe_args_string.tc
-> @@ -28,6 +28,9 @@ s390*)
->  mips*)
->    ARG1=%r4
->  ;;
-> +loongarch*)
-> +  ARG1=%r4
-> +;;
->  *)
->    echo "Please implement other architecture here"
->    exit_untested
-> diff --git a/tools/testing/selftests/ftrace/test.d/kprobe/kprobe_args_syntax.tc b/tools/testing/selftests/ftrace/test.d/kprobe/kprobe_args_syntax.tc
-> index d4662c8cf407..1df61e13a812 100644
-> --- a/tools/testing/selftests/ftrace/test.d/kprobe/kprobe_args_syntax.tc
-> +++ b/tools/testing/selftests/ftrace/test.d/kprobe/kprobe_args_syntax.tc
-> @@ -40,6 +40,10 @@ mips*)
->    GOODREG=%r4
->    BADREG=%r12
->  ;;
-> +loongarch*)
-> +  GOODREG=%r4
-> +  BADREG=%r12
-> +;;
->  *)
->    echo "Please implement other architecture here"
->    exit_untested
+> diff --git a/kernel/trace/trace_events_hist.c b/kernel/trace/trace_events_hist.c
+> index 888b7a394ce5..76bd105988c6 100644
+> --- a/kernel/trace/trace_events_hist.c
+> +++ b/kernel/trace/trace_events_hist.c
+> @@ -3135,13 +3135,15 @@ static inline void __update_field_vars(struct tracing_map_elt *elt,
+>  				size = min(val->size, STR_VAR_LEN_MAX);
+>  				strscpy(str, val_str, size);
+>  			} else {
+> +				char *stack_start = str + sizeof(unsigned long);
+>  				int e;
+>  
+> -				e = stack_trace_save((void *)str,
+> +				e = stack_trace_save((void *)stack_start,
+>  						     HIST_STACKTRACE_DEPTH,
+>  						     HIST_STACKTRACE_SKIP);
+
+BTW, the size of "str" is enough to store HIST_STACKTRACE_DEPTH?
+In string case, 
+
+size = min(val->size, STR_VAR_LEN_MAX);
+
+will limit the max size.
+
+Thank you,
+
+>  				if (e < HIST_STACKTRACE_DEPTH - 1)
+> -					((unsigned long *)str)[e] = 0;
+> +					((unsigned long *)stack_start)[e] = 0;
+> +				*((unsigned long *)str) = e;
+>  			}
+>  			var_val = (u64)(uintptr_t)str;
+>  		}
+> @@ -5133,13 +5135,15 @@ static void hist_trigger_elt_update(struct hist_trigger_data *hist_data,
+>  					size = min(hist_field->size, STR_VAR_LEN_MAX);
+>  					strscpy(str, val_str, size);
+>  				} else {
+> +					char *stack_start = str + sizeof(unsigned long);
+>  					int e;
+>  
+> -					e = stack_trace_save((void *)str,
+> +					e = stack_trace_save((void *)stack_start,
+>  							     HIST_STACKTRACE_DEPTH,
+>  							     HIST_STACKTRACE_SKIP);
+>  					if (e < HIST_STACKTRACE_DEPTH - 1)
+> -						((unsigned long *)str)[e] = 0;
+> +						((unsigned long *)stack_start)[e] = 0;
+> +					*((unsigned long *)str) = e;
+>  				}
+>  				hist_val = (u64)(uintptr_t)str;
+>  			}
+> diff --git a/kernel/trace/trace_events_synth.c b/kernel/trace/trace_events_synth.c
+> index d458d7a0dfd7..6209b23c863f 100644
+> --- a/kernel/trace/trace_events_synth.c
+> +++ b/kernel/trace/trace_events_synth.c
+> @@ -538,7 +538,12 @@ static notrace void trace_event_raw_event_synth(void *__data,
+>  		val_idx = var_ref_idx[field_pos];
+>  		str_val = (char *)(long)var_ref_vals[val_idx];
+>  
+> -		len = kern_fetch_store_strlen((unsigned long)str_val);
+> +		if (event->dynamic_fields[i]->is_stack) {
+> +			len = *((unsigned long *)str_val);
+> +			len *= sizeof(unsigned long);
+> +		} else {
+> +			len = kern_fetch_store_strlen((unsigned long)str_val);
+> +		}
+>  
+>  		fields_size += len;
+>  	}
 > -- 
-> 2.36.0
+> 2.34.1
 > 
 
 
