@@ -2,153 +2,75 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 64903C636CC
-	for <linux-trace-kernel@archiver.kernel.org>; Mon, 13 Feb 2023 15:24:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A1A9C636CC
+	for <linux-trace-kernel@archiver.kernel.org>; Mon, 13 Feb 2023 15:57:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229688AbjBMPYY (ORCPT
+        id S230204AbjBMP5R (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Mon, 13 Feb 2023 10:24:24 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38126 "EHLO
+        Mon, 13 Feb 2023 10:57:17 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46648 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229588AbjBMPYX (ORCPT
+        with ESMTP id S229468AbjBMP5Q (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Mon, 13 Feb 2023 10:24:23 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D7CD1558E;
-        Mon, 13 Feb 2023 07:24:22 -0800 (PST)
+        Mon, 13 Feb 2023 10:57:16 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 86A7C124;
+        Mon, 13 Feb 2023 07:57:15 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 726D96117A;
-        Mon, 13 Feb 2023 15:24:22 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3E4B2C433D2;
-        Mon, 13 Feb 2023 15:24:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1676301861;
-        bh=U7/h4PcTTuCP83D457yoOt5YF99KmnT1gMD+1Gv9zu8=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=WSeKozxjmCZSrIOiZjQSNIY7gNPXnrv+gAWu8A67aNA1zez2cpOQx6cIg0D3AIlSH
-         nQlvKfiVfnSsYaHZdVUd0fSiWCXsr51Al0KcqqkrXlow9DNJ5PhrFdrV/zI/SLrJHw
-         hXYAlsBbwEP+PdRZUM15/MWobMl6JVjUpCCNXtiQTuyNt+ogVYw2xdiLhf0wB04ZO5
-         tHLBpw8/dFOAbWoOzm4M+2oLZIZuMc/mBun77faH6TOrRY8K5rqJxzfgSe6VSvj+NX
-         c6Njr5wlmD9YUebD4aq/Q3KywBT3VsDysa3EFDudMsHufUvCqsEWR9wN8gpd4y0yfI
-         rnD1ub70DGIhg==
-Date:   Tue, 14 Feb 2023 00:24:18 +0900
-From:   Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To:     Tom Zanussi <zanussi@kernel.org>
-Cc:     rostedt@goodmis.org, mhiramat@kernel.org,
-        linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
-        akpm@linux-foundation.org, zwisler@google.com,
-        chinglinyu@google.com
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 295AF61177;
+        Mon, 13 Feb 2023 15:57:15 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C14CBC433D2;
+        Mon, 13 Feb 2023 15:56:59 +0000 (UTC)
+Date:   Mon, 13 Feb 2023 10:56:33 -0500
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
+Cc:     Tom Zanussi <zanussi@kernel.org>, linux-kernel@vger.kernel.org,
+        linux-trace-kernel@vger.kernel.org, akpm@linux-foundation.org,
+        zwisler@google.com, chinglinyu@google.com
 Subject: Re: [PATCH 1/4] tracing/histogram: Don't use strlen to find length
  of stacktrace variables
-Message-Id: <20230214002418.0103b9e765d3e5c374d2aa7d@kernel.org>
-In-Reply-To: <1ed6906cd9d6477ef2bd8e63c61de20a9ffe64d7.1676063532.git.zanussi@kernel.org>
+Message-ID: <20230213105633.006a22fc@rorschach.local.home>
+In-Reply-To: <20230214002418.0103b9e765d3e5c374d2aa7d@kernel.org>
 References: <cover.1676063532.git.zanussi@kernel.org>
         <1ed6906cd9d6477ef2bd8e63c61de20a9ffe64d7.1676063532.git.zanussi@kernel.org>
-X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
+        <20230214002418.0103b9e765d3e5c374d2aa7d@kernel.org>
+X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On Fri, 10 Feb 2023 15:33:03 -0600
-Tom Zanussi <zanussi@kernel.org> wrote:
+On Tue, 14 Feb 2023 00:24:18 +0900
+Masami Hiramatsu (Google) <mhiramat@kernel.org> wrote:
 
-> Because stacktraces are saved in dynamic strings,
-> trace_event_raw_event_synth() uses strlen to determine the length of
-> the stack.  Stacktraces may contain 0-bytes, though, in the saved
-> addresses, so the length found and passed to reserve() will be too
-> small.
-
-Good catch!
-
+> > -				e = stack_trace_save((void *)str,
+> > +				e = stack_trace_save((void *)stack_start,
+> >  						     HIST_STACKTRACE_DEPTH,
+> >  						     HIST_STACKTRACE_SKIP);  
 > 
-> Fix this by using the first unsigned long in the stack variables to
-> store the actual number of elements in the stack and have
-> trace_event_raw_event_synth() use that to determine the length of the
-> stack.
+> BTW, the size of "str" is enough to store HIST_STACKTRACE_DEPTH?
+> In string case, 
 > 
-> Signed-off-by: Tom Zanussi <zanussi@kernel.org>
-> ---
->  kernel/trace/trace_events_hist.c  | 12 ++++++++----
->  kernel/trace/trace_events_synth.c |  7 ++++++-
->  2 files changed, 14 insertions(+), 5 deletions(-)
+> size = min(val->size, STR_VAR_LEN_MAX);
 > 
-> diff --git a/kernel/trace/trace_events_hist.c b/kernel/trace/trace_events_hist.c
-> index 888b7a394ce5..76bd105988c6 100644
-> --- a/kernel/trace/trace_events_hist.c
-> +++ b/kernel/trace/trace_events_hist.c
-> @@ -3135,13 +3135,15 @@ static inline void __update_field_vars(struct tracing_map_elt *elt,
->  				size = min(val->size, STR_VAR_LEN_MAX);
->  				strscpy(str, val_str, size);
->  			} else {
-> +				char *stack_start = str + sizeof(unsigned long);
->  				int e;
->  
-> -				e = stack_trace_save((void *)str,
-> +				e = stack_trace_save((void *)stack_start,
->  						     HIST_STACKTRACE_DEPTH,
->  						     HIST_STACKTRACE_SKIP);
+> will limit the max size.
 
-BTW, the size of "str" is enough to store HIST_STACKTRACE_DEPTH?
-In string case, 
+Well, we have:
 
-size = min(val->size, STR_VAR_LEN_MAX);
+#define HIST_STACKTRACE_DEPTH  16
 
-will limit the max size.
+And 16 * 8 = 128
 
-Thank you,
+#define STR_VAR_LEN_MAX              MAX_FILTER_STR_VAL
+#define MAX_FILTER_STR_VAL 256U
 
->  				if (e < HIST_STACKTRACE_DEPTH - 1)
-> -					((unsigned long *)str)[e] = 0;
-> +					((unsigned long *)stack_start)[e] = 0;
-> +				*((unsigned long *)str) = e;
->  			}
->  			var_val = (u64)(uintptr_t)str;
->  		}
-> @@ -5133,13 +5135,15 @@ static void hist_trigger_elt_update(struct hist_trigger_data *hist_data,
->  					size = min(hist_field->size, STR_VAR_LEN_MAX);
->  					strscpy(str, val_str, size);
->  				} else {
-> +					char *stack_start = str + sizeof(unsigned long);
->  					int e;
->  
-> -					e = stack_trace_save((void *)str,
-> +					e = stack_trace_save((void *)stack_start,
->  							     HIST_STACKTRACE_DEPTH,
->  							     HIST_STACKTRACE_SKIP);
->  					if (e < HIST_STACKTRACE_DEPTH - 1)
-> -						((unsigned long *)str)[e] = 0;
-> +						((unsigned long *)stack_start)[e] = 0;
-> +					*((unsigned long *)str) = e;
->  				}
->  				hist_val = (u64)(uintptr_t)str;
->  			}
-> diff --git a/kernel/trace/trace_events_synth.c b/kernel/trace/trace_events_synth.c
-> index d458d7a0dfd7..6209b23c863f 100644
-> --- a/kernel/trace/trace_events_synth.c
-> +++ b/kernel/trace/trace_events_synth.c
-> @@ -538,7 +538,12 @@ static notrace void trace_event_raw_event_synth(void *__data,
->  		val_idx = var_ref_idx[field_pos];
->  		str_val = (char *)(long)var_ref_vals[val_idx];
->  
-> -		len = kern_fetch_store_strlen((unsigned long)str_val);
-> +		if (event->dynamic_fields[i]->is_stack) {
-> +			len = *((unsigned long *)str_val);
-> +			len *= sizeof(unsigned long);
-> +		} else {
-> +			len = kern_fetch_store_strlen((unsigned long)str_val);
-> +		}
->  
->  		fields_size += len;
->  	}
-> -- 
-> 2.34.1
-> 
+So 128 < 256, with plenty of room. I wouldn't do this runtime, but we
+should add here:
 
+	BUILD_BUG_ON((HIST_STACKTRACE_DEPTH + 1) * sizeof(long) >= STR_VAR_LEN_MAX);
 
--- 
-Masami Hiramatsu (Google) <mhiramat@kernel.org>
+-- Steve
