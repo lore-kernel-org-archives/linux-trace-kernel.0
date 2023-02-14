@@ -2,234 +2,176 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E67FAC61DA4
-	for <linux-trace-kernel@archiver.kernel.org>; Tue, 14 Feb 2023 12:07:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D6C1C64EC7
+	for <linux-trace-kernel@archiver.kernel.org>; Tue, 14 Feb 2023 12:14:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230240AbjBNMHQ (ORCPT
+        id S232262AbjBNMOq (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Tue, 14 Feb 2023 07:07:16 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34762 "EHLO
+        Tue, 14 Feb 2023 07:14:46 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40686 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229742AbjBNMHQ (ORCPT
+        with ESMTP id S231814AbjBNMOq (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Tue, 14 Feb 2023 07:07:16 -0500
+        Tue, 14 Feb 2023 07:14:46 -0500
 Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DECE66EA6;
-        Tue, 14 Feb 2023 04:07:13 -0800 (PST)
-Received: from pps.filterd (m0279863.ppops.net [127.0.0.1])
-        by mx0a-0031df01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 31E8MA2x018253;
-        Tue, 14 Feb 2023 12:07:05 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=from : to : cc :
- subject : date : message-id : mime-version : content-type; s=qcppdkim1;
- bh=SRdv0mwY1mjW5CCdq+LWbNd2Y2xuZ8nNCpBpkpCRfC4=;
- b=bHDwmNZqAUKXonlnqLDL5cpq+CUCT+L2Ptr217SQUpYUYL6laVlrcNnIaIRZKxiSlqqW
- oz15yRXg7Z0eXqOOAeBeBaHu/gWzTLeYsJbIaJ3jnJy15CZY/RhsxIC0kJO/LRAW7hz8
- Nma3K/NlE/R86zQEevPYVpqiLSRivI+Io4MhzKzVKhXjBrRGn55dZOMhVzqMzdPr/TQx
- zxTZ/rN56Ry4m7PSljQ2fks+YDLTcJwVLr7OJ/dVLeR1BHOfvjyaZ9HPQxsyrp6VaaEc
- 7Q2XpBBpkD1/ut7XItwDbncE8aTScijjTiuiTVm5uLO8fNWpdKFQekH4QmlvSywmYvTD Mg== 
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3D64E211D;
+        Tue, 14 Feb 2023 04:14:45 -0800 (PST)
+Received: from pps.filterd (m0279862.ppops.net [127.0.0.1])
+        by mx0a-0031df01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 31E4Ls5H030528;
+        Tue, 14 Feb 2023 12:14:38 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=message-id : date :
+ mime-version : subject : to : cc : references : from : in-reply-to :
+ content-type : content-transfer-encoding; s=qcppdkim1;
+ bh=vN0frs54ZBYYfmOCBXdNKCUNlLLin+tNZYV8zh4bHZg=;
+ b=OopLqgIK/1KXNtR6iJKsnKmJ67iQPbiX5tLsC8ukbcS9w2TbSYH85BNm1BBNgBuninPm
+ y4IJ523SgdBL57NMrZHDTxy00xzpIfbrKAjrcBxTf05+UjQPjGeCjTlr/4mkzHnbwCDs
+ 6sHtbF3IzH4oeaWKW0abS+tjsMmX3UokGka6X6NqG6EroOfj3ti/R15V0eqXtia3BrIK
+ O8IL8p4fPmW4wVaWV5N20oiH1HhsQgAkFR0frBMJNpshpQcH7q1nJyidJaLC7aedRVOo
+ tFQ2AOgHLEIRCCYte6gNyNnpBvyUvLSOaP/Gmd3CYSRQeTSjt6YIHlOUihVfiCTJWf7O mA== 
 Received: from nasanppmta03.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-        by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3nr6ps0he4-1
+        by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3nqyygsdqk-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 14 Feb 2023 12:07:04 +0000
+        Tue, 14 Feb 2023 12:14:37 +0000
 Received: from nasanex01c.na.qualcomm.com (nasanex01c.na.qualcomm.com [10.45.79.139])
-        by NASANPPMTA03.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 31EC744l022245
+        by NASANPPMTA03.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 31ECEbUN001922
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 14 Feb 2023 12:07:04 GMT
-Received: from hu-mojha-hyd.qualcomm.com (10.80.80.8) by
- nasanex01c.na.qualcomm.com (10.45.79.139) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.986.36; Tue, 14 Feb 2023 04:07:01 -0800
-From:   Mukesh Ojha <quic_mojha@quicinc.com>
-To:     <rostedt@goodmis.org>, <mhiramat@kernel.org>
-CC:     <linux-kernel@vger.kernel.org>,
-        <linux-trace-kernel@vger.kernel.org>, <zhengyejian1@huawei.com>,
-        <wanghai38@huawei.com>, Mukesh Ojha <quic_mojha@quicinc.com>
-Subject: [PATCH] ring-buffer: Handle race between rb_move_tail and rb_check_pages
-Date:   Tue, 14 Feb 2023 17:36:43 +0530
-Message-ID: <1676376403-16462-1-git-send-email-quic_mojha@quicinc.com>
-X-Mailer: git-send-email 2.7.4
+        Tue, 14 Feb 2023 12:14:37 GMT
+Received: from [10.216.50.155] (10.80.80.8) by nasanex01c.na.qualcomm.com
+ (10.45.79.139) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.986.36; Tue, 14 Feb
+ 2023 04:14:34 -0800
+Message-ID: <04ba3f0f-6ca8-b8ff-3fd8-2ccc63482e04@quicinc.com>
+Date:   Tue, 14 Feb 2023 17:44:31 +0530
 MIME-Version: 1.0
-Content-Type: text/plain
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.6.1
+Subject: Re: [PATCH] tracing/ring-buffer: Remove integrity check at end of
+ iter read
+Content-Language: en-US
+To:     Steven Rostedt <rostedt@goodmis.org>
+CC:     <zhengyejian1@huawei.com>, <linux-kernel@vger.kernel.org>,
+        <linux-trace-kernel@vger.kernel.org>, <wanghai38@huawei.com>
+References: <20230208090814.869242-1-zhengyejian1@huawei.com>
+ <1676042556-737-1-git-send-email-quic_mojha@quicinc.com>
+ <20230211113700.40728a05@gandalf.local.home>
+From:   Mukesh Ojha <quic_mojha@quicinc.com>
+In-Reply-To: <20230211113700.40728a05@gandalf.local.home>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
 X-Originating-IP: [10.80.80.8]
 X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
  nasanex01c.na.qualcomm.com (10.45.79.139)
 X-QCInternal: smtphost
 X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: QhrLB9RCMbXZPuSs-i_ju3TxAF4X3P7P
-X-Proofpoint-GUID: QhrLB9RCMbXZPuSs-i_ju3TxAF4X3P7P
+X-Proofpoint-ORIG-GUID: hdtNgYMRu8hmneO8_G-VDvoIBOGjqTlu
+X-Proofpoint-GUID: hdtNgYMRu8hmneO8_G-VDvoIBOGjqTlu
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.219,Aquarius:18.0.930,Hydra:6.0.562,FMLib:17.11.170.22
  definitions=2023-02-14_07,2023-02-14_01,2023-02-09_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0 clxscore=1015
- impostorscore=0 adultscore=0 mlxlogscore=978 malwarescore=0
- priorityscore=1501 bulkscore=0 suspectscore=0 lowpriorityscore=0
- mlxscore=0 phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2212070000 definitions=main-2302140105
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0 phishscore=0
+ impostorscore=0 malwarescore=0 adultscore=0 mlxlogscore=703 mlxscore=0
+ priorityscore=1501 lowpriorityscore=0 spamscore=0 bulkscore=0
+ clxscore=1015 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2212070000 definitions=main-2302140106
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-It seems a data race between ring_buffer writing and integrity check.
-That is, RB_FLAG of head_page is been updating, while at same time
-RB_FLAG was cleared when doing integrity check rb_check_pages():
 
-  rb_check_pages()            rb_handle_head_page():
-  --------                    --------
-  rb_head_page_deactivate()
-                              rb_head_page_set_normal()
-  rb_head_page_activate()
 
-We do intergrity test of the list to check if the list is corrupted and
-it is still worth doing it. So, let's refactor rb_check_pages() such that
-we no longer clear and set flag during the list sanity checking.
+On 2/11/2023 10:07 PM, Steven Rostedt wrote:
+> On Fri, 10 Feb 2023 20:52:36 +0530
+> Mukesh Ojha <quic_mojha@quicinc.com> wrote:
+> 
+>>>> 		return -1;
+>>>>
+>>>> 	list_for_each_entry_safe(bpage, tmp, head, list) {
+>>>
+>>> I'd like to know if there is a case that "head" happens to be a
+>>> "reader_page", and the ring buffer is not exactly being traversed?
+> 
+> No, the way it works is that the reader page is found by searching for the
+> head pointer, and then it is set when swapped. Basically, the pseudo code
+> is:
+> 
+>    reader->next = head_page | HEAD_FLAG
+>    val = head_page->prev->next
+>    val &= ~FLAGS
+>    val |= HEAD_FLAG
+>    cmpxchg(head_page->prev->next, val, reader)
+> 
+> The HEAD_FLAG is always on the pointer that points to the head page that
+> gets swapped. This will never point to the reader page, as that would mean
+> the writer has access to it.
+> 
+>>
+>> In my issue, i see below callstack and it seem to be spinning inside rb_list_head_clear() as
+>> cpu_buffer->pages has duplicate entry in the list.
+>>
+>> -00 |rb_list_head_clear(inline)
+>> -00 |rb_head_page_deactivate(inline)
+>> -00 |rb_check_pages(cpu_buffer = 0xFFFFFF89E0C3B200)
+>> -01 |atomic_try_cmpxchg_acquire(inline)
+>> -01 |queued_spin_lock(inline)
+>> -01 |do_raw_spin_lock_flags(inline)
+>> -01 |__raw_spin_lock_irqsave(inline)
+>> -01 |_raw_spin_lock_irqsave(inline)
+>> -01 |ring_buffer_read_finish(iter = 0xFFFFFF8006FE3780)
+>> -02 |cpumask_next(inline)
+>> -02 |tracing_release(inode = ?, file = 0xFFFFFF8A53A63F00)
+>> -03 |__fput(file = 0xFFFFFF8A53A63F00)
+>> -04 |____fput(work = ?)
+>> -05 |_raw_spin_unlock_irq(inline)
+>> -05 |task_work_run()
+>> -06 |tracehook_notify_resume(inline)
+>> -06 |do_notify_resume(regs = 0xFFFFFFC06ADC8EB0, thread_flags = 67108868)
+>> -07 |prepare_exit_to_user_mode(inline)
+>> -07 |exit_to_user_mode(inline)
+>> -07 |el0_svc(regs = 0xFFFFFFC06ADC8EB0)
+>> -08 |el0t_64_sync_handler(regs = ?)
+>> -09 |el0t_64_sync(asm)
+>>
+>> ...
+>> ..
+>> ffffff80359eeb00 --> Duplicate entry
+>> ffffff80359ee300
+>> ffffff80359ee180
+>> ffffff80359eeec0
+>> ffffff80359eec00
+>> ffffff80359ee800 -- Tail page
+>> ffffff80359eedc0 -- Head page
+>> ffffff80359ee640
+>> ffffff80359ee080
+>> ffffff80359ee700
+>> ffffff80359ee7c0
+>> ffffff80359eed80
+>> ffffff80359ee900
+>> ffffff80359ee9c0
+>> ffffff80359eea00
+>> ffffff80359eea80
+>> ffffff80359eec80
+>> ffffff80359ee240
+>> ffffff80359ee6c0
+>> ffffff80359ee0c0
+>> ffffff80359ee8c0
+>> ffffff80359ee940
+>> ffffff80359eee00
+>> ffffff80359ee000
+>> ffffff80359eeb00 ---> Duplicate entry
+> 
+> So this is a separate issue where the ring buffer is corrupted?
 
-[1] and [2] are the test to reproduce and the crash report respectively.
+It looks to be different issue and there also i see similar call stack 
+of tracing_release() but in that issue it is looping forever in 
+deactivate call due to list corruption.
 
-1:
-``` read_trace.sh
-  while true;
-  do
-    # the "trace" file is closed after read
-    head -1 /sys/kernel/tracing/trace > /dev/null
-  done
-```
-``` repro.sh
-  sysctl -w kernel.panic_on_warn=1
-  # function tracer will writing enough data into ring_buffer
-  echo function > /sys/kernel/tracing/current_tracer
-  ./read_trace.sh &
-  ./read_trace.sh &
-  ./read_trace.sh &
-  ./read_trace.sh &
-  ./read_trace.sh &
-  ./read_trace.sh &
-  ./read_trace.sh &
-  ./read_trace.sh &
-```
+I am not yet able to root cause a place of corruption as it is 
+reproduced only once, will need to check more on this.
 
-2:
-------------[ cut here ]------------
-WARNING: CPU: 9 PID: 62 at kernel/trace/ring_buffer.c:2653
-rb_move_tail+0x450/0x470
-Modules linked in:
-CPU: 9 PID: 62 Comm: ksoftirqd/9 Tainted: G        W          6.2.0-rc6+
-Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS
-rel-1.15.0-0-g2dd4b9b3f840-prebuilt.qemu.org 04/01/2014
-RIP: 0010:rb_move_tail+0x450/0x470
-Code: ff ff 4c 89 c8 f0 4d 0f b1 02 48 89 c2 48 83 e2 fc 49 39 d0 75 24
-83 e0 03 83 f8 02 0f 84 e1 fb ff ff 48 8b 57 10 f0 ff 42 08 <0f> 0b 83
-f8 02 0f 84 ce fb ff ff e9 db
-RSP: 0018:ffffb5564089bd00 EFLAGS: 00000203
-RAX: 0000000000000000 RBX: ffff9db385a2bf81 RCX: ffffb5564089bd18
-RDX: ffff9db281110100 RSI: 0000000000000fe4 RDI: ffff9db380145400
-RBP: ffff9db385a2bf80 R08: ffff9db385a2bfc0 R09: ffff9db385a2bfc2
-R10: ffff9db385a6c000 R11: ffff9db385a2bf80 R12: 0000000000000000
-R13: 00000000000003e8 R14: ffff9db281110100 R15: ffffffffbb006108
-FS:  0000000000000000(0000) GS:ffff9db3bdcc0000(0000)
-knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 00005602323024c8 CR3: 0000000022e0c000 CR4: 00000000000006e0
-Call Trace:
- <TASK>
- ring_buffer_lock_reserve+0x136/0x360
- ? __do_softirq+0x287/0x2df
- ? __pfx_rcu_softirq_qs+0x10/0x10
- trace_function+0x21/0x110
- ? __pfx_rcu_softirq_qs+0x10/0x10
- ? __do_softirq+0x287/0x2df
- function_trace_call+0xf6/0x120
- 0xffffffffc038f097
- ? rcu_softirq_qs+0x5/0x140
- rcu_softirq_qs+0x5/0x140
- __do_softirq+0x287/0x2df
- run_ksoftirqd+0x2a/0x30
- smpboot_thread_fn+0x188/0x220
- ? __pfx_smpboot_thread_fn+0x10/0x10
- kthread+0xe7/0x110
- ? __pfx_kthread+0x10/0x10
- ret_from_fork+0x2c/0x50
- </TASK>
----[ end trace 0000000000000000 ]---
+For this issue, i have posted at
+https://lore.kernel.org/lkml/1676376403-16462-1-git-send-email-quic_mojha@quicinc.com/
 
-[ crash report and test reproducer credit goes to Zheng Yejian]
+-Mukesh
 
-Reported-by: Zheng Yejian <zhengyejian1@huawei.com>
-Signed-off-by: Mukesh Ojha <quic_mojha@quicinc.com>
----
- kernel/trace/ring_buffer.c | 42 ++++++++++--------------------------------
- 1 file changed, 10 insertions(+), 32 deletions(-)
-
-diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
-index c366a0a..b641cab 100644
---- a/kernel/trace/ring_buffer.c
-+++ b/kernel/trace/ring_buffer.c
-@@ -1581,19 +1581,6 @@ static int rb_check_bpage(struct ring_buffer_per_cpu *cpu_buffer,
- }
- 
- /**
-- * rb_check_list - make sure a pointer to a list has the last bits zero
-- */
--static int rb_check_list(struct ring_buffer_per_cpu *cpu_buffer,
--			 struct list_head *list)
--{
--	if (RB_WARN_ON(cpu_buffer, rb_list_head(list->prev) != list->prev))
--		return 1;
--	if (RB_WARN_ON(cpu_buffer, rb_list_head(list->next) != list->next))
--		return 1;
--	return 0;
--}
--
--/**
-  * rb_check_pages - integrity check of buffer pages
-  * @cpu_buffer: CPU buffer with pages to test
-  *
-@@ -1602,36 +1589,27 @@ static int rb_check_list(struct ring_buffer_per_cpu *cpu_buffer,
-  */
- static int rb_check_pages(struct ring_buffer_per_cpu *cpu_buffer)
- {
--	struct list_head *head = cpu_buffer->pages;
--	struct buffer_page *bpage, *tmp;
-+	struct list_head *head = rb_list_head(cpu_buffer->pages);
-+	struct list_head *tmp;
- 
--	/* Reset the head page if it exists */
--	if (cpu_buffer->head_page)
--		rb_set_head_page(cpu_buffer);
--
--	rb_head_page_deactivate(cpu_buffer);
--
--	if (RB_WARN_ON(cpu_buffer, head->next->prev != head))
--		return -1;
--	if (RB_WARN_ON(cpu_buffer, head->prev->next != head))
-+	if (RB_WARN_ON(cpu_buffer,
-+			rb_list_head(rb_list_head(head->next)->prev) != head))
- 		return -1;
- 
--	if (rb_check_list(cpu_buffer, head))
-+	if (RB_WARN_ON(cpu_buffer,
-+			rb_list_head(rb_list_head(head->prev)->next) != head))
- 		return -1;
- 
--	list_for_each_entry_safe(bpage, tmp, head, list) {
-+	for (tmp = rb_list_head(head->next); tmp != head; tmp = rb_list_head(tmp->next)) {
- 		if (RB_WARN_ON(cpu_buffer,
--			       bpage->list.next->prev != &bpage->list))
-+				rb_list_head(rb_list_head(tmp->next)->prev) != tmp))
- 			return -1;
-+
- 		if (RB_WARN_ON(cpu_buffer,
--			       bpage->list.prev->next != &bpage->list))
--			return -1;
--		if (rb_check_list(cpu_buffer, &bpage->list))
-+				rb_list_head(rb_list_head(tmp->prev)->next) != tmp))
- 			return -1;
- 	}
- 
--	rb_head_page_activate(cpu_buffer);
--
- 	return 0;
- }
- 
--- 
-2.7.4
-
+> 
+> -- Steve
