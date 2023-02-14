@@ -2,199 +2,287 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 08596C61DA4
-	for <linux-trace-kernel@archiver.kernel.org>; Tue, 14 Feb 2023 17:05:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 60B58C64ED9
+	for <linux-trace-kernel@archiver.kernel.org>; Tue, 14 Feb 2023 17:11:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229799AbjBNRF4 (ORCPT
+        id S233029AbjBNRLN (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Tue, 14 Feb 2023 12:05:56 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59274 "EHLO
+        Tue, 14 Feb 2023 12:11:13 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37022 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231776AbjBNRFw (ORCPT
+        with ESMTP id S232786AbjBNRK7 (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Tue, 14 Feb 2023 12:05:52 -0500
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BA7A62CFED
-        for <linux-trace-kernel@vger.kernel.org>; Tue, 14 Feb 2023 09:04:26 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1676394244;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=NRv9ri62QZ3gJa1mEP8cILMMa4bJVoJu/pQsWSUh2bo=;
-        b=DRJCyQwCmwxA/WB+ek+hgT2HvQUGhx4vywVXkS5J/HRJ/qCr7IlZnSU5y24LfYIPD3ryU/
-        Pnw35PMlCA9nHhx/TKS+yuz1GN2z+z/Bh/JX5xranRYeZ0SBgsr4Ots3ykmR+Yehs7QuGO
-        kwt5Vs+bt4rrLPtSKQJ/ITjmpGfLIkQ=
-Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
- [209.85.128.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_128_GCM_SHA256) id
- us-mta-641-2PblipGiPfaKSQBJnwoGeg-1; Tue, 14 Feb 2023 12:04:03 -0500
-X-MC-Unique: 2PblipGiPfaKSQBJnwoGeg-1
-Received: by mail-wm1-f72.google.com with SMTP id o31-20020a05600c511f00b003dc53da325dso11233094wms.8
-        for <linux-trace-kernel@vger.kernel.org>; Tue, 14 Feb 2023 09:04:02 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:in-reply-to:organization:references:cc:to
-         :from:content-language:subject:user-agent:mime-version:date
-         :message-id:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=NRv9ri62QZ3gJa1mEP8cILMMa4bJVoJu/pQsWSUh2bo=;
-        b=lE8B9MhXw1T+o0SRZlMAkZpBtDHmPIEuHc+0dIq/WdxyCLAOqoSGRRa2zpGg1bl71P
-         4/mW4hKKxV8829OEHvTWnTbvTxMn5H12gl3pBdCdmn8CBVp1sNgv8thre+fTzRAc0Zhj
-         ki4EX/ALDMNGKMt4CevnYMY0RCr60YMQOIT7v7nWoxyHyuJM9i29JXSfbXgji/ewhEPA
-         0hjWD9GdIy4QXZpG96/48fgLMtlm0kS4JiuIwpIlZrOSWy7LC8nlfni6rYFeAL02QzoX
-         CJdyNqNPgcXlB1Cv1PCfTF4tTT652z0xA7lHGl6PW5CafHBA+bnqbQybxzylGLDKp1T4
-         o3zw==
-X-Gm-Message-State: AO0yUKUq0pIgJIkydpx18JiBAMKY2tPU3vZu4B7mjEOOT76s4mUqjyA3
-        un2CKJ4Jbo5XARWMywqGDYiKgDr6jJu4sHII+I/7W5ra9IAPuov2W1QMF/id+FmEc8Al6ngCojH
-        NlxKOIaljFVonA+k++H47sL0CHw9FNlY6
-X-Received: by 2002:a05:600c:13c5:b0:3dd:daac:d99d with SMTP id e5-20020a05600c13c500b003dddaacd99dmr2527043wmg.36.1676394241790;
-        Tue, 14 Feb 2023 09:04:01 -0800 (PST)
-X-Google-Smtp-Source: AK7set8tSPkMFovKHAi9fQL2Lota2iYTdYbeJPkqZQwJOal/QZ6PhHFXtJ8m01VC2QuC7xPfjtZ3Cg==
-X-Received: by 2002:a05:600c:13c5:b0:3dd:daac:d99d with SMTP id e5-20020a05600c13c500b003dddaacd99dmr2526969wmg.36.1676394241490;
-        Tue, 14 Feb 2023 09:04:01 -0800 (PST)
-Received: from ?IPV6:2003:cb:c709:1700:969:8e2b:e8bb:46be? (p200300cbc709170009698e2be8bb46be.dip0.t-ipconnect.de. [2003:cb:c709:1700:969:8e2b:e8bb:46be])
-        by smtp.gmail.com with ESMTPSA id t7-20020a05600c450700b003dc42d48defsm20057888wmo.6.2023.02.14.09.03.58
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 14 Feb 2023 09:04:00 -0800 (PST)
-Message-ID: <1bee97ef-7632-b1bf-f042-29b97882bfb6@redhat.com>
-Date:   Tue, 14 Feb 2023 18:03:58 +0100
+        Tue, 14 Feb 2023 12:10:59 -0500
+Received: from mga06.intel.com (mga06b.intel.com [134.134.136.31])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7C76B2E81B;
+        Tue, 14 Feb 2023 09:10:30 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1676394630; x=1707930630;
+  h=date:from:to:cc:subject:message-id:mime-version:
+   content-transfer-encoding;
+  bh=CSK5mIDaVWpNXNLLNXtPJEQjjrLG5SjV8c3RKQrKEMs=;
+  b=T6aH3oQGwh9sYClRnEtiCw7Z9F3Zuc8960R0kP7SWJOMHk+P3HQzAecg
+   36YTTluWAQ7LktGmN0Vizxzl/3sZp5MlJIjGQmYYepXLZByt6LJONQDpN
+   XAyS+aUngTKnEmw+PcuB6Bh6YuTpY04EDREyRF6k7HTioog0JiuY5SVYb
+   eGdFoXSE9nd34DwiFbvkCIbQfU8bybU/TLLu1qWYYUih72GnUX+7Rf6G+
+   1NPkOhiWyq7C+NKxqnerUpgcuWKqyJL4eXEr1hOy94nUzyMa5VhtEva4w
+   rcKbhtGUCUA58J/mg4//XUSnnqcDx7X8Gk5C/BGYEDMNBovqJKHXgnpHJ
+   g==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10621"; a="393611936"
+X-IronPort-AV: E=Sophos;i="5.97,297,1669104000"; 
+   d="scan'208";a="393611936"
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Feb 2023 09:10:28 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6500,9779,10621"; a="914813208"
+X-IronPort-AV: E=Sophos;i="5.97,297,1669104000"; 
+   d="scan'208";a="914813208"
+Received: from lkp-server01.sh.intel.com (HELO 4455601a8d94) ([10.239.97.150])
+  by fmsmga006.fm.intel.com with ESMTP; 14 Feb 2023 09:10:17 -0800
+Received: from kbuild by 4455601a8d94 with local (Exim 4.96)
+        (envelope-from <lkp@intel.com>)
+        id 1pRyoq-0008fQ-34;
+        Tue, 14 Feb 2023 17:10:16 +0000
+Date:   Wed, 15 Feb 2023 01:10:15 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     Andrew Morton <akpm@linux-foundation.org>
+Cc:     netdev@vger.kernel.org, linux-wireless@vger.kernel.org,
+        linux-usb@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+        linux-riscv@lists.infradead.org, linux-pci@vger.kernel.org,
+        linux-mips@vger.kernel.org, linux-doc@vger.kernel.org,
+        linux-cxl@vger.kernel.org, intel-gfx@lists.freedesktop.org,
+        amd-gfx@lists.freedesktop.org,
+        Linux Memory Management List <linux-mm@kvack.org>
+Subject: [linux-next:master] BUILD REGRESSION
+ 3ebb0ac55efaf1d0fb1b106f852c114e5021f7eb
+Message-ID: <63ebc077.iIFldcCwBHnTkZn0%lkp@intel.com>
+User-Agent: Heirloom mailx 12.5 6/20/10
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.6.0
-Subject: Re: [PATCH v4 00/14] Introduce Copy-On-Write to Page Table
-From:   David Hildenbrand <david@redhat.com>
-To:     Chih-En Lin <shiyn.lin@gmail.com>
-Cc:     Pasha Tatashin <pasha.tatashin@soleen.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Qi Zheng <zhengqi.arch@bytedance.com>,
-        "Matthew Wilcox (Oracle)" <willy@infradead.org>,
-        Christophe Leroy <christophe.leroy@csgroup.eu>,
-        John Hubbard <jhubbard@nvidia.com>,
-        Nadav Amit <namit@vmware.com>, Barry Song <baohua@kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Yang Shi <shy828301@gmail.com>, Peter Xu <peterx@redhat.com>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Zach O'Keefe <zokeefe@google.com>,
-        Yun Zhou <yun.zhou@windriver.com>,
-        Hugh Dickins <hughd@google.com>,
-        Suren Baghdasaryan <surenb@google.com>,
-        Yu Zhao <yuzhao@google.com>, Juergen Gross <jgross@suse.com>,
-        Tong Tiangen <tongtiangen@huawei.com>,
-        Liu Shixin <liushixin2@huawei.com>,
-        Anshuman Khandual <anshuman.khandual@arm.com>,
-        Li kunyu <kunyu@nfschina.com>,
-        Minchan Kim <minchan@kernel.org>,
-        Miaohe Lin <linmiaohe@huawei.com>,
-        Gautam Menghani <gautammenghani201@gmail.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Mark Brown <broonie@kernel.org>, Will Deacon <will@kernel.org>,
-        Vincenzo Frascino <Vincenzo.Frascino@arm.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        "Liam R. Howlett" <Liam.Howlett@oracle.com>,
-        Fenghua Yu <fenghua.yu@intel.com>,
-        Andrei Vagin <avagin@gmail.com>,
-        Barret Rhoden <brho@google.com>,
-        Michal Hocko <mhocko@suse.com>,
-        "Jason A. Donenfeld" <Jason@zx2c4.com>,
-        Alexey Gladkov <legion@kernel.org>,
-        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-mm@kvack.org, linux-trace-kernel@vger.kernel.org,
-        linux-perf-users@vger.kernel.org,
-        Dinglan Peng <peng301@purdue.edu>,
-        Pedro Fonseca <pfonseca@purdue.edu>,
-        Jim Huang <jserv@ccns.ncku.edu.tw>,
-        Huichun Feng <foxhoundsk.tw@gmail.com>
-References: <20230207035139.272707-1-shiyn.lin@gmail.com>
- <CA+CK2bBt0Gujv9BdhghVkbFRirAxCYXbpH-nquccPsKGnGwOBQ@mail.gmail.com>
- <CANOhDtU3J8SUCzKtKvPPPrUHyo+LV5npNObHtYP_AK4W3LomDw@mail.gmail.com>
- <CA+CK2bAWnzqKDTjBbxXOvURwr7nWmf8q-mzD1x-ztwbWVQBQKA@mail.gmail.com>
- <Y+Z8ymNYc+vJMBx8@strix-laptop>
- <62c44d12-933d-ee66-ef50-467cd8d30a58@redhat.com>
- <Y+uv3iTajGoOuNMO@strix-laptop>
- <a02714ee-3223-ba53-09eb-33f7b03ef038@redhat.com>
-Organization: Red Hat
-In-Reply-To: <a02714ee-3223-ba53-09eb-33f7b03ef038@redhat.com>
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
-Content-Language: en-US
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset=us-ascii
 Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On 14.02.23 17:58, David Hildenbrand wrote:
-> 
->>>>
->>>> Honestly, for improving the fork(), I have an idea to skip the per-page
->>>> operation without breaking the logic. However, this will introduce the
->>>> complicated mechanism and may has the overhead for other features. It
->>>> might not be worth it. It's hard to strike a balance between the
->>>> over-complicated mechanism with (probably) better performance and data
->>>> consistency with the page status. So, I would focus on the safety and
->>>> stable approach at first.
->>>
->>> Yes, it is most probably possible, but complexity, robustness and
->>> maintainability have to be considered as well.
->>>
->>> Thanks for implementing this approach (only deduplication without other
->>> optimizations) and evaluating it accordingly. It's certainly "cleaner", such
->>> that we only have to mess with unsharing and not with other
->>> accounting/pinning/mapcount thingies. But it also highlights how intrusive
->>> even this basic deduplication approach already is -- and that most benefits
->>> of the original approach requires even more complexity on top.
->>>
->>> I am not quite sure if the benefit is worth the price (I am not to decide
->>> and I would like to hear other options).
->>
->> I'm looking at the discussion of page table sharing in 2002 [1].
->> It looks like in 2002 ~ 2006, there also have some patches try to
->> improve fork().
->>
->> After that, I also saw one thread which is about another shared page
->> table patch's benchmark. I can't find the original patch though [2].
->> But, I found the probably same patch in 2005 [3], it also mentioned
->> the previous benchmark discussion:
->>
->> "
->> For those familiar with the shared page table patch I did a couple of years
->> ago, this patch does not implement copy-on-write page tables for private
->> mappings.  Analysis showed the cost and complexity far outweighed any
->> potential benefit.
->> "
-> 
-> Thanks for the pointer, interesting read. And my personal opinion is
-> that part of that statement still hold true :)
-> 
->>
->> However, it might be different right now. For example, the implemetation
->> . We have split page table lock now, so we don't have to consider the
->> page_table_share_lock thing. Also, presently, we have different use
->> cases (shells [2] v.s. VM cloning and fuzzing) to consider.
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git master
+branch HEAD: 3ebb0ac55efaf1d0fb1b106f852c114e5021f7eb  Add linux-next specific files for 20230214
 
+Error/Warning reports:
 
-Oh, and because I stumbled over it, just as an interesting pointer on 
-QEMU devel:
+https://lore.kernel.org/oe-kbuild-all/202301300743.bp7Dpazv-lkp@intel.com
+https://lore.kernel.org/oe-kbuild-all/202301302110.mEtNwkBD-lkp@intel.com
+https://lore.kernel.org/oe-kbuild-all/202302061911.C7xvHX9v-lkp@intel.com
+https://lore.kernel.org/oe-kbuild-all/202302062224.ByzeTXh1-lkp@intel.com
+https://lore.kernel.org/oe-kbuild-all/202302092211.54EYDhYH-lkp@intel.com
+https://lore.kernel.org/oe-kbuild-all/202302111601.jtY4lKrA-lkp@intel.com
+https://lore.kernel.org/oe-kbuild-all/202302112104.g75cGHZd-lkp@intel.com
+https://lore.kernel.org/oe-kbuild-all/202302142145.iN5WZnpF-lkp@intel.com
 
-"[PATCH 00/10] Retire Fork-Based Fuzzing" [1]
+Error/Warning: (recently discovered and may have been fixed)
 
-[1] https://lore.kernel.org/all/20230205042951.3570008-1-alxndr@bu.edu/T/#u
+Documentation/riscv/uabi.rst:24: WARNING: Enumerated list ends without a blank line; unexpected unindent.
+Documentation/sphinx/templates/kernel-toc.html: 1:36 Invalid token: #}
+ERROR: modpost: "devm_platform_ioremap_resource" [drivers/dma/fsl-edma.ko] undefined!
+ERROR: modpost: "devm_platform_ioremap_resource" [drivers/dma/idma64.ko] undefined!
+arch/mips/kernel/vpe.c:643:41: error: 'struct module' has no member named 'mod_mem'
+drivers/cxl/core/region.c:2628:6: warning: variable 'rc' is used uninitialized whenever 'if' condition is false [-Wsometimes-uninitialized]
+drivers/gpu/drm/amd/amdgpu/../display/dc/dcn30/dcn30_optc.c:294:6: warning: no previous prototype for 'optc3_wait_drr_doublebuffer_pending_clear' [-Wmissing-prototypes]
+drivers/gpu/drm/amd/amdgpu/../display/dc/dcn31/dcn31_hubbub.c:1011:6: warning: no previous prototype for 'hubbub31_init' [-Wmissing-prototypes]
+drivers/gpu/drm/amd/amdgpu/../display/dc/dcn32/dcn32_hubbub.c:948:6: warning: no previous prototype for 'hubbub32_init' [-Wmissing-prototypes]
+drivers/gpu/drm/amd/amdgpu/../display/dc/dcn32/dcn32_hubp.c:158:6: warning: no previous prototype for 'hubp32_init' [-Wmissing-prototypes]
+drivers/gpu/drm/amd/amdgpu/../display/dc/dcn32/dcn32_resource_helpers.c:62:18: warning: variable 'cursor_bpp' set but not used [-Wunused-but-set-variable]
+drivers/gpu/drm/amd/amdgpu/../display/dc/link/protocols/link_dp_capability.c:1296:32: warning: variable 'result_write_min_hblank' set but not used [-Wunused-but-set-variable]
+drivers/gpu/drm/amd/amdgpu/../display/dc/link/protocols/link_dp_capability.c:280:42: warning: variable 'ds_port' set but not used [-Wunused-but-set-variable]
+drivers/gpu/drm/amd/amdgpu/../display/dc/link/protocols/link_dp_training.c:1586:38: warning: variable 'result' set but not used [-Wunused-but-set-variable]
+ftrace-ops.c:(.init.text+0x2c3): undefined reference to `__udivdi3'
+
+Unverified Error/Warning (likely false positive, please contact us if interested):
+
+drivers/clk/ingenic/jz4760-cgu.c:80 jz4760_cgu_calc_m_n_od() error: uninitialized symbol 'od'.
+drivers/net/ethernet/broadcom/bnxt/bnxt_ulp.c:415 bnxt_rdma_aux_device_init() warn: possible memory leak of 'edev'
+drivers/net/wireless/realtek/rtl8xxxu/rtl8xxxu_8188e.c:1678 rtl8188e_handle_ra_tx_report2() warn: ignoring unreachable code.
+drivers/pci/setup-bus.c:1916:21-24: ERROR: invalid reference to the index variable of the iterator on line 1890
+drivers/usb/gadget/composite.c:2082:33: sparse: sparse: restricted __le16 degrades to integer
+drivers/usb/host/xhci-plat.c:371 xhci_generic_plat_probe() error: we previously assumed 'sysdev' could be null (see line 361)
+
+Error/Warning ids grouped by kconfigs:
+
+gcc_recent_errors
+|-- alpha-allyesconfig
+|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-protocols-link_dp_capability.c:warning:variable-ds_port-set-but-not-used
+|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-protocols-link_dp_capability.c:warning:variable-result_write_min_hblank-set-but-not-used
+|   `-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-protocols-link_dp_training.c:warning:variable-result-set-but-not-used
+|-- alpha-randconfig-c041-20230212
+|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-protocols-link_dp_capability.c:warning:variable-ds_port-set-but-not-used
+|   `-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-protocols-link_dp_capability.c:warning:variable-result_write_min_hblank-set-but-not-used
+|-- alpha-randconfig-s042-20230212
+|   `-- drivers-usb-gadget-composite.c:sparse:sparse:restricted-__le16-degrades-to-integer
+|-- arc-allyesconfig
+|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-protocols-link_dp_capability.c:warning:variable-ds_port-set-but-not-used
+|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-protocols-link_dp_capability.c:warning:variable-result_write_min_hblank-set-but-not-used
+|   `-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-protocols-link_dp_training.c:warning:variable-result-set-but-not-used
+|-- arc-randconfig-r016-20230213
+|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-protocols-link_dp_capability.c:warning:variable-ds_port-set-but-not-used
+|   `-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-protocols-link_dp_capability.c:warning:variable-result_write_min_hblank-set-but-not-used
+|-- arm-allmodconfig
+|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-protocols-link_dp_capability.c:warning:variable-ds_port-set-but-not-used
+|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-protocols-link_dp_capability.c:warning:variable-result_write_min_hblank-set-but-not-used
+|   `-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-protocols-link_dp_training.c:warning:variable-result-set-but-not-used
+|-- arm-allyesconfig
+|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-protocols-link_dp_capability.c:warning:variable-ds_port-set-but-not-used
+|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-protocols-link_dp_capability.c:warning:variable-result_write_min_hblank-set-but-not-used
+|   `-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-protocols-link_dp_training.c:warning:variable-result-set-but-not-used
+|-- arm64-allyesconfig
+|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-dcn30-dcn30_optc.c:warning:no-previous-prototype-for-optc3_wait_drr_doublebuffer_pending_clear
+|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-dcn31-dcn31_hubbub.c:warning:no-previous-prototype-for-hubbub31_init
+|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-dcn32-dcn32_hubbub.c:warning:no-previous-prototype-for-hubbub32_init
+|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-dcn32-dcn32_hubp.c:warning:no-previous-prototype-for-hubp32_init
+|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-dcn32-dcn32_resource_helpers.c:warning:variable-cursor_bpp-set-but-not-used
+|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-protocols-link_dp_capability.c:warning:variable-ds_port-set-but-not-used
+|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-protocols-link_dp_capability.c:warning:variable-result_write_min_hblank-set-but-not-used
+|   `-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-protocols-link_dp_training.c:warning:variable-result-set-but-not-used
+|-- i386-allyesconfig
+|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-dcn30-dcn30_optc.c:warning:no-previous-prototype-for-optc3_wait_drr_doublebuffer_pending_clear
+|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-dcn31-dcn31_hubbub.c:warning:no-previous-prototype-for-hubbub31_init
+|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-dcn32-dcn32_hubbub.c:warning:no-previous-prototype-for-hubbub32_init
+|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-dcn32-dcn32_hubp.c:warning:no-previous-prototype-for-hubp32_init
+|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-dcn32-dcn32_resource_helpers.c:warning:variable-cursor_bpp-set-but-not-used
+|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-protocols-link_dp_capability.c:warning:variable-ds_port-set-but-not-used
+|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-protocols-link_dp_capability.c:warning:variable-result_write_min_hblank-set-but-not-used
+|   |-- drivers-gpu-drm-amd-amdgpu-..-display-dc-link-protocols-link_dp_training.c:warning:variable-result-set-but-not-used
+|   `-- ftrace-ops.c:(.init.text):undefined-reference-to-__udivdi3
+|-- i386-randconfig-m021
+|   `-- kernel-trace-trace_events_synth.c-trace_event_raw_event_synth()-warn:inconsistent-indenting
+|-- i386-randconfig-s001
+|   |-- drivers-gpu-drm-i915-gem-i915_gem_ttm.c:sparse:sparse:incorrect-type-in-assignment-(different-base-types)-expected-restricted-vm_fault_t-assigned-usertype-ret-got-int
+|   `-- drivers-usb-gadget-composite.c:sparse:sparse:restricted-__le16-degrades-to-integer
+|-- i386-randconfig-s002
+|   `-- drivers-gpu-drm-i915-gem-i915_gem_ttm.c:sparse:sparse:incorrect-type-in-assignment-(different-base-types)-expected-restricted-vm_fault_t-assigned-usertype-ret-got-int
+clang_recent_errors
+|-- s390-randconfig-r044-20230214
+|   `-- drivers-cxl-core-region.c:warning:variable-rc-is-used-uninitialized-whenever-if-condition-is-false
+|-- x86_64-randconfig-a002-20230213
+|   `-- drivers-cxl-core-region.c:warning:variable-rc-is-used-uninitialized-whenever-if-condition-is-false
+|-- x86_64-randconfig-a004-20230213
+|   `-- drivers-cxl-core-region.c:warning:variable-rc-is-used-uninitialized-whenever-if-condition-is-false
+|-- x86_64-randconfig-a005-20230213
+|   `-- drivers-cxl-core-region.c:warning:variable-rc-is-used-uninitialized-whenever-if-condition-is-false
+`-- x86_64-randconfig-r036-20230213
+    `-- drivers-cxl-core-region.c:warning:variable-rc-is-used-uninitialized-whenever-if-condition-is-false
+
+elapsed time: 726m
+
+configs tested: 103
+configs skipped: 4
+
+gcc tested configs:
+alpha                            allyesconfig
+alpha                               defconfig
+arc                              allyesconfig
+arc                                 defconfig
+arc                        nsim_700_defconfig
+arc                  randconfig-r043-20230212
+arc                  randconfig-r043-20230213
+arc                  randconfig-r043-20230214
+arm                              allmodconfig
+arm                              allyesconfig
+arm                                 defconfig
+arm                  randconfig-r046-20230212
+arm                  randconfig-r046-20230214
+arm64                            allyesconfig
+arm64                               defconfig
+csky                                defconfig
+i386                             allyesconfig
+i386                              debian-10.3
+i386                         debian-10.3-func
+i386                   debian-10.3-kselftests
+i386                        debian-10.3-kunit
+i386                          debian-10.3-kvm
+i386                                defconfig
+i386                 randconfig-a011-20230213
+i386                 randconfig-a012-20230213
+i386                 randconfig-a013-20230213
+i386                 randconfig-a014-20230213
+i386                 randconfig-a015-20230213
+i386                 randconfig-a016-20230213
+i386                          randconfig-c001
+ia64                             allmodconfig
+ia64                                defconfig
+ia64                        generic_defconfig
+loongarch                        allmodconfig
+loongarch                         allnoconfig
+loongarch                           defconfig
+m68k                             allmodconfig
+m68k                                defconfig
+m68k                            mac_defconfig
+microblaze                          defconfig
+mips                             allmodconfig
+mips                             allyesconfig
+mips                 decstation_r4k_defconfig
+mips                        vocore2_defconfig
+nios2                               defconfig
+parisc                              defconfig
+parisc64                            defconfig
+powerpc                          allmodconfig
+powerpc                           allnoconfig
+powerpc                       holly_defconfig
+riscv                            allmodconfig
+riscv                             allnoconfig
+riscv                               defconfig
+riscv                randconfig-r042-20230213
+riscv                          rv32_defconfig
+s390                             allmodconfig
+s390                             allyesconfig
+s390                                defconfig
+s390                 randconfig-r044-20230213
+sh                               allmodconfig
+sh                          landisk_defconfig
+sh                   secureedge5410_defconfig
+sparc                               defconfig
+um                             i386_defconfig
+um                           x86_64_defconfig
+x86_64                            allnoconfig
+x86_64                           allyesconfig
+x86_64                              defconfig
+x86_64                                  kexec
+x86_64               randconfig-a011-20230213
+x86_64               randconfig-a012-20230213
+x86_64               randconfig-a013-20230213
+x86_64               randconfig-a014-20230213
+x86_64               randconfig-a015-20230213
+x86_64               randconfig-a016-20230213
+x86_64                               rhel-8.3
+
+clang tested configs:
+arm                     davinci_all_defconfig
+arm                  randconfig-r046-20230213
+hexagon              randconfig-r041-20230212
+hexagon              randconfig-r041-20230213
+hexagon              randconfig-r041-20230214
+hexagon              randconfig-r045-20230212
+hexagon              randconfig-r045-20230213
+hexagon              randconfig-r045-20230214
+i386                 randconfig-a001-20230213
+i386                 randconfig-a002-20230213
+i386                 randconfig-a003-20230213
+i386                 randconfig-a004-20230213
+i386                 randconfig-a005-20230213
+i386                 randconfig-a006-20230213
+powerpc                     ksi8560_defconfig
+powerpc                 mpc836x_rdk_defconfig
+powerpc                     tqm5200_defconfig
+riscv                randconfig-r042-20230212
+riscv                randconfig-r042-20230214
+s390                 randconfig-r044-20230212
+s390                 randconfig-r044-20230214
+x86_64               randconfig-a001-20230213
+x86_64               randconfig-a002-20230213
+x86_64               randconfig-a003-20230213
+x86_64               randconfig-a004-20230213
+x86_64               randconfig-a005-20230213
+x86_64               randconfig-a006-20230213
 
 -- 
-Thanks,
-
-David / dhildenb
-
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests
