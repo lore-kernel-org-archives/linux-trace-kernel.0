@@ -2,176 +2,270 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D6C1C64EC7
-	for <linux-trace-kernel@archiver.kernel.org>; Tue, 14 Feb 2023 12:14:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B793C6379F
+	for <linux-trace-kernel@archiver.kernel.org>; Tue, 14 Feb 2023 13:08:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232262AbjBNMOq (ORCPT
+        id S231938AbjBNNIg (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Tue, 14 Feb 2023 07:14:46 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40686 "EHLO
+        Tue, 14 Feb 2023 08:08:36 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51260 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231814AbjBNMOq (ORCPT
+        with ESMTP id S232088AbjBNNIf (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Tue, 14 Feb 2023 07:14:46 -0500
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3D64E211D;
-        Tue, 14 Feb 2023 04:14:45 -0800 (PST)
-Received: from pps.filterd (m0279862.ppops.net [127.0.0.1])
-        by mx0a-0031df01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 31E4Ls5H030528;
-        Tue, 14 Feb 2023 12:14:38 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=message-id : date :
- mime-version : subject : to : cc : references : from : in-reply-to :
- content-type : content-transfer-encoding; s=qcppdkim1;
- bh=vN0frs54ZBYYfmOCBXdNKCUNlLLin+tNZYV8zh4bHZg=;
- b=OopLqgIK/1KXNtR6iJKsnKmJ67iQPbiX5tLsC8ukbcS9w2TbSYH85BNm1BBNgBuninPm
- y4IJ523SgdBL57NMrZHDTxy00xzpIfbrKAjrcBxTf05+UjQPjGeCjTlr/4mkzHnbwCDs
- 6sHtbF3IzH4oeaWKW0abS+tjsMmX3UokGka6X6NqG6EroOfj3ti/R15V0eqXtia3BrIK
- O8IL8p4fPmW4wVaWV5N20oiH1HhsQgAkFR0frBMJNpshpQcH7q1nJyidJaLC7aedRVOo
- tFQ2AOgHLEIRCCYte6gNyNnpBvyUvLSOaP/Gmd3CYSRQeTSjt6YIHlOUihVfiCTJWf7O mA== 
-Received: from nasanppmta03.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-        by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3nqyygsdqk-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 14 Feb 2023 12:14:37 +0000
-Received: from nasanex01c.na.qualcomm.com (nasanex01c.na.qualcomm.com [10.45.79.139])
-        by NASANPPMTA03.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 31ECEbUN001922
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 14 Feb 2023 12:14:37 GMT
-Received: from [10.216.50.155] (10.80.80.8) by nasanex01c.na.qualcomm.com
- (10.45.79.139) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.986.36; Tue, 14 Feb
- 2023 04:14:34 -0800
-Message-ID: <04ba3f0f-6ca8-b8ff-3fd8-2ccc63482e04@quicinc.com>
-Date:   Tue, 14 Feb 2023 17:44:31 +0530
+        Tue, 14 Feb 2023 08:08:35 -0500
+Received: from mail-qv1-xf2d.google.com (mail-qv1-xf2d.google.com [IPv6:2607:f8b0:4864:20::f2d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8C57B25E35
+        for <linux-trace-kernel@vger.kernel.org>; Tue, 14 Feb 2023 05:08:32 -0800 (PST)
+Received: by mail-qv1-xf2d.google.com with SMTP id l7so5433612qvw.7
+        for <linux-trace-kernel@vger.kernel.org>; Tue, 14 Feb 2023 05:08:32 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=soleen.com; s=google;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=d7iD43RuVySzDimpnmaP4LT4xXO0J3BUtoo0lGShArc=;
+        b=pO1vKw910NGD+QvW3upj9bxB+96r0/YxhOOdt/cELSkVPjWrEljUmf4XzD4mfOYpew
+         mqe2Yjn7WzmsgmuQM2wW/81XJ2G2fokcqcNwWs/H9Fu489nfYXGUhGj4e3xl5zgLMOYm
+         UJjcBuIJVGeXNeRUGaYNE1s/nth54SN/PQHuBITj6lOBsEqiLg5aLbCCXIx8ug61XhyE
+         3QVAJ+hK7P7o/N91LrfoPIvvi9ilW/dlQKNrfqi6v5s90uuWMB3zlqDpGIHP3/4XVYY9
+         Jw0SHhZ/j5AYRFvwGemJejg7ozx8VOL6jGe3G/+UregpoDgy4Tx/o3rdV/4YpmWxj1rs
+         XWMw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=d7iD43RuVySzDimpnmaP4LT4xXO0J3BUtoo0lGShArc=;
+        b=CWwtMkHw1GIxvPiYH2dsHofLYJVVL5o3w2gGbxhVvYY8twZfKbm6aL13vK5yoUrv8X
+         tzQ4qI1dJsNUZN2hymY6T9m0sy4Oom+msbWg0vxAz1xeVjmdNWDxOOC+nNdPi/jPHTOx
+         8kOsiC3cwh6yeRQb1s1hFboEylSh1LmirdSseodSSAdyTrXJQ3jMsrNSDsmSDi42dkxR
+         odnp0drvJDF6vIR8fUzc32rgIOBL3AtZRkA3Cch1hwERVqYMuYaTntX3Z7CMyfSmRtxI
+         pyALn7hdeTlLNTIAyKxotGy99CuoyuFULM2jYwX+1N1wcYEh5lvSJg1nAquOYROFDOQG
+         VH3w==
+X-Gm-Message-State: AO0yUKUExScI9Mt8oy29ZEtvV9SNnBW/PjndHeaVie+j7vVn8rLRZGLh
+        voYUGI4A4pH34sQT3pRBIdhMtaCjjvUIJU3T9M05eQ==
+X-Google-Smtp-Source: AK7set/9NH3fHFal9QJ7z9f3vQC37YYM4w0VMhx4GLZZxCPRYzbFY5ZgZZBs0cL/X7/6SUX4p6gBRLnG5NbumKf4IRQ=
+X-Received: by 2002:a0c:db07:0:b0:56e:986f:cc09 with SMTP id
+ d7-20020a0cdb07000000b0056e986fcc09mr196862qvk.44.1676380111529; Tue, 14 Feb
+ 2023 05:08:31 -0800 (PST)
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.6.1
-Subject: Re: [PATCH] tracing/ring-buffer: Remove integrity check at end of
- iter read
-Content-Language: en-US
-To:     Steven Rostedt <rostedt@goodmis.org>
-CC:     <zhengyejian1@huawei.com>, <linux-kernel@vger.kernel.org>,
-        <linux-trace-kernel@vger.kernel.org>, <wanghai38@huawei.com>
-References: <20230208090814.869242-1-zhengyejian1@huawei.com>
- <1676042556-737-1-git-send-email-quic_mojha@quicinc.com>
- <20230211113700.40728a05@gandalf.local.home>
-From:   Mukesh Ojha <quic_mojha@quicinc.com>
-In-Reply-To: <20230211113700.40728a05@gandalf.local.home>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.80.80.8]
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nasanex01c.na.qualcomm.com (10.45.79.139)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: hdtNgYMRu8hmneO8_G-VDvoIBOGjqTlu
-X-Proofpoint-GUID: hdtNgYMRu8hmneO8_G-VDvoIBOGjqTlu
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.219,Aquarius:18.0.930,Hydra:6.0.562,FMLib:17.11.170.22
- definitions=2023-02-14_07,2023-02-14_01,2023-02-09_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0 phishscore=0
- impostorscore=0 malwarescore=0 adultscore=0 mlxlogscore=703 mlxscore=0
- priorityscore=1501 lowpriorityscore=0 spamscore=0 bulkscore=0
- clxscore=1015 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2212070000 definitions=main-2302140106
+References: <20230207035139.272707-1-shiyn.lin@gmail.com> <CA+CK2bBt0Gujv9BdhghVkbFRirAxCYXbpH-nquccPsKGnGwOBQ@mail.gmail.com>
+ <CANOhDtU3J8SUCzKtKvPPPrUHyo+LV5npNObHtYP_AK4W3LomDw@mail.gmail.com>
+ <CA+CK2bAWnzqKDTjBbxXOvURwr7nWmf8q-mzD1x-ztwbWVQBQKA@mail.gmail.com>
+ <Y+Z8ymNYc+vJMBx8@strix-laptop> <62c44d12-933d-ee66-ef50-467cd8d30a58@redhat.com>
+In-Reply-To: <62c44d12-933d-ee66-ef50-467cd8d30a58@redhat.com>
+From:   Pasha Tatashin <pasha.tatashin@soleen.com>
+Date:   Tue, 14 Feb 2023 08:07:54 -0500
+Message-ID: <CA+CK2bB-dArab6scZU6tD7vnBBqbn9NwWbfwnddBzTxUmmhOfQ@mail.gmail.com>
+Subject: Re: [PATCH v4 00/14] Introduce Copy-On-Write to Page Table
+To:     David Hildenbrand <david@redhat.com>
+Cc:     Chih-En Lin <shiyn.lin@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Qi Zheng <zhengqi.arch@bytedance.com>,
+        "Matthew Wilcox (Oracle)" <willy@infradead.org>,
+        Christophe Leroy <christophe.leroy@csgroup.eu>,
+        John Hubbard <jhubbard@nvidia.com>,
+        Nadav Amit <namit@vmware.com>, Barry Song <baohua@kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Yang Shi <shy828301@gmail.com>, Peter Xu <peterx@redhat.com>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        "Zach O'Keefe" <zokeefe@google.com>,
+        Yun Zhou <yun.zhou@windriver.com>,
+        Hugh Dickins <hughd@google.com>,
+        Suren Baghdasaryan <surenb@google.com>,
+        Yu Zhao <yuzhao@google.com>, Juergen Gross <jgross@suse.com>,
+        Tong Tiangen <tongtiangen@huawei.com>,
+        Liu Shixin <liushixin2@huawei.com>,
+        Anshuman Khandual <anshuman.khandual@arm.com>,
+        Li kunyu <kunyu@nfschina.com>,
+        Minchan Kim <minchan@kernel.org>,
+        Miaohe Lin <linmiaohe@huawei.com>,
+        Gautam Menghani <gautammenghani201@gmail.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Mark Brown <broonie@kernel.org>, Will Deacon <will@kernel.org>,
+        Vincenzo Frascino <Vincenzo.Frascino@arm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        "Liam R. Howlett" <Liam.Howlett@oracle.com>,
+        Fenghua Yu <fenghua.yu@intel.com>,
+        Andrei Vagin <avagin@gmail.com>,
+        Barret Rhoden <brho@google.com>,
+        Michal Hocko <mhocko@suse.com>,
+        "Jason A. Donenfeld" <Jason@zx2c4.com>,
+        Alexey Gladkov <legion@kernel.org>,
+        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-mm@kvack.org, linux-trace-kernel@vger.kernel.org,
+        linux-perf-users@vger.kernel.org,
+        Dinglan Peng <peng301@purdue.edu>,
+        Pedro Fonseca <pfonseca@purdue.edu>,
+        Jim Huang <jserv@ccns.ncku.edu.tw>,
+        Huichun Feng <foxhoundsk.tw@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
+On Tue, Feb 14, 2023 at 4:58 AM David Hildenbrand <david@redhat.com> wrote:
+>
+> On 10.02.23 18:20, Chih-En Lin wrote:
+> > On Fri, Feb 10, 2023 at 11:21:16AM -0500, Pasha Tatashin wrote:
+> >>>>> Currently, copy-on-write is only used for the mapped memory; the child
+> >>>>> process still needs to copy the entire page table from the parent
+> >>>>> process during forking. The parent process might take a lot of time and
+> >>>>> memory to copy the page table when the parent has a big page table
+> >>>>> allocated. For example, the memory usage of a process after forking with
+> >>>>> 1 GB mapped memory is as follows:
+> >>>>
+> >>>> For some reason, I was not able to reproduce performance improvements
+> >>>> with a simple fork() performance measurement program. The results that
+> >>>> I saw are the following:
+> >>>>
+> >>>> Base:
+> >>>> Fork latency per gigabyte: 0.004416 seconds
+> >>>> Fork latency per gigabyte: 0.004382 seconds
+> >>>> Fork latency per gigabyte: 0.004442 seconds
+> >>>> COW kernel:
+> >>>> Fork latency per gigabyte: 0.004524 seconds
+> >>>> Fork latency per gigabyte: 0.004764 seconds
+> >>>> Fork latency per gigabyte: 0.004547 seconds
+> >>>>
+> >>>> AMD EPYC 7B12 64-Core Processor
+> >>>> Base:
+> >>>> Fork latency per gigabyte: 0.003923 seconds
+> >>>> Fork latency per gigabyte: 0.003909 seconds
+> >>>> Fork latency per gigabyte: 0.003955 seconds
+> >>>> COW kernel:
+> >>>> Fork latency per gigabyte: 0.004221 seconds
+> >>>> Fork latency per gigabyte: 0.003882 seconds
+> >>>> Fork latency per gigabyte: 0.003854 seconds
+> >>>>
+> >>>> Given, that page table for child is not copied, I was expecting the
+> >>>> performance to be better with COW kernel, and also not to depend on
+> >>>> the size of the parent.
+> >>>
+> >>> Yes, the child won't duplicate the page table, but fork will still
+> >>> traverse all the page table entries to do the accounting.
+> >>> And, since this patch expends the COW to the PTE table level, it's not
+> >>> the mapped page (page table entry) grained anymore, so we have to
+> >>> guarantee that all the mapped page is available to do COW mapping in
+> >>> the such page table.
+> >>> This kind of checking also costs some time.
+> >>> As a result, since the accounting and the checking, the COW PTE fork
+> >>> still depends on the size of the parent so the improvement might not
+> >>> be significant.
+> >>
+> >> The current version of the series does not provide any performance
+> >> improvements for fork(). I would recommend removing claims from the
+> >> cover letter about better fork() performance, as this may be
+> >> misleading for those looking for a way to speed up forking. In my
+> >
+> >  From v3 to v4, I changed the implementation of the COW fork() part to do
+> > the accounting and checking. At the time, I also removed most of the
+> > descriptions about the better fork() performance. Maybe it's not enough
+> > and still has some misleading. I will fix this in the next version.
+> > Thanks.
+> >
+> >> case, I was looking to speed up Redis OSS, which relies on fork() to
+> >> create consistent snapshots for driving replicates/backups. The O(N)
+> >> per-page operation causes fork() to be slow, so I was hoping that this
+> >> series, which does not duplicate the VA during fork(), would make the
+> >> operation much quicker.
+> >
+> > Indeed, at first, I tried to avoid the O(N) per-page operation by
+> > deferring the accounting and the swap stuff to the page fault. But,
+> > as I mentioned, it's not suitable for the mainline.
+> >
+> > Honestly, for improving the fork(), I have an idea to skip the per-page
+> > operation without breaking the logic. However, this will introduce the
+> > complicated mechanism and may has the overhead for other features. It
+> > might not be worth it. It's hard to strike a balance between the
+> > over-complicated mechanism with (probably) better performance and data
+> > consistency with the page status. So, I would focus on the safety and
+> > stable approach at first.
+>
+> Yes, it is most probably possible, but complexity, robustness and
+> maintainability have to be considered as well.
+>
+> Thanks for implementing this approach (only deduplication without other
+> optimizations) and evaluating it accordingly. It's certainly "cleaner",
+> such that we only have to mess with unsharing and not with other
+> accounting/pinning/mapcount thingies. But it also highlights how
+> intrusive even this basic deduplication approach already is -- and that
+> most benefits of the original approach requires even more complexity on top.
+>
+> I am not quite sure if the benefit is worth the price (I am not to
+> decide and I would like to hear other options).
+>
+> My quick thoughts after skimming over the core parts of this series
+>
+> (1) forgetting to break COW on a PTE in some pgtable walker feels quite
+>      likely (meaning that it might be fairly error-prone) and forgetting
+>      to break COW on a PTE table, accidentally modifying the shared
+>      table.
+> (2) break_cow_pte() can fail, which means that we can fail some
+>      operations (possibly silently halfway through) now. For example,
+>      looking at your change_pte_range() change, I suspect it's wrong.
+> (3) handle_cow_pte_fault() looks quite complicated and needs quite some
+>      double-checking: we temporarily clear the PMD, to reset it
+>      afterwards. I am not sure if that is correct. For example, what
+>      stops another page fault stumbling over that pmd_none() and
+>      allocating an empty page table? Maybe there are some locking details
+>      missing or they are very subtle such that we better document them. I
+>     recall that THP played quite some tricks to make such cases work ...
+>
+> >
+> >>> Actually, at the RFC v1 and v2, we proposed the version of skipping
+> >>> those works, and we got a significant improvement. You can see the
+> >>> number from RFC v2 cover letter [1]:
+> >>> "In short, with 512 MB mapped memory, COW PTE decreases latency by 93%
+> >>> for normal fork"
+> >>
+> >> I suspect the 93% improvement (when the mapcount was not updated) was
+> >> only for VAs with 4K pages. With 2M mappings this series did not
+> >> provide any benefit is this correct?
+> >
+> > Yes. In this case, the COW PTE performance is similar to the normal
+> > fork().
+>
+>
+> The thing with THP is, that during fork(), we always allocate a backup
+> PTE table, to be able to PTE-map the THP whenever we have to. Otherwise
+> we'd have to eventually fail some operations we don't want to fail --
+> similar to the case where break_cow_pte() could fail now due to -ENOMEM
+> although we really don't want to fail (e.g., change_pte_range() ).
+>
+> I always considered that wasteful, because in many scenarios, we'll
+> never ever split a THP and possibly waste memory.
 
+Yes, it does sound wasteful for a pretty rare corner case that
+combines splitting THP in a process, and not having enough memory to
+allocate PTE page tables.
 
-On 2/11/2023 10:07 PM, Steven Rostedt wrote:
-> On Fri, 10 Feb 2023 20:52:36 +0530
-> Mukesh Ojha <quic_mojha@quicinc.com> wrote:
-> 
->>>> 		return -1;
->>>>
->>>> 	list_for_each_entry_safe(bpage, tmp, head, list) {
->>>
->>> I'd like to know if there is a case that "head" happens to be a
->>> "reader_page", and the ring buffer is not exactly being traversed?
-> 
-> No, the way it works is that the reader page is found by searching for the
-> head pointer, and then it is set when swapped. Basically, the pseudo code
-> is:
-> 
->    reader->next = head_page | HEAD_FLAG
->    val = head_page->prev->next
->    val &= ~FLAGS
->    val |= HEAD_FLAG
->    cmpxchg(head_page->prev->next, val, reader)
-> 
-> The HEAD_FLAG is always on the pointer that points to the head page that
-> gets swapped. This will never point to the reader page, as that would mean
-> the writer has access to it.
-> 
->>
->> In my issue, i see below callstack and it seem to be spinning inside rb_list_head_clear() as
->> cpu_buffer->pages has duplicate entry in the list.
->>
->> -00 |rb_list_head_clear(inline)
->> -00 |rb_head_page_deactivate(inline)
->> -00 |rb_check_pages(cpu_buffer = 0xFFFFFF89E0C3B200)
->> -01 |atomic_try_cmpxchg_acquire(inline)
->> -01 |queued_spin_lock(inline)
->> -01 |do_raw_spin_lock_flags(inline)
->> -01 |__raw_spin_lock_irqsave(inline)
->> -01 |_raw_spin_lock_irqsave(inline)
->> -01 |ring_buffer_read_finish(iter = 0xFFFFFF8006FE3780)
->> -02 |cpumask_next(inline)
->> -02 |tracing_release(inode = ?, file = 0xFFFFFF8A53A63F00)
->> -03 |__fput(file = 0xFFFFFF8A53A63F00)
->> -04 |____fput(work = ?)
->> -05 |_raw_spin_unlock_irq(inline)
->> -05 |task_work_run()
->> -06 |tracehook_notify_resume(inline)
->> -06 |do_notify_resume(regs = 0xFFFFFFC06ADC8EB0, thread_flags = 67108868)
->> -07 |prepare_exit_to_user_mode(inline)
->> -07 |exit_to_user_mode(inline)
->> -07 |el0_svc(regs = 0xFFFFFFC06ADC8EB0)
->> -08 |el0t_64_sync_handler(regs = ?)
->> -09 |el0t_64_sync(asm)
->>
->> ...
->> ..
->> ffffff80359eeb00 --> Duplicate entry
->> ffffff80359ee300
->> ffffff80359ee180
->> ffffff80359eeec0
->> ffffff80359eec00
->> ffffff80359ee800 -- Tail page
->> ffffff80359eedc0 -- Head page
->> ffffff80359ee640
->> ffffff80359ee080
->> ffffff80359ee700
->> ffffff80359ee7c0
->> ffffff80359eed80
->> ffffff80359ee900
->> ffffff80359ee9c0
->> ffffff80359eea00
->> ffffff80359eea80
->> ffffff80359eec80
->> ffffff80359ee240
->> ffffff80359ee6c0
->> ffffff80359ee0c0
->> ffffff80359ee8c0
->> ffffff80359ee940
->> ffffff80359eee00
->> ffffff80359ee000
->> ffffff80359eeb00 ---> Duplicate entry
-> 
-> So this is a separate issue where the ring buffer is corrupted?
+> Optimizing that for THP (e.g., don't always allocate backup THP, have
+> some global allocation backup pool for splits + refill when
+> close-to-empty) might provide similar fork() improvements, both in speed
+> and memory consumption when it comes to anonymous memory.
 
-It looks to be different issue and there also i see similar call stack 
-of tracing_release() but in that issue it is looping forever in 
-deactivate call due to list corruption.
+This sounds like a reasonable way to optimize the fork performance for
+processes with large RSS, which in most cases would have 2M THP
+mappings. When you say global pool, do you mean per machine, per
+cgroup, or per process?
 
-I am not yet able to root cause a place of corruption as it is 
-reproduced only once, will need to check more on this.
+Pasha
 
-For this issue, i have posted at
-https://lore.kernel.org/lkml/1676376403-16462-1-git-send-email-quic_mojha@quicinc.com/
-
--Mukesh
-
-> 
-> -- Steve
+>
+> --
+> Thanks,
+>
+> David / dhildenb
+>
+>
