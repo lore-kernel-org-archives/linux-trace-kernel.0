@@ -2,316 +2,274 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 30EF8C636D4
-	for <linux-trace-kernel@archiver.kernel.org>; Tue, 14 Feb 2023 02:58:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B42EBC61DA4
+	for <linux-trace-kernel@archiver.kernel.org>; Tue, 14 Feb 2023 10:01:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231605AbjBNC65 (ORCPT
+        id S231561AbjBNKBM (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Mon, 13 Feb 2023 21:58:57 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58840 "EHLO
+        Tue, 14 Feb 2023 05:01:12 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36972 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231514AbjBNC6p (ORCPT
+        with ESMTP id S232371AbjBNKAN (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Mon, 13 Feb 2023 21:58:45 -0500
-Received: from mail-yb1-xb4a.google.com (mail-yb1-xb4a.google.com [IPv6:2607:f8b0:4864:20::b4a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BF2741D93A
-        for <linux-trace-kernel@vger.kernel.org>; Mon, 13 Feb 2023 18:57:39 -0800 (PST)
-Received: by mail-yb1-xb4a.google.com with SMTP id n20-20020a25da14000000b008fa1d22bd55so10067744ybf.21
-        for <linux-trace-kernel@vger.kernel.org>; Mon, 13 Feb 2023 18:57:39 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20210112;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=n1X2XjCSWTS0Xt2U+9FcjOG0KGHQAkV0L4y9jO00ul8=;
-        b=Jz3B8vjWMIfiSGvdijtz0pIAF82oGmD5/LXxTrKb6i7o7aCfKOxBSwLCVJCW6ZTOy3
-         VWjY/bODigfBmyu8XjTUieBoX0zFJnOGdsJ9sF0+RPcn+2vWmYX/hr8rUmnvA6D0GrYH
-         oHfbkr86mE/99Z4f6+k04v45m/VI1uaOjIGwDJflH9OeBcI0c3HprDPWQTOflTpl2Qrh
-         NdkK2oBCKKzESCHRHfGZ8uZSV9OViMmkyOiV3OQQuh5EOXCRFPaa9dy+qzUJKyAKSHsB
-         VqyQLMsmBhHkfNOmPcyERQjM7kx8uhqLS5uE1xhGrnL11U0xOXon2FhHrtkPvu6jO59x
-         Ajcg==
+        Tue, 14 Feb 2023 05:00:13 -0500
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CDA7B23C74
+        for <linux-trace-kernel@vger.kernel.org>; Tue, 14 Feb 2023 01:58:37 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1676368717;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=p2satF+hQ5FFdcjtgYoKpvsKHvu1xE8rXyO2IMUMeVs=;
+        b=eTwlP9SA+VA5oNrnu3sv9UtiXrJoBvV+3a7uQghiG5txwUk6/I5J7oxglelCtspjZ8CjYn
+        009YKLjlg38yciHuf7QSGCE/93LOppGIlRv6LiI2jEhOlV+eC0FbooOpXCyHs4DKZVIsXN
+        EhBUSgv1j4/poOooE5RQHJm2GDa1tj8=
+Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
+ [209.85.221.72]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_128_GCM_SHA256) id
+ us-mta-655-93cpqYicPYyIQFhAB9mO_A-1; Tue, 14 Feb 2023 04:58:34 -0500
+X-MC-Unique: 93cpqYicPYyIQFhAB9mO_A-1
+Received: by mail-wr1-f72.google.com with SMTP id n18-20020adfc612000000b002c3d80ab568so2933349wrg.18
+        for <linux-trace-kernel@vger.kernel.org>; Tue, 14 Feb 2023 01:58:34 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=n1X2XjCSWTS0Xt2U+9FcjOG0KGHQAkV0L4y9jO00ul8=;
-        b=KNKQ7xR5X3jWwtm/bBqUQaVz5YSM8+93hCT7K2X3WYa7XRDmu05TGZCU5659IAOPXT
-         1vYarJ/HMDkxfksXNEph19e6J7qm12bc95Bg/Di65pXgNS/u31gmDOoF08CrQh+AthKq
-         tXdwGiQotzrRQsz1IU0cyOi6tWa665sjwZvzykR+9stgcVynjBxjLRtxXEDtBqiQKzc3
-         C40p7sNqpRJmSk+P72XLNv8+7rSzxh4Sb3CJEs9L2huAC4XykSxEFHfE8/PfoDci0oNx
-         yZUy5mXTK/yacCL2Ull8wOg0Pdl8cxf51jDor2BLXZzccIjoJMDigOemKsS5cmIXxXZQ
-         tuOA==
-X-Gm-Message-State: AO0yUKUK9xzv5R3Au2J94qAv4vYCQo+QFWRHcwvPGy2S02BaMb1Qr7ZX
-        ITYLf7QQ5aoH9EjkHma19mtsLEA=
-X-Google-Smtp-Source: AK7set+FZ6PYjIp0Bd4DuvC/w1q7HcNzSItU1Q3y6Mdoc+9GjxsosAUtZgOMTkm9xgLpVb0KYY44BSY=
-X-Received: from sdf.c.googlers.com ([fda3:e722:ac3:cc00:7f:e700:c0a8:5935])
- (user=sdf job=sendgmr) by 2002:a0d:ef42:0:b0:52f:7c8:c195 with SMTP id
- y63-20020a0def42000000b0052f07c8c195mr45214ywe.258.1676343438180; Mon, 13 Feb
- 2023 18:57:18 -0800 (PST)
-Date:   Mon, 13 Feb 2023 18:57:16 -0800
-In-Reply-To: <20230213221835.592763-1-zwisler@google.com>
-Mime-Version: 1.0
-References: <20230213221835.592763-1-zwisler@google.com>
-Message-ID: <Y+r4jLwWvhcvyuih@google.com>
-Subject: Re: [PATCH bpf-next 1/2] bpf: use canonical ftrace path
-From:   Stanislav Fomichev <sdf@google.com>
-To:     Ross Zwisler <zwisler@chromium.org>
-Cc:     linux-kernel@vger.kernel.org, Ross Zwisler <zwisler@google.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Andrii Nakryiko <andrii@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Hao Luo <haoluo@google.com>, Jason Gunthorpe <jgg@ziepe.ca>,
+        h=content-transfer-encoding:in-reply-to:subject:organization:from
+         :references:cc:to:content-language:user-agent:mime-version:date
+         :message-id:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=p2satF+hQ5FFdcjtgYoKpvsKHvu1xE8rXyO2IMUMeVs=;
+        b=iivc3waKHpheJ3qSJ4BAKnbIhrdXbp+T8ZG/4JiefwX1V7cZ9UklK8WvuAiNXOUh+n
+         qeoPAhht34LvM4vo5y6dBWKqpQM+h/IhYeVHsUh+4+MN8rCuTPYXO9yVJppBuSzmN4+I
+         3LGg5Q+3Aj0gEqCzghIGnRVxNGi3mLOjeCZAprZjUMQV8vzu3ijKbWdwVBvT2qXvFBPU
+         HQBp7Gml4D6W08CAulaen1W1Z2wbCxi3HSoLc/LdArOBuXKk3yAw8P/ceX5XTPZfR8cB
+         TCOy4aJeJobB5ofrYZ34YBRn8kDT268dMuOw/a0nArTSR+QnsKrTMQ5h8YNrOllCskOz
+         7gfA==
+X-Gm-Message-State: AO0yUKUzrExtCyA/TkIthtaKfh1Mbgv/9m0GM+sIgr9D06wAjHl74eQo
+        ITANPp6w20+jWzp3a+bzOhrv5IV40Rwv4wmkFZiRjBHTLkm7yWqjgBls1p2FW4MeJCdHMqIyPGj
+        iRflNJRqR4wmWBhyrl71AFxiMsNdvaKyq
+X-Received: by 2002:adf:f8d1:0:b0:2c5:4c9d:2dab with SMTP id f17-20020adff8d1000000b002c54c9d2dabmr1282115wrq.10.1676368713314;
+        Tue, 14 Feb 2023 01:58:33 -0800 (PST)
+X-Google-Smtp-Source: AK7set+2/NL6NVo4bVpqbzQ5N2dQQ7fBvgOyM9xawBoayfZ5rVsOIRGo9F1XR2LfxDgPz096coFAug==
+X-Received: by 2002:adf:f8d1:0:b0:2c5:4c9d:2dab with SMTP id f17-20020adff8d1000000b002c54c9d2dabmr1282057wrq.10.1676368713026;
+        Tue, 14 Feb 2023 01:58:33 -0800 (PST)
+Received: from ?IPV6:2003:cb:c709:1700:969:8e2b:e8bb:46be? (p200300cbc709170009698e2be8bb46be.dip0.t-ipconnect.de. [2003:cb:c709:1700:969:8e2b:e8bb:46be])
+        by smtp.gmail.com with ESMTPSA id a12-20020a5d508c000000b002c55ec7f661sm3270850wrt.5.2023.02.14.01.58.30
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 14 Feb 2023 01:58:32 -0800 (PST)
+Message-ID: <62c44d12-933d-ee66-ef50-467cd8d30a58@redhat.com>
+Date:   Tue, 14 Feb 2023 10:58:30 +0100
+MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.6.0
+To:     Chih-En Lin <shiyn.lin@gmail.com>,
+        Pasha Tatashin <pasha.tatashin@soleen.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Qi Zheng <zhengqi.arch@bytedance.com>,
+        "Matthew Wilcox (Oracle)" <willy@infradead.org>,
+        Christophe Leroy <christophe.leroy@csgroup.eu>,
+        John Hubbard <jhubbard@nvidia.com>,
+        Nadav Amit <namit@vmware.com>, Barry Song <baohua@kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Jiri Olsa <jolsa@kernel.org>,
-        John Fastabend <john.fastabend@gmail.com>,
-        KP Singh <kpsingh@kernel.org>,
-        Leon Romanovsky <leon@kernel.org>,
-        Martin KaFai Lau <martin.lau@linux.dev>,
-        Mykola Lysenko <mykolal@fb.com>, Shuah Khan <shuah@kernel.org>,
-        Song Liu <song@kernel.org>, Yonghong Song <yhs@fb.com>,
-        bpf@vger.kernel.org, linux-kselftest@vger.kernel.org,
-        linux-rdma@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>,
-        linux-trace-kernel@vger.kernel.org,
-        "Michael S . Tsirkin" <mst@redhat.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
+        Namhyung Kim <namhyung@kernel.org>,
+        Yang Shi <shy828301@gmail.com>, Peter Xu <peterx@redhat.com>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Zach O'Keefe <zokeefe@google.com>,
+        Yun Zhou <yun.zhou@windriver.com>,
+        Hugh Dickins <hughd@google.com>,
+        Suren Baghdasaryan <surenb@google.com>,
+        Yu Zhao <yuzhao@google.com>, Juergen Gross <jgross@suse.com>,
+        Tong Tiangen <tongtiangen@huawei.com>,
+        Liu Shixin <liushixin2@huawei.com>,
+        Anshuman Khandual <anshuman.khandual@arm.com>,
+        Li kunyu <kunyu@nfschina.com>,
+        Minchan Kim <minchan@kernel.org>,
+        Miaohe Lin <linmiaohe@huawei.com>,
+        Gautam Menghani <gautammenghani201@gmail.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Mark Brown <broonie@kernel.org>, Will Deacon <will@kernel.org>,
+        Vincenzo Frascino <Vincenzo.Frascino@arm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        "Liam R. Howlett" <Liam.Howlett@oracle.com>,
+        Fenghua Yu <fenghua.yu@intel.com>,
+        Andrei Vagin <avagin@gmail.com>,
+        Barret Rhoden <brho@google.com>,
+        Michal Hocko <mhocko@suse.com>,
+        "Jason A. Donenfeld" <Jason@zx2c4.com>,
+        Alexey Gladkov <legion@kernel.org>,
+        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-mm@kvack.org, linux-trace-kernel@vger.kernel.org,
+        linux-perf-users@vger.kernel.org,
+        Dinglan Peng <peng301@purdue.edu>,
+        Pedro Fonseca <pfonseca@purdue.edu>,
+        Jim Huang <jserv@ccns.ncku.edu.tw>,
+        Huichun Feng <foxhoundsk.tw@gmail.com>
+References: <20230207035139.272707-1-shiyn.lin@gmail.com>
+ <CA+CK2bBt0Gujv9BdhghVkbFRirAxCYXbpH-nquccPsKGnGwOBQ@mail.gmail.com>
+ <CANOhDtU3J8SUCzKtKvPPPrUHyo+LV5npNObHtYP_AK4W3LomDw@mail.gmail.com>
+ <CA+CK2bAWnzqKDTjBbxXOvURwr7nWmf8q-mzD1x-ztwbWVQBQKA@mail.gmail.com>
+ <Y+Z8ymNYc+vJMBx8@strix-laptop>
+From:   David Hildenbrand <david@redhat.com>
+Organization: Red Hat
+Subject: Re: [PATCH v4 00/14] Introduce Copy-On-Write to Page Table
+In-Reply-To: <Y+Z8ymNYc+vJMBx8@strix-laptop>
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: redhat.com
+Content-Language: en-US
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On 02/13, Ross Zwisler wrote:
-> The canonical location for the tracefs filesystem is at  
-> /sys/kernel/tracing.
+On 10.02.23 18:20, Chih-En Lin wrote:
+> On Fri, Feb 10, 2023 at 11:21:16AM -0500, Pasha Tatashin wrote:
+>>>>> Currently, copy-on-write is only used for the mapped memory; the child
+>>>>> process still needs to copy the entire page table from the parent
+>>>>> process during forking. The parent process might take a lot of time and
+>>>>> memory to copy the page table when the parent has a big page table
+>>>>> allocated. For example, the memory usage of a process after forking with
+>>>>> 1 GB mapped memory is as follows:
+>>>>
+>>>> For some reason, I was not able to reproduce performance improvements
+>>>> with a simple fork() performance measurement program. The results that
+>>>> I saw are the following:
+>>>>
+>>>> Base:
+>>>> Fork latency per gigabyte: 0.004416 seconds
+>>>> Fork latency per gigabyte: 0.004382 seconds
+>>>> Fork latency per gigabyte: 0.004442 seconds
+>>>> COW kernel:
+>>>> Fork latency per gigabyte: 0.004524 seconds
+>>>> Fork latency per gigabyte: 0.004764 seconds
+>>>> Fork latency per gigabyte: 0.004547 seconds
+>>>>
+>>>> AMD EPYC 7B12 64-Core Processor
+>>>> Base:
+>>>> Fork latency per gigabyte: 0.003923 seconds
+>>>> Fork latency per gigabyte: 0.003909 seconds
+>>>> Fork latency per gigabyte: 0.003955 seconds
+>>>> COW kernel:
+>>>> Fork latency per gigabyte: 0.004221 seconds
+>>>> Fork latency per gigabyte: 0.003882 seconds
+>>>> Fork latency per gigabyte: 0.003854 seconds
+>>>>
+>>>> Given, that page table for child is not copied, I was expecting the
+>>>> performance to be better with COW kernel, and also not to depend on
+>>>> the size of the parent.
+>>>
+>>> Yes, the child won't duplicate the page table, but fork will still
+>>> traverse all the page table entries to do the accounting.
+>>> And, since this patch expends the COW to the PTE table level, it's not
+>>> the mapped page (page table entry) grained anymore, so we have to
+>>> guarantee that all the mapped page is available to do COW mapping in
+>>> the such page table.
+>>> This kind of checking also costs some time.
+>>> As a result, since the accounting and the checking, the COW PTE fork
+>>> still depends on the size of the parent so the improvement might not
+>>> be significant.
+>>
+>> The current version of the series does not provide any performance
+>> improvements for fork(). I would recommend removing claims from the
+>> cover letter about better fork() performance, as this may be
+>> misleading for those looking for a way to speed up forking. In my
+> 
+>  From v3 to v4, I changed the implementation of the COW fork() part to do
+> the accounting and checking. At the time, I also removed most of the
+> descriptions about the better fork() performance. Maybe it's not enough
+> and still has some misleading. I will fix this in the next version.
+> Thanks.
+> 
+>> case, I was looking to speed up Redis OSS, which relies on fork() to
+>> create consistent snapshots for driving replicates/backups. The O(N)
+>> per-page operation causes fork() to be slow, so I was hoping that this
+>> series, which does not duplicate the VA during fork(), would make the
+>> operation much quicker.
+> 
+> Indeed, at first, I tried to avoid the O(N) per-page operation by
+> deferring the accounting and the swap stuff to the page fault. But,
+> as I mentioned, it's not suitable for the mainline.
+> 
+> Honestly, for improving the fork(), I have an idea to skip the per-page
+> operation without breaking the logic. However, this will introduce the
+> complicated mechanism and may has the overhead for other features. It
+> might not be worth it. It's hard to strike a balance between the
+> over-complicated mechanism with (probably) better performance and data
+> consistency with the page status. So, I would focus on the safety and
+> stable approach at first.
 
-> But, from Documentation/trace/ftrace.rst:
+Yes, it is most probably possible, but complexity, robustness and 
+maintainability have to be considered as well.
 
->    Before 4.1, all ftrace tracing control files were within the debugfs
->    file system, which is typically located at /sys/kernel/debug/tracing.
->    For backward compatibility, when mounting the debugfs file system,
->    the tracefs file system will be automatically mounted at:
+Thanks for implementing this approach (only deduplication without other 
+optimizations) and evaluating it accordingly. It's certainly "cleaner", 
+such that we only have to mess with unsharing and not with other 
+accounting/pinning/mapcount thingies. But it also highlights how 
+intrusive even this basic deduplication approach already is -- and that 
+most benefits of the original approach requires even more complexity on top.
 
->    /sys/kernel/debug/tracing
+I am not quite sure if the benefit is worth the price (I am not to 
+decide and I would like to hear other options).
 
-> Many comments and samples in the bpf code still refer to this older
-> debugfs path, so let's update them to avoid confusion.  There are a few
-> spots where the bpf code explicitly checks both tracefs and debugfs
-> (tools/bpf/bpftool/tracelog.c and tools/lib/api/fs/fs.c) and I've left
-> those alone so that the tools can continue to work with both paths.
+My quick thoughts after skimming over the core parts of this series
 
-Doesn't seem to apply cleanly to bpf-next?
+(1) forgetting to break COW on a PTE in some pgtable walker feels quite
+     likely (meaning that it might be fairly error-prone) and forgetting
+     to break COW on a PTE table, accidentally modifying the shared
+     table.
+(2) break_cow_pte() can fail, which means that we can fail some
+     operations (possibly silently halfway through) now. For example,
+     looking at your change_pte_range() change, I suspect it's wrong.
+(3) handle_cow_pte_fault() looks quite complicated and needs quite some
+     double-checking: we temporarily clear the PMD, to reset it
+     afterwards. I am not sure if that is correct. For example, what
+     stops another page fault stumbling over that pmd_none() and
+     allocating an empty page table? Maybe there are some locking details
+     missing or they are very subtle such that we better document them. I
+    recall that THP played quite some tricks to make such cases work ...
 
-https://github.com/kernel-patches/bpf/pull/4584
+> 
+>>> Actually, at the RFC v1 and v2, we proposed the version of skipping
+>>> those works, and we got a significant improvement. You can see the
+>>> number from RFC v2 cover letter [1]:
+>>> "In short, with 512 MB mapped memory, COW PTE decreases latency by 93%
+>>> for normal fork"
+>>
+>> I suspect the 93% improvement (when the mapcount was not updated) was
+>> only for VAs with 4K pages. With 2M mappings this series did not
+>> provide any benefit is this correct?
+> 
+> Yes. In this case, the COW PTE performance is similar to the normal
+> fork().
 
-> Signed-off-by: Ross Zwisler <zwisler@google.com>
-> Acked-by: Michael S. Tsirkin <mst@redhat.com>
-> ---
 
-> [ Per Alexei's request, resending towards bpf-next ]
+The thing with THP is, that during fork(), we always allocate a backup 
+PTE table, to be able to PTE-map the THP whenever we have to. Otherwise 
+we'd have to eventually fail some operations we don't want to fail -- 
+similar to the case where break_cow_pte() could fail now due to -ENOMEM 
+although we really don't want to fail (e.g., change_pte_range() ).
 
->   include/uapi/linux/bpf.h            | 8 ++++----
->   samples/bpf/cpustat_kern.c          | 4 ++--
->   samples/bpf/hbm.c                   | 4 ++--
->   samples/bpf/ibumad_kern.c           | 4 ++--
->   samples/bpf/lwt_len_hist.sh         | 2 +-
->   samples/bpf/offwaketime_kern.c      | 2 +-
->   samples/bpf/task_fd_query_user.c    | 4 ++--
->   samples/bpf/test_lwt_bpf.sh         | 2 +-
->   samples/bpf/test_overhead_tp_kern.c | 4 ++--
->   tools/include/uapi/linux/bpf.h      | 8 ++++----
->   10 files changed, 21 insertions(+), 21 deletions(-)
+I always considered that wasteful, because in many scenarios, we'll 
+never ever split a THP and possibly waste memory.
 
-> diff --git a/include/uapi/linux/bpf.h b/include/uapi/linux/bpf.h
-> index 464ca3f01fe7..44387b31cbde 100644
-> --- a/include/uapi/linux/bpf.h
-> +++ b/include/uapi/linux/bpf.h
-> @@ -1642,17 +1642,17 @@ union bpf_attr {
->    * 	Description
->    * 		This helper is a "printk()-like" facility for debugging. It
->    * 		prints a message defined by format *fmt* (of size *fmt_size*)
-> - * 		to file *\/sys/kernel/debug/tracing/trace* from DebugFS, if
-> + * 		to file *\/sys/kernel/tracing/trace* from TraceFS, if
->    * 		available. It can take up to three additional **u64**
->    * 		arguments (as an eBPF helpers, the total number of arguments is
->    * 		limited to five).
->    *
->    * 		Each time the helper is called, it appends a line to the trace.
-> - * 		Lines are discarded while *\/sys/kernel/debug/tracing/trace* is
-> - * 		open, use *\/sys/kernel/debug/tracing/trace_pipe* to avoid this.
-> + * 		Lines are discarded while *\/sys/kernel/tracing/trace* is
-> + * 		open, use *\/sys/kernel/tracing/trace_pipe* to avoid this.
->    * 		The format of the trace is customizable, and the exact output
->    * 		one will get depends on the options set in
-> - * 		*\/sys/kernel/debug/tracing/trace_options* (see also the
-> + * 		*\/sys/kernel/tracing/trace_options* (see also the
->    * 		*README* file under the same directory). However, it usually
->    * 		defaults to something like:
->    *
-> diff --git a/samples/bpf/cpustat_kern.c b/samples/bpf/cpustat_kern.c
-> index 5aefd19cdfa1..944f13fe164a 100644
-> --- a/samples/bpf/cpustat_kern.c
-> +++ b/samples/bpf/cpustat_kern.c
-> @@ -76,8 +76,8 @@ struct {
+Optimizing that for THP (e.g., don't always allocate backup THP, have 
+some global allocation backup pool for splits + refill when 
+close-to-empty) might provide similar fork() improvements, both in speed 
+and memory consumption when it comes to anonymous memory.
 
->   /*
->    * The trace events for cpu_idle and cpu_frequency are taken from:
-> - * /sys/kernel/debug/tracing/events/power/cpu_idle/format
-> - * /sys/kernel/debug/tracing/events/power/cpu_frequency/format
-> + * /sys/kernel/tracing/events/power/cpu_idle/format
-> + * /sys/kernel/tracing/events/power/cpu_frequency/format
->    *
->    * These two events have same format, so define one common structure.
->    */
-> diff --git a/samples/bpf/hbm.c b/samples/bpf/hbm.c
-> index 516fbac28b71..ff58ec43f56a 100644
-> --- a/samples/bpf/hbm.c
-> +++ b/samples/bpf/hbm.c
-> @@ -65,7 +65,7 @@ static void Usage(void);
->   static void read_trace_pipe2(void);
->   static void do_error(char *msg, bool errno_flag);
+-- 
+Thanks,
 
-> -#define DEBUGFS "/sys/kernel/debug/tracing/"
-> +#define TRACEFS "/sys/kernel/tracing/"
-
->   static struct bpf_program *bpf_prog;
->   static struct bpf_object *obj;
-> @@ -77,7 +77,7 @@ static void read_trace_pipe2(void)
->   	FILE *outf;
->   	char *outFname = "hbm_out.log";
-
-> -	trace_fd = open(DEBUGFS "trace_pipe", O_RDONLY, 0);
-> +	trace_fd = open(TRACEFS "trace_pipe", O_RDONLY, 0);
->   	if (trace_fd < 0) {
->   		printf("Error opening trace_pipe\n");
->   		return;
-> diff --git a/samples/bpf/ibumad_kern.c b/samples/bpf/ibumad_kern.c
-> index 9b193231024a..f07474c72525 100644
-> --- a/samples/bpf/ibumad_kern.c
-> +++ b/samples/bpf/ibumad_kern.c
-> @@ -39,8 +39,8 @@ struct {
->   /* Taken from the current format defined in
->    * include/trace/events/ib_umad.h
->    * and
-> - * /sys/kernel/debug/tracing/events/ib_umad/ib_umad_read/format
-> - * /sys/kernel/debug/tracing/events/ib_umad/ib_umad_write/format
-> + * /sys/kernel/tracing/events/ib_umad/ib_umad_read/format
-> + * /sys/kernel/tracing/events/ib_umad/ib_umad_write/format
->    */
->   struct ib_umad_rw_args {
->   	u64 pad;
-> diff --git a/samples/bpf/lwt_len_hist.sh b/samples/bpf/lwt_len_hist.sh
-> index 0eda9754f50b..11fa0a087db6 100755
-> --- a/samples/bpf/lwt_len_hist.sh
-> +++ b/samples/bpf/lwt_len_hist.sh
-> @@ -5,7 +5,7 @@ NS1=lwt_ns1
->   VETH0=tst_lwt1a
->   VETH1=tst_lwt1b
-
-> -TRACE_ROOT=/sys/kernel/debug/tracing
-> +TRACE_ROOT=/sys/kernel/tracing
-
->   function cleanup {
->   	# To reset saved histogram, remove pinned map
-> diff --git a/samples/bpf/offwaketime_kern.c  
-> b/samples/bpf/offwaketime_kern.c
-> index eb4d94742e6b..23f12b47e9e5 100644
-> --- a/samples/bpf/offwaketime_kern.c
-> +++ b/samples/bpf/offwaketime_kern.c
-> @@ -110,7 +110,7 @@ static inline int update_counts(void *ctx, u32 pid,  
-> u64 delta)
->   }
-
->   #if 1
-> -/* taken from /sys/kernel/debug/tracing/events/sched/sched_switch/format  
-> */
-> +/* taken from /sys/kernel/tracing/events/sched/sched_switch/format */
->   struct sched_switch_args {
->   	unsigned long long pad;
->   	char prev_comm[TASK_COMM_LEN];
-> diff --git a/samples/bpf/task_fd_query_user.c  
-> b/samples/bpf/task_fd_query_user.c
-> index a33d74bd3a4b..1e61f2180470 100644
-> --- a/samples/bpf/task_fd_query_user.c
-> +++ b/samples/bpf/task_fd_query_user.c
-> @@ -235,7 +235,7 @@ static int test_debug_fs_uprobe(char *binary_path,  
-> long offset, bool is_return)
->   	struct bpf_link *link;
->   	ssize_t bytes;
-
-> -	snprintf(buf, sizeof(buf), "/sys/kernel/debug/tracing/%s_events",
-> +	snprintf(buf, sizeof(buf), "/sys/kernel/tracing/%s_events",
->   		 event_type);
->   	kfd = open(buf, O_WRONLY | O_TRUNC, 0);
->   	CHECK_PERROR_RET(kfd < 0);
-> @@ -252,7 +252,7 @@ static int test_debug_fs_uprobe(char *binary_path,  
-> long offset, bool is_return)
->   	close(kfd);
->   	kfd = -1;
-
-> -	snprintf(buf, sizeof(buf), "/sys/kernel/debug/tracing/events/%ss/%s/id",
-> +	snprintf(buf, sizeof(buf), "/sys/kernel/tracing/events/%ss/%s/id",
->   		 event_type, event_alias);
->   	efd = open(buf, O_RDONLY, 0);
->   	CHECK_PERROR_RET(efd < 0);
-> diff --git a/samples/bpf/test_lwt_bpf.sh b/samples/bpf/test_lwt_bpf.sh
-> index 65a976058dd3..db5691e6637f 100755
-> --- a/samples/bpf/test_lwt_bpf.sh
-> +++ b/samples/bpf/test_lwt_bpf.sh
-> @@ -19,7 +19,7 @@ IPVETH3="192.168.111.2"
-
->   IP_LOCAL="192.168.99.1"
-
-> -TRACE_ROOT=/sys/kernel/debug/tracing
-> +TRACE_ROOT=/sys/kernel/tracing
-
->   function lookup_mac()
->   {
-> diff --git a/samples/bpf/test_overhead_tp_kern.c  
-> b/samples/bpf/test_overhead_tp_kern.c
-> index 80edadacb692..a1d53b0d8476 100644
-> --- a/samples/bpf/test_overhead_tp_kern.c
-> +++ b/samples/bpf/test_overhead_tp_kern.c
-> @@ -8,7 +8,7 @@
->   #include <uapi/linux/bpf.h>
->   #include <bpf/bpf_helpers.h>
-
-> -/* from /sys/kernel/debug/tracing/events/task/task_rename/format */
-> +/* from /sys/kernel/tracing/events/task/task_rename/format */
->   struct task_rename {
->   	__u64 pad;
->   	__u32 pid;
-> @@ -22,7 +22,7 @@ int prog(struct task_rename *ctx)
->   	return 0;
->   }
-
-> -/* from /sys/kernel/debug/tracing/events/random/urandom_read/format */
-> +/* from /sys/kernel/tracing/events/random/urandom_read/format */
->   struct urandom_read {
->   	__u64 pad;
->   	int got_bits;
-> diff --git a/tools/include/uapi/linux/bpf.h  
-> b/tools/include/uapi/linux/bpf.h
-> index 464ca3f01fe7..44387b31cbde 100644
-> --- a/tools/include/uapi/linux/bpf.h
-> +++ b/tools/include/uapi/linux/bpf.h
-> @@ -1642,17 +1642,17 @@ union bpf_attr {
->    * 	Description
->    * 		This helper is a "printk()-like" facility for debugging. It
->    * 		prints a message defined by format *fmt* (of size *fmt_size*)
-> - * 		to file *\/sys/kernel/debug/tracing/trace* from DebugFS, if
-> + * 		to file *\/sys/kernel/tracing/trace* from TraceFS, if
->    * 		available. It can take up to three additional **u64**
->    * 		arguments (as an eBPF helpers, the total number of arguments is
->    * 		limited to five).
->    *
->    * 		Each time the helper is called, it appends a line to the trace.
-> - * 		Lines are discarded while *\/sys/kernel/debug/tracing/trace* is
-> - * 		open, use *\/sys/kernel/debug/tracing/trace_pipe* to avoid this.
-> + * 		Lines are discarded while *\/sys/kernel/tracing/trace* is
-> + * 		open, use *\/sys/kernel/tracing/trace_pipe* to avoid this.
->    * 		The format of the trace is customizable, and the exact output
->    * 		one will get depends on the options set in
-> - * 		*\/sys/kernel/debug/tracing/trace_options* (see also the
-> + * 		*\/sys/kernel/tracing/trace_options* (see also the
->    * 		*README* file under the same directory). However, it usually
->    * 		defaults to something like:
->    *
-> --
-> 2.39.1.581.gbfd45094c4-goog
+David / dhildenb
 
