@@ -2,248 +2,170 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 592A8C61DA4
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A869AC678DB
 	for <linux-trace-kernel@archiver.kernel.org>; Tue, 14 Feb 2023 17:00:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232890AbjBNRAV (ORCPT
+        id S232930AbjBNRAX (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Tue, 14 Feb 2023 12:00:21 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51294 "EHLO
+        Tue, 14 Feb 2023 12:00:23 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50444 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233057AbjBNRAJ (ORCPT
+        with ESMTP id S229930AbjBNQ7g (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Tue, 14 Feb 2023 12:00:09 -0500
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4C6D4206A7
-        for <linux-trace-kernel@vger.kernel.org>; Tue, 14 Feb 2023 08:58:52 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1676393931;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=kuHwzZTrvbVLrZIEtXxaNZLPc/tFsdLuSJJ5efA8PZ0=;
-        b=S65friWBnFPwtPc1M2CvjvpHlL1j9nb8a0c9fh94JPLER1J9BjiiYPOgHnEqRvtD8KyT10
-        tgyKHbBHuP/Wt60vsa1p+DeXrC3MgPsNG4w9TvEApticAGGzSzxwi80TlW7b+Zev+ck0pf
-        HSiSmBDziRry20j51xHQpoj45VYIl74=
-Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
- [209.85.221.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_128_GCM_SHA256) id
- us-mta-528-h1UvzBJGMtyJgLwMvBYIbg-1; Tue, 14 Feb 2023 11:58:50 -0500
-X-MC-Unique: h1UvzBJGMtyJgLwMvBYIbg-1
-Received: by mail-wr1-f69.google.com with SMTP id o9-20020adfa109000000b002bfc062eaa8so3224298wro.20
-        for <linux-trace-kernel@vger.kernel.org>; Tue, 14 Feb 2023 08:58:50 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:in-reply-to:subject:organization:from
-         :references:cc:to:content-language:user-agent:mime-version:date
-         :message-id:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=kuHwzZTrvbVLrZIEtXxaNZLPc/tFsdLuSJJ5efA8PZ0=;
-        b=jgEgLWx89jldWHhIupLk8VEsvuyc5NUM5geHNc7048pyyabF7oj/lhh1hx84Tkw58n
-         BjDOLCU+AcuB2W33Ucvc/4GtbwMGhfYqhCZB6XtkdcSfbB/acdIBkrTqJE9k85W4XhUF
-         HrriBNj/TstzO4W0Ig9M0g3+QaYep3ZrzZ8iSwXSTmCkRzgYReO8wg+/enZ9Oz8QLVoh
-         /Zm/1Q9IlXtkcPWY9YplPUpiueFowXu39ZvndU3lY/tAcYEIA8B/CGOHcTzVb4PX2yjt
-         8aUibfmGiByh6GinUFyWh4RzDgWfpP6yhLIm3aj5CwC+CZSzTDI7Rx3Yv/RpsirsCTzC
-         esoQ==
-X-Gm-Message-State: AO0yUKUQlDG+DA76DDPWxVm16BloKgeDFaMBEPdXbXKS5i6656Ke1zS8
-        JWlHx8xm2RiFVFV7XZRtfMv8ZhRrLck8bIhr5P4KXvaAdsOaW/n/NSdXTibVYh69kqiXTIG+6C+
-        4MyqmxoslPqj5pGr3GWXSdBjBb+tmuRM/
-X-Received: by 2002:adf:fd11:0:b0:2c5:60e2:ed6b with SMTP id e17-20020adffd11000000b002c560e2ed6bmr2472178wrr.2.1676393929304;
-        Tue, 14 Feb 2023 08:58:49 -0800 (PST)
-X-Google-Smtp-Source: AK7set+c46SGb0cyt7nBCeLUBmB3MfNMmWwOtQ0u0jB0emQwNtfrzpIlWNiHXf7awUpb3XlyQknNdA==
-X-Received: by 2002:adf:fd11:0:b0:2c5:60e2:ed6b with SMTP id e17-20020adffd11000000b002c560e2ed6bmr2472156wrr.2.1676393928992;
-        Tue, 14 Feb 2023 08:58:48 -0800 (PST)
-Received: from ?IPV6:2003:cb:c709:1700:969:8e2b:e8bb:46be? (p200300cbc709170009698e2be8bb46be.dip0.t-ipconnect.de. [2003:cb:c709:1700:969:8e2b:e8bb:46be])
-        by smtp.gmail.com with ESMTPSA id l18-20020a5d6752000000b002c5503a8d21sm8549944wrw.70.2023.02.14.08.58.46
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 14 Feb 2023 08:58:48 -0800 (PST)
-Message-ID: <a02714ee-3223-ba53-09eb-33f7b03ef038@redhat.com>
-Date:   Tue, 14 Feb 2023 17:58:45 +0100
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.6.0
-To:     Chih-En Lin <shiyn.lin@gmail.com>
-Cc:     Pasha Tatashin <pasha.tatashin@soleen.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Qi Zheng <zhengqi.arch@bytedance.com>,
-        "Matthew Wilcox (Oracle)" <willy@infradead.org>,
-        Christophe Leroy <christophe.leroy@csgroup.eu>,
-        John Hubbard <jhubbard@nvidia.com>,
-        Nadav Amit <namit@vmware.com>, Barry Song <baohua@kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
+        Tue, 14 Feb 2023 11:59:36 -0500
+Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0140D2E0E6;
+        Tue, 14 Feb 2023 08:59:13 -0800 (PST)
+Received: from pps.filterd (m0246632.ppops.net [127.0.0.1])
+        by mx0b-00069f02.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 31EGXk5t027870;
+        Tue, 14 Feb 2023 16:57:49 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
+ subject : date : message-id : in-reply-to : references : mime-version :
+ content-type : content-transfer-encoding; s=corp-2022-7-12;
+ bh=COxPmLf+paRDDdFuvH25Zi2bcrkGUWbmw1AV1Vzz6fg=;
+ b=YLvFKW+EqHo4lJihtKam5O2u/Ez9btXYR9UATFH2zB8Iu5e5Y/RW6Fp0KY6CkhCradAN
+ WTilqdKWZFcLKiqsqfa4V8mYN1ZQvBadLk2TsOnIkEtZUKsfbgOWWK7HvSPFJKd8W46X
+ 6I8lZN4dOtwp7sy+z6JM8Hyy2wb+bAGvhr+gIyRw8kVIAEWVmTfaTTf5O0Ec6XCJ2W+/
+ s+ECjqJ+6XkIgXtXUIiTIJDq/ia5qoW1iTGafvouFXOp0XKQKEIPCwqm6SXEU/hwPFGd
+ rIIwhMwB2pOtB0Be/uO7OEApgaB8P0mSiaWnOpESEKGFyDpTBPCUpGUYLIbIrtBSw8Fd aQ== 
+Received: from iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta03.appoci.oracle.com [130.35.103.27])
+        by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3np2mtdxts-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 14 Feb 2023 16:57:48 +0000
+Received: from pps.filterd (iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
+        by iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (8.17.1.5/8.17.1.5) with ESMTP id 31EGuKPb009707;
+        Tue, 14 Feb 2023 16:57:47 GMT
+Received: from pps.reinject (localhost [127.0.0.1])
+        by iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 3np1f5uuka-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 14 Feb 2023 16:57:47 +0000
+Received: from iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
+        by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 31EGuHor039739;
+        Tue, 14 Feb 2023 16:57:45 GMT
+Received: from ca-mkp2.ca.oracle.com.com (mpeterse-ol9.allregionaliads.osdevelopmeniad.oraclevcn.com [100.100.251.135])
+        by iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTP id 3np1f5uuff-9;
+        Tue, 14 Feb 2023 16:57:45 +0000
+From:   "Martin K. Petersen" <martin.petersen@oracle.com>
+To:     linux-kernel@vger.kernel.org, Randy Dunlap <rdunlap@infradead.org>
+Cc:     "Martin K . Petersen" <martin.petersen@oracle.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Russell King <linux@armlinux.org.uk>,
+        Jens Axboe <axboe@kernel.dk>,
+        Andrii Nakryiko <andrii@kernel.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Vladimir Oltean <olteanv@gmail.com>,
+        Steffen Klassert <steffen.klassert@secunet.com>,
+        Daniel Jordan <daniel.m.jordan@oracle.com>,
+        Akinobu Mita <akinobu.mita@gmail.com>,
+        Helge Deller <deller@gmx.de>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Jiri Kosina <jikos@kernel.org>,
+        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
+        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+        Wolfram Sang <wsa@kernel.org>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Henrik Rydberg <rydberg@bitmath.org>,
+        Karsten Keil <isdn@linux-pingi.de>,
+        Pavel Machek <pavel@ucw.cz>, Lee Jones <lee@kernel.org>,
+        Josh Poimboeuf <jpoimboe@kernel.org>,
+        Miroslav Benes <mbenes@suse.cz>,
+        Petr Mladek <pmladek@suse.com>,
         Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Yang Shi <shy828301@gmail.com>, Peter Xu <peterx@redhat.com>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Zach O'Keefe <zokeefe@google.com>,
-        Yun Zhou <yun.zhou@windriver.com>,
-        Hugh Dickins <hughd@google.com>,
-        Suren Baghdasaryan <surenb@google.com>,
-        Yu Zhao <yuzhao@google.com>, Juergen Gross <jgross@suse.com>,
-        Tong Tiangen <tongtiangen@huawei.com>,
-        Liu Shixin <liushixin2@huawei.com>,
-        Anshuman Khandual <anshuman.khandual@arm.com>,
-        Li kunyu <kunyu@nfschina.com>,
-        Minchan Kim <minchan@kernel.org>,
+        =?UTF-8?q?J=C3=A9r=C3=B4me=20Glisse?= <jglisse@redhat.com>,
+        Naoya Horiguchi <naoya.horiguchi@nec.com>,
         Miaohe Lin <linmiaohe@huawei.com>,
-        Gautam Menghani <gautammenghani201@gmail.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Mark Brown <broonie@kernel.org>, Will Deacon <will@kernel.org>,
-        Vincenzo Frascino <Vincenzo.Frascino@arm.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        "Liam R. Howlett" <Liam.Howlett@oracle.com>,
+        Jonas Bonn <jonas@southpole.se>,
+        Stefan Kristiansson <stefan.kristiansson@saunalahti.fi>,
+        Stafford Horne <shorne@gmail.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Lorenzo Pieralisi <lpieralisi@kernel.org>,
+        Marc Zyngier <maz@kernel.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Len Brown <len.brown@intel.com>,
+        Heiko Carstens <hca@linux.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Alexander Gordeev <agordeev@linux.ibm.com>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        David Howells <dhowells@redhat.com>,
+        Jarkko Sakkinen <jarkko@kernel.org>,
+        Paul Moore <paul@paul-moore.com>,
+        James Morris <jmorris@namei.org>,
+        "Serge E. Hallyn" <serge@hallyn.com>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>, Mark Brown <broonie@kernel.org>,
+        Daniel Bristot de Oliveira <bristot@kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Evgeniy Polyakov <zbr@ioremap.net>,
         Fenghua Yu <fenghua.yu@intel.com>,
-        Andrei Vagin <avagin@gmail.com>,
-        Barret Rhoden <brho@google.com>,
-        Michal Hocko <mhocko@suse.com>,
-        "Jason A. Donenfeld" <Jason@zx2c4.com>,
-        Alexey Gladkov <legion@kernel.org>,
-        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-mm@kvack.org, linux-trace-kernel@vger.kernel.org,
-        linux-perf-users@vger.kernel.org,
-        Dinglan Peng <peng301@purdue.edu>,
-        Pedro Fonseca <pfonseca@purdue.edu>,
-        Jim Huang <jserv@ccns.ncku.edu.tw>,
-        Huichun Feng <foxhoundsk.tw@gmail.com>
-References: <20230207035139.272707-1-shiyn.lin@gmail.com>
- <CA+CK2bBt0Gujv9BdhghVkbFRirAxCYXbpH-nquccPsKGnGwOBQ@mail.gmail.com>
- <CANOhDtU3J8SUCzKtKvPPPrUHyo+LV5npNObHtYP_AK4W3LomDw@mail.gmail.com>
- <CA+CK2bAWnzqKDTjBbxXOvURwr7nWmf8q-mzD1x-ztwbWVQBQKA@mail.gmail.com>
- <Y+Z8ymNYc+vJMBx8@strix-laptop>
- <62c44d12-933d-ee66-ef50-467cd8d30a58@redhat.com>
- <Y+uv3iTajGoOuNMO@strix-laptop>
-From:   David Hildenbrand <david@redhat.com>
-Organization: Red Hat
-Subject: Re: [PATCH v4 00/14] Introduce Copy-On-Write to Page Table
-In-Reply-To: <Y+uv3iTajGoOuNMO@strix-laptop>
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
-Content-Language: en-US
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+        Reinette Chatre <reinette.chatre@intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Borislav Petkov <bp@alien8.de>,
+        Chris Zankel <chris@zankel.net>,
+        Max Filippov <jcmvbkbc@gmail.com>, alsa-devel@alsa-project.org,
+        coresight@lists.linaro.org, bpf@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, isdn4linux@listserv.isdn4linux.de,
+        keyrings@vger.kernel.org, linux-acpi@vger.kernel.org,
+        linux-block@vger.kernel.org, linux-crypto@vger.kernel.org,
+        linux-doc@vger.kernel.org, linux-fbdev@vger.kernel.org,
+        linux-i2c@vger.kernel.org, linux-input@vger.kernel.org,
+        linux-leds@vger.kernel.org, linux-pci@vger.kernel.org,
+        linux-s390@vger.kernel.org, linux-scsi@vger.kernel.org,
+        linux-sgx@vger.kernel.org, linux-spi@vger.kernel.org,
+        linux-trace-devel@vger.kernel.org,
+        linux-trace-kernel@vger.kernel.org, live-patching@vger.kernel.org,
+        linux-pm@vger.kernel.org, linux-security-module@vger.kernel.org,
+        linux-usb@vger.kernel.org, netdev@vger.kernel.org,
+        target-devel@vger.kernel.org, linux-mm@kvack.org,
+        openrisc@lists.librecores.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-xtensa@linux-xtensa.org, linuxppc-dev@lists.ozlabs.org,
+        x86@kernel.org
+Subject: Re: (subset) [PATCH 00/35] Documentation: correct lots of spelling errors (series 1)
+Date:   Tue, 14 Feb 2023 11:57:35 -0500
+Message-Id: <167639371105.486235.1228754650636546815.b4-ty@oracle.com>
+X-Mailer: git-send-email 2.39.1
+In-Reply-To: <20230127064005.1558-1-rdunlap@infradead.org>
+References: <20230127064005.1558-1-rdunlap@infradead.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.219,Aquarius:18.0.930,Hydra:6.0.562,FMLib:17.11.170.22
+ definitions=2023-02-14_11,2023-02-14_01,2023-02-09_01
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 phishscore=0
+ suspectscore=0 mlxscore=0 spamscore=0 mlxlogscore=997 adultscore=0
+ bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2212070000 definitions=main-2302140144
+X-Proofpoint-GUID: F9bpdPmEiXIR5xn5JduF_4kuCVCc4so3
+X-Proofpoint-ORIG-GUID: F9bpdPmEiXIR5xn5JduF_4kuCVCc4so3
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
+On Thu, 26 Jan 2023 22:39:30 -0800, Randy Dunlap wrote:
 
->>>
->>> Honestly, for improving the fork(), I have an idea to skip the per-page
->>> operation without breaking the logic. However, this will introduce the
->>> complicated mechanism and may has the overhead for other features. It
->>> might not be worth it. It's hard to strike a balance between the
->>> over-complicated mechanism with (probably) better performance and data
->>> consistency with the page status. So, I would focus on the safety and
->>> stable approach at first.
->>
->> Yes, it is most probably possible, but complexity, robustness and
->> maintainability have to be considered as well.
->>
->> Thanks for implementing this approach (only deduplication without other
->> optimizations) and evaluating it accordingly. It's certainly "cleaner", such
->> that we only have to mess with unsharing and not with other
->> accounting/pinning/mapcount thingies. But it also highlights how intrusive
->> even this basic deduplication approach already is -- and that most benefits
->> of the original approach requires even more complexity on top.
->>
->> I am not quite sure if the benefit is worth the price (I am not to decide
->> and I would like to hear other options).
+> Correct many spelling errors in Documentation/ as reported by codespell.
 > 
-> I'm looking at the discussion of page table sharing in 2002 [1].
-> It looks like in 2002 ~ 2006, there also have some patches try to
-> improve fork().
+> Maintainers of specific kernel subsystems are only Cc-ed on their
+> respective patches, not the entire series. [if all goes well]
 > 
-> After that, I also saw one thread which is about another shared page
-> table patch's benchmark. I can't find the original patch though [2].
-> But, I found the probably same patch in 2005 [3], it also mentioned
-> the previous benchmark discussion:
+> These patches are based on linux-next-20230125.
 > 
-> "
-> For those familiar with the shared page table patch I did a couple of years
-> ago, this patch does not implement copy-on-write page tables for private
-> mappings.  Analysis showed the cost and complexity far outweighed any
-> potential benefit.
-> "
+> [...]
 
-Thanks for the pointer, interesting read. And my personal opinion is 
-that part of that statement still hold true :)
+Applied to 6.3/scsi-queue, thanks!
 
-> 
-> However, it might be different right now. For example, the implemetation
-> . We have split page table lock now, so we don't have to consider the
-> page_table_share_lock thing. Also, presently, we have different use
-> cases (shells [2] v.s. VM cloning and fuzzing) to consider.
-> 
-> Nonetheless, I still think the discussion can provide some of the mind
-> to us.
-> 
-> BTW, It seems like the 2002 patch [1] is different from the 2002 [2]
-> and 2005 [3].
-> 
-> [1] https://lkml.iu.edu/hypermail/linux/kernel/0202.2/0102.html
-> [2] https://lore.kernel.org/linux-mm/3E02FACD.5B300794@digeo.com/
-> [3] https://lore.kernel.org/linux-mm/7C49DFF721CB4E671DB260F9@%5B10.1.1.4%5D/T/#u
-> 
->> My quick thoughts after skimming over the core parts of this series
->>
->> (1) forgetting to break COW on a PTE in some pgtable walker feels quite
->>      likely (meaning that it might be fairly error-prone) and forgetting
->>      to break COW on a PTE table, accidentally modifying the shared
->>      table.
-> 
-> Maybe I should also handle arch/ and others parts.
-> I will keep looking at where I missed.
-
-One could add sanity checks when modifying a PTE while the PTE table is 
-still marked shared ... but I guess there are some valid reasons where 
-we might want to modify shared PTE tables (rmap).
-
-> 
->> (2) break_cow_pte() can fail, which means that we can fail some
->>      operations (possibly silently halfway through) now. For example,
->>      looking at your change_pte_range() change, I suspect it's wrong.
-> 
-> Maybe I should add WARN_ON() and skip the failed COW PTE.
-
-One way or the other we'll have to handle it. WARN_ON() sounds wrong for 
-handling OOM situations (e.g., if only that cgroup is OOM).
-
-> 
->> (3) handle_cow_pte_fault() looks quite complicated and needs quite some
->>      double-checking: we temporarily clear the PMD, to reset it
->>      afterwards. I am not sure if that is correct. For example, what
->>      stops another page fault stumbling over that pmd_none() and
->>      allocating an empty page table? Maybe there are some locking details
->>      missing or they are very subtle such that we better document them. I
->>     recall that THP played quite some tricks to make such cases work ...
-> 
-> I think that holding mmap_write_lock may be enough (I added
-> mmap_assert_write_locked() in the fault function btw). But, I might
-> be wrong. I will look at the THP stuff to see how they work. Thanks.
-> 
-
-Ehm, but page faults don't hold the mmap lock writable? And so are other 
-callers, like MADV_DONTNEED or MADV_FREE.
-
-handle_pte_fault()->handle_pte_fault()->mmap_assert_write_locked() 
-should bail out.
-
-Either I am missing something or you didn't test with lockdep enabled :)
-
-Note that there are upstream efforts to use only a VMA lock (and some 
-people even want to perform some page faults only protected by RCU).
+[28/35] Documentation: target: correct spelling
+        https://git.kernel.org/mkp/scsi/c/c57ac5748be5
 
 -- 
-Thanks,
-
-David / dhildenb
-
+Martin K. Petersen	Oracle Linux Engineering
