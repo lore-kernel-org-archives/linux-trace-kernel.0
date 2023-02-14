@@ -2,64 +2,69 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44A26C61DA4
-	for <linux-trace-kernel@archiver.kernel.org>; Tue, 14 Feb 2023 16:31:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 592A8C61DA4
+	for <linux-trace-kernel@archiver.kernel.org>; Tue, 14 Feb 2023 17:00:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230090AbjBNQbR (ORCPT
+        id S232890AbjBNRAV (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Tue, 14 Feb 2023 11:31:17 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46382 "EHLO
+        Tue, 14 Feb 2023 12:00:21 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51294 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229930AbjBNQbL (ORCPT
+        with ESMTP id S233057AbjBNRAJ (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Tue, 14 Feb 2023 11:31:11 -0500
-Received: from mail-qk1-x72e.google.com (mail-qk1-x72e.google.com [IPv6:2607:f8b0:4864:20::72e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BC7731A485
-        for <linux-trace-kernel@vger.kernel.org>; Tue, 14 Feb 2023 08:31:03 -0800 (PST)
-Received: by mail-qk1-x72e.google.com with SMTP id 206so6324704qkl.12
-        for <linux-trace-kernel@vger.kernel.org>; Tue, 14 Feb 2023 08:31:03 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=soleen.com; s=google;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=DeKrFVj5RLu1KKnNTVCusgp5T0P1wsNltnH7kGalgo8=;
-        b=lTQvvwCTQaIPkgC4gnl5/hjKykULn4Egld4GWcEFMZ5GSFB7wzUHzwatF1UsxgmIBf
-         Q5L6KF6EAIjWy6lD9/0VT22Z4TtKiNNeST78ktjPDgN2LLePJQRvhVDC1juULo45oYs6
-         DIDhkOM/iYfIQtqcUytpx5/hzlrc62TtNADKfcal3v4gXHZ+K/Cl8YptRnp96r3ykb6m
-         HQKKqnoOuaJSH/HMuxkIN4YG/ulb9k2pxtXZ4IzlKB6RX5/muq6WBdeQMNrSexeB2O8V
-         bCXUt83hwneHXMKOuup0hNUYUA4Y9MUCprj61gZqjf3zltCdVO8ewwOuKRkwy0VkL7U+
-         +xEg==
+        Tue, 14 Feb 2023 12:00:09 -0500
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4C6D4206A7
+        for <linux-trace-kernel@vger.kernel.org>; Tue, 14 Feb 2023 08:58:52 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1676393931;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=kuHwzZTrvbVLrZIEtXxaNZLPc/tFsdLuSJJ5efA8PZ0=;
+        b=S65friWBnFPwtPc1M2CvjvpHlL1j9nb8a0c9fh94JPLER1J9BjiiYPOgHnEqRvtD8KyT10
+        tgyKHbBHuP/Wt60vsa1p+DeXrC3MgPsNG4w9TvEApticAGGzSzxwi80TlW7b+Zev+ck0pf
+        HSiSmBDziRry20j51xHQpoj45VYIl74=
+Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
+ [209.85.221.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_128_GCM_SHA256) id
+ us-mta-528-h1UvzBJGMtyJgLwMvBYIbg-1; Tue, 14 Feb 2023 11:58:50 -0500
+X-MC-Unique: h1UvzBJGMtyJgLwMvBYIbg-1
+Received: by mail-wr1-f69.google.com with SMTP id o9-20020adfa109000000b002bfc062eaa8so3224298wro.20
+        for <linux-trace-kernel@vger.kernel.org>; Tue, 14 Feb 2023 08:58:50 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+        h=content-transfer-encoding:in-reply-to:subject:organization:from
+         :references:cc:to:content-language:user-agent:mime-version:date
+         :message-id:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=DeKrFVj5RLu1KKnNTVCusgp5T0P1wsNltnH7kGalgo8=;
-        b=OiVJMx9aShNEjlp0lDYWTqq9rBwAKmtxN2fTFZ7S1R8+8vng+XAp4aqsF1h0yJnpQ0
-         L6TfsHTfaRjoOftZLaTF+4xHtjfp6IdNqSkTCxY02zuIe9BNahxY71/dmInynFCLyjK/
-         rBXKJO56zLV7Ve6vx5RynSLdltB7ZPxlpXOzBeUFTJDHXPumFznTuzfZpn08NJx5JTyj
-         krLuak4BvVdKknt/jj/gOSpbg6FwsKrgyhX0ZOd2h81KQsv6AJHsN989TGTeGBs1JWX4
-         68UhdyeFSv4rU2Urrt9otlUrvA1taQ8EqQMa0gI9WZ4Nddul35/nEQSDDd3I8lCjaKAR
-         FeNQ==
-X-Gm-Message-State: AO0yUKULSrl+MNK39HHyI1c9jmwVNTG6fqMMqBFd3FmGorhir1ZSXwuf
-        oihAAm+AnsBvqAo6byoP3EptFfjQjUV2U8iJjkB02g==
-X-Google-Smtp-Source: AK7set/L+qy5uWlxvBUp/FcipQgFAAkwrRaoGi3X/CTT2//GFz/QnqteBkgrL4rwfaRCkEkiLcVtj6hsQmZEOseBQR4=
-X-Received: by 2002:a05:620a:cc1:b0:720:6045:25ea with SMTP id
- b1-20020a05620a0cc100b00720604525eamr194899qkj.27.1676392262801; Tue, 14 Feb
- 2023 08:31:02 -0800 (PST)
+        bh=kuHwzZTrvbVLrZIEtXxaNZLPc/tFsdLuSJJ5efA8PZ0=;
+        b=jgEgLWx89jldWHhIupLk8VEsvuyc5NUM5geHNc7048pyyabF7oj/lhh1hx84Tkw58n
+         BjDOLCU+AcuB2W33Ucvc/4GtbwMGhfYqhCZB6XtkdcSfbB/acdIBkrTqJE9k85W4XhUF
+         HrriBNj/TstzO4W0Ig9M0g3+QaYep3ZrzZ8iSwXSTmCkRzgYReO8wg+/enZ9Oz8QLVoh
+         /Zm/1Q9IlXtkcPWY9YplPUpiueFowXu39ZvndU3lY/tAcYEIA8B/CGOHcTzVb4PX2yjt
+         8aUibfmGiByh6GinUFyWh4RzDgWfpP6yhLIm3aj5CwC+CZSzTDI7Rx3Yv/RpsirsCTzC
+         esoQ==
+X-Gm-Message-State: AO0yUKUQlDG+DA76DDPWxVm16BloKgeDFaMBEPdXbXKS5i6656Ke1zS8
+        JWlHx8xm2RiFVFV7XZRtfMv8ZhRrLck8bIhr5P4KXvaAdsOaW/n/NSdXTibVYh69kqiXTIG+6C+
+        4MyqmxoslPqj5pGr3GWXSdBjBb+tmuRM/
+X-Received: by 2002:adf:fd11:0:b0:2c5:60e2:ed6b with SMTP id e17-20020adffd11000000b002c560e2ed6bmr2472178wrr.2.1676393929304;
+        Tue, 14 Feb 2023 08:58:49 -0800 (PST)
+X-Google-Smtp-Source: AK7set+c46SGb0cyt7nBCeLUBmB3MfNMmWwOtQ0u0jB0emQwNtfrzpIlWNiHXf7awUpb3XlyQknNdA==
+X-Received: by 2002:adf:fd11:0:b0:2c5:60e2:ed6b with SMTP id e17-20020adffd11000000b002c560e2ed6bmr2472156wrr.2.1676393928992;
+        Tue, 14 Feb 2023 08:58:48 -0800 (PST)
+Received: from ?IPV6:2003:cb:c709:1700:969:8e2b:e8bb:46be? (p200300cbc709170009698e2be8bb46be.dip0.t-ipconnect.de. [2003:cb:c709:1700:969:8e2b:e8bb:46be])
+        by smtp.gmail.com with ESMTPSA id l18-20020a5d6752000000b002c5503a8d21sm8549944wrw.70.2023.02.14.08.58.46
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 14 Feb 2023 08:58:48 -0800 (PST)
+Message-ID: <a02714ee-3223-ba53-09eb-33f7b03ef038@redhat.com>
+Date:   Tue, 14 Feb 2023 17:58:45 +0100
 MIME-Version: 1.0
-References: <20230207035139.272707-1-shiyn.lin@gmail.com> <CA+CK2bBt0Gujv9BdhghVkbFRirAxCYXbpH-nquccPsKGnGwOBQ@mail.gmail.com>
- <CANOhDtU3J8SUCzKtKvPPPrUHyo+LV5npNObHtYP_AK4W3LomDw@mail.gmail.com>
- <CA+CK2bAWnzqKDTjBbxXOvURwr7nWmf8q-mzD1x-ztwbWVQBQKA@mail.gmail.com>
- <Y+Z8ymNYc+vJMBx8@strix-laptop> <62c44d12-933d-ee66-ef50-467cd8d30a58@redhat.com>
- <Y+uv3iTajGoOuNMO@strix-laptop>
-In-Reply-To: <Y+uv3iTajGoOuNMO@strix-laptop>
-From:   Pasha Tatashin <pasha.tatashin@soleen.com>
-Date:   Tue, 14 Feb 2023 11:30:26 -0500
-Message-ID: <CA+CK2bCKOONeipaYNQJSPTicej1DW0OWvw97r0TbG7oRtxVGnQ@mail.gmail.com>
-Subject: Re: [PATCH v4 00/14] Introduce Copy-On-Write to Page Table
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.6.0
 To:     Chih-En Lin <shiyn.lin@gmail.com>
-Cc:     David Hildenbrand <david@redhat.com>,
+Cc:     Pasha Tatashin <pasha.tatashin@soleen.com>,
         Andrew Morton <akpm@linux-foundation.org>,
         Qi Zheng <zhengqi.arch@bytedance.com>,
         "Matthew Wilcox (Oracle)" <willy@infradead.org>,
@@ -77,7 +82,7 @@ Cc:     David Hildenbrand <david@redhat.com>,
         Namhyung Kim <namhyung@kernel.org>,
         Yang Shi <shy828301@gmail.com>, Peter Xu <peterx@redhat.com>,
         Vlastimil Babka <vbabka@suse.cz>,
-        "Zach O'Keefe" <zokeefe@google.com>,
+        Zach O'Keefe <zokeefe@google.com>,
         Yun Zhou <yun.zhou@windriver.com>,
         Hugh Dickins <hughd@google.com>,
         Suren Baghdasaryan <surenb@google.com>,
@@ -110,28 +115,135 @@ Cc:     David Hildenbrand <david@redhat.com>,
         Pedro Fonseca <pfonseca@purdue.edu>,
         Jim Huang <jserv@ccns.ncku.edu.tw>,
         Huichun Feng <foxhoundsk.tw@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+References: <20230207035139.272707-1-shiyn.lin@gmail.com>
+ <CA+CK2bBt0Gujv9BdhghVkbFRirAxCYXbpH-nquccPsKGnGwOBQ@mail.gmail.com>
+ <CANOhDtU3J8SUCzKtKvPPPrUHyo+LV5npNObHtYP_AK4W3LomDw@mail.gmail.com>
+ <CA+CK2bAWnzqKDTjBbxXOvURwr7nWmf8q-mzD1x-ztwbWVQBQKA@mail.gmail.com>
+ <Y+Z8ymNYc+vJMBx8@strix-laptop>
+ <62c44d12-933d-ee66-ef50-467cd8d30a58@redhat.com>
+ <Y+uv3iTajGoOuNMO@strix-laptop>
+From:   David Hildenbrand <david@redhat.com>
+Organization: Red Hat
+Subject: Re: [PATCH v4 00/14] Introduce Copy-On-Write to Page Table
+In-Reply-To: <Y+uv3iTajGoOuNMO@strix-laptop>
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: redhat.com
+Content-Language: en-US
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-> > The thing with THP is, that during fork(), we always allocate a backup PTE
-> > table, to be able to PTE-map the THP whenever we have to. Otherwise we'd
-> > have to eventually fail some operations we don't want to fail -- similar to
-> > the case where break_cow_pte() could fail now due to -ENOMEM although we
-> > really don't want to fail (e.g., change_pte_range() ).
-> >
-> > I always considered that wasteful, because in many scenarios, we'll never
-> > ever split a THP and possibly waste memory.
-> >
-> > Optimizing that for THP (e.g., don't always allocate backup THP, have some
-> > global allocation backup pool for splits + refill when close-to-empty) might
-> > provide similar fork() improvements, both in speed and memory consumption
-> > when it comes to anonymous memory.
->
-> When collapsing huge pages, do/can they reuse those PTEs for backup?
-> So, we don't have to allocate the PTE or maintain the pool.
 
-It might not work for all pages, as collapsing pages might have had
-holes in the user page table, and there were no PTE tables.
-Pasha
+>>>
+>>> Honestly, for improving the fork(), I have an idea to skip the per-page
+>>> operation without breaking the logic. However, this will introduce the
+>>> complicated mechanism and may has the overhead for other features. It
+>>> might not be worth it. It's hard to strike a balance between the
+>>> over-complicated mechanism with (probably) better performance and data
+>>> consistency with the page status. So, I would focus on the safety and
+>>> stable approach at first.
+>>
+>> Yes, it is most probably possible, but complexity, robustness and
+>> maintainability have to be considered as well.
+>>
+>> Thanks for implementing this approach (only deduplication without other
+>> optimizations) and evaluating it accordingly. It's certainly "cleaner", such
+>> that we only have to mess with unsharing and not with other
+>> accounting/pinning/mapcount thingies. But it also highlights how intrusive
+>> even this basic deduplication approach already is -- and that most benefits
+>> of the original approach requires even more complexity on top.
+>>
+>> I am not quite sure if the benefit is worth the price (I am not to decide
+>> and I would like to hear other options).
+> 
+> I'm looking at the discussion of page table sharing in 2002 [1].
+> It looks like in 2002 ~ 2006, there also have some patches try to
+> improve fork().
+> 
+> After that, I also saw one thread which is about another shared page
+> table patch's benchmark. I can't find the original patch though [2].
+> But, I found the probably same patch in 2005 [3], it also mentioned
+> the previous benchmark discussion:
+> 
+> "
+> For those familiar with the shared page table patch I did a couple of years
+> ago, this patch does not implement copy-on-write page tables for private
+> mappings.  Analysis showed the cost and complexity far outweighed any
+> potential benefit.
+> "
+
+Thanks for the pointer, interesting read. And my personal opinion is 
+that part of that statement still hold true :)
+
+> 
+> However, it might be different right now. For example, the implemetation
+> . We have split page table lock now, so we don't have to consider the
+> page_table_share_lock thing. Also, presently, we have different use
+> cases (shells [2] v.s. VM cloning and fuzzing) to consider.
+> 
+> Nonetheless, I still think the discussion can provide some of the mind
+> to us.
+> 
+> BTW, It seems like the 2002 patch [1] is different from the 2002 [2]
+> and 2005 [3].
+> 
+> [1] https://lkml.iu.edu/hypermail/linux/kernel/0202.2/0102.html
+> [2] https://lore.kernel.org/linux-mm/3E02FACD.5B300794@digeo.com/
+> [3] https://lore.kernel.org/linux-mm/7C49DFF721CB4E671DB260F9@%5B10.1.1.4%5D/T/#u
+> 
+>> My quick thoughts after skimming over the core parts of this series
+>>
+>> (1) forgetting to break COW on a PTE in some pgtable walker feels quite
+>>      likely (meaning that it might be fairly error-prone) and forgetting
+>>      to break COW on a PTE table, accidentally modifying the shared
+>>      table.
+> 
+> Maybe I should also handle arch/ and others parts.
+> I will keep looking at where I missed.
+
+One could add sanity checks when modifying a PTE while the PTE table is 
+still marked shared ... but I guess there are some valid reasons where 
+we might want to modify shared PTE tables (rmap).
+
+> 
+>> (2) break_cow_pte() can fail, which means that we can fail some
+>>      operations (possibly silently halfway through) now. For example,
+>>      looking at your change_pte_range() change, I suspect it's wrong.
+> 
+> Maybe I should add WARN_ON() and skip the failed COW PTE.
+
+One way or the other we'll have to handle it. WARN_ON() sounds wrong for 
+handling OOM situations (e.g., if only that cgroup is OOM).
+
+> 
+>> (3) handle_cow_pte_fault() looks quite complicated and needs quite some
+>>      double-checking: we temporarily clear the PMD, to reset it
+>>      afterwards. I am not sure if that is correct. For example, what
+>>      stops another page fault stumbling over that pmd_none() and
+>>      allocating an empty page table? Maybe there are some locking details
+>>      missing or they are very subtle such that we better document them. I
+>>     recall that THP played quite some tricks to make such cases work ...
+> 
+> I think that holding mmap_write_lock may be enough (I added
+> mmap_assert_write_locked() in the fault function btw). But, I might
+> be wrong. I will look at the THP stuff to see how they work. Thanks.
+> 
+
+Ehm, but page faults don't hold the mmap lock writable? And so are other 
+callers, like MADV_DONTNEED or MADV_FREE.
+
+handle_pte_fault()->handle_pte_fault()->mmap_assert_write_locked() 
+should bail out.
+
+Either I am missing something or you didn't test with lockdep enabled :)
+
+Note that there are upstream efforts to use only a VMA lock (and some 
+people even want to perform some page faults only protected by RCU).
+
+-- 
+Thanks,
+
+David / dhildenb
+
