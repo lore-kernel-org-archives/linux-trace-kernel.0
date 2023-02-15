@@ -2,63 +2,62 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AF525C64ED9
-	for <linux-trace-kernel@archiver.kernel.org>; Wed, 15 Feb 2023 22:34:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DF83C636CC
+	for <linux-trace-kernel@archiver.kernel.org>; Wed, 15 Feb 2023 22:34:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229810AbjBOWeC (ORCPT
+        id S229861AbjBOWeD (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Wed, 15 Feb 2023 17:34:02 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36840 "EHLO
+        Wed, 15 Feb 2023 17:34:03 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36830 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229809AbjBOWeA (ORCPT
+        with ESMTP id S229824AbjBOWeB (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Wed, 15 Feb 2023 17:34:00 -0500
-Received: from mail-il1-x12f.google.com (mail-il1-x12f.google.com [IPv6:2607:f8b0:4864:20::12f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E4FCA3433C
+        Wed, 15 Feb 2023 17:34:01 -0500
+Received: from mail-il1-x12a.google.com (mail-il1-x12a.google.com [IPv6:2607:f8b0:4864:20::12a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CE7F4252B2
         for <linux-trace-kernel@vger.kernel.org>; Wed, 15 Feb 2023 14:33:59 -0800 (PST)
-Received: by mail-il1-x12f.google.com with SMTP id y8so180192ilv.1
+Received: by mail-il1-x12a.google.com with SMTP id v13so172231iln.4
         for <linux-trace-kernel@vger.kernel.org>; Wed, 15 Feb 2023 14:33:59 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=lP7i4Vg5vCi45+1jZsWESpRSmXH35ZniV9m1/+tW+Hk=;
-        b=nkZL9fJ4DuIlF/CtEtVuUWG1NHpyIExHBSMUpvG++W5Ao+0jTazceFPQ+qafDgTzZN
-         P+qX432q5PjnU01ridwbkLLkiU0rTtSZdXZEQd/FetfZiE1KzwwCeQCqOizI8U6m/CdR
-         qCDN90d6J3zjeKTJ5KEfh+qukVjCgjja+cIZM=
+        bh=KRiIylVtHLM7M15bsUbIunpslIeQnzNkiL62MB+UIyE=;
+        b=XDrTWczdWtWaoFMsyxlLVwbPoQdmxEcpRJz8GQEWwI4ccFUfl2v4C8mxYu1m5tIV9N
+         TG+TcjrZLqOfuvf95ggXwSj8/yudyG0CglTYncr55dcrtosjtDHyzohqf0vR7Yg97M1O
+         jOsVnHpSdwpT5fJhRgPlu2bPmANuNnJKXUEjc=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=lP7i4Vg5vCi45+1jZsWESpRSmXH35ZniV9m1/+tW+Hk=;
-        b=RB5wzv71wfNC4zVxAYlEsjmbRr8xf/XoPmQ+EZuyM9p2tkOpGi1PwkS1LsyqkSHY1r
-         4OKd8+QLBOg1PeoT5D31bnaUKL1F0KCkFjTT2RR6pyXWROdNh4SAe9asl+kkCdhOROk5
-         ipaW5SadJBR+uL9gFj/9iMfif2WlF6Fb7W//hFYg1DTEhZvcrJGxR+t5var6n4j+GHbY
-         B3yupDPlNxR20AajhclRNCHU9PglMlB0gQm8934dNDWf093tglZ6E7bVhVc5a70iLtux
-         rF4nbTesw0qygoQCdOC2oXQBXMh1fpEuYDEzD2WvfvgaV1L2RtXEqep7q1OGlBTKolyr
-         f5Xw==
-X-Gm-Message-State: AO0yUKVi+cQK0IcJNg3NLsSGUnY3EhCv5ZCPsUTf0YbmSYdu8QX3JWg1
-        s3u2b2/AeMbTINXVyp2wkc4Ksw==
-X-Google-Smtp-Source: AK7set/iT57WkSxfAxsAOUoPZU2et6o/KodiZpe6LUgEgddn6Z+TYNMWbr3f09Z6/v0pnuZZ8Xenpg==
-X-Received: by 2002:a05:6e02:1d91:b0:315:7004:3e6c with SMTP id h17-20020a056e021d9100b0031570043e6cmr3354878ila.23.1676500439322;
-        Wed, 15 Feb 2023 14:33:59 -0800 (PST)
+        bh=KRiIylVtHLM7M15bsUbIunpslIeQnzNkiL62MB+UIyE=;
+        b=RQ7NGKIuQ95/VIoJOJ59H8mKynEQqf1onB6SKTnT8leNP4LxRaHkenfk4RMBTEiuce
+         CuJEOPeNw9r5a+hZ0SIV67hZbujkWePlyJ6gse936Kzl2LEzV/EUqS6/9dTBYl9po4wQ
+         utmAFVit24LIWylL3okrPs9IgU+h9YNmIphmokgvu18cbTrtnZMxCmQV8IkCDQVjXfOg
+         H7iVrEUKVcLKWG21lUFZ9doCGiUoa4TmjEyZ/nRrMIYrmY77AG4SUvMCL/GF2KBiEBSn
+         zcuEn5+5Tm0eEO3PfTY2mtCA1AT5Lae97XsE8Hd4F4gp0cRgyfQeZGV20SVrCKbm7OD+
+         xNXw==
+X-Gm-Message-State: AO0yUKUHyVq2j2nEMPCZ2+SvJWEf5uUSjYb0Io0z3jx8VXC8aKWSYVTX
+        laIO2nRz4cMSN23cI4593li6Ug==
+X-Google-Smtp-Source: AK7set+st368XsFs7KuhNnjJJxjSkTp+ehPsvZjpomFKZjaSs7keJycjfj1LQ7Z2YQJHHx4GupN8Hw==
+X-Received: by 2002:a05:6e02:1605:b0:315:2b7d:d2d8 with SMTP id t5-20020a056e02160500b003152b7dd2d8mr4248678ilu.4.1676500438753;
+        Wed, 15 Feb 2023 14:33:58 -0800 (PST)
 Received: from ravnica.bld.corp.google.com ([2620:15c:183:200:6299:179b:a6e4:be59])
         by smtp.gmail.com with ESMTPSA id b15-20020a92c14f000000b003141eddd283sm1131489ilh.22.2023.02.15.14.33.58
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 15 Feb 2023 14:33:59 -0800 (PST)
+        Wed, 15 Feb 2023 14:33:58 -0800 (PST)
 From:   Ross Zwisler <zwisler@chromium.org>
 X-Google-Original-From: Ross Zwisler <zwisler@google.com>
 To:     linux-kernel@vger.kernel.org
-Cc:     Ross Zwisler <zwisler@google.com>, Shuah Khan <shuah@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        linux-kselftest@vger.kernel.org, linux-mm@kvack.org,
-        linux-trace-kernel@vger.kernel.org,
-        Steven Rostedt <rostedt@goodmis.org>
-Subject: [PATCH v2 2/6] selftests: use canonical ftrace path
-Date:   Wed, 15 Feb 2023 15:33:46 -0700
-Message-Id: <20230215223350.2658616-3-zwisler@google.com>
+Cc:     Ross Zwisler <zwisler@google.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        linux-trace-kernel@vger.kernel.org
+Subject: [PATCH v2 1/6] tracing: always use canonical ftrace path
+Date:   Wed, 15 Feb 2023 15:33:45 -0700
+Message-Id: <20230215223350.2658616-2-zwisler@google.com>
 X-Mailer: git-send-email 2.39.1.637.g21b0678d19-goog
 In-Reply-To: <20230215223350.2658616-1-zwisler@google.com>
 References: <20230215223350.2658616-1-zwisler@google.com>
@@ -79,92 +78,258 @@ But, from Documentation/trace/ftrace.rst:
 
   /sys/kernel/debug/tracing
 
-A few spots in tools/testing/selftests still refer to this older debugfs
-path, so let's update them to avoid confusion.
+Many comments and Kconfig help messages in the tracing code still refer
+to this older debugfs path, so let's update them to avoid confusion.
 
 Signed-off-by: Ross Zwisler <zwisler@google.com>
 ---
- tools/testing/selftests/user_events/dyn_test.c    |  2 +-
- tools/testing/selftests/user_events/ftrace_test.c | 10 +++++-----
- tools/testing/selftests/user_events/perf_test.c   |  8 ++++----
- tools/testing/selftests/vm/protection_keys.c      |  4 ++--
- 4 files changed, 12 insertions(+), 12 deletions(-)
+ include/linux/kernel.h                    |  2 +-
+ include/linux/tracepoint.h                |  4 ++--
+ kernel/trace/Kconfig                      | 20 ++++++++++----------
+ kernel/trace/kprobe_event_gen_test.c      |  2 +-
+ kernel/trace/ring_buffer.c                |  2 +-
+ kernel/trace/synth_event_gen_test.c       |  2 +-
+ kernel/trace/trace.c                      |  2 +-
+ samples/user_events/example.c             |  4 ++--
+ scripts/tracing/draw_functrace.py         |  6 +++---
+ tools/lib/api/fs/tracing_path.c           |  4 ++--
+ tools/tracing/latency/latency-collector.c |  2 +-
+ 11 files changed, 25 insertions(+), 25 deletions(-)
 
-diff --git a/tools/testing/selftests/user_events/dyn_test.c b/tools/testing/selftests/user_events/dyn_test.c
-index d6265d14cd51..8879a7b04c6a 100644
---- a/tools/testing/selftests/user_events/dyn_test.c
-+++ b/tools/testing/selftests/user_events/dyn_test.c
-@@ -16,7 +16,7 @@
+diff --git a/include/linux/kernel.h b/include/linux/kernel.h
+index fe6efb24d151..40bce7495af8 100644
+--- a/include/linux/kernel.h
++++ b/include/linux/kernel.h
+@@ -297,7 +297,7 @@ bool mac_pton(const char *s, u8 *mac);
+  *
+  * Use tracing_on/tracing_off when you want to quickly turn on or off
+  * tracing. It simply enables or disables the recording of the trace events.
+- * This also corresponds to the user space /sys/kernel/debug/tracing/tracing_on
++ * This also corresponds to the user space /sys/kernel/tracing/tracing_on
+  * file, which gives a means for the kernel and userspace to interact.
+  * Place a tracing_off() in the kernel where you want tracing to end.
+  * From user space, examine the trace, and then echo 1 > tracing_on
+diff --git a/include/linux/tracepoint.h b/include/linux/tracepoint.h
+index 4b33b95eb8be..fa1004fcf810 100644
+--- a/include/linux/tracepoint.h
++++ b/include/linux/tracepoint.h
+@@ -471,7 +471,7 @@ static inline struct tracepoint *tracepoint_ptr_deref(tracepoint_ptr_t *p)
+  *	* This is how the trace record is structured and will
+  *	* be saved into the ring buffer. These are the fields
+  *	* that will be exposed to user-space in
+- *	* /sys/kernel/debug/tracing/events/<*>/format.
++ *	* /sys/kernel/tracing/events/<*>/format.
+  *	*
+  *	* The declared 'local variable' is called '__entry'
+  *	*
+@@ -531,7 +531,7 @@ static inline struct tracepoint *tracepoint_ptr_deref(tracepoint_ptr_t *p)
+  * tracepoint callback (this is used by programmatic plugins and
+  * can also by used by generic instrumentation like SystemTap), and
+  * it is also used to expose a structured trace record in
+- * /sys/kernel/debug/tracing/events/.
++ * /sys/kernel/tracing/events/.
+  *
+  * A set of (un)registration functions can be passed to the variant
+  * TRACE_EVENT_FN to perform any (un)registration work.
+diff --git a/kernel/trace/Kconfig b/kernel/trace/Kconfig
+index d7043043f59c..5f5e64f9e715 100644
+--- a/kernel/trace/Kconfig
++++ b/kernel/trace/Kconfig
+@@ -239,7 +239,7 @@ config DYNAMIC_FTRACE
+ 	  enabled, and the functions not enabled will not affect
+ 	  performance of the system.
  
- #include "../kselftest_harness.h"
+-	  See the files in /sys/kernel/debug/tracing:
++	  See the files in /sys/kernel/tracing:
+ 	    available_filter_functions
+ 	    set_ftrace_filter
+ 	    set_ftrace_notrace
+@@ -299,7 +299,7 @@ config STACK_TRACER
+ 	select KALLSYMS
+ 	help
+ 	  This special tracer records the maximum stack footprint of the
+-	  kernel and displays it in /sys/kernel/debug/tracing/stack_trace.
++	  kernel and displays it in /sys/kernel/tracing/stack_trace.
  
--const char *dyn_file = "/sys/kernel/debug/tracing/dynamic_events";
-+const char *dyn_file = "/sys/kernel/tracing/dynamic_events";
- const char *clear = "!u:__test_event";
+ 	  This tracer works by hooking into every function call that the
+ 	  kernel executes, and keeping a maximum stack depth value and
+@@ -339,7 +339,7 @@ config IRQSOFF_TRACER
+ 	  disabled by default and can be runtime (re-)started
+ 	  via:
  
- static int Append(const char *value)
-diff --git a/tools/testing/selftests/user_events/ftrace_test.c b/tools/testing/selftests/user_events/ftrace_test.c
-index 404a2713dcae..a0b2c96eb252 100644
---- a/tools/testing/selftests/user_events/ftrace_test.c
-+++ b/tools/testing/selftests/user_events/ftrace_test.c
-@@ -16,11 +16,11 @@
+-	      echo 0 > /sys/kernel/debug/tracing/tracing_max_latency
++	      echo 0 > /sys/kernel/tracing/tracing_max_latency
  
- #include "../kselftest_harness.h"
+ 	  (Note that kernel size and overhead increase with this option
+ 	  enabled. This option and the preempt-off timing option can be
+@@ -363,7 +363,7 @@ config PREEMPT_TRACER
+ 	  disabled by default and can be runtime (re-)started
+ 	  via:
  
--const char *data_file = "/sys/kernel/debug/tracing/user_events_data";
--const char *status_file = "/sys/kernel/debug/tracing/user_events_status";
--const char *enable_file = "/sys/kernel/debug/tracing/events/user_events/__test_event/enable";
--const char *trace_file = "/sys/kernel/debug/tracing/trace";
--const char *fmt_file = "/sys/kernel/debug/tracing/events/user_events/__test_event/format";
-+const char *data_file = "/sys/kernel/tracing/user_events_data";
-+const char *status_file = "/sys/kernel/tracing/user_events_status";
-+const char *enable_file = "/sys/kernel/tracing/events/user_events/__test_event/enable";
-+const char *trace_file = "/sys/kernel/tracing/trace";
-+const char *fmt_file = "/sys/kernel/tracing/events/user_events/__test_event/format";
+-	      echo 0 > /sys/kernel/debug/tracing/tracing_max_latency
++	      echo 0 > /sys/kernel/tracing/tracing_max_latency
  
- static inline int status_check(char *status_page, int status_bit)
- {
-diff --git a/tools/testing/selftests/user_events/perf_test.c b/tools/testing/selftests/user_events/perf_test.c
-index 8b4c7879d5a7..31505642aa9b 100644
---- a/tools/testing/selftests/user_events/perf_test.c
-+++ b/tools/testing/selftests/user_events/perf_test.c
-@@ -18,10 +18,10 @@
+ 	  (Note that kernel size and overhead increase with this option
+ 	  enabled. This option and the irqs-off timing option can be
+@@ -515,7 +515,7 @@ config TRACER_SNAPSHOT
+ 	  Allow tracing users to take snapshot of the current buffer using the
+ 	  ftrace interface, e.g.:
  
- #include "../kselftest_harness.h"
+-	      echo 1 > /sys/kernel/debug/tracing/snapshot
++	      echo 1 > /sys/kernel/tracing/snapshot
+ 	      cat snapshot
  
--const char *data_file = "/sys/kernel/debug/tracing/user_events_data";
--const char *status_file = "/sys/kernel/debug/tracing/user_events_status";
--const char *id_file = "/sys/kernel/debug/tracing/events/user_events/__test_event/id";
--const char *fmt_file = "/sys/kernel/debug/tracing/events/user_events/__test_event/format";
-+const char *data_file = "/sys/kernel/tracing/user_events_data";
-+const char *status_file = "/sys/kernel/tracing/user_events_status";
-+const char *id_file = "/sys/kernel/tracing/events/user_events/__test_event/id";
-+const char *fmt_file = "/sys/kernel/tracing/events/user_events/__test_event/format";
+ config TRACER_SNAPSHOT_PER_CPU_SWAP
+@@ -527,7 +527,7 @@ config TRACER_SNAPSHOT_PER_CPU_SWAP
+ 	  full swap (all buffers). If this is set, then the following is
+ 	  allowed:
  
- struct event {
- 	__u32 index;
-diff --git a/tools/testing/selftests/vm/protection_keys.c b/tools/testing/selftests/vm/protection_keys.c
-index 95f403a0c46d..0381c34fdd56 100644
---- a/tools/testing/selftests/vm/protection_keys.c
-+++ b/tools/testing/selftests/vm/protection_keys.c
-@@ -98,7 +98,7 @@ int tracing_root_ok(void)
- void tracing_on(void)
- {
- #if CONTROL_TRACING > 0
--#define TRACEDIR "/sys/kernel/debug/tracing"
-+#define TRACEDIR "/sys/kernel/tracing"
- 	char pidstr[32];
+-	      echo 1 > /sys/kernel/debug/tracing/per_cpu/cpu2/snapshot
++	      echo 1 > /sys/kernel/tracing/per_cpu/cpu2/snapshot
  
- 	if (!tracing_root_ok())
-@@ -124,7 +124,7 @@ void tracing_off(void)
- #if CONTROL_TRACING > 0
- 	if (!tracing_root_ok())
- 		return;
--	cat_into_file("0", "/sys/kernel/debug/tracing/tracing_on");
-+	cat_into_file("0", "/sys/kernel/tracing/tracing_on");
- #endif
+ 	  After which, only the tracing buffer for CPU 2 was swapped with
+ 	  the main tracing buffer, and the other CPU buffers remain the same.
+@@ -574,7 +574,7 @@ config PROFILE_ANNOTATED_BRANCHES
+ 	  This tracer profiles all likely and unlikely macros
+ 	  in the kernel. It will display the results in:
+ 
+-	  /sys/kernel/debug/tracing/trace_stat/branch_annotated
++	  /sys/kernel/tracing/trace_stat/branch_annotated
+ 
+ 	  Note: this will add a significant overhead; only turn this
+ 	  on if you need to profile the system's use of these macros.
+@@ -587,7 +587,7 @@ config PROFILE_ALL_BRANCHES
+ 	  taken in the kernel is recorded whether it hit or miss.
+ 	  The results will be displayed in:
+ 
+-	  /sys/kernel/debug/tracing/trace_stat/branch_all
++	  /sys/kernel/tracing/trace_stat/branch_all
+ 
+ 	  This option also enables the likely/unlikely profiler.
+ 
+@@ -638,8 +638,8 @@ config BLK_DEV_IO_TRACE
+ 	  Tracing also is possible using the ftrace interface, e.g.:
+ 
+ 	    echo 1 > /sys/block/sda/sda1/trace/enable
+-	    echo blk > /sys/kernel/debug/tracing/current_tracer
+-	    cat /sys/kernel/debug/tracing/trace_pipe
++	    echo blk > /sys/kernel/tracing/current_tracer
++	    cat /sys/kernel/tracing/trace_pipe
+ 
+ 	  If unsure, say N.
+ 
+diff --git a/kernel/trace/kprobe_event_gen_test.c b/kernel/trace/kprobe_event_gen_test.c
+index c736487fc0e4..4850fdfe27f1 100644
+--- a/kernel/trace/kprobe_event_gen_test.c
++++ b/kernel/trace/kprobe_event_gen_test.c
+@@ -21,7 +21,7 @@
+  * Then:
+  *
+  * # insmod kernel/trace/kprobe_event_gen_test.ko
+- * # cat /sys/kernel/debug/tracing/trace
++ * # cat /sys/kernel/tracing/trace
+  *
+  * You should see many instances of the "gen_kprobe_test" and
+  * "gen_kretprobe_test" events in the trace buffer.
+diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
+index c366a0a9ddba..4cdb2feccff3 100644
+--- a/kernel/trace/ring_buffer.c
++++ b/kernel/trace/ring_buffer.c
+@@ -2886,7 +2886,7 @@ rb_check_timestamp(struct ring_buffer_per_cpu *cpu_buffer,
+ 		  sched_clock_stable() ? "" :
+ 		  "If you just came from a suspend/resume,\n"
+ 		  "please switch to the trace global clock:\n"
+-		  "  echo global > /sys/kernel/debug/tracing/trace_clock\n"
++		  "  echo global > /sys/kernel/tracing/trace_clock\n"
+ 		  "or add trace_clock=global to the kernel command line\n");
  }
  
+diff --git a/kernel/trace/synth_event_gen_test.c b/kernel/trace/synth_event_gen_test.c
+index 8d77526892f4..8dfe85499d4a 100644
+--- a/kernel/trace/synth_event_gen_test.c
++++ b/kernel/trace/synth_event_gen_test.c
+@@ -22,7 +22,7 @@
+  * Then:
+  *
+  * # insmod kernel/trace/synth_event_gen_test.ko
+- * # cat /sys/kernel/debug/tracing/trace
++ * # cat /sys/kernel/tracing/trace
+  *
+  * You should see several events in the trace buffer -
+  * "create_synth_test", "empty_synth_test", and several instances of
+diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
+index c9e40f692650..1101220052b3 100644
+--- a/kernel/trace/trace.c
++++ b/kernel/trace/trace.c
+@@ -1142,7 +1142,7 @@ void tracing_snapshot_instance(struct trace_array *tr)
+  *
+  * Note, make sure to allocate the snapshot with either
+  * a tracing_snapshot_alloc(), or by doing it manually
+- * with: echo 1 > /sys/kernel/debug/tracing/snapshot
++ * with: echo 1 > /sys/kernel/tracing/snapshot
+  *
+  * If the snapshot buffer is not allocated, it will stop tracing.
+  * Basically making a permanent snapshot.
+diff --git a/samples/user_events/example.c b/samples/user_events/example.c
+index d06dc24156ec..18e34c9d708e 100644
+--- a/samples/user_events/example.c
++++ b/samples/user_events/example.c
+@@ -23,8 +23,8 @@
+ #endif
+ 
+ /* Assumes debugfs is mounted */
+-const char *data_file = "/sys/kernel/debug/tracing/user_events_data";
+-const char *status_file = "/sys/kernel/debug/tracing/user_events_status";
++const char *data_file = "/sys/kernel/tracing/user_events_data";
++const char *status_file = "/sys/kernel/tracing/user_events_status";
+ 
+ static int event_status(long **status)
+ {
+diff --git a/scripts/tracing/draw_functrace.py b/scripts/tracing/draw_functrace.py
+index 438516bdfb3c..42fa87300941 100755
+--- a/scripts/tracing/draw_functrace.py
++++ b/scripts/tracing/draw_functrace.py
+@@ -12,9 +12,9 @@ calls. Only the functions's names and the call time are provided.
+ 
+ Usage:
+ 	Be sure that you have CONFIG_FUNCTION_TRACER
+-	# mount -t debugfs nodev /sys/kernel/debug
+-	# echo function > /sys/kernel/debug/tracing/current_tracer
+-	$ cat /sys/kernel/debug/tracing/trace_pipe > ~/raw_trace_func
++	# mount -t tracefs nodev /sys/kernel/tracing
++	# echo function > /sys/kernel/tracing/current_tracer
++	$ cat /sys/kernel/tracing/trace_pipe > ~/raw_trace_func
+ 	Wait some times but not too much, the script is a bit slow.
+ 	Break the pipe (Ctrl + Z)
+ 	$ scripts/tracing/draw_functrace.py < ~/raw_trace_func > draw_functrace
+diff --git a/tools/lib/api/fs/tracing_path.c b/tools/lib/api/fs/tracing_path.c
+index b8e457c841ab..7ba3e81274e8 100644
+--- a/tools/lib/api/fs/tracing_path.c
++++ b/tools/lib/api/fs/tracing_path.c
+@@ -14,8 +14,8 @@
+ #include "tracing_path.h"
+ 
+ static char tracing_mnt[PATH_MAX]  = "/sys/kernel/debug";
+-static char tracing_path[PATH_MAX]        = "/sys/kernel/debug/tracing";
+-static char tracing_events_path[PATH_MAX] = "/sys/kernel/debug/tracing/events";
++static char tracing_path[PATH_MAX]        = "/sys/kernel/tracing";
++static char tracing_events_path[PATH_MAX] = "/sys/kernel/tracing/events";
+ 
+ static void __tracing_path_set(const char *tracing, const char *mountpoint)
+ {
+diff --git a/tools/tracing/latency/latency-collector.c b/tools/tracing/latency/latency-collector.c
+index 59a7f2346eab..0fd9c747d396 100644
+--- a/tools/tracing/latency/latency-collector.c
++++ b/tools/tracing/latency/latency-collector.c
+@@ -1584,7 +1584,7 @@ static void *do_printloop(void *arg)
+ 		/*
+ 		 * Toss a coin to decide if we want to sleep before printing
+ 		 * out the backtrace. The reason for this is that opening
+-		 * /sys/kernel/debug/tracing/trace will cause a blackout of
++		 * /sys/kernel/tracing/trace will cause a blackout of
+ 		 * hundreds of ms, where no latencies will be noted by the
+ 		 * latency tracer. Thus by randomly sleeping we try to avoid
+ 		 * missing traces systematically due to this. With this option
 -- 
 2.39.1.637.g21b0678d19-goog
 
