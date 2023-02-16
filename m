@@ -2,188 +2,164 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BDE17C64ED6
-	for <linux-trace-kernel@archiver.kernel.org>; Thu, 16 Feb 2023 03:45:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A882C636CC
+	for <linux-trace-kernel@archiver.kernel.org>; Thu, 16 Feb 2023 11:47:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229518AbjBPDpE (ORCPT
+        id S229623AbjBPLrm (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Wed, 15 Feb 2023 22:45:04 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46340 "EHLO
+        Thu, 16 Feb 2023 06:47:42 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37738 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229629AbjBPDpE (ORCPT
+        with ESMTP id S229546AbjBPLrl (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Wed, 15 Feb 2023 22:45:04 -0500
-Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F22B9BDDB;
-        Wed, 15 Feb 2023 19:45:02 -0800 (PST)
-Received: from kwepemm600003.china.huawei.com (unknown [172.30.72.55])
-        by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4PHLPq1Lr8zJsW9;
-        Thu, 16 Feb 2023 11:43:11 +0800 (CST)
-Received: from ubuntu1804.huawei.com (10.67.174.61) by
- kwepemm600003.china.huawei.com (7.193.23.202) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.17; Thu, 16 Feb 2023 11:44:58 +0800
-From:   Yang Jihong <yangjihong1@huawei.com>
-To:     <tglx@linutronix.de>, <mingo@redhat.com>, <bp@alien8.de>,
-        <dave.hansen@linux.intel.com>, <x86@kernel.org>, <hpa@zytor.com>,
-        <naveen.n.rao@linux.ibm.com>, <anil.s.keshavamurthy@intel.com>,
-        <davem@davemloft.net>, <mhiramat@kernel.org>, <ast@kernel.org>,
-        <peterz@infradead.org>, <linux-kernel@vger.kernel.org>,
-        <linux-trace-kernel@vger.kernel.org>
-CC:     <stable@vger.kernel.org>, <yangjihong1@huawei.com>
-Subject: [PATCH v2 2/2] x86/kprobes: Fix arch_check_optimized_kprobe check within optimized_kprobe range
-Date:   Thu, 16 Feb 2023 11:42:47 +0800
-Message-ID: <20230216034247.32348-3-yangjihong1@huawei.com>
-X-Mailer: git-send-email 2.30.GIT
-In-Reply-To: <20230216034247.32348-1-yangjihong1@huawei.com>
-References: <20230216034247.32348-1-yangjihong1@huawei.com>
+        Thu, 16 Feb 2023 06:47:41 -0500
+Received: from wp530.webpack.hosteurope.de (wp530.webpack.hosteurope.de [80.237.130.52])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A01675593;
+        Thu, 16 Feb 2023 03:47:39 -0800 (PST)
+Received: from [2a02:8108:8980:2478:8cde:aa2c:f324:937e]; authenticated
+        by wp530.webpack.hosteurope.de running ExIM with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        id 1pScjg-0000CY-Ra; Thu, 16 Feb 2023 12:47:36 +0100
+Message-ID: <286293b4-5ae6-1348-9d69-7049ef5adf35@leemhuis.info>
+Date:   Thu, 16 Feb 2023 12:47:36 +0100
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [10.67.174.61]
-X-ClientProxiedBy: dggems704-chm.china.huawei.com (10.3.19.181) To
- kwepemm600003.china.huawei.com (7.193.23.202)
-X-CFilter-Loop: Reflected
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.7.2
+Reply-To: Linux regressions mailing list <regressions@lists.linux.dev>
+Subject: Re: [RFC PATCH V2 1/1] rasdaemon: Fix poll() on per_cpu
+ trace_pipe_raw blocks indefinitely
+Content-Language: en-US, de-DE
+To:     rostedt@goodmis.org
+Cc:     mhiramat@kernel.org, linux-kernel@vger.kernel.org,
+        linux-trace-kernel@vger.kernel.org, tanxiaofei@huawei.com,
+        jonathan.cameron@huawei.com, linuxarm@huawei.com,
+        Linux kernel regressions list <regressions@lists.linux.dev>,
+        shiju.jose@huawei.com, mchehab@kernel.org,
+        linux-edac@vger.kernel.org
+References: <20230204193345.842-1-shiju.jose@huawei.com>
+From:   "Linux regression tracking (Thorsten Leemhuis)" 
+        <regressions@leemhuis.info>
+In-Reply-To: <20230204193345.842-1-shiju.jose@huawei.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-bounce-key: webpack.hosteurope.de;regressions@leemhuis.info;1676548059;509d3c9d;
+X-HE-SMSGID: 1pScjg-0000CY-Ra
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-When arch_prepare_optimized_kprobe calculating jump destination address,
-it copies original instructions from jmp-optimized kprobe (see
-__recover_optprobed_insn), and calculated based on length of original
-instruction.
+Hi, this is your Linux kernel regression tracker.
 
-arch_check_optimized_kprobe does not check KPROBE_FLAG_OPTIMATED when
-checking whether jmp-optimized kprobe exists.
-As a result, setup_detour_execution may jump to a range that has been
-overwritten by jump destination address, resulting in an inval opcode error.
+On 04.02.23 20:33, shiju.jose@huawei.com wrote:
+> From: Shiju Jose <shiju.jose@huawei.com>
+> 
+> The error events are not received in the rasdaemon since kernel 6.1-rc6.
+> This issue is firstly detected and reported, when testing the CXL error
+> events in the rasdaemon.
 
-For example, assume that register two kprobes whose addresses are
-<func+9> and <func+11> in "func" function.
-The original code of "func" function is as follows:
+Thanks for working on this. This submission looks stalled, unless I
+missed something. This is unfortunate, as this afaics is fixing a
+regression (caused by a commit from Steven). Hence it would be good to
+get this fixed rather sooner than later. Or is the RFC in the subject
+the reason why there was no progress? Is it maybe time to remove it?
 
-   0xffffffff816cb5e9 <+9>:     push   %r12
-   0xffffffff816cb5eb <+11>:    xor    %r12d,%r12d
-   0xffffffff816cb5ee <+14>:    test   %rdi,%rdi
-   0xffffffff816cb5f1 <+17>:    setne  %r12b
-   0xffffffff816cb5f5 <+21>:    push   %rbp
+> Debugging showed, poll() on trace_pipe_raw in the ras-events.c do not
+> return and this issue is seen after the commit
+> 42fb0a1e84ff525ebe560e2baf9451ab69127e2b ("tracing/ring-buffer: Have
+> polling block on watermark").
+> 
+> This also verified using a test application for poll()
+> and select() on trace_pipe_raw.
+> 
+> There is also a bug reported on this issue,
+> https://lore.kernel.org/all/31eb3b12-3350-90a4-a0d9-d1494db7cf74@oracle.com/
 
-1.Register the kprobe for <func+11>, assume that is kp1, corresponding optimized_kprobe is op1.
-  After the optimization, "func" code changes to:
 
-   0xffffffff816cc079 <+9>:     push   %r12
-   0xffffffff816cc07b <+11>:    jmp    0xffffffffa0210000
-   0xffffffff816cc080 <+16>:    incl   0xf(%rcx)
-   0xffffffff816cc083 <+19>:    xchg   %eax,%ebp
-   0xffffffff816cc084 <+20>:    (bad)
-   0xffffffff816cc085 <+21>:    push   %rbp
 
-Now op1->flags == KPROBE_FLAG_OPTIMATED;
 
-2. Register the kprobe for <func+9>, assume that is kp2, corresponding optimized_kprobe is op2.
+> This issue occurs for the per_cpu case, which calls the
+> ring_buffer_poll_wait(), in kernel/trace/ring_buffer.c, with the
+> buffer_percent > 0 and then wait until the percentage of pages are
+> available.The default value set for the buffer_percent is 50 in the
+> kernel/trace/trace.c. However poll() does not return even met the percentage
+> of pages condition.
+> 
+> As a fix, rasdaemon set buffer_percent as 0 through the
+> /sys/kernel/debug/tracing/instances/rasdaemon/buffer_percent, then the
+> task will wake up as soon as data is added to any of the specific cpu
+> buffer and poll() on per_cpu/cpuX/trace_pipe_raw does not block
+> indefinitely.
+> 
+> Dependency on the kernel RFC patch
+> tracing: Fix poll() and select() do not work on per_cpu trace_pipe and trace_pipe_raw
 
-register_kprobe(kp2)
-  register_aggr_kprobe
-    alloc_aggr_kprobe
-      __prepare_optimized_kprobe
-        arch_prepare_optimized_kprobe
-          __recover_optprobed_insn    // copy original bytes from kp1->optinsn.copied_insn,
-                                      // jump address = <func+14>
+BTW, this patch afaics should have these tags:
 
-3. disable kp1:
+Fixes: 42fb0a1e84ff ("tracing/ring-buffer: Have polling block on watermark")
+Reported-by: Harshit Mogalapalli <harshit.m.mogalapalli@oracle.com>
+Link:
+https://lore.kernel.org/r/31eb3b12-3350-90a4-a0d9-d1494db7cf74@oracle.com/
 
-disable_kprobe(kp1)
-  __disable_kprobe
-    ...
-    if (p == orig_p || aggr_kprobe_disabled(orig_p)) {
-      ret = disarm_kprobe(orig_p, true)       // add op1 in unoptimizing_list, not unoptimized
-      orig_p->flags |= KPROBE_FLAG_DISABLED;  // op1->flags ==  KPROBE_FLAG_OPTIMATED | KPROBE_FLAG_DISABLED
-    ...
+An likely a
 
-4. unregister kp2
-__unregister_kprobe_top
-  ...
-  if (!kprobe_disabled(ap) && !kprobes_all_disarmed) {
-    optimize_kprobe(op)
-      ...
-      if (arch_check_optimized_kprobe(op) < 0) // because op1 has KPROBE_FLAG_DISABLED, here not return
-        return;
-      p->kp.flags |= KPROBE_FLAG_OPTIMIZED;   //  now op2 has KPROBE_FLAG_OPTIMIZED
-  }
+Cc: <stable@vger.kernel.org> # 6.1.x
 
-"func" code now is:
+Ciao, Thorsten (wearing his 'the Linux kernel's regression tracker' hat)
+--
+Everything you wanna know about Linux kernel regression tracking:
+https://linux-regtracking.leemhuis.info/about/#tldr
+If I did something stupid, please tell me, as explained on that page.
 
-   0xffffffff816cc079 <+9>:     int3
-   0xffffffff816cc07a <+10>:    push   %rsp
-   0xffffffff816cc07b <+11>:    jmp    0xffffffffa0210000
-   0xffffffff816cc080 <+16>:    incl   0xf(%rcx)
-   0xffffffff816cc083 <+19>:    xchg   %eax,%ebp
-   0xffffffff816cc084 <+20>:    (bad)
-   0xffffffff816cc085 <+21>:    push   %rbp
+#regzbot poke
+#regzbot ^backmonitor:
+https://lore.kernel.org/r/31eb3b12-3350-90a4-a0d9-d1494db7cf74@oracle.com/
 
-5. if call "func", int3 handler call setup_detour_execution:
-
-  if (p->flags & KPROBE_FLAG_OPTIMIZED) {
-    ...
-    regs->ip = (unsigned long)op->optinsn.insn + TMPL_END_IDX;
-    ...
-  }
-
-The code for the destination address is
-
-   0xffffffffa021072c:  push   %r12
-   0xffffffffa021072e:  xor    %r12d,%r12d
-   0xffffffffa0210731:  jmp    0xffffffff816cb5ee <func+14>
-
-However, <func+14> is not a valid start instruction address. As a result, an error occurs.
-
-Cc: stable@vger.kernel.org
-Fixes: f66c0447cca1 ("kprobes: Set unoptimized flag after unoptimizing code")
-Signed-off-by: Yang Jihong <yangjihong1@huawei.com>
----
- arch/x86/kernel/kprobes/opt.c | 2 +-
- include/linux/kprobes.h       | 1 +
- kernel/kprobes.c              | 2 +-
- 3 files changed, 3 insertions(+), 2 deletions(-)
-
-diff --git a/arch/x86/kernel/kprobes/opt.c b/arch/x86/kernel/kprobes/opt.c
-index f406bfa9a8cd..57b0037d0a99 100644
---- a/arch/x86/kernel/kprobes/opt.c
-+++ b/arch/x86/kernel/kprobes/opt.c
-@@ -353,7 +353,7 @@ int arch_check_optimized_kprobe(struct optimized_kprobe *op)
- 
- 	for (i = 1; i < op->optinsn.size; i++) {
- 		p = get_kprobe(op->kp.addr + i);
--		if (p && !kprobe_disabled(p))
-+		if (p && !kprobe_disarmed(p))
- 			return -EEXIST;
- 	}
- 
-diff --git a/include/linux/kprobes.h b/include/linux/kprobes.h
-index ab39285f71a6..85a64cb95d75 100644
---- a/include/linux/kprobes.h
-+++ b/include/linux/kprobes.h
-@@ -379,6 +379,7 @@ DEFINE_INSN_CACHE_OPS(optinsn);
- 
- extern void wait_for_kprobe_optimizer(void);
- bool optprobe_queued_unopt(struct optimized_kprobe *op);
-+bool kprobe_disarmed(struct kprobe *p);
- #else /* !CONFIG_OPTPROBES */
- static inline void wait_for_kprobe_optimizer(void) { }
- #endif /* CONFIG_OPTPROBES */
-diff --git a/kernel/kprobes.c b/kernel/kprobes.c
-index 90b0fac6efa0..99c3f4de3e5c 100644
---- a/kernel/kprobes.c
-+++ b/kernel/kprobes.c
-@@ -458,7 +458,7 @@ static inline int kprobe_optready(struct kprobe *p)
- }
- 
- /* Return true if the kprobe is disarmed. Note: p must be on hash list */
--static inline bool kprobe_disarmed(struct kprobe *p)
-+bool kprobe_disarmed(struct kprobe *p)
- {
- 	struct optimized_kprobe *op;
- 
--- 
-2.30.GIT
-
+> Signed-off-by: Shiju Jose <shiju.jose@huawei.com>
+> 
+> Changes:
+> RFC V1 -> RFC V2
+> 1. Rename the patch header subject.
+> 2. Changes for the backward compatability to the old kernels.
+> ---
+>  ras-events.c | 22 ++++++++++++++++++++++
+>  1 file changed, 22 insertions(+)
+> 
+> diff --git a/ras-events.c b/ras-events.c
+> index 3691311..e505a0e 100644
+> --- a/ras-events.c
+> +++ b/ras-events.c
+> @@ -383,6 +383,8 @@ static int read_ras_event_all_cpus(struct pthread_data *pdata,
+>  	int warnonce[n_cpus];
+>  	char pipe_raw[PATH_MAX];
+>  	int legacy_kernel = 0;
+> +	int fd;
+> +	char buf[10];
+>  #if 0
+>  	int need_sleep = 0;
+>  #endif
+> @@ -402,6 +404,26 @@ static int read_ras_event_all_cpus(struct pthread_data *pdata,
+>  		return -ENOMEM;
+>  	}
+>  
+> +	/* Fix for poll() on the per_cpu trace_pipe and trace_pipe_raw blocks
+> +	 * indefinitely with the default buffer_percent in the kernel trace system,
+> +	 * which is introduced by the following change in the kernel.
+> +	 * https://lore.kernel.org/all/20221020231427.41be3f26@gandalf.local.home/T/#u.
+> +	 * Set buffer_percent to 0 so that poll() will return immediately
+> +	 * when the trace data is available in the ras per_cpu trace pipe_raw
+> +	 */
+> +	fd = open_trace(pdata[0].ras, "buffer_percent", O_WRONLY);
+> +	if (fd >= 0) {
+> +		/* For the backward compatabilty to the old kernel, do not return
+> +		 * if fail to set the buffer_percent.
+> +		 */
+> +		snprintf(buf, sizeof(buf), "0");
+> +		size = write(fd, buf, strlen(buf));
+> +		if (size <= 0)
+> +			log(TERM, LOG_WARNING, "can't write to buffer_percent\n");
+> +		close(fd);
+> +	} else
+> +		log(TERM, LOG_WARNING, "Can't open buffer_percent\n");
+> +
+>  	for (i = 0; i < (n_cpus + 1); i++)
+>  		fds[i].fd = -1;
+>  
