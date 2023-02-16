@@ -2,83 +2,78 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 45D04C636CC
-	for <linux-trace-kernel@archiver.kernel.org>; Thu, 16 Feb 2023 17:44:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 83E97C636CC
+	for <linux-trace-kernel@archiver.kernel.org>; Thu, 16 Feb 2023 19:45:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229786AbjBPRoX (ORCPT
+        id S229454AbjBPTpZ (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Thu, 16 Feb 2023 12:44:23 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57424 "EHLO
+        Thu, 16 Feb 2023 14:45:25 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50654 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229650AbjBPRoW (ORCPT
+        with ESMTP id S229448AbjBPTpY (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Thu, 16 Feb 2023 12:44:22 -0500
-Received: from mail-pl1-f180.google.com (mail-pl1-f180.google.com [209.85.214.180])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 960644FAA1;
-        Thu, 16 Feb 2023 09:44:14 -0800 (PST)
-Received: by mail-pl1-f180.google.com with SMTP id e17so2784268plg.12;
-        Thu, 16 Feb 2023 09:44:14 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=SNlyHVO03gSSlxY11fMP/YX0lFTvzCZ7sRSjwx4TdKQ=;
-        b=yqZv3NcUCwSiOcow8KL07wltxQaZBh+z7JFJV982GB1bQbJzW3FjQBfEdJMb1poQOq
-         kMva7RPTd6h8BcBTVwjzloOrjd55aV7T0ccjWjAbJXtmAgILGn1fZX4FzxQynIk2asU7
-         RD1633+GqTlZhjW8Rx0QqeDCMUQF6KkwCNRcs1dDIPLEM8K/4h/puFCWHqe/+IYb/bIF
-         dyKNDqdYcGc0m5PHKeGYF6KiiDEUET1oaGnWCaywBaQnGHwnic440+6tOr/iQnMZI63i
-         M5J1EARBoyXGh3SQh3h7IMjr3P/Wrpapfx98pOD+jYNA2NiNxfaPFNUAmflZDIltVBkx
-         jXeA==
-X-Gm-Message-State: AO0yUKUrWRc3/zFcAfIgupa7BDqulZ7xz0a9gOrAfzXZGF74bW2hvLpF
-        fDmMMlL3KOel7ShCRAIxWpY=
-X-Google-Smtp-Source: AK7set9dQjUa26lRSSatffjWGkjyIjtK9E0mv/mmiA047bV64RNBvX+Cf8+JcyzB6Rqbn4D+OGRlIw==
-X-Received: by 2002:a17:902:e2c2:b0:19a:8304:21f1 with SMTP id l2-20020a170902e2c200b0019a830421f1mr4896457plc.69.1676569454020;
-        Thu, 16 Feb 2023 09:44:14 -0800 (PST)
-Received: from ?IPV6:2620:15c:211:201:3a83:c047:6e5d:a776? ([2620:15c:211:201:3a83:c047:6e5d:a776])
-        by smtp.gmail.com with ESMTPSA id c4-20020a170902aa4400b0019a7ef5e9a8sm1595198plr.82.2023.02.16.09.44.12
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 16 Feb 2023 09:44:13 -0800 (PST)
-Message-ID: <e318febd-8731-3289-e168-d566db82a5b2@acm.org>
-Date:   Thu, 16 Feb 2023 09:44:10 -0800
+        Thu, 16 Feb 2023 14:45:24 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8EFA550349;
+        Thu, 16 Feb 2023 11:45:23 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 2A9F260ACA;
+        Thu, 16 Feb 2023 19:45:23 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 61D52C433EF;
+        Thu, 16 Feb 2023 19:45:22 +0000 (UTC)
+Date:   Thu, 16 Feb 2023 14:45:20 -0500
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     LKML <linux-kernel@vger.kernel.org>,
+        Linux trace kernel <linux-trace-kernel@vger.kernel.org>
+Cc:     Masami Hiramatsu <mhiramat@kernel.org>,
+        Tom Zanussi <zanussi@kernel.org>
+Subject: PATCH] tracing: Add BUILD_BUG() to make sure stacktrace fits in 
+ strings
+Message-ID: <20230216144520.07f4aebf@rorschach.local.home>
+X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.6.0
-Subject: Re: [PATCH v1] scsi: ufs: core: Add trace event for MCQ
-Content-Language: en-US
-To:     Ziqi Chen <quic_ziqichen@quicinc.com>, quic_asutoshd@quicinc.com,
-        quic_cang@quicinc.com, mani@kernel.org, stanley.chu@mediatek.com,
-        adrian.hunter@intel.com, beanhuo@micron.com, avri.altman@wdc.com,
-        junwoo80.lee@samsung.com, martin.petersen@oracle.com
-Cc:     linux-scsi@vger.kernel.org, Alim Akhtar <alim.akhtar@samsung.com>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        "open list:TRACING" <linux-trace-kernel@vger.kernel.org>
-References: <1676515562-55805-1-git-send-email-quic_ziqichen@quicinc.com>
-From:   Bart Van Assche <bvanassche@acm.org>
-In-Reply-To: <1676515562-55805-1-git-send-email-quic_ziqichen@quicinc.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On 2/15/23 18:45, Ziqi Chen wrote:
-> diff --git a/include/trace/events/ufs.h b/include/trace/events/ufs.h
-> index 599739e..a406404e 100644
-> --- a/include/trace/events/ufs.h
-> +++ b/include/trace/events/ufs.h
-> @@ -10,6 +10,7 @@
->   #define _TRACE_UFS_H
->   
->   #include <linux/tracepoint.h>
-> +#include <ufs/ufshcd.h>
+From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
 
-Would including <ufs/ufs.h> here be sufficient?
+The max string length for a histogram variable is 256 bytes. The max depth
+of a stacktrace is 16. With 8byte words, that's 16 * 8 = 128. Which can
+easily fit in the string variable. The histogram stacktrace is being
+stored in the string value (with the given max length), with the
+assumption it will fit. To make sure that this is always the case (in the
+case that the stack trace depth increases), add a BUILD_BUG_ON() to test
+this.
 
-Thanks,
+Link: https://lore.kernel.org/linux-trace-kernel/20230214002418.0103b9e765d3e5c374d2aa7d@kernel.org/
 
-Bart.
+Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+---
+[ Note this is on top of:
+  https://patchwork.kernel.org/project/linux-trace-kernel/patch/1ed6906cd9d6477ef2bd8e63c61de20a9ffe64d7.1676063532.git.zanussi@kernel.org/
+ ]
+ kernel/trace/trace_events_hist.c | 3 +++
+ 1 file changed, 3 insertions(+)
+
+diff --git a/kernel/trace/trace_events_hist.c b/kernel/trace/trace_events_hist.c
+index f21e42ddba69..6cef1def1da5 100644
+--- a/kernel/trace/trace_events_hist.c
++++ b/kernel/trace/trace_events_hist.c
+@@ -3119,6 +3119,9 @@ static inline void __update_field_vars(struct tracing_map_elt *elt,
+ 	unsigned int i, j, var_idx;
+ 	u64 var_val;
+ 
++	/* Make sure stacktrace can fit in the string variable length */
++	BUILD_BUG_ON((HIST_STACKTRACE_DEPTH + 1) * sizeof(long) >= STR_VAR_LEN_MAX);
++
+ 	for (i = 0, j = field_var_str_start; i < n_field_vars; i++) {
+ 		struct field_var *field_var = field_vars[i];
+ 		struct hist_field *var = field_var->var;
+-- 
+2.39.1
 
