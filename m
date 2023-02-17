@@ -2,112 +2,117 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 454C6C05027
-	for <linux-trace-kernel@archiver.kernel.org>; Fri, 17 Feb 2023 06:11:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9138DC636D4
+	for <linux-trace-kernel@archiver.kernel.org>; Fri, 17 Feb 2023 11:33:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229640AbjBQGLo (ORCPT
+        id S229515AbjBQLdM (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Fri, 17 Feb 2023 01:11:44 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34330 "EHLO
+        Fri, 17 Feb 2023 06:33:12 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47816 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229517AbjBQGLn (ORCPT
+        with ESMTP id S229825AbjBQLdL (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Fri, 17 Feb 2023 01:11:43 -0500
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B670759714;
-        Thu, 16 Feb 2023 22:11:42 -0800 (PST)
-Received: from pps.filterd (m0279865.ppops.net [127.0.0.1])
-        by mx0a-0031df01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 31H5rcJq029216;
-        Fri, 17 Feb 2023 06:11:20 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=message-id : date :
- mime-version : subject : to : cc : references : from : in-reply-to :
- content-type : content-transfer-encoding; s=qcppdkim1;
- bh=ugG6GOg7970Ju4+uu5sDfNaptVOYwt+MYMLuv6OGjC8=;
- b=Fib5TAbui7zStb6/MVvuL3r4Pz5QMeTMPEvSJMvJwy1AnBtmfOl1dk1IAUCVjujno5Cw
- COCoBXqEhySyL0DBUpsloExhtvlvL3WrmgQQr+fAQaTcolRCTfhejgj6wGbC4C4AqRQk
- 05CspkfOQyk9vWY+FC0QcNGAhUJPH8gRMARXdpxe67NigEze1GshV7/TYpzQtc04gJ/L
- 70dlbQwv+QvZlY9MRwPrcXS/4P9widIAZJhorIGxm++sHBlD585rF31mouRcz5rC/GFJ
- 6PDO/9YKG/OVGR9SG7IS8nyLQvm8tHcNjKMEKq7PkKpaB79ICHqhBiq/cuxgowLmVtAm Og== 
-Received: from nasanppmta02.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-        by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3nswjpgwvd-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 17 Feb 2023 06:11:20 +0000
-Received: from nasanex01a.na.qualcomm.com ([10.52.223.231])
-        by NASANPPMTA02.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 31H6BJVF027948
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 17 Feb 2023 06:11:19 GMT
-Received: from [10.239.155.136] (10.80.80.8) by nasanex01a.na.qualcomm.com
- (10.52.223.231) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.986.41; Thu, 16 Feb
- 2023 22:11:15 -0800
-Message-ID: <257dd9ff-26d3-72fb-729f-f0a04ff5f265@quicinc.com>
-Date:   Fri, 17 Feb 2023 14:11:11 +0800
+        Fri, 17 Feb 2023 06:33:11 -0500
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E8CD46534F
+        for <linux-trace-kernel@vger.kernel.org>; Fri, 17 Feb 2023 03:32:24 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1676633544;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=tFo2Wp9IgQFuBh3x/erGvc1GmA/wqCVf+VmHpdKFEto=;
+        b=QuXk/thUj3WHgMFMLM48tGBF/XbYYbWcs9u3Pqs7K7aLeHno9U8+83jws1Oiv12iZhw3NI
+        tgCUTOy1zSpUPlTEd17HDYOHsBpkrTe9NY4UkVxO+Mg0P0CN4KPt5hEa+0ch4h57dinfiU
+        DReV9A7oZzQcoqPdfiqYJeKzB7ipQ9g=
+Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
+ [209.85.128.70]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_128_GCM_SHA256) id
+ us-mta-47-v35uj21zMayaoi3tjeW3Hw-1; Fri, 17 Feb 2023 06:32:22 -0500
+X-MC-Unique: v35uj21zMayaoi3tjeW3Hw-1
+Received: by mail-wm1-f70.google.com with SMTP id bi27-20020a05600c3d9b00b003e1e7d3db06so525391wmb.5
+        for <linux-trace-kernel@vger.kernel.org>; Fri, 17 Feb 2023 03:32:22 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:in-reply-to:subject:from:references:cc:to
+         :content-language:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=tFo2Wp9IgQFuBh3x/erGvc1GmA/wqCVf+VmHpdKFEto=;
+        b=TVaPDhhXrhBnsQhr/68JCM0/QRoNcHjYmy9BMyubjTLRH5RP6pahoOO5clpnYqpzjf
+         P5fcg1pi4ibxPhtzoSgCTIgVijGXbmKOjgLCM8dGpk10cAks+K25eop/bhMrqr5qtyd5
+         Tckyn3fJVUdSgjqg+FxojYYQoihWfyL7tXJIJe9ngdN/uu3CHdV5N9qz6N7wnkF5yumt
+         StKfK0veikPin+GhIMZwj66qROB76aU4bpaf5QnP/OnMJ739KtNuhFO8HJcmhvzenjQh
+         YFAcNT6EU4QqIzAV/KC0Ssl9iP8G2j9pvv0QcyUTJN3Vf5agn55e5/Rej/b4NI2yCidW
+         SNUw==
+X-Gm-Message-State: AO0yUKUwkQxztkLVrOCdbiEFJOoMyZpLY/iW9OvQfNKpayCvAO3tfeHS
+        uRHUCwp/cm3okeWvXSv/YoM5Y/z1qNwRZgisfCBHs7cpSQRKFhxNprZsWT/GB25Ibt/4cfgrmib
+        r5laNgV64/Dc6ZaAwZydJtUM2KG1K5lyO
+X-Received: by 2002:a05:6000:4:b0:2c5:941d:26b8 with SMTP id h4-20020a056000000400b002c5941d26b8mr3462313wrx.15.1676633541794;
+        Fri, 17 Feb 2023 03:32:21 -0800 (PST)
+X-Google-Smtp-Source: AK7set9z0VSv6vFYFUxc2JibA5rMdRqfesKqozBYoDdDZVR545b93kHzqNt5eh1OEGIsB0X5uIeL8A==
+X-Received: by 2002:a05:6000:4:b0:2c5:941d:26b8 with SMTP id h4-20020a056000000400b002c5941d26b8mr3462290wrx.15.1676633541462;
+        Fri, 17 Feb 2023 03:32:21 -0800 (PST)
+Received: from ?IPV6:2001:b07:add:ec09:c399:bc87:7b6c:fb2a? ([2001:b07:add:ec09:c399:bc87:7b6c:fb2a])
+        by smtp.googlemail.com with ESMTPSA id n13-20020adfe34d000000b002c546d169ddsm4038181wrj.11.2023.02.17.03.32.20
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 17 Feb 2023 03:32:20 -0800 (PST)
+Message-ID: <45e343f7-9b1b-fb23-30ee-4ba59b6dfa62@redhat.com>
+Date:   Fri, 17 Feb 2023 12:32:14 +0100
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
- Thunderbird/91.8.0
-Subject: Re: [PATCH v1] scsi: ufs: core: Add trace event for MCQ
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.7.1
+To:     Ross Zwisler <zwisler@chromium.org>, linux-kernel@vger.kernel.org
+Cc:     Ross Zwisler <zwisler@google.com>, kvm@vger.kernel.org,
+        linux-trace-kernel@vger.kernel.org,
+        Steven Rostedt <rostedt@goodmis.org>
+References: <20230215223350.2658616-1-zwisler@google.com>
+ <20230215223350.2658616-5-zwisler@google.com>
+From:   Paolo Bonzini <pbonzini@redhat.com>
+Subject: Re: [PATCH v2 4/6] tools/kvm_stat: use canonical ftrace path
+In-Reply-To: <20230215223350.2658616-5-zwisler@google.com>
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: redhat.com
 Content-Language: en-US
-To:     Bart Van Assche <bvanassche@acm.org>, <quic_asutoshd@quicinc.com>,
-        <quic_cang@quicinc.com>, <mani@kernel.org>,
-        <stanley.chu@mediatek.com>, <adrian.hunter@intel.com>,
-        <beanhuo@micron.com>, <avri.altman@wdc.com>,
-        <junwoo80.lee@samsung.com>, <martin.petersen@oracle.com>
-CC:     <linux-scsi@vger.kernel.org>,
-        Alim Akhtar <alim.akhtar@samsung.com>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        "open list:TRACING" <linux-trace-kernel@vger.kernel.org>
-References: <1676515562-55805-1-git-send-email-quic_ziqichen@quicinc.com>
- <e318febd-8731-3289-e168-d566db82a5b2@acm.org>
-From:   Ziqi Chen <quic_ziqichen@quicinc.com>
-In-Reply-To: <e318febd-8731-3289-e168-d566db82a5b2@acm.org>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.80.80.8]
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nasanex01a.na.qualcomm.com (10.52.223.231)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: 8NxYwFKtQkxLrNMcp4gs23AYk8vH7kEM
-X-Proofpoint-ORIG-GUID: 8NxYwFKtQkxLrNMcp4gs23AYk8vH7kEM
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.219,Aquarius:18.0.930,Hydra:6.0.562,FMLib:17.11.170.22
- definitions=2023-02-17_02,2023-02-16_01,2023-02-09_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015
- priorityscore=1501 adultscore=0 malwarescore=0 suspectscore=0 mlxscore=0
- impostorscore=0 mlxlogscore=999 spamscore=0 phishscore=0 bulkscore=0
- lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2212070000 definitions=main-2302170054
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
+On 2/15/23 23:33, Ross Zwisler wrote:
+> The canonical location for the tracefs filesystem is at /sys/kernel/tracing.
+> 
+> But, from Documentation/trace/ftrace.rst:
+> 
+>    Before 4.1, all ftrace tracing control files were within the debugfs
+>    file system, which is typically located at /sys/kernel/debug/tracing.
+>    For backward compatibility, when mounting the debugfs file system,
+>    the tracefs file system will be automatically mounted at:
+> 
+>    /sys/kernel/debug/tracing
+> 
+> A comment in kvm_stat still refers to this older debugfs path, so let's
+> update it to avoid confusion.
+> 
+> Signed-off-by: Ross Zwisler <zwisler@google.com>
+> ---
+>   tools/kvm/kvm_stat/kvm_stat | 2 +-
+>   1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/tools/kvm/kvm_stat/kvm_stat b/tools/kvm/kvm_stat/kvm_stat
+> index 6f28180ffeea..15bf00e79e3f 100755
+> --- a/tools/kvm/kvm_stat/kvm_stat
+> +++ b/tools/kvm/kvm_stat/kvm_stat
+> @@ -627,7 +627,7 @@ class TracepointProvider(Provider):
+>           name)'.
+>   
+>           All available events have directories under
+> -        /sys/kernel/debug/tracing/events/ which export information
+> +        /sys/kernel/tracing/events/ which export information
+>           about the specific event. Therefore, listing the dirs gives us
+>           a list of all available events.
+>   
 
-On 2/17/2023 1:44 AM, Bart Van Assche wrote:
-> On 2/15/23 18:45, Ziqi Chen wrote:
->> diff --git a/include/trace/events/ufs.h b/include/trace/events/ufs.h
->> index 599739e..a406404e 100644
->> --- a/include/trace/events/ufs.h
->> +++ b/include/trace/events/ufs.h
->> @@ -10,6 +10,7 @@
->>   #define _TRACE_UFS_H
->>     #include <linux/tracepoint.h>
->> +#include <ufs/ufshcd.h>
->
-> Would including <ufs/ufs.h> here be sufficient?
-Hi Bart.
+Acked-by: Paolo Bonzini <pbonzini@redhat.com>
 
-The struct ufs_hw_queue which be used by this change not be defined in 
-ufs.h.
-
-Best Regards,
-
-Ziqi
-
->
-> Thanks,
->
-> Bart.
->
