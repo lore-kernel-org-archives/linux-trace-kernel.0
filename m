@@ -2,78 +2,274 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 19B37C636CC
-	for <linux-trace-kernel@archiver.kernel.org>; Sat, 18 Feb 2023 15:59:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 09D33C6FD1E
+	for <linux-trace-kernel@archiver.kernel.org>; Sun, 19 Feb 2023 14:39:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229476AbjBRP72 (ORCPT
+        id S230258AbjBSOjJ (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Sat, 18 Feb 2023 10:59:28 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42090 "EHLO
+        Sun, 19 Feb 2023 09:39:09 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38432 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229585AbjBRP71 (ORCPT
+        with ESMTP id S230282AbjBSOil (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Sat, 18 Feb 2023 10:59:27 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 42A4217CDB;
-        Sat, 18 Feb 2023 07:59:25 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id C60E860B99;
-        Sat, 18 Feb 2023 15:59:24 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 85878C433D2;
-        Sat, 18 Feb 2023 15:59:23 +0000 (UTC)
-Date:   Sat, 18 Feb 2023 10:59:21 -0500
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     LKML <linux-kernel@vger.kernel.org>,
-        Linux Trace Kernel <linux-trace-kernel@vger.kernel.org>
-Cc:     Masami Hiramatsu <mhiramat@kernel.org>,
-        Tom Zanussi <zanussi@kernel.org>, ionut_n2001@yahoo.com
-Subject: [PATCH] tracing: Check for NULL field_name in
- __synth_event_add_val()
-Message-ID: <20230218105921.12ddb86f@gandalf.local.home>
-X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+        Sun, 19 Feb 2023 09:38:41 -0500
+Received: from mail-wr1-x430.google.com (mail-wr1-x430.google.com [IPv6:2a00:1450:4864:20::430])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0594711159
+        for <linux-trace-kernel@vger.kernel.org>; Sun, 19 Feb 2023 06:38:19 -0800 (PST)
+Received: by mail-wr1-x430.google.com with SMTP id b10so388238wrx.11
+        for <linux-trace-kernel@vger.kernel.org>; Sun, 19 Feb 2023 06:38:19 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=uQDbrZzTyIu0DglbWKhFLaeyxSO75uKLoMfSjkuf9YI=;
+        b=JmC/4sBikepuW2JL9s0EDARnxaYc9IhDcSSyd6fyTgOXblmVe2B7Cw4NdEaUve7mnf
+         kOd6Nls86ri95KMu6WGE0bWwE2DHHdvx2fO4PaoebjorROd8/s0yz8rUdE97FQz4N1q/
+         WOYl+CLeNIpT/GfpXmGwr76XysM7kty0PsloJSBr4Vz/JRh+3oNv4nEzZTMUD5nPAKPU
+         bMay40lxp632XH2jOvoakMsN6ai82/dY2oY8W3b11A794yUhGGNe4WNJJwi2i+mRBe2C
+         YJUIUysF3CeGyMNpf3yk6QTIk4Ayt9ERqe28tXPFnM7rF+Vl0J7DGvTO9G6qnWCU2NNi
+         IweQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=uQDbrZzTyIu0DglbWKhFLaeyxSO75uKLoMfSjkuf9YI=;
+        b=pbaoLkWJexQgAJS2nwS3DGoYRX7B4i70ACL5Aqm5qevCVS6BURWvJWgITBej0pCldu
+         2J4bbWWmLJCB8GwRxOWIoExKWsvCP/nRJSk10gGCBQC5up40i3620sANjuEh01Hurggd
+         Zvmeh3s/cUBf0xgSU/fpojJocgsO5GDZblwIJ5o2MZliPJthrezun70k9ki1qN4df1LY
+         Z6lavWJVUTjqQ+Oy73pxgTSEC/9D/1GRVG0Zz83I5vs43JtASzOYLx2UoKM6+X5RBLir
+         QAsWTGRDDEe7X59kogd/YChZcxcf71rSryMY3igJlAWojusp94mnr6TIw+WvFOYKLL5E
+         fsRg==
+X-Gm-Message-State: AO0yUKUWbOGNZLPOMrYEhbz0DtVuwMOP6NAP7sRq166zlX1zeeH5Yw7l
+        Ten0bCtheS18sIC8zP5B+i3hww==
+X-Google-Smtp-Source: AK7set9FPJDzm1Vj7zrXvpQzx9aw3H/dbD9ad4OcovBUQOY/lXbpxGaorLf2uPObOVPYJr4I3dCEiA==
+X-Received: by 2002:a5d:6502:0:b0:2c6:85ef:3cd2 with SMTP id x2-20020a5d6502000000b002c685ef3cd2mr221046wru.33.1676817499495;
+        Sun, 19 Feb 2023 06:38:19 -0800 (PST)
+Received: from mai.box.freepro.com ([2a05:6e02:1041:c10:6f43:b92:7670:463])
+        by smtp.gmail.com with ESMTPSA id a18-20020adfe5d2000000b002be505ab59asm86176wrn.97.2023.02.19.06.38.18
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 19 Feb 2023 06:38:19 -0800 (PST)
+From:   Daniel Lezcano <daniel.lezcano@linaro.org>
+To:     rafael@kernel.org, daniel.lezcano@linaro.org
+Cc:     linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Amit Kucheria <amitk@kernel.org>,
+        Zhang Rui <rui.zhang@intel.com>,
+        Lukasz Luba <lukasz.luba@arm.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        linux-trace-kernel@vger.kernel.org (open list:TRACING)
+Subject: [PATCH v1 17/17] thermal/traces: Replace the thermal zone structure parameter with the field value
+Date:   Sun, 19 Feb 2023 15:36:57 +0100
+Message-Id: <20230219143657.241542-18-daniel.lezcano@linaro.org>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20230219143657.241542-1-daniel.lezcano@linaro.org>
+References: <20230219143657.241542-1-daniel.lezcano@linaro.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
+In the work of the thermal zone device self-encapsulation, let's pass
+the field value instead of dereferencing them in the traces which
+force us to export publicly the thermal_zone_device structure.
 
-It is possible that the field_name passed into __synth_event_add_val() can
-be NULL with the trace_state set to add_name (possibly set from a previous
-call), in which case it needs to be checked.
+No fonctionnal change intended.
 
-Cc: stable@vger.kernel.org
-Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=217053
-Fixes: 8dcc53ad956d2 ("tracing: Add synth_event_trace() and related functions")
-Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
 ---
+ drivers/thermal/gov_fair_share.c              |  2 +-
+ drivers/thermal/gov_power_allocator.c         |  4 ++--
+ drivers/thermal/gov_step_wise.c               |  2 +-
+ drivers/thermal/thermal_core.c                |  5 ++--
+ include/trace/events/thermal.h                | 24 +++++++++----------
+ .../trace/events/thermal_power_allocator.h    | 12 +++++-----
+ 6 files changed, 25 insertions(+), 24 deletions(-)
 
-Tom, can you review this. Is there a legitimate case where you can have a
-previous call set "add_name" but the next call not require it? This patch
-assumes that it can't.
-
- kernel/trace/trace_events_synth.c | 4 ++++
- 1 file changed, 4 insertions(+)
-
-diff --git a/kernel/trace/trace_events_synth.c b/kernel/trace/trace_events_synth.c
-index 70bddb25d9c0..fa28c1da06d2 100644
---- a/kernel/trace/trace_events_synth.c
-+++ b/kernel/trace/trace_events_synth.c
-@@ -1982,6 +1982,10 @@ static int __synth_event_add_val(const char *field_name, u64 val,
+diff --git a/drivers/thermal/gov_fair_share.c b/drivers/thermal/gov_fair_share.c
+index aad7d5fe3a14..e6c21abaaa80 100644
+--- a/drivers/thermal/gov_fair_share.c
++++ b/drivers/thermal/gov_fair_share.c
+@@ -35,7 +35,7 @@ static int get_trip_level(struct thermal_zone_device *tz)
+ 	 * point, in which case, trip_point = count - 1
+ 	 */
+ 	if (count > 0)
+-		trace_thermal_zone_trip(tz, count - 1, trip.type);
++		trace_thermal_zone_trip(tz->type, tz->id, count - 1, trip.type);
  
- 	event = trace_state->event;
- 	if (trace_state->add_name) {
-+		if (!field_name) {
-+			ret = -EINVAL;
-+			goto out;
-+		}
- 		for (i = 0; i < event->n_fields; i++) {
- 			field = event->fields[i];
- 			if (strcmp(field->name, field_name) == 0)
+ 	return count;
+ }
+diff --git a/drivers/thermal/gov_power_allocator.c b/drivers/thermal/gov_power_allocator.c
+index 0eaf1527d3e3..aaa8b57434ef 100644
+--- a/drivers/thermal/gov_power_allocator.c
++++ b/drivers/thermal/gov_power_allocator.c
+@@ -266,7 +266,7 @@ static u32 pid_controller(struct thermal_zone_device *tz,
+ 
+ 	power_range = clamp(power_range, (s64)0, (s64)max_allocatable_power);
+ 
+-	trace_thermal_power_allocator_pid(tz, frac_to_int(err),
++	trace_thermal_power_allocator_pid(tz->id, frac_to_int(err),
+ 					  frac_to_int(params->err_integral),
+ 					  frac_to_int(p), frac_to_int(i),
+ 					  frac_to_int(d), power_range);
+@@ -481,7 +481,7 @@ static int allocate_power(struct thermal_zone_device *tz,
+ 		i++;
+ 	}
+ 
+-	trace_thermal_power_allocator(tz, req_power, total_req_power,
++	trace_thermal_power_allocator(tz->id, req_power, total_req_power,
+ 				      granted_power, total_granted_power,
+ 				      num_actors, power_range,
+ 				      max_allocatable_power, tz->temperature,
+diff --git a/drivers/thermal/gov_step_wise.c b/drivers/thermal/gov_step_wise.c
+index 31235e169c5a..f469e04770fe 100644
+--- a/drivers/thermal/gov_step_wise.c
++++ b/drivers/thermal/gov_step_wise.c
+@@ -109,7 +109,7 @@ static void thermal_zone_trip_update(struct thermal_zone_device *tz, int trip_id
+ 
+ 	if (tz->temperature >= trip.temperature) {
+ 		throttle = true;
+-		trace_thermal_zone_trip(tz, trip_id, trip.type);
++		trace_thermal_zone_trip(tz->type, tz->id, trip_id, trip.type);
+ 	}
+ 
+ 	dev_dbg(&tz->device, "Trip%d[type=%d,temp=%d]:trend=%d,throttle=%d\n",
+diff --git a/drivers/thermal/thermal_core.c b/drivers/thermal/thermal_core.c
+index e06c76b38c04..0f6af8ab2f41 100644
+--- a/drivers/thermal/thermal_core.c
++++ b/drivers/thermal/thermal_core.c
+@@ -336,7 +336,7 @@ static void handle_critical_trips(struct thermal_zone_device *tz,
+ 	if (trip_temp <= 0 || tz->temperature < trip_temp)
+ 		return;
+ 
+-	trace_thermal_zone_trip(tz, trip, trip_type);
++	trace_thermal_zone_trip(tz->type, tz->id, trip, trip_type);
+ 
+ 	if (trip_type == THERMAL_TRIP_HOT && tz->ops->hot)
+ 		tz->ops->hot(tz);
+@@ -387,7 +387,8 @@ static void update_temperature(struct thermal_zone_device *tz)
+ 	tz->last_temperature = tz->temperature;
+ 	tz->temperature = temp;
+ 
+-	trace_thermal_temperature(tz);
++	trace_thermal_temperature(tz->type, tz->id,
++				  tz->last_temperature, tz->temperature);
+ 
+ 	thermal_genl_sampling_temp(tz->id, temp);
+ }
+diff --git a/include/trace/events/thermal.h b/include/trace/events/thermal.h
+index e58bf3072f32..50c7d2e1526d 100644
+--- a/include/trace/events/thermal.h
++++ b/include/trace/events/thermal.h
+@@ -23,22 +23,22 @@ TRACE_DEFINE_ENUM(THERMAL_TRIP_ACTIVE);
+ 
+ TRACE_EVENT(thermal_temperature,
+ 
+-	TP_PROTO(struct thermal_zone_device *tz),
++	TP_PROTO(const char *type, int id, int temp_prev, int temp),
+ 
+-	TP_ARGS(tz),
++	TP_ARGS(type, id, temp_prev, temp),
+ 
+ 	TP_STRUCT__entry(
+-		__string(thermal_zone, tz->type)
++		__string(thermal_zone, type)
+ 		__field(int, id)
+ 		__field(int, temp_prev)
+ 		__field(int, temp)
+ 	),
+ 
+ 	TP_fast_assign(
+-		__assign_str(thermal_zone, tz->type);
+-		__entry->id = tz->id;
+-		__entry->temp_prev = tz->last_temperature;
+-		__entry->temp = tz->temperature;
++		__assign_str(thermal_zone, type);
++		__entry->id = id;
++		__entry->temp_prev = temp_prev;
++		__entry->temp = temp;
+ 	),
+ 
+ 	TP_printk("thermal_zone=%s id=%d temp_prev=%d temp=%d",
+@@ -67,21 +67,21 @@ TRACE_EVENT(cdev_update,
+ 
+ TRACE_EVENT(thermal_zone_trip,
+ 
+-	TP_PROTO(struct thermal_zone_device *tz, int trip,
++	TP_PROTO(const char *type, int id, int trip,
+ 		enum thermal_trip_type trip_type),
+ 
+-	TP_ARGS(tz, trip, trip_type),
++	TP_ARGS(type, id, trip, trip_type),
+ 
+ 	TP_STRUCT__entry(
+-		__string(thermal_zone, tz->type)
++		__string(thermal_zone, type)
+ 		__field(int, id)
+ 		__field(int, trip)
+ 		__field(enum thermal_trip_type, trip_type)
+ 	),
+ 
+ 	TP_fast_assign(
+-		__assign_str(thermal_zone, tz->type);
+-		__entry->id = tz->id;
++		__assign_str(thermal_zone, type);
++		__entry->id = id;
+ 		__entry->trip = trip;
+ 		__entry->trip_type = trip_type;
+ 	),
+diff --git a/include/trace/events/thermal_power_allocator.h b/include/trace/events/thermal_power_allocator.h
+index 1c8fb95544f9..7ac049e7e3cf 100644
+--- a/include/trace/events/thermal_power_allocator.h
++++ b/include/trace/events/thermal_power_allocator.h
+@@ -8,12 +8,12 @@
+ #include <linux/tracepoint.h>
+ 
+ TRACE_EVENT(thermal_power_allocator,
+-	TP_PROTO(struct thermal_zone_device *tz, u32 *req_power,
++	TP_PROTO(int id, u32 *req_power,
+ 		 u32 total_req_power, u32 *granted_power,
+ 		 u32 total_granted_power, size_t num_actors,
+ 		 u32 power_range, u32 max_allocatable_power,
+ 		 int current_temp, s32 delta_temp),
+-	TP_ARGS(tz, req_power, total_req_power, granted_power,
++	TP_ARGS(id, req_power, total_req_power, granted_power,
+ 		total_granted_power, num_actors, power_range,
+ 		max_allocatable_power, current_temp, delta_temp),
+ 	TP_STRUCT__entry(
+@@ -29,7 +29,7 @@ TRACE_EVENT(thermal_power_allocator,
+ 		__field(s32,           delta_temp               )
+ 	),
+ 	TP_fast_assign(
+-		__entry->tz_id = tz->id;
++		__entry->tz_id = id;
+ 		memcpy(__get_dynamic_array(req_power), req_power,
+ 			num_actors * sizeof(*req_power));
+ 		__entry->total_req_power = total_req_power;
+@@ -56,9 +56,9 @@ TRACE_EVENT(thermal_power_allocator,
+ );
+ 
+ TRACE_EVENT(thermal_power_allocator_pid,
+-	TP_PROTO(struct thermal_zone_device *tz, s32 err, s32 err_integral,
++	TP_PROTO(int id, s32 err, s32 err_integral,
+ 		 s64 p, s64 i, s64 d, s32 output),
+-	TP_ARGS(tz, err, err_integral, p, i, d, output),
++	TP_ARGS(id, err, err_integral, p, i, d, output),
+ 	TP_STRUCT__entry(
+ 		__field(int, tz_id       )
+ 		__field(s32, err         )
+@@ -69,7 +69,7 @@ TRACE_EVENT(thermal_power_allocator_pid,
+ 		__field(s32, output      )
+ 	),
+ 	TP_fast_assign(
+-		__entry->tz_id = tz->id;
++		__entry->tz_id = id;
+ 		__entry->err = err;
+ 		__entry->err_integral = err_integral;
+ 		__entry->p = p;
 -- 
-2.39.1
+2.34.1
 
