@@ -2,103 +2,124 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FBDEC61DA3
-	for <linux-trace-kernel@archiver.kernel.org>; Tue, 21 Feb 2023 09:49:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B154BC61DA3
+	for <linux-trace-kernel@archiver.kernel.org>; Tue, 21 Feb 2023 09:56:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234020AbjBUJtS (ORCPT
+        id S234077AbjBUJ4S (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Tue, 21 Feb 2023 04:49:18 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57164 "EHLO
+        Tue, 21 Feb 2023 04:56:18 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37470 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233962AbjBUJtS (ORCPT
+        with ESMTP id S234001AbjBUJ4R (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Tue, 21 Feb 2023 04:49:18 -0500
-Received: from mail-ed1-x52b.google.com (mail-ed1-x52b.google.com [IPv6:2a00:1450:4864:20::52b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0FFEF234CE;
-        Tue, 21 Feb 2023 01:49:15 -0800 (PST)
-Received: by mail-ed1-x52b.google.com with SMTP id da10so15893136edb.3;
-        Tue, 21 Feb 2023 01:49:14 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=LdwNHcOx7nVwU4J/tHwSqkSY6cEaZO3K0e0TjSYhYbE=;
-        b=CmYjc1Dfsm4QDGGVg2CCQ2jz+xbhUPMPSrwJF279Qa5iwEUlLXEl6NEasQP+oRUOGv
-         uzXUzwjmVYBuZ9sGw7QXvC5Nquf4kVYYbjKojvg95uEzT6yXz4bHsHVuPkCt/VYSUQTx
-         YS62yxEi0JRATc8vQZJ3S40kVYGT/cOiQvOlThVOPbJm6CnTS684oHomJtjbxTHgbcy2
-         F+7//ju3mH263iDlBSTtvclZ+Fo5V0fcvFpmdPUzMZhJ3xXR3j/jOaXzH1vZpeKogpV2
-         98EmrD10RVv7B20sCPTYxxSjzeuih93oiQ85n/ce0T/3YGqUL5QssNBpRmOSfLNyIwe1
-         c0Sg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=LdwNHcOx7nVwU4J/tHwSqkSY6cEaZO3K0e0TjSYhYbE=;
-        b=IUwg2UtIMTJmtqKqkbpSwWH4JvEOc6MF6XeTUC+cY2qN/c/R3KXim9GNOl/ELF3Qj3
-         +Ji4I4FtstjzwRlU+bvamrcqdX/IVWzZGBnYEe3yK2K/u0Qls9AhoVW05YYnT8Z+44iJ
-         cYOOgbUcngeTPghK1Jh5xZYGvrN14fvYj/mRRmXgBhiCP5DCf69XEvRKXetQCzO6U2K/
-         1RUT1jBN14gLC7oNyraUtR298ARGeMNDHuqhvHzT38Pqwe1m+fr2B5N0J4mlpkLzPsji
-         iFF94NpLXgQ1kWJEsAyqoYGO3ViLjwPqIkc81TCyfMat648W0Ht/3XP18y8uIb9vfPBb
-         z8Mg==
-X-Gm-Message-State: AO0yUKUrMlSLmZ1gOrSSQcHNvrfDgBnRqUEQMdKaTNmqk7fzLTNiZ/e5
-        KxnH/XHtAYwBDJsHaZXoFiY=
-X-Google-Smtp-Source: AK7set/D2Hjs7e1kInqVeHI/rRZJX+swmXOevpfZmdGeCl4gAimvMAr8DmwYpWqToB9u1Z87l2+7zg==
-X-Received: by 2002:a17:906:7ce:b0:895:58be:957 with SMTP id m14-20020a17090607ce00b0089558be0957mr10090551ejc.2.1676972953445;
-        Tue, 21 Feb 2023 01:49:13 -0800 (PST)
-Received: from [10.176.235.173] ([137.201.254.41])
-        by smtp.gmail.com with ESMTPSA id l13-20020a1709061c4d00b008dcb559dbdbsm1059214ejg.88.2023.02.21.01.49.11
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 21 Feb 2023 01:49:12 -0800 (PST)
-Message-ID: <614c6437-d0ba-a75f-8f65-6b47dab0ff99@gmail.com>
-Date:   Tue, 21 Feb 2023 10:49:10 +0100
+        Tue, 21 Feb 2023 04:56:17 -0500
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C6C6025E1F;
+        Tue, 21 Feb 2023 01:55:45 -0800 (PST)
+Received: from pps.filterd (m0279869.ppops.net [127.0.0.1])
+        by mx0a-0031df01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 31L3c368006086;
+        Tue, 21 Feb 2023 09:55:22 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=message-id : date :
+ mime-version : subject : to : cc : references : from : in-reply-to :
+ content-type : content-transfer-encoding; s=qcppdkim1;
+ bh=Eq62Q0wbpo7pHylv0FcNCCpESKRGyazEgASQmrp3l8Y=;
+ b=YszRfKMJZyP92x8kLF/QJYqBgIn2LiqZfL9syGCXfDvjzF5P7jwjKxvqr3oiaUYN92sy
+ Dz18HlfD/CAjoy3+99LEm+SecNwzn/IqnB2U8JnmqprTcN8ZCCFp/M5t7+m++iRSxMQ7
+ lyd2kR6JcnyXKgpyKmI6tjnShw20nK270czOHkX1CDXBC7NT2Cz9lCft3MuiKhCh5SIC
+ SPqjClCQNwK2RJ3rygtNwWxjZBhEzf5bWDtHvcxO4mzM2phZwObQQXIhhd7BwWXUqhd6
+ Qh7hNTqUlMRkMkk2L0gfVQdP33DDgl7CZxEoC5dd1KrLesq16EQhJ0dtbPq6hcaUTC66 Iw== 
+Received: from nasanppmta02.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+        by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3ntnpgfhhj-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 21 Feb 2023 09:55:22 +0000
+Received: from nasanex01a.na.qualcomm.com ([10.52.223.231])
+        by NASANPPMTA02.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 31L9tKkN018817
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 21 Feb 2023 09:55:20 GMT
+Received: from [10.239.155.136] (10.80.80.8) by nasanex01a.na.qualcomm.com
+ (10.52.223.231) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.986.41; Tue, 21 Feb
+ 2023 01:55:16 -0800
+Message-ID: <d21f21f4-eabb-a30d-8251-9acaefb379e3@quicinc.com>
+Date:   Tue, 21 Feb 2023 17:55:14 +0800
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.7.1
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
+ Thunderbird/91.8.0
 Subject: Re: [PATCH v2] scsi: ufs: core: Add trace event for MCQ
 Content-Language: en-US
-To:     Ziqi Chen <quic_ziqichen@quicinc.com>, quic_asutoshd@quicinc.com,
-        quic_cang@quicinc.com, bvanassche@acm.org, mani@kernel.org,
-        stanley.chu@mediatek.com, adrian.hunter@intel.com,
-        beanhuo@micron.com, avri.altman@wdc.com, junwoo80.lee@samsung.com,
-        martin.petersen@oracle.com
-Cc:     linux-scsi@vger.kernel.org, Alim Akhtar <alim.akhtar@samsung.com>,
+To:     Bean Huo <huobean@gmail.com>, <quic_asutoshd@quicinc.com>,
+        <quic_cang@quicinc.com>, <bvanassche@acm.org>, <mani@kernel.org>,
+        <stanley.chu@mediatek.com>, <adrian.hunter@intel.com>,
+        <beanhuo@micron.com>, <avri.altman@wdc.com>,
+        <junwoo80.lee@samsung.com>, <martin.petersen@oracle.com>,
+        <quic_ziqichen@quicinc.com>
+CC:     <linux-scsi@vger.kernel.org>,
+        Alim Akhtar <alim.akhtar@samsung.com>,
         "James E.J. Bottomley" <jejb@linux.ibm.com>,
         Steven Rostedt <rostedt@goodmis.org>,
         Masami Hiramatsu <mhiramat@kernel.org>,
         open list <linux-kernel@vger.kernel.org>,
         "open list:TRACING" <linux-trace-kernel@vger.kernel.org>
 References: <1676959630-35504-1-git-send-email-quic_ziqichen@quicinc.com>
-From:   Bean Huo <huobean@gmail.com>
-In-Reply-To: <1676959630-35504-1-git-send-email-quic_ziqichen@quicinc.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+ <614c6437-d0ba-a75f-8f65-6b47dab0ff99@gmail.com>
+From:   Ziqi Chen <quic_ziqichen@quicinc.com>
+In-Reply-To: <614c6437-d0ba-a75f-8f65-6b47dab0ff99@gmail.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.80.80.8]
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nasanex01a.na.qualcomm.com (10.52.223.231)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-ORIG-GUID: qRWBxcL2gl11Etivy2JJcazoShKtM3YU
+X-Proofpoint-GUID: qRWBxcL2gl11Etivy2JJcazoShKtM3YU
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.219,Aquarius:18.0.930,Hydra:6.0.562,FMLib:17.11.170.22
+ definitions=2023-02-21_05,2023-02-20_02,2023-02-09_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ suspectscore=0 mlxlogscore=999 adultscore=0 spamscore=0 clxscore=1011
+ malwarescore=0 mlxscore=0 phishscore=0 bulkscore=0 lowpriorityscore=0
+ impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2212070000 definitions=main-2302210084
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On 21.02.23 7:07 AM, Ziqi Chen wrote:
-> +
-> +	TP_printk(
-> +		"%s: %s: tag: %u, hwq_id: %d, size: %d, IS: %u, LBA: %llu, opcode: 0x%x (%s), group_id: 0x%x, sq_tail_slot: %d, cq_head_slot: %d, cq_tail_slot: %d",
+Hi Bean，
 
-Hi Ziqi,
-
-Looks good to me, just one thing,  the above print strings can be shortened?
-
-hwq_id-->hdid
-sq_tail_slot-->sqt
-cq_tail_slot->sqt
-cq_head_slot->cqh
+looks reasonable，I will update in next version. Thanks~
 
 
-Kind regards,
-Bean
+On 2/21/2023 5:49 PM, Bean Huo wrote:
+> On 21.02.23 7:07 AM, Ziqi Chen wrote:
+>> +
+>> +    TP_printk(
+>> +        "%s: %s: tag: %u, hwq_id: %d, size: %d, IS: %u, LBA: %llu, 
+>> opcode: 0x%x (%s), group_id: 0x%x, sq_tail_slot: %d, cq_head_slot: 
+>> %d, cq_tail_slot: %d",
+>
+> Hi Ziqi,
+>
+> Looks good to me, just one thing,  the above print strings can be 
+> shortened?
+>
+> hwq_id-->hdid
+> sq_tail_slot-->sqt
+> cq_tail_slot->sqt
+> cq_head_slot->cqh
+>
+>
+> Kind regards,
+> Bean
+>
+>> + show_ufs_cmd_trace_str(__entry->str_t), __get_str(dev_name),
+>> +        __entry->tag, __entry->hwq_id, __entry->transfer_len,
+>> +        __entry->intr, __entry->lba, (u32)__entry->opcode,
+>> +        str_opcode(__entry->opcode), (u32)__entry->group_id,
+>> +        __entry->sq_tail, __entry->cq_head, __entry->cq_tail
+>> +    )
 
-> +		show_ufs_cmd_trace_str(__entry->str_t), __get_str(dev_name),
-> +		__entry->tag, __entry->hwq_id, __entry->transfer_len,
-> +		__entry->intr, __entry->lba, (u32)__entry->opcode,
-> +		str_opcode(__entry->opcode), (u32)__entry->group_id,
-> +		__entry->sq_tail, __entry->cq_head,  __entry->cq_tail
-> +	)
+Best Regards,
+
+Ziqi
+
