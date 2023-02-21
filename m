@@ -2,56 +2,56 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CA40C61DA3
-	for <linux-trace-kernel@archiver.kernel.org>; Tue, 21 Feb 2023 21:26:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 74916C64ED6
+	for <linux-trace-kernel@archiver.kernel.org>; Tue, 21 Feb 2023 21:26:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229949AbjBUV0w (ORCPT
+        id S229967AbjBUV0z (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Tue, 21 Feb 2023 16:26:52 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57974 "EHLO
+        Tue, 21 Feb 2023 16:26:55 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58104 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229930AbjBUV0t (ORCPT
+        with ESMTP id S229940AbjBUV0w (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Tue, 21 Feb 2023 16:26:49 -0500
+        Tue, 21 Feb 2023 16:26:52 -0500
 Received: from mx0a-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AD28F2E82D;
-        Tue, 21 Feb 2023 13:26:47 -0800 (PST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9A64E2ED4C;
+        Tue, 21 Feb 2023 13:26:50 -0800 (PST)
 Received: from pps.filterd (m0098419.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 31LLHOIS023384;
-        Tue, 21 Feb 2023 21:26:29 GMT
+        by mx0b-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 31LLHNqq023254;
+        Tue, 21 Feb 2023 21:26:35 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
  : date : message-id : in-reply-to : references : mime-version :
  content-transfer-encoding; s=pp1;
- bh=Qyn+EWnxFstxyTndS+aBZAkYcNiZRJK1wB+Dw0C3Hw8=;
- b=U5nDySRsuRNC1pN32z9Rnv7yFXz+gxsWc5PqGFEaHGlnGQW1911IhihVaXblAxsoPQ+4
- GoCAPwTMo4sYDJUbuWIW8kpI1gNlVVHq9PD97BdQhJ//8MKIVYKQv3RmmHGhgWwfcS22
- Is76opS1dCChaEjTYBIOy0mgVdd+6qfFgzrZ1CkLBTaqA2DCWS2KESz1kozDTHWYFc8N
- OxeHZYVDcs1J65hmVxlLtRHfGg5de5eSUvn8q05kWue40SV0SgQ7VFyEF5RTHJ8Nh0dN
- hwm3kTZG8Aw+Z6ybqVleHBHVpuICw+l+BNnn2TGxTM1yxNm11h00r9bobhf9VF7kFrvQ pw== 
-Received: from ppma05wdc.us.ibm.com (1b.90.2fa9.ip4.static.sl-reverse.com [169.47.144.27])
-        by mx0b-001b2d01.pphosted.com (PPS) with ESMTPS id 3nw5he0f21-1
+ bh=5xWbYPcgc3bQ0wvnr2TBCu4KGyKaVhhsaKawXrsKrGU=;
+ b=GRbpKUMka62Zv1MOGZApY6Wd9QdEvmVygEWa3gNhFLbigXF4v9PLv6SvYGw+K1Q1Lotd
+ Qg2CDLthN6bFMh5n0wZn0VuEfl+koClVsw0o4xNlWt46JL/Ph3mgbcEIyRzIYSnwU1nJ
+ 3zNlX7gFhA2UNDHrmJNSAuYdoUIja9Z4JP60e+zxhbZg7IHoh2flezOnQ6HdJuK9Wm/S
+ sQP8GyUNYLSc/vDQAyTdpJ2REzqfIW5VyQEbjzWDEl2mnDSXFJ8sOgyqU7Lr/7fQ1Y9b
+ hHOpVHDcm3beVOxMa6k2aLtIBZQQt63/ss/zsLTKvxKGyDZhkqvs+FVZaC1AfReE+R/w Zw== 
+Received: from ppma02dal.us.ibm.com (a.bd.3ea9.ip4.static.sl-reverse.com [169.62.189.10])
+        by mx0b-001b2d01.pphosted.com (PPS) with ESMTPS id 3nw5he0f3r-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 21 Feb 2023 21:26:28 +0000
-Received: from pps.filterd (ppma05wdc.us.ibm.com [127.0.0.1])
-        by ppma05wdc.us.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 31LLDV6f015920;
-        Tue, 21 Feb 2023 21:26:28 GMT
-Received: from smtprelay01.wdc07v.mail.ibm.com ([9.208.129.119])
-        by ppma05wdc.us.ibm.com (PPS) with ESMTPS id 3ntpa6vuy5-1
+        Tue, 21 Feb 2023 21:26:35 +0000
+Received: from pps.filterd (ppma02dal.us.ibm.com [127.0.0.1])
+        by ppma02dal.us.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 31LITOfF019805;
+        Tue, 21 Feb 2023 21:26:34 GMT
+Received: from smtprelay03.dal12v.mail.ibm.com ([9.208.130.98])
+        by ppma02dal.us.ibm.com (PPS) with ESMTPS id 3ntpa7a035-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 21 Feb 2023 21:26:28 +0000
+        Tue, 21 Feb 2023 21:26:34 +0000
 Received: from smtpav02.wdc07v.mail.ibm.com (smtpav02.wdc07v.mail.ibm.com [10.39.53.229])
-        by smtprelay01.wdc07v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 31LLQRGU41288080
+        by smtprelay03.dal12v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 31LLQXKk1770158
         (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 21 Feb 2023 21:26:27 GMT
+        Tue, 21 Feb 2023 21:26:33 GMT
 Received: from smtpav02.wdc07v.mail.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id EA3CC58058;
-        Tue, 21 Feb 2023 21:26:26 +0000 (GMT)
+        by IMSVA (Postfix) with ESMTP id 1AF0C5805C;
+        Tue, 21 Feb 2023 21:26:33 +0000 (GMT)
 Received: from smtpav02.wdc07v.mail.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 24CAC58059;
-        Tue, 21 Feb 2023 21:26:25 +0000 (GMT)
+        by IMSVA (Postfix) with ESMTP id 4CC7758058;
+        Tue, 21 Feb 2023 21:26:31 +0000 (GMT)
 Received: from slate16.aus.stglabs.ibm.com (unknown [9.65.223.120])
         by smtpav02.wdc07v.mail.ibm.com (Postfix) with ESMTP;
-        Tue, 21 Feb 2023 21:26:24 +0000 (GMT)
+        Tue, 21 Feb 2023 21:26:31 +0000 (GMT)
 From:   Eddie James <eajames@linux.ibm.com>
 To:     linux-fsi@lists.ozlabs.org
 Cc:     rostedt@goodmis.org, linux-trace-kernel@vger.kernel.org,
@@ -59,17 +59,17 @@ Cc:     rostedt@goodmis.org, linux-trace-kernel@vger.kernel.org,
         mhiramat@kernel.org, alistair@popple.id.au, joel@jms.id.au,
         jk@ozlabs.org, andrew@aj.id.au, robh+dt@kernel.org,
         krzysztof.kozlowski+dt@linaro.org, eajames@linux.ibm.com
-Subject: [PATCH v5 1/6] fsi: Move fsi_slave structure definition to header
-Date:   Tue, 21 Feb 2023 15:26:17 -0600
-Message-Id: <20230221212622.3897097-2-eajames@linux.ibm.com>
+Subject: [PATCH v5 4/6] fsi: Add I2C Responder SCOM driver
+Date:   Tue, 21 Feb 2023 15:26:20 -0600
+Message-Id: <20230221212622.3897097-5-eajames@linux.ibm.com>
 X-Mailer: git-send-email 2.31.1
 In-Reply-To: <20230221212622.3897097-1-eajames@linux.ibm.com>
 References: <20230221212622.3897097-1-eajames@linux.ibm.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: soZPrvsKpj-x7P2i25deSYAtonnUn0eJ
-X-Proofpoint-GUID: soZPrvsKpj-x7P2i25deSYAtonnUn0eJ
+X-Proofpoint-ORIG-GUID: rCHA6uGqnlQ9G7oA-E6CktJEwHqQ-v51
+X-Proofpoint-GUID: rCHA6uGqnlQ9G7oA-E6CktJEwHqQ-v51
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.219,Aquarius:18.0.930,Hydra:6.0.562,FMLib:17.11.170.22
  definitions=2023-02-21_12,2023-02-20_02,2023-02-09_01
@@ -82,163 +82,214 @@ Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-Some FSI drivers may have need of the slave definition, so
-move it to a header file. Also use one macro for obtaining a
-pointer to the fsi_master structure.
+The I2CR has the capability to directly perform SCOM operations,
+circumventing the need to drive the FSI2PIB engine. Add a new
+driver to perform SCOM operations through the I2CR.
 
 Signed-off-by: Eddie James <eajames@linux.ibm.com>
 ---
- drivers/fsi/fsi-core.c          | 24 ++++--------------------
- drivers/fsi/fsi-master-aspeed.c |  2 +-
- drivers/fsi/fsi-master-ast-cf.c |  2 +-
- drivers/fsi/fsi-master-gpio.c   |  2 +-
- drivers/fsi/fsi-master-hub.c    |  2 +-
- drivers/fsi/fsi-master.h        |  2 +-
- drivers/fsi/fsi-slave.h         | 28 ++++++++++++++++++++++++++++
- 7 files changed, 37 insertions(+), 25 deletions(-)
- create mode 100644 drivers/fsi/fsi-slave.h
+ drivers/fsi/Kconfig     |  12 +++
+ drivers/fsi/Makefile    |   1 +
+ drivers/fsi/i2cr-scom.c | 158 ++++++++++++++++++++++++++++++++++++++++
+ 3 files changed, 171 insertions(+)
+ create mode 100644 drivers/fsi/i2cr-scom.c
 
-diff --git a/drivers/fsi/fsi-core.c b/drivers/fsi/fsi-core.c
-index 0b927c9f4267..d591e68afd11 100644
---- a/drivers/fsi/fsi-core.c
-+++ b/drivers/fsi/fsi-core.c
-@@ -23,6 +23,10 @@
- #include <linux/uaccess.h>
+diff --git a/drivers/fsi/Kconfig b/drivers/fsi/Kconfig
+index 999be82720c5..09a8285d4bdc 100644
+--- a/drivers/fsi/Kconfig
++++ b/drivers/fsi/Kconfig
+@@ -71,6 +71,18 @@ config FSI_MASTER_I2CR
+ 	  that translates I2C commands to CFAM or SCOM operations, effectively
+ 	  implementing an FSI master and bus.
  
- #include "fsi-master.h"
-+#include "fsi-slave.h"
++if FSI_MASTER_I2CR
 +
-+#define CREATE_TRACE_POINTS
-+#include <trace/events/fsi.h>
- 
- #define FSI_SLAVE_CONF_NEXT_MASK	GENMASK(31, 31)
- #define FSI_SLAVE_CONF_SLOTS_MASK	GENMASK(23, 16)
-@@ -78,26 +82,6 @@ static const int engine_page_size = 0x400;
- 
- static DEFINE_IDA(master_ida);
- 
--struct fsi_slave {
--	struct device		dev;
--	struct fsi_master	*master;
--	struct cdev		cdev;
--	int			cdev_idx;
--	int			id;	/* FSI address */
--	int			link;	/* FSI link# */
--	u32			cfam_id;
--	int			chip_id;
--	uint32_t		size;	/* size of slave address space */
--	u8			t_send_delay;
--	u8			t_echo_delay;
--};
--
--#define CREATE_TRACE_POINTS
--#include <trace/events/fsi.h>
--
--#define to_fsi_master(d) container_of(d, struct fsi_master, dev)
--#define to_fsi_slave(d) container_of(d, struct fsi_slave, dev)
--
- static const int slave_retries = 2;
- static int discard_errors;
- 
-diff --git a/drivers/fsi/fsi-master-aspeed.c b/drivers/fsi/fsi-master-aspeed.c
-index 7cec1772820d..437f87b4a6a3 100644
---- a/drivers/fsi/fsi-master-aspeed.c
-+++ b/drivers/fsi/fsi-master-aspeed.c
-@@ -376,7 +376,7 @@ static int aspeed_master_break(struct fsi_master *master, int link)
- static void aspeed_master_release(struct device *dev)
- {
- 	struct fsi_master_aspeed *aspeed =
--		to_fsi_master_aspeed(dev_to_fsi_master(dev));
-+		to_fsi_master_aspeed(to_fsi_master(dev));
- 
- 	kfree(aspeed);
- }
-diff --git a/drivers/fsi/fsi-master-ast-cf.c b/drivers/fsi/fsi-master-ast-cf.c
-index 5f608ef8b53c..6124978305eb 100644
---- a/drivers/fsi/fsi-master-ast-cf.c
-+++ b/drivers/fsi/fsi-master-ast-cf.c
-@@ -1190,7 +1190,7 @@ static int fsi_master_acf_gpio_release(void *data)
- 
- static void fsi_master_acf_release(struct device *dev)
- {
--	struct fsi_master_acf *master = to_fsi_master_acf(dev_to_fsi_master(dev));
-+	struct fsi_master_acf *master = to_fsi_master_acf(to_fsi_master(dev));
- 
- 	/* Cleanup, stop coprocessor */
- 	mutex_lock(&master->lock);
-diff --git a/drivers/fsi/fsi-master-gpio.c b/drivers/fsi/fsi-master-gpio.c
-index 7d5f29b4b595..ed03da4f2447 100644
---- a/drivers/fsi/fsi-master-gpio.c
-+++ b/drivers/fsi/fsi-master-gpio.c
-@@ -761,7 +761,7 @@ static DEVICE_ATTR(external_mode, 0664,
- 
- static void fsi_master_gpio_release(struct device *dev)
- {
--	struct fsi_master_gpio *master = to_fsi_master_gpio(dev_to_fsi_master(dev));
-+	struct fsi_master_gpio *master = to_fsi_master_gpio(to_fsi_master(dev));
- 
- 	of_node_put(dev_of_node(master->dev));
- 
-diff --git a/drivers/fsi/fsi-master-hub.c b/drivers/fsi/fsi-master-hub.c
-index 01f0a796111e..6d8b6e8854e5 100644
---- a/drivers/fsi/fsi-master-hub.c
-+++ b/drivers/fsi/fsi-master-hub.c
-@@ -105,7 +105,7 @@ static int hub_master_link_enable(struct fsi_master *master, int link,
- 
- static void hub_master_release(struct device *dev)
- {
--	struct fsi_master_hub *hub = to_fsi_master_hub(dev_to_fsi_master(dev));
-+	struct fsi_master_hub *hub = to_fsi_master_hub(to_fsi_master(dev));
- 
- 	kfree(hub);
- }
-diff --git a/drivers/fsi/fsi-master.h b/drivers/fsi/fsi-master.h
-index 4762315a46ba..967622c1cabf 100644
---- a/drivers/fsi/fsi-master.h
-+++ b/drivers/fsi/fsi-master.h
-@@ -136,7 +136,7 @@ struct fsi_master {
- 				       u8 t_send_delay, u8 t_echo_delay);
- };
- 
--#define dev_to_fsi_master(d) container_of(d, struct fsi_master, dev)
-+#define to_fsi_master(d) container_of(d, struct fsi_master, dev)
- 
- /**
-  * fsi_master registration & lifetime: the fsi_master_register() and
-diff --git a/drivers/fsi/fsi-slave.h b/drivers/fsi/fsi-slave.h
++config I2CR_SCOM
++	tristate "IBM I2C Responder SCOM driver"
++	default y
++	help
++	  This option enables an I2C Responder based SCOM device driver. The
++	  I2CR has the capability to directly perform SCOM operations instead
++	  of using the FSI2PIB engine.
++
++endif
++
+ config FSI_SCOM
+ 	tristate "SCOM FSI client device driver"
+ 	help
+diff --git a/drivers/fsi/Makefile b/drivers/fsi/Makefile
+index 34dbaa1c452e..5550aa15e0b1 100644
+--- a/drivers/fsi/Makefile
++++ b/drivers/fsi/Makefile
+@@ -9,3 +9,4 @@ obj-$(CONFIG_FSI_MASTER_AST_CF) += fsi-master-ast-cf.o
+ obj-$(CONFIG_FSI_SCOM) += fsi-scom.o
+ obj-$(CONFIG_FSI_SBEFIFO) += fsi-sbefifo.o
+ obj-$(CONFIG_FSI_OCC) += fsi-occ.o
++obj-$(CONFIG_I2CR_SCOM) += i2cr-scom.o
+diff --git a/drivers/fsi/i2cr-scom.c b/drivers/fsi/i2cr-scom.c
 new file mode 100644
-index 000000000000..1d63a585829d
+index 000000000000..7e1c7b93c32f
 --- /dev/null
-+++ b/drivers/fsi/fsi-slave.h
-@@ -0,0 +1,28 @@
-+/* SPDX-License-Identifier: GPL-2.0-only */
++++ b/drivers/fsi/i2cr-scom.c
+@@ -0,0 +1,158 @@
++// SPDX-License-Identifier: GPL-2.0
 +/* Copyright (C) IBM Corporation 2023 */
-+
-+#ifndef DRIVERS_FSI_SLAVE_H
-+#define DRIVERS_FSI_SLAVE_H
 +
 +#include <linux/cdev.h>
 +#include <linux/device.h>
++#include <linux/fs.h>
++#include <linux/fsi.h>
++#include <linux/module.h>
++#include <linux/mod_devicetable.h>
 +
-+struct fsi_master;
++#include "fsi-master-i2cr.h"
++#include "fsi-slave.h"
 +
-+struct fsi_slave {
-+	struct device		dev;
-+	struct fsi_master	*master;
-+	struct cdev		cdev;
-+	int			cdev_idx;
-+	int			id;	/* FSI address */
-+	int			link;	/* FSI link# */
-+	u32			cfam_id;
-+	int			chip_id;
-+	uint32_t		size;	/* size of slave address space */
-+	u8			t_send_delay;
-+	u8			t_echo_delay;
++struct i2cr_scom {
++	struct device dev;
++	struct cdev cdev;
++	struct fsi_master_i2cr *i2cr;
 +};
 +
-+#define to_fsi_slave(d) container_of(d, struct fsi_slave, dev)
++static loff_t i2cr_scom_llseek(struct file *file, loff_t offset, int whence)
++{
++	switch (whence) {
++	case SEEK_CUR:
++		break;
++	case SEEK_SET:
++		file->f_pos = offset;
++		break;
++	default:
++		return -EINVAL;
++	}
 +
-+#endif /* DRIVERS_FSI_SLAVE_H */
++	return offset;
++}
++
++static ssize_t i2cr_scom_read(struct file *filep, char __user *buf, size_t len, loff_t *offset)
++{
++	struct i2cr_scom *scom = filep->private_data;
++	__be64 data_be;
++	u64 data;
++	int ret;
++
++	if (len != sizeof(data))
++		return -EINVAL;
++
++	ret = fsi_master_i2cr_read(scom->i2cr, (u32)*offset, &data_be, sizeof(data_be));
++	if (ret)
++		return ret;
++
++	data = be64_to_cpu(data_be);
++	ret = copy_to_user(buf, &data, len);
++	if (ret)
++		return ret;
++
++	return len;
++}
++
++static ssize_t i2cr_scom_write(struct file *filep, const char __user *buf, size_t len,
++			       loff_t *offset)
++{
++	struct i2cr_scom *scom = filep->private_data;
++	__be64 data_be;
++	u64 data;
++	int ret;
++
++	if (len != sizeof(data))
++		return -EINVAL;
++
++	ret = copy_from_user(&data, buf, len);
++	if (ret)
++		return ret;
++
++	data_be = cpu_to_be64(data);
++	ret = fsi_master_i2cr_write(scom->i2cr, (u32)*offset, &data_be, sizeof(data_be));
++	if (ret)
++		return ret;
++
++	return len;
++}
++
++static const struct file_operations i2cr_scom_fops = {
++	.owner		= THIS_MODULE,
++	.open		= simple_open,
++	.llseek		= i2cr_scom_llseek,
++	.read		= i2cr_scom_read,
++	.write		= i2cr_scom_write,
++};
++
++static int i2cr_scom_probe(struct device *dev)
++{
++	struct fsi_device *fsi_dev = to_fsi_dev(dev);
++	struct i2cr_scom *scom;
++	int didx;
++	int ret;
++
++	if (!(fsi_dev->slave->master->flags & FSI_MASTER_FLAG_I2CR))
++		return -ENODEV;
++
++	scom = devm_kzalloc(dev, sizeof(*scom), GFP_KERNEL);
++	if (!scom)
++		return -ENOMEM;
++
++	scom->i2cr = to_fsi_master_i2cr(fsi_dev->slave->master);
++	dev_set_drvdata(dev, scom);
++
++	scom->dev.type = &fsi_cdev_type;
++	scom->dev.parent = dev;
++	device_initialize(&scom->dev);
++
++	ret = fsi_get_new_minor(fsi_dev, fsi_dev_scom, &scom->dev.devt, &didx);
++	if (ret)
++		return ret;
++
++	dev_set_name(&scom->dev, "scom%d", didx);
++	cdev_init(&scom->cdev, &i2cr_scom_fops);
++	ret = cdev_device_add(&scom->cdev, &scom->dev);
++	if (ret)
++		fsi_free_minor(scom->dev.devt);
++
++	return ret;
++}
++
++static int i2cr_scom_remove(struct device *dev)
++{
++	struct i2cr_scom *scom = dev_get_drvdata(dev);
++
++	cdev_device_del(&scom->cdev, &scom->dev);
++	fsi_free_minor(scom->dev.devt);
++
++	return 0;
++}
++
++static const struct of_device_id i2cr_scom_of_ids[] = {
++	{ .compatible = "ibm,i2cr-scom" },
++	{ }
++};
++MODULE_DEVICE_TABLE(of, i2cr_scom_of_ids);
++
++static const struct fsi_device_id i2cr_scom_ids[] = {
++	{ 0x5, FSI_VERSION_ANY },
++	{ }
++};
++
++static struct fsi_driver i2cr_scom_driver = {
++	.id_table = i2cr_scom_ids,
++	.drv = {
++		.name = "i2cr_scom",
++		.bus = &fsi_bus_type,
++		.of_match_table = i2cr_scom_of_ids,
++		.probe = i2cr_scom_probe,
++		.remove = i2cr_scom_remove,
++	}
++};
++
++module_fsi_driver(i2cr_scom_driver);
++
++MODULE_AUTHOR("Eddie James <eajames@linux.ibm.com>");
++MODULE_DESCRIPTION("IBM I2C Responder SCOM driver");
++MODULE_LICENSE("GPL");
 -- 
 2.31.1
 
