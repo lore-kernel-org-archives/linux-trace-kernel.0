@@ -2,37 +2,37 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AC3E5C7EE30
-	for <linux-trace-kernel@archiver.kernel.org>; Sun, 26 Feb 2023 03:42:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FACCC7EE30
+	for <linux-trace-kernel@archiver.kernel.org>; Sun, 26 Feb 2023 03:44:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229759AbjBZDmr (ORCPT
+        id S229938AbjBZDoT (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Sat, 25 Feb 2023 22:42:47 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51500 "EHLO
+        Sat, 25 Feb 2023 22:44:19 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54538 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229610AbjBZDmi (ORCPT
+        with ESMTP id S229814AbjBZDoA (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Sat, 25 Feb 2023 22:42:38 -0500
-Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B3FA312F12;
-        Sat, 25 Feb 2023 19:42:15 -0800 (PST)
+        Sat, 25 Feb 2023 22:44:00 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 17D6DE047;
+        Sat, 25 Feb 2023 19:43:33 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 1B294B80B77;
-        Sun, 26 Feb 2023 03:42:13 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EABBEC433D2;
-        Sun, 26 Feb 2023 03:42:10 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 6695360C03;
+        Sun, 26 Feb 2023 03:43:17 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BF120C433D2;
+        Sun, 26 Feb 2023 03:43:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1677382931;
-        bh=veqChXxmEkX/AqPwqYJGPjjae22olX12BzM0xkMw1Qg=;
+        s=k20201202; t=1677382996;
+        bh=y/Ex1sxIzzWjeXoa6IJWdQKmOciITNkCMP2aYr8j90s=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=PmNgXe7OpIotShDBzUxHkj7qsYdK574Sh638Po3la3dZZNatnMLk+rlBVvfCqLFTG
-         f8+D5xGbt9f9WFcAWYYkZvpfz26P3T948EW37jS+yAQXGPYe/McuIHUG5LUBXVP/GD
-         8accHojD4wHmcIJyO4ABznyQZarh6jFwV5DerR7PY1ZlTr8lR3syDqBLAyysTMjF3q
-         4h2xjICv8QYu233gKnswf4gur2IXaPBMBzFHclnPiqVDTtn8wfOxiaMGae2AyJThgF
-         rNyuMd5ZiGjjaOqGx91DW4HYq/QODFvu+eLw3mfH7J1Tb3FfRlD/nDjOIgi9Rx++uH
-         MrVQtaJV4OdKQ==
+        b=XzbZ87oVng9QpgYNS9or6abErJKDqqwStTlaM0WeboYi+sCeuKTv11jvCoF2GZ/07
+         CnzYuJ422rFTe/Jp86omZ13rz+QTiD/KSNP104eFnaLtxXo47vunuwiRAnjVUJXTY4
+         xxwa7+Ddbdf/24zJ42j0rzaquUKNPOvtmzEwB4A8aYi+RmGrJ/CupJNwoKfTufnkej
+         htO8bNc5X2L54E0/8G4El0qJX1QRiWV5iNHZV397T/jnLyzI1OhuEYi22Q7omUvLMW
+         kXyU7fmqzNPq7gfUOGAnCXNI/SGB93IK0GP8IJ9dQCkysAorJPCUB/rr3ultxshrUS
+         tIOQTRbZ6JbDQ==
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
@@ -42,12 +42,12 @@ Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         linux-block@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
         Bart Van Assche <bvanassche@acm.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 6.2 11/21] trace/blktrace: fix memory leak with using debugfs_lookup()
-Date:   Sat, 25 Feb 2023 22:41:40 -0500
-Message-Id: <20230226034150.771411-11-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 6.1 11/21] trace/blktrace: fix memory leak with using debugfs_lookup()
+Date:   Sat, 25 Feb 2023 22:42:46 -0500
+Message-Id: <20230226034256.771769-11-sashal@kernel.org>
 X-Mailer: git-send-email 2.39.0
-In-Reply-To: <20230226034150.771411-1-sashal@kernel.org>
-References: <20230226034150.771411-1-sashal@kernel.org>
+In-Reply-To: <20230226034256.771769-1-sashal@kernel.org>
+References: <20230226034256.771769-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -81,7 +81,7 @@ Signed-off-by: Sasha Levin <sashal@kernel.org>
  1 file changed, 2 insertions(+), 2 deletions(-)
 
 diff --git a/kernel/trace/blktrace.c b/kernel/trace/blktrace.c
-index 918a7d12df8ff..5743be5594153 100644
+index a66cff5a18579..a5b35bcfb0602 100644
 --- a/kernel/trace/blktrace.c
 +++ b/kernel/trace/blktrace.c
 @@ -320,8 +320,8 @@ static void blk_trace_free(struct request_queue *q, struct blk_trace *bt)
