@@ -2,100 +2,99 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C0AFAC6FA8E
-	for <linux-trace-kernel@archiver.kernel.org>; Fri, 24 Feb 2023 17:17:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AC3E5C7EE30
+	for <linux-trace-kernel@archiver.kernel.org>; Sun, 26 Feb 2023 03:42:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229510AbjBXRRS (ORCPT
+        id S229759AbjBZDmr (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Fri, 24 Feb 2023 12:17:18 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46358 "EHLO
+        Sat, 25 Feb 2023 22:42:47 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51500 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229642AbjBXRRS (ORCPT
+        with ESMTP id S229610AbjBZDmi (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Fri, 24 Feb 2023 12:17:18 -0500
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C6C0716896;
-        Fri, 24 Feb 2023 09:17:14 -0800 (PST)
-Received: from pps.filterd (m0279867.ppops.net [127.0.0.1])
-        by mx0a-0031df01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 31OCYJbh027126;
-        Fri, 24 Feb 2023 17:17:08 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=message-id : date :
- mime-version : subject : to : cc : references : from : in-reply-to :
- content-type : content-transfer-encoding; s=qcppdkim1;
- bh=/s0mPwvSSDW+VQauRoSbgFNDF3tO1lzqgOdoz387oPo=;
- b=Io5nYkDPhQSndUbG9/z2HdXwNkSrHRyQ9bx08fXmHxmDmKVIpMx4zzrS1zi09opW3UtJ
- rnot6S/LhjryKVIPj0+kMUdgXNOZmxegEzq79m6VXcx9pckEold/NGYtCD09m8XytXHc
- GJoFRGLxe1aD1WolUrSnLo/0J8Uyf2/m3q70zLe9KGqo25iqAVgdwRT7mEcGHLGvy+dq
- ch14i8qKY8eXwWlU4ZaobQK0W9k//i7ssPGejo+7riGEnh3kS5pX7EILL38Keji6FNSE
- TiMdxRWXyZSAwV6e42iOR5sYeNrbeQkC++pAwphOensVIf73ptRFmvClB7ZVsY1tFmVq JQ== 
-Received: from nasanppmta05.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-        by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3nxuu110qa-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 24 Feb 2023 17:17:08 +0000
-Received: from nasanex01a.na.qualcomm.com ([10.52.223.231])
-        by NASANPPMTA05.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 31OHH7hF023679
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 24 Feb 2023 17:17:07 GMT
-Received: from [10.110.82.3] (10.80.80.8) by nasanex01a.na.qualcomm.com
- (10.52.223.231) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.986.41; Fri, 24 Feb
- 2023 09:17:07 -0800
-Message-ID: <31766494-4952-ab02-d9b1-861e81d9b080@quicinc.com>
-Date:   Fri, 24 Feb 2023 09:17:06 -0800
+        Sat, 25 Feb 2023 22:42:38 -0500
+Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B3FA312F12;
+        Sat, 25 Feb 2023 19:42:15 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 1B294B80B77;
+        Sun, 26 Feb 2023 03:42:13 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EABBEC433D2;
+        Sun, 26 Feb 2023 03:42:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1677382931;
+        bh=veqChXxmEkX/AqPwqYJGPjjae22olX12BzM0xkMw1Qg=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=PmNgXe7OpIotShDBzUxHkj7qsYdK574Sh638Po3la3dZZNatnMLk+rlBVvfCqLFTG
+         f8+D5xGbt9f9WFcAWYYkZvpfz26P3T948EW37jS+yAQXGPYe/McuIHUG5LUBXVP/GD
+         8accHojD4wHmcIJyO4ABznyQZarh6jFwV5DerR7PY1ZlTr8lR3syDqBLAyysTMjF3q
+         4h2xjICv8QYu233gKnswf4gur2IXaPBMBzFHclnPiqVDTtn8wfOxiaMGae2AyJThgF
+         rNyuMd5ZiGjjaOqGx91DW4HYq/QODFvu+eLw3mfH7J1Tb3FfRlD/nDjOIgi9Rx++uH
+         MrVQtaJV4OdKQ==
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jens Axboe <axboe@kernel.dk>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        linux-block@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+        Bart Van Assche <bvanassche@acm.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 6.2 11/21] trace/blktrace: fix memory leak with using debugfs_lookup()
+Date:   Sat, 25 Feb 2023 22:41:40 -0500
+Message-Id: <20230226034150.771411-11-sashal@kernel.org>
+X-Mailer: git-send-email 2.39.0
+In-Reply-To: <20230226034150.771411-1-sashal@kernel.org>
+References: <20230226034150.771411-1-sashal@kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.6.1
-Subject: Re: [PATCH v1 1/1] remoteproc: qcom: Add remoteproc tracing
-Content-Language: en-US
-To:     Gokul krishna Krishnakumar <quic_gokukris@quicinc.com>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <andersson@kernel.org>,
-        Konrad Dybcio <konrad.dybcio@somainline.org>,
-        Mathieu Poirier <mathieu.poirier@linaro.org>
-CC:     Satya Durga Srinivasu Prabhala <quic_satyap@quicinc.com>,
-        Rajendra Nayak <quic_rjendra@quicinc.com>,
-        Elliot Berman <quic_eberman@quicinc.com>,
-        "Guru Das Srinagesh" <quic_gurus@quicinc.com>,
-        Sibi Sankar <quic_sibis@quicinc.com>,
-        <linux-remoteproc@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-arm-msm@vger.kernel.org>,
-        <linux-trace-kernel@vger.kernel.org>
-References: <20230224165142.17745-1-quic_gokukris@quicinc.com>
- <20230224165142.17745-2-quic_gokukris@quicinc.com>
-From:   Trilok Soni <quic_tsoni@quicinc.com>
-In-Reply-To: <20230224165142.17745-2-quic_gokukris@quicinc.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.80.80.8]
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nasanex01a.na.qualcomm.com (10.52.223.231)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: ZUF84FnOekLcPjwSR-2iTz6t9nmHm3zw
-X-Proofpoint-ORIG-GUID: ZUF84FnOekLcPjwSR-2iTz6t9nmHm3zw
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.219,Aquarius:18.0.930,Hydra:6.0.562,FMLib:17.11.170.22
- definitions=2023-02-24_12,2023-02-24_01,2023-02-09_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 impostorscore=0
- suspectscore=0 mlxscore=0 clxscore=1011 priorityscore=1501 bulkscore=0
- spamscore=0 lowpriorityscore=0 phishscore=0 mlxlogscore=503 malwarescore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2212070000
- definitions=main-2302240136
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On 2/24/2023 8:51 AM, Gokul krishna Krishnakumar wrote:
-> This change adds traces to the following rproc events:
-> 1. subdevices events - (STRAT/STOP/CRASH)
-> 2. subsystem events - (START/STOP/CRASH)
-> 3. RPROC framework events - (Firmware Load/Authentication)
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
+[ Upstream commit 83e8864fee26f63a7435e941b7c36a20fd6fe93e ]
 
-Whenever I see 1/2/3 bullets it probably means different patches? I am 
-not sure if that applies here, but I don't know why you use numbered 
-bullets here. Also please describe what is the benefit of these trace 
-events and how you plan to use it? What kind of debugging scenartio it 
-will help you.
+When calling debugfs_lookup() the result must have dput() called on it,
+otherwise the memory will leak over time.  To make things simpler, just
+call debugfs_lookup_and_remove() instead which handles all of the logic
+at once.
 
----Trilok Soni
+Cc: Jens Axboe <axboe@kernel.dk>
+Cc: Steven Rostedt <rostedt@goodmis.org>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>
+Cc: linux-block@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
+Cc: linux-trace-kernel@vger.kernel.org
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Reviewed-by: Bart Van Assche <bvanassche@acm.org>
+Link: https://lore.kernel.org/r/20230202141956.2299521-1-gregkh@linuxfoundation.org
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ kernel/trace/blktrace.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/kernel/trace/blktrace.c b/kernel/trace/blktrace.c
+index 918a7d12df8ff..5743be5594153 100644
+--- a/kernel/trace/blktrace.c
++++ b/kernel/trace/blktrace.c
+@@ -320,8 +320,8 @@ static void blk_trace_free(struct request_queue *q, struct blk_trace *bt)
+ 	 * under 'q->debugfs_dir', thus lookup and remove them.
+ 	 */
+ 	if (!bt->dir) {
+-		debugfs_remove(debugfs_lookup("dropped", q->debugfs_dir));
+-		debugfs_remove(debugfs_lookup("msg", q->debugfs_dir));
++		debugfs_lookup_and_remove("dropped", q->debugfs_dir);
++		debugfs_lookup_and_remove("msg", q->debugfs_dir);
+ 	} else {
+ 		debugfs_remove(bt->dir);
+ 	}
+-- 
+2.39.0
+
