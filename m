@@ -2,283 +2,198 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 317A8C7EE2F
-	for <linux-trace-kernel@archiver.kernel.org>; Sun, 26 Feb 2023 22:56:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B29E2C64ED8
+	for <linux-trace-kernel@archiver.kernel.org>; Mon, 27 Feb 2023 06:35:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229838AbjBZW4q (ORCPT
+        id S229572AbjB0Gfo (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Sun, 26 Feb 2023 17:56:46 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33872 "EHLO
+        Mon, 27 Feb 2023 01:35:44 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42426 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229767AbjBZWz6 (ORCPT
+        with ESMTP id S229451AbjB0Gfn (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Sun, 26 Feb 2023 17:55:58 -0500
-Received: from mail-wm1-x32f.google.com (mail-wm1-x32f.google.com [IPv6:2a00:1450:4864:20::32f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DE83B1A4A2
-        for <linux-trace-kernel@vger.kernel.org>; Sun, 26 Feb 2023 14:55:38 -0800 (PST)
-Received: by mail-wm1-x32f.google.com with SMTP id az36so3173602wmb.1
-        for <linux-trace-kernel@vger.kernel.org>; Sun, 26 Feb 2023 14:55:38 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=1vHRlE4gW0G0XPdoOjf4Phl247vZu3Xaj6GOQBk8A4E=;
-        b=A6LZOrlAVN+GzHJYwJ06W4bRMQ9VCiWoajvXTzMG6CK2hj1Xi/Vmqc5+jSO91pwHqw
-         0EZY7wMul0fbcveD+eaGXc+qs/kpcSD792PXEEG7SlS3zlwDWuqrQny7lVWrB4LejVdD
-         bCKWWLF8BPcJUf3F2a/XiMK0ehZXd2IXW6/WCtkaOswQ+BG4V1ENuzI1w/iD/zGUmBaj
-         RwhJVijlWaAjzD/IkHStv1kf7kmA8D4En9TshN1wnxnODCUO+7uKzmYYmGDBIIWVQshd
-         SGsA4pF/C1yyuVXZLbE5IoTVaIy6efJFsamL7oC6IhtVW7XqC4n3MTKJrih31HdUlb6h
-         CEIg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=1vHRlE4gW0G0XPdoOjf4Phl247vZu3Xaj6GOQBk8A4E=;
-        b=6HoZbHCPgyjDvBt1rlGUtvB6SlI/0q9lXln/gTMLJYgNNlk4fHQDD4xoOHkoBSab7X
-         ogTBFk23wdOpoQal2EyjDqO9QeGVAvvucoAAckqIRW/e9/+fBiTs20+VvvM6yJEmArRN
-         6BIrV4dvLY7LSoUlHVCWzYtoUcp45OSJ6mZ/onxES6bLJsdpQtVR0v9Tt5wPbAnKsxbd
-         EOHIk7ZbgP36lT+aU4zXpw3RP+SSXBftB9i7E+SzAq3CN/W46B/LvzU+aJxq6oELPBnw
-         lBno92JfEvnnTGKgWJW0Xcf8zzQX+Ia8q3LoUlr6ml4j/fgEdO1nvWsSc4rG0UKvxOJF
-         Gv4w==
-X-Gm-Message-State: AO0yUKXtuZ6vEMEqjfojlVan1eW1CryUBJ5pc256xu9lZBlQzbFzl3Yj
-        Wi1f5lqTwG5UoQdj0+mpsK8ztg==
-X-Google-Smtp-Source: AK7set+gh98ADYFHHJNmYfkq6fdJ7l360zTjP3VhXEH8nirAfkJhh+dORdFV5tdn1UY5zQFVwwUJkw==
-X-Received: by 2002:a05:600c:1d10:b0:3e7:b17f:9af1 with SMTP id l16-20020a05600c1d1000b003e7b17f9af1mr15546106wms.22.1677452125225;
-        Sun, 26 Feb 2023 14:55:25 -0800 (PST)
-Received: from mai.box.freepro.com ([2a05:6e02:1041:c10:8baa:6b32:391b:62de])
-        by smtp.gmail.com with ESMTPSA id d10-20020a05600c3aca00b003eb369abd92sm6138074wms.2.2023.02.26.14.55.24
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 26 Feb 2023 14:55:24 -0800 (PST)
-From:   Daniel Lezcano <daniel.lezcano@linaro.org>
-To:     rafael@kernel.org, daniel.lezcano@linaro.org
-Cc:     linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Amit Kucheria <amitk@kernel.org>,
-        Zhang Rui <rui.zhang@intel.com>,
-        Lukasz Luba <lukasz.luba@arm.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        linux-trace-kernel@vger.kernel.org (open list:TRACING)
-Subject: [PATCH v3 20/20] thermal/traces: Replace the thermal zone structure parameter with the field value
-Date:   Sun, 26 Feb 2023 23:54:06 +0100
-Message-Id: <20230226225406.979703-21-daniel.lezcano@linaro.org>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20230226225406.979703-1-daniel.lezcano@linaro.org>
-References: <20230226225406.979703-1-daniel.lezcano@linaro.org>
+        Mon, 27 Feb 2023 01:35:43 -0500
+Received: from mga05.intel.com (mga05.intel.com [192.55.52.43])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1D3AEDBF0;
+        Sun, 26 Feb 2023 22:35:42 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1677479742; x=1709015742;
+  h=from:to:cc:subject:date:message-id:references:
+   in-reply-to:content-id:content-transfer-encoding:
+   mime-version;
+  bh=NRqSnAbm4RhlJOK9s7g2ivDXvIOQyaz5NaXKHRJvw1U=;
+  b=leaDTuN48zfhb/PWjhq33UpmXlShA2yI7tM0CylFnRYUfWnUKunLS9M+
+   rSUnkDs/4B+cvWmrkvNhiJ6ALZM8rGOyMumlipdfnSTmXmD0tKU33goMJ
+   qn21pMuWmuPbC6+BFUAU5x5n1ZDN6Xa5WxnF7Zbwws4LEY5Ar+gIuFLda
+   2hVJWWfwwo6C59vELJnw1qNYwbLYoiK/x2/zE0Ni0gXp2kbSBcD1LR6SB
+   uVdS2SrdGkU+J+w0tBJoiE30Cgi8SAbvFjxfIz6jMVbXpga4lh/yypWNv
+   crY12VVYfDwyBgppKccCSoAzjOE0iUO8UORFmfFtE0Fsob5vEM6gVsYvO
+   Q==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10633"; a="420054808"
+X-IronPort-AV: E=Sophos;i="5.97,331,1669104000"; 
+   d="scan'208";a="420054808"
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Feb 2023 22:35:36 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6500,9779,10633"; a="623445105"
+X-IronPort-AV: E=Sophos;i="5.97,331,1669104000"; 
+   d="scan'208";a="623445105"
+Received: from fmsmsx602.amr.corp.intel.com ([10.18.126.82])
+  by orsmga003.jf.intel.com with ESMTP; 26 Feb 2023 22:35:35 -0800
+Received: from fmsmsx612.amr.corp.intel.com (10.18.126.92) by
+ fmsmsx602.amr.corp.intel.com (10.18.126.82) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.16; Sun, 26 Feb 2023 22:35:35 -0800
+Received: from FMSEDG603.ED.cps.intel.com (10.1.192.133) by
+ fmsmsx612.amr.corp.intel.com (10.18.126.92) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.16 via Frontend Transport; Sun, 26 Feb 2023 22:35:35 -0800
+Received: from NAM04-DM6-obe.outbound.protection.outlook.com (104.47.73.43) by
+ edgegateway.intel.com (192.55.55.68) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.16; Sun, 26 Feb 2023 22:35:35 -0800
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=lRTfLSQUcNcjgwoLxU3RQbXaXiWrKP3giZ6kFSxS/x2GYo834qjwJr9rkN92CJyWOy3C0JzH0tLYDf8ZVVAU0cPVQ6hloKJ4Dj5QaVQUmZdWSKFCg9gcljigwGtycje/Gn+zEIOdJZicYe/MN2kf/E9UWnMCE/5sbfC5pLXbJcBH/ADCmwSkDAEIx5H4rbnh2RhJNP9oe+4et6VQaRXzG0islebnom/n64gcT03Oh9114awfq0P1ZbbgYk0Zbb4IaE6KsuU0yCmnsdbM5ObQPczdbccylcmFKCxm0A46WQpWhqmje3weu2ofKCiYBFj8LmwchaIxLFf+EC5J9Dhyng==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=NRqSnAbm4RhlJOK9s7g2ivDXvIOQyaz5NaXKHRJvw1U=;
+ b=F7s0W7dclLuqe/6jQ/+fqN1yXFDtfHcpwI0TGs4kgCLq5YGe7Am4GbfiadoWifvsqtSIlhL0bCGL6+rLqg2u2lS5QgQdKcy9kmK1mhyehGqGBSMW2c6ga/u23OcjKcbklkKPdwGvwY6jUogYZtZvFWwJTlr7I0GVNRYKxgPURtCJny7UIuGCIe7P5Toc7NMxuIIKEjk8o5/uKm0oZ0KexBUc+wnWG5gyM6wxOxzW0WzZHUsL7nNcSFnYQA39drxENxNSplrNGCBVxqbdXGE/SkkK02Hk9gA+BIJt8JwmavQjS3wJ1qGzjXWAA0ZKs9Boip0wLEkKYIoK1PsCF+sWsQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Received: from CO1PR11MB4820.namprd11.prod.outlook.com (2603:10b6:303:6f::8)
+ by MN2PR11MB4648.namprd11.prod.outlook.com (2603:10b6:208:26f::10) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6134.25; Mon, 27 Feb
+ 2023 06:35:32 +0000
+Received: from CO1PR11MB4820.namprd11.prod.outlook.com
+ ([fe80::8073:f55d:5f64:7c6]) by CO1PR11MB4820.namprd11.prod.outlook.com
+ ([fe80::8073:f55d:5f64:7c6%8]) with mapi id 15.20.6134.028; Mon, 27 Feb 2023
+ 06:35:32 +0000
+From:   "Yin, Fengwei" <fengwei.yin@intel.com>
+To:     "shakeelb@google.com" <shakeelb@google.com>,
+        "willy@infradead.org" <willy@infradead.org>,
+        "tj@kernel.org" <tj@kernel.org>,
+        "dennis@kernel.org" <dennis@kernel.org>,
+        "akpm@linux-foundation.org" <akpm@linux-foundation.org>
+CC:     lkp <lkp@intel.com>,
+        "zhengjun.xing@linux.intel.com" <zhengjun.xing@linux.intel.com>,
+        "Huang, Ying" <ying.huang@intel.com>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        "Tang, Feng" <feng.tang@intel.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "m.szyprowski@samsung.com" <m.szyprowski@samsung.com>,
+        "Sang, Oliver" <oliver.sang@intel.com>,
+        "linux-trace-kernel@vger.kernel.org" 
+        <linux-trace-kernel@vger.kernel.org>,
+        "oe-lkp@lists.linux.dev" <oe-lkp@lists.linux.dev>
+Subject: Re: [linus:master] [mm] f1a7941243: unixbench.score -19.2% regression
+Thread-Topic: [linus:master] [mm] f1a7941243: unixbench.score -19.2%
+ regression
+Thread-Index: AQHZNaGiUwf449h850awKs6Cgs0uTa7igHEA
+Date:   Mon, 27 Feb 2023 06:35:31 +0000
+Message-ID: <d5d0bcf75cbaa2792a3ad0e7b15a84fd67e54454.camel@intel.com>
+References: <202301301057.e55dad5b-oliver.sang@intel.com>
+         <Y9dETROtv9Bld9TI@casper.infradead.org>
+         <20230131052352.5qnqegzwmt7akk7t@google.com>
+         <Y9iq8fRT4sDgIwQN@casper.infradead.org>
+         <20230131055743.tsilxx5vfl6gx4dj@google.com>
+         <CALvZod7TuaJ7pCc2nJKehwGkcuvsvjdL+4hs6qC3bZsOmGzXzg@mail.gmail.com>
+In-Reply-To: <CALvZod7TuaJ7pCc2nJKehwGkcuvsvjdL+4hs6qC3bZsOmGzXzg@mail.gmail.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+user-agent: Evolution 3.38.3-1+deb11u1 
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: CO1PR11MB4820:EE_|MN2PR11MB4648:EE_
+x-ms-office365-filtering-correlation-id: f10d318b-f89c-4e5b-a18c-08db188cd31f
+x-ld-processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: k6g9yANPu5ebHOxcmZZ1lHDLP8hOiHLYFpVLxVXS0BjZEiHGTc3svDPZtaJDeyn10BIXsnbwWqFVRMhde023c3y6rdKd+rjAK3vVqzsTGUTc9uVaE9iOT3ghDiu+wek6Cusw71+BdUG40kmOGEpGnEnaImUmRhtftYseIszqhmD2/miIrVGyaSoDB0hriomrEDRvrE6bQCzUB/fJYdqKYzBbIVpLhuxP6uW/aUMc3EGWZDip2eNvGftt8t4pwFueTGATJVqwPwVXFwP6zoIxNeErjH24/whVcttLvRnjpfTDPqXo92r+ChQpUBTVxJThO73GnisrfeBXpLOtemouDJnEv2OCUmSM8TEhFrjQ+mjUzLe/mRMxCDQu88apmr1WIgaAhMf0sCFTxfur1MAOoBqaMTfvj+/prmDLkzitNSgeOj7NGvzB2n803qWYhAd9WhqDv5fZpIh2Lp5uq8B6pCVSstjPpuGK6LOKPmgRbAqPo1cxEadBkHo8flB1aSDYeH1xCyAJZImnKmhG9uHKptMhUXD6llCL2XgnIIxaeLvXe7jzq8Suj/j7gqhYGB4ODBF5LFvA+A6QMfVu99xFXsAAdFPyB4OctMVgMJQ10rt7HUvTfzy+H2ye9rcXGaQ9jZTCIh7FxeC+1SqOGWNsys9bAOjIhxxDU0mIbw9df1BXxhN4Qvt2ZiSUsi+nLPy6
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CO1PR11MB4820.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230025)(396003)(346002)(39860400002)(136003)(376002)(366004)(451199018)(186003)(53546011)(26005)(316002)(38070700005)(41300700001)(71200400001)(66446008)(66946007)(91956017)(66476007)(66556008)(76116006)(64756008)(54906003)(6486002)(4326008)(8676002)(6512007)(110136005)(38100700002)(478600001)(966005)(6506007)(36756003)(2906002)(83380400001)(8936002)(2616005)(86362001)(122000001)(7416002)(5660300002)(82960400001);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0: =?utf-8?B?Vkd0RGNYbEI3ZHoxdlBQT3ZDNUVlNm80WHBIZGdRZFZ5MlU3YmVHWnFUK283?=
+ =?utf-8?B?cEpXN0duOWoxV2Q0b0FiSnhGWUxNTkZWZG5QTFN0T2hiSzFGM2VBZHc3MWZL?=
+ =?utf-8?B?WUFWQzY2anJ5OFFVTFllSW9kTG5UeVloYlRGR2NuVENlNUQwU2JlYjMybjBm?=
+ =?utf-8?B?bC9BNFFMQ2V4cHNYYVJ4K09uTmRGMGp5cDZGcTlIaWc5U2lCclQxRXVsalI5?=
+ =?utf-8?B?cklFd094bFZUaXdYQ3ZQaEJwYWpXMlBuNGpqcThkdGZ5QW1LalcwQlBNUnhB?=
+ =?utf-8?B?dE1WK0RaeVlmcVNhR0Y2Y2VIeldrM3F5c1lxUDExTlBQeldlYVhhai92K2JH?=
+ =?utf-8?B?TXBrQy8zRUtSbG1UeG1OckN2K0xpMmtYYnRRNEVadUxMbng0bEd2UERSRFc0?=
+ =?utf-8?B?OVNFaGpWL3RwQnBBeVZTcnRqVy9EczYyN1JpMThiWjErT1doT1lVdVBMYUFw?=
+ =?utf-8?B?S0R5QVpZTDhnZjQxbC92c08rTjZ3ZU56aWlBZkRmSjBoSm0vWkJxYUlUVTFq?=
+ =?utf-8?B?Zzh6dVJqYjJMOTc1OGZzb3R5WExvNTBXS1FUZDh5dzFyaUpPMFY5ZWF5YTVk?=
+ =?utf-8?B?aVdMaFMvTElnWXRadnlkY3FvNENkSGR1dmJjUHlUUUtxeGg0Nm8rdjIwcm56?=
+ =?utf-8?B?dFZ2a0NpanF5blJLSVZMTkhxeVRNNW5tWXh4NklidWo1S1lXa0gvNWJNb1Fi?=
+ =?utf-8?B?eXp1U1BVQmJvVk1ldFhHTE8vaTFHS0grTzV2L1p5RzJjU3d4NnNtdWRrSWR2?=
+ =?utf-8?B?VEhtMVZsdkZxWisyQ1VDbXVySm9yZDNFdDU1V1NrMUNKWEFtWEZpUU9RVU5p?=
+ =?utf-8?B?S21CQjdaMGdzV1JpVmphTzkyZEIyRFE4TjY4Qm9wOUxVaUp4aWhvU2JKZi9I?=
+ =?utf-8?B?dEEyWWZleHNRY1ZxazhNQk8vS3JHWkpMbmNWQ3hUUG1VbDVUYmtzL3p1Um43?=
+ =?utf-8?B?N3A2WFljSnBOMDdCeFFXaGVoYXI2dFczNlVGcWJhc3ZXYlVORVBqQzZsbW5G?=
+ =?utf-8?B?ak42Tk4yV0dqbXpDUFZwLzB3NWNsZkxLSTFkMUN2QW5CRU01cXJhc2h2U1ds?=
+ =?utf-8?B?T1JRR2NXcDBLRVJoLzVPeDRyRnhaeThXeHhHcEQyTDhVVngyV3lHKy8raHNn?=
+ =?utf-8?B?VkhqOFVwMXFUbS9MS2JaKzlka2VMMWJwak9VaEhZb0RxSFh0Tk9DeGhyVVRi?=
+ =?utf-8?B?TlhhSlpvOFc2bFljaEdIZzN2R3Z3VStuc05hOXNudGU3S1lxS0hrVlZTcXFT?=
+ =?utf-8?B?VFg2cmFtZDlNM05xWWFlWDBzRXlhZUtrQ3JRK05JTGY4b2hUemhzUnAzQVZK?=
+ =?utf-8?B?U3k2T1lNajVBVHdWQmFGNFhZbHJlTE84MXBzTVNuajRMN3JndXJTU09OVVZu?=
+ =?utf-8?B?aks1V282aFFEVG5ld1dYK3RnT09tQXRKRnZia1JvcnJZMDUrekg1OUxwQmZB?=
+ =?utf-8?B?VkNEZm5EMTBRVkFmUXFCU2ZxRktmR2dvY3kveTY1bFZrRHhHYzNrZ1VRaU9Z?=
+ =?utf-8?B?ZnRleHhtMjFaSnl2MDNPT1FJMVdVbVo2VzVsaTZYNTlTV2o5ZEdEYVFZanQ1?=
+ =?utf-8?B?YzkxQ1RaOVlDZFJaTjdCYzh6Ym8rT0NPZ3c0K3RqRjdidzNURmRQdGJwbGhs?=
+ =?utf-8?B?aEtXQXI5azhPaTN2cGhFMmQ5aEZvQmx1dFdSZFFHZzIvN29Walp3VENIdVll?=
+ =?utf-8?B?Y1FCb2lRZlR0YnE2YmJWclRvSUl1aENJZ3Iyd1o4RGdISUNWaXVWRXNZaUFr?=
+ =?utf-8?B?VzdJK2d6ZTRScjFJbHZjdkRCQWNzaE1GMHVFU2xsWkpIclV5UzJucTNXK0dZ?=
+ =?utf-8?B?V2RGM2o5dEY3SWdlaTVYOG5la3d5QStia3BYQ3lxM2RPenFnaTVNVkhHdnV0?=
+ =?utf-8?B?MEY1R3Z6TS9FQzl5bUc2RFJEWW9aVzl3TVVIRGZFaURZK3BySncvaUg2NUlG?=
+ =?utf-8?B?N2FWcENRajgwQTRheENTMkVuWGtqenUrNE5YTEo1KzhuRzVXMGZTS2dDN1d5?=
+ =?utf-8?B?L0VGS2Q1a1gvWHZjeGo5ZUZjRUo3WVdneXNHN2FaSWQzT1Izb1ZCTU5qbVJB?=
+ =?utf-8?B?WkYvRVBqY1JxL1E0WXBPS0JUb2NIa1ZyV2dVNlgrUXIwaUVFYkdxTGdlWHI4?=
+ =?utf-8?B?WDFmSTdaeExhaHdKN1pBSVRLL3VTaEZWNEFxZlhuZmFxVHZ5ZmIzeHhoekZJ?=
+ =?utf-8?B?Wnc9PQ==?=
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <373E1695EF3F6F489E480DE6E091E9CB@namprd11.prod.outlook.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: CO1PR11MB4820.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: f10d318b-f89c-4e5b-a18c-08db188cd31f
+X-MS-Exchange-CrossTenant-originalarrivaltime: 27 Feb 2023 06:35:31.9141
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: JGqOJZjQx96AlxB7HRKod1IZ89spwYCMoVLMhaLbs3qzIw6roB46ORZZ9gFBbZyRoyvaG3zUoSvKqUIrfM9uXQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR11MB4648
+X-OriginatorOrg: intel.com
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-In the work of the thermal zone device self-encapsulation, let's pass
-the field value instead of dereferencing them in the traces which
-force us to export publicly the thermal_zone_device structure.
-
-No fonctionnal change intended.
-
-Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
----
- drivers/thermal/gov_fair_share.c              |  4 +++-
- drivers/thermal/gov_power_allocator.c         |  6 +++--
- drivers/thermal/gov_step_wise.c               |  4 +++-
- drivers/thermal/thermal_core.c                |  8 +++++--
- include/trace/events/thermal.h                | 24 +++++++++----------
- .../trace/events/thermal_power_allocator.h    | 12 +++++-----
- 6 files changed, 34 insertions(+), 24 deletions(-)
-
-diff --git a/drivers/thermal/gov_fair_share.c b/drivers/thermal/gov_fair_share.c
-index aad7d5fe3a14..cdddd593021d 100644
---- a/drivers/thermal/gov_fair_share.c
-+++ b/drivers/thermal/gov_fair_share.c
-@@ -35,7 +35,9 @@ static int get_trip_level(struct thermal_zone_device *tz)
- 	 * point, in which case, trip_point = count - 1
- 	 */
- 	if (count > 0)
--		trace_thermal_zone_trip(tz, count - 1, trip.type);
-+		trace_thermal_zone_trip(thermal_zone_device_type(tz),
-+					thermal_zone_device_id(tz),
-+					count - 1, trip.type);
- 
- 	return count;
- }
-diff --git a/drivers/thermal/gov_power_allocator.c b/drivers/thermal/gov_power_allocator.c
-index 0eaf1527d3e3..bebab8b8694b 100644
---- a/drivers/thermal/gov_power_allocator.c
-+++ b/drivers/thermal/gov_power_allocator.c
-@@ -266,7 +266,8 @@ static u32 pid_controller(struct thermal_zone_device *tz,
- 
- 	power_range = clamp(power_range, (s64)0, (s64)max_allocatable_power);
- 
--	trace_thermal_power_allocator_pid(tz, frac_to_int(err),
-+	trace_thermal_power_allocator_pid(thermal_zone_device_id(tz),
-+					  frac_to_int(err),
- 					  frac_to_int(params->err_integral),
- 					  frac_to_int(p), frac_to_int(i),
- 					  frac_to_int(d), power_range);
-@@ -481,7 +482,8 @@ static int allocate_power(struct thermal_zone_device *tz,
- 		i++;
- 	}
- 
--	trace_thermal_power_allocator(tz, req_power, total_req_power,
-+	trace_thermal_power_allocator(thermal_zone_device_id(tz),
-+				      req_power, total_req_power,
- 				      granted_power, total_granted_power,
- 				      num_actors, power_range,
- 				      max_allocatable_power, tz->temperature,
-diff --git a/drivers/thermal/gov_step_wise.c b/drivers/thermal/gov_step_wise.c
-index 31235e169c5a..81ef43a40f98 100644
---- a/drivers/thermal/gov_step_wise.c
-+++ b/drivers/thermal/gov_step_wise.c
-@@ -109,7 +109,9 @@ static void thermal_zone_trip_update(struct thermal_zone_device *tz, int trip_id
- 
- 	if (tz->temperature >= trip.temperature) {
- 		throttle = true;
--		trace_thermal_zone_trip(tz, trip_id, trip.type);
-+		trace_thermal_zone_trip(thermal_zone_device_type(tz),
-+					thermal_zone_device_id(tz),
-+					trip_id, trip.type);
- 	}
- 
- 	dev_dbg(&tz->device, "Trip%d[type=%d,temp=%d]:trend=%d,throttle=%d\n",
-diff --git a/drivers/thermal/thermal_core.c b/drivers/thermal/thermal_core.c
-index 46dedfe061df..c856ab911149 100644
---- a/drivers/thermal/thermal_core.c
-+++ b/drivers/thermal/thermal_core.c
-@@ -336,7 +336,9 @@ static void handle_critical_trips(struct thermal_zone_device *tz,
- 	if (trip_temp <= 0 || tz->temperature < trip_temp)
- 		return;
- 
--	trace_thermal_zone_trip(tz, trip, trip_type);
-+	trace_thermal_zone_trip(thermal_zone_device_type(tz),
-+				thermal_zone_device_id(tz),
-+				trip, trip_type);
- 
- 	if (trip_type == THERMAL_TRIP_HOT && tz->ops->hot)
- 		tz->ops->hot(tz);
-@@ -387,7 +389,9 @@ static void update_temperature(struct thermal_zone_device *tz)
- 	tz->last_temperature = tz->temperature;
- 	tz->temperature = temp;
- 
--	trace_thermal_temperature(tz);
-+	trace_thermal_temperature(thermal_zone_device_type(tz),
-+				  thermal_zone_device_id(tz),
-+				  tz->last_temperature, tz->temperature);
- 
- 	thermal_genl_sampling_temp(tz->id, temp);
- }
-diff --git a/include/trace/events/thermal.h b/include/trace/events/thermal.h
-index e58bf3072f32..50c7d2e1526d 100644
---- a/include/trace/events/thermal.h
-+++ b/include/trace/events/thermal.h
-@@ -23,22 +23,22 @@ TRACE_DEFINE_ENUM(THERMAL_TRIP_ACTIVE);
- 
- TRACE_EVENT(thermal_temperature,
- 
--	TP_PROTO(struct thermal_zone_device *tz),
-+	TP_PROTO(const char *type, int id, int temp_prev, int temp),
- 
--	TP_ARGS(tz),
-+	TP_ARGS(type, id, temp_prev, temp),
- 
- 	TP_STRUCT__entry(
--		__string(thermal_zone, tz->type)
-+		__string(thermal_zone, type)
- 		__field(int, id)
- 		__field(int, temp_prev)
- 		__field(int, temp)
- 	),
- 
- 	TP_fast_assign(
--		__assign_str(thermal_zone, tz->type);
--		__entry->id = tz->id;
--		__entry->temp_prev = tz->last_temperature;
--		__entry->temp = tz->temperature;
-+		__assign_str(thermal_zone, type);
-+		__entry->id = id;
-+		__entry->temp_prev = temp_prev;
-+		__entry->temp = temp;
- 	),
- 
- 	TP_printk("thermal_zone=%s id=%d temp_prev=%d temp=%d",
-@@ -67,21 +67,21 @@ TRACE_EVENT(cdev_update,
- 
- TRACE_EVENT(thermal_zone_trip,
- 
--	TP_PROTO(struct thermal_zone_device *tz, int trip,
-+	TP_PROTO(const char *type, int id, int trip,
- 		enum thermal_trip_type trip_type),
- 
--	TP_ARGS(tz, trip, trip_type),
-+	TP_ARGS(type, id, trip, trip_type),
- 
- 	TP_STRUCT__entry(
--		__string(thermal_zone, tz->type)
-+		__string(thermal_zone, type)
- 		__field(int, id)
- 		__field(int, trip)
- 		__field(enum thermal_trip_type, trip_type)
- 	),
- 
- 	TP_fast_assign(
--		__assign_str(thermal_zone, tz->type);
--		__entry->id = tz->id;
-+		__assign_str(thermal_zone, type);
-+		__entry->id = id;
- 		__entry->trip = trip;
- 		__entry->trip_type = trip_type;
- 	),
-diff --git a/include/trace/events/thermal_power_allocator.h b/include/trace/events/thermal_power_allocator.h
-index 1c8fb95544f9..7ac049e7e3cf 100644
---- a/include/trace/events/thermal_power_allocator.h
-+++ b/include/trace/events/thermal_power_allocator.h
-@@ -8,12 +8,12 @@
- #include <linux/tracepoint.h>
- 
- TRACE_EVENT(thermal_power_allocator,
--	TP_PROTO(struct thermal_zone_device *tz, u32 *req_power,
-+	TP_PROTO(int id, u32 *req_power,
- 		 u32 total_req_power, u32 *granted_power,
- 		 u32 total_granted_power, size_t num_actors,
- 		 u32 power_range, u32 max_allocatable_power,
- 		 int current_temp, s32 delta_temp),
--	TP_ARGS(tz, req_power, total_req_power, granted_power,
-+	TP_ARGS(id, req_power, total_req_power, granted_power,
- 		total_granted_power, num_actors, power_range,
- 		max_allocatable_power, current_temp, delta_temp),
- 	TP_STRUCT__entry(
-@@ -29,7 +29,7 @@ TRACE_EVENT(thermal_power_allocator,
- 		__field(s32,           delta_temp               )
- 	),
- 	TP_fast_assign(
--		__entry->tz_id = tz->id;
-+		__entry->tz_id = id;
- 		memcpy(__get_dynamic_array(req_power), req_power,
- 			num_actors * sizeof(*req_power));
- 		__entry->total_req_power = total_req_power;
-@@ -56,9 +56,9 @@ TRACE_EVENT(thermal_power_allocator,
- );
- 
- TRACE_EVENT(thermal_power_allocator_pid,
--	TP_PROTO(struct thermal_zone_device *tz, s32 err, s32 err_integral,
-+	TP_PROTO(int id, s32 err, s32 err_integral,
- 		 s64 p, s64 i, s64 d, s32 output),
--	TP_ARGS(tz, err, err_integral, p, i, d, output),
-+	TP_ARGS(id, err, err_integral, p, i, d, output),
- 	TP_STRUCT__entry(
- 		__field(int, tz_id       )
- 		__field(s32, err         )
-@@ -69,7 +69,7 @@ TRACE_EVENT(thermal_power_allocator_pid,
- 		__field(s32, output      )
- 	),
- 	TP_fast_assign(
--		__entry->tz_id = tz->id;
-+		__entry->tz_id = id;
- 		__entry->err = err;
- 		__entry->err_integral = err_integral;
- 		__entry->p = p;
--- 
-2.34.1
-
+SGkgQW5kcmV3LCBTaGFrZWVsLA0KDQpPbiBUdWUsIDIwMjMtMDEtMzEgYXQgMTA6MjYgLTA4MDAs
+IFNoYWtlZWwgQnV0dCB3cm90ZToNCj4gK3Blci1jcHUgbWVtb3J5IG1haW50YWluZXJzIGZvciBG
+WUkuDQo+IA0KPiBUaHJlYWQgc3RhcnRlZCBhdA0KPiBodHRwczovL2xvcmUua2VybmVsLm9yZy9s
+aW51eC1tbS8yMDIzMDEzMDEwNTcuZTU1ZGFkNWItb2xpdmVyLnNhbmdAaW50ZWwuY29tLw0KPiAN
+Cj4gT24gTW9uLCBKYW4gMzAsIDIwMjMgYXQgOTo1NyBQTSBTaGFrZWVsIEJ1dHQgPHNoYWtlZWxi
+QGdvb2dsZS5jb20+DQo+IHdyb3RlOg0KPiA+IA0KPiBbLi4uXQ0KPiA+ID4gDQo+ID4gPiBXZSBj
+b3VsZCBjdXQgZG93biB0aGUgbnVtYmVyIG9mIGNhbGxzIHRvIHBjcHVfYWxsb2MoKSBieSBhIGZh
+Y3Rvcg0KPiA+ID4gb2YgNA0KPiA+ID4gYnkgaGF2aW5nIGEgcGNwdV9hbGxvY19idWxrKCkgdGhh
+dCB3b3VsZCBhbGxvY2F0ZSBhbGwgZm91ciBSU1MNCj4gPiA+IGNvdW50ZXJzDQo+ID4gPiBhdCBv
+bmNlLg0KPiA+ID4gDQo+ID4gPiBKdXN0IHRocm93aW5nIG91dCBpZGVhcyAuLi4NCj4gPiANCj4g
+PiBUaGFua3MsIEkgd2lsbCB0YWtlIGEgc3RhYiBhdCBwY3B1X2FsbG9jX2J1bGsoKSBhbmQgd2ls
+bCBzaGFyZSB0aGUNCj4gPiByZXN1bHQgdG9tb3Jyb3cuDQo+ID4gDQo+IA0KPiBPSywgbm90IGEg
+b25lIGRheSBlZmZvcnQuDQo+IA0KPiBBbmRyZXcsIHdoaWNoIG9wdGlvbiBkbyB5b3UgcHJlZmVy
+Pw0KPiANCj4gMS4gS2VlcCB0aGUgcGF0Y2hlcyBhcyB0aGUgdGVzdCB3b3JrbG9hZCAoZm9yayBw
+aW5nIHBvbmcpIGlzIG5vdCBhDQo+IHJlcHJlc2VudGF0aXZlIG9mIHJlYWwgd29ybGQgd29ya2xv
+YWQgYW5kIHdvcmsgb24gaW1wcm92aW5nDQo+IHBjcHVfYWxsb2MoKSBmb3IgNi40Ky4NCj4gDQo+
+IDIuIFJldmVydCB0aGUgcGF0Y2hlcyBmb3Igbm93LCBpbXByb3ZlIHBjcHVfYWxsb2MoKSBhbmQg
+cmUtaW50cm9kdWNlDQo+IHRoZSBwYXRjaGVzIG9uY2Ugd2UgY29uZmlybSB0aGF0IGZvcmstcGlu
+Zy1wb25nIGlzIG5vdCByZWdyZXNzZWQNCj4gYW55bW9yZS4NClRoaXMgcGVyZm9ybWFuY2UgcmVn
+cmVzc2lvbiBzdGlsbCBjYW4gYmUgcmVwcm9kdWNlZCBvbiBsYXRlc3QgbWFzdGVyDQpicmFuY2gu
+IFNvIHdlIHRvb2sgb3B0aW9uMSBoZXJlLiBSaWdodD8gVGhhbmtzLg0KDQpSZWdhcmRzDQpZaW4s
+IEZlbmd3ZWkNCg0KPiANCj4gdGhhbmtzLA0KPiBTaGFrZWVsDQoNCg==
