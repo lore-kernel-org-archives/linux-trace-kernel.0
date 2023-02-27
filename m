@@ -2,155 +2,128 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A04FC64ED6
-	for <linux-trace-kernel@archiver.kernel.org>; Mon, 27 Feb 2023 16:01:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C3967C64ED8
+	for <linux-trace-kernel@archiver.kernel.org>; Mon, 27 Feb 2023 16:50:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229549AbjB0QBo (ORCPT
+        id S229862AbjB0QuV (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Mon, 27 Feb 2023 11:01:44 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46642 "EHLO
+        Mon, 27 Feb 2023 11:50:21 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58844 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229946AbjB0QBo (ORCPT
+        with ESMTP id S229470AbjB0QuU (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Mon, 27 Feb 2023 11:01:44 -0500
-Received: from mail-wr1-x42a.google.com (mail-wr1-x42a.google.com [IPv6:2a00:1450:4864:20::42a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 65F3920D1A
-        for <linux-trace-kernel@vger.kernel.org>; Mon, 27 Feb 2023 08:01:42 -0800 (PST)
-Received: by mail-wr1-x42a.google.com with SMTP id r7so6762679wrz.6
-        for <linux-trace-kernel@vger.kernel.org>; Mon, 27 Feb 2023 08:01:42 -0800 (PST)
+        Mon, 27 Feb 2023 11:50:20 -0500
+Received: from mail-yw1-x112d.google.com (mail-yw1-x112d.google.com [IPv6:2607:f8b0:4864:20::112d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 184FDC64F
+        for <linux-trace-kernel@vger.kernel.org>; Mon, 27 Feb 2023 08:50:19 -0800 (PST)
+Received: by mail-yw1-x112d.google.com with SMTP id 00721157ae682-536cd8f6034so192285417b3.10
+        for <linux-trace-kernel@vger.kernel.org>; Mon, 27 Feb 2023 08:50:19 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=BMO+fA1MIl81zKq6OpToM8j6lL3UYLiZJAoDm7QQyIw=;
-        b=cTYNMmkD63U5RpdJ5vRp0vRQb/GAOyyzPu5FYWKiUpsZlqf42UuY8/BhleHQtk0A2a
-         PDCU9S28O+aJfPuFDPLVOwlrccOPcfbfyd1JF/aWIOdKAjSTN/FG688ER+pMlprJKwaL
-         5SB49wCOgqPZ/dcTr1iKNE9e4FOwIZczX1QjG7tIHSgF6PU1obVMB3ri7LsrEs1ug1Yw
-         OjABw2cgL+K2oyYKKILNnK/TYJ8Vy8f1A0cWXkMonWChIAX+xZ8WXn8o6iH01zto8L/H
-         +6T+DzNWfeRaVV+uD8y50WJojdap0NX/gWyTnIXuYVFJyuzN80CJnfhfk9xcLFWCAhi0
-         +xEw==
+        d=google.com; s=20210112;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=yZeTsz2LgmEqTFu2D1y6H+6n8BeVxT4dDCxIvwbJYZY=;
+        b=jMbv2r0SjzyLfd/109qTg+Zt8ATsSAGsZlaSIpfCNwq5MIkuMOmLkPrv5s0SX2Niqc
+         MW13m5uCGpMy+WActWyp/aBFjIsABYD7rOJZxYz+L8ev/at3VpEsOl1aSGD/fg9fAxua
+         eJ06FHs9y2Gd2u2RJdup1zDKoxef+VlmA1id7W+V1aNeMurRTMCoKUeuxbOl/2FJMH+K
+         69ocsLyGP1GZMP839JOIlS0Gn2tFsDBARF/ntfFuAjaNjJAF8gfgd+ru+qMGlRREUcd8
+         PoQCRdH5cvAnSFFw/+0AoDeKZqRUsNif+iN7CSIiwJgxom+C+kB7bPml9a7g3HDM5xhG
+         H+dg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=BMO+fA1MIl81zKq6OpToM8j6lL3UYLiZJAoDm7QQyIw=;
-        b=J8RGlgZVEgnwhTo22aEE49wq2rNQW64uu5k9lNl4y9UoHKtWi76JbdM+8zVHApdMPh
-         fYEABQs/vQVGDNf76HebJbnt/h/IRgtn/lIVMJsWA/8+SyavSPpdB73oYd6X7gJNFrna
-         cxmeY6w38SS/GSBzkdny8sXO6Il/CBJ+FAdPtjeR62WKuLsfsAnyHzs5UlvxH1PPwxxj
-         voTsPzIXYDpQCtM3heRqDcZZ1NBlhjYG5mS6T4viHzYcS1vAlFFxhGV1EnLNlaqihM6M
-         3neYin884bsEMN3SxjW9ylu56R6FiIras26h4vrFVuEHZFHWKZiRzV5W0+CNskgPdD9w
-         z2cw==
-X-Gm-Message-State: AO0yUKWTcQHPU+E4aA/4hYcTv0QvI/vcjRyZOKN5c4FuZsi3qeYORPpH
-        kGw/tcQ8mmR41zvkAmi0dxD23Q==
-X-Google-Smtp-Source: AK7set8OI0zIVwExIwjpmyxmhAKwEjDQvw3qCiwG/NVjp/4rLL7HN0tK2+VtPdNw1PwJUcztmP1fUA==
-X-Received: by 2002:a05:6000:1703:b0:2c5:4ffb:b5d4 with SMTP id n3-20020a056000170300b002c54ffbb5d4mr6547533wrc.19.1677513700809;
-        Mon, 27 Feb 2023 08:01:40 -0800 (PST)
-Received: from ?IPV6:2a05:6e02:1041:c10:8baa:6b32:391b:62de? ([2a05:6e02:1041:c10:8baa:6b32:391b:62de])
-        by smtp.googlemail.com with ESMTPSA id e9-20020a5d5309000000b002c70d269b4esm7362220wrv.91.2023.02.27.08.01.39
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 27 Feb 2023 08:01:40 -0800 (PST)
-Message-ID: <b7b99ec6-5c6f-34a1-05be-a109b4328eab@linaro.org>
-Date:   Mon, 27 Feb 2023 17:01:39 +0100
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=yZeTsz2LgmEqTFu2D1y6H+6n8BeVxT4dDCxIvwbJYZY=;
+        b=uaaSFSxGXVDz23YAKfrbe2NYiqsDlxBG6Bzb5TY3x6Pf9w6lfoBnq2OFmdxZvzog6A
+         XrbIric2ueBuUJHpBYmSs6PlBbLmvPB29ioAxWLkW8u6CeLI8sA1mJj30wSKKdhXpIhw
+         c7X+UeHP/oVuzMIse6YTIF9ww6iefdIuvEXtTa4obd8gOU/+PIbLsnbp63PeJj/RYn0q
+         kC1YI+2ZAfIUQjlCSILp4D0apUqoEsq8T6zfPRWp/VEbvQGYrL8ixNIN0iWjzU4X/K9I
+         C97EZUVpmi0Bx0DcSmZyxFvNedXqjWs+0LQYvTk9zCW0Bh44JYLaWTdzsfyW/j/hFoQK
+         5Wpw==
+X-Gm-Message-State: AO0yUKX28a4l4Z1HhpDUpXI0azoPQcXxjojXmZHCy/6wBYj5bjifo9+v
+        M8/col/A0teL9FqG3dRWKCN8gJRyd3bNiQS2nOHXpw==
+X-Google-Smtp-Source: AK7set8lTXaiez4ACEuOb2wNkB4Dm/JTTL0C1kWWQrm108DPBrKq3P5Ta7PTFE2EKJWgLgv4skNklgr9Jbg7qnJNPeI=
+X-Received: by 2002:a81:ae52:0:b0:536:155a:b73d with SMTP id
+ g18-20020a81ae52000000b00536155ab73dmr10845609ywk.2.1677516618212; Mon, 27
+ Feb 2023 08:50:18 -0800 (PST)
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.7.1
-Subject: Re: [PATCH v3 20/20] thermal/traces: Replace the thermal zone
- structure parameter with the field value
-Content-Language: en-US
-To:     Steven Rostedt <rostedt@goodmis.org>
-Cc:     rafael@kernel.org, linux-pm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Amit Kucheria <amitk@kernel.org>,
-        Zhang Rui <rui.zhang@intel.com>,
-        Lukasz Luba <lukasz.luba@arm.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        "open list:TRACING" <linux-trace-kernel@vger.kernel.org>
-References: <20230226225406.979703-1-daniel.lezcano@linaro.org>
- <20230226225406.979703-21-daniel.lezcano@linaro.org>
- <20230227100715.7d896836@gandalf.local.home>
-From:   Daniel Lezcano <daniel.lezcano@linaro.org>
-In-Reply-To: <20230227100715.7d896836@gandalf.local.home>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+References: <202301301057.e55dad5b-oliver.sang@intel.com> <Y9dETROtv9Bld9TI@casper.infradead.org>
+ <20230131052352.5qnqegzwmt7akk7t@google.com> <Y9iq8fRT4sDgIwQN@casper.infradead.org>
+ <20230131055743.tsilxx5vfl6gx4dj@google.com> <CALvZod7TuaJ7pCc2nJKehwGkcuvsvjdL+4hs6qC3bZsOmGzXzg@mail.gmail.com>
+ <d5d0bcf75cbaa2792a3ad0e7b15a84fd67e54454.camel@intel.com>
+In-Reply-To: <d5d0bcf75cbaa2792a3ad0e7b15a84fd67e54454.camel@intel.com>
+From:   Shakeel Butt <shakeelb@google.com>
+Date:   Mon, 27 Feb 2023 08:50:07 -0800
+Message-ID: <CALvZod7wP9n+cqJV4VN3YNnf6CPQ8PJZbkAgK=fv84D4Sk+Heg@mail.gmail.com>
+Subject: Re: [linus:master] [mm] f1a7941243: unixbench.score -19.2% regression
+To:     "Yin, Fengwei" <fengwei.yin@intel.com>
+Cc:     "willy@infradead.org" <willy@infradead.org>,
+        "tj@kernel.org" <tj@kernel.org>,
+        "dennis@kernel.org" <dennis@kernel.org>,
+        "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
+        lkp <lkp@intel.com>,
+        "zhengjun.xing@linux.intel.com" <zhengjun.xing@linux.intel.com>,
+        "Huang, Ying" <ying.huang@intel.com>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        "Tang, Feng" <feng.tang@intel.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "m.szyprowski@samsung.com" <m.szyprowski@samsung.com>,
+        "Sang, Oliver" <oliver.sang@intel.com>,
+        "linux-trace-kernel@vger.kernel.org" 
+        <linux-trace-kernel@vger.kernel.org>,
+        "oe-lkp@lists.linux.dev" <oe-lkp@lists.linux.dev>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-
-Hi Steven,
-
-
-On 27/02/2023 16:07, Steven Rostedt wrote:
-> On Sun, 26 Feb 2023 23:54:06 +0100
-> Daniel Lezcano <daniel.lezcano@linaro.org> wrote:
-> 
->> In the work of the thermal zone device self-encapsulation, let's pass
->> the field value instead of dereferencing them in the traces which
->> force us to export publicly the thermal_zone_device structure.
->>
->> No fonctionnal change intended.
->>
->> Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
->> ---
->>   drivers/thermal/gov_fair_share.c              |  4 +++-
->>   drivers/thermal/gov_power_allocator.c         |  6 +++--
->>   drivers/thermal/gov_step_wise.c               |  4 +++-
->>   drivers/thermal/thermal_core.c                |  8 +++++--
->>   include/trace/events/thermal.h                | 24 +++++++++----------
->>   .../trace/events/thermal_power_allocator.h    | 12 +++++-----
->>   6 files changed, 34 insertions(+), 24 deletions(-)
->>
->> diff --git a/drivers/thermal/gov_fair_share.c b/drivers/thermal/gov_fair_share.c
->> index aad7d5fe3a14..cdddd593021d 100644
->> --- a/drivers/thermal/gov_fair_share.c
->> +++ b/drivers/thermal/gov_fair_share.c
->> @@ -35,7 +35,9 @@ static int get_trip_level(struct thermal_zone_device *tz)
->>   	 * point, in which case, trip_point = count - 1
->>   	 */
->>   	if (count > 0)
->> -		trace_thermal_zone_trip(tz, count - 1, trip.type);
->> +		trace_thermal_zone_trip(thermal_zone_device_type(tz),
->> +					thermal_zone_device_id(tz),
->> +					count - 1, trip.type);
-> 
-> The problem with this approach is that you are moving all the work to
-> dereference the pointers into the hot paths (the code execution), instead
-> of doing it in the slow path (where the tracepoint work is done).
-
-Good point, that is something I did not realize, thanks for pointing it out.
-
-> If you are concerned with exporting a structure then move the trace file
-> from:
+On Sun, Feb 26, 2023 at 10:35=E2=80=AFPM Yin, Fengwei <fengwei.yin@intel.co=
+m> wrote:
 >
->    include/trace/events/thermal.h to drivers/thermal/trace.h
-> 
-> like drivers/vfio/pci/trace.h and many other drivers do.
+> Hi Andrew, Shakeel,
+>
+> On Tue, 2023-01-31 at 10:26 -0800, Shakeel Butt wrote:
+> > +per-cpu memory maintainers for FYI.
+> >
+> > Thread started at
+> > https://lore.kernel.org/linux-mm/202301301057.e55dad5b-oliver.sang@inte=
+l.com/
+> >
+> > On Mon, Jan 30, 2023 at 9:57 PM Shakeel Butt <shakeelb@google.com>
+> > wrote:
+> > >
+> > [...]
+> > > >
+> > > > We could cut down the number of calls to pcpu_alloc() by a factor
+> > > > of 4
+> > > > by having a pcpu_alloc_bulk() that would allocate all four RSS
+> > > > counters
+> > > > at once.
+> > > >
+> > > > Just throwing out ideas ...
+> > >
+> > > Thanks, I will take a stab at pcpu_alloc_bulk() and will share the
+> > > result tomorrow.
+> > >
+> >
+> > OK, not a one day effort.
+> >
+> > Andrew, which option do you prefer?
+> >
+> > 1. Keep the patches as the test workload (fork ping pong) is not a
+> > representative of real world workload and work on improving
+> > pcpu_alloc() for 6.4+.
+> >
+> > 2. Revert the patches for now, improve pcpu_alloc() and re-introduce
+> > the patches once we confirm that fork-ping-pong is not regressed
+> > anymore.
+> This performance regression still can be reproduced on latest master
+> branch. So we took option1 here. Right? Thanks.
+>
 
-Good idea, I'll do that
+Yes unless some real workload reports regression.
 
-> Read
->     https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/samples/trace_events/Makefile
-> to see how to use a trace header outside the include/trace/events directory.
-> 
-> also, by removing the pointer, you lose out on BPF and kprobe traces that
-> could dereference the pointer if you needed to trace something that was not
-> exported by the trace point itself.
-
-As the trace will be in the drivers/thermal/trace.h, it will be able to 
-use the thermal_core.h private file and no longer 
-include/linux/thermal.h, so preventing to unexport the thermal zone 
-structure from thermal.h. Consequently, we no longer have to change the 
-prototype of the traces and the pointer will stay in place.
-
-Thanks for your suggestions
-
-
--- 
-<http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
-
-Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-<http://twitter.com/#!/linaroorg> Twitter |
-<http://www.linaro.org/linaro-blog/> Blog
-
+Shakeel
