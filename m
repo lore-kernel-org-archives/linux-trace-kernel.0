@@ -2,152 +2,162 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 475E7C64EC4
-	for <linux-trace-kernel@archiver.kernel.org>; Tue, 28 Feb 2023 21:45:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 92DEAC64EC7
+	for <linux-trace-kernel@archiver.kernel.org>; Tue, 28 Feb 2023 22:55:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229773AbjB1Vp3 (ORCPT
+        id S229535AbjB1Wz2 (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Tue, 28 Feb 2023 16:45:29 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34638 "EHLO
+        Tue, 28 Feb 2023 17:55:28 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48646 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230505AbjB1VpM (ORCPT
+        with ESMTP id S229512AbjB1Wz1 (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Tue, 28 Feb 2023 16:45:12 -0500
-Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F0D40367FC;
-        Tue, 28 Feb 2023 13:44:35 -0800 (PST)
+        Tue, 28 Feb 2023 17:55:27 -0500
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 72A573644D;
+        Tue, 28 Feb 2023 14:55:25 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 1BB04B80E1C;
-        Tue, 28 Feb 2023 21:43:50 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 03331C433D2;
-        Tue, 28 Feb 2023 21:43:47 +0000 (UTC)
-Date:   Tue, 28 Feb 2023 16:43:46 -0500
-From:   Steven Rostedt <rostedt@goodmis.org>
+        by ams.source.kernel.org (Postfix) with ESMTPS id 26F93B80DD0;
+        Tue, 28 Feb 2023 22:55:24 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B8C4AC433EF;
+        Tue, 28 Feb 2023 22:55:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1677624922;
+        bh=+J5dybGf17o0wN1DobraFoU++9dN2UmIDOv7C6NV+aY=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=flY9czc83DDmsYRvRyj51brgCuz5OJjlqkhHd0hsIlK6K3kXg87uM7mxJ/ZuSR3Yx
+         qb6YM6EZrUP/K5mmcvBPUwyemrINyRtFXAEYksIzSZ0DrQUpwEtQVezhM6ks1ik5HM
+         Yz5i0sRFKOn8KZEDbHawnJKPMgfZBDAwVpxJbkgQAs0ZZfnlpSeOToE5tqr7qLlpmz
+         D7aoDtWPHl5YTPDjdLL8Qzvghs1SiJl2agfe3ieL3K2+ELIosk7nxGaorq5GGce8RK
+         lzOJh/k0KgYzcVFjO2Rz6pph1MdDZzsZlnOTEPoIHGxcf2xE0BsGNckfkGvUI2erdy
+         +0NBRFAJszaKg==
+Date:   Wed, 1 Mar 2023 07:55:19 +0900
+From:   Masami Hiramatsu (Google) <mhiramat@kernel.org>
 To:     Uros Bizjak <ubizjak@gmail.com>
 Cc:     linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        Joel Fernandes <joel@joelfernandes.org>
-Subject: Re: [PATCH 3/3] ring_buffer: Use try_cmpxchg instead of cmpxchg
-Message-ID: <20230228164346.0691bb11@gandalf.local.home>
-In-Reply-To: <20230228175929.7534-4-ubizjak@gmail.com>
+        Steven Rostedt <rostedt@goodmis.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>
+Subject: Re: [PATCH 1/3] ring_buffer: Change some static functions to void
+Message-Id: <20230301075519.dbf770fed0476e2b6ecdad37@kernel.org>
+In-Reply-To: <20230228175929.7534-2-ubizjak@gmail.com>
 References: <20230228175929.7534-1-ubizjak@gmail.com>
-        <20230228175929.7534-4-ubizjak@gmail.com>
-X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
-MIME-Version: 1.0
+        <20230228175929.7534-2-ubizjak@gmail.com>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On Tue, 28 Feb 2023 18:59:29 +0100
+On Tue, 28 Feb 2023 18:59:27 +0100
 Uros Bizjak <ubizjak@gmail.com> wrote:
 
-> Use try_cmpxchg instead of cmpxchg (*ptr, old, new) == old.
-> x86 CMPXCHG instruction returns success in ZF flag, so this change
-> saves a compare after cmpxchg (and related move instruction in
-> front of cmpxchg).
-> 
-> Also, try_cmpxchg implicitly assigns old *ptr value to "old" when cmpxchg
-> fails. There is no need to re-read the value in the loop.
+> The results of some static functions are not used. Change the
+> type of these function to void and remove unnecessary returns.
 > 
 > No functional change intended.
 
-As I mentioned in the RCU thread, I have issues with some of the changes
-here.
+NAK, instead of dropping the errors, please handle it on the caller side.
+
+Thank you,
 
 > 
 > Cc: Steven Rostedt <rostedt@goodmis.org>
 > Cc: Masami Hiramatsu <mhiramat@kernel.org>
 > Signed-off-by: Uros Bizjak <ubizjak@gmail.com>
 > ---
->  kernel/trace/ring_buffer.c | 20 ++++++++------------
->  1 file changed, 8 insertions(+), 12 deletions(-)
+>  kernel/trace/ring_buffer.c | 22 +++++++---------------
+>  1 file changed, 7 insertions(+), 15 deletions(-)
 > 
 > diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
-> index 4188af7d4cfe..8f0ef7d12ddd 100644
+> index af50d931b020..05fdc92554df 100644
 > --- a/kernel/trace/ring_buffer.c
 > +++ b/kernel/trace/ring_buffer.c
-> @@ -1493,14 +1493,11 @@ static bool rb_head_page_replace(struct buffer_page *old,
+> @@ -1569,15 +1569,12 @@ static void rb_tail_page_update(struct ring_buffer_per_cpu *cpu_buffer,
+>  	}
+>  }
+>  
+> -static int rb_check_bpage(struct ring_buffer_per_cpu *cpu_buffer,
+> +static void rb_check_bpage(struct ring_buffer_per_cpu *cpu_buffer,
+>  			  struct buffer_page *bpage)
 >  {
->  	unsigned long *ptr = (unsigned long *)&old->list.prev->next;
->  	unsigned long val;
-> -	unsigned long ret;
+>  	unsigned long val = (unsigned long)bpage;
 >  
->  	val = *ptr & ~RB_FLAG_MASK;
->  	val |= RB_PAGE_HEAD;
->  
-> -	ret = cmpxchg(ptr, val, (unsigned long)&new->list);
+> -	if (RB_WARN_ON(cpu_buffer, val & RB_FLAG_MASK))
+> -		return 1;
 > -
-> -	return ret == val;
-> +	return try_cmpxchg(ptr, &val, (unsigned long)&new->list);
-
-No, val should not be updated.
-
+> -	return 0;
+> +	RB_WARN_ON(cpu_buffer, val & RB_FLAG_MASK);
 >  }
 >  
->  /*
-> @@ -2055,7 +2052,7 @@ rb_insert_pages(struct ring_buffer_per_cpu *cpu_buffer)
->  	retries = 10;
->  	success = false;
->  	while (retries--) {
-> -		struct list_head *head_page, *prev_page, *r;
-> +		struct list_head *head_page, *prev_page;
->  		struct list_head *last_page, *first_page;
->  		struct list_head *head_page_with_bit;
+>  /**
+> @@ -1587,30 +1584,28 @@ static int rb_check_bpage(struct ring_buffer_per_cpu *cpu_buffer,
+>   * As a safety measure we check to make sure the data pages have not
+>   * been corrupted.
+>   */
+> -static int rb_check_pages(struct ring_buffer_per_cpu *cpu_buffer)
+> +static void rb_check_pages(struct ring_buffer_per_cpu *cpu_buffer)
+>  {
+>  	struct list_head *head = rb_list_head(cpu_buffer->pages);
+>  	struct list_head *tmp;
 >  
-> @@ -2073,9 +2070,8 @@ rb_insert_pages(struct ring_buffer_per_cpu *cpu_buffer)
->  		last_page->next = head_page_with_bit;
->  		first_page->prev = prev_page;
+>  	if (RB_WARN_ON(cpu_buffer,
+>  			rb_list_head(rb_list_head(head->next)->prev) != head))
+> -		return -1;
+> +		return;
 >  
-> -		r = cmpxchg(&prev_page->next, head_page_with_bit, first_page);
+>  	if (RB_WARN_ON(cpu_buffer,
+>  			rb_list_head(rb_list_head(head->prev)->next) != head))
+> -		return -1;
+> +		return;
+>  
+>  	for (tmp = rb_list_head(head->next); tmp != head; tmp = rb_list_head(tmp->next)) {
+>  		if (RB_WARN_ON(cpu_buffer,
+>  				rb_list_head(rb_list_head(tmp->next)->prev) != tmp))
+> -			return -1;
+> +			return;
+>  
+>  		if (RB_WARN_ON(cpu_buffer,
+>  				rb_list_head(rb_list_head(tmp->prev)->next) != tmp))
+> -			return -1;
+> +			return;
+>  	}
 > -
-> -		if (r == head_page_with_bit) {
-> +		if (try_cmpxchg(&prev_page->next,
-> +				&head_page_with_bit, first_page)) {
-
-No. head_page_with_bit should not be updated.
-
->  			/*
->  			 * yay, we replaced the page pointer to our new list,
->  			 * now, we just have to update to head page's prev
-> @@ -4061,10 +4057,10 @@ void ring_buffer_record_off(struct trace_buffer *buffer)
->  	unsigned int rd;
->  	unsigned int new_rd;
->  
-> +	rd = atomic_read(&buffer->record_disabled);
->  	do {
-> -		rd = atomic_read(&buffer->record_disabled);
->  		new_rd = rd | RB_BUFFER_OFF;
-> -	} while (atomic_cmpxchg(&buffer->record_disabled, rd, new_rd) != rd);
-> +	} while (!atomic_try_cmpxchg(&buffer->record_disabled, &rd, new_rd));
-
-This change is OK.
-
+> -	return 0;
 >  }
->  EXPORT_SYMBOL_GPL(ring_buffer_record_off);
 >  
-> @@ -4084,10 +4080,10 @@ void ring_buffer_record_on(struct trace_buffer *buffer)
->  	unsigned int rd;
->  	unsigned int new_rd;
->  
-> +	rd = atomic_read(&buffer->record_disabled);
->  	do {
-> -		rd = atomic_read(&buffer->record_disabled);
->  		new_rd = rd & ~RB_BUFFER_OFF;
-> -	} while (atomic_cmpxchg(&buffer->record_disabled, rd, new_rd) != rd);
-> +	} while (!atomic_try_cmpxchg(&buffer->record_disabled, &rd, new_rd));
-
-And so is this one.
-
-So I will not take this patch as is.
-
--- Steve
-
+>  static int __rb_allocate_pages(struct ring_buffer_per_cpu *cpu_buffer,
+> @@ -4500,7 +4495,6 @@ rb_update_read_stamp(struct ring_buffer_per_cpu *cpu_buffer,
+>  	default:
+>  		RB_WARN_ON(cpu_buffer, 1);
+>  	}
+> -	return;
 >  }
->  EXPORT_SYMBOL_GPL(ring_buffer_record_on);
 >  
+>  static void
+> @@ -4531,7 +4525,6 @@ rb_update_iter_read_stamp(struct ring_buffer_iter *iter,
+>  	default:
+>  		RB_WARN_ON(iter->cpu_buffer, 1);
+>  	}
+> -	return;
+>  }
+>  
+>  static struct buffer_page *
+> @@ -4946,7 +4939,6 @@ rb_reader_unlock(struct ring_buffer_per_cpu *cpu_buffer, bool locked)
+>  {
+>  	if (likely(locked))
+>  		raw_spin_unlock(&cpu_buffer->reader_lock);
+> -	return;
+>  }
+>  
+>  /**
+> -- 
+> 2.39.2
+> 
 
+
+-- 
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
