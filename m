@@ -2,313 +2,230 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 58931C7EE2D
-	for <linux-trace-kernel@archiver.kernel.org>; Mon, 27 Feb 2023 20:03:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BD27C64ED6
+	for <linux-trace-kernel@archiver.kernel.org>; Tue, 28 Feb 2023 00:32:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229657AbjB0UDZ (ORCPT
+        id S229379AbjB1Acy (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Mon, 27 Feb 2023 15:03:25 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52068 "EHLO
+        Mon, 27 Feb 2023 19:32:54 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58438 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229542AbjB0UDY (ORCPT
+        with ESMTP id S229486AbjB1Acx (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Mon, 27 Feb 2023 15:03:24 -0500
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5A3709EDD;
-        Mon, 27 Feb 2023 12:03:22 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 1D484B80C94;
-        Mon, 27 Feb 2023 20:03:21 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DB412C433D2;
-        Mon, 27 Feb 2023 20:03:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1677528199;
-        bh=L1hXB8aev1OB4sehbJ+LYymCKbtXDt8zn4Fj8SbEDdk=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Hjh+RhQM5Frh2Y0d6+hbW2Uid+PrJOA3YIoiQd6Ea6veVMrCWOZ3RU+buTo5dl9KD
-         FM0r8XCOFnFkyWK5EtVI2zoOmhdThjDYsbuXcA1OPeqlXPpD4Xjp+d/Bu5a6k/mYUp
-         MNI/baP+IZLc25GMkGEkiuvLCangBfY3j3K31ZPJqFzHmXgEE/h4JzRXg3ric3tcIQ
-         AsOSNcpwE7aroqKLVJuHM5/pM9qzD8SRM1flI8QVR3TAr/ZMKpbR9UMzB9+w5XDkcw
-         cdjQkHIPhyQs8+rqhl7u4j43jvA3r/MYMzl3Ibp6nmpxtRA/z16AxORFHHmTdTnEfY
-         +qsQlNiMid3tA==
-Date:   Mon, 27 Feb 2023 12:06:39 -0800
-From:   Bjorn Andersson <andersson@kernel.org>
-To:     Gokul krishna Krishnakumar <quic_gokukris@quicinc.com>
-Cc:     Andy Gross <agross@kernel.org>,
-        Konrad Dybcio <konrad.dybcio@somainline.org>,
-        Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Trilok Soni <quic_tsoni@quicinc.com>,
-        Satya Durga Srinivasu Prabhala <quic_satyap@quicinc.com>,
-        Rajendra Nayak <quic_rjendra@quicinc.com>,
-        Elliot Berman <quic_eberman@quicinc.com>,
-        Guru Das Srinagesh <quic_gurus@quicinc.com>,
-        Sibi Sankar <quic_sibis@quicinc.com>,
-        linux-remoteproc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, linux-trace-kernel@vger.kernel.org
-Subject: Re: [PATCH v1 1/1] remoteproc: qcom: Add remoteproc tracing
-Message-ID: <20230227200639.fei5rsb5omaquhqn@ripper>
-References: <20230224165142.17745-1-quic_gokukris@quicinc.com>
- <20230224165142.17745-2-quic_gokukris@quicinc.com>
+        Mon, 27 Feb 2023 19:32:53 -0500
+Received: from mga09.intel.com (mga09.intel.com [134.134.136.24])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A365226CC8;
+        Mon, 27 Feb 2023 16:32:49 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1677544369; x=1709080369;
+  h=message-id:date:subject:to:cc:references:from:
+   in-reply-to:content-transfer-encoding:mime-version;
+  bh=P23uLetnNolTJcy9mDLIsoQZ3g4oqxGnRUZAQbYhF+E=;
+  b=R09iQP/W2FEpinsILT/GqfAE3kY3+yx2UTmKP8IGRvAf37g7KkeQ04Ve
+   DqNVVHJgWWWGGZon6VAh5svo6Llh2WPRJeghpdepz5zT9Oizh+5XlA1Ny
+   1FTBVgyrDvBTJnaTIVdZ3oYWncpyIKzuHjVrfGuG0ajcHAbW33z89oxb5
+   aMWfo2uD2hN+8EbzazuoTyKtQpnygOzkwinTC5RxbDi41W7SCzI00yxMv
+   vURQvWtxpq10T9EDDzGN/w4MaB2sNTP8fUEdg/5euntcGVfdxp/FPS6e1
+   8g3c8kx151IT4rojum5jt5fk+Ry2+iPfqLcFgDmgct9rXLF6Z04vIMVyP
+   Q==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10634"; a="335498919"
+X-IronPort-AV: E=Sophos;i="5.98,220,1673942400"; 
+   d="scan'208";a="335498919"
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Feb 2023 16:32:49 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6500,9779,10634"; a="673939224"
+X-IronPort-AV: E=Sophos;i="5.98,220,1673942400"; 
+   d="scan'208";a="673939224"
+Received: from orsmsx603.amr.corp.intel.com ([10.22.229.16])
+  by orsmga002.jf.intel.com with ESMTP; 27 Feb 2023 16:32:49 -0800
+Received: from orsmsx611.amr.corp.intel.com (10.22.229.24) by
+ ORSMSX603.amr.corp.intel.com (10.22.229.16) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.16; Mon, 27 Feb 2023 16:32:48 -0800
+Received: from orsmsx612.amr.corp.intel.com (10.22.229.25) by
+ ORSMSX611.amr.corp.intel.com (10.22.229.24) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.16; Mon, 27 Feb 2023 16:32:48 -0800
+Received: from ORSEDG602.ED.cps.intel.com (10.7.248.7) by
+ orsmsx612.amr.corp.intel.com (10.22.229.25) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.16 via Frontend Transport; Mon, 27 Feb 2023 16:32:48 -0800
+Received: from NAM10-DM6-obe.outbound.protection.outlook.com (104.47.58.105)
+ by edgegateway.intel.com (134.134.137.103) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.16; Mon, 27 Feb 2023 16:32:47 -0800
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=PYhdWWzOKHSH4ubl0JJydI6+0mWN106gywex5Kjn6DKIe3mNRDPxU5dU59urEcGfWfUXifRHg+VSigNK8QnU1sostkPkg8pt/MhG4q+kdj+XHAnCOfDeQl/dNUQ9ex7ii/UFCwydrxtto6af/6fxtpjTTe9JAU40sTESGHBb1fAKNOjWeWLrBKCCrXRAx/xY8D3Q0gk/AABr1IERusfEMctHZOqtbt0Uy2+ZQRpw/Fiwxa/t9JR1Vow8Pk7N3wT6rwrKiOnXbYc4FGgEJ9Qd9hAyf0AF82VOHrD1h1Zai3vJbFI4B6a5U15fAEhf2hZId40fWfYu5yVg2YvLPZ59YQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=gbTgprWF2o54uYVJGGoHAPrrePWR4SKvqJtRT3WWlxs=;
+ b=UY+lafnmA70A4aktKdmcqGPQ81c2Gs52UgN+Jwnr9p2ewB8nP4XpZ5FQ5mHbXgcDq0JWg6wv8OudZNzc6mmI8QUgIGEfPqLpgvNGrodQWM4TTK4WYqsvIVivzzkICrSCCnI568vAgY3yRWVynk7bxif5kWNUvJMNkW0WvhSMpO+kejjxy7zR+5Nisrrv+p0NhSIfbaOEKDNinb5glD6/oNbFtzitNJMFSOhitqWg7Njf2BKByShKxxI7uAPYQWOViul4gfftiXMoVCoFoymSZ8cc9ElvhkTqqv+K2a5FEUckADt/0OhzSfU30xiyhurtTmuxWKVyOeLPIjTVcllcWQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+Received: from CO1PR11MB4820.namprd11.prod.outlook.com (2603:10b6:303:6f::8)
+ by IA0PR11MB7696.namprd11.prod.outlook.com (2603:10b6:208:403::13) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6134.25; Tue, 28 Feb
+ 2023 00:32:44 +0000
+Received: from CO1PR11MB4820.namprd11.prod.outlook.com
+ ([fe80::8073:f55d:5f64:7c6]) by CO1PR11MB4820.namprd11.prod.outlook.com
+ ([fe80::8073:f55d:5f64:7c6%8]) with mapi id 15.20.6134.028; Tue, 28 Feb 2023
+ 00:32:44 +0000
+Message-ID: <a4aa2e13-7187-600b-c628-7e8fb108def0@intel.com>
+Date:   Tue, 28 Feb 2023 08:32:31 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Firefox/102.0 Thunderbird/102.8.0
+Subject: Re: [linus:master] [mm] f1a7941243: unixbench.score -19.2% regression
+To:     Shakeel Butt <shakeelb@google.com>
+CC:     "willy@infradead.org" <willy@infradead.org>,
+        "tj@kernel.org" <tj@kernel.org>,
+        "dennis@kernel.org" <dennis@kernel.org>,
+        "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
+        lkp <lkp@intel.com>,
+        "zhengjun.xing@linux.intel.com" <zhengjun.xing@linux.intel.com>,
+        "Huang, Ying" <ying.huang@intel.com>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        "Tang, Feng" <feng.tang@intel.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "m.szyprowski@samsung.com" <m.szyprowski@samsung.com>,
+        "Sang, Oliver" <oliver.sang@intel.com>,
+        "linux-trace-kernel@vger.kernel.org" 
+        <linux-trace-kernel@vger.kernel.org>,
+        "oe-lkp@lists.linux.dev" <oe-lkp@lists.linux.dev>
+References: <202301301057.e55dad5b-oliver.sang@intel.com>
+ <Y9dETROtv9Bld9TI@casper.infradead.org>
+ <20230131052352.5qnqegzwmt7akk7t@google.com>
+ <Y9iq8fRT4sDgIwQN@casper.infradead.org>
+ <20230131055743.tsilxx5vfl6gx4dj@google.com>
+ <CALvZod7TuaJ7pCc2nJKehwGkcuvsvjdL+4hs6qC3bZsOmGzXzg@mail.gmail.com>
+ <d5d0bcf75cbaa2792a3ad0e7b15a84fd67e54454.camel@intel.com>
+ <CALvZod7wP9n+cqJV4VN3YNnf6CPQ8PJZbkAgK=fv84D4Sk+Heg@mail.gmail.com>
+Content-Language: en-US
+From:   "Yin, Fengwei" <fengwei.yin@intel.com>
+In-Reply-To: <CALvZod7wP9n+cqJV4VN3YNnf6CPQ8PJZbkAgK=fv84D4Sk+Heg@mail.gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: SG2PR03CA0104.apcprd03.prod.outlook.com
+ (2603:1096:4:7c::32) To CO1PR11MB4820.namprd11.prod.outlook.com
+ (2603:10b6:303:6f::8)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230224165142.17745-2-quic_gokukris@quicinc.com>
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CO1PR11MB4820:EE_|IA0PR11MB7696:EE_
+X-MS-Office365-Filtering-Correlation-Id: 9e87fe46-0670-4c96-8cfa-08db19234ec4
+X-LD-Processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: 82Kqb7jro+UawYDyq3lX5dIKdZ1eHw986MtkePiGbrCDXgNmrPnAQ3HhP1TJP902XPDtOrkCrTqljp7EuEyaYzG5FalUjkhP6GXYmqdTMQodBh0uREGpdCHvonLtXRGyCLgEESlbuTAZvXCr8SLC6xjYnQE6W4H65QMuh5SEESPEcef+PbDJuNXgUqA55ebwneUYeZPhDO7olMqLZ4w7rsW5GJ5VQY8GGKT3TiAvJWzH1tpfGADUN8wERJsQJICY0krZkhJU/fCe7QBthbIpT9riWkgq0m6u2fj17GyoFvPkRVUi8SuaAnqtvX8JXbty3+wiJ5W815pxR22OdyB1bYqOxsEWgsHceoRNC60E97wD3f4S+qpdpuuupkXw08evOtqYz1TIMq81tM0VwiqSAEiynLrKhKSVs3AttVJl3Q+S6wL9QAKTVmAxwNm/pJa6EM9rX2fbZnypW3HC6BXwuWDDAW+0l6Ls2sqnxZurgXH6a9b9lYRTIIFCyeXjRyyChae5ZRMiFuRrglwpKc/I9SqtyL5jGxr8xbJRS+utNI4TudSC7A9bwHkzjxHllCALnCILKkPp1t9BW/HClFv8ptPHdwvg5ZiaA5F/Ho426C0A0KC0UoOwlNsRimYqUasLYZTIzSDCy2yjwl77PtfCPAzVmDaVj6TIo46fN9kgHCQwVHkgodt+1Y602O0p3uj6AgXR+VpBE9SndxOrln1GjqJsMv79tcObf5kx1uEA2EI=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CO1PR11MB4820.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230025)(376002)(346002)(39860400002)(396003)(136003)(366004)(451199018)(316002)(54906003)(83380400001)(966005)(36756003)(86362001)(31696002)(31686004)(6486002)(6512007)(2906002)(478600001)(7416002)(41300700001)(5660300002)(8676002)(66476007)(6916009)(4326008)(66946007)(53546011)(8936002)(2616005)(6666004)(186003)(26005)(66556008)(6506007)(38100700002)(82960400001)(43740500002)(45980500001);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?MWFaV05EaVM4QzB6NWtkb0pKTGk2V2pLSHVvV29Gd0VGS05wUGNVb25MUmQ4?=
+ =?utf-8?B?N3NHMEdJUmlpdVVZNTVFTit0N1gzS05BTHE0OHp1Nlo0WnE1Q3Q2N05BYmpj?=
+ =?utf-8?B?TlB4MnhOZEJkM3JRSHUzN21DNGxKYktmZndRT2hiSzRobVBWUnJsdTR0VlJh?=
+ =?utf-8?B?Q2xHWlBJZmtvK0FETzlSczZRVm1YNk9SWWVkNDdmQndmeWRuYUJZZmRmOEMv?=
+ =?utf-8?B?MGh5OEZ2QVBoQW5mTndJU2tDZ1VlNkFrRHlGdEJiTzVCQ1YzWkNuN0ZRVSt5?=
+ =?utf-8?B?ZzN4QjVLUDh1dVVCN3Q4eG9tUWZHWFd6azAzanVwcm50TmpBVlRVZWdGTWpj?=
+ =?utf-8?B?MG1OSW56d1QxL05FeXJEYmFOTTV0WUx3VzdNeFZJUEpLTks0aTR3S3NDbThR?=
+ =?utf-8?B?Yk54U2o5UGRMaERIb2FiRFFrdUoxUVF6eDI5M3h4S0ZqTjlweDQ3d2tMV2dm?=
+ =?utf-8?B?ZVVUc2thV0ZIc3BCOXljMVEyMmpaVEEva1RrNGN6YnVNMWg0a3B2Nk9MMHFT?=
+ =?utf-8?B?WVczUlo2dTFUSFdVQU1OTkJqeXQ4eFl2cDZDZ0I4bjczUGwwQWV3amxtUnZG?=
+ =?utf-8?B?TGIrUW8wQWVLS2JkZTBRVHc0ZFNPZDJDTW1GVlZEOTE1UW1LRk5WWDhTeU5J?=
+ =?utf-8?B?YVVOS1g0d2t6SVY5OHhoUStuR3VNZ2g5WGxaVWFJV1phS21UVFQ3d25EMWdJ?=
+ =?utf-8?B?ak5IZ3NLY08rTVJuamdNRUdWcEY3dVN6anNiVXFkZEtldUVRTVVyZWE3OGpw?=
+ =?utf-8?B?VWw0dndhMmE4VFlsK0Z3K0UyN3d4cXM4Umx5c282YzVTQWpGZG54VjR6NGtx?=
+ =?utf-8?B?NFd4dGlraHFzNksycC80SkJyN2NXdGVvWit2cCtSNDMwWm5nOEVUbEh1QnF5?=
+ =?utf-8?B?VUhtWG1ZbzRnS3V2a1BJRmZ1bzlNcUdjNW5wUzhxVjA0eGp0QmcrVlZUVjJ1?=
+ =?utf-8?B?ZGJpS3FlYTVpYldoNjJyWUZyK2hsa2R4WkFtQU1vZzlNaXBqN2piZG5yQkk5?=
+ =?utf-8?B?dGFlaUlOcktDOW5lbEdYSmkrSzJ3YjA0cEJIcmlTUmg5ZjFjVmd3c0EybXRL?=
+ =?utf-8?B?bkJjYTlERVFaTkc0RDlSaVRablJ6MkRpY2lsOU9qTGFhcVZ3dUxQaVJ0OVYv?=
+ =?utf-8?B?NVRCQVhqZnYrRStmUTErMENWWURCZTRhYWtKZlBCSGZ4QXlGQnZxelFWTmVN?=
+ =?utf-8?B?NDU0NDVjQjdBY2Z5aCswNlg5WEttT204SkM1b1VXK2VITitoU0NYeHVObGFq?=
+ =?utf-8?B?V1dOMEZWVVRXclJZSFpXYWJQMm5vbG9vZDFGM0RUTHV4bXpBSVJkVlp6Wjdi?=
+ =?utf-8?B?blozeS8yd1NaZGo1SlB2NHVVSDVFb1lzbEpOTWNDcGxCQWZQZS90N1d2WEZI?=
+ =?utf-8?B?a083N050UE1EeTkzTUh1QzFiSmsrd3dQTzUrUFJEbmd1RXdTRyt3RkRwSUdi?=
+ =?utf-8?B?dzMvaENmNHVjWWpERnZIbGZ5RFZ3SGFzUHN0Nk11WU0vZUQycm1lYkZmczdM?=
+ =?utf-8?B?K0NaSVJmeWVQb29VSjFlQnBOU2pnY0JCbFEvZVhHZCtObENkMXEzV1FhTmc5?=
+ =?utf-8?B?em4reGlzOHBNeWMzTHB1N2RiSEpJbkVwaEFQMHBGRGk1dXlMbk1pMENaa1RD?=
+ =?utf-8?B?WE1NTVZlU0NIRmVRUzEycDVjSFJRNHFJREU1bkl1b0JDTkozTm1yY2ErZFpt?=
+ =?utf-8?B?emlIWTRsYmx1UTFVUE1nUTFGMFE2MlZnZDdheExCTE8vVjh5THUyWTJxa1NN?=
+ =?utf-8?B?VHVHekNqTGY2WHQ0dlZHaEZEeGQrMDViMUdKTENvMzgydXNibERtRVNqVWhr?=
+ =?utf-8?B?ZnllVFFZUFpGcXgxRWE1R2p3NWVmU2xrZjRINEZlUk5HSEtrb2FYVmtRNWwz?=
+ =?utf-8?B?dkdMMFRxSEREcWF1QWo3aGwxSmZHZW5pbnJKYyt1RGpiSUY0V0tESThoSURS?=
+ =?utf-8?B?Q05nMlY0WmlGSE43amtyL1J2UnpoNHpia3piZkdMODRlSlRscDJ1bE8xelli?=
+ =?utf-8?B?THVSbHNCQXVsQmRlbEY0UmdadVFXcDNWR2ZkZDFzaTMvQzJ6TW51Ti9aV0lR?=
+ =?utf-8?B?eldBaFNGTGx2ZHNrUjhEZlRRVk1jb0xTR2RHdldFL0xyYlVSTXVicmFUVThx?=
+ =?utf-8?Q?YZ0ON2BRaitYj7rPUmQTnAlG6?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: 9e87fe46-0670-4c96-8cfa-08db19234ec4
+X-MS-Exchange-CrossTenant-AuthSource: CO1PR11MB4820.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 28 Feb 2023 00:32:44.1453
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: aXwRjuQ+oH+EqclC4otZVI8lumYwbFtKmZKVxEBv39rAdEwOwuVG2acU/zqSan2UL5FDnqytaGJUuBPPeOLuiw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA0PR11MB7696
+X-OriginatorOrg: intel.com
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On Fri, Feb 24, 2023 at 08:51:42AM -0800, Gokul krishna Krishnakumar wrote:
-> This change adds traces to the following rproc events:
-> 1. subdevices events - (STRAT/STOP/CRASH)
-> 2. subsystem events - (START/STOP/CRASH)
-> 3. RPROC framework events - (Firmware Load/Authentication)
+Hi Shakeel,
+
+On 2/28/2023 12:50 AM, Shakeel Butt wrote:
+> On Sun, Feb 26, 2023 at 10:35 PM Yin, Fengwei <fengwei.yin@intel.com> wrote:
+>>
+>> Hi Andrew, Shakeel,
+>>
+>> On Tue, 2023-01-31 at 10:26 -0800, Shakeel Butt wrote:
+>>> +per-cpu memory maintainers for FYI.
+>>>
+>>> Thread started at
+>>> https://lore.kernel.org/linux-mm/202301301057.e55dad5b-oliver.sang@intel.com/
+>>>
+>>> On Mon, Jan 30, 2023 at 9:57 PM Shakeel Butt <shakeelb@google.com>
+>>> wrote:
+>>>>
+>>> [...]
+>>>>>
+>>>>> We could cut down the number of calls to pcpu_alloc() by a factor
+>>>>> of 4
+>>>>> by having a pcpu_alloc_bulk() that would allocate all four RSS
+>>>>> counters
+>>>>> at once.
+>>>>>
+>>>>> Just throwing out ideas ...
+>>>>
+>>>> Thanks, I will take a stab at pcpu_alloc_bulk() and will share the
+>>>> result tomorrow.
+>>>>
+>>>
+>>> OK, not a one day effort.
+>>>
+>>> Andrew, which option do you prefer?
+>>>
+>>> 1. Keep the patches as the test workload (fork ping pong) is not a
+>>> representative of real world workload and work on improving
+>>> pcpu_alloc() for 6.4+.
+>>>
+>>> 2. Revert the patches for now, improve pcpu_alloc() and re-introduce
+>>> the patches once we confirm that fork-ping-pong is not regressed
+>>> anymore.
+>> This performance regression still can be reproduced on latest master
+>> branch. So we took option1 here. Right? Thanks.
+>>
 > 
+> Yes unless some real workload reports regression.
+Thanks for the confirmation.
 
-Thanks for proposing the introduction of tracepoints, this is something
-we have talked about for years, but no one has shown enough
-need/interest to do the work.
+Regards
+Yin, Fengwei
 
-Most of the proposed tracepoints would however be very useful if you
-move them one step up (or down...) in the stack.
-
-I.e. please move them into the common code.
-
-> Signed-off-by: Gokul krishna Krishnakumar <quic_gokukris@quicinc.com>
-> ---
->  drivers/remoteproc/Makefile           |  3 ++-
->  drivers/remoteproc/qcom_common.c      | 25 +++++++++++++++++++
->  drivers/remoteproc/qcom_q6v5.c        |  3 +++
->  drivers/remoteproc/qcom_q6v5_pas.c    | 17 +++++++++++++
->  drivers/remoteproc/qcom_sysmon.c      | 13 ++++++++++
->  drivers/remoteproc/qcom_tracepoints.c | 10 ++++++++
->  include/trace/events/rproc_qcom.h     | 36 +++++++++++++++++++++++++++
->  7 files changed, 106 insertions(+), 1 deletion(-)
->  create mode 100644 drivers/remoteproc/qcom_tracepoints.c
->  create mode 100644 include/trace/events/rproc_qcom.h
 > 
-> diff --git a/drivers/remoteproc/Makefile b/drivers/remoteproc/Makefile
-> index 91314a9b43ce..e52fa815ddc0 100644
-> --- a/drivers/remoteproc/Makefile
-> +++ b/drivers/remoteproc/Makefile
-> @@ -22,7 +22,8 @@ obj-$(CONFIG_KEYSTONE_REMOTEPROC)	+= keystone_remoteproc.o
->  obj-$(CONFIG_MESON_MX_AO_ARC_REMOTEPROC)+= meson_mx_ao_arc.o
->  obj-$(CONFIG_PRU_REMOTEPROC)		+= pru_rproc.o
->  obj-$(CONFIG_QCOM_PIL_INFO)		+= qcom_pil_info.o
-> -obj-$(CONFIG_QCOM_RPROC_COMMON)		+= qcom_common.o
-> +obj-$(CONFIG_QCOM_RPROC_COMMON)		+= rproc_qcom_common.o
-> +rproc_qcom_common-y			:= qcom_common.o qcom_tracepoints.o
->  obj-$(CONFIG_QCOM_Q6V5_COMMON)		+= qcom_q6v5.o
->  obj-$(CONFIG_QCOM_Q6V5_ADSP)		+= qcom_q6v5_adsp.o
->  obj-$(CONFIG_QCOM_Q6V5_MSS)		+= qcom_q6v5_mss.o
-> diff --git a/drivers/remoteproc/qcom_common.c b/drivers/remoteproc/qcom_common.c
-> index a0d4238492e9..7da3259be14a 100644
-> --- a/drivers/remoteproc/qcom_common.c
-> +++ b/drivers/remoteproc/qcom_common.c
-> @@ -18,6 +18,7 @@
->  #include <linux/slab.h>
->  #include <linux/soc/qcom/mdt_loader.h>
->  #include <linux/soc/qcom/smem.h>
-> +#include <trace/events/rproc_qcom.h>
->  
->  #include "remoteproc_internal.h"
->  #include "qcom_common.h"
-> @@ -26,6 +27,10 @@
->  #define to_smd_subdev(d) container_of(d, struct qcom_rproc_subdev, subdev)
->  #define to_ssr_subdev(d) container_of(d, struct qcom_rproc_ssr, subdev)
->  
-> +#define GLINK_SUBDEV_NAME	"glink"
-> +#define SMD_SUBDEV_NAME		"smd"
-> +#define SSR_SUBDEV_NAME		"ssr"
-> +
->  #define MAX_NUM_OF_SS           10
->  #define MAX_REGION_NAME_LENGTH  16
->  #define SBL_MINIDUMP_SMEM_ID	602
-> @@ -189,6 +194,8 @@ static int glink_subdev_start(struct rproc_subdev *subdev)
->  {
->  	struct qcom_rproc_glink *glink = to_glink_subdev(subdev);
->  
-> +	trace_rproc_qcom_event(dev_name(glink->dev->parent), GLINK_SUBDEV_NAME, "start");
-
-Please do add individual events, rather than adding a single
-trace_printk()-like event. That allows the user to selectively enable
-events, and it becomes convenient to use the events in debugging.
-
-> +
->  	glink->edge = qcom_glink_smem_register(glink->dev, glink->node);
->  
->  	return PTR_ERR_OR_ZERO(glink->edge);
-[..]
-> diff --git a/drivers/remoteproc/qcom_q6v5_pas.c b/drivers/remoteproc/qcom_q6v5_pas.c
-> index 6cc4e13c5d36..27d3a6f8c92f 100644
-> --- a/drivers/remoteproc/qcom_q6v5_pas.c
-> +++ b/drivers/remoteproc/qcom_q6v5_pas.c
-> @@ -24,6 +24,7 @@
->  #include <linux/soc/qcom/mdt_loader.h>
->  #include <linux/soc/qcom/smem.h>
->  #include <linux/soc/qcom/smem_state.h>
-> +#include <trace/events/rproc_qcom.h>
->  
->  #include "qcom_common.h"
->  #include "qcom_pil_info.h"
-> @@ -206,10 +207,13 @@ static int adsp_load(struct rproc *rproc, const struct firmware *fw)
->  	struct qcom_adsp *adsp = (struct qcom_adsp *)rproc->priv;
->  	int ret;
->  
-> +	trace_rproc_qcom_event(dev_name(adsp->dev), "adsp_load", "enter");
-> +
->  	/* Store firmware handle to be used in adsp_start() */
->  	adsp->firmware = fw;
->  
->  	if (adsp->dtb_pas_id) {
-> +		trace_rproc_qcom_event(dev_name(adsp->dev), "dtb_firmware_loading", "enter");
->  		ret = request_firmware(&adsp->dtb_firmware, adsp->dtb_firmware_name, adsp->dev);
->  		if (ret) {
->  			dev_err(adsp->dev, "request_firmware failed for %s: %d\n",
-> @@ -231,6 +235,8 @@ static int adsp_load(struct rproc *rproc, const struct firmware *fw)
->  			goto release_dtb_metadata;
->  	}
->  
-> +	trace_rproc_qcom_event(dev_name(adsp->dev), "adsp_load", "exit");
-
-I believe it would be more useful to capture the error path as well.
-
-> +
->  	return 0;
->  
->  release_dtb_metadata:
-> @@ -247,6 +253,8 @@ static int adsp_start(struct rproc *rproc)
->  	struct qcom_adsp *adsp = (struct qcom_adsp *)rproc->priv;
->  	int ret;
->  
-> +	trace_rproc_qcom_event(dev_name(adsp->dev), "adsp_start", "enter");
-> +
->  	ret = qcom_q6v5_prepare(&adsp->q6v5);
->  	if (ret)
->  		return ret;
-> @@ -276,6 +284,7 @@ static int adsp_start(struct rproc *rproc)
->  	}
->  
->  	if (adsp->dtb_pas_id) {
-> +	        trace_rproc_qcom_event(dev_name(adsp->dev), "dtb_auth_reset", "enter");
->  		ret = qcom_scm_pas_auth_and_reset(adsp->dtb_pas_id);
->  		if (ret) {
->  			dev_err(adsp->dev,
-> @@ -289,6 +298,8 @@ static int adsp_start(struct rproc *rproc)
->  	if (ret)
->  		goto disable_px_supply;
->  
-> +	trace_rproc_qcom_event(dev_name(adsp->dev), "Q6_firmware_loading", "enter");
-
-I would like this to contain move useful information, e.g. what file is
-it that we're trying to load?
-
-And you only put "enter" here because you have a single tracepoint, it
-doesn't add any value...
-
-> +
->  	ret = qcom_mdt_load_no_init(adsp->dev, adsp->firmware, rproc->firmware, adsp->pas_id,
->  				    adsp->mem_region, adsp->mem_phys, adsp->mem_size,
->  				    &adsp->mem_reloc);
-> @@ -296,6 +307,7 @@ static int adsp_start(struct rproc *rproc)
->  		goto release_pas_metadata;
->  
->  	qcom_pil_info_store(adsp->info_name, adsp->mem_phys, adsp->mem_size);
-> +	trace_rproc_qcom_event(dev_name(adsp->dev), "Q6_auth_reset", "enter");
->  
-
-When is this tracepoint useful to you? (Same with the mdt loader above)
-
-Should mdt-loader and scm drivers have their own tracepoints defined?
-They are after all called from a variety of other drivers...
-
->  	ret = qcom_scm_pas_auth_and_reset(adsp->pas_id);
->  	if (ret) {
-> @@ -303,6 +315,7 @@ static int adsp_start(struct rproc *rproc)
->  			"failed to authenticate image and release reset\n");
->  		goto release_pas_metadata;
->  	}
-> +	trace_rproc_qcom_event(dev_name(adsp->dev), "Q6_auth_reset", "exit");
->  
->  	ret = qcom_q6v5_wait_for_start(&adsp->q6v5, msecs_to_jiffies(5000));
->  	if (ret == -ETIMEDOUT) {
-> @@ -364,6 +377,8 @@ static int adsp_stop(struct rproc *rproc)
->  	int handover;
->  	int ret;
->  
-> +	trace_rproc_qcom_event(dev_name(adsp->dev), "adsp_stop", "enter");
-> +
->  	ret = qcom_q6v5_request_stop(&adsp->q6v5, adsp->sysmon);
->  	if (ret == -ETIMEDOUT)
->  		dev_err(adsp->dev, "timed out on wait\n");
-> @@ -385,6 +400,8 @@ static int adsp_stop(struct rproc *rproc)
->  	if (handover)
->  		qcom_pas_handover(&adsp->q6v5);
->  
-> +	trace_rproc_qcom_event(dev_name(adsp->dev), "adsp_stop", "exit");
-
-You're missing an opportunity to convey the success/failure by not using
-"ret".
-
-> +
->  	return ret;
->  }
->  
-[..]
-> diff --git a/include/trace/events/rproc_qcom.h b/include/trace/events/rproc_qcom.h
-> new file mode 100644
-> index 000000000000..b8748873ab25
-> --- /dev/null
-> +++ b/include/trace/events/rproc_qcom.h
-> @@ -0,0 +1,36 @@
-> +/* SPDX-License-Identifier: GPL-2.0-only */
-> +/*
-> + * Copyright (c) 2021 The Linux Foundation. All rights reserved.
-> + */
-> +
-> +#undef TRACE_SYSTEM
-> +#define TRACE_SYSTEM rproc_qcom
-> +
-> +#if !defined(_TRACE_RPROC_QCOM_H) || defined(TRACE_HEADER_MULTI_READ)
-> +#define _TRACE_RPROC_QCOM_H
-> +#include <linux/tracepoint.h>
-> +
-> +TRACE_EVENT(rproc_qcom_event,
-> +
-> +	TP_PROTO(const char *name, const char *event, const char *subevent),
-> +
-> +	TP_ARGS(name, event, subevent),
-> +
-> +	TP_STRUCT__entry(
-> +		__string(name, name)
-> +		__string(event, event)
-> +		__string(subevent, subevent)
-
-Please ensure that your trace events are carrying useful information;
-as seen above, subevent is not useful in all cases, and in several other
-cases you're missing useful information.
-
-Please think beyond printk, and please consider that these buffers could
-be consumed by a machine.
-
-Regards,
-Bjorn
-
-> +	),
-> +
-> +	TP_fast_assign(
-> +		__assign_str(name, name);
-> +		__assign_str(event, event);
-> +		__assign_str(subevent, subevent);
-> +	),
-> +
-> +	TP_printk("%s: %s: %s", __get_str(name), __get_str(event), __get_str(subevent))
-> +);
-> +#endif /* _TRACE_RPROC_QCOM_H */
-> +
-> +/* This part must be outside protection */
-> +#include <trace/define_trace.h>
-> -- 
-> 2.39.2
-> 
+> Shakeel
