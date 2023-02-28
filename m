@@ -2,230 +2,108 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BD27C64ED6
-	for <linux-trace-kernel@archiver.kernel.org>; Tue, 28 Feb 2023 00:32:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C7BDC7EE31
+	for <linux-trace-kernel@archiver.kernel.org>; Tue, 28 Feb 2023 01:01:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229379AbjB1Acy (ORCPT
+        id S229524AbjB1BBz (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Mon, 27 Feb 2023 19:32:54 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58438 "EHLO
+        Mon, 27 Feb 2023 20:01:55 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46662 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229486AbjB1Acx (ORCPT
+        with ESMTP id S229700AbjB1BBz (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Mon, 27 Feb 2023 19:32:53 -0500
-Received: from mga09.intel.com (mga09.intel.com [134.134.136.24])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A365226CC8;
-        Mon, 27 Feb 2023 16:32:49 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1677544369; x=1709080369;
-  h=message-id:date:subject:to:cc:references:from:
-   in-reply-to:content-transfer-encoding:mime-version;
-  bh=P23uLetnNolTJcy9mDLIsoQZ3g4oqxGnRUZAQbYhF+E=;
-  b=R09iQP/W2FEpinsILT/GqfAE3kY3+yx2UTmKP8IGRvAf37g7KkeQ04Ve
-   DqNVVHJgWWWGGZon6VAh5svo6Llh2WPRJeghpdepz5zT9Oizh+5XlA1Ny
-   1FTBVgyrDvBTJnaTIVdZ3oYWncpyIKzuHjVrfGuG0ajcHAbW33z89oxb5
-   aMWfo2uD2hN+8EbzazuoTyKtQpnygOzkwinTC5RxbDi41W7SCzI00yxMv
-   vURQvWtxpq10T9EDDzGN/w4MaB2sNTP8fUEdg/5euntcGVfdxp/FPS6e1
-   8g3c8kx151IT4rojum5jt5fk+Ry2+iPfqLcFgDmgct9rXLF6Z04vIMVyP
-   Q==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10634"; a="335498919"
-X-IronPort-AV: E=Sophos;i="5.98,220,1673942400"; 
-   d="scan'208";a="335498919"
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Feb 2023 16:32:49 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6500,9779,10634"; a="673939224"
-X-IronPort-AV: E=Sophos;i="5.98,220,1673942400"; 
-   d="scan'208";a="673939224"
-Received: from orsmsx603.amr.corp.intel.com ([10.22.229.16])
-  by orsmga002.jf.intel.com with ESMTP; 27 Feb 2023 16:32:49 -0800
-Received: from orsmsx611.amr.corp.intel.com (10.22.229.24) by
- ORSMSX603.amr.corp.intel.com (10.22.229.16) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.16; Mon, 27 Feb 2023 16:32:48 -0800
-Received: from orsmsx612.amr.corp.intel.com (10.22.229.25) by
- ORSMSX611.amr.corp.intel.com (10.22.229.24) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.16; Mon, 27 Feb 2023 16:32:48 -0800
-Received: from ORSEDG602.ED.cps.intel.com (10.7.248.7) by
- orsmsx612.amr.corp.intel.com (10.22.229.25) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.16 via Frontend Transport; Mon, 27 Feb 2023 16:32:48 -0800
-Received: from NAM10-DM6-obe.outbound.protection.outlook.com (104.47.58.105)
- by edgegateway.intel.com (134.134.137.103) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.16; Mon, 27 Feb 2023 16:32:47 -0800
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=PYhdWWzOKHSH4ubl0JJydI6+0mWN106gywex5Kjn6DKIe3mNRDPxU5dU59urEcGfWfUXifRHg+VSigNK8QnU1sostkPkg8pt/MhG4q+kdj+XHAnCOfDeQl/dNUQ9ex7ii/UFCwydrxtto6af/6fxtpjTTe9JAU40sTESGHBb1fAKNOjWeWLrBKCCrXRAx/xY8D3Q0gk/AABr1IERusfEMctHZOqtbt0Uy2+ZQRpw/Fiwxa/t9JR1Vow8Pk7N3wT6rwrKiOnXbYc4FGgEJ9Qd9hAyf0AF82VOHrD1h1Zai3vJbFI4B6a5U15fAEhf2hZId40fWfYu5yVg2YvLPZ59YQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=gbTgprWF2o54uYVJGGoHAPrrePWR4SKvqJtRT3WWlxs=;
- b=UY+lafnmA70A4aktKdmcqGPQ81c2Gs52UgN+Jwnr9p2ewB8nP4XpZ5FQ5mHbXgcDq0JWg6wv8OudZNzc6mmI8QUgIGEfPqLpgvNGrodQWM4TTK4WYqsvIVivzzkICrSCCnI568vAgY3yRWVynk7bxif5kWNUvJMNkW0WvhSMpO+kejjxy7zR+5Nisrrv+p0NhSIfbaOEKDNinb5glD6/oNbFtzitNJMFSOhitqWg7Njf2BKByShKxxI7uAPYQWOViul4gfftiXMoVCoFoymSZ8cc9ElvhkTqqv+K2a5FEUckADt/0OhzSfU30xiyhurtTmuxWKVyOeLPIjTVcllcWQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from CO1PR11MB4820.namprd11.prod.outlook.com (2603:10b6:303:6f::8)
- by IA0PR11MB7696.namprd11.prod.outlook.com (2603:10b6:208:403::13) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6134.25; Tue, 28 Feb
- 2023 00:32:44 +0000
-Received: from CO1PR11MB4820.namprd11.prod.outlook.com
- ([fe80::8073:f55d:5f64:7c6]) by CO1PR11MB4820.namprd11.prod.outlook.com
- ([fe80::8073:f55d:5f64:7c6%8]) with mapi id 15.20.6134.028; Tue, 28 Feb 2023
- 00:32:44 +0000
-Message-ID: <a4aa2e13-7187-600b-c628-7e8fb108def0@intel.com>
-Date:   Tue, 28 Feb 2023 08:32:31 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Firefox/102.0 Thunderbird/102.8.0
-Subject: Re: [linus:master] [mm] f1a7941243: unixbench.score -19.2% regression
-To:     Shakeel Butt <shakeelb@google.com>
-CC:     "willy@infradead.org" <willy@infradead.org>,
-        "tj@kernel.org" <tj@kernel.org>,
-        "dennis@kernel.org" <dennis@kernel.org>,
-        "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
-        lkp <lkp@intel.com>,
-        "zhengjun.xing@linux.intel.com" <zhengjun.xing@linux.intel.com>,
-        "Huang, Ying" <ying.huang@intel.com>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        "Tang, Feng" <feng.tang@intel.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "m.szyprowski@samsung.com" <m.szyprowski@samsung.com>,
-        "Sang, Oliver" <oliver.sang@intel.com>,
-        "linux-trace-kernel@vger.kernel.org" 
-        <linux-trace-kernel@vger.kernel.org>,
-        "oe-lkp@lists.linux.dev" <oe-lkp@lists.linux.dev>
-References: <202301301057.e55dad5b-oliver.sang@intel.com>
- <Y9dETROtv9Bld9TI@casper.infradead.org>
- <20230131052352.5qnqegzwmt7akk7t@google.com>
- <Y9iq8fRT4sDgIwQN@casper.infradead.org>
- <20230131055743.tsilxx5vfl6gx4dj@google.com>
- <CALvZod7TuaJ7pCc2nJKehwGkcuvsvjdL+4hs6qC3bZsOmGzXzg@mail.gmail.com>
- <d5d0bcf75cbaa2792a3ad0e7b15a84fd67e54454.camel@intel.com>
- <CALvZod7wP9n+cqJV4VN3YNnf6CPQ8PJZbkAgK=fv84D4Sk+Heg@mail.gmail.com>
-Content-Language: en-US
-From:   "Yin, Fengwei" <fengwei.yin@intel.com>
-In-Reply-To: <CALvZod7wP9n+cqJV4VN3YNnf6CPQ8PJZbkAgK=fv84D4Sk+Heg@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: SG2PR03CA0104.apcprd03.prod.outlook.com
- (2603:1096:4:7c::32) To CO1PR11MB4820.namprd11.prod.outlook.com
- (2603:10b6:303:6f::8)
+        Mon, 27 Feb 2023 20:01:55 -0500
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BED9D298EC;
+        Mon, 27 Feb 2023 17:01:50 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 42582B80DCF;
+        Tue, 28 Feb 2023 01:01:49 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 62809C4339B;
+        Tue, 28 Feb 2023 01:01:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1677546108;
+        bh=v4B1NDUdQOLGsbvYBPpHqzJS0pYBcoIKrBcT+CToIbs=;
+        h=From:To:Cc:Subject:Date:From;
+        b=M3pV4PhLBSWvguLe7x+n82M1wqfZPxxFdiFo3LvFQ5DgBe6liDchMXXiltndHJHmG
+         A0o3fSWxM7yX+jSpzTii4N3ly+b3pC3jvbWXUiMedKUcH0Jr4aBQJORR0zcSt1qvh5
+         YC86dIaBV6JrBnhiQYVIv653Wr6TqIM2skzbib3UxstxCFAABw8ub7JWwLsEdLqpl5
+         9Pu4klckjJRl/rJPk8hcPaL4zHd2lE+dfiU0NT0O15KwvC7we02lGPi5Vltf54giMk
+         ial8cRkR938cQoG6ov+KMFZ/iG5Jw+YqMBtTymY0o8y/I1JR6/iQxD1vMsgM3kDJVY
+         q6+KKMsoqSxRQ==
+From:   "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
+To:     linux-trace-kernel@vger.kernel.org,
+        "Paul E . McKenney" <paulmck@kernel.org>
+Cc:     Geert Uytterhoeven <geert@linux-m68k.org>,
+        linux-kernel@vger.kernel.org, akpm@linux-foundation.org,
+        ndesaulniers@google.com, vbabka@suse.cz, hannes@cmpxchg.org,
+        joel@joelfernandes.org, quic_neeraju@quicinc.com, urezki@gmail.com,
+        mhiramat@kernel.org
+Subject: [PATCH] bootconfig: Change message if no bootconfig with CONFIG_BOOT_CONFIG_FORCE=y
+Date:   Tue, 28 Feb 2023 10:01:42 +0900
+Message-Id: <167754610254.318944.16848412476667893329.stgit@devnote2>
+X-Mailer: git-send-email 2.25.1
+User-Agent: StGit/0.19
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CO1PR11MB4820:EE_|IA0PR11MB7696:EE_
-X-MS-Office365-Filtering-Correlation-Id: 9e87fe46-0670-4c96-8cfa-08db19234ec4
-X-LD-Processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: 82Kqb7jro+UawYDyq3lX5dIKdZ1eHw986MtkePiGbrCDXgNmrPnAQ3HhP1TJP902XPDtOrkCrTqljp7EuEyaYzG5FalUjkhP6GXYmqdTMQodBh0uREGpdCHvonLtXRGyCLgEESlbuTAZvXCr8SLC6xjYnQE6W4H65QMuh5SEESPEcef+PbDJuNXgUqA55ebwneUYeZPhDO7olMqLZ4w7rsW5GJ5VQY8GGKT3TiAvJWzH1tpfGADUN8wERJsQJICY0krZkhJU/fCe7QBthbIpT9riWkgq0m6u2fj17GyoFvPkRVUi8SuaAnqtvX8JXbty3+wiJ5W815pxR22OdyB1bYqOxsEWgsHceoRNC60E97wD3f4S+qpdpuuupkXw08evOtqYz1TIMq81tM0VwiqSAEiynLrKhKSVs3AttVJl3Q+S6wL9QAKTVmAxwNm/pJa6EM9rX2fbZnypW3HC6BXwuWDDAW+0l6Ls2sqnxZurgXH6a9b9lYRTIIFCyeXjRyyChae5ZRMiFuRrglwpKc/I9SqtyL5jGxr8xbJRS+utNI4TudSC7A9bwHkzjxHllCALnCILKkPp1t9BW/HClFv8ptPHdwvg5ZiaA5F/Ho426C0A0KC0UoOwlNsRimYqUasLYZTIzSDCy2yjwl77PtfCPAzVmDaVj6TIo46fN9kgHCQwVHkgodt+1Y602O0p3uj6AgXR+VpBE9SndxOrln1GjqJsMv79tcObf5kx1uEA2EI=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CO1PR11MB4820.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230025)(376002)(346002)(39860400002)(396003)(136003)(366004)(451199018)(316002)(54906003)(83380400001)(966005)(36756003)(86362001)(31696002)(31686004)(6486002)(6512007)(2906002)(478600001)(7416002)(41300700001)(5660300002)(8676002)(66476007)(6916009)(4326008)(66946007)(53546011)(8936002)(2616005)(6666004)(186003)(26005)(66556008)(6506007)(38100700002)(82960400001)(43740500002)(45980500001);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?MWFaV05EaVM4QzB6NWtkb0pKTGk2V2pLSHVvV29Gd0VGS05wUGNVb25MUmQ4?=
- =?utf-8?B?N3NHMEdJUmlpdVVZNTVFTit0N1gzS05BTHE0OHp1Nlo0WnE1Q3Q2N05BYmpj?=
- =?utf-8?B?TlB4MnhOZEJkM3JRSHUzN21DNGxKYktmZndRT2hiSzRobVBWUnJsdTR0VlJh?=
- =?utf-8?B?Q2xHWlBJZmtvK0FETzlSczZRVm1YNk9SWWVkNDdmQndmeWRuYUJZZmRmOEMv?=
- =?utf-8?B?MGh5OEZ2QVBoQW5mTndJU2tDZ1VlNkFrRHlGdEJiTzVCQ1YzWkNuN0ZRVSt5?=
- =?utf-8?B?ZzN4QjVLUDh1dVVCN3Q4eG9tUWZHWFd6azAzanVwcm50TmpBVlRVZWdGTWpj?=
- =?utf-8?B?MG1OSW56d1QxL05FeXJEYmFOTTV0WUx3VzdNeFZJUEpLTks0aTR3S3NDbThR?=
- =?utf-8?B?Yk54U2o5UGRMaERIb2FiRFFrdUoxUVF6eDI5M3h4S0ZqTjlweDQ3d2tMV2dm?=
- =?utf-8?B?ZVVUc2thV0ZIc3BCOXljMVEyMmpaVEEva1RrNGN6YnVNMWg0a3B2Nk9MMHFT?=
- =?utf-8?B?WVczUlo2dTFUSFdVQU1OTkJqeXQ4eFl2cDZDZ0I4bjczUGwwQWV3amxtUnZG?=
- =?utf-8?B?TGIrUW8wQWVLS2JkZTBRVHc0ZFNPZDJDTW1GVlZEOTE1UW1LRk5WWDhTeU5J?=
- =?utf-8?B?YVVOS1g0d2t6SVY5OHhoUStuR3VNZ2g5WGxaVWFJV1phS21UVFQ3d25EMWdJ?=
- =?utf-8?B?ak5IZ3NLY08rTVJuamdNRUdWcEY3dVN6anNiVXFkZEtldUVRTVVyZWE3OGpw?=
- =?utf-8?B?VWw0dndhMmE4VFlsK0Z3K0UyN3d4cXM4Umx5c282YzVTQWpGZG54VjR6NGtx?=
- =?utf-8?B?NFd4dGlraHFzNksycC80SkJyN2NXdGVvWit2cCtSNDMwWm5nOEVUbEh1QnF5?=
- =?utf-8?B?VUhtWG1ZbzRnS3V2a1BJRmZ1bzlNcUdjNW5wUzhxVjA0eGp0QmcrVlZUVjJ1?=
- =?utf-8?B?ZGJpS3FlYTVpYldoNjJyWUZyK2hsa2R4WkFtQU1vZzlNaXBqN2piZG5yQkk5?=
- =?utf-8?B?dGFlaUlOcktDOW5lbEdYSmkrSzJ3YjA0cEJIcmlTUmg5ZjFjVmd3c0EybXRL?=
- =?utf-8?B?bkJjYTlERVFaTkc0RDlSaVRablJ6MkRpY2lsOU9qTGFhcVZ3dUxQaVJ0OVYv?=
- =?utf-8?B?NVRCQVhqZnYrRStmUTErMENWWURCZTRhYWtKZlBCSGZ4QXlGQnZxelFWTmVN?=
- =?utf-8?B?NDU0NDVjQjdBY2Z5aCswNlg5WEttT204SkM1b1VXK2VITitoU0NYeHVObGFq?=
- =?utf-8?B?V1dOMEZWVVRXclJZSFpXYWJQMm5vbG9vZDFGM0RUTHV4bXpBSVJkVlp6Wjdi?=
- =?utf-8?B?blozeS8yd1NaZGo1SlB2NHVVSDVFb1lzbEpOTWNDcGxCQWZQZS90N1d2WEZI?=
- =?utf-8?B?a083N050UE1EeTkzTUh1QzFiSmsrd3dQTzUrUFJEbmd1RXdTRyt3RkRwSUdi?=
- =?utf-8?B?dzMvaENmNHVjWWpERnZIbGZ5RFZ3SGFzUHN0Nk11WU0vZUQycm1lYkZmczdM?=
- =?utf-8?B?K0NaSVJmeWVQb29VSjFlQnBOU2pnY0JCbFEvZVhHZCtObENkMXEzV1FhTmc5?=
- =?utf-8?B?em4reGlzOHBNeWMzTHB1N2RiSEpJbkVwaEFQMHBGRGk1dXlMbk1pMENaa1RD?=
- =?utf-8?B?WE1NTVZlU0NIRmVRUzEycDVjSFJRNHFJREU1bkl1b0JDTkozTm1yY2ErZFpt?=
- =?utf-8?B?emlIWTRsYmx1UTFVUE1nUTFGMFE2MlZnZDdheExCTE8vVjh5THUyWTJxa1NN?=
- =?utf-8?B?VHVHekNqTGY2WHQ0dlZHaEZEeGQrMDViMUdKTENvMzgydXNibERtRVNqVWhr?=
- =?utf-8?B?ZnllVFFZUFpGcXgxRWE1R2p3NWVmU2xrZjRINEZlUk5HSEtrb2FYVmtRNWwz?=
- =?utf-8?B?dkdMMFRxSEREcWF1QWo3aGwxSmZHZW5pbnJKYyt1RGpiSUY0V0tESThoSURS?=
- =?utf-8?B?Q05nMlY0WmlGSE43amtyL1J2UnpoNHpia3piZkdMODRlSlRscDJ1bE8xelli?=
- =?utf-8?B?THVSbHNCQXVsQmRlbEY0UmdadVFXcDNWR2ZkZDFzaTMvQzJ6TW51Ti9aV0lR?=
- =?utf-8?B?eldBaFNGTGx2ZHNrUjhEZlRRVk1jb0xTR2RHdldFL0xyYlVSTXVicmFUVThx?=
- =?utf-8?Q?YZ0ON2BRaitYj7rPUmQTnAlG6?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: 9e87fe46-0670-4c96-8cfa-08db19234ec4
-X-MS-Exchange-CrossTenant-AuthSource: CO1PR11MB4820.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 28 Feb 2023 00:32:44.1453
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: aXwRjuQ+oH+EqclC4otZVI8lumYwbFtKmZKVxEBv39rAdEwOwuVG2acU/zqSan2UL5FDnqytaGJUuBPPeOLuiw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA0PR11MB7696
-X-OriginatorOrg: intel.com
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-Hi Shakeel,
+From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 
-On 2/28/2023 12:50 AM, Shakeel Butt wrote:
-> On Sun, Feb 26, 2023 at 10:35 PM Yin, Fengwei <fengwei.yin@intel.com> wrote:
->>
->> Hi Andrew, Shakeel,
->>
->> On Tue, 2023-01-31 at 10:26 -0800, Shakeel Butt wrote:
->>> +per-cpu memory maintainers for FYI.
->>>
->>> Thread started at
->>> https://lore.kernel.org/linux-mm/202301301057.e55dad5b-oliver.sang@intel.com/
->>>
->>> On Mon, Jan 30, 2023 at 9:57 PM Shakeel Butt <shakeelb@google.com>
->>> wrote:
->>>>
->>> [...]
->>>>>
->>>>> We could cut down the number of calls to pcpu_alloc() by a factor
->>>>> of 4
->>>>> by having a pcpu_alloc_bulk() that would allocate all four RSS
->>>>> counters
->>>>> at once.
->>>>>
->>>>> Just throwing out ideas ...
->>>>
->>>> Thanks, I will take a stab at pcpu_alloc_bulk() and will share the
->>>> result tomorrow.
->>>>
->>>
->>> OK, not a one day effort.
->>>
->>> Andrew, which option do you prefer?
->>>
->>> 1. Keep the patches as the test workload (fork ping pong) is not a
->>> representative of real world workload and work on improving
->>> pcpu_alloc() for 6.4+.
->>>
->>> 2. Revert the patches for now, improve pcpu_alloc() and re-introduce
->>> the patches once we confirm that fork-ping-pong is not regressed
->>> anymore.
->> This performance regression still can be reproduced on latest master
->> branch. So we took option1 here. Right? Thanks.
->>
-> 
-> Yes unless some real workload reports regression.
-Thanks for the confirmation.
+Change no bootconfig data error message if user do not specify 'bootconfig'
+option but CONFIG_BOOT_CONFIG_FORCE=y.
+With CONFIG_BOOT_CONFIG_FORCE=y, the kernel proceeds bootconfig check even
+if user does not specify 'bootconfig' option. So the current error message
+is confusing. Let's show just an information message to notice skipping
+the bootconfig in that case.
 
-Regards
-Yin, Fengwei
+Fixes: b743852ccc1d ("Allow forcing unconditional bootconfig processing")
+Reported-by: Geert Uytterhoeven <geert@linux-m68k.org>
+Link: https://lore.kernel.org/all/CAMuHMdV9jJvE2y8gY5V_CxidUikCf5515QMZHzTA3rRGEOj6=w@mail.gmail.com/
+Suggested-by: Paul E. McKenney <paulmck@kernel.org>
+Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+---
+ init/main.c |   10 +++++++---
+ 1 file changed, 7 insertions(+), 3 deletions(-)
 
-> 
-> Shakeel
+diff --git a/init/main.c b/init/main.c
+index 4425d1783d5c..bb87b789c543 100644
+--- a/init/main.c
++++ b/init/main.c
+@@ -156,7 +156,7 @@ static char *extra_init_args;
+ 
+ #ifdef CONFIG_BOOT_CONFIG
+ /* Is bootconfig on command line? */
+-static bool bootconfig_found = IS_ENABLED(CONFIG_BOOT_CONFIG_FORCE);
++static bool bootconfig_found;
+ static size_t initargs_offs;
+ #else
+ # define bootconfig_found false
+@@ -429,7 +429,7 @@ static void __init setup_boot_config(void)
+ 	err = parse_args("bootconfig", tmp_cmdline, NULL, 0, 0, 0, NULL,
+ 			 bootconfig_params);
+ 
+-	if (IS_ERR(err) || !bootconfig_found)
++	if (IS_ERR(err) || !(bootconfig_found || IS_ENABLED(CONFIG_BOOT_CONFIG_FORCE)))
+ 		return;
+ 
+ 	/* parse_args() stops at the next param of '--' and returns an address */
+@@ -437,7 +437,11 @@ static void __init setup_boot_config(void)
+ 		initargs_offs = err - tmp_cmdline;
+ 
+ 	if (!data) {
+-		pr_err("'bootconfig' found on command line, but no bootconfig found\n");
++		/* If user intended to use bootconfig, show an error level message */
++		if (bootconfig_found)
++			pr_err("'bootconfig' found on command line, but no bootconfig found\n");
++		else
++			pr_info("No bootconfig data provided, so skipping bootconfig");
+ 		return;
+ 	}
+ 
+
