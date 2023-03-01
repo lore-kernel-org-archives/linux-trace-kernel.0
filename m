@@ -2,162 +2,108 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 92DEAC64EC7
-	for <linux-trace-kernel@archiver.kernel.org>; Tue, 28 Feb 2023 22:55:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C1D8C7EE23
+	for <linux-trace-kernel@archiver.kernel.org>; Wed,  1 Mar 2023 03:45:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229535AbjB1Wz2 (ORCPT
+        id S230057AbjCADph (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Tue, 28 Feb 2023 17:55:28 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48646 "EHLO
+        Tue, 28 Feb 2023 22:45:37 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46820 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229512AbjB1Wz1 (ORCPT
+        with ESMTP id S230073AbjCADpJ (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Tue, 28 Feb 2023 17:55:27 -0500
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 72A573644D;
-        Tue, 28 Feb 2023 14:55:25 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 26F93B80DD0;
-        Tue, 28 Feb 2023 22:55:24 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B8C4AC433EF;
-        Tue, 28 Feb 2023 22:55:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1677624922;
-        bh=+J5dybGf17o0wN1DobraFoU++9dN2UmIDOv7C6NV+aY=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=flY9czc83DDmsYRvRyj51brgCuz5OJjlqkhHd0hsIlK6K3kXg87uM7mxJ/ZuSR3Yx
-         qb6YM6EZrUP/K5mmcvBPUwyemrINyRtFXAEYksIzSZ0DrQUpwEtQVezhM6ks1ik5HM
-         Yz5i0sRFKOn8KZEDbHawnJKPMgfZBDAwVpxJbkgQAs0ZZfnlpSeOToE5tqr7qLlpmz
-         D7aoDtWPHl5YTPDjdLL8Qzvghs1SiJl2agfe3ieL3K2+ELIosk7nxGaorq5GGce8RK
-         lzOJh/k0KgYzcVFjO2Rz6pph1MdDZzsZlnOTEPoIHGxcf2xE0BsGNckfkGvUI2erdy
-         +0NBRFAJszaKg==
-Date:   Wed, 1 Mar 2023 07:55:19 +0900
-From:   Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To:     Uros Bizjak <ubizjak@gmail.com>
-Cc:     linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>
-Subject: Re: [PATCH 1/3] ring_buffer: Change some static functions to void
-Message-Id: <20230301075519.dbf770fed0476e2b6ecdad37@kernel.org>
-In-Reply-To: <20230228175929.7534-2-ubizjak@gmail.com>
-References: <20230228175929.7534-1-ubizjak@gmail.com>
-        <20230228175929.7534-2-ubizjak@gmail.com>
-X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        Tue, 28 Feb 2023 22:45:09 -0500
+Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7FDFA2CFEA;
+        Tue, 28 Feb 2023 19:44:38 -0800 (PST)
+Received: from dggpeml100012.china.huawei.com (unknown [172.30.72.53])
+        by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4PRKn30lK4z9tPk;
+        Wed,  1 Mar 2023 11:42:31 +0800 (CST)
+Received: from localhost.localdomain (10.67.175.61) by
+ dggpeml100012.china.huawei.com (7.185.36.121) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.21; Wed, 1 Mar 2023 11:44:30 +0800
+From:   Zheng Yejian <zhengyejian1@huawei.com>
+To:     <rostedt@goodmis.org>, <mhiramat@kernel.org>
+CC:     <linux-kernel@vger.kernel.org>,
+        <linux-trace-kernel@vger.kernel.org>, <zhengyejian1@huawei.com>
+Subject: [RFC PATCH] tracing/ring-buffer: Drop inappropriate WARN in rb_set_head_page()
+Date:   Wed, 1 Mar 2023 11:47:02 +0800
+Message-ID: <20230301034702.3449755-1-zhengyejian1@huawei.com>
+X-Mailer: git-send-email 2.25.1
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [10.67.175.61]
+X-ClientProxiedBy: dggems704-chm.china.huawei.com (10.3.19.181) To
+ dggpeml100012.china.huawei.com (7.185.36.121)
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On Tue, 28 Feb 2023 18:59:27 +0100
-Uros Bizjak <ubizjak@gmail.com> wrote:
+Following WARNING appears several times during test on v5.10 but
+mainline kernel should have the same problem. However I currently
+can't find the reproduction method.
 
-> The results of some static functions are not used. Change the
-> type of these function to void and remove unnecessary returns.
-> 
-> No functional change intended.
+WARNING: CPU: 29 PID: 686834 at kernel/trace/ring_buffer.c:1357
+           rb_set_head_page+0x168/0x264
+Link: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git/tree/kernel/trace/ring_buffer.c?h=linux-5.10.y#n1357
+Call trace:
+ rb_set_head_page+0x168/0x264
+ rb_per_cpu_empty+0x34/0x15c
+ ring_buffer_empty_cpu.part.0.isra.0+0x1a4/0x3f0
+ ring_buffer_empty_cpu+0x74/0xb4
+ __find_next_entry+0x14c/0x2f4
+ trace_find_next_entry_inc+0x48/0x13c
+ tracing_read_pipe+0x2c8/0x6b4
+ vfs_read+0x144/0x324
+ ksys_read+0x104/0x220
+ __arm64_sys_read+0x54/0x70
+ el0_svc_common.constprop.0+0xd8/0x37c
+ do_el0_svc+0x50/0x120
+ el0_svc+0x24/0x3c
+ el0_sync_handler+0x17c/0x180
+ el0_sync+0x160/0x180
 
-NAK, instead of dropping the errors, please handle it on the caller side.
+The WARNING appears because rb_set_head_page() didn't grab the header
+after three loops traversing buffer pages. This was not considered
+to be expected, as comment said, writer possibly moves the header in
+one loop.
 
-Thank you,
+However, supposing writer keeps moving the header, we may miss more
+loops and it seems normal not to grab the header within three loops
+in rb_set_head_page(). Therefore drop that RB_WARN_ON().
 
-> 
-> Cc: Steven Rostedt <rostedt@goodmis.org>
-> Cc: Masami Hiramatsu <mhiramat@kernel.org>
-> Signed-off-by: Uros Bizjak <ubizjak@gmail.com>
-> ---
->  kernel/trace/ring_buffer.c | 22 +++++++---------------
->  1 file changed, 7 insertions(+), 15 deletions(-)
-> 
-> diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
-> index af50d931b020..05fdc92554df 100644
-> --- a/kernel/trace/ring_buffer.c
-> +++ b/kernel/trace/ring_buffer.c
-> @@ -1569,15 +1569,12 @@ static void rb_tail_page_update(struct ring_buffer_per_cpu *cpu_buffer,
->  	}
->  }
->  
-> -static int rb_check_bpage(struct ring_buffer_per_cpu *cpu_buffer,
-> +static void rb_check_bpage(struct ring_buffer_per_cpu *cpu_buffer,
->  			  struct buffer_page *bpage)
->  {
->  	unsigned long val = (unsigned long)bpage;
->  
-> -	if (RB_WARN_ON(cpu_buffer, val & RB_FLAG_MASK))
-> -		return 1;
-> -
-> -	return 0;
-> +	RB_WARN_ON(cpu_buffer, val & RB_FLAG_MASK);
->  }
->  
->  /**
-> @@ -1587,30 +1584,28 @@ static int rb_check_bpage(struct ring_buffer_per_cpu *cpu_buffer,
->   * As a safety measure we check to make sure the data pages have not
->   * been corrupted.
->   */
-> -static int rb_check_pages(struct ring_buffer_per_cpu *cpu_buffer)
-> +static void rb_check_pages(struct ring_buffer_per_cpu *cpu_buffer)
->  {
->  	struct list_head *head = rb_list_head(cpu_buffer->pages);
->  	struct list_head *tmp;
->  
->  	if (RB_WARN_ON(cpu_buffer,
->  			rb_list_head(rb_list_head(head->next)->prev) != head))
-> -		return -1;
-> +		return;
->  
->  	if (RB_WARN_ON(cpu_buffer,
->  			rb_list_head(rb_list_head(head->prev)->next) != head))
-> -		return -1;
-> +		return;
->  
->  	for (tmp = rb_list_head(head->next); tmp != head; tmp = rb_list_head(tmp->next)) {
->  		if (RB_WARN_ON(cpu_buffer,
->  				rb_list_head(rb_list_head(tmp->next)->prev) != tmp))
-> -			return -1;
-> +			return;
->  
->  		if (RB_WARN_ON(cpu_buffer,
->  				rb_list_head(rb_list_head(tmp->prev)->next) != tmp))
-> -			return -1;
-> +			return;
->  	}
-> -
-> -	return 0;
->  }
->  
->  static int __rb_allocate_pages(struct ring_buffer_per_cpu *cpu_buffer,
-> @@ -4500,7 +4495,6 @@ rb_update_read_stamp(struct ring_buffer_per_cpu *cpu_buffer,
->  	default:
->  		RB_WARN_ON(cpu_buffer, 1);
->  	}
-> -	return;
->  }
->  
->  static void
-> @@ -4531,7 +4525,6 @@ rb_update_iter_read_stamp(struct ring_buffer_iter *iter,
->  	default:
->  		RB_WARN_ON(iter->cpu_buffer, 1);
->  	}
-> -	return;
->  }
->  
->  static struct buffer_page *
-> @@ -4946,7 +4939,6 @@ rb_reader_unlock(struct ring_buffer_per_cpu *cpu_buffer, bool locked)
->  {
->  	if (likely(locked))
->  		raw_spin_unlock(&cpu_buffer->reader_lock);
-> -	return;
->  }
->  
->  /**
-> -- 
-> 2.39.2
-> 
+Signed-off-by: Zheng Yejian <zhengyejian1@huawei.com>
+---
+ kernel/trace/ring_buffer.c | 6 +-----
+ 1 file changed, 1 insertion(+), 5 deletions(-)
 
-
+diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
+index af50d931b020..cbfa306570d3 100644
+--- a/kernel/trace/ring_buffer.c
++++ b/kernel/trace/ring_buffer.c
+@@ -1471,9 +1471,7 @@ rb_set_head_page(struct ring_buffer_per_cpu *cpu_buffer)
+ 	page = head = cpu_buffer->head_page;
+ 	/*
+ 	 * It is possible that the writer moves the header behind
+-	 * where we started, and we miss in one loop.
+-	 * A second loop should grab the header, but we'll do
+-	 * three loops just because I'm paranoid.
++	 * where we started, so we try three loops to grab the header.
+ 	 */
+ 	for (i = 0; i < 3; i++) {
+ 		do {
+@@ -1485,8 +1483,6 @@ rb_set_head_page(struct ring_buffer_per_cpu *cpu_buffer)
+ 		} while (page != head);
+ 	}
+ 
+-	RB_WARN_ON(cpu_buffer, 1);
+-
+ 	return NULL;
+ }
+ 
 -- 
-Masami Hiramatsu (Google) <mhiramat@kernel.org>
+2.25.1
+
