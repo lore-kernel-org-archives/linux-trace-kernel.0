@@ -2,49 +2,48 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F3C2C6FA9D
-	for <linux-trace-kernel@archiver.kernel.org>; Wed,  1 Mar 2023 16:29:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 23090C7EE39
+	for <linux-trace-kernel@archiver.kernel.org>; Wed,  1 Mar 2023 16:29:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229754AbjCAQ3l (ORCPT
+        id S229679AbjCAQ3u (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Wed, 1 Mar 2023 11:29:41 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49162 "EHLO
+        Wed, 1 Mar 2023 11:29:50 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49322 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229696AbjCAQ3i (ORCPT
+        with ESMTP id S229840AbjCAQ3p (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Wed, 1 Mar 2023 11:29:38 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AFED2241CE;
-        Wed,  1 Mar 2023 08:29:37 -0800 (PST)
+        Wed, 1 Mar 2023 11:29:45 -0500
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F12092E827;
+        Wed,  1 Mar 2023 08:29:43 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 2FAB561419;
-        Wed,  1 Mar 2023 16:29:37 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 03235C433A1;
-        Wed,  1 Mar 2023 16:29:35 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id A509AB810BD;
+        Wed,  1 Mar 2023 16:29:42 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 77274C4339C;
+        Wed,  1 Mar 2023 16:29:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1677688176;
-        bh=YKefre9Jvc6Lxl3JY7rnaim0zfA+qJGhlhH0R3hZHcI=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=jddqKhb24qr2wPFLtidH3DlI27H6Y3duDhpa7cvvdNEK818iHSfXomzhlykIHwxp1
-         UoyUvvkz1+1mSeoLMW64RQ3FGsFZZy8RByne40QlT0xGZhtg6LrcdRQTeG3DfQMAeN
-         o6ls8BLlk1uWtMNcMtDJYJ/B2AUCI3f4eLjzT4BaD5tgRAFod82XwRUUsBVxbU/HhY
-         tgjBVDtaORRF/cXC2/pv1jAeTcYYf4O9e8JCX7q11aQ54TYV4ywC8I/nFU66gNPqdh
-         qAGexyL0gXiFCaEXTCQctNWuXTPbUO7mUnGYTkiAyR4MW93DRho0SM5uhStpI/YxEA
-         dIvo0VsAdssbg==
+        s=k20201202; t=1677688181;
+        bh=y+IuifJf2p4ypkG4gNFCi5D4gz9zHb7zTQ+Z9QC/l0o=;
+        h=From:To:Cc:Subject:Date:From;
+        b=V8kz/10ld30MrTSPi2OwFvJ4OWAORd3dBHa1qesgIA9YtJpplw85qr2HGd+juueda
+         CuB0LgSPxAq6pXC7EIoCgxCuS2S8DWS5hFaDEkJBsR5ILkmjjx2h2Ka7DFg/u29klq
+         i2oigrwWHOiLfXIveahQB0EjnneMGoVm2fqOnxNBgMHq4cbYn35MjRnc7NDf8U/HLs
+         1281i1xVl+jvtNQvnqGO1nB52vbpP0Ch29JMRYeLbj/o6oFUQtP39JwAzPLC4Szk80
+         idoYp3Jr6bPh1ZXjpy3kb5iqA5G7Rv1+JA5MDTWZe/UMTveeyWD67MhZUkd1Cx/sEH
+         WPhJfL0K6KUTA==
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Souradeep Chowdhury <quic_schowdhu@quicinc.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Sasha Levin <sashal@kernel.org>,
+Cc:     Jia-Ju Bai <baijiaju1990@gmail.com>,
+        TOTE Robot <oslab@tsinghua.edu.cn>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Sasha Levin <sashal@kernel.org>, mhiramat@kernel.org,
         linux-trace-kernel@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.2 5/6] bootconfig: Increase max nodes of bootconfig from 1024 to 8192 for DCC support
-Date:   Wed,  1 Mar 2023 11:29:28 -0500
-Message-Id: <20230301162929.1302785-5-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 6.1 1/6] tracing: Add NULL checks for buffer in ring_buffer_free_read_page()
+Date:   Wed,  1 Mar 2023 11:29:33 -0500
+Message-Id: <20230301162938.1302886-1-sashal@kernel.org>
 X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20230301162929.1302785-1-sashal@kernel.org>
-References: <20230301162929.1302785-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -53,38 +52,60 @@ Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-From: Souradeep Chowdhury <quic_schowdhu@quicinc.com>
+From: Jia-Ju Bai <baijiaju1990@gmail.com>
 
-[ Upstream commit 6c40624930c58529185a257380442547580ed837 ]
+[ Upstream commit 3e4272b9954094907f16861199728f14002fcaf6 ]
 
-The Data Capture and Compare(DCC) is a debugging tool that uses the bootconfig
-for configuring the register values during boot-time. Increase the max nodes
-supported by bootconfig to cater to the requirements of the Data Capture and
-Compare Driver.
+In a previous commit 7433632c9ff6, buffer, buffer->buffers and
+buffer->buffers[cpu] in ring_buffer_wake_waiters() can be NULL,
+and thus the related checks are added.
 
-Link: https://lore.kernel.org/all/1674536682-18404-1-git-send-email-quic_schowdhu@quicinc.com/
+However, in the same call stack, these variables are also used in
+ring_buffer_free_read_page():
 
-Signed-off-by: Souradeep Chowdhury <quic_schowdhu@quicinc.com>
-Acked-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+tracing_buffers_release()
+  ring_buffer_wake_waiters(iter->array_buffer->buffer)
+    cpu_buffer = buffer->buffers[cpu] -> Add checks by previous commit
+  ring_buffer_free_read_page(iter->array_buffer->buffer)
+    cpu_buffer = buffer->buffers[cpu] -> No check
+
+Thus, to avod possible null-pointer derefernces, the related checks
+should be added.
+
+These results are reported by a static tool designed by myself.
+
+Link: https://lkml.kernel.org/r/20230113125501.760324-1-baijiaju1990@gmail.com
+
+Reported-by: TOTE Robot <oslab@tsinghua.edu.cn>
+Signed-off-by: Jia-Ju Bai <baijiaju1990@gmail.com>
+Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- include/linux/bootconfig.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ kernel/trace/ring_buffer.c | 7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
 
-diff --git a/include/linux/bootconfig.h b/include/linux/bootconfig.h
-index 1611f9db878e7..ca73940e26df8 100644
---- a/include/linux/bootconfig.h
-+++ b/include/linux/bootconfig.h
-@@ -59,7 +59,7 @@ struct xbc_node {
- /* Maximum size of boot config is 32KB - 1 */
- #define XBC_DATA_MAX	(XBC_VALUE - 1)
+diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
+index b21bf14bae9bd..2a5856ac25ebe 100644
+--- a/kernel/trace/ring_buffer.c
++++ b/kernel/trace/ring_buffer.c
+@@ -5610,11 +5610,16 @@ EXPORT_SYMBOL_GPL(ring_buffer_alloc_read_page);
+  */
+ void ring_buffer_free_read_page(struct trace_buffer *buffer, int cpu, void *data)
+ {
+-	struct ring_buffer_per_cpu *cpu_buffer = buffer->buffers[cpu];
++	struct ring_buffer_per_cpu *cpu_buffer;
+ 	struct buffer_data_page *bpage = data;
+ 	struct page *page = virt_to_page(bpage);
+ 	unsigned long flags;
  
--#define XBC_NODE_MAX	1024
-+#define XBC_NODE_MAX	8192
- #define XBC_KEYLEN_MAX	256
- #define XBC_DEPTH_MAX	16
- 
++	if (!buffer || !buffer->buffers || !buffer->buffers[cpu])
++		return;
++
++	cpu_buffer = buffer->buffers[cpu];
++
+ 	/* If the page is still in use someplace else, we can't reuse it */
+ 	if (page_ref_count(page) > 1)
+ 		goto out;
 -- 
 2.39.2
 
