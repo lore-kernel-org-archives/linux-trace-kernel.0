@@ -2,108 +2,132 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C1D8C7EE23
-	for <linux-trace-kernel@archiver.kernel.org>; Wed,  1 Mar 2023 03:45:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CF333C64EC7
+	for <linux-trace-kernel@archiver.kernel.org>; Wed,  1 Mar 2023 08:36:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230057AbjCADph (ORCPT
+        id S229524AbjCAIgA (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Tue, 28 Feb 2023 22:45:37 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46820 "EHLO
+        Wed, 1 Mar 2023 03:36:00 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34508 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230073AbjCADpJ (ORCPT
+        with ESMTP id S229445AbjCAIf7 (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Tue, 28 Feb 2023 22:45:09 -0500
-Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7FDFA2CFEA;
-        Tue, 28 Feb 2023 19:44:38 -0800 (PST)
-Received: from dggpeml100012.china.huawei.com (unknown [172.30.72.53])
-        by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4PRKn30lK4z9tPk;
-        Wed,  1 Mar 2023 11:42:31 +0800 (CST)
-Received: from localhost.localdomain (10.67.175.61) by
- dggpeml100012.china.huawei.com (7.185.36.121) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.21; Wed, 1 Mar 2023 11:44:30 +0800
-From:   Zheng Yejian <zhengyejian1@huawei.com>
-To:     <rostedt@goodmis.org>, <mhiramat@kernel.org>
-CC:     <linux-kernel@vger.kernel.org>,
-        <linux-trace-kernel@vger.kernel.org>, <zhengyejian1@huawei.com>
-Subject: [RFC PATCH] tracing/ring-buffer: Drop inappropriate WARN in rb_set_head_page()
-Date:   Wed, 1 Mar 2023 11:47:02 +0800
-Message-ID: <20230301034702.3449755-1-zhengyejian1@huawei.com>
-X-Mailer: git-send-email 2.25.1
+        Wed, 1 Mar 2023 03:35:59 -0500
+Received: from mail-yw1-x112d.google.com (mail-yw1-x112d.google.com [IPv6:2607:f8b0:4864:20::112d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A2D183801E;
+        Wed,  1 Mar 2023 00:35:57 -0800 (PST)
+Received: by mail-yw1-x112d.google.com with SMTP id 00721157ae682-536cd8f6034so345892117b3.10;
+        Wed, 01 Mar 2023 00:35:57 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112; t=1677659757;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=aGs9LOCZf2XKLf/5MYphyrbJ5yqe/DA7GQ/3C3v30kA=;
+        b=Wy0qGplFM4so7Hmt8kBpdGEnG8FHnFelBoGgCN7n5rL8UCVZ3cA7N6wjTJF2JcPGl8
+         2CYQpQROcXCznbWYXyYUsLZD4gZzbQ6a7+vd/piHDHDSfwtEcHeum6Oetf1Wrl+pMsqi
+         /1HmtNg8fkLbwCIa55Qq9vg+A3wr1bFZJy4BjcMUFIKg266Mx/ewsE+PzChuYtCJu86P
+         +tYVslNQDLReSTHwxqSPHUNdvga+nZel2ldvCOy5kBcVOeaP2n2dNeziJ2h+yxyZdM4g
+         ph7p9Ve0PD+gOHGN9ggE/vrUqpNVWwBoaNZaw0dfnymQqTdLv30oQoSDM5dluxc4mNt5
+         NkTg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112; t=1677659757;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=aGs9LOCZf2XKLf/5MYphyrbJ5yqe/DA7GQ/3C3v30kA=;
+        b=PoVY98xqHL03ptR0/oNga97LipsC8mlYXhTiytV85Q3VOoNV90RYDLPgpGwqYdRvts
+         lAkqMRv+b+3n3x4gIHlSakfdiRnYgooTG2H6SQHlqnmlw1EakPmodH3+Xpb6OfR35i2/
+         1MDbE2QXVPslHKW9aiSZZMcZNI4oCu4+oCaRFBDo227FC5ivoXWVfxvp8DnVLG+40jQY
+         ci0P4rRVQR8eMoTmRVjSHEk+HvLWrq4uGZTU5GuaX+DNBJMYoU6+DiyirlKjic8Hcr72
+         8Qe4Qs0t94SHVYjHb4Av5ks457SwF+PLi39VgX+1221qjRji1ZykqG0pz4kIaD4q0jFV
+         9YWA==
+X-Gm-Message-State: AO0yUKVY6XMiHNykgaHVINWaOy25VujVva/iUfEDaZ2tYNH7eNUKkDaD
+        Iqjsqcn1qFmvYahzPo1pEKJjIKJkT2jiV/a4f20=
+X-Google-Smtp-Source: AK7set8TiOBVyaXAOitu4dieQCJbBqw+ECvxyLNxR4af4YrRwQj105FirjOpDVEk/2AL7kNKi7PaCZNJczMFoHA5eTc=
+X-Received: by 2002:a5b:a10:0:b0:87a:957b:fd67 with SMTP id
+ k16-20020a5b0a10000000b0087a957bfd67mr2989573ybq.10.1677659756726; Wed, 01
+ Mar 2023 00:35:56 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [10.67.175.61]
-X-ClientProxiedBy: dggems704-chm.china.huawei.com (10.3.19.181) To
- dggpeml100012.china.huawei.com (7.185.36.121)
-X-CFilter-Loop: Reflected
+References: <20230228175929.7534-1-ubizjak@gmail.com> <20230228143547.52f30201@gandalf.local.home>
+In-Reply-To: <20230228143547.52f30201@gandalf.local.home>
+From:   Uros Bizjak <ubizjak@gmail.com>
+Date:   Wed, 1 Mar 2023 09:35:44 +0100
+Message-ID: <CAFULd4Z3gpPUO7vQxinm1rQcndP9c_08arBNjNtjagOiuiiABQ@mail.gmail.com>
+Subject: Re: [PATCH 0/3] Improve trace/ring_buffer.c
+To:     Steven Rostedt <rostedt@goodmis.org>
+Cc:     linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Masami Hiramatsu <mhiramat@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-Following WARNING appears several times during test on v5.10 but
-mainline kernel should have the same problem. However I currently
-can't find the reproduction method.
+On Tue, Feb 28, 2023 at 8:35 PM Steven Rostedt <rostedt@goodmis.org> wrote:
+>
+> On Tue, 28 Feb 2023 18:59:26 +0100
+> Uros Bizjak <ubizjak@gmail.com> wrote:
+>
+> > This series improves ring_buffer.c by changing the type of some
+> > static functions to void or bool and
+>
+> Well, it's not really an improvement unless it has a functional change. But
+> I'm OK with taking these.
 
-WARNING: CPU: 29 PID: 686834 at kernel/trace/ring_buffer.c:1357
-           rb_set_head_page+0x168/0x264
-Link: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git/tree/kernel/trace/ring_buffer.c?h=linux-5.10.y#n1357
-Call trace:
- rb_set_head_page+0x168/0x264
- rb_per_cpu_empty+0x34/0x15c
- ring_buffer_empty_cpu.part.0.isra.0+0x1a4/0x3f0
- ring_buffer_empty_cpu+0x74/0xb4
- __find_next_entry+0x14c/0x2f4
- trace_find_next_entry_inc+0x48/0x13c
- tracing_read_pipe+0x2c8/0x6b4
- vfs_read+0x144/0x324
- ksys_read+0x104/0x220
- __arm64_sys_read+0x54/0x70
- el0_svc_common.constprop.0+0xd8/0x37c
- do_el0_svc+0x50/0x120
- el0_svc+0x24/0x3c
- el0_sync_handler+0x17c/0x180
- el0_sync+0x160/0x180
+"No functional changes intended" claim should be taken in the sense
+that the same functionality is achieved in a more optimal way. As a
+trivial example, changing some functions to bool eliminates many
+unnecessary zero-extensions and results in smaller code:
 
-The WARNING appears because rb_set_head_page() didn't grab the header
-after three loops traversing buffer pages. This was not considered
-to be expected, as comment said, writer possibly moves the header in
-one loop.
+size ring_buffer-*.o
+  text    data     bss     dec     hex filename
+  25599    1762       4   27365    6ae5 ring_buffer-vanilla.o
+  25551    1762       4   27317    6ab5 ring_buffer-bool.o
 
-However, supposing writer keeps moving the header, we may miss more
-loops and it seems normal not to grab the header within three loops
-in rb_set_head_page(). Therefore drop that RB_WARN_ON().
+Please also note that setting the output value with "SETcc r8" results
+in a partial register stall on x86 when returning r32. The compiler
+knows how to handle this issue (using register dependency breaking XOR
+in front of SETcc), but it is better to avoid the issue altogether.
+So, there are also secondary benefits of the above "No functional
+changes intended" change, besides lower code size.
 
-Signed-off-by: Zheng Yejian <zhengyejian1@huawei.com>
----
- kernel/trace/ring_buffer.c | 6 +-----
- 1 file changed, 1 insertion(+), 5 deletions(-)
+> > uses try_cmpxchg instead of
+> > cmpxchg (*ptr, old, new) == old where appropriate.
+>
+> Now, the try_cmpxchg() could be an improvement on x86.
 
-diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
-index af50d931b020..cbfa306570d3 100644
---- a/kernel/trace/ring_buffer.c
-+++ b/kernel/trace/ring_buffer.c
-@@ -1471,9 +1471,7 @@ rb_set_head_page(struct ring_buffer_per_cpu *cpu_buffer)
- 	page = head = cpu_buffer->head_page;
- 	/*
- 	 * It is possible that the writer moves the header behind
--	 * where we started, and we miss in one loop.
--	 * A second loop should grab the header, but we'll do
--	 * three loops just because I'm paranoid.
-+	 * where we started, so we try three loops to grab the header.
- 	 */
- 	for (i = 0; i < 3; i++) {
- 		do {
-@@ -1485,8 +1483,6 @@ rb_set_head_page(struct ring_buffer_per_cpu *cpu_buffer)
- 		} while (page != head);
- 	}
- 
--	RB_WARN_ON(cpu_buffer, 1);
--
- 	return NULL;
- }
- 
--- 
-2.25.1
+True, the concrete example is e.g. ring_buffer_record_off, where the
+cmpxchg loop improves from:
 
+      78:    8b 57 08                 mov    0x8(%rdi),%edx
+      7b:    89 d6                    mov    %edx,%esi
+      7d:    89 d0                    mov    %edx,%eax
+      7f:    81 ce 00 00 10 00        or     $0x100000,%esi
+      85:    f0 0f b1 31              lock cmpxchg %esi,(%rcx)
+      89:    39 d0                    cmp    %edx,%eax
+      8b:    75 eb                    jne    78 <ring_buffer_record_off+0x8>
+
+to:
+
+     1bb:    89 c2                    mov    %eax,%edx
+     1bd:    81 ca 00 00 10 00        or     $0x100000,%edx
+     1c3:    f0 0f b1 17              lock cmpxchg %edx,(%rdi)
+     1c7:    75 f2                    jne    1bb <ring_buffer_record_off+0xb>
+
+As can be demonstrated above, the move to a temporary reg and the
+comparison with said temporary are both eliminated.
+
+The above code is generated with gcc-10.3.1 to show the direct
+benefits of the change. gcc-12+ is able to use likely/unlikely
+annotations inside try_cmpxchg definition and generates fast paths
+through the code (as mentioned by you in the RCU patch-set thread).
+
+Please also note that try_cmpxchg generates better code also for
+targets that do not define try_cmpxchg and use fallback code, as
+reported in [1] and follow-up messages.
+
+The API of try_cmpxhg is written in such a way that benefits loops and
+also linear code. I will discuss this in the reply of PATCH 3/3.
+
+[1] https://lore.kernel.org/lkml/871qwgmqws.fsf@mpe.ellerman.id.au/
+
+Uros.
