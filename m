@@ -2,116 +2,147 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D707C7EE2F
-	for <linux-trace-kernel@archiver.kernel.org>; Wed,  1 Mar 2023 14:47:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 92141C64ED6
+	for <linux-trace-kernel@archiver.kernel.org>; Wed,  1 Mar 2023 15:49:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229851AbjCAOrG (ORCPT
+        id S229668AbjCAPta (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Wed, 1 Mar 2023 09:47:06 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43052 "EHLO
+        Wed, 1 Mar 2023 10:49:30 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41214 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230006AbjCAOrF (ORCPT
+        with ESMTP id S229909AbjCAPt3 (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Wed, 1 Mar 2023 09:47:05 -0500
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 66D5E43449;
-        Wed,  1 Mar 2023 06:46:52 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 31478B81081;
-        Wed,  1 Mar 2023 14:46:51 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8DC27C4339E;
-        Wed,  1 Mar 2023 14:46:49 +0000 (UTC)
-Date:   Wed, 1 Mar 2023 09:46:46 -0500
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Zheng Yejian <zhengyejian1@huawei.com>
-Cc:     <mhiramat@kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-trace-kernel@vger.kernel.org>
-Subject: Re: [RFC PATCH] tracing/ring-buffer: Drop inappropriate WARN in
- rb_set_head_page()
-Message-ID: <20230301094646.76dc4056@gandalf.local.home>
-In-Reply-To: <20230301034702.3449755-1-zhengyejian1@huawei.com>
-References: <20230301034702.3449755-1-zhengyejian1@huawei.com>
-X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+        Wed, 1 Mar 2023 10:49:29 -0500
+Received: from mail-lj1-x229.google.com (mail-lj1-x229.google.com [IPv6:2a00:1450:4864:20::229])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 098E41FDE
+        for <linux-trace-kernel@vger.kernel.org>; Wed,  1 Mar 2023 07:49:25 -0800 (PST)
+Received: by mail-lj1-x229.google.com with SMTP id g18so12317859ljl.3
+        for <linux-trace-kernel@vger.kernel.org>; Wed, 01 Mar 2023 07:49:24 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=joelfernandes.org; s=google; t=1677685763;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=0JkydG2DRk4JOaJeEiFWJUTEBQi7aSQ+GmTlbAeBTqY=;
+        b=Ikn7e+BoE4WfGJwctB8k0N3bt9XTlZfSkpOU461CEJ6hnFoyOyPQTR+Xocy5lD1nGD
+         SfCeE6Hm4/4m53EsigjTIW+ryHqI7CvsdFsjrAi/rKvX73l0LcLTBME/AEtDnjchj9R8
+         1Z5dasOZJ8P5gteajVDvoydGbK29VslX/OmKU=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112; t=1677685763;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=0JkydG2DRk4JOaJeEiFWJUTEBQi7aSQ+GmTlbAeBTqY=;
+        b=nm5H6Ic6yHpBc880TbrzyeMFfqo2MeVb1R56CAOGH5aHJX5Ysmz6wNRSPqE5vuT39i
+         /KV6gwh0411v0ddSubiFGknzUp4VZeqRZv1hr8di4I62igO0dyrpws10115XGYApYaSr
+         a70XNkkM5/RriS6Eih72NZDmUJPhRd+vspWHuJms89E/qaGar0jOGBbvt6O7+D4/2rD3
+         9FEVUFbHj+DVIrpyPLToch9hdB/WiVAgX4CyCQyofiaJSJmCHSxafT0LLQ0A1CfyC52d
+         YWQ3snCkZ/lrFYusvFFTSpb+EJIzTQYTnze84XVylBW//s1BYEDM5uvQvb6w4PO48Ahk
+         NgnQ==
+X-Gm-Message-State: AO0yUKVnMLUNrPCmZrW34HTRSpJzTIijE+NCumBdGcL4/pLu/syDwg7A
+        FHZcwzWG2IjsM0bODO7MU4GZwgGyqffZi+IoBVXWfIGXViiCyTgR
+X-Google-Smtp-Source: AK7set95iPbgny2MOgX4k296eemoKEMpGfg3hrtBBuu8xtR8ABzVCOuKwdUwyBS9SRiM0RMA8D6WHbOIVzw74Y+RyRE=
+X-Received: by 2002:a05:651c:170b:b0:295:b597:c903 with SMTP id
+ be11-20020a05651c170b00b00295b597c903mr2190963ljb.3.1677685763184; Wed, 01
+ Mar 2023 07:49:23 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+References: <20230228175929.7534-1-ubizjak@gmail.com> <20230228175929.7534-4-ubizjak@gmail.com>
+ <20230228164346.0691bb11@gandalf.local.home> <CAFULd4aGx=kGYYUz0BkFJz3abz97WOwDEgFHAOocT8SWT2oX-Q@mail.gmail.com>
+In-Reply-To: <CAFULd4aGx=kGYYUz0BkFJz3abz97WOwDEgFHAOocT8SWT2oX-Q@mail.gmail.com>
+From:   Joel Fernandes <joel@joelfernandes.org>
+Date:   Wed, 1 Mar 2023 10:49:11 -0500
+Message-ID: <CAEXW_YS89AXrbFXZpYeyh=5AxbQwhxDitniVcz=_tWFvnyuQyA@mail.gmail.com>
+Subject: Re: [PATCH 3/3] ring_buffer: Use try_cmpxchg instead of cmpxchg
+To:     Uros Bizjak <ubizjak@gmail.com>
+Cc:     Steven Rostedt <rostedt@goodmis.org>,
+        linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        "Paul E. McKenney" <paulmck@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On Wed, 1 Mar 2023 11:47:02 +0800
-Zheng Yejian <zhengyejian1@huawei.com> wrote:
+On Wed, Mar 1, 2023 at 4:37=E2=80=AFAM Uros Bizjak <ubizjak@gmail.com> wrot=
+e:
+>
+> On Tue, Feb 28, 2023 at 10:43 PM Steven Rostedt <rostedt@goodmis.org> wro=
+te:
+> >
+> > On Tue, 28 Feb 2023 18:59:29 +0100
+> > Uros Bizjak <ubizjak@gmail.com> wrote:
+> >
+> > > Use try_cmpxchg instead of cmpxchg (*ptr, old, new) =3D=3D old.
+> > > x86 CMPXCHG instruction returns success in ZF flag, so this change
+> > > saves a compare after cmpxchg (and related move instruction in
+> > > front of cmpxchg).
+> > >
+> > > Also, try_cmpxchg implicitly assigns old *ptr value to "old" when cmp=
+xchg
+> > > fails. There is no need to re-read the value in the loop.
+> > >
+> > > No functional change intended.
+> >
+> > As I mentioned in the RCU thread, I have issues with some of the change=
+s
+> > here.
+> >
+> > >
+> > > Cc: Steven Rostedt <rostedt@goodmis.org>
+> > > Cc: Masami Hiramatsu <mhiramat@kernel.org>
+> > > Signed-off-by: Uros Bizjak <ubizjak@gmail.com>
+> > > ---
+> > >  kernel/trace/ring_buffer.c | 20 ++++++++------------
+> > >  1 file changed, 8 insertions(+), 12 deletions(-)
+> > >
+> > > diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
+> > > index 4188af7d4cfe..8f0ef7d12ddd 100644
+> > > --- a/kernel/trace/ring_buffer.c
+> > > +++ b/kernel/trace/ring_buffer.c
+> > > @@ -1493,14 +1493,11 @@ static bool rb_head_page_replace(struct buffe=
+r_page *old,
+> > >  {
+> > >       unsigned long *ptr =3D (unsigned long *)&old->list.prev->next;
+> > >       unsigned long val;
+> > > -     unsigned long ret;
+> > >
+> > >       val =3D *ptr & ~RB_FLAG_MASK;
+> > >       val |=3D RB_PAGE_HEAD;
+> > >
+> > > -     ret =3D cmpxchg(ptr, val, (unsigned long)&new->list);
+> > > -
+> > > -     return ret =3D=3D val;
+> > > +     return try_cmpxchg(ptr, &val, (unsigned long)&new->list);
+> >
+> > No, val should not be updated.
+>
+> Please see the definition of try_cmpxchg. The definition is written in
+> such a way that benefits loops as well as linear code and in the later
+> case depends on the compiler to eliminate assignment to val as a dead
+> assignment.
+>
+> The above change was done under the assumption that val is unused
+> after try_cmpxchg, and can be considered as a temporary
+> [Alternatively, the value could be copied to a local temporary and a
+> pointer to this local temporary could be passed to try_cmpxchg
+> instead. Compiler is smart enough to eliminate the assignment in any
+> case.]
 
-> Following WARNING appears several times during test on v5.10 but
-> mainline kernel should have the same problem. However I currently
-> can't find the reproduction method.
-> 
-> WARNING: CPU: 29 PID: 686834 at kernel/trace/ring_buffer.c:1357
->            rb_set_head_page+0x168/0x264
-> Link: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git/tree/kernel/trace/ring_buffer.c?h=linux-5.10.y#n1357
-> Call trace:
->  rb_set_head_page+0x168/0x264
->  rb_per_cpu_empty+0x34/0x15c
->  ring_buffer_empty_cpu.part.0.isra.0+0x1a4/0x3f0
->  ring_buffer_empty_cpu+0x74/0xb4
->  __find_next_entry+0x14c/0x2f4
->  trace_find_next_entry_inc+0x48/0x13c
->  tracing_read_pipe+0x2c8/0x6b4
->  vfs_read+0x144/0x324
->  ksys_read+0x104/0x220
->  __arm64_sys_read+0x54/0x70
->  el0_svc_common.constprop.0+0xd8/0x37c
->  do_el0_svc+0x50/0x120
->  el0_svc+0x24/0x3c
->  el0_sync_handler+0x17c/0x180
->  el0_sync+0x160/0x180
-> 
-> The WARNING appears because rb_set_head_page() didn't grab the header
-> after three loops traversing buffer pages. This was not considered
-> to be expected, as comment said, writer possibly moves the header in
-> one loop.
-> 
-> However, supposing writer keeps moving the header, we may miss more
-> loops and it seems normal not to grab the header within three loops
-> in rb_set_head_page(). Therefore drop that RB_WARN_ON().
+If I understood Steve correctly, I think the "misleading" part is that
+you are passing a variable by address to try_cmpxchg() but not really
+modifying it (unlike in the loop patterns).
 
-It's normal to grab the header in two loops. I only made it three in case I
-was wrong. If it took 4 tries, something is wrong. Just returning NULL
-without setting the header will cause bugs elsewhere.
+Perhaps it is more meaningful to have an API that looks like:
+bool cmpxchg_succeeded(TYPE ptr, TYPE old, TYPE new)
+Where old is not a pointer (unlike try_cmpxchg), and the API returns bool.
 
--- Steve
+Both cleaner to read and has the optimization you want, I believe.
 
+However, the other point is, this is useful only for slow paths, but
+at least cmpxchg_succeeded() is more readable and less "misleading"
+than try_cmpxchg() IMO.
 
-> 
-> Signed-off-by: Zheng Yejian <zhengyejian1@huawei.com>
-> ---
->  kernel/trace/ring_buffer.c | 6 +-----
->  1 file changed, 1 insertion(+), 5 deletions(-)
-> 
-> diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
-> index af50d931b020..cbfa306570d3 100644
-> --- a/kernel/trace/ring_buffer.c
-> +++ b/kernel/trace/ring_buffer.c
-> @@ -1471,9 +1471,7 @@ rb_set_head_page(struct ring_buffer_per_cpu *cpu_buffer)
->  	page = head = cpu_buffer->head_page;
->  	/*
->  	 * It is possible that the writer moves the header behind
-> -	 * where we started, and we miss in one loop.
-> -	 * A second loop should grab the header, but we'll do
-> -	 * three loops just because I'm paranoid.
-> +	 * where we started, so we try three loops to grab the header.
->  	 */
->  	for (i = 0; i < 3; i++) {
->  		do {
-> @@ -1485,8 +1483,6 @@ rb_set_head_page(struct ring_buffer_per_cpu *cpu_buffer)
->  		} while (page != head);
->  	}
->  
-> -	RB_WARN_ON(cpu_buffer, 1);
-> -
->  	return NULL;
->  }
->  
+ - Joel
 
+[...]
