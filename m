@@ -2,79 +2,110 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 570DDC6FA9D
-	for <linux-trace-kernel@archiver.kernel.org>; Wed,  1 Mar 2023 16:36:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 88D67C64ED6
+	for <linux-trace-kernel@archiver.kernel.org>; Wed,  1 Mar 2023 16:36:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229831AbjCAQgS (ORCPT
+        id S230042AbjCAQg2 (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Wed, 1 Mar 2023 11:36:18 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60954 "EHLO
+        Wed, 1 Mar 2023 11:36:28 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60462 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230157AbjCAQgF (ORCPT
+        with ESMTP id S229515AbjCAQgN (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Wed, 1 Mar 2023 11:36:05 -0500
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 878364AFF7;
-        Wed,  1 Mar 2023 08:35:17 -0800 (PST)
+        Wed, 1 Mar 2023 11:36:13 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 607E046094;
+        Wed,  1 Mar 2023 08:35:24 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id CC26DB80E95;
-        Wed,  1 Mar 2023 16:34:20 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C4153C433D2;
-        Wed,  1 Mar 2023 16:34:18 +0000 (UTC)
-Date:   Wed, 1 Mar 2023 11:34:16 -0500
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Uros Bizjak <ubizjak@gmail.com>
-Cc:     Masami Hiramatsu <mhiramat@kernel.org>,
-        linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/3] ring_buffer: Change some static functions to void
-Message-ID: <20230301113416.7526d858@gandalf.local.home>
-In-Reply-To: <CAFULd4b0zQSzesH3mrbtThH17VnoPzVhg2R6cDpDZTMsPeDWpQ@mail.gmail.com>
-References: <20230228175929.7534-1-ubizjak@gmail.com>
-        <20230228175929.7534-2-ubizjak@gmail.com>
-        <20230301075519.dbf770fed0476e2b6ecdad37@kernel.org>
-        <CAFULd4b0zQSzesH3mrbtThH17VnoPzVhg2R6cDpDZTMsPeDWpQ@mail.gmail.com>
-X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id C4C776141C;
+        Wed,  1 Mar 2023 16:30:20 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6BA87C433D2;
+        Wed,  1 Mar 2023 16:30:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1677688220;
+        bh=Lc2wLEVZ5PqZSCE2Szx1C7DEymrnO5bWyJZC6R2SqL4=;
+        h=From:To:Cc:Subject:Date:From;
+        b=rX8PMzA3VZGBIF0c+PfvTmLqErOeKDFKpzVXCpYgZ/8LwTXfYiqk3bb+gHZHf4SdC
+         iSU13+WqutbMeGFABIxFiJZ3PEnuk7B6+TY4lfaZXSfkh9HYMtio188omYM6BXqSG9
+         BoJCGvpUPBGw9u4/zQph9Vc77Yt6l9cQTG8aZ4JTsb4IdnnunrtT2cpTaPi4hhCxQO
+         mv8IRtKflXtEZlMOD48UXXBqXq8QokW0/fxMk/sVxSy/7b4wZehLDNP4aOP6OnU45a
+         VHVzkuRcX3X9sS8eXnh4g3U6KAlnWbboVRZUV1jOAOm+/LrLgXxVRBg48auWJZX2nX
+         j2nX3Sgp0ft5w==
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Jia-Ju Bai <baijiaju1990@gmail.com>,
+        TOTE Robot <oslab@tsinghua.edu.cn>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Sasha Levin <sashal@kernel.org>, mhiramat@kernel.org,
+        linux-trace-kernel@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 1/3] tracing: Add NULL checks for buffer in ring_buffer_free_read_page()
+Date:   Wed,  1 Mar 2023 11:30:15 -0500
+Message-Id: <20230301163017.1303229-1-sashal@kernel.org>
+X-Mailer: git-send-email 2.39.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On Wed, 1 Mar 2023 09:46:50 +0100
-Uros Bizjak <ubizjak@gmail.com> wrote:
+From: Jia-Ju Bai <baijiaju1990@gmail.com>
 
-> On Tue, Feb 28, 2023 at 11:55 PM Masami Hiramatsu <mhiramat@kernel.org> wrote:
-> >
-> > On Tue, 28 Feb 2023 18:59:27 +0100
-> > Uros Bizjak <ubizjak@gmail.com> wrote:
-> >  
-> > > The results of some static functions are not used. Change the
-> > > type of these function to void and remove unnecessary returns.
-> > >
-> > > No functional change intended.  
-> >
-> > NAK, instead of dropping the errors, please handle it on the caller side.  
-> 
-> I was under the impression that the intention of these two functions
-> is to warn if there is any corruption in data pages detected. Please
-> note that the patch has no effect on code size, as the compiler is
-> smart enough to drop unused return values by itself. So, the change is
-> mostly cosmetic as I was just bothered by unused returns. I'm not
-> versed enough in the code to introduce additional error handling, so
-> considering its minimal impact, the patch can just be dropped.
-> 
+[ Upstream commit 3e4272b9954094907f16861199728f14002fcaf6 ]
 
-I'm not against the change.
+In a previous commit 7433632c9ff6, buffer, buffer->buffers and
+buffer->buffers[cpu] in ring_buffer_wake_waiters() can be NULL,
+and thus the related checks are added.
 
-Masami,
+However, in the same call stack, these variables are also used in
+ring_buffer_free_read_page():
 
-I don't think we need to check the return values, as when these checks
-fail, it triggers RB_WARN_ON() which disables the ring buffer involved, and
-that should stop further progress of other calls to the affected ring
-buffer.
+tracing_buffers_release()
+  ring_buffer_wake_waiters(iter->array_buffer->buffer)
+    cpu_buffer = buffer->buffers[cpu] -> Add checks by previous commit
+  ring_buffer_free_read_page(iter->array_buffer->buffer)
+    cpu_buffer = buffer->buffers[cpu] -> No check
 
--- Steve
+Thus, to avod possible null-pointer derefernces, the related checks
+should be added.
+
+These results are reported by a static tool designed by myself.
+
+Link: https://lkml.kernel.org/r/20230113125501.760324-1-baijiaju1990@gmail.com
+
+Reported-by: TOTE Robot <oslab@tsinghua.edu.cn>
+Signed-off-by: Jia-Ju Bai <baijiaju1990@gmail.com>
+Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ kernel/trace/ring_buffer.c | 7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
+
+diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
+index 5e5b0c067f611..bef3d01b8ff61 100644
+--- a/kernel/trace/ring_buffer.c
++++ b/kernel/trace/ring_buffer.c
+@@ -4685,11 +4685,16 @@ EXPORT_SYMBOL_GPL(ring_buffer_alloc_read_page);
+  */
+ void ring_buffer_free_read_page(struct ring_buffer *buffer, int cpu, void *data)
+ {
+-	struct ring_buffer_per_cpu *cpu_buffer = buffer->buffers[cpu];
++	struct ring_buffer_per_cpu *cpu_buffer;
+ 	struct buffer_data_page *bpage = data;
+ 	struct page *page = virt_to_page(bpage);
+ 	unsigned long flags;
+ 
++	if (!buffer || !buffer->buffers || !buffer->buffers[cpu])
++		return;
++
++	cpu_buffer = buffer->buffers[cpu];
++
+ 	/* If the page is still in use someplace else, we can't reuse it */
+ 	if (page_ref_count(page) > 1)
+ 		goto out;
+-- 
+2.39.2
 
