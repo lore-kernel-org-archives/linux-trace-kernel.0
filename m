@@ -2,37 +2,37 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C821C7EE2F
-	for <linux-trace-kernel@archiver.kernel.org>; Wed,  1 Mar 2023 16:30:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0364BC6FA9D
+	for <linux-trace-kernel@archiver.kernel.org>; Wed,  1 Mar 2023 16:31:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229961AbjCAQay (ORCPT
+        id S230059AbjCAQbU (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Wed, 1 Mar 2023 11:30:54 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50536 "EHLO
+        Wed, 1 Mar 2023 11:31:20 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50530 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229854AbjCAQaT (ORCPT
+        with ESMTP id S229880AbjCAQaw (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Wed, 1 Mar 2023 11:30:19 -0500
+        Wed, 1 Mar 2023 11:30:52 -0500
 Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DF9F748E12;
-        Wed,  1 Mar 2023 08:30:00 -0800 (PST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4DA5E49891;
+        Wed,  1 Mar 2023 08:30:11 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id ADF1C61411;
-        Wed,  1 Mar 2023 16:30:00 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 46ADAC433D2;
-        Wed,  1 Mar 2023 16:29:59 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 2E93461411;
+        Wed,  1 Mar 2023 16:30:11 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C0E9DC433EF;
+        Wed,  1 Mar 2023 16:30:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1677688200;
-        bh=NczOW2bOI1WMfFk3acA3+kSBiTbZfS3oP6RkTQ2CNho=;
+        s=k20201202; t=1677688210;
+        bh=uCECDDvtpiSYIrsHG/STdok+YOIBt6dmLdPwrNFmHSc=;
         h=From:To:Cc:Subject:Date:From;
-        b=VcYmNsf46txPvrV3JQaQORKhxhoaKn5sbZ11L9Twa/E/7nuCuG2YxOJiMsHDiyBvB
-         iYFI1GFWo59z49biydDTwbdxV4t+UXWRQl9Y2gNU3hM3x+onB3vhXfMGhv5AV5aDJI
-         lYXm1XcCZVx3hPcgfdIIs3DS77pgOkHjPuPq2KgK9Nn/Jo46L0/3R/N0rwYFVi1g6D
-         kwR1xloD3InmjKWTTxUWpDo5SnRxlAdr8x4MoVayO80nrhfcGpmY6wskWgqsl/eq7l
-         xvoBppXFGdKQg7qNGv85XLowkWWX93Pgg9+gea0Agb9keXJxAkWp6LKKv+UTnWPkFB
-         +73ZzeOpihVQg==
+        b=VtmqY8fy5xPZ63BMvtTNW8kkKfyKuT+DHdclAfOtPUNDNvn0GotIbWGVSUSyDwI/B
+         JoSIhTj7b9Ucx0tYK0KBA0UmRzRblyCToSf7bczZT/P9FuMhMgKeYMigswEOEaBTvL
+         v+273bkIAalOtVdpoLDdNawfg2RiGbXFKC7w1o0a10X3R88T91zod5oyy2QXFaTBmt
+         EfFlkSLf2RPy8kRvlABWPb/ARoxTaUWO4vYEAQso93hFgGva1/8TEKfl80MW8rI2Mx
+         h6haEHTEAVXQCQTcBPNEXTI6rZgyHQw7bokPaWN98Z6rqWDV44LeCFysTqn6RXLy+Q
+         CYeDO+gz5Koxg==
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Jia-Ju Bai <baijiaju1990@gmail.com>,
@@ -40,9 +40,9 @@ Cc:     Jia-Ju Bai <baijiaju1990@gmail.com>,
         Steven Rostedt <rostedt@goodmis.org>,
         Sasha Levin <sashal@kernel.org>, mhiramat@kernel.org,
         linux-trace-kernel@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.10 1/5] tracing: Add NULL checks for buffer in ring_buffer_free_read_page()
-Date:   Wed,  1 Mar 2023 11:29:53 -0500
-Message-Id: <20230301162957.1303086-1-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.4 1/4] tracing: Add NULL checks for buffer in ring_buffer_free_read_page()
+Date:   Wed,  1 Mar 2023 11:30:04 -0500
+Message-Id: <20230301163007.1303162-1-sashal@kernel.org>
 X-Mailer: git-send-email 2.39.2
 MIME-Version: 1.0
 X-stable: review
@@ -85,12 +85,12 @@ Signed-off-by: Sasha Levin <sashal@kernel.org>
  1 file changed, 6 insertions(+), 1 deletion(-)
 
 diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
-index 49ebb8c662682..1429d190752ee 100644
+index 11e8189dd8ae9..58809fffc8171 100644
 --- a/kernel/trace/ring_buffer.c
 +++ b/kernel/trace/ring_buffer.c
-@@ -5324,11 +5324,16 @@ EXPORT_SYMBOL_GPL(ring_buffer_alloc_read_page);
+@@ -4769,11 +4769,16 @@ EXPORT_SYMBOL_GPL(ring_buffer_alloc_read_page);
   */
- void ring_buffer_free_read_page(struct trace_buffer *buffer, int cpu, void *data)
+ void ring_buffer_free_read_page(struct ring_buffer *buffer, int cpu, void *data)
  {
 -	struct ring_buffer_per_cpu *cpu_buffer = buffer->buffers[cpu];
 +	struct ring_buffer_per_cpu *cpu_buffer;
