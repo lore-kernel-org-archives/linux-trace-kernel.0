@@ -2,94 +2,79 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B839FC6FA8E
-	for <linux-trace-kernel@archiver.kernel.org>; Thu,  2 Mar 2023 17:19:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4ED80C678D4
+	for <linux-trace-kernel@archiver.kernel.org>; Thu,  2 Mar 2023 17:44:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229764AbjCBRTb (ORCPT
+        id S230017AbjCBRn7 (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Thu, 2 Mar 2023 12:19:31 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57100 "EHLO
+        Thu, 2 Mar 2023 12:43:59 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49318 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229567AbjCBRTa (ORCPT
+        with ESMTP id S229764AbjCBRn7 (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Thu, 2 Mar 2023 12:19:30 -0500
-Received: from mail-yb1-xb35.google.com (mail-yb1-xb35.google.com [IPv6:2607:f8b0:4864:20::b35])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6245B6E8B;
-        Thu,  2 Mar 2023 09:19:29 -0800 (PST)
-Received: by mail-yb1-xb35.google.com with SMTP id 82so4270708ybn.6;
-        Thu, 02 Mar 2023 09:19:29 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112; t=1677777568;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Uit9vXQN5dUsgYieCjn7laYXQPsqA8YR/x9Zxms4wJE=;
-        b=pI+LgniKKi36tZwoGnshSJXnnSrErIqYS61kZx3CdEp+v8NSKvDhRPt6a5hghfztqs
-         Exb96trUnaf40fDCIDeblbgUYW9XMmXLR2Sp/jbjF98oSo5WMB29LIRqXryFGvhu+ZhC
-         83hmmIa29wXivsbMKfGu015i8Cl+rPvOAW5zjAK5dES3OtCY6Jpwljw8nAuEr2U7YDSY
-         Oobi9Bi+2cjtuJTbQYsd109s2K7HcncMNo/NJwhk1uoQerJd1VbgLbd8BmB08ebHuxbM
-         xDXOUhIRpubjhhsERXkfqyg3oRCQbjeiYAdYr6rbtbvoD+QAMKji+7PN161b6b+Mytmp
-         hARw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1677777568;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Uit9vXQN5dUsgYieCjn7laYXQPsqA8YR/x9Zxms4wJE=;
-        b=04a6asOu9Jb6bH+nv4H1GiexYDTA/vK9/YBWIuJ6vkzUbgCTaTqdHr2xVEKmwtv1QU
-         MehaqqqZFaug4NN3QENM7mMMBGxazahjLMJ6KyhmIdgBvN6iysttqG09fyDp1QnTIWhh
-         1+VLI+e2oFSWgdZAeP0zG+7OPUIvNBb+uym/iGguMSGXbQh7JQimuYFzvz5ZFrUi/Z2V
-         0sOSlEZkdITvincz3y9qKAf8TPO7zCn/prW6LrDU1uHUbiU1SZNneO7hV5s02IeuErR3
-         RCjAh977x3c2Du/Br08TIpPwb506FR3lWog7m4XXtTyQxKS7aMthSI4I4nHoIXGsrNbC
-         ABvw==
-X-Gm-Message-State: AO0yUKW2no+sZZaA2j8imxqfIYxTtuBIDugrGPtWesReMapQ3o+9Xuqf
-        8TkVPehH00DOkJ+V3VhgvCeaR7o8qMFN4sgymv0iHGGHefYh9Q==
-X-Google-Smtp-Source: AK7set/hNqUOCRdsVB9sYdNOfDCdQlGLUIwPFoPFBIRH3epUIEIT2aXlninuryMFbjQKgc2AltMjJK9K3vOw4UfM0/M=
-X-Received: by 2002:a5b:892:0:b0:9fe:195a:ce0d with SMTP id
- e18-20020a5b0892000000b009fe195ace0dmr3934270ybq.10.1677777568205; Thu, 02
- Mar 2023 09:19:28 -0800 (PST)
-MIME-Version: 1.0
+        Thu, 2 Mar 2023 12:43:59 -0500
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EE5AC14493;
+        Thu,  2 Mar 2023 09:43:57 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 885E1B8133A;
+        Thu,  2 Mar 2023 17:43:56 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A0412C4339B;
+        Thu,  2 Mar 2023 17:43:54 +0000 (UTC)
+Date:   Thu, 2 Mar 2023 12:43:52 -0500
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     Uros Bizjak <ubizjak@gmail.com>
+Cc:     linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Masami Hiramatsu <mhiramat@kernel.org>
+Subject: Re: [PATCH v2 2/3] ring_buffer: Change some static functions to
+ bool
+Message-ID: <20230302124352.6d6295a8@gandalf.local.home>
+In-Reply-To: <20230302164129.4862-3-ubizjak@gmail.com>
 References: <20230302164129.4862-1-ubizjak@gmail.com>
-In-Reply-To: <20230302164129.4862-1-ubizjak@gmail.com>
-From:   Uros Bizjak <ubizjak@gmail.com>
-Date:   Thu, 2 Mar 2023 18:19:16 +0100
-Message-ID: <CAFULd4bw3sa01_bZ1YhtSYEdbcxvsjVraH5bdQ4-djoYnpy8Sg@mail.gmail.com>
-Subject: Re: [PATCH v2 0/3] Improve trace/ring_buffer.c
-To:     linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     Masami Hiramatsu <mhiramat@kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+        <20230302164129.4862-3-ubizjak@gmail.com>
+X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On Thu, Mar 2, 2023 at 5:41=E2=80=AFPM Uros Bizjak <ubizjak@gmail.com> wrot=
-e:
->
-> *** BLURB HERE ***
+On Thu,  2 Mar 2023 17:41:28 +0100
+Uros Bizjak <ubizjak@gmail.com> wrote:
 
-Eh...
+> -static int
+> +static bool
+>  rb_insert_pages(struct ring_buffer_per_cpu *cpu_buffer)
+>  {
+>  	struct list_head *pages = &cpu_buffer->new_pages;
+> -	int retries, success;
+> +	int retries;
+>  	unsigned long flags;
+> +	bool success;
 
-Here should read:
+Nit, but I prefer to keep the "upside-down xmas-tree" format:
 
-This series improves ring_buffer.c by changing the type of some
-static functions to void or bool and uses try_cmpxchg instead of
-cmpxchg (*ptr, old, new) =3D=3D old where appropriate.
+That is, instead of:
 
-v2: Convert only loops with cmpxchg.
+  	struct list_head *pages = &cpu_buffer->new_pages;
+	int retries;
+ 	unsigned long flags;
+	bool success;
 
-Cc: Steven Rostedt <rostedt@goodmis.org>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>
+Have
 
-> Uros Bizjak (3):
->   ring_buffer: Change some static functions to void
->   ring_buffer: Change some static functions to bool
->   ring_buffer: Use try_cmpxchg instead of cmpxchg
->
->  kernel/trace/ring_buffer.c | 77 ++++++++++++++++----------------------
->  1 file changed, 33 insertions(+), 44 deletions(-)
->
-> --
-> 2.39.2
->
+  	struct list_head *pages = &cpu_buffer->new_pages;
+ 	unsigned long flags;
+	bool success;
+	int retries;
+
+It's easier to read, and looks cleaner.
+
+-- Steve
+
+>  
+>  	/* Can be called at early boot up, where interrupts must not been enabled */
+>  	raw_spin_lock_irqsave(&cpu_buffer->reader_lock, flags);
