@@ -2,121 +2,63 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 984B8C7EE2F
-	for <linux-trace-kernel@archiver.kernel.org>; Thu,  2 Mar 2023 16:41:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 80BDDC7EE2F
+	for <linux-trace-kernel@archiver.kernel.org>; Thu,  2 Mar 2023 17:18:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229618AbjCBQl6 (ORCPT
+        id S229552AbjCBRSE (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Thu, 2 Mar 2023 11:41:58 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48774 "EHLO
+        Thu, 2 Mar 2023 12:18:04 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55070 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229803AbjCBQl5 (ORCPT
+        with ESMTP id S229505AbjCBRSC (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Thu, 2 Mar 2023 11:41:57 -0500
-Received: from mail-ed1-x52c.google.com (mail-ed1-x52c.google.com [IPv6:2a00:1450:4864:20::52c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0F17726B9;
-        Thu,  2 Mar 2023 08:41:56 -0800 (PST)
-Received: by mail-ed1-x52c.google.com with SMTP id o15so67552877edr.13;
-        Thu, 02 Mar 2023 08:41:55 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112; t=1677775314;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=kLrofQCA379uXcxid9S1DouhqkUwWzrSWgzlacbqnto=;
-        b=CBFi0q4qOzth7spzkCafCsnejBZ721xr4ZthnIXTkOhnTmnyMd6YUmSfUxL89Vy3HC
-         YtXbBLYz+gKvlror5Vywa08LyC5DCv6HyUIqUDT/NU5qf8LGb6RIokAQu3IuKAkPKs4O
-         IHo/8G8bsQQQ7wGcy99pcMgjmhWVHmIVqBZqcYwyw2hI16o/twXYVQlLYcPGbhGauemX
-         tXmQUPQNW5TbbPel2iTN6Q+hrm205V4mhkStxNg2/qpEqs8NSy+yFmUL1kv8BRrisKIc
-         Rbh1rlGyVtjuQl6i0VZaWSKnMn3fMBDPfP7p/06TN6nwFtuMT3Cx9IZTWs1UAbUV1HLx
-         At0A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1677775314;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=kLrofQCA379uXcxid9S1DouhqkUwWzrSWgzlacbqnto=;
-        b=BDkp77eAoz4/K+17d/gzHYHC3mF9KwqAc/4YF/caU7Fc3R76G0PALe1EKbrXenvyg1
-         m/vFYMwvQglxNa0MC0yBUY0alcrute1nc8dvFLyZto+knfKWw7vBlBAWyZhWH3Opcwns
-         DSoCsa1DYHg+k8q9cBSjKhi9mONUP/GQ90C/2K6OnmilA5ynenVsFinoFmtWvakj+icl
-         O+5bDGcA+5LW43LBnqF8nG1RqXxdM7P+Jh8gFLUEMi038n0Jd4bYYYfucDiI504rg0Wa
-         KV6nIWVCJTQhw5T0c1IxIQI/bLzTh76z3J/HXCWArqEsMjc+p+9T9M6HQmacEfNU9pZz
-         W5sQ==
-X-Gm-Message-State: AO0yUKWm4JcRl2mM+UxeWEsLjlUQGl2IZbh59Y5bKPHXAMExMv+KB6UM
-        vPa+P2QIOxMLg8Fq/vPIMyn6/+vv7deAyg==
-X-Google-Smtp-Source: AK7set8YEwFGNVdmj+NqqNvop5WliKHmQ5jLgKHZ0k4uiGQ7ef26y3YYlFF8IExTdDxlue87hxbLLg==
-X-Received: by 2002:a17:907:20ef:b0:8ab:b03d:a34f with SMTP id rh15-20020a17090720ef00b008abb03da34fmr2819385ejb.12.1677775314129;
-        Thu, 02 Mar 2023 08:41:54 -0800 (PST)
-Received: from localhost.localdomain ([46.248.82.114])
-        by smtp.gmail.com with ESMTPSA id a22-20020a170906191600b008c327bef167sm7230998eje.7.2023.03.02.08.41.53
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 02 Mar 2023 08:41:53 -0800 (PST)
-From:   Uros Bizjak <ubizjak@gmail.com>
-To:     linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     Uros Bizjak <ubizjak@gmail.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>
-Subject: [PATCH v2 3/3] ring_buffer: Use try_cmpxchg instead of cmpxchg
-Date:   Thu,  2 Mar 2023 17:41:29 +0100
-Message-Id: <20230302164129.4862-4-ubizjak@gmail.com>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20230302164129.4862-1-ubizjak@gmail.com>
-References: <20230302164129.4862-1-ubizjak@gmail.com>
+        Thu, 2 Mar 2023 12:18:02 -0500
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 35055BBA1;
+        Thu,  2 Mar 2023 09:18:00 -0800 (PST)
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 96A3E1FB;
+        Thu,  2 Mar 2023 09:18:43 -0800 (PST)
+Received: from lakrids.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 6AD713F67D;
+        Thu,  2 Mar 2023 09:17:59 -0800 (PST)
+From:   Mark Rutland <mark.rutland@arm.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     linux-trace-kernel@vger.kernel.org, mark.rutland@arm.com,
+        mhiramat@kernel.org, rostedt@goodmis.org, zanussi@kernel.org
+Subject: [PATCH 0/2] tracing/hist: add a modulus operator
+Date:   Thu,  2 Mar 2023 17:17:53 +0000
+Message-Id: <20230302171755.1821653-1-mark.rutland@arm.com>
+X-Mailer: git-send-email 2.30.2
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-Use try_cmpxchg instead of cmpxchg (*ptr, old, new) == old.
-x86 CMPXCHG instruction returns success in ZF flag, so this change
-saves a compare after cmpxchg (and related move instruction in
-front of cmpxchg).
+I've been analysing some usercopy code, and wanted to cpature the spread
+of sizes and alignment of copies for a workload. I found that histrogram
+triggers were great for cpaturing the size, but there's not currently a
+way to capture the alignment short of recording the entire base pointer
+and post-processing the histogram, which is less than ideal.
 
-Also, try_cmpxchg implicitly assigns old *ptr value to "old" when cmpxchg
-fails. There is no need to re-read the value in the loop.
+These patches add a modulus operator to histogram expressions, so which
+allows the alignment of pointers to be captured directly.
 
-No functional change intended.
+The first patch is a preparatory refactoring to the expression parsing
+code, and the second actually adds the new operator.
 
-Cc: Steven Rostedt <rostedt@goodmis.org>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>
-Signed-off-by: Uros Bizjak <ubizjak@gmail.com>
----
-v2: Convert only loops with cmpxchg.
----
- kernel/trace/ring_buffer.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+Thanks,
+Mark.
 
-diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
-index 4188af7d4cfe..9a6ba5824cf2 100644
---- a/kernel/trace/ring_buffer.c
-+++ b/kernel/trace/ring_buffer.c
-@@ -4061,10 +4061,10 @@ void ring_buffer_record_off(struct trace_buffer *buffer)
- 	unsigned int rd;
- 	unsigned int new_rd;
- 
-+	rd = atomic_read(&buffer->record_disabled);
- 	do {
--		rd = atomic_read(&buffer->record_disabled);
- 		new_rd = rd | RB_BUFFER_OFF;
--	} while (atomic_cmpxchg(&buffer->record_disabled, rd, new_rd) != rd);
-+	} while (!atomic_try_cmpxchg(&buffer->record_disabled, &rd, new_rd));
- }
- EXPORT_SYMBOL_GPL(ring_buffer_record_off);
- 
-@@ -4084,10 +4084,10 @@ void ring_buffer_record_on(struct trace_buffer *buffer)
- 	unsigned int rd;
- 	unsigned int new_rd;
- 
-+	rd = atomic_read(&buffer->record_disabled);
- 	do {
--		rd = atomic_read(&buffer->record_disabled);
- 		new_rd = rd & ~RB_BUFFER_OFF;
--	} while (atomic_cmpxchg(&buffer->record_disabled, rd, new_rd) != rd);
-+	} while (!atomic_try_cmpxchg(&buffer->record_disabled, &rd, new_rd));
- }
- EXPORT_SYMBOL_GPL(ring_buffer_record_on);
- 
+Mark Rutland (2):
+  tracing/hist: simplify contains_operator()
+  tracing/hist: add modulus operator
+
+ Documentation/trace/histogram.rst |   4 +-
+ kernel/trace/trace_events_hist.c  | 109 ++++++++++++++++--------------
+ 2 files changed, 62 insertions(+), 51 deletions(-)
+
 -- 
-2.39.2
+2.30.2
 
