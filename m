@@ -2,74 +2,146 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 573C2C6FA8E
-	for <linux-trace-kernel@archiver.kernel.org>; Thu,  2 Mar 2023 13:19:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 77202C6FA8E
+	for <linux-trace-kernel@archiver.kernel.org>; Thu,  2 Mar 2023 14:19:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229750AbjCBNTB (ORCPT
+        id S229607AbjCBOTT (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Thu, 2 Mar 2023 08:19:01 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50288 "EHLO
+        Thu, 2 Mar 2023 09:19:19 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40432 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230047AbjCBNTB (ORCPT
+        with ESMTP id S229471AbjCBOTS (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Thu, 2 Mar 2023 08:19:01 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 658F418140;
-        Thu,  2 Mar 2023 05:18:59 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 052CD615B0;
-        Thu,  2 Mar 2023 13:18:59 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 73A88C433EF;
-        Thu,  2 Mar 2023 13:18:57 +0000 (UTC)
-Date:   Thu, 2 Mar 2023 08:18:55 -0500
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
-Cc:     Masami Hiramatsu <mhiramat@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
+        Thu, 2 Mar 2023 09:19:18 -0500
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 3A03813513;
+        Thu,  2 Mar 2023 06:19:17 -0800 (PST)
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 378B11FB;
+        Thu,  2 Mar 2023 06:20:00 -0800 (PST)
+Received: from FVFF77S0Q05N.cambridge.arm.com (FVFF77S0Q05N.cambridge.arm.com [10.1.26.133])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 10BA03F587;
+        Thu,  2 Mar 2023 06:19:15 -0800 (PST)
+Date:   Thu, 2 Mar 2023 14:18:52 +0000
+From:   Mark Rutland <mark.rutland@arm.com>
+To:     Steven Rostedt <rostedt@goodmis.org>
+Cc:     linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+        Masami Hiramatsu <mhiramat@kernel.org>,
         Andrew Morton <akpm@linux-foundation.org>,
-        Tom Zanussi <zanussi@kernel.org>
-Subject: Re: [PATCH 0/2] tracing: Fix adding some modifiers to histogram
- values
-Message-ID: <20230302081855.7ee88b32@gandalf.local.home>
-In-Reply-To: <20230302010051.044209550@goodmis.org>
+        stable@vger.kernel.org
+Subject: Re: [PATCH 2/2] tracing: Check field value in hist_field_name()
+Message-ID: <ZACwTKyIkq5MyPHd@FVFF77S0Q05N.cambridge.arm.com>
 References: <20230302010051.044209550@goodmis.org>
-X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+ <20230302020810.762384440@goodmis.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230302020810.762384440@goodmis.org>
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-
-I forgot to add Tom Zanussi on this series.
-
--- Steve
-
-
-On Wed, 01 Mar 2023 20:00:51 -0500
-Steven Rostedt <rostedt@goodmis.org> wrote:
-
-> Mark Rutland reported to me on IRC that he accidentally added the
-> ".buckets=8" modifier to hitcount. This should not be allowed, but it
-> did not error. Worse yet, when reading the hist file, it would crash
-> as there was a NULL pointer dereference due to the values not having
-> fields assigned to them.
+On Wed, Mar 01, 2023 at 08:00:53PM -0500, Steven Rostedt wrote:
+> From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
 > 
-> The first fix is to make sure that histogram values do not get assigned
-> modifiers that they can't use.
+> The function hist_field_name() cannot handle being passed a NULL field
+> parameter. It should never be NULL, but due to a previous bug, NULL was
+> passed to the function and the kernel crashed due to a NULL dereference.
+> Mark Rutland reported this to me on IRC.
 > 
-> The the second patch is to not crash if a NULL pointer is passed to
-> hist_field_name() (which is what happens if you allow some of these
-> modifiers to be used by values).
+> The bug was fixed, but to prevent future bugs from crashing the kernel,
+> check the field and add a WARN_ON() if it is NULL.
 > 
-> Steven Rostedt (Google) (2):
->       tracing: Do not let histogram values have some modifiers
->       tracing: Check field value in hist_field_name()
-> 
-> ----
->  kernel/trace/trace_events_hist.c | 12 ++++++++++++
->  1 file changed, 12 insertions(+)
+> Cc: stable@vger.kernel.org
+> Reported-by: Mark Rutland <mark.rutland@arm.com>
+> Fixes: c6afad49d127f ("tracing: Add hist trigger 'sym' and 'sym-offset' modifiers")
+> Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
 
+Tested-by: Mark Rutland <mark.rutland@arm.com>
+
+I gave this patch a spin on its own (without the prior patch), and it behaves
+as expected. When deliberately triggering the aforementioned bug I hit the
+WARN_ON_ONCE() without crashing the kernel:
+
+| # echo 'p:copy_to_user __arch_copy_to_user n=$arg2' >> /sys/kernel/tracing/kprobe_events
+| # echo 'hist:keys=n:vals=hitcount.buckets=8:sort=hitcount' > /sys/kernel/tracing/events/kprobes/copy_to_user/trigger
+| # cat /sys/kernel/tracing/events/kprobes/copy_to_user/hist 
+| ------------[ cut here ]------------
+| WARNING: CPU: 0 PID: 133 at kernel/trace/trace_events_hist.c:1337 hist_field_name+0x94/0x144
+| Modules linked in:
+| CPU: 0 PID: 133 Comm: cat Not tainted 6.2.0-00003-g785bb684c534 #2
+| Hardware name: linux,dummy-virt (DT)
+| pstate: 80000005 (Nzcv daif -PAN -UAO -TCO -DIT -SSBS BTYPE=--)
+| pc : hist_field_name+0x94/0x144
+| lr : hist_field_name+0xbc/0x144
+| sp : ffff800008343a60
+| x29: ffff800008343a60 x28: 0000000000000001 x27: 0000000000400cc0
+| x26: ffffaed00953fcd0 x25: 0000000000000000 x24: ffff65c743e8bf00
+| x23: ffffaed0093d2488 x22: ffff65c743fadc00 x21: 0000000000000001
+| x20: ffff65c743ec1000 x19: ffff65c743fadc00 x18: 0000000000000000
+| x17: 0000000000000000 x16: 0000000000000000 x15: 0000000000000000
+| x14: 0000000000000000 x13: 203a6f666e692072 x12: 6567676972742023
+| x11: 0a230a6d6172676f x10: 000000000000002c x9 : ffffaed007be1fcc
+| x8 : 000000000000002c x7 : 7f7f7f7f7f7f7f7f x6 : 000000000000002c
+| x5 : ffff65c743b0103e x4 : ffffaed00953fcd1 x3 : 000000000000003d
+| x2 : 0000000000020001 x1 : 0000000000000001 x0 : 0000000000000000
+| Call trace:
+|  hist_field_name+0x94/0x144
+|  hist_field_print+0x28/0x14c
+|  event_hist_trigger_print+0x174/0x4d0
+|  hist_show+0xf8/0x980
+|  seq_read_iter+0x1bc/0x4b0
+|  seq_read+0x8c/0xc4
+|  vfs_read+0xc8/0x2a4
+|  ksys_read+0x70/0xfc
+|  __arm64_sys_read+0x24/0x30
+|  invoke_syscall+0x50/0x120
+|  el0_svc_common.constprop.0+0x4c/0x100
+|  do_el0_svc+0x44/0xd0
+|  el0_svc+0x2c/0x84
+|  el0t_64_sync_handler+0xbc/0x140
+|  el0t_64_sync+0x190/0x194
+| ---[ end trace 0000000000000000 ]---
+| # event histogram
+| #
+| # trigger info: hist:keys=n:vals=hitcount,.buckets=8:sort=hitcount:size=2048 [active]
+| #
+| 
+| { n: 18446574505247538232 } hitcount:          1  :          1
+| { n: 18446574505249480120 } hitcount:          1  :          1
+| { n: 18446574505255937966 } hitcount:          1  :          1
+| { n: 18446574505234423224 } hitcount:          1  :          1
+
+[...]
+
+| Totals:
+|     Hits: 371
+|     Entries: 263
+|     Dropped: 0
+
+Note: the 'n' values are large because '$arg2' is actually the 'from' pointer
+here, another mistake of mine (I had meant to capture '$arg3').
+
+Thanks,
+Mark.
+
+> ---
+>  kernel/trace/trace_events_hist.c | 3 +++
+>  1 file changed, 3 insertions(+)
+> 
+> diff --git a/kernel/trace/trace_events_hist.c b/kernel/trace/trace_events_hist.c
+> index 6e8ab726a7b5..486cca3c2b75 100644
+> --- a/kernel/trace/trace_events_hist.c
+> +++ b/kernel/trace/trace_events_hist.c
+> @@ -1331,6 +1331,9 @@ static const char *hist_field_name(struct hist_field *field,
+>  {
+>  	const char *field_name = "";
+>  
+> +	if (WARN_ON_ONCE(!field))
+> +		return field_name;
+> +
+>  	if (level > 1)
+>  		return field_name;
+>  
+> -- 
+> 2.39.1
