@@ -2,195 +2,94 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2297FC7EE32
-	for <linux-trace-kernel@archiver.kernel.org>; Thu,  2 Mar 2023 17:18:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B839FC6FA8E
+	for <linux-trace-kernel@archiver.kernel.org>; Thu,  2 Mar 2023 17:19:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229683AbjCBRSH (ORCPT
+        id S229764AbjCBRTb (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Thu, 2 Mar 2023 12:18:07 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55134 "EHLO
+        Thu, 2 Mar 2023 12:19:31 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57100 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229626AbjCBRSF (ORCPT
+        with ESMTP id S229567AbjCBRTa (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Thu, 2 Mar 2023 12:18:05 -0500
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id D5BD0CA26;
-        Thu,  2 Mar 2023 09:18:03 -0800 (PST)
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id DD251169E;
-        Thu,  2 Mar 2023 09:18:46 -0800 (PST)
-Received: from lakrids.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id BE54D3F67D;
-        Thu,  2 Mar 2023 09:18:02 -0800 (PST)
-From:   Mark Rutland <mark.rutland@arm.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     linux-trace-kernel@vger.kernel.org, mark.rutland@arm.com,
-        mhiramat@kernel.org, rostedt@goodmis.org, zanussi@kernel.org
-Subject: [PATCH 2/2] tracing/hist: add modulus operator
-Date:   Thu,  2 Mar 2023 17:17:55 +0000
-Message-Id: <20230302171755.1821653-3-mark.rutland@arm.com>
-X-Mailer: git-send-email 2.30.2
-In-Reply-To: <20230302171755.1821653-1-mark.rutland@arm.com>
-References: <20230302171755.1821653-1-mark.rutland@arm.com>
+        Thu, 2 Mar 2023 12:19:30 -0500
+Received: from mail-yb1-xb35.google.com (mail-yb1-xb35.google.com [IPv6:2607:f8b0:4864:20::b35])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6245B6E8B;
+        Thu,  2 Mar 2023 09:19:29 -0800 (PST)
+Received: by mail-yb1-xb35.google.com with SMTP id 82so4270708ybn.6;
+        Thu, 02 Mar 2023 09:19:29 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112; t=1677777568;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Uit9vXQN5dUsgYieCjn7laYXQPsqA8YR/x9Zxms4wJE=;
+        b=pI+LgniKKi36tZwoGnshSJXnnSrErIqYS61kZx3CdEp+v8NSKvDhRPt6a5hghfztqs
+         Exb96trUnaf40fDCIDeblbgUYW9XMmXLR2Sp/jbjF98oSo5WMB29LIRqXryFGvhu+ZhC
+         83hmmIa29wXivsbMKfGu015i8Cl+rPvOAW5zjAK5dES3OtCY6Jpwljw8nAuEr2U7YDSY
+         Oobi9Bi+2cjtuJTbQYsd109s2K7HcncMNo/NJwhk1uoQerJd1VbgLbd8BmB08ebHuxbM
+         xDXOUhIRpubjhhsERXkfqyg3oRCQbjeiYAdYr6rbtbvoD+QAMKji+7PN161b6b+Mytmp
+         hARw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112; t=1677777568;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Uit9vXQN5dUsgYieCjn7laYXQPsqA8YR/x9Zxms4wJE=;
+        b=04a6asOu9Jb6bH+nv4H1GiexYDTA/vK9/YBWIuJ6vkzUbgCTaTqdHr2xVEKmwtv1QU
+         MehaqqqZFaug4NN3QENM7mMMBGxazahjLMJ6KyhmIdgBvN6iysttqG09fyDp1QnTIWhh
+         1+VLI+e2oFSWgdZAeP0zG+7OPUIvNBb+uym/iGguMSGXbQh7JQimuYFzvz5ZFrUi/Z2V
+         0sOSlEZkdITvincz3y9qKAf8TPO7zCn/prW6LrDU1uHUbiU1SZNneO7hV5s02IeuErR3
+         RCjAh977x3c2Du/Br08TIpPwb506FR3lWog7m4XXtTyQxKS7aMthSI4I4nHoIXGsrNbC
+         ABvw==
+X-Gm-Message-State: AO0yUKW2no+sZZaA2j8imxqfIYxTtuBIDugrGPtWesReMapQ3o+9Xuqf
+        8TkVPehH00DOkJ+V3VhgvCeaR7o8qMFN4sgymv0iHGGHefYh9Q==
+X-Google-Smtp-Source: AK7set/hNqUOCRdsVB9sYdNOfDCdQlGLUIwPFoPFBIRH3epUIEIT2aXlninuryMFbjQKgc2AltMjJK9K3vOw4UfM0/M=
+X-Received: by 2002:a5b:892:0:b0:9fe:195a:ce0d with SMTP id
+ e18-20020a5b0892000000b009fe195ace0dmr3934270ybq.10.1677777568205; Thu, 02
+ Mar 2023 09:19:28 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20230302164129.4862-1-ubizjak@gmail.com>
+In-Reply-To: <20230302164129.4862-1-ubizjak@gmail.com>
+From:   Uros Bizjak <ubizjak@gmail.com>
+Date:   Thu, 2 Mar 2023 18:19:16 +0100
+Message-ID: <CAFULd4bw3sa01_bZ1YhtSYEdbcxvsjVraH5bdQ4-djoYnpy8Sg@mail.gmail.com>
+Subject: Re: [PATCH v2 0/3] Improve trace/ring_buffer.c
+To:     linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     Masami Hiramatsu <mhiramat@kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-Currently historgram field expressions can use addition ('+'),
-substraction ('-'), division ('/'), and multiplication ('*') operators.
-It would be helpful to also have a modulus ('%') operator.
+On Thu, Mar 2, 2023 at 5:41=E2=80=AFPM Uros Bizjak <ubizjak@gmail.com> wrot=
+e:
+>
+> *** BLURB HERE ***
 
-This is helpful for capturing the alignment of pointers. For example, on
-arm64 with CONFIG_KPROBE_EVENTS_ON_NOTRACE=y, we can record the size and
-alignment of copies to user with:
+Eh...
 
-| # echo 'p:copy_to_user __arch_copy_to_user to=$arg1 from=$arg2 n=$arg3' >> /sys/kernel/tracing/kprobe_events
-| # echo 'hist keys=n,to%8:vals=hitcount:sort=n,to%8' > /sys/kernel/tracing/events/kprobes/copy_to_user/trigger
-| # cat /sys/kernel/tracing/events/kprobes/copy_to_user/hist
-| # event histogram
-| #
-| # trigger info: hist:keys=n,to%8:vals=hitcount:sort=n,to%8:size=2048 [active]
-| #
-|
-| { n:          1, to%8:          1 } hitcount:          5
-| { n:          8, to%8:          0 } hitcount:          3
-| { n:         16, to%8:          0 } hitcount:          2
-| { n:         32, to%8:          0 } hitcount:          1
-| { n:         36, to%8:          0 } hitcount:          1
-| { n:        128, to%8:          0 } hitcount:          4
-| { n:        336, to%8:          0 } hitcount:          1
-| { n:        832, to%8:          0 } hitcount:          3
-|
-| Totals:
-|     Hits: 20
-|     Entries: 8
-|     Dropped: 0
+Here should read:
 
-Add a modulus operator, with the same precedence as multiplication and
-division, matching C's operator precedence.
+This series improves ring_buffer.c by changing the type of some
+static functions to void or bool and uses try_cmpxchg instead of
+cmpxchg (*ptr, old, new) =3D=3D old where appropriate.
 
-Signed-off-by: Mark Rutland <mark.rutland@arm.com>
+v2: Convert only loops with cmpxchg.
+
+Cc: Steven Rostedt <rostedt@goodmis.org>
 Cc: Masami Hiramatsu <mhiramat@kernel.org>
-Cc: Steven Rostedt (Google) <rostedt@goodmis.org>
-Cc: Tom Zanussi <zanussi@kernel.org>
-Cc: linux-trace-kernel@vger.kernel.org
----
- Documentation/trace/histogram.rst |  4 ++--
- kernel/trace/trace_events_hist.c  | 35 +++++++++++++++++++++++++++++--
- 2 files changed, 35 insertions(+), 4 deletions(-)
 
-diff --git a/Documentation/trace/histogram.rst b/Documentation/trace/histogram.rst
-index f95459aa984f..534fb190ebe0 100644
---- a/Documentation/trace/histogram.rst
-+++ b/Documentation/trace/histogram.rst
-@@ -1771,8 +1771,8 @@ using the same key and variable from yet another event::
- 
-   # echo 'hist:key=pid:wakeupswitch_lat=$wakeup_lat+$switchtime_lat ...' >> event3/trigger
- 
--Expressions support the use of addition, subtraction, multiplication and
--division operators (+-\*/).
-+Expressions support the use of addition, subtraction, multiplication,
-+division, modulus operators (+-\*/%).
- 
- Note if division by zero cannot be detected at parse time (i.e. the
- divisor is not a constant), the result will be -1.
-diff --git a/kernel/trace/trace_events_hist.c b/kernel/trace/trace_events_hist.c
-index a308da2cde2f..629896aaed54 100644
---- a/kernel/trace/trace_events_hist.c
-+++ b/kernel/trace/trace_events_hist.c
-@@ -103,6 +103,7 @@ enum field_op_id {
- 	FIELD_OP_UNARY_MINUS,
- 	FIELD_OP_DIV,
- 	FIELD_OP_MULT,
-+	FIELD_OP_MOD,
- };
- 
- enum hist_field_fn {
-@@ -131,6 +132,7 @@ enum hist_field_fn {
- 	HIST_FIELD_FN_PLUS,
- 	HIST_FIELD_FN_DIV,
- 	HIST_FIELD_FN_MULT,
-+	HIST_FIELD_FN_MOD,
- 	HIST_FIELD_FN_DIV_POWER2,
- 	HIST_FIELD_FN_DIV_NOT_POWER2,
- 	HIST_FIELD_FN_DIV_MULT_SHIFT,
-@@ -436,6 +438,21 @@ static u64 hist_field_mult(struct hist_field *hist_field,
- 	return val1 * val2;
- }
- 
-+static u64 hist_field_mod(struct hist_field *hist_field,
-+			  struct tracing_map_elt *elt,
-+			  struct trace_buffer *buffer,
-+			  struct ring_buffer_event *rbe,
-+			  void *event)
-+{
-+	struct hist_field *operand1 = hist_field->operands[0];
-+	struct hist_field *operand2 = hist_field->operands[1];
-+
-+	u64 val1 = hist_fn_call(operand1, elt, buffer, rbe, event);
-+	u64 val2 = hist_fn_call(operand2, elt, buffer, rbe, event);
-+
-+	return val1 % val2;
-+}
-+
- static u64 hist_field_unary_minus(struct hist_field *hist_field,
- 				  struct tracing_map_elt *elt,
- 				  struct trace_buffer *buffer,
-@@ -1796,6 +1813,9 @@ static char *expr_str(struct hist_field *field, unsigned int level)
- 	case FIELD_OP_MULT:
- 		strcat(expr, "*");
- 		break;
-+	case FIELD_OP_MOD:
-+		strcat(expr, "%");
-+		break;
- 	default:
- 		kfree(expr);
- 		return NULL;
-@@ -1859,8 +1879,8 @@ static int contains_operator(char *str, char **sep)
- 		return field_op;
- 
- 	/*
--	 * Second, consider the higher precedence multiplication and division
--	 * operators.
-+	 * Second, consider the higher precedence multiplication, division, and
-+	 * modulus operators.
- 	 */
- 	op = strrchr(str, '/');
- 	if (op > *sep) {
-@@ -1874,6 +1894,12 @@ static int contains_operator(char *str, char **sep)
- 		field_op = FIELD_OP_MULT;
- 	}
- 
-+	op = strrchr(str, '%');
-+	if (op > *sep) {
-+		*sep = op;
-+		field_op = FIELD_OP_MOD;
-+	}
-+
- 	return field_op;
- }
- 
-@@ -2698,6 +2724,9 @@ static struct hist_field *parse_expr(struct hist_trigger_data *hist_data,
- 	case FIELD_OP_MULT:
- 		op_fn = HIST_FIELD_FN_MULT;
- 		break;
-+	case FIELD_OP_MOD:
-+		op_fn = HIST_FIELD_FN_MOD;
-+		break;
- 	default:
- 		ret = -EINVAL;
- 		goto free_operands;
-@@ -4289,6 +4318,8 @@ static u64 hist_fn_call(struct hist_field *hist_field,
- 		return hist_field_div(hist_field, elt, buffer, rbe, event);
- 	case HIST_FIELD_FN_MULT:
- 		return hist_field_mult(hist_field, elt, buffer, rbe, event);
-+	case HIST_FIELD_FN_MOD:
-+		return hist_field_mod(hist_field, elt, buffer, rbe, event);
- 	case HIST_FIELD_FN_DIV_POWER2:
- 		return div_by_power_of_two(hist_field, elt, buffer, rbe, event);
- 	case HIST_FIELD_FN_DIV_NOT_POWER2:
--- 
-2.30.2
-
+> Uros Bizjak (3):
+>   ring_buffer: Change some static functions to void
+>   ring_buffer: Change some static functions to bool
+>   ring_buffer: Use try_cmpxchg instead of cmpxchg
+>
+>  kernel/trace/ring_buffer.c | 77 ++++++++++++++++----------------------
+>  1 file changed, 33 insertions(+), 44 deletions(-)
+>
+> --
+> 2.39.2
+>
