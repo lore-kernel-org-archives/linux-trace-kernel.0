@@ -2,115 +2,77 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 20D27C6FA8E
-	for <linux-trace-kernel@archiver.kernel.org>; Thu,  2 Mar 2023 14:24:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5209EC7EE2F
+	for <linux-trace-kernel@archiver.kernel.org>; Thu,  2 Mar 2023 16:41:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229506AbjCBOY4 (ORCPT
+        id S229642AbjCBQl4 (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Thu, 2 Mar 2023 09:24:56 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44978 "EHLO
+        Thu, 2 Mar 2023 11:41:56 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48754 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229468AbjCBOYz (ORCPT
+        with ESMTP id S229618AbjCBQlz (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Thu, 2 Mar 2023 09:24:55 -0500
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 52E293669F;
-        Thu,  2 Mar 2023 06:24:54 -0800 (PST)
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 57E061FB;
-        Thu,  2 Mar 2023 06:25:37 -0800 (PST)
-Received: from FVFF77S0Q05N.cambridge.arm.com (FVFF77S0Q05N.cambridge.arm.com [10.1.26.133])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 305DF3F587;
-        Thu,  2 Mar 2023 06:24:53 -0800 (PST)
-Date:   Thu, 2 Mar 2023 14:24:50 +0000
-From:   Mark Rutland <mark.rutland@arm.com>
-To:     Steven Rostedt <rostedt@goodmis.org>
-Cc:     linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        stable@vger.kernel.org
-Subject: Re: [PATCH 1/2] tracing: Do not let histogram values have some
- modifiers
-Message-ID: <ZACxsje6oGZWUs7m@FVFF77S0Q05N.cambridge.arm.com>
-References: <20230302010051.044209550@goodmis.org>
- <20230302020810.559462599@goodmis.org>
+        Thu, 2 Mar 2023 11:41:55 -0500
+Received: from mail-ed1-x529.google.com (mail-ed1-x529.google.com [IPv6:2a00:1450:4864:20::529])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1ECBC35A5;
+        Thu,  2 Mar 2023 08:41:51 -0800 (PST)
+Received: by mail-ed1-x529.google.com with SMTP id u9so20529750edd.2;
+        Thu, 02 Mar 2023 08:41:51 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112; t=1677775309;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=hqmFHLIVVDxhvIU62EN6xy9b21kgStvoRKH93Ih6aGQ=;
+        b=HwQreqnneKxXLaTd2xJAKwNUgmlwCevSjqH/kB8v6BR1S1knns+tHGbYB2r7WFrB6J
+         uMeafiljJ/oIxTi4uZ6pK38ePYn6WnmrWGPTaUVaVBn09gVpMFjeQoC8myGrcNn6o9p5
+         hqq468OKeKQvClMjJSEyLhCJqt1MlrZ/7hbifiembOdkAqcAlXr6lztTxvYWf7dL8R1r
+         xlFfWkJZM+CiXI7sZp7D9BMJFyPoCGDCZcZc+gt4c0y8CJCLes3iZtUVBruFgsqv23Cu
+         HsrooyVIT4pzuhpupjC90WCRwFYpiYOvzdTT5M2PUMzeF3EktehV7qhr3oqry+mtLVz9
+         hyQw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112; t=1677775309;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=hqmFHLIVVDxhvIU62EN6xy9b21kgStvoRKH93Ih6aGQ=;
+        b=JMM+bXJSxFckXzrVSCCbMZFBA5R8xNtR8h4ejyEcfAfIo+hB57KK/tHIyeis1AC3WD
+         Uo3Yx1IqrraVuD0UKxsi9tTzzXrz64OkxdxE9bhQWft77ChmLChanw1OeK3wl0XCLjf8
+         Cx+r+nCn+FugckcRAXv/MLAsHtm5F4WhfcqbCDVPiU1dIEAOxDrmzZrNUdXp38pOLOuq
+         cT7txY0UOfQfAsAUDuwYBhq6wfq2DMfpRM7bKEwC7BKvuT0TZEClB01XEkMFKiXk4Byb
+         JyLmESAiF9aCHNrgGEBX+XWxIAfnaBsqqrtcV/Uyx8EVFQUTK4SzRdpKegMr9f0Pfja7
+         feSg==
+X-Gm-Message-State: AO0yUKV69Jr9xkOqUcrgpCOxVvMn2VnWiuwncEYGG614S7vKm5xtW8VO
+        DGLiQr6hek5EcXfI8tOfI/fQdjWDbvg6Rg==
+X-Google-Smtp-Source: AK7set82cIQghQTqqSG7Br6ZTSrLyKD1lxGEnvfpMkPkhwpghuZzWWHbVjBFT6MaiFta9JRuIRFxFw==
+X-Received: by 2002:aa7:de8c:0:b0:4ab:4b85:a69f with SMTP id j12-20020aa7de8c000000b004ab4b85a69fmr10866390edv.1.1677775309236;
+        Thu, 02 Mar 2023 08:41:49 -0800 (PST)
+Received: from localhost.localdomain ([46.248.82.114])
+        by smtp.gmail.com with ESMTPSA id a22-20020a170906191600b008c327bef167sm7230998eje.7.2023.03.02.08.41.48
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 02 Mar 2023 08:41:48 -0800 (PST)
+From:   Uros Bizjak <ubizjak@gmail.com>
+To:     linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     Uros Bizjak <ubizjak@gmail.com>
+Subject: [PATCH v2 0/3] Improve trace/ring_buffer.c
+Date:   Thu,  2 Mar 2023 17:41:26 +0100
+Message-Id: <20230302164129.4862-1-ubizjak@gmail.com>
+X-Mailer: git-send-email 2.39.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230302020810.559462599@goodmis.org>
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On Wed, Mar 01, 2023 at 08:00:52PM -0500, Steven Rostedt wrote:
-> From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
-> 
-> Histogram values can not be strings, stacktraces, graphs, symbols,
-> syscalls, or grouped in buckets or log. Give an error if a value is set to
-> do so.
-> 
-> Note, the histogram code was not prepared to handle these modifiers for
-> histograms and caused a bug.
- 
-> Cc: stable@vger.kernel.org
-> Fixes: c6afad49d127f ("tracing: Add hist trigger 'sym' and 'sym-offset' modifiers")
-> Reported-by: Mark Rutland <mark.rutland@arm.com>
-> Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+*** BLURB HERE ***
 
-Tested-by: Mark Rutland <mark.rutland@arm.com>
+Uros Bizjak (3):
+  ring_buffer: Change some static functions to void
+  ring_buffer: Change some static functions to bool
+  ring_buffer: Use try_cmpxchg instead of cmpxchg
 
-I gave this a spin, and I see that the buckets modifier gerts rejected for
-hitcount, but is usable for other values as it should be:
+ kernel/trace/ring_buffer.c | 77 ++++++++++++++++----------------------
+ 1 file changed, 33 insertions(+), 44 deletions(-)
 
-| # echo 'p:copy_to_user __arch_copy_to_user n=$arg3' >> /sys/kernel/tracing/kprobe_events
-| # echo 'hist:keys=n:vals=hitcount.buckets=8:sort=hitcount' > /sys/kernel/tracing/events/kprobes/copy_to_user/trigger
-| sh: write error: Invalid argument
-| # echo 'hist:keys=n.buckets=8:vals=hitcount:sort=hitcount' > /sys/kernel/tracing/events/kprobes/copy_to_user/trigger
-| # cat /sys/kernel/tracing/events/kprobes/copy_to_user/hist
-| # event histogram
-| #
-| # trigger info: hist:keys=n.buckets=8:vals=hitcount:sort=hitcount:size=2048 [active]
-| #
-| 
-| { n: ~ 336-343 } hitcount:          1
-| { n: ~ 16-23 } hitcount:          2
-| { n: ~ 32-39 } hitcount:          2
-| { n: ~ 832-839 } hitcount:          3
-| { n: ~ 8-15 } hitcount:          3
-| { n: ~ 128-135 } hitcount:          5
-| { n: ~ 0-7 } hitcount:         57
-| 
-| Totals:
-|     Hits: 73
-|     Entries: 7
-|     Dropped: 0
+-- 
+2.39.2
 
-Thanks,
-Mark.
-
-> ---
->  kernel/trace/trace_events_hist.c | 9 +++++++++
->  1 file changed, 9 insertions(+)
-> 
-> diff --git a/kernel/trace/trace_events_hist.c b/kernel/trace/trace_events_hist.c
-> index 89877a18f933..6e8ab726a7b5 100644
-> --- a/kernel/trace/trace_events_hist.c
-> +++ b/kernel/trace/trace_events_hist.c
-> @@ -4235,6 +4235,15 @@ static int __create_val_field(struct hist_trigger_data *hist_data,
->  		goto out;
->  	}
->  
-> +	/* Some types cannot be a value */
-> +	if (hist_field->flags & (HIST_FIELD_FL_GRAPH | HIST_FIELD_FL_PERCENT |
-> +				 HIST_FIELD_FL_BUCKET | HIST_FIELD_FL_LOG2 |
-> +				 HIST_FIELD_FL_SYM | HIST_FIELD_FL_SYM_OFFSET |
-> +				 HIST_FIELD_FL_SYSCALL | HIST_FIELD_FL_STACKTRACE)) {
-> +		hist_err(file->tr, HIST_ERR_BAD_FIELD_MODIFIER, errpos(field_str));
-> +		ret = -EINVAL;
-> +	}
-> +
->  	hist_data->fields[val_idx] = hist_field;
->  
->  	++hist_data->n_vals;
-> -- 
-> 2.39.1
