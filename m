@@ -2,87 +2,121 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EA0E0C64EC4
-	for <linux-trace-kernel@archiver.kernel.org>; Fri,  3 Mar 2023 15:17:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 30C1BC7EE2D
+	for <linux-trace-kernel@archiver.kernel.org>; Fri,  3 Mar 2023 15:17:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230111AbjCCPRf (ORCPT
+        id S231138AbjCCPRh (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Fri, 3 Mar 2023 10:17:35 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34854 "EHLO
+        Fri, 3 Mar 2023 10:17:37 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34900 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231138AbjCCPRe (ORCPT
+        with ESMTP id S230494AbjCCPRg (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Fri, 3 Mar 2023 10:17:34 -0500
+        Fri, 3 Mar 2023 10:17:36 -0500
 Received: from mail-ed1-x535.google.com (mail-ed1-x535.google.com [IPv6:2a00:1450:4864:20::535])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C9DC017CCA;
-        Fri,  3 Mar 2023 07:17:32 -0800 (PST)
-Received: by mail-ed1-x535.google.com with SMTP id u9so11744383edd.2;
-        Fri, 03 Mar 2023 07:17:32 -0800 (PST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B7E41149B2;
+        Fri,  3 Mar 2023 07:17:34 -0800 (PST)
+Received: by mail-ed1-x535.google.com with SMTP id u9so11744989edd.2;
+        Fri, 03 Mar 2023 07:17:34 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112; t=1677856651;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=jiz8YLTPcqlWnRa7+hI1APh94xQl+T2YHqqlHIHeeHI=;
-        b=Jdup7WqmUvWn0dT9Buk1t92BPL3lqwj9+JODu1CveyogggIGL5dG/hpUinbpl3RaYO
-         4/XwmnO1i/4J4pHh8ixThMCEmbTsqDo/INEHUiFLv+wDRzPnSEYpk9LHmsm46QbUPO47
-         3oyYiCkB2pvqg2/YqG2DNVZPO1qspgiHuJvO7PXZW8iG3OMT8wiqPAXakU46qXB5Oyzw
-         KXXSX2ATGrIJl0e2hHBY1j7O/oRPXpZp7HD9tZ8+V39cHBlAjuvSFzNfnMfBx+yKLrSQ
-         +6S4eQPRwW1jfStlLXo9/ygZPYusm8eYjdbqkStTw0Gq9IMXv39YuKxzQob9NPvEooAb
-         cKiQ==
+        d=gmail.com; s=20210112; t=1677856654;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=aP7JkOmtAPoKEylq3aS9f49bNSoafYjJVu7dXcYE+Mk=;
+        b=kypas4z1GXFmKra5JVQlleH/5cZ3Mh2A5xzCbYjsy+aO4/wFvoCtsqm+wikrhcrJDD
+         TquAw8PTqLfttIBxSfalvlSLzI2KgLhRLcT1/Lzxx0xVOu9+x5ERsyLrdWHvX0m86dci
+         Q2hPbcIwFSFHBHM3sKU5oWRtpQBFFpX1DusSjVzsnI8E93plw0HsgKujwwRnB3FLIm5r
+         y23GNwCwA0/vL7nxyjiFv8py9AS2bMxnxXLXSVB712rJNc/7OXtufaMdTg/KaMDruPIM
+         WZ2xpvEgeqvsAEVbtDLAt4b/+fQPpJUqUz/BB152t+5mA5/Xy4Z2aF+GSDul9AzjXoQC
+         mm0A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1677856651;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=jiz8YLTPcqlWnRa7+hI1APh94xQl+T2YHqqlHIHeeHI=;
-        b=zZGMiCGoMyzjxi4Lfpw5I2BMUNvHV7N1ZPeQmXno+UwQCWJ9CaTUHuNHaur0WjNoDS
-         ORIWO2Td7Wuqvpah9XrIZV02gEFIBpwJubqZKWmE0JbaZatb3QJ8EKfH8M+e2tS770yK
-         0+OYIfxTEg76DtUQCRat6NaNj1V0ml4758/w81EhT8RvwOWE7DXUM3WBAPkjEvScRT5E
-         VnBTc7CKU+BKJcqDOF4Lgnj/FgskEn3aHgBocVgVXQgBgfnwvVwdbEnqEChrAuybeQS9
-         26SkFKUl37/UijWYLgvT4psPt/FFwv2QoywFYHe/u+DYtp9J3Wo1hjlxYRX2JvQlhP9V
-         urtg==
-X-Gm-Message-State: AO0yUKV5HAdWlScDo4NvCkDBhcZR8aWq+jfbOR+Aej0VXlUrpfWbmd7z
-        03swdNfnSSZPrESNodtHcg/mTAqa19VCrQ==
-X-Google-Smtp-Source: AK7set91eGWveWWR4+wIG8jnM2sdO7C/Af5Gj+zhycaB1yJ0GzuQNDiBta9uyb89iDeFTDPgYMoHeA==
-X-Received: by 2002:a17:906:36d3:b0:8bf:e95c:467b with SMTP id b19-20020a17090636d300b008bfe95c467bmr1791377ejc.63.1677856650820;
-        Fri, 03 Mar 2023 07:17:30 -0800 (PST)
+        d=1e100.net; s=20210112; t=1677856654;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=aP7JkOmtAPoKEylq3aS9f49bNSoafYjJVu7dXcYE+Mk=;
+        b=MoC0C2OlTcnnZ0j31xdMASovEiMaQtaXOqnCjZlp1EJKRzigoEPpWuNEet/KEDN3bu
+         83efBCTgR0zj+i/IkuosKMaXwNlvf15khPIF7cJaOlGt2YJ9jOkHCkR6yB0Y1VT8qhuh
+         iGY9bnRzda48ROX9GG3XIQo9jTPk8FeIFfaCxQwh2mkhTxHkXcWnRAM4kCsR7LyuceA8
+         rMKdhIJpb/e3OjYYQg9ar4c3ANQQ+b6W73lXanrcLYNWIS086L0q82UjVw8uhk1RsS0J
+         k6+cqBoU2nd9BolRGV3DemKm5LbYIxcoLAWXtO9NTiWkRyJlzVpPgM2u+VNu25bSF8KI
+         cWMA==
+X-Gm-Message-State: AO0yUKVxU+UqgKzWsly+BnFYYRxHN+R5Eo5woHhBwGl08ioznZBizT1w
+        duMX12qrOmiyQYDi/Z2Pi3//Pu1Nei5hKw==
+X-Google-Smtp-Source: AK7set/68r3nqsPVT+4Y8wGluLWFM7nENyT18dqTJYMsULBuaKxax5yQEMMlv4ivVUHDAEr9dYiG1A==
+X-Received: by 2002:a17:907:728c:b0:8b1:788f:2198 with SMTP id dt12-20020a170907728c00b008b1788f2198mr2415159ejc.19.1677856653846;
+        Fri, 03 Mar 2023 07:17:33 -0800 (PST)
 Received: from localhost.localdomain ([46.248.82.114])
-        by smtp.gmail.com with ESMTPSA id o13-20020a1709062e8d00b008e22978b98bsm1048390eji.61.2023.03.03.07.17.30
+        by smtp.gmail.com with ESMTPSA id o13-20020a1709062e8d00b008e22978b98bsm1048390eji.61.2023.03.03.07.17.33
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 03 Mar 2023 07:17:30 -0800 (PST)
+        Fri, 03 Mar 2023 07:17:33 -0800 (PST)
 From:   Uros Bizjak <ubizjak@gmail.com>
 To:     linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org
 Cc:     Uros Bizjak <ubizjak@gmail.com>,
         Steven Rostedt <rostedt@goodmis.org>,
         Masami Hiramatsu <mhiramat@kernel.org>
-Subject: [PATCH v3 0/3] Improve trace/ring_buffer.c
-Date:   Fri,  3 Mar 2023 16:17:03 +0100
-Message-Id: <20230303151706.57851-1-ubizjak@gmail.com>
+Subject: [PATCH v3 3/3] ring_buffer: Use try_cmpxchg instead of cmpxchg
+Date:   Fri,  3 Mar 2023 16:17:06 +0100
+Message-Id: <20230303151706.57851-4-ubizjak@gmail.com>
 X-Mailer: git-send-email 2.39.2
+In-Reply-To: <20230303151706.57851-1-ubizjak@gmail.com>
+References: <20230303151706.57851-1-ubizjak@gmail.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-This series improves ring_buffer.c by changing the type of some
-static functions to void or bool and uses try_cmpxchg instead of
-cmpxchg (*ptr, old, new) == old where appropriate.
+Use try_cmpxchg instead of cmpxchg (*ptr, old, new) == old.
+x86 CMPXCHG instruction returns success in ZF flag, so this change
+saves a compare after cmpxchg (and related move instruction in
+front of cmpxchg).
 
-v2: Convert only loops with cmpxchg.
-v3: Rearrange variable declarations.
- 
+Also, try_cmpxchg implicitly assigns old *ptr value to "old" when cmpxchg
+fails. There is no need to re-read the value in the loop.
+
+No functional change intended.
+
 Cc: Steven Rostedt <rostedt@goodmis.org>
 Cc: Masami Hiramatsu <mhiramat@kernel.org>
+Signed-off-by: Uros Bizjak <ubizjak@gmail.com>
+---
+v2: Convert only loops with cmpxchg.
+---
+ kernel/trace/ring_buffer.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-Uros Bizjak (3):
-  ring_buffer: Change some static functions to void
-  ring_buffer: Change some static functions to bool
-  ring_buffer: Use try_cmpxchg instead of cmpxchg
-
- kernel/trace/ring_buffer.c | 77 ++++++++++++++++----------------------
- 1 file changed, 33 insertions(+), 44 deletions(-)
-
+diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
+index 71df857242b4..3bfc2e8a3da4 100644
+--- a/kernel/trace/ring_buffer.c
++++ b/kernel/trace/ring_buffer.c
+@@ -4061,10 +4061,10 @@ void ring_buffer_record_off(struct trace_buffer *buffer)
+ 	unsigned int rd;
+ 	unsigned int new_rd;
+ 
++	rd = atomic_read(&buffer->record_disabled);
+ 	do {
+-		rd = atomic_read(&buffer->record_disabled);
+ 		new_rd = rd | RB_BUFFER_OFF;
+-	} while (atomic_cmpxchg(&buffer->record_disabled, rd, new_rd) != rd);
++	} while (!atomic_try_cmpxchg(&buffer->record_disabled, &rd, new_rd));
+ }
+ EXPORT_SYMBOL_GPL(ring_buffer_record_off);
+ 
+@@ -4084,10 +4084,10 @@ void ring_buffer_record_on(struct trace_buffer *buffer)
+ 	unsigned int rd;
+ 	unsigned int new_rd;
+ 
++	rd = atomic_read(&buffer->record_disabled);
+ 	do {
+-		rd = atomic_read(&buffer->record_disabled);
+ 		new_rd = rd & ~RB_BUFFER_OFF;
+-	} while (atomic_cmpxchg(&buffer->record_disabled, rd, new_rd) != rd);
++	} while (!atomic_try_cmpxchg(&buffer->record_disabled, &rd, new_rd));
+ }
+ EXPORT_SYMBOL_GPL(ring_buffer_record_on);
+ 
 -- 
 2.39.2
 
