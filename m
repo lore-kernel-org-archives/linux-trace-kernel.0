@@ -2,130 +2,105 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CD75C678D5
-	for <linux-trace-kernel@archiver.kernel.org>; Sat,  4 Mar 2023 08:56:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DF5A9C678DB
+	for <linux-trace-kernel@archiver.kernel.org>; Sat,  4 Mar 2023 12:40:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229471AbjCDI4r (ORCPT
+        id S229591AbjCDMk7 (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Sat, 4 Mar 2023 03:56:47 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36468 "EHLO
+        Sat, 4 Mar 2023 07:40:59 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51200 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229447AbjCDI4q (ORCPT
+        with ESMTP id S229478AbjCDMk6 (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Sat, 4 Mar 2023 03:56:46 -0500
-Received: from mail-yb1-xb2b.google.com (mail-yb1-xb2b.google.com [IPv6:2607:f8b0:4864:20::b2b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D75761C5A7;
-        Sat,  4 Mar 2023 00:56:45 -0800 (PST)
-Received: by mail-yb1-xb2b.google.com with SMTP id x12so3929872ybt.7;
-        Sat, 04 Mar 2023 00:56:45 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112; t=1677920205;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=6UFU63RDASPJk22Kg3GWOjkWMm7mURdn+Uv1+ep8nQs=;
-        b=Nlr+YUsO+zzngGAtrEVWUl7L/7sL6wk+eZSMYO7gXA9dWZmF91WgryTgdsJgcWlMH5
-         gZNnHtU7LIHQdJOGVc0Z8KsjbjJcHiJmGdHbCwVPlyVsjsYn+UhsnS9OhEAPofTH0/4j
-         TRmEh4qmB9T8SsRy9cFHACmQ9KEMq15ZGzgXKgGK7+FRZDAurHqn2I4jP6nfcQj9zseP
-         0vfw+7GKrJa2U6CAYYye/TixXo7F31vPxq95MH43Xb7TIC5AqJNusVzxay43SKbcyCj8
-         YC53qt4fiOSlTxXW4NMjPxIrohGelCuf+zNjSCCl+sK7CRBK4oeOrimtaMOGX+rk7eeq
-         EqXA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1677920205;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=6UFU63RDASPJk22Kg3GWOjkWMm7mURdn+Uv1+ep8nQs=;
-        b=QDSBZutbHZYVx3qzRC2ODVJaTTL0xG2h7dS7751UqAceoEEA3kR2TUiLcPKGKscWJ1
-         tkLWI40ecjDh0Yrn//wakXLk86U2vaKWVx4u8tk+X59nV1EFt9lI2/pvknAIm5Vr/fq/
-         HreS3U2xLHiXH385Gi6cMaW6AlTmU8DLelk5chCdoWHdmh5m1W6IzUAJaT4sETrAQMxi
-         gDTYLKU6WgoSVMG9pKQKFFxDUa9rBmISlTwrgAfS2Bib29P1SpxbdsyRFn/MfOKNXXcN
-         xx4cWNJt8QwGW1wE/XH2JQVOVEoU5ZT4OC/2XeDFMO9IzYocPW+97VzXhoRWxwUKKCBq
-         iQRQ==
-X-Gm-Message-State: AO0yUKVy4yLLm1XePqIz4MUkcNdwfKmh8J/qZd7nZHkNKezZ3VdR0dT5
-        tW48YWIrrR7HCNDQf5EkBhDI4hQ6dN9xP465Hg0=
-X-Google-Smtp-Source: AK7set/lnGPwn38sZt3T9BEU/gA+Gsy147tIajt2F1G6IcS3aB2DqE6p3BezyJyW2wX7TjOOwzlehsWh9EoMWViGCwM=
-X-Received: by 2002:a5b:a10:0:b0:87a:957b:fd67 with SMTP id
- k16-20020a5b0a10000000b0087a957bfd67mr2566400ybq.10.1677920204997; Sat, 04
- Mar 2023 00:56:44 -0800 (PST)
+        Sat, 4 Mar 2023 07:40:58 -0500
+Received: from mga04.intel.com (mga04.intel.com [192.55.52.120])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1F71011174;
+        Sat,  4 Mar 2023 04:40:57 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1677933657; x=1709469657;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=7Q4E9z2WW/wNytshCGe+UYgFaKXWgPKBLi18rp/fOzc=;
+  b=kDAxZNiFFw0o2Kdi9r4IYF/6LOaYl0fDk3Z8+YWP0emsktLEAEHu8Q8l
+   II/ovKENR1Fnu+y5F04q4OlUDK6rRUJkHjpCvgX/Rnnov+7knyjagyAxW
+   ZivmQ73FRWWXP0+6vO5epLad3R2r3sKFvVMppLg6dE+75D5yA4Va8dcnw
+   JZlCw7oxLdqK01g8laZSXibSVlsyqEJZhrH7vzjwErsFTexeOVoMJONwU
+   SRpr6G8zhFQlgntsMYLewrMyw3WJtNnVNZyD0Oe8y+b/hFpn75K9C7k0w
+   9tTLQV7IazJhvCBS8+/iCv2vDA71og4APHM9colcCxEe1F+mgIuDHdiYj
+   A==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10638"; a="333977019"
+X-IronPort-AV: E=Sophos;i="5.98,233,1673942400"; 
+   d="scan'208";a="333977019"
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Mar 2023 04:40:56 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6500,9779,10638"; a="739804762"
+X-IronPort-AV: E=Sophos;i="5.98,233,1673942400"; 
+   d="scan'208";a="739804762"
+Received: from lkp-server01.sh.intel.com (HELO 776573491cc5) ([10.239.97.150])
+  by fmsmga008.fm.intel.com with ESMTP; 04 Mar 2023 04:40:53 -0800
+Received: from kbuild by 776573491cc5 with local (Exim 4.96)
+        (envelope-from <lkp@intel.com>)
+        id 1pYRC0-0002A2-3C;
+        Sat, 04 Mar 2023 12:40:52 +0000
+Date:   Sat, 4 Mar 2023 20:40:47 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     Eddie James <eajames@linux.ibm.com>, linux-fsi@lists.ozlabs.org
+Cc:     oe-kbuild-all@lists.linux.dev, rostedt@goodmis.org,
+        linux-trace-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, mhiramat@kernel.org,
+        alistair@popple.id.au, joel@jms.id.au, jk@ozlabs.org,
+        andrew@aj.id.au, robh+dt@kernel.org,
+        krzysztof.kozlowski+dt@linaro.org, eajames@linux.ibm.com
+Subject: Re: [PATCH v7 4/7] fsi: Add I2C Responder SCOM driver
+Message-ID: <202303042033.kC3KNCW2-lkp@intel.com>
+References: <20230303170416.1347530-5-eajames@linux.ibm.com>
 MIME-Version: 1.0
-References: <20230303151706.57851-1-ubizjak@gmail.com> <20230303151706.57851-3-ubizjak@gmail.com>
- <c63f96bb-2972-b96e-5105-d47c89f8571e@quicinc.com>
-In-Reply-To: <c63f96bb-2972-b96e-5105-d47c89f8571e@quicinc.com>
-From:   Uros Bizjak <ubizjak@gmail.com>
-Date:   Sat, 4 Mar 2023 09:56:36 +0100
-Message-ID: <CAFULd4Z87YEkmtogBGmnCoAEq1HWeXb3JcJhr0rSnpjyiZ0nXA@mail.gmail.com>
-Subject: Re: [PATCH v3 2/3] ring_buffer: Change some static functions to bool
-To:     Mukesh Ojha <quic_mojha@quicinc.com>
-Cc:     linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230303170416.1347530-5-eajames@linux.ibm.com>
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On Fri, Mar 3, 2023 at 5:34=E2=80=AFPM Mukesh Ojha <quic_mojha@quicinc.com>=
- wrote:
+Hi Eddie,
 
-> > -static int rb_time_cmpxchg(rb_time_t *t, u64 expect, u64 set)
-> > +static bool rb_time_cmpxchg(rb_time_t *t, u64 expect, u64 set)
-> >   {
-> >       unsigned long cnt, top, bottom, msb;
-> >       unsigned long cnt2, top2, bottom2, msb2;
-> > @@ -1490,7 +1488,7 @@ rb_set_head_page(struct ring_buffer_per_cpu *cpu_=
-buffer)
-> >       return NULL;
-> >   }
-> >
-> > -static int rb_head_page_replace(struct buffer_page *old,
-> > +static bool rb_head_page_replace(struct buffer_page *old,
-> >                               struct buffer_page *new)
->
-> nit: did you miss ret in rb_get_reader_page()?
+I love your patch! Yet something to improve:
 
-Indeed, thanks for noticing!
+[auto build test ERROR on robh/for-next]
+[also build test ERROR on linus/master v6.2 next-20230303]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
-> >   static __always_inline void
-> > @@ -5408,9 +5407,8 @@ bool ring_buffer_empty(struct trace_buffer *buffe=
-r)
-> >   {
-> >       struct ring_buffer_per_cpu *cpu_buffer;
-> >       unsigned long flags;
-> > -     bool dolock;
-> > +     bool dolock, ret;
-> >       int cpu;
-> > -     int ret;
->
-> nit: would have been nice if you would not have changed existing stuff
-> i.e each variable on a separate line.
-> >
-> >       /* yes this is racy, but if you don't like the race, lock the buf=
-fer */
-> >       for_each_buffer_cpu(buffer, cpu) {
-> > @@ -5438,8 +5436,7 @@ bool ring_buffer_empty_cpu(struct trace_buffer *b=
-uffer, int cpu)
-> >   {
-> >       struct ring_buffer_per_cpu *cpu_buffer;
-> >       unsigned long flags;
-> > -     bool dolock;
-> > -     int ret;
-> > +     bool dolock, ret;
->
-> same here
+url:    https://github.com/intel-lab-lkp/linux/commits/Eddie-James/fsi-Move-fsi_slave-structure-definition-to-header/20230304-011530
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/robh/linux.git for-next
+patch link:    https://lore.kernel.org/r/20230303170416.1347530-5-eajames%40linux.ibm.com
+patch subject: [PATCH v7 4/7] fsi: Add I2C Responder SCOM driver
+config: powerpc-allmodconfig (https://download.01.org/0day-ci/archive/20230304/202303042033.kC3KNCW2-lkp@intel.com/config)
+compiler: powerpc-linux-gcc (GCC) 12.1.0
+reproduce (this is a W=1 build):
+        wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
+        chmod +x ~/bin/make.cross
+        # https://github.com/intel-lab-lkp/linux/commit/36d0c348a48344d2ffef15d5abefe139fc511684
+        git remote add linux-review https://github.com/intel-lab-lkp/linux
+        git fetch --no-tags linux-review Eddie-James/fsi-Move-fsi_slave-structure-definition-to-header/20230304-011530
+        git checkout 36d0c348a48344d2ffef15d5abefe139fc511684
+        # save the config file
+        mkdir build_dir && cp config build_dir/.config
+        COMPILER_INSTALL_PATH=$HOME/0day COMPILER=gcc-12.1.0 make.cross W=1 O=build_dir ARCH=powerpc olddefconfig
+        COMPILER_INSTALL_PATH=$HOME/0day COMPILER=gcc-12.1.0 make.cross W=1 O=build_dir ARCH=powerpc SHELL=/bin/bash
 
-I'll do it in the way you propose in the follow-up revisiton.
+If you fix the issue, kindly add following tag where applicable
+| Reported-by: kernel test robot <lkp@intel.com>
+| Link: https://lore.kernel.org/oe-kbuild-all/202303042033.kC3KNCW2-lkp@intel.com/
 
-> >
-> >       if (!cpumask_test_cpu(cpu, buffer->cpumask))
-> >               return true;
->
->
-> Feel free to add
->
-> Reviewed-by: Mukesh Ojha <quic_mojha@quicinc.com>
+All errors (new ones prefixed by >>, old ones prefixed by <<):
 
-Thanks.
+>> ERROR: modpost: "fsi_master_i2cr_read" [drivers/fsi/i2cr-scom.ko] undefined!
+>> ERROR: modpost: "fsi_master_i2cr_write" [drivers/fsi/i2cr-scom.ko] undefined!
 
-Uros.
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests
