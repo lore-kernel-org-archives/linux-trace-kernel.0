@@ -2,59 +2,58 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F03CC61DA4
-	for <linux-trace-kernel@archiver.kernel.org>; Sun,  5 Mar 2023 08:10:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8AA33C61DA4
+	for <linux-trace-kernel@archiver.kernel.org>; Sun,  5 Mar 2023 15:11:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229621AbjCEIKv (ORCPT
+        id S229621AbjCEPLG (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Sun, 5 Mar 2023 03:10:51 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54642 "EHLO
+        Sun, 5 Mar 2023 10:11:06 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50176 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229379AbjCEIKu (ORCPT
+        with ESMTP id S229491AbjCEPLF (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Sun, 5 Mar 2023 03:10:50 -0500
+        Sun, 5 Mar 2023 10:11:05 -0500
 Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 96AAEEB54;
-        Sun,  5 Mar 2023 00:10:48 -0800 (PST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E9C68B75B;
+        Sun,  5 Mar 2023 07:11:01 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 405AFB80942;
-        Sun,  5 Mar 2023 08:10:47 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E1CECC4339C;
-        Sun,  5 Mar 2023 08:10:45 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 861C9B80AD9;
+        Sun,  5 Mar 2023 15:11:00 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1197BC4339B;
+        Sun,  5 Mar 2023 15:10:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1678003845;
-        bh=MuuRgcA2SK0KtsfkRXWe9vtpoHAbvlIgFEaN+WS+Ka4=;
+        s=k20201202; t=1678029059;
+        bh=RlcSs9U00i8cPx/6YbgM4UbWDDp7+QQtC/istVgsnzk=;
         h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=PuR//aMRF01TtHLuXoiLnA4jMzgmzqcKrbxIyV5EzqEQv+pIiAc9YEWFPj7GQjRxn
-         txF0TNRnt/PGzfsyWztf7dHHm0uxFiGQ+HHjyxTcmiOMwgbpRt0y59vy2hu0fQSOui
-         m8euxNdIFMLqODHQnyNuchWLy1fjbWlag3YrCxgwjOo1W0cP5GWDH1Nu+2+ECZwlgt
-         Ki8nP75teksYqMY9v5vYs30f9k9MsZmLpfYb4NBao86sfkUpT3QGKmefFUkyOLUdXg
-         kWROTjf2LK5gUa6N+6Pd4aO0wxg4aWi2mp5hUEXE4TcHIapGKalnmBhnOz4SvYdESI
-         xA5pPyW+69GoQ==
-Received: by mail-ot1-f50.google.com with SMTP id e9-20020a056830200900b00694651d19f6so849030otp.12;
-        Sun, 05 Mar 2023 00:10:45 -0800 (PST)
-X-Gm-Message-State: AO0yUKW/yfK9FfpKHR3x8tLTeslVoBDYfaTiEDdDv5k4YFHm1ZZahp2/
-        8VBpQ8QIScBQOec82kjUUvCXCSnFC4rMCwqodsA=
-X-Google-Smtp-Source: AK7set8+X8UYYW7FdWrjFjAN2ijVn+1/+c3oiv16LLk/6CvYx3oVEk618Vu8Ah+3bf9oqvAL6epjfchpDgjnlL/KbEo=
-X-Received: by 2002:a05:6830:3374:b0:693:ce5a:7a72 with SMTP id
- l52-20020a056830337400b00693ce5a7a72mr2138120ott.0.1678003845218; Sun, 05 Mar
- 2023 00:10:45 -0800 (PST)
+        b=jkYkrYwrFpuL0kcaJBxE0tUtrj6qBW0jeVRVX/Q6vwiUmww/+Unl2h76J9w2abQpJ
+         fWg+FKORW/99KmwUV3tEVxXXRdUIyMrRoGrw/GPGJUw3ADbox57azGA5QJealTJoUN
+         SAef2p/MkKpwZHu5YKk8HJ6str3skuOX4yZUUKNsN8N7rHC3UAxnpXTYTpMqgxDFou
+         DTCWnE8YxU58tvLVwfKhsVk//1nXFX9Ujv5+1M3jLMU1mCptr1NsKbL3DFxpmka83q
+         Ms5osDzGxH/5P4tDeRpOe2BG+nizbqNsAfb5yXOpg3bUSQ5WfPph4DvmRg55WTlipU
+         IGDdC5bqqDycQ==
+Received: by mail-oa1-f50.google.com with SMTP id 586e51a60fabf-173435e0ec4so8741583fac.12;
+        Sun, 05 Mar 2023 07:10:58 -0800 (PST)
+X-Gm-Message-State: AO0yUKXfpnCcaackvXTb/Ee7qDzfkAJZ/v6I07qyMeNgFHinWoeFWfrR
+        8h3630EKc0OdjyO/YI8P6vBK8HPIMQJckfgLGVM=
+X-Google-Smtp-Source: AK7set/dTF6oLMPVw27eM3Q3LyKhvRX4Fie0Hx+7dicG7/Jp2L50eVGaODuaHzUZJs6CZVAL3wiY/h1D6G1xrQgCMgw=
+X-Received: by 2002:a05:6870:3a1b:b0:176:4f00:abce with SMTP id
+ du27-20020a0568703a1b00b001764f00abcemr2666513oab.8.1678029058279; Sun, 05
+ Mar 2023 07:10:58 -0800 (PST)
 MIME-Version: 1.0
-References: <20221205163157.269335-1-nick.alcock@oracle.com> <20221205163157.269335-3-nick.alcock@oracle.com>
-In-Reply-To: <20221205163157.269335-3-nick.alcock@oracle.com>
+References: <20221205163157.269335-1-nick.alcock@oracle.com> <20221205163157.269335-4-nick.alcock@oracle.com>
+In-Reply-To: <20221205163157.269335-4-nick.alcock@oracle.com>
 From:   Masahiro Yamada <masahiroy@kernel.org>
-Date:   Sun, 5 Mar 2023 17:10:08 +0900
-X-Gmail-Original-Message-ID: <CAK7LNAQLttPD=Ae==e0CYeQtS78=o_JZFK+zxa29JnUYio52Ug@mail.gmail.com>
-Message-ID: <CAK7LNAQLttPD=Ae==e0CYeQtS78=o_JZFK+zxa29JnUYio52Ug@mail.gmail.com>
-Subject: Re: [PATCH v10 02/13] kbuild: bring back tristate.conf
+Date:   Mon, 6 Mar 2023 00:10:22 +0900
+X-Gmail-Original-Message-ID: <CAK7LNASpkAY=t3uOmehTDD7o1-MY9Kzm1C=V2+i0XhHmjjJdUQ@mail.gmail.com>
+Message-ID: <CAK7LNASpkAY=t3uOmehTDD7o1-MY9Kzm1C=V2+i0XhHmjjJdUQ@mail.gmail.com>
+Subject: Re: [PATCH v10 03/13] kbuild: add tristate checker
 To:     Nick Alcock <nick.alcock@oracle.com>
 Cc:     mcgrof@kernel.org, linux-modules@vger.kernel.org,
         linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org,
         arnd@arndb.de, akpm@linux-foundation.org, eugene.loh@oracle.com,
-        kris.van.hees@oracle.com,
-        Victor Erminpour <victor.erminpour@oracle.com>
+        kris.van.hees@oracle.com
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
@@ -64,31 +63,24 @@ X-Mailing-List: linux-trace-kernel@vger.kernel.org
 On Tue, Dec 6, 2022 at 1:32=E2=80=AFAM Nick Alcock <nick.alcock@oracle.com>=
  wrote:
 >
-> tristate.conf was dropped because it is not needed to build
-> modules.builtin any more, and doing so avoids one round of recursion
-> through the build tree to build it.  But it has one property that can be
-> obtained in no other way in the current tree: it provides a
-> machine-readable record of whether a module is tristate or not.
-> (modules.builtin.objs, just added, uses modinfo, which is recorded in
-> the source files themselves, but it is Kconfig that actually controls
-> whether something can be built as a module.)
->
-> So bring it back for this purpose.  (Thanks to the refactoring in
-> the 5.16 timeframe, this is basically a reimplementation of commit
-> 8b41fc4454e36fbfdbb23f940d023d4dece2de29 rather than a simple
-> reversion.)
->
-> A verifier that uses it will be added in the next commit.
-
->
-> Signed-off-by: Nick Alcock <nick.alcock@oracle.com>
-> Reviewed-by: Victor Erminpour <victor.erminpour@oracle.com>
-> Reviewed-by: Kris Van Hees <kris.van.hees@oracle.com>
+> This new check target uses the tristate.conf machinery just added, and
+> modules.builtin.objs, to identify source files that have MODULE_*
+> declarations despite not being modules according to Kconfig.  After
+> commit 8b41fc4454e ("kbuild: create modules.builtin without
+> Makefile.modbuiltin or tristate.conf"), all such declarations will cause
+> modprobe to misidentify their containing object file as a module when it
+> is not, which might cause it to spuriously fail when trying to load
+> something that is built in to the kernel.
 
 
 
-IIRC, I said please do not do this.
-Please do not come back with this again.
+
+Having false-positives in modules.builtin should be OK.
+
+
+Also, scripts/check-tristates.mk is just a rename of
+scripts/Makefile.modbuiltin.
+
 
 NACK.
 
@@ -96,7 +88,8 @@ NACK.
 
 
 
-
 --
 Best Regards
+
+
 Masahiro Yamada
