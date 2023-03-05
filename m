@@ -2,105 +2,166 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DF5A9C678DB
-	for <linux-trace-kernel@archiver.kernel.org>; Sat,  4 Mar 2023 12:40:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F04FFC61DA4
+	for <linux-trace-kernel@archiver.kernel.org>; Sun,  5 Mar 2023 08:10:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229591AbjCDMk7 (ORCPT
+        id S229559AbjCEIKW (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Sat, 4 Mar 2023 07:40:59 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51200 "EHLO
+        Sun, 5 Mar 2023 03:10:22 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54038 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229478AbjCDMk6 (ORCPT
+        with ESMTP id S229379AbjCEIKV (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Sat, 4 Mar 2023 07:40:58 -0500
-Received: from mga04.intel.com (mga04.intel.com [192.55.52.120])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1F71011174;
-        Sat,  4 Mar 2023 04:40:57 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1677933657; x=1709469657;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=7Q4E9z2WW/wNytshCGe+UYgFaKXWgPKBLi18rp/fOzc=;
-  b=kDAxZNiFFw0o2Kdi9r4IYF/6LOaYl0fDk3Z8+YWP0emsktLEAEHu8Q8l
-   II/ovKENR1Fnu+y5F04q4OlUDK6rRUJkHjpCvgX/Rnnov+7knyjagyAxW
-   ZivmQ73FRWWXP0+6vO5epLad3R2r3sKFvVMppLg6dE+75D5yA4Va8dcnw
-   JZlCw7oxLdqK01g8laZSXibSVlsyqEJZhrH7vzjwErsFTexeOVoMJONwU
-   SRpr6G8zhFQlgntsMYLewrMyw3WJtNnVNZyD0Oe8y+b/hFpn75K9C7k0w
-   9tTLQV7IazJhvCBS8+/iCv2vDA71og4APHM9colcCxEe1F+mgIuDHdiYj
-   A==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10638"; a="333977019"
-X-IronPort-AV: E=Sophos;i="5.98,233,1673942400"; 
-   d="scan'208";a="333977019"
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Mar 2023 04:40:56 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6500,9779,10638"; a="739804762"
-X-IronPort-AV: E=Sophos;i="5.98,233,1673942400"; 
-   d="scan'208";a="739804762"
-Received: from lkp-server01.sh.intel.com (HELO 776573491cc5) ([10.239.97.150])
-  by fmsmga008.fm.intel.com with ESMTP; 04 Mar 2023 04:40:53 -0800
-Received: from kbuild by 776573491cc5 with local (Exim 4.96)
-        (envelope-from <lkp@intel.com>)
-        id 1pYRC0-0002A2-3C;
-        Sat, 04 Mar 2023 12:40:52 +0000
-Date:   Sat, 4 Mar 2023 20:40:47 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     Eddie James <eajames@linux.ibm.com>, linux-fsi@lists.ozlabs.org
-Cc:     oe-kbuild-all@lists.linux.dev, rostedt@goodmis.org,
-        linux-trace-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, mhiramat@kernel.org,
-        alistair@popple.id.au, joel@jms.id.au, jk@ozlabs.org,
-        andrew@aj.id.au, robh+dt@kernel.org,
-        krzysztof.kozlowski+dt@linaro.org, eajames@linux.ibm.com
-Subject: Re: [PATCH v7 4/7] fsi: Add I2C Responder SCOM driver
-Message-ID: <202303042033.kC3KNCW2-lkp@intel.com>
-References: <20230303170416.1347530-5-eajames@linux.ibm.com>
+        Sun, 5 Mar 2023 03:10:21 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A3238D51A;
+        Sun,  5 Mar 2023 00:10:20 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 2BD1560AB1;
+        Sun,  5 Mar 2023 08:10:20 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7B801C433A1;
+        Sun,  5 Mar 2023 08:10:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1678003819;
+        bh=JAXEBqW4smtYeSra+h8Nm3kI8Izhu6NtyGNvHt5ilE4=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=KknQR0/oo0F0pi92V8Wt8RkAaJoMUHmO4qfAGTx0O12EKkObYzbpzFVPEmv1E3GDN
+         P78MfXN00gHhxus4lbONKjGJS8+JyDGsRS8C/iGe0txgpcPc2CbX0LzKA5XJFX9owx
+         Jlw3eOFB/cjgIo4sRi2O+iXa4EXrXB9zvv69XVbzagtgl/NvB1+jiEHtT9e1Z10v1c
+         te8HCoXlMq2EOL4ASFXQQPmGPSr01hdvhEcj34gbD536BdDAOa0R6eFMfsV4CKmZtu
+         0vy5ze8AotdmTRKa2ndv52ZzcdfdKfzyLHd5BhOBJr3qyiSRZ1fh7M7477gdTRWpJt
+         8JT3zQ9hWlJ5A==
+Received: by mail-oi1-f174.google.com with SMTP id q15so4873075oiw.11;
+        Sun, 05 Mar 2023 00:10:19 -0800 (PST)
+X-Gm-Message-State: AO0yUKWs4o1ANa5xdcw1if8FC9+bOAX3pDVVFm9uUEOJ7nbC0csxr/B3
+        WT7Stm+35F3ncjCCQRn9UubCF5JyqL1q4ZoNx3k=
+X-Google-Smtp-Source: AK7set9avGdsdRmrXutmkIsGYqUw6NbhJrqqbjs5VWAzWE+FerfQH4m4SBWAqOkOOGaJQ06gZOWh1lw/vokJLe0DPRo=
+X-Received: by 2002:aca:1a0d:0:b0:36e:f6f5:66a2 with SMTP id
+ a13-20020aca1a0d000000b0036ef6f566a2mr2270094oia.8.1678003818692; Sun, 05 Mar
+ 2023 00:10:18 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230303170416.1347530-5-eajames@linux.ibm.com>
+References: <20221205163157.269335-1-nick.alcock@oracle.com>
+ <20221205163157.269335-6-nick.alcock@oracle.com> <CAMuHMdVrP1sLGRS999q=2L-5JhxXwcjBLkQREdcJhDerg70OtA@mail.gmail.com>
+ <87mt80l2py.fsf@esperi.org.uk> <5f0a5ea7-2d48-435f-aaa0-82b6ef8cfcc5@app.fastmail.com>
+ <Y5AeuI4RD0tpzlp5@bombadil.infradead.org>
+In-Reply-To: <Y5AeuI4RD0tpzlp5@bombadil.infradead.org>
+From:   Masahiro Yamada <masahiroy@kernel.org>
+Date:   Sun, 5 Mar 2023 17:09:42 +0900
+X-Gmail-Original-Message-ID: <CAK7LNASL7_RgfASstBvN6AzhR=nMU=HsQvODf5q13Xud8tBWRQ@mail.gmail.com>
+Message-ID: <CAK7LNASL7_RgfASstBvN6AzhR=nMU=HsQvODf5q13Xud8tBWRQ@mail.gmail.com>
+Subject: Re: [PATCH v10 05/13] kbuild: remove MODULE_LICENSE/AUTHOR/DESCRIPTION
+ in non-modules
+To:     Luis Chamberlain <mcgrof@kernel.org>
+Cc:     Arnd Bergmann <arnd@arndb.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Nick Alcock <nick.alcock@oracle.com>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        linux-modules@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Andrew Morton <akpm@linux-foundation.org>,
+        eugene.loh@oracle.com, kris.van.hees@oracle.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-Hi Eddie,
+On Wed, Dec 7, 2022 at 2:04=E2=80=AFPM Luis Chamberlain <mcgrof@kernel.org>=
+ wrote:
+>
+> On Tue, Dec 06, 2022 at 10:02:30PM +0100, Arnd Bergmann wrote:
+> > On Tue, Dec 6, 2022, at 21:03, Nick Alcock wrote:
+> > > On 6 Dec 2022, Geert Uytterhoeven uttered the following:
+> > > Only MODULE_LICENSE invokes MODULE_FILE and thus ends up introducing =
+a
+> > > KBUILD_MODOBJS entry that triggers things going wrong iff not a modul=
+e:
+> > > so only it needs to go out (or be replaced with a variant that doesn'=
+t
+> > > invoke MODULE_FILE, if you want to keep the license in too --
+> >
+> > That sounds like a better alternative
+> >
+> > > but if the thing is no longer a standalone entity at all I'm not sure
+> > > what meaning it could possibly have).
+> >
+> > As far as I can tell, the general trend is to make more things modules,
+> > so there is a good chance that these come back eventually. If the
+> > information in the MODULE_LICENSE field isn't wrong, I would just
+> > leave it in there.
+>
+> Tooling today uses it though to make a deterministic call on if something
+> *can* be a module. In particular after commit 8b41fc4454e ("kbuild: creat=
+e
+> modules.builtin without Makefile.modbuiltin or tristate.conf") we rely on
+> the module license tag to generate the modules.builtin file. This in
+> turn is used to allow modprobe to *not* fail when trying to load a module
+> which is built-in.
 
-I love your patch! Yet something to improve:
 
-[auto build test ERROR on robh/for-next]
-[also build test ERROR on linus/master v6.2 next-20230303]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Eddie-James/fsi-Move-fsi_slave-structure-definition-to-header/20230304-011530
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/robh/linux.git for-next
-patch link:    https://lore.kernel.org/r/20230303170416.1347530-5-eajames%40linux.ibm.com
-patch subject: [PATCH v7 4/7] fsi: Add I2C Responder SCOM driver
-config: powerpc-allmodconfig (https://download.01.org/0day-ci/archive/20230304/202303042033.kC3KNCW2-lkp@intel.com/config)
-compiler: powerpc-linux-gcc (GCC) 12.1.0
-reproduce (this is a W=1 build):
-        wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
-        chmod +x ~/bin/make.cross
-        # https://github.com/intel-lab-lkp/linux/commit/36d0c348a48344d2ffef15d5abefe139fc511684
-        git remote add linux-review https://github.com/intel-lab-lkp/linux
-        git fetch --no-tags linux-review Eddie-James/fsi-Move-fsi_slave-structure-definition-to-header/20230304-011530
-        git checkout 36d0c348a48344d2ffef15d5abefe139fc511684
-        # save the config file
-        mkdir build_dir && cp config build_dir/.config
-        COMPILER_INSTALL_PATH=$HOME/0day COMPILER=gcc-12.1.0 make.cross W=1 O=build_dir ARCH=powerpc olddefconfig
-        COMPILER_INSTALL_PATH=$HOME/0day COMPILER=gcc-12.1.0 make.cross W=1 O=build_dir ARCH=powerpc SHELL=/bin/bash
+If we have a bool driver 'foo.ko' in modules.builtin,
+'modprobe foo' will not fail where you expect it will fail.
 
-If you fix the issue, kindly add following tag where applicable
-| Reported-by: kernel test robot <lkp@intel.com>
-| Link: https://lore.kernel.org/oe-kbuild-all/202303042033.kC3KNCW2-lkp@intel.com/
+Is it so important to make this strict?
 
-All errors (new ones prefixed by >>, old ones prefixed by <<):
+I do not think so.
 
->> ERROR: modpost: "fsi_master_i2cr_read" [drivers/fsi/i2cr-scom.ko] undefined!
->> ERROR: modpost: "fsi_master_i2cr_write" [drivers/fsi/i2cr-scom.ko] undefined!
 
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests
+What is a point for a user to realize
+"Oh, I did not know foo cannot be compiled as a module"
+
+
+Re-read the commit description of
+bc081dd6e9f622c73334dc465359168543ccaabf
+
+The motivation of module.builtin is to know the functionality 'foo'
+is available (via built-in or module, whatever).
+
+In this sense, having always-builtin entries in module.builtin is OK.
+
+
+I do not see any sense in the tooling mess in this patch set.
+
+
+
+
+
+
+
+
+> So we can't just disable the tag for when the code is built-in as *want*
+> to carry it when modules are built-in, that is the point, to help
+> userspace with this determination.
+>
+> I don't think we want to revert 8b41fc4454e as it means we'd force Kbuild=
+ to
+> traverse the source tree twice.
+
+
+I do not want to revert it.
+
+and I do not want this series in the mainline.
+
+
+
+
+>
+> Geert's point was not keeping MODULE_LICENSE() but instead the other
+> MODULE_*() crap for things which are not modules in case in the future
+> code becomes a module...
+>
+> But I don't see the point in keeping things around just in case, if we
+> want to keep things simple. Just use the SPDX license tag for the license=
+.
+>
+>   Luis
+
+
+
+--
+Best Regards
+Masahiro Yamada
