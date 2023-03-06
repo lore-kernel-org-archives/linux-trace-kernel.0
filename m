@@ -2,69 +2,113 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A57D8C61DA4
-	for <linux-trace-kernel@archiver.kernel.org>; Mon,  6 Mar 2023 16:23:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A77EC6FA99
+	for <linux-trace-kernel@archiver.kernel.org>; Mon,  6 Mar 2023 16:29:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229905AbjCFQXO (ORCPT
+        id S229767AbjCFQ3E (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Mon, 6 Mar 2023 11:23:14 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53210 "EHLO
+        Mon, 6 Mar 2023 11:29:04 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37020 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229940AbjCFQWu (ORCPT
+        with ESMTP id S229689AbjCFQ3D (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Mon, 6 Mar 2023 11:22:50 -0500
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9590A83D1;
-        Mon,  6 Mar 2023 08:21:24 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 9855561028;
-        Mon,  6 Mar 2023 16:15:16 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0EACCC433A0;
-        Mon,  6 Mar 2023 16:15:14 +0000 (UTC)
-Date:   Mon, 6 Mar 2023 11:15:13 -0500
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Douglas RAILLARD <douglas.raillard@arm.com>
-Cc:     Jaegeuk Kim <jaegeuk@kernel.org>, Chao Yu <chao@kernel.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        linux-f2fs-devel@lists.sourceforge.net (open list:F2FS FILE SYSTEM),
-        linux-kernel@vger.kernel.org (open list:TRACING),
-        linux-trace-kernel@vger.kernel.org (open list:TRACING)
-Subject: Re: [PATCH] f2fs: Fix f2fs_truncate_partial_nodes ftrace event
-Message-ID: <20230306111513.2aa49b1a@gandalf.local.home>
-In-Reply-To: <20230306122549.236561-1-douglas.raillard@arm.com>
-References: <20230306122549.236561-1-douglas.raillard@arm.com>
-X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+        Mon, 6 Mar 2023 11:29:03 -0500
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B2D5BA5F3;
+        Mon,  6 Mar 2023 08:28:36 -0800 (PST)
+Received: from pps.filterd (m0098396.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 326FrF7E017356;
+        Mon, 6 Mar 2023 16:11:19 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
+ : date : message-id : in-reply-to : references : mime-version :
+ content-transfer-encoding; s=pp1;
+ bh=KJc0ydFTUgIwjCtrGuXVj0xPsA/uMLi0FjiGPI0kMbA=;
+ b=hY8ZOxUv5biZkTPrq/BY7fVKfXFAIDujuM2L5SDJgcEqx3Ov8gYKJeeVTtDjXh1PrsH7
+ M6bCX9ipx2O7io8MCeYLG+5aeIAXypHkLNxVVJtMg2m4CJUZ8n9XcaHP2xMaHF0ebspG
+ kwRo1iqDvHmkj5BAhjnXA8HXDFbBx8BjvQ4i5tUohKIxrXY5zPAmJX0uhex5yT2N7kpH
+ oz2yVfhG2DSS8OSb3MkR2suIVZtpFSo5Aner9yY6k8FMYRRsT8nMOMQ8zFRTXsPFkCNy
+ C+9X/8Vy+yn2lqzwqLVi3o8qHwO6TH47oTvNX23Yy8FLgq4sClphrx+DWJCXk8UyljAM 0A== 
+Received: from ppma04wdc.us.ibm.com (1a.90.2fa9.ip4.static.sl-reverse.com [169.47.144.26])
+        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3p4vp23hw5-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 06 Mar 2023 16:11:18 +0000
+Received: from pps.filterd (ppma04wdc.us.ibm.com [127.0.0.1])
+        by ppma04wdc.us.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 326G5cJN010180;
+        Mon, 6 Mar 2023 16:11:17 GMT
+Received: from smtprelay05.wdc07v.mail.ibm.com ([9.208.129.117])
+        by ppma04wdc.us.ibm.com (PPS) with ESMTPS id 3p419e632q-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 06 Mar 2023 16:11:17 +0000
+Received: from smtpav02.wdc07v.mail.ibm.com (smtpav02.wdc07v.mail.ibm.com [10.39.53.229])
+        by smtprelay05.wdc07v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 326GBGCZ4260470
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 6 Mar 2023 16:11:16 GMT
+Received: from smtpav02.wdc07v.mail.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 021EE58059;
+        Mon,  6 Mar 2023 16:11:16 +0000 (GMT)
+Received: from smtpav02.wdc07v.mail.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 267C15805B;
+        Mon,  6 Mar 2023 16:11:14 +0000 (GMT)
+Received: from slate16.aus.stglabs.ibm.com (unknown [9.160.108.29])
+        by smtpav02.wdc07v.mail.ibm.com (Postfix) with ESMTP;
+        Mon,  6 Mar 2023 16:11:13 +0000 (GMT)
+From:   Eddie James <eajames@linux.ibm.com>
+To:     linux-fsi@lists.ozlabs.org
+Cc:     rostedt@goodmis.org, linux-trace-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        mhiramat@kernel.org, alistair@popple.id.au, joel@jms.id.au,
+        jk@ozlabs.org, andrew@aj.id.au, robh+dt@kernel.org,
+        krzysztof.kozlowski+dt@linaro.org, eajames@linux.ibm.com
+Subject: [PATCH v8 8/8] fsi: sbefifo: Don't check status during probe
+Date:   Mon,  6 Mar 2023 10:10:56 -0600
+Message-Id: <20230306161057.44017-9-eajames@linux.ibm.com>
+X-Mailer: git-send-email 2.31.1
+In-Reply-To: <20230306161057.44017-1-eajames@linux.ibm.com>
+References: <20230306161057.44017-1-eajames@linux.ibm.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: _GRm8Kz4E-rhTUsgYYNUBbSH2FhkmY1_
+X-Proofpoint-GUID: _GRm8Kz4E-rhTUsgYYNUBbSH2FhkmY1_
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.219,Aquarius:18.0.942,Hydra:6.0.573,FMLib:17.11.170.22
+ definitions=2023-03-06_08,2023-03-06_01,2023-02-09_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0 impostorscore=0
+ lowpriorityscore=0 malwarescore=0 bulkscore=0 clxscore=1015 suspectscore=0
+ mlxlogscore=999 mlxscore=0 priorityscore=1501 adultscore=0 phishscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2212070000
+ definitions=main-2303060142
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On Mon,  6 Mar 2023 12:25:49 +0000
-Douglas RAILLARD <douglas.raillard@arm.com> wrote:
+The status check during probe doesn't serve any purpose. Any attempt
+to use the SBEFIFO will result in the same check and cleanup.
 
-> diff --git a/include/trace/events/f2fs.h b/include/trace/events/f2fs.h
-> index 31d994e6b4ca..8d053838d6cf 100644
-> --- a/include/trace/events/f2fs.h
-> +++ b/include/trace/events/f2fs.h
-> @@ -512,7 +512,7 @@ TRACE_EVENT(f2fs_truncate_partial_nodes,
->  	TP_STRUCT__entry(
->  		__field(dev_t,	dev)
->  		__field(ino_t,	ino)
-> -		__field(nid_t,	nid[3])
+Signed-off-by: Eddie James <eajames@linux.ibm.com>
+---
+ drivers/fsi/fsi-sbefifo.c | 8 --------
+ 1 file changed, 8 deletions(-)
 
-That should not have even compiled. I'll see if I can add some tricks to
-make that fail.
+diff --git a/drivers/fsi/fsi-sbefifo.c b/drivers/fsi/fsi-sbefifo.c
+index 9912b7a6a4b9..42d7c95528d1 100644
+--- a/drivers/fsi/fsi-sbefifo.c
++++ b/drivers/fsi/fsi-sbefifo.c
+@@ -1027,14 +1027,6 @@ static int sbefifo_probe(struct device *dev)
+ 	mutex_init(&sbefifo->lock);
+ 	sbefifo->timeout_start_rsp_ms = SBEFIFO_TIMEOUT_START_RSP;
+ 
+-	/*
+-	 * Try cleaning up the FIFO. If this fails, we still register the
+-	 * driver and will try cleaning things up again on the next access.
+-	 */
+-	rc = sbefifo_cleanup_hw(sbefifo);
+-	if (rc && rc != -ESHUTDOWN)
+-		dev_err(dev, "Initial HW cleanup failed, will retry later\n");
+-
+ 	/* Create chardev for userspace access */
+ 	sbefifo->dev.type = &fsi_cdev_type;
+ 	sbefifo->dev.parent = dev;
+-- 
+2.31.1
 
-Thanks,
-
--- Steve
-
-
-> +		__array(nid_t,	nid, 3)
->  		__field(int,	depth)
->  		__field(int,	err)
->  	),
