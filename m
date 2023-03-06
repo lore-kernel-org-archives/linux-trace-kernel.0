@@ -2,364 +2,504 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6002FC61DA4
-	for <linux-trace-kernel@archiver.kernel.org>; Mon,  6 Mar 2023 11:54:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 077DCC678D4
+	for <linux-trace-kernel@archiver.kernel.org>; Mon,  6 Mar 2023 12:18:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230251AbjCFLyb (ORCPT
+        id S230253AbjCFMSR (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Mon, 6 Mar 2023 06:54:31 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44690 "EHLO
+        Mon, 6 Mar 2023 07:18:17 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44042 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229723AbjCFLyM (ORCPT
+        with ESMTP id S229867AbjCFMSQ (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Mon, 6 Mar 2023 06:54:12 -0500
-X-Greylist: delayed 600 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Mon, 06 Mar 2023 03:53:49 PST
-Received: from mail-m118111.qiye.163.com (mail-m118111.qiye.163.com [115.236.118.111])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 43F1226CF1
-        for <linux-trace-kernel@vger.kernel.org>; Mon,  6 Mar 2023 03:53:49 -0800 (PST)
-Received: from ubuntu.localdomain (unknown [121.32.254.147])
-        by mail-m118111.qiye.163.com (Hmail) with ESMTPA id 0C62D58073D;
-        Mon,  6 Mar 2023 19:34:51 +0800 (CST)
-From:   Donglin Peng <pengdonglin@sangfor.com.cn>
-To:     rostedt@goodmis.org, mhiramat@kernel.org
-Cc:     dinghui@sangfor.com.cn, huangcun@sangfor.com.cn,
-        linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Donglin Peng <pengdonglin@sangfor.com.cn>
-Subject: [RFC][PATCH] function_graph: Support recording and outputing the return value of function
-Date:   Mon,  6 Mar 2023 03:34:47 -0800
-Message-Id: <20230306113447.215527-1-pengdonglin@sangfor.com.cn>
-X-Mailer: git-send-email 2.25.1
+        Mon, 6 Mar 2023 07:18:16 -0500
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 498693ABF;
+        Mon,  6 Mar 2023 04:18:08 -0800 (PST)
+Received: from pps.filterd (m0279872.ppops.net [127.0.0.1])
+        by mx0a-0031df01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 32654n8a004830;
+        Mon, 6 Mar 2023 12:17:59 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=message-id : date :
+ mime-version : subject : to : cc : references : from : in-reply-to :
+ content-type : content-transfer-encoding; s=qcppdkim1;
+ bh=yTkifJ+1beZGiIpQmMxXnDesKK6JFLzzVqozkO/oa/A=;
+ b=EkucKlQjiCgWD0DoV/nleWnvJ/c0So9w1BMoWl4Optc+HJo/fUQ/5eEjOjyOI6tYkD6k
+ tkGiaNDblAy4r6Xic9VyWNZhoYnTAaXo2Y3zJH2bQrLiyLPr1sQ5ZmajnsWiuRGjUOf/
+ tz7REQBmsq4nC/Zb00GC/94iEQ2y5rFvsR+GWSJP8V4bHTev4g3kJdOiXYQjQRTi4jPQ
+ J8fj68McLgynk1rrLsMI6QoObXybTOamg9u7WOqGngqiMIwrJq7a0V8dv8H3jByG8euL
+ py2ll1DRLxvMpBEQZ6tCrjCrtmz7Zr9fXU5E7QccfN1l2ZOnB4tfkXj65CUqSoMO4oMl AA== 
+Received: from nasanppmta01.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+        by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3p41javn1a-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 06 Mar 2023 12:17:58 +0000
+Received: from nasanex01c.na.qualcomm.com (nasanex01c.na.qualcomm.com [10.45.79.139])
+        by NASANPPMTA01.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 326CHvV6016232
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 6 Mar 2023 12:17:57 GMT
+Received: from [10.204.79.110] (10.80.80.8) by nasanex01c.na.qualcomm.com
+ (10.45.79.139) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.986.41; Mon, 6 Mar 2023
+ 04:17:53 -0800
+Message-ID: <982531d7-dc87-a020-237b-8d1ffed6ae4e@quicinc.com>
+Date:   Mon, 6 Mar 2023 17:47:44 +0530
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-HM-Spam-Status: e1kfGhgUHx5ZQUpXWQgPGg8OCBgUHx5ZQUlOS1dZFg8aDwILHllBWSg2Ly
-        tZV1koWUFITzdXWS1ZQUlXWQ8JGhUIEh9ZQVkaSk9PVkwdH0MYTEodSB1JGFUTARMWGhIXJBQOD1
-        lXWRgSC1lBWUpJSlVISVVJTk9VSk9MWVdZFhoPEhUdFFlBWU9LSFVKSktMSkhVSktLVUtZBg++
-X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6NjI6Qxw5Mz0JNTM2KSI6DjAa
-        MjAaCSlVSlVKTUxDSktJT0JJSU9IVTMWGhIXVQseFRwfFBUcFxIVOwgaFRwdFAlVGBQWVRgVRVlX
-        WRILWUFZSklKVUhJVUlOT1VKT0xZV1kIAVlBSkhITks3Bg++
-X-HM-Tid: 0a86b6b3f18a2eb7kusn0c62d58073d
-X-HM-MType: 1
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.8.0
+Subject: Re: [PATCH v2 1/1] remoteproc: qcom: Add remoteproc tracing
+To:     Gokul krishna Krishnakumar <quic_gokukris@quicinc.com>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <andersson@kernel.org>,
+        Konrad Dybcio <konrad.dybcio@somainline.org>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>
+CC:     <linux-arm-msm@vger.kernel.org>,
+        <linux-remoteproc@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        Trilok Soni <quic_tsoni@quicinc.com>,
+        "Satya Durga Srinivasu Prabhala" <quic_satyap@quicinc.com>,
+        Rajendra Nayak <quic_rjendra@quicinc.com>,
+        Elliot Berman <quic_eberman@quicinc.com>,
+        "Guru Das Srinagesh" <quic_gurus@quicinc.com>,
+        Sibi Sankar <quic_sibis@quicinc.com>,
+        <linux-trace-kernel@vger.kernel.org>
+References: <20230303035453.19034-1-quic_gokukris@quicinc.com>
+Content-Language: en-US
+From:   Mukesh Ojha <quic_mojha@quicinc.com>
+In-Reply-To: <20230303035453.19034-1-quic_gokukris@quicinc.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.80.80.8]
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nasanex01c.na.qualcomm.com (10.45.79.139)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-ORIG-GUID: TyH84SilHV6e31iiIDtHyfDx2Vvig2HG
+X-Proofpoint-GUID: TyH84SilHV6e31iiIDtHyfDx2Vvig2HG
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.219,Aquarius:18.0.942,Hydra:6.0.573,FMLib:17.11.170.22
+ definitions=2023-03-06_04,2023-03-06_01,2023-02-09_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 clxscore=1011
+ malwarescore=0 adultscore=0 spamscore=0 bulkscore=0 impostorscore=0
+ mlxlogscore=999 suspectscore=0 phishscore=0 lowpriorityscore=0
+ priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2212070000 definitions=main-2303060107
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-When using function_graph to analyze the reasons for system call failures,
-we need to spend a considerable amount of time analyzing the logs and
-cannot quickly locate the error. This modification aims to make this
-process easier by recording the return values of each traced function.
-When outputting trace logs, the tracing option funcgraph-retval can be
-used to control whether to display the return values. If the return value
-looks like an error code, it will be output in both hexadecimal and signed
-decimal, otherwise only hexadecimal.
 
-One drawback is that even if a function's return type is void, the value
-stored in the return value register will still be recorded and output, as
-there seems to be no good way to know the return type of a kernel function.
 
-Currently, this modification supports the following commonly used processor
-architectures: x64, x86, arm64, arm, riscv.
+On 3/3/2023 9:24 AM, Gokul krishna Krishnakumar wrote:
+> This change attempts to add traces for start, stop, crash
+> subsystem/subdevice event these will serve as standard checkpoints in
+> code and could help in debugging the failures in subdevice/subsystem
+> prepare, start, stop and unprepare functions. This will also breakdown
+> the time taken for each step in remoteproc bootup/shutdown process.
+> 
+> Change-Id: I202814452192ca0733f134daf7c99201881e2c9c
+> Signed-off-by: Gokul krishna Krishnakumar <quic_gokukris@quicinc.com>
+> ---
+>   drivers/remoteproc/Makefile           |   1 +
+>   drivers/remoteproc/qcom_common.c      |  37 ++++++++
+>   drivers/remoteproc/qcom_q6v5.c        |   9 ++
+>   drivers/remoteproc/qcom_tracepoints.c |  12 +++
+>   drivers/remoteproc/remoteproc_core.c  |   8 ++
+>   include/trace/events/rproc_qcom.h     | 128 ++++++++++++++++++++++++++
+>   6 files changed, 195 insertions(+)
+>   create mode 100644 drivers/remoteproc/qcom_tracepoints.c
+>   create mode 100644 include/trace/events/rproc_qcom.h
 
-For example:
 
-I want to attach the demo process to a cpu cgroup, but it failed:
+I think, it is better to split this where first patch will introduce the 
+trace event and in the later you can use at respective places.
 
-echo `pidof demo` > /sys/fs/cgroup/cpu/test/tasks
--bash: echo: write error: Invalid argument
+> 
+> diff --git a/drivers/remoteproc/Makefile b/drivers/remoteproc/Makefile
+> index 91314a9b43ce..3399fcaba39b 100644
+> --- a/drivers/remoteproc/Makefile
+> +++ b/drivers/remoteproc/Makefile
+> @@ -10,6 +10,7 @@ remoteproc-y				+= remoteproc_debugfs.o
+>   remoteproc-y				+= remoteproc_sysfs.o
+>   remoteproc-y				+= remoteproc_virtio.o
+>   remoteproc-y				+= remoteproc_elf_loader.o
+> +remoteproc-y				+= qcom_tracepoints.o
+>   obj-$(CONFIG_REMOTEPROC_CDEV)		+= remoteproc_cdev.o
+>   obj-$(CONFIG_IMX_REMOTEPROC)		+= imx_rproc.o
+>   obj-$(CONFIG_IMX_DSP_REMOTEPROC)	+= imx_dsp_rproc.o
+> diff --git a/drivers/remoteproc/qcom_common.c b/drivers/remoteproc/qcom_common.c
+> index 020349f8979d..09b79f39ccd6 100644
+> --- a/drivers/remoteproc/qcom_common.c
+> +++ b/drivers/remoteproc/qcom_common.c
+> @@ -18,6 +18,7 @@
+>   #include <linux/slab.h>
+>   #include <linux/soc/qcom/mdt_loader.h>
+>   #include <linux/soc/qcom/smem.h>
+> +#include <trace/events/rproc_qcom.h>
+>   
+>   #include "remoteproc_internal.h"
+>   #include "qcom_common.h"
+> @@ -186,6 +187,10 @@ static int glink_subdev_start(struct rproc_subdev *subdev)
+>   
+>   	glink->edge = qcom_glink_smem_register(glink->dev, glink->node);
+>   
+> +	trace_rproc_subdev_event(dev_name(glink->dev->parent),
+> +					"glink", "start",
+> +					PTR_ERR_OR_ZERO(glink->edge));
+> +
+>   	return PTR_ERR_OR_ZERO(glink->edge);
+>   }
+>   
+> @@ -194,6 +199,11 @@ static void glink_subdev_stop(struct rproc_subdev *subdev, bool crashed)
+>   	struct qcom_rproc_glink *glink = to_glink_subdev(subdev);
+>   
+>   	qcom_glink_smem_unregister(glink->edge);
+> +
+> +	trace_rproc_subdev_event(dev_name(glink->dev->parent),
+> +					"glink", "stop",
+> +					PTR_ERR_OR_ZERO(glink->edge));
+> +
+>   	glink->edge = NULL;
+>   }
+>   
+> @@ -201,6 +211,10 @@ static void glink_subdev_unprepare(struct rproc_subdev *subdev)
+>   {
+>   	struct qcom_rproc_glink *glink = to_glink_subdev(subdev);
+>   
+> +	trace_rproc_subdev_event(dev_name(glink->dev->parent),
+> +					"glink", "unprepare",
+> +					PTR_ERR_OR_ZERO(glink->edge));
+> +
+>   	qcom_glink_ssr_notify(glink->ssr_name);
+>   }
+>   
+> @@ -295,6 +309,10 @@ static int smd_subdev_start(struct rproc_subdev *subdev)
+>   {
+>   	struct qcom_rproc_subdev *smd = to_smd_subdev(subdev);
+>   
+> +	trace_rproc_subdev_event(dev_name(smd->dev->parent),
+> +					"smd", "start",
+> +					PTR_ERR_OR_ZERO(smd->edge));
+> +
+>   	smd->edge = qcom_smd_register_edge(smd->dev, smd->node);
+>   
+>   	return PTR_ERR_OR_ZERO(smd->edge);
+> @@ -304,6 +322,10 @@ static void smd_subdev_stop(struct rproc_subdev *subdev, bool crashed)
+>   {
+>   	struct qcom_rproc_subdev *smd = to_smd_subdev(subdev);
+>   
+> +	trace_rproc_subdev_event(dev_name(smd->dev->parent),
+> +					"smd", "stop",
+> +					PTR_ERR_OR_ZERO(smd->edge));
+> +
+>   	qcom_smd_unregister_edge(smd->edge);
+>   	smd->edge = NULL;
+>   }
+> @@ -420,6 +442,10 @@ static int ssr_notify_prepare(struct rproc_subdev *subdev)
+>   		.crashed = false,
+>   	};
+>   
+> +	trace_rproc_subdev_event(ssr->info->name,
+> +					"ssr", "QCOM_SSR_BEFORE_POWERUP",
+> +					data.crashed);
+> +
+>   	srcu_notifier_call_chain(&ssr->info->notifier_list,
+>   				 QCOM_SSR_BEFORE_POWERUP, &data);
+>   	return 0;
+> @@ -432,6 +458,9 @@ static int ssr_notify_start(struct rproc_subdev *subdev)
+>   		.name = ssr->info->name,
+>   		.crashed = false,
+>   	};
+> +	trace_rproc_subdev_event(ssr->info->name,
+> +					"ssr", "QCOM_SSR_AFTER_POWERUP",
+> +					data.crashed);
+>   
+>   	srcu_notifier_call_chain(&ssr->info->notifier_list,
+>   				 QCOM_SSR_AFTER_POWERUP, &data);
+> @@ -446,6 +475,10 @@ static void ssr_notify_stop(struct rproc_subdev *subdev, bool crashed)
+>   		.crashed = crashed,
+>   	};
+>   
+> +	trace_rproc_subdev_event(ssr->info->name,
+> +					"ssr", "QCOM_SSR_BEFORE_SHUTDOWN",
+> +					data.crashed);
+> +
+>   	srcu_notifier_call_chain(&ssr->info->notifier_list,
+>   				 QCOM_SSR_BEFORE_SHUTDOWN, &data);
+>   }
+> @@ -458,6 +491,10 @@ static void ssr_notify_unprepare(struct rproc_subdev *subdev)
+>   		.crashed = false,
+>   	};
+>   
+> +	trace_rproc_subdev_event(ssr->info->name,
+> +					"ssr", "QCOM_SSR_AFTER_SHUTDOWN",
+> +					data.crashed);
+> +
+>   	srcu_notifier_call_chain(&ssr->info->notifier_list,
+>   				 QCOM_SSR_AFTER_SHUTDOWN, &data);
+>   }
+> diff --git a/drivers/remoteproc/qcom_q6v5.c b/drivers/remoteproc/qcom_q6v5.c
+> index 497acfb33f8f..aff91de3cea0 100644
+> --- a/drivers/remoteproc/qcom_q6v5.c
+> +++ b/drivers/remoteproc/qcom_q6v5.c
+> @@ -15,6 +15,7 @@
+>   #include <linux/soc/qcom/smem.h>
+>   #include <linux/soc/qcom/smem_state.h>
+>   #include <linux/remoteproc.h>
+> +#include <trace/events/rproc_qcom.h>
+>   #include "qcom_common.h"
+>   #include "qcom_q6v5.h"
+>   
+> @@ -113,6 +114,7 @@ static irqreturn_t q6v5_wdog_interrupt(int irq, void *data)
+>   		dev_err(q6v5->dev, "watchdog without message\n");
+>   
+>   	q6v5->running = false;
+> +	trace_rproc_interrupt_event(q6v5->rproc, "q6v5_wdog", msg);
+>   	rproc_report_crash(q6v5->rproc, RPROC_WATCHDOG);
+>   
+>   	return IRQ_HANDLED;
+> @@ -134,6 +136,7 @@ static irqreturn_t q6v5_fatal_interrupt(int irq, void *data)
+>   		dev_err(q6v5->dev, "fatal error without message\n");
+>   
+>   	q6v5->running = false;
+> +	trace_rproc_interrupt_event(q6v5->rproc, "fatal", msg);
+>   	rproc_report_crash(q6v5->rproc, RPROC_FATAL_ERROR);
+>   
+>   	return IRQ_HANDLED;
+> @@ -165,6 +168,8 @@ int qcom_q6v5_wait_for_start(struct qcom_q6v5 *q6v5, int timeout)
+>   	if (!ret)
+>   		disable_irq(q6v5->handover_irq);
+>   
+> +	trace_rproc_interrupt_event(q6v5->rproc, "Ready", !ret? "-ETIMEDOUT":"done");
+> +
+>   	return !ret ? -ETIMEDOUT : 0;
+>   }
+>   EXPORT_SYMBOL_GPL(qcom_q6v5_wait_for_start);
+> @@ -180,6 +185,8 @@ static irqreturn_t q6v5_handover_interrupt(int irq, void *data)
+>   
+>   	q6v5->handover_issued = true;
+>   
+> +	trace_rproc_interrupt_event(q6v5->rproc, "handover", "Proxy votes removed");
+> +
+>   	return IRQ_HANDLED;
+>   }
+>   
+> @@ -216,6 +223,8 @@ int qcom_q6v5_request_stop(struct qcom_q6v5 *q6v5, struct qcom_sysmon *sysmon)
+>   
+>   	qcom_smem_state_update_bits(q6v5->state, BIT(q6v5->stop_bit), 0);
+>   
+> +	trace_rproc_interrupt_event(q6v5->rproc, "Stop", ret? "done":"-EETIMEDOUT");
+> +
+>   	return ret == 0 ? -ETIMEDOUT : 0;
+>   }
+>   EXPORT_SYMBOL_GPL(qcom_q6v5_request_stop);
+> diff --git a/drivers/remoteproc/qcom_tracepoints.c b/drivers/remoteproc/qcom_tracepoints.c
+> new file mode 100644
+> index 000000000000..1b587ef54aa7
+> --- /dev/null
+> +++ b/drivers/remoteproc/qcom_tracepoints.c'
 
-The strace logs tells that the write system call returned -EINVAL(-22):
-...
-write(1, "273\n", 4)                    = -1 EINVAL (Invalid argument)
-...
+is it qcom specific ? No, i guess, as you have put traces in generic 
+path as well.
 
-Use the following commands to capture trace logs when calling the write
-system call:
+-Mukesh
 
-cd /sys/kernel/debug/tracing/
-echo 0 > tracing_on
-echo > trace
-echo *sys_write > set_graph_function
-echo *spin* > set_graph_notrace
-echo *rcu* >> set_graph_notrace
-echo *alloc* >> set_graph_notrace
-echo preempt* >> set_graph_notrace
-echo kfree* >> set_graph_notrace
-echo $$ > set_ftrace_pid
-echo function_graph > current_tracer
-echo 1 > tracing_on
-echo `pidof demo` > /sys/fs/cgroup/cpu/test/tasks
-echo 0 > tracing_on
-echo 1 > options/funcgraph-retval
-cat trace > ~/trace.log
-
-Search -22 directly in the trace.log and find that the function
-cpu_cgroup_can_attach returned -22 first, then read the code of this
-function to get the root cause.
-
-...
- 0)            |  cgroup_migrate() {
- 0)  0.521 us  |    cgroup_migrate_add_task(); /* => ffff88800cbaa000 */
- 0)  0.500 us  |    cgroup_migrate_add_task(); /* => ffff88800cbaa000 */
- 0)  0.441 us  |    cgroup_migrate_add_task(); /* => ffff88800cbaa000 */
- 0)  0.521 us  |    cgroup_migrate_add_task(); /* => ffff88800cbaa000 */
- 0)  0.421 us  |    cgroup_migrate_add_task(); /* => ffff88800cbaa000 */
- 0)  0.431 us  |    cgroup_migrate_add_task(); /* => ffff88800cbaa000 */
- 0)            |    cgroup_migrate_execute() {
- 0)            |      cpu_cgroup_can_attach() {
- 0)            |        cgroup_taskset_first() {
- 0)  0.221 us  |          cgroup_taskset_next(); /* => ffff88800e13c000 */
- 0)  0.641 us  |        } /* cgroup_taskset_first => ffff88800e13c000 */
- 0)  0.320 us  |        sched_rt_can_attach(); /* => 0 */
- 0)  1.713 us  |      } /* cpu_cgroup_can_attach => ffffffea -22 */
- 0)  3.717 us  |    } /* cgroup_migrate_execute => ffffffea -22 */
- 0)  9.959 us  |  } /* cgroup_migrate => ffffffea -22 */
-...
-
-Signed-off-by: Donglin Peng <pengdonglin@sangfor.com.cn>
----
- arch/arm/kernel/entry-ftrace.S       |  1 +
- arch/arm64/kernel/entry-ftrace.S     |  1 +
- arch/riscv/kernel/mcount.S           |  2 +
- arch/x86/kernel/ftrace_32.S          |  1 +
- arch/x86/kernel/ftrace_64.S          |  2 +
- include/linux/ftrace.h               |  1 +
- kernel/trace/fgraph.c                |  3 +-
- kernel/trace/trace.h                 |  1 +
- kernel/trace/trace_entries.h         |  5 +-
- kernel/trace/trace_functions_graph.c | 70 ++++++++++++++++++++++++----
- 10 files changed, 74 insertions(+), 13 deletions(-)
-
-diff --git a/arch/arm/kernel/entry-ftrace.S b/arch/arm/kernel/entry-ftrace.S
-index 3e7bcaca5e07..c6666c0d909c 100644
---- a/arch/arm/kernel/entry-ftrace.S
-+++ b/arch/arm/kernel/entry-ftrace.S
-@@ -258,6 +258,7 @@ ENDPROC(ftrace_graph_regs_caller)
- #ifdef CONFIG_FUNCTION_GRAPH_TRACER
- ENTRY(return_to_handler)
- 	stmdb	sp!, {r0-r3}
-+	mov	r1, r0			@ pass the return value
- 	add	r0, sp, #16		@ sp at exit of instrumented routine
- 	bl	ftrace_return_to_handler
- 	mov	lr, r0			@ r0 has real ret addr
-diff --git a/arch/arm64/kernel/entry-ftrace.S b/arch/arm64/kernel/entry-ftrace.S
-index 350ed81324ac..0eb9a0e3ba3d 100644
---- a/arch/arm64/kernel/entry-ftrace.S
-+++ b/arch/arm64/kernel/entry-ftrace.S
-@@ -276,6 +276,7 @@ SYM_CODE_START(return_to_handler)
- 	stp x4, x5, [sp, #32]
- 	stp x6, x7, [sp, #48]
- 
-+	mov	x1, x0			// pass the return value
- 	mov	x0, x29			//     parent's fp
- 	bl	ftrace_return_to_handler// addr = ftrace_return_to_hander(fp);
- 	mov	x30, x0			// restore the original return address
-diff --git a/arch/riscv/kernel/mcount.S b/arch/riscv/kernel/mcount.S
-index 30102aadc4d7..afce5abcbcd2 100644
---- a/arch/riscv/kernel/mcount.S
-+++ b/arch/riscv/kernel/mcount.S
-@@ -69,6 +69,8 @@ ENTRY(return_to_handler)
- 	mv	t6, s0
- #endif
- 	SAVE_RET_ABI_STATE
-+	/* pass the return value to ftrace_return_to_handler */
-+	mv	a1, a0
- #ifdef HAVE_FUNCTION_GRAPH_FP_TEST
- 	mv	a0, t6
- #endif
-diff --git a/arch/x86/kernel/ftrace_32.S b/arch/x86/kernel/ftrace_32.S
-index a0ed0e4a2c0c..7611374ccce8 100644
---- a/arch/x86/kernel/ftrace_32.S
-+++ b/arch/x86/kernel/ftrace_32.S
-@@ -184,6 +184,7 @@ SYM_CODE_END(ftrace_graph_caller)
- return_to_handler:
- 	pushl	%eax
- 	pushl	%edx
-+	movl	%eax, %edx	#  2nd argument: the return value
- 	movl	$0, %eax
- 	call	ftrace_return_to_handler
- 	movl	%eax, %ecx
-diff --git a/arch/x86/kernel/ftrace_64.S b/arch/x86/kernel/ftrace_64.S
-index 1265ad519249..d685b773e7ad 100644
---- a/arch/x86/kernel/ftrace_64.S
-+++ b/arch/x86/kernel/ftrace_64.S
-@@ -348,6 +348,8 @@ SYM_CODE_START(return_to_handler)
- 	movq %rax, (%rsp)
- 	movq %rdx, 8(%rsp)
- 	movq %rbp, %rdi
-+	/* Pass the return value to ftrace_return_to_handler */
-+	movq %rax, %rsi
- 
- 	call ftrace_return_to_handler
- 
-diff --git a/include/linux/ftrace.h b/include/linux/ftrace.h
-index 366c730beaa3..157fd25be2b7 100644
---- a/include/linux/ftrace.h
-+++ b/include/linux/ftrace.h
-@@ -1032,6 +1032,7 @@ struct ftrace_graph_ent {
-  */
- struct ftrace_graph_ret {
- 	unsigned long func; /* Current function */
-+	unsigned long retval;
- 	int depth;
- 	/* Number of functions that overran the depth limit for current task */
- 	unsigned int overrun;
-diff --git a/kernel/trace/fgraph.c b/kernel/trace/fgraph.c
-index 218cd95bf8e4..006b39a98dc3 100644
---- a/kernel/trace/fgraph.c
-+++ b/kernel/trace/fgraph.c
-@@ -240,12 +240,13 @@ static struct notifier_block ftrace_suspend_notifier = {
-  * Send the trace to the ring-buffer.
-  * @return the original return address.
-  */
--unsigned long ftrace_return_to_handler(unsigned long frame_pointer)
-+unsigned long ftrace_return_to_handler(unsigned long frame_pointer, unsigned long retval)
- {
- 	struct ftrace_graph_ret trace;
- 	unsigned long ret;
- 
- 	ftrace_pop_return_trace(&trace, &ret, frame_pointer);
-+	trace.retval = retval;
- 	trace.rettime = trace_clock_local();
- 	ftrace_graph_return(&trace);
- 	/*
-diff --git a/kernel/trace/trace.h b/kernel/trace/trace.h
-index 616e1aa1c4da..5ef32c6e1d45 100644
---- a/kernel/trace/trace.h
-+++ b/kernel/trace/trace.h
-@@ -831,6 +831,7 @@ static __always_inline bool ftrace_hash_empty(struct ftrace_hash *hash)
- #define TRACE_GRAPH_PRINT_TAIL          0x100
- #define TRACE_GRAPH_SLEEP_TIME          0x200
- #define TRACE_GRAPH_GRAPH_TIME          0x400
-+#define TRACE_GRAPH_PRINT_RETVAL        0x800
- #define TRACE_GRAPH_PRINT_FILL_SHIFT	28
- #define TRACE_GRAPH_PRINT_FILL_MASK	(0x3 << TRACE_GRAPH_PRINT_FILL_SHIFT)
- 
-diff --git a/kernel/trace/trace_entries.h b/kernel/trace/trace_entries.h
-index cd41e863b51c..d798cb17546f 100644
---- a/kernel/trace/trace_entries.h
-+++ b/kernel/trace/trace_entries.h
-@@ -93,16 +93,17 @@ FTRACE_ENTRY_PACKED(funcgraph_exit, ftrace_graph_ret_entry,
- 	F_STRUCT(
- 		__field_struct(	struct ftrace_graph_ret,	ret	)
- 		__field_packed(	unsigned long,	ret,		func	)
-+		__field_packed(	unsigned long,	ret,		retval	)
- 		__field_packed(	int,		ret,		depth	)
- 		__field_packed(	unsigned int,	ret,		overrun	)
- 		__field_packed(	unsigned long long, ret,	calltime)
- 		__field_packed(	unsigned long long, ret,	rettime	)
- 	),
- 
--	F_printk("<-- %ps (%d) (start: %llx  end: %llx) over: %d",
-+	F_printk("<-- %ps (%d) (start: %llx  end: %llx) over: %d retval: %lx",
- 		 (void *)__entry->func, __entry->depth,
- 		 __entry->calltime, __entry->rettime,
--		 __entry->depth)
-+		 __entry->depth, __entry->retval)
- );
- 
- /*
-diff --git a/kernel/trace/trace_functions_graph.c b/kernel/trace/trace_functions_graph.c
-index 203204cadf92..706d3e5c2156 100644
---- a/kernel/trace/trace_functions_graph.c
-+++ b/kernel/trace/trace_functions_graph.c
-@@ -58,6 +58,8 @@ static struct tracer_opt trace_opts[] = {
- 	{ TRACER_OPT(funcgraph-irqs, TRACE_GRAPH_PRINT_IRQS) },
- 	/* Display function name after trailing } */
- 	{ TRACER_OPT(funcgraph-tail, TRACE_GRAPH_PRINT_TAIL) },
-+	/* Display function return value */
-+	{ TRACER_OPT(funcgraph-retval, TRACE_GRAPH_PRINT_RETVAL) },
- 	/* Include sleep time (scheduled out) between entry and return */
- 	{ TRACER_OPT(sleep-time, TRACE_GRAPH_SLEEP_TIME) },
- 
-@@ -619,6 +621,43 @@ print_graph_duration(struct trace_array *tr, unsigned long long duration,
- 	trace_seq_puts(s, "|  ");
- }
- 
-+static void print_graph_retval(struct trace_seq *s, unsigned long retval,
-+				bool leaf, void *func)
-+{
-+	unsigned long err_code = 0;
-+
-+	if (retval == 0)
-+		goto done;
-+
-+	/* Guess whether the retval looks like an error code */
-+	if ((retval & BIT(7)) && (retval >> 8) == 0)
-+		err_code = (unsigned long)(s8)retval;
-+	else if ((retval & BIT(15)) && (retval >> 16) == 0)
-+		err_code = (unsigned long)(s16)retval;
-+	else if ((retval & BIT(31)) && (((u64)retval) >> 32) == 0)
-+		err_code = (unsigned long)(s32)retval;
-+	else
-+		err_code = retval;
-+
-+	if (!IS_ERR_VALUE(err_code))
-+		err_code = 0;
-+
-+done:
-+	if (leaf) {
-+		if (err_code != 0)
-+			trace_seq_printf(s, "%ps(); /* => %lx %ld */\n",
-+				func, retval, err_code);
-+		else
-+			trace_seq_printf(s, "%ps(); /* => %lx */\n", func, retval);
-+	} else {
-+		if (err_code != 0)
-+			trace_seq_printf(s, "} /* %ps => %lx %ld */\n",
-+				func, retval, err_code);
-+		else
-+			trace_seq_printf(s, "} /* %ps => %lx */\n", func, retval);
-+	}
-+}
-+
- /* Case of a leaf function on its call entry */
- static enum print_line_t
- print_graph_entry_leaf(struct trace_iterator *iter,
-@@ -663,7 +702,10 @@ print_graph_entry_leaf(struct trace_iterator *iter,
- 	for (i = 0; i < call->depth * TRACE_GRAPH_INDENT; i++)
- 		trace_seq_putc(s, ' ');
- 
--	trace_seq_printf(s, "%ps();\n", (void *)call->func);
-+	if (flags & TRACE_GRAPH_PRINT_RETVAL)
-+		print_graph_retval(s, graph_ret->retval, true, (void *)call->func);
-+	else
-+		trace_seq_printf(s, "%ps();\n", (void *)call->func);
- 
- 	print_graph_irq(iter, graph_ret->func, TRACE_GRAPH_RET,
- 			cpu, iter->ent->pid, flags);
-@@ -942,16 +984,24 @@ print_graph_return(struct ftrace_graph_ret *trace, struct trace_seq *s,
- 		trace_seq_putc(s, ' ');
- 
- 	/*
--	 * If the return function does not have a matching entry,
--	 * then the entry was lost. Instead of just printing
--	 * the '}' and letting the user guess what function this
--	 * belongs to, write out the function name. Always do
--	 * that if the funcgraph-tail option is enabled.
-+	 * Always write out the function name and its return value if the
-+	 * function-retval option is enabled.
- 	 */
--	if (func_match && !(flags & TRACE_GRAPH_PRINT_TAIL))
--		trace_seq_puts(s, "}\n");
--	else
--		trace_seq_printf(s, "} /* %ps */\n", (void *)trace->func);
-+	if (flags & TRACE_GRAPH_PRINT_RETVAL) {
-+		print_graph_retval(s, trace->retval, false, (void *)trace->func);
-+	} else {
-+		/*
-+		 * If the return function does not have a matching entry,
-+		 * then the entry was lost. Instead of just printing
-+		 * the '}' and letting the user guess what function this
-+		 * belongs to, write out the function name. Always do
-+		 * that if the funcgraph-tail option is enabled.
-+		 */
-+		if (func_match && !(flags & TRACE_GRAPH_PRINT_TAIL))
-+			trace_seq_puts(s, "}\n");
-+		else
-+			trace_seq_printf(s, "} /* %ps */\n", (void *)trace->func);
-+	}
- 
- 	/* Overrun */
- 	if (flags & TRACE_GRAPH_PRINT_OVERRUN)
--- 
-2.25.1
+> @@ -0,0 +1,12 @@
+> +// SPDX-License-Identifier: GPL-2.0-only
+> +/*
+> + * Copyright (c) 2023 Qualcomm Innovation Center, Inc. All rights reserved.
+> + */
+> +
+> +#define CREATE_TRACE_POINTS
+> +#include <trace/events/rproc_qcom.h>
+> +EXPORT_TRACEPOINT_SYMBOL(rproc_load_event);
+> +EXPORT_TRACEPOINT_SYMBOL(rproc_start_event);
+> +EXPORT_TRACEPOINT_SYMBOL(rproc_stop_event);
+> +EXPORT_TRACEPOINT_SYMBOL(rproc_interrupt_event);
+> +EXPORT_TRACEPOINT_SYMBOL(rproc_subdev_event);
+> diff --git a/drivers/remoteproc/remoteproc_core.c b/drivers/remoteproc/remoteproc_core.c
+> index 1cd4815a6dd1..6def868f0a98 100644
+> --- a/drivers/remoteproc/remoteproc_core.c
+> +++ b/drivers/remoteproc/remoteproc_core.c
+> @@ -38,6 +38,7 @@
+>   #include <linux/virtio_ring.h>
+>   #include <asm/byteorder.h>
+>   #include <linux/platform_device.h>
+> +#include <trace/events/rproc_qcom.h>
+>   
+>   #include "remoteproc_internal.h"
+>   
+> @@ -1270,6 +1271,7 @@ static int rproc_start(struct rproc *rproc, const struct firmware *fw)
+>   
+>   	/* load the ELF segments to memory */
+>   	ret = rproc_load_segments(rproc, fw);
+> +	trace_rproc_load_event(rproc, ret);
+>   	if (ret) {
+>   		dev_err(dev, "Failed to load program segments: %d\n", ret);
+>   		return ret;
+> @@ -1305,6 +1307,7 @@ static int rproc_start(struct rproc *rproc, const struct firmware *fw)
+>   
+>   	/* Start any subdevices for the remote processor */
+>   	ret = rproc_start_subdevices(rproc);
+> +
+>   	if (ret) {
+>   		dev_err(dev, "failed to probe subdevices for %s: %d\n",
+>   			rproc->name, ret);
+> @@ -1729,6 +1732,8 @@ static int rproc_stop(struct rproc *rproc, bool crashed)
+>   		return ret;
+>   	}
+>   
+> +	trace_rproc_stop_event(rproc, crashed ? "crash stop" : "stop");
+> +
+>   	rproc_unprepare_subdevices(rproc);
+>   
+>   	rproc->state = RPROC_OFFLINE;
+> @@ -1939,6 +1944,8 @@ int rproc_boot(struct rproc *rproc)
+>   		dev_info(dev, "attaching to %s\n", rproc->name);
+>   
+>   		ret = rproc_attach(rproc);
+> +		trace_rproc_start_event(rproc, ret);
+> +
+>   	} else {
+>   		dev_info(dev, "powering up %s\n", rproc->name);
+>   
+> @@ -1950,6 +1957,7 @@ int rproc_boot(struct rproc *rproc)
+>   		}
+>   
+>   		ret = rproc_fw_boot(rproc, firmware_p);
+> +		trace_rproc_start_event(rproc, ret);
+>   
+>   		release_firmware(firmware_p);
+>   	}
+> diff --git a/include/trace/events/rproc_qcom.h b/include/trace/events/rproc_qcom.h
+> new file mode 100644
+> index 000000000000..66b10cb17965
+> --- /dev/null
+> +++ b/include/trace/events/rproc_qcom.h
+> @@ -0,0 +1,128 @@
+> +/* SPDX-License-Identifier: GPL-2.0-only */
+> +/*
+> + * Copyright (c) 2023 Qualcomm Innovation Center, Inc. All rights reserved.
+> + */
+> +
+> +#undef TRACE_SYSTEM
+> +#define TRACE_SYSTEM rproc_qcom
+> +
+> +#if !defined(_TRACE_RPROC_QCOM_H) || defined(TRACE_HEADER_MULTI_READ)
+> +#define _TRACE_RPROC_QCOM_H
+> +#include <linux/tracepoint.h>
+> +#include <linux/remoteproc.h>
+> +
+> +/*
+> + * Tracepoints for remoteproc and subdevice events
+> + */
+> +TRACE_EVENT(rproc_load_event,
+> +
+> +	TP_PROTO(struct rproc *rproc, int ret),
+> +
+> +	TP_ARGS(rproc, ret),
+> +
+> +	TP_STRUCT__entry(
+> +		__string(name, rproc->name)
+> +		__string(firmware, rproc->firmware)
+> +		__field(int,ret)
+> +	),
+> +
+> +	TP_fast_assign(
+> +		__assign_str(name, rproc->name);
+> +		__assign_str(firmware, rproc->firmware);
+> +		__entry->ret = ret;
+> +	),
+> +
+> +	TP_printk("%s loading firmware %s returned %d",
+> +			__get_str(name), __get_str(firmware),
+> +			__entry->ret)
+> +);
+> +
+> +TRACE_EVENT(rproc_start_event,
+> +
+> +	TP_PROTO(struct rproc *rproc, int ret),
+> +
+> +	TP_ARGS(rproc, ret),
+> +
+> +	TP_STRUCT__entry(
+> +		__string(name, rproc->name)
+> +		__field(int, ret)
+> +	),
+> +
+> +	TP_fast_assign(
+> +		__assign_str(name, rproc->name);
+> +		__entry->ret = ret;
+> +	),
+> +
+> +	TP_printk("%s %d", __get_str(name), __entry->ret)
+> +);
+> +
+> +TRACE_EVENT(rproc_stop_event,
+> +
+> +	TP_PROTO(struct rproc *rproc, char* crash_msg),
+> +
+> +	TP_ARGS(rproc, crash_msg),
+> +
+> +	TP_STRUCT__entry(
+> +		__string(name, rproc->name)
+> +		__string(crash_msg, crash_msg)
+> +	),
+> +
+> +	TP_fast_assign(
+> +		__assign_str(name, rproc->name);
+> +		__assign_str(crash_msg, crash_msg)
+> +	),
+> +
+> +	TP_printk("%s %s", __get_str(name), __get_str(crash_msg))
+> +);
+> +
+> +TRACE_EVENT(rproc_interrupt_event,
+> +
+> +	TP_PROTO(struct rproc *rproc, const char* event,
+> +			 const char* msg),
+> +
+> +	TP_ARGS(rproc, event, msg),
+> +
+> +	TP_STRUCT__entry(
+> +		__string(name, rproc->name)
+> +		__string(event, event)
+> +		__string(msg, msg)
+> +	),
+> +
+> +	TP_fast_assign(
+> +		__assign_str(name, rproc->name);
+> +		__assign_str(event, event);
+> +		__assign_str(msg, msg);
+> +	),
+> +
+> +	TP_printk("%s %s returned %s", __get_str(name),
+> +			 __get_str(event), __get_str(msg))
+> +);
+> +
+> +TRACE_EVENT(rproc_subdev_event,
+> +
+> +	TP_PROTO(const char* rproc, const char* subdev,
+> +			const char* event, int ret),
+> +
+> +	TP_ARGS(rproc, subdev, event, ret),
+> +
+> +	TP_STRUCT__entry(
+> +		__string(rproc, rproc)
+> +		__string(subdev, subdev)
+> +		__string(event, event)
+> +		__field(int, ret)
+> +	),
+> +
+> +	TP_fast_assign(
+> +		__assign_str(rproc, rproc);
+> +		__assign_str(subdev, subdev);
+> +		__assign_str(event, event);
+> +		__entry->ret = ret;
+> +	),
+> +
+> +	TP_printk("%s %s %s %d", __get_str(rproc), __get_str(subdev),
+> +			__get_str(event), __entry->ret)
+> +);
+> +#endif /* _TRACE_RPROC_QCOM_H */
+> +
+> +/* This part must be outside protection */
+> +#include <trace/define_trace.h>
 
