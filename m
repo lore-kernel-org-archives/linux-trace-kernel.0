@@ -2,60 +2,61 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 81397C678D4
-	for <linux-trace-kernel@archiver.kernel.org>; Mon,  6 Mar 2023 12:28:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E0E11C61DA4
+	for <linux-trace-kernel@archiver.kernel.org>; Mon,  6 Mar 2023 12:52:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229836AbjCFM2m (ORCPT
+        id S229646AbjCFMwW (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Mon, 6 Mar 2023 07:28:42 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53974 "EHLO
+        Mon, 6 Mar 2023 07:52:22 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50506 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229677AbjCFM2m (ORCPT
+        with ESMTP id S229961AbjCFMwV (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Mon, 6 Mar 2023 07:28:42 -0500
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0531A1FE8;
-        Mon,  6 Mar 2023 04:28:40 -0800 (PST)
-Received: from pps.filterd (m0279864.ppops.net [127.0.0.1])
-        by mx0a-0031df01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 326AsWi1005673;
-        Mon, 6 Mar 2023 12:28:37 GMT
+        Mon, 6 Mar 2023 07:52:21 -0500
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 640E02BEE7;
+        Mon,  6 Mar 2023 04:52:17 -0800 (PST)
+Received: from pps.filterd (m0279873.ppops.net [127.0.0.1])
+        by mx0a-0031df01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 32652YAr022938;
+        Mon, 6 Mar 2023 12:52:05 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=message-id : date :
- mime-version : subject : to : cc : references : from : in-reply-to :
+ mime-version : subject : to : references : from : in-reply-to :
  content-type : content-transfer-encoding; s=qcppdkim1;
- bh=w+dretXfOL6v87H797k8h5OZjEv4f65zOOku+HkGzD4=;
- b=dCNCFY7qBVhb1fdK95aY5QQ6B6ou2WZDUnWsMM4wFoExA2w9TnzNDBigbvhBifcTFHcF
- U+6acpbbBSwn7fkq7tAIBrVzlixidmMCzJ21UFG1qdS3Mav+Bwb+ldjSXHRVoyaDndVh
- bDsv+sI7A9t9zBRDwjHwh/35K69cOdkCqh54Y3yMV4K10W/H1ejvbi7CRUw3AhD5VSo2
- jOet5fuVpCz5yEw1uYWjMIOdVLFoiJ96hbtb3SviAoFpE5mMHCOUitzaYP17/pL7HprA
- f4V4RU/G3lY9J5CeCmiXAMZnkmBWcvObImXaGyfHVAXaFvn9JROFq0z9ia8X1KFDaBwC jw== 
-Received: from nasanppmta05.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-        by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3p415hvpxk-1
+ bh=Q2jlX39BuxHZUxqQJCS0V6f2hdX5HmqoSngiobuaRUY=;
+ b=e7dPY+2A/UXgMVinv++xA2oPvr7o9MoIwvDjp+6hkgRkmr81HbKifPENVsIZzL9pViPR
+ nSkKALuiRnd3qtvwHckMokjCyBYhmVHThvBHdfO28/GBSRhpF2PtbfjA9MmZqqrDkJhl
+ cdnHVo0DHzs+RVoSYpQzUwnhoIf/NaGzADqfvlo+Rd8N6xSL067KDuGICVi2yzQOSrKB
+ Bgai041uVA4EvhchhqBU9eox1yeilv4O9LW9gc9qN+9wbSYGv6Hojij8LwYpi2Tr9FbR
+ V7k+31EcXtC1up2cWSgu9XN/C9SdcEoTGi+R+VV9Jww7aweNiNJNVgF9RWN0mPmY6P/L oA== 
+Received: from nasanppmta03.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+        by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3p41j6cpkk-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 06 Mar 2023 12:28:36 +0000
+        Mon, 06 Mar 2023 12:52:05 +0000
 Received: from nasanex01c.na.qualcomm.com (nasanex01c.na.qualcomm.com [10.45.79.139])
-        by NASANPPMTA05.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 326CSa60001631
+        by NASANPPMTA03.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 326Cq40t016393
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 6 Mar 2023 12:28:36 GMT
+        Mon, 6 Mar 2023 12:52:04 GMT
 Received: from [10.204.79.110] (10.80.80.8) by nasanex01c.na.qualcomm.com
  (10.45.79.139) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.986.41; Mon, 6 Mar 2023
- 04:28:34 -0800
-Message-ID: <45cac39e-3b9e-f5f6-a534-421574953856@quicinc.com>
-Date:   Mon, 6 Mar 2023 17:58:31 +0530
+ 04:52:01 -0800
+Message-ID: <7a812676-086d-60d2-2cc4-9a9c5f0a872f@quicinc.com>
+Date:   Mon, 6 Mar 2023 18:21:58 +0530
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
  Thunderbird/102.8.0
-Subject: Re: [PATCH v4 3/3] ring_buffer: Use try_cmpxchg instead of cmpxchg
+Subject: Re: [PATCH] f2fs: Fix f2fs_truncate_partial_nodes ftrace event
 Content-Language: en-US
-To:     Uros Bizjak <ubizjak@gmail.com>,
-        <linux-trace-kernel@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-CC:     Steven Rostedt <rostedt@goodmis.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>
-References: <20230305155532.5549-1-ubizjak@gmail.com>
- <20230305155532.5549-4-ubizjak@gmail.com>
+To:     Douglas RAILLARD <douglas.raillard@arm.com>,
+        Jaegeuk Kim <jaegeuk@kernel.org>, Chao Yu <chao@kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        "open list:F2FS FILE SYSTEM" <linux-f2fs-devel@lists.sourceforge.net>,
+        "open list:TRACING" <linux-kernel@vger.kernel.org>,
+        "open list:TRACING" <linux-trace-kernel@vger.kernel.org>
+References: <20230306122549.236561-1-douglas.raillard@arm.com>
 From:   Mukesh Ojha <quic_mojha@quicinc.com>
-In-Reply-To: <20230305155532.5549-4-ubizjak@gmail.com>
+In-Reply-To: <20230306122549.236561-1-douglas.raillard@arm.com>
 Content-Type: text/plain; charset="UTF-8"; format=flowed
 Content-Transfer-Encoding: 7bit
 X-Originating-IP: [10.80.80.8]
@@ -63,73 +64,62 @@ X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
  nasanex01c.na.qualcomm.com (10.45.79.139)
 X-QCInternal: smtphost
 X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: 83V-C1bxbJ1apAziIk8IBByXh1-p8rnm
-X-Proofpoint-GUID: 83V-C1bxbJ1apAziIk8IBByXh1-p8rnm
+X-Proofpoint-GUID: SG11kEEpxNNCpC5ZFUIcNq_iAqTUDJSS
+X-Proofpoint-ORIG-GUID: SG11kEEpxNNCpC5ZFUIcNq_iAqTUDJSS
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.219,Aquarius:18.0.942,Hydra:6.0.573,FMLib:17.11.170.22
  definitions=2023-03-06_05,2023-03-06_01,2023-02-09_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 bulkscore=0
- clxscore=1015 lowpriorityscore=0 priorityscore=1501 mlxscore=0
- adultscore=0 mlxlogscore=512 suspectscore=0 spamscore=0 impostorscore=0
- phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2212070000 definitions=main-2303060109
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0 impostorscore=0
+ suspectscore=0 bulkscore=0 priorityscore=1501 lowpriorityscore=0
+ malwarescore=0 phishscore=0 mlxlogscore=722 clxscore=1011 mlxscore=0
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2212070000 definitions=main-2303060113
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
 
 
-On 3/5/2023 9:25 PM, Uros Bizjak wrote:
-> Use try_cmpxchg instead of cmpxchg (*ptr, old, new) == old.
-> x86 CMPXCHG instruction returns success in ZF flag, so this change
-> saves a compare after cmpxchg (and related move instruction in
-> front of cmpxchg).
+On 3/6/2023 5:55 PM, Douglas RAILLARD wrote:
+> From: Douglas Raillard <douglas.raillard@arm.com>
 > 
-> Also, try_cmpxchg implicitly assigns old *ptr value to "old" when cmpxchg
-> fails. There is no need to re-read the value in the loop.
+> Fix the nid_t field so that its size is correctly reported in the text
+> format embedded in trace.dat files. As it stands, it is reported as
+> being of size 4:
 > 
-> No functional change intended.
+>          field:nid_t nid[3];     offset:24;      size:4; signed:0;
 > 
-> Cc: Steven Rostedt <rostedt@goodmis.org>
-> Cc: Masami Hiramatsu <mhiramat@kernel.org>
-> Signed-off-by: Uros Bizjak <ubizjak@gmail.com>
+> Instead of 12:
+> 
+>          field:nid_t nid[3];     offset:24;      size:12;        signed:0;
+> 
+> This also fixes the reported offset of subsequent fields so that they
+> match with the actual struct layout.
+> 
+> 
+> Signed-off-by: Douglas Raillard <douglas.raillard@arm.com>
 > ---
-> v2: Convert only loops with cmpxchg.
-> ---
->   kernel/trace/ring_buffer.c | 8 ++++----
->   1 file changed, 4 insertions(+), 4 deletions(-)
+>   include/trace/events/f2fs.h | 2 +-
+>   1 file changed, 1 insertion(+), 1 deletion(-)
 > 
-> diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
-> index 5235037f83d3..d17345b522f4 100644
-> --- a/kernel/trace/ring_buffer.c
-> +++ b/kernel/trace/ring_buffer.c
-> @@ -4061,10 +4061,10 @@ void ring_buffer_record_off(struct trace_buffer *buffer)
->   	unsigned int rd;
->   	unsigned int new_rd;
->   
-> +	rd = atomic_read(&buffer->record_disabled);
->   	do {
-> -		rd = atomic_read(&buffer->record_disabled);
->   		new_rd = rd | RB_BUFFER_OFF;
-> -	} while (atomic_cmpxchg(&buffer->record_disabled, rd, new_rd) != rd);
-> +	} while (!atomic_try_cmpxchg(&buffer->record_disabled, &rd, new_rd));
->   }
->   EXPORT_SYMBOL_GPL(ring_buffer_record_off);
->   
-> @@ -4084,10 +4084,10 @@ void ring_buffer_record_on(struct trace_buffer *buffer)
->   	unsigned int rd;
->   	unsigned int new_rd;
->   
-> +	rd = atomic_read(&buffer->record_disabled);
->   	do {
-> -		rd = atomic_read(&buffer->record_disabled);
->   		new_rd = rd & ~RB_BUFFER_OFF;
-> -	} while (atomic_cmpxchg(&buffer->record_disabled, rd, new_rd) != rd);
-> +	} while (!atomic_try_cmpxchg(&buffer->record_disabled, &rd, new_rd));
->   }
+> diff --git a/include/trace/events/f2fs.h b/include/trace/events/f2fs.h
+> index 31d994e6b4ca..8d053838d6cf 100644
+> --- a/include/trace/events/f2fs.h
+> +++ b/include/trace/events/f2fs.h
+> @@ -512,7 +512,7 @@ TRACE_EVENT(f2fs_truncate_partial_nodes,
+>   	TP_STRUCT__entry(
+>   		__field(dev_t,	dev)
+>   		__field(ino_t,	ino)
+> -		__field(nid_t,	nid[3])
+> +		__array(nid_t,	nid, 3)
 
-Acked-by: Mukesh Ojha <quic_mojha@quicinc.com>
+
+Good catch.
+
+Reviewed-by: Mukesh Ojha <quic_mojha@quicinc.com>
 
 -Mukesh
->   EXPORT_SYMBOL_GPL(ring_buffer_record_on);
->   
+
+>   		__field(int,	depth)
+>   		__field(int,	err)
+>   	),
