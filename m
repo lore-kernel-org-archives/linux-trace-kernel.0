@@ -2,243 +2,104 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 09538C6FA99
-	for <linux-trace-kernel@archiver.kernel.org>; Mon,  6 Mar 2023 17:09:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C6D0C61DA4
+	for <linux-trace-kernel@archiver.kernel.org>; Mon,  6 Mar 2023 17:26:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230426AbjCFRJl (ORCPT
+        id S229955AbjCFR0m (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Mon, 6 Mar 2023 12:09:41 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48520 "EHLO
+        Mon, 6 Mar 2023 12:26:42 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56050 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230320AbjCFRJX (ORCPT
+        with ESMTP id S229963AbjCFR0j (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Mon, 6 Mar 2023 12:09:23 -0500
-Received: from mx0a-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D6DE660D7D;
-        Mon,  6 Mar 2023 09:08:35 -0800 (PST)
-Received: from pps.filterd (m0098416.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 326Ev3nr032334;
-        Mon, 6 Mar 2023 16:11:04 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
- : date : message-id : in-reply-to : references : mime-version :
- content-transfer-encoding; s=pp1;
- bh=Qyn+EWnxFstxyTndS+aBZAkYcNiZRJK1wB+Dw0C3Hw8=;
- b=UQ+o6A126g2+5NTduuED56jGnBrjYeew+QXJtdiukjFu9PDhRPHYdZLQVYk0yl6EHJPW
- u5e7Xb13ckxV5OKykLE09Q//DqeAmFO87bvq45oDq+8iSKEBn+hnzo5Ie1jLHo5JVdXL
- ALwtgjwfyOzjVay530JGCXz8LutHc6klTZL91FVelfRcs1JclLZJ0i7Xq/5d3+elFaLv
- XQBOQtmb5/bN9P0Tm5xc8skqb5CIY0s71WLjfS33v1HDebN2rz7cSVWgpg0kLrkhx7lY
- RSsOWZVCTN3SM0fA1wvNXTNaoBdLaQbSDFiFZlvrenqWNVYBr3wXbTQgGaQUXufJuetv Ag== 
-Received: from ppma01dal.us.ibm.com (83.d6.3fa9.ip4.static.sl-reverse.com [169.63.214.131])
-        by mx0b-001b2d01.pphosted.com (PPS) with ESMTPS id 3p4x1htpnm-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 06 Mar 2023 16:11:04 +0000
-Received: from pps.filterd (ppma01dal.us.ibm.com [127.0.0.1])
-        by ppma01dal.us.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 326Dwqhm005417;
-        Mon, 6 Mar 2023 16:11:03 GMT
-Received: from smtprelay03.wdc07v.mail.ibm.com ([9.208.129.113])
-        by ppma01dal.us.ibm.com (PPS) with ESMTPS id 3p4184smnv-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 06 Mar 2023 16:11:03 +0000
-Received: from smtpav02.wdc07v.mail.ibm.com (smtpav02.wdc07v.mail.ibm.com [10.39.53.229])
-        by smtprelay03.wdc07v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 326GB1WG30999046
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 6 Mar 2023 16:11:01 GMT
-Received: from smtpav02.wdc07v.mail.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 8AFBA58059;
-        Mon,  6 Mar 2023 16:11:01 +0000 (GMT)
-Received: from smtpav02.wdc07v.mail.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id B6B975805E;
-        Mon,  6 Mar 2023 16:10:59 +0000 (GMT)
-Received: from slate16.aus.stglabs.ibm.com (unknown [9.160.108.29])
-        by smtpav02.wdc07v.mail.ibm.com (Postfix) with ESMTP;
-        Mon,  6 Mar 2023 16:10:59 +0000 (GMT)
-From:   Eddie James <eajames@linux.ibm.com>
-To:     linux-fsi@lists.ozlabs.org
-Cc:     rostedt@goodmis.org, linux-trace-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        mhiramat@kernel.org, alistair@popple.id.au, joel@jms.id.au,
-        jk@ozlabs.org, andrew@aj.id.au, robh+dt@kernel.org,
-        krzysztof.kozlowski+dt@linaro.org, eajames@linux.ibm.com
-Subject: [PATCH v8 1/8] fsi: Move fsi_slave structure definition to header
-Date:   Mon,  6 Mar 2023 10:10:49 -0600
-Message-Id: <20230306161057.44017-2-eajames@linux.ibm.com>
-X-Mailer: git-send-email 2.31.1
-In-Reply-To: <20230306161057.44017-1-eajames@linux.ibm.com>
-References: <20230306161057.44017-1-eajames@linux.ibm.com>
+        Mon, 6 Mar 2023 12:26:39 -0500
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D60B5664ED;
+        Mon,  6 Mar 2023 09:25:55 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id BAE4FB80FED;
+        Mon,  6 Mar 2023 17:25:32 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B03D8C433D2;
+        Mon,  6 Mar 2023 17:25:30 +0000 (UTC)
+Date:   Mon, 6 Mar 2023 12:25:29 -0500
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     Douglas RAILLARD <douglas.raillard@arm.com>
+Cc:     Jaegeuk Kim <jaegeuk@kernel.org>, Chao Yu <chao@kernel.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        linux-f2fs-devel@lists.sourceforge.net (open list:F2FS FILE SYSTEM),
+        linux-kernel@vger.kernel.org (open list:TRACING),
+        linux-trace-kernel@vger.kernel.org (open list:TRACING)
+Subject: Re: [PATCH] f2fs: Fix f2fs_truncate_partial_nodes ftrace event
+Message-ID: <20230306122529.44e8d566@gandalf.local.home>
+In-Reply-To: <20230306111513.2aa49b1a@gandalf.local.home>
+References: <20230306122549.236561-1-douglas.raillard@arm.com>
+        <20230306111513.2aa49b1a@gandalf.local.home>
+X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: 3BBdPRkBBM1jcNFOp9bHxfQR8hTwYYDo
-X-Proofpoint-ORIG-GUID: 3BBdPRkBBM1jcNFOp9bHxfQR8hTwYYDo
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.219,Aquarius:18.0.942,Hydra:6.0.573,FMLib:17.11.170.22
- definitions=2023-03-06_08,2023-03-06_01,2023-02-09_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0
- mlxlogscore=999 spamscore=0 lowpriorityscore=0 suspectscore=0
- clxscore=1015 adultscore=0 phishscore=0 mlxscore=0 bulkscore=0
- impostorscore=0 priorityscore=1501 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-2212070000 definitions=main-2303060142
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-Some FSI drivers may have need of the slave definition, so
-move it to a header file. Also use one macro for obtaining a
-pointer to the fsi_master structure.
+On Mon, 6 Mar 2023 11:15:13 -0500
+Steven Rostedt <rostedt@goodmis.org> wrote:
 
-Signed-off-by: Eddie James <eajames@linux.ibm.com>
----
- drivers/fsi/fsi-core.c          | 24 ++++--------------------
- drivers/fsi/fsi-master-aspeed.c |  2 +-
- drivers/fsi/fsi-master-ast-cf.c |  2 +-
- drivers/fsi/fsi-master-gpio.c   |  2 +-
- drivers/fsi/fsi-master-hub.c    |  2 +-
- drivers/fsi/fsi-master.h        |  2 +-
- drivers/fsi/fsi-slave.h         | 28 ++++++++++++++++++++++++++++
- 7 files changed, 37 insertions(+), 25 deletions(-)
- create mode 100644 drivers/fsi/fsi-slave.h
+> > diff --git a/include/trace/events/f2fs.h b/include/trace/events/f2fs.h
+> > index 31d994e6b4ca..8d053838d6cf 100644
+> > --- a/include/trace/events/f2fs.h
+> > +++ b/include/trace/events/f2fs.h
+> > @@ -512,7 +512,7 @@ TRACE_EVENT(f2fs_truncate_partial_nodes,
+> >  	TP_STRUCT__entry(
+> >  		__field(dev_t,	dev)
+> >  		__field(ino_t,	ino)
+> > -		__field(nid_t,	nid[3])  
+> 
+> That should not have even compiled. I'll see if I can add some tricks to
+> make that fail.
 
-diff --git a/drivers/fsi/fsi-core.c b/drivers/fsi/fsi-core.c
-index 0b927c9f4267..d591e68afd11 100644
---- a/drivers/fsi/fsi-core.c
-+++ b/drivers/fsi/fsi-core.c
-@@ -23,6 +23,10 @@
- #include <linux/uaccess.h>
- 
- #include "fsi-master.h"
-+#include "fsi-slave.h"
-+
-+#define CREATE_TRACE_POINTS
-+#include <trace/events/fsi.h>
- 
- #define FSI_SLAVE_CONF_NEXT_MASK	GENMASK(31, 31)
- #define FSI_SLAVE_CONF_SLOTS_MASK	GENMASK(23, 16)
-@@ -78,26 +82,6 @@ static const int engine_page_size = 0x400;
- 
- static DEFINE_IDA(master_ida);
- 
--struct fsi_slave {
--	struct device		dev;
--	struct fsi_master	*master;
--	struct cdev		cdev;
--	int			cdev_idx;
--	int			id;	/* FSI address */
--	int			link;	/* FSI link# */
--	u32			cfam_id;
--	int			chip_id;
--	uint32_t		size;	/* size of slave address space */
--	u8			t_send_delay;
--	u8			t_echo_delay;
--};
--
--#define CREATE_TRACE_POINTS
--#include <trace/events/fsi.h>
--
--#define to_fsi_master(d) container_of(d, struct fsi_master, dev)
--#define to_fsi_slave(d) container_of(d, struct fsi_slave, dev)
--
- static const int slave_retries = 2;
- static int discard_errors;
- 
-diff --git a/drivers/fsi/fsi-master-aspeed.c b/drivers/fsi/fsi-master-aspeed.c
-index 7cec1772820d..437f87b4a6a3 100644
---- a/drivers/fsi/fsi-master-aspeed.c
-+++ b/drivers/fsi/fsi-master-aspeed.c
-@@ -376,7 +376,7 @@ static int aspeed_master_break(struct fsi_master *master, int link)
- static void aspeed_master_release(struct device *dev)
- {
- 	struct fsi_master_aspeed *aspeed =
--		to_fsi_master_aspeed(dev_to_fsi_master(dev));
-+		to_fsi_master_aspeed(to_fsi_master(dev));
- 
- 	kfree(aspeed);
- }
-diff --git a/drivers/fsi/fsi-master-ast-cf.c b/drivers/fsi/fsi-master-ast-cf.c
-index 5f608ef8b53c..6124978305eb 100644
---- a/drivers/fsi/fsi-master-ast-cf.c
-+++ b/drivers/fsi/fsi-master-ast-cf.c
-@@ -1190,7 +1190,7 @@ static int fsi_master_acf_gpio_release(void *data)
- 
- static void fsi_master_acf_release(struct device *dev)
- {
--	struct fsi_master_acf *master = to_fsi_master_acf(dev_to_fsi_master(dev));
-+	struct fsi_master_acf *master = to_fsi_master_acf(to_fsi_master(dev));
- 
- 	/* Cleanup, stop coprocessor */
- 	mutex_lock(&master->lock);
-diff --git a/drivers/fsi/fsi-master-gpio.c b/drivers/fsi/fsi-master-gpio.c
-index 7d5f29b4b595..ed03da4f2447 100644
---- a/drivers/fsi/fsi-master-gpio.c
-+++ b/drivers/fsi/fsi-master-gpio.c
-@@ -761,7 +761,7 @@ static DEVICE_ATTR(external_mode, 0664,
- 
- static void fsi_master_gpio_release(struct device *dev)
- {
--	struct fsi_master_gpio *master = to_fsi_master_gpio(dev_to_fsi_master(dev));
-+	struct fsi_master_gpio *master = to_fsi_master_gpio(to_fsi_master(dev));
- 
- 	of_node_put(dev_of_node(master->dev));
- 
-diff --git a/drivers/fsi/fsi-master-hub.c b/drivers/fsi/fsi-master-hub.c
-index 01f0a796111e..6d8b6e8854e5 100644
---- a/drivers/fsi/fsi-master-hub.c
-+++ b/drivers/fsi/fsi-master-hub.c
-@@ -105,7 +105,7 @@ static int hub_master_link_enable(struct fsi_master *master, int link,
- 
- static void hub_master_release(struct device *dev)
- {
--	struct fsi_master_hub *hub = to_fsi_master_hub(dev_to_fsi_master(dev));
-+	struct fsi_master_hub *hub = to_fsi_master_hub(to_fsi_master(dev));
- 
- 	kfree(hub);
- }
-diff --git a/drivers/fsi/fsi-master.h b/drivers/fsi/fsi-master.h
-index 4762315a46ba..967622c1cabf 100644
---- a/drivers/fsi/fsi-master.h
-+++ b/drivers/fsi/fsi-master.h
-@@ -136,7 +136,7 @@ struct fsi_master {
- 				       u8 t_send_delay, u8 t_echo_delay);
- };
- 
--#define dev_to_fsi_master(d) container_of(d, struct fsi_master, dev)
-+#define to_fsi_master(d) container_of(d, struct fsi_master, dev)
- 
- /**
-  * fsi_master registration & lifetime: the fsi_master_register() and
-diff --git a/drivers/fsi/fsi-slave.h b/drivers/fsi/fsi-slave.h
-new file mode 100644
-index 000000000000..1d63a585829d
---- /dev/null
-+++ b/drivers/fsi/fsi-slave.h
-@@ -0,0 +1,28 @@
-+/* SPDX-License-Identifier: GPL-2.0-only */
-+/* Copyright (C) IBM Corporation 2023 */
-+
-+#ifndef DRIVERS_FSI_SLAVE_H
-+#define DRIVERS_FSI_SLAVE_H
-+
-+#include <linux/cdev.h>
-+#include <linux/device.h>
-+
-+struct fsi_master;
-+
-+struct fsi_slave {
-+	struct device		dev;
-+	struct fsi_master	*master;
-+	struct cdev		cdev;
-+	int			cdev_idx;
-+	int			id;	/* FSI address */
-+	int			link;	/* FSI link# */
-+	u32			cfam_id;
-+	int			chip_id;
-+	uint32_t		size;	/* size of slave address space */
-+	u8			t_send_delay;
-+	u8			t_echo_delay;
-+};
-+
-+#define to_fsi_slave(d) container_of(d, struct fsi_slave, dev)
-+
-+#endif /* DRIVERS_FSI_SLAVE_H */
--- 
-2.31.1
+And this patch makes that happen!
 
+-- Steve
+
+diff --git a/include/trace/stages/stage5_get_offsets.h b/include/trace/stages/stage5_get_offsets.h
+index ac5c24d3beeb..e30a13be46ba 100644
+--- a/include/trace/stages/stage5_get_offsets.h
++++ b/include/trace/stages/stage5_get_offsets.h
+@@ -9,17 +9,30 @@
+ #undef __entry
+ #define __entry entry
+ 
++/*
++ * Fields should never declare an array: i.e. __field(int, arr[5])
++ * If they do, it will cause issues in parsing and possibly corrupt the
++ * events. To prevent that from happening, test the sizeof() a fictitious
++ * type called "struct _test_no_array_##item" which will fail if "item"
++ * contains array elements (like "arr[5]").
++ *
++ * If you hit this, use __array(int, arr, 5) instead.
++ */
+ #undef __field
+-#define __field(type, item)
++#define __field(type, item)					\
++	{ (void)sizeof(struct _test_no_array_##item *); }
+ 
+ #undef __field_ext
+-#define __field_ext(type, item, filter_type)
++#define __field_ext(type, item, filter_type)			\
++	{ (void)sizeof(struct _test_no_array_##item *); }
+ 
+ #undef __field_struct
+-#define __field_struct(type, item)
++#define __field_struct(type, item)				\
++	{ (void)sizeof(struct _test_no_array_##item *); }
+ 
+ #undef __field_struct_ext
+-#define __field_struct_ext(type, item, filter_type)
++#define __field_struct_ext(type, item, filter_type)		\
++	{ (void)sizeof(struct _test_no_array_##item *); }
+ 
+ #undef __array
+ #define __array(type, item, len)
