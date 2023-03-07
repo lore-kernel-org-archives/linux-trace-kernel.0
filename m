@@ -2,255 +2,136 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 001C9C678D5
-	for <linux-trace-kernel@archiver.kernel.org>; Tue,  7 Mar 2023 13:37:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 98C7BC678D4
+	for <linux-trace-kernel@archiver.kernel.org>; Tue,  7 Mar 2023 15:48:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230139AbjCGNh7 (ORCPT
+        id S229935AbjCGPsL (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Tue, 7 Mar 2023 08:37:59 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33540 "EHLO
+        Tue, 7 Mar 2023 10:48:11 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57524 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229833AbjCGNh6 (ORCPT
+        with ESMTP id S230509AbjCGPsG (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Tue, 7 Mar 2023 08:37:58 -0500
-Received: from mail-wr1-x432.google.com (mail-wr1-x432.google.com [IPv6:2a00:1450:4864:20::432])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 77537524E
-        for <linux-trace-kernel@vger.kernel.org>; Tue,  7 Mar 2023 05:37:56 -0800 (PST)
-Received: by mail-wr1-x432.google.com with SMTP id v16so12209736wrn.0
-        for <linux-trace-kernel@vger.kernel.org>; Tue, 07 Mar 2023 05:37:56 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1678196275;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=b5lJEnGWoR5daba7syY/YlJQMJlulw+k3BHuc1yDN1U=;
-        b=HNwN9xLjHkYN2k4XJ8+FCxhbozlsuAWJRVES03TTNWLuJDi7/D9zR0blvPsClZ4aJF
-         dZVBH9kFIfyJNf3aBDJqkT/ANpEmjPCvvMpjtEVRpbSzXmJKheHZkXa/xF2aCcoUksQG
-         /OHuCQKOOxEDZu67yNYMjHLCbqBQ7uQNupFZKwbvHiTGsnjdtceKUahaCVtpqEa0P5BL
-         yZ7RFojSHhXPz0U3y2KlOY3Vnagf+/0/imHZ/YHPIsbGd+BtzVH9Jnb3EyKFJoEkIHb6
-         XMLn49DMTSr7koKc390uGmGAn0KPKhDsaY/9OjWfea4UP28n3QM7vmfL86Rfl69LBlQM
-         2f+A==
+        Tue, 7 Mar 2023 10:48:06 -0500
+Received: from mail-pl1-f170.google.com (mail-pl1-f170.google.com [209.85.214.170])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7572885A6F;
+        Tue,  7 Mar 2023 07:47:38 -0800 (PST)
+Received: by mail-pl1-f170.google.com with SMTP id u5so14521575plq.7;
+        Tue, 07 Mar 2023 07:47:38 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1678196275;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=b5lJEnGWoR5daba7syY/YlJQMJlulw+k3BHuc1yDN1U=;
-        b=cOKHbYhdHSVDmxhplmZ067Upzj5Mw90VGMi6czukynKTj0HT7pt3P1W8PTMKgt+p/M
-         bH02YoR0OF1vXcyCTX3rWC/VRhzWwWbI4MioimRypDNVbTbW+u5qMAQCFIRelUBGnTS2
-         yUohHmMJYDr3GDG3Pq1uNmqK0Oh3/hqcPvKC3ospAEt82LxAHueDBA+/+3uGPc+P3cho
-         LvcpLJP2TW9npTDUSLIhpl8E+dogFiddFGsjWVoeiH93h5PrTQqULTOX5XUPm50dYSiF
-         ohJnl1bw02hlheIMypAApRkzfVjd4njtQfvj5JXG09ZpJ60gp1QZRAiHMWUaRAHPP2h4
-         gTpw==
-X-Gm-Message-State: AO0yUKW886iaHycx26ZU9luBoL5+as5E/EiAFtqas95H12mzKviKCe00
-        BGc/a5ErjeQSK605vK90PppN3g==
-X-Google-Smtp-Source: AK7set8ZMrApDRZd5133PVg919iApzpcGKhJiym0d1GCCx1FzE5z2niOOu588zS7WXr0/sPqW8nwbw==
-X-Received: by 2002:adf:e745:0:b0:2c5:a38f:ca3a with SMTP id c5-20020adfe745000000b002c5a38fca3amr13239879wrn.10.1678196274952;
-        Tue, 07 Mar 2023 05:37:54 -0800 (PST)
-Received: from mai.box.freepro.com ([2a05:6e02:1041:c10:5ab9:1ac6:870d:35c])
-        by smtp.gmail.com with ESMTPSA id v5-20020a5d43c5000000b002c55de1c72bsm12311477wrr.62.2023.03.07.05.37.54
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 07 Mar 2023 05:37:54 -0800 (PST)
-From:   Daniel Lezcano <daniel.lezcano@linaro.org>
-To:     daniel.lezcano@linaro.org, rafael@kernel.org
-Cc:     rui.zhang@intel.com, amitk@kernel.org,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Amit Daniel Kachhap <amit.kachhap@gmail.com>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Lukasz Luba <lukasz.luba@arm.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        linux-pm@vger.kernel.org (open list:THERMAL),
-        linux-kernel@vger.kernel.org (open list),
-        linux-trace-kernel@vger.kernel.org (open list:TRACING)
-Subject: [PATCH v1 01/11] thermal/core: Relocate the traces definition in thermal directory
-Date:   Tue,  7 Mar 2023 14:37:25 +0100
-Message-Id: <20230307133735.90772-2-daniel.lezcano@linaro.org>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20230307133735.90772-1-daniel.lezcano@linaro.org>
-References: <20230307133735.90772-1-daniel.lezcano@linaro.org>
+        d=1e100.net; s=20210112; t=1678204039;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=xwziTOWSx5gQIjIikRUH/cZZiINMVMawOuX2ejCg0M8=;
+        b=CRd5KlmPRtJ+3YrdKonwKCa3NsIsek+DDzpfeY4GtPJgZpQWZWS5HOEq01paDyE4Qg
+         6pC++5q0r2qKzOaXM3z04uZBNbyBBn/xjkP/sGnhXuEVwskG56VAw7MLhZf0Yfzx3VeX
+         LoS1WH/JCZMcLjit6KJoc3YXsZd3JNoY6Ro0fFS9EO0ve7E55NpdN0x3qD/GFDjXK9xT
+         TFDnIk7HEsp0I+Mt/N1HugK9qXhL6XyRlfbmMz5/T/u9hdQcBWXrmReodvhFIg362trt
+         nrqSr0kd5gKNBFTXCvPbvCjC1nISa35MyNm+5fKkMXwO2MirAHCczZNd5zZEtEGYcupa
+         P4EA==
+X-Gm-Message-State: AO0yUKWa4ttKxGRCci05X4F2qo79sWZ9dXhqiFLRxo1ckUIBG7YthoM6
+        MNamj/SE6bOeW+/TfpRg3ak=
+X-Google-Smtp-Source: AK7set9bOFD86hVEitetXq7V1awDY1Hh1VJBlAr53BoHItabMvkpg4xM4u+NWEpADacOF/57k82xdQ==
+X-Received: by 2002:a05:6a20:a88f:b0:c3:cc65:165c with SMTP id ca15-20020a056a20a88f00b000c3cc65165cmr12350717pzb.61.1678204038588;
+        Tue, 07 Mar 2023 07:47:18 -0800 (PST)
+Received: from [192.168.132.235] ([63.145.95.70])
+        by smtp.gmail.com with ESMTPSA id v9-20020aa78089000000b005e4d8c6168csm7985460pff.210.2023.03.07.07.47.17
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 07 Mar 2023 07:47:17 -0800 (PST)
+Message-ID: <8a83ec79-be04-ec5c-f3ef-67f64dc55f12@acm.org>
+Date:   Tue, 7 Mar 2023 07:47:16 -0800
 MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.7.1
+Subject: Re: [PATCH v4] scsi: ufs: core: Add trace event for MCQ
+Content-Language: en-US
+To:     Ziqi Chen <quic_ziqichen@quicinc.com>, quic_asutoshd@quicinc.com,
+        quic_cang@quicinc.com, mani@kernel.org, stanley.chu@mediatek.com,
+        adrian.hunter@intel.com, beanhuo@micron.com, avri.altman@wdc.com,
+        junwoo80.lee@samsung.com, martin.petersen@oracle.com
+Cc:     linux-scsi@vger.kernel.org, Alim Akhtar <alim.akhtar@samsung.com>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        "open list:TRACING" <linux-trace-kernel@vger.kernel.org>
+References: <1677836154-29192-1-git-send-email-quic_ziqichen@quicinc.com>
+ <67db2c6b-c3b0-c525-e6a9-2b2fe6c6adbb@acm.org>
+ <f80fd91b-3a03-5c38-72c0-cd5c3edb33b8@quicinc.com>
+From:   Bart Van Assche <bvanassche@acm.org>
+In-Reply-To: <f80fd91b-3a03-5c38-72c0-cd5c3edb33b8@quicinc.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-The traces are exported but only local to the thermal core code. On
-the other side, the traces take the thermal zone device structure as
-argument, thus they have to rely on the exported thermal.h header
-file. As we want to move the structure to the private thermal core
-header, first we have to relocate those traces to the same place as
-many drivers do.
+On 3/6/23 21:53, Ziqi Chen wrote:
+> You are right,  users may hate it if the trace events for legacy mode 
+> and MCQ mode are different. But if I merge them into one event, it will 
+> print much invalid information as we can not add if-else into TP_printk().
+> 
+> (For example:  in SDB legacy mode, you can see such invalid prints " 
+> hqid = 0 , sqt= 0, cqh=0, cqt = 0")
+> 
+> Users may hate these invalid information.
+> 
+> Anyway, I have made new version that merge 2 mode into one event, but 
+> are you sure we really need to use this way? if yes , I can push new 
+> version here.
+> 
+> Or, could you give some suggestions if you have better way.
+> 
+> Below is a piece of new version code , you can preview.
+> 
+>      TP_fast_assign(
+>          __assign_str(dev_name, dev_name);
+>          __entry->str_t = str_t;
+>          __entry->tag = tag;
+>          __entry->doorbell = doorbell;
+>          __entry->hwq_id = hwq? hwq->id: 0;
+>          __entry->sq_tail = hwq? hwq->sq_tail_slot: 0;
+>          __entry->cq_head = hwq? hwq->cq_head_slot: 0;
+>          __entry->cq_tail = hwq? hwq->cq_tail_slot: 0;
+>          __entry->transfer_len = transfer_len;
+>          __entry->lba = lba;
+>          __entry->intr = intr;
+>          __entry->opcode = opcode;
+>          __entry->group_id = group_id;
+>      ),
+> 
+>      TP_printk(
+>          "%s: %s: tag: %u, DB: 0x%x, size: %d, IS: %u, LBA: %llu, 
+> opcode: 0x%x (%s),"
+>          "group_id: 0x%x, hqid: %d, sqt: %d, cqh: %d, cqt: %d",
+>          show_ufs_cmd_trace_str(__entry->str_t), __get_str(dev_name), 
+> __entry->tag,
+>          __entry->doorbell, __entry->transfer_len, __entry->intr, 
+> __entry->lba,
+>          (u32)__entry->opcode, str_opcode(__entry->opcode), 
+> (u32)__entry->group_id,
+>          __entry->hwq_id,__entry->sq_tail, __entry->cq_head,  
+> __entry->cq_tail
+>      )
 
-Cc: Steven Rostedt <rostedt@goodmis.org>
-Suggested-by: Steven Rostedt <rostedt@goodmis.org>
-Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
----
- drivers/thermal/Makefile                                    | 3 ++-
- drivers/thermal/cpufreq_cooling.c                           | 2 +-
- drivers/thermal/devfreq_cooling.c                           | 2 +-
- drivers/thermal/gov_fair_share.c                            | 2 +-
- drivers/thermal/gov_power_allocator.c                       | 2 +-
- drivers/thermal/gov_step_wise.c                             | 2 +-
- drivers/thermal/thermal_core.c                              | 2 +-
- drivers/thermal/thermal_helpers.c                           | 3 +--
- .../events/thermal.h => drivers/thermal/thermal_trace.h     | 6 ++++++
- .../thermal/thermal_trace_ipa.h                             | 6 ++++++
- 10 files changed, 21 insertions(+), 9 deletions(-)
- rename include/trace/events/thermal.h => drivers/thermal/thermal_trace.h (97%)
- rename include/trace/events/thermal_power_allocator.h => drivers/thermal/thermal_trace_ipa.h (96%)
+Hi Ziqi,
 
-diff --git a/drivers/thermal/Makefile b/drivers/thermal/Makefile
-index eed300e83d48..058664bc3ec0 100644
---- a/drivers/thermal/Makefile
-+++ b/drivers/thermal/Makefile
-@@ -2,7 +2,7 @@
- #
- # Makefile for sensor chip drivers.
- #
--
-+CFLAGS_thermal_core.o		:= -I$(src)
- obj-$(CONFIG_THERMAL)		+= thermal_sys.o
- thermal_sys-y			+= thermal_core.o thermal_sysfs.o
- thermal_sys-y			+= thermal_trip.o thermal_helpers.o
-@@ -16,6 +16,7 @@ thermal_sys-$(CONFIG_THERMAL_OF)		+= thermal_of.o
- thermal_sys-$(CONFIG_THERMAL_ACPI)		+= thermal_acpi.o
- 
- # governors
-+CFLAGS_gov_power_allocator.o			:= -I$(src)
- thermal_sys-$(CONFIG_THERMAL_GOV_FAIR_SHARE)	+= gov_fair_share.o
- thermal_sys-$(CONFIG_THERMAL_GOV_BANG_BANG)	+= gov_bang_bang.o
- thermal_sys-$(CONFIG_THERMAL_GOV_STEP_WISE)	+= gov_step_wise.o
-diff --git a/drivers/thermal/cpufreq_cooling.c b/drivers/thermal/cpufreq_cooling.c
-index 9f8b438fcf8f..65ef08b30334 100644
---- a/drivers/thermal/cpufreq_cooling.c
-+++ b/drivers/thermal/cpufreq_cooling.c
-@@ -23,7 +23,7 @@
- #include <linux/thermal.h>
- #include <linux/units.h>
- 
--#include <trace/events/thermal.h>
-+#include "thermal_trace.h"
- 
- /*
-  * Cooling state <-> CPUFreq frequency
-diff --git a/drivers/thermal/devfreq_cooling.c b/drivers/thermal/devfreq_cooling.c
-index 24b474925cd6..262e62ab6cf2 100644
---- a/drivers/thermal/devfreq_cooling.c
-+++ b/drivers/thermal/devfreq_cooling.c
-@@ -20,7 +20,7 @@
- #include <linux/thermal.h>
- #include <linux/units.h>
- 
--#include <trace/events/thermal.h>
-+#include "thermal_trace.h"
- 
- #define SCALE_ERROR_MITIGATION	100
- 
-diff --git a/drivers/thermal/gov_fair_share.c b/drivers/thermal/gov_fair_share.c
-index aad7d5fe3a14..1ce5692151f5 100644
---- a/drivers/thermal/gov_fair_share.c
-+++ b/drivers/thermal/gov_fair_share.c
-@@ -11,7 +11,7 @@
-  */
- 
- #include <linux/thermal.h>
--#include <trace/events/thermal.h>
-+#include "thermal_trace.h" 
- 
- #include "thermal_core.h"
- 
-diff --git a/drivers/thermal/gov_power_allocator.c b/drivers/thermal/gov_power_allocator.c
-index 0eaf1527d3e3..3df2d440d73d 100644
---- a/drivers/thermal/gov_power_allocator.c
-+++ b/drivers/thermal/gov_power_allocator.c
-@@ -12,7 +12,7 @@
- #include <linux/thermal.h>
- 
- #define CREATE_TRACE_POINTS
--#include <trace/events/thermal_power_allocator.h>
-+#include "thermal_trace_ipa.h" 
- 
- #include "thermal_core.h"
- 
-diff --git a/drivers/thermal/gov_step_wise.c b/drivers/thermal/gov_step_wise.c
-index 31235e169c5a..f69c83e2992d 100644
---- a/drivers/thermal/gov_step_wise.c
-+++ b/drivers/thermal/gov_step_wise.c
-@@ -12,7 +12,7 @@
- 
- #include <linux/thermal.h>
- #include <linux/minmax.h>
--#include <trace/events/thermal.h>
-+#include "thermal_trace.h" 
- 
- #include "thermal_core.h"
- 
-diff --git a/drivers/thermal/thermal_core.c b/drivers/thermal/thermal_core.c
-index 46dedfe061df..cec72c6673a5 100644
---- a/drivers/thermal/thermal_core.c
-+++ b/drivers/thermal/thermal_core.c
-@@ -22,7 +22,7 @@
- #include <linux/suspend.h>
- 
- #define CREATE_TRACE_POINTS
--#include <trace/events/thermal.h>
-+#include "thermal_trace.h"
- 
- #include "thermal_core.h"
- #include "thermal_hwmon.h"
-diff --git a/drivers/thermal/thermal_helpers.c b/drivers/thermal/thermal_helpers.c
-index 9558339f5633..c41b1a5700a5 100644
---- a/drivers/thermal/thermal_helpers.c
-+++ b/drivers/thermal/thermal_helpers.c
-@@ -19,9 +19,8 @@
- #include <linux/string.h>
- #include <linux/sysfs.h>
- 
--#include <trace/events/thermal.h>
--
- #include "thermal_core.h"
-+#include "thermal_trace.h"
- 
- int get_tz_trend(struct thermal_zone_device *tz, int trip)
- {
-diff --git a/include/trace/events/thermal.h b/drivers/thermal/thermal_trace.h
-similarity index 97%
-rename from include/trace/events/thermal.h
-rename to drivers/thermal/thermal_trace.h
-index e58bf3072f32..459c8ce6cf3b 100644
---- a/include/trace/events/thermal.h
-+++ b/drivers/thermal/thermal_trace.h
-@@ -195,5 +195,11 @@ TRACE_EVENT(thermal_power_devfreq_limit,
- #endif /* CONFIG_DEVFREQ_THERMAL */
- #endif /* _TRACE_THERMAL_H */
- 
-+#undef TRACE_INCLUDE_PATH
-+#define TRACE_INCLUDE_PATH .
-+
-+#undef TRACE_INCLUDE_FILE
-+#define TRACE_INCLUDE_FILE thermal_trace
-+
- /* This part must be outside protection */
- #include <trace/define_trace.h>
-diff --git a/include/trace/events/thermal_power_allocator.h b/drivers/thermal/thermal_trace_ipa.h
-similarity index 96%
-rename from include/trace/events/thermal_power_allocator.h
-rename to drivers/thermal/thermal_trace_ipa.h
-index 1c8fb95544f9..84568db5421b 100644
---- a/include/trace/events/thermal_power_allocator.h
-+++ b/drivers/thermal/thermal_trace_ipa.h
-@@ -84,5 +84,11 @@ TRACE_EVENT(thermal_power_allocator_pid,
- );
- #endif /* _TRACE_THERMAL_POWER_ALLOCATOR_H */
- 
-+#undef TRACE_INCLUDE_PATH
-+#define TRACE_INCLUDE_PATH .
-+
-+#undef TRACE_INCLUDE_FILE
-+#define TRACE_INCLUDE_FILE thermal_trace_ipa
-+
- /* This part must be outside protection */
- #include <trace/define_trace.h>
--- 
-2.34.1
+Please reply below the original e-mail instead of above. This is 
+expected on Linux kernel mailing lists.
+
+Regarding your question: I propose to leave out the sq_tail, cq_head and 
+cq_tail information. That information may be useful for hardware 
+developers but is not useful for other users of the Linux kernel. So the 
+only piece of information that is left that is MCQ-specific is the 
+hardware queue index. I expect that users will be fine to see that 
+information in trace events.
+
+How about reporting hardware queue index -1 for legacy mode instead of 
+0? That will allow users to tell the difference between legacy mode and 
+MCQ mode from the trace events.
+
+Thanks,
+
+Bart.
 
