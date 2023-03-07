@@ -2,192 +2,255 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 75CC8C678DB
-	for <linux-trace-kernel@archiver.kernel.org>; Tue,  7 Mar 2023 10:05:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 001C9C678D5
+	for <linux-trace-kernel@archiver.kernel.org>; Tue,  7 Mar 2023 13:37:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230039AbjCGKFc (ORCPT
+        id S230139AbjCGNh7 (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Tue, 7 Mar 2023 05:05:32 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41422 "EHLO
+        Tue, 7 Mar 2023 08:37:59 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33540 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231158AbjCGKF1 (ORCPT
+        with ESMTP id S229833AbjCGNh6 (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Tue, 7 Mar 2023 05:05:27 -0500
-Received: from mail-ua1-x934.google.com (mail-ua1-x934.google.com [IPv6:2607:f8b0:4864:20::934])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A5E1162B5F
-        for <linux-trace-kernel@vger.kernel.org>; Tue,  7 Mar 2023 02:05:13 -0800 (PST)
-Received: by mail-ua1-x934.google.com with SMTP id m5so8436059uae.11
-        for <linux-trace-kernel@vger.kernel.org>; Tue, 07 Mar 2023 02:05:13 -0800 (PST)
+        Tue, 7 Mar 2023 08:37:58 -0500
+Received: from mail-wr1-x432.google.com (mail-wr1-x432.google.com [IPv6:2a00:1450:4864:20::432])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 77537524E
+        for <linux-trace-kernel@vger.kernel.org>; Tue,  7 Mar 2023 05:37:56 -0800 (PST)
+Received: by mail-wr1-x432.google.com with SMTP id v16so12209736wrn.0
+        for <linux-trace-kernel@vger.kernel.org>; Tue, 07 Mar 2023 05:37:56 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1678183512;
-        h=cc:to:subject:message-id:date:from:mime-version:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=ZJQteWRnYzXph7B/Yag6wboM2N2GJr+YfQg8dgWg9fg=;
-        b=i8YkSnXonegkW6NuzrPQBnddeL5AYYykbpX7rf6mfB8qYXCajrksSX8+6x4H5APR+w
-         CyNC62BEdd3IYiqGt744W8UizLpcEOdhUiDZRYh/JcwTFH6rlLqr7g9s07erwqZcY7dp
-         q/F4VRUtobYOSrlJ7QIQWS6hZAgJzvST7krsB060SCJMGqiX21BS0uo1RLBt3V0qA+Cf
-         WT23cEsgXMPi/eZrq57WQU3qNvc/9+1vGZmbtzjWxUWi/VDuq4oxgV+Sg408FcGFZxpi
-         ft4GnPZVeN7MdoezfV5rJKQ0+V0oxD6qCplcauC3YCrpheLCf/aDfQi/OCF/2Gopx5U0
-         RQqA==
+        d=linaro.org; s=google; t=1678196275;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=b5lJEnGWoR5daba7syY/YlJQMJlulw+k3BHuc1yDN1U=;
+        b=HNwN9xLjHkYN2k4XJ8+FCxhbozlsuAWJRVES03TTNWLuJDi7/D9zR0blvPsClZ4aJF
+         dZVBH9kFIfyJNf3aBDJqkT/ANpEmjPCvvMpjtEVRpbSzXmJKheHZkXa/xF2aCcoUksQG
+         /OHuCQKOOxEDZu67yNYMjHLCbqBQ7uQNupFZKwbvHiTGsnjdtceKUahaCVtpqEa0P5BL
+         yZ7RFojSHhXPz0U3y2KlOY3Vnagf+/0/imHZ/YHPIsbGd+BtzVH9Jnb3EyKFJoEkIHb6
+         XMLn49DMTSr7koKc390uGmGAn0KPKhDsaY/9OjWfea4UP28n3QM7vmfL86Rfl69LBlQM
+         2f+A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1678183512;
-        h=cc:to:subject:message-id:date:from:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=ZJQteWRnYzXph7B/Yag6wboM2N2GJr+YfQg8dgWg9fg=;
-        b=I24zwvSWe8/mTzWDSI9d3oHwUbe51ulP73aRTTqi4+MaF+NlbExPMQQOd9BwbOEFry
-         PYSehJxKpGFXJc2Vig1FKm3SuKq5/U9WeXgBF1rXEkNXxvgxQpIHywoSQzaSpbj3Q8/0
-         vpm9BK7pATSYZ3X8UySS6n//l/vicVxF5PeJQVDLkD0pn+i24VMD/J/zPYdRGS+3zn2c
-         egmLMo8uarpWKg8qaAGrWXhD90loFhFwJ8kjBBh0hZyD0Sf1W2QZaEgDx9hvY6RacWBW
-         +P/NdxsaJya5QeyPYnIpaMlvHx9DUAxhagAKJEs/dlf0qJ1pJIycwNDCTpK0HZdaOBmJ
-         uYiw==
-X-Gm-Message-State: AO0yUKUGH8dTDgrDb9DHflXN9KzcI6jaNlGJp6Fz5QNsIDGnNSClVeeu
-        TDibvwevkjMYnGwLvOlW1B9StgrRVyqsVegIf1kzgg==
-X-Google-Smtp-Source: AK7set8c+gLtppl3OV34UlpT2NVSBrBDOXjbBL6Qoi5a7s9uQCdvDonXutxUCPmrYcSLhl/Eg4gal+XbsMwFV15tygk=
-X-Received: by 2002:a1f:e483:0:b0:406:3e8d:92c8 with SMTP id
- b125-20020a1fe483000000b004063e8d92c8mr8898453vkh.1.1678183512529; Tue, 07
- Mar 2023 02:05:12 -0800 (PST)
+        d=1e100.net; s=20210112; t=1678196275;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=b5lJEnGWoR5daba7syY/YlJQMJlulw+k3BHuc1yDN1U=;
+        b=cOKHbYhdHSVDmxhplmZ067Upzj5Mw90VGMi6czukynKTj0HT7pt3P1W8PTMKgt+p/M
+         bH02YoR0OF1vXcyCTX3rWC/VRhzWwWbI4MioimRypDNVbTbW+u5qMAQCFIRelUBGnTS2
+         yUohHmMJYDr3GDG3Pq1uNmqK0Oh3/hqcPvKC3ospAEt82LxAHueDBA+/+3uGPc+P3cho
+         LvcpLJP2TW9npTDUSLIhpl8E+dogFiddFGsjWVoeiH93h5PrTQqULTOX5XUPm50dYSiF
+         ohJnl1bw02hlheIMypAApRkzfVjd4njtQfvj5JXG09ZpJ60gp1QZRAiHMWUaRAHPP2h4
+         gTpw==
+X-Gm-Message-State: AO0yUKW886iaHycx26ZU9luBoL5+as5E/EiAFtqas95H12mzKviKCe00
+        BGc/a5ErjeQSK605vK90PppN3g==
+X-Google-Smtp-Source: AK7set8ZMrApDRZd5133PVg919iApzpcGKhJiym0d1GCCx1FzE5z2niOOu588zS7WXr0/sPqW8nwbw==
+X-Received: by 2002:adf:e745:0:b0:2c5:a38f:ca3a with SMTP id c5-20020adfe745000000b002c5a38fca3amr13239879wrn.10.1678196274952;
+        Tue, 07 Mar 2023 05:37:54 -0800 (PST)
+Received: from mai.box.freepro.com ([2a05:6e02:1041:c10:5ab9:1ac6:870d:35c])
+        by smtp.gmail.com with ESMTPSA id v5-20020a5d43c5000000b002c55de1c72bsm12311477wrr.62.2023.03.07.05.37.54
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 07 Mar 2023 05:37:54 -0800 (PST)
+From:   Daniel Lezcano <daniel.lezcano@linaro.org>
+To:     daniel.lezcano@linaro.org, rafael@kernel.org
+Cc:     rui.zhang@intel.com, amitk@kernel.org,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Amit Daniel Kachhap <amit.kachhap@gmail.com>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Lukasz Luba <lukasz.luba@arm.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        linux-pm@vger.kernel.org (open list:THERMAL),
+        linux-kernel@vger.kernel.org (open list),
+        linux-trace-kernel@vger.kernel.org (open list:TRACING)
+Subject: [PATCH v1 01/11] thermal/core: Relocate the traces definition in thermal directory
+Date:   Tue,  7 Mar 2023 14:37:25 +0100
+Message-Id: <20230307133735.90772-2-daniel.lezcano@linaro.org>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20230307133735.90772-1-daniel.lezcano@linaro.org>
+References: <20230307133735.90772-1-daniel.lezcano@linaro.org>
 MIME-Version: 1.0
-From:   Naresh Kamboju <naresh.kamboju@linaro.org>
-Date:   Tue, 7 Mar 2023 15:35:01 +0530
-Message-ID: <CA+G9fYuJJySMY_6oLx_R_ebX9wDkwTLbDW7f7_CqF9UgFhSajg@mail.gmail.com>
-Subject: ftrace_regression01: qemu-i386: EIP: vm_area_free: Kernel panic - not
- syncing: Fatal exception in interrupt
-To:     linux-clk <linux-clk@vger.kernel.org>,
-        linux-mm <linux-mm@kvack.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        lkft-triage@lists.linaro.org, linux-trace-kernel@vger.kernel.org,
-        LTP List <ltp@lists.linux.it>
-Cc:     Arnd Bergmann <arnd@arndb.de>,
-        Anders Roxell <anders.roxell@linaro.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Masami Hiramatsu <mhiramat@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-The following kernel panic noticed While running LTP tracing tests on
-qemu-i386.
+The traces are exported but only local to the thermal core code. On
+the other side, the traces take the thermal zone device structure as
+argument, thus they have to rely on the exported thermal.h header
+file. As we want to move the structure to the private thermal core
+header, first we have to relocate those traces to the same place as
+many drivers do.
 
-Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
+Cc: Steven Rostedt <rostedt@goodmis.org>
+Suggested-by: Steven Rostedt <rostedt@goodmis.org>
+Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
+---
+ drivers/thermal/Makefile                                    | 3 ++-
+ drivers/thermal/cpufreq_cooling.c                           | 2 +-
+ drivers/thermal/devfreq_cooling.c                           | 2 +-
+ drivers/thermal/gov_fair_share.c                            | 2 +-
+ drivers/thermal/gov_power_allocator.c                       | 2 +-
+ drivers/thermal/gov_step_wise.c                             | 2 +-
+ drivers/thermal/thermal_core.c                              | 2 +-
+ drivers/thermal/thermal_helpers.c                           | 3 +--
+ .../events/thermal.h => drivers/thermal/thermal_trace.h     | 6 ++++++
+ .../thermal/thermal_trace_ipa.h                             | 6 ++++++
+ 10 files changed, 21 insertions(+), 9 deletions(-)
+ rename include/trace/events/thermal.h => drivers/thermal/thermal_trace.h (97%)
+ rename include/trace/events/thermal_power_allocator.h => drivers/thermal/thermal_trace_ipa.h (96%)
 
+diff --git a/drivers/thermal/Makefile b/drivers/thermal/Makefile
+index eed300e83d48..058664bc3ec0 100644
+--- a/drivers/thermal/Makefile
++++ b/drivers/thermal/Makefile
+@@ -2,7 +2,7 @@
+ #
+ # Makefile for sensor chip drivers.
+ #
+-
++CFLAGS_thermal_core.o		:= -I$(src)
+ obj-$(CONFIG_THERMAL)		+= thermal_sys.o
+ thermal_sys-y			+= thermal_core.o thermal_sysfs.o
+ thermal_sys-y			+= thermal_trip.o thermal_helpers.o
+@@ -16,6 +16,7 @@ thermal_sys-$(CONFIG_THERMAL_OF)		+= thermal_of.o
+ thermal_sys-$(CONFIG_THERMAL_ACPI)		+= thermal_acpi.o
+ 
+ # governors
++CFLAGS_gov_power_allocator.o			:= -I$(src)
+ thermal_sys-$(CONFIG_THERMAL_GOV_FAIR_SHARE)	+= gov_fair_share.o
+ thermal_sys-$(CONFIG_THERMAL_GOV_BANG_BANG)	+= gov_bang_bang.o
+ thermal_sys-$(CONFIG_THERMAL_GOV_STEP_WISE)	+= gov_step_wise.o
+diff --git a/drivers/thermal/cpufreq_cooling.c b/drivers/thermal/cpufreq_cooling.c
+index 9f8b438fcf8f..65ef08b30334 100644
+--- a/drivers/thermal/cpufreq_cooling.c
++++ b/drivers/thermal/cpufreq_cooling.c
+@@ -23,7 +23,7 @@
+ #include <linux/thermal.h>
+ #include <linux/units.h>
+ 
+-#include <trace/events/thermal.h>
++#include "thermal_trace.h"
+ 
+ /*
+  * Cooling state <-> CPUFreq frequency
+diff --git a/drivers/thermal/devfreq_cooling.c b/drivers/thermal/devfreq_cooling.c
+index 24b474925cd6..262e62ab6cf2 100644
+--- a/drivers/thermal/devfreq_cooling.c
++++ b/drivers/thermal/devfreq_cooling.c
+@@ -20,7 +20,7 @@
+ #include <linux/thermal.h>
+ #include <linux/units.h>
+ 
+-#include <trace/events/thermal.h>
++#include "thermal_trace.h"
+ 
+ #define SCALE_ERROR_MITIGATION	100
+ 
+diff --git a/drivers/thermal/gov_fair_share.c b/drivers/thermal/gov_fair_share.c
+index aad7d5fe3a14..1ce5692151f5 100644
+--- a/drivers/thermal/gov_fair_share.c
++++ b/drivers/thermal/gov_fair_share.c
+@@ -11,7 +11,7 @@
+  */
+ 
+ #include <linux/thermal.h>
+-#include <trace/events/thermal.h>
++#include "thermal_trace.h" 
+ 
+ #include "thermal_core.h"
+ 
+diff --git a/drivers/thermal/gov_power_allocator.c b/drivers/thermal/gov_power_allocator.c
+index 0eaf1527d3e3..3df2d440d73d 100644
+--- a/drivers/thermal/gov_power_allocator.c
++++ b/drivers/thermal/gov_power_allocator.c
+@@ -12,7 +12,7 @@
+ #include <linux/thermal.h>
+ 
+ #define CREATE_TRACE_POINTS
+-#include <trace/events/thermal_power_allocator.h>
++#include "thermal_trace_ipa.h" 
+ 
+ #include "thermal_core.h"
+ 
+diff --git a/drivers/thermal/gov_step_wise.c b/drivers/thermal/gov_step_wise.c
+index 31235e169c5a..f69c83e2992d 100644
+--- a/drivers/thermal/gov_step_wise.c
++++ b/drivers/thermal/gov_step_wise.c
+@@ -12,7 +12,7 @@
+ 
+ #include <linux/thermal.h>
+ #include <linux/minmax.h>
+-#include <trace/events/thermal.h>
++#include "thermal_trace.h" 
+ 
+ #include "thermal_core.h"
+ 
+diff --git a/drivers/thermal/thermal_core.c b/drivers/thermal/thermal_core.c
+index 46dedfe061df..cec72c6673a5 100644
+--- a/drivers/thermal/thermal_core.c
++++ b/drivers/thermal/thermal_core.c
+@@ -22,7 +22,7 @@
+ #include <linux/suspend.h>
+ 
+ #define CREATE_TRACE_POINTS
+-#include <trace/events/thermal.h>
++#include "thermal_trace.h"
+ 
+ #include "thermal_core.h"
+ #include "thermal_hwmon.h"
+diff --git a/drivers/thermal/thermal_helpers.c b/drivers/thermal/thermal_helpers.c
+index 9558339f5633..c41b1a5700a5 100644
+--- a/drivers/thermal/thermal_helpers.c
++++ b/drivers/thermal/thermal_helpers.c
+@@ -19,9 +19,8 @@
+ #include <linux/string.h>
+ #include <linux/sysfs.h>
+ 
+-#include <trace/events/thermal.h>
+-
+ #include "thermal_core.h"
++#include "thermal_trace.h"
+ 
+ int get_tz_trend(struct thermal_zone_device *tz, int trip)
+ {
+diff --git a/include/trace/events/thermal.h b/drivers/thermal/thermal_trace.h
+similarity index 97%
+rename from include/trace/events/thermal.h
+rename to drivers/thermal/thermal_trace.h
+index e58bf3072f32..459c8ce6cf3b 100644
+--- a/include/trace/events/thermal.h
++++ b/drivers/thermal/thermal_trace.h
+@@ -195,5 +195,11 @@ TRACE_EVENT(thermal_power_devfreq_limit,
+ #endif /* CONFIG_DEVFREQ_THERMAL */
+ #endif /* _TRACE_THERMAL_H */
+ 
++#undef TRACE_INCLUDE_PATH
++#define TRACE_INCLUDE_PATH .
++
++#undef TRACE_INCLUDE_FILE
++#define TRACE_INCLUDE_FILE thermal_trace
++
+ /* This part must be outside protection */
+ #include <trace/define_trace.h>
+diff --git a/include/trace/events/thermal_power_allocator.h b/drivers/thermal/thermal_trace_ipa.h
+similarity index 96%
+rename from include/trace/events/thermal_power_allocator.h
+rename to drivers/thermal/thermal_trace_ipa.h
+index 1c8fb95544f9..84568db5421b 100644
+--- a/include/trace/events/thermal_power_allocator.h
++++ b/drivers/thermal/thermal_trace_ipa.h
+@@ -84,5 +84,11 @@ TRACE_EVENT(thermal_power_allocator_pid,
+ );
+ #endif /* _TRACE_THERMAL_POWER_ALLOCATOR_H */
+ 
++#undef TRACE_INCLUDE_PATH
++#define TRACE_INCLUDE_PATH .
++
++#undef TRACE_INCLUDE_FILE
++#define TRACE_INCLUDE_FILE thermal_trace_ipa
++
+ /* This part must be outside protection */
+ #include <trace/define_trace.h>
+-- 
+2.34.1
 
-[    0.000000] Linux version 6.3.0-rc1 (tuxmake@tuxmake) (Debian clang
-version 16.0.0 (++20230228093516+60692a66ced6-1~exp1~20230228093525.41),
-Debian LLD 16.0.0) #1 SMP PREEMPT_DYNAMIC @1678136838
-...
-LTP tracing tests
-Running tests.......
-<6>[   35.957375] traps: systemd-network[287] trap invalid opcode
-ip:b7d99bef sp:bfcf8e20 error:0 in
-libsystemd-shared-250.so[b7c33000+1c0000]
-<6>[   39.887678] traps: systemd-network[330] trap invalid opcode
-ip:b7db0bef sp:bfb6ab00 error:0 in
-libsystemd-shared-250.so[b7c4a000+1c0000]
-<4>[   41.883172] clocksource: timekeeping watchdog on CPU0: Marking
-clocksource 'tsc' as unstable because the skew is too large:
-<4>[   41.885195] clocksource:                       'acpi_pm'
-wd_nsec: 633206175 wd_now: 13fe92 wd_last: f168b4 mask: ffffff
-<4>[   41.886363] clocksource:                       'tsc' cs_nsec:
-5320282620 cs_now: 1cbab6bece cs_last: 19231a48ea mask:
-ffffffffffffffff
-<4>[   41.887503] clocksource:                       Clocksource 'tsc'
-skewed 4687076445 ns (4687 ms) over watchdog 'acpi_pm' interval of
-633206175 ns (633 ms)
-<4>[   41.888583] clocksource:                       'tsc' is current
-clocksource.
-<6>[   41.889615] tsc: Marking TSC unstable due to clocksource watchdog
-<4>[   41.894933] TSC found unstable after boot, most likely due to
-broken BIOS. Use 'tsc=unstable'.
-<6>[   41.895623] sched_clock: Marking unstable (41348265135,
-546543322)<-(41919545028, -24729054)
-<4>[   41.905093] clocksource: Checking clocksource tsc
-synchronization from CPU 1 to CPUs 0.
-<6>[   41.921496] clocksource: Switched to clocksource acpi_pm
-<47>[   42.122074] systemd-journald[108]: Successfully sent stream
-file descriptor to service manager.
-
-ftrace_regression01 1 TPASS: Finished running the test
-
-<4>[   43.795642] int3: 0000 [#1] PREEMPT SMP
-<4>[   43.795642] CPU: 0 PID: 331 Comm: systemd-network Not tainted 6.3.0-rc1 #1
-<4>[   43.795642] Hardware name: QEMU Standard PC (Q35 + ICH9, 2009),
-BIOS 1.14.0-2 04/01/2014
-<4>[   43.795642] EIP: vm_area_free+0x1/0x20
-<4>[   43.795642] Code: e5 85 1d 00 85 c0 74 14 b9 11 00 00 00 89 c7
-f3 a5 89 c1 83 c1 24 89 48 24 89 48 28 5e 5f 5d c3 90 90 90 90 90 90
-90 90 90 3e <8d> 74 26 00 55 89 e5 89 c2 a1 ac 99 82 d3 e8 fc 8f 1d 00
-5d c3 90
-<4>[   43.795642] EAX: c243bab0 EBX: c243bab0 ECX: 00000000 EDX: c23cb9c0
-<4>[   43.795642] ESI: 00000000 EDI: 000001c0 EBP: c25c1e24 ESP: c25c1dd0
-<4>[   43.795642] DS: 007b ES: 007b FS: 00d8 GS: 0000 SS: 0068 EFLAGS: 00000246
-<4>[   43.795642] CR0: 80050033 CR2: 081d764c CR3: 02ce1000 CR4: 000006d0
-<4>[   43.795642] Call Trace:
-<4>[   43.795642]  ? do_vmi_align_munmap+0x26e/0x380
-<4>[   43.795642]  mmap_region+0x26e/0x880
-<4>[   43.795642]  ? arch_ftrace_ops_list_func+0x20/0x1a0
-<4>[   43.795642]  ? ftrace_call+0x5/0x13
-<4>[   43.795642]  do_mmap+0x33f/0x4b0
-<4>[   43.795642]  ? do_mmap+0x3f6/0x4b0
-<4>[   43.795642]  vm_mmap_pgoff+0x9b/0x120
-<4>[   43.795642]  ksys_mmap_pgoff+0x15d/0x1b0
-<4>[   43.795642]  __ia32_sys_mmap_pgoff+0x21/0x30
-<4>[   43.795642]  do_int80_syscall_32+0x39/0x74
-<4>[   43.795642]  entry_INT80_32+0xf0/0xf0
-<4>[   43.795642] EIP: 0xb7f7d9c1
-<4>[   43.795642] Code: c3 8d b4 26 00 00 00 00 90 8b 5c 24 08 01 c3
-8b 6c 2b 40 89 2f eb b6 66 90 f3 0f 1e fb 53 57 55 8b 1f 8b 6f 08 8b
-7f 04 cd 80 <5d> 5f 5b c3 66 90 66 90 66 90 66 90 66 90 90 f3 0f 1e fb
-e8 5a 00
-<4>[   43.795642] EAX: ffffffda EBX: b7c94000 ECX: 001c0000 EDX: 00000005
-<4>[   43.795642] ESI: 00000812 EDI: 00000004 EBP: 0000003b ESP: bff393e0
-<4>[   43.795642] DS: 007b ES: 007b FS: 0000 GS: 0000 SS: 007b EFLAGS: 00000202
-<4>[   43.795642] Modules linked in:
-<4>[   43.795642]  \
- ---[ end trace 0000000000000000 ]---
-<4>[   43.795642] EIP: vm_area_free+0x1/0x20
-<4>[   43.795642] Code: e5 85 1d 00 85 c0 74 14 b9 11 00 00 00 89 c7
-f3 a5 89 c1 83 c1 24 89 48 24 89 48 28 5e 5f 5d c3 90 90 90 90 90 90
-90 90 90 3e <8d> 74 26 00 55 89 e5 89 c2 a1 ac 99 82 d3 e8 fc 8f 1d 00
-5d c3 90
-<4>[   43.795642] EAX: c243bab0 EBX: c243bab0 ECX: 00000000 EDX: c23cb9c0
-<4>[   43.795642] ESI: 00000000 EDI: 000001c0 EBP: c25c1e24 ESP: c25c1dd0
-<4>[   43.795642] DS: 007b ES: 007b FS: 00d8 GS: 0000 SS: 0068 EFLAGS: 00000246
-<4>[   43.795642] CR0: 80050033 CR2: 081d764c CR3: 02ce1000 CR4: 000006d0
-<0>[   43.795642] Kernel panic - not syncing: Fatal exception in interrupt
-<0>[   43.795642] Kernel Offset: disabled
-
-test log:
------
-  - https://qa-reports.linaro.org/lkft/linux-mainline-master/build/v6.3-rc1-2-g8ca09d5fa354/testrun/15298979/suite/log-parser-test/test/check-kernel-panic/log
-  - https://qa-reports.linaro.org/lkft/linux-mainline-master/build/v6.3-rc1-2-g8ca09d5fa354/testrun/15298979/suite/log-parser-test/tests/
-
-
-steps to reproduce:
---------------
-# To install tuxrun on your system globally:
-# sudo pip3 install -U tuxrun==0.37.2
-#
-# See https://tuxrun.org/ for complete documentation.
-
-tuxrun  \
- --runtime podman  \
- --device qemu-i386  \
- --kernel https://storage.tuxsuite.com/public/linaro/lkft/builds/2MemUurDShqDi3xoAvTknd2dbfd/bzImage
- \
- --modules https://storage.tuxsuite.com/public/linaro/lkft/builds/2MemUurDShqDi3xoAvTknd2dbfd/modules.tar.xz
- \
- --rootfs https://storage.tuxsuite.com/public/linaro/lkft/oebuilds/2MV9clY6B5uyK3SNAIPgiO5gCoP/images/intel-core2-32/lkft-tux-image-intel-core2-32-20230303113918.rootfs.ext4.gz
- \
- --parameters SKIPFILE=skipfile-lkft.yaml  \
- --parameters SHARD_NUMBER=4  \
- --parameters SHARD_INDEX=1  \
- --image docker.io/lavasoftware/lava-dispatcher:2023.01.0020.gc1598238f  \
- --tests ltp-tracing  \
- --timeouts boot=15 ltp-tracing=30
-
-
---
-Linaro LKFT
-https://lkft.linaro.org
