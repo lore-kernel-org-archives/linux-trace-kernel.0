@@ -2,87 +2,69 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB0C8C64EC4
-	for <linux-trace-kernel@archiver.kernel.org>; Thu,  9 Mar 2023 15:46:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 45E7DC76186
+	for <linux-trace-kernel@archiver.kernel.org>; Thu,  9 Mar 2023 16:39:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230484AbjCIPqA (ORCPT
+        id S229991AbjCIQjG (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Thu, 9 Mar 2023 10:46:00 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51040 "EHLO
+        Thu, 9 Mar 2023 11:39:06 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42398 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229943AbjCIPp7 (ORCPT
+        with ESMTP id S229983AbjCIQi2 (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Thu, 9 Mar 2023 10:45:59 -0500
-Received: from mail-pl1-f179.google.com (mail-pl1-f179.google.com [209.85.214.179])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CCDA3E4C5B;
-        Thu,  9 Mar 2023 07:45:58 -0800 (PST)
-Received: by mail-pl1-f179.google.com with SMTP id a2so2432138plm.4;
-        Thu, 09 Mar 2023 07:45:58 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1678376758;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=biZNX5KZ/hMnGZ5e5usbkfRsd1fpRjUN8x8r4dcxMI0=;
-        b=4Vy9T0LYmB2rtcUpAOG2AaIuFrgegeScMLkO8ccyiP9YgS+V2KiVyX2BDTzhIEQEJp
-         m8l/Yj518RC5gdn8k36cBg2AecuBraocMR13itdUtN1nPqxkI4v/BeQduZjI7Jj8eamh
-         t66hWSFqPjedsoi+MvxU3/Z64Y+JTXBJTi2qz8VFTcJ77ajDvreQZDWGdtmVfuJtsZnC
-         VRGWrY1QGh97RHxasSPz6HVCxVm/Sf613YGIkVazrj2aeHTBb8gofN8LXMDR/gLxof6M
-         Lkvo3MjZbOvHzQfJyPN4NN+w0URdmRCWtp9uOd2vfl30+3ZdCymmNcmKYk0eDCUM943L
-         8ayQ==
-X-Gm-Message-State: AO0yUKXrLWwrBgJPmJ20BZMZ1nyUu6ilsE3mhrdS+7kWe2eZuFL7WAmG
-        mjfOflHe8K/OXE1IlT2cYuXj0XCAR3M=
-X-Google-Smtp-Source: AK7set+xPX0lIUeqjOBJsgMn1+hDVCVKiXFB5AlWnVU0ciJ2KmKKfMm6Y6dXl5EDibkB+IhgTTZ2gg==
-X-Received: by 2002:a05:6a20:3d0b:b0:c9:9312:5f1d with SMTP id y11-20020a056a203d0b00b000c993125f1dmr29893458pzi.4.1678376758123;
-        Thu, 09 Mar 2023 07:45:58 -0800 (PST)
-Received: from [192.168.132.235] ([63.145.95.70])
-        by smtp.gmail.com with ESMTPSA id 142-20020a630594000000b004fbe302b3f6sm11203167pgf.74.2023.03.09.07.45.57
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 09 Mar 2023 07:45:57 -0800 (PST)
-Message-ID: <99f2ea8e-e543-fc14-91d7-0e7e29d2f381@acm.org>
-Date:   Thu, 9 Mar 2023 07:45:56 -0800
+        Thu, 9 Mar 2023 11:38:28 -0500
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B623D23D95;
+        Thu,  9 Mar 2023 08:28:52 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id F07B2B81FB1;
+        Thu,  9 Mar 2023 16:15:02 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0031AC433EF;
+        Thu,  9 Mar 2023 16:15:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+        s=korg; t=1678378501;
+        bh=HcwHDBfFsKMC1NScBUvgLRXeM273n/hMohRdHJg+Xh4=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=fBn4ORoJgJ9/ZDEE2QDPdiUpLhPiB3wJmlLoxIWFeUqajPrUSr+S11Zigs2yTXH96
+         kkTgc+dwJ7CKAesmoXOXwMrbASlFFyuTfSDrlvwyXnsqF/QuP52I3WFxRH+4uBmUWi
+         HrYhjtJs4yCrPkjhHWFvi6esIdYgZGPSUpxPcNjQ=
+Date:   Thu, 9 Mar 2023 17:14:58 +0100
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Nick Alcock <nick.alcock@oracle.com>
+Cc:     mcgrof@kernel.org, linux-clk@vger.kernel.org,
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-modules@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        linux-pm@vger.kernel.org, linux-remoteproc@vger.kernel.org,
+        linux-renesas-soc@vger.kernel.org, linux-riscv@lists.infradead.org,
+        linux-serial@vger.kernel.org, linux-tegra@vger.kernel.org,
+        linux-trace-devel@vger.kernel.org,
+        linux-trace-kernel@vger.kernel.org
+Subject: Re: [PATCH 00/20] MODULE_LICENSE removals, fifth tranche
+Message-ID: <ZAoGAj3sRXKYzwc2@kroah.com>
+References: <20230228130215.289081-1-nick.alcock@oracle.com>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.7.1
-Subject: Re: [PATCH v4] scsi: ufs: core: Add trace event for MCQ
-Content-Language: en-US
-To:     Ziqi Chen <quic_ziqichen@quicinc.com>, quic_asutoshd@quicinc.com,
-        quic_cang@quicinc.com, mani@kernel.org, stanley.chu@mediatek.com,
-        adrian.hunter@intel.com, beanhuo@micron.com, avri.altman@wdc.com,
-        junwoo80.lee@samsung.com, martin.petersen@oracle.com
-Cc:     linux-scsi@vger.kernel.org, Alim Akhtar <alim.akhtar@samsung.com>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        "open list:TRACING" <linux-trace-kernel@vger.kernel.org>
-References: <1677836154-29192-1-git-send-email-quic_ziqichen@quicinc.com>
- <67db2c6b-c3b0-c525-e6a9-2b2fe6c6adbb@acm.org>
- <f80fd91b-3a03-5c38-72c0-cd5c3edb33b8@quicinc.com>
- <8a83ec79-be04-ec5c-f3ef-67f64dc55f12@acm.org>
- <f96b1867-142f-7fdc-8123-58fe3bdce844@quicinc.com>
-From:   Bart Van Assche <bvanassche@acm.org>
-In-Reply-To: <f96b1867-142f-7fdc-8123-58fe3bdce844@quicinc.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230228130215.289081-1-nick.alcock@oracle.com>
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On 3/8/23 18:44, Ziqi Chen wrote:
-> Thanks for you suggestion. But the member hwq->id is an Unsigned 
-> integer. if you want to identify SDB mode and MCQ mode,  using "0" is 
-> enough, Or how about add string such as below?
-> 
-> ufshcd_command: MCQ: complete_rsp: 1d84000.ufshc: tag: 14, DB: 0x0, 
-> size: 32768, IS: 0, LBA: 5979448,opcode: 0x2a (WRITE_10),group_id: 0x0, 
-> hqid: 2
+On Tue, Feb 28, 2023 at 01:01:55PM +0000, Nick Alcock wrote:
+> This series, based on current modules-next, is part of a treewide cleanup
+> suggested by Luis Chamberlain, to remove the LICENSE_MODULE usage from
+> files/objects that are not tristate.  Due to recent changes to kbuild, these
+> uses are now problematic.  See the commit logs for more details.
 
-Hi Ziqi,
+Why isn't kbuild fixed instead?  These files can have MODULE_AUTHOR()
+and other macros when built into the kernel, what is so special about
+MODULE_LICENSE() that prevents this from working properly?
 
-Since 0 is a valid queue ID using 0 to identify the legacy command 
-submission mechanism is ambiguous.
+There should not be a need to remove these markings in my opinion, why
+treat one MODULE_* macro more special than others?
 
-Thanks,
+thanks,
 
-Bart.
+greg k-h
