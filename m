@@ -2,99 +2,264 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F3E8DC74A4B
-	for <linux-trace-kernel@archiver.kernel.org>; Fri, 10 Mar 2023 19:07:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 37291C74A44
+	for <linux-trace-kernel@archiver.kernel.org>; Fri, 10 Mar 2023 19:26:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231414AbjCJTHl (ORCPT
+        id S229890AbjCJT0L (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Fri, 10 Mar 2023 14:07:41 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38106 "EHLO
+        Fri, 10 Mar 2023 14:26:11 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43772 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231405AbjCJTHV (ORCPT
+        with ESMTP id S229580AbjCJT0K (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Fri, 10 Mar 2023 14:07:21 -0500
-Received: from mail-io1-xd29.google.com (mail-io1-xd29.google.com [IPv6:2607:f8b0:4864:20::d29])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 13971132BDF
-        for <linux-trace-kernel@vger.kernel.org>; Fri, 10 Mar 2023 11:07:04 -0800 (PST)
-Received: by mail-io1-xd29.google.com with SMTP id e11so2442419ioe.3
-        for <linux-trace-kernel@vger.kernel.org>; Fri, 10 Mar 2023 11:07:03 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20210112; t=1678475223;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=eWqtsiqhGUvNVAxgRGNmyViFn5ukJIP+nu+2X15PDag=;
-        b=lP+cRiqQYogRnG8ytsvBRJH62sDPxM3+CDXZhL5XklrS+EMZfkeHz6srLEEcNzUSKm
-         DQr6N4ghWlycKeo8HTR6udWthHKnHA7p+Ry3Ppb6ljZKee48XYYfD10MMFYqFbKq2GfW
-         utJapnTS8BCSAfrd10vVbnnse/BcUYaInkirScHdlhRqAPQvySuKfHHF+hna6jkMbTjg
-         6U6WqLvkSxMbIpNEneCVMdD2tkpMgcJW3ntwItTTvy0/L26WDIzhDwqGm6Mc/l8JSwwd
-         XUAmsvkJbXHXjO8TP2D8SoCozFxRHUi2hiAfZzIu97sY/JgQCM3B5mqm+d6ANOxJwKix
-         +edQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1678475223;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=eWqtsiqhGUvNVAxgRGNmyViFn5ukJIP+nu+2X15PDag=;
-        b=SNRK0RnctZ/h/QCCD9A9oGQDFtk26D2ijHTzr8QR7wbWyDpknA3LEESwNJg6dZNJIu
-         qUe21iyT98MEUz2hudvVZ+y42j19SH5i6nDKKnUbu5ln7ZwwKJEBmTek1b0X72ge38wn
-         Gi101kP03KAi8Vgw4xpWVTAJUcqabu9/8UoeKdoX+p384aJHOxOIALNvgY5A8kicEo6o
-         jZHVJdULKLftSGaPn0RkiCJesGNbv9E1FYtG3XQntBzDOP9zZMvtp6bzwGNcBWUlkYM1
-         mecdICg0MReCcNiL3FDpBDZz3XjzjHsCNUPcaPTM3Nz4oTIhpaDwx3Uadn1b8KCgqMsg
-         V6gQ==
-X-Gm-Message-State: AO0yUKWjt66ABEicRGmuMuNBPRLPBx9w2Q+PvuL9uXh/vhQhQZpkwtbf
-        n/xi2beSGJGBnVoV9/dKsRdgGQ==
-X-Google-Smtp-Source: AK7set98xZN8awZ1NN+vEagnjcoQMPk9okvoD5NJwhGvEkQKUqEiVikUd2YXenveqqScArjHta7Ztw==
-X-Received: by 2002:a5d:8482:0:b0:74c:91c7:8794 with SMTP id t2-20020a5d8482000000b0074c91c78794mr4158053iom.21.1678475223076;
-        Fri, 10 Mar 2023 11:07:03 -0800 (PST)
-Received: from google.com ([2620:15c:183:200:4031:1c3f:5d8e:1b77])
-        by smtp.gmail.com with ESMTPSA id j2-20020a5d93c2000000b0074c7e84d0c8sm126473ioo.55.2023.03.10.11.07.02
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 10 Mar 2023 11:07:02 -0800 (PST)
-Date:   Fri, 10 Mar 2023 12:06:58 -0700
-From:   Ross Zwisler <zwisler@google.com>
-To:     "Michael S. Tsirkin" <mst@redhat.com>
-Cc:     Ross Zwisler <zwisler@chromium.org>, linux-kernel@vger.kernel.org,
-        "Tobin C. Harding" <me@tobin.cc>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Jason Wang <jasowang@redhat.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Shuah Khan <shuah@kernel.org>,
-        Tycho Andersen <tycho@tycho.pizza>, kvm@vger.kernel.org,
-        linux-hardening@vger.kernel.org, linux-kselftest@vger.kernel.org,
-        linux-mm@kvack.org, virtualization@lists.linux-foundation.org,
-        linux-trace-kernel@vger.kernel.org,
-        Steven Rostedt <rostedt@goodmis.org>
-Subject: Re: [PATCH v2 0/6] use canonical ftrace path whenever possible
-Message-ID: <20230310190658.GA3723158@google.com>
-References: <20230215223350.2658616-1-zwisler@google.com>
- <20230310032921-mutt-send-email-mst@kernel.org>
+        Fri, 10 Mar 2023 14:26:10 -0500
+Received: from out2-smtp.messagingengine.com (out2-smtp.messagingengine.com [66.111.4.26])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CA7A01340EE
+        for <linux-trace-kernel@vger.kernel.org>; Fri, 10 Mar 2023 11:26:08 -0800 (PST)
+Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
+        by mailout.nyi.internal (Postfix) with ESMTP id 94C655C00BB;
+        Fri, 10 Mar 2023 14:26:05 -0500 (EST)
+Received: from mailfrontend2 ([10.202.2.163])
+  by compute4.internal (MEProxy); Fri, 10 Mar 2023 14:26:05 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=devkernel.io; h=
+        cc:cc:content-type:content-type:date:date:from:from:in-reply-to
+        :in-reply-to:message-id:mime-version:references:reply-to:sender
+        :subject:subject:to:to; s=fm2; t=1678476365; x=1678562765; bh=5o
+        dF1s1CdYFE+uVP/AXOoJhD4DO7O8QOP7+HNQOSlIQ=; b=JkK7rgU/uYsQ88z8kc
+        ov8wPxisY8rjazG2ATFagGn+amk7PuHLH3cwUMw8A6cbkEBbh/3G4LO7jBojGV3s
+        HXC7sGteTQYb4CD3esZLEZSPE9RWxpVNP3OK2Yk+Wv3U/7ZmuH+NSLKhuNWfBxl5
+        8qQ3Voy4EzfhPsZ48Jx9dGsJ1auwY2anRHuHtn4UuPfFk+0PlcvZ7F8iTAJXOHzf
+        +OeHQy52vUs8jIJI0PgJLEtzFO1bmgtzKfBaZmtdX88gStPsl5TDL8oorpA/UWLy
+        vwoRccog+cKnHrcGGKygVY+8eW3YnYX8jzpomkBCYgMriiq6SQ1UQsxkYtsycWGL
+        g8jw==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:cc:content-type:content-type:date:date
+        :feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
+        :message-id:mime-version:references:reply-to:sender:subject
+        :subject:to:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender
+        :x-sasl-enc; s=fm1; t=1678476365; x=1678562765; bh=5odF1s1CdYFE+
+        uVP/AXOoJhD4DO7O8QOP7+HNQOSlIQ=; b=O86L6cKm/EpXAudx60mq9Vq8/dEhn
+        SG9QoINb7DbyXF3Df4/AAlcrDdKaHv9N+joZhFFZn0/kAQa7YW54t6Fe1J2AdWYV
+        6rXgy1W8JGAaibtV1ms6TAdy4UBrnz59rfRckFBm8M8bgR7L0k91z4Y04dU7tRQ7
+        r2eX0uhou5ohh4O+lSvXABQ7SX+VmgJ8XWeq0jQNEVw3SjvSnlBwGdtsO2/O2bcW
+        LWkARJPNlgU4cjPY8x7aZnUgP/UH8qIXQCdiliBQtpq2O/8rXffCdEgOhqRqYpuK
+        m9XrWh9bh2OhCWrKSibTAFt+0iMU5Bn3ffMHUXZmpH/NXB8u2mu2OKvhA==
+X-ME-Sender: <xms:TYQLZMUk0IzhrUnAQRoeRvASoF3fq9MgkeobtKweCLS89MHuZ13Fvg>
+    <xme:TYQLZAnCOvncDSv7zXiRDiU1rwG1Unpctgf8ZDJ883Gt-CjwoPVBNiY5g25283HY6
+    rCP7sLOJNU7h50sQvU>
+X-ME-Received: <xmr:TYQLZAYMBY6xTH13VW7OnD6bknxlDPTmKbRXZTK3BVqNjjX2eBB55eqI8eyF-ipCjz3UiHwdJkvSmTbqtiNhSic1nPsf_AojDzPDLugoKg>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvhedrvddukedguddvvdcutefuodetggdotefrod
+    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfgh
+    necuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmd
+    enucfjughrpehffgfhvfevufffjgfkgggtsehttdertddtredtnecuhfhrohhmpefuthgv
+    fhgrnhcutfhovghstghhuceoshhhrhesuggvvhhkvghrnhgvlhdrihhoqeenucggtffrrg
+    htthgvrhhnpeevlefggffhheduiedtheejveehtdfhtedvhfeludetvdegieekgeeggfdu
+    geeutdenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpe
+    hshhhrseguvghvkhgvrhhnvghlrdhioh
+X-ME-Proxy: <xmx:TYQLZLXuXo-Bqv4534n7b1syUylRcAf_7VEqJ4BIbg0XDXnxDYEsbg>
+    <xmx:TYQLZGkFApdXSVYAqXHOGMaTa9ztaCY5nhjsjwKs5rwhND_wYSW1dg>
+    <xmx:TYQLZAdAa6gffTlOEGmvtwI__pKm4STTwLMi0q7VSVdbiW-6iv3Csg>
+    <xmx:TYQLZIj_QtKIUnQppDr7XWJ8NQcvFMFZYqKaIbGxUTBcKbdC1Kvdyw>
+Feedback-ID: i84614614:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Fri,
+ 10 Mar 2023 14:26:04 -0500 (EST)
+References: <20230210214645.2720847-1-shr@devkernel.io>
+ <20230309172726.14fca32e@gandalf.local.home>
+User-agent: mu4e 1.6.11; emacs 28.2.50
+From:   Stefan Roesch <shr@devkernel.io>
+To:     Steven Rostedt <rostedt@goodmis.org>
+Cc:     kernel-team@fb.com, linux-mm@kvack.org,
+        linux-trace-kernel@vger.kernel.org, akpm@linux-foundation.org
+Subject: Re: [PATCH v1] mm: add tracepoints to ksm
+Date:   Fri, 10 Mar 2023 11:22:54 -0800
+In-reply-to: <20230309172726.14fca32e@gandalf.local.home>
+Message-ID: <qvqwa60k2yt5.fsf@dev0134.prn3.facebook.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230310032921-mutt-send-email-mst@kernel.org>
+Content-Type: text/plain
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On Fri, Mar 10, 2023 at 03:29:49AM -0500, Michael S. Tsirkin wrote:
-> On Wed, Feb 15, 2023 at 03:33:44PM -0700, Ross Zwisler wrote:
-> > Changes in v2:
-> >  * Dropped patches which were pulled into maintainer trees.
-> >  * Split BPF patches out into another series targeting bpf-next.
-> >  * trace-agent now falls back to debugfs if tracefs isn't present.
-> >  * Added Acked-by from mst@redhat.com to series.
-> >  * Added a typo fixup for the virtio-trace README.
-> > 
-> > Steven, assuming there are no objections, would you feel comfortable
-> > taking this series through your tree?
-> 
-> Acked-by: Michael S. Tsirkin <mst@redhat.com>
-> 
-> if you want the virtio patches through my tree after all, let me know.
 
-Yes, please, that would be great.  I'll send out v3 with the few patches that
-haven't gotten a response, but I'll drop the virtio patches assuming you've
-got them.
+Steven Rostedt <rostedt@goodmis.org> writes:
 
-Thanks!
+> On Fri, 10 Feb 2023 13:46:45 -0800
+> Stefan Roesch <shr@devkernel.io> wrote:
+>
+> Sorry for the late reply, I just noticed this (I had the flu when this was
+> originally sent).
+>
+>> +/**
+>> + * ksm_remove_ksm_page - called after a ksm page has been removed
+>> + *
+>> + * @pfn:		page frame number of ksm page
+>> + *
+>> + * Allows to trace the removing of stable ksm pages.
+>> + */
+>> +TRACE_EVENT(ksm_remove_ksm_page,
+>> +
+>> +	TP_PROTO(unsigned long pfn),
+>> +
+>> +	TP_ARGS(pfn),
+>> +
+>> +	TP_STRUCT__entry(
+>> +		__field(unsigned long, pfn)
+>> +	),
+>> +
+>> +	TP_fast_assign(
+>> +		__entry->pfn = pfn;
+>> +	),
+>> +
+>> +	TP_printk("pfn %lu", __entry->pfn)
+>> +);
+>> +
+>> +/**
+>> + * ksm_remove_rmap_item - called after a rmap_item has been removed from the
+>> + *                        stable tree
+>> + *
+>> + * @pfn:		page frame number of ksm page
+>> + * @rmap_item:		address of rmap_item  object
+>> + * @mm:			address of the process mm struct
+>> + *
+>> + * Allows to trace the removal of pages from the stable tree list.
+>> + */
+>> +TRACE_EVENT(ksm_remove_rmap_item,
+>> +
+>> +	TP_PROTO(unsigned long pfn, void *rmap_item, void *mm),
+>> +
+>> +	TP_ARGS(pfn, rmap_item, mm),
+>> +
+>> +	TP_STRUCT__entry(
+>> +		__field(unsigned long,	pfn)
+>> +		__field(void *,		rmap_item)
+>> +		__field(void *,		mm)
+>> +	),
+>> +
+>> +	TP_fast_assign(
+>> +		__entry->pfn		= pfn;
+>> +		__entry->rmap_item	= rmap_item;
+>> +		__entry->mm		= mm;
+>> +	),
+>> +
+>> +	TP_printk("pfn %lu rmap_item %p mm %p",
+>> +			__entry->pfn, __entry->rmap_item, __entry->mm)
+>> +);
+>> +
+>> +#endif /* _TRACE_KSM_H */
+>> +
+>> +/* This part must be outside protection */
+>> +#include <trace/define_trace.h>
+>> diff --git a/mm/ksm.c b/mm/ksm.c
+>> index 56808e3bfd19..4356af760735 100644
+>> --- a/mm/ksm.c
+>> +++ b/mm/ksm.c
+>> @@ -45,6 +45,9 @@
+>>  #include "internal.h"
+>>  #include "mm_slot.h"
+>>
+>> +#define CREATE_TRACE_POINTS
+>> +#include <trace/events/ksm.h>
+>> +
+>>  #ifdef CONFIG_NUMA
+>>  #define NUMA(x)		(x)
+>>  #define DO_NUMA(x)	do { (x); } while (0)
+>> @@ -655,10 +658,12 @@ static void remove_node_from_stable_tree(struct ksm_stable_node *stable_node)
+>>  	BUG_ON(stable_node->rmap_hlist_len < 0);
+>>
+>>  	hlist_for_each_entry(rmap_item, &stable_node->hlist, hlist) {
+>> -		if (rmap_item->hlist.next)
+>> +		if (rmap_item->hlist.next) {
+>>  			ksm_pages_sharing--;
+>> -		else
+>> +			trace_ksm_remove_rmap_item(stable_node->kpfn, rmap_item, rmap_item->mm);
+>
+> Instead of dereferencing the stable_node here, where the work could
+> possibly happen outside the trace event and in the hot path, could you pass
+> in the stable_node instead, and then in the TP_fast_assign() do:
+>
+> 		__entry->pfn = stable_node->kpfn;
+>
+>
+
+To do this, the structure would need to be exposed. Currently the
+structure is defined in ksm.c. This is an internal structure that we
+most likely don't want to expose. We can get by not printing the pfn
+and use the rmap_item to refer back to it, but exposing it directly
+here is more convenient for debugging.
+
+Any thoughts?
+
+>> +		} else {
+>>  			ksm_pages_shared--;
+>> +		}
+>>
+>>  		rmap_item->mm->ksm_merging_pages--;
+>>
+>> @@ -679,6 +684,7 @@ static void remove_node_from_stable_tree(struct ksm_stable_node *stable_node)
+>>  	BUILD_BUG_ON(STABLE_NODE_DUP_HEAD <= &migrate_nodes);
+>>  	BUILD_BUG_ON(STABLE_NODE_DUP_HEAD >= &migrate_nodes + 1);
+>>
+>> +	trace_ksm_remove_ksm_page(stable_node->kpfn);
+>
+> Here too?
+>
+> -- Steve
+>
+>>  	if (stable_node->head == &migrate_nodes)
+>>  		list_del(&stable_node->list);
+>>  	else
+>> @@ -1367,6 +1373,8 @@ static int try_to_merge_with_ksm_page(struct ksm_rmap_item *rmap_item,
+>>  	get_anon_vma(vma->anon_vma);
+>>  out:
+>>  	mmap_read_unlock(mm);
+>> +	trace_ksm_merge_with_ksm_page(kpage, page_to_pfn(kpage ? kpage : page),
+>> +				rmap_item, mm, err);
+>>  	return err;
+>>  }
+>>
+>> @@ -2114,6 +2122,9 @@ static int try_to_merge_with_kernel_zero_page(struct ksm_rmap_item *rmap_item,
+>>  		if (vma) {
+>>  			err = try_to_merge_one_page(vma, page,
+>>  						ZERO_PAGE(rmap_item->address));
+>> +			trace_ksm_merge_one_page(
+>> +				page_to_pfn(ZERO_PAGE(rmap_item->address)),
+>> +				rmap_item, mm, err);
+>>  			if (!err) {
+>>  				rmap_item->address |= ZERO_PAGE_FLAG;
+>>  				ksm_zero_pages_sharing++;
+>> @@ -2344,6 +2355,8 @@ static struct ksm_rmap_item *scan_get_next_rmap_item(struct page **page)
+>>
+>>  	mm_slot = ksm_scan.mm_slot;
+>>  	if (mm_slot == &ksm_mm_head) {
+>> +		trace_ksm_start_scan(ksm_scan.seqnr, ksm_rmap_items);
+>> +
+>>  		/*
+>>  		 * A number of pages can hang around indefinitely on per-cpu
+>>  		 * pagevecs, raised page count preventing write_protect_page
+>> @@ -2510,6 +2523,7 @@ static struct ksm_rmap_item *scan_get_next_rmap_item(struct page **page)
+>>  	if (mm_slot != &ksm_mm_head)
+>>  		goto next_mm;
+>>
+>> +	trace_ksm_stop_scan(ksm_scan.seqnr, ksm_rmap_items);
+>>  	ksm_scan.seqnr++;
+>>  	return NULL;
+>>  }
+>> @@ -2661,6 +2675,7 @@ int __ksm_enter(struct mm_struct *mm)
+>>  	if (needs_wakeup)
+>>  		wake_up_interruptible(&ksm_thread_wait);
+>>
+>> +	trace_ksm_enter(mm);
+>>  	return 0;
+>>  }
+>>
+>> @@ -2702,6 +2717,8 @@ void __ksm_exit(struct mm_struct *mm)
+>>  		mmap_write_lock(mm);
+>>  		mmap_write_unlock(mm);
+>>  	}
+>> +
+>> +	trace_ksm_exit(mm);
+>>  }
+>>
+>>  struct page *ksm_might_need_to_copy(struct page *page,
+>>
+>> base-commit: 234a68e24b120b98875a8b6e17a9dead277be16a
