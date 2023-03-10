@@ -2,139 +2,152 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E8EB7C6FD19
-	for <linux-trace-kernel@archiver.kernel.org>; Fri, 10 Mar 2023 08:28:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C94D5C64EC4
+	for <linux-trace-kernel@archiver.kernel.org>; Fri, 10 Mar 2023 08:31:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230293AbjCJI2K (ORCPT
+        id S231159AbjCJIbP (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Fri, 10 Mar 2023 03:28:10 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33114 "EHLO
+        Fri, 10 Mar 2023 03:31:15 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38472 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229774AbjCJI2I (ORCPT
+        with ESMTP id S231138AbjCJIbE (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Fri, 10 Mar 2023 03:28:08 -0500
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 30AB41E1FC;
-        Fri, 10 Mar 2023 00:28:05 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 748ECB821E5;
-        Fri, 10 Mar 2023 08:28:04 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E05DFC433D2;
-        Fri, 10 Mar 2023 08:28:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1678436883;
-        bh=qsrSwXZko/tTXpRe9p1GPDISHLEs2ScFa2sr3Aj8QRk=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=qGiBUA12F4dRCFu1TLVc0bPhuxohaHzY5cIF7FkI8bsw+UHYfx59FKehYi20GNxJY
-         FYlfM3OMwQiyBwhGf+XNEwI4uLFD39LqkWCikGbnaGGw52l36XOKNmV7GxYxSr8nq0
-         4JTLiirvXg6jAnhKOG8oI/a0pDmW4c2fp/S6Tr9weQNMIZ+RkKv+p9wuI8/adMYAjp
-         2Uha7rg6bxBwwJoOs982nkmHrTH+o2cKmHR+oiqWNGu+ASZnxX98ZLEwMYPrBmlhba
-         T6gYMOJZCVaAAhkxmr9IUOAKXRdeDOTSGY+zUicKmZCGpELRj3FXSn60UoH89RuyD3
-         Kmi9oKnjvvJlQ==
-Date:   Fri, 10 Mar 2023 17:27:58 +0900
-From:   Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To:     Steven Rostedt <rostedt@goodmis.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Linux Trace Kernel <linux-trace-kernel@vger.kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
+        Fri, 10 Mar 2023 03:31:04 -0500
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2E815E9833
+        for <linux-trace-kernel@vger.kernel.org>; Fri, 10 Mar 2023 00:29:58 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1678436997;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=0VVY8kly3TcDFN9v8u5UAZIFaG8NcKB7KdRar2p0UPo=;
+        b=gcwXZKdJjfaYpRzASdQdDUOcZK7GhWSEkLJoKJ5d2i8lsjarxzWzi7oPOEdnLop4WcCkq7
+        EkTNWXM+7jbzKgHMAz23Cpw7GmvJ3aJYNmqRstxg0wvFwwzfqxcIjrTnKxoWqXTPrhZUSe
+        cuxVpbQ9JeDdsbz7/2o6jPlkoeONqrs=
+Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
+ [209.85.128.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-386-90zuAw45P2qPqYhwpwffcA-1; Fri, 10 Mar 2023 03:29:56 -0500
+X-MC-Unique: 90zuAw45P2qPqYhwpwffcA-1
+Received: by mail-wm1-f69.google.com with SMTP id o27-20020a05600c511b00b003ebf87958f8so1714481wms.3
+        for <linux-trace-kernel@vger.kernel.org>; Fri, 10 Mar 2023 00:29:55 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112; t=1678436995;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=0VVY8kly3TcDFN9v8u5UAZIFaG8NcKB7KdRar2p0UPo=;
+        b=SINivyuec/MoBcQsRD2E08P7NGqv+R/3EHy4Dn3ctFDSWtFeRylqxTMGp3csd4KT2Z
+         XbjwGu9fbC0oBNj8Ft+0zBmmyOyQ6cPSfKfEt78T5lT2GmdEIOTe8hXGq4DlCzJRj7wd
+         8kMvkX59ObKDOHJ+c163mP3JsQ6pdoMyAncGycUIcuIhnjauVf4mEenarg3Vym2Nj1jb
+         +ZQffIF0hsZXyQN7bu0aC3VSZcBtMA9lHUJvOT76rV/Ox6IpfWhhPfM6iarJzoglow7F
+         3ATgMAwQXoy6ZXsLzWf7ArEiQ66WxnigM1bM6qnSNGM/LOViowaGXDdjRisEiyAaLK4+
+         sZXQ==
+X-Gm-Message-State: AO0yUKWZsP5c+UdcoeJeFIx4bR0i6BC1uHRzrFisY8X/oOmt/L7yNdVs
+        SJWCe1GhMkldJCO1q3gR1wYQ9pR/rvdwBFqWnvV7wNYLBe6KLV+zvO13VTN5ozjObR8I30KRijC
+        CQ0a+Nhc27s5+2G1mRMDpZivd4PN8pT20
+X-Received: by 2002:a05:600c:46d1:b0:3eb:29fe:fe19 with SMTP id q17-20020a05600c46d100b003eb29fefe19mr1724975wmo.34.1678436994993;
+        Fri, 10 Mar 2023 00:29:54 -0800 (PST)
+X-Google-Smtp-Source: AK7set/3NDIB2yQpnAOJ1gLOd87qFJtloJUYcD7foQwbKEjLNGWL6NTidbGAfi/e3Esc+ca2i7/9Kw==
+X-Received: by 2002:a05:600c:46d1:b0:3eb:29fe:fe19 with SMTP id q17-20020a05600c46d100b003eb29fefe19mr1724955wmo.34.1678436994706;
+        Fri, 10 Mar 2023 00:29:54 -0800 (PST)
+Received: from redhat.com ([2.52.9.88])
+        by smtp.gmail.com with ESMTPSA id l14-20020a1ced0e000000b003eb20d4d4a8sm1415501wmh.44.2023.03.10.00.29.51
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 10 Mar 2023 00:29:54 -0800 (PST)
+Date:   Fri, 10 Mar 2023 03:29:49 -0500
+From:   "Michael S. Tsirkin" <mst@redhat.com>
+To:     Ross Zwisler <zwisler@chromium.org>
+Cc:     linux-kernel@vger.kernel.org, Ross Zwisler <zwisler@google.com>,
+        "Tobin C. Harding" <me@tobin.cc>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Jason Wang <jasowang@redhat.com>,
         Masami Hiramatsu <mhiramat@kernel.org>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Joel Fernandes <joel@joelfernandes.org>
-Subject: Re: [PATCH] tracing: Make tracepoint lockdep check actually test
- something
-Message-Id: <20230310172758.38c1ec9c6272e41a579ff820@kernel.org>
-In-Reply-To: <20230309165603.6967197d@gandalf.local.home>
-References: <20230309165603.6967197d@gandalf.local.home>
-X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Shuah Khan <shuah@kernel.org>,
+        Tycho Andersen <tycho@tycho.pizza>, kvm@vger.kernel.org,
+        linux-hardening@vger.kernel.org, linux-kselftest@vger.kernel.org,
+        linux-mm@kvack.org, virtualization@lists.linux-foundation.org,
+        linux-trace-kernel@vger.kernel.org,
+        Steven Rostedt <rostedt@goodmis.org>
+Subject: Re: [PATCH v2 0/6] use canonical ftrace path whenever possible
+Message-ID: <20230310032921-mutt-send-email-mst@kernel.org>
+References: <20230215223350.2658616-1-zwisler@google.com>
+MIME-Version: 1.0
+In-Reply-To: <20230215223350.2658616-1-zwisler@google.com>
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: redhat.com
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On Thu, 9 Mar 2023 16:56:03 -0500
-Steven Rostedt <rostedt@goodmis.org> wrote:
+On Wed, Feb 15, 2023 at 03:33:44PM -0700, Ross Zwisler wrote:
+> Changes in v2:
+>  * Dropped patches which were pulled into maintainer trees.
+>  * Split BPF patches out into another series targeting bpf-next.
+>  * trace-agent now falls back to debugfs if tracefs isn't present.
+>  * Added Acked-by from mst@redhat.com to series.
+>  * Added a typo fixup for the virtio-trace README.
+> 
+> Steven, assuming there are no objections, would you feel comfortable
+> taking this series through your tree?
 
-> From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
-> 
-> A while ago where the trace events had the following:
-> 
->    rcu_read_lock_sched_notrace();
->    rcu_dereference_sched(...);
->    rcu_read_unlock_sched_notrace();
-> 
-> If the tracepoint is enabled, it could trigger RCU issues if called in
-> the wrong place. And this warning was only triggered if lockdep was
-> enabled. If the tracepoint was never enabled with lockdep, the bug would
-> not be caught. To handle this, the above sequence was done when lockdep
-> was enabled regardless if the tracepoint was enabled or not (although the
-> always enabled code really didn't do anything, it would still trigger a
-> warning).
-> 
-> But a lot has changed since that lockdep code was added. One is, that
-> sequence no longer triggers any warning. Another is, the tracepoint when
-> enabled doesn't even do that sequence anymore.
-> 
-> The main check we care about today is whether RCU is "watching" or not.
-> So if lockdep is enabled, always check if rcu_is_watching() which will
-> trigger a warning if it is not (tracepoints require RCU to be watching).
-> 
-> Note, that old sequence did add a bit of overhead when lockdep was enabled,
-> and with the latest kernel updates, would cause the system to slow down
-> enough to trigger kernel "stalled" warnings.
-> 
-> Link: http://lore.kernel.org/lkml/20140806181801.GA4605@redhat.com
-> Link: http://lore.kernel.org/lkml/20140807175204.C257CAC5@viggo.jf.intel.com
-> Link: https://lore.kernel.org/lkml/20230307184645.521db5c9@gandalf.local.home/
-> 
+Acked-by: Michael S. Tsirkin <mst@redhat.com>
 
-This check has been introduced by commit 3a630178fd5f ("tracing: generate RCU
-warnings even when tracepoints are disabled"), and it also added a comment
-above this macro.
+if you want the virtio patches through my tree after all, let me know.
 
- * When lockdep is enabled, we make sure to always do the RCU portions of
- * the tracepoint code, regardless of whether tracing is on. However,
- * don't check if the condition is false, due to interaction with idle
- * instrumentation. This lets us find RCU issues triggered with tracepoints
- * even when this tracepoint is off. This code has no purpose other than
- * poking RCU a bit.
-
-I think at least the last sentence will be outdated by this fix.
-
-Thank you,
-
-
-> Cc: stable@vger.kernel.org
-> Fixes: e6753f23d961 ("tracepoint: Make rcuidle tracepoint callers use SRCU")
-> Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
 > ---
->  include/linux/tracepoint.h | 4 +---
->  1 file changed, 1 insertion(+), 3 deletions(-)
+> The canonical location for the tracefs filesystem is at /sys/kernel/tracing.
 > 
-> diff --git a/include/linux/tracepoint.h b/include/linux/tracepoint.h
-> index e299f29375bb..d3a221158ab1 100644
-> --- a/include/linux/tracepoint.h
-> +++ b/include/linux/tracepoint.h
-> @@ -260,9 +260,7 @@ static inline struct tracepoint *tracepoint_ptr_deref(tracepoint_ptr_t *p)
->  				TP_ARGS(args),				\
->  				TP_CONDITION(cond), 0);			\
->  		if (IS_ENABLED(CONFIG_LOCKDEP) && (cond)) {		\
-> -			rcu_read_lock_sched_notrace();			\
-> -			rcu_dereference_sched(__tracepoint_##name.funcs);\
-> -			rcu_read_unlock_sched_notrace();		\
-> +			WARN_ON_ONCE(!rcu_is_watching());		\
->  		}							\
->  	}								\
->  	__DECLARE_TRACE_RCU(name, PARAMS(proto), PARAMS(args),		\
+> But, from Documentation/trace/ftrace.rst:
+> 
+>   Before 4.1, all ftrace tracing control files were within the debugfs
+>   file system, which is typically located at /sys/kernel/debug/tracing.
+>   For backward compatibility, when mounting the debugfs file system,
+>   the tracefs file system will be automatically mounted at:
+> 
+>   /sys/kernel/debug/tracing
+> 
+> There are many places where this older debugfs path is still used in
+> code comments, selftests, examples and tools, so let's update them to
+> avoid confusion.
+> 
+> I've broken up the series as best I could by maintainer or directory,
+> and I've only sent people the patches that I think they care about to
+> avoid spamming everyone.
+> 
+> Ross Zwisler (6):
+>   tracing: always use canonical ftrace path
+>   selftests: use canonical ftrace path
+>   leaking_addresses: also skip canonical ftrace path
+>   tools/kvm_stat: use canonical ftrace path
+>   tools/virtio: use canonical ftrace path
+>   tools/virtio: fix typo in README instructions
+> 
+>  include/linux/kernel.h                        |  2 +-
+>  include/linux/tracepoint.h                    |  4 ++--
+>  kernel/trace/Kconfig                          | 20 +++++++++----------
+>  kernel/trace/kprobe_event_gen_test.c          |  2 +-
+>  kernel/trace/ring_buffer.c                    |  2 +-
+>  kernel/trace/synth_event_gen_test.c           |  2 +-
+>  kernel/trace/trace.c                          |  2 +-
+>  samples/user_events/example.c                 |  4 ++--
+>  scripts/leaking_addresses.pl                  |  1 +
+>  scripts/tracing/draw_functrace.py             |  6 +++---
+>  tools/kvm/kvm_stat/kvm_stat                   |  2 +-
+>  tools/lib/api/fs/tracing_path.c               |  4 ++--
+>  .../testing/selftests/user_events/dyn_test.c  |  2 +-
+>  .../selftests/user_events/ftrace_test.c       | 10 +++++-----
+>  .../testing/selftests/user_events/perf_test.c |  8 ++++----
+>  tools/testing/selftests/vm/protection_keys.c  |  4 ++--
+>  tools/tracing/latency/latency-collector.c     |  2 +-
+>  tools/virtio/virtio-trace/README              |  4 ++--
+>  tools/virtio/virtio-trace/trace-agent.c       | 12 +++++++----
+>  19 files changed, 49 insertions(+), 44 deletions(-)
+> 
 > -- 
-> 2.39.1
-> 
+> 2.39.1.637.g21b0678d19-goog
 
-
--- 
-Masami Hiramatsu (Google) <mhiramat@kernel.org>
