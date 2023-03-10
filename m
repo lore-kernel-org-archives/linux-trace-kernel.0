@@ -2,40 +2,36 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CB9EFC64EC4
-	for <linux-trace-kernel@archiver.kernel.org>; Thu,  9 Mar 2023 23:31:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5EF4AC61DA4
+	for <linux-trace-kernel@archiver.kernel.org>; Fri, 10 Mar 2023 03:13:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229823AbjCIXbI (ORCPT
+        id S229612AbjCJDNI (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Thu, 9 Mar 2023 18:31:08 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57668 "EHLO
+        Thu, 9 Mar 2023 22:13:08 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35790 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229601AbjCIXbH (ORCPT
+        with ESMTP id S229445AbjCJDNH (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Thu, 9 Mar 2023 18:31:07 -0500
+        Thu, 9 Mar 2023 22:13:07 -0500
 Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C4D08F98ED;
-        Thu,  9 Mar 2023 15:31:03 -0800 (PST)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 776312BEFC;
+        Thu,  9 Mar 2023 19:13:05 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 5D1FB61D1D;
-        Thu,  9 Mar 2023 23:31:03 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 08D67C433D2;
-        Thu,  9 Mar 2023 23:31:01 +0000 (UTC)
-Date:   Thu, 9 Mar 2023 18:31:00 -0500
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 199B36069D;
+        Fri, 10 Mar 2023 03:13:05 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0CFE1C433D2;
+        Fri, 10 Mar 2023 03:13:03 +0000 (UTC)
+Date:   Thu, 9 Mar 2023 22:13:02 -0500
 From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Tero Kristo <tero.kristo@linux.intel.com>
-Cc:     Daniel Bristot de Oliveira <bristot@kernel.org>,
-        mhiramat@kernel.org, linux-kernel@vger.kernel.org,
-        linux-trace-kernel@vger.kernel.org
-Subject: Re: [PATCH] trace/hwlat: Do not restart per-cpu threads if they are
- already running
-Message-ID: <20230309183100.624e200f@gandalf.local.home>
-In-Reply-To: <189d0e91-3216-edd0-b9b6-d2df3bb9618d@linux.intel.com>
-References: <20230302113654.2984709-1-tero.kristo@linux.intel.com>
-        <92700518-46e3-88af-9be1-db18767754f5@kernel.org>
-        <189d0e91-3216-edd0-b9b6-d2df3bb9618d@linux.intel.com>
+To:     LKML <linux-kernel@vger.kernel.org>,
+        Linux Trace Kernel <linux-trace-kernel@vger.kernel.org>
+Cc:     Masami Hiramatsu <mhiramat@kernel.org>,
+        Douglas RAILLARD <douglas.raillard@arm.com>
+Subject: [PATCH] tracing: Error if a trace event has an array for a
+ __field()
+Message-ID: <20230309221302.642e82d9@gandalf.local.home>
 X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
@@ -44,117 +40,76 @@ Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On Thu, 2 Mar 2023 14:02:37 +0200
-Tero Kristo <tero.kristo@linux.intel.com> wrote:
+From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
 
-> Hi,
-> 
-> On 02/03/2023 13:49, Daniel Bristot de Oliveira wrote:
-> > Hi Tero,
-> >
-> > On 3/2/23 08:36, Tero Kristo wrote:  
-> >> Check if the hwlatd thread for the cpu is already running, before
-> >> starting a new one. This avoids running multiple instances of the same
-> >> CPU thread on the system. Also, do not wipe the contents of the
-> >> per-cpu kthread data when starting the tracer, as this can completely
-> >> forget about already running instances and start new additional per-cpu
-> >> threads. Fixes issues where fiddling with either the mode of the hwlat
-> >> tracer or doing cpu-hotplugs messes up the internal book-keeping
-> >> resulting in stale hwlatd threads.  
-> > Thanks for your patch.
-> >
-> > Would you mind explaining how do you hit the problem? that is, how can
-> > I reproduce the same problem you faced.  
-> 
-> For example, this script snippet reproduces it for me every time:
-> 
-> #!/bin/sh
-> cd /sys/kernel/debug/tracing
-> echo 0 > tracing_on
-> echo hwlat > current_tracer
-> echo per-cpu > hwlat_detector/mode
-> echo 100000 > hwlat_detector/width
-> echo 200000 > hwlat_detector/window
-> echo 200 > tracing_thresh
-> echo 1 > tracing_on
+A __field() in the TRACE_EVENT() macro is used to set up the fields of the
+trace event data. It is for single storage units (word, char, int,
+pointer, etc) and not for complex structures or arrays. Unfortunately,
+there's nothing preventing the build from accepting:
 
-I did the above and saw this:
+    __field(int, arr[5]);
 
- # ps aux | grep hwlat
-root        1410 36.2  0.0      0     0 ?        R    18:10   0:22 [hwlatd/0]
-root        1411 36.7  0.0      0     0 ?        R    18:10   0:22 [hwlatd/1]
-root        1412 36.4  0.0      0     0 ?        R    18:10   0:22 [hwlatd/2]
-root        1413 36.7  0.0      0     0 ?        R    18:10   0:22 [hwlatd/3]
-root        1414 36.7  0.0      0     0 ?        R    18:10   0:22 [hwlatd/4]
-root        1415 36.5  0.0      0     0 ?        R    18:10   0:22 [hwlatd/5]
-root        1417 36.4  0.0      0     0 ?        R    18:10   0:22 [hwlatd/6]
-root        1418 36.6  0.0      0     0 ?        S    18:10   0:22 [hwlatd/7]
-root        1426 33.1  0.0      0     0 ?        R    18:10   0:11 [hwlatd/0]
-root        1427 33.1  0.0      0     0 ?        R    18:10   0:11 [hwlatd/1]
-root        1428 32.9  0.0      0     0 ?        R    18:10   0:11 [hwlatd/2]
-root        1429 32.9  0.0      0     0 ?        R    18:10   0:11 [hwlatd/3]
-root        1430 32.8  0.0      0     0 ?        R    18:10   0:11 [hwlatd/4]
-root        1431 33.2  0.0      0     0 ?        R    18:10   0:11 [hwlatd/5]
-root        1432 33.2  0.0      0     0 ?        R    18:10   0:11 [hwlatd/6]
-root        1433 33.2  0.0      0     0 ?        S    18:10   0:11 [hwlatd/7]
-root        1521  0.0  0.0   6332  2048 pts/0    S+   18:22   0:00 grep hwlat
+from building. It will turn into a array value. This use to work fine, as
+the offset and size use to be determined by the macro using the field name,
+but things have changed and the offset and size are now determined by the
+type. So the above would only be size 4, and the next field will be
+located 4 bytes from it (instead of 20).
 
-Which I'm guessing is bad (having two of each hwlatd/#).
+The proper way to declare static arrays is to use the __array() macro.
 
-> 
-> Another case where something wonky happens is if you offline/online a 
-> large number of CPUs (which takes a lot of time), and you start/disable 
-> the hwlat tracer at the same time.
-> 
+Instead of __field(int, arr[5]) it should be __array(int, arr, 5).
 
-After applying the patch and running the same commands,  I have this:
+Add some macro tricks to the building of a trace event from the
+TRACE_EVENT() macro such that __field(int, arr[5]) will fail to build. A
+comment by the failure will explain why the build failed.
 
- # ps aux | grep hwlat
-root         768 40.7  0.0      0     0 ?        S    18:23   0:10 [hwlatd/0]
-root         769 39.7  0.0      0     0 ?        R    18:23   0:10 [hwlatd/1]
-root         770 39.8  0.0      0     0 ?        R    18:23   0:10 [hwlatd/2]
-root         771 39.4  0.0      0     0 ?        R    18:23   0:10 [hwlatd/3]
-root         772 40.5  0.0      0     0 ?        S    18:23   0:10 [hwlatd/4]
-root         773 40.5  0.0      0     0 ?        R    18:23   0:10 [hwlatd/5]
-root         775 41.0  0.0      0     0 ?        S    18:23   0:10 [hwlatd/6]
-root         776 41.3  0.0      0     0 ?        R    18:23   0:10 [hwlatd/7]
-root         781  0.0  0.0   6332  2048 pts/0    S+   18:25   0:00 grep hwlat
+Link: https://lore.kernel.org/lkml/20230306122549.236561-1-douglas.raillard@arm.com/
 
-Looks as if this does fix the issue.
+Reported-by: Douglas RAILLARD <douglas.raillard@arm.com>
+Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+---
+ include/trace/stages/stage5_get_offsets.h | 21 +++++++++++++++++----
+ 1 file changed, 17 insertions(+), 4 deletions(-)
 
-> >> diff --git a/kernel/trace/trace_hwlat.c b/kernel/trace/trace_hwlat.c
-> >> index d440ddd5fd8b..c4945f8adc11 100644
-> >> --- a/kernel/trace/trace_hwlat.c
-> >> +++ b/kernel/trace/trace_hwlat.c
-> >> @@ -492,6 +492,10 @@ static int start_cpu_kthread(unsigned int cpu)
-> >>   {
-> >>   	struct task_struct *kthread;
-> >>   
-> >> +	/* Do not start a new hwlatd thread if it is already running */
-> >> +	if (per_cpu(hwlat_per_cpu_data, cpu).kthread)
-> >> +		return 0;
-> >> +
-> >>   	kthread = kthread_run_on_cpu(kthread_fn, NULL, cpu, "hwlatd/%u");
-> >>   	if (IS_ERR(kthread)) {
-> >>   		pr_err(BANNER "could not start sampling thread\n");
-> >> @@ -584,9 +588,6 @@ static int start_per_cpu_kthreads(struct trace_array *tr)
-> >>   	 */
-> >>   	cpumask_and(current_mask, cpu_online_mask, tr->tracing_cpumask);
-> >>   
-> >> -	for_each_online_cpu(cpu)
-> >> -		per_cpu(hwlat_per_cpu_data, cpu).kthread = NULL;
-> >> -
+diff --git a/include/trace/stages/stage5_get_offsets.h b/include/trace/stages/stage5_get_offsets.h
+index ac5c24d3beeb..e30a13be46ba 100644
+--- a/include/trace/stages/stage5_get_offsets.h
++++ b/include/trace/stages/stage5_get_offsets.h
+@@ -9,17 +9,30 @@
+ #undef __entry
+ #define __entry entry
+ 
++/*
++ * Fields should never declare an array: i.e. __field(int, arr[5])
++ * If they do, it will cause issues in parsing and possibly corrupt the
++ * events. To prevent that from happening, test the sizeof() a fictitious
++ * type called "struct _test_no_array_##item" which will fail if "item"
++ * contains array elements (like "arr[5]").
++ *
++ * If you hit this, use __array(int, arr, 5) instead.
++ */
+ #undef __field
+-#define __field(type, item)
++#define __field(type, item)					\
++	{ (void)sizeof(struct _test_no_array_##item *); }
+ 
+ #undef __field_ext
+-#define __field_ext(type, item, filter_type)
++#define __field_ext(type, item, filter_type)			\
++	{ (void)sizeof(struct _test_no_array_##item *); }
+ 
+ #undef __field_struct
+-#define __field_struct(type, item)
++#define __field_struct(type, item)				\
++	{ (void)sizeof(struct _test_no_array_##item *); }
+ 
+ #undef __field_struct_ext
+-#define __field_struct_ext(type, item, filter_type)
++#define __field_struct_ext(type, item, filter_type)		\
++	{ (void)sizeof(struct _test_no_array_##item *); }
+ 
+ #undef __array
+ #define __array(type, item, len)
+-- 
+2.39.1
 
-I believe this is two different bugs (the two hunks). This should be two
-patches.
-
-Please add the reproducer above to the commit log in a v2.
-
-Thanks,
-
--- Steve
-
-
-> >>   	for_each_cpu(cpu, current_mask) {
-> >>   		retval = start_cpu_kthread(cpu);
-> >>   		if (retval)  
