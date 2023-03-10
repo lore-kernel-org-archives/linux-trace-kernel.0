@@ -2,48 +2,38 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2ED1FC6FD19
-	for <linux-trace-kernel@archiver.kernel.org>; Fri, 10 Mar 2023 19:37:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 32DEBC6FD19
+	for <linux-trace-kernel@archiver.kernel.org>; Fri, 10 Mar 2023 20:02:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229916AbjCJThv (ORCPT
+        id S229636AbjCJUC5 (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Fri, 10 Mar 2023 14:37:51 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60832 "EHLO
+        Fri, 10 Mar 2023 15:02:57 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41978 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229469AbjCJTht (ORCPT
+        with ESMTP id S230197AbjCJUCz (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Fri, 10 Mar 2023 14:37:49 -0500
-Received: from sin.source.kernel.org (sin.source.kernel.org [145.40.73.55])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BB5B61386BB;
-        Fri, 10 Mar 2023 11:37:43 -0800 (PST)
+        Fri, 10 Mar 2023 15:02:55 -0500
+Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A490A126F32
+        for <linux-trace-kernel@vger.kernel.org>; Fri, 10 Mar 2023 12:02:34 -0800 (PST)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by sin.source.kernel.org (Postfix) with ESMTPS id 328A3CE2AC9;
-        Fri, 10 Mar 2023 19:37:42 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BD037C433D2;
-        Fri, 10 Mar 2023 19:37:38 +0000 (UTC)
-Date:   Fri, 10 Mar 2023 14:37:36 -0500
+        by ams.source.kernel.org (Postfix) with ESMTPS id 59EC7B823FD
+        for <linux-trace-kernel@vger.kernel.org>; Fri, 10 Mar 2023 20:02:23 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6350BC433EF;
+        Fri, 10 Mar 2023 20:02:21 +0000 (UTC)
+Date:   Fri, 10 Mar 2023 15:02:18 -0500
 From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Ross Zwisler <zwisler@google.com>
-Cc:     "Michael S. Tsirkin" <mst@redhat.com>,
-        Ross Zwisler <zwisler@chromium.org>,
-        linux-kernel@vger.kernel.org, "Tobin C. Harding" <me@tobin.cc>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Jason Wang <jasowang@redhat.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Shuah Khan <shuah@kernel.org>,
-        Tycho Andersen <tycho@tycho.pizza>, kvm@vger.kernel.org,
-        linux-hardening@vger.kernel.org, linux-kselftest@vger.kernel.org,
-        linux-mm@kvack.org, virtualization@lists.linux-foundation.org,
-        linux-trace-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 0/6] use canonical ftrace path whenever possible
-Message-ID: <20230310143736.7d3b8656@gandalf.local.home>
-In-Reply-To: <20230310190658.GA3723158@google.com>
-References: <20230215223350.2658616-1-zwisler@google.com>
-        <20230310032921-mutt-send-email-mst@kernel.org>
-        <20230310190658.GA3723158@google.com>
+To:     Stefan Roesch <shr@devkernel.io>
+Cc:     kernel-team@fb.com, linux-mm@kvack.org,
+        linux-trace-kernel@vger.kernel.org, akpm@linux-foundation.org
+Subject: Re: [PATCH v1] mm: add tracepoints to ksm
+Message-ID: <20230310150218.31510a60@gandalf.local.home>
+In-Reply-To: <qvqwa60k2yt5.fsf@dev0134.prn3.facebook.com>
+References: <20230210214645.2720847-1-shr@devkernel.io>
+        <20230309172726.14fca32e@gandalf.local.home>
+        <qvqwa60k2yt5.fsf@dev0134.prn3.facebook.com>
 X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
@@ -52,37 +42,37 @@ Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On Fri, 10 Mar 2023 12:06:58 -0700
-Ross Zwisler <zwisler@google.com> wrote:
+On Fri, 10 Mar 2023 11:22:54 -0800
+Stefan Roesch <shr@devkernel.io> wrote:
 
-> On Fri, Mar 10, 2023 at 03:29:49AM -0500, Michael S. Tsirkin wrote:
-> > On Wed, Feb 15, 2023 at 03:33:44PM -0700, Ross Zwisler wrote:  
-> > > Changes in v2:
-> > >  * Dropped patches which were pulled into maintainer trees.
-> > >  * Split BPF patches out into another series targeting bpf-next.
-> > >  * trace-agent now falls back to debugfs if tracefs isn't present.
-> > >  * Added Acked-by from mst@redhat.com to series.
-> > >  * Added a typo fixup for the virtio-trace README.
-> > > 
-> > > Steven, assuming there are no objections, would you feel comfortable
-> > > taking this series through your tree?  
-> > 
-> > Acked-by: Michael S. Tsirkin <mst@redhat.com>
-> > 
-> > if you want the virtio patches through my tree after all, let me know.  
+> >> +			trace_ksm_remove_rmap_item(stable_node->kpfn, rmap_item, rmap_item->mm);  
+> >
+> > Instead of dereferencing the stable_node here, where the work could
+> > possibly happen outside the trace event and in the hot path, could you pass
+> > in the stable_node instead, and then in the TP_fast_assign() do:
+> >
+> > 		__entry->pfn = stable_node->kpfn;
+> >
+> >  
 > 
-> Yes, please, that would be great.  I'll send out v3 with the few patches that
-> haven't gotten a response, but I'll drop the virtio patches assuming you've
-> got them.
->
+> To do this, the structure would need to be exposed. Currently the
+> structure is defined in ksm.c. This is an internal structure that we
+> most likely don't want to expose. We can get by not printing the pfn
+> and use the rmap_item to refer back to it, but exposing it directly
+> here is more convenient for debugging.
+> 
+> Any thoughts?
 
-Since the last patch 6/6 is not tracing related, I would prefer it to go
-through the virtio tree.
+Sounds like the include/trace/events/ksm.h should be local too.
 
-For patches 1-5, please add:
+See my reply about include/trace/events/thermal.h
 
-Reviewed-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+  https://lore.kernel.org/all/20230227100715.7d896836@gandalf.local.home/
 
-Thanks!
+And their solution.
+
+  https://lore.kernel.org/all/20230307133735.90772-2-daniel.lezcano@linaro.org/
+
+I suggest you do the same.
 
 -- Steve
