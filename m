@@ -2,114 +2,130 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 60EA5C6FA99
-	for <linux-trace-kernel@archiver.kernel.org>; Fri, 10 Mar 2023 04:23:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 35E05C6FA99
+	for <linux-trace-kernel@archiver.kernel.org>; Fri, 10 Mar 2023 05:24:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230297AbjCJEXX (ORCPT
+        id S229659AbjCJFYI (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Thu, 9 Mar 2023 23:23:23 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50596 "EHLO
+        Fri, 10 Mar 2023 00:24:08 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49934 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230209AbjCJEWv (ORCPT
+        with ESMTP id S229597AbjCJFYH (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Thu, 9 Mar 2023 23:22:51 -0500
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B3A5DF8287;
-        Thu,  9 Mar 2023 20:20:22 -0800 (PST)
-Received: from pps.filterd (m0279869.ppops.net [127.0.0.1])
-        by mx0a-0031df01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 32A3AjQB029841;
-        Fri, 10 Mar 2023 04:20:06 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=message-id : date :
- mime-version : subject : to : cc : references : from : in-reply-to :
- content-type : content-transfer-encoding; s=qcppdkim1;
- bh=AJ5dBzBaSKqSf1Ba/YZpvWjGeMq5RaKskpH+CDXL1pA=;
- b=dfX0wJHdRZcaxXc+W8nxZ1a2XLAf4fyGBenqSltmiMnAIxthkEC/M4jxTR+5+tZrEugu
- BrC4vrr4LT33V6LbKL2ZzW/JqB1IGd3rDrcHTiuuKflOwwJE12d+fXqM6twYHGnvXwRF
- OrskvvFnqwaq9Z5+WnK3GmNepniTaqJa6OjisdlV/J/fHQSOD4pdx7AULBfnGobh8vTC
- FB87eVpsSw2Wd+HWfWlkZPQ8x13J73z3jFPewvUT6sgMz4GO5sHIVxUGT+pKhMkg908y
- 9EecnEWCONy95FshLJGFIQ1QR2a0VDXy4/gq+O/k+TcrpTlv5kYUx9hAtxWdyTwlBD7Q ew== 
-Received: from nasanppmta04.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-        by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3p7q0y0x3s-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 10 Mar 2023 04:20:06 +0000
-Received: from nasanex01a.na.qualcomm.com ([10.52.223.231])
-        by NASANPPMTA04.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 32A4K5uo025099
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 10 Mar 2023 04:20:05 GMT
-Received: from [10.239.155.136] (10.80.80.8) by nasanex01a.na.qualcomm.com
- (10.52.223.231) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.986.41; Thu, 9 Mar 2023
- 20:20:01 -0800
-Message-ID: <9d54e732-75e6-6912-750b-2c4238d618bb@quicinc.com>
-Date:   Fri, 10 Mar 2023 12:19:59 +0800
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
- Thunderbird/91.8.0
-Subject: Re: [PATCH v4] scsi: ufs: core: Add trace event for MCQ
-Content-Language: en-US
-To:     Bart Van Assche <bvanassche@acm.org>, <quic_asutoshd@quicinc.com>,
-        <quic_cang@quicinc.com>, <mani@kernel.org>,
-        <stanley.chu@mediatek.com>, <adrian.hunter@intel.com>,
-        <beanhuo@micron.com>, <avri.altman@wdc.com>,
-        <junwoo80.lee@samsung.com>, <martin.petersen@oracle.com>
-CC:     <linux-scsi@vger.kernel.org>,
-        Alim Akhtar <alim.akhtar@samsung.com>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        "open list:TRACING" <linux-trace-kernel@vger.kernel.org>
-References: <1677836154-29192-1-git-send-email-quic_ziqichen@quicinc.com>
- <67db2c6b-c3b0-c525-e6a9-2b2fe6c6adbb@acm.org>
- <f80fd91b-3a03-5c38-72c0-cd5c3edb33b8@quicinc.com>
- <8a83ec79-be04-ec5c-f3ef-67f64dc55f12@acm.org>
- <f96b1867-142f-7fdc-8123-58fe3bdce844@quicinc.com>
- <99f2ea8e-e543-fc14-91d7-0e7e29d2f381@acm.org>
-From:   Ziqi Chen <quic_ziqichen@quicinc.com>
-In-Reply-To: <99f2ea8e-e543-fc14-91d7-0e7e29d2f381@acm.org>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.80.80.8]
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nasanex01a.na.qualcomm.com (10.52.223.231)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: kzG8T3kxifzbSNm8Di_lm03_QUcfGaeD
-X-Proofpoint-ORIG-GUID: kzG8T3kxifzbSNm8Di_lm03_QUcfGaeD
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.254,Aquarius:18.0.942,Hydra:6.0.573,FMLib:17.11.170.22
- definitions=2023-03-10_01,2023-03-09_01,2023-02-09_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0 adultscore=0
- impostorscore=0 lowpriorityscore=0 malwarescore=0 clxscore=1015 mlxscore=0
- mlxlogscore=999 suspectscore=0 bulkscore=0 priorityscore=1501 phishscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2212070000
- definitions=main-2303100032
+        Fri, 10 Mar 2023 00:24:07 -0500
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8170DF73A2;
+        Thu,  9 Mar 2023 21:24:04 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 788D360AB8;
+        Fri, 10 Mar 2023 05:24:04 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BBE43C433D2;
+        Fri, 10 Mar 2023 05:24:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1678425843;
+        bh=11/oeDd475kGskQ2Zo4dMEJ9xAPQrvW8B5KRsslcyAY=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=XZ16GuZUo7TYJ2V3pyLXRK+CgS4Zx64Jsl7hq/uvuUtp6RIwKq28wT28IALGlGguz
+         WG0UaWygcdZoB4reIFn5QKyPgp2TVRJ0Hha8Z1twKV8WRZWiCMAGV5eJOwhw3k+q6F
+         SdMl9DbclMQUU3BEiaMunaUZ0KSYGlVrBLdm7OYvtC2rXWuIXv0qTQzhVIp8vPbtVR
+         0xzKG+5qSkefQBHyoaLVOxVQtkjPvm/PS3PWHPP3As64z2PtbGmQK04jN0OwLp1ypB
+         xuvAiZUNGAPgBTCwaP3WYWrk+icJNfjrDOFLXyKSTMSnBpZC+mDPzcqw94F3k9Vcx+
+         Vcx8InAuAWbEA==
+Date:   Fri, 10 Mar 2023 14:24:00 +0900
+From:   Masami Hiramatsu (Google) <mhiramat@kernel.org>
+To:     Tom Rix <trix@redhat.com>
+Cc:     rostedt@goodmis.org, bristot@kernel.org,
+        linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
+Subject: Re: [PATCH] tracing/osnoise: set several trace_osnoise.c variables
+ storage-class-specifier to static
+Message-Id: <20230310142400.072ce534ddec8e375e8dfa99@kernel.org>
+In-Reply-To: <20230309150414.4036764-1-trix@redhat.com>
+References: <20230309150414.4036764-1-trix@redhat.com>
+X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
+On Thu,  9 Mar 2023 10:04:14 -0500
+Tom Rix <trix@redhat.com> wrote:
 
-On 3/9/2023 11:45 PM, Bart Van Assche wrote:
-> On 3/8/23 18:44, Ziqi Chen wrote:
->> Thanks for you suggestion. But the member hwq->id is an Unsigned 
->> integer. if you want to identify SDB mode and MCQ mode,  using "0" is 
->> enough, Or how about add string such as below?
->>
->> ufshcd_command: MCQ: complete_rsp: 1d84000.ufshc: tag: 14, DB: 0x0, 
->> size: 32768, IS: 0, LBA: 5979448,opcode: 0x2a (WRITE_10),group_id: 
->> 0x0, hqid: 2
+> smatch reports several similar warnings
+> kernel/trace/trace_osnoise.c:220:1: warning:
+>   symbol '__pcpu_scope_per_cpu_osnoise_var' was not declared. Should it be static?
+> kernel/trace/trace_osnoise.c:243:1: warning:
+>   symbol '__pcpu_scope_per_cpu_timerlat_var' was not declared. Should it be static?
+> kernel/trace/trace_osnoise.c:335:14: warning:
+>   symbol 'interface_lock' was not declared. Should it be static?
+> kernel/trace/trace_osnoise.c:2242:5: warning:
+>   symbol 'timerlat_min_period' was not declared. Should it be static?
+> kernel/trace/trace_osnoise.c:2243:5: warning:
+>   symbol 'timerlat_max_period' was not declared. Should it be static?
 > 
-> Hi Ziqi,
+> These variables are only used in trace_osnoise.c, so it should be static
 > 
-> Since 0 is a valid queue ID using 0 to identify the legacy command 
-> submission mechanism is ambiguous.
-> 
-> Thanks,
-> 
-> Bart.
 
-OK, let me convert hwq id to int from ftrace side.
+Looks good to me.
+
+Acked-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+
+Thanks!
+
+> Signed-off-by: Tom Rix <trix@redhat.com>
+> ---
+>  kernel/trace/trace_osnoise.c | 10 +++++-----
+>  1 file changed, 5 insertions(+), 5 deletions(-)
+> 
+> diff --git a/kernel/trace/trace_osnoise.c b/kernel/trace/trace_osnoise.c
+> index f68ca1e6460f..cf395d2e8775 100644
+> --- a/kernel/trace/trace_osnoise.c
+> +++ b/kernel/trace/trace_osnoise.c
+> @@ -217,7 +217,7 @@ struct osnoise_variables {
+>  /*
+>   * Per-cpu runtime information.
+>   */
+> -DEFINE_PER_CPU(struct osnoise_variables, per_cpu_osnoise_var);
+> +static DEFINE_PER_CPU(struct osnoise_variables, per_cpu_osnoise_var);
+>  
+>  /*
+>   * this_cpu_osn_var - Return the per-cpu osnoise_variables on its relative CPU
+> @@ -240,7 +240,7 @@ struct timerlat_variables {
+>  	u64			count;
+>  };
+>  
+> -DEFINE_PER_CPU(struct timerlat_variables, per_cpu_timerlat_var);
+> +static DEFINE_PER_CPU(struct timerlat_variables, per_cpu_timerlat_var);
+>  
+>  /*
+>   * this_cpu_tmr_var - Return the per-cpu timerlat_variables on its relative CPU
+> @@ -332,7 +332,7 @@ struct timerlat_sample {
+>  /*
+>   * Protect the interface.
+>   */
+> -struct mutex interface_lock;
+> +static struct mutex interface_lock;
+>  
+>  /*
+>   * Tracer data.
+> @@ -2239,8 +2239,8 @@ static struct trace_min_max_param osnoise_print_stack = {
+>  /*
+>   * osnoise/timerlat_period: min 100 us, max 1 s
+>   */
+> -u64 timerlat_min_period = 100;
+> -u64 timerlat_max_period = 1000000;
+> +static u64 timerlat_min_period = 100;
+> +static u64 timerlat_max_period = 1000000;
+>  static struct trace_min_max_param timerlat_period = {
+>  	.lock	= &interface_lock,
+>  	.val	= &osnoise_data.timerlat_period,
+> -- 
+> 2.27.0
+> 
 
 
-Best Regards,
-Ziqi
+-- 
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
