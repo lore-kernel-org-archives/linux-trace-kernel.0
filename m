@@ -2,84 +2,80 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E7DEDC6FD19
-	for <linux-trace-kernel@archiver.kernel.org>; Fri, 10 Mar 2023 23:34:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F25DC6FD19
+	for <linux-trace-kernel@archiver.kernel.org>; Fri, 10 Mar 2023 23:57:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231559AbjCJXes (ORCPT
+        id S231584AbjCJX5Q (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Fri, 10 Mar 2023 18:34:48 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46478 "EHLO
+        Fri, 10 Mar 2023 18:57:16 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58100 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231589AbjCJXeq (ORCPT
+        with ESMTP id S231537AbjCJX5P (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Fri, 10 Mar 2023 18:34:46 -0500
-Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C90A9115B6F;
-        Fri, 10 Mar 2023 15:34:40 -0800 (PST)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 6D21FB82433;
-        Fri, 10 Mar 2023 23:34:39 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AF026C433D2;
-        Fri, 10 Mar 2023 23:34:35 +0000 (UTC)
-Date:   Fri, 10 Mar 2023 18:34:34 -0500
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     zwisler@kernel.org
-Cc:     bpf@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Ross Zwisler <zwisler@google.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Andrii Nakryiko <andrii@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Hao Luo <haoluo@google.com>, Jason Gunthorpe <jgg@ziepe.ca>,
-        Jiri Olsa <jolsa@kernel.org>,
-        John Fastabend <john.fastabend@gmail.com>,
-        KP Singh <kpsingh@kernel.org>,
-        Leon Romanovsky <leon@kernel.org>,
-        Martin KaFai Lau <martin.lau@linux.dev>,
-        Mykola Lysenko <mykolal@fb.com>, Shuah Khan <shuah@kernel.org>,
-        Song Liu <song@kernel.org>,
-        Stanislav Fomichev <sdf@google.com>,
-        Yonghong Song <yhs@fb.com>, linux-kselftest@vger.kernel.org,
-        linux-rdma@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
-        "Michael S . Tsirkin" <mst@redhat.com>
-Subject: Re: [PATCH bpf-next v3 1/2] bpf: use canonical ftrace path
-Message-ID: <20230310183434.64ade329@gandalf.local.home>
-In-Reply-To: <20230310175209.2130880-1-zwisler@kernel.org>
-References: <20230310175209.2130880-1-zwisler@kernel.org>
-X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+        Fri, 10 Mar 2023 18:57:15 -0500
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3E0A712CBCE;
+        Fri, 10 Mar 2023 15:57:12 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=apH1q+cCj7BHOOFHzKRoP24Y/6OcQc9IVy03k3952ns=; b=tDnypKjeMJzwspXNIkw8eDOAAC
+        eUlobV5HH3/2uhd8ujkNXPNih8A8N14Gqd2m/aLOK9KU+szI3yI/knN2qSlHqfMy8ilL7xhJDdtOB
+        9MANI2/fugNQuAArlSyb/DTLanVdQtS2tZu4ug26n4oxaLemcHrtPL9i6r3aAzcoB3LykncuvrDLJ
+        razRW/0zBdPH1X7kSP2QiqOkxHZPU18MPuB0URza1G/asGSkjtHnuHRBvvXYdgInzMD468mPH93Y2
+        8yNeN7D7C/lqGAQ0C7rhtagBajHM5updNuMg0XsfPM4AJUkGPNYyecXQSpxlXxyhSiqyYYdljVn5M
+        BcopNVxg==;
+Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
+        by casper.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
+        id 1pambX-009oKY-J1; Fri, 10 Mar 2023 23:56:56 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id C50FB30030B;
+        Sat, 11 Mar 2023 00:56:53 +0100 (CET)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 8D5672130975A; Sat, 11 Mar 2023 00:56:53 +0100 (CET)
+Date:   Sat, 11 Mar 2023 00:56:53 +0100
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Steven Rostedt <rostedt@goodmis.org>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Linux Trace Kernel <linux-trace-kernel@vger.kernel.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Joel Fernandes <joel@joelfernandes.org>
+Subject: Re: [PATCH v2] tracing: Make tracepoint lockdep check actually test
+ something
+Message-ID: <20230310235653.GC1605437@hirez.programming.kicks-ass.net>
+References: <20230310172856.77406446@gandalf.local.home>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230310172856.77406446@gandalf.local.home>
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On Fri, 10 Mar 2023 10:52:08 -0700
-zwisler@kernel.org wrote:
+On Fri, Mar 10, 2023 at 05:28:56PM -0500, Steven Rostedt wrote:
 
-> From: Ross Zwisler <zwisler@google.com>
-> 
-> The canonical location for the tracefs filesystem is at /sys/kernel/tracing.
-> 
-> But, from Documentation/trace/ftrace.rst:
-> 
->   Before 4.1, all ftrace tracing control files were within the debugfs
->   file system, which is typically located at /sys/kernel/debug/tracing.
->   For backward compatibility, when mounting the debugfs file system,
->   the tracefs file system will be automatically mounted at:
-> 
->   /sys/kernel/debug/tracing
-> 
-> Many comments and samples in the bpf code still refer to this older
-> debugfs path, so let's update them to avoid confusion.  There are a few
-> spots where the bpf code explicitly checks both tracefs and debugfs
-> (tools/bpf/bpftool/tracelog.c and tools/lib/api/fs/fs.c) and I've left
-> those alone so that the tools can continue to work with both paths.
-> 
-> Signed-off-by: Ross Zwisler <zwisler@google.com>
-> Acked-by: Michael S. Tsirkin <mst@redhat.com>
+> @@ -249,9 +248,7 @@ static inline struct tracepoint *tracepoint_ptr_deref(tracepoint_ptr_t *p)
+>  				TP_ARGS(args),				\
+>  				TP_CONDITION(cond), 0);			\
+>  		if (IS_ENABLED(CONFIG_LOCKDEP) && (cond)) {		\
+> -			rcu_read_lock_sched_notrace();			\
+> -			rcu_dereference_sched(__tracepoint_##name.funcs);\
+> -			rcu_read_unlock_sched_notrace();		\
+> +			WARN_ON_ONCE(!rcu_is_watching());		\
+>  		}							\
+>  	}								\
+>  	__DECLARE_TRACE_RCU(name, PARAMS(proto), PARAMS(args),		\
 
-Reviewed-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+Yep, that makes heaps more sense. If you so care you can save one more
+line and make the {} go away too.
 
--- Steve
+In any case,
+
+Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
