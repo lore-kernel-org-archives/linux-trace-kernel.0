@@ -2,160 +2,63 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DAE82C6FD1C
-	for <linux-trace-kernel@archiver.kernel.org>; Fri, 10 Mar 2023 08:40:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D2C0C64EC4
+	for <linux-trace-kernel@archiver.kernel.org>; Fri, 10 Mar 2023 10:05:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230494AbjCJIk0 (ORCPT
+        id S230258AbjCJKFI (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Fri, 10 Mar 2023 03:40:26 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50864 "EHLO
+        Fri, 10 Mar 2023 05:05:08 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48656 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231290AbjCJIju (ORCPT
+        with ESMTP id S229922AbjCJKFH (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Fri, 10 Mar 2023 03:39:50 -0500
-Received: from mga05.intel.com (mga05.intel.com [192.55.52.43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BF40E10A13E;
-        Fri, 10 Mar 2023 00:38:03 -0800 (PST)
+        Fri, 10 Mar 2023 05:05:07 -0500
+Received: from mga06.intel.com (mga06b.intel.com [134.134.136.31])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AA0E3108688;
+        Fri, 10 Mar 2023 02:05:03 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1678437483; x=1709973483;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=QtZvbYRePTNq2hQ0hWKhD/pks5jqsVWhwxiA5aU7K0Y=;
-  b=A+PJH0chdbn829RGWrRVIBZn9jcctoc4ZGvs3hw+Wp9ASTKLZervrEjw
-   RbBbHDqyAinXhzvqeXM9T7tq6DDt9Y/w8Y1m40YqXk93K553pVMOsJGeM
-   Eket3htCQUgWe+e90UiFFW0B1BspSXLAxWYxXWTyKH8zLogZl24xkF+Ji
-   0fBG4L/hDg5dZrAdpZJmyTx/PmDla/DpEiSeQ3ecgo0hVg2gvXxD4H13/
-   wxORKjRPJlL5XoRzr4Bte69i3yHHcbMfzBzKtt5geRYBrwPeX0WMjoSlx
-   CoKJHhvorJydTi2nbo9HVc0XxrFRulopQ3lRkuTKRtRJmZEeW1HrB+ZZW
-   w==;
-X-IronPort-AV: E=McAfee;i="6500,9779,10644"; a="422946941"
+  t=1678442703; x=1709978703;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=ESWaCkXAaeEblso0aAHVmOfH9iSTPLuh8pAb5SDrc8w=;
+  b=aGuk8jozdo3X3ZsKbgM3IlhXTzOWWbzc3MWEv23aSEK5m3jACgDaTBnr
+   NvPq+IZxKRl2eCwIVXhC6IK/jRfdtYKIuQRQfW7Jf3DRfkyhWpQx1G1Ml
+   GVIMqvibOwO8fPjgIk8v4m3WhoRFRRKZWvCdYkWIZ5svN6+VKqJkfHd2R
+   NtBpSlnvxIwNPv9TDra4zwBIPazt9DZkWlKoYfqPnV4TBIdiIgLgU19d1
+   cwNz1jnTYz06KrhFbxIN8MCQfBtxZK/eQIRwjpYTT+KbpERllnBcJPoAK
+   tqcMb1vt9wTMa0mxNuWXcRJaHTUs8EV+4zqO9Ku40HTmqYKyLjRCqcLdL
+   Q==;
+X-IronPort-AV: E=McAfee;i="6500,9779,10644"; a="399294161"
 X-IronPort-AV: E=Sophos;i="5.98,249,1673942400"; 
-   d="scan'208";a="422946941"
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Mar 2023 00:37:13 -0800
+   d="scan'208";a="399294161"
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Mar 2023 02:05:02 -0800
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6500,9779,10644"; a="851831733"
+X-IronPort-AV: E=McAfee;i="6500,9779,10644"; a="923609283"
 X-IronPort-AV: E=Sophos;i="5.98,249,1673942400"; 
-   d="scan'208";a="851831733"
-Received: from lkp-server01.sh.intel.com (HELO b613635ddfff) ([10.239.97.150])
-  by orsmga005.jf.intel.com with ESMTP; 10 Mar 2023 00:37:10 -0800
-Received: from kbuild by b613635ddfff with local (Exim 4.96)
-        (envelope-from <lkp@intel.com>)
-        id 1paYFS-0003fh-0W;
-        Fri, 10 Mar 2023 08:37:10 +0000
-Date:   Fri, 10 Mar 2023 16:37:09 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     Steven Rostedt <rostedt@goodmis.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Linux Trace Kernel <linux-trace-kernel@vger.kernel.org>
-Cc:     oe-kbuild-all@lists.linux.dev,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Douglas RAILLARD <douglas.raillard@arm.com>
-Subject: Re: [PATCH] tracing: Error if a trace event has an array for a
- __field()
-Message-ID: <202303101645.28bnQoH2-lkp@intel.com>
-References: <20230309221302.642e82d9@gandalf.local.home>
+   d="scan'208";a="923609283"
+Received: from fliu-mobl.ger.corp.intel.com (HELO tkristo-desk.intel.com) ([10.252.32.249])
+  by fmsmga006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Mar 2023 02:05:01 -0800
+From:   Tero Kristo <tero.kristo@linux.intel.com>
+To:     rostedt@goodmis.org, bristot@kernel.org, mhiramat@kernel.org
+Cc:     linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
+Subject: [PATCHv2 0/2] trace/hwlat: Prevent startup of multiple per-cpu threads
+Date:   Fri, 10 Mar 2023 12:04:49 +0200
+Message-Id: <20230310100451.3948583-1-tero.kristo@linux.intel.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230309221302.642e82d9@gandalf.local.home>
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-Hi Steven,
+Hi,
 
-Thank you for the patch! Yet something to improve:
+v2 of this series just splits the patch into two, and adds the
+reproducer script into the commit of patch #2. Separately, neither of
+the patches fix the issue completely, both are needed.
 
-[auto build test ERROR on linus/master]
-[also build test ERROR on v6.3-rc1]
-[cannot apply to next-20230310]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
-
-url:    https://github.com/intel-lab-lkp/linux/commits/Steven-Rostedt/tracing-Error-if-a-trace-event-has-an-array-for-a-__field/20230310-111456
-patch link:    https://lore.kernel.org/r/20230309221302.642e82d9%40gandalf.local.home
-patch subject: [PATCH] tracing: Error if a trace event has an array for a __field()
-config: x86_64-randconfig-a006 (https://download.01.org/0day-ci/archive/20230310/202303101645.28bnQoH2-lkp@intel.com/config)
-compiler: gcc-11 (Debian 11.3.0-8) 11.3.0
-reproduce (this is a W=1 build):
-        # https://github.com/intel-lab-lkp/linux/commit/4828e98216144ead91bbb26298aae865dac9f837
-        git remote add linux-review https://github.com/intel-lab-lkp/linux
-        git fetch --no-tags linux-review Steven-Rostedt/tracing-Error-if-a-trace-event-has-an-array-for-a-__field/20230310-111456
-        git checkout 4828e98216144ead91bbb26298aae865dac9f837
-        # save the config file
-        mkdir build_dir && cp config build_dir/.config
-        make W=1 O=build_dir ARCH=x86_64 olddefconfig
-        make W=1 O=build_dir ARCH=x86_64 SHELL=/bin/bash kernel/rcu/
-
-If you fix the issue, kindly add following tag where applicable
-| Reported-by: kernel test robot <lkp@intel.com>
-| Link: https://lore.kernel.org/oe-kbuild-all/202303101645.28bnQoH2-lkp@intel.com/
-
-All errors (new ones prefixed by >>):
-
-   In file included from include/trace/define_trace.h:102,
-                    from include/trace/events/rcu.h:839,
-                    from kernel/rcu/rcu.h:13,
-                    from kernel/rcu/update.c:49:
-   include/trace/events/rcu.h: In function 'trace_event_get_offsets_rcu_torture_read':
->> include/trace/stages/stage5_get_offsets.h:23:53: error: expected ')' before '*' token
-      23 |         { (void)sizeof(struct _test_no_array_##item *); }
-         |                       ~                             ^
-   include/trace/trace_events.h:263:9: note: in definition of macro 'DECLARE_EVENT_CLASS'
-     263 |         tstruct;                                                        \
-         |         ^~~~~~~
-   include/trace/trace_events.h:43:30: note: in expansion of macro 'PARAMS'
-      43 |                              PARAMS(tstruct),                  \
-         |                              ^~~~~~
-   include/trace/events/rcu.h:11:25: note: in expansion of macro 'TRACE_EVENT'
-      11 | #define TRACE_EVENT_RCU TRACE_EVENT
-         |                         ^~~~~~~~~~~
-   include/trace/events/rcu.h:770:9: note: in expansion of macro 'TP_STRUCT__entry'
-     770 |         TP_STRUCT__entry(
-         |         ^~~~~~~~~~~~~~~~
-   include/trace/events/rcu.h:771:17: note: in expansion of macro '__field'
-     771 |                 __field(char, rcutorturename[RCUTORTURENAME_LEN])
-         |                 ^~~~~~~
->> include/trace/events/rcu.h:771:45: error: array type has incomplete element type 'struct _test_no_array_rcutorturename'
-     771 |                 __field(char, rcutorturename[RCUTORTURENAME_LEN])
-         |                                             ^
-   include/trace/trace_events.h:263:9: note: in definition of macro 'DECLARE_EVENT_CLASS'
-     263 |         tstruct;                                                        \
-         |         ^~~~~~~
-   include/trace/trace_events.h:43:30: note: in expansion of macro 'PARAMS'
-      43 |                              PARAMS(tstruct),                  \
-         |                              ^~~~~~
-   include/trace/events/rcu.h:11:25: note: in expansion of macro 'TRACE_EVENT'
-      11 | #define TRACE_EVENT_RCU TRACE_EVENT
-         |                         ^~~~~~~~~~~
-   include/trace/events/rcu.h:770:9: note: in expansion of macro 'TP_STRUCT__entry'
-     770 |         TP_STRUCT__entry(
-         |         ^~~~~~~~~~~~~~~~
-   include/trace/events/rcu.h:771:17: note: in expansion of macro '__field'
-     771 |                 __field(char, rcutorturename[RCUTORTURENAME_LEN])
-         |                 ^~~~~~~
+-Tero
 
 
-vim +23 include/trace/stages/stage5_get_offsets.h
-
-    11	
-    12	/*
-    13	 * Fields should never declare an array: i.e. __field(int, arr[5])
-    14	 * If they do, it will cause issues in parsing and possibly corrupt the
-    15	 * events. To prevent that from happening, test the sizeof() a fictitious
-    16	 * type called "struct _test_no_array_##item" which will fail if "item"
-    17	 * contains array elements (like "arr[5]").
-    18	 *
-    19	 * If you hit this, use __array(int, arr, 5) instead.
-    20	 */
-    21	#undef __field
-    22	#define __field(type, item)					\
-  > 23		{ (void)sizeof(struct _test_no_array_##item *); }
-    24	
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests
