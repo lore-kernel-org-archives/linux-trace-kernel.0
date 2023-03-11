@@ -2,44 +2,30 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F25DC6FD19
-	for <linux-trace-kernel@archiver.kernel.org>; Fri, 10 Mar 2023 23:57:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 48B9DC6FD19
+	for <linux-trace-kernel@archiver.kernel.org>; Sat, 11 Mar 2023 00:40:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231584AbjCJX5Q (ORCPT
+        id S230422AbjCKAkz (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Fri, 10 Mar 2023 18:57:16 -0500
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58100 "EHLO
+        Fri, 10 Mar 2023 19:40:55 -0500
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53360 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231537AbjCJX5P (ORCPT
+        with ESMTP id S230206AbjCKAkh (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Fri, 10 Mar 2023 18:57:15 -0500
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3E0A712CBCE;
-        Fri, 10 Mar 2023 15:57:12 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=apH1q+cCj7BHOOFHzKRoP24Y/6OcQc9IVy03k3952ns=; b=tDnypKjeMJzwspXNIkw8eDOAAC
-        eUlobV5HH3/2uhd8ujkNXPNih8A8N14Gqd2m/aLOK9KU+szI3yI/knN2qSlHqfMy8ilL7xhJDdtOB
-        9MANI2/fugNQuAArlSyb/DTLanVdQtS2tZu4ug26n4oxaLemcHrtPL9i6r3aAzcoB3LykncuvrDLJ
-        razRW/0zBdPH1X7kSP2QiqOkxHZPU18MPuB0URza1G/asGSkjtHnuHRBvvXYdgInzMD468mPH93Y2
-        8yNeN7D7C/lqGAQ0C7rhtagBajHM5updNuMg0XsfPM4AJUkGPNYyecXQSpxlXxyhSiqyYYdljVn5M
-        BcopNVxg==;
-Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
-        by casper.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
-        id 1pambX-009oKY-J1; Fri, 10 Mar 2023 23:56:56 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id C50FB30030B;
-        Sat, 11 Mar 2023 00:56:53 +0100 (CET)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 8D5672130975A; Sat, 11 Mar 2023 00:56:53 +0100 (CET)
-Date:   Sat, 11 Mar 2023 00:56:53 +0100
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Steven Rostedt <rostedt@goodmis.org>
+        Fri, 10 Mar 2023 19:40:37 -0500
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 89ECB1409C8;
+        Fri, 10 Mar 2023 16:40:12 -0800 (PST)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id BA046B82461;
+        Sat, 11 Mar 2023 00:40:10 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 77D3EC433EF;
+        Sat, 11 Mar 2023 00:40:08 +0000 (UTC)
+Date:   Fri, 10 Mar 2023 19:40:05 -0500
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     Peter Zijlstra <peterz@infradead.org>
 Cc:     LKML <linux-kernel@vger.kernel.org>,
         Linux Trace Kernel <linux-trace-kernel@vger.kernel.org>,
         Masami Hiramatsu <mhiramat@kernel.org>,
@@ -49,33 +35,46 @@ Cc:     LKML <linux-kernel@vger.kernel.org>,
         Joel Fernandes <joel@joelfernandes.org>
 Subject: Re: [PATCH v2] tracing: Make tracepoint lockdep check actually test
  something
-Message-ID: <20230310235653.GC1605437@hirez.programming.kicks-ass.net>
+Message-ID: <20230310194005.374c5367@gandalf.local.home>
+In-Reply-To: <20230310235653.GC1605437@hirez.programming.kicks-ass.net>
 References: <20230310172856.77406446@gandalf.local.home>
+        <20230310235653.GC1605437@hirez.programming.kicks-ass.net>
+X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230310172856.77406446@gandalf.local.home>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On Fri, Mar 10, 2023 at 05:28:56PM -0500, Steven Rostedt wrote:
+On Sat, 11 Mar 2023 00:56:53 +0100
+Peter Zijlstra <peterz@infradead.org> wrote:
 
-> @@ -249,9 +248,7 @@ static inline struct tracepoint *tracepoint_ptr_deref(tracepoint_ptr_t *p)
->  				TP_ARGS(args),				\
->  				TP_CONDITION(cond), 0);			\
->  		if (IS_ENABLED(CONFIG_LOCKDEP) && (cond)) {		\
-> -			rcu_read_lock_sched_notrace();			\
-> -			rcu_dereference_sched(__tracepoint_##name.funcs);\
-> -			rcu_read_unlock_sched_notrace();		\
-> +			WARN_ON_ONCE(!rcu_is_watching());		\
->  		}							\
->  	}								\
->  	__DECLARE_TRACE_RCU(name, PARAMS(proto), PARAMS(args),		\
+> On Fri, Mar 10, 2023 at 05:28:56PM -0500, Steven Rostedt wrote:
+> 
+> > @@ -249,9 +248,7 @@ static inline struct tracepoint *tracepoint_ptr_deref(tracepoint_ptr_t *p)
+> >  				TP_ARGS(args),				\
+> >  				TP_CONDITION(cond), 0);			\
+> >  		if (IS_ENABLED(CONFIG_LOCKDEP) && (cond)) {		\
+> > -			rcu_read_lock_sched_notrace();			\
+> > -			rcu_dereference_sched(__tracepoint_##name.funcs);\
+> > -			rcu_read_unlock_sched_notrace();		\
+> > +			WARN_ON_ONCE(!rcu_is_watching());		\
+> >  		}							\
+> >  	}								\
+> >  	__DECLARE_TRACE_RCU(name, PARAMS(proto), PARAMS(args),		\  
+> 
+> Yep, that makes heaps more sense. If you so care you can save one more
+> line and make the {} go away too.
 
-Yep, that makes heaps more sense. If you so care you can save one more
-line and make the {} go away too.
+I thought about that, but I kinda prefer the brackets still.
 
-In any case,
+> 
+> In any case,
+> 
+> Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
 
-Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Thanks!
+
+-- Steve
+
