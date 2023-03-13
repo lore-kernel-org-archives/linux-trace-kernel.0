@@ -2,416 +2,201 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB27DC74A5B
-	for <linux-trace-kernel@archiver.kernel.org>; Sun, 12 Mar 2023 13:27:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D5673C6FD19
+	for <linux-trace-kernel@archiver.kernel.org>; Mon, 13 Mar 2023 09:18:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230300AbjCLN1x (ORCPT
+        id S229586AbjCMJSV (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Sun, 12 Mar 2023 09:27:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43672 "EHLO
+        Mon, 13 Mar 2023 05:18:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55190 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230420AbjCLN1k (ORCPT
+        with ESMTP id S229689AbjCMJST (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Sun, 12 Mar 2023 09:27:40 -0400
-Received: from mail-m118111.qiye.163.com (mail-m118111.qiye.163.com [115.236.118.111])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EE95E53D82;
-        Sun, 12 Mar 2023 06:27:11 -0700 (PDT)
-Received: from [192.168.0.193] (unknown [113.87.239.236])
-        by mail-m118111.qiye.163.com (Hmail) with ESMTPA id 30CDA58016E;
-        Sun, 12 Mar 2023 21:27:01 +0800 (CST)
-Message-ID: <8bff97c8-e365-ee1a-2d48-79fd4902f0e3@sangfor.com.cn>
-Date:   Sun, 12 Mar 2023 21:26:57 +0800
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.8.0
-From:   Donglin Peng <pengdonglin@sangfor.com.cn>
-Subject: Re: [RFC v2] function_graph: Support recording and outputing the
- return value of function
-To:     "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
-Cc:     rostedt@goodmis.org, xiehuan09@gmail.com, dinghui@sangfor.com.cn,
-        huangcun@sangfor.com.cn, linux-trace-kernel@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20230312022826.10367-1-pengdonglin@sangfor.com.cn>
- <20230312185853.1b85d63cfda11824fc609e18@kernel.org>
-In-Reply-To: <20230312185853.1b85d63cfda11824fc609e18@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-HM-Spam-Status: e1kfGhgUHx5ZQUpXWQgPGg8OCBgUHx5ZQUlOS1dZFg8aDwILHllBWSg2Ly
-        tZV1koWUFITzdXWS1ZQUlXWQ8JGhUIEh9ZQVlDQh9CVkkeQkkYTUlIQ0MZSFUTARMWGhIXJBQOD1
-        lXWRgSC1lBWUpKSFVDTFVJSEJVSUhNWVdZFhoPEhUdFFlBWU9LSFVKSktPSEhVSktLVUtZBg++
-X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6M1E6Sgw5Cj0LMSgJMyFNPj8C
-        IRYaFFZVSlVKTUxDTUlMTUlKQk5PVTMWGhIXVQseFRwfFBUcFxIVOwgaFRwdFAlVGBQWVRgVRVlX
-        WRILWUFZSkpIVUNMVUlIQlVJSE1ZV1kIAVlBSk1MTEk3Bg++
-X-HM-Tid: 0a86d600ca232eb7kusn30cda58016e
-X-HM-MType: 1
+        Mon, 13 Mar 2023 05:18:19 -0400
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 41772113D1;
+        Mon, 13 Mar 2023 02:18:15 -0700 (PDT)
+Received: from pps.filterd (m0279865.ppops.net [127.0.0.1])
+        by mx0a-0031df01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 32D7SK8Y029779;
+        Mon, 13 Mar 2023 09:17:50 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=from : to : cc :
+ subject : date : message-id; s=qcppdkim1;
+ bh=0H7NGg+no3R1jEB+A9Rmw3VAqYB+CcMABuXkv6FUM3M=;
+ b=IJGkpibQB0zxFhT75OVyywJa+YjNJ9yQIucR44IntJHC5EvhyGKhuXJtHbErgH2Dn9Vk
+ 9ubwtOJ0Rq6F/EJjXekaiXq3VAtiuHfc1ERZhpcsk7I8G+oXSF1d5MjsQskhFjZagYDj
+ CGvE2cSCuet71H6w32qjYnY07j4R9Z2ucsP5jv/2aHtzEaVG7zdUsS+/4QhYSztfZPXj
+ ewDgbdzdx51zBYZtwbrLfZ6AuHgSzpPLSnUwzDHXCSp0bRcCEzHt/0xcu1Vyl3A57dPM
+ IHIWfxPLuwAowPdzxJk9IXXUVM/hoNxPdqMCQkyFGezOVHeX7G0dV9aRDUobu6JzzGum RQ== 
+Received: from aptaippmta02.qualcomm.com (tpe-colo-wan-fw-bordernet.qualcomm.com [103.229.16.4])
+        by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3p9yew08hq-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 13 Mar 2023 09:17:50 +0000
+Received: from pps.filterd (APTAIPPMTA02.qualcomm.com [127.0.0.1])
+        by APTAIPPMTA02.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTP id 32D9HlAc009088;
+        Mon, 13 Mar 2023 09:17:47 GMT
+Received: from pps.reinject (localhost [127.0.0.1])
+        by APTAIPPMTA02.qualcomm.com (PPS) with ESMTP id 3p8jqm9tbk-1;
+        Mon, 13 Mar 2023 09:17:47 +0000
+Received: from APTAIPPMTA02.qualcomm.com (APTAIPPMTA02.qualcomm.com [127.0.0.1])
+        by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 32D9HlVU009083;
+        Mon, 13 Mar 2023 09:17:47 GMT
+Received: from cbsp-sh-gv.qualcomm.com (CBSP-SH-gv.ap.qualcomm.com [10.231.249.68])
+        by APTAIPPMTA02.qualcomm.com (PPS) with ESMTP id 32D9HkiP009082;
+        Mon, 13 Mar 2023 09:17:47 +0000
+Received: by cbsp-sh-gv.qualcomm.com (Postfix, from userid 393357)
+        id 97CFD452E; Mon, 13 Mar 2023 17:17:45 +0800 (CST)
+From:   Ziqi Chen <quic_ziqichen@quicinc.com>
+To:     quic_asutoshd@quicinc.com, quic_cang@quicinc.com,
+        quic_nguyenb@quicinc.com, bvanassche@acm.org, mani@kernel.org,
+        stanley.chu@mediatek.com, adrian.hunter@intel.com,
+        beanhuo@micron.com, avri.altman@wdc.com, junwoo80.lee@samsung.com,
+        martin.petersen@oracle.com, quic_ziqichen@quicinc.com
+Cc:     linux-scsi@vger.kernel.org, Alim Akhtar <alim.akhtar@samsung.com>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        linux-kernel@vger.kernel.org (open list),
+        linux-trace-kernel@vger.kernel.org (open list:TRACING)
+Subject: [PATCH v5] scsi: ufs: core: Add trace event for MCQ
+Date:   Mon, 13 Mar 2023 17:16:05 +0800
+Message-Id: <1678699023-6645-1-git-send-email-quic_ziqichen@quicinc.com>
+X-Mailer: git-send-email 2.7.4
+X-QCInternal: smtphost
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: zMmCpXuZLgWsQLgS0pZELvB1skl3au7W
+X-Proofpoint-ORIG-GUID: zMmCpXuZLgWsQLgS0pZELvB1skl3au7W
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.254,Aquarius:18.0.942,Hydra:6.0.573,FMLib:17.11.170.22
+ definitions=2023-03-13_02,2023-03-10_01,2023-02-09_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0 adultscore=0
+ priorityscore=1501 bulkscore=0 lowpriorityscore=0 phishscore=0 spamscore=0
+ clxscore=1015 mlxscore=0 suspectscore=0 malwarescore=0 mlxlogscore=999
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2212070000
+ definitions=main-2303130075
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
+Added a new trace event to record MCQ relevant information
+for each request in MCQ mode, include hardware queue ID,
+SQ tail slot, CQ head slot and CQ tail slot.
 
+Signed-off-by: Ziqi Chen <quic_ziqichen@quicinc.com>
 
-On 2023/3/12 17:58, Masami Hiramatsu (Google) wrote:
-> Hi Donglin,
-> 
-> This looks really interesting. There is fprobe and I'm trying introduce the
-> fprobe event, but that is an event trace. So this is another way to trace
-> the return values.
-Thank you. I have seen your patches, and fprobe is better than 
-kprobe,and I am learning it.
->  > On Sat, 11 Mar 2023 18:28:26 -0800
-> Donglin Peng <pengdonglin@sangfor.com.cn> wrote:
-> 
->> When using function_graph to analyze the reasons for system call failures,
->> we need to spend a considerable amount of time analyzing the logs and
->> cannot quickly locate the error. This modification aims to make this
->> process easier by recording the return values of each traced function.
->> When outputting trace logs, the tracing option funcgraph-retval can be
->> used to control whether to display the return values. If the return value
->> looks like an error code, it will be output in both hexadecimal and signed
->> decimal, otherwise only hexadecimal.
-> 
-> Hm, this will confuse the output parser. The output should be human readable
-> but also machine readable. I think you can introduce an option (tracefs/options/*)
-> to show "smart" output or hexadecimal output always.
-> 
-> treacefs/options/graph_retval_hex
-> 
-> If this is 1, the return value is printed always in hexadecimal. If it is 0,
-> when the IS_ERR(retval) is true, it will show it in signed decimal, or
-> hexadecimal (with "0x" prefix).
-Good idea,i will add this in v4.
-> 
->> Currently, this modification supports the following commonly used processor
->> architectures: x64, x86, arm64, arm, riscv.
-> 
-> This may also need to be reviewed by each arch maintainer. So we need
-> CONFIG_HAVE_FUNCTION_GRAPH_RETVAL which indicates that this architecture
-> support ftrace-graph retval and CONFIG_FUNCTION_GRAPH_RETVAL which
-> switches this retval is printed or not.
-> 
-Yeah,I will modify this in v4.
->>
->> One drawback is that even if a function's return type is void, the value
->> stored in the return value register will still be recorded and output.
-> 
-> Yeah, but I think that is no problem. We can notify user that this retval
-> is always be shown even if the function return type is void.
-> 
-Yeah.I implement a simple tool to deal with the trace logs using BTF 
-information just now, the processed trace logs are added in v3.
->> I think the BTF files can be used to obtain the return type of kernel
->> functions, but the search cost is a bit high. Therefore, we can
->> implement a tool to process trace logs based on BTF information.
-> 
-> Agreed. Anyway for some specific functions, we can use fprobe events.
-> 
-Yeah.
-> Thank you.
->
->>
->> For example:
->>
->> I want to attach the demo process to a cpu cgroup, but it failed:
->>
->> echo `pidof demo` > /sys/fs/cgroup/cpu/test/tasks
->> -bash: echo: write error: Invalid argument
->>
->> The strace logs tells that the write system call returned -EINVAL(-22):
->> ...
->> write(1, "273\n", 4)                    = -1 EINVAL (Invalid argument)
->> ...
->>
->> Use the following commands to capture trace logs when calling the write
->> system call:
->>
->> cd /sys/kernel/debug/tracing/
->> echo 0 > tracing_on
->> echo > trace
->> echo *sys_write > set_graph_function
->> echo *spin* > set_graph_notrace
->> echo *rcu* >> set_graph_notrace
->> echo *alloc* >> set_graph_notrace
->> echo preempt* >> set_graph_notrace
->> echo kfree* >> set_graph_notrace
->> echo $$ > set_ftrace_pid
->> echo function_graph > current_tracer
->> echo 1 > tracing_on
->> echo `pidof demo` > /sys/fs/cgroup/cpu/test/tasks
->> echo 0 > tracing_on
->> echo 1 > options/funcgraph-retval
->> cat trace > ~/trace.log
->>
->> Search -22 directly in the trace.log and find that the function
->> cpu_cgroup_can_attach returned -22 first, then read the code of this
->> function to get the root cause.
->>
->> ...
->>   0)            |  cgroup_migrate() {
->>   0)  0.521 us  |    cgroup_migrate_add_task(); /* => ffff88800cbaa000 */
->>   0)  0.500 us  |    cgroup_migrate_add_task(); /* => ffff88800cbaa000 */
->>   0)  0.441 us  |    cgroup_migrate_add_task(); /* => ffff88800cbaa000 */
->>   0)  0.521 us  |    cgroup_migrate_add_task(); /* => ffff88800cbaa000 */
->>   0)  0.421 us  |    cgroup_migrate_add_task(); /* => ffff88800cbaa000 */
->>   0)  0.431 us  |    cgroup_migrate_add_task(); /* => ffff88800cbaa000 */
->>   0)            |    cgroup_migrate_execute() {
->>   0)            |      cpu_cgroup_can_attach() {
->>   0)            |        cgroup_taskset_first() {
->>   0)  0.221 us  |          cgroup_taskset_next(); /* => ffff88800e13c000 */
->>   0)  0.641 us  |        } /* cgroup_taskset_first => ffff88800e13c000 */
->>   0)  0.320 us  |        sched_rt_can_attach(); /* => 0 */
->>   0)  1.713 us  |      } /* cpu_cgroup_can_attach => ffffffea -22 */
->>   0)  3.717 us  |    } /* cgroup_migrate_execute => ffffffea -22 */
->>   0)  9.959 us  |  } /* cgroup_migrate => ffffffea -22 */
->> ...
->>
->> Signed-off-by: Donglin Peng <pengdonglin@sangfor.com.cn>
->> ---
->>   arch/arm/kernel/entry-ftrace.S       |  1 +
->>   arch/arm64/kernel/entry-ftrace.S     |  1 +
->>   arch/riscv/kernel/mcount.S           |  2 +
->>   arch/x86/kernel/ftrace_32.S          |  1 +
->>   arch/x86/kernel/ftrace_64.S          |  2 +
->>   include/linux/ftrace.h               |  1 +
->>   kernel/trace/fgraph.c                |  3 +-
->>   kernel/trace/trace.h                 |  1 +
->>   kernel/trace/trace_entries.h         |  5 +-
->>   kernel/trace/trace_functions_graph.c | 70 ++++++++++++++++++++++++----
->>   10 files changed, 74 insertions(+), 13 deletions(-)
->>
->> diff --git a/arch/arm/kernel/entry-ftrace.S b/arch/arm/kernel/entry-ftrace.S
->> index 3e7bcaca5e07..c6666c0d909c 100644
->> --- a/arch/arm/kernel/entry-ftrace.S
->> +++ b/arch/arm/kernel/entry-ftrace.S
->> @@ -258,6 +258,7 @@ ENDPROC(ftrace_graph_regs_caller)
->>   #ifdef CONFIG_FUNCTION_GRAPH_TRACER
->>   ENTRY(return_to_handler)
->>   	stmdb	sp!, {r0-r3}
->> +	mov	r1, r0			@ pass the return value
->>   	add	r0, sp, #16		@ sp at exit of instrumented routine
->>   	bl	ftrace_return_to_handler
->>   	mov	lr, r0			@ r0 has real ret addr
->> diff --git a/arch/arm64/kernel/entry-ftrace.S b/arch/arm64/kernel/entry-ftrace.S
->> index 350ed81324ac..0eb9a0e3ba3d 100644
->> --- a/arch/arm64/kernel/entry-ftrace.S
->> +++ b/arch/arm64/kernel/entry-ftrace.S
->> @@ -276,6 +276,7 @@ SYM_CODE_START(return_to_handler)
->>   	stp x4, x5, [sp, #32]
->>   	stp x6, x7, [sp, #48]
->>   
->> +	mov	x1, x0			// pass the return value
->>   	mov	x0, x29			//     parent's fp
->>   	bl	ftrace_return_to_handler// addr = ftrace_return_to_hander(fp);
->>   	mov	x30, x0			// restore the original return address
->> diff --git a/arch/riscv/kernel/mcount.S b/arch/riscv/kernel/mcount.S
->> index 30102aadc4d7..afce5abcbcd2 100644
->> --- a/arch/riscv/kernel/mcount.S
->> +++ b/arch/riscv/kernel/mcount.S
->> @@ -69,6 +69,8 @@ ENTRY(return_to_handler)
->>   	mv	t6, s0
->>   #endif
->>   	SAVE_RET_ABI_STATE
->> +	/* pass the return value to ftrace_return_to_handler */
->> +	mv	a1, a0
->>   #ifdef HAVE_FUNCTION_GRAPH_FP_TEST
->>   	mv	a0, t6
->>   #endif
->> diff --git a/arch/x86/kernel/ftrace_32.S b/arch/x86/kernel/ftrace_32.S
->> index a0ed0e4a2c0c..7611374ccce8 100644
->> --- a/arch/x86/kernel/ftrace_32.S
->> +++ b/arch/x86/kernel/ftrace_32.S
->> @@ -184,6 +184,7 @@ SYM_CODE_END(ftrace_graph_caller)
->>   return_to_handler:
->>   	pushl	%eax
->>   	pushl	%edx
->> +	movl	%eax, %edx	#  2nd argument: the return value
->>   	movl	$0, %eax
->>   	call	ftrace_return_to_handler
->>   	movl	%eax, %ecx
->> diff --git a/arch/x86/kernel/ftrace_64.S b/arch/x86/kernel/ftrace_64.S
->> index 1265ad519249..d685b773e7ad 100644
->> --- a/arch/x86/kernel/ftrace_64.S
->> +++ b/arch/x86/kernel/ftrace_64.S
->> @@ -348,6 +348,8 @@ SYM_CODE_START(return_to_handler)
->>   	movq %rax, (%rsp)
->>   	movq %rdx, 8(%rsp)
->>   	movq %rbp, %rdi
->> +	/* Pass the return value to ftrace_return_to_handler */
->> +	movq %rax, %rsi
->>   
->>   	call ftrace_return_to_handler
->>   
->> diff --git a/include/linux/ftrace.h b/include/linux/ftrace.h
->> index 366c730beaa3..157fd25be2b7 100644
->> --- a/include/linux/ftrace.h
->> +++ b/include/linux/ftrace.h
->> @@ -1032,6 +1032,7 @@ struct ftrace_graph_ent {
->>    */
->>   struct ftrace_graph_ret {
->>   	unsigned long func; /* Current function */
->> +	unsigned long retval;
->>   	int depth;
->>   	/* Number of functions that overran the depth limit for current task */
->>   	unsigned int overrun;
->> diff --git a/kernel/trace/fgraph.c b/kernel/trace/fgraph.c
->> index 218cd95bf8e4..006b39a98dc3 100644
->> --- a/kernel/trace/fgraph.c
->> +++ b/kernel/trace/fgraph.c
->> @@ -240,12 +240,13 @@ static struct notifier_block ftrace_suspend_notifier = {
->>    * Send the trace to the ring-buffer.
->>    * @return the original return address.
->>    */
->> -unsigned long ftrace_return_to_handler(unsigned long frame_pointer)
->> +unsigned long ftrace_return_to_handler(unsigned long frame_pointer, unsigned long retval)
->>   {
->>   	struct ftrace_graph_ret trace;
->>   	unsigned long ret;
->>   
->>   	ftrace_pop_return_trace(&trace, &ret, frame_pointer);
->> +	trace.retval = retval;
->>   	trace.rettime = trace_clock_local();
->>   	ftrace_graph_return(&trace);
->>   	/*
->> diff --git a/kernel/trace/trace.h b/kernel/trace/trace.h
->> index 616e1aa1c4da..5ef32c6e1d45 100644
->> --- a/kernel/trace/trace.h
->> +++ b/kernel/trace/trace.h
->> @@ -831,6 +831,7 @@ static __always_inline bool ftrace_hash_empty(struct ftrace_hash *hash)
->>   #define TRACE_GRAPH_PRINT_TAIL          0x100
->>   #define TRACE_GRAPH_SLEEP_TIME          0x200
->>   #define TRACE_GRAPH_GRAPH_TIME          0x400
->> +#define TRACE_GRAPH_PRINT_RETVAL        0x800
->>   #define TRACE_GRAPH_PRINT_FILL_SHIFT	28
->>   #define TRACE_GRAPH_PRINT_FILL_MASK	(0x3 << TRACE_GRAPH_PRINT_FILL_SHIFT)
->>   
->> diff --git a/kernel/trace/trace_entries.h b/kernel/trace/trace_entries.h
->> index cd41e863b51c..d798cb17546f 100644
->> --- a/kernel/trace/trace_entries.h
->> +++ b/kernel/trace/trace_entries.h
->> @@ -93,16 +93,17 @@ FTRACE_ENTRY_PACKED(funcgraph_exit, ftrace_graph_ret_entry,
->>   	F_STRUCT(
->>   		__field_struct(	struct ftrace_graph_ret,	ret	)
->>   		__field_packed(	unsigned long,	ret,		func	)
->> +		__field_packed(	unsigned long,	ret,		retval	)
->>   		__field_packed(	int,		ret,		depth	)
->>   		__field_packed(	unsigned int,	ret,		overrun	)
->>   		__field_packed(	unsigned long long, ret,	calltime)
->>   		__field_packed(	unsigned long long, ret,	rettime	)
->>   	),
->>   
->> -	F_printk("<-- %ps (%d) (start: %llx  end: %llx) over: %d",
->> +	F_printk("<-- %ps (%d) (start: %llx  end: %llx) over: %d retval: %lx",
->>   		 (void *)__entry->func, __entry->depth,
->>   		 __entry->calltime, __entry->rettime,
->> -		 __entry->depth)
->> +		 __entry->depth, __entry->retval)
->>   );
->>   
->>   /*
->> diff --git a/kernel/trace/trace_functions_graph.c b/kernel/trace/trace_functions_graph.c
->> index 203204cadf92..706d3e5c2156 100644
->> --- a/kernel/trace/trace_functions_graph.c
->> +++ b/kernel/trace/trace_functions_graph.c
->> @@ -58,6 +58,8 @@ static struct tracer_opt trace_opts[] = {
->>   	{ TRACER_OPT(funcgraph-irqs, TRACE_GRAPH_PRINT_IRQS) },
->>   	/* Display function name after trailing } */
->>   	{ TRACER_OPT(funcgraph-tail, TRACE_GRAPH_PRINT_TAIL) },
->> +	/* Display function return value */
->> +	{ TRACER_OPT(funcgraph-retval, TRACE_GRAPH_PRINT_RETVAL) },
->>   	/* Include sleep time (scheduled out) between entry and return */
->>   	{ TRACER_OPT(sleep-time, TRACE_GRAPH_SLEEP_TIME) },
->>   
->> @@ -619,6 +621,43 @@ print_graph_duration(struct trace_array *tr, unsigned long long duration,
->>   	trace_seq_puts(s, "|  ");
->>   }
->>   
->> +static void print_graph_retval(struct trace_seq *s, unsigned long retval,
->> +				bool leaf, void *func)
->> +{
->> +	unsigned long err_code = 0;
->> +
->> +	if (retval == 0)
->> +		goto done;
->> +
->> +	/* Guess whether the retval looks like an error code */
->> +	if ((retval & BIT(7)) && (retval >> 8) == 0)
->> +		err_code = (unsigned long)(s8)retval;
->> +	else if ((retval & BIT(15)) && (retval >> 16) == 0)
->> +		err_code = (unsigned long)(s16)retval;
->> +	else if ((retval & BIT(31)) && (((u64)retval) >> 32) == 0)
->> +		err_code = (unsigned long)(s32)retval;
->> +	else
->> +		err_code = retval;
->> +
->> +	if (!IS_ERR_VALUE(err_code))
->> +		err_code = 0;
->> +
->> +done:
->> +	if (leaf) {
->> +		if (err_code != 0)
->> +			trace_seq_printf(s, "%ps(); /* => %lx %ld */\n",
->> +				func, retval, err_code);
->> +		else
->> +			trace_seq_printf(s, "%ps(); /* => %lx */\n", func, retval);
->> +	} else {
->> +		if (err_code != 0)
->> +			trace_seq_printf(s, "} /* %ps => %lx %ld */\n",
->> +				func, retval, err_code);
->> +		else
->> +			trace_seq_printf(s, "} /* %ps => %lx */\n", func, retval);
->> +	}
->> +}
->> +
->>   /* Case of a leaf function on its call entry */
->>   static enum print_line_t
->>   print_graph_entry_leaf(struct trace_iterator *iter,
->> @@ -663,7 +702,10 @@ print_graph_entry_leaf(struct trace_iterator *iter,
->>   	for (i = 0; i < call->depth * TRACE_GRAPH_INDENT; i++)
->>   		trace_seq_putc(s, ' ');
->>   
->> -	trace_seq_printf(s, "%ps();\n", (void *)call->func);
->> +	if (flags & TRACE_GRAPH_PRINT_RETVAL)
->> +		print_graph_retval(s, graph_ret->retval, true, (void *)call->func);
->> +	else
->> +		trace_seq_printf(s, "%ps();\n", (void *)call->func);
->>   
->>   	print_graph_irq(iter, graph_ret->func, TRACE_GRAPH_RET,
->>   			cpu, iter->ent->pid, flags);
->> @@ -942,16 +984,24 @@ print_graph_return(struct ftrace_graph_ret *trace, struct trace_seq *s,
->>   		trace_seq_putc(s, ' ');
->>   
->>   	/*
->> -	 * If the return function does not have a matching entry,
->> -	 * then the entry was lost. Instead of just printing
->> -	 * the '}' and letting the user guess what function this
->> -	 * belongs to, write out the function name. Always do
->> -	 * that if the funcgraph-tail option is enabled.
->> +	 * Always write out the function name and its return value if the
->> +	 * function-retval option is enabled.
->>   	 */
->> -	if (func_match && !(flags & TRACE_GRAPH_PRINT_TAIL))
->> -		trace_seq_puts(s, "}\n");
->> -	else
->> -		trace_seq_printf(s, "} /* %ps */\n", (void *)trace->func);
->> +	if (flags & TRACE_GRAPH_PRINT_RETVAL) {
->> +		print_graph_retval(s, trace->retval, false, (void *)trace->func);
->> +	} else {
->> +		/*
->> +		 * If the return function does not have a matching entry,
->> +		 * then the entry was lost. Instead of just printing
->> +		 * the '}' and letting the user guess what function this
->> +		 * belongs to, write out the function name. Always do
->> +		 * that if the funcgraph-tail option is enabled.
->> +		 */
->> +		if (func_match && !(flags & TRACE_GRAPH_PRINT_TAIL))
->> +			trace_seq_puts(s, "}\n");
->> +		else
->> +			trace_seq_printf(s, "} /* %ps */\n", (void *)trace->func);
->> +	}
->>   
->>   	/* Overrun */
->>   	if (flags & TRACE_GRAPH_PRINT_OVERRUN)
->> -- 
->> 2.25.1
->>
-> 
-> 
+---
+Changes to v4:
+- Merged MCQ and SDB trace event as one.
+
+Changes to v3:
+- Free trace_ufshcd_command_mcq() from dependency on trace_ufshcd_command().
+
+Changes to v2:
+- Shorten printing strings.
+
+Changes to v1:
+- Adjust the order of fileds to keep them aligned.
+---
+ drivers/ufs/core/ufshcd.c  | 15 ++++++++++++---
+ include/trace/events/ufs.h | 24 +++++++++++++-----------
+ 2 files changed, 25 insertions(+), 14 deletions(-)
+
+diff --git a/drivers/ufs/core/ufshcd.c b/drivers/ufs/core/ufshcd.c
+index 3b3cf78..53a7287 100644
+--- a/drivers/ufs/core/ufshcd.c
++++ b/drivers/ufs/core/ufshcd.c
+@@ -422,10 +422,12 @@ static void ufshcd_add_command_trace(struct ufs_hba *hba, unsigned int tag,
+ {
+ 	u64 lba = 0;
+ 	u8 opcode = 0, group_id = 0;
+-	u32 intr, doorbell;
++	u32 doorbell = 0, hwq_id = 0;
++	u32 intr;
+ 	struct ufshcd_lrb *lrbp = &hba->lrb[tag];
+ 	struct scsi_cmnd *cmd = lrbp->cmd;
+ 	struct request *rq = scsi_cmd_to_rq(cmd);
++	struct ufs_hw_queue *hwq = NULL;
+ 	int transfer_len = -1;
+ 
+ 	if (!cmd)
+@@ -456,9 +458,16 @@ static void ufshcd_add_command_trace(struct ufs_hba *hba, unsigned int tag,
+ 	}
+ 
+ 	intr = ufshcd_readl(hba, REG_INTERRUPT_STATUS);
+-	doorbell = ufshcd_readl(hba, REG_UTP_TRANSFER_REQ_DOOR_BELL);
++
++	if (is_mcq_enabled(hba)) {
++		hwq = ufshcd_mcq_req_to_hwq(hba, rq);
++		hwq_id = hwq->id;
++	} else {
++		doorbell = ufshcd_readl(hba, REG_UTP_TRANSFER_REQ_DOOR_BELL);
++		hwq_id = -1;
++	}
+ 	trace_ufshcd_command(dev_name(hba->dev), str_t, tag,
+-			doorbell, transfer_len, intr, lba, opcode, group_id);
++			doorbell, hwq_id, transfer_len, intr, lba, opcode, group_id);
+ }
+ 
+ static void ufshcd_print_clk_freqs(struct ufs_hba *hba)
+diff --git a/include/trace/events/ufs.h b/include/trace/events/ufs.h
+index 599739e..37637ff 100644
+--- a/include/trace/events/ufs.h
++++ b/include/trace/events/ufs.h
+@@ -268,20 +268,21 @@ DEFINE_EVENT(ufshcd_template, ufshcd_wl_runtime_resume,
+ 
+ TRACE_EVENT(ufshcd_command,
+ 	TP_PROTO(const char *dev_name, enum ufs_trace_str_t str_t,
+-		 unsigned int tag, u32 doorbell, int transfer_len, u32 intr,
+-		 u64 lba, u8 opcode, u8 group_id),
++		 unsigned int tag, u32 doorbell, u32 hwq_id, int transfer_len,
++		 u32 intr, u64 lba, u8 opcode, u8 group_id),
+ 
+-	TP_ARGS(dev_name, str_t, tag, doorbell, transfer_len,
+-				intr, lba, opcode, group_id),
++	TP_ARGS(dev_name, str_t, tag, doorbell, hwq_id, transfer_len,
++			intr, lba, opcode, group_id),
+ 
+ 	TP_STRUCT__entry(
+ 		__string(dev_name, dev_name)
+ 		__field(enum ufs_trace_str_t, str_t)
+ 		__field(unsigned int, tag)
+ 		__field(u32, doorbell)
+-		__field(int, transfer_len)
++		__field(u32, hwq_id)
+ 		__field(u32, intr)
+ 		__field(u64, lba)
++		__field(int, transfer_len)
+ 		__field(u8, opcode)
+ 		__field(u8, group_id)
+ 	),
+@@ -291,19 +292,20 @@ TRACE_EVENT(ufshcd_command,
+ 		__entry->str_t = str_t;
+ 		__entry->tag = tag;
+ 		__entry->doorbell = doorbell;
+-		__entry->transfer_len = transfer_len;
++		__entry->hwq_id = hwq_id;
+ 		__entry->intr = intr;
+ 		__entry->lba = lba;
++		__entry->transfer_len = transfer_len;
+ 		__entry->opcode = opcode;
+ 		__entry->group_id = group_id;
+ 	),
+ 
+ 	TP_printk(
+-		"%s: %s: tag: %u, DB: 0x%x, size: %d, IS: %u, LBA: %llu, opcode: 0x%x (%s), group_id: 0x%x",
+-		show_ufs_cmd_trace_str(__entry->str_t), __get_str(dev_name),
+-		__entry->tag, __entry->doorbell, __entry->transfer_len,
+-		__entry->intr, __entry->lba, (u32)__entry->opcode,
+-		str_opcode(__entry->opcode), (u32)__entry->group_id
++		"%s: %s: tag: %u, DB: 0x%x, size: %d, IS: %u, LBA: %llu, opcode: 0x%x (%s), group_id: 0x%x, hqid: %d",
++		 show_ufs_cmd_trace_str(__entry->str_t), __get_str(dev_name),
++		 __entry->tag, __entry->doorbell, __entry->transfer_len, __entry->intr,
++		 __entry->lba, (u32)__entry->opcode, str_opcode(__entry->opcode),
++		 (u32)__entry->group_id, __entry->hwq_id
+ 	)
+ );
+ 
+-- 
+2.7.4
+
