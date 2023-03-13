@@ -2,185 +2,549 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 09AFFC6FD1C
-	for <linux-trace-kernel@archiver.kernel.org>; Mon, 13 Mar 2023 20:41:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 560CBC6FD1C
+	for <linux-trace-kernel@archiver.kernel.org>; Mon, 13 Mar 2023 20:46:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229735AbjCMUlh (ORCPT
+        id S229551AbjCMUq0 (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Mon, 13 Mar 2023 16:41:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42214 "EHLO
+        Mon, 13 Mar 2023 16:46:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51024 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229673AbjCMUlf (ORCPT
+        with ESMTP id S229482AbjCMUqZ (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Mon, 13 Mar 2023 16:41:35 -0400
-Received: from mail-io1-xd2f.google.com (mail-io1-xd2f.google.com [IPv6:2607:f8b0:4864:20::d2f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 76646509BD
-        for <linux-trace-kernel@vger.kernel.org>; Mon, 13 Mar 2023 13:41:01 -0700 (PDT)
-Received: by mail-io1-xd2f.google.com with SMTP id b5so5564810iow.0
-        for <linux-trace-kernel@vger.kernel.org>; Mon, 13 Mar 2023 13:41:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20210112; t=1678740054;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=0T+Km9cavSQaDYPpPQXfU9zdS3Tn01gJlo4SYSaGTsQ=;
-        b=TQATrXuUbv73UnY+1AoZezSFrjnoWb6XBb4KKmy55Dz6xoRMZMU5Lk5mVbE/yBcLoS
-         uielXBVD5Xil2P2hsyGwgq3sdGc01SpHIjc9oWqTjvvue5SLYFhijuaVnRJjZY8gDNOh
-         ZTvdnJYkRVLx6HpXv7gMdi7CWdOgEwoykKcbtHLrJZ8A/WwLPpcEoLzGE7malfTUYJjd
-         iSVCqvSgQAD7jOwK0C0ecMYOFtRxx6gjS8WryAOQFoPuQV79KsFJoh8X2QvDhTcPIfs9
-         qELFz6z7V3giyT7opexr6QgITwDZrGVqYPaijuP+BS4ZDSv/mCQxNh03E+/46usgG7CZ
-         zZrw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1678740054;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=0T+Km9cavSQaDYPpPQXfU9zdS3Tn01gJlo4SYSaGTsQ=;
-        b=8CrUq07VesTfqp06N15R2FNwIF3mBZYveNCIzE6Wu570FW09WzUAqg9Ykf8ljH1pYb
-         g9nbo6oftt7N7gI1L+4OzsdgoWz/M+qPtnJqgic8Nroge4/HhF5NviJvz4hcskNHUg1t
-         otL3kYVYfuQ5h8x8NaxtI9FnuDNFjdiZZuh6WKXvO22XD0oyjFfK7QFVi2GwHFNf6kpb
-         tOYlzlBfx6OtbGuZ/zaGXK0+s6ssZoOVJK8KSfgizBYey0MkgQvaiZarDMjjTuKbqoVD
-         kYxQdMuiUhUnMvX2UA9BRL8up/dbGNoRc3qqN70x+u2ndT9CdGLnkpeM2RIEzjCFRMLZ
-         biXQ==
-X-Gm-Message-State: AO0yUKXl8j8JEr8OmyPQ06GZDCr0Uvlo0kvpJJhbll1D+bmzIByCdW/m
-        8K2WL4fXh08NbPinT3WD5RGQZg==
-X-Google-Smtp-Source: AK7set/xW8ytFvQ8KfIVjFvFDObW2b6jVdvNOP69AGFe4AmpmWOEiHtIGspIfm9vNvggXDisP45jHw==
-X-Received: by 2002:a5e:8819:0:b0:74d:114c:832b with SMTP id l25-20020a5e8819000000b0074d114c832bmr24055572ioj.20.1678740054335;
-        Mon, 13 Mar 2023 13:40:54 -0700 (PDT)
-Received: from google.com ([2620:15c:183:200:a33c:9b70:2c95:9544])
-        by smtp.gmail.com with ESMTPSA id h14-20020a0566380f8e00b003c4e3ecb02dsm189549jal.24.2023.03.13.13.40.53
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 13 Mar 2023 13:40:54 -0700 (PDT)
-Date:   Mon, 13 Mar 2023 14:40:50 -0600
-From:   Ross Zwisler <zwisler@google.com>
-To:     Steven Rostedt <rostedt@goodmis.org>
-Cc:     zwisler@kernel.org, bpf@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Alexei Starovoitov <ast@kernel.org>,
-        Andrii Nakryiko <andrii@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Hao Luo <haoluo@google.com>, Jason Gunthorpe <jgg@ziepe.ca>,
-        Jiri Olsa <jolsa@kernel.org>,
-        John Fastabend <john.fastabend@gmail.com>,
-        KP Singh <kpsingh@kernel.org>,
-        Leon Romanovsky <leon@kernel.org>,
-        Martin KaFai Lau <martin.lau@linux.dev>,
-        Mykola Lysenko <mykolal@fb.com>, Shuah Khan <shuah@kernel.org>,
-        Song Liu <song@kernel.org>,
-        Stanislav Fomichev <sdf@google.com>,
-        Yonghong Song <yhs@fb.com>, linux-kselftest@vger.kernel.org,
-        linux-rdma@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
-        "Michael S . Tsirkin" <mst@redhat.com>
-Subject: Re: [PATCH bpf-next v3 2/2] selftests/bpf: use canonical ftrace path
-Message-ID: <20230313204050.GA592900@google.com>
-References: <20230310175209.2130880-1-zwisler@kernel.org>
- <20230310175209.2130880-2-zwisler@kernel.org>
- <20230310183352.2943e633@gandalf.local.home>
+        Mon, 13 Mar 2023 16:46:25 -0400
+Received: from 66-220-144-178.mail-mxout.facebook.com (66-220-144-178.mail-mxout.facebook.com [66.220.144.178])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DED157B9B0
+        for <linux-trace-kernel@vger.kernel.org>; Mon, 13 Mar 2023 13:46:22 -0700 (PDT)
+Received: by dev0134.prn3.facebook.com (Postfix, from userid 425415)
+        id B030890C527E; Mon, 13 Mar 2023 13:46:08 -0700 (PDT)
+From:   Stefan Roesch <shr@devkernel.io>
+To:     kernel-team@fb.com
+Cc:     shr@devkernel.io, linux-mm@kvack.org, rostedt@goodmis.org,
+        linux-trace-kernel@vger.kernel.org, akpm@linux-foundation.org
+Subject: [PATCH v2] mm: add tracepoints to ksm
+Date:   Mon, 13 Mar 2023 13:46:06 -0700
+Message-Id: <20230313204606.3581988-1-shr@devkernel.io>
+X-Mailer: git-send-email 2.34.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230310183352.2943e633@gandalf.local.home>
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On Fri, Mar 10, 2023 at 06:33:52PM -0500, Steven Rostedt wrote:
-> On Fri, 10 Mar 2023 10:52:09 -0700
-> zwisler@kernel.org wrote:
-> 
-> > diff --git a/tools/testing/selftests/bpf/get_cgroup_id_user.c b/tools/testing/selftests/bpf/get_cgroup_id_user.c
-> > index 156743cf5870..4fa61ac8a0ee 100644
-> > --- a/tools/testing/selftests/bpf/get_cgroup_id_user.c
-> > +++ b/tools/testing/selftests/bpf/get_cgroup_id_user.c
-> > @@ -86,8 +86,12 @@ int main(int argc, char **argv)
-> >  	pid = getpid();
-> >  	bpf_map_update_elem(pidmap_fd, &key, &pid, 0);
-> >  
-> > -	snprintf(buf, sizeof(buf),
-> > -		 "/sys/kernel/debug/tracing/events/%s/id", probe_name);
-> > +	if (access("/sys/kernel/tracing/trace", F_OK) == 0)
-> > +		snprintf(buf, sizeof(buf),
-> > +			 "/sys/kernel/tracing/events/%s/id", probe_name);
-> > +	else
-> > +		snprintf(buf, sizeof(buf),
-> > +			 "/sys/kernel/debug/tracing/events/%s/id", probe_name);
-> 
-> I don't know how the BPF folks feel, but I do know some kernel developers
-> prefer that if you need to break a single command into multiple lines that
-> you then need to add brackets around it. As it makes it easier to read.
-> 
-> 	if (access("/sys/kernel/tracing/trace", F_OK) == 0) {
-> 		snprintf(buf, sizeof(buf),
-> 			 "/sys/kernel/tracing/events/%s/id", probe_name);
-> 	} else {
-> 		snprintf(buf, sizeof(buf),
-> 			 "/sys/kernel/debug/tracing/events/%s/id", probe_name);
-> 	}
-> 
-> 
-> 
-> >  	efd = open(buf, O_RDONLY, 0);
-> >  	if (CHECK(efd < 0, "open", "err %d errno %d\n", efd, errno))
-> >  		goto close_prog;
-> > diff --git a/tools/testing/selftests/bpf/prog_tests/kprobe_multi_test.c b/tools/testing/selftests/bpf/prog_tests/kprobe_multi_test.c
-> > index 113dba349a57..22be0a9a5a0a 100644
-> > --- a/tools/testing/selftests/bpf/prog_tests/kprobe_multi_test.c
-> > +++ b/tools/testing/selftests/bpf/prog_tests/kprobe_multi_test.c
-> > @@ -338,7 +338,12 @@ static int get_syms(char ***symsp, size_t *cntp, bool kernel)
-> >  	 * Filtering out duplicates by using hashmap__add, which won't
-> >  	 * add existing entry.
-> >  	 */
-> > -	f = fopen("/sys/kernel/debug/tracing/available_filter_functions", "r");
-> > +
-> > +	if (access("/sys/kernel/tracing/trace", F_OK) == 0)
-> > +		f = fopen("/sys/kernel/tracing/available_filter_functions", "r");
-> > +	else
-> > +		f = fopen("/sys/kernel/debug/tracing/available_filter_functions", "r");
-> > +
-> >  	if (!f)
-> >  		return -EINVAL;
-> >  
-> > diff --git a/tools/testing/selftests/bpf/prog_tests/task_fd_query_tp.c b/tools/testing/selftests/bpf/prog_tests/task_fd_query_tp.c
-> > index c717741bf8b6..60f92fd3c37a 100644
-> > --- a/tools/testing/selftests/bpf/prog_tests/task_fd_query_tp.c
-> > +++ b/tools/testing/selftests/bpf/prog_tests/task_fd_query_tp.c
-> > @@ -17,8 +17,12 @@ static void test_task_fd_query_tp_core(const char *probe_name,
-> >  	if (CHECK(err, "bpf_prog_test_load", "err %d errno %d\n", err, errno))
-> >  		goto close_prog;
-> >  
-> > -	snprintf(buf, sizeof(buf),
-> > -		 "/sys/kernel/debug/tracing/events/%s/id", probe_name);
-> > +	if (access("/sys/kernel/tracing/trace", F_OK) == 0)
-> > +		snprintf(buf, sizeof(buf),
-> > +			 "/sys/kernel/tracing/events/%s/id", probe_name);
-> > +	else
-> > +		snprintf(buf, sizeof(buf),
-> > +			 "/sys/kernel/debug/tracing/events/%s/id", probe_name);
-> 
-> Same here.
-> 
-> >  	efd = open(buf, O_RDONLY, 0);
-> >  	if (CHECK(efd < 0, "open", "err %d errno %d\n", efd, errno))
-> >  		goto close_prog;
-> > diff --git a/tools/testing/selftests/bpf/prog_tests/tp_attach_query.c b/tools/testing/selftests/bpf/prog_tests/tp_attach_query.c
-> > index 770fcc3bb1ba..d3e377fa8e9b 100644
-> > --- a/tools/testing/selftests/bpf/prog_tests/tp_attach_query.c
-> > +++ b/tools/testing/selftests/bpf/prog_tests/tp_attach_query.c
-> > @@ -16,8 +16,12 @@ void serial_test_tp_attach_query(void)
-> >  	for (i = 0; i < num_progs; i++)
-> >  		obj[i] = NULL;
-> >  
-> > -	snprintf(buf, sizeof(buf),
-> > -		 "/sys/kernel/debug/tracing/events/sched/sched_switch/id");
-> > +	if (access("/sys/kernel/tracing/trace", F_OK) == 0)
-> > +		snprintf(buf, sizeof(buf),
-> > +			 "/sys/kernel/tracing/events/sched/sched_switch/id");
-> > +	else
-> > +		snprintf(buf, sizeof(buf),
-> > +			 "/sys/kernel/debug/tracing/events/sched/sched_switch/id");
-> 
-> and here.
-> 
-> But perhaps the BPF folks don't care?
+This adds the following tracepoints to ksm:
+- start / stop scan
+- ksm enter / exit
+- merge a page
+- merge a page with ksm
+- remove a page
+- remove a rmap item
 
-Sure, I agree that this is more readable.  I'll gather your Reviewed-by for
-patch #1, make this change, rebase to the current bpf/bpf-next and send out
-v4.
+This patch has been split off from the RFC patch series "mm:
+process/cgroup ksm support".
+
+Link: https://lkml.kernel.org/r/20230210214645.2720847-1-shr@devkernel.io
+Signed-off-by: Stefan Roesch <shr@devkernel.io>
+Reviewed-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+---
+ mm/Makefile    |   1 +
+ mm/ksm.c       |  62 ++++--------
+ mm/ksm.h       |  45 +++++++++
+ mm/ksm_trace.h | 258 +++++++++++++++++++++++++++++++++++++++++++++++++
+ 4 files changed, 324 insertions(+), 42 deletions(-)
+ create mode 100644 mm/ksm.h
+ create mode 100644 mm/ksm_trace.h
+
+diff --git a/mm/Makefile b/mm/Makefile
+index 3a08f5d7b178..1cb6ae4404f2 100644
+--- a/mm/Makefile
++++ b/mm/Makefile
+@@ -35,6 +35,7 @@ KCOV_INSTRUMENT_failslab.o :=3D n
+=20
+ CFLAGS_init-mm.o +=3D $(call cc-disable-warning, override-init)
+ CFLAGS_init-mm.o +=3D $(call cc-disable-warning, initializer-overrides)
++CFLAGS_ksm.o		:=3D -I$(src)
+=20
+ mmu-y			:=3D nommu.o
+ mmu-$(CONFIG_MMU)	:=3D highmem.o memory.o mincore.o \
+diff --git a/mm/ksm.c b/mm/ksm.c
+index 192f29fcc93c..6effc4e0a79f 100644
+--- a/mm/ksm.c
++++ b/mm/ksm.c
+@@ -44,6 +44,10 @@
+ #include <asm/tlbflush.h>
+ #include "internal.h"
+ #include "mm_slot.h"
++#include "ksm.h"
++
++#define CREATE_TRACE_POINTS
++#include "ksm_trace.h"
+=20
+ #ifdef CONFIG_NUMA
+ #define NUMA(x)		(x)
+@@ -139,46 +143,6 @@ struct ksm_scan {
+ 	unsigned long seqnr;
+ };
+=20
+-/**
+- * struct ksm_stable_node - node of the stable rbtree
+- * @node: rb node of this ksm page in the stable tree
+- * @head: (overlaying parent) &migrate_nodes indicates temporarily on th=
+at list
+- * @hlist_dup: linked into the stable_node->hlist with a stable_node cha=
+in
+- * @list: linked into migrate_nodes, pending placement in the proper nod=
+e tree
+- * @hlist: hlist head of rmap_items using this ksm page
+- * @kpfn: page frame number of this ksm page (perhaps temporarily on wro=
+ng nid)
+- * @chain_prune_time: time of the last full garbage collection
+- * @rmap_hlist_len: number of rmap_item entries in hlist or STABLE_NODE_=
+CHAIN
+- * @nid: NUMA node id of stable tree in which linked (may not match kpfn=
+)
+- */
+-struct ksm_stable_node {
+-	union {
+-		struct rb_node node;	/* when node of stable tree */
+-		struct {		/* when listed for migration */
+-			struct list_head *head;
+-			struct {
+-				struct hlist_node hlist_dup;
+-				struct list_head list;
+-			};
+-		};
+-	};
+-	struct hlist_head hlist;
+-	union {
+-		unsigned long kpfn;
+-		unsigned long chain_prune_time;
+-	};
+-	/*
+-	 * STABLE_NODE_CHAIN can be any negative number in
+-	 * rmap_hlist_len negative range, but better not -1 to be able
+-	 * to reliably detect underflows.
+-	 */
+-#define STABLE_NODE_CHAIN -1024
+-	int rmap_hlist_len;
+-#ifdef CONFIG_NUMA
+-	int nid;
+-#endif
+-};
+-
+ /**
+  * struct ksm_rmap_item - reverse mapping item for virtual addresses
+  * @rmap_list: next rmap_item in mm_slot's singly-linked rmap_list
+@@ -655,10 +619,12 @@ static void remove_node_from_stable_tree(struct ksm=
+_stable_node *stable_node)
+ 	BUG_ON(stable_node->rmap_hlist_len < 0);
+=20
+ 	hlist_for_each_entry(rmap_item, &stable_node->hlist, hlist) {
+-		if (rmap_item->hlist.next)
++		if (rmap_item->hlist.next) {
+ 			ksm_pages_sharing--;
+-		else
++			trace_ksm_remove_rmap_item(stable_node, rmap_item, rmap_item->mm);
++		} else {
+ 			ksm_pages_shared--;
++		}
+=20
+ 		rmap_item->mm->ksm_merging_pages--;
+=20
+@@ -679,6 +645,7 @@ static void remove_node_from_stable_tree(struct ksm_s=
+table_node *stable_node)
+ 	BUILD_BUG_ON(STABLE_NODE_DUP_HEAD <=3D &migrate_nodes);
+ 	BUILD_BUG_ON(STABLE_NODE_DUP_HEAD >=3D &migrate_nodes + 1);
+=20
++	trace_ksm_remove_ksm_page(stable_node);
+ 	if (stable_node->head =3D=3D &migrate_nodes)
+ 		list_del(&stable_node->list);
+ 	else
+@@ -1375,6 +1342,8 @@ static int try_to_merge_with_ksm_page(struct ksm_rm=
+ap_item *rmap_item,
+ 	get_anon_vma(vma->anon_vma);
+ out:
+ 	mmap_read_unlock(mm);
++	trace_ksm_merge_with_ksm_page(kpage, page_to_pfn(kpage ? kpage : page),
++				rmap_item, mm, err);
+ 	return err;
+ }
+=20
+@@ -2122,6 +2091,9 @@ static int try_to_merge_with_kernel_zero_page(struc=
+t ksm_rmap_item *rmap_item,
+ 		if (vma) {
+ 			err =3D try_to_merge_one_page(vma, page,
+ 						ZERO_PAGE(rmap_item->address));
++			trace_ksm_merge_one_page(
++				page_to_pfn(ZERO_PAGE(rmap_item->address)),
++				rmap_item, mm, err);
+ 			if (!err) {
+ 				rmap_item->address |=3D ZERO_PAGE_FLAG;
+ 				ksm_zero_pages_sharing++;
+@@ -2365,6 +2337,8 @@ static struct ksm_rmap_item *scan_get_next_rmap_ite=
+m(struct page **page)
+=20
+ 	mm_slot =3D ksm_scan.mm_slot;
+ 	if (mm_slot =3D=3D &ksm_mm_head) {
++		trace_ksm_start_scan(ksm_scan.seqnr, ksm_rmap_items);
++
+ 		/*
+ 		 * A number of pages can hang around indefinitely on per-cpu
+ 		 * pagevecs, raised page count preventing write_protect_page
+@@ -2544,6 +2518,7 @@ static struct ksm_rmap_item *scan_get_next_rmap_ite=
+m(struct page **page)
+ 	if (mm_slot !=3D &ksm_mm_head)
+ 		goto next_mm;
+=20
++	trace_ksm_stop_scan(ksm_scan.seqnr, ksm_rmap_items);
+ 	ksm_scan.seqnr++;
+ 	return NULL;
+ }
+@@ -2696,6 +2671,7 @@ int __ksm_enter(struct mm_struct *mm, int flag)
+ 	if (needs_wakeup)
+ 		wake_up_interruptible(&ksm_thread_wait);
+=20
++	trace_ksm_enter(mm);
+ 	return 0;
+ }
+=20
+@@ -2764,6 +2740,8 @@ void __ksm_exit(struct mm_struct *mm, int flag)
+ 		mmap_write_lock(mm);
+ 		mmap_write_unlock(mm);
+ 	}
++
++	trace_ksm_exit(mm);
+ }
+=20
+ struct page *ksm_might_need_to_copy(struct page *page,
+diff --git a/mm/ksm.h b/mm/ksm.h
+new file mode 100644
+index 000000000000..b5855ac996f7
+--- /dev/null
++++ b/mm/ksm.h
+@@ -0,0 +1,45 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++#ifndef __MM_KSM_H__
++#define __MM_KSM_H__
++
++/**
++ * struct ksm_stable_node - node of the stable rbtree
++ * @node: rb node of this ksm page in the stable tree
++ * @head: (overlaying parent) &migrate_nodes indicates temporarily on th=
+at list
++ * @hlist_dup: linked into the stable_node->hlist with a stable_node cha=
+in
++ * @list: linked into migrate_nodes, pending placement in the proper nod=
+e tree
++ * @hlist: hlist head of rmap_items using this ksm page
++ * @kpfn: page frame number of this ksm page (perhaps temporarily on wro=
+ng nid)
++ * @chain_prune_time: time of the last full garbage collection
++ * @rmap_hlist_len: number of rmap_item entries in hlist or STABLE_NODE_=
+CHAIN
++ * @nid: NUMA node id of stable tree in which linked (may not match kpfn=
+)
++ */
++struct ksm_stable_node {
++	union {
++		struct rb_node node;	/* when node of stable tree */
++		struct {		/* when listed for migration */
++			struct list_head *head;
++			struct {
++				struct hlist_node hlist_dup;
++				struct list_head list;
++			};
++		};
++	};
++	struct hlist_head hlist;
++	union {
++		unsigned long kpfn;
++		unsigned long chain_prune_time;
++	};
++	/*
++	 * STABLE_NODE_CHAIN can be any negative number in
++	 * rmap_hlist_len negative range, but better not -1 to be able
++	 * to reliably detect underflows.
++	 */
++#define STABLE_NODE_CHAIN -1024
++	int rmap_hlist_len;
++#ifdef CONFIG_NUMA
++	int nid;
++#endif
++};
++
++#endif
+diff --git a/mm/ksm_trace.h b/mm/ksm_trace.h
+new file mode 100644
+index 000000000000..3cf8c36e08c2
+--- /dev/null
++++ b/mm/ksm_trace.h
+@@ -0,0 +1,258 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++#undef TRACE_SYSTEM
++#define TRACE_SYSTEM ksm
++
++#if !defined(_TRACE_KSM_H) || defined(TRACE_HEADER_MULTI_READ)
++#define _TRACE_KSM_H
++
++#include <linux/tracepoint.h>
++#include "ksm.h"
++
++/**
++ * ksm_scan_template - called for start / stop scan
++ *
++ * @seq:		sequence number of scan
++ * @rmap_entries:	actual number of rmap entries
++ *
++ * Allows to trace the start / stop of a ksm scan.
++ */
++DECLARE_EVENT_CLASS(ksm_scan_template,
++
++	TP_PROTO(int seq, u32 rmap_entries),
++
++	TP_ARGS(seq, rmap_entries),
++
++	TP_STRUCT__entry(
++		__field(int,	seq)
++		__field(u32,	rmap_entries)
++	),
++
++	TP_fast_assign(
++		__entry->seq		=3D seq;
++		__entry->rmap_entries	=3D rmap_entries;
++	),
++
++	TP_printk("seq %d rmap size %d",
++			__entry->seq, __entry->rmap_entries)
++);
++
++/**
++ * ksm_start_scan - called after a new ksm scan is started
++ *
++ * @seq:		sequence number of scan
++ * @rmap_entries:	actual number of rmap entries
++ *
++ * Allows to trace the start of a ksm scan.
++ */
++DEFINE_EVENT(ksm_scan_template, ksm_start_scan,
++
++	TP_PROTO(int seq, u32 rmap_entries),
++
++	TP_ARGS(seq, rmap_entries)
++);
++
++/**
++ * ksm_stop_scan - called after a new ksm scan has completed
++ *
++ * @seq:		sequence number of scan
++ * @rmap_entries:	actual number of rmap entries
++ *
++ * Allows to trace the completion of a ksm scan.
++ */
++DEFINE_EVENT(ksm_scan_template, ksm_stop_scan,
++
++	TP_PROTO(int seq, u32 rmap_entries),
++
++	TP_ARGS(seq, rmap_entries)
++);
++
++/**
++ * ksm_enter - called after a new process has been added / removed from =
+ksm
++ *
++ * @mm:			address of the mm object of the process
++ *
++ * Allows to trace the when a process has been added or removed from ksm=
+.
++ */
++DECLARE_EVENT_CLASS(ksm_enter_exit_template,
++
++	TP_PROTO(void *mm),
++
++	TP_ARGS(mm),
++
++	TP_STRUCT__entry(
++		__field(void *,		mm)
++	),
++
++	TP_fast_assign(
++		__entry->mm	=3D mm;
++	),
++
++	TP_printk("mm %p", __entry->mm)
++);
++
++/**
++ * ksm_enter - called after a new process has been added to ksm
++ *
++ * @mm:			address of the mm object of the process
++ *
++ * Allows to trace the when a process has been added to ksm.
++ */
++DEFINE_EVENT(ksm_enter_exit_template, ksm_enter,
++
++	TP_PROTO(void *mm),
++
++	TP_ARGS(mm)
++);
++
++/**
++ * ksm_exit - called after a new process has been removed from ksm
++ *
++ * @mm:			address of the mm object of the process
++ *
++ * Allows to trace the when a process has been removed from ksm.
++ */
++DEFINE_EVENT(ksm_enter_exit_template, ksm_exit,
++
++	TP_PROTO(void *mm),
++
++	TP_ARGS(mm)
++);
++
++/**
++ * ksm_merge_one_page - called after a page has been merged
++ *
++ * @pfn:		page frame number of ksm page
++ * @rmap_item:		address of rmap_item  object
++ * @mm:			address of the process mm struct
++ * @err:		success
++ *
++ * Allows to trace the ksm merging of individual pages.
++ */
++TRACE_EVENT(ksm_merge_one_page,
++
++	TP_PROTO(unsigned long pfn, void *rmap_item, void *mm, int err),
++
++	TP_ARGS(pfn, rmap_item, mm, err),
++
++	TP_STRUCT__entry(
++		__field(unsigned long,	pfn)
++		__field(void *,		rmap_item)
++		__field(void *,		mm)
++		__field(int,		err)
++	),
++
++	TP_fast_assign(
++		__entry->pfn		=3D pfn;
++		__entry->rmap_item	=3D rmap_item;
++		__entry->mm		=3D mm;
++		__entry->err		=3D err;
++	),
++
++	TP_printk("ksm pfn %lu rmap_item %p mm %p error %d",
++			__entry->pfn, __entry->rmap_item, __entry->mm, __entry->err)
++);
++
++/**
++ * ksm_merge_with_ksm_page - called after a page has been merged with a =
+ksm page
++ *
++ * @ksm_page:		address ksm page
++ * @pfn:		page frame number of ksm page
++ * @rmap_item:		address of rmap_item  object
++ * @mm:			address of the mm object of the process
++ * @err:		success
++ *
++ * Allows to trace the merging of a page with a ksm page.
++ */
++TRACE_EVENT(ksm_merge_with_ksm_page,
++
++	TP_PROTO(void *ksm_page, unsigned long pfn, void *rmap_item, void *mm, =
+int err),
++
++	TP_ARGS(ksm_page, pfn, rmap_item, mm, err),
++
++	TP_STRUCT__entry(
++		__field(void *,		ksm_page)
++		__field(unsigned long,	pfn)
++		__field(void *,		rmap_item)
++		__field(void *,		mm)
++		__field(int,		err)
++	),
++
++	TP_fast_assign(
++		__entry->ksm_page	=3D ksm_page;
++		__entry->pfn		=3D pfn;
++		__entry->rmap_item	=3D rmap_item;
++		__entry->mm		=3D mm;
++		__entry->err		=3D err;
++	),
++
++	TP_printk("%spfn %lu rmap_item %p mm %p error %d",
++		  (__entry->ksm_page ? "ksm " : ""),
++		  __entry->pfn, __entry->rmap_item, __entry->mm, __entry->err)
++);
++
++/**
++ * ksm_remove_ksm_page - called after a ksm page has been removed
++ *
++ * @stable_node: pointer to stable node
++ *
++ * Allows to trace the removing of stable ksm pages.
++ */
++TRACE_EVENT(ksm_remove_ksm_page,
++
++	TP_PROTO(struct ksm_stable_node *stable_node),
++
++	TP_ARGS(stable_node),
++
++	TP_STRUCT__entry(
++		__field(unsigned long, pfn)
++	),
++
++	TP_fast_assign(
++		__entry->pfn =3D stable_node->kpfn;
++	),
++
++	TP_printk("pfn %lu", __entry->pfn)
++);
++
++/**
++ * ksm_remove_rmap_item - called after a rmap_item has been removed from=
+ the
++ *                        stable tree
++ *
++ * @stable_node: pointer to stable node
++ * @rmap_item:		address of rmap_item  object
++ * @mm:			address of the process mm struct
++ *
++ * Allows to trace the removal of pages from the stable tree list.
++ */
++TRACE_EVENT(ksm_remove_rmap_item,
++
++	TP_PROTO(struct ksm_stable_node *stable_node, void *rmap_item, void *mm=
+),
++
++	TP_ARGS(stable_node, rmap_item, mm),
++
++	TP_STRUCT__entry(
++		__field(unsigned long,	pfn)
++		__field(void *,		rmap_item)
++		__field(void *,		mm)
++	),
++
++	TP_fast_assign(
++		__entry->pfn		=3D stable_node->kpfn;
++		__entry->rmap_item	=3D rmap_item;
++		__entry->mm		=3D mm;
++	),
++
++	TP_printk("pfn %lu rmap_item %p mm %p",
++			__entry->pfn, __entry->rmap_item, __entry->mm)
++);
++
++#endif /* _TRACE_KSM_H */
++
++#undef TRACE_INCLUDE_PATH
++#define TRACE_INCLUDE_PATH .
++
++#undef TRACE_INCLUDE_FILE
++#define TRACE_INCLUDE_FILE ksm_trace
++
++/* This part must be outside protection */
++#include <trace/define_trace.h>
+--=20
+2.34.1
+
