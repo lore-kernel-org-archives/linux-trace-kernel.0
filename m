@@ -2,103 +2,97 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9293DC6FD19
-	for <linux-trace-kernel@archiver.kernel.org>; Mon, 13 Mar 2023 21:10:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 69195C74A4B
+	for <linux-trace-kernel@archiver.kernel.org>; Mon, 13 Mar 2023 21:18:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229704AbjCMVKt (ORCPT
+        id S229745AbjCMVSj (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Mon, 13 Mar 2023 17:10:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40514 "EHLO
+        Mon, 13 Mar 2023 17:18:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55366 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229534AbjCMVKs (ORCPT
+        with ESMTP id S229748AbjCMVSh (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Mon, 13 Mar 2023 17:10:48 -0400
-Received: from mail-pj1-f54.google.com (mail-pj1-f54.google.com [209.85.216.54])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8A1192C661;
-        Mon, 13 Mar 2023 14:10:11 -0700 (PDT)
-Received: by mail-pj1-f54.google.com with SMTP id h11-20020a17090a2ecb00b00237c740335cso13047900pjs.3;
-        Mon, 13 Mar 2023 14:10:11 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1678741771;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=NlbP4RMuI0UuGpDLkK+kTJ9DE1XKYPJgo0MhTNATv38=;
-        b=cbKDqV0ze5AvyQmXeGBELpf8Ock5/8DBqbUwtBHfv3xAQzcnDfjxxQEhFrqJK9s1Lh
-         cEBm3OrjM80MuXMJFIxrBVqh98wmesN09J+3t0fYSsYr4ZJlHayn0s0GxfOWpUfxZ1Gi
-         G04v/us8Tgzbr+kQU3e/T6OwC/xJKLN0LecOArW/9vFJfLwp/dEHqAT19nB4SAIBtig1
-         OCpvNNXvlwQ4hcEqx4orsr37UAek8m9B3d+02rxfmxmpQT31or6tTFP8wjopb9TwKdgt
-         mwNVqZ3i6fA0oL20sV9TA/BTfxYFrcbvkTddpcAZSXdS6kwc4red/egMCDuaKTs5sAkL
-         VfiA==
-X-Gm-Message-State: AO0yUKVjZS1tv7Fg8BcM9KeaEjvtQwqKMuOReXnenSTXh/Y/cqoCEwJp
-        zO2ZGwfkpytkyMFM/7BQ3s0=
-X-Google-Smtp-Source: AK7set+QSfPstXZPjDc6o/gv7ERNFNhqrNhy/iy0ONgwO/xGZ//yARXWv+44cLD9sfmyrcpV81ZI6w==
-X-Received: by 2002:a17:90a:bd85:b0:23b:d506:226e with SMTP id z5-20020a17090abd8500b0023bd506226emr5992734pjr.42.1678741770779;
-        Mon, 13 Mar 2023 14:09:30 -0700 (PDT)
-Received: from ?IPV6:2620:15c:211:201:9cdb:df66:226e:e52a? ([2620:15c:211:201:9cdb:df66:226e:e52a])
-        by smtp.gmail.com with ESMTPSA id l10-20020a17090aaa8a00b002311dbb2bc5sm273276pjq.45.2023.03.13.14.09.28
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 13 Mar 2023 14:09:30 -0700 (PDT)
-Message-ID: <5ee20e75-8a61-be89-5302-45f390a0cbd6@acm.org>
-Date:   Mon, 13 Mar 2023 14:09:27 -0700
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.7.1
-Subject: Re: [PATCH v5] scsi: ufs: core: Add trace event for MCQ
-Content-Language: en-US
-To:     Ziqi Chen <quic_ziqichen@quicinc.com>, quic_asutoshd@quicinc.com,
-        quic_cang@quicinc.com, quic_nguyenb@quicinc.com, mani@kernel.org,
-        stanley.chu@mediatek.com, adrian.hunter@intel.com,
-        beanhuo@micron.com, avri.altman@wdc.com, junwoo80.lee@samsung.com,
-        martin.petersen@oracle.com
-Cc:     linux-scsi@vger.kernel.org, Alim Akhtar <alim.akhtar@samsung.com>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
+        Mon, 13 Mar 2023 17:18:37 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1623925BB7;
+        Mon, 13 Mar 2023 14:18:17 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 5FA5D6150D;
+        Mon, 13 Mar 2023 21:18:17 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CE125C433D2;
+        Mon, 13 Mar 2023 21:18:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1678742296;
+        bh=q17gWNDEER7JFUSGy9HVW9DTdpWFf2LCktZduqnianY=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=sYWYaC5bJg15qkd5Wy1envpuTqaOAMqPXhrK+ra5OePk7jrNF8Gs0W7JdLpjKn/jH
+         ZikIXg6VFeiSYDGyPtekMZlE6T8pVNLPgBQSRlzmLFP3ihzgZt9bY+MmUIjJD70EX/
+         cMfSMW6W9QacnsivpuypswFUIslyS2opfmuIjce9lrebqjmm4VPBeZPzOORTUGyswP
+         oRG2aHJS9Kk667ds2itHFeH8MvGghQSO2p9j7GLRp+YmAoczxVfhBFyPEj1pjUQthI
+         qLaT90azdUVwHozj+RFPzxsGI9SCXuAIN+S3VAjCxnEYaXJxi8nMsvibR/9Tuwwn9N
+         1C4EraE9FLatg==
+From:   Ross Zwisler <zwisler@kernel.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Ross Zwisler <zwisler@google.com>,
+        "Tobin C. Harding" <me@tobin.cc>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Mark Rutland <mark.rutland@arm.com>,
         Masami Hiramatsu <mhiramat@kernel.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        "open list:TRACING" <linux-trace-kernel@vger.kernel.org>
-References: <1678699023-6645-1-git-send-email-quic_ziqichen@quicinc.com>
-From:   Bart Van Assche <bvanassche@acm.org>
-In-Reply-To: <1678699023-6645-1-git-send-email-quic_ziqichen@quicinc.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Shuah Khan <shuah@kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Tycho Andersen <tycho@tycho.pizza>, kvm@vger.kernel.org,
+        linux-hardening@vger.kernel.org, linux-kselftest@vger.kernel.org,
+        linux-mm@kvack.org, linux-trace-kernel@vger.kernel.org
+Subject: [PATCH v4 2/3] leaking_addresses: also skip canonical ftrace path
+Date:   Mon, 13 Mar 2023 15:17:44 -0600
+Message-Id: <20230313211746.1541525-2-zwisler@kernel.org>
+X-Mailer: git-send-email 2.40.0.rc1.284.g88254d51c5-goog
+In-Reply-To: <20230313211746.1541525-1-zwisler@kernel.org>
+References: <20230313211746.1541525-1-zwisler@kernel.org>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On 3/13/23 02:16, Ziqi Chen wrote:
-> Added a new trace event to record MCQ relevant information
-> for each request in MCQ mode, include hardware queue ID,
-> SQ tail slot, CQ head slot and CQ tail slot.
+From: Ross Zwisler <zwisler@google.com>
 
-Added a new trace event ... -> Add the MCQ information in the existing 
-trace event ...
+The canonical location for the tracefs filesystem is at /sys/kernel/tracing.
 
- From Documentation/process/submitting-patches.rst: "Describe your 
-changes in imperative mood, e.g. "make xyzzy do frotz"".
+But, from Documentation/trace/ftrace.rst:
 
-> Changes to v1:
-> - Adjust the order of fileds to keep them aligned.
-                         ^^^^^^
-                         fields?
+  Before 4.1, all ftrace tracing control files were within the debugfs
+  file system, which is typically located at /sys/kernel/debug/tracing.
+  For backward compatibility, when mounting the debugfs file system,
+  the tracefs file system will be automatically mounted at:
 
-> -	u32 intr, doorbell;
-> +	u32 doorbell = 0, hwq_id = 0;
-> +	u32 intr;
+  /sys/kernel/debug/tracing
 
-Since hwq_id can be assigned the value -1, shouldn't its type be changed 
-from u32 into int, int16_t or int32_t?
+scripts/leaking_addresses.pl only skipped this older debugfs path, so
+let's add the canonical path as well.
 
-> +	struct ufs_hw_queue *hwq = NULL;
+Acked-by: Tycho Andersen <tycho@tycho.pizza>
+Reviewed-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+Signed-off-by: Ross Zwisler <zwisler@google.com>
+---
+ scripts/leaking_addresses.pl | 1 +
+ 1 file changed, 1 insertion(+)
 
-Is this pointer only used inside one branch of the if-statement below? 
-If so, can it be moved under "if (is_mcq_enabled(hba)) {"?
+diff --git a/scripts/leaking_addresses.pl b/scripts/leaking_addresses.pl
+index 8f636a23bc3f..e695634d153d 100755
+--- a/scripts/leaking_addresses.pl
++++ b/scripts/leaking_addresses.pl
+@@ -61,6 +61,7 @@ my @skip_abs = (
+ 	'/proc/device-tree',
+ 	'/proc/1/syscall',
+ 	'/sys/firmware/devicetree',
++	'/sys/kernel/tracing/trace_pipe',
+ 	'/sys/kernel/debug/tracing/trace_pipe',
+ 	'/sys/kernel/security/apparmor/revision');
+ 
+-- 
+2.40.0.rc1.284.g88254d51c5-goog
 
-> +		"%s: %s: tag: %u, DB: 0x%x, size: %d, IS: %u, LBA: %llu, opcode: 0x%x (%s), group_id: 0x%x, hqid: %d",
-
-Consider changing "hqid" into "hwq_id" to make the trace information 
-easier to understand.
-
-Thanks,
-
-Bart.
