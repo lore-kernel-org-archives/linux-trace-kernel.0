@@ -2,114 +2,185 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 915F0C61DA4
-	for <linux-trace-kernel@archiver.kernel.org>; Mon, 13 Mar 2023 13:56:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 09AFFC6FD1C
+	for <linux-trace-kernel@archiver.kernel.org>; Mon, 13 Mar 2023 20:41:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230212AbjCMN4W (ORCPT
+        id S229735AbjCMUlh (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Mon, 13 Mar 2023 09:56:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36538 "EHLO
+        Mon, 13 Mar 2023 16:41:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42214 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230493AbjCMN4T (ORCPT
+        with ESMTP id S229673AbjCMUlf (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Mon, 13 Mar 2023 09:56:19 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E15B36B961;
-        Mon, 13 Mar 2023 06:56:14 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 75559612CE;
-        Mon, 13 Mar 2023 13:56:14 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 91EEEC433D2;
-        Mon, 13 Mar 2023 13:56:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1678715773;
-        bh=lwNDyirsOLX/1gzMo/KMEGrZVGoMdUl7WVD7PqcZeVk=;
-        h=From:To:Cc:Subject:Date:From;
-        b=SdAHjZD4Q+Xfpyh780M0HO/FZr+7H1jOadclJCst9hSAjktOqwq+/ZY53UXt3HGAs
-         +tYNo18uBF3YoaNQ3P1d+VRDTea0qLyGZjcZwETWdnobaqtH0W46Bcifsd4NsJQtTJ
-         cJTlEFQJHapbn/qw7h5Hm8Npvt9xUkhLq561I6G3FzHGEAQwzQacGC0wf6SCVcl0VC
-         RZoMk7LrwZnCzBUCaQkGzwISzY3VlSKSdGAYq6Y48SlLtt2uyUx7THPuowSs81HmrA
-         dlPXoRUUqrPsrJvhhljBD4kh93Hp8AmirXlAebQ3HezQnnpb9iK8ltMNQ7ZQTVJ4Ok
-         PMURugHaB8y2w==
-From:   "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
-To:     linux-trace-kernel@vger.kernel.org
-Cc:     Heinz Wiesinger <pprkut@slackware.com>, andersson@kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        mhiramat@kernel.org, quic_rjendra@quicinc.com,
-        quic_saipraka@quicinc.com, quic_sibis@quicinc.com
-Subject: [PATCH] bootconfig: Fix testcase to increase max node
-Date:   Mon, 13 Mar 2023 22:56:09 +0900
-Message-Id: <167871576880.783280.2390717518955954275.stgit@devnote2>
-X-Mailer: git-send-email 2.25.1
-User-Agent: StGit/0.19
+        Mon, 13 Mar 2023 16:41:35 -0400
+Received: from mail-io1-xd2f.google.com (mail-io1-xd2f.google.com [IPv6:2607:f8b0:4864:20::d2f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 76646509BD
+        for <linux-trace-kernel@vger.kernel.org>; Mon, 13 Mar 2023 13:41:01 -0700 (PDT)
+Received: by mail-io1-xd2f.google.com with SMTP id b5so5564810iow.0
+        for <linux-trace-kernel@vger.kernel.org>; Mon, 13 Mar 2023 13:41:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20210112; t=1678740054;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=0T+Km9cavSQaDYPpPQXfU9zdS3Tn01gJlo4SYSaGTsQ=;
+        b=TQATrXuUbv73UnY+1AoZezSFrjnoWb6XBb4KKmy55Dz6xoRMZMU5Lk5mVbE/yBcLoS
+         uielXBVD5Xil2P2hsyGwgq3sdGc01SpHIjc9oWqTjvvue5SLYFhijuaVnRJjZY8gDNOh
+         ZTvdnJYkRVLx6HpXv7gMdi7CWdOgEwoykKcbtHLrJZ8A/WwLPpcEoLzGE7malfTUYJjd
+         iSVCqvSgQAD7jOwK0C0ecMYOFtRxx6gjS8WryAOQFoPuQV79KsFJoh8X2QvDhTcPIfs9
+         qELFz6z7V3giyT7opexr6QgITwDZrGVqYPaijuP+BS4ZDSv/mCQxNh03E+/46usgG7CZ
+         zZrw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112; t=1678740054;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=0T+Km9cavSQaDYPpPQXfU9zdS3Tn01gJlo4SYSaGTsQ=;
+        b=8CrUq07VesTfqp06N15R2FNwIF3mBZYveNCIzE6Wu570FW09WzUAqg9Ykf8ljH1pYb
+         g9nbo6oftt7N7gI1L+4OzsdgoWz/M+qPtnJqgic8Nroge4/HhF5NviJvz4hcskNHUg1t
+         otL3kYVYfuQ5h8x8NaxtI9FnuDNFjdiZZuh6WKXvO22XD0oyjFfK7QFVi2GwHFNf6kpb
+         tOYlzlBfx6OtbGuZ/zaGXK0+s6ssZoOVJK8KSfgizBYey0MkgQvaiZarDMjjTuKbqoVD
+         kYxQdMuiUhUnMvX2UA9BRL8up/dbGNoRc3qqN70x+u2ndT9CdGLnkpeM2RIEzjCFRMLZ
+         biXQ==
+X-Gm-Message-State: AO0yUKXl8j8JEr8OmyPQ06GZDCr0Uvlo0kvpJJhbll1D+bmzIByCdW/m
+        8K2WL4fXh08NbPinT3WD5RGQZg==
+X-Google-Smtp-Source: AK7set/xW8ytFvQ8KfIVjFvFDObW2b6jVdvNOP69AGFe4AmpmWOEiHtIGspIfm9vNvggXDisP45jHw==
+X-Received: by 2002:a5e:8819:0:b0:74d:114c:832b with SMTP id l25-20020a5e8819000000b0074d114c832bmr24055572ioj.20.1678740054335;
+        Mon, 13 Mar 2023 13:40:54 -0700 (PDT)
+Received: from google.com ([2620:15c:183:200:a33c:9b70:2c95:9544])
+        by smtp.gmail.com with ESMTPSA id h14-20020a0566380f8e00b003c4e3ecb02dsm189549jal.24.2023.03.13.13.40.53
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 13 Mar 2023 13:40:54 -0700 (PDT)
+Date:   Mon, 13 Mar 2023 14:40:50 -0600
+From:   Ross Zwisler <zwisler@google.com>
+To:     Steven Rostedt <rostedt@goodmis.org>
+Cc:     zwisler@kernel.org, bpf@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Alexei Starovoitov <ast@kernel.org>,
+        Andrii Nakryiko <andrii@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Hao Luo <haoluo@google.com>, Jason Gunthorpe <jgg@ziepe.ca>,
+        Jiri Olsa <jolsa@kernel.org>,
+        John Fastabend <john.fastabend@gmail.com>,
+        KP Singh <kpsingh@kernel.org>,
+        Leon Romanovsky <leon@kernel.org>,
+        Martin KaFai Lau <martin.lau@linux.dev>,
+        Mykola Lysenko <mykolal@fb.com>, Shuah Khan <shuah@kernel.org>,
+        Song Liu <song@kernel.org>,
+        Stanislav Fomichev <sdf@google.com>,
+        Yonghong Song <yhs@fb.com>, linux-kselftest@vger.kernel.org,
+        linux-rdma@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+        "Michael S . Tsirkin" <mst@redhat.com>
+Subject: Re: [PATCH bpf-next v3 2/2] selftests/bpf: use canonical ftrace path
+Message-ID: <20230313204050.GA592900@google.com>
+References: <20230310175209.2130880-1-zwisler@kernel.org>
+ <20230310175209.2130880-2-zwisler@kernel.org>
+ <20230310183352.2943e633@gandalf.local.home>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230310183352.2943e633@gandalf.local.home>
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+On Fri, Mar 10, 2023 at 06:33:52PM -0500, Steven Rostedt wrote:
+> On Fri, 10 Mar 2023 10:52:09 -0700
+> zwisler@kernel.org wrote:
+> 
+> > diff --git a/tools/testing/selftests/bpf/get_cgroup_id_user.c b/tools/testing/selftests/bpf/get_cgroup_id_user.c
+> > index 156743cf5870..4fa61ac8a0ee 100644
+> > --- a/tools/testing/selftests/bpf/get_cgroup_id_user.c
+> > +++ b/tools/testing/selftests/bpf/get_cgroup_id_user.c
+> > @@ -86,8 +86,12 @@ int main(int argc, char **argv)
+> >  	pid = getpid();
+> >  	bpf_map_update_elem(pidmap_fd, &key, &pid, 0);
+> >  
+> > -	snprintf(buf, sizeof(buf),
+> > -		 "/sys/kernel/debug/tracing/events/%s/id", probe_name);
+> > +	if (access("/sys/kernel/tracing/trace", F_OK) == 0)
+> > +		snprintf(buf, sizeof(buf),
+> > +			 "/sys/kernel/tracing/events/%s/id", probe_name);
+> > +	else
+> > +		snprintf(buf, sizeof(buf),
+> > +			 "/sys/kernel/debug/tracing/events/%s/id", probe_name);
+> 
+> I don't know how the BPF folks feel, but I do know some kernel developers
+> prefer that if you need to break a single command into multiple lines that
+> you then need to add brackets around it. As it makes it easier to read.
+> 
+> 	if (access("/sys/kernel/tracing/trace", F_OK) == 0) {
+> 		snprintf(buf, sizeof(buf),
+> 			 "/sys/kernel/tracing/events/%s/id", probe_name);
+> 	} else {
+> 		snprintf(buf, sizeof(buf),
+> 			 "/sys/kernel/debug/tracing/events/%s/id", probe_name);
+> 	}
+> 
+> 
+> 
+> >  	efd = open(buf, O_RDONLY, 0);
+> >  	if (CHECK(efd < 0, "open", "err %d errno %d\n", efd, errno))
+> >  		goto close_prog;
+> > diff --git a/tools/testing/selftests/bpf/prog_tests/kprobe_multi_test.c b/tools/testing/selftests/bpf/prog_tests/kprobe_multi_test.c
+> > index 113dba349a57..22be0a9a5a0a 100644
+> > --- a/tools/testing/selftests/bpf/prog_tests/kprobe_multi_test.c
+> > +++ b/tools/testing/selftests/bpf/prog_tests/kprobe_multi_test.c
+> > @@ -338,7 +338,12 @@ static int get_syms(char ***symsp, size_t *cntp, bool kernel)
+> >  	 * Filtering out duplicates by using hashmap__add, which won't
+> >  	 * add existing entry.
+> >  	 */
+> > -	f = fopen("/sys/kernel/debug/tracing/available_filter_functions", "r");
+> > +
+> > +	if (access("/sys/kernel/tracing/trace", F_OK) == 0)
+> > +		f = fopen("/sys/kernel/tracing/available_filter_functions", "r");
+> > +	else
+> > +		f = fopen("/sys/kernel/debug/tracing/available_filter_functions", "r");
+> > +
+> >  	if (!f)
+> >  		return -EINVAL;
+> >  
+> > diff --git a/tools/testing/selftests/bpf/prog_tests/task_fd_query_tp.c b/tools/testing/selftests/bpf/prog_tests/task_fd_query_tp.c
+> > index c717741bf8b6..60f92fd3c37a 100644
+> > --- a/tools/testing/selftests/bpf/prog_tests/task_fd_query_tp.c
+> > +++ b/tools/testing/selftests/bpf/prog_tests/task_fd_query_tp.c
+> > @@ -17,8 +17,12 @@ static void test_task_fd_query_tp_core(const char *probe_name,
+> >  	if (CHECK(err, "bpf_prog_test_load", "err %d errno %d\n", err, errno))
+> >  		goto close_prog;
+> >  
+> > -	snprintf(buf, sizeof(buf),
+> > -		 "/sys/kernel/debug/tracing/events/%s/id", probe_name);
+> > +	if (access("/sys/kernel/tracing/trace", F_OK) == 0)
+> > +		snprintf(buf, sizeof(buf),
+> > +			 "/sys/kernel/tracing/events/%s/id", probe_name);
+> > +	else
+> > +		snprintf(buf, sizeof(buf),
+> > +			 "/sys/kernel/debug/tracing/events/%s/id", probe_name);
+> 
+> Same here.
+> 
+> >  	efd = open(buf, O_RDONLY, 0);
+> >  	if (CHECK(efd < 0, "open", "err %d errno %d\n", efd, errno))
+> >  		goto close_prog;
+> > diff --git a/tools/testing/selftests/bpf/prog_tests/tp_attach_query.c b/tools/testing/selftests/bpf/prog_tests/tp_attach_query.c
+> > index 770fcc3bb1ba..d3e377fa8e9b 100644
+> > --- a/tools/testing/selftests/bpf/prog_tests/tp_attach_query.c
+> > +++ b/tools/testing/selftests/bpf/prog_tests/tp_attach_query.c
+> > @@ -16,8 +16,12 @@ void serial_test_tp_attach_query(void)
+> >  	for (i = 0; i < num_progs; i++)
+> >  		obj[i] = NULL;
+> >  
+> > -	snprintf(buf, sizeof(buf),
+> > -		 "/sys/kernel/debug/tracing/events/sched/sched_switch/id");
+> > +	if (access("/sys/kernel/tracing/trace", F_OK) == 0)
+> > +		snprintf(buf, sizeof(buf),
+> > +			 "/sys/kernel/tracing/events/sched/sched_switch/id");
+> > +	else
+> > +		snprintf(buf, sizeof(buf),
+> > +			 "/sys/kernel/debug/tracing/events/sched/sched_switch/id");
+> 
+> and here.
+> 
+> But perhaps the BPF folks don't care?
 
-Since commit 6c40624930c5 ("bootconfig: Increase max nodes of bootconfig
-from 1024 to 8192 for DCC support") increased the max number of bootconfig
-node to 8192, the bootconfig testcase of the max number of nodes fails.
-To fix this issue, we can not simply increase the number in the test script
-because the test bootconfig file becomes too big (>32KB). To fix that, we
-can use a combination of three alphabets (26^3 = 17576). But with that,
-we can not express the 8193 (just one exceed from the limitation) because
-it also exceeds the max size of bootconfig. So, the first 26 nodes will just
-use one alphabet.
-
-With this fix, test-bootconfig.sh passes all tests.
-
-Reported-by: Heinz Wiesinger <pprkut@slackware.com>
-Link: https://lore.kernel.org/all/2463802.XAFRqVoOGU@amaterasu.liwjatan.org
-Fixes: 6c40624930c5 ("bootconfig: Increase max nodes of bootconfig from 1024 to 8192 for DCC support")
-Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
----
- tools/bootconfig/test-bootconfig.sh |   17 ++++++++++++-----
- 1 file changed, 12 insertions(+), 5 deletions(-)
-
-diff --git a/tools/bootconfig/test-bootconfig.sh b/tools/bootconfig/test-bootconfig.sh
-index f68e2e9eef8b..b1b77d76110d 100755
---- a/tools/bootconfig/test-bootconfig.sh
-+++ b/tools/bootconfig/test-bootconfig.sh
-@@ -14,10 +14,11 @@ ALIGN=4
- INITRD=`mktemp ${TESTDIR}/initrd-XXXX`
- TEMPCONF=`mktemp ${TESTDIR}/temp-XXXX.bconf`
- OUTFILE=`mktemp ${TESTDIR}/tempout-XXXX`
-+AWKFILE=`mktemp ${TESTDIR}/temp-XXXX.awk`
- NG=0
- 
- cleanup() {
--  rm -f $INITRD $TEMPCONF $OUTFILE
-+  rm -f $INITRD $TEMPCONF $OUTFILE $AWKFILE
-   exit $NG
- }
- 
-@@ -87,10 +88,16 @@ xfail grep -i "error" $OUTFILE
- 
- echo "Max node number check"
- 
--echo -n > $TEMPCONF
--for i in `seq 1 1024` ; do
--   echo "node$i" >> $TEMPCONF
--done
-+cat > $AWKFILE << EOF
-+BEGIN {
-+  for (i = 0; i < 26; i += 1)
-+      printf("%c\n", 65 + i % 26)
-+  for (i = 26; i < 8192; i += 1)
-+      printf("%c%c%c\n", 65 + i % 26, 65 + (i / 26) % 26, 65 + (i / 26 / 26))
-+}
-+EOF
-+awk -f "$AWKFILE" > $TEMPCONF
-+
- xpass $BOOTCONF -a $TEMPCONF $INITRD
- 
- echo "badnode" >> $TEMPCONF
-
+Sure, I agree that this is more readable.  I'll gather your Reviewed-by for
+patch #1, make this change, rebase to the current bpf/bpf-next and send out
+v4.
