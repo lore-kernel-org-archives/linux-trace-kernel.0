@@ -2,201 +2,140 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D5673C6FD19
-	for <linux-trace-kernel@archiver.kernel.org>; Mon, 13 Mar 2023 09:18:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A240C6FD1C
+	for <linux-trace-kernel@archiver.kernel.org>; Mon, 13 Mar 2023 13:46:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229586AbjCMJSV (ORCPT
+        id S231158AbjCMNqP (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Mon, 13 Mar 2023 05:18:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55190 "EHLO
+        Mon, 13 Mar 2023 09:46:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46036 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229689AbjCMJST (ORCPT
+        with ESMTP id S229612AbjCMNqN (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Mon, 13 Mar 2023 05:18:19 -0400
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 41772113D1;
-        Mon, 13 Mar 2023 02:18:15 -0700 (PDT)
-Received: from pps.filterd (m0279865.ppops.net [127.0.0.1])
-        by mx0a-0031df01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 32D7SK8Y029779;
-        Mon, 13 Mar 2023 09:17:50 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=from : to : cc :
- subject : date : message-id; s=qcppdkim1;
- bh=0H7NGg+no3R1jEB+A9Rmw3VAqYB+CcMABuXkv6FUM3M=;
- b=IJGkpibQB0zxFhT75OVyywJa+YjNJ9yQIucR44IntJHC5EvhyGKhuXJtHbErgH2Dn9Vk
- 9ubwtOJ0Rq6F/EJjXekaiXq3VAtiuHfc1ERZhpcsk7I8G+oXSF1d5MjsQskhFjZagYDj
- CGvE2cSCuet71H6w32qjYnY07j4R9Z2ucsP5jv/2aHtzEaVG7zdUsS+/4QhYSztfZPXj
- ewDgbdzdx51zBYZtwbrLfZ6AuHgSzpPLSnUwzDHXCSp0bRcCEzHt/0xcu1Vyl3A57dPM
- IHIWfxPLuwAowPdzxJk9IXXUVM/hoNxPdqMCQkyFGezOVHeX7G0dV9aRDUobu6JzzGum RQ== 
-Received: from aptaippmta02.qualcomm.com (tpe-colo-wan-fw-bordernet.qualcomm.com [103.229.16.4])
-        by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3p9yew08hq-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 13 Mar 2023 09:17:50 +0000
-Received: from pps.filterd (APTAIPPMTA02.qualcomm.com [127.0.0.1])
-        by APTAIPPMTA02.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTP id 32D9HlAc009088;
-        Mon, 13 Mar 2023 09:17:47 GMT
-Received: from pps.reinject (localhost [127.0.0.1])
-        by APTAIPPMTA02.qualcomm.com (PPS) with ESMTP id 3p8jqm9tbk-1;
-        Mon, 13 Mar 2023 09:17:47 +0000
-Received: from APTAIPPMTA02.qualcomm.com (APTAIPPMTA02.qualcomm.com [127.0.0.1])
-        by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 32D9HlVU009083;
-        Mon, 13 Mar 2023 09:17:47 GMT
-Received: from cbsp-sh-gv.qualcomm.com (CBSP-SH-gv.ap.qualcomm.com [10.231.249.68])
-        by APTAIPPMTA02.qualcomm.com (PPS) with ESMTP id 32D9HkiP009082;
-        Mon, 13 Mar 2023 09:17:47 +0000
-Received: by cbsp-sh-gv.qualcomm.com (Postfix, from userid 393357)
-        id 97CFD452E; Mon, 13 Mar 2023 17:17:45 +0800 (CST)
-From:   Ziqi Chen <quic_ziqichen@quicinc.com>
-To:     quic_asutoshd@quicinc.com, quic_cang@quicinc.com,
-        quic_nguyenb@quicinc.com, bvanassche@acm.org, mani@kernel.org,
-        stanley.chu@mediatek.com, adrian.hunter@intel.com,
-        beanhuo@micron.com, avri.altman@wdc.com, junwoo80.lee@samsung.com,
-        martin.petersen@oracle.com, quic_ziqichen@quicinc.com
-Cc:     linux-scsi@vger.kernel.org, Alim Akhtar <alim.akhtar@samsung.com>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
+        Mon, 13 Mar 2023 09:46:13 -0400
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 08D25637FF;
+        Mon, 13 Mar 2023 06:46:07 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id B32F4B8106E;
+        Mon, 13 Mar 2023 13:46:05 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 89A45C433D2;
+        Mon, 13 Mar 2023 13:46:03 +0000 (UTC)
+Date:   Mon, 13 Mar 2023 09:46:01 -0400
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     LKML <linux-kernel@vger.kernel.org>,
+        Linux Trace Kernel <linux-trace-kernel@vger.kernel.org>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
         Masami Hiramatsu <mhiramat@kernel.org>,
-        linux-kernel@vger.kernel.org (open list),
-        linux-trace-kernel@vger.kernel.org (open list:TRACING)
-Subject: [PATCH v5] scsi: ufs: core: Add trace event for MCQ
-Date:   Mon, 13 Mar 2023 17:16:05 +0800
-Message-Id: <1678699023-6645-1-git-send-email-quic_ziqichen@quicinc.com>
-X-Mailer: git-send-email 2.7.4
-X-QCInternal: smtphost
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: zMmCpXuZLgWsQLgS0pZELvB1skl3au7W
-X-Proofpoint-ORIG-GUID: zMmCpXuZLgWsQLgS0pZELvB1skl3au7W
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.254,Aquarius:18.0.942,Hydra:6.0.573,FMLib:17.11.170.22
- definitions=2023-03-13_02,2023-03-10_01,2023-02-09_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0 adultscore=0
- priorityscore=1501 bulkscore=0 lowpriorityscore=0 phishscore=0 spamscore=0
- clxscore=1015 mlxscore=0 suspectscore=0 malwarescore=0 mlxlogscore=999
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2212070000
- definitions=main-2303130075
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Joel Fernandes <joel@joelfernandes.org>
+Subject: Re: [PATCH v2] tracing: Make tracepoint lockdep check actually test
+ something
+Message-ID: <20230313094601.3df9182d@gandalf.local.home>
+In-Reply-To: <20230310172856.77406446@gandalf.local.home>
+References: <20230310172856.77406446@gandalf.local.home>
+X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-Added a new trace event to record MCQ relevant information
-for each request in MCQ mode, include hardware queue ID,
-SQ tail slot, CQ head slot and CQ tail slot.
+On Fri, 10 Mar 2023 17:28:56 -0500
+Steven Rostedt <rostedt@goodmis.org> wrote:
 
-Signed-off-by: Ziqi Chen <quic_ziqichen@quicinc.com>
+> From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
+> 
+> A while ago where the trace events had the following:
+> 
+>    rcu_read_lock_sched_notrace();
+>    rcu_dereference_sched(...);
+>    rcu_read_unlock_sched_notrace();
+> 
+> If the tracepoint is enabled, it could trigger RCU issues if called in
+> the wrong place. And this warning was only triggered if lockdep was
+> enabled. If the tracepoint was never enabled with lockdep, the bug would
+> not be caught. To handle this, the above sequence was done when lockdep
+> was enabled regardless if the tracepoint was enabled or not (although the
+> always enabled code really didn't do anything, it would still trigger a
+> warning).
+> 
+> But a lot has changed since that lockdep code was added. One is, that
+> sequence no longer triggers any warning. Another is, the tracepoint when
+> enabled doesn't even do that sequence anymore.
+> 
+> The main check we care about today is whether RCU is "watching" or not.
+> So if lockdep is enabled, always check if rcu_is_watching() which will
+> trigger a warning if it is not (tracepoints require RCU to be watching).
+> 
+> Note, that old sequence did add a bit of overhead when lockdep was enabled,
+> and with the latest kernel updates, would cause the system to slow down
+> enough to trigger kernel "stalled" warnings.
+> 
+> Link: http://lore.kernel.org/lkml/20140806181801.GA4605@redhat.com
+> Link: http://lore.kernel.org/lkml/20140807175204.C257CAC5@viggo.jf.intel.com
+> Link: https://lore.kernel.org/lkml/20230307184645.521db5c9@gandalf.local.home/
+> 
+> Cc: stable@vger.kernel.org
+> Cc: Peter Zijlstra <peterz@infradead.org>
+> Cc: Masami Hiramatsu <mhiramat@kernel.org>
+> Cc: Dave Hansen <dave.hansen@linux.intel.com>
+> Cc: "Paul E. McKenney" <paulmck@kernel.org>
+> Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+> Cc: Joel Fernandes <joel@joelfernandes.org>
+> Fixes: e6753f23d961 ("tracepoint: Make rcuidle tracepoint callers use SRCU")
+> Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+> ---
+> Changes since v1: https://lore.kernel.org/linux-trace-kernel/20230309165603.6967197d@gandalf.local.home
+> 
+>  - Updated the comment above the code (Masami Hiramatsu)
+> 
+>  include/linux/tracepoint.h | 15 ++++++---------
+>  1 file changed, 6 insertions(+), 9 deletions(-)
+> 
+> diff --git a/include/linux/tracepoint.h b/include/linux/tracepoint.h
+> index fa1004fcf810..2083f2d2f05b 100644
+> --- a/include/linux/tracepoint.h
+> +++ b/include/linux/tracepoint.h
+> @@ -231,12 +231,11 @@ static inline struct tracepoint *tracepoint_ptr_deref(tracepoint_ptr_t *p)
+>   * not add unwanted padding between the beginning of the section and the
+>   * structure. Force alignment to the same alignment as the section start.
+>   *
+> - * When lockdep is enabled, we make sure to always do the RCU portions of
+> - * the tracepoint code, regardless of whether tracing is on. However,
+> - * don't check if the condition is false, due to interaction with idle
+> - * instrumentation. This lets us find RCU issues triggered with tracepoints
+> - * even when this tracepoint is off. This code has no purpose other than
+> - * poking RCU a bit.
+> + * When lockdep is enabled, we make sure to always test if RCU is
+> + * "watching" regardless if the tracepoint is enabled or not. Tracepoints
+> + * require RCU to be active, and it should always warn at the tracepoint
+> + * site if it is not watching, as it will need to be active when the
+> + * tracepoint is enabled.
+>   */
 
----
-Changes to v4:
-- Merged MCQ and SDB trace event as one.
+Masami,
 
-Changes to v3:
-- Free trace_ufshcd_command_mcq() from dependency on trace_ufshcd_command().
+Are you OK with this version of the patch?
 
-Changes to v2:
-- Shorten printing strings.
+-- Steve
 
-Changes to v1:
-- Adjust the order of fileds to keep them aligned.
----
- drivers/ufs/core/ufshcd.c  | 15 ++++++++++++---
- include/trace/events/ufs.h | 24 +++++++++++++-----------
- 2 files changed, 25 insertions(+), 14 deletions(-)
-
-diff --git a/drivers/ufs/core/ufshcd.c b/drivers/ufs/core/ufshcd.c
-index 3b3cf78..53a7287 100644
---- a/drivers/ufs/core/ufshcd.c
-+++ b/drivers/ufs/core/ufshcd.c
-@@ -422,10 +422,12 @@ static void ufshcd_add_command_trace(struct ufs_hba *hba, unsigned int tag,
- {
- 	u64 lba = 0;
- 	u8 opcode = 0, group_id = 0;
--	u32 intr, doorbell;
-+	u32 doorbell = 0, hwq_id = 0;
-+	u32 intr;
- 	struct ufshcd_lrb *lrbp = &hba->lrb[tag];
- 	struct scsi_cmnd *cmd = lrbp->cmd;
- 	struct request *rq = scsi_cmd_to_rq(cmd);
-+	struct ufs_hw_queue *hwq = NULL;
- 	int transfer_len = -1;
- 
- 	if (!cmd)
-@@ -456,9 +458,16 @@ static void ufshcd_add_command_trace(struct ufs_hba *hba, unsigned int tag,
- 	}
- 
- 	intr = ufshcd_readl(hba, REG_INTERRUPT_STATUS);
--	doorbell = ufshcd_readl(hba, REG_UTP_TRANSFER_REQ_DOOR_BELL);
-+
-+	if (is_mcq_enabled(hba)) {
-+		hwq = ufshcd_mcq_req_to_hwq(hba, rq);
-+		hwq_id = hwq->id;
-+	} else {
-+		doorbell = ufshcd_readl(hba, REG_UTP_TRANSFER_REQ_DOOR_BELL);
-+		hwq_id = -1;
-+	}
- 	trace_ufshcd_command(dev_name(hba->dev), str_t, tag,
--			doorbell, transfer_len, intr, lba, opcode, group_id);
-+			doorbell, hwq_id, transfer_len, intr, lba, opcode, group_id);
- }
- 
- static void ufshcd_print_clk_freqs(struct ufs_hba *hba)
-diff --git a/include/trace/events/ufs.h b/include/trace/events/ufs.h
-index 599739e..37637ff 100644
---- a/include/trace/events/ufs.h
-+++ b/include/trace/events/ufs.h
-@@ -268,20 +268,21 @@ DEFINE_EVENT(ufshcd_template, ufshcd_wl_runtime_resume,
- 
- TRACE_EVENT(ufshcd_command,
- 	TP_PROTO(const char *dev_name, enum ufs_trace_str_t str_t,
--		 unsigned int tag, u32 doorbell, int transfer_len, u32 intr,
--		 u64 lba, u8 opcode, u8 group_id),
-+		 unsigned int tag, u32 doorbell, u32 hwq_id, int transfer_len,
-+		 u32 intr, u64 lba, u8 opcode, u8 group_id),
- 
--	TP_ARGS(dev_name, str_t, tag, doorbell, transfer_len,
--				intr, lba, opcode, group_id),
-+	TP_ARGS(dev_name, str_t, tag, doorbell, hwq_id, transfer_len,
-+			intr, lba, opcode, group_id),
- 
- 	TP_STRUCT__entry(
- 		__string(dev_name, dev_name)
- 		__field(enum ufs_trace_str_t, str_t)
- 		__field(unsigned int, tag)
- 		__field(u32, doorbell)
--		__field(int, transfer_len)
-+		__field(u32, hwq_id)
- 		__field(u32, intr)
- 		__field(u64, lba)
-+		__field(int, transfer_len)
- 		__field(u8, opcode)
- 		__field(u8, group_id)
- 	),
-@@ -291,19 +292,20 @@ TRACE_EVENT(ufshcd_command,
- 		__entry->str_t = str_t;
- 		__entry->tag = tag;
- 		__entry->doorbell = doorbell;
--		__entry->transfer_len = transfer_len;
-+		__entry->hwq_id = hwq_id;
- 		__entry->intr = intr;
- 		__entry->lba = lba;
-+		__entry->transfer_len = transfer_len;
- 		__entry->opcode = opcode;
- 		__entry->group_id = group_id;
- 	),
- 
- 	TP_printk(
--		"%s: %s: tag: %u, DB: 0x%x, size: %d, IS: %u, LBA: %llu, opcode: 0x%x (%s), group_id: 0x%x",
--		show_ufs_cmd_trace_str(__entry->str_t), __get_str(dev_name),
--		__entry->tag, __entry->doorbell, __entry->transfer_len,
--		__entry->intr, __entry->lba, (u32)__entry->opcode,
--		str_opcode(__entry->opcode), (u32)__entry->group_id
-+		"%s: %s: tag: %u, DB: 0x%x, size: %d, IS: %u, LBA: %llu, opcode: 0x%x (%s), group_id: 0x%x, hqid: %d",
-+		 show_ufs_cmd_trace_str(__entry->str_t), __get_str(dev_name),
-+		 __entry->tag, __entry->doorbell, __entry->transfer_len, __entry->intr,
-+		 __entry->lba, (u32)__entry->opcode, str_opcode(__entry->opcode),
-+		 (u32)__entry->group_id, __entry->hwq_id
- 	)
- );
- 
--- 
-2.7.4
+>  #define __DECLARE_TRACE(name, proto, args, cond, data_proto)		\
+>  	extern int __traceiter_##name(data_proto);			\
+> @@ -249,9 +248,7 @@ static inline struct tracepoint *tracepoint_ptr_deref(tracepoint_ptr_t *p)
+>  				TP_ARGS(args),				\
+>  				TP_CONDITION(cond), 0);			\
+>  		if (IS_ENABLED(CONFIG_LOCKDEP) && (cond)) {		\
+> -			rcu_read_lock_sched_notrace();			\
+> -			rcu_dereference_sched(__tracepoint_##name.funcs);\
+> -			rcu_read_unlock_sched_notrace();		\
+> +			WARN_ON_ONCE(!rcu_is_watching());		\
+>  		}							\
+>  	}								\
+>  	__DECLARE_TRACE_RCU(name, PARAMS(proto), PARAMS(args),		\
 
