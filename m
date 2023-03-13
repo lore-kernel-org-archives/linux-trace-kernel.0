@@ -2,140 +2,114 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A240C6FD1C
-	for <linux-trace-kernel@archiver.kernel.org>; Mon, 13 Mar 2023 13:46:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 915F0C61DA4
+	for <linux-trace-kernel@archiver.kernel.org>; Mon, 13 Mar 2023 13:56:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231158AbjCMNqP (ORCPT
+        id S230212AbjCMN4W (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Mon, 13 Mar 2023 09:46:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46036 "EHLO
+        Mon, 13 Mar 2023 09:56:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36538 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229612AbjCMNqN (ORCPT
+        with ESMTP id S230493AbjCMN4T (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Mon, 13 Mar 2023 09:46:13 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 08D25637FF;
-        Mon, 13 Mar 2023 06:46:07 -0700 (PDT)
+        Mon, 13 Mar 2023 09:56:19 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E15B36B961;
+        Mon, 13 Mar 2023 06:56:14 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id B32F4B8106E;
-        Mon, 13 Mar 2023 13:46:05 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 89A45C433D2;
-        Mon, 13 Mar 2023 13:46:03 +0000 (UTC)
-Date:   Mon, 13 Mar 2023 09:46:01 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     LKML <linux-kernel@vger.kernel.org>,
-        Linux Trace Kernel <linux-trace-kernel@vger.kernel.org>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Joel Fernandes <joel@joelfernandes.org>
-Subject: Re: [PATCH v2] tracing: Make tracepoint lockdep check actually test
- something
-Message-ID: <20230313094601.3df9182d@gandalf.local.home>
-In-Reply-To: <20230310172856.77406446@gandalf.local.home>
-References: <20230310172856.77406446@gandalf.local.home>
-X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 75559612CE;
+        Mon, 13 Mar 2023 13:56:14 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 91EEEC433D2;
+        Mon, 13 Mar 2023 13:56:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1678715773;
+        bh=lwNDyirsOLX/1gzMo/KMEGrZVGoMdUl7WVD7PqcZeVk=;
+        h=From:To:Cc:Subject:Date:From;
+        b=SdAHjZD4Q+Xfpyh780M0HO/FZr+7H1jOadclJCst9hSAjktOqwq+/ZY53UXt3HGAs
+         +tYNo18uBF3YoaNQ3P1d+VRDTea0qLyGZjcZwETWdnobaqtH0W46Bcifsd4NsJQtTJ
+         cJTlEFQJHapbn/qw7h5Hm8Npvt9xUkhLq561I6G3FzHGEAQwzQacGC0wf6SCVcl0VC
+         RZoMk7LrwZnCzBUCaQkGzwISzY3VlSKSdGAYq6Y48SlLtt2uyUx7THPuowSs81HmrA
+         dlPXoRUUqrPsrJvhhljBD4kh93Hp8AmirXlAebQ3HezQnnpb9iK8ltMNQ7ZQTVJ4Ok
+         PMURugHaB8y2w==
+From:   "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
+To:     linux-trace-kernel@vger.kernel.org
+Cc:     Heinz Wiesinger <pprkut@slackware.com>, andersson@kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        mhiramat@kernel.org, quic_rjendra@quicinc.com,
+        quic_saipraka@quicinc.com, quic_sibis@quicinc.com
+Subject: [PATCH] bootconfig: Fix testcase to increase max node
+Date:   Mon, 13 Mar 2023 22:56:09 +0900
+Message-Id: <167871576880.783280.2390717518955954275.stgit@devnote2>
+X-Mailer: git-send-email 2.25.1
+User-Agent: StGit/0.19
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On Fri, 10 Mar 2023 17:28:56 -0500
-Steven Rostedt <rostedt@goodmis.org> wrote:
+From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 
-> From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
-> 
-> A while ago where the trace events had the following:
-> 
->    rcu_read_lock_sched_notrace();
->    rcu_dereference_sched(...);
->    rcu_read_unlock_sched_notrace();
-> 
-> If the tracepoint is enabled, it could trigger RCU issues if called in
-> the wrong place. And this warning was only triggered if lockdep was
-> enabled. If the tracepoint was never enabled with lockdep, the bug would
-> not be caught. To handle this, the above sequence was done when lockdep
-> was enabled regardless if the tracepoint was enabled or not (although the
-> always enabled code really didn't do anything, it would still trigger a
-> warning).
-> 
-> But a lot has changed since that lockdep code was added. One is, that
-> sequence no longer triggers any warning. Another is, the tracepoint when
-> enabled doesn't even do that sequence anymore.
-> 
-> The main check we care about today is whether RCU is "watching" or not.
-> So if lockdep is enabled, always check if rcu_is_watching() which will
-> trigger a warning if it is not (tracepoints require RCU to be watching).
-> 
-> Note, that old sequence did add a bit of overhead when lockdep was enabled,
-> and with the latest kernel updates, would cause the system to slow down
-> enough to trigger kernel "stalled" warnings.
-> 
-> Link: http://lore.kernel.org/lkml/20140806181801.GA4605@redhat.com
-> Link: http://lore.kernel.org/lkml/20140807175204.C257CAC5@viggo.jf.intel.com
-> Link: https://lore.kernel.org/lkml/20230307184645.521db5c9@gandalf.local.home/
-> 
-> Cc: stable@vger.kernel.org
-> Cc: Peter Zijlstra <peterz@infradead.org>
-> Cc: Masami Hiramatsu <mhiramat@kernel.org>
-> Cc: Dave Hansen <dave.hansen@linux.intel.com>
-> Cc: "Paul E. McKenney" <paulmck@kernel.org>
-> Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-> Cc: Joel Fernandes <joel@joelfernandes.org>
-> Fixes: e6753f23d961 ("tracepoint: Make rcuidle tracepoint callers use SRCU")
-> Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
-> ---
-> Changes since v1: https://lore.kernel.org/linux-trace-kernel/20230309165603.6967197d@gandalf.local.home
-> 
->  - Updated the comment above the code (Masami Hiramatsu)
-> 
->  include/linux/tracepoint.h | 15 ++++++---------
->  1 file changed, 6 insertions(+), 9 deletions(-)
-> 
-> diff --git a/include/linux/tracepoint.h b/include/linux/tracepoint.h
-> index fa1004fcf810..2083f2d2f05b 100644
-> --- a/include/linux/tracepoint.h
-> +++ b/include/linux/tracepoint.h
-> @@ -231,12 +231,11 @@ static inline struct tracepoint *tracepoint_ptr_deref(tracepoint_ptr_t *p)
->   * not add unwanted padding between the beginning of the section and the
->   * structure. Force alignment to the same alignment as the section start.
->   *
-> - * When lockdep is enabled, we make sure to always do the RCU portions of
-> - * the tracepoint code, regardless of whether tracing is on. However,
-> - * don't check if the condition is false, due to interaction with idle
-> - * instrumentation. This lets us find RCU issues triggered with tracepoints
-> - * even when this tracepoint is off. This code has no purpose other than
-> - * poking RCU a bit.
-> + * When lockdep is enabled, we make sure to always test if RCU is
-> + * "watching" regardless if the tracepoint is enabled or not. Tracepoints
-> + * require RCU to be active, and it should always warn at the tracepoint
-> + * site if it is not watching, as it will need to be active when the
-> + * tracepoint is enabled.
->   */
+Since commit 6c40624930c5 ("bootconfig: Increase max nodes of bootconfig
+from 1024 to 8192 for DCC support") increased the max number of bootconfig
+node to 8192, the bootconfig testcase of the max number of nodes fails.
+To fix this issue, we can not simply increase the number in the test script
+because the test bootconfig file becomes too big (>32KB). To fix that, we
+can use a combination of three alphabets (26^3 = 17576). But with that,
+we can not express the 8193 (just one exceed from the limitation) because
+it also exceeds the max size of bootconfig. So, the first 26 nodes will just
+use one alphabet.
 
-Masami,
+With this fix, test-bootconfig.sh passes all tests.
 
-Are you OK with this version of the patch?
+Reported-by: Heinz Wiesinger <pprkut@slackware.com>
+Link: https://lore.kernel.org/all/2463802.XAFRqVoOGU@amaterasu.liwjatan.org
+Fixes: 6c40624930c5 ("bootconfig: Increase max nodes of bootconfig from 1024 to 8192 for DCC support")
+Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+---
+ tools/bootconfig/test-bootconfig.sh |   17 ++++++++++++-----
+ 1 file changed, 12 insertions(+), 5 deletions(-)
 
--- Steve
-
->  #define __DECLARE_TRACE(name, proto, args, cond, data_proto)		\
->  	extern int __traceiter_##name(data_proto);			\
-> @@ -249,9 +248,7 @@ static inline struct tracepoint *tracepoint_ptr_deref(tracepoint_ptr_t *p)
->  				TP_ARGS(args),				\
->  				TP_CONDITION(cond), 0);			\
->  		if (IS_ENABLED(CONFIG_LOCKDEP) && (cond)) {		\
-> -			rcu_read_lock_sched_notrace();			\
-> -			rcu_dereference_sched(__tracepoint_##name.funcs);\
-> -			rcu_read_unlock_sched_notrace();		\
-> +			WARN_ON_ONCE(!rcu_is_watching());		\
->  		}							\
->  	}								\
->  	__DECLARE_TRACE_RCU(name, PARAMS(proto), PARAMS(args),		\
+diff --git a/tools/bootconfig/test-bootconfig.sh b/tools/bootconfig/test-bootconfig.sh
+index f68e2e9eef8b..b1b77d76110d 100755
+--- a/tools/bootconfig/test-bootconfig.sh
++++ b/tools/bootconfig/test-bootconfig.sh
+@@ -14,10 +14,11 @@ ALIGN=4
+ INITRD=`mktemp ${TESTDIR}/initrd-XXXX`
+ TEMPCONF=`mktemp ${TESTDIR}/temp-XXXX.bconf`
+ OUTFILE=`mktemp ${TESTDIR}/tempout-XXXX`
++AWKFILE=`mktemp ${TESTDIR}/temp-XXXX.awk`
+ NG=0
+ 
+ cleanup() {
+-  rm -f $INITRD $TEMPCONF $OUTFILE
++  rm -f $INITRD $TEMPCONF $OUTFILE $AWKFILE
+   exit $NG
+ }
+ 
+@@ -87,10 +88,16 @@ xfail grep -i "error" $OUTFILE
+ 
+ echo "Max node number check"
+ 
+-echo -n > $TEMPCONF
+-for i in `seq 1 1024` ; do
+-   echo "node$i" >> $TEMPCONF
+-done
++cat > $AWKFILE << EOF
++BEGIN {
++  for (i = 0; i < 26; i += 1)
++      printf("%c\n", 65 + i % 26)
++  for (i = 26; i < 8192; i += 1)
++      printf("%c%c%c\n", 65 + i % 26, 65 + (i / 26) % 26, 65 + (i / 26 / 26))
++}
++EOF
++awk -f "$AWKFILE" > $TEMPCONF
++
+ xpass $BOOTCONF -a $TEMPCONF $INITRD
+ 
+ echo "badnode" >> $TEMPCONF
 
