@@ -2,102 +2,136 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D4C6C6FD19
-	for <linux-trace-kernel@archiver.kernel.org>; Mon, 13 Mar 2023 22:39:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 28375C61DA4
+	for <linux-trace-kernel@archiver.kernel.org>; Tue, 14 Mar 2023 01:37:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229722AbjCMWj5 (ORCPT
+        id S229921AbjCNBhX (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Mon, 13 Mar 2023 18:39:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60706 "EHLO
+        Mon, 13 Mar 2023 21:37:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54324 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229610AbjCMWj4 (ORCPT
+        with ESMTP id S229486AbjCNBhW (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Mon, 13 Mar 2023 18:39:56 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 63AD76FFF7;
-        Mon, 13 Mar 2023 15:39:54 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 0B4A3B815E9;
-        Mon, 13 Mar 2023 22:39:53 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3F03BC433D2;
-        Mon, 13 Mar 2023 22:39:49 +0000 (UTC)
-Date:   Mon, 13 Mar 2023 18:39:46 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Ross Zwisler <zwisler@kernel.org>
-Cc:     linux-kernel@vger.kernel.org, Ross Zwisler <zwisler@google.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Andrii Nakryiko <andrii@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Hao Luo <haoluo@google.com>, Jason Gunthorpe <jgg@ziepe.ca>,
-        Jiri Olsa <jolsa@kernel.org>,
-        John Fastabend <john.fastabend@gmail.com>,
-        KP Singh <kpsingh@kernel.org>,
-        Leon Romanovsky <leon@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Martin KaFai Lau <martin.lau@linux.dev>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Mykola Lysenko <mykolal@fb.com>, Shuah Khan <shuah@kernel.org>,
-        Song Liu <song@kernel.org>,
-        Stanislav Fomichev <sdf@google.com>,
-        Yonghong Song <yhs@fb.com>, bpf@vger.kernel.org,
-        linux-kselftest@vger.kernel.org, linux-rdma@vger.kernel.org,
-        linux-trace-kernel@vger.kernel.org,
-        "Michael S . Tsirkin" <mst@redhat.com>
-Subject: Re: [PATCH bpf-next v4 2/2] selftests/bpf: use canonical ftrace
- path
-Message-ID: <20230313183946.1a98ef01@gandalf.local.home>
-In-Reply-To: <20230313205628.1058720-3-zwisler@kernel.org>
-References: <20230310192050.4096886-1-zwisler@kernel.org>
-        <20230313205628.1058720-1-zwisler@kernel.org>
-        <20230313205628.1058720-3-zwisler@kernel.org>
-X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        Mon, 13 Mar 2023 21:37:22 -0400
+Received: from mailout3.samsung.com (mailout3.samsung.com [203.254.224.33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 981936A2FF
+        for <linux-trace-kernel@vger.kernel.org>; Mon, 13 Mar 2023 18:37:17 -0700 (PDT)
+Received: from epcas1p4.samsung.com (unknown [182.195.41.48])
+        by mailout3.samsung.com (KnoxPortal) with ESMTP id 20230314013714epoutp038179f85bae98962698b8c360d380a268~MJVsXDj9Z0064000640epoutp03a
+        for <linux-trace-kernel@vger.kernel.org>; Tue, 14 Mar 2023 01:37:14 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout3.samsung.com 20230314013714epoutp038179f85bae98962698b8c360d380a268~MJVsXDj9Z0064000640epoutp03a
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1678757834;
+        bh=A7V77BacVIZ1CfXwebVlpytr8W8698A2iyAIUzoKyRo=;
+        h=From:To:Cc:Subject:Date:References:From;
+        b=SEGb1eytl8aJWQh9LFUXeiN1tVe/d8mgQzbjmvmz98+sWkpdrGE7oUCzskoVG/lWj
+         XOqYnbPXxyL0W3w4Tef+wpluVBjPiCVNxU5ooYjzIPuVgFXLBeSMZh2uHlsKU0TKHE
+         iTBUeD8h4zP68xfhvOABMI7JT1q7qGZSXfo9YyIQ=
+Received: from epsnrtp4.localdomain (unknown [182.195.42.165]) by
+        epcas1p3.samsung.com (KnoxPortal) with ESMTP id
+        20230314013713epcas1p3c92b9abd3e52523e40122bd7acd04b70~MJVsBnw-A0622406224epcas1p39;
+        Tue, 14 Mar 2023 01:37:13 +0000 (GMT)
+Received: from epsmges1p5.samsung.com (unknown [182.195.38.232]) by
+        epsnrtp4.localdomain (Postfix) with ESMTP id 4PbGNS6Mf5z4x9QB; Tue, 14 Mar
+        2023 01:37:12 +0000 (GMT)
+Received: from epcas1p3.samsung.com ( [182.195.41.47]) by
+        epsmges1p5.samsung.com (Symantec Messaging Gateway) with SMTP id
+        5E.3D.54823.8CFCF046; Tue, 14 Mar 2023 10:37:12 +0900 (KST)
+Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
+        epcas1p1.samsung.com (KnoxPortal) with ESMTPA id
+        20230314013712epcas1p174a260fa55e9661dac7ea816a8ea96f4~MJVqfP9zp1180811808epcas1p1n;
+        Tue, 14 Mar 2023 01:37:12 +0000 (GMT)
+Received: from epsmgms1p2.samsung.com (unknown [182.195.42.42]) by
+        epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
+        20230314013712epsmtrp1f660cc715801a7ae703847511175290f~MJVqeoFTG1535115351epsmtrp1G;
+        Tue, 14 Mar 2023 01:37:12 +0000 (GMT)
+X-AuditID: b6c32a39-d01fc7000000d627-3c-640fcfc88b2e
+Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
+        epsmgms1p2.samsung.com (Symantec Messaging Gateway) with SMTP id
+        2B.09.31821.8CFCF046; Tue, 14 Mar 2023 10:37:12 +0900 (KST)
+Received: from localhost.localdomain (unknown [10.113.111.54]) by
+        epsmtip2.samsung.com (KnoxPortal) with ESMTPA id
+        20230314013712epsmtip27df62576e8fea57d283b838741257098~MJVqSDZHl0266902669epsmtip2f;
+        Tue, 14 Mar 2023 01:37:12 +0000 (GMT)
+From:   Sung-hun Kim <sfoon.kim@samsung.com>
+To:     rostedt@goodmis.org, mhirmat@kernel.org,
+        linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
+Cc:     sungguk.na@samsung.com, sw0312.kim@samsung.com,
+        Sung-hun Kim <sfoon.kim@samsung.com>
+Subject: [PATCH] tracing: Make splice_read available again
+Date:   Tue, 14 Mar 2023 10:37:07 +0900
+Message-Id: <20230314013707.28814-1-sfoon.kim@samsung.com>
+X-Mailer: git-send-email 2.17.1
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrBKsWRmVeSWpSXmKPExsWy7bCmvu6J8/wpBn+uyltc3jWHzeLI+rMs
+        FjdWXmC32NfxgMmicdpydosd8w4yWsyY/JLNgd2jZd8tdo9NqzrZPPq2rGL0+LxJLoAlKtsm
+        IzUxJbVIITUvOT8lMy/dVsk7ON453tTMwFDX0NLCXEkhLzE31VbJxSdA1y0zB+gCJYWyxJxS
+        oFBAYnGxkr6dTVF+aUmqQkZ+cYmtUmpBSk6BaYFecWJucWleul5eaomVoYGBkSlQYUJ2xrL9
+        dQUzOCqu7pNqYHzJ1sXIySEhYCKxY9Zv9i5GLg4hgR2MEgs+nmSEcD4xSjTeWs4EUiUk8JlR
+        4vkWXpiO37c/QnXsYpSYcnYJG4QDVNT37SDYXDYBLYlt+y8xgtgiAvkSbUsng8WZBaIkLuxr
+        YQaxhQWsJPYv+sAKYrMIqEqsXjiXHcTmBYrP7VoCdZ+8xOoNB5hBFkgILGKX2PxuIVTCRaJr
+        /WpmCFtY4tXxLewQtpTEy/42IJsDyK6WmPqcG6K3hVHi38v9rBA1xhL7l05mAqlhFtCUWL9L
+        HyKsKLHz91xGiDv5JN597WGFGMMr0dEmBFGiLPH4YDMLhC0p8XXfdSYI20Pi5fL5jJDAipWY
+        +PoZywRG2VkICxYwMq5iFEstKM5NTy02LDCFR1Fyfu4mRnCS0rLcwTj97Qe9Q4xMHIyHGCU4
+        mJVEeLfw86QI8aYkVlalFuXHF5XmpBYfYjQFhtdEZinR5HxgmswriTc0sTQwMTMyNrEwNDNU
+        EucVtz2ZLCSQnliSmp2aWpBaBNPHxMEp1cB0+H5nReKqS32JJ+cxu29TP6yeffRZ8+W8ApHb
+        QrUXhN0WJTEUb/y377N/gcaJGY+/sy4/sGqP0Z+9qhHsK+MY+Uv2rq9Ydml6znrjtDXeFyRM
+        Fte2rpxxioV7H9OLiLRHF+cL856/sHmd6I93b9eFd8hqNMYqp69caNn9Omfr5SvW5zYZSFlO
+        /p3F83jKuR8cUvJqMZ4Zfoun6lsz/WoQbrLa6yuomFY+s08tg/uAi3PNg8S3bX5erVe0bhTm
+        d9V5XvVaN+N+BO+uS6/26mRKHL7js3CDxccZCsVsgh3v9st0XbblO/4jOuRlSL+Kb9DnOdq/
+        VVyd1up3S55LPSAwoaZjx9VrF57nTXulvmanEktxRqKhFnNRcSIATvXCRtsDAAA=
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFvrGJMWRmVeSWpSXmKPExsWy7bCSvO6J8/wpBo/n81hc3jWHzeLI+rMs
+        FjdWXmC32NfxgMmicdpydosd8w4yWsyY/JLNgd2jZd8tdo9NqzrZPPq2rGL0+LxJLoAlissm
+        JTUnsyy1SN8ugStj2f66ghkcFVf3STUwvmTrYuTkkBAwkfh9+yN7FyMXh5DADkaJszfPQyUk
+        JeasW8DYxcgBZAtLHD5cDFHzkVHiZ9cidpAaNgEtiW37L4HViAgUS+zpUAUJMwvESLSvn80E
+        YgsLWEnsX/SBFcRmEVCVWL1wLlgrL1B8btcSqFXyEqs3HGCewMizgJFhFaNkakFxbnpusWGB
+        UV5quV5xYm5xaV66XnJ+7iZGcNBoae1g3LPqg94hRiYOxkOMEhzMSiK8W/h5UoR4UxIrq1KL
+        8uOLSnNSiw8xSnOwKInzXug6GS8kkJ5YkpqdmlqQWgSTZeLglGpg8i9cIz05/nLvgpaUglXz
+        eGR1H4anei56X5wbOK0/wXBS1o0tSttDfp69d3BewMbiP3lanHUJNR9kraf+3O78wfP28vON
+        S6zPLD0zs15vRdibUo7LGQ9/nzKY5LPX5A3rpxUrIk8KChzbfvjW1J/VEZasPZreP+74T1M9
+        cbJisdN9C6m+FWXWEi5M3Mte+rx9lXOHdcXJphLhnOgbz8K3X5p6wu2hjSDL8ZPi3CUaATJS
+        Vaf+8p26qLhx66mGS+1ZHv8ylDSKv2VLXZTYPjVsSp/YbKHqkBuavt+P9ydzL817ZRuSZMRh
+        e/Z1520WRcvq2WYR1bwRLz8+PnI26f3e5NaIV+Xf5dg4d/VGGh70VGIpzkg01GIuKk4EAGs9
+        06CJAgAA
+X-CMS-MailID: 20230314013712epcas1p174a260fa55e9661dac7ea816a8ea96f4
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-Sendblock-Type: SVC_REQ_APPROVE
+CMS-TYPE: 101P
+DLP-Filter: Pass
+X-CFilter-Loop: Reflected
+X-CMS-RootMailID: 20230314013712epcas1p174a260fa55e9661dac7ea816a8ea96f4
+References: <CGME20230314013712epcas1p174a260fa55e9661dac7ea816a8ea96f4@epcas1p1.samsung.com>
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On Mon, 13 Mar 2023 14:56:28 -0600
-Ross Zwisler <zwisler@kernel.org> wrote:
+Since the commit 36e2c7421f02 ("fs: don't allow splice read/write
+without explicit ops") is applied to the kernel, splice() and
+sendfile() calls on the trace file (/sys/kernel/debug/tracing
+/trace) return EINVAL.
 
-> From: Ross Zwisler <zwisler@google.com>
-> 
-> The canonical location for the tracefs filesystem is at
-> /sys/kernel/tracing.
-> 
-> But, from Documentation/trace/ftrace.rst:
-> 
->   Before 4.1, all ftrace tracing control files were within the debugfs
->   file system, which is typically located at /sys/kernel/debug/tracing.
->   For backward compatibility, when mounting the debugfs file system,
->   the tracefs file system will be automatically mounted at:
-> 
->   /sys/kernel/debug/tracing
-> 
-> Many tests in the bpf selftest code still refer to this older debugfs
-> path, so let's update them to avoid confusion.
-> 
-> Signed-off-by: Ross Zwisler <zwisler@google.com>
-> Acked-by: Michael S. Tsirkin <mst@redhat.com>
+This patch restores these system calls by initializing splice_read
+in file_operations of the trace file. This patch only enables such
+functionalities for the read case.
 
-Reviewed-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+Signed-off-by: Sung-hun Kim <sfoon.kim@samsung.com>
+---
+ kernel/trace/trace.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
--- Steve
-
-> ---
->  tools/testing/selftests/bpf/get_cgroup_id_user.c    |  9 +++++++--
->  .../selftests/bpf/prog_tests/kprobe_multi_test.c    |  7 ++++++-
->  .../selftests/bpf/prog_tests/task_fd_query_tp.c     |  9 +++++++--
->  .../selftests/bpf/prog_tests/tp_attach_query.c      |  9 +++++++--
->  .../testing/selftests/bpf/prog_tests/trace_printk.c | 10 +++++++---
->  .../selftests/bpf/prog_tests/trace_vprintk.c        | 10 +++++++---
->  .../selftests/bpf/progs/test_stacktrace_map.c       |  2 +-
->  tools/testing/selftests/bpf/progs/test_tracepoint.c |  2 +-
->  tools/testing/selftests/bpf/test_ftrace.sh          |  7 ++++++-
->  tools/testing/selftests/bpf/test_tunnel.sh          | 13 +++++++++----
->  tools/testing/selftests/bpf/trace_helpers.c         |  8 ++++++--
->  11 files changed, 64 insertions(+), 22 deletions(-)
+diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
+index 45551c7b4c36..937e9676dfd4 100644
+--- a/kernel/trace/trace.c
++++ b/kernel/trace/trace.c
+@@ -5167,6 +5167,8 @@ loff_t tracing_lseek(struct file *file, loff_t offset, int whence)
+ static const struct file_operations tracing_fops = {
+ 	.open		= tracing_open,
+ 	.read		= seq_read,
++	.read_iter	= seq_read_iter,
++	.splice_read	= generic_file_splice_read,
+ 	.write		= tracing_write_stub,
+ 	.llseek		= tracing_lseek,
+ 	.release	= tracing_release,
+-- 
+2.17.1
 
