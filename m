@@ -2,136 +2,91 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 28375C61DA4
-	for <linux-trace-kernel@archiver.kernel.org>; Tue, 14 Mar 2023 01:37:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D746C74A44
+	for <linux-trace-kernel@archiver.kernel.org>; Tue, 14 Mar 2023 05:10:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229921AbjCNBhX (ORCPT
+        id S229657AbjCNFKU (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Mon, 13 Mar 2023 21:37:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54324 "EHLO
+        Tue, 14 Mar 2023 01:10:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44404 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229486AbjCNBhW (ORCPT
+        with ESMTP id S229493AbjCNFKT (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Mon, 13 Mar 2023 21:37:22 -0400
-Received: from mailout3.samsung.com (mailout3.samsung.com [203.254.224.33])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 981936A2FF
-        for <linux-trace-kernel@vger.kernel.org>; Mon, 13 Mar 2023 18:37:17 -0700 (PDT)
-Received: from epcas1p4.samsung.com (unknown [182.195.41.48])
-        by mailout3.samsung.com (KnoxPortal) with ESMTP id 20230314013714epoutp038179f85bae98962698b8c360d380a268~MJVsXDj9Z0064000640epoutp03a
-        for <linux-trace-kernel@vger.kernel.org>; Tue, 14 Mar 2023 01:37:14 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout3.samsung.com 20230314013714epoutp038179f85bae98962698b8c360d380a268~MJVsXDj9Z0064000640epoutp03a
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1678757834;
-        bh=A7V77BacVIZ1CfXwebVlpytr8W8698A2iyAIUzoKyRo=;
-        h=From:To:Cc:Subject:Date:References:From;
-        b=SEGb1eytl8aJWQh9LFUXeiN1tVe/d8mgQzbjmvmz98+sWkpdrGE7oUCzskoVG/lWj
-         XOqYnbPXxyL0W3w4Tef+wpluVBjPiCVNxU5ooYjzIPuVgFXLBeSMZh2uHlsKU0TKHE
-         iTBUeD8h4zP68xfhvOABMI7JT1q7qGZSXfo9YyIQ=
-Received: from epsnrtp4.localdomain (unknown [182.195.42.165]) by
-        epcas1p3.samsung.com (KnoxPortal) with ESMTP id
-        20230314013713epcas1p3c92b9abd3e52523e40122bd7acd04b70~MJVsBnw-A0622406224epcas1p39;
-        Tue, 14 Mar 2023 01:37:13 +0000 (GMT)
-Received: from epsmges1p5.samsung.com (unknown [182.195.38.232]) by
-        epsnrtp4.localdomain (Postfix) with ESMTP id 4PbGNS6Mf5z4x9QB; Tue, 14 Mar
-        2023 01:37:12 +0000 (GMT)
-Received: from epcas1p3.samsung.com ( [182.195.41.47]) by
-        epsmges1p5.samsung.com (Symantec Messaging Gateway) with SMTP id
-        5E.3D.54823.8CFCF046; Tue, 14 Mar 2023 10:37:12 +0900 (KST)
-Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
-        epcas1p1.samsung.com (KnoxPortal) with ESMTPA id
-        20230314013712epcas1p174a260fa55e9661dac7ea816a8ea96f4~MJVqfP9zp1180811808epcas1p1n;
-        Tue, 14 Mar 2023 01:37:12 +0000 (GMT)
-Received: from epsmgms1p2.samsung.com (unknown [182.195.42.42]) by
-        epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
-        20230314013712epsmtrp1f660cc715801a7ae703847511175290f~MJVqeoFTG1535115351epsmtrp1G;
-        Tue, 14 Mar 2023 01:37:12 +0000 (GMT)
-X-AuditID: b6c32a39-d01fc7000000d627-3c-640fcfc88b2e
-Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
-        epsmgms1p2.samsung.com (Symantec Messaging Gateway) with SMTP id
-        2B.09.31821.8CFCF046; Tue, 14 Mar 2023 10:37:12 +0900 (KST)
-Received: from localhost.localdomain (unknown [10.113.111.54]) by
-        epsmtip2.samsung.com (KnoxPortal) with ESMTPA id
-        20230314013712epsmtip27df62576e8fea57d283b838741257098~MJVqSDZHl0266902669epsmtip2f;
-        Tue, 14 Mar 2023 01:37:12 +0000 (GMT)
-From:   Sung-hun Kim <sfoon.kim@samsung.com>
-To:     rostedt@goodmis.org, mhirmat@kernel.org,
-        linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
-Cc:     sungguk.na@samsung.com, sw0312.kim@samsung.com,
-        Sung-hun Kim <sfoon.kim@samsung.com>
-Subject: [PATCH] tracing: Make splice_read available again
-Date:   Tue, 14 Mar 2023 10:37:07 +0900
-Message-Id: <20230314013707.28814-1-sfoon.kim@samsung.com>
-X-Mailer: git-send-email 2.17.1
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrBKsWRmVeSWpSXmKPExsWy7bCmvu6J8/wpBn+uyltc3jWHzeLI+rMs
-        FjdWXmC32NfxgMmicdpydosd8w4yWsyY/JLNgd2jZd8tdo9NqzrZPPq2rGL0+LxJLoAlKtsm
-        IzUxJbVIITUvOT8lMy/dVsk7ON453tTMwFDX0NLCXEkhLzE31VbJxSdA1y0zB+gCJYWyxJxS
-        oFBAYnGxkr6dTVF+aUmqQkZ+cYmtUmpBSk6BaYFecWJucWleul5eaomVoYGBkSlQYUJ2xrL9
-        dQUzOCqu7pNqYHzJ1sXIySEhYCKxY9Zv9i5GLg4hgR2MEgs+nmSEcD4xSjTeWs4EUiUk8JlR
-        4vkWXpiO37c/QnXsYpSYcnYJG4QDVNT37SDYXDYBLYlt+y8xgtgiAvkSbUsng8WZBaIkLuxr
-        YQaxhQWsJPYv+sAKYrMIqEqsXjiXHcTmBYrP7VoCdZ+8xOoNB5hBFkgILGKX2PxuIVTCRaJr
-        /WpmCFtY4tXxLewQtpTEy/42IJsDyK6WmPqcG6K3hVHi38v9rBA1xhL7l05mAqlhFtCUWL9L
-        HyKsKLHz91xGiDv5JN597WGFGMMr0dEmBFGiLPH4YDMLhC0p8XXfdSYI20Pi5fL5jJDAipWY
-        +PoZywRG2VkICxYwMq5iFEstKM5NTy02LDCFR1Fyfu4mRnCS0rLcwTj97Qe9Q4xMHIyHGCU4
-        mJVEeLfw86QI8aYkVlalFuXHF5XmpBYfYjQFhtdEZinR5HxgmswriTc0sTQwMTMyNrEwNDNU
-        EucVtz2ZLCSQnliSmp2aWpBaBNPHxMEp1cB0+H5nReKqS32JJ+cxu29TP6yeffRZ8+W8ApHb
-        QrUXhN0WJTEUb/y377N/gcaJGY+/sy4/sGqP0Z+9qhHsK+MY+Uv2rq9Ydml6znrjtDXeFyRM
-        Fte2rpxxioV7H9OLiLRHF+cL856/sHmd6I93b9eFd8hqNMYqp69caNn9Omfr5SvW5zYZSFlO
-        /p3F83jKuR8cUvJqMZ4Zfoun6lsz/WoQbrLa6yuomFY+s08tg/uAi3PNg8S3bX5erVe0bhTm
-        d9V5XvVaN+N+BO+uS6/26mRKHL7js3CDxccZCsVsgh3v9st0XbblO/4jOuRlSL+Kb9DnOdq/
-        VVyd1up3S55LPSAwoaZjx9VrF57nTXulvmanEktxRqKhFnNRcSIATvXCRtsDAAA=
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFvrGJMWRmVeSWpSXmKPExsWy7bCSvO6J8/wpBo/n81hc3jWHzeLI+rMs
-        FjdWXmC32NfxgMmicdpydosd8w4yWsyY/JLNgd2jZd8tdo9NqzrZPPq2rGL0+LxJLoAlissm
-        JTUnsyy1SN8ugStj2f66ghkcFVf3STUwvmTrYuTkkBAwkfh9+yN7FyMXh5DADkaJszfPQyUk
-        JeasW8DYxcgBZAtLHD5cDFHzkVHiZ9cidpAaNgEtiW37L4HViAgUS+zpUAUJMwvESLSvn80E
-        YgsLWEnsX/SBFcRmEVCVWL1wLlgrL1B8btcSqFXyEqs3HGCewMizgJFhFaNkakFxbnpusWGB
-        UV5quV5xYm5xaV66XnJ+7iZGcNBoae1g3LPqg94hRiYOxkOMEhzMSiK8W/h5UoR4UxIrq1KL
-        8uOLSnNSiw8xSnOwKInzXug6GS8kkJ5YkpqdmlqQWgSTZeLglGpg8i9cIz05/nLvgpaUglXz
-        eGR1H4anei56X5wbOK0/wXBS1o0tSttDfp69d3BewMbiP3lanHUJNR9kraf+3O78wfP28vON
-        S6zPLD0zs15vRdibUo7LGQ9/nzKY5LPX5A3rpxUrIk8KChzbfvjW1J/VEZasPZreP+74T1M9
-        cbJisdN9C6m+FWXWEi5M3Mte+rx9lXOHdcXJphLhnOgbz8K3X5p6wu2hjSDL8ZPi3CUaATJS
-        Vaf+8p26qLhx66mGS+1ZHv8ylDSKv2VLXZTYPjVsSp/YbKHqkBuavt+P9ydzL817ZRuSZMRh
-        e/Z1520WRcvq2WYR1bwRLz8+PnI26f3e5NaIV+Xf5dg4d/VGGh70VGIpzkg01GIuKk4EAGs9
-        06CJAgAA
-X-CMS-MailID: 20230314013712epcas1p174a260fa55e9661dac7ea816a8ea96f4
-X-Msg-Generator: CA
+        Tue, 14 Mar 2023 01:10:19 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 615605D89A;
+        Mon, 13 Mar 2023 22:10:18 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id EE0EB615D5;
+        Tue, 14 Mar 2023 05:10:17 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 49675C4339C;
+        Tue, 14 Mar 2023 05:10:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1678770617;
+        bh=cE5/+eBhcLUf6U82GCqGZsImd9QRoYP/wn3Bjv9SLKk=;
+        h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+        b=oIMIAcokfBTRxAcX7A92g0WRno1tTK4xzA68iKpMQmvh2+6bmYlZ1JcC5PfwJ5Hm0
+         CpzNxBa8gMsjcHbETRx38RCdm2sbsKVmnoijgHoS8Am+jN/d10wqZgIVgAi3QW3x77
+         Nf5zBz2BzF4GCdLw1jl0yv9MM9aq/5CwasZ6uhrW0rxomVCdmjg75ThX1EcF23ru19
+         RcEV9I/vt3fU7sGdyTQd3bWElKAIYOFmYbJQ536yYcJ32G8hNYTdh5waQnBqh+mqxZ
+         5Q8q5+ahXvPfo1+84b0Z1efTkF3bOmSgz4W5bRcKkVlAUGz015U0tOthHdhSjClYPG
+         aJL9ZMDScJ3Aw==
+Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
+        by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 2C38DE66CB8;
+        Tue, 14 Mar 2023 05:10:17 +0000 (UTC)
 Content-Type: text/plain; charset="utf-8"
-X-Sendblock-Type: SVC_REQ_APPROVE
-CMS-TYPE: 101P
-DLP-Filter: Pass
-X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20230314013712epcas1p174a260fa55e9661dac7ea816a8ea96f4
-References: <CGME20230314013712epcas1p174a260fa55e9661dac7ea816a8ea96f4@epcas1p1.samsung.com>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH bpf-next v4 1/2] bpf: use canonical ftrace path
+From:   patchwork-bot+netdevbpf@kernel.org
+Message-Id: <167877061717.18868.4284758514562021959.git-patchwork-notify@kernel.org>
+Date:   Tue, 14 Mar 2023 05:10:17 +0000
+References: <20230313205628.1058720-2-zwisler@kernel.org>
+In-Reply-To: <20230313205628.1058720-2-zwisler@kernel.org>
+To:     Ross Zwisler <zwisler@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, zwisler@google.com, ast@kernel.org,
+        andrii@kernel.org, daniel@iogearbox.net, haoluo@google.com,
+        jgg@ziepe.ca, jolsa@kernel.org, john.fastabend@gmail.com,
+        kpsingh@kernel.org, leon@kernel.org, mark.rutland@arm.com,
+        martin.lau@linux.dev, mhiramat@kernel.org, mykolal@fb.com,
+        shuah@kernel.org, song@kernel.org, sdf@google.com,
+        rostedt@goodmis.org, yhs@fb.com, bpf@vger.kernel.org,
+        linux-kselftest@vger.kernel.org, linux-rdma@vger.kernel.org,
+        linux-trace-kernel@vger.kernel.org, mst@redhat.com
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-Since the commit 36e2c7421f02 ("fs: don't allow splice read/write
-without explicit ops") is applied to the kernel, splice() and
-sendfile() calls on the trace file (/sys/kernel/debug/tracing
-/trace) return EINVAL.
+Hello:
 
-This patch restores these system calls by initializing splice_read
-in file_operations of the trace file. This patch only enables such
-functionalities for the read case.
+This series was applied to bpf/bpf-next.git (master)
+by Alexei Starovoitov <ast@kernel.org>:
 
-Signed-off-by: Sung-hun Kim <sfoon.kim@samsung.com>
----
- kernel/trace/trace.c | 2 ++
- 1 file changed, 2 insertions(+)
+On Mon, 13 Mar 2023 14:56:27 -0600 you wrote:
+> From: Ross Zwisler <zwisler@google.com>
+> 
+> The canonical location for the tracefs filesystem is at /sys/kernel/tracing.
+> 
+> But, from Documentation/trace/ftrace.rst:
+> 
+>   Before 4.1, all ftrace tracing control files were within the debugfs
+>   file system, which is typically located at /sys/kernel/debug/tracing.
+>   For backward compatibility, when mounting the debugfs file system,
+>   the tracefs file system will be automatically mounted at:
+> 
+> [...]
 
-diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
-index 45551c7b4c36..937e9676dfd4 100644
---- a/kernel/trace/trace.c
-+++ b/kernel/trace/trace.c
-@@ -5167,6 +5167,8 @@ loff_t tracing_lseek(struct file *file, loff_t offset, int whence)
- static const struct file_operations tracing_fops = {
- 	.open		= tracing_open,
- 	.read		= seq_read,
-+	.read_iter	= seq_read_iter,
-+	.splice_read	= generic_file_splice_read,
- 	.write		= tracing_write_stub,
- 	.llseek		= tracing_lseek,
- 	.release	= tracing_release,
+Here is the summary with links:
+  - [bpf-next,v4,1/2] bpf: use canonical ftrace path
+    https://git.kernel.org/bpf/bpf-next/c/27d7fdf06fdb
+  - [bpf-next,v4,2/2] selftests/bpf: use canonical ftrace path
+    https://git.kernel.org/bpf/bpf-next/c/ab4c15feb2eb
+
+You are awesome, thank you!
 -- 
-2.17.1
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
+
 
