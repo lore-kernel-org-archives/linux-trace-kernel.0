@@ -2,195 +2,131 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 24E6CC74A44
-	for <linux-trace-kernel@archiver.kernel.org>; Tue, 14 Mar 2023 05:27:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 00BC2C6FD1F
+	for <linux-trace-kernel@archiver.kernel.org>; Tue, 14 Mar 2023 05:28:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229687AbjCNF1g (ORCPT
+        id S229497AbjCNF2f (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Tue, 14 Mar 2023 01:27:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35674 "EHLO
+        Tue, 14 Mar 2023 01:28:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37992 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229497AbjCNF1f (ORCPT
+        with ESMTP id S229483AbjCNF2e (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Tue, 14 Mar 2023 01:27:35 -0400
-Received: from mail-pj1-x102d.google.com (mail-pj1-x102d.google.com [IPv6:2607:f8b0:4864:20::102d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 83A4F8F529;
-        Mon, 13 Mar 2023 22:27:34 -0700 (PDT)
-Received: by mail-pj1-x102d.google.com with SMTP id fy10-20020a17090b020a00b0023b4bcf0727so6518350pjb.0;
-        Mon, 13 Mar 2023 22:27:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112; t=1678771654;
-        h=content-transfer-encoding:mime-version:subject:references
-         :in-reply-to:message-id:cc:to:from:date:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=4D03rED555IfCoQrbUz4ZWLp8DNJPBkSCZrRpWNZxMU=;
-        b=PHK/eH6cxnMBDS+FpMlgzW09AXUjOoOlj8ASxxz2aTuLTVeKSUp7xKHTxKB7/Vcnkl
-         CwrVvnjVsspQikiPLvqlnnjBDOxS40eWdvJsSUGxDU9E81cNPnOowcX7tvis4axPax1e
-         vSywQecGqxKImEGF0uFw76T+kBlaJxqgol80grFJZkUz5kLNctM8vh3mtCgSko4Br0zB
-         XYfcFPVNVBkNm0OVf5Gv+KmHUfO9wlIw6xyR7Qh9BkdAGnnE+V6K5jyl3saNZFDyiF2U
-         BQBfFni82qvs4AvD+UDTygqlI33Uc561jC+hN2hOzrWdEFbRj8XdWiOJvOYvh9ZCYTSI
-         vyTg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1678771654;
-        h=content-transfer-encoding:mime-version:subject:references
-         :in-reply-to:message-id:cc:to:from:date:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=4D03rED555IfCoQrbUz4ZWLp8DNJPBkSCZrRpWNZxMU=;
-        b=DlsHwLFi6G4pF6Bh7cnD+PkE3ygxTqhqwtepAkiFWzjy58spAdQGK+D0Xhcs/pvguT
-         BM141plrOlYp7gPDh151BxpbH+vrlTHbE8N2Msed0zEhVmSgC59v7y1t3VO9lOeahOQU
-         ZlYQJA5a30l/0mDwBLCAkosaI3g3MkmlxThsbib7bkvp7AosCPo5gfbH+vaaRwZQXBFB
-         TBDuhg8EPS2oXRxkMieRdX429l4Lf/mCSKDX3P22EjzJWxqXFHVuZx+peTVJx2nMvrQq
-         Wu8xD2g1EEiE6lA+PVXY76NJs1SbhY5bdSvsVvaVasYmB/JKMgMKROSsGE/GAbBTxGSz
-         PFbg==
-X-Gm-Message-State: AO0yUKURnHXDkAOK+QAwPsf7wcNMPBO+mSCqMAvi6BcHUEu/sznu74HC
-        fxCSZzihvXAMBpuQd+wJuLY=
-X-Google-Smtp-Source: AK7set/4mOlSqk9UfChalfQ+S/QeZHZ3bmvtWmPxEpzecYyp26RBTvUEq8a4As4Nzv6DpHtOhUGiNw==
-X-Received: by 2002:a17:902:d54f:b0:19e:73a9:c21b with SMTP id z15-20020a170902d54f00b0019e73a9c21bmr34729856plf.45.1678771654019;
-        Mon, 13 Mar 2023 22:27:34 -0700 (PDT)
-Received: from localhost ([98.97.116.12])
-        by smtp.gmail.com with ESMTPSA id jx2-20020a170903138200b0019a7d6a9a76sm758621plb.111.2023.03.13.22.27.33
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 13 Mar 2023 22:27:33 -0700 (PDT)
-Date:   Mon, 13 Mar 2023 22:27:32 -0700
-From:   John Fastabend <john.fastabend@gmail.com>
-To:     Ross Zwisler <zwisler@google.com>,
-        Steven Rostedt <rostedt@goodmis.org>
-Cc:     zwisler@kernel.org, bpf@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Alexei Starovoitov <ast@kernel.org>,
-        Andrii Nakryiko <andrii@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Hao Luo <haoluo@google.com>, Jason Gunthorpe <jgg@ziepe.ca>,
-        Jiri Olsa <jolsa@kernel.org>,
-        John Fastabend <john.fastabend@gmail.com>,
-        KP Singh <kpsingh@kernel.org>,
-        Leon Romanovsky <leon@kernel.org>,
-        Martin KaFai Lau <martin.lau@linux.dev>,
-        Mykola Lysenko <mykolal@fb.com>, Shuah Khan <shuah@kernel.org>,
-        Song Liu <song@kernel.org>,
-        Stanislav Fomichev <sdf@google.com>,
-        Yonghong Song <yhs@fb.com>, linux-kselftest@vger.kernel.org,
-        linux-rdma@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
-        "Michael S . Tsirkin" <mst@redhat.com>
-Message-ID: <641005c453661_4258120826@john.notmuch>
-In-Reply-To: <20230313204050.GA592900@google.com>
-References: <20230310175209.2130880-1-zwisler@kernel.org>
- <20230310175209.2130880-2-zwisler@kernel.org>
- <20230310183352.2943e633@gandalf.local.home>
- <20230313204050.GA592900@google.com>
-Subject: Re: [PATCH bpf-next v3 2/2] selftests/bpf: use canonical ftrace path
-Mime-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
+        Tue, 14 Mar 2023 01:28:34 -0400
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D06DE1815C;
+        Mon, 13 Mar 2023 22:28:32 -0700 (PDT)
+Received: from pps.filterd (m0279867.ppops.net [127.0.0.1])
+        by mx0a-0031df01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 32E3WnxR025985;
+        Tue, 14 Mar 2023 05:28:19 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=message-id : date :
+ mime-version : subject : to : cc : references : from : in-reply-to :
+ content-type : content-transfer-encoding; s=qcppdkim1;
+ bh=0zMo/C/ZBnYtaBHa+bdEoXXpbeMwYZnTOhyA+3iZwpQ=;
+ b=Ip+jVh7m9PYh1BkHYcvn3L6HVpI8Z/1GMLj6kKx6Mm1bzQlTn09yFH5ex13S+dabytRc
+ 5mQkQ4sR3Rwcu27FwYUohh+D8eCUfSybjYJW/JAMI7b1jt6ZaANu2K0uP+o1AyXVQ0GX
+ BkBCvhkdaBWVXzGcPDUVKifqRV7FyPBjnNlFSgiRpUlROEbeNSomRLGCEw63uxlGQn6X
+ SFk3rYZgzvNcfCBu7/dWvRRbHPH6melQAbHo+AD6mVoe/jMvyeSLeE4Lp2MYq62Zwtxn
+ 18WVNT3uJt8S52yCPRNzaGzStK2Auh8Dycg1gZpSDYcQnQbrWPHz/6x86QEjtX9u5jbW fA== 
+Received: from nasanppmta01.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+        by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3paay393dx-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 14 Mar 2023 05:28:19 +0000
+Received: from nasanex01c.na.qualcomm.com (nasanex01c.na.qualcomm.com [10.45.79.139])
+        by NASANPPMTA01.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 32E5SIXS003628
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 14 Mar 2023 05:28:18 GMT
+Received: from [10.214.66.81] (10.80.80.8) by nasanex01c.na.qualcomm.com
+ (10.45.79.139) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.986.41; Mon, 13 Mar
+ 2023 22:28:16 -0700
+Message-ID: <1bcdc3ec-5329-119e-87b7-c8cf51256dd0@quicinc.com>
+Date:   Tue, 14 Mar 2023 10:58:07 +0530
+MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.8.0
+Subject: Re: [PATCH] mm: mmap: remove newline at the end of the trace
+To:     Minwoo Im <minwoo.im.dev@gmail.com>, <linux-mm@kvack.org>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-trace-kernel@vger.kernel.org>
+CC:     Steven Rostedt <rostedt@goodmis.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        "Matthew Wilcox (Oracle)" <willy@infradead.org>
+References: <ZAu6qDsNPmk82UjV@minwoo-desktop>
+Content-Language: en-US
+From:   Mukesh Ojha <quic_mojha@quicinc.com>
+In-Reply-To: <ZAu6qDsNPmk82UjV@minwoo-desktop>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
 Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.80.80.8]
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nasanex01c.na.qualcomm.com (10.45.79.139)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-ORIG-GUID: 5WD2I_pVau7pKwe017_7CRX-cr7Ra6kp
+X-Proofpoint-GUID: 5WD2I_pVau7pKwe017_7CRX-cr7Ra6kp
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.254,Aquarius:18.0.942,Hydra:6.0.573,FMLib:17.11.170.22
+ definitions=2023-03-13_13,2023-03-14_01,2023-02-09_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1011 mlxscore=0
+ mlxlogscore=821 malwarescore=0 adultscore=0 lowpriorityscore=0 bulkscore=0
+ phishscore=0 spamscore=0 impostorscore=0 priorityscore=1501 suspectscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2212070000
+ definitions=main-2303140048
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-Ross Zwisler wrote:
-> On Fri, Mar 10, 2023 at 06:33:52PM -0500, Steven Rostedt wrote:
-> > On Fri, 10 Mar 2023 10:52:09 -0700
-> > zwisler@kernel.org wrote:
-> > 
-> > > diff --git a/tools/testing/selftests/bpf/get_cgroup_id_user.c b/tools/testing/selftests/bpf/get_cgroup_id_user.c
-> > > index 156743cf5870..4fa61ac8a0ee 100644
-> > > --- a/tools/testing/selftests/bpf/get_cgroup_id_user.c
-> > > +++ b/tools/testing/selftests/bpf/get_cgroup_id_user.c
-> > > @@ -86,8 +86,12 @@ int main(int argc, char **argv)
-> > >  	pid = getpid();
-> > >  	bpf_map_update_elem(pidmap_fd, &key, &pid, 0);
-> > >  
-> > > -	snprintf(buf, sizeof(buf),
-> > > -		 "/sys/kernel/debug/tracing/events/%s/id", probe_name);
-> > > +	if (access("/sys/kernel/tracing/trace", F_OK) == 0)
-> > > +		snprintf(buf, sizeof(buf),
-> > > +			 "/sys/kernel/tracing/events/%s/id", probe_name);
-> > > +	else
-> > > +		snprintf(buf, sizeof(buf),
-> > > +			 "/sys/kernel/debug/tracing/events/%s/id", probe_name);
-> > 
-> > I don't know how the BPF folks feel, but I do know some kernel developers
-> > prefer that if you need to break a single command into multiple lines that
-> > you then need to add brackets around it. As it makes it easier to read.
-> > 
-> > 	if (access("/sys/kernel/tracing/trace", F_OK) == 0) {
-> > 		snprintf(buf, sizeof(buf),
-> > 			 "/sys/kernel/tracing/events/%s/id", probe_name);
-> > 	} else {
-> > 		snprintf(buf, sizeof(buf),
-> > 			 "/sys/kernel/debug/tracing/events/%s/id", probe_name);
-> > 	}
-> > 
-> > 
-> > 
-> > >  	efd = open(buf, O_RDONLY, 0);
-> > >  	if (CHECK(efd < 0, "open", "err %d errno %d\n", efd, errno))
-> > >  		goto close_prog;
-> > > diff --git a/tools/testing/selftests/bpf/prog_tests/kprobe_multi_test.c b/tools/testing/selftests/bpf/prog_tests/kprobe_multi_test.c
-> > > index 113dba349a57..22be0a9a5a0a 100644
-> > > --- a/tools/testing/selftests/bpf/prog_tests/kprobe_multi_test.c
-> > > +++ b/tools/testing/selftests/bpf/prog_tests/kprobe_multi_test.c
-> > > @@ -338,7 +338,12 @@ static int get_syms(char ***symsp, size_t *cntp, bool kernel)
-> > >  	 * Filtering out duplicates by using hashmap__add, which won't
-> > >  	 * add existing entry.
-> > >  	 */
-> > > -	f = fopen("/sys/kernel/debug/tracing/available_filter_functions", "r");
-> > > +
-> > > +	if (access("/sys/kernel/tracing/trace", F_OK) == 0)
-> > > +		f = fopen("/sys/kernel/tracing/available_filter_functions", "r");
-> > > +	else
-> > > +		f = fopen("/sys/kernel/debug/tracing/available_filter_functions", "r");
-> > > +
-> > >  	if (!f)
-> > >  		return -EINVAL;
-> > >  
-> > > diff --git a/tools/testing/selftests/bpf/prog_tests/task_fd_query_tp.c b/tools/testing/selftests/bpf/prog_tests/task_fd_query_tp.c
-> > > index c717741bf8b6..60f92fd3c37a 100644
-> > > --- a/tools/testing/selftests/bpf/prog_tests/task_fd_query_tp.c
-> > > +++ b/tools/testing/selftests/bpf/prog_tests/task_fd_query_tp.c
-> > > @@ -17,8 +17,12 @@ static void test_task_fd_query_tp_core(const char *probe_name,
-> > >  	if (CHECK(err, "bpf_prog_test_load", "err %d errno %d\n", err, errno))
-> > >  		goto close_prog;
-> > >  
-> > > -	snprintf(buf, sizeof(buf),
-> > > -		 "/sys/kernel/debug/tracing/events/%s/id", probe_name);
-> > > +	if (access("/sys/kernel/tracing/trace", F_OK) == 0)
-> > > +		snprintf(buf, sizeof(buf),
-> > > +			 "/sys/kernel/tracing/events/%s/id", probe_name);
-> > > +	else
-> > > +		snprintf(buf, sizeof(buf),
-> > > +			 "/sys/kernel/debug/tracing/events/%s/id", probe_name);
-> > 
-> > Same here.
-> > 
-> > >  	efd = open(buf, O_RDONLY, 0);
-> > >  	if (CHECK(efd < 0, "open", "err %d errno %d\n", efd, errno))
-> > >  		goto close_prog;
-> > > diff --git a/tools/testing/selftests/bpf/prog_tests/tp_attach_query.c b/tools/testing/selftests/bpf/prog_tests/tp_attach_query.c
-> > > index 770fcc3bb1ba..d3e377fa8e9b 100644
-> > > --- a/tools/testing/selftests/bpf/prog_tests/tp_attach_query.c
-> > > +++ b/tools/testing/selftests/bpf/prog_tests/tp_attach_query.c
-> > > @@ -16,8 +16,12 @@ void serial_test_tp_attach_query(void)
-> > >  	for (i = 0; i < num_progs; i++)
-> > >  		obj[i] = NULL;
-> > >  
-> > > -	snprintf(buf, sizeof(buf),
-> > > -		 "/sys/kernel/debug/tracing/events/sched/sched_switch/id");
-> > > +	if (access("/sys/kernel/tracing/trace", F_OK) == 0)
-> > > +		snprintf(buf, sizeof(buf),
-> > > +			 "/sys/kernel/tracing/events/sched/sched_switch/id");
-> > > +	else
-> > > +		snprintf(buf, sizeof(buf),
-> > > +			 "/sys/kernel/debug/tracing/events/sched/sched_switch/id");
-> > 
-> > and here.
-> > 
-> > But perhaps the BPF folks don't care?
+
+
+On 3/11/2023 4:48 AM, Minwoo Im wrote:
+> We already have newline in TP_printk so remove the redundant newline
+> character at the end of the mmap trace.
 > 
-> Sure, I agree that this is more readable.  I'll gather your Reviewed-by for
-> patch #1, make this change, rebase to the current bpf/bpf-next and send out
-> v4.
+> <...>-345     [006] .....    95.589290: exit_mmap: mt_mod ...
+> 
+> <...>-345     [006] .....    95.589413: vm_unmapped_area: addr=...
+> 
+> <...>-345     [006] .....    95.589571: vm_unmapped_area: addr=...
+> 
+> <...>-345     [006] .....    95.589606: vm_unmapped_area: addr=...
+> 
+> to
+> 
+> <...>-336     [006] .....    44.762506: exit_mmap: mt_mod ...
+> <...>-336     [006] .....    44.762654: vm_unmapped_area: addr=...
+> <...>-336     [006] .....    44.762794: vm_unmapped_area: addr=...
+> <...>-336     [006] .....    44.762835: vm_unmapped_area: addr=...
+> 
+> Signed-off-by: Minwoo Im <minwoo.im.dev@gmail.com>
 
+Reviewed-by: Mukesh Ojha <quic_mojha@quicinc.com>
 
-Also for the patch. LGTM
+-Mukesh
 
-Acked-by: John Fastabend <john.fastabend@gmail.com>
+> ---
+>   include/trace/events/mmap.h | 4 ++--
+>   1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/include/trace/events/mmap.h b/include/trace/events/mmap.h
+> index 216de5f03621..f8d61485de16 100644
+> --- a/include/trace/events/mmap.h
+> +++ b/include/trace/events/mmap.h
+> @@ -35,7 +35,7 @@ TRACE_EVENT(vm_unmapped_area,
+>   		__entry->align_offset = info->align_offset;
+>   	),
+>   
+> -	TP_printk("addr=0x%lx err=%ld total_vm=0x%lx flags=0x%lx len=0x%lx lo=0x%lx hi=0x%lx mask=0x%lx ofs=0x%lx\n",
+> +	TP_printk("addr=0x%lx err=%ld total_vm=0x%lx flags=0x%lx len=0x%lx lo=0x%lx hi=0x%lx mask=0x%lx ofs=0x%lx",
+>   		IS_ERR_VALUE(__entry->addr) ? 0 : __entry->addr,
+>   		IS_ERR_VALUE(__entry->addr) ? __entry->addr : 0,
+>   		__entry->total_vm, __entry->flags, __entry->length,
+> @@ -110,7 +110,7 @@ TRACE_EVENT(exit_mmap,
+>   		       __entry->mt		= &mm->mm_mt;
+>   	),
+>   
+> -	TP_printk("mt_mod %p, DESTROY\n",
+> +	TP_printk("mt_mod %p, DESTROY",
+>   		  __entry->mt
+>   	)
+>   );
