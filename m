@@ -2,129 +2,145 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8596CC6FD1C
-	for <linux-trace-kernel@archiver.kernel.org>; Tue, 14 Mar 2023 09:40:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ED535C6FD1D
+	for <linux-trace-kernel@archiver.kernel.org>; Tue, 14 Mar 2023 10:23:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229755AbjCNJkJ (ORCPT
+        id S230272AbjCNKXs (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Tue, 14 Mar 2023 05:40:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37556 "EHLO
+        Tue, 14 Mar 2023 06:23:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53034 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229552AbjCNJkI (ORCPT
+        with ESMTP id S230304AbjCNKX2 (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Tue, 14 Mar 2023 05:40:08 -0400
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 67D8021292;
-        Tue, 14 Mar 2023 02:40:06 -0700 (PDT)
-Received: from pps.filterd (m0279869.ppops.net [127.0.0.1])
-        by mx0a-0031df01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 32E3Y1nI013689;
-        Tue, 14 Mar 2023 09:34:19 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=message-id : date :
- mime-version : subject : to : cc : references : from : in-reply-to :
- content-type : content-transfer-encoding; s=qcppdkim1;
- bh=M9xKy/8yo2UJKxTJy7iMWhvOIWBeXFv18E8f9hp8k0U=;
- b=Ytt0WSNGGQIaKmKHLp2t58Qkx9SKzMkx4/DtNXYFeJzNab2NaUbSfK6zu27pk3QXp3s0
- itvnyKyTQ+tAHMFA48Ta05lzN8pKPlc1bmx4UQBo2CYBzAO8kpYHuci+N5GlQ0lZr6FM
- fs+hWtqFeIwjL1HSgQOW0Yir7GqIJuYB/lQ+zLd+L1Yr6v/XuRX6gfloc6DlZgWyZkwF
- pD550bgY7DPO8fXctIT16BvzVBhqcb4X+8RkWcpAhOuvRArQ+p+DNNbjeIwxT/m/ICDB
- 4l1v70uGk6llxGUp9BAui2awtGbRH9rjfEigJH1ajDHnOPoasUp6IAtmuJNirxx06HFr Ig== 
-Received: from nasanppmta04.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-        by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3pa6n32fgt-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 14 Mar 2023 09:34:18 +0000
-Received: from nasanex01a.na.qualcomm.com ([10.52.223.231])
-        by NASANPPMTA04.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 32E9YHB5010446
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 14 Mar 2023 09:34:17 GMT
-Received: from [10.239.155.136] (10.80.80.8) by nasanex01a.na.qualcomm.com
- (10.52.223.231) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.986.41; Tue, 14 Mar
- 2023 02:34:13 -0700
-Message-ID: <26b84239-3b52-6e42-2d17-a34933cab13e@quicinc.com>
-Date:   Tue, 14 Mar 2023 17:34:11 +0800
+        Tue, 14 Mar 2023 06:23:28 -0400
+Received: from mail-ua1-x92e.google.com (mail-ua1-x92e.google.com [IPv6:2607:f8b0:4864:20::92e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8D89120048
+        for <linux-trace-kernel@vger.kernel.org>; Tue, 14 Mar 2023 03:22:56 -0700 (PDT)
+Received: by mail-ua1-x92e.google.com with SMTP id h34so10202466uag.4
+        for <linux-trace-kernel@vger.kernel.org>; Tue, 14 Mar 2023 03:22:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1678789375;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=oK6l1bLYaFxR9jVa3Sb0b7gfGtMaLgpY33m0htG6rbI=;
+        b=qAujV86UmC0NGw1Dtp+ks5Kkvw0sAmpu4k5RJs+CgI9NiKjNTCQm85QaTy7hj8l8li
+         Xz2eBYt5pG0VMBC4C1pWsslZpUACSnplxf6DzTBH3z5YRtB5vbtmx+ddOF6T1ALCs9Z7
+         SUcMt3t6fAUaLUr0E87yIFc5SH0xPZMf4qMYRlzmhPQI3qFIrOxFZUJaczbf7HInkDdC
+         B+obj5Wq6p90KHwSEZBTWvlkXbXHmbhigX3n+Nps2zYBBx5yfyRUrtMR3w4YRHOtKk+f
+         gg/jeGowVu4OP175v4gCgoqp8Vw2g3VU9LJaHuxt7unhbBxndDnJZUvT+MXGRn69h1XC
+         sVJg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112; t=1678789375;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=oK6l1bLYaFxR9jVa3Sb0b7gfGtMaLgpY33m0htG6rbI=;
+        b=JzPqLanum+Dk4xsVBK2fE54a1btjJGnCkUe8NMy3ZUAeR+/YJCa+iAJVY00lDoqn2m
+         G3fA5OQqfWO48qGx1LFFHM8jJRs+/unwvuVIT4o7tYM9c6tHHjZaqvt7MrN1YqQVYvC7
+         4rLWLTcgg5PALAAYJdJhL2cW57d3ZTbgxkXoblC6HpEsE6kExeB7QTttwAxE+Et2mND7
+         cTgaoEjfDksVKqV+1oXmiP2EIPrQ5BZHFcsPFnSZ78m4jqZhvoxURb2Ueh5GZ47QS+oR
+         pf1TrMZEZ8Y2db1aaPp7KVPOQUtCpX+1YDtMRtmkcaRnoPe1bH2YJ1z+PCZ8pUt897Bz
+         wXnQ==
+X-Gm-Message-State: AO0yUKWz46BU8JX/facBFJzgCF6k9BdVBhvs20SpSmsfjflsUMuetWgl
+        6UswuGRQ+ET9r4iBMFPpQ5j3NAU3lpS57nkSpmIurCAB3LnZoTgaPBigyw==
+X-Google-Smtp-Source: AK7set8hMUVOa/qYE8BdEgeaQtRuTH3svAjQltS166F8lAkGHwHJevtx5wqU7pymCMpPOF1NLi8bpKbTkfXr41b8ZMY=
+X-Received: by 2002:ab0:5402:0:b0:688:d612:2024 with SMTP id
+ n2-20020ab05402000000b00688d6122024mr23748723uaa.2.1678789375323; Tue, 14 Mar
+ 2023 03:22:55 -0700 (PDT)
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
- Thunderbird/91.8.0
-Subject: Re: [PATCH v5] scsi: ufs: core: Add trace event for MCQ
-Content-Language: en-US
-To:     Bart Van Assche <bvanassche@acm.org>, <quic_asutoshd@quicinc.com>,
-        <quic_cang@quicinc.com>, <quic_nguyenb@quicinc.com>,
-        <mani@kernel.org>, <stanley.chu@mediatek.com>,
-        <adrian.hunter@intel.com>, <beanhuo@micron.com>,
-        <avri.altman@wdc.com>, <junwoo80.lee@samsung.com>,
-        <martin.petersen@oracle.com>
-CC:     <linux-scsi@vger.kernel.org>,
-        Alim Akhtar <alim.akhtar@samsung.com>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
+From:   Naresh Kamboju <naresh.kamboju@linaro.org>
+Date:   Tue, 14 Mar 2023 15:52:44 +0530
+Message-ID: <CA+G9fYtF-XEKi9YNGgR=Kf==7iRb2FrmEC7qtwAeQbfyah-UhA@mail.gmail.com>
+Subject: selftests: ftrace: event filter function - test event filtering on
+ functions [FAIL]
+To:     open list <linux-kernel@vger.kernel.org>,
+        linux-trace-kernel@vger.kernel.org,
+        Linux-Next Mailing List <linux-next@vger.kernel.org>,
+        lkft-triage@lists.linaro.org
+Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
         Masami Hiramatsu <mhiramat@kernel.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        "open list:TRACING" <linux-trace-kernel@vger.kernel.org>
-References: <1678699023-6645-1-git-send-email-quic_ziqichen@quicinc.com>
- <5ee20e75-8a61-be89-5302-45f390a0cbd6@acm.org>
-From:   Ziqi Chen <quic_ziqichen@quicinc.com>
-In-Reply-To: <5ee20e75-8a61-be89-5302-45f390a0cbd6@acm.org>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.80.80.8]
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nasanex01a.na.qualcomm.com (10.52.223.231)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: _gJlGZCi3m2dyS7YHXGDaCKqobbuTDjQ
-X-Proofpoint-GUID: _gJlGZCi3m2dyS7YHXGDaCKqobbuTDjQ
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.254,Aquarius:18.0.942,Hydra:6.0.573,FMLib:17.11.170.22
- definitions=2023-03-14_03,2023-03-14_01,2023-02-09_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 mlxscore=0
- bulkscore=0 mlxlogscore=999 impostorscore=0 priorityscore=1501
- adultscore=0 phishscore=0 spamscore=0 lowpriorityscore=0 clxscore=1015
- suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2212070000 definitions=main-2303140081
+        Arnd Bergmann <arnd@arndb.de>,
+        Anders Roxell <anders.roxell@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-Thanks Bart, will address your comments and update new version V6 soon.
+Results from Linaro=E2=80=99s test farm.
 
-Best Regards,
-Ziqi
+selftests ftrace failed on qemu-x86_64 and qemu-arm64.
+Please find the test log below.
 
-On 3/14/2023 5:09 AM, Bart Van Assche wrote:
-> On 3/13/23 02:16, Ziqi Chen wrote:
->> Added a new trace event to record MCQ relevant information
->> for each request in MCQ mode, include hardware queue ID,
->> SQ tail slot, CQ head slot and CQ tail slot.
-> 
-> Added a new trace event ... -> Add the MCQ information in the existing 
-> trace event ...
-> 
->  From Documentation/process/submitting-patches.rst: "Describe your 
-> changes in imperative mood, e.g. "make xyzzy do frotz"".
-> 
->> Changes to v1:
->> - Adjust the order of fileds to keep them aligned.
->                          ^^^^^^
->                          fields?
-> 
->> -    u32 intr, doorbell;
->> +    u32 doorbell = 0, hwq_id = 0;
->> +    u32 intr;
-> 
-> Since hwq_id can be assigned the value -1, shouldn't its type be changed 
-> from u32 into int, int16_t or int32_t?
-> 
->> +    struct ufs_hw_queue *hwq = NULL;
-> 
-> Is this pointer only used inside one branch of the if-statement below? 
-> If so, can it be moved under "if (is_mcq_enabled(hba)) {"?
-> 
->> +        "%s: %s: tag: %u, DB: 0x%x, size: %d, IS: %u, LBA: %llu, 
->> opcode: 0x%x (%s), group_id: 0x%x, hqid: %d",
-> 
-> Consider changing "hqid" into "hwq_id" to make the trace information 
-> easier to understand.
-> 
-> Thanks,
-> 
-> Bart.
+Is this expected to fail ? Am I missing anything ?
+
+Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
+
+kselftest: Running tests in ftrace
+TAP version 13
+1..1
+# selftests: ftrace: ftracetest
+# =3D=3D=3D Ftrace unit tests =3D=3D=3D
+# [1] Basic trace file check [PASS]
+
+...
+
+# [23] event filter function - test event filtering on functions [FAIL]
+
+...
+# [58] Kretprobe %return suffix test [PASS]
+# [59] Register/unregister many kprobe events
+[  431.662904] trace_kprobe: Could not probe notrace function startup_64
+[  431.669846] trace_kprobe: Could not probe notrace function _stext
+[  431.674104] trace_kprobe: Could not probe notrace function _text
+[  431.675908] trace_kprobe: Could not probe notrace function
+secondary_startup_64
+[  431.677876] trace_kprobe: Could not probe notrace function
+secondary_startup_64_no_verify
+[  431.679899] trace_kprobe: Could not probe notrace function __pfx_verify_=
+cpu
+[  431.681738] trace_kprobe: Could not probe notrace function verify_cpu
+[  431.683667] trace_kprobe: Could not probe notrace function
+__pfx_sev_verify_cbit
+[  431.685594] trace_kprobe: Could not probe notrace function sev_verify_cb=
+it
+[  431.687381] trace_kprobe: Could not probe notrace function start_cpu0
+[  431.689225] trace_kprobe: Could not probe notrace function __pfx___start=
+up_64
+[  431.691223] trace_kprobe: Could not probe notrace function __startup_64
+[  431.693088] trace_kprobe: Could not probe notrace function
+__pfx_startup_64_setup_env
+[  431.695021] trace_kprobe: Could not probe notrace function
+startup_64_setup_env
+[  431.697012] trace_kprobe: Could not probe notrace function
+__pfx___traceiter_initcall_level
+[  431.700780] trace_kprobe: Could not probe notrace function
+__pfx___traceiter_initcall_start
+...
+[  439.183587] trace_kprobe: Could not probe notrace function
+__pfx_hv_check_msr_access
+[  439.186192] trace_kprobe: Could not probe notrace function
+__pfx_kvm_hv_flush_tlb
+...
+
+# [106] (instance)  event filter function - test event filtering on
+functions [FAIL]
+
+...
+#
+# # of passed:  109
+# # of failed:  2
+# # of unresolved:  3
+# # of untested:  0
+# # of unsupported:  3
+# # of xfailed:  1
+# # of undefined(test bug):  0
+not ok 1 selftests: ftrace: ftracetest # exit=3D1
+
+log link,
+https://qa-reports.linaro.org/lkft/linux-next-master/build/next-20230314/te=
+strun/15564370/suite/kselftest-ftrace/test/ftrace_ftracetest/log
+
+--
+Linaro LKFT
+https://lkft.linaro.org
