@@ -2,99 +2,97 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 27336C61DA4
-	for <linux-trace-kernel@archiver.kernel.org>; Wed, 15 Mar 2023 14:22:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 72AF2C61DA4
+	for <linux-trace-kernel@archiver.kernel.org>; Wed, 15 Mar 2023 14:25:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232625AbjCOOWk (ORCPT
+        id S231769AbjCOOZL (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Wed, 15 Mar 2023 10:22:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42174 "EHLO
+        Wed, 15 Mar 2023 10:25:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46810 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232105AbjCOOWj (ORCPT
+        with ESMTP id S233204AbjCOOY4 (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Wed, 15 Mar 2023 10:22:39 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B6CDE69CEC;
-        Wed, 15 Mar 2023 07:22:38 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Wed, 15 Mar 2023 10:24:56 -0400
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [IPv6:2001:67c:2178:6::1c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9004126BA;
+        Wed, 15 Mar 2023 07:24:53 -0700 (PDT)
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 514A961DC1;
-        Wed, 15 Mar 2023 14:22:38 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BBEB2C433EF;
-        Wed, 15 Mar 2023 14:22:36 +0000 (UTC)
-Date:   Wed, 15 Mar 2023 10:22:32 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
-Cc:     linux-trace-kernel@vger.kernel.org,
-        Heinz Wiesinger <pprkut@slackware.com>, andersson@kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        quic_rjendra@quicinc.com, quic_saipraka@quicinc.com,
-        quic_sibis@quicinc.com
-Subject: Re: [PATCH v2] bootconfig: Fix testcase to increase max node
-Message-ID: <20230315102232.0a67e109@gandalf.local.home>
-In-Reply-To: <167888844790.791176.670805252426835131.stgit@devnote2>
-References: <167888844790.791176.670805252426835131.stgit@devnote2>
-X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+        by smtp-out1.suse.de (Postfix) with ESMTPS id 46B3D219B6;
+        Wed, 15 Mar 2023 14:24:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+        t=1678890292; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
+        bh=a+KmZa22ry4Mgykdv6ds4+NZZU+jJdD3ovXoAnBercU=;
+        b=fk+lviOJUYNIIWxZOQhBR3LYVKPlSO9Q7aIZlYx+5Pqh+c8/whk6rzTCZ0lz+4kEWpcKes
+        mGAIJV8WYHa9uLpVrFRSWralgJptO3m9XhZotPURxqBh7xCYEMxy4fW7iahXQwyLGKiDhO
+        f6MrDxPvgubph7iVYP2ODp1BgAZ/eyg=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+        s=susede2_ed25519; t=1678890292;
+        h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
+        bh=a+KmZa22ry4Mgykdv6ds4+NZZU+jJdD3ovXoAnBercU=;
+        b=PKcHYVjHTS3FQPTGcYiDe8udkvAtI9bmDIT8yZfNAEK1cRYJJFKSqBfoGSaTRmG8uUprMn
+        4NPv5OFsvmDfgjCQ==
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+        (No client certificate requested)
+        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id 2732213A2F;
+        Wed, 15 Mar 2023 14:24:52 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([192.168.254.65])
+        by imap2.suse-dmz.suse.de with ESMTPSA
+        id dV3kCDTVEWTaRwAAMHmgww
+        (envelope-from <vbabka@suse.cz>); Wed, 15 Mar 2023 14:24:52 +0000
+From:   Vlastimil Babka <vbabka@suse.cz>
+To:     Steven Rostedt <rostedt@goodmis.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Ingo Molnar <mingo@elte.hu>
+Cc:     linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        patches@lists.linux.dev, Vlastimil Babka <vbabka@suse.cz>,
+        Mike Rapoport <mike.rapoport@gmail.com>
+Subject: [PATCH] ring-buffer: remove obsolete comment for free_buffer_page()
+Date:   Wed, 15 Mar 2023 15:24:46 +0100
+Message-Id: <20230315142446.27040-1-vbabka@suse.cz>
+X-Mailer: git-send-email 2.39.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On Wed, 15 Mar 2023 22:54:08 +0900
-"Masami Hiramatsu (Google)" <mhiramat@kernel.org> wrote:
+The comment refers to mm/slob.o which is being removed. It comes from
+commit ed56829cb319 ("ring_buffer: reset buffer page when freeing") and
+according to Steven the borrowed code was a page mapcount and mapping
+reset, which was later removed by commit e4c2ce82ca27 ("ring_buffer:
+allocate buffer page pointer"). Thus the comment is not accurate anyway,
+remove it.
 
-> From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-> 
-> Since commit 6c40624930c5 ("bootconfig: Increase max nodes of bootconfig
-> from 1024 to 8192 for DCC support") increased the max number of bootconfig
-> node to 8192, the bootconfig testcase of the max number of nodes fails.
-> To fix this issue, we can not simply increase the number in the test script
-> because the test bootconfig file becomes too big (>32KB). To fix that, we
-> can use a combination of three alphabets (26^3 = 17576). But with that,
-> we can not express the 8193 (just one exceed from the limitation) because
-> it also exceeds the max size of bootconfig. So, the first 26 nodes will just
-> use one alphabet.
-> 
-> With this fix, test-bootconfig.sh passes all tests.
-> 
-> Reported-by: Heinz Wiesinger <pprkut@slackware.com>
-> Link: https://lore.kernel.org/all/2463802.XAFRqVoOGU@amaterasu.liwjatan.org
-> Fixes: 6c40624930c5 ("bootconfig: Increase max nodes of bootconfig from 1024 to 8192 for DCC support")
-> Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+Reported-by: Mike Rapoport <mike.rapoport@gmail.com>
+Suggested-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+Fixes: e4c2ce82ca27 ("ring_buffer: allocate buffer page pointer")
+Signed-off-by: Vlastimil Babka <vbabka@suse.cz>
+---
+ kernel/trace/ring_buffer.c | 4 ----
+ 1 file changed, 4 deletions(-)
 
-Reviewed-by: Steven Rostedt (Google) <rostedt@goodmis.org>
-
--- Steve
-
-> ---
->  tools/bootconfig/test-bootconfig.sh |   12 ++++++++----
->  1 file changed, 8 insertions(+), 4 deletions(-)
-> 
-> diff --git a/tools/bootconfig/test-bootconfig.sh b/tools/bootconfig/test-bootconfig.sh
-> index f68e2e9eef8b..a2c484c243f5 100755
-> --- a/tools/bootconfig/test-bootconfig.sh
-> +++ b/tools/bootconfig/test-bootconfig.sh
-> @@ -87,10 +87,14 @@ xfail grep -i "error" $OUTFILE
->  
->  echo "Max node number check"
->  
-> -echo -n > $TEMPCONF
-> -for i in `seq 1 1024` ; do
-> -   echo "node$i" >> $TEMPCONF
-> -done
-> +awk '
-> +BEGIN {
-> +  for (i = 0; i < 26; i += 1)
-> +      printf("%c\n", 65 + i % 26)
-> +  for (i = 26; i < 8192; i += 1)
-> +      printf("%c%c%c\n", 65 + i % 26, 65 + (i / 26) % 26, 65 + (i / 26 / 26))
-> +}
-> +' > $TEMPCONF
->  xpass $BOOTCONF -a $TEMPCONF $INITRD
->  
->  echo "badnode" >> $TEMPCONF
+diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
+index af50d931b020..c6f47b6cfd5f 100644
+--- a/kernel/trace/ring_buffer.c
++++ b/kernel/trace/ring_buffer.c
+@@ -354,10 +354,6 @@ static void rb_init_page(struct buffer_data_page *bpage)
+ 	local_set(&bpage->commit, 0);
+ }
+ 
+-/*
+- * Also stolen from mm/slob.c. Thanks to Mathieu Desnoyers for pointing
+- * this issue out.
+- */
+ static void free_buffer_page(struct buffer_page *bpage)
+ {
+ 	free_page((unsigned long)bpage->page);
+-- 
+2.39.2
 
