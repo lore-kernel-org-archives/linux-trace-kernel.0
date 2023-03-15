@@ -2,97 +2,94 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 72AF2C61DA4
-	for <linux-trace-kernel@archiver.kernel.org>; Wed, 15 Mar 2023 14:25:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EBA56C6FD1D
+	for <linux-trace-kernel@archiver.kernel.org>; Wed, 15 Mar 2023 15:00:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231769AbjCOOZL (ORCPT
+        id S232231AbjCOPAZ (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Wed, 15 Mar 2023 10:25:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46810 "EHLO
+        Wed, 15 Mar 2023 11:00:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46524 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233204AbjCOOY4 (ORCPT
+        with ESMTP id S233184AbjCOO7c (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Wed, 15 Mar 2023 10:24:56 -0400
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [IPv6:2001:67c:2178:6::1c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9004126BA;
-        Wed, 15 Mar 2023 07:24:53 -0700 (PDT)
-Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+        Wed, 15 Mar 2023 10:59:32 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C4A1C94751;
+        Wed, 15 Mar 2023 07:58:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=wd8qK2CA6PymeHUSx0iaO6FA3rxmYEqXDRJEu+NxeFQ=; b=PFP1zbNSgF4Lhynb68W1Zs6OoH
+        HEDO+2MGSPoRsxZUfpjUK+DAEtI7EL9ir21q/hml31B0rqCSFtdkCG4//j87u+65tDB/SOig7IWbY
+        QdA45IM8LaNGDys8KDlhn0jtnKyPmz4PreME22ouaOEa1moXdFlsGB7qfzpQQ8ig8C5cQZSC2Px+C
+        PsaDe99yZvUZaOb5LVpCyrZRyKzsxfSRFPG10Rqi1fhJsAcDxB/Qosfj0DGyctMR458LS9bqW+ADs
+        1zf0SeHzabZeqQwiV4+mxEuwnHrhQ6sR4QyEfNDFbUeCStT8CXqhNzJ0ovfHNdc2Tww3A/B2Zzfgi
+        x/Z23HRg==;
+Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
+        by casper.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
+        id 1pcSZk-00DvdH-FK; Wed, 15 Mar 2023 14:58:01 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
-        (No client certificate requested)
-        by smtp-out1.suse.de (Postfix) with ESMTPS id 46B3D219B6;
-        Wed, 15 Mar 2023 14:24:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-        t=1678890292; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
-        bh=a+KmZa22ry4Mgykdv6ds4+NZZU+jJdD3ovXoAnBercU=;
-        b=fk+lviOJUYNIIWxZOQhBR3LYVKPlSO9Q7aIZlYx+5Pqh+c8/whk6rzTCZ0lz+4kEWpcKes
-        mGAIJV8WYHa9uLpVrFRSWralgJptO3m9XhZotPURxqBh7xCYEMxy4fW7iahXQwyLGKiDhO
-        f6MrDxPvgubph7iVYP2ODp1BgAZ/eyg=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-        s=susede2_ed25519; t=1678890292;
-        h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
-        bh=a+KmZa22ry4Mgykdv6ds4+NZZU+jJdD3ovXoAnBercU=;
-        b=PKcHYVjHTS3FQPTGcYiDe8udkvAtI9bmDIT8yZfNAEK1cRYJJFKSqBfoGSaTRmG8uUprMn
-        4NPv5OFsvmDfgjCQ==
-Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
-        (No client certificate requested)
-        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id 2732213A2F;
-        Wed, 15 Mar 2023 14:24:52 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([192.168.254.65])
-        by imap2.suse-dmz.suse.de with ESMTPSA
-        id dV3kCDTVEWTaRwAAMHmgww
-        (envelope-from <vbabka@suse.cz>); Wed, 15 Mar 2023 14:24:52 +0000
-From:   Vlastimil Babka <vbabka@suse.cz>
-To:     Steven Rostedt <rostedt@goodmis.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Ingo Molnar <mingo@elte.hu>
-Cc:     linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        patches@lists.linux.dev, Vlastimil Babka <vbabka@suse.cz>,
-        Mike Rapoport <mike.rapoport@gmail.com>
-Subject: [PATCH] ring-buffer: remove obsolete comment for free_buffer_page()
-Date:   Wed, 15 Mar 2023 15:24:46 +0100
-Message-Id: <20230315142446.27040-1-vbabka@suse.cz>
-X-Mailer: git-send-email 2.39.2
+         key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id B85213001E5;
+        Wed, 15 Mar 2023 15:57:57 +0100 (CET)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 6EA362408DE43; Wed, 15 Mar 2023 15:57:57 +0100 (CET)
+Date:   Wed, 15 Mar 2023 15:57:57 +0100
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Steven Rostedt <rostedt@goodmis.org>
+Cc:     Donglin Peng <pengdonglin@sangfor.com.cn>, mhiramat@kernel.org,
+        linux@armlinux.org.uk, mark.rutland@arm.com, will@kernel.org,
+        catalin.marinas@arm.com, palmer@dabbelt.com,
+        paul.walmsley@sifive.com, tglx@linutronix.de,
+        dave.hansen@linux.intel.com, x86@kernel.org, mingo@redhat.com,
+        xiehuan09@gmail.com, dinghui@sangfor.com.cn,
+        huangcun@sangfor.com.cn, dolinux.peng@gmail.com,
+        linux-trace-kernel@vger.kernel.org,
+        linux-riscv@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4 1/2] function_graph: Support recording and printing
+ the return value of function
+Message-ID: <20230315145757.GE2006103@hirez.programming.kicks-ass.net>
+References: <20230315133911.958741-1-pengdonglin@sangfor.com.cn>
+ <20230315133911.958741-2-pengdonglin@sangfor.com.cn>
+ <20230315134911.GD2006103@hirez.programming.kicks-ass.net>
+ <20230315101348.1234c7f5@gandalf.local.home>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230315101348.1234c7f5@gandalf.local.home>
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-The comment refers to mm/slob.o which is being removed. It comes from
-commit ed56829cb319 ("ring_buffer: reset buffer page when freeing") and
-according to Steven the borrowed code was a page mapcount and mapping
-reset, which was later removed by commit e4c2ce82ca27 ("ring_buffer:
-allocate buffer page pointer"). Thus the comment is not accurate anyway,
-remove it.
+On Wed, Mar 15, 2023 at 10:13:48AM -0400, Steven Rostedt wrote:
+> On Wed, 15 Mar 2023 14:49:11 +0100
+> Peter Zijlstra <peterz@infradead.org> wrote:
+> 
+> > > diff --git a/arch/x86/kernel/ftrace_64.S b/arch/x86/kernel/ftrace_64.S
+> > > index 1265ad519249..35ac9c58dc77 100644
+> > > --- a/arch/x86/kernel/ftrace_64.S
+> > > +++ b/arch/x86/kernel/ftrace_64.S
+> > > @@ -348,6 +348,10 @@ SYM_CODE_START(return_to_handler)
+> > >  	movq %rax, (%rsp)
+> > >  	movq %rdx, 8(%rsp)
+> > >  	movq %rbp, %rdi
+> > > +#ifdef CONFIG_FUNCTION_GRAPH_RETVAL
+> > > +	/* Pass the function return value to ftrace_return_to_handler */
+> > > +	movq %rax, %rsi
+> > > +#endif
+> > >  
+> > >  	call ftrace_return_to_handler  
+> > 
+> > What about the case of double register return values (when the value
+> > is returned in the A,D pair) ?
+> 
+> Is there anything that does that in 64 bit kernels?
 
-Reported-by: Mike Rapoport <mike.rapoport@gmail.com>
-Suggested-by: Steven Rostedt (Google) <rostedt@goodmis.org>
-Fixes: e4c2ce82ca27 ("ring_buffer: allocate buffer page pointer")
-Signed-off-by: Vlastimil Babka <vbabka@suse.cz>
----
- kernel/trace/ring_buffer.c | 4 ----
- 1 file changed, 4 deletions(-)
-
-diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
-index af50d931b020..c6f47b6cfd5f 100644
---- a/kernel/trace/ring_buffer.c
-+++ b/kernel/trace/ring_buffer.c
-@@ -354,10 +354,6 @@ static void rb_init_page(struct buffer_data_page *bpage)
- 	local_set(&bpage->commit, 0);
- }
- 
--/*
-- * Also stolen from mm/slob.c. Thanks to Mathieu Desnoyers for pointing
-- * this issue out.
-- */
- static void free_buffer_page(struct buffer_page *bpage)
- {
- 	free_page((unsigned long)bpage->page);
--- 
-2.39.2
-
+Note sure; but I have a patch series that introduces cmpxchg128 and
+friends. Most of the actual functions are __always_inline, but still,
+the moment a compiler decides to break out a subfunction on a u128
+boundary we're in luck.
