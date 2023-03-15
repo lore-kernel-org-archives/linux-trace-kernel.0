@@ -2,88 +2,120 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E33BC6FD1F
-	for <linux-trace-kernel@archiver.kernel.org>; Tue, 14 Mar 2023 18:13:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0954FC61DA4
+	for <linux-trace-kernel@archiver.kernel.org>; Wed, 15 Mar 2023 07:44:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229970AbjCNSNn (ORCPT
+        id S231414AbjCOHoo (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Tue, 14 Mar 2023 14:13:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35736 "EHLO
+        Wed, 15 Mar 2023 03:44:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40448 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229516AbjCNSNm (ORCPT
+        with ESMTP id S231543AbjCOHoh (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Tue, 14 Mar 2023 14:13:42 -0400
-Received: from mail-pf1-f178.google.com (mail-pf1-f178.google.com [209.85.210.178])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 404031CBED;
-        Tue, 14 Mar 2023 11:13:37 -0700 (PDT)
-Received: by mail-pf1-f178.google.com with SMTP id ay18so10287205pfb.2;
-        Tue, 14 Mar 2023 11:13:37 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1678817617;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=shjOGf3us/BM8xDvslDFXavV6ys4MahLutw/vfYX6aM=;
-        b=FHNky5FbRujLsGDqo9HBt4O9FAe386beercnMTVbIbgVw8TAGKzMooYdNsU1sCRRxS
-         JXWlvwjZa3hNDGNlsDLscuQVboTSb5BbIHsUYCyZEqsMT5W5nt78Hi2Syv1TLNqhO3+w
-         UdqDfr2oOGnYK9nBspmt6nPBQ1Z12JLFP2+j+9VppMtP0BjyovCC9mTiw4YT1nKJydgB
-         /olW/5eJrHmVn6UNMQzi//hXvbtFQHNVxhU20/dMU1dOSAn2cWP1oysui5Jt7nOEEI8s
-         xwpZArnaHgLT39vTE1SbDB71B0TIs5aCrIgQj1mwaUr8XIz7UCw//lDGNJExGfIuo76r
-         bjpw==
-X-Gm-Message-State: AO0yUKULsB+7BMBudDJsUDZk4HqqrGft3lFGQMduG7mfA2bfN7drC5+v
-        RNEhU+Sg5NoBsw6jnEGkWGg=
-X-Google-Smtp-Source: AK7set/Km0QT0pAtwmzkW3cd3nztFqhRP9idHwCg5shq5E/ZsERUt/xe28cabD1HwLK76qUKkC+5cQ==
-X-Received: by 2002:a62:1a4c:0:b0:623:79d9:a8e6 with SMTP id a73-20020a621a4c000000b0062379d9a8e6mr6482026pfa.19.1678817616607;
-        Tue, 14 Mar 2023 11:13:36 -0700 (PDT)
-Received: from ?IPV6:2620:15c:211:201:9cdb:df66:226e:e52a? ([2620:15c:211:201:9cdb:df66:226e:e52a])
-        by smtp.gmail.com with ESMTPSA id g24-20020aa78198000000b0058b927b9653sm1965634pfi.92.2023.03.14.11.13.34
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 14 Mar 2023 11:13:36 -0700 (PDT)
-Message-ID: <70bf37fb-bc66-d341-7c2d-bf1785ba464f@acm.org>
-Date:   Tue, 14 Mar 2023 11:13:33 -0700
+        Wed, 15 Mar 2023 03:44:37 -0400
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9823612BF0;
+        Wed, 15 Mar 2023 00:44:23 -0700 (PDT)
+Received: from pps.filterd (m0279873.ppops.net [127.0.0.1])
+        by mx0a-0031df01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 32F4tSLZ014017;
+        Wed, 15 Mar 2023 07:43:38 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=message-id : date :
+ mime-version : subject : to : cc : references : from : in-reply-to :
+ content-type : content-transfer-encoding; s=qcppdkim1;
+ bh=MnCZz38kzqLJScTGZXzpPP8AqHNxs8XsBNy8Q65MsNA=;
+ b=JtAiVazhbFAZKg0CDtWcwDxuTpgAN0hr9hleE2yVDupSgq2GYdpAGgHR6+T2LYYqu4IG
+ m1pz2cZMt2PN+oZqZFJLSaPs+FBokrUGDwujOW/HCivaMjulmlxbA32PwAuyt6DbBs4i
+ aNmxd7q8bxgJzJKRkb01r5oTrs6DjhxohkyBDmPwsb5S2Jy+d2zrytCyrN5FgnpQO1gh
+ idAsv7lvJssLWKjsZnP2t5g/y+rmhI7jOrfp9DQQ/mlYSOR65j9M4JOiFOMqjYRQ8Abe
+ JCbELDxnUtGA9PtAeEBuM4L9erH8y031R/AdVE3Sdk8GmmXIFL5evmrop3nJQkZaJF1A Iw== 
+Received: from nasanppmta04.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+        by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3pb2cr0v0f-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 15 Mar 2023 07:43:38 +0000
+Received: from nasanex01a.na.qualcomm.com ([10.52.223.231])
+        by NASANPPMTA04.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 32F7hbCR020945
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 15 Mar 2023 07:43:37 GMT
+Received: from [10.239.155.136] (10.80.80.8) by nasanex01a.na.qualcomm.com
+ (10.52.223.231) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.986.41; Wed, 15 Mar
+ 2023 00:43:33 -0700
+Message-ID: <c1d9e985-9948-6620-d311-cfc590fe89b2@quicinc.com>
+Date:   Wed, 15 Mar 2023 15:43:31 +0800
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.7.1
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
+ Thunderbird/91.8.0
 Subject: Re: [PATCH v6] scsi: ufs: core: Add trace event for MCQ
 Content-Language: en-US
-To:     Ziqi Chen <quic_ziqichen@quicinc.com>, quic_asutoshd@quicinc.com,
-        quic_cang@quicinc.com, quic_nguyenb@quicinc.com, mani@kernel.org,
-        stanley.chu@mediatek.com, adrian.hunter@intel.com,
-        beanhuo@micron.com, avri.altman@wdc.com, junwoo80.lee@samsung.com,
-        martin.petersen@oracle.com
-Cc:     linux-scsi@vger.kernel.org, Alim Akhtar <alim.akhtar@samsung.com>,
+To:     Bart Van Assche <bvanassche@acm.org>, <quic_asutoshd@quicinc.com>,
+        <quic_cang@quicinc.com>, <quic_nguyenb@quicinc.com>,
+        <mani@kernel.org>, <stanley.chu@mediatek.com>,
+        <adrian.hunter@intel.com>, <beanhuo@micron.com>,
+        <avri.altman@wdc.com>, <junwoo80.lee@samsung.com>,
+        <martin.petersen@oracle.com>
+CC:     <linux-scsi@vger.kernel.org>,
+        Alim Akhtar <alim.akhtar@samsung.com>,
         "James E.J. Bottomley" <jejb@linux.ibm.com>,
         Steven Rostedt <rostedt@goodmis.org>,
         Masami Hiramatsu <mhiramat@kernel.org>,
         open list <linux-kernel@vger.kernel.org>,
         "open list:TRACING" <linux-trace-kernel@vger.kernel.org>
 References: <1678792580-3178-1-git-send-email-quic_ziqichen@quicinc.com>
-From:   Bart Van Assche <bvanassche@acm.org>
-In-Reply-To: <1678792580-3178-1-git-send-email-quic_ziqichen@quicinc.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+ <70bf37fb-bc66-d341-7c2d-bf1785ba464f@acm.org>
+From:   Ziqi Chen <quic_ziqichen@quicinc.com>
+In-Reply-To: <70bf37fb-bc66-d341-7c2d-bf1785ba464f@acm.org>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.80.80.8]
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nasanex01a.na.qualcomm.com (10.52.223.231)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-ORIG-GUID: hPAoTDQ1ysPVbZKryAbrEJIW7seTbE10
+X-Proofpoint-GUID: hPAoTDQ1ysPVbZKryAbrEJIW7seTbE10
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.254,Aquarius:18.0.942,Hydra:6.0.573,FMLib:17.11.170.22
+ definitions=2023-03-15_03,2023-03-14_02,2023-02-09_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=999
+ malwarescore=0 phishscore=0 bulkscore=0 clxscore=1015 lowpriorityscore=0
+ spamscore=0 impostorscore=0 mlxscore=0 suspectscore=0 priorityscore=1501
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2302240000 definitions=main-2303150063
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On 3/14/23 04:15, Ziqi Chen wrote:
->   	TP_printk(
-> -		"%s: %s: tag: %u, DB: 0x%x, size: %d, IS: %u, LBA: %llu, opcode: 0x%x (%s), group_id: 0x%x",
-> -		show_ufs_cmd_trace_str(__entry->str_t), __get_str(dev_name),
-> -		__entry->tag, __entry->doorbell, __entry->transfer_len,
-> -		__entry->intr, __entry->lba, (u32)__entry->opcode,
-> -		str_opcode(__entry->opcode), (u32)__entry->group_id
-> +		"%s: %s: tag: %u, DB: 0x%x, size: %d, IS: %u, LBA: %llu, opcode: 0x%x (%s), group_id: 0x%x, hwq_id: %d",
-> +		 show_ufs_cmd_trace_str(__entry->str_t), __get_str(dev_name),
-> +		 __entry->tag, __entry->doorbell, __entry->transfer_len, __entry->intr,
-> +		 __entry->lba, (u32)__entry->opcode, str_opcode(__entry->opcode),
-> +		 (u32)__entry->group_id, __entry->hwq_id
+Hi Bart,
 
-The alignment of the TP_printk() arguments looks odd. Please make sure 
-that arguments 2 and later start in the same column as the opening 
-double quote (") instead of one column to the right of that double quote.
+Sure, will fix it.
 
-Thanks,
 
-Bart.
+Best Regards,
+Ziqi
 
+On 3/15/2023 2:13 AM, Bart Van Assche wrote:
+> On 3/14/23 04:15, Ziqi Chen wrote:
+>>       TP_printk(
+>> -        "%s: %s: tag: %u, DB: 0x%x, size: %d, IS: %u, LBA: %llu, 
+>> opcode: 0x%x (%s), group_id: 0x%x",
+>> -        show_ufs_cmd_trace_str(__entry->str_t), __get_str(dev_name),
+>> -        __entry->tag, __entry->doorbell, __entry->transfer_len,
+>> -        __entry->intr, __entry->lba, (u32)__entry->opcode,
+>> -        str_opcode(__entry->opcode), (u32)__entry->group_id
+>> +        "%s: %s: tag: %u, DB: 0x%x, size: %d, IS: %u, LBA: %llu, 
+>> opcode: 0x%x (%s), group_id: 0x%x, hwq_id: %d",
+>> +         show_ufs_cmd_trace_str(__entry->str_t), __get_str(dev_name),
+>> +         __entry->tag, __entry->doorbell, __entry->transfer_len, 
+>> __entry->intr,
+>> +         __entry->lba, (u32)__entry->opcode, 
+>> str_opcode(__entry->opcode),
+>> +         (u32)__entry->group_id, __entry->hwq_id
+> 
+> The alignment of the TP_printk() arguments looks odd. Please make sure 
+> that arguments 2 and later start in the same column as the opening 
+> double quote (") instead of one column to the right of that double quote.
+> 
+> Thanks,
+> 
+> Bart.
+> 
