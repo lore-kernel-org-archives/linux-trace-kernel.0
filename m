@@ -2,111 +2,149 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CD22EC7618E
-	for <linux-trace-kernel@archiver.kernel.org>; Wed, 15 Mar 2023 07:59:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E7D4C61DA4
+	for <linux-trace-kernel@archiver.kernel.org>; Wed, 15 Mar 2023 08:33:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230451AbjCOH7L (ORCPT
+        id S230094AbjCOIdE (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Wed, 15 Mar 2023 03:59:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39144 "EHLO
+        Wed, 15 Mar 2023 04:33:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58894 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231586AbjCOH7K (ORCPT
+        with ESMTP id S229971AbjCOIdD (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Wed, 15 Mar 2023 03:59:10 -0400
+        Wed, 15 Mar 2023 04:33:03 -0400
 Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3F9C442BCE;
-        Wed, 15 Mar 2023 00:59:09 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BCC7E83E9;
+        Wed, 15 Mar 2023 01:33:01 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id CED3561BDD;
-        Wed, 15 Mar 2023 07:59:08 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9CFF9C433EF;
-        Wed, 15 Mar 2023 07:59:06 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 57B8761B77;
+        Wed, 15 Mar 2023 08:33:01 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1E1A6C433D2;
+        Wed, 15 Mar 2023 08:32:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1678867148;
-        bh=vRFR481Q9774JGel+N5ZkZPT18QV5YRBoXfvxt1cumY=;
+        s=k20201202; t=1678869180;
+        bh=O6E2IOFT7Qo6yMnQvB/m7JajulqmQNBlEUHnHZxFKPY=;
         h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=KcpVndpJ8/eCcRy26ZDTUjvEX040VPQs2cXEpNU5dnmaiN/nUoUS/z6GYvMmy5wm7
-         Jqk36hLkhsvNuB40Q0+XYVAQ66E+z3lrgkeR1vgfC/VU1lirwRIP4iMmwmJj/DaENm
-         7oypyGwzoZPtjGIu1tfA5PtzTWCPNmUhc0eRItCYxUKMmASDev/C8cx/fTQOiQ6Q5u
-         jjXz73thMqRZO/dhRFG9vAGItnJSG1gHPtN9Q0tpnIXtZkoKkt/B2RJZ/7vdcEFL+P
-         9YU4lRfVp5WlLrvoN1+JwyvNl51UGMlcIyVOiFZ2FtCirH034xozA/9yMI/CUnaGzn
-         VWOW7UlgJDSFA==
-Date:   Wed, 15 Mar 2023 16:59:05 +0900
+        b=pYRWPmTG2IWkcRZSgKf4n/QcI/FH5910wX+3Z0vmTqe0YSQP46H8P3BZNw6HEQRj8
+         qUq4vtUeba2wxdWZLNB9uQ7OK1E09IqnQ+PbNKmoWGgllT9jNRcYabguZbcfFTz863
+         1SldAVuMHjDKdqNDc9lTa7S+VK8juIz5cHW21LArrarzAvxszwFrewXqn7kQ499NIZ
+         kHzgFwvi9OAZZk4s2R7QxjlJv+Cm1JcCT4/0xhWGv54WqEF9AC+OMUTA4d1qasNHxq
+         mQZvsKousLR1sDrkRSGSELtscd9Pu+QCef0dWv3RX3cdopjUlIJwuHPaaxX2wh/IGy
+         q6PTTR5onCzFw==
+Date:   Wed, 15 Mar 2023 17:32:57 +0900
 From:   Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To:     Steven Rostedt <rostedt@goodmis.org>
-Cc:     linux-trace-kernel@vger.kernel.org,
-        Heinz Wiesinger <pprkut@slackware.com>, andersson@kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        quic_rjendra@quicinc.com, quic_saipraka@quicinc.com,
-        quic_sibis@quicinc.com
-Subject: Re: [PATCH] bootconfig: Fix testcase to increase max node
-Message-Id: <20230315165905.4bb2a464b2ffe4fb640cfbdd@kernel.org>
-In-Reply-To: <20230314111213.08f33839@gandalf.local.home>
-References: <167871576880.783280.2390717518955954275.stgit@devnote2>
-        <20230314111213.08f33839@gandalf.local.home>
+To:     Naresh Kamboju <naresh.kamboju@linaro.org>
+Cc:     open list <linux-kernel@vger.kernel.org>,
+        linux-trace-kernel@vger.kernel.org,
+        Linux-Next Mailing List <linux-next@vger.kernel.org>,
+        lkft-triage@lists.linaro.org,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Anders Roxell <anders.roxell@linaro.org>
+Subject: Re: selftests: ftrace: event filter function - test event filtering
+ on functions [FAIL]
+Message-Id: <20230315173257.1311e50729c73e0cb6e0aa0d@kernel.org>
+In-Reply-To: <CA+G9fYtF-XEKi9YNGgR=Kf==7iRb2FrmEC7qtwAeQbfyah-UhA@mail.gmail.com>
+References: <CA+G9fYtF-XEKi9YNGgR=Kf==7iRb2FrmEC7qtwAeQbfyah-UhA@mail.gmail.com>
 X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On Tue, 14 Mar 2023 11:12:13 -0400
-Steven Rostedt <rostedt@goodmis.org> wrote:
+Hi Naresh,
 
-> On Mon, 13 Mar 2023 22:56:09 +0900
-> "Masami Hiramatsu (Google)" <mhiramat@kernel.org> wrote:
-> 
-> > @@ -87,10 +88,16 @@ xfail grep -i "error" $OUTFILE
-> >  
-> >  echo "Max node number check"
-> >  
-> > -echo -n > $TEMPCONF
-> > -for i in `seq 1 1024` ; do
-> > -   echo "node$i" >> $TEMPCONF
-> 
-> Do you need this extra file?
-> 
-> > -done
-> > +cat > $AWKFILE << EOF
-> > +BEGIN {
-> > +  for (i = 0; i < 26; i += 1)
-> > +      printf("%c\n", 65 + i % 26)
-> > +  for (i = 26; i < 8192; i += 1)
-> > +      printf("%c%c%c\n", 65 + i % 26, 65 + (i / 26) % 26, 65 + (i / 26 / 26))
-> > +}
-> > +EOF
-> > +awk -f "$AWKFILE" > $TEMPCONF
-> 
-> Couldn't the above just be:
-> 
-> awk '
-> 	BEGIN {
-> 		for (i = 0; i < 26; i += 1)
-> 			printf("%c\n", 65 + i % 26)
-> 		for (i = 26; i < 8192; i += 1)
-> 			printf("%c%c%c\n", 65 + i % 26, 65 + (i / 26) % 26, 65 + (i / 26 / 26))
-> 	}
-> ' > $TEMPCONF
-> 
-> and not need the extra file?
+On Tue, 14 Mar 2023 15:52:44 +0530
+Naresh Kamboju <naresh.kamboju@linaro.org> wrote:
 
-Indeed. Let me update this.
+> Results from Linaro’s test farm.
+> 
+> selftests ftrace failed on qemu-x86_64 and qemu-arm64.
+> Please find the test log below.
 
-Thank you!
+Thanks for reporting!
+Can you share the kernel config which you used for this build?
+And the kernel is "next-20230314", is that correct?
 
 > 
-> -- Steve
+> Is this expected to fail ? Am I missing anything ?
+
+No, it should be a bug. I would like to reproduce it.
+
+Thank you,
+
 > 
+> Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
 > 
-> >  xpass $BOOTCONF -a $TEMPCONF $INITRD
-> >  
-> >  echo "badnode" >> $TEMPCONF
+> kselftest: Running tests in ftrace
+> TAP version 13
+> 1..1
+> # selftests: ftrace: ftracetest
+> # === Ftrace unit tests ===
+> # [1] Basic trace file check [PASS]
 > 
+> ...
+> 
+> # [23] event filter function - test event filtering on functions [FAIL]
+> 
+> ...
+> # [58] Kretprobe %return suffix test [PASS]
+> # [59] Register/unregister many kprobe events
+> [  431.662904] trace_kprobe: Could not probe notrace function startup_64
+> [  431.669846] trace_kprobe: Could not probe notrace function _stext
+> [  431.674104] trace_kprobe: Could not probe notrace function _text
+> [  431.675908] trace_kprobe: Could not probe notrace function
+> secondary_startup_64
+> [  431.677876] trace_kprobe: Could not probe notrace function
+> secondary_startup_64_no_verify
+> [  431.679899] trace_kprobe: Could not probe notrace function __pfx_verify_cpu
+> [  431.681738] trace_kprobe: Could not probe notrace function verify_cpu
+> [  431.683667] trace_kprobe: Could not probe notrace function
+> __pfx_sev_verify_cbit
+> [  431.685594] trace_kprobe: Could not probe notrace function sev_verify_cbit
+> [  431.687381] trace_kprobe: Could not probe notrace function start_cpu0
+> [  431.689225] trace_kprobe: Could not probe notrace function __pfx___startup_64
+> [  431.691223] trace_kprobe: Could not probe notrace function __startup_64
+> [  431.693088] trace_kprobe: Could not probe notrace function
+> __pfx_startup_64_setup_env
+> [  431.695021] trace_kprobe: Could not probe notrace function
+> startup_64_setup_env
+> [  431.697012] trace_kprobe: Could not probe notrace function
+> __pfx___traceiter_initcall_level
+> [  431.700780] trace_kprobe: Could not probe notrace function
+> __pfx___traceiter_initcall_start
+> ...
+> [  439.183587] trace_kprobe: Could not probe notrace function
+> __pfx_hv_check_msr_access
+> [  439.186192] trace_kprobe: Could not probe notrace function
+> __pfx_kvm_hv_flush_tlb
+> ...
+> 
+> # [106] (instance)  event filter function - test event filtering on
+> functions [FAIL]
+> 
+> ...
+> #
+> # # of passed:  109
+> # # of failed:  2
+> # # of unresolved:  3
+> # # of untested:  0
+> # # of unsupported:  3
+> # # of xfailed:  1
+> # # of undefined(test bug):  0
+> not ok 1 selftests: ftrace: ftracetest # exit=1
+> 
+> log link,
+> https://qa-reports.linaro.org/lkft/linux-next-master/build/next-20230314/testrun/15564370/suite/kselftest-ftrace/test/ftrace_ftracetest/log
+> 
+> --
+> Linaro LKFT
+> https://lkft.linaro.org
 
 
 -- 
