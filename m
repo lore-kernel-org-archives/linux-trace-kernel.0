@@ -2,128 +2,260 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BAA1C6FD1D
-	for <linux-trace-kernel@archiver.kernel.org>; Wed, 15 Mar 2023 19:44:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FA58C6FD1D
+	for <linux-trace-kernel@archiver.kernel.org>; Wed, 15 Mar 2023 23:37:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232424AbjCOToh (ORCPT
+        id S233139AbjCOXhK (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Wed, 15 Mar 2023 15:44:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47498 "EHLO
+        Wed, 15 Mar 2023 19:37:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45212 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231928AbjCOTof (ORCPT
+        with ESMTP id S233216AbjCOXgn (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Wed, 15 Mar 2023 15:44:35 -0400
-Received: from mail-qt1-x82c.google.com (mail-qt1-x82c.google.com [IPv6:2607:f8b0:4864:20::82c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B10C3F773
-        for <linux-trace-kernel@vger.kernel.org>; Wed, 15 Mar 2023 12:44:31 -0700 (PDT)
-Received: by mail-qt1-x82c.google.com with SMTP id r5so17505125qtp.4
-        for <linux-trace-kernel@vger.kernel.org>; Wed, 15 Mar 2023 12:44:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=joelfernandes.org; s=google; t=1678909470;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=v18L/HyzbX8RIGPkv74gEAaNuKF2umfPmevTB4XROmQ=;
-        b=LAK5vaKQ7yNuOXwJ/bmj+BxFvK6WV9egm/yBtxMZRQ86LkU+ecP3uQvSIt9nrBkN+u
-         Zx3IzVf7Qvxjmyq2vNKFl9qY9SmA2yHS3dUcZJYtGNJdYLUNEp14r4a9nDEFBOf2I51P
-         K36kb3x302AK7FfweoSCaIdBujCIksdSNSirg=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1678909470;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=v18L/HyzbX8RIGPkv74gEAaNuKF2umfPmevTB4XROmQ=;
-        b=A/fAhMmGG6f2XiEZE0s3kKFP/nfyHbOea0Os/yWlSRGgsYq6RFk2l/gs/nnJDEPLRA
-         nR+NRYzaaHbv66PkwRqyh1Cazhv/oqzPzNTLPEL4qsrHNvz6yToFWDd4fx92350l8CM6
-         lq0iCCR7/XDKT8p6nRx2WH+JgGm6m+/uJYWnRQqaxXCT4ocw9MdiM/5Oemr132iFQBK0
-         UvQ3xihgrlH1Q+awSW5jyU1KWJ9VWpBx6IxqI8cT/pIK0dFaUfJbNe4juEA46QAr/eF/
-         rKp03O5xTHD8NLNHf0R0TafdpwAEQtjkcVKrMjWJIND7B8tlSFhqZCsOSwIUpoTrxFQ7
-         jAOg==
-X-Gm-Message-State: AO0yUKXojNOkgag6wpTKQR2+3IlOpYwks3/vT5GLG3a7p11Xnz3BfgQ6
-        EGNUpu4/wqkgNw5eOORfIlz64g==
-X-Google-Smtp-Source: AK7set+1xJxMyUYjCwPpkgFMm3z1hwMdYE1QZynRvOo/9xx1oGT3RffTi7vAUfXL1hJQUwX5WJAIMg==
-X-Received: by 2002:a05:622a:174c:b0:3bf:d1b3:2bbb with SMTP id l12-20020a05622a174c00b003bfd1b32bbbmr2125188qtk.13.1678909470197;
-        Wed, 15 Mar 2023 12:44:30 -0700 (PDT)
-Received: from joelboxx.c.googlers.com.com (129.239.188.35.bc.googleusercontent.com. [35.188.239.129])
-        by smtp.gmail.com with ESMTPSA id c15-20020ac8660f000000b003b86b088755sm4346666qtp.15.2023.03.15.12.44.29
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 15 Mar 2023 12:44:29 -0700 (PDT)
-From:   "Joel Fernandes (Google)" <joel@joelfernandes.org>
-To:     linux-kernel@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Frederic Weisbecker <fweisbec@gmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@kernel.org>,
-        "Paul E. McKenney" <paulmck@kernel.org>
-Cc:     Zqiang <qiang1.zhang@intel.com>,
-        Anna-Maria Behnsen <anna-maria@linutronix.de>,
-        Frederic Weisbecker <frederic@kernel.org>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        linux-trace-kernel@vger.kernel.org
-Subject: [PATCH 2/9] rcu: Fix missing TICK_DEP_MASK_RCU_EXP dependency check
-Date:   Wed, 15 Mar 2023 19:43:42 +0000
-Message-Id: <20230315194349.10798-2-joel@joelfernandes.org>
-X-Mailer: git-send-email 2.40.0.rc1.284.g88254d51c5-goog
-In-Reply-To: <20230315194349.10798-1-joel@joelfernandes.org>
-References: <20230315194349.10798-1-joel@joelfernandes.org>
+        Wed, 15 Mar 2023 19:36:43 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A1F1B6F61F;
+        Wed, 15 Mar 2023 16:35:08 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 1166E61E91;
+        Wed, 15 Mar 2023 23:33:59 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B8B08C433D2;
+        Wed, 15 Mar 2023 23:33:56 +0000 (UTC)
+Date:   Wed, 15 Mar 2023 19:33:55 -0400
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     Florent Revest <revest@chromium.org>
+Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-trace-kernel@vger.kernel.org, bpf@vger.kernel.org,
+        catalin.marinas@arm.com, will@kernel.org, mhiramat@kernel.org,
+        mark.rutland@arm.com, ast@kernel.org, daniel@iogearbox.net,
+        andrii@kernel.org, kpsingh@kernel.org, jolsa@kernel.org,
+        xukuohai@huaweicloud.com, lihuafei1@huawei.com
+Subject: Re: [PATCH v2 01/10] ftrace: Replace uses of _ftrace_direct APIs
+ with _ftrace_direct_multi
+Message-ID: <20230315193355.30c48764@gandalf.local.home>
+In-Reply-To: <20230207182135.2671106-2-revest@chromium.org>
+References: <20230207182135.2671106-1-revest@chromium.org>
+        <20230207182135.2671106-2-revest@chromium.org>
+X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-From: Zqiang <qiang1.zhang@intel.com>
+On Tue,  7 Feb 2023 19:21:26 +0100
+Florent Revest <revest@chromium.org> wrote:
 
-This commit adds checks for the TICK_DEP_MASK_RCU_EXP bit, thus enabling
-RCU expedited grace periods to actually force-enable scheduling-clock
-interrupts on holdout CPUs.
+> The _multi API requires that users keep their own ops but can enforce
+> that an op is only associated to one direct call.
+> 
+> Signed-off-by: Florent Revest <revest@chromium.org>
+> Acked-by: Mark Rutland <mark.rutland@arm.com>
+> Tested-by: Mark Rutland <mark.rutland@arm.com>
+> ---
+>  kernel/trace/trace_selftest.c         | 11 +++++++----
+>  samples/ftrace/ftrace-direct-modify.c | 12 ++++++++----
+>  samples/ftrace/ftrace-direct-too.c    | 12 +++++++-----
+>  samples/ftrace/ftrace-direct.c        | 12 +++++++-----
+>  4 files changed, 29 insertions(+), 18 deletions(-)
+> 
+> diff --git a/kernel/trace/trace_selftest.c b/kernel/trace/trace_selftest.c
+> index ff0536cea968..57221f69a33b 100644
+> --- a/kernel/trace/trace_selftest.c
+> +++ b/kernel/trace/trace_selftest.c
+> @@ -806,6 +806,9 @@ trace_selftest_startup_function_graph(struct tracer *trace,
+>  	int ret;
+>  	unsigned long count;
+>  	char *func_name __maybe_unused;
+> +#ifdef CONFIG_DYNAMIC_FTRACE_WITH_DIRECT_CALLS
+> +	struct ftrace_ops direct = {};
 
-Fixes: df1e849ae455 ("rcu: Enable tick for nohz_full CPUs slow to provide expedited QS")
-Signed-off-by: Zqiang <qiang1.zhang@intel.com>
-Cc: Steven Rostedt <rostedt@goodmis.org>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>
-Cc: Frederic Weisbecker <fweisbec@gmail.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Ingo Molnar <mingo@kernel.org>
-Cc: Anna-Maria Behnsen <anna-maria@linutronix.de>
-Acked-by: Frederic Weisbecker <frederic@kernel.org>
-Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
-Signed-off-by: Joel Fernandes (Google) <joel@joelfernandes.org>
----
- include/trace/events/timer.h | 3 ++-
- kernel/time/tick-sched.c     | 5 +++++
- 2 files changed, 7 insertions(+), 1 deletion(-)
+Make this static to the file and move it above to where there's already an
+#ifdef CONFIG_DYNAMIC_FTRACE_WITH_DIRECT_CALLS block.
 
-diff --git a/include/trace/events/timer.h b/include/trace/events/timer.h
-index 2e713a7d9aa3..3e8619c72f77 100644
---- a/include/trace/events/timer.h
-+++ b/include/trace/events/timer.h
-@@ -371,7 +371,8 @@ TRACE_EVENT(itimer_expire,
- 		tick_dep_name(PERF_EVENTS)		\
- 		tick_dep_name(SCHED)			\
- 		tick_dep_name(CLOCK_UNSTABLE)		\
--		tick_dep_name_end(RCU)
-+		tick_dep_name(RCU)			\
-+		tick_dep_name_end(RCU_EXP)
- 
- #undef tick_dep_name
- #undef tick_dep_mask_name
-diff --git a/kernel/time/tick-sched.c b/kernel/time/tick-sched.c
-index b0e3c9205946..ba2ac1469d47 100644
---- a/kernel/time/tick-sched.c
-+++ b/kernel/time/tick-sched.c
-@@ -281,6 +281,11 @@ static bool check_tick_dependency(atomic_t *dep)
- 		return true;
- 	}
- 
-+	if (val & TICK_DEP_MASK_RCU_EXP) {
-+		trace_tick_stop(0, TICK_DEP_MASK_RCU_EXP);
-+		return true;
-+	}
-+
- 	return false;
- }
- 
--- 
-2.40.0.rc1.284.g88254d51c5-goog
+Less #ifdef is better, and also, I don't like having as an example an
+ftrace_ops structure allocated on the stack. It can become increasingly
+larger as time goes by. I don't want to encourage placing it on stacks.
+
+> +#endif
+>  
+>  #ifdef CONFIG_DYNAMIC_FTRACE
+>  	if (ftrace_filter_param) {
+> @@ -870,8 +873,8 @@ trace_selftest_startup_function_graph(struct tracer *trace,
+>  	 * Register direct function together with graph tracer
+>  	 * and make sure we get graph trace.
+>  	 */
+> -	ret = register_ftrace_direct((unsigned long) DYN_FTRACE_TEST_NAME,
+> -				     (unsigned long) trace_direct_tramp);
+> +	ftrace_set_filter_ip(&direct, (unsigned long)DYN_FTRACE_TEST_NAME, 0, 0);
+> +	ret = register_ftrace_direct_multi(&direct, (unsigned long)trace_direct_tramp);
+>  	if (ret)
+>  		goto out;
+
+I had to rebase this code on top of the latest tree because of updates.
+Which is good, because this patch requires those same. When using
+ftrace_set_filter_ip() one needs to call
+
+   ftrace_free_filter(&direct);
+
+Because the ftrace_set_filter_ip() allocates hashs on the ftrace_ops and
+those need to be freed.
+
+
+>  
+> @@ -891,8 +894,8 @@ trace_selftest_startup_function_graph(struct tracer *trace,
+>  
+>  	unregister_ftrace_graph(&fgraph_ops);
+>  
+> -	ret = unregister_ftrace_direct((unsigned long) DYN_FTRACE_TEST_NAME,
+> -				       (unsigned long) trace_direct_tramp);
+> +	ret = unregister_ftrace_direct_multi(&direct,
+> +					     (unsigned long) trace_direct_tramp);
+>  	if (ret)
+>  		goto out;
+>  
+> diff --git a/samples/ftrace/ftrace-direct-modify.c b/samples/ftrace/ftrace-direct-modify.c
+> index de5a0f67f320..ecd76f75cb80 100644
+> --- a/samples/ftrace/ftrace-direct-modify.c
+> +++ b/samples/ftrace/ftrace-direct-modify.c
+> @@ -96,6 +96,8 @@ asm (
+>  
+>  #endif /* CONFIG_S390 */
+>  
+> +static struct ftrace_ops direct;
+> +
+>  static unsigned long my_tramp = (unsigned long)my_tramp1;
+>  static unsigned long tramps[2] = {
+>  	(unsigned long)my_tramp1,
+> @@ -114,7 +116,7 @@ static int simple_thread(void *arg)
+>  		if (ret)
+>  			continue;
+>  		t ^= 1;
+> -		ret = modify_ftrace_direct(my_ip, my_tramp, tramps[t]);
+> +		ret = modify_ftrace_direct_multi(&direct, tramps[t]);
+>  		if (!ret)
+>  			my_tramp = tramps[t];
+>  		WARN_ON_ONCE(ret);
+> @@ -129,7 +131,9 @@ static int __init ftrace_direct_init(void)
+>  {
+>  	int ret;
+>  
+> -	ret = register_ftrace_direct(my_ip, my_tramp);
+> +	ftrace_set_filter_ip(&direct, (unsigned long) my_ip, 0, 0);
+> +	ret = register_ftrace_direct_multi(&direct, my_tramp);
+> +
+>  	if (!ret)
+>  		simple_tsk = kthread_run(simple_thread, NULL, "event-sample-fn");
+>  	return ret;
+> @@ -138,12 +142,12 @@ static int __init ftrace_direct_init(void)
+>  static void __exit ftrace_direct_exit(void)
+>  {
+>  	kthread_stop(simple_tsk);
+> -	unregister_ftrace_direct(my_ip, my_tramp);
+> +	unregister_ftrace_direct_multi(&direct, my_tramp);
+
+Same here.
+
+>  }
+>  
+>  module_init(ftrace_direct_init);
+>  module_exit(ftrace_direct_exit);
+>  
+>  MODULE_AUTHOR("Steven Rostedt");
+> -MODULE_DESCRIPTION("Example use case of using modify_ftrace_direct()");
+> +MODULE_DESCRIPTION("Example use case of using modify_ftrace_direct_multi()");
+>  MODULE_LICENSE("GPL");
+> diff --git a/samples/ftrace/ftrace-direct-too.c b/samples/ftrace/ftrace-direct-too.c
+> index e13fb59a2b47..0e907092e2c0 100644
+> --- a/samples/ftrace/ftrace-direct-too.c
+> +++ b/samples/ftrace/ftrace-direct-too.c
+> @@ -70,21 +70,23 @@ asm (
+>  
+>  #endif /* CONFIG_S390 */
+>  
+> +static struct ftrace_ops direct;
+> +
+>  static int __init ftrace_direct_init(void)
+>  {
+> -	return register_ftrace_direct((unsigned long)handle_mm_fault,
+> -				     (unsigned long)my_tramp);
+> +	ftrace_set_filter_ip(&direct, (unsigned long) handle_mm_fault, 0, 0);
+> +
+> +	return register_ftrace_direct_multi(&direct, (unsigned long) my_tramp);
+>  }
+>  
+>  static void __exit ftrace_direct_exit(void)
+>  {
+> -	unregister_ftrace_direct((unsigned long)handle_mm_fault,
+> -				 (unsigned long)my_tramp);
+> +	unregister_ftrace_direct_multi(&direct, (unsigned long)my_tramp);
+
+And here.
+
+>  }
+>  
+>  module_init(ftrace_direct_init);
+>  module_exit(ftrace_direct_exit);
+>  
+>  MODULE_AUTHOR("Steven Rostedt");
+> -MODULE_DESCRIPTION("Another example use case of using register_ftrace_direct()");
+> +MODULE_DESCRIPTION("Another example use case of using register_ftrace_direct_multi()");
+>  MODULE_LICENSE("GPL");
+> diff --git a/samples/ftrace/ftrace-direct.c b/samples/ftrace/ftrace-direct.c
+> index 1f769d0db20f..e446c38f6b58 100644
+> --- a/samples/ftrace/ftrace-direct.c
+> +++ b/samples/ftrace/ftrace-direct.c
+> @@ -63,21 +63,23 @@ asm (
+>  
+>  #endif /* CONFIG_S390 */
+>  
+> +static struct ftrace_ops direct;
+> +
+>  static int __init ftrace_direct_init(void)
+>  {
+> -	return register_ftrace_direct((unsigned long)wake_up_process,
+> -				     (unsigned long)my_tramp);
+> +	ftrace_set_filter_ip(&direct, (unsigned long) wake_up_process, 0, 0);
+> +
+> +	return register_ftrace_direct_multi(&direct, (unsigned long) my_tramp);
+>  }
+>  
+>  static void __exit ftrace_direct_exit(void)
+>  {
+> -	unregister_ftrace_direct((unsigned long)wake_up_process,
+> -				 (unsigned long)my_tramp);
+> +	unregister_ftrace_direct_multi(&direct, (unsigned long)my_tramp);
+
+And here.
+
+Maybe we could add a parameter to unregister_ftrace_direct_multi():
+
+  bool free_filters
+
+when set, it will call the ftrace_free_filter(), as it looks like there's a
+common code path here:
+
+	ftrace_set_filter_ip();
+	register_ftrace_direct_multi();
+	[..]
+	unregister_ftrace_direct_multi();
+	ftrace_free_filter();
+
+Add the option will save people from having to do that last step, and also
+remind people that the filters need to be freed.
+
+-- Steve
+
+>  }
+>  
+>  module_init(ftrace_direct_init);
+>  module_exit(ftrace_direct_exit);
+>  
+>  MODULE_AUTHOR("Steven Rostedt");
+> -MODULE_DESCRIPTION("Example use case of using register_ftrace_direct()");
+> +MODULE_DESCRIPTION("Example use case of using register_ftrace_direct_multi()");
+>  MODULE_LICENSE("GPL");
 
