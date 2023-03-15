@@ -2,149 +2,92 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E7D4C61DA4
-	for <linux-trace-kernel@archiver.kernel.org>; Wed, 15 Mar 2023 08:33:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B6CDEC6FD1D
+	for <linux-trace-kernel@archiver.kernel.org>; Wed, 15 Mar 2023 08:48:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230094AbjCOIdE (ORCPT
+        id S230200AbjCOIsv (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Wed, 15 Mar 2023 04:33:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58894 "EHLO
+        Wed, 15 Mar 2023 04:48:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52820 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229971AbjCOIdD (ORCPT
+        with ESMTP id S229487AbjCOIsu (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Wed, 15 Mar 2023 04:33:03 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BCC7E83E9;
-        Wed, 15 Mar 2023 01:33:01 -0700 (PDT)
+        Wed, 15 Mar 2023 04:48:50 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9907B5FD9;
+        Wed, 15 Mar 2023 01:48:49 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 57B8761B77;
-        Wed, 15 Mar 2023 08:33:01 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1E1A6C433D2;
-        Wed, 15 Mar 2023 08:32:59 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 36B9161AC1;
+        Wed, 15 Mar 2023 08:48:49 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 63D49C433EF;
+        Wed, 15 Mar 2023 08:48:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1678869180;
-        bh=O6E2IOFT7Qo6yMnQvB/m7JajulqmQNBlEUHnHZxFKPY=;
+        s=k20201202; t=1678870128;
+        bh=J2k08xWudvUCv6nsO7U+IrEa2txCfR0J8IVe5Z7YUlY=;
         h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=pYRWPmTG2IWkcRZSgKf4n/QcI/FH5910wX+3Z0vmTqe0YSQP46H8P3BZNw6HEQRj8
-         qUq4vtUeba2wxdWZLNB9uQ7OK1E09IqnQ+PbNKmoWGgllT9jNRcYabguZbcfFTz863
-         1SldAVuMHjDKdqNDc9lTa7S+VK8juIz5cHW21LArrarzAvxszwFrewXqn7kQ499NIZ
-         kHzgFwvi9OAZZk4s2R7QxjlJv+Cm1JcCT4/0xhWGv54WqEF9AC+OMUTA4d1qasNHxq
-         mQZvsKousLR1sDrkRSGSELtscd9Pu+QCef0dWv3RX3cdopjUlIJwuHPaaxX2wh/IGy
-         q6PTTR5onCzFw==
-Date:   Wed, 15 Mar 2023 17:32:57 +0900
+        b=VU8ZJa8E0er6C6d+JYQXuCR4sr/CHUTWqeyuXoPW2bG/hl7UPHeDjb/Jj3VjI7AXg
+         GUCoOnLQ9nGBi66+jUFkDxwCDyXkNEr3Kv5kFlDK7Loqx11VMFiHJGb/sJXxoQB7gZ
+         r4P9kyOFilh80LN7le7EMqH4UJYb8YgDtidke75P1oUp780SBPN7ui6mDk/dVNE/qa
+         gJtEDJnDZDzCCtkFz0TjxqEQ10B/sPZuXto80CJuFuAIxA4sSVMaJCZvN09/Q70Ima
+         rztg0GqPF/gfoupCt82gRKk2R3+7mrHxNOlWLyCVsxuHFqaVcYavATbX3mMIuYKqSG
+         MpEMIRi8JdrPw==
+Date:   Wed, 15 Mar 2023 17:48:45 +0900
 From:   Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To:     Naresh Kamboju <naresh.kamboju@linaro.org>
-Cc:     open list <linux-kernel@vger.kernel.org>,
-        linux-trace-kernel@vger.kernel.org,
-        Linux-Next Mailing List <linux-next@vger.kernel.org>,
-        lkft-triage@lists.linaro.org,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Anders Roxell <anders.roxell@linaro.org>
-Subject: Re: selftests: ftrace: event filter function - test event filtering
- on functions [FAIL]
-Message-Id: <20230315173257.1311e50729c73e0cb6e0aa0d@kernel.org>
-In-Reply-To: <CA+G9fYtF-XEKi9YNGgR=Kf==7iRb2FrmEC7qtwAeQbfyah-UhA@mail.gmail.com>
-References: <CA+G9fYtF-XEKi9YNGgR=Kf==7iRb2FrmEC7qtwAeQbfyah-UhA@mail.gmail.com>
+To:     Tom Rix <trix@redhat.com>
+Cc:     rostedt@goodmis.org, mark.rutland@arm.com,
+        linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
+Subject: Re: [PATCH] ftrace: set direct_ops storage-class-specifier to
+ static
+Message-Id: <20230315174845.c4bcf7a75ff5f644bef7b07a@kernel.org>
+In-Reply-To: <20230311135113.711824-1-trix@redhat.com>
+References: <20230311135113.711824-1-trix@redhat.com>
 X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-Hi Naresh,
+On Sat, 11 Mar 2023 08:51:13 -0500
+Tom Rix <trix@redhat.com> wrote:
 
-On Tue, 14 Mar 2023 15:52:44 +0530
-Naresh Kamboju <naresh.kamboju@linaro.org> wrote:
+> smatch reports this warning
+> kernel/trace/ftrace.c:2594:19: warning:
+>   symbol 'direct_ops' was not declared. Should it be static?
+> 
+> The variable direct_ops is only used in ftrace.c, so it should be static
+> 
+> Signed-off-by: Tom Rix <trix@redhat.com>
 
-> Results from Linaro’s test farm.
-> 
-> selftests ftrace failed on qemu-x86_64 and qemu-arm64.
-> Please find the test log below.
+This looks good to me.
 
-Thanks for reporting!
-Can you share the kernel config which you used for this build?
-And the kernel is "next-20230314", is that correct?
+Acked-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 
-> 
-> Is this expected to fail ? Am I missing anything ?
+Thank you!
 
-No, it should be a bug. I would like to reproduce it.
-
-Thank you,
-
+> ---
+>  kernel/trace/ftrace.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
-> Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
+> diff --git a/kernel/trace/ftrace.c b/kernel/trace/ftrace.c
+> index 29baa97d0d53..05f76dc1f0c5 100644
+> --- a/kernel/trace/ftrace.c
+> +++ b/kernel/trace/ftrace.c
+> @@ -2591,7 +2591,7 @@ static void call_direct_funcs(unsigned long ip, unsigned long pip,
+>  	arch_ftrace_set_direct_caller(fregs, addr);
+>  }
+>  
+> -struct ftrace_ops direct_ops = {
+> +static struct ftrace_ops direct_ops = {
+>  	.func		= call_direct_funcs,
+>  	.flags		= FTRACE_OPS_FL_DIRECT | FTRACE_OPS_FL_SAVE_REGS
+>  			  | FTRACE_OPS_FL_PERMANENT,
+> -- 
+> 2.27.0
 > 
-> kselftest: Running tests in ftrace
-> TAP version 13
-> 1..1
-> # selftests: ftrace: ftracetest
-> # === Ftrace unit tests ===
-> # [1] Basic trace file check [PASS]
-> 
-> ...
-> 
-> # [23] event filter function - test event filtering on functions [FAIL]
-> 
-> ...
-> # [58] Kretprobe %return suffix test [PASS]
-> # [59] Register/unregister many kprobe events
-> [  431.662904] trace_kprobe: Could not probe notrace function startup_64
-> [  431.669846] trace_kprobe: Could not probe notrace function _stext
-> [  431.674104] trace_kprobe: Could not probe notrace function _text
-> [  431.675908] trace_kprobe: Could not probe notrace function
-> secondary_startup_64
-> [  431.677876] trace_kprobe: Could not probe notrace function
-> secondary_startup_64_no_verify
-> [  431.679899] trace_kprobe: Could not probe notrace function __pfx_verify_cpu
-> [  431.681738] trace_kprobe: Could not probe notrace function verify_cpu
-> [  431.683667] trace_kprobe: Could not probe notrace function
-> __pfx_sev_verify_cbit
-> [  431.685594] trace_kprobe: Could not probe notrace function sev_verify_cbit
-> [  431.687381] trace_kprobe: Could not probe notrace function start_cpu0
-> [  431.689225] trace_kprobe: Could not probe notrace function __pfx___startup_64
-> [  431.691223] trace_kprobe: Could not probe notrace function __startup_64
-> [  431.693088] trace_kprobe: Could not probe notrace function
-> __pfx_startup_64_setup_env
-> [  431.695021] trace_kprobe: Could not probe notrace function
-> startup_64_setup_env
-> [  431.697012] trace_kprobe: Could not probe notrace function
-> __pfx___traceiter_initcall_level
-> [  431.700780] trace_kprobe: Could not probe notrace function
-> __pfx___traceiter_initcall_start
-> ...
-> [  439.183587] trace_kprobe: Could not probe notrace function
-> __pfx_hv_check_msr_access
-> [  439.186192] trace_kprobe: Could not probe notrace function
-> __pfx_kvm_hv_flush_tlb
-> ...
-> 
-> # [106] (instance)  event filter function - test event filtering on
-> functions [FAIL]
-> 
-> ...
-> #
-> # # of passed:  109
-> # # of failed:  2
-> # # of unresolved:  3
-> # # of untested:  0
-> # # of unsupported:  3
-> # # of xfailed:  1
-> # # of undefined(test bug):  0
-> not ok 1 selftests: ftrace: ftracetest # exit=1
-> 
-> log link,
-> https://qa-reports.linaro.org/lkft/linux-next-master/build/next-20230314/testrun/15564370/suite/kselftest-ftrace/test/ftrace_ftracetest/log
-> 
-> --
-> Linaro LKFT
-> https://lkft.linaro.org
 
 
 -- 
