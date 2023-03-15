@@ -2,131 +2,115 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DD7EC61DA4
-	for <linux-trace-kernel@archiver.kernel.org>; Wed, 15 Mar 2023 16:07:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A369AC74A5B
+	for <linux-trace-kernel@archiver.kernel.org>; Wed, 15 Mar 2023 18:19:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231942AbjCOQHi (ORCPT
+        id S231774AbjCOSTb (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Wed, 15 Mar 2023 12:07:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45628 "EHLO
+        Wed, 15 Mar 2023 14:19:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52984 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231955AbjCOQHg (ORCPT
+        with ESMTP id S232399AbjCOSTa (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Wed, 15 Mar 2023 12:07:36 -0400
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F2F6D968C0;
-        Wed, 15 Mar 2023 09:07:10 -0700 (PDT)
-Received: from pps.filterd (m0279869.ppops.net [127.0.0.1])
-        by mx0a-0031df01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 32FAMX5E030774;
-        Wed, 15 Mar 2023 15:53:59 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=message-id : date :
- mime-version : subject : from : to : cc : references : in-reply-to :
- content-type : content-transfer-encoding; s=qcppdkim1;
- bh=xb5P8YPq/H03NLXOC5oLXz7TjpMuUTiQFudiRNbQavI=;
- b=eQM1yFz78AdasNBt9QQFKjzjKXR7SUqCfx8dbSQA6vVTCvIxm+lr2OE99VYbHmwU86Dv
- JeROSJPxkWY4q9V1FSFj9zlc7ZtuGrQeLfm6+2qTE3amLw6TuTYN2ChVFqHQuOKOxorp
- /kwJOMIwbZ7DE0ig00M7rd3BVDNTTzJFpgqaOT3YRL02dormknWgVD2wn8Lp/wN579j8
- BMD/l+PCGjPBBVfoYwVS9vjZAH+HcR1ds3O19pdev/6u3w3ESFqAMCo2tN9v17//cxKF
- pnzit3PRfR3K/tmWmpItEceatKjQtRobdU+6oBsBH2h1dLL+ANFG4LkgpuLo2KSYsRYr dQ== 
-Received: from nasanppmta05.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-        by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3pb2ck2558-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 15 Mar 2023 15:53:59 +0000
-Received: from nasanex01c.na.qualcomm.com (nasanex01c.na.qualcomm.com [10.45.79.139])
-        by NASANPPMTA05.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 32FFrwha029836
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 15 Mar 2023 15:53:58 GMT
-Received: from [10.216.36.238] (10.80.80.8) by nasanex01c.na.qualcomm.com
- (10.45.79.139) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.986.41; Wed, 15 Mar
- 2023 08:53:55 -0700
-Message-ID: <1cb12058-f59e-1433-6ba6-f500be250996@quicinc.com>
-Date:   Wed, 15 Mar 2023 21:23:51 +0530
+        Wed, 15 Mar 2023 14:19:30 -0400
+Received: from mail-qv1-xf2b.google.com (mail-qv1-xf2b.google.com [IPv6:2607:f8b0:4864:20::f2b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 880CD5BCBB
+        for <linux-trace-kernel@vger.kernel.org>; Wed, 15 Mar 2023 11:19:28 -0700 (PDT)
+Received: by mail-qv1-xf2b.google.com with SMTP id op8so17205855qvb.11
+        for <linux-trace-kernel@vger.kernel.org>; Wed, 15 Mar 2023 11:19:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=joelfernandes.org; s=google; t=1678904367;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=8z1V24My5EukKvP2tBVF8l+SikUfpmtGJWjB50uVIOg=;
+        b=gJL6xjY5J2VB+tgs7f4PKBmC6aJ6vF1TWCTHcKQSQeXddqkVkKHy4ky/vJZtWMfi1o
+         uOBvR7syUfnwN1QoGa1eAGsFwODy02Qau5v8CRaDi+6RCsH9b1haKNaZ+fbdnRhLv0Rx
+         VZK+iIEW4txFkIEOJqJ11RttHfWWpcIa5GTPw=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112; t=1678904367;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=8z1V24My5EukKvP2tBVF8l+SikUfpmtGJWjB50uVIOg=;
+        b=vGG1DA6K+tHGw8Pgxtx1MQ7A3H0y0O8WDYZXgNebdIuyu7mOZAc/ahHDMChe7DJwD5
+         b/KoB8/3L+tSIfX7sgXzhfR5UW2v7P2Hgec9nzqi3ouUc5+ssEPhnpKvvI1sfdf/Cbiu
+         gxkrab7sU6DAzPG44pumegYmK90F5Ei5K2mMxLTYRO47xBntx868BUMJQI9YMg0H/5yI
+         fcZiYYaYeTYin8RSB+rHy7s3T5T7CvuARGgRhccMvILja8uWOma3FfjERC9G3e0S6Kbg
+         a0vbFchVwVaGMDOYDTIV7G1MbJpv2XPOPgo8dbSt97Co4z8316cpeQZWXEDOoIVOXwW7
+         4QVg==
+X-Gm-Message-State: AO0yUKURkoNCGOaB0r6HvD7nfb6XMtgqy8hAAE18lN2/C0gvd47dIfHt
+        BX14g4nG3S6Gp/aXN1qG0t2UyZ5jdlaN4lgb0ts=
+X-Google-Smtp-Source: AK7set8coNV2PCiddxtok30tFqWS0F5BBEEcIkmqhxeatRAX+cmZTCY9Dq8Q7VYbYbwbGSn1bAem5A==
+X-Received: by 2002:a05:6214:1cc8:b0:5ac:58cc:69d1 with SMTP id g8-20020a0562141cc800b005ac58cc69d1mr12603637qvd.31.1678904367609;
+        Wed, 15 Mar 2023 11:19:27 -0700 (PDT)
+Received: from joelboxx.c.googlers.com.com (129.239.188.35.bc.googleusercontent.com. [35.188.239.129])
+        by smtp.gmail.com with ESMTPSA id v125-20020a379383000000b007458ae32290sm4113974qkd.128.2023.03.15.11.19.27
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 15 Mar 2023 11:19:27 -0700 (PDT)
+From:   "Joel Fernandes (Google)" <joel@joelfernandes.org>
+To:     Steven Rostedt <rostedt@goodmis.org>,
+        Daniel Bristot de Oliveira <bristot@kernel.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>
+Cc:     "Uladzislau Rezki (Sony)" <urezki@gmail.com>,
+        "Paul E . McKenney" <paulmck@kernel.org>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
+Subject: [PATCH v2 03/14] tracing: Rename kvfree_rcu() to kvfree_rcu_mightsleep()
+Date:   Wed, 15 Mar 2023 18:18:50 +0000
+Message-Id: <20230315181902.4177819-3-joel@joelfernandes.org>
+X-Mailer: git-send-email 2.40.0.rc1.284.g88254d51c5-goog
+In-Reply-To: <20230315181902.4177819-1-joel@joelfernandes.org>
+References: <20230315181902.4177819-1-joel@joelfernandes.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.8.0
-Subject: Re: [PATCH] ring-buffer: remove obsolete comment for
- free_buffer_page()
-Content-Language: en-US
-From:   Mukesh Ojha <quic_mojha@quicinc.com>
-To:     Vlastimil Babka <vbabka@suse.cz>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Ingo Molnar <mingo@elte.hu>
-CC:     <linux-trace-kernel@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <patches@lists.linux.dev>,
-        Mike Rapoport <mike.rapoport@gmail.com>
-References: <20230315142446.27040-1-vbabka@suse.cz>
- <72de48c7-014d-80ac-51e9-ba22450f1d5b@quicinc.com>
-In-Reply-To: <72de48c7-014d-80ac-51e9-ba22450f1d5b@quicinc.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
 Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.80.80.8]
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nasanex01c.na.qualcomm.com (10.45.79.139)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: tWTUwyx-G1ue8ABDjRD_AFNaeBsZipo_
-X-Proofpoint-GUID: tWTUwyx-G1ue8ABDjRD_AFNaeBsZipo_
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.254,Aquarius:18.0.942,Hydra:6.0.573,FMLib:17.11.170.22
- definitions=2023-03-15_08,2023-03-15_01,2023-02-09_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0 bulkscore=0
- mlxlogscore=999 clxscore=1015 mlxscore=0 priorityscore=1501 malwarescore=0
- spamscore=0 suspectscore=0 adultscore=0 phishscore=0 lowpriorityscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2302240000
- definitions=main-2303150133
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
+From: "Uladzislau Rezki (Sony)" <urezki@gmail.com>
 
+The kvfree_rcu() macro's single-argument form is deprecated.  Therefore
+switch to the new kvfree_rcu_mightsleep() variant. The goal is to
+avoid accidental use of the single-argument forms, which can introduce
+functionality bugs in atomic contexts and latency bugs in non-atomic
+contexts.
 
-On 3/15/2023 9:21 PM, Mukesh Ojha wrote:
-> 
-> 
-> On 3/15/2023 7:54 PM, Vlastimil Babka wrote:
->> The comment refers to mm/slob.o which is being removed. It comes from
+Cc: Steven Rostedt (VMware) <rostedt@goodmis.org>
+Signed-off-by: Uladzislau Rezki (Sony) <urezki@gmail.com>
+Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
+Signed-off-by: Joel Fernandes (Google) <joel@joelfernandes.org>
+---
+ kernel/trace/trace_osnoise.c | 2 +-
+ kernel/trace/trace_probe.c   | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
-nit: mm/slob.c
+diff --git a/kernel/trace/trace_osnoise.c b/kernel/trace/trace_osnoise.c
+index 04f0fdae19a1..f68ca1e6460f 100644
+--- a/kernel/trace/trace_osnoise.c
++++ b/kernel/trace/trace_osnoise.c
+@@ -159,7 +159,7 @@ static void osnoise_unregister_instance(struct trace_array *tr)
+ 	if (!found)
+ 		return;
+ 
+-	kvfree_rcu(inst);
++	kvfree_rcu_mightsleep(inst);
+ }
+ 
+ /*
+diff --git a/kernel/trace/trace_probe.c b/kernel/trace/trace_probe.c
+index 20d0c4a97633..2d2616678295 100644
+--- a/kernel/trace/trace_probe.c
++++ b/kernel/trace/trace_probe.c
+@@ -1172,7 +1172,7 @@ int trace_probe_remove_file(struct trace_probe *tp,
+ 		return -ENOENT;
+ 
+ 	list_del_rcu(&link->list);
+-	kvfree_rcu(link);
++	kvfree_rcu_mightsleep(link);
+ 
+ 	if (list_empty(&tp->event->files))
+ 		trace_probe_clear_flag(tp, TP_FLAG_TRACE);
+-- 
+2.40.0.rc1.284.g88254d51c5-goog
 
--- Mukesh
-
-> 
-> 
->> commit ed56829cb319 ("ring_buffer: reset buffer page when freeing") and
->> according to Steven the borrowed code was a page mapcount and mapping
->> reset, which was later removed by commit e4c2ce82ca27 ("ring_buffer:
->> allocate buffer page pointer"). Thus the comment is not accurate anyway,
->> remove it.
->>
->> Reported-by: Mike Rapoport <mike.rapoport@gmail.com>
->> Suggested-by: Steven Rostedt (Google) <rostedt@goodmis.org>
->> Fixes: e4c2ce82ca27 ("ring_buffer: allocate buffer page pointer")
->> Signed-off-by: Vlastimil Babka <vbabka@suse.cz>
->> ---
->>   kernel/trace/ring_buffer.c | 4 ----
->>   1 file changed, 4 deletions(-)
->>
->> diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
->> index af50d931b020..c6f47b6cfd5f 100644
->> --- a/kernel/trace/ring_buffer.c
->> +++ b/kernel/trace/ring_buffer.c
->> @@ -354,10 +354,6 @@ static void rb_init_page(struct buffer_data_page 
->> *bpage)
->>       local_set(&bpage->commit, 0);
->>   }
->> -/*
->> - * Also stolen from mm/slob.c. Thanks to Mathieu Desnoyers for pointing
->> - * this issue out.
->> - */
-> 
-> Thanks for the clean up.
-> 
-> Reviewed-by: Mukesh Ojha <quic_mojha@quicinc.com>
-> 
-> -- Mukesh
-> 
->>   static void free_buffer_page(struct buffer_page *bpage)
->>   {
->>       free_page((unsigned long)bpage->page);
