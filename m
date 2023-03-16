@@ -2,109 +2,107 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F14D1C6FD1D
-	for <linux-trace-kernel@archiver.kernel.org>; Wed, 15 Mar 2023 23:51:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9EE56C6FD1D
+	for <linux-trace-kernel@archiver.kernel.org>; Thu, 16 Mar 2023 03:20:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232196AbjCOXvq (ORCPT
+        id S229631AbjCPDUK (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Wed, 15 Mar 2023 19:51:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55770 "EHLO
+        Wed, 15 Mar 2023 23:20:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58474 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231894AbjCOXvp (ORCPT
+        with ESMTP id S230018AbjCPDTH (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Wed, 15 Mar 2023 19:51:45 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C7F5824499;
-        Wed, 15 Mar 2023 16:51:43 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 7FE7CB81E8A;
-        Wed, 15 Mar 2023 23:51:42 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 632F8C433D2;
-        Wed, 15 Mar 2023 23:51:39 +0000 (UTC)
-Date:   Wed, 15 Mar 2023 19:51:36 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Florent Revest <revest@chromium.org>
-Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-trace-kernel@vger.kernel.org, bpf@vger.kernel.org,
-        catalin.marinas@arm.com, will@kernel.org, mhiramat@kernel.org,
-        mark.rutland@arm.com, ast@kernel.org, daniel@iogearbox.net,
-        andrii@kernel.org, kpsingh@kernel.org, jolsa@kernel.org,
-        xukuohai@huaweicloud.com, lihuafei1@huawei.com,
-        Xu Kuohai <xukuohai@huawei.com>
-Subject: Re: [PATCH v2 06/10] ftrace: selftest: remove broken
- trace_direct_tramp
-Message-ID: <20230315195136.2996b1dd@gandalf.local.home>
-In-Reply-To: <20230207182135.2671106-7-revest@chromium.org>
-References: <20230207182135.2671106-1-revest@chromium.org>
-        <20230207182135.2671106-7-revest@chromium.org>
-X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+        Wed, 15 Mar 2023 23:19:07 -0400
+Received: from mail-m118111.qiye.163.com (mail-m118111.qiye.163.com [115.236.118.111])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 30F948DCC1;
+        Wed, 15 Mar 2023 20:18:31 -0700 (PDT)
+Received: from [172.23.196.229] (unknown [121.32.254.146])
+        by mail-m118111.qiye.163.com (Hmail) with ESMTPA id B5BCD580405;
+        Thu, 16 Mar 2023 11:18:23 +0800 (CST)
+Message-ID: <664f9fa1-da31-2be9-76d9-3eb08e08b7f9@sangfor.com.cn>
+Date:   Thu, 16 Mar 2023 11:18:23 +0800
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.8.0
+From:   Donglin Peng <pengdonglin@sangfor.com.cn>
+Subject: Re: [PATCH v4 1/2] function_graph: Support recording and printing the
+ return value of function
+To:     Peter Zijlstra <peterz@infradead.org>,
+        Steven Rostedt <rostedt@goodmis.org>
+Cc:     mhiramat@kernel.org, linux@armlinux.org.uk, mark.rutland@arm.com,
+        will@kernel.org, catalin.marinas@arm.com, palmer@dabbelt.com,
+        paul.walmsley@sifive.com, tglx@linutronix.de,
+        dave.hansen@linux.intel.com, x86@kernel.org, mingo@redhat.com,
+        xiehuan09@gmail.com, dinghui@sangfor.com.cn,
+        huangcun@sangfor.com.cn, dolinux.peng@gmail.com,
+        linux-trace-kernel@vger.kernel.org,
+        linux-riscv@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+References: <20230315133911.958741-1-pengdonglin@sangfor.com.cn>
+ <20230315133911.958741-2-pengdonglin@sangfor.com.cn>
+ <20230315134911.GD2006103@hirez.programming.kicks-ass.net>
+ <20230315101348.1234c7f5@gandalf.local.home>
+ <20230315145757.GE2006103@hirez.programming.kicks-ass.net>
+Content-Language: en-US
+In-Reply-To: <20230315145757.GE2006103@hirez.programming.kicks-ass.net>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
+X-HM-Spam-Status: e1kfGhgUHx5ZQUpXWQgPGg8OCBgUHx5ZQUlOS1dZFg8aDwILHllBWSg2Ly
+        tZV1koWUFITzdXWS1ZQUlXWQ8JGhUIEh9ZQVlDHx4fVkxDTx8YSENMGRgfTFUTARMWGhIXJBQOD1
+        lXWRgSC1lBWUpJSlVISVVJTk9VSk9NWVdZFhoPEhUdFFlBWU9LSFVKSktPSEhVSktLVUtZBg++
+X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6Py46FBw6Cz0VDxkpUTAJMQgZ
+        SEowC1FVSlVKTUxDQkhNTEtOSkpJVTMWGhIXVQseFRwfFBUcFxIVOwgaFRwdFAlVGBQWVRgVRVlX
+        WRILWUFZSklKVUhJVUlOT1VKT01ZV1kIAVlBT09DSjcG
+X-HM-Tid: 0a86e86d066f2eb7kusnb5bcd580405
+X-HM-MType: 1
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On Tue,  7 Feb 2023 19:21:31 +0100
-Florent Revest <revest@chromium.org> wrote:
-
-> From: Mark Rutland <mark.rutland@arm.com>
+On 2023/3/15 22:57, Peter Zijlstra wrote:
+> On Wed, Mar 15, 2023 at 10:13:48AM -0400, Steven Rostedt wrote:
+>> On Wed, 15 Mar 2023 14:49:11 +0100
+>> Peter Zijlstra <peterz@infradead.org> wrote:
+>>
+>>>> diff --git a/arch/x86/kernel/ftrace_64.S b/arch/x86/kernel/ftrace_64.S
+>>>> index 1265ad519249..35ac9c58dc77 100644
+>>>> --- a/arch/x86/kernel/ftrace_64.S
+>>>> +++ b/arch/x86/kernel/ftrace_64.S
+>>>> @@ -348,6 +348,10 @@ SYM_CODE_START(return_to_handler)
+>>>>   	movq %rax, (%rsp)
+>>>>   	movq %rdx, 8(%rsp)
+>>>>   	movq %rbp, %rdi
+>>>> +#ifdef CONFIG_FUNCTION_GRAPH_RETVAL
+>>>> +	/* Pass the function return value to ftrace_return_to_handler */
+>>>> +	movq %rax, %rsi
+>>>> +#endif
+>>>>   
+>>>>   	call ftrace_return_to_handler
+>>>
+>>> What about the case of double register return values (when the value
+>>> is returned in the A,D pair) ?
+>>
+>> Is there anything that does that in 64 bit kernels?
 > 
-> The ftrace selftest code has a trace_direct_tramp() function which it
-> uses as a direct call trampoline. This happens to work on x86, since the
-> direct call's return address is in the usual place, and can be returned
-> to via a RET, but in general the calling convention for direct calls is
-> different from regular function calls, and requires a trampoline written
-> in assembly.
-> 
-> On s390, regular function calls place the return address in %r14, and an
-> ftrace patch-site in an instrumented function places the trampoline's
-> return address (which is within the instrumented function) in %r0,
-> preserving the original %r14 value in-place. As a regular C function
-> will return to the address in %r14, using a C function as the trampoline
-> results in the trampoline returning to the caller of the instrumented
-> function, skipping the body of the instrumented function.
-> 
-> Note that the s390 issue is not detcted by the ftrace selftest code, as
-> the instrumented function is trivial, and returning back into the caller
-> happens to be equivalent.
-> 
-> On arm64, regular function calls place the return address in x30, and
-> an ftrace patch-site in an instrumented function saves this into r9
-> and places the trampoline's return address (within the instrumented
-> function) in x30. A regular C function will return to the address in
-> x30, but will not restore x9 into x30. Consequently, using a C function
-> as the trampoline results in returning to the trampoline's return
-> address having corrupted x30, such that when the instrumented function
-> returns, it will return back into itself.
-> 
-> To avoid future issues in this area, remove the trace_direct_tramp()
-> function, and require that each architecture with direct calls provides
-> a stub trampoline, named ftrace_stub_direct_tramp. This can be written
-> to handle the architecture's trampoline calling convention, and in
-> future could be used elsewhere (e.g. in the ftrace ops sample, to
-> measure the overhead of direct calls), so we may as well always build it
-> in.
-> 
-> Signed-off-by: Mark Rutland <mark.rutland@arm.com>
-> Cc: Li Huafei <lihuafei1@huawei.com>
-> Cc: Xu Kuohai <xukuohai@huawei.com>
-> Cc: Steven Rostedt (Google) <rostedt@goodmis.org>
-> Cc: Florent Revest <revest@chromium.org>
-> Signed-off-by: Florent Revest <revest@chromium.org>
+> Note sure; but I have a patch series that introduces cmpxchg128 and
+> friends. Most of the actual functions are __always_inline, but still,
+> the moment a compiler decides to break out a subfunction on a u128
+> boundary we're in luck.
+I have reviewed the kretprobe implementation and noticed that $retval
+only retrieves the value of pt_regs.ax, which is an unsigned long data
+type. I wrote a demo and tested it on an x86 machine, and found that
+$retval only shows the least significant 32 bits of retval.Therefore,I
+think it can be consistent with kretprobe.
 
+static noinline unsigned long long test_retval_func(void)
+{
+	unsigned long long value = 0x1234567887654321;
+	return value;
+}
 
-Care to respin with my update requests? I can take up to this patch and
-base it directly on v6.3-rc3 when it comes out. I'm expecting that to have
-the fixes in other code that is breaking my tests.
+add a kretprobe event:
+echo 'r:myretprobe test_retval_func $retval:x64' > kprobe_events
 
-Then I'll push it out after it passes all my tests, and you can take it
-and add the arm64 specific bits on top. I'm currently running these patches
-as is on my tests to see if they fail (with a patched kernel for the other
-code that's breaking my tests).
-
-Does that sound OK?
-
--- Steve
+the trace log:
+myretprobe: (retval_open+0x1c/0x2c [test_retval] <- test_retval_func) 
+arg1=0x87654321
