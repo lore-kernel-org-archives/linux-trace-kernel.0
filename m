@@ -2,43 +2,37 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DFBEC6FD1F
-	for <linux-trace-kernel@archiver.kernel.org>; Thu, 16 Mar 2023 13:57:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EDD18C6FD19
+	for <linux-trace-kernel@archiver.kernel.org>; Thu, 16 Mar 2023 14:12:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229510AbjCPN5x (ORCPT
+        id S231159AbjCPOMF (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Thu, 16 Mar 2023 09:57:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36424 "EHLO
+        Thu, 16 Mar 2023 10:12:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60364 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229997AbjCPN5w (ORCPT
+        with ESMTP id S230321AbjCPOL6 (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Thu, 16 Mar 2023 09:57:52 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ED583B3E2A;
-        Thu, 16 Mar 2023 06:57:51 -0700 (PDT)
+        Thu, 16 Mar 2023 10:11:58 -0400
+Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 13062768C
+        for <linux-trace-kernel@vger.kernel.org>; Thu, 16 Mar 2023 07:11:42 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 8714762049;
-        Thu, 16 Mar 2023 13:57:51 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0301CC4339B;
-        Thu, 16 Mar 2023 13:57:49 +0000 (UTC)
-Date:   Thu, 16 Mar 2023 09:57:48 -0400
+        by ams.source.kernel.org (Postfix) with ESMTPS id B35CBB82165
+        for <linux-trace-kernel@vger.kernel.org>; Thu, 16 Mar 2023 14:11:40 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A72ABC433EF;
+        Thu, 16 Mar 2023 14:11:38 +0000 (UTC)
+Date:   Thu, 16 Mar 2023 10:11:37 -0400
 From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Vlastimil Babka <vbabka@suse.cz>
-Cc:     Mukesh Ojha <quic_mojha@quicinc.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Ingo Molnar <mingo@elte.hu>,
-        linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        patches@lists.linux.dev, Mike Rapoport <mike.rapoport@gmail.com>
-Subject: Re: [PATCH] ring-buffer: remove obsolete comment for
- free_buffer_page()
-Message-ID: <20230316095748.0b93bfc5@gandalf.local.home>
-In-Reply-To: <c5d9c8b4-663c-c00f-438b-f104e1228ef7@suse.cz>
-References: <20230315142446.27040-1-vbabka@suse.cz>
-        <72de48c7-014d-80ac-51e9-ba22450f1d5b@quicinc.com>
-        <1cb12058-f59e-1433-6ba6-f500be250996@quicinc.com>
-        <c5d9c8b4-663c-c00f-438b-f104e1228ef7@suse.cz>
+To:     Gildong Hong <roaming2man@gmail.com>
+Cc:     mhiramat@kernel.org, delyank@fb.com, peterz@infradead.org,
+        linux-trace-kernel@vger.kernel.org
+Subject: Re: [PATCH] trace/events/sched: Remove unit on printing vruntime
+ value
+Message-ID: <20230316101137.1739d1e2@gandalf.local.home>
+In-Reply-To: <20230316115655.66639-1-roaming2man@gmail.com>
+References: <20230316115655.66639-1-roaming2man@gmail.com>
 X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
@@ -47,22 +41,34 @@ Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On Thu, 16 Mar 2023 09:29:30 +0100
-Vlastimil Babka <vbabka@suse.cz> wrote:
+On Thu, 16 Mar 2023 20:56:55 +0900
+Gildong Hong <roaming2man@gmail.com> wrote:
 
-> On 3/15/23 16:53, Mukesh Ojha wrote:
-> > 
-> > 
-> > On 3/15/2023 9:21 PM, Mukesh Ojha wrote:  
-> >> 
-> >> 
-> >> On 3/15/2023 7:54 PM, Vlastimil Babka wrote:  
-> >>> The comment refers to mm/slob.o which is being removed. It comes from  
-> > 
-> > nit: mm/slob.c  
+> vruntime is not actual time so remove unit on printing
 > 
-> Thanks, Steven can you fix that up while picking the patch, or need v2?
+> Signed-off-by: Gildong Hong <roaming2man@gmail.com>
+> ---
+>  include/trace/events/sched.h | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/include/trace/events/sched.h b/include/trace/events/sched.h
+> index fbb99a61f714..26ef85a8d3cd 100644
+> --- a/include/trace/events/sched.h
+> +++ b/include/trace/events/sched.h
+> @@ -511,7 +511,7 @@ DECLARE_EVENT_CLASS(sched_stat_runtime,
+>  		__entry->vruntime	= vruntime;
+>  	),
+>  
+> -	TP_printk("comm=%s pid=%d runtime=%Lu [ns] vruntime=%Lu [ns]",
+> +	TP_printk("comm=%s pid=%d runtime=%Lu [ns] vruntime=%Lu",
 
-I'll fix it up.
+What about calling it "[vns]" for "virtual nanosecond" ?
+
+;-)
 
 -- Steve
+
+>  			__entry->comm, __entry->pid,
+>  			(unsigned long long)__entry->runtime,
+>  			(unsigned long long)__entry->vruntime)
+
