@@ -2,118 +2,127 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1019CC6FD19
-	for <linux-trace-kernel@archiver.kernel.org>; Thu, 16 Mar 2023 17:15:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A558DC6FD19
+	for <linux-trace-kernel@archiver.kernel.org>; Thu, 16 Mar 2023 17:38:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229542AbjCPRP5 (ORCPT
+        id S229814AbjCPRik (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Thu, 16 Mar 2023 13:15:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55142 "EHLO
+        Thu, 16 Mar 2023 13:38:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60162 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229479AbjCPRPz (ORCPT
+        with ESMTP id S229584AbjCPRij (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Thu, 16 Mar 2023 13:15:55 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7822818176;
-        Thu, 16 Mar 2023 10:15:54 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 1DFDE620B3;
-        Thu, 16 Mar 2023 17:15:54 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 99003C433D2;
-        Thu, 16 Mar 2023 17:15:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1678986953;
-        bh=paYpboia4VxrbfCtT7DOi0TFcUA2l2m0b6vVWEPCcpQ=;
-        h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-        b=DCFTD87d1LgeIPlMHHQndU91cdYEz+J0z4jZkrWPsQmcHTFgQaev0mcysL6rNzWof
-         OUszJ5pWE+IS1uaIvrSOWOZ0nZtI7jvCD3ERiXi+MJoOvK9DrjQkwhCmmX2hCelU9Q
-         1ObRa8JzKpZRgqwi2lbe1FgvkUmI239SRdEzGSuE8GCq0OKTE3qrBiqYXwEKE+/qZt
-         tO3y6eLZi5+mavlnL+F0SR+jcoHZva1fuDYMMV08eA3zdZhuTkyTub5ZbNnR7/SJTa
-         ewNrzZACCZIDtH3w8J2u3m9vTzH1RFE9Y/vhuBbjfjI16nGyGDx6brv7GEeF7h6pmm
-         vgt8pOH6L9lpA==
-Message-ID: <51e64093-5e2f-18fa-db04-8d6789362921@kernel.org>
-Date:   Thu, 16 Mar 2023 18:15:48 +0100
+        Thu, 16 Mar 2023 13:38:39 -0400
+Received: from mail-wm1-x335.google.com (mail-wm1-x335.google.com [IPv6:2a00:1450:4864:20::335])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7652A1B2F0
+        for <linux-trace-kernel@vger.kernel.org>; Thu, 16 Mar 2023 10:38:37 -0700 (PDT)
+Received: by mail-wm1-x335.google.com with SMTP id p16so1808825wmq.5
+        for <linux-trace-kernel@vger.kernel.org>; Thu, 16 Mar 2023 10:38:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1678988316;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=U5mSMxwdN0IR5nAI9XvdYIXU9bwtI93jGwawWBVdvG8=;
+        b=Dxs14Bj7A6T+cKbTpK2Sr5K3V6GlyRbuHWlE4K0dGbM4pDIOSwjsb5VM2+iga4ht4M
+         sY7R67sqg3IZml4TtJi1d0ePthVPWeyBgXjC4aBut8+2fLjigEV5rL9+Y0pQY6qv0j9r
+         NZLjtRF7GEYx63rOSN253WcUx8r4tJ1hQn5fM=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112; t=1678988316;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=U5mSMxwdN0IR5nAI9XvdYIXU9bwtI93jGwawWBVdvG8=;
+        b=Ae3BfMEqcNUqxRBedLvglPjklxYOjfR10TGRepKq1KLg502Bwlt0wDeaAQzCp723cv
+         jDmsTPKGNxiLxBol7GjUsrztvrxtBk8GJopZM6zWk3Q/OUIsdBM7ByjouxePhy7gucLo
+         i4Oi1YoE2SZoUqNJLxvs6cQSY1ovIdnhpBvJ6BEN87qeuKnkEwsZoekw0FSeXB8Vzwl/
+         S6f0VI0z4pOtQ3AT45o2rh9ShBd6uHdS91dObaxt4lN1N+y5buvOaeNibfu+EuEdyQdH
+         IbIenXVXMsyGiLreJAMdhm5ngu6ERWPDn8FVtFH9zVHyiQZKhSZS5IazTIiZHRVO8y4N
+         oUrg==
+X-Gm-Message-State: AO0yUKU3jOfFp3kg5FmUsZYEQ9awHgg/rOVRrV1lN53uXHAh1zusCDXi
+        J8CCaFGUo13P+PbN/UjLiwAirA==
+X-Google-Smtp-Source: AK7set+SPBlj7qjk2ovvOr0jigoTcKalAVDYTuxbkxBRwGrIsClH1KoAnTY10DcSl+pLzdrq3q2kXQ==
+X-Received: by 2002:a05:600c:4f91:b0:3ed:2c92:9f4f with SMTP id n17-20020a05600c4f9100b003ed2c929f4fmr9602119wmq.10.1678988315837;
+        Thu, 16 Mar 2023 10:38:35 -0700 (PDT)
+Received: from revest.zrh.corp.google.com ([2a00:79e0:9d:6:24ff:9ff7:736e:20a6])
+        by smtp.gmail.com with ESMTPSA id t14-20020a1c770e000000b003daf7721bb3sm5596436wmi.12.2023.03.16.10.38.34
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 16 Mar 2023 10:38:35 -0700 (PDT)
+From:   Florent Revest <revest@chromium.org>
+To:     linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
+Cc:     rostedt@goodmis.org, mhiramat@kernel.org, mark.rutland@arm.com,
+        ast@kernel.org, daniel@iogearbox.net, kpsingh@kernel.org,
+        revest@chromium.org, jolsa@kernel.org
+Subject: [PATCH 0/7] Refactor ftrace direct call APIs
+Date:   Thu, 16 Mar 2023 18:38:04 +0100
+Message-Id: <20230316173811.1223508-1-revest@chromium.org>
+X-Mailer: git-send-email 2.40.0.rc2.332.ga46443480c-goog
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.8.0
-Subject: Re: [PATCH] tracing/hwlat: Replace sched_setaffinity with
- set_cpus_allowed_ptr
-To:     Costa Shulyupin <costa.shul@redhat.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        "open list:TRACING" <linux-kernel@vger.kernel.org>,
-        "open list:TRACING" <linux-trace-kernel@vger.kernel.org>
-Cc:     bwensley@redhat.com, constantine.shulyupin@gmail.com
-References: <20230316144535.1004952-1-costa.shul@redhat.com>
-Content-Language: en-US
-From:   Daniel Bristot de Oliveira <bristot@kernel.org>
-In-Reply-To: <20230316144535.1004952-1-costa.shul@redhat.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On 3/16/23 15:45, Costa Shulyupin wrote:
-> There is a problem with the behavior of hwlat in a container,
-> resulting in incorrect output. A warning message is generated:
-> "cpumask changed while in round-robin mode, switching to mode none",
-> and the tracing_cpumask is ignored. This issue arises because
-> the kernel thread, hwlatd, is not a part of the container, and
-> the function sched_setaffinity is unable to locate it using its PID.
-> Additionally, the task_struct of hwlatd is already known.
-> Ultimately, the function set_cpus_allowed_ptr achieves
-> the same outcome as sched_setaffinity, but employs task_struct
-> instead of PID.
-> 
-> Test case:
-> 
->   # cd /sys/kernel/tracing
->   # echo 0 > tracing_on
->   # echo round-robin > hwlat_detector/mode
->   # echo hwlat > current_tracer
->   # unshare --fork --pid bash -c 'echo 1 > tracing_on'
->   # dmesg -c
-> 
-> Actual behavior:
-> 
-> [573502.809060] hwlat_detector: cpumask changed while in round-robin mode, switching to mode none
-> 
-> Signed-off-by: Costa Shulyupin <costa.shul@redhat.com>
+This series refactors ftrace direct call APIs in preparation for arm64 support.
+It is roughly a subset of [1] rebased on v6.3-rc2 and meant to be taken by
+Steven's tree before all the arm64 specific bits.
 
-I tested it and... it works.
+The first patch was suggested by Steven in a review of [1], it makes it more
+obvious to the caller that filters probably need to be freed when unregistering
+a direct call.
 
-Acked-by: Daniel Bristot de Oliveira <bristot@kernel.org>
+The next three patches consolidate the two existing ftrace APIs for registering
+direct calls. They are only split to make the reviewer's life easier.
+Currently, there is both a _ftrace_direct and _ftrace_direct_multi API. Apart
+from samples and selftests, there are no users of the _ftrace_direct API left
+in-tree so this deletes it and renames the _ftrace_direct_multi API to
+_ftrace_direct for simplicity.
 
-Thanks
--- Daniel
+The main benefit of this refactoring is that, with the API that's left, an
+ftrace_ops backing a direct call will only ever point to one direct call. We can
+therefore store the direct called trampoline address in the ops (patch 5) and,
+in the future arm64 series, look it up from the ftrace trampoline. (in the
+meantime, it makes call_direct_funcs a bit simpler too)
 
-> ---
->  kernel/trace/trace_hwlat.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/kernel/trace/trace_hwlat.c b/kernel/trace/trace_hwlat.c
-> index d440ddd5fd8b..444dfc31f258 100644
-> --- a/kernel/trace/trace_hwlat.c
-> +++ b/kernel/trace/trace_hwlat.c
-> @@ -339,7 +339,7 @@ static void move_to_next_cpu(void)
->  	cpumask_clear(current_mask);
->  	cpumask_set_cpu(next_cpu, current_mask);
->  
-> -	sched_setaffinity(0, current_mask);
-> +	set_cpus_allowed_ptr(current, current_mask);
->  	return;
->  
->   change_mode:
-> @@ -446,7 +446,7 @@ static int start_single_kthread(struct trace_array *tr)
->  
->  	}
->  
-> -	sched_setaffinity(kthread->pid, current_mask);
-> +	set_cpus_allowed_ptr(kthread, current_mask);
->  
->  	kdata->kthread = kthread;
->  	wake_up_process(kthread);
+Ftrace direct calls technically don't need DYNAMIC_FTRACE_WITH_REGS so this
+extends its support to DYNAMIC_FTRACE_WITH_ARGS (patch 6). arm64 won't support
+DYNAMIC_FTRACE_WITH_REGS.
+
+Finally, it fixes the ABI of the stub direct call trampoline used in ftrace
+selftests.
+
+This has been tested on x86_64 with:
+1- CONFIG_FTRACE_SELFTEST
+2- samples/ftrace/*.ko
+
+1: https://lore.kernel.org/all/20230207182135.2671106-1-revest@chromium.org/T/#t
+
+Florent Revest (6):
+  ftrace: Let unregister_ftrace_direct_multi() call ftrace_free_filter()
+  ftrace: Replace uses of _ftrace_direct APIs with _ftrace_direct_multi
+  ftrace: Remove the legacy _ftrace_direct API
+  ftrace: Rename _ftrace_direct_multi APIs to _ftrace_direct APIs
+  ftrace: Store direct called addresses in their ops
+  ftrace: Make DIRECT_CALLS work WITH_ARGS and !WITH_REGS
+
+Mark Rutland (1):
+  ftrace: selftest: remove broken trace_direct_tramp
+
+ arch/s390/kernel/mcount.S                   |   5 +
+ arch/x86/kernel/ftrace_32.S                 |   5 +
+ arch/x86/kernel/ftrace_64.S                 |   4 +
+ include/linux/ftrace.h                      |  61 +--
+ kernel/bpf/trampoline.c                     |  12 +-
+ kernel/trace/Kconfig                        |   2 +-
+ kernel/trace/ftrace.c                       | 438 ++------------------
+ kernel/trace/trace_selftest.c               |  19 +-
+ samples/Kconfig                             |   2 +-
+ samples/ftrace/ftrace-direct-modify.c       |  10 +-
+ samples/ftrace/ftrace-direct-multi-modify.c |   9 +-
+ samples/ftrace/ftrace-direct-multi.c        |   5 +-
+ samples/ftrace/ftrace-direct-too.c          |  10 +-
+ samples/ftrace/ftrace-direct.c              |  10 +-
+ 14 files changed, 101 insertions(+), 491 deletions(-)
+
+-- 
+2.40.0.rc2.332.ga46443480c-goog
 
