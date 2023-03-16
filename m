@@ -2,220 +2,114 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E678C7618E
-	for <linux-trace-kernel@archiver.kernel.org>; Thu, 16 Mar 2023 17:39:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A2786C6FD1F
+	for <linux-trace-kernel@archiver.kernel.org>; Thu, 16 Mar 2023 23:21:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230074AbjCPRi6 (ORCPT
+        id S229704AbjCPXVq (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Thu, 16 Mar 2023 13:38:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60316 "EHLO
+        Thu, 16 Mar 2023 19:21:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40892 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229832AbjCPRis (ORCPT
+        with ESMTP id S229488AbjCPXVp (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Thu, 16 Mar 2023 13:38:48 -0400
-Received: from mail-wm1-x334.google.com (mail-wm1-x334.google.com [IPv6:2a00:1450:4864:20::334])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5BEFFD5176
-        for <linux-trace-kernel@vger.kernel.org>; Thu, 16 Mar 2023 10:38:44 -0700 (PDT)
-Received: by mail-wm1-x334.google.com with SMTP id ip21-20020a05600ca69500b003ed56690948so1594065wmb.1
-        for <linux-trace-kernel@vger.kernel.org>; Thu, 16 Mar 2023 10:38:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1678988324;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=zMn2X0pVjGcM1Rx/07U3BIPDRphxQJGYTZujBYSKg+w=;
-        b=RPgCbQ6PyVQjxLGL0IcvB1gVuQH9t/1i/oM/+DkpLnArJ2ArIUJcA85LzplHaS3nGV
-         c4zOiU+41Vuq0zfPh+rw3F1/kBt+En94aW5wbzQmlXQvl+FMMV2xH6SBHz14IMvL91nr
-         G4vyDsDpFgycD8boH4ck4HD6tOn4kUlx1vyQs=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1678988324;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=zMn2X0pVjGcM1Rx/07U3BIPDRphxQJGYTZujBYSKg+w=;
-        b=56YrCF20dUUnnRjMau0y/iMW+nBqyK5Zdfe5regt89BLmqDuv+m5iF3gId1EO422sU
-         hzZzOedv+L3JxmT7NYb+qgWkRRx+aNlEjZsxIjqwSevx4ZQW7GJd4D9P7ZF8gsCCMa9h
-         5xeDo62wIOTIV+xK6GfhtGdXVysGuFcn5CCtab2ztSuj4T4mYRQ7XoNFqzgBB+pwLV5e
-         nWUm3xsaKjeUoEvLWGF3M0sS+F0NUD9TlSVJH6W4j2hKZNyAoof9GHlqHluB6G2HOwQJ
-         xkzGFjN7MzOpJhZTWEDTlUeun23JI64GFuZK4szmRILjtlCtxPSp8JUU/PBI2QSIiAOF
-         qCEQ==
-X-Gm-Message-State: AO0yUKUN7oq+osvww+otgEaaNiXDj/jib7Kc9l8QA3RUtv66/UMe84cG
-        FpyG/Z2kTMQ3jSLSEpTfchcZrQ==
-X-Google-Smtp-Source: AK7set/s+VI8Ri5FGPF2tCoLAXysJ+jb38EY5MW7Qm4I+MiprbSI9j1/0+C+R6y0otHe07m74zugTg==
-X-Received: by 2002:a7b:c053:0:b0:3eb:f59f:6daf with SMTP id u19-20020a7bc053000000b003ebf59f6dafmr21593709wmc.34.1678988323864;
-        Thu, 16 Mar 2023 10:38:43 -0700 (PDT)
-Received: from revest.zrh.corp.google.com ([2a00:79e0:9d:6:24ff:9ff7:736e:20a6])
-        by smtp.gmail.com with ESMTPSA id t14-20020a1c770e000000b003daf7721bb3sm5596436wmi.12.2023.03.16.10.38.42
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 16 Mar 2023 10:38:43 -0700 (PDT)
-From:   Florent Revest <revest@chromium.org>
-To:     linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
-Cc:     rostedt@goodmis.org, mhiramat@kernel.org, mark.rutland@arm.com,
-        ast@kernel.org, daniel@iogearbox.net, kpsingh@kernel.org,
-        revest@chromium.org, jolsa@kernel.org,
-        Li Huafei <lihuafei1@huawei.com>,
-        Xu Kuohai <xukuohai@huawei.com>
-Subject: [PATCH 7/7] ftrace: selftest: remove broken trace_direct_tramp
-Date:   Thu, 16 Mar 2023 18:38:11 +0100
-Message-Id: <20230316173811.1223508-8-revest@chromium.org>
-X-Mailer: git-send-email 2.40.0.rc2.332.ga46443480c-goog
-In-Reply-To: <20230316173811.1223508-1-revest@chromium.org>
-References: <20230316173811.1223508-1-revest@chromium.org>
+        Thu, 16 Mar 2023 19:21:45 -0400
+Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [IPv6:2001:4d48:ad52:32c8:5054:ff:fe00:142])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 518D310DE40;
+        Thu, 16 Mar 2023 16:21:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=Sdi/29/StTsbeuvKgT+Z/F++TfRAz2A8U4n5uNyTQzU=; b=yc1jhoRBNKVkdjN9mmlVB044Vu
+        wohIHAMTrL9uqkgv4xeeoVKIdni4or2O28eapr23X3uKegkoPxskg52+U/dVBIsVL3sIXwjsHEMW5
+        80C//4z4+Gbb4RT9+qfZ8Kb9S9cuSvo0GmBevSrXz37rQJSJc9S4xzJTtduN8qZ6LSlVstXP73atx
+        t857BK93EF5gn8KtcYGaGmLJ+7YBGo4cO5CmN8X6Pl8bYu+/SFSa/UlQrS7vgRDCpnDqPEQY5v5o5
+        EyLb4d79U+oBi6RtiDdDjSz+RQLfa2KuHEAqmdPdLSfnFYGRTVeGWmfnOBnbGvPnb/GY9cGx5fkMW
+        TWAK5xiQ==;
+Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:43194)
+        by pandora.armlinux.org.uk with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+        (Exim 4.94.2)
+        (envelope-from <linux@armlinux.org.uk>)
+        id 1pcwuI-0001Tf-9J; Thu, 16 Mar 2023 23:21:14 +0000
+Received: from linux by shell.armlinux.org.uk with local (Exim 4.94.2)
+        (envelope-from <linux@shell.armlinux.org.uk>)
+        id 1pcwuB-0002qU-Rg; Thu, 16 Mar 2023 23:21:07 +0000
+Date:   Thu, 16 Mar 2023 23:21:07 +0000
+From:   "Russell King (Oracle)" <linux@armlinux.org.uk>
+To:     Donglin Peng <pengdonglin@sangfor.com.cn>
+Cc:     mhiramat@kernel.org, rostedt@goodmis.org, mark.rutland@arm.com,
+        will@kernel.org, catalin.marinas@arm.com, palmer@dabbelt.com,
+        paul.walmsley@sifive.com, tglx@linutronix.de,
+        dave.hansen@linux.intel.com, x86@kernel.org, mingo@redhat.com,
+        xiehuan09@gmail.com, dinghui@sangfor.com.cn,
+        huangcun@sangfor.com.cn, dolinux.peng@gmail.com,
+        linux-trace-kernel@vger.kernel.org,
+        linux-riscv@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4 1/2] function_graph: Support recording and printing
+ the return value of function
+Message-ID: <ZBOkY8FkqgoBfzQ2@shell.armlinux.org.uk>
+References: <20230315133911.958741-1-pengdonglin@sangfor.com.cn>
+ <20230315133911.958741-2-pengdonglin@sangfor.com.cn>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230315133911.958741-2-pengdonglin@sangfor.com.cn>
+Sender: Russell King (Oracle) <linux@armlinux.org.uk>
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-From: Mark Rutland <mark.rutland@arm.com>
+On Wed, Mar 15, 2023 at 06:39:10AM -0700, Donglin Peng wrote:
+> diff --git a/arch/arm/Kconfig b/arch/arm/Kconfig
+> index e24a9820e12f..ad03fc868f34 100644
+> --- a/arch/arm/Kconfig
+> +++ b/arch/arm/Kconfig
+> @@ -99,6 +99,7 @@ config ARM
+>  	select HAVE_FTRACE_MCOUNT_RECORD if !XIP_KERNEL
+>  	select HAVE_FUNCTION_ERROR_INJECTION
+>  	select HAVE_FUNCTION_GRAPH_TRACER
+> +	select HAVE_FUNCTION_GRAPH_RETVAL if HAVE_FUNCTION_GRAPH_TRACER
+>  	select HAVE_FUNCTION_TRACER if !XIP_KERNEL
+>  	select HAVE_GCC_PLUGINS
+>  	select HAVE_HW_BREAKPOINT if PERF_EVENTS && (CPU_V6 || CPU_V6K || CPU_V7)
+> diff --git a/arch/arm/kernel/entry-ftrace.S b/arch/arm/kernel/entry-ftrace.S
+> index 3e7bcaca5e07..0151d2ce9958 100644
+> --- a/arch/arm/kernel/entry-ftrace.S
+> +++ b/arch/arm/kernel/entry-ftrace.S
+> @@ -258,6 +258,10 @@ ENDPROC(ftrace_graph_regs_caller)
+>  #ifdef CONFIG_FUNCTION_GRAPH_TRACER
+>  ENTRY(return_to_handler)
+>  	stmdb	sp!, {r0-r3}
+> +#ifdef CONFIG_FUNCTION_GRAPH_RETVAL
+> +	/* Pass the function return value to ftrace_return_to_handler */
+> +	mov	r1, r0
 
-The ftrace selftest code has a trace_direct_tramp() function which it
-uses as a direct call trampoline. This happens to work on x86, since the
-direct call's return address is in the usual place, and can be returned
-to via a RET, but in general the calling convention for direct calls is
-different from regular function calls, and requires a trampoline written
-in assembly.
+In a similar vein to Peter's comment, do we care about 64-bit return
+values here, because the above only covers 32-bit values.
 
-On s390, regular function calls place the return address in %r14, and an
-ftrace patch-site in an instrumented function places the trampoline's
-return address (which is within the instrumented function) in %r0,
-preserving the original %r14 value in-place. As a regular C function
-will return to the address in %r14, using a C function as the trampoline
-results in the trampoline returning to the caller of the instrumented
-function, skipping the body of the instrumented function.
+If we do care about 64-bit values, then we get into EABI/OABI
+stickyness, because on EABI the 64-bit value would have to be passed
+in r2,r3, and OABI would need r1,r2.
 
-Note that the s390 issue is not detcted by the ftrace selftest code, as
-the instrumented function is trivial, and returning back into the caller
-happens to be equivalent.
+it would be better to have the 64-bit argument as the first argument
+to ftrace_return_to_handler() which would eliminate that variability,
+but I don't know what effect that would have for other architectures.
 
-On arm64, regular function calls place the return address in x30, and
-an ftrace patch-site in an instrumented function saves this into r9
-and places the trampoline's return address (within the instrumented
-function) in x30. A regular C function will return to the address in
-x30, but will not restore x9 into x30. Consequently, using a C function
-as the trampoline results in returning to the trampoline's return
-address having corrupted x30, such that when the instrumented function
-returns, it will return back into itself.
+Things get more icky if we want 128-bit values. For EABI, we've
+conveniently just stacked that. For OABI, that would need to be in
+r1-r3 and the final high bits on the stack.
 
-To avoid future issues in this area, remove the trace_direct_tramp()
-function, and require that each architecture with direct calls provides
-a stub trampoline, named ftrace_stub_direct_tramp. This can be written
-to handle the architecture's trampoline calling convention, and in
-future could be used elsewhere (e.g. in the ftrace ops sample, to
-measure the overhead of direct calls), so we may as well always build it
-in.
+With a 128-bit argument as the first, that would be r0-r3 with the
+existing stack pointer argument stored... on the stack.
 
-Signed-off-by: Mark Rutland <mark.rutland@arm.com>
-Cc: Li Huafei <lihuafei1@huawei.com>
-Cc: Xu Kuohai <xukuohai@huawei.com>
-Cc: Steven Rostedt (Google) <rostedt@goodmis.org>
-Cc: Florent Revest <revest@chromium.org>
-Signed-off-by: Florent Revest <revest@chromium.org>
----
- arch/s390/kernel/mcount.S     |  5 +++++
- arch/x86/kernel/ftrace_32.S   |  5 +++++
- arch/x86/kernel/ftrace_64.S   |  4 ++++
- include/linux/ftrace.h        |  2 ++
- kernel/trace/trace_selftest.c | 12 ++----------
- 5 files changed, 18 insertions(+), 10 deletions(-)
+So, really it depends what size of return value we want to report.
+Also, please bear in mind that where a function returns a 32-bit
+value, that will be in r0, and r1 will be whatever happened to be
+in it at function exit - there's no defined value for r1.
 
-diff --git a/arch/s390/kernel/mcount.S b/arch/s390/kernel/mcount.S
-index 43ff91073d2a..6c10da43b538 100644
---- a/arch/s390/kernel/mcount.S
-+++ b/arch/s390/kernel/mcount.S
-@@ -32,6 +32,11 @@ ENTRY(ftrace_stub)
- 	BR_EX	%r14
- ENDPROC(ftrace_stub)
- 
-+SYM_CODE_START(ftrace_stub_direct_tramp)
-+	lgr	%r1, %r0
-+	BR_EX	%r1
-+SYM_CODE_END(ftrace_stub_direct_tramp)
-+
- 	.macro	ftrace_regs_entry, allregs=0
- 	stg	%r14,(__SF_GPRS+8*8)(%r15)	# save traced function caller
- 
-diff --git a/arch/x86/kernel/ftrace_32.S b/arch/x86/kernel/ftrace_32.S
-index a0ed0e4a2c0c..0d9a14528176 100644
---- a/arch/x86/kernel/ftrace_32.S
-+++ b/arch/x86/kernel/ftrace_32.S
-@@ -163,6 +163,11 @@ SYM_INNER_LABEL(ftrace_regs_call, SYM_L_GLOBAL)
- 	jmp	.Lftrace_ret
- SYM_CODE_END(ftrace_regs_caller)
- 
-+SYM_FUNC_START(ftrace_stub_direct_tramp)
-+	CALL_DEPTH_ACCOUNT
-+	RET
-+SYM_FUNC_END(ftrace_stub_direct_tramp)
-+
- #ifdef CONFIG_FUNCTION_GRAPH_TRACER
- SYM_CODE_START(ftrace_graph_caller)
- 	pushl	%eax
-diff --git a/arch/x86/kernel/ftrace_64.S b/arch/x86/kernel/ftrace_64.S
-index 1265ad519249..8fc77e3e039c 100644
---- a/arch/x86/kernel/ftrace_64.S
-+++ b/arch/x86/kernel/ftrace_64.S
-@@ -307,6 +307,10 @@ SYM_INNER_LABEL(ftrace_regs_caller_end, SYM_L_GLOBAL)
- SYM_FUNC_END(ftrace_regs_caller)
- STACK_FRAME_NON_STANDARD_FP(ftrace_regs_caller)
- 
-+SYM_FUNC_START(ftrace_stub_direct_tramp)
-+	CALL_DEPTH_ACCOUNT
-+	RET
-+SYM_FUNC_END(ftrace_stub_direct_tramp)
- 
- #else /* ! CONFIG_DYNAMIC_FTRACE */
- 
-diff --git a/include/linux/ftrace.h b/include/linux/ftrace.h
-index 31f1e1df2af3..931f3d904529 100644
---- a/include/linux/ftrace.h
-+++ b/include/linux/ftrace.h
-@@ -413,6 +413,8 @@ int unregister_ftrace_direct(struct ftrace_ops *ops, unsigned long addr,
- int modify_ftrace_direct(struct ftrace_ops *ops, unsigned long addr);
- int modify_ftrace_direct_nolock(struct ftrace_ops *ops, unsigned long addr);
- 
-+void ftrace_stub_direct_tramp(void);
-+
- #else
- struct ftrace_ops;
- # define ftrace_direct_func_count 0
-diff --git a/kernel/trace/trace_selftest.c b/kernel/trace/trace_selftest.c
-index 84cd7ba31d27..a931d9aaea26 100644
---- a/kernel/trace/trace_selftest.c
-+++ b/kernel/trace/trace_selftest.c
-@@ -786,14 +786,6 @@ static struct fgraph_ops fgraph_ops __initdata  = {
- 
- #ifdef CONFIG_DYNAMIC_FTRACE_WITH_DIRECT_CALLS
- static struct ftrace_ops direct;
--#ifndef CALL_DEPTH_ACCOUNT
--#define CALL_DEPTH_ACCOUNT ""
--#endif
--
--noinline __noclone static void trace_direct_tramp(void)
--{
--	asm(CALL_DEPTH_ACCOUNT);
--}
- #endif
- 
- /*
-@@ -873,7 +865,7 @@ trace_selftest_startup_function_graph(struct tracer *trace,
- 	 */
- 	ftrace_set_filter_ip(&direct, (unsigned long)DYN_FTRACE_TEST_NAME, 0, 0);
- 	ret = register_ftrace_direct(&direct,
--				     (unsigned long)trace_direct_tramp);
-+				     (unsigned long)ftrace_stub_direct_tramp);
- 	if (ret)
- 		goto out;
- 
-@@ -894,7 +886,7 @@ trace_selftest_startup_function_graph(struct tracer *trace,
- 	unregister_ftrace_graph(&fgraph_ops);
- 
- 	ret = unregister_ftrace_direct(&direct,
--				       (unsigned long) trace_direct_tramp,
-+				       (unsigned long)ftrace_stub_direct_tramp,
- 				       true);
- 	if (ret)
- 		goto out;
 -- 
-2.40.0.rc2.332.ga46443480c-goog
-
+RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+FTTP is here! 40Mbps down 10Mbps up. Decent connectivity at last!
