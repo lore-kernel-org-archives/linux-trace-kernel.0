@@ -2,126 +2,67 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8AE45C7618D
-	for <linux-trace-kernel@archiver.kernel.org>; Thu, 16 Mar 2023 13:14:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DFBEC6FD1F
+	for <linux-trace-kernel@archiver.kernel.org>; Thu, 16 Mar 2023 13:57:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229732AbjCPNOW (ORCPT
+        id S229510AbjCPN5x (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Thu, 16 Mar 2023 09:14:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54894 "EHLO
+        Thu, 16 Mar 2023 09:57:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36424 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229436AbjCPNOV (ORCPT
+        with ESMTP id S229997AbjCPN5w (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Thu, 16 Mar 2023 09:14:21 -0400
-Received: from mail-m118111.qiye.163.com (mail-m118111.qiye.163.com [115.236.118.111])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A358F5FEF;
-        Thu, 16 Mar 2023 06:14:17 -0700 (PDT)
-Received: from [172.23.196.229] (unknown [121.32.254.147])
-        by mail-m118111.qiye.163.com (Hmail) with ESMTPA id 013F858083A;
-        Thu, 16 Mar 2023 21:13:59 +0800 (CST)
-Message-ID: <454b587e-6794-875d-b998-078af80fb195@sangfor.com.cn>
-Date:   Thu, 16 Mar 2023 21:13:56 +0800
+        Thu, 16 Mar 2023 09:57:52 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ED583B3E2A;
+        Thu, 16 Mar 2023 06:57:51 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 8714762049;
+        Thu, 16 Mar 2023 13:57:51 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0301CC4339B;
+        Thu, 16 Mar 2023 13:57:49 +0000 (UTC)
+Date:   Thu, 16 Mar 2023 09:57:48 -0400
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     Vlastimil Babka <vbabka@suse.cz>
+Cc:     Mukesh Ojha <quic_mojha@quicinc.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Ingo Molnar <mingo@elte.hu>,
+        linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        patches@lists.linux.dev, Mike Rapoport <mike.rapoport@gmail.com>
+Subject: Re: [PATCH] ring-buffer: remove obsolete comment for
+ free_buffer_page()
+Message-ID: <20230316095748.0b93bfc5@gandalf.local.home>
+In-Reply-To: <c5d9c8b4-663c-c00f-438b-f104e1228ef7@suse.cz>
+References: <20230315142446.27040-1-vbabka@suse.cz>
+        <72de48c7-014d-80ac-51e9-ba22450f1d5b@quicinc.com>
+        <1cb12058-f59e-1433-6ba6-f500be250996@quicinc.com>
+        <c5d9c8b4-663c-c00f-438b-f104e1228ef7@suse.cz>
+X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.8.0
-Subject: Re: [PATCH v4 1/2] function_graph: Support recording and printing the
- return value of function
-To:     "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Steven Rostedt <rostedt@goodmis.org>, linux@armlinux.org.uk,
-        mark.rutland@arm.com, will@kernel.org, catalin.marinas@arm.com,
-        palmer@dabbelt.com, paul.walmsley@sifive.com, tglx@linutronix.de,
-        dave.hansen@linux.intel.com, x86@kernel.org, mingo@redhat.com,
-        xiehuan09@gmail.com, dinghui@sangfor.com.cn,
-        huangcun@sangfor.com.cn, dolinux.peng@gmail.com,
-        linux-trace-kernel@vger.kernel.org,
-        linux-riscv@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-References: <20230315133911.958741-1-pengdonglin@sangfor.com.cn>
- <20230315133911.958741-2-pengdonglin@sangfor.com.cn>
- <20230315134911.GD2006103@hirez.programming.kicks-ass.net>
- <20230315101348.1234c7f5@gandalf.local.home>
- <20230315145757.GE2006103@hirez.programming.kicks-ass.net>
- <664f9fa1-da31-2be9-76d9-3eb08e08b7f9@sangfor.com.cn>
- <20230316213925.f958c648e25f723db86aa705@kernel.org>
-Content-Language: en-US
-From:   Donglin Peng <pengdonglin@sangfor.com.cn>
-In-Reply-To: <20230316213925.f958c648e25f723db86aa705@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-HM-Spam-Status: e1kfGhgUHx5ZQUpXWQgPGg8OCBgUHx5ZQUlOS1dZFg8aDwILHllBWSg2Ly
-        tZV1koWUFITzdXWS1ZQUlXWQ8JGhUIEh9ZQVkaSR9PVk5CSkxJQkNLTEkYSlUTARMWGhIXJBQOD1
-        lXWRgSC1lBWUpJSlVISVVJTk9VSk9MWVdZFhoPEhUdFFlBWU9LSFVKSktPSEhVSktLVUtZBg++
-X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6NEk6DSo6Ez0PKRhKNw0jIj4R
-        IgEaCyJVSlVKTUxDQkxJT09KSE9IVTMWGhIXVQseFRwfFBUcFxIVOwgaFRwdFAlVGBQWVRgVRVlX
-        WRILWUFZSklKVUhJVUlOT1VKT0xZV1kIAVlBTkhPTjcG
-X-HM-Tid: 0a86ea8e515b2eb7kusn013f858083a
-X-HM-MType: 1
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On 2023/3/16 20:39, Masami Hiramatsu (Google) wrote:
-> On Thu, 16 Mar 2023 11:18:23 +0800
-> Donglin Peng <pengdonglin@sangfor.com.cn> wrote:
-> 
->> On 2023/3/15 22:57, Peter Zijlstra wrote:
->>> On Wed, Mar 15, 2023 at 10:13:48AM -0400, Steven Rostedt wrote:
->>>> On Wed, 15 Mar 2023 14:49:11 +0100
->>>> Peter Zijlstra <peterz@infradead.org> wrote:
->>>>
->>>>>> diff --git a/arch/x86/kernel/ftrace_64.S b/arch/x86/kernel/ftrace_64.S
->>>>>> index 1265ad519249..35ac9c58dc77 100644
->>>>>> --- a/arch/x86/kernel/ftrace_64.S
->>>>>> +++ b/arch/x86/kernel/ftrace_64.S
->>>>>> @@ -348,6 +348,10 @@ SYM_CODE_START(return_to_handler)
->>>>>>    	movq %rax, (%rsp)
->>>>>>    	movq %rdx, 8(%rsp)
->>>>>>    	movq %rbp, %rdi
->>>>>> +#ifdef CONFIG_FUNCTION_GRAPH_RETVAL
->>>>>> +	/* Pass the function return value to ftrace_return_to_handler */
->>>>>> +	movq %rax, %rsi
->>>>>> +#endif
->>>>>>    
->>>>>>    	call ftrace_return_to_handler
->>>>>
->>>>> What about the case of double register return values (when the value
->>>>> is returned in the A,D pair) ?
->>>>
->>>> Is there anything that does that in 64 bit kernels?
->>>
->>> Note sure; but I have a patch series that introduces cmpxchg128 and
->>> friends. Most of the actual functions are __always_inline, but still,
->>> the moment a compiler decides to break out a subfunction on a u128
->>> boundary we're in luck.
->> I have reviewed the kretprobe implementation and noticed that $retval
->> only retrieves the value of pt_regs.ax, which is an unsigned long data
->> type. I wrote a demo and tested it on an x86 machine, and found that
->> $retval only shows the least significant 32 bits of retval.Therefore,I
->> think it can be consistent with kretprobe.
-> 
-> Yeah, because it doesn't support 128bit type (u128/long long).
-> It is possible to support it, but I think we can just document this
-> as a limitation for fgraph return value. It is just for quickly trace
-> most of the return values.
-> 
-Yeah,I will add this limitation to the documents in v5.
+On Thu, 16 Mar 2023 09:29:30 +0100
+Vlastimil Babka <vbabka@suse.cz> wrote:
 
-> Thank you,
+> On 3/15/23 16:53, Mukesh Ojha wrote:
+> > 
+> > 
+> > On 3/15/2023 9:21 PM, Mukesh Ojha wrote:  
+> >> 
+> >> 
+> >> On 3/15/2023 7:54 PM, Vlastimil Babka wrote:  
+> >>> The comment refers to mm/slob.o which is being removed. It comes from  
+> > 
+> > nit: mm/slob.c  
 > 
->>
->> static noinline unsigned long long test_retval_func(void)
->> {
->> 	unsigned long long value = 0x1234567887654321;
->> 	return value;
->> }
->>
->> add a kretprobe event:
->> echo 'r:myretprobe test_retval_func $retval:x64' > kprobe_events
->>
->> the trace log:
->> myretprobe: (retval_open+0x1c/0x2c [test_retval] <- test_retval_func)
->> arg1=0x87654321
-> 
-> 
+> Thanks, Steven can you fix that up while picking the patch, or need v2?
 
+I'll fix it up.
+
+-- Steve
