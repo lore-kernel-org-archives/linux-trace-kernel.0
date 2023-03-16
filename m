@@ -2,94 +2,133 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A9C14C6FD19
-	for <linux-trace-kernel@archiver.kernel.org>; Thu, 16 Mar 2023 07:38:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 11752C6FD1F
+	for <linux-trace-kernel@archiver.kernel.org>; Thu, 16 Mar 2023 08:29:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229454AbjCPHid (ORCPT
+        id S229574AbjCPI3j (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Thu, 16 Mar 2023 03:38:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53932 "EHLO
+        Thu, 16 Mar 2023 04:29:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38218 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229832AbjCPHib (ORCPT
+        with ESMTP id S229596AbjCPI3i (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Thu, 16 Mar 2023 03:38:31 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A948B133;
-        Thu, 16 Mar 2023 00:38:21 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Thu, 16 Mar 2023 04:29:38 -0400
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [IPv6:2001:67c:2178:6::1d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 51F6949EC;
+        Thu, 16 Mar 2023 01:29:32 -0700 (PDT)
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 14B4D61E4A;
-        Thu, 16 Mar 2023 07:38:21 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 262B5C4339B;
-        Thu, 16 Mar 2023 07:38:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1678952300;
-        bh=+4jwn3QqZ5K5vGm+sbwhzx/Jn1cyBnPfG3vpqKKXsmg=;
-        h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-        b=cdW2fMN2ZLL/SuMZxHU/G/Mg5aUZYSnbPiknVKkfgBARpbJe2/uatL21nvBTqNKKD
-         VMOyv1HwmW4ynDhC27BFX37vUOnNpudwCKx0EbMZYtCdH3Gbibgbxyx2PZoCd1q3KQ
-         JKL2DzCa3mVpHq5eWUS1JsUr3XjDOBOajs6dWWzlxn3eRmJCZhxQCSY5tZoJWzTOal
-         nVPhEK2r0FhETU095ZTle7eh8yRj4yZ1XRnKJJokRJ0nUebd8QgBJ1fVuCNKKpn0EF
-         vMPmpWt5abfBEfrXftCXgGTbrbOyRHTnaO/0L2QY5nt7eZ8NbUcFJVmJFrEgePSAoy
-         C8pErrXVyCaaQ==
-Message-ID: <4620911e-6fd5-542e-15d8-7849cc60780b@kernel.org>
-Date:   Thu, 16 Mar 2023 08:38:14 +0100
+        by smtp-out2.suse.de (Postfix) with ESMTPS id 9A8C21FDEC;
+        Thu, 16 Mar 2023 08:29:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+        t=1678955370; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=cVCXY5Bgz2RHJRsH5WCaGi/r+E4g7WP8V9UNBAtw7ik=;
+        b=k2M4YZj3WVXFea2cQaYpLXlM5isJrO/4UuFm2CDDxNYtQu+SMXaxMs8VV0/JmZitJXnX1C
+        9NQtwPDNh9XyhN70/Q068MzJnS4Up/kgyFjlOoGjalECVh5DziO4veUtSegqR25MrQT/ax
+        ZXiQuENZflKlfvAh791pTfyRP6y4/74=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+        s=susede2_ed25519; t=1678955370;
+        h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=cVCXY5Bgz2RHJRsH5WCaGi/r+E4g7WP8V9UNBAtw7ik=;
+        b=QBZAtFCFRyt/EAGU1flndM8xAD66jbXQ1npZV7Sd9VBo7zb+IBuQ2GmVKV88+8s1EDl/4S
+        /x9y/5R8O0av49BA==
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+        (No client certificate requested)
+        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id 7B6DF13A2F;
+        Thu, 16 Mar 2023 08:29:30 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([192.168.254.65])
+        by imap2.suse-dmz.suse.de with ESMTPSA
+        id GAGYHWrTEmQ4IgAAMHmgww
+        (envelope-from <vbabka@suse.cz>); Thu, 16 Mar 2023 08:29:30 +0000
+Message-ID: <c5d9c8b4-663c-c00f-438b-f104e1228ef7@suse.cz>
+Date:   Thu, 16 Mar 2023 09:29:30 +0100
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.8.0
-Subject: Re: [PATCH v2 03/14] tracing: Rename kvfree_rcu() to
- kvfree_rcu_mightsleep()
+Subject: Re: [PATCH] ring-buffer: remove obsolete comment for
+ free_buffer_page()
 Content-Language: en-US
-To:     "Joel Fernandes (Google)" <joel@joelfernandes.org>,
+To:     Mukesh Ojha <quic_mojha@quicinc.com>,
         Steven Rostedt <rostedt@goodmis.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>
-Cc:     "Uladzislau Rezki (Sony)" <urezki@gmail.com>,
-        "Paul E . McKenney" <paulmck@kernel.org>,
-        linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
-References: <20230315181902.4177819-1-joel@joelfernandes.org>
- <20230315181902.4177819-3-joel@joelfernandes.org>
-From:   Daniel Bristot de Oliveira <bristot@kernel.org>
-In-Reply-To: <20230315181902.4177819-3-joel@joelfernandes.org>
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Ingo Molnar <mingo@elte.hu>
+Cc:     linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        patches@lists.linux.dev, Mike Rapoport <mike.rapoport@gmail.com>
+References: <20230315142446.27040-1-vbabka@suse.cz>
+ <72de48c7-014d-80ac-51e9-ba22450f1d5b@quicinc.com>
+ <1cb12058-f59e-1433-6ba6-f500be250996@quicinc.com>
+From:   Vlastimil Babka <vbabka@suse.cz>
+In-Reply-To: <1cb12058-f59e-1433-6ba6-f500be250996@quicinc.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On 3/15/23 19:18, Joel Fernandes (Google) wrote:
-> From: "Uladzislau Rezki (Sony)" <urezki@gmail.com>
+On 3/15/23 16:53, Mukesh Ojha wrote:
 > 
-> The kvfree_rcu() macro's single-argument form is deprecated.  Therefore
-> switch to the new kvfree_rcu_mightsleep() variant. The goal is to
-> avoid accidental use of the single-argument forms, which can introduce
-> functionality bugs in atomic contexts and latency bugs in non-atomic
-> contexts.
 > 
-> Cc: Steven Rostedt (VMware) <rostedt@goodmis.org>
-> Signed-off-by: Uladzislau Rezki (Sony) <urezki@gmail.com>
-> Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
-> Signed-off-by: Joel Fernandes (Google) <joel@joelfernandes.org>
-> ---
->  kernel/trace/trace_osnoise.c | 2 +-
->  kernel/trace/trace_probe.c   | 2 +-
->  2 files changed, 2 insertions(+), 2 deletions(-)
+> On 3/15/2023 9:21 PM, Mukesh Ojha wrote:
+>> 
+>> 
+>> On 3/15/2023 7:54 PM, Vlastimil Babka wrote:
+>>> The comment refers to mm/slob.o which is being removed. It comes from
 > 
-> diff --git a/kernel/trace/trace_osnoise.c b/kernel/trace/trace_osnoise.c
-> index 04f0fdae19a1..f68ca1e6460f 100644
-> --- a/kernel/trace/trace_osnoise.c
-> +++ b/kernel/trace/trace_osnoise.c
-> @@ -159,7 +159,7 @@ static void osnoise_unregister_instance(struct trace_array *tr)
->  	if (!found)
->  		return;
->  
-> -	kvfree_rcu(inst);
-> +	kvfree_rcu_mightsleep(inst);
->  }
->  
->  /*
+> nit: mm/slob.c
 
-Acked-by: Daniel Bristot de Oliveira <bristot@kernel.org>
+Thanks, Steven can you fix that up while picking the patch, or need v2?
 
-Thanks!
--- Daniel
+> -- Mukesh
+> 
+>> 
+>> 
+>>> commit ed56829cb319 ("ring_buffer: reset buffer page when freeing") and
+>>> according to Steven the borrowed code was a page mapcount and mapping
+>>> reset, which was later removed by commit e4c2ce82ca27 ("ring_buffer:
+>>> allocate buffer page pointer"). Thus the comment is not accurate anyway,
+>>> remove it.
+>>>
+>>> Reported-by: Mike Rapoport <mike.rapoport@gmail.com>
+>>> Suggested-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+>>> Fixes: e4c2ce82ca27 ("ring_buffer: allocate buffer page pointer")
+>>> Signed-off-by: Vlastimil Babka <vbabka@suse.cz>
+>>> ---
+>>>   kernel/trace/ring_buffer.c | 4 ----
+>>>   1 file changed, 4 deletions(-)
+>>>
+>>> diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
+>>> index af50d931b020..c6f47b6cfd5f 100644
+>>> --- a/kernel/trace/ring_buffer.c
+>>> +++ b/kernel/trace/ring_buffer.c
+>>> @@ -354,10 +354,6 @@ static void rb_init_page(struct buffer_data_page 
+>>> *bpage)
+>>>       local_set(&bpage->commit, 0);
+>>>   }
+>>> -/*
+>>> - * Also stolen from mm/slob.c. Thanks to Mathieu Desnoyers for pointing
+>>> - * this issue out.
+>>> - */
+>> 
+>> Thanks for the clean up.
+>> 
+>> Reviewed-by: Mukesh Ojha <quic_mojha@quicinc.com>
+
+Thanks.
+
+>> 
+>> -- Mukesh
+>> 
+>>>   static void free_buffer_page(struct buffer_page *bpage)
+>>>   {
+>>>       free_page((unsigned long)bpage->page);
+
