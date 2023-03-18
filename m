@@ -2,48 +2,44 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4114AC61DA4
-	for <linux-trace-kernel@archiver.kernel.org>; Sat, 18 Mar 2023 16:40:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0897AC61DA4
+	for <linux-trace-kernel@archiver.kernel.org>; Sat, 18 Mar 2023 18:35:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229640AbjCRQke (ORCPT
+        id S229553AbjCRSfj (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Sat, 18 Mar 2023 12:40:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39490 "EHLO
+        Sat, 18 Mar 2023 14:35:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44248 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229478AbjCRQke (ORCPT
+        with ESMTP id S229473AbjCRSfi (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Sat, 18 Mar 2023 12:40:34 -0400
+        Sat, 18 Mar 2023 14:35:38 -0400
 Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 289481B31B;
-        Sat, 18 Mar 2023 09:40:33 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 48D9C28E99;
+        Sat, 18 Mar 2023 11:35:37 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id A48D760EBD;
-        Sat, 18 Mar 2023 16:40:32 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7EEBFC433EF;
-        Sat, 18 Mar 2023 16:40:30 +0000 (UTC)
-Date:   Sat, 18 Mar 2023 12:40:28 -0400
+        by dfw.source.kernel.org (Postfix) with ESMTPS id CDCC160ED4;
+        Sat, 18 Mar 2023 18:35:36 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 45902C4339C;
+        Sat, 18 Mar 2023 18:35:35 +0000 (UTC)
+Date:   Sat, 18 Mar 2023 14:35:33 -0400
 From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Donglin Peng <pengdonglin@sangfor.com.cn>
-Cc:     "Russell King (Oracle)" <linux@armlinux.org.uk>,
-        mhiramat@kernel.org, mark.rutland@arm.com, will@kernel.org,
-        catalin.marinas@arm.com, palmer@dabbelt.com,
-        paul.walmsley@sifive.com, tglx@linutronix.de,
-        dave.hansen@linux.intel.com, x86@kernel.org, mingo@redhat.com,
-        xiehuan09@gmail.com, dinghui@sangfor.com.cn,
-        huangcun@sangfor.com.cn, dolinux.peng@gmail.com,
-        linux-trace-kernel@vger.kernel.org,
-        linux-riscv@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4 1/2] function_graph: Support recording and printing
- the return value of function
-Message-ID: <20230318124028.4faf75d1@rorschach.local.home>
-In-Reply-To: <34781b74-8d3e-a7e6-9abe-e8d45d680eec@sangfor.com.cn>
-References: <20230315133911.958741-1-pengdonglin@sangfor.com.cn>
-        <20230315133911.958741-2-pengdonglin@sangfor.com.cn>
-        <ZBOkY8FkqgoBfzQ2@shell.armlinux.org.uk>
-        <34781b74-8d3e-a7e6-9abe-e8d45d680eec@sangfor.com.cn>
+To:     Cheng-Jui Wang <cheng-jui.wang@mediatek.com>
+Cc:     Masami Hiramatsu <mhiramat@kernel.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        AngeloGioacchino Del Regno 
+        <angelogioacchino.delregno@collabora.com>,
+        "Tom Zanussi" <zanussi@kernel.org>, <Bobule.chang@mediatek.com>,
+        <wsd_upstream@mediatek.com>, Tze-nan Wu <Tze-nan.Wu@mediatek.com>,
+        <stable@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-trace-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-mediatek@lists.infradead.org>
+Subject: Re: [PATCH] tracing: Fix use-after-free and double-free on last_cmd
+Message-ID: <20230318143533.1890d9bc@rorschach.local.home>
+In-Reply-To: <20230317053044.13828-1-cheng-jui.wang@mediatek.com>
+References: <20230317053044.13828-1-cheng-jui.wang@mediatek.com>
 X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
@@ -52,33 +48,118 @@ Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On Fri, 17 Mar 2023 10:49:49 +0800
-Donglin Peng <pengdonglin@sangfor.com.cn> wrote:
+On Fri, 17 Mar 2023 13:30:44 +0800
+Cheng-Jui Wang <cheng-jui.wang@mediatek.com> wrote:
 
-> > So, really it depends what size of return value we want to report.
-> > Also, please bear in mind that where a function returns a 32-bit
-> > value, that will be in r0, and r1 will be whatever happened to be
-> > in it at function exit - there's no defined value for r1.
-> >   
+> From: "Tze-nan Wu" <Tze-nan.Wu@mediatek.com>
+
+Hi!
+
+Thanks for the report and the patch. Some nits below.
+
+Also change the subject to:
+
+	tracing/synthetic: Fix races on freeing last_cmd
+
+> ---
+>  kernel/trace/trace_events_synth.c | 23 +++++++++++++++++++----
+>  1 file changed, 19 insertions(+), 4 deletions(-)
 > 
-> Thank you. I will document this as a limitation of fgraph return value.
-> It can just cover most cases at present and I think the r0 is enough.
+> diff --git a/kernel/trace/trace_events_synth.c b/kernel/trace/trace_events_synth.c
+> index 46d0abb32d0f..ce438eccab2e 100644
+> --- a/kernel/trace/trace_events_synth.c
+> +++ b/kernel/trace/trace_events_synth.c
+> @@ -42,16 +42,25 @@ enum { ERRORS };
+>  #undef C
+>  #define C(a, b)		b
+>  
+> +static DEFINE_MUTEX(lastcmd_mutex);
+> +
+>  static const char *err_text[] = { ERRORS };
+>  
+>  static char *last_cmd;
 
-One thing we could possibly do here is to use BTF or objtool to denote
-the return value of each function and use 2 bits of the ftrace
-rec->flags to state that it is:
+Please keep the mutex and the variable it protects next to each other:
 
-0 - void
-1 - 1 word size return
-2 - 2 word size return
+static DEFINE_MUTEX(lastcmd_mutex);
+static char *last_cmd;
 
-I believe we can get access to the function's rec via the return call
-(or add that access) and pass both words to the return function, and
-then the return callback can use this lookup to determine what values
-are useful or not.
+>  
+>  static int errpos(const char *str)
+>  {
+> -	if (!str || !last_cmd)
+> -		return 0;
+> +	int ret = 0;
+> +
+> +	mutex_lock(&lastcmd_mutex);
+> +	if (!str || !last_cmd) {
 
-In any case, I would suggest passing both regs to the callback, and for
-now just ignore the second reg until we can come up with a way to
-differentiate each function.
+Change this to just:
+
+	if (!str || !last_cmd)
+		goto out;
+
+> +		mutex_unlock(&lastcmd_mutex);
+> +		return ret;
+
+> +	}
+>  
+> -	return err_pos(last_cmd, str);
+> +	ret = err_pos(last_cmd, str);
+
+Add:
+
+ out:
+
+> +	mutex_unlock(&lastcmd_mutex);
+> +	return ret;
+>  }
+>  
+>  static void last_cmd_set(const char *str)
+> @@ -59,18 +68,24 @@ static void last_cmd_set(const char *str)
+>  	if (!str)
+>  		return;
+>  
+> +	mutex_lock(&lastcmd_mutex);
+>  	kfree(last_cmd);
+>  
+
+In this case, you can remove the space:
+
+	mutex_lock(&lastcmd_mutex);
+	kfree(last_cmd);
+	last_cmd = kstrdup(str, GFP_KERNEL);
+	mutex_unlock(&lastcmd_mutex);
+
+>  	last_cmd = kstrdup(str, GFP_KERNEL);
+> +	mutex_unlock(&lastcmd_mutex);
+>  }
+>  
+>  static void synth_err(u8 err_type, u16 err_pos)
+>  {
+> -	if (!last_cmd)
+> +	mutex_lock(&lastcmd_mutex);
+> +	if (!last_cmd) {
+
+This should be:
+
+	if (!last_cmd)
+		goto out;
+
+> +		mutex_unlock(&lastcmd_mutex);
+>  		return;
+> +	}
+>  
+>  	tracing_log_err(NULL, "synthetic_events", last_cmd, err_text,
+>  			err_type, err_pos);
+
+ out:
+
+> +	mutex_unlock(&lastcmd_mutex);
+>  }
+>  
+>  static int create_synth_event(const char *raw_command);
+
+Thanks,
 
 -- Steve
