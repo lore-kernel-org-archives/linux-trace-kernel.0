@@ -2,219 +2,150 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 76A21C6FD1D
-	for <linux-trace-kernel@archiver.kernel.org>; Fri, 17 Mar 2023 14:33:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F37BC74A5B
+	for <linux-trace-kernel@archiver.kernel.org>; Sat, 18 Mar 2023 15:28:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231238AbjCQOdn (ORCPT
+        id S229832AbjCRP2H (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Fri, 17 Mar 2023 10:33:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57192 "EHLO
+        Sat, 18 Mar 2023 11:28:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46996 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231152AbjCQOdi (ORCPT
+        with ESMTP id S229813AbjCRP2H (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Fri, 17 Mar 2023 10:33:38 -0400
-Received: from mail-wm1-x349.google.com (mail-wm1-x349.google.com [IPv6:2a00:1450:4864:20::349])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9F8E7E4C5D
-        for <linux-trace-kernel@vger.kernel.org>; Fri, 17 Mar 2023 07:33:33 -0700 (PDT)
-Received: by mail-wm1-x349.google.com with SMTP id l18-20020a05600c4f1200b003ed35ab903aso3952032wmq.6
-        for <linux-trace-kernel@vger.kernel.org>; Fri, 17 Mar 2023 07:33:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20210112; t=1679063612;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=pr8i0Eumz09pFpMEBVzLFDV1F++dQdI0hyhxEAp2n3w=;
-        b=KFFpGv1i3Q3hEABcr9gwon1e9ZOOii+a9nok8Xz6VJHQXlZj8a4ilUYyQ7HMnuhkCI
-         sXZLVNB42WAB9R7e4mMHVa9IZOWnDXuNH+2j9OKDAHzVLPmvvD6GIRnvO3NL+LPmoXb7
-         CuYqX6HtBJEl7yOy8tE3CbgH2a9QuAhgQH0TMKy6gIwD8vuHiQY14lGwrbFvySHqxjcW
-         UHWAke4bMF7QCgim7nTrat4IpktRIS4roz/VIcQX5Tyx5Mc3q8mmJStRrFEcodzEy9VI
-         XUqcI0Leb2W5ruN5ngLNBSm4rP1RDU/TYfcc9QEzXLb0+IXTjftKOL6d3GVh+lQTWdfp
-         ZTSQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1679063612;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=pr8i0Eumz09pFpMEBVzLFDV1F++dQdI0hyhxEAp2n3w=;
-        b=0OSedUOCcbp5oUD7O31/tcVH2zo71YBux7T1GEzixzVyAahWMf4Z1eh38b0zdsEv5+
-         2u/p3jfW7AjmZyCtabdwP7Xue46inAc6xNOoviBIaKpGG/HYnu7tytcJ1IdyZWchMeX0
-         mo2bhhyNZvoo80cPSuiCDQB5R9kvFx+IPKvTTg9V2nxMS7NxP6yW7NQ16vrmAxgzxMa0
-         KdH6c/7wLSZolsS6fiJrVCvCYYoURjm5AXtQT9YpRHpc6qk3f4emApnpwssIkl0cEqIk
-         /l2N2/+CdBcxddee3GilEF1PhuJRpwjY45ychhlLeSTYw6l1m/WNRJLlMDjQC/ZThrSi
-         GLpA==
-X-Gm-Message-State: AO0yUKXvXXk3aEM2L51xJVHz45qwkp5q/RFPXiExsFNjdd1syxn50HYK
-        nSrl5PZjpIiFXgSmrkKsbERw/nmV5o9AszEh
-X-Google-Smtp-Source: AK7set/+ZPVsiYqB7Hdp5WNTZma1qHm7dbiDdmEBcxtiq5xxh7zeGKnvdJNfz8Sgi+ddXtHaCz11zbRlVfE7ArBN
-X-Received: from vdonnefort.c.googlers.com ([fda3:e722:ac3:cc00:28:9cb1:c0a8:2eea])
- (user=vdonnefort job=sendgmr) by 2002:adf:efc1:0:b0:2cf:e74f:c5b1 with SMTP
- id i1-20020adfefc1000000b002cfe74fc5b1mr653973wrp.7.1679063612090; Fri, 17
- Mar 2023 07:33:32 -0700 (PDT)
-Date:   Fri, 17 Mar 2023 14:33:10 +0000
-In-Reply-To: <20230317143310.1604700-1-vdonnefort@google.com>
+        Sat, 18 Mar 2023 11:28:07 -0400
+Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2E7A0168A5;
+        Sat, 18 Mar 2023 08:28:04 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 537C5B8015A;
+        Sat, 18 Mar 2023 15:28:03 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 72901C433D2;
+        Sat, 18 Mar 2023 15:28:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1679153282;
+        bh=TfkymS/0UtxxXLVQX0IAZAlCFa1g/qoFFz33Aw2cDP4=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=EYzi7k5Shpe1V/FX4jtI7ba2bvlLmXhkezcgjC3YlwSXarKkuA8EJFeS3md6T5+eG
+         K8WEKNdaN3Ai8k+mVF3zEHPnVwRv2usaOCwd1eziABm+jZpxm5enKmHqa4HnrfqmJU
+         lD8/M6dbLgTOY0fKaMubpYydknDb56kfooQLaVn4Tn9Z8Tzwqi9sdW5vvLq1vYnhiT
+         9OXBzJ9koG0owY1T7wAIY1rhgYRtNFFeXwL23uDw4stPuVgSeslEk0i3cTYQujyeMc
+         baPoJPjd6IsSxRSojAkfZl4UCVVR/hIiQ2RiKztLh5+LSRlB7F8p12ZcaVZWLnBQ1n
+         pWdkLH0Z8NMFw==
+Date:   Sun, 19 Mar 2023 00:27:58 +0900
+From:   Masami Hiramatsu (Google) <mhiramat@kernel.org>
+To:     Naresh Kamboju <naresh.kamboju@linaro.org>
+Cc:     open list <linux-kernel@vger.kernel.org>,
+        linux-trace-kernel@vger.kernel.org,
+        Linux-Next Mailing List <linux-next@vger.kernel.org>,
+        lkft-triage@lists.linaro.org,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Anders Roxell <anders.roxell@linaro.org>
+Subject: Re: selftests: ftrace: event filter function - test event filtering
+ on functions [FAIL]
+Message-Id: <20230319002758.84a3893c88f6bfbf7ff9ad85@kernel.org>
+In-Reply-To: <CA+G9fYv5G5Hows6Ex=1NMgSW3wtieKNNsFPBTpaLcF-bzaUtrw@mail.gmail.com>
+References: <CA+G9fYtF-XEKi9YNGgR=Kf==7iRb2FrmEC7qtwAeQbfyah-UhA@mail.gmail.com>
+        <20230315173257.1311e50729c73e0cb6e0aa0d@kernel.org>
+        <CA+G9fYv5G5Hows6Ex=1NMgSW3wtieKNNsFPBTpaLcF-bzaUtrw@mail.gmail.com>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Mime-Version: 1.0
-References: <20230317143310.1604700-1-vdonnefort@google.com>
-X-Mailer: git-send-email 2.40.0.rc1.284.g88254d51c5-goog
-Message-ID: <20230317143310.1604700-3-vdonnefort@google.com>
-Subject: [PATCH 2/2] tracing: Allow user-space mapping of the ring-buffer
-From:   Vincent Donnefort <vdonnefort@google.com>
-To:     rostedt@goodmis.org, mhiramat@kernel.org,
-        linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
-Cc:     kernel-team@android.com, Vincent Donnefort <vdonnefort@google.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-Currently, user-space extracts data from the ring-buffer via splice,
-which is handy for storage or network sharing. However, due to splice
-limitations, it is imposible to do real-time analysis without a copy.
+Hi Naresh,
 
-A solution for that problem is to let the user-space map the ring-buffer
-directly.
+On Wed, 15 Mar 2023 14:41:51 +0530
+Naresh Kamboju <naresh.kamboju@linaro.org> wrote:
 
-The mapping exposed via the per-CPU file trace_pipe_raw. The first page
-is the meta-page and is followed by each page of the ring-buffer,
-ordered by their unique page ID. It is therefore easy to translate a
-page-ID to an offset in the mapping.
+> Hi Masami San,
+> 
+> 
+> On Wed, 15 Mar 2023 at 14:03, Masami Hiramatsu <mhiramat@kernel.org> wrote:
+> >
+> > Hi Naresh,
+> >
+> > On Tue, 14 Mar 2023 15:52:44 +0530
+> > Naresh Kamboju <naresh.kamboju@linaro.org> wrote:
+> >
+> > > Results from Linaro’s test farm.
+> > >
+> > > selftests ftrace failed on qemu-x86_64 and qemu-arm64.
+> > > Please find the test log below.
+> >
+> > Thanks for reporting!
+> > Can you share the kernel config which you used for this build?
+> > And the kernel is "next-20230314", is that correct?
+> 
+> I have attached a test log file and Kconfig file.
 
-  * Meta-page -- include/uapi/linux/trace_mmap.h for a description
-  * Page ID 0
-  * Page ID 1
-     ...
+Thanks! I could reproduced.
 
-The mapper must then do what use to be the kernel jobs: swap the reader
-with the head. This is done with a newly introduced ioctl:
-TRACE_MMAP_IOCTL_GET_READER_PAGE.
+The error log is here.
+----
++ . /mnt/ftrace/test.d/filter/event-filter-function.tc
++ echo 'Test event filter function name'
+Test event filter function name
++ echo 0
++ echo 0
++ echo
++ echo 'call_site.function == exit_mmap'
++ echo 1
++ echo 1
++ ls
++ echo 0
++ + wcgrep -l
+ exit_mmap
++ grep kmem_cache_free trace
++ hitcnt=0
++ + wcgrep -l
+ -v+  exit_mmap
+grep kmem_cache_free trace
++ misscnt=0
++ '[' 0 -eq 0 ]
++ exit_fail
++ exit 1
 
-Entries, pages_touched and overrun fields are automatically updated by
-the writer. Only readers keep the head page field updated. An additional
-ioctl TRACE_MMAP_IOCTL_UPDATE_META_PAGE allows to query that update,
-enabling non-consuming read from userspace.
+And the test case is here.
+-----
+echo 'call_site.function == exit_mmap' > events/kmem/kmem_cache_free/filter
+echo 1 > events/kmem/kmem_cache_free/enable
+echo 1 > tracing_on
+ls > /dev/null
+echo 0 > events/kmem/kmem_cache_free/enable
 
-Signed-off-by: Vincent Donnefort <vdonnefort@google.com>
+hitcnt=`grep kmem_cache_free trace| grep exit_mmap | wc -l`
+misscnt=`grep kmem_cache_free trace| grep -v exit_mmap | wc -l`
 
-diff --git a/include/uapi/linux/trace_mmap.h b/include/uapi/linux/trace_mmap.h
-index b5caed17a066..24bcec754a35 100644
---- a/include/uapi/linux/trace_mmap.h
-+++ b/include/uapi/linux/trace_mmap.h
-@@ -21,4 +21,7 @@ struct ring_buffer_meta_page {
- 	__u32	data_pages[];
- };
- 
-+#define TRACE_MMAP_IOCTL_GET_READER_PAGE	_IO('T', 0x1)
-+#define TRACE_MMAP_IOCTL_UPDATE_META_PAGE	_IO('T', 0x2)
-+
- #endif /* _UAPI_TRACE_MMAP_H_ */
-diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
-index 45551c7b4c36..51d06a2a7545 100644
---- a/kernel/trace/trace.c
-+++ b/kernel/trace/trace.c
-@@ -6399,7 +6399,7 @@ static void tracing_set_nop(struct trace_array *tr)
- {
- 	if (tr->current_trace == &nop_trace)
- 		return;
--	
-+
- 	tr->current_trace->enabled--;
- 
- 	if (tr->current_trace->reset)
-@@ -8432,15 +8432,27 @@ tracing_buffers_splice_read(struct file *file, loff_t *ppos,
- 	return ret;
- }
- 
--/* An ioctl call with cmd 0 to the ring buffer file will wake up all waiters */
- static long tracing_buffers_ioctl(struct file *file, unsigned int cmd, unsigned long arg)
- {
- 	struct ftrace_buffer_info *info = file->private_data;
- 	struct trace_iterator *iter = &info->iter;
- 
-+	switch (cmd) {
-+	case TRACE_MMAP_IOCTL_GET_READER_PAGE:
-+		return ring_buffer_get_reader_page(iter->array_buffer->buffer,
-+						   iter->cpu_file);
-+	case TRACE_MMAP_IOCTL_UPDATE_META_PAGE:
-+		return ring_buffer_update_meta_page(iter->array_buffer->buffer,
-+						    iter->cpu_file);
-+	}
-+
- 	if (cmd)
--		return -ENOIOCTLCMD;
-+		return -ENOTTY;
- 
-+	/*
-+	 * An ioctl call with cmd 0 to the ring buffer file will wake up all
-+	 * waiters
-+	 */
- 	mutex_lock(&trace_types_lock);
- 
- 	iter->wait_index++;
-@@ -8453,6 +8465,60 @@ static long tracing_buffers_ioctl(struct file *file, unsigned int cmd, unsigned
- 	return 0;
- }
- 
-+static vm_fault_t tracing_buffers_mmap_fault(struct vm_fault *vmf)
-+{
-+	struct ftrace_buffer_info *info = vmf->vma->vm_file->private_data;
-+	struct trace_iterator *iter = &info->iter;
-+	vm_fault_t ret = VM_FAULT_SIGBUS;
-+	struct page *page;
-+
-+	page = ring_buffer_map_fault(iter->array_buffer->buffer, iter->cpu_file,
-+				     vmf->pgoff);
-+	if (!page)
-+		return ret;
-+
-+	get_page(page);
-+	vmf->page = page;
-+
-+	return 0;
-+}
-+
-+static void tracing_buffers_mmap_close(struct vm_area_struct *vma)
-+{
-+	struct ftrace_buffer_info *info = vma->vm_file->private_data;
-+	struct trace_iterator *iter = &info->iter;
-+
-+	ring_buffer_unmap(iter->array_buffer->buffer, iter->cpu_file);
-+}
-+
-+static void tracing_buffers_mmap_open(struct vm_area_struct *vma)
-+{
-+	struct ftrace_buffer_info *info = vma->vm_file->private_data;
-+	struct trace_iterator *iter = &info->iter;
-+
-+	WARN_ON(ring_buffer_map(iter->array_buffer->buffer, iter->cpu_file));
-+}
-+
-+static const struct vm_operations_struct tracing_buffers_vmops = {
-+	.open		= tracing_buffers_mmap_open,
-+	.close		= tracing_buffers_mmap_close,
-+	.fault		= tracing_buffers_mmap_fault,
-+};
-+
-+static int tracing_buffers_mmap(struct file *filp, struct vm_area_struct *vma)
-+{
-+	struct ftrace_buffer_info *info = filp->private_data;
-+	struct trace_iterator *iter = &info->iter;
-+
-+	if (vma->vm_flags & VM_WRITE)
-+		return -EPERM;
-+
-+	vm_flags_mod(vma, VM_DONTCOPY | VM_DONTDUMP, VM_MAYWRITE);
-+	vma->vm_ops = &tracing_buffers_vmops;
-+
-+	return ring_buffer_map(iter->array_buffer->buffer, iter->cpu_file);
-+}
-+
- static const struct file_operations tracing_buffers_fops = {
- 	.open		= tracing_buffers_open,
- 	.read		= tracing_buffers_read,
-@@ -8461,6 +8527,7 @@ static const struct file_operations tracing_buffers_fops = {
- 	.splice_read	= tracing_buffers_splice_read,
- 	.unlocked_ioctl = tracing_buffers_ioctl,
- 	.llseek		= no_llseek,
-+	.mmap		= tracing_buffers_mmap,
- };
- 
- static ssize_t
+if [ $hitcnt -eq 0 ]; then
+        exit_fail
+fi
+-----
+
+The test case expects the `ls > /dev/null` involves 'kmem_cache_free' trace
+event, but it doesn't.
+
+BTW, this code is a bit fragile because the function caller can be changed
+frequently. I think it should sample the events and use one of them.
+Let me fix that.
+
+Thank you,
+
+
+> 
+> >
+> > >
+> > > Is this expected to fail ? Am I missing anything ?
+> >
+> > No, it should be a bug. I would like to reproduce it.
+> 
+> - Naresh
+
+
 -- 
-2.40.0.rc1.284.g88254d51c5-goog
-
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
