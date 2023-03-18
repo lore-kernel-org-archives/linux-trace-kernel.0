@@ -2,150 +2,83 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F37BC74A5B
-	for <linux-trace-kernel@archiver.kernel.org>; Sat, 18 Mar 2023 15:28:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4114AC61DA4
+	for <linux-trace-kernel@archiver.kernel.org>; Sat, 18 Mar 2023 16:40:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229832AbjCRP2H (ORCPT
+        id S229640AbjCRQke (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Sat, 18 Mar 2023 11:28:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46996 "EHLO
+        Sat, 18 Mar 2023 12:40:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39490 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229813AbjCRP2H (ORCPT
+        with ESMTP id S229478AbjCRQke (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Sat, 18 Mar 2023 11:28:07 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2E7A0168A5;
-        Sat, 18 Mar 2023 08:28:04 -0700 (PDT)
+        Sat, 18 Mar 2023 12:40:34 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 289481B31B;
+        Sat, 18 Mar 2023 09:40:33 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 537C5B8015A;
-        Sat, 18 Mar 2023 15:28:03 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 72901C433D2;
-        Sat, 18 Mar 2023 15:28:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1679153282;
-        bh=TfkymS/0UtxxXLVQX0IAZAlCFa1g/qoFFz33Aw2cDP4=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=EYzi7k5Shpe1V/FX4jtI7ba2bvlLmXhkezcgjC3YlwSXarKkuA8EJFeS3md6T5+eG
-         K8WEKNdaN3Ai8k+mVF3zEHPnVwRv2usaOCwd1eziABm+jZpxm5enKmHqa4HnrfqmJU
-         lD8/M6dbLgTOY0fKaMubpYydknDb56kfooQLaVn4Tn9Z8Tzwqi9sdW5vvLq1vYnhiT
-         9OXBzJ9koG0owY1T7wAIY1rhgYRtNFFeXwL23uDw4stPuVgSeslEk0i3cTYQujyeMc
-         baPoJPjd6IsSxRSojAkfZl4UCVVR/hIiQ2RiKztLh5+LSRlB7F8p12ZcaVZWLnBQ1n
-         pWdkLH0Z8NMFw==
-Date:   Sun, 19 Mar 2023 00:27:58 +0900
-From:   Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To:     Naresh Kamboju <naresh.kamboju@linaro.org>
-Cc:     open list <linux-kernel@vger.kernel.org>,
+        by dfw.source.kernel.org (Postfix) with ESMTPS id A48D760EBD;
+        Sat, 18 Mar 2023 16:40:32 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7EEBFC433EF;
+        Sat, 18 Mar 2023 16:40:30 +0000 (UTC)
+Date:   Sat, 18 Mar 2023 12:40:28 -0400
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     Donglin Peng <pengdonglin@sangfor.com.cn>
+Cc:     "Russell King (Oracle)" <linux@armlinux.org.uk>,
+        mhiramat@kernel.org, mark.rutland@arm.com, will@kernel.org,
+        catalin.marinas@arm.com, palmer@dabbelt.com,
+        paul.walmsley@sifive.com, tglx@linutronix.de,
+        dave.hansen@linux.intel.com, x86@kernel.org, mingo@redhat.com,
+        xiehuan09@gmail.com, dinghui@sangfor.com.cn,
+        huangcun@sangfor.com.cn, dolinux.peng@gmail.com,
         linux-trace-kernel@vger.kernel.org,
-        Linux-Next Mailing List <linux-next@vger.kernel.org>,
-        lkft-triage@lists.linaro.org,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Anders Roxell <anders.roxell@linaro.org>
-Subject: Re: selftests: ftrace: event filter function - test event filtering
- on functions [FAIL]
-Message-Id: <20230319002758.84a3893c88f6bfbf7ff9ad85@kernel.org>
-In-Reply-To: <CA+G9fYv5G5Hows6Ex=1NMgSW3wtieKNNsFPBTpaLcF-bzaUtrw@mail.gmail.com>
-References: <CA+G9fYtF-XEKi9YNGgR=Kf==7iRb2FrmEC7qtwAeQbfyah-UhA@mail.gmail.com>
-        <20230315173257.1311e50729c73e0cb6e0aa0d@kernel.org>
-        <CA+G9fYv5G5Hows6Ex=1NMgSW3wtieKNNsFPBTpaLcF-bzaUtrw@mail.gmail.com>
-X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+        linux-riscv@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4 1/2] function_graph: Support recording and printing
+ the return value of function
+Message-ID: <20230318124028.4faf75d1@rorschach.local.home>
+In-Reply-To: <34781b74-8d3e-a7e6-9abe-e8d45d680eec@sangfor.com.cn>
+References: <20230315133911.958741-1-pengdonglin@sangfor.com.cn>
+        <20230315133911.958741-2-pengdonglin@sangfor.com.cn>
+        <ZBOkY8FkqgoBfzQ2@shell.armlinux.org.uk>
+        <34781b74-8d3e-a7e6-9abe-e8d45d680eec@sangfor.com.cn>
+X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-Hi Naresh,
+On Fri, 17 Mar 2023 10:49:49 +0800
+Donglin Peng <pengdonglin@sangfor.com.cn> wrote:
 
-On Wed, 15 Mar 2023 14:41:51 +0530
-Naresh Kamboju <naresh.kamboju@linaro.org> wrote:
-
-> Hi Masami San,
+> > So, really it depends what size of return value we want to report.
+> > Also, please bear in mind that where a function returns a 32-bit
+> > value, that will be in r0, and r1 will be whatever happened to be
+> > in it at function exit - there's no defined value for r1.
+> >   
 > 
-> 
-> On Wed, 15 Mar 2023 at 14:03, Masami Hiramatsu <mhiramat@kernel.org> wrote:
-> >
-> > Hi Naresh,
-> >
-> > On Tue, 14 Mar 2023 15:52:44 +0530
-> > Naresh Kamboju <naresh.kamboju@linaro.org> wrote:
-> >
-> > > Results from Linaro’s test farm.
-> > >
-> > > selftests ftrace failed on qemu-x86_64 and qemu-arm64.
-> > > Please find the test log below.
-> >
-> > Thanks for reporting!
-> > Can you share the kernel config which you used for this build?
-> > And the kernel is "next-20230314", is that correct?
-> 
-> I have attached a test log file and Kconfig file.
+> Thank you. I will document this as a limitation of fgraph return value.
+> It can just cover most cases at present and I think the r0 is enough.
 
-Thanks! I could reproduced.
+One thing we could possibly do here is to use BTF or objtool to denote
+the return value of each function and use 2 bits of the ftrace
+rec->flags to state that it is:
 
-The error log is here.
-----
-+ . /mnt/ftrace/test.d/filter/event-filter-function.tc
-+ echo 'Test event filter function name'
-Test event filter function name
-+ echo 0
-+ echo 0
-+ echo
-+ echo 'call_site.function == exit_mmap'
-+ echo 1
-+ echo 1
-+ ls
-+ echo 0
-+ + wcgrep -l
- exit_mmap
-+ grep kmem_cache_free trace
-+ hitcnt=0
-+ + wcgrep -l
- -v+  exit_mmap
-grep kmem_cache_free trace
-+ misscnt=0
-+ '[' 0 -eq 0 ]
-+ exit_fail
-+ exit 1
+0 - void
+1 - 1 word size return
+2 - 2 word size return
 
-And the test case is here.
------
-echo 'call_site.function == exit_mmap' > events/kmem/kmem_cache_free/filter
-echo 1 > events/kmem/kmem_cache_free/enable
-echo 1 > tracing_on
-ls > /dev/null
-echo 0 > events/kmem/kmem_cache_free/enable
+I believe we can get access to the function's rec via the return call
+(or add that access) and pass both words to the return function, and
+then the return callback can use this lookup to determine what values
+are useful or not.
 
-hitcnt=`grep kmem_cache_free trace| grep exit_mmap | wc -l`
-misscnt=`grep kmem_cache_free trace| grep -v exit_mmap | wc -l`
+In any case, I would suggest passing both regs to the callback, and for
+now just ignore the second reg until we can come up with a way to
+differentiate each function.
 
-if [ $hitcnt -eq 0 ]; then
-        exit_fail
-fi
------
-
-The test case expects the `ls > /dev/null` involves 'kmem_cache_free' trace
-event, but it doesn't.
-
-BTW, this code is a bit fragile because the function caller can be changed
-frequently. I think it should sample the events and use one of them.
-Let me fix that.
-
-Thank you,
-
-
-> 
-> >
-> > >
-> > > Is this expected to fail ? Am I missing anything ?
-> >
-> > No, it should be a bug. I would like to reproduce it.
-> 
-> - Naresh
-
-
--- 
-Masami Hiramatsu (Google) <mhiramat@kernel.org>
+-- Steve
