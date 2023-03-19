@@ -2,113 +2,130 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5CC3FC7618A
-	for <linux-trace-kernel@archiver.kernel.org>; Sun, 19 Mar 2023 18:23:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F3426C6FD1F
+	for <linux-trace-kernel@archiver.kernel.org>; Sun, 19 Mar 2023 18:55:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229700AbjCSSXG (ORCPT
+        id S229460AbjCSSzP (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Sun, 19 Mar 2023 14:23:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33414 "EHLO
+        Sun, 19 Mar 2023 14:55:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33078 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229460AbjCSSXF (ORCPT
+        with ESMTP id S229881AbjCSSzN (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Sun, 19 Mar 2023 14:23:05 -0400
-Received: from mail-wm1-x335.google.com (mail-wm1-x335.google.com [IPv6:2a00:1450:4864:20::335])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EA0B18693;
-        Sun, 19 Mar 2023 11:23:03 -0700 (PDT)
-Received: by mail-wm1-x335.google.com with SMTP id o40-20020a05600c512800b003eddedc47aeso804326wms.3;
-        Sun, 19 Mar 2023 11:23:03 -0700 (PDT)
+        Sun, 19 Mar 2023 14:55:13 -0400
+Received: from mail-wr1-x42c.google.com (mail-wr1-x42c.google.com [IPv6:2a00:1450:4864:20::42c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D48E31FE3;
+        Sun, 19 Mar 2023 11:55:02 -0700 (PDT)
+Received: by mail-wr1-x42c.google.com with SMTP id i9so8502657wrp.3;
+        Sun, 19 Mar 2023 11:55:02 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112; t=1679250182;
+        d=gmail.com; s=20210112; t=1679252100;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=lSlmso6KkBwBklxSLJ75f8Ha+gCZQtySj8JbPBjFDek=;
-        b=RJ5EyvENhicDdyJ8u4kBtkLgOG7blSSpE2ZeS1AZBwp3+mpSZWBC84pWpRfTqUpxyL
-         PCgJzWu4u2ir4NkajumTPbsNUZuXXLkJunZyegIyesvFLzA8jbflEcPUMysMbyiP491X
-         Cy9KOg/kd9E44C9cvkzmWov7KMJCu7C+bD7RA4K37ud/svjLyym0tBn95Ku52HDouHJc
-         je76VmevGV071YHhdPL/of6EH/BZckyG6wFFTwXaaW53tL8UCfDroQPIoiz3HpWp5G4B
-         wn1JZTVgxwOj8DmD7DgHk4ApQNEE101BA99/RIvbmKKbYLuC7A/Au7D3bD6FKrP4q82D
-         XYjw==
+        bh=T8FuFglnsRTgM0DFJejxa4YeSyCwH93jBqxU8rr/8OI=;
+        b=PCodkK3x5ukl2M4K3OGErs9joY41dIBSVutIJPRdvjcJ3PiZ39lPDqawUMepncr5Tt
+         ZCyyl9oK4ulMjV+UItVFbLvQmx84kVsUWN1EIWvKmQfeH1gQKCXe0yYf2vewISAES1oM
+         hfb85ywP1iPPPkuCSsovZG0jQEqMXNmZUsQ9vjx1y7QuJciGh8/535NBrHj9mBZcnzxd
+         e0bnad28cQHTQJYcQxYO+8b5Xen4b0HsHK+TjnduIPwGduyOG3zzey7quU3/6n+C1lfD
+         huzOGJdtaBuinUFX5VIW1H9FgE6lHK1QVXn5H7MAuMbkizyBpp0D1O2tJgOUAJKd7lDY
+         F6Vg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1679250182;
+        d=1e100.net; s=20210112; t=1679252100;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=lSlmso6KkBwBklxSLJ75f8Ha+gCZQtySj8JbPBjFDek=;
-        b=wVPIKbp/ZNx+dgTqk774luEgKYQ2RWtmg8t6p3BtAwJbJPQcciVpZANvaEcCbb7vki
-         S0qtdqH+mSS1810ZaQMdw/vz2qaA6+HaSdnXzYP+1zwtYWk8D9+MhU1V96JuDsKgszLs
-         p21qsekrngDV3dpCBmSz2aj6DI24ysq6w3RqtOIfVdODQldyVo70r6xYCOPsJvoPqfTw
-         RqICDoiNvspInjzdjgYoQ9gbHDEgCbQvMjCeJwVNzvHchmiFTHViHQ/QyrIAkq7GM3zb
-         4uMWv7HHh94ttLGmKpyV/YYIwiOrG+z6sYLpjGdxViLWv02OhAQuP8Esac230FFlJrdd
-         w+Iw==
-X-Gm-Message-State: AO0yUKWMY1X7/A+JlL8k+XrK8SmlYXwCXyTFTEwYRj48iOhA1iUl+Ova
-        sEFL7NIpQyLoDmaJh/sRCOGCtSty2altZgPNu+w=
-X-Google-Smtp-Source: AK7set+8PK8WzQdWYQnVV4eGQct12+K+dhBfQvg6I/KNECs5hAlQxWqYAfkve4BhnwqumFr/YbeZqg==
-X-Received: by 2002:a05:600c:4fc9:b0:3ed:3d5a:ac99 with SMTP id o9-20020a05600c4fc900b003ed3d5aac99mr12965796wmq.5.1679250182451;
-        Sun, 19 Mar 2023 11:23:02 -0700 (PDT)
+        bh=T8FuFglnsRTgM0DFJejxa4YeSyCwH93jBqxU8rr/8OI=;
+        b=U71U+1eTuojLioD/45QkdyU3NENIGTaIhfk7XGHzKWYKma9563wTAQPXyON/OnCW0T
+         0/vvL5oBkX6Lo6n87ZFrNdhyAClU02ueB743Fcac7h32aE8aYA0UuPPXCg4Y2SubGoG0
+         DeOqpVJOK386WK1XvETdcjhwc8NyB6WRcGj51V6Iae7SakYRkrdJeAc1Ar/CGNH7dSQQ
+         8Ro4mjstW6KP2gByaqRRdskEXO4G9R3qBJ0hgnagumoEij0QGQcrQWf9tjYQuYjNPvWC
+         QTfXWwoFScCRlU5eWcVLxphX+xVJRve9VfbKJ/BWWwwy/Sgu6EKBqEviupj6bltxdUgL
+         D4vQ==
+X-Gm-Message-State: AO0yUKXbWOzGnvtZhpw2DZlVDBLoko0CdZzhdR7zy9wOFMhpB+MhKVBH
+        26HHahzJFR82/CULVrcRV54=
+X-Google-Smtp-Source: AK7set/6qugdrP+lP+37lsKec2suWsOgRB5q7oQUIoTp8ZmqaX7YJXSI6HexDporJ8igGdBY4jRi2w==
+X-Received: by 2002:a5d:4985:0:b0:2cf:f140:52e3 with SMTP id r5-20020a5d4985000000b002cff14052e3mr12201175wrq.9.1679252099627;
+        Sun, 19 Mar 2023 11:54:59 -0700 (PDT)
 Received: from krava (net-93-147-243-166.cust.vodafonedsl.it. [93.147.243.166])
-        by smtp.gmail.com with ESMTPSA id f14-20020a05600c4e8e00b003ede178677csm2007680wmq.45.2023.03.19.11.23.01
+        by smtp.gmail.com with ESMTPSA id c8-20020adfe708000000b002cde626cd96sm7067347wrm.65.2023.03.19.11.54.58
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 19 Mar 2023 11:23:02 -0700 (PDT)
+        Sun, 19 Mar 2023 11:54:59 -0700 (PDT)
 From:   Jiri Olsa <olsajiri@gmail.com>
 X-Google-Original-From: Jiri Olsa <jolsa@kernel.org>
-Date:   Sun, 19 Mar 2023 19:22:59 +0100
+Date:   Sun, 19 Mar 2023 19:54:56 +0100
 To:     Steven Rostedt <rostedt@goodmis.org>
 Cc:     Jiri Olsa <olsajiri@gmail.com>,
         Florent Revest <revest@chromium.org>,
         linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
         mhiramat@kernel.org, mark.rutland@arm.com, ast@kernel.org,
         daniel@iogearbox.net, kpsingh@kernel.org
-Subject: Re: [PATCH 4/7] ftrace: Rename _ftrace_direct_multi APIs to
- _ftrace_direct APIs
-Message-ID: <ZBdTA0gKh2xAk5Ay@krava>
+Subject: Re: [PATCH 5/7] ftrace: Store direct called addresses in their ops
+Message-ID: <ZBdagJQFA/Z7Phj5@krava>
 References: <20230316173811.1223508-1-revest@chromium.org>
- <20230316173811.1223508-5-revest@chromium.org>
- <ZBcqWqWyq0uW/wj7@krava>
- <20230319135550.22aaa04b@rorschach.local.home>
+ <20230316173811.1223508-6-revest@chromium.org>
+ <ZBcqUoUTZSNyIjLx@krava>
+ <20230319135443.1d29db2d@rorschach.local.home>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20230319135550.22aaa04b@rorschach.local.home>
+In-Reply-To: <20230319135443.1d29db2d@rorschach.local.home>
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On Sun, Mar 19, 2023 at 01:55:50PM -0400, Steven Rostedt wrote:
-> On Sun, 19 Mar 2023 16:29:30 +0100
+On Sun, Mar 19, 2023 at 01:54:43PM -0400, Steven Rostedt wrote:
+> On Sun, 19 Mar 2023 16:29:22 +0100
 > Jiri Olsa <olsajiri@gmail.com> wrote:
 > 
-> > On Thu, Mar 16, 2023 at 06:38:08PM +0100, Florent Revest wrote:
+> > > +++ b/kernel/trace/ftrace.c
+> > > @@ -2582,9 +2582,8 @@ ftrace_add_rec_direct(unsigned long ip, unsigned long addr,
+> > >  static void call_direct_funcs(unsigned long ip, unsigned long pip,
+> > >  			      struct ftrace_ops *ops, struct ftrace_regs *fregs)
+> > >  {
+> > > -	unsigned long addr;
+> > > +	unsigned long addr = ops->direct_call;  
 > > 
-> > SNIP
-> > 
-> > > diff --git a/samples/Kconfig b/samples/Kconfig
-> > > index 30ef8bd48ba3..fd24daa99f34 100644
-> > > --- a/samples/Kconfig
-> > > +++ b/samples/Kconfig
-> > > @@ -38,7 +38,7 @@ config SAMPLE_FTRACE_DIRECT
-> > >  	  that hooks to wake_up_process and prints the parameters.
-> > >  
-> > >  config SAMPLE_FTRACE_DIRECT_MULTI  
-> > 
-> > nit, we could perhaps remove this config option as well
-> > and use SAMPLE_FTRACE_DIRECT_MULTI
+> > nice, should it be read with READ_ONCE ?
 > 
-> Remove SAMPLE_FTRACE_DIRECT_MULTI for SAMPLE_FTRACE_DIRECT_MULTI?
-> 
+> Is there a "read tearing" too?
 
-sorry typo, I meant SAMPLE_FTRACE_DIRECT
+don't know, saw the comment in __modify_ftrace_direct and got curious
+why it's not in here.. feel free to ignore, I'll look it up
 
 jirka
 
+> 
 > -- Steve
 > 
 > > 
 > > jirka
 > > 
-> > > -	tristate "Build register_ftrace_direct_multi() example"
-> > > +	tristate "Build register_ftrace_direct() on multiple ips example"
-> > >  	depends on DYNAMIC_FTRACE_WITH_DIRECT_CALLS && m
-> > >  	depends on HAVE_SAMPLE_FTRACE_DIRECT_MULTI
-> > >  	help  
-> 
+> > >  
+> > > -	addr = ftrace_find_rec_direct(ip);
+> > >  	if (!addr)
+> > >  		return;
+> > >  
+> > > @@ -5380,6 +5379,7 @@ int register_ftrace_direct(struct ftrace_ops *ops, unsigned long addr)
+> > >  	ops->func = call_direct_funcs;
+> > >  	ops->flags = MULTI_FLAGS;
+> > >  	ops->trampoline = FTRACE_REGS_ADDR;
+> > > +	ops->direct_call = addr;
+> > >  
+> > >  	err = register_ftrace_function_nolock(ops);
+> > >  
+> > > @@ -5454,6 +5454,7 @@ __modify_ftrace_direct(struct ftrace_ops *ops, unsigned long addr)
+> > >  	/* Enable the tmp_ops to have the same functions as the direct ops */
+> > >  	ftrace_ops_init(&tmp_ops);
+> > >  	tmp_ops.func_hash = ops->func_hash;
+> > > +	tmp_ops.direct_call = addr;
+> > >  
+> > >  	err = register_ftrace_function_nolock(&tmp_ops);
+> > >  	if (err)
+> > > @@ -5475,6 +5476,8 @@ __modify_ftrace_direct(struct ftrace_ops *ops, unsigned long addr)
+> > >  			entry->direct = addr;
+> > >  		}
+> > >  	}
+> > > +	/* Prevent store tearing if a trampoline concurrently accesses the value */
+> > > +	WRITE_ONCE(ops->direct_call, addr);
+> > >  
+> > >  	mutex_unlock(&ftrace_lock);
