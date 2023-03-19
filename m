@@ -2,300 +2,146 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 38300C6FD1F
-	for <linux-trace-kernel@archiver.kernel.org>; Sun, 19 Mar 2023 14:24:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 59AC5C6FD1F
+	for <linux-trace-kernel@archiver.kernel.org>; Sun, 19 Mar 2023 15:29:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230416AbjCSOYz (ORCPT
+        id S230507AbjCSP3a (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Sun, 19 Mar 2023 10:24:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60028 "EHLO
+        Sun, 19 Mar 2023 11:29:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36214 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230417AbjCSOYr (ORCPT
+        with ESMTP id S230509AbjCSP33 (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Sun, 19 Mar 2023 10:24:47 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1553F1421B;
-        Sun, 19 Mar 2023 07:24:45 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 96467B80B8A;
-        Sun, 19 Mar 2023 14:24:43 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2EBD3C433AA;
-        Sun, 19 Mar 2023 14:24:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1679235882;
-        bh=IrpEa9OGG9NfUm7EFpWhzaFL6PqZH8Ie8jNrifNhhO0=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=d0GJUJEYJXTRgxnbWG0eLbOw/dvyT/qiqmaaDkdOUmwvmQectDYbeSSdQirtOXFN+
-         KLi/EuJkn5eFtvUvpBPTR+o9ePUP95+XRtx4m3o9gHWNMk5vm9xekdvLYnvZIwHwZI
-         rnAGE0eXv7nSUNAu8PL/9buaPmujg/JrE6M/UZ8WpXY7TJBVKAiYtM5LYBBBUE1Wsz
-         Uq+mhLAdA1xZv4c6qKJBf+0H0YXkxpavPMXd3F0rOuJzYsuZ0ETTg7sCD8AE9vMxQu
-         gw6PRdmaLcdI53yTfh/a37dpVPJ2G/M1nNBb9fpGy189BErzVWctjzv4EEUaeAyvGk
-         ItKqemmq5M0XQ==
-Date:   Sun, 19 Mar 2023 23:24:38 +0900
-From:   Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To:     Mark Brown <broonie@kernel.org>
-Cc:     Steven Rostedt <rostedt@goodmis.org>,
-        Shuah Khan <shuah@kernel.org>, linux-kernel@vger.kernel.org,
-        linux-trace-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org
-Subject: Re: [PATCH] selftests/ftrace: Improve integration with kselftest
- runner
-Message-Id: <20230319232438.786c46feaf9bb7ddcb78a731@kernel.org>
-In-Reply-To: <20230302-ftrace-kselftest-ktap-v1-1-a84a0765b7ad@kernel.org>
-References: <20230302-ftrace-kselftest-ktap-v1-1-a84a0765b7ad@kernel.org>
-X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        Sun, 19 Mar 2023 11:29:29 -0400
+Received: from mail-wm1-x335.google.com (mail-wm1-x335.google.com [IPv6:2a00:1450:4864:20::335])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DA9C2E1B4;
+        Sun, 19 Mar 2023 08:29:27 -0700 (PDT)
+Received: by mail-wm1-x335.google.com with SMTP id o11-20020a05600c4fcb00b003eb33ea29a8so6072345wmq.1;
+        Sun, 19 Mar 2023 08:29:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112; t=1679239766;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=tOMPkpBRgRivxnPOH7XFVD7bd47oiyx4aO634gRangA=;
+        b=j7FxfjErBxVkLfyqK8+CjjG/o/3XqirJwH3NiATirpxSDa9dJXip0WNO8EYiFinfWv
+         KxZikdR0WLEvor8H92rFJNy6d3Yf4EmLgHBYwcMg4hyqJxK6w1A9mvCNGY7bG1JNLdt5
+         bP1GgrjGEF2+COc5UL43ZmXLlJdFLguGy3wc3wbC1F7IPpGgSDXLgcJ4FKRnrFvD/ms+
+         1Ll7Cu/T0NAfRY+GS43gSdkMQPH7idU8VSMraDfKcZXCJOYoqYMbosHHIJ2VqGVWaZSK
+         D7ru/FMT7/DKfEcKa9BL8v7OCWJHGnfmQyc/MpjbW+KmieyA79tVkrIbjMO14byE7yGp
+         SeZw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112; t=1679239766;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=tOMPkpBRgRivxnPOH7XFVD7bd47oiyx4aO634gRangA=;
+        b=i+VxrCXaaH6rVDritWNYhRC4DzS+Zv1HVeIvnF4RbRyMI2YLQV4KpwLIpJeTebbSka
+         wzcMXSq34MwAaPGXg73nT1jPOpkzvbNgc+5n560N3YEnUhjBnizad6lMbvm7CPsFBFst
+         qVLyqu7iRHWnSqMw1FEjTv4bRquA83GCcTRKOEvAGeX068nkbuzBz0QQKYXR6jAJv2VN
+         H3+ZBwxZcZCnyBFgchHCE5xJ6zH8+H9S7kzoeSr7bvzNDnEApTLRLT2+w2lLarHtXVON
+         4GrYxEU/1KgmwLlQMh7f7pTs/XGadOewpDQ7x0y4rx1fIZb6jabeOLlQ/NdgV+2Pf6fG
+         N/7A==
+X-Gm-Message-State: AO0yUKUjfmKf1JHh7stQYYm77kjd4A9AXjM6Hro+d+cBEkSKZvl5G0iW
+        CKewZ/id3GulC+KAOjo7KwVa0ExuV08SQCbX9DE=
+X-Google-Smtp-Source: AK7set8Wy+4BbU3BpcV/tcwvESdcmSx5l8cGmB9WmC+3spldN6amF8PW6aDfCpu0iml5LpEeQ4XMAA==
+X-Received: by 2002:a7b:c8d8:0:b0:3db:8de:6993 with SMTP id f24-20020a7bc8d8000000b003db08de6993mr7152538wml.4.1679239766249;
+        Sun, 19 Mar 2023 08:29:26 -0700 (PDT)
+Received: from krava (net-93-147-243-166.cust.vodafonedsl.it. [93.147.243.166])
+        by smtp.gmail.com with ESMTPSA id f26-20020a7bc8da000000b003ed2d7f9135sm7715428wml.45.2023.03.19.08.29.24
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 19 Mar 2023 08:29:25 -0700 (PDT)
+From:   Jiri Olsa <olsajiri@gmail.com>
+X-Google-Original-From: Jiri Olsa <jolsa@kernel.org>
+Date:   Sun, 19 Mar 2023 16:29:22 +0100
+To:     Florent Revest <revest@chromium.org>
+Cc:     linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+        rostedt@goodmis.org, mhiramat@kernel.org, mark.rutland@arm.com,
+        ast@kernel.org, daniel@iogearbox.net, kpsingh@kernel.org
+Subject: Re: [PATCH 5/7] ftrace: Store direct called addresses in their ops
+Message-ID: <ZBcqUoUTZSNyIjLx@krava>
+References: <20230316173811.1223508-1-revest@chromium.org>
+ <20230316173811.1223508-6-revest@chromium.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230316173811.1223508-6-revest@chromium.org>
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-Hi Mark,
-
-On Mon, 06 Mar 2023 15:35:10 +0000
-Mark Brown <broonie@kernel.org> wrote:
-
-> The ftrace selftests do not currently produce KTAP output, they produce a
-> custom format much nicer for human consumption. This means that when run in
-> automated test systems we just get a single result for the suite as a whole
-> rather than recording results for individual test cases, making it harder
-> to look at the test data and masking things like inappropriate skips.
+On Thu, Mar 16, 2023 at 06:38:09PM +0100, Florent Revest wrote:
+> All direct calls are now registered using the register_ftrace_direct API
+> so each ops can jump to only one direct-called trampoline.
 > 
-> Address this by adding support for KTAP output to the ftracetest script and
-> providing a trivial wrapper which will be invoked by the kselftest runner
-> to generate output in this format by default, users using ftracetest
-> directly will continue to get the existing output.
+> By storing the direct called trampoline address directly in the ops we
+> can save one hashmap lookup in the direct call ops and implement arm64
+> direct calls on top of call ops.
 > 
-> This is not the most elegant solution but it is simple and effective. I
-> did consider implementing this by post processing the existing output
-> format but that felt more complex and likely to result in all output being
-> lost if something goes seriously wrong during the run which would not be
-> helpful. I did also consider just writing a separate runner script but
-> there's enough going on with things like the signal handling for that to
-> seem like it would be duplicating too much.
-
-This looks great! and is what we need.
-
-Acked-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-Tested-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-
-Thank you!
-
-> 
-> Signed-off-by: Mark Brown <broonie@kernel.org>
+> Signed-off-by: Florent Revest <revest@chromium.org>
 > ---
->  tools/testing/selftests/ftrace/Makefile        |  3 +-
->  tools/testing/selftests/ftrace/ftracetest      | 63 ++++++++++++++++++++++++--
->  tools/testing/selftests/ftrace/ftracetest-ktap |  8 ++++
->  3 files changed, 70 insertions(+), 4 deletions(-)
+>  include/linux/ftrace.h | 3 +++
+>  kernel/trace/ftrace.c  | 7 +++++--
+>  2 files changed, 8 insertions(+), 2 deletions(-)
 > 
-> diff --git a/tools/testing/selftests/ftrace/Makefile b/tools/testing/selftests/ftrace/Makefile
-> index d6e106fbce11..a1e955d2de4c 100644
-> --- a/tools/testing/selftests/ftrace/Makefile
-> +++ b/tools/testing/selftests/ftrace/Makefile
-> @@ -1,7 +1,8 @@
->  # SPDX-License-Identifier: GPL-2.0
->  all:
+> diff --git a/include/linux/ftrace.h b/include/linux/ftrace.h
+> index abee60865fc7..6a532dd6789e 100644
+> --- a/include/linux/ftrace.h
+> +++ b/include/linux/ftrace.h
+> @@ -321,6 +321,9 @@ struct ftrace_ops {
+>  	unsigned long			trampoline_size;
+>  	struct list_head		list;
+>  	ftrace_ops_func_t		ops_func;
+> +#ifdef CONFIG_DYNAMIC_FTRACE_WITH_DIRECT_CALLS
+> +	unsigned long			direct_call;
+> +#endif
+>  #endif
+>  };
 >  
-> -TEST_PROGS := ftracetest
-> +TEST_PROGS_EXTENDED := ftracetest
-> +TEST_PROGS := ftracetest-ktap
->  TEST_FILES := test.d settings
->  EXTRA_CLEAN := $(OUTPUT)/logs/*
+> diff --git a/kernel/trace/ftrace.c b/kernel/trace/ftrace.c
+> index 33530198d1ca..66c91fa4b6ab 100644
+> --- a/kernel/trace/ftrace.c
+> +++ b/kernel/trace/ftrace.c
+> @@ -2582,9 +2582,8 @@ ftrace_add_rec_direct(unsigned long ip, unsigned long addr,
+>  static void call_direct_funcs(unsigned long ip, unsigned long pip,
+>  			      struct ftrace_ops *ops, struct ftrace_regs *fregs)
+>  {
+> -	unsigned long addr;
+> +	unsigned long addr = ops->direct_call;
+
+nice, should it be read with READ_ONCE ?
+
+jirka
+
 >  
-> diff --git a/tools/testing/selftests/ftrace/ftracetest b/tools/testing/selftests/ftrace/ftracetest
-> index c3311c8c4089..539c8d6d5d71 100755
-> --- a/tools/testing/selftests/ftrace/ftracetest
-> +++ b/tools/testing/selftests/ftrace/ftracetest
-> @@ -13,6 +13,7 @@ echo "Usage: ftracetest [options] [testcase(s)] [testcase-directory(s)]"
->  echo " Options:"
->  echo "		-h|--help  Show help message"
->  echo "		-k|--keep  Keep passed test logs"
-> +echo "		-K|--KTAP  Output in KTAP format"
->  echo "		-v|--verbose Increase verbosity of test messages"
->  echo "		-vv        Alias of -v -v (Show all results in stdout)"
->  echo "		-vvv       Alias of -v -v -v (Show all commands immediately)"
-> @@ -85,6 +86,10 @@ parse_opts() { # opts
->        KEEP_LOG=1
->        shift 1
->      ;;
-> +    --ktap|-K)
-> +      KTAP=1
-> +      shift 1
-> +    ;;
->      --verbose|-v|-vv|-vvv)
->        if [ $VERBOSE -eq -1 ]; then
->  	usage "--console can not use with --verbose"
-> @@ -178,6 +183,7 @@ TEST_DIR=$TOP_DIR/test.d
->  TEST_CASES=`find_testcases $TEST_DIR`
->  LOG_DIR=$TOP_DIR/logs/`date +%Y%m%d-%H%M%S`/
->  KEEP_LOG=0
-> +KTAP=0
->  DEBUG=0
->  VERBOSE=0
->  UNSUPPORTED_RESULT=0
-> @@ -229,7 +235,7 @@ prlog() { # messages
->      newline=
->      shift
->    fi
-> -  printf "$*$newline"
-> +  [ "$KTAP" != "1" ] && printf "$*$newline"
->    [ "$LOG_FILE" ] && printf "$*$newline" | strip_esc >> $LOG_FILE
->  }
->  catlog() { #file
-> @@ -260,11 +266,11 @@ TOTAL_RESULT=0
+> -	addr = ftrace_find_rec_direct(ip);
+>  	if (!addr)
+>  		return;
 >  
->  INSTANCE=
->  CASENO=0
-> +CASENAME=
+> @@ -5380,6 +5379,7 @@ int register_ftrace_direct(struct ftrace_ops *ops, unsigned long addr)
+>  	ops->func = call_direct_funcs;
+>  	ops->flags = MULTI_FLAGS;
+>  	ops->trampoline = FTRACE_REGS_ADDR;
+> +	ops->direct_call = addr;
 >  
->  testcase() { # testfile
->    CASENO=$((CASENO+1))
-> -  desc=`grep "^#[ \t]*description:" $1 | cut -f2- -d:`
-> -  prlog -n "[$CASENO]$INSTANCE$desc"
-> +  CASENAME=`grep "^#[ \t]*description:" $1 | cut -f2- -d:`
->  }
+>  	err = register_ftrace_function_nolock(ops);
 >  
->  checkreq() { # testfile
-> @@ -277,40 +283,68 @@ test_on_instance() { # testfile
->    grep -q "^#[ \t]*flags:.*instance" $1
->  }
+> @@ -5454,6 +5454,7 @@ __modify_ftrace_direct(struct ftrace_ops *ops, unsigned long addr)
+>  	/* Enable the tmp_ops to have the same functions as the direct ops */
+>  	ftrace_ops_init(&tmp_ops);
+>  	tmp_ops.func_hash = ops->func_hash;
+> +	tmp_ops.direct_call = addr;
 >  
-> +ktaptest() { # result comment
-> +  if [ "$KTAP" != "1" ]; then
-> +    return
-> +  fi
-> +
-> +  local result=
-> +  if [ "$1" = "1" ]; then
-> +    result="ok"
-> +  else
-> +    result="not ok"
-> +  fi
-> +  shift
-> +
-> +  local comment=$*
-> +  if [ "$comment" != "" ]; then
-> +    comment="# $comment"
-> +  fi
-> +
-> +  echo $CASENO $result $INSTANCE$CASENAME $comment
-> +}
-> +
->  eval_result() { # sigval
->    case $1 in
->      $PASS)
->        prlog "	[${color_green}PASS${color_reset}]"
-> +      ktaptest 1
->        PASSED_CASES="$PASSED_CASES $CASENO"
->        return 0
->      ;;
->      $FAIL)
->        prlog "	[${color_red}FAIL${color_reset}]"
-> +      ktaptest 0
->        FAILED_CASES="$FAILED_CASES $CASENO"
->        return 1 # this is a bug.
->      ;;
->      $UNRESOLVED)
->        prlog "	[${color_blue}UNRESOLVED${color_reset}]"
-> +      ktaptest 0 UNRESOLVED
->        UNRESOLVED_CASES="$UNRESOLVED_CASES $CASENO"
->        return $UNRESOLVED_RESULT # depends on use case
->      ;;
->      $UNTESTED)
->        prlog "	[${color_blue}UNTESTED${color_reset}]"
-> +      ktaptest 1 SKIP
->        UNTESTED_CASES="$UNTESTED_CASES $CASENO"
->        return 0
->      ;;
->      $UNSUPPORTED)
->        prlog "	[${color_blue}UNSUPPORTED${color_reset}]"
-> +      ktaptest 1 SKIP
->        UNSUPPORTED_CASES="$UNSUPPORTED_CASES $CASENO"
->        return $UNSUPPORTED_RESULT # depends on use case
->      ;;
->      $XFAIL)
->        prlog "	[${color_green}XFAIL${color_reset}]"
-> +      ktaptest 1 XFAIL
->        XFAILED_CASES="$XFAILED_CASES $CASENO"
->        return 0
->      ;;
->      *)
->        prlog "	[${color_blue}UNDEFINED${color_reset}]"
-> +      ktaptest 0 error
->        UNDEFINED_CASES="$UNDEFINED_CASES $CASENO"
->        return 1 # this must be a test bug
->      ;;
-> @@ -371,6 +405,7 @@ __run_test() { # testfile
->  run_test() { # testfile
->    local testname=`basename $1`
->    testcase $1
-> +  prlog -n "[$CASENO]$INSTANCE$CASENAME"
->    if [ ! -z "$LOG_FILE" ] ; then
->      local testlog=`mktemp $LOG_DIR/${CASENO}-${testname}-log.XXXXXX`
->    else
-> @@ -405,6 +440,17 @@ run_test() { # testfile
->  # load in the helper functions
->  . $TEST_DIR/functions
+>  	err = register_ftrace_function_nolock(&tmp_ops);
+>  	if (err)
+> @@ -5475,6 +5476,8 @@ __modify_ftrace_direct(struct ftrace_ops *ops, unsigned long addr)
+>  			entry->direct = addr;
+>  		}
+>  	}
+> +	/* Prevent store tearing if a trampoline concurrently accesses the value */
+> +	WRITE_ONCE(ops->direct_call, addr);
 >  
-> +if [ "$KTAP" = "1" ]; then
-> +  echo "TAP version 13"
-> +
-> +  casecount=`echo $TEST_CASES | wc -w`
-> +  for t in $TEST_CASES; do
-> +    test_on_instance $t || continue
-> +    casecount=$((casecount+1))
-> +  done
-> +  echo "1..${casecount}"
-> +fi
-> +
->  # Main loop
->  for t in $TEST_CASES; do
->    run_test $t
-> @@ -439,6 +485,17 @@ prlog "# of unsupported: " `echo $UNSUPPORTED_CASES | wc -w`
->  prlog "# of xfailed: " `echo $XFAILED_CASES | wc -w`
->  prlog "# of undefined(test bug): " `echo $UNDEFINED_CASES | wc -w`
+>  	mutex_unlock(&ftrace_lock);
 >  
-> +if [ "$KTAP" = "1" ]; then
-> +  echo -n "# Totals:"
-> +  echo -n " pass:"`echo $PASSED_CASES | wc -w`
-> +  echo -n " faii:"`echo $FAILED_CASES | wc -w`
-> +  echo -n " xfail:"`echo $XFAILED_CASES | wc -w`
-> +  echo -n " xpass:0"
-> +  echo -n " skip:"`echo $UNTESTED_CASES $UNSUPPORTED_CASES | wc -w`
-> +  echo -n " error:"`echo $UNRESOLVED_CASES $UNDEFINED_CASES | wc -w`
-> +  echo
-> +fi
-> +
->  cleanup
->  
->  # if no error, return 0
-> diff --git a/tools/testing/selftests/ftrace/ftracetest-ktap b/tools/testing/selftests/ftrace/ftracetest-ktap
-> new file mode 100755
-> index 000000000000..b3284679ef3a
-> --- /dev/null
-> +++ b/tools/testing/selftests/ftrace/ftracetest-ktap
-> @@ -0,0 +1,8 @@
-> +#!/bin/sh -e
-> +# SPDX-License-Identifier: GPL-2.0-only
-> +#
-> +# ftracetest-ktap: Wrapper to integrate ftracetest with the kselftest runner
-> +#
-> +# Copyright (C) Arm Ltd., 2023
-> +
-> +./ftracetest -K
-> 
-> ---
-> base-commit: fe15c26ee26efa11741a7b632e9f23b01aca4cc6
-> change-id: 20230302-ftrace-kselftest-ktap-9d7878691557
-> 
-> Best regards,
 > -- 
-> Mark Brown <broonie@kernel.org>
+> 2.40.0.rc2.332.ga46443480c-goog
 > 
-
-
--- 
-Masami Hiramatsu (Google) <mhiramat@kernel.org>
