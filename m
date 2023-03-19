@@ -2,130 +2,67 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F3426C6FD1F
-	for <linux-trace-kernel@archiver.kernel.org>; Sun, 19 Mar 2023 18:55:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C6A6DC7618A
+	for <linux-trace-kernel@archiver.kernel.org>; Sun, 19 Mar 2023 20:00:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229460AbjCSSzP (ORCPT
+        id S229819AbjCSUAJ (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Sun, 19 Mar 2023 14:55:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33078 "EHLO
+        Sun, 19 Mar 2023 16:00:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39858 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229881AbjCSSzN (ORCPT
+        with ESMTP id S229490AbjCSUAI (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Sun, 19 Mar 2023 14:55:13 -0400
-Received: from mail-wr1-x42c.google.com (mail-wr1-x42c.google.com [IPv6:2a00:1450:4864:20::42c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D48E31FE3;
-        Sun, 19 Mar 2023 11:55:02 -0700 (PDT)
-Received: by mail-wr1-x42c.google.com with SMTP id i9so8502657wrp.3;
-        Sun, 19 Mar 2023 11:55:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112; t=1679252100;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=T8FuFglnsRTgM0DFJejxa4YeSyCwH93jBqxU8rr/8OI=;
-        b=PCodkK3x5ukl2M4K3OGErs9joY41dIBSVutIJPRdvjcJ3PiZ39lPDqawUMepncr5Tt
-         ZCyyl9oK4ulMjV+UItVFbLvQmx84kVsUWN1EIWvKmQfeH1gQKCXe0yYf2vewISAES1oM
-         hfb85ywP1iPPPkuCSsovZG0jQEqMXNmZUsQ9vjx1y7QuJciGh8/535NBrHj9mBZcnzxd
-         e0bnad28cQHTQJYcQxYO+8b5Xen4b0HsHK+TjnduIPwGduyOG3zzey7quU3/6n+C1lfD
-         huzOGJdtaBuinUFX5VIW1H9FgE6lHK1QVXn5H7MAuMbkizyBpp0D1O2tJgOUAJKd7lDY
-         F6Vg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1679252100;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=T8FuFglnsRTgM0DFJejxa4YeSyCwH93jBqxU8rr/8OI=;
-        b=U71U+1eTuojLioD/45QkdyU3NENIGTaIhfk7XGHzKWYKma9563wTAQPXyON/OnCW0T
-         0/vvL5oBkX6Lo6n87ZFrNdhyAClU02ueB743Fcac7h32aE8aYA0UuPPXCg4Y2SubGoG0
-         DeOqpVJOK386WK1XvETdcjhwc8NyB6WRcGj51V6Iae7SakYRkrdJeAc1Ar/CGNH7dSQQ
-         8Ro4mjstW6KP2gByaqRRdskEXO4G9R3qBJ0hgnagumoEij0QGQcrQWf9tjYQuYjNPvWC
-         QTfXWwoFScCRlU5eWcVLxphX+xVJRve9VfbKJ/BWWwwy/Sgu6EKBqEviupj6bltxdUgL
-         D4vQ==
-X-Gm-Message-State: AO0yUKXbWOzGnvtZhpw2DZlVDBLoko0CdZzhdR7zy9wOFMhpB+MhKVBH
-        26HHahzJFR82/CULVrcRV54=
-X-Google-Smtp-Source: AK7set/6qugdrP+lP+37lsKec2suWsOgRB5q7oQUIoTp8ZmqaX7YJXSI6HexDporJ8igGdBY4jRi2w==
-X-Received: by 2002:a5d:4985:0:b0:2cf:f140:52e3 with SMTP id r5-20020a5d4985000000b002cff14052e3mr12201175wrq.9.1679252099627;
-        Sun, 19 Mar 2023 11:54:59 -0700 (PDT)
-Received: from krava (net-93-147-243-166.cust.vodafonedsl.it. [93.147.243.166])
-        by smtp.gmail.com with ESMTPSA id c8-20020adfe708000000b002cde626cd96sm7067347wrm.65.2023.03.19.11.54.58
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 19 Mar 2023 11:54:59 -0700 (PDT)
-From:   Jiri Olsa <olsajiri@gmail.com>
-X-Google-Original-From: Jiri Olsa <jolsa@kernel.org>
-Date:   Sun, 19 Mar 2023 19:54:56 +0100
-To:     Steven Rostedt <rostedt@goodmis.org>
-Cc:     Jiri Olsa <olsajiri@gmail.com>,
-        Florent Revest <revest@chromium.org>,
-        linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
-        mhiramat@kernel.org, mark.rutland@arm.com, ast@kernel.org,
-        daniel@iogearbox.net, kpsingh@kernel.org
-Subject: Re: [PATCH 5/7] ftrace: Store direct called addresses in their ops
-Message-ID: <ZBdagJQFA/Z7Phj5@krava>
-References: <20230316173811.1223508-1-revest@chromium.org>
- <20230316173811.1223508-6-revest@chromium.org>
- <ZBcqUoUTZSNyIjLx@krava>
- <20230319135443.1d29db2d@rorschach.local.home>
+        Sun, 19 Mar 2023 16:00:08 -0400
+Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:3::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 98946193E5;
+        Sun, 19 Mar 2023 12:59:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20210309; h=Sender:In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=Mm5hAkLD4yLj0mE1mdGeckyZ6ya5GzFBRWzIacjhkDs=; b=GRfyPnZBO6s2GUbhAtXKTg4FOB
+        JDsUoyrbN9te/DxcftSI/88lF9I8Qt1oIPRxO5Q/AZ4vOs5DKj/hGsFDivNYH6Xhu5/fzXk9e5A8E
+        /eGobTH5eXNoNxS0r6XLb1/xX+wm7BE7kwLUD8uOv5bgQAlfZ0GVq0HSS9jP+j6B3rTYqAv72EkKq
+        EfVjmE80y0tF0sX1nyb5py7XeTTNHwSazhX64DSuJwm6lpBcCcXVHZ5/r4/7Sq85m1ah6bfmW2dKD
+        a/zXfLYp23Q3/QywKW9sOR8vE9YgV1i7ENlxsMAj5WMxxS3qiyWlhdlDnNdSpW16XkameiW3OqIGS
+        fIP0+M9A==;
+Received: from mcgrof by bombadil.infradead.org with local (Exim 4.96 #2 (Red Hat Linux))
+        id 1pdzBS-007KV1-0R;
+        Sun, 19 Mar 2023 19:59:14 +0000
+Date:   Sun, 19 Mar 2023 12:59:14 -0700
+From:   Luis Chamberlain <mcgrof@kernel.org>
+To:     Zhen Lei <thunder.leizhen@huawei.com>
+Cc:     Josh Poimboeuf <jpoimboe@kernel.org>,
+        Jiri Kosina <jikos@kernel.org>,
+        Miroslav Benes <mbenes@suse.cz>,
+        Petr Mladek <pmladek@suse.com>,
+        Joe Lawrence <joe.lawrence@redhat.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        linux-trace-kernel@vger.kernel.org, live-patching@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-modules@vger.kernel.org
+Subject: Re: [PATCH] kallsyms: Delete an unused parameter related to
+ {module_}kallsyms_on_each_symbol()
+Message-ID: <ZBdpkk275nlVL6yd@bombadil.infradead.org>
+References: <20230308073846.1882-1-thunder.leizhen@huawei.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20230319135443.1d29db2d@rorschach.local.home>
+In-Reply-To: <20230308073846.1882-1-thunder.leizhen@huawei.com>
+Sender: Luis Chamberlain <mcgrof@infradead.org>
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On Sun, Mar 19, 2023 at 01:54:43PM -0400, Steven Rostedt wrote:
-> On Sun, 19 Mar 2023 16:29:22 +0100
-> Jiri Olsa <olsajiri@gmail.com> wrote:
+On Wed, Mar 08, 2023 at 03:38:46PM +0800, Zhen Lei wrote:
+> The parameter 'struct module *' in the hook function associated with
+> {module_}kallsyms_on_each_symbol() is no longer used. Delete it.
 > 
-> > > +++ b/kernel/trace/ftrace.c
-> > > @@ -2582,9 +2582,8 @@ ftrace_add_rec_direct(unsigned long ip, unsigned long addr,
-> > >  static void call_direct_funcs(unsigned long ip, unsigned long pip,
-> > >  			      struct ftrace_ops *ops, struct ftrace_regs *fregs)
-> > >  {
-> > > -	unsigned long addr;
-> > > +	unsigned long addr = ops->direct_call;  
-> > 
-> > nice, should it be read with READ_ONCE ?
-> 
-> Is there a "read tearing" too?
+> Suggested-by: Petr Mladek <pmladek@suse.com>
+> Signed-off-by: Zhen Lei <thunder.leizhen@huawei.com>
 
-don't know, saw the comment in __modify_ftrace_direct and got curious
-why it's not in here.. feel free to ignore, I'll look it up
+Thanks, queued up on modules-next.
 
-jirka
-
-> 
-> -- Steve
-> 
-> > 
-> > jirka
-> > 
-> > >  
-> > > -	addr = ftrace_find_rec_direct(ip);
-> > >  	if (!addr)
-> > >  		return;
-> > >  
-> > > @@ -5380,6 +5379,7 @@ int register_ftrace_direct(struct ftrace_ops *ops, unsigned long addr)
-> > >  	ops->func = call_direct_funcs;
-> > >  	ops->flags = MULTI_FLAGS;
-> > >  	ops->trampoline = FTRACE_REGS_ADDR;
-> > > +	ops->direct_call = addr;
-> > >  
-> > >  	err = register_ftrace_function_nolock(ops);
-> > >  
-> > > @@ -5454,6 +5454,7 @@ __modify_ftrace_direct(struct ftrace_ops *ops, unsigned long addr)
-> > >  	/* Enable the tmp_ops to have the same functions as the direct ops */
-> > >  	ftrace_ops_init(&tmp_ops);
-> > >  	tmp_ops.func_hash = ops->func_hash;
-> > > +	tmp_ops.direct_call = addr;
-> > >  
-> > >  	err = register_ftrace_function_nolock(&tmp_ops);
-> > >  	if (err)
-> > > @@ -5475,6 +5476,8 @@ __modify_ftrace_direct(struct ftrace_ops *ops, unsigned long addr)
-> > >  			entry->direct = addr;
-> > >  		}
-> > >  	}
-> > > +	/* Prevent store tearing if a trampoline concurrently accesses the value */
-> > > +	WRITE_ONCE(ops->direct_call, addr);
-> > >  
-> > >  	mutex_unlock(&ftrace_lock);
+  Luis
