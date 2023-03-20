@@ -2,90 +2,143 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AD01AC7618D
-	for <linux-trace-kernel@archiver.kernel.org>; Mon, 20 Mar 2023 12:57:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3485CC7618D
+	for <linux-trace-kernel@archiver.kernel.org>; Mon, 20 Mar 2023 13:18:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229611AbjCTM54 (ORCPT
+        id S231782AbjCTNSU (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Mon, 20 Mar 2023 08:57:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45934 "EHLO
+        Mon, 20 Mar 2023 09:18:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42724 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231668AbjCTM5g (ORCPT
+        with ESMTP id S231770AbjCTNSJ (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Mon, 20 Mar 2023 08:57:36 -0400
-Received: from mail-io1-xd2e.google.com (mail-io1-xd2e.google.com [IPv6:2607:f8b0:4864:20::d2e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 94867EB45
-        for <linux-trace-kernel@vger.kernel.org>; Mon, 20 Mar 2023 05:56:45 -0700 (PDT)
-Received: by mail-io1-xd2e.google.com with SMTP id o12so5346103iow.6
-        for <linux-trace-kernel@vger.kernel.org>; Mon, 20 Mar 2023 05:56:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google; t=1679317005; x=1681909005;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=4PBK1F4xmuxkhj1Bp/pC5zsVsfYN8MHoztwMr1Mlxt0=;
-        b=hmCo894tBO47HrZGMgQ0TU1uLXbzv1E1p+aiRQ5KELmPk0Wz7DxvH5p81Xz4CL9ARs
-         C+rqH33TiKjBLRwEeokcvbtUJM2/xZe1J4sUcbbjU10Y+d1eot4HzrNF4Cc9cs0QK7oK
-         fWIUKt2zol35q3fEky3giQvmj8RBkOOgmHUyI=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1679317005; x=1681909005;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=4PBK1F4xmuxkhj1Bp/pC5zsVsfYN8MHoztwMr1Mlxt0=;
-        b=2lBGwvUtfNHkqQeLM1gREmrK7SgyZ9sPvP1uvwG93z6ZZ2KZ0Lke9sMg0ZODqI16jJ
-         p2U3zuVuC0eI+WGAnqRxWbTfpPgmp1/fMDyZRtqNbQrgXz1FR0iunLBs8CtxGJ2okmy0
-         oHkafm4/6hHvY6iIEaHJpi9Yhcl4yQ8pab0wIAdQK4jxIbJFtBJyBktBL6BpFnL3G1Sq
-         GDsVAl93KDS5SsVyvo8PU/FqvHrkj/H6KsmEkQueP7aRlLtHD15qltGi+gzc+Xb1CP5z
-         MnbDs5sMg3vju3Ik35B+90Zs6xKhdIOjL/y+VpcD2HT3zSJPdJwsAkpoWf9NhBzT7o5S
-         djqQ==
-X-Gm-Message-State: AO0yUKXuKBQryU5eFwTj8h60dMbayz6rdFo02O1/G0cLiuqA/hi3JpKz
-        pvdMR86RGPv1I1C+0NKOZB1iHg==
-X-Google-Smtp-Source: AK7set+VbE6SOQTu7hY7IZOXpYFjyei0/tZDLmAEfqaPb+DBYjzbVCs+QSOKQiFlDt45F6XUxaO0+Q==
-X-Received: by 2002:a5e:a50d:0:b0:74c:9cc4:647 with SMTP id 13-20020a5ea50d000000b0074c9cc40647mr8922048iog.1.1679317004868;
-        Mon, 20 Mar 2023 05:56:44 -0700 (PDT)
-Received: from [192.168.1.128] ([38.15.45.1])
-        by smtp.gmail.com with ESMTPSA id h24-20020a056602009800b00743fe29dd56sm2872679iob.4.2023.03.20.05.56.44
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 20 Mar 2023 05:56:44 -0700 (PDT)
-Message-ID: <8579dfaf-11bf-cefa-c3ed-eb9b2d9d1a22@linuxfoundation.org>
-Date:   Mon, 20 Mar 2023 06:56:43 -0600
+        Mon, 20 Mar 2023 09:18:09 -0400
+Received: from mail-m118111.qiye.163.com (mail-m118111.qiye.163.com [115.236.118.111])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E93D723A64;
+        Mon, 20 Mar 2023 06:17:50 -0700 (PDT)
+Received: from localhost.localdomain (unknown [117.133.56.22])
+        by mail-m118111.qiye.163.com (Hmail) with ESMTPA id 5AFCC5801D9;
+        Mon, 20 Mar 2023 21:17:35 +0800 (CST)
+From:   Donglin Peng <pengdonglin@sangfor.com.cn>
+To:     mhiramat@kernel.org, rostedt@goodmis.org, linux@armlinux.org.uk,
+        mark.rutland@arm.com, will@kernel.org, catalin.marinas@arm.com,
+        palmer@dabbelt.com, paul.walmsley@sifive.com, tglx@linutronix.de,
+        dave.hansen@linux.intel.com, x86@kernel.org, mingo@redhat.com,
+        xiehuan09@gmail.com, dinghui@sangfor.com.cn,
+        huangcun@sangfor.com.cn, dolinux.peng@gmail.com
+Cc:     linux-trace-kernel@vger.kernel.org,
+        linux-riscv@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Donglin Peng <pengdonglin@sangfor.com.cn>
+Subject: [PATCH v5 0/2] function_graph: Support recording and printing the return value of function
+Date:   Mon, 20 Mar 2023 06:16:48 -0700
+Message-Id: <20230320131650.482594-1-pengdonglin@sangfor.com.cn>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.8.0
-Subject: Re: [PATCH] tracing/selftests: Ignore __pfx_ symbols in kprobe test
-To:     Steven Rostedt <rostedt@goodmis.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Linux Trace Kernel <linux-trace-kernel@vger.kernel.org>
-Cc:     Masami Hiramatsu <mhiramat@kernel.org>,
-        Shuah Khan <shuah@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Shuah Khan <skhan@linuxfoundation.org>
-References: <20230207135147.5ce618d6@gandalf.local.home>
- <20230213204643.39f86987@rorschach.local.home>
- <20230318144202.486c43d1@rorschach.local.home>
-Content-Language: en-US
-From:   Shuah Khan <skhan@linuxfoundation.org>
-In-Reply-To: <20230318144202.486c43d1@rorschach.local.home>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-HM-Spam-Status: e1kfGhgUHx5ZQUpXWQgPGg8OCBgUHx5ZQUlOS1dZFg8aDwILHllBWSg2Ly
+        tZV1koWUFITzdXWS1ZQUlXWQ8JGhUIEh9ZQVlDTE5CVk1MHklMSU5PTk5MSVUTARMWGhIXJBQOD1
+        lXWRgSC1lBWUpKTFVKSEhVTk1VSUlZV1kWGg8SFR0UWUFZT0tIVUpISkJIT1VKS0tVS1kG
+X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6NxQ6OCo5Cj0QCxEeNwkNGCMr
+        ASkaCUNVSlVKTUxCSEpDSU5NTElDVTMWGhIXVQseFRwfFBUcFxIVOwgaFRwdFAlVGBQWVRgVRVlX
+        WRILWUFZSkpMVUpISFVOTVVJSVlXWQgBWUFNS01DNwY+
+X-HM-Tid: 0a86ff2b0a2a2eb7kusn5afcc5801d9
+X-HM-MType: 1
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On 3/18/23 12:42, Steven Rostedt wrote:
-> On Mon, 13 Feb 2023 20:46:43 -0500
-> Steven Rostedt <rostedt@goodmis.org> wrote:
-> 
->> Shuah,
->>
->> Can you pick this patch up?
-> 
-> ping?
-> 
-> -- Steve
+When using the function_graph tracer to analyze system call failures,
+it can be time-consuming to analyze the trace logs and locate the kernel
+function that first returns an error. This change aims to simplify the
+process by recording the function return value to the 'retval' member of
+'ftrace_graph_ent' and printing it when outputing the trace log.
 
-l I will queue this up. Sorry for the delay.
+Note that even if a function's return type is void, a return value will
+still be printed, so it should be ignored. If you care about this, the
+BTF file can be used to obtain the details of function return type. We
+can implement a tool to process the trace log and display the return
+value based on its actual type.
 
-thanks,
--- Shuah
+Here is an example:
+
+...
+
+ 1)               |  cgroup_attach_task() {
+ 1)               |    cgroup_migrate_add_src() {
+ 1)   1.403 us    |      cset_cgroup_from_root(); /* = 0xffff93fc86f58010 */
+ 1)   2.154 us    |    } /* cgroup_migrate_add_src = 0xffffb286c1297d00 */
+ 1) ! 386.538 us  |    cgroup_migrate_prepare_dst(); /* = 0x0 */
+ 1)               |    cgroup_migrate() {
+ 1)   0.651 us    |      cgroup_migrate_add_task(); /* = 0xffff93fcfd346c00 */
+ 1)               |      cgroup_migrate_execute() {
+ 1)               |        cpu_cgroup_can_attach() {
+ 1)               |          cgroup_taskset_first() {
+ 1)   0.732 us    |            cgroup_taskset_next(); /* = 0xffff93fc8fb20000 */
+ 1)   1.232 us    |          } /* cgroup_taskset_first = 0xffff93fc8fb20000 */
+ 1)   0.380 us    |          sched_rt_can_attach(); /* = 0x0 */
+ 1)   2.335 us    |        } /* cpu_cgroup_can_attach = -22 */
+ 1)   4.369 us    |      } /* cgroup_migrate_execute = -22 */
+ 1)   7.143 us    |    } /* cgroup_migrate = -22 */
+ 1)               |    cgroup_migrate_finish() {
+ 1)   0.411 us    |      put_css_set_locked(); /* = 0x8 */
+ 1) + 62.397 us   |      put_css_set_locked(); /* = 0x80000001 */
+ 1) + 64.742 us   |    } /* cgroup_migrate_finish = 0x80000000 */
+ 1) ! 465.605 us  |  } /* cgroup_attach_task = -22 */
+
+...
+
+After processing the above trace logs using BTF information:
+
+...
+
+ 1)               |  cgroup_attach_task() {
+ 1)               |    cgroup_migrate_add_src() {
+ 1)   1.403 us    |      cset_cgroup_from_root(); /* = 0xffff93fc86f58010 */
+ 1)   2.154 us    |    } /* cgroup_migrate_add_src */
+ 1) ! 386.538 us  |    cgroup_migrate_prepare_dst(); /* = 0 */
+ 1)               |    cgroup_migrate() {
+ 1)   0.651 us    |      cgroup_migrate_add_task();
+ 1)               |      cgroup_migrate_execute() {
+ 1)               |        cpu_cgroup_can_attach() {
+ 1)               |          cgroup_taskset_first() {
+ 1)   0.732 us    |            cgroup_taskset_next(); /* = 0xffff93fc8fb20000 */
+ 1)   1.232 us    |          } /* cgroup_taskset_first = 0xffff93fc8fb20000 */
+ 1)   0.380 us    |          sched_rt_can_attach(); /* = 0 */
+ 1)   2.335 us    |        } /* cpu_cgroup_can_attach = -22 */
+ 1)   4.369 us    |      } /* cgroup_migrate_execute = -22 */
+ 1)   7.143 us    |    } /* cgroup_migrate = -22 */
+ 1)               |    cgroup_migrate_finish() {
+ 1)   0.411 us    |      put_css_set_locked();
+ 1) + 62.397 us   |      put_css_set_locked();
+ 1) + 64.742 us   |    } /* cgroup_migrate_finish */
+ 1) ! 465.605 us  |  } /* cgroup_attach_task = -22 */
+
+...
+
+Donglin Peng (2):
+  function_graph: Support recording and printing the return value of
+    function
+  tracing: Add documentation for funcgraph-retval and graph_retval_hex
+
+ Documentation/trace/ftrace.rst       | 75 ++++++++++++++++++++++
+ arch/arm/Kconfig                     |  1 +
+ arch/arm/kernel/entry-ftrace.S       |  8 +++
+ arch/arm64/Kconfig                   |  1 +
+ arch/arm64/kernel/entry-ftrace.S     |  8 +++
+ arch/riscv/Kconfig                   |  1 +
+ arch/riscv/kernel/mcount.S           | 12 +++-
+ arch/x86/Kconfig                     |  1 +
+ arch/x86/kernel/ftrace_32.S          |  8 +++
+ arch/x86/kernel/ftrace_64.S          | 10 +++
+ include/linux/ftrace.h               |  3 +
+ kernel/trace/Kconfig                 |  8 +++
+ kernel/trace/fgraph.c                | 25 +++++++-
+ kernel/trace/trace.h                 |  2 +
+ kernel/trace/trace_entries.h         | 26 ++++++++
+ kernel/trace/trace_functions_graph.c | 95 +++++++++++++++++++++++++---
+ 16 files changed, 272 insertions(+), 12 deletions(-)
+
+-- 
+2.25.1
+
