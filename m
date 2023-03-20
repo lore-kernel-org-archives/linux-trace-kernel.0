@@ -2,121 +2,90 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C4540C7618D
-	for <linux-trace-kernel@archiver.kernel.org>; Mon, 20 Mar 2023 11:45:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AD01AC7618D
+	for <linux-trace-kernel@archiver.kernel.org>; Mon, 20 Mar 2023 12:57:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230163AbjCTLpx (ORCPT
+        id S229611AbjCTM54 (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Mon, 20 Mar 2023 07:45:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55596 "EHLO
+        Mon, 20 Mar 2023 08:57:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45934 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231173AbjCTLpp (ORCPT
+        with ESMTP id S231668AbjCTM5g (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Mon, 20 Mar 2023 07:45:45 -0400
-Received: from mail-pj1-x102a.google.com (mail-pj1-x102a.google.com [IPv6:2607:f8b0:4864:20::102a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9EB7D20050;
-        Mon, 20 Mar 2023 04:45:35 -0700 (PDT)
-Received: by mail-pj1-x102a.google.com with SMTP id j3-20020a17090adc8300b0023d09aea4a6so16171365pjv.5;
-        Mon, 20 Mar 2023 04:45:35 -0700 (PDT)
+        Mon, 20 Mar 2023 08:57:36 -0400
+Received: from mail-io1-xd2e.google.com (mail-io1-xd2e.google.com [IPv6:2607:f8b0:4864:20::d2e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 94867EB45
+        for <linux-trace-kernel@vger.kernel.org>; Mon, 20 Mar 2023 05:56:45 -0700 (PDT)
+Received: by mail-io1-xd2e.google.com with SMTP id o12so5346103iow.6
+        for <linux-trace-kernel@vger.kernel.org>; Mon, 20 Mar 2023 05:56:45 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112; t=1679312735;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=9i+gqxdM/y5BZO9g7s9aqMmU36osNc941oAXaTE2IFc=;
-        b=FtT0atWMoBZ2Zmxoi0UplcYMfcOPvZB8ve7hACQTBebHSoYhsrMIvwaVUBIIqaquu3
-         SEOR1+O6+bUwCTuAHDhRFj0Uj18Go+qY/yTtGxup7qyRq/1Liwa7WLU5Z3f/+Ur9+zpd
-         ceKEULxJfYgYbQTaRTleVtHifUf7Glw7vSwINHaTKEKi5ZTQvD21lPZ9Uh6n7RGqja7j
-         qoL4wrhlaK15hpZAR+2anK22lfZRTgxjjVFw0/soyys9WGEeIx8IGkWWztRWdgQArSU0
-         FrY07hcbDP+OKhiXgPbdftrnA3xSWQ+OqqTyQ7mBxE4pvEiQ4pZ0ul4kXLv2GL85CdEG
-         WO9g==
+        d=linuxfoundation.org; s=google; t=1679317005; x=1681909005;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=4PBK1F4xmuxkhj1Bp/pC5zsVsfYN8MHoztwMr1Mlxt0=;
+        b=hmCo894tBO47HrZGMgQ0TU1uLXbzv1E1p+aiRQ5KELmPk0Wz7DxvH5p81Xz4CL9ARs
+         C+rqH33TiKjBLRwEeokcvbtUJM2/xZe1J4sUcbbjU10Y+d1eot4HzrNF4Cc9cs0QK7oK
+         fWIUKt2zol35q3fEky3giQvmj8RBkOOgmHUyI=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1679312735;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=9i+gqxdM/y5BZO9g7s9aqMmU36osNc941oAXaTE2IFc=;
-        b=A+Yqe784SvmdAn99JVFb3TRMvmozyuBJD8ZENbr4KLuvKuJGz+0Pd+3ENoIL//Xiih
-         +gvL7xJLxfYCF8i20M+53fe2GOUPzo+ITBIXAJfDVGkHZtZHEQDnIeSP9tyPQ1CK+g/p
-         J8pcu7Y0lAsLIRyHm1jdW8CPza+s51KRsdUTlDvmTmMTlVOboDoFdwF14CT2JJQfOTFB
-         UqM8fRVusLTZGrBXienOB92OW9upcSgXkXYLxcCMLig7IexPqOn+JPqPgk5Mfh7fOG61
-         2Q8AWohiOt65Ub0x3COJEonLJ2gRWdtIbCLSPGbSa0/2umaZNhgMXNfcG8puPpSD2ddB
-         tzRg==
-X-Gm-Message-State: AO0yUKVq/mCwT0DdaWnSADOkXJC0QMy1KnNR4zHbVZDr0w9Z9i5/hUM1
-        m5DPTIMYwiWDnwaxAplfGm8=
-X-Google-Smtp-Source: AK7set8azzlqz4uSwPpReCQKh/IjgkSweHSc7ScO5sPQkjTEURyTKyHR4Yz69DeJn5iA1VkI+D9p0w==
-X-Received: by 2002:a17:902:c713:b0:1a1:8d4e:a71d with SMTP id p19-20020a170902c71300b001a18d4ea71dmr14373775plp.46.1679312734669;
-        Mon, 20 Mar 2023 04:45:34 -0700 (PDT)
-Received: from minwoo-desktop ([1.237.94.73])
-        by smtp.gmail.com with ESMTPSA id r8-20020a1709028bc800b0019cad2de863sm6506109plo.176.2023.03.20.04.45.32
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 20 Mar 2023 04:45:34 -0700 (PDT)
-Date:   Mon, 20 Mar 2023 20:45:02 +0900
-From:   Minwoo Im <minwoo.im.dev@gmail.com>
-To:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        linux-trace-kernel@vger.kernel.org
-Cc:     Steven Rostedt <rostedt@goodmis.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        "Matthew Wilcox (Oracle)" <willy@infradead.org>,
-        Andrew Morton <akpm@linux-foundation.org>
-Subject: Re: [PATCH] mm: mmap: remove newline at the end of the trace
-Message-ID: <ZBhHPsy8pOZ1Twds@minwoo-desktop>
-References: <ZAu6qDsNPmk82UjV@minwoo-desktop>
+        d=1e100.net; s=20210112; t=1679317005; x=1681909005;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=4PBK1F4xmuxkhj1Bp/pC5zsVsfYN8MHoztwMr1Mlxt0=;
+        b=2lBGwvUtfNHkqQeLM1gREmrK7SgyZ9sPvP1uvwG93z6ZZ2KZ0Lke9sMg0ZODqI16jJ
+         p2U3zuVuC0eI+WGAnqRxWbTfpPgmp1/fMDyZRtqNbQrgXz1FR0iunLBs8CtxGJ2okmy0
+         oHkafm4/6hHvY6iIEaHJpi9Yhcl4yQ8pab0wIAdQK4jxIbJFtBJyBktBL6BpFnL3G1Sq
+         GDsVAl93KDS5SsVyvo8PU/FqvHrkj/H6KsmEkQueP7aRlLtHD15qltGi+gzc+Xb1CP5z
+         MnbDs5sMg3vju3Ik35B+90Zs6xKhdIOjL/y+VpcD2HT3zSJPdJwsAkpoWf9NhBzT7o5S
+         djqQ==
+X-Gm-Message-State: AO0yUKXuKBQryU5eFwTj8h60dMbayz6rdFo02O1/G0cLiuqA/hi3JpKz
+        pvdMR86RGPv1I1C+0NKOZB1iHg==
+X-Google-Smtp-Source: AK7set+VbE6SOQTu7hY7IZOXpYFjyei0/tZDLmAEfqaPb+DBYjzbVCs+QSOKQiFlDt45F6XUxaO0+Q==
+X-Received: by 2002:a5e:a50d:0:b0:74c:9cc4:647 with SMTP id 13-20020a5ea50d000000b0074c9cc40647mr8922048iog.1.1679317004868;
+        Mon, 20 Mar 2023 05:56:44 -0700 (PDT)
+Received: from [192.168.1.128] ([38.15.45.1])
+        by smtp.gmail.com with ESMTPSA id h24-20020a056602009800b00743fe29dd56sm2872679iob.4.2023.03.20.05.56.44
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 20 Mar 2023 05:56:44 -0700 (PDT)
+Message-ID: <8579dfaf-11bf-cefa-c3ed-eb9b2d9d1a22@linuxfoundation.org>
+Date:   Mon, 20 Mar 2023 06:56:43 -0600
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <ZAu6qDsNPmk82UjV@minwoo-desktop>
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.8.0
+Subject: Re: [PATCH] tracing/selftests: Ignore __pfx_ symbols in kprobe test
+To:     Steven Rostedt <rostedt@goodmis.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linux Trace Kernel <linux-trace-kernel@vger.kernel.org>
+Cc:     Masami Hiramatsu <mhiramat@kernel.org>,
+        Shuah Khan <shuah@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Shuah Khan <skhan@linuxfoundation.org>
+References: <20230207135147.5ce618d6@gandalf.local.home>
+ <20230213204643.39f86987@rorschach.local.home>
+ <20230318144202.486c43d1@rorschach.local.home>
+Content-Language: en-US
+From:   Shuah Khan <skhan@linuxfoundation.org>
+In-Reply-To: <20230318144202.486c43d1@rorschach.local.home>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-Ping :)
+On 3/18/23 12:42, Steven Rostedt wrote:
+> On Mon, 13 Feb 2023 20:46:43 -0500
+> Steven Rostedt <rostedt@goodmis.org> wrote:
+> 
+>> Shuah,
+>>
+>> Can you pick this patch up?
+> 
+> ping?
+> 
+> -- Steve
 
-On 23-03-11 08:18:00, Minwoo Im wrote:
-> We already have newline in TP_printk so remove the redundant newline
-> character at the end of the mmap trace.
-> 
-> <...>-345     [006] .....    95.589290: exit_mmap: mt_mod ...
-> 
-> <...>-345     [006] .....    95.589413: vm_unmapped_area: addr=...
-> 
-> <...>-345     [006] .....    95.589571: vm_unmapped_area: addr=...
-> 
-> <...>-345     [006] .....    95.589606: vm_unmapped_area: addr=...
-> 
-> to
-> 
-> <...>-336     [006] .....    44.762506: exit_mmap: mt_mod ...
-> <...>-336     [006] .....    44.762654: vm_unmapped_area: addr=...
-> <...>-336     [006] .....    44.762794: vm_unmapped_area: addr=...
-> <...>-336     [006] .....    44.762835: vm_unmapped_area: addr=...
-> 
-> Signed-off-by: Minwoo Im <minwoo.im.dev@gmail.com>
-> ---
->  include/trace/events/mmap.h | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/include/trace/events/mmap.h b/include/trace/events/mmap.h
-> index 216de5f03621..f8d61485de16 100644
-> --- a/include/trace/events/mmap.h
-> +++ b/include/trace/events/mmap.h
-> @@ -35,7 +35,7 @@ TRACE_EVENT(vm_unmapped_area,
->  		__entry->align_offset = info->align_offset;
->  	),
->  
-> -	TP_printk("addr=0x%lx err=%ld total_vm=0x%lx flags=0x%lx len=0x%lx lo=0x%lx hi=0x%lx mask=0x%lx ofs=0x%lx\n",
-> +	TP_printk("addr=0x%lx err=%ld total_vm=0x%lx flags=0x%lx len=0x%lx lo=0x%lx hi=0x%lx mask=0x%lx ofs=0x%lx",
->  		IS_ERR_VALUE(__entry->addr) ? 0 : __entry->addr,
->  		IS_ERR_VALUE(__entry->addr) ? __entry->addr : 0,
->  		__entry->total_vm, __entry->flags, __entry->length,
-> @@ -110,7 +110,7 @@ TRACE_EVENT(exit_mmap,
->  		       __entry->mt		= &mm->mm_mt;
->  	),
->  
-> -	TP_printk("mt_mod %p, DESTROY\n",
-> +	TP_printk("mt_mod %p, DESTROY",
->  		  __entry->mt
->  	)
->  );
-> -- 
-> 2.34.1
-> 
+l I will queue this up. Sorry for the delay.
+
+thanks,
+-- Shuah
