@@ -2,43 +2,41 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5731AC7618A
-	for <linux-trace-kernel@archiver.kernel.org>; Mon, 20 Mar 2023 18:05:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A3AB3C6FD1D
+	for <linux-trace-kernel@archiver.kernel.org>; Mon, 20 Mar 2023 18:10:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229553AbjCTSFb (ORCPT
+        id S229529AbjCTSKc (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Mon, 20 Mar 2023 14:05:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34448 "EHLO
+        Mon, 20 Mar 2023 14:10:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41144 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231342AbjCTSFI (ORCPT
+        with ESMTP id S230504AbjCTSJi (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Mon, 20 Mar 2023 14:05:08 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EE5F710E7;
-        Mon, 20 Mar 2023 10:59:11 -0700 (PDT)
+        Mon, 20 Mar 2023 14:09:38 -0400
+Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BC99A33465
+        for <linux-trace-kernel@vger.kernel.org>; Mon, 20 Mar 2023 11:03:36 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 91F926176C;
-        Mon, 20 Mar 2023 17:58:36 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 01322C433EF;
-        Mon, 20 Mar 2023 17:58:34 +0000 (UTC)
-Date:   Mon, 20 Mar 2023 13:58:33 -0400
+        by ams.source.kernel.org (Postfix) with ESMTPS id 7E428B81054
+        for <linux-trace-kernel@vger.kernel.org>; Mon, 20 Mar 2023 18:02:45 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7DD9BC433EF;
+        Mon, 20 Mar 2023 18:02:43 +0000 (UTC)
+Date:   Mon, 20 Mar 2023 14:02:41 -0400
 From:   Steven Rostedt <rostedt@goodmis.org>
-To:     "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
-Cc:     linux-trace-kernel@vger.kernel.org,
-        Naresh Kamboju <naresh.kamboju@linaro.org>,
-        linux-kernel@vger.kernel.org,
-        Linux-Next Mailing List <linux-next@vger.kernel.org>,
-        lkft-triage@lists.linaro.org,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Anders Roxell <anders.roxell@linaro.org>
-Subject: Re: [PATCH] selftests/ftrace: Choose target function for filter
- test from samples
-Message-ID: <20230320135833.3681499e@gandalf.local.home>
-In-Reply-To: <167919441260.1922645.18355804179347364057.stgit@mhiramat.roam.corp.google.com>
-References: <167919441260.1922645.18355804179347364057.stgit@mhiramat.roam.corp.google.com>
+To:     Gildong Hong <roaming2man@gmail.com>
+Cc:     mhiramat@kernel.org, delyank@fb.com, peterz@infradead.org,
+        linux-trace-kernel@vger.kernel.org
+Subject: Re: [PATCH] trace/events/sched: Remove unit on printing vruntime
+ value
+Message-ID: <20230320140241.401812d1@gandalf.local.home>
+In-Reply-To: <20230320114139.GB2077@darius>
+References: <20230316115655.66639-1-roaming2man@gmail.com>
+        <20230316101137.1739d1e2@gandalf.local.home>
+        <20230319030520.GB6049@darius>
+        <20230319140738.57170fab@rorschach.local.home>
+        <20230320114139.GB2077@darius>
 X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
@@ -47,23 +45,33 @@ Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On Sun, 19 Mar 2023 11:53:32 +0900
-"Masami Hiramatsu (Google)" <mhiramat@kernel.org> wrote:
+On Mon, 20 Mar 2023 20:41:39 +0900
+Gildong Hong <roaming2man@gmail.com> wrote:
 
-> From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-> 
-> Since the event-filter-function.tc expects the 'exit_mmap()' directly
-> calls 'kmem_cache_free()', this is vulnerable to code modifications.
-> 
-> Choose the target function for the filter test from the sample
-> event data so that it can keep test running correctly even if the caller
-> function name will be changed.
-> 
-> Link: https://lore.kernel.org/all/CA+G9fYtF-XEKi9YNGgR=Kf==7iRb2FrmEC7qtwAeQbfyah-UhA@mail.gmail.com/
-> Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
-> Fixes: 7f09d639b8c4 ("tracing/selftests: Add test for event filtering on function name")
-> Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+> I agree with your opinion.
+> People can understand "vns" if they understand "vruntime".
+> Followings are the modified patch.
+> I add your name on "Suggested-by"
+> I or you could remove the line if you mind it.
 
-Acked-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+I'm good.
+
+Thanks,
 
 -- Steve
+
+> 
+> Thanks,
+> Gildong
+> 
+> ------------
+> >From 8a8d1f08a2f217151f26f04795d6c1483eb1c48f Mon Sep 17 00:00:00 2001  
+> From: Gildong Hong <roaming2man@gmail.com>
+> Date: Thu, 16 Mar 2023 20:05:48 +0900
+> Subject: [PATCH] trace/events/sched: Change unit on printing vruntime value
+> 
+> vruntime is not actual time so change unit on printing
+> from "ns" to "vns" which denotes "virtual nanosecond"
+> 
+> Suggested-by: Steven Rostedt <rostedt@goodmis.org>
+> Signed-off-by: Gildong Hong <roaming2man@gmail.com>
