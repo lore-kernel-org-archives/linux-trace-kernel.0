@@ -2,67 +2,68 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C6A6DC7618A
-	for <linux-trace-kernel@archiver.kernel.org>; Sun, 19 Mar 2023 20:00:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0EABDC6FD1F
+	for <linux-trace-kernel@archiver.kernel.org>; Mon, 20 Mar 2023 00:47:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229819AbjCSUAJ (ORCPT
+        id S229637AbjCTArm (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Sun, 19 Mar 2023 16:00:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39858 "EHLO
+        Sun, 19 Mar 2023 20:47:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54066 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229490AbjCSUAI (ORCPT
+        with ESMTP id S229493AbjCTArk (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Sun, 19 Mar 2023 16:00:08 -0400
-Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:3::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 98946193E5;
-        Sun, 19 Mar 2023 12:59:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20210309; h=Sender:In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=Mm5hAkLD4yLj0mE1mdGeckyZ6ya5GzFBRWzIacjhkDs=; b=GRfyPnZBO6s2GUbhAtXKTg4FOB
-        JDsUoyrbN9te/DxcftSI/88lF9I8Qt1oIPRxO5Q/AZ4vOs5DKj/hGsFDivNYH6Xhu5/fzXk9e5A8E
-        /eGobTH5eXNoNxS0r6XLb1/xX+wm7BE7kwLUD8uOv5bgQAlfZ0GVq0HSS9jP+j6B3rTYqAv72EkKq
-        EfVjmE80y0tF0sX1nyb5py7XeTTNHwSazhX64DSuJwm6lpBcCcXVHZ5/r4/7Sq85m1ah6bfmW2dKD
-        a/zXfLYp23Q3/QywKW9sOR8vE9YgV1i7ENlxsMAj5WMxxS3qiyWlhdlDnNdSpW16XkameiW3OqIGS
-        fIP0+M9A==;
-Received: from mcgrof by bombadil.infradead.org with local (Exim 4.96 #2 (Red Hat Linux))
-        id 1pdzBS-007KV1-0R;
-        Sun, 19 Mar 2023 19:59:14 +0000
-Date:   Sun, 19 Mar 2023 12:59:14 -0700
-From:   Luis Chamberlain <mcgrof@kernel.org>
-To:     Zhen Lei <thunder.leizhen@huawei.com>
-Cc:     Josh Poimboeuf <jpoimboe@kernel.org>,
-        Jiri Kosina <jikos@kernel.org>,
-        Miroslav Benes <mbenes@suse.cz>,
-        Petr Mladek <pmladek@suse.com>,
-        Joe Lawrence <joe.lawrence@redhat.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        linux-trace-kernel@vger.kernel.org, live-patching@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-modules@vger.kernel.org
-Subject: Re: [PATCH] kallsyms: Delete an unused parameter related to
- {module_}kallsyms_on_each_symbol()
-Message-ID: <ZBdpkk275nlVL6yd@bombadil.infradead.org>
-References: <20230308073846.1882-1-thunder.leizhen@huawei.com>
+        Sun, 19 Mar 2023 20:47:40 -0400
+Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7D48F1A495;
+        Sun, 19 Mar 2023 17:47:39 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id B22E1B80CA0;
+        Mon, 20 Mar 2023 00:47:37 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3CB50C433D2;
+        Mon, 20 Mar 2023 00:47:35 +0000 (UTC)
+Date:   Sun, 19 Mar 2023 20:47:31 -0400
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     Jiri Olsa <olsajiri@gmail.com>
+Cc:     Florent Revest <revest@chromium.org>, linux-kernel@vger.kernel.org,
+        linux-trace-kernel@vger.kernel.org, mhiramat@kernel.org,
+        mark.rutland@arm.com, ast@kernel.org, daniel@iogearbox.net,
+        kpsingh@kernel.org
+Subject: Re: [PATCH 4/7] ftrace: Rename _ftrace_direct_multi APIs to
+ _ftrace_direct APIs
+Message-ID: <20230319204731.6691dedc@rorschach.local.home>
+In-Reply-To: <ZBdTA0gKh2xAk5Ay@krava>
+References: <20230316173811.1223508-1-revest@chromium.org>
+        <20230316173811.1223508-5-revest@chromium.org>
+        <ZBcqWqWyq0uW/wj7@krava>
+        <20230319135550.22aaa04b@rorschach.local.home>
+        <ZBdTA0gKh2xAk5Ay@krava>
+X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230308073846.1882-1-thunder.leizhen@huawei.com>
-Sender: Luis Chamberlain <mcgrof@infradead.org>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On Wed, Mar 08, 2023 at 03:38:46PM +0800, Zhen Lei wrote:
-> The parameter 'struct module *' in the hook function associated with
-> {module_}kallsyms_on_each_symbol() is no longer used. Delete it.
+On Sun, 19 Mar 2023 19:22:59 +0100
+Jiri Olsa <olsajiri@gmail.com> wrote:
+
+> > > >  config SAMPLE_FTRACE_DIRECT_MULTI    
+> > > 
+> > > nit, we could perhaps remove this config option as well
+> > > and use SAMPLE_FTRACE_DIRECT_MULTI  
+> > 
+> > Remove SAMPLE_FTRACE_DIRECT_MULTI for SAMPLE_FTRACE_DIRECT_MULTI?
+> >   
 > 
-> Suggested-by: Petr Mladek <pmladek@suse.com>
-> Signed-off-by: Zhen Lei <thunder.leizhen@huawei.com>
+> sorry typo, I meant SAMPLE_FTRACE_DIRECT
 
-Thanks, queued up on modules-next.
+I believe this was discussed before, and I thought we decided to keep
+them separate. Or perhaps that was at least for testing?
 
-  Luis
+Anyway, we could merge this in the future, but I don't think that's
+necessary now.
+
+-- Steve
