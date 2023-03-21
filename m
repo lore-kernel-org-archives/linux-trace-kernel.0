@@ -2,146 +2,118 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DF613C74A5B
-	for <linux-trace-kernel@archiver.kernel.org>; Tue, 21 Mar 2023 17:07:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 52F46C74A5B
+	for <linux-trace-kernel@archiver.kernel.org>; Tue, 21 Mar 2023 17:32:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229749AbjCURHq (ORCPT
+        id S229672AbjCURc2 (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Tue, 21 Mar 2023 13:07:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32892 "EHLO
+        Tue, 21 Mar 2023 13:32:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43772 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229806AbjCURHO (ORCPT
+        with ESMTP id S229571AbjCURc1 (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Tue, 21 Mar 2023 13:07:14 -0400
-Received: from mail-wr1-x430.google.com (mail-wr1-x430.google.com [IPv6:2a00:1450:4864:20::430])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D2F143D0B0;
-        Tue, 21 Mar 2023 10:06:40 -0700 (PDT)
-Received: by mail-wr1-x430.google.com with SMTP id r29so14436382wra.13;
-        Tue, 21 Mar 2023 10:06:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112; t=1679418395;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=G2HoYoANsB+VvNaGXuuO9KcciwMkPoJj0KD18LbionU=;
-        b=bMDI99RhOSW5vpSfE3GaWRu+pk0/tZcfKlMx/azfWpsGxXvt/Y4W8YPe49olPSmDq1
-         avoK8x45BZyNoPvPal8UNnq1DUfb1owzNIno7rF8CYpcUrdl+J/Xlzx5DUX40UZcHeVO
-         mT7nisyrxvGJoIssKJgF/ejYz8FTnXs6fbMTANuGoh0g9tn51Z3VSqPrp2MRic/P2k0i
-         bp/MqDxjvddqC6GiVSmy4utJbrHT2uGw8sar8SU26siKxo+aZhuIQHuD+Wx5z4l725yl
-         5n0ab3geMztsR4Cl6HlfAqnLsIuHhhawc1NhB3v6qm+fU8Pgwa9rmp5bMR5y15Svj+C5
-         jGfw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1679418395;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=G2HoYoANsB+VvNaGXuuO9KcciwMkPoJj0KD18LbionU=;
-        b=5DArywQcLcA/eeVzu1sQ6rXKPG5GE5Y8eTCER9PJcH/egaOZ3R6jQujTCQdybeF2k3
-         q4v/XmCp95RlNanHHuDlPu6XlsfZ+gJnK4iwikAHf2auWlxtUEYXfQD/LmBB2mdwmzo8
-         W53uHLsJx5NTVPG3EGsCeZpUL5UjpmG7sX81yNpzUqxJ8N4ljlcBQ+JgpBr96Jqzedbj
-         tGbifFHmp+w2JzDC4tJ8jbsZOr2qrLOcfrdQRUA/knCKs28A/P0evswQ2DPQbHoIKGQo
-         fZzxxsxUdk2Nx/IaEa7llE5dGRO0Oy0lMWQ+usx7SWYgBfZ3IV7LQghQRwetLHCCVQEa
-         eeTA==
-X-Gm-Message-State: AO0yUKXgvWTSxXGFzFbV9ezmRXYRKODXhhXGgoIbp1eXm9D6+fQnLZ2w
-        0W8hS0UKlfxwneUZ3ZxRTPo=
-X-Google-Smtp-Source: AK7set9p0814di118+c/TjT6mOORVqCK0RYOtIblfktO2fICJkJphjRKlMUiMPxWlGGvfOs/l592VA==
-X-Received: by 2002:adf:ed0e:0:b0:2d3:bfcc:1b11 with SMTP id a14-20020adfed0e000000b002d3bfcc1b11mr2780971wro.42.1679418394749;
-        Tue, 21 Mar 2023 10:06:34 -0700 (PDT)
-Received: from krava (net-93-147-243-166.cust.vodafonedsl.it. [93.147.243.166])
-        by smtp.gmail.com with ESMTPSA id n2-20020adffe02000000b002cfeffb442bsm11743267wrr.57.2023.03.21.10.06.33
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 21 Mar 2023 10:06:34 -0700 (PDT)
-From:   Jiri Olsa <olsajiri@gmail.com>
-X-Google-Original-From: Jiri Olsa <jolsa@kernel.org>
-Date:   Tue, 21 Mar 2023 18:06:31 +0100
-To:     Florent Revest <revest@chromium.org>
-Cc:     linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
-        rostedt@goodmis.org, mhiramat@kernel.org, mark.rutland@arm.com,
-        ast@kernel.org, daniel@iogearbox.net, kpsingh@kernel.org
-Subject: Re: [PATCH v2 0/7] Refactor ftrace direct call APIs
-Message-ID: <ZBnkFz4aXwOjqInu@krava>
-References: <20230321140424.345218-1-revest@chromium.org>
+        Tue, 21 Mar 2023 13:32:27 -0400
+Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [IPv6:2001:4d48:ad52:32c8:5054:ff:fe00:142])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A170B13D5C;
+        Tue, 21 Mar 2023 10:32:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=xUZFSZQsr16SNSQJKusTXYyu832nutqEq5J/FsHnccU=; b=AVftADjchhmt+Jp4bRXmDpPWgb
+        QPWGGGotXG4NW1Bxs8o7Mp2rYgt/rL0QpXwz7h7on7QEc0WLk1BogpwK3a4peFkSHmTxBkVUyXocp
+        j16OfEx0Oa09g8pUR/qFB7nkgAKzV/AW/0T7oiuhW2LiRPbNE7GT6NZmc/fLBVcY22b/BpDYwIOMJ
+        2N+0YvkAiRDtyivAXO6s+QL9tNvKIH+3z2wm6TRGR2P1oF6tdGWQwzSQ2WpgY5ufuJR9Gx3RyzHQF
+        kR1xJKNsXr60PT+/7CeaDjk9yyvTwktOC8fZrAOTP1SzL9jUPDeglbIOlB9HuOkQdulRWp8kKMoJC
+        oqAmnEXA==;
+Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:51692)
+        by pandora.armlinux.org.uk with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+        (Exim 4.94.2)
+        (envelope-from <linux@armlinux.org.uk>)
+        id 1pefq5-0001da-I2; Tue, 21 Mar 2023 17:32:01 +0000
+Received: from linux by shell.armlinux.org.uk with local (Exim 4.94.2)
+        (envelope-from <linux@shell.armlinux.org.uk>)
+        id 1pefpp-0007vh-5A; Tue, 21 Mar 2023 17:31:45 +0000
+Date:   Tue, 21 Mar 2023 17:31:45 +0000
+From:   "Russell King (Oracle)" <linux@armlinux.org.uk>
+To:     Donglin Peng <pengdonglin@sangfor.com.cn>
+Cc:     mhiramat@kernel.org, rostedt@goodmis.org, mark.rutland@arm.com,
+        will@kernel.org, catalin.marinas@arm.com, palmer@dabbelt.com,
+        paul.walmsley@sifive.com, tglx@linutronix.de,
+        dave.hansen@linux.intel.com, x86@kernel.org, mingo@redhat.com,
+        xiehuan09@gmail.com, dinghui@sangfor.com.cn,
+        huangcun@sangfor.com.cn, dolinux.peng@gmail.com,
+        linux-trace-kernel@vger.kernel.org,
+        linux-riscv@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v5 1/2] function_graph: Support recording and printing
+ the return value of function
+Message-ID: <ZBnqAYO7rdk4Qikq@shell.armlinux.org.uk>
+References: <20230320131650.482594-1-pengdonglin@sangfor.com.cn>
+ <20230320131650.482594-2-pengdonglin@sangfor.com.cn>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20230321140424.345218-1-revest@chromium.org>
+In-Reply-To: <20230320131650.482594-2-pengdonglin@sangfor.com.cn>
+Sender: Russell King (Oracle) <linux@armlinux.org.uk>
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On Tue, Mar 21, 2023 at 03:04:17PM +0100, Florent Revest wrote:
-> Differences since v1 [1]:
-> - Use a READ_ONCE() to read the direct call address in call_direct_funcs
-> - Added an Acked-by from Mark
-> 
-> This series refactors ftrace direct call APIs in preparation for arm64 support.
-> It is roughly a subset of [2] rebased on v6.3-rc2 and meant to be taken by
-> Steven's tree before all the arm64 specific bits.
-> 
-> The first patch was suggested by Steven in a review of [1], it makes it more
-> obvious to the caller that filters probably need to be freed when unregistering
-> a direct call.
-> 
-> The next three patches consolidate the two existing ftrace APIs for registering
-> direct calls. They are only split to make the reviewer's life easier.
-> Currently, there is both a _ftrace_direct and _ftrace_direct_multi API. Apart
-> from samples and selftests, there are no users of the _ftrace_direct API left
-> in-tree so this deletes it and renames the _ftrace_direct_multi API to
-> _ftrace_direct for simplicity.
-> 
-> The main benefit of this refactoring is that, with the API that's left, an
-> ftrace_ops backing a direct call will only ever point to one direct call. We can
-> therefore store the direct called trampoline address in the ops (patch 5) and,
-> in the future arm64 series, look it up from the ftrace trampoline. (in the
-> meantime, it makes call_direct_funcs a bit simpler too)
-> 
-> Ftrace direct calls technically don't need DYNAMIC_FTRACE_WITH_REGS so this
-> extends its support to DYNAMIC_FTRACE_WITH_ARGS (patch 6). arm64 won't support
-> DYNAMIC_FTRACE_WITH_REGS.
-> 
-> Finally, it fixes the ABI of the stub direct call trampoline used in ftrace
-> selftests.
-> 
-> This has been tested on x86_64 with:
-> 1- CONFIG_FTRACE_SELFTEST
-> 2- samples/ftrace/*.ko
-> 
-> 1: https://lore.kernel.org/all/20230316173811.1223508-1-revest@chromium.org/T/#t
-> 2: https://lore.kernel.org/all/20230207182135.2671106-1-revest@chromium.org/T/#t
-> 
-> Florent Revest (6):
->   ftrace: Let unregister_ftrace_direct_multi() call ftrace_free_filter()
->   ftrace: Replace uses of _ftrace_direct APIs with _ftrace_direct_multi
->   ftrace: Remove the legacy _ftrace_direct API
->   ftrace: Rename _ftrace_direct_multi APIs to _ftrace_direct APIs
->   ftrace: Store direct called addresses in their ops
->   ftrace: Make DIRECT_CALLS work WITH_ARGS and !WITH_REGS
+On Mon, Mar 20, 2023 at 06:16:49AM -0700, Donglin Peng wrote:
+> diff --git a/arch/arm/kernel/entry-ftrace.S b/arch/arm/kernel/entry-ftrace.S
+> index 3e7bcaca5e07..ba1986e27af8 100644
+> --- a/arch/arm/kernel/entry-ftrace.S
+> +++ b/arch/arm/kernel/entry-ftrace.S
+> @@ -258,7 +258,15 @@ ENDPROC(ftrace_graph_regs_caller)
+>  #ifdef CONFIG_FUNCTION_GRAPH_TRACER
+>  ENTRY(return_to_handler)
+>  	stmdb	sp!, {r0-r3}
+> +#ifdef CONFIG_FUNCTION_GRAPH_RETVAL
+> +	/*
+> +	 * Pass both the function return values in the register r0 and r1
+> +	 * to ftrace_return_to_handler
+> +	 */
+> +	add	r2, sp, #16		@ sp at exit of instrumented routine
+> +#else
+>  	add	r0, sp, #16		@ sp at exit of instrumented routine
+> +#endif
+>  	bl	ftrace_return_to_handler
+...
+> -unsigned long ftrace_return_to_handler(unsigned long frame_pointer)
+> +static unsigned long __ftrace_return_to_handler(unsigned long retval_1st,
+> +			unsigned long retval_2nd, unsigned long frame_pointer)
+...
+> +#ifdef CONFIG_FUNCTION_GRAPH_RETVAL
+> +unsigned long ftrace_return_to_handler(unsigned long retval_1st,
+> +			unsigned long retval_2nd, unsigned long frame_pointer)
+> +{
+> +	return __ftrace_return_to_handler(retval_1st, retval_2nd, frame_pointer);
+> +}
+> +#else
+> +unsigned long ftrace_return_to_handler(unsigned long frame_pointer)
+> +{
+> +	return __ftrace_return_to_handler(0, 0, frame_pointer);
+> +}
+> +#endif
+> +
 
-lgtm
+Hi,
 
-Acked-by: Jiri Olsa <jolsa@kernel.org>
+To echo Mark's criticism, I also don't like this. I feel it would be
+better if ftrace_return_to_handler() always took the same arguments
+irrespective of the setting of CONFIG_FUNCTION_GRAPH_RETVAL.
 
-jirka
+On 32-bit ARM, we have to stack r0-r3 anyway to prevent the call to
+ftrace_return_to_handler() corrupting the return value, and these
+are the registers we need. So we might as well pass a pointer to
+these stacked registers. Whether that's acceptable on other
+architectures, I couldn't say.
 
-> 
-> Mark Rutland (1):
->   ftrace: selftest: remove broken trace_direct_tramp
-> 
->  arch/s390/kernel/mcount.S                   |   5 +
->  arch/x86/kernel/ftrace_32.S                 |   5 +
->  arch/x86/kernel/ftrace_64.S                 |   4 +
->  include/linux/ftrace.h                      |  61 +--
->  kernel/bpf/trampoline.c                     |  12 +-
->  kernel/trace/Kconfig                        |   2 +-
->  kernel/trace/ftrace.c                       | 438 ++------------------
->  kernel/trace/trace_selftest.c               |  19 +-
->  samples/Kconfig                             |   2 +-
->  samples/ftrace/ftrace-direct-modify.c       |  10 +-
->  samples/ftrace/ftrace-direct-multi-modify.c |   9 +-
->  samples/ftrace/ftrace-direct-multi.c        |   5 +-
->  samples/ftrace/ftrace-direct-too.c          |  10 +-
->  samples/ftrace/ftrace-direct.c              |  10 +-
->  14 files changed, 101 insertions(+), 491 deletions(-)
-> 
-> -- 
-> 2.40.0.rc2.332.ga46443480c-goog
-> 
+Thanks.
+
+-- 
+RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+FTTP is here! 40Mbps down 10Mbps up. Decent connectivity at last!
