@@ -2,138 +2,82 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 738B5C74A5B
-	for <linux-trace-kernel@archiver.kernel.org>; Tue, 21 Mar 2023 14:44:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D621EC6FD1D
+	for <linux-trace-kernel@archiver.kernel.org>; Tue, 21 Mar 2023 14:44:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229738AbjCUOoJ (ORCPT
+        id S231458AbjCUOoV (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Tue, 21 Mar 2023 10:44:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44328 "EHLO
+        Tue, 21 Mar 2023 10:44:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44912 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230231AbjCUOoH (ORCPT
+        with ESMTP id S231448AbjCUOoT (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Tue, 21 Mar 2023 10:44:07 -0400
-Received: from mail-wr1-x436.google.com (mail-wr1-x436.google.com [IPv6:2a00:1450:4864:20::436])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 19320303EE;
-        Tue, 21 Mar 2023 07:44:04 -0700 (PDT)
-Received: by mail-wr1-x436.google.com with SMTP id t15so13950638wrz.7;
-        Tue, 21 Mar 2023 07:44:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112; t=1679409842;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=rHAgTCkUW/lrxIRKIdW9hq+yn5IAPeXNGhTcjGhOfFo=;
-        b=LGSs9hSyVpDRwvB0TOwPjE/1eLc1VHF1TNQZmTDpSLKzMdYHrV2OUr3VH12n7tnoxb
-         Wreq1U9DzJI7OCfds7m2Dz+2JtSQGmydhEdCod+5w9gOXVUlxPBQPI3Q+ppq0lXP9Shn
-         fP27z32x+l8+r4NRTHcvaqnOZ6+NVr4YUrTat6jVuZpuENeAPOgqF6mX6xEicCbvr2Lk
-         tLWnEV8+LaHYvO0xX8wsKstmcYFXdMOuJylc9axParRxL/wluOaX9RqX/8Hyzf6eFcl5
-         HLqqXQ8gDm/Q61F2ePTQKKm9D3u16dKktCGKxK1PpBbcAmm0lEWf7B6hg7fkzojlNWse
-         Foxg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1679409842;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=rHAgTCkUW/lrxIRKIdW9hq+yn5IAPeXNGhTcjGhOfFo=;
-        b=aAhxmglkX6ivF0CWzSk8VWFctGjnRHZ0NunFQ2mX8efldEcFifwa31eAVPJhgJGa+J
-         Dpl4votYz/j1Dfg8aJxlBz1uUGUF4GYQPCVfhmQXFZxZFm30Z8tpR+BG1wHkxMXomVch
-         8fa1THjSCg+Je7RXjcHXiNH04mPdfOcMeIVyJb1rAIyAAsQAxjSf6e3gBSaclwMk0C9x
-         U/DZl0dyNSAwwCCbqo6ZFHsYUYtjArEek0NyMD1005RvsVefPxzPix0eA+obPqrah2zj
-         6K8uM8+zl4J5km42J08fUQn6qJlpz/F7l3Ys97iJ/7+kvskFTdIqPmnyFJYYFCeNhpcZ
-         i/QQ==
-X-Gm-Message-State: AO0yUKWyaYcY6W7itxVzXS+J+XsI5A6lIKTyeYpRswVXIVyOGrnBxoVF
-        NeYgvIy7C6/a73sCJlQNObE=
-X-Google-Smtp-Source: AK7set+THO0MAZ7nqkCgdMSS/If1fcEvpOX/pQjSu515Q+TLwuh3rBt36/NutZVAcshaHYlYC73P5w==
-X-Received: by 2002:a5d:5685:0:b0:2ce:a835:83d4 with SMTP id f5-20020a5d5685000000b002cea83583d4mr2587977wrv.27.1679409842363;
-        Tue, 21 Mar 2023 07:44:02 -0700 (PDT)
-Received: from krava (net-93-147-243-166.cust.vodafonedsl.it. [93.147.243.166])
-        by smtp.gmail.com with ESMTPSA id x8-20020a5d6508000000b002cea299a575sm11513572wru.101.2023.03.21.07.44.01
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 21 Mar 2023 07:44:01 -0700 (PDT)
-From:   Jiri Olsa <olsajiri@gmail.com>
-X-Google-Original-From: Jiri Olsa <jolsa@kernel.org>
-Date:   Tue, 21 Mar 2023 15:43:59 +0100
-To:     Yafang Shao <laoar.shao@gmail.com>
-Cc:     rostedt@goodmis.org, mhiramat@kernel.org,
-        alexei.starovoitov@gmail.com, linux-trace-kernel@vger.kernel.org,
-        bpf@vger.kernel.org, Andrii Nakryiko <andrii.nakryiko@gmail.com>,
-        Jiri Olsa <olsajiri@gmail.com>
-Subject: Re: [PATCH] tracing: Refuse fprobe if RCU is not watching
-Message-ID: <ZBnCr6YuUKCXpDXr@krava>
-References: <20230321020103.13494-1-laoar.shao@gmail.com>
+        Tue, 21 Mar 2023 10:44:19 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2CA143A84F;
+        Tue, 21 Mar 2023 07:44:18 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id A5C4D61BC5;
+        Tue, 21 Mar 2023 14:44:17 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E28B9C4339C;
+        Tue, 21 Mar 2023 14:44:14 +0000 (UTC)
+Date:   Tue, 21 Mar 2023 10:44:13 -0400
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     Florian Kauer <florian.kauer@linutronix.de>
+Cc:     Donglin Peng <pengdonglin@sangfor.com.cn>, mhiramat@kernel.org,
+        linux@armlinux.org.uk, mark.rutland@arm.com, will@kernel.org,
+        catalin.marinas@arm.com, palmer@dabbelt.com,
+        paul.walmsley@sifive.com, tglx@linutronix.de,
+        dave.hansen@linux.intel.com, x86@kernel.org, mingo@redhat.com,
+        xiehuan09@gmail.com, dinghui@sangfor.com.cn,
+        huangcun@sangfor.com.cn, dolinux.peng@gmail.com,
+        linux-trace-kernel@vger.kernel.org,
+        linux-riscv@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v5 1/2] function_graph: Support recording and printing
+ the return value of function
+Message-ID: <20230321104413.43a81ffb@gandalf.local.home>
+In-Reply-To: <2eeef5a3-cbe7-7a01-489a-87c5ac00adf7@linutronix.de>
+References: <20230320131650.482594-1-pengdonglin@sangfor.com.cn>
+        <20230320131650.482594-2-pengdonglin@sangfor.com.cn>
+        <2eeef5a3-cbe7-7a01-489a-87c5ac00adf7@linutronix.de>
+X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230321020103.13494-1-laoar.shao@gmail.com>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On Tue, Mar 21, 2023 at 02:01:03AM +0000, Yafang Shao wrote:
-> It hits below warning on my test machine when running
-> selftests/bpf/test_progs,
-> 
-> [  702.223611] ------------[ cut here ]------------
-> [  702.224168] RCU not on for: preempt_count_sub+0x0/0xa0
-> [  702.224770] WARNING: CPU: 14 PID: 5267 at include/linux/trace_recursion.h:162 fprobe_handler.part.0+0x1b8/0x1c0
-> [  702.231740] CPU: 14 PID: 5267 Comm: main_amd64 Kdump: loaded Tainted: G           O       6.2.0+ #584
-> [  702.233169] RIP: 0010:fprobe_handler.part.0+0x1b8/0x1c0
-> [  702.241388] Call Trace:
-> [  702.241615]  <TASK>
-> [  702.241811]  fprobe_handler+0x22/0x30
-> [  702.242129]  0xffffffffc04710f7
-> [  702.242417] RIP: 0010:preempt_count_sub+0x5/0xa0
-> [  702.242809] Code: c8 50 68 94 42 0e b5 48 cf e9 f9 fd ff ff 0f 1f 80 00 00 00 00 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 e8 4b cd 38 0b <55> 8b 0d 9c d0 cf 02 48 89 e5 85 c9 75 1b 65 8b 05 be 78 f4 4a 89
-> [  702.244752] RSP: 0018:ffffaf6187d27f10 EFLAGS: 00000082 ORIG_RAX: 0000000000000000
-> [  702.245801] RAX: 000000000000000e RBX: 0000000001b6ab72 RCX: 0000000000000000
-> [  702.246804] RDX: 0000000000000000 RSI: ffffffffb627967d RDI: 0000000000000001
-> [  702.247801] RBP: ffffaf6187d27f30 R08: 0000000000000000 R09: 0000000000000000
-> [  702.248786] R10: 0000000000000000 R11: 0000000000000000 R12: 00000000000000ca
-> [  702.249782] R13: ffffaf6187d27f58 R14: 0000000000000000 R15: 0000000000000000
-> [  702.250785]  ? preempt_count_sub+0x5/0xa0
-> [  702.251540]  ? syscall_enter_from_user_mode+0x96/0xc0
-> [  702.252368]  ? preempt_count_sub+0x5/0xa0
-> [  702.253104]  ? syscall_enter_from_user_mode+0x96/0xc0
-> [  702.253918]  do_syscall_64+0x16/0x90
-> [  702.254613]  entry_SYSCALL_64_after_hwframe+0x72/0xdc
-> [  702.255422] RIP: 0033:0x46b793
-> 
-> This issue happens under CONFIG_CONTEXT_TRACKING_USER=y. When a task
-> enters from user mode to kernel mode, or enters from user mode to irq,
-> it excutes preempt_count_sub before RCU begins watching, and thus this
-> warning is triggered.
-> 
-> We should not handle fprobe if RCU is not watching.
-> 
-> Suggested-by: Alexei Starovoitov <alexei.starovoitov@gmail.com>
-> Signed-off-by: Yafang Shao <laoar.shao@gmail.com>
-> Cc: Alexei Starovoitov <alexei.starovoitov@gmail.com>
-> Cc: Andrii Nakryiko <andrii.nakryiko@gmail.com>
-> Cc: Jiri Olsa <olsajiri@gmail.com>
+On Tue, 21 Mar 2023 15:09:40 +0100
+Florian Kauer <florian.kauer@linutronix.de> wrote:
 
-Acked-by: Jiri Olsa <jolsa@kernel.org>
-
-thanks,
-jirka
-
-> ---
->  kernel/trace/fprobe.c | 3 +++
->  1 file changed, 3 insertions(+)
+> On 20.03.23 14:16, Donglin Peng wrote:
+> > When using the function_graph tracer to analyze system call failures,
+> > it can be time-consuming to analyze the trace logs and locate the kernel
+> > function that first returns an error. This change aims to simplify the
+> > process by recording the function return value to the 'retval' member of
+> > 'ftrace_graph_ent' and printing it when outputing the trace log.  
 > 
-> diff --git a/kernel/trace/fprobe.c b/kernel/trace/fprobe.c
-> index e8143e3..fe4b248 100644
-> --- a/kernel/trace/fprobe.c
-> +++ b/kernel/trace/fprobe.c
-> @@ -27,6 +27,9 @@ static void fprobe_handler(unsigned long ip, unsigned long parent_ip,
->  	struct fprobe *fp;
->  	int bit;
+> I just came across your patch by pure luck and it helped me a lot
+> to trace down a problem I had, thanks!
+> 
+> So you can have my
+> Tested-by: Florian Kauer <florian.kauer@linutronix.de>
 >  
-> +	if (!rcu_is_watching())
-> +		return;
-> +
->  	fp = container_of(ops, struct fprobe, ops);
->  	if (fprobe_disabled(fp))
->  		return;
-> -- 
-> 1.8.3.1
+> > New trace options are introduced: funcgraph-retval and graph_retval_hex.  
 > 
+> I would personally prefer to have the second option scoped better, so for example
+> "funcgraph-retval-hex".
+
+That could be an ftrace option.
+
+Anyway, could you tell us your use case, and that could go into the change
+log of this patch as "one use case that this helped with".
+
+Thanks,
+
+-- Steve
+
