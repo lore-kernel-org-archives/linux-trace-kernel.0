@@ -2,207 +2,129 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C694FC6FD1C
-	for <linux-trace-kernel@archiver.kernel.org>; Tue, 21 Mar 2023 01:45:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 35822C6FD1D
+	for <linux-trace-kernel@archiver.kernel.org>; Tue, 21 Mar 2023 02:01:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229677AbjCUBpZ (ORCPT
+        id S229572AbjCUCBO (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Mon, 20 Mar 2023 21:45:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56774 "EHLO
+        Mon, 20 Mar 2023 22:01:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44342 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229449AbjCUBpY (ORCPT
+        with ESMTP id S230012AbjCUCBM (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Mon, 20 Mar 2023 21:45:24 -0400
-Received: from sin.source.kernel.org (sin.source.kernel.org [145.40.73.55])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 177F32A151;
-        Mon, 20 Mar 2023 18:45:22 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by sin.source.kernel.org (Postfix) with ESMTPS id 7F810CE1742;
-        Tue, 21 Mar 2023 01:45:20 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0904AC433EF;
-        Tue, 21 Mar 2023 01:45:17 +0000 (UTC)
-Date:   Mon, 20 Mar 2023 21:45:16 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Vincent Donnefort <vdonnefort@google.com>
-Cc:     mhiramat@kernel.org, linux-kernel@vger.kernel.org,
-        linux-trace-kernel@vger.kernel.org, kernel-team@android.com
-Subject: Re: [PATCH 1/2] ring-buffer: Introducing ring-buffer mapping
- functions
-Message-ID: <20230320214516.01c18367@gandalf.local.home>
-In-Reply-To: <20230317143310.1604700-2-vdonnefort@google.com>
-References: <20230317143310.1604700-1-vdonnefort@google.com>
-        <20230317143310.1604700-2-vdonnefort@google.com>
-X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+        Mon, 20 Mar 2023 22:01:12 -0400
+Received: from mail-pj1-x1029.google.com (mail-pj1-x1029.google.com [IPv6:2607:f8b0:4864:20::1029])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BD413206A4;
+        Mon, 20 Mar 2023 19:01:11 -0700 (PDT)
+Received: by mail-pj1-x1029.google.com with SMTP id h12-20020a17090aea8c00b0023d1311fab3so14422466pjz.1;
+        Mon, 20 Mar 2023 19:01:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112; t=1679364071;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=lhhrQN6VU2Z6m6A347eXTdRhJvwC6OZa/ddk6dk1oq0=;
+        b=Myb/qLmsz62zshr+JOn5ZGXOoFhNLxsg98Vy5Tvgi6Rdv4PJmhEHRYnMpk67rzhGKt
+         vKTcg7JOc/nYUrxOEpZuGtq1vQXToNp3O0gCvP5RdWO1bfF1+ReUe2JLA8sJnwink7+i
+         dadIeV1EJR8qqhN66u+HGkUww45QL6776eQXv4iL5GbcFE+5VtjUDFvvq/ZNTOFKyZkE
+         Mt9vb93Y3Mdr8e899EjS9n3rdSj4gdKrb4tWvbiR8zOUgMicl2piBqzJCkr0SVwvnjpD
+         jlg8zAdqgYSZ36ACI9s46HixUhnjekRjNjvTUV3ndzCwLjT+VNmCQHLbBPstk9WNbKLf
+         PX5A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112; t=1679364071;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=lhhrQN6VU2Z6m6A347eXTdRhJvwC6OZa/ddk6dk1oq0=;
+        b=rIoKNGGNJX8F8fAKLRvRLngxAuX8A48E/p6Ofa0WpdWgOy2Pr8ZenwlD73y2GTLnIN
+         Mh7yxygQtzfoHe9THioD3z0KZ9MHiAVhdGBGC/HjdLiPvmdQj/u4iOR3jSio9uW/7Po9
+         x5OVgxrIFpDZuTgBu/xvuur+tv9MKOGN5IybCvX/uv4ElOOPPwkhPTJJYfn1CwCVtPz/
+         hS5pYlQ1dCHX6zj1yI4MRybsIhx1jtZ1P2tgWU/tjdD8OhPVrMvNwsDccLwrlFCBR5+b
+         v6UizBET8KL5tL0kMhifeqRaX2rJjt8Z6zoIns3gR70OdUKd2Un04NOYQCCesA6LlRdy
+         Tbkw==
+X-Gm-Message-State: AO0yUKWWyWrM5EnaZzbBrMadcEFY+kSSrKANns3bA4ZPhKiyzbIgf46S
+        xWNSR2Y+h9vfPTQbNGUnDuw=
+X-Google-Smtp-Source: AK7set+z2UfwI6l7sgtBqNrYRQ1wr+Ou2J+fErZOAcYywp9G1cp6o8o3ogoHEWLZTKVrMqjq6cIovg==
+X-Received: by 2002:a17:903:410c:b0:1a1:cd69:d301 with SMTP id r12-20020a170903410c00b001a1cd69d301mr413857pld.68.1679364071105;
+        Mon, 20 Mar 2023 19:01:11 -0700 (PDT)
+Received: from vultr.guest ([2001:19f0:7002:81f:5400:4ff:fe5b:b66d])
+        by smtp.gmail.com with ESMTPSA id s7-20020a170902988700b0019edd34dac9sm7367704plp.60.2023.03.20.19.01.09
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 20 Mar 2023 19:01:10 -0700 (PDT)
+From:   Yafang Shao <laoar.shao@gmail.com>
+To:     rostedt@goodmis.org, mhiramat@kernel.org,
+        alexei.starovoitov@gmail.com
+Cc:     linux-trace-kernel@vger.kernel.org, bpf@vger.kernel.org,
+        Yafang Shao <laoar.shao@gmail.com>,
+        Andrii Nakryiko <andrii.nakryiko@gmail.com>,
+        Jiri Olsa <olsajiri@gmail.com>
+Subject: [PATCH] tracing: Refuse fprobe if RCU is not watching
+Date:   Tue, 21 Mar 2023 02:01:03 +0000
+Message-Id: <20230321020103.13494-1-laoar.shao@gmail.com>
+X-Mailer: git-send-email 2.39.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On Fri, 17 Mar 2023 14:33:09 +0000
-Vincent Donnefort <vdonnefort@google.com> wrote:
+It hits below warning on my test machine when running
+selftests/bpf/test_progs,
 
-> Also, the meta-page being... a single page, this limits at the moment the
-> number of pages in the ring-buffer that can be mapped: ~3MB on a 4K pages
-> system.
+[  702.223611] ------------[ cut here ]------------
+[  702.224168] RCU not on for: preempt_count_sub+0x0/0xa0
+[  702.224770] WARNING: CPU: 14 PID: 5267 at include/linux/trace_recursion.h:162 fprobe_handler.part.0+0x1b8/0x1c0
+[  702.231740] CPU: 14 PID: 5267 Comm: main_amd64 Kdump: loaded Tainted: G           O       6.2.0+ #584
+[  702.233169] RIP: 0010:fprobe_handler.part.0+0x1b8/0x1c0
+[  702.241388] Call Trace:
+[  702.241615]  <TASK>
+[  702.241811]  fprobe_handler+0x22/0x30
+[  702.242129]  0xffffffffc04710f7
+[  702.242417] RIP: 0010:preempt_count_sub+0x5/0xa0
+[  702.242809] Code: c8 50 68 94 42 0e b5 48 cf e9 f9 fd ff ff 0f 1f 80 00 00 00 00 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 e8 4b cd 38 0b <55> 8b 0d 9c d0 cf 02 48 89 e5 85 c9 75 1b 65 8b 05 be 78 f4 4a 89
+[  702.244752] RSP: 0018:ffffaf6187d27f10 EFLAGS: 00000082 ORIG_RAX: 0000000000000000
+[  702.245801] RAX: 000000000000000e RBX: 0000000001b6ab72 RCX: 0000000000000000
+[  702.246804] RDX: 0000000000000000 RSI: ffffffffb627967d RDI: 0000000000000001
+[  702.247801] RBP: ffffaf6187d27f30 R08: 0000000000000000 R09: 0000000000000000
+[  702.248786] R10: 0000000000000000 R11: 0000000000000000 R12: 00000000000000ca
+[  702.249782] R13: ffffaf6187d27f58 R14: 0000000000000000 R15: 0000000000000000
+[  702.250785]  ? preempt_count_sub+0x5/0xa0
+[  702.251540]  ? syscall_enter_from_user_mode+0x96/0xc0
+[  702.252368]  ? preempt_count_sub+0x5/0xa0
+[  702.253104]  ? syscall_enter_from_user_mode+0x96/0xc0
+[  702.253918]  do_syscall_64+0x16/0x90
+[  702.254613]  entry_SYSCALL_64_after_hwframe+0x72/0xdc
+[  702.255422] RIP: 0033:0x46b793
 
-I hate this limitation, so I fixed it ;-)
+This issue happens under CONFIG_CONTEXT_TRACKING_USER=y. When a task
+enters from user mode to kernel mode, or enters from user mode to irq,
+it excutes preempt_count_sub before RCU begins watching, and thus this
+warning is triggered.
 
-I added a meta_page_size field to the meta page, and user space can do:
+We should not handle fprobe if RCU is not watching.
 
-	meta = mmap(NULL, page_size, PROT_READ, MAP_SHARED, fd, 0);
-	if (meta == MAP_FAILED)
-		pdie("mmap");
+Suggested-by: Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Signed-off-by: Yafang Shao <laoar.shao@gmail.com>
+Cc: Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Cc: Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Cc: Jiri Olsa <olsajiri@gmail.com>
+---
+ kernel/trace/fprobe.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-	map = meta;
-	meta_len = map->meta_page_size;
-
-	if (meta_len > page_size) {
-		munmap(meta, page_size);
-		meta = mmap(NULL, meta_len, PROT_READ, MAP_SHARED, fd, 0);
-		if (meta == MAP_FAILED)
-			pdie("mmap");
-		map = meta;
-	}
-
-This appears to work (but I'm still testing it).
-
--- Steve
-
-diff --git a/include/uapi/linux/trace_mmap.h b/include/uapi/linux/trace_mmap.h
-index 24bcec754a35..12f3f7ee33d9 100644
---- a/include/uapi/linux/trace_mmap.h
-+++ b/include/uapi/linux/trace_mmap.h
-@@ -18,6 +18,7 @@ struct ring_buffer_meta_page {
- 	__u32	reader_page;
- 	__u32	nr_data_pages;	/* doesn't take into account the reader_page */
- 	__u32	data_page_head;	/* index of data_pages[] */
-+	__u32	meta_page_size;	/* size of the meta page */
- 	__u32	data_pages[];
- };
+diff --git a/kernel/trace/fprobe.c b/kernel/trace/fprobe.c
+index e8143e3..fe4b248 100644
+--- a/kernel/trace/fprobe.c
++++ b/kernel/trace/fprobe.c
+@@ -27,6 +27,9 @@ static void fprobe_handler(unsigned long ip, unsigned long parent_ip,
+ 	struct fprobe *fp;
+ 	int bit;
  
-diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
-index 10a17e78cfe6..77c92e4a7adc 100644
---- a/kernel/trace/ring_buffer.c
-+++ b/kernel/trace/ring_buffer.c
-@@ -526,6 +526,7 @@ struct ring_buffer_per_cpu {
- 	u64				read_stamp;
- 
- 	int				mapped;
-+	int				meta_order;
- 	struct mutex			mapping_lock;
- 	unsigned long			*page_ids;	/* ID to addr */
- 	struct ring_buffer_meta_page	*meta_page;
-@@ -5898,7 +5899,7 @@ int ring_buffer_read_page(struct trace_buffer *buffer,
- EXPORT_SYMBOL_GPL(ring_buffer_read_page);
- 
- #define META_PAGE_MAX_PAGES \
--	((PAGE_SIZE - (offsetof(struct ring_buffer_meta_page, data_page_head))) >> 2)
-+	((PAGE_SIZE - (offsetof(struct ring_buffer_meta_page, data_pages))) >> 2)
- 
- static void rb_free_page_ids(struct ring_buffer_per_cpu *cpu_buffer)
- {
-@@ -5908,22 +5909,34 @@ static void rb_free_page_ids(struct ring_buffer_per_cpu *cpu_buffer)
- 
- static int rb_alloc_meta_page(struct ring_buffer_per_cpu *cpu_buffer)
- {
-+	struct page *meta_pages;
-+	int pages;
-+	int order = 0;
++	if (!rcu_is_watching())
++		return;
 +
- 	if (cpu_buffer->meta_page)
- 		return 0;
- 
--	if (cpu_buffer->nr_pages > META_PAGE_MAX_PAGES)
--		return -E2BIG;
--
--	cpu_buffer->meta_page = page_to_virt(alloc_page(GFP_USER));
--	if (!cpu_buffer->meta_page)
-+	if (cpu_buffer->nr_pages > META_PAGE_MAX_PAGES) {
-+		/* Calcualte how many more pages we need to hold indexes */
-+		pages = DIV_ROUND_UP(cpu_buffer->nr_pages - META_PAGE_MAX_PAGES,
-+				     PAGE_SIZE / sizeof(u32));
-+		/* Add back the meta_page itself */
-+		pages++;
-+		order = fls(pages) - 1;
-+	}
-+	meta_pages = alloc_pages(GFP_USER, order);
-+	if (!meta_pages)
- 		return -ENOMEM;
- 
-+	cpu_buffer->meta_page = page_to_virt(meta_pages);
-+	cpu_buffer->meta_order = order;
-+
- 	return 0;
- }
- 
- static void rb_free_meta_page(struct ring_buffer_per_cpu *cpu_buffer)
- {
--	free_page((unsigned long)cpu_buffer->meta_page);
-+	free_pages((unsigned long)cpu_buffer->meta_page, cpu_buffer->meta_order);
- 	cpu_buffer->meta_page = NULL;
- }
- 
-@@ -5932,14 +5945,20 @@ static void rb_setup_ids_meta_page(struct ring_buffer_per_cpu *cpu_buffer,
- {
- 	struct ring_buffer_meta_page *meta = cpu_buffer->meta_page;
- 	struct buffer_page *first_page, *bpage;
-+	int data_page_end;
- 	int id = 0;
- 
- 	page_ids[id] = (unsigned long)cpu_buffer->reader_page->page;
- 	cpu_buffer->reader_page->id = id++;
- 
-+	/* Calculate the last index of data_pages[] */
-+	data_page_end = (1 << (cpu_buffer->meta_order + PAGE_SHIFT)) -
-+		offsetof(struct ring_buffer_meta_page, data_pages);
-+	data_page_end /= sizeof(u32);
-+
- 	first_page = bpage = rb_set_head_page(cpu_buffer);
- 	do {
--		if (id > META_PAGE_MAX_PAGES) {
-+		if (id > data_page_end) {
- 			WARN_ON(1);
- 			break;
- 		}
-@@ -5960,6 +5979,7 @@ static void rb_setup_ids_meta_page(struct ring_buffer_per_cpu *cpu_buffer,
- 	meta->pages_touched = 0;
- 	meta->reader_page = cpu_buffer->reader_page->id;
- 	meta->nr_data_pages = cpu_buffer->nr_pages;
-+	meta->meta_page_size = 1 << (cpu_buffer->meta_order + PAGE_SHIFT);
- 	meta->data_page_head = 0;
- }
- 
-@@ -6092,10 +6112,12 @@ int ring_buffer_unmap(struct trace_buffer *buffer, int cpu)
- /*
-  *   +--------------+
-  *   |   meta page  |  pgoff=0
-+ *   |     ...      |
-+ *   |              |  pgoff=(1<<cpu_buffer->meta_order - 1)
-  *   +--------------+
-- *   |  data page1  |  pgoff=1 page_ids=0
-+ *   |  data page1  |  page_ids=0
-  *   +--------------+
-- *   |  data page2  |  pgoff=2 page_ids=1
-+ *   |  data page2  |  page_ids=1
-  *         ...
-  */
- struct page *ring_buffer_map_fault(struct trace_buffer *buffer, int cpu,
-@@ -6103,10 +6125,11 @@ struct page *ring_buffer_map_fault(struct trace_buffer *buffer, int cpu,
- {
- 	struct ring_buffer_per_cpu *cpu_buffer = buffer->buffers[cpu];
- 
--	if (!pgoff)
--		return virt_to_page(cpu_buffer->meta_page);
-+	if (pgoff < (1 << cpu_buffer->meta_order) + 1)
-+		return virt_to_page((void *)cpu_buffer->meta_page + (pgoff << PAGE_SHIFT));
-+
-+	pgoff -= (1 << cpu_buffer->meta_order);
- 
--	pgoff--;
- 	if (pgoff > cpu_buffer->nr_pages)
- 		return NULL;
- 
+ 	fp = container_of(ops, struct fprobe, ops);
+ 	if (fprobe_disabled(fp))
+ 		return;
+-- 
+1.8.3.1
+
