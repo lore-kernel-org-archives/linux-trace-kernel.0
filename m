@@ -2,103 +2,146 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 08517C6FD1D
-	for <linux-trace-kernel@archiver.kernel.org>; Tue, 21 Mar 2023 16:52:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DF613C74A5B
+	for <linux-trace-kernel@archiver.kernel.org>; Tue, 21 Mar 2023 17:07:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229878AbjCUQwO (ORCPT
+        id S229749AbjCURHq (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Tue, 21 Mar 2023 12:52:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42664 "EHLO
+        Tue, 21 Mar 2023 13:07:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32892 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229991AbjCUQwJ (ORCPT
+        with ESMTP id S229806AbjCURHO (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Tue, 21 Mar 2023 12:52:09 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C790828852;
-        Tue, 21 Mar 2023 09:52:04 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 68A2FB818D8;
-        Tue, 21 Mar 2023 16:52:03 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 71888C433D2;
-        Tue, 21 Mar 2023 16:52:01 +0000 (UTC)
-Date:   Tue, 21 Mar 2023 12:51:59 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Vincent Donnefort <vdonnefort@google.com>
-Cc:     mhiramat@kernel.org, linux-kernel@vger.kernel.org,
-        linux-trace-kernel@vger.kernel.org, kernel-team@android.com
-Subject: Re: [PATCH 1/2] ring-buffer: Introducing ring-buffer mapping
- functions
-Message-ID: <20230321125159.5ddc2da7@gandalf.local.home>
-In-Reply-To: <ZBnZWhcelEpKXHo8@google.com>
-References: <20230317143310.1604700-1-vdonnefort@google.com>
-        <20230317143310.1604700-2-vdonnefort@google.com>
-        <20230320214516.01c18367@gandalf.local.home>
-        <ZBnKe55cvTZybZLF@google.com>
-        <20230321114047.3432afbe@gandalf.local.home>
-        <ZBnZWhcelEpKXHo8@google.com>
-X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+        Tue, 21 Mar 2023 13:07:14 -0400
+Received: from mail-wr1-x430.google.com (mail-wr1-x430.google.com [IPv6:2a00:1450:4864:20::430])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D2F143D0B0;
+        Tue, 21 Mar 2023 10:06:40 -0700 (PDT)
+Received: by mail-wr1-x430.google.com with SMTP id r29so14436382wra.13;
+        Tue, 21 Mar 2023 10:06:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112; t=1679418395;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=G2HoYoANsB+VvNaGXuuO9KcciwMkPoJj0KD18LbionU=;
+        b=bMDI99RhOSW5vpSfE3GaWRu+pk0/tZcfKlMx/azfWpsGxXvt/Y4W8YPe49olPSmDq1
+         avoK8x45BZyNoPvPal8UNnq1DUfb1owzNIno7rF8CYpcUrdl+J/Xlzx5DUX40UZcHeVO
+         mT7nisyrxvGJoIssKJgF/ejYz8FTnXs6fbMTANuGoh0g9tn51Z3VSqPrp2MRic/P2k0i
+         bp/MqDxjvddqC6GiVSmy4utJbrHT2uGw8sar8SU26siKxo+aZhuIQHuD+Wx5z4l725yl
+         5n0ab3geMztsR4Cl6HlfAqnLsIuHhhawc1NhB3v6qm+fU8Pgwa9rmp5bMR5y15Svj+C5
+         jGfw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112; t=1679418395;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=G2HoYoANsB+VvNaGXuuO9KcciwMkPoJj0KD18LbionU=;
+        b=5DArywQcLcA/eeVzu1sQ6rXKPG5GE5Y8eTCER9PJcH/egaOZ3R6jQujTCQdybeF2k3
+         q4v/XmCp95RlNanHHuDlPu6XlsfZ+gJnK4iwikAHf2auWlxtUEYXfQD/LmBB2mdwmzo8
+         W53uHLsJx5NTVPG3EGsCeZpUL5UjpmG7sX81yNpzUqxJ8N4ljlcBQ+JgpBr96Jqzedbj
+         tGbifFHmp+w2JzDC4tJ8jbsZOr2qrLOcfrdQRUA/knCKs28A/P0evswQ2DPQbHoIKGQo
+         fZzxxsxUdk2Nx/IaEa7llE5dGRO0Oy0lMWQ+usx7SWYgBfZ3IV7LQghQRwetLHCCVQEa
+         eeTA==
+X-Gm-Message-State: AO0yUKXgvWTSxXGFzFbV9ezmRXYRKODXhhXGgoIbp1eXm9D6+fQnLZ2w
+        0W8hS0UKlfxwneUZ3ZxRTPo=
+X-Google-Smtp-Source: AK7set9p0814di118+c/TjT6mOORVqCK0RYOtIblfktO2fICJkJphjRKlMUiMPxWlGGvfOs/l592VA==
+X-Received: by 2002:adf:ed0e:0:b0:2d3:bfcc:1b11 with SMTP id a14-20020adfed0e000000b002d3bfcc1b11mr2780971wro.42.1679418394749;
+        Tue, 21 Mar 2023 10:06:34 -0700 (PDT)
+Received: from krava (net-93-147-243-166.cust.vodafonedsl.it. [93.147.243.166])
+        by smtp.gmail.com with ESMTPSA id n2-20020adffe02000000b002cfeffb442bsm11743267wrr.57.2023.03.21.10.06.33
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 21 Mar 2023 10:06:34 -0700 (PDT)
+From:   Jiri Olsa <olsajiri@gmail.com>
+X-Google-Original-From: Jiri Olsa <jolsa@kernel.org>
+Date:   Tue, 21 Mar 2023 18:06:31 +0100
+To:     Florent Revest <revest@chromium.org>
+Cc:     linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+        rostedt@goodmis.org, mhiramat@kernel.org, mark.rutland@arm.com,
+        ast@kernel.org, daniel@iogearbox.net, kpsingh@kernel.org
+Subject: Re: [PATCH v2 0/7] Refactor ftrace direct call APIs
+Message-ID: <ZBnkFz4aXwOjqInu@krava>
+References: <20230321140424.345218-1-revest@chromium.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230321140424.345218-1-revest@chromium.org>
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On Tue, 21 Mar 2023 16:20:42 +0000
-Vincent Donnefort <vdonnefort@google.com> wrote:
-
-> > > Do we want a specific field here? That could be deduced from nr_data_pages()
-> > > quite easily?  
-> > 
-> > I rather not have too much implementation detail knowledge in user space.
-> > It only removes a single entry, and it makes user space easier. In fact,  
+On Tue, Mar 21, 2023 at 03:04:17PM +0100, Florent Revest wrote:
+> Differences since v1 [1]:
+> - Use a READ_ONCE() to read the direct call address in call_direct_funcs
+> - Added an Acked-by from Mark
 > 
-> Ack.
+> This series refactors ftrace direct call APIs in preparation for arm64 support.
+> It is roughly a subset of [2] rebased on v6.3-rc2 and meant to be taken by
+> Steven's tree before all the arm64 specific bits.
 > 
-> > I'm thinking we should not include "__u32 data_pages[]" but instead add a:
-> > "__u32 data_start" where user space does:
-> > 
-> > 	__u32 *data_pages = (_u32 *)meta_page + meta_page->data_start;
-> > 
-> > That way we could extend the data provided by the meta_page in the future.  
+> The first patch was suggested by Steven in a review of [1], it makes it more
+> obvious to the caller that filters probably need to be freed when unregistering
+> a direct call.
 > 
-> That'd be nice. Couldn't we keep both to simplify the code for the kernel side?
+> The next three patches consolidate the two existing ftrace APIs for registering
+> direct calls. They are only split to make the reviewer's life easier.
+> Currently, there is both a _ftrace_direct and _ftrace_direct_multi API. Apart
+> from samples and selftests, there are no users of the _ftrace_direct API left
+> in-tree so this deletes it and renames the _ftrace_direct_multi API to
+> _ftrace_direct for simplicity.
+> 
+> The main benefit of this refactoring is that, with the API that's left, an
+> ftrace_ops backing a direct call will only ever point to one direct call. We can
+> therefore store the direct called trampoline address in the ops (patch 5) and,
+> in the future arm64 series, look it up from the ftrace trampoline. (in the
+> meantime, it makes call_direct_funcs a bit simpler too)
+> 
+> Ftrace direct calls technically don't need DYNAMIC_FTRACE_WITH_REGS so this
+> extends its support to DYNAMIC_FTRACE_WITH_ARGS (patch 6). arm64 won't support
+> DYNAMIC_FTRACE_WITH_REGS.
+> 
+> Finally, it fixes the ABI of the stub direct call trampoline used in ftrace
+> selftests.
+> 
+> This has been tested on x86_64 with:
+> 1- CONFIG_FTRACE_SELFTEST
+> 2- samples/ftrace/*.ko
+> 
+> 1: https://lore.kernel.org/all/20230316173811.1223508-1-revest@chromium.org/T/#t
+> 2: https://lore.kernel.org/all/20230207182135.2671106-1-revest@chromium.org/T/#t
+> 
+> Florent Revest (6):
+>   ftrace: Let unregister_ftrace_direct_multi() call ftrace_free_filter()
+>   ftrace: Replace uses of _ftrace_direct APIs with _ftrace_direct_multi
+>   ftrace: Remove the legacy _ftrace_direct API
+>   ftrace: Rename _ftrace_direct_multi APIs to _ftrace_direct APIs
+>   ftrace: Store direct called addresses in their ops
+>   ftrace: Make DIRECT_CALLS work WITH_ARGS and !WITH_REGS
 
-I would not expose the data_pages[] to user space, because then they'll use
-it, and that *will* become an API.
+lgtm
 
-But we could expose it to the kernel side with;
+Acked-by: Jiri Olsa <jolsa@kernel.org>
 
-include/uapi/linux/trace_mmap.h:
+jirka
 
-struct ring_buffer_meta_page {
-#if __BITS_PER_LONG == 64
-	__u64	entries;
-	__u64	overrun;
-#else
-	__u32	entries;
-	__u32	overrun;
-#endif
-	__u32	pages_touched;
-	__u32	reader_page;
-	__u32	nr_data_pages;	/* doesn't take into account the reader_page */
-	__u32	data_page_head;	/* index of data_pages[] */
-	__u32	meta_page_size;	/* size of the meta page */
-	__u32	data_start;	/* offset to where data_pages are */
-};
-
-kernel/trace/ring_buffer.c:
-
-struct ring_buffer_meta {
-	struct ring_buffer_meta_page	meta;
-	u32				data_pages[];
-}
-
-Then we can start each function with:
-
-	struct ring_buffer_meta_page *meta = &cpu_buffer->meta_page.meta;
-	u32 *data_pages = cpu_buffer->meta_page.data_pages;
-
--- Steve
+> 
+> Mark Rutland (1):
+>   ftrace: selftest: remove broken trace_direct_tramp
+> 
+>  arch/s390/kernel/mcount.S                   |   5 +
+>  arch/x86/kernel/ftrace_32.S                 |   5 +
+>  arch/x86/kernel/ftrace_64.S                 |   4 +
+>  include/linux/ftrace.h                      |  61 +--
+>  kernel/bpf/trampoline.c                     |  12 +-
+>  kernel/trace/Kconfig                        |   2 +-
+>  kernel/trace/ftrace.c                       | 438 ++------------------
+>  kernel/trace/trace_selftest.c               |  19 +-
+>  samples/Kconfig                             |   2 +-
+>  samples/ftrace/ftrace-direct-modify.c       |  10 +-
+>  samples/ftrace/ftrace-direct-multi-modify.c |   9 +-
+>  samples/ftrace/ftrace-direct-multi.c        |   5 +-
+>  samples/ftrace/ftrace-direct-too.c          |  10 +-
+>  samples/ftrace/ftrace-direct.c              |  10 +-
+>  14 files changed, 101 insertions(+), 491 deletions(-)
+> 
+> -- 
+> 2.40.0.rc2.332.ga46443480c-goog
+> 
