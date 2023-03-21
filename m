@@ -2,132 +2,177 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 36625C761A6
-	for <linux-trace-kernel@archiver.kernel.org>; Tue, 21 Mar 2023 14:04:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D48EC74A5B
+	for <linux-trace-kernel@archiver.kernel.org>; Tue, 21 Mar 2023 14:04:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230437AbjCUOEi (ORCPT
+        id S231346AbjCUOEj (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Tue, 21 Mar 2023 10:04:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40710 "EHLO
+        Tue, 21 Mar 2023 10:04:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40730 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
         with ESMTP id S229749AbjCUOEi (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
         Tue, 21 Mar 2023 10:04:38 -0400
-Received: from mail-wm1-x333.google.com (mail-wm1-x333.google.com [IPv6:2a00:1450:4864:20::333])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 76B1E20A00
-        for <linux-trace-kernel@vger.kernel.org>; Tue, 21 Mar 2023 07:04:36 -0700 (PDT)
-Received: by mail-wm1-x333.google.com with SMTP id o40-20020a05600c512800b003eddedc47aeso4071039wms.3
-        for <linux-trace-kernel@vger.kernel.org>; Tue, 21 Mar 2023 07:04:36 -0700 (PDT)
+Received: from mail-wr1-x42f.google.com (mail-wr1-x42f.google.com [IPv6:2a00:1450:4864:20::42f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A78B220A1A
+        for <linux-trace-kernel@vger.kernel.org>; Tue, 21 Mar 2023 07:04:37 -0700 (PDT)
+Received: by mail-wr1-x42f.google.com with SMTP id j24so4906419wrd.0
+        for <linux-trace-kernel@vger.kernel.org>; Tue, 21 Mar 2023 07:04:37 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1679407475;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=Eyc9M815DDWPE+a5iQ5MddjThl1AbQtLO2yVDEfZLUY=;
-        b=GXjeLkvKjytTCw5uvgmOTPE72dJ3RoJKaN4OhBTYpmZH634OeIJ9U9cmpyukPU8pf2
-         p8z8E2TpYumBVVrBbBaHDwvUeaUd79xpcPLLvl3WT2i2BfepOcb+8fAFNrfBc65/QV4i
-         bTRYMbd1T8XGBarkJrOeUnNdwTh26TkUUqe1k=
+        d=chromium.org; s=google; t=1679407476;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=9WwprlyMlMMHhcPdyuhJ0L2KuDUXGr9VK74fm/Vyg9g=;
+        b=nLWVXyspYz9peVqzG15vQujgApPLo7W8YAlDMmwXgMiAA8jyvGC+C9kFU5nQxGTPhi
+         zJaGZ+jIs25bcgi3FxZOM/mn7T0TS5RAADcWbBNMT8QkFTxWOR1tGMn9V9jRt+S4/O8J
+         vhouX/tHYrYoPpKhnDRpdau1olcLao3K7xi84=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1679407475;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=Eyc9M815DDWPE+a5iQ5MddjThl1AbQtLO2yVDEfZLUY=;
-        b=ALuhNsIza3PO4a9wPfFRPRbF65MesrTougUaB6gKlsEs26A8vQ42eoCQ+drNxawZ/a
-         48VXuR3YZC8RGBZ4IylvH48veoYyFvSebLQGBaOnXLyy3BZy0UfAvlUd7DPH7PzI8ryP
-         lL1xWUCzGKBtmOzynyoLi5WjbEpP42ZfYwJQ2RKoPPw/MPFzNhbB52cw8YqxPcxgDzjt
-         mGh65Q8bPnPHPHMJU6WG3IDBDJEb/Uru71+PLgN7aKHWt8prQuXrfXf6E35zxmF4UZg0
-         rZEdhSD2LkS0UFNrkeHOn5jyJ6Db8OxyOPXhSVJda50KLvnMxw9d5QcvXm/pE0ZZqXT9
-         tv9A==
-X-Gm-Message-State: AO0yUKXOGl1ZLrlWMg1j5tO9mvNWLxOwruU4+OiL+TwZDDp3wgPgrgIy
-        /AiaYaKxCqIeQLwbNEgNjdb8kQ==
-X-Google-Smtp-Source: AK7set+y3+a5NcLXFa6wVgIOm4MXUQFs8Vfjy2+3xjt1w+J7OQdgRVkS4bb9JL2mGu6q6T1ODgPuuw==
-X-Received: by 2002:a1c:f210:0:b0:3eb:39e0:3530 with SMTP id s16-20020a1cf210000000b003eb39e03530mr2480006wmc.41.1679407474866;
-        Tue, 21 Mar 2023 07:04:34 -0700 (PDT)
+        d=1e100.net; s=20210112; t=1679407476;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=9WwprlyMlMMHhcPdyuhJ0L2KuDUXGr9VK74fm/Vyg9g=;
+        b=xM3B6xgibNtAEFw/eMAqXc08iI69mpFAG7Z0OTPb3PXtfbeqXCAt55+sZJjBTq6/Ci
+         Y6Cyqokn/OBcdyuxaqAFNCkDTTFXQv/rVABzrCojGZUMJh5KCI4vSewRmz5HgzmWcmEx
+         f+fbWrUKeAKRlWF/z8RSt79OW113lUMdLzM7pyDrgAAxfQxtEDyWApkXSBHYHWqScdEt
+         PKKqcAvGvVhpSBNzHAyVmXmeBZdb1BF5CNkRmVpVnqjJnUN3N0jhbyXZWW/vTXt5iNVp
+         f2GP4YfY2JXXLG/8F8xAFNad+XwMWXYJ0B5cynJYw0AoTyIbgXwR1YU6xmdV/QDm0E9g
+         tljA==
+X-Gm-Message-State: AO0yUKXlEyJ86Z0WRRnmQTt+X7YTJhkG89breGMlJ9zPTgTyg8hS66Zg
+        oNvzUISIuWk2HJgznyHKTOUwqvezdmcQT20kCkc=
+X-Google-Smtp-Source: AK7set8j3AWvvYQCOCHio+wE0JelTFbsmhmRg5txzyLp9SsTVqwHubY4XxVeXRxmdO+Rz1x3oFnzoQ==
+X-Received: by 2002:a05:6000:105:b0:2d9:eb77:90d2 with SMTP id o5-20020a056000010500b002d9eb7790d2mr182791wrx.70.1679407476066;
+        Tue, 21 Mar 2023 07:04:36 -0700 (PDT)
 Received: from revest.zrh.corp.google.com ([2a00:79e0:9d:6:4b8c:8b16:90d:8d9a])
-        by smtp.gmail.com with ESMTPSA id f12-20020a1cc90c000000b003e20cf0408esm13620896wmb.40.2023.03.21.07.04.33
+        by smtp.gmail.com with ESMTPSA id f12-20020a1cc90c000000b003e20cf0408esm13620896wmb.40.2023.03.21.07.04.35
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 21 Mar 2023 07:04:34 -0700 (PDT)
+        Tue, 21 Mar 2023 07:04:35 -0700 (PDT)
 From:   Florent Revest <revest@chromium.org>
 To:     linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
 Cc:     rostedt@goodmis.org, mhiramat@kernel.org, mark.rutland@arm.com,
         ast@kernel.org, daniel@iogearbox.net, kpsingh@kernel.org,
         revest@chromium.org, jolsa@kernel.org
-Subject: [PATCH v2 0/7] Refactor ftrace direct call APIs
-Date:   Tue, 21 Mar 2023 15:04:17 +0100
-Message-Id: <20230321140424.345218-1-revest@chromium.org>
+Subject: [PATCH v2 1/7] ftrace: Let unregister_ftrace_direct_multi() call ftrace_free_filter()
+Date:   Tue, 21 Mar 2023 15:04:18 +0100
+Message-Id: <20230321140424.345218-2-revest@chromium.org>
 X-Mailer: git-send-email 2.40.0.rc2.332.ga46443480c-goog
+In-Reply-To: <20230321140424.345218-1-revest@chromium.org>
+References: <20230321140424.345218-1-revest@chromium.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-Differences since v1 [1]:
-- Use a READ_ONCE() to read the direct call address in call_direct_funcs
-- Added an Acked-by from Mark
+A common pattern when using the ftrace_direct_multi API is to unregister
+the ops and also immediately free its filter. We've noticed it's very
+easy for users to miss calling ftrace_free_filter().
 
-This series refactors ftrace direct call APIs in preparation for arm64 support.
-It is roughly a subset of [2] rebased on v6.3-rc2 and meant to be taken by
-Steven's tree before all the arm64 specific bits.
+This adds a "free_filters" argument to unregister_ftrace_direct_multi()
+to both remind the user they should free filters and also to make their
+life easier.
 
-The first patch was suggested by Steven in a review of [1], it makes it more
-obvious to the caller that filters probably need to be freed when unregistering
-a direct call.
+Suggested-by: Steven Rostedt <rostedt@goodmis.org>
+Signed-off-by: Florent Revest <revest@chromium.org>
+Acked-by: Mark Rutland <mark.rutland@arm.com>
+---
+ include/linux/ftrace.h                      | 6 ++++--
+ kernel/bpf/trampoline.c                     | 2 +-
+ kernel/trace/ftrace.c                       | 6 +++++-
+ samples/ftrace/ftrace-direct-multi-modify.c | 3 +--
+ samples/ftrace/ftrace-direct-multi.c        | 3 +--
+ 5 files changed, 12 insertions(+), 8 deletions(-)
 
-The next three patches consolidate the two existing ftrace APIs for registering
-direct calls. They are only split to make the reviewer's life easier.
-Currently, there is both a _ftrace_direct and _ftrace_direct_multi API. Apart
-from samples and selftests, there are no users of the _ftrace_direct API left
-in-tree so this deletes it and renames the _ftrace_direct_multi API to
-_ftrace_direct for simplicity.
-
-The main benefit of this refactoring is that, with the API that's left, an
-ftrace_ops backing a direct call will only ever point to one direct call. We can
-therefore store the direct called trampoline address in the ops (patch 5) and,
-in the future arm64 series, look it up from the ftrace trampoline. (in the
-meantime, it makes call_direct_funcs a bit simpler too)
-
-Ftrace direct calls technically don't need DYNAMIC_FTRACE_WITH_REGS so this
-extends its support to DYNAMIC_FTRACE_WITH_ARGS (patch 6). arm64 won't support
-DYNAMIC_FTRACE_WITH_REGS.
-
-Finally, it fixes the ABI of the stub direct call trampoline used in ftrace
-selftests.
-
-This has been tested on x86_64 with:
-1- CONFIG_FTRACE_SELFTEST
-2- samples/ftrace/*.ko
-
-1: https://lore.kernel.org/all/20230316173811.1223508-1-revest@chromium.org/T/#t
-2: https://lore.kernel.org/all/20230207182135.2671106-1-revest@chromium.org/T/#t
-
-Florent Revest (6):
-  ftrace: Let unregister_ftrace_direct_multi() call ftrace_free_filter()
-  ftrace: Replace uses of _ftrace_direct APIs with _ftrace_direct_multi
-  ftrace: Remove the legacy _ftrace_direct API
-  ftrace: Rename _ftrace_direct_multi APIs to _ftrace_direct APIs
-  ftrace: Store direct called addresses in their ops
-  ftrace: Make DIRECT_CALLS work WITH_ARGS and !WITH_REGS
-
-Mark Rutland (1):
-  ftrace: selftest: remove broken trace_direct_tramp
-
- arch/s390/kernel/mcount.S                   |   5 +
- arch/x86/kernel/ftrace_32.S                 |   5 +
- arch/x86/kernel/ftrace_64.S                 |   4 +
- include/linux/ftrace.h                      |  61 +--
- kernel/bpf/trampoline.c                     |  12 +-
- kernel/trace/Kconfig                        |   2 +-
- kernel/trace/ftrace.c                       | 438 ++------------------
- kernel/trace/trace_selftest.c               |  19 +-
- samples/Kconfig                             |   2 +-
- samples/ftrace/ftrace-direct-modify.c       |  10 +-
- samples/ftrace/ftrace-direct-multi-modify.c |   9 +-
- samples/ftrace/ftrace-direct-multi.c        |   5 +-
- samples/ftrace/ftrace-direct-too.c          |  10 +-
- samples/ftrace/ftrace-direct.c              |  10 +-
- 14 files changed, 101 insertions(+), 491 deletions(-)
-
+diff --git a/include/linux/ftrace.h b/include/linux/ftrace.h
+index 366c730beaa3..5b68ee874bc1 100644
+--- a/include/linux/ftrace.h
++++ b/include/linux/ftrace.h
+@@ -407,7 +407,8 @@ int ftrace_modify_direct_caller(struct ftrace_func_entry *entry,
+ 				unsigned long new_addr);
+ unsigned long ftrace_find_rec_direct(unsigned long ip);
+ int register_ftrace_direct_multi(struct ftrace_ops *ops, unsigned long addr);
+-int unregister_ftrace_direct_multi(struct ftrace_ops *ops, unsigned long addr);
++int unregister_ftrace_direct_multi(struct ftrace_ops *ops, unsigned long addr,
++				   bool free_filters);
+ int modify_ftrace_direct_multi(struct ftrace_ops *ops, unsigned long addr);
+ int modify_ftrace_direct_multi_nolock(struct ftrace_ops *ops, unsigned long addr);
+ 
+@@ -446,7 +447,8 @@ static inline int register_ftrace_direct_multi(struct ftrace_ops *ops, unsigned
+ {
+ 	return -ENODEV;
+ }
+-static inline int unregister_ftrace_direct_multi(struct ftrace_ops *ops, unsigned long addr)
++static inline int unregister_ftrace_direct_multi(struct ftrace_ops *ops, unsigned long addr,
++						 bool free_filters)
+ {
+ 	return -ENODEV;
+ }
+diff --git a/kernel/bpf/trampoline.c b/kernel/bpf/trampoline.c
+index d0ed7d6f5eec..88bc23f1e10a 100644
+--- a/kernel/bpf/trampoline.c
++++ b/kernel/bpf/trampoline.c
+@@ -198,7 +198,7 @@ static int unregister_fentry(struct bpf_trampoline *tr, void *old_addr)
+ 	int ret;
+ 
+ 	if (tr->func.ftrace_managed)
+-		ret = unregister_ftrace_direct_multi(tr->fops, (long)old_addr);
++		ret = unregister_ftrace_direct_multi(tr->fops, (long)old_addr, false);
+ 	else
+ 		ret = bpf_arch_text_poke(ip, BPF_MOD_CALL, old_addr, NULL);
+ 
+diff --git a/kernel/trace/ftrace.c b/kernel/trace/ftrace.c
+index 29baa97d0d53..fa379cf91fdb 100644
+--- a/kernel/trace/ftrace.c
++++ b/kernel/trace/ftrace.c
+@@ -5804,7 +5804,8 @@ EXPORT_SYMBOL_GPL(register_ftrace_direct_multi);
+  *  0 on success
+  *  -EINVAL - The @ops object was not properly registered.
+  */
+-int unregister_ftrace_direct_multi(struct ftrace_ops *ops, unsigned long addr)
++int unregister_ftrace_direct_multi(struct ftrace_ops *ops, unsigned long addr,
++				   bool free_filters)
+ {
+ 	struct ftrace_hash *hash = ops->func_hash->filter_hash;
+ 	int err;
+@@ -5822,6 +5823,9 @@ int unregister_ftrace_direct_multi(struct ftrace_ops *ops, unsigned long addr)
+ 	/* cleanup for possible another register call */
+ 	ops->func = NULL;
+ 	ops->trampoline = 0;
++
++	if (free_filters)
++		ftrace_free_filter(ops);
+ 	return err;
+ }
+ EXPORT_SYMBOL_GPL(unregister_ftrace_direct_multi);
+diff --git a/samples/ftrace/ftrace-direct-multi-modify.c b/samples/ftrace/ftrace-direct-multi-modify.c
+index b58c594efb51..196b43971cb5 100644
+--- a/samples/ftrace/ftrace-direct-multi-modify.c
++++ b/samples/ftrace/ftrace-direct-multi-modify.c
+@@ -151,8 +151,7 @@ static int __init ftrace_direct_multi_init(void)
+ static void __exit ftrace_direct_multi_exit(void)
+ {
+ 	kthread_stop(simple_tsk);
+-	unregister_ftrace_direct_multi(&direct, my_tramp);
+-	ftrace_free_filter(&direct);
++	unregister_ftrace_direct_multi(&direct, my_tramp, true);
+ }
+ 
+ module_init(ftrace_direct_multi_init);
+diff --git a/samples/ftrace/ftrace-direct-multi.c b/samples/ftrace/ftrace-direct-multi.c
+index c27cf130c319..ea0e88ee5e43 100644
+--- a/samples/ftrace/ftrace-direct-multi.c
++++ b/samples/ftrace/ftrace-direct-multi.c
+@@ -78,8 +78,7 @@ static int __init ftrace_direct_multi_init(void)
+ 
+ static void __exit ftrace_direct_multi_exit(void)
+ {
+-	unregister_ftrace_direct_multi(&direct, (unsigned long) my_tramp);
+-	ftrace_free_filter(&direct);
++	unregister_ftrace_direct_multi(&direct, (unsigned long) my_tramp, true);
+ }
+ 
+ module_init(ftrace_direct_multi_init);
 -- 
 2.40.0.rc2.332.ga46443480c-goog
 
