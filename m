@@ -2,235 +2,94 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FF67C6FD1D
-	for <linux-trace-kernel@archiver.kernel.org>; Tue, 21 Mar 2023 16:44:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D7783C74A5B
+	for <linux-trace-kernel@archiver.kernel.org>; Tue, 21 Mar 2023 16:51:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229981AbjCUQow (ORCPT
+        id S230110AbjCUQvC (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Tue, 21 Mar 2023 12:44:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58072 "EHLO
+        Tue, 21 Mar 2023 12:51:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40788 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230216AbjCUQot (ORCPT
+        with ESMTP id S229473AbjCUQvA (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Tue, 21 Mar 2023 12:44:49 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6A31311640;
-        Tue, 21 Mar 2023 09:44:31 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id ABD8861D32;
-        Tue, 21 Mar 2023 16:44:30 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7E0EAC433D2;
-        Tue, 21 Mar 2023 16:44:29 +0000 (UTC)
-Date:   Tue, 21 Mar 2023 12:44:25 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Vincent Donnefort <vdonnefort@google.com>
+        Tue, 21 Mar 2023 12:51:00 -0400
+Received: from mail-wm1-x32e.google.com (mail-wm1-x32e.google.com [IPv6:2a00:1450:4864:20::32e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D6C7C28E4B
+        for <linux-trace-kernel@vger.kernel.org>; Tue, 21 Mar 2023 09:50:56 -0700 (PDT)
+Received: by mail-wm1-x32e.google.com with SMTP id w11so8938083wmo.2
+        for <linux-trace-kernel@vger.kernel.org>; Tue, 21 Mar 2023 09:50:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20210112; t=1679417455;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=OfZP5WUwQ2zes6TJwapZ83j4T5feELIfk8vczVnLdPI=;
+        b=E0+aVcsylyia6nwcDEPzALqwWBMGJDgGwUYNgRB3rF3ityRUjdO+sK2wUNsTrhiNiQ
+         Tu455Dp1ctS7qVOIAmPAfFT4uzhkmjjqhYrL+Ez30y0vyTjuZD1jTcaax/QI9kfSC6Bi
+         v90AwVGmHV1r3dBl01ib0cQ67/9cDEre4QigEPz2G1GOcWIolO6VLJ2BoDsuG7MEjlgx
+         pFXPRMw1XzaSxRuhtl1EOp6VoTwtsqGhKip4iO7CAbUpH5fB8jfDIDjPDcFwXNuwd4+U
+         fPog1MWrWwyIj/1PJzynAkgsrmW8r7j+s7eAbpgyJxWkkJgGLG5h8qtakcFdnzYykMVl
+         87oA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112; t=1679417455;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=OfZP5WUwQ2zes6TJwapZ83j4T5feELIfk8vczVnLdPI=;
+        b=J6jxEHCAm6GqHITJHhxSid/rHnQ6lB8DetpNOR8Dn2SQ1TRg52t1p3R0tM+Nd5qe4o
+         niyTOxuaruIkQvgZqR37F56ti+uVOW5m3jx/jOI0yZl8YT02mFai39LEu5VXJ/qxGcgf
+         SRNipWbKkVN3tW+bBjN+dbXpti+hoVUEZhHkIj+30RO1bm/V6I7xSEXmHC/SQDv1zt2H
+         T1wAK+fLCZpdhbj3KYVC0Oc16TYUJd6MknBioWdplJiAJpyTO1Qk/DB7+mpfBt3KGM2p
+         FWR8iGDEGtuj9rcctyeW1Z7AtTDMxaVKzFzjUECsgTyejmHXVRZywYJLSGMWAYhU7Kjk
+         ffLg==
+X-Gm-Message-State: AO0yUKUROjXuGL+AN+rf1jbIrV3gY9fNi5RjBsZgUZNq1vyM/MxWYoer
+        QfFivryI+1QjXtea3zyACmRagA==
+X-Google-Smtp-Source: AK7set/5CTKHv7W42iSkRDz6r+Fv5GwBJzTkDXZQnUC7keFECRTnXqtOMDiGp/Vor20x/ruRFYAKEw==
+X-Received: by 2002:a7b:cd09:0:b0:3ee:4dc0:d4f2 with SMTP id f9-20020a7bcd09000000b003ee4dc0d4f2mr463024wmj.41.1679417455116;
+        Tue, 21 Mar 2023 09:50:55 -0700 (PDT)
+Received: from google.com (65.0.187.35.bc.googleusercontent.com. [35.187.0.65])
+        by smtp.gmail.com with ESMTPSA id v26-20020a05600c215a00b003eafc47eb09sm13904832wml.43.2023.03.21.09.50.54
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 21 Mar 2023 09:50:54 -0700 (PDT)
+Date:   Tue, 21 Mar 2023 16:50:49 +0000
+From:   Vincent Donnefort <vdonnefort@google.com>
+To:     Steven Rostedt <rostedt@goodmis.org>
 Cc:     mhiramat@kernel.org, linux-kernel@vger.kernel.org,
         linux-trace-kernel@vger.kernel.org, kernel-team@android.com
 Subject: Re: [PATCH 1/2] ring-buffer: Introducing ring-buffer mapping
  functions
-Message-ID: <20230321124425.6ca93621@gandalf.local.home>
-In-Reply-To: <20230321114047.3432afbe@gandalf.local.home>
+Message-ID: <ZBngaarixYOgBCOA@google.com>
 References: <20230317143310.1604700-1-vdonnefort@google.com>
-        <20230317143310.1604700-2-vdonnefort@google.com>
-        <20230320214516.01c18367@gandalf.local.home>
-        <ZBnKe55cvTZybZLF@google.com>
-        <20230321114047.3432afbe@gandalf.local.home>
-X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+ <20230317143310.1604700-2-vdonnefort@google.com>
+ <20230320214516.01c18367@gandalf.local.home>
+ <ZBnKe55cvTZybZLF@google.com>
+ <20230321114047.3432afbe@gandalf.local.home>
+ <20230321124425.6ca93621@gandalf.local.home>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230321124425.6ca93621@gandalf.local.home>
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On Tue, 21 Mar 2023 11:40:47 -0400
-Steven Rostedt <rostedt@goodmis.org> wrote:
-
-> > 
-> > Thanks a lot for having a look. Do you mind if I fold this in my patch for a V2?  
+On Tue, Mar 21, 2023 at 12:44:25PM -0400, Steven Rostedt wrote:
+> On Tue, 21 Mar 2023 11:40:47 -0400
+> Steven Rostedt <rostedt@goodmis.org> wrote:
 > 
-> Hold off, I found some bugs that I'm fixing ;-)
+> > > 
+> > > Thanks a lot for having a look. Do you mind if I fold this in my patch for a V2?  
+> > 
+> > Hold off, I found some bugs that I'm fixing ;-)
+> 
+> OK, you can fold this in. I also fixed an issue with your patch where it
+> was missing setting a page->mapping and also clearing it.
+> 
+> I haven't updated to replace "__u32 *data_pages[]" with an "__u32 data_start"
+> But I think that should still be done.
+> 
+> -- Steve
+>
 
-OK, you can fold this in. I also fixed an issue with your patch where it
-was missing setting a page->mapping and also clearing it.
+[...] 
 
-I haven't updated to replace "__u32 *data_pages[]" with an "__u32 data_start"
-But I think that should still be done.
-
--- Steve
-
-diff --git a/include/uapi/linux/trace_mmap.h b/include/uapi/linux/trace_mmap.h
-index 24bcec754a35..12f3f7ee33d9 100644
---- a/include/uapi/linux/trace_mmap.h
-+++ b/include/uapi/linux/trace_mmap.h
-@@ -18,6 +18,7 @@ struct ring_buffer_meta_page {
- 	__u32	reader_page;
- 	__u32	nr_data_pages;	/* doesn't take into account the reader_page */
- 	__u32	data_page_head;	/* index of data_pages[] */
-+	__u32	meta_page_size;	/* size of the meta page */
- 	__u32	data_pages[];
- };
- 
-diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
-index 10a17e78cfe6..d546fdd14fc3 100644
---- a/kernel/trace/ring_buffer.c
-+++ b/kernel/trace/ring_buffer.c
-@@ -526,6 +526,7 @@ struct ring_buffer_per_cpu {
- 	u64				read_stamp;
- 
- 	int				mapped;
-+	int				meta_order;
- 	struct mutex			mapping_lock;
- 	unsigned long			*page_ids;	/* ID to addr */
- 	struct ring_buffer_meta_page	*meta_page;
-@@ -5898,32 +5899,63 @@ int ring_buffer_read_page(struct trace_buffer *buffer,
- EXPORT_SYMBOL_GPL(ring_buffer_read_page);
- 
- #define META_PAGE_MAX_PAGES \
--	((PAGE_SIZE - (offsetof(struct ring_buffer_meta_page, data_page_head))) >> 2)
-+	((PAGE_SIZE - (offsetof(struct ring_buffer_meta_page, data_pages))) >> 2)
-+
-+static void unmap_page(unsigned long addr)
-+{
-+	struct page *page = virt_to_page(addr);
-+
-+	page->mapping = NULL;
-+}
- 
- static void rb_free_page_ids(struct ring_buffer_per_cpu *cpu_buffer)
- {
-+	int i;
-+
-+	for (i = 0; i < cpu_buffer->nr_pages; i++)
-+		unmap_page(cpu_buffer->page_ids[i]);
-+
- 	kfree(cpu_buffer->page_ids);
- 	cpu_buffer->page_ids = NULL;
- }
- 
- static int rb_alloc_meta_page(struct ring_buffer_per_cpu *cpu_buffer)
- {
-+	struct page *meta_pages;
-+	int pages;
-+	int order = 0;
-+
- 	if (cpu_buffer->meta_page)
- 		return 0;
- 
--	if (cpu_buffer->nr_pages > META_PAGE_MAX_PAGES)
--		return -E2BIG;
--
--	cpu_buffer->meta_page = page_to_virt(alloc_page(GFP_USER));
--	if (!cpu_buffer->meta_page)
-+	if (cpu_buffer->nr_pages > META_PAGE_MAX_PAGES) {
-+		/* Calcualte how many more pages we need to hold indexes */
-+		pages = DIV_ROUND_UP(cpu_buffer->nr_pages - META_PAGE_MAX_PAGES,
-+				     PAGE_SIZE / sizeof(u32));
-+		/* Add back the meta_page itself */
-+		pages++;
-+		order = fls(pages) - 1;
-+	}
-+	meta_pages = alloc_pages(GFP_USER, order);
-+	if (!meta_pages)
- 		return -ENOMEM;
- 
-+	cpu_buffer->meta_page = page_to_virt(meta_pages);
-+	cpu_buffer->meta_order = order;
-+
- 	return 0;
- }
- 
- static void rb_free_meta_page(struct ring_buffer_per_cpu *cpu_buffer)
- {
--	free_page((unsigned long)cpu_buffer->meta_page);
-+	unsigned long addr = (unsigned long)cpu_buffer->meta_page;
-+	int i;
-+
-+	for (i = 0; i < (1 << cpu_buffer->meta_order); i++) {
-+		unmap_page(addr);
-+		addr += PAGE_SIZE;
-+	}
-+	free_pages((unsigned long)cpu_buffer->meta_page, cpu_buffer->meta_order);
- 	cpu_buffer->meta_page = NULL;
- }
- 
-@@ -5932,14 +5964,20 @@ static void rb_setup_ids_meta_page(struct ring_buffer_per_cpu *cpu_buffer,
- {
- 	struct ring_buffer_meta_page *meta = cpu_buffer->meta_page;
- 	struct buffer_page *first_page, *bpage;
-+	int data_page_end;
- 	int id = 0;
- 
- 	page_ids[id] = (unsigned long)cpu_buffer->reader_page->page;
- 	cpu_buffer->reader_page->id = id++;
- 
-+	/* Calculate the last index of data_pages[] */
-+	data_page_end = (1 << (cpu_buffer->meta_order + PAGE_SHIFT)) -
-+		offsetof(struct ring_buffer_meta_page, data_pages);
-+	data_page_end /= sizeof(u32);
-+
- 	first_page = bpage = rb_set_head_page(cpu_buffer);
- 	do {
--		if (id > META_PAGE_MAX_PAGES) {
-+		if (id > data_page_end) {
- 			WARN_ON(1);
- 			break;
- 		}
-@@ -5960,6 +5998,7 @@ static void rb_setup_ids_meta_page(struct ring_buffer_per_cpu *cpu_buffer,
- 	meta->pages_touched = 0;
- 	meta->reader_page = cpu_buffer->reader_page->id;
- 	meta->nr_data_pages = cpu_buffer->nr_pages;
-+	meta->meta_page_size = 1 << (cpu_buffer->meta_order + PAGE_SHIFT);
- 	meta->data_page_head = 0;
- }
- 
-@@ -6092,10 +6131,12 @@ int ring_buffer_unmap(struct trace_buffer *buffer, int cpu)
- /*
-  *   +--------------+
-  *   |   meta page  |  pgoff=0
-+ *   |     ...      |
-+ *   |              |  pgoff=(1<<cpu_buffer->meta_order - 1)
-  *   +--------------+
-- *   |  data page1  |  pgoff=1 page_ids=0
-+ *   |  data page1  |  page_ids=0
-  *   +--------------+
-- *   |  data page2  |  pgoff=2 page_ids=1
-+ *   |  data page2  |  page_ids=1
-  *         ...
-  */
- struct page *ring_buffer_map_fault(struct trace_buffer *buffer, int cpu,
-@@ -6103,10 +6144,11 @@ struct page *ring_buffer_map_fault(struct trace_buffer *buffer, int cpu,
- {
- 	struct ring_buffer_per_cpu *cpu_buffer = buffer->buffers[cpu];
- 
--	if (!pgoff)
--		return virt_to_page(cpu_buffer->meta_page);
-+	if (pgoff < (1 << cpu_buffer->meta_order))
-+		return virt_to_page((void *)cpu_buffer->meta_page + (pgoff << PAGE_SHIFT));
-+
-+	pgoff -= (1 << cpu_buffer->meta_order);
- 
--	pgoff--;
- 	if (pgoff > cpu_buffer->nr_pages)
- 		return NULL;
- 
-diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
-index ea48eabce7b7..2f43e4a842e7 100644
---- a/kernel/trace/trace.c
-+++ b/kernel/trace/trace.c
-@@ -8479,9 +8479,12 @@ static vm_fault_t tracing_buffers_mmap_fault(struct vm_fault *vmf)
- 	if (!page)
- 		return ret;
- 
--	get_page(page);
- 	vmf->page = page;
- 
-+	get_page(vmf->page);
-+	vmf->page->mapping = vmf->vma->vm_file->f_mapping;
-+	vmf->page->index   = vmf->pgoff;
-+
- 	return 0;
- }
- 
+Thanks! I'll prepare a v2 with all that!
