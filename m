@@ -2,118 +2,150 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CFEAC74A5B
-	for <linux-trace-kernel@archiver.kernel.org>; Tue, 21 Mar 2023 14:17:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 664C6C6FD1D
+	for <linux-trace-kernel@archiver.kernel.org>; Tue, 21 Mar 2023 14:31:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229905AbjCUORV (ORCPT
+        id S229879AbjCUObi (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Tue, 21 Mar 2023 10:17:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58000 "EHLO
+        Tue, 21 Mar 2023 10:31:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56168 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229924AbjCUORU (ORCPT
+        with ESMTP id S229726AbjCUObh (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Tue, 21 Mar 2023 10:17:20 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 185E72212D;
-        Tue, 21 Mar 2023 07:17:18 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id AFA3DB816ED;
-        Tue, 21 Mar 2023 14:17:16 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5B68AC433EF;
-        Tue, 21 Mar 2023 14:17:14 +0000 (UTC)
-Date:   Tue, 21 Mar 2023 10:17:11 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Yafang Shao <laoar.shao@gmail.com>
-Cc:     mhiramat@kernel.org, alexei.starovoitov@gmail.com,
-        linux-trace-kernel@vger.kernel.org, bpf@vger.kernel.org,
-        Andrii Nakryiko <andrii.nakryiko@gmail.com>,
-        Jiri Olsa <olsajiri@gmail.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Josh Poimboeuf <jpoimboe@redhat.com>
-Subject: Re: [PATCH] tracing: Refuse fprobe if RCU is not watching
-Message-ID: <20230321101711.625d0ccb@gandalf.local.home>
-In-Reply-To: <20230321020103.13494-1-laoar.shao@gmail.com>
-References: <20230321020103.13494-1-laoar.shao@gmail.com>
-X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+        Tue, 21 Mar 2023 10:31:37 -0400
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 02CAD3C16;
+        Tue, 21 Mar 2023 07:31:35 -0700 (PDT)
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 397B6AD7;
+        Tue, 21 Mar 2023 07:25:18 -0700 (PDT)
+Received: from FVFF77S0Q05N (unknown [10.57.54.220])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 4ADBD3F6C4;
+        Tue, 21 Mar 2023 07:24:31 -0700 (PDT)
+Date:   Tue, 21 Mar 2023 14:24:28 +0000
+From:   Mark Rutland <mark.rutland@arm.com>
+To:     Donglin Peng <pengdonglin@sangfor.com.cn>
+Cc:     mhiramat@kernel.org, rostedt@goodmis.org, linux@armlinux.org.uk,
+        will@kernel.org, catalin.marinas@arm.com, palmer@dabbelt.com,
+        paul.walmsley@sifive.com, tglx@linutronix.de,
+        dave.hansen@linux.intel.com, x86@kernel.org, mingo@redhat.com,
+        xiehuan09@gmail.com, dinghui@sangfor.com.cn,
+        huangcun@sangfor.com.cn, dolinux.peng@gmail.com,
+        linux-trace-kernel@vger.kernel.org,
+        linux-riscv@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v5 1/2] function_graph: Support recording and printing
+ the return value of function
+Message-ID: <ZBm+HKK9laIXAdsc@FVFF77S0Q05N>
+References: <20230320131650.482594-1-pengdonglin@sangfor.com.cn>
+ <20230320131650.482594-2-pengdonglin@sangfor.com.cn>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230320131650.482594-2-pengdonglin@sangfor.com.cn>
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On Tue, 21 Mar 2023 02:01:03 +0000
-Yafang Shao <laoar.shao@gmail.com> wrote:
+On Mon, Mar 20, 2023 at 06:16:49AM -0700, Donglin Peng wrote:
+> When using the function_graph tracer to analyze system call failures,
+> it can be time-consuming to analyze the trace logs and locate the kernel
+> function that first returns an error. This change aims to simplify the
+> process by recording the function return value to the 'retval' member of
+> 'ftrace_graph_ent' and printing it when outputing the trace log.
+> 
+> New trace options are introduced: funcgraph-retval and graph_retval_hex.
+> The former is used to control whether to display the return value, while
+> the latter is used to control the display format of the reutrn value.
+> 
+> Note that even if a function's return type is void, a return value will
+> still be printed, so just ignore it.
+> 
+> Currently, this modification supports the following commonly used
+> processor architectures: x86_64, x86, arm64, arm, riscv.
+> 
+> Here is an example:
+> 
+> I want to attach the demo process to a cpu cgroup, but it failed:
+> 
+> echo `pidof demo` > /sys/fs/cgroup/cpu/test/tasks
+> -bash: echo: write error: Invalid argument
+> 
+> The strace logs tells that the write system call returned -EINVAL(-22):
+> ...
+> write(1, "273\n", 4)                    = -1 EINVAL (Invalid argument)
+> ...
+> 
+> Use the following commands to capture trace logs when calling the write
+> system call:
+> 
+> cd /sys/kernel/debug/tracing/
+> echo 0 > tracing_on
+> echo > trace
+> echo *sys_write > set_graph_function
+> echo *spin* > set_graph_notrace
+> echo *rcu* >> set_graph_notrace
+> echo *alloc* >> set_graph_notrace
+> echo preempt* >> set_graph_notrace
+> echo kfree* >> set_graph_notrace
+> echo $$ > set_ftrace_pid
+> echo function_graph > current_tracer
+> echo 1 > tracing_on
+> echo `pidof demo` > /sys/fs/cgroup/cpu/test/tasks
+> echo 0 > tracing_on
+> echo 1 > options/funcgraph-retval
+> cat trace > ~/trace.log
+> 
+> Search the error code -22 directly in the file trace.log and find the
+> first function that return -22, then read the function code to get the
+> root cause.
+> 
+> ...
+> 
+>  1)          | cgroup_migrate() {
+>  1) 0.651 us |   cgroup_migrate_add_task(); /* = 0xffff93fcfd346c00 */
+>  1)          |   cgroup_migrate_execute() {
+>  1)          |     cpu_cgroup_can_attach() {
+>  1)          |       cgroup_taskset_first() {
+>  1) 0.732 us |         cgroup_taskset_next(); /* = 0xffff93fc8fb20000 */
+>  1) 1.232 us |       } /* cgroup_taskset_first = 0xffff93fc8fb20000 */
+>  1) 0.380 us |       sched_rt_can_attach(); /* = 0x0 */
+>  1) 2.335 us |     } /* cpu_cgroup_can_attach = -22 */
+>  1) 4.369 us |   } /* cgroup_migrate_execute = -22 */
+>  1) 7.143 us | } /* cgroup_migrate = -22 */
+> 
+> ...
+> 
+> Signed-off-by: Donglin Peng <pengdonglin@sangfor.com.cn>
 
-> It hits below warning on my test machine when running
-> selftests/bpf/test_progs,
-> 
-> [  702.223611] ------------[ cut here ]------------
-> [  702.224168] RCU not on for: preempt_count_sub+0x0/0xa0
-> [  702.224770] WARNING: CPU: 14 PID: 5267 at include/linux/trace_recursion.h:162 fprobe_handler.part.0+0x1b8/0x1c0
-> [  702.231740] CPU: 14 PID: 5267 Comm: main_amd64 Kdump: loaded Tainted: G           O       6.2.0+ #584
-> [  702.233169] RIP: 0010:fprobe_handler.part.0+0x1b8/0x1c0
-> [  702.241388] Call Trace:
-> [  702.241615]  <TASK>
-> [  702.241811]  fprobe_handler+0x22/0x30
-> [  702.242129]  0xffffffffc04710f7
-> [  702.242417] RIP: 0010:preempt_count_sub+0x5/0xa0
-> [  702.242809] Code: c8 50 68 94 42 0e b5 48 cf e9 f9 fd ff ff 0f 1f 80 00 00 00 00 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 e8 4b cd 38 0b <55> 8b 0d 9c d0 cf 02 48 89 e5 85 c9 75 1b 65 8b 05 be 78 f4 4a 89
-> [  702.244752] RSP: 0018:ffffaf6187d27f10 EFLAGS: 00000082 ORIG_RAX: 0000000000000000
-> [  702.245801] RAX: 000000000000000e RBX: 0000000001b6ab72 RCX: 0000000000000000
-> [  702.246804] RDX: 0000000000000000 RSI: ffffffffb627967d RDI: 0000000000000001
-> [  702.247801] RBP: ffffaf6187d27f30 R08: 0000000000000000 R09: 0000000000000000
-> [  702.248786] R10: 0000000000000000 R11: 0000000000000000 R12: 00000000000000ca
-> [  702.249782] R13: ffffaf6187d27f58 R14: 0000000000000000 R15: 0000000000000000
-> [  702.250785]  ? preempt_count_sub+0x5/0xa0
-> [  702.251540]  ? syscall_enter_from_user_mode+0x96/0xc0
-> [  702.252368]  ? preempt_count_sub+0x5/0xa0
-> [  702.253104]  ? syscall_enter_from_user_mode+0x96/0xc0
-> [  702.253918]  do_syscall_64+0x16/0x90
-> [  702.254613]  entry_SYSCALL_64_after_hwframe+0x72/0xdc
-> [  702.255422] RIP: 0033:0x46b793
-> 
-> This issue happens under CONFIG_CONTEXT_TRACKING_USER=y. When a task
-> enters from user mode to kernel mode, or enters from user mode to irq,
-> it excutes preempt_count_sub before RCU begins watching, and thus this
-> warning is triggered.
-> 
-> We should not handle fprobe if RCU is not watching.
-> 
-> Suggested-by: Alexei Starovoitov <alexei.starovoitov@gmail.com>
-> Signed-off-by: Yafang Shao <laoar.shao@gmail.com>
-> Cc: Alexei Starovoitov <alexei.starovoitov@gmail.com>
-> Cc: Andrii Nakryiko <andrii.nakryiko@gmail.com>
-> Cc: Jiri Olsa <olsajiri@gmail.com>
-> ---
->  kernel/trace/fprobe.c | 3 +++
->  1 file changed, 3 insertions(+)
-> 
-> diff --git a/kernel/trace/fprobe.c b/kernel/trace/fprobe.c
-> index e8143e3..fe4b248 100644
-> --- a/kernel/trace/fprobe.c
-> +++ b/kernel/trace/fprobe.c
-> @@ -27,6 +27,9 @@ static void fprobe_handler(unsigned long ip, unsigned long parent_ip,
->  	struct fprobe *fp;
->  	int bit;
+> diff --git a/arch/arm64/kernel/entry-ftrace.S b/arch/arm64/kernel/entry-ftrace.S
+> index 350ed81324ac..d1a5d76e6d72 100644
+> --- a/arch/arm64/kernel/entry-ftrace.S
+> +++ b/arch/arm64/kernel/entry-ftrace.S
+> @@ -276,7 +276,15 @@ SYM_CODE_START(return_to_handler)
+>  	stp x4, x5, [sp, #32]
+>  	stp x6, x7, [sp, #48]
 >  
-> +	if (!rcu_is_watching())
-> +		return;
+> +#ifdef CONFIG_FUNCTION_GRAPH_RETVAL
+> +	/*
+> +	 * Pass both the function return values in the register x0 and x1
+> +	 * to ftrace_return_to_handler.
+> +	 */
+> +	mov	x2, x29			//     parent's fp
+> +#else
+>  	mov	x0, x29			//     parent's fp
+> +#endif
+>  	bl	ftrace_return_to_handler// addr = ftrace_return_to_hander(fp);
+>  	mov	x30, x0			// restore the original return address
 
-Hmm, at least on 6.3, this should not be an issue anymore. I believe that
-all locations that have ftrace callbacks should now have rcu watching?
 
-I think we *want* a warn on when this happens.
+Please don't make the calling convention of the asm change depending on a
+selectable config option.
 
-Peter?
+We already store the regs here; I'd be happy to make that a struct ftrace_regs
+and pass a pointer to that to C code. Then it's be easy to acquire the value
+you want in the exact same way as upon entry, and it'll work even if we decide
+to return a structure by value somewhere (as that can use registers x2-x7 too).
 
--- Steve
-
-
-> +
->  	fp = container_of(ops, struct fprobe, ops);
->  	if (fprobe_disabled(fp))
->  		return;
-
+Thanks,
+Mark.
