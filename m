@@ -2,130 +2,112 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BDB9EC6FD1F
-	for <linux-trace-kernel@archiver.kernel.org>; Wed, 22 Mar 2023 17:38:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0ED5CC6FD1C
+	for <linux-trace-kernel@archiver.kernel.org>; Wed, 22 Mar 2023 18:17:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230093AbjCVRiI (ORCPT
+        id S231154AbjCVSRT (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Wed, 22 Mar 2023 13:38:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49114 "EHLO
+        Wed, 22 Mar 2023 14:17:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36698 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230081AbjCVRh7 (ORCPT
+        with ESMTP id S231153AbjCVSRD (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Wed, 22 Mar 2023 13:37:59 -0400
-Received: from mga11.intel.com (mga11.intel.com [192.55.52.93])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1454659E64;
-        Wed, 22 Mar 2023 10:37:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1679506673; x=1711042673;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=C9wfZ1hifRk76oRJlnFT7q1rnf57c5ttxFsnoG5toJM=;
-  b=Xs4Vdm/jLU2phl/+cBmVthXryo5AFPj4RZe3frWLi/3joYdy4JrSdz8n
-   C7gAJfgg0saD9689Fw+zJCxMNXADd1LSxXtKZ1eHJf0nTHhxxV5thbvGY
-   My3kfr/XJ4wD6ldYF6sdwzZNOZlCyd5v/6wfaiQVpBbwkRdyUpyU2u6LQ
-   3xBIDfe/80FRXbU7+hgsW98jNfdJUvJlNJTthe1rPjJsA1i0wOXQ+zam3
-   OqMaSzk8e/GE25N5EhV8Yz56sSkvw/XyDrWgY1TlRN/IVPwN+SjyN1IAe
-   aNDE0BVxYN27yIoO/4gGXrnuR8HgUro+tWzuvufPFDBvMIM7sl/0RtCwN
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10657"; a="336793104"
-X-IronPort-AV: E=Sophos;i="5.98,282,1673942400"; 
-   d="scan'208";a="336793104"
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Mar 2023 10:37:52 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10657"; a="927917093"
-X-IronPort-AV: E=Sophos;i="5.98,282,1673942400"; 
-   d="scan'208";a="927917093"
-Received: from lkp-server01.sh.intel.com (HELO b613635ddfff) ([10.239.97.150])
-  by fmsmga006.fm.intel.com with ESMTP; 22 Mar 2023 10:37:49 -0700
-Received: from kbuild by b613635ddfff with local (Exim 4.96)
-        (envelope-from <lkp@intel.com>)
-        id 1pf2PE-000DWw-0G;
-        Wed, 22 Mar 2023 17:37:48 +0000
-Date:   Thu, 23 Mar 2023 01:37:33 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     Lukasz Luba <lukasz.luba@arm.com>, linux-kernel@vger.kernel.org,
-        linux-trace-kernel@vger.kernel.org
-Cc:     oe-kbuild-all@lists.linux.dev, rostedt@goodmis.org,
-        mhiramat@kernel.org, mingo@redhat.com, juri.lelli@redhat.com,
-        vincent.guittot@linaro.org, dietmar.eggemann@arm.com,
-        bsegall@google.com, mgorman@suse.de, bristot@redhat.com,
-        vschneid@redhat.com, delyank@fb.com, lukasz.luba@arm.com,
-        qyousef@google.com
-Subject: Re: [PATCH 3/3] schedutil: trace: Add tracing to capture filter out
- requests
-Message-ID: <202303230130.BVOhzn4o-lkp@intel.com>
-References: <20230322151843.14390-4-lukasz.luba@arm.com>
+        Wed, 22 Mar 2023 14:17:03 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7ABA467030;
+        Wed, 22 Mar 2023 11:17:01 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 67D2562264;
+        Wed, 22 Mar 2023 18:17:00 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CC589C433D2;
+        Wed, 22 Mar 2023 18:16:58 +0000 (UTC)
+Date:   Wed, 22 Mar 2023 14:16:57 -0400
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Linux Trace Kernel <linux-trace-kernel@vger.kernel.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Ross Zwisler <zwisler@google.com>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        Miroslav Benes <mbenes@suse.cz>
+Subject: Re: [PATCH] tracing: Trace instrumentation begin and end
+Message-ID: <20230322141657.7d00a9bd@gandalf.local.home>
+In-Reply-To: <87v8is94n6.ffs@tglx>
+References: <20230321215121.71b339c5@gandalf.local.home>
+        <87y1np824t.ffs@tglx>
+        <20230322084834.37ed755e@gandalf.local.home>
+        <87v8is94n6.ffs@tglx>
+X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230322151843.14390-4-lukasz.luba@arm.com>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-Hi Lukasz,
+On Wed, 22 Mar 2023 16:39:41 +0100
+Thomas Gleixner <tglx@linutronix.de> wrote:
 
-I love your patch! Perhaps something to improve:
+> But for figuring out how long a syscall, interrupt or exception takes
+> there are exactly TWO tracepoints required, not 10 or 8. And it's bloody
+> obvious where to place them, right?
 
-[auto build test WARNING on rafael-pm/linux-next]
-[also build test WARNING on tip/sched/core linus/master v6.3-rc3 next-20230322]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+Not always, and it's pretty much always architecture dependent. I was
+looking for an architecture agnostic approach, as I imagine all archs will
+be eventually using this.
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Lukasz-Luba/sched-tp-Add-new-tracepoint-to-track-uclamp-set-from-user-space/20230322-232206
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/rafael/linux-pm.git linux-next
-patch link:    https://lore.kernel.org/r/20230322151843.14390-4-lukasz.luba%40arm.com
-patch subject: [PATCH 3/3] schedutil: trace: Add tracing to capture filter out requests
-config: x86_64-allyesconfig (https://download.01.org/0day-ci/archive/20230323/202303230130.BVOhzn4o-lkp@intel.com/config)
-compiler: gcc-11 (Debian 11.3.0-8) 11.3.0
-reproduce (this is a W=1 build):
-        # https://github.com/intel-lab-lkp/linux/commit/9eba04b3431f67b8e0c18ff57ea2976111673bea
-        git remote add linux-review https://github.com/intel-lab-lkp/linux
-        git fetch --no-tags linux-review Lukasz-Luba/sched-tp-Add-new-tracepoint-to-track-uclamp-set-from-user-space/20230322-232206
-        git checkout 9eba04b3431f67b8e0c18ff57ea2976111673bea
-        # save the config file
-        mkdir build_dir && cp config build_dir/.config
-        make W=1 O=build_dir ARCH=x86_64 olddefconfig
-        make W=1 O=build_dir ARCH=x86_64 SHELL=/bin/bash kernel/
+> 
+> >> instrumentation_begin()/end() is solely meant for objtool validation and
+> >> nothing else.
+> >> 
+> >> There are clearly less horrible ways to retrieve the #PF duration, no?  
+> >
+> > It's not just for #PF, that was just one example. I use to use function
+> > graph tracing max_depth_count=1 to verify NO_HZ_FULL to make sure there's
+> > no entry into the kernel. That doesn't work anymore. Even compat syscalls
+> > are not traced.  
+> 
+> That still works. noinstr did neither break syscall tracing nor any of
+> the interrupt/exception tracepoints which can be used to validate the
+> NOHZ full mechanics. Your fancy favourite script might not work anymore,
+> but claiming that it can't be traced is just nonsense.
 
-If you fix the issue, kindly add following tag where applicable
-| Reported-by: kernel test robot <lkp@intel.com>
-| Link: https://lore.kernel.org/oe-kbuild-all/202303230130.BVOhzn4o-lkp@intel.com/
+I don't remember fully, but there was something that was missing. It was
+back in 2021, so I do not remember fully. That's when I first wrote this
+patch. I only just redisovered it and wanted to share ;-) The only thing I
+did differently since then was to add the page fault logic, because that
+was something I am currently interested it.
 
-All warnings (new ones prefixed by >>):
+Things could have changed since then. But if adding trace events for the
+missing syscalls and around exceptions for timing purposes is OK, then I'm
+happy to go that approach.
 
-   In file included from include/trace/trace_events.h:27,
-                    from include/trace/define_trace.h:102,
-                    from include/trace/events/schedutil.h:17,
-                    from kernel/sched/cpufreq_schedutil.c:10,
-                    from kernel/sched/build_utility.c:69:
->> include/trace/stages/init.h:2:23: warning: 'str__schedutil__trace_system_name' defined but not used [-Wunused-const-variable=]
-       2 | #define __app__(x, y) str__##x##y
-         |                       ^~~~~
-   include/trace/stages/init.h:3:21: note: in expansion of macro '__app__'
-       3 | #define __app(x, y) __app__(x, y)
-         |                     ^~~~~~~
-   include/trace/stages/init.h:5:29: note: in expansion of macro '__app'
-       5 | #define TRACE_SYSTEM_STRING __app(TRACE_SYSTEM_VAR,__trace_system_name)
-         |                             ^~~~~
-   include/trace/stages/init.h:8:27: note: in expansion of macro 'TRACE_SYSTEM_STRING'
-       8 |         static const char TRACE_SYSTEM_STRING[] =       \
-         |                           ^~~~~~~~~~~~~~~~~~~
-   include/trace/stages/init.h:11:1: note: in expansion of macro 'TRACE_MAKE_SYSTEM_STR'
-      11 | TRACE_MAKE_SYSTEM_STR();
-         | ^~~~~~~~~~~~~~~~~~~~~
+> 
+> > I lost a kernel feature with the noinstr push and this is the closest that
+> > comes to bringing it back.  
+> 
+> This is the closest _you_ came up with without thinking about it for a
+> split second.
+> 
+> > And the more we add noinstr, the more the kernel becomes a black box
+> > again.  
+> 
+> It does not. noinstr is a technical requirement to keep instrumentation
+> out of code pathes which are not able to handle instrumentation. You
+> know that very well, so please stop this theatrical handwaving and come
+> back if you have sensible technical arguments.
 
+I never said nor implied that it's not important. I'm just concerned that
+we currently have no way to see when it's happening.
 
-vim +/str__schedutil__trace_system_name +2 include/trace/stages/init.h
+But I'll drop this patch and look to add specific trace events in specific
+points to be able to get the timings that are useful.
 
-af6b9668e85ffd Steven Rostedt (Google  2022-03-03 @2) #define __app__(x, y) str__##x##y
-af6b9668e85ffd Steven Rostedt (Google  2022-03-03  3) #define __app(x, y) __app__(x, y)
-af6b9668e85ffd Steven Rostedt (Google  2022-03-03  4) 
+Thanks,
 
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests
+-- Steve
