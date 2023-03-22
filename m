@@ -2,133 +2,103 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D7007C6FD1F
-	for <linux-trace-kernel@archiver.kernel.org>; Wed, 22 Mar 2023 15:39:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 90678C6FD1C
+	for <linux-trace-kernel@archiver.kernel.org>; Wed, 22 Mar 2023 16:52:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229589AbjCVPj5 (ORCPT
+        id S230521AbjCVQwt (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Wed, 22 Mar 2023 11:39:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59218 "EHLO
+        Wed, 22 Mar 2023 12:52:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60510 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229549AbjCVPjq (ORCPT
+        with ESMTP id S230394AbjCVQwr (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Wed, 22 Mar 2023 11:39:46 -0400
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F0D2D14E94;
-        Wed, 22 Mar 2023 08:39:44 -0700 (PDT)
-From:   Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1679499582;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=FnI5FUKH+VXuOsSKw2KeY0TziAMCvQOxA2QzpSUcaFU=;
-        b=qTTpltSA8nJyB7slxoIsBrLpn/Vem2Z8PGSVcNBga70/xYf/+9G/Vqnelv2cYQepzEMTa/
-        uinAXTwB0r5r+h9Gv+AI4bqhihPuze6c4GoLrmVK7BNbd7EssfR6jWosYuA6/2I8rloM1n
-        rLLxLfuba72PKYo12tERWepUhqMh3R+u8hfHvpv2SqqOjAhWz9U1aJY/W4cd7yQBSlHwjv
-        zTcOpkrYhORYZvsthQN7hkVXHmTCuLuF54nSPTaL19M9MXIzLkr0XudhVVY8Oc+i/Njk7T
-        2PXF8Qt9OXWdO7JcAcBULz1BMpzsYEeLPT8SnbVzG+Tz2kNMLxHJZY67GJqkog==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1679499582;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=FnI5FUKH+VXuOsSKw2KeY0TziAMCvQOxA2QzpSUcaFU=;
-        b=qXFl48UbCrhfJo7nDwl6I7FRiMTzel7OHkAEnZQB9q3sthM/NtR8KFvyAK74i4HA6hBHeL
-        p6IR1ThdcuxrAeDw==
-To:     Steven Rostedt <rostedt@goodmis.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Linux Trace Kernel <linux-trace-kernel@vger.kernel.org>,
+        Wed, 22 Mar 2023 12:52:47 -0400
+Received: from mail-il1-x129.google.com (mail-il1-x129.google.com [IPv6:2607:f8b0:4864:20::129])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A5A265DEC0
+        for <linux-trace-kernel@vger.kernel.org>; Wed, 22 Mar 2023 09:52:38 -0700 (PDT)
+Received: by mail-il1-x129.google.com with SMTP id h5so10185344ile.13
+        for <linux-trace-kernel@vger.kernel.org>; Wed, 22 Mar 2023 09:52:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20210112; t=1679503958;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=l3zjB9M2d0SQWHDN6AWzzgIm2jt75ssYc9u25xKl8IE=;
+        b=hZCnPQWdr3tCG5xo0v92lpLk+DAmOiy31UKY1ztRu4DcmVfTcbbEZoBAx/XTFbMhVa
+         z95qnrw654vLf32Me4P1KY8p92d6nBBn+NVuDFzOjUlTq/NXl1GiPQ/mEfIl/Akf9gZ+
+         HyMaQPAUP6VaYutn86OT1tsv9qBvMdyYXXF9oKVG8nXuoDc5I0In0pt+UpiAh5XYPhgL
+         U2DLcpVKUoenwMm6iQx8Toz4D9xWDcqkstJpYVU/Ee2Unm0P59dB06Y/aJ0OPlway83D
+         8uSFduRk16DAZbshMI3ViMcX5wZeIJYP1bRXG7vG1ZVEy+tQs4jLvFxbXiJSgFP+6PQ4
+         KMhw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112; t=1679503958;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=l3zjB9M2d0SQWHDN6AWzzgIm2jt75ssYc9u25xKl8IE=;
+        b=1qRdRj30g65V4jRLPNGAz2PqkveH3lw+NEQnwaUWYR4LIvIOduGrrDi1j5hgnQXom1
+         aVo3lacdTHJluKzRFBe23HiVbhiBjB3qhfdyESxCi6x05+vTAkWOpR9C+xTFl2qf/4qg
+         T2D8RXn5PA1ohd3IMW7JgJfB05r+Zh0Qmgm0WdPIiO8aVAaLlL5r0KQeUizgzR4X3Di2
+         K2nuRPvnsRML14Fty+3HXPl4Ticgg96x8sIrdebG/8qkxzVKPDeXDJWu1zSZPotQGI+L
+         UuwkQWRus3+a+hcryl+jtiWRuoPH0gjGao+gdHPUTvw3X0CMdEbfFw6Gr5wz3rwRaD3u
+         Rd6Q==
+X-Gm-Message-State: AO0yUKUZJrKhBoB/Un2wGZ+Tftqj2SySzGcF9HDNfCYvdCEYVK1TDajh
+        aSdb+aBH3K7XiGZXNH162V7OCg==
+X-Google-Smtp-Source: AK7set/iHwdOxGZxb/coQap30EbwOdQq/VzCyxP9uY03QDMRgrI+8cfcaLD/yueaYS+BqRYm395aOQ==
+X-Received: by 2002:a92:db10:0:b0:315:4c1c:f9db with SMTP id b16-20020a92db10000000b003154c1cf9dbmr4947711iln.19.1679503957782;
+        Wed, 22 Mar 2023 09:52:37 -0700 (PDT)
+Received: from google.com ([2620:15c:183:200:7419:4945:3325:dd1e])
+        by smtp.gmail.com with ESMTPSA id t4-20020a025404000000b004061dfd9e23sm5359438jaa.19.2023.03.22.09.52.36
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 22 Mar 2023 09:52:37 -0700 (PDT)
+Date:   Wed, 22 Mar 2023 10:52:33 -0600
+From:   Ross Zwisler <zwisler@google.com>
+To:     "Michael S. Tsirkin" <mst@redhat.com>
+Cc:     Ross Zwisler <zwisler@chromium.org>, linux-kernel@vger.kernel.org,
+        "Tobin C. Harding" <me@tobin.cc>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Jason Wang <jasowang@redhat.com>,
         Masami Hiramatsu <mhiramat@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Ross Zwisler <zwisler@google.com>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        Miroslav Benes <mbenes@suse.cz>
-Subject: Re: [PATCH] tracing: Trace instrumentation begin and end
-In-Reply-To: <20230322084834.37ed755e@gandalf.local.home>
-References: <20230321215121.71b339c5@gandalf.local.home>
- <87y1np824t.ffs@tglx> <20230322084834.37ed755e@gandalf.local.home>
-Date:   Wed, 22 Mar 2023 16:39:41 +0100
-Message-ID: <87v8is94n6.ffs@tglx>
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Shuah Khan <shuah@kernel.org>,
+        Tycho Andersen <tycho@tycho.pizza>, kvm@vger.kernel.org,
+        linux-hardening@vger.kernel.org, linux-kselftest@vger.kernel.org,
+        linux-mm@kvack.org, virtualization@lists.linux-foundation.org,
+        linux-trace-kernel@vger.kernel.org,
+        Steven Rostedt <rostedt@goodmis.org>
+Subject: Re: [PATCH v2 0/6] use canonical ftrace path whenever possible
+Message-ID: <20230322165233.GA2583234@google.com>
+References: <20230215223350.2658616-1-zwisler@google.com>
+ <20230321223139-mutt-send-email-mst@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230321223139-mutt-send-email-mst@kernel.org>
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-Steven!
+On Tue, Mar 21, 2023 at 10:32:46PM -0400, Michael S. Tsirkin wrote:
+> On Wed, Feb 15, 2023 at 03:33:44PM -0700, Ross Zwisler wrote:
+> > Changes in v2:
+> >  * Dropped patches which were pulled into maintainer trees.
+> >  * Split BPF patches out into another series targeting bpf-next.
+> >  * trace-agent now falls back to debugfs if tracefs isn't present.
+> >  * Added Acked-by from mst@redhat.com to series.
+> >  * Added a typo fixup for the virtio-trace README.
+> > 
+> > Steven, assuming there are no objections, would you feel comfortable
+> > taking this series through your tree?
+> 
+> for merging up to patch 5 through another tree:
+> 
+> Acked-by: Michael S. Tsirkin <mst@redhat.com>
+> 
+> I'll merge patch 6, no problem.
 
-On Wed, Mar 22 2023 at 08:48, Steven Rostedt wrote:
-> On Wed, 22 Mar 2023 12:19:14 +0100
-> Thomas Gleixner <tglx@linutronix.de> wrote:
->> Seriously? That's completely insane. Have you actually looked how many
->> instrumentation_begin()/end() pairs are in the affected code pathes?
->> 
->> Obviously not. It's a total of _five_ for every syscall and at least
->> _four_ for every interrupt/exception from user mode.
->> 
->> The number #1 design rule for instrumentation is to be as non-intrusive as
->> possible and not to be as lazy as possible.
->
-> And it still is. It still uses nops when not enabled. I could even add a
-> config to only have this compiled in when the config is set, so that
-> production can disable it if it wants to.
->
-> Just in case it's not obvious:
->
-> 	if (tracepoint_enabled(instrumentation_begin))
-> 		call_trace_instrumentation_begin(ip, pip);
->
-> is equivalent to:
->
-> 	if (static_key_false(&__tracepoint_instrumentation_begin.key))
-> 		call_trace_instrumentation_begin(ip, pip);
+Hey Michael, would you also mind merging patch 5, the other virtio patch?
 
-And that makes the insanity of enabling 10 tracepoints in the syscall
-path and at mininum 8 tracepoints in the exception/interrupt path any
-smaller?
+[PATCH v2 5/6] tools/virtio: use canonical ftrace path
 
-> We have trace points in preempt_enable/disable() I think that's *far* more
-> intrusive.
+https://lore.kernel.org/all/20230215223350.2658616-6-zwisler@google.com/
 
-What? If you want to do preempt_enable()/disable() tracing then there is
-no other choice than tracing every single invocation.
-
-But for figuring out how long a syscall, interrupt or exception takes
-there are exactly TWO tracepoints required, not 10 or 8. And it's bloody
-obvious where to place them, right?
-
->> instrumentation_begin()/end() is solely meant for objtool validation and
->> nothing else.
->> 
->> There are clearly less horrible ways to retrieve the #PF duration, no?
->
-> It's not just for #PF, that was just one example. I use to use function
-> graph tracing max_depth_count=1 to verify NO_HZ_FULL to make sure there's
-> no entry into the kernel. That doesn't work anymore. Even compat syscalls
-> are not traced.
-
-That still works. noinstr did neither break syscall tracing nor any of
-the interrupt/exception tracepoints which can be used to validate the
-NOHZ full mechanics. Your fancy favourite script might not work anymore,
-but claiming that it can't be traced is just nonsense.
-
-> I lost a kernel feature with the noinstr push and this is the closest that
-> comes to bringing it back.
-
-This is the closest _you_ came up with without thinking about it for a
-split second.
-
-> And the more we add noinstr, the more the kernel becomes a black box
-> again.
-
-It does not. noinstr is a technical requirement to keep instrumentation
-out of code pathes which are not able to handle instrumentation. You
-know that very well, so please stop this theatrical handwaving and come
-back if you have sensible technical arguments.
-
-Thanks,
-
-        tglx
+I don't think Steven took this one through his tree.  Thanks!
