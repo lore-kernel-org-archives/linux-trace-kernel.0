@@ -2,49 +2,49 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 51976C6FD1C
-	for <linux-trace-kernel@archiver.kernel.org>; Wed, 22 Mar 2023 03:27:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 66B9EC6FD1C
+	for <linux-trace-kernel@archiver.kernel.org>; Wed, 22 Mar 2023 03:47:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230036AbjCVD1T (ORCPT
+        id S230187AbjCVDrW (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Tue, 21 Mar 2023 23:27:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60696 "EHLO
+        Tue, 21 Mar 2023 23:47:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33860 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229931AbjCVD1R (ORCPT
+        with ESMTP id S230127AbjCVDrV (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Tue, 21 Mar 2023 23:27:17 -0400
-Received: from mga06.intel.com (mga06b.intel.com [134.134.136.31])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 75091580D3;
-        Tue, 21 Mar 2023 20:27:16 -0700 (PDT)
+        Tue, 21 Mar 2023 23:47:21 -0400
+Received: from mga09.intel.com (mga09.intel.com [134.134.136.24])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 538FC2F7B7;
+        Tue, 21 Mar 2023 20:47:20 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1679455636; x=1710991636;
+  t=1679456840; x=1710992840;
   h=date:from:to:cc:subject:message-id:references:
    mime-version:in-reply-to;
-  bh=q0WrwoWlpiXHEXP/PcXkjqE6BTl9wSWIbnMlf2EXPKI=;
-  b=MIxSVACGghT1hIuVeW8ArPUnBBenCJKRyUf9pAuBMUznlVbd0JLSFCCr
-   +MmcXGlO1dZFrfUdMuzy6ydOLrJmKjoKuJC7feKb2GW6kIeENkWRaoKu2
-   eeWlDsWSF9ufdCRQ/R8b+RE+mxEzr1ul6OlLG0J79eDtD0tyrXs8td15O
-   3g/q2wBDH9zIvA9BWCXkZJ8NWy8NHqottUgofbAunVM6/K0LirKk71sej
-   mFlAp0a6bNAbzove/SngpNDRfh2wCx3zEE1W+OV2O9IRevi6bGdvewK7s
-   xOd1tI2VB2c+K24hecH0oxFsVLuL42aqD64RaCLLzMI6ZaeABYONdhN8j
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10656"; a="401686439"
+  bh=4Qx8FlvzNHHlgWRW4V7LLgEkErNpSgGrzQJdEa45mTk=;
+  b=M+p9qe0SWSf9Flakv86O7FG7Q61VueZ+igdEIk4m7A8o0rcyEZuUy1v7
+   HTh4ho4WpCo0/fJhOL5pMqxwB9aHLhwg908cq/KaiiuhnFtJGD8ASxOTp
+   KfEmSa6oz8r04786Kiuka+NJRFS/q4O0ppExeuQYvzBLAvL300igD8mdq
+   cWda//dvinj21OrWz9fhy70CJqdaZO1DvXGkIUeNNscwhDgdVtAhetQsW
+   wQ5mgWLlEEsiSCTzHvunOj851L0zR6TCGhwyqq4WHfUGHDpoFAOpMnGFc
+   ju2iXzXnL2iQACid4+cBMGA5XAny1PwExmFLWEw7B4qpQrt4pVm0pD5AV
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10656"; a="340655853"
 X-IronPort-AV: E=Sophos;i="5.98,280,1673942400"; 
-   d="scan'208";a="401686439"
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Mar 2023 20:27:15 -0700
+   d="scan'208";a="340655853"
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Mar 2023 20:47:18 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10656"; a="681753567"
+X-IronPort-AV: E=McAfee;i="6600,9927,10656"; a="825227596"
 X-IronPort-AV: E=Sophos;i="5.98,280,1673942400"; 
-   d="scan'208";a="681753567"
+   d="scan'208";a="825227596"
 Received: from lkp-server01.sh.intel.com (HELO b613635ddfff) ([10.239.97.150])
-  by orsmga002.jf.intel.com with ESMTP; 21 Mar 2023 20:27:13 -0700
+  by fmsmga001.fm.intel.com with ESMTP; 21 Mar 2023 20:47:15 -0700
 Received: from kbuild by b613635ddfff with local (Exim 4.96)
         (envelope-from <lkp@intel.com>)
-        id 1pep84-000Cnh-0o;
-        Wed, 22 Mar 2023 03:27:12 +0000
-Date:   Wed, 22 Mar 2023 11:26:19 +0800
+        id 1pepRS-000Cpy-2M;
+        Wed, 22 Mar 2023 03:47:14 +0000
+Date:   Wed, 22 Mar 2023 11:47:05 +0800
 From:   kernel test robot <lkp@intel.com>
 To:     Steven Rostedt <rostedt@goodmis.org>,
         LKML <linux-kernel@vger.kernel.org>,
@@ -58,7 +58,7 @@ Cc:     oe-kbuild-all@lists.linux.dev,
         "Paul E. McKenney" <paulmck@kernel.org>,
         Miroslav Benes <mbenes@suse.cz>
 Subject: Re: [PATCH] tracing: Trace instrumentation begin and end
-Message-ID: <202303221148.o4nkqckQ-lkp@intel.com>
+Message-ID: <202303221157.uDnuxtAh-lkp@intel.com>
 References: <20230321215121.71b339c5@gandalf.local.home>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
@@ -81,8 +81,8 @@ https://git-scm.com/docs/git-format-patch#_base_tree_information]
 url:    https://github.com/intel-lab-lkp/linux/commits/Steven-Rostedt/tracing-Trace-instrumentation-begin-and-end/20230322-095354
 patch link:    https://lore.kernel.org/r/20230321215121.71b339c5%40gandalf.local.home
 patch subject: [PATCH] tracing: Trace instrumentation begin and end
-config: powerpc-allyesconfig (https://download.01.org/0day-ci/archive/20230322/202303221148.o4nkqckQ-lkp@intel.com/config)
-compiler: powerpc-linux-gcc (GCC) 12.1.0
+config: m68k-allyesconfig (https://download.01.org/0day-ci/archive/20230322/202303221157.uDnuxtAh-lkp@intel.com/config)
+compiler: m68k-linux-gcc (GCC) 12.1.0
 reproduce (this is a W=1 build):
         wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
         chmod +x ~/bin/make.cross
@@ -92,75 +92,153 @@ reproduce (this is a W=1 build):
         git checkout 1f40755bb9b4817135459d6cf76fcbd17ffb53dd
         # save the config file
         mkdir build_dir && cp config build_dir/.config
-        COMPILER_INSTALL_PATH=$HOME/0day COMPILER=gcc-12.1.0 make.cross W=1 O=build_dir ARCH=powerpc olddefconfig
-        COMPILER_INSTALL_PATH=$HOME/0day COMPILER=gcc-12.1.0 make.cross W=1 O=build_dir ARCH=powerpc prepare
+        COMPILER_INSTALL_PATH=$HOME/0day COMPILER=gcc-12.1.0 make.cross W=1 O=build_dir ARCH=m68k olddefconfig
+        COMPILER_INSTALL_PATH=$HOME/0day COMPILER=gcc-12.1.0 make.cross W=1 O=build_dir ARCH=m68k prepare
 
 If you fix the issue, kindly add following tag where applicable
 | Reported-by: kernel test robot <lkp@intel.com>
-| Link: https://lore.kernel.org/oe-kbuild-all/202303221148.o4nkqckQ-lkp@intel.com/
+| Link: https://lore.kernel.org/oe-kbuild-all/202303221157.uDnuxtAh-lkp@intel.com/
 
 All errors (new ones prefixed by >>):
 
    scripts/genksyms/parse.y: warning: 9 shift/reduce conflicts [-Wconflicts-sr]
    scripts/genksyms/parse.y: warning: 5 reduce/reduce conflicts [-Wconflicts-rr]
    scripts/genksyms/parse.y: note: rerun with option '-Wcounterexamples' to generate conflict counterexamples
-   In file included from arch/powerpc/include/asm/page.h:247,
-                    from arch/powerpc/include/asm/thread_info.h:13,
-                    from include/linux/thread_info.h:60,
-                    from arch/powerpc/include/asm/ptrace.h:342,
-                    from arch/powerpc/include/asm/hw_irq.h:12,
-                    from arch/powerpc/include/asm/irqflags.h:12,
-                    from include/linux/irqflags.h:16,
-                    from include/asm-generic/cmpxchg-local.h:6,
-                    from arch/powerpc/include/asm/cmpxchg.h:755,
-                    from arch/powerpc/include/asm/atomic.h:11,
-                    from include/linux/atomic.h:7,
-                    from include/linux/tracepoint-defs.h:11,
-                    from include/linux/instrumentation.h:7,
-                    from include/asm-generic/bug.h:6,
-                    from arch/powerpc/include/asm/bug.h:159,
+   In file included from include/asm-generic/bug.h:6,
+                    from arch/m68k/include/asm/bug.h:32,
                     from include/linux/bug.h:5,
-                    from include/linux/fortify-string.h:5,
-                    from include/linux/string.h:254,
-                    from include/linux/uuid.h:11,
-                    from include/linux/mod_devicetable.h:13,
-                    from scripts/mod/devicetable-offsets.c:3:
-   arch/powerpc/include/asm/page_32.h: In function 'clear_page':
->> arch/powerpc/include/asm/page_32.h:48:9: error: implicit declaration of function 'WARN_ON' [-Werror=implicit-function-declaration]
-      48 |         WARN_ON((unsigned long)addr & (L1_CACHE_BYTES - 1));
-         |         ^~~~~~~
+                    from include/linux/thread_info.h:13,
+                    from include/asm-generic/preempt.h:5,
+                    from ./arch/m68k/include/generated/asm/preempt.h:1,
+                    from include/linux/preempt.h:78,
+                    from arch/m68k/include/asm/irqflags.h:6,
+                    from include/linux/irqflags.h:16,
+                    from arch/m68k/include/asm/atomic.h:6,
+                    from include/linux/atomic.h:7,
+                    from include/linux/rcupdate.h:25,
+                    from include/linux/rculist.h:11,
+                    from include/linux/pid.h:5,
+                    from include/linux/sched.h:14,
+                    from arch/m68k/kernel/asm-offsets.c:15:
    include/linux/thread_info.h: In function 'check_copy_size':
->> include/linux/thread_info.h:249:13: error: implicit declaration of function 'WARN_ON_ONCE' [-Werror=implicit-function-declaration]
+>> include/linux/instrumentation.h:87:65: error: '_THIS_IP_' undeclared (first use in this function)
+      87 | # define instrumentation_begin() do_trace_instrumentation_begin(_THIS_IP_, _RET_IP_);
+         |                                                                 ^~~~~~~~~
+   include/asm-generic/bug.h:96:17: note: in expansion of macro 'instrumentation_begin'
+      96 |                 instrumentation_begin();                                \
+         |                 ^~~~~~~~~~~~~~~~~~~~~
+   include/asm-generic/bug.h:94:33: note: in expansion of macro '__WARN_printf'
+      94 | #define __WARN()                __WARN_printf(TAINT_WARN, NULL)
+         |                                 ^~~~~~~~~~~~~
+   include/asm-generic/bug.h:124:17: note: in expansion of macro '__WARN'
+     124 |                 __WARN();                                               \
+         |                 ^~~~~~
+   include/linux/once_lite.h:31:25: note: in expansion of macro 'WARN_ON'
+      31 |                         func(__VA_ARGS__);                              \
+         |                         ^~~~
+   include/asm-generic/bug.h:147:9: note: in expansion of macro 'DO_ONCE_LITE_IF'
+     147 |         DO_ONCE_LITE_IF(condition, WARN_ON, 1)
+         |         ^~~~~~~~~~~~~~~
+   include/linux/thread_info.h:249:13: note: in expansion of macro 'WARN_ON_ONCE'
      249 |         if (WARN_ON_ONCE(bytes > INT_MAX))
          |             ^~~~~~~~~~~~
-   cc1: some warnings being treated as errors
-   make[2]: *** [scripts/Makefile.build:114: scripts/mod/devicetable-offsets.s] Error 1
-   make[2]: Target 'scripts/mod/' not remade because of errors.
-   make[1]: *** [Makefile:1285: prepare0] Error 2
+   include/linux/instrumentation.h:87:65: note: each undeclared identifier is reported only once for each function it appears in
+      87 | # define instrumentation_begin() do_trace_instrumentation_begin(_THIS_IP_, _RET_IP_);
+         |                                                                 ^~~~~~~~~
+   include/asm-generic/bug.h:96:17: note: in expansion of macro 'instrumentation_begin'
+      96 |                 instrumentation_begin();                                \
+         |                 ^~~~~~~~~~~~~~~~~~~~~
+   include/asm-generic/bug.h:94:33: note: in expansion of macro '__WARN_printf'
+      94 | #define __WARN()                __WARN_printf(TAINT_WARN, NULL)
+         |                                 ^~~~~~~~~~~~~
+   include/asm-generic/bug.h:124:17: note: in expansion of macro '__WARN'
+     124 |                 __WARN();                                               \
+         |                 ^~~~~~
+   include/linux/once_lite.h:31:25: note: in expansion of macro 'WARN_ON'
+      31 |                         func(__VA_ARGS__);                              \
+         |                         ^~~~
+   include/asm-generic/bug.h:147:9: note: in expansion of macro 'DO_ONCE_LITE_IF'
+     147 |         DO_ONCE_LITE_IF(condition, WARN_ON, 1)
+         |         ^~~~~~~~~~~~~~~
+   include/linux/thread_info.h:249:13: note: in expansion of macro 'WARN_ON_ONCE'
+     249 |         if (WARN_ON_ONCE(bytes > INT_MAX))
+         |             ^~~~~~~~~~~~
+>> include/linux/instrumentation.h:87:76: error: '_RET_IP_' undeclared (first use in this function)
+      87 | # define instrumentation_begin() do_trace_instrumentation_begin(_THIS_IP_, _RET_IP_);
+         |                                                                            ^~~~~~~~
+   include/asm-generic/bug.h:96:17: note: in expansion of macro 'instrumentation_begin'
+      96 |                 instrumentation_begin();                                \
+         |                 ^~~~~~~~~~~~~~~~~~~~~
+   include/asm-generic/bug.h:94:33: note: in expansion of macro '__WARN_printf'
+      94 | #define __WARN()                __WARN_printf(TAINT_WARN, NULL)
+         |                                 ^~~~~~~~~~~~~
+   include/asm-generic/bug.h:124:17: note: in expansion of macro '__WARN'
+     124 |                 __WARN();                                               \
+         |                 ^~~~~~
+   include/linux/once_lite.h:31:25: note: in expansion of macro 'WARN_ON'
+      31 |                         func(__VA_ARGS__);                              \
+         |                         ^~~~
+   include/asm-generic/bug.h:147:9: note: in expansion of macro 'DO_ONCE_LITE_IF'
+     147 |         DO_ONCE_LITE_IF(condition, WARN_ON, 1)
+         |         ^~~~~~~~~~~~~~~
+   include/linux/thread_info.h:249:13: note: in expansion of macro 'WARN_ON_ONCE'
+     249 |         if (WARN_ON_ONCE(bytes > INT_MAX))
+         |             ^~~~~~~~~~~~
+   make[2]: *** [scripts/Makefile.build:114: arch/m68k/kernel/asm-offsets.s] Error 1
+   make[2]: Target 'prepare' not remade because of errors.
+   make[1]: *** [Makefile:1286: prepare0] Error 2
    make[1]: Target 'prepare' not remade because of errors.
    make: *** [Makefile:226: __sub-make] Error 2
    make: Target 'prepare' not remade because of errors.
 
 
-vim +/WARN_ON +48 arch/powerpc/include/asm/page_32.h
+vim +/_THIS_IP_ +87 include/linux/instrumentation.h
 
-7ab0b7cb8951d4 arch/powerpc/include/asm/page_32.h Christophe Leroy 2019-08-16  38  
-5736f96d12dd42 arch/powerpc/include/asm/page_32.h Christophe Leroy 2016-02-09  39  /*
-5736f96d12dd42 arch/powerpc/include/asm/page_32.h Christophe Leroy 2016-02-09  40   * Clear page using the dcbz instruction, which doesn't cause any
-5736f96d12dd42 arch/powerpc/include/asm/page_32.h Christophe Leroy 2016-02-09  41   * memory traffic (except to write out any cache lines which get
-5736f96d12dd42 arch/powerpc/include/asm/page_32.h Christophe Leroy 2016-02-09  42   * displaced).  This only works on cacheable memory.
-5736f96d12dd42 arch/powerpc/include/asm/page_32.h Christophe Leroy 2016-02-09  43   */
-5736f96d12dd42 arch/powerpc/include/asm/page_32.h Christophe Leroy 2016-02-09  44  static inline void clear_page(void *addr)
-5736f96d12dd42 arch/powerpc/include/asm/page_32.h Christophe Leroy 2016-02-09  45  {
-5736f96d12dd42 arch/powerpc/include/asm/page_32.h Christophe Leroy 2016-02-09  46  	unsigned int i;
-5736f96d12dd42 arch/powerpc/include/asm/page_32.h Christophe Leroy 2016-02-09  47  
-7ab0b7cb8951d4 arch/powerpc/include/asm/page_32.h Christophe Leroy 2019-08-16 @48  	WARN_ON((unsigned long)addr & (L1_CACHE_BYTES - 1));
-7ab0b7cb8951d4 arch/powerpc/include/asm/page_32.h Christophe Leroy 2019-08-16  49  
-5736f96d12dd42 arch/powerpc/include/asm/page_32.h Christophe Leroy 2016-02-09  50  	for (i = 0; i < PAGE_SIZE / L1_CACHE_BYTES; i++, addr += L1_CACHE_BYTES)
-5736f96d12dd42 arch/powerpc/include/asm/page_32.h Christophe Leroy 2016-02-09  51  		dcbz(addr);
-5736f96d12dd42 arch/powerpc/include/asm/page_32.h Christophe Leroy 2016-02-09  52  }
-5cd16ee934eafc include/asm-powerpc/page_32.h      Michael Ellerman 2005-11-11  53  extern void copy_page(void *to, void *from);
-5cd16ee934eafc include/asm-powerpc/page_32.h      Michael Ellerman 2005-11-11  54  
+    46	
+    47	/*
+    48	 * Because instrumentation_{begin,end}() can nest, objtool validation considers
+    49	 * _begin() a +1 and _end() a -1 and computes a sum over the instructions.
+    50	 * When the value is greater than 0, we consider instrumentation allowed.
+    51	 *
+    52	 * There is a problem with code like:
+    53	 *
+    54	 * noinstr void foo()
+    55	 * {
+    56	 *	instrumentation_begin();
+    57	 *	...
+    58	 *	if (cond) {
+    59	 *		instrumentation_begin();
+    60	 *		...
+    61	 *		instrumentation_end();
+    62	 *	}
+    63	 *	bar();
+    64	 *	instrumentation_end();
+    65	 * }
+    66	 *
+    67	 * If instrumentation_end() would be an empty label, like all the other
+    68	 * annotations, the inner _end(), which is at the end of a conditional block,
+    69	 * would land on the instruction after the block.
+    70	 *
+    71	 * If we then consider the sum of the !cond path, we'll see that the call to
+    72	 * bar() is with a 0-value, even though, we meant it to happen with a positive
+    73	 * value.
+    74	 *
+    75	 * To avoid this, have _end() be a NOP instruction, this ensures it will be
+    76	 * part of the condition block and does not escape.
+    77	 */
+    78	#define __instrumentation_end(c) ({					\
+    79		do_trace_instrumentation_end(_THIS_IP_, _RET_IP_);		\
+    80		asm volatile(__stringify(c) ": nop\n\t"				\
+    81			     ".pushsection .discard.instr_end\n\t"		\
+    82			     ".long " __stringify(c) "b - .\n\t"		\
+    83			     ".popsection\n\t" : : "i" (c));			\
+    84	})
+    85	#define instrumentation_end() __instrumentation_end(__COUNTER__)
+    86	#else /* !CONFIG_NOINSTR_VALIDATION */
+  > 87	# define instrumentation_begin() do_trace_instrumentation_begin(_THIS_IP_, _RET_IP_);
+    88	# define instrumentation_end()	 do_trace_instrumentation_end(_THIS_IP_, _RET_IP_);
+    89	#endif /* CONFIG_NOINSTR_VALIDATION */
+    90	
 
 -- 
 0-DAY CI Kernel Test Service
