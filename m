@@ -2,112 +2,103 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0ED5CC6FD1C
-	for <linux-trace-kernel@archiver.kernel.org>; Wed, 22 Mar 2023 18:17:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 43027C6FD1F
+	for <linux-trace-kernel@archiver.kernel.org>; Wed, 22 Mar 2023 20:04:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231154AbjCVSRT (ORCPT
+        id S231698AbjCVUEa (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Wed, 22 Mar 2023 14:17:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36698 "EHLO
+        Wed, 22 Mar 2023 16:04:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34842 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231153AbjCVSRD (ORCPT
+        with ESMTP id S231180AbjCVUDv (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Wed, 22 Mar 2023 14:17:03 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7ABA467030;
-        Wed, 22 Mar 2023 11:17:01 -0700 (PDT)
+        Wed, 22 Mar 2023 16:03:51 -0400
+Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E07EE6C6AF;
+        Wed, 22 Mar 2023 12:59:44 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 67D2562264;
-        Wed, 22 Mar 2023 18:17:00 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CC589C433D2;
-        Wed, 22 Mar 2023 18:16:58 +0000 (UTC)
-Date:   Wed, 22 Mar 2023 14:16:57 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Linux Trace Kernel <linux-trace-kernel@vger.kernel.org>,
+        by ams.source.kernel.org (Postfix) with ESMTPS id CE60BB81DE5;
+        Wed, 22 Mar 2023 19:59:26 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E099EC433A0;
+        Wed, 22 Mar 2023 19:59:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1679515165;
+        bh=iIimPAl3W7sA8efoe/qBB54Hy/DRWY0cczHHWIEH6Vk=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=C7/ZmWa1D527vgcLz1DILDld1MP7POm75akPVJnBlrFEsXYpEq5DypwchBbo5aZj0
+         p9mFVkGKSggakysAqmXFJDFTt8SLiyrqpAbFEfx/Mc3AKzY207a6j4ponU70R+TWSG
+         K0NSs27NEY0S652YuOzw1yrO8mLuWGZmZnmUO8uCOgibgkG3TBO/jvnnIEJ4uoFe2c
+         I42uqjjVjqU4QsNrh0EIO+o/4PHwUb74UDLbGz9E9uEJAzM0O9SYaUF4MQrOspmqSK
+         u6B8u0Q1eWhKTd0ZC1qF61dG2yLOedV1rVO/vtzUbfVZ4rvyYbkJKeFq8p41Ra6ysU
+         yXqMkeSrfyrZw==
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Anton Gusev <aagusev@ispras.ru>,
+        Steven Rostedt <rostedt@goodmis.org>,
         Masami Hiramatsu <mhiramat@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Ross Zwisler <zwisler@google.com>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        Miroslav Benes <mbenes@suse.cz>
-Subject: Re: [PATCH] tracing: Trace instrumentation begin and end
-Message-ID: <20230322141657.7d00a9bd@gandalf.local.home>
-In-Reply-To: <87v8is94n6.ffs@tglx>
-References: <20230321215121.71b339c5@gandalf.local.home>
-        <87y1np824t.ffs@tglx>
-        <20230322084834.37ed755e@gandalf.local.home>
-        <87v8is94n6.ffs@tglx>
-X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+        Sasha Levin <sashal@kernel.org>,
+        linux-trace-kernel@vger.kernel.org
+Subject: [PATCH AUTOSEL 6.2 45/45] tracing: Fix wrong return in kprobe_event_gen_test.c
+Date:   Wed, 22 Mar 2023 15:56:39 -0400
+Message-Id: <20230322195639.1995821-45-sashal@kernel.org>
+X-Mailer: git-send-email 2.39.2
+In-Reply-To: <20230322195639.1995821-1-sashal@kernel.org>
+References: <20230322195639.1995821-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On Wed, 22 Mar 2023 16:39:41 +0100
-Thomas Gleixner <tglx@linutronix.de> wrote:
+From: Anton Gusev <aagusev@ispras.ru>
 
-> But for figuring out how long a syscall, interrupt or exception takes
-> there are exactly TWO tracepoints required, not 10 or 8. And it's bloody
-> obvious where to place them, right?
+[ Upstream commit bc4f359b3b607daac0290d0038561237a86b38cb ]
 
-Not always, and it's pretty much always architecture dependent. I was
-looking for an architecture agnostic approach, as I imagine all archs will
-be eventually using this.
+Overwriting the error code with the deletion result may cause the
+function to return 0 despite encountering an error. Commit b111545d26c0
+("tracing: Remove the useless value assignment in
+test_create_synth_event()") solves a similar issue by
+returning the original error code, so this patch does the same.
 
-> 
-> >> instrumentation_begin()/end() is solely meant for objtool validation and
-> >> nothing else.
-> >> 
-> >> There are clearly less horrible ways to retrieve the #PF duration, no?  
-> >
-> > It's not just for #PF, that was just one example. I use to use function
-> > graph tracing max_depth_count=1 to verify NO_HZ_FULL to make sure there's
-> > no entry into the kernel. That doesn't work anymore. Even compat syscalls
-> > are not traced.  
-> 
-> That still works. noinstr did neither break syscall tracing nor any of
-> the interrupt/exception tracepoints which can be used to validate the
-> NOHZ full mechanics. Your fancy favourite script might not work anymore,
-> but claiming that it can't be traced is just nonsense.
+Found by Linux Verification Center (linuxtesting.org) with SVACE.
 
-I don't remember fully, but there was something that was missing. It was
-back in 2021, so I do not remember fully. That's when I first wrote this
-patch. I only just redisovered it and wanted to share ;-) The only thing I
-did differently since then was to add the page fault logic, because that
-was something I am currently interested it.
+Link: https://lore.kernel.org/linux-trace-kernel/20230131075818.5322-1-aagusev@ispras.ru
 
-Things could have changed since then. But if adding trace events for the
-missing syscalls and around exceptions for timing purposes is OK, then I'm
-happy to go that approach.
+Signed-off-by: Anton Gusev <aagusev@ispras.ru>
+Reviewed-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+Acked-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ kernel/trace/kprobe_event_gen_test.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-> 
-> > I lost a kernel feature with the noinstr push and this is the closest that
-> > comes to bringing it back.  
-> 
-> This is the closest _you_ came up with without thinking about it for a
-> split second.
-> 
-> > And the more we add noinstr, the more the kernel becomes a black box
-> > again.  
-> 
-> It does not. noinstr is a technical requirement to keep instrumentation
-> out of code pathes which are not able to handle instrumentation. You
-> know that very well, so please stop this theatrical handwaving and come
-> back if you have sensible technical arguments.
+diff --git a/kernel/trace/kprobe_event_gen_test.c b/kernel/trace/kprobe_event_gen_test.c
+index c736487fc0e48..e0c420eb0b2b4 100644
+--- a/kernel/trace/kprobe_event_gen_test.c
++++ b/kernel/trace/kprobe_event_gen_test.c
+@@ -146,7 +146,7 @@ static int __init test_gen_kprobe_cmd(void)
+ 	if (trace_event_file_is_valid(gen_kprobe_test))
+ 		gen_kprobe_test = NULL;
+ 	/* We got an error after creating the event, delete it */
+-	ret = kprobe_event_delete("gen_kprobe_test");
++	kprobe_event_delete("gen_kprobe_test");
+ 	goto out;
+ }
+ 
+@@ -211,7 +211,7 @@ static int __init test_gen_kretprobe_cmd(void)
+ 	if (trace_event_file_is_valid(gen_kretprobe_test))
+ 		gen_kretprobe_test = NULL;
+ 	/* We got an error after creating the event, delete it */
+-	ret = kprobe_event_delete("gen_kretprobe_test");
++	kprobe_event_delete("gen_kretprobe_test");
+ 	goto out;
+ }
+ 
+-- 
+2.39.2
 
-I never said nor implied that it's not important. I'm just concerned that
-we currently have no way to see when it's happening.
-
-But I'll drop this patch and look to add specific trace events in specific
-points to be able to get the timings that are useful.
-
-Thanks,
-
--- Steve
