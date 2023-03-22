@@ -2,33 +2,33 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 38308C6FD1C
-	for <linux-trace-kernel@archiver.kernel.org>; Wed, 22 Mar 2023 08:47:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 693A9C6FD1F
+	for <linux-trace-kernel@archiver.kernel.org>; Wed, 22 Mar 2023 09:02:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230008AbjCVIrh (ORCPT
+        id S229595AbjCVJCE (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Wed, 22 Mar 2023 04:47:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55156 "EHLO
+        Wed, 22 Mar 2023 05:02:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46316 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230054AbjCVIr2 (ORCPT
+        with ESMTP id S229611AbjCVJCD (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Wed, 22 Mar 2023 04:47:28 -0400
+        Wed, 22 Mar 2023 05:02:03 -0400
 Received: from mail-m118111.qiye.163.com (mail-m118111.qiye.163.com [115.236.118.111])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 166BF14235;
-        Wed, 22 Mar 2023 01:47:26 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5D5D95B42A;
+        Wed, 22 Mar 2023 02:02:01 -0700 (PDT)
 Received: from [10.128.10.193] (unknown [117.133.56.22])
-        by mail-m118111.qiye.163.com (Hmail) with ESMTPA id 5DCC85807B4;
-        Wed, 22 Mar 2023 16:47:18 +0800 (CST)
-Message-ID: <a7256b94-c044-7aef-bee2-69182956e913@sangfor.com.cn>
-Date:   Wed, 22 Mar 2023 16:47:17 +0800
+        by mail-m118111.qiye.163.com (Hmail) with ESMTPA id 9E5CB5807BE;
+        Wed, 22 Mar 2023 17:01:55 +0800 (CST)
+Message-ID: <88c2c37b-c221-5c27-9663-7026084adf8d@sangfor.com.cn>
+Date:   Wed, 22 Mar 2023 17:01:54 +0800
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
  Thunderbird/102.9.0
 Subject: Re: [PATCH v5 1/2] function_graph: Support recording and printing the
  return value of function
 Content-Language: en-US
-To:     Mark Rutland <mark.rutland@arm.com>
-Cc:     mhiramat@kernel.org, rostedt@goodmis.org, linux@armlinux.org.uk,
+To:     "Russell King (Oracle)" <linux@armlinux.org.uk>
+Cc:     mhiramat@kernel.org, rostedt@goodmis.org, mark.rutland@arm.com,
         will@kernel.org, catalin.marinas@arm.com, palmer@dabbelt.com,
         paul.walmsley@sifive.com, tglx@linutronix.de,
         dave.hansen@linux.intel.com, x86@kernel.org, mingo@redhat.com,
@@ -39,131 +39,81 @@ Cc:     mhiramat@kernel.org, rostedt@goodmis.org, linux@armlinux.org.uk,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 References: <20230320131650.482594-1-pengdonglin@sangfor.com.cn>
  <20230320131650.482594-2-pengdonglin@sangfor.com.cn>
- <ZBm+HKK9laIXAdsc@FVFF77S0Q05N>
+ <ZBnqAYO7rdk4Qikq@shell.armlinux.org.uk>
 From:   Donglin Peng <pengdonglin@sangfor.com.cn>
-In-Reply-To: <ZBm+HKK9laIXAdsc@FVFF77S0Q05N>
+In-Reply-To: <ZBnqAYO7rdk4Qikq@shell.armlinux.org.uk>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 X-HM-Spam-Status: e1kfGhgUHx5ZQUpXWQgPGg8OCBgUHx5ZQUlOS1dZFg8aDwILHllBWSg2Ly
-        tZV1koWUFITzdXWS1ZQUlXWQ8JGhUIEh9ZQVlCTkwZVhpOHkgaGU5OSExCT1UTARMWGhIXJBQOD1
+        tZV1koWUFITzdXWS1ZQUlXWQ8JGhUIEh9ZQVkaTx4eVkwdS0NOT04YGR0eTFUTARMWGhIXJBQOD1
         lXWRgSC1lBWUpKTFVKSEhVTk1VSUlZV1kWGg8SFR0UWUFZT0tIVUpKS09ISFVKS0tVS1kG
-X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6OTI6Mzo4GT0LLRQPLg8ZQy1D
-        NR4KCTxVSlVKTUxCT0xPQ0hCQkJOVTMWGhIXVQseFRwfFBUcFxIVOwgaFRwdFAlVGBQWVRgVRVlX
-        WRILWUFZSkpMVUpISFVOTVVJSVlXWQgBWUFNTUNNNwY+
-X-HM-Tid: 0a8708804f962eb7kusn5dcc85807b4
+X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6PC46GSo*Kj0OKRRJLRI3QiE2
+        NwNPFA9VSlVKTUxCT0xOTEpMS01MVTMWGhIXVQseFRwfFBUcFxIVOwgaFRwdFAlVGBQWVRgVRVlX
+        WRILWUFZSkpMVUpISFVOTVVJSVlXWQgBWUFPTU1DNwY+
+X-HM-Tid: 0a87088db1662eb7kusn9e5cb5807be
 X-HM-MType: 1
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On 2023/3/21 22:24, Mark Rutland wrote:
+On 2023/3/22 1:31, Russell King (Oracle) wrote:
 > On Mon, Mar 20, 2023 at 06:16:49AM -0700, Donglin Peng wrote:
->> When using the function_graph tracer to analyze system call failures,
->> it can be time-consuming to analyze the trace logs and locate the kernel
->> function that first returns an error. This change aims to simplify the
->> process by recording the function return value to the 'retval' member of
->> 'ftrace_graph_ent' and printing it when outputing the trace log.
->>
->> New trace options are introduced: funcgraph-retval and graph_retval_hex.
->> The former is used to control whether to display the return value, while
->> the latter is used to control the display format of the reutrn value.
->>
->> Note that even if a function's return type is void, a return value will
->> still be printed, so just ignore it.
->>
->> Currently, this modification supports the following commonly used
->> processor architectures: x86_64, x86, arm64, arm, riscv.
->>
->> Here is an example:
->>
->> I want to attach the demo process to a cpu cgroup, but it failed:
->>
->> echo `pidof demo` > /sys/fs/cgroup/cpu/test/tasks
->> -bash: echo: write error: Invalid argument
->>
->> The strace logs tells that the write system call returned -EINVAL(-22):
->> ...
->> write(1, "273\n", 4)                    = -1 EINVAL (Invalid argument)
->> ...
->>
->> Use the following commands to capture trace logs when calling the write
->> system call:
->>
->> cd /sys/kernel/debug/tracing/
->> echo 0 > tracing_on
->> echo > trace
->> echo *sys_write > set_graph_function
->> echo *spin* > set_graph_notrace
->> echo *rcu* >> set_graph_notrace
->> echo *alloc* >> set_graph_notrace
->> echo preempt* >> set_graph_notrace
->> echo kfree* >> set_graph_notrace
->> echo $$ > set_ftrace_pid
->> echo function_graph > current_tracer
->> echo 1 > tracing_on
->> echo `pidof demo` > /sys/fs/cgroup/cpu/test/tasks
->> echo 0 > tracing_on
->> echo 1 > options/funcgraph-retval
->> cat trace > ~/trace.log
->>
->> Search the error code -22 directly in the file trace.log and find the
->> first function that return -22, then read the function code to get the
->> root cause.
->>
->> ...
->>
->>   1)          | cgroup_migrate() {
->>   1) 0.651 us |   cgroup_migrate_add_task(); /* = 0xffff93fcfd346c00 */
->>   1)          |   cgroup_migrate_execute() {
->>   1)          |     cpu_cgroup_can_attach() {
->>   1)          |       cgroup_taskset_first() {
->>   1) 0.732 us |         cgroup_taskset_next(); /* = 0xffff93fc8fb20000 */
->>   1) 1.232 us |       } /* cgroup_taskset_first = 0xffff93fc8fb20000 */
->>   1) 0.380 us |       sched_rt_can_attach(); /* = 0x0 */
->>   1) 2.335 us |     } /* cpu_cgroup_can_attach = -22 */
->>   1) 4.369 us |   } /* cgroup_migrate_execute = -22 */
->>   1) 7.143 us | } /* cgroup_migrate = -22 */
->>
->> ...
->>
->> Signed-off-by: Donglin Peng <pengdonglin@sangfor.com.cn>
-> 
->> diff --git a/arch/arm64/kernel/entry-ftrace.S b/arch/arm64/kernel/entry-ftrace.S
->> index 350ed81324ac..d1a5d76e6d72 100644
->> --- a/arch/arm64/kernel/entry-ftrace.S
->> +++ b/arch/arm64/kernel/entry-ftrace.S
->> @@ -276,7 +276,15 @@ SYM_CODE_START(return_to_handler)
->>   	stp x4, x5, [sp, #32]
->>   	stp x6, x7, [sp, #48]
->>   
+>> diff --git a/arch/arm/kernel/entry-ftrace.S b/arch/arm/kernel/entry-ftrace.S
+>> index 3e7bcaca5e07..ba1986e27af8 100644
+>> --- a/arch/arm/kernel/entry-ftrace.S
+>> +++ b/arch/arm/kernel/entry-ftrace.S
+>> @@ -258,7 +258,15 @@ ENDPROC(ftrace_graph_regs_caller)
+>>   #ifdef CONFIG_FUNCTION_GRAPH_TRACER
+>>   ENTRY(return_to_handler)
+>>   	stmdb	sp!, {r0-r3}
 >> +#ifdef CONFIG_FUNCTION_GRAPH_RETVAL
 >> +	/*
->> +	 * Pass both the function return values in the register x0 and x1
->> +	 * to ftrace_return_to_handler.
+>> +	 * Pass both the function return values in the register r0 and r1
+>> +	 * to ftrace_return_to_handler
 >> +	 */
->> +	mov	x2, x29			//     parent's fp
+>> +	add	r2, sp, #16		@ sp at exit of instrumented routine
 >> +#else
->>   	mov	x0, x29			//     parent's fp
+>>   	add	r0, sp, #16		@ sp at exit of instrumented routine
 >> +#endif
->>   	bl	ftrace_return_to_handler// addr = ftrace_return_to_hander(fp);
->>   	mov	x30, x0			// restore the original return address
+>>   	bl	ftrace_return_to_handler
+> ...
+>> -unsigned long ftrace_return_to_handler(unsigned long frame_pointer)
+>> +static unsigned long __ftrace_return_to_handler(unsigned long retval_1st,
+>> +			unsigned long retval_2nd, unsigned long frame_pointer)
+> ...
+>> +#ifdef CONFIG_FUNCTION_GRAPH_RETVAL
+>> +unsigned long ftrace_return_to_handler(unsigned long retval_1st,
+>> +			unsigned long retval_2nd, unsigned long frame_pointer)
+>> +{
+>> +	return __ftrace_return_to_handler(retval_1st, retval_2nd, frame_pointer);
+>> +}
+>> +#else
+>> +unsigned long ftrace_return_to_handler(unsigned long frame_pointer)
+>> +{
+>> +	return __ftrace_return_to_handler(0, 0, frame_pointer);
+>> +}
+>> +#endif
+>> +
 > 
+> Hi,
 > 
-> Please don't make the calling convention of the asm change depending on a
-> selectable config option.
+> To echo Mark's criticism, I also don't like this. I feel it would be
+> better if ftrace_return_to_handler() always took the same arguments
+> irrespective of the setting of CONFIG_FUNCTION_GRAPH_RETVAL.
 > 
-> We already store the regs here; I'd be happy to make that a struct ftrace_regs
-> and pass a pointer to that to C code. Then it's be easy to acquire the value
-> you want in the exact same way as upon entry, and it'll work even if we decide
-> to return a structure by value somewhere (as that can use registers x2-x7 too).
+> On 32-bit ARM, we have to stack r0-r3 anyway to prevent the call to
+> ftrace_return_to_handler() corrupting the return value, and these
+> are the registers we need. So we might as well pass a pointer to
+> these stacked registers. Whether that's acceptable on other
+> architectures, I couldn't say.
 
-Agree, I think we only need to store return registers, but ftrace_regs
-has too many members. So we can introduce a new structure called
-pt_ret_regs which only contains return registers and frame pointer
-register, for ARM64, they are x0~x7 and x29. Then pass the pointer to
-pt_ret_regs to ftrace_return_to_handler.
+Agree, I think we can introduce a new structure called pt_ret_regs for
+each relevant architecture. The pt_ret_regs should only contain the
+return registers and the frame pointer register, for arm, they are r0~r3
+and r11.Then we can pass the pointer to the pt_ret_regs to 
+ftrace_return_to_handler.
 
 > 
-> Thanks,
-> Mark.
+> Thanks.
+> 
 
