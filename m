@@ -2,244 +2,117 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 66B9EC6FD1C
-	for <linux-trace-kernel@archiver.kernel.org>; Wed, 22 Mar 2023 03:47:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 08320C6FD1F
+	for <linux-trace-kernel@archiver.kernel.org>; Wed, 22 Mar 2023 05:01:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230187AbjCVDrW (ORCPT
+        id S229611AbjCVFBV (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Tue, 21 Mar 2023 23:47:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33860 "EHLO
+        Wed, 22 Mar 2023 01:01:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58016 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230127AbjCVDrV (ORCPT
+        with ESMTP id S229524AbjCVFBU (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Tue, 21 Mar 2023 23:47:21 -0400
-Received: from mga09.intel.com (mga09.intel.com [134.134.136.24])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 538FC2F7B7;
-        Tue, 21 Mar 2023 20:47:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1679456840; x=1710992840;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=4Qx8FlvzNHHlgWRW4V7LLgEkErNpSgGrzQJdEa45mTk=;
-  b=M+p9qe0SWSf9Flakv86O7FG7Q61VueZ+igdEIk4m7A8o0rcyEZuUy1v7
-   HTh4ho4WpCo0/fJhOL5pMqxwB9aHLhwg908cq/KaiiuhnFtJGD8ASxOTp
-   KfEmSa6oz8r04786Kiuka+NJRFS/q4O0ppExeuQYvzBLAvL300igD8mdq
-   cWda//dvinj21OrWz9fhy70CJqdaZO1DvXGkIUeNNscwhDgdVtAhetQsW
-   wQ5mgWLlEEsiSCTzHvunOj851L0zR6TCGhwyqq4WHfUGHDpoFAOpMnGFc
-   ju2iXzXnL2iQACid4+cBMGA5XAny1PwExmFLWEw7B4qpQrt4pVm0pD5AV
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10656"; a="340655853"
-X-IronPort-AV: E=Sophos;i="5.98,280,1673942400"; 
-   d="scan'208";a="340655853"
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Mar 2023 20:47:18 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10656"; a="825227596"
-X-IronPort-AV: E=Sophos;i="5.98,280,1673942400"; 
-   d="scan'208";a="825227596"
-Received: from lkp-server01.sh.intel.com (HELO b613635ddfff) ([10.239.97.150])
-  by fmsmga001.fm.intel.com with ESMTP; 21 Mar 2023 20:47:15 -0700
-Received: from kbuild by b613635ddfff with local (Exim 4.96)
-        (envelope-from <lkp@intel.com>)
-        id 1pepRS-000Cpy-2M;
-        Wed, 22 Mar 2023 03:47:14 +0000
-Date:   Wed, 22 Mar 2023 11:47:05 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     Steven Rostedt <rostedt@goodmis.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Linux Trace Kernel <linux-trace-kernel@vger.kernel.org>
-Cc:     oe-kbuild-all@lists.linux.dev,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Ross Zwisler <zwisler@google.com>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        Miroslav Benes <mbenes@suse.cz>
-Subject: Re: [PATCH] tracing: Trace instrumentation begin and end
-Message-ID: <202303221157.uDnuxtAh-lkp@intel.com>
-References: <20230321215121.71b339c5@gandalf.local.home>
+        Wed, 22 Mar 2023 01:01:20 -0400
+Received: from mail-m118111.qiye.163.com (mail-m118111.qiye.163.com [115.236.118.111])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F313F3B862;
+        Tue, 21 Mar 2023 22:01:17 -0700 (PDT)
+Received: from [10.128.10.193] (unknown [117.133.56.22])
+        by mail-m118111.qiye.163.com (Hmail) with ESMTPA id 9A1045802E1;
+        Wed, 22 Mar 2023 13:01:09 +0800 (CST)
+Message-ID: <463601ac-da5f-1616-e531-2bbc3a22fc43@sangfor.com.cn>
+Date:   Wed, 22 Mar 2023 13:01:09 +0800
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230321215121.71b339c5@gandalf.local.home>
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.9.0
+Subject: Re: [PATCH v5 1/2] function_graph: Support recording and printing the
+ return value of function
+Content-Language: en-US
+To:     Florian Kauer <florian.kauer@linutronix.de>,
+        Steven Rostedt <rostedt@goodmis.org>, mhiramat@kernel.org
+Cc:     linux@armlinux.org.uk, mark.rutland@arm.com, will@kernel.org,
+        catalin.marinas@arm.com, palmer@dabbelt.com,
+        paul.walmsley@sifive.com, tglx@linutronix.de,
+        dave.hansen@linux.intel.com, x86@kernel.org, mingo@redhat.com,
+        xiehuan09@gmail.com, dinghui@sangfor.com.cn,
+        huangcun@sangfor.com.cn, dolinux.peng@gmail.com,
+        linux-trace-kernel@vger.kernel.org,
+        linux-riscv@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+References: <20230320131650.482594-1-pengdonglin@sangfor.com.cn>
+ <20230320131650.482594-2-pengdonglin@sangfor.com.cn>
+ <2eeef5a3-cbe7-7a01-489a-87c5ac00adf7@linutronix.de>
+ <20230321104413.43a81ffb@gandalf.local.home>
+ <ac95f1f7-2af3-1461-2ea2-3608d081de3f@linutronix.de>
+From:   Donglin Peng <pengdonglin@sangfor.com.cn>
+In-Reply-To: <ac95f1f7-2af3-1461-2ea2-3608d081de3f@linutronix.de>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-HM-Spam-Status: e1kfGhgUHx5ZQUpXWQgPGg8OCBgUHx5ZQUlOS1dZFg8aDwILHllBWSg2Ly
+        tZV1koWUFITzdXWS1ZQUlXWQ8JGhUIEh9ZQVlDQxhOVk4fQ0xKSk9DTR4fQ1UTARMWGhIXJBQOD1
+        lXWRgSC1lBWUpKTFVKSEhVTk1VSUlZV1kWGg8SFR0UWUFZT0tIVUpKS09ISFVKS0tVS1kG
+X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6Ogw6CCo4Ez0ONRUMIQgdIRZW
+        ExMKFAhVSlVKTUxCT01KSUxLQ05IVTMWGhIXVQseFRwfFBUcFxIVOwgaFRwdFAlVGBQWVRgVRVlX
+        WRILWUFZSkpMVUpISFVOTVVJSVlXWQgBWUFOSkhCNwY+
+X-HM-Tid: 0a8707b143a22eb7kusn9a1045802e1
+X-HM-MType: 1
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-Hi Steven,
+On 2023/3/21 23:11, Florian Kauer wrote:
+> On 21.03.23 15:44, Steven Rostedt wrote:
+>> On Tue, 21 Mar 2023 15:09:40 +0100
+>> Florian Kauer <florian.kauer@linutronix.de> wrote:
+>>
+>>> On 20.03.23 14:16, Donglin Peng wrote:
+>>>> When using the function_graph tracer to analyze system call failures,
+>>>> it can be time-consuming to analyze the trace logs and locate the kernel
+>>>> function that first returns an error. This change aims to simplify the
+>>>> process by recording the function return value to the 'retval' member of
+>>>> 'ftrace_graph_ent' and printing it when outputing the trace log.
+>>>
+>>> I just came across your patch by pure luck and it helped me a lot
+>>> to trace down a problem I had, thanks!
+>>>
+>>> So you can have my
+>>> Tested-by: Florian Kauer <florian.kauer@linutronix.de>
+>>>   
+>>>> New trace options are introduced: funcgraph-retval and graph_retval_hex.
+>>>
+>>> I would personally prefer to have the second option scoped better, so for example
+>>> "funcgraph-retval-hex".
+>>
+>> That could be an ftrace option.
+> 
+> What do you mean? In the current implementation both funcgraph-retval and graph_retval_hex
+> are options for the function_graph tracer, but one is prefixed with "funcgraph-" as nearly
+> all other options for the function_graph tracer and one is not (and is even snake_case, while
+> the others are kebab-case). So it just looks inconsistent for me, but there might be a reason?
 
-Thank you for the patch! Yet something to improve:
+Agree, I also think "funcgraph-retval-hex" may look better.
 
-[auto build test ERROR on linus/master]
-[also build test ERROR on v6.3-rc3 next-20230321]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+Hi Hiramatsu, what do you think?
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Steven-Rostedt/tracing-Trace-instrumentation-begin-and-end/20230322-095354
-patch link:    https://lore.kernel.org/r/20230321215121.71b339c5%40gandalf.local.home
-patch subject: [PATCH] tracing: Trace instrumentation begin and end
-config: m68k-allyesconfig (https://download.01.org/0day-ci/archive/20230322/202303221157.uDnuxtAh-lkp@intel.com/config)
-compiler: m68k-linux-gcc (GCC) 12.1.0
-reproduce (this is a W=1 build):
-        wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
-        chmod +x ~/bin/make.cross
-        # https://github.com/intel-lab-lkp/linux/commit/1f40755bb9b4817135459d6cf76fcbd17ffb53dd
-        git remote add linux-review https://github.com/intel-lab-lkp/linux
-        git fetch --no-tags linux-review Steven-Rostedt/tracing-Trace-instrumentation-begin-and-end/20230322-095354
-        git checkout 1f40755bb9b4817135459d6cf76fcbd17ffb53dd
-        # save the config file
-        mkdir build_dir && cp config build_dir/.config
-        COMPILER_INSTALL_PATH=$HOME/0day COMPILER=gcc-12.1.0 make.cross W=1 O=build_dir ARCH=m68k olddefconfig
-        COMPILER_INSTALL_PATH=$HOME/0day COMPILER=gcc-12.1.0 make.cross W=1 O=build_dir ARCH=m68k prepare
+> 
+> By the way: The documentation patch also references "function-retval" instead of
+> "funcgraph-retval" in the documentation of the graph_retval_hex option.
 
-If you fix the issue, kindly add following tag where applicable
-| Reported-by: kernel test robot <lkp@intel.com>
-| Link: https://lore.kernel.org/oe-kbuild-all/202303221157.uDnuxtAh-lkp@intel.com/
+Thanks, it has been removed in v6.
 
-All errors (new ones prefixed by >>):
+> 
+>> Anyway, could you tell us your use case, and that could go into the change
+>> log of this patch as "one use case that this helped with".
+> 
+> Nothing spectacular. I just wanted to find out why ICMP port unreachable messages
+> sporadically lead to -111 (Connection Refused) for __sys_sendto() when IP_RECVERR is set
+> and the call never fails if IP_RECVERR is not set. (I am still unsure if this is
+> REALLY intended behavior, but at least it makes sense why this occurs when reading
+> the sources).
+> 
+> And with this patch, the -111 is directly popping up in the trace, but I do not think
+> that my missing knowledge about details of the kernel network stack
+> really qualifies as a good argument ;-)
+> 
+> Greetings,
+> Florian
 
-   scripts/genksyms/parse.y: warning: 9 shift/reduce conflicts [-Wconflicts-sr]
-   scripts/genksyms/parse.y: warning: 5 reduce/reduce conflicts [-Wconflicts-rr]
-   scripts/genksyms/parse.y: note: rerun with option '-Wcounterexamples' to generate conflict counterexamples
-   In file included from include/asm-generic/bug.h:6,
-                    from arch/m68k/include/asm/bug.h:32,
-                    from include/linux/bug.h:5,
-                    from include/linux/thread_info.h:13,
-                    from include/asm-generic/preempt.h:5,
-                    from ./arch/m68k/include/generated/asm/preempt.h:1,
-                    from include/linux/preempt.h:78,
-                    from arch/m68k/include/asm/irqflags.h:6,
-                    from include/linux/irqflags.h:16,
-                    from arch/m68k/include/asm/atomic.h:6,
-                    from include/linux/atomic.h:7,
-                    from include/linux/rcupdate.h:25,
-                    from include/linux/rculist.h:11,
-                    from include/linux/pid.h:5,
-                    from include/linux/sched.h:14,
-                    from arch/m68k/kernel/asm-offsets.c:15:
-   include/linux/thread_info.h: In function 'check_copy_size':
->> include/linux/instrumentation.h:87:65: error: '_THIS_IP_' undeclared (first use in this function)
-      87 | # define instrumentation_begin() do_trace_instrumentation_begin(_THIS_IP_, _RET_IP_);
-         |                                                                 ^~~~~~~~~
-   include/asm-generic/bug.h:96:17: note: in expansion of macro 'instrumentation_begin'
-      96 |                 instrumentation_begin();                                \
-         |                 ^~~~~~~~~~~~~~~~~~~~~
-   include/asm-generic/bug.h:94:33: note: in expansion of macro '__WARN_printf'
-      94 | #define __WARN()                __WARN_printf(TAINT_WARN, NULL)
-         |                                 ^~~~~~~~~~~~~
-   include/asm-generic/bug.h:124:17: note: in expansion of macro '__WARN'
-     124 |                 __WARN();                                               \
-         |                 ^~~~~~
-   include/linux/once_lite.h:31:25: note: in expansion of macro 'WARN_ON'
-      31 |                         func(__VA_ARGS__);                              \
-         |                         ^~~~
-   include/asm-generic/bug.h:147:9: note: in expansion of macro 'DO_ONCE_LITE_IF'
-     147 |         DO_ONCE_LITE_IF(condition, WARN_ON, 1)
-         |         ^~~~~~~~~~~~~~~
-   include/linux/thread_info.h:249:13: note: in expansion of macro 'WARN_ON_ONCE'
-     249 |         if (WARN_ON_ONCE(bytes > INT_MAX))
-         |             ^~~~~~~~~~~~
-   include/linux/instrumentation.h:87:65: note: each undeclared identifier is reported only once for each function it appears in
-      87 | # define instrumentation_begin() do_trace_instrumentation_begin(_THIS_IP_, _RET_IP_);
-         |                                                                 ^~~~~~~~~
-   include/asm-generic/bug.h:96:17: note: in expansion of macro 'instrumentation_begin'
-      96 |                 instrumentation_begin();                                \
-         |                 ^~~~~~~~~~~~~~~~~~~~~
-   include/asm-generic/bug.h:94:33: note: in expansion of macro '__WARN_printf'
-      94 | #define __WARN()                __WARN_printf(TAINT_WARN, NULL)
-         |                                 ^~~~~~~~~~~~~
-   include/asm-generic/bug.h:124:17: note: in expansion of macro '__WARN'
-     124 |                 __WARN();                                               \
-         |                 ^~~~~~
-   include/linux/once_lite.h:31:25: note: in expansion of macro 'WARN_ON'
-      31 |                         func(__VA_ARGS__);                              \
-         |                         ^~~~
-   include/asm-generic/bug.h:147:9: note: in expansion of macro 'DO_ONCE_LITE_IF'
-     147 |         DO_ONCE_LITE_IF(condition, WARN_ON, 1)
-         |         ^~~~~~~~~~~~~~~
-   include/linux/thread_info.h:249:13: note: in expansion of macro 'WARN_ON_ONCE'
-     249 |         if (WARN_ON_ONCE(bytes > INT_MAX))
-         |             ^~~~~~~~~~~~
->> include/linux/instrumentation.h:87:76: error: '_RET_IP_' undeclared (first use in this function)
-      87 | # define instrumentation_begin() do_trace_instrumentation_begin(_THIS_IP_, _RET_IP_);
-         |                                                                            ^~~~~~~~
-   include/asm-generic/bug.h:96:17: note: in expansion of macro 'instrumentation_begin'
-      96 |                 instrumentation_begin();                                \
-         |                 ^~~~~~~~~~~~~~~~~~~~~
-   include/asm-generic/bug.h:94:33: note: in expansion of macro '__WARN_printf'
-      94 | #define __WARN()                __WARN_printf(TAINT_WARN, NULL)
-         |                                 ^~~~~~~~~~~~~
-   include/asm-generic/bug.h:124:17: note: in expansion of macro '__WARN'
-     124 |                 __WARN();                                               \
-         |                 ^~~~~~
-   include/linux/once_lite.h:31:25: note: in expansion of macro 'WARN_ON'
-      31 |                         func(__VA_ARGS__);                              \
-         |                         ^~~~
-   include/asm-generic/bug.h:147:9: note: in expansion of macro 'DO_ONCE_LITE_IF'
-     147 |         DO_ONCE_LITE_IF(condition, WARN_ON, 1)
-         |         ^~~~~~~~~~~~~~~
-   include/linux/thread_info.h:249:13: note: in expansion of macro 'WARN_ON_ONCE'
-     249 |         if (WARN_ON_ONCE(bytes > INT_MAX))
-         |             ^~~~~~~~~~~~
-   make[2]: *** [scripts/Makefile.build:114: arch/m68k/kernel/asm-offsets.s] Error 1
-   make[2]: Target 'prepare' not remade because of errors.
-   make[1]: *** [Makefile:1286: prepare0] Error 2
-   make[1]: Target 'prepare' not remade because of errors.
-   make: *** [Makefile:226: __sub-make] Error 2
-   make: Target 'prepare' not remade because of errors.
-
-
-vim +/_THIS_IP_ +87 include/linux/instrumentation.h
-
-    46	
-    47	/*
-    48	 * Because instrumentation_{begin,end}() can nest, objtool validation considers
-    49	 * _begin() a +1 and _end() a -1 and computes a sum over the instructions.
-    50	 * When the value is greater than 0, we consider instrumentation allowed.
-    51	 *
-    52	 * There is a problem with code like:
-    53	 *
-    54	 * noinstr void foo()
-    55	 * {
-    56	 *	instrumentation_begin();
-    57	 *	...
-    58	 *	if (cond) {
-    59	 *		instrumentation_begin();
-    60	 *		...
-    61	 *		instrumentation_end();
-    62	 *	}
-    63	 *	bar();
-    64	 *	instrumentation_end();
-    65	 * }
-    66	 *
-    67	 * If instrumentation_end() would be an empty label, like all the other
-    68	 * annotations, the inner _end(), which is at the end of a conditional block,
-    69	 * would land on the instruction after the block.
-    70	 *
-    71	 * If we then consider the sum of the !cond path, we'll see that the call to
-    72	 * bar() is with a 0-value, even though, we meant it to happen with a positive
-    73	 * value.
-    74	 *
-    75	 * To avoid this, have _end() be a NOP instruction, this ensures it will be
-    76	 * part of the condition block and does not escape.
-    77	 */
-    78	#define __instrumentation_end(c) ({					\
-    79		do_trace_instrumentation_end(_THIS_IP_, _RET_IP_);		\
-    80		asm volatile(__stringify(c) ": nop\n\t"				\
-    81			     ".pushsection .discard.instr_end\n\t"		\
-    82			     ".long " __stringify(c) "b - .\n\t"		\
-    83			     ".popsection\n\t" : : "i" (c));			\
-    84	})
-    85	#define instrumentation_end() __instrumentation_end(__COUNTER__)
-    86	#else /* !CONFIG_NOINSTR_VALIDATION */
-  > 87	# define instrumentation_begin() do_trace_instrumentation_begin(_THIS_IP_, _RET_IP_);
-    88	# define instrumentation_end()	 do_trace_instrumentation_end(_THIS_IP_, _RET_IP_);
-    89	#endif /* CONFIG_NOINSTR_VALIDATION */
-    90	
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests
