@@ -2,118 +2,80 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 693A9C6FD1F
-	for <linux-trace-kernel@archiver.kernel.org>; Wed, 22 Mar 2023 09:02:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8710FC6FD1C
+	for <linux-trace-kernel@archiver.kernel.org>; Wed, 22 Mar 2023 09:29:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229595AbjCVJCE (ORCPT
+        id S230404AbjCVJ3n (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Wed, 22 Mar 2023 05:02:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46316 "EHLO
+        Wed, 22 Mar 2023 05:29:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52516 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229611AbjCVJCD (ORCPT
+        with ESMTP id S230476AbjCVJ3h (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Wed, 22 Mar 2023 05:02:03 -0400
-Received: from mail-m118111.qiye.163.com (mail-m118111.qiye.163.com [115.236.118.111])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5D5D95B42A;
-        Wed, 22 Mar 2023 02:02:01 -0700 (PDT)
-Received: from [10.128.10.193] (unknown [117.133.56.22])
-        by mail-m118111.qiye.163.com (Hmail) with ESMTPA id 9E5CB5807BE;
-        Wed, 22 Mar 2023 17:01:55 +0800 (CST)
-Message-ID: <88c2c37b-c221-5c27-9663-7026084adf8d@sangfor.com.cn>
-Date:   Wed, 22 Mar 2023 17:01:54 +0800
+        Wed, 22 Mar 2023 05:29:37 -0400
+Received: from mail-io1-f71.google.com (mail-io1-f71.google.com [209.85.166.71])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EE42659E4C
+        for <linux-trace-kernel@vger.kernel.org>; Wed, 22 Mar 2023 02:29:19 -0700 (PDT)
+Received: by mail-io1-f71.google.com with SMTP id s3-20020a056602240300b007589413aea0so1197973ioa.5
+        for <linux-trace-kernel@vger.kernel.org>; Wed, 22 Mar 2023 02:29:19 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112; t=1679477359;
+        h=to:from:subject:message-id:in-reply-to:date:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=VwR4H6MGsoLQxINvSfgEoqaiGeIJXbBfzWUEo9uno3E=;
+        b=14tyJvwzyJAA+eeAa/S+DwJxHP1JuzstwgySs+HOayZ1WjVZtkqsztZ/2nCrw4cuMG
+         EoktE2cmBdWDx6Oe0m9NvlME8JwewsEPfwO0o4vI6Hiu+LgCy19YUTk3LdZXhXGoIzpb
+         BMWDHwaAKoxqHPcDvSnaY85n4pbKVgaUTIJvShVivNAzmZk4jFqsXsqyqjuVw/7ExGva
+         Fu5owVmJW0reSSz6WgV145Ii/LMFzJ6vm60F3wfn6xUWm0mVnQKvPl60WhY023LEYXQG
+         tZ4YA9dfj1BZZ/lKPeb+IzmMQ+6DKWCcilBvTiu0O3XrmNsPe15Q8R0QBj3TABEnuPNq
+         ugUw==
+X-Gm-Message-State: AO0yUKXYOwXuJs2dEsgAI8LNeCooMCpYG9PfZosTudk0enhlHhxsQOi0
+        2SxX3YZkGPHGSNDod6LkmXIXyDuL2WAPAmZO55kY1EDW8FWd
+X-Google-Smtp-Source: AK7set9wiXXV8HcfSnBA3WXXQuxKz+LajL6b0bCizutG2gEq/GuJ4PDA4gkD8fLcC7wmG0GimCb5oA7lyiAD8rOGbOyncXzfWO0+
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.9.0
-Subject: Re: [PATCH v5 1/2] function_graph: Support recording and printing the
- return value of function
-Content-Language: en-US
-To:     "Russell King (Oracle)" <linux@armlinux.org.uk>
-Cc:     mhiramat@kernel.org, rostedt@goodmis.org, mark.rutland@arm.com,
-        will@kernel.org, catalin.marinas@arm.com, palmer@dabbelt.com,
-        paul.walmsley@sifive.com, tglx@linutronix.de,
-        dave.hansen@linux.intel.com, x86@kernel.org, mingo@redhat.com,
-        xiehuan09@gmail.com, dinghui@sangfor.com.cn,
-        huangcun@sangfor.com.cn, dolinux.peng@gmail.com,
-        linux-trace-kernel@vger.kernel.org,
-        linux-riscv@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-References: <20230320131650.482594-1-pengdonglin@sangfor.com.cn>
- <20230320131650.482594-2-pengdonglin@sangfor.com.cn>
- <ZBnqAYO7rdk4Qikq@shell.armlinux.org.uk>
-From:   Donglin Peng <pengdonglin@sangfor.com.cn>
-In-Reply-To: <ZBnqAYO7rdk4Qikq@shell.armlinux.org.uk>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-HM-Spam-Status: e1kfGhgUHx5ZQUpXWQgPGg8OCBgUHx5ZQUlOS1dZFg8aDwILHllBWSg2Ly
-        tZV1koWUFITzdXWS1ZQUlXWQ8JGhUIEh9ZQVkaTx4eVkwdS0NOT04YGR0eTFUTARMWGhIXJBQOD1
-        lXWRgSC1lBWUpKTFVKSEhVTk1VSUlZV1kWGg8SFR0UWUFZT0tIVUpKS09ISFVKS0tVS1kG
-X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6PC46GSo*Kj0OKRRJLRI3QiE2
-        NwNPFA9VSlVKTUxCT0xOTEpMS01MVTMWGhIXVQseFRwfFBUcFxIVOwgaFRwdFAlVGBQWVRgVRVlX
-        WRILWUFZSkpMVUpISFVOTVVJSVlXWQgBWUFPTU1DNwY+
-X-HM-Tid: 0a87088db1662eb7kusn9e5cb5807be
-X-HM-MType: 1
+X-Received: by 2002:a02:9567:0:b0:3c2:b9ba:72f9 with SMTP id
+ y94-20020a029567000000b003c2b9ba72f9mr2581039jah.5.1679477359313; Wed, 22 Mar
+ 2023 02:29:19 -0700 (PDT)
+Date:   Wed, 22 Mar 2023 02:29:19 -0700
+In-Reply-To: <0000000000006294c805e106db34@google.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000690cbc05f779cba8@google.com>
+Subject: Re: [syzbot] [bpf?] [trace?] possible deadlock in bpf_trace_printk
+From:   syzbot <syzbot+c49e17557ddb5725583d@syzkaller.appspotmail.com>
+To:     andrii@kernel.org, ast@kernel.org, boqun.feng@gmail.com,
+        bpf@vger.kernel.org, daniel@iogearbox.net, davem@davemloft.net,
+        fgheet255t@gmail.com, haoluo@google.com, hawk@kernel.org,
+        hdanton@sina.com, john.fastabend@gmail.com, jolsa@kernel.org,
+        kafai@fb.com, kpsingh@kernel.org, kuba@kernel.org,
+        linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+        longman@redhat.com, martin.lau@linux.dev, mingo@redhat.com,
+        netdev@vger.kernel.org, peterz@infradead.org, rostedt@goodmis.org,
+        sdf@google.com, song@kernel.org, songliubraving@fb.com,
+        syzkaller-bugs@googlegroups.com, will@kernel.org, yhs@fb.com
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On 2023/3/22 1:31, Russell King (Oracle) wrote:
-> On Mon, Mar 20, 2023 at 06:16:49AM -0700, Donglin Peng wrote:
->> diff --git a/arch/arm/kernel/entry-ftrace.S b/arch/arm/kernel/entry-ftrace.S
->> index 3e7bcaca5e07..ba1986e27af8 100644
->> --- a/arch/arm/kernel/entry-ftrace.S
->> +++ b/arch/arm/kernel/entry-ftrace.S
->> @@ -258,7 +258,15 @@ ENDPROC(ftrace_graph_regs_caller)
->>   #ifdef CONFIG_FUNCTION_GRAPH_TRACER
->>   ENTRY(return_to_handler)
->>   	stmdb	sp!, {r0-r3}
->> +#ifdef CONFIG_FUNCTION_GRAPH_RETVAL
->> +	/*
->> +	 * Pass both the function return values in the register r0 and r1
->> +	 * to ftrace_return_to_handler
->> +	 */
->> +	add	r2, sp, #16		@ sp at exit of instrumented routine
->> +#else
->>   	add	r0, sp, #16		@ sp at exit of instrumented routine
->> +#endif
->>   	bl	ftrace_return_to_handler
-> ...
->> -unsigned long ftrace_return_to_handler(unsigned long frame_pointer)
->> +static unsigned long __ftrace_return_to_handler(unsigned long retval_1st,
->> +			unsigned long retval_2nd, unsigned long frame_pointer)
-> ...
->> +#ifdef CONFIG_FUNCTION_GRAPH_RETVAL
->> +unsigned long ftrace_return_to_handler(unsigned long retval_1st,
->> +			unsigned long retval_2nd, unsigned long frame_pointer)
->> +{
->> +	return __ftrace_return_to_handler(retval_1st, retval_2nd, frame_pointer);
->> +}
->> +#else
->> +unsigned long ftrace_return_to_handler(unsigned long frame_pointer)
->> +{
->> +	return __ftrace_return_to_handler(0, 0, frame_pointer);
->> +}
->> +#endif
->> +
-> 
-> Hi,
-> 
-> To echo Mark's criticism, I also don't like this. I feel it would be
-> better if ftrace_return_to_handler() always took the same arguments
-> irrespective of the setting of CONFIG_FUNCTION_GRAPH_RETVAL.
-> 
-> On 32-bit ARM, we have to stack r0-r3 anyway to prevent the call to
-> ftrace_return_to_handler() corrupting the return value, and these
-> are the registers we need. So we might as well pass a pointer to
-> these stacked registers. Whether that's acceptable on other
-> architectures, I couldn't say.
+syzbot suspects this issue was fixed by commit:
 
-Agree, I think we can introduce a new structure called pt_ret_regs for
-each relevant architecture. The pt_ret_regs should only contain the
-return registers and the frame pointer register, for arm, they are r0~r3
-and r11.Then we can pass the pointer to the pt_ret_regs to 
-ftrace_return_to_handler.
+commit 05b24ff9b2cfabfcfd951daaa915a036ab53c9e1
+Author: Jiri Olsa <jolsa@kernel.org>
+Date:   Fri Sep 16 07:19:14 2022 +0000
 
-> 
-> Thanks.
-> 
+    bpf: Prevent bpf program recursion for raw tracepoint probes
 
+bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=10a653d6c80000
+start commit:   a335366bad13 Merge tag 'gpio-fixes-for-v6.0-rc6' of git://..
+git tree:       upstream
+kernel config:  https://syzkaller.appspot.com/x/.config?x=9e66520f224211a2
+dashboard link: https://syzkaller.appspot.com/bug?extid=c49e17557ddb5725583d
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=16e27480880000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=12737fbf080000
+
+If the result looks correct, please mark the issue as fixed by replying with:
+
+#syz fix: bpf: Prevent bpf program recursion for raw tracepoint probes
+
+For information about bisection process see: https://goo.gl/tpsmEJ#bisection
