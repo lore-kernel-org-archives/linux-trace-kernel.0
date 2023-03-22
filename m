@@ -2,155 +2,166 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A63FC6FD1D
-	for <linux-trace-kernel@archiver.kernel.org>; Wed, 22 Mar 2023 02:33:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 51976C6FD1C
+	for <linux-trace-kernel@archiver.kernel.org>; Wed, 22 Mar 2023 03:27:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230209AbjCVCdo (ORCPT
+        id S230036AbjCVD1T (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Tue, 21 Mar 2023 22:33:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52142 "EHLO
+        Tue, 21 Mar 2023 23:27:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60696 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229525AbjCVCdn (ORCPT
+        with ESMTP id S229931AbjCVD1R (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Tue, 21 Mar 2023 22:33:43 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 01AFE5BA1
-        for <linux-trace-kernel@vger.kernel.org>; Tue, 21 Mar 2023 19:32:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1679452374;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=BzR3eLSpqoTMzxh2NgN0pV0oM+P8NH9sKNgtkW4tjlQ=;
-        b=IZi4b9wmRy2VokAZnpLkAKbkn5axwxhLgeVPtxgXzygCWcbs+UFiE1m/7dus1a2yL1JPG9
-        R/C4B3Vi0DbeVa9TzpUzMUWudO4sRywTZQ8x63hRwwVRfD7ofV+WLaSLsUa55IE+XHg3rM
-        IbyeFgD7Ac5J4+2JMimt7QWbKOKom40=
-Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
- [209.85.128.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-640-IGQgcgKeP_Sp2PzIowckRQ-1; Tue, 21 Mar 2023 22:32:53 -0400
-X-MC-Unique: IGQgcgKeP_Sp2PzIowckRQ-1
-Received: by mail-wm1-f69.google.com with SMTP id i3-20020a05600c354300b003edfa408811so3746367wmq.1
-        for <linux-trace-kernel@vger.kernel.org>; Tue, 21 Mar 2023 19:32:52 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1679452372;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=BzR3eLSpqoTMzxh2NgN0pV0oM+P8NH9sKNgtkW4tjlQ=;
-        b=OYJJCaGBbhdjQb8rhqluR8ul8DpUCFw/PSySpoW8e4e7Km0CC8/P/2OWEKJkNL7GGZ
-         WO0LmbIzjLmCGHnXoi00V1UG1IMwhTsIk0/4NQ5Oz1hPsLq3xwk7PJIxdMRroTGLijKg
-         SpvVNqSdDNDYEh+huk7UepIXqsxBZOekEk89MbXPpTQ0EfiQuYd0amghgDpxDSJV2NxQ
-         5yZLt40zckgQkp095DeRHPKjp6PKeh5Oasvu23EdaWYp/B+TeNLoojO7mIkc7EVy759Y
-         xc0dnKBPzkN5IsHen3EuTvKYEAzAcc/DM7Cfp4sX0h31U4qi6iw3Hz9JbKnXo27gybxn
-         nwbA==
-X-Gm-Message-State: AO0yUKXO+uGkwCP5AJv/aMG5tZBPoMuFbBl54xaJiCnVvK4vALsYEavG
-        eQrSTDmRpPCdMAsH7NTsfn27t/6YdEH2LwbiuMx0/9mlE07lBDC5oA/FVDvNeC20NiCuZZX7a3Q
-        4ekSYiSRBjgVaFiIoPCJMdj4KmRX6kbiK
-X-Received: by 2002:a5d:4521:0:b0:2cf:e827:b597 with SMTP id j1-20020a5d4521000000b002cfe827b597mr3982535wra.10.1679452371929;
-        Tue, 21 Mar 2023 19:32:51 -0700 (PDT)
-X-Google-Smtp-Source: AK7set+IAoeXaV5Ezy2+ySyjfqstu/owf9Mg6SdCShB52Q1gVgr7GbSGeNN3VY0ntYreU5GIBMrYUQ==
-X-Received: by 2002:a5d:4521:0:b0:2cf:e827:b597 with SMTP id j1-20020a5d4521000000b002cfe827b597mr3982509wra.10.1679452371580;
-        Tue, 21 Mar 2023 19:32:51 -0700 (PDT)
-Received: from redhat.com ([2.52.1.105])
-        by smtp.gmail.com with ESMTPSA id n1-20020a5d67c1000000b002cfe685bfd6sm12661630wrw.108.2023.03.21.19.32.48
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 21 Mar 2023 19:32:51 -0700 (PDT)
-Date:   Tue, 21 Mar 2023 22:32:46 -0400
-From:   "Michael S. Tsirkin" <mst@redhat.com>
-To:     Ross Zwisler <zwisler@chromium.org>
-Cc:     linux-kernel@vger.kernel.org, Ross Zwisler <zwisler@google.com>,
-        "Tobin C. Harding" <me@tobin.cc>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Jason Wang <jasowang@redhat.com>,
+        Tue, 21 Mar 2023 23:27:17 -0400
+Received: from mga06.intel.com (mga06b.intel.com [134.134.136.31])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 75091580D3;
+        Tue, 21 Mar 2023 20:27:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1679455636; x=1710991636;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=q0WrwoWlpiXHEXP/PcXkjqE6BTl9wSWIbnMlf2EXPKI=;
+  b=MIxSVACGghT1hIuVeW8ArPUnBBenCJKRyUf9pAuBMUznlVbd0JLSFCCr
+   +MmcXGlO1dZFrfUdMuzy6ydOLrJmKjoKuJC7feKb2GW6kIeENkWRaoKu2
+   eeWlDsWSF9ufdCRQ/R8b+RE+mxEzr1ul6OlLG0J79eDtD0tyrXs8td15O
+   3g/q2wBDH9zIvA9BWCXkZJ8NWy8NHqottUgofbAunVM6/K0LirKk71sej
+   mFlAp0a6bNAbzove/SngpNDRfh2wCx3zEE1W+OV2O9IRevi6bGdvewK7s
+   xOd1tI2VB2c+K24hecH0oxFsVLuL42aqD64RaCLLzMI6ZaeABYONdhN8j
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10656"; a="401686439"
+X-IronPort-AV: E=Sophos;i="5.98,280,1673942400"; 
+   d="scan'208";a="401686439"
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Mar 2023 20:27:15 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10656"; a="681753567"
+X-IronPort-AV: E=Sophos;i="5.98,280,1673942400"; 
+   d="scan'208";a="681753567"
+Received: from lkp-server01.sh.intel.com (HELO b613635ddfff) ([10.239.97.150])
+  by orsmga002.jf.intel.com with ESMTP; 21 Mar 2023 20:27:13 -0700
+Received: from kbuild by b613635ddfff with local (Exim 4.96)
+        (envelope-from <lkp@intel.com>)
+        id 1pep84-000Cnh-0o;
+        Wed, 22 Mar 2023 03:27:12 +0000
+Date:   Wed, 22 Mar 2023 11:26:19 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     Steven Rostedt <rostedt@goodmis.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linux Trace Kernel <linux-trace-kernel@vger.kernel.org>
+Cc:     oe-kbuild-all@lists.linux.dev,
         Masami Hiramatsu <mhiramat@kernel.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Shuah Khan <shuah@kernel.org>,
-        Tycho Andersen <tycho@tycho.pizza>, kvm@vger.kernel.org,
-        linux-hardening@vger.kernel.org, linux-kselftest@vger.kernel.org,
-        linux-mm@kvack.org, virtualization@lists.linux-foundation.org,
-        linux-trace-kernel@vger.kernel.org,
-        Steven Rostedt <rostedt@goodmis.org>
-Subject: Re: [PATCH v2 0/6] use canonical ftrace path whenever possible
-Message-ID: <20230321223139-mutt-send-email-mst@kernel.org>
-References: <20230215223350.2658616-1-zwisler@google.com>
+        Peter Zijlstra <peterz@infradead.org>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Ross Zwisler <zwisler@google.com>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        Miroslav Benes <mbenes@suse.cz>
+Subject: Re: [PATCH] tracing: Trace instrumentation begin and end
+Message-ID: <202303221148.o4nkqckQ-lkp@intel.com>
+References: <20230321215121.71b339c5@gandalf.local.home>
 MIME-Version: 1.0
-In-Reply-To: <20230215223350.2658616-1-zwisler@google.com>
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+In-Reply-To: <20230321215121.71b339c5@gandalf.local.home>
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On Wed, Feb 15, 2023 at 03:33:44PM -0700, Ross Zwisler wrote:
-> Changes in v2:
->  * Dropped patches which were pulled into maintainer trees.
->  * Split BPF patches out into another series targeting bpf-next.
->  * trace-agent now falls back to debugfs if tracefs isn't present.
->  * Added Acked-by from mst@redhat.com to series.
->  * Added a typo fixup for the virtio-trace README.
-> 
-> Steven, assuming there are no objections, would you feel comfortable
-> taking this series through your tree?
+Hi Steven,
 
-for merging up to patch 5 through another tree:
+Thank you for the patch! Yet something to improve:
 
-Acked-by: Michael S. Tsirkin <mst@redhat.com>
+[auto build test ERROR on linus/master]
+[also build test ERROR on v6.3-rc3 next-20230321]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
-I'll merge patch 6, no problem.
+url:    https://github.com/intel-lab-lkp/linux/commits/Steven-Rostedt/tracing-Trace-instrumentation-begin-and-end/20230322-095354
+patch link:    https://lore.kernel.org/r/20230321215121.71b339c5%40gandalf.local.home
+patch subject: [PATCH] tracing: Trace instrumentation begin and end
+config: powerpc-allyesconfig (https://download.01.org/0day-ci/archive/20230322/202303221148.o4nkqckQ-lkp@intel.com/config)
+compiler: powerpc-linux-gcc (GCC) 12.1.0
+reproduce (this is a W=1 build):
+        wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
+        chmod +x ~/bin/make.cross
+        # https://github.com/intel-lab-lkp/linux/commit/1f40755bb9b4817135459d6cf76fcbd17ffb53dd
+        git remote add linux-review https://github.com/intel-lab-lkp/linux
+        git fetch --no-tags linux-review Steven-Rostedt/tracing-Trace-instrumentation-begin-and-end/20230322-095354
+        git checkout 1f40755bb9b4817135459d6cf76fcbd17ffb53dd
+        # save the config file
+        mkdir build_dir && cp config build_dir/.config
+        COMPILER_INSTALL_PATH=$HOME/0day COMPILER=gcc-12.1.0 make.cross W=1 O=build_dir ARCH=powerpc olddefconfig
+        COMPILER_INSTALL_PATH=$HOME/0day COMPILER=gcc-12.1.0 make.cross W=1 O=build_dir ARCH=powerpc prepare
+
+If you fix the issue, kindly add following tag where applicable
+| Reported-by: kernel test robot <lkp@intel.com>
+| Link: https://lore.kernel.org/oe-kbuild-all/202303221148.o4nkqckQ-lkp@intel.com/
+
+All errors (new ones prefixed by >>):
+
+   scripts/genksyms/parse.y: warning: 9 shift/reduce conflicts [-Wconflicts-sr]
+   scripts/genksyms/parse.y: warning: 5 reduce/reduce conflicts [-Wconflicts-rr]
+   scripts/genksyms/parse.y: note: rerun with option '-Wcounterexamples' to generate conflict counterexamples
+   In file included from arch/powerpc/include/asm/page.h:247,
+                    from arch/powerpc/include/asm/thread_info.h:13,
+                    from include/linux/thread_info.h:60,
+                    from arch/powerpc/include/asm/ptrace.h:342,
+                    from arch/powerpc/include/asm/hw_irq.h:12,
+                    from arch/powerpc/include/asm/irqflags.h:12,
+                    from include/linux/irqflags.h:16,
+                    from include/asm-generic/cmpxchg-local.h:6,
+                    from arch/powerpc/include/asm/cmpxchg.h:755,
+                    from arch/powerpc/include/asm/atomic.h:11,
+                    from include/linux/atomic.h:7,
+                    from include/linux/tracepoint-defs.h:11,
+                    from include/linux/instrumentation.h:7,
+                    from include/asm-generic/bug.h:6,
+                    from arch/powerpc/include/asm/bug.h:159,
+                    from include/linux/bug.h:5,
+                    from include/linux/fortify-string.h:5,
+                    from include/linux/string.h:254,
+                    from include/linux/uuid.h:11,
+                    from include/linux/mod_devicetable.h:13,
+                    from scripts/mod/devicetable-offsets.c:3:
+   arch/powerpc/include/asm/page_32.h: In function 'clear_page':
+>> arch/powerpc/include/asm/page_32.h:48:9: error: implicit declaration of function 'WARN_ON' [-Werror=implicit-function-declaration]
+      48 |         WARN_ON((unsigned long)addr & (L1_CACHE_BYTES - 1));
+         |         ^~~~~~~
+   include/linux/thread_info.h: In function 'check_copy_size':
+>> include/linux/thread_info.h:249:13: error: implicit declaration of function 'WARN_ON_ONCE' [-Werror=implicit-function-declaration]
+     249 |         if (WARN_ON_ONCE(bytes > INT_MAX))
+         |             ^~~~~~~~~~~~
+   cc1: some warnings being treated as errors
+   make[2]: *** [scripts/Makefile.build:114: scripts/mod/devicetable-offsets.s] Error 1
+   make[2]: Target 'scripts/mod/' not remade because of errors.
+   make[1]: *** [Makefile:1285: prepare0] Error 2
+   make[1]: Target 'prepare' not remade because of errors.
+   make: *** [Makefile:226: __sub-make] Error 2
+   make: Target 'prepare' not remade because of errors.
 
 
-> ---
-> The canonical location for the tracefs filesystem is at /sys/kernel/tracing.
-> 
-> But, from Documentation/trace/ftrace.rst:
-> 
->   Before 4.1, all ftrace tracing control files were within the debugfs
->   file system, which is typically located at /sys/kernel/debug/tracing.
->   For backward compatibility, when mounting the debugfs file system,
->   the tracefs file system will be automatically mounted at:
-> 
->   /sys/kernel/debug/tracing
-> 
-> There are many places where this older debugfs path is still used in
-> code comments, selftests, examples and tools, so let's update them to
-> avoid confusion.
-> 
-> I've broken up the series as best I could by maintainer or directory,
-> and I've only sent people the patches that I think they care about to
-> avoid spamming everyone.
-> 
-> Ross Zwisler (6):
->   tracing: always use canonical ftrace path
->   selftests: use canonical ftrace path
->   leaking_addresses: also skip canonical ftrace path
->   tools/kvm_stat: use canonical ftrace path
->   tools/virtio: use canonical ftrace path
->   tools/virtio: fix typo in README instructions
-> 
->  include/linux/kernel.h                        |  2 +-
->  include/linux/tracepoint.h                    |  4 ++--
->  kernel/trace/Kconfig                          | 20 +++++++++----------
->  kernel/trace/kprobe_event_gen_test.c          |  2 +-
->  kernel/trace/ring_buffer.c                    |  2 +-
->  kernel/trace/synth_event_gen_test.c           |  2 +-
->  kernel/trace/trace.c                          |  2 +-
->  samples/user_events/example.c                 |  4 ++--
->  scripts/leaking_addresses.pl                  |  1 +
->  scripts/tracing/draw_functrace.py             |  6 +++---
->  tools/kvm/kvm_stat/kvm_stat                   |  2 +-
->  tools/lib/api/fs/tracing_path.c               |  4 ++--
->  .../testing/selftests/user_events/dyn_test.c  |  2 +-
->  .../selftests/user_events/ftrace_test.c       | 10 +++++-----
->  .../testing/selftests/user_events/perf_test.c |  8 ++++----
->  tools/testing/selftests/vm/protection_keys.c  |  4 ++--
->  tools/tracing/latency/latency-collector.c     |  2 +-
->  tools/virtio/virtio-trace/README              |  4 ++--
->  tools/virtio/virtio-trace/trace-agent.c       | 12 +++++++----
->  19 files changed, 49 insertions(+), 44 deletions(-)
-> 
-> -- 
-> 2.39.1.637.g21b0678d19-goog
+vim +/WARN_ON +48 arch/powerpc/include/asm/page_32.h
 
+7ab0b7cb8951d4 arch/powerpc/include/asm/page_32.h Christophe Leroy 2019-08-16  38  
+5736f96d12dd42 arch/powerpc/include/asm/page_32.h Christophe Leroy 2016-02-09  39  /*
+5736f96d12dd42 arch/powerpc/include/asm/page_32.h Christophe Leroy 2016-02-09  40   * Clear page using the dcbz instruction, which doesn't cause any
+5736f96d12dd42 arch/powerpc/include/asm/page_32.h Christophe Leroy 2016-02-09  41   * memory traffic (except to write out any cache lines which get
+5736f96d12dd42 arch/powerpc/include/asm/page_32.h Christophe Leroy 2016-02-09  42   * displaced).  This only works on cacheable memory.
+5736f96d12dd42 arch/powerpc/include/asm/page_32.h Christophe Leroy 2016-02-09  43   */
+5736f96d12dd42 arch/powerpc/include/asm/page_32.h Christophe Leroy 2016-02-09  44  static inline void clear_page(void *addr)
+5736f96d12dd42 arch/powerpc/include/asm/page_32.h Christophe Leroy 2016-02-09  45  {
+5736f96d12dd42 arch/powerpc/include/asm/page_32.h Christophe Leroy 2016-02-09  46  	unsigned int i;
+5736f96d12dd42 arch/powerpc/include/asm/page_32.h Christophe Leroy 2016-02-09  47  
+7ab0b7cb8951d4 arch/powerpc/include/asm/page_32.h Christophe Leroy 2019-08-16 @48  	WARN_ON((unsigned long)addr & (L1_CACHE_BYTES - 1));
+7ab0b7cb8951d4 arch/powerpc/include/asm/page_32.h Christophe Leroy 2019-08-16  49  
+5736f96d12dd42 arch/powerpc/include/asm/page_32.h Christophe Leroy 2016-02-09  50  	for (i = 0; i < PAGE_SIZE / L1_CACHE_BYTES; i++, addr += L1_CACHE_BYTES)
+5736f96d12dd42 arch/powerpc/include/asm/page_32.h Christophe Leroy 2016-02-09  51  		dcbz(addr);
+5736f96d12dd42 arch/powerpc/include/asm/page_32.h Christophe Leroy 2016-02-09  52  }
+5cd16ee934eafc include/asm-powerpc/page_32.h      Michael Ellerman 2005-11-11  53  extern void copy_page(void *to, void *from);
+5cd16ee934eafc include/asm-powerpc/page_32.h      Michael Ellerman 2005-11-11  54  
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests
