@@ -2,381 +2,155 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3137DC6FD1D
-	for <linux-trace-kernel@archiver.kernel.org>; Wed, 22 Mar 2023 02:11:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A63FC6FD1D
+	for <linux-trace-kernel@archiver.kernel.org>; Wed, 22 Mar 2023 02:33:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230044AbjCVCLG (ORCPT
+        id S230209AbjCVCdo (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Tue, 21 Mar 2023 22:11:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46584 "EHLO
+        Tue, 21 Mar 2023 22:33:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52142 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229464AbjCVCLF (ORCPT
+        with ESMTP id S229525AbjCVCdn (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Tue, 21 Mar 2023 22:11:05 -0400
-Received: from mail-yb1-xb2d.google.com (mail-yb1-xb2d.google.com [IPv6:2607:f8b0:4864:20::b2d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2EE5F5708F
-        for <linux-trace-kernel@vger.kernel.org>; Tue, 21 Mar 2023 19:11:02 -0700 (PDT)
-Received: by mail-yb1-xb2d.google.com with SMTP id e71so19541501ybc.0
-        for <linux-trace-kernel@vger.kernel.org>; Tue, 21 Mar 2023 19:11:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=joelfernandes.org; s=google; t=1679451061;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=6eUbqWA9KySMuyv5juifE3y+Fd59o9IFPcHGcsNfLgc=;
-        b=ILsZZShT4Yy5mt5JwFt3JF8ziAM4JCZMdZiJ6v/YRzy8wJY8RiXuR76A7hKdHAquzL
-         Ps4lN75OXpDJj9ASyq9zVqhiDzNusBjk6la5KaSCF6d0Ig2VTMeEvvuVMDevzV4jodid
-         kaeJEhjeoXlPdmk2SXZI24CHMrifk7wFA/MEI=
+        Tue, 21 Mar 2023 22:33:43 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 01AFE5BA1
+        for <linux-trace-kernel@vger.kernel.org>; Tue, 21 Mar 2023 19:32:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1679452374;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=BzR3eLSpqoTMzxh2NgN0pV0oM+P8NH9sKNgtkW4tjlQ=;
+        b=IZi4b9wmRy2VokAZnpLkAKbkn5axwxhLgeVPtxgXzygCWcbs+UFiE1m/7dus1a2yL1JPG9
+        R/C4B3Vi0DbeVa9TzpUzMUWudO4sRywTZQ8x63hRwwVRfD7ofV+WLaSLsUa55IE+XHg3rM
+        IbyeFgD7Ac5J4+2JMimt7QWbKOKom40=
+Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
+ [209.85.128.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-640-IGQgcgKeP_Sp2PzIowckRQ-1; Tue, 21 Mar 2023 22:32:53 -0400
+X-MC-Unique: IGQgcgKeP_Sp2PzIowckRQ-1
+Received: by mail-wm1-f69.google.com with SMTP id i3-20020a05600c354300b003edfa408811so3746367wmq.1
+        for <linux-trace-kernel@vger.kernel.org>; Tue, 21 Mar 2023 19:32:52 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1679451061;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=6eUbqWA9KySMuyv5juifE3y+Fd59o9IFPcHGcsNfLgc=;
-        b=wG7J2jqZP1+G8zkkhAmWiQZsmEJfe4/0FgqgKAmT7QwCYpSxAxzJXyk2CtLkk+useS
-         arzhuX7miAcAQLGDQdxFvP6offWm5fOCTP4BDVifmJnI2ysPHAWHUxLFpFWswWci3Hvu
-         Jk5hhMCeS9lsJEpQ5i+zPHsLIK6yhhXLcdnLV7hcY2Rn6Lxt7NA0pr+SkCsMVGjevp59
-         A/HASITgg0l2kzR3kODiEV+fHPeOCofENPzF1/8dtW0lMdp87bibkXb/x6ap4Vi5Zy61
-         a3hMU8FrUHdBSCwDgEnT7adzWvj0ccEuRYfXW7MAWfSjeZFdenTvWzCyNys8CUmuASUY
-         UqCg==
-X-Gm-Message-State: AAQBX9fxwek/kEfk6OqLCJ8GlIXljcxF7guMlIM1Eh1I0y5mFCckdctA
-        lSI72Cd8HvcePf0lRQkvDm2eNXvYc3l6+wJtubi1OcjMcNYbVwqDNog=
-X-Google-Smtp-Source: AKy350YvmzgayBwwvOO2gAU0wmzK2QncsJ9H1IvRjyQmdnAS4lGwe+sy10ZCn22hsqX4IMRyujzZPS7FzTkVFzkmqzI=
-X-Received: by 2002:a05:6902:1890:b0:b6a:2590:6c7f with SMTP id
- cj16-20020a056902189000b00b6a25906c7fmr2602717ybb.2.1679451061266; Tue, 21
- Mar 2023 19:11:01 -0700 (PDT)
-MIME-Version: 1.0
-References: <20230321215121.71b339c5@gandalf.local.home>
-In-Reply-To: <20230321215121.71b339c5@gandalf.local.home>
-From:   Joel Fernandes <joel@joelfernandes.org>
-Date:   Tue, 21 Mar 2023 22:10:50 -0400
-Message-ID: <CAEXW_YRjX8_jXD0W7AvEsJ+8AAOm1s9JzQEGU5bbg5ja+k6y4w@mail.gmail.com>
-Subject: Re: [PATCH] tracing: Trace instrumentation begin and end
-To:     Steven Rostedt <rostedt@goodmis.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Linux Trace Kernel <linux-trace-kernel@vger.kernel.org>,
+        d=1e100.net; s=20210112; t=1679452372;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=BzR3eLSpqoTMzxh2NgN0pV0oM+P8NH9sKNgtkW4tjlQ=;
+        b=OYJJCaGBbhdjQb8rhqluR8ul8DpUCFw/PSySpoW8e4e7Km0CC8/P/2OWEKJkNL7GGZ
+         WO0LmbIzjLmCGHnXoi00V1UG1IMwhTsIk0/4NQ5Oz1hPsLq3xwk7PJIxdMRroTGLijKg
+         SpvVNqSdDNDYEh+huk7UepIXqsxBZOekEk89MbXPpTQ0EfiQuYd0amghgDpxDSJV2NxQ
+         5yZLt40zckgQkp095DeRHPKjp6PKeh5Oasvu23EdaWYp/B+TeNLoojO7mIkc7EVy759Y
+         xc0dnKBPzkN5IsHen3EuTvKYEAzAcc/DM7Cfp4sX0h31U4qi6iw3Hz9JbKnXo27gybxn
+         nwbA==
+X-Gm-Message-State: AO0yUKXO+uGkwCP5AJv/aMG5tZBPoMuFbBl54xaJiCnVvK4vALsYEavG
+        eQrSTDmRpPCdMAsH7NTsfn27t/6YdEH2LwbiuMx0/9mlE07lBDC5oA/FVDvNeC20NiCuZZX7a3Q
+        4ekSYiSRBjgVaFiIoPCJMdj4KmRX6kbiK
+X-Received: by 2002:a5d:4521:0:b0:2cf:e827:b597 with SMTP id j1-20020a5d4521000000b002cfe827b597mr3982535wra.10.1679452371929;
+        Tue, 21 Mar 2023 19:32:51 -0700 (PDT)
+X-Google-Smtp-Source: AK7set+IAoeXaV5Ezy2+ySyjfqstu/owf9Mg6SdCShB52Q1gVgr7GbSGeNN3VY0ntYreU5GIBMrYUQ==
+X-Received: by 2002:a5d:4521:0:b0:2cf:e827:b597 with SMTP id j1-20020a5d4521000000b002cfe827b597mr3982509wra.10.1679452371580;
+        Tue, 21 Mar 2023 19:32:51 -0700 (PDT)
+Received: from redhat.com ([2.52.1.105])
+        by smtp.gmail.com with ESMTPSA id n1-20020a5d67c1000000b002cfe685bfd6sm12661630wrw.108.2023.03.21.19.32.48
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 21 Mar 2023 19:32:51 -0700 (PDT)
+Date:   Tue, 21 Mar 2023 22:32:46 -0400
+From:   "Michael S. Tsirkin" <mst@redhat.com>
+To:     Ross Zwisler <zwisler@chromium.org>
+Cc:     linux-kernel@vger.kernel.org, Ross Zwisler <zwisler@google.com>,
+        "Tobin C. Harding" <me@tobin.cc>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Jason Wang <jasowang@redhat.com>,
         Masami Hiramatsu <mhiramat@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Ross Zwisler <zwisler@google.com>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        Miroslav Benes <mbenes@suse.cz>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Shuah Khan <shuah@kernel.org>,
+        Tycho Andersen <tycho@tycho.pizza>, kvm@vger.kernel.org,
+        linux-hardening@vger.kernel.org, linux-kselftest@vger.kernel.org,
+        linux-mm@kvack.org, virtualization@lists.linux-foundation.org,
+        linux-trace-kernel@vger.kernel.org,
+        Steven Rostedt <rostedt@goodmis.org>
+Subject: Re: [PATCH v2 0/6] use canonical ftrace path whenever possible
+Message-ID: <20230321223139-mutt-send-email-mst@kernel.org>
+References: <20230215223350.2658616-1-zwisler@google.com>
+MIME-Version: 1.0
+In-Reply-To: <20230215223350.2658616-1-zwisler@google.com>
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: redhat.com
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On Tue, Mar 21, 2023 at 9:51=E2=80=AFPM Steven Rostedt <rostedt@goodmis.org=
-> wrote:
->
-> From: "Steven Rostedt (VMware)" <rostedt@goodmis.org>
->
-> I do a lot of analysis on how much the kernel is interfering with user
-> space and why. One measurement was to trace the length of page faults.
-> That was done with:
->
->  trace-cmd start -p function_graph --max-graph_depth 1
->
-> Which would produce output like:
->
->  3)   4.429 us    | __do_page_fault();
->  3)   8.208 us    | __do_page_fault();
->  3)   6.877 us    | __do_page_fault();
->  3)   + 10.033 us | __do_page_fault();
->  3)   8.013 us    | __do_page_fault();
->
-> But now that entry into the kernel is all protected with noinstr, functio=
-n
-> graph tracing no longer catches entry into the kernel, and
-> __do_page_fault() is no longer traced.
->
-> Even trying just:
->
->  trace-cmd start -p function_graph --max-graph_depth 1 -e page_fault_user
->
-> produces:
->
->  2)   0.764 us    |  exit_to_user_mode_prepare();
->  2)               |  /* page_fault_user: address=3D0x7fadaba40fd8 ip=3D0x=
-7fadaba40fd8 error_code=3D0x14 */
->  2)   0.581 us    |  down_read_trylock();
->
-> The "page_fault_user" event is not encapsulated around any function, whic=
-h
-> means it probably triggered and went back to user space without any trace
-> to know how long that page fault took (the down_read_trylock() is likely =
-to
-> be part of the page fault function, but that's besides the point).
->
-> To help bring back the old functionality, two trace points are added. One
-> just after instrumentation begins, and one just before it ends. This way,
-> we can see all the time that the kernel can do something meaningful, and =
-we
-> will trace it.
->
->  trace-cmd start -e instrumentation -e page_fault_user
+On Wed, Feb 15, 2023 at 03:33:44PM -0700, Ross Zwisler wrote:
+> Changes in v2:
+>  * Dropped patches which were pulled into maintainer trees.
+>  * Split BPF patches out into another series targeting bpf-next.
+>  * trace-agent now falls back to debugfs if tracefs isn't present.
+>  * Added Acked-by from mst@redhat.com to series.
+>  * Added a typo fixup for the virtio-trace README.
+> 
+> Steven, assuming there are no objections, would you feel comfortable
+> taking this series through your tree?
 
-One drawback is it requires the user to know about instrumentation.
+for merging up to patch 5 through another tree:
 
-I don't have an issue with the new instrumentation tracepoint but I
-was wondering, since you have this specific usecase a lot, would it
-not also be better to add a dedicated tracepoint to measure pagefault
-time? And only collect the start timestamp if the tracepoint is
-enabled.
+Acked-by: Michael S. Tsirkin <mst@redhat.com>
 
-Or even a pair of pagefault begin/end tracepoints and then one can go
-create synthetic events on top to measure the time delta. :-P
-
-thanks,
-
- - Joel
+I'll merge patch 6, no problem.
 
 
->
-> produces:
->
->        trace-cmd-911     [001] d....  2616.730120: instrumentation_begin:=
- exc_page_fault+0x2e/0x250 <- asm_exc_page_fault+0x26/0x30
->        trace-cmd-911     [001] d....  2616.730121: page_fault_user: addre=
-ss=3D0x7fcadc16ab70 ip=3D0x7fcadc16ab70 error_code=3D0x14
->        trace-cmd-911     [001] d....  2616.730137: instrumentation_end: e=
-xc_page_fault+0x8d/0x250 <- asm_exc_page_fault+0x26/0x30
->
-> The time between the instrumentation_begin and the instrumentation_end
-> that has the page_fault_user can be considered the time the page fault
-> took.
->
-> To even make a histogram out of this, and using sqlhist to create
-> synthetic events. A synthetic event can be used to join the
-> instrumentation_begin with page_fault_user, and then another synthetic
-> event can join that synthetic event to instrumentation_end, passing the
-> timestamp between them.
->
->  sqlhist -e -n fault_start 'SELECT start.TIMESTAMP AS start_ts
->          FROM instrumentation_begin AS start JOIN page_fault_user AS end
->          ON start.common_pid =3D end.common_pid'
->
->  sqlhist -e -n fault_total 'SELECT (end.TIMESTAMP - start.start_ts) AS de=
-lta
->          FROM fault_start AS start JOIN instrumentation_end AS end
->          ON start.common_pid =3D end.common_pid'
->
->  ># cd /sys/kernel/tracing
->  ># echo 'hist:keys=3Dip.sym-offset,pip.sys-offset,delta.buckets=3D20' > =
-events/synthetic/fault_total/trigger
->  ># cat events/synthetic/fault_total/hist
->  # event histogram
->  #
->  # trigger info: hist:keys=3Dcommon_pid.execname,delta.buckets=3D2000:val=
-s=3Dhitcount:sort=3Dcommon_pid.execname,delta.buckets=3D2000:size=3D2048 [a=
-ctive]
->  #
->
->  { common_pid: systemd-journal [       250], delta: ~ 2000-3999 } hitcoun=
-t:          7
->  { common_pid: systemd-journal [       250], delta: ~ 4000-5999 } hitcoun=
-t:        153
->  { common_pid: systemd-journal [       250], delta: ~ 6000-7999 } hitcoun=
-t:          7
->  { common_pid: systemd-journal [       250], delta: ~ 8000-9999 } hitcoun=
-t:          1
->  { common_pid: systemd-journal [       250], delta: ~ 14000-15999 } hitco=
-unt:          1
->  { common_pid: systemd-journal [       250], delta: ~ 16000-17999 } hitco=
-unt:          1
->  { common_pid: systemd-journal [       250], delta: ~ 20000-21999 } hitco=
-unt:          9
->  { common_pid: systemd-journal [       250], delta: ~ 22000-23999 } hitco=
-unt:          5
->  { common_pid: systemd-journal [       250], delta: ~ 24000-25999 } hitco=
-unt:          3
->  { common_pid: systemd-journal [       250], delta: ~ 42000-43999 } hitco=
-unt:          2
->  { common_pid: systemd-journal [       250], delta: ~ 44000-45999 } hitco=
-unt:          1
->  { common_pid: systemd-journal [       250], delta: ~ 52000-53999 } hitco=
-unt:          1
->  { common_pid: systemd-journal [       250], delta: ~ 70000-71999 } hitco=
-unt:          1
->  { common_pid: systemd-journal [       250], delta: ~ 74000-75999 } hitco=
-unt:          1
->  { common_pid: systemd-journal [       250], delta: ~ 162000-163999 } hit=
-count:          1
->  { common_pid: systemd-journal [       250], delta: ~ 172000-173999 } hit=
-count:          1
->  { common_pid: NetworkManager  [       393], delta: ~ 10000-11999 } hitco=
-unt:          1
->  { common_pid: NetworkManager  [       393], delta: ~ 30000-31999 } hitco=
-unt:          1
->  { common_pid: exim4           [       719], delta: ~ 8000-9999 } hitcoun=
-t:          1
->  { common_pid: exim4           [       719], delta: ~ 12000-13999 } hitco=
-unt:          3
->
-> Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
 > ---
->  include/linux/instrumentation.h        | 34 ++++++++++++++++++++--
->  include/trace/events/instrumentation.h | 40 ++++++++++++++++++++++++++
->  kernel/trace/trace.c                   | 20 +++++++++++++
->  3 files changed, 92 insertions(+), 2 deletions(-)
->  create mode 100644 include/trace/events/instrumentation.h
->
-> diff --git a/include/linux/instrumentation.h b/include/linux/instrumentat=
-ion.h
-> index bc7babe91b2e..f013acfc9192 100644
-> --- a/include/linux/instrumentation.h
-> +++ b/include/linux/instrumentation.h
-> @@ -2,6 +2,34 @@
->  #ifndef __LINUX_INSTRUMENTATION_H
->  #define __LINUX_INSTRUMENTATION_H
->
-> +#ifdef CONFIG_TRACING
-> +#include <linux/kernel.h>
-> +#include <linux/tracepoint-defs.h>
-> +
-> +void call_trace_instrumentation_begin(unsigned long ip, unsigned long pi=
-p);
-> +void call_trace_instrumentation_end(unsigned long ip, unsigned long pip)=
-;
-> +
-> +DECLARE_TRACEPOINT(instrumentation_begin);
-> +DECLARE_TRACEPOINT(instrumentation_end);
-> +
-> +static inline void do_trace_instrumentation_begin(unsigned long ip,
-> +                                                 unsigned long pip)
-> +{
-> +       if (tracepoint_enabled(instrumentation_begin))
-> +               call_trace_instrumentation_begin(ip, pip);
-> +}
-> +
-> +static inline void do_trace_instrumentation_end(unsigned long ip,
-> +                                               unsigned long pip)
-> +{
-> +       if (tracepoint_enabled(instrumentation_end))
-> +               call_trace_instrumentation_end(ip, pip);
-> +}
-> +#else /* !CONFIG_TRACING */
-> +static inline void do_trace_instrumentation_begin(unsigned long ip, unsi=
-gned long pip) { }
-> +static inline void do_trace_instrumentation_end(unsigned long ip, unsign=
-ed long pip) { }
-> +#endif /* CONFIG_TRACING */
-> +
->  #ifdef CONFIG_NOINSTR_VALIDATION
->
->  #include <linux/stringify.h>
-> @@ -12,6 +40,7 @@
->                      ".pushsection .discard.instr_begin\n\t"            \
->                      ".long " __stringify(c) "b - .\n\t"                \
->                      ".popsection\n\t" : : "i" (c));                    \
-> +       do_trace_instrumentation_begin(_THIS_IP_, _RET_IP_);            \
->  })
->  #define instrumentation_begin() __instrumentation_begin(__COUNTER__)
->
-> @@ -47,6 +76,7 @@
->   * part of the condition block and does not escape.
->   */
->  #define __instrumentation_end(c) ({                                    \
-> +       do_trace_instrumentation_end(_THIS_IP_, _RET_IP_);              \
->         asm volatile(__stringify(c) ": nop\n\t"                         \
->                      ".pushsection .discard.instr_end\n\t"              \
->                      ".long " __stringify(c) "b - .\n\t"                \
-> @@ -54,8 +84,8 @@
->  })
->  #define instrumentation_end() __instrumentation_end(__COUNTER__)
->  #else /* !CONFIG_NOINSTR_VALIDATION */
-> -# define instrumentation_begin()       do { } while(0)
-> -# define instrumentation_end()         do { } while(0)
-> +# define instrumentation_begin() do_trace_instrumentation_begin(_THIS_IP=
-_, _RET_IP_);
-> +# define instrumentation_end()  do_trace_instrumentation_end(_THIS_IP_, =
-_RET_IP_);
->  #endif /* CONFIG_NOINSTR_VALIDATION */
->
->  #endif /* __LINUX_INSTRUMENTATION_H */
-> diff --git a/include/trace/events/instrumentation.h b/include/trace/event=
-s/instrumentation.h
-> new file mode 100644
-> index 000000000000..6b92a205d9ae
-> --- /dev/null
-> +++ b/include/trace/events/instrumentation.h
-> @@ -0,0 +1,40 @@
-> +/* SPDX-License-Identifier: GPL-2.0 */
-> +#undef TRACE_SYSTEM
-> +#define TRACE_SYSTEM instrumentation
-> +
-> +#if !defined(_TRACE_INSTRUMENTATION_H) || defined(TRACE_HEADER_MULTI_REA=
-D)
-> +#define _TRACE_INSTRUMENTATION_H
-> +
-> +#include <linux/tracepoint.h>
-> +
-> +DECLARE_EVENT_CLASS(instrumentation_template,
-> +
-> +       TP_PROTO(unsigned long ip, unsigned long pip),
-> +
-> +       TP_ARGS(ip, pip),
-> +
-> +       TP_STRUCT__entry(
-> +               __field( unsigned long,         ip )
-> +               __field( unsigned long,         pip )
-> +       ),
-> +
-> +       TP_fast_assign(
-> +               __entry->ip =3D ip;
-> +               __entry->pip =3D pip;
-> +       ),
-> +
-> +       TP_printk("%pS <- %pS", (void *)__entry->ip, (void *)__entry->pip=
-)
-> +);
-> +
-> +DEFINE_EVENT(instrumentation_template, instrumentation_begin,
-> +            TP_PROTO(unsigned long ip, unsigned long pip),
-> +            TP_ARGS(ip, pip));
-> +
-> +DEFINE_EVENT(instrumentation_template, instrumentation_end,
-> +            TP_PROTO(unsigned long ip, unsigned long pip),
-> +            TP_ARGS(ip, pip));
-> +
-> +#endif /* _TRACE_INSTRUMENTATION_H */
-> +
-> +/* This part must be outside protection */
-> +#include <trace/define_trace.h>
-> diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
-> index 937e9676dfd4..071885824408 100644
-> --- a/kernel/trace/trace.c
-> +++ b/kernel/trace/trace.c
-> @@ -54,6 +54,26 @@
->  #include "trace.h"
->  #include "trace_output.h"
->
-> +/* Define instrumentation tracing here, as there is no real home for it =
-*/
-> +#define CREATE_TRACE_POINTS
-> +#include <trace/events/instrumentation.h>
-> +#undef CREATE_TRACE_POINTS
-> +
-> +void call_trace_instrumentation_begin(unsigned long ip, unsigned long pi=
-p)
-> +{
-> +       trace_instrumentation_begin(ip, pip);
-> +}
-> +EXPORT_SYMBOL_GPL(call_trace_instrumentation_begin);
-> +
-> +void call_trace_instrumentation_end(unsigned long ip, unsigned long pip)
-> +{
-> +       trace_instrumentation_end(ip, pip);
-> +}
-> +EXPORT_SYMBOL_GPL(call_trace_instrumentation_end);
-> +
-> +EXPORT_TRACEPOINT_SYMBOL_GPL(instrumentation_begin);
-> +EXPORT_TRACEPOINT_SYMBOL_GPL(instrumentation_end);
-> +
->  /*
->   * On boot up, the ring buffer is set to the minimum size, so that
->   * we do not waste memory on systems that are not using tracing.
-> --
-> 2.39.1
->
+> The canonical location for the tracefs filesystem is at /sys/kernel/tracing.
+> 
+> But, from Documentation/trace/ftrace.rst:
+> 
+>   Before 4.1, all ftrace tracing control files were within the debugfs
+>   file system, which is typically located at /sys/kernel/debug/tracing.
+>   For backward compatibility, when mounting the debugfs file system,
+>   the tracefs file system will be automatically mounted at:
+> 
+>   /sys/kernel/debug/tracing
+> 
+> There are many places where this older debugfs path is still used in
+> code comments, selftests, examples and tools, so let's update them to
+> avoid confusion.
+> 
+> I've broken up the series as best I could by maintainer or directory,
+> and I've only sent people the patches that I think they care about to
+> avoid spamming everyone.
+> 
+> Ross Zwisler (6):
+>   tracing: always use canonical ftrace path
+>   selftests: use canonical ftrace path
+>   leaking_addresses: also skip canonical ftrace path
+>   tools/kvm_stat: use canonical ftrace path
+>   tools/virtio: use canonical ftrace path
+>   tools/virtio: fix typo in README instructions
+> 
+>  include/linux/kernel.h                        |  2 +-
+>  include/linux/tracepoint.h                    |  4 ++--
+>  kernel/trace/Kconfig                          | 20 +++++++++----------
+>  kernel/trace/kprobe_event_gen_test.c          |  2 +-
+>  kernel/trace/ring_buffer.c                    |  2 +-
+>  kernel/trace/synth_event_gen_test.c           |  2 +-
+>  kernel/trace/trace.c                          |  2 +-
+>  samples/user_events/example.c                 |  4 ++--
+>  scripts/leaking_addresses.pl                  |  1 +
+>  scripts/tracing/draw_functrace.py             |  6 +++---
+>  tools/kvm/kvm_stat/kvm_stat                   |  2 +-
+>  tools/lib/api/fs/tracing_path.c               |  4 ++--
+>  .../testing/selftests/user_events/dyn_test.c  |  2 +-
+>  .../selftests/user_events/ftrace_test.c       | 10 +++++-----
+>  .../testing/selftests/user_events/perf_test.c |  8 ++++----
+>  tools/testing/selftests/vm/protection_keys.c  |  4 ++--
+>  tools/tracing/latency/latency-collector.c     |  2 +-
+>  tools/virtio/virtio-trace/README              |  4 ++--
+>  tools/virtio/virtio-trace/trace-agent.c       | 12 +++++++----
+>  19 files changed, 49 insertions(+), 44 deletions(-)
+> 
+> -- 
+> 2.39.1.637.g21b0678d19-goog
+
