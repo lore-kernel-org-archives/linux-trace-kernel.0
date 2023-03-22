@@ -2,35 +2,34 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 08320C6FD1F
-	for <linux-trace-kernel@archiver.kernel.org>; Wed, 22 Mar 2023 05:01:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 38308C6FD1C
+	for <linux-trace-kernel@archiver.kernel.org>; Wed, 22 Mar 2023 08:47:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229611AbjCVFBV (ORCPT
+        id S230008AbjCVIrh (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Wed, 22 Mar 2023 01:01:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58016 "EHLO
+        Wed, 22 Mar 2023 04:47:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55156 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229524AbjCVFBU (ORCPT
+        with ESMTP id S230054AbjCVIr2 (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Wed, 22 Mar 2023 01:01:20 -0400
+        Wed, 22 Mar 2023 04:47:28 -0400
 Received: from mail-m118111.qiye.163.com (mail-m118111.qiye.163.com [115.236.118.111])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F313F3B862;
-        Tue, 21 Mar 2023 22:01:17 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 166BF14235;
+        Wed, 22 Mar 2023 01:47:26 -0700 (PDT)
 Received: from [10.128.10.193] (unknown [117.133.56.22])
-        by mail-m118111.qiye.163.com (Hmail) with ESMTPA id 9A1045802E1;
-        Wed, 22 Mar 2023 13:01:09 +0800 (CST)
-Message-ID: <463601ac-da5f-1616-e531-2bbc3a22fc43@sangfor.com.cn>
-Date:   Wed, 22 Mar 2023 13:01:09 +0800
+        by mail-m118111.qiye.163.com (Hmail) with ESMTPA id 5DCC85807B4;
+        Wed, 22 Mar 2023 16:47:18 +0800 (CST)
+Message-ID: <a7256b94-c044-7aef-bee2-69182956e913@sangfor.com.cn>
+Date:   Wed, 22 Mar 2023 16:47:17 +0800
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
  Thunderbird/102.9.0
 Subject: Re: [PATCH v5 1/2] function_graph: Support recording and printing the
  return value of function
 Content-Language: en-US
-To:     Florian Kauer <florian.kauer@linutronix.de>,
-        Steven Rostedt <rostedt@goodmis.org>, mhiramat@kernel.org
-Cc:     linux@armlinux.org.uk, mark.rutland@arm.com, will@kernel.org,
-        catalin.marinas@arm.com, palmer@dabbelt.com,
+To:     Mark Rutland <mark.rutland@arm.com>
+Cc:     mhiramat@kernel.org, rostedt@goodmis.org, linux@armlinux.org.uk,
+        will@kernel.org, catalin.marinas@arm.com, palmer@dabbelt.com,
         paul.walmsley@sifive.com, tglx@linutronix.de,
         dave.hansen@linux.intel.com, x86@kernel.org, mingo@redhat.com,
         xiehuan09@gmail.com, dinghui@sangfor.com.cn,
@@ -40,79 +39,131 @@ Cc:     linux@armlinux.org.uk, mark.rutland@arm.com, will@kernel.org,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 References: <20230320131650.482594-1-pengdonglin@sangfor.com.cn>
  <20230320131650.482594-2-pengdonglin@sangfor.com.cn>
- <2eeef5a3-cbe7-7a01-489a-87c5ac00adf7@linutronix.de>
- <20230321104413.43a81ffb@gandalf.local.home>
- <ac95f1f7-2af3-1461-2ea2-3608d081de3f@linutronix.de>
+ <ZBm+HKK9laIXAdsc@FVFF77S0Q05N>
 From:   Donglin Peng <pengdonglin@sangfor.com.cn>
-In-Reply-To: <ac95f1f7-2af3-1461-2ea2-3608d081de3f@linutronix.de>
+In-Reply-To: <ZBm+HKK9laIXAdsc@FVFF77S0Q05N>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 X-HM-Spam-Status: e1kfGhgUHx5ZQUpXWQgPGg8OCBgUHx5ZQUlOS1dZFg8aDwILHllBWSg2Ly
-        tZV1koWUFITzdXWS1ZQUlXWQ8JGhUIEh9ZQVlDQxhOVk4fQ0xKSk9DTR4fQ1UTARMWGhIXJBQOD1
+        tZV1koWUFITzdXWS1ZQUlXWQ8JGhUIEh9ZQVlCTkwZVhpOHkgaGU5OSExCT1UTARMWGhIXJBQOD1
         lXWRgSC1lBWUpKTFVKSEhVTk1VSUlZV1kWGg8SFR0UWUFZT0tIVUpKS09ISFVKS0tVS1kG
-X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6Ogw6CCo4Ez0ONRUMIQgdIRZW
-        ExMKFAhVSlVKTUxCT01KSUxLQ05IVTMWGhIXVQseFRwfFBUcFxIVOwgaFRwdFAlVGBQWVRgVRVlX
-        WRILWUFZSkpMVUpISFVOTVVJSVlXWQgBWUFOSkhCNwY+
-X-HM-Tid: 0a8707b143a22eb7kusn9a1045802e1
+X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6OTI6Mzo4GT0LLRQPLg8ZQy1D
+        NR4KCTxVSlVKTUxCT0xPQ0hCQkJOVTMWGhIXVQseFRwfFBUcFxIVOwgaFRwdFAlVGBQWVRgVRVlX
+        WRILWUFZSkpMVUpISFVOTVVJSVlXWQgBWUFNTUNNNwY+
+X-HM-Tid: 0a8708804f962eb7kusn5dcc85807b4
 X-HM-MType: 1
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On 2023/3/21 23:11, Florian Kauer wrote:
-> On 21.03.23 15:44, Steven Rostedt wrote:
->> On Tue, 21 Mar 2023 15:09:40 +0100
->> Florian Kauer <florian.kauer@linutronix.de> wrote:
+On 2023/3/21 22:24, Mark Rutland wrote:
+> On Mon, Mar 20, 2023 at 06:16:49AM -0700, Donglin Peng wrote:
+>> When using the function_graph tracer to analyze system call failures,
+>> it can be time-consuming to analyze the trace logs and locate the kernel
+>> function that first returns an error. This change aims to simplify the
+>> process by recording the function return value to the 'retval' member of
+>> 'ftrace_graph_ent' and printing it when outputing the trace log.
 >>
->>> On 20.03.23 14:16, Donglin Peng wrote:
->>>> When using the function_graph tracer to analyze system call failures,
->>>> it can be time-consuming to analyze the trace logs and locate the kernel
->>>> function that first returns an error. This change aims to simplify the
->>>> process by recording the function return value to the 'retval' member of
->>>> 'ftrace_graph_ent' and printing it when outputing the trace log.
->>>
->>> I just came across your patch by pure luck and it helped me a lot
->>> to trace down a problem I had, thanks!
->>>
->>> So you can have my
->>> Tested-by: Florian Kauer <florian.kauer@linutronix.de>
->>>   
->>>> New trace options are introduced: funcgraph-retval and graph_retval_hex.
->>>
->>> I would personally prefer to have the second option scoped better, so for example
->>> "funcgraph-retval-hex".
+>> New trace options are introduced: funcgraph-retval and graph_retval_hex.
+>> The former is used to control whether to display the return value, while
+>> the latter is used to control the display format of the reutrn value.
 >>
->> That could be an ftrace option.
+>> Note that even if a function's return type is void, a return value will
+>> still be printed, so just ignore it.
+>>
+>> Currently, this modification supports the following commonly used
+>> processor architectures: x86_64, x86, arm64, arm, riscv.
+>>
+>> Here is an example:
+>>
+>> I want to attach the demo process to a cpu cgroup, but it failed:
+>>
+>> echo `pidof demo` > /sys/fs/cgroup/cpu/test/tasks
+>> -bash: echo: write error: Invalid argument
+>>
+>> The strace logs tells that the write system call returned -EINVAL(-22):
+>> ...
+>> write(1, "273\n", 4)                    = -1 EINVAL (Invalid argument)
+>> ...
+>>
+>> Use the following commands to capture trace logs when calling the write
+>> system call:
+>>
+>> cd /sys/kernel/debug/tracing/
+>> echo 0 > tracing_on
+>> echo > trace
+>> echo *sys_write > set_graph_function
+>> echo *spin* > set_graph_notrace
+>> echo *rcu* >> set_graph_notrace
+>> echo *alloc* >> set_graph_notrace
+>> echo preempt* >> set_graph_notrace
+>> echo kfree* >> set_graph_notrace
+>> echo $$ > set_ftrace_pid
+>> echo function_graph > current_tracer
+>> echo 1 > tracing_on
+>> echo `pidof demo` > /sys/fs/cgroup/cpu/test/tasks
+>> echo 0 > tracing_on
+>> echo 1 > options/funcgraph-retval
+>> cat trace > ~/trace.log
+>>
+>> Search the error code -22 directly in the file trace.log and find the
+>> first function that return -22, then read the function code to get the
+>> root cause.
+>>
+>> ...
+>>
+>>   1)          | cgroup_migrate() {
+>>   1) 0.651 us |   cgroup_migrate_add_task(); /* = 0xffff93fcfd346c00 */
+>>   1)          |   cgroup_migrate_execute() {
+>>   1)          |     cpu_cgroup_can_attach() {
+>>   1)          |       cgroup_taskset_first() {
+>>   1) 0.732 us |         cgroup_taskset_next(); /* = 0xffff93fc8fb20000 */
+>>   1) 1.232 us |       } /* cgroup_taskset_first = 0xffff93fc8fb20000 */
+>>   1) 0.380 us |       sched_rt_can_attach(); /* = 0x0 */
+>>   1) 2.335 us |     } /* cpu_cgroup_can_attach = -22 */
+>>   1) 4.369 us |   } /* cgroup_migrate_execute = -22 */
+>>   1) 7.143 us | } /* cgroup_migrate = -22 */
+>>
+>> ...
+>>
+>> Signed-off-by: Donglin Peng <pengdonglin@sangfor.com.cn>
 > 
-> What do you mean? In the current implementation both funcgraph-retval and graph_retval_hex
-> are options for the function_graph tracer, but one is prefixed with "funcgraph-" as nearly
-> all other options for the function_graph tracer and one is not (and is even snake_case, while
-> the others are kebab-case). So it just looks inconsistent for me, but there might be a reason?
+>> diff --git a/arch/arm64/kernel/entry-ftrace.S b/arch/arm64/kernel/entry-ftrace.S
+>> index 350ed81324ac..d1a5d76e6d72 100644
+>> --- a/arch/arm64/kernel/entry-ftrace.S
+>> +++ b/arch/arm64/kernel/entry-ftrace.S
+>> @@ -276,7 +276,15 @@ SYM_CODE_START(return_to_handler)
+>>   	stp x4, x5, [sp, #32]
+>>   	stp x6, x7, [sp, #48]
+>>   
+>> +#ifdef CONFIG_FUNCTION_GRAPH_RETVAL
+>> +	/*
+>> +	 * Pass both the function return values in the register x0 and x1
+>> +	 * to ftrace_return_to_handler.
+>> +	 */
+>> +	mov	x2, x29			//     parent's fp
+>> +#else
+>>   	mov	x0, x29			//     parent's fp
+>> +#endif
+>>   	bl	ftrace_return_to_handler// addr = ftrace_return_to_hander(fp);
+>>   	mov	x30, x0			// restore the original return address
+> 
+> 
+> Please don't make the calling convention of the asm change depending on a
+> selectable config option.
+> 
+> We already store the regs here; I'd be happy to make that a struct ftrace_regs
+> and pass a pointer to that to C code. Then it's be easy to acquire the value
+> you want in the exact same way as upon entry, and it'll work even if we decide
+> to return a structure by value somewhere (as that can use registers x2-x7 too).
 
-Agree, I also think "funcgraph-retval-hex" may look better.
-
-Hi Hiramatsu, what do you think?
-
-> 
-> By the way: The documentation patch also references "function-retval" instead of
-> "funcgraph-retval" in the documentation of the graph_retval_hex option.
-
-Thanks, it has been removed in v6.
+Agree, I think we only need to store return registers, but ftrace_regs
+has too many members. So we can introduce a new structure called
+pt_ret_regs which only contains return registers and frame pointer
+register, for ARM64, they are x0~x7 and x29. Then pass the pointer to
+pt_ret_regs to ftrace_return_to_handler.
 
 > 
->> Anyway, could you tell us your use case, and that could go into the change
->> log of this patch as "one use case that this helped with".
-> 
-> Nothing spectacular. I just wanted to find out why ICMP port unreachable messages
-> sporadically lead to -111 (Connection Refused) for __sys_sendto() when IP_RECVERR is set
-> and the call never fails if IP_RECVERR is not set. (I am still unsure if this is
-> REALLY intended behavior, but at least it makes sense why this occurs when reading
-> the sources).
-> 
-> And with this patch, the -111 is directly popping up in the trace, but I do not think
-> that my missing knowledge about details of the kernel network stack
-> really qualifies as a good argument ;-)
-> 
-> Greetings,
-> Florian
+> Thanks,
+> Mark.
 
