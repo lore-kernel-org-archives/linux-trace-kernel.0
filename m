@@ -2,114 +2,166 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F222C6FD1C
-	for <linux-trace-kernel@archiver.kernel.org>; Wed, 22 Mar 2023 12:53:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 39934C6FD1C
+	for <linux-trace-kernel@archiver.kernel.org>; Wed, 22 Mar 2023 13:13:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230410AbjCVMxX (ORCPT
+        id S230051AbjCVNN5 (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Wed, 22 Mar 2023 08:53:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45480 "EHLO
+        Wed, 22 Mar 2023 09:13:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43542 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230081AbjCVMxW (ORCPT
+        with ESMTP id S229656AbjCVNN5 (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Wed, 22 Mar 2023 08:53:22 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 035C617CFE;
-        Wed, 22 Mar 2023 05:53:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=6BRyU+JbkSdh5FU2QQ8gNeV3eQhFmOfGX6dsLMm751I=; b=Wn4ZgGHpfD6yPJFUT5oLuFN3qw
-        UfwHFLXgWP5rl/xFiyT4EcY81xma2D2cL1/AyfutYWo1Wv25FiR7Kz5v1/C3sJ1SlD/AvnbrWpipp
-        gz3ao5le8asoZrMVWTAiI7VYVeHTSZ+XQVTwYj1bg0NLj6yCkkayJAQNlkiEWqvqtPplz+j9f7taf
-        ErnrrG7r6ryAIf0drZhRYZaCpFt3Mh7YWOoEQfOvNtwNRcBdETtdYKBJhpBSR7//MhcP7QnXweZ/q
-        SKQfFLELiKFR2xJn+5A+D6/HwjVSaO+Ar0niJ59rYCTr5osVIvnHQ2aSynYd/3hZiOfh+lBMV+OOT
-        k49oq18g==;
-Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
-        by casper.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
-        id 1pexxc-0031Ii-3q; Wed, 22 Mar 2023 12:53:00 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id E0E0230030F;
-        Wed, 22 Mar 2023 13:52:57 +0100 (CET)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 4D34D205D08C3; Wed, 22 Mar 2023 13:52:57 +0100 (CET)
-Date:   Wed, 22 Mar 2023 13:52:57 +0100
-From:   Peter Zijlstra <peterz@infradead.org>
+        Wed, 22 Mar 2023 09:13:57 -0400
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id C0DD419C73;
+        Wed, 22 Mar 2023 06:13:55 -0700 (PDT)
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 65D864B3;
+        Wed, 22 Mar 2023 06:14:39 -0700 (PDT)
+Received: from FVFF77S0Q05N (unknown [10.57.53.3])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 736E03F6C4;
+        Wed, 22 Mar 2023 06:13:54 -0700 (PDT)
+Date:   Wed, 22 Mar 2023 13:13:51 +0000
+From:   Mark Rutland <mark.rutland@arm.com>
 To:     Steven Rostedt <rostedt@goodmis.org>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Linux Trace Kernel <linux-trace-kernel@vger.kernel.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Ross Zwisler <zwisler@google.com>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        Miroslav Benes <mbenes@suse.cz>
-Subject: Re: [PATCH] tracing: Trace instrumentation begin and end
-Message-ID: <20230322125257.GA2357380@hirez.programming.kicks-ass.net>
-References: <20230321215121.71b339c5@gandalf.local.home>
- <87y1np824t.ffs@tglx>
- <20230322084834.37ed755e@gandalf.local.home>
+Cc:     linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+        mhiramat@kernel.org, zanussi@kernel.org
+Subject: Re: [PATCH 1/2] tracing/hist: simplify contains_operator()
+Message-ID: <ZBr/DzoqOWdFvAOP@FVFF77S0Q05N>
+References: <20230302171755.1821653-1-mark.rutland@arm.com>
+ <20230302171755.1821653-2-mark.rutland@arm.com>
+ <20230318151208.61d73823@rorschach.local.home>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20230322084834.37ed755e@gandalf.local.home>
+In-Reply-To: <20230318151208.61d73823@rorschach.local.home>
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On Wed, Mar 22, 2023 at 08:48:34AM -0400, Steven Rostedt wrote:
-> On Wed, 22 Mar 2023 12:19:14 +0100
-> Thomas Gleixner <tglx@linutronix.de> wrote:
+On Sat, Mar 18, 2023 at 03:12:08PM -0400, Steven Rostedt wrote:
+> On Thu,  2 Mar 2023 17:17:54 +0000
+> Mark Rutland <mark.rutland@arm.com> wrote:
 > 
-> > Steven!
-> > 
-> > On Tue, Mar 21 2023 at 21:51, Steven Rostedt wrote:
-> > > From: "Steven Rostedt (VMware)" <rostedt@goodmis.org>
-> > > produces:
-> > >
-> > >  2)   0.764 us    |  exit_to_user_mode_prepare();
-> > >  2)               |  /* page_fault_user: address=0x7fadaba40fd8 ip=0x7fadaba40fd8 error_code=0x14 */
-> > >  2)   0.581 us    |  down_read_trylock();
-> > >
-> > > The "page_fault_user" event is not encapsulated around any function, which
-> > > means it probably triggered and went back to user space without any trace
-> > > to know how long that page fault took (the down_read_trylock() is likely to
-> > > be part of the page fault function, but that's besides the point).
-> > >
-> > > To help bring back the old functionality, two trace points are added. One
-> > > just after instrumentation begins, and one just before it ends. This way,
-> > > we can see all the time that the kernel can do something meaningful, and we
-> > > will trace it.  
-> > 
-> > Seriously? That's completely insane. Have you actually looked how many
-> > instrumentation_begin()/end() pairs are in the affected code pathes?
-> > 
-> > Obviously not. It's a total of _five_ for every syscall and at least
-> > _four_ for every interrupt/exception from user mode.
-> > 
-> > The number #1 design rule for instrumentation is to be as non-intrusive as
-> > possible and not to be as lazy as possible.
+> FYI, we follow Linus's preference that subjects start with a capital
+> letter. Unless of course you are a socialist and dislike capitalism?
 > 
-> And it still is. It still uses nops when not enabled. I could even add a
-> config to only have this compiled in when the config is set, so that
-> production can disable it if it wants to.
-> 
-> Just in case it's not obvious:
-> 
-> 	if (tracepoint_enabled(instrumentation_begin))
-> 		call_trace_instrumentation_begin(ip, pip);
-> 
-> is equivalent to:
-> 
-> 	if (static_key_false(&__tracepoint_instrumentation_begin.key))
-> 		call_trace_instrumentation_begin(ip, pip);
+>   tracing/hist: Simplify contains_operator()
 > 
 
-It is still completely insane.
+Sorry; I always get this wrong since many other trees do everything lower case
+(or support total commit message anarchy). I'll go fix that up.
 
-NAK.
+> 
+> > In a subsequent patch we'll add additional operators for histogram
+> > expressions.
+> 
+> Refrain from using "subsequent patch", instead say:
+> 
+>  Simplify contains_operator() in order to support additional operators
+>  for histogram expressions.
+
+Sure.
+
+> 
+> > 
+> > In preparation for adding additional operators, this patch refactors
+> > contains_operator() to consider each operator within a precedence group
+> > independently by using the 'sep' pointer as the current rightmost
+> > operator, and removing the separate op pointers.
+> > 
+> > Within each precedence group, this allows operators to be checked
+> > independently with a consistent pattern:
+> > 
+> > 	op = strrchr(str, $OP_CHAR);
+> > 	if (op > *sep) {
+> > 		*sep = op;
+> > 		field_op = $FIELD_OP_TYPE;
+> > 	}
+> > 
+> > This makes it easy to add new operators of the same precedence without
+> > needing to check multiple pointers, and without needing a final switch
+> > statement to recover the relevant pointer.
+> > 
+> > There should be no functional change as a result of this patch.
+> > 
+> > Signed-off-by: Mark Rutland <mark.rutland@arm.com>
+> > Cc: Masami Hiramatsu <mhiramat@kernel.org>
+> > Cc: Steven Rostedt (Google) <rostedt@goodmis.org>
+> > Cc: Tom Zanussi <zanussi@kernel.org>
+> > Cc: linux-trace-kernel@vger.kernel.org
+> > ---
+> >  kernel/trace/trace_events_hist.c | 80 ++++++++++++--------------------
+> >  1 file changed, 30 insertions(+), 50 deletions(-)
+> > 
+> > diff --git a/kernel/trace/trace_events_hist.c b/kernel/trace/trace_events_hist.c
+> > index 10d36f751fcd..a308da2cde2f 100644
+> > --- a/kernel/trace/trace_events_hist.c
+> > +++ b/kernel/trace/trace_events_hist.c
+> > @@ -1813,13 +1813,15 @@ static char *expr_str(struct hist_field *field, unsigned int level)
+> >  static int contains_operator(char *str, char **sep)
+> >  {
+> >  	enum field_op_id field_op = FIELD_OP_NONE;
+> > -	char *minus_op, *plus_op, *div_op, *mult_op;
+> > +	char *op;
+> >  
+> > +	*sep = NULL;
+> 
+> Hmm!
+
+Ugh, sorry, I had completely glossed over the:
+
+	if (sep) {
+		...
+		// assignments to *sep here
+		...
+	}
+
+... in the existing code.
+
+I'll go rework that...
+
+> 
+> >  
+> >  	/*
+> > -	 * Report the last occurrence of the operators first, so that the
+> > -	 * expression is evaluated left to right. This is important since
+> > -	 * subtraction and division are not associative.
+> > +	 * For operators of the same precedence report the last occurrence of
+> > +	 * the operators first, so that the expression is evaluated left to
+> > +	 * right. This is important since subtraction and division are not
+> > +	 * associative.
+> >  	 *
+> >  	 *	e.g
+> >  	 *		64/8/4/2 is 1, i.e 64/8/4/2 = ((64/8)/4)/2
+> > @@ -1830,68 +1832,46 @@ static int contains_operator(char *str, char **sep)
+> >  	 * First, find lower precedence addition and subtraction
+> >  	 * since the expression will be evaluated recursively.
+> >  	 */
+> > -	minus_op = strrchr(str, '-');
+> > -	if (minus_op) {
+> > +	op = strrchr(str, '-');
+> > +	if (op > *sep) {
+> 
+> Why compare to *sep if it is always NULL?
+
+As in the commit message, that was just so that every check for an operator had
+the same shape. I can certainly drop this for the first check and just have:
+
+	op = strrchr(str, '-');
+	if (op) {
+		...
+	}
+
+> 
+> Oh! But later in the code we have:
+> 
+> 	if (contains_operator(field, NULL) || is_var_ref(field))
+> 
+> I wonder how *sep = NULL will handle that?
+
+Yep, I got this wrong. I'll go rejig that.
+
+Thanks,
+Mark.
