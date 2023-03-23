@@ -2,185 +2,140 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 066C9C6FD1C
-	for <linux-trace-kernel@archiver.kernel.org>; Thu, 23 Mar 2023 19:07:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 85322C6FD1C
+	for <linux-trace-kernel@archiver.kernel.org>; Thu, 23 Mar 2023 23:44:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231688AbjCWTHN (ORCPT
+        id S229847AbjCWXoB (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Thu, 23 Mar 2023 15:07:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46426 "EHLO
+        Thu, 23 Mar 2023 19:44:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47526 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231695AbjCWTGl (ORCPT
+        with ESMTP id S229508AbjCWXoA (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Thu, 23 Mar 2023 15:06:41 -0400
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id C6FA228E97;
-        Thu, 23 Mar 2023 12:06:34 -0700 (PDT)
-Received: from W11-BEAU-MD.localdomain (unknown [76.135.27.212])
-        by linux.microsoft.com (Postfix) with ESMTPSA id 9C4D420FC3DD;
-        Thu, 23 Mar 2023 12:06:18 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 9C4D420FC3DD
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-        s=default; t=1679598378;
-        bh=I/N19C63THCRBfckR+N4mJDWmIQC1iuXco7+RGR9L6U=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=j9tjnCR3CsEDEcvA3k+oaUsSOcOjeNTj1ojEqDHiabzZ7dIvAD5cYt1Op99jOFX5/
-         LcmOeu0DdoXgGP/L0gNnvIIBmAFdGUpliUOnyr7lP0Mck+y+jxamvGOrU4LEDUjqjq
-         i0QRGSPaXbcZ7+TrOypw604xLApVE5AWW7WlYV1w=
-From:   Beau Belgrave <beaub@linux.microsoft.com>
-To:     rostedt@goodmis.org, mhiramat@kernel.org,
-        mathieu.desnoyers@efficios.com, dcook@linux.microsoft.com,
-        alanau@linux.microsoft.com, brauner@kernel.org,
-        akpm@linux-foundation.org, ebiederm@xmission.com,
-        keescook@chromium.org, tglx@linutronix.de
-Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        linux-trace-kernel@vger.kernel.org
-Subject: [RESEND PATCH v8 11/11] tracing/user_events: Limit global user_event count
-Date:   Thu, 23 Mar 2023 12:06:10 -0700
-Message-Id: <20230323190610.251-12-beaub@linux.microsoft.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20230323190610.251-1-beaub@linux.microsoft.com>
-References: <20230323190610.251-1-beaub@linux.microsoft.com>
+        Thu, 23 Mar 2023 19:44:00 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 55D656EA9;
+        Thu, 23 Mar 2023 16:43:59 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id EE34E62903;
+        Thu, 23 Mar 2023 23:43:58 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2B9B9C433EF;
+        Thu, 23 Mar 2023 23:43:57 +0000 (UTC)
+Date:   Thu, 23 Mar 2023 19:43:55 -0400
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     Florent Revest <revest@chromium.org>
+Cc:     linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+        mhiramat@kernel.org, mark.rutland@arm.com, ast@kernel.org,
+        daniel@iogearbox.net, kpsingh@kernel.org, jolsa@kernel.org,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: Re: [PATCH v2 0/7] Refactor ftrace direct call APIs
+Message-ID: <20230323194355.3f714774@gandalf.local.home>
+In-Reply-To: <20230321140424.345218-1-revest@chromium.org>
+References: <20230321140424.345218-1-revest@chromium.org>
+X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-Operators want to be able to ensure enough tracepoints exist on the
-system for kernel components as well as for user components. Since there
-are only up to 64K events, by default allow up to half to be used by
-user events.
 
-Add a boot parameter (user_events_max=%d) and a kernel sysctl parameter
-(kernel.user_events_max) to set a global limit that is honored among all
-groups on the system. This ensures hard limits can be setup to prevent
-user processes from consuming all event IDs on the system.
+So I applied this to my for-next branch as the first patches starting from
+v6.3-rc3. Last commit (patch 7) is fee86a4ed536f4e521f3a4530242e152dd2a466b
 
-Signed-off-by: Beau Belgrave <beaub@linux.microsoft.com>
----
- kernel/trace/trace_events_user.c | 59 ++++++++++++++++++++++++++++++++
- 1 file changed, 59 insertions(+)
+The branch is here:
 
-diff --git a/kernel/trace/trace_events_user.c b/kernel/trace/trace_events_user.c
-index 222f2eb59c7c..6a5ebe243999 100644
---- a/kernel/trace/trace_events_user.c
-+++ b/kernel/trace/trace_events_user.c
-@@ -20,6 +20,7 @@
- #include <linux/types.h>
- #include <linux/uaccess.h>
- #include <linux/highmem.h>
-+#include <linux/init.h>
- #include <linux/user_events.h>
- #include "trace.h"
- #include "trace_dynevent.h"
-@@ -61,6 +62,12 @@ struct user_event_group {
- /* Group for init_user_ns mapping, top-most group */
- static struct user_event_group *init_group;
- 
-+/* Max allowed events for the whole system */
-+static unsigned int max_user_events = 32768;
-+
-+/* Current number of events on the whole system */
-+static unsigned int current_user_events;
-+
- /*
-  * Stores per-event properties, as users register events
-  * within a file a user_event might be created if it does not
-@@ -1241,6 +1248,8 @@ static int destroy_user_event(struct user_event *user)
- {
- 	int ret = 0;
- 
-+	lockdep_assert_held(&event_mutex);
-+
- 	/* Must destroy fields before call removal */
- 	user_event_destroy_fields(user);
- 
-@@ -1257,6 +1266,11 @@ static int destroy_user_event(struct user_event *user)
- 	kfree(EVENT_NAME(user));
- 	kfree(user);
- 
-+	if (current_user_events > 0)
-+		current_user_events--;
-+	else
-+		pr_alert("BUG: Bad current_user_events\n");
-+
- 	return ret;
- }
- 
-@@ -1744,6 +1758,11 @@ static int user_event_parse(struct user_event_group *group, char *name,
- 
- 	mutex_lock(&event_mutex);
- 
-+	if (current_user_events >= max_user_events) {
-+		ret = -EMFILE;
-+		goto put_user_lock;
-+	}
-+
- 	ret = user_event_trace_register(user);
- 
- 	if (ret)
-@@ -1755,6 +1774,7 @@ static int user_event_parse(struct user_event_group *group, char *name,
- 	dyn_event_init(&user->devent, &user_event_dops);
- 	dyn_event_add(&user->devent, &user->call);
- 	hash_add(group->register_table, &user->node, key);
-+	current_user_events++;
- 
- 	mutex_unlock(&event_mutex);
- 
-@@ -2386,6 +2406,43 @@ static int create_user_tracefs(void)
- 	return -ENODEV;
- }
- 
-+static int __init set_max_user_events(char *str)
-+{
-+	if (!str)
-+		return 0;
-+
-+	if (kstrtouint(str, 0, &max_user_events))
-+		return 0;
-+
-+	return 1;
-+}
-+__setup("user_events_max=", set_max_user_events);
-+
-+static int set_max_user_events_sysctl(struct ctl_table *table, int write,
-+				      void *buffer, size_t *lenp, loff_t *ppos)
-+{
-+	int ret;
-+
-+	mutex_lock(&event_mutex);
-+
-+	ret = proc_douintvec(table, write, buffer, lenp, ppos);
-+
-+	mutex_unlock(&event_mutex);
-+
-+	return ret;
-+}
-+
-+static struct ctl_table user_event_sysctls[] = {
-+	{
-+		.procname	= "user_events_max",
-+		.data		= &max_user_events,
-+		.maxlen		= sizeof(unsigned int),
-+		.mode		= 0644,
-+		.proc_handler	= set_max_user_events_sysctl,
-+	},
-+	{}
-+};
-+
- static int __init trace_events_user_init(void)
- {
- 	int ret;
-@@ -2415,6 +2472,8 @@ static int __init trace_events_user_init(void)
- 	if (dyn_event_register(&user_event_dops))
- 		pr_warn("user_events could not register with dyn_events\n");
- 
-+	register_sysctl_init("kernel", user_event_sysctls);
-+
- 	return 0;
- }
- 
--- 
-2.25.1
+  git://git.kernel.org/pub/scm/linux/kernel/git/trace/linux-trace.git
+    trace/for-next
+
+  https://git.kernel.org/pub/scm/linux/kernel/git/trace/linux-trace.git/commit/?h=trace/for-next&id=fee86a4ed536f4e521f3a4530242e152dd2a466b
+
+Since that commit only contains the updates for the direct trampolines that
+ARM64 needs, and I'm not going to rebase that branch, you can just merge it
+into the ARM64 tree so that you can base your changes on it. Make sure you
+merge that commit, not the branch, as I have more tracing specific patches
+on top of that commit.
+
+Make sure to write a nice change log message in why you are merging that
+branch, so that Linus knows about it. I'm Cc'ing Linus now so that he's
+aware, but the change log should remind him why you pulled in my branch.
+
+Again, at the above mentioned commit, that branch only contains the updates
+you need to make the direct trampolines work on ARM64.
+
+-- Steve
+
+
+On Tue, 21 Mar 2023 15:04:17 +0100
+Florent Revest <revest@chromium.org> wrote:
+
+> Differences since v1 [1]:
+> - Use a READ_ONCE() to read the direct call address in call_direct_funcs
+> - Added an Acked-by from Mark
+> 
+> This series refactors ftrace direct call APIs in preparation for arm64 support.
+> It is roughly a subset of [2] rebased on v6.3-rc2 and meant to be taken by
+> Steven's tree before all the arm64 specific bits.
+> 
+> The first patch was suggested by Steven in a review of [1], it makes it more
+> obvious to the caller that filters probably need to be freed when unregistering
+> a direct call.
+> 
+> The next three patches consolidate the two existing ftrace APIs for registering
+> direct calls. They are only split to make the reviewer's life easier.
+> Currently, there is both a _ftrace_direct and _ftrace_direct_multi API. Apart
+> from samples and selftests, there are no users of the _ftrace_direct API left
+> in-tree so this deletes it and renames the _ftrace_direct_multi API to
+> _ftrace_direct for simplicity.
+> 
+> The main benefit of this refactoring is that, with the API that's left, an
+> ftrace_ops backing a direct call will only ever point to one direct call. We can
+> therefore store the direct called trampoline address in the ops (patch 5) and,
+> in the future arm64 series, look it up from the ftrace trampoline. (in the
+> meantime, it makes call_direct_funcs a bit simpler too)
+> 
+> Ftrace direct calls technically don't need DYNAMIC_FTRACE_WITH_REGS so this
+> extends its support to DYNAMIC_FTRACE_WITH_ARGS (patch 6). arm64 won't support
+> DYNAMIC_FTRACE_WITH_REGS.
+> 
+> Finally, it fixes the ABI of the stub direct call trampoline used in ftrace
+> selftests.
+> 
+> This has been tested on x86_64 with:
+> 1- CONFIG_FTRACE_SELFTEST
+> 2- samples/ftrace/*.ko
+> 
+> 1: https://lore.kernel.org/all/20230316173811.1223508-1-revest@chromium.org/T/#t
+> 2: https://lore.kernel.org/all/20230207182135.2671106-1-revest@chromium.org/T/#t
+> 
+> Florent Revest (6):
+>   ftrace: Let unregister_ftrace_direct_multi() call ftrace_free_filter()
+>   ftrace: Replace uses of _ftrace_direct APIs with _ftrace_direct_multi
+>   ftrace: Remove the legacy _ftrace_direct API
+>   ftrace: Rename _ftrace_direct_multi APIs to _ftrace_direct APIs
+>   ftrace: Store direct called addresses in their ops
+>   ftrace: Make DIRECT_CALLS work WITH_ARGS and !WITH_REGS
+> 
+> Mark Rutland (1):
+>   ftrace: selftest: remove broken trace_direct_tramp
+> 
+>  arch/s390/kernel/mcount.S                   |   5 +
+>  arch/x86/kernel/ftrace_32.S                 |   5 +
+>  arch/x86/kernel/ftrace_64.S                 |   4 +
+>  include/linux/ftrace.h                      |  61 +--
+>  kernel/bpf/trampoline.c                     |  12 +-
+>  kernel/trace/Kconfig                        |   2 +-
+>  kernel/trace/ftrace.c                       | 438 ++------------------
+>  kernel/trace/trace_selftest.c               |  19 +-
+>  samples/Kconfig                             |   2 +-
+>  samples/ftrace/ftrace-direct-modify.c       |  10 +-
+>  samples/ftrace/ftrace-direct-multi-modify.c |   9 +-
+>  samples/ftrace/ftrace-direct-multi.c        |   5 +-
+>  samples/ftrace/ftrace-direct-too.c          |  10 +-
+>  samples/ftrace/ftrace-direct.c              |  10 +-
+>  14 files changed, 101 insertions(+), 491 deletions(-)
+> 
 
