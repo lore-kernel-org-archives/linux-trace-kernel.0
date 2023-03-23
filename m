@@ -2,43 +2,54 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D9EDC6FD1F
-	for <linux-trace-kernel@archiver.kernel.org>; Wed, 22 Mar 2023 22:03:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 140F3C6FD1C
+	for <linux-trace-kernel@archiver.kernel.org>; Thu, 23 Mar 2023 01:57:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229757AbjCVWDk (ORCPT
+        id S229784AbjCWB5J (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Wed, 22 Mar 2023 18:03:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46322 "EHLO
+        Wed, 22 Mar 2023 21:57:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37272 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229510AbjCVWDj (ORCPT
+        with ESMTP id S229517AbjCWB5J (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Wed, 22 Mar 2023 18:03:39 -0400
-Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 84DF2D307;
-        Wed, 22 Mar 2023 15:03:38 -0700 (PDT)
-From:   Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1679522617;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=/M+ljBNIE5oJFKtf6KCEV8v2OTJg2/aQzgbtxFKqFk8=;
-        b=4paOE+N8kusW/YyURznb/FtA4Hi570566Kd4dRgqz/OXXyq7eJ1Jy3guYjqaskuwgmEh93
-        tE8prg9/wO3uKMZ/Epp7/qyjg8ehRDskXHxkoEJwanRhlIOIBVjzbJ38ivLPSaomqvfl6X
-        SCJp+3/Zq0dUrveWCPiW6XMDYQL5UMeEUVmb8DEDPMGmkdGxSKbZmXVFEwLS9URajFh6bz
-        7ttxGtLLb/DeaBNcxlXqljGA4F/tfP3T+H1uYp7IBIdWAoBjbeJFiTbWhMJFUh0mChvAPi
-        JIWWWOBmYdy85jT/qbTHpHBYz+l7erKIL5fFV+9orvEM0rCXbH4M3YN+Hhz4yg==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1679522617;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=/M+ljBNIE5oJFKtf6KCEV8v2OTJg2/aQzgbtxFKqFk8=;
-        b=cdoAWXTCmSyhwqHhcPMvx4dvxMb7sZAAcu5puaTuTQNekaMB4HjimU4Y4xcYqryQmdYX9w
-        YE0MAxHg6+vnvWBg==
-To:     Steven Rostedt <rostedt@goodmis.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Linux Trace Kernel <linux-trace-kernel@vger.kernel.org>,
+        Wed, 22 Mar 2023 21:57:09 -0400
+Received: from mga09.intel.com (mga09.intel.com [134.134.136.24])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C35F6211EB;
+        Wed, 22 Mar 2023 18:57:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1679536627; x=1711072627;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=AOaSIlwCUsIpDTclzW9GoxbdemwcG9Jdhr/dYoorob4=;
+  b=kEvaG11plclAHJdYPEUHe46zO+Rx7nfv6NmdSuzfEFTrRxMzIYCL2Z76
+   yNLOjcrIXfzeY/9UX85kwIAPWr3MTp+lL4zPquKAFa/5p4wYLwMOPN289
+   ++3CzrOlc3BBhAbXaRMM5zKe09OlNlM3/oJRmZVNXZLbyR11VZ4RFZEMz
+   RdpUXLLvOi6QI5dOYDsaGFcnR0U52ozSM1e6cLZn7HQ390YihRLXE7NQ/
+   SeBexWLBcyr9PXgm22uqK2vJ6HicGRfqF8atwBBBj6fzL0diaZjKdN+/f
+   zDO3LcjxgE8dnp2p/aJP0ryyjnk1MHxCPxcQ6bdkAUZ/GbUlvJt8ODI11
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10657"; a="340912687"
+X-IronPort-AV: E=Sophos;i="5.98,283,1673942400"; 
+   d="scan'208";a="340912687"
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Mar 2023 18:57:07 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10657"; a="771268782"
+X-IronPort-AV: E=Sophos;i="5.98,283,1673942400"; 
+   d="scan'208";a="771268782"
+Received: from lkp-server01.sh.intel.com (HELO b613635ddfff) ([10.239.97.150])
+  by FMSMGA003.fm.intel.com with ESMTP; 22 Mar 2023 18:57:04 -0700
+Received: from kbuild by b613635ddfff with local (Exim 4.96)
+        (envelope-from <lkp@intel.com>)
+        id 1pfACN-000Dpq-2w;
+        Thu, 23 Mar 2023 01:57:03 +0000
+Date:   Thu, 23 Mar 2023 09:56:19 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     Steven Rostedt <rostedt@goodmis.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linux Trace Kernel <linux-trace-kernel@vger.kernel.org>
+Cc:     oe-kbuild-all@lists.linux.dev,
         Masami Hiramatsu <mhiramat@kernel.org>,
         Peter Zijlstra <peterz@infradead.org>,
         Josh Poimboeuf <jpoimboe@redhat.com>,
@@ -47,134 +58,53 @@ Cc:     LKML <linux-kernel@vger.kernel.org>,
         "Paul E. McKenney" <paulmck@kernel.org>,
         Miroslav Benes <mbenes@suse.cz>
 Subject: Re: [PATCH] tracing: Trace instrumentation begin and end
-In-Reply-To: <20230322141657.7d00a9bd@gandalf.local.home>
+Message-ID: <202303230955.doWocaU3-lkp@intel.com>
 References: <20230321215121.71b339c5@gandalf.local.home>
- <87y1np824t.ffs@tglx> <20230322084834.37ed755e@gandalf.local.home>
- <87v8is94n6.ffs@tglx> <20230322141657.7d00a9bd@gandalf.local.home>
-Date:   Wed, 22 Mar 2023 23:03:36 +0100
-Message-ID: <87jzz88mvb.ffs@tglx>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230321215121.71b339c5@gandalf.local.home>
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-Steven!
+Hi Steven,
 
-On Wed, Mar 22 2023 at 14:16, Steven Rostedt wrote:
-> On Wed, 22 Mar 2023 16:39:41 +0100
-> Thomas Gleixner <tglx@linutronix.de> wrote:
->
->> But for figuring out how long a syscall, interrupt or exception takes
->> there are exactly TWO tracepoints required, not 10 or 8. And it's bloody
->> obvious where to place them, right?
->
-> Not always, and it's pretty much always architecture dependent. I was
-> looking for an architecture agnostic approach, as I imagine all archs will
-> be eventually using this.
+Thank you for the patch! Perhaps something to improve:
 
-All architectures, at least those which matter, will eventually use the
-generic entry code, which is completely architecture agnostic.
+[auto build test WARNING on linus/master]
+[also build test WARNING on v6.3-rc3 next-20230322]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
-And again, while instrumentation_begin/end() might be in use on more
-architectures today, it's still the fundamentally wrong place to stick a
-tracepoint into. See below.
+url:    https://github.com/intel-lab-lkp/linux/commits/Steven-Rostedt/tracing-Trace-instrumentation-begin-and-end/20230322-095354
+patch link:    https://lore.kernel.org/r/20230321215121.71b339c5%40gandalf.local.home
+patch subject: [PATCH] tracing: Trace instrumentation begin and end
+config: x86_64-rhel-8.3 (https://download.01.org/0day-ci/archive/20230323/202303230955.doWocaU3-lkp@intel.com/config)
+compiler: gcc-11 (Debian 11.3.0-8) 11.3.0
+reproduce (this is a W=1 build):
+        # https://github.com/intel-lab-lkp/linux/commit/1f40755bb9b4817135459d6cf76fcbd17ffb53dd
+        git remote add linux-review https://github.com/intel-lab-lkp/linux
+        git fetch --no-tags linux-review Steven-Rostedt/tracing-Trace-instrumentation-begin-and-end/20230322-095354
+        git checkout 1f40755bb9b4817135459d6cf76fcbd17ffb53dd
+        # save the config file
+        mkdir build_dir && cp config build_dir/.config
+        make W=1 O=build_dir ARCH=x86_64 olddefconfig
+        make W=1 O=build_dir ARCH=x86_64 SHELL=/bin/bash
 
-> Things could have changed since then. But if adding trace events for the
-> missing syscalls and around exceptions for timing purposes is OK, then I'm
-> happy to go that approach.
+If you fix the issue, kindly add following tag where applicable
+| Reported-by: kernel test robot <lkp@intel.com>
+| Link: https://lore.kernel.org/oe-kbuild-all/202303230955.doWocaU3-lkp@intel.com/
 
-If there are tracepoints missing for syscalls then the obvious correct
-thing is to add them so that the syscall coverage is complete instead of
-abusing the lack of tracepoints as an argument for horrible hackery.
+All warnings (new ones prefixed by >>):
 
-If there is a value to have tracepoints around exceptions etc. for
-timing purposes then they definitely make more sense than the abuse of
-instrumentation_begin/end() which just generates noise and adds overhead
-into completely unrelated code pathes.
-
->> > And the more we add noinstr, the more the kernel becomes a black box
->> > again.  
->> 
->> It does not. noinstr is a technical requirement to keep instrumentation
->> out of code pathes which are not able to handle instrumentation. You
->> know that very well, so please stop this theatrical handwaving and come
->> back if you have sensible technical arguments.
->
-> I never said nor implied that it's not important. I'm just concerned that
-> we currently have no way to see when it's happening.
-
-There is no value to see the instrumentation_begin()/end() annotations
-in tracing, really.
-
-They are annotations to enable objtool to validate that the noinstr
-constraints are not violated. We need quite a few of them as the tooling
-operates at function scope. So a function which is invoked from noinstr
-low level code looks like this:
-
-noinstr foo(...)
-{
-        enter();
-
-        instrumentation_begin();        #2
-        do_other_stuff();
-        instrumentation_end();          #2
-
-        exit();
-}
-
-enter()/exit() need to be noinstr functions as well, but as enter()
-might be the function which actually establishes the context,
-e.g. __enter_from_user_mode(), it can contain calls into instrumentable
-code too:
-
-noinstr enter(..)
-{
-        enter_context();
-
-        instrumentation_begin();        #1
-        do_instrumentable_enter();
-        instrumentation_end();          #1
-}
-
-See? So you end up with two pairs of instrumentation_begin()/end() in
-this simple example. Add exit() to the picture:
-
-noinstr exit(..)
-{
-        instrumentation_begin();        #3
-        do_instrumentable_exit();
-        instrumentation_end();          #3
-
-        exit_context();
-}
-
-So you have already three.
-
-In reality it's five pairs per syscall and at least four pairs per
-exception/interrupt.
-
-As you can see above end() #1 and begin() #2 are identical from a
-tracing POV. So are end() #2 and begin() #3.
-
-IOW there is zero value to have tracepoints in them. Especially as
-do_instrumentable_enter()/exit() and do_other_stuff() are subject to
-tracing already unless the compiler decides to inline them.
-
-The only relevant information is begin() #1 and end() #3, right?
-
-And as you cannot piggy-pack that on instrumentation_begin()/end() for
-obvious reasons, you need explicit tracepoints, which are in the very
-end more informative and come with a factor of 4-5 less overhead in both
-the enabled and disabled case.
-
-Contrary to popular believe, disabled tracepoints are not completely
-free of overhead either.
-
-Thanks,
-
-        tglx
+>> vmlinux.o: warning: objtool: .text+0x2bb7f2: relocation to !ENDBR: .text+0x2bb7e9
+   vmlinux.o: warning: objtool: .text+0x2bb803: relocation to !ENDBR: .text+0x2bb7e2
 
 
+objdump-func vmlinux.o .text:
 
-
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests
