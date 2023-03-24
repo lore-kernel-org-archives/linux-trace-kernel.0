@@ -2,89 +2,95 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 74589C76195
-	for <linux-trace-kernel@archiver.kernel.org>; Fri, 24 Mar 2023 17:52:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F1FD9C76196
+	for <linux-trace-kernel@archiver.kernel.org>; Fri, 24 Mar 2023 18:03:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232142AbjCXRwn (ORCPT
+        id S232461AbjCXSDo (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Fri, 24 Mar 2023 13:52:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51034 "EHLO
+        Fri, 24 Mar 2023 14:03:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47618 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231966AbjCXRwO (ORCPT
+        with ESMTP id S231968AbjCXSC0 (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Fri, 24 Mar 2023 13:52:14 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 36DA119681;
-        Fri, 24 Mar 2023 10:51:50 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id B0526B82593;
-        Fri, 24 Mar 2023 17:51:47 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 370FBC433EF;
-        Fri, 24 Mar 2023 17:51:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1679680306;
-        bh=VTt1KMunBj3bGgIvGPFs64aHDoVxlj73J1yqfBRjYOI=;
-        h=From:To:Cc:Subject:Date:From;
-        b=L8bz/aycpolR8IDhVvjHMD18pt8aeE/Uu4eq3zgOHzc9SeOgmFcKXaJmToDc7fsUR
-         ysnPJ3bmtEqDllWZUMZhq4wDUa9qcCOlijXgP9OGaHhcbbFc35RrplYRqr8/od6Px1
-         ON0DL8R7mD0EooC6/K36gi6IfSVIgl2LPrsy0AGOMPIii0MOswuCgrkxr1JMKzX4PX
-         oDU6IWk9jn6QE8lfbYbPAiTH0NSN6uJ/xSccP9FcQhblOUGS/aXePOwlWWwCXHtkTR
-         JyndVN8X13KbjihpPPK691hHKedWwIUML9cg8hoc8eNxFskmdmIXjBUfbQp65n3/9D
-         2eAv2Kkecc+EQ==
-From:   Daniel Bristot de Oliveira <bristot@kernel.org>
-To:     Steven Rostedt <rostedt@goodmis.org>
-Cc:     Daniel Bristot de Oliveira <bristot@kernel.org>,
-        linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
-        Masami Hiramatsu <mhiramat@kernel.org>
-Subject: [PATCH] tracing/osnoise: Fix notify new tracing_max_latency
-Date:   Fri, 24 Mar 2023 18:51:35 +0100
-Message-Id: <c22302a7db3cee6bcabf87462ed22a35dd38690f.1679675521.git.bristot@kernel.org>
-X-Mailer: git-send-email 2.38.1
+        Fri, 24 Mar 2023 14:02:26 -0400
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 210A08A59;
+        Fri, 24 Mar 2023 11:02:06 -0700 (PDT)
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 28299113E;
+        Fri, 24 Mar 2023 11:02:05 -0700 (PDT)
+Received: from FVFF77S0Q05N (unknown [10.57.56.40])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id A01213F71E;
+        Fri, 24 Mar 2023 11:01:18 -0700 (PDT)
+Date:   Fri, 24 Mar 2023 18:01:13 +0000
+From:   Mark Rutland <mark.rutland@arm.com>
+To:     Florent Revest <revest@chromium.org>
+Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-trace-kernel@vger.kernel.org, bpf@vger.kernel.org,
+        catalin.marinas@arm.com, will@kernel.org, rostedt@goodmis.org,
+        mhiramat@kernel.org, ast@kernel.org, daniel@iogearbox.net,
+        andrii@kernel.org, kpsingh@kernel.org, jolsa@kernel.org,
+        xukuohai@huaweicloud.com, lihuafei1@huawei.com
+Subject: Re: [PATCH v3 2/4] arm64: ftrace: Simplify get_ftrace_plt
+Message-ID: <ZB3laWS5+X13nhvi@FVFF77S0Q05N>
+References: <20230324171451.2752302-1-revest@chromium.org>
+ <20230324171451.2752302-3-revest@chromium.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230324171451.2752302-3-revest@chromium.org>
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-timerlat is not reporting a new tracing_max_latency for the thread
-latency. Also, the tracer is reporting new max latency on instances
-where the tracing is off, creating inconsistencies between the max
-reported values in the trace and in the tracing_max_latency. Thus
-only report new tracing_max_latency on active tracing instances.
+On Fri, Mar 24, 2023 at 06:14:49PM +0100, Florent Revest wrote:
+> Following recent refactorings, the get_ftrace_plt function only ever
+> gets called with addr = FTRACE_ADDR so its code can be simplified to
+> always return the ftrace trampoline plt.
+> 
+> Signed-off-by: Florent Revest <revest@chromium.org>
 
-Fixes: dae181349f1e ("tracing/osnoise: Support a list of trace_array *tr")
-Cc: Daniel Bristot de Oliveira <bristot@kernel.org>
-Cc: Steven Rostedt <rostedt@goodmis.org>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>
-Signed-off-by: Daniel Bristot de Oliveira <bristot@kernel.org>
----
- kernel/trace/trace_osnoise.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+Acked-by: Mark Rutland <mark.rutland@arm.com>
 
-diff --git a/kernel/trace/trace_osnoise.c b/kernel/trace/trace_osnoise.c
-index 210e1f168392..2a1b337ac643 100644
---- a/kernel/trace/trace_osnoise.c
-+++ b/kernel/trace/trace_osnoise.c
-@@ -1296,7 +1296,7 @@ static void notify_new_max_latency(u64 latency)
- 	rcu_read_lock();
- 	list_for_each_entry_rcu(inst, &osnoise_instances, list) {
- 		tr = inst->tr;
--		if (tr->max_latency < latency) {
-+		if (tracer_tracing_is_on(tr) && tr->max_latency < latency) {
- 			tr->max_latency = latency;
- 			latency_fsnotify(tr);
- 		}
-@@ -1738,6 +1738,8 @@ static int timerlat_main(void *data)
- 
- 		trace_timerlat_sample(&s);
- 
-+		notify_new_max_latency(diff);
-+
- 		timerlat_dump_stack(time_to_us(diff));
- 
- 		tlat->tracing_thread = false;
--- 
-2.38.1
+Mark.
 
+> ---
+>  arch/arm64/kernel/ftrace.c | 10 +++++-----
+>  1 file changed, 5 insertions(+), 5 deletions(-)
+> 
+> diff --git a/arch/arm64/kernel/ftrace.c b/arch/arm64/kernel/ftrace.c
+> index 758436727fba..432626c866a8 100644
+> --- a/arch/arm64/kernel/ftrace.c
+> +++ b/arch/arm64/kernel/ftrace.c
+> @@ -195,15 +195,15 @@ int ftrace_update_ftrace_func(ftrace_func_t func)
+>  	return ftrace_modify_code(pc, 0, new, false);
+>  }
+>  
+> -static struct plt_entry *get_ftrace_plt(struct module *mod, unsigned long addr)
+> +static struct plt_entry *get_ftrace_plt(struct module *mod)
+>  {
+>  #ifdef CONFIG_ARM64_MODULE_PLTS
+>  	struct plt_entry *plt = mod->arch.ftrace_trampolines;
+>  
+> -	if (addr == FTRACE_ADDR)
+> -		return &plt[FTRACE_PLT_IDX];
+> -#endif
+> +	return &plt[FTRACE_PLT_IDX];
+> +#else
+>  	return NULL;
+> +#endif
+>  }
+>  
+>  static bool reachable_by_bl(unsigned long addr, unsigned long pc)
+> @@ -270,7 +270,7 @@ static bool ftrace_find_callable_addr(struct dyn_ftrace *rec,
+>  	if (WARN_ON(!mod))
+>  		return false;
+>  
+> -	plt = get_ftrace_plt(mod, *addr);
+> +	plt = get_ftrace_plt(mod);
+>  	if (!plt) {
+>  		pr_err("ftrace: no module PLT for %ps\n", (void *)*addr);
+>  		return false;
+> -- 
+> 2.40.0.348.gf938b09366-goog
+> 
