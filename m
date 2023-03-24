@@ -2,171 +2,118 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D2520C6FD20
-	for <linux-trace-kernel@archiver.kernel.org>; Fri, 24 Mar 2023 12:58:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A77FC6FD20
+	for <linux-trace-kernel@archiver.kernel.org>; Fri, 24 Mar 2023 17:15:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231150AbjCXM6U (ORCPT
+        id S232177AbjCXRPn (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Fri, 24 Mar 2023 08:58:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43712 "EHLO
+        Fri, 24 Mar 2023 13:15:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46496 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231393AbjCXM6T (ORCPT
+        with ESMTP id S232139AbjCXRPa (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Fri, 24 Mar 2023 08:58:19 -0400
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 7F0AC86A0;
-        Fri, 24 Mar 2023 05:58:12 -0700 (PDT)
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 1B64711FB;
-        Fri, 24 Mar 2023 05:58:56 -0700 (PDT)
-Received: from FVFF77S0Q05N (unknown [10.57.56.6])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 1BC043F766;
-        Fri, 24 Mar 2023 05:58:07 -0700 (PDT)
-Date:   Fri, 24 Mar 2023 12:57:18 +0000
-From:   Mark Rutland <mark.rutland@arm.com>
-To:     Donglin Peng <pengdonglin@sangfor.com.cn>
-Cc:     mhiramat@kernel.org, rostedt@goodmis.org, linux@armlinux.org.uk,
-        will@kernel.org, catalin.marinas@arm.com, palmer@dabbelt.com,
-        paul.walmsley@sifive.com, tglx@linutronix.de,
-        dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com,
-        chenhuacai@kernel.org, zhangqing@loongson.cn, kernel@xen0n.name,
-        mingo@redhat.com, peterz@infradead.org, xiehuan09@gmail.com,
-        dinghui@sangfor.com.cn, huangcun@sangfor.com.cn,
-        dolinux.peng@gmail.com, linux-trace-kernel@vger.kernel.org,
-        loongarch@lists.linux.dev, linux-riscv@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v7 4/8] arm64: ftrace: Enable HAVE_FUNCTION_GRAPH_RETVAL
-Message-ID: <ZB2eLsD4aoR3LEOV@FVFF77S0Q05N>
-References: <20230324123731.3801920-1-pengdonglin@sangfor.com.cn>
- <20230324123731.3801920-5-pengdonglin@sangfor.com.cn>
+        Fri, 24 Mar 2023 13:15:30 -0400
+Received: from mail-wm1-x336.google.com (mail-wm1-x336.google.com [IPv6:2a00:1450:4864:20::336])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0E193B47C
+        for <linux-trace-kernel@vger.kernel.org>; Fri, 24 Mar 2023 10:15:02 -0700 (PDT)
+Received: by mail-wm1-x336.google.com with SMTP id j18-20020a05600c1c1200b003ee5157346cso3614442wms.1
+        for <linux-trace-kernel@vger.kernel.org>; Fri, 24 Mar 2023 10:15:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1679678097;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=RegTj6ZIebUQPA8rcD0vl5uPS+26g2Sm5QVA1mqn3kI=;
+        b=AsEFpNhIC31p7EY+r3N6BmQ0k/tTWIhol6uk5hJCrx+qN5EgWZx2jMqSPeYt3/KOZM
+         rKXSmLCp4ikMxij1pQzXGiuBNjpcpSvMp54tsTBEXtiqeUmYUMfjjWn148rAVlmS/FlO
+         hdWMzBIAiLcYSSKeFfP64Qq4eGQ0iOwiSLD+s=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112; t=1679678097;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=RegTj6ZIebUQPA8rcD0vl5uPS+26g2Sm5QVA1mqn3kI=;
+        b=VM2kcWVNPuq8m/JaCXc69B/w+4YkUisJ0ENUwcWsRGaheIO3j4EU+rN0E5ot6aPjDm
+         NgD4BEhXPzMPTqroz0/eNTA+F2ytpMjimgiJP8tSUjxwg7pUYJVx3IybfPSdzPVZk279
+         z+4C13c7MwIToITRQEJJqXOhcF42VAZ1A1zQOym8gYc1OtjomPM2+dwujW6Wy9ci35pR
+         U03a6ZV+XRQNFRFzWC2Jgriy7AjxQx7W9YYuWNZ0Ou75BR1GpvdWs0NzAvUu/1rRg2Oq
+         WjphnCilaVOZYP4Wpx1DxT3RFWE6hgxEU0K6m13bukmc8EiKTySx3cPr5l8simDothCo
+         3kbQ==
+X-Gm-Message-State: AO0yUKXSzljxBhYX2H1KuRMGRwgd5qdtoQV2fURitvJJhI0KVULXTNoV
+        fqqR6tA4U1r8exjBJsk0hWevMw==
+X-Google-Smtp-Source: AK7set+RzbeIy+ik1zAtmcE5ClYFAskZBrekDO+igxhK9XPkVFmRtsLXkpwpOngDkYj0K19uCjvm3A==
+X-Received: by 2002:a05:600c:218d:b0:3ed:5a12:5641 with SMTP id e13-20020a05600c218d00b003ed5a125641mr3325142wme.36.1679678097171;
+        Fri, 24 Mar 2023 10:14:57 -0700 (PDT)
+Received: from revest.zrh.corp.google.com ([2a00:79e0:9d:6:ffb1:35ba:1031:ba71])
+        by smtp.gmail.com with ESMTPSA id 26-20020a05600c231a00b003dc522dd25esm5385107wmo.30.2023.03.24.10.14.55
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 24 Mar 2023 10:14:56 -0700 (PDT)
+From:   Florent Revest <revest@chromium.org>
+To:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-trace-kernel@vger.kernel.org, bpf@vger.kernel.org
+Cc:     catalin.marinas@arm.com, will@kernel.org, rostedt@goodmis.org,
+        mhiramat@kernel.org, mark.rutland@arm.com, ast@kernel.org,
+        daniel@iogearbox.net, andrii@kernel.org, kpsingh@kernel.org,
+        jolsa@kernel.org, xukuohai@huaweicloud.com, lihuafei1@huawei.com,
+        Florent Revest <revest@chromium.org>
+Subject: [PATCH v3 0/4] Add ftrace direct call for arm64
+Date:   Fri, 24 Mar 2023 18:14:47 +0100
+Message-Id: <20230324171451.2752302-1-revest@chromium.org>
+X-Mailer: git-send-email 2.40.0.348.gf938b09366-goog
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230324123731.3801920-5-pengdonglin@sangfor.com.cn>
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On Fri, Mar 24, 2023 at 05:37:27AM -0700, Donglin Peng wrote:
-> The commit d4815c5d1bbd ("function_graph: Support recording and
-> printing the return value of function") laid the groundwork for the
-> for the funcgraph-retval, and this modification makes it available
-> on the ARM64 platform.
-> 
-> We introduce a new structure called fgraph_ret_regs for the ARM64
-> platform to hold return registers and the frame pointer. We then
-> fill its content in the return_to_handler and pass its address to
-> the function ftrace_return_to_handler to record the return value.
+This series adds ftrace direct call support to arm64.
+This makes BPF tracing programs (fentry/fexit/fmod_ret/lsm) work on arm64.
 
-I'm happy with this, or with using ftrace_regs and capturing more regs here.
+It is meant to be taken by the arm64 tree but it depends on the
+trace-direct-v6.3-rc3 tag of the linux-trace tree:
+  git://git.kernel.org/pub/scm/linux/kernel/git/trace/linux-trace.git
+That tag was created by Steven Rostedt so the arm64 tree can pull the prior work
+this depends on. [1]
 
-This overall looks good, but there's one functional issue and a couple of minor
-nits which I've detailed below.
+Thanks to the ftrace refactoring under that tag, an ftrace_ops backing a ftrace
+direct call will only ever point to *one* direct call. This means we can look up
+the direct called trampoline address stored in the ops from the ftrace_caller
+trampoline in the case when the destination would be out of reach of a BL
+instruction at the ftrace callsite. This fixes limitations of previous attempts
+such as [2].
 
-> 
-> Signed-off-by: Donglin Peng <pengdonglin@sangfor.com.cn>
-> ---
->  arch/arm64/Kconfig               |  1 +
->  arch/arm64/include/asm/ftrace.h  | 23 +++++++++++++++++++++++
->  arch/arm64/kernel/entry-ftrace.S |  9 +++++----
->  3 files changed, 29 insertions(+), 4 deletions(-)
-> 
-> diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
-> index 1023e896d46b..48856d230800 100644
-> --- a/arch/arm64/Kconfig
-> +++ b/arch/arm64/Kconfig
-> @@ -195,6 +195,7 @@ config ARM64
->  	select HAVE_FTRACE_MCOUNT_RECORD
->  	select HAVE_FUNCTION_TRACER
->  	select HAVE_FUNCTION_ERROR_INJECTION
-> +	select HAVE_FUNCTION_GRAPH_RETVAL if HAVE_FUNCTION_GRAPH_TRACER
->  	select HAVE_FUNCTION_GRAPH_TRACER
->  	select HAVE_GCC_PLUGINS
->  	select HAVE_HW_BREAKPOINT if PERF_EVENTS
-> diff --git a/arch/arm64/include/asm/ftrace.h b/arch/arm64/include/asm/ftrace.h
-> index 1c2672bbbf37..f68dcc41be3b 100644
-> --- a/arch/arm64/include/asm/ftrace.h
-> +++ b/arch/arm64/include/asm/ftrace.h
-> @@ -170,4 +170,27 @@ static inline bool arch_syscall_match_sym_name(const char *sym,
->  }
->  #endif /* ifndef __ASSEMBLY__ */
->  
-> +#ifndef __ASSEMBLY__
-> +
-> +#ifdef CONFIG_HAVE_FUNCTION_GRAPH_RETVAL
-> +struct fgraph_ret_regs {
-> +	/* x0 - x7 */
-> +	u64 regs[8];
-> +
-> +	u64 fp;
-> +};
+This series has been tested on arm64 with:
+1- CONFIG_FTRACE_SELFTEST
+2- samples/ftrace/*.ko (cf: patch 3)
+3- tools/testing/selftests/bpf/test_progs (cf: patch 4)
 
-As a minor nit, for ftrace_regs we used `unsigned long` rather than `u64`;
-could we do the same here for consistency?
+Changes since v2 [3]:
+- Dropped the first 6 patches which got merged separately in the tracing tree
+- Minor rebase changes when switching to v6.3-rc3
+- Fixed a typo in a comment (trmapoline -> trampoline)
 
-This will need to be padded to 16 bytes, as within the kernel, arm64 requires
-the SP to be aligned to 16 bytes at all time. Please can you add an `__unused`
-field, like we have in ftrace_regs, to ensure that?
+1: https://lore.kernel.org/all/ZB2Nl7fzpHoq5V20@FVFF77S0Q05N/
+2: https://lore.kernel.org/all/20220913162732.163631-1-xukuohai@huaweicloud.com/
+3: https://lore.kernel.org/all/20230207182135.2671106-1-revest@chromium.org/
 
-> +
-> +static inline unsigned long fgraph_ret_regs_return_value(struct fgraph_ret_regs *ret_regs)
-> +{
-> +	return ret_regs->regs[0];
-> +}
-> +
-> +static inline unsigned long fgraph_ret_regs_frame_pointer(struct fgraph_ret_regs *ret_regs)
-> +{
-> +	return ret_regs->fp;
-> +}
-> +#endif
-> +
-> +#endif
-> +
->  #endif /* __ASM_FTRACE_H */
-> diff --git a/arch/arm64/kernel/entry-ftrace.S b/arch/arm64/kernel/entry-ftrace.S
-> index 350ed81324ac..8ac6f952e68f 100644
-> --- a/arch/arm64/kernel/entry-ftrace.S
-> +++ b/arch/arm64/kernel/entry-ftrace.S
-> @@ -270,14 +270,15 @@ SYM_FUNC_END(ftrace_stub_graph)
->   */
->  SYM_CODE_START(return_to_handler)
->  	/* save return value regs */
-> -	sub sp, sp, #64
-> +	sub sp, sp, #72
->  	stp x0, x1, [sp]
->  	stp x2, x3, [sp, #16]
->  	stp x4, x5, [sp, #32]
->  	stp x6, x7, [sp, #48]
-> +	str x29,    [sp, #64]		//     parent's fp
+Florent Revest (4):
+  arm64: ftrace: Add direct call support
+  arm64: ftrace: Simplify get_ftrace_plt
+  arm64: ftrace: Add direct call trampoline samples support
+  selftests/bpf: Update the tests deny list on aarch64
 
-As above, this will need to be padded to keep the stack aligned to 16 bytes,
-and I'd prefer if we could use asm-offsets so that we can have something like:
+ arch/arm64/Kconfig                           |  6 ++
+ arch/arm64/include/asm/ftrace.h              | 22 +++++
+ arch/arm64/kernel/asm-offsets.c              |  6 ++
+ arch/arm64/kernel/entry-ftrace.S             | 90 ++++++++++++++++----
+ arch/arm64/kernel/ftrace.c                   | 46 +++++++---
+ samples/ftrace/ftrace-direct-modify.c        | 32 +++++++
+ samples/ftrace/ftrace-direct-multi-modify.c  | 36 ++++++++
+ samples/ftrace/ftrace-direct-multi.c         | 22 +++++
+ samples/ftrace/ftrace-direct-too.c           | 25 ++++++
+ samples/ftrace/ftrace-direct.c               | 23 +++++
+ tools/testing/selftests/bpf/DENYLIST.aarch64 | 82 ++----------------
+ 11 files changed, 288 insertions(+), 102 deletions(-)
 
-	sub	sp, sp, #FRET_REGS_SIZE
-	stp	x0, x1, [sp, #FRET_REGS_X0]
-	stp	x2, x3, [sp, #FRET_REGS_X2]
-	stp	x4, x5, [sp, #FRET_REGS_X4]
-	stp	x6, x7, [sp, #FRET_REGS_X6]
-	str	x29, [sp, FRET_REGS_FP]
+-- 
+2.40.0.348.gf938b09366-goog
 
->  
-> -	mov	x0, x29			//     parent's fp
-> -	bl	ftrace_return_to_handler// addr = ftrace_return_to_hander(fp);
-> +	mov	x0, sp
-> +	bl	ftrace_return_to_handler// addr = ftrace_return_to_hander(regs);
->  	mov	x30, x0			// restore the original return address
->  
->  	/* restore return value regs */
-> @@ -285,7 +286,7 @@ SYM_CODE_START(return_to_handler)
->  	ldp x2, x3, [sp, #16]
->  	ldp x4, x5, [sp, #32]
->  	ldp x6, x7, [sp, #48]
-> -	add sp, sp, #64
-> +	add sp, sp, #72
-
-Likewise here.
-
-Other than that, this looks good to me, thanks for respinning!
-
-Thanks,
-Mark.
