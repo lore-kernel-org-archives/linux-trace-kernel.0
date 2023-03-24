@@ -2,101 +2,89 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D9409C6FD20
-	for <linux-trace-kernel@archiver.kernel.org>; Fri, 24 Mar 2023 17:19:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 74589C76195
+	for <linux-trace-kernel@archiver.kernel.org>; Fri, 24 Mar 2023 17:52:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231346AbjCXRTG (ORCPT
+        id S232142AbjCXRwn (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Fri, 24 Mar 2023 13:19:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34646 "EHLO
+        Fri, 24 Mar 2023 13:52:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51034 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231422AbjCXRTF (ORCPT
+        with ESMTP id S231966AbjCXRwO (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Fri, 24 Mar 2023 13:19:05 -0400
-Received: from mail-pj1-x1035.google.com (mail-pj1-x1035.google.com [IPv6:2607:f8b0:4864:20::1035])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D8B5FD53D
-        for <linux-trace-kernel@vger.kernel.org>; Fri, 24 Mar 2023 10:18:45 -0700 (PDT)
-Received: by mail-pj1-x1035.google.com with SMTP id d13so2082400pjh.0
-        for <linux-trace-kernel@vger.kernel.org>; Fri, 24 Mar 2023 10:18:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1679678324;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=rQ341GCvg6YIFD2oT/Yqhgt/PFmq4abtkloi7GVbvVg=;
-        b=axpBDSzM4wxY51DrQFnyncrYK9OldBbjXq4hz1P5YcJ+T7tXEB4YnBrOgPn9/Fv573
-         5I///UmB7xAXnIk4KhUc5vLcvYs5bsDDImvMMFWiCCxrqNY3teDcySKnuDPe4biaMhtg
-         ECn/0+IMbhiEJ40J4M2kBVhBiAc7ohgsmIP1A=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1679678324;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=rQ341GCvg6YIFD2oT/Yqhgt/PFmq4abtkloi7GVbvVg=;
-        b=BB1AdBKcSUlo3iZvkcWc4uXTf1l7bVqmBI6DF4vl44SheH+CggUuNEI4T//8iGdwak
-         1XbXv4fI8QccvNzbCq8CqVOiGnm8xOnqwdraYn8I/9P1h1idf5PxLMT+hfvQv4fMKjFq
-         W2eKhL4Nzt/JFzQaRz6rjyF0YdUk0R/+Ab2OzKelhni+4rharcRvmxpbAgSokaMnJCuN
-         Z93fkX8I1p9xC19uQYaIRPM2qxM2B+tJeObVOoCNmZEp6yKw7dV8KtU32g3qKfpKIpoA
-         lkzKbBvTMmWU4UEpHI/GbZqorWT7MUZ4UdQ2hQ8KchBw6lsQXkCbLP5eYOUteapzysKQ
-         feMA==
-X-Gm-Message-State: AAQBX9cA/r6RgmrEAYsj2Q7KoJSE6kh1+gNZh6pj9RCBZHnHOnq9fl5j
-        rGEfygOREbxnlV9Zg/hQJJKh2YqDcpyLiBUvulDoaQ==
-X-Google-Smtp-Source: AKy350bswPorGvZ7VpMUprWUtU23AX9/VmlQSrlhuzPYgLYG+BSz5F7xWyGX32U+W4ymIG0olhufPF5UtcpjmjWF8QY=
-X-Received: by 2002:a17:902:c20c:b0:19f:3cc1:e3be with SMTP id
- 12-20020a170902c20c00b0019f3cc1e3bemr1199305pll.12.1679678324622; Fri, 24 Mar
- 2023 10:18:44 -0700 (PDT)
+        Fri, 24 Mar 2023 13:52:14 -0400
+Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 36DA119681;
+        Fri, 24 Mar 2023 10:51:50 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id B0526B82593;
+        Fri, 24 Mar 2023 17:51:47 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 370FBC433EF;
+        Fri, 24 Mar 2023 17:51:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1679680306;
+        bh=VTt1KMunBj3bGgIvGPFs64aHDoVxlj73J1yqfBRjYOI=;
+        h=From:To:Cc:Subject:Date:From;
+        b=L8bz/aycpolR8IDhVvjHMD18pt8aeE/Uu4eq3zgOHzc9SeOgmFcKXaJmToDc7fsUR
+         ysnPJ3bmtEqDllWZUMZhq4wDUa9qcCOlijXgP9OGaHhcbbFc35RrplYRqr8/od6Px1
+         ON0DL8R7mD0EooC6/K36gi6IfSVIgl2LPrsy0AGOMPIii0MOswuCgrkxr1JMKzX4PX
+         oDU6IWk9jn6QE8lfbYbPAiTH0NSN6uJ/xSccP9FcQhblOUGS/aXePOwlWWwCXHtkTR
+         JyndVN8X13KbjihpPPK691hHKedWwIUML9cg8hoc8eNxFskmdmIXjBUfbQp65n3/9D
+         2eAv2Kkecc+EQ==
+From:   Daniel Bristot de Oliveira <bristot@kernel.org>
+To:     Steven Rostedt <rostedt@goodmis.org>
+Cc:     Daniel Bristot de Oliveira <bristot@kernel.org>,
+        linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+        Masami Hiramatsu <mhiramat@kernel.org>
+Subject: [PATCH] tracing/osnoise: Fix notify new tracing_max_latency
+Date:   Fri, 24 Mar 2023 18:51:35 +0100
+Message-Id: <c22302a7db3cee6bcabf87462ed22a35dd38690f.1679675521.git.bristot@kernel.org>
+X-Mailer: git-send-email 2.38.1
 MIME-Version: 1.0
-References: <20230321140424.345218-1-revest@chromium.org> <20230323194355.3f714774@gandalf.local.home>
- <20230323220042.40ec4904@gandalf.local.home> <ZB2Nl7fzpHoq5V20@FVFF77S0Q05N>
-In-Reply-To: <ZB2Nl7fzpHoq5V20@FVFF77S0Q05N>
-From:   Florent Revest <revest@chromium.org>
-Date:   Fri, 24 Mar 2023 18:18:33 +0100
-Message-ID: <CABRcYmJbCAsVkgWmqq7g1qkM2qX7WurcU34TxgYRotJQQghFKA@mail.gmail.com>
-Subject: Re: [PATCH v2 0/7] Refactor ftrace direct call APIs
-To:     Mark Rutland <mark.rutland@arm.com>
-Cc:     Steven Rostedt <rostedt@goodmis.org>, linux-kernel@vger.kernel.org,
-        linux-trace-kernel@vger.kernel.org, mhiramat@kernel.org,
-        ast@kernel.org, daniel@iogearbox.net, kpsingh@kernel.org,
-        jolsa@kernel.org, Linus Torvalds <torvalds@linux-foundation.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On Fri, Mar 24, 2023 at 12:46=E2=80=AFPM Mark Rutland <mark.rutland@arm.com=
-> wrote:
->
-> On Thu, Mar 23, 2023 at 10:00:42PM -0400, Steven Rostedt wrote:
-> > On Thu, 23 Mar 2023 19:43:55 -0400
-> > Steven Rostedt <rostedt@goodmis.org> wrote:
-> >
-> > > Since that commit only contains the updates for the direct trampoline=
-s that
-> > > ARM64 needs, and I'm not going to rebase that branch, you can just me=
-rge it
-> > > into the ARM64 tree so that you can base your changes on it. Make sur=
-e you
-> > > merge that commit, not the branch, as I have more tracing specific pa=
-tches
-> > > on top of that commit.
-> >
-> > I just made it easier for you. I created a signed tag: trace-direct-v6.=
-3-rc3
-> >
-> > So just pull from:
-> >
-> >   git://git.kernel.org/pub/scm/linux/kernel/git/trace/linux-trace.git
-> >
-> > tag: trace-direct-v6.3-rc3
+timerlat is not reporting a new tracing_max_latency for the thread
+latency. Also, the tracer is reporting new max latency on instances
+where the tracing is off, creating inconsistencies between the max
+reported values in the trace and in the tracing_max_latency. Thus
+only report new tracing_max_latency on active tracing instances.
 
-Awesome! Thank you Steve :D
+Fixes: dae181349f1e ("tracing/osnoise: Support a list of trace_array *tr")
+Cc: Daniel Bristot de Oliveira <bristot@kernel.org>
+Cc: Steven Rostedt <rostedt@goodmis.org>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>
+Signed-off-by: Daniel Bristot de Oliveira <bristot@kernel.org>
+---
+ kernel/trace/trace_osnoise.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-> Thanks Steve; much appreciated!
->
-> Florent, can you post a new spinf of the remaining arm64 bits rebased ato=
-p
-> that?
+diff --git a/kernel/trace/trace_osnoise.c b/kernel/trace/trace_osnoise.c
+index 210e1f168392..2a1b337ac643 100644
+--- a/kernel/trace/trace_osnoise.c
++++ b/kernel/trace/trace_osnoise.c
+@@ -1296,7 +1296,7 @@ static void notify_new_max_latency(u64 latency)
+ 	rcu_read_lock();
+ 	list_for_each_entry_rcu(inst, &osnoise_instances, list) {
+ 		tr = inst->tr;
+-		if (tr->max_latency < latency) {
++		if (tracer_tracing_is_on(tr) && tr->max_latency < latency) {
+ 			tr->max_latency = latency;
+ 			latency_fsnotify(tr);
+ 		}
+@@ -1738,6 +1738,8 @@ static int timerlat_main(void *data)
+ 
+ 		trace_timerlat_sample(&s);
+ 
++		notify_new_max_latency(diff);
++
+ 		timerlat_dump_stack(time_to_us(diff));
+ 
+ 		tlat->tracing_thread = false;
+-- 
+2.38.1
 
-Done! :)
-https://lore.kernel.org/bpf/20230324171451.2752302-1-revest@chromium.org/
