@@ -2,31 +2,31 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C169C77B6C
-	for <linux-trace-kernel@archiver.kernel.org>; Fri, 24 Mar 2023 22:30:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8954EC76195
+	for <linux-trace-kernel@archiver.kernel.org>; Fri, 24 Mar 2023 22:30:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232091AbjCXWan (ORCPT
+        id S232151AbjCXWao (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Fri, 24 Mar 2023 18:30:43 -0400
+        Fri, 24 Mar 2023 18:30:44 -0400
 Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43042 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231959AbjCXWal (ORCPT
+        with ESMTP id S232045AbjCXWam (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Fri, 24 Mar 2023 18:30:41 -0400
+        Fri, 24 Mar 2023 18:30:42 -0400
 Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 020FB9030;
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id CA8AA16AF0;
         Fri, 24 Mar 2023 15:30:40 -0700 (PDT)
 Received: from W11-BEAU-MD.localdomain (unknown [76.135.27.212])
-        by linux.microsoft.com (Postfix) with ESMTPSA id 4BAA320FC4DD;
-        Fri, 24 Mar 2023 15:30:39 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 4BAA320FC4DD
+        by linux.microsoft.com (Postfix) with ESMTPSA id 1D8ED20FC4E8;
+        Fri, 24 Mar 2023 15:30:40 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 1D8ED20FC4E8
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-        s=default; t=1679697039;
-        bh=hPint7oilCioEigkIIslQUbcyG4C0cJ57YmYs/t8wm4=;
+        s=default; t=1679697040;
+        bh=yLsV99bpcauClh1MlrmzrNiAoYsutXdpDe7QcYfID8o=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=T1h0cFi4IJCvrrodn8sP35NqQ8H3yTURpNJVbQP8fli2BFNBDSwP5G0dK/5EcVkcN
-         xzmLqb1hU09rPc0J+fRC13LdXN1uc0Bu+MF9PMC/aa3bYjWQfdUeosRjkwvewFsjUC
-         wWGcICmEV4CWi+9SAfDX6w/0+ftkvkk+3dqTe88I=
+        b=ptna8i4OIyE99pNNWGB/XMEXh1wQAyC00ZvdH3TLa4dKs+4ZSA+x6Qd9s+5CjTffW
+         MwplxVLcw06wb9j36lHhM7N5ZJRnl86aDXipIQPyrqrjmZ0lceEr+RfX7BMayR84th
+         DpiYNQOCkCiMsd2Bv3sAkjFHzVUXbRWx5uCAk8kE=
 From:   Beau Belgrave <beaub@linux.microsoft.com>
 To:     rostedt@goodmis.org, mhiramat@kernel.org,
         mathieu.desnoyers@efficios.com, dcook@linux.microsoft.com,
@@ -35,9 +35,9 @@ To:     rostedt@goodmis.org, mhiramat@kernel.org,
         keescook@chromium.org, tglx@linutronix.de
 Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
         linux-trace-kernel@vger.kernel.org
-Subject: [PATCH v9 05/11] tracing/user_events: Add ioctl for disabling addresses
-Date:   Fri, 24 Mar 2023 15:30:22 -0700
-Message-Id: <20230324223028.172-6-beaub@linux.microsoft.com>
+Subject: [PATCH v9 07/11] tracing/user_events: Add ABI self-test
+Date:   Fri, 24 Mar 2023 15:30:24 -0700
+Message-Id: <20230324223028.172-8-beaub@linux.microsoft.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20230324223028.172-1-beaub@linux.microsoft.com>
 References: <20230324223028.172-1-beaub@linux.microsoft.com>
@@ -47,207 +47,263 @@ Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-Enablements are now tracked by the lifetime of the task/mm. User
-processes need to be able to disable their addresses if tracing is
-requested to be turned off. Before unmapping the page would suffice.
-However, we now need a stronger contract. Add an ioctl to enable this.
-
-A new flag bit is added, freeing, to user_event_enabler to ensure that
-if the event is attempted to be removed while a fault is being handled
-that the remove is delayed until after the fault is reattempted.
+Add ABI specific self-test to ensure enablements work in various
+scenarios such as fork, VM_CLONE, and basic event enable/disable.
+Ensure ABI contracts/limits are also being upheld, such as bit limits
+and data size limits.
 
 Signed-off-by: Beau Belgrave <beaub@linux.microsoft.com>
 ---
- include/uapi/linux/user_events.h | 24 +++++++++
- kernel/trace/trace_events_user.c | 93 +++++++++++++++++++++++++++++++-
- 2 files changed, 115 insertions(+), 2 deletions(-)
+ tools/testing/selftests/user_events/Makefile  |   2 +-
+ .../testing/selftests/user_events/abi_test.c  | 226 ++++++++++++++++++
+ 2 files changed, 227 insertions(+), 1 deletion(-)
+ create mode 100644 tools/testing/selftests/user_events/abi_test.c
 
-diff --git a/include/uapi/linux/user_events.h b/include/uapi/linux/user_events.h
-index 22521bc622db..3e7275e3234a 100644
---- a/include/uapi/linux/user_events.h
-+++ b/include/uapi/linux/user_events.h
-@@ -46,6 +46,27 @@ struct user_reg {
- 	__u32 write_index;
- } __attribute__((__packed__));
+diff --git a/tools/testing/selftests/user_events/Makefile b/tools/testing/selftests/user_events/Makefile
+index c765d8635d9a..d5f64ef93197 100644
+--- a/tools/testing/selftests/user_events/Makefile
++++ b/tools/testing/selftests/user_events/Makefile
+@@ -2,7 +2,7 @@
+ CFLAGS += -Wl,-no-as-needed -Wall -I../../../../usr/include
+ LDLIBS += -lrt -lpthread -lm
  
+-TEST_GEN_PROGS = ftrace_test dyn_test perf_test
++TEST_GEN_PROGS = ftrace_test dyn_test perf_test abi_test
+ 
+ TEST_FILES := settings
+ 
+diff --git a/tools/testing/selftests/user_events/abi_test.c b/tools/testing/selftests/user_events/abi_test.c
+new file mode 100644
+index 000000000000..e0323d3777a7
+--- /dev/null
++++ b/tools/testing/selftests/user_events/abi_test.c
+@@ -0,0 +1,226 @@
++// SPDX-License-Identifier: GPL-2.0
 +/*
-+ * Describes an event unregister, callers must set the size, address and bit.
-+ * This structure is passed to the DIAG_IOCSUNREG ioctl to disable bit updates.
++ * User Events ABI Test Program
++ *
++ * Copyright (c) 2022 Beau Belgrave <beaub@linux.microsoft.com>
 + */
-+struct user_unreg {
-+	/* Input: Size of the user_unreg structure being used */
-+	__u32 size;
 +
-+	/* Input: Bit to unregister */
-+	__u8 disable_bit;
++#define _GNU_SOURCE
++#include <sched.h>
 +
-+	/* Input: Reserved, set to 0 */
-+	__u8 __reserved;
++#include <errno.h>
++#include <linux/user_events.h>
++#include <stdio.h>
++#include <stdlib.h>
++#include <fcntl.h>
++#include <sys/ioctl.h>
++#include <sys/stat.h>
++#include <unistd.h>
++#include <asm/unistd.h>
 +
-+	/* Input: Reserved, set to 0 */
-+	__u16 __reserved2;
++#include "../kselftest_harness.h"
 +
-+	/* Input: Address to unregister */
-+	__u64 disable_addr;
-+} __attribute__((__packed__));
++const char *data_file = "/sys/kernel/tracing/user_events_data";
++const char *enable_file = "/sys/kernel/tracing/events/user_events/__abi_event/enable";
 +
- #define DIAG_IOC_MAGIC '*'
- 
- /* Request to register a user_event */
-@@ -54,4 +75,7 @@ struct user_reg {
- /* Request to delete a user_event */
- #define DIAG_IOCSDEL _IOW(DIAG_IOC_MAGIC, 1, char *)
- 
-+/* Requests to unregister a user_event */
-+#define DIAG_IOCSUNREG _IOW(DIAG_IOC_MAGIC, 2, struct user_unreg*)
-+
- #endif /* _UAPI_LINUX_USER_EVENTS_H */
-diff --git a/kernel/trace/trace_events_user.c b/kernel/trace/trace_events_user.c
-index 86bda1660536..e4ee25d16f3b 100644
---- a/kernel/trace/trace_events_user.c
-+++ b/kernel/trace/trace_events_user.c
-@@ -102,6 +102,9 @@ struct user_event_enabler {
- /* Bit 6 is for faulting status of enablement */
- #define ENABLE_VAL_FAULTING_BIT 6
- 
-+/* Bit 7 is for freeing status of enablement */
-+#define ENABLE_VAL_FREEING_BIT 7
-+
- /* Only duplicate the bit value */
- #define ENABLE_VAL_DUP_MASK ENABLE_VAL_BIT_MASK
- 
-@@ -301,6 +304,12 @@ static void user_event_enabler_fault_fixup(struct work_struct *work)
- 	/* Prevent state changes from racing */
- 	mutex_lock(&event_mutex);
- 
-+	/* User asked for enabler to be removed during fault */
-+	if (test_bit(ENABLE_VAL_FREEING_BIT, ENABLE_BITOPS(enabler))) {
-+		user_event_enabler_destroy(enabler);
-+		goto out;
-+	}
-+
- 	/*
- 	 * If we managed to get the page, re-issue the write. We do not
- 	 * want to get into a possible infinite loop, which is why we only
-@@ -315,7 +324,7 @@ static void user_event_enabler_fault_fixup(struct work_struct *work)
- 		user_event_enabler_write(mm, enabler, true);
- 		mmap_read_unlock(mm->mm);
- 	}
--
-+out:
- 	mutex_unlock(&event_mutex);
- 
- 	/* In all cases we no longer need the mm or fault */
-@@ -370,7 +379,8 @@ static int user_event_enabler_write(struct user_event_mm *mm,
- 	if (refcount_read(&mm->tasks) == 0)
- 		return -ENOENT;
- 
--	if (unlikely(test_bit(ENABLE_VAL_FAULTING_BIT, ENABLE_BITOPS(enabler))))
-+	if (unlikely(test_bit(ENABLE_VAL_FAULTING_BIT, ENABLE_BITOPS(enabler)) ||
-+		     test_bit(ENABLE_VAL_FREEING_BIT, ENABLE_BITOPS(enabler))))
- 		return -EBUSY;
- 
- 	ret = pin_user_pages_remote(mm->mm, uaddr, 1, FOLL_WRITE | FOLL_NOFAULT,
-@@ -428,6 +438,10 @@ static bool user_event_enabler_dup(struct user_event_enabler *orig,
- {
- 	struct user_event_enabler *enabler;
- 
-+	/* Skip pending frees */
-+	if (unlikely(test_bit(ENABLE_VAL_FREEING_BIT, ENABLE_BITOPS(orig))))
-+		return true;
-+
- 	enabler = kzalloc(sizeof(*enabler), GFP_NOWAIT);
- 
- 	if (!enabler)
-@@ -2086,6 +2100,75 @@ static long user_events_ioctl_del(struct user_event_file_info *info,
- 	return ret;
- }
- 
-+static long user_unreg_get(struct user_unreg __user *ureg,
-+			   struct user_unreg *kreg)
++static int change_event(bool enable)
 +{
-+	u32 size;
-+	long ret;
++	int fd = open(enable_file, O_RDWR);
++	int ret;
 +
-+	ret = get_user(size, &ureg->size);
++	if (fd < 0)
++		return -1;
 +
-+	if (ret)
-+		return ret;
++	if (enable)
++		ret = write(fd, "1", 1);
++	else
++		ret = write(fd, "0", 1);
 +
-+	if (size > PAGE_SIZE)
-+		return -E2BIG;
++	close(fd);
 +
-+	if (size < offsetofend(struct user_unreg, disable_addr))
-+		return -EINVAL;
-+
-+	ret = copy_struct_from_user(kreg, sizeof(*kreg), ureg, size);
++	if (ret == 1)
++		ret = 0;
++	else
++		ret = -1;
 +
 +	return ret;
 +}
 +
-+/*
-+ * Unregisters an enablement address/bit within a task/user mm.
-+ */
-+static long user_events_ioctl_unreg(unsigned long uarg)
++static int reg_enable(long *enable, int size, int bit)
 +{
-+	struct user_unreg __user *ureg = (struct user_unreg __user *)uarg;
-+	struct user_event_mm *mm = current->user_event_mm;
-+	struct user_event_enabler *enabler, *next;
-+	struct user_unreg reg;
-+	long ret;
++	struct user_reg reg = {0};
++	int fd = open(data_file, O_RDWR);
++	int ret;
 +
-+	ret = user_unreg_get(ureg, &reg);
++	if (fd < 0)
++		return -1;
 +
-+	if (ret)
-+		return ret;
++	reg.size = sizeof(reg);
++	reg.name_args = (__u64)"__abi_event";
++	reg.enable_bit = bit;
++	reg.enable_addr = (__u64)enable;
++	reg.enable_size = size;
 +
-+	if (!mm)
-+		return -ENOENT;
++	ret = ioctl(fd, DIAG_IOCSREG, &reg);
 +
-+	ret = -ENOENT;
++	close(fd);
 +
-+	/*
-+	 * Flags freeing and faulting are used to indicate if the enabler is in
-+	 * use at all. When faulting is set a page-fault is occurring asyncly.
-+	 * During async fault if freeing is set, the enabler will be destroyed.
-+	 * If no async fault is happening, we can destroy it now since we hold
-+	 * the event_mutex during these checks.
-+	 */
-+	mutex_lock(&event_mutex);
++	return ret;
++}
 +
-+	list_for_each_entry_safe(enabler, next, &mm->enablers, link)
-+		if (enabler->addr == reg.disable_addr &&
-+		    (enabler->values & ENABLE_VAL_BIT_MASK) == reg.disable_bit) {
-+			set_bit(ENABLE_VAL_FREEING_BIT, ENABLE_BITOPS(enabler));
++static int reg_disable(long *enable, int bit)
++{
++	struct user_unreg reg = {0};
++	int fd = open(data_file, O_RDWR);
++	int ret;
 +
-+			if (!test_bit(ENABLE_VAL_FAULTING_BIT, ENABLE_BITOPS(enabler)))
-+				user_event_enabler_destroy(enabler);
++	if (fd < 0)
++		return -1;
 +
-+			/* Removed at least one */
-+			ret = 0;
++	reg.size = sizeof(reg);
++	reg.disable_bit = bit;
++	reg.disable_addr = (__u64)enable;
++
++	ret = ioctl(fd, DIAG_IOCSUNREG, &reg);
++
++	close(fd);
++
++	return ret;
++}
++
++FIXTURE(user) {
++	long check;
++};
++
++FIXTURE_SETUP(user) {
++	change_event(false);
++	self->check = 0;
++}
++
++FIXTURE_TEARDOWN(user) {
++}
++
++TEST_F(user, enablement) {
++	/* Changes should be reflected immediately */
++	ASSERT_EQ(0, self->check);
++	ASSERT_EQ(0, reg_enable(&self->check, sizeof(int), 0));
++	ASSERT_EQ(0, change_event(true));
++	ASSERT_EQ(1, self->check);
++	ASSERT_EQ(0, change_event(false));
++	ASSERT_EQ(0, self->check);
++
++	/* Should not change after disable */
++	ASSERT_EQ(0, change_event(true));
++	ASSERT_EQ(1, self->check);
++	ASSERT_EQ(0, reg_disable(&self->check, 0));
++	ASSERT_EQ(0, change_event(false));
++	ASSERT_EQ(1, self->check);
++	self->check = 0;
++}
++
++TEST_F(user, bit_sizes) {
++	/* Allow 0-31 bits for 32-bit */
++	ASSERT_EQ(0, reg_enable(&self->check, sizeof(int), 0));
++	ASSERT_EQ(0, reg_enable(&self->check, sizeof(int), 31));
++	ASSERT_NE(0, reg_enable(&self->check, sizeof(int), 32));
++	ASSERT_EQ(0, reg_disable(&self->check, 0));
++	ASSERT_EQ(0, reg_disable(&self->check, 31));
++
++#if BITS_PER_LONG == 8
++	/* Allow 0-64 bits for 64-bit */
++	ASSERT_EQ(0, reg_enable(&self->check, sizeof(long), 63));
++	ASSERT_NE(0, reg_enable(&self->check, sizeof(long), 64));
++	ASSERT_EQ(0, reg_disable(&self->check, 63));
++#endif
++
++	/* Disallowed sizes (everything beside 4 and 8) */
++	ASSERT_NE(0, reg_enable(&self->check, 1, 0));
++	ASSERT_NE(0, reg_enable(&self->check, 2, 0));
++	ASSERT_NE(0, reg_enable(&self->check, 3, 0));
++	ASSERT_NE(0, reg_enable(&self->check, 5, 0));
++	ASSERT_NE(0, reg_enable(&self->check, 6, 0));
++	ASSERT_NE(0, reg_enable(&self->check, 7, 0));
++	ASSERT_NE(0, reg_enable(&self->check, 9, 0));
++	ASSERT_NE(0, reg_enable(&self->check, 128, 0));
++}
++
++TEST_F(user, forks) {
++	int i;
++
++	/* Ensure COW pages get updated after fork */
++	ASSERT_EQ(0, reg_enable(&self->check, sizeof(int), 0));
++	ASSERT_EQ(0, self->check);
++
++	if (fork() == 0) {
++		/* Force COW */
++		self->check = 0;
++
++		/* Up to 1 sec for enablement */
++		for (i = 0; i < 10; ++i) {
++			usleep(100000);
++
++			if (self->check)
++				exit(0);
 +		}
 +
-+	mutex_unlock(&event_mutex);
++		exit(1);
++	}
 +
-+	return ret;
++	/* Allow generous time for COW, then enable */
++	usleep(100000);
++	ASSERT_EQ(0, change_event(true));
++
++	ASSERT_NE(-1, wait(&i));
++	ASSERT_EQ(0, WEXITSTATUS(i));
++
++	/* Ensure child doesn't disable parent */
++	if (fork() == 0)
++		exit(reg_disable(&self->check, 0));
++
++	ASSERT_NE(-1, wait(&i));
++	ASSERT_EQ(0, WEXITSTATUS(i));
++	ASSERT_EQ(1, self->check);
++	ASSERT_EQ(0, change_event(false));
++	ASSERT_EQ(0, self->check);
 +}
 +
- /*
-  * Handles the ioctl from user mode to register or alter operations.
-  */
-@@ -2108,6 +2191,12 @@ static long user_events_ioctl(struct file *file, unsigned int cmd,
- 		ret = user_events_ioctl_del(info, uarg);
- 		mutex_unlock(&group->reg_mutex);
- 		break;
++/* Waits up to 1 sec for enablement */
++static int clone_check(void *check)
++{
++	int i;
 +
-+	case DIAG_IOCSUNREG:
-+		mutex_lock(&group->reg_mutex);
-+		ret = user_events_ioctl_unreg(uarg);
-+		mutex_unlock(&group->reg_mutex);
-+		break;
- 	}
- 
- 	return ret;
++	for (i = 0; i < 10; ++i) {
++		usleep(100000);
++
++		if (*(long *)check)
++			return 0;
++	}
++
++	return 1;
++}
++
++TEST_F(user, clones) {
++	int i, stack_size = 4096;
++	void *stack = mmap(NULL, stack_size, PROT_READ | PROT_WRITE,
++			   MAP_PRIVATE | MAP_ANONYMOUS | MAP_STACK,
++			   -1, 0);
++
++	ASSERT_NE(MAP_FAILED, stack);
++	ASSERT_EQ(0, reg_enable(&self->check, sizeof(int), 0));
++	ASSERT_EQ(0, self->check);
++
++	/* Shared VM should see enablements */
++	ASSERT_NE(-1, clone(&clone_check, stack + stack_size,
++			    CLONE_VM | SIGCHLD, &self->check));
++
++	ASSERT_EQ(0, change_event(true));
++	ASSERT_NE(-1, wait(&i));
++	ASSERT_EQ(0, WEXITSTATUS(i));
++	munmap(stack, stack_size);
++	ASSERT_EQ(0, change_event(false));
++}
++
++int main(int argc, char **argv)
++{
++	return test_harness_run(argc, argv);
++}
 -- 
 2.25.1
 
