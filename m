@@ -2,69 +2,114 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 06842C6FD1C
-	for <linux-trace-kernel@archiver.kernel.org>; Fri, 24 Mar 2023 11:46:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E158C76196
+	for <linux-trace-kernel@archiver.kernel.org>; Fri, 24 Mar 2023 12:38:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230357AbjCXLqo (ORCPT
+        id S231667AbjCXMiB (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Fri, 24 Mar 2023 07:46:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52856 "EHLO
+        Fri, 24 Mar 2023 08:38:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43592 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230267AbjCXLqn (ORCPT
+        with ESMTP id S231501AbjCXMiA (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Fri, 24 Mar 2023 07:46:43 -0400
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 7A453212B1;
-        Fri, 24 Mar 2023 04:46:42 -0700 (PDT)
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 53C6211FB;
-        Fri, 24 Mar 2023 04:47:26 -0700 (PDT)
-Received: from FVFF77S0Q05N (unknown [10.57.56.6])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 9211E3F766;
-        Fri, 24 Mar 2023 04:46:40 -0700 (PDT)
-Date:   Fri, 24 Mar 2023 11:46:31 +0000
-From:   Mark Rutland <mark.rutland@arm.com>
-To:     Steven Rostedt <rostedt@goodmis.org>,
-        Florent Revest <revest@chromium.org>
-Cc:     linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
-        mhiramat@kernel.org, ast@kernel.org, daniel@iogearbox.net,
-        kpsingh@kernel.org, jolsa@kernel.org,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: Re: [PATCH v2 0/7] Refactor ftrace direct call APIs
-Message-ID: <ZB2Nl7fzpHoq5V20@FVFF77S0Q05N>
-References: <20230321140424.345218-1-revest@chromium.org>
- <20230323194355.3f714774@gandalf.local.home>
- <20230323220042.40ec4904@gandalf.local.home>
+        Fri, 24 Mar 2023 08:38:00 -0400
+Received: from mail-m118111.qiye.163.com (mail-m118111.qiye.163.com [115.236.118.111])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D60843C2F;
+        Fri, 24 Mar 2023 05:37:57 -0700 (PDT)
+Received: from ubuntu.localdomain (unknown [117.133.56.22])
+        by mail-m118111.qiye.163.com (Hmail) with ESMTPA id 650CD580A4D;
+        Fri, 24 Mar 2023 20:37:48 +0800 (CST)
+From:   Donglin Peng <pengdonglin@sangfor.com.cn>
+To:     mhiramat@kernel.org, rostedt@goodmis.org, linux@armlinux.org.uk,
+        mark.rutland@arm.com, will@kernel.org, catalin.marinas@arm.com,
+        palmer@dabbelt.com, paul.walmsley@sifive.com, tglx@linutronix.de,
+        dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com,
+        chenhuacai@kernel.org, zhangqing@loongson.cn, kernel@xen0n.name,
+        mingo@redhat.com, peterz@infradead.org, xiehuan09@gmail.com,
+        dinghui@sangfor.com.cn, huangcun@sangfor.com.cn,
+        dolinux.peng@gmail.com
+Cc:     linux-trace-kernel@vger.kernel.org, loongarch@lists.linux.dev,
+        linux-riscv@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Donglin Peng <pengdonglin@sangfor.com.cn>
+Subject: [PATCH v7 8/8] selftests/ftrace: Add funcgraph-retval test case
+Date:   Fri, 24 Mar 2023 05:37:31 -0700
+Message-Id: <20230324123731.3801920-9-pengdonglin@sangfor.com.cn>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20230324123731.3801920-1-pengdonglin@sangfor.com.cn>
+References: <20230324123731.3801920-1-pengdonglin@sangfor.com.cn>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230323220042.40ec4904@gandalf.local.home>
+Content-Transfer-Encoding: 8bit
+X-HM-Spam-Status: e1kfGhgUHx5ZQUpXWQgPGg8OCBgUHx5ZQUlOS1dZFg8aDwILHllBWSg2Ly
+        tZV1koWUFITzdXWS1ZQUlXWQ8JGhUIEh9ZQVlCSUIdVk5NGEhPSkxIGEpDTVUTARMWGhIXJBQOD1
+        lXWRgSC1lBWUpKTFVKSEhVTk1VSUlZV1kWGg8SFR0UWUFZT0tIVUpKS09ISFVKS0tVS1kG
+X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6OAg6Sio4Lj0cHw8LT0gXEQ0t
+        HDwwChlVSlVKTUxCTU1KT01CQ0NLVTMWGhIXVQseFRwfFBUcFxIVOwgaFRwdFAlVGBQWVRgVRVlX
+        WRILWUFZSkpMVUpISFVOTVVJSVlXWQgBWUFIQk9MNwY+
+X-HM-Tid: 0a8713a00efc2eb7kusn650cd580a4d
+X-HM-MType: 1
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On Thu, Mar 23, 2023 at 10:00:42PM -0400, Steven Rostedt wrote:
-> On Thu, 23 Mar 2023 19:43:55 -0400
-> Steven Rostedt <rostedt@goodmis.org> wrote:
-> 
-> > Since that commit only contains the updates for the direct trampolines that
-> > ARM64 needs, and I'm not going to rebase that branch, you can just merge it
-> > into the ARM64 tree so that you can base your changes on it. Make sure you
-> > merge that commit, not the branch, as I have more tracing specific patches
-> > on top of that commit.
-> 
-> I just made it easier for you. I created a signed tag: trace-direct-v6.3-rc3
-> 
-> So just pull from:
-> 
->   git://git.kernel.org/pub/scm/linux/kernel/git/trace/linux-trace.git
-> 
-> tag: trace-direct-v6.3-rc3
+Add a test case for the funcgraph-retval and funcgraph-retval-hex
+trace options.
 
-Thanks Steve; much appreciated!
+Signed-off-by: Donglin Peng <pengdonglin@sangfor.com.cn>
+---
+ .../ftrace/test.d/ftrace/fgraph-retval.tc     | 43 +++++++++++++++++++
+ 1 file changed, 43 insertions(+)
+ create mode 100644 tools/testing/selftests/ftrace/test.d/ftrace/fgraph-retval.tc
 
-Florent, can you post a new spinf of the remaining arm64 bits rebased atop
-that?
+diff --git a/tools/testing/selftests/ftrace/test.d/ftrace/fgraph-retval.tc b/tools/testing/selftests/ftrace/test.d/ftrace/fgraph-retval.tc
+new file mode 100644
+index 000000000000..bee466bef8b2
+--- /dev/null
++++ b/tools/testing/selftests/ftrace/test.d/ftrace/fgraph-retval.tc
+@@ -0,0 +1,43 @@
++#!/bin/sh
++# SPDX-License-Identifier: GPL-2.0
++# description: ftrace - function graph print function return value
++# requires: set_graph_function options/funcgraph-retval options/funcgraph-retval-hex function_graph:tracer
++
++# Make sure that funcgraph-retval works
++
++fail() { # msg
++    echo $1
++    exit_fail
++}
++
++disable_tracing
++clear_trace
++
++echo proc_reg_write > set_graph_function
++echo function_graph > current_tracer
++echo funcgraph-retval > trace_options
++
++enable_tracing
++
++set +e
++echo > /proc/interrupts 2>/dev/null
++set -e
++
++disable_tracing
++
++: "Test printing the error code in signed decimal format"
++echo nofuncgraph-retval-hex > trace_options
++count=`cat trace | grep 'proc_reg_write = -5' | wc -l`
++if [ $count -eq 0 ]; then
++    fail "Return value can not be printed in signed decimal format"
++fi
++
++: "Test printing the error code in hexadecimal format"
++echo funcgraph-retval-hex > trace_options
++count=`cat trace | grep 'proc_reg_write' | grep 'fffffffb' | wc -l`
++if [ $count -eq 0 ]; then
++    fail "Return value can not be printed in hexadecimal format"
++fi
++
++exit 0
++
+-- 
+2.25.1
 
-Thanks,
-Mark.
