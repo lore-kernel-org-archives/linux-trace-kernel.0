@@ -2,131 +2,94 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 80867C6FD20
-	for <linux-trace-kernel@archiver.kernel.org>; Fri, 24 Mar 2023 19:24:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CC70C6FD1C
+	for <linux-trace-kernel@archiver.kernel.org>; Fri, 24 Mar 2023 21:07:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231608AbjCXTYK (ORCPT
+        id S232306AbjCXVHq (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Fri, 24 Mar 2023 15:24:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45758 "EHLO
+        Fri, 24 Mar 2023 17:07:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43552 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231596AbjCXTYH (ORCPT
+        with ESMTP id S231977AbjCXVHe (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Fri, 24 Mar 2023 15:24:07 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B319711E95;
-        Fri, 24 Mar 2023 12:23:16 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 9DF67B82546;
-        Fri, 24 Mar 2023 19:23:14 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B677BC433D2;
-        Fri, 24 Mar 2023 19:23:12 +0000 (UTC)
-Date:   Fri, 24 Mar 2023 15:23:09 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Zheng Yejian <zhengyejian1@huawei.com>
-Cc:     <mhiramat@kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-trace-kernel@vger.kernel.org>
-Subject: Re: [PATCH] ring-buffer: Fix race while reader and writer are on
- the same page
-Message-ID: <20230324152309.134f361a@gandalf.local.home>
-In-Reply-To: <20230324125037.2719020-1-zhengyejian1@huawei.com>
-References: <20230324125037.2719020-1-zhengyejian1@huawei.com>
-X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+        Fri, 24 Mar 2023 17:07:34 -0400
+Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7D42E1F5FD;
+        Fri, 24 Mar 2023 14:07:26 -0700 (PDT)
+Received: from pps.filterd (m0246632.ppops.net [127.0.0.1])
+        by mx0b-00069f02.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 32OL4P03006442;
+        Fri, 24 Mar 2023 21:07:09 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
+ subject : date : message-id : in-reply-to : references : mime-version :
+ content-type : content-transfer-encoding; s=corp-2022-7-12;
+ bh=bOEEQ3ULyAOwpIjBOULA6je1JKKwgPN/L4E/At7MsoM=;
+ b=ebH+92K+mGejUZfbDCwboi1xZCiN1uFDhab48APOz33G1M6g3EA2J38Jlm/eq7mgZ5Fd
+ oUDEcoDp74JOiJlqH+8szRcRREomoJVrztlGhXlGVbhqNfQCaPZUPsS9TAfFHH/EixEn
+ KpHDYSkx6j1ONdoG5YJqNF9sJP6BD4T4EDUZLMLH3RadAhRXCuQvk1djGVkkFtNTDErX
+ 2HkggNYNCAvTnqRx1MrGGGOCEoy0KCZpO/uLgfKG3jMud3OBIWE9IvBw0lgoTWPOjxXW
+ bOg3Z4jWFUVW1mJjbRnj7cTxf3zu6qy3sZcqVwVptVOCNN8drcOf8NRnGyOlan+Dub4t CA== 
+Received: from iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta03.appoci.oracle.com [130.35.103.27])
+        by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3phkey806v-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 24 Mar 2023 21:07:09 +0000
+Received: from pps.filterd (iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
+        by iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (8.17.1.5/8.17.1.5) with ESMTP id 32OKa6bY027823;
+        Fri, 24 Mar 2023 21:07:09 GMT
+Received: from pps.reinject (localhost [127.0.0.1])
+        by iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 3pgxk4se4d-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 24 Mar 2023 21:07:08 +0000
+Received: from iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
+        by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 32OL76fA017159;
+        Fri, 24 Mar 2023 21:07:08 GMT
+Received: from ca-mkp2.ca.oracle.com.com (mpeterse-ol9.allregionaliads.osdevelopmeniad.oraclevcn.com [100.100.251.135])
+        by iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTP id 3pgxk4se2p-5;
+        Fri, 24 Mar 2023 21:07:08 +0000
+From:   "Martin K. Petersen" <martin.petersen@oracle.com>
+To:     quic_asutoshd@quicinc.com, quic_cang@quicinc.com,
+        quic_nguyenb@quicinc.com, bvanassche@acm.org, mani@kernel.org,
+        stanley.chu@mediatek.com, adrian.hunter@intel.com,
+        beanhuo@micron.com, avri.altman@wdc.com, junwoo80.lee@samsung.com,
+        Ziqi Chen <quic_ziqichen@quicinc.com>
+Cc:     "Martin K . Petersen" <martin.petersen@oracle.com>,
+        linux-scsi@vger.kernel.org, Alim Akhtar <alim.akhtar@samsung.com>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
+Subject: Re: [PATCH v7] scsi: ufs: core: Add trace event for MCQ
+Date:   Fri, 24 Mar 2023 17:06:56 -0400
+Message-Id: <167969123965.59527.12606811786229269286.b4-ty@oracle.com>
+X-Mailer: git-send-email 2.40.0
+In-Reply-To: <1678866271-49601-1-git-send-email-quic_ziqichen@quicinc.com>
+References: <1678866271-49601-1-git-send-email-quic_ziqichen@quicinc.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.254,Aquarius:18.0.942,Hydra:6.0.573,FMLib:17.11.170.22
+ definitions=2023-03-24_11,2023-03-24_01,2023-02-09_01
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 suspectscore=0
+ malwarescore=0 spamscore=0 mlxlogscore=905 adultscore=0 mlxscore=0
+ phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2303200000 definitions=main-2303240160
+X-Proofpoint-GUID: tJB-xe9-xJlBGOgc9-B5E--NPDFLft5V
+X-Proofpoint-ORIG-GUID: tJB-xe9-xJlBGOgc9-B5E--NPDFLft5V
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On Fri, 24 Mar 2023 20:50:37 +0800
-Zheng Yejian <zhengyejian1@huawei.com> wrote:
+On Wed, 15 Mar 2023 15:44:25 +0800, Ziqi Chen wrote:
 
-> Fixes: 77ae365eca89 ("ring-buffer: make lockless")
-> Signed-off-by: Zheng Yejian <zhengyejian1@huawei.com>
-> ---
->  kernel/trace/ring_buffer.c | 14 +++++++++++++-
->  1 file changed, 13 insertions(+), 1 deletion(-)
+> Add MCQ hardware queue ID in the existing trace event
+> ufshcd_command().
 > 
-> diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
-> index c6f47b6cfd5f..79fd5e10ee05 100644
-> --- a/kernel/trace/ring_buffer.c
-> +++ b/kernel/trace/ring_buffer.c
-> @@ -2942,6 +2942,13 @@ rb_update_event(struct ring_buffer_per_cpu *cpu_buffer,
->  		event->array[0] = length;
->  	} else
->  		event->type_len = DIV_ROUND_UP(length, RB_ALIGNMENT);
-> +
-> +	/*
-> +	 * The 'event' may be reserved from the page which is reading
-> +	 * by reader, make sure 'event' is completely updated before
-> +	 * reader_page->page->commit being set.
-> +	 */
-> +	smp_wmb();
+> 
 
-This isn't the place to put this. We only care before the commit is
-updated, not at *ever* update to the event (this can be called several
-times before a commit).
+Applied to 6.4/scsi-queue, thanks!
 
-If we need to add a smp_wmb() it's best to be in rb_set_commit_to_write()
+[1/1] scsi: ufs: core: Add trace event for MCQ
+      https://git.kernel.org/mkp/scsi/c/4a52338bf288
 
->  }
->  
->  static unsigned rb_calculate_event_length(unsigned length)
-> @@ -4684,7 +4691,12 @@ rb_get_reader_page(struct ring_buffer_per_cpu *cpu_buffer)
->  
->  	/*
->  	 * Make sure we see any padding after the write update
-> -	 * (see rb_reset_tail())
-> +	 * (see rb_reset_tail()).
-> +	 *
-> +	 * In addition, writer may be writing on the reader page
-> +	 * if the page has not been fully filled, so the read barrier
-> +	 * is also needed to make sure we see the completely updated
-> +	 * event that reserved by writer (see rb_update_event()).
->  	 */
->  	smp_rmb();
->  
-
-I think we want this instead:
-
-diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
-index 2d5c3caff32d..22d05cd04a3a 100644
---- a/kernel/trace/ring_buffer.c
-+++ b/kernel/trace/ring_buffer.c
-@@ -3092,6 +3092,10 @@ rb_set_commit_to_write(struct ring_buffer_per_cpu *cpu_buffer)
- 		if (RB_WARN_ON(cpu_buffer,
- 			       rb_is_reader_page(cpu_buffer->tail_page)))
- 			return;
-+		/*
-+		 * No need for a memory barrier here, as the update
-+		 * of the tail_page did it for this page.
-+		 */
- 		local_set(&cpu_buffer->commit_page->page->commit,
- 			  rb_page_write(cpu_buffer->commit_page));
- 		rb_inc_page(&cpu_buffer->commit_page);
-@@ -3101,6 +3105,8 @@ rb_set_commit_to_write(struct ring_buffer_per_cpu *cpu_buffer)
- 	while (rb_commit_index(cpu_buffer) !=
- 	       rb_page_write(cpu_buffer->commit_page)) {
- 
-+		/* Make sure the readers see the content of what is committed. */
-+		smp_wmb();
- 		local_set(&cpu_buffer->commit_page->page->commit,
- 			  rb_page_write(cpu_buffer->commit_page));
- 		RB_WARN_ON(cpu_buffer,
-@@ -4676,7 +4682,12 @@ rb_get_reader_page(struct ring_buffer_per_cpu *cpu_buffer)
- 
- 	/*
- 	 * Make sure we see any padding after the write update
--	 * (see rb_reset_tail())
-+	 * (see rb_reset_tail()).
-+	 *
-+	 * In addition, a writer may be writing on the reader page
-+	 * if the page has not been fully filled, so the read barrier
-+	 * is also needed to make sure we see the completely updated
-+	 * event reserved by the writer (see rb_tail_page_update()).
- 	 */
- 	smp_rmb();
- 
+-- 
+Martin K. Petersen	Oracle Linux Engineering
