@@ -2,95 +2,131 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F1FD9C76196
-	for <linux-trace-kernel@archiver.kernel.org>; Fri, 24 Mar 2023 18:03:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 80867C6FD20
+	for <linux-trace-kernel@archiver.kernel.org>; Fri, 24 Mar 2023 19:24:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232461AbjCXSDo (ORCPT
+        id S231608AbjCXTYK (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Fri, 24 Mar 2023 14:03:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47618 "EHLO
+        Fri, 24 Mar 2023 15:24:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45758 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231968AbjCXSC0 (ORCPT
+        with ESMTP id S231596AbjCXTYH (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Fri, 24 Mar 2023 14:02:26 -0400
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 210A08A59;
-        Fri, 24 Mar 2023 11:02:06 -0700 (PDT)
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 28299113E;
-        Fri, 24 Mar 2023 11:02:05 -0700 (PDT)
-Received: from FVFF77S0Q05N (unknown [10.57.56.40])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id A01213F71E;
-        Fri, 24 Mar 2023 11:01:18 -0700 (PDT)
-Date:   Fri, 24 Mar 2023 18:01:13 +0000
-From:   Mark Rutland <mark.rutland@arm.com>
-To:     Florent Revest <revest@chromium.org>
-Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-trace-kernel@vger.kernel.org, bpf@vger.kernel.org,
-        catalin.marinas@arm.com, will@kernel.org, rostedt@goodmis.org,
-        mhiramat@kernel.org, ast@kernel.org, daniel@iogearbox.net,
-        andrii@kernel.org, kpsingh@kernel.org, jolsa@kernel.org,
-        xukuohai@huaweicloud.com, lihuafei1@huawei.com
-Subject: Re: [PATCH v3 2/4] arm64: ftrace: Simplify get_ftrace_plt
-Message-ID: <ZB3laWS5+X13nhvi@FVFF77S0Q05N>
-References: <20230324171451.2752302-1-revest@chromium.org>
- <20230324171451.2752302-3-revest@chromium.org>
+        Fri, 24 Mar 2023 15:24:07 -0400
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B319711E95;
+        Fri, 24 Mar 2023 12:23:16 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 9DF67B82546;
+        Fri, 24 Mar 2023 19:23:14 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B677BC433D2;
+        Fri, 24 Mar 2023 19:23:12 +0000 (UTC)
+Date:   Fri, 24 Mar 2023 15:23:09 -0400
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     Zheng Yejian <zhengyejian1@huawei.com>
+Cc:     <mhiramat@kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-trace-kernel@vger.kernel.org>
+Subject: Re: [PATCH] ring-buffer: Fix race while reader and writer are on
+ the same page
+Message-ID: <20230324152309.134f361a@gandalf.local.home>
+In-Reply-To: <20230324125037.2719020-1-zhengyejian1@huawei.com>
+References: <20230324125037.2719020-1-zhengyejian1@huawei.com>
+X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230324171451.2752302-3-revest@chromium.org>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On Fri, Mar 24, 2023 at 06:14:49PM +0100, Florent Revest wrote:
-> Following recent refactorings, the get_ftrace_plt function only ever
-> gets called with addr = FTRACE_ADDR so its code can be simplified to
-> always return the ftrace trampoline plt.
-> 
-> Signed-off-by: Florent Revest <revest@chromium.org>
+On Fri, 24 Mar 2023 20:50:37 +0800
+Zheng Yejian <zhengyejian1@huawei.com> wrote:
 
-Acked-by: Mark Rutland <mark.rutland@arm.com>
-
-Mark.
-
+> Fixes: 77ae365eca89 ("ring-buffer: make lockless")
+> Signed-off-by: Zheng Yejian <zhengyejian1@huawei.com>
 > ---
->  arch/arm64/kernel/ftrace.c | 10 +++++-----
->  1 file changed, 5 insertions(+), 5 deletions(-)
+>  kernel/trace/ring_buffer.c | 14 +++++++++++++-
+>  1 file changed, 13 insertions(+), 1 deletion(-)
 > 
-> diff --git a/arch/arm64/kernel/ftrace.c b/arch/arm64/kernel/ftrace.c
-> index 758436727fba..432626c866a8 100644
-> --- a/arch/arm64/kernel/ftrace.c
-> +++ b/arch/arm64/kernel/ftrace.c
-> @@ -195,15 +195,15 @@ int ftrace_update_ftrace_func(ftrace_func_t func)
->  	return ftrace_modify_code(pc, 0, new, false);
+> diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
+> index c6f47b6cfd5f..79fd5e10ee05 100644
+> --- a/kernel/trace/ring_buffer.c
+> +++ b/kernel/trace/ring_buffer.c
+> @@ -2942,6 +2942,13 @@ rb_update_event(struct ring_buffer_per_cpu *cpu_buffer,
+>  		event->array[0] = length;
+>  	} else
+>  		event->type_len = DIV_ROUND_UP(length, RB_ALIGNMENT);
+> +
+> +	/*
+> +	 * The 'event' may be reserved from the page which is reading
+> +	 * by reader, make sure 'event' is completely updated before
+> +	 * reader_page->page->commit being set.
+> +	 */
+> +	smp_wmb();
+
+This isn't the place to put this. We only care before the commit is
+updated, not at *ever* update to the event (this can be called several
+times before a commit).
+
+If we need to add a smp_wmb() it's best to be in rb_set_commit_to_write()
+
 >  }
 >  
-> -static struct plt_entry *get_ftrace_plt(struct module *mod, unsigned long addr)
-> +static struct plt_entry *get_ftrace_plt(struct module *mod)
->  {
->  #ifdef CONFIG_ARM64_MODULE_PLTS
->  	struct plt_entry *plt = mod->arch.ftrace_trampolines;
+>  static unsigned rb_calculate_event_length(unsigned length)
+> @@ -4684,7 +4691,12 @@ rb_get_reader_page(struct ring_buffer_per_cpu *cpu_buffer)
 >  
-> -	if (addr == FTRACE_ADDR)
-> -		return &plt[FTRACE_PLT_IDX];
-> -#endif
-> +	return &plt[FTRACE_PLT_IDX];
-> +#else
->  	return NULL;
-> +#endif
->  }
+>  	/*
+>  	 * Make sure we see any padding after the write update
+> -	 * (see rb_reset_tail())
+> +	 * (see rb_reset_tail()).
+> +	 *
+> +	 * In addition, writer may be writing on the reader page
+> +	 * if the page has not been fully filled, so the read barrier
+> +	 * is also needed to make sure we see the completely updated
+> +	 * event that reserved by writer (see rb_update_event()).
+>  	 */
+>  	smp_rmb();
 >  
->  static bool reachable_by_bl(unsigned long addr, unsigned long pc)
-> @@ -270,7 +270,7 @@ static bool ftrace_find_callable_addr(struct dyn_ftrace *rec,
->  	if (WARN_ON(!mod))
->  		return false;
->  
-> -	plt = get_ftrace_plt(mod, *addr);
-> +	plt = get_ftrace_plt(mod);
->  	if (!plt) {
->  		pr_err("ftrace: no module PLT for %ps\n", (void *)*addr);
->  		return false;
-> -- 
-> 2.40.0.348.gf938b09366-goog
-> 
+
+I think we want this instead:
+
+diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
+index 2d5c3caff32d..22d05cd04a3a 100644
+--- a/kernel/trace/ring_buffer.c
++++ b/kernel/trace/ring_buffer.c
+@@ -3092,6 +3092,10 @@ rb_set_commit_to_write(struct ring_buffer_per_cpu *cpu_buffer)
+ 		if (RB_WARN_ON(cpu_buffer,
+ 			       rb_is_reader_page(cpu_buffer->tail_page)))
+ 			return;
++		/*
++		 * No need for a memory barrier here, as the update
++		 * of the tail_page did it for this page.
++		 */
+ 		local_set(&cpu_buffer->commit_page->page->commit,
+ 			  rb_page_write(cpu_buffer->commit_page));
+ 		rb_inc_page(&cpu_buffer->commit_page);
+@@ -3101,6 +3105,8 @@ rb_set_commit_to_write(struct ring_buffer_per_cpu *cpu_buffer)
+ 	while (rb_commit_index(cpu_buffer) !=
+ 	       rb_page_write(cpu_buffer->commit_page)) {
+ 
++		/* Make sure the readers see the content of what is committed. */
++		smp_wmb();
+ 		local_set(&cpu_buffer->commit_page->page->commit,
+ 			  rb_page_write(cpu_buffer->commit_page));
+ 		RB_WARN_ON(cpu_buffer,
+@@ -4676,7 +4682,12 @@ rb_get_reader_page(struct ring_buffer_per_cpu *cpu_buffer)
+ 
+ 	/*
+ 	 * Make sure we see any padding after the write update
+-	 * (see rb_reset_tail())
++	 * (see rb_reset_tail()).
++	 *
++	 * In addition, a writer may be writing on the reader page
++	 * if the page has not been fully filled, so the read barrier
++	 * is also needed to make sure we see the completely updated
++	 * event reserved by the writer (see rb_tail_page_update()).
+ 	 */
+ 	smp_rmb();
+ 
