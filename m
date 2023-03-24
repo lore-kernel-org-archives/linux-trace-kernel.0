@@ -2,129 +2,171 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B285C6FD20
-	for <linux-trace-kernel@archiver.kernel.org>; Fri, 24 Mar 2023 12:47:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D2520C6FD20
+	for <linux-trace-kernel@archiver.kernel.org>; Fri, 24 Mar 2023 12:58:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230329AbjCXMrl (ORCPT
+        id S231150AbjCXM6U (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Fri, 24 Mar 2023 08:47:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34658 "EHLO
+        Fri, 24 Mar 2023 08:58:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43712 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229522AbjCXMrl (ORCPT
+        with ESMTP id S231393AbjCXM6T (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Fri, 24 Mar 2023 08:47:41 -0400
-Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 15CCB1C591;
-        Fri, 24 Mar 2023 05:47:38 -0700 (PDT)
-Received: from dggpeml100012.china.huawei.com (unknown [172.30.72.54])
-        by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4Pjhm93H8nzrSQh;
-        Fri, 24 Mar 2023 20:46:33 +0800 (CST)
-Received: from localhost.localdomain (10.67.175.61) by
- dggpeml100012.china.huawei.com (7.185.36.121) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.21; Fri, 24 Mar 2023 20:47:36 +0800
-From:   Zheng Yejian <zhengyejian1@huawei.com>
-To:     <rostedt@goodmis.org>, <mhiramat@kernel.org>
-CC:     <linux-kernel@vger.kernel.org>,
-        <linux-trace-kernel@vger.kernel.org>, <zhengyejian1@huawei.com>
-Subject: [PATCH] ring-buffer: Fix race while reader and writer are on the same page
-Date:   Fri, 24 Mar 2023 20:50:37 +0800
-Message-ID: <20230324125037.2719020-1-zhengyejian1@huawei.com>
-X-Mailer: git-send-email 2.25.1
+        Fri, 24 Mar 2023 08:58:19 -0400
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 7F0AC86A0;
+        Fri, 24 Mar 2023 05:58:12 -0700 (PDT)
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 1B64711FB;
+        Fri, 24 Mar 2023 05:58:56 -0700 (PDT)
+Received: from FVFF77S0Q05N (unknown [10.57.56.6])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 1BC043F766;
+        Fri, 24 Mar 2023 05:58:07 -0700 (PDT)
+Date:   Fri, 24 Mar 2023 12:57:18 +0000
+From:   Mark Rutland <mark.rutland@arm.com>
+To:     Donglin Peng <pengdonglin@sangfor.com.cn>
+Cc:     mhiramat@kernel.org, rostedt@goodmis.org, linux@armlinux.org.uk,
+        will@kernel.org, catalin.marinas@arm.com, palmer@dabbelt.com,
+        paul.walmsley@sifive.com, tglx@linutronix.de,
+        dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com,
+        chenhuacai@kernel.org, zhangqing@loongson.cn, kernel@xen0n.name,
+        mingo@redhat.com, peterz@infradead.org, xiehuan09@gmail.com,
+        dinghui@sangfor.com.cn, huangcun@sangfor.com.cn,
+        dolinux.peng@gmail.com, linux-trace-kernel@vger.kernel.org,
+        loongarch@lists.linux.dev, linux-riscv@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v7 4/8] arm64: ftrace: Enable HAVE_FUNCTION_GRAPH_RETVAL
+Message-ID: <ZB2eLsD4aoR3LEOV@FVFF77S0Q05N>
+References: <20230324123731.3801920-1-pengdonglin@sangfor.com.cn>
+ <20230324123731.3801920-5-pengdonglin@sangfor.com.cn>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [10.67.175.61]
-X-ClientProxiedBy: dggems706-chm.china.huawei.com (10.3.19.183) To
- dggpeml100012.china.huawei.com (7.185.36.121)
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230324123731.3801920-5-pengdonglin@sangfor.com.cn>
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-When user reads file 'trace_pipe', kernel keeps printing following logs
-that warn at "cpu_buffer->reader_page->read > rb_page_size(reader)".
-It just looks like there's an infinite loop in tracing_read_pipe().
-This problem occurs several times on arm64 when testing v5.10 and below.
+On Fri, Mar 24, 2023 at 05:37:27AM -0700, Donglin Peng wrote:
+> The commit d4815c5d1bbd ("function_graph: Support recording and
+> printing the return value of function") laid the groundwork for the
+> for the funcgraph-retval, and this modification makes it available
+> on the ARM64 platform.
+> 
+> We introduce a new structure called fgraph_ret_regs for the ARM64
+> platform to hold return registers and the frame pointer. We then
+> fill its content in the return_to_handler and pass its address to
+> the function ftrace_return_to_handler to record the return value.
 
-  Call trace:
-   rb_get_reader_page+0x248/0x1300
-   rb_buffer_peek+0x34/0x160
-   ring_buffer_peek+0xbc/0x224
-   peek_next_entry+0x98/0xbc
-   __find_next_entry+0xc4/0x1c0
-   trace_find_next_entry_inc+0x30/0x94
-   tracing_read_pipe+0x198/0x304
-   vfs_read+0xb4/0x1e0
-   ksys_read+0x74/0x100
-   __arm64_sys_read+0x24/0x30
-   el0_svc_common.constprop.0+0x7c/0x1bc
-   do_el0_svc+0x2c/0x94
-   el0_svc+0x20/0x30
-   el0_sync_handler+0xb0/0xb4
-   el0_sync+0x160/0x180
+I'm happy with this, or with using ftrace_regs and capturing more regs here.
 
-Then I dump the vmcore and look into the problematic per_cpu ring_buffer,
-I found that tail_page/commit_page/reader_page are on the same page while
-reader_page->read is obviously abnormal:
-  tail_page == commit_page == reader_page == {
-    .write = 0x100d20,
-    .read = 0x8f9f4805,  // Far greater than 0xd20, obviously abnormal!!!
-    .entries = 0x10004c,
-    .real_end = 0x0,
-    .page = {
-      .time_stamp = 0x857257416af0,
-      .commit = 0xd20,  // This page hasn't been full filled.
-      // .data[0...0xd20] seems normal
-    }
- }
+This overall looks good, but there's one functional issue and a couple of minor
+nits which I've detailed below.
 
-The root cause is most likely the race that reader and writer are on the
-same page while reader saw an event that not fully committed by writer.
+> 
+> Signed-off-by: Donglin Peng <pengdonglin@sangfor.com.cn>
+> ---
+>  arch/arm64/Kconfig               |  1 +
+>  arch/arm64/include/asm/ftrace.h  | 23 +++++++++++++++++++++++
+>  arch/arm64/kernel/entry-ftrace.S |  9 +++++----
+>  3 files changed, 29 insertions(+), 4 deletions(-)
+> 
+> diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
+> index 1023e896d46b..48856d230800 100644
+> --- a/arch/arm64/Kconfig
+> +++ b/arch/arm64/Kconfig
+> @@ -195,6 +195,7 @@ config ARM64
+>  	select HAVE_FTRACE_MCOUNT_RECORD
+>  	select HAVE_FUNCTION_TRACER
+>  	select HAVE_FUNCTION_ERROR_INJECTION
+> +	select HAVE_FUNCTION_GRAPH_RETVAL if HAVE_FUNCTION_GRAPH_TRACER
+>  	select HAVE_FUNCTION_GRAPH_TRACER
+>  	select HAVE_GCC_PLUGINS
+>  	select HAVE_HW_BREAKPOINT if PERF_EVENTS
+> diff --git a/arch/arm64/include/asm/ftrace.h b/arch/arm64/include/asm/ftrace.h
+> index 1c2672bbbf37..f68dcc41be3b 100644
+> --- a/arch/arm64/include/asm/ftrace.h
+> +++ b/arch/arm64/include/asm/ftrace.h
+> @@ -170,4 +170,27 @@ static inline bool arch_syscall_match_sym_name(const char *sym,
+>  }
+>  #endif /* ifndef __ASSEMBLY__ */
+>  
+> +#ifndef __ASSEMBLY__
+> +
+> +#ifdef CONFIG_HAVE_FUNCTION_GRAPH_RETVAL
+> +struct fgraph_ret_regs {
+> +	/* x0 - x7 */
+> +	u64 regs[8];
+> +
+> +	u64 fp;
+> +};
 
-To fix this, add memory barriers to make sure that reader can see every
-completely committed event. Since commit a0fcaaed0c46 ("ring-buffer: Fix
-race between reset page and reading page") has added the read barrier in
-rb_get_reader_page(), here we just need to add the write barrier.
+As a minor nit, for ftrace_regs we used `unsigned long` rather than `u64`;
+could we do the same here for consistency?
 
-Fixes: 77ae365eca89 ("ring-buffer: make lockless")
-Signed-off-by: Zheng Yejian <zhengyejian1@huawei.com>
----
- kernel/trace/ring_buffer.c | 14 +++++++++++++-
- 1 file changed, 13 insertions(+), 1 deletion(-)
+This will need to be padded to 16 bytes, as within the kernel, arm64 requires
+the SP to be aligned to 16 bytes at all time. Please can you add an `__unused`
+field, like we have in ftrace_regs, to ensure that?
 
-diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
-index c6f47b6cfd5f..79fd5e10ee05 100644
---- a/kernel/trace/ring_buffer.c
-+++ b/kernel/trace/ring_buffer.c
-@@ -2942,6 +2942,13 @@ rb_update_event(struct ring_buffer_per_cpu *cpu_buffer,
- 		event->array[0] = length;
- 	} else
- 		event->type_len = DIV_ROUND_UP(length, RB_ALIGNMENT);
-+
-+	/*
-+	 * The 'event' may be reserved from the page which is reading
-+	 * by reader, make sure 'event' is completely updated before
-+	 * reader_page->page->commit being set.
-+	 */
-+	smp_wmb();
- }
- 
- static unsigned rb_calculate_event_length(unsigned length)
-@@ -4684,7 +4691,12 @@ rb_get_reader_page(struct ring_buffer_per_cpu *cpu_buffer)
- 
- 	/*
- 	 * Make sure we see any padding after the write update
--	 * (see rb_reset_tail())
-+	 * (see rb_reset_tail()).
-+	 *
-+	 * In addition, writer may be writing on the reader page
-+	 * if the page has not been fully filled, so the read barrier
-+	 * is also needed to make sure we see the completely updated
-+	 * event that reserved by writer (see rb_update_event()).
- 	 */
- 	smp_rmb();
- 
--- 
-2.25.1
+> +
+> +static inline unsigned long fgraph_ret_regs_return_value(struct fgraph_ret_regs *ret_regs)
+> +{
+> +	return ret_regs->regs[0];
+> +}
+> +
+> +static inline unsigned long fgraph_ret_regs_frame_pointer(struct fgraph_ret_regs *ret_regs)
+> +{
+> +	return ret_regs->fp;
+> +}
+> +#endif
+> +
+> +#endif
+> +
+>  #endif /* __ASM_FTRACE_H */
+> diff --git a/arch/arm64/kernel/entry-ftrace.S b/arch/arm64/kernel/entry-ftrace.S
+> index 350ed81324ac..8ac6f952e68f 100644
+> --- a/arch/arm64/kernel/entry-ftrace.S
+> +++ b/arch/arm64/kernel/entry-ftrace.S
+> @@ -270,14 +270,15 @@ SYM_FUNC_END(ftrace_stub_graph)
+>   */
+>  SYM_CODE_START(return_to_handler)
+>  	/* save return value regs */
+> -	sub sp, sp, #64
+> +	sub sp, sp, #72
+>  	stp x0, x1, [sp]
+>  	stp x2, x3, [sp, #16]
+>  	stp x4, x5, [sp, #32]
+>  	stp x6, x7, [sp, #48]
+> +	str x29,    [sp, #64]		//     parent's fp
 
+As above, this will need to be padded to keep the stack aligned to 16 bytes,
+and I'd prefer if we could use asm-offsets so that we can have something like:
+
+	sub	sp, sp, #FRET_REGS_SIZE
+	stp	x0, x1, [sp, #FRET_REGS_X0]
+	stp	x2, x3, [sp, #FRET_REGS_X2]
+	stp	x4, x5, [sp, #FRET_REGS_X4]
+	stp	x6, x7, [sp, #FRET_REGS_X6]
+	str	x29, [sp, FRET_REGS_FP]
+
+>  
+> -	mov	x0, x29			//     parent's fp
+> -	bl	ftrace_return_to_handler// addr = ftrace_return_to_hander(fp);
+> +	mov	x0, sp
+> +	bl	ftrace_return_to_handler// addr = ftrace_return_to_hander(regs);
+>  	mov	x30, x0			// restore the original return address
+>  
+>  	/* restore return value regs */
+> @@ -285,7 +286,7 @@ SYM_CODE_START(return_to_handler)
+>  	ldp x2, x3, [sp, #16]
+>  	ldp x4, x5, [sp, #32]
+>  	ldp x6, x7, [sp, #48]
+> -	add sp, sp, #64
+> +	add sp, sp, #72
+
+Likewise here.
+
+Other than that, this looks good to me, thanks for respinning!
+
+Thanks,
+Mark.
