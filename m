@@ -2,94 +2,200 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CC70C6FD1C
-	for <linux-trace-kernel@archiver.kernel.org>; Fri, 24 Mar 2023 21:07:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AC4E4C6FD1C
+	for <linux-trace-kernel@archiver.kernel.org>; Fri, 24 Mar 2023 22:30:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232306AbjCXVHq (ORCPT
+        id S231922AbjCXWak (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Fri, 24 Mar 2023 17:07:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43552 "EHLO
+        Fri, 24 Mar 2023 18:30:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43042 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231977AbjCXVHe (ORCPT
+        with ESMTP id S231864AbjCXWaj (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Fri, 24 Mar 2023 17:07:34 -0400
-Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7D42E1F5FD;
-        Fri, 24 Mar 2023 14:07:26 -0700 (PDT)
-Received: from pps.filterd (m0246632.ppops.net [127.0.0.1])
-        by mx0b-00069f02.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 32OL4P03006442;
-        Fri, 24 Mar 2023 21:07:09 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
- subject : date : message-id : in-reply-to : references : mime-version :
- content-type : content-transfer-encoding; s=corp-2022-7-12;
- bh=bOEEQ3ULyAOwpIjBOULA6je1JKKwgPN/L4E/At7MsoM=;
- b=ebH+92K+mGejUZfbDCwboi1xZCiN1uFDhab48APOz33G1M6g3EA2J38Jlm/eq7mgZ5Fd
- oUDEcoDp74JOiJlqH+8szRcRREomoJVrztlGhXlGVbhqNfQCaPZUPsS9TAfFHH/EixEn
- KpHDYSkx6j1ONdoG5YJqNF9sJP6BD4T4EDUZLMLH3RadAhRXCuQvk1djGVkkFtNTDErX
- 2HkggNYNCAvTnqRx1MrGGGOCEoy0KCZpO/uLgfKG3jMud3OBIWE9IvBw0lgoTWPOjxXW
- bOg3Z4jWFUVW1mJjbRnj7cTxf3zu6qy3sZcqVwVptVOCNN8drcOf8NRnGyOlan+Dub4t CA== 
-Received: from iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta03.appoci.oracle.com [130.35.103.27])
-        by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3phkey806v-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 24 Mar 2023 21:07:09 +0000
-Received: from pps.filterd (iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
-        by iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (8.17.1.5/8.17.1.5) with ESMTP id 32OKa6bY027823;
-        Fri, 24 Mar 2023 21:07:09 GMT
-Received: from pps.reinject (localhost [127.0.0.1])
-        by iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 3pgxk4se4d-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 24 Mar 2023 21:07:08 +0000
-Received: from iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
-        by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 32OL76fA017159;
-        Fri, 24 Mar 2023 21:07:08 GMT
-Received: from ca-mkp2.ca.oracle.com.com (mpeterse-ol9.allregionaliads.osdevelopmeniad.oraclevcn.com [100.100.251.135])
-        by iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTP id 3pgxk4se2p-5;
-        Fri, 24 Mar 2023 21:07:08 +0000
-From:   "Martin K. Petersen" <martin.petersen@oracle.com>
-To:     quic_asutoshd@quicinc.com, quic_cang@quicinc.com,
-        quic_nguyenb@quicinc.com, bvanassche@acm.org, mani@kernel.org,
-        stanley.chu@mediatek.com, adrian.hunter@intel.com,
-        beanhuo@micron.com, avri.altman@wdc.com, junwoo80.lee@samsung.com,
-        Ziqi Chen <quic_ziqichen@quicinc.com>
-Cc:     "Martin K . Petersen" <martin.petersen@oracle.com>,
-        linux-scsi@vger.kernel.org, Alim Akhtar <alim.akhtar@samsung.com>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
-Subject: Re: [PATCH v7] scsi: ufs: core: Add trace event for MCQ
-Date:   Fri, 24 Mar 2023 17:06:56 -0400
-Message-Id: <167969123965.59527.12606811786229269286.b4-ty@oracle.com>
-X-Mailer: git-send-email 2.40.0
-In-Reply-To: <1678866271-49601-1-git-send-email-quic_ziqichen@quicinc.com>
-References: <1678866271-49601-1-git-send-email-quic_ziqichen@quicinc.com>
+        Fri, 24 Mar 2023 18:30:39 -0400
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 20F949030;
+        Fri, 24 Mar 2023 15:30:38 -0700 (PDT)
+Received: from W11-BEAU-MD.localdomain (unknown [76.135.27.212])
+        by linux.microsoft.com (Postfix) with ESMTPSA id 2F6A720FC3CF;
+        Fri, 24 Mar 2023 15:30:37 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 2F6A720FC3CF
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+        s=default; t=1679697037;
+        bh=Ep5nNPz4lz96sDudAV5L59mwRJdJA/ImnhxaQXHg9kI=;
+        h=From:To:Cc:Subject:Date:From;
+        b=A/F3EOFNblU/sc5n51dqJJwUBTvDJZZafJgVO3fx2k4p5PQdDkY/mcF4QPAaRHoa3
+         872wTxDQkO4tWk2h4RULYaI6x1XlWpHfd8TijS9pa5tLk697JyOKWqV1n3KsGpGf4H
+         Ra5Y488Y4HYs/GwbHyeGKEFYrD5Z5FFLlV6G3pAA=
+From:   Beau Belgrave <beaub@linux.microsoft.com>
+To:     rostedt@goodmis.org, mhiramat@kernel.org,
+        mathieu.desnoyers@efficios.com, dcook@linux.microsoft.com,
+        alanau@linux.microsoft.com, brauner@kernel.org,
+        akpm@linux-foundation.org, ebiederm@xmission.com,
+        keescook@chromium.org, tglx@linutronix.de
+Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        linux-trace-kernel@vger.kernel.org
+Subject: [PATCH v9 00/11] tracing/user_events: Remote write ABI
+Date:   Fri, 24 Mar 2023 15:30:17 -0700
+Message-Id: <20230324223028.172-1-beaub@linux.microsoft.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.254,Aquarius:18.0.942,Hydra:6.0.573,FMLib:17.11.170.22
- definitions=2023-03-24_11,2023-03-24_01,2023-02-09_01
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 suspectscore=0
- malwarescore=0 spamscore=0 mlxlogscore=905 adultscore=0 mlxscore=0
- phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2303200000 definitions=main-2303240160
-X-Proofpoint-GUID: tJB-xe9-xJlBGOgc9-B5E--NPDFLft5V
-X-Proofpoint-ORIG-GUID: tJB-xe9-xJlBGOgc9-B5E--NPDFLft5V
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On Wed, 15 Mar 2023 15:44:25 +0800, Ziqi Chen wrote:
+As part of the discussions for user_events aligned with user space
+tracers, it was determined that user programs should register a aligned
+value to set or clear a bit when an event becomes enabled. Currently a
+shared page is being used that requires mmap(). Remove the shared page
+implementation and move to a user registered address implementation.
 
-> Add MCQ hardware queue ID in the existing trace event
-> ufshcd_command().
-> 
-> 
+In this new model during the event registration from user programs 3 new
+values are specified. The first is the address to update when the event
+is either enabled or disabled. The second is the bit to set/clear to
+reflect the event being enabled. The third is the size of the value at
+the specified address.
 
-Applied to 6.4/scsi-queue, thanks!
+This allows for a local 32/64-bit value in user programs to support
+both kernel and user tracers. As an example, setting bit 31 for kernel
+tracers when the event becomes enabled allows for user tracers to use
+the other bits for ref counts or other flags. The kernel side updates
+the bit atomically, user programs need to also update these values
+atomically.
 
-[1/1] scsi: ufs: core: Add trace event for MCQ
-      https://git.kernel.org/mkp/scsi/c/4a52338bf288
+User provided addresses must be aligned on a natural boundary, this
+allows for single page checking and prevents odd behaviors such as a
+enable value straddling 2 pages instead of a single page.
 
+When page faults are encountered they are done asyncly via a workqueue.
+If the page faults back in, the write update is attempted again. If the
+page cannot fault-in, then we log and wait until the next time the event
+is enabled/disabled. This is to prevent possible infinite loops resulting
+from bad user processes unmapping or changing protection values after
+registering the address.
+
+Change history
+
+V9:
+Updated documentation to include __packed attributed in example payload.
+
+Removed boot argument for max events, since sysctl can now be set via
+kernel boot parameters.
+
+V8:
+Rebase to 6.2-rc8.
+
+V7:
+Rebase to 6.2-rc4.
+
+Added flags to register ioctl, validates it's 0 for now. Future patches
+will enable other types of formats/options as needed.
+
+V6:
+Rebase to 6.2-rc2.
+
+Fixed small typos, code style.
+
+Changed from synchronize_rcu() to queue_rcu_work() to allow an rcu
+delay asyncly when mm is being removed and in an appropriate context
+for mmdrop().
+
+V5:
+GFP_NOWAIT is still needed in user_event_enabler_dup(), due to rcu lock.
+
+V4:
+Rebase to 6.1-rc7.
+
+Moved user_events_fork() out of task signal lock and dropped use of
+GFP_NOWAIT. All allocations are now GFP_KERNEL or GFP_KERNEL_ACCOUNT.
+
+Added boot parameter user_events_max= to limit global events.
+
+Added sysctl value kernel.user_events_max to limit global events.
+
+Added cgroup tracking of memory allocated for events.
+
+V3:
+Rebase to 6.1-rc6.
+
+Removed RFC tag on series.
+
+Updated documentation to reflect ABI changes.
+
+Added self-test for ABI specific clone/fork cases.
+
+Moved user_event_mm removal into do_exit() to ensure RSS task accounting
+is done properly in async fault paths. Also lets us remove the delayed
+mmdrop(), saving memory in each user_event_mm struct.
+
+Fixed timing window where task exits, but write could be in-progress.
+During exit we now take mmap_write_lock to ensure we drain writes.
+
+V2:
+Rebase to 6.1-rc5.
+
+Added various comments based on feedback.
+
+Added enable_size to register struct, allows 32/64 bit addresses
+as long as the enable_bit fits and the address is naturally aligned.
+
+Changed user_event_enabler_write to accept a new flag indicating if a
+fault fixup should be done or not. This allows user_event_enabler_create
+to return back failures to the user ioctl reg call and retry to fault
+in data.
+
+Added tracking fork/exec/exit of tasks to have the user_event_mm lifetime
+tied more to the task than the file. This came with extra requirements
+around when you can lock, such as softirq cases, as well as a RCU
+pattern to ensure fork/exec/exit take minimal lock times.
+
+Changed enablers to use a single word-aligned value for saving the bit
+to set and any flags, such as faulting asyncly or being freed. This was
+required to ensure atomic bit set/test for fork cases where taking the
+event_mutex is not a good scalability decision.
+
+Added unregister IOCTL, since file lifetime no longer limits the enable
+time for any events (the mm does).
+
+Updated sample code to reflect the new remote write based ABI.
+
+Updated self-test code to reflect the new remote write based ABI.
+
+Beau Belgrave (11):
+  tracing/user_events: Split header into uapi and kernel
+  tracing/user_events: Track fork/exec/exit for mm lifetime
+  tracing/user_events: Use remote writes for event enablement
+  tracing/user_events: Fixup enable faults asyncly
+  tracing/user_events: Add ioctl for disabling addresses
+  tracing/user_events: Update self-tests to write ABI
+  tracing/user_events: Add ABI self-test
+  tracing/user_events: Use write ABI in example
+  tracing/user_events: Update documentation for ABI
+  tracing/user_events: Charge event allocs to cgroups
+  tracing/user_events: Limit global user_event count
+
+ Documentation/trace/user_events.rst           | 179 ++--
+ fs/exec.c                                     |   2 +
+ include/linux/sched.h                         |   5 +
+ include/linux/user_events.h                   | 101 ++-
+ include/uapi/linux/user_events.h              |  81 ++
+ kernel/exit.c                                 |   2 +
+ kernel/fork.c                                 |   2 +
+ kernel/trace/Kconfig                          |   5 +-
+ kernel/trace/trace_events_user.c              | 851 +++++++++++++++---
+ samples/user_events/example.c                 |  47 +-
+ tools/testing/selftests/user_events/Makefile  |   2 +-
+ .../testing/selftests/user_events/abi_test.c  | 226 +++++
+ .../testing/selftests/user_events/dyn_test.c  |   2 +-
+ .../selftests/user_events/ftrace_test.c       | 162 ++--
+ .../testing/selftests/user_events/perf_test.c |  39 +-
+ 15 files changed, 1306 insertions(+), 400 deletions(-)
+ create mode 100644 include/uapi/linux/user_events.h
+ create mode 100644 tools/testing/selftests/user_events/abi_test.c
+
+
+base-commit: ceaa837f96adb69c0df0397937cd74991d5d821a
 -- 
-Martin K. Petersen	Oracle Linux Engineering
+2.25.1
+
