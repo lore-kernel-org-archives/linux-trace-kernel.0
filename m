@@ -2,86 +2,162 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CC44FC6FD1C
-	for <linux-trace-kernel@archiver.kernel.org>; Fri, 24 Mar 2023 03:01:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 45AFFC6FD20
+	for <linux-trace-kernel@archiver.kernel.org>; Fri, 24 Mar 2023 03:13:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230098AbjCXDB1 convert rfc822-to-8bit (ORCPT
+        id S229948AbjCXDNT (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Thu, 23 Mar 2023 23:01:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39750 "EHLO
+        Thu, 23 Mar 2023 23:13:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54380 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229581AbjCXDB0 (ORCPT
+        with ESMTP id S230040AbjCXDNS (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Thu, 23 Mar 2023 23:01:26 -0400
+        Thu, 23 Mar 2023 23:13:18 -0400
 Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F2F721B30B;
-        Thu, 23 Mar 2023 20:01:23 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 72AD14C05;
+        Thu, 23 Mar 2023 20:13:15 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 119F4627BC;
-        Fri, 24 Mar 2023 03:01:22 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 43A5DC433EF;
-        Fri, 24 Mar 2023 03:01:20 +0000 (UTC)
-Date:   Thu, 23 Mar 2023 23:01:05 -0400
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 01D686293D;
+        Fri, 24 Mar 2023 03:13:15 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7B330C4339B;
+        Fri, 24 Mar 2023 03:13:13 +0000 (UTC)
+Date:   Thu, 23 Mar 2023 23:13:11 -0400
 From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Yafang Shao <laoar.shao@gmail.com>
-Cc:     mhiramat@kernel.org, alexei.starovoitov@gmail.com,
-        linux-trace-kernel@vger.kernel.org, bpf@vger.kernel.org,
-        Andrii Nakryiko <andrii.nakryiko@gmail.com>,
-        Jiri Olsa <olsajiri@gmail.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Josh Poimboeuf <jpoimboe@redhat.com>
-Subject: Re: [PATCH] tracing: Refuse fprobe if RCU is not watching
-Message-ID: <20230323230105.57c40232@rorschach.local.home>
-In-Reply-To: <CALOAHbDtM7KuiRn1n9EBYrSGqJmOYcY6voVRfF+QGN510W_OtQ@mail.gmail.com>
-References: <20230321020103.13494-1-laoar.shao@gmail.com>
-        <20230321101711.625d0ccb@gandalf.local.home>
-        <CALOAHbAfQxAMQTwDHnMOLHDfz=Mo0gFwu9i3bS0emttUTodA4g@mail.gmail.com>
-        <20230323083914.31f76c2b@gandalf.local.home>
-        <CALOAHbDtM7KuiRn1n9EBYrSGqJmOYcY6voVRfF+QGN510W_OtQ@mail.gmail.com>
+To:     Wenchao Hao <haowenchao2@huawei.com>
+Cc:     Masami Hiramatsu <mhiramat@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-trace-kernel@vger.kernel.org>, <linfeilong@huawei.com>,
+        <louhongxiang@huawei.com>
+Subject: Re: [PATCH] trace:cma: remove unnecessary event class
+ cma_alloc_class
+Message-ID: <20230323231311.4a11c7f7@rorschach.local.home>
+In-Reply-To: <20230323114136.177677-1-haowenchao2@huawei.com>
+References: <20230323114136.177677-1-haowenchao2@huawei.com>
 X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On Fri, 24 Mar 2023 10:51:49 +0800
-Yafang Shao <laoar.shao@gmail.com> wrote:
+On Thu, 23 Mar 2023 19:41:36 +0800
+Wenchao Hao <haowenchao2@huawei.com> wrote:
 
-> On Thu, Mar 23, 2023 at 8:39 PM Steven Rostedt <rostedt@goodmis.org> wrote:
-> >
-> > On Thu, 23 Mar 2023 13:59:34 +0800
-> > Yafang Shao <laoar.shao@gmail.com> wrote:
-> >  
-> > > I have verified the latest linux-trace tree,
-> > >     git://git.kernel.org/pub/scm/linux/kernel/git/trace/linux-trace.git
-> > > trace/core
-> > >
-> > > The result of "uname -r" is ''6.3.0-rc3+".
-> > > This issue still exists, and after applying this patch it disappears.
-> > > It can be reproduced with a simple bpf program as follows,
-> > >     SEC("kprobe.multi/preempt_count_sub")
-> > >     int fprobe_test()
-> > >     {
-> > >         return 0;
-> > >     }  
-> >
-> > Still your patch is hiding a bug, not fixing one.
-> >
-> > Can you apply this patch and see if the bug goes away?
-> >  
-> 
-> I have verified that the bug goes away after applying this patch.
-> Thanks for the fix.
+> After commit cb6c33d4dc09 ("cma: tracing: print alloc result in
+> trace_cma_alloc_finish"), cma_alloc_class has only one event which is
+> cma_alloc_busy_retry. So we can remove the cma_alloc_class.
 > 
 
-It's in tip:
+This is fine for an aesthetic view, but it has no functional change.
+TRACE_EVENT() is simply defined as:
 
-  https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git/commit/?h=x86/urgent&id=f87d28673b71b35b248231a2086f9404afbb7f28
+#define TRACE_EVENT(name, proto, args, tstruct, assign, print) \
+	DECLARE_EVENT_CLASS(name,			       \
+			     PARAMS(proto),		       \
+			     PARAMS(args),		       \
+			     PARAMS(tstruct),		       \
+			     PARAMS(assign),		       \
+			     PARAMS(print));		       \
+	DEFINE_EVENT(name, name, PARAMS(proto), PARAMS(args));
 
-Hopefully it will make it to mainline soon.
+ https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/include/trace/trace_events.h#n29
+
+This patch simply un-open-codes it.
+
+Acked-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+
+Cheers,
 
 -- Steve
+
+
+> Signed-off-by: Wenchao Hao <haowenchao2@huawei.com>
+> ---
+>  include/trace/events/cma.h | 58 ++++++++++++++++----------------------
+>  1 file changed, 25 insertions(+), 33 deletions(-)
+> 
+> diff --git a/include/trace/events/cma.h b/include/trace/events/cma.h
+> index ef75ea606ab2..25103e67737c 100644
+> --- a/include/trace/events/cma.h
+> +++ b/include/trace/events/cma.h
+> @@ -8,37 +8,6 @@
+>  #include <linux/types.h>
+>  #include <linux/tracepoint.h>
+>  
+> -DECLARE_EVENT_CLASS(cma_alloc_class,
+> -
+> -	TP_PROTO(const char *name, unsigned long pfn, const struct page *page,
+> -		 unsigned long count, unsigned int align),
+> -
+> -	TP_ARGS(name, pfn, page, count, align),
+> -
+> -	TP_STRUCT__entry(
+> -		__string(name, name)
+> -		__field(unsigned long, pfn)
+> -		__field(const struct page *, page)
+> -		__field(unsigned long, count)
+> -		__field(unsigned int, align)
+> -	),
+> -
+> -	TP_fast_assign(
+> -		__assign_str(name, name);
+> -		__entry->pfn = pfn;
+> -		__entry->page = page;
+> -		__entry->count = count;
+> -		__entry->align = align;
+> -	),
+> -
+> -	TP_printk("name=%s pfn=0x%lx page=%p count=%lu align=%u",
+> -		  __get_str(name),
+> -		  __entry->pfn,
+> -		  __entry->page,
+> -		  __entry->count,
+> -		  __entry->align)
+> -);
+> -
+>  TRACE_EVENT(cma_release,
+>  
+>  	TP_PROTO(const char *name, unsigned long pfn, const struct page *page,
+> @@ -125,12 +94,35 @@ TRACE_EVENT(cma_alloc_finish,
+>  		  __entry->errorno)
+>  );
+>  
+> -DEFINE_EVENT(cma_alloc_class, cma_alloc_busy_retry,
+> +TRACE_EVENT(cma_alloc_busy_retry,
+>  
+>  	TP_PROTO(const char *name, unsigned long pfn, const struct page *page,
+>  		 unsigned long count, unsigned int align),
+>  
+> -	TP_ARGS(name, pfn, page, count, align)
+> +	TP_ARGS(name, pfn, page, count, align),
+> +
+> +	TP_STRUCT__entry(
+> +		__string(name, name)
+> +		__field(unsigned long, pfn)
+> +		__field(const struct page *, page)
+> +		__field(unsigned long, count)
+> +		__field(unsigned int, align)
+> +	),
+> +
+> +	TP_fast_assign(
+> +		__assign_str(name, name);
+> +		__entry->pfn = pfn;
+> +		__entry->page = page;
+> +		__entry->count = count;
+> +		__entry->align = align;
+> +	),
+> +
+> +	TP_printk("name=%s pfn=0x%lx page=%p count=%lu align=%u",
+> +		  __get_str(name),
+> +		  __entry->pfn,
+> +		  __entry->page,
+> +		  __entry->count,
+> +		  __entry->align)
+>  );
+>  
+>  #endif /* _TRACE_CMA_H */
+
