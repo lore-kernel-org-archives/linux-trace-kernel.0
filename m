@@ -2,172 +2,142 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B93CC6FD1C
-	for <linux-trace-kernel@archiver.kernel.org>; Fri, 24 Mar 2023 22:30:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D3222C6FD1C
+	for <linux-trace-kernel@archiver.kernel.org>; Sat, 25 Mar 2023 02:09:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231946AbjCXWav (ORCPT
+        id S232145AbjCYCJz (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Fri, 24 Mar 2023 18:30:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43230 "EHLO
+        Fri, 24 Mar 2023 22:09:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52546 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232123AbjCXWao (ORCPT
+        with ESMTP id S232091AbjCYCJt (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Fri, 24 Mar 2023 18:30:44 -0400
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 8B05117CF0;
-        Fri, 24 Mar 2023 15:30:42 -0700 (PDT)
-Received: from W11-BEAU-MD.localdomain (unknown [76.135.27.212])
-        by linux.microsoft.com (Postfix) with ESMTPSA id C98CD20FC4FA;
-        Fri, 24 Mar 2023 15:30:41 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com C98CD20FC4FA
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-        s=default; t=1679697042;
-        bh=9hn7lg9dudknRxZST2EvcXuTZnhH2Dpn1zkQtZUpKR0=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=FiFa0lj4u0e+Ncsfd5AUeJfL964Tk6p0G1c6Bp/6p7o7ZptOxS7NqaVNgYvxsX814
-         uyUEsOSMgRPHo8IBeiPvPTHbXGzKwnhAAOiKTnIoGz9esjUu721Zcbbgt6s5YAdK/B
-         +8yreuxzE1R2hXNL6IR3qji9QLfg6iJG+rQv16ik=
-From:   Beau Belgrave <beaub@linux.microsoft.com>
-To:     rostedt@goodmis.org, mhiramat@kernel.org,
-        mathieu.desnoyers@efficios.com, dcook@linux.microsoft.com,
-        alanau@linux.microsoft.com, brauner@kernel.org,
-        akpm@linux-foundation.org, ebiederm@xmission.com,
-        keescook@chromium.org, tglx@linutronix.de
-Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        linux-trace-kernel@vger.kernel.org
-Subject: [PATCH v9 11/11] tracing/user_events: Limit global user_event count
-Date:   Fri, 24 Mar 2023 15:30:28 -0700
-Message-Id: <20230324223028.172-12-beaub@linux.microsoft.com>
+        Fri, 24 Mar 2023 22:09:49 -0400
+Received: from szxga03-in.huawei.com (szxga03-in.huawei.com [45.249.212.189])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 689B31632E;
+        Fri, 24 Mar 2023 19:09:48 -0700 (PDT)
+Received: from dggpeml100012.china.huawei.com (unknown [172.30.72.55])
+        by szxga03-in.huawei.com (SkyGuard) with ESMTP id 4Pk2ZS62mPzKnZC;
+        Sat, 25 Mar 2023 10:09:20 +0800 (CST)
+Received: from localhost.localdomain (10.67.175.61) by
+ dggpeml100012.china.huawei.com (7.185.36.121) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.21; Sat, 25 Mar 2023 10:09:45 +0800
+From:   Zheng Yejian <zhengyejian1@huawei.com>
+To:     <rostedt@goodmis.org>
+CC:     <linux-kernel@vger.kernel.org>,
+        <linux-trace-kernel@vger.kernel.org>, <mhiramat@kernel.org>,
+        <zhengyejian1@huawei.com>
+Subject: [PATCH v2] ring-buffer: Fix race while reader and writer are on the same page
+Date:   Sat, 25 Mar 2023 10:12:47 +0800
+Message-ID: <20230325021247.2923907-1-zhengyejian1@huawei.com>
 X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20230324223028.172-1-beaub@linux.microsoft.com>
-References: <20230324223028.172-1-beaub@linux.microsoft.com>
+In-Reply-To: <20230324152309.134f361a@gandalf.local.home>
+References: <20230324152309.134f361a@gandalf.local.home>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [10.67.175.61]
+X-ClientProxiedBy: dggems702-chm.china.huawei.com (10.3.19.179) To
+ dggpeml100012.china.huawei.com (7.185.36.121)
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-Operators want to be able to ensure enough tracepoints exist on the
-system for kernel components as well as for user components. Since there
-are only up to 64K events, by default allow up to half to be used by
-user events.
+When user reads file 'trace_pipe', kernel keeps printing following logs
+that warn at "cpu_buffer->reader_page->read > rb_page_size(reader)" in
+rb_get_reader_page(). It just looks like there's an infinite loop in
+tracing_read_pipe(). This problem occurs several times on arm64 platform
+when testing v5.10 and below.
 
-Add a kernel sysctl parameter (kernel.user_events_max) to set a global
-limit that is honored among all groups on the system. This ensures hard
-limits can be setup to prevent user processes from consuming all event
-IDs on the system.
+  Call trace:
+   rb_get_reader_page+0x248/0x1300
+   rb_buffer_peek+0x34/0x160
+   ring_buffer_peek+0xbc/0x224
+   peek_next_entry+0x98/0xbc
+   __find_next_entry+0xc4/0x1c0
+   trace_find_next_entry_inc+0x30/0x94
+   tracing_read_pipe+0x198/0x304
+   vfs_read+0xb4/0x1e0
+   ksys_read+0x74/0x100
+   __arm64_sys_read+0x24/0x30
+   el0_svc_common.constprop.0+0x7c/0x1bc
+   do_el0_svc+0x2c/0x94
+   el0_svc+0x20/0x30
+   el0_sync_handler+0xb0/0xb4
+   el0_sync+0x160/0x180
 
-Signed-off-by: Beau Belgrave <beaub@linux.microsoft.com>
+Then I dump the vmcore and look into the problematic per_cpu ring_buffer,
+I found that tail_page/commit_page/reader_page are on the same page while
+reader_page->read is obviously abnormal:
+  tail_page == commit_page == reader_page == {
+    .write = 0x100d20,
+    .read = 0x8f9f4805,  // Far greater than 0xd20, obviously abnormal!!!
+    .entries = 0x10004c,
+    .real_end = 0x0,
+    .page = {
+      .time_stamp = 0x857257416af0,
+      .commit = 0xd20,  // This page hasn't been full filled.
+      // .data[0...0xd20] seems normal.
+    }
+ }
+
+The root cause is most likely the race that reader and writer are on the
+same page while reader saw an event that not fully committed by writer.
+
+To fix this, add memory barriers to make sure the reader can see the
+content of what is committed. Since commit a0fcaaed0c46 ("ring-buffer: Fix
+race between reset page and reading page") has added the read barrier in
+rb_get_reader_page(), here we just need to add the write barrier.
+
+Fixes: 77ae365eca89 ("ring-buffer: make lockless")
+Suggested-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+Signed-off-by: Zheng Yejian <zhengyejian1@huawei.com>
 ---
- kernel/trace/trace_events_user.c | 47 ++++++++++++++++++++++++++++++++
- 1 file changed, 47 insertions(+)
+ kernel/trace/ring_buffer.c | 13 ++++++++++++-
+ 1 file changed, 12 insertions(+), 1 deletion(-)
 
-diff --git a/kernel/trace/trace_events_user.c b/kernel/trace/trace_events_user.c
-index 222f2eb59c7c..11922f7cf496 100644
---- a/kernel/trace/trace_events_user.c
-+++ b/kernel/trace/trace_events_user.c
-@@ -20,6 +20,7 @@
- #include <linux/types.h>
- #include <linux/uaccess.h>
- #include <linux/highmem.h>
-+#include <linux/init.h>
- #include <linux/user_events.h>
- #include "trace.h"
- #include "trace_dynevent.h"
-@@ -61,6 +62,12 @@ struct user_event_group {
- /* Group for init_user_ns mapping, top-most group */
- static struct user_event_group *init_group;
+v1 -> v2:
+  Put smp_wmb() in right place and update comments as suggested by Steven.
+
+diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
+index c6f47b6cfd5f..76a2d91eecad 100644
+--- a/kernel/trace/ring_buffer.c
++++ b/kernel/trace/ring_buffer.c
+@@ -3098,6 +3098,10 @@ rb_set_commit_to_write(struct ring_buffer_per_cpu *cpu_buffer)
+ 		if (RB_WARN_ON(cpu_buffer,
+ 			       rb_is_reader_page(cpu_buffer->tail_page)))
+ 			return;
++		/*
++		 * No need for a memory barrier here, as the update
++		 * of the tail_page did it for this page.
++		 */
+ 		local_set(&cpu_buffer->commit_page->page->commit,
+ 			  rb_page_write(cpu_buffer->commit_page));
+ 		rb_inc_page(&cpu_buffer->commit_page);
+@@ -3107,6 +3111,8 @@ rb_set_commit_to_write(struct ring_buffer_per_cpu *cpu_buffer)
+ 	while (rb_commit_index(cpu_buffer) !=
+ 	       rb_page_write(cpu_buffer->commit_page)) {
  
-+/* Max allowed events for the whole system */
-+static unsigned int max_user_events = 32768;
-+
-+/* Current number of events on the whole system */
-+static unsigned int current_user_events;
-+
- /*
-  * Stores per-event properties, as users register events
-  * within a file a user_event might be created if it does not
-@@ -1241,6 +1248,8 @@ static int destroy_user_event(struct user_event *user)
- {
- 	int ret = 0;
++		/* Make sure the readers see the content of what is committed. */
++		smp_wmb();
+ 		local_set(&cpu_buffer->commit_page->page->commit,
+ 			  rb_page_write(cpu_buffer->commit_page));
+ 		RB_WARN_ON(cpu_buffer,
+@@ -4684,7 +4690,12 @@ rb_get_reader_page(struct ring_buffer_per_cpu *cpu_buffer)
  
-+	lockdep_assert_held(&event_mutex);
-+
- 	/* Must destroy fields before call removal */
- 	user_event_destroy_fields(user);
- 
-@@ -1257,6 +1266,11 @@ static int destroy_user_event(struct user_event *user)
- 	kfree(EVENT_NAME(user));
- 	kfree(user);
- 
-+	if (current_user_events > 0)
-+		current_user_events--;
-+	else
-+		pr_alert("BUG: Bad current_user_events\n");
-+
- 	return ret;
- }
- 
-@@ -1744,6 +1758,11 @@ static int user_event_parse(struct user_event_group *group, char *name,
- 
- 	mutex_lock(&event_mutex);
- 
-+	if (current_user_events >= max_user_events) {
-+		ret = -EMFILE;
-+		goto put_user_lock;
-+	}
-+
- 	ret = user_event_trace_register(user);
- 
- 	if (ret)
-@@ -1755,6 +1774,7 @@ static int user_event_parse(struct user_event_group *group, char *name,
- 	dyn_event_init(&user->devent, &user_event_dops);
- 	dyn_event_add(&user->devent, &user->call);
- 	hash_add(group->register_table, &user->node, key);
-+	current_user_events++;
- 
- 	mutex_unlock(&event_mutex);
- 
-@@ -2386,6 +2406,31 @@ static int create_user_tracefs(void)
- 	return -ENODEV;
- }
- 
-+static int set_max_user_events_sysctl(struct ctl_table *table, int write,
-+				      void *buffer, size_t *lenp, loff_t *ppos)
-+{
-+	int ret;
-+
-+	mutex_lock(&event_mutex);
-+
-+	ret = proc_douintvec(table, write, buffer, lenp, ppos);
-+
-+	mutex_unlock(&event_mutex);
-+
-+	return ret;
-+}
-+
-+static struct ctl_table user_event_sysctls[] = {
-+	{
-+		.procname	= "user_events_max",
-+		.data		= &max_user_events,
-+		.maxlen		= sizeof(unsigned int),
-+		.mode		= 0644,
-+		.proc_handler	= set_max_user_events_sysctl,
-+	},
-+	{}
-+};
-+
- static int __init trace_events_user_init(void)
- {
- 	int ret;
-@@ -2415,6 +2460,8 @@ static int __init trace_events_user_init(void)
- 	if (dyn_event_register(&user_event_dops))
- 		pr_warn("user_events could not register with dyn_events\n");
- 
-+	register_sysctl_init("kernel", user_event_sysctls);
-+
- 	return 0;
- }
+ 	/*
+ 	 * Make sure we see any padding after the write update
+-	 * (see rb_reset_tail())
++	 * (see rb_reset_tail()).
++	 *
++	 * In addition, a writer may be writing on the reader page
++	 * if the page has not been fully filled, so the read barrier
++	 * is also needed to make sure we see the content of what is
++	 * committed by the writer (see rb_set_commit_to_write()).
+ 	 */
+ 	smp_rmb();
  
 -- 
 2.25.1
