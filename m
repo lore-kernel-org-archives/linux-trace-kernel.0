@@ -2,128 +2,225 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E6ADAC6FD1C
-	for <linux-trace-kernel@archiver.kernel.org>; Sat, 25 Mar 2023 17:34:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A908C6FD1C
+	for <linux-trace-kernel@archiver.kernel.org>; Sun, 26 Mar 2023 15:23:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231842AbjCYReL (ORCPT
+        id S232355AbjCZPXy (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Sat, 25 Mar 2023 13:34:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36814 "EHLO
+        Sun, 26 Mar 2023 11:23:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56288 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231786AbjCYReG (ORCPT
+        with ESMTP id S229621AbjCZPXx (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Sat, 25 Mar 2023 13:34:06 -0400
-Received: from mail-qv1-xf2a.google.com (mail-qv1-xf2a.google.com [IPv6:2607:f8b0:4864:20::f2a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A37A3D535
-        for <linux-trace-kernel@vger.kernel.org>; Sat, 25 Mar 2023 10:34:00 -0700 (PDT)
-Received: by mail-qv1-xf2a.google.com with SMTP id 31so3847197qvc.1
-        for <linux-trace-kernel@vger.kernel.org>; Sat, 25 Mar 2023 10:34:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=joelfernandes.org; s=google; t=1679765640;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=WkqhMIgatpcxnL+zHWHZ8wmMPBfEMgxQ9GLo+81Qz2Y=;
-        b=urQ3eGiSW39KOAg6HtdLQrdsQBhLE8fe/4vhcVkRPGPen+juA88G3/CNjtLggI5yz+
-         /Hsq3yl9CS37DT4iPWQayHWqbtRy9ZytQ8GAhvPbolMecAoOjwgCOLok1U+uYBLXNFGT
-         fF2bATwed5QWM3wvD1atFjToYeb3jtgI3zZSQ=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1679765640;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=WkqhMIgatpcxnL+zHWHZ8wmMPBfEMgxQ9GLo+81Qz2Y=;
-        b=QV3n0Ackw7rXSpJ6qeH7UPTIDUO/C7UZ9hjoJUEgCeSZ8JpA3mEO3uL4u4G4hcuMCt
-         lkxdOp/ySALFpGhboSW4RCWPj+iwan99/PtiTVW7LvSePhDpqo7xX0ZVf4jfRn0OGvAE
-         yVYUKxxhFwCydRoofZIByjW9ZdBV/ELkqY0N/iCaQdOCgQh40lTuN+vYFjYGrw5hb9wO
-         OGdWMg95pKf6Qu3yMT+uDs4hhCSDUo9w4QA/bYVeInnQujJFyGeAL9uBDwy6cUs5mt/i
-         rOJMj/6RgI6/K+6beB8r48041DtcYDnkR7G8Gdbi3K5PPE/0LJFpWrZtABUceF47Wn8z
-         PSGQ==
-X-Gm-Message-State: AAQBX9dntyHgg+OdpTQ1F3SuCPV1AzV9RqP6XIH3bnrMBar2X8aSIi7o
-        EQBfNEqViFneds7I2iXBeiBZqg==
-X-Google-Smtp-Source: AKy350aHEmw9YFemES+YvWFbuHmTRQ1f6F/yTZi3NzBEEE4hql5/JbCy7XCBFuSVU3Z1xg6Fl0ubRA==
-X-Received: by 2002:a05:6214:27c6:b0:574:97e9:e21c with SMTP id ge6-20020a05621427c600b0057497e9e21cmr11359421qvb.4.1679765639777;
-        Sat, 25 Mar 2023 10:33:59 -0700 (PDT)
-Received: from joelboxx.c.googlers.com.com (129.239.188.35.bc.googleusercontent.com. [35.188.239.129])
-        by smtp.gmail.com with ESMTPSA id m4-20020ac84444000000b003e37ee54b5dsm6762764qtn.90.2023.03.25.10.33.59
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 25 Mar 2023 10:33:59 -0700 (PDT)
-From:   "Joel Fernandes (Google)" <joel@joelfernandes.org>
-To:     linux-kernel@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Frederic Weisbecker <fweisbec@gmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@kernel.org>,
-        "Paul E. McKenney" <paulmck@kernel.org>
-Cc:     Zqiang <qiang1.zhang@intel.com>,
-        Anna-Maria Behnsen <anna-maria@linutronix.de>,
-        Frederic Weisbecker <frederic@kernel.org>,
-        Joel Fernandes <joel@joelfernandes.org>,
+        Sun, 26 Mar 2023 11:23:53 -0400
+Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4C44E1992;
+        Sun, 26 Mar 2023 08:23:52 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id C6840B80C73;
+        Sun, 26 Mar 2023 15:23:50 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 970E6C433D2;
+        Sun, 26 Mar 2023 15:23:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1679844229;
+        bh=FyoyS6JmF8HdnDmT5bIJ+3QIdLa9Vz5VvRmgD1HKOFs=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=i3fpC1ot2ttQYib1GNMfE/or2qPX67mZyWoDFRfx3DFd6eqWJxKbJT0lQUMxfBDNv
+         uPkDiiB/oK1WMp5WPDMteQ6G6lutLUV5CMGgYLzjvd7r14zxi2+JRDc+gyvQm16LkX
+         KmxHcrjuJitydDaAIOiyWxXA0xmOmA/9q6gg4g3baPReSAIxVzodAny0vXat8ubI5y
+         stl3I1lNusBk4gMBtyd4SrpBkeOxvgVCJOgI9DzYYa7X4Mkv1gDbUqKnyV7/Ext99C
+         UATNEJ8ftNZovBAv6Wy2kmkjdXj5n6mczj+QpW0C0qAT4kJD7KQ0i0od/Yl8ka8YCx
+         UNlPDvIGxJxvA==
+Date:   Sun, 26 Mar 2023 23:23:43 +0800
+From:   Masami Hiramatsu (Google) <mhiramat@kernel.org>
+To:     Beau Belgrave <beaub@linux.microsoft.com>
+Cc:     rostedt@goodmis.org, mathieu.desnoyers@efficios.com,
+        dcook@linux.microsoft.com, alanau@linux.microsoft.com,
+        brauner@kernel.org, akpm@linux-foundation.org,
+        ebiederm@xmission.com, keescook@chromium.org, tglx@linutronix.de,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
         linux-trace-kernel@vger.kernel.org
-Subject: [PATCH v2 07/13] rcu: Fix missing TICK_DEP_MASK_RCU_EXP dependency check
-Date:   Sat, 25 Mar 2023 17:33:10 +0000
-Message-Id: <20230325173316.3118674-8-joel@joelfernandes.org>
-X-Mailer: git-send-email 2.40.0.348.gf938b09366-goog
-In-Reply-To: <20230325173316.3118674-1-joel@joelfernandes.org>
-References: <20230325173316.3118674-1-joel@joelfernandes.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH v9 00/11] tracing/user_events: Remote write ABI
+Message-Id: <20230326232343.736eee853dcc72f26458c848@kernel.org>
+In-Reply-To: <20230324223028.172-1-beaub@linux.microsoft.com>
+References: <20230324223028.172-1-beaub@linux.microsoft.com>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-From: Zqiang <qiang1.zhang@intel.com>
+On Fri, 24 Mar 2023 15:30:17 -0700
+Beau Belgrave <beaub@linux.microsoft.com> wrote:
 
-This commit adds checks for the TICK_DEP_MASK_RCU_EXP bit, thus enabling
-RCU expedited grace periods to actually force-enable scheduling-clock
-interrupts on holdout CPUs.
+> As part of the discussions for user_events aligned with user space
+> tracers, it was determined that user programs should register a aligned
+> value to set or clear a bit when an event becomes enabled. Currently a
+> shared page is being used that requires mmap(). Remove the shared page
+> implementation and move to a user registered address implementation.
+> 
+> In this new model during the event registration from user programs 3 new
+> values are specified. The first is the address to update when the event
+> is either enabled or disabled. The second is the bit to set/clear to
+> reflect the event being enabled. The third is the size of the value at
+> the specified address.
+> 
+> This allows for a local 32/64-bit value in user programs to support
+> both kernel and user tracers. As an example, setting bit 31 for kernel
+> tracers when the event becomes enabled allows for user tracers to use
+> the other bits for ref counts or other flags. The kernel side updates
+> the bit atomically, user programs need to also update these values
+> atomically.
+> 
+> User provided addresses must be aligned on a natural boundary, this
+> allows for single page checking and prevents odd behaviors such as a
+> enable value straddling 2 pages instead of a single page.
+> 
+> When page faults are encountered they are done asyncly via a workqueue.
+> If the page faults back in, the write update is attempted again. If the
+> page cannot fault-in, then we log and wait until the next time the event
+> is enabled/disabled. This is to prevent possible infinite loops resulting
+> from bad user processes unmapping or changing protection values after
+> registering the address.
 
-Fixes: df1e849ae455 ("rcu: Enable tick for nohz_full CPUs slow to provide expedited QS")
-Signed-off-by: Zqiang <qiang1.zhang@intel.com>
-Cc: Steven Rostedt <rostedt@goodmis.org>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>
-Cc: Frederic Weisbecker <fweisbec@gmail.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Ingo Molnar <mingo@kernel.org>
-Cc: Anna-Maria Behnsen <anna-maria@linutronix.de>
-Acked-by: Frederic Weisbecker <frederic@kernel.org>
-Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
-Signed-off-by: Joel Fernandes (Google) <joel@joelfernandes.org>
----
- include/trace/events/timer.h | 3 ++-
- kernel/time/tick-sched.c     | 5 +++++
- 2 files changed, 7 insertions(+), 1 deletion(-)
+This series looks good to me.
 
-diff --git a/include/trace/events/timer.h b/include/trace/events/timer.h
-index 2e713a7d9aa3..3e8619c72f77 100644
---- a/include/trace/events/timer.h
-+++ b/include/trace/events/timer.h
-@@ -371,7 +371,8 @@ TRACE_EVENT(itimer_expire,
- 		tick_dep_name(PERF_EVENTS)		\
- 		tick_dep_name(SCHED)			\
- 		tick_dep_name(CLOCK_UNSTABLE)		\
--		tick_dep_name_end(RCU)
-+		tick_dep_name(RCU)			\
-+		tick_dep_name_end(RCU_EXP)
- 
- #undef tick_dep_name
- #undef tick_dep_mask_name
-diff --git a/kernel/time/tick-sched.c b/kernel/time/tick-sched.c
-index 68d81a4283c8..a46506f7ec6d 100644
---- a/kernel/time/tick-sched.c
-+++ b/kernel/time/tick-sched.c
-@@ -281,6 +281,11 @@ static bool check_tick_dependency(atomic_t *dep)
- 		return true;
- 	}
- 
-+	if (val & TICK_DEP_MASK_RCU_EXP) {
-+		trace_tick_stop(0, TICK_DEP_MASK_RCU_EXP);
-+		return true;
-+	}
-+
- 	return false;
- }
- 
+Acked-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+
+for the series.
+
+Thank you!
+
+> 
+> Change history
+> 
+> V9:
+> Updated documentation to include __packed attributed in example payload.
+> 
+> Removed boot argument for max events, since sysctl can now be set via
+> kernel boot parameters.
+> 
+> V8:
+> Rebase to 6.2-rc8.
+> 
+> V7:
+> Rebase to 6.2-rc4.
+> 
+> Added flags to register ioctl, validates it's 0 for now. Future patches
+> will enable other types of formats/options as needed.
+> 
+> V6:
+> Rebase to 6.2-rc2.
+> 
+> Fixed small typos, code style.
+> 
+> Changed from synchronize_rcu() to queue_rcu_work() to allow an rcu
+> delay asyncly when mm is being removed and in an appropriate context
+> for mmdrop().
+> 
+> V5:
+> GFP_NOWAIT is still needed in user_event_enabler_dup(), due to rcu lock.
+> 
+> V4:
+> Rebase to 6.1-rc7.
+> 
+> Moved user_events_fork() out of task signal lock and dropped use of
+> GFP_NOWAIT. All allocations are now GFP_KERNEL or GFP_KERNEL_ACCOUNT.
+> 
+> Added boot parameter user_events_max= to limit global events.
+> 
+> Added sysctl value kernel.user_events_max to limit global events.
+> 
+> Added cgroup tracking of memory allocated for events.
+> 
+> V3:
+> Rebase to 6.1-rc6.
+> 
+> Removed RFC tag on series.
+> 
+> Updated documentation to reflect ABI changes.
+> 
+> Added self-test for ABI specific clone/fork cases.
+> 
+> Moved user_event_mm removal into do_exit() to ensure RSS task accounting
+> is done properly in async fault paths. Also lets us remove the delayed
+> mmdrop(), saving memory in each user_event_mm struct.
+> 
+> Fixed timing window where task exits, but write could be in-progress.
+> During exit we now take mmap_write_lock to ensure we drain writes.
+> 
+> V2:
+> Rebase to 6.1-rc5.
+> 
+> Added various comments based on feedback.
+> 
+> Added enable_size to register struct, allows 32/64 bit addresses
+> as long as the enable_bit fits and the address is naturally aligned.
+> 
+> Changed user_event_enabler_write to accept a new flag indicating if a
+> fault fixup should be done or not. This allows user_event_enabler_create
+> to return back failures to the user ioctl reg call and retry to fault
+> in data.
+> 
+> Added tracking fork/exec/exit of tasks to have the user_event_mm lifetime
+> tied more to the task than the file. This came with extra requirements
+> around when you can lock, such as softirq cases, as well as a RCU
+> pattern to ensure fork/exec/exit take minimal lock times.
+> 
+> Changed enablers to use a single word-aligned value for saving the bit
+> to set and any flags, such as faulting asyncly or being freed. This was
+> required to ensure atomic bit set/test for fork cases where taking the
+> event_mutex is not a good scalability decision.
+> 
+> Added unregister IOCTL, since file lifetime no longer limits the enable
+> time for any events (the mm does).
+> 
+> Updated sample code to reflect the new remote write based ABI.
+> 
+> Updated self-test code to reflect the new remote write based ABI.
+> 
+> Beau Belgrave (11):
+>   tracing/user_events: Split header into uapi and kernel
+>   tracing/user_events: Track fork/exec/exit for mm lifetime
+>   tracing/user_events: Use remote writes for event enablement
+>   tracing/user_events: Fixup enable faults asyncly
+>   tracing/user_events: Add ioctl for disabling addresses
+>   tracing/user_events: Update self-tests to write ABI
+>   tracing/user_events: Add ABI self-test
+>   tracing/user_events: Use write ABI in example
+>   tracing/user_events: Update documentation for ABI
+>   tracing/user_events: Charge event allocs to cgroups
+>   tracing/user_events: Limit global user_event count
+> 
+>  Documentation/trace/user_events.rst           | 179 ++--
+>  fs/exec.c                                     |   2 +
+>  include/linux/sched.h                         |   5 +
+>  include/linux/user_events.h                   | 101 ++-
+>  include/uapi/linux/user_events.h              |  81 ++
+>  kernel/exit.c                                 |   2 +
+>  kernel/fork.c                                 |   2 +
+>  kernel/trace/Kconfig                          |   5 +-
+>  kernel/trace/trace_events_user.c              | 851 +++++++++++++++---
+>  samples/user_events/example.c                 |  47 +-
+>  tools/testing/selftests/user_events/Makefile  |   2 +-
+>  .../testing/selftests/user_events/abi_test.c  | 226 +++++
+>  .../testing/selftests/user_events/dyn_test.c  |   2 +-
+>  .../selftests/user_events/ftrace_test.c       | 162 ++--
+>  .../testing/selftests/user_events/perf_test.c |  39 +-
+>  15 files changed, 1306 insertions(+), 400 deletions(-)
+>  create mode 100644 include/uapi/linux/user_events.h
+>  create mode 100644 tools/testing/selftests/user_events/abi_test.c
+> 
+> 
+> base-commit: ceaa837f96adb69c0df0397937cd74991d5d821a
+> -- 
+> 2.25.1
+> 
+
+
 -- 
-2.40.0.348.gf938b09366-goog
-
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
