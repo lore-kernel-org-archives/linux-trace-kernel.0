@@ -2,58 +2,236 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 06F47C76195
-	for <linux-trace-kernel@archiver.kernel.org>; Mon, 27 Mar 2023 20:41:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F0B76C76196
+	for <linux-trace-kernel@archiver.kernel.org>; Tue, 28 Mar 2023 09:43:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229692AbjC0UlL (ORCPT
+        id S232132AbjC1JnY (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Mon, 27 Mar 2023 16:41:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38212 "EHLO
+        Tue, 28 Mar 2023 05:43:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58530 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229456AbjC0UlK (ORCPT
+        with ESMTP id S232822AbjC1JnL (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Mon, 27 Mar 2023 16:41:10 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E87C310D1;
-        Mon, 27 Mar 2023 13:41:09 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 82A2B614B0;
-        Mon, 27 Mar 2023 20:41:09 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1AE63C433EF;
-        Mon, 27 Mar 2023 20:41:07 +0000 (UTC)
-Date:   Mon, 27 Mar 2023 16:41:06 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Shuah Khan <skhan@linuxfoundation.org>
-Cc:     "Masami Hiramatsu (Google)" <mhiramat@kernel.org>,
-        Mark Brown <broonie@kernel.org>, Shuah Khan <shuah@kernel.org>,
-        linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
-        linux-kselftest@vger.kernel.org
-Subject: Re: [PATCH] selftests/ftrace: Improve integration with kselftest
- runner
-Message-ID: <20230327164106.0d1270db@gandalf.local.home>
-In-Reply-To: <1e2b5a9e-9e92-6394-74fd-18dae2ed0712@linuxfoundation.org>
-References: <20230302-ftrace-kselftest-ktap-v1-1-a84a0765b7ad@kernel.org>
-        <20230319232438.786c46feaf9bb7ddcb78a731@kernel.org>
-        <1e2b5a9e-9e92-6394-74fd-18dae2ed0712@linuxfoundation.org>
-X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+        Tue, 28 Mar 2023 05:43:11 -0400
+Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9CEBE65AA;
+        Tue, 28 Mar 2023 02:43:03 -0700 (PDT)
+Received: from dggpeml100012.china.huawei.com (unknown [172.30.72.55])
+        by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4Pm4Qn2S44zgZD1;
+        Tue, 28 Mar 2023 17:39:45 +0800 (CST)
+Received: from localhost.localdomain (10.67.175.61) by
+ dggpeml100012.china.huawei.com (7.185.36.121) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.21; Tue, 28 Mar 2023 17:43:00 +0800
+From:   Zheng Yejian <zhengyejian1@huawei.com>
+To:     <axboe@kernel.dk>, <rostedt@goodmis.org>, <mhiramat@kernel.org>
+CC:     <linux-block@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-trace-kernel@vger.kernel.org>, <zhengyejian1@huawei.com>
+Subject: [PATCH] blktrace: Gracefully return if fail in blk_register_tracepoints()
+Date:   Tue, 28 Mar 2023 17:46:05 +0800
+Message-ID: <20230328094605.480557-1-zhengyejian1@huawei.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [10.67.175.61]
+X-ClientProxiedBy: dggems705-chm.china.huawei.com (10.3.19.182) To
+ dggpeml100012.china.huawei.com (7.185.36.121)
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On Mon, 27 Mar 2023 13:43:15 -0600
-Shuah Khan <skhan@linuxfoundation.org> wrote:
+Currently blk_register_tracepoints() WARN for every registration failure
+of block tracepoint, however, blk_trace can still be setup-ed.
 
-> Steve,
-> 
-> Okay to pick this up for the Linux 6.4?
+It seems better to cleanup registered tracepoints and return error when
+a certain registration failed, even if it's a small probability, and
+users can know the error and do blk_trace setup again.
 
-Fine by me.
+Signed-off-by: Zheng Yejian <zhengyejian1@huawei.com>
+---
+ kernel/trace/blktrace.c | 113 +++++++++++++++++++++++++++++++---------
+ 1 file changed, 87 insertions(+), 26 deletions(-)
 
-Thanks Shuah.
+diff --git a/kernel/trace/blktrace.c b/kernel/trace/blktrace.c
+index d5d94510afd3..62ac72866f02 100644
+--- a/kernel/trace/blktrace.c
++++ b/kernel/trace/blktrace.c
+@@ -60,7 +60,7 @@ static struct tracer_flags blk_tracer_flags = {
+ static DEFINE_MUTEX(blk_probe_mutex);
+ static int blk_probes_ref;
+ 
+-static void blk_register_tracepoints(void);
++static int blk_register_tracepoints(void);
+ static void blk_unregister_tracepoints(void);
+ 
+ /*
+@@ -330,12 +330,20 @@ static void blk_trace_free(struct request_queue *q, struct blk_trace *bt)
+ 	kfree(bt);
+ }
+ 
+-static void get_probe_ref(void)
++static int get_probe_ref(void)
+ {
++	int ret = 0;
++
+ 	mutex_lock(&blk_probe_mutex);
+-	if (++blk_probes_ref == 1)
+-		blk_register_tracepoints();
++	if (++blk_probes_ref == 1) {
++		ret = blk_register_tracepoints();
++		if (ret) {
++			pr_warn("Could not register block tracepoints\n");
++			--blk_probes_ref;
++		}
++	}
+ 	mutex_unlock(&blk_probe_mutex);
++	return ret;
+ }
+ 
+ static void put_probe_ref(void)
+@@ -608,13 +616,14 @@ static int do_blk_trace_setup(struct request_queue *q, char *name, dev_t dev,
+ 	bt->pid = buts->pid;
+ 	bt->trace_state = Blktrace_setup;
+ 
++	ret = get_probe_ref();
++	if (ret)
++		goto err;
+ 	rcu_assign_pointer(q->blk_trace, bt);
+-	get_probe_ref();
++	return 0;
+ 
+-	ret = 0;
+ err:
+-	if (ret)
+-		blk_trace_free(q, bt);
++	blk_trace_free(q, bt);
+ 	return ret;
+ }
+ 
+@@ -1088,42 +1097,92 @@ void blk_add_driver_data(struct request *rq, void *data, size_t len)
+ }
+ EXPORT_SYMBOL_GPL(blk_add_driver_data);
+ 
+-static void blk_register_tracepoints(void)
++static int blk_register_tracepoints(void)
+ {
+ 	int ret;
+ 
+ 	ret = register_trace_block_rq_insert(blk_add_trace_rq_insert, NULL);
+-	WARN_ON(ret);
++	if (ret)
++		return ret;
+ 	ret = register_trace_block_rq_issue(blk_add_trace_rq_issue, NULL);
+-	WARN_ON(ret);
++	if (ret)
++		goto err_block_rq_issue;
+ 	ret = register_trace_block_rq_merge(blk_add_trace_rq_merge, NULL);
+-	WARN_ON(ret);
++	if (ret)
++		goto err_block_rq_merge;
+ 	ret = register_trace_block_rq_requeue(blk_add_trace_rq_requeue, NULL);
+-	WARN_ON(ret);
++	if (ret)
++		goto err_block_rq_requeue;
+ 	ret = register_trace_block_rq_complete(blk_add_trace_rq_complete, NULL);
+-	WARN_ON(ret);
++	if (ret)
++		goto err_block_rq_complete;
+ 	ret = register_trace_block_bio_bounce(blk_add_trace_bio_bounce, NULL);
+-	WARN_ON(ret);
++	if (ret)
++		goto err_block_bio_bounce;
+ 	ret = register_trace_block_bio_complete(blk_add_trace_bio_complete, NULL);
+-	WARN_ON(ret);
++	if (ret)
++		goto err_block_bio_complete;
+ 	ret = register_trace_block_bio_backmerge(blk_add_trace_bio_backmerge, NULL);
+-	WARN_ON(ret);
++	if (ret)
++		goto err_block_bio_backmerge;
+ 	ret = register_trace_block_bio_frontmerge(blk_add_trace_bio_frontmerge, NULL);
+-	WARN_ON(ret);
++	if (ret)
++		goto err_block_bio_frontmerge;
+ 	ret = register_trace_block_bio_queue(blk_add_trace_bio_queue, NULL);
+-	WARN_ON(ret);
++	if (ret)
++		goto err_block_bio_queue;
+ 	ret = register_trace_block_getrq(blk_add_trace_getrq, NULL);
+-	WARN_ON(ret);
++	if (ret)
++		goto err_block_getrq;
+ 	ret = register_trace_block_plug(blk_add_trace_plug, NULL);
+-	WARN_ON(ret);
++	if (ret)
++		goto err_block_plug;
+ 	ret = register_trace_block_unplug(blk_add_trace_unplug, NULL);
+-	WARN_ON(ret);
++	if (ret)
++		goto err_block_unplug;
+ 	ret = register_trace_block_split(blk_add_trace_split, NULL);
+-	WARN_ON(ret);
++	if (ret)
++		goto err_block_split;
+ 	ret = register_trace_block_bio_remap(blk_add_trace_bio_remap, NULL);
+-	WARN_ON(ret);
++	if (ret)
++		goto err_block_bio_remap;
+ 	ret = register_trace_block_rq_remap(blk_add_trace_rq_remap, NULL);
+-	WARN_ON(ret);
++	if (ret)
++		goto err_block_rq_remap;
++	return 0;
++
++err_block_rq_remap:
++	unregister_trace_block_bio_remap(blk_add_trace_bio_remap, NULL);
++err_block_bio_remap:
++	unregister_trace_block_split(blk_add_trace_split, NULL);
++err_block_split:
++	unregister_trace_block_unplug(blk_add_trace_unplug, NULL);
++err_block_unplug:
++	unregister_trace_block_plug(blk_add_trace_plug, NULL);
++err_block_plug:
++	unregister_trace_block_getrq(blk_add_trace_getrq, NULL);
++err_block_getrq:
++	unregister_trace_block_bio_queue(blk_add_trace_bio_queue, NULL);
++err_block_bio_queue:
++	unregister_trace_block_bio_frontmerge(blk_add_trace_bio_frontmerge, NULL);
++err_block_bio_frontmerge:
++	unregister_trace_block_bio_backmerge(blk_add_trace_bio_backmerge, NULL);
++err_block_bio_backmerge:
++	unregister_trace_block_bio_complete(blk_add_trace_bio_complete, NULL);
++err_block_bio_complete:
++	unregister_trace_block_bio_bounce(blk_add_trace_bio_bounce, NULL);
++err_block_bio_bounce:
++	unregister_trace_block_rq_complete(blk_add_trace_rq_complete, NULL);
++err_block_rq_complete:
++	unregister_trace_block_rq_requeue(blk_add_trace_rq_requeue, NULL);
++err_block_rq_requeue:
++	unregister_trace_block_rq_merge(blk_add_trace_rq_merge, NULL);
++err_block_rq_merge:
++	unregister_trace_block_rq_issue(blk_add_trace_rq_issue, NULL);
++err_block_rq_issue:
++	unregister_trace_block_rq_insert(blk_add_trace_rq_insert, NULL);
++	tracepoint_synchronize_unregister();
++	return ret;
+ }
+ 
+ static void blk_unregister_tracepoints(void)
+@@ -1643,8 +1702,10 @@ static int blk_trace_setup_queue(struct request_queue *q,
+ 
+ 	blk_trace_setup_lba(bt, bdev);
+ 
++	ret = get_probe_ref();
++	if (ret)
++		goto free_bt;
+ 	rcu_assign_pointer(q->blk_trace, bt);
+-	get_probe_ref();
+ 	return 0;
+ 
+ free_bt:
+-- 
+2.25.1
 
--- Steve
