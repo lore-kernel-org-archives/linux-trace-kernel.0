@@ -2,90 +2,206 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B5B6AC6FD18
-	for <linux-trace-kernel@archiver.kernel.org>; Tue, 28 Mar 2023 23:16:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 388C7C76196
+	for <linux-trace-kernel@archiver.kernel.org>; Tue, 28 Mar 2023 23:52:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229627AbjC1XQU (ORCPT
+        id S229456AbjC1Xw1 (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Tue, 28 Mar 2023 19:16:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60338 "EHLO
+        Tue, 28 Mar 2023 19:52:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57588 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229531AbjC1XQT (ORCPT
+        with ESMTP id S229532AbjC1Xw0 (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Tue, 28 Mar 2023 19:16:19 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 01B331BF0;
-        Tue, 28 Mar 2023 16:16:18 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 90935619E8;
-        Tue, 28 Mar 2023 23:16:17 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7E7CDC433EF;
-        Tue, 28 Mar 2023 23:16:16 +0000 (UTC)
-Date:   Tue, 28 Mar 2023 19:16:13 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Daniel Bristot de Oliveira <bristot@kernel.org>
-Cc:     linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
-        Masami Hiramatsu <mhiramat@kernel.org>
-Subject: Re: [PATCH] tracing/osnoise: Fix notify new tracing_max_latency
-Message-ID: <20230328191613.33ac3f5e@gandalf.local.home>
-In-Reply-To: <c22302a7db3cee6bcabf87462ed22a35dd38690f.1679675521.git.bristot@kernel.org>
-References: <c22302a7db3cee6bcabf87462ed22a35dd38690f.1679675521.git.bristot@kernel.org>
-X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+        Tue, 28 Mar 2023 19:52:26 -0400
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 4C7112D47;
+        Tue, 28 Mar 2023 16:52:25 -0700 (PDT)
+Received: from W11-BEAU-MD.localdomain (unknown [76.135.27.212])
+        by linux.microsoft.com (Postfix) with ESMTPSA id 631F120FDA98;
+        Tue, 28 Mar 2023 16:52:24 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 631F120FDA98
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+        s=default; t=1680047544;
+        bh=0pwfcOP0BYjht0WfrCJ2bDXdNNrEgKRfwKmD9iPi+fk=;
+        h=From:To:Cc:Subject:Date:From;
+        b=g6TUG/nmDiCWRUDvyK0XUTblKnu7x40ya09oCI0WRg7LHSlbM5REy978h6eknxh2j
+         XBShQi3w7TJLWb3k7jiemicGH8AZtAo97r6jUo67CPG1Mtp3sGocVWNGh8Z2X1tc/9
+         IvQyAY8gvov62jeT4We42EJ6Tjo/ihC1TWByi9Rs=
+From:   Beau Belgrave <beaub@linux.microsoft.com>
+To:     rostedt@goodmis.org, mhiramat@kernel.org,
+        mathieu.desnoyers@efficios.com, dcook@linux.microsoft.com,
+        alanau@linux.microsoft.com, brauner@kernel.org,
+        akpm@linux-foundation.org, ebiederm@xmission.com,
+        keescook@chromium.org, tglx@linutronix.de
+Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        linux-trace-kernel@vger.kernel.org
+Subject: [PATCH v10 00/12] tracing/user_events: Remote write ABI
+Date:   Tue, 28 Mar 2023 16:52:07 -0700
+Message-Id: <20230328235219.203-1-beaub@linux.microsoft.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On Fri, 24 Mar 2023 18:51:35 +0100
-Daniel Bristot de Oliveira <bristot@kernel.org> wrote:
+As part of the discussions for user_events aligned with user space
+tracers, it was determined that user programs should register a aligned
+value to set or clear a bit when an event becomes enabled. Currently a
+shared page is being used that requires mmap(). Remove the shared page
+implementation and move to a user registered address implementation.
 
-> timerlat is not reporting a new tracing_max_latency for the thread
-> latency. Also, the tracer is reporting new max latency on instances
-> where the tracing is off, creating inconsistencies between the max
-> reported values in the trace and in the tracing_max_latency. Thus
-> only report new tracing_max_latency on active tracing instances.
+In this new model during the event registration from user programs 3 new
+values are specified. The first is the address to update when the event
+is either enabled or disabled. The second is the bit to set/clear to
+reflect the event being enabled. The third is the size of the value at
+the specified address.
 
-Sounds to me this patch fixes two different bugs. If so, can you please
-break it up into two different patches?
+This allows for a local 32/64-bit value in user programs to support
+both kernel and user tracers. As an example, setting bit 31 for kernel
+tracers when the event becomes enabled allows for user tracers to use
+the other bits for ref counts or other flags. The kernel side updates
+the bit atomically, user programs need to also update these values
+atomically.
 
-Thanks!
+User provided addresses must be aligned on a natural boundary, this
+allows for single page checking and prevents odd behaviors such as a
+enable value straddling 2 pages instead of a single page.
 
--- Steve
+When page faults are encountered they are done asyncly via a workqueue.
+If the page faults back in, the write update is attempted again. If the
+page cannot fault-in, then we log and wait until the next time the event
+is enabled/disabled. This is to prevent possible infinite loops resulting
+from bad user processes unmapping or changing protection values after
+registering the address.
 
-> 
-> Fixes: dae181349f1e ("tracing/osnoise: Support a list of trace_array *tr")
-> Cc: Daniel Bristot de Oliveira <bristot@kernel.org>
-> Cc: Steven Rostedt <rostedt@goodmis.org>
-> Cc: Masami Hiramatsu <mhiramat@kernel.org>
-> Signed-off-by: Daniel Bristot de Oliveira <bristot@kernel.org>
-> ---
->  kernel/trace/trace_osnoise.c | 4 +++-
->  1 file changed, 3 insertions(+), 1 deletion(-)
-> 
-> diff --git a/kernel/trace/trace_osnoise.c b/kernel/trace/trace_osnoise.c
-> index 210e1f168392..2a1b337ac643 100644
-> --- a/kernel/trace/trace_osnoise.c
-> +++ b/kernel/trace/trace_osnoise.c
-> @@ -1296,7 +1296,7 @@ static void notify_new_max_latency(u64 latency)
->  	rcu_read_lock();
->  	list_for_each_entry_rcu(inst, &osnoise_instances, list) {
->  		tr = inst->tr;
-> -		if (tr->max_latency < latency) {
-> +		if (tracer_tracing_is_on(tr) && tr->max_latency < latency) {
->  			tr->max_latency = latency;
->  			latency_fsnotify(tr);
->  		}
-> @@ -1738,6 +1738,8 @@ static int timerlat_main(void *data)
->  
->  		trace_timerlat_sample(&s);
->  
-> +		notify_new_max_latency(diff);
-> +
->  		timerlat_dump_stack(time_to_us(diff));
->  
->  		tlat->tracing_thread = false;
+Change history
+
+V10:
+Ensure reserved values in unregister ioctl are set to 0.
+
+Tab out all structs for readability.
+
+V9:
+Updated documentation to include __packed attributed in example payload.
+
+Removed boot argument for max events, since sysctl can now be set via
+kernel boot parameters.
+
+V8:
+Rebase to 6.2-rc8.
+
+V7:
+Rebase to 6.2-rc4.
+
+Added flags to register ioctl, validates it's 0 for now. Future patches
+will enable other types of formats/options as needed.
+
+V6:
+Rebase to 6.2-rc2.
+
+Fixed small typos, code style.
+
+Changed from synchronize_rcu() to queue_rcu_work() to allow an rcu
+delay asyncly when mm is being removed and in an appropriate context
+for mmdrop().
+
+V5:
+GFP_NOWAIT is still needed in user_event_enabler_dup(), due to rcu lock.
+
+V4:
+Rebase to 6.1-rc7.
+
+Moved user_events_fork() out of task signal lock and dropped use of
+GFP_NOWAIT. All allocations are now GFP_KERNEL or GFP_KERNEL_ACCOUNT.
+
+Added boot parameter user_events_max= to limit global events.
+
+Added sysctl value kernel.user_events_max to limit global events.
+
+Added cgroup tracking of memory allocated for events.
+
+V3:
+Rebase to 6.1-rc6.
+
+Removed RFC tag on series.
+
+Updated documentation to reflect ABI changes.
+
+Added self-test for ABI specific clone/fork cases.
+
+Moved user_event_mm removal into do_exit() to ensure RSS task accounting
+is done properly in async fault paths. Also lets us remove the delayed
+mmdrop(), saving memory in each user_event_mm struct.
+
+Fixed timing window where task exits, but write could be in-progress.
+During exit we now take mmap_write_lock to ensure we drain writes.
+
+V2:
+Rebase to 6.1-rc5.
+
+Added various comments based on feedback.
+
+Added enable_size to register struct, allows 32/64 bit addresses
+as long as the enable_bit fits and the address is naturally aligned.
+
+Changed user_event_enabler_write to accept a new flag indicating if a
+fault fixup should be done or not. This allows user_event_enabler_create
+to return back failures to the user ioctl reg call and retry to fault
+in data.
+
+Added tracking fork/exec/exit of tasks to have the user_event_mm lifetime
+tied more to the task than the file. This came with extra requirements
+around when you can lock, such as softirq cases, as well as a RCU
+pattern to ensure fork/exec/exit take minimal lock times.
+
+Changed enablers to use a single word-aligned value for saving the bit
+to set and any flags, such as faulting asyncly or being freed. This was
+required to ensure atomic bit set/test for fork cases where taking the
+event_mutex is not a good scalability decision.
+
+Added unregister IOCTL, since file lifetime no longer limits the enable
+time for any events (the mm does).
+
+Updated sample code to reflect the new remote write based ABI.
+
+Updated self-test code to reflect the new remote write based ABI.
+
+Beau Belgrave (12):
+  tracing/user_events: Split header into uapi and kernel
+  tracing/user_events: Track fork/exec/exit for mm lifetime
+  tracing/user_events: Use remote writes for event enablement
+  tracing/user_events: Fixup enable faults asyncly
+  tracing/user_events: Add ioctl for disabling addresses
+  tracing/user_events: Update self-tests to write ABI
+  tracing/user_events: Add ABI self-test
+  tracing/user_events: Use write ABI in example
+  tracing/user_events: Update documentation for ABI
+  tracing/user_events: Charge event allocs to cgroups
+  tracing/user_events: Limit global user_event count
+  tracing/user_events: Align structs with tabs for readability
+
+ Documentation/trace/user_events.rst           | 179 ++--
+ fs/exec.c                                     |   2 +
+ include/linux/sched.h                         |   5 +
+ include/linux/user_events.h                   | 101 +-
+ include/uapi/linux/user_events.h              |  81 ++
+ kernel/exit.c                                 |   2 +
+ kernel/fork.c                                 |   2 +
+ kernel/trace/Kconfig                          |   5 +-
+ kernel/trace/trace_events_user.c              | 923 ++++++++++++++----
+ samples/user_events/example.c                 |  47 +-
+ tools/testing/selftests/user_events/Makefile  |   2 +-
+ .../testing/selftests/user_events/abi_test.c  | 226 +++++
+ .../testing/selftests/user_events/dyn_test.c  |   2 +-
+ .../selftests/user_events/ftrace_test.c       | 162 +--
+ .../testing/selftests/user_events/perf_test.c |  39 +-
+ 15 files changed, 1344 insertions(+), 434 deletions(-)
+ create mode 100644 include/uapi/linux/user_events.h
+ create mode 100644 tools/testing/selftests/user_events/abi_test.c
+
+
+base-commit: ceaa837f96adb69c0df0397937cd74991d5d821a
+-- 
+2.25.1
 
