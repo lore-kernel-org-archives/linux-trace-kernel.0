@@ -2,23 +2,23 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F84FC761AF
-	for <linux-trace-kernel@archiver.kernel.org>; Tue, 28 Mar 2023 13:44:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B7DDCC6FD18
+	for <linux-trace-kernel@archiver.kernel.org>; Tue, 28 Mar 2023 13:44:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232546AbjC1Nog (ORCPT
+        id S231976AbjC1Noh (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Tue, 28 Mar 2023 09:44:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49334 "EHLO
+        Tue, 28 Mar 2023 09:44:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49344 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233298AbjC1NoQ (ORCPT
+        with ESMTP id S233300AbjC1NoQ (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
         Tue, 28 Mar 2023 09:44:16 -0400
 Received: from mail-m118111.qiye.163.com (mail-m118111.qiye.163.com [115.236.118.111])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F3860C640;
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F3347C169;
         Tue, 28 Mar 2023 06:44:01 -0700 (PDT)
 Received: from ubuntu.localdomain (unknown [117.133.56.22])
-        by mail-m118111.qiye.163.com (Hmail) with ESMTPA id 487B1580407;
-        Tue, 28 Mar 2023 21:43:32 +0800 (CST)
+        by mail-m118111.qiye.163.com (Hmail) with ESMTPA id 9B3475801BB;
+        Tue, 28 Mar 2023 21:43:24 +0800 (CST)
 From:   Donglin Peng <pengdonglin@sangfor.com.cn>
 To:     mhiramat@kernel.org, rostedt@goodmis.org, linux@armlinux.org.uk,
         mark.rutland@arm.com, will@kernel.org, catalin.marinas@arm.com,
@@ -32,140 +32,140 @@ Cc:     linux-trace-kernel@vger.kernel.org, loongarch@lists.linux.dev,
         linux-riscv@lists.infradead.org,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
         Donglin Peng <pengdonglin@sangfor.com.cn>
-Subject: [PATCH v8 7/8] LoongArch: ftrace: Enable HAVE_FUNCTION_GRAPH_RETVAL
-Date:   Tue, 28 Mar 2023 06:43:18 -0700
-Message-Id: <20230328134319.2185812-8-pengdonglin@sangfor.com.cn>
+Subject: [PATCH v8 2/8] tracing: Add documentation for funcgraph-retval and funcgraph-retval-hex
+Date:   Tue, 28 Mar 2023 06:43:13 -0700
+Message-Id: <20230328134319.2185812-3-pengdonglin@sangfor.com.cn>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20230328134319.2185812-1-pengdonglin@sangfor.com.cn>
 References: <20230328134319.2185812-1-pengdonglin@sangfor.com.cn>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-HM-Spam-Status: e1kfGhgUHx5ZQUpXWQgPGg8OCBgUHx5ZQUlOS1dZFg8aDwILHllBWSg2Ly
-        tZV1koWUFITzdXWS1ZQUlXWQ8JGhUIEh9ZQVlDHhkYVh4aTUkZHx1DH0xISlUTARMWGhIXJBQOD1
-        lXWRgSC1lBWUpKTFVKSEhVTk1VSUlZV1kWGg8SFR0UWUFZT0tIVUpKS09LQ1VKS0tVS1kG
-X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6NjY6PRw4Ej0KA1YfAQsTDzUv
-        IxBPCxJVSlVKTUNLS0pKS0pITEpIVTMWGhIXVQseFRwfFBUcFxIVOwgaFRwdFAlVGBQWVRgVRVlX
-        WRILWUFZSkpMVUpISFVOTVVJSVlXWQgBWUFOQ0xCNwY+
-X-HM-Tid: 0a872875ac292eb7kusn487b1580407
+        tZV1koWUFITzdXWS1ZQUlXWQ8JGhUIEh9ZQVlCTEJNVktKS0IYSBhITR0fS1UTARMWGhIXJBQOD1
+        lXWRgSC1lBWUpKTFVKSEhVTk1VSUlZV1kWGg8SFR0UWUFZT0tIVUpISkJIT1VKS0tVS1kG
+X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6OBQ6LQw6MD0QSFYVAQodDz40
+        ORcaFBRVSlVKTUNLS0pKS0tNS0pJVTMWGhIXVQseFRwfFBUcFxIVOwgaFRwdFAlVGBQWVRgVRVlX
+        WRILWUFZSkpMVUpISFVOTVVJSVlXWQgBWUFMSUJMNwY+
+X-HM-Tid: 0a8728758e632eb7kusn9b3475801bb
 X-HM-MType: 1
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-The commit d4815c5d1bbd ("function_graph: Support recording and
-printing the return value of function") laid the groundwork for the
-for the funcgraph-retval, and this modification makes it available
-on the LoongArch platform.
-
-We introduce a new structure called fgraph_ret_regs for the LoongArch
-platform to hold return registers and the frame pointer. We then fill
-its content in the return_to_handler and pass its address to the
-function ftrace_return_to_handler to record the return value.
+Add documentation for the two newly introduced options for the
+function_graph tracer. The funcgraph-retval option is used to
+control whether or not to display the return value, while the
+funcgraph-retval-hex option is used to control the display
+format of the return value.
 
 Signed-off-by: Donglin Peng <pengdonglin@sangfor.com.cn>
 ---
-v8:
- - Modify the control range of CONFIG_HAVE_FUNCTION_GRAPH_RETVAL
----
- arch/loongarch/Kconfig              |  1 +
- arch/loongarch/include/asm/ftrace.h | 18 ++++++++++++++++++
- arch/loongarch/kernel/mcount.S      |  6 ++++--
- arch/loongarch/kernel/mcount_dyn.S  |  7 ++++---
- 4 files changed, 27 insertions(+), 5 deletions(-)
+v7:
+ - Rename trace option 'graph_retval_hex' to 'funcgraph-retval-hex'
+ - Update documentation description
 
-diff --git a/arch/loongarch/Kconfig b/arch/loongarch/Kconfig
-index 7fd51257e0ed..4bf60132869b 100644
---- a/arch/loongarch/Kconfig
-+++ b/arch/loongarch/Kconfig
-@@ -99,6 +99,7 @@ config LOONGARCH
- 	select HAVE_FAST_GUP
- 	select HAVE_FTRACE_MCOUNT_RECORD
- 	select HAVE_FUNCTION_ARG_ACCESS_API
-+	select HAVE_FUNCTION_GRAPH_RETVAL if HAVE_FUNCTION_GRAPH_TRACER
- 	select HAVE_FUNCTION_GRAPH_TRACER
- 	select HAVE_FUNCTION_TRACER
- 	select HAVE_GENERIC_VDSO
-diff --git a/arch/loongarch/include/asm/ftrace.h b/arch/loongarch/include/asm/ftrace.h
-index 3418d32d4fc7..433c6218888b 100644
---- a/arch/loongarch/include/asm/ftrace.h
-+++ b/arch/loongarch/include/asm/ftrace.h
-@@ -63,4 +63,22 @@ void ftrace_graph_func(unsigned long ip, unsigned long parent_ip,
+v6:
+ - Modify the limitations for funcgraph-retval
+ - Optimize the English expression
+
+v5:
+ - Describe the limitations of funcgraph-retval
+---
+ Documentation/trace/ftrace.rst | 74 ++++++++++++++++++++++++++++++++++
+ 1 file changed, 74 insertions(+)
+
+diff --git a/Documentation/trace/ftrace.rst b/Documentation/trace/ftrace.rst
+index b927fb2b94dc..cdf94b97876f 100644
+--- a/Documentation/trace/ftrace.rst
++++ b/Documentation/trace/ftrace.rst
+@@ -1328,6 +1328,19 @@ Options for function_graph tracer:
+ 	only a closing curly bracket "}" is displayed for
+ 	the return of a function.
  
- #endif /* CONFIG_FUNCTION_TRACER */
- 
-+#ifndef __ASSEMBLY__
-+struct fgraph_ret_regs {
-+	unsigned long a0;
-+	unsigned long a1;
-+	unsigned long fp;
-+};
++  funcgraph-retval
++	When set, the return value of each traced function
++	will be printed after an equal sign "=". By default
++	this is off.
 +
-+static inline unsigned long fgraph_ret_regs_return_value(struct fgraph_ret_regs *ret_regs)
-+{
-+	return ret_regs->a0;
-+}
++  funcgraph-retval-hex
++	When set, the return value will always be printed
++	in hexadecimal format. If the option is not set and
++	the return value is an error code, it will be printed
++	in signed decimal format; otherwise it will also be
++	printed in hexadecimal format. By default, this option
++	is off.
 +
-+static inline unsigned long fgraph_ret_regs_frame_pointer(struct fgraph_ret_regs *ret_regs)
-+{
-+	return ret_regs->fp;
-+}
-+#endif
+   sleep-time
+ 	When running function graph tracer, to include
+ 	the time a task schedules out in its function.
+@@ -2673,6 +2686,67 @@ It is default disabled.
+     0)   1.757 us    |        } /* kmem_cache_free() */
+     0)   2.861 us    |      } /* putname() */
+ 
++The return value of each traced function can be displayed after
++an equal sign "=". When encountering system call failures, it
++can be verfy helpful to quickly locate the function that first
++returns an error code.
 +
- #endif /* _ASM_LOONGARCH_FTRACE_H */
-diff --git a/arch/loongarch/kernel/mcount.S b/arch/loongarch/kernel/mcount.S
-index 8cdc1563cd33..3e405c0212c0 100644
---- a/arch/loongarch/kernel/mcount.S
-+++ b/arch/loongarch/kernel/mcount.S
-@@ -79,10 +79,12 @@ SYM_FUNC_START(ftrace_graph_caller)
- SYM_FUNC_END(ftrace_graph_caller)
- 
- SYM_FUNC_START(return_to_handler)
--	PTR_ADDI	sp, sp, -2 * SZREG
-+	PTR_ADDI	sp, sp, -3 * SZREG
- 	PTR_S		a0, sp, 0
- 	PTR_S		a1, sp, SZREG
-+	PTR_S		zero, sp, 2 * SZREG
- 
-+	move		a0, sp
- 	bl		ftrace_return_to_handler
- 
- 	/* Restore the real parent address: a0 -> ra */
-@@ -90,7 +92,7 @@ SYM_FUNC_START(return_to_handler)
- 
- 	PTR_L		a0, sp, 0
- 	PTR_L		a1, sp, SZREG
--	PTR_ADDI	sp, sp, 2 * SZREG
-+	PTR_ADDI	sp, sp, 3 * SZREG
- 	jr		ra
- SYM_FUNC_END(return_to_handler)
- #endif /* CONFIG_FUNCTION_GRAPH_TRACER */
-diff --git a/arch/loongarch/kernel/mcount_dyn.S b/arch/loongarch/kernel/mcount_dyn.S
-index bbabf06244c2..ab85a953c6d3 100644
---- a/arch/loongarch/kernel/mcount_dyn.S
-+++ b/arch/loongarch/kernel/mcount_dyn.S
-@@ -131,18 +131,19 @@ SYM_CODE_END(ftrace_graph_caller)
- 
- SYM_CODE_START(return_to_handler)
- 	/* Save return value regs */
--	PTR_ADDI 	sp, sp, -2 * SZREG
-+	PTR_ADDI 	sp, sp, -3 * SZREG
- 	PTR_S		a0, sp, 0
- 	PTR_S		a1, sp, SZREG
-+	PTR_S		zero, sp, 2 * SZREG
- 
--	move		a0, zero
-+	move		a0, sp
- 	bl		ftrace_return_to_handler
- 	move		ra, a0
- 
- 	/* Restore return value regs */
- 	PTR_L		a0, sp, 0
- 	PTR_L		a1, sp, SZREG
--	PTR_ADDI 	sp, sp, 2 * SZREG
-+	PTR_ADDI 	sp, sp, 3 * SZREG
- 
- 	jr		ra
- SYM_CODE_END(return_to_handler)
++	- hide: echo nofuncgraph-retval > trace_options
++	- show: echo funcgraph-retval > trace_options
++
++  Example with funcgraph-retval::
++
++    1)               |    cgroup_migrate() {
++    1)   0.651 us    |      cgroup_migrate_add_task(); /* = 0xffff93fcfd346c00 */
++    1)               |      cgroup_migrate_execute() {
++    1)               |        cpu_cgroup_can_attach() {
++    1)               |          cgroup_taskset_first() {
++    1)   0.732 us    |            cgroup_taskset_next(); /* = 0xffff93fc8fb20000 */
++    1)   1.232 us    |          } /* cgroup_taskset_first = 0xffff93fc8fb20000 */
++    1)   0.380 us    |          sched_rt_can_attach(); /* = 0x0 */
++    1)   2.335 us    |        } /* cpu_cgroup_can_attach = -22 */
++    1)   4.369 us    |      } /* cgroup_migrate_execute = -22 */
++    1)   7.143 us    |    } /* cgroup_migrate = -22 */
++
++The above example shows that the function cpu_cgroup_can_attach
++returned the error code -22 firstly, then we can read the code
++of this function to get the root cause.
++
++When the option funcgraph-retval-hex is not set, the return value can
++be displayed in a smart way. Specifically, if it is an error code,
++it will be printed in signed decimal format, otherwise it will
++printed in hexadecimal format.
++
++	- smart: echo nofuncgraph-retval-hex > trace_options
++	- hexadecimal always: echo funcgraph-retval-hex > trace_options
++
++  Example with funcgraph-retval-hex::
++
++    1)               |      cgroup_migrate() {
++    1)   0.651 us    |        cgroup_migrate_add_task(); /* = 0xffff93fcfd346c00 */
++    1)               |        cgroup_migrate_execute() {
++    1)               |          cpu_cgroup_can_attach() {
++    1)               |            cgroup_taskset_first() {
++    1)   0.732 us    |              cgroup_taskset_next(); /* = 0xffff93fc8fb20000 */
++    1)   1.232 us    |            } /* cgroup_taskset_first = 0xffff93fc8fb20000 */
++    1)   0.380 us    |            sched_rt_can_attach(); /* = 0x0 */
++    1)   2.335 us    |          } /* cpu_cgroup_can_attach = 0xffffffea */
++    1)   4.369 us    |        } /* cgroup_migrate_execute = 0xffffffea */
++    1)   7.143 us    |      } /* cgroup_migrate = 0xffffffea */
++
++At present, there are some limitations when using the funcgraph-retval
++option, which may be addressed in the future:
++
++- Even if the function return type is void, a return value will still
++  be printed, and you can just ignore it.
++
++- Even if return values are stored in multiple registers, only the
++  value contained in the first register will be recorded and printed.
++  To illustrate, in the x86 architecture, eax and edx are used to store
++  a 64-bit return value, with the lower 32 bits saved in eax and the
++  upper 32 bits saved in edx. However, only the value stored in eax
++  will be recorded and printed.
++
+ You can put some comments on specific functions by using
+ trace_printk() For example, if you want to put a comment inside
+ the __might_sleep() function, you just have to include
 -- 
 2.25.1
 
