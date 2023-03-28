@@ -2,23 +2,23 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B7DDCC6FD18
-	for <linux-trace-kernel@archiver.kernel.org>; Tue, 28 Mar 2023 13:44:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AA12CC77B61
+	for <linux-trace-kernel@archiver.kernel.org>; Tue, 28 Mar 2023 13:44:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231976AbjC1Noh (ORCPT
+        id S233356AbjC1Noh (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
         Tue, 28 Mar 2023 09:44:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49344 "EHLO
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49352 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233300AbjC1NoQ (ORCPT
+        with ESMTP id S233302AbjC1NoQ (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
         Tue, 28 Mar 2023 09:44:16 -0400
 Received: from mail-m118111.qiye.163.com (mail-m118111.qiye.163.com [115.236.118.111])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F3347C169;
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BC5E1BDF5;
         Tue, 28 Mar 2023 06:44:01 -0700 (PDT)
 Received: from ubuntu.localdomain (unknown [117.133.56.22])
-        by mail-m118111.qiye.163.com (Hmail) with ESMTPA id 9B3475801BB;
-        Tue, 28 Mar 2023 21:43:24 +0800 (CST)
+        by mail-m118111.qiye.163.com (Hmail) with ESMTPA id BFAA9580979;
+        Tue, 28 Mar 2023 21:43:33 +0800 (CST)
 From:   Donglin Peng <pengdonglin@sangfor.com.cn>
 To:     mhiramat@kernel.org, rostedt@goodmis.org, linux@armlinux.org.uk,
         mark.rutland@arm.com, will@kernel.org, catalin.marinas@arm.com,
@@ -32,140 +32,83 @@ Cc:     linux-trace-kernel@vger.kernel.org, loongarch@lists.linux.dev,
         linux-riscv@lists.infradead.org,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
         Donglin Peng <pengdonglin@sangfor.com.cn>
-Subject: [PATCH v8 2/8] tracing: Add documentation for funcgraph-retval and funcgraph-retval-hex
-Date:   Tue, 28 Mar 2023 06:43:13 -0700
-Message-Id: <20230328134319.2185812-3-pengdonglin@sangfor.com.cn>
+Subject: [PATCH v8 8/8] selftests/ftrace: Add funcgraph-retval test case
+Date:   Tue, 28 Mar 2023 06:43:19 -0700
+Message-Id: <20230328134319.2185812-9-pengdonglin@sangfor.com.cn>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20230328134319.2185812-1-pengdonglin@sangfor.com.cn>
 References: <20230328134319.2185812-1-pengdonglin@sangfor.com.cn>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-HM-Spam-Status: e1kfGhgUHx5ZQUpXWQgPGg8OCBgUHx5ZQUlOS1dZFg8aDwILHllBWSg2Ly
-        tZV1koWUFITzdXWS1ZQUlXWQ8JGhUIEh9ZQVlCTEJNVktKS0IYSBhITR0fS1UTARMWGhIXJBQOD1
-        lXWRgSC1lBWUpKTFVKSEhVTk1VSUlZV1kWGg8SFR0UWUFZT0tIVUpISkJIT1VKS0tVS1kG
-X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6OBQ6LQw6MD0QSFYVAQodDz40
-        ORcaFBRVSlVKTUNLS0pKS0tNS0pJVTMWGhIXVQseFRwfFBUcFxIVOwgaFRwdFAlVGBQWVRgVRVlX
-        WRILWUFZSkpMVUpISFVOTVVJSVlXWQgBWUFMSUJMNwY+
-X-HM-Tid: 0a8728758e632eb7kusn9b3475801bb
+        tZV1koWUFITzdXWS1ZQUlXWQ8JGhUIEh9ZQVkaSB8eVh5OSR5LQx8ZHk0ZHVUTARMWGhIXJBQOD1
+        lXWRgSC1lBWUpKTFVKSEhVTk1VSUlZV1kWGg8SFR0UWUFZT0tIVUpKS0hKTFVKS0tVS1kG
+X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6Mz46Aio6NT0WA1YJAQo6DzoZ
+        Hi0wFDpVSlVKTUNLS0pKS0pOSkpCVTMWGhIXVQseFRwfFBUcFxIVOwgaFRwdFAlVGBQWVRgVRVlX
+        WRILWUFZSkpMVUpISFVOTVVJSVlXWQgBWUFIQk9INwY+
+X-HM-Tid: 0a872875b2232eb7kusnbfaa9580979
 X-HM-MType: 1
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-Add documentation for the two newly introduced options for the
-function_graph tracer. The funcgraph-retval option is used to
-control whether or not to display the return value, while the
-funcgraph-retval-hex option is used to control the display
-format of the return value.
+Add a test case for the funcgraph-retval and funcgraph-retval-hex
+trace options.
 
 Signed-off-by: Donglin Peng <pengdonglin@sangfor.com.cn>
 ---
-v7:
- - Rename trace option 'graph_retval_hex' to 'funcgraph-retval-hex'
- - Update documentation description
-
-v6:
- - Modify the limitations for funcgraph-retval
- - Optimize the English expression
-
-v5:
- - Describe the limitations of funcgraph-retval
+v8:
+ - Fix issues in selftest
 ---
- Documentation/trace/ftrace.rst | 74 ++++++++++++++++++++++++++++++++++
- 1 file changed, 74 insertions(+)
+ .../ftrace/test.d/ftrace/fgraph-retval.tc     | 39 +++++++++++++++++++
+ 1 file changed, 39 insertions(+)
+ create mode 100644 tools/testing/selftests/ftrace/test.d/ftrace/fgraph-retval.tc
 
-diff --git a/Documentation/trace/ftrace.rst b/Documentation/trace/ftrace.rst
-index b927fb2b94dc..cdf94b97876f 100644
---- a/Documentation/trace/ftrace.rst
-+++ b/Documentation/trace/ftrace.rst
-@@ -1328,6 +1328,19 @@ Options for function_graph tracer:
- 	only a closing curly bracket "}" is displayed for
- 	the return of a function.
- 
-+  funcgraph-retval
-+	When set, the return value of each traced function
-+	will be printed after an equal sign "=". By default
-+	this is off.
+diff --git a/tools/testing/selftests/ftrace/test.d/ftrace/fgraph-retval.tc b/tools/testing/selftests/ftrace/test.d/ftrace/fgraph-retval.tc
+new file mode 100644
+index 000000000000..ac6d0183e4d9
+--- /dev/null
++++ b/tools/testing/selftests/ftrace/test.d/ftrace/fgraph-retval.tc
+@@ -0,0 +1,39 @@
++#!/bin/sh
++# SPDX-License-Identifier: GPL-2.0
++# description: ftrace - function graph print function return value
++# requires: set_graph_function options/funcgraph-retval options/funcgraph-retval-hex function_graph:tracer
 +
-+  funcgraph-retval-hex
-+	When set, the return value will always be printed
-+	in hexadecimal format. If the option is not set and
-+	the return value is an error code, it will be printed
-+	in signed decimal format; otherwise it will also be
-+	printed in hexadecimal format. By default, this option
-+	is off.
++# Make sure that funcgraph-retval works
 +
-   sleep-time
- 	When running function graph tracer, to include
- 	the time a task schedules out in its function.
-@@ -2673,6 +2686,67 @@ It is default disabled.
-     0)   1.757 us    |        } /* kmem_cache_free() */
-     0)   2.861 us    |      } /* putname() */
- 
-+The return value of each traced function can be displayed after
-+an equal sign "=". When encountering system call failures, it
-+can be verfy helpful to quickly locate the function that first
-+returns an error code.
++fail() { # msg
++    echo $1
++    exit_fail
++}
 +
-+	- hide: echo nofuncgraph-retval > trace_options
-+	- show: echo funcgraph-retval > trace_options
++echo proc_reg_write > set_graph_function
++echo function_graph > current_tracer
++echo funcgraph-retval > trace_options
 +
-+  Example with funcgraph-retval::
++enable_tracing
 +
-+    1)               |    cgroup_migrate() {
-+    1)   0.651 us    |      cgroup_migrate_add_task(); /* = 0xffff93fcfd346c00 */
-+    1)               |      cgroup_migrate_execute() {
-+    1)               |        cpu_cgroup_can_attach() {
-+    1)               |          cgroup_taskset_first() {
-+    1)   0.732 us    |            cgroup_taskset_next(); /* = 0xffff93fc8fb20000 */
-+    1)   1.232 us    |          } /* cgroup_taskset_first = 0xffff93fc8fb20000 */
-+    1)   0.380 us    |          sched_rt_can_attach(); /* = 0x0 */
-+    1)   2.335 us    |        } /* cpu_cgroup_can_attach = -22 */
-+    1)   4.369 us    |      } /* cgroup_migrate_execute = -22 */
-+    1)   7.143 us    |    } /* cgroup_migrate = -22 */
++set +e
++echo > /proc/interrupts
++set -e
 +
-+The above example shows that the function cpu_cgroup_can_attach
-+returned the error code -22 firstly, then we can read the code
-+of this function to get the root cause.
++disable_tracing
 +
-+When the option funcgraph-retval-hex is not set, the return value can
-+be displayed in a smart way. Specifically, if it is an error code,
-+it will be printed in signed decimal format, otherwise it will
-+printed in hexadecimal format.
++: "Test printing the error code in signed decimal format"
++echo nofuncgraph-retval-hex > trace_options
++count=`cat trace | grep 'proc_reg_write' | grep '= -5' | wc -l`
++if [ $count -eq 0 ]; then
++    fail "Return value can not be printed in signed decimal format"
++fi
 +
-+	- smart: echo nofuncgraph-retval-hex > trace_options
-+	- hexadecimal always: echo funcgraph-retval-hex > trace_options
++: "Test printing the error code in hexadecimal format"
++echo funcgraph-retval-hex > trace_options
++count=`cat trace | grep 'proc_reg_write' | grep 'fffffffb' | wc -l`
++if [ $count -eq 0 ]; then
++    fail "Return value can not be printed in hexadecimal format"
++fi
 +
-+  Example with funcgraph-retval-hex::
-+
-+    1)               |      cgroup_migrate() {
-+    1)   0.651 us    |        cgroup_migrate_add_task(); /* = 0xffff93fcfd346c00 */
-+    1)               |        cgroup_migrate_execute() {
-+    1)               |          cpu_cgroup_can_attach() {
-+    1)               |            cgroup_taskset_first() {
-+    1)   0.732 us    |              cgroup_taskset_next(); /* = 0xffff93fc8fb20000 */
-+    1)   1.232 us    |            } /* cgroup_taskset_first = 0xffff93fc8fb20000 */
-+    1)   0.380 us    |            sched_rt_can_attach(); /* = 0x0 */
-+    1)   2.335 us    |          } /* cpu_cgroup_can_attach = 0xffffffea */
-+    1)   4.369 us    |        } /* cgroup_migrate_execute = 0xffffffea */
-+    1)   7.143 us    |      } /* cgroup_migrate = 0xffffffea */
-+
-+At present, there are some limitations when using the funcgraph-retval
-+option, which may be addressed in the future:
-+
-+- Even if the function return type is void, a return value will still
-+  be printed, and you can just ignore it.
-+
-+- Even if return values are stored in multiple registers, only the
-+  value contained in the first register will be recorded and printed.
-+  To illustrate, in the x86 architecture, eax and edx are used to store
-+  a 64-bit return value, with the lower 32 bits saved in eax and the
-+  upper 32 bits saved in edx. However, only the value stored in eax
-+  will be recorded and printed.
-+
- You can put some comments on specific functions by using
- trace_printk() For example, if you want to put a comment inside
- the __might_sleep() function, you just have to include
++exit 0
 -- 
 2.25.1
 
