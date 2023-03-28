@@ -2,31 +2,31 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B271AC77B6F
-	for <linux-trace-kernel@archiver.kernel.org>; Tue, 28 Mar 2023 23:52:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BE9DEC77B6C
+	for <linux-trace-kernel@archiver.kernel.org>; Tue, 28 Mar 2023 23:52:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229667AbjC1Xwg (ORCPT
+        id S229692AbjC1Xwh (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Tue, 28 Mar 2023 19:52:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57704 "EHLO
+        Tue, 28 Mar 2023 19:52:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57706 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229741AbjC1Xwa (ORCPT
+        with ESMTP id S229770AbjC1Xwa (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
         Tue, 28 Mar 2023 19:52:30 -0400
 Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 919B32D53;
-        Tue, 28 Mar 2023 16:52:28 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id A0CA730DF;
+        Tue, 28 Mar 2023 16:52:29 -0700 (PDT)
 Received: from W11-BEAU-MD.localdomain (unknown [76.135.27.212])
-        by linux.microsoft.com (Postfix) with ESMTPSA id DFDE520FDC2B;
-        Tue, 28 Mar 2023 16:52:27 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com DFDE520FDC2B
+        by linux.microsoft.com (Postfix) with ESMTPSA id 1B87320FDC3A;
+        Tue, 28 Mar 2023 16:52:29 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 1B87320FDC3A
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-        s=default; t=1680047548;
-        bh=qI96osokKp98pPQQ0gcTi7CZ/dblw6z+BDokZ8I1srE=;
+        s=default; t=1680047549;
+        bh=MYYDTYE8Up+wGqx+f1YsuHPS1P/30RHQ/hjmHTBgUyY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=lmrNtkNNG4dzoN7913JS2gWP+R8KGWlUDqKaxO8sCMrmKxOVyLwVtjKYhmuMO865J
-         Tji3YhaEy0FIY1/Knn034TsTx2mXweD//zlirKc8oTd+P7RU8z18hF9vmwovu92SI2
-         dqRA68YgPlxdY/pvAjSzhDOj6IayloDfARS7MtB0=
+        b=Jqyl4KPw+E+tV+T5GSisoQ5Rmyf37Cjz/I/bQERDIT2eym1qrzjyLDap9dlmJASTX
+         A9VuVoCBgoqlVRQYTkaSH3yKyXSUBt8Uo4fYLa/UeSoopA5O3npO1Ucx2L/wG+nl0X
+         v2RTgH45YmKPVqpwAhVUJYnsMKK7rdsu5GC8WwnU=
 From:   Beau Belgrave <beaub@linux.microsoft.com>
 To:     rostedt@goodmis.org, mhiramat@kernel.org,
         mathieu.desnoyers@efficios.com, dcook@linux.microsoft.com,
@@ -35,9 +35,9 @@ To:     rostedt@goodmis.org, mhiramat@kernel.org,
         keescook@chromium.org, tglx@linutronix.de
 Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
         linux-trace-kernel@vger.kernel.org
-Subject: [PATCH v10 09/12] tracing/user_events: Update documentation for ABI
-Date:   Tue, 28 Mar 2023 16:52:16 -0700
-Message-Id: <20230328235219.203-10-beaub@linux.microsoft.com>
+Subject: [PATCH v10 12/12] tracing/user_events: Align structs with tabs for readability
+Date:   Tue, 28 Mar 2023 16:52:19 -0700
+Message-Id: <20230328235219.203-13-beaub@linux.microsoft.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20230328235219.203-1-beaub@linux.microsoft.com>
 References: <20230328235219.203-1-beaub@linux.microsoft.com>
@@ -47,285 +47,257 @@ Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-The ABI for user_events has changed from mmap() based to remote writes.
-Update the documentation to reflect these changes, add new section for
-unregistering events since lifetime is now tied to tasks instead of
-files.
+Add tabs to make struct members easier to read and unify the style of
+the code.
 
 Signed-off-by: Beau Belgrave <beaub@linux.microsoft.com>
 ---
- Documentation/trace/user_events.rst | 179 ++++++++++++++++------------
- 1 file changed, 103 insertions(+), 76 deletions(-)
+ include/linux/user_events.h      | 14 +++---
+ include/uapi/linux/user_events.h | 24 +++++-----
+ kernel/trace/trace_events_user.c | 82 ++++++++++++++++----------------
+ 3 files changed, 60 insertions(+), 60 deletions(-)
 
-diff --git a/Documentation/trace/user_events.rst b/Documentation/trace/user_events.rst
-index 9f181f342a70..f79987e16cf4 100644
---- a/Documentation/trace/user_events.rst
-+++ b/Documentation/trace/user_events.rst
-@@ -11,20 +11,19 @@ that can be viewed via existing tools, such as ftrace and perf.
- To enable this feature, build your kernel with CONFIG_USER_EVENTS=y.
+diff --git a/include/linux/user_events.h b/include/linux/user_events.h
+index 0120b3dd5b03..2847f5a18a86 100644
+--- a/include/linux/user_events.h
++++ b/include/linux/user_events.h
+@@ -17,13 +17,13 @@
  
- Programs can view status of the events via
--/sys/kernel/debug/tracing/user_events_status and can both register and write
--data out via /sys/kernel/debug/tracing/user_events_data.
-+/sys/kernel/tracing/user_events_status and can both register and write
-+data out via /sys/kernel/tracing/user_events_data.
+ #ifdef CONFIG_USER_EVENTS
+ struct user_event_mm {
+-	struct list_head link;
+-	struct list_head enablers;
+-	struct mm_struct *mm;
+-	struct user_event_mm *next;
+-	refcount_t refcnt;
+-	refcount_t tasks;
+-	struct rcu_work put_rwork;
++	struct list_head	link;
++	struct list_head	enablers;
++	struct mm_struct	*mm;
++	struct user_event_mm	*next;
++	refcount_t		refcnt;
++	refcount_t		tasks;
++	struct rcu_work		put_rwork;
+ };
  
--Programs can also use /sys/kernel/debug/tracing/dynamic_events to register and
-+Programs can also use /sys/kernel/tracing/dynamic_events to register and
- delete user based events via the u: prefix. The format of the command to
- dynamic_events is the same as the ioctl with the u: prefix applied.
+ extern void user_event_mm_dup(struct task_struct *t,
+diff --git a/include/uapi/linux/user_events.h b/include/uapi/linux/user_events.h
+index 3e7275e3234a..2984aae4a2b4 100644
+--- a/include/uapi/linux/user_events.h
++++ b/include/uapi/linux/user_events.h
+@@ -25,25 +25,25 @@
+ struct user_reg {
  
- Typically programs will register a set of events that they wish to expose to
- tools that can read trace_events (such as ftrace and perf). The registration
--process gives back two ints to the program for each event. The first int is
--the status bit. This describes which bit in little-endian format in the
--/sys/kernel/debug/tracing/user_events_status file represents this event. The
--second int is the write index which describes the data when a write() or
--writev() is called on the /sys/kernel/debug/tracing/user_events_data file.
-+process tells the kernel which address and bit to reflect if any tool has
-+enabled the event and data should be written. The registration will give back
-+a write index which describes the data when a write() or writev() is called
-+on the /sys/kernel/tracing/user_events_data file.
+ 	/* Input: Size of the user_reg structure being used */
+-	__u32 size;
++	__u32	size;
  
- The structures referenced in this document are contained within the
- /include/uapi/linux/user_events.h file in the source tree.
-@@ -35,29 +34,70 @@ filesystem and may be mounted at different paths than above.*
- Registering
- -----------
- Registering within a user process is done via ioctl() out to the
--/sys/kernel/debug/tracing/user_events_data file. The command to issue is
-+/sys/kernel/tracing/user_events_data file. The command to issue is
- DIAG_IOCSREG.
+ 	/* Input: Bit in enable address to use */
+-	__u8 enable_bit;
++	__u8	enable_bit;
  
- This command takes a packed struct user_reg as an argument::
+ 	/* Input: Enable size in bytes at address */
+-	__u8 enable_size;
++	__u8	enable_size;
  
-   struct user_reg {
--        u32 size;
--        u64 name_args;
--        u32 status_bit;
--        u32 write_index;
--  };
-+        /* Input: Size of the user_reg structure being used */
-+        __u32 size;
-+
-+        /* Input: Bit in enable address to use */
-+        __u8 enable_bit;
-+
-+        /* Input: Enable size in bytes at address */
-+        __u8 enable_size;
-+
-+        /* Input: Flags for future use, set to 0 */
-+        __u16 flags;
-+
-+        /* Input: Address to update when enabled */
-+        __u64 enable_addr;
-+
-+        /* Input: Pointer to string with event name, description and flags */
-+        __u64 name_args;
-+
-+        /* Output: Index of the event to use when writing data */
-+        __u32 write_index;
-+  } __attribute__((__packed__));
-+
-+The struct user_reg requires all the above inputs to be set appropriately.
-+
-++ size: This must be set to sizeof(struct user_reg).
+ 	/* Input: Flags for future use, set to 0 */
+-	__u16 flags;
++	__u16	flags;
  
--The struct user_reg requires two inputs, the first is the size of the structure
--to ensure forward and backward compatibility. The second is the command string
--to issue for registering. Upon success two outputs are set, the status bit
--and the write index.
-++ enable_bit: The bit to reflect the event status at the address specified by
-+  enable_addr.
-+
-++ enable_size: The size of the value specified by enable_addr.
-+  This must be 4 (32-bit) or 8 (64-bit). 64-bit values are only allowed to be
-+  used on 64-bit kernels, however, 32-bit can be used on all kernels.
-+
-++ flags: The flags to use, if any. For the initial version this must be 0.
-+  Callers should first attempt to use flags and retry without flags to ensure
-+  support for lower versions of the kernel. If a flag is not supported -EINVAL
-+  is returned.
-+
-++ enable_addr: The address of the value to use to reflect event status. This
-+  must be naturally aligned and write accessible within the user program.
-+
-++ name_args: The name and arguments to describe the event, see command format
-+  for details.
-+
-+Upon successful registration the following is set.
-+
-++ write_index: The index to use for this file descriptor that represents this
-+  event when writing out data. The index is unique to this instance of the file
-+  descriptor that was used for the registration. See writing data for details.
+ 	/* Input: Address to update when enabled */
+-	__u64 enable_addr;
++	__u64	enable_addr;
  
- User based events show up under tracefs like any other event under the
- subsystem named "user_events". This means tools that wish to attach to the
--events need to use /sys/kernel/debug/tracing/events/user_events/[name]/enable
-+events need to use /sys/kernel/tracing/events/user_events/[name]/enable
- or perf record -e user_events:[name] when attaching/recording.
+ 	/* Input: Pointer to string with event name, description and flags */
+-	__u64 name_args;
++	__u64	name_args;
  
--**NOTE:** *The write_index returned is only valid for the FD that was used*
-+**NOTE:** The event subsystem name by default is "user_events". Callers should
-+not assume it will always be "user_events". Operators reserve the right in the
-+future to change the subsystem name per-process to accomodate event isolation.
+ 	/* Output: Index of the event to use when writing data */
+-	__u32 write_index;
++	__u32	write_index;
+ } __attribute__((__packed__));
  
- Command Format
- ^^^^^^^^^^^^^^
-@@ -94,9 +134,9 @@ Would be represented by the following field::
-   struct mytype myname 20
+ /*
+@@ -52,19 +52,19 @@ struct user_reg {
+  */
+ struct user_unreg {
+ 	/* Input: Size of the user_unreg structure being used */
+-	__u32 size;
++	__u32	size;
  
- Deleting
-------------
-+--------
- Deleting an event from within a user process is done via ioctl() out to the
--/sys/kernel/debug/tracing/user_events_data file. The command to issue is
-+/sys/kernel/tracing/user_events_data file. The command to issue is
- DIAG_IOCSDEL.
+ 	/* Input: Bit to unregister */
+-	__u8 disable_bit;
++	__u8	disable_bit;
  
- This command only requires a single string specifying the event to delete by
-@@ -104,92 +144,79 @@ its name. Delete will only succeed if there are no references left to the
- event (in both user and kernel space). User programs should use a separate file
- to request deletes than the one used for registration due to this.
+ 	/* Input: Reserved, set to 0 */
+-	__u8 __reserved;
++	__u8	__reserved;
  
--Status
--------
--When tools attach/record user based events the status of the event is updated
--in realtime. This allows user programs to only incur the cost of the write() or
--writev() calls when something is actively attached to the event.
--
--User programs call mmap() on /sys/kernel/debug/tracing/user_events_status to
--check the status for each event that is registered. The bit to check in the
--file is given back after the register ioctl() via user_reg.status_bit. The bit
--is always in little-endian format. Programs can check if the bit is set either
--using a byte-wise index with a mask or a long-wise index with a little-endian
--mask.
-+Unregistering
-+-------------
-+If after registering an event it is no longer wanted to be updated then it can
-+be disabled via ioctl() out to the /sys/kernel/tracing/user_events_data file.
-+The command to issue is DIAG_IOCSUNREG. This is different than deleting, where
-+deleting actually removes the event from the system. Unregistering simply tells
-+the kernel your process is no longer interested in updates to the event.
+ 	/* Input: Reserved, set to 0 */
+-	__u16 __reserved2;
++	__u16	__reserved2;
  
--Currently the size of user_events_status is a single page, however, custom
--kernel configurations can change this size to allow more user based events. In
--all cases the size of the file is a multiple of a page size.
-+This command takes a packed struct user_unreg as an argument::
+ 	/* Input: Address to unregister */
+-	__u64 disable_addr;
++	__u64	disable_addr;
+ } __attribute__((__packed__));
  
--For example, if the register ioctl() gives back a status_bit of 3 you would
--check byte 0 (3 / 8) of the returned mmap data and then AND the result with 8
--(1 << (3 % 8)) to see if anything is attached to that event.
-+  struct user_unreg {
-+        /* Input: Size of the user_unreg structure being used */
-+        __u32 size;
+ #define DIAG_IOC_MAGIC '*'
+diff --git a/kernel/trace/trace_events_user.c b/kernel/trace/trace_events_user.c
+index 9b43a02e1597..67cb7b53caf6 100644
+--- a/kernel/trace/trace_events_user.c
++++ b/kernel/trace/trace_events_user.c
+@@ -53,9 +53,9 @@
+  * allows isolation for events by various means.
+  */
+ struct user_event_group {
+-	char *system_name;
+-	struct hlist_node node;
+-	struct mutex reg_mutex;
++	char		*system_name;
++	struct		hlist_node node;
++	struct		mutex reg_mutex;
+ 	DECLARE_HASHTABLE(register_table, 8);
+ };
  
--A byte-wise index check is performed as follows::
-+        /* Input: Bit to unregister */
-+        __u8 disable_bit;
+@@ -76,17 +76,17 @@ static unsigned int current_user_events;
+  * refcnt reaches one.
+  */
+ struct user_event {
+-	struct user_event_group *group;
+-	struct tracepoint tracepoint;
+-	struct trace_event_call call;
+-	struct trace_event_class class;
+-	struct dyn_event devent;
+-	struct hlist_node node;
+-	struct list_head fields;
+-	struct list_head validators;
+-	refcount_t refcnt;
+-	int min_size;
+-	char status;
++	struct user_event_group		*group;
++	struct tracepoint		tracepoint;
++	struct trace_event_call		call;
++	struct trace_event_class	class;
++	struct dyn_event		devent;
++	struct hlist_node		node;
++	struct list_head		fields;
++	struct list_head		validators;
++	refcount_t			refcnt;
++	int				min_size;
++	char				status;
+ };
  
--  int index, mask;
--  char *status_page;
-+        /* Input: Reserved, set to 0 */
-+        __u8 __reserved;
+ /*
+@@ -95,12 +95,12 @@ struct user_event {
+  * these to track enablement sites that are tied to an event.
+  */
+ struct user_event_enabler {
+-	struct list_head link;
+-	struct user_event *event;
+-	unsigned long addr;
++	struct list_head	link;
++	struct user_event	*event;
++	unsigned long		addr;
  
--  index = status_bit / 8;
--  mask = 1 << (status_bit % 8);
--
--  ...
-+        /* Input: Reserved, set to 0 */
-+        __u16 __reserved2;
+ 	/* Track enable bit, flags, etc. Aligned for bitops. */
+-	unsigned int values;
++	unsigned int		values;
+ };
  
--  if (status_page[index] & mask) {
--        /* Enabled */
--  }
-+        /* Input: Address to unregister */
-+        __u64 disable_addr;
-+  } __attribute__((__packed__));
+ /* Bits 0-5 are for the bit to update upon enable/disable (0-63 allowed) */
+@@ -119,9 +119,9 @@ struct user_event_enabler {
  
--A long-wise index check is performed as follows::
-+The struct user_unreg requires all the above inputs to be set appropriately.
+ /* Used for asynchronous faulting in of pages */
+ struct user_event_enabler_fault {
+-	struct work_struct work;
+-	struct user_event_mm *mm;
+-	struct user_event_enabler *enabler;
++	struct work_struct		work;
++	struct user_event_mm		*mm;
++	struct user_event_enabler	*enabler;
+ };
  
--  #include <asm/bitsperlong.h>
--  #include <endian.h>
-++ size: This must be set to sizeof(struct user_unreg).
+ static struct kmem_cache *fault_cache;
+@@ -137,23 +137,23 @@ static DEFINE_SPINLOCK(user_event_mms_lock);
+  * These are not shared and only accessible by the file that created it.
+  */
+ struct user_event_refs {
+-	struct rcu_head rcu;
+-	int count;
+-	struct user_event *events[];
++	struct rcu_head		rcu;
++	int			count;
++	struct user_event	*events[];
+ };
  
--  #if __BITS_PER_LONG == 64
--  #define endian_swap(x) htole64(x)
--  #else
--  #define endian_swap(x) htole32(x)
--  #endif
-++ disable_bit: This must be set to the bit to disable (same bit that was
-+  previously registered via enable_bit).
+ struct user_event_file_info {
+-	struct user_event_group *group;
+-	struct user_event_refs *refs;
++	struct user_event_group	*group;
++	struct user_event_refs	*refs;
+ };
  
--  long index, mask, *status_page;
-++ disable_addr: This must be set to the address to disable (same address that was
-+  previously registered via enable_addr).
+ #define VALIDATOR_ENSURE_NULL (1 << 0)
+ #define VALIDATOR_REL (1 << 1)
  
--  index = status_bit / __BITS_PER_LONG;
--  mask = 1L << (status_bit % __BITS_PER_LONG);
--  mask = endian_swap(mask);
-+**NOTE:** Events are automatically unregistered when execve() is invoked. During
-+fork() the registered events will be retained and must be unregistered manually
-+in each process if wanted.
+ struct user_event_validator {
+-	struct list_head link;
+-	int offset;
+-	int flags;
++	struct list_head	link;
++	int			offset;
++	int			flags;
+ };
  
--  ...
-+Status
-+------
-+When tools attach/record user based events the status of the event is updated
-+in realtime. This allows user programs to only incur the cost of the write() or
-+writev() calls when something is actively attached to the event.
+ typedef void (*user_event_func_t) (struct user_event *user, struct iov_iter *i,
+@@ -2276,11 +2276,11 @@ static int user_events_release(struct inode *node, struct file *file)
+ }
  
--  if (status_page[index] & mask) {
--        /* Enabled */
--  }
-+The kernel will update the specified bit that was registered for the event as
-+tools attach/detach from the event. User programs simply check if the bit is set
-+to see if something is attached or not.
+ static const struct file_operations user_data_fops = {
+-	.open = user_events_open,
+-	.write = user_events_write,
+-	.write_iter = user_events_write_iter,
++	.open		= user_events_open,
++	.write		= user_events_write,
++	.write_iter	= user_events_write_iter,
+ 	.unlocked_ioctl	= user_events_ioctl,
+-	.release = user_events_release,
++	.release	= user_events_release,
+ };
  
- Administrators can easily check the status of all registered events by reading
- the user_events_status file directly via a terminal. The output is as follows::
+ static void *user_seq_start(struct seq_file *m, loff_t *pos)
+@@ -2346,10 +2346,10 @@ static int user_seq_show(struct seq_file *m, void *p)
+ }
  
--  Byte:Name [# Comments]
-+  Name [# Comments]
-   ...
+ static const struct seq_operations user_seq_ops = {
+-	.start = user_seq_start,
+-	.next  = user_seq_next,
+-	.stop  = user_seq_stop,
+-	.show  = user_seq_show,
++	.start	= user_seq_start,
++	.next	= user_seq_next,
++	.stop	= user_seq_stop,
++	.show	= user_seq_show,
+ };
  
-   Active: ActiveCount
-   Busy: BusyCount
--  Max: MaxCount
+ static int user_status_open(struct inode *node, struct file *file)
+@@ -2375,10 +2375,10 @@ static int user_status_open(struct inode *node, struct file *file)
+ }
  
- For example, on a system that has a single event the output looks like this::
+ static const struct file_operations user_status_fops = {
+-	.open = user_status_open,
+-	.read = seq_read,
+-	.llseek  = seq_lseek,
+-	.release = seq_release,
++	.open		= user_status_open,
++	.read		= seq_read,
++	.llseek		= seq_lseek,
++	.release	= seq_release,
+ };
  
--  1:test
-+  test
- 
-   Active: 1
-   Busy: 0
--  Max: 32768
- 
- If a user enables the user event via ftrace, the output would change to this::
- 
--  1:test # Used by ftrace
-+  test # Used by ftrace
- 
-   Active: 1
-   Busy: 1
--  Max: 32768
--
--**NOTE:** *A status bit of 0 will never be returned. This allows user programs
--to have a bit that can be used on error cases.*
- 
- Writing Data
- ------------
-@@ -217,7 +244,7 @@ For example, if I have a struct like this::
-         int src;
-         int dst;
-         int flags;
--  };
-+  } __attribute__((__packed__));
- 
- It's advised for user programs to do the following::
- 
+ /*
 -- 
 2.25.1
 
