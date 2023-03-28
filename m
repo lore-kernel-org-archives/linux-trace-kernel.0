@@ -2,37 +2,42 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B7D20C76196
-	for <linux-trace-kernel@archiver.kernel.org>; Tue, 28 Mar 2023 19:14:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AA25FC76196
+	for <linux-trace-kernel@archiver.kernel.org>; Tue, 28 Mar 2023 21:32:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229745AbjC1TOW (ORCPT
+        id S229556AbjC1VcJ (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Tue, 28 Mar 2023 15:14:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37976 "EHLO
+        Tue, 28 Mar 2023 17:32:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34080 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229617AbjC1TOV (ORCPT
+        with ESMTP id S229456AbjC1VcI (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Tue, 28 Mar 2023 15:14:21 -0400
-Received: from sin.source.kernel.org (sin.source.kernel.org [IPv6:2604:1380:40e1:4800::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 41AAB2D72;
-        Tue, 28 Mar 2023 12:14:20 -0700 (PDT)
+        Tue, 28 Mar 2023 17:32:08 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 081351BF6;
+        Tue, 28 Mar 2023 14:32:07 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by sin.source.kernel.org (Postfix) with ESMTPS id 5F5E0CE1EAB;
-        Tue, 28 Mar 2023 19:14:17 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EDADFC433D2;
-        Tue, 28 Mar 2023 19:14:14 +0000 (UTC)
-Date:   Tue, 28 Mar 2023 15:14:13 -0400
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 996126196F;
+        Tue, 28 Mar 2023 21:32:06 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9AC12C433D2;
+        Tue, 28 Mar 2023 21:32:04 +0000 (UTC)
+Date:   Tue, 28 Mar 2023 17:32:00 -0400
 From:   Steven Rostedt <rostedt@goodmis.org>
-To:     LKML <linux-kernel@vger.kernel.org>,
-        Linux Trace Kernel <linux-trace-kernel@vger.kernel.org>
-Cc:     Masami Hiramatsu <mhiramat@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Beau Belgrave <beaub@linux.microsoft.com>
-Subject: [PATCH] tracing/user_events: Use print_format_fields() for trace
- output
-Message-ID: <20230328151413.4770b8d7@gandalf.local.home>
+To:     Beau Belgrave <beaub@linux.microsoft.com>
+Cc:     mhiramat@kernel.org, mathieu.desnoyers@efficios.com,
+        dcook@linux.microsoft.com, alanau@linux.microsoft.com,
+        brauner@kernel.org, akpm@linux-foundation.org,
+        ebiederm@xmission.com, keescook@chromium.org, tglx@linutronix.de,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        linux-trace-kernel@vger.kernel.org
+Subject: Re: [PATCH v9 05/11] tracing/user_events: Add ioctl for disabling
+ addresses
+Message-ID: <20230328173200.22ac45dc@gandalf.local.home>
+In-Reply-To: <20230324223028.172-6-beaub@linux.microsoft.com>
+References: <20230324223028.172-1-beaub@linux.microsoft.com>
+        <20230324223028.172-6-beaub@linux.microsoft.com>
 X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
@@ -41,69 +46,159 @@ Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
+On Fri, 24 Mar 2023 15:30:22 -0700
+Beau Belgrave <beaub@linux.microsoft.com> wrote:
 
-Currently, user events are shown using the "hex" output for "safety"
-reasons as one cannot trust user events behaving nicely. But the hex
-output is not the only utility for safe outputting of trace events. The
-print_event_fields() is just as safe and gives user readable output.
+> Enablements are now tracked by the lifetime of the task/mm. User
+> processes need to be able to disable their addresses if tracing is
+> requested to be turned off. Before unmapping the page would suffice.
+> However, we now need a stronger contract. Add an ioctl to enable this.
+> 
+> A new flag bit is added, freeing, to user_event_enabler to ensure that
+> if the event is attempted to be removed while a fault is being handled
+> that the remove is delayed until after the fault is reattempted.
+> 
+> Signed-off-by: Beau Belgrave <beaub@linux.microsoft.com>
+> ---
+>  include/uapi/linux/user_events.h | 24 +++++++++
+>  kernel/trace/trace_events_user.c | 93 +++++++++++++++++++++++++++++++-
+>  2 files changed, 115 insertions(+), 2 deletions(-)
+> 
+> diff --git a/include/uapi/linux/user_events.h b/include/uapi/linux/user_events.h
+> index 22521bc622db..3e7275e3234a 100644
+> --- a/include/uapi/linux/user_events.h
+> +++ b/include/uapi/linux/user_events.h
+> @@ -46,6 +46,27 @@ struct user_reg {
+>  	__u32 write_index;
+>  } __attribute__((__packed__));
+>  
+> +/*
+> + * Describes an event unregister, callers must set the size, address and bit.
+> + * This structure is passed to the DIAG_IOCSUNREG ioctl to disable bit updates.
+> + */
+> +struct user_unreg {
+> +	/* Input: Size of the user_unreg structure being used */
+> +	__u32 size;
+> +
+> +	/* Input: Bit to unregister */
+> +	__u8 disable_bit;
+> +
+> +	/* Input: Reserved, set to 0 */
+> +	__u8 __reserved;
+> +
+> +	/* Input: Reserved, set to 0 */
+> +	__u16 __reserved2;
 
-Before:
-         example-839     [001] .....    43.222244:
-00000000: b1 06 00 00 47 03 00 00 00 00 00 00              ....G.......
-         example-839     [001] .....    43.564433:
-00000000: b1 06 00 00 47 03 00 00 01 00 00 00              ....G.......
-         example-839     [001] .....    43.763917:
-00000000: b1 06 00 00 47 03 00 00 02 00 00 00              ....G.......
-         example-839     [001] .....    43.967929:
-00000000: b1 06 00 00 47 03 00 00 03 00 00 00              ....G.......
+These are reserved so they must be set to zero, such that old programs do
+not break when they become meaningful and something had it randomly set
+(due to being uninitialized).
 
-After:
 
-         example-837     [006] .....    55.739249: test: count=0x0 (0)
-         example-837     [006] .....   111.104784: test: count=0x1 (1)
-         example-837     [006] .....   111.268444: test: count=0x2 (2)
-         example-837     [006] .....   111.416533: test: count=0x3 (3)
-         example-837     [006] .....   111.542859: test: count=0x4 (4)
+> +
+> +	/* Input: Address to unregister */
+> +	__u64 disable_addr;
+> +} __attribute__((__packed__));
+> +
+>  #define DIAG_IOC_MAGIC '*'
+> 
 
-Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
----
+> @@ -2086,6 +2100,75 @@ static long user_events_ioctl_del(struct user_event_file_info *info,
+>  	return ret;
+>  }
+>  
+> +static long user_unreg_get(struct user_unreg __user *ureg,
+> +			   struct user_unreg *kreg)
+> +{
+> +	u32 size;
+> +	long ret;
+> +
+> +	ret = get_user(size, &ureg->size);
+> +
+> +	if (ret)
+> +		return ret;
+> +
+> +	if (size > PAGE_SIZE)
+> +		return -E2BIG;
+> +
+> +	if (size < offsetofend(struct user_unreg, disable_addr))
+> +		return -EINVAL;
+> +
+> +	ret = copy_struct_from_user(kreg, sizeof(*kreg), ureg, size);
+> +
+> +	return ret;
+> +}
+> +
+> +/*
+> + * Unregisters an enablement address/bit within a task/user mm.
+> + */
+> +static long user_events_ioctl_unreg(unsigned long uarg)
+> +{
+> +	struct user_unreg __user *ureg = (struct user_unreg __user *)uarg;
+> +	struct user_event_mm *mm = current->user_event_mm;
+> +	struct user_event_enabler *enabler, *next;
+> +	struct user_unreg reg;
+> +	long ret;
+> +
+> +	ret = user_unreg_get(ureg, &reg);
+> +
+> +	if (ret)
+> +		return ret;
+> +
+> +	if (!mm)
+> +		return -ENOENT;
+> +
+> +	ret = -ENOENT;
 
-This depends on:
+Probably should add:
 
-   https://lore.kernel.org/linux-trace-kernel/20230328145156.497651be@gandalf.local.home/
+	if (reg.__reserved || reg.__reserved2)
+		return -EINVAL;
 
- kernel/trace/trace_events_user.c | 9 +++------
- 1 file changed, 3 insertions(+), 6 deletions(-)
+here.
 
-diff --git a/kernel/trace/trace_events_user.c b/kernel/trace/trace_events_user.c
-index 11922f7cf496..b8fb67448e00 100644
---- a/kernel/trace/trace_events_user.c
-+++ b/kernel/trace/trace_events_user.c
-@@ -22,8 +22,9 @@
- #include <linux/highmem.h>
- #include <linux/init.h>
- #include <linux/user_events.h>
--#include "trace.h"
- #include "trace_dynevent.h"
-+#include "trace_output.h"
-+#include "trace.h"
- 
- #define USER_EVENTS_PREFIX_LEN (sizeof(USER_EVENTS_PREFIX)-1)
- 
-@@ -1198,11 +1199,7 @@ static enum print_line_t user_event_print_trace(struct trace_iterator *iter,
- 						int flags,
- 						struct trace_event *event)
- {
--	/* Unsafe to try to decode user provided print_fmt, use hex */
--	trace_print_hex_dump_seq(&iter->seq, "", DUMP_PREFIX_OFFSET, 16,
--				 1, iter->ent, iter->ent_size, true);
--
--	return trace_handle_return(&iter->seq);
-+	return print_event_fields(iter, event);
- }
- 
- static struct trace_event_functions user_event_funcs = {
--- 
-2.39.1
+-- Steve
+
+> +
+> +	/*
+> +	 * Flags freeing and faulting are used to indicate if the enabler is in
+> +	 * use at all. When faulting is set a page-fault is occurring asyncly.
+> +	 * During async fault if freeing is set, the enabler will be destroyed.
+> +	 * If no async fault is happening, we can destroy it now since we hold
+> +	 * the event_mutex during these checks.
+> +	 */
+> +	mutex_lock(&event_mutex);
+> +
+> +	list_for_each_entry_safe(enabler, next, &mm->enablers, link)
+> +		if (enabler->addr == reg.disable_addr &&
+> +		    (enabler->values & ENABLE_VAL_BIT_MASK) == reg.disable_bit) {
+> +			set_bit(ENABLE_VAL_FREEING_BIT, ENABLE_BITOPS(enabler));
+> +
+> +			if (!test_bit(ENABLE_VAL_FAULTING_BIT, ENABLE_BITOPS(enabler)))
+> +				user_event_enabler_destroy(enabler);
+> +
+> +			/* Removed at least one */
+> +			ret = 0;
+> +		}
+> +
+> +	mutex_unlock(&event_mutex);
+> +
+> +	return ret;
+> +}
+> +
+>  /*
+>   * Handles the ioctl from user mode to register or alter operations.
+>   */
+> @@ -2108,6 +2191,12 @@ static long user_events_ioctl(struct file *file, unsigned int cmd,
+>  		ret = user_events_ioctl_del(info, uarg);
+>  		mutex_unlock(&group->reg_mutex);
+>  		break;
+> +
+> +	case DIAG_IOCSUNREG:
+> +		mutex_lock(&group->reg_mutex);
+> +		ret = user_events_ioctl_unreg(uarg);
+> +		mutex_unlock(&group->reg_mutex);
+> +		break;
+>  	}
+>  
+>  	return ret;
 
