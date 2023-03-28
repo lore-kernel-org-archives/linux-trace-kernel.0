@@ -2,236 +2,135 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F0B76C76196
-	for <linux-trace-kernel@archiver.kernel.org>; Tue, 28 Mar 2023 09:43:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4110BC76196
+	for <linux-trace-kernel@archiver.kernel.org>; Tue, 28 Mar 2023 13:44:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232132AbjC1JnY (ORCPT
+        id S233083AbjC1NoG (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Tue, 28 Mar 2023 05:43:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58530 "EHLO
+        Tue, 28 Mar 2023 09:44:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45832 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232822AbjC1JnL (ORCPT
+        with ESMTP id S233294AbjC1NoA (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Tue, 28 Mar 2023 05:43:11 -0400
-Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9CEBE65AA;
-        Tue, 28 Mar 2023 02:43:03 -0700 (PDT)
-Received: from dggpeml100012.china.huawei.com (unknown [172.30.72.55])
-        by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4Pm4Qn2S44zgZD1;
-        Tue, 28 Mar 2023 17:39:45 +0800 (CST)
-Received: from localhost.localdomain (10.67.175.61) by
- dggpeml100012.china.huawei.com (7.185.36.121) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.21; Tue, 28 Mar 2023 17:43:00 +0800
-From:   Zheng Yejian <zhengyejian1@huawei.com>
-To:     <axboe@kernel.dk>, <rostedt@goodmis.org>, <mhiramat@kernel.org>
-CC:     <linux-block@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-trace-kernel@vger.kernel.org>, <zhengyejian1@huawei.com>
-Subject: [PATCH] blktrace: Gracefully return if fail in blk_register_tracepoints()
-Date:   Tue, 28 Mar 2023 17:46:05 +0800
-Message-ID: <20230328094605.480557-1-zhengyejian1@huawei.com>
+        Tue, 28 Mar 2023 09:44:00 -0400
+Received: from mail-m118111.qiye.163.com (mail-m118111.qiye.163.com [115.236.118.111])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AE662BDD2;
+        Tue, 28 Mar 2023 06:43:38 -0700 (PDT)
+Received: from ubuntu.localdomain (unknown [117.133.56.22])
+        by mail-m118111.qiye.163.com (Hmail) with ESMTPA id 3F13458097E;
+        Tue, 28 Mar 2023 21:43:29 +0800 (CST)
+From:   Donglin Peng <pengdonglin@sangfor.com.cn>
+To:     mhiramat@kernel.org, rostedt@goodmis.org, linux@armlinux.org.uk,
+        mark.rutland@arm.com, will@kernel.org, catalin.marinas@arm.com,
+        palmer@dabbelt.com, paul.walmsley@sifive.com, tglx@linutronix.de,
+        dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com,
+        chenhuacai@kernel.org, zhangqing@loongson.cn, kernel@xen0n.name,
+        mingo@redhat.com, peterz@infradead.org, xiehuan09@gmail.com,
+        dinghui@sangfor.com.cn, huangcun@sangfor.com.cn,
+        dolinux.peng@gmail.com
+Cc:     linux-trace-kernel@vger.kernel.org, loongarch@lists.linux.dev,
+        linux-riscv@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Donglin Peng <pengdonglin@sangfor.com.cn>
+Subject: [PATCH v8 5/8] riscv: ftrace: Enable HAVE_FUNCTION_GRAPH_RETVAL
+Date:   Tue, 28 Mar 2023 06:43:16 -0700
+Message-Id: <20230328134319.2185812-6-pengdonglin@sangfor.com.cn>
 X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20230328134319.2185812-1-pengdonglin@sangfor.com.cn>
+References: <20230328134319.2185812-1-pengdonglin@sangfor.com.cn>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [10.67.175.61]
-X-ClientProxiedBy: dggems705-chm.china.huawei.com (10.3.19.182) To
- dggpeml100012.china.huawei.com (7.185.36.121)
-X-CFilter-Loop: Reflected
+Content-Transfer-Encoding: 8bit
+X-HM-Spam-Status: e1kfGhgUHx5ZQUpXWQgPGg8OCBgUHx5ZQUlOS1dZFg8aDwILHllBWSg2Ly
+        tZV1koWUFITzdXWS1ZQUlXWQ8JGhUIEh9ZQVkaTUtCVh1PQ0lMTxlJSUgaSFUTARMWGhIXJBQOD1
+        lXWRgSC1lBWUpKTFVKSEhVTk1VSUlZV1kWGg8SFR0UWUFZT0tIVUpKS0hKTFVKS0tVS1kG
+X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6Myo6MQw*Fz0JLVYwARRODzxC
+        OTUKCxhVSlVKTUNLS0pKS0pLTk1CVTMWGhIXVQseFRwfFBUcFxIVOwgaFRwdFAlVGBQWVRgVRVlX
+        WRILWUFZSkpMVUpISFVOTVVJSVlXWQgBWUFPQklDNwY+
+X-HM-Tid: 0a872875a0672eb7kusn3f13458097e
+X-HM-MType: 1
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-Currently blk_register_tracepoints() WARN for every registration failure
-of block tracepoint, however, blk_trace can still be setup-ed.
+The commit d4815c5d1bbd ("function_graph: Support recording and
+printing the return value of function") laid the groundwork for the
+for the funcgraph-retval, and this modification makes it available
+on the RISC-V platform.
 
-It seems better to cleanup registered tracepoints and return error when
-a certain registration failed, even if it's a small probability, and
-users can know the error and do blk_trace setup again.
+We introduce a new structure called fgraph_ret_regs for the RISC-V
+platform to hold return registers and the frame pointer. We then
+fill its content in the return_to_handler and pass its address to
+the function ftrace_return_to_handler to record the return value.
 
-Signed-off-by: Zheng Yejian <zhengyejian1@huawei.com>
+Signed-off-by: Donglin Peng <pengdonglin@sangfor.com.cn>
 ---
- kernel/trace/blktrace.c | 113 +++++++++++++++++++++++++++++++---------
- 1 file changed, 87 insertions(+), 26 deletions(-)
+v8:
+ - Modify the control range of CONFIG_HAVE_FUNCTION_GRAPH_RETVAL
+---
+ arch/riscv/Kconfig              |  1 +
+ arch/riscv/include/asm/ftrace.h | 19 +++++++++++++++++++
+ arch/riscv/kernel/mcount.S      |  7 +------
+ 3 files changed, 21 insertions(+), 6 deletions(-)
 
-diff --git a/kernel/trace/blktrace.c b/kernel/trace/blktrace.c
-index d5d94510afd3..62ac72866f02 100644
---- a/kernel/trace/blktrace.c
-+++ b/kernel/trace/blktrace.c
-@@ -60,7 +60,7 @@ static struct tracer_flags blk_tracer_flags = {
- static DEFINE_MUTEX(blk_probe_mutex);
- static int blk_probes_ref;
+diff --git a/arch/riscv/Kconfig b/arch/riscv/Kconfig
+index c5e42cc37604..a616af85defb 100644
+--- a/arch/riscv/Kconfig
++++ b/arch/riscv/Kconfig
+@@ -138,6 +138,7 @@ config RISCV
+ 	select HAVE_DYNAMIC_FTRACE if !XIP_KERNEL && MMU && $(cc-option,-fpatchable-function-entry=8)
+ 	select HAVE_DYNAMIC_FTRACE_WITH_REGS if HAVE_DYNAMIC_FTRACE
+ 	select HAVE_FTRACE_MCOUNT_RECORD if !XIP_KERNEL
++	select HAVE_FUNCTION_GRAPH_RETVAL if HAVE_FUNCTION_GRAPH_TRACER
+ 	select HAVE_FUNCTION_GRAPH_TRACER
+ 	select HAVE_FUNCTION_TRACER if !XIP_KERNEL && !PREEMPTION
  
--static void blk_register_tracepoints(void);
-+static int blk_register_tracepoints(void);
- static void blk_unregister_tracepoints(void);
+diff --git a/arch/riscv/include/asm/ftrace.h b/arch/riscv/include/asm/ftrace.h
+index d47d87c2d7e3..8e1b9cfc0619 100644
+--- a/arch/riscv/include/asm/ftrace.h
++++ b/arch/riscv/include/asm/ftrace.h
+@@ -111,4 +111,23 @@ int ftrace_init_nop(struct module *mod, struct dyn_ftrace *rec);
  
- /*
-@@ -330,12 +330,20 @@ static void blk_trace_free(struct request_queue *q, struct blk_trace *bt)
- 	kfree(bt);
- }
+ #endif /* CONFIG_DYNAMIC_FTRACE */
  
--static void get_probe_ref(void)
-+static int get_probe_ref(void)
- {
-+	int ret = 0;
++#ifndef __ASSEMBLY__
++struct fgraph_ret_regs {
++	unsigned long a1;
++	unsigned long a0;
++	unsigned long s0;
++	unsigned long ra;
++};
 +
- 	mutex_lock(&blk_probe_mutex);
--	if (++blk_probes_ref == 1)
--		blk_register_tracepoints();
-+	if (++blk_probes_ref == 1) {
-+		ret = blk_register_tracepoints();
-+		if (ret) {
-+			pr_warn("Could not register block tracepoints\n");
-+			--blk_probes_ref;
-+		}
-+	}
- 	mutex_unlock(&blk_probe_mutex);
-+	return ret;
- }
- 
- static void put_probe_ref(void)
-@@ -608,13 +616,14 @@ static int do_blk_trace_setup(struct request_queue *q, char *name, dev_t dev,
- 	bt->pid = buts->pid;
- 	bt->trace_state = Blktrace_setup;
- 
-+	ret = get_probe_ref();
-+	if (ret)
-+		goto err;
- 	rcu_assign_pointer(q->blk_trace, bt);
--	get_probe_ref();
-+	return 0;
- 
--	ret = 0;
- err:
--	if (ret)
--		blk_trace_free(q, bt);
-+	blk_trace_free(q, bt);
- 	return ret;
- }
- 
-@@ -1088,42 +1097,92 @@ void blk_add_driver_data(struct request *rq, void *data, size_t len)
- }
- EXPORT_SYMBOL_GPL(blk_add_driver_data);
- 
--static void blk_register_tracepoints(void)
-+static int blk_register_tracepoints(void)
- {
- 	int ret;
- 
- 	ret = register_trace_block_rq_insert(blk_add_trace_rq_insert, NULL);
--	WARN_ON(ret);
-+	if (ret)
-+		return ret;
- 	ret = register_trace_block_rq_issue(blk_add_trace_rq_issue, NULL);
--	WARN_ON(ret);
-+	if (ret)
-+		goto err_block_rq_issue;
- 	ret = register_trace_block_rq_merge(blk_add_trace_rq_merge, NULL);
--	WARN_ON(ret);
-+	if (ret)
-+		goto err_block_rq_merge;
- 	ret = register_trace_block_rq_requeue(blk_add_trace_rq_requeue, NULL);
--	WARN_ON(ret);
-+	if (ret)
-+		goto err_block_rq_requeue;
- 	ret = register_trace_block_rq_complete(blk_add_trace_rq_complete, NULL);
--	WARN_ON(ret);
-+	if (ret)
-+		goto err_block_rq_complete;
- 	ret = register_trace_block_bio_bounce(blk_add_trace_bio_bounce, NULL);
--	WARN_ON(ret);
-+	if (ret)
-+		goto err_block_bio_bounce;
- 	ret = register_trace_block_bio_complete(blk_add_trace_bio_complete, NULL);
--	WARN_ON(ret);
-+	if (ret)
-+		goto err_block_bio_complete;
- 	ret = register_trace_block_bio_backmerge(blk_add_trace_bio_backmerge, NULL);
--	WARN_ON(ret);
-+	if (ret)
-+		goto err_block_bio_backmerge;
- 	ret = register_trace_block_bio_frontmerge(blk_add_trace_bio_frontmerge, NULL);
--	WARN_ON(ret);
-+	if (ret)
-+		goto err_block_bio_frontmerge;
- 	ret = register_trace_block_bio_queue(blk_add_trace_bio_queue, NULL);
--	WARN_ON(ret);
-+	if (ret)
-+		goto err_block_bio_queue;
- 	ret = register_trace_block_getrq(blk_add_trace_getrq, NULL);
--	WARN_ON(ret);
-+	if (ret)
-+		goto err_block_getrq;
- 	ret = register_trace_block_plug(blk_add_trace_plug, NULL);
--	WARN_ON(ret);
-+	if (ret)
-+		goto err_block_plug;
- 	ret = register_trace_block_unplug(blk_add_trace_unplug, NULL);
--	WARN_ON(ret);
-+	if (ret)
-+		goto err_block_unplug;
- 	ret = register_trace_block_split(blk_add_trace_split, NULL);
--	WARN_ON(ret);
-+	if (ret)
-+		goto err_block_split;
- 	ret = register_trace_block_bio_remap(blk_add_trace_bio_remap, NULL);
--	WARN_ON(ret);
-+	if (ret)
-+		goto err_block_bio_remap;
- 	ret = register_trace_block_rq_remap(blk_add_trace_rq_remap, NULL);
--	WARN_ON(ret);
-+	if (ret)
-+		goto err_block_rq_remap;
-+	return 0;
++static inline unsigned long fgraph_ret_regs_return_value(struct fgraph_ret_regs *ret_regs)
++{
++	return ret_regs->a0;
++}
 +
-+err_block_rq_remap:
-+	unregister_trace_block_bio_remap(blk_add_trace_bio_remap, NULL);
-+err_block_bio_remap:
-+	unregister_trace_block_split(blk_add_trace_split, NULL);
-+err_block_split:
-+	unregister_trace_block_unplug(blk_add_trace_unplug, NULL);
-+err_block_unplug:
-+	unregister_trace_block_plug(blk_add_trace_plug, NULL);
-+err_block_plug:
-+	unregister_trace_block_getrq(blk_add_trace_getrq, NULL);
-+err_block_getrq:
-+	unregister_trace_block_bio_queue(blk_add_trace_bio_queue, NULL);
-+err_block_bio_queue:
-+	unregister_trace_block_bio_frontmerge(blk_add_trace_bio_frontmerge, NULL);
-+err_block_bio_frontmerge:
-+	unregister_trace_block_bio_backmerge(blk_add_trace_bio_backmerge, NULL);
-+err_block_bio_backmerge:
-+	unregister_trace_block_bio_complete(blk_add_trace_bio_complete, NULL);
-+err_block_bio_complete:
-+	unregister_trace_block_bio_bounce(blk_add_trace_bio_bounce, NULL);
-+err_block_bio_bounce:
-+	unregister_trace_block_rq_complete(blk_add_trace_rq_complete, NULL);
-+err_block_rq_complete:
-+	unregister_trace_block_rq_requeue(blk_add_trace_rq_requeue, NULL);
-+err_block_rq_requeue:
-+	unregister_trace_block_rq_merge(blk_add_trace_rq_merge, NULL);
-+err_block_rq_merge:
-+	unregister_trace_block_rq_issue(blk_add_trace_rq_issue, NULL);
-+err_block_rq_issue:
-+	unregister_trace_block_rq_insert(blk_add_trace_rq_insert, NULL);
-+	tracepoint_synchronize_unregister();
-+	return ret;
- }
- 
- static void blk_unregister_tracepoints(void)
-@@ -1643,8 +1702,10 @@ static int blk_trace_setup_queue(struct request_queue *q,
- 
- 	blk_trace_setup_lba(bt, bdev);
- 
-+	ret = get_probe_ref();
-+	if (ret)
-+		goto free_bt;
- 	rcu_assign_pointer(q->blk_trace, bt);
--	get_probe_ref();
- 	return 0;
- 
- free_bt:
++static inline unsigned long fgraph_ret_regs_frame_pointer(struct fgraph_ret_regs *ret_regs)
++{
++	return ret_regs->s0;
++}
++#endif
++
+ #endif /* _ASM_RISCV_FTRACE_H */
+diff --git a/arch/riscv/kernel/mcount.S b/arch/riscv/kernel/mcount.S
+index 30102aadc4d7..8a6e5a9e842a 100644
+--- a/arch/riscv/kernel/mcount.S
++++ b/arch/riscv/kernel/mcount.S
+@@ -65,13 +65,8 @@ ENTRY(return_to_handler)
+  * So alternatively we check the *old* frame pointer position, that is, the
+  * value stored in -16(s0) on entry, and the s0 on return.
+  */
+-#ifdef HAVE_FUNCTION_GRAPH_FP_TEST
+-	mv	t6, s0
+-#endif
+ 	SAVE_RET_ABI_STATE
+-#ifdef HAVE_FUNCTION_GRAPH_FP_TEST
+-	mv	a0, t6
+-#endif
++	mv	a0, sp
+ 	call	ftrace_return_to_handler
+ 	mv	a2, a0
+ 	RESTORE_RET_ABI_STATE
 -- 
 2.25.1
 
