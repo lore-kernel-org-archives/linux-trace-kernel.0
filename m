@@ -2,143 +2,352 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 79C9FC6FD18
-	for <linux-trace-kernel@archiver.kernel.org>; Tue, 28 Mar 2023 17:58:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 943DFC6FD18
+	for <linux-trace-kernel@archiver.kernel.org>; Tue, 28 Mar 2023 18:52:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229865AbjC1R6v (ORCPT
+        id S229881AbjC1SwF (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Tue, 28 Mar 2023 13:58:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47964 "EHLO
+        Tue, 28 Mar 2023 14:52:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52888 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229913AbjC1R6s (ORCPT
+        with ESMTP id S229850AbjC1SwE (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Tue, 28 Mar 2023 13:58:48 -0400
-Received: from NAM12-MW2-obe.outbound.protection.outlook.com (mail-mw2nam12on2088.outbound.protection.outlook.com [40.107.244.88])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C5F9E10433;
-        Tue, 28 Mar 2023 10:58:27 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=b6Yho39LoSY+iOVjeLdGYBHrOnXqyV3aMAmOOVVn26JIQjmOM5qeoNspDBlA9zcB+XRUxc+q21QCm++n+P2dBZtJDB6R1Ke77NnKeKg9dIykZfuArG/2oTd2JRZ/TuCekjfdzWcvhIKN4iXeIKlN586oU0OlABsGWHT1nV2+yN54313R8d9jpGbdBzRPByEBXMldv5oItg8jEB71fGkifXnrZzgSNOi8mPO4Na1bgafmGoaBh2qnhfqRPmB0HBFX7NFRFlZVHU5lHV8Q24NjtE43a6g8e5k0AATBRFN846qefNaqwSUZGtyitHDi4l7xMdgPOuFcCEbf2Z9QTMgDEA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=TwWBZhO1wqIKmSwi1/edUE8W6nK4df8cg3dLn6ydrf4=;
- b=XsA41b47pPh4rLf2YWrqQlqePs/zHFbMD55GYH1XPyaUjCBAaBJQDp6vZCdyKvTK8i35h0EdTqEeQVyp9DiDGHF1BMpGWL6TbbrdVJZ4ZsdF2UAXQUv54JD5U4zmP8hDaUoloZvVhNadySsuCkydCdhiTCOvQRY8AP4DUYFJKhCYTRXVuLnu8uviz/FtcDXsSh7ztYXP8kOiM5YRCcsHDcn6jY1iaFRFd2aMY/GZnIEHoCsH/HMgQCC0bt2uK/bGekuzbdJV6iAYWs38JbgSH0TeuaTQE6sk0DSWLYO9As3LslIImvTX1Oab82qxgp1j37iwyYgppBworeFN141zOQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=TwWBZhO1wqIKmSwi1/edUE8W6nK4df8cg3dLn6ydrf4=;
- b=sfLD5Dbg7ArMsjHm2VxFWccrpaAz801NBMnccK0/5GM5g2Mca6xfvUpNaKEv8naPpgFkVtbzx6R8gCbe+Je5rBcltHa/57Zzy7X2jd3v/uSrY0N3PNC80ppk9SQwpNy2lxZRv47i1kaV0VQkQacCMkN35b7RJ6O9S3B35pQHRJQKTBWpXI7ZiP7PKt54hdmuRzRkSJarvCdqDEUUSUZPehcAHUukBGt00ls6OKl7D1VWBEXU5n1BJFq1czguk+1ixiVhMYSfUyXkYMf3sGmOu+DwPasLvsfEm+CZpnplFAeQc3eDvS9N4g/dyhYMFt3h7RV3HK9aonG5+KZw1ozn9g==
-Received: from MW2PR12MB4667.namprd12.prod.outlook.com (2603:10b6:302:12::28)
- by SN7PR12MB8147.namprd12.prod.outlook.com (2603:10b6:806:32e::5) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6178.41; Tue, 28 Mar
- 2023 17:58:24 +0000
-Received: from MW2PR12MB4667.namprd12.prod.outlook.com
- ([fe80::9f90:cf3d:d640:a90b]) by MW2PR12MB4667.namprd12.prod.outlook.com
- ([fe80::9f90:cf3d:d640:a90b%4]) with mapi id 15.20.6222.030; Tue, 28 Mar 2023
- 17:58:24 +0000
-From:   Chaitanya Kulkarni <chaitanyak@nvidia.com>
-To:     Zheng Yejian <zhengyejian1@huawei.com>,
-        "axboe@kernel.dk" <axboe@kernel.dk>,
-        "rostedt@goodmis.org" <rostedt@goodmis.org>,
-        "mhiramat@kernel.org" <mhiramat@kernel.org>
-CC:     "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-trace-kernel@vger.kernel.org" 
-        <linux-trace-kernel@vger.kernel.org>
-Subject: Re: [PATCH] blktrace: Gracefully return if fail in
- blk_register_tracepoints()
-Thread-Topic: [PATCH] blktrace: Gracefully return if fail in
- blk_register_tracepoints()
-Thread-Index: AQHZYVnBKN801/2HuE+GbVHCI96aJ68QexOA
-Date:   Tue, 28 Mar 2023 17:58:24 +0000
-Message-ID: <5e3d8652-7cab-a6ea-a943-80950a0f9bed@nvidia.com>
-References: <20230328094605.480557-1-zhengyejian1@huawei.com>
-In-Reply-To: <20230328094605.480557-1-zhengyejian1@huawei.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-user-agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.8.0
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nvidia.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: MW2PR12MB4667:EE_|SN7PR12MB8147:EE_
-x-ms-office365-filtering-correlation-id: e8c7774c-1ada-42ea-7062-08db2fb6067d
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: u+ASXpzSsDeVffHS4NyXss8myYs6p4exFq/2dx9c13gNEiwutuVQc0/4fRvtuUUo7AIVakSdHg7fEWcmsc0tM9kxapIkMt5bUzhRyo6uhz6ibM0eFDvBFUr8afgwEKrXEk1KKShGB8TnRl99p+wcruXFmtquJ1kUZA9s+5QpfhJ/+oTii6z8auWocu+Q18/JHoB6jj6uHlm9d+Vr+M5h8pGb0mR9E/ojzRjJmoKajAfPwRhWLst4aWe0GYEtiUhl087DmdbGzpEr6VlUAe29+eWN5772OLObK0JeJi67tzsvHVLZu+tnyz5hT/GjKGGGM7gfLJDO/ySEuQyq1jCCJJol4yfCWFr5pZ9Fak4IZJXy7kWrD48/e3gNFM8QDoBRK9lD3sNERAbcdddsT85Daj5PjNt8KLGKT/Dr10g4Wmv+qZbcWpg38G8IM8LAL4WaNmQyC9BGz9wXEnRUCrnqXM94mo6ujPu7YR0pYCXlhgIys6ABbNBLsUhRU+LJaiuE8oFhh0PJGi+w6xLHbCOQ6Tn4QCpUps1+be+HahT3B1Fdguil910HkgxJJ13M5yxnLcDfDyZGrfyxo7mh5vdwVCH4Tnv8p0NvFQ7aL8wFtqN2DhXWwW/GI2V+75Rcon4L5G0Gb7KbJHbxDgwFWcyyZy/CnH6La42Gfd+BXjyiF11joSi2Lff3zaSaC5ZJ/3XL
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MW2PR12MB4667.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230028)(4636009)(396003)(366004)(376002)(39860400002)(136003)(346002)(451199021)(26005)(2906002)(86362001)(83380400001)(31696002)(4326008)(8676002)(2616005)(186003)(38100700002)(5660300002)(64756008)(66556008)(38070700005)(53546011)(41300700001)(66446008)(36756003)(122000001)(66946007)(66476007)(8936002)(76116006)(6486002)(4744005)(6506007)(110136005)(6512007)(316002)(91956017)(54906003)(478600001)(71200400001)(31686004)(45980500001)(43740500002);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?utf-8?B?SDdjL2hqY2J0NEVoMUYxN1YxSzBMbU51dGlmT1JYZ0NWTUVTYWMwVlFlNmlL?=
- =?utf-8?B?WlY3K2YvOFhiQStSdnNlM0NRclNaWkxETlRJSXVNeEVxVVQ2UzhkN0k5eldv?=
- =?utf-8?B?OThSTzlDQVJSQkh3WEUrQ2dmTFNTZGI2RUg4MnEyREVhZEpoZmoraEJldzVT?=
- =?utf-8?B?TjN3ZmZnQ1lkcHZNTVlscHI0UUtKTUVkbmNjUHdObzNKOTVxRHgza0MrSWxD?=
- =?utf-8?B?azFXWjM1clVqVU12SzcrWDh6N0dsYWdCcGFtVlVJYUFQNXlhRTc4NUExbkVv?=
- =?utf-8?B?TEpQWWE5RERCTUhmN1NxNm43eWpBNHNyOUJMMTBwQVhKd0dKVzV0cnprbm1Z?=
- =?utf-8?B?ODFCbUVHeUVvMXFKKzFQZ3E1TFRSNC9Nemw5VFVDV1BpaytkNm1CT2FWZUpB?=
- =?utf-8?B?ek01b0dGRGM2QnQ5NEk3ZW1GaTlVNDV5QmZYckdOYkxDdDhsUi8yc1hTamhV?=
- =?utf-8?B?VVF4cWh5K3Yyd0VuNWlIQVBub2QvaUlhaEUvdFdGMzFpQ0pHazEyNzVyeHBU?=
- =?utf-8?B?elVaQWhMRHpONWUzZkhtbHZZaTMzNWNkWUIyMXB4L3d4Y21DVEszd3dEY1Rj?=
- =?utf-8?B?dDV2L204MXJNWGVuRFZQVElxalhxRUhpVlRCbU9kTmJ6ZTMwZVVLRDlpeFB3?=
- =?utf-8?B?UVA1b29uaGk3ZXBnUUtrVXQ5alhnU2tiU2YrelZvV05rZ1QwckdoblVoZjRD?=
- =?utf-8?B?Wm84TkFPNlpVRVRSYWR3dGdLUWR0eVhGV2N1T2RtbDN1K0dsRmpSMW4zRjdJ?=
- =?utf-8?B?WTNlSThMVWl6NFRzUnlUaERkL2NGZ05YczRRaGpkZW9kQVV1cTFaZkdkZ0tZ?=
- =?utf-8?B?ei9RczcxSEJFUHpWbWlucjFoTmZYc2hGK1hhMVFYbDNUUkVQRndFOFhEUFJH?=
- =?utf-8?B?bnhXeThmYnZ1M2dkT0xlRHFEUGxQNGdoWWIzQmdnMDVScFR6VktNaDhkMHEw?=
- =?utf-8?B?eFV0SW5CMEtraVNua1R1ay80b1ZrVzFkSjdJbVFlTTVDOEplUEsyVDZsZTJ2?=
- =?utf-8?B?NFRBR2RxNkFESlIxajNKM1hybHYxQUNqM1IvTzRkQkdIQmMyZHg1VFltdWph?=
- =?utf-8?B?UDVlOFlOWXRXM1Q0MXVPM3BheW9pKzdqb1NHWm1GTHd5a2FWOG81SzU3MFYv?=
- =?utf-8?B?ZjRFWE5ZMloyUkxPNGN0ZWtjZ0VDN253K0ZnbGc4aUFJUUZqZUpWQ29RcTVm?=
- =?utf-8?B?MWFHL21walo3R1BOQWZhZVdPVkRkKzY1U2JHVncxOGhOeTB6azZIRzRadWVp?=
- =?utf-8?B?dkQ5S3BaK2FxaWlRbzNnSjRJdU1ZclhUbjAyRlltV015ZVY1MFlkNDlrYU9q?=
- =?utf-8?B?V0RMMmtVcis2bER5UnVhczZmcWoxNGJCN3dIUlZZaXVabnpMeEZERDhTK24z?=
- =?utf-8?B?enBpdXA2T1lHYzZWdE5NUUc5L1lxSnp3a0ZEeWdlSkxFZVI5S2JOc2lJTFRo?=
- =?utf-8?B?SWR5WVdJcDNQeW5aN1hRL1MzR3ZUVVhSWjc0U0dnRFRwYkwzbExUSndZazV2?=
- =?utf-8?B?aWF5RHl2SmlZdVhmVG0reWJod2Jhb1V0QWg2VzM0dUlWZTN5Zk84T094NXB2?=
- =?utf-8?B?UDdxUDRoS3FqS2lpOERVMFQyYkgzaHBIRTErVXM1TzNRRlUvQlpCU0JodDZx?=
- =?utf-8?B?Q1k2eFJTODN1VSttNzBIQ1VFeUROMVNrdXZWOFdEMFhvZEhXejd3cXJrUnph?=
- =?utf-8?B?ZUd1dlZ5ZEtBdEhhVzRkL25kcmM4T3FRbmx0eCtMekdIcWFrc1BEQlhrRlBu?=
- =?utf-8?B?TGFIQkU0T2JmUXJkdU1VN2hMUzB1cnp3ejFwc1hNMkwzVERGVFBYQ1BWTG00?=
- =?utf-8?B?azlGRCtTTmQ2NzcyeXl6dzR5TlhoaXl0RDFnNFpaTENFeUd5cFZBZWwwOHl3?=
- =?utf-8?B?a2hieDhXOW1YejhqbWVmM08xa0FVcFRqTm1nYTZzVWY1SG1ocXBvVXFPUVp1?=
- =?utf-8?B?NFR2a2ZDZnBvK1lEZDAzd1QwNUNRc0FLdFpIcVJXNW5MaU9GenNkS2VJNEg0?=
- =?utf-8?B?WUJlTXIwQWxIemVsZzdJSUUvdXRyb29tamNwbVc4S2RVUFlnZ2llOUxnZG1t?=
- =?utf-8?B?eENzalBNVWxIYjF6MmRobVM0YUFtNVpnWEZsbjlOR0ZqRlM5ZUtZYS9VOTBX?=
- =?utf-8?Q?5ilY4om9G1PkiwVYbbhc9DlJ3?=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <E9FB4C4E6D4D1A45A6A97F6B0A0140E2@namprd12.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        Tue, 28 Mar 2023 14:52:04 -0400
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D64AE26A5;
+        Tue, 28 Mar 2023 11:52:01 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 5291AB81E46;
+        Tue, 28 Mar 2023 18:52:00 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5DCE4C433EF;
+        Tue, 28 Mar 2023 18:51:58 +0000 (UTC)
+Date:   Tue, 28 Mar 2023 14:51:56 -0400
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     LKML <linux-kernel@vger.kernel.org>,
+        Linux Trace Kernel <linux-trace-kernel@vger.kernel.org>
+Cc:     Masami Hiramatsu <mhiramat@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Beau Belgrave <beaub@linux.microsoft.com>
+Subject: [PATCH] tracing: Add "fields" option to show raw trace event fields
+Message-ID: <20230328145156.497651be@gandalf.local.home>
+X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: MW2PR12MB4667.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: e8c7774c-1ada-42ea-7062-08db2fb6067d
-X-MS-Exchange-CrossTenant-originalarrivaltime: 28 Mar 2023 17:58:24.2345
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: GNlaTsHVT7pxMu3HPb0dZ526RgifHPfNPOUirlzQPbSa1kRFvopi7OCEG3hRA04AySNM4Rp34tEInFPjGf35xQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN7PR12MB8147
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-T24gMy8yOC8yMyAwMjo0NiwgWmhlbmcgWWVqaWFuIHdyb3RlOg0KPiBDdXJyZW50bHkgYmxrX3Jl
-Z2lzdGVyX3RyYWNlcG9pbnRzKCkgV0FSTiBmb3IgZXZlcnkgcmVnaXN0cmF0aW9uIGZhaWx1cmUN
-Cj4gb2YgYmxvY2sgdHJhY2Vwb2ludCwgaG93ZXZlciwgYmxrX3RyYWNlIGNhbiBzdGlsbCBiZSBz
-ZXR1cC1lZC4NCj4NCj4gSXQgc2VlbXMgYmV0dGVyIHRvIGNsZWFudXAgcmVnaXN0ZXJlZCB0cmFj
-ZXBvaW50cyBhbmQgcmV0dXJuIGVycm9yIHdoZW4NCj4gYSBjZXJ0YWluIHJlZ2lzdHJhdGlvbiBm
-YWlsZWQsIGV2ZW4gaWYgaXQncyBhIHNtYWxsIHByb2JhYmlsaXR5LCBhbmQNCj4gdXNlcnMgY2Fu
-IGtub3cgdGhlIGVycm9yIGFuZCBkbyBibGtfdHJhY2Ugc2V0dXAgYWdhaW4uDQo+DQo+IFNpZ25l
-ZC1vZmYtYnk6IFpoZW5nIFllamlhbiA8emhlbmd5ZWppYW4xQGh1YXdlaS5jb20+DQo+IC0tLQ0K
-Pg0KDQpTbyBmYXIgSSdtIGZpbmUgd2l0aCBjdXJyZW50IGNvZGUgYXMgdGhpcyBhZGRzIGEgbG90
-IG9mIGNvZGUuDQpJJ3ZlIHRob3VnaHQgb2YgZG9pbmcgdGhpcyB3aGVuIEkgd29ya2VkIG9uIGJs
-a3RyYWNlIGV4dGVuc2lvbiwgYnV0DQpvdGhlcnMgYXJlIG9rYXkgd2l0aCBpdCBzdXJlIC4uDQoN
-Ci1jaw0KDQoNCg==
+From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
+
+The hex, raw and bin formats come from the old PREEMPT_RT patch set
+latency tracer. That actually gave real alternatives to reading the ascii
+buffer. But they have started to bit rot and they do not give a good
+representation of the tracing data.
+
+Add "fields" option that will read the trace event fields and parse the
+data from how the fields are defined:
+
+With "fields" = 0 (default)
+
+ echo 1 > events/sched/sched_switch/enable
+ cat trace
+         <idle>-0       [003] d..2.   540.078653: sched_switch: prev_comm=swapper/3 prev_pid=0 prev_prio=120 prev_state=R ==> next_comm=kworker/3:1 next_pid=83 next_prio=120
+     kworker/3:1-83      [003] d..2.   540.078860: sched_switch: prev_comm=kworker/3:1 prev_pid=83 prev_prio=120 prev_state=I ==> next_comm=swapper/3 next_pid=0 next_prio=120
+          <idle>-0       [003] d..2.   540.206423: sched_switch: prev_comm=swapper/3 prev_pid=0 prev_prio=120 prev_state=R ==> next_comm=sshd next_pid=807 next_prio=120
+            sshd-807     [003] d..2.   540.206531: sched_switch: prev_comm=sshd prev_pid=807 prev_prio=120 prev_state=S ==> next_comm=swapper/3 next_pid=0 next_prio=120
+          <idle>-0       [001] d..2.   540.206597: sched_switch: prev_comm=swapper/1 prev_pid=0 prev_prio=120 prev_state=R ==> next_comm=kworker/u16:4 next_pid=58 next_prio=120
+   kworker/u16:4-58      [001] d..2.   540.206617: sched_switch: prev_comm=kworker/u16:4 prev_pid=58 prev_prio=120 prev_state=I ==> next_comm=bash next_pid=830 next_prio=120
+            bash-830     [001] d..2.   540.206678: sched_switch: prev_comm=bash prev_pid=830 prev_prio=120 prev_state=R ==> next_comm=kworker/u16:4 next_pid=58 next_prio=120
+   kworker/u16:4-58      [001] d..2.   540.206696: sched_switch: prev_comm=kworker/u16:4 prev_pid=58 prev_prio=120 prev_state=I ==> next_comm=bash next_pid=830 next_prio=120
+            bash-830     [001] d..2.   540.206713: sched_switch: prev_comm=bash prev_pid=830 prev_prio=120 prev_state=R ==> next_comm=kworker/u16:4 next_pid=58 next_prio=120
+
+ echo 1 > options/fields
+           <...>-998     [002] d..2.   538.643732: sched_switch: next_prio=0x78 (120) next_pid=0x0 (0) next_comm=swapper/2 prev_state=0x20 (32) prev_prio=0x78 (120) prev_pid=0x3e6 (998) prev_comm=trace-cmd
+          <idle>-0       [001] d..2.   538.643806: sched_switch: next_prio=0x78 (120) next_pid=0x33e (830) next_comm=bash prev_state=0x0 (0) prev_prio=0x78 (120) prev_pid=0x0 (0) prev_comm=swapper/1
+            bash-830     [001] d..2.   538.644106: sched_switch: next_prio=0x78 (120) next_pid=0x3a (58) next_comm=kworker/u16:4 prev_state=0x0 (0) prev_prio=0x78 (120) prev_pid=0x33e (830) prev_comm=bash
+   kworker/u16:4-58      [001] d..2.   538.644130: sched_switch: next_prio=0x78 (120) next_pid=0x33e (830) next_comm=bash prev_state=0x80 (128) prev_prio=0x78 (120) prev_pid=0x3a (58) prev_comm=kworker/u16:4
+            bash-830     [001] d..2.   538.644180: sched_switch: next_prio=0x78 (120) next_pid=0x3a (58) next_comm=kworker/u16:4 prev_state=0x0 (0) prev_prio=0x78 (120) prev_pid=0x33e (830) prev_comm=bash
+   kworker/u16:4-58      [001] d..2.   538.644185: sched_switch: next_prio=0x78 (120) next_pid=0x33e (830) next_comm=bash prev_state=0x80 (128) prev_prio=0x78 (120) prev_pid=0x3a (58) prev_comm=kworker/u16:4
+            bash-830     [001] d..2.   538.644204: sched_switch: next_prio=0x78 (120) next_pid=0x0 (0) next_comm=swapper/1 prev_state=0x1 (1) prev_prio=0x78 (120) prev_pid=0x33e (830) prev_comm=bash
+          <idle>-0       [003] d..2.   538.644211: sched_switch: next_prio=0x78 (120) next_pid=0x327 (807) next_comm=sshd prev_state=0x0 (0) prev_prio=0x78 (120) prev_pid=0x0 (0) prev_comm=swapper/3
+            sshd-807     [003] d..2.   538.644340: sched_switch: next_prio=0x78 (120) next_pid=0x0 (0) next_comm=swapper/3 prev_state=0x1 (1) prev_prio=0x78 (120) prev_pid=0x327 (807) prev_comm=sshd
+
+It traces the data safely without using the trace print formatting.
+
+Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+---
+ Documentation/trace/ftrace.rst |   6 ++
+ kernel/trace/trace.c           |   7 +-
+ kernel/trace/trace.h           |   2 +
+ kernel/trace/trace_output.c    | 168 +++++++++++++++++++++++++++++++++
+ kernel/trace/trace_output.h    |   2 +
+ 5 files changed, 183 insertions(+), 2 deletions(-)
+
+diff --git a/Documentation/trace/ftrace.rst b/Documentation/trace/ftrace.rst
+index b927fb2b94dc..aaebb821912e 100644
+--- a/Documentation/trace/ftrace.rst
++++ b/Documentation/trace/ftrace.rst
+@@ -1027,6 +1027,7 @@ To see what is available, simply cat the file::
+ 	nohex
+ 	nobin
+ 	noblock
++	nofields
+ 	trace_printk
+ 	annotate
+ 	nouserstacktrace
+@@ -1110,6 +1111,11 @@ Here are the available options:
+   block
+ 	When set, reading trace_pipe will not block when polled.
+ 
++  fields
++	Print the fields as described by their types. This is a better
++	option than using hex, bin or raw, as it gives a better parsing
++	of the content of the event.
++
+   trace_printk
+ 	Can disable trace_printk() from writing into the buffer.
+ 
+diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
+index 937e9676dfd4..076d893d2965 100644
+--- a/kernel/trace/trace.c
++++ b/kernel/trace/trace.c
+@@ -3726,7 +3726,7 @@ __find_next_entry(struct trace_iterator *iter, int *ent_cpu,
+ #define STATIC_FMT_BUF_SIZE	128
+ static char static_fmt_buf[STATIC_FMT_BUF_SIZE];
+ 
+-static char *trace_iter_expand_format(struct trace_iterator *iter)
++char *trace_iter_expand_format(struct trace_iterator *iter)
+ {
+ 	char *tmp;
+ 
+@@ -4446,8 +4446,11 @@ static enum print_line_t print_trace_fmt(struct trace_iterator *iter)
+ 	if (trace_seq_has_overflowed(s))
+ 		return TRACE_TYPE_PARTIAL_LINE;
+ 
+-	if (event)
++	if (event) {
++		if (tr->trace_flags & TRACE_ITER_FIELDS)
++			return print_event_fields(iter, event);
+ 		return event->funcs->trace(iter, sym_flags, event);
++	}
+ 
+ 	trace_seq_printf(s, "Unknown type %d\n", entry->type);
+ 
+diff --git a/kernel/trace/trace.h b/kernel/trace/trace.h
+index 616e1aa1c4da..79bdefe9261b 100644
+--- a/kernel/trace/trace.h
++++ b/kernel/trace/trace.h
+@@ -619,6 +619,7 @@ bool trace_is_tracepoint_string(const char *str);
+ const char *trace_event_format(struct trace_iterator *iter, const char *fmt);
+ void trace_check_vprintf(struct trace_iterator *iter, const char *fmt,
+ 			 va_list ap) __printf(2, 0);
++char *trace_iter_expand_format(struct trace_iterator *iter);
+ 
+ int trace_empty(struct trace_iterator *iter);
+ 
+@@ -1199,6 +1200,7 @@ extern int trace_get_user(struct trace_parser *parser, const char __user *ubuf,
+ 		C(HEX,			"hex"),			\
+ 		C(BIN,			"bin"),			\
+ 		C(BLOCK,		"block"),		\
++		C(FIELDS,		"fields"),		\
+ 		C(PRINTK,		"trace_printk"),	\
+ 		C(ANNOTATE,		"annotate"),		\
+ 		C(USERSTACKTRACE,	"userstacktrace"),	\
+diff --git a/kernel/trace/trace_output.c b/kernel/trace/trace_output.c
+index bd475a00f96d..780c6971c944 100644
+--- a/kernel/trace/trace_output.c
++++ b/kernel/trace/trace_output.c
+@@ -808,6 +808,174 @@ EXPORT_SYMBOL_GPL(unregister_trace_event);
+  * Standard events
+  */
+ 
++static void print_array(struct trace_iterator *iter, void *pos,
++			struct ftrace_event_field *field)
++{
++	int offset;
++	int len;
++	int i;
++
++	offset = *(int *)pos & 0xffff;
++	len = *(int *)pos >> 16;
++
++	if (field)
++		offset += field->offset;
++
++	if (offset + len >= iter->ent_size) {
++		trace_seq_puts(&iter->seq, "<OVERFLOW>");
++		return;
++	}
++
++	for (i = 0; i < len; i++, pos++) {
++		if (i)
++			trace_seq_putc(&iter->seq, ',');
++		trace_seq_printf(&iter->seq, "%02x", *(unsigned char *)pos);
++	}
++}
++
++static void print_fields(struct trace_iterator *iter, struct trace_event_call *call,
++			 struct list_head *head)
++{
++	struct ftrace_event_field *field;
++	int offset;
++	int len;
++	int ret;
++	void *pos;
++
++	list_for_each_entry(field, head, link) {
++		trace_seq_printf(&iter->seq, " %s=", field->name);
++		if (field->offset + field->size > iter->ent_size) {
++			trace_seq_puts(&iter->seq, "<OVERFLOW>");
++			continue;
++		}
++		pos = (void *)iter->ent + field->offset;
++
++		switch (field->filter_type) {
++		case FILTER_COMM:
++		case FILTER_STATIC_STRING:
++			trace_seq_printf(&iter->seq, "%.*s", field->size, (char *)pos);
++			break;
++		case FILTER_RDYN_STRING:
++		case FILTER_DYN_STRING:
++			offset = *(int *)pos & 0xffff;
++			len = *(int *)pos >> 16;
++
++			if (field->filter_type == FILTER_RDYN_STRING)
++				offset += field->offset;
++
++			if (offset + len >= iter->ent_size) {
++				trace_seq_puts(&iter->seq, "<OVERFLOW>");
++				break;
++			}
++			pos = (void *)iter->ent + offset;
++			trace_seq_printf(&iter->seq, "%.*s", len, (char *)pos);
++			break;
++		case FILTER_PTR_STRING:
++			if (!iter->fmt_size)
++				trace_iter_expand_format(iter);
++			pos = *(void **)pos;
++			ret = strncpy_from_kernel_nofault(iter->fmt, pos,
++							  iter->fmt_size);
++			if (ret < 0)
++				trace_seq_printf(&iter->seq, "(0x%px)", pos);
++			else
++				trace_seq_printf(&iter->seq, "(0x%px:%s)",
++						 pos, iter->fmt);
++			break;
++		case FILTER_TRACE_FN:
++			pos = *(void **)pos;
++			trace_seq_printf(&iter->seq, "%pS", pos);
++			break;
++		case FILTER_CPU:
++		case FILTER_OTHER:
++			switch (field->size) {
++			case 1:
++				if (isprint(*(char *)pos)) {
++					trace_seq_printf(&iter->seq, "'%c'",
++						 *(unsigned char *)pos);
++				}
++				trace_seq_printf(&iter->seq, "(%d)",
++						 *(unsigned char *)pos);
++				break;
++			case 2:
++				trace_seq_printf(&iter->seq, "0x%x (%d)",
++						 *(unsigned short *)pos,
++						 *(unsigned short *)pos);
++				break;
++			case 4:
++				/* dynamic array info is 4 bytes */
++				if (strstr(field->type, "__data_loc")) {
++					print_array(iter, pos, NULL);
++					break;
++				}
++
++				if (strstr(field->type, "__rel_loc")) {
++					print_array(iter, pos, field);
++					break;
++				}
++
++				trace_seq_printf(&iter->seq, "0x%x (%d)",
++						 *(unsigned int *)pos,
++						 *(unsigned int *)pos);
++				break;
++			case 8:
++				trace_seq_printf(&iter->seq, "0x%llx (%lld)",
++						 *(unsigned long long *)pos,
++						 *(unsigned long long *)pos);
++				break;
++			default:
++				trace_seq_puts(&iter->seq, "<INVALID-SIZE>");
++				break;
++			}
++			break;
++		default:
++			trace_seq_puts(&iter->seq, "<INVALID-TYPE>");
++		}
++	}
++	trace_seq_putc(&iter->seq, '\n');
++}
++
++enum print_line_t print_event_fields(struct trace_iterator *iter,
++				     struct trace_event *event)
++{
++	struct trace_event_call *call;
++	struct list_head *head;
++
++	/* ftrace defined events have separate call structures */
++	if (event->type <= __TRACE_LAST_TYPE) {
++		bool found = false;
++
++		down_read(&trace_event_sem);
++		list_for_each_entry(call, &ftrace_events, list) {
++			if (call->event.type == event->type) {
++				found = true;
++				break;
++			}
++			/* No need to search all events */
++			if (call->event.type > __TRACE_LAST_TYPE)
++				break;
++		}
++		up_read(&trace_event_sem);
++		if (!found) {
++			trace_seq_printf(&iter->seq, "UNKNOWN TYPE %d\n", event->type);
++			goto out;
++		}
++	} else {
++		call = container_of(event, struct trace_event_call, event);
++	}
++	head = trace_get_fields(call);
++
++	trace_seq_printf(&iter->seq, "%s:", trace_event_name(call));
++
++	if (head && !list_empty(head))
++		print_fields(iter, call, head);
++	else
++		trace_seq_puts(&iter->seq, "No fields found\n");
++
++ out:
++	return trace_handle_return(&iter->seq);
++}
++
+ enum print_line_t trace_nop_print(struct trace_iterator *iter, int flags,
+ 				  struct trace_event *event)
+ {
+diff --git a/kernel/trace/trace_output.h b/kernel/trace/trace_output.h
+index 4c954636caf0..dca40f1f1da4 100644
+--- a/kernel/trace/trace_output.h
++++ b/kernel/trace/trace_output.h
+@@ -19,6 +19,8 @@ seq_print_ip_sym(struct trace_seq *s, unsigned long ip,
+ extern void trace_seq_print_sym(struct trace_seq *s, unsigned long address, bool offset);
+ extern int trace_print_context(struct trace_iterator *iter);
+ extern int trace_print_lat_context(struct trace_iterator *iter);
++extern enum print_line_t print_event_fields(struct trace_iterator *iter,
++					    struct trace_event *event);
+ 
+ extern void trace_event_read_lock(void);
+ extern void trace_event_read_unlock(void);
+-- 
+2.39.1
+
