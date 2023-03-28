@@ -2,209 +2,171 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 445B2C77B62
-	for <linux-trace-kernel@archiver.kernel.org>; Tue, 28 Mar 2023 13:44:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AC3EFC76196
+	for <linux-trace-kernel@archiver.kernel.org>; Tue, 28 Mar 2023 14:05:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233291AbjC1Noi (ORCPT
+        id S230363AbjC1OFO (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Tue, 28 Mar 2023 09:44:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49424 "EHLO
+        Tue, 28 Mar 2023 10:05:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47066 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233312AbjC1NoR (ORCPT
+        with ESMTP id S230269AbjC1OFN (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Tue, 28 Mar 2023 09:44:17 -0400
-Received: from mail-m118111.qiye.163.com (mail-m118111.qiye.163.com [115.236.118.111])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 30ACEC656;
-        Tue, 28 Mar 2023 06:44:01 -0700 (PDT)
-Received: from ubuntu.localdomain (unknown [117.133.56.22])
-        by mail-m118111.qiye.163.com (Hmail) with ESMTPA id 96D2158042C;
-        Tue, 28 Mar 2023 21:43:21 +0800 (CST)
-From:   Donglin Peng <pengdonglin@sangfor.com.cn>
-To:     mhiramat@kernel.org, rostedt@goodmis.org, linux@armlinux.org.uk,
-        mark.rutland@arm.com, will@kernel.org, catalin.marinas@arm.com,
-        palmer@dabbelt.com, paul.walmsley@sifive.com, tglx@linutronix.de,
+        Tue, 28 Mar 2023 10:05:13 -0400
+Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [IPv6:2001:4d48:ad52:32c8:5054:ff:fe00:142])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 25AD3CC1C;
+        Tue, 28 Mar 2023 07:04:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=04vP3RzMs3P/u6ra9aohOJriuOsHdgwipqyExrFrTjc=; b=mh6/AUJNqn+FdcuZzLxS1JRPCX
+        9PjtU4toaTdFVFl8Oq9o4nbuQoE4aiZM9QOcGREWE4jLWY5DoSYbELFv8DeY1wFP2mTYG070hd6Wd
+        Tfe7eR5++Rk8eczns5zb+jJ9Ky7ydT3o9MEOVkd+Mvo6y2Qjj49i8W/cXrM3mUJ50OxS/wVoAjwtZ
+        4xrdvc55AKGF1grOslzBDBZlBkvSAxdNwdMzb7XPRz/+prNath1ct2o3sL3EpinKQF/tOKsNcQqQw
+        Ig2781259z8H1OdssQ8MsAn/tTHXr6eCszj7n0Dxt3/by0YcDWPkadhEKH46s76AMvQbseCeW5+h7
+        yic00bRw==;
+Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:51186)
+        by pandora.armlinux.org.uk with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+        (Exim 4.94.2)
+        (envelope-from <linux@armlinux.org.uk>)
+        id 1ph9uX-0006Pz-8z; Tue, 28 Mar 2023 15:02:53 +0100
+Received: from linux by shell.armlinux.org.uk with local (Exim 4.94.2)
+        (envelope-from <linux@shell.armlinux.org.uk>)
+        id 1ph9uJ-0006WX-6C; Tue, 28 Mar 2023 15:02:39 +0100
+Date:   Tue, 28 Mar 2023 15:02:39 +0100
+From:   "Russell King (Oracle)" <linux@armlinux.org.uk>
+To:     Donglin Peng <pengdonglin@sangfor.com.cn>
+Cc:     mhiramat@kernel.org, rostedt@goodmis.org, mark.rutland@arm.com,
+        will@kernel.org, catalin.marinas@arm.com, palmer@dabbelt.com,
+        paul.walmsley@sifive.com, tglx@linutronix.de,
         dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com,
         chenhuacai@kernel.org, zhangqing@loongson.cn, kernel@xen0n.name,
         mingo@redhat.com, peterz@infradead.org, xiehuan09@gmail.com,
         dinghui@sangfor.com.cn, huangcun@sangfor.com.cn,
-        dolinux.peng@gmail.com
-Cc:     linux-trace-kernel@vger.kernel.org, loongarch@lists.linux.dev,
-        linux-riscv@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Donglin Peng <pengdonglin@sangfor.com.cn>
-Subject: [PATCH v8 0/8] function_graph: Support recording and printing the return value of function
-Date:   Tue, 28 Mar 2023 06:43:11 -0700
-Message-Id: <20230328134319.2185812-1-pengdonglin@sangfor.com.cn>
-X-Mailer: git-send-email 2.25.1
+        dolinux.peng@gmail.com, linux-trace-kernel@vger.kernel.org,
+        loongarch@lists.linux.dev, linux-riscv@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v8 3/8] ARM: ftrace: Enable HAVE_FUNCTION_GRAPH_RETVAL
+Message-ID: <ZCLzf6RX4U00g9Cu@shell.armlinux.org.uk>
+References: <20230328134319.2185812-1-pengdonglin@sangfor.com.cn>
+ <20230328134319.2185812-4-pengdonglin@sangfor.com.cn>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-HM-Spam-Status: e1kfGhgUHx5ZQUpXWQgPGg8OCBgUHx5ZQUlOS1dZFg8aDwILHllBWSg2Ly
-        tZV1koWUFITzdXWS1ZQUlXWQ8JGhUIEh9ZQVkZQkhMVkofTBhKTU4aHk0eGVUTARMWGhIXJBQOD1
-        lXWRgSC1lBWUpKTFVKSEhVTk1VSUlZV1kWGg8SFR0UWUFZT0tIVUpISkJIT1VKS0tVS1kG
-X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6PzI6Dxw5Iz0cA1Y8EQoXDzEY
-        SRwwCgNVSlVKTUNLS0pKS0tIS0hLVTMWGhIXVQseFRwfFBUcFxIVOwgaFRwdFAlVGBQWVRgVRVlX
-        WRILWUFZSkpMVUpISFVOTVVJSVlXWQgBWUFDQkJMNwY+
-X-HM-Tid: 0a87287582a52eb7kusn96d2158042c
-X-HM-MType: 1
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230328134319.2185812-4-pengdonglin@sangfor.com.cn>
+Sender: Russell King (Oracle) <linux@armlinux.org.uk>
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-When using the function_graph tracer to analyze system call failures,
-it can be time-consuming to analyze the trace logs and locate the kernel
-function that first returns an error. This change aims to simplify the
-process by recording the function return value to the 'retval' member of
-'ftrace_graph_ent' and printing it when outputing the trace log.
+On Tue, Mar 28, 2023 at 06:43:14AM -0700, Donglin Peng wrote:
+> The commit d4815c5d1bbd ("function_graph: Support recording and printing
+> the return value of function") laid the groundwork for the for the
+> funcgraph-retval, and this modification makes it available on the
+> ARM platform.
+> 
+> We introduce a new structure called fgraph_ret_regs for the ARM platform
+> to hold return registers and the frame pointer. We then fill its content
+> in the return_to_handler and pass its address to the function
+> ftrace_return_to_handler to record the return value.
+> 
+> Signed-off-by: Donglin Peng <pengdonglin@sangfor.com.cn>
+> ---
+> v8:
+>  - Modify the control range of CONFIG_HAVE_FUNCTION_GRAPH_RETVAL
+> ---
+>  arch/arm/Kconfig               |  1 +
+>  arch/arm/include/asm/ftrace.h  | 18 ++++++++++++++++++
+>  arch/arm/kernel/entry-ftrace.S |  6 +++++-
+>  3 files changed, 24 insertions(+), 1 deletion(-)
+> 
+> diff --git a/arch/arm/Kconfig b/arch/arm/Kconfig
+> index e24a9820e12f..73061379855a 100644
+> --- a/arch/arm/Kconfig
+> +++ b/arch/arm/Kconfig
+> @@ -98,6 +98,7 @@ config ARM
+>  	select HAVE_FAST_GUP if ARM_LPAE
+>  	select HAVE_FTRACE_MCOUNT_RECORD if !XIP_KERNEL
+>  	select HAVE_FUNCTION_ERROR_INJECTION
+> +	select HAVE_FUNCTION_GRAPH_RETVAL if HAVE_FUNCTION_GRAPH_TRACER
+>  	select HAVE_FUNCTION_GRAPH_TRACER
+>  	select HAVE_FUNCTION_TRACER if !XIP_KERNEL
+>  	select HAVE_GCC_PLUGINS
+> diff --git a/arch/arm/include/asm/ftrace.h b/arch/arm/include/asm/ftrace.h
+> index 7e9251ca29fe..2ab4bee21d79 100644
+> --- a/arch/arm/include/asm/ftrace.h
+> +++ b/arch/arm/include/asm/ftrace.h
+> @@ -77,4 +77,22 @@ static inline bool arch_syscall_match_sym_name(const char *sym,
+>  
+>  #endif /* ifndef __ASSEMBLY__ */
+>  
+> +
+> +#ifndef __ASSEMBLY__
+> +struct fgraph_ret_regs {
+> +	unsigned long regs[4];
+> +	unsigned long fp;
+> +};
+> +
+> +static inline unsigned long fgraph_ret_regs_return_value(struct fgraph_ret_regs *ret_regs)
+> +{
+> +	return ret_regs->regs[0];
+> +}
+> +
+> +static inline unsigned long fgraph_ret_regs_frame_pointer(struct fgraph_ret_regs *ret_regs)
+> +{
+> +	return ret_regs->fp;
+> +}
+> +#endif
+> +
+>  #endif /* _ASM_ARM_FTRACE */
+> diff --git a/arch/arm/kernel/entry-ftrace.S b/arch/arm/kernel/entry-ftrace.S
+> index 3e7bcaca5e07..5f1e74555b25 100644
+> --- a/arch/arm/kernel/entry-ftrace.S
+> +++ b/arch/arm/kernel/entry-ftrace.S
+> @@ -257,11 +257,15 @@ ENDPROC(ftrace_graph_regs_caller)
+>  
+>  #ifdef CONFIG_FUNCTION_GRAPH_TRACER
+>  ENTRY(return_to_handler)
+> +	sub	sp, sp, #4
+>  	stmdb	sp!, {r0-r3}
+> -	add	r0, sp, #16		@ sp at exit of instrumented routine
+> +	add	r0, sp, #20		@ sp at exit of instrumented routine
+> +	str	r0, [sp, #16]
+> +	mov	r0, sp
 
-Note that even if a function's return type is void, a return value will
-still be printed, so it should be ignored. If you care about this, the
-BTF file can be used to obtain the details of function return type. We
-can implement a tool to process the trace log and display the return
-value based on its actual type.
+1) EABI wants the stack to be aligned to 8 bytes.
+2) We can do better than this.
 
-Here is an example:
+	mov	ip, sp
+	stmdb	sp!, {r0-r3, ip, lr}
+	mov	r0, sp
 
-...
+>  	bl	ftrace_return_to_handler
+>  	mov	lr, r0			@ r0 has real ret addr
+>  	ldmia	sp!, {r0-r3}
 
- 1)               |  cgroup_attach_task() {
- 1)               |    cgroup_migrate_add_src() {
- 1)   1.403 us    |      cset_cgroup_from_root(); /* = 0xffff93fc86f58010 */
- 1)   2.154 us    |    } /* cgroup_migrate_add_src = 0xffffb286c1297d00 */
- 1) ! 386.538 us  |    cgroup_migrate_prepare_dst(); /* = 0x0 */
- 1)               |    cgroup_migrate() {
- 1)   0.651 us    |      cgroup_migrate_add_task(); /* = 0xffff93fcfd346c00 */
- 1)               |      cgroup_migrate_execute() {
- 1)               |        cpu_cgroup_can_attach() {
- 1)               |          cgroup_taskset_first() {
- 1)   0.732 us    |            cgroup_taskset_next(); /* = 0xffff93fc8fb20000 */
- 1)   1.232 us    |          } /* cgroup_taskset_first = 0xffff93fc8fb20000 */
- 1)   0.380 us    |          sched_rt_can_attach(); /* = 0x0 */
- 1)   2.335 us    |        } /* cpu_cgroup_can_attach = -22 */
- 1)   4.369 us    |      } /* cgroup_migrate_execute = -22 */
- 1)   7.143 us    |    } /* cgroup_migrate = -22 */
- 1)               |    cgroup_migrate_finish() {
- 1)   0.411 us    |      put_css_set_locked(); /* = 0x8 */
- 1) + 62.397 us   |      put_css_set_locked(); /* = 0x80000001 */
- 1) + 64.742 us   |    } /* cgroup_migrate_finish = 0x80000000 */
- 1) ! 465.605 us  |  } /* cgroup_attach_task = -22 */
+	ldmia	sp, {r0-r3}		@ since we need to manually adjust sp,
 
-...
+> +	add	sp, sp, #4		@ skip fp
 
-After processing the above trace logs using BTF information:
+	add	sp, sp, #4 * 6		@ restore stack pointer here
 
-...
-
- 1)               |  cgroup_attach_task() {
- 1)               |    cgroup_migrate_add_src() {
- 1)   1.403 us    |      cset_cgroup_from_root(); /* = 0xffff93fc86f58010 */
- 1)   2.154 us    |    } /* cgroup_migrate_add_src */
- 1) ! 386.538 us  |    cgroup_migrate_prepare_dst(); /* = 0 */
- 1)               |    cgroup_migrate() {
- 1)   0.651 us    |      cgroup_migrate_add_task();
- 1)               |      cgroup_migrate_execute() {
- 1)               |        cpu_cgroup_can_attach() {
- 1)               |          cgroup_taskset_first() {
- 1)   0.732 us    |            cgroup_taskset_next(); /* = 0xffff93fc8fb20000 */
- 1)   1.232 us    |          } /* cgroup_taskset_first = 0xffff93fc8fb20000 */
- 1)   0.380 us    |          sched_rt_can_attach(); /* = 0 */
- 1)   2.335 us    |        } /* cpu_cgroup_can_attach = -22 */
- 1)   4.369 us    |      } /* cgroup_migrate_execute = -22 */
- 1)   7.143 us    |    } /* cgroup_migrate = -22 */
- 1)               |    cgroup_migrate_finish() {
- 1)   0.411 us    |      put_css_set_locked();
- 1) + 62.397 us   |      put_css_set_locked();
- 1) + 64.742 us   |    } /* cgroup_migrate_finish */
- 1) ! 465.605 us  |  } /* cgroup_attach_task = -22 */
-
-...
-
----
-v8:
- - Fix issues in ARM64 asm code
- - Fix issues in selftest
- - Add some comments on CONFIG_HAVE_FUNCTION_GRAPH_RETVAL
- - Make CONFIG_FUNCTION_GRAPH_RETVAL switable
- - Modify the control range of CONFIG_HAVE_FUNCTION_GRAPH_RETVAL
-
-v7:
- - Rename trace option 'graph_retval_hex' to 'funcgraph-retval-hex'
- - Introduce a new structure fgraph_ret_regs for each architecture to
-   hold return registers
- - Separate each architecture modification info individual patches
- - Add a test case for funcgraph-retval
- - Update documentation description
- - Support LoongArch
-
-v6:
- - Remove the conversion code for short and char types, because these
-   two types are rarely used to store an error code.
- - Modify the limitations for funcgraph-retval
- - Optimize the English expression
-
-v5:
- - Pass both the return values to ftrace_return_to_handler
- - Modify the parameter sequence of ftrace_return_to_handler to
-   decrease the modification of assembly code, thanks to Russell King
- - Wrap __ftrace_return_to_handler with ftrace_return_to_handler
-   for compatible
- - Describe the limitations of funcgraph-retval
-
-v4:
- - Modify commit message
- - Introduce new option graph_retval_hex to control display format
- - Introduce macro CONFIG_FUNCTION_GRAPH_RETVAL and
-   CONFIG_HAVE_FUNCTION_GRAPH_RETVAL
- - Add related arch maintainers to review
-
-v3:
- - Modify the commit message: add trace logs processed with the btf tool
-
-v2:
- - Modify the commit message: use BTF to get the return type of function
-
-*** BLURB HERE ***
-
-Donglin Peng (8):
-  function_graph: Support recording and printing the return value of
-    function
-  tracing: Add documentation for funcgraph-retval and
-    funcgraph-retval-hex
-  ARM: ftrace: Enable HAVE_FUNCTION_GRAPH_RETVAL
-  arm64: ftrace: Enable HAVE_FUNCTION_GRAPH_RETVAL
-  riscv: ftrace: Enable HAVE_FUNCTION_GRAPH_RETVAL
-  x86/ftrace: Enable HAVE_FUNCTION_GRAPH_RETVAL
-  LoongArch: ftrace: Enable HAVE_FUNCTION_GRAPH_RETVAL
-  selftests/ftrace: Add funcgraph-retval test case
-
- Documentation/trace/ftrace.rst                | 74 +++++++++++++++
- arch/arm/Kconfig                              |  1 +
- arch/arm/include/asm/ftrace.h                 | 18 ++++
- arch/arm/kernel/entry-ftrace.S                |  6 +-
- arch/arm64/Kconfig                            |  1 +
- arch/arm64/include/asm/ftrace.h               | 20 ++++
- arch/arm64/kernel/asm-offsets.c               | 12 +++
- arch/arm64/kernel/entry-ftrace.S              | 27 +++---
- arch/loongarch/Kconfig                        |  1 +
- arch/loongarch/include/asm/ftrace.h           | 18 ++++
- arch/loongarch/kernel/mcount.S                |  6 +-
- arch/loongarch/kernel/mcount_dyn.S            |  7 +-
- arch/riscv/Kconfig                            |  1 +
- arch/riscv/include/asm/ftrace.h               | 19 ++++
- arch/riscv/kernel/mcount.S                    |  7 +-
- arch/x86/Kconfig                              |  1 +
- arch/x86/include/asm/ftrace.h                 | 18 ++++
- arch/x86/kernel/ftrace_32.S                   |  8 +-
- arch/x86/kernel/ftrace_64.S                   |  7 +-
- include/linux/ftrace.h                        |  3 +
- kernel/trace/Kconfig                          | 15 +++
- kernel/trace/fgraph.c                         | 23 ++++-
- kernel/trace/trace.h                          |  2 +
- kernel/trace/trace_entries.h                  | 26 ++++++
- kernel/trace/trace_functions_graph.c          | 93 +++++++++++++++++--
- .../ftrace/test.d/ftrace/fgraph-retval.tc     | 39 ++++++++
- 26 files changed, 411 insertions(+), 42 deletions(-)
- create mode 100644 tools/testing/selftests/ftrace/test.d/ftrace/fgraph-retval.tc
+>  	ret	lr
+>  ENDPROC(return_to_handler)
+>  #endif
+> -- 
+> 2.25.1
+> 
+> 
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+> 
 
 -- 
-2.25.1
-
+RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+FTTP is here! 40Mbps down 10Mbps up. Decent connectivity at last!
