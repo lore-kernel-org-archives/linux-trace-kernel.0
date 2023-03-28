@@ -2,99 +2,78 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DB493C76196
-	for <linux-trace-kernel@archiver.kernel.org>; Tue, 28 Mar 2023 21:53:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A7F4C76196
+	for <linux-trace-kernel@archiver.kernel.org>; Tue, 28 Mar 2023 22:47:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229982AbjC1Vxb (ORCPT
+        id S229549AbjC1Wrt (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Tue, 28 Mar 2023 17:53:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45882 "EHLO
+        Tue, 28 Mar 2023 18:47:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46702 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229966AbjC1VxX (ORCPT
+        with ESMTP id S229530AbjC1Wrt (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Tue, 28 Mar 2023 17:53:23 -0400
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 7C59F2D54;
-        Tue, 28 Mar 2023 14:53:22 -0700 (PDT)
-Received: from W11-BEAU-MD.localdomain (unknown [76.135.27.212])
-        by linux.microsoft.com (Postfix) with ESMTPSA id AB41220FDA92;
-        Tue, 28 Mar 2023 14:53:21 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com AB41220FDA92
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-        s=default; t=1680040401;
-        bh=vEFB1z2QmcpHdHshSNcrN3p3s6kuh7H1QAAI42oT64U=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=U/RSAlulI4icbxrgBDeo+f/RSQbJtLtwI8T/AZ5uVvMsIPsQgysULDRy2l5h5IUr1
-         ySZOm2wZc1lkwmuLkwVJv/P8542h2ykT9HDwxLUzuavcC5aa/ik+GzllUAJstDgXJZ
-         8YRydOh/hsDz357idecBIBjOv6jYZaiZvb93kaIE=
-Date:   Tue, 28 Mar 2023 14:53:15 -0700
-From:   Beau Belgrave <beaub@linux.microsoft.com>
-To:     Steven Rostedt <rostedt@goodmis.org>
-Cc:     mhiramat@kernel.org, mathieu.desnoyers@efficios.com,
-        dcook@linux.microsoft.com, alanau@linux.microsoft.com,
-        brauner@kernel.org, akpm@linux-foundation.org,
-        ebiederm@xmission.com, keescook@chromium.org, tglx@linutronix.de,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        linux-trace-kernel@vger.kernel.org
-Subject: Re: [PATCH v9 05/11] tracing/user_events: Add ioctl for disabling
- addresses
-Message-ID: <20230328215315.GA143@W11-BEAU-MD.localdomain>
-References: <20230324223028.172-1-beaub@linux.microsoft.com>
- <20230324223028.172-6-beaub@linux.microsoft.com>
- <20230328173200.22ac45dc@gandalf.local.home>
- <20230328173740.0595c953@gandalf.local.home>
+        Tue, 28 Mar 2023 18:47:49 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5BE422134;
+        Tue, 28 Mar 2023 15:47:48 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id EAE21619A2;
+        Tue, 28 Mar 2023 22:47:47 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 065D0C433EF;
+        Tue, 28 Mar 2023 22:47:45 +0000 (UTC)
+Date:   Tue, 28 Mar 2023 18:47:43 -0400
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     Ajay Kaher <akaher@vmware.com>
+Cc:     mhiramat@kernel.org, linux-kernel@vger.kernel.org,
+        linux-trace-kernel@vger.kernel.org, chinglinyu@google.com,
+        namit@vmware.com, srivatsab@vmware.com, srivatsa@csail.mit.edu,
+        amakhalov@vmware.com, vsirnapalli@vmware.com, tkundu@vmware.com,
+        er.ajay.kaher@gmail.com
+Subject: Re: [PATCH 0/8] tracing: introducing eventfs
+Message-ID: <20230328184743.7984463b@gandalf.local.home>
+In-Reply-To: <1674407228-49109-9-git-send-email-akaher@vmware.com>
+References: <1674407228-49109-1-git-send-email-akaher@vmware.com>
+        <1674407228-49109-9-git-send-email-akaher@vmware.com>
+X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230328173740.0595c953@gandalf.local.home>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On Tue, Mar 28, 2023 at 05:37:40PM -0400, Steven Rostedt wrote:
-> On Tue, 28 Mar 2023 17:32:00 -0400
-> Steven Rostedt <rostedt@goodmis.org> wrote:
-> 
-> > > +static long user_events_ioctl_unreg(unsigned long uarg)
-> > > +{
-> > > +	struct user_unreg __user *ureg = (struct user_unreg __user *)uarg;
-> > > +	struct user_event_mm *mm = current->user_event_mm;
-> > > +	struct user_event_enabler *enabler, *next;
-> > > +	struct user_unreg reg;
-> > > +	long ret;
-> > > +
-> > > +	ret = user_unreg_get(ureg, &reg);
-> > > +
-> > > +	if (ret)
-> > > +		return ret;
-> > > +
-> > > +	if (!mm)
-> > > +		return -ENOENT;
-> > > +
-> > > +	ret = -ENOENT;  
-> > 
-> > Probably should add:
-> > 
-> > 	if (reg.__reserved || reg.__reserved2)
-> > 		return -EINVAL;
-> > 
-> > here.
+On Sun, 22 Jan 2023 22:37:08 +0530
+Ajay Kaher <akaher@vmware.com> wrote:
 
-Nice catch! Yes I'll add this.
-
+> Events Tracing infrastructure contains lot of files, directories
+> (internally in terms of inodes, dentries). And ends up by consuming
+> memory in MBs. We can have multiple events of Events Tracing, which
+> further requires more memory.
 > 
-> I finished my review.
-> 
-> Can to send a v10 out with this update, and also update all the structs to
-> have the fields tabbed out for easier reading.
+> Instead of creating inodes/dentries, eventfs could keep meta-data and
+> skip the creation of inodes/dentries. As and when require, eventfs will
+> create the inodes/dentries only for required files/directories.
+> Also eventfs would delete the inodes/dentries once no more requires
+> but preserve the meta data.
 > 
 
-Yep will do, I will have the tabbed out changes in a isolated patch in
-the v10 series.
+Hi Ajay,
 
-Thanks,
--Beau
+Is there going to be any more work on this?
 
-> Thanks!
+-- Steve
+
+> Tracing events took ~9MB, with this approach it took ~4.5MB
+> for ~10K files/dir.
 > 
-> -- Steve
+> [PATCH 1/8]: Introducing struct tracefs_inode
+> [PATCH 2/8]: Adding eventfs-dir-add functions
+> [PATCH 3/8]: Adding eventfs-file-add function
+> [PATCH 4/8]: Adding eventfs-file-directory-remove function
+> [PATCH 5/8]: Adding functions to create-eventfs-files
+> [PATCH 6/8]: Adding eventfs lookup, read, open functions
+> [PATCH 7/8]: Creating tracefs_inode_cache
+> [PATCH 8/8]: Moving tracing events to eventfs
+
