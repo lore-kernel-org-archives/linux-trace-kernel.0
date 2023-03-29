@@ -2,80 +2,106 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 67AB7C6FD18
-	for <linux-trace-kernel@archiver.kernel.org>; Wed, 29 Mar 2023 12:27:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A7C4C6FD18
+	for <linux-trace-kernel@archiver.kernel.org>; Wed, 29 Mar 2023 12:47:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229679AbjC2M1i (ORCPT
+        id S229941AbjC2Mrt (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Wed, 29 Mar 2023 08:27:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38352 "EHLO
+        Wed, 29 Mar 2023 08:47:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55904 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229638AbjC2M1i (ORCPT
+        with ESMTP id S229944AbjC2Mrq (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Wed, 29 Mar 2023 08:27:38 -0400
-Received: from mail-wm1-x333.google.com (mail-wm1-x333.google.com [IPv6:2a00:1450:4864:20::333])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BF8573C29
-        for <linux-trace-kernel@vger.kernel.org>; Wed, 29 Mar 2023 05:27:36 -0700 (PDT)
-Received: by mail-wm1-x333.google.com with SMTP id bg16-20020a05600c3c9000b003eb34e21bdfso11352271wmb.0
-        for <linux-trace-kernel@vger.kernel.org>; Wed, 29 Mar 2023 05:27:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20210112; t=1680092855;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=K9utD/b0dx3Ld9K9PQeMcjphZnAINU+9inEgYyc+570=;
-        b=q9JhWLQtoVBQ8ZY8ontuf+BPWOWLuklLYmdoKdddmdqzR6QAAoE4F82Wp2wt+zVgnF
-         ilaHku5vFkl7+gTWWkMK698wnObj1zjh5xGlmgkAesIXx4zrB5zwVM5lagBCsgQWfF2l
-         kb+VttJV2uTb1Uies+Zl/nQPpewB1g7gV9LAeTP/o4bLdtCV2nnwB7oBqwRZYRSIIVcv
-         coH4cRk19j3QT8+qM3mkMfDpMRAG37VoKRC7rKJyzLYlgUKrsztscyiV5Zly1VoLdo6R
-         y+a8m/XxCy0s564Itj4CLwngUTmtAsZ//u+qMdP0QIv9S7+kT3qyZRxfg3kUrTC7BnfX
-         WAug==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1680092855;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=K9utD/b0dx3Ld9K9PQeMcjphZnAINU+9inEgYyc+570=;
-        b=RCGbSaIeNUJXelV5dn9Prhv4ZddAh5rsQyZfhPGE0r3q4P7VmiHR9DRlR1sYOAZQJA
-         gZcLOkqHtH8S6bvx6q8J3gO/biWA5NouI1/+5iAbH3meMtwawj5tgzVH0ZgS9Jeh9J++
-         OJ5Yrd4OAGxdgnNCKGlAbHFekv1306Xz1DJzfVtFEpJske7iRsbUcTeN0KW0Oe/HMGt+
-         CIbbKwJ5GWAOYHKVc8zGRQj41sLHL8Y4sthkSe/CiDWc5fcLWgQryfJ7k2OX+3DQxsXd
-         UDmwWbYAMMljGLX82lA0gFqsg5rmG6tdJciCFVG3Mrfwtm5YZ0D8CG9dgKAwq9noVTa5
-         Qa2w==
-X-Gm-Message-State: AO0yUKU9t0ALKzr1S017MSjOqOMSNZOGMcVbYxZNlw3TtnVXvO0T7aJs
-        HUIj//TQkw/B6zkchuGln8yv+Q==
-X-Google-Smtp-Source: AK7set9HNMY1Yo3GoPuBErduWgXXAzG5IN+i0ixsLBCno+3Nj1yvZIZpxXgqgnQ+u503ICN6qaN82g==
-X-Received: by 2002:a7b:cb95:0:b0:3ed:3033:496d with SMTP id m21-20020a7bcb95000000b003ed3033496dmr14569206wmi.0.1680092855006;
-        Wed, 29 Mar 2023 05:27:35 -0700 (PDT)
-Received: from google.com (65.0.187.35.bc.googleusercontent.com. [35.187.0.65])
-        by smtp.gmail.com with ESMTPSA id l32-20020a05600c1d2000b003f0321c22basm640348wms.12.2023.03.29.05.27.34
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 29 Mar 2023 05:27:34 -0700 (PDT)
-Date:   Wed, 29 Mar 2023 13:27:30 +0100
-From:   Vincent Donnefort <vdonnefort@google.com>
-To:     Steven Rostedt <rostedt@goodmis.org>
+        Wed, 29 Mar 2023 08:47:46 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 31D5540D9;
+        Wed, 29 Mar 2023 05:47:44 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id C893061C83;
+        Wed, 29 Mar 2023 12:47:43 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7056EC433D2;
+        Wed, 29 Mar 2023 12:47:42 +0000 (UTC)
+Date:   Wed, 29 Mar 2023 08:47:35 -0400
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     Vincent Donnefort <vdonnefort@google.com>
 Cc:     mhiramat@kernel.org, linux-kernel@vger.kernel.org,
         linux-trace-kernel@vger.kernel.org, kernel-team@android.com
 Subject: Re: [PATCH v2 1/2] ring-buffer: Introducing ring-buffer mapping
  functions
-Message-ID: <ZCQussSh5h/GSwh6@google.com>
+Message-ID: <20230329084735.6c4a9229@rorschach.local.home>
+In-Reply-To: <ZCQtpbyWrjliJkdg@google.com>
 References: <20230322102244.3239740-1-vdonnefort@google.com>
- <20230322102244.3239740-2-vdonnefort@google.com>
- <20230328224411.0d69e272@gandalf.local.home>
- <ZCQCsD9+nNwBYIyH@google.com>
- <20230329070353.1e1b443b@gandalf.local.home>
- <20230329080758.0e730796@rorschach.local.home>
+        <20230322102244.3239740-2-vdonnefort@google.com>
+        <20230328224411.0d69e272@gandalf.local.home>
+        <ZCQCsD9+nNwBYIyH@google.com>
+        <20230329070353.1e1b443b@gandalf.local.home>
+        <ZCQtpbyWrjliJkdg@google.com>
+X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230329080758.0e730796@rorschach.local.home>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On Wed, Mar 29, 2023 at 08:07:58AM -0400, Steven Rostedt wrote:
-> On Wed, 29 Mar 2023 07:03:53 -0400
-> Steven Rostedt <rostedt@goodmis.org> wrote:
+On Wed, 29 Mar 2023 13:23:01 +0100
+Vincent Donnefort <vdonnefort@google.com> wrote:
+
+> On Wed, Mar 29, 2023 at 07:03:53AM -0400, Steven Rostedt wrote:
+> > On Wed, 29 Mar 2023 10:19:44 +0100
+> > Vincent Donnefort <vdonnefort@google.com> wrote:
+> >   
+> > > > I've been playing with this a bit, and I'm thinking, do we need the
+> > > > data_pages[] array on the meta page?
+> > > > 
+> > > > I noticed that I'm not even using it.
+> > > > 
+> > > > Currently, we need to do a ioctl every time we finish with the reader page,
+> > > > and that updates the reader_page in the meta data to point to the next page
+> > > > to read. When do we need to look at the data_start section?    
+> > > 
+> > > This is for non-consuming read, to get all the pages in order.  
+> > 
+> > Yeah, I was trying to see how a non consuming read would work, and was
+> > having issues figuring that out without the tail page being updated.  
 > 
+> Would the userspace really need to know where is the tail page? It can just stop
+> whenever it finds out a page doesn't have any events, and make sure it does not
+> loop once back to the head?
+
+I'm trying to come up with a possible algorithm that doesn't need
+ioctls. It would need to know if the writer moved or not. Probably need
+a counter that gets incremented every time the writer goes to a new page.
+
+Having the tail page was just a convenient way to know where the end is.
+
+> 
+> >   
+> > > 
+> > > If we remove this section we would lose this ability ... but we'd also simplify
+> > > the code by a good order of magnitude (don't need the update ioctl anymore, no
+> > > need to keep those pages in order and everything can fit a 0-order meta-page).
+> > > And the non-consuming read doesn't bring much to the user over the pipe version.
+> > > 
+> > > This will although impact our hypervisor tracing which will only be able to
+> > > expose trace_pipe interfaces. But I don't think it is a problem, all userspace
+> > > tools only relying on consuming read anyway.
+> > > 
+> > > So if you're happy dropping this support, let's get rid of it.  
+> > 
+> > I don't really want to get rid of it, but perhaps break it up where we
+> > don't have it in the first release, but add it in a second one. That will
+> > also make sure that we can expand the API if necessary (one reason I wanted
+> > the "data_start" in the first place).
+> > 
+> > Let's drop it for now, but be able to add it later, an have the current
+> > structure be:  
+> 
+> Ok, I will prepare a V3 accordingly.
+> 
+> > 
 > > struct ring_buffer_meta_page_header {
 > > #if __BITS_PER_LONG == 64
 > > 	__u64	entries;
@@ -91,14 +117,16 @@ On Wed, Mar 29, 2023 at 08:07:58AM -0400, Steven Rostedt wrote:
 > > };
 > > 
 > > BTW, shouldn't the nr_data_pages take into account the reader page? As it
-> > is part of the array we traverse isn't it?
+> > is part of the array we traverse isn't it?  
 > 
-> Ah, I guess nr_data_pages is the length of the index mapping, not the
-> array of pages mapped?
-
-Yes correct, data_pages[nr_data_pages] and the reader_page being excluded...
-which might not be the easiest interface, as the size of the buffer to read
-depends on if the reader_page has data to be read or not.
-
+> It depends if the reader page has ever been swapped out. If yes, the reader
+> would have to start from reader_page and then switch to the data_pages.
+> Which sounds like a fiddly interface for the userspace.
 > 
-> -- Steve
+> So yeah, consuming-read only feels like a better start.
+> 
+
+I agree. I'd like to get something in that can be extended, but simple
+enough that it's not too much of a barrier wrt getting the API correct.
+
+-- Steve
