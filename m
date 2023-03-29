@@ -2,110 +2,74 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D392C77B61
-	for <linux-trace-kernel@archiver.kernel.org>; Wed, 29 Mar 2023 15:08:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 07066C74A5B
+	for <linux-trace-kernel@archiver.kernel.org>; Wed, 29 Mar 2023 15:33:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229525AbjC2PIp (ORCPT
+        id S229638AbjC2PdT (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Wed, 29 Mar 2023 11:08:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51466 "EHLO
+        Wed, 29 Mar 2023 11:33:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41914 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230411AbjC2PIo (ORCPT
+        with ESMTP id S229603AbjC2PdS (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Wed, 29 Mar 2023 11:08:44 -0400
-Received: from mail-wr1-x435.google.com (mail-wr1-x435.google.com [IPv6:2a00:1450:4864:20::435])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9E4C240DA
-        for <linux-trace-kernel@vger.kernel.org>; Wed, 29 Mar 2023 08:08:23 -0700 (PDT)
-Received: by mail-wr1-x435.google.com with SMTP id i9so16097222wrp.3
-        for <linux-trace-kernel@vger.kernel.org>; Wed, 29 Mar 2023 08:08:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20210112; t=1680102502;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=cLqJhQMaFDVDwir91iG5u9uTplZGw8VD4gR41F8nB1k=;
-        b=KhvUbJT4Av7xzTMbSWNOO1siZ0qNc+lIz9Lt48+ImwgXApDJw9+g+VMgMWVuVOCUfB
-         +4QM8tSCHX7sovgz1XmVWkPQhBrYi/bfd/6HddiRQvQ2AS23lQf84eJBz89GMhPN2xKm
-         eKEOvYUJECI5OxN8GRnKuKOaldUtW1GOWdNgPF3q922ey1Xxsg+/Mzi+d9TXlk4lRp4b
-         v/gcVm9QYfF/rj0xlAvglj3AV5LQlv+VZnuGj3jJwzjDyabWiwT4PgfoHXdK4W/p1GF8
-         sKt5FVZrxiM1cCr6LkchYzJwMUKpdE9FxAeC3pPXPuAIvVy4Vbo00tlbsc1t3a3+mZVl
-         kk2A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1680102502;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=cLqJhQMaFDVDwir91iG5u9uTplZGw8VD4gR41F8nB1k=;
-        b=omSYQFDQaIYS5yY/w56KqlZBcQjlqb7ERQmez+M7q/ksdbsFsXL4SrSN0s6deywJHX
-         eeHqry1qNuHxu2Az/iBzA0MFauvkxEe6jYap/StfACQxHlT3fjBJoXw8CxSeypJsmMhV
-         /Lb17ov7esU9HmN6xcAtcl2JG7ayzMiDCwaN4h2d6wFDb5ZMV69BETcHhTOzdhcJcIcR
-         Mbm6FXkiggoIh4PmXVx33Zq2eH+DcERgn4U0k8Kndhjt/tke2DQl7e2m3wKxhvRzyhRk
-         fWfHmQa0vR4q/+y9/mklYQfP27Mgbdc1mq+pRZGsnD8azTCUlEDPRocab+rewidG7Y7D
-         q/mQ==
-X-Gm-Message-State: AAQBX9dzcyuQ8CL8/bvFEUGSdHVwCshVRegn/9831OPXZOHWZ8o6QG+L
-        L7gYnAyGuFcvdMScvnXGkm8sIA==
-X-Google-Smtp-Source: AKy350bDav8MHFZ7bINEHrERRe/L0sIk0whGqY5osDPnWzGNlG1THJmIYgUxk+Dc0oXbNARD7NRi4w==
-X-Received: by 2002:adf:e90b:0:b0:2d4:751d:675b with SMTP id f11-20020adfe90b000000b002d4751d675bmr15047399wrm.35.1680102502068;
-        Wed, 29 Mar 2023 08:08:22 -0700 (PDT)
-Received: from google.com (65.0.187.35.bc.googleusercontent.com. [35.187.0.65])
-        by smtp.gmail.com with ESMTPSA id a7-20020adff7c7000000b002c70ce264bfsm30710058wrq.76.2023.03.29.08.08.21
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 29 Mar 2023 08:08:21 -0700 (PDT)
-Date:   Wed, 29 Mar 2023 16:08:17 +0100
-From:   Vincent Donnefort <vdonnefort@google.com>
-To:     Steven Rostedt <rostedt@goodmis.org>
+        Wed, 29 Mar 2023 11:33:18 -0400
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CC1614215;
+        Wed, 29 Mar 2023 08:32:39 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 193CDB8236F;
+        Wed, 29 Mar 2023 15:32:38 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 18CE3C433EF;
+        Wed, 29 Mar 2023 15:32:36 +0000 (UTC)
+Date:   Wed, 29 Mar 2023 11:32:34 -0400
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     Vincent Donnefort <vdonnefort@google.com>
 Cc:     mhiramat@kernel.org, linux-kernel@vger.kernel.org,
         linux-trace-kernel@vger.kernel.org, kernel-team@android.com
 Subject: Re: [PATCH v2 1/2] ring-buffer: Introducing ring-buffer mapping
  functions
-Message-ID: <ZCRUYQHORVund9PC@google.com>
-References: <20230322102244.3239740-2-vdonnefort@google.com>
- <20230328224411.0d69e272@gandalf.local.home>
- <ZCQCsD9+nNwBYIyH@google.com>
- <20230329070353.1e1b443b@gandalf.local.home>
- <20230329085106.046a8991@rorschach.local.home>
- <ZCQ2jW5Jl/cWCG7s@google.com>
- <20230329091107.408d63a8@rorschach.local.home>
- <ZCQ9m5K34Qa9ZkUd@google.com>
- <20230329093602.2b3243f0@rorschach.local.home>
- <ZCRDXaTVfNwxdRJZ@google.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Message-ID: <20230329113234.3285209c@gandalf.local.home>
 In-Reply-To: <ZCRDXaTVfNwxdRJZ@google.com>
+References: <20230322102244.3239740-1-vdonnefort@google.com>
+        <20230322102244.3239740-2-vdonnefort@google.com>
+        <20230328224411.0d69e272@gandalf.local.home>
+        <ZCQCsD9+nNwBYIyH@google.com>
+        <20230329070353.1e1b443b@gandalf.local.home>
+        <20230329085106.046a8991@rorschach.local.home>
+        <ZCQ2jW5Jl/cWCG7s@google.com>
+        <20230329091107.408d63a8@rorschach.local.home>
+        <ZCQ9m5K34Qa9ZkUd@google.com>
+        <20230329093602.2b3243f0@rorschach.local.home>
+        <ZCRDXaTVfNwxdRJZ@google.com>
+X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On Wed, Mar 29, 2023 at 02:55:41PM +0100, Vincent Donnefort wrote:
-> On Wed, Mar 29, 2023 at 09:36:46AM -0400, Steven Rostedt wrote:
-> > On Wed, 29 Mar 2023 14:31:07 +0100
-> > Vincent Donnefort <vdonnefort@google.com> wrote:
-> > 
-> > > We can say we update cpu_buffer->reader_page->read on the get_reader_page ioctl,
-> > > to the most recent value possible, which will have the consequence of actually
-> > > "flushing" those events?
-> > 
-> > Yes. It should be no different than doing a normal read of the
-> > trace_pipe_raw file, which does the same.
-> > 
-> > > 
-> > > If the reader decides to read events past this value then it just can't expect
-> > > them to not be duplicated?
-> > > 
-> > > I suppose it'd be down the reader to store meta->read somehwere?
-> > > 
-> > >    prev_read = meta->read
-> > >    ioctl(fd, TRACE_MMAP_IOCTL_GET_READER_PAGE)
-> > >    /* read events from prev_read to meta->read */
-> > 
+On Wed, 29 Mar 2023 14:55:41 +0100
+Vincent Donnefort <vdonnefort@google.com> wrote:
+
 > > Yes, in fact it shouldn't need to call the ioctl until after it read it.
 > > 
 > > Maybe, we should have the ioctl take a parameter of how much was read?
-> > To prevent races?
+> > To prevent races?  
 > 
 > Races would only be with other consuming readers. In that case we'd probably
 > have many other problems anyway as I suppose nothing would prevent another one
 > of swapping the page while our userspace reader is still processing it?
+
+I'm not worried about user space readers. I'm worried about writers, as
+the ioctl will update the reader_page->read = reader_page->commit. The time
+that the reader last read and stopped and then called the ioctl, a writer
+could fill the page, then the ioctl may even swap the page. By passing in
+the read amount, the ioctl will know if it needs to keep the same page or
+not.
+
 > 
 > I don't know if this is worth splitting the ABI between the meta-page and the
 > ioctl parameters for this?
@@ -115,14 +79,85 @@ On Wed, Mar 29, 2023 at 02:55:41PM +0100, Vincent Donnefort wrote:
 > the reader page ID and cpu_buffer->reader_page->read? (for the hyp tracing, we
 > have up to 4 registers for the HVC which would replace in our case the ioctl)
 
-Or we can keep everything in the meta-page but update the "reader bits" only
-during the get_reader_page ioctl.
+I don't think we need the reader_page id, as that should never move without
+reader involvement. If there's more than one reader, that's up to the
+readers to keep track of each other, not the kernel.
 
-I can prepare something around those lines for the v3.
+Which BTW, the more I look at doing this without ioctls, I think we may
+need to update things slightly different.
 
-> 
-> > 
-> > That is, it should pass in the page->commit that it used to to read the
-> > pages.
-> > 
-> > -- Steve
+I would keep the current approach, but for clarification of terminology, we
+have:
+
+meta_data - the data that holds information that is shared between user and
+	kernel space.
+
+data_pages - this is a separate mapping that holds the mapped ring buffer
+	pages. In user space, this is one contiguous array and also holds
+	the reader page.
+
+data_index - This is an array of what the writer sees. It maps the index
+	into data_pages[] of where to find the mapped pages. It does not
+	contain the reader page. We currently map this with the meta_data,
+	but that's not a requirement (although we may continue to do so).
+
+I'm thinking that we make the data_index[] elements into a structure:
+
+struct trace_map_data_index {
+	int		idx;	/* index into data_pages[] */
+	int		cnt;	/* counter updated by writer */
+};
+
+The cnt is initialized to zero when initially mapped.
+
+Instead of having the bpage->id = index into data_pages[], have it equal
+the index into data_index[].
+
+The cpu_buffer->reader_page->id = -1;
+
+meta_data->reader_page = index into data_pages[] of reader page
+
+The swapping of the header page would look something like this:
+
+static inline void
+rb_meta_page_head_swap(struct ring_buffer_per_cpu *cpu_buffer)
+{
+	struct ring_buffer_meta_page *meta = cpu_buffer->meta_page;
+	int head_page;
+
+	if (!READ_ONCE(cpu_buffer->mapped))
+		return;
+
+	head_page = meta->data_pages[meta->hdr.data_page_head];
+	meta->data_pages[meta->hdr.data_page_head] = meta->hdr.reader_page;
+	meta->hdr.reader_page = head_page;
+	meta->data_pages[head_page]->id = -1;
+}
+
+As hdr.data_page_head would be an index into data_index[] and not
+data_pages[].
+
+The fact that bpage->id points to the data_index[] and not the data_pages[]
+means that the writer can easily get to that index, and modify the count.
+That way, in rb_tail_page_update() (between cmpxchgs) we can do something
+like:
+
+	if (cpu_buffer->mapped) {
+		meta = cpu_buffer->meta_page;
+		meta->data_index[next_page->id].cnt++;
+	}
+
+And this will allow the reader to know if the current page it is on just
+got overwritten by the writer, by doing:
+
+	prev_id = meta->data_index[this_page].cnt;
+	smp_rmb();
+	read event (copy it, whatever)
+	smp_rmb();
+	if (prev_id != meta->data_index[this_page].cnt)
+		/* read data may be corrupted, abort it */
+
+
+Does this make sense?
+
+-- Steve
