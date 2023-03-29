@@ -2,198 +2,112 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DCF1BC74A5B
-	for <linux-trace-kernel@archiver.kernel.org>; Wed, 29 Mar 2023 04:31:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5430BC74A5B
+	for <linux-trace-kernel@archiver.kernel.org>; Wed, 29 Mar 2023 06:31:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229644AbjC2Eb3 (ORCPT
+        id S229536AbjC2Gbl (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Wed, 29 Mar 2023 00:31:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59614 "EHLO
+        Wed, 29 Mar 2023 02:31:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40858 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229477AbjC2Eb2 (ORCPT
+        with ESMTP id S229518AbjC2Gbk (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Wed, 29 Mar 2023 00:31:28 -0400
-Received: from mail-m118111.qiye.163.com (mail-m118111.qiye.163.com [115.236.118.111])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ADDBC210C;
-        Tue, 28 Mar 2023 21:31:25 -0700 (PDT)
-Received: from [10.128.10.193] (unknown [117.133.56.22])
-        by mail-m118111.qiye.163.com (Hmail) with ESMTPA id 42A495801FC;
-        Wed, 29 Mar 2023 12:31:15 +0800 (CST)
-Message-ID: <115b1771-8204-749a-0a93-7835e74ea6ba@sangfor.com.cn>
-Date:   Wed, 29 Mar 2023 12:31:13 +0800
+        Wed, 29 Mar 2023 02:31:40 -0400
+Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A6A2F271B;
+        Tue, 28 Mar 2023 23:31:39 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 23823B81EAF;
+        Wed, 29 Mar 2023 06:31:38 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CF2E8C433EF;
+        Wed, 29 Mar 2023 06:31:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1680071496;
+        bh=P9/TB1qBMW5QFzAH9SkR4I2Xesn5PxwRRnIYxnPmfQQ=;
+        h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+        b=kxN82WA16Q0vdI2CREy+FB0eCojo+ECD4jmRMCkIJ8JBd5NEZD5r1+yGk07iPqZ7y
+         M8llyyT2HMSSh46d3lTcd19j2Em47c+W0/aiWu0X+KbyTk9aNjgRXrO3b+OBtJ7Hzh
+         g1SmXvQkn2bPojUuO/LQp3V7PRUglLLOXqXOBE1amh3/K60ODM3rfvFvRXBcgxKQ8h
+         afGT/nkb/yRoRzQ0JAi68hA09R152oYSZjnCDnZPtqVEgtlgREGTqX0VhQa4MxVEnt
+         unlHmMmLEUe4xiOj6KCXyRSWTjVcDjoF4icdv6S/C7zb00BQrcLnjgSU2iaYz4um+b
+         dmRcFPWt6lh2A==
+Message-ID: <7607caa6-d76b-519b-b798-0603b7ea70cc@kernel.org>
+Date:   Wed, 29 Mar 2023 08:31:33 +0200
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.9.0
-Subject: Re: [PATCH v8 7/8] LoongArch: ftrace: Enable
- HAVE_FUNCTION_GRAPH_RETVAL
+Subject: Re: [PATCH] tracing/osnoise: Fix notify new tracing_max_latency
+To:     Steven Rostedt <rostedt@goodmis.org>
+Cc:     linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+        Masami Hiramatsu <mhiramat@kernel.org>
+References: <c22302a7db3cee6bcabf87462ed22a35dd38690f.1679675521.git.bristot@kernel.org>
+ <20230328191613.33ac3f5e@gandalf.local.home>
 Content-Language: en-US
-To:     Qing Zhang <zhangqing@loongson.cn>, mhiramat@kernel.org,
-        rostedt@goodmis.org, linux@armlinux.org.uk, mark.rutland@arm.com,
-        will@kernel.org, catalin.marinas@arm.com, palmer@dabbelt.com,
-        paul.walmsley@sifive.com, tglx@linutronix.de,
-        dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com,
-        chenhuacai@kernel.org, kernel@xen0n.name, mingo@redhat.com,
-        peterz@infradead.org, xiehuan09@gmail.com, dinghui@sangfor.com.cn,
-        huangcun@sangfor.com.cn, dolinux.peng@gmail.com
-Cc:     linux-trace-kernel@vger.kernel.org, loongarch@lists.linux.dev,
-        linux-riscv@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-References: <20230328134319.2185812-1-pengdonglin@sangfor.com.cn>
- <20230328134319.2185812-8-pengdonglin@sangfor.com.cn>
- <28389252-4611-977f-ab80-baeca99d9080@loongson.cn>
-From:   Donglin Peng <pengdonglin@sangfor.com.cn>
-In-Reply-To: <28389252-4611-977f-ab80-baeca99d9080@loongson.cn>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-HM-Spam-Status: e1kfGhgUHx5ZQUpXWQgPGg8OCBgUHx5ZQUlOS1dZFg8aDwILHllBWSg2Ly
-        tZV1koWUFITzdXWS1ZQUlXWQ8JGhUIEh9ZQVlCTxlMVkMaGhkaGE5CTk1KS1UTARMWGhIXJBQOD1
-        lXWRgSC1lBWUpKTFVKSEhVTk1VSUlZV1kWGg8SFR0UWUFZT0tIVUpKS0hKTFVKS0tVS1kG
-X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6OlE6ITo4Hj0PTEstSjoqPUgu
-        VilPCz5VSlVKTUNLS01PSUxNTU9MVTMWGhIXVQseFRwfFBUcFxIVOwgaFRwdFAlVGBQWVRgVRVlX
-        WRILWUFZSkpMVUpISFVOTVVJSVlXWQgBWUFMQ09PNwY+
-X-HM-Tid: 0a872ba266f92eb7kusn42a495801fc
-X-HM-MType: 1
+From:   Daniel Bristot de Oliveira <bristot@kernel.org>
+In-Reply-To: <20230328191613.33ac3f5e@gandalf.local.home>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On 2023/3/29 12:08, Qing Zhang wrote:
-> Hi, Donglin
+On 3/29/23 01:16, Steven Rostedt wrote:
+> On Fri, 24 Mar 2023 18:51:35 +0100
+> Daniel Bristot de Oliveira <bristot@kernel.org> wrote:
 > 
-> On 2023/3/28 下午9:43, Donglin Peng wrote:
->> The commit d4815c5d1bbd ("function_graph: Support recording and
->> printing the return value of function") laid the groundwork for the
->> for the funcgraph-retval, and this modification makes it available
->> on the LoongArch platform.
+>> timerlat is not reporting a new tracing_max_latency for the thread
+>> latency. Also, the tracer is reporting new max latency on instances
+>> where the tracing is off, creating inconsistencies between the max
+>> reported values in the trace and in the tracing_max_latency. Thus
+>> only report new tracing_max_latency on active tracing instances.
+> 
+> Sounds to me this patch fixes two different bugs. If so, can you please
+> break it up into two different patches?
+
+Yeah, I was dubious about sending one or two patches when I sent this one... But
+it makes sense making two of them... so I will do.
+
+Thanks!
+
+-- Daniel
+
+> Thanks!
+> 
+> -- Steve
+> 
 >>
->> We introduce a new structure called fgraph_ret_regs for the LoongArch
->> platform to hold return registers and the frame pointer. We then fill
->> its content in the return_to_handler and pass its address to the
->> function ftrace_return_to_handler to record the return value.
->>
->> Signed-off-by: Donglin Peng <pengdonglin@sangfor.com.cn>
+>> Fixes: dae181349f1e ("tracing/osnoise: Support a list of trace_array *tr")
+>> Cc: Daniel Bristot de Oliveira <bristot@kernel.org>
+>> Cc: Steven Rostedt <rostedt@goodmis.org>
+>> Cc: Masami Hiramatsu <mhiramat@kernel.org>
+>> Signed-off-by: Daniel Bristot de Oliveira <bristot@kernel.org>
 >> ---
->> v8:
->>   - Modify the control range of CONFIG_HAVE_FUNCTION_GRAPH_RETVAL
->> ---
->>   arch/loongarch/Kconfig              |  1 +
->>   arch/loongarch/include/asm/ftrace.h | 18 ++++++++++++++++++
->>   arch/loongarch/kernel/mcount.S      |  6 ++++--
->>   arch/loongarch/kernel/mcount_dyn.S  |  7 ++++---
->>   4 files changed, 27 insertions(+), 5 deletions(-)
+>>  kernel/trace/trace_osnoise.c | 4 +++-
+>>  1 file changed, 3 insertions(+), 1 deletion(-)
 >>
->> diff --git a/arch/loongarch/Kconfig b/arch/loongarch/Kconfig
->> index 7fd51257e0ed..4bf60132869b 100644
->> --- a/arch/loongarch/Kconfig
->> +++ b/arch/loongarch/Kconfig
->> @@ -99,6 +99,7 @@ config LOONGARCH
->>       select HAVE_FAST_GUP
->>       select HAVE_FTRACE_MCOUNT_RECORD
->>       select HAVE_FUNCTION_ARG_ACCESS_API
->> +    select HAVE_FUNCTION_GRAPH_RETVAL if HAVE_FUNCTION_GRAPH_TRACER
->>       select HAVE_FUNCTION_GRAPH_TRACER
->>       select HAVE_FUNCTION_TRACER
->>       select HAVE_GENERIC_VDSO
->> diff --git a/arch/loongarch/include/asm/ftrace.h 
->> b/arch/loongarch/include/asm/ftrace.h
->> index 3418d32d4fc7..433c6218888b 100644
->> --- a/arch/loongarch/include/asm/ftrace.h
->> +++ b/arch/loongarch/include/asm/ftrace.h
->> @@ -63,4 +63,22 @@ void ftrace_graph_func(unsigned long ip, unsigned 
->> long parent_ip,
->>   #endif /* CONFIG_FUNCTION_TRACER */
->> +#ifndef __ASSEMBLY__
->> +struct fgraph_ret_regs {
->> +    unsigned long a0;
->> +    unsigned long a1;
->> +    unsigned long fp;
->> +};
-> 
-> This overall looks good, but some places need attention:
-> 
-> This will need to be padded to 16 bytes, as within the kernel,
-> loongarch requires the SP to be aligned to 16 bytes at all time.
-> Please can you add an `__unused/padding` field to ensure.
-
-Thank you for pointing out this issue, and I will fix it.
-
+>> diff --git a/kernel/trace/trace_osnoise.c b/kernel/trace/trace_osnoise.c
+>> index 210e1f168392..2a1b337ac643 100644
+>> --- a/kernel/trace/trace_osnoise.c
+>> +++ b/kernel/trace/trace_osnoise.c
+>> @@ -1296,7 +1296,7 @@ static void notify_new_max_latency(u64 latency)
+>>  	rcu_read_lock();
+>>  	list_for_each_entry_rcu(inst, &osnoise_instances, list) {
+>>  		tr = inst->tr;
+>> -		if (tr->max_latency < latency) {
+>> +		if (tracer_tracing_is_on(tr) && tr->max_latency < latency) {
+>>  			tr->max_latency = latency;
+>>  			latency_fsnotify(tr);
+>>  		}
+>> @@ -1738,6 +1738,8 @@ static int timerlat_main(void *data)
+>>  
+>>  		trace_timerlat_sample(&s);
+>>  
+>> +		notify_new_max_latency(diff);
 >> +
->> +static inline unsigned long fgraph_ret_regs_return_value(struct 
->> fgraph_ret_regs *ret_regs)
->> +{
->> +    return ret_regs->a0;
->> +}
->> +
->> +static inline unsigned long fgraph_ret_regs_frame_pointer(struct 
->> fgraph_ret_regs *ret_regs)
->> +{
->> +    return ret_regs->fp;
->> +}
->> +#endif
->> +
->>   #endif /* _ASM_LOONGARCH_FTRACE_H */
->> diff --git a/arch/loongarch/kernel/mcount.S 
->> b/arch/loongarch/kernel/mcount.S
->> index 8cdc1563cd33..3e405c0212c0 100644
->> --- a/arch/loongarch/kernel/mcount.S
->> +++ b/arch/loongarch/kernel/mcount.S
->> @@ -79,10 +79,12 @@ SYM_FUNC_START(ftrace_graph_caller)
->>   SYM_FUNC_END(ftrace_graph_caller)
->>   SYM_FUNC_START(return_to_handler)
->> -    PTR_ADDI    sp, sp, -2 * SZREG
->> +    PTR_ADDI    sp, sp, -3 * SZREG
-> As above, this will need to be padded to keep the stack aligned to 16
-> bytes.
->      PTR_ADDI    sp, sp, -4 * SZREG
-
-Thanks.
-
-> 
->>       PTR_S        a0, sp, 0
->>       PTR_S        a1, sp, SZREG
->> +    PTR_S        zero, sp, 2 * SZREG
->> +    move        a0, sp
->>       bl        ftrace_return_to_handler
->>       /* Restore the real parent address: a0 -> ra */
->> @@ -90,7 +92,7 @@ SYM_FUNC_START(return_to_handler)
->>       PTR_L        a0, sp, 0
->>       PTR_L        a1, sp, SZREG
->> -    PTR_ADDI    sp, sp, 2 * SZREG
->> +    PTR_ADDI    sp, sp, 3 * SZREG
->>       jr        ra
->>   SYM_FUNC_END(return_to_handler)
->>   #endif /* CONFIG_FUNCTION_GRAPH_TRACER */
->> diff --git a/arch/loongarch/kernel/mcount_dyn.S 
->> b/arch/loongarch/kernel/mcount_dyn.S
->> index bbabf06244c2..ab85a953c6d3 100644
->> --- a/arch/loongarch/kernel/mcount_dyn.S
->> +++ b/arch/loongarch/kernel/mcount_dyn.S
->> @@ -131,18 +131,19 @@ SYM_CODE_END(ftrace_graph_caller)
->>   SYM_CODE_START(return_to_handler)
->>       /* Save return value regs */
->> -    PTR_ADDI     sp, sp, -2 * SZREG
->> +    PTR_ADDI     sp, sp, -3 * SZREG
-> as above.
-
-Thanks.
-
-> 
-> Thanks,
-> - Qing
->>       PTR_S        a0, sp, 0
->>       PTR_S        a1, sp, SZREG
->> +    PTR_S        zero, sp, 2 * SZREG
->> -    move        a0, zero
->> +    move        a0, sp
->>       bl        ftrace_return_to_handler
->>       move        ra, a0
->>       /* Restore return value regs */
->>       PTR_L        a0, sp, 0
->>       PTR_L        a1, sp, SZREG
->> -    PTR_ADDI     sp, sp, 2 * SZREG
->> +    PTR_ADDI     sp, sp, 3 * SZREG
->>       jr        ra
->>   SYM_CODE_END(return_to_handler)
->>
+>>  		timerlat_dump_stack(time_to_us(diff));
+>>  
+>>  		tlat->tracing_thread = false;
 > 
 
