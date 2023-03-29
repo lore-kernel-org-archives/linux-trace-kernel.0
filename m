@@ -2,70 +2,102 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 66235C6FD18
-	for <linux-trace-kernel@archiver.kernel.org>; Wed, 29 Mar 2023 12:08:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 173FAC6FD18
+	for <linux-trace-kernel@archiver.kernel.org>; Wed, 29 Mar 2023 12:15:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229487AbjC2MIP (ORCPT
+        id S229980AbjC2MPQ convert rfc822-to-8bit (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Wed, 29 Mar 2023 08:08:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50440 "EHLO
+        Wed, 29 Mar 2023 08:15:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57218 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229529AbjC2MIN (ORCPT
+        with ESMTP id S230030AbjC2MPM (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Wed, 29 Mar 2023 08:08:13 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 054553C0F;
-        Wed, 29 Mar 2023 05:08:12 -0700 (PDT)
+        Wed, 29 Mar 2023 08:15:12 -0400
+Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4E9CE4C00;
+        Wed, 29 Mar 2023 05:15:07 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id AA7F5B822E4;
-        Wed, 29 Mar 2023 12:08:10 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 26AC6C433D2;
-        Wed, 29 Mar 2023 12:08:07 +0000 (UTC)
-Date:   Wed, 29 Mar 2023 08:07:58 -0400
+        by ams.source.kernel.org (Postfix) with ESMTPS id C32D9B820CA;
+        Wed, 29 Mar 2023 12:15:05 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B40CCC433EF;
+        Wed, 29 Mar 2023 12:15:03 +0000 (UTC)
+Date:   Wed, 29 Mar 2023 08:14:54 -0400
 From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Vincent Donnefort <vdonnefort@google.com>
-Cc:     mhiramat@kernel.org, linux-kernel@vger.kernel.org,
-        linux-trace-kernel@vger.kernel.org, kernel-team@android.com
-Subject: Re: [PATCH v2 1/2] ring-buffer: Introducing ring-buffer mapping
- functions
-Message-ID: <20230329080758.0e730796@rorschach.local.home>
-In-Reply-To: <20230329070353.1e1b443b@gandalf.local.home>
-References: <20230322102244.3239740-1-vdonnefort@google.com>
-        <20230322102244.3239740-2-vdonnefort@google.com>
-        <20230328224411.0d69e272@gandalf.local.home>
-        <ZCQCsD9+nNwBYIyH@google.com>
-        <20230329070353.1e1b443b@gandalf.local.home>
+To:     "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
+Cc:     linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Florent Revest <revest@chromium.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Will Deacon <will@kernel.org>
+Subject: Re: [PATCH v3 09/10] tracing/probes: Add fprobe events for tracing
+ function entry and exit.
+Message-ID: <20230329081454.05133571@rorschach.local.home>
+In-Reply-To: <167526703341.433354.12634235635015890994.stgit@mhiramat.roam.corp.google.com>
+References: <167526695292.433354.8949652607331707144.stgit@mhiramat.roam.corp.google.com>
+        <167526703341.433354.12634235635015890994.stgit@mhiramat.roam.corp.google.com>
 X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On Wed, 29 Mar 2023 07:03:53 -0400
-Steven Rostedt <rostedt@goodmis.org> wrote:
+On Thu,  2 Feb 2023 00:57:13 +0900
+"Masami Hiramatsu (Google)" <mhiramat@kernel.org> wrote:
 
-> struct ring_buffer_meta_page_header {
-> #if __BITS_PER_LONG == 64
-> 	__u64	entries;
-> 	__u64	overrun;
-> #else
-> 	__u32	entries;
-> 	__u32	overrun;
-> #endif
-> 	__u32	pages_touched;
-> 	__u32	meta_page_size;
-> 	__u32	reader_page;	/* page ID for the reader page */
-> 	__u32	nr_data_pages;	/* doesn't take into account the reader_page */
-> };
+> From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 > 
-> BTW, shouldn't the nr_data_pages take into account the reader page? As it
-> is part of the array we traverse isn't it?
+> Add fprobe events for tracing function entry and exit instead of kprobe
+> events. With this change, we can continue to trace function entry/exit
+> even if the CONFIG_KPROBES_ON_FTRACE is not available. Since
+> CONFIG_KPROBES_ON_FTRACE requires the CONFIG_DYNAMIC_FTRACE_WITH_REGS,
+> it is not available if the architecture only supports
+> CONFIG_DYNAMIC_FTRACE_WITH_ARGS. And that means kprobe events can not
+> probe function entry/exit effectively on such architecture.
+> But this can be solved if the dynamic events supports fprobe events.
+> 
+> The fprobe event is a new dynamic events which is only for the function
+> (symbol) entry and exit. This event accepts non register fetch arguments
+> so that user can trace the function arguments and return values.
+> 
 
-Ah, I guess nr_data_pages is the length of the index mapping, not the
-array of pages mapped?
+Hi Masami,
+
+After applying this patch I get a bunch of these:
+
+/work/git/linux-trace.git/kernel/trace/trace_fprobe.c:117:1: error: redefinition of ‘fetch_store_strlen_user’
+  117 | fetch_store_strlen_user(unsigned long addr)
+      | ^~~~~~~~~~~~~~~~~~~~~~~
+In file included from /work/git/linux-trace.git/kernel/trace/trace_fprobe.c:16:
+/work/git/linux-trace.git/kernel/trace/trace_probe_kernel.h:15:1: note: previous definition of ‘fetch_store_strlen_user’ with type ‘int(long unsigned int)’
+   15 | fetch_store_strlen_user(unsigned long addr)
+      | ^~~~~~~~~~~~~~~~~~~~~~~
+/work/git/linux-trace.git/kernel/trace/trace_fprobe.c: In function ‘fetch_store_strlen_user’:
+/work/git/linux-trace.git/kernel/trace/trace_fprobe.c:119:16: error: implicit declaration of function ‘kern_fetch_store_strlen_user’; did you mean ‘fetch_store_strlen_user’? [-Werror=implicit-function-declaration]
+  119 |         return kern_fetch_store_strlen_user(addr);
+      |                ^~~~~~~~~~~~~~~~~~~~~~~~~~~~
+      |                fetch_store_strlen_user
+/work/git/linux-trace.git/kernel/trace/trace_fprobe.c: At top level:
+/work/git/linux-trace.git/kernel/trace/trace_fprobe.c:124:1: error: redefinition of ‘fetch_store_strlen’
+  124 | fetch_store_strlen(unsigned long addr)
+      | ^~~~~~~~~~~~~~~~~~
+/work/git/linux-trace.git/kernel/trace/trace_probe_kernel.h:32:1: note: previous definition of ‘fetch_store_strlen’ with type ‘int(long unsigned int)’
+   32 | fetch_store_strlen(unsigned long addr)
+      | ^~~~~~~~~~~~~~~~~~
+/work/git/linux-trace.git/kernel/trace/trace_fprobe.c: In function ‘fetch_store_strlen’:
+/work/git/linux-trace.git/kernel/trace/trace_fprobe.c:126:16: error: implicit declaration of function ‘kern_fetch_store_strlen’; did you mean ‘fetch_store_strlen’? [-Werror=implicit-function-declaration]
+  126 |         return kern_fetch_store_strlen(addr);
+      |                ^~~~~~~~~~~~~~~~~~~~~~~
+      |                fetch_store_strlen
+
+
+Can you rebase it on the latest changes (on top of trace/for-next)?
+
+BTW, I've applied patches 1-8 and I'm currently running them through my
+tests. So if you do rebase, just send patches 9 and 10. I'm hoping to
+post a for-next series later today, that will include those other
+patches.
 
 -- Steve
