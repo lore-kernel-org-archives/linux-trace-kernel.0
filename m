@@ -2,302 +2,99 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BE9DEC77B6C
-	for <linux-trace-kernel@archiver.kernel.org>; Tue, 28 Mar 2023 23:52:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D05CBC6FD18
+	for <linux-trace-kernel@archiver.kernel.org>; Wed, 29 Mar 2023 00:36:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229692AbjC1Xwh (ORCPT
+        id S229668AbjC2AgQ (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Tue, 28 Mar 2023 19:52:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57706 "EHLO
+        Tue, 28 Mar 2023 20:36:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37138 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229770AbjC1Xwa (ORCPT
+        with ESMTP id S229695AbjC2AgL (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Tue, 28 Mar 2023 19:52:30 -0400
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id A0CA730DF;
-        Tue, 28 Mar 2023 16:52:29 -0700 (PDT)
-Received: from W11-BEAU-MD.localdomain (unknown [76.135.27.212])
-        by linux.microsoft.com (Postfix) with ESMTPSA id 1B87320FDC3A;
-        Tue, 28 Mar 2023 16:52:29 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 1B87320FDC3A
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-        s=default; t=1680047549;
-        bh=MYYDTYE8Up+wGqx+f1YsuHPS1P/30RHQ/hjmHTBgUyY=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Jqyl4KPw+E+tV+T5GSisoQ5Rmyf37Cjz/I/bQERDIT2eym1qrzjyLDap9dlmJASTX
-         A9VuVoCBgoqlVRQYTkaSH3yKyXSUBt8Uo4fYLa/UeSoopA5O3npO1Ucx2L/wG+nl0X
-         v2RTgH45YmKPVqpwAhVUJYnsMKK7rdsu5GC8WwnU=
-From:   Beau Belgrave <beaub@linux.microsoft.com>
-To:     rostedt@goodmis.org, mhiramat@kernel.org,
-        mathieu.desnoyers@efficios.com, dcook@linux.microsoft.com,
-        alanau@linux.microsoft.com, brauner@kernel.org,
-        akpm@linux-foundation.org, ebiederm@xmission.com,
-        keescook@chromium.org, tglx@linutronix.de
-Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        linux-trace-kernel@vger.kernel.org
-Subject: [PATCH v10 12/12] tracing/user_events: Align structs with tabs for readability
-Date:   Tue, 28 Mar 2023 16:52:19 -0700
-Message-Id: <20230328235219.203-13-beaub@linux.microsoft.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20230328235219.203-1-beaub@linux.microsoft.com>
-References: <20230328235219.203-1-beaub@linux.microsoft.com>
+        Tue, 28 Mar 2023 20:36:11 -0400
+Received: from ams.source.kernel.org (ams.source.kernel.org [145.40.68.75])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8096C1BD1;
+        Tue, 28 Mar 2023 17:36:10 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ams.source.kernel.org (Postfix) with ESMTPS id 1F7C1B81F65;
+        Wed, 29 Mar 2023 00:36:09 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 99D71C433D2;
+        Wed, 29 Mar 2023 00:36:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1680050167;
+        bh=CRGoe9g/Zg2dbVzuHdM29TbmYjg+4heFgOM3Ae0VP8s=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=WEobjo2qUZgLl+BRnj0/+9kJmxt/OoqabnlGUjaIW06Iuc+OwkrkkE0tbBlIKlyYf
+         ssb+AWTkGyri1oyNJjro5YEOLLUCQeACb55VAXMKjZBaw5FA7/GdmzC0o35xnou59r
+         QL3kd8E2gpFl0nGC+/kI8LwFvMzPTMzqTuVwlRmIEC5IAmU72CgNL8DKrttHRpxDe4
+         ar0tOEDr35NOfBQ6cYtV4RUbxKOH9SRHu7VLQvjvU1oCDOAUlY9Hvi/c9CTnYDl3xo
+         e8vBMNDurHtsBSYmIdoimwI/DPIvMKP6VKoC/nXzHD94vOwHXnHL2CANfxPfpCKlnt
+         ynDaDGYd5CcAQ==
+Date:   Tue, 28 Mar 2023 17:36:06 -0700
+From:   Jaegeuk Kim <jaegeuk@kernel.org>
+To:     Steven Rostedt <rostedt@goodmis.org>
+Cc:     patchwork-bot+f2fs@kernel.org,
+        Douglas RAILLARD <douglas.raillard@arm.com>, chao@kernel.org,
+        mhiramat@kernel.org, linux-f2fs-devel@lists.sourceforge.net,
+        linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: Re: [f2fs-dev] [PATCH] f2fs: Fix f2fs_truncate_partial_nodes ftrace
+ event
+Message-ID: <ZCOH9pc3hBKU3G3Z@google.com>
+References: <20230306122549.236561-1-douglas.raillard@arm.com>
+ <167821082479.1693.18260840022075703789.git-patchwork-notify@kernel.org>
+ <20230328190306.3337b7b0@gandalf.local.home>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230328190306.3337b7b0@gandalf.local.home>
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-Add tabs to make struct members easier to read and unify the style of
-the code.
+On 03/28, Steven Rostedt wrote:
+> On Tue, 07 Mar 2023 17:40:24 +0000
+> patchwork-bot+f2fs@kernel.org wrote:
+> 
+> > Hello:
+> > 
+> > This patch was applied to jaegeuk/f2fs.git (dev)
+> > by Jaegeuk Kim <jaegeuk@kernel.org>:
+> > 
+> > On Mon,  6 Mar 2023 12:25:49 +0000 you wrote:
+> > > From: Douglas Raillard <douglas.raillard@arm.com>
+> > > 
+> > > Fix the nid_t field so that its size is correctly reported in the text
+> > > format embedded in trace.dat files. As it stands, it is reported as
+> > > being of size 4:
+> > > 
+> > >         field:nid_t nid[3];     offset:24;      size:4; signed:0;
+> > > 
+> > > [...]  
+> > 
+> > Here is the summary with links:
+> >   - [f2fs-dev] f2fs: Fix f2fs_truncate_partial_nodes ftrace event
+> >     https://git.kernel.org/jaegeuk/f2fs/c/3ccc99d5a4ea
+> > 
+> > You are awesome, thank you!
+> 
+> I'm hoping you are not waiting for the merge window to get this in. Please
+> get it to Linus before rc5 is out, because I plan on adding my patch[1]
+> which will cause this to fail the build at rc5.
+> 
+> The above is a fix to bug that causes unwanted results. Please get it into
+> mainline ASAP.
 
-Signed-off-by: Beau Belgrave <beaub@linux.microsoft.com>
----
- include/linux/user_events.h      | 14 +++---
- include/uapi/linux/user_events.h | 24 +++++-----
- kernel/trace/trace_events_user.c | 82 ++++++++++++++++----------------
- 3 files changed, 60 insertions(+), 60 deletions(-)
+Thanks for heads-up. I sent a pull request having the above patch to Linus.
 
-diff --git a/include/linux/user_events.h b/include/linux/user_events.h
-index 0120b3dd5b03..2847f5a18a86 100644
---- a/include/linux/user_events.h
-+++ b/include/linux/user_events.h
-@@ -17,13 +17,13 @@
- 
- #ifdef CONFIG_USER_EVENTS
- struct user_event_mm {
--	struct list_head link;
--	struct list_head enablers;
--	struct mm_struct *mm;
--	struct user_event_mm *next;
--	refcount_t refcnt;
--	refcount_t tasks;
--	struct rcu_work put_rwork;
-+	struct list_head	link;
-+	struct list_head	enablers;
-+	struct mm_struct	*mm;
-+	struct user_event_mm	*next;
-+	refcount_t		refcnt;
-+	refcount_t		tasks;
-+	struct rcu_work		put_rwork;
- };
- 
- extern void user_event_mm_dup(struct task_struct *t,
-diff --git a/include/uapi/linux/user_events.h b/include/uapi/linux/user_events.h
-index 3e7275e3234a..2984aae4a2b4 100644
---- a/include/uapi/linux/user_events.h
-+++ b/include/uapi/linux/user_events.h
-@@ -25,25 +25,25 @@
- struct user_reg {
- 
- 	/* Input: Size of the user_reg structure being used */
--	__u32 size;
-+	__u32	size;
- 
- 	/* Input: Bit in enable address to use */
--	__u8 enable_bit;
-+	__u8	enable_bit;
- 
- 	/* Input: Enable size in bytes at address */
--	__u8 enable_size;
-+	__u8	enable_size;
- 
- 	/* Input: Flags for future use, set to 0 */
--	__u16 flags;
-+	__u16	flags;
- 
- 	/* Input: Address to update when enabled */
--	__u64 enable_addr;
-+	__u64	enable_addr;
- 
- 	/* Input: Pointer to string with event name, description and flags */
--	__u64 name_args;
-+	__u64	name_args;
- 
- 	/* Output: Index of the event to use when writing data */
--	__u32 write_index;
-+	__u32	write_index;
- } __attribute__((__packed__));
- 
- /*
-@@ -52,19 +52,19 @@ struct user_reg {
-  */
- struct user_unreg {
- 	/* Input: Size of the user_unreg structure being used */
--	__u32 size;
-+	__u32	size;
- 
- 	/* Input: Bit to unregister */
--	__u8 disable_bit;
-+	__u8	disable_bit;
- 
- 	/* Input: Reserved, set to 0 */
--	__u8 __reserved;
-+	__u8	__reserved;
- 
- 	/* Input: Reserved, set to 0 */
--	__u16 __reserved2;
-+	__u16	__reserved2;
- 
- 	/* Input: Address to unregister */
--	__u64 disable_addr;
-+	__u64	disable_addr;
- } __attribute__((__packed__));
- 
- #define DIAG_IOC_MAGIC '*'
-diff --git a/kernel/trace/trace_events_user.c b/kernel/trace/trace_events_user.c
-index 9b43a02e1597..67cb7b53caf6 100644
---- a/kernel/trace/trace_events_user.c
-+++ b/kernel/trace/trace_events_user.c
-@@ -53,9 +53,9 @@
-  * allows isolation for events by various means.
-  */
- struct user_event_group {
--	char *system_name;
--	struct hlist_node node;
--	struct mutex reg_mutex;
-+	char		*system_name;
-+	struct		hlist_node node;
-+	struct		mutex reg_mutex;
- 	DECLARE_HASHTABLE(register_table, 8);
- };
- 
-@@ -76,17 +76,17 @@ static unsigned int current_user_events;
-  * refcnt reaches one.
-  */
- struct user_event {
--	struct user_event_group *group;
--	struct tracepoint tracepoint;
--	struct trace_event_call call;
--	struct trace_event_class class;
--	struct dyn_event devent;
--	struct hlist_node node;
--	struct list_head fields;
--	struct list_head validators;
--	refcount_t refcnt;
--	int min_size;
--	char status;
-+	struct user_event_group		*group;
-+	struct tracepoint		tracepoint;
-+	struct trace_event_call		call;
-+	struct trace_event_class	class;
-+	struct dyn_event		devent;
-+	struct hlist_node		node;
-+	struct list_head		fields;
-+	struct list_head		validators;
-+	refcount_t			refcnt;
-+	int				min_size;
-+	char				status;
- };
- 
- /*
-@@ -95,12 +95,12 @@ struct user_event {
-  * these to track enablement sites that are tied to an event.
-  */
- struct user_event_enabler {
--	struct list_head link;
--	struct user_event *event;
--	unsigned long addr;
-+	struct list_head	link;
-+	struct user_event	*event;
-+	unsigned long		addr;
- 
- 	/* Track enable bit, flags, etc. Aligned for bitops. */
--	unsigned int values;
-+	unsigned int		values;
- };
- 
- /* Bits 0-5 are for the bit to update upon enable/disable (0-63 allowed) */
-@@ -119,9 +119,9 @@ struct user_event_enabler {
- 
- /* Used for asynchronous faulting in of pages */
- struct user_event_enabler_fault {
--	struct work_struct work;
--	struct user_event_mm *mm;
--	struct user_event_enabler *enabler;
-+	struct work_struct		work;
-+	struct user_event_mm		*mm;
-+	struct user_event_enabler	*enabler;
- };
- 
- static struct kmem_cache *fault_cache;
-@@ -137,23 +137,23 @@ static DEFINE_SPINLOCK(user_event_mms_lock);
-  * These are not shared and only accessible by the file that created it.
-  */
- struct user_event_refs {
--	struct rcu_head rcu;
--	int count;
--	struct user_event *events[];
-+	struct rcu_head		rcu;
-+	int			count;
-+	struct user_event	*events[];
- };
- 
- struct user_event_file_info {
--	struct user_event_group *group;
--	struct user_event_refs *refs;
-+	struct user_event_group	*group;
-+	struct user_event_refs	*refs;
- };
- 
- #define VALIDATOR_ENSURE_NULL (1 << 0)
- #define VALIDATOR_REL (1 << 1)
- 
- struct user_event_validator {
--	struct list_head link;
--	int offset;
--	int flags;
-+	struct list_head	link;
-+	int			offset;
-+	int			flags;
- };
- 
- typedef void (*user_event_func_t) (struct user_event *user, struct iov_iter *i,
-@@ -2276,11 +2276,11 @@ static int user_events_release(struct inode *node, struct file *file)
- }
- 
- static const struct file_operations user_data_fops = {
--	.open = user_events_open,
--	.write = user_events_write,
--	.write_iter = user_events_write_iter,
-+	.open		= user_events_open,
-+	.write		= user_events_write,
-+	.write_iter	= user_events_write_iter,
- 	.unlocked_ioctl	= user_events_ioctl,
--	.release = user_events_release,
-+	.release	= user_events_release,
- };
- 
- static void *user_seq_start(struct seq_file *m, loff_t *pos)
-@@ -2346,10 +2346,10 @@ static int user_seq_show(struct seq_file *m, void *p)
- }
- 
- static const struct seq_operations user_seq_ops = {
--	.start = user_seq_start,
--	.next  = user_seq_next,
--	.stop  = user_seq_stop,
--	.show  = user_seq_show,
-+	.start	= user_seq_start,
-+	.next	= user_seq_next,
-+	.stop	= user_seq_stop,
-+	.show	= user_seq_show,
- };
- 
- static int user_status_open(struct inode *node, struct file *file)
-@@ -2375,10 +2375,10 @@ static int user_status_open(struct inode *node, struct file *file)
- }
- 
- static const struct file_operations user_status_fops = {
--	.open = user_status_open,
--	.read = seq_read,
--	.llseek  = seq_lseek,
--	.release = seq_release,
-+	.open		= user_status_open,
-+	.read		= seq_read,
-+	.llseek		= seq_lseek,
-+	.release	= seq_release,
- };
- 
- /*
--- 
-2.25.1
+https://lore.kernel.org/linux-f2fs-devel/ZCOHd4jYn8zUCEZ0@google.com/T/#u
 
+Thanks,
+
+> 
+> [1] https://patchwork.kernel.org/project/linux-trace-kernel/patch/20230309221302.642e82d9@gandalf.local.home/
+> 
+> -- Steve
