@@ -2,162 +2,83 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 07066C74A5B
-	for <linux-trace-kernel@archiver.kernel.org>; Wed, 29 Mar 2023 15:33:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 900A7C74A5B
+	for <linux-trace-kernel@archiver.kernel.org>; Wed, 29 Mar 2023 15:50:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229638AbjC2PdT (ORCPT
+        id S230222AbjC2Puj (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Wed, 29 Mar 2023 11:33:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41914 "EHLO
+        Wed, 29 Mar 2023 11:50:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37476 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229603AbjC2PdS (ORCPT
+        with ESMTP id S230272AbjC2Pub (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Wed, 29 Mar 2023 11:33:18 -0400
-Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CC1614215;
-        Wed, 29 Mar 2023 08:32:39 -0700 (PDT)
+        Wed, 29 Mar 2023 11:50:31 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 71455469C;
+        Wed, 29 Mar 2023 08:50:30 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ams.source.kernel.org (Postfix) with ESMTPS id 193CDB8236F;
-        Wed, 29 Mar 2023 15:32:38 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 18CE3C433EF;
-        Wed, 29 Mar 2023 15:32:36 +0000 (UTC)
-Date:   Wed, 29 Mar 2023 11:32:34 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Vincent Donnefort <vdonnefort@google.com>
-Cc:     mhiramat@kernel.org, linux-kernel@vger.kernel.org,
-        linux-trace-kernel@vger.kernel.org, kernel-team@android.com
-Subject: Re: [PATCH v2 1/2] ring-buffer: Introducing ring-buffer mapping
- functions
-Message-ID: <20230329113234.3285209c@gandalf.local.home>
-In-Reply-To: <ZCRDXaTVfNwxdRJZ@google.com>
-References: <20230322102244.3239740-1-vdonnefort@google.com>
-        <20230322102244.3239740-2-vdonnefort@google.com>
-        <20230328224411.0d69e272@gandalf.local.home>
-        <ZCQCsD9+nNwBYIyH@google.com>
-        <20230329070353.1e1b443b@gandalf.local.home>
-        <20230329085106.046a8991@rorschach.local.home>
-        <ZCQ2jW5Jl/cWCG7s@google.com>
-        <20230329091107.408d63a8@rorschach.local.home>
-        <ZCQ9m5K34Qa9ZkUd@google.com>
-        <20230329093602.2b3243f0@rorschach.local.home>
-        <ZCRDXaTVfNwxdRJZ@google.com>
-X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id E287C61D84;
+        Wed, 29 Mar 2023 15:50:29 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E98C3C433EF;
+        Wed, 29 Mar 2023 15:50:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1680105029;
+        bh=2tVl9UGX52wuunDco8JD3qwtKdEDsXFZ5A6RPBCNMuM=;
+        h=From:To:Cc:Subject:Date:From;
+        b=p1d/75k2P1b9x5VEEKcCUXBAF+mJF/l25lthonFZXcGlnBqDARpn491qzTs4UJp7+
+         gc0x4tMB22H0K1cOnqFTZUDQWukKo/EQAz4PJ6JNMOM5wq5vIwd5PuIjT+dmesn4QL
+         VtUM05QWvhHbEQqKYH9VjzC86mrcf+DeGuh3n0x1EY2cDuxY8I22xZHv5JnklufUgr
+         uvKQzh9NyXdLZ0VQM+nBDrA+OB/+3bPk4nbDwpjUcQzue9Mi/RSk3nyIh5Z5i47Vjh
+         wPJByOH9KEXDhaTw0IClQK8iMB2QcCTlKGb6cl4D9OcUSEEcwbirDB1yErG3FhFlnE
+         c99EhNEjf2+Ng==
+From:   Daniel Bristot de Oliveira <bristot@kernel.org>
+To:     Steven Rostedt <rostedt@goodmis.org>
+Cc:     Daniel Bristot de Oliveira <bristot@kernel.org>,
+        linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+        Masami Hiramatsu <mhiramat@kernel.org>
+Subject: [PATCH V2 1/2] tracing/timerlat: Notify new max thread latency
+Date:   Wed, 29 Mar 2023 17:50:15 +0200
+Message-Id: <16e18d61d69073d0192ace07bf61e405cca96e9c.1680104184.git.bristot@kernel.org>
+X-Mailer: git-send-email 2.38.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On Wed, 29 Mar 2023 14:55:41 +0100
-Vincent Donnefort <vdonnefort@google.com> wrote:
+timerlat is not reporting a new tracing_max_latency for the thread
+latency. The reason is that it is not calling notify_new_max_latency()
+function after the new thread latency is sampled.
 
-> > Yes, in fact it shouldn't need to call the ioctl until after it read it.
-> > 
-> > Maybe, we should have the ioctl take a parameter of how much was read?
-> > To prevent races?  
-> 
-> Races would only be with other consuming readers. In that case we'd probably
-> have many other problems anyway as I suppose nothing would prevent another one
-> of swapping the page while our userspace reader is still processing it?
+Call notify_new_max_latency after computing the thread latency.
 
-I'm not worried about user space readers. I'm worried about writers, as
-the ioctl will update the reader_page->read = reader_page->commit. The time
-that the reader last read and stopped and then called the ioctl, a writer
-could fill the page, then the ioctl may even swap the page. By passing in
-the read amount, the ioctl will know if it needs to keep the same page or
-not.
+Changes from V1:
+ Split the patch into two patches (Steve)
 
-> 
-> I don't know if this is worth splitting the ABI between the meta-page and the
-> ioctl parameters for this?
-> 
-> Or maybe we should say the meta-page contains things modified by the writer and
-> parameters modified by the reader are passed by the get_reader_page ioctl i.e.
-> the reader page ID and cpu_buffer->reader_page->read? (for the hyp tracing, we
-> have up to 4 registers for the HVC which would replace in our case the ioctl)
+Fixes: dae181349f1e ("tracing/osnoise: Support a list of trace_array *tr")
+Cc: Daniel Bristot de Oliveira <bristot@kernel.org>
+Cc: Steven Rostedt <rostedt@goodmis.org>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>
+Signed-off-by: Daniel Bristot de Oliveira <bristot@kernel.org>
+---
+ kernel/trace/trace_osnoise.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-I don't think we need the reader_page id, as that should never move without
-reader involvement. If there's more than one reader, that's up to the
-readers to keep track of each other, not the kernel.
+diff --git a/kernel/trace/trace_osnoise.c b/kernel/trace/trace_osnoise.c
+index 9176bb7a9bb4..e8116094bed8 100644
+--- a/kernel/trace/trace_osnoise.c
++++ b/kernel/trace/trace_osnoise.c
+@@ -1738,6 +1738,8 @@ static int timerlat_main(void *data)
+ 
+ 		trace_timerlat_sample(&s);
+ 
++		notify_new_max_latency(diff);
++
+ 		timerlat_dump_stack(time_to_us(diff));
+ 
+ 		tlat->tracing_thread = false;
+-- 
+2.38.1
 
-Which BTW, the more I look at doing this without ioctls, I think we may
-need to update things slightly different.
-
-I would keep the current approach, but for clarification of terminology, we
-have:
-
-meta_data - the data that holds information that is shared between user and
-	kernel space.
-
-data_pages - this is a separate mapping that holds the mapped ring buffer
-	pages. In user space, this is one contiguous array and also holds
-	the reader page.
-
-data_index - This is an array of what the writer sees. It maps the index
-	into data_pages[] of where to find the mapped pages. It does not
-	contain the reader page. We currently map this with the meta_data,
-	but that's not a requirement (although we may continue to do so).
-
-I'm thinking that we make the data_index[] elements into a structure:
-
-struct trace_map_data_index {
-	int		idx;	/* index into data_pages[] */
-	int		cnt;	/* counter updated by writer */
-};
-
-The cnt is initialized to zero when initially mapped.
-
-Instead of having the bpage->id = index into data_pages[], have it equal
-the index into data_index[].
-
-The cpu_buffer->reader_page->id = -1;
-
-meta_data->reader_page = index into data_pages[] of reader page
-
-The swapping of the header page would look something like this:
-
-static inline void
-rb_meta_page_head_swap(struct ring_buffer_per_cpu *cpu_buffer)
-{
-	struct ring_buffer_meta_page *meta = cpu_buffer->meta_page;
-	int head_page;
-
-	if (!READ_ONCE(cpu_buffer->mapped))
-		return;
-
-	head_page = meta->data_pages[meta->hdr.data_page_head];
-	meta->data_pages[meta->hdr.data_page_head] = meta->hdr.reader_page;
-	meta->hdr.reader_page = head_page;
-	meta->data_pages[head_page]->id = -1;
-}
-
-As hdr.data_page_head would be an index into data_index[] and not
-data_pages[].
-
-The fact that bpage->id points to the data_index[] and not the data_pages[]
-means that the writer can easily get to that index, and modify the count.
-That way, in rb_tail_page_update() (between cmpxchgs) we can do something
-like:
-
-	if (cpu_buffer->mapped) {
-		meta = cpu_buffer->meta_page;
-		meta->data_index[next_page->id].cnt++;
-	}
-
-And this will allow the reader to know if the current page it is on just
-got overwritten by the writer, by doing:
-
-	prev_id = meta->data_index[this_page].cnt;
-	smp_rmb();
-	read event (copy it, whatever)
-	smp_rmb();
-	if (prev_id != meta->data_index[this_page].cnt)
-		/* read data may be corrupted, abort it */
-
-
-Does this make sense?
-
--- Steve
