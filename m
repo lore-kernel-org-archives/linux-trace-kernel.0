@@ -2,88 +2,216 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 862AFC74A5B
-	for <linux-trace-kernel@archiver.kernel.org>; Thu, 30 Mar 2023 02:49:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B3721C6FD1D
+	for <linux-trace-kernel@archiver.kernel.org>; Thu, 30 Mar 2023 10:31:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229615AbjC3CtV (ORCPT
+        id S229563AbjC3KbS (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Wed, 29 Mar 2023 22:49:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34234 "EHLO
+        Thu, 30 Mar 2023 06:31:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50816 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229553AbjC3CtU (ORCPT
+        with ESMTP id S229470AbjC3KbR (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Wed, 29 Mar 2023 22:49:20 -0400
-Received: from szxga03-in.huawei.com (szxga03-in.huawei.com [45.249.212.189])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DFB7C4EEF;
-        Wed, 29 Mar 2023 19:49:18 -0700 (PDT)
-Received: from dggpeml100012.china.huawei.com (unknown [172.30.72.57])
-        by szxga03-in.huawei.com (SkyGuard) with ESMTP id 4Pn7Cf1j4TzKqYF;
-        Thu, 30 Mar 2023 10:48:46 +0800 (CST)
-Received: from localhost.localdomain (10.67.175.61) by
- dggpeml100012.china.huawei.com (7.185.36.121) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.21; Thu, 30 Mar 2023 10:49:16 +0800
-From:   Zheng Yejian <zhengyejian1@huawei.com>
-To:     <rostedt@goodmis.org>, <mhiramat@kernel.org>,
-        <mark.rutland@arm.com>, <ast@kernel.org>, <daniel@iogearbox.net>
-CC:     <linux-kernel@vger.kernel.org>,
-        <linux-trace-kernel@vger.kernel.org>, <zhengyejian1@huawei.com>
-Subject: [PATCH] ftrace: Fix issue that 'direct->addr' not restored in modify_ftrace_direct()
-Date:   Thu, 30 Mar 2023 10:52:23 +0800
-Message-ID: <20230330025223.1046087-1-zhengyejian1@huawei.com>
-X-Mailer: git-send-email 2.25.1
+        Thu, 30 Mar 2023 06:31:17 -0400
+Received: from mail-wm1-x335.google.com (mail-wm1-x335.google.com [IPv6:2a00:1450:4864:20::335])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D5DDDFA
+        for <linux-trace-kernel@vger.kernel.org>; Thu, 30 Mar 2023 03:31:15 -0700 (PDT)
+Received: by mail-wm1-x335.google.com with SMTP id p34so10582507wms.3
+        for <linux-trace-kernel@vger.kernel.org>; Thu, 30 Mar 2023 03:31:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20210112; t=1680172274;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=oCSLCronvrWqAes79LDile7lDfgU2BaSyNu7ahhmt4c=;
+        b=jSvObG5da5v2p1XpYHcorjOkhqfpzf0kPpN7Q4trfd2n2tRMe9vBDpI9yGb4bmWMos
+         yBfacMc0nGb5HOPLQ+zuYKzIz/3FRWe1OJMNlcTpRPrku3fPuuUAbvTHICCi2LZZGvAO
+         HsIoyr1Of8fT3/1DJyk4QlkKDBM3568GA4MmhMj7fjWUnrDXENXVAxxZEw6g0l6iMU9F
+         wjTG/T9+X+nnz6vZMwmxcE1k/0tQUu5Ev6MWZ7XZvkrktoGDE6Z/BfplFC2HfFL6WCQ2
+         Bra9EHq5EdPMLW5Cnddu7Lye66LxX6daeBv7hm/YccvQShJR0Wtpq7sZDyZEw9vv0axX
+         z4yg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112; t=1680172274;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=oCSLCronvrWqAes79LDile7lDfgU2BaSyNu7ahhmt4c=;
+        b=2sXdUtmCpAB4H30ntQQQ9mk6X56PQFzRfuG35Sw5OYXWNvHL5Fmxzkhw0OuHNsqnn/
+         bpertrwsACJWVmvjnYPlmRScwu1IUjjXbVwz5ceTKG/2fRbyVDRMmK9tdd3vt1uhdBdC
+         elCKITowktGFkq3yXNn0Eo19fUcL0KD+ORxPrV4xUdBplwqRyvWkrzm2L1EkLX9cHcvi
+         o5lyknGj00fV59gUkSbzpyNi0Um+OlptnKQT8Jrxy368KhKU4kkEttR/wCqRvFaMOcDt
+         +40Bq989UX0+xeC/NefoH0a+XlJLQfHU6g0iIYORM55sVpEbyrqGs8PBD61eZ7wjDRgs
+         3jxw==
+X-Gm-Message-State: AAQBX9cG2gXPTrc4AchZ+VbOMVy2Q1/2Rca61aaEyRSU6K/X+FBGU+Wl
+        FE5Pdltnz28lgHKPz+l8Hz9BCQ==
+X-Google-Smtp-Source: AKy350YanmM4k/wNl9S03NJjrNoF8Ay+Z30J/Bb1EaoBgQ3rpopW0XJh649xqhqiIoN3BmX2xWxt2A==
+X-Received: by 2002:a1c:7215:0:b0:3ef:d8c6:4bc0 with SMTP id n21-20020a1c7215000000b003efd8c64bc0mr4336810wmc.40.1680172274120;
+        Thu, 30 Mar 2023 03:31:14 -0700 (PDT)
+Received: from google.com (65.0.187.35.bc.googleusercontent.com. [35.187.0.65])
+        by smtp.gmail.com with ESMTPSA id iv19-20020a05600c549300b003ef69873cf1sm5805650wmb.40.2023.03.30.03.31.13
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 30 Mar 2023 03:31:13 -0700 (PDT)
+Date:   Thu, 30 Mar 2023 11:30:51 +0100
+From:   Vincent Donnefort <vdonnefort@google.com>
+To:     Steven Rostedt <rostedt@goodmis.org>
+Cc:     mhiramat@kernel.org, linux-kernel@vger.kernel.org,
+        linux-trace-kernel@vger.kernel.org, kernel-team@android.com
+Subject: Re: [PATCH v2 1/2] ring-buffer: Introducing ring-buffer mapping
+ functions
+Message-ID: <ZCVk26InuXhy+Lmg@google.com>
+References: <20230328224411.0d69e272@gandalf.local.home>
+ <ZCQCsD9+nNwBYIyH@google.com>
+ <20230329070353.1e1b443b@gandalf.local.home>
+ <20230329085106.046a8991@rorschach.local.home>
+ <ZCQ2jW5Jl/cWCG7s@google.com>
+ <20230329091107.408d63a8@rorschach.local.home>
+ <ZCQ9m5K34Qa9ZkUd@google.com>
+ <20230329093602.2b3243f0@rorschach.local.home>
+ <ZCRDXaTVfNwxdRJZ@google.com>
+ <20230329113234.3285209c@gandalf.local.home>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [10.67.175.61]
-X-ClientProxiedBy: dggems706-chm.china.huawei.com (10.3.19.183) To
- dggpeml100012.china.huawei.com (7.185.36.121)
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230329113234.3285209c@gandalf.local.home>
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-Syzkaller report a WARNING: "WARN_ON(!direct)" in modify_ftrace_direct().
+On Wed, Mar 29, 2023 at 11:32:34AM -0400, Steven Rostedt wrote:
+> On Wed, 29 Mar 2023 14:55:41 +0100
+> Vincent Donnefort <vdonnefort@google.com> wrote:
+> 
+> > > Yes, in fact it shouldn't need to call the ioctl until after it read it.
+> > > 
+> > > Maybe, we should have the ioctl take a parameter of how much was read?
+> > > To prevent races?  
+> > 
+> > Races would only be with other consuming readers. In that case we'd probably
+> > have many other problems anyway as I suppose nothing would prevent another one
+> > of swapping the page while our userspace reader is still processing it?
+> 
+> I'm not worried about user space readers. I'm worried about writers, as
+> the ioctl will update the reader_page->read = reader_page->commit. The time
+> that the reader last read and stopped and then called the ioctl, a writer
+> could fill the page, then the ioctl may even swap the page. By passing in
+> the read amount, the ioctl will know if it needs to keep the same page or
+> not.
 
-Root cause is 'direct->addr' was changed from 'old_addr' to 'new_addr' but
-not restored if error happened on calling ftrace_modify_direct_caller().
-Then it can no longer find 'direct' by that 'old_addr'.
+How about?
 
-To fix it, restore 'direct->addr' to 'old_addr' explicitly in error path.
+userspace:
 
-Cc: stable@vger.kernel.org
-Fixes: 8a141dd7f706 ("ftrace: Fix modify_ftrace_direct.")
-Signed-off-by: Zheng Yejian <zhengyejian1@huawei.com>
----
- kernel/trace/ftrace.c | 15 +++++++++------
- 1 file changed, 9 insertions(+), 6 deletions(-)
+  prev_read = meta->read;
+  ioctl(TRACE_MMAP_IOCTL_GET_READER_PAGE)
 
-diff --git a/kernel/trace/ftrace.c b/kernel/trace/ftrace.c
-index 0feea145bb29..c67bcc89a771 100644
---- a/kernel/trace/ftrace.c
-+++ b/kernel/trace/ftrace.c
-@@ -5667,12 +5667,15 @@ int modify_ftrace_direct(unsigned long ip,
- 		ret = 0;
- 	}
- 
--	if (unlikely(ret && new_direct)) {
--		direct->count++;
--		list_del_rcu(&new_direct->next);
--		synchronize_rcu_tasks();
--		kfree(new_direct);
--		ftrace_direct_func_count--;
-+	if (ret) {
-+		direct->addr = old_addr;
-+		if (unlikely(new_direct)) {
-+			direct->count++;
-+			list_del_rcu(&new_direct->next);
-+			synchronize_rcu_tasks();
-+			kfree(new_direct);
-+			ftrace_direct_func_count--;
-+		}
- 	}
- 
-  out_unlock:
--- 
-2.25.1
+kernel:
+    ring_buffer_get_reader_page()
+      rb_get_reader_page(cpu_buffer);
+      cpu_buffer->reader_page->read = rb_page_size(reader);
+      meta->read = cpu_buffer->reader_page->read;
 
+userspace:
+   /* if new page prev_read = 0 */
+   /* read between prev_read and meta->read */
+
+If the writer does anything in-between, wouldn't rb_get_reader_page() handle it
+nicely by returning the same reader as more would be there to read?
+
+It is similar to rb_advance_reader() except we'd be moving several events at
+once?
+
+> 
+> > 
+> > I don't know if this is worth splitting the ABI between the meta-page and the
+> > ioctl parameters for this?
+> > 
+> > Or maybe we should say the meta-page contains things modified by the writer and
+> > parameters modified by the reader are passed by the get_reader_page ioctl i.e.
+> > the reader page ID and cpu_buffer->reader_page->read? (for the hyp tracing, we
+> > have up to 4 registers for the HVC which would replace in our case the ioctl)
+> 
+> I don't think we need the reader_page id, as that should never move without
+> reader involvement. If there's more than one reader, that's up to the
+> readers to keep track of each other, not the kernel.
+> 
+> Which BTW, the more I look at doing this without ioctls, I think we may
+> need to update things slightly different.
+> 
+> I would keep the current approach, but for clarification of terminology, we
+> have:
+> 
+> meta_data - the data that holds information that is shared between user and
+> 	kernel space.
+> 
+> data_pages - this is a separate mapping that holds the mapped ring buffer
+> 	pages. In user space, this is one contiguous array and also holds
+> 	the reader page.
+> 
+> data_index - This is an array of what the writer sees. It maps the index
+> 	into data_pages[] of where to find the mapped pages. It does not
+> 	contain the reader page. We currently map this with the meta_data,
+> 	but that's not a requirement (although we may continue to do so).
+> 
+> I'm thinking that we make the data_index[] elements into a structure:
+> 
+> struct trace_map_data_index {
+> 	int		idx;	/* index into data_pages[] */
+> 	int		cnt;	/* counter updated by writer */
+> };
+> 
+> The cnt is initialized to zero when initially mapped.
+> 
+> Instead of having the bpage->id = index into data_pages[], have it equal
+> the index into data_index[].
+> 
+> The cpu_buffer->reader_page->id = -1;
+> 
+> meta_data->reader_page = index into data_pages[] of reader page
+> 
+> The swapping of the header page would look something like this:
+> 
+> static inline void
+> rb_meta_page_head_swap(struct ring_buffer_per_cpu *cpu_buffer)
+> {
+> 	struct ring_buffer_meta_page *meta = cpu_buffer->meta_page;
+> 	int head_page;
+> 
+> 	if (!READ_ONCE(cpu_buffer->mapped))
+> 		return;
+> 
+> 	head_page = meta->data_pages[meta->hdr.data_page_head];
+> 	meta->data_pages[meta->hdr.data_page_head] = meta->hdr.reader_page;
+> 	meta->hdr.reader_page = head_page;
+> 	meta->data_pages[head_page]->id = -1;
+> }
+> 
+> As hdr.data_page_head would be an index into data_index[] and not
+> data_pages[].
+> 
+> The fact that bpage->id points to the data_index[] and not the data_pages[]
+> means that the writer can easily get to that index, and modify the count.
+> That way, in rb_tail_page_update() (between cmpxchgs) we can do something
+> like:
+> 
+> 	if (cpu_buffer->mapped) {
+> 		meta = cpu_buffer->meta_page;
+> 		meta->data_index[next_page->id].cnt++;
+> 	}
+> 
+> And this will allow the reader to know if the current page it is on just
+> got overwritten by the writer, by doing:
+> 
+> 	prev_id = meta->data_index[this_page].cnt;
+> 	smp_rmb();
+> 	read event (copy it, whatever)
+> 	smp_rmb();
+> 	if (prev_id != meta->data_index[this_page].cnt)
+> 		/* read data may be corrupted, abort it */
+
+Couldn't the reader just check for the page commit field? rb_iter_head_event()
+does something like this to check if the writer is on its page.
+
+> 
+> 
+> Does this make sense?
+> 
+> -- Steve
