@@ -2,216 +2,167 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B3721C6FD1D
-	for <linux-trace-kernel@archiver.kernel.org>; Thu, 30 Mar 2023 10:31:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 55133C761A6
+	for <linux-trace-kernel@archiver.kernel.org>; Thu, 30 Mar 2023 11:40:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229563AbjC3KbS (ORCPT
+        id S231718AbjC3Lkn (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Thu, 30 Mar 2023 06:31:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50816 "EHLO
+        Thu, 30 Mar 2023 07:40:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47018 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229470AbjC3KbR (ORCPT
+        with ESMTP id S231735AbjC3LkU (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Thu, 30 Mar 2023 06:31:17 -0400
-Received: from mail-wm1-x335.google.com (mail-wm1-x335.google.com [IPv6:2a00:1450:4864:20::335])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D5DDDFA
-        for <linux-trace-kernel@vger.kernel.org>; Thu, 30 Mar 2023 03:31:15 -0700 (PDT)
-Received: by mail-wm1-x335.google.com with SMTP id p34so10582507wms.3
-        for <linux-trace-kernel@vger.kernel.org>; Thu, 30 Mar 2023 03:31:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20210112; t=1680172274;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=oCSLCronvrWqAes79LDile7lDfgU2BaSyNu7ahhmt4c=;
-        b=jSvObG5da5v2p1XpYHcorjOkhqfpzf0kPpN7Q4trfd2n2tRMe9vBDpI9yGb4bmWMos
-         yBfacMc0nGb5HOPLQ+zuYKzIz/3FRWe1OJMNlcTpRPrku3fPuuUAbvTHICCi2LZZGvAO
-         HsIoyr1Of8fT3/1DJyk4QlkKDBM3568GA4MmhMj7fjWUnrDXENXVAxxZEw6g0l6iMU9F
-         wjTG/T9+X+nnz6vZMwmxcE1k/0tQUu5Ev6MWZ7XZvkrktoGDE6Z/BfplFC2HfFL6WCQ2
-         Bra9EHq5EdPMLW5Cnddu7Lye66LxX6daeBv7hm/YccvQShJR0Wtpq7sZDyZEw9vv0axX
-         z4yg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1680172274;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=oCSLCronvrWqAes79LDile7lDfgU2BaSyNu7ahhmt4c=;
-        b=2sXdUtmCpAB4H30ntQQQ9mk6X56PQFzRfuG35Sw5OYXWNvHL5Fmxzkhw0OuHNsqnn/
-         bpertrwsACJWVmvjnYPlmRScwu1IUjjXbVwz5ceTKG/2fRbyVDRMmK9tdd3vt1uhdBdC
-         elCKITowktGFkq3yXNn0Eo19fUcL0KD+ORxPrV4xUdBplwqRyvWkrzm2L1EkLX9cHcvi
-         o5lyknGj00fV59gUkSbzpyNi0Um+OlptnKQT8Jrxy368KhKU4kkEttR/wCqRvFaMOcDt
-         +40Bq989UX0+xeC/NefoH0a+XlJLQfHU6g0iIYORM55sVpEbyrqGs8PBD61eZ7wjDRgs
-         3jxw==
-X-Gm-Message-State: AAQBX9cG2gXPTrc4AchZ+VbOMVy2Q1/2Rca61aaEyRSU6K/X+FBGU+Wl
-        FE5Pdltnz28lgHKPz+l8Hz9BCQ==
-X-Google-Smtp-Source: AKy350YanmM4k/wNl9S03NJjrNoF8Ay+Z30J/Bb1EaoBgQ3rpopW0XJh649xqhqiIoN3BmX2xWxt2A==
-X-Received: by 2002:a1c:7215:0:b0:3ef:d8c6:4bc0 with SMTP id n21-20020a1c7215000000b003efd8c64bc0mr4336810wmc.40.1680172274120;
-        Thu, 30 Mar 2023 03:31:14 -0700 (PDT)
-Received: from google.com (65.0.187.35.bc.googleusercontent.com. [35.187.0.65])
-        by smtp.gmail.com with ESMTPSA id iv19-20020a05600c549300b003ef69873cf1sm5805650wmb.40.2023.03.30.03.31.13
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 30 Mar 2023 03:31:13 -0700 (PDT)
-Date:   Thu, 30 Mar 2023 11:30:51 +0100
-From:   Vincent Donnefort <vdonnefort@google.com>
-To:     Steven Rostedt <rostedt@goodmis.org>
-Cc:     mhiramat@kernel.org, linux-kernel@vger.kernel.org,
-        linux-trace-kernel@vger.kernel.org, kernel-team@android.com
-Subject: Re: [PATCH v2 1/2] ring-buffer: Introducing ring-buffer mapping
- functions
-Message-ID: <ZCVk26InuXhy+Lmg@google.com>
-References: <20230328224411.0d69e272@gandalf.local.home>
- <ZCQCsD9+nNwBYIyH@google.com>
- <20230329070353.1e1b443b@gandalf.local.home>
- <20230329085106.046a8991@rorschach.local.home>
- <ZCQ2jW5Jl/cWCG7s@google.com>
- <20230329091107.408d63a8@rorschach.local.home>
- <ZCQ9m5K34Qa9ZkUd@google.com>
- <20230329093602.2b3243f0@rorschach.local.home>
- <ZCRDXaTVfNwxdRJZ@google.com>
- <20230329113234.3285209c@gandalf.local.home>
+        Thu, 30 Mar 2023 07:40:20 -0400
+Received: from mail-m118111.qiye.163.com (mail-m118111.qiye.163.com [115.236.118.111])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6071B9751;
+        Thu, 30 Mar 2023 04:39:33 -0700 (PDT)
+Received: from ubuntu.localdomain (unknown [117.133.56.22])
+        by mail-m118111.qiye.163.com (Hmail) with ESMTPA id 0CED9580C18;
+        Thu, 30 Mar 2023 19:39:25 +0800 (CST)
+From:   Donglin Peng <pengdonglin@sangfor.com.cn>
+To:     mhiramat@kernel.org, rostedt@goodmis.org, linux@armlinux.org.uk,
+        mark.rutland@arm.com, will@kernel.org, catalin.marinas@arm.com,
+        rmk+kernel@armlinux.org.uk, palmer@dabbelt.com,
+        paul.walmsley@sifive.com, aou@eecs.berkeley.edu,
+        tglx@linutronix.de, dave.hansen@linux.intel.com, x86@kernel.org,
+        bp@alien8.de, hpa@zytor.com, chenhuacai@kernel.org,
+        zhangqing@loongson.cn, kernel@xen0n.name, mingo@redhat.com,
+        peterz@infradead.org, xiehuan09@gmail.com, dinghui@sangfor.com.cn,
+        huangcun@sangfor.com.cn, dolinux.peng@gmail.com
+Cc:     linux-trace-kernel@vger.kernel.org, loongarch@lists.linux.dev,
+        linux-riscv@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Donglin Peng <pengdonglin@sangfor.com.cn>
+Subject: [PATCH v9 3/8] ARM: ftrace: Enable HAVE_FUNCTION_GRAPH_RETVAL
+Date:   Thu, 30 Mar 2023 04:39:10 -0700
+Message-Id: <762760c8b7cdd0641a4474f25e42bd06d6e4781c.1680176068.git.pengdonglin@sangfor.com.cn>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <cover.1680176068.git.pengdonglin@sangfor.com.cn>
+References: <cover.1680176068.git.pengdonglin@sangfor.com.cn>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230329113234.3285209c@gandalf.local.home>
+Content-Transfer-Encoding: 8bit
+X-HM-Spam-Status: e1kfGhgUHx5ZQUpXWQgPGg8OCBgUHx5ZQUlOS1dZFg8aDwILHllBWSg2Ly
+        tZV1koWUFITzdXWS1ZQUlXWQ8JGhUIEh9ZQVkaGUIaVkseT0lKGBofHU5IQ1UTARMWGhIXJBQOD1
+        lXWRgSC1lBWUpKTFVKSEhVTk1VSUlZV1kWGg8SFR0UWUFZT0tIVUpKS0hKTFVKS0tVS1kG
+X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6OAw6Eyo5Lj0SF08xAi40STBM
+        NUgKCk5VSlVKTUNLSkxNSE1NTk5KVTMWGhIXVQseFRwfFBUcFxIVOwgaFRwdFAlVGBQWVRgVRVlX
+        WRILWUFZSkpMVUpISFVOTVVJSVlXWQgBWUFNSkhJNwY+
+X-HM-Tid: 0a873250c21c2eb7kusn0ced9580c18
+X-HM-MType: 1
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On Wed, Mar 29, 2023 at 11:32:34AM -0400, Steven Rostedt wrote:
-> On Wed, 29 Mar 2023 14:55:41 +0100
-> Vincent Donnefort <vdonnefort@google.com> wrote:
-> 
-> > > Yes, in fact it shouldn't need to call the ioctl until after it read it.
-> > > 
-> > > Maybe, we should have the ioctl take a parameter of how much was read?
-> > > To prevent races?  
-> > 
-> > Races would only be with other consuming readers. In that case we'd probably
-> > have many other problems anyway as I suppose nothing would prevent another one
-> > of swapping the page while our userspace reader is still processing it?
-> 
-> I'm not worried about user space readers. I'm worried about writers, as
-> the ioctl will update the reader_page->read = reader_page->commit. The time
-> that the reader last read and stopped and then called the ioctl, a writer
-> could fill the page, then the ioctl may even swap the page. By passing in
-> the read amount, the ioctl will know if it needs to keep the same page or
-> not.
+The previous patch ("function_graph: Support recording and printing
+the return value of function") has laid the groundwork for the for
+the funcgraph-retval, and this modification makes it available on
+the ARM platform.
 
-How about?
+We introduce a new structure called fgraph_ret_regs for the ARM platform
+to hold return registers and the frame pointer. We then fill its content
+in the return_to_handler and pass its address to the function
+ftrace_return_to_handler to record the return value.
 
-userspace:
+Signed-off-by: Donglin Peng <pengdonglin@sangfor.com.cn>
+---
+v9:
+ - Fix stack pointer align issues
+ - Update the commit message
 
-  prev_read = meta->read;
-  ioctl(TRACE_MMAP_IOCTL_GET_READER_PAGE)
+v8:
+ - Modify the control range of CONFIG_HAVE_FUNCTION_GRAPH_RETVAL
+---
+ arch/arm/Kconfig               |  1 +
+ arch/arm/include/asm/ftrace.h  | 20 ++++++++++++++++++++
+ arch/arm/kernel/asm-offsets.c  |  6 +++++-
+ arch/arm/kernel/entry-ftrace.S | 10 ++++++----
+ 4 files changed, 32 insertions(+), 5 deletions(-)
 
-kernel:
-    ring_buffer_get_reader_page()
-      rb_get_reader_page(cpu_buffer);
-      cpu_buffer->reader_page->read = rb_page_size(reader);
-      meta->read = cpu_buffer->reader_page->read;
+diff --git a/arch/arm/Kconfig b/arch/arm/Kconfig
+index e24a9820e12f..73061379855a 100644
+--- a/arch/arm/Kconfig
++++ b/arch/arm/Kconfig
+@@ -98,6 +98,7 @@ config ARM
+ 	select HAVE_FAST_GUP if ARM_LPAE
+ 	select HAVE_FTRACE_MCOUNT_RECORD if !XIP_KERNEL
+ 	select HAVE_FUNCTION_ERROR_INJECTION
++	select HAVE_FUNCTION_GRAPH_RETVAL if HAVE_FUNCTION_GRAPH_TRACER
+ 	select HAVE_FUNCTION_GRAPH_TRACER
+ 	select HAVE_FUNCTION_TRACER if !XIP_KERNEL
+ 	select HAVE_GCC_PLUGINS
+diff --git a/arch/arm/include/asm/ftrace.h b/arch/arm/include/asm/ftrace.h
+index 7e9251ca29fe..558bd9d1f9b0 100644
+--- a/arch/arm/include/asm/ftrace.h
++++ b/arch/arm/include/asm/ftrace.h
+@@ -77,4 +77,24 @@ static inline bool arch_syscall_match_sym_name(const char *sym,
+ 
+ #endif /* ifndef __ASSEMBLY__ */
+ 
++#ifndef __ASSEMBLY__
++struct fgraph_ret_regs {
++	/* r0 - r3 */
++	unsigned long regs[4];
++
++	unsigned long fp;
++	unsigned long __unused;
++};
++
++static inline unsigned long fgraph_ret_regs_return_value(struct fgraph_ret_regs *ret_regs)
++{
++	return ret_regs->regs[0];
++}
++
++static inline unsigned long fgraph_ret_regs_frame_pointer(struct fgraph_ret_regs *ret_regs)
++{
++	return ret_regs->fp;
++}
++#endif
++
+ #endif /* _ASM_ARM_FTRACE */
+diff --git a/arch/arm/kernel/asm-offsets.c b/arch/arm/kernel/asm-offsets.c
+index 38121c59cbc2..14853550db6d 100644
+--- a/arch/arm/kernel/asm-offsets.c
++++ b/arch/arm/kernel/asm-offsets.c
+@@ -23,6 +23,7 @@
+ #include <asm/suspend.h>
+ #include <asm/vdso_datapage.h>
+ #include <asm/hardware/cache-l2x0.h>
++#include <asm/ftrace.h>
+ #include <linux/kbuild.h>
+ #include <linux/arm-smccc.h>
+ #include "signal.h"
+@@ -170,5 +171,8 @@ int main(void)
+   DEFINE(KEXEC_INDIR_PAGE,	offsetof(struct kexec_relocate_data, kexec_indirection_page));
+   DEFINE(KEXEC_MACH_TYPE,	offsetof(struct kexec_relocate_data, kexec_mach_type));
+   DEFINE(KEXEC_R2,		offsetof(struct kexec_relocate_data, kexec_r2));
+-  return 0; 
++  BLANK();
++  DEFINE(FGRET_REGS_SIZE,	sizeof(struct fgraph_ret_regs));
++  BLANK();
++  return 0;
+ }
+diff --git a/arch/arm/kernel/entry-ftrace.S b/arch/arm/kernel/entry-ftrace.S
+index 3e7bcaca5e07..d41a1676608c 100644
+--- a/arch/arm/kernel/entry-ftrace.S
++++ b/arch/arm/kernel/entry-ftrace.S
+@@ -257,11 +257,13 @@ ENDPROC(ftrace_graph_regs_caller)
+ 
+ #ifdef CONFIG_FUNCTION_GRAPH_TRACER
+ ENTRY(return_to_handler)
+-	stmdb	sp!, {r0-r3}
+-	add	r0, sp, #16		@ sp at exit of instrumented routine
++	mov	ip, sp				@ sp at exit of instrumented routine
++	stmdb	sp!, {r0-r3, ip, lr}		@ fill fgraph_ret_regs
++	mov	r0, sp
+ 	bl	ftrace_return_to_handler
+-	mov	lr, r0			@ r0 has real ret addr
+-	ldmia	sp!, {r0-r3}
++	mov	lr, r0				@ r0 has real ret addr
++	ldmia	sp, {r0-r3}
++	add	sp, sp, #FGRET_REGS_SIZE	@ restore stack pointer
+ 	ret	lr
+ ENDPROC(return_to_handler)
+ #endif
+-- 
+2.25.1
 
-userspace:
-   /* if new page prev_read = 0 */
-   /* read between prev_read and meta->read */
-
-If the writer does anything in-between, wouldn't rb_get_reader_page() handle it
-nicely by returning the same reader as more would be there to read?
-
-It is similar to rb_advance_reader() except we'd be moving several events at
-once?
-
-> 
-> > 
-> > I don't know if this is worth splitting the ABI between the meta-page and the
-> > ioctl parameters for this?
-> > 
-> > Or maybe we should say the meta-page contains things modified by the writer and
-> > parameters modified by the reader are passed by the get_reader_page ioctl i.e.
-> > the reader page ID and cpu_buffer->reader_page->read? (for the hyp tracing, we
-> > have up to 4 registers for the HVC which would replace in our case the ioctl)
-> 
-> I don't think we need the reader_page id, as that should never move without
-> reader involvement. If there's more than one reader, that's up to the
-> readers to keep track of each other, not the kernel.
-> 
-> Which BTW, the more I look at doing this without ioctls, I think we may
-> need to update things slightly different.
-> 
-> I would keep the current approach, but for clarification of terminology, we
-> have:
-> 
-> meta_data - the data that holds information that is shared between user and
-> 	kernel space.
-> 
-> data_pages - this is a separate mapping that holds the mapped ring buffer
-> 	pages. In user space, this is one contiguous array and also holds
-> 	the reader page.
-> 
-> data_index - This is an array of what the writer sees. It maps the index
-> 	into data_pages[] of where to find the mapped pages. It does not
-> 	contain the reader page. We currently map this with the meta_data,
-> 	but that's not a requirement (although we may continue to do so).
-> 
-> I'm thinking that we make the data_index[] elements into a structure:
-> 
-> struct trace_map_data_index {
-> 	int		idx;	/* index into data_pages[] */
-> 	int		cnt;	/* counter updated by writer */
-> };
-> 
-> The cnt is initialized to zero when initially mapped.
-> 
-> Instead of having the bpage->id = index into data_pages[], have it equal
-> the index into data_index[].
-> 
-> The cpu_buffer->reader_page->id = -1;
-> 
-> meta_data->reader_page = index into data_pages[] of reader page
-> 
-> The swapping of the header page would look something like this:
-> 
-> static inline void
-> rb_meta_page_head_swap(struct ring_buffer_per_cpu *cpu_buffer)
-> {
-> 	struct ring_buffer_meta_page *meta = cpu_buffer->meta_page;
-> 	int head_page;
-> 
-> 	if (!READ_ONCE(cpu_buffer->mapped))
-> 		return;
-> 
-> 	head_page = meta->data_pages[meta->hdr.data_page_head];
-> 	meta->data_pages[meta->hdr.data_page_head] = meta->hdr.reader_page;
-> 	meta->hdr.reader_page = head_page;
-> 	meta->data_pages[head_page]->id = -1;
-> }
-> 
-> As hdr.data_page_head would be an index into data_index[] and not
-> data_pages[].
-> 
-> The fact that bpage->id points to the data_index[] and not the data_pages[]
-> means that the writer can easily get to that index, and modify the count.
-> That way, in rb_tail_page_update() (between cmpxchgs) we can do something
-> like:
-> 
-> 	if (cpu_buffer->mapped) {
-> 		meta = cpu_buffer->meta_page;
-> 		meta->data_index[next_page->id].cnt++;
-> 	}
-> 
-> And this will allow the reader to know if the current page it is on just
-> got overwritten by the writer, by doing:
-> 
-> 	prev_id = meta->data_index[this_page].cnt;
-> 	smp_rmb();
-> 	read event (copy it, whatever)
-> 	smp_rmb();
-> 	if (prev_id != meta->data_index[this_page].cnt)
-> 		/* read data may be corrupted, abort it */
-
-Couldn't the reader just check for the page commit field? rb_iter_head_event()
-does something like this to check if the writer is on its page.
-
-> 
-> 
-> Does this make sense?
-> 
-> -- Steve
