@@ -2,82 +2,177 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F681C761A6
-	for <linux-trace-kernel@archiver.kernel.org>; Thu, 30 Mar 2023 15:23:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 50A43C77B6C
+	for <linux-trace-kernel@archiver.kernel.org>; Fri, 31 Mar 2023 12:49:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232927AbjC3PXP (ORCPT
+        id S231868AbjCaMtR (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Thu, 30 Mar 2023 11:23:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40504 "EHLO
+        Fri, 31 Mar 2023 08:49:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48674 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232958AbjC3PXJ (ORCPT
+        with ESMTP id S231718AbjCaMtG (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Thu, 30 Mar 2023 11:23:09 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 50280D31D;
-        Thu, 30 Mar 2023 08:22:30 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 9AAE5620D0;
-        Thu, 30 Mar 2023 15:21:06 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 53AD1C4339B;
-        Thu, 30 Mar 2023 15:21:05 +0000 (UTC)
-Date:   Thu, 30 Mar 2023 11:21:03 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Vincent Donnefort <vdonnefort@google.com>
-Cc:     mhiramat@kernel.org, linux-kernel@vger.kernel.org,
-        linux-trace-kernel@vger.kernel.org, kernel-team@android.com
-Subject: Re: [PATCH v2 1/2] ring-buffer: Introducing ring-buffer mapping
- functions
-Message-ID: <20230330112103.00c3f422@gandalf.local.home>
-In-Reply-To: <ZCVk26InuXhy+Lmg@google.com>
-References: <20230328224411.0d69e272@gandalf.local.home>
-        <ZCQCsD9+nNwBYIyH@google.com>
-        <20230329070353.1e1b443b@gandalf.local.home>
-        <20230329085106.046a8991@rorschach.local.home>
-        <ZCQ2jW5Jl/cWCG7s@google.com>
-        <20230329091107.408d63a8@rorschach.local.home>
-        <ZCQ9m5K34Qa9ZkUd@google.com>
-        <20230329093602.2b3243f0@rorschach.local.home>
-        <ZCRDXaTVfNwxdRJZ@google.com>
-        <20230329113234.3285209c@gandalf.local.home>
-        <ZCVk26InuXhy+Lmg@google.com>
-X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+        Fri, 31 Mar 2023 08:49:06 -0400
+Received: from mail-m118111.qiye.163.com (mail-m118111.qiye.163.com [115.236.118.111])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 64EE0210D;
+        Fri, 31 Mar 2023 05:48:44 -0700 (PDT)
+Received: from ubuntu.localdomain (unknown [117.133.56.22])
+        by mail-m118111.qiye.163.com (Hmail) with ESMTPA id 9F28A580172;
+        Fri, 31 Mar 2023 20:48:11 +0800 (CST)
+From:   Donglin Peng <pengdonglin@sangfor.com.cn>
+To:     mhiramat@kernel.org, rostedt@goodmis.org, linux@armlinux.org.uk,
+        mark.rutland@arm.com, will@kernel.org, catalin.marinas@arm.com,
+        rmk+kernel@armlinux.org.uk, palmer@dabbelt.com,
+        paul.walmsley@sifive.com, aou@eecs.berkeley.edu,
+        tglx@linutronix.de, dave.hansen@linux.intel.com, x86@kernel.org,
+        bp@alien8.de, hpa@zytor.com, chenhuacai@kernel.org,
+        zhangqing@loongson.cn, kernel@xen0n.name, mingo@redhat.com,
+        peterz@infradead.org, xiehuan09@gmail.com, dinghui@sangfor.com.cn,
+        huangcun@sangfor.com.cn, dolinux.peng@gmail.com
+Cc:     linux-trace-kernel@vger.kernel.org, loongarch@lists.linux.dev,
+        linux-riscv@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Donglin Peng <pengdonglin@sangfor.com.cn>
+Subject: [PATCH v10 6/8] x86/ftrace: Enable HAVE_FUNCTION_GRAPH_RETVAL
+Date:   Fri, 31 Mar 2023 05:47:42 -0700
+Message-Id: <d80de826945a3f5b67c32c867332188d5700c3cf.1680265828.git.pengdonglin@sangfor.com.cn>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <cover.1680265828.git.pengdonglin@sangfor.com.cn>
+References: <cover.1680265828.git.pengdonglin@sangfor.com.cn>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-HM-Spam-Status: e1kfGhgUHx5ZQUpXWQgPGg8OCBgUHx5ZQUlOS1dZFg8aDwILHllBWSg2Ly
+        tZV1koWUFITzdXWS1ZQUlXWQ8JGhUIEh9ZQVkaSR5KVkJISx1PTxgaTR4fQlUTARMWGhIXJBQOD1
+        lXWRgSC1lBWUpKTFVKSEhVTk1VSUlZV1kWGg8SFR0UWUFZT0tIVUpKS0hKTFVKS0tVS1kG
+X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6Phw6LRw*Nz0KTE0aHT84ITka
+        USJPCgxVSlVKTUNLSU1NQ0JIT0lOVTMWGhIXVQseFRwfFBUcFxIVOwgaFRwdFAlVGBQWVRgVRVlX
+        WRILWUFZSkpMVUpISFVOTVVJSVlXWQgBWUFNS0hPNwY+
+X-HM-Tid: 0a8737b616012eb7kusn9f28a580172
+X-HM-MType: 1
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On Thu, 30 Mar 2023 11:30:51 +0100
-Vincent Donnefort <vdonnefort@google.com> wrote:
+The previous patch ("function_graph: Support recording and printing
+the return value of function") has laid the groundwork for the for
+the funcgraph-retval, and this modification makes it available on
+the x86 platform.
 
-> How about?
-> 
-> userspace:
-> 
->   prev_read = meta->read;
->   ioctl(TRACE_MMAP_IOCTL_GET_READER_PAGE)
-> 
-> kernel:
->     ring_buffer_get_reader_page()
->       rb_get_reader_page(cpu_buffer);
->       cpu_buffer->reader_page->read = rb_page_size(reader);
->       meta->read = cpu_buffer->reader_page->read;
-> 
-> userspace:
->    /* if new page prev_read = 0 */
->    /* read between prev_read and meta->read */
-> 
-> If the writer does anything in-between, wouldn't rb_get_reader_page() handle it
-> nicely by returning the same reader as more would be there to read?
-> 
-> It is similar to rb_advance_reader() except we'd be moving several events at
-> once?
+We introduce a new structure called fgraph_ret_regs for the x86
+platform to hold return registers and the frame pointer. We then
+fill its content in the return_to_handler and pass its address
+to the function ftrace_return_to_handler to record the return
+value.
 
-Yeah, I think that can work. So we just need to make sure that the meta
-page has the "read" variable passed through.
+Signed-off-by: Donglin Peng <pengdonglin@sangfor.com.cn>
+---
+v10:
+ - Use CONFIG_FUNCTION_GRAPH_TRACER to control fgraph_ret_regs definition
 
--- Steve
+v9:
+ - Update the commit message
+
+v8:
+ - Modify the control range of CONFIG_HAVE_FUNCTION_GRAPH_RETVAL
+---
+ arch/x86/Kconfig              |  1 +
+ arch/x86/include/asm/ftrace.h | 20 ++++++++++++++++++++
+ arch/x86/kernel/ftrace_32.S   |  8 +++++---
+ arch/x86/kernel/ftrace_64.S   |  7 ++++---
+ 4 files changed, 30 insertions(+), 6 deletions(-)
+
+diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
+index a825bf031f49..956cc988bdf9 100644
+--- a/arch/x86/Kconfig
++++ b/arch/x86/Kconfig
+@@ -214,6 +214,7 @@ config X86
+ 	select HAVE_FAST_GUP
+ 	select HAVE_FENTRY			if X86_64 || DYNAMIC_FTRACE
+ 	select HAVE_FTRACE_MCOUNT_RECORD
++	select HAVE_FUNCTION_GRAPH_RETVAL	if HAVE_FUNCTION_GRAPH_TRACER
+ 	select HAVE_FUNCTION_GRAPH_TRACER	if X86_32 || (X86_64 && DYNAMIC_FTRACE)
+ 	select HAVE_FUNCTION_TRACER
+ 	select HAVE_GCC_PLUGINS
+diff --git a/arch/x86/include/asm/ftrace.h b/arch/x86/include/asm/ftrace.h
+index 5061ac98ffa1..38d1df9aed37 100644
+--- a/arch/x86/include/asm/ftrace.h
++++ b/arch/x86/include/asm/ftrace.h
+@@ -147,4 +147,24 @@ static inline bool arch_trace_is_compat_syscall(struct pt_regs *regs)
+ #endif /* !COMPILE_OFFSETS */
+ #endif /* !__ASSEMBLY__ */
+ 
++#ifndef __ASSEMBLY__
++#ifdef CONFIG_FUNCTION_GRAPH_TRACER
++struct fgraph_ret_regs {
++	unsigned long ax;
++	unsigned long dx;
++	unsigned long bp;
++};
++
++static inline unsigned long fgraph_ret_regs_return_value(struct fgraph_ret_regs *ret_regs)
++{
++	return ret_regs->ax;
++}
++
++static inline unsigned long fgraph_ret_regs_frame_pointer(struct fgraph_ret_regs *ret_regs)
++{
++	return ret_regs->bp;
++}
++#endif /* ifdef CONFIG_FUNCTION_GRAPH_TRACER */
++#endif
++
+ #endif /* _ASM_X86_FTRACE_H */
+diff --git a/arch/x86/kernel/ftrace_32.S b/arch/x86/kernel/ftrace_32.S
+index a0ed0e4a2c0c..5a9cc723f81f 100644
+--- a/arch/x86/kernel/ftrace_32.S
++++ b/arch/x86/kernel/ftrace_32.S
+@@ -182,12 +182,14 @@ SYM_CODE_END(ftrace_graph_caller)
+ 
+ .globl return_to_handler
+ return_to_handler:
+-	pushl	%eax
++	pushl	$0
+ 	pushl	%edx
+-	movl	$0, %eax
++	pushl	%eax
++	movl	%esp, %eax
+ 	call	ftrace_return_to_handler
+ 	movl	%eax, %ecx
+-	popl	%edx
+ 	popl	%eax
++	popl	%edx
++	addl	$4, %esp		# skip ebp
+ 	JMP_NOSPEC ecx
+ #endif
+diff --git a/arch/x86/kernel/ftrace_64.S b/arch/x86/kernel/ftrace_64.S
+index fb4f1e01b64a..ef78c0bbae62 100644
+--- a/arch/x86/kernel/ftrace_64.S
++++ b/arch/x86/kernel/ftrace_64.S
+@@ -344,12 +344,13 @@ STACK_FRAME_NON_STANDARD_FP(__fentry__)
+ SYM_CODE_START(return_to_handler)
+ 	UNWIND_HINT_EMPTY
+ 	ANNOTATE_NOENDBR
+-	subq  $16, %rsp
++	subq  $24, %rsp
+ 
+ 	/* Save the return values */
+ 	movq %rax, (%rsp)
+ 	movq %rdx, 8(%rsp)
+-	movq %rbp, %rdi
++	movq %rbp, 16(%rsp)
++	movq %rsp, %rdi
+ 
+ 	call ftrace_return_to_handler
+ 
+@@ -357,7 +358,7 @@ SYM_CODE_START(return_to_handler)
+ 	movq 8(%rsp), %rdx
+ 	movq (%rsp), %rax
+ 
+-	addq $16, %rsp
++	addq $24, %rsp
+ 	/*
+ 	 * Jump back to the old return address. This cannot be JMP_NOSPEC rdi
+ 	 * since IBT would demand that contain ENDBR, which simply isn't so for
+-- 
+2.25.1
+
