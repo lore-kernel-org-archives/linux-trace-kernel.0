@@ -2,197 +2,146 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F1FDC76196
-	for <linux-trace-kernel@archiver.kernel.org>; Sat,  1 Apr 2023 22:17:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BAA98C76196
+	for <linux-trace-kernel@archiver.kernel.org>; Sun,  2 Apr 2023 11:15:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229469AbjDAWRY (ORCPT
+        id S230433AbjDBLPq (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Sat, 1 Apr 2023 18:17:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43856 "EHLO
+        Sun, 2 Apr 2023 07:15:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36572 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229448AbjDAWRX (ORCPT
+        with ESMTP id S230354AbjDBLPp (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Sat, 1 Apr 2023 18:17:23 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6B3BAE042;
-        Sat,  1 Apr 2023 15:17:22 -0700 (PDT)
+        Sun, 2 Apr 2023 07:15:45 -0400
+Received: from ams.source.kernel.org (ams.source.kernel.org [IPv6:2604:1380:4601:e00::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2F9AFAF0C;
+        Sun,  2 Apr 2023 04:15:44 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id EB15060A47;
-        Sat,  1 Apr 2023 22:17:21 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DF6BCC433EF;
-        Sat,  1 Apr 2023 22:17:15 +0000 (UTC)
+        by ams.source.kernel.org (Postfix) with ESMTPS id D65FFB8068D;
+        Sun,  2 Apr 2023 11:15:42 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DA7C9C4339B;
+        Sun,  2 Apr 2023 11:15:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1680387441;
-        bh=aoDdZ34PoBNv5QUtFFFcg/3Z3R3lKI8oojzkBnrAy5s=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=QiFoaS/Rg1H+6UGrilF4GMPsbFrWRrcUHt3WvJmKBjGthkOwGXTzhcYTouJEFiIjk
-         6wYfCPmxXZ73ddq0dEPbZW/lBAuzvCNKoG1XGi/Sm+nfW1nvO82w8tW0ZGjNhNY84g
-         pDoucuW732ESD33YTpF+R8NTFcaBGnW0viIEK6wVXguxIPu0Yxeb3Nj2CaOmd3o+oo
-         7297BBaO9ULjQ/dSyFkO3InXYDbif8rmH6+PZ/Ln8+Q+b9SRpYTYOA+HopesyN0qjH
-         UBuEBu2DLEmWOrAiiVDNerzzEQmqIagENWX8v3NTzWHwhQw6jsicHjS1QqL12s3Sij
-         G9ee0SukSMhRQ==
-Date:   Sun, 2 Apr 2023 07:17:13 +0900
-From:   Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To:     Donglin Peng <pengdonglin@sangfor.com.cn>
-Cc:     rostedt@goodmis.org, linux@armlinux.org.uk, mark.rutland@arm.com,
-        will@kernel.org, catalin.marinas@arm.com,
-        rmk+kernel@armlinux.org.uk, palmer@dabbelt.com,
-        paul.walmsley@sifive.com, aou@eecs.berkeley.edu,
-        tglx@linutronix.de, dave.hansen@linux.intel.com, x86@kernel.org,
-        bp@alien8.de, hpa@zytor.com, chenhuacai@kernel.org,
-        zhangqing@loongson.cn, kernel@xen0n.name, mingo@redhat.com,
-        peterz@infradead.org, xiehuan09@gmail.com, dinghui@sangfor.com.cn,
-        huangcun@sangfor.com.cn, dolinux.peng@gmail.com,
-        linux-trace-kernel@vger.kernel.org, loongarch@lists.linux.dev,
-        linux-riscv@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v10 2/8] tracing: Add documentation for funcgraph-retval
- and funcgraph-retval-hex
-Message-Id: <20230402071713.4f278b65ba9bb67c72ab2fb5@kernel.org>
-In-Reply-To: <a3dcdd61b3ac07eefabc1b11fc18e9fae23d8cbe.1680265828.git.pengdonglin@sangfor.com.cn>
-References: <cover.1680265828.git.pengdonglin@sangfor.com.cn>
-        <a3dcdd61b3ac07eefabc1b11fc18e9fae23d8cbe.1680265828.git.pengdonglin@sangfor.com.cn>
-X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+        s=k20201202; t=1680434141;
+        bh=qDuCb9jB6m4dPBHgb/ksN36Hij3KDguXmS0bhWU2DiA=;
+        h=From:Date:Subject:To:Cc:From;
+        b=e4gDTBliFoU/oaCbgZJa+s1wt9Jia1+DIGqn5B/Wb51kBv+CKPgFkcPoQ/am+Y6YI
+         Nvf1+Qgg0f+ds+ohoTYLjQerbMSovH5MXpEWJvzz9tX9ztqgGWPLhTq14FrRp1ZrsS
+         CQguvUyybzd9vyTkBDIplQz2VYvYC9CRA6ONz+l9yIsQKAa/ZyJco6Qif7n/TpFecl
+         DnLAei72nZQPnfZWu1/qZALbMM0qZ61lSkWp3wi7v6L8/QTI0NgU7RMg9VOYxshkJR
+         UxZSaydpcShXcGOPzZ/vWXSp5sM8J/JKTPwaSi2wuvAyjCiAL4IwipM66nqQCP1dfH
+         eBoJqNQm2cnTw==
+From:   Simon Horman <horms@kernel.org>
+Date:   Sun, 02 Apr 2023 13:15:33 +0200
+Subject: [PATCH RFC] net: qrtr: correct types of trace event parameters
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
+Message-Id: <20230402-qrtr-trace-types-v1-1-da062d368e74@kernel.org>
+X-B4-Tracking: v=1; b=H4sIANRjKWQC/x2NQQrCQAwAv1JyNrDGpYpXwQd4FQ/pNrULZa3JK
+ krp3w0eZ2CYBUw0i8GxWUDlnS0/isN200AaudwFc+8MFGgXYiB8alWsykmwfmcxpMhE+7aPh6E
+ Fzzo2wU65pNHD8poml7PKkD//zxUu5xPc1vUHZpq9onwAAAA=
+To:     Manivannan Sadhasivam <mani@kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>
+Cc:     linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-trace-kernel@vger.kernel.org, netdev@vger.kernel.org
+X-Mailer: b4 0.12.2
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On Fri, 31 Mar 2023 05:47:38 -0700
-Donglin Peng <pengdonglin@sangfor.com.cn> wrote:
+The arguments passed to the trace events are of type unsigned int,
+however the signature of the events used __le32 parameters.
 
-> Add documentation for the two newly introduced options for the
-> function_graph tracer. The funcgraph-retval option is used to
-> control whether or not to display the return value, while the
-> funcgraph-retval-hex option is used to control the display
-> format of the return value.
-> 
-> Signed-off-by: Donglin Peng <pengdonglin@sangfor.com.cn>
+I may be missing the point here, but sparse flagged this and it
+does seem incorrect to me.
 
-Looks good to me.
+  net/qrtr/ns.c: note: in included file (through include/trace/trace_events.h, include/trace/define_trace.h, include/trace/events/qrtr.h):
+  ./include/trace/events/qrtr.h:11:1: warning: cast to restricted __le32
+  ./include/trace/events/qrtr.h:11:1: warning: restricted __le32 degrades to integer
+  ./include/trace/events/qrtr.h:11:1: warning: restricted __le32 degrades to integer
+  ... (a lot more similar warnings)
+  net/qrtr/ns.c:115:47:    expected restricted __le32 [usertype] service
+  net/qrtr/ns.c:115:47:    got unsigned int service
+  net/qrtr/ns.c:115:61: warning: incorrect type in argument 2 (different base types)
+  ... (a lot more similar warnings)
 
-Acked-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+Signed-off-by: Simon Horman <horms@kernel.org>
+---
+ include/trace/events/qrtr.h | 33 ++++++++++++++++++---------------
+ 1 file changed, 18 insertions(+), 15 deletions(-)
 
-Thank you!
+diff --git a/include/trace/events/qrtr.h b/include/trace/events/qrtr.h
+index b1de14c3bb93..441132c67133 100644
+--- a/include/trace/events/qrtr.h
++++ b/include/trace/events/qrtr.h
+@@ -10,15 +10,16 @@
+ 
+ TRACE_EVENT(qrtr_ns_service_announce_new,
+ 
+-	TP_PROTO(__le32 service, __le32 instance, __le32 node, __le32 port),
++	TP_PROTO(unsigned int service, unsigned int instance,
++		 unsigned int node, unsigned int port),
+ 
+ 	TP_ARGS(service, instance, node, port),
+ 
+ 	TP_STRUCT__entry(
+-		__field(__le32, service)
+-		__field(__le32, instance)
+-		__field(__le32, node)
+-		__field(__le32, port)
++		__field(unsigned int, service)
++		__field(unsigned int, instance)
++		__field(unsigned int, node)
++		__field(unsigned int, port)
+ 	),
+ 
+ 	TP_fast_assign(
+@@ -36,15 +37,16 @@ TRACE_EVENT(qrtr_ns_service_announce_new,
+ 
+ TRACE_EVENT(qrtr_ns_service_announce_del,
+ 
+-	TP_PROTO(__le32 service, __le32 instance, __le32 node, __le32 port),
++	TP_PROTO(unsigned int service, unsigned int instance,
++		 unsigned int node, unsigned int port),
+ 
+ 	TP_ARGS(service, instance, node, port),
+ 
+ 	TP_STRUCT__entry(
+-		__field(__le32, service)
+-		__field(__le32, instance)
+-		__field(__le32, node)
+-		__field(__le32, port)
++		__field(unsigned int, service)
++		__field(unsigned int, instance)
++		__field(unsigned int, node)
++		__field(unsigned int, port)
+ 	),
+ 
+ 	TP_fast_assign(
+@@ -62,15 +64,16 @@ TRACE_EVENT(qrtr_ns_service_announce_del,
+ 
+ TRACE_EVENT(qrtr_ns_server_add,
+ 
+-	TP_PROTO(__le32 service, __le32 instance, __le32 node, __le32 port),
++	TP_PROTO(unsigned int service, unsigned int instance,
++		 unsigned int node, unsigned int port),
+ 
+ 	TP_ARGS(service, instance, node, port),
+ 
+ 	TP_STRUCT__entry(
+-		__field(__le32, service)
+-		__field(__le32, instance)
+-		__field(__le32, node)
+-		__field(__le32, port)
++		__field(unsigned int, service)
++		__field(unsigned int, instance)
++		__field(unsigned int, node)
++		__field(unsigned int, port)
+ 	),
+ 
+ 	TP_fast_assign(
 
-> ---
-> v9:
->  - Update limitation description
-> 
-> v7:
->  - Rename trace option 'graph_retval_hex' to 'funcgraph-retval-hex'
->  - Update documentation description
-> 
-> v6:
->  - Modify the limitations for funcgraph-retval
->  - Optimize the English expression
-> 
-> v5:
->  - Describe the limitations of funcgraph-retval
-> ---
->  Documentation/trace/ftrace.rst | 74 ++++++++++++++++++++++++++++++++++
->  1 file changed, 74 insertions(+)
-> 
-> diff --git a/Documentation/trace/ftrace.rst b/Documentation/trace/ftrace.rst
-> index b927fb2b94dc..f572ae419219 100644
-> --- a/Documentation/trace/ftrace.rst
-> +++ b/Documentation/trace/ftrace.rst
-> @@ -1328,6 +1328,19 @@ Options for function_graph tracer:
->  	only a closing curly bracket "}" is displayed for
->  	the return of a function.
->  
-> +  funcgraph-retval
-> +	When set, the return value of each traced function
-> +	will be printed after an equal sign "=". By default
-> +	this is off.
-> +
-> +  funcgraph-retval-hex
-> +	When set, the return value will always be printed
-> +	in hexadecimal format. If the option is not set and
-> +	the return value is an error code, it will be printed
-> +	in signed decimal format; otherwise it will also be
-> +	printed in hexadecimal format. By default, this option
-> +	is off.
-> +
->    sleep-time
->  	When running function graph tracer, to include
->  	the time a task schedules out in its function.
-> @@ -2673,6 +2686,67 @@ It is default disabled.
->      0)   1.757 us    |        } /* kmem_cache_free() */
->      0)   2.861 us    |      } /* putname() */
->  
-> +The return value of each traced function can be displayed after
-> +an equal sign "=". When encountering system call failures, it
-> +can be verfy helpful to quickly locate the function that first
-> +returns an error code.
-> +
-> +	- hide: echo nofuncgraph-retval > trace_options
-> +	- show: echo funcgraph-retval > trace_options
-> +
-> +  Example with funcgraph-retval::
-> +
-> +    1)               |    cgroup_migrate() {
-> +    1)   0.651 us    |      cgroup_migrate_add_task(); /* = 0xffff93fcfd346c00 */
-> +    1)               |      cgroup_migrate_execute() {
-> +    1)               |        cpu_cgroup_can_attach() {
-> +    1)               |          cgroup_taskset_first() {
-> +    1)   0.732 us    |            cgroup_taskset_next(); /* = 0xffff93fc8fb20000 */
-> +    1)   1.232 us    |          } /* cgroup_taskset_first = 0xffff93fc8fb20000 */
-> +    1)   0.380 us    |          sched_rt_can_attach(); /* = 0x0 */
-> +    1)   2.335 us    |        } /* cpu_cgroup_can_attach = -22 */
-> +    1)   4.369 us    |      } /* cgroup_migrate_execute = -22 */
-> +    1)   7.143 us    |    } /* cgroup_migrate = -22 */
-> +
-> +The above example shows that the function cpu_cgroup_can_attach
-> +returned the error code -22 firstly, then we can read the code
-> +of this function to get the root cause.
-> +
-> +When the option funcgraph-retval-hex is not set, the return value can
-> +be displayed in a smart way. Specifically, if it is an error code,
-> +it will be printed in signed decimal format, otherwise it will
-> +printed in hexadecimal format.
-> +
-> +	- smart: echo nofuncgraph-retval-hex > trace_options
-> +	- hexadecimal always: echo funcgraph-retval-hex > trace_options
-> +
-> +  Example with funcgraph-retval-hex::
-> +
-> +    1)               |      cgroup_migrate() {
-> +    1)   0.651 us    |        cgroup_migrate_add_task(); /* = 0xffff93fcfd346c00 */
-> +    1)               |        cgroup_migrate_execute() {
-> +    1)               |          cpu_cgroup_can_attach() {
-> +    1)               |            cgroup_taskset_first() {
-> +    1)   0.732 us    |              cgroup_taskset_next(); /* = 0xffff93fc8fb20000 */
-> +    1)   1.232 us    |            } /* cgroup_taskset_first = 0xffff93fc8fb20000 */
-> +    1)   0.380 us    |            sched_rt_can_attach(); /* = 0x0 */
-> +    1)   2.335 us    |          } /* cpu_cgroup_can_attach = 0xffffffea */
-> +    1)   4.369 us    |        } /* cgroup_migrate_execute = 0xffffffea */
-> +    1)   7.143 us    |      } /* cgroup_migrate = 0xffffffea */
-> +
-> +At present, there are some limitations when using the funcgraph-retval
-> +option, and these limitations will be eliminated in the future:
-> +
-> +- Even if the function return type is void, a return value will still
-> +  be printed, and you can just ignore it.
-> +
-> +- Even if return values are stored in multiple registers, only the
-> +  value contained in the first register will be recorded and printed.
-> +  To illustrate, in the x86 architecture, eax and edx are used to store
-> +  a 64-bit return value, with the lower 32 bits saved in eax and the
-> +  upper 32 bits saved in edx. However, only the value stored in eax
-> +  will be recorded and printed.
-> +
->  You can put some comments on specific functions by using
->  trace_printk() For example, if you want to put a comment inside
->  the __might_sleep() function, you just have to include
-> -- 
-> 2.25.1
-> 
-
-
--- 
-Masami Hiramatsu (Google) <mhiramat@kernel.org>
