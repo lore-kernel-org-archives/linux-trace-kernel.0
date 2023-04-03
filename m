@@ -2,91 +2,363 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 71820C76188
-	for <linux-trace-kernel@archiver.kernel.org>; Mon,  3 Apr 2023 17:02:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BA28FC77B6C
+	for <linux-trace-kernel@archiver.kernel.org>; Mon,  3 Apr 2023 17:26:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232195AbjDCRCY (ORCPT
+        id S233128AbjDCR0q (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Mon, 3 Apr 2023 13:02:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43888 "EHLO
+        Mon, 3 Apr 2023 13:26:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60160 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232752AbjDCRCY (ORCPT
+        with ESMTP id S233116AbjDCR0o (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Mon, 3 Apr 2023 13:02:24 -0400
+        Mon, 3 Apr 2023 13:26:44 -0400
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id C1E52270E;
-        Mon,  3 Apr 2023 10:02:22 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 3F72FF9;
+        Mon,  3 Apr 2023 10:26:38 -0700 (PDT)
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 05706FEC;
-        Mon,  3 Apr 2023 10:03:07 -0700 (PDT)
-Received: from [10.57.20.195] (unknown [10.57.20.195])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 1165B3F6C4;
-        Mon,  3 Apr 2023 10:02:18 -0700 (PDT)
-Message-ID: <cd91905d-2bf2-bd66-92d2-f6fb42f669e3@arm.com>
-Date:   Mon, 3 Apr 2023 18:02:17 +0100
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 767524B3;
+        Mon,  3 Apr 2023 10:27:22 -0700 (PDT)
+Received: from FVFF77S0Q05N.cambridge.arm.com (FVFF77S0Q05N.cambridge.arm.com [10.1.29.158])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id DDE2A3F6C4;
+        Mon,  3 Apr 2023 10:26:35 -0700 (PDT)
+Date:   Mon, 3 Apr 2023 18:26:27 +0100
+From:   Mark Rutland <mark.rutland@arm.com>
+To:     Florent Revest <revest@chromium.org>
+Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-trace-kernel@vger.kernel.org, bpf@vger.kernel.org,
+        catalin.marinas@arm.com, will@kernel.org, rostedt@goodmis.org,
+        mhiramat@kernel.org, ast@kernel.org, daniel@iogearbox.net,
+        andrii@kernel.org, kpsingh@kernel.org, jolsa@kernel.org,
+        xukuohai@huaweicloud.com, lihuafei1@huawei.com
+Subject: Re: [PATCH v5 3/4] arm64: ftrace: Add direct call trampoline samples
+ support
+Message-ID: <ZCsMQ/6MI49st2oW@FVFF77S0Q05N.cambridge.arm.com>
+References: <20230403113552.2857693-1-revest@chromium.org>
+ <20230403113552.2857693-4-revest@chromium.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.9.0
-Subject: Re: [PATCH 3/3] schedutil: trace: Add tracing to capture filter out
- requests
-Content-Language: en-US
-To:     Qais Yousef <qyousef@layalina.io>
-Cc:     linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
-        rostedt@goodmis.org, mhiramat@kernel.org, mingo@redhat.com,
-        peterz@infradead.org, juri.lelli@redhat.com,
-        vincent.guittot@linaro.org, dietmar.eggemann@arm.com,
-        bsegall@google.com, mgorman@suse.de, bristot@redhat.com,
-        vschneid@redhat.com, delyank@fb.com, qyousef@google.com
-References: <20230322151843.14390-1-lukasz.luba@arm.com>
- <20230322151843.14390-4-lukasz.luba@arm.com>
- <20230403134646.shc2m57yvvnf2o54@airbuntu>
-From:   Lukasz Luba <lukasz.luba@arm.com>
-In-Reply-To: <20230403134646.shc2m57yvvnf2o54@airbuntu>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230403113552.2857693-4-revest@chromium.org>
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-
-
-On 4/3/23 14:46, Qais Yousef wrote:
-> On 03/22/23 15:18, Lukasz Luba wrote:
->> Some of the frequency update requests coming form the task scheduler
->> might be filter out. It can happen when the previous request was served
->> not that long ago (in a period smaller than provided by the cpufreq driver
->> as minimum for frequency update). In such case, we want to know if some of
->> the frequency updates cannot make through.
->> Export the new tracepoint as well. That would allow to handle it by a
->> toolkit for trace analyzes.
+On Mon, Apr 03, 2023 at 01:35:51PM +0200, Florent Revest wrote:
+> The ftrace samples need per-architecture trampoline implementations
+> to save and restore argument registers around the calls to
+> my_direct_func* and to restore polluted registers (eg: x30).
 > 
-> I think you can use register_kretprobe() for this one. When functions are not
-> inlined it should be easy to hook into them and you can get the return value of
-> the function too.
+> These samples also include <asm/asm-offsets.h> which, on arm64, is not
+> necessary and redefines previously defined macros (resulting in
+> warnings) so these includes are guarded by !CONFIG_ARM64.
+> 
+> Signed-off-by: Florent Revest <revest@chromium.org>
 
-Could be possible, but that's a different pattern to what we have in
-terms of LISa. It's also a bit complicated for downstream folks to
-understand when I would ask about the trace with a particular name.
-The integration would be a bit more complicated and our tooling and CI
-might be impacted but this different design approach. Therefore,
-I prefer to be aligned with the old-school.
+Overall this looks pretty good!
 
-> 
-> Check the usage in lib/test_kprobes.c. Creating the event in sched_tp should be
-> the same way when registering for a tracepoint. They both are essentially the
-> same.
-> 
-> Patches to sched_tp module would be welcome ;-)
+I spotted a few bugs below while testing, and I've suggested some fixups below.
 
-I cannot promise, but I'll try to find some cycles for it :)
+w.r.t. the asm-offsets include guards. I took a look at fixing arm64's
+asm-offsets.c to not be problematic, but it requires some invasive refactoring,
+so I'd like to clean that up as a separate series. I don't think that should
+block this series, and I think that the include guards are fine for now.
 
-Cheers,
-Lukasz
+> ---
+>  arch/arm64/Kconfig                          |  2 ++
+>  samples/ftrace/ftrace-direct-modify.c       | 34 ++++++++++++++++++
+>  samples/ftrace/ftrace-direct-multi-modify.c | 38 +++++++++++++++++++++
+>  samples/ftrace/ftrace-direct-multi.c        | 23 +++++++++++++
+>  samples/ftrace/ftrace-direct-too.c          | 26 ++++++++++++++
+>  samples/ftrace/ftrace-direct.c              | 24 +++++++++++++
+>  6 files changed, 147 insertions(+)
+> 
+> diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
+> index f3503d0cc1b8..c2bf28099abd 100644
+> --- a/arch/arm64/Kconfig
+> +++ b/arch/arm64/Kconfig
+> @@ -194,6 +194,8 @@ config ARM64
+>  		    !CC_OPTIMIZE_FOR_SIZE)
+>  	select FTRACE_MCOUNT_USE_PATCHABLE_FUNCTION_ENTRY \
+>  		if DYNAMIC_FTRACE_WITH_ARGS
+> +	select HAVE_SAMPLE_FTRACE_DIRECT
+> +	select HAVE_SAMPLE_FTRACE_DIRECT_MULTI
+>  	select HAVE_EFFICIENT_UNALIGNED_ACCESS
+>  	select HAVE_FAST_GUP
+>  	select HAVE_FTRACE_MCOUNT_RECORD
+> diff --git a/samples/ftrace/ftrace-direct-modify.c b/samples/ftrace/ftrace-direct-modify.c
+> index 25fba66f61c0..98d1b7385f08 100644
+> --- a/samples/ftrace/ftrace-direct-modify.c
+> +++ b/samples/ftrace/ftrace-direct-modify.c
+> @@ -2,7 +2,9 @@
+>  #include <linux/module.h>
+>  #include <linux/kthread.h>
+>  #include <linux/ftrace.h>
+> +#ifndef CONFIG_ARM64
+>  #include <asm/asm-offsets.h>
+> +#endif
+>  
+>  extern void my_direct_func1(void);
+>  extern void my_direct_func2(void);
+> @@ -96,6 +98,38 @@ asm (
+>  
+>  #endif /* CONFIG_S390 */
+>  
+> +#ifdef CONFIG_ARM64
+> +
+> +asm (
+> +"	.pushsection    .text, \"ax\", @progbits\n"
+> +"	.type		my_tramp1, @function\n"
+> +"	.globl		my_tramp1\n"
+> +"   my_tramp1:"
+> +"	bti	c\n"
+> +"	sub	sp, sp, #16\n"
+> +"	stp	x9, x30, [sp]\n"
+> +"	bl	my_direct_func1\n"
+> +"	ldp	x30, x9, [sp]\n"
+> +"	add	sp, sp, #16\n"
+> +"	ret	x9\n"
+> +"	.size		my_tramp1, .-my_tramp1\n"
+> +
+> +"	.type		my_tramp2, @function\n"
+> +"	.globl		my_tramp2\n"
+> +"   my_tramp2:"
+> +"	bti	c\n"
+> +"	sub	sp, sp, #16\n"
+> +"	stp	x9, x30, [sp]\n"
+> +"	bl	my_direct_func2\n"
+> +"	ldp	x30, x9, [sp]\n"
+> +"	add	sp, sp, #16\n"
+> +"	ret	x9\n"
+> +"	.size		my_tramp2, .-my_tramp2\n"
+> +"	.popsection\n"
+> +);
+> +
+> +#endif /* CONFIG_ARM64 */
 
-> 
-> 
-> Cheers
-> 
-> --
-> Qais Yousef
-> 
+These looks functionally correct, given they'll only be attached to schedule()
+and the direct funcs take no arguments, so there's no arguments to save/restore
+and nothing to shuffle.
+
+As an aside, I believe we'll need to rework the sequences when we add support
+for RELIABLE_STACKTRACE so that the unwinder can reliably acquire the address
+of the instrumented function and its caller, but I think for now it's
+preferable to keep this simple and I'm happy to make that a problem for future
+me.
+
+> diff --git a/samples/ftrace/ftrace-direct-multi-modify.c b/samples/ftrace/ftrace-direct-multi-modify.c
+> index f72623899602..e39108eb085d 100644
+> --- a/samples/ftrace/ftrace-direct-multi-modify.c
+> +++ b/samples/ftrace/ftrace-direct-multi-modify.c
+> @@ -2,7 +2,9 @@
+>  #include <linux/module.h>
+>  #include <linux/kthread.h>
+>  #include <linux/ftrace.h>
+> +#ifndef CONFIG_ARM64
+>  #include <asm/asm-offsets.h>
+> +#endif
+>  
+>  extern void my_direct_func1(unsigned long ip);
+>  extern void my_direct_func2(unsigned long ip);
+> @@ -103,6 +105,42 @@ asm (
+>  
+>  #endif /* CONFIG_S390 */
+>  
+> +#ifdef CONFIG_ARM64
+> +
+> +asm (
+> +"	.pushsection    .text, \"ax\", @progbits\n"
+> +"	.type		my_tramp1, @function\n"
+> +"	.globl		my_tramp1\n"
+> +"   my_tramp1:"
+> +"	bti	c\n"
+> +"	sub	sp, sp, #32\n"
+> +"	stp	x9, x30, [sp]\n"
+> +"	str	x0, [sp, #16]\n"
+> +"	bl	my_direct_func1\n"
+> +"	ldp	x30, x9, [sp]\n"
+> +"	ldr	x0, [sp, #16]\n"
+> +"	add	sp, sp, #32\n"
+> +"	ret	x9\n"
+> +"	.size		my_tramp1, .-my_tramp1\n"
+> +
+> +"	.type		my_tramp2, @function\n"
+> +"	.globl		my_tramp2\n"
+> +"   my_tramp2:"
+> +"	bti	c\n"
+> +"	sub	sp, sp, #32\n"
+> +"	stp	x9, x30, [sp]\n"
+> +"	str	x0, [sp, #16]\n"
+> +"	bl	my_direct_func2\n"
+> +"	ldp	x30, x9, [sp]\n"
+> +"	ldr	x0, [sp, #16]\n"
+> +"	add	sp, sp, #32\n"
+> +"	ret	x9\n"
+> +"	.size		my_tramp2, .-my_tramp2\n"
+> +"	.popsection\n"
+> +);
+> +
+> +#endif /* CONFIG_ARM64 */
+
+For both of these trampolines we need to pass the trampoline's return address
+(i.e. where we'll return to in the instrumented function) as the 'ip' argument
+to my_direct_func{1,2}().
+
+In both cases, just before the 'bl my_direct_func{1,2}' we'll need to add:
+
+	mov	x0, x30
+
+[...]
+
+> diff --git a/samples/ftrace/ftrace-direct-multi.c b/samples/ftrace/ftrace-direct-multi.c
+> index 1547c2c6be02..5a395d2d2e07 100644
+> --- a/samples/ftrace/ftrace-direct-multi.c
+> +++ b/samples/ftrace/ftrace-direct-multi.c
+> @@ -4,7 +4,9 @@
+>  #include <linux/mm.h> /* for handle_mm_fault() */
+>  #include <linux/ftrace.h>
+>  #include <linux/sched/stat.h>
+> +#ifndef CONFIG_ARM64
+>  #include <asm/asm-offsets.h>
+> +#endif
+>  
+>  extern void my_direct_func(unsigned long ip);
+>  
+> @@ -66,6 +68,27 @@ asm (
+>  
+>  #endif /* CONFIG_S390 */
+>  
+> +#ifdef CONFIG_ARM64
+> +
+> +asm (
+> +"	.pushsection	.text, \"ax\", @progbits\n"
+> +"	.type		my_tramp, @function\n"
+> +"	.globl		my_tramp\n"
+> +"   my_tramp:"
+> +"	bti	c\n"
+> +"	sub	sp, sp, #32\n"
+> +"	stp	x9, x30, [sp]\n"
+> +"	str	x0, [sp, #16]\n"
+> +"	bl	my_direct_func\n"
+> +"	ldp	x30, x9, [sp]\n"
+> +"	ldr	x0, [sp, #16]\n"
+> +"	add	sp, sp, #32\n"
+> +"	ret	x9\n"
+> +"	.size		my_tramp, .-my_tramp\n"
+> +"	.popsection\n"
+> +);
+> +
+> +#endif /* CONFIG_ARM64 */
+>  static struct ftrace_ops direct;
+
+As with ftrace-direct-multi-modify.c, we need to pass the return address of the
+trampoline as the 'ip' argument to my_direct_func1(), so just before the 'bl
+my_direct_func' we'll need to add:
+
+	mov	x0, x30
+
+[...]
+
+> diff --git a/samples/ftrace/ftrace-direct-too.c b/samples/ftrace/ftrace-direct-too.c
+> index f28e7b99840f..6e93c45fea86 100644
+> --- a/samples/ftrace/ftrace-direct-too.c
+> +++ b/samples/ftrace/ftrace-direct-too.c
+> @@ -3,7 +3,9 @@
+>  
+>  #include <linux/mm.h> /* for handle_mm_fault() */
+>  #include <linux/ftrace.h>
+> +#ifndef CONFIG_ARM64
+>  #include <asm/asm-offsets.h>
+> +#endif
+>  
+>  extern void my_direct_func(struct vm_area_struct *vma,
+>  			   unsigned long address, unsigned int flags);
+
+This gets attached to handle_mm_fault(), whose prototype is currently:
+
+vm_fault_t handle_mm_fault(struct vm_area_struct *vma, unsigned long address,
+                           unsigned int flags, struct pt_regs *regs)
+
+i.e. it has 4 arguments, in x0 to x3.
+
+> @@ -70,6 +72,30 @@ asm (
+>  
+>  #endif /* CONFIG_S390 */
+>  
+> +#ifdef CONFIG_ARM64
+> +
+> +asm (
+> +"	.pushsection	.text, \"ax\", @progbits\n"
+> +"	.type		my_tramp, @function\n"
+> +"	.globl		my_tramp\n"
+> +"   my_tramp:"
+> +"	bti	c\n"
+> +"	sub	sp, sp, #48\n"
+> +"	stp	x9, x30, [sp]\n"
+> +"	stp	x0, x1, [sp, #16]\n"
+> +"	str	x2, [sp, #32]\n"
+> +"	bl	my_direct_func\n"
+> +"	ldp	x30, x9, [sp]\n"
+> +"	ldp	x0, x1, [sp, #16]\n"
+> +"	ldr	x2, [sp, #32]\n"
+
+So here we need to save+restore x3 also.
+
+We already have the space reserved, so that should just be a matter of using
+stp/ldp for x2 and x3.
+
+> +"	add	sp, sp, #48\n"
+> +"	ret	x9\n"
+> +"	.size		my_tramp, .-my_tramp\n"
+> +"	.popsection\n"
+> +);
+> +
+> +#endif /* CONFIG_ARM64 */
+> +
+>  static struct ftrace_ops direct;
+>  
+>  static int __init ftrace_direct_init(void)
+> diff --git a/samples/ftrace/ftrace-direct.c b/samples/ftrace/ftrace-direct.c
+> index d81a9473b585..e5312f9c15d3 100644
+> --- a/samples/ftrace/ftrace-direct.c
+> +++ b/samples/ftrace/ftrace-direct.c
+> @@ -3,7 +3,9 @@
+>  
+>  #include <linux/sched.h> /* for wake_up_process() */
+>  #include <linux/ftrace.h>
+> +#ifndef CONFIG_ARM64
+>  #include <asm/asm-offsets.h>
+> +#endif
+>  
+>  extern void my_direct_func(struct task_struct *p);
+>  
+> @@ -63,6 +65,28 @@ asm (
+>  
+>  #endif /* CONFIG_S390 */
+>  
+> +#ifdef CONFIG_ARM64
+> +
+> +asm (
+> +"	.pushsection	.text, \"ax\", @progbits\n"
+> +"	.type		my_tramp, @function\n"
+> +"	.globl		my_tramp\n"
+> +"   my_tramp:"
+> +"	bti	c\n"
+> +"	sub	sp, sp, #32\n"
+> +"	stp	x9, x30, [sp]\n"
+> +"	str	x0, [sp, #16]\n"
+> +"	bl	my_direct_func\n"
+> +"	ldp	x30, x9, [sp]\n"
+> +"	ldr	x0, [sp, #16]\n"
+> +"	add	sp, sp, #32\n"
+> +"	ret	x9\n"
+> +"	.size		my_tramp, .-my_tramp\n"
+> +"	.popsection\n"
+> +);
+
+This looks fine. Since my_direct_func() is attached to wake_up_process() and
+expects its single argument, saving/restoring x0 is sufficient and we don't
+need any additional register shuffling.
+
+Thanks,
+Mark.
