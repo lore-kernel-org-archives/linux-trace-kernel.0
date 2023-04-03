@@ -2,173 +2,162 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8ED1FC761A6
-	for <linux-trace-kernel@archiver.kernel.org>; Mon,  3 Apr 2023 13:46:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 61E63C76196
+	for <linux-trace-kernel@archiver.kernel.org>; Mon,  3 Apr 2023 15:43:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232580AbjDCNq5 (ORCPT
+        id S232506AbjDCPnZ (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Mon, 3 Apr 2023 09:46:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49168 "EHLO
+        Mon, 3 Apr 2023 11:43:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47554 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232643AbjDCNq4 (ORCPT
+        with ESMTP id S231783AbjDCPnY (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Mon, 3 Apr 2023 09:46:56 -0400
-Received: from mail-wm1-x330.google.com (mail-wm1-x330.google.com [IPv6:2a00:1450:4864:20::330])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E200122202
-        for <linux-trace-kernel@vger.kernel.org>; Mon,  3 Apr 2023 06:46:50 -0700 (PDT)
-Received: by mail-wm1-x330.google.com with SMTP id i5-20020a05600c354500b003edd24054e0so19882891wmq.4
-        for <linux-trace-kernel@vger.kernel.org>; Mon, 03 Apr 2023 06:46:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=layalina-io.20210112.gappssmtp.com; s=20210112; t=1680529609;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=1Ak9wjHCHkwpCyxuipvIoIUoQo6Q2URYvn4sHkalAOo=;
-        b=qUkkB11ujOtPJB8/2xV6qSc9suikRlsXXDIPqhNOWGRHEJ/9Lg45TlhjtAaxShzhyY
-         ibs+X9Sw9zWemb3z7IeDw45xBZWZGVScLqmsLHy7CejWvOqpTgm9lBxREh2gXhX//LMu
-         SGed8/va9SKs/5FrJT3vp4/5hqw5aMgHlvENQS9b+siDwYo5qmmPgj2g+TDc5OwLkN1K
-         hwIWXPLdMHPjTcqpZLEWgYO5YkwsZkqbN50C8y5b6OLmJt8KQS0gYjy6isCItw6ZWbtj
-         9ylbly5Fi9cmf1jWgiYU324Y5z6sYzFOe4UNHZ6PKkwpuAzEXLJlbmUsf1EpDT1UIij+
-         QeLA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1680529609;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=1Ak9wjHCHkwpCyxuipvIoIUoQo6Q2URYvn4sHkalAOo=;
-        b=qCTIKcPRr6w0z+VEc8f7rO2S912RIqkFbLKafHgjDThyD/j77hy/Wd6EkzAlnMr2ef
-         PgUaJ6D2dVQC2Jq5TXqY00lS7r4r+Ws8nTCdeVADoJ8k0gblndQft2jv6gQUdFJk73f1
-         ThO9131xZUFW6Sz4rpyG3OAITXCJC7ZwpiPEyJtHF5na1GlDCYoEy9bvTLTq+kSUhUMJ
-         r5AinLZ1yDr+0YTo3PLnguUhXWzsKkRjHi0HTMp183s6W2+FICNPwOeJxqhQ7HubFFnU
-         STvDug3v1KD1/I5WTpvJ0bBwofUbssMQdC4LP1bs6SEr3KKBYm7h4GmU4vXP+DjiU7i1
-         gvYw==
-X-Gm-Message-State: AAQBX9claIfa34Ue24YYI1jf55bkqIGhhiZR20tBRM7XlmSDuIVXnp3s
-        bUb0RYmV8DIw1XG4sr9OmtUd6A==
-X-Google-Smtp-Source: AKy350a0xDBbQ4wSsfwWZtlWhl63L+ugXDuNCH7Ld+UsuEY+HL8mjdgplaxFLLsoHk0fk7if+xS/Qw==
-X-Received: by 2002:a1c:f210:0:b0:3f0:48f4:8454 with SMTP id s16-20020a1cf210000000b003f048f48454mr5824843wmc.27.1680529609295;
-        Mon, 03 Apr 2023 06:46:49 -0700 (PDT)
-Received: from airbuntu (host86-163-35-64.range86-163.btcentralplus.com. [86.163.35.64])
-        by smtp.gmail.com with ESMTPSA id bg11-20020a05600c3c8b00b003f04057bf1bsm12748840wmb.18.2023.04.03.06.46.47
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 03 Apr 2023 06:46:48 -0700 (PDT)
-Date:   Mon, 3 Apr 2023 14:46:46 +0100
-From:   Qais Yousef <qyousef@layalina.io>
-To:     Lukasz Luba <lukasz.luba@arm.com>
-Cc:     linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
-        rostedt@goodmis.org, mhiramat@kernel.org, mingo@redhat.com,
-        peterz@infradead.org, juri.lelli@redhat.com,
-        vincent.guittot@linaro.org, dietmar.eggemann@arm.com,
-        bsegall@google.com, mgorman@suse.de, bristot@redhat.com,
-        vschneid@redhat.com, delyank@fb.com, qyousef@google.com
-Subject: Re: [PATCH 3/3] schedutil: trace: Add tracing to capture filter out
- requests
-Message-ID: <20230403134646.shc2m57yvvnf2o54@airbuntu>
-References: <20230322151843.14390-1-lukasz.luba@arm.com>
- <20230322151843.14390-4-lukasz.luba@arm.com>
+        Mon, 3 Apr 2023 11:43:24 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C012A173C;
+        Mon,  3 Apr 2023 08:43:22 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 37744611E4;
+        Mon,  3 Apr 2023 15:43:22 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9BB82C433D2;
+        Mon,  3 Apr 2023 15:43:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1680536601;
+        bh=/nTJ/4bKDJ/WqlH5THKtzdy/s9UbbcglRfZ7A7Rr4g0=;
+        h=From:Date:Subject:To:Cc:From;
+        b=KzIEdFeFu61URFI6EDe5EqZ5KxuxODX3vHbUSNUBiF7Ws1Wm5zVlP5tsS+CdDOVoX
+         IpG9HTi388LWqmFLLArpkAu6Inl1Z7zTc7CPxhWftEoRlPJgN1+rXb4W8AHqigKWfR
+         na1x2cKZupdE4ABL5T3RaTL4YuXBkylyCx/FxPPKu2/O5oxnZ3gjj3UrKzZKE/RjDn
+         FvibN+t7Ko0eJqlLBpCG35vtHB9wtAJCd4iqABdYIykHlksz57UJPR0+nMyJrM5EN3
+         IHck0+KC7Kx7+VljtU+82OTYwj67gT7CNrahULHEOGqP8Yh8IjsotU0YenzP3ljOut
+         yoDujDxEkPKqg==
+From:   Simon Horman <horms@kernel.org>
+Date:   Mon, 03 Apr 2023 17:43:16 +0200
+Subject: [PATCH net-next] net: qrtr: correct types of trace event
+ parameters
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20230322151843.14390-4-lukasz.luba@arm.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20230402-qrtr-trace-types-v1-1-92ad55008dd3@kernel.org>
+X-B4-Tracking: v=1; b=H4sIABP0KmQC/3WOwQqDMBBEf0X23C1JDFF66n8UD9GsGirRblJRx
+ H9v8N7jm2F4c0Ak9hThURzAtPro55BB3groRhsGQu8ygxKqFFoo/HBiTGw7wrQvFFFpq1RlnK5
+ 7A3nW2kjYsg3dmIfhO005XJh6v12eFwRKGGhL0ORm9DHNvF8HVnn1/12rRInOCqNcaWqq9PNNH
+ Gi6zzxAc57nD4OqzffQAAAA
+To:     Jakub Kicinski <kuba@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Eric Dumazet <edumazet@google.com>,
+        Paolo Abeni <pabeni@redhat.com>
+Cc:     Manivannan Sadhasivam <mani@kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-trace-kernel@vger.kernel.org, netdev@vger.kernel.org
+X-Mailer: b4 0.12.2
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On 03/22/23 15:18, Lukasz Luba wrote:
-> Some of the frequency update requests coming form the task scheduler
-> might be filter out. It can happen when the previous request was served
-> not that long ago (in a period smaller than provided by the cpufreq driver
-> as minimum for frequency update). In such case, we want to know if some of
-> the frequency updates cannot make through.
-> Export the new tracepoint as well. That would allow to handle it by a
-> toolkit for trace analyzes.
+The arguments passed to the trace events are of type unsigned int,
+however the signature of the events used __le32 parameters.
 
-I think you can use register_kretprobe() for this one. When functions are not
-inlined it should be easy to hook into them and you can get the return value of
-the function too.
+I may be missing the point here, but sparse flagged this and it
+does seem incorrect to me.
 
-Check the usage in lib/test_kprobes.c. Creating the event in sched_tp should be
-the same way when registering for a tracepoint. They both are essentially the
-same.
+  net/qrtr/ns.c: note: in included file (through include/trace/trace_events.h, include/trace/define_trace.h, include/trace/events/qrtr.h):
+  ./include/trace/events/qrtr.h:11:1: warning: cast to restricted __le32
+  ./include/trace/events/qrtr.h:11:1: warning: restricted __le32 degrades to integer
+  ./include/trace/events/qrtr.h:11:1: warning: restricted __le32 degrades to integer
+  ... (a lot more similar warnings)
+  net/qrtr/ns.c:115:47:    expected restricted __le32 [usertype] service
+  net/qrtr/ns.c:115:47:    got unsigned int service
+  net/qrtr/ns.c:115:61: warning: incorrect type in argument 2 (different base types)
+  ... (a lot more similar warnings)
 
-Patches to sched_tp module would be welcome ;-)
+Fixes: dfddb54043f0 ("net: qrtr: Add tracepoint support")
+Reviewed-by: Manivannan Sadhasivam <mani@kernel.org>
+Signed-off-by: Simon Horman <horms@kernel.org>
+---
+v1
+* Drop RFC designation
+* Add Fixes and Reviewed-by tags
+* Target at 'net-next' (not sure if that is correct)
 
+RFC
+* Link: https://lore.kernel.org/r/20230402-qrtr-trace-types-v1-1-da062d368e74@kernel.org
+---
+ include/trace/events/qrtr.h | 33 ++++++++++++++++++---------------
+ 1 file changed, 18 insertions(+), 15 deletions(-)
 
-Cheers
+diff --git a/include/trace/events/qrtr.h b/include/trace/events/qrtr.h
+index b1de14c3bb93..441132c67133 100644
+--- a/include/trace/events/qrtr.h
++++ b/include/trace/events/qrtr.h
+@@ -10,15 +10,16 @@
+ 
+ TRACE_EVENT(qrtr_ns_service_announce_new,
+ 
+-	TP_PROTO(__le32 service, __le32 instance, __le32 node, __le32 port),
++	TP_PROTO(unsigned int service, unsigned int instance,
++		 unsigned int node, unsigned int port),
+ 
+ 	TP_ARGS(service, instance, node, port),
+ 
+ 	TP_STRUCT__entry(
+-		__field(__le32, service)
+-		__field(__le32, instance)
+-		__field(__le32, node)
+-		__field(__le32, port)
++		__field(unsigned int, service)
++		__field(unsigned int, instance)
++		__field(unsigned int, node)
++		__field(unsigned int, port)
+ 	),
+ 
+ 	TP_fast_assign(
+@@ -36,15 +37,16 @@ TRACE_EVENT(qrtr_ns_service_announce_new,
+ 
+ TRACE_EVENT(qrtr_ns_service_announce_del,
+ 
+-	TP_PROTO(__le32 service, __le32 instance, __le32 node, __le32 port),
++	TP_PROTO(unsigned int service, unsigned int instance,
++		 unsigned int node, unsigned int port),
+ 
+ 	TP_ARGS(service, instance, node, port),
+ 
+ 	TP_STRUCT__entry(
+-		__field(__le32, service)
+-		__field(__le32, instance)
+-		__field(__le32, node)
+-		__field(__le32, port)
++		__field(unsigned int, service)
++		__field(unsigned int, instance)
++		__field(unsigned int, node)
++		__field(unsigned int, port)
+ 	),
+ 
+ 	TP_fast_assign(
+@@ -62,15 +64,16 @@ TRACE_EVENT(qrtr_ns_service_announce_del,
+ 
+ TRACE_EVENT(qrtr_ns_server_add,
+ 
+-	TP_PROTO(__le32 service, __le32 instance, __le32 node, __le32 port),
++	TP_PROTO(unsigned int service, unsigned int instance,
++		 unsigned int node, unsigned int port),
+ 
+ 	TP_ARGS(service, instance, node, port),
+ 
+ 	TP_STRUCT__entry(
+-		__field(__le32, service)
+-		__field(__le32, instance)
+-		__field(__le32, node)
+-		__field(__le32, port)
++		__field(unsigned int, service)
++		__field(unsigned int, instance)
++		__field(unsigned int, node)
++		__field(unsigned int, port)
+ 	),
+ 
+ 	TP_fast_assign(
 
---
-Qais Yousef
-
-> 
-> Signed-off-by: Lukasz Luba <lukasz.luba@arm.com>
-> ---
->  include/trace/events/schedutil.h | 17 +++++++++++++++++
->  kernel/sched/cpufreq_schedutil.c | 14 ++++++++++++--
->  2 files changed, 29 insertions(+), 2 deletions(-)
->  create mode 100644 include/trace/events/schedutil.h
-> 
-> diff --git a/include/trace/events/schedutil.h b/include/trace/events/schedutil.h
-> new file mode 100644
-> index 000000000000..7f25122f7257
-> --- /dev/null
-> +++ b/include/trace/events/schedutil.h
-> @@ -0,0 +1,17 @@
-> +/* SPDX-License-Identifier: GPL-2.0 */
-> +#undef TRACE_SYSTEM
-> +#define TRACE_SYSTEM schedutil
-> +
-> +#if !defined(_TRACE_SCHEDUTIL_H) || defined(TRACE_HEADER_MULTI_READ)
-> +#define _TRACE_SCHEDUTIL_H
-> +
-> +#include <linux/tracepoint.h>
-> +
-> +DECLARE_TRACE(schedutil_update_filtered_tp,
-> +	TP_PROTO(int cpu),
-> +	TP_ARGS(cpu));
-> +
-> +#endif /* _TRACE_SCHEDUTIL_H */
-> +
-> +/* This part must be outside protection */
-> +#include <trace/define_trace.h>
-> diff --git a/kernel/sched/cpufreq_schedutil.c b/kernel/sched/cpufreq_schedutil.c
-> index f462496e5c07..45c18559f3a8 100644
-> --- a/kernel/sched/cpufreq_schedutil.c
-> +++ b/kernel/sched/cpufreq_schedutil.c
-> @@ -6,6 +6,12 @@
->   * Author: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
->   */
->  
-> +#define CREATE_TRACE_POINTS
-> +#include <trace/events/schedutil.h>
-> +#undef CREATE_TRACE_POINTS
-> +
-> +EXPORT_TRACEPOINT_SYMBOL_GPL(schedutil_update_filtered_tp);
-> +
->  #define IOWAIT_BOOST_MIN	(SCHED_CAPACITY_SCALE / 8)
->  
->  struct sugov_tunables {
-> @@ -318,8 +324,10 @@ static inline bool sugov_update_single_common(struct sugov_cpu *sg_cpu,
->  
->  	ignore_dl_rate_limit(sg_cpu);
->  
-> -	if (!sugov_should_update_freq(sg_cpu->sg_policy, time))
-> +	if (!sugov_should_update_freq(sg_cpu->sg_policy, time)) {
-> +		trace_schedutil_update_filtered_tp(sg_cpu->cpu);
->  		return false;
-> +	}
->  
->  	sugov_get_util(sg_cpu);
->  	sugov_iowait_apply(sg_cpu, time, max_cap);
-> @@ -446,8 +454,10 @@ sugov_update_shared(struct update_util_data *hook, u64 time, unsigned int flags)
->  
->  	ignore_dl_rate_limit(sg_cpu);
->  
-> -	if (!sugov_should_update_freq(sg_policy, time))
-> +	if (!sugov_should_update_freq(sg_policy, time)) {
-> +		trace_schedutil_update_filtered_tp(sg_cpu->cpu);
->  		goto unlock;
-> +	}
->  
->  	next_f = sugov_next_freq_shared(sg_cpu, time);
->  
-> -- 
-> 2.17.1
-> 
