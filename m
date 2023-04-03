@@ -2,224 +2,117 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F0E5BC761A6
-	for <linux-trace-kernel@archiver.kernel.org>; Mon,  3 Apr 2023 08:30:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D3D6C761A6
+	for <linux-trace-kernel@archiver.kernel.org>; Mon,  3 Apr 2023 11:21:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231679AbjDCIa0 (ORCPT
+        id S231655AbjDCLVb (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Mon, 3 Apr 2023 04:30:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49176 "EHLO
+        Mon, 3 Apr 2023 07:21:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50402 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231598AbjDCIaZ (ORCPT
+        with ESMTP id S232348AbjDCLVa (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Mon, 3 Apr 2023 04:30:25 -0400
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 2FC0A49C2;
-        Mon,  3 Apr 2023 01:30:23 -0700 (PDT)
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 30DF41063;
-        Mon,  3 Apr 2023 01:31:07 -0700 (PDT)
-Received: from FVFF77S0Q05N (unknown [10.57.57.89])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 807B63F6C4;
-        Mon,  3 Apr 2023 01:30:18 -0700 (PDT)
-Date:   Mon, 3 Apr 2023 09:30:15 +0100
-From:   Mark Rutland <mark.rutland@arm.com>
-To:     Donglin Peng <pengdonglin@sangfor.com.cn>
-Cc:     mhiramat@kernel.org, rostedt@goodmis.org, linux@armlinux.org.uk,
-        will@kernel.org, catalin.marinas@arm.com,
-        rmk+kernel@armlinux.org.uk, palmer@dabbelt.com,
-        paul.walmsley@sifive.com, aou@eecs.berkeley.edu,
-        tglx@linutronix.de, dave.hansen@linux.intel.com, x86@kernel.org,
-        bp@alien8.de, hpa@zytor.com, chenhuacai@kernel.org,
-        zhangqing@loongson.cn, kernel@xen0n.name, mingo@redhat.com,
-        peterz@infradead.org, xiehuan09@gmail.com, dinghui@sangfor.com.cn,
-        huangcun@sangfor.com.cn, dolinux.peng@gmail.com,
-        linux-trace-kernel@vger.kernel.org, loongarch@lists.linux.dev,
-        linux-riscv@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v10 2/8] tracing: Add documentation for funcgraph-retval
- and funcgraph-retval-hex
-Message-ID: <ZCqOl1TCHGhbf0hf@FVFF77S0Q05N>
-References: <cover.1680265828.git.pengdonglin@sangfor.com.cn>
- <a3dcdd61b3ac07eefabc1b11fc18e9fae23d8cbe.1680265828.git.pengdonglin@sangfor.com.cn>
+        Mon, 3 Apr 2023 07:21:30 -0400
+Received: from mail-wr1-x433.google.com (mail-wr1-x433.google.com [IPv6:2a00:1450:4864:20::433])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 532231117E
+        for <linux-trace-kernel@vger.kernel.org>; Mon,  3 Apr 2023 04:21:23 -0700 (PDT)
+Received: by mail-wr1-x433.google.com with SMTP id y14so28974535wrq.4
+        for <linux-trace-kernel@vger.kernel.org>; Mon, 03 Apr 2023 04:21:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1680520882;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=yfXbK+ehjb3x3tftRCKApX1xRkjQHv0ANTDTDP3NxOc=;
+        b=LP5ajRRnzT235CHmQ0lWGzS01yRL1tgN2As0C6a9k+8kESyhDzgjyXI8/BDjLJaUTJ
+         WsvByzsfaG8Sorgy//fxlbYOVC0mNesRhPJwZdh9m0lkowm6Q44RL+WC5zrfnawtMqAp
+         spVLCXyWFMFo1ZXSL+bQvrMPVbziP+EyTRhcA=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112; t=1680520882;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=yfXbK+ehjb3x3tftRCKApX1xRkjQHv0ANTDTDP3NxOc=;
+        b=stVqYXa2MUZDXtwjAq8tZL89oFCjwvk4wkIfeQhx2RDCqagB9eaehJbZgy1KbnKzYR
+         i7+AlS/ufaCxzNn1WAg1UcHMRJ5KISutwvA8lcQ3a/7xJkX+gULQO4joBEc4MTgYiRqz
+         2rL13t/8+XruWIvpGoDMo+rJm/z++Hqds1SRoCYwmm6uWyc6qODxxYfiN//rthaKUZzs
+         wAVfkKRmOUjGgoxiFXhZ+8BbLN5P3c0fazAyX2tTanT6ISRUaVPz00hHBsYcJl06GUAU
+         fQeUdVHtAfq73C4ZA9M48leN390H3l+68xE/y4wcYp/75RgTIkr/Px4MQEUXRCDmVm0o
+         0sJg==
+X-Gm-Message-State: AAQBX9cLiVpJEEdJOgB47oJBDD/UB2qGMECQKITLXV2w2Zkp+cd3ItEW
+        sSDMQAXLfbEJs0KzKovawFyvNw==
+X-Google-Smtp-Source: AKy350YH8mOD0Si3cDk+4jVUPMTXC/FAXN6Jt/A0MkgFu+t8zSiQuC5DogJ94PDR//YD6KjdIBX/GQ==
+X-Received: by 2002:adf:e90c:0:b0:2cf:eeae:88c3 with SMTP id f12-20020adfe90c000000b002cfeeae88c3mr28245477wrm.32.1680520881678;
+        Mon, 03 Apr 2023 04:21:21 -0700 (PDT)
+Received: from revest.zrh.corp.google.com ([2a00:79e0:9d:6:b5a2:4ffd:8524:ac1])
+        by smtp.gmail.com with ESMTPSA id u13-20020adfeb4d000000b002daeb108304sm9510031wrn.33.2023.04.03.04.21.20
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 03 Apr 2023 04:21:21 -0700 (PDT)
+From:   Florent Revest <revest@chromium.org>
+To:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-trace-kernel@vger.kernel.org, bpf@vger.kernel.org
+Cc:     catalin.marinas@arm.com, will@kernel.org, rostedt@goodmis.org,
+        mhiramat@kernel.org, mark.rutland@arm.com, ast@kernel.org,
+        daniel@iogearbox.net, andrii@kernel.org, kpsingh@kernel.org,
+        jolsa@kernel.org, xukuohai@huaweicloud.com, lihuafei1@huawei.com,
+        Florent Revest <revest@chromium.org>
+Subject: [PATCH v4 0/4] Add ftrace direct call for arm64
+Date:   Mon,  3 Apr 2023 13:20:55 +0200
+Message-Id: <20230403112059.2749695-1-revest@chromium.org>
+X-Mailer: git-send-email 2.40.0.423.gd6c402a77b-goog
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <a3dcdd61b3ac07eefabc1b11fc18e9fae23d8cbe.1680265828.git.pengdonglin@sangfor.com.cn>
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On Fri, Mar 31, 2023 at 05:47:38AM -0700, Donglin Peng wrote:
-> Add documentation for the two newly introduced options for the
-> function_graph tracer. The funcgraph-retval option is used to
-> control whether or not to display the return value, while the
-> funcgraph-retval-hex option is used to control the display
-> format of the return value.
-> 
-> Signed-off-by: Donglin Peng <pengdonglin@sangfor.com.cn>
-> ---
-> v9:
->  - Update limitation description
-> 
-> v7:
->  - Rename trace option 'graph_retval_hex' to 'funcgraph-retval-hex'
->  - Update documentation description
-> 
-> v6:
->  - Modify the limitations for funcgraph-retval
->  - Optimize the English expression
-> 
-> v5:
->  - Describe the limitations of funcgraph-retval
-> ---
->  Documentation/trace/ftrace.rst | 74 ++++++++++++++++++++++++++++++++++
->  1 file changed, 74 insertions(+)
-> 
-> diff --git a/Documentation/trace/ftrace.rst b/Documentation/trace/ftrace.rst
-> index b927fb2b94dc..f572ae419219 100644
-> --- a/Documentation/trace/ftrace.rst
-> +++ b/Documentation/trace/ftrace.rst
-> @@ -1328,6 +1328,19 @@ Options for function_graph tracer:
->  	only a closing curly bracket "}" is displayed for
->  	the return of a function.
->  
-> +  funcgraph-retval
-> +	When set, the return value of each traced function
-> +	will be printed after an equal sign "=". By default
-> +	this is off.
-> +
-> +  funcgraph-retval-hex
-> +	When set, the return value will always be printed
-> +	in hexadecimal format. If the option is not set and
-> +	the return value is an error code, it will be printed
-> +	in signed decimal format; otherwise it will also be
-> +	printed in hexadecimal format. By default, this option
-> +	is off.
-> +
->    sleep-time
->  	When running function graph tracer, to include
->  	the time a task schedules out in its function.
-> @@ -2673,6 +2686,67 @@ It is default disabled.
->      0)   1.757 us    |        } /* kmem_cache_free() */
->      0)   2.861 us    |      } /* putname() */
->  
-> +The return value of each traced function can be displayed after
-> +an equal sign "=". When encountering system call failures, it
-> +can be verfy helpful to quickly locate the function that first
-> +returns an error code.
-> +
-> +	- hide: echo nofuncgraph-retval > trace_options
-> +	- show: echo funcgraph-retval > trace_options
-> +
-> +  Example with funcgraph-retval::
-> +
-> +    1)               |    cgroup_migrate() {
-> +    1)   0.651 us    |      cgroup_migrate_add_task(); /* = 0xffff93fcfd346c00 */
-> +    1)               |      cgroup_migrate_execute() {
-> +    1)               |        cpu_cgroup_can_attach() {
-> +    1)               |          cgroup_taskset_first() {
-> +    1)   0.732 us    |            cgroup_taskset_next(); /* = 0xffff93fc8fb20000 */
-> +    1)   1.232 us    |          } /* cgroup_taskset_first = 0xffff93fc8fb20000 */
-> +    1)   0.380 us    |          sched_rt_can_attach(); /* = 0x0 */
-> +    1)   2.335 us    |        } /* cpu_cgroup_can_attach = -22 */
-> +    1)   4.369 us    |      } /* cgroup_migrate_execute = -22 */
-> +    1)   7.143 us    |    } /* cgroup_migrate = -22 */
-> +
-> +The above example shows that the function cpu_cgroup_can_attach
-> +returned the error code -22 firstly, then we can read the code
-> +of this function to get the root cause.
-> +
-> +When the option funcgraph-retval-hex is not set, the return value can
-> +be displayed in a smart way. Specifically, if it is an error code,
-> +it will be printed in signed decimal format, otherwise it will
-> +printed in hexadecimal format.
-> +
-> +	- smart: echo nofuncgraph-retval-hex > trace_options
-> +	- hexadecimal always: echo funcgraph-retval-hex > trace_options
-> +
-> +  Example with funcgraph-retval-hex::
-> +
-> +    1)               |      cgroup_migrate() {
-> +    1)   0.651 us    |        cgroup_migrate_add_task(); /* = 0xffff93fcfd346c00 */
-> +    1)               |        cgroup_migrate_execute() {
-> +    1)               |          cpu_cgroup_can_attach() {
-> +    1)               |            cgroup_taskset_first() {
-> +    1)   0.732 us    |              cgroup_taskset_next(); /* = 0xffff93fc8fb20000 */
-> +    1)   1.232 us    |            } /* cgroup_taskset_first = 0xffff93fc8fb20000 */
-> +    1)   0.380 us    |            sched_rt_can_attach(); /* = 0x0 */
-> +    1)   2.335 us    |          } /* cpu_cgroup_can_attach = 0xffffffea */
-> +    1)   4.369 us    |        } /* cgroup_migrate_execute = 0xffffffea */
-> +    1)   7.143 us    |      } /* cgroup_migrate = 0xffffffea */
-> +
-> +At present, there are some limitations when using the funcgraph-retval
-> +option, and these limitations will be eliminated in the future:
-> +
-> +- Even if the function return type is void, a return value will still
-> +  be printed, and you can just ignore it.
-> +
-> +- Even if return values are stored in multiple registers, only the
-> +  value contained in the first register will be recorded and printed.
-> +  To illustrate, in the x86 architecture, eax and edx are used to store
-> +  a 64-bit return value, with the lower 32 bits saved in eax and the
-> +  upper 32 bits saved in edx. However, only the value stored in eax
-> +  will be recorded and printed.
+This series adds ftrace direct call support to arm64.
+This makes BPF tracing programs (fentry/fexit/fmod_ret/lsm) work on arm64.
 
-With some procedure call standards (e.g. arm64's AAPCS64), when a type is
-smaller than a GPR it's up to the consumer to perform the narrowing, and the
-upport bits may contain UNKNOWN values. For example, with a u8 in a 64-bit GPR,
-bits [3:8] may contain arbitrary values.
+It is meant to be taken by the arm64 tree but it depends on the
+trace-direct-v6.3-rc3 tag of the linux-trace tree:
+  git://git.kernel.org/pub/scm/linux/kernel/git/trace/linux-trace.git
+That tag was created by Steven Rostedt so the arm64 tree can pull the prior work
+this depends on. [1]
 
-It's probably worth noting that this means *some* manual processing will always
-be necessary for such cases.
+Thanks to the ftrace refactoring under that tag, an ftrace_ops backing a ftrace
+direct call will only ever point to *one* direct call. This means we can look up
+the direct called trampoline address stored in the ops from the ftrace_caller
+trampoline in the case when the destination would be out of reach of a BL
+instruction at the ftrace callsite. This fixes limitations of previous attempts
+such as [2].
 
-That's mostly visible around where largelr types get truncated (whether
-explciitly or implicitly), e.g.
+This series has been tested on arm64 with:
+1- CONFIG_FTRACE_SELFTEST
+2- samples/ftrace/*.ko (cf: patch 3)
+3- tools/testing/selftests/bpf/test_progs (cf: patch 4)
 
-	u8 narrow_to_u8(u64 val)
-	{
-		// implicitly truncated
-		return val;
-	}
+Changes since v3 [3]:
+- Added "BTI C" instructions at the beginning of each ftrace direct call sample
+- Added Mark Rutland's Acked-by to patch 2
 
-... could be compiled to:
+1: https://lore.kernel.org/all/ZB2Nl7fzpHoq5V20@FVFF77S0Q05N/
+2: https://lore.kernel.org/all/20220913162732.163631-1-xukuohai@huaweicloud.com/
+3: https://lore.kernel.org/bpf/20230324171451.2752302-1-revest@chromium.org/
 
-	narrow_to_u8:
-		< ... ftrace instrumentation ... >
-		RET
+Florent Revest (4):
+  arm64: ftrace: Add direct call support
+  arm64: ftrace: Simplify get_ftrace_plt
+  arm64: ftrace: Add direct call trampoline samples support
+  selftests/bpf: Update the tests deny list on aarch64
 
-... and so:
-	
-	narrow_to_u8(0x123456789abcdef);
+ arch/arm64/Kconfig                           |  6 ++
+ arch/arm64/include/asm/ftrace.h              | 22 +++++
+ arch/arm64/kernel/asm-offsets.c              |  6 ++
+ arch/arm64/kernel/entry-ftrace.S             | 90 ++++++++++++++++----
+ arch/arm64/kernel/ftrace.c                   | 46 +++++++---
+ samples/ftrace/ftrace-direct-modify.c        | 32 +++++++
+ samples/ftrace/ftrace-direct-multi-modify.c  | 36 ++++++++
+ samples/ftrace/ftrace-direct-multi.c         | 22 +++++
+ samples/ftrace/ftrace-direct-too.c           | 25 ++++++
+ samples/ftrace/ftrace-direct.c               | 23 +++++
+ tools/testing/selftests/bpf/DENYLIST.aarch64 | 82 ++----------------
+ 11 files changed, 288 insertions(+), 102 deletions(-)
 
-... might be recorded as returning 0x123456789abcdef rather than 0xef.
+-- 
+2.40.0.423.gd6c402a77b-goog
 
-
-That can happen in surprising ways, e.g.
-
-	int error_if_not_4g_aligned(u64 val)
-	{
-		if (val & GENMASK(63, 32))
-			return -EINVAL;
-
-		return 0;
-	}
-
-... could be compiled to:
-
-	error_if_not_4g_aligned:
-		CBNZ	w0, .Lnot_aligned
-		RET				// bits [31:0] are zero, bits
-						// [63:32] are UNKNOWN
-	.Lnot_aligned:
-		MOV	x0, #-EINVAL
-		RET
-
-.... and so:
-
-	error_if_not_4g_aligned(SZ_8G)
-
-... could return with bits [63:32] non-zero
-
-Thanks,
-Mark.
