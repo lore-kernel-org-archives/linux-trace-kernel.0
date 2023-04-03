@@ -2,167 +2,201 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AB963C76196
-	for <linux-trace-kernel@archiver.kernel.org>; Mon,  3 Apr 2023 05:15:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B23DC761A6
+	for <linux-trace-kernel@archiver.kernel.org>; Mon,  3 Apr 2023 08:13:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230200AbjDCFPF (ORCPT
+        id S231843AbjDCINj (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Mon, 3 Apr 2023 01:15:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55014 "EHLO
+        Mon, 3 Apr 2023 04:13:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36086 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230192AbjDCFPF (ORCPT
+        with ESMTP id S231555AbjDCINi (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Mon, 3 Apr 2023 01:15:05 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EE69C5FDB;
-        Sun,  2 Apr 2023 22:15:03 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 7377D61490;
-        Mon,  3 Apr 2023 05:15:03 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9DDEAC433D2;
-        Mon,  3 Apr 2023 05:15:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1680498902;
-        bh=Ixr/FFBnESFYocqUR2S5brutidXiL5FXC0yTKcWtPxk=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=GazujrsRaycMDAoP33HEUQ0JfQ7EMg0bNtPSIQJZat3LWer2Eu2uIckZ9nNpBnNYp
-         OXXbsQuyymB7jgZrClRzUWhjM6HPjHsbJUswwCj6jxaM+Z1psmxYl4PwehOaikiilM
-         xvDmEbw+J/6MWCb/eyyQ1GnTSl7JKfs75iuFk9TPV1K43UPjBAtNGIFiUhQw1KUncq
-         0HU0wq035hQx2DLpOkdINRQCmU6FWpQYMZdMonql8+0ksJnX+JqUc7qP7XzHF4FdNF
-         l/EKnY05EvqGepme2Og3KXyaVFY0JbTdCMceCHRxtXisTmGuBpQuhjBNRazZJh+zuE
-         D/OaXOKyIbxdw==
-Date:   Mon, 3 Apr 2023 10:44:56 +0530
-From:   Manivannan Sadhasivam <mani@kernel.org>
-To:     Simon Horman <horms@kernel.org>
-Cc:     Steven Rostedt <rostedt@goodmis.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-trace-kernel@vger.kernel.org, netdev@vger.kernel.org
-Subject: Re: [PATCH RFC] net: qrtr: correct types of trace event parameters
-Message-ID: <20230403051436.GA4627@thinkpad>
-References: <20230402-qrtr-trace-types-v1-1-da062d368e74@kernel.org>
+        Mon, 3 Apr 2023 04:13:38 -0400
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 23BA549F3;
+        Mon,  3 Apr 2023 01:13:37 -0700 (PDT)
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 43786FEC;
+        Mon,  3 Apr 2023 01:14:21 -0700 (PDT)
+Received: from FVFF77S0Q05N (unknown [10.57.57.89])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 44A603F6C4;
+        Mon,  3 Apr 2023 01:13:26 -0700 (PDT)
+Date:   Mon, 3 Apr 2023 09:13:20 +0100
+From:   Mark Rutland <mark.rutland@arm.com>
+To:     Donglin Peng <pengdonglin@sangfor.com.cn>
+Cc:     mhiramat@kernel.org, rostedt@goodmis.org, linux@armlinux.org.uk,
+        will@kernel.org, catalin.marinas@arm.com,
+        rmk+kernel@armlinux.org.uk, palmer@dabbelt.com,
+        paul.walmsley@sifive.com, aou@eecs.berkeley.edu,
+        tglx@linutronix.de, dave.hansen@linux.intel.com, x86@kernel.org,
+        bp@alien8.de, hpa@zytor.com, chenhuacai@kernel.org,
+        zhangqing@loongson.cn, kernel@xen0n.name, mingo@redhat.com,
+        peterz@infradead.org, xiehuan09@gmail.com, dinghui@sangfor.com.cn,
+        huangcun@sangfor.com.cn, dolinux.peng@gmail.com,
+        linux-trace-kernel@vger.kernel.org, loongarch@lists.linux.dev,
+        linux-riscv@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v10 4/8] arm64: ftrace: Enable HAVE_FUNCTION_GRAPH_RETVAL
+Message-ID: <ZCqKoPrqoKwSVsY7@FVFF77S0Q05N>
+References: <cover.1680265828.git.pengdonglin@sangfor.com.cn>
+ <8f75bbf69eb49afb8e14b10dad6e091c43cff4e2.1680265828.git.pengdonglin@sangfor.com.cn>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20230402-qrtr-trace-types-v1-1-da062d368e74@kernel.org>
+In-Reply-To: <8f75bbf69eb49afb8e14b10dad6e091c43cff4e2.1680265828.git.pengdonglin@sangfor.com.cn>
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On Sun, Apr 02, 2023 at 01:15:33PM +0200, Simon Horman wrote:
-> The arguments passed to the trace events are of type unsigned int,
-> however the signature of the events used __le32 parameters.
+On Fri, Mar 31, 2023 at 05:47:40AM -0700, Donglin Peng wrote:
+> The previous patch ("function_graph: Support recording and printing
+> the return value of function") has laid the groundwork for the for
+> the funcgraph-retval, and this modification makes it available on
+> the ARM64 platform.
 > 
-> I may be missing the point here, but sparse flagged this and it
-> does seem incorrect to me.
+> We introduce a new structure called fgraph_ret_regs for the ARM64
+> platform to hold return registers and the frame pointer. We then
+> fill its content in the return_to_handler and pass its address to
+> the function ftrace_return_to_handler to record the return value.
 > 
->   net/qrtr/ns.c: note: in included file (through include/trace/trace_events.h, include/trace/define_trace.h, include/trace/events/qrtr.h):
->   ./include/trace/events/qrtr.h:11:1: warning: cast to restricted __le32
->   ./include/trace/events/qrtr.h:11:1: warning: restricted __le32 degrades to integer
->   ./include/trace/events/qrtr.h:11:1: warning: restricted __le32 degrades to integer
->   ... (a lot more similar warnings)
->   net/qrtr/ns.c:115:47:    expected restricted __le32 [usertype] service
->   net/qrtr/ns.c:115:47:    got unsigned int service
->   net/qrtr/ns.c:115:61: warning: incorrect type in argument 2 (different base types)
->   ... (a lot more similar warnings)
-> 
+> Signed-off-by: Donglin Peng <pengdonglin@sangfor.com.cn>
 
-You are right. The actual arguments (service, instance, node, port) transferred/
-received over QRTR are in le32 as per the protocol. But in the NS driver, the
-arguments passed to the trace events are in the native endian (i.e) before
-getting typecased to le32 for transmission.
+Thanks for working through all the feedback!
 
-And my intention was to trace the arguments in native endian format only. So
-this patch indeed fixes the issue.
+The structual changes all look good to me, and I've given this a spin to check
+that it doesn't break graph tracing, so:
 
-> Signed-off-by: Simon Horman <horms@kernel.org>
+Reviewed-by: Mark Rutland <mark.rutland@arm.com>
+Tested-by: Mark Rutland <mark.rutland@arm.com>
 
-Please add the fixes tag once you remove RFC,
-
-Fixes: dfddb54043f0 ("net: qrtr: Add tracepoint support")
-
-Reviewed-by: Manivannan Sadhasivam <mani@kernel.org>
-
-- Mani
+Mark.
 
 > ---
->  include/trace/events/qrtr.h | 33 ++++++++++++++++++---------------
->  1 file changed, 18 insertions(+), 15 deletions(-)
+> v10:
+>  - Use CONFIG_FUNCTION_GRAPH_TRACER to control fgraph_ret_regs definition
 > 
-> diff --git a/include/trace/events/qrtr.h b/include/trace/events/qrtr.h
-> index b1de14c3bb93..441132c67133 100644
-> --- a/include/trace/events/qrtr.h
-> +++ b/include/trace/events/qrtr.h
-> @@ -10,15 +10,16 @@
->  
->  TRACE_EVENT(qrtr_ns_service_announce_new,
->  
-> -	TP_PROTO(__le32 service, __le32 instance, __le32 node, __le32 port),
-> +	TP_PROTO(unsigned int service, unsigned int instance,
-> +		 unsigned int node, unsigned int port),
->  
->  	TP_ARGS(service, instance, node, port),
->  
->  	TP_STRUCT__entry(
-> -		__field(__le32, service)
-> -		__field(__le32, instance)
-> -		__field(__le32, node)
-> -		__field(__le32, port)
-> +		__field(unsigned int, service)
-> +		__field(unsigned int, instance)
-> +		__field(unsigned int, node)
-> +		__field(unsigned int, port)
->  	),
->  
->  	TP_fast_assign(
-> @@ -36,15 +37,16 @@ TRACE_EVENT(qrtr_ns_service_announce_new,
->  
->  TRACE_EVENT(qrtr_ns_service_announce_del,
->  
-> -	TP_PROTO(__le32 service, __le32 instance, __le32 node, __le32 port),
-> +	TP_PROTO(unsigned int service, unsigned int instance,
-> +		 unsigned int node, unsigned int port),
->  
->  	TP_ARGS(service, instance, node, port),
->  
->  	TP_STRUCT__entry(
-> -		__field(__le32, service)
-> -		__field(__le32, instance)
-> -		__field(__le32, node)
-> -		__field(__le32, port)
-> +		__field(unsigned int, service)
-> +		__field(unsigned int, instance)
-> +		__field(unsigned int, node)
-> +		__field(unsigned int, port)
->  	),
->  
->  	TP_fast_assign(
-> @@ -62,15 +64,16 @@ TRACE_EVENT(qrtr_ns_service_announce_del,
->  
->  TRACE_EVENT(qrtr_ns_server_add,
->  
-> -	TP_PROTO(__le32 service, __le32 instance, __le32 node, __le32 port),
-> +	TP_PROTO(unsigned int service, unsigned int instance,
-> +		 unsigned int node, unsigned int port),
->  
->  	TP_ARGS(service, instance, node, port),
->  
->  	TP_STRUCT__entry(
-> -		__field(__le32, service)
-> -		__field(__le32, instance)
-> -		__field(__le32, node)
-> -		__field(__le32, port)
-> +		__field(unsigned int, service)
-> +		__field(unsigned int, instance)
-> +		__field(unsigned int, node)
-> +		__field(unsigned int, port)
->  	),
->  
->  	TP_fast_assign(
+> v9:
+>  - Update the commit message
 > 
-
--- 
-மணிவண்ணன் சதாசிவம்
+> v8:
+>  - Fix issues in ARM64 asm code
+>  - Modify the control range of CONFIG_HAVE_FUNCTION_GRAPH_RETVAL
+> ---
+>  arch/arm64/Kconfig               |  1 +
+>  arch/arm64/include/asm/ftrace.h  | 22 ++++++++++++++++++++++
+>  arch/arm64/kernel/asm-offsets.c  | 13 +++++++++++++
+>  arch/arm64/kernel/entry-ftrace.S | 27 ++++++++++++++-------------
+>  4 files changed, 50 insertions(+), 13 deletions(-)
+> 
+> diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
+> index 1023e896d46b..48856d230800 100644
+> --- a/arch/arm64/Kconfig
+> +++ b/arch/arm64/Kconfig
+> @@ -195,6 +195,7 @@ config ARM64
+>  	select HAVE_FTRACE_MCOUNT_RECORD
+>  	select HAVE_FUNCTION_TRACER
+>  	select HAVE_FUNCTION_ERROR_INJECTION
+> +	select HAVE_FUNCTION_GRAPH_RETVAL if HAVE_FUNCTION_GRAPH_TRACER
+>  	select HAVE_FUNCTION_GRAPH_TRACER
+>  	select HAVE_GCC_PLUGINS
+>  	select HAVE_HW_BREAKPOINT if PERF_EVENTS
+> diff --git a/arch/arm64/include/asm/ftrace.h b/arch/arm64/include/asm/ftrace.h
+> index 1c2672bbbf37..657adcbd80a4 100644
+> --- a/arch/arm64/include/asm/ftrace.h
+> +++ b/arch/arm64/include/asm/ftrace.h
+> @@ -170,4 +170,26 @@ static inline bool arch_syscall_match_sym_name(const char *sym,
+>  }
+>  #endif /* ifndef __ASSEMBLY__ */
+>  
+> +#ifndef __ASSEMBLY__
+> +#ifdef CONFIG_FUNCTION_GRAPH_TRACER
+> +struct fgraph_ret_regs {
+> +	/* x0 - x7 */
+> +	unsigned long regs[8];
+> +
+> +	unsigned long fp;
+> +	unsigned long __unused;
+> +};
+> +
+> +static inline unsigned long fgraph_ret_regs_return_value(struct fgraph_ret_regs *ret_regs)
+> +{
+> +	return ret_regs->regs[0];
+> +}
+> +
+> +static inline unsigned long fgraph_ret_regs_frame_pointer(struct fgraph_ret_regs *ret_regs)
+> +{
+> +	return ret_regs->fp;
+> +}
+> +#endif /* ifdef CONFIG_FUNCTION_GRAPH_TRACER  */
+> +#endif
+> +
+>  #endif /* __ASM_FTRACE_H */
+> diff --git a/arch/arm64/kernel/asm-offsets.c b/arch/arm64/kernel/asm-offsets.c
+> index ae345b06e9f7..75082e0409bf 100644
+> --- a/arch/arm64/kernel/asm-offsets.c
+> +++ b/arch/arm64/kernel/asm-offsets.c
+> @@ -197,6 +197,19 @@ int main(void)
+>  #endif
+>  #ifdef CONFIG_FUNCTION_TRACER
+>    DEFINE(FTRACE_OPS_FUNC,		offsetof(struct ftrace_ops, func));
+> +#endif
+> +  BLANK();
+> +#ifdef CONFIG_FUNCTION_GRAPH_TRACER
+> +  DEFINE(FGRET_REGS_X0,			offsetof(struct fgraph_ret_regs, regs[0]));
+> +  DEFINE(FGRET_REGS_X1,			offsetof(struct fgraph_ret_regs, regs[1]));
+> +  DEFINE(FGRET_REGS_X2,			offsetof(struct fgraph_ret_regs, regs[2]));
+> +  DEFINE(FGRET_REGS_X3,			offsetof(struct fgraph_ret_regs, regs[3]));
+> +  DEFINE(FGRET_REGS_X4,			offsetof(struct fgraph_ret_regs, regs[4]));
+> +  DEFINE(FGRET_REGS_X5,			offsetof(struct fgraph_ret_regs, regs[5]));
+> +  DEFINE(FGRET_REGS_X6,			offsetof(struct fgraph_ret_regs, regs[6]));
+> +  DEFINE(FGRET_REGS_X7,			offsetof(struct fgraph_ret_regs, regs[7]));
+> +  DEFINE(FGRET_REGS_FP,			offsetof(struct fgraph_ret_regs, fp));
+> +  DEFINE(FGRET_REGS_SIZE,		sizeof(struct fgraph_ret_regs));
+>  #endif
+>    return 0;
+>  }
+> diff --git a/arch/arm64/kernel/entry-ftrace.S b/arch/arm64/kernel/entry-ftrace.S
+> index 350ed81324ac..da1443bcf776 100644
+> --- a/arch/arm64/kernel/entry-ftrace.S
+> +++ b/arch/arm64/kernel/entry-ftrace.S
+> @@ -270,22 +270,23 @@ SYM_FUNC_END(ftrace_stub_graph)
+>   */
+>  SYM_CODE_START(return_to_handler)
+>  	/* save return value regs */
+> -	sub sp, sp, #64
+> -	stp x0, x1, [sp]
+> -	stp x2, x3, [sp, #16]
+> -	stp x4, x5, [sp, #32]
+> -	stp x6, x7, [sp, #48]
+> +	sub sp, sp, #FGRET_REGS_SIZE
+> +	stp x0, x1, [sp, #FGRET_REGS_X0]
+> +	stp x2, x3, [sp, #FGRET_REGS_X2]
+> +	stp x4, x5, [sp, #FGRET_REGS_X4]
+> +	stp x6, x7, [sp, #FGRET_REGS_X6]
+> +	str x29,    [sp, #FGRET_REGS_FP]	// parent's fp
+>  
+> -	mov	x0, x29			//     parent's fp
+> -	bl	ftrace_return_to_handler// addr = ftrace_return_to_hander(fp);
+> -	mov	x30, x0			// restore the original return address
+> +	mov	x0, sp
+> +	bl	ftrace_return_to_handler	// addr = ftrace_return_to_hander(regs);
+> +	mov	x30, x0				// restore the original return address
+>  
+>  	/* restore return value regs */
+> -	ldp x0, x1, [sp]
+> -	ldp x2, x3, [sp, #16]
+> -	ldp x4, x5, [sp, #32]
+> -	ldp x6, x7, [sp, #48]
+> -	add sp, sp, #64
+> +	ldp x0, x1, [sp, #FGRET_REGS_X0]
+> +	ldp x2, x3, [sp, #FGRET_REGS_X2]
+> +	ldp x4, x5, [sp, #FGRET_REGS_X4]
+> +	ldp x6, x7, [sp, #FGRET_REGS_X6]
+> +	add sp, sp, #FGRET_REGS_SIZE
+>  
+>  	ret
+>  SYM_CODE_END(return_to_handler)
+> -- 
+> 2.25.1
+> 
