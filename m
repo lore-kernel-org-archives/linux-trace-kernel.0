@@ -2,103 +2,117 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 224E5C761A6
-	for <linux-trace-kernel@archiver.kernel.org>; Mon,  3 Apr 2023 11:26:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 663DAC77B60
+	for <linux-trace-kernel@archiver.kernel.org>; Mon,  3 Apr 2023 11:36:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231384AbjDCL0N (ORCPT
+        id S232493AbjDCLgF (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Mon, 3 Apr 2023 07:26:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57250 "EHLO
+        Mon, 3 Apr 2023 07:36:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39364 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231655AbjDCL0M (ORCPT
+        with ESMTP id S232482AbjDCLgE (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Mon, 3 Apr 2023 07:26:12 -0400
-Received: from mail-pf1-x435.google.com (mail-pf1-x435.google.com [IPv6:2607:f8b0:4864:20::435])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1F28910C3
-        for <linux-trace-kernel@vger.kernel.org>; Mon,  3 Apr 2023 04:26:08 -0700 (PDT)
-Received: by mail-pf1-x435.google.com with SMTP id y2so18903975pfw.9
-        for <linux-trace-kernel@vger.kernel.org>; Mon, 03 Apr 2023 04:26:08 -0700 (PDT)
+        Mon, 3 Apr 2023 07:36:04 -0400
+Received: from mail-wm1-x32c.google.com (mail-wm1-x32c.google.com [IPv6:2a00:1450:4864:20::32c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6FFFD11641
+        for <linux-trace-kernel@vger.kernel.org>; Mon,  3 Apr 2023 04:36:01 -0700 (PDT)
+Received: by mail-wm1-x32c.google.com with SMTP id u11-20020a05600c19cb00b003edcc414997so17917252wmq.3
+        for <linux-trace-kernel@vger.kernel.org>; Mon, 03 Apr 2023 04:36:01 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1680521167;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ZPfN6H9GzSSwoyl7nWUpLiWgOMSJP2rcV6xsiUErpvA=;
-        b=DhS9E/8WyR3JS9FsRm9YYu3/KJdAKSHtR6KiImoIMS9reKvRnaBgwNbsl/pz+4oCk1
-         dyPfknbbYslWE826HseDt8gvc4gPdcKljTlSoe50J50j5/5sDPfh+Bn2Gm/r+UJXU+bf
-         3E6RmSy5Ss+wurpPFAD/KtrsrdonrrsIyQqQc=
+        d=chromium.org; s=google; t=1680521758;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=i0HG+W1Nr/Zm5XRUMWQUndq8bum7JqRDYebIXh9Qbe0=;
+        b=ADin8NDRYe5sQ0hrQPtqSRLSxBB8ihn7EpyAUhlsyrOcCkUj61zdV9iPRft+pFLa0x
+         E09qWvv0++B5plr6iXhNTTdYGo23EMPXVy1xwh6WqY7AGjsf4MFmGNH4LhqH19kBPAP7
+         dVdDRTCTSY0MHjb/HLXDSl+4C4hbkxyfphfSE=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1680521167;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=ZPfN6H9GzSSwoyl7nWUpLiWgOMSJP2rcV6xsiUErpvA=;
-        b=SLX9UeY+3esGCaAZsKBY/AgnKRI3QsCKPszRgPnUcie9ApUsK+R8epDPiAh5X5xRoQ
-         /zXnd+dF85SRbB3W8NkpPe7zdIhB6oMsBE20GEEQK2wbvoHmoNUcET0BLHeqYWdfg4FT
-         B4oKVQ1ZZWjSBT5TovZCw5mQEXh9GGGXWs7F9U0Kxki2YhHm7nqFNqtCzwWImJhGkzN8
-         BW6QBqDdHF5Ukq8zdVMoLeFrASh9NI1NzjlQkmsHl0iyt37RWstYV0rlY4CqNQ2ZiYwV
-         GWzAIewyQxARDHx9iflgF0mGezbWWkTDwDHbbNVyB09uVIqWBDJtNl28B7RW2cS0a11T
-         h+sA==
-X-Gm-Message-State: AAQBX9dcfCO6iVS0zJweJnMA4MASItPYQQfx3VYWnNCOMORvLbUzmrHs
-        DkIUeuofj2uHCAKoKRUvRM74wvnSbaZ1TvLOk56upA==
-X-Google-Smtp-Source: AKy350Z1SB2ADtmNWWYX+uAfqdQ/xVxYHIbU/JDIrSe10oRa3VNheGlpMbMMQwMoIj6X+d2LGdVT0WFTkT9DyDoLJgM=
-X-Received: by 2002:a05:6a00:881:b0:62d:dd8d:56ac with SMTP id
- q1-20020a056a00088100b0062ddd8d56acmr5893169pfj.0.1680521167488; Mon, 03 Apr
- 2023 04:26:07 -0700 (PDT)
-MIME-Version: 1.0
-References: <20230403112059.2749695-1-revest@chromium.org>
-In-Reply-To: <20230403112059.2749695-1-revest@chromium.org>
+        d=1e100.net; s=20210112; t=1680521758;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=i0HG+W1Nr/Zm5XRUMWQUndq8bum7JqRDYebIXh9Qbe0=;
+        b=Md87wL1aTcXA06EZT+EiCMgFr0LBwlnfDalTSlf5mpmpM3HM0ajrJZWvpEhIR5m28W
+         wI+12ZxD03zVeJ0aje/8rG6O9AxzSPZ8DNsrD5TcEacyNKDErkGOrgMXsYpMjf6qbtVI
+         4VN2cV5IYfsHj1cSl1LbVGWSc7D4rgXoxR+jBDmT4YfKHcUX5e2a8o+gPr3S2pLRo94A
+         6Ll/EM1QfdSG7sm49hIOxl4yX3hIbl8unU8OG65lUga59CVBk/oeIu69kxdChWQhrW6+
+         Y6EeTQpRbuqooLlEYiegylmVKuh0/ymB4vBLTsdGx1WObRIE39WKXbd7kqRvJLg8tray
+         4Hmw==
+X-Gm-Message-State: AO0yUKW9wOVOLkAjpKT0Ggzl0i6gG9tKOB+ktvPbdnDH4gLr9mVRxLYS
+        eOE/SpMW3/gxlm8lRPX11fXyLg==
+X-Google-Smtp-Source: AK7set/4kJW+CgDqrDOz4wXVt98om3F+A+nmj93tUu871u1MurFxeTkkxPOfkG6PPH56agG15HqArw==
+X-Received: by 2002:a05:600c:2312:b0:3ee:b3bf:5f7c with SMTP id 18-20020a05600c231200b003eeb3bf5f7cmr27217057wmo.23.1680521758197;
+        Mon, 03 Apr 2023 04:35:58 -0700 (PDT)
+Received: from revest.zrh.corp.google.com ([2a00:79e0:9d:6:b5a2:4ffd:8524:ac1])
+        by smtp.gmail.com with ESMTPSA id s15-20020a05600c45cf00b003eb2e33f327sm29841410wmo.2.2023.04.03.04.35.56
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 03 Apr 2023 04:35:57 -0700 (PDT)
 From:   Florent Revest <revest@chromium.org>
-Date:   Mon, 3 Apr 2023 13:25:56 +0200
-Message-ID: <CABRcYm+p-_z0i7TyyA16NPY3GkR37mFxN1SKiV6RBS1pGEoa1Q@mail.gmail.com>
-Subject: Re: [PATCH v4 0/4] Add ftrace direct call for arm64
 To:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
         linux-trace-kernel@vger.kernel.org, bpf@vger.kernel.org
 Cc:     catalin.marinas@arm.com, will@kernel.org, rostedt@goodmis.org,
         mhiramat@kernel.org, mark.rutland@arm.com, ast@kernel.org,
         daniel@iogearbox.net, andrii@kernel.org, kpsingh@kernel.org,
-        jolsa@kernel.org, xukuohai@huaweicloud.com, lihuafei1@huawei.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+        jolsa@kernel.org, xukuohai@huaweicloud.com, lihuafei1@huawei.com,
+        Florent Revest <revest@chromium.org>
+Subject: [PATCH v5 0/4] Add ftrace direct call for arm64
+Date:   Mon,  3 Apr 2023 13:35:48 +0200
+Message-Id: <20230403113552.2857693-1-revest@chromium.org>
+X-Mailer: git-send-email 2.40.0.423.gd6c402a77b-goog
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On Mon, Apr 3, 2023 at 1:21=E2=80=AFPM Florent Revest <revest@chromium.org>=
- wrote:
->
-> This series adds ftrace direct call support to arm64.
-> This makes BPF tracing programs (fentry/fexit/fmod_ret/lsm) work on arm64=
-.
->
-> It is meant to be taken by the arm64 tree but it depends on the
-> trace-direct-v6.3-rc3 tag of the linux-trace tree:
->   git://git.kernel.org/pub/scm/linux/kernel/git/trace/linux-trace.git
-> That tag was created by Steven Rostedt so the arm64 tree can pull the pri=
-or work
-> this depends on. [1]
->
-> Thanks to the ftrace refactoring under that tag, an ftrace_ops backing a =
-ftrace
-> direct call will only ever point to *one* direct call. This means we can =
-look up
-> the direct called trampoline address stored in the ops from the ftrace_ca=
-ller
-> trampoline in the case when the destination would be out of reach of a BL
-> instruction at the ftrace callsite. This fixes limitations of previous at=
-tempts
-> such as [2].
->
-> This series has been tested on arm64 with:
-> 1- CONFIG_FTRACE_SELFTEST
-> 2- samples/ftrace/*.ko (cf: patch 3)
-> 3- tools/testing/selftests/bpf/test_progs (cf: patch 4)
->
-> Changes since v3 [3]:
-> - Added "BTI C" instructions at the beginning of each ftrace direct call =
-sample
+This series adds ftrace direct call support to arm64.
+This makes BPF tracing programs (fentry/fexit/fmod_ret/lsm) work on arm64.
 
-Ugh, I am an idiot (let's just blame Mondays!) and didn't actually
-amend this change, I'm sending the series again as a v5 and this time
-with the change actually folded in... Please ignore this v4, sorry for
-the noise! :|
+It is meant to be taken by the arm64 tree but it depends on the
+trace-direct-v6.3-rc3 tag of the linux-trace tree:
+  git://git.kernel.org/pub/scm/linux/kernel/git/trace/linux-trace.git
+That tag was created by Steven Rostedt so the arm64 tree can pull the prior work
+this depends on. [1]
+
+Thanks to the ftrace refactoring under that tag, an ftrace_ops backing a ftrace
+direct call will only ever point to *one* direct call. This means we can look up
+the direct called trampoline address stored in the ops from the ftrace_caller
+trampoline in the case when the destination would be out of reach of a BL
+instruction at the ftrace callsite. This fixes limitations of previous attempts
+such as [2].
+
+This series has been tested on arm64 with:
+1- CONFIG_FTRACE_SELFTEST
+2- samples/ftrace/*.ko (cf: patch 3)
+3- tools/testing/selftests/bpf/test_progs (cf: patch 4)
+
+Changes since v4 [3]:
+- *Actually* added "BTI C" instructions at the beginning of each ftrace direct
+  call sample (v4 was supposed to do that but I forgot to git commit --amend...)
+
+1: https://lore.kernel.org/all/ZB2Nl7fzpHoq5V20@FVFF77S0Q05N/
+2: https://lore.kernel.org/all/20220913162732.163631-1-xukuohai@huaweicloud.com/
+3: https://lore.kernel.org/bpf/20230403112059.2749695-1-revest@chromium.org/
+
+Florent Revest (4):
+  arm64: ftrace: Add direct call support
+  arm64: ftrace: Simplify get_ftrace_plt
+  arm64: ftrace: Add direct call trampoline samples support
+  selftests/bpf: Update the tests deny list on aarch64
+
+ arch/arm64/Kconfig                           |  6 ++
+ arch/arm64/include/asm/ftrace.h              | 22 +++++
+ arch/arm64/kernel/asm-offsets.c              |  6 ++
+ arch/arm64/kernel/entry-ftrace.S             | 90 ++++++++++++++++----
+ arch/arm64/kernel/ftrace.c                   | 46 +++++++---
+ samples/ftrace/ftrace-direct-modify.c        | 34 ++++++++
+ samples/ftrace/ftrace-direct-multi-modify.c  | 38 +++++++++
+ samples/ftrace/ftrace-direct-multi.c         | 23 +++++
+ samples/ftrace/ftrace-direct-too.c           | 26 ++++++
+ samples/ftrace/ftrace-direct.c               | 24 ++++++
+ tools/testing/selftests/bpf/DENYLIST.aarch64 | 82 ++----------------
+ 11 files changed, 295 insertions(+), 102 deletions(-)
+
+-- 
+2.40.0.423.gd6c402a77b-goog
+
