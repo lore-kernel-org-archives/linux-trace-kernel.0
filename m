@@ -2,196 +2,167 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F0C09C76196
-	for <linux-trace-kernel@archiver.kernel.org>; Mon,  3 Apr 2023 05:01:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AB963C76196
+	for <linux-trace-kernel@archiver.kernel.org>; Mon,  3 Apr 2023 05:15:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229751AbjDCFBv (ORCPT
+        id S230200AbjDCFPF (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Mon, 3 Apr 2023 01:01:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50562 "EHLO
+        Mon, 3 Apr 2023 01:15:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55014 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229454AbjDCFBu (ORCPT
+        with ESMTP id S230192AbjDCFPF (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Mon, 3 Apr 2023 01:01:50 -0400
-Received: from mail-m118111.qiye.163.com (mail-m118111.qiye.163.com [115.236.118.111])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 727D73598;
-        Sun,  2 Apr 2023 22:01:48 -0700 (PDT)
-Received: from [10.128.10.193] (unknown [117.133.56.22])
-        by mail-m118111.qiye.163.com (Hmail) with ESMTPA id 16233580203;
-        Mon,  3 Apr 2023 13:01:31 +0800 (CST)
-Message-ID: <7088643e-400b-4cd4-edd3-63b3baa36a7c@sangfor.com.cn>
-Date:   Mon, 3 Apr 2023 13:01:30 +0800
+        Mon, 3 Apr 2023 01:15:05 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EE69C5FDB;
+        Sun,  2 Apr 2023 22:15:03 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 7377D61490;
+        Mon,  3 Apr 2023 05:15:03 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9DDEAC433D2;
+        Mon,  3 Apr 2023 05:15:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1680498902;
+        bh=Ixr/FFBnESFYocqUR2S5brutidXiL5FXC0yTKcWtPxk=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=GazujrsRaycMDAoP33HEUQ0JfQ7EMg0bNtPSIQJZat3LWer2Eu2uIckZ9nNpBnNYp
+         OXXbsQuyymB7jgZrClRzUWhjM6HPjHsbJUswwCj6jxaM+Z1psmxYl4PwehOaikiilM
+         xvDmEbw+J/6MWCb/eyyQ1GnTSl7JKfs75iuFk9TPV1K43UPjBAtNGIFiUhQw1KUncq
+         0HU0wq035hQx2DLpOkdINRQCmU6FWpQYMZdMonql8+0ksJnX+JqUc7qP7XzHF4FdNF
+         l/EKnY05EvqGepme2Og3KXyaVFY0JbTdCMceCHRxtXisTmGuBpQuhjBNRazZJh+zuE
+         D/OaXOKyIbxdw==
+Date:   Mon, 3 Apr 2023 10:44:56 +0530
+From:   Manivannan Sadhasivam <mani@kernel.org>
+To:     Simon Horman <horms@kernel.org>
+Cc:     Steven Rostedt <rostedt@goodmis.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-trace-kernel@vger.kernel.org, netdev@vger.kernel.org
+Subject: Re: [PATCH RFC] net: qrtr: correct types of trace event parameters
+Message-ID: <20230403051436.GA4627@thinkpad>
+References: <20230402-qrtr-trace-types-v1-1-da062d368e74@kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.9.1
-Subject: Re: [PATCH v10 8/8] selftests/ftrace: Add funcgraph-retval test case
-Content-Language: en-US
-From:   Donglin Peng <pengdonglin@sangfor.com.cn>
-To:     "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
-Cc:     rostedt@goodmis.org, linux@armlinux.org.uk, mark.rutland@arm.com,
-        will@kernel.org, catalin.marinas@arm.com,
-        rmk+kernel@armlinux.org.uk, palmer@dabbelt.com,
-        paul.walmsley@sifive.com, aou@eecs.berkeley.edu,
-        tglx@linutronix.de, dave.hansen@linux.intel.com, x86@kernel.org,
-        bp@alien8.de, hpa@zytor.com, chenhuacai@kernel.org,
-        zhangqing@loongson.cn, kernel@xen0n.name, mingo@redhat.com,
-        peterz@infradead.org, xiehuan09@gmail.com, dinghui@sangfor.com.cn,
-        huangcun@sangfor.com.cn, dolinux.peng@gmail.com,
-        linux-trace-kernel@vger.kernel.org, loongarch@lists.linux.dev,
-        linux-riscv@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-References: <cover.1680265828.git.pengdonglin@sangfor.com.cn>
- <ba23c2429f1ef798946ce65e21c7a7a2bff0019e.1680265828.git.pengdonglin@sangfor.com.cn>
- <20230402070406.177f09cc34f9860baf3e6ec2@kernel.org>
- <f4eabd56-2f91-05fc-b882-9dd8328f87ae@sangfor.com.cn>
-In-Reply-To: <f4eabd56-2f91-05fc-b882-9dd8328f87ae@sangfor.com.cn>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-X-HM-Spam-Status: e1kfGhgUHx5ZQUpXWQgPGg8OCBgUHx5ZQUlOS1dZFg8aDwILHllBWSg2Ly
-        tZV1koWUFITzdXWS1ZQUlXWQ8JGhUIEh9ZQVlCGEseVhlMHUwdGEoaTEtDTlUTARMWGhIXJBQOD1
-        lXWRgSC1lBWUpKTFVKSEhVTk1VSUlZV1kWGg8SFR0UWUFZT0tIVUpKS0hKTFVKS0tVS1kG
-X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6PS46Sww6FT0VKDoNFkIeLitR
-        SDkKCRFVSlVKTUNLT0JDS0JJTUpCVTMWGhIXVQseFRwfFBUcFxIVOwgaFRwdFAlVGBQWVRgVRVlX
-        WRILWUFZSkpMVUpISFVOTVVJSVlXWQgBWUFMS0pKNwY+
-X-HM-Tid: 0a87457de8552eb7kusn16233580203
-X-HM-MType: 1
+In-Reply-To: <20230402-qrtr-trace-types-v1-1-da062d368e74@kernel.org>
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On 2023/4/3 10:33, Donglin Peng wrote:
-> On 2023/4/2 6:04, Masami Hiramatsu (Google) wrote:
->> On Fri, 31 Mar 2023 05:47:44 -0700
->> Donglin Peng <pengdonglin@sangfor.com.cn> wrote:
->>
->>> Add a test case for the funcgraph-retval and funcgraph-retval-hex
->>> trace options.
->>>
->>> Signed-off-by: Donglin Peng <pengdonglin@sangfor.com.cn>
->>> ---
->>> v10:
->>>   - Fix issues in selftest
->>>
->>> v8:
->>>   - Fix issues in selftest
->>> ---
->>>   .../ftrace/test.d/ftrace/fgraph-retval.tc     | 43 +++++++++++++++++++
->>>   1 file changed, 43 insertions(+)
->>>   create mode 100644 
->>> tools/testing/selftests/ftrace/test.d/ftrace/fgraph-retval.tc
->>>
->>> diff --git 
->>> a/tools/testing/selftests/ftrace/test.d/ftrace/fgraph-retval.tc 
->>> b/tools/testing/selftests/ftrace/test.d/ftrace/fgraph-retval.tc
->>> new file mode 100644
->>> index 000000000000..5819aa2dd6ad
->>> --- /dev/null
->>> +++ b/tools/testing/selftests/ftrace/test.d/ftrace/fgraph-retval.tc
->>> @@ -0,0 +1,43 @@
->>> +#!/bin/sh
->>> +# SPDX-License-Identifier: GPL-2.0
->>> +# description: ftrace - function graph print function return value
->>> +# requires: options/funcgraph-retval options/funcgraph-retval-hex 
->>> function_graph:tracer
->>> +
->>> +# Make sure that funcgraph-retval works
->>> +
->>> +fail() { # msg
->>> +    echo $1
->>> +    exit_fail
->>> +}
->>> +
->>> +disable_tracing
->>> +clear_trace
->>> +
->>> +read PID _ < /proc/self/stat
->>
->> You can use "$$" for self pid.
+On Sun, Apr 02, 2023 at 01:15:33PM +0200, Simon Horman wrote:
+> The arguments passed to the trace events are of type unsigned int,
+> however the signature of the events used __le32 parameters.
 > 
-> Yeah, I will fix it.
-
-I found that ftracetest used () to launch a new child process for
-executing a .tc script file, however the $$ value remains unchanged,
-so we can not use $$ here, because it is PPID. Therefore I think we
-have to get PID from /proc/self/stat.
-
-Here is the code from ftracetest that launches a child shell for 
-executing the .tc file.
-
-__run_test() { # testfile
-   # setup PID and PPID, $$ is *not* updated.
-   (cd $TRACING_DIR; read PID _ < /proc/self/stat; set -e; set -x;
-    checkreq $1; initialize_ftrace; . $1)
-   [ $? -ne 0 ] && kill -s $SIG_FAIL $SIG_PID
-}
-
+> I may be missing the point here, but sparse flagged this and it
+> does seem incorrect to me.
 > 
->>
->>> +[ -f set_ftrace_pid ] && echo ${PID} > set_ftrace_pid
->>> +[ -f set_ftrace_filter ] && echo proc_reg_write > set_ftrace_filter
->>> +[ -f set_graph_function ] && echo proc_reg_write > set_graph_function
->>
->> You should set the required files for this test, so that the test result
->> is always same. BTW, you need to set either 'set_ftrace_filter' or
->> 'set_graph_function'.
-> 
-> Yes, but I discovered that set_ftrace_filter and set_graph_function rely 
-> on the CONFIG_DYNAMIC_FTRACE configuration, which means that these two 
-> files are not present when CONFIG_DYNAMIC_FTRACE is disabled, even if 
-> CONFIG_FUNCTION_GRAPH_RETVAL is enabled. Therefore, I think that these 
-> two trace files are not necessary for this test.
-> 
-> I will modify the above like this:
-> 
-> [ -f set_ftrace_pid ] && echo $$ > set_ftrace_pid
-> [ -f set_ftrace_filter ] && echo proc_reg_write > set_ftrace_filter
-> 
->>
->>> +echo function_graph > current_tracer
->>> +echo funcgraph-retval > trace_options
->>> +
->>> +set +e
->>> +enable_tracing
->>> +echo > /proc/interrupts
->>> +disable_tracing
->>> +set -e
->>> +
->>> +: "Test printing the error code in signed decimal format"
->>> +echo nofuncgraph-retval-hex > trace_options
->>
->> echo 0 > options/funcgraph-retval-hex
->>
->> If you require 'options/funcgraph-retval-hex' file, you can use the
->> file to set it or clear it.
-> 
-> Yeah.
-> 
->>
->>> +count=`cat trace | grep 'proc_reg_write' | grep '= -5' | wc -l`
->>> +if [ $count -eq 0 ]; then
->>> +    fail "Return value can not be printed in signed decimal format"
->>> +fi
->>> +
->>> +: "Test printing the error code in hexadecimal format"
->>> +echo funcgraph-retval-hex > trace_options
->>
->> Ditto.
-> 
-> Thanks.
-> 
->>
->> Thanks,
->>
->>> +count=`cat trace | grep 'proc_reg_write' | grep 'fffffffb' | wc -l`
->>> +if [ $count -eq 0 ]; then
->>> +    fail "Return value can not be printed in hexadecimal format"
->>> +fi
->>> +
->>> +exit 0
->>> -- 
->>> 2.25.1
->>>
->>
->>
+>   net/qrtr/ns.c: note: in included file (through include/trace/trace_events.h, include/trace/define_trace.h, include/trace/events/qrtr.h):
+>   ./include/trace/events/qrtr.h:11:1: warning: cast to restricted __le32
+>   ./include/trace/events/qrtr.h:11:1: warning: restricted __le32 degrades to integer
+>   ./include/trace/events/qrtr.h:11:1: warning: restricted __le32 degrades to integer
+>   ... (a lot more similar warnings)
+>   net/qrtr/ns.c:115:47:    expected restricted __le32 [usertype] service
+>   net/qrtr/ns.c:115:47:    got unsigned int service
+>   net/qrtr/ns.c:115:61: warning: incorrect type in argument 2 (different base types)
+>   ... (a lot more similar warnings)
 > 
 
+You are right. The actual arguments (service, instance, node, port) transferred/
+received over QRTR are in le32 as per the protocol. But in the NS driver, the
+arguments passed to the trace events are in the native endian (i.e) before
+getting typecased to le32 for transmission.
+
+And my intention was to trace the arguments in native endian format only. So
+this patch indeed fixes the issue.
+
+> Signed-off-by: Simon Horman <horms@kernel.org>
+
+Please add the fixes tag once you remove RFC,
+
+Fixes: dfddb54043f0 ("net: qrtr: Add tracepoint support")
+
+Reviewed-by: Manivannan Sadhasivam <mani@kernel.org>
+
+- Mani
+
+> ---
+>  include/trace/events/qrtr.h | 33 ++++++++++++++++++---------------
+>  1 file changed, 18 insertions(+), 15 deletions(-)
+> 
+> diff --git a/include/trace/events/qrtr.h b/include/trace/events/qrtr.h
+> index b1de14c3bb93..441132c67133 100644
+> --- a/include/trace/events/qrtr.h
+> +++ b/include/trace/events/qrtr.h
+> @@ -10,15 +10,16 @@
+>  
+>  TRACE_EVENT(qrtr_ns_service_announce_new,
+>  
+> -	TP_PROTO(__le32 service, __le32 instance, __le32 node, __le32 port),
+> +	TP_PROTO(unsigned int service, unsigned int instance,
+> +		 unsigned int node, unsigned int port),
+>  
+>  	TP_ARGS(service, instance, node, port),
+>  
+>  	TP_STRUCT__entry(
+> -		__field(__le32, service)
+> -		__field(__le32, instance)
+> -		__field(__le32, node)
+> -		__field(__le32, port)
+> +		__field(unsigned int, service)
+> +		__field(unsigned int, instance)
+> +		__field(unsigned int, node)
+> +		__field(unsigned int, port)
+>  	),
+>  
+>  	TP_fast_assign(
+> @@ -36,15 +37,16 @@ TRACE_EVENT(qrtr_ns_service_announce_new,
+>  
+>  TRACE_EVENT(qrtr_ns_service_announce_del,
+>  
+> -	TP_PROTO(__le32 service, __le32 instance, __le32 node, __le32 port),
+> +	TP_PROTO(unsigned int service, unsigned int instance,
+> +		 unsigned int node, unsigned int port),
+>  
+>  	TP_ARGS(service, instance, node, port),
+>  
+>  	TP_STRUCT__entry(
+> -		__field(__le32, service)
+> -		__field(__le32, instance)
+> -		__field(__le32, node)
+> -		__field(__le32, port)
+> +		__field(unsigned int, service)
+> +		__field(unsigned int, instance)
+> +		__field(unsigned int, node)
+> +		__field(unsigned int, port)
+>  	),
+>  
+>  	TP_fast_assign(
+> @@ -62,15 +64,16 @@ TRACE_EVENT(qrtr_ns_service_announce_del,
+>  
+>  TRACE_EVENT(qrtr_ns_server_add,
+>  
+> -	TP_PROTO(__le32 service, __le32 instance, __le32 node, __le32 port),
+> +	TP_PROTO(unsigned int service, unsigned int instance,
+> +		 unsigned int node, unsigned int port),
+>  
+>  	TP_ARGS(service, instance, node, port),
+>  
+>  	TP_STRUCT__entry(
+> -		__field(__le32, service)
+> -		__field(__le32, instance)
+> -		__field(__le32, node)
+> -		__field(__le32, port)
+> +		__field(unsigned int, service)
+> +		__field(unsigned int, instance)
+> +		__field(unsigned int, node)
+> +		__field(unsigned int, port)
+>  	),
+>  
+>  	TP_fast_assign(
+> 
+
+-- 
+மணிவண்ணன் சதாசிவம்
