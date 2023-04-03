@@ -2,33 +2,33 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 145B1C76188
-	for <linux-trace-kernel@archiver.kernel.org>; Mon,  3 Apr 2023 16:47:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 71820C76188
+	for <linux-trace-kernel@archiver.kernel.org>; Mon,  3 Apr 2023 17:02:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232526AbjDCQrJ (ORCPT
+        id S232195AbjDCRCY (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Mon, 3 Apr 2023 12:47:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55930 "EHLO
+        Mon, 3 Apr 2023 13:02:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43888 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231899AbjDCQrI (ORCPT
+        with ESMTP id S232752AbjDCRCY (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Mon, 3 Apr 2023 12:47:08 -0400
+        Mon, 3 Apr 2023 13:02:24 -0400
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 0F945171E;
-        Mon,  3 Apr 2023 09:47:06 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id C1E52270E;
+        Mon,  3 Apr 2023 10:02:22 -0700 (PDT)
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 08CFBFEC;
-        Mon,  3 Apr 2023 09:47:51 -0700 (PDT)
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 05706FEC;
+        Mon,  3 Apr 2023 10:03:07 -0700 (PDT)
 Received: from [10.57.20.195] (unknown [10.57.20.195])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id E1DEC3F6C4;
-        Mon,  3 Apr 2023 09:47:03 -0700 (PDT)
-Message-ID: <bdaebc90-ca39-1301-c7ba-e367f8406d09@arm.com>
-Date:   Mon, 3 Apr 2023 17:47:02 +0100
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 1165B3F6C4;
+        Mon,  3 Apr 2023 10:02:18 -0700 (PDT)
+Message-ID: <cd91905d-2bf2-bd66-92d2-f6fb42f669e3@arm.com>
+Date:   Mon, 3 Apr 2023 18:02:17 +0100
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.9.0
-Subject: Re: [PATCH 1/3] sched/tp: Add new tracepoint to track uclamp set from
- user-space
+Subject: Re: [PATCH 3/3] schedutil: trace: Add tracing to capture filter out
+ requests
 Content-Language: en-US
 To:     Qais Yousef <qyousef@layalina.io>
 Cc:     linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
@@ -38,119 +38,55 @@ Cc:     linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
         bsegall@google.com, mgorman@suse.de, bristot@redhat.com,
         vschneid@redhat.com, delyank@fb.com, qyousef@google.com
 References: <20230322151843.14390-1-lukasz.luba@arm.com>
- <20230322151843.14390-2-lukasz.luba@arm.com>
- <20230403134606.amdxfmr5fb544xnv@airbuntu>
+ <20230322151843.14390-4-lukasz.luba@arm.com>
+ <20230403134646.shc2m57yvvnf2o54@airbuntu>
 From:   Lukasz Luba <lukasz.luba@arm.com>
-In-Reply-To: <20230403134606.amdxfmr5fb544xnv@airbuntu>
+In-Reply-To: <20230403134646.shc2m57yvvnf2o54@airbuntu>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-Hi Qais,
+
 
 On 4/3/23 14:46, Qais Yousef wrote:
-> Hi Lukasz!
-> 
 > On 03/22/23 15:18, Lukasz Luba wrote:
->> The user-space can set uclamp value for a given task. It impacts task
->> placement decisions made by the scheduler. This is very useful information
->> and helps to understand the system behavior or track improvements in
->> middleware and applications which start using uclamp mechanisms and report
->> better performance in tests.
+>> Some of the frequency update requests coming form the task scheduler
+>> might be filter out. It can happen when the previous request was served
+>> not that long ago (in a period smaller than provided by the cpufreq driver
+>> as minimum for frequency update). In such case, we want to know if some of
+>> the frequency updates cannot make through.
+>> Export the new tracepoint as well. That would allow to handle it by a
+>> toolkit for trace analyzes.
 > 
-> We do have uclamp trace events in sched_tp, why are they not sufficient?
-> 
-> 	https://github.com/qais-yousef/sched_tp/blob/main/sched_events.h#L233
-> 
-> Do you really want to know the exact time the value has changed?
+> I think you can use register_kretprobe() for this one. When functions are not
+> inlined it should be easy to hook into them and you can get the return value of
+> the function too.
 
-Yes, that's why these new are triggered instantly after userspace wanted
-to set the new uclamp values. We are going to have a few different
-uclamp implementations: one in mainline and X in Android vendor kernels.
-The goal is to have only one... We will have to experiment to find
-the behavior of those algorithms and understand the differences. Since
-uclamp is part of this 'control-chain' of CPU frequency and also
-task placement - it would be really tricky to figure our everything.
-The analysis on traces are crucial for this.
+Could be possible, but that's a different pattern to what we have in
+terms of LISa. It's also a bit complicated for downstream folks to
+understand when I would ask about the trace with a particular name.
+The integration would be a bit more complicated and our tooling and CI
+might be impacted but this different design approach. Therefore,
+I prefer to be aligned with the old-school.
 
 > 
-> Would it make sense to introduce a generic sched_setscheduler tracepoint
-> instead? Although this might not be necessary as I think we can use
-> register_kprobe() to register a callback and create a new event without any
-> additional tracepoint. sched_setscheduler() is not inlined so should be easy to
-> hook into and create events, no?
+> Check the usage in lib/test_kprobes.c. Creating the event in sched_tp should be
+> the same way when registering for a tracepoint. They both are essentially the
+> same.
+> 
+> Patches to sched_tp module would be welcome ;-)
 
-This looks very complex and we already have our LISA tool with the
-module to change the tracepoints into trace events and build them.
-I wanted to be aligned with that design, which might look a bit
-old-fashion but is simple IMO.
+I cannot promise, but I'll try to find some cycles for it :)
 
-The 'sched_setscheduler tracepoint' might be a too big for this
-purpose.
-
-Thanks for the comments :)
+Cheers,
 Lukasz
 
 > 
 > 
-> Thanks
+> Cheers
 > 
 > --
 > Qais Yousef
 > 
->>
->> Signed-off-by: Lukasz Luba <lukasz.luba@arm.com>
->> ---
->>   include/trace/events/sched.h | 4 ++++
->>   kernel/sched/core.c          | 5 +++++
->>   2 files changed, 9 insertions(+)
->>
->> diff --git a/include/trace/events/sched.h b/include/trace/events/sched.h
->> index fbb99a61f714..dbfb30809f15 100644
->> --- a/include/trace/events/sched.h
->> +++ b/include/trace/events/sched.h
->> @@ -735,6 +735,10 @@ DECLARE_TRACE(sched_update_nr_running_tp,
->>   	TP_PROTO(struct rq *rq, int change),
->>   	TP_ARGS(rq, change));
->>   
->> +DECLARE_TRACE(uclamp_update_tsk_tp,
->> +	TP_PROTO(struct task_struct *tsk, int uclamp_id,  unsigned int value),
->> +	TP_ARGS(tsk, uclamp_id, value));
->> +
->>   #endif /* _TRACE_SCHED_H */
->>   
->>   /* This part must be outside protection */
->> diff --git a/kernel/sched/core.c b/kernel/sched/core.c
->> index 488655f2319f..882c92e3ccf0 100644
->> --- a/kernel/sched/core.c
->> +++ b/kernel/sched/core.c
->> @@ -110,6 +110,7 @@ EXPORT_TRACEPOINT_SYMBOL_GPL(sched_overutilized_tp);
->>   EXPORT_TRACEPOINT_SYMBOL_GPL(sched_util_est_cfs_tp);
->>   EXPORT_TRACEPOINT_SYMBOL_GPL(sched_util_est_se_tp);
->>   EXPORT_TRACEPOINT_SYMBOL_GPL(sched_update_nr_running_tp);
->> +EXPORT_TRACEPOINT_SYMBOL_GPL(uclamp_update_tsk_tp);
->>   
->>   DEFINE_PER_CPU_SHARED_ALIGNED(struct rq, runqueues);
->>   
->> @@ -1936,12 +1937,16 @@ static void __setscheduler_uclamp(struct task_struct *p,
->>   	    attr->sched_util_min != -1) {
->>   		uclamp_se_set(&p->uclamp_req[UCLAMP_MIN],
->>   			      attr->sched_util_min, true);
->> +		trace_uclamp_update_tsk_tp(p, UCLAMP_MIN,
->> +					   attr->sched_util_min);
->>   	}
->>   
->>   	if (attr->sched_flags & SCHED_FLAG_UTIL_CLAMP_MAX &&
->>   	    attr->sched_util_max != -1) {
->>   		uclamp_se_set(&p->uclamp_req[UCLAMP_MAX],
->>   			      attr->sched_util_max, true);
->> +		trace_uclamp_update_tsk_tp(p, UCLAMP_MAX,
->> +					   attr->sched_util_max);
->>   	}
->>   }
->>   
->> -- 
->> 2.17.1
->>
