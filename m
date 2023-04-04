@@ -2,96 +2,127 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 07B08C761AF
-	for <linux-trace-kernel@archiver.kernel.org>; Tue,  4 Apr 2023 23:03:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 64697C76188
+	for <linux-trace-kernel@archiver.kernel.org>; Tue,  4 Apr 2023 23:45:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236516AbjDDXDN (ORCPT
+        id S236625AbjDDXpL (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Tue, 4 Apr 2023 19:03:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40434 "EHLO
+        Tue, 4 Apr 2023 19:45:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57412 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236029AbjDDXDM (ORCPT
+        with ESMTP id S236619AbjDDXpK (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Tue, 4 Apr 2023 19:03:12 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4046C10CA;
-        Tue,  4 Apr 2023 16:03:11 -0700 (PDT)
+        Tue, 4 Apr 2023 19:45:10 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 269824216;
+        Tue,  4 Apr 2023 16:45:08 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 4586063935;
-        Tue,  4 Apr 2023 23:03:10 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A6348C433EF;
-        Tue,  4 Apr 2023 23:03:09 +0000 (UTC)
-Received: from rostedt by gandalf with local (Exim 4.96)
-        (envelope-from <rostedt@goodmis.org>)
-        id 1pjpgC-000elp-1Y;
-        Tue, 04 Apr 2023 19:03:08 -0400
-Message-ID: <20230404230308.297647172@goodmis.org>
-User-Agent: quilt/0.66
-Date:   Tue, 04 Apr 2023 19:00:12 -0400
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 6BF1B63AC8;
+        Tue,  4 Apr 2023 23:45:07 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B5AB4C433D2;
+        Tue,  4 Apr 2023 23:45:05 +0000 (UTC)
+Date:   Tue, 4 Apr 2023 19:45:04 -0400
 From:   Steven Rostedt <rostedt@goodmis.org>
-To:     linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
+To:     LKML <linux-kernel@vger.kernel.org>,
+        Linux Trace Kernel <linux-trace-kernel@vger.kernel.org>
 Cc:     Masami Hiramatsu <mhiramat@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
         Andrew Morton <akpm@linux-foundation.org>,
-        Ross Zwisler <zwisler@google.com>, stable@vger.kernel.org
-Subject: [PATCH 1/2] tracing: Have tracing_snapshot_instance_cond() write errors to the
- appropriate instance
-References: <20230404230011.757302390@goodmis.org>
+        Mark Rutland <mark.rutland@arm.com>,
+        Mirsad Goran Todorovac <mirsad.todorovac@alu.unizg.hr>,
+        Thorsten Leemhuis <regressions@leemhuis.info>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Eric Biggers <ebiggers@kernel.org>
+Subject: [PATCH] tracing: Free error logs of tracing instances
+Message-ID: <20230404194504.5790b95f@gandalf.local.home>
+X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
 From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
 
-If a trace instance has a failure with its snapshot code, the error
-message is to be written to that instance's buffer. But currently, the
-message is written to the top level buffer. Worse yet, it may also disable
-the top level buffer and not the instance that had the issue.
+When a tracing instance is removed, the error messages that hold errors
+that occurred in the instance needs to be freed. The following reports a
+memory leak:
+
+ # cd /sys/kernel/tracing
+ # mkdir instances/foo
+ # echo 'hist:keys=x' > instances/foo/events/sched/sched_switch/trigger
+ # cat instances/foo/error_log
+ [  117.404795] hist:sched:sched_switch: error: Couldn't find field
+   Command: hist:keys=x
+                      ^
+ # rmdir instances/foo
+
+Then check for memory leaks:
+
+ # echo scan > /sys/kernel/debug/kmemleak
+ # cat /sys/kernel/debug/kmemleak
+unreferenced object 0xffff88810d8ec700 (size 192):
+  comm "bash", pid 869, jiffies 4294950577 (age 215.752s)
+  hex dump (first 32 bytes):
+    60 dd 68 61 81 88 ff ff 60 dd 68 61 81 88 ff ff  `.ha....`.ha....
+    a0 30 8c 83 ff ff ff ff 26 00 0a 00 00 00 00 00  .0......&.......
+  backtrace:
+    [<00000000dae26536>] kmalloc_trace+0x2a/0xa0
+    [<00000000b2938940>] tracing_log_err+0x277/0x2e0
+    [<000000004a0e1b07>] parse_atom+0x966/0xb40
+    [<0000000023b24337>] parse_expr+0x5f3/0xdb0
+    [<00000000594ad074>] event_hist_trigger_parse+0x27f8/0x3560
+    [<00000000293a9645>] trigger_process_regex+0x135/0x1a0
+    [<000000005c22b4f2>] event_trigger_write+0x87/0xf0
+    [<000000002cadc509>] vfs_write+0x162/0x670
+    [<0000000059c3b9be>] ksys_write+0xca/0x170
+    [<00000000f1cddc00>] do_syscall_64+0x3e/0xc0
+    [<00000000868ac68c>] entry_SYSCALL_64_after_hwframe+0x72/0xdc
+unreferenced object 0xffff888170c35a00 (size 32):
+  comm "bash", pid 869, jiffies 4294950577 (age 215.752s)
+  hex dump (first 32 bytes):
+    0a 20 20 43 6f 6d 6d 61 6e 64 3a 20 68 69 73 74  .  Command: hist
+    3a 6b 65 79 73 3d 78 0a 00 00 00 00 00 00 00 00  :keys=x.........
+  backtrace:
+    [<000000006a747de5>] __kmalloc+0x4d/0x160
+    [<000000000039df5f>] tracing_log_err+0x29b/0x2e0
+    [<000000004a0e1b07>] parse_atom+0x966/0xb40
+    [<0000000023b24337>] parse_expr+0x5f3/0xdb0
+    [<00000000594ad074>] event_hist_trigger_parse+0x27f8/0x3560
+    [<00000000293a9645>] trigger_process_regex+0x135/0x1a0
+    [<000000005c22b4f2>] event_trigger_write+0x87/0xf0
+    [<000000002cadc509>] vfs_write+0x162/0x670
+    [<0000000059c3b9be>] ksys_write+0xca/0x170
+    [<00000000f1cddc00>] do_syscall_64+0x3e/0xc0
+    [<00000000868ac68c>] entry_SYSCALL_64_after_hwframe+0x72/0xdc
+
+The problem is that the error log needs to be freed when the instance is
+removed.
+
+Link: https://lore.kernel.org/lkml/76134d9f-a5ba-6a0d-37b3-28310b4a1e91@alu.unizg.hr/
 
 Cc: stable@vger.kernel.org
-Fixes: 2824f50332486 ("tracing: Make the snapshot trigger work with instances")
+Fixes: 2f754e771b1a6 ("tracing: Have the error logs show up in the proper instances")
+Reported-by: Mirsad Goran Todorovac <mirsad.todorovac@alu.unizg.hr>
 Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
 ---
- kernel/trace/trace.c | 14 +++++++-------
- 1 file changed, 7 insertions(+), 7 deletions(-)
+ kernel/trace/trace.c | 1 +
+ 1 file changed, 1 insertion(+)
 
 diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
-index 937e9676dfd4..ed1d1093f5e9 100644
+index 8ae51f1dea8e..352a804b016d 100644
 --- a/kernel/trace/trace.c
 +++ b/kernel/trace/trace.c
-@@ -1149,22 +1149,22 @@ static void tracing_snapshot_instance_cond(struct trace_array *tr,
- 	unsigned long flags;
+@@ -9516,6 +9516,7 @@ static int __remove_instance(struct trace_array *tr)
+ 	tracefs_remove(tr->dir);
+ 	free_percpu(tr->last_func_repeats);
+ 	free_trace_buffers(tr);
++	clear_tracing_err_log(tr);
  
- 	if (in_nmi()) {
--		internal_trace_puts("*** SNAPSHOT CALLED FROM NMI CONTEXT ***\n");
--		internal_trace_puts("*** snapshot is being ignored        ***\n");
-+		trace_array_puts(tr, "*** SNAPSHOT CALLED FROM NMI CONTEXT ***\n");
-+		trace_array_puts(tr, "*** snapshot is being ignored        ***\n");
- 		return;
- 	}
- 
- 	if (!tr->allocated_snapshot) {
--		internal_trace_puts("*** SNAPSHOT NOT ALLOCATED ***\n");
--		internal_trace_puts("*** stopping trace here!   ***\n");
--		tracing_off();
-+		trace_array_puts(tr, "*** SNAPSHOT NOT ALLOCATED ***\n");
-+		trace_array_puts(tr, "*** stopping trace here!   ***\n");
-+		tracer_tracing_off(tr);
- 		return;
- 	}
- 
- 	/* Note, snapshot can not be used when the tracer uses it */
- 	if (tracer->use_max_tr) {
--		internal_trace_puts("*** LATENCY TRACER ACTIVE ***\n");
--		internal_trace_puts("*** Can not use snapshot (sorry) ***\n");
-+		trace_array_puts(tr, "*** LATENCY TRACER ACTIVE ***\n");
-+		trace_array_puts(tr, "*** Can not use snapshot (sorry) ***\n");
- 		return;
- 	}
- 
+ 	for (i = 0; i < tr->nr_topts; i++) {
+ 		kfree(tr->topts[i].topts);
 -- 
 2.39.2
+
