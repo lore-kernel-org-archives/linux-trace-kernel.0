@@ -2,105 +2,180 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BD7EEC7618D
-	for <linux-trace-kernel@archiver.kernel.org>; Tue,  4 Apr 2023 07:37:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E52DC77B62
+	for <linux-trace-kernel@archiver.kernel.org>; Tue,  4 Apr 2023 08:20:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233706AbjDDHh4 (ORCPT
+        id S234126AbjDDIU0 (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Tue, 4 Apr 2023 03:37:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44492 "EHLO
+        Tue, 4 Apr 2023 04:20:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56336 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233928AbjDDHhy (ORCPT
+        with ESMTP id S234123AbjDDIUX (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Tue, 4 Apr 2023 03:37:54 -0400
-Received: from mail-wr1-x42f.google.com (mail-wr1-x42f.google.com [IPv6:2a00:1450:4864:20::42f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DCF84137
-        for <linux-trace-kernel@vger.kernel.org>; Tue,  4 Apr 2023 00:37:53 -0700 (PDT)
-Received: by mail-wr1-x42f.google.com with SMTP id j24so31783673wrd.0
-        for <linux-trace-kernel@vger.kernel.org>; Tue, 04 Apr 2023 00:37:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112; t=1680593872;
-        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=seoNBFTF4gD2bGERn3rux8neCDK93XhgsoBfvJ4M+UI=;
-        b=Aav7Czuz08kGIElQ+jeAEzZbX4sIGIRRc/HjRhRrNUpFP/PSTZy5LctZ68QwW7hAYv
-         6yWMn9dk16pLOhPJY4J0bAMunwtxKYwJGWaHo0AO6HAAO6pH8rQsI4k8z4VdAN6uePXL
-         +Jnzr9Y9UK9tc17wMoyee1RoeCKtbPoMS9tTGXGU5652FHpwyEeMKbhsr/tLuqlZ5IUW
-         lkPDfmD0TVNGs7Mh9NOQiGz67n5pPLeKcdNzkwcixTtC8HaBSm678YHqx8UpChxwbtJK
-         9dJQbsWwQgG2WucKPnGnb6tTQC/bim65Uk6MMsZEjh0xrLX4qYET9Hy1HmBykmmAfLbe
-         /T3A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1680593872;
-        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=seoNBFTF4gD2bGERn3rux8neCDK93XhgsoBfvJ4M+UI=;
-        b=p0cMUFDkvlg0HfbtaCoRbQVCjRgxK3L1EjKnRCXMyRWsM7P+jrfR8tYoA2+IWGtOwE
-         h8ROOAqhZNvwol21RixAV6ADleZXR+v5cMN+2LBJfAgwRWB2TsY2wW+dG7TChdFNkmcS
-         m3TXWXc2RO5kMXuufptm0ajsmv7ApDOiVGlCvDtnRJdX7KTl4mb9t4F2d0GyuChmwex1
-         MleHurzjiJcUgnETpdxs9qMCD0tyHWiv7TG+6Rc06CB2SJBIxtiBUZGm93o7q75B6vMe
-         fkkS37ews+frp7An3KeeOI0ImDWqduG/rhRS4BuwV/VJDqpByTFhmHVvQHVJnG0llXvm
-         oDWQ==
-X-Gm-Message-State: AAQBX9ebTySXzaILh5BwXY+7c5mMoRel6/ZSw35LdrfIynywP9kr5lql
-        qm6DWaJ4dNGK51j01O+7uzg=
-X-Google-Smtp-Source: AKy350aV0kW469W7C84G01LHuLzPP4XNrp8TdbxwnWdrwS8rZlJIVJJWhqGgqO6JfqNHC4oDLMPBrA==
-X-Received: by 2002:adf:fc4d:0:b0:2c9:8df7:b390 with SMTP id e13-20020adffc4d000000b002c98df7b390mr855170wrs.63.1680593872242;
-        Tue, 04 Apr 2023 00:37:52 -0700 (PDT)
-Received: from localhost ([102.36.222.112])
-        by smtp.gmail.com with ESMTPSA id b5-20020a5d4b85000000b002c559843748sm11604225wrt.10.2023.04.04.00.37.51
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 04 Apr 2023 00:37:51 -0700 (PDT)
-Date:   Tue, 4 Apr 2023 10:37:48 +0300
-From:   Dan Carpenter <error27@gmail.com>
-To:     mhiramat@kernel.org
-Cc:     linux-trace-kernel@vger.kernel.org
-Subject: [bug report] fprobe: Skip exit_handler if entry_handler returns !0
-Message-ID: <85429a5c-a4b9-499e-b6c0-cbd313291c49@kili.mountain>
+        Tue, 4 Apr 2023 04:20:23 -0400
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A10DF1A4;
+        Tue,  4 Apr 2023 01:20:22 -0700 (PDT)
+Received: from pps.filterd (m0279865.ppops.net [127.0.0.1])
+        by mx0a-0031df01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 3345usVj014799;
+        Tue, 4 Apr 2023 08:20:19 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=message-id : date :
+ mime-version : subject : to : cc : references : from : in-reply-to :
+ content-type : content-transfer-encoding; s=qcppdkim1;
+ bh=X3b5qJIOalorokOS7twAewMeNT3gtn3t8Ss3x3cQbCI=;
+ b=dcYu+YeXALGc4IXslie6D1Tb0e/70WP9UtTO0hnWEaacdD9ORIewfoz9Jo3yLhVIoVNx
+ 4q8BonxC9msmCKa2nBUq75OCFnMogGj1cVwpiUi1OSjqoDA0s/wMaQ1K9HdG087yJGjO
+ 0oHjqcbYh5tzlIRBc9MzlVKCxqJ93Ujsbf7o5wwDYlea6OwlqM5LkqZQzO2TXBptmDBO
+ B3DGE8JkOlVAXo6mw3SMWcjhLgXLIdr5DaLpGGQTtshDl8pE5Z2rAkVQ3H0Wtj64LtKn
+ +AYJGcz6YOmRNJNcD5wXFS2yLhOCJjHhFfxj/PZEp+nyPFUCCHDZBaRQZ2QETaRwwAWW WA== 
+Received: from nasanppmta05.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+        by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3pqw36tr9n-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 04 Apr 2023 08:20:19 +0000
+Received: from nasanex01c.na.qualcomm.com (nasanex01c.na.qualcomm.com [10.45.79.139])
+        by NASANPPMTA05.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 3348KIUt021098
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 4 Apr 2023 08:20:18 GMT
+Received: from [10.214.66.81] (10.80.80.8) by nasanex01c.na.qualcomm.com
+ (10.45.79.139) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.986.42; Tue, 4 Apr 2023
+ 01:20:15 -0700
+Message-ID: <ed690550-3256-f889-c18f-2182d4b904cc@quicinc.com>
+Date:   Tue, 4 Apr 2023 13:50:12 +0530
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.8.0
+Subject: Re: [PATCH RFC] net: qrtr: correct types of trace event parameters
+Content-Language: en-US
+To:     Simon Horman <horms@kernel.org>,
+        Manivannan Sadhasivam <mani@kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>
+CC:     <linux-arm-msm@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-trace-kernel@vger.kernel.org>, <netdev@vger.kernel.org>
+References: <20230402-qrtr-trace-types-v1-1-da062d368e74@kernel.org>
+From:   Mukesh Ojha <quic_mojha@quicinc.com>
+In-Reply-To: <20230402-qrtr-trace-types-v1-1-da062d368e74@kernel.org>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.80.80.8]
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nasanex01c.na.qualcomm.com (10.45.79.139)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-ORIG-GUID: 4uNhI53zH0IIxZvyxYztqfPi_ilI_20V
+X-Proofpoint-GUID: 4uNhI53zH0IIxZvyxYztqfPi_ilI_20V
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.254,Aquarius:18.0.942,Hydra:6.0.573,FMLib:17.11.170.22
+ definitions=2023-04-04_02,2023-04-03_03,2023-02-09_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0 impostorscore=0
+ lowpriorityscore=0 priorityscore=1501 bulkscore=0 suspectscore=0
+ phishscore=0 clxscore=1011 malwarescore=0 adultscore=0 mlxscore=0
+ mlxlogscore=999 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2303200000 definitions=main-2304040077
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-Hello Masami Hiramatsu (Google),
 
-The patch 39d954200bf6: "fprobe: Skip exit_handler if entry_handler
-returns !0" from Feb 2, 2023, leads to the following Smatch static
-checker warning:
 
-	kernel/trace/fprobe.c:59 fprobe_handler()
-	error: uninitialized symbol 'ret'.
+On 4/2/2023 4:45 PM, Simon Horman wrote:
+> The arguments passed to the trace events are of type unsigned int,
+> however the signature of the events used __le32 parameters.
+> 
+> I may be missing the point here, but sparse flagged this and it
+> does seem incorrect to me.
+> 
+>    net/qrtr/ns.c: note: in included file (through include/trace/trace_events.h, include/trace/define_trace.h, include/trace/events/qrtr.h):
+>    ./include/trace/events/qrtr.h:11:1: warning: cast to restricted __le32
+>    ./include/trace/events/qrtr.h:11:1: warning: restricted __le32 degrades to integer
+>    ./include/trace/events/qrtr.h:11:1: warning: restricted __le32 degrades to integer
+>    ... (a lot more similar warnings)
+>    net/qrtr/ns.c:115:47:    expected restricted __le32 [usertype] service
+>    net/qrtr/ns.c:115:47:    got unsigned int service
+>    net/qrtr/ns.c:115:61: warning: incorrect type in argument 2 (different base types)
+>    ... (a lot more similar warnings)
+> 
+> Signed-off-by: Simon Horman <horms@kernel.org>
+> ---
+>   include/trace/events/qrtr.h | 33 ++++++++++++++++++---------------
+>   1 file changed, 18 insertions(+), 15 deletions(-)
+> 
+> diff --git a/include/trace/events/qrtr.h b/include/trace/events/qrtr.h
+> index b1de14c3bb93..441132c67133 100644
+> --- a/include/trace/events/qrtr.h
+> +++ b/include/trace/events/qrtr.h
+> @@ -10,15 +10,16 @@
+>   
+>   TRACE_EVENT(qrtr_ns_service_announce_new,
+>   
+> -	TP_PROTO(__le32 service, __le32 instance, __le32 node, __le32 port),
+> +	TP_PROTO(unsigned int service, unsigned int instance,
+> +		 unsigned int node, unsigned int port),
+>   
+>   	TP_ARGS(service, instance, node, port),
+>   
+>   	TP_STRUCT__entry(
+> -		__field(__le32, service)
+> -		__field(__le32, instance)
+> -		__field(__le32, node)
+> -		__field(__le32, port)
+> +		__field(unsigned int, service)
+> +		__field(unsigned int, instance)
+> +		__field(unsigned int, node)
+> +		__field(unsigned int, port)
+>   	),
+>   
+>   	TP_fast_assign(
+> @@ -36,15 +37,16 @@ TRACE_EVENT(qrtr_ns_service_announce_new,
+>   
+>   TRACE_EVENT(qrtr_ns_service_announce_del,
+>   
+> -	TP_PROTO(__le32 service, __le32 instance, __le32 node, __le32 port),
+> +	TP_PROTO(unsigned int service, unsigned int instance,
+> +		 unsigned int node, unsigned int port),
+>   
+>   	TP_ARGS(service, instance, node, port),
+>   
+>   	TP_STRUCT__entry(
+> -		__field(__le32, service)
+> -		__field(__le32, instance)
+> -		__field(__le32, node)
+> -		__field(__le32, port)
+> +		__field(unsigned int, service)
+> +		__field(unsigned int, instance)
+> +		__field(unsigned int, node)
+> +		__field(unsigned int, port)
+>   	),
+>   
+>   	TP_fast_assign(
+> @@ -62,15 +64,16 @@ TRACE_EVENT(qrtr_ns_service_announce_del,
+>   
+>   TRACE_EVENT(qrtr_ns_server_add,
+>   
+> -	TP_PROTO(__le32 service, __le32 instance, __le32 node, __le32 port),
+> +	TP_PROTO(unsigned int service, unsigned int instance,
+> +		 unsigned int node, unsigned int port),
+>   
+>   	TP_ARGS(service, instance, node, port),
+>   
+>   	TP_STRUCT__entry(
+> -		__field(__le32, service)
+> -		__field(__le32, instance)
+> -		__field(__le32, node)
+> -		__field(__le32, port)
+> +		__field(unsigned int, service)
+> +		__field(unsigned int, instance)
+> +		__field(unsigned int, node)
+> +		__field(unsigned int, port)
+>   	),
+>   
+>   	TP_fast_assign(
 
-kernel/trace/fprobe.c
-    49                 fpr->entry_ip = ip;
-    50                 if (fp->entry_data_size)
-    51                         entry_data = fpr->data;
-    52         }
-    53 
-    54         if (fp->entry_handler)
-    55                 ret = fp->entry_handler(fp, ip, ftrace_get_regs(fregs), entry_data);
+LGTM.
 
-ret is only initialized if there is an ->entry_handler
+Acked-by: Mukesh Ojha <quic_mojha@quicinc.com>
 
-    56 
-    57         /* If entry_handler returns !0, nmissed is not counted. */
-    58         if (rh) {
+--Mukesh
 
-rh is only true if there is an ->exit_handler.  Presumably if you have
-and ->exit_handler that means you also have a ->entry_handler but Smatch
-is not smart enough to figure it out.
-
---> 59                 if (ret)
-                           ^^^
-Warning here.
-
-    60                         rethook_recycle(rh);
-    61                 else
-    62                         rethook_hook(rh, ftrace_get_regs(fregs), true);
-    63         }
-    64 out:
-    65         ftrace_test_recursion_unlock(bit);
-    66 }
-
-regards,
-dan carpenter
+> 
