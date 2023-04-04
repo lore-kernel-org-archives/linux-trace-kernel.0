@@ -2,205 +2,361 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BB992C6FD1D
-	for <linux-trace-kernel@archiver.kernel.org>; Tue,  4 Apr 2023 12:53:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 92CD9C761A6
+	for <linux-trace-kernel@archiver.kernel.org>; Tue,  4 Apr 2023 13:39:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234262AbjDDMxM (ORCPT
+        id S235373AbjDDNj3 (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Tue, 4 Apr 2023 08:53:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56752 "EHLO
+        Tue, 4 Apr 2023 09:39:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54874 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235076AbjDDMxL (ORCPT
+        with ESMTP id S235400AbjDDNjM (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Tue, 4 Apr 2023 08:53:11 -0400
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 67878269A;
-        Tue,  4 Apr 2023 05:53:07 -0700 (PDT)
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 4A431D75;
-        Tue,  4 Apr 2023 05:53:51 -0700 (PDT)
-Received: from FVFF77S0Q05N.cambridge.arm.com (FVFF77S0Q05N.cambridge.arm.com [10.1.35.139])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 2A4653F762;
-        Tue,  4 Apr 2023 05:53:03 -0700 (PDT)
-Date:   Tue, 4 Apr 2023 13:52:57 +0100
-From:   Mark Rutland <mark.rutland@arm.com>
-To:     Donglin Peng <pengdonglin@sangfor.com.cn>
-Cc:     mhiramat@kernel.org, rostedt@goodmis.org, linux@armlinux.org.uk,
-        will@kernel.org, catalin.marinas@arm.com,
-        rmk+kernel@armlinux.org.uk, palmer@dabbelt.com,
-        paul.walmsley@sifive.com, aou@eecs.berkeley.edu,
-        tglx@linutronix.de, dave.hansen@linux.intel.com, x86@kernel.org,
-        bp@alien8.de, hpa@zytor.com, chenhuacai@kernel.org,
-        zhangqing@loongson.cn, kernel@xen0n.name, mingo@redhat.com,
-        peterz@infradead.org, xiehuan09@gmail.com, dinghui@sangfor.com.cn,
-        huangcun@sangfor.com.cn, dolinux.peng@gmail.com,
-        linux-trace-kernel@vger.kernel.org, loongarch@lists.linux.dev,
-        linux-riscv@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v10 2/8] tracing: Add documentation for funcgraph-retval
- and funcgraph-retval-hex
-Message-ID: <ZCwdqTAUx+BwthQx@FVFF77S0Q05N.cambridge.arm.com>
-References: <cover.1680265828.git.pengdonglin@sangfor.com.cn>
- <a3dcdd61b3ac07eefabc1b11fc18e9fae23d8cbe.1680265828.git.pengdonglin@sangfor.com.cn>
- <ZCqOl1TCHGhbf0hf@FVFF77S0Q05N>
- <d8b58492-e702-05b7-399e-054892ba6ded@sangfor.com.cn>
+        Tue, 4 Apr 2023 09:39:12 -0400
+Received: from mail-pj1-x1030.google.com (mail-pj1-x1030.google.com [IPv6:2607:f8b0:4864:20::1030])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9744B4201
+        for <linux-trace-kernel@vger.kernel.org>; Tue,  4 Apr 2023 06:38:44 -0700 (PDT)
+Received: by mail-pj1-x1030.google.com with SMTP id h12-20020a17090aea8c00b0023d1311fab3so33965573pjz.1
+        for <linux-trace-kernel@vger.kernel.org>; Tue, 04 Apr 2023 06:38:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1680615521;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=llENXJnfou0jHlwcAitFpF80zmdqqymKntlBX6KuEaQ=;
+        b=FPA8lS3Ld7kyxA/NPoVx4VmFI259DulnGq3/aKGnqhSQal98slT+yBh+SodYuqVjzZ
+         +FCbV0ArxBQOv5btNRCdRdbIZyCaotK2e6WbI0mb2iYu0t8xulPfxTvq1mmTf7pNP2dG
+         rX2mWXujKUkKEPkTfs+hBkka0J7MPLvC1kBN4=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112; t=1680615521;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=llENXJnfou0jHlwcAitFpF80zmdqqymKntlBX6KuEaQ=;
+        b=z+tS2KNFNs+yfDVkswlHAz7vyH7iAZ69iavMVid2BVnK415LS3k8o01W6IQohnQ835
+         cNy52ioycSsuz5pvJoyvyeaAmPUWtqBHKCtRzTBchrd4uhMB4WB7Ayaz3iwxngaQr1ft
+         IV+qo2CaLrv+rFPR22k/OIzUKHOZL1lpBDzp5IwLl19AJGly7Cw3xL7P/fVHfOA6UXDx
+         d56ut41W2B8lzimKSRh5rz7RuBoZuvpAzK7y1lb9jsNHFuiIsIV4wZVE8yeKOsSPVmDn
+         HsXcOaWpq2KM8+Elp1mDP+atxv9M0I+EZAicwwqvtMBspsddJHnJWmRJOqb7SJKGle4c
+         /5RA==
+X-Gm-Message-State: AAQBX9fqc/HB0FFG2284C29elXlqJnUvTuNl3fl8I0dsPfMvXxhVGRw0
+        aKIRFUdvR5qv5fp4aY0N8i/0FELaGXHUtJlp8MYl/g==
+X-Google-Smtp-Source: AKy350b1tmpN2kP03lwA2YUIAI8vuYXWL2d7aNm1yEKP8eq8boem9oM3plC8rDv4swzoK98EZ9sMMLztSt/QkW7+o50=
+X-Received: by 2002:a17:90a:a886:b0:23b:36cc:f347 with SMTP id
+ h6-20020a17090aa88600b0023b36ccf347mr947229pjq.9.1680615520948; Tue, 04 Apr
+ 2023 06:38:40 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <d8b58492-e702-05b7-399e-054892ba6ded@sangfor.com.cn>
+References: <20230403113552.2857693-1-revest@chromium.org> <20230403113552.2857693-4-revest@chromium.org>
+ <ZCsMQ/6MI49st2oW@FVFF77S0Q05N.cambridge.arm.com>
+In-Reply-To: <ZCsMQ/6MI49st2oW@FVFF77S0Q05N.cambridge.arm.com>
+From:   Florent Revest <revest@chromium.org>
+Date:   Tue, 4 Apr 2023 15:38:29 +0200
+Message-ID: <CABRcYmJXQ6DpfNJ_P1Aros3QZ9+fZuvF-WgHc=YDRnUSUj__FQ@mail.gmail.com>
+Subject: Re: [PATCH v5 3/4] arm64: ftrace: Add direct call trampoline samples support
+To:     Mark Rutland <mark.rutland@arm.com>
+Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-trace-kernel@vger.kernel.org, bpf@vger.kernel.org,
+        catalin.marinas@arm.com, will@kernel.org, rostedt@goodmis.org,
+        mhiramat@kernel.org, ast@kernel.org, daniel@iogearbox.net,
+        andrii@kernel.org, kpsingh@kernel.org, jolsa@kernel.org,
+        xukuohai@huaweicloud.com, lihuafei1@huawei.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On Tue, Apr 04, 2023 at 08:02:44PM +0800, Donglin Peng wrote:
-> On 2023/4/3 16:30, Mark Rutland wrote:
-> > On Fri, Mar 31, 2023 at 05:47:38AM -0700, Donglin Peng wrote:
+On Mon, Apr 3, 2023 at 7:26=E2=80=AFPM Mark Rutland <mark.rutland@arm.com> =
+wrote:
+>
+> On Mon, Apr 03, 2023 at 01:35:51PM +0200, Florent Revest wrote:
+> > The ftrace samples need per-architecture trampoline implementations
+> > to save and restore argument registers around the calls to
+> > my_direct_func* and to restore polluted registers (eg: x30).
+> >
+> > These samples also include <asm/asm-offsets.h> which, on arm64, is not
+> > necessary and redefines previously defined macros (resulting in
+> > warnings) so these includes are guarded by !CONFIG_ARM64.
+> >
+> > Signed-off-by: Florent Revest <revest@chromium.org>
+>
+> Overall this looks pretty good!
+>
+> I spotted a few bugs below while testing, and I've suggested some fixups =
+below.
+>
+> w.r.t. the asm-offsets include guards. I took a look at fixing arm64's
+> asm-offsets.c to not be problematic, but it requires some invasive refact=
+oring,
+> so I'd like to clean that up as a separate series. I don't think that sho=
+uld
+> block this series, and I think that the include guards are fine for now.
 
-> > > +At present, there are some limitations when using the funcgraph-retval
-> > > +option, and these limitations will be eliminated in the future:
-> > > +
-> > > +- Even if the function return type is void, a return value will still
-> > > +  be printed, and you can just ignore it.
-> > > +
-> > > +- Even if return values are stored in multiple registers, only the
-> > > +  value contained in the first register will be recorded and printed.
-> > > +  To illustrate, in the x86 architecture, eax and edx are used to store
-> > > +  a 64-bit return value, with the lower 32 bits saved in eax and the
-> > > +  upper 32 bits saved in edx. However, only the value stored in eax
-> > > +  will be recorded and printed.
-> > 
-> > With some procedure call standards (e.g. arm64's AAPCS64), when a type is
-> > smaller than a GPR it's up to the consumer to perform the narrowing, and the
-> > upport bits may contain UNKNOWN values. For example, with a u8 in a 64-bit GPR,
-> > bits [3:8] may contain arbitrary values.
-> 
-> Thank you. Just to clarify, Should it be that bits [63:8] may contain
-> arbitrary values in such cases?
+Sounds great! Thank you Mark :)
 
-Yes; I meant to say bits [63:8].
+> > ---
+> >  arch/arm64/Kconfig                          |  2 ++
+> >  samples/ftrace/ftrace-direct-modify.c       | 34 ++++++++++++++++++
+> >  samples/ftrace/ftrace-direct-multi-modify.c | 38 +++++++++++++++++++++
+> >  samples/ftrace/ftrace-direct-multi.c        | 23 +++++++++++++
+> >  samples/ftrace/ftrace-direct-too.c          | 26 ++++++++++++++
+> >  samples/ftrace/ftrace-direct.c              | 24 +++++++++++++
+> >  6 files changed, 147 insertions(+)
+> >
+> > diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
+> > index f3503d0cc1b8..c2bf28099abd 100644
+> > --- a/arch/arm64/Kconfig
+> > +++ b/arch/arm64/Kconfig
+> > @@ -194,6 +194,8 @@ config ARM64
+> >                   !CC_OPTIMIZE_FOR_SIZE)
+> >       select FTRACE_MCOUNT_USE_PATCHABLE_FUNCTION_ENTRY \
+> >               if DYNAMIC_FTRACE_WITH_ARGS
+> > +     select HAVE_SAMPLE_FTRACE_DIRECT
+> > +     select HAVE_SAMPLE_FTRACE_DIRECT_MULTI
+> >       select HAVE_EFFICIENT_UNALIGNED_ACCESS
+> >       select HAVE_FAST_GUP
+> >       select HAVE_FTRACE_MCOUNT_RECORD
+> > diff --git a/samples/ftrace/ftrace-direct-modify.c b/samples/ftrace/ftr=
+ace-direct-modify.c
+> > index 25fba66f61c0..98d1b7385f08 100644
+> > --- a/samples/ftrace/ftrace-direct-modify.c
+> > +++ b/samples/ftrace/ftrace-direct-modify.c
+> > @@ -2,7 +2,9 @@
+> >  #include <linux/module.h>
+> >  #include <linux/kthread.h>
+> >  #include <linux/ftrace.h>
+> > +#ifndef CONFIG_ARM64
+> >  #include <asm/asm-offsets.h>
+> > +#endif
+> >
+> >  extern void my_direct_func1(void);
+> >  extern void my_direct_func2(void);
+> > @@ -96,6 +98,38 @@ asm (
+> >
+> >  #endif /* CONFIG_S390 */
+> >
+> > +#ifdef CONFIG_ARM64
+> > +
+> > +asm (
+> > +"    .pushsection    .text, \"ax\", @progbits\n"
+> > +"    .type           my_tramp1, @function\n"
+> > +"    .globl          my_tramp1\n"
+> > +"   my_tramp1:"
+> > +"    bti     c\n"
+> > +"    sub     sp, sp, #16\n"
+> > +"    stp     x9, x30, [sp]\n"
+> > +"    bl      my_direct_func1\n"
+> > +"    ldp     x30, x9, [sp]\n"
+> > +"    add     sp, sp, #16\n"
+> > +"    ret     x9\n"
+> > +"    .size           my_tramp1, .-my_tramp1\n"
+> > +
+> > +"    .type           my_tramp2, @function\n"
+> > +"    .globl          my_tramp2\n"
+> > +"   my_tramp2:"
+> > +"    bti     c\n"
+> > +"    sub     sp, sp, #16\n"
+> > +"    stp     x9, x30, [sp]\n"
+> > +"    bl      my_direct_func2\n"
+> > +"    ldp     x30, x9, [sp]\n"
+> > +"    add     sp, sp, #16\n"
+> > +"    ret     x9\n"
+> > +"    .size           my_tramp2, .-my_tramp2\n"
+> > +"    .popsection\n"
+> > +);
+> > +
+> > +#endif /* CONFIG_ARM64 */
+>
+> These looks functionally correct, given they'll only be attached to sched=
+ule()
+> and the direct funcs take no arguments, so there's no arguments to save/r=
+estore
+> and nothing to shuffle.
+>
+> As an aside, I believe we'll need to rework the sequences when we add sup=
+port
+> for RELIABLE_STACKTRACE so that the unwinder can reliably acquire the add=
+ress
+> of the instrumented function and its caller, but I think for now it's
+> preferable to keep this simple and I'm happy to make that a problem for f=
+uture
+> me.
 
-> > It's probably worth noting that this means *some* manual processing will always
-> > be necessary for such cases.
-> > 
-> > That's mostly visible around where largelr types get truncated (whether
-> > explciitly or implicitly), e.g.
-> > 
-> > 	u8 narrow_to_u8(u64 val)
-> > 	{
-> > 		// implicitly truncated
-> > 		return val;
-> > 	}
-> > 
-> > ... could be compiled to:
-> > 
-> > 	narrow_to_u8:
-> > 		< ... ftrace instrumentation ... >
-> > 		RET
-> > 
-> > ... and so:
-> > 	
-> > 	narrow_to_u8(0x123456789abcdef);
-> > 
-> > ... might be recorded as returning 0x123456789abcdef rather than 0xef.
-> > 
-> > 
-> > That can happen in surprising ways, e.g.
-> > 
-> > 	int error_if_not_4g_aligned(u64 val)
-> > 	{
-> > 		if (val & GENMASK(63, 32))
-> 
-> Should it be GENMASK(31, 0)?
+Ah, interesting. I'd be happy to help when that time comes! :)
 
-Yes; whoops!
+> > diff --git a/samples/ftrace/ftrace-direct-multi-modify.c b/samples/ftra=
+ce/ftrace-direct-multi-modify.c
+> > index f72623899602..e39108eb085d 100644
+> > --- a/samples/ftrace/ftrace-direct-multi-modify.c
+> > +++ b/samples/ftrace/ftrace-direct-multi-modify.c
+> > @@ -2,7 +2,9 @@
+> >  #include <linux/module.h>
+> >  #include <linux/kthread.h>
+> >  #include <linux/ftrace.h>
+> > +#ifndef CONFIG_ARM64
+> >  #include <asm/asm-offsets.h>
+> > +#endif
+> >
+> >  extern void my_direct_func1(unsigned long ip);
+> >  extern void my_direct_func2(unsigned long ip);
+> > @@ -103,6 +105,42 @@ asm (
+> >
+> >  #endif /* CONFIG_S390 */
+> >
+> > +#ifdef CONFIG_ARM64
+> > +
+> > +asm (
+> > +"    .pushsection    .text, \"ax\", @progbits\n"
+> > +"    .type           my_tramp1, @function\n"
+> > +"    .globl          my_tramp1\n"
+> > +"   my_tramp1:"
+> > +"    bti     c\n"
+> > +"    sub     sp, sp, #32\n"
+> > +"    stp     x9, x30, [sp]\n"
+> > +"    str     x0, [sp, #16]\n"
+> > +"    bl      my_direct_func1\n"
+> > +"    ldp     x30, x9, [sp]\n"
+> > +"    ldr     x0, [sp, #16]\n"
+> > +"    add     sp, sp, #32\n"
+> > +"    ret     x9\n"
+> > +"    .size           my_tramp1, .-my_tramp1\n"
+> > +
+> > +"    .type           my_tramp2, @function\n"
+> > +"    .globl          my_tramp2\n"
+> > +"   my_tramp2:"
+> > +"    bti     c\n"
+> > +"    sub     sp, sp, #32\n"
+> > +"    stp     x9, x30, [sp]\n"
+> > +"    str     x0, [sp, #16]\n"
+> > +"    bl      my_direct_func2\n"
+> > +"    ldp     x30, x9, [sp]\n"
+> > +"    ldr     x0, [sp, #16]\n"
+> > +"    add     sp, sp, #32\n"
+> > +"    ret     x9\n"
+> > +"    .size           my_tramp2, .-my_tramp2\n"
+> > +"    .popsection\n"
+> > +);
+> > +
+> > +#endif /* CONFIG_ARM64 */
+>
+> For both of these trampolines we need to pass the trampoline's return add=
+ress
+> (i.e. where we'll return to in the instrumented function) as the 'ip' arg=
+ument
+> to my_direct_func{1,2}().
+>
+> In both cases, just before the 'bl my_direct_func{1,2}' we'll need to add=
+:
+>
+>         mov     x0, x30
 
-> > 			return -EINVAL;
-> > 
-> > 		return 0;
-> > 	}
-> > 
-> > ... could be compiled to:
-> > 
-> > 	error_if_not_4g_aligned:
-> > 		CBNZ	w0, .Lnot_aligned
-> > 		RET				// bits [31:0] are zero, bits
-> > 						// [63:32] are UNKNOWN
-> > 	.Lnot_aligned:
-> > 		MOV	x0, #-EINVAL
-> > 		RET
-> > 
-> > .... and so:
-> > 
-> > 	error_if_not_4g_aligned(SZ_8G)
-> > 
-> > ... could return with bits [63:32] non-zero
-> > 
-> > Thanks,
-> > Mark.
-> 
-> Thank you for sharing this note. I will append the following limitation.
+Oopsie, yes! Very good catch!
 
-That looks great; thanks!
+> > diff --git a/samples/ftrace/ftrace-direct-multi.c b/samples/ftrace/ftra=
+ce-direct-multi.c
+> > index 1547c2c6be02..5a395d2d2e07 100644
+> > --- a/samples/ftrace/ftrace-direct-multi.c
+> > +++ b/samples/ftrace/ftrace-direct-multi.c
+> > @@ -4,7 +4,9 @@
+> >  #include <linux/mm.h> /* for handle_mm_fault() */
+> >  #include <linux/ftrace.h>
+> >  #include <linux/sched/stat.h>
+> > +#ifndef CONFIG_ARM64
+> >  #include <asm/asm-offsets.h>
+> > +#endif
+> >
+> >  extern void my_direct_func(unsigned long ip);
+> >
+> > @@ -66,6 +68,27 @@ asm (
+> >
+> >  #endif /* CONFIG_S390 */
+> >
+> > +#ifdef CONFIG_ARM64
+> > +
+> > +asm (
+> > +"    .pushsection    .text, \"ax\", @progbits\n"
+> > +"    .type           my_tramp, @function\n"
+> > +"    .globl          my_tramp\n"
+> > +"   my_tramp:"
+> > +"    bti     c\n"
+> > +"    sub     sp, sp, #32\n"
+> > +"    stp     x9, x30, [sp]\n"
+> > +"    str     x0, [sp, #16]\n"
+> > +"    bl      my_direct_func\n"
+> > +"    ldp     x30, x9, [sp]\n"
+> > +"    ldr     x0, [sp, #16]\n"
+> > +"    add     sp, sp, #32\n"
+> > +"    ret     x9\n"
+> > +"    .size           my_tramp, .-my_tramp\n"
+> > +"    .popsection\n"
+> > +);
+> > +
+> > +#endif /* CONFIG_ARM64 */
+> >  static struct ftrace_ops direct;
+>
+> As with ftrace-direct-multi-modify.c, we need to pass the return address =
+of the
+> trampoline as the 'ip' argument to my_direct_func1(), so just before the =
+'bl
+> my_direct_func' we'll need to add:
+>
+>         mov     x0, x30
 
-> In certain procedure call standards, such as arm64's AAPCS64, when a
-> type is smaller than a GPR, it is the responsibility of the consumer to
-> perform the narrowing, and the upper bits may contain UNKNOWN values.
-> Therefore, it is advisable to check the code for such cases. For
-> instance,when using a u8 in a 64-bit GPR, bits [63:8] may contain
-          ^
-Minor nit: missing space here.
+Will do :)
 
-> arbitrary values, especially when larger types are truncated, whether
-> explicitly or implicitly. Here are some specific cases to illustrate
-> this point:
-> 
->  - Case One:
-> 
->   The function narrow_to_u8 is defined as follows:
-> 
->  	u8 narrow_to_u8(u64 val)
-> 	{
-> 		// implicitly truncated
-> 		return val;
-> 	}
-> 
->   It may be compiled to:
-> 
-> 	narrow_to_u8:
-> 		< ... ftrace instrumentation ... >
-> 		RET
-> 
->   If you pass 0x123456789abcdef to this function and want to narrow it,
->   it may be recorded as 0x123456789abcdef instead of 0xef.
-> 
->   - Case Two:
-> 
->   The function error_if_not_4g_aligned is defined as follows:
-> 
-> 	int error_if_not_4g_aligned(u64 val)
-> 	{
-> 		if (val & GENMASK(31, 0))
-> 			return -EINVAL;
-> 
-> 		return 0;
-> 	}
-> 
->   It could be compile to:
-                ^^^^^^^
+> > diff --git a/samples/ftrace/ftrace-direct-too.c b/samples/ftrace/ftrace=
+-direct-too.c
+> > index f28e7b99840f..6e93c45fea86 100644
+> > --- a/samples/ftrace/ftrace-direct-too.c
+> > +++ b/samples/ftrace/ftrace-direct-too.c
+> > @@ -3,7 +3,9 @@
+> >
+> >  #include <linux/mm.h> /* for handle_mm_fault() */
+> >  #include <linux/ftrace.h>
+> > +#ifndef CONFIG_ARM64
+> >  #include <asm/asm-offsets.h>
+> > +#endif
+> >
+> >  extern void my_direct_func(struct vm_area_struct *vma,
+> >                          unsigned long address, unsigned int flags);
+>
+> This gets attached to handle_mm_fault(), whose prototype is currently:
+>
+> vm_fault_t handle_mm_fault(struct vm_area_struct *vma, unsigned long addr=
+ess,
+>                            unsigned int flags, struct pt_regs *regs)
+>
+> i.e. it has 4 arguments, in x0 to x3.
+>
+> > @@ -70,6 +72,30 @@ asm (
+> >
+> >  #endif /* CONFIG_S390 */
+> >
+> > +#ifdef CONFIG_ARM64
+> > +
+> > +asm (
+> > +"    .pushsection    .text, \"ax\", @progbits\n"
+> > +"    .type           my_tramp, @function\n"
+> > +"    .globl          my_tramp\n"
+> > +"   my_tramp:"
+> > +"    bti     c\n"
+> > +"    sub     sp, sp, #48\n"
+> > +"    stp     x9, x30, [sp]\n"
+> > +"    stp     x0, x1, [sp, #16]\n"
+> > +"    str     x2, [sp, #32]\n"
+> > +"    bl      my_direct_func\n"
+> > +"    ldp     x30, x9, [sp]\n"
+> > +"    ldp     x0, x1, [sp, #16]\n"
+> > +"    ldr     x2, [sp, #32]\n"
+>
+> So here we need to save+restore x3 also.
+>
+> We already have the space reserved, so that should just be a matter of us=
+ing
+> stp/ldp for x2 and x3.
 
-Minor nit: s/compile/compiled here.
-
-Thanks,
-Mark.
-
-> 
-> 	error_if_not_4g_aligned:
-> 		CBNZ	w0, .Lnot_aligned
-> 		RET				// bits [31:0] are zero, bits
-> 						// [63:32] are UNKNOWN
-> 	.Lnot_aligned:
-> 		MOV	x0, #-EINVAL
-> 		RET
-> 
->   When passing 0x2_0000_0000 to it, the return value may be recorded as
->   0x2_0000_0000 instead of 0.
+That's also a very good catch. It looks like it's an issue for the
+sample trampoline on x86_64 as well, I'll fix it too in a separate
+patch as part of v6. (if i understand s390 asm correctly, the stmg
+already saves all arg registers in one instruction so s390 doesn't
+need to change)
