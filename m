@@ -2,32 +2,29 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B7F9BC6FD1D
-	for <linux-trace-kernel@archiver.kernel.org>; Tue,  4 Apr 2023 12:09:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BB992C6FD1D
+	for <linux-trace-kernel@archiver.kernel.org>; Tue,  4 Apr 2023 12:53:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234708AbjDDMJH (ORCPT
+        id S234262AbjDDMxM (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Tue, 4 Apr 2023 08:09:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43962 "EHLO
+        Tue, 4 Apr 2023 08:53:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56752 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234709AbjDDMHC (ORCPT
+        with ESMTP id S235076AbjDDMxL (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Tue, 4 Apr 2023 08:07:02 -0400
-Received: from mail-m118111.qiye.163.com (mail-m118111.qiye.163.com [115.236.118.111])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E92DF3C0B;
-        Tue,  4 Apr 2023 05:03:08 -0700 (PDT)
-Received: from [10.128.10.193] (unknown [117.133.56.22])
-        by mail-m118111.qiye.163.com (Hmail) with ESMTPA id 7CA695809D2;
-        Tue,  4 Apr 2023 20:02:48 +0800 (CST)
-Message-ID: <d8b58492-e702-05b7-399e-054892ba6ded@sangfor.com.cn>
-Date:   Tue, 4 Apr 2023 20:02:44 +0800
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.9.1
-From:   Donglin Peng <pengdonglin@sangfor.com.cn>
-Subject: Re: [PATCH v10 2/8] tracing: Add documentation for funcgraph-retval
- and funcgraph-retval-hex
-To:     Mark Rutland <mark.rutland@arm.com>
+        Tue, 4 Apr 2023 08:53:11 -0400
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 67878269A;
+        Tue,  4 Apr 2023 05:53:07 -0700 (PDT)
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 4A431D75;
+        Tue,  4 Apr 2023 05:53:51 -0700 (PDT)
+Received: from FVFF77S0Q05N.cambridge.arm.com (FVFF77S0Q05N.cambridge.arm.com [10.1.35.139])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 2A4653F762;
+        Tue,  4 Apr 2023 05:53:03 -0700 (PDT)
+Date:   Tue, 4 Apr 2023 13:52:57 +0100
+From:   Mark Rutland <mark.rutland@arm.com>
+To:     Donglin Peng <pengdonglin@sangfor.com.cn>
 Cc:     mhiramat@kernel.org, rostedt@goodmis.org, linux@armlinux.org.uk,
         will@kernel.org, catalin.marinas@arm.com,
         rmk+kernel@armlinux.org.uk, palmer@dabbelt.com,
@@ -40,189 +37,162 @@ Cc:     mhiramat@kernel.org, rostedt@goodmis.org, linux@armlinux.org.uk,
         linux-trace-kernel@vger.kernel.org, loongarch@lists.linux.dev,
         linux-riscv@lists.infradead.org,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v10 2/8] tracing: Add documentation for funcgraph-retval
+ and funcgraph-retval-hex
+Message-ID: <ZCwdqTAUx+BwthQx@FVFF77S0Q05N.cambridge.arm.com>
 References: <cover.1680265828.git.pengdonglin@sangfor.com.cn>
  <a3dcdd61b3ac07eefabc1b11fc18e9fae23d8cbe.1680265828.git.pengdonglin@sangfor.com.cn>
  <ZCqOl1TCHGhbf0hf@FVFF77S0Q05N>
-Content-Language: en-US
-In-Reply-To: <ZCqOl1TCHGhbf0hf@FVFF77S0Q05N>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-HM-Spam-Status: e1kfGhgUHx5ZQUpXWQgPGg8OCBgUHx5ZQUlOS1dZFg8aDwILHllBWSg2Ly
-        tZV1koWUFITzdXWS1ZQUlXWQ8JGhUIEh9ZQVkaTE4YVkIZQ0lMGEIdTUtJH1UTARMWGhIXJBQOD1
-        lXWRgSC1lBWUpKTFVKSEhVTk1VSUlZV1kWGg8SFR0UWUFZT0tIVUpKS0hKTFVKS0tVS1kG
-X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6Nxw6GCo*GD0OGj4WAQ8tAQlO
-        EiwKC0xVSlVKTUNLTUtCTExLSkJNVTMWGhIXVQseFRwfFBUcFxIVOwgaFRwdFAlVGBQWVRgVRVlX
-        WRILWUFZSkpMVUpISFVOTVVJSVlXWQgBWUFKSkpLTTcG
-X-HM-Tid: 0a874c25f8c72eb7kusn7ca695809d2
-X-HM-MType: 1
+ <d8b58492-e702-05b7-399e-054892ba6ded@sangfor.com.cn>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <d8b58492-e702-05b7-399e-054892ba6ded@sangfor.com.cn>
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On 2023/4/3 16:30, Mark Rutland wrote:
-> On Fri, Mar 31, 2023 at 05:47:38AM -0700, Donglin Peng wrote:
->> Add documentation for the two newly introduced options for the
->> function_graph tracer. The funcgraph-retval option is used to
->> control whether or not to display the return value, while the
->> funcgraph-retval-hex option is used to control the display
->> format of the return value.
->>
->> Signed-off-by: Donglin Peng <pengdonglin@sangfor.com.cn>
->> ---
->> v9:
->>   - Update limitation description
->>
->> v7:
->>   - Rename trace option 'graph_retval_hex' to 'funcgraph-retval-hex'
->>   - Update documentation description
->>
->> v6:
->>   - Modify the limitations for funcgraph-retval
->>   - Optimize the English expression
->>
->> v5:
->>   - Describe the limitations of funcgraph-retval
->> ---
->>   Documentation/trace/ftrace.rst | 74 ++++++++++++++++++++++++++++++++++
->>   1 file changed, 74 insertions(+)
->>
->> diff --git a/Documentation/trace/ftrace.rst b/Documentation/trace/ftrace.rst
->> index b927fb2b94dc..f572ae419219 100644
->> --- a/Documentation/trace/ftrace.rst
->> +++ b/Documentation/trace/ftrace.rst
->> @@ -1328,6 +1328,19 @@ Options for function_graph tracer:
->>   	only a closing curly bracket "}" is displayed for
->>   	the return of a function.
->>   
->> +  funcgraph-retval
->> +	When set, the return value of each traced function
->> +	will be printed after an equal sign "=". By default
->> +	this is off.
->> +
->> +  funcgraph-retval-hex
->> +	When set, the return value will always be printed
->> +	in hexadecimal format. If the option is not set and
->> +	the return value is an error code, it will be printed
->> +	in signed decimal format; otherwise it will also be
->> +	printed in hexadecimal format. By default, this option
->> +	is off.
->> +
->>     sleep-time
->>   	When running function graph tracer, to include
->>   	the time a task schedules out in its function.
->> @@ -2673,6 +2686,67 @@ It is default disabled.
->>       0)   1.757 us    |        } /* kmem_cache_free() */
->>       0)   2.861 us    |      } /* putname() */
->>   
->> +The return value of each traced function can be displayed after
->> +an equal sign "=". When encountering system call failures, it
->> +can be verfy helpful to quickly locate the function that first
->> +returns an error code.
->> +
->> +	- hide: echo nofuncgraph-retval > trace_options
->> +	- show: echo funcgraph-retval > trace_options
->> +
->> +  Example with funcgraph-retval::
->> +
->> +    1)               |    cgroup_migrate() {
->> +    1)   0.651 us    |      cgroup_migrate_add_task(); /* = 0xffff93fcfd346c00 */
->> +    1)               |      cgroup_migrate_execute() {
->> +    1)               |        cpu_cgroup_can_attach() {
->> +    1)               |          cgroup_taskset_first() {
->> +    1)   0.732 us    |            cgroup_taskset_next(); /* = 0xffff93fc8fb20000 */
->> +    1)   1.232 us    |          } /* cgroup_taskset_first = 0xffff93fc8fb20000 */
->> +    1)   0.380 us    |          sched_rt_can_attach(); /* = 0x0 */
->> +    1)   2.335 us    |        } /* cpu_cgroup_can_attach = -22 */
->> +    1)   4.369 us    |      } /* cgroup_migrate_execute = -22 */
->> +    1)   7.143 us    |    } /* cgroup_migrate = -22 */
->> +
->> +The above example shows that the function cpu_cgroup_can_attach
->> +returned the error code -22 firstly, then we can read the code
->> +of this function to get the root cause.
->> +
->> +When the option funcgraph-retval-hex is not set, the return value can
->> +be displayed in a smart way. Specifically, if it is an error code,
->> +it will be printed in signed decimal format, otherwise it will
->> +printed in hexadecimal format.
->> +
->> +	- smart: echo nofuncgraph-retval-hex > trace_options
->> +	- hexadecimal always: echo funcgraph-retval-hex > trace_options
->> +
->> +  Example with funcgraph-retval-hex::
->> +
->> +    1)               |      cgroup_migrate() {
->> +    1)   0.651 us    |        cgroup_migrate_add_task(); /* = 0xffff93fcfd346c00 */
->> +    1)               |        cgroup_migrate_execute() {
->> +    1)               |          cpu_cgroup_can_attach() {
->> +    1)               |            cgroup_taskset_first() {
->> +    1)   0.732 us    |              cgroup_taskset_next(); /* = 0xffff93fc8fb20000 */
->> +    1)   1.232 us    |            } /* cgroup_taskset_first = 0xffff93fc8fb20000 */
->> +    1)   0.380 us    |            sched_rt_can_attach(); /* = 0x0 */
->> +    1)   2.335 us    |          } /* cpu_cgroup_can_attach = 0xffffffea */
->> +    1)   4.369 us    |        } /* cgroup_migrate_execute = 0xffffffea */
->> +    1)   7.143 us    |      } /* cgroup_migrate = 0xffffffea */
->> +
->> +At present, there are some limitations when using the funcgraph-retval
->> +option, and these limitations will be eliminated in the future:
->> +
->> +- Even if the function return type is void, a return value will still
->> +  be printed, and you can just ignore it.
->> +
->> +- Even if return values are stored in multiple registers, only the
->> +  value contained in the first register will be recorded and printed.
->> +  To illustrate, in the x86 architecture, eax and edx are used to store
->> +  a 64-bit return value, with the lower 32 bits saved in eax and the
->> +  upper 32 bits saved in edx. However, only the value stored in eax
->> +  will be recorded and printed.
-> 
-> With some procedure call standards (e.g. arm64's AAPCS64), when a type is
-> smaller than a GPR it's up to the consumer to perform the narrowing, and the
-> upport bits may contain UNKNOWN values. For example, with a u8 in a 64-bit GPR,
-> bits [3:8] may contain arbitrary values.
+On Tue, Apr 04, 2023 at 08:02:44PM +0800, Donglin Peng wrote:
+> On 2023/4/3 16:30, Mark Rutland wrote:
+> > On Fri, Mar 31, 2023 at 05:47:38AM -0700, Donglin Peng wrote:
 
-Thank you. Just to clarify, Should it be that bits [63:8] may contain
-arbitrary values in such cases?
+> > > +At present, there are some limitations when using the funcgraph-retval
+> > > +option, and these limitations will be eliminated in the future:
+> > > +
+> > > +- Even if the function return type is void, a return value will still
+> > > +  be printed, and you can just ignore it.
+> > > +
+> > > +- Even if return values are stored in multiple registers, only the
+> > > +  value contained in the first register will be recorded and printed.
+> > > +  To illustrate, in the x86 architecture, eax and edx are used to store
+> > > +  a 64-bit return value, with the lower 32 bits saved in eax and the
+> > > +  upper 32 bits saved in edx. However, only the value stored in eax
+> > > +  will be recorded and printed.
+> > 
+> > With some procedure call standards (e.g. arm64's AAPCS64), when a type is
+> > smaller than a GPR it's up to the consumer to perform the narrowing, and the
+> > upport bits may contain UNKNOWN values. For example, with a u8 in a 64-bit GPR,
+> > bits [3:8] may contain arbitrary values.
+> 
+> Thank you. Just to clarify, Should it be that bits [63:8] may contain
+> arbitrary values in such cases?
 
+Yes; I meant to say bits [63:8].
+
+> > It's probably worth noting that this means *some* manual processing will always
+> > be necessary for such cases.
+> > 
+> > That's mostly visible around where largelr types get truncated (whether
+> > explciitly or implicitly), e.g.
+> > 
+> > 	u8 narrow_to_u8(u64 val)
+> > 	{
+> > 		// implicitly truncated
+> > 		return val;
+> > 	}
+> > 
+> > ... could be compiled to:
+> > 
+> > 	narrow_to_u8:
+> > 		< ... ftrace instrumentation ... >
+> > 		RET
+> > 
+> > ... and so:
+> > 	
+> > 	narrow_to_u8(0x123456789abcdef);
+> > 
+> > ... might be recorded as returning 0x123456789abcdef rather than 0xef.
+> > 
+> > 
+> > That can happen in surprising ways, e.g.
+> > 
+> > 	int error_if_not_4g_aligned(u64 val)
+> > 	{
+> > 		if (val & GENMASK(63, 32))
 > 
-> It's probably worth noting that this means *some* manual processing will always
-> be necessary for such cases.
+> Should it be GENMASK(31, 0)?
+
+Yes; whoops!
+
+> > 			return -EINVAL;
+> > 
+> > 		return 0;
+> > 	}
+> > 
+> > ... could be compiled to:
+> > 
+> > 	error_if_not_4g_aligned:
+> > 		CBNZ	w0, .Lnot_aligned
+> > 		RET				// bits [31:0] are zero, bits
+> > 						// [63:32] are UNKNOWN
+> > 	.Lnot_aligned:
+> > 		MOV	x0, #-EINVAL
+> > 		RET
+> > 
+> > .... and so:
+> > 
+> > 	error_if_not_4g_aligned(SZ_8G)
+> > 
+> > ... could return with bits [63:32] non-zero
+> > 
+> > Thanks,
+> > Mark.
 > 
-> That's mostly visible around where largelr types get truncated (whether
-> explciitly or implicitly), e.g.
+> Thank you for sharing this note. I will append the following limitation.
+
+That looks great; thanks!
+
+> In certain procedure call standards, such as arm64's AAPCS64, when a
+> type is smaller than a GPR, it is the responsibility of the consumer to
+> perform the narrowing, and the upper bits may contain UNKNOWN values.
+> Therefore, it is advisable to check the code for such cases. For
+> instance,when using a u8 in a 64-bit GPR, bits [63:8] may contain
+          ^
+Minor nit: missing space here.
+
+> arbitrary values, especially when larger types are truncated, whether
+> explicitly or implicitly. Here are some specific cases to illustrate
+> this point:
 > 
-> 	u8 narrow_to_u8(u64 val)
+>  - Case One:
+> 
+>   The function narrow_to_u8 is defined as follows:
+> 
+>  	u8 narrow_to_u8(u64 val)
 > 	{
 > 		// implicitly truncated
 > 		return val;
 > 	}
 > 
-> ... could be compiled to:
+>   It may be compiled to:
 > 
 > 	narrow_to_u8:
 > 		< ... ftrace instrumentation ... >
 > 		RET
 > 
-> ... and so:
-> 	
-> 	narrow_to_u8(0x123456789abcdef);
+>   If you pass 0x123456789abcdef to this function and want to narrow it,
+>   it may be recorded as 0x123456789abcdef instead of 0xef.
 > 
-> ... might be recorded as returning 0x123456789abcdef rather than 0xef.
+>   - Case Two:
 > 
-> 
-> That can happen in surprising ways, e.g.
+>   The function error_if_not_4g_aligned is defined as follows:
 > 
 > 	int error_if_not_4g_aligned(u64 val)
 > 	{
-> 		if (val & GENMASK(63, 32))
-
-Should it be GENMASK(31, 0)?
-
+> 		if (val & GENMASK(31, 0))
 > 			return -EINVAL;
 > 
 > 		return 0;
 > 	}
 > 
-> ... could be compiled to:
+>   It could be compile to:
+                ^^^^^^^
+
+Minor nit: s/compile/compiled here.
+
+Thanks,
+Mark.
+
 > 
 > 	error_if_not_4g_aligned:
 > 		CBNZ	w0, .Lnot_aligned
@@ -232,66 +202,5 @@ Should it be GENMASK(31, 0)?
 > 		MOV	x0, #-EINVAL
 > 		RET
 > 
-> .... and so:
-> 
-> 	error_if_not_4g_aligned(SZ_8G)
-> 
-> ... could return with bits [63:32] non-zero
-> 
-> Thanks,
-> Mark.
-
-Thank you for sharing this note. I will append the following limitation.
-
-In certain procedure call standards, such as arm64's AAPCS64, when a
-type is smaller than a GPR, it is the responsibility of the consumer to
-perform the narrowing, and the upper bits may contain UNKNOWN values.
-Therefore, it is advisable to check the code for such cases. For
-instance,when using a u8 in a 64-bit GPR, bits [63:8] may contain
-arbitrary values, especially when larger types are truncated, whether
-explicitly or implicitly. Here are some specific cases to illustrate
-this point:
-
-  - Case One:
-
-   The function narrow_to_u8 is defined as follows:
-
-  	u8 narrow_to_u8(u64 val)
-	{
-		// implicitly truncated
-		return val;
-	}
-
-   It may be compiled to:
-
-	narrow_to_u8:
-		< ... ftrace instrumentation ... >
-		RET
-
-   If you pass 0x123456789abcdef to this function and want to narrow it,
-   it may be recorded as 0x123456789abcdef instead of 0xef.
-
-   - Case Two:
-
-   The function error_if_not_4g_aligned is defined as follows:
-
-	int error_if_not_4g_aligned(u64 val)
-	{
-		if (val & GENMASK(31, 0))
-			return -EINVAL;
-
-		return 0;
-	}
-
-   It could be compile to:
-
-	error_if_not_4g_aligned:
-		CBNZ	w0, .Lnot_aligned
-		RET				// bits [31:0] are zero, bits
-						// [63:32] are UNKNOWN
-	.Lnot_aligned:
-		MOV	x0, #-EINVAL
-		RET
-
-   When passing 0x2_0000_0000 to it, the return value may be recorded as
-   0x2_0000_0000 instead of 0.
+>   When passing 0x2_0000_0000 to it, the return value may be recorded as
+>   0x2_0000_0000 instead of 0.
