@@ -2,361 +2,166 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 92CD9C761A6
-	for <linux-trace-kernel@archiver.kernel.org>; Tue,  4 Apr 2023 13:39:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E3355C761A6
+	for <linux-trace-kernel@archiver.kernel.org>; Tue,  4 Apr 2023 17:17:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235373AbjDDNj3 (ORCPT
+        id S235669AbjDDRRm (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Tue, 4 Apr 2023 09:39:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54874 "EHLO
+        Tue, 4 Apr 2023 13:17:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40822 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235400AbjDDNjM (ORCPT
+        with ESMTP id S235849AbjDDRRl (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Tue, 4 Apr 2023 09:39:12 -0400
-Received: from mail-pj1-x1030.google.com (mail-pj1-x1030.google.com [IPv6:2607:f8b0:4864:20::1030])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9744B4201
-        for <linux-trace-kernel@vger.kernel.org>; Tue,  4 Apr 2023 06:38:44 -0700 (PDT)
-Received: by mail-pj1-x1030.google.com with SMTP id h12-20020a17090aea8c00b0023d1311fab3so33965573pjz.1
-        for <linux-trace-kernel@vger.kernel.org>; Tue, 04 Apr 2023 06:38:44 -0700 (PDT)
+        Tue, 4 Apr 2023 13:17:41 -0400
+Received: from mail-wm1-x331.google.com (mail-wm1-x331.google.com [IPv6:2a00:1450:4864:20::331])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E8D8555BA
+        for <linux-trace-kernel@vger.kernel.org>; Tue,  4 Apr 2023 10:17:23 -0700 (PDT)
+Received: by mail-wm1-x331.google.com with SMTP id o32so19473663wms.1
+        for <linux-trace-kernel@vger.kernel.org>; Tue, 04 Apr 2023 10:17:23 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1680615521;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=llENXJnfou0jHlwcAitFpF80zmdqqymKntlBX6KuEaQ=;
-        b=FPA8lS3Ld7kyxA/NPoVx4VmFI259DulnGq3/aKGnqhSQal98slT+yBh+SodYuqVjzZ
-         +FCbV0ArxBQOv5btNRCdRdbIZyCaotK2e6WbI0mb2iYu0t8xulPfxTvq1mmTf7pNP2dG
-         rX2mWXujKUkKEPkTfs+hBkka0J7MPLvC1kBN4=
+        d=layalina-io.20210112.gappssmtp.com; s=20210112; t=1680628642;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=txVm5JgMwTa0GASAVxn38cvz41mLZSuRMGj6/8ZDA7c=;
+        b=FloniA4MoWqYbM+5TFvqRD8Xh5RN/1Xkg6Ks5dcY4KLO8ijNV5A3p3APgiGCnV7x9s
+         vC+2Ygzlfroa7epKwHbJJY3LHGbbjCM+iMDvdwHAp1gBjcMA1i+aH7hDmvxeQ2sUKbaR
+         BwwS7fyCCmUeC1t85F1QqAbdWrGxV7MKZXuo/uHco/AylG4F+bQ+4AmINeVeXwkHNKfl
+         1DZwjB9alBUouexQ0FKXHRT82AQKJWiv+B7qdKk9+zjVNqNJR56JknG8DvJn93tECrHw
+         yqKSHxvSM7Bx0qOB4tzCHt+VU4rPbJy8ynDkvqdmf817ZAovk2MwsIKDEmhAat0TmemN
+         v7dw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1680615521;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=llENXJnfou0jHlwcAitFpF80zmdqqymKntlBX6KuEaQ=;
-        b=z+tS2KNFNs+yfDVkswlHAz7vyH7iAZ69iavMVid2BVnK415LS3k8o01W6IQohnQ835
-         cNy52ioycSsuz5pvJoyvyeaAmPUWtqBHKCtRzTBchrd4uhMB4WB7Ayaz3iwxngaQr1ft
-         IV+qo2CaLrv+rFPR22k/OIzUKHOZL1lpBDzp5IwLl19AJGly7Cw3xL7P/fVHfOA6UXDx
-         d56ut41W2B8lzimKSRh5rz7RuBoZuvpAzK7y1lb9jsNHFuiIsIV4wZVE8yeKOsSPVmDn
-         HsXcOaWpq2KM8+Elp1mDP+atxv9M0I+EZAicwwqvtMBspsddJHnJWmRJOqb7SJKGle4c
-         /5RA==
-X-Gm-Message-State: AAQBX9fqc/HB0FFG2284C29elXlqJnUvTuNl3fl8I0dsPfMvXxhVGRw0
-        aKIRFUdvR5qv5fp4aY0N8i/0FELaGXHUtJlp8MYl/g==
-X-Google-Smtp-Source: AKy350b1tmpN2kP03lwA2YUIAI8vuYXWL2d7aNm1yEKP8eq8boem9oM3plC8rDv4swzoK98EZ9sMMLztSt/QkW7+o50=
-X-Received: by 2002:a17:90a:a886:b0:23b:36cc:f347 with SMTP id
- h6-20020a17090aa88600b0023b36ccf347mr947229pjq.9.1680615520948; Tue, 04 Apr
- 2023 06:38:40 -0700 (PDT)
+        d=1e100.net; s=20210112; t=1680628642;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=txVm5JgMwTa0GASAVxn38cvz41mLZSuRMGj6/8ZDA7c=;
+        b=g/9iUBCgrcoU7XNimAqRzTr879McreZFPiwmX1OSGqNvafnM0h7y5dbRTItX/fIy5R
+         fK+7y493f3/fFe5Xu8fItX56gzY3pjlOYsTbfLD8GK+dcj0CH3JYuJqUcx4SaKDEUe01
+         TPQ8bsmeQobpoxR+Yh/Q01sL+EmjmQz9TuIYS07krs+l1xc0kGM24MzW2wq6Mfd0Qz+2
+         TlKBAubBwWza58tRM9lunvmH0dVlPdJvRP+CAqskApxuuEWs4glou+KCKTa4/xjHSOpw
+         0Gn95c19ZH8TZ25LyDlGLXNaBD3igKMuMUJ+ChZQyykuT06cCsihxQf/rUIhAs+opHxf
+         BxLQ==
+X-Gm-Message-State: AAQBX9f5iHRu/BLKsfoyOYnjftZXwTmqWHhZ8BGMTt0RHMdK+dPqavO8
+        +cRTCa/4V18o3LmVIQt3nRWPYw==
+X-Google-Smtp-Source: AKy350Ze6ZhJMWKYd/qI5CGFx2CSupFNq011b07kq3gL9ejsm0Si9sT7MoSagbShMYuxxGAXSJisRg==
+X-Received: by 2002:a1c:cc1a:0:b0:3f0:4e04:b8f8 with SMTP id h26-20020a1ccc1a000000b003f04e04b8f8mr2648001wmb.39.1680628642373;
+        Tue, 04 Apr 2023 10:17:22 -0700 (PDT)
+Received: from airbuntu (host86-163-35-64.range86-163.btcentralplus.com. [86.163.35.64])
+        by smtp.gmail.com with ESMTPSA id m26-20020a05600c3b1a00b003ede2c4701dsm23061015wms.14.2023.04.04.10.17.21
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 04 Apr 2023 10:17:21 -0700 (PDT)
+Date:   Tue, 4 Apr 2023 18:17:20 +0100
+From:   Qais Yousef <qyousef@layalina.io>
+To:     Lukasz Luba <lukasz.luba@arm.com>
+Cc:     linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+        rostedt@goodmis.org, mhiramat@kernel.org, mingo@redhat.com,
+        peterz@infradead.org, juri.lelli@redhat.com,
+        vincent.guittot@linaro.org, dietmar.eggemann@arm.com,
+        bsegall@google.com, mgorman@suse.de, bristot@redhat.com,
+        vschneid@redhat.com, delyank@fb.com, qyousef@google.com
+Subject: Re: [PATCH 1/3] sched/tp: Add new tracepoint to track uclamp set
+ from user-space
+Message-ID: <20230404171720.ntktoqixkj5f77ag@airbuntu>
+References: <20230322151843.14390-1-lukasz.luba@arm.com>
+ <20230322151843.14390-2-lukasz.luba@arm.com>
+ <20230403134606.amdxfmr5fb544xnv@airbuntu>
+ <bdaebc90-ca39-1301-c7ba-e367f8406d09@arm.com>
 MIME-Version: 1.0
-References: <20230403113552.2857693-1-revest@chromium.org> <20230403113552.2857693-4-revest@chromium.org>
- <ZCsMQ/6MI49st2oW@FVFF77S0Q05N.cambridge.arm.com>
-In-Reply-To: <ZCsMQ/6MI49st2oW@FVFF77S0Q05N.cambridge.arm.com>
-From:   Florent Revest <revest@chromium.org>
-Date:   Tue, 4 Apr 2023 15:38:29 +0200
-Message-ID: <CABRcYmJXQ6DpfNJ_P1Aros3QZ9+fZuvF-WgHc=YDRnUSUj__FQ@mail.gmail.com>
-Subject: Re: [PATCH v5 3/4] arm64: ftrace: Add direct call trampoline samples support
-To:     Mark Rutland <mark.rutland@arm.com>
-Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-trace-kernel@vger.kernel.org, bpf@vger.kernel.org,
-        catalin.marinas@arm.com, will@kernel.org, rostedt@goodmis.org,
-        mhiramat@kernel.org, ast@kernel.org, daniel@iogearbox.net,
-        andrii@kernel.org, kpsingh@kernel.org, jolsa@kernel.org,
-        xukuohai@huaweicloud.com, lihuafei1@huawei.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <bdaebc90-ca39-1301-c7ba-e367f8406d09@arm.com>
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On Mon, Apr 3, 2023 at 7:26=E2=80=AFPM Mark Rutland <mark.rutland@arm.com> =
-wrote:
->
-> On Mon, Apr 03, 2023 at 01:35:51PM +0200, Florent Revest wrote:
-> > The ftrace samples need per-architecture trampoline implementations
-> > to save and restore argument registers around the calls to
-> > my_direct_func* and to restore polluted registers (eg: x30).
-> >
-> > These samples also include <asm/asm-offsets.h> which, on arm64, is not
-> > necessary and redefines previously defined macros (resulting in
-> > warnings) so these includes are guarded by !CONFIG_ARM64.
-> >
-> > Signed-off-by: Florent Revest <revest@chromium.org>
->
-> Overall this looks pretty good!
->
-> I spotted a few bugs below while testing, and I've suggested some fixups =
-below.
->
-> w.r.t. the asm-offsets include guards. I took a look at fixing arm64's
-> asm-offsets.c to not be problematic, but it requires some invasive refact=
-oring,
-> so I'd like to clean that up as a separate series. I don't think that sho=
-uld
-> block this series, and I think that the include guards are fine for now.
+On 04/03/23 17:47, Lukasz Luba wrote:
+> Hi Qais,
+> 
+> On 4/3/23 14:46, Qais Yousef wrote:
+> > Hi Lukasz!
+> > 
+> > On 03/22/23 15:18, Lukasz Luba wrote:
+> > > The user-space can set uclamp value for a given task. It impacts task
+> > > placement decisions made by the scheduler. This is very useful information
+> > > and helps to understand the system behavior or track improvements in
+> > > middleware and applications which start using uclamp mechanisms and report
+> > > better performance in tests.
+> > 
+> > We do have uclamp trace events in sched_tp, why are they not sufficient?
+> > 
+> > 	https://github.com/qais-yousef/sched_tp/blob/main/sched_events.h#L233
+> > 
+> > Do you really want to know the exact time the value has changed?
+> 
+> Yes, that's why these new are triggered instantly after userspace wanted
+> to set the new uclamp values. We are going to have a few different
+> uclamp implementations: one in mainline and X in Android vendor kernels.
 
-Sounds great! Thank you Mark :)
+This is not true. As you can see everyone tries to push fixes for issues they
+find, but this not happening fast enough and they get forced to carry out of
+tree stuff at the end. Out of tree stuff for the broken bits that is.
 
-> > ---
-> >  arch/arm64/Kconfig                          |  2 ++
-> >  samples/ftrace/ftrace-direct-modify.c       | 34 ++++++++++++++++++
-> >  samples/ftrace/ftrace-direct-multi-modify.c | 38 +++++++++++++++++++++
-> >  samples/ftrace/ftrace-direct-multi.c        | 23 +++++++++++++
-> >  samples/ftrace/ftrace-direct-too.c          | 26 ++++++++++++++
-> >  samples/ftrace/ftrace-direct.c              | 24 +++++++++++++
-> >  6 files changed, 147 insertions(+)
-> >
-> > diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
-> > index f3503d0cc1b8..c2bf28099abd 100644
-> > --- a/arch/arm64/Kconfig
-> > +++ b/arch/arm64/Kconfig
-> > @@ -194,6 +194,8 @@ config ARM64
-> >                   !CC_OPTIMIZE_FOR_SIZE)
-> >       select FTRACE_MCOUNT_USE_PATCHABLE_FUNCTION_ENTRY \
-> >               if DYNAMIC_FTRACE_WITH_ARGS
-> > +     select HAVE_SAMPLE_FTRACE_DIRECT
-> > +     select HAVE_SAMPLE_FTRACE_DIRECT_MULTI
-> >       select HAVE_EFFICIENT_UNALIGNED_ACCESS
-> >       select HAVE_FAST_GUP
-> >       select HAVE_FTRACE_MCOUNT_RECORD
-> > diff --git a/samples/ftrace/ftrace-direct-modify.c b/samples/ftrace/ftr=
-ace-direct-modify.c
-> > index 25fba66f61c0..98d1b7385f08 100644
-> > --- a/samples/ftrace/ftrace-direct-modify.c
-> > +++ b/samples/ftrace/ftrace-direct-modify.c
-> > @@ -2,7 +2,9 @@
-> >  #include <linux/module.h>
-> >  #include <linux/kthread.h>
-> >  #include <linux/ftrace.h>
-> > +#ifndef CONFIG_ARM64
-> >  #include <asm/asm-offsets.h>
-> > +#endif
-> >
-> >  extern void my_direct_func1(void);
-> >  extern void my_direct_func2(void);
-> > @@ -96,6 +98,38 @@ asm (
-> >
-> >  #endif /* CONFIG_S390 */
-> >
-> > +#ifdef CONFIG_ARM64
-> > +
-> > +asm (
-> > +"    .pushsection    .text, \"ax\", @progbits\n"
-> > +"    .type           my_tramp1, @function\n"
-> > +"    .globl          my_tramp1\n"
-> > +"   my_tramp1:"
-> > +"    bti     c\n"
-> > +"    sub     sp, sp, #16\n"
-> > +"    stp     x9, x30, [sp]\n"
-> > +"    bl      my_direct_func1\n"
-> > +"    ldp     x30, x9, [sp]\n"
-> > +"    add     sp, sp, #16\n"
-> > +"    ret     x9\n"
-> > +"    .size           my_tramp1, .-my_tramp1\n"
-> > +
-> > +"    .type           my_tramp2, @function\n"
-> > +"    .globl          my_tramp2\n"
-> > +"   my_tramp2:"
-> > +"    bti     c\n"
-> > +"    sub     sp, sp, #16\n"
-> > +"    stp     x9, x30, [sp]\n"
-> > +"    bl      my_direct_func2\n"
-> > +"    ldp     x30, x9, [sp]\n"
-> > +"    add     sp, sp, #16\n"
-> > +"    ret     x9\n"
-> > +"    .size           my_tramp2, .-my_tramp2\n"
-> > +"    .popsection\n"
-> > +);
-> > +
-> > +#endif /* CONFIG_ARM64 */
->
-> These looks functionally correct, given they'll only be attached to sched=
-ule()
-> and the direct funcs take no arguments, so there's no arguments to save/r=
-estore
-> and nothing to shuffle.
->
-> As an aside, I believe we'll need to rework the sequences when we add sup=
-port
-> for RELIABLE_STACKTRACE so that the unwinder can reliably acquire the add=
-ress
-> of the instrumented function and its caller, but I think for now it's
-> preferable to keep this simple and I'm happy to make that a problem for f=
-uture
-> me.
+> The goal is to have only one... We will have to experiment to find
 
-Ah, interesting. I'd be happy to help when that time comes! :)
+This statement gives a very strong message to everyone out here. And I'd like
+to stress strongly that this is NOT true. Broken bits, yes. But essential bits
+that works are used the same.
 
-> > diff --git a/samples/ftrace/ftrace-direct-multi-modify.c b/samples/ftra=
-ce/ftrace-direct-multi-modify.c
-> > index f72623899602..e39108eb085d 100644
-> > --- a/samples/ftrace/ftrace-direct-multi-modify.c
-> > +++ b/samples/ftrace/ftrace-direct-multi-modify.c
-> > @@ -2,7 +2,9 @@
-> >  #include <linux/module.h>
-> >  #include <linux/kthread.h>
-> >  #include <linux/ftrace.h>
-> > +#ifndef CONFIG_ARM64
-> >  #include <asm/asm-offsets.h>
-> > +#endif
-> >
-> >  extern void my_direct_func1(unsigned long ip);
-> >  extern void my_direct_func2(unsigned long ip);
-> > @@ -103,6 +105,42 @@ asm (
-> >
-> >  #endif /* CONFIG_S390 */
-> >
-> > +#ifdef CONFIG_ARM64
-> > +
-> > +asm (
-> > +"    .pushsection    .text, \"ax\", @progbits\n"
-> > +"    .type           my_tramp1, @function\n"
-> > +"    .globl          my_tramp1\n"
-> > +"   my_tramp1:"
-> > +"    bti     c\n"
-> > +"    sub     sp, sp, #32\n"
-> > +"    stp     x9, x30, [sp]\n"
-> > +"    str     x0, [sp, #16]\n"
-> > +"    bl      my_direct_func1\n"
-> > +"    ldp     x30, x9, [sp]\n"
-> > +"    ldr     x0, [sp, #16]\n"
-> > +"    add     sp, sp, #32\n"
-> > +"    ret     x9\n"
-> > +"    .size           my_tramp1, .-my_tramp1\n"
-> > +
-> > +"    .type           my_tramp2, @function\n"
-> > +"    .globl          my_tramp2\n"
-> > +"   my_tramp2:"
-> > +"    bti     c\n"
-> > +"    sub     sp, sp, #32\n"
-> > +"    stp     x9, x30, [sp]\n"
-> > +"    str     x0, [sp, #16]\n"
-> > +"    bl      my_direct_func2\n"
-> > +"    ldp     x30, x9, [sp]\n"
-> > +"    ldr     x0, [sp, #16]\n"
-> > +"    add     sp, sp, #32\n"
-> > +"    ret     x9\n"
-> > +"    .size           my_tramp2, .-my_tramp2\n"
-> > +"    .popsection\n"
-> > +);
-> > +
-> > +#endif /* CONFIG_ARM64 */
->
-> For both of these trampolines we need to pass the trampoline's return add=
-ress
-> (i.e. where we'll return to in the instrumented function) as the 'ip' arg=
-ument
-> to my_direct_func{1,2}().
->
-> In both cases, just before the 'bl my_direct_func{1,2}' we'll need to add=
-:
->
->         mov     x0, x30
+We can do a better job and fix things faster upstream. I am committed to
+sorting all these stuff out anyway.
 
-Oopsie, yes! Very good catch!
+> the behavior of those algorithms and understand the differences. Since
+> uclamp is part of this 'control-chain' of CPU frequency and also
+> task placement - it would be really tricky to figure our everything.
+> The analysis on traces are crucial for this.
 
-> > diff --git a/samples/ftrace/ftrace-direct-multi.c b/samples/ftrace/ftra=
-ce-direct-multi.c
-> > index 1547c2c6be02..5a395d2d2e07 100644
-> > --- a/samples/ftrace/ftrace-direct-multi.c
-> > +++ b/samples/ftrace/ftrace-direct-multi.c
-> > @@ -4,7 +4,9 @@
-> >  #include <linux/mm.h> /* for handle_mm_fault() */
-> >  #include <linux/ftrace.h>
-> >  #include <linux/sched/stat.h>
-> > +#ifndef CONFIG_ARM64
-> >  #include <asm/asm-offsets.h>
-> > +#endif
-> >
-> >  extern void my_direct_func(unsigned long ip);
-> >
-> > @@ -66,6 +68,27 @@ asm (
-> >
-> >  #endif /* CONFIG_S390 */
-> >
-> > +#ifdef CONFIG_ARM64
-> > +
-> > +asm (
-> > +"    .pushsection    .text, \"ax\", @progbits\n"
-> > +"    .type           my_tramp, @function\n"
-> > +"    .globl          my_tramp\n"
-> > +"   my_tramp:"
-> > +"    bti     c\n"
-> > +"    sub     sp, sp, #32\n"
-> > +"    stp     x9, x30, [sp]\n"
-> > +"    str     x0, [sp, #16]\n"
-> > +"    bl      my_direct_func\n"
-> > +"    ldp     x30, x9, [sp]\n"
-> > +"    ldr     x0, [sp, #16]\n"
-> > +"    add     sp, sp, #32\n"
-> > +"    ret     x9\n"
-> > +"    .size           my_tramp, .-my_tramp\n"
-> > +"    .popsection\n"
-> > +);
-> > +
-> > +#endif /* CONFIG_ARM64 */
-> >  static struct ftrace_ops direct;
->
-> As with ftrace-direct-multi-modify.c, we need to pass the return address =
-of the
-> trampoline as the 'ip' argument to my_direct_func1(), so just before the =
-'bl
-> my_direct_func' we'll need to add:
->
->         mov     x0, x30
+I think the existing uclamp trace event is enough to be honest. But up to the
+maintainer if they want to add this new specific one. The two tps seem a bit of
+a clutter to me. With kprobes and bpf a lot can be done on the fly if you want
+to reverse engineer some stuff.
 
-Will do :)
+> 
+> > 
+> > Would it make sense to introduce a generic sched_setscheduler tracepoint
+> > instead? Although this might not be necessary as I think we can use
+> > register_kprobe() to register a callback and create a new event without any
+> > additional tracepoint. sched_setscheduler() is not inlined so should be easy to
+> > hook into and create events, no?
+> 
+> This looks very complex and we already have our LISA tool with the
 
-> > diff --git a/samples/ftrace/ftrace-direct-too.c b/samples/ftrace/ftrace=
--direct-too.c
-> > index f28e7b99840f..6e93c45fea86 100644
-> > --- a/samples/ftrace/ftrace-direct-too.c
-> > +++ b/samples/ftrace/ftrace-direct-too.c
-> > @@ -3,7 +3,9 @@
-> >
-> >  #include <linux/mm.h> /* for handle_mm_fault() */
-> >  #include <linux/ftrace.h>
-> > +#ifndef CONFIG_ARM64
-> >  #include <asm/asm-offsets.h>
-> > +#endif
-> >
-> >  extern void my_direct_func(struct vm_area_struct *vma,
-> >                          unsigned long address, unsigned int flags);
->
-> This gets attached to handle_mm_fault(), whose prototype is currently:
->
-> vm_fault_t handle_mm_fault(struct vm_area_struct *vma, unsigned long addr=
-ess,
->                            unsigned int flags, struct pt_regs *regs)
->
-> i.e. it has 4 arguments, in x0 to x3.
->
-> > @@ -70,6 +72,30 @@ asm (
-> >
-> >  #endif /* CONFIG_S390 */
-> >
-> > +#ifdef CONFIG_ARM64
-> > +
-> > +asm (
-> > +"    .pushsection    .text, \"ax\", @progbits\n"
-> > +"    .type           my_tramp, @function\n"
-> > +"    .globl          my_tramp\n"
-> > +"   my_tramp:"
-> > +"    bti     c\n"
-> > +"    sub     sp, sp, #48\n"
-> > +"    stp     x9, x30, [sp]\n"
-> > +"    stp     x0, x1, [sp, #16]\n"
-> > +"    str     x2, [sp, #32]\n"
-> > +"    bl      my_direct_func\n"
-> > +"    ldp     x30, x9, [sp]\n"
-> > +"    ldp     x0, x1, [sp, #16]\n"
-> > +"    ldr     x2, [sp, #32]\n"
->
-> So here we need to save+restore x3 also.
->
-> We already have the space reserved, so that should just be a matter of us=
-ing
-> stp/ldp for x2 and x3.
+It's not. Here's a PoC that only does a trace_printk(), it's simple. You don't
+need to do it in a module even, see below.
 
-That's also a very good catch. It looks like it's an issue for the
-sample trampoline on x86_64 as well, I'll fix it too in a separate
-patch as part of v6. (if i understand s390 asm correctly, the stmg
-already saves all arg registers in one instruction so s390 doesn't
-need to change)
+	https://github.com/qais-yousef/sched_tp/compare/main...kprobe-poc
+
+It did highlight that sugov_should_update_freq() ends up actually being inlined
+though :(. It should work for sched_setscheduler(). You'd want to use
+register_kprobe() instead for that.
+
+> module to change the tracepoints into trace events and build them.
+> I wanted to be aligned with that design, which might look a bit
+> old-fashion but is simple IMO.
+
+trace-cmd, bpf and I believe perf, all can do the same; and they support
+kprobes not just tracepoints.
+
+And they all boil down to the same underlying mechanism
+
+	https://www.kernel.org/doc/html/v6.1/trace/kprobetrace.html
+
+No need to re-invent a new wheel ;-)
+
+> The 'sched_setscheduler tracepoint' might be a too big for this
+> purpose.
+
+Sorry I am usually supportive for more tracepoints, but I feel skeptical this
+time. That said, I really don't mind if the maintainers are okay with it. So
+while I'm not convinced, but I don't have any objection either.
+
+> Thanks for the comments :)
+
+Thanks!
+
+--
+Qais Yousef
