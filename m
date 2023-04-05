@@ -2,91 +2,96 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BF3F3C76188
-	for <linux-trace-kernel@archiver.kernel.org>; Wed,  5 Apr 2023 02:10:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D24D8C761A6
+	for <linux-trace-kernel@archiver.kernel.org>; Wed,  5 Apr 2023 02:23:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236718AbjDECKU (ORCPT
+        id S236695AbjDECXr (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Tue, 4 Apr 2023 22:10:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37496 "EHLO
+        Tue, 4 Apr 2023 22:23:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42316 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232695AbjDECKT (ORCPT
+        with ESMTP id S235302AbjDECXo (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Tue, 4 Apr 2023 22:10:19 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DDB2C3C0A;
-        Tue,  4 Apr 2023 19:10:18 -0700 (PDT)
+        Tue, 4 Apr 2023 22:23:44 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 319821BC;
+        Tue,  4 Apr 2023 19:23:44 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 5C70263986;
-        Wed,  5 Apr 2023 02:10:18 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPS id B7CB7C433D2;
-        Wed,  5 Apr 2023 02:10:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1680660617;
-        bh=4zJ4kLaeaZbHgZtylnXU4eUVkHyBkUaet36sI15YNo8=;
-        h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-        b=MtjY6CQPKm7hzi4jCZ8G4ZOL70G+tRaFbgX3Qo1mjQaCWGGszB8J+6X6ckYA1cCV9
-         D/uDMZy3uroXe8iDIyGvCA+nt5eBFAC4kdREUHIIHjiAq5rWKLFt7Z23UMMKUs3tEI
-         tdkvEB4bDgwNUXA/VL8U5DY3nIdHFxZRHzEmI6YIA8RmeH7C4DR/faW2p/caJAhYgp
-         jEe2rLGDO29zc6uAcLkqNgAOoUkWajZQvYf4V/W+fMge/vnekc+dJ1Pbh7GjrXQ97+
-         yBrcxsdVgPWvtpq8npBOlH+BuXyJFzeaa9ZKCiXuflPBMz1Pwm3Dir4aHm3SglcKD4
-         h9TZ/FwmeFW1w==
-Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-        by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 97249E4D02D;
-        Wed,  5 Apr 2023 02:10:17 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
+        by dfw.source.kernel.org (Postfix) with ESMTPS id B7C0463A24;
+        Wed,  5 Apr 2023 02:23:43 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 23C4DC4339C;
+        Wed,  5 Apr 2023 02:23:43 +0000 (UTC)
+Received: from rostedt by gandalf with local (Exim 4.96)
+        (envelope-from <rostedt@goodmis.org>)
+        id 1pjsoH-000hVF-2o;
+        Tue, 04 Apr 2023 22:23:41 -0400
+Message-ID: <20230405022341.688730321@goodmis.org>
+User-Agent: quilt/0.66
+Date:   Tue, 04 Apr 2023 22:21:14 -0400
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
+Cc:     Masami Hiramatsu <mhiramat@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Ross Zwisler <zwisler@google.com>, stable@vger.kernel.org
+Subject: [PATCH 1/2 v2] tracing: Have tracing_snapshot_instance_cond() write errors to the
+ appropriate instance
+References: <20230405022113.860447811@goodmis.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH net-next] net: qrtr: correct types of trace event
- parameters
-From:   patchwork-bot+netdevbpf@kernel.org
-Message-Id: <168066061761.16096.17994837774956890281.git-patchwork-notify@kernel.org>
-Date:   Wed, 05 Apr 2023 02:10:17 +0000
-References: <20230402-qrtr-trace-types-v1-1-92ad55008dd3@kernel.org>
-In-Reply-To: <20230402-qrtr-trace-types-v1-1-92ad55008dd3@kernel.org>
-To:     Simon Horman <horms@kernel.org>
-Cc:     kuba@kernel.org, davem@davemloft.net, edumazet@google.com,
-        pabeni@redhat.com, mani@kernel.org, rostedt@goodmis.org,
-        mhiramat@kernel.org, linux-arm-msm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
-        netdev@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-Hello:
+From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
 
-This patch was applied to netdev/net-next.git (main)
-by Jakub Kicinski <kuba@kernel.org>:
+If a trace instance has a failure with its snapshot code, the error
+message is to be written to that instance's buffer. But currently, the
+message is written to the top level buffer. Worse yet, it may also disable
+the top level buffer and not the instance that had the issue.
 
-On Mon, 03 Apr 2023 17:43:16 +0200 you wrote:
-> The arguments passed to the trace events are of type unsigned int,
-> however the signature of the events used __le32 parameters.
-> 
-> I may be missing the point here, but sparse flagged this and it
-> does seem incorrect to me.
-> 
->   net/qrtr/ns.c: note: in included file (through include/trace/trace_events.h, include/trace/define_trace.h, include/trace/events/qrtr.h):
->   ./include/trace/events/qrtr.h:11:1: warning: cast to restricted __le32
->   ./include/trace/events/qrtr.h:11:1: warning: restricted __le32 degrades to integer
->   ./include/trace/events/qrtr.h:11:1: warning: restricted __le32 degrades to integer
->   ... (a lot more similar warnings)
->   net/qrtr/ns.c:115:47:    expected restricted __le32 [usertype] service
->   net/qrtr/ns.c:115:47:    got unsigned int service
->   net/qrtr/ns.c:115:61: warning: incorrect type in argument 2 (different base types)
->   ... (a lot more similar warnings)
-> 
-> [...]
+Cc: stable@vger.kernel.org
+Fixes: 2824f50332486 ("tracing: Make the snapshot trigger work with instances")
+Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+---
+ kernel/trace/trace.c | 14 +++++++-------
+ 1 file changed, 7 insertions(+), 7 deletions(-)
 
-Here is the summary with links:
-  - [net-next] net: qrtr: correct types of trace event parameters
-    https://git.kernel.org/netdev/net-next/c/054fbf7ff814
-
-You are awesome, thank you!
+diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
+index 0a7ea02c9f08..93740a9370c6 100644
+--- a/kernel/trace/trace.c
++++ b/kernel/trace/trace.c
+@@ -1149,22 +1149,22 @@ static void tracing_snapshot_instance_cond(struct trace_array *tr,
+ 	unsigned long flags;
+ 
+ 	if (in_nmi()) {
+-		internal_trace_puts("*** SNAPSHOT CALLED FROM NMI CONTEXT ***\n");
+-		internal_trace_puts("*** snapshot is being ignored        ***\n");
++		trace_array_puts(tr, "*** SNAPSHOT CALLED FROM NMI CONTEXT ***\n");
++		trace_array_puts(tr, "*** snapshot is being ignored        ***\n");
+ 		return;
+ 	}
+ 
+ 	if (!tr->allocated_snapshot) {
+-		internal_trace_puts("*** SNAPSHOT NOT ALLOCATED ***\n");
+-		internal_trace_puts("*** stopping trace here!   ***\n");
+-		tracing_off();
++		trace_array_puts(tr, "*** SNAPSHOT NOT ALLOCATED ***\n");
++		trace_array_puts(tr, "*** stopping trace here!   ***\n");
++		tracer_tracing_off(tr);
+ 		return;
+ 	}
+ 
+ 	/* Note, snapshot can not be used when the tracer uses it */
+ 	if (tracer->use_max_tr) {
+-		internal_trace_puts("*** LATENCY TRACER ACTIVE ***\n");
+-		internal_trace_puts("*** Can not use snapshot (sorry) ***\n");
++		trace_array_puts(tr, "*** LATENCY TRACER ACTIVE ***\n");
++		trace_array_puts(tr, "*** Can not use snapshot (sorry) ***\n");
+ 		return;
+ 	}
+ 
 -- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
-
-
+2.39.2
