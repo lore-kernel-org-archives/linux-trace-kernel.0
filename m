@@ -2,205 +2,225 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B994C76188
-	for <linux-trace-kernel@archiver.kernel.org>; Wed,  5 Apr 2023 10:47:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 428E2C7619A
+	for <linux-trace-kernel@archiver.kernel.org>; Wed,  5 Apr 2023 10:50:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237860AbjDEKrX (ORCPT
+        id S237313AbjDEKur (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Wed, 5 Apr 2023 06:47:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55830 "EHLO
+        Wed, 5 Apr 2023 06:50:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60424 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237427AbjDEKrT (ORCPT
+        with ESMTP id S229605AbjDEKur (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Wed, 5 Apr 2023 06:47:19 -0400
-Received: from domac.alu.hr (domac.alu.unizg.hr [161.53.235.3])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0C4625254;
-        Wed,  5 Apr 2023 03:47:14 -0700 (PDT)
-Received: from localhost (localhost [127.0.0.1])
-        by domac.alu.hr (Postfix) with ESMTP id A6EDD604F0;
-        Wed,  5 Apr 2023 12:47:12 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=alu.unizg.hr; s=mail;
-        t=1680691632; bh=hl//JDs8oq/nFxtyl7Fq4HFZ8Dr8YwBH1A6IHePegpc=;
-        h=Date:Subject:From:To:Cc:References:In-Reply-To:From;
-        b=StbPfXMQOa28PhM8mfR0ME6qhsOvy8QMZRN7TuL7mUskbgoDvFKcmZHg6GGg8qgkR
-         dNqMyIjsKNSZPBhMxbJvzBpEbYMlu0Uykqmh52DgZOBkWokwlSWsp/BpCWk+FZrbHH
-         +97so/zBN8tKSxMvSfNGO0vfe44cixjfL1phmw9BCpSaLGw/6mM9hgDXSO7R7n+qBy
-         bHpjU2JyGscV4qMFiH5PSUVZNlDewCpMRF+HJdvsctDDlLwDdWgVcq+TVQ2BdufYYY
-         I3eYGzbWROuLoV5oGxuVi+dS976YaWCbAAZ07anzsvjTUlNd/dPc4jmaMY71yN4rST
-         oc7mofrpMtKTg==
-X-Virus-Scanned: Debian amavisd-new at domac.alu.hr
-Received: from domac.alu.hr ([127.0.0.1])
-        by localhost (domac.alu.hr [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id 0qOeGV9IwPxq; Wed,  5 Apr 2023 12:47:09 +0200 (CEST)
-Received: from [10.0.1.5] (grf-nat.grf.hr [161.53.83.23])
-        by domac.alu.hr (Postfix) with ESMTPSA id CAF59604EF;
-        Wed,  5 Apr 2023 12:47:08 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=alu.unizg.hr; s=mail;
-        t=1680691629; bh=hl//JDs8oq/nFxtyl7Fq4HFZ8Dr8YwBH1A6IHePegpc=;
-        h=Date:Subject:From:To:Cc:References:In-Reply-To:From;
-        b=BD3o07zr31fwFUHKIAj09rN8O2tBI1duCjOmrbyBmT5qBHsLQhFwF0QFKirt/WMKf
-         85F2c9dfPAkSqvgySttS171CXy6jIRia/Eeiy6PfxvI1FL7GShrfrueXGm9Vwy1hlB
-         CUtBTwel/SzyxrNfr5Ra5UkdHPEMIT1G7X/V+CDewFf401P41ffca4N71od1tvzGrc
-         0dAYzeOTXg7n2ObapyRY53npaC78kz/D8p/e5U19iQR/TTRjJq0CnPfh4GHppWZyr4
-         t9wbeys/K8HgNsrsZWsKG3jC0R1D0BQS7e7OQgsyYJVVJJKkz2mDn/cxzMwj0X9MMe
-         bYVGs7ILjfjxw==
-Message-ID: <f871aa71-9c2e-6a31-151c-2e4cae70a0b2@alu.unizg.hr>
-Date:   Wed, 5 Apr 2023 12:47:08 +0200
+        Wed, 5 Apr 2023 06:50:47 -0400
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 05DB84C19;
+        Wed,  5 Apr 2023 03:50:45 -0700 (PDT)
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 470D31684;
+        Wed,  5 Apr 2023 03:51:29 -0700 (PDT)
+Received: from [10.57.20.121] (unknown [10.57.20.121])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 2BCB13F73F;
+        Wed,  5 Apr 2023 03:50:42 -0700 (PDT)
+Message-ID: <96a920d4-8614-65ce-1c81-2b72a3ff9036@arm.com>
+Date:   Wed, 5 Apr 2023 11:50:39 +0100
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.9.1
-Subject: Re: [PATCH] tracing: Free error logs of tracing instances
-Content-Language: en-US, hr
-From:   Mirsad Goran Todorovac <mirsad.todorovac@alu.unizg.hr>
-To:     Steven Rostedt <rostedt@goodmis.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Linux Trace Kernel <linux-trace-kernel@vger.kernel.org>
-Cc:     Masami Hiramatsu <mhiramat@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Thorsten Leemhuis <regressions@leemhuis.info>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Eric Biggers <ebiggers@kernel.org>
-References: <20230404194504.5790b95f@gandalf.local.home>
- <5d6332fc-a64a-5e1a-33e0-a7f1e31b2f90@alu.unizg.hr>
-In-Reply-To: <5d6332fc-a64a-5e1a-33e0-a7f1e31b2f90@alu.unizg.hr>
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.9.0
+Subject: Re: [PATCH 1/3] sched/tp: Add new tracepoint to track uclamp set from
+ user-space
+Content-Language: en-US
+To:     Qais Yousef <qyousef@layalina.io>
+Cc:     linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+        rostedt@goodmis.org, mhiramat@kernel.org, mingo@redhat.com,
+        peterz@infradead.org, juri.lelli@redhat.com,
+        vincent.guittot@linaro.org, dietmar.eggemann@arm.com,
+        bsegall@google.com, mgorman@suse.de, bristot@redhat.com,
+        vschneid@redhat.com, delyank@fb.com, qyousef@google.com
+References: <20230322151843.14390-1-lukasz.luba@arm.com>
+ <20230322151843.14390-2-lukasz.luba@arm.com>
+ <20230403134606.amdxfmr5fb544xnv@airbuntu>
+ <bdaebc90-ca39-1301-c7ba-e367f8406d09@arm.com>
+ <20230404171720.ntktoqixkj5f77ag@airbuntu>
+From:   Lukasz Luba <lukasz.luba@arm.com>
+In-Reply-To: <20230404171720.ntktoqixkj5f77ag@airbuntu>
 Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On 5.4.2023. 5:57, Mirsad Goran Todorovac wrote:
-> On 05. 04. 2023. 01:45, Steven Rostedt wrote:
->> From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
+
+
+On 4/4/23 18:17, Qais Yousef wrote:
+> On 04/03/23 17:47, Lukasz Luba wrote:
+>> Hi Qais,
 >>
->> When a tracing instance is removed, the error messages that hold errors
->> that occurred in the instance needs to be freed. The following reports a
->> memory leak:
+>> On 4/3/23 14:46, Qais Yousef wrote:
+>>> Hi Lukasz!
+>>>
+>>> On 03/22/23 15:18, Lukasz Luba wrote:
+>>>> The user-space can set uclamp value for a given task. It impacts task
+>>>> placement decisions made by the scheduler. This is very useful information
+>>>> and helps to understand the system behavior or track improvements in
+>>>> middleware and applications which start using uclamp mechanisms and report
+>>>> better performance in tests.
+>>>
+>>> We do have uclamp trace events in sched_tp, why are they not sufficient?
+>>>
+>>> 	https://github.com/qais-yousef/sched_tp/blob/main/sched_events.h#L233
+>>>
+>>> Do you really want to know the exact time the value has changed?
 >>
->>   # cd /sys/kernel/tracing
->>   # mkdir instances/foo
->>   # echo 'hist:keys=x' > instances/foo/events/sched/sched_switch/trigger
->>   # cat instances/foo/error_log
->>   [  117.404795] hist:sched:sched_switch: error: Couldn't find field
->>     Command: hist:keys=x
->>                        ^
->>   # rmdir instances/foo
->>
->> Then check for memory leaks:
->>
->>   # echo scan > /sys/kernel/debug/kmemleak
->>   # cat /sys/kernel/debug/kmemleak
->> unreferenced object 0xffff88810d8ec700 (size 192):
->>    comm "bash", pid 869, jiffies 4294950577 (age 215.752s)
->>    hex dump (first 32 bytes):
->>      60 dd 68 61 81 88 ff ff 60 dd 68 61 81 88 ff ff  `.ha....`.ha....
->>      a0 30 8c 83 ff ff ff ff 26 00 0a 00 00 00 00 00  .0......&.......
->>    backtrace:
->>      [<00000000dae26536>] kmalloc_trace+0x2a/0xa0
->>      [<00000000b2938940>] tracing_log_err+0x277/0x2e0
->>      [<000000004a0e1b07>] parse_atom+0x966/0xb40
->>      [<0000000023b24337>] parse_expr+0x5f3/0xdb0
->>      [<00000000594ad074>] event_hist_trigger_parse+0x27f8/0x3560
->>      [<00000000293a9645>] trigger_process_regex+0x135/0x1a0
->>      [<000000005c22b4f2>] event_trigger_write+0x87/0xf0
->>      [<000000002cadc509>] vfs_write+0x162/0x670
->>      [<0000000059c3b9be>] ksys_write+0xca/0x170
->>      [<00000000f1cddc00>] do_syscall_64+0x3e/0xc0
->>      [<00000000868ac68c>] entry_SYSCALL_64_after_hwframe+0x72/0xdc
->> unreferenced object 0xffff888170c35a00 (size 32):
->>    comm "bash", pid 869, jiffies 4294950577 (age 215.752s)
->>    hex dump (first 32 bytes):
->>      0a 20 20 43 6f 6d 6d 61 6e 64 3a 20 68 69 73 74  .  Command: hist
->>      3a 6b 65 79 73 3d 78 0a 00 00 00 00 00 00 00 00  :keys=x.........
->>    backtrace:
->>      [<000000006a747de5>] __kmalloc+0x4d/0x160
->>      [<000000000039df5f>] tracing_log_err+0x29b/0x2e0
->>      [<000000004a0e1b07>] parse_atom+0x966/0xb40
->>      [<0000000023b24337>] parse_expr+0x5f3/0xdb0
->>      [<00000000594ad074>] event_hist_trigger_parse+0x27f8/0x3560
->>      [<00000000293a9645>] trigger_process_regex+0x135/0x1a0
->>      [<000000005c22b4f2>] event_trigger_write+0x87/0xf0
->>      [<000000002cadc509>] vfs_write+0x162/0x670
->>      [<0000000059c3b9be>] ksys_write+0xca/0x170
->>      [<00000000f1cddc00>] do_syscall_64+0x3e/0xc0
->>      [<00000000868ac68c>] entry_SYSCALL_64_after_hwframe+0x72/0xdc
->>
->> The problem is that the error log needs to be freed when the instance is
->> removed.
->>
->> Link: https://lore.kernel.org/lkml/76134d9f-a5ba-6a0d-37b3-28310b4a1e91@alu.unizg.hr/
->>
->> Cc: stable@vger.kernel.org
->> Fixes: 2f754e771b1a6 ("tracing: Have the error logs show up in the proper instances")
->> Reported-by: Mirsad Goran Todorovac <mirsad.todorovac@alu.unizg.hr>
->> Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
->> ---
->>   kernel/trace/trace.c | 1 +
->>   1 file changed, 1 insertion(+)
->>
->> diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
->> index 8ae51f1dea8e..352a804b016d 100644
->> --- a/kernel/trace/trace.c
->> +++ b/kernel/trace/trace.c
->> @@ -9516,6 +9516,7 @@ static int __remove_instance(struct trace_array *tr)
->>   	tracefs_remove(tr->dir);
->>   	free_percpu(tr->last_func_repeats);
->>   	free_trace_buffers(tr);
->> +	clear_tracing_err_log(tr);
->>   
->>   	for (i = 0; i < tr->nr_topts; i++) {
->>   		kfree(tr->topts[i].topts);
+>> Yes, that's why these new are triggered instantly after userspace wanted
+>> to set the new uclamp values. We are going to have a few different
+>> uclamp implementations: one in mainline and X in Android vendor kernels.
 > 
-> Hello,
+> This is not true. As you can see everyone tries to push fixes for issues they
+
+Could you clarify which part is not true?
+1. We have X vendor hook implementations how uclamp is interpreted + one
+    upstream
+2. we are going to have such situation for a while (till we don't meet
+    requirements in mainline uclamp, so the hooks can be removed and
+    we would have the same mechanism under the hood that we understand)
+3. the user-space sets uclamp value via syscall
+
+
+> find, but this not happening fast enough and they get forced to carry out of
+> tree stuff at the end. Out of tree stuff for the broken bits that is.
 > 
-> Apparently, this fixed the issue (leak) with the same config, kernel commit and
-> HW.
+>> The goal is to have only one... We will have to experiment to find
 > 
-> Please add
+> This statement gives a very strong message to everyone out here. And I'd like
+> to stress strongly that this is NOT true. Broken bits, yes. But essential bits
+> that works are used the same.
+
+Could you elaborate this?
+
+This is how I view the solution with uclamp, but I'm afraid we have
+different views:
+Uclamp is part of the control algorithms in a closed feedback loop. The
+apps want to use (as stated in the latest kernel doc) uclamp in order
+get desired performance (e.g. no frame drops) in an environment, which:
+1. can change with a CPUs configuration that the app was installed
+    (single app from a repo want to run efficient on various devices;
+     those devices create different environment, from the beginning)
+2. the thermal conditions can change in run-time, so the capacity of
+    the platform might change (even to a point that some CPUs is out)
+3. has access to a dedicated accelerators, which can handle some of
+    heavy computations from the CPUs (e.g. those with neural networks)
+4. drivers and devices have different capabilities e.g. in terms of
+    fast DVFS change, which can be and issue in this case
+
+When the uclamp algorithm, which interprets the individual tasks' values
+and runqueue value, can be different, then this is a different solution.
+In such situation every platform might have different solution.
+
+We are going to focus on mainline uclamp development. We want to know
+if the frequency cannot be changed due to some slow HW or a huge traffic
+in the system of various tasks/runqueues wanted to change the freq, or
+just wrong setting in the schedutil filter. We are also interested in
+measuring the 'delay' from the uclamp new request till the HW getting
+it actually. All of this would shape the solutions 'quality'.
+
+I don't know if vendors justify their vendor hook uclamp implementation
+as a fix for 'broken bits' or a 'value-added'.
+
 > 
-> Tested-by: Mirsad Todorovac <mirsad.todorovac@alu.unizg.hr>
+> We can do a better job and fix things faster upstream. I am committed to
+> sorting all these stuff out anyway.
 > 
-> at your convenience.
+>> the behavior of those algorithms and understand the differences. Since
+>> uclamp is part of this 'control-chain' of CPU frequency and also
+>> task placement - it would be really tricky to figure our everything.
+>> The analysis on traces are crucial for this.
 > 
-> The bisect was obviously misleading, but not intentionally. This is the first time
-> my bisect was wrong (out of five or six), so I will thoroughly investigate the fault,
-> for - needless to say - quality binary search bisect is essential to hunt down bug.
-I found the culprit.
+> I think the existing uclamp trace event is enough to be honest. But up to the
+> maintainer if they want to add this new specific one. The two tps seem a bit of
+> a clutter to me. With kprobes and bpf a lot can be done on the fly if you want
+> to reverse engineer some stuff.
+> 
+>>
+>>>
+>>> Would it make sense to introduce a generic sched_setscheduler tracepoint
+>>> instead? Although this might not be necessary as I think we can use
+>>> register_kprobe() to register a callback and create a new event without any
+>>> additional tracepoint. sched_setscheduler() is not inlined so should be easy to
+>>> hook into and create events, no?
+>>
+>> This looks very complex and we already have our LISA tool with the
+> 
+> It's not. Here's a PoC that only does a trace_printk(), it's simple. You don't
+> need to do it in a module even, see below.
+> 
+> 	https://github.com/qais-yousef/sched_tp/compare/main...kprobe-poc
+> 
+> It did highlight that sugov_should_update_freq() ends up actually being inlined
+> though :(. It should work for sched_setscheduler(). You'd want to use
+> register_kprobe() instead for that.
 
-I have naively classified build 6.1.0-ftrace-06910-g90b12f423d3c as "good",
-giving me a false negative.
+Issues with that approach:
+- as you said, it won't work with inline functions, so in this patch set
+   example it would work 'partially' ;)
+- uses trace_printk() which is not aligned method to our tool and AFAIK
+   Perfetto
+- would create mix of mechanisms that would push the complexity for
+   our analysis tool, which we don't want. This is the complexity
+   that I had in mind from SW engineering perspective.
+   Maintainability and understanding of the mechanics across teams
+   or even companies is not for free. Then explaining someone in
+   different company that this approach won't work if the compiler
+   inlined a function, so they have to rewrite the code and use
+   the other approach (with tracepoint in the code) doesn't sound
+   good.
 
-It turned out that it takes at least two attempts on
+> 
+>> module to change the tracepoints into trace events and build them.
+>> I wanted to be aligned with that design, which might look a bit
+>> old-fashion but is simple IMO.
+> 
+> trace-cmd, bpf and I believe perf, all can do the same; and they support
+> kprobes not just tracepoints.
+> 
+> And they all boil down to the same underlying mechanism
+> 
+> 	https://www.kernel.org/doc/html/v6.1/trace/kprobetrace.html
+> 
+> No need to re-invent a new wheel ;-)
 
-# echo scan > /sys/kernel/debug/kmemleak
+I don't understand why you are calling this 're-invent a new wheel',
+when I said this is aligned with our SW design for trace analysis.
+BTW, the LISA tool is open source and anyone can use it for free [1].
+I'm not developing another framework for tracepoints here, I just use
+this approach.
 
-to display the "ftracetest" leak in the
+I agree, there is a few ways of doing this. The worse thing would
+be for a us to use a mix (and mess) a few of them. As you know,
+our tool takes the path with one of them: tracepoints explicitly
+visible to everyone in the kernel code, so you can point engineers
+into it. I know, you can basically trace almost any function dynamically
+which creates huge potential space. The big space of opportunity isn't
+good when you want to solve the problem and share the knowledge
+to others how to follow. Look at the example of tracepoints which
+are used for deriving the task wake-up latency. It's easier for
+engineers to see that in the code with the tracepoints, what parts
+are important. Where and why the flow is going, which is a nice
+example how the vast code space can been reduced.
 
-# cat /sys/kernel/debug/kmemleak
+> 
+>> The 'sched_setscheduler tracepoint' might be a too big for this
+>> purpose.
+> 
+> Sorry I am usually supportive for more tracepoints, but I feel skeptical this
+> time. That said, I really don't mind if the maintainers are okay with it. So
+> while I'm not convinced, but I don't have any objection either.
 
-output. First try again showed no leaks. The log shows "looks good". I don't
-remember what I did on Jan/26th, but it was obviously not good enough.
+I hope I would convince you with those examples, so you would be less
+skeptical.
 
-Mea culpa.
+Cheers,
+Lukasz
 
-The leak is present already in the v5.9.0, which is earliest which I can boot
-with the default kmod v30+20220630-3ubuntu1 and default ZSTD kernel compression.
-
-If it mattered, I could proceed bisect on the other device (we'd get Fixes:
-line, but the bug is already patched).
-
-Best regards,
-Mirsad
-
--- 
-Mirsad Todorovac
-System engineer
-Faculty of Graphic Arts | Academy of Fine Arts
-University of Zagreb
-Republic of Croatia, the European Union
-
-Sistem inženjer
-Grafički fakultet | Akademija likovnih umjetnosti
-Sveučilište u Zagrebu
-
+[1] 
+https://lisa-linux-integrated-system-analysis.readthedocs.io/en/latest/setup.html
