@@ -2,127 +2,91 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 64697C76188
-	for <linux-trace-kernel@archiver.kernel.org>; Tue,  4 Apr 2023 23:45:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BF3F3C76188
+	for <linux-trace-kernel@archiver.kernel.org>; Wed,  5 Apr 2023 02:10:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236625AbjDDXpL (ORCPT
+        id S236718AbjDECKU (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Tue, 4 Apr 2023 19:45:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57412 "EHLO
+        Tue, 4 Apr 2023 22:10:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37496 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236619AbjDDXpK (ORCPT
+        with ESMTP id S232695AbjDECKT (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Tue, 4 Apr 2023 19:45:10 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 269824216;
-        Tue,  4 Apr 2023 16:45:08 -0700 (PDT)
+        Tue, 4 Apr 2023 22:10:19 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DDB2C3C0A;
+        Tue,  4 Apr 2023 19:10:18 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 6BF1B63AC8;
-        Tue,  4 Apr 2023 23:45:07 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B5AB4C433D2;
-        Tue,  4 Apr 2023 23:45:05 +0000 (UTC)
-Date:   Tue, 4 Apr 2023 19:45:04 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     LKML <linux-kernel@vger.kernel.org>,
-        Linux Trace Kernel <linux-trace-kernel@vger.kernel.org>
-Cc:     Masami Hiramatsu <mhiramat@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Mirsad Goran Todorovac <mirsad.todorovac@alu.unizg.hr>,
-        Thorsten Leemhuis <regressions@leemhuis.info>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Eric Biggers <ebiggers@kernel.org>
-Subject: [PATCH] tracing: Free error logs of tracing instances
-Message-ID: <20230404194504.5790b95f@gandalf.local.home>
-X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 5C70263986;
+        Wed,  5 Apr 2023 02:10:18 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPS id B7CB7C433D2;
+        Wed,  5 Apr 2023 02:10:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1680660617;
+        bh=4zJ4kLaeaZbHgZtylnXU4eUVkHyBkUaet36sI15YNo8=;
+        h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+        b=MtjY6CQPKm7hzi4jCZ8G4ZOL70G+tRaFbgX3Qo1mjQaCWGGszB8J+6X6ckYA1cCV9
+         D/uDMZy3uroXe8iDIyGvCA+nt5eBFAC4kdREUHIIHjiAq5rWKLFt7Z23UMMKUs3tEI
+         tdkvEB4bDgwNUXA/VL8U5DY3nIdHFxZRHzEmI6YIA8RmeH7C4DR/faW2p/caJAhYgp
+         jEe2rLGDO29zc6uAcLkqNgAOoUkWajZQvYf4V/W+fMge/vnekc+dJ1Pbh7GjrXQ97+
+         yBrcxsdVgPWvtpq8npBOlH+BuXyJFzeaa9ZKCiXuflPBMz1Pwm3Dir4aHm3SglcKD4
+         h9TZ/FwmeFW1w==
+Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
+        by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 97249E4D02D;
+        Wed,  5 Apr 2023 02:10:17 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH net-next] net: qrtr: correct types of trace event
+ parameters
+From:   patchwork-bot+netdevbpf@kernel.org
+Message-Id: <168066061761.16096.17994837774956890281.git-patchwork-notify@kernel.org>
+Date:   Wed, 05 Apr 2023 02:10:17 +0000
+References: <20230402-qrtr-trace-types-v1-1-92ad55008dd3@kernel.org>
+In-Reply-To: <20230402-qrtr-trace-types-v1-1-92ad55008dd3@kernel.org>
+To:     Simon Horman <horms@kernel.org>
+Cc:     kuba@kernel.org, davem@davemloft.net, edumazet@google.com,
+        pabeni@redhat.com, mani@kernel.org, rostedt@goodmis.org,
+        mhiramat@kernel.org, linux-arm-msm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+        netdev@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
+Hello:
 
-When a tracing instance is removed, the error messages that hold errors
-that occurred in the instance needs to be freed. The following reports a
-memory leak:
+This patch was applied to netdev/net-next.git (main)
+by Jakub Kicinski <kuba@kernel.org>:
 
- # cd /sys/kernel/tracing
- # mkdir instances/foo
- # echo 'hist:keys=x' > instances/foo/events/sched/sched_switch/trigger
- # cat instances/foo/error_log
- [  117.404795] hist:sched:sched_switch: error: Couldn't find field
-   Command: hist:keys=x
-                      ^
- # rmdir instances/foo
+On Mon, 03 Apr 2023 17:43:16 +0200 you wrote:
+> The arguments passed to the trace events are of type unsigned int,
+> however the signature of the events used __le32 parameters.
+> 
+> I may be missing the point here, but sparse flagged this and it
+> does seem incorrect to me.
+> 
+>   net/qrtr/ns.c: note: in included file (through include/trace/trace_events.h, include/trace/define_trace.h, include/trace/events/qrtr.h):
+>   ./include/trace/events/qrtr.h:11:1: warning: cast to restricted __le32
+>   ./include/trace/events/qrtr.h:11:1: warning: restricted __le32 degrades to integer
+>   ./include/trace/events/qrtr.h:11:1: warning: restricted __le32 degrades to integer
+>   ... (a lot more similar warnings)
+>   net/qrtr/ns.c:115:47:    expected restricted __le32 [usertype] service
+>   net/qrtr/ns.c:115:47:    got unsigned int service
+>   net/qrtr/ns.c:115:61: warning: incorrect type in argument 2 (different base types)
+>   ... (a lot more similar warnings)
+> 
+> [...]
 
-Then check for memory leaks:
+Here is the summary with links:
+  - [net-next] net: qrtr: correct types of trace event parameters
+    https://git.kernel.org/netdev/net-next/c/054fbf7ff814
 
- # echo scan > /sys/kernel/debug/kmemleak
- # cat /sys/kernel/debug/kmemleak
-unreferenced object 0xffff88810d8ec700 (size 192):
-  comm "bash", pid 869, jiffies 4294950577 (age 215.752s)
-  hex dump (first 32 bytes):
-    60 dd 68 61 81 88 ff ff 60 dd 68 61 81 88 ff ff  `.ha....`.ha....
-    a0 30 8c 83 ff ff ff ff 26 00 0a 00 00 00 00 00  .0......&.......
-  backtrace:
-    [<00000000dae26536>] kmalloc_trace+0x2a/0xa0
-    [<00000000b2938940>] tracing_log_err+0x277/0x2e0
-    [<000000004a0e1b07>] parse_atom+0x966/0xb40
-    [<0000000023b24337>] parse_expr+0x5f3/0xdb0
-    [<00000000594ad074>] event_hist_trigger_parse+0x27f8/0x3560
-    [<00000000293a9645>] trigger_process_regex+0x135/0x1a0
-    [<000000005c22b4f2>] event_trigger_write+0x87/0xf0
-    [<000000002cadc509>] vfs_write+0x162/0x670
-    [<0000000059c3b9be>] ksys_write+0xca/0x170
-    [<00000000f1cddc00>] do_syscall_64+0x3e/0xc0
-    [<00000000868ac68c>] entry_SYSCALL_64_after_hwframe+0x72/0xdc
-unreferenced object 0xffff888170c35a00 (size 32):
-  comm "bash", pid 869, jiffies 4294950577 (age 215.752s)
-  hex dump (first 32 bytes):
-    0a 20 20 43 6f 6d 6d 61 6e 64 3a 20 68 69 73 74  .  Command: hist
-    3a 6b 65 79 73 3d 78 0a 00 00 00 00 00 00 00 00  :keys=x.........
-  backtrace:
-    [<000000006a747de5>] __kmalloc+0x4d/0x160
-    [<000000000039df5f>] tracing_log_err+0x29b/0x2e0
-    [<000000004a0e1b07>] parse_atom+0x966/0xb40
-    [<0000000023b24337>] parse_expr+0x5f3/0xdb0
-    [<00000000594ad074>] event_hist_trigger_parse+0x27f8/0x3560
-    [<00000000293a9645>] trigger_process_regex+0x135/0x1a0
-    [<000000005c22b4f2>] event_trigger_write+0x87/0xf0
-    [<000000002cadc509>] vfs_write+0x162/0x670
-    [<0000000059c3b9be>] ksys_write+0xca/0x170
-    [<00000000f1cddc00>] do_syscall_64+0x3e/0xc0
-    [<00000000868ac68c>] entry_SYSCALL_64_after_hwframe+0x72/0xdc
-
-The problem is that the error log needs to be freed when the instance is
-removed.
-
-Link: https://lore.kernel.org/lkml/76134d9f-a5ba-6a0d-37b3-28310b4a1e91@alu.unizg.hr/
-
-Cc: stable@vger.kernel.org
-Fixes: 2f754e771b1a6 ("tracing: Have the error logs show up in the proper instances")
-Reported-by: Mirsad Goran Todorovac <mirsad.todorovac@alu.unizg.hr>
-Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
----
- kernel/trace/trace.c | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
-index 8ae51f1dea8e..352a804b016d 100644
---- a/kernel/trace/trace.c
-+++ b/kernel/trace/trace.c
-@@ -9516,6 +9516,7 @@ static int __remove_instance(struct trace_array *tr)
- 	tracefs_remove(tr->dir);
- 	free_percpu(tr->last_func_repeats);
- 	free_trace_buffers(tr);
-+	clear_tracing_err_log(tr);
- 
- 	for (i = 0; i < tr->nr_topts; i++) {
- 		kfree(tr->topts[i].topts);
+You are awesome, thank you!
 -- 
-2.39.2
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
+
 
