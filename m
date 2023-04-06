@@ -2,192 +2,78 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F1E7BC76196
-	for <linux-trace-kernel@archiver.kernel.org>; Thu,  6 Apr 2023 08:07:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FCE9C76196
+	for <linux-trace-kernel@archiver.kernel.org>; Thu,  6 Apr 2023 08:15:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235362AbjDFIHu (ORCPT
+        id S235885AbjDFIPO (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Thu, 6 Apr 2023 04:07:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51520 "EHLO
+        Thu, 6 Apr 2023 04:15:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58016 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235156AbjDFIHs (ORCPT
+        with ESMTP id S236127AbjDFIPG (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Thu, 6 Apr 2023 04:07:48 -0400
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 071346592;
-        Thu,  6 Apr 2023 01:07:43 -0700 (PDT)
-Received: from pps.filterd (m0279864.ppops.net [127.0.0.1])
-        by mx0a-0031df01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 3366DHAE013854;
-        Thu, 6 Apr 2023 08:07:30 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=message-id : date :
- mime-version : subject : to : cc : references : from : in-reply-to :
- content-type : content-transfer-encoding; s=qcppdkim1;
- bh=jJZpK+4LUoxPvabfOSLEoyNinN7S5mTg5CwsNL84xjw=;
- b=kjMe/+F1hIyFVsZ4CQ4oUcT4396yvvvQOup5kUw2Fuspq+FctwzusRsKtVLHnHymHIJO
- mPA3TrUFWzxnMVXV+nSNnVw1QQa9B4I49rKmlChHrWG8pqjf/Dr5s1oV1/xHWW0oSIMH
- N0Gpz1K5dcGIMZugzk9FggIXLjgDci5HLOCjbbdhpUPXtx7Ur17wwiLlrDtTUAn73YkC
- S+M4bQ4fYqq9dMLDkfGuUK/bcY/JrOGPCy6zSPF2tn4Xs+O+4cRYJqghvPQ5RSVi0UJL
- FqsdsEnXIk7yCyBqb1C7KW+87K9+nKac+QyFR94xFH++zdW8kHVDBF7MxOVB8P6v/8oN Tg== 
-Received: from nasanppmta04.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-        by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3psmyx0nmv-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 06 Apr 2023 08:07:30 +0000
-Received: from nasanex01c.na.qualcomm.com (nasanex01c.na.qualcomm.com [10.45.79.139])
-        by NASANPPMTA04.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 33687TA3003418
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 6 Apr 2023 08:07:29 GMT
-Received: from [10.216.2.94] (10.80.80.8) by nasanex01c.na.qualcomm.com
- (10.45.79.139) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.986.42; Thu, 6 Apr 2023
- 01:07:25 -0700
-Message-ID: <62fb952e-ffb9-763c-4e4b-4601c017ad26@quicinc.com>
-Date:   Thu, 6 Apr 2023 13:37:22 +0530
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.8.0
-Subject: Re: [PATCH net-next] net: qrtr: correct types of trace event
- parameters
-Content-Language: en-US
-To:     Simon Horman <horms@kernel.org>, Jakub Kicinski <kuba@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Eric Dumazet <edumazet@google.com>,
-        Paolo Abeni <pabeni@redhat.com>
-CC:     Manivannan Sadhasivam <mani@kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
+        Thu, 6 Apr 2023 04:15:06 -0400
+Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5CA645276;
+        Thu,  6 Apr 2023 01:15:05 -0700 (PDT)
+Date:   Thu, 6 Apr 2023 10:15:01 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020; t=1680768902;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=NmksDzLXdOctZW9XPkY/c3iq+kJAl0CSoWbiwwGb8Pk=;
+        b=QvaPIpxUaBNeZbw/K3/HgY/TKdMt0k2xxuBYTqOsVlYsPFB6Tit28SNe+LQFpmK5PTHQpk
+        +nyM2g3QZbQMdaQfewO6DqH0a7sX9dYu+BUlCFgezptafB4FsyGj9QF0/epcNiyjcyKO4d
+        fzxu2Tg3M4O+/TG8oOMpB95j/AE6cRCHcOUE42wgApDfNtKT3jRJSK9X11N0traCQg2tXl
+        rx6Y7nFVBjMWCBWEdCtAFmSLhhyzFse/6y11cu58rqEINMKtPkk0mhMwPqC+srq+WgE81Q
+        R6LNt/S0ls3DoxpWHBC/ABJ5BSSEx4tjJVBXuqd8EuwKdRfuunERjYt7GyWnhg==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020e; t=1680768902;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=NmksDzLXdOctZW9XPkY/c3iq+kJAl0CSoWbiwwGb8Pk=;
+        b=lUDN+cLyXE5ZZS58//iARXgnIIwGqAbc4obCSNLQ2cMpQJJp4AkIf3IGWpHSencV8vhnNM
+        EbC5werHpNTXuuAQ==
+From:   Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+To:     Leonardo Bras <leobras@redhat.com>
+Cc:     Steven Rostedt <rostedt@goodmis.org>,
         Masami Hiramatsu <mhiramat@kernel.org>,
-        <linux-arm-msm@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-trace-kernel@vger.kernel.org>, <netdev@vger.kernel.org>
-References: <20230402-qrtr-trace-types-v1-1-92ad55008dd3@kernel.org>
-From:   Mukesh Ojha <quic_mojha@quicinc.com>
-In-Reply-To: <20230402-qrtr-trace-types-v1-1-92ad55008dd3@kernel.org>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.80.80.8]
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nasanex01c.na.qualcomm.com (10.45.79.139)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: h48KRiHCC5-6Cb2kepEKb3Fo2hcERqYP
-X-Proofpoint-ORIG-GUID: h48KRiHCC5-6Cb2kepEKb3Fo2hcERqYP
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.254,Aquarius:18.0.942,Hydra:6.0.573,FMLib:17.11.170.22
- definitions=2023-04-06_03,2023-04-05_01,2023-02-09_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- phishscore=0 impostorscore=0 adultscore=0 clxscore=1011 mlxlogscore=999
- bulkscore=0 mlxscore=0 lowpriorityscore=0 spamscore=0 suspectscore=0
- malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2303200000 definitions=main-2304060071
+        Thomas Gleixner <tglx@linutronix.de>,
+        Yury Norov <yury.norov@gmail.com>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Nadav Amit <namit@vmware.com>,
+        Zhen Lei <thunder.leizhen@huawei.com>,
+        Chen Zhongjin <chenzhongjin@huawei.com>,
+        linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+        Marcelo Tosatti <mtosatti@redhat.com>
+Subject: Re: [RFC PATCH 1/1] smp: Add tracepoints for functions called with
+ smp_call_function*()
+Message-ID: <20230406081501.pS4ZnWaK@linutronix.de>
+References: <20230406075718.68672-1-leobras@redhat.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20230406075718.68672-1-leobras@redhat.com>
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
+On 2023-04-06 04:57:18 [-0300], Leonardo Bras wrote:
+> When running RT workloads in isolated CPUs, many cases of deadline misses
+> are caused by remote CPU requests such as smp_call_function*().
+> 
+> For those cases, having the names of those functions running around the
+> deadline miss moment could help finding a target for the next improvements.
+> 
+> Add tracepoints for acquiring the funtion name & argument before entry and
+> after exitting the called function.
+> 
+> Signed-off-by: Leonardo Bras <leobras@redhat.com>
 
+Check
+	https://lore.kernel.org/20230307143558.294354-1-vschneid@redhat.com
 
-On 4/3/2023 9:13 PM, Simon Horman wrote:
-> The arguments passed to the trace events are of type unsigned int,
-> however the signature of the events used __le32 parameters.
-> 
-> I may be missing the point here, but sparse flagged this and it
-> does seem incorrect to me.
-> 
->    net/qrtr/ns.c: note: in included file (through include/trace/trace_events.h, include/trace/define_trace.h, include/trace/events/qrtr.h):
->    ./include/trace/events/qrtr.h:11:1: warning: cast to restricted __le32
->    ./include/trace/events/qrtr.h:11:1: warning: restricted __le32 degrades to integer
->    ./include/trace/events/qrtr.h:11:1: warning: restricted __le32 degrades to integer
->    ... (a lot more similar warnings)
->    net/qrtr/ns.c:115:47:    expected restricted __le32 [usertype] service
->    net/qrtr/ns.c:115:47:    got unsigned int service
->    net/qrtr/ns.c:115:61: warning: incorrect type in argument 2 (different base types)
->    ... (a lot more similar warnings)
-> 
-> Fixes: dfddb54043f0 ("net: qrtr: Add tracepoint support")
-> Reviewed-by: Manivannan Sadhasivam <mani@kernel.org>
-> Signed-off-by: Simon Horman <horms@kernel.org>
-> ---
-> v1
-> * Drop RFC designation
-> * Add Fixes and Reviewed-by tags
-> * Target at 'net-next' (not sure if that is correct)
-> 
-> RFC
-> * Link: https://lore.kernel.org/r/20230402-qrtr-trace-types-v1-1-da062d368e74@kernel.org
-> ---
->   include/trace/events/qrtr.h | 33 ++++++++++++++++++---------------
->   1 file changed, 18 insertions(+), 15 deletions(-)
-> 
-> diff --git a/include/trace/events/qrtr.h b/include/trace/events/qrtr.h
-> index b1de14c3bb93..441132c67133 100644
-> --- a/include/trace/events/qrtr.h
-> +++ b/include/trace/events/qrtr.h
-> @@ -10,15 +10,16 @@
->   
->   TRACE_EVENT(qrtr_ns_service_announce_new,
->   
-> -	TP_PROTO(__le32 service, __le32 instance, __le32 node, __le32 port),
-> +	TP_PROTO(unsigned int service, unsigned int instance,
-> +		 unsigned int node, unsigned int port),
->   
->   	TP_ARGS(service, instance, node, port),
->   
->   	TP_STRUCT__entry(
-> -		__field(__le32, service)
-> -		__field(__le32, instance)
-> -		__field(__le32, node)
-> -		__field(__le32, port)
-> +		__field(unsigned int, service)
-> +		__field(unsigned int, instance)
-> +		__field(unsigned int, node)
-> +		__field(unsigned int, port)
->   	),
->   
->   	TP_fast_assign(
-> @@ -36,15 +37,16 @@ TRACE_EVENT(qrtr_ns_service_announce_new,
->   
->   TRACE_EVENT(qrtr_ns_service_announce_del,
->   
-> -	TP_PROTO(__le32 service, __le32 instance, __le32 node, __le32 port),
-> +	TP_PROTO(unsigned int service, unsigned int instance,
-> +		 unsigned int node, unsigned int port),
->   
->   	TP_ARGS(service, instance, node, port),
->   
->   	TP_STRUCT__entry(
-> -		__field(__le32, service)
-> -		__field(__le32, instance)
-> -		__field(__le32, node)
-> -		__field(__le32, port)
-> +		__field(unsigned int, service)
-> +		__field(unsigned int, instance)
-> +		__field(unsigned int, node)
-> +		__field(unsigned int, port)
->   	),
->   
->   	TP_fast_assign(
-> @@ -62,15 +64,16 @@ TRACE_EVENT(qrtr_ns_service_announce_del,
->   
->   TRACE_EVENT(qrtr_ns_server_add,
->   
-> -	TP_PROTO(__le32 service, __le32 instance, __le32 node, __le32 port),
-> +	TP_PROTO(unsigned int service, unsigned int instance,
-> +		 unsigned int node, unsigned int port),
->   
->   	TP_ARGS(service, instance, node, port),
->   
->   	TP_STRUCT__entry(
-> -		__field(__le32, service)
-> -		__field(__le32, instance)
-> -		__field(__le32, node)
-> -		__field(__le32, port)
-> +		__field(unsigned int, service)
-> +		__field(unsigned int, instance)
-> +		__field(unsigned int, node)
-> +		__field(unsigned int, port)
-
-Reviewed-by: Mukesh Ojha <quic_mojha@quicinc.com>
-
--- Mukesh
-
->   	),
->   
->   	TP_fast_assign(
-> 
+Sebastian
