@@ -2,252 +2,334 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 57535C76196
-	for <linux-trace-kernel@archiver.kernel.org>; Thu,  6 Apr 2023 10:36:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DF036C7618D
+	for <linux-trace-kernel@archiver.kernel.org>; Thu,  6 Apr 2023 10:50:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237048AbjDFKgO (ORCPT
+        id S236845AbjDFKuU (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Thu, 6 Apr 2023 06:36:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36472 "EHLO
+        Thu, 6 Apr 2023 06:50:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45982 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229820AbjDFKgO (ORCPT
+        with ESMTP id S233619AbjDFKuT (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Thu, 6 Apr 2023 06:36:14 -0400
-Received: from mail-m118111.qiye.163.com (mail-m118111.qiye.163.com [115.236.118.111])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DD11C4C08;
-        Thu,  6 Apr 2023 03:36:11 -0700 (PDT)
-Received: from [172.23.196.59] (unknown [121.32.254.147])
-        by mail-m118111.qiye.163.com (Hmail) with ESMTPA id 38C2F58045F;
-        Thu,  6 Apr 2023 18:35:53 +0800 (CST)
-Message-ID: <1ee16ad1-925a-411d-c67e-5ddab2fb6074@sangfor.com.cn>
-Date:   Thu, 6 Apr 2023 18:35:50 +0800
+        Thu, 6 Apr 2023 06:50:19 -0400
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id B126E4C05;
+        Thu,  6 Apr 2023 03:50:17 -0700 (PDT)
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A43CA16F8;
+        Thu,  6 Apr 2023 03:51:01 -0700 (PDT)
+Received: from FVFF77S0Q05N (unknown [10.57.20.171])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 0C0BC3F73F;
+        Thu,  6 Apr 2023 03:50:14 -0700 (PDT)
+Date:   Thu, 6 Apr 2023 11:50:12 +0100
+From:   Mark Rutland <mark.rutland@arm.com>
+To:     Florent Revest <revest@chromium.org>
+Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-trace-kernel@vger.kernel.org, bpf@vger.kernel.org,
+        catalin.marinas@arm.com, will@kernel.org, rostedt@goodmis.org,
+        mhiramat@kernel.org, ast@kernel.org, daniel@iogearbox.net,
+        andrii@kernel.org, kpsingh@kernel.org, jolsa@kernel.org,
+        xukuohai@huaweicloud.com, lihuafei1@huawei.com
+Subject: Re: [PATCH v6 4/5] arm64: ftrace: Add direct call trampoline samples
+ support
+Message-ID: <ZC6j5GCvWuSG9vYe@FVFF77S0Q05N>
+References: <20230405180250.2046566-1-revest@chromium.org>
+ <20230405180250.2046566-5-revest@chromium.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.9.1
-Subject: Re: [PATCH v10 8/8] selftests/ftrace: Add funcgraph-retval test case
-From:   Donglin Peng <pengdonglin@sangfor.com.cn>
-To:     "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
-Cc:     rostedt@goodmis.org, linux@armlinux.org.uk, mark.rutland@arm.com,
-        will@kernel.org, catalin.marinas@arm.com,
-        rmk+kernel@armlinux.org.uk, palmer@dabbelt.com,
-        paul.walmsley@sifive.com, aou@eecs.berkeley.edu,
-        tglx@linutronix.de, dave.hansen@linux.intel.com, x86@kernel.org,
-        bp@alien8.de, hpa@zytor.com, chenhuacai@kernel.org,
-        zhangqing@loongson.cn, kernel@xen0n.name, mingo@redhat.com,
-        peterz@infradead.org, xiehuan09@gmail.com, dinghui@sangfor.com.cn,
-        huangcun@sangfor.com.cn, dolinux.peng@gmail.com,
-        linux-trace-kernel@vger.kernel.org, loongarch@lists.linux.dev,
-        linux-riscv@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-References: <cover.1680265828.git.pengdonglin@sangfor.com.cn>
- <ba23c2429f1ef798946ce65e21c7a7a2bff0019e.1680265828.git.pengdonglin@sangfor.com.cn>
- <20230402070406.177f09cc34f9860baf3e6ec2@kernel.org>
- <f4eabd56-2f91-05fc-b882-9dd8328f87ae@sangfor.com.cn>
- <7088643e-400b-4cd4-edd3-63b3baa36a7c@sangfor.com.cn>
-Content-Language: en-US
-In-Reply-To: <7088643e-400b-4cd4-edd3-63b3baa36a7c@sangfor.com.cn>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-HM-Spam-Status: e1kfGhgUHx5ZQUpXWQgPGg8OCBgUHx5ZQUlOS1dZFg8aDwILHllBWSg2Ly
-        tZV1koWUFITzdXWS1ZQUlXWQ8JGhUIEh9ZQVlCSxhIVktMQktLTUkeGRoaS1UTARMWGhIXJBQOD1
-        lXWRgSC1lBWUpJSlVISVVJTk9VSk9MWVdZFhoPEhUdFFlBWU9LSFVKSktISkxVSktLVUtZBg++
-X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6PBg6Gjo6Mj0WODNMMDA8CAgy
-        FitPFCpVSlVKTUNLTExMSE5PQ0pMVTMWGhIXVQseFRwfFBUcFxIVOwgaFRwdFAlVGBQWVRgVRVlX
-        WRILWUFZSklKVUhJVUlOT1VKT0xZV1kIAVlBQ01IQzcG
-X-HM-Tid: 0a8756231c5c2eb7kusn38c2f58045f
-X-HM-MType: 1
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230405180250.2046566-5-revest@chromium.org>
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On 2023/4/3 13:01, Donglin Peng wrote:
-> On 2023/4/3 10:33, Donglin Peng wrote:
->> On 2023/4/2 6:04, Masami Hiramatsu (Google) wrote:
->>> On Fri, 31 Mar 2023 05:47:44 -0700
->>> Donglin Peng <pengdonglin@sangfor.com.cn> wrote:
->>>
->>>> Add a test case for the funcgraph-retval and funcgraph-retval-hex
->>>> trace options.
->>>>
->>>> Signed-off-by: Donglin Peng <pengdonglin@sangfor.com.cn>
->>>> ---
->>>> v10:
->>>>   - Fix issues in selftest
->>>>
->>>> v8:
->>>>   - Fix issues in selftest
->>>> ---
->>>>   .../ftrace/test.d/ftrace/fgraph-retval.tc     | 43 
->>>> +++++++++++++++++++
->>>>   1 file changed, 43 insertions(+)
->>>>   create mode 100644 
->>>> tools/testing/selftests/ftrace/test.d/ftrace/fgraph-retval.tc
->>>>
->>>> diff --git 
->>>> a/tools/testing/selftests/ftrace/test.d/ftrace/fgraph-retval.tc 
->>>> b/tools/testing/selftests/ftrace/test.d/ftrace/fgraph-retval.tc
->>>> new file mode 100644
->>>> index 000000000000..5819aa2dd6ad
->>>> --- /dev/null
->>>> +++ b/tools/testing/selftests/ftrace/test.d/ftrace/fgraph-retval.tc
->>>> @@ -0,0 +1,43 @@
->>>> +#!/bin/sh
->>>> +# SPDX-License-Identifier: GPL-2.0
->>>> +# description: ftrace - function graph print function return value
->>>> +# requires: options/funcgraph-retval options/funcgraph-retval-hex 
->>>> function_graph:tracer
->>>> +
->>>> +# Make sure that funcgraph-retval works
->>>> +
->>>> +fail() { # msg
->>>> +    echo $1
->>>> +    exit_fail
->>>> +}
->>>> +
->>>> +disable_tracing
->>>> +clear_trace
->>>> +
->>>> +read PID _ < /proc/self/stat
->>>
->>> You can use "$$" for self pid.
->>
->> Yeah, I will fix it.
+On Wed, Apr 05, 2023 at 08:02:49PM +0200, Florent Revest wrote:
+> The ftrace samples need per-architecture trampoline implementations
+> to save and restore argument registers around the calls to
+> my_direct_func* and to restore polluted registers (eg: x30).
 > 
-> I found that ftracetest used () to launch a new child process for
-> executing a .tc script file, however the $$ value remains unchanged,
-> so we can not use $$ here, because it is PPID. Therefore I think we
-> have to get PID from /proc/self/stat.
+> These samples also include <asm/asm-offsets.h> which, on arm64, is not
+> necessary and redefines previously defined macros (resulting in
+> warnings) so these includes are guarded by !CONFIG_ARM64.
 > 
-> Here is the code from ftracetest that launches a child shell for 
-> executing the .tc file.
+> Signed-off-by: Florent Revest <revest@chromium.org>
+
+These all look good to me. I gave each module a spin in an 8-vCPU VM on an M1
+Macbook Pro with a bunch of other work going on, and all of those worked as
+expected with sensible output in /sys/kernel/tracing/trace, and no noticeable
+failures elsewhere. So:
+
+Reviewed-by: Mark Rutland <mark.rutland@arm.com>
+Tested-by: Mark Rutland <mark.rutland@arm.com>
+
+Mark.
+
+> ---
+>  arch/arm64/Kconfig                          |  2 ++
+>  samples/ftrace/ftrace-direct-modify.c       | 34 ++++++++++++++++++
+>  samples/ftrace/ftrace-direct-multi-modify.c | 40 +++++++++++++++++++++
+>  samples/ftrace/ftrace-direct-multi.c        | 24 +++++++++++++
+>  samples/ftrace/ftrace-direct-too.c          | 26 ++++++++++++++
+>  samples/ftrace/ftrace-direct.c              | 24 +++++++++++++
+>  6 files changed, 150 insertions(+)
 > 
-> __run_test() { # testfile
->    # setup PID and PPID, $$ is *not* updated.
->    (cd $TRACING_DIR; read PID _ < /proc/self/stat; set -e; set -x;
->     checkreq $1; initialize_ftrace; . $1)
->    [ $? -ne 0 ] && kill -s $SIG_FAIL $SIG_PID
-> }
+> diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
+> index f3503d0cc1b8..c2bf28099abd 100644
+> --- a/arch/arm64/Kconfig
+> +++ b/arch/arm64/Kconfig
+> @@ -194,6 +194,8 @@ config ARM64
+>  		    !CC_OPTIMIZE_FOR_SIZE)
+>  	select FTRACE_MCOUNT_USE_PATCHABLE_FUNCTION_ENTRY \
+>  		if DYNAMIC_FTRACE_WITH_ARGS
+> +	select HAVE_SAMPLE_FTRACE_DIRECT
+> +	select HAVE_SAMPLE_FTRACE_DIRECT_MULTI
+>  	select HAVE_EFFICIENT_UNALIGNED_ACCESS
+>  	select HAVE_FAST_GUP
+>  	select HAVE_FTRACE_MCOUNT_RECORD
+> diff --git a/samples/ftrace/ftrace-direct-modify.c b/samples/ftrace/ftrace-direct-modify.c
+> index 25fba66f61c0..98d1b7385f08 100644
+> --- a/samples/ftrace/ftrace-direct-modify.c
+> +++ b/samples/ftrace/ftrace-direct-modify.c
+> @@ -2,7 +2,9 @@
+>  #include <linux/module.h>
+>  #include <linux/kthread.h>
+>  #include <linux/ftrace.h>
+> +#ifndef CONFIG_ARM64
+>  #include <asm/asm-offsets.h>
+> +#endif
+>  
+>  extern void my_direct_func1(void);
+>  extern void my_direct_func2(void);
+> @@ -96,6 +98,38 @@ asm (
+>  
+>  #endif /* CONFIG_S390 */
+>  
+> +#ifdef CONFIG_ARM64
+> +
+> +asm (
+> +"	.pushsection    .text, \"ax\", @progbits\n"
+> +"	.type		my_tramp1, @function\n"
+> +"	.globl		my_tramp1\n"
+> +"   my_tramp1:"
+> +"	bti	c\n"
+> +"	sub	sp, sp, #16\n"
+> +"	stp	x9, x30, [sp]\n"
+> +"	bl	my_direct_func1\n"
+> +"	ldp	x30, x9, [sp]\n"
+> +"	add	sp, sp, #16\n"
+> +"	ret	x9\n"
+> +"	.size		my_tramp1, .-my_tramp1\n"
+> +
+> +"	.type		my_tramp2, @function\n"
+> +"	.globl		my_tramp2\n"
+> +"   my_tramp2:"
+> +"	bti	c\n"
+> +"	sub	sp, sp, #16\n"
+> +"	stp	x9, x30, [sp]\n"
+> +"	bl	my_direct_func2\n"
+> +"	ldp	x30, x9, [sp]\n"
+> +"	add	sp, sp, #16\n"
+> +"	ret	x9\n"
+> +"	.size		my_tramp2, .-my_tramp2\n"
+> +"	.popsection\n"
+> +);
+> +
+> +#endif /* CONFIG_ARM64 */
+> +
+>  static struct ftrace_ops direct;
+>  
+>  static unsigned long my_tramp = (unsigned long)my_tramp1;
+> diff --git a/samples/ftrace/ftrace-direct-multi-modify.c b/samples/ftrace/ftrace-direct-multi-modify.c
+> index f72623899602..26956c8fc513 100644
+> --- a/samples/ftrace/ftrace-direct-multi-modify.c
+> +++ b/samples/ftrace/ftrace-direct-multi-modify.c
+> @@ -2,7 +2,9 @@
+>  #include <linux/module.h>
+>  #include <linux/kthread.h>
+>  #include <linux/ftrace.h>
+> +#ifndef CONFIG_ARM64
+>  #include <asm/asm-offsets.h>
+> +#endif
+>  
+>  extern void my_direct_func1(unsigned long ip);
+>  extern void my_direct_func2(unsigned long ip);
+> @@ -103,6 +105,44 @@ asm (
+>  
+>  #endif /* CONFIG_S390 */
+>  
+> +#ifdef CONFIG_ARM64
+> +
+> +asm (
+> +"	.pushsection    .text, \"ax\", @progbits\n"
+> +"	.type		my_tramp1, @function\n"
+> +"	.globl		my_tramp1\n"
+> +"   my_tramp1:"
+> +"	bti	c\n"
+> +"	sub	sp, sp, #32\n"
+> +"	stp	x9, x30, [sp]\n"
+> +"	str	x0, [sp, #16]\n"
+> +"	mov	x0, x30\n"
+> +"	bl	my_direct_func1\n"
+> +"	ldp	x30, x9, [sp]\n"
+> +"	ldr	x0, [sp, #16]\n"
+> +"	add	sp, sp, #32\n"
+> +"	ret	x9\n"
+> +"	.size		my_tramp1, .-my_tramp1\n"
+> +
+> +"	.type		my_tramp2, @function\n"
+> +"	.globl		my_tramp2\n"
+> +"   my_tramp2:"
+> +"	bti	c\n"
+> +"	sub	sp, sp, #32\n"
+> +"	stp	x9, x30, [sp]\n"
+> +"	str	x0, [sp, #16]\n"
+> +"	mov	x0, x30\n"
+> +"	bl	my_direct_func2\n"
+> +"	ldp	x30, x9, [sp]\n"
+> +"	ldr	x0, [sp, #16]\n"
+> +"	add	sp, sp, #32\n"
+> +"	ret	x9\n"
+> +"	.size		my_tramp2, .-my_tramp2\n"
+> +"	.popsection\n"
+> +);
+> +
+> +#endif /* CONFIG_ARM64 */
+> +
+>  static unsigned long my_tramp = (unsigned long)my_tramp1;
+>  static unsigned long tramps[2] = {
+>  	(unsigned long)my_tramp1,
+> diff --git a/samples/ftrace/ftrace-direct-multi.c b/samples/ftrace/ftrace-direct-multi.c
+> index 1547c2c6be02..b2ac90e0c02e 100644
+> --- a/samples/ftrace/ftrace-direct-multi.c
+> +++ b/samples/ftrace/ftrace-direct-multi.c
+> @@ -4,7 +4,9 @@
+>  #include <linux/mm.h> /* for handle_mm_fault() */
+>  #include <linux/ftrace.h>
+>  #include <linux/sched/stat.h>
+> +#ifndef CONFIG_ARM64
+>  #include <asm/asm-offsets.h>
+> +#endif
+>  
+>  extern void my_direct_func(unsigned long ip);
+>  
+> @@ -66,6 +68,28 @@ asm (
+>  
+>  #endif /* CONFIG_S390 */
+>  
+> +#ifdef CONFIG_ARM64
+> +
+> +asm (
+> +"	.pushsection	.text, \"ax\", @progbits\n"
+> +"	.type		my_tramp, @function\n"
+> +"	.globl		my_tramp\n"
+> +"   my_tramp:"
+> +"	bti	c\n"
+> +"	sub	sp, sp, #32\n"
+> +"	stp	x9, x30, [sp]\n"
+> +"	str	x0, [sp, #16]\n"
+> +"	mov	x0, x30\n"
+> +"	bl	my_direct_func\n"
+> +"	ldp	x30, x9, [sp]\n"
+> +"	ldr	x0, [sp, #16]\n"
+> +"	add	sp, sp, #32\n"
+> +"	ret	x9\n"
+> +"	.size		my_tramp, .-my_tramp\n"
+> +"	.popsection\n"
+> +);
+> +
+> +#endif /* CONFIG_ARM64 */
+>  static struct ftrace_ops direct;
+>  
+>  static int __init ftrace_direct_multi_init(void)
+> diff --git a/samples/ftrace/ftrace-direct-too.c b/samples/ftrace/ftrace-direct-too.c
+> index 71ed4ee8cb4a..38f6f677f913 100644
+> --- a/samples/ftrace/ftrace-direct-too.c
+> +++ b/samples/ftrace/ftrace-direct-too.c
+> @@ -3,7 +3,9 @@
+>  
+>  #include <linux/mm.h> /* for handle_mm_fault() */
+>  #include <linux/ftrace.h>
+> +#ifndef CONFIG_ARM64
+>  #include <asm/asm-offsets.h>
+> +#endif
+>  
+>  extern void my_direct_func(struct vm_area_struct *vma, unsigned long address,
+>  			   unsigned int flags, struct pt_regs *regs);
+> @@ -72,6 +74,30 @@ asm (
+>  
+>  #endif /* CONFIG_S390 */
+>  
+> +#ifdef CONFIG_ARM64
+> +
+> +asm (
+> +"	.pushsection	.text, \"ax\", @progbits\n"
+> +"	.type		my_tramp, @function\n"
+> +"	.globl		my_tramp\n"
+> +"   my_tramp:"
+> +"	bti	c\n"
+> +"	sub	sp, sp, #48\n"
+> +"	stp	x9, x30, [sp]\n"
+> +"	stp	x0, x1, [sp, #16]\n"
+> +"	stp	x2, x3, [sp, #32]\n"
+> +"	bl	my_direct_func\n"
+> +"	ldp	x30, x9, [sp]\n"
+> +"	ldp	x0, x1, [sp, #16]\n"
+> +"	ldp	x2, x3, [sp, #32]\n"
+> +"	add	sp, sp, #48\n"
+> +"	ret	x9\n"
+> +"	.size		my_tramp, .-my_tramp\n"
+> +"	.popsection\n"
+> +);
+> +
+> +#endif /* CONFIG_ARM64 */
+> +
+>  static struct ftrace_ops direct;
+>  
+>  static int __init ftrace_direct_init(void)
+> diff --git a/samples/ftrace/ftrace-direct.c b/samples/ftrace/ftrace-direct.c
+> index d81a9473b585..e5312f9c15d3 100644
+> --- a/samples/ftrace/ftrace-direct.c
+> +++ b/samples/ftrace/ftrace-direct.c
+> @@ -3,7 +3,9 @@
+>  
+>  #include <linux/sched.h> /* for wake_up_process() */
+>  #include <linux/ftrace.h>
+> +#ifndef CONFIG_ARM64
+>  #include <asm/asm-offsets.h>
+> +#endif
+>  
+>  extern void my_direct_func(struct task_struct *p);
+>  
+> @@ -63,6 +65,28 @@ asm (
+>  
+>  #endif /* CONFIG_S390 */
+>  
+> +#ifdef CONFIG_ARM64
+> +
+> +asm (
+> +"	.pushsection	.text, \"ax\", @progbits\n"
+> +"	.type		my_tramp, @function\n"
+> +"	.globl		my_tramp\n"
+> +"   my_tramp:"
+> +"	bti	c\n"
+> +"	sub	sp, sp, #32\n"
+> +"	stp	x9, x30, [sp]\n"
+> +"	str	x0, [sp, #16]\n"
+> +"	bl	my_direct_func\n"
+> +"	ldp	x30, x9, [sp]\n"
+> +"	ldr	x0, [sp, #16]\n"
+> +"	add	sp, sp, #32\n"
+> +"	ret	x9\n"
+> +"	.size		my_tramp, .-my_tramp\n"
+> +"	.popsection\n"
+> +);
+> +
+> +#endif /* CONFIG_ARM64 */
+> +
+>  static struct ftrace_ops direct;
+>  
+>  static int __init ftrace_direct_init(void)
+> -- 
+> 2.40.0.577.gac1e443424-goog
 > 
->>
->>>
->>>> +[ -f set_ftrace_pid ] && echo ${PID} > set_ftrace_pid
->>>> +[ -f set_ftrace_filter ] && echo proc_reg_write > set_ftrace_filter
->>>> +[ -f set_graph_function ] && echo proc_reg_write > set_graph_function
->>>
->>> You should set the required files for this test, so that the test result
->>> is always same. BTW, you need to set either 'set_ftrace_filter' or
->>> 'set_graph_function'.
->>
->> Yes, but I discovered that set_ftrace_filter and set_graph_function 
->> rely on the CONFIG_DYNAMIC_FTRACE configuration, which means that 
->> these two files are not present when CONFIG_DYNAMIC_FTRACE is 
->> disabled, even if CONFIG_FUNCTION_GRAPH_RETVAL is enabled. Therefore, 
->> I think that these two trace files are not necessary for this test.
->>
->> I will modify the above like this:
->>
->> [ -f set_ftrace_pid ] && echo $$ > set_ftrace_pid
->> [ -f set_ftrace_filter ] && echo proc_reg_write > set_ftrace_filter
->>
->>>
->>>> +echo function_graph > current_tracer
->>>> +echo funcgraph-retval > trace_options
->>>> +
->>>> +set +e
->>>> +enable_tracing
->>>> +echo > /proc/interrupts
->>>> +disable_tracing
->>>> +set -e
->>>> +
->>>> +: "Test printing the error code in signed decimal format"
->>>> +echo nofuncgraph-retval-hex > trace_options
->>>
->>> echo 0 > options/funcgraph-retval-hex
->>>
->>> If you require 'options/funcgraph-retval-hex' file, you can use the
->>> file to set it or clear it.
->>
->> Yeah.
->>
->>>
->>>> +count=`cat trace | grep 'proc_reg_write' | grep '= -5' | wc -l`
->>>> +if [ $count -eq 0 ]; then
->>>> +    fail "Return value can not be printed in signed decimal format"
->>>> +fi
->>>> +
->>>> +: "Test printing the error code in hexadecimal format"
->>>> +echo funcgraph-retval-hex > trace_options
->>>
->>> Ditto.
->>
->> Thanks.
->>
->>>
->>> Thanks,
->>>
->>>> +count=`cat trace | grep 'proc_reg_write' | grep 'fffffffb' | wc -l`
->>>> +if [ $count -eq 0 ]; then
->>>> +    fail "Return value can not be printed in hexadecimal format"
->>>> +fi
->>>> +
->>>> +exit 0
->>>> -- 
->>>> 2.25.1
->>>>
->>>
->>>
->>
-> 
-
-Hi Masami,
-
-I will update the selftest as follows, according to the comments:
-
-#!/bin/sh
-# SPDX-License-Identifier: GPL-2.0
-# description: ftrace - function graph print function return value
-# requires: options/funcgraph-retval options/funcgraph-retval-hex 
-function_graph:tracer
-
-# Make sure that funcgraph-retval works
-
-fail() { # msg
-     echo $1
-     exit_fail
-}
-
-disable_tracing
-clear_trace
-
-# get self PID, can not use $$, because it is PPID
-read PID _ < /proc/self/stat
-
-[ -f set_ftrace_filter ] && echo proc_reg_write > set_ftrace_filter
-[ -f set_ftrace_pid ] && echo ${PID} > set_ftrace_pid
-echo function_graph > current_tracer
-echo 1 > options/funcgraph-retval
-
-set +e
-enable_tracing
-echo > /proc/interrupts
-disable_tracing
-set -e
-
-: "Test printing the error code in signed decimal format"
-echo 0 > options/funcgraph-retval-hex
-count=`cat trace | grep 'proc_reg_write' | grep '= -5' | wc -l`
-if [ $count -eq 0 ]; then
-     fail "Return value can not be printed in signed decimal format"
-fi
-
-: "Test printing the error code in hexadecimal format"
-echo 1 > options/funcgraph-retval-hex
-count=`cat trace | grep 'proc_reg_write' | grep 'fffffffb' | wc -l`
-if [ $count -eq 0 ]; then
-     fail "Return value can not be printed in hexadecimal format"
-fi
-
-exit 0
-
-
-
