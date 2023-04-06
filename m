@@ -2,154 +2,219 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A5CDFC7619A
-	for <linux-trace-kernel@archiver.kernel.org>; Thu,  6 Apr 2023 01:46:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B95FCC76196
+	for <linux-trace-kernel@archiver.kernel.org>; Thu,  6 Apr 2023 07:59:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233828AbjDFBqO (ORCPT
+        id S234581AbjDFH7f (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Wed, 5 Apr 2023 21:46:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47528 "EHLO
+        Thu, 6 Apr 2023 03:59:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38320 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232271AbjDFBqO (ORCPT
+        with ESMTP id S234972AbjDFH7d (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Wed, 5 Apr 2023 21:46:14 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3216C729B;
-        Wed,  5 Apr 2023 18:46:13 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id AB13E642E7;
-        Thu,  6 Apr 2023 01:46:12 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5D7A6C433D2;
-        Thu,  6 Apr 2023 01:46:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1680745572;
-        bh=HDCBusMkO55J/81bAiDcUmDhrM9EeFRF67au4Tkp4JU=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=ckJt/UhduAy2IEVvv/Nexydv+11FUQggOYVoeE2xOeRohO7HfM9FCbpxGgQ8IZjeO
-         X0CfjbmDwZyC0uyJi6SPW40YlTG4Ecg59sEDFNJbeUcjPTz37n69g1/E4Zl0YH59+f
-         DzKnl4+3lnDxOn3rzoUCuthMlbMSGznw6gueDK3MkLXuaVvT5qWlxr7rG7Ydxbg2Xb
-         rfyq3Np4x+FVVDFaXaxbVPqiHt3Js3IZ45uQ9+hRJTISv5IgEBJTc7g4c6h4a4i+QP
-         9IkLgRlBBQRkiD5wGuXr8C1GlE6tLIHCLlSiJzl7BLvYInGTCdkU8vfg5Ve1vh7W+M
-         Y1maXJ7COXfUw==
-Date:   Thu, 6 Apr 2023 10:46:07 +0900
-From:   Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To:     Steven Rostedt <rostedt@goodmis.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Linux Trace Kernel <linux-trace-kernel@vger.kernel.org>,
+        Thu, 6 Apr 2023 03:59:33 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9B1DF7EE1
+        for <linux-trace-kernel@vger.kernel.org>; Thu,  6 Apr 2023 00:58:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1680767858;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=o8Jnf1oxja9yxfnwJ3kNckwJZHzsUpda+/vzVwFHt+Q=;
+        b=IMbzhku+da9WUX7OxMTZAz+7Dx3rcYknOAl5LZsDfdnY0pZh7bGtzGWJ1IBhk4hKkiXOPo
+        +f9HsweA9vKzpwBjauevJ5PCjqc6G0XO10Yqq83EAv/8Cfc9O6cXCp02JTe5r0Asl3Iae5
+        BApoS/9A4OY8H5M+dw2h/BBU9fXWdiw=
+Received: from mail-qv1-f69.google.com (mail-qv1-f69.google.com
+ [209.85.219.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-553-zx0PowWJOHGyD16DekVxdA-1; Thu, 06 Apr 2023 03:57:36 -0400
+X-MC-Unique: zx0PowWJOHGyD16DekVxdA-1
+Received: by mail-qv1-f69.google.com with SMTP id f8-20020a0cbec8000000b005b14a30945cso17547576qvj.8
+        for <linux-trace-kernel@vger.kernel.org>; Thu, 06 Apr 2023 00:57:36 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112; t=1680767855;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=o8Jnf1oxja9yxfnwJ3kNckwJZHzsUpda+/vzVwFHt+Q=;
+        b=1zbAaeAOreHIRjXPZx8jm4BXunMIgGKMZclkv9q95XETTC9vvFkVlRcgs3Cp5iUrhG
+         HUPzMYf+2rD95h3Qj6CFPtjeoxiatxS+YN+y9i6yjnuc3EntdUaKMx9TdKEnOprW+Gts
+         iIpP2yL31cFkiKrxh259mgVoK1e6lv7oOP6SOqicj/ex5DRiz4SnIIISNzNIrFudh9ja
+         ifgoLkLI0CLQnbMOj3r5zEd+jqz0qcOrUp0JBPi80ghNZcTzg08YZ8JlXFciBtpEKcev
+         mXQvf9bUyrAjBrJ+H8hLMbKOmusfKS3E3FVqeSNoU7Zpf+wqtN2qu7rEKMyyqC07+zTj
+         Hp9w==
+X-Gm-Message-State: AAQBX9eMa5uGcD+46v4VGQk49i8TYumqI2QgPx4cfMMSuyfHTFfTiRXH
+        I/L+nbKEt+bHr7Cvd4umAOa+i9MPQtQV0xxk57Z5M7MW//I+u9iXRzcndP8nwuHQdL4XQGyoTZq
+        uVqROYuNwx+uWYGyc4xESCFgmj/GyEBEn
+X-Received: by 2002:ac8:59ca:0:b0:3db:e078:2886 with SMTP id f10-20020ac859ca000000b003dbe0782886mr9151937qtf.38.1680767855661;
+        Thu, 06 Apr 2023 00:57:35 -0700 (PDT)
+X-Google-Smtp-Source: AKy350YtU54Wqkzwh65tOVrlQK9meeDaoTwSlSqIm7X76SPtVj5Y1hGi9JgQ1K+gkhZliX019qG+6w==
+X-Received: by 2002:ac8:59ca:0:b0:3db:e078:2886 with SMTP id f10-20020ac859ca000000b003dbe0782886mr9151923qtf.38.1680767855405;
+        Thu, 06 Apr 2023 00:57:35 -0700 (PDT)
+Received: from LeoBras.redhat.com ([2804:1b3:a802:2599:3b52:5a:179c:6ae7])
+        by smtp.gmail.com with ESMTPSA id de21-20020a05620a371500b0074a5ffbecd3sm292307qkb.49.2023.04.06.00.57.32
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 06 Apr 2023 00:57:34 -0700 (PDT)
+From:   Leonardo Bras <leobras@redhat.com>
+To:     Steven Rostedt <rostedt@goodmis.org>,
         Masami Hiramatsu <mhiramat@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Mirsad Goran Todorovac <mirsad.todorovac@alu.unizg.hr>,
-        Thorsten Leemhuis <regressions@leemhuis.info>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Eric Biggers <ebiggers@kernel.org>
-Subject: Re: [PATCH] tracing: Free error logs of tracing instances
-Message-Id: <20230406104607.b6ccc8b969d5031275ad0764@kernel.org>
-In-Reply-To: <20230404194504.5790b95f@gandalf.local.home>
-References: <20230404194504.5790b95f@gandalf.local.home>
-X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        Leonardo Bras <leobras@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Yury Norov <yury.norov@gmail.com>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Nadav Amit <namit@vmware.com>,
+        Zhen Lei <thunder.leizhen@huawei.com>,
+        Chen Zhongjin <chenzhongjin@huawei.com>
+Cc:     linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+        Marcelo Tosatti <mtosatti@redhat.com>
+Subject: [RFC PATCH 1/1] smp: Add tracepoints for functions called with smp_call_function*()
+Date:   Thu,  6 Apr 2023 04:57:18 -0300
+Message-Id: <20230406075718.68672-1-leobras@redhat.com>
+X-Mailer: git-send-email 2.40.0
+MIME-Version: 1.0
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: redhat.com
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="US-ASCII"; x-default=true
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On Tue, 4 Apr 2023 19:45:04 -0400
-Steven Rostedt <rostedt@goodmis.org> wrote:
+When running RT workloads in isolated CPUs, many cases of deadline misses
+are caused by remote CPU requests such as smp_call_function*().
 
-> From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
-> 
-> When a tracing instance is removed, the error messages that hold errors
-> that occurred in the instance needs to be freed. The following reports a
-> memory leak:
-> 
->  # cd /sys/kernel/tracing
->  # mkdir instances/foo
->  # echo 'hist:keys=x' > instances/foo/events/sched/sched_switch/trigger
->  # cat instances/foo/error_log
->  [  117.404795] hist:sched:sched_switch: error: Couldn't find field
->    Command: hist:keys=x
->                       ^
->  # rmdir instances/foo
-> 
-> Then check for memory leaks:
-> 
->  # echo scan > /sys/kernel/debug/kmemleak
->  # cat /sys/kernel/debug/kmemleak
-> unreferenced object 0xffff88810d8ec700 (size 192):
->   comm "bash", pid 869, jiffies 4294950577 (age 215.752s)
->   hex dump (first 32 bytes):
->     60 dd 68 61 81 88 ff ff 60 dd 68 61 81 88 ff ff  `.ha....`.ha....
->     a0 30 8c 83 ff ff ff ff 26 00 0a 00 00 00 00 00  .0......&.......
->   backtrace:
->     [<00000000dae26536>] kmalloc_trace+0x2a/0xa0
->     [<00000000b2938940>] tracing_log_err+0x277/0x2e0
->     [<000000004a0e1b07>] parse_atom+0x966/0xb40
->     [<0000000023b24337>] parse_expr+0x5f3/0xdb0
->     [<00000000594ad074>] event_hist_trigger_parse+0x27f8/0x3560
->     [<00000000293a9645>] trigger_process_regex+0x135/0x1a0
->     [<000000005c22b4f2>] event_trigger_write+0x87/0xf0
->     [<000000002cadc509>] vfs_write+0x162/0x670
->     [<0000000059c3b9be>] ksys_write+0xca/0x170
->     [<00000000f1cddc00>] do_syscall_64+0x3e/0xc0
->     [<00000000868ac68c>] entry_SYSCALL_64_after_hwframe+0x72/0xdc
-> unreferenced object 0xffff888170c35a00 (size 32):
->   comm "bash", pid 869, jiffies 4294950577 (age 215.752s)
->   hex dump (first 32 bytes):
->     0a 20 20 43 6f 6d 6d 61 6e 64 3a 20 68 69 73 74  .  Command: hist
->     3a 6b 65 79 73 3d 78 0a 00 00 00 00 00 00 00 00  :keys=x.........
->   backtrace:
->     [<000000006a747de5>] __kmalloc+0x4d/0x160
->     [<000000000039df5f>] tracing_log_err+0x29b/0x2e0
->     [<000000004a0e1b07>] parse_atom+0x966/0xb40
->     [<0000000023b24337>] parse_expr+0x5f3/0xdb0
->     [<00000000594ad074>] event_hist_trigger_parse+0x27f8/0x3560
->     [<00000000293a9645>] trigger_process_regex+0x135/0x1a0
->     [<000000005c22b4f2>] event_trigger_write+0x87/0xf0
->     [<000000002cadc509>] vfs_write+0x162/0x670
->     [<0000000059c3b9be>] ksys_write+0xca/0x170
->     [<00000000f1cddc00>] do_syscall_64+0x3e/0xc0
->     [<00000000868ac68c>] entry_SYSCALL_64_after_hwframe+0x72/0xdc
-> 
-> The problem is that the error log needs to be freed when the instance is
-> removed.
-> 
-> Link: https://lore.kernel.org/lkml/76134d9f-a5ba-6a0d-37b3-28310b4a1e91@alu.unizg.hr/
-> 
-> Cc: stable@vger.kernel.org
-> Fixes: 2f754e771b1a6 ("tracing: Have the error logs show up in the proper instances")
-> Reported-by: Mirsad Goran Todorovac <mirsad.todorovac@alu.unizg.hr>
-> Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+For those cases, having the names of those functions running around the
+deadline miss moment could help finding a target for the next improvements.
 
-This looks good to me.
+Add tracepoints for acquiring the funtion name & argument before entry and
+after exitting the called function.
 
-Acked-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+Signed-off-by: Leonardo Bras <leobras@redhat.com>
+---
+ include/trace/events/smp.h | 56 ++++++++++++++++++++++++++++++++++++++
+ kernel/smp.c               | 11 ++++++++
+ 2 files changed, 67 insertions(+)
+ create mode 100644 include/trace/events/smp.h
 
-Thank you!
-
-> ---
->  kernel/trace/trace.c | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
-> index 8ae51f1dea8e..352a804b016d 100644
-> --- a/kernel/trace/trace.c
-> +++ b/kernel/trace/trace.c
-> @@ -9516,6 +9516,7 @@ static int __remove_instance(struct trace_array *tr)
->  	tracefs_remove(tr->dir);
->  	free_percpu(tr->last_func_repeats);
->  	free_trace_buffers(tr);
-> +	clear_tracing_err_log(tr);
->  
->  	for (i = 0; i < tr->nr_topts; i++) {
->  		kfree(tr->topts[i].topts);
-> -- 
-> 2.39.2
-> 
-
-
+diff --git a/include/trace/events/smp.h b/include/trace/events/smp.h
+new file mode 100644
+index 0000000000000..94aae8d71705d
+--- /dev/null
++++ b/include/trace/events/smp.h
+@@ -0,0 +1,56 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++#undef TRACE_SYSTEM
++#define TRACE_SYSTEM smp
++
++#if !defined(_TRACE_SMP_H) || defined(TRACE_HEADER_MULTI_READ)
++#define _TRACE_SMP_H
++
++#include <linux/tracepoint.h>
++#include <linux/smp.h>
++
++/*
++ * Tracepoints for a function which is called as an effect of smp_call_function.*
++ */
++TRACE_EVENT(smp_call_function_entry,
++
++	TP_PROTO(smp_call_func_t func, void *info),
++
++	TP_ARGS(func, info),
++
++	TP_STRUCT__entry(
++		__field(void *,	func)
++		__field(void *,	info)
++	),
++
++	TP_fast_assign(
++		__entry->func	= func;
++		__entry->info	= info;
++	),
++
++	TP_printk("function %ps, argument = %p", __entry->func, __entry->info)
++);
++
++
++TRACE_EVENT(smp_call_function_exit,
++
++	TP_PROTO(smp_call_func_t func, void *info),
++
++	TP_ARGS(func, info),
++
++	TP_STRUCT__entry(
++		__field(void *,	func)
++		__field(void *,	info)
++	),
++
++	TP_fast_assign(
++		__entry->func	= func;
++		__entry->info	= info;
++	),
++
++	TP_printk("function %ps with argument = %p", __entry->func, __entry->info)
++);
++
++#endif /* _TRACE_SMP_H */
++
++/* This part must be outside protection */
++#include <trace/define_trace.h>
+diff --git a/kernel/smp.c b/kernel/smp.c
+index 06a413987a14a..38d8dec28c39c 100644
+--- a/kernel/smp.c
++++ b/kernel/smp.c
+@@ -29,6 +29,9 @@
+ #include "smpboot.h"
+ #include "sched/smp.h"
+ 
++#define CREATE_TRACE_POINTS
++#include <trace/events/smp.h>
++
+ #define CSD_TYPE(_csd)	((_csd)->node.u_flags & CSD_FLAG_TYPE_MASK)
+ 
+ #ifdef CONFIG_CSD_LOCK_WAIT_DEBUG
+@@ -517,7 +520,9 @@ static int generic_exec_single(int cpu, struct __call_single_data *csd)
+ 		csd_lock_record(csd);
+ 		csd_unlock(csd);
+ 		local_irq_save(flags);
++		trace_smp_call_function_entry(func, info);
+ 		func(info);
++		trace_smp_call_function_exit(func, info);
+ 		csd_lock_record(NULL);
+ 		local_irq_restore(flags);
+ 		return 0;
+@@ -627,7 +632,9 @@ static void __flush_smp_call_function_queue(bool warn_cpu_offline)
+ 			}
+ 
+ 			csd_lock_record(csd);
++			trace_smp_call_function_entry(func, info);
+ 			func(info);
++			trace_smp_call_function_exit(func, info);
+ 			csd_unlock(csd);
+ 			csd_lock_record(NULL);
+ 		} else {
+@@ -662,7 +669,9 @@ static void __flush_smp_call_function_queue(bool warn_cpu_offline)
+ 
+ 				csd_lock_record(csd);
+ 				csd_unlock(csd);
++				trace_smp_call_function_entry(func, info);
+ 				func(info);
++				trace_smp_call_function_exit(func, info);
+ 				csd_lock_record(NULL);
+ 			} else if (type == CSD_TYPE_IRQ_WORK) {
+ 				irq_work_single(csd);
+@@ -975,7 +984,9 @@ static void smp_call_function_many_cond(const struct cpumask *mask,
+ 		unsigned long flags;
+ 
+ 		local_irq_save(flags);
++		trace_smp_call_function_entry(func, info);
+ 		func(info);
++		trace_smp_call_function_exit(func, info);
+ 		local_irq_restore(flags);
+ 	}
+ 
 -- 
-Masami Hiramatsu (Google) <mhiramat@kernel.org>
+2.40.0
+
