@@ -2,92 +2,76 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6559CC7618D
-	for <linux-trace-kernel@archiver.kernel.org>; Thu,  6 Apr 2023 12:12:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 87546C76196
+	for <linux-trace-kernel@archiver.kernel.org>; Thu,  6 Apr 2023 13:50:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229784AbjDFMMS (ORCPT
+        id S236554AbjDFNt7 convert rfc822-to-8bit (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Thu, 6 Apr 2023 08:12:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50178 "EHLO
+        Thu, 6 Apr 2023 09:49:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54578 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234767AbjDFMMS (ORCPT
+        with ESMTP id S237053AbjDFNty (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Thu, 6 Apr 2023 08:12:18 -0400
-Received: from mga14.intel.com (mga14.intel.com [192.55.52.115])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6A5B01FCC;
-        Thu,  6 Apr 2023 05:12:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1680783135; x=1712319135;
-  h=date:from:to:cc:subject:message-id:mime-version;
-  bh=ZTXrXnEhkoM+Vmt5i1EvsJ5/ntJMCMiU5AlyIZi0mIE=;
-  b=hyV28nYV1iJwVbpuWI4tyd0FyyY/jfPAwKkLnH8DqZYqlp1A84UmhcvS
-   a1sM+955h9/siyGUzt/Wtbo3AvJVH/+jhvfnnPzvHUeas5rDcEATKc2UZ
-   YvyHrEaLgwOtUEjGORJr3JgTViy1nl+dtIkYTteBSPIX/wB5AlDl2sG6W
-   dbTerjmNjPgTod1tsG8po3IE6hJ7oAiTdl62P6GiH+3f1iuaMUSimmHbc
-   Bk6eytvu/iXM6O67U5EqfmKfq2TqpxW5NeL7+FsmQJQnIyUrvGWIMV1x9
-   2zd3CiTDb9/Mrv3qJ/Jw6jCq8WT0LJbRWMxPnQ4rCrU+6HDlYzc47cFsH
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10671"; a="342726424"
-X-IronPort-AV: E=Sophos;i="5.98,323,1673942400"; 
-   d="scan'208";a="342726424"
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Apr 2023 05:11:52 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10671"; a="689649473"
-X-IronPort-AV: E=Sophos;i="5.98,323,1673942400"; 
-   d="scan'208";a="689649473"
-Received: from lkp-server01.sh.intel.com (HELO b613635ddfff) ([10.239.97.150])
-  by fmsmga007.fm.intel.com with ESMTP; 06 Apr 2023 05:11:51 -0700
-Received: from kbuild by b613635ddfff with local (Exim 4.96)
-        (envelope-from <lkp@intel.com>)
-        id 1pkOSz-000RLu-2k;
-        Thu, 06 Apr 2023 12:11:49 +0000
-Date:   Thu, 6 Apr 2023 20:11:17 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     Tze-nan Wu <Tze-nan.Wu@mediatek.com>
-Cc:     oe-kbuild-all@lists.linux.dev, linux-kernel@vger.kernel.org,
-        "Steven Rostedt (Google)" <rostedt@goodmis.org>,
+        Thu, 6 Apr 2023 09:49:54 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 038D293C5;
+        Thu,  6 Apr 2023 06:49:53 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 9300960E06;
+        Thu,  6 Apr 2023 13:49:52 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9518EC4339B;
+        Thu,  6 Apr 2023 13:49:50 +0000 (UTC)
+Date:   Thu, 6 Apr 2023 09:49:47 -0400
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     Leonardo =?UTF-8?B?QnLDoXM=?= <leobras@redhat.com>
+Cc:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
         Masami Hiramatsu <mhiramat@kernel.org>,
-        linux-trace-kernel@vger.kernel.org
-Subject: kernel/trace/trace_events_synth.c:47:1: sparse: sparse: symbol
- 'lastcmd_mutex' was not declared. Should it be static?
-Message-ID: <202304062033.cRStgOuP-lkp@intel.com>
+        Thomas Gleixner <tglx@linutronix.de>,
+        Yury Norov <yury.norov@gmail.com>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Nadav Amit <namit@vmware.com>,
+        Zhen Lei <thunder.leizhen@huawei.com>,
+        Chen Zhongjin <chenzhongjin@huawei.com>,
+        linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+        Marcelo Tosatti <mtosatti@redhat.com>
+Subject: Re: [RFC PATCH 1/1] smp: Add tracepoints for functions called with
+ smp_call_function*()
+Message-ID: <20230406094947.6b92084c@gandalf.local.home>
+In-Reply-To: <cf8d18d80222c561da1865514734d92e0e2fb3d5.camel@redhat.com>
+References: <20230406075718.68672-1-leobras@redhat.com>
+        <20230406081501.pS4ZnWaK@linutronix.de>
+        <cf8d18d80222c561da1865514734d92e0e2fb3d5.camel@redhat.com>
+X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
-head:   99ddf2254febae9eab7fb0bcc02c5322243f5c49
-commit: 4ccf11c4e8a8e051499d53a12f502196c97a758e tracing/synthetic: Fix races on freeing last_cmd
-date:   3 days ago
-config: i386-randconfig-s031-20230403 (https://download.01.org/0day-ci/archive/20230406/202304062033.cRStgOuP-lkp@intel.com/config)
-compiler: gcc-11 (Debian 11.3.0-8) 11.3.0
-reproduce:
-        # apt-get install sparse
-        # sparse version: v0.6.4-39-gce1a6720-dirty
-        # https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=4ccf11c4e8a8e051499d53a12f502196c97a758e
-        git remote add linus https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git
-        git fetch --no-tags linus master
-        git checkout 4ccf11c4e8a8e051499d53a12f502196c97a758e
-        # save the config file
-        mkdir build_dir && cp config build_dir/.config
-        make W=1 C=1 CF='-fdiagnostic-prefix -D__CHECK_ENDIAN__' O=build_dir ARCH=i386 olddefconfig
-        make W=1 C=1 CF='-fdiagnostic-prefix -D__CHECK_ENDIAN__' O=build_dir ARCH=i386 SHELL=/bin/bash kernel/trace/
+On Thu, 06 Apr 2023 05:42:13 -0300
+Leonardo Brás <leobras@redhat.com> wrote:
 
-If you fix the issue, kindly add following tag where applicable
-| Reported-by: kernel test robot <lkp@intel.com>
-| Link: https://lore.kernel.org/oe-kbuild-all/202304062033.cRStgOuP-lkp@intel.com/
+> Hello Sebastian, thanks for the heads up!
+> 
+> IIUC Valentin is adding/improving tracepoints that are collected in the
+> requesting CPU, at the moment of scheduling the IPI, which are also useful.
+> 
+> But on my scenario, would be nice to actually have the information on the time
+> window in which the requested function is running in the requested CPU. 
+> 
 
-sparse warnings: (new ones prefixed by >>)
->> kernel/trace/trace_events_synth.c:47:1: sparse: sparse: symbol 'lastcmd_mutex' was not declared. Should it be static?
-   kernel/trace/trace_events_synth.c:475:68: sparse: sparse: incorrect type in argument 2 (different address spaces) @@     expected void const [noderef] __user *unsafe_addr @@     got char *str_val @@
-   kernel/trace/trace_events_synth.c:475:68: sparse:     expected void const [noderef] __user *unsafe_addr
-   kernel/trace/trace_events_synth.c:475:68: sparse:     got char *str_val
+Well once you know the functions that are being called (running your test
+case with the IPI trace events), then you can get the timings of those same
+functions by:
 
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests
+ # cd /sys/kernel/tracing
+ # echo '<space-delimited-list-of-functions>' > set_ftrace_filter
+ # echo function_graph > current_tracer
+
+Then the function graph will give you those timings.
+
+-- Steve
