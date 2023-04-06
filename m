@@ -2,96 +2,92 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 68B09C7618D
-	for <linux-trace-kernel@archiver.kernel.org>; Thu,  6 Apr 2023 11:38:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6559CC7618D
+	for <linux-trace-kernel@archiver.kernel.org>; Thu,  6 Apr 2023 12:12:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238376AbjDFLiM (ORCPT
+        id S229784AbjDFMMS (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Thu, 6 Apr 2023 07:38:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46436 "EHLO
+        Thu, 6 Apr 2023 08:12:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50178 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238308AbjDFLhv (ORCPT
+        with ESMTP id S234767AbjDFMMS (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Thu, 6 Apr 2023 07:37:51 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8B7AF8A60;
-        Thu,  6 Apr 2023 04:34:49 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 3E2EA64485;
-        Thu,  6 Apr 2023 11:33:41 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 95759C433EF;
-        Thu,  6 Apr 2023 11:33:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1680780820;
-        bh=mppVQ5jtT4fSApzqCuxe+7bh5NUmo2Ve9smUeficbsk=;
-        h=From:To:Cc:Subject:Date:From;
-        b=qbq02H56Qhiu1Bd0jTXlPqXSzBgOZUsQIhtAr5dTGCZ4JJSISBo+Z84c20Jh0viHd
-         e8uRW6RIISDjddVmLiIG9Bkd8QQoOy5hQrlJl0A7PxK3xnpsl9IEBHiXpK5d+V/DPN
-         co95PW96bagKkO9LE5PZjw5NMJ0ZzgTPIDHNA2vimZSXMUMOEQ3lblO603UMumr8j+
-         cA29DDzW9QQQxKMBqKyEdpFiyny75UCbEZg4dwKtQc/z5elfLNbSGiqYbdOWx2KtPO
-         LL61WjHRB19jwn+J9FKk7rSwlLwxpLRqNJWmGUKQUDqlpbargclxUlErXDTFx2sgqm
-         4SiaK40KkXtWw==
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Douglas Raillard <douglas.raillard@arm.com>,
-        Mukesh Ojha <quic_mojha@quicinc.com>,
-        Chao Yu <chao@kernel.org>, Jaegeuk Kim <jaegeuk@kernel.org>,
-        Sasha Levin <sashal@kernel.org>, rostedt@goodmis.org,
-        mhiramat@kernel.org, linux-f2fs-devel@lists.sourceforge.net,
+        Thu, 6 Apr 2023 08:12:18 -0400
+Received: from mga14.intel.com (mga14.intel.com [192.55.52.115])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6A5B01FCC;
+        Thu,  6 Apr 2023 05:12:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1680783135; x=1712319135;
+  h=date:from:to:cc:subject:message-id:mime-version;
+  bh=ZTXrXnEhkoM+Vmt5i1EvsJ5/ntJMCMiU5AlyIZi0mIE=;
+  b=hyV28nYV1iJwVbpuWI4tyd0FyyY/jfPAwKkLnH8DqZYqlp1A84UmhcvS
+   a1sM+955h9/siyGUzt/Wtbo3AvJVH/+jhvfnnPzvHUeas5rDcEATKc2UZ
+   YvyHrEaLgwOtUEjGORJr3JgTViy1nl+dtIkYTteBSPIX/wB5AlDl2sG6W
+   dbTerjmNjPgTod1tsG8po3IE6hJ7oAiTdl62P6GiH+3f1iuaMUSimmHbc
+   Bk6eytvu/iXM6O67U5EqfmKfq2TqpxW5NeL7+FsmQJQnIyUrvGWIMV1x9
+   2zd3CiTDb9/Mrv3qJ/Jw6jCq8WT0LJbRWMxPnQ4rCrU+6HDlYzc47cFsH
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10671"; a="342726424"
+X-IronPort-AV: E=Sophos;i="5.98,323,1673942400"; 
+   d="scan'208";a="342726424"
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Apr 2023 05:11:52 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10671"; a="689649473"
+X-IronPort-AV: E=Sophos;i="5.98,323,1673942400"; 
+   d="scan'208";a="689649473"
+Received: from lkp-server01.sh.intel.com (HELO b613635ddfff) ([10.239.97.150])
+  by fmsmga007.fm.intel.com with ESMTP; 06 Apr 2023 05:11:51 -0700
+Received: from kbuild by b613635ddfff with local (Exim 4.96)
+        (envelope-from <lkp@intel.com>)
+        id 1pkOSz-000RLu-2k;
+        Thu, 06 Apr 2023 12:11:49 +0000
+Date:   Thu, 6 Apr 2023 20:11:17 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     Tze-nan Wu <Tze-nan.Wu@mediatek.com>
+Cc:     oe-kbuild-all@lists.linux.dev, linux-kernel@vger.kernel.org,
+        "Steven Rostedt (Google)" <rostedt@goodmis.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
         linux-trace-kernel@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 1/9] f2fs: Fix f2fs_truncate_partial_nodes ftrace event
-Date:   Thu,  6 Apr 2023 07:33:29 -0400
-Message-Id: <20230406113337.648916-1-sashal@kernel.org>
-X-Mailer: git-send-email 2.39.2
+Subject: kernel/trace/trace_events_synth.c:47:1: sparse: sparse: symbol
+ 'lastcmd_mutex' was not declared. Should it be static?
+Message-ID: <202304062033.cRStgOuP-lkp@intel.com>
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-From: Douglas Raillard <douglas.raillard@arm.com>
+tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
+head:   99ddf2254febae9eab7fb0bcc02c5322243f5c49
+commit: 4ccf11c4e8a8e051499d53a12f502196c97a758e tracing/synthetic: Fix races on freeing last_cmd
+date:   3 days ago
+config: i386-randconfig-s031-20230403 (https://download.01.org/0day-ci/archive/20230406/202304062033.cRStgOuP-lkp@intel.com/config)
+compiler: gcc-11 (Debian 11.3.0-8) 11.3.0
+reproduce:
+        # apt-get install sparse
+        # sparse version: v0.6.4-39-gce1a6720-dirty
+        # https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=4ccf11c4e8a8e051499d53a12f502196c97a758e
+        git remote add linus https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git
+        git fetch --no-tags linus master
+        git checkout 4ccf11c4e8a8e051499d53a12f502196c97a758e
+        # save the config file
+        mkdir build_dir && cp config build_dir/.config
+        make W=1 C=1 CF='-fdiagnostic-prefix -D__CHECK_ENDIAN__' O=build_dir ARCH=i386 olddefconfig
+        make W=1 C=1 CF='-fdiagnostic-prefix -D__CHECK_ENDIAN__' O=build_dir ARCH=i386 SHELL=/bin/bash kernel/trace/
 
-[ Upstream commit 0b04d4c0542e8573a837b1d81b94209e48723b25 ]
+If you fix the issue, kindly add following tag where applicable
+| Reported-by: kernel test robot <lkp@intel.com>
+| Link: https://lore.kernel.org/oe-kbuild-all/202304062033.cRStgOuP-lkp@intel.com/
 
-Fix the nid_t field so that its size is correctly reported in the text
-format embedded in trace.dat files. As it stands, it is reported as
-being of size 4:
+sparse warnings: (new ones prefixed by >>)
+>> kernel/trace/trace_events_synth.c:47:1: sparse: sparse: symbol 'lastcmd_mutex' was not declared. Should it be static?
+   kernel/trace/trace_events_synth.c:475:68: sparse: sparse: incorrect type in argument 2 (different address spaces) @@     expected void const [noderef] __user *unsafe_addr @@     got char *str_val @@
+   kernel/trace/trace_events_synth.c:475:68: sparse:     expected void const [noderef] __user *unsafe_addr
+   kernel/trace/trace_events_synth.c:475:68: sparse:     got char *str_val
 
-        field:nid_t nid[3];     offset:24;      size:4; signed:0;
-
-Instead of 12:
-
-        field:nid_t nid[3];     offset:24;      size:12;        signed:0;
-
-This also fixes the reported offset of subsequent fields so that they
-match with the actual struct layout.
-
-Signed-off-by: Douglas Raillard <douglas.raillard@arm.com>
-Reviewed-by: Mukesh Ojha <quic_mojha@quicinc.com>
-Reviewed-by: Chao Yu <chao@kernel.org>
-Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- include/trace/events/f2fs.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/include/trace/events/f2fs.h b/include/trace/events/f2fs.h
-index a7613efc271ab..88266a7fbad26 100644
---- a/include/trace/events/f2fs.h
-+++ b/include/trace/events/f2fs.h
-@@ -499,7 +499,7 @@ TRACE_EVENT(f2fs_truncate_partial_nodes,
- 	TP_STRUCT__entry(
- 		__field(dev_t,	dev)
- 		__field(ino_t,	ino)
--		__field(nid_t,	nid[3])
-+		__array(nid_t,	nid, 3)
- 		__field(int,	depth)
- 		__field(int,	err)
- 	),
 -- 
-2.39.2
-
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests
