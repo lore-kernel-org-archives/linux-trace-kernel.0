@@ -2,37 +2,37 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 59D9DC7618D
-	for <linux-trace-kernel@archiver.kernel.org>; Thu,  6 Apr 2023 11:37:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B8B12C7618D
+	for <linux-trace-kernel@archiver.kernel.org>; Thu,  6 Apr 2023 11:37:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238442AbjDFLhE (ORCPT
+        id S238212AbjDFLhX (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Thu, 6 Apr 2023 07:37:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34334 "EHLO
+        Thu, 6 Apr 2023 07:37:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33976 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238210AbjDFLgS (ORCPT
+        with ESMTP id S238435AbjDFLhA (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Thu, 6 Apr 2023 07:36:18 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 34A42A5C4;
-        Thu,  6 Apr 2023 04:34:04 -0700 (PDT)
+        Thu, 6 Apr 2023 07:37:00 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 050B6B758;
+        Thu,  6 Apr 2023 04:34:25 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id E2E786448A;
-        Thu,  6 Apr 2023 11:34:03 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4C4B8C4339B;
-        Thu,  6 Apr 2023 11:34:02 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id D8ECF60C8A;
+        Thu,  6 Apr 2023 11:34:24 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 41F74C433EF;
+        Thu,  6 Apr 2023 11:34:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1680780843;
-        bh=FrPrFRzIb80pwqGPPW/9W4CngxldpXYwhVu5k4UI80Q=;
+        s=k20201202; t=1680780864;
+        bh=bGR+Tw6mloWZH8hjTxh2KaOIT6KEbpEGt46Bqak7IiA=;
         h=From:To:Cc:Subject:Date:From;
-        b=sYnM4NjzMbhILoUjrkvIKXnYDQlisejccKwGKyuExp+d35Y/K2HLxIH9aNsf9CILI
-         m9tVgx+o4O0CA+1K8e94Rq6KdehFLnUJdNlhibf2gDUKL1hKXwGKJ9Z6qMeIQrWssS
-         ucu7Mf01HqgevsqxmTkIkYdZn+jbo9LgkmG3ILGenFl9yjQndW63e80e/xRbsVulfy
-         eKcu7QHc6TaJXtNLu7Jqx7wAvOt1cJnP7SmJ3m+SyRwVX2pjXqjr6CZw4gUe4bpfvw
-         /v0eLR33jW3RX8S51Xn8BtUzVhfRQNrqOz2JbSpR4PxISm/SlU3qfapkNd25Veur+9
-         fae+mtL1WfkVg==
+        b=vJQcJ9W1yJnS60YhZ6inH9gesB3vsmG8g95CP7UJAZ97giIFz0eLXBS3uKPJ0+hxg
+         aZHXsn4AlhwwRx4FHMuT4pT8wF+VkvfBaRnAkluaLAAZDl0AtxTaxI06Om6orfGYHP
+         QJT8k8QBifCLnyiXRR0QW0v6Pqq3aRVVagjKuBfw2txCjI1+GXCvKW1OgP3R/zXTmf
+         BIRyAtP8NLbK6KIMBwxs3ddfshKBxUyoBTZTsl2/aPJDL0p1uVf7pV3b4RiSZdYlnZ
+         wwqCbfoGEMN45m9Eh/RabFr8VqVgOIHvsWML7/HHSD6gUNUOGYteSbxdBsfHEtYuWR
+         aM+uME6mezCkw==
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Douglas Raillard <douglas.raillard@arm.com>,
@@ -41,9 +41,9 @@ Cc:     Douglas Raillard <douglas.raillard@arm.com>,
         Sasha Levin <sashal@kernel.org>, rostedt@goodmis.org,
         mhiramat@kernel.org, linux-f2fs-devel@lists.sourceforge.net,
         linux-trace-kernel@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 1/8] f2fs: Fix f2fs_truncate_partial_nodes ftrace event
-Date:   Thu,  6 Apr 2023 07:33:53 -0400
-Message-Id: <20230406113400.649038-1-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.14 1/7] f2fs: Fix f2fs_truncate_partial_nodes ftrace event
+Date:   Thu,  6 Apr 2023 07:34:15 -0400
+Message-Id: <20230406113421.649149-1-sashal@kernel.org>
 X-Mailer: git-send-email 2.39.2
 MIME-Version: 1.0
 X-stable: review
@@ -80,10 +80,10 @@ Signed-off-by: Sasha Levin <sashal@kernel.org>
  1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/include/trace/events/f2fs.h b/include/trace/events/f2fs.h
-index 52e6456bdb922..098d6dff20bef 100644
+index 7ab40491485bc..8ecfc8e68507d 100644
 --- a/include/trace/events/f2fs.h
 +++ b/include/trace/events/f2fs.h
-@@ -498,7 +498,7 @@ TRACE_EVENT(f2fs_truncate_partial_nodes,
+@@ -485,7 +485,7 @@ TRACE_EVENT(f2fs_truncate_partial_nodes,
  	TP_STRUCT__entry(
  		__field(dev_t,	dev)
  		__field(ino_t,	ino)
