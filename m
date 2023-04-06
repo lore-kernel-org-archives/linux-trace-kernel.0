@@ -2,334 +2,96 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DF036C7618D
-	for <linux-trace-kernel@archiver.kernel.org>; Thu,  6 Apr 2023 10:50:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 68352C7618D
+	for <linux-trace-kernel@archiver.kernel.org>; Thu,  6 Apr 2023 11:31:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236845AbjDFKuU (ORCPT
+        id S229851AbjDFLbh (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Thu, 6 Apr 2023 06:50:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45982 "EHLO
+        Thu, 6 Apr 2023 07:31:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60756 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233619AbjDFKuT (ORCPT
+        with ESMTP id S229579AbjDFLbg (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Thu, 6 Apr 2023 06:50:19 -0400
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id B126E4C05;
-        Thu,  6 Apr 2023 03:50:17 -0700 (PDT)
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A43CA16F8;
-        Thu,  6 Apr 2023 03:51:01 -0700 (PDT)
-Received: from FVFF77S0Q05N (unknown [10.57.20.171])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 0C0BC3F73F;
-        Thu,  6 Apr 2023 03:50:14 -0700 (PDT)
-Date:   Thu, 6 Apr 2023 11:50:12 +0100
-From:   Mark Rutland <mark.rutland@arm.com>
-To:     Florent Revest <revest@chromium.org>
-Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-trace-kernel@vger.kernel.org, bpf@vger.kernel.org,
-        catalin.marinas@arm.com, will@kernel.org, rostedt@goodmis.org,
-        mhiramat@kernel.org, ast@kernel.org, daniel@iogearbox.net,
-        andrii@kernel.org, kpsingh@kernel.org, jolsa@kernel.org,
-        xukuohai@huaweicloud.com, lihuafei1@huawei.com
-Subject: Re: [PATCH v6 4/5] arm64: ftrace: Add direct call trampoline samples
- support
-Message-ID: <ZC6j5GCvWuSG9vYe@FVFF77S0Q05N>
-References: <20230405180250.2046566-1-revest@chromium.org>
- <20230405180250.2046566-5-revest@chromium.org>
+        Thu, 6 Apr 2023 07:31:36 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F3F3DA2;
+        Thu,  6 Apr 2023 04:31:35 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 8ED7A64636;
+        Thu,  6 Apr 2023 11:31:35 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D81B0C433D2;
+        Thu,  6 Apr 2023 11:31:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1680780695;
+        bh=OJnp1eB1GU+IdWevcDAhKD+L9ozYSOlac/WkoeZhdY4=;
+        h=From:To:Cc:Subject:Date:From;
+        b=TAOQPpr8ev1UMXA/XeT3VTqs+DtxjfS0dSo1heaw8T0pibgmPXk0YsSLkXqc90PEW
+         TziPpMsrz+D1L9cj460wh6RqNMwm+DHszMQqU3amr4hekyKYsmGuVugTYDcbNhbrSR
+         DEKnT3AuZNTHlj/TeOfITwrzx4RsUTHFygNgxAt4si7Df/4Ef7ZnuWjOxtXK3B54lp
+         4ZJOxBSeP5jcinKi3Q0i0HUsqw2pv2R67GqAMr7gOZDt1pSSdVH0LPFG0hqbqKcaAN
+         OxGlaeBC869IbtI9Fs8qGtwaYa2etOim+dlCOly+sW//PaY5dpfV+lrb+9ZU58mYIo
+         GsHmclQlLHHhA==
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Douglas Raillard <douglas.raillard@arm.com>,
+        Mukesh Ojha <quic_mojha@quicinc.com>,
+        Chao Yu <chao@kernel.org>, Jaegeuk Kim <jaegeuk@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, rostedt@goodmis.org,
+        mhiramat@kernel.org, linux-f2fs-devel@lists.sourceforge.net,
+        linux-trace-kernel@vger.kernel.org
+Subject: [PATCH AUTOSEL 6.2 01/17] f2fs: Fix f2fs_truncate_partial_nodes ftrace event
+Date:   Thu,  6 Apr 2023 07:31:15 -0400
+Message-Id: <20230406113131.648213-1-sashal@kernel.org>
+X-Mailer: git-send-email 2.39.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230405180250.2046566-5-revest@chromium.org>
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On Wed, Apr 05, 2023 at 08:02:49PM +0200, Florent Revest wrote:
-> The ftrace samples need per-architecture trampoline implementations
-> to save and restore argument registers around the calls to
-> my_direct_func* and to restore polluted registers (eg: x30).
-> 
-> These samples also include <asm/asm-offsets.h> which, on arm64, is not
-> necessary and redefines previously defined macros (resulting in
-> warnings) so these includes are guarded by !CONFIG_ARM64.
-> 
-> Signed-off-by: Florent Revest <revest@chromium.org>
+From: Douglas Raillard <douglas.raillard@arm.com>
 
-These all look good to me. I gave each module a spin in an 8-vCPU VM on an M1
-Macbook Pro with a bunch of other work going on, and all of those worked as
-expected with sensible output in /sys/kernel/tracing/trace, and no noticeable
-failures elsewhere. So:
+[ Upstream commit 0b04d4c0542e8573a837b1d81b94209e48723b25 ]
 
-Reviewed-by: Mark Rutland <mark.rutland@arm.com>
-Tested-by: Mark Rutland <mark.rutland@arm.com>
+Fix the nid_t field so that its size is correctly reported in the text
+format embedded in trace.dat files. As it stands, it is reported as
+being of size 4:
 
-Mark.
+        field:nid_t nid[3];     offset:24;      size:4; signed:0;
 
-> ---
->  arch/arm64/Kconfig                          |  2 ++
->  samples/ftrace/ftrace-direct-modify.c       | 34 ++++++++++++++++++
->  samples/ftrace/ftrace-direct-multi-modify.c | 40 +++++++++++++++++++++
->  samples/ftrace/ftrace-direct-multi.c        | 24 +++++++++++++
->  samples/ftrace/ftrace-direct-too.c          | 26 ++++++++++++++
->  samples/ftrace/ftrace-direct.c              | 24 +++++++++++++
->  6 files changed, 150 insertions(+)
-> 
-> diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
-> index f3503d0cc1b8..c2bf28099abd 100644
-> --- a/arch/arm64/Kconfig
-> +++ b/arch/arm64/Kconfig
-> @@ -194,6 +194,8 @@ config ARM64
->  		    !CC_OPTIMIZE_FOR_SIZE)
->  	select FTRACE_MCOUNT_USE_PATCHABLE_FUNCTION_ENTRY \
->  		if DYNAMIC_FTRACE_WITH_ARGS
-> +	select HAVE_SAMPLE_FTRACE_DIRECT
-> +	select HAVE_SAMPLE_FTRACE_DIRECT_MULTI
->  	select HAVE_EFFICIENT_UNALIGNED_ACCESS
->  	select HAVE_FAST_GUP
->  	select HAVE_FTRACE_MCOUNT_RECORD
-> diff --git a/samples/ftrace/ftrace-direct-modify.c b/samples/ftrace/ftrace-direct-modify.c
-> index 25fba66f61c0..98d1b7385f08 100644
-> --- a/samples/ftrace/ftrace-direct-modify.c
-> +++ b/samples/ftrace/ftrace-direct-modify.c
-> @@ -2,7 +2,9 @@
->  #include <linux/module.h>
->  #include <linux/kthread.h>
->  #include <linux/ftrace.h>
-> +#ifndef CONFIG_ARM64
->  #include <asm/asm-offsets.h>
-> +#endif
->  
->  extern void my_direct_func1(void);
->  extern void my_direct_func2(void);
-> @@ -96,6 +98,38 @@ asm (
->  
->  #endif /* CONFIG_S390 */
->  
-> +#ifdef CONFIG_ARM64
-> +
-> +asm (
-> +"	.pushsection    .text, \"ax\", @progbits\n"
-> +"	.type		my_tramp1, @function\n"
-> +"	.globl		my_tramp1\n"
-> +"   my_tramp1:"
-> +"	bti	c\n"
-> +"	sub	sp, sp, #16\n"
-> +"	stp	x9, x30, [sp]\n"
-> +"	bl	my_direct_func1\n"
-> +"	ldp	x30, x9, [sp]\n"
-> +"	add	sp, sp, #16\n"
-> +"	ret	x9\n"
-> +"	.size		my_tramp1, .-my_tramp1\n"
-> +
-> +"	.type		my_tramp2, @function\n"
-> +"	.globl		my_tramp2\n"
-> +"   my_tramp2:"
-> +"	bti	c\n"
-> +"	sub	sp, sp, #16\n"
-> +"	stp	x9, x30, [sp]\n"
-> +"	bl	my_direct_func2\n"
-> +"	ldp	x30, x9, [sp]\n"
-> +"	add	sp, sp, #16\n"
-> +"	ret	x9\n"
-> +"	.size		my_tramp2, .-my_tramp2\n"
-> +"	.popsection\n"
-> +);
-> +
-> +#endif /* CONFIG_ARM64 */
-> +
->  static struct ftrace_ops direct;
->  
->  static unsigned long my_tramp = (unsigned long)my_tramp1;
-> diff --git a/samples/ftrace/ftrace-direct-multi-modify.c b/samples/ftrace/ftrace-direct-multi-modify.c
-> index f72623899602..26956c8fc513 100644
-> --- a/samples/ftrace/ftrace-direct-multi-modify.c
-> +++ b/samples/ftrace/ftrace-direct-multi-modify.c
-> @@ -2,7 +2,9 @@
->  #include <linux/module.h>
->  #include <linux/kthread.h>
->  #include <linux/ftrace.h>
-> +#ifndef CONFIG_ARM64
->  #include <asm/asm-offsets.h>
-> +#endif
->  
->  extern void my_direct_func1(unsigned long ip);
->  extern void my_direct_func2(unsigned long ip);
-> @@ -103,6 +105,44 @@ asm (
->  
->  #endif /* CONFIG_S390 */
->  
-> +#ifdef CONFIG_ARM64
-> +
-> +asm (
-> +"	.pushsection    .text, \"ax\", @progbits\n"
-> +"	.type		my_tramp1, @function\n"
-> +"	.globl		my_tramp1\n"
-> +"   my_tramp1:"
-> +"	bti	c\n"
-> +"	sub	sp, sp, #32\n"
-> +"	stp	x9, x30, [sp]\n"
-> +"	str	x0, [sp, #16]\n"
-> +"	mov	x0, x30\n"
-> +"	bl	my_direct_func1\n"
-> +"	ldp	x30, x9, [sp]\n"
-> +"	ldr	x0, [sp, #16]\n"
-> +"	add	sp, sp, #32\n"
-> +"	ret	x9\n"
-> +"	.size		my_tramp1, .-my_tramp1\n"
-> +
-> +"	.type		my_tramp2, @function\n"
-> +"	.globl		my_tramp2\n"
-> +"   my_tramp2:"
-> +"	bti	c\n"
-> +"	sub	sp, sp, #32\n"
-> +"	stp	x9, x30, [sp]\n"
-> +"	str	x0, [sp, #16]\n"
-> +"	mov	x0, x30\n"
-> +"	bl	my_direct_func2\n"
-> +"	ldp	x30, x9, [sp]\n"
-> +"	ldr	x0, [sp, #16]\n"
-> +"	add	sp, sp, #32\n"
-> +"	ret	x9\n"
-> +"	.size		my_tramp2, .-my_tramp2\n"
-> +"	.popsection\n"
-> +);
-> +
-> +#endif /* CONFIG_ARM64 */
-> +
->  static unsigned long my_tramp = (unsigned long)my_tramp1;
->  static unsigned long tramps[2] = {
->  	(unsigned long)my_tramp1,
-> diff --git a/samples/ftrace/ftrace-direct-multi.c b/samples/ftrace/ftrace-direct-multi.c
-> index 1547c2c6be02..b2ac90e0c02e 100644
-> --- a/samples/ftrace/ftrace-direct-multi.c
-> +++ b/samples/ftrace/ftrace-direct-multi.c
-> @@ -4,7 +4,9 @@
->  #include <linux/mm.h> /* for handle_mm_fault() */
->  #include <linux/ftrace.h>
->  #include <linux/sched/stat.h>
-> +#ifndef CONFIG_ARM64
->  #include <asm/asm-offsets.h>
-> +#endif
->  
->  extern void my_direct_func(unsigned long ip);
->  
-> @@ -66,6 +68,28 @@ asm (
->  
->  #endif /* CONFIG_S390 */
->  
-> +#ifdef CONFIG_ARM64
-> +
-> +asm (
-> +"	.pushsection	.text, \"ax\", @progbits\n"
-> +"	.type		my_tramp, @function\n"
-> +"	.globl		my_tramp\n"
-> +"   my_tramp:"
-> +"	bti	c\n"
-> +"	sub	sp, sp, #32\n"
-> +"	stp	x9, x30, [sp]\n"
-> +"	str	x0, [sp, #16]\n"
-> +"	mov	x0, x30\n"
-> +"	bl	my_direct_func\n"
-> +"	ldp	x30, x9, [sp]\n"
-> +"	ldr	x0, [sp, #16]\n"
-> +"	add	sp, sp, #32\n"
-> +"	ret	x9\n"
-> +"	.size		my_tramp, .-my_tramp\n"
-> +"	.popsection\n"
-> +);
-> +
-> +#endif /* CONFIG_ARM64 */
->  static struct ftrace_ops direct;
->  
->  static int __init ftrace_direct_multi_init(void)
-> diff --git a/samples/ftrace/ftrace-direct-too.c b/samples/ftrace/ftrace-direct-too.c
-> index 71ed4ee8cb4a..38f6f677f913 100644
-> --- a/samples/ftrace/ftrace-direct-too.c
-> +++ b/samples/ftrace/ftrace-direct-too.c
-> @@ -3,7 +3,9 @@
->  
->  #include <linux/mm.h> /* for handle_mm_fault() */
->  #include <linux/ftrace.h>
-> +#ifndef CONFIG_ARM64
->  #include <asm/asm-offsets.h>
-> +#endif
->  
->  extern void my_direct_func(struct vm_area_struct *vma, unsigned long address,
->  			   unsigned int flags, struct pt_regs *regs);
-> @@ -72,6 +74,30 @@ asm (
->  
->  #endif /* CONFIG_S390 */
->  
-> +#ifdef CONFIG_ARM64
-> +
-> +asm (
-> +"	.pushsection	.text, \"ax\", @progbits\n"
-> +"	.type		my_tramp, @function\n"
-> +"	.globl		my_tramp\n"
-> +"   my_tramp:"
-> +"	bti	c\n"
-> +"	sub	sp, sp, #48\n"
-> +"	stp	x9, x30, [sp]\n"
-> +"	stp	x0, x1, [sp, #16]\n"
-> +"	stp	x2, x3, [sp, #32]\n"
-> +"	bl	my_direct_func\n"
-> +"	ldp	x30, x9, [sp]\n"
-> +"	ldp	x0, x1, [sp, #16]\n"
-> +"	ldp	x2, x3, [sp, #32]\n"
-> +"	add	sp, sp, #48\n"
-> +"	ret	x9\n"
-> +"	.size		my_tramp, .-my_tramp\n"
-> +"	.popsection\n"
-> +);
-> +
-> +#endif /* CONFIG_ARM64 */
-> +
->  static struct ftrace_ops direct;
->  
->  static int __init ftrace_direct_init(void)
-> diff --git a/samples/ftrace/ftrace-direct.c b/samples/ftrace/ftrace-direct.c
-> index d81a9473b585..e5312f9c15d3 100644
-> --- a/samples/ftrace/ftrace-direct.c
-> +++ b/samples/ftrace/ftrace-direct.c
-> @@ -3,7 +3,9 @@
->  
->  #include <linux/sched.h> /* for wake_up_process() */
->  #include <linux/ftrace.h>
-> +#ifndef CONFIG_ARM64
->  #include <asm/asm-offsets.h>
-> +#endif
->  
->  extern void my_direct_func(struct task_struct *p);
->  
-> @@ -63,6 +65,28 @@ asm (
->  
->  #endif /* CONFIG_S390 */
->  
-> +#ifdef CONFIG_ARM64
-> +
-> +asm (
-> +"	.pushsection	.text, \"ax\", @progbits\n"
-> +"	.type		my_tramp, @function\n"
-> +"	.globl		my_tramp\n"
-> +"   my_tramp:"
-> +"	bti	c\n"
-> +"	sub	sp, sp, #32\n"
-> +"	stp	x9, x30, [sp]\n"
-> +"	str	x0, [sp, #16]\n"
-> +"	bl	my_direct_func\n"
-> +"	ldp	x30, x9, [sp]\n"
-> +"	ldr	x0, [sp, #16]\n"
-> +"	add	sp, sp, #32\n"
-> +"	ret	x9\n"
-> +"	.size		my_tramp, .-my_tramp\n"
-> +"	.popsection\n"
-> +);
-> +
-> +#endif /* CONFIG_ARM64 */
-> +
->  static struct ftrace_ops direct;
->  
->  static int __init ftrace_direct_init(void)
-> -- 
-> 2.40.0.577.gac1e443424-goog
-> 
+Instead of 12:
+
+        field:nid_t nid[3];     offset:24;      size:12;        signed:0;
+
+This also fixes the reported offset of subsequent fields so that they
+match with the actual struct layout.
+
+Signed-off-by: Douglas Raillard <douglas.raillard@arm.com>
+Reviewed-by: Mukesh Ojha <quic_mojha@quicinc.com>
+Reviewed-by: Chao Yu <chao@kernel.org>
+Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ include/trace/events/f2fs.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/include/trace/events/f2fs.h b/include/trace/events/f2fs.h
+index 35ecb3118c7d5..111fafe049f7d 100644
+--- a/include/trace/events/f2fs.h
++++ b/include/trace/events/f2fs.h
+@@ -512,7 +512,7 @@ TRACE_EVENT(f2fs_truncate_partial_nodes,
+ 	TP_STRUCT__entry(
+ 		__field(dev_t,	dev)
+ 		__field(ino_t,	ino)
+-		__field(nid_t,	nid[3])
++		__array(nid_t,	nid, 3)
+ 		__field(int,	depth)
+ 		__field(int,	err)
+ 	),
+-- 
+2.39.2
+
