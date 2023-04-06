@@ -2,80 +2,108 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 35C44C76196
-	for <linux-trace-kernel@archiver.kernel.org>; Thu,  6 Apr 2023 09:57:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 72465C76196
+	for <linux-trace-kernel@archiver.kernel.org>; Thu,  6 Apr 2023 10:23:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235911AbjDFJ5q (ORCPT
+        id S237021AbjDFKXY (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Thu, 6 Apr 2023 05:57:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43642 "EHLO
+        Thu, 6 Apr 2023 06:23:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45738 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235037AbjDFJ5U (ORCPT
+        with ESMTP id S237047AbjDFKXI (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Thu, 6 Apr 2023 05:57:20 -0400
-Received: from desiato.infradead.org (desiato.infradead.org [IPv6:2001:8b0:10b:1:d65d:64ff:fe57:4e05])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CF771213B;
-        Thu,  6 Apr 2023 02:55:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=YxhRL3yiAbFaoSIURbLJJRHKJGjYXkeVxmnQ/pEnBmY=; b=jGkaZVBOG3JXDwyQnR5K3g7hz/
-        2ptks3zFH6B32uTi1CJ187m0NUIOvTwd4CvbInPMwVIBAPC+p2DKBfy/J2kLaA/fxIEf0a0HR4Mfs
-        FxgSqwl17h+5IdMBqA0/qX5e6Y7epVv5hRgeFOvyVHmfodi3Cii3INJTSk1Nv1uZ7L7hZkqvyLD4J
-        4ehW5fGpIMn3gvJkcfDEB1qAy/Xgwrn+wwKGDl1s7fcnsJVGImxEUmrUWAotaLMgyE9OFK2Yyre4G
-        eiSXzS/tsczaroxHZ9QV16yIcr5pxeB1fIBzpIhoHTT+ra48irTEDlcBncZDNBXA0vVpfckFTAsfB
-        oMqihneg==;
-Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
-        by desiato.infradead.org with esmtpsa (Exim 4.96 #2 (Red Hat Linux))
-        id 1pkML1-00AUXC-1c;
-        Thu, 06 Apr 2023 09:55:27 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (4096 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 20E2F30008D;
-        Thu,  6 Apr 2023 11:55:20 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 04F7520B6A7D6; Thu,  6 Apr 2023 11:55:19 +0200 (CEST)
-Date:   Thu, 6 Apr 2023 11:55:19 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Leonardo Bras <leobras@redhat.com>
-Cc:     Steven Rostedt <rostedt@goodmis.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Yury Norov <yury.norov@gmail.com>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Nadav Amit <namit@vmware.com>,
-        Zhen Lei <thunder.leizhen@huawei.com>,
-        Chen Zhongjin <chenzhongjin@huawei.com>,
-        linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
-        Marcelo Tosatti <mtosatti@redhat.com>
-Subject: Re: [RFC PATCH 1/1] smp: Add tracepoints for functions called with
- smp_call_function*()
-Message-ID: <20230406095519.GG386572@hirez.programming.kicks-ass.net>
-References: <20230406075718.68672-1-leobras@redhat.com>
+        Thu, 6 Apr 2023 06:23:08 -0400
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 295848A48;
+        Thu,  6 Apr 2023 03:22:27 -0700 (PDT)
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id BBCA516F8;
+        Thu,  6 Apr 2023 03:23:01 -0700 (PDT)
+Received: from FVFF77S0Q05N (unknown [10.57.20.171])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 42B2E3F762;
+        Thu,  6 Apr 2023 03:22:15 -0700 (PDT)
+Date:   Thu, 6 Apr 2023 11:22:09 +0100
+From:   Mark Rutland <mark.rutland@arm.com>
+To:     Florent Revest <revest@chromium.org>
+Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-trace-kernel@vger.kernel.org, bpf@vger.kernel.org,
+        catalin.marinas@arm.com, will@kernel.org, rostedt@goodmis.org,
+        mhiramat@kernel.org, ast@kernel.org, daniel@iogearbox.net,
+        andrii@kernel.org, kpsingh@kernel.org, jolsa@kernel.org,
+        xukuohai@huaweicloud.com, lihuafei1@huawei.com
+Subject: Re: [PATCH v6 3/5] samples: ftrace: Save required argument registers
+ in sample trampolines
+Message-ID: <ZC6dUacJjFVDyDGz@FVFF77S0Q05N>
+References: <20230405180250.2046566-1-revest@chromium.org>
+ <20230405180250.2046566-4-revest@chromium.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20230406075718.68672-1-leobras@redhat.com>
+In-Reply-To: <20230405180250.2046566-4-revest@chromium.org>
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On Thu, Apr 06, 2023 at 04:57:18AM -0300, Leonardo Bras wrote:
-> When running RT workloads in isolated CPUs, many cases of deadline misses
-> are caused by remote CPU requests such as smp_call_function*().
+On Wed, Apr 05, 2023 at 08:02:48PM +0200, Florent Revest wrote:
+> The ftrace-direct-too sample traces the handle_mm_fault function whose
+> signature changed since the introduction of the sample. Since:
+> commit bce617edecad ("mm: do page fault accounting in handle_mm_fault")
+> handle_mm_fault now has 4 arguments. Therefore, the sample trampoline
+> should save 4 argument registers.
 > 
-> For those cases, having the names of those functions running around the
-> deadline miss moment could help finding a target for the next improvements.
+> s390 saves all argument registers already so it does not need a change
+> but x86_64 needs an extra push and pop.
 > 
-> Add tracepoints for acquiring the funtion name & argument before entry and
-> after exitting the called function.
+> This also evolves the signature of the tracing function to make it
+> mirror the signature of the traced function.
 > 
-> Signed-off-by: Leonardo Bras <leobras@redhat.com>
+> Signed-off-by: Florent Revest <revest@chromium.org>
 
-How are the patches queued there not sufficient?
+Reviewed-by: Mark Rutland <mark.rutland@arm.com>
 
-https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git/log/?h=smp/core
+Thanks for this!
+
+Mark.
+
+> ---
+>  samples/ftrace/ftrace-direct-too.c | 14 ++++++++------
+>  1 file changed, 8 insertions(+), 6 deletions(-)
+> 
+> diff --git a/samples/ftrace/ftrace-direct-too.c b/samples/ftrace/ftrace-direct-too.c
+> index f28e7b99840f..71ed4ee8cb4a 100644
+> --- a/samples/ftrace/ftrace-direct-too.c
+> +++ b/samples/ftrace/ftrace-direct-too.c
+> @@ -5,14 +5,14 @@
+>  #include <linux/ftrace.h>
+>  #include <asm/asm-offsets.h>
+>  
+> -extern void my_direct_func(struct vm_area_struct *vma,
+> -			   unsigned long address, unsigned int flags);
+> +extern void my_direct_func(struct vm_area_struct *vma, unsigned long address,
+> +			   unsigned int flags, struct pt_regs *regs);
+>  
+> -void my_direct_func(struct vm_area_struct *vma,
+> -			unsigned long address, unsigned int flags)
+> +void my_direct_func(struct vm_area_struct *vma, unsigned long address,
+> +		    unsigned int flags, struct pt_regs *regs)
+>  {
+> -	trace_printk("handle mm fault vma=%p address=%lx flags=%x\n",
+> -		     vma, address, flags);
+> +	trace_printk("handle mm fault vma=%p address=%lx flags=%x regs=%p\n",
+> +		     vma, address, flags, regs);
+>  }
+>  
+>  extern void my_tramp(void *);
+> @@ -34,7 +34,9 @@ asm (
+>  "	pushq %rdi\n"
+>  "	pushq %rsi\n"
+>  "	pushq %rdx\n"
+> +"	pushq %rcx\n"
+>  "	call my_direct_func\n"
+> +"	popq %rcx\n"
+>  "	popq %rdx\n"
+>  "	popq %rsi\n"
+>  "	popq %rdi\n"
+> -- 
+> 2.40.0.577.gac1e443424-goog
+> 
