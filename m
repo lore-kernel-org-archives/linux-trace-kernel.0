@@ -2,144 +2,110 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1ADF1C77B61
-	for <linux-trace-kernel@archiver.kernel.org>; Sat,  8 Apr 2023 12:42:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 76673C77B6C
+	for <linux-trace-kernel@archiver.kernel.org>; Sat,  8 Apr 2023 14:24:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231149AbjDHMm5 (ORCPT
+        id S229972AbjDHOYI (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Sat, 8 Apr 2023 08:42:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51790 "EHLO
+        Sat, 8 Apr 2023 10:24:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48186 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230383AbjDHMmx (ORCPT
+        with ESMTP id S229527AbjDHOYF (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Sat, 8 Apr 2023 08:42:53 -0400
-Received: from mail-m118111.qiye.163.com (mail-m118111.qiye.163.com [115.236.118.111])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 809D6FF36;
-        Sat,  8 Apr 2023 05:42:50 -0700 (PDT)
-Received: from ubuntu.localdomain (unknown [121.32.254.147])
-        by mail-m118111.qiye.163.com (Hmail) with ESMTPA id 289A85802E3;
-        Sat,  8 Apr 2023 20:42:35 +0800 (CST)
-From:   Donglin Peng <pengdonglin@sangfor.com.cn>
-To:     mhiramat@kernel.org, rostedt@goodmis.org, linux@armlinux.org.uk,
-        mark.rutland@arm.com, will@kernel.org, catalin.marinas@arm.com,
-        rmk+kernel@armlinux.org.uk, palmer@dabbelt.com,
-        paul.walmsley@sifive.com, aou@eecs.berkeley.edu,
-        tglx@linutronix.de, dave.hansen@linux.intel.com, x86@kernel.org,
-        bp@alien8.de, hpa@zytor.com, chenhuacai@kernel.org,
-        zhangqing@loongson.cn, kernel@xen0n.name, mingo@redhat.com,
-        peterz@infradead.org, xiehuan09@gmail.com, dinghui@sangfor.com.cn,
-        huangcun@sangfor.com.cn, dolinux.peng@gmail.com
-Cc:     linux-trace-kernel@vger.kernel.org, loongarch@lists.linux.dev,
-        linux-riscv@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Donglin Peng <pengdonglin@sangfor.com.cn>
-Subject: [PATCH v11 5/8] riscv: ftrace: Enable HAVE_FUNCTION_GRAPH_RETVAL
-Date:   Sat,  8 Apr 2023 05:42:19 -0700
-Message-Id: <a8d71b12259f90e7e63d0ea654fcac95b0232bbc.1680954589.git.pengdonglin@sangfor.com.cn>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <cover.1680954589.git.pengdonglin@sangfor.com.cn>
-References: <cover.1680954589.git.pengdonglin@sangfor.com.cn>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-HM-Spam-Status: e1kfGhgUHx5ZQUpXWQgPGg8OCBgUHx5ZQUlOS1dZFg8aDwILHllBWSg2Ly
-        tZV1koWUFITzdXWS1ZQUlXWQ8JGhUIEh9ZQVkaTx0aVk4fTBpIT0wdGhpIHVUTARMWGhIXJBQOD1
-        lXWRgSC1lBWUpJSlVISVVJTk9VSk9MWVdZFhoPEhUdFFlBWU9LSFVKSktPSEhVSktLVUtZBg++
-X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6Pjo6DCo6Hz0XMDc#ShxMVhY4
-        GT9PCh1VSlVKTUNLQk5MTE5NTE1IVTMWGhIXVQseFRwfFBUcFxIVOwgaFRwdFAlVGBQWVRgVRVlX
-        WRILWUFZSklKVUhJVUlOT1VKT0xZV1kIAVlBTkhJSjcG
-X-HM-Tid: 0a8760e3d3422eb7kusn289a85802e3
-X-HM-MType: 1
+        Sat, 8 Apr 2023 10:24:05 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B7736C15F
+        for <linux-trace-kernel@vger.kernel.org>; Sat,  8 Apr 2023 07:24:04 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 5595860F11
+        for <linux-trace-kernel@vger.kernel.org>; Sat,  8 Apr 2023 14:24:04 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B5C0EC433D2;
+        Sat,  8 Apr 2023 14:24:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1680963843;
+        bh=M2c9+7TABtKJScbG8xpYjHjqS1RegDbHIhTwpLLYfT0=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=nPmSBOF/NsdyX4yoq30LbAZfTAknLV/8eAg7lqFJ01MknFcOc+Da9ZAde7cC0GgGl
+         nkBNWfZAtShcrs9mHEdkWatKR35OpYNbGaMSoSUbUNJZhSDtozCmgoecEWZTjWx08O
+         KyMm3+154T35BhM13vmTreAjVO9A63+xFP78vW8aIBNaQe2hYX8MKpmwFBqXwEiiY1
+         icz/bYBOAJHKKUU4W7biQxyniePHvEzF3G8fpCtOJeRR6wWatoj4p4OksQcmMrkjh5
+         Kt7SPSeKgk8JaP1HysWBslXCg0/oUYnXSltdJN1trbtpTjH9tTwQAkVRHQIFU6x4dx
+         cDu9gAp6S7RBQ==
+Date:   Sat, 8 Apr 2023 23:24:00 +0900
+From:   Masami Hiramatsu (Google) <mhiramat@kernel.org>
+To:     Dan Carpenter <error27@gmail.com>
+Cc:     linux-trace-kernel@vger.kernel.org
+Subject: Re: [bug report] fprobe: Skip exit_handler if entry_handler returns
+ !0
+Message-Id: <20230408232400.467608f3b7c809d39096d3b1@kernel.org>
+In-Reply-To: <85429a5c-a4b9-499e-b6c0-cbd313291c49@kili.mountain>
+References: <85429a5c-a4b9-499e-b6c0-cbd313291c49@kili.mountain>
+X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-The previous patch ("function_graph: Support recording and printing
-the return value of function") has laid the groundwork for the for
-the funcgraph-retval, and this modification makes it available on
-the RISC-V platform.
+Hi Dan,
 
-We introduce a new structure called fgraph_ret_regs for the RISC-V
-platform to hold return registers and the frame pointer. We then
-fill its content in the return_to_handler and pass its address to
-the function ftrace_return_to_handler to record the return value.
+Thanks for reporting!
 
-Signed-off-by: Donglin Peng <pengdonglin@sangfor.com.cn>
----
-v10:
- - Use CONFIG_FUNCTION_GRAPH_TRACER to control fgraph_ret_regs definition
+On Tue, 4 Apr 2023 10:37:48 +0300
+Dan Carpenter <error27@gmail.com> wrote:
 
-v9:
- - Update the commit message
+> Hello Masami Hiramatsu (Google),
+> 
+> The patch 39d954200bf6: "fprobe: Skip exit_handler if entry_handler
+> returns !0" from Feb 2, 2023, leads to the following Smatch static
+> checker warning:
+> 
+> 	kernel/trace/fprobe.c:59 fprobe_handler()
+> 	error: uninitialized symbol 'ret'.
+> 
+> kernel/trace/fprobe.c
+>     49                 fpr->entry_ip = ip;
+>     50                 if (fp->entry_data_size)
+>     51                         entry_data = fpr->data;
+>     52         }
+>     53 
+>     54         if (fp->entry_handler)
+>     55                 ret = fp->entry_handler(fp, ip, ftrace_get_regs(fregs), entry_data);
+> 
+> ret is only initialized if there is an ->entry_handler
+> 
+>     56 
+>     57         /* If entry_handler returns !0, nmissed is not counted. */
+>     58         if (rh) {
+> 
+> rh is only true if there is an ->exit_handler.  Presumably if you have
+> and ->exit_handler that means you also have a ->entry_handler but Smatch
+> is not smart enough to figure it out.
 
-v8:
- - Modify the control range of CONFIG_HAVE_FUNCTION_GRAPH_RETVAL
----
- arch/riscv/Kconfig              |  1 +
- arch/riscv/include/asm/ftrace.h | 21 +++++++++++++++++++++
- arch/riscv/kernel/mcount.S      |  7 +------
- 3 files changed, 23 insertions(+), 6 deletions(-)
+Ah, OK. Let me fix to initialize 'ret'.
 
-diff --git a/arch/riscv/Kconfig b/arch/riscv/Kconfig
-index eb7f29a412f8..108538815309 100644
---- a/arch/riscv/Kconfig
-+++ b/arch/riscv/Kconfig
-@@ -139,6 +139,7 @@ config RISCV
- 	select HAVE_DYNAMIC_FTRACE if !XIP_KERNEL && MMU && $(cc-option,-fpatchable-function-entry=8)
- 	select HAVE_DYNAMIC_FTRACE_WITH_REGS if HAVE_DYNAMIC_FTRACE
- 	select HAVE_FTRACE_MCOUNT_RECORD if !XIP_KERNEL
-+	select HAVE_FUNCTION_GRAPH_RETVAL if HAVE_FUNCTION_GRAPH_TRACER
- 	select HAVE_FUNCTION_GRAPH_TRACER
- 	select HAVE_FUNCTION_TRACER if !XIP_KERNEL && !PREEMPTION
- 
-diff --git a/arch/riscv/include/asm/ftrace.h b/arch/riscv/include/asm/ftrace.h
-index d47d87c2d7e3..740a979171e5 100644
---- a/arch/riscv/include/asm/ftrace.h
-+++ b/arch/riscv/include/asm/ftrace.h
-@@ -111,4 +111,25 @@ int ftrace_init_nop(struct module *mod, struct dyn_ftrace *rec);
- 
- #endif /* CONFIG_DYNAMIC_FTRACE */
- 
-+#ifndef __ASSEMBLY__
-+#ifdef CONFIG_FUNCTION_GRAPH_TRACER
-+struct fgraph_ret_regs {
-+	unsigned long a1;
-+	unsigned long a0;
-+	unsigned long s0;
-+	unsigned long ra;
-+};
-+
-+static inline unsigned long fgraph_ret_regs_return_value(struct fgraph_ret_regs *ret_regs)
-+{
-+	return ret_regs->a0;
-+}
-+
-+static inline unsigned long fgraph_ret_regs_frame_pointer(struct fgraph_ret_regs *ret_regs)
-+{
-+	return ret_regs->s0;
-+}
-+#endif /* ifdef CONFIG_FUNCTION_GRAPH_TRACER */
-+#endif
-+
- #endif /* _ASM_RISCV_FTRACE_H */
-diff --git a/arch/riscv/kernel/mcount.S b/arch/riscv/kernel/mcount.S
-index 30102aadc4d7..8a6e5a9e842a 100644
---- a/arch/riscv/kernel/mcount.S
-+++ b/arch/riscv/kernel/mcount.S
-@@ -65,13 +65,8 @@ ENTRY(return_to_handler)
-  * So alternatively we check the *old* frame pointer position, that is, the
-  * value stored in -16(s0) on entry, and the s0 on return.
-  */
--#ifdef HAVE_FUNCTION_GRAPH_FP_TEST
--	mv	t6, s0
--#endif
- 	SAVE_RET_ABI_STATE
--#ifdef HAVE_FUNCTION_GRAPH_FP_TEST
--	mv	a0, t6
--#endif
-+	mv	a0, sp
- 	call	ftrace_return_to_handler
- 	mv	a2, a0
- 	RESTORE_RET_ABI_STATE
+> 
+> --> 59                 if (ret)
+>                            ^^^
+> Warning here.
+
+Thank you!
+
+> 
+>     60                         rethook_recycle(rh);
+>     61                 else
+>     62                         rethook_hook(rh, ftrace_get_regs(fregs), true);
+>     63         }
+>     64 out:
+>     65         ftrace_test_recursion_unlock(bit);
+>     66 }
+> 
+> regards,
+> dan carpenter
+
+
 -- 
-2.25.1
-
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
