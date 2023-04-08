@@ -2,23 +2,23 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F0C5C77B61
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E4F4BC77B6C
 	for <linux-trace-kernel@archiver.kernel.org>; Sat,  8 Apr 2023 12:42:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230135AbjDHMms (ORCPT
+        id S230166AbjDHMms (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
         Sat, 8 Apr 2023 08:42:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51566 "EHLO
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51570 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229981AbjDHMmr (ORCPT
+        with ESMTP id S229468AbjDHMmr (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
         Sat, 8 Apr 2023 08:42:47 -0400
 Received: from mail-m118111.qiye.163.com (mail-m118111.qiye.163.com [115.236.118.111])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 50E1AAF12;
-        Sat,  8 Apr 2023 05:42:44 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8C69EAF34;
+        Sat,  8 Apr 2023 05:42:45 -0700 (PDT)
 Received: from ubuntu.localdomain (unknown [121.32.254.147])
-        by mail-m118111.qiye.163.com (Hmail) with ESMTPA id B85045802A0;
-        Sat,  8 Apr 2023 20:42:31 +0800 (CST)
+        by mail-m118111.qiye.163.com (Hmail) with ESMTPA id 0EC145801A9;
+        Sat,  8 Apr 2023 20:42:40 +0800 (CST)
 From:   Donglin Peng <pengdonglin@sangfor.com.cn>
 To:     mhiramat@kernel.org, rostedt@goodmis.org, linux@armlinux.org.uk,
         mark.rutland@arm.com, will@kernel.org, catalin.marinas@arm.com,
@@ -33,143 +33,94 @@ Cc:     linux-trace-kernel@vger.kernel.org, loongarch@lists.linux.dev,
         linux-riscv@lists.infradead.org,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
         Donglin Peng <pengdonglin@sangfor.com.cn>
-Subject: [PATCH v11 3/8] ARM: ftrace: Enable HAVE_FUNCTION_GRAPH_RETVAL
-Date:   Sat,  8 Apr 2023 05:42:17 -0700
-Message-Id: <c61eb9290c3e817d4d70c429c0e987e3ec51a3c4.1680954589.git.pengdonglin@sangfor.com.cn>
+Subject: [PATCH v11 8/8] selftests/ftrace: Add funcgraph-retval test case
+Date:   Sat,  8 Apr 2023 05:42:22 -0700
+Message-Id: <9fedbd25e63f012cade5dad13be21225fec2fb5d.1680954589.git.pengdonglin@sangfor.com.cn>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <cover.1680954589.git.pengdonglin@sangfor.com.cn>
 References: <cover.1680954589.git.pengdonglin@sangfor.com.cn>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-HM-Spam-Status: e1kfGhgUHx5ZQUpXWQgPGg8OCBgUHx5ZQUlOS1dZFg8aDwILHllBWSg2Ly
-        tZV1koWUFITzdXWS1ZQUlXWQ8JGhUIEh9ZQVlCGUMeVh0fGh0fTBpOHk1CGlUTARMWGhIXJBQOD1
+        tZV1koWUFITzdXWS1ZQUlXWQ8JGhUIEh9ZQVlCSB1LVk4fSR9NSB4dQ0lJTVUTARMWGhIXJBQOD1
         lXWRgSC1lBWUpJSlVISVVJTk9VSk9MWVdZFhoPEhUdFFlBWU9LSFVKSktPSEhVSktLVUtZBg++
-X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6OEk6Mhw5GD0SMDcyShNOVhQe
-        Pi8aCRZVSlVKTUNLQk5MTE5ISUJKVTMWGhIXVQseFRwfFBUcFxIVOwgaFRwdFAlVGBQWVRgVRVlX
-        WRILWUFZSklKVUhJVUlOT1VKT0xZV1kIAVlBTUhOTDcG
-X-HM-Tid: 0a8760e3c6062eb7kusnb85045802a0
+X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6Myo6Egw6OD0cSzcWFRwsVgtP
+        VjcaFBVVSlVKTUNLQk5MTE1KTkJPVTMWGhIXVQseFRwfFBUcFxIVOwgaFRwdFAlVGBQWVRgVRVlX
+        WRILWUFZSklKVUhJVUlOT1VKT0xZV1kIAVlBT0hNSzcG
+X-HM-Tid: 0a8760e3e6582eb7kusn0ec145801a9
 X-HM-MType: 1
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-The previous patch ("function_graph: Support recording and printing
-the return value of function") has laid the groundwork for the for
-the funcgraph-retval, and this modification makes it available on
-the ARM platform.
-
-We introduce a new structure called fgraph_ret_regs for the ARM platform
-to hold return registers and the frame pointer. We then fill its content
-in the return_to_handler and pass its address to the function
-ftrace_return_to_handler to record the return value.
+Add a test case for the funcgraph-retval and funcgraph-retval-hex
+trace options.
 
 Signed-off-by: Donglin Peng <pengdonglin@sangfor.com.cn>
 ---
-v10:
- - Use CONFIG_FUNCTION_GRAPH_TRACER to control fgraph_ret_regs definition
+v11:
+ - Fix selftest issues
 
-v9:
- - Fix stack pointer align issues
- - Update the commit message
+v10:
+ - Fix issues in selftest
 
 v8:
- - Modify the control range of CONFIG_HAVE_FUNCTION_GRAPH_RETVAL
+ - Fix issues in selftest
 ---
- arch/arm/Kconfig               |  1 +
- arch/arm/include/asm/ftrace.h  | 22 ++++++++++++++++++++++
- arch/arm/kernel/asm-offsets.c  |  8 +++++++-
- arch/arm/kernel/entry-ftrace.S | 10 ++++++----
- 4 files changed, 36 insertions(+), 5 deletions(-)
+ .../ftrace/test.d/ftrace/fgraph-retval.tc     | 44 +++++++++++++++++++
+ 1 file changed, 44 insertions(+)
+ create mode 100644 tools/testing/selftests/ftrace/test.d/ftrace/fgraph-retval.tc
 
-diff --git a/arch/arm/Kconfig b/arch/arm/Kconfig
-index e24a9820e12f..73061379855a 100644
---- a/arch/arm/Kconfig
-+++ b/arch/arm/Kconfig
-@@ -98,6 +98,7 @@ config ARM
- 	select HAVE_FAST_GUP if ARM_LPAE
- 	select HAVE_FTRACE_MCOUNT_RECORD if !XIP_KERNEL
- 	select HAVE_FUNCTION_ERROR_INJECTION
-+	select HAVE_FUNCTION_GRAPH_RETVAL if HAVE_FUNCTION_GRAPH_TRACER
- 	select HAVE_FUNCTION_GRAPH_TRACER
- 	select HAVE_FUNCTION_TRACER if !XIP_KERNEL
- 	select HAVE_GCC_PLUGINS
-diff --git a/arch/arm/include/asm/ftrace.h b/arch/arm/include/asm/ftrace.h
-index 7e9251ca29fe..3c457902b355 100644
---- a/arch/arm/include/asm/ftrace.h
-+++ b/arch/arm/include/asm/ftrace.h
-@@ -77,4 +77,26 @@ static inline bool arch_syscall_match_sym_name(const char *sym,
- 
- #endif /* ifndef __ASSEMBLY__ */
- 
-+#ifndef __ASSEMBLY__
-+#ifdef CONFIG_FUNCTION_GRAPH_TRACER
-+struct fgraph_ret_regs {
-+	/* r0 - r3 */
-+	unsigned long regs[4];
+diff --git a/tools/testing/selftests/ftrace/test.d/ftrace/fgraph-retval.tc b/tools/testing/selftests/ftrace/test.d/ftrace/fgraph-retval.tc
+new file mode 100644
+index 000000000000..e34c0bdef3ed
+--- /dev/null
++++ b/tools/testing/selftests/ftrace/test.d/ftrace/fgraph-retval.tc
+@@ -0,0 +1,44 @@
++#!/bin/sh
++# SPDX-License-Identifier: GPL-2.0
++# description: ftrace - function graph print function return value
++# requires: options/funcgraph-retval options/funcgraph-retval-hex function_graph:tracer
 +
-+	unsigned long fp;
-+	unsigned long __unused;
-+};
++# Make sure that funcgraph-retval works
 +
-+static inline unsigned long fgraph_ret_regs_return_value(struct fgraph_ret_regs *ret_regs)
-+{
-+	return ret_regs->regs[0];
++fail() { # msg
++    echo $1
++    exit_fail
 +}
 +
-+static inline unsigned long fgraph_ret_regs_frame_pointer(struct fgraph_ret_regs *ret_regs)
-+{
-+	return ret_regs->fp;
-+}
-+#endif /* ifdef CONFIG_FUNCTION_GRAPH_TRACER */
-+#endif
++disable_tracing
++clear_trace
 +
- #endif /* _ASM_ARM_FTRACE */
-diff --git a/arch/arm/kernel/asm-offsets.c b/arch/arm/kernel/asm-offsets.c
-index 38121c59cbc2..18bb85115b21 100644
---- a/arch/arm/kernel/asm-offsets.c
-+++ b/arch/arm/kernel/asm-offsets.c
-@@ -23,6 +23,7 @@
- #include <asm/suspend.h>
- #include <asm/vdso_datapage.h>
- #include <asm/hardware/cache-l2x0.h>
-+#include <asm/ftrace.h>
- #include <linux/kbuild.h>
- #include <linux/arm-smccc.h>
- #include "signal.h"
-@@ -170,5 +171,10 @@ int main(void)
-   DEFINE(KEXEC_INDIR_PAGE,	offsetof(struct kexec_relocate_data, kexec_indirection_page));
-   DEFINE(KEXEC_MACH_TYPE,	offsetof(struct kexec_relocate_data, kexec_mach_type));
-   DEFINE(KEXEC_R2,		offsetof(struct kexec_relocate_data, kexec_r2));
--  return 0; 
-+#ifdef CONFIG_FUNCTION_GRAPH_TRACER
-+  BLANK();
-+  DEFINE(FGRET_REGS_SIZE,	sizeof(struct fgraph_ret_regs));
-+  BLANK();
-+#endif
-+  return 0;
- }
-diff --git a/arch/arm/kernel/entry-ftrace.S b/arch/arm/kernel/entry-ftrace.S
-index 3e7bcaca5e07..d41a1676608c 100644
---- a/arch/arm/kernel/entry-ftrace.S
-+++ b/arch/arm/kernel/entry-ftrace.S
-@@ -257,11 +257,13 @@ ENDPROC(ftrace_graph_regs_caller)
- 
- #ifdef CONFIG_FUNCTION_GRAPH_TRACER
- ENTRY(return_to_handler)
--	stmdb	sp!, {r0-r3}
--	add	r0, sp, #16		@ sp at exit of instrumented routine
-+	mov	ip, sp				@ sp at exit of instrumented routine
-+	stmdb	sp!, {r0-r3, ip, lr}		@ fill fgraph_ret_regs
-+	mov	r0, sp
- 	bl	ftrace_return_to_handler
--	mov	lr, r0			@ r0 has real ret addr
--	ldmia	sp!, {r0-r3}
-+	mov	lr, r0				@ r0 has real ret addr
-+	ldmia	sp, {r0-r3}
-+	add	sp, sp, #FGRET_REGS_SIZE	@ restore stack pointer
- 	ret	lr
- ENDPROC(return_to_handler)
- #endif
++# get self PID, can not use $$, because it is PPID
++read PID _ < /proc/self/stat
++
++[ -f set_ftrace_filter ] && echo proc_reg_write > set_ftrace_filter
++[ -f set_ftrace_pid ] && echo ${PID} > set_ftrace_pid
++echo function_graph > current_tracer
++echo 1 > options/funcgraph-retval
++
++set +e
++enable_tracing
++echo > /proc/interrupts
++disable_tracing
++set -e
++
++: "Test printing the error code in signed decimal format"
++echo 0 > options/funcgraph-retval-hex
++count=`cat trace | grep 'proc_reg_write' | grep '= -5' | wc -l`
++if [ $count -eq 0 ]; then
++    fail "Return value can not be printed in signed decimal format"
++fi
++
++: "Test printing the error code in hexadecimal format"
++echo 1 > options/funcgraph-retval-hex
++count=`cat trace | grep 'proc_reg_write' | grep 'fffffffb' | wc -l`
++if [ $count -eq 0 ]; then
++    fail "Return value can not be printed in hexadecimal format"
++fi
++
++exit 0
 -- 
 2.25.1
 
