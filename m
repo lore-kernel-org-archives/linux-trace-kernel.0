@@ -2,23 +2,23 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 83137C77B61
-	for <linux-trace-kernel@archiver.kernel.org>; Sat,  8 Apr 2023 12:42:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D6DDC77B6C
+	for <linux-trace-kernel@archiver.kernel.org>; Sat,  8 Apr 2023 12:42:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230452AbjDHMmy (ORCPT
+        id S230526AbjDHMm4 (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Sat, 8 Apr 2023 08:42:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51724 "EHLO
+        Sat, 8 Apr 2023 08:42:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51768 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230316AbjDHMmv (ORCPT
+        with ESMTP id S230331AbjDHMmw (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Sat, 8 Apr 2023 08:42:51 -0400
+        Sat, 8 Apr 2023 08:42:52 -0400
 Received: from mail-m118111.qiye.163.com (mail-m118111.qiye.163.com [115.236.118.111])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9868DB74D;
-        Sat,  8 Apr 2023 05:42:49 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 808D3FF35;
+        Sat,  8 Apr 2023 05:42:50 -0700 (PDT)
 Received: from ubuntu.localdomain (unknown [121.32.254.147])
-        by mail-m118111.qiye.163.com (Hmail) with ESMTPA id 3660D5800FA;
-        Sat,  8 Apr 2023 20:42:28 +0800 (CST)
+        by mail-m118111.qiye.163.com (Hmail) with ESMTPA id 5B44E5802D6;
+        Sat,  8 Apr 2023 20:42:33 +0800 (CST)
 From:   Donglin Peng <pengdonglin@sangfor.com.cn>
 To:     mhiramat@kernel.org, rostedt@goodmis.org, linux@armlinux.org.uk,
         mark.rutland@arm.com, will@kernel.org, catalin.marinas@arm.com,
@@ -32,432 +32,165 @@ To:     mhiramat@kernel.org, rostedt@goodmis.org, linux@armlinux.org.uk,
 Cc:     linux-trace-kernel@vger.kernel.org, loongarch@lists.linux.dev,
         linux-riscv@lists.infradead.org,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Donglin Peng <pengdonglin@sangfor.com.cn>,
-        Florian Kauer <florian.kauer@linutronix.de>
-Subject: [PATCH v11 1/8] function_graph: Support recording and printing the return value of function
-Date:   Sat,  8 Apr 2023 05:42:15 -0700
-Message-Id: <1fc502712c981e0e6742185ba242992170ac9da8.1680954589.git.pengdonglin@sangfor.com.cn>
+        Donglin Peng <pengdonglin@sangfor.com.cn>
+Subject: [PATCH v11 4/8] arm64: ftrace: Enable HAVE_FUNCTION_GRAPH_RETVAL
+Date:   Sat,  8 Apr 2023 05:42:18 -0700
+Message-Id: <c78366416ce93f704ae7000c4ee60eb4258c38f7.1680954589.git.pengdonglin@sangfor.com.cn>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <cover.1680954589.git.pengdonglin@sangfor.com.cn>
 References: <cover.1680954589.git.pengdonglin@sangfor.com.cn>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-HM-Spam-Status: e1kfGhgUHx5ZQUpXWQgPGg8OCBgUHx5ZQUlOS1dZFg8aDwILHllBWSg2Ly
-        tZV1koWUFITzdXWS1ZQUlXWQ8JGhUIEh9ZQVlDSEIZVktDSh1LS00dQxoZTlUTARMWGhIXJBQOD1
+        tZV1koWUFITzdXWS1ZQUlXWQ8JGhUIEh9ZQVkZGEkdVkxCGBhCHUxDSx4dT1UTARMWGhIXJBQOD1
         lXWRgSC1lBWUpJSlVISVVJTk9VSk9MWVdZFhoPEhUdFFlBWU9LSFVKSktPSEhVSktLVUtZBg++
-X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6Pzo6SQw5Sj0PMDc5IxFJVg4L
-        ASwKCTBVSlVKTUNLQk5MTE9CQkhDVTMWGhIXVQseFRwfFBUcFxIVOwgaFRwdFAlVGBQWVRgVRVlX
-        WRILWUFZSklKVUhJVUlOT1VKT0xZV1kIAVlBSk1NTUk3Bg++
-X-HM-Tid: 0a8760e3b86b2eb7kusn3660d5800fa
+X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6NCo6Ngw*PD0TTzdWIxIWVgko
+        NRgwChBVSlVKTUNLQk5MTE5OS0NPVTMWGhIXVQseFRwfFBUcFxIVOwgaFRwdFAlVGBQWVRgVRVlX
+        WRILWUFZSklKVUhJVUlOT1VKT0xZV1kIAVlBTEhITzcG
+X-HM-Tid: 0a8760e3cc3e2eb7kusn5b44e5802d6
 X-HM-MType: 1
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-Analyzing system call failures with the function_graph tracer can be a
-time-consuming process, particularly when locating the kernel function
-that first returns an error in the trace logs. This change aims to
-simplify the process by recording the function return value to the
-'retval' member of 'ftrace_graph_ent' and printing it when outputting
-the trace log.
+The previous patch ("function_graph: Support recording and printing
+the return value of function") has laid the groundwork for the for
+the funcgraph-retval, and this modification makes it available on
+the ARM64 platform.
 
-We have introduced new trace options: funcgraph-retval and
-funcgraph-retval-hex. The former controls whether to display the return
-value, while the latter controls the display format.
+We introduce a new structure called fgraph_ret_regs for the ARM64
+platform to hold return registers and the frame pointer. We then
+fill its content in the return_to_handler and pass its address to
+the function ftrace_return_to_handler to record the return value.
 
-Please note that even if a function's return type is void, a return
-value will still be printed. You can simply ignore it.
-
-This patch only establishes the fundamental infrastructure. Subsequent
-patches will make this feature available on some commonly used processor
-architectures.
-
-Here is an example:
-
-I attempted to attach the demo process to a cpu cgroup, but it failed:
-
-echo `pidof demo` > /sys/fs/cgroup/cpu/test/tasks
--bash: echo: write error: Invalid argument
-
-The strace logs indicate that the write system call returned -EINVAL(-22):
-...
-write(1, "273\n", 4)                    = -1 EINVAL (Invalid argument)
-...
-
-To capture trace logs during a write system call, use the following
-commands:
-
-cd /sys/kernel/debug/tracing/
-echo 0 > tracing_on
-echo > trace
-echo *sys_write > set_graph_function
-echo *spin* > set_graph_notrace
-echo *rcu* >> set_graph_notrace
-echo *alloc* >> set_graph_notrace
-echo preempt* >> set_graph_notrace
-echo kfree* >> set_graph_notrace
-echo $$ > set_ftrace_pid
-echo function_graph > current_tracer
-echo 1 > options/funcgraph-retval
-echo 0 > options/funcgraph-retval-hex
-echo 1 > tracing_on
-echo `pidof demo` > /sys/fs/cgroup/cpu/test/tasks
-echo 0 > tracing_on
-cat trace > ~/trace.log
-
-To locate the root cause, search for error code -22 directly in the file
-trace.log and identify the first function that returned -22. Once you
-have identified this function, examine its code to determine the root
-cause.
-
-For example, in the trace log below, cpu_cgroup_can_attach
-returned -22 first, so we can focus our analysis on this function to
-identify the root cause.
-
-...
-
- 1)          | cgroup_migrate() {
- 1) 0.651 us |   cgroup_migrate_add_task(); /* = 0xffff93fcfd346c00 */
- 1)          |   cgroup_migrate_execute() {
- 1)          |     cpu_cgroup_can_attach() {
- 1)          |       cgroup_taskset_first() {
- 1) 0.732 us |         cgroup_taskset_next(); /* = 0xffff93fc8fb20000 */
- 1) 1.232 us |       } /* cgroup_taskset_first = 0xffff93fc8fb20000 */
- 1) 0.380 us |       sched_rt_can_attach(); /* = 0x0 */
- 1) 2.335 us |     } /* cpu_cgroup_can_attach = -22 */
- 1) 4.369 us |   } /* cgroup_migrate_execute = -22 */
- 1) 7.143 us | } /* cgroup_migrate = -22 */
-
-...
-
-Tested-by: Florian Kauer <florian.kauer@linutronix.de>
-Acked-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+Reviewed-by: Mark Rutland <mark.rutland@arm.com>
+Tested-by: Mark Rutland <mark.rutland@arm.com>
 Signed-off-by: Donglin Peng <pengdonglin@sangfor.com.cn>
 ---
-v11:
- - Update the Kconfig for FUNCTION_GRAPH_RETVAL.
+v10:
+ - Use CONFIG_FUNCTION_GRAPH_TRACER to control fgraph_ret_regs definition
 
 v9:
- - Update comments for ftrace_return_to_handler
+ - Update the commit message
 
 v8:
- - Add some comments on CONFIG_HAVE_FUNCTION_GRAPH_RETVAL
- - Make CONFIG_FUNCTION_GRAPH_RETVAL switable
-
-v7:
- - Rename trace option 'graph_retval_hex' to 'funcgraph-retval-hex'
- - Separate each architecture modification info individual patches
- - Introduce a new structure fgraph_ret_regs for each architecture to
-   hold return registers
-
-v6:
- - Remove the conversion code for short and char types, because these
-   two types are rarely used to store an error code.
-
-v5:
- - Pass both the return values to ftrace_return_to_handler
- - Modify the parameter sequence of ftrace_return_to_handler to
-   decrease the modification of assembly code, thanks to Russell King
- - Wrap __ftrace_return_to_handler with ftrace_return_to_handler
-   for compatible
-
-v4:
- - Modify commit message
- - Introduce new option graph_retval_hex to control display format
- - Introduce macro CONFIG_FUNCTION_GRAPH_RETVAL and
-   CONFIG_HAVE_FUNCTION_GRAPH_RETVAL
- - Add related arch maintainers to review
-
-v3:
- - Modify the commit message: add trace logs processed with the btf tool
-
-v2:
- - Modify the commit message: use BTF to get the return type of function
+ - Fix issues in ARM64 asm code
+ - Modify the control range of CONFIG_HAVE_FUNCTION_GRAPH_RETVAL
 ---
- include/linux/ftrace.h               |  3 +
- kernel/trace/Kconfig                 | 15 +++++
- kernel/trace/fgraph.c                | 23 ++++++-
- kernel/trace/trace.h                 |  2 +
- kernel/trace/trace_entries.h         | 26 ++++++++
- kernel/trace/trace_functions_graph.c | 93 +++++++++++++++++++++++++---
- 6 files changed, 151 insertions(+), 11 deletions(-)
+ arch/arm64/Kconfig               |  1 +
+ arch/arm64/include/asm/ftrace.h  | 22 ++++++++++++++++++++++
+ arch/arm64/kernel/asm-offsets.c  | 13 +++++++++++++
+ arch/arm64/kernel/entry-ftrace.S | 27 ++++++++++++++-------------
+ 4 files changed, 50 insertions(+), 13 deletions(-)
 
-diff --git a/include/linux/ftrace.h b/include/linux/ftrace.h
-index 402fc061de75..7639a70e17c1 100644
---- a/include/linux/ftrace.h
-+++ b/include/linux/ftrace.h
-@@ -1032,6 +1032,9 @@ struct ftrace_graph_ent {
-  */
- struct ftrace_graph_ret {
- 	unsigned long func; /* Current function */
-+#ifdef CONFIG_FUNCTION_GRAPH_RETVAL
-+	unsigned long retval;
-+#endif
- 	int depth;
- 	/* Number of functions that overran the depth limit for current task */
- 	unsigned int overrun;
-diff --git a/kernel/trace/Kconfig b/kernel/trace/Kconfig
-index a856d4a34c67..fb73a43be261 100644
---- a/kernel/trace/Kconfig
-+++ b/kernel/trace/Kconfig
-@@ -31,6 +31,9 @@ config HAVE_FUNCTION_GRAPH_TRACER
- 	help
- 	  See Documentation/trace/ftrace-design.rst
- 
-+config HAVE_FUNCTION_GRAPH_RETVAL
-+	bool
-+
- config HAVE_DYNAMIC_FTRACE
- 	bool
- 	help
-@@ -227,6 +230,18 @@ config FUNCTION_GRAPH_TRACER
- 	  the return value. This is done by setting the current return
- 	  address on the current task structure into a stack of calls.
- 
-+config FUNCTION_GRAPH_RETVAL
-+	bool "Kernel Function Graph Return Value"
-+	depends on HAVE_FUNCTION_GRAPH_RETVAL
-+	depends on FUNCTION_GRAPH_TRACER
-+	default n
-+	help
-+	  Support recording and printing the function return value when
-+	  using function graph tracer. It can be helpful to locate functions
-+	  that return errors. This feature is off by default, and you can
-+	  enable it via the trace option funcgraph-retval.
-+	  See Documentation/trace/ftrace.rst
-+
- config DYNAMIC_FTRACE
- 	bool "enable/disable function tracing dynamically"
- 	depends on FUNCTION_TRACER
-diff --git a/kernel/trace/fgraph.c b/kernel/trace/fgraph.c
-index 218cd95bf8e4..170ec9429efb 100644
---- a/kernel/trace/fgraph.c
-+++ b/kernel/trace/fgraph.c
-@@ -240,12 +240,16 @@ static struct notifier_block ftrace_suspend_notifier = {
-  * Send the trace to the ring-buffer.
-  * @return the original return address.
-  */
--unsigned long ftrace_return_to_handler(unsigned long frame_pointer)
-+static unsigned long __ftrace_return_to_handler(struct fgraph_ret_regs *ret_regs,
-+						unsigned long frame_pointer)
- {
- 	struct ftrace_graph_ret trace;
- 	unsigned long ret;
- 
- 	ftrace_pop_return_trace(&trace, &ret, frame_pointer);
-+#ifdef CONFIG_FUNCTION_GRAPH_RETVAL
-+	trace.retval = fgraph_ret_regs_return_value(ret_regs);
-+#endif
- 	trace.rettime = trace_clock_local();
- 	ftrace_graph_return(&trace);
- 	/*
-@@ -266,6 +270,23 @@ unsigned long ftrace_return_to_handler(unsigned long frame_pointer)
- 	return ret;
+diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
+index 1023e896d46b..48856d230800 100644
+--- a/arch/arm64/Kconfig
++++ b/arch/arm64/Kconfig
+@@ -195,6 +195,7 @@ config ARM64
+ 	select HAVE_FTRACE_MCOUNT_RECORD
+ 	select HAVE_FUNCTION_TRACER
+ 	select HAVE_FUNCTION_ERROR_INJECTION
++	select HAVE_FUNCTION_GRAPH_RETVAL if HAVE_FUNCTION_GRAPH_TRACER
+ 	select HAVE_FUNCTION_GRAPH_TRACER
+ 	select HAVE_GCC_PLUGINS
+ 	select HAVE_HW_BREAKPOINT if PERF_EVENTS
+diff --git a/arch/arm64/include/asm/ftrace.h b/arch/arm64/include/asm/ftrace.h
+index 1c2672bbbf37..657adcbd80a4 100644
+--- a/arch/arm64/include/asm/ftrace.h
++++ b/arch/arm64/include/asm/ftrace.h
+@@ -170,4 +170,26 @@ static inline bool arch_syscall_match_sym_name(const char *sym,
  }
+ #endif /* ifndef __ASSEMBLY__ */
  
-+/*
-+ * After all architecures have selected HAVE_FUNCTION_GRAPH_RETVAL, we can
-+ * leave only ftrace_return_to_handler(ret_regs).
-+ */
-+#ifdef CONFIG_HAVE_FUNCTION_GRAPH_RETVAL
-+unsigned long ftrace_return_to_handler(struct fgraph_ret_regs *ret_regs)
++#ifndef __ASSEMBLY__
++#ifdef CONFIG_FUNCTION_GRAPH_TRACER
++struct fgraph_ret_regs {
++	/* x0 - x7 */
++	unsigned long regs[8];
++
++	unsigned long fp;
++	unsigned long __unused;
++};
++
++static inline unsigned long fgraph_ret_regs_return_value(struct fgraph_ret_regs *ret_regs)
 +{
-+	return __ftrace_return_to_handler(ret_regs,
-+				fgraph_ret_regs_frame_pointer(ret_regs));
++	return ret_regs->regs[0];
 +}
-+#else
-+unsigned long ftrace_return_to_handler(unsigned long frame_pointer)
++
++static inline unsigned long fgraph_ret_regs_frame_pointer(struct fgraph_ret_regs *ret_regs)
 +{
-+	return __ftrace_return_to_handler(NULL, frame_pointer);
++	return ret_regs->fp;
 +}
++#endif /* ifdef CONFIG_FUNCTION_GRAPH_TRACER  */
 +#endif
 +
- /**
-  * ftrace_graph_get_ret_stack - return the entry of the shadow stack
-  * @task: The task to read the shadow stack from
-diff --git a/kernel/trace/trace.h b/kernel/trace/trace.h
-index 616e1aa1c4da..0a3c4582df10 100644
---- a/kernel/trace/trace.h
-+++ b/kernel/trace/trace.h
-@@ -831,6 +831,8 @@ static __always_inline bool ftrace_hash_empty(struct ftrace_hash *hash)
- #define TRACE_GRAPH_PRINT_TAIL          0x100
- #define TRACE_GRAPH_SLEEP_TIME          0x200
- #define TRACE_GRAPH_GRAPH_TIME          0x400
-+#define TRACE_GRAPH_PRINT_RETVAL        0x800
-+#define TRACE_GRAPH_PRINT_RETVAL_HEX    0x1000
- #define TRACE_GRAPH_PRINT_FILL_SHIFT	28
- #define TRACE_GRAPH_PRINT_FILL_MASK	(0x3 << TRACE_GRAPH_PRINT_FILL_SHIFT)
- 
-diff --git a/kernel/trace/trace_entries.h b/kernel/trace/trace_entries.h
-index cd41e863b51c..340b2fa98218 100644
---- a/kernel/trace/trace_entries.h
-+++ b/kernel/trace/trace_entries.h
-@@ -86,6 +86,30 @@ FTRACE_ENTRY_PACKED(funcgraph_entry, ftrace_graph_ent_entry,
- );
- 
- /* Function return entry */
-+#ifdef CONFIG_FUNCTION_GRAPH_RETVAL
-+
-+FTRACE_ENTRY_PACKED(funcgraph_exit, ftrace_graph_ret_entry,
-+
-+	TRACE_GRAPH_RET,
-+
-+	F_STRUCT(
-+		__field_struct(	struct ftrace_graph_ret,	ret	)
-+		__field_packed(	unsigned long,	ret,		func	)
-+		__field_packed(	unsigned long,	ret,		retval	)
-+		__field_packed(	int,		ret,		depth	)
-+		__field_packed(	unsigned int,	ret,		overrun	)
-+		__field_packed(	unsigned long long, ret,	calltime)
-+		__field_packed(	unsigned long long, ret,	rettime	)
-+	),
-+
-+	F_printk("<-- %ps (%d) (start: %llx  end: %llx) over: %d retval: %lx",
-+		 (void *)__entry->func, __entry->depth,
-+		 __entry->calltime, __entry->rettime,
-+		 __entry->depth, __entry->retval)
-+);
-+
-+#else
-+
- FTRACE_ENTRY_PACKED(funcgraph_exit, ftrace_graph_ret_entry,
- 
- 	TRACE_GRAPH_RET,
-@@ -105,6 +129,8 @@ FTRACE_ENTRY_PACKED(funcgraph_exit, ftrace_graph_ret_entry,
- 		 __entry->depth)
- );
- 
+ #endif /* __ASM_FTRACE_H */
+diff --git a/arch/arm64/kernel/asm-offsets.c b/arch/arm64/kernel/asm-offsets.c
+index ae345b06e9f7..75082e0409bf 100644
+--- a/arch/arm64/kernel/asm-offsets.c
++++ b/arch/arm64/kernel/asm-offsets.c
+@@ -197,6 +197,19 @@ int main(void)
+ #endif
+ #ifdef CONFIG_FUNCTION_TRACER
+   DEFINE(FTRACE_OPS_FUNC,		offsetof(struct ftrace_ops, func));
 +#endif
-+
- /*
-  * Context switch trace entry - which task (and prio) we switched from/to:
-  *
-diff --git a/kernel/trace/trace_functions_graph.c b/kernel/trace/trace_functions_graph.c
-index 203204cadf92..c35fbaab2a47 100644
---- a/kernel/trace/trace_functions_graph.c
-+++ b/kernel/trace/trace_functions_graph.c
-@@ -58,6 +58,12 @@ static struct tracer_opt trace_opts[] = {
- 	{ TRACER_OPT(funcgraph-irqs, TRACE_GRAPH_PRINT_IRQS) },
- 	/* Display function name after trailing } */
- 	{ TRACER_OPT(funcgraph-tail, TRACE_GRAPH_PRINT_TAIL) },
-+#ifdef CONFIG_FUNCTION_GRAPH_RETVAL
-+	/* Display function return value ? */
-+	{ TRACER_OPT(funcgraph-retval, TRACE_GRAPH_PRINT_RETVAL) },
-+	/* Display function return value in hexadecimal format ? */
-+	{ TRACER_OPT(funcgraph-retval-hex, TRACE_GRAPH_PRINT_RETVAL_HEX) },
-+#endif
- 	/* Include sleep time (scheduled out) between entry and return */
- 	{ TRACER_OPT(sleep-time, TRACE_GRAPH_SLEEP_TIME) },
- 
-@@ -619,6 +625,56 @@ print_graph_duration(struct trace_array *tr, unsigned long long duration,
- 	trace_seq_puts(s, "|  ");
++  BLANK();
++#ifdef CONFIG_FUNCTION_GRAPH_TRACER
++  DEFINE(FGRET_REGS_X0,			offsetof(struct fgraph_ret_regs, regs[0]));
++  DEFINE(FGRET_REGS_X1,			offsetof(struct fgraph_ret_regs, regs[1]));
++  DEFINE(FGRET_REGS_X2,			offsetof(struct fgraph_ret_regs, regs[2]));
++  DEFINE(FGRET_REGS_X3,			offsetof(struct fgraph_ret_regs, regs[3]));
++  DEFINE(FGRET_REGS_X4,			offsetof(struct fgraph_ret_regs, regs[4]));
++  DEFINE(FGRET_REGS_X5,			offsetof(struct fgraph_ret_regs, regs[5]));
++  DEFINE(FGRET_REGS_X6,			offsetof(struct fgraph_ret_regs, regs[6]));
++  DEFINE(FGRET_REGS_X7,			offsetof(struct fgraph_ret_regs, regs[7]));
++  DEFINE(FGRET_REGS_FP,			offsetof(struct fgraph_ret_regs, fp));
++  DEFINE(FGRET_REGS_SIZE,		sizeof(struct fgraph_ret_regs));
+ #endif
+   return 0;
  }
+diff --git a/arch/arm64/kernel/entry-ftrace.S b/arch/arm64/kernel/entry-ftrace.S
+index 350ed81324ac..da1443bcf776 100644
+--- a/arch/arm64/kernel/entry-ftrace.S
++++ b/arch/arm64/kernel/entry-ftrace.S
+@@ -270,22 +270,23 @@ SYM_FUNC_END(ftrace_stub_graph)
+  */
+ SYM_CODE_START(return_to_handler)
+ 	/* save return value regs */
+-	sub sp, sp, #64
+-	stp x0, x1, [sp]
+-	stp x2, x3, [sp, #16]
+-	stp x4, x5, [sp, #32]
+-	stp x6, x7, [sp, #48]
++	sub sp, sp, #FGRET_REGS_SIZE
++	stp x0, x1, [sp, #FGRET_REGS_X0]
++	stp x2, x3, [sp, #FGRET_REGS_X2]
++	stp x4, x5, [sp, #FGRET_REGS_X4]
++	stp x6, x7, [sp, #FGRET_REGS_X6]
++	str x29,    [sp, #FGRET_REGS_FP]	// parent's fp
  
-+#ifdef CONFIG_FUNCTION_GRAPH_RETVAL
-+
-+#define __TRACE_GRAPH_PRINT_RETVAL TRACE_GRAPH_PRINT_RETVAL
-+
-+static void print_graph_retval(struct trace_seq *s, unsigned long retval,
-+				bool leaf, void *func, bool hex_format)
-+{
-+	unsigned long err_code = 0;
-+
-+	if (retval == 0 || hex_format)
-+		goto done;
-+
-+	/* Check if the return value matches the negative format */
-+	if (IS_ENABLED(CONFIG_64BIT) && (retval & BIT(31)) &&
-+		(((u64)retval) >> 32) == 0) {
-+		/* sign extension */
-+		err_code = (unsigned long)(s32)retval;
-+	} else {
-+		err_code = retval;
-+	}
-+
-+	if (!IS_ERR_VALUE(err_code))
-+		err_code = 0;
-+
-+done:
-+	if (leaf) {
-+		if (hex_format || (err_code == 0))
-+			trace_seq_printf(s, "%ps(); /* = 0x%lx */\n",
-+					func, retval);
-+		else
-+			trace_seq_printf(s, "%ps(); /* = %ld */\n",
-+					func, err_code);
-+	} else {
-+		if (hex_format || (err_code == 0))
-+			trace_seq_printf(s, "} /* %ps = 0x%lx */\n",
-+					func, retval);
-+		else
-+			trace_seq_printf(s, "} /* %ps = %ld */\n",
-+					func, err_code);
-+	}
-+}
-+
-+#else
-+
-+#define __TRACE_GRAPH_PRINT_RETVAL 0
-+
-+#define print_graph_retval(_seq, _retval, _leaf, _func, _format) do {} while (0)
-+
-+#endif
-+
- /* Case of a leaf function on its call entry */
- static enum print_line_t
- print_graph_entry_leaf(struct trace_iterator *iter,
-@@ -663,7 +719,15 @@ print_graph_entry_leaf(struct trace_iterator *iter,
- 	for (i = 0; i < call->depth * TRACE_GRAPH_INDENT; i++)
- 		trace_seq_putc(s, ' ');
+-	mov	x0, x29			//     parent's fp
+-	bl	ftrace_return_to_handler// addr = ftrace_return_to_hander(fp);
+-	mov	x30, x0			// restore the original return address
++	mov	x0, sp
++	bl	ftrace_return_to_handler	// addr = ftrace_return_to_hander(regs);
++	mov	x30, x0				// restore the original return address
  
--	trace_seq_printf(s, "%ps();\n", (void *)call->func);
-+	/*
-+	 * Write out the function return value if the option function-retval is
-+	 * enabled.
-+	 */
-+	if (flags & __TRACE_GRAPH_PRINT_RETVAL)
-+		print_graph_retval(s, graph_ret->retval, true, (void *)call->func,
-+				!!(flags & TRACE_GRAPH_PRINT_RETVAL_HEX));
-+	else
-+		trace_seq_printf(s, "%ps();\n", (void *)call->func);
+ 	/* restore return value regs */
+-	ldp x0, x1, [sp]
+-	ldp x2, x3, [sp, #16]
+-	ldp x4, x5, [sp, #32]
+-	ldp x6, x7, [sp, #48]
+-	add sp, sp, #64
++	ldp x0, x1, [sp, #FGRET_REGS_X0]
++	ldp x2, x3, [sp, #FGRET_REGS_X2]
++	ldp x4, x5, [sp, #FGRET_REGS_X4]
++	ldp x6, x7, [sp, #FGRET_REGS_X6]
++	add sp, sp, #FGRET_REGS_SIZE
  
- 	print_graph_irq(iter, graph_ret->func, TRACE_GRAPH_RET,
- 			cpu, iter->ent->pid, flags);
-@@ -942,16 +1006,25 @@ print_graph_return(struct ftrace_graph_ret *trace, struct trace_seq *s,
- 		trace_seq_putc(s, ' ');
- 
- 	/*
--	 * If the return function does not have a matching entry,
--	 * then the entry was lost. Instead of just printing
--	 * the '}' and letting the user guess what function this
--	 * belongs to, write out the function name. Always do
--	 * that if the funcgraph-tail option is enabled.
-+	 * Always write out the function name and its return value if the
-+	 * function-retval option is enabled.
- 	 */
--	if (func_match && !(flags & TRACE_GRAPH_PRINT_TAIL))
--		trace_seq_puts(s, "}\n");
--	else
--		trace_seq_printf(s, "} /* %ps */\n", (void *)trace->func);
-+	if (flags & __TRACE_GRAPH_PRINT_RETVAL) {
-+		print_graph_retval(s, trace->retval, false, (void *)trace->func,
-+			!!(flags & TRACE_GRAPH_PRINT_RETVAL_HEX));
-+	} else {
-+		/*
-+		 * If the return function does not have a matching entry,
-+		 * then the entry was lost. Instead of just printing
-+		 * the '}' and letting the user guess what function this
-+		 * belongs to, write out the function name. Always do
-+		 * that if the funcgraph-tail option is enabled.
-+		 */
-+		if (func_match && !(flags & TRACE_GRAPH_PRINT_TAIL))
-+			trace_seq_puts(s, "}\n");
-+		else
-+			trace_seq_printf(s, "} /* %ps */\n", (void *)trace->func);
-+	}
- 
- 	/* Overrun */
- 	if (flags & TRACE_GRAPH_PRINT_OVERRUN)
+ 	ret
+ SYM_CODE_END(return_to_handler)
 -- 
 2.25.1
 
