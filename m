@@ -2,156 +2,174 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 229F1C7619A
-	for <linux-trace-kernel@archiver.kernel.org>; Sat,  8 Apr 2023 12:21:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F0C5C77B61
+	for <linux-trace-kernel@archiver.kernel.org>; Sat,  8 Apr 2023 12:42:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229756AbjDHMVy (ORCPT
+        id S230135AbjDHMms (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Sat, 8 Apr 2023 08:21:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58328 "EHLO
+        Sat, 8 Apr 2023 08:42:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51566 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229647AbjDHMVx (ORCPT
+        with ESMTP id S229981AbjDHMmr (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Sat, 8 Apr 2023 08:21:53 -0400
-Received: from mga12.intel.com (mga12.intel.com [192.55.52.136])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8B169F4;
-        Sat,  8 Apr 2023 05:21:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1680956511; x=1712492511;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=eW13kTIIAfgyJU8/U8MXPKMLhPp5eP1G5Lfen3ZIMtc=;
-  b=VBI1VWlLlICHD5offjd5ZLtQphwSd3h66zRvIKRrF3TnRihiMLVch79f
-   Mhgyc5xbb4vQxNBuTqsECdsHuT4T5RN4FYPebPxr4i9kuhSC7yWzpu2o5
-   9elKmxbnbS1Dn2qgpZ5LcgqqDpeSdkPrDgiqj2DZz+9ZdYrL+h7v7mgju
-   3KEYmXDR1e095vRZSsrgnWZEysgQWgd+eX4wYTX8yhABz4Y0pCkfmoGcA
-   SHg4qacsGZJTWpD2RtS67BGE9lZvM8iI01UhcAy+3Tn+scG8FjrXXqSaw
-   NmrBOA6GSE+H0xM3a1Ks9K7j+ur+WYYZf+BXYKuZN7AkHU205fF7/n/hi
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10673"; a="322769829"
-X-IronPort-AV: E=Sophos;i="5.98,329,1673942400"; 
-   d="scan'208";a="322769829"
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Apr 2023 05:21:51 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10673"; a="681274312"
-X-IronPort-AV: E=Sophos;i="5.98,329,1673942400"; 
-   d="scan'208";a="681274312"
-Received: from lkp-server01.sh.intel.com (HELO b613635ddfff) ([10.239.97.150])
-  by orsmga007.jf.intel.com with ESMTP; 08 Apr 2023 05:21:48 -0700
-Received: from kbuild by b613635ddfff with local (Exim 4.96)
-        (envelope-from <lkp@intel.com>)
-        id 1pl7Zj-000TiP-1t;
-        Sat, 08 Apr 2023 12:21:47 +0000
-Date:   Sat, 8 Apr 2023 20:20:52 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     Tze-nan Wu <Tze-nan.Wu@mediatek.com>, rostedt@goodmis.org,
-        mhiramat@kernel.org
-Cc:     oe-kbuild-all@lists.linux.dev, bobule.chang@mediatek.com,
-        wsd_upstream@mediatek.com, Tze-nan.Wu@mediatek.com,
-        stable@vger.kernel.org,
-        AngeloGioacchino Del Regno 
-        <angelogioacchino.delregno@collabora.com>,
-        linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org
-Subject: Re: [PATCH] ring-buffer: Prevent inconsistent operation on
- cpu_buffer->resize_disabled
-Message-ID: <202304082051.Dp50upfS-lkp@intel.com>
-References: <20230408052226.25268-1-Tze-nan.Wu@mediatek.com>
+        Sat, 8 Apr 2023 08:42:47 -0400
+Received: from mail-m118111.qiye.163.com (mail-m118111.qiye.163.com [115.236.118.111])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 50E1AAF12;
+        Sat,  8 Apr 2023 05:42:44 -0700 (PDT)
+Received: from ubuntu.localdomain (unknown [121.32.254.147])
+        by mail-m118111.qiye.163.com (Hmail) with ESMTPA id B85045802A0;
+        Sat,  8 Apr 2023 20:42:31 +0800 (CST)
+From:   Donglin Peng <pengdonglin@sangfor.com.cn>
+To:     mhiramat@kernel.org, rostedt@goodmis.org, linux@armlinux.org.uk,
+        mark.rutland@arm.com, will@kernel.org, catalin.marinas@arm.com,
+        rmk+kernel@armlinux.org.uk, palmer@dabbelt.com,
+        paul.walmsley@sifive.com, aou@eecs.berkeley.edu,
+        tglx@linutronix.de, dave.hansen@linux.intel.com, x86@kernel.org,
+        bp@alien8.de, hpa@zytor.com, chenhuacai@kernel.org,
+        zhangqing@loongson.cn, kernel@xen0n.name, mingo@redhat.com,
+        peterz@infradead.org, xiehuan09@gmail.com, dinghui@sangfor.com.cn,
+        huangcun@sangfor.com.cn, dolinux.peng@gmail.com
+Cc:     linux-trace-kernel@vger.kernel.org, loongarch@lists.linux.dev,
+        linux-riscv@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Donglin Peng <pengdonglin@sangfor.com.cn>
+Subject: [PATCH v11 3/8] ARM: ftrace: Enable HAVE_FUNCTION_GRAPH_RETVAL
+Date:   Sat,  8 Apr 2023 05:42:17 -0700
+Message-Id: <c61eb9290c3e817d4d70c429c0e987e3ec51a3c4.1680954589.git.pengdonglin@sangfor.com.cn>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <cover.1680954589.git.pengdonglin@sangfor.com.cn>
+References: <cover.1680954589.git.pengdonglin@sangfor.com.cn>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230408052226.25268-1-Tze-nan.Wu@mediatek.com>
+Content-Transfer-Encoding: 8bit
+X-HM-Spam-Status: e1kfGhgUHx5ZQUpXWQgPGg8OCBgUHx5ZQUlOS1dZFg8aDwILHllBWSg2Ly
+        tZV1koWUFITzdXWS1ZQUlXWQ8JGhUIEh9ZQVlCGUMeVh0fGh0fTBpOHk1CGlUTARMWGhIXJBQOD1
+        lXWRgSC1lBWUpJSlVISVVJTk9VSk9MWVdZFhoPEhUdFFlBWU9LSFVKSktPSEhVSktLVUtZBg++
+X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6OEk6Mhw5GD0SMDcyShNOVhQe
+        Pi8aCRZVSlVKTUNLQk5MTE5ISUJKVTMWGhIXVQseFRwfFBUcFxIVOwgaFRwdFAlVGBQWVRgVRVlX
+        WRILWUFZSklKVUhJVUlOT1VKT0xZV1kIAVlBTUhOTDcG
+X-HM-Tid: 0a8760e3c6062eb7kusnb85045802a0
+X-HM-MType: 1
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-Hi Tze-nan,
+The previous patch ("function_graph: Support recording and printing
+the return value of function") has laid the groundwork for the for
+the funcgraph-retval, and this modification makes it available on
+the ARM platform.
 
-kernel test robot noticed the following build warnings:
+We introduce a new structure called fgraph_ret_regs for the ARM platform
+to hold return registers and the frame pointer. We then fill its content
+in the return_to_handler and pass its address to the function
+ftrace_return_to_handler to record the return value.
 
-[auto build test WARNING on linus/master]
-[cannot apply to rostedt-trace/for-next-urgent]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+Signed-off-by: Donglin Peng <pengdonglin@sangfor.com.cn>
+---
+v10:
+ - Use CONFIG_FUNCTION_GRAPH_TRACER to control fgraph_ret_regs definition
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Tze-nan-Wu/ring-buffer-Prevent-inconsistent-operation-on-cpu_buffer-resize_disabled/20230408-132502
-patch link:    https://lore.kernel.org/r/20230408052226.25268-1-Tze-nan.Wu%40mediatek.com
-patch subject: [PATCH] ring-buffer: Prevent inconsistent operation on cpu_buffer->resize_disabled
-config: s390-allyesconfig (https://download.01.org/0day-ci/archive/20230408/202304082051.Dp50upfS-lkp@intel.com/config)
-compiler: s390-linux-gcc (GCC) 12.1.0
-reproduce (this is a W=1 build):
-        wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
-        chmod +x ~/bin/make.cross
-        # https://github.com/intel-lab-lkp/linux/commit/d404bc0af0a4bde3aa20704642d69a78bdc154f8
-        git remote add linux-review https://github.com/intel-lab-lkp/linux
-        git fetch --no-tags linux-review Tze-nan-Wu/ring-buffer-Prevent-inconsistent-operation-on-cpu_buffer-resize_disabled/20230408-132502
-        git checkout d404bc0af0a4bde3aa20704642d69a78bdc154f8
-        # save the config file
-        mkdir build_dir && cp config build_dir/.config
-        COMPILER_INSTALL_PATH=$HOME/0day COMPILER=gcc-12.1.0 make.cross W=1 O=build_dir ARCH=s390 olddefconfig
-        COMPILER_INSTALL_PATH=$HOME/0day COMPILER=gcc-12.1.0 make.cross W=1 O=build_dir ARCH=s390 SHELL=/bin/bash kernel/
+v9:
+ - Fix stack pointer align issues
+ - Update the commit message
 
-If you fix the issue, kindly add following tag where applicable
-| Reported-by: kernel test robot <lkp@intel.com>
-| Link: https://lore.kernel.org/oe-kbuild-all/202304082051.Dp50upfS-lkp@intel.com/
+v8:
+ - Modify the control range of CONFIG_HAVE_FUNCTION_GRAPH_RETVAL
+---
+ arch/arm/Kconfig               |  1 +
+ arch/arm/include/asm/ftrace.h  | 22 ++++++++++++++++++++++
+ arch/arm/kernel/asm-offsets.c  |  8 +++++++-
+ arch/arm/kernel/entry-ftrace.S | 10 ++++++----
+ 4 files changed, 36 insertions(+), 5 deletions(-)
 
-All warnings (new ones prefixed by >>):
-
-   kernel/trace/ring_buffer.c: In function 'ring_buffer_reset_online_cpus':
->> kernel/trace/ring_buffer.c:5359:9: warning: 'reset_online_mask' is used uninitialized [-Wuninitialized]
-    5359 |         cpumask_copy(reset_online_mask, cpu_online_mask);
-         |         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-   kernel/trace/ring_buffer.c:5353:23: note: 'reset_online_mask' was declared here
-    5353 |         cpumask_var_t reset_online_mask;
-         |                       ^~~~~~~~~~~~~~~~~
-
-
-vim +/reset_online_mask +5359 kernel/trace/ring_buffer.c
-
-  5344	
-  5345	/**
-  5346	 * ring_buffer_reset_online_cpus - reset a ring buffer per CPU buffer
-  5347	 * @buffer: The ring buffer to reset a per cpu buffer of
-  5348	 * @cpu: The CPU buffer to be reset
-  5349	 */
-  5350	void ring_buffer_reset_online_cpus(struct trace_buffer *buffer)
-  5351	{
-  5352		struct ring_buffer_per_cpu *cpu_buffer;
-  5353		cpumask_var_t reset_online_mask;
-  5354		int cpu;
-  5355	
-  5356		/* prevent another thread from changing buffer sizes */
-  5357		mutex_lock(&buffer->mutex);
-  5358	
-> 5359		cpumask_copy(reset_online_mask, cpu_online_mask);
-  5360	
-  5361		for_each_cpu_and(cpu, buffer->cpumask, reset_online_mask) {
-  5362			cpu_buffer = buffer->buffers[cpu];
-  5363	
-  5364			atomic_inc(&cpu_buffer->resize_disabled);
-  5365			atomic_inc(&cpu_buffer->record_disabled);
-  5366		}
-  5367	
-  5368		/* Make sure all commits have finished */
-  5369		synchronize_rcu();
-  5370	
-  5371		for_each_cpu_and(cpu, buffer->cpumask, reset_online_mask) {
-  5372			cpu_buffer = buffer->buffers[cpu];
-  5373	
-  5374			reset_disabled_cpu_buffer(cpu_buffer);
-  5375	
-  5376			atomic_dec(&cpu_buffer->record_disabled);
-  5377			atomic_dec(&cpu_buffer->resize_disabled);
-  5378		}
-  5379	
-  5380		mutex_unlock(&buffer->mutex);
-  5381	}
-  5382	
-
+diff --git a/arch/arm/Kconfig b/arch/arm/Kconfig
+index e24a9820e12f..73061379855a 100644
+--- a/arch/arm/Kconfig
++++ b/arch/arm/Kconfig
+@@ -98,6 +98,7 @@ config ARM
+ 	select HAVE_FAST_GUP if ARM_LPAE
+ 	select HAVE_FTRACE_MCOUNT_RECORD if !XIP_KERNEL
+ 	select HAVE_FUNCTION_ERROR_INJECTION
++	select HAVE_FUNCTION_GRAPH_RETVAL if HAVE_FUNCTION_GRAPH_TRACER
+ 	select HAVE_FUNCTION_GRAPH_TRACER
+ 	select HAVE_FUNCTION_TRACER if !XIP_KERNEL
+ 	select HAVE_GCC_PLUGINS
+diff --git a/arch/arm/include/asm/ftrace.h b/arch/arm/include/asm/ftrace.h
+index 7e9251ca29fe..3c457902b355 100644
+--- a/arch/arm/include/asm/ftrace.h
++++ b/arch/arm/include/asm/ftrace.h
+@@ -77,4 +77,26 @@ static inline bool arch_syscall_match_sym_name(const char *sym,
+ 
+ #endif /* ifndef __ASSEMBLY__ */
+ 
++#ifndef __ASSEMBLY__
++#ifdef CONFIG_FUNCTION_GRAPH_TRACER
++struct fgraph_ret_regs {
++	/* r0 - r3 */
++	unsigned long regs[4];
++
++	unsigned long fp;
++	unsigned long __unused;
++};
++
++static inline unsigned long fgraph_ret_regs_return_value(struct fgraph_ret_regs *ret_regs)
++{
++	return ret_regs->regs[0];
++}
++
++static inline unsigned long fgraph_ret_regs_frame_pointer(struct fgraph_ret_regs *ret_regs)
++{
++	return ret_regs->fp;
++}
++#endif /* ifdef CONFIG_FUNCTION_GRAPH_TRACER */
++#endif
++
+ #endif /* _ASM_ARM_FTRACE */
+diff --git a/arch/arm/kernel/asm-offsets.c b/arch/arm/kernel/asm-offsets.c
+index 38121c59cbc2..18bb85115b21 100644
+--- a/arch/arm/kernel/asm-offsets.c
++++ b/arch/arm/kernel/asm-offsets.c
+@@ -23,6 +23,7 @@
+ #include <asm/suspend.h>
+ #include <asm/vdso_datapage.h>
+ #include <asm/hardware/cache-l2x0.h>
++#include <asm/ftrace.h>
+ #include <linux/kbuild.h>
+ #include <linux/arm-smccc.h>
+ #include "signal.h"
+@@ -170,5 +171,10 @@ int main(void)
+   DEFINE(KEXEC_INDIR_PAGE,	offsetof(struct kexec_relocate_data, kexec_indirection_page));
+   DEFINE(KEXEC_MACH_TYPE,	offsetof(struct kexec_relocate_data, kexec_mach_type));
+   DEFINE(KEXEC_R2,		offsetof(struct kexec_relocate_data, kexec_r2));
+-  return 0; 
++#ifdef CONFIG_FUNCTION_GRAPH_TRACER
++  BLANK();
++  DEFINE(FGRET_REGS_SIZE,	sizeof(struct fgraph_ret_regs));
++  BLANK();
++#endif
++  return 0;
+ }
+diff --git a/arch/arm/kernel/entry-ftrace.S b/arch/arm/kernel/entry-ftrace.S
+index 3e7bcaca5e07..d41a1676608c 100644
+--- a/arch/arm/kernel/entry-ftrace.S
++++ b/arch/arm/kernel/entry-ftrace.S
+@@ -257,11 +257,13 @@ ENDPROC(ftrace_graph_regs_caller)
+ 
+ #ifdef CONFIG_FUNCTION_GRAPH_TRACER
+ ENTRY(return_to_handler)
+-	stmdb	sp!, {r0-r3}
+-	add	r0, sp, #16		@ sp at exit of instrumented routine
++	mov	ip, sp				@ sp at exit of instrumented routine
++	stmdb	sp!, {r0-r3, ip, lr}		@ fill fgraph_ret_regs
++	mov	r0, sp
+ 	bl	ftrace_return_to_handler
+-	mov	lr, r0			@ r0 has real ret addr
+-	ldmia	sp!, {r0-r3}
++	mov	lr, r0				@ r0 has real ret addr
++	ldmia	sp, {r0-r3}
++	add	sp, sp, #FGRET_REGS_SIZE	@ restore stack pointer
+ 	ret	lr
+ ENDPROC(return_to_handler)
+ #endif
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests
+2.25.1
+
