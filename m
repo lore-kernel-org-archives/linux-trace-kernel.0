@@ -2,207 +2,179 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 669B6C77B61
-	for <linux-trace-kernel@archiver.kernel.org>; Mon, 10 Apr 2023 13:09:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 23AD9C76196
+	for <linux-trace-kernel@archiver.kernel.org>; Mon, 10 Apr 2023 13:56:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229827AbjDJNJy (ORCPT
+        id S229603AbjDJN4y (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Mon, 10 Apr 2023 09:09:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44234 "EHLO
+        Mon, 10 Apr 2023 09:56:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41718 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229810AbjDJNJy (ORCPT
+        with ESMTP id S229503AbjDJN4y (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Mon, 10 Apr 2023 09:09:54 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AA3A54C2B
-        for <linux-trace-kernel@vger.kernel.org>; Mon, 10 Apr 2023 06:09:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1681132144;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=motyMZYGjG8ZpzgKBhQCp3NlNr2re4z0Ma0gRtL0ojg=;
-        b=Lu7ahFI0gWttfCuMZnt14th3Lstp+3qFad05XEe7CJsaMv7AZUeD2UbkbOtIeYHDGy4Ka4
-        p2l6gyg9yRjG6xIRP7HM+1JUoqfp0yV4TUcc8D2qNlBTyTV8PBqO4c2dzBnDw00/6rKbUA
-        7NbwOxkEybu79u6LKd2MjZ9Qtv0xEQc=
-Received: from mail-qt1-f198.google.com (mail-qt1-f198.google.com
- [209.85.160.198]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-654-DmCUqFTlOcmtacSzBumS9Q-1; Mon, 10 Apr 2023 09:09:01 -0400
-X-MC-Unique: DmCUqFTlOcmtacSzBumS9Q-1
-Received: by mail-qt1-f198.google.com with SMTP id v24-20020a05622a189800b003e0e27bbc2eso4195168qtc.8
-        for <linux-trace-kernel@vger.kernel.org>; Mon, 10 Apr 2023 06:09:01 -0700 (PDT)
+        Mon, 10 Apr 2023 09:56:54 -0400
+Received: from mail-qv1-xf33.google.com (mail-qv1-xf33.google.com [IPv6:2607:f8b0:4864:20::f33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2326318D;
+        Mon, 10 Apr 2023 06:56:53 -0700 (PDT)
+Received: by mail-qv1-xf33.google.com with SMTP id ly9so6606837qvb.5;
+        Mon, 10 Apr 2023 06:56:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112; t=1681135012; x=1683727012;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=uO7Ze7d6ITncQ0S0kaxWh3rYwOyWMowxVHkmW2rD6yw=;
+        b=lZnzcXoYP8Ysgsv2RkdKM+eEy/e+vihRKfHa246f8Bcah/IGFSSYkrOALR/3UC2fn+
+         lQtezkPmVyhrMr1bBkUY7w+raxZrZzGhi/phNsV/jc7XlLlmwXj6ysY9/+XN0Cr9I6JS
+         nc88CTrLVsxGVam0i0k7+DXJvXa0aeimfdopnM2CXMKgPgWbKCerWKBbB8kLrzBa1FZL
+         w39aZ143bI25svJlV4Q5+mMqoLH7qoKybkHms6zhowfuGFTfL1xha0oRcxUB2skd+QSQ
+         SMvfKNgWbOThBhWDcUNG6+qRDy8lX2WAuenpRsR1jDeT64vSumvc3b5IO06Rk5WwiaUb
+         oUVA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1681132141;
-        h=content-transfer-encoding:in-reply-to:subject:from:content-language
-         :references:cc:to:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=motyMZYGjG8ZpzgKBhQCp3NlNr2re4z0Ma0gRtL0ojg=;
-        b=GU6WxsiVwXoLcWSY7Ib5vvxowrDYKaAhuSPUTNjMTxQ2ltoH7kNDwfYP7Ym+oUzNdm
-         68zFTfaz1G/UBqlMd3Py6oIzJdggDBUFaxlj7ai4ZkvYMN0geql+o0w9A7cXgs0FObkk
-         symYgYSaz39mD6DKxkvqxgQacQdJx8ERkEhL9cN+2XKppD4CntQKQAlAAhdcyLAcPnLE
-         xxc5FoH+/i+wCVUw6CCA8slcaMF2+CSL7+Sv0k/O9ktrwR1e4MQTeamXO+yJjQs19LlI
-         R6b3Q8YoJApK7olFeWrqSXDgIrafYuXZpqzqCbivm+nBmlD8hc70rr1FWmEu78KiU2WD
-         PXMw==
-X-Gm-Message-State: AAQBX9cK38JIFdZFyY5tMu9fA2P1rXixdGCFWkWs9a0kajduEYh7RZm2
-        mm62FEYs9FblhPNXcdLNzTaKkst9OT/kL3IloG6xSUYHK7uqNG/wCjit36ck+dyvFoUYiB2T7/7
-        5/A9IOCuWxmRV1i2nCXylpAcTVep4icyU
-X-Received: by 2002:a05:622a:51:b0:3e6:9e18:73ee with SMTP id y17-20020a05622a005100b003e69e1873eemr8542968qtw.15.1681132141312;
-        Mon, 10 Apr 2023 06:09:01 -0700 (PDT)
-X-Google-Smtp-Source: AKy350ZzjirNzSjNF5jT1Ah5Inm/x9IabKjpY5EYEIDyrRcBFwpvL0tmr37y9R10Y3VXQD6dUgFKPg==
-X-Received: by 2002:a05:622a:51:b0:3e6:9e18:73ee with SMTP id y17-20020a05622a005100b003e69e1873eemr8542922qtw.15.1681132140968;
-        Mon, 10 Apr 2023 06:09:00 -0700 (PDT)
-Received: from [192.168.1.14] (pool-68-160-135-240.bstnma.fios.verizon.net. [68.160.135.240])
-        by smtp.gmail.com with ESMTPSA id z63-20020a376542000000b007417e60f621sm3239007qkb.126.2023.04.10.06.08.59
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 10 Apr 2023 06:09:00 -0700 (PDT)
-Message-ID: <025f2151-ce7c-5630-9b90-98742c97ac65@redhat.com>
-Date:   Mon, 10 Apr 2023 09:08:58 -0400
+        d=1e100.net; s=20210112; t=1681135012; x=1683727012;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=uO7Ze7d6ITncQ0S0kaxWh3rYwOyWMowxVHkmW2rD6yw=;
+        b=x2AW73pXB2yMnC3VUjqNFIEMl4vnfeII785a+sJXB+blYozAbtYlV1MonHrjeO/F2p
+         W2G0fv5lJlbOxJn+yo9FyKTPoaR3sqMo47KurfqrzSn4DiYThjVoJVsyQg+NYQH0l68P
+         yKJ4FF206zp+TwyuUhhCH0PKJEwu2oMqqyYYKUVJwy9TywB1y0L39isCO2N7h6FlFBem
+         EXfqfTDS3tWDwiPDcf9WimMtRG6/vash2i13z/iUAO34WFU4smy4OYVOA+I6eJpK7P+W
+         U502EtgAnq6GVF1WTgy3sv23KUsh5FZjBpntjPPBCn9SIO2Ja1F2tx1BoEJbPuupY36I
+         Hzxg==
+X-Gm-Message-State: AAQBX9eR6jSfLScNEzvc0UMMUz4vT37xshAJdWhMMHIcwL+ZvI6u1nkb
+        qXRZCXbHIs56zOSDn/7N6ooxh9QHrjDIBJn1r06uDx5b0PG4vw==
+X-Google-Smtp-Source: AKy350YLxUh8ocoojih3vRmu1NPvcQITr0NrWy6MQZruTKRNLpVZb6ByNvVBYHkXsDXipObSfZdH5+Bv+5PYF7cvYOY=
+X-Received: by 2002:a05:6214:4a47:b0:5e9:6b31:7140 with SMTP id
+ ph7-20020a0562144a4700b005e96b317140mr1433578qvb.3.1681135012142; Mon, 10 Apr
+ 2023 06:56:52 -0700 (PDT)
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.9.1
-To:     Josh Poimboeuf <jpoimboe@kernel.org>,
-        Nick Alcock <nick.alcock@oracle.com>
-Cc:     mcgrof@kernel.org, masahiroy@kernel.org,
-        linux-modules@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
-        linux-kernel@vger.kernel.org, arnd@arndb.de,
-        akpm@linux-foundation.org, eugene.loh@oracle.com,
-        kris.van.hees@oracle.com, live-patching@vger.kernel.org,
+References: <20230321020103.13494-1-laoar.shao@gmail.com> <20230321101711.625d0ccb@gandalf.local.home>
+ <CALOAHbAfQxAMQTwDHnMOLHDfz=Mo0gFwu9i3bS0emttUTodA4g@mail.gmail.com>
+ <20230323083914.31f76c2b@gandalf.local.home> <CALOAHbDtM7KuiRn1n9EBYrSGqJmOYcY6voVRfF+QGN510W_OtQ@mail.gmail.com>
+ <20230323230105.57c40232@rorschach.local.home> <CALOAHbCZSY2XJpzJ+AxSrRLbMqyoJjcaXeof-xMLN8y+uB7PJg@mail.gmail.com>
+ <20230409075515.2504db78@rorschach.local.home> <CALOAHbBALsJrkO-tPKoEtrdm42fLnRoYs-46tz0J7yDwrxC0Tg@mail.gmail.com>
+ <20230409225414.2b66610f4145ade7b09339bb@kernel.org> <CALOAHbBQFSm=rXvzJJnOqrK04f9j1opbgRoYKwSUAd5g64r-jA@mail.gmail.com>
+ <20230409220239.0fcf6738@rorschach.local.home> <CALOAHbC5UvoU2EUM+YzNSaJyNNq_OOXYZYcqXu6nUfB0AyX0bA@mail.gmail.com>
+ <20230410063046.391dd2bd@rorschach.local.home>
+In-Reply-To: <20230410063046.391dd2bd@rorschach.local.home>
+From:   Yafang Shao <laoar.shao@gmail.com>
+Date:   Mon, 10 Apr 2023 21:56:16 +0800
+Message-ID: <CALOAHbCXgksmdYRRxrjVrW1-AWiTr1u24yJAdh2+0ou15vvKiA@mail.gmail.com>
+Subject: Re: [PATCH] tracing: Refuse fprobe if RCU is not watching
+To:     Steven Rostedt <rostedt@goodmis.org>
+Cc:     Masami Hiramatsu <mhiramat@kernel.org>,
+        alexei.starovoitov@gmail.com, linux-trace-kernel@vger.kernel.org,
+        bpf@vger.kernel.org, Andrii Nakryiko <andrii.nakryiko@gmail.com>,
+        Jiri Olsa <olsajiri@gmail.com>,
         Peter Zijlstra <peterz@infradead.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        =?UTF-8?B?RsSBbmctcnXDrCBTw7JuZw==?= <maskray@google.com>
-References: <20221205163157.269335-1-nick.alcock@oracle.com>
- <20230407232118.o2x5lakfgyzy56gz@treble>
-From:   Joe Lawrence <joe.lawrence@redhat.com>
-Subject: Re: [PATCH modules-next v10 00/13] kallsyms: reliable symbol->address
- lookup with /proc/kallmodsyms
-In-Reply-To: <20230407232118.o2x5lakfgyzy56gz@treble>
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
-Content-Language: en-US
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+        Josh Poimboeuf <jpoimboe@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On 4/7/23 19:21, Josh Poimboeuf wrote:
-> On Mon, Dec 05, 2022 at 04:31:44PM +0000, Nick Alcock wrote:
->> The whole point of symbols is that their names are unique: you can look up a
->> symbol and get back a unique address, and vice versa.  Alas, because
->> /proc/kallsyms (rightly) reports all symbols, even hidden ones, it does not
->> really satisfy this requirement.  Large numbers of symbols are duplicated
->> many times (just search for __list_del_entry!), and while usually these are
->> just out-of-lined things defined in header files and thus all have the same
->> implementation, it does make it needlessly hard to figure out which one is
->> which in stack dumps, when tracing, and such things.  Some configuration
->> options make things much worse: my test make allyesconfig runs introduced
->> thousands of text symbols named _sub_I_65535_1, one per compiler-generated
->> object file, and it was fairly easy to make them appear in ftrace output.
->>
->> Right now the kernel has no way at all to tell such symbols apart, and nor
->> has the user: their address differs and that's all.  Which module did they
->> come from?  Which object file?  We don't know.  Figuring out which is which
->> when tracing needs a combination of guesswork and luck, and if there are
->> thousands of them that's not a pleasant prospect.  In discussions at LPC it
->> became clear that this is not just annoying me but Steve Rostedt and others,
->> so it's probably desirable to fix this.
->>
->> It turns out that the linker, and the kernel build system, can be made to
->> give us everything we need to resolve this once and for all.  This series
->> provides a new /proc/kallmodsyms which is like /proc/kallsyms except that it
->> annotates every (textual) symbol which comes from a built-in kernel module
->> with the module's name, in square brackets: if a symbol is used by multiple
->> modules, it gets [multiple] [names]; if a symbol is still ambiguous it gets
->> a cut-down {object file name}; the combination of symbol, [module] [names]
->> and {object file name} is unique (with one minor exception: the arm64 nvhe
->> module is pre-linked with ld -r, causing all symbols in it to appear to come
->> from the same object file: if it was reworked to use thin archives this
->> problem would go away).
-> 
-> Hi Nick,
-> 
-> Sorry for jumping in late on an old patch set.  I just saw the LWN
-> article about the MODULE_LICENSE() patches and I have some comments
-> about duplicate symbols and a question about the motivation for this
-> patch set.
-> 
-> For livepatch we have a solution for disambiguating duplicate local
-> symbols called "sympos".  It works (for now) but there are some cases
-> (like LTO) where it falls apart and it may not be the best long term
-> solution.
-> 
-> The function granularity KASLR (fgkaslr) patches proposed a potentially
-> better option: use the GNU linker -zunique_symbols flag which renames
-> all duplicates to have unique names across the entire linked object.
-> 
+On Mon, Apr 10, 2023 at 6:30=E2=80=AFPM Steven Rostedt <rostedt@goodmis.org=
+> wrote:
+>
+> On Mon, 10 Apr 2023 13:36:32 +0800
+> Yafang Shao <laoar.shao@gmail.com> wrote:
+>
+> > Many thanks for the detailed explanation.
+> > I think ftrace_test_recursion_trylock() can't apply to migreate_enable(=
+).
+> > If we change as follows to prevent migrate_enable() from recursing,
+> >
+> >          bit =3D ftrace_test_recursion_trylock();
+> >          if (bit < 0)
+> >                  return;
+> >          migrate_enable();
+> >          ftrace_test_recursion_unlock(bit);
+> >
+> > We have called migrate_disable() before, so if we don't call
+> > migrate_enable() it will cause other issues.
+>
+> Right. Because you called migrate_disable() before (and protected it
+> with the ftrace_test_recursion_trylock(), the second call is guaranteed
+> to succeed!
+>
+> [1]     bit =3D ftrace_test_recursion_trylock();
+>         if (bit < 0)
+>                 return;
+>         migrate_disable();
+>         ftrace_test_recursion_trylock(bit);
+>
+>         [..]
+>
+> [2]     ftrace_test_recursion_trylock();
+>         migrate_enable();
+>         ftrace_test_recursion_trylock(bit);
+>
+> You don't even need to read the bit again, because it will be the same
+> as the first call [1]. That's because it returns the recursion level
+> you are in. A function will have the same recursion level through out
+> the function (as long as it always calls ftrace_test_recursion_unlock()
+> between them).
+>
+>         bpf_func()
+>             bit =3D ftrace_test_recursion_trylock(); <-- OK
+>             migrate_disable();
+>             ftrace_test_recursion_unlock(bit);
+>
+>             [..]
+>
+>             ftrace_test_recursion_trylock(); <<-- guaranteed to be OK
+>             migrate_enable() <<<-- gets traced
+>
+>                 bpf_func()
+>                     bit =3D ftrace_test_recursion_trylock() <-- FAILED
+>                     if (bit < 0)
+>                         return;
+>
+>             ftrace_test_recursion_unlock(bit);
+>
+>
+> See, still works!
+>
+> The migrate_enable() will never be called without the migrate_disable()
+> as the migrate_disable() only gets called when not being recursed.
+>
 
-And IIRC, that idea was eventually dropped.  Fāng-ruì Sòng posted a few
-reasons why -zunique-symbols wouldn't be a great solution [1]
+Thanks for your explanation again.
+BPF trampoline is a little special. It includes three parts, as follows,
 
-[1]
-https://lore.kernel.org/lkml/CAFP8O3K1mkiCGMTEeuSifZtr2piHsKTjP5TOA25nqpv2SrbzYQ@mail.gmail.com/
+    ret =3D __bpf_prog_enter();
+    if (ret)
+        prog->bpf_func();
+     __bpf_prog_exit();
 
-<file + symbol> was suggested instead, but I'm not 100% if that ever
-became the preferred solution.
+migrate_disable() is called in __bpf_prog_enter() and migrate_enable()
+in __bpf_prog_exit():
 
-> There are other components which also struggle with duplicate symbols:
-> ftrace, kprobes, BPF, etc.  It would be good to come up with a kallsyms
-> solution that works for everybody.
-> 
-> Anyway, I was nodding along with the above cover letter until I got to
-> the third paragraph.
-> 
-> A "built-in kernel module" is not actually a module, as it's built in to
-> vmlinux.  I suspect the point is that if you rebuild with a different
-> config, it might become a module.  But many other changes could also
-> occur with a changed config, including changed inlining decisions and
-> GCC IPA optimization function renaming, in which case the symbol might
-> no longer exist with the new config.
-> 
-> Also I'm confused what it means for a symbol to be "used by multiple
-> modules".  If the same TU or inline symbol is linked into two modules,
-> it will be loaded twice at two different addresses, and the
-> implementations could even differ.
-> 
-> It sounds like there are two problems being conflated:
-> 
->   1) how to uniquely identify symbols in the current kernel
-> 
->      For this, all we really need is file+sym.
-> 
->      Or, enable -zunique-symbols in the linker.
-> 
->   2) how to uniquely identify symbols across multiple kernels/configs
-> 
->      This seems much trickier, as much can change across kernels and
->      configs, including compiler inlining and naming decisions, not to
->      mention actual code changes.
-> 
-> The problems are related, but distinct.
-> 
-> #2 seems significantly harder to implement properly.
-> 
-> Would solving #1 give you most of what you need?
-> 
-> Based on the difficulty of #2, it really needs a proper justification.
-> I didn't see that in either of the patch sets.
-> 
-> Can you share more details about what specific problem needs solved and
-> why?  And how this would be used?  Examples would be helpful.
-> 
-> The article linked to this brief explanation [1], but that doesn't
-> clarify why "distinct notation used by users for things in named
-> modules" would be important.
-> 
-> Is there a reason the user can't just use whatever notation is
-> appropriate for their specific kernel?  Or, once we have #1, couldn't
-> tooling do an intermediate translation?
-> 
-> [1] https://lwn.net/ml/linux-kernel/87h6z5wqlk.fsf@esperi.org.uk/
-> 
+    ret =3D __bpf_prog_enter();
+                migrate_disable();
+    if (ret)
+        prog->bpf_func();
+     __bpf_prog_exit();
+          migrate_enable();
 
--- 
-Joe
+That said, if we haven't executed migrate_disable() in
+__bpf_prog_enter(), we shouldn't execute migrate_enable() in
+__bpf_prog_exit().
+Can ftrace_test_recursion_trylock() be applied to this pattern ?
 
+> Note, the ftrace_test_recursion_*() code needs to be updated because it
+> currently does disable preemption, which it doesn't have to. And that
+> can cause migrate_disable() to do something different. It only disabled
+> preemption, as there was a time that it needed to, but now it doesn't.
+> But the users of it will need to be audited to make sure that they
+> don't need the side effect of it disabling preemption.
+>
+
+disabling preemption is not expected by bpf prog, so I think we should
+change it.
+
+--=20
+Regards
+Yafang
