@@ -2,101 +2,82 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A7CD5C77B6F
-	for <linux-trace-kernel@archiver.kernel.org>; Tue, 11 Apr 2023 17:54:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0617DC7619A
+	for <linux-trace-kernel@archiver.kernel.org>; Tue, 11 Apr 2023 18:37:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229712AbjDKRye (ORCPT
+        id S229822AbjDKShs (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Tue, 11 Apr 2023 13:54:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37080 "EHLO
+        Tue, 11 Apr 2023 14:37:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57192 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229593AbjDKRyd (ORCPT
+        with ESMTP id S229890AbjDKShp (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Tue, 11 Apr 2023 13:54:33 -0400
+        Tue, 11 Apr 2023 14:37:45 -0400
 Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 66ACB5241;
-        Tue, 11 Apr 2023 10:54:32 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1D4145B8D;
+        Tue, 11 Apr 2023 11:37:42 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id ECB1B625B5;
-        Tue, 11 Apr 2023 17:54:31 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 634C6C4339E;
-        Tue, 11 Apr 2023 17:54:28 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 92B1362AE1;
+        Tue, 11 Apr 2023 18:37:41 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F05B5C433D2;
+        Tue, 11 Apr 2023 18:37:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1681235671;
-        bh=54LJu/uSR+OsrlePoQijbNxy1ZDn64og6zc21iXSGBs=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=FZM7uyjNGHb190bgTNK8XIfUWc5OWWpnCC2DBIMmQ0TOjo8htAv2XNx2Mg+0YBHhS
-         BSeyE2SA9B8oxWjfSu/2Na+nvWy+upQ4VyB9OdYWwm6Hr7Ma3Xw17W3arxD9KayRwT
-         HmIPJ8NTIoyLmiw95MjWATlmInH5pX2zxPfljlImUnhkSDcYBwlUPbJ9RFor+5H0+g
-         GLF4YJWt59Oy8p/ME+f7vAW+/2alSHw6Gh0RrbtYVR42eyP1ZqstkUzE2qeAahk1Du
-         NjgRtXpolpQ/7ZMUu1BSJyOQ28v6iAtN50jLnQVlZcEvjL7CmwG5b8XIkDOhe7Zxmf
-         hzo/Z9oXsk15A==
-Date:   Tue, 11 Apr 2023 18:54:24 +0100
+        s=k20201202; t=1681238261;
+        bh=bVNFNE0AyvC9VYJ6To61TadIe2WW1fg0uKBdoz+410I=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=m0SYWHwoxs7cZ0gkfU2np4bNg78D348+38aigs5n6bgtBQUhGwI65OobImNSGr8NY
+         /i8YbgdqjOgxbNYhNZU7RNoKXwbB9EmXRnhCnRsP9HA1KZuVsGi5jRgfSRfl1twCUm
+         XHUVdNHRS6YghAI08tqMyV0IbDW7LyuvVuJaGqyJ2azl5T3AYf7JyyX9n2x54PXM45
+         u04jSSffIG7RquB8gDxQmOHoq7ioCZdoPA7soF0JqXt+fashjm4/ivcphIE3UmzgOi
+         pRQ/XCaEiujXQhg/zOku3PIHiuqvxNIvz9wwrYhmNfFVdfTtmVtsS20zn5WONWKUlG
+         y8W+qpd+Ig+bw==
 From:   Will Deacon <will@kernel.org>
-To:     Steven Rostedt <rostedt@goodmis.org>
-Cc:     Mark Rutland <mark.rutland@arm.com>,
-        Florent Revest <revest@chromium.org>, catalin.marinas@arm.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-trace-kernel@vger.kernel.org, bpf@vger.kernel.org,
-        mhiramat@kernel.org, ast@kernel.org, daniel@iogearbox.net,
-        andrii@kernel.org, kpsingh@kernel.org, jolsa@kernel.org,
-        xukuohai@huaweicloud.com, lihuafei1@huawei.com,
-        Linus Torvalds <torvalds@linux-foundation.org>
+To:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-trace-kernel@vger.kernel.org,
+        Florent Revest <revest@chromium.org>, bpf@vger.kernel.org
+Cc:     catalin.marinas@arm.com, kernel-team@android.com,
+        Will Deacon <will@kernel.org>, mark.rutland@arm.com,
+        daniel@iogearbox.net, andrii@kernel.org, xukuohai@huaweicloud.com,
+        jolsa@kernel.org, rostedt@goodmis.org, mhiramat@kernel.org,
+        ast@kernel.org, lihuafei1@huawei.com, kpsingh@kernel.org
 Subject: Re: [PATCH v6 0/5] Add ftrace direct call for arm64
-Message-ID: <20230411175423.GD23143@willie-the-truck>
+Date:   Tue, 11 Apr 2023 19:37:27 +0100
+Message-Id: <168123280013.1317107.14827742829060906340.b4-ty@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20230405180250.2046566-1-revest@chromium.org>
 References: <20230405180250.2046566-1-revest@chromium.org>
- <ZDWDPUY2tZiMbk8V@FVFF77S0Q05N>
- <20230411124749.7aeea715@gandalf.local.home>
- <20230411170807.GA23143@willie-the-truck>
- <20230411134456.728551f8@gandalf.local.home>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230411134456.728551f8@gandalf.local.home>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On Tue, Apr 11, 2023 at 01:44:56PM -0400, Steven Rostedt wrote:
-> On Tue, 11 Apr 2023 18:08:08 +0100
-> Will Deacon <will@kernel.org> wrote:
+On Wed, 5 Apr 2023 20:02:45 +0200, Florent Revest wrote:
+> This series adds ftrace direct call support to arm64.
+> This makes BPF tracing programs (fentry/fexit/fmod_ret/lsm) work on arm64.
 > 
-> > On Tue, Apr 11, 2023 at 12:47:49PM -0400, Steven Rostedt wrote:
-> > > On Tue, 11 Apr 2023 16:56:45 +0100
-> > > Mark Rutland <mark.rutland@arm.com> wrote:
-> > >   
-> > > > IIUC Steve was hoping to take the FUNCTION_GRAPH_RETVAL series through the
-> > > > trace tree, and if that's still the plan, maybe both should go that way?  
-> > > 
-> > > The conflict is minor, and I think I prefer to still have the ARM64 bits go
-> > > through the arm64 tree, as it will get better testing, and I don't like to
-> > > merge branches ;-)
-> > > 
-> > > I've added Linus to the Cc so he knows that there will be conflicts, but as
-> > > long as we mention it in our pull request, with a branch that includes the
-> > > solution, it should be fine going through two different trees.  
-> > 
-> > If it's just the simple asm-offsets conflict that Mark mentioned, then that
-> > sounds fine to me. However, patches 3-5 don't seem to have anything to do
+> It is meant to be taken by the arm64 tree but it depends on the
+> trace-direct-v6.3-rc3 tag of the linux-trace tree:
+>   git://git.kernel.org/pub/scm/linux/kernel/git/trace/linux-trace.git
+> That tag was created by Steven Rostedt so the arm64 tree can pull the prior work
+> this depends on. [1]
 > 
-> I guess 3 and 5 are not, but patch 4 adds arm64 code to the samples (as
-> it requires arch specific asm to handle the direct trampolines).
+> [...]
 
-Sorry, yes, I was thinking of arch/arm64/ and then failed spectacularly
-at communicating :)
+Applied first two to arm64 (for-next/ftrace), thanks!
 
-> > with arm64 at all and I'd prefer those to go via other trees (esp. as patch
-> > 3 is an independent -stable candidate and the last one is a bpf selftest
-> > change which conflicts in -next).
-> > 
-> > So I'll queue the first two in arm64 on a branch (or-next/ftrace) based
-> > on trace-direct-v6.3-rc3.
-> 
-> Are 3-5 dependent on those changes? If not, I can pull them into my tree.
+[1/5] arm64: ftrace: Add direct call support
+      https://git.kernel.org/arm64/c/2aa6ac03516d
+[2/5] arm64: ftrace: Simplify get_ftrace_plt
+      https://git.kernel.org/arm64/c/0f59dca63bf2
 
-Good question. Florent?
-
+Cheers,
+-- 
 Will
+
+https://fixes.arm64.dev
+https://next.arm64.dev
+https://will.arm64.dev
