@@ -2,166 +2,293 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EF3F8C76196
-	for <linux-trace-kernel@archiver.kernel.org>; Mon, 10 Apr 2023 21:35:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D7393C76196
+	for <linux-trace-kernel@archiver.kernel.org>; Tue, 11 Apr 2023 11:19:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229523AbjDJVfS (ORCPT
+        id S229490AbjDKLTx (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Mon, 10 Apr 2023 17:35:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37818 "EHLO
+        Tue, 11 Apr 2023 07:19:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58680 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229507AbjDJVfR (ORCPT
+        with ESMTP id S229651AbjDKLTt (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Mon, 10 Apr 2023 17:35:17 -0400
-Received: from mail-ed1-x52c.google.com (mail-ed1-x52c.google.com [IPv6:2a00:1450:4864:20::52c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2DD92172D;
-        Mon, 10 Apr 2023 14:35:16 -0700 (PDT)
-Received: by mail-ed1-x52c.google.com with SMTP id 4fb4d7f45d1cf-5049a1085cbso1220112a12.3;
-        Mon, 10 Apr 2023 14:35:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112; t=1681162514; x=1683754514;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:date:from:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=Rc4V4a4tCJSui2sn08n+mk8Q22U/XQOyhuZaLhrce2U=;
-        b=XxW4gpw7N42SvL5t6psjxn4IUtriVOJE4g77JiSsGGOO1bBoWCxMJtGn+varv23zcB
-         5HAesLKZpoZAXoZpe0amQowTuKYEZKhSxSlpyf55/e00EWYWee8fg4CNe32SO6Oxi0kv
-         p/8l53UaXRf41l5hA9x1C8BCW2E2yYufomGI9oX1Wf+i8vpbqeVcpIUheVTm4Vch42PX
-         xoROUEpXxi4Uv/4u1VHbnwWgCf2c1QldcTft0N8KM9zF03W/E+njF4KXHk4Gjc5VMOO9
-         2d5wuDYwDf883+s4Tca+dON+O1hdM6mDsS8ENIeVxruTTv1bwQffnwIJrx2qPDY9GDeV
-         HVBA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1681162514; x=1683754514;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:date:from
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Rc4V4a4tCJSui2sn08n+mk8Q22U/XQOyhuZaLhrce2U=;
-        b=xdl82+Zrp2ncny5JkIRanR17lnhEO0Y4hdUN2XW6TsC9GzTwq0ao3Ugo0aMtaZAUcS
-         BeDGWlCJXvPUqHvLnWL1kib/Xytmvw0DM90lQw/fc+ZgT+SW7UxT288DIrOhlxIYCpFM
-         WqTIIqrBnga2rWo/mJzU4kXowRmL5ObE+LzZsZ0tyMubQVmw0LqgXL3xsPuaH0QL0PGX
-         18AgqIxedrtuwsmDzB5GH9Q/VkGc4WLsgtK/+ms0nQ4qzD/EwMiCtGwjWssu0RyhgTcw
-         97PFRYj+ebOYZfqTpU6H7xoEzZkX1sEM1epyJ3hQgntPeCpcFzm/EWJGGrh8rpXZTlZD
-         4CHg==
-X-Gm-Message-State: AAQBX9fVhhTQEwJJJVRtYFpbi88vr9oGQhsjpjnkR2jz4fgut2Q3a73h
-        SnvPeN96OYhy3l7Sn/4TPyc=
-X-Google-Smtp-Source: AKy350bSwEMsvWNJy3ScLA73dn0aYaGJUe0gkhDeXTByyZ7uTaBA3ujVFVgYmWmttWrOYT168NhTIw==
-X-Received: by 2002:a50:ec8f:0:b0:504:a2c9:c657 with SMTP id e15-20020a50ec8f000000b00504a2c9c657mr4777357edr.42.1681162514299;
-        Mon, 10 Apr 2023 14:35:14 -0700 (PDT)
-Received: from krava (ip-94-113-247-30.net.vodafone.cz. [94.113.247.30])
-        by smtp.gmail.com with ESMTPSA id w4-20020a50c444000000b004bf999f8e57sm5153932edf.19.2023.04.10.14.35.13
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 10 Apr 2023 14:35:13 -0700 (PDT)
-From:   Jiri Olsa <olsajiri@gmail.com>
-X-Google-Original-From: Jiri Olsa <jolsa@kernel.org>
-Date:   Mon, 10 Apr 2023 23:35:11 +0200
-To:     Yafang Shao <laoar.shao@gmail.com>
-Cc:     Steven Rostedt <rostedt@goodmis.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        alexei.starovoitov@gmail.com, linux-trace-kernel@vger.kernel.org,
-        bpf@vger.kernel.org, Andrii Nakryiko <andrii.nakryiko@gmail.com>,
-        Jiri Olsa <olsajiri@gmail.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Josh Poimboeuf <jpoimboe@redhat.com>
-Subject: Re: [PATCH] tracing: Refuse fprobe if RCU is not watching
-Message-ID: <ZDSBD6UvUdA73TSv@krava>
-References: <20230409075515.2504db78@rorschach.local.home>
- <CALOAHbBALsJrkO-tPKoEtrdm42fLnRoYs-46tz0J7yDwrxC0Tg@mail.gmail.com>
- <20230409225414.2b66610f4145ade7b09339bb@kernel.org>
- <CALOAHbBQFSm=rXvzJJnOqrK04f9j1opbgRoYKwSUAd5g64r-jA@mail.gmail.com>
- <20230409220239.0fcf6738@rorschach.local.home>
- <CALOAHbC5UvoU2EUM+YzNSaJyNNq_OOXYZYcqXu6nUfB0AyX0bA@mail.gmail.com>
- <20230410063046.391dd2bd@rorschach.local.home>
- <CALOAHbCXgksmdYRRxrjVrW1-AWiTr1u24yJAdh2+0ou15vvKiA@mail.gmail.com>
- <20230410101224.7e3b238c@gandalf.local.home>
- <CALOAHbBQgPqhBhOVukWG9FNL23m3EOFm1QN6+pi5SN8cP2ztBw@mail.gmail.com>
+        Tue, 11 Apr 2023 07:19:49 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 360A81A1;
+        Tue, 11 Apr 2023 04:19:48 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id C4ACC6247D;
+        Tue, 11 Apr 2023 11:19:47 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E4031C433EF;
+        Tue, 11 Apr 2023 11:19:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1681211987;
+        bh=E1zhjZsDqXu7ZcjyxWAVSvVSVDz46CeGhHGsz7thqLI=;
+        h=From:Date:Subject:To:Cc:From;
+        b=bUkXZTTSyVNyiCNC1PCBi9SiGnfJCT931/SrdtyhqA82BOfIoXqD40ED59EPSzPq4
+         +o55Z+GLnRh72CfIsszYAyXTcl18mB3cZjNRmX0Nq2jPEnCRfaRvYMJuRVHwiPKMHX
+         M6o+y7h2uwXzim+gFUTQomcyH5G1kIcTEqkT8hZSxpbEYxsBixSd/YBwemhCKuUnel
+         AvflII/9dpAlfEHsskXaRMgAk2xoe3XUMAISSUXeHGMXmlJItAp7IpbmKjlZHw4uSg
+         LwuNdtxPPlV+yNDL+xZfm8iP39udLWr8zVCUSxwdGsTlBxjflUdVE5AL/Hu7phRDSH
+         G2idG+dGux87Q==
+From:   Mark Brown <broonie@kernel.org>
+Date:   Tue, 11 Apr 2023 12:19:30 +0100
+Subject: [PATCH RESEND] selftests/ftrace: Improve integration with
+ kselftest runner
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CALOAHbBQgPqhBhOVukWG9FNL23m3EOFm1QN6+pi5SN8cP2ztBw@mail.gmail.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20230302-ftrace-kselftest-ktap-v1-1-1270085b4cd5@kernel.org>
+To:     Steven Rostedt <rostedt@goodmis.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Shuah Khan <shuah@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+        linux-kselftest@vger.kernel.org, Mark Brown <broonie@kernel.org>
+X-Mailer: b4 0.13-dev-00303
+X-Developer-Signature: v=1; a=openpgp-sha256; l=7335; i=broonie@kernel.org;
+ h=from:subject:message-id; bh=E1zhjZsDqXu7ZcjyxWAVSvVSVDz46CeGhHGsz7thqLI=;
+ b=owEBbQGS/pANAwAKASTWi3JdVIfQAcsmYgBkNUJPqyyc3WK2jryAAiP954rt0XvIjf+f1HvjBU5a
+ YYZQWm2JATMEAAEKAB0WIQSt5miqZ1cYtZ/in+ok1otyXVSH0AUCZDVCTwAKCRAk1otyXVSH0KClB/
+ sHzPndXSQjVbk0ZMWg3jvt3DFdQEvKawebKuxOfqFaFXPaqhMJ4aqcHnhnnexkLtQsv47Px4Q5VpMa
+ +AFrYxzT/mw9tRqdq0s2DUNmK392Co+YqV3yLm8CVausUMXQiBIklmxQse2HR0/NkRCTnBJRNLQ5HH
+ FfmMn57K2i7Me/qIrl4K1QdQKPGrnsp8RRpSnxz0qLMllwXYaq7bXzvX8xpWpmJq2xJdGBSRgAk5Uy
+ yfbop7K3lsn8bnPcvoK0CjRMgq+CFavMHsSSuThhJRwlVJ9VHkC3tgy6ZxV4f/jZ8GtP/1PneBOwSQ
+ xkx6CUefg+i8iGO7Miryadp79Hx328
+X-Developer-Key: i=broonie@kernel.org; a=openpgp;
+ fpr=3F2568AAC26998F9E813A1C5C3F436CA30F5D8EB
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On Mon, Apr 10, 2023 at 10:20:31PM +0800, Yafang Shao wrote:
-> On Mon, Apr 10, 2023 at 10:12 PM Steven Rostedt <rostedt@goodmis.org> wrote:
-> >
-> > On Mon, 10 Apr 2023 21:56:16 +0800
-> > Yafang Shao <laoar.shao@gmail.com> wrote:
-> >
-> > > Thanks for your explanation again.
-> > > BPF trampoline is a little special. It includes three parts, as follows,
-> > >
-> > >     ret = __bpf_prog_enter();
-> > >     if (ret)
-> > >         prog->bpf_func();
-> > >      __bpf_prog_exit();
-> > >
-> > > migrate_disable() is called in __bpf_prog_enter() and migrate_enable()
-> > > in __bpf_prog_exit():
-> > >
-> > >     ret = __bpf_prog_enter();
-> > >                 migrate_disable();
-> > >     if (ret)
-> > >         prog->bpf_func();
-> > >      __bpf_prog_exit();
-> > >           migrate_enable();
-> > >
-> > > That said, if we haven't executed migrate_disable() in
-> > > __bpf_prog_enter(), we shouldn't execute migrate_enable() in
-> > > __bpf_prog_exit().
-> > > Can ftrace_test_recursion_trylock() be applied to this pattern ?
-> >
-> > Yes, it can! And in this you would need to not call migrate_enable()
-> > because if the trace_recursion_trylock() failed, it would prevent
-> > migrate_disable() from being called (and should not let the bpf_func() from
-> > being called either. And then the migrate_enable in __bpf_prog_exit() would
-> > need to know not to call migrate_enable() which checking the return value
-> > of ftrace_test_recursion_trylock() would give the same value as what the
-> > one before migrate_disable() had.
-> >
-> 
-> That needs some changes in invoke_bpf_prog() in files
-> arch/${ARCH}/net/bpf_jit_comp.c.
-> But I will have a try. We can then remove the bpf_prog->active, that
-> will be a good cleanup as well.
+The ftrace selftests do not currently produce KTAP output, they produce a
+custom format much nicer for human consumption. This means that when run in
+automated test systems we just get a single result for the suite as a whole
+rather than recording results for individual test cases, making it harder
+to look at the test data and masking things like inappropriate skips.
 
-I was wondering if it's worth the effort to do that just to be able to attach
-bpf prog to preempt_count_add/sub and was going to suggest to add them to
-btf_id_deny as Steven pointed out earlier as possible solution
+Address this by adding support for KTAP output to the ftracetest script and
+providing a trivial wrapper which will be invoked by the kselftest runner
+to generate output in this format by default, users using ftracetest
+directly will continue to get the existing output.
 
-but if that might turn out as alternative to prog->active, that'd be great
+This is not the most elegant solution but it is simple and effective. I
+did consider implementing this by post processing the existing output
+format but that felt more complex and likely to result in all output being
+lost if something goes seriously wrong during the run which would not be
+helpful. I did also consider just writing a separate runner script but
+there's enough going on with things like the signal handling for that to
+seem like it would be duplicating too much.
 
-jirka
+Signed-off-by: Mark Brown <broonie@kernel.org>
+---
+ tools/testing/selftests/ftrace/Makefile        |  3 +-
+ tools/testing/selftests/ftrace/ftracetest      | 63 ++++++++++++++++++++++++--
+ tools/testing/selftests/ftrace/ftracetest-ktap |  8 ++++
+ 3 files changed, 70 insertions(+), 4 deletions(-)
 
-> 
-> >
-> > >
-> > > > Note, the ftrace_test_recursion_*() code needs to be updated because it
-> > > > currently does disable preemption, which it doesn't have to. And that
-> > > > can cause migrate_disable() to do something different. It only disabled
-> > > > preemption, as there was a time that it needed to, but now it doesn't.
-> > > > But the users of it will need to be audited to make sure that they
-> > > > don't need the side effect of it disabling preemption.
-> > > >
-> > >
-> > > disabling preemption is not expected by bpf prog, so I think we should
-> > > change it.
-> >
-> > The disabling of preemption was just done because every place that used it
-> > happened to also disable preemption. So it was just a clean up, not a
-> > requirement. Although the documentation said it did disable preemption :-/
-> >
-> >  See ce5e48036c9e7 ("ftrace: disable preemption when recursion locked")
-> >
-> > I think I can add a ftrace_test_recursion_try_aquire() and release() that
-> > is does the same thing without preemption. That way, we don't need to
-> > revert that patch, and use that instead.
-> >
-> > -- Steve
-> 
-> 
-> 
-> -- 
-> Regards
-> Yafang
+diff --git a/tools/testing/selftests/ftrace/Makefile b/tools/testing/selftests/ftrace/Makefile
+index d6e106fbce11..a1e955d2de4c 100644
+--- a/tools/testing/selftests/ftrace/Makefile
++++ b/tools/testing/selftests/ftrace/Makefile
+@@ -1,7 +1,8 @@
+ # SPDX-License-Identifier: GPL-2.0
+ all:
+ 
+-TEST_PROGS := ftracetest
++TEST_PROGS_EXTENDED := ftracetest
++TEST_PROGS := ftracetest-ktap
+ TEST_FILES := test.d settings
+ EXTRA_CLEAN := $(OUTPUT)/logs/*
+ 
+diff --git a/tools/testing/selftests/ftrace/ftracetest b/tools/testing/selftests/ftrace/ftracetest
+index c3311c8c4089..539c8d6d5d71 100755
+--- a/tools/testing/selftests/ftrace/ftracetest
++++ b/tools/testing/selftests/ftrace/ftracetest
+@@ -13,6 +13,7 @@ echo "Usage: ftracetest [options] [testcase(s)] [testcase-directory(s)]"
+ echo " Options:"
+ echo "		-h|--help  Show help message"
+ echo "		-k|--keep  Keep passed test logs"
++echo "		-K|--KTAP  Output in KTAP format"
+ echo "		-v|--verbose Increase verbosity of test messages"
+ echo "		-vv        Alias of -v -v (Show all results in stdout)"
+ echo "		-vvv       Alias of -v -v -v (Show all commands immediately)"
+@@ -85,6 +86,10 @@ parse_opts() { # opts
+       KEEP_LOG=1
+       shift 1
+     ;;
++    --ktap|-K)
++      KTAP=1
++      shift 1
++    ;;
+     --verbose|-v|-vv|-vvv)
+       if [ $VERBOSE -eq -1 ]; then
+ 	usage "--console can not use with --verbose"
+@@ -178,6 +183,7 @@ TEST_DIR=$TOP_DIR/test.d
+ TEST_CASES=`find_testcases $TEST_DIR`
+ LOG_DIR=$TOP_DIR/logs/`date +%Y%m%d-%H%M%S`/
+ KEEP_LOG=0
++KTAP=0
+ DEBUG=0
+ VERBOSE=0
+ UNSUPPORTED_RESULT=0
+@@ -229,7 +235,7 @@ prlog() { # messages
+     newline=
+     shift
+   fi
+-  printf "$*$newline"
++  [ "$KTAP" != "1" ] && printf "$*$newline"
+   [ "$LOG_FILE" ] && printf "$*$newline" | strip_esc >> $LOG_FILE
+ }
+ catlog() { #file
+@@ -260,11 +266,11 @@ TOTAL_RESULT=0
+ 
+ INSTANCE=
+ CASENO=0
++CASENAME=
+ 
+ testcase() { # testfile
+   CASENO=$((CASENO+1))
+-  desc=`grep "^#[ \t]*description:" $1 | cut -f2- -d:`
+-  prlog -n "[$CASENO]$INSTANCE$desc"
++  CASENAME=`grep "^#[ \t]*description:" $1 | cut -f2- -d:`
+ }
+ 
+ checkreq() { # testfile
+@@ -277,40 +283,68 @@ test_on_instance() { # testfile
+   grep -q "^#[ \t]*flags:.*instance" $1
+ }
+ 
++ktaptest() { # result comment
++  if [ "$KTAP" != "1" ]; then
++    return
++  fi
++
++  local result=
++  if [ "$1" = "1" ]; then
++    result="ok"
++  else
++    result="not ok"
++  fi
++  shift
++
++  local comment=$*
++  if [ "$comment" != "" ]; then
++    comment="# $comment"
++  fi
++
++  echo $CASENO $result $INSTANCE$CASENAME $comment
++}
++
+ eval_result() { # sigval
+   case $1 in
+     $PASS)
+       prlog "	[${color_green}PASS${color_reset}]"
++      ktaptest 1
+       PASSED_CASES="$PASSED_CASES $CASENO"
+       return 0
+     ;;
+     $FAIL)
+       prlog "	[${color_red}FAIL${color_reset}]"
++      ktaptest 0
+       FAILED_CASES="$FAILED_CASES $CASENO"
+       return 1 # this is a bug.
+     ;;
+     $UNRESOLVED)
+       prlog "	[${color_blue}UNRESOLVED${color_reset}]"
++      ktaptest 0 UNRESOLVED
+       UNRESOLVED_CASES="$UNRESOLVED_CASES $CASENO"
+       return $UNRESOLVED_RESULT # depends on use case
+     ;;
+     $UNTESTED)
+       prlog "	[${color_blue}UNTESTED${color_reset}]"
++      ktaptest 1 SKIP
+       UNTESTED_CASES="$UNTESTED_CASES $CASENO"
+       return 0
+     ;;
+     $UNSUPPORTED)
+       prlog "	[${color_blue}UNSUPPORTED${color_reset}]"
++      ktaptest 1 SKIP
+       UNSUPPORTED_CASES="$UNSUPPORTED_CASES $CASENO"
+       return $UNSUPPORTED_RESULT # depends on use case
+     ;;
+     $XFAIL)
+       prlog "	[${color_green}XFAIL${color_reset}]"
++      ktaptest 1 XFAIL
+       XFAILED_CASES="$XFAILED_CASES $CASENO"
+       return 0
+     ;;
+     *)
+       prlog "	[${color_blue}UNDEFINED${color_reset}]"
++      ktaptest 0 error
+       UNDEFINED_CASES="$UNDEFINED_CASES $CASENO"
+       return 1 # this must be a test bug
+     ;;
+@@ -371,6 +405,7 @@ __run_test() { # testfile
+ run_test() { # testfile
+   local testname=`basename $1`
+   testcase $1
++  prlog -n "[$CASENO]$INSTANCE$CASENAME"
+   if [ ! -z "$LOG_FILE" ] ; then
+     local testlog=`mktemp $LOG_DIR/${CASENO}-${testname}-log.XXXXXX`
+   else
+@@ -405,6 +440,17 @@ run_test() { # testfile
+ # load in the helper functions
+ . $TEST_DIR/functions
+ 
++if [ "$KTAP" = "1" ]; then
++  echo "TAP version 13"
++
++  casecount=`echo $TEST_CASES | wc -w`
++  for t in $TEST_CASES; do
++    test_on_instance $t || continue
++    casecount=$((casecount+1))
++  done
++  echo "1..${casecount}"
++fi
++
+ # Main loop
+ for t in $TEST_CASES; do
+   run_test $t
+@@ -439,6 +485,17 @@ prlog "# of unsupported: " `echo $UNSUPPORTED_CASES | wc -w`
+ prlog "# of xfailed: " `echo $XFAILED_CASES | wc -w`
+ prlog "# of undefined(test bug): " `echo $UNDEFINED_CASES | wc -w`
+ 
++if [ "$KTAP" = "1" ]; then
++  echo -n "# Totals:"
++  echo -n " pass:"`echo $PASSED_CASES | wc -w`
++  echo -n " faii:"`echo $FAILED_CASES | wc -w`
++  echo -n " xfail:"`echo $XFAILED_CASES | wc -w`
++  echo -n " xpass:0"
++  echo -n " skip:"`echo $UNTESTED_CASES $UNSUPPORTED_CASES | wc -w`
++  echo -n " error:"`echo $UNRESOLVED_CASES $UNDEFINED_CASES | wc -w`
++  echo
++fi
++
+ cleanup
+ 
+ # if no error, return 0
+diff --git a/tools/testing/selftests/ftrace/ftracetest-ktap b/tools/testing/selftests/ftrace/ftracetest-ktap
+new file mode 100755
+index 000000000000..b3284679ef3a
+--- /dev/null
++++ b/tools/testing/selftests/ftrace/ftracetest-ktap
+@@ -0,0 +1,8 @@
++#!/bin/sh -e
++# SPDX-License-Identifier: GPL-2.0-only
++#
++# ftracetest-ktap: Wrapper to integrate ftracetest with the kselftest runner
++#
++# Copyright (C) Arm Ltd., 2023
++
++./ftracetest -K
+
+---
+base-commit: fe15c26ee26efa11741a7b632e9f23b01aca4cc6
+change-id: 20230302-ftrace-kselftest-ktap-9d7878691557
+
+Best regards,
+-- 
+Mark Brown <broonie@kernel.org>
+
