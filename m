@@ -2,82 +2,93 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0617DC7619A
-	for <linux-trace-kernel@archiver.kernel.org>; Tue, 11 Apr 2023 18:37:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A754DC7619A
+	for <linux-trace-kernel@archiver.kernel.org>; Tue, 11 Apr 2023 21:17:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229822AbjDKShs (ORCPT
+        id S229742AbjDKVRR (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Tue, 11 Apr 2023 14:37:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57192 "EHLO
+        Tue, 11 Apr 2023 17:17:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38730 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229890AbjDKShp (ORCPT
+        with ESMTP id S229737AbjDKVRQ (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Tue, 11 Apr 2023 14:37:45 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1D4145B8D;
-        Tue, 11 Apr 2023 11:37:42 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 92B1362AE1;
-        Tue, 11 Apr 2023 18:37:41 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F05B5C433D2;
-        Tue, 11 Apr 2023 18:37:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1681238261;
-        bh=bVNFNE0AyvC9VYJ6To61TadIe2WW1fg0uKBdoz+410I=;
+        Tue, 11 Apr 2023 17:17:16 -0400
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id A42EC40E4;
+        Tue, 11 Apr 2023 14:17:15 -0700 (PDT)
+Received: from W11-BEAU-MD.localdomain (unknown [76.135.27.212])
+        by linux.microsoft.com (Postfix) with ESMTPSA id 13A5621779A4;
+        Tue, 11 Apr 2023 14:17:15 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 13A5621779A4
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+        s=default; t=1681247835;
+        bh=9bQADjcnzfitEajWNwld8GIEX6pWZSTccoW5aErnhjg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=m0SYWHwoxs7cZ0gkfU2np4bNg78D348+38aigs5n6bgtBQUhGwI65OobImNSGr8NY
-         /i8YbgdqjOgxbNYhNZU7RNoKXwbB9EmXRnhCnRsP9HA1KZuVsGi5jRgfSRfl1twCUm
-         XHUVdNHRS6YghAI08tqMyV0IbDW7LyuvVuJaGqyJ2azl5T3AYf7JyyX9n2x54PXM45
-         u04jSSffIG7RquB8gDxQmOHoq7ioCZdoPA7soF0JqXt+fashjm4/ivcphIE3UmzgOi
-         pRQ/XCaEiujXQhg/zOku3PIHiuqvxNIvz9wwrYhmNfFVdfTtmVtsS20zn5WONWKUlG
-         y8W+qpd+Ig+bw==
-From:   Will Deacon <will@kernel.org>
-To:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-trace-kernel@vger.kernel.org,
-        Florent Revest <revest@chromium.org>, bpf@vger.kernel.org
-Cc:     catalin.marinas@arm.com, kernel-team@android.com,
-        Will Deacon <will@kernel.org>, mark.rutland@arm.com,
-        daniel@iogearbox.net, andrii@kernel.org, xukuohai@huaweicloud.com,
-        jolsa@kernel.org, rostedt@goodmis.org, mhiramat@kernel.org,
-        ast@kernel.org, lihuafei1@huawei.com, kpsingh@kernel.org
-Subject: Re: [PATCH v6 0/5] Add ftrace direct call for arm64
-Date:   Tue, 11 Apr 2023 19:37:27 +0100
-Message-Id: <168123280013.1317107.14827742829060906340.b4-ty@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20230405180250.2046566-1-revest@chromium.org>
-References: <20230405180250.2046566-1-revest@chromium.org>
+        b=hLTVNCA0O8jYUr2YSxF7S20EZevHhSS/9dTrPFg2hvlFJ6IEAxWhdsbjTUrcmFZi1
+         EUgVH9kuhoHibBtrQzPGme+e6qWp3lmCw/a8oYGfoklkDlj7Szay0ZntAjeiFhgL4r
+         QeFOE0accT+P5qSlSSj0/HMouLXnC+EqOEoEOlk8=
+From:   Beau Belgrave <beaub@linux.microsoft.com>
+To:     rostedt@goodmis.org, mhiramat@kernel.org,
+        mathieu.desnoyers@efficios.com, dcook@linux.microsoft.com,
+        alanau@linux.microsoft.com
+Cc:     linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
+Subject: [PATCH 1/3] tracing/user_events: Ensure write index cannot be negative
+Date:   Tue, 11 Apr 2023 14:17:07 -0700
+Message-Id: <20230411211709.15018-2-beaub@linux.microsoft.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20230411211709.15018-1-beaub@linux.microsoft.com>
+References: <20230411211709.15018-1-beaub@linux.microsoft.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On Wed, 5 Apr 2023 20:02:45 +0200, Florent Revest wrote:
-> This series adds ftrace direct call support to arm64.
-> This makes BPF tracing programs (fentry/fexit/fmod_ret/lsm) work on arm64.
-> 
-> It is meant to be taken by the arm64 tree but it depends on the
-> trace-direct-v6.3-rc3 tag of the linux-trace tree:
->   git://git.kernel.org/pub/scm/linux/kernel/git/trace/linux-trace.git
-> That tag was created by Steven Rostedt so the arm64 tree can pull the prior work
-> this depends on. [1]
-> 
-> [...]
+The write index indicates which event the data is for and accesses a
+per-file array. The index is passed by user processes during write()
+calls as the first 4 bytes. Ensure that it cannot be negative by
+returning -EINVAL to prevent out of bounds accesses.
 
-Applied first two to arm64 (for-next/ftrace), thanks!
+Update ftrace self-test to ensure this occurs properly.
 
-[1/5] arm64: ftrace: Add direct call support
-      https://git.kernel.org/arm64/c/2aa6ac03516d
-[2/5] arm64: ftrace: Simplify get_ftrace_plt
-      https://git.kernel.org/arm64/c/0f59dca63bf2
+Fixes: 7f5a08c79df3 ("user_events: Add minimal support for trace_event into ftrace")
+Reported-by: Doug Cook <dcook@linux.microsoft.com>
+Signed-off-by: Beau Belgrave <beaub@linux.microsoft.com>
+---
+ kernel/trace/trace_events_user.c                  | 3 +++
+ tools/testing/selftests/user_events/ftrace_test.c | 5 +++++
+ 2 files changed, 8 insertions(+)
 
-Cheers,
+diff --git a/kernel/trace/trace_events_user.c b/kernel/trace/trace_events_user.c
+index cc8c6d8b69b5..e7dff24aa724 100644
+--- a/kernel/trace/trace_events_user.c
++++ b/kernel/trace/trace_events_user.c
+@@ -1821,6 +1821,9 @@ static ssize_t user_events_write_core(struct file *file, struct iov_iter *i)
+ 	if (unlikely(copy_from_iter(&idx, sizeof(idx), i) != sizeof(idx)))
+ 		return -EFAULT;
+ 
++	if (idx < 0)
++		return -EINVAL;
++
+ 	rcu_read_lock_sched();
+ 
+ 	refs = rcu_dereference_sched(info->refs);
+diff --git a/tools/testing/selftests/user_events/ftrace_test.c b/tools/testing/selftests/user_events/ftrace_test.c
+index aceafacfb126..91272f9d6fce 100644
+--- a/tools/testing/selftests/user_events/ftrace_test.c
++++ b/tools/testing/selftests/user_events/ftrace_test.c
+@@ -296,6 +296,11 @@ TEST_F(user, write_events) {
+ 	ASSERT_NE(-1, writev(self->data_fd, (const struct iovec *)io, 3));
+ 	after = trace_bytes();
+ 	ASSERT_GT(after, before);
++
++	/* Negative index should fail with EINVAL */
++	reg.write_index = -1;
++	ASSERT_EQ(-1, writev(self->data_fd, (const struct iovec *)io, 3));
++	ASSERT_EQ(EINVAL, errno);
+ }
+ 
+ TEST_F(user, write_fault) {
 -- 
-Will
+2.25.1
 
-https://fixes.arm64.dev
-https://next.arm64.dev
-https://will.arm64.dev
