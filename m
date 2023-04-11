@@ -2,39 +2,39 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EA50DC77B6F
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C34FEC77B72
 	for <linux-trace-kernel@archiver.kernel.org>; Tue, 11 Apr 2023 21:17:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229779AbjDKVRS (ORCPT
+        id S229765AbjDKVRR (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Tue, 11 Apr 2023 17:17:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38740 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229752AbjDKVRR (ORCPT
-        <rfc822;linux-trace-kernel@vger.kernel.org>);
         Tue, 11 Apr 2023 17:17:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38738 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229710AbjDKVRQ (ORCPT
+        <rfc822;linux-trace-kernel@vger.kernel.org>);
+        Tue, 11 Apr 2023 17:17:16 -0400
 Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 3C7CF449A;
-        Tue, 11 Apr 2023 14:17:16 -0700 (PDT)
-Received: from W11-BEAU-MD.localdomain (unknown [76.135.27.212])
-        by linux.microsoft.com (Postfix) with ESMTPSA id 9C6E521779A8;
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id F2C704482;
         Tue, 11 Apr 2023 14:17:15 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 9C6E521779A8
+Received: from W11-BEAU-MD.localdomain (unknown [76.135.27.212])
+        by linux.microsoft.com (Postfix) with ESMTPSA id 5513C21779A6;
+        Tue, 11 Apr 2023 14:17:15 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 5513C21779A6
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
         s=default; t=1681247835;
-        bh=5c4d3BEotzSKMJMtgcr0S62whYX8qPpisF7gsoBkDkw=;
+        bh=hP1cRNuxHkIdEXUzblUPdQ1BwU/USkWFGaUyWmDt9gQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=WkUcKuIBuTCbVj31WezZoCtuMd/DBX5L//tgE+SDhh9YZhmSUfXIp6LevIyc30PV1
-         T0DSgumpETd3O1BwU6FNAFnmC3gZnZ7xWCEUdhzF6bs9XsxfGnhCmz7+kTq0aXtn84
-         B+7D/Q5CLdiHg+Q9QKQ1Emd7lEfInE8R81jTrVjc=
+        b=PQSaP+ezQbaPttIFdbKkZXDsVkwbr1h/eoZ3XuTodlKQSfr8PnuS6r5SHvRKlAuuY
+         ORC1Lajk4ftnf+hT6PSiuJf1X3Hbfmt4gZ6OENNiZMJu6KapcPqBGUr2lwkAGKDfEJ
+         lgpeHtIXivwCHumdkirPPoB8MY8N3hlWLUvAYgqs=
 From:   Beau Belgrave <beaub@linux.microsoft.com>
 To:     rostedt@goodmis.org, mhiramat@kernel.org,
         mathieu.desnoyers@efficios.com, dcook@linux.microsoft.com,
         alanau@linux.microsoft.com
 Cc:     linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
-Subject: [PATCH 3/3] tracing/user_events: Prevent same address and bit per process
-Date:   Tue, 11 Apr 2023 14:17:09 -0700
-Message-Id: <20230411211709.15018-4-beaub@linux.microsoft.com>
+Subject: [PATCH 2/3] tracing/user_events: Ensure bit is cleared on unregister
+Date:   Tue, 11 Apr 2023 14:17:08 -0700
+Message-Id: <20230411211709.15018-3-beaub@linux.microsoft.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20230411211709.15018-1-beaub@linux.microsoft.com>
 References: <20230411211709.15018-1-beaub@linux.microsoft.com>
@@ -44,117 +44,95 @@ Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-User processes register an address and bit pair for events. If the same
-address and bit pair are registered multiple times in the same process,
-it can cause undefined behavior when events are enabled/disabled.
-When more than one are used, the bit could be turned off by another
-event being disabled, while the original event is still enabled.
+If an event is enabled and a user process unregisters user_events, the
+bit is left set. Fix this by always clearing the bit in the user process
+if unregister is successful.
 
-Prevent undefined behavior by checking the current mm to see if any
-event has already been registered for the address and bit pair. Return
-EADDRINUSE back to the user process if it's already being used.
-
-Update ftrace self-test to ensure this occurs properly.
+Update abi self-test to ensure this occurs properly.
 
 Suggested-by: Doug Cook <dcook@linux.microsoft.com>
 Signed-off-by: Beau Belgrave <beaub@linux.microsoft.com>
 ---
- kernel/trace/trace_events_user.c              | 40 +++++++++++++++++++
- .../selftests/user_events/ftrace_test.c       |  9 ++++-
- 2 files changed, 48 insertions(+), 1 deletion(-)
+ kernel/trace/trace_events_user.c              | 34 +++++++++++++++++++
+ .../testing/selftests/user_events/abi_test.c  |  9 +++--
+ 2 files changed, 40 insertions(+), 3 deletions(-)
 
 diff --git a/kernel/trace/trace_events_user.c b/kernel/trace/trace_events_user.c
-index eb195d697177..ce5357019113 100644
+index e7dff24aa724..eb195d697177 100644
 --- a/kernel/trace/trace_events_user.c
 +++ b/kernel/trace/trace_events_user.c
-@@ -419,6 +419,20 @@ static int user_event_enabler_write(struct user_event_mm *mm,
- 	return 0;
+@@ -2146,6 +2146,35 @@ static long user_unreg_get(struct user_unreg __user *ureg,
+ 	return ret;
  }
  
-+static bool user_event_enabler_exists(struct user_event_mm *mm,
-+				      unsigned long uaddr, unsigned char bit)
++static int user_event_mm_clear_bit(struct user_event_mm *user_mm,
++				   unsigned long uaddr, unsigned char bit)
 +{
-+	struct user_event_enabler *enabler;
-+	struct user_event_enabler *next;
++	struct user_event_enabler enabler;
++	int result;
 +
-+	list_for_each_entry_safe(enabler, next, &mm->enablers, link)
-+		if (enabler->addr == uaddr &&
-+		    (enabler->values & ENABLE_VAL_BIT_MASK) == bit)
-+			return true;
++	memset(&enabler, 0, sizeof(enabler));
++	enabler.addr = uaddr;
++	enabler.values = bit;
++retry:
++	/* Prevents state changes from racing with new enablers */
++	mutex_lock(&event_mutex);
 +
-+	return false;
++	/* Force the bit to be cleared, since no event is attached */
++	mmap_read_lock(user_mm->mm);
++	result = user_event_enabler_write(user_mm, &enabler, false);
++	mmap_read_unlock(user_mm->mm);
++
++	mutex_unlock(&event_mutex);
++
++	if (result) {
++		/* Attempt to fault-in and retry if it worked */
++		if (!user_event_mm_fault_in(user_mm, uaddr))
++			goto retry;
++	}
++
++	return result;
 +}
 +
- static void user_event_enabler_update(struct user_event *user)
- {
- 	struct user_event_enabler *enabler;
-@@ -657,6 +671,22 @@ void user_event_mm_dup(struct task_struct *t, struct user_event_mm *old_mm)
- 	user_event_mm_remove(t);
+ /*
+  * Unregisters an enablement address/bit within a task/user mm.
+  */
+@@ -2190,6 +2219,11 @@ static long user_events_ioctl_unreg(unsigned long uarg)
+ 
+ 	mutex_unlock(&event_mutex);
+ 
++	/* Ensure bit is now cleared for user, regardless of event status */
++	if (!ret)
++		ret = user_event_mm_clear_bit(mm, reg.disable_addr,
++					      reg.disable_bit);
++
+ 	return ret;
  }
  
-+static bool current_user_event_enabler_exists(unsigned long uaddr,
-+					      unsigned char bit)
-+{
-+	struct user_event_mm *user_mm = current_user_event_mm();
-+	bool exists;
-+
-+	if (!user_mm)
-+		return false;
-+
-+	exists = user_event_enabler_exists(user_mm, uaddr, bit);
-+
-+	user_event_mm_put(user_mm);
-+
-+	return exists;
-+}
-+
- static struct user_event_enabler
- *user_event_enabler_create(struct user_reg *reg, struct user_event *user,
- 			   int *write_result)
-@@ -2045,6 +2075,16 @@ static long user_events_ioctl_reg(struct user_event_file_info *info,
- 	if (ret)
- 		return ret;
+diff --git a/tools/testing/selftests/user_events/abi_test.c b/tools/testing/selftests/user_events/abi_test.c
+index e0323d3777a7..5125c42efe65 100644
+--- a/tools/testing/selftests/user_events/abi_test.c
++++ b/tools/testing/selftests/user_events/abi_test.c
+@@ -109,13 +109,16 @@ TEST_F(user, enablement) {
+ 	ASSERT_EQ(0, change_event(false));
+ 	ASSERT_EQ(0, self->check);
  
-+	/*
-+	 * Prevent users from using the same address and bit multiple times
-+	 * within the same mm address space. This can cause unexpected behavior
-+	 * for user processes that is far easier to debug if this is explictly
-+	 * an error upon registering.
-+	 */
-+	if (current_user_event_enabler_exists((unsigned long)reg.enable_addr,
-+					      reg.enable_bit))
-+		return -EADDRINUSE;
+-	/* Should not change after disable */
++	/* Ensure kernel clears bit after disable */
+ 	ASSERT_EQ(0, change_event(true));
+ 	ASSERT_EQ(1, self->check);
+ 	ASSERT_EQ(0, reg_disable(&self->check, 0));
++	ASSERT_EQ(0, self->check);
 +
- 	name = strndup_user((const char __user *)(uintptr_t)reg.name_args,
- 			    MAX_EVENT_DESC);
++	/* Ensure doesn't change after unreg */
++	ASSERT_EQ(0, change_event(true));
++	ASSERT_EQ(0, self->check);
+ 	ASSERT_EQ(0, change_event(false));
+-	ASSERT_EQ(1, self->check);
+-	self->check = 0;
+ }
  
-diff --git a/tools/testing/selftests/user_events/ftrace_test.c b/tools/testing/selftests/user_events/ftrace_test.c
-index 91272f9d6fce..7c99cef94a65 100644
---- a/tools/testing/selftests/user_events/ftrace_test.c
-+++ b/tools/testing/selftests/user_events/ftrace_test.c
-@@ -219,7 +219,12 @@ TEST_F(user, register_events) {
- 	ASSERT_EQ(0, ioctl(self->data_fd, DIAG_IOCSREG, &reg));
- 	ASSERT_EQ(0, reg.write_index);
- 
--	/* Multiple registers should result in same index */
-+	/* Multiple registers to the same addr + bit should fail */
-+	ASSERT_EQ(-1, ioctl(self->data_fd, DIAG_IOCSREG, &reg));
-+	ASSERT_EQ(EADDRINUSE, errno);
-+
-+	/* Multiple registers to same name should result in same index */
-+	reg.enable_bit = 30;
- 	ASSERT_EQ(0, ioctl(self->data_fd, DIAG_IOCSREG, &reg));
- 	ASSERT_EQ(0, reg.write_index);
- 
-@@ -242,6 +247,8 @@ TEST_F(user, register_events) {
- 
- 	/* Unregister */
- 	ASSERT_EQ(0, ioctl(self->data_fd, DIAG_IOCSUNREG, &unreg));
-+	unreg.disable_bit = 30;
-+	ASSERT_EQ(0, ioctl(self->data_fd, DIAG_IOCSUNREG, &unreg));
- 
- 	/* Delete should work only after close and unregister */
- 	close(self->data_fd);
+ TEST_F(user, bit_sizes) {
 -- 
 2.25.1
 
