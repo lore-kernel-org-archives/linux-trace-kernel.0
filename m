@@ -2,116 +2,192 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4407DC77B6F
-	for <linux-trace-kernel@archiver.kernel.org>; Tue, 11 Apr 2023 15:56:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B39EEC76196
+	for <linux-trace-kernel@archiver.kernel.org>; Tue, 11 Apr 2023 16:44:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231199AbjDKP44 (ORCPT
+        id S230112AbjDKQog (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Tue, 11 Apr 2023 11:56:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46560 "EHLO
+        Tue, 11 Apr 2023 12:44:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48742 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231130AbjDKP4z (ORCPT
+        with ESMTP id S229995AbjDKQoc (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Tue, 11 Apr 2023 11:56:55 -0400
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 5CCA0E74;
-        Tue, 11 Apr 2023 08:56:54 -0700 (PDT)
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 6EB32D75;
-        Tue, 11 Apr 2023 08:57:38 -0700 (PDT)
-Received: from FVFF77S0Q05N (unknown [10.57.20.166])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 994CF3F73F;
-        Tue, 11 Apr 2023 08:56:51 -0700 (PDT)
-Date:   Tue, 11 Apr 2023 16:56:45 +0100
-From:   Mark Rutland <mark.rutland@arm.com>
-To:     Florent Revest <revest@chromium.org>, catalin.marinas@arm.com,
-        will@kernel.org, rostedt@goodmis.org
-Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-trace-kernel@vger.kernel.org, bpf@vger.kernel.org,
-        mhiramat@kernel.org, ast@kernel.org, daniel@iogearbox.net,
-        andrii@kernel.org, kpsingh@kernel.org, jolsa@kernel.org,
-        xukuohai@huaweicloud.com, lihuafei1@huawei.com
-Subject: Re: [PATCH v6 0/5] Add ftrace direct call for arm64
-Message-ID: <ZDWDPUY2tZiMbk8V@FVFF77S0Q05N>
-References: <20230405180250.2046566-1-revest@chromium.org>
+        Tue, 11 Apr 2023 12:44:32 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 24E6649F6;
+        Tue, 11 Apr 2023 09:44:21 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 1A1D662956;
+        Tue, 11 Apr 2023 16:44:07 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1C903C433D2;
+        Tue, 11 Apr 2023 16:44:05 +0000 (UTC)
+Date:   Tue, 11 Apr 2023 12:44:03 -0400
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     Tze-nan Wu <Tze-nan.Wu@mediatek.com>
+Cc:     <mhiramat@kernel.org>, <bobule.chang@mediatek.com>,
+        <wsd_upstream@mediatek.com>, <cheng-jui.wang@mediatek.com>,
+        <npiggin@gmail.com>, <stable@vger.kernel.org>,
+        AngeloGioacchino Del Regno 
+        <angelogioacchino.delregno@collabora.com>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-trace-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-mediatek@lists.infradead.org>
+Subject: Re: [PATCH v3] ring-buffer: Prevent inconsistent operation on
+ cpu_buffer->resize_disabled
+Message-ID: <20230411124403.2a31e12d@gandalf.local.home>
+In-Reply-To: <20230410073512.13362-1-Tze-nan.Wu@mediatek.com>
+References: <20230409024616.31099-1-Tze-nan.Wu@mediatek.com>
+        <20230410073512.13362-1-Tze-nan.Wu@mediatek.com>
+X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230405180250.2046566-1-revest@chromium.org>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On Wed, Apr 05, 2023 at 08:02:45PM +0200, Florent Revest wrote:
-> This series adds ftrace direct call support to arm64.
-> This makes BPF tracing programs (fentry/fexit/fmod_ret/lsm) work on arm64.
-> 
-> It is meant to be taken by the arm64 tree but it depends on the
-> trace-direct-v6.3-rc3 tag of the linux-trace tree:
->   git://git.kernel.org/pub/scm/linux/kernel/git/trace/linux-trace.git
-> That tag was created by Steven Rostedt so the arm64 tree can pull the prior work
-> this depends on. [1]
 
-Catalin, Will, are you happy to pick this via the arm64 tree, or for it to go
-via the trace tree?
+Please have each new patch be a new thread, and not a Cc to the previous
+version of the patch. As it makes it hard to find in INBOXs.
 
-We'd been assuming the former, but it looks like there'll be a (simple) merge
-conflict with the series adding FUNCTION_GRAPH_RETVAL:
+On Mon, 10 Apr 2023 15:35:08 +0800
+Tze-nan Wu <Tze-nan.Wu@mediatek.com> wrote:
 
-  https://lore.kernel.org/lkml/cover.1680954589.git.pengdonglin@sangfor.com.cn/
+> Write to buffer_size_kb can permanently fail, due to cpu_online_mask may
+> changed between two for_each_online_buffer_cpu loops.
+> The number of increasing and decreasing on cpu_buffer->resize_disable
+> may be inconsistent, leading that the resize_disabled in some CPUs
+> becoming none zero after ring_buffer_reset_online_cpus return.
+> 
+> This issue can be reproduced by "echo 0 > trace" while hotplugging cpu.
+> After reproducing success, we can find out buffer_size_kb will not be
+> functional anymore.
+> 
+> Prevent the two "loops" in this function from iterating through different
+> online cpus by copying cpu_online_mask at the entry of the function.
+> 
 
-... as both series add some definitions to arm64's asm-offsets.c in the same
-place, and all those additions need to be kept. Other than that, the two series
-are independent.
+The "Changes from" need to go below  the '---', otherwise they are added to
+the git commit (we don't want it there).
 
-IIUC Steve was hoping to take the FUNCTION_GRAPH_RETVAL series through the
-trace tree, and if that's still the plan, maybe both should go that way?
+> Changes from v1 to v3:
+>   Declare the cpumask variable statically rather than dynamically.
+> 
+> Changes from v2 to v3:
+>   Considering holding cpu_hotplug_lock too long because of the
+>   synchronize_rcu(), maybe it's better to prevent the issue by copying
+>   cpu_online_mask at the entry of the function as V1 does, instead of
+>   using cpus_read_lock().
+> 
+> Link: https://lore.kernel.org/lkml/20230408052226.25268-1-Tze-nan.Wu@mediatek.com/
+> Link: https://lore.kernel.org/oe-kbuild-all/202304082051.Dp50upfS-lkp@intel.com/
+> Link: https://lore.kernel.org/oe-kbuild-all/202304081615.eiaqpbV8-lkp@intel.com/
+> 
+> Cc: stable@vger.kernel.org
+> Cc: npiggin@gmail.com
+> Fixes: b23d7a5f4a07 ("ring-buffer: speed up buffer resets by avoiding synchronize_rcu for each CPU")
+> Reported-by: kernel test robot <lkp@intel.com>
+> Reviewed-by: Cheng-Jui Wang <cheng-jui.wang@mediatek.com>
+> Signed-off-by: Tze-nan Wu <Tze-nan.Wu@mediatek.com>
+> ---
 
-Mark.
+This is where the "Changes from" go. And since this patch is not suppose to
+be a Cc. But since it's still good to have a link to it. You could do:
 
-> Thanks to the ftrace refactoring under that tag, an ftrace_ops backing a ftrace
-> direct call will only ever point to *one* direct call. This means we can look up
-> the direct called trampoline address stored in the ops from the ftrace_caller
-> trampoline in the case when the destination would be out of reach of a BL
-> instruction at the ftrace callsite. This fixes limitations of previous attempts
-> such as [2].
+Changes from v2 to v3: https://lore.kernel.org/linux-trace-kernel/20230409024616.31099-1-Tze-nan.Wu@mediatek.com/
+  Considering holding cpu_hotplug_lock too long because of the
+  synchronize_rcu(), maybe it's better to prevent the issue by copying
+  cpu_online_mask at the entry of the function as V1 does, instead of
+  using cpus_read_lock().
+
+
+Where the previous version changes has the lore link to the previous patch,
+in case someone wants to look at it.
+
+
+>  kernel/trace/ring_buffer.c | 14 +++++++++-----
+>  1 file changed, 9 insertions(+), 5 deletions(-)
 > 
-> This series has been tested on arm64 with:
-> 1- CONFIG_FTRACE_SELFTEST
-> 2- samples/ftrace/*.ko (cf: patch 4)
-> 3- tools/testing/selftests/bpf/test_progs (cf: patch 5)
-> 
-> Changes since v5 [3]:
-> - Fixed saving the fourth argument of handle_mm_fault in both the x86 (patch 3)
->   and arm64 (as part of patch 4) "ftrace-direct-too" sample trampolines
-> - Fixed the address of the traced function logged by some direct call samples
->   (ftrace-direct-multi and ftrace-direct-multi-modify) by moving lr into x0
-> 
-> 1: https://lore.kernel.org/all/ZB2Nl7fzpHoq5V20@FVFF77S0Q05N/
-> 2: https://lore.kernel.org/all/20220913162732.163631-1-xukuohai@huaweicloud.com/
-> 3: https://lore.kernel.org/bpf/20230403113552.2857693-1-revest@chromium.org/
-> 
-> Florent Revest (5):
->   arm64: ftrace: Add direct call support
->   arm64: ftrace: Simplify get_ftrace_plt
->   samples: ftrace: Save required argument registers in sample
->     trampolines
->   arm64: ftrace: Add direct call trampoline samples support
->   selftests/bpf: Update the tests deny list on aarch64
-> 
->  arch/arm64/Kconfig                           |  6 ++
->  arch/arm64/include/asm/ftrace.h              | 22 +++++
->  arch/arm64/kernel/asm-offsets.c              |  6 ++
->  arch/arm64/kernel/entry-ftrace.S             | 90 ++++++++++++++++----
->  arch/arm64/kernel/ftrace.c                   | 46 +++++++---
->  samples/ftrace/ftrace-direct-modify.c        | 34 ++++++++
->  samples/ftrace/ftrace-direct-multi-modify.c  | 40 +++++++++
->  samples/ftrace/ftrace-direct-multi.c         | 24 ++++++
->  samples/ftrace/ftrace-direct-too.c           | 40 +++++++--
->  samples/ftrace/ftrace-direct.c               | 24 ++++++
->  tools/testing/selftests/bpf/DENYLIST.aarch64 | 82 ++----------------
->  11 files changed, 306 insertions(+), 108 deletions(-)
-> 
-> -- 
-> 2.40.0.577.gac1e443424-goog
-> 
+> diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
+> index 76a2d91eecad..dc758930dacb 100644
+> --- a/kernel/trace/ring_buffer.c
+> +++ b/kernel/trace/ring_buffer.c
+> @@ -288,9 +288,6 @@ EXPORT_SYMBOL_GPL(ring_buffer_event_data);
+>  #define for_each_buffer_cpu(buffer, cpu)		\
+>  	for_each_cpu(cpu, buffer->cpumask)
+>  
+> -#define for_each_online_buffer_cpu(buffer, cpu)		\
+> -	for_each_cpu_and(cpu, buffer->cpumask, cpu_online_mask)
+> -
+>  #define TS_SHIFT	27
+>  #define TS_MASK		((1ULL << TS_SHIFT) - 1)
+>  #define TS_DELTA_TEST	(~TS_MASK)
+> @@ -5353,12 +5350,19 @@ EXPORT_SYMBOL_GPL(ring_buffer_reset_cpu);
+>  void ring_buffer_reset_online_cpus(struct trace_buffer *buffer)
+>  {
+>  	struct ring_buffer_per_cpu *cpu_buffer;
+> +	cpumask_t reset_online_cpumask;
+
+It's usually considered bad form to put a cpumask on the stack. As it can
+be 128 bytes for a machine with 1024 CPUs (and yes they do exist). Also,
+the mask size is set to NR_CPUS not the actual size, so you do not even
+need to have it that big.
+
+
+>  	int cpu;
+>  
+> +	/*
+> +	 * Record cpu_online_mask here to make sure we iterate through the same
+> +	 * online CPUs in the following two loops.
+> +	 */
+> +	cpumask_copy(&reset_online_cpumask, cpu_online_mask);
+> +
+>  	/* prevent another thread from changing buffer sizes */
+>  	mutex_lock(&buffer->mutex);
+>  
+> -	for_each_online_buffer_cpu(buffer, cpu) {
+> +	for_each_cpu_and(cpu, buffer->cpumask, &reset_online_cpumask) {
+>  		cpu_buffer = buffer->buffers[cpu];
+>  
+>  		atomic_inc(&cpu_buffer->resize_disabled);
+
+Anyway, we don't need to modify any of the above, and just do the following
+instead of atomic_inc():
+
+#define RESET_BIT	(1 << 30)
+
+		atomic_add(&cpu_buffer->resize_disabled, RESET_BIT);
+
+
+> @@ -5368,7 +5372,7 @@ void ring_buffer_reset_online_cpus(struct trace_buffer *buffer)
+>  	/* Make sure all commits have finished */
+>  	synchronize_rcu();
+>  
+> -	for_each_online_buffer_cpu(buffer, cpu) {
+> +	for_each_cpu_and(cpu, buffer->cpumask, &reset_online_cpumask) {
+>  		cpu_buffer = buffer->buffers[cpu];
+
+Then here we can do:
+
+		/*
+		 * If a CPU came online during the synchronize_rcu(), then
+		 * ignore it.
+		 */
+		if (!atomic_read(&cpu_buffer->resize_disabled) & RESET_BIT))
+			continue;
+
+		atomic_sub(&cpu_buffer->resize_disabled, RESET_BIT);
+
+
+As the resize_disabled only needs to be set to something to make it
+disabled.
+
+-- Steve
+
+>  
+>  		reset_disabled_cpu_buffer(cpu_buffer);
+
