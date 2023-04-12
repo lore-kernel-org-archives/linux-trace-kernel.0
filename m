@@ -2,83 +2,147 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 50750C77B6E
-	for <linux-trace-kernel@archiver.kernel.org>; Wed, 12 Apr 2023 10:26:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 05BCDC77B71
+	for <linux-trace-kernel@archiver.kernel.org>; Wed, 12 Apr 2023 11:25:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229821AbjDLK0K (ORCPT
+        id S230094AbjDLLZN (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Wed, 12 Apr 2023 06:26:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38740 "EHLO
+        Wed, 12 Apr 2023 07:25:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52090 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229873AbjDLK0I (ORCPT
+        with ESMTP id S230294AbjDLLYw (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Wed, 12 Apr 2023 06:26:08 -0400
-X-Greylist: delayed 397 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Wed, 12 Apr 2023 03:26:04 PDT
-Received: from cstnet.cn (smtp25.cstnet.cn [159.226.251.25])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 3E468184;
-        Wed, 12 Apr 2023 03:26:04 -0700 (PDT)
-Received: from localhost.localdomain (unknown [124.16.141.245])
-        by APP-05 (Coremail) with SMTP id zQCowADHzMylhTZkxMRvEQ--.61397S2;
-        Wed, 12 Apr 2023 18:19:17 +0800 (CST)
-From:   sunying@nj.iscas.ac.cn
-To:     rostedt@goodmis.org, mhiramat@kernel.org
-Cc:     linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
-        Ying Sun <sunying@nj.iscas.ac.cn>
-Subject: [PATCH] trace/recordmcount: add the necessary dependencies
-Date:   Wed, 12 Apr 2023 18:18:40 +0800
-Message-Id: <20230412101840.13601-1-sunying@nj.iscas.ac.cn>
-X-Mailer: git-send-email 2.17.1
+        Wed, 12 Apr 2023 07:24:52 -0400
+Received: from mailgw02.mediatek.com (unknown [210.61.82.184])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0596740F2;
+        Wed, 12 Apr 2023 04:24:27 -0700 (PDT)
+X-UUID: 8c6c1186d92411edb6b9f13eb10bd0fe-20230412
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Type:MIME-Version:Message-ID:Date:Subject:CC:To:From; bh=QP7sQjwZzKXI0b464YWLSZqML8grLgd1UX3dg7K3rSA=;
+        b=QgezrJLGrXlXX/1TvSBmalnHr1z23JCPcE6nXNPDzDumPGVvmBymdwaX/VY3FHSV1XDXcQ58DfyjfdqVQFBzKaV5jYdkdPfK/vNTEasXbZaxTNvUndgxiRjVVJNq0n2xZG/Iv1BVqCGRLc0xEvw44nE09OIZmDVcrl1wMpBlK98=;
+X-CID-P-RULE: Release_Ham
+X-CID-O-INFO: VERSION:1.1.22,REQID:228adf8c-7605-4685-83d6-6ad6e972d08f,IP:0,U
+        RL:0,TC:0,Content:-25,EDM:0,RT:0,SF:95,FILE:0,BULK:0,RULE:Release_Ham,ACTI
+        ON:release,TS:70
+X-CID-INFO: VERSION:1.1.22,REQID:228adf8c-7605-4685-83d6-6ad6e972d08f,IP:0,URL
+        :0,TC:0,Content:-25,EDM:0,RT:0,SF:95,FILE:0,BULK:0,RULE:Spam_GS981B3D,ACTI
+        ON:quarantine,TS:70
+X-CID-META: VersionHash:120426c,CLOUDID:84f2b9ea-db6f-41fe-8b83-13fe7ed1ef52,B
+        ulkID:2304121924148FJCQDB8,BulkQuantity:0,Recheck:0,SF:38|29|28|17|19|48,T
+        C:nil,Content:0,EDM:-3,IP:nil,URL:11|1,File:nil,Bulk:nil,QS:nil,BEC:nil,CO
+        L:0,OSI:0,OSA:0,AV:0
+X-CID-BVR: 0
+X-CID-BAS: 0,_,0,_
+X-UUID: 8c6c1186d92411edb6b9f13eb10bd0fe-20230412
+Received: from mtkmbs10n1.mediatek.inc [(172.21.101.34)] by mailgw02.mediatek.com
+        (envelope-from <tze-nan.wu@mediatek.com>)
+        (Generic MTA with TLSv1.2 ECDHE-RSA-AES256-GCM-SHA384 256/256)
+        with ESMTP id 1256624878; Wed, 12 Apr 2023 19:24:11 +0800
+Received: from mtkmbs13n2.mediatek.inc (172.21.101.108) by
+ mtkmbs10n2.mediatek.inc (172.21.101.183) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1118.25; Wed, 12 Apr 2023 19:24:10 +0800
+Received: from mtksdccf07.mediatek.inc (172.21.84.99) by
+ mtkmbs13n2.mediatek.inc (172.21.101.73) with Microsoft SMTP Server id
+ 15.2.1118.25 via Frontend Transport; Wed, 12 Apr 2023 19:24:10 +0800
+From:   Tze-nan Wu <Tze-nan.Wu@mediatek.com>
+To:     <rostedt@goodmis.org>, <mhiramat@kernel.org>
+CC:     <bobule.chang@mediatek.com>, <wsd_upstream@mediatek.com>,
+        <Tze-nan.Wu@mediatek.com>, <cheng-jui.wang@mediatek.com>,
+        <npiggin@gmail.com>, <stable@vger.kernel.org>,
+        AngeloGioacchino Del Regno 
+        <angelogioacchino.delregno@collabora.com>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-trace-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-mediatek@lists.infradead.org>
+Subject: [PATCH v4] ring-buffer: Ensure proper resetting of atomic variables in ring_buffer_reset_online_cpus
+Date:   Wed, 12 Apr 2023 19:23:56 +0800
+Message-ID: <20230412112401.25081-1-Tze-nan.Wu@mediatek.com>
+X-Mailer: git-send-email 2.18.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID: zQCowADHzMylhTZkxMRvEQ--.61397S2
-X-Coremail-Antispam: 1UD129KBjvdXoW7Xw1xuw43tF45urWDJw47Jwb_yoW3uwc_X3
-        y8W3W8Gr4DZryv9rWUWFs3uF1aqaykXFWvka4UtrZrJw1DKr13G3Z8JFn8JrZrG3sxuF13
-        ZrWfXrs3tF1fujkaLaAFLSUrUUUUjb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
-        9fnUUIcSsGvfJTRUUUbIkFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2IYs7xG
-        6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8w
-        A2z4x0Y4vE2Ix0cI8IcVAFwI0_Jr0_JF4l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Jr0_
-        Gr1l84ACjcxK6I8E87Iv67AKxVWxJVW8Jr1l84ACjcxK6I8E87Iv6xkF7I0E14v26r4j6r
-        4UJwAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0
-        I7IYx2IY67AKxVWUGVWUXwAv7VC2z280aVAFwI0_Gr1j6F4UJwAm72CE4IkC6x0Yz7v_Jr
-        0_Gr1lF7xvr2IYc2Ij64vIr41lF7I21c0EjII2zVCS5cI20VAGYxC7M4kE6xkIj40Ew7xC
-        0wCY02Avz4vE14v_Gw1l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2
-        IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v2
-        6r126r1DMIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2
-        IY6xkF7I0E14v26r1j6r4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv
-        67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r1j6r4UYxBIdaVFxhVjvjDU0xZFpf
-        9x0JUdb1nUUUUU=
-X-Originating-IP: [124.16.141.245]
-X-CM-SenderInfo: 5vxq5xdqj60y4olvutnvoduhdfq/
+Content-Type: text/plain
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-From: Ying Sun <sunying@nj.iscas.ac.cn>
+In ring_buffer_reset_online_cpus, the buffer_size_kb write operation
+may permanently fail if the cpu_online_mask changes between two
+for_each_online_buffer_cpu loops. The number of increases and decreases
+on both cpu_buffer->resize_disabled and cpu_buffer->record_disabled may be
+inconsistent, causing some CPUs to have non-zero values for these atomic
+variables after the function returns.
 
-HAVE_C_RECORDMCOUNT is used only if the condition
-"ifdef CONFIG_FTRACE_MCOUNT_USE_RECORDMCOUNT" is met in the Makefile,
-adding a dependency constraint on this configuration option
- to prevent it from being set ‘y' but not taking effect.
+This issue can be reproduced by "echo 0 > trace" while hotplugging cpu.
+After reproducing success, we can find out buffer_size_kb will not be
+functional anymore.
 
-Suggested-by: Yanjie Ren <renyanjie01@gmail.com>
-Signed-off-by: Ying Sun <sunying@nj.iscas.ac.cn>
+To prevent leaving 'resize_disabled' and 'record_disabled' non-zero after
+ring_buffer_reset_online_cpus returns, we ensure that each atomic variable
+has been set up before atomic_sub() to it.
+
+Cc: stable@vger.kernel.org
+Cc: npiggin@gmail.com
+Fixes: b23d7a5f4a07 ("ring-buffer: speed up buffer resets by avoiding synchronize_rcu for each CPU")
+Reviewed-by: Cheng-Jui Wang <cheng-jui.wang@mediatek.com>
+Signed-off-by: Tze-nan Wu <Tze-nan.Wu@mediatek.com>
 ---
- kernel/trace/Kconfig | 1 +
- 1 file changed, 1 insertion(+)
+Changes from v1 to v3: https://lore.kernel.org/all/20230408052226.25268-1-Tze-nan.Wu@mediatek.com/
+  - Declare the cpumask variable statically rather than dynamically.
 
-diff --git a/kernel/trace/Kconfig b/kernel/trace/Kconfig
-index 8cf97fa4a4b3..69bb70b6bdd7 100644
---- a/kernel/trace/Kconfig
-+++ b/kernel/trace/Kconfig
-@@ -94,6 +94,7 @@ config HAVE_OBJTOOL_NOP_MCOUNT
+Changes from v2 to v3: https://lore.kernel.org/all/20230409024616.31099-1-Tze-nan.Wu@mediatek.com/
+  - Considering holding cpu_hotplug_lock too long because of the
+    synchronize_rcu(), maybe it's better to prevent the issue by copying
+    cpu_online_mask at the entry of the function as V1 does, instead of
+    using cpus_read_lock().
+
+Changes from v3 to v4: https://lore.kernel.org/all/20230410073512.13362-1-Tze-nan.Wu@mediatek.com/
+  - Considering that the size of cpumask may not be too big on some machines
+    We no longer adopt the approach of copying cpumask at the beginning of
+    the function. Instead, we ensure that atomic variables have been set up
+    before atomic_sub() is called.
+  - Change the title of the patch.
+---
+ kernel/trace/ring_buffer.c | 14 +++++++++++---
+ 1 file changed, 11 insertions(+), 3 deletions(-)
+
+diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
+index 76a2d91eecad..8c647d8b5bb4 100644
+--- a/kernel/trace/ring_buffer.c
++++ b/kernel/trace/ring_buffer.c
+@@ -5361,20 +5361,28 @@ void ring_buffer_reset_online_cpus(struct trace_buffer *buffer)
+ 	for_each_online_buffer_cpu(buffer, cpu) {
+ 		cpu_buffer = buffer->buffers[cpu];
  
- config HAVE_C_RECORDMCOUNT
- 	bool
-+	depends on FTRACE_MCOUNT_USE_RECORDMCOUNT
- 	help
- 	  C version of recordmcount available?
+-		atomic_inc(&cpu_buffer->resize_disabled);
++#define RESET_BIT	(1 << 30)
++		atomic_add(RESET_BIT, &cpu_buffer->resize_disabled);
+ 		atomic_inc(&cpu_buffer->record_disabled);
+ 	}
  
+ 	/* Make sure all commits have finished */
+ 	synchronize_rcu();
+ 
+-	for_each_online_buffer_cpu(buffer, cpu) {
++	for_each_buffer_cpu(buffer, cpu) {
+ 		cpu_buffer = buffer->buffers[cpu];
+ 
++		/*
++		 * If a CPU came online during the synchronize_rcu(), then
++		 * ignore it.
++		 */
++		if (!(atomic_read(&cpu_buffer->resize_disabled) & RESET_BIT))
++			continue;
++
+ 		reset_disabled_cpu_buffer(cpu_buffer);
+ 
+ 		atomic_dec(&cpu_buffer->record_disabled);
+-		atomic_dec(&cpu_buffer->resize_disabled);
++		atomic_sub(RESET_BIT, &cpu_buffer->resize_disabled);
+ 	}
+ 
+ 	mutex_unlock(&buffer->mutex);
 -- 
-2.25.1
+2.18.0
 
