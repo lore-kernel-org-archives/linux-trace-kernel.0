@@ -2,153 +2,91 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 73DA1C77B6E
-	for <linux-trace-kernel@archiver.kernel.org>; Wed, 12 Apr 2023 14:38:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 98ED3C77B6F
+	for <linux-trace-kernel@archiver.kernel.org>; Wed, 12 Apr 2023 18:38:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231721AbjDLOiP (ORCPT
+        id S230176AbjDLSit (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Wed, 12 Apr 2023 10:38:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38522 "EHLO
+        Wed, 12 Apr 2023 14:38:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48738 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230170AbjDLOiA (ORCPT
+        with ESMTP id S230260AbjDLSia (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Wed, 12 Apr 2023 10:38:00 -0400
-Received: from mail-qk1-x72e.google.com (mail-qk1-x72e.google.com [IPv6:2607:f8b0:4864:20::72e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BCD3893CD;
-        Wed, 12 Apr 2023 07:37:44 -0700 (PDT)
-Received: by mail-qk1-x72e.google.com with SMTP id ay7so10933736qkb.6;
-        Wed, 12 Apr 2023 07:37:44 -0700 (PDT)
+        Wed, 12 Apr 2023 14:38:30 -0400
+Received: from mail-pj1-x1029.google.com (mail-pj1-x1029.google.com [IPv6:2607:f8b0:4864:20::1029])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1217230E5;
+        Wed, 12 Apr 2023 11:37:45 -0700 (PDT)
+Received: by mail-pj1-x1029.google.com with SMTP id j8so10920566pjy.4;
+        Wed, 12 Apr 2023 11:37:45 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1681310263; x=1683902263;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=b09CrhD67oV9Nc91i6UQuqChgusxN1E7ggWKfvHWW5E=;
-        b=WrjlJ5j31NPotp7JiePq/XbNUAJIcRBrvGr/2oGw6GCqLHlOWRwksUVEBbMONhiijp
-         cpDUiFivtC5NO4+1BZp78+QUQGXDIh+6RMs7Zzjvnq92fttFuCeFqa+eBboz3YPwSTZU
-         FTfKxepiJuHRHxDtX1Q46fsi4Zjimlbb7rDNL/1+b10XJqzEI6JHxCYZL1E+5llyVrlN
-         ySnqORQikS93EjvpmtQ4iEm574NHbRZZVXRXYOmytGDx3OKzLQtg4EIehAkYhHCxq6fC
-         qVL0gzKa9aUbyzRQIICp0yPu4j4KuFqr84uAN9bCVyIafEyns7Bl4S7QzVRjQISsMXEa
-         E+Sg==
+        d=gmail.com; s=20221208; t=1681324664; x=1683916664;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=l1XECP8wQGmDTAyM5631GbSa3D6PGwx6DxzWPpofMRU=;
+        b=C3eItOqtkLxgsOp+Tp65SbnO8LqInhzF9vSwarsWOUXRY+YIvmlljgxRS/MtqfKMVe
+         YKAH1NwIfJVHnB/i/i+3aS3Fn6F+cx8JzaFIAOFrW5GoegvrBUst6nz+RXx35yk5Sgt5
+         iet1kFIBAlLEPNbIEwuH1Z6GdACz0uxS4VMq7l/N4rGAgyGW3+00nH+jWdj/ZyNJHqBT
+         1M+tmuzK246KI8uRqEVDqQK19GXujPFF+kU6a2C8+WncdFjfLNv3velvfFWY82WVJHU2
+         jjl4oH5Tbd0f/JQ8tPCXMvVh4zk0KqMVbNPAa8vklfV6MTYF7uLANaIhJzZkyFPl0fMw
+         ga3A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112; t=1681310263; x=1683902263;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=b09CrhD67oV9Nc91i6UQuqChgusxN1E7ggWKfvHWW5E=;
-        b=DF+Cn6pIjfyMo6HrUh/WAdVXonJQ7oCkrf6lwdte4ACovJk1Ugm7ss8n5RbqdowzOK
-         s6Lnc9EbRmJuTQRkttoNFO8ZBvNPm/9Aijf+4ArY0f9+ptSVjjoDl1Ai17LDU6KKb/Sl
-         BUWf/95Z5VYwVhIepU4oo2kAYjB87/nr3m7zLc9BtCUum38ibe1sCkaKa1oF+Zcf14Ap
-         omSZx/vNCClFiREs6dQRX1A8GToKw2jvDGBC6FQq5fIvD1fsFmEjyNGc4GarvTTIMun9
-         Uu1xfhRT6U07ZvWTHSf1s2tbATJfVxUnzAJMjYizo7RCNwIvwp4Xy3G0G9cJdXzsADDz
-         1Lbg==
-X-Gm-Message-State: AAQBX9fvy9dbtKvx6pLteZOS8hfPwuG5EJbU3iqf8m6eAlY4K/2iNT8p
-        M/RqFO67rkm0oGHCD63kf5Z1mGTpjZ11BKLJkZQ=
-X-Google-Smtp-Source: AKy350bh83dXX/NNxSuzJvoGWlVf21/bwGqVgqgxZO35fqxfRMpj+2VelWyXcycwSOt3Cpf2es/qYnSlvpjdZcIbYlM=
-X-Received: by 2002:a05:620a:1918:b0:743:9b78:d97e with SMTP id
- bj24-20020a05620a191800b007439b78d97emr6062195qkb.14.1681310263035; Wed, 12
- Apr 2023 07:37:43 -0700 (PDT)
+        d=1e100.net; s=20221208; t=1681324664; x=1683916664;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=l1XECP8wQGmDTAyM5631GbSa3D6PGwx6DxzWPpofMRU=;
+        b=U74KpVvIhaRE3o/HeXmhTxfEakqVdO6T7t/w6I3TJ+bhycJUMJ8FhcdBvf0MbMjOXt
+         WbNv+JmUfc9DcSD6/bJcVOQHlNgnKpdZRmOJqY9rhct3JwpvHTyfFWP0kWh4e+7ieaVI
+         IM2wNMe8bEca/p15LIp5HRERmB01OT0hTnGhvWAR5q3VCrESYclnFLGiX6sw8c/+s3aD
+         cJjxXFtYWDrf561qmYOW0xD7QsvqCrxjMHWACy3GiogBOuS8UsUS2Kcqsj5aJLfARv52
+         XN3md8wk26OsSxfUv4HJ4lMkQEKIHwmljWE0NcvuEAoX8e2uf4idnU/Uv+gtPtMbOCGF
+         kwSw==
+X-Gm-Message-State: AAQBX9ej3jzkwaRnzbkQznuIl1anrA8FCNsN2J6qDLuFv4nTYdUWncRM
+        C411GbINdcAonmDKMnS0Elw=
+X-Google-Smtp-Source: AKy350bBBZ0QYRKRh2qu1ggHSIBgOofz7rkL37srMW6LcxOvnaYjKyjoeqbGRZYyGwYwZfoLPpGE4A==
+X-Received: by 2002:a17:90a:b004:b0:246:fdcc:f84c with SMTP id x4-20020a17090ab00400b00246fdccf84cmr148220pjq.35.1681324664310;
+        Wed, 12 Apr 2023 11:37:44 -0700 (PDT)
+Received: from ubuntu.localdomain (36-229-229-178.dynamic-ip.hinet.net. [36.229.229.178])
+        by smtp.gmail.com with ESMTPSA id m9-20020a17090a5a4900b00246ea338c96sm1724272pji.53.2023.04.12.11.37.42
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 12 Apr 2023 11:37:44 -0700 (PDT)
+From:   Lin Yu Chen <starpt.official@gmail.com>
+To:     corbet@lwn.net
+Cc:     rostedt@goodmis.org, mhiramat@kernel.org, mark.rutland@arm.com,
+        linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+        linux-doc@vger.kernel.org, Lin Yu Chen <starpt.official@gmail.com>
+Subject: [PATCH] docs: trace: Fix typo in ftrace.rst
+Date:   Wed, 12 Apr 2023 11:37:39 -0700
+Message-Id: <20230412183739.89894-1-starpt.official@gmail.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-References: <20230409075515.2504db78@rorschach.local.home> <CALOAHbBALsJrkO-tPKoEtrdm42fLnRoYs-46tz0J7yDwrxC0Tg@mail.gmail.com>
- <20230409225414.2b66610f4145ade7b09339bb@kernel.org> <CALOAHbBQFSm=rXvzJJnOqrK04f9j1opbgRoYKwSUAd5g64r-jA@mail.gmail.com>
- <20230409220239.0fcf6738@rorschach.local.home> <CALOAHbC5UvoU2EUM+YzNSaJyNNq_OOXYZYcqXu6nUfB0AyX0bA@mail.gmail.com>
- <20230410063046.391dd2bd@rorschach.local.home> <CALOAHbCXgksmdYRRxrjVrW1-AWiTr1u24yJAdh2+0ou15vvKiA@mail.gmail.com>
- <20230410101224.7e3b238c@gandalf.local.home> <CALOAHbBQgPqhBhOVukWG9FNL23m3EOFm1QN6+pi5SN8cP2ztBw@mail.gmail.com>
- <ZDSBD6UvUdA73TSv@krava>
-In-Reply-To: <ZDSBD6UvUdA73TSv@krava>
-From:   Yafang Shao <laoar.shao@gmail.com>
-Date:   Wed, 12 Apr 2023 22:37:07 +0800
-Message-ID: <CALOAHbACzCwu-VeMczEJw8A4WFgkL-uQDS1NkcVR2pqEMZyAQQ@mail.gmail.com>
-Subject: Re: [PATCH] tracing: Refuse fprobe if RCU is not watching
-To:     Jiri Olsa <olsajiri@gmail.com>
-Cc:     Steven Rostedt <rostedt@goodmis.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        alexei.starovoitov@gmail.com, linux-trace-kernel@vger.kernel.org,
-        bpf@vger.kernel.org, Andrii Nakryiko <andrii.nakryiko@gmail.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Josh Poimboeuf <jpoimboe@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On Tue, Apr 11, 2023 at 5:35=E2=80=AFAM Jiri Olsa <olsajiri@gmail.com> wrot=
-e:
->
-> On Mon, Apr 10, 2023 at 10:20:31PM +0800, Yafang Shao wrote:
-> > On Mon, Apr 10, 2023 at 10:12=E2=80=AFPM Steven Rostedt <rostedt@goodmi=
-s.org> wrote:
-> > >
-> > > On Mon, 10 Apr 2023 21:56:16 +0800
-> > > Yafang Shao <laoar.shao@gmail.com> wrote:
-> > >
-> > > > Thanks for your explanation again.
-> > > > BPF trampoline is a little special. It includes three parts, as fol=
-lows,
-> > > >
-> > > >     ret =3D __bpf_prog_enter();
-> > > >     if (ret)
-> > > >         prog->bpf_func();
-> > > >      __bpf_prog_exit();
-> > > >
-> > > > migrate_disable() is called in __bpf_prog_enter() and migrate_enabl=
-e()
-> > > > in __bpf_prog_exit():
-> > > >
-> > > >     ret =3D __bpf_prog_enter();
-> > > >                 migrate_disable();
-> > > >     if (ret)
-> > > >         prog->bpf_func();
-> > > >      __bpf_prog_exit();
-> > > >           migrate_enable();
-> > > >
-> > > > That said, if we haven't executed migrate_disable() in
-> > > > __bpf_prog_enter(), we shouldn't execute migrate_enable() in
-> > > > __bpf_prog_exit().
-> > > > Can ftrace_test_recursion_trylock() be applied to this pattern ?
-> > >
-> > > Yes, it can! And in this you would need to not call migrate_enable()
-> > > because if the trace_recursion_trylock() failed, it would prevent
-> > > migrate_disable() from being called (and should not let the bpf_func(=
-) from
-> > > being called either. And then the migrate_enable in __bpf_prog_exit()=
- would
-> > > need to know not to call migrate_enable() which checking the return v=
-alue
-> > > of ftrace_test_recursion_trylock() would give the same value as what =
-the
-> > > one before migrate_disable() had.
-> > >
-> >
-> > That needs some changes in invoke_bpf_prog() in files
-> > arch/${ARCH}/net/bpf_jit_comp.c.
-> > But I will have a try. We can then remove the bpf_prog->active, that
-> > will be a good cleanup as well.
->
-> I was wondering if it's worth the effort to do that just to be able to at=
-tach
-> bpf prog to preempt_count_add/sub and was going to suggest to add them to
-> btf_id_deny as Steven pointed out earlier as possible solution
->
-> but if that might turn out as alternative to prog->active, that'd be grea=
-t
->
+There is a typo in the sentence "A kernel developer must be
+conscience ...". The word conscience should be conscious.
+This patch fixes it.
 
-I think we can do it in two steps,
-1. Fix this crash by adding preempt_count_{sub,add} into btf_id deny list.
-   The stable kernel may need this fix, so we'd better make it
-simpler, then it can be backported easily.
+Signed-off-by: Lin Yu Chen <starpt.official@gmail.com>
+---
+ Documentation/trace/ftrace.rst | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-2. Replace prog->active with the new
-test_recursion_try_{acquire,release} introduced by Steven
-   That's an improvement. We can do it in a separate patchset.
+diff --git a/Documentation/trace/ftrace.rst b/Documentation/trace/ftrace.rst
+index b927fb2b94dc..e8bca5fea7cc 100644
+--- a/Documentation/trace/ftrace.rst
++++ b/Documentation/trace/ftrace.rst
+@@ -3510,7 +3510,7 @@ directories, the rmdir will fail with EBUSY.
+ Stack trace
+ -----------
+ Since the kernel has a fixed sized stack, it is important not to
+-waste it in functions. A kernel developer must be conscience of
++waste it in functions. A kernel developer must be conscious of
+ what they allocate on the stack. If they add too much, the system
+ can be in danger of a stack overflow, and corruption will occur,
+ usually leading to a system panic.
+-- 
+2.25.1
 
-WDYT?
-
-BTW, maybe we need to add a new fentry test case to attach all
-available FUNCs parsed from /sys/kernel/btf/vmlinux.
-
---=20
-Regards
-Yafang
