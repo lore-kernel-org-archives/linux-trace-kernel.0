@@ -2,37 +2,37 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DA026C77B6C
-	for <linux-trace-kernel@archiver.kernel.org>; Thu, 13 Apr 2023 02:37:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D2ACEC77B6C
+	for <linux-trace-kernel@archiver.kernel.org>; Thu, 13 Apr 2023 02:39:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230034AbjDMCha (ORCPT
+        id S230156AbjDMCj2 (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Wed, 12 Apr 2023 22:37:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35616 "EHLO
+        Wed, 12 Apr 2023 22:39:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35626 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230033AbjDMCgz (ORCPT
+        with ESMTP id S230255AbjDMCix (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Wed, 12 Apr 2023 22:36:55 -0400
+        Wed, 12 Apr 2023 22:38:53 -0400
 Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9A3BF8694;
-        Wed, 12 Apr 2023 19:36:42 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C95A09747;
+        Wed, 12 Apr 2023 19:37:41 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id A6A3D63A9E;
-        Thu, 13 Apr 2023 02:36:41 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 500D7C433D2;
-        Thu, 13 Apr 2023 02:36:40 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 31EDE63AB4;
+        Thu, 13 Apr 2023 02:37:23 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CE896C43444;
+        Thu, 13 Apr 2023 02:37:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1681353401;
-        bh=gN79EhcNFLINcoVlQfIFEdwOuICOjlDUvsnTfSNzw4M=;
+        s=k20201202; t=1681353442;
+        bh=fn4c/CDgIjRRQYF9Ditvwio+s6mP6kNR2b4a0KayenQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=r3IGcXAVKAyxLOydPddWwcrjI9RH9dSTrUuEm0G4JAM+9HqnhUN+IIwIYfPJcr2hA
-         ZVHCiQEBwglb2gKBi7C9uUvAL9HlbIooOdoPf79ykcNEKfsQxkaHSnoimKFRy4A9LK
-         cVSo7OL1CDWoHsa0Ap3HbEH+ePimlJ5Rv+S0t3UprD7TapRTTzeHjEYOEaAj9V1M8f
-         px6d02tjK+A3U4dbl2xVjgvVZpYNWi+5e77TL/Qp4RIq0UguWIWvLbmfflshAaXtlW
-         BVDBv7NG61Br4wiImZBa4+qT2UYjeyuUx6EkesEnTVytsB1MMqWaTN1SHicQ+1oOdu
-         4mahgzywd2/tw==
+        b=BRK6sLxybVxXIVUbfnK4HIErxF4z6kmcc4RXQ9Hr/FfbNnDrGQXefU4+lm8HnAOgH
+         tL27vSbjpkm1KawRPPCZSYOkh7YJ/u3SbF/SoF8gzKcqXtvljueqvlovcI91pemgED
+         JW7fSr+j97RbFJyeZFPNbzw1/IkSRKbYRBBK7i4U2XvIK2c210sOb2A65Zxb73Xme/
+         kOxYjaY5sK2YfQsTTTxurcESy3pVlvkRZOpKw4bWFHpX+5XHVd0kBG9BJl2TyFXNf/
+         pyRqvuRK+c6Jh7R9XX2Zsx9vXJoM7VwzdgpCWeZBBF0+qcxRrYcBPrC1dccM0WBgoR
+         UNhAxOL58X3sQ==
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     "Steven Rostedt (Google)" <rostedt@goodmis.org>,
@@ -40,12 +40,12 @@ Cc:     "Steven Rostedt (Google)" <rostedt@goodmis.org>,
         Masami Hiramatsu <mhiramat@kernel.org>,
         Sasha Levin <sashal@kernel.org>, vschneid@redhat.com,
         linux-trace-kernel@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.2 17/20] tracing: Error if a trace event has an array for a __field()
-Date:   Wed, 12 Apr 2023 22:35:55 -0400
-Message-Id: <20230413023601.74410-17-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 6.1 15/17] tracing: Error if a trace event has an array for a __field()
+Date:   Wed, 12 Apr 2023 22:36:43 -0400
+Message-Id: <20230413023647.74661-15-sashal@kernel.org>
 X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20230413023601.74410-1-sashal@kernel.org>
-References: <20230413023601.74410-1-sashal@kernel.org>
+In-Reply-To: <20230413023647.74661-1-sashal@kernel.org>
+References: <20230413023647.74661-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -91,7 +91,7 @@ Signed-off-by: Sasha Levin <sashal@kernel.org>
  1 file changed, 17 insertions(+), 4 deletions(-)
 
 diff --git a/include/trace/stages/stage5_get_offsets.h b/include/trace/stages/stage5_get_offsets.h
-index ac5c24d3beeb2..e30a13be46ba5 100644
+index fba4c24ed9e60..def36fbb8c5cd 100644
 --- a/include/trace/stages/stage5_get_offsets.h
 +++ b/include/trace/stages/stage5_get_offsets.h
 @@ -9,17 +9,30 @@
