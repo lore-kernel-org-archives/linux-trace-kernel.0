@@ -2,88 +2,133 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 856A5C77B6C
-	for <linux-trace-kernel@archiver.kernel.org>; Thu, 13 Apr 2023 02:19:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DA026C77B6C
+	for <linux-trace-kernel@archiver.kernel.org>; Thu, 13 Apr 2023 02:37:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229526AbjDMCTV (ORCPT
+        id S230034AbjDMCha (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Wed, 12 Apr 2023 22:19:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57540 "EHLO
+        Wed, 12 Apr 2023 22:37:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35616 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229878AbjDMCTU (ORCPT
+        with ESMTP id S230033AbjDMCgz (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Wed, 12 Apr 2023 22:19:20 -0400
-Received: from mail-pl1-x629.google.com (mail-pl1-x629.google.com [IPv6:2607:f8b0:4864:20::629])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3859F10FA;
-        Wed, 12 Apr 2023 19:19:19 -0700 (PDT)
-Received: by mail-pl1-x629.google.com with SMTP id kh6so11931855plb.0;
-        Wed, 12 Apr 2023 19:19:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1681352358;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=AoNmsypXyoGXGjxp2QCOVLgkPqEcooZxqGiyUVMKORY=;
-        b=rtdAp8pUT1xeg+sHdseeSi2PZY0w0SeedN1oAzlwW5ZUu/Fkk7aztNCQIC7GGRORFv
-         bsF6FJKfM5iHaAP7mGZ3+dnt1Hg4I5NkOf03Yfv2JfUAN5/eAHHkuvI0wBnH/Cl51H5i
-         inNYkFkw70g6f7DhVtyQ8LgvcShxD7gl5qfKiY/mEAVDOHF7hv91KM/UhfkJaU6jNuW/
-         Uu2WGdzqmZUMTkXbnAKo/u/Pq1TUNAYNTj6Z8t13eHtYIPCIsH8qf0zFhyxwkUJqv7Hu
-         v4hFWeO5/dOk7cW6B3qxtLq8f4cen3yHq+6RaGsafxB3h6ykTB4p4qVG4b7iFx5CHUPA
-         fw/A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1681352358;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=AoNmsypXyoGXGjxp2QCOVLgkPqEcooZxqGiyUVMKORY=;
-        b=SvkAHlo3yeXKYyWc/mzxJqOknlHU9ViHOTsjqMPVVohpLsQg4NA1ynGd01mSpWuLAu
-         TdF/KMRIr0Oy0tcJ7+6j3an7bCW9bcoFhPGd9TCaYIY72PsF2o834BUlf8EOP9i6mCvS
-         icDLEXlHI7SHsBbhiJWt+/Q0tHPfS0MbO1aqSPyqJgFMsPvVez6JASFNsyWfjqUmIo+x
-         gTEqKVBfIVsC8lNuEoOBR3yViEpmBI/U8mKonA4uDh4YwxsARMBOftdLu/yWbumFpOjU
-         mIlps342+2d9DmR1yv6P/qX10TT2Ovcl0TCdLdHRNS+wbiBGqZMBs9tYNAGxqh4YRzQx
-         yubQ==
-X-Gm-Message-State: AAQBX9etqyQVE/sdV0OVrLap2wivk1tVfvsa6d8u2nHTF109V3AzxdeZ
-        327QsJbnk/Py1sZIAo2UtHmF62hGpA+z4g==
-X-Google-Smtp-Source: AKy350YgBaYDqEgM2C+hmFCOpT123hc0nY43RIYnzC6A630tQkk4BC4RLyqpIAO9bCFs69jp7CRlAw==
-X-Received: by 2002:a17:902:d54a:b0:1a6:5fa2:aa50 with SMTP id z10-20020a170902d54a00b001a65fa2aa50mr597498plf.1.1681352358584;
-        Wed, 12 Apr 2023 19:19:18 -0700 (PDT)
-Received: from [192.168.43.80] (subs02-180-214-232-2.three.co.id. [180.214.232.2])
-        by smtp.gmail.com with ESMTPSA id j12-20020a170902c3cc00b0019edc1b9eb2sm235003plj.238.2023.04.12.19.19.15
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 12 Apr 2023 19:19:18 -0700 (PDT)
-Message-ID: <4b17c67c-4b3d-4326-37e7-949a08d03f55@gmail.com>
-Date:   Thu, 13 Apr 2023 09:19:12 +0700
+        Wed, 12 Apr 2023 22:36:55 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9A3BF8694;
+        Wed, 12 Apr 2023 19:36:42 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id A6A3D63A9E;
+        Thu, 13 Apr 2023 02:36:41 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 500D7C433D2;
+        Thu, 13 Apr 2023 02:36:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1681353401;
+        bh=gN79EhcNFLINcoVlQfIFEdwOuICOjlDUvsnTfSNzw4M=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=r3IGcXAVKAyxLOydPddWwcrjI9RH9dSTrUuEm0G4JAM+9HqnhUN+IIwIYfPJcr2hA
+         ZVHCiQEBwglb2gKBi7C9uUvAL9HlbIooOdoPf79ykcNEKfsQxkaHSnoimKFRy4A9LK
+         cVSo7OL1CDWoHsa0Ap3HbEH+ePimlJ5Rv+S0t3UprD7TapRTTzeHjEYOEaAj9V1M8f
+         px6d02tjK+A3U4dbl2xVjgvVZpYNWi+5e77TL/Qp4RIq0UguWIWvLbmfflshAaXtlW
+         BVDBv7NG61Br4wiImZBa4+qT2UYjeyuUx6EkesEnTVytsB1MMqWaTN1SHicQ+1oOdu
+         4mahgzywd2/tw==
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     "Steven Rostedt (Google)" <rostedt@goodmis.org>,
+        Douglas RAILLARD <douglas.raillard@arm.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Sasha Levin <sashal@kernel.org>, vschneid@redhat.com,
+        linux-trace-kernel@vger.kernel.org
+Subject: [PATCH AUTOSEL 6.2 17/20] tracing: Error if a trace event has an array for a __field()
+Date:   Wed, 12 Apr 2023 22:35:55 -0400
+Message-Id: <20230413023601.74410-17-sashal@kernel.org>
+X-Mailer: git-send-email 2.39.2
+In-Reply-To: <20230413023601.74410-1-sashal@kernel.org>
+References: <20230413023601.74410-1-sashal@kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.9.1
-Subject: Re: [PATCH] docs: trace: Fix typo in ftrace.rst
-To:     Lin Yu Chen <starpt.official@gmail.com>, corbet@lwn.net
-Cc:     rostedt@goodmis.org, mhiramat@kernel.org, mark.rutland@arm.com,
-        linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
-        linux-doc@vger.kernel.org
-References: <20230412183739.89894-1-starpt.official@gmail.com>
-Content-Language: en-US
-From:   Bagas Sanjaya <bagasdotme@gmail.com>
-In-Reply-To: <20230412183739.89894-1-starpt.official@gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On 4/13/23 01:37, Lin Yu Chen wrote:
-> There is a typo in the sentence "A kernel developer must be
-> conscience ...". The word conscience should be conscious.
-> This patch fixes it.
-> 
+From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
 
-Please don't say "This patch does foo".
+[ Upstream commit f82e7ca019dfad3b006fd3b772f7ac569672db55 ]
+
+A __field() in the TRACE_EVENT() macro is used to set up the fields of the
+trace event data. It is for single storage units (word, char, int,
+pointer, etc) and not for complex structures or arrays. Unfortunately,
+there's nothing preventing the build from accepting:
+
+    __field(int, arr[5]);
+
+from building. It will turn into a array value. This use to work fine, as
+the offset and size use to be determined by the macro using the field name,
+but things have changed and the offset and size are now determined by the
+type. So the above would only be size 4, and the next field will be
+located 4 bytes from it (instead of 20).
+
+The proper way to declare static arrays is to use the __array() macro.
+
+Instead of __field(int, arr[5]) it should be __array(int, arr, 5).
+
+Add some macro tricks to the building of a trace event from the
+TRACE_EVENT() macro such that __field(int, arr[5]) will fail to build. A
+comment by the failure will explain why the build failed.
+
+Link: https://lore.kernel.org/lkml/20230306122549.236561-1-douglas.raillard@arm.com/
+Link: https://lore.kernel.org/linux-trace-kernel/20230309221302.642e82d9@gandalf.local.home
+
+Reported-by: Douglas RAILLARD <douglas.raillard@arm.com>
+Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+Acked-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ include/trace/stages/stage5_get_offsets.h | 21 +++++++++++++++++----
+ 1 file changed, 17 insertions(+), 4 deletions(-)
+
+diff --git a/include/trace/stages/stage5_get_offsets.h b/include/trace/stages/stage5_get_offsets.h
+index ac5c24d3beeb2..e30a13be46ba5 100644
+--- a/include/trace/stages/stage5_get_offsets.h
++++ b/include/trace/stages/stage5_get_offsets.h
+@@ -9,17 +9,30 @@
+ #undef __entry
+ #define __entry entry
  
-> -waste it in functions. A kernel developer must be conscience of
-> +waste it in functions. A kernel developer must be conscious of
-
-Alternatively, what about "aware of"?
-
++/*
++ * Fields should never declare an array: i.e. __field(int, arr[5])
++ * If they do, it will cause issues in parsing and possibly corrupt the
++ * events. To prevent that from happening, test the sizeof() a fictitious
++ * type called "struct _test_no_array_##item" which will fail if "item"
++ * contains array elements (like "arr[5]").
++ *
++ * If you hit this, use __array(int, arr, 5) instead.
++ */
+ #undef __field
+-#define __field(type, item)
++#define __field(type, item)					\
++	{ (void)sizeof(struct _test_no_array_##item *); }
+ 
+ #undef __field_ext
+-#define __field_ext(type, item, filter_type)
++#define __field_ext(type, item, filter_type)			\
++	{ (void)sizeof(struct _test_no_array_##item *); }
+ 
+ #undef __field_struct
+-#define __field_struct(type, item)
++#define __field_struct(type, item)				\
++	{ (void)sizeof(struct _test_no_array_##item *); }
+ 
+ #undef __field_struct_ext
+-#define __field_struct_ext(type, item, filter_type)
++#define __field_struct_ext(type, item, filter_type)		\
++	{ (void)sizeof(struct _test_no_array_##item *); }
+ 
+ #undef __array
+ #define __array(type, item, len)
 -- 
-An old man doll... just what I always wanted! - Clara
+2.39.2
 
