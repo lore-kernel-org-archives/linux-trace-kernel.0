@@ -2,174 +2,369 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4639AC77B61
-	for <linux-trace-kernel@archiver.kernel.org>; Fri, 14 Apr 2023 01:17:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 842C1C77B61
+	for <linux-trace-kernel@archiver.kernel.org>; Fri, 14 Apr 2023 03:00:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229814AbjDNBRF (ORCPT
+        id S229663AbjDNDAj (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Thu, 13 Apr 2023 21:17:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45452 "EHLO
+        Thu, 13 Apr 2023 23:00:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36890 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229591AbjDNBRC (ORCPT
+        with ESMTP id S229446AbjDNDAi (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Thu, 13 Apr 2023 21:17:02 -0400
-Received: from mailgw01.mediatek.com (unknown [60.244.123.138])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2FA6040F1;
-        Thu, 13 Apr 2023 18:16:57 -0700 (PDT)
-X-UUID: 082b6cf2da6211eda9a90f0bb45854f4-20230414
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=MIME-Version:Content-Transfer-Encoding:Content-ID:Content-Type:In-Reply-To:References:Message-ID:Date:Subject:CC:To:From; bh=eRdwCz3aIdqjE+q0y5ipyd1eThbc9jPVN+D0Y9eiURA=;
-        b=TTmZmnqZ2iGPoHWikPL05YBaBo5ZwvQG+4Ca92qioLtERIudHa11RXU+e3twW2YbLsF9MrMEszVX4FHF1z/ja9VhwFGEUv/16zZir2u7v22mLL2uD9VFAcS2EIiVfWMdbEOxWMRV9axvlKs5tuAqugbWdlPPq71RVCNmHSkH1Nk=;
-X-CID-P-RULE: Release_Ham
-X-CID-O-INFO: VERSION:1.1.22,REQID:d74fc9c9-2297-4399-aa0a-5eaa8eae30df,IP:0,U
-        RL:0,TC:0,Content:0,EDM:0,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTION:
-        release,TS:0
-X-CID-META: VersionHash:120426c,CLOUDID:797e0084-cd9c-45f5-8134-710979e3df0e,B
-        ulkID:nil,BulkQuantity:0,Recheck:0,SF:102,TC:nil,Content:0,EDM:-3,IP:nil,U
-        RL:1,File:nil,Bulk:nil,QS:nil,BEC:nil,COL:0,OSI:0,OSA:0,AV:0
-X-CID-BVR: 0
-X-CID-BAS: 0,_,0,_
-X-UUID: 082b6cf2da6211eda9a90f0bb45854f4-20230414
-Received: from mtkmbs10n2.mediatek.inc [(172.21.101.183)] by mailgw01.mediatek.com
-        (envelope-from <tze-nan.wu@mediatek.com>)
-        (Generic MTA with TLSv1.2 ECDHE-RSA-AES256-GCM-SHA384 256/256)
-        with ESMTP id 705154530; Fri, 14 Apr 2023 09:16:49 +0800
-Received: from mtkmbs10n2.mediatek.inc (172.21.101.183) by
- mtkmbs13n1.mediatek.inc (172.21.101.193) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1118.25; Fri, 14 Apr 2023 09:16:49 +0800
-Received: from APC01-SG2-obe.outbound.protection.outlook.com (172.21.101.239)
- by mtkmbs10n2.mediatek.inc (172.21.101.183) with Microsoft SMTP Server id
- 15.2.1118.25 via Frontend Transport; Fri, 14 Apr 2023 09:16:49 +0800
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Yk1al80Em3DfB11Nos/eYJYrUA9FNIpfSFMYzzw94oBXb0KdT6bCA7n0m9We3iH1nZH/G4yXe6NHGRi8rWB9EDJZMSUBFSU6MoggjG2i1mJwqybMQB+pH7jedFpZLOgQBx69ZCTwuJTyJLteo3bZYLynop0hC4MqgCF+7h7XOoZZPjj/5AVjhKXuDQiGmIbXuR7qGoA947N4SOcu98DL5daR8g17YtRY49IxN519kcKqfY+s2PyAbhsVbdU5Q212JP/wd5xXsGXgieOfiaLqA9ZCg0X6Kgw68iV93v/3/++WN5fx2LWB0OAK9qKimLX0PkwXF0PUG6o8hzJzLuBVfw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=eRdwCz3aIdqjE+q0y5ipyd1eThbc9jPVN+D0Y9eiURA=;
- b=KR26pHIKzUyam1yONhwu1gMT/EHLtalC6Za6HU0z4ExiKsRcCUY7S0jkU5axUwT5zEzQGaDk6izUK6tmCfuoGf6fgMymCUBno/lhpvKbPUv7NqP+Tm/3aEXbFNGddDQJiDBWSiTprSkW7b8ZGBKo8eDCj2w314XURH5AJBdOfezpRseu/8BXP2UWuvP5QTdY/TCyQ5zVEFOSFDUmBoF2yHTqKhXdLl71rjXVOCip0spJbfou9tiq5e5DnwDUayrWFxAqkwKZiBIBqIQvgtMI8gvccm4COtRJ6LWc8eYEyEb5nh01UzyQ6T06L9HlA+u7vVsx1cLpiaWTBYC19PijmA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=mediatek.com; dmarc=pass action=none header.from=mediatek.com;
- dkim=pass header.d=mediatek.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=mediateko365.onmicrosoft.com; s=selector2-mediateko365-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=eRdwCz3aIdqjE+q0y5ipyd1eThbc9jPVN+D0Y9eiURA=;
- b=b9rYjhHinIKJc2MDxYyBm72ZfsXrNSVX9uXjBsze3BCuiYHNYcfgCWtO99AiLPUk5mw+KZW4lBnrnX/5oQh5lrv4ufqH/FIpa1Pexs/S+0AL9ypj3mZPa9RPYPQCtmrScoLzSMcqlkDLCxoWb8Ak7NETKYfCqamAgiM5Aifjq7o=
-Received: from TYZPR03MB7183.apcprd03.prod.outlook.com (2603:1096:400:33a::11)
- by PUZPR03MB6965.apcprd03.prod.outlook.com (2603:1096:301:fa::6) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6298.30; Fri, 14 Apr
- 2023 01:16:46 +0000
-Received: from TYZPR03MB7183.apcprd03.prod.outlook.com
- ([fe80::6d55:5655:af99:8cb7]) by TYZPR03MB7183.apcprd03.prod.outlook.com
- ([fe80::6d55:5655:af99:8cb7%5]) with mapi id 15.20.6298.030; Fri, 14 Apr 2023
- 01:16:45 +0000
-From:   =?utf-8?B?VHplLW5hbiBXdSAo5ZCz5r6k5Y2XKQ==?= 
-        <Tze-nan.Wu@mediatek.com>
-To:     "mhiramat@kernel.org" <mhiramat@kernel.org>,
-        "rostedt@goodmis.org" <rostedt@goodmis.org>
-CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Thu, 13 Apr 2023 23:00:38 -0400
+Received: from mailout4.samsung.com (mailout4.samsung.com [203.254.224.34])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3928E40FB
+        for <linux-trace-kernel@vger.kernel.org>; Thu, 13 Apr 2023 20:00:32 -0700 (PDT)
+Received: from epcas2p3.samsung.com (unknown [182.195.41.55])
+        by mailout4.samsung.com (KnoxPortal) with ESMTP id 20230414030023epoutp04af96f20ef1c32971db5c967792d1d0a8~VreI8F5uQ3150231502epoutp04P
+        for <linux-trace-kernel@vger.kernel.org>; Fri, 14 Apr 2023 03:00:23 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout4.samsung.com 20230414030023epoutp04af96f20ef1c32971db5c967792d1d0a8~VreI8F5uQ3150231502epoutp04P
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1681441223;
+        bh=XmlnYYLnquBdXwuz8EUaHHCgZ7HKmHIycehtiFaMkGQ=;
+        h=Subject:Reply-To:From:To:CC:Date:References:From;
+        b=TfjITh4Rol/+nrqsOTz6cpzqDypOJfW91Z0EoSPjaa8GHT/n6Mhscbul3tzkGDmth
+         COZcC6dgYEkHE/cwNbax1yQ71k/SMRJzIfAOip60SJPtFfHJklVcZ1w5ZZPtMBm0rX
+         pDZkJcejCvESQyCzNWo/DjzCOJQJpxjU7Pr9ihWU=
+Received: from epsnrtp4.localdomain (unknown [182.195.42.165]) by
+        epcas2p4.samsung.com (KnoxPortal) with ESMTP id
+        20230414030022epcas2p41f2601da8457ba9353857412c53fe270~VreIY7BnP1772317723epcas2p4M;
+        Fri, 14 Apr 2023 03:00:22 +0000 (GMT)
+Received: from epsmges2p4.samsung.com (unknown [182.195.36.97]) by
+        epsnrtp4.localdomain (Postfix) with ESMTP id 4PyLm56jzYz4x9Pq; Fri, 14 Apr
+        2023 03:00:21 +0000 (GMT)
+X-AuditID: b6c32a48-dc7ff700000025b2-74-6438c1c57724
+Received: from epcas2p2.samsung.com ( [182.195.41.54]) by
+        epsmges2p4.samsung.com (Symantec Messaging Gateway) with SMTP id
+        A0.48.09650.5C1C8346; Fri, 14 Apr 2023 12:00:21 +0900 (KST)
+Mime-Version: 1.0
+Subject: [PATCH] f2fs: add async reset zone command support
+Reply-To: daejun7.park@samsung.com
+Sender: Daejun Park <daejun7.park@samsung.com>
+From:   Daejun Park <daejun7.park@samsung.com>
+To:     "jaegeuk@kernel.org" <jaegeuk@kernel.org>,
+        "chao@kernel.org" <chao@kernel.org>,
+        "corbet@lwn.net" <corbet@lwn.net>,
+        "rostedt@goodmis.org" <rostedt@goodmis.org>,
+        "mhiramat@kernel.org" <mhiramat@kernel.org>
+CC:     "linux-f2fs-devel@lists.sourceforge.net" 
+        <linux-f2fs-devel@lists.sourceforge.net>,
+        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
         "linux-trace-kernel@vger.kernel.org" 
         <linux-trace-kernel@vger.kernel.org>,
-        "linux-mediatek@lists.infradead.org" 
-        <linux-mediatek@lists.infradead.org>,
-        =?utf-8?B?Q2hlbmctSnVpIFdhbmcgKOeOi+ato+edvyk=?= 
-        <Cheng-Jui.Wang@mediatek.com>,
-        wsd_upstream <wsd_upstream@mediatek.com>,
-        "paulmck@kernel.org" <paulmck@kernel.org>,
-        =?utf-8?B?Qm9idWxlIENoYW5nICjlvLXlvJjnvqkp?= 
-        <bobule.chang@mediatek.com>,
-        "stable@vger.kernel.org" <stable@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "angelogioacchino.delregno@collabora.com" 
-        <angelogioacchino.delregno@collabora.com>,
-        "npiggin@gmail.com" <npiggin@gmail.com>
-Subject: Re: [PATCH v3] ring-buffer: Prevent inconsistent operation on
- cpu_buffer->resize_disabled
-Thread-Topic: [PATCH v3] ring-buffer: Prevent inconsistent operation on
- cpu_buffer->resize_disabled
-Thread-Index: AQHZa38KrpoyHt4TVEOuF1N51i1qDq8qBooA
-Date:   Fri, 14 Apr 2023 01:16:43 +0000
-Message-ID: <3747eb90487f6eb9cd2f6ff84208c08d4b958bd9.camel@mediatek.com>
-References: <20230409024616.31099-1-Tze-nan.Wu@mediatek.com>
-         <20230410073512.13362-1-Tze-nan.Wu@mediatek.com>
-In-Reply-To: <20230410073512.13362-1-Tze-nan.Wu@mediatek.com>
-Accept-Language: zh-TW, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=mediatek.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: TYZPR03MB7183:EE_|PUZPR03MB6965:EE_
-x-ms-office365-filtering-correlation-id: ec6e55de-939e-4a6d-6a82-08db3c85e8f2
-x-ld-processed: a7687ede-7a6b-4ef6-bace-642f677fbe31,ExtAddr
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: myDArm7w0ITcoS/PC4blC0LtwxwRJSSGjWhuqa79bZzJFArQtuXIhWizeNif0HcTR+SabtOiFUs5AnD3BNrB4F5o5wWZ0rqEc8fAD0TNWJ6oX1Xetp+YFj/m4lQflNRPiRnooKeONOKSELL+4I9Vj1isq3QkEdSZhJu1XYKUfhn6DeY0rmG4dJCLBAx23sQK31fAV7w87leuKSe2+DoAFcn9t2LyuqjC6P9B4S8Z2VPnzEOClFb1o3epU6qV3G67+aIJKOZEeN8pMQMzbwzPguBrg5XbyqtY4sAFD2XTCxszVd7uS1OvJtoqHJ5T0swGq2Qr9C54A0cQ3SzHxLpv/ObRT0PUzoSvflWlDjPmQhdkWfBplayGWxjITFAOet0OpBTVyAg5JhuVBMIPM3edgWdHazWhFlW2NuA9DdSrHszgU0t/V2i87SGr2oTrW7djOaK7JsjXjyv8N4l5gWRrM7wLg98eOX0exQxxlBzueBppRqhqvNrHDUcnis80/OR+I4v6qAQjHUgtAYeHNW13EHizPQeKKJSprtHI0eRvXG/5fhpqi3YXzId9l6pZ3FPR2rrhphDwZ5+G+x32b5hHa+Zk/5didgr3O6qGLC6Fvc+KEL5eCI4QV6udmxyENgS8j8vanocoxdpbYaCvGQczwg==
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:TYZPR03MB7183.apcprd03.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230028)(4636009)(136003)(396003)(376002)(39860400002)(366004)(346002)(451199021)(8676002)(85182001)(38100700002)(36756003)(5660300002)(2906002)(7416002)(38070700005)(86362001)(8936002)(4326008)(122000001)(316002)(66556008)(64756008)(41300700001)(66946007)(66446008)(66476007)(54906003)(110136005)(2616005)(966005)(76116006)(558084003)(6506007)(26005)(186003)(6512007)(71200400001)(6486002)(478600001);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?utf-8?B?QjFVb25zRVRqRGZOSTFQdUo2VFNleHZ3aHNuN2ZpY1V6YklQTXMxdlRXbzFv?=
- =?utf-8?B?ZFVPWlNSRkJ1SUtVeWxHZlRPNlFoSmN2L21IQzEvQ1lydm1kSjl4Rk9YU1Zo?=
- =?utf-8?B?NjFmQ0hWZk9EU1RucWVVUEVyMDYxMGpnTW9yMGxLVTNmakJkeU84QmZCUCt6?=
- =?utf-8?B?SGd6dW8ydDBaUzlrZFFHS2JJcEVEK2k4aitSTGhhVG9xdThOS2Zpem9ySmJp?=
- =?utf-8?B?dWxqUnJIenRWTVl0RXlZN3JmT1UrbWp2ZXprTFJXT0Ercm1GUnJqNzJ2Zkk4?=
- =?utf-8?B?eUtTNWZXc1NvQnErV1V5bGVDTVpOZVhaWnczdWxWOGRUYU1ITDNVTnFiNnZz?=
- =?utf-8?B?ekl6anFLUWpZa0tnK2pwZ216TUEwS2oxWU05WmVyTUVXMmVoMG1WMVcwUEZU?=
- =?utf-8?B?VTVBSXNQZ0VrNW9YRkhSU0pHUFV1REw1R3l6UXlCcm5oYzdjcENjNWxjbTZD?=
- =?utf-8?B?anFkWXB5Znoxa0VBMWtCdVpGZ3BWaGhLOSt4eWpkdmRuZUszWGVKU05DTVB6?=
- =?utf-8?B?Z25mOXJjK3ZjaFA4Y0RkcGordW1BdDQ3aHg3U0czbkxHK3BON1JNazRFU2xD?=
- =?utf-8?B?R0RuTGR0c2NTVWlDZzJNaTZ6T0ZLQjZaY2VHVjl4aHpsWU9ONWVuckxaRDdz?=
- =?utf-8?B?TjgvTDNvc2JRcGJKUmQ3SmJTMUhyM3BJNkF1Wml2eko1SjNUYTQzNno0M2kx?=
- =?utf-8?B?L2krMmw4QnlnSGpBL0pXVmdpYnhuaVlNdEpuRE5hTFFaOElhSnJ5YlkzL3VY?=
- =?utf-8?B?OHM1Q3FwcnhrV09Nenp2TkF2dmdpbjRVVGFPWlVhMlFNWlVkY3Z0ZlVEWC9S?=
- =?utf-8?B?a1lDT3duQjRVNHl2VFdzeGRJdlUxZ05nYVgxb1A4UFhLN24xUS9YOFo4alNL?=
- =?utf-8?B?UldGNWZkaGE5LzkwRy9QZnhsZTAydER5Q2dtakxQMFo0R0h4czZhei8zQy9G?=
- =?utf-8?B?Yk1mWVRvS2xMNUlpMFNMNVBvbmgyQm05dEx4QlFhbC9PYXFIZDVLaDg2elJ0?=
- =?utf-8?B?dmt0YVhhNUlSdjR0WXBxNStocVJvbGMwVDR2c2JjbVdubWFSV2IwVFpXbU82?=
- =?utf-8?B?VVdVdjNvUjBOOWQ5Nmo3OGVjajBEMkJNTHM0aDNDOGFsSXF1cDZ3Tk5zR1FJ?=
- =?utf-8?B?RGxiSnlaeTVZaEJGY2ZFM0dwaXZseDFWWm40YXM5QlMyeTVVNm0ycmxuNFZM?=
- =?utf-8?B?TUtGNFM1TUw1aEJ0a2s3eThORzl2cmxBb08ydGpmTEdvRDdkV0l2VTA5V3V5?=
- =?utf-8?B?ZG1XMmJVMkN6cnhJNDYxYWxiZGs2MGdPRlorRW10eXRZZmNHcEZVaXRZbkFW?=
- =?utf-8?B?NXF4dGVwN3BpWW56dlN4dXhkQ01XVXRGMWViR0JaVFo4OVNYMUNHNVB3anFn?=
- =?utf-8?B?aDJ6QXUvVTJ0VWNKSnZGRVliWVNlcm14d1BkbWsvTDNpMWlZWWtoUFFvYVJn?=
- =?utf-8?B?Y0VMcnhQYUVpd2lBeW9vYkcxR0VzdDZYa0ZrM2FuNmNlVkpucHlYVGxPNUcy?=
- =?utf-8?B?ZzlneERUcTRhd0djQmNyK1lNYkZKQmFkemZHcHdLc0ZUMEJsRTVZMVlsWDZX?=
- =?utf-8?B?dlcxdDRHOWFuNDVaN08yZitzVXhVK1Z0RVZVZXZMSlFzeWh4VlhFT3IzdGI2?=
- =?utf-8?B?Ryt3V1FGVmhaU2d1RWg2aFk5VlBuT0dNNW5aMHZsUHZjZ2pGVzJYdXZSbGpT?=
- =?utf-8?B?akVsSWtPQmJLTkxnakxSUC8xNVlVeE9XbEl3bGRuSExuRDRZN256OVFEdm5q?=
- =?utf-8?B?R1hpWnhIekZkaUUzSExEaVltTlQrRHBXL24zbFo4b2tHd2JCbnNNRmZQRGx2?=
- =?utf-8?B?WkttMkFZOERxRTBQTXdCMFBIN3VPMnN2VGtVM0JCYnhyc3NHOXN5V2kvb0Rx?=
- =?utf-8?B?Y1hYNTBEZzJDTTFqamM5b1JvQ2lCeFF5WHd4UEZqbXdESnJpRjBCeHdBcmpT?=
- =?utf-8?B?alF6MUo0U3VTNzhQZUN0L0luT3JpY3RBL0VBU1ZkOFp5TmZRS1dIdHh5bWZR?=
- =?utf-8?B?SVEzZlVZREN3THRBNERYNjdmMzBDU1Q3NGk5Y0JndVlsQjc0dTJHRXlIdUlN?=
- =?utf-8?B?TTU5SWs1M2NEMmdPSjVYbkNRMnFaWHp5OGIxa1NhbzhCU2tlOEVIbXE3QW9n?=
- =?utf-8?B?ZVRKVWRmOHJkZmJxREs0ZHV4ZlRDU3Fxb0QyS2VFMVBDd0REWlljWHlVYURW?=
- =?utf-8?B?bEE9PQ==?=
+        Seokhwan Kim <sukka.kim@samsung.com>,
+        beomsu kim <beomsu7.kim@samsung.com>,
+        Yonggil Song <yonggil.song@samsung.com>,
+        Daejun Park <daejun7.park@samsung.com>
+X-Priority: 3
+X-Content-Kind-Code: NORMAL
+X-CPGS-Detection: blocking_info_exchange
+X-Drm-Type: N,general
+X-Msg-Generator: Mail
+X-Msg-Type: PERSONAL
+X-Reply-Demand: N
+Message-ID: <20230414025921epcms2p5736ebf6a215201e0c2a2c1a3f73ee06a@epcms2p5>
+Date:   Fri, 14 Apr 2023 11:59:21 +0900
+X-CMS-MailID: 20230414025921epcms2p5736ebf6a215201e0c2a2c1a3f73ee06a
+Content-Transfer-Encoding: 7bit
 Content-Type: text/plain; charset="utf-8"
-Content-ID: <6DD6E13CD4E27B4C9CBE5D7C17EB32C1@apcprd03.prod.outlook.com>
-Content-Transfer-Encoding: base64
-MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: TYZPR03MB7183.apcprd03.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: ec6e55de-939e-4a6d-6a82-08db3c85e8f2
-X-MS-Exchange-CrossTenant-originalarrivaltime: 14 Apr 2023 01:16:43.9313
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: a7687ede-7a6b-4ef6-bace-642f677fbe31
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: /lb/WC5KDiIuyASec2zH+a/OlyKoc4RoE2hyqJxlUlvIr25zX6quL0WzxMQUd6fbxTt5WGqer2i569kBI4tjVA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PUZPR03MB6965
+X-Sendblock-Type: AUTO_CONFIDENTIAL
+CMS-TYPE: 102P
+X-CPGSPASS: Y
+X-CPGSPASS: Y
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrJJsWRmVeSWpSXmKPExsWy7bCmme7RgxYpBi+6TSwuzPvIbHF66lkm
+        iycH2hktXh7StFj1INziyfpZzBYL25awWFxa5G5xedccNosj68+yWCxermaxr+MBk8WqjrmM
+        FlPPH2Fy4PNo2XeL3WPTqk42j90LPjN5LO6bzOrRt2UVo8fnTXIBbFHZNhmpiSmpRQqpecn5
+        KZl56bZK3sHxzvGmZgaGuoaWFuZKCnmJuam2Si4+AbpumTlApyoplCXmlAKFAhKLi5X07WyK
+        8ktLUhUy8otLbJVSC1JyCswL9IoTc4tL89L18lJLrAwNDIxMgQoTsjM2fTrDUrDdvWJf91bm
+        BsYpVl2MHBwSAiYS/2cZdjFycQgJ7GCU6OmexAYS5xUQlPi7Q7iLkZNDWMBaYu2yLiYQW0hA
+        SWL9xVnsEHE9iVsP1zCC2GwCOhLTT9xnB5kjInCZUWLvioNgDrPAQWaJLfuPsYFUSQjwSsxo
+        f8oCYUtLbF++lRHC1pD4sayXGcIWlbi5+i07jP3+2HyoGhGJ1ntnoWoEJR783A0Vl5S4PXcT
+        VH2+xP8ry6HsGoltB+ZB2foS1zo2gu3lFfCV2H9zBlgvi4CqxJUDR6HmuEj8nvoc7E5mAXmJ
+        7W/nMIMCgllAU2L9Ln1IWClLHLnFAlHBJ9Fx+C87zFcNG39jZe+Y94QJwlaTWPdzPRPEGBmJ
+        W/MYJzAqzUIE9Cwka2chrF3AyLyKUSy1oDg3PbXYqMAEHrXJ+bmbGMFpVstjB+Pstx/0DjEy
+        cTAeYpTgYFYS4f3hYpoixJuSWFmVWpQfX1Sak1p8iNEU6OGJzFKiyfnARJ9XEm9oYmlgYmZm
+        aG5kamCuJM77sUM5RUggPbEkNTs1tSC1CKaPiYNTqoGpOnlFfVjjJKZVL0TDWU/HGP65sP//
+        vcaX+y0YdLuXLYl57F64Tkoitqqly1tRnM38aGKxWubyLqcGnafv0mL3Hgqa18z0fybrhekX
+        G0Nm3kr4cycpV3v/q9Xxy4IWu6orPq6s+7ZNIHzzn01P/i668mSXSLS2WdKsL558hg8/7NFc
+        tWmG28ndfSeORrtZhG+pdJLV9l6UcX6x5qJlV+/O/GQW4m/7+oft6qVPAw/Wfpven/lyfvaz
+        mWkpi4Lm1c7T+npLetId11aunbvnrbujUpX56uRM9VAOfUFlo/VWF3Rbl65ldnv6+G7xUs++
+        j3G/7ujFKJ5RCHtfMW3r8Zki2oZzfxqLhZuX8CqLtN89osRSnJFoqMVcVJwIALZ1V+M8BAAA
+DLP-Filter: Pass
+X-CFilter-Loop: Reflected
+X-CMS-RootMailID: 20230414025921epcms2p5736ebf6a215201e0c2a2c1a3f73ee06a
+References: <CGME20230414025921epcms2p5736ebf6a215201e0c2a2c1a3f73ee06a@epcms2p5>
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-SW4gY2FzZSB0aG9zZSB3aG8gYXJlIGZvbGxvd2luZyB0aGlzIHRocmVhZCBidXQgYXJlIG5vdCBp
-bmNsdWRlZCBpbiB0aGUNCmNjIGxpc3QsIHRoZSB2NCBwYXRjaCBjYW5ub3QgYmUgZWFzaWx5IGZv
-dW5kIGJ5IHRoZW0gZHVlIHRvIHRoZSB0aWxlIG9mDQp0aGUgbmV3ZXIgcGF0Y2ggaGFkIGJlZW4g
-Y2hhbmdlZC4NCg0KTGV0IG15IHB1dCBhIGxpbmsgaGVyZToNCiAgDQpodHRwczovL2xvcmUua2Vy
-bmVsLm9yZy9sa21sLzIwMjMwNDEyMTEyNDAxLjI1MDgxLTEtVHplLW5hbi5XdUBtZWRpYXRlay5j
-b20vDQo=
+This patch enables submit reset zone command asynchornously. It helps
+decrease average latency of write IOs in high utilization scenario by
+faster checkpointing.
+
+Signed-off-by: Daejun Park <daejun7.park@samsung.com>
+---
+ Documentation/filesystems/f2fs.rst |  4 ++
+ fs/f2fs/f2fs.h                     |  1 +
+ fs/f2fs/segment.c                  | 92 +++++++++++++++++++++++++++++-
+ fs/f2fs/super.c                    |  8 +++
+ include/trace/events/f2fs.h        | 18 +++++-
+ 5 files changed, 119 insertions(+), 4 deletions(-)
+
+diff --git a/Documentation/filesystems/f2fs.rst b/Documentation/filesystems/f2fs.rst
+index 2055e72871fe..4cfabf831a79 100644
+--- a/Documentation/filesystems/f2fs.rst
++++ b/Documentation/filesystems/f2fs.rst
+@@ -342,6 +342,10 @@ discard_unit=%s		 Control discard unit, the argument can be "block", "segment"
+ 			 default, it is helpful for large sized SMR or ZNS devices to
+ 			 reduce memory cost by getting rid of fs metadata supports small
+ 			 discard.
++async_reset_zone         Enable the RESET WRITE POINTER command to be submitted asynchronously.
++                         With this option, the RESET WRITE POINTER command can be processed by
++                         the discard thread like a discard command. It can reduce checkpoint
++                         latency by asynchronously checking for completion of the RESET WRITE POINTER command.
+ memory=%s		 Control memory mode. This supports "normal" and "low" modes.
+ 			 "low" mode is introduced to support low memory devices.
+ 			 Because of the nature of low memory devices, in this mode, f2fs
+diff --git a/fs/f2fs/f2fs.h b/fs/f2fs/f2fs.h
+index 4e2596dacbf1..021e55c5d1a8 100644
+--- a/fs/f2fs/f2fs.h
++++ b/fs/f2fs/f2fs.h
+@@ -167,6 +167,7 @@ struct f2fs_mount_info {
+ 					 * be aligned to this unit: block,
+ 					 * segment or section
+ 					 */
++	bool async_zone_reset;          /* async zone reset */
+ 	struct fscrypt_dummy_policy dummy_enc_policy; /* test dummy encryption */
+ 	block_t unusable_cap_perc;	/* percentage for cap */
+ 	block_t unusable_cap;		/* Amount of space allowed to be
+diff --git a/fs/f2fs/segment.c b/fs/f2fs/segment.c
+index 45128694eefa..60cfe97c9dbd 100644
+--- a/fs/f2fs/segment.c
++++ b/fs/f2fs/segment.c
+@@ -1189,6 +1189,46 @@ static void __init_discard_policy(struct f2fs_sb_info *sbi,
+ static void __update_discard_tree_range(struct f2fs_sb_info *sbi,
+ 				struct block_device *bdev, block_t lstart,
+ 				block_t start, block_t len);
++
++#ifdef CONFIG_BLK_DEV_ZONED
++static int __submit_zone_reset_cmd(struct f2fs_sb_info *sbi,
++				   struct discard_cmd *dc, blk_opf_t flag,
++				   struct list_head *wait_list,
++				   unsigned int *issued)
++{
++	struct discard_cmd_control *dcc = SM_I(sbi)->dcc_info;
++	struct block_device *bdev = dc->bdev;
++	struct bio *bio = bio_alloc(bdev, 0, REQ_OP_ZONE_RESET | flag, GFP_NOFS);
++	unsigned long flags;
++
++	trace_f2fs_issue_reset_zone(bdev, SECTOR_FROM_BLOCK(dc->di.start));
++
++	spin_lock_irqsave(&dc->lock, flags);
++	dc->state = D_SUBMIT;
++	dc->bio_ref++;
++	spin_unlock_irqrestore(&dc->lock, flags);
++
++	if (issued)
++		(*issued)++;
++
++	atomic_inc(&dcc->queued_discard);
++	dc->queued++;
++	list_move_tail(&dc->list, wait_list);
++
++	/* sanity check on discard range */
++	__check_sit_bitmap(sbi, dc->di.lstart, dc->di.lstart + dc->di.len);
++
++	bio->bi_iter.bi_sector = SECTOR_FROM_BLOCK(dc->di.start);
++	bio->bi_private = dc;
++	bio->bi_end_io = f2fs_submit_discard_endio;
++	submit_bio(bio);
++
++	atomic_inc(&dcc->issued_discard);
++
++	return 0;
++}
++#endif
++
+ /* this function is copied from blkdev_issue_discard from block/blk-lib.c */
+ static int __submit_discard_cmd(struct f2fs_sb_info *sbi,
+ 				struct discard_policy *dpolicy,
+@@ -1210,6 +1250,11 @@ static int __submit_discard_cmd(struct f2fs_sb_info *sbi,
+ 	if (is_sbi_flag_set(sbi, SBI_NEED_FSCK))
+ 		return 0;
+ 
++#ifdef CONFIG_BLK_DEV_ZONED
++	if (f2fs_sb_has_blkzoned(sbi) && bdev_is_zoned(bdev))
++		return __submit_zone_reset_cmd(sbi, dc, flag, wait_list, issued);
++#endif
++
+ 	trace_f2fs_issue_discard(bdev, dc->di.start, dc->di.len);
+ 
+ 	lstart = dc->di.lstart;
+@@ -1454,21 +1499,42 @@ static void __update_discard_tree_range(struct f2fs_sb_info *sbi,
+ 	}
+ }
+ 
++#ifdef CONFIG_BLK_DEV_ZONED
++static void __queue_zone_reset_cmd(struct f2fs_sb_info *sbi,
++		struct block_device *bdev, block_t blkstart, block_t blklen)
++{
++	block_t lblkstart = blkstart;
++
++	if (f2fs_is_multi_device(sbi)) {
++		int devi = f2fs_target_device_index(sbi, blkstart);
++
++		blkstart -= FDEV(devi).start_blk;
++	}
++
++	trace_f2fs_queue_reset_zone(bdev, blkstart);
++
++	mutex_lock(&SM_I(sbi)->dcc_info->cmd_lock);
++	__insert_discard_cmd(sbi, bdev, lblkstart, blkstart, blklen);
++	mutex_unlock(&SM_I(sbi)->dcc_info->cmd_lock);
++}
++#endif
++
+ static void __queue_discard_cmd(struct f2fs_sb_info *sbi,
+ 		struct block_device *bdev, block_t blkstart, block_t blklen)
+ {
+ 	block_t lblkstart = blkstart;
+ 
++	trace_f2fs_queue_discard(bdev, blkstart, blklen);
++
+ 	if (!f2fs_bdev_support_discard(bdev))
+ 		return;
+ 
+-	trace_f2fs_queue_discard(bdev, blkstart, blklen);
+-
+ 	if (f2fs_is_multi_device(sbi)) {
+ 		int devi = f2fs_target_device_index(sbi, blkstart);
+ 
+ 		blkstart -= FDEV(devi).start_blk;
+ 	}
++
+ 	mutex_lock(&SM_I(sbi)->dcc_info->cmd_lock);
+ 	__update_discard_tree_range(sbi, bdev, lblkstart, blkstart, blklen);
+ 	mutex_unlock(&SM_I(sbi)->dcc_info->cmd_lock);
+@@ -1719,7 +1785,22 @@ static void f2fs_wait_discard_bio(struct f2fs_sb_info *sbi, block_t blkaddr)
+ 	dc = __lookup_discard_cmd(sbi, blkaddr);
+ 	if (dc) {
+ 		if (dc->state == D_PREP) {
++#ifdef CONFIG_BLK_DEV_ZONED
++			if (f2fs_sb_has_blkzoned(sbi) &&
++			    bdev_is_zoned(dc->bdev)) {
++				struct discard_policy dpolicy;
++				/* force submit zone reset */
++				__init_discard_policy(sbi, &dpolicy,
++						      DPOLICY_FORCE, 1);
++				__submit_discard_cmd(sbi, &dpolicy, dc, NULL);
++				dc->ref++;
++				need_wait = true;
++			} else {
++				__punch_discard_cmd(sbi, dc, blkaddr);
++			}
++#else
+ 			__punch_discard_cmd(sbi, dc, blkaddr);
++#endif
+ 		} else {
+ 			dc->ref++;
+ 			need_wait = true;
+@@ -1869,6 +1950,13 @@ static int __f2fs_issue_discard_zone(struct f2fs_sb_info *sbi,
+ 				 blkstart, blklen);
+ 			return -EIO;
+ 		}
++
++		if (likely(!is_sbi_flag_set(sbi, SBI_POR_DOING)) &&
++			   F2FS_OPTION(sbi).async_zone_reset) {
++			__queue_zone_reset_cmd(sbi, bdev, lblkstart, blklen);
++			return 0;
++		}
++
+ 		trace_f2fs_issue_reset_zone(bdev, blkstart);
+ 		return blkdev_zone_mgmt(bdev, REQ_OP_ZONE_RESET,
+ 					sector, nr_sects, GFP_NOFS);
+diff --git a/fs/f2fs/super.c b/fs/f2fs/super.c
+index 7d0202f7b317..48198112cbbc 100644
+--- a/fs/f2fs/super.c
++++ b/fs/f2fs/super.c
+@@ -162,6 +162,7 @@ enum {
+ 	Opt_gc_merge,
+ 	Opt_nogc_merge,
+ 	Opt_discard_unit,
++	Opt_async_zone_reset,
+ 	Opt_memory_mode,
+ 	Opt_age_extent_cache,
+ 	Opt_err,
+@@ -241,6 +242,7 @@ static match_table_t f2fs_tokens = {
+ 	{Opt_gc_merge, "gc_merge"},
+ 	{Opt_nogc_merge, "nogc_merge"},
+ 	{Opt_discard_unit, "discard_unit=%s"},
++	{Opt_async_zone_reset, "async_zone_reset"},
+ 	{Opt_memory_mode, "memory=%s"},
+ 	{Opt_age_extent_cache, "age_extent_cache"},
+ 	{Opt_err, NULL},
+@@ -1249,6 +1251,9 @@ static int parse_options(struct super_block *sb, char *options, bool is_remount)
+ 			}
+ 			kfree(name);
+ 			break;
++		case Opt_async_zone_reset:
++			F2FS_OPTION(sbi).async_zone_reset = true;
++			break;
+ 		case Opt_memory_mode:
+ 			name = match_strdup(&args[0]);
+ 			if (!name)
+@@ -2047,6 +2052,9 @@ static int f2fs_show_options(struct seq_file *seq, struct dentry *root)
+ 	if (test_opt(sbi, ATGC))
+ 		seq_puts(seq, ",atgc");
+ 
++	if (F2FS_OPTION(sbi).async_zone_reset)
++		seq_puts(seq, ",async_zone_reset");
++
+ 	if (F2FS_OPTION(sbi).memory_mode == MEMORY_MODE_NORMAL)
+ 		seq_printf(seq, ",memory=%s", "normal");
+ 	else if (F2FS_OPTION(sbi).memory_mode == MEMORY_MODE_LOW)
+diff --git a/include/trace/events/f2fs.h b/include/trace/events/f2fs.h
+index 99cbc5949e3c..ee1477de8324 100644
+--- a/include/trace/events/f2fs.h
++++ b/include/trace/events/f2fs.h
+@@ -1512,7 +1512,7 @@ DEFINE_EVENT(f2fs_discard, f2fs_remove_discard,
+ 	TP_ARGS(dev, blkstart, blklen)
+ );
+ 
+-TRACE_EVENT(f2fs_issue_reset_zone,
++DECLARE_EVENT_CLASS(f2fs_reset_zone,
+ 
+ 	TP_PROTO(struct block_device *dev, block_t blkstart),
+ 
+@@ -1528,11 +1528,25 @@ TRACE_EVENT(f2fs_issue_reset_zone,
+ 		__entry->blkstart = blkstart;
+ 	),
+ 
+-	TP_printk("dev = (%d,%d), reset zone at block = 0x%llx",
++	TP_printk("dev = (%d,%d), zone at block = 0x%llx",
+ 		show_dev(__entry->dev),
+ 		(unsigned long long)__entry->blkstart)
+ );
+ 
++DEFINE_EVENT(f2fs_reset_zone, f2fs_queue_reset_zone,
++
++	TP_PROTO(struct block_device *dev, block_t blkstart),
++
++	TP_ARGS(dev, blkstart)
++);
++
++DEFINE_EVENT(f2fs_reset_zone, f2fs_issue_reset_zone,
++
++	TP_PROTO(struct block_device *dev, block_t blkstart),
++
++	TP_ARGS(dev, blkstart)
++);
++
+ TRACE_EVENT(f2fs_issue_flush,
+ 
+ 	TP_PROTO(struct block_device *dev, unsigned int nobarrier,
+-- 
+2.25.1
+
