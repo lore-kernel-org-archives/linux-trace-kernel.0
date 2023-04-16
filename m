@@ -2,109 +2,109 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ABB51C77B70
-	for <linux-trace-kernel@archiver.kernel.org>; Sat, 15 Apr 2023 15:46:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 269D5C77B70
+	for <linux-trace-kernel@archiver.kernel.org>; Sun, 16 Apr 2023 02:43:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229995AbjDOPqk (ORCPT
+        id S229731AbjDPCn2 (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Sat, 15 Apr 2023 11:46:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34724 "EHLO
+        Sat, 15 Apr 2023 22:43:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44154 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229670AbjDOPqk (ORCPT
+        with ESMTP id S229451AbjDPCn2 (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Sat, 15 Apr 2023 11:46:40 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E9ACA2D59;
-        Sat, 15 Apr 2023 08:46:38 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 886C160AEE;
-        Sat, 15 Apr 2023 15:46:38 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7182EC433D2;
-        Sat, 15 Apr 2023 15:46:37 +0000 (UTC)
-Date:   Sat, 15 Apr 2023 11:46:35 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Yafang Shao <laoar.shao@gmail.com>
+        Sat, 15 Apr 2023 22:43:28 -0400
+Received: from mail-qv1-xf2b.google.com (mail-qv1-xf2b.google.com [IPv6:2607:f8b0:4864:20::f2b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0199630CF;
+        Sat, 15 Apr 2023 19:43:26 -0700 (PDT)
+Received: by mail-qv1-xf2b.google.com with SMTP id me15so1916161qvb.4;
+        Sat, 15 Apr 2023 19:43:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1681613006; x=1684205006;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=emh2Okv2wtPboESKlb9uAvYp8mFKsbIQggX9WGkmmVA=;
+        b=FBqaM60tznk3PqkeiIJOe8qPlXA7CzcxGp3cR4bLX9cI+aucjWVbEdFh5fhQ2kj1KV
+         K0LZtbb63OrxwZkpij9AKw2or4UitoTw0K6WRfonLuMUgMuBXkKKsDNW1WV9k5dJOBkd
+         wH9Wwf99onwF9EivFsFjGcbEWphRkg0TpC4Md2Us4ntmaSM9na1YxrK1kNTSBVo/3UJi
+         2v5YFVCKgTFWunuk6NxaPQqTK63CByOWgBl33uP4MjjLjiYpEIvO45rpUWyYPSQu8UcD
+         kNmgPRp2V2ef8Qctg0nSjqkInQQtjaQFT5sQ7oupK3pfRnPsddhmqITSHW+5MGD1fsCI
+         OnEw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1681613006; x=1684205006;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=emh2Okv2wtPboESKlb9uAvYp8mFKsbIQggX9WGkmmVA=;
+        b=Wg5EJj+1YVq8YjybSCp4UTbts3et5IDzah6kKmIzXNb9T2DmiiOpCU49Syx8aMmCxX
+         UI9PN70UDXAeB8ko7Q1XeGrHy5OB5GFzFJll7jmVD+if9oetYICzu+Y8e7m2OEkvu0P4
+         ILAog1o9AkdNGADQWUSkBGs5xvCvBlnF6PBJJCDgrpKtUVCRC29SInAGK99DuMDltUba
+         qqQoKhm3qSg/xkMsRWK2ZnKZBmkEocsTn6h6WKuobxryDY7vt7CViHiRWzkyDTKpt6cs
+         eDzmTItwhlgU6Z8Na6EJ/YW6WRX3MmCu6IMTq01FX+AsTwFLUQYf0L3823eS/jXyvDVX
+         fDHA==
+X-Gm-Message-State: AAQBX9ePetH1e62JtLFugIXTZTmnphP68eBmC7JJg7Gcnxf6sdD3/okz
+        v7g+cIazpF1zATDRzcwS3nXr5E3F1DyTUg2daSCcwIUDdAo=
+X-Google-Smtp-Source: AKy350Z6KtN6UyhQVcp+nh44u6AxqibNwzsunsv2Mhtz3En9ISlSb5f9GUug0kDFh9BlG5pihoQaprHmGWVTZkzFrJQ=
+X-Received: by 2002:a05:6214:c69:b0:5ef:52f0:7b1e with SMTP id
+ t9-20020a0562140c6900b005ef52f07b1emr12671857qvj.31.1681613006151; Sat, 15
+ Apr 2023 19:43:26 -0700 (PDT)
+MIME-Version: 1.0
+References: <20230414221702.554c44fe@rorschach.local.home> <CALOAHbDUkvyu0hWXfcveJBW_dxDkqUTVBmwXt5Y-ERBv9GksbQ@mail.gmail.com>
+ <CALOAHbB9VvOAuA5kG3YpS-XMqX9AFGxbuOQWerJTQYgsqU182A@mail.gmail.com> <20230415114635.15d9eda8@rorschach.local.home>
+In-Reply-To: <20230415114635.15d9eda8@rorschach.local.home>
+From:   Yafang Shao <laoar.shao@gmail.com>
+Date:   Sun, 16 Apr 2023 10:42:48 +0800
+Message-ID: <CALOAHbCFWCzV6PQXkB7YyyPuLOZv27yABDADgbwi1F76pOzwVg@mail.gmail.com>
+Subject: Re: [PATCH] tracing: Add generic test_recursion_try_acquire()
+To:     Steven Rostedt <rostedt@goodmis.org>
 Cc:     Alexei Starovoitov <ast@kernel.org>,
         LKML <linux-kernel@vger.kernel.org>,
         Linux trace kernel <linux-trace-kernel@vger.kernel.org>,
         Masami Hiramatsu <mhiramat@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>, bpf <bpf@vger.kernel.org>
-Subject: Re: [PATCH] tracing: Add generic test_recursion_try_acquire()
-Message-ID: <20230415114635.15d9eda8@rorschach.local.home>
-In-Reply-To: <CALOAHbB9VvOAuA5kG3YpS-XMqX9AFGxbuOQWerJTQYgsqU182A@mail.gmail.com>
-References: <20230414221702.554c44fe@rorschach.local.home>
-        <CALOAHbDUkvyu0hWXfcveJBW_dxDkqUTVBmwXt5Y-ERBv9GksbQ@mail.gmail.com>
-        <CALOAHbB9VvOAuA5kG3YpS-XMqX9AFGxbuOQWerJTQYgsqU182A@mail.gmail.com>
-X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On Sat, 15 Apr 2023 22:33:17 +0800
-Yafang Shao <laoar.shao@gmail.com> wrote:
+On Sat, Apr 15, 2023 at 11:46=E2=80=AFPM Steven Rostedt <rostedt@goodmis.or=
+g> wrote:
+>
+> On Sat, 15 Apr 2023 22:33:17 +0800
+> Yafang Shao <laoar.shao@gmail.com> wrote:
+>
+> >
+> > I don't have a clear idea why TRACE_CTX_TRANSITION must be needed, but
+> > it seems we have to do below code for the fentry test case,
+>
+> The issue is that there's still cases that we can trace when
+> preempt_count hasn't been updated to the new context. That is,
+> preempt_count is used to determine if we are in softirq, hardirq or NMI
+> context. But there's some places that have:
+>
+>  normal context:
+>  func_a() --> traced
+>    --> interrupt
+>     func_b() --> traced
+>     preempt_count_add(HARDIRQ_OFFSET)
+>
+> Now we drop the second trace because it is flagged as a recursion when
+> in reality it is in a new context, but the preempt_count has not been
+> updated yet.
+>
+> We are currently fixing these locations, but it's not there yet. And
+> since there's tools that relies on not dropping these locations, the
+> transition bit needs to be there until this situation is dealt with.
+>
 
-> 
-> I don't have a clear idea why TRACE_CTX_TRANSITION must be needed, but
-> it seems we have to do below code for the fentry test case,
+Got it. Thanks for your explanation.
 
-The issue is that there's still cases that we can trace when
-preempt_count hasn't been updated to the new context. That is,
-preempt_count is used to determine if we are in softirq, hardirq or NMI
-context. But there's some places that have:
+> Can you change the tests to allow a single recursion?
+>
 
- normal context:
- func_a() --> traced
-   --> interrupt
-    func_b() --> traced
-    preempt_count_add(HARDIRQ_OFFSET)
+I think one single recursion should be acceptable. I will change it.
 
-Now we drop the second trace because it is flagged as a recursion when
-in reality it is in a new context, but the preempt_count has not been
-updated yet.
-
-We are currently fixing these locations, but it's not there yet. And
-since there's tools that relies on not dropping these locations, the
-transition bit needs to be there until this situation is dealt with.
-
-Can you change the tests to allow a single recursion?
-
--- Steve
-
-> 
-> diff --git a/include/linux/trace_recursion.h b/include/linux/trace_recursion.h
-> index d48cd92d2364..f6b4601dd604 100644
-> --- a/include/linux/trace_recursion.h
-> +++ b/include/linux/trace_recursion.h
-> @@ -163,21 +163,8 @@ static __always_inline int
-> trace_test_and_set_recursion(unsigned long ip, unsign
->   return -1;
-> 
->   bit = trace_get_context_bit() + start;
-> - if (unlikely(val & (1 << bit))) {
-> - /*
-> - * If an interrupt occurs during a trace, and another trace
-> - * happens in that interrupt but before the preempt_count is
-> - * updated to reflect the new interrupt context, then this
-> - * will think a recursion occurred, and the event will be dropped.
-> - * Let a single instance happen via the TRANSITION_BIT to
-> - * not drop those events.
-> - */
-> - bit = TRACE_CTX_TRANSITION + start;
-> - if (val & (1 << bit)) {
-> - do_ftrace_record_recursion(ip, pip);
-> - return -1;
-> - }
-> - }
-> + if (unlikely(val & (1 << bit)))
-> + return -1;
-> 
->   val |= 1 << bit;
->   current->trace_recursion = val;
-> 
-> 
-> > The reason is that the bpf_map_delete_elem() in this fentry SEC()[2]
+--=20
+Regards
+Yafang
