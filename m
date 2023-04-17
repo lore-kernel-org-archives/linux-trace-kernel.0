@@ -2,109 +2,136 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 269D5C77B70
-	for <linux-trace-kernel@archiver.kernel.org>; Sun, 16 Apr 2023 02:43:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7EB7DC77B7A
+	for <linux-trace-kernel@archiver.kernel.org>; Mon, 17 Apr 2023 15:47:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229731AbjDPCn2 (ORCPT
+        id S231370AbjDQPr5 (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Sat, 15 Apr 2023 22:43:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44154 "EHLO
+        Mon, 17 Apr 2023 11:47:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42474 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229451AbjDPCn2 (ORCPT
+        with ESMTP id S229485AbjDQPr4 (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Sat, 15 Apr 2023 22:43:28 -0400
-Received: from mail-qv1-xf2b.google.com (mail-qv1-xf2b.google.com [IPv6:2607:f8b0:4864:20::f2b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0199630CF;
-        Sat, 15 Apr 2023 19:43:26 -0700 (PDT)
-Received: by mail-qv1-xf2b.google.com with SMTP id me15so1916161qvb.4;
-        Sat, 15 Apr 2023 19:43:26 -0700 (PDT)
+        Mon, 17 Apr 2023 11:47:56 -0400
+Received: from mail-pl1-x635.google.com (mail-pl1-x635.google.com [IPv6:2607:f8b0:4864:20::635])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CF76FB0;
+        Mon, 17 Apr 2023 08:47:54 -0700 (PDT)
+Received: by mail-pl1-x635.google.com with SMTP id d8so912519plg.2;
+        Mon, 17 Apr 2023 08:47:54 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1681613006; x=1684205006;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=emh2Okv2wtPboESKlb9uAvYp8mFKsbIQggX9WGkmmVA=;
-        b=FBqaM60tznk3PqkeiIJOe8qPlXA7CzcxGp3cR4bLX9cI+aucjWVbEdFh5fhQ2kj1KV
-         K0LZtbb63OrxwZkpij9AKw2or4UitoTw0K6WRfonLuMUgMuBXkKKsDNW1WV9k5dJOBkd
-         wH9Wwf99onwF9EivFsFjGcbEWphRkg0TpC4Md2Us4ntmaSM9na1YxrK1kNTSBVo/3UJi
-         2v5YFVCKgTFWunuk6NxaPQqTK63CByOWgBl33uP4MjjLjiYpEIvO45rpUWyYPSQu8UcD
-         kNmgPRp2V2ef8Qctg0nSjqkInQQtjaQFT5sQ7oupK3pfRnPsddhmqITSHW+5MGD1fsCI
-         OnEw==
+        d=gmail.com; s=20221208; t=1681746474; x=1684338474;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=OULnICdYHOAOBZgGzZH4pNXiLKXoIP2AAPrDpC3Es1Q=;
+        b=MbsretE2GcIGceLNQIgzbDZAtx/EMTEEcrC47j5Zpe1K6RWuaROAD+mun174uT12Ow
+         dgWqdJbCNho1H/WNFwkmE8aPCtA5S2dre0w4+EwqSiZ4cN47v8GF4AodXyA3cvEf2r2+
+         SPM7z8uwQIkgwKYChhXS29JJkS2vhM2ImOUaTi/R95MPc8RY8S/uOxtKZS6CY4eNTXe2
+         Cb28LgfA758G0nzkWMlf5OvRavEtZ3tn4/5umeJ1RsndKAZVnYbuSY2ikXvkCLkZTRZX
+         QMx713+nhSFxVCHLt/m2Gieef/nKeph2w6t23hdopxh28dy+90sXdnnnZDkqJaDvY0fi
+         +ulg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1681613006; x=1684205006;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=emh2Okv2wtPboESKlb9uAvYp8mFKsbIQggX9WGkmmVA=;
-        b=Wg5EJj+1YVq8YjybSCp4UTbts3et5IDzah6kKmIzXNb9T2DmiiOpCU49Syx8aMmCxX
-         UI9PN70UDXAeB8ko7Q1XeGrHy5OB5GFzFJll7jmVD+if9oetYICzu+Y8e7m2OEkvu0P4
-         ILAog1o9AkdNGADQWUSkBGs5xvCvBlnF6PBJJCDgrpKtUVCRC29SInAGK99DuMDltUba
-         qqQoKhm3qSg/xkMsRWK2ZnKZBmkEocsTn6h6WKuobxryDY7vt7CViHiRWzkyDTKpt6cs
-         eDzmTItwhlgU6Z8Na6EJ/YW6WRX3MmCu6IMTq01FX+AsTwFLUQYf0L3823eS/jXyvDVX
-         fDHA==
-X-Gm-Message-State: AAQBX9ePetH1e62JtLFugIXTZTmnphP68eBmC7JJg7Gcnxf6sdD3/okz
-        v7g+cIazpF1zATDRzcwS3nXr5E3F1DyTUg2daSCcwIUDdAo=
-X-Google-Smtp-Source: AKy350Z6KtN6UyhQVcp+nh44u6AxqibNwzsunsv2Mhtz3En9ISlSb5f9GUug0kDFh9BlG5pihoQaprHmGWVTZkzFrJQ=
-X-Received: by 2002:a05:6214:c69:b0:5ef:52f0:7b1e with SMTP id
- t9-20020a0562140c6900b005ef52f07b1emr12671857qvj.31.1681613006151; Sat, 15
- Apr 2023 19:43:26 -0700 (PDT)
-MIME-Version: 1.0
-References: <20230414221702.554c44fe@rorschach.local.home> <CALOAHbDUkvyu0hWXfcveJBW_dxDkqUTVBmwXt5Y-ERBv9GksbQ@mail.gmail.com>
- <CALOAHbB9VvOAuA5kG3YpS-XMqX9AFGxbuOQWerJTQYgsqU182A@mail.gmail.com> <20230415114635.15d9eda8@rorschach.local.home>
-In-Reply-To: <20230415114635.15d9eda8@rorschach.local.home>
+        d=1e100.net; s=20221208; t=1681746474; x=1684338474;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=OULnICdYHOAOBZgGzZH4pNXiLKXoIP2AAPrDpC3Es1Q=;
+        b=PUz7zhezHYOHTQDyYZwcW+/nV4WRgIymQXtNoSf6PGIcib3F+pFmo9I7T0RF3zqOQa
+         Habks/q86JeD/qMUBjEoEChIygA/qVB9hcJiAGSLG7LqIGUc3k9lxc1G1jjgqfMlQ++k
+         j6mzoGtarqWpB3wwfrfG6lNptDQNocxpson71NKvem9qkYWLotpeaqenGDRCbFaIGScu
+         EOa4YLjFZNUaSW4nWTxHP0lk3H+Q2eoeGW6UMTCJNwXiVrH0zWng89co+oWXdQTGyJ51
+         Hrwnb5/Kd6rles2l3GDK/4H+qQ3Rxaygy5/Uxd0017uYUbVbE93aUGB6prZYCH+c9NgD
+         EwRQ==
+X-Gm-Message-State: AAQBX9fjh9/rtAXOJ09cslM7omIsOPsWwY+kzQ9Zdjjj50FPvHqwXxSD
+        ecZ/+IVKiQbV5nrZ8XtQdBU=
+X-Google-Smtp-Source: AKy350bokXXTKLgGTQTsy58AVJVbkvNw4Hl9PBMwfbi34k5ByMLkxkAgE8hrNv9/27xSdpWpqLIbuw==
+X-Received: by 2002:a17:902:fa0d:b0:1a5:2b7b:57e8 with SMTP id la13-20020a170902fa0d00b001a52b7b57e8mr11845625plb.26.1681746474104;
+        Mon, 17 Apr 2023 08:47:54 -0700 (PDT)
+Received: from vultr.guest ([2401:c080:3800:263c:5400:4ff:fe66:d27f])
+        by smtp.gmail.com with ESMTPSA id jj17-20020a170903049100b001a6b308fcaesm4437513plb.153.2023.04.17.08.47.50
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 17 Apr 2023 08:47:53 -0700 (PDT)
 From:   Yafang Shao <laoar.shao@gmail.com>
-Date:   Sun, 16 Apr 2023 10:42:48 +0800
-Message-ID: <CALOAHbCFWCzV6PQXkB7YyyPuLOZv27yABDADgbwi1F76pOzwVg@mail.gmail.com>
-Subject: Re: [PATCH] tracing: Add generic test_recursion_try_acquire()
-To:     Steven Rostedt <rostedt@goodmis.org>
-Cc:     Alexei Starovoitov <ast@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Linux trace kernel <linux-trace-kernel@vger.kernel.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>, bpf <bpf@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+To:     ast@kernel.org, daniel@iogearbox.net, andrii@kernel.org,
+        kafai@fb.com, songliubraving@fb.com, yhs@fb.com,
+        john.fastabend@gmail.com, kpsingh@kernel.org, sdf@google.com,
+        haoluo@google.com, jolsa@kernel.org, rostedt@goodmis.org,
+        mhiramat@kernel.org
+Cc:     bpf@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Yafang Shao <laoar.shao@gmail.com>
+Subject: [PATCH bpf-next 0/6] bpf: Tracing recursion prevention mechanism improvement 
+Date:   Mon, 17 Apr 2023 15:47:31 +0000
+Message-Id: <20230417154737.12740-1-laoar.shao@gmail.com>
+X-Mailer: git-send-email 2.39.1
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On Sat, Apr 15, 2023 at 11:46=E2=80=AFPM Steven Rostedt <rostedt@goodmis.or=
-g> wrote:
->
-> On Sat, 15 Apr 2023 22:33:17 +0800
-> Yafang Shao <laoar.shao@gmail.com> wrote:
->
-> >
-> > I don't have a clear idea why TRACE_CTX_TRANSITION must be needed, but
-> > it seems we have to do below code for the fentry test case,
->
-> The issue is that there's still cases that we can trace when
-> preempt_count hasn't been updated to the new context. That is,
-> preempt_count is used to determine if we are in softirq, hardirq or NMI
-> context. But there's some places that have:
->
->  normal context:
->  func_a() --> traced
->    --> interrupt
->     func_b() --> traced
->     preempt_count_add(HARDIRQ_OFFSET)
->
-> Now we drop the second trace because it is flagged as a recursion when
-> in reality it is in a new context, but the preempt_count has not been
-> updated yet.
->
-> We are currently fixing these locations, but it's not there yet. And
-> since there's tools that relies on not dropping these locations, the
-> transition bit needs to be there until this situation is dealt with.
->
+Currently we use prog->active to prevent tracing recursion, but it has
+some downsides,
 
-Got it. Thanks for your explanation.
+- It can't identify different contexts
+  That said, if a process context is interrupted by a irq context and
+  the irq context runs the same code path, it will be considered as
+  recursion. For example,
+    normal:
+      this_cpu_inc_return(*(prog->active)) == 1 <- OK
 
-> Can you change the tests to allow a single recursion?
->
+      irq:
+        this_cpu_inc_return(*(prog->active)) == 1 <- FAIL!
+        [ Considered as recusion ]
 
-I think one single recursion should be acceptable. I will change it.
+- It has to maintain a percpu area
+  A percpu area will be allocated for each prog when the prog is loaded
+  and be freed when the prog is destroyed.
 
---=20
-Regards
-Yafang
+Let's replace it with the generic tracing recursion prevention mechanism,
+which can work fine with anything. In the above example, the irq context
+won't be considered as recursion again,
+  normal:
+    test_recursion_try_acquire() <- OK
+
+    softirq:
+      test_recursion_try_acquire() <- OK
+
+      irq:
+        test_recursion_try_acquire() <- OK
+
+Note that, currently one single recursion in process context is allowed
+due to the TRACE_CTX_TRANSITION workaround, which can be fixed in the
+future. That said, below behavior is expected currently,
+  normal:
+    test_recursion_try_acquire() <- OK
+    [ recursion happens ]        <- one single recursion is allowed
+    test_recursion_try_acquire() <- OK
+    [ recursion happens ]
+    test_recursion_try_acquire() <- RECURSION!
+
+To adapt to this behavior, the bpf recursion selftest is changed.
+
+Steven Rostedt (Google) (1):
+  tracing: Add generic test_recursion_try_acquire()
+
+Yafang Shao (5):
+  bpf: Add __rcu_read_{lock,unlock} into btf id deny list
+  tracing: Add the comment for allowing one single recursion in process
+    context
+  selftests/bpf: Allow one single recursion in fentry recursion test
+  bpf: Improve tracing recursion prevention mechanism
+  bpf: Remove some denied functions from the btf id deny list
+
+ include/linux/bpf.h                                |  2 +-
+ include/linux/trace_recursion.h                    | 49 ++++++++++++++++------
+ kernel/bpf/core.c                                  | 10 -----
+ kernel/bpf/trampoline.c                            | 44 ++++++++++++++-----
+ kernel/bpf/verifier.c                              | 10 ++---
+ kernel/trace/bpf_trace.c                           | 12 +++---
+ kernel/trace/ftrace.c                              |  2 +
+ tools/testing/selftests/bpf/prog_tests/recursion.c |  7 +++-
+ tools/testing/selftests/bpf/test_progs.h           | 19 +++++++++
+ 9 files changed, 107 insertions(+), 48 deletions(-)
+
+-- 
+1.8.3.1
+
