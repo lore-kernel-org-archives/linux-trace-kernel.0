@@ -2,109 +2,97 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A1993C77B7A
-	for <linux-trace-kernel@archiver.kernel.org>; Mon, 17 Apr 2023 15:49:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EBA48C77B72
+	for <linux-trace-kernel@archiver.kernel.org>; Mon, 17 Apr 2023 20:15:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230052AbjDQPtD (ORCPT
+        id S229769AbjDQUPF (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Mon, 17 Apr 2023 11:49:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43978 "EHLO
+        Mon, 17 Apr 2023 16:15:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43704 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231251AbjDQPsp (ORCPT
+        with ESMTP id S229562AbjDQUPE (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Mon, 17 Apr 2023 11:48:45 -0400
-Received: from mail-pl1-x631.google.com (mail-pl1-x631.google.com [IPv6:2607:f8b0:4864:20::631])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8C753CC09;
-        Mon, 17 Apr 2023 08:48:19 -0700 (PDT)
-Received: by mail-pl1-x631.google.com with SMTP id o2so26125750plg.4;
-        Mon, 17 Apr 2023 08:48:19 -0700 (PDT)
+        Mon, 17 Apr 2023 16:15:04 -0400
+Received: from mail-pl1-x632.google.com (mail-pl1-x632.google.com [IPv6:2607:f8b0:4864:20::632])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9DBAA199A;
+        Mon, 17 Apr 2023 13:15:01 -0700 (PDT)
+Received: by mail-pl1-x632.google.com with SMTP id la15so3905115plb.11;
+        Mon, 17 Apr 2023 13:15:01 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1681746498; x=1684338498;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=hzwNPovO934/64aRBZe++yk+dNmk1JTc3kyHlCW2thM=;
-        b=EtvJ8wzzGeIKNvCSRVQyBRs0///s9z59xSvbgIBRPTP1pfha9sUxogoFUVO0c0db+g
-         M0COUsSWzkRLMZ+BDmNpjNjihYBldeUy7CY+ea/XG6e5FC5qNvtB+ZpwGFQXDIXu8NmX
-         64xY4XB80LHkLvy+SfsRjM+m/8d1gweexpJpB3NblaNolg9oxMkQfNwiF+8FvZ8JM2zW
-         HDzq/NK8MLfgTR9LMciv9ceCAK9TtdmoA4kd/QYe1ZddwdaGqEjucKQNjx8tgVFk6+DH
-         mHGoEyEqZrq9qahzLy0G/E8FMAHx6sLdPtSlzL4L4nx8V2W6JapPUI1wGfB4yMUNmmHB
-         XrYw==
+        d=gmail.com; s=20221208; t=1681762501; x=1684354501;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=4Avbj4awFk6rrKm+MFrJ3zdjtROI8yyonU4xCuAnVHM=;
+        b=BStUB1/YFIObgGQyJ/e3G2fizdV8FeW6VKILet4qATiRlnM1CTjHevbYZcTx7+r90R
+         HRVRbxII8iXNTXkZhb8MZsvevsLZ8G/iI+quaV61+I0+o1zv5G4WpVVi2dRoUSkdWU0p
+         zL1RGrTmdWz1435gn3UffJKYmaKaPS8XPOSMkJ9n7iWy1ElA6/3lI7QzjDZG3RRtq2mt
+         +w6fvC/qU4SbQUTJrrqq0aCRj1DlXafJWDcQ3o87Ns0cn25d2RdMBOMCnZSa60lYYYR5
+         iwk9OIZf5tKkjsL131vH6h1iqMLzYHM8u0d2Qm5VrAZ152uU2Gl6VExmSyqEoRw0I0g6
+         y8zQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1681746498; x=1684338498;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=hzwNPovO934/64aRBZe++yk+dNmk1JTc3kyHlCW2thM=;
-        b=fzEs6b4m7P0M3A8Qfym+mkaSXOol0fiXFsSzY8rWOdvI7T6C7HJnWy6QDAf1gaxnNx
-         /GpRfbTS7QIX2STu8Szb1YBn5NXzwZSavVLxNHimwbVnwi+S1/0zQw8UwByXoQFgsfoj
-         f5Xo3c78+3H0HufoEmUIt6To9HGk4JGT2C5/KItcxkmTbr/kk7BwLfEcpK2aUfbW85uA
-         Ph7HaNRmodLNlPHXJHse4UE+Hkhc3APC/tbIBrUsQaGfLCw9V8HHGlCJA5KEBTIw93Ag
-         oaa3Dk1+VUWQULC8PCRN5qcmzvU8xJULtHAXQxAheEqaJxRGHM/D36nSHySzVskwZfpz
-         pc+A==
-X-Gm-Message-State: AAQBX9fuEF4wEvFvB/ovbpfLu08RuOPTtD97KuCZ1hoBDwqZp+8ZGIlO
-        acWMsaaI6tjTqyknuqeBA10=
-X-Google-Smtp-Source: AKy350Ztle8natRSMegaDwypqIor50+pRLxLEDw9RI/thoOaMOAwGj0hmhhdVjUJTgHAFxDO1bxoCQ==
-X-Received: by 2002:a17:902:eac2:b0:1a1:b440:3773 with SMTP id p2-20020a170902eac200b001a1b4403773mr12088320pld.27.1681746497891;
-        Mon, 17 Apr 2023 08:48:17 -0700 (PDT)
-Received: from vultr.guest ([2401:c080:3800:263c:5400:4ff:fe66:d27f])
-        by smtp.gmail.com with ESMTPSA id jj17-20020a170903049100b001a6b308fcaesm4437513plb.153.2023.04.17.08.48.14
+        d=1e100.net; s=20221208; t=1681762501; x=1684354501;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=4Avbj4awFk6rrKm+MFrJ3zdjtROI8yyonU4xCuAnVHM=;
+        b=fhOF24vPVF+PycmrkHOPY/u41Dl8j8SoTQc/9MHXmVoGQmAprTAOYdsTcNBddCukNG
+         23H9nFPjv4faRnlXq5M2ICjGDFqIgJnzTthyUofhyjsrDl+s7ju/vE6l/fFoVW8LCFUp
+         jhe2dCuM100+WmXOsDiqYD73g0p6k9/qakvg5PvoD8RNJbJ1h5UR0Aqj8rkgWvX/l2Gp
+         L+bxhI4SY0nNdd/GkkTqGnf2XJLD3gNxLUT3kiNSWeTmZ11Z8y/puNu/X48OeJ//o33L
+         BuhTN9vqFZpV8hOVd/0vGdrvR2ZwJWRlbE63PqKUzULqRQ6zZWwG+q/8EyESDcW/nRfN
+         WN5Q==
+X-Gm-Message-State: AAQBX9dvzZLT51wenOB1RAy8uzYsobmjZ/s/Bk9DQbB47Tko9C11XR5I
+        3ODb8rIXos1HPDvPoG6uII8=
+X-Google-Smtp-Source: AKy350bIofsgtB6f9sx6ZPim4cB4pDB0rkv6pyJ8mxL6/W/LsBYmRcoGYiB+hnludGpFq0K30Od/LQ==
+X-Received: by 2002:a05:6a20:a89d:b0:d8:d061:96ec with SMTP id ca29-20020a056a20a89d00b000d8d06196ecmr16995919pzb.27.1681762500944;
+        Mon, 17 Apr 2023 13:15:00 -0700 (PDT)
+Received: from dhcp-172-26-102-232.dhcp.thefacebook.com ([2620:10d:c090:400::5:9cf7])
+        by smtp.gmail.com with ESMTPSA id u1-20020a655c01000000b0051322a5aa64sm7525822pgr.3.2023.04.17.13.14.58
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 17 Apr 2023 08:48:17 -0700 (PDT)
-From:   Yafang Shao <laoar.shao@gmail.com>
-To:     ast@kernel.org, daniel@iogearbox.net, andrii@kernel.org,
+        Mon, 17 Apr 2023 13:15:00 -0700 (PDT)
+Date:   Mon, 17 Apr 2023 13:14:57 -0700
+From:   Alexei Starovoitov <alexei.starovoitov@gmail.com>
+To:     Yafang Shao <laoar.shao@gmail.com>
+Cc:     ast@kernel.org, daniel@iogearbox.net, andrii@kernel.org,
         kafai@fb.com, songliubraving@fb.com, yhs@fb.com,
         john.fastabend@gmail.com, kpsingh@kernel.org, sdf@google.com,
         haoluo@google.com, jolsa@kernel.org, rostedt@goodmis.org,
-        mhiramat@kernel.org
-Cc:     bpf@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Yafang Shao <laoar.shao@gmail.com>
-Subject: [PATCH bpf-next 6/6] bpf: Remove some denied functions from the btf id deny list
-Date:   Mon, 17 Apr 2023 15:47:37 +0000
-Message-Id: <20230417154737.12740-7-laoar.shao@gmail.com>
-X-Mailer: git-send-email 2.39.1
-In-Reply-To: <20230417154737.12740-1-laoar.shao@gmail.com>
+        mhiramat@kernel.org, bpf@vger.kernel.org,
+        linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH bpf-next 5/6] bpf: Improve tracing recursion prevention
+ mechanism
+Message-ID: <20230417201457.c43xfcukjzm4u6vx@dhcp-172-26-102-232.dhcp.thefacebook.com>
 References: <20230417154737.12740-1-laoar.shao@gmail.com>
+ <20230417154737.12740-6-laoar.shao@gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230417154737.12740-6-laoar.shao@gmail.com>
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-With the generic tracing recursion prevention mechanism applied, it is
-safe to trace migrate_{disable,enable} and preempt_count_{sub,add}. So
-we can remove them from the deny list.
-However we can't remove rcu_read_unlock_strict and
-__rcu_read_{lock,unlock}, because they are used in rcu_read_unlock() or
-rcu_read_lock().
+On Mon, Apr 17, 2023 at 03:47:36PM +0000, Yafang Shao wrote:
+> diff --git a/kernel/bpf/trampoline.c b/kernel/bpf/trampoline.c
+> index f61d513..3df39a5 100644
+> --- a/kernel/bpf/trampoline.c
+> +++ b/kernel/bpf/trampoline.c
+> @@ -842,15 +842,21 @@ static __always_inline u64 notrace bpf_prog_start_time(void)
+>  static u64 notrace __bpf_prog_enter_recur(struct bpf_prog *prog, struct bpf_tramp_run_ctx *run_ctx)
+>  	__acquires(RCU)
+>  {
+> -	rcu_read_lock();
+> -	migrate_disable();
+> -
+> -	run_ctx->saved_run_ctx = bpf_set_run_ctx(&run_ctx->run_ctx);
+> +	int bit;
+>  
+> -	if (unlikely(this_cpu_inc_return(*(prog->active)) != 1)) {
+> +	rcu_read_lock();
+> +	bit = test_recursion_try_acquire(_THIS_IP_, _RET_IP_);
 
-Signed-off-by: Yafang Shao <laoar.shao@gmail.com>
----
- kernel/bpf/verifier.c | 8 --------
- 1 file changed, 8 deletions(-)
+and bpf will prevent ftrace to run and vice versa.
+Not a good idea.
 
-diff --git a/kernel/bpf/verifier.c b/kernel/bpf/verifier.c
-index 83fb94f..40f6b2c 100644
---- a/kernel/bpf/verifier.c
-+++ b/kernel/bpf/verifier.c
-@@ -18634,17 +18634,9 @@ int bpf_check_attach_target(struct bpf_verifier_log *log,
- 
- BTF_SET_START(btf_id_deny)
- BTF_ID_UNUSED
--#ifdef CONFIG_SMP
--BTF_ID(func, migrate_disable)
--BTF_ID(func, migrate_enable)
--#endif
- #if !defined CONFIG_PREEMPT_RCU && !defined CONFIG_TINY_RCU
- BTF_ID(func, rcu_read_unlock_strict)
- #endif
--#if defined(CONFIG_DEBUG_PREEMPT) || defined(CONFIG_TRACE_PREEMPT_TOGGLE)
--BTF_ID(func, preempt_count_add)
--BTF_ID(func, preempt_count_sub)
--#endif
- #ifdef CONFIG_PREEMPT_RCU
- BTF_ID(func, __rcu_read_lock)
- BTF_ID(func, __rcu_read_unlock)
--- 
-1.8.3.1
-
+One bpf prog will prevent different bpf prog to run since they share current task.
+Not a good idea either.
