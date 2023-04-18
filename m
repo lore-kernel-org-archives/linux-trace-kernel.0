@@ -2,83 +2,118 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 97B85C77B75
-	for <linux-trace-kernel@archiver.kernel.org>; Tue, 18 Apr 2023 14:38:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EA155C6FD18
+	for <linux-trace-kernel@archiver.kernel.org>; Tue, 18 Apr 2023 15:24:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229800AbjDROi7 (ORCPT
+        id S231877AbjDRPYr (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Tue, 18 Apr 2023 10:38:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42418 "EHLO
+        Tue, 18 Apr 2023 11:24:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42266 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229517AbjDROi6 (ORCPT
+        with ESMTP id S231598AbjDRPYq (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Tue, 18 Apr 2023 10:38:58 -0400
-Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F317A448E;
-        Tue, 18 Apr 2023 07:38:56 -0700 (PDT)
-Date:   Tue, 18 Apr 2023 16:38:54 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1681828735;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type;
-        bh=HDWs2ddjtNGHMlnGV0ZEvDXQY8w3gDQpVYK7AV0UPeM=;
-        b=NBZYVBatqhtjwKHQ5vPt8VNVjpzPLJWQ5ocxzLNpS5CvbX88osqVD1IlNnnOUo8Y4oRHM8
-        VxV3qlpujjYbTOxbY0ukfx0ub9H6bXxbV4sWxNKZWcxwbDqMKsT1miEtNSDV+o7+zinIc+
-        xIYAElLGGaKXjQoimk5dcROOT5iE1bU+bBB9WYds13aAxhujX8oDGPQwJ5XzGT2D079ZcN
-        bmB92Ah5XFiaV3PvkASobNMA9ZqWBmpFbaCBibuUQTdG7K04dbEgjIl4csZIAYf8j36KcD
-        P1a8klNLECKDajx2yaQbncfIKMQCsY4V25v6aqJHgwPBHj5vqjd0+sYYE7wrSA==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1681828735;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type;
-        bh=HDWs2ddjtNGHMlnGV0ZEvDXQY8w3gDQpVYK7AV0UPeM=;
-        b=1a7Le/7KspJHQ+qTPfNPzGWYt1DvHAOu29Huc/FQm6XkCacKlPN60IZyZ9j4qc1SlXKNOj
-        whrW4glXW0Bcd7Aw==
-From:   Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-To:     linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
-Cc:     Steven Rostedt <rostedt@goodmis.org>,
+        Tue, 18 Apr 2023 11:24:46 -0400
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9CFCA12CB0;
+        Tue, 18 Apr 2023 08:24:41 -0700 (PDT)
+Received: from pps.filterd (m0279863.ppops.net [127.0.0.1])
+        by mx0a-0031df01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 33I6rQvW008403;
+        Tue, 18 Apr 2023 15:24:27 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=message-id : date :
+ mime-version : subject : to : cc : references : from : in-reply-to :
+ content-type : content-transfer-encoding; s=qcppdkim1;
+ bh=rNasdmeHm0asfhvPEs4XOdtG16/F5CT6ndRcY6Rz8wI=;
+ b=lVh4biwWC2VfTHQ6S53pIMCAbifWv6nXO0MUyIgd7p5zIgqlAPi2/u8K1IUSWrtBk7Qt
+ j2C2eSL0hGI1SyPahEBQnvS2LbeeeXxZ35ZjxGsumFKhWxdeoEWi2VZ72kvt55jwuAb9
+ /u3NTt3NaK5rOBXW6/hi7t7dNCsvCqsd5SO85y8rhJ2sNdhEV+clv2hmxMWu1Plxxov7
+ WYwGi4V3u2UONLDMg6R15mkpcsKI+l+HM+sAqrBSnW/UmwY+uEZWoWo9yz4zZS7Ajndz
+ zCxjVuyOCSn/K7OrVgJCie3+oNldKT4pMs0my1XcsP1Xcaj3Pv1ZwnT2BNf0qlwzeU4V VQ== 
+Received: from nasanppmta05.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+        by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3q19kg2ncx-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 18 Apr 2023 15:24:27 +0000
+Received: from nasanex01c.na.qualcomm.com (nasanex01c.na.qualcomm.com [10.45.79.139])
+        by NASANPPMTA05.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 33IFOQvZ002113
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 18 Apr 2023 15:24:26 GMT
+Received: from [10.216.30.222] (10.80.80.8) by nasanex01c.na.qualcomm.com
+ (10.45.79.139) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.986.42; Tue, 18 Apr
+ 2023 08:24:23 -0700
+Message-ID: <b33d2762-6769-15d1-6f7f-ca24feb6aa1b@quicinc.com>
+Date:   Tue, 18 Apr 2023 20:54:19 +0530
+MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.8.0
+Subject: Re: [PATCH] tracing/timer: Add missing hrtimer modes to
+ decode_hrtimer_mode().
+Content-Language: en-US
+To:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-trace-kernel@vger.kernel.org>
+CC:     Steven Rostedt <rostedt@goodmis.org>,
         Masami Hiramatsu <mhiramat@kernel.org>,
         Thomas Gleixner <tglx@linutronix.de>
-Subject: [PATCH] tracing/timer: Add missing hrtimer modes to
- decode_hrtimer_mode().
-Message-ID: <20230418143854.8vHWQKLM@linutronix.de>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+References: <20230418143854.8vHWQKLM@linutronix.de>
+From:   Mukesh Ojha <quic_mojha@quicinc.com>
+In-Reply-To: <20230418143854.8vHWQKLM@linutronix.de>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.80.80.8]
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nasanex01c.na.qualcomm.com (10.45.79.139)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: YMVAh5o6zWjxYE0pAtdWzRB6xpAWsDDy
+X-Proofpoint-ORIG-GUID: YMVAh5o6zWjxYE0pAtdWzRB6xpAWsDDy
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.254,Aquarius:18.0.942,Hydra:6.0.573,FMLib:17.11.170.22
+ definitions=2023-04-18_11,2023-04-18_01,2023-02-09_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 mlxlogscore=987
+ suspectscore=0 bulkscore=0 spamscore=0 impostorscore=0 lowpriorityscore=0
+ priorityscore=1501 clxscore=1011 mlxscore=0 adultscore=0 malwarescore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2303200000
+ definitions=main-2304180131
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-The trace output for the HRTIMER_MODE_.*_HARD modes is seen as a number
-since these modes are not decoded. The author was not aware of the fancy
-decoding function which makes the life easier.
 
-Extend decode_hrtimer_mode() with the additional HRTIMER_MODE_.*_HARD
-modes.
 
-Fixes: ae6683d815895 ("hrtimer: Introduce HARD expiry mode")
-Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
----
- include/trace/events/timer.h | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+On 4/18/2023 8:08 PM, Sebastian Andrzej Siewior wrote:
+> The trace output for the HRTIMER_MODE_.*_HARD modes is seen as a number
+> since these modes are not decoded. The author was not aware of the fancy
+> decoding function which makes the life easier.
+> 
+> Extend decode_hrtimer_mode() with the additional HRTIMER_MODE_.*_HARD
+> modes.
+> 
+> Fixes: ae6683d815895 ("hrtimer: Introduce HARD expiry mode")
+> Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
 
-diff --git a/include/trace/events/timer.h b/include/trace/events/timer.h
-index 2e713a7d9aa3a..5d43751a766c6 100644
---- a/include/trace/events/timer.h
-+++ b/include/trace/events/timer.h
-@@ -158,7 +158,11 @@ DEFINE_EVENT(timer_class, timer_cancel,
- 		{ HRTIMER_MODE_ABS_SOFT,	"ABS|SOFT"	},	\
- 		{ HRTIMER_MODE_REL_SOFT,	"REL|SOFT"	},	\
- 		{ HRTIMER_MODE_ABS_PINNED_SOFT,	"ABS|PINNED|SOFT" },	\
--		{ HRTIMER_MODE_REL_PINNED_SOFT,	"REL|PINNED|SOFT" })
-+		{ HRTIMER_MODE_REL_PINNED_SOFT,	"REL|PINNED|SOFT" },	\
-+		{ HRTIMER_MODE_ABS_HARD,	"ABS|HARD" },		\
-+		{ HRTIMER_MODE_REL_HARD,	"REL|HARD" },		\
-+		{ HRTIMER_MODE_ABS_PINNED_HARD, "ABS|PINNED|HARD" },	\
-+		{ HRTIMER_MODE_REL_PINNED_HARD,	"REL|PINNED|HARD" })
- 
- /**
-  * hrtimer_init - called when the hrtimer is initialized
--- 
-2.40.0
+Good catch.
+Reviewed-by: Mukesh Ojha <quic_mojha@quicinc.com>
 
+-Mukesh
+
+> ---
+>   include/trace/events/timer.h | 6 +++++-
+>   1 file changed, 5 insertions(+), 1 deletion(-)
+> 
+> diff --git a/include/trace/events/timer.h b/include/trace/events/timer.h
+> index 2e713a7d9aa3a..5d43751a766c6 100644
+> --- a/include/trace/events/timer.h
+> +++ b/include/trace/events/timer.h
+> @@ -158,7 +158,11 @@ DEFINE_EVENT(timer_class, timer_cancel,
+>   		{ HRTIMER_MODE_ABS_SOFT,	"ABS|SOFT"	},	\
+>   		{ HRTIMER_MODE_REL_SOFT,	"REL|SOFT"	},	\
+>   		{ HRTIMER_MODE_ABS_PINNED_SOFT,	"ABS|PINNED|SOFT" },	\
+> -		{ HRTIMER_MODE_REL_PINNED_SOFT,	"REL|PINNED|SOFT" })
+> +		{ HRTIMER_MODE_REL_PINNED_SOFT,	"REL|PINNED|SOFT" },	\
+> +		{ HRTIMER_MODE_ABS_HARD,	"ABS|HARD" },		\
+> +		{ HRTIMER_MODE_REL_HARD,	"REL|HARD" },		\
+> +		{ HRTIMER_MODE_ABS_PINNED_HARD, "ABS|PINNED|HARD" },	\
+> +		{ HRTIMER_MODE_REL_PINNED_HARD,	"REL|PINNED|HARD" })
+>   
+>   /**
+>    * hrtimer_init - called when the hrtimer is initialized
