@@ -2,113 +2,136 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 906EBC77B72
-	for <linux-trace-kernel@archiver.kernel.org>; Tue, 18 Apr 2023 01:51:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E51D8C77B76
+	for <linux-trace-kernel@archiver.kernel.org>; Tue, 18 Apr 2023 09:57:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230337AbjDRBvy (ORCPT
+        id S229453AbjDRJ5n (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Mon, 17 Apr 2023 21:51:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37816 "EHLO
+        Tue, 18 Apr 2023 05:57:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56958 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230149AbjDRBvx (ORCPT
+        with ESMTP id S229610AbjDRJ5k (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Mon, 17 Apr 2023 21:51:53 -0400
-Received: from mail-qv1-xf31.google.com (mail-qv1-xf31.google.com [IPv6:2607:f8b0:4864:20::f31])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2721C19A6;
-        Mon, 17 Apr 2023 18:51:17 -0700 (PDT)
-Received: by mail-qv1-xf31.google.com with SMTP id me15so7034411qvb.4;
-        Mon, 17 Apr 2023 18:51:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1681782591; x=1684374591;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=a7a6S2fWZYFzPFmPdbHoXKoOqx5GTXT/tFpcCrdO71c=;
-        b=ll+jtBq/Iq7g4EWx+raUAFK8CnDCweG1yJn1s23TOfhXF0F7waGOc7S4B2M72MJXHZ
-         d4Vi+B9+bQ+Bq/Ym77R3HJUoOrab9QB7LCSPRyeEjg6EYgKkIyDVtRHrlEx2kJM10fWA
-         YN2y/HwozYSGHbwNzX+Y2ipLKklupLNha1gJXCeZL0hHylzr1BjlnrXWjeZbbw58HUV1
-         19zKVhDl0YZ9wn6Sn/oVoCkZUEtigAlX8Q9Ykqlug7gCaz53Ufsj3GwAF7ytssIeYLPN
-         u53r7Uy2j7Wq4ukwjRKVWUhd0fix5bwM+k4tZxSctVegTFJVLzi+/cMBWBNbJhDZeQkN
-         tW3A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1681782591; x=1684374591;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=a7a6S2fWZYFzPFmPdbHoXKoOqx5GTXT/tFpcCrdO71c=;
-        b=f3j9DMLHzLOPU2RGX1pitbciexAL+MJXDb3ZK5cpfTvIrzvT/JcWVm6S5IIZCJ6wJi
-         jBtMpFpaACgqKhaPlSKRB06c0ebP4s23Ka9Uh0r0dslaT75/R/0w3HfktjPqAQnUWXHF
-         Dhxi4yIRTikP5/CK8LBKzKiNYlg6PViWHOjPnq6Tlb2ODxm60MLD0P4r2nZfln0pHn2H
-         YsviasrawlUBUgG+vGC0rMMxeuBGr5swcRy7tQG0w13oo1W60OGY5yt6t/Bm1Yx+ottA
-         0yR/aOQ0F6YV0SainyGowz2YuaqYNA86Z5Tu3Ygo/ra8qBWtKWuH8+71T+E+uD/sVhrE
-         E8LQ==
-X-Gm-Message-State: AAQBX9du9IG42XTbgKvUI+bhSxT0hEQPf73Jn/P8w/JhwNmR5NbORyAR
-        uKIh5HIEvA00BYq7WMkyGmy7JAcYcu3kas0/6SM=
-X-Google-Smtp-Source: AKy350YVTzsQV/D+Yaag/9o3NagW64of/FBjDyYCTBzo4auEHG/0P3yksm2ypt7Uksn7q8kutZ8WCddAQs7eR5Gre+o=
-X-Received: by 2002:ad4:5f06:0:b0:5ef:8b3a:5b9 with SMTP id
- fo6-20020ad45f06000000b005ef8b3a05b9mr4731293qvb.1.1681782590896; Mon, 17 Apr
- 2023 18:49:50 -0700 (PDT)
-MIME-Version: 1.0
-References: <20230417154737.12740-1-laoar.shao@gmail.com> <20230417154737.12740-6-laoar.shao@gmail.com>
- <20230417201457.c43xfcukjzm4u6vx@dhcp-172-26-102-232.dhcp.thefacebook.com>
-In-Reply-To: <20230417201457.c43xfcukjzm4u6vx@dhcp-172-26-102-232.dhcp.thefacebook.com>
-From:   Yafang Shao <laoar.shao@gmail.com>
-Date:   Tue, 18 Apr 2023 09:49:14 +0800
-Message-ID: <CALOAHbC4Bz_VX52zmv=sScBf0hzscMAC4+EwMCpnd1BcaSVJSw@mail.gmail.com>
-Subject: Re: [PATCH bpf-next 5/6] bpf: Improve tracing recursion prevention mechanism
-To:     Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Cc:     ast@kernel.org, daniel@iogearbox.net, andrii@kernel.org,
-        kafai@fb.com, songliubraving@fb.com, yhs@fb.com,
-        john.fastabend@gmail.com, kpsingh@kernel.org, sdf@google.com,
-        haoluo@google.com, jolsa@kernel.org, rostedt@goodmis.org,
-        mhiramat@kernel.org, bpf@vger.kernel.org,
+        Tue, 18 Apr 2023 05:57:40 -0400
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 915987ED7;
+        Tue, 18 Apr 2023 02:57:04 -0700 (PDT)
+Received: from pps.filterd (m0353722.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 33I9j3QI012916;
+        Tue, 18 Apr 2023 09:56:17 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
+ : date : message-id : in-reply-to : references : mime-version :
+ content-transfer-encoding; s=pp1;
+ bh=gcDsJ3qWfJbVBLy5reW9DJAoH6Vn2IeHQawNmq3ml6o=;
+ b=tLiKyc6ynXfBtoWgU01m8PJNB3xRkgDeRtU9zd/gllQo7anoeOF4XBIBn5oMHwKntC6g
+ qCn4acLmYzBlCU9AEnBjy6F6SJ4QCy8M/djfApg6uuS70QjlHb1DZIe/gVhkBdvlJYFQ
+ 8Za5MTal3f1ZB3x7J6qmex4PNSgpVEp+64jtVKoal+axkO27IHJ9ndcLbzdJk87jGL/r
+ UfQD2ixADQGQkx3nznSdazC/V6H7YDfySvj0eJGea7BLyFV12l9um6TGFOWwwz3OQima
+ LtrhN9y0E27fml8jyW8oo6PfSRCmmlK7B0R1mTx/QdJYqViP2mx+k7q800n/h6c1L0kE vg== 
+Received: from ppma03ams.nl.ibm.com (62.31.33a9.ip4.static.sl-reverse.com [169.51.49.98])
+        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3q1q353qtc-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 18 Apr 2023 09:56:17 +0000
+Received: from pps.filterd (ppma03ams.nl.ibm.com [127.0.0.1])
+        by ppma03ams.nl.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 33I3nqpe016741;
+        Tue, 18 Apr 2023 09:56:15 GMT
+Received: from smtprelay05.fra02v.mail.ibm.com ([9.218.2.225])
+        by ppma03ams.nl.ibm.com (PPS) with ESMTPS id 3pykj6hx07-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 18 Apr 2023 09:56:15 +0000
+Received: from smtpav05.fra02v.mail.ibm.com (smtpav05.fra02v.mail.ibm.com [10.20.54.104])
+        by smtprelay05.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 33I9uBec7078512
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 18 Apr 2023 09:56:11 GMT
+Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id CF4442004B;
+        Tue, 18 Apr 2023 09:56:11 +0000 (GMT)
+Received: from smtpav05.fra02v.mail.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 5658520040;
+        Tue, 18 Apr 2023 09:56:10 +0000 (GMT)
+Received: from li-ed75614c-32e0-11b2-a85c-ba2953069b43.in.ibm.com (unknown [9.109.209.37])
+        by smtpav05.fra02v.mail.ibm.com (Postfix) with ESMTP;
+        Tue, 18 Apr 2023 09:56:10 +0000 (GMT)
+From:   Akanksha J N <akanksha@linux.ibm.com>
+To:     linux-kselftest@vger.kernel.org,
         linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Cc:     rostedt@goodmis.org, mhiramat@kernel.org, shuah@kernel.org,
+        naveen.n.rao@linux.ibm.com, akanksha@linux.ibm.com
+Subject: [PATCH v2 2/2] selftests/ftrace: Add new test case which checks for optimized probes
+Date:   Tue, 18 Apr 2023 15:25:57 +0530
+Message-Id: <20230418095557.19061-3-akanksha@linux.ibm.com>
+X-Mailer: git-send-email 2.31.1
+In-Reply-To: <20230418095557.19061-1-akanksha@linux.ibm.com>
+References: <20230418095557.19061-1-akanksha@linux.ibm.com>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: rrbtHFRkYg3m4IWvtAviFGwCY95dNWvH
+X-Proofpoint-ORIG-GUID: rrbtHFRkYg3m4IWvtAviFGwCY95dNWvH
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.254,Aquarius:18.0.942,Hydra:6.0.573,FMLib:17.11.170.22
+ definitions=2023-04-18_05,2023-04-17_01,2023-02-09_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015 adultscore=0
+ malwarescore=0 spamscore=0 lowpriorityscore=0 mlxlogscore=956 bulkscore=0
+ phishscore=0 mlxscore=0 impostorscore=0 suspectscore=0 priorityscore=1501
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2303200000
+ definitions=main-2304180082
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On Tue, Apr 18, 2023 at 4:15=E2=80=AFAM Alexei Starovoitov
-<alexei.starovoitov@gmail.com> wrote:
->
-> On Mon, Apr 17, 2023 at 03:47:36PM +0000, Yafang Shao wrote:
-> > diff --git a/kernel/bpf/trampoline.c b/kernel/bpf/trampoline.c
-> > index f61d513..3df39a5 100644
-> > --- a/kernel/bpf/trampoline.c
-> > +++ b/kernel/bpf/trampoline.c
-> > @@ -842,15 +842,21 @@ static __always_inline u64 notrace bpf_prog_start=
-_time(void)
-> >  static u64 notrace __bpf_prog_enter_recur(struct bpf_prog *prog, struc=
-t bpf_tramp_run_ctx *run_ctx)
-> >       __acquires(RCU)
-> >  {
-> > -     rcu_read_lock();
-> > -     migrate_disable();
-> > -
-> > -     run_ctx->saved_run_ctx =3D bpf_set_run_ctx(&run_ctx->run_ctx);
-> > +     int bit;
-> >
-> > -     if (unlikely(this_cpu_inc_return(*(prog->active)) !=3D 1)) {
-> > +     rcu_read_lock();
-> > +     bit =3D test_recursion_try_acquire(_THIS_IP_, _RET_IP_);
->
-> and bpf will prevent ftrace to run and vice versa.
-> Not a good idea.
->
-> One bpf prog will prevent different bpf prog to run since they share curr=
-ent task.
-> Not a good idea either.
+Add new test case kprobe_opt_types.tc which enables and checks
+if each probe has been optimized in order to test potential issues with
+optimized probes.
+The '|| continue' is added with the echo statement to ignore errors that
+are caused by trying to add kprobes to non probeable lines and continue
+with the test.
+Signed-off-by: Akanksha J N <akanksha@linux.ibm.com>
+---
+ .../ftrace/test.d/kprobe/kprobe_opt_types.tc  | 34 +++++++++++++++++++
+ 1 file changed, 34 insertions(+)
+ create mode 100644 tools/testing/selftests/ftrace/test.d/kprobe/kprobe_opt_types.tc
 
-That shouldn't happen. test_recursion_try_acquire() uses a
-per-task_struct value. One single task_struct can't run in parallel,
-right?
-Note that the bpf program running in softirq or irq context won't be
-prevented by it.
-IIUC, the bpf program should run in serial in one single task, right?
-That said, one bpf program can only run after another bpf program
-finished in the same task?
+diff --git a/tools/testing/selftests/ftrace/test.d/kprobe/kprobe_opt_types.tc b/tools/testing/selftests/ftrace/test.d/kprobe/kprobe_opt_types.tc
+new file mode 100644
+index 000000000000..54e4800b8a13
+--- /dev/null
++++ b/tools/testing/selftests/ftrace/test.d/kprobe/kprobe_opt_types.tc
+@@ -0,0 +1,34 @@
++#!/bin/sh
++# SPDX-License-Identifier: GPL-2.0-or-later
++# Copyright (C) 2023 Akanksha J N, IBM corporation
++# description: Register/unregister optimized probe
++# requires: kprobe_events
++
++case `uname -m` in
++x86_64)
++;;
++arm*)
++;;
++ppc*)
++;;
++*)
++  echo "Please implement other architecture here"
++  exit_unsupported
++esac
++
++DEFAULT=$(cat /proc/sys/debug/kprobes-optimization)
++echo 1 > /proc/sys/debug/kprobes-optimization
++for i in `seq 0 255`; do
++        echo  "p:testprobe $FUNCTION_FORK+${i}" > kprobe_events || continue
++        echo 1 > events/kprobes/enable || continue
++        (echo "forked")
++        PROBE_TYPE=$(cat /sys/kernel/debug/kprobes/list | grep $FUNCTION_FORK | awk '{print $4}' | awk '{print substr($0,2,length($0)-2)}')
++        echo 0 > events/kprobes/enable
++        echo > kprobe_events
++        if [ $PROBE_TYPE = "OPTIMIZED" ]; then
++                echo "$DEFAULT" >  /proc/sys/debug/kprobes-optimization
++                exit_pass
++        fi
++done
++echo "$DEFAULT" >  /proc/sys/debug/kprobes-optimization
++echo "Done"
+-- 
+2.31.1
 
---=20
-Regards
-Yafang
