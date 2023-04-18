@@ -2,118 +2,121 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EA155C6FD18
-	for <linux-trace-kernel@archiver.kernel.org>; Tue, 18 Apr 2023 15:24:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A47E2C6FD18
+	for <linux-trace-kernel@archiver.kernel.org>; Tue, 18 Apr 2023 15:39:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231877AbjDRPYr (ORCPT
+        id S231589AbjDRPjE (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Tue, 18 Apr 2023 11:24:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42266 "EHLO
+        Tue, 18 Apr 2023 11:39:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55112 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231598AbjDRPYq (ORCPT
+        with ESMTP id S229978AbjDRPjD (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Tue, 18 Apr 2023 11:24:46 -0400
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9CFCA12CB0;
-        Tue, 18 Apr 2023 08:24:41 -0700 (PDT)
-Received: from pps.filterd (m0279863.ppops.net [127.0.0.1])
-        by mx0a-0031df01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 33I6rQvW008403;
-        Tue, 18 Apr 2023 15:24:27 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=message-id : date :
- mime-version : subject : to : cc : references : from : in-reply-to :
- content-type : content-transfer-encoding; s=qcppdkim1;
- bh=rNasdmeHm0asfhvPEs4XOdtG16/F5CT6ndRcY6Rz8wI=;
- b=lVh4biwWC2VfTHQ6S53pIMCAbifWv6nXO0MUyIgd7p5zIgqlAPi2/u8K1IUSWrtBk7Qt
- j2C2eSL0hGI1SyPahEBQnvS2LbeeeXxZ35ZjxGsumFKhWxdeoEWi2VZ72kvt55jwuAb9
- /u3NTt3NaK5rOBXW6/hi7t7dNCsvCqsd5SO85y8rhJ2sNdhEV+clv2hmxMWu1Plxxov7
- WYwGi4V3u2UONLDMg6R15mkpcsKI+l+HM+sAqrBSnW/UmwY+uEZWoWo9yz4zZS7Ajndz
- zCxjVuyOCSn/K7OrVgJCie3+oNldKT4pMs0my1XcsP1Xcaj3Pv1ZwnT2BNf0qlwzeU4V VQ== 
-Received: from nasanppmta05.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-        by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3q19kg2ncx-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 18 Apr 2023 15:24:27 +0000
-Received: from nasanex01c.na.qualcomm.com (nasanex01c.na.qualcomm.com [10.45.79.139])
-        by NASANPPMTA05.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 33IFOQvZ002113
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 18 Apr 2023 15:24:26 GMT
-Received: from [10.216.30.222] (10.80.80.8) by nasanex01c.na.qualcomm.com
- (10.45.79.139) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.986.42; Tue, 18 Apr
- 2023 08:24:23 -0700
-Message-ID: <b33d2762-6769-15d1-6f7f-ca24feb6aa1b@quicinc.com>
-Date:   Tue, 18 Apr 2023 20:54:19 +0530
+        Tue, 18 Apr 2023 11:39:03 -0400
+Received: from mail-ej1-x62a.google.com (mail-ej1-x62a.google.com [IPv6:2a00:1450:4864:20::62a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9BFC91384D;
+        Tue, 18 Apr 2023 08:38:57 -0700 (PDT)
+Received: by mail-ej1-x62a.google.com with SMTP id a640c23a62f3a-94f0dd117dcso202099866b.3;
+        Tue, 18 Apr 2023 08:38:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1681832336; x=1684424336;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=xRhoPtoWvk9JTnFy49QmkeA3jHwK2uTwQ5tD3o618bk=;
+        b=q93AsTVnuVuSJXdEtyd+uD0Tau1ePOodDrmgL6PqFKV7eknMxjMyIUHg1n/camoF4J
+         a8N0rRjm64Kw2984e4v/ieQP552ueI/fqH65vnEwa/FMDy7vXwx0cwBtnuLaaIHvwnlD
+         kL8zd2fAhiv2KCGHnMp8A4cSxi6siuaCr4K/aOy2nhwOcU8XE+gcb15snZCBqo1eZK5Y
+         89pfuPqIgewArS7NGCwATb2UofhJCa00vSqSPQ3QhMZusBduxvu45FmeEApE61HJwAb2
+         uRVO4yRLNZagGLXAldBjQKvLZpvidVs3h7yq677Rp7TyBE1egogpq/KFLUgbmM9WkJzb
+         pdRg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1681832336; x=1684424336;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=xRhoPtoWvk9JTnFy49QmkeA3jHwK2uTwQ5tD3o618bk=;
+        b=KBclxZgE9bS2ImYOM3OhVqp3j6B2FJiz5Srp6PUQ18LUGu/aMm0h8HtZqNDegetIiG
+         hexSCVA0iSILqOgNJtZF3bUV/HKJSg4bvcLUXvS+Tob1jJo97mX9kI7y31+hBYR3L8W/
+         OYV7iIKzeBqQ2EJqnL38MpofWE/cLkCjmUee9EVtnOzve3T9lahFRiOF5rbLjMVWBq0/
+         P+YTpD7Ht1K+D/xT1DjaUuc4PfSAHBXTFq4tdGB0UnedFsOICmC3ghpbzZL0G9gpPJB4
+         A6fmpTdguvGHlCTgDwGLObFXaUfKqkmpBTwHZROovbW/sHEsd/8LgAS7bnZ9OgRR/15W
+         C7Ew==
+X-Gm-Message-State: AAQBX9cfF9K1Vc8UCezae3fLKrTnTEtxtBwdP/ch3HkMB0f5WXoAJKyA
+        TWrKv434+lW14Sy/gehKuXqSi3ZprURsmW8Sokk=
+X-Google-Smtp-Source: AKy350YjYYKN64Ltm6I9TaT/Oe8KxeMlHKbfYR55/dIdgsNWH7uNEiBi2JkswaP62CDU57Y9tnFgMkMrYjhv05ezGWk=
+X-Received: by 2002:a50:d716:0:b0:506:34d8:c710 with SMTP id
+ t22-20020a50d716000000b0050634d8c710mr1396132edi.3.1681832335506; Tue, 18 Apr
+ 2023 08:38:55 -0700 (PDT)
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.8.0
-Subject: Re: [PATCH] tracing/timer: Add missing hrtimer modes to
- decode_hrtimer_mode().
-Content-Language: en-US
-To:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-trace-kernel@vger.kernel.org>
-CC:     Steven Rostedt <rostedt@goodmis.org>,
+References: <20230417154737.12740-1-laoar.shao@gmail.com> <20230417154737.12740-6-laoar.shao@gmail.com>
+ <20230417201457.c43xfcukjzm4u6vx@dhcp-172-26-102-232.dhcp.thefacebook.com> <CALOAHbC4Bz_VX52zmv=sScBf0hzscMAC4+EwMCpnd1BcaSVJSw@mail.gmail.com>
+In-Reply-To: <CALOAHbC4Bz_VX52zmv=sScBf0hzscMAC4+EwMCpnd1BcaSVJSw@mail.gmail.com>
+From:   Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Date:   Tue, 18 Apr 2023 08:38:44 -0700
+Message-ID: <CAADnVQJw9BCK2itE5bZWdQYz7D-8KdcH96E885zUakEDAOrC+Q@mail.gmail.com>
+Subject: Re: [PATCH bpf-next 5/6] bpf: Improve tracing recursion prevention mechanism
+To:     Yafang Shao <laoar.shao@gmail.com>
+Cc:     Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Andrii Nakryiko <andrii@kernel.org>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        John Fastabend <john.fastabend@gmail.com>,
+        KP Singh <kpsingh@kernel.org>,
+        Stanislav Fomichev <sdf@google.com>,
+        Hao Luo <haoluo@google.com>, Jiri Olsa <jolsa@kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
         Masami Hiramatsu <mhiramat@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>
-References: <20230418143854.8vHWQKLM@linutronix.de>
-From:   Mukesh Ojha <quic_mojha@quicinc.com>
-In-Reply-To: <20230418143854.8vHWQKLM@linutronix.de>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.80.80.8]
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nasanex01c.na.qualcomm.com (10.45.79.139)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: YMVAh5o6zWjxYE0pAtdWzRB6xpAWsDDy
-X-Proofpoint-ORIG-GUID: YMVAh5o6zWjxYE0pAtdWzRB6xpAWsDDy
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.254,Aquarius:18.0.942,Hydra:6.0.573,FMLib:17.11.170.22
- definitions=2023-04-18_11,2023-04-18_01,2023-02-09_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 mlxlogscore=987
- suspectscore=0 bulkscore=0 spamscore=0 impostorscore=0 lowpriorityscore=0
- priorityscore=1501 clxscore=1011 mlxscore=0 adultscore=0 malwarescore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2303200000
- definitions=main-2304180131
+        bpf <bpf@vger.kernel.org>, linux-trace-kernel@vger.kernel.org,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
+On Mon, Apr 17, 2023 at 6:49=E2=80=AFPM Yafang Shao <laoar.shao@gmail.com> =
+wrote:
+>
+> On Tue, Apr 18, 2023 at 4:15=E2=80=AFAM Alexei Starovoitov
+> <alexei.starovoitov@gmail.com> wrote:
+> >
+> > On Mon, Apr 17, 2023 at 03:47:36PM +0000, Yafang Shao wrote:
+> > > diff --git a/kernel/bpf/trampoline.c b/kernel/bpf/trampoline.c
+> > > index f61d513..3df39a5 100644
+> > > --- a/kernel/bpf/trampoline.c
+> > > +++ b/kernel/bpf/trampoline.c
+> > > @@ -842,15 +842,21 @@ static __always_inline u64 notrace bpf_prog_sta=
+rt_time(void)
+> > >  static u64 notrace __bpf_prog_enter_recur(struct bpf_prog *prog, str=
+uct bpf_tramp_run_ctx *run_ctx)
+> > >       __acquires(RCU)
+> > >  {
+> > > -     rcu_read_lock();
+> > > -     migrate_disable();
+> > > -
+> > > -     run_ctx->saved_run_ctx =3D bpf_set_run_ctx(&run_ctx->run_ctx);
+> > > +     int bit;
+> > >
+> > > -     if (unlikely(this_cpu_inc_return(*(prog->active)) !=3D 1)) {
+> > > +     rcu_read_lock();
+> > > +     bit =3D test_recursion_try_acquire(_THIS_IP_, _RET_IP_);
+> >
+> > and bpf will prevent ftrace to run and vice versa.
+> > Not a good idea.
+> >
+> > One bpf prog will prevent different bpf prog to run since they share cu=
+rrent task.
+> > Not a good idea either.
+>
+> That shouldn't happen. test_recursion_try_acquire() uses a
+> per-task_struct value. One single task_struct can't run in parallel,
+> right?
+> Note that the bpf program running in softirq or irq context won't be
+> prevented by it.
+> IIUC, the bpf program should run in serial in one single task, right?
+> That said, one bpf program can only run after another bpf program
+> finished in the same task?
 
-
-On 4/18/2023 8:08 PM, Sebastian Andrzej Siewior wrote:
-> The trace output for the HRTIMER_MODE_.*_HARD modes is seen as a number
-> since these modes are not decoded. The author was not aware of the fancy
-> decoding function which makes the life easier.
-> 
-> Extend decode_hrtimer_mode() with the additional HRTIMER_MODE_.*_HARD
-> modes.
-> 
-> Fixes: ae6683d815895 ("hrtimer: Introduce HARD expiry mode")
-> Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-
-Good catch.
-Reviewed-by: Mukesh Ojha <quic_mojha@quicinc.com>
-
--Mukesh
-
-> ---
->   include/trace/events/timer.h | 6 +++++-
->   1 file changed, 5 insertions(+), 1 deletion(-)
-> 
-> diff --git a/include/trace/events/timer.h b/include/trace/events/timer.h
-> index 2e713a7d9aa3a..5d43751a766c6 100644
-> --- a/include/trace/events/timer.h
-> +++ b/include/trace/events/timer.h
-> @@ -158,7 +158,11 @@ DEFINE_EVENT(timer_class, timer_cancel,
->   		{ HRTIMER_MODE_ABS_SOFT,	"ABS|SOFT"	},	\
->   		{ HRTIMER_MODE_REL_SOFT,	"REL|SOFT"	},	\
->   		{ HRTIMER_MODE_ABS_PINNED_SOFT,	"ABS|PINNED|SOFT" },	\
-> -		{ HRTIMER_MODE_REL_PINNED_SOFT,	"REL|PINNED|SOFT" })
-> +		{ HRTIMER_MODE_REL_PINNED_SOFT,	"REL|PINNED|SOFT" },	\
-> +		{ HRTIMER_MODE_ABS_HARD,	"ABS|HARD" },		\
-> +		{ HRTIMER_MODE_REL_HARD,	"REL|HARD" },		\
-> +		{ HRTIMER_MODE_ABS_PINNED_HARD, "ABS|PINNED|HARD" },	\
-> +		{ HRTIMER_MODE_REL_PINNED_HARD,	"REL|PINNED|HARD" })
->   
->   /**
->    * hrtimer_init - called when the hrtimer is initialized
+bpf progs can nest in the same task.
