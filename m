@@ -2,121 +2,140 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A47E2C6FD18
-	for <linux-trace-kernel@archiver.kernel.org>; Tue, 18 Apr 2023 15:39:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D92DCC6FD18
+	for <linux-trace-kernel@archiver.kernel.org>; Wed, 19 Apr 2023 03:46:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231589AbjDRPjE (ORCPT
+        id S231516AbjDSDqL (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Tue, 18 Apr 2023 11:39:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55112 "EHLO
+        Tue, 18 Apr 2023 23:46:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32870 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229978AbjDRPjD (ORCPT
+        with ESMTP id S231574AbjDSDqK (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Tue, 18 Apr 2023 11:39:03 -0400
-Received: from mail-ej1-x62a.google.com (mail-ej1-x62a.google.com [IPv6:2a00:1450:4864:20::62a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9BFC91384D;
-        Tue, 18 Apr 2023 08:38:57 -0700 (PDT)
-Received: by mail-ej1-x62a.google.com with SMTP id a640c23a62f3a-94f0dd117dcso202099866b.3;
-        Tue, 18 Apr 2023 08:38:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1681832336; x=1684424336;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=xRhoPtoWvk9JTnFy49QmkeA3jHwK2uTwQ5tD3o618bk=;
-        b=q93AsTVnuVuSJXdEtyd+uD0Tau1ePOodDrmgL6PqFKV7eknMxjMyIUHg1n/camoF4J
-         a8N0rRjm64Kw2984e4v/ieQP552ueI/fqH65vnEwa/FMDy7vXwx0cwBtnuLaaIHvwnlD
-         kL8zd2fAhiv2KCGHnMp8A4cSxi6siuaCr4K/aOy2nhwOcU8XE+gcb15snZCBqo1eZK5Y
-         89pfuPqIgewArS7NGCwATb2UofhJCa00vSqSPQ3QhMZusBduxvu45FmeEApE61HJwAb2
-         uRVO4yRLNZagGLXAldBjQKvLZpvidVs3h7yq677Rp7TyBE1egogpq/KFLUgbmM9WkJzb
-         pdRg==
+        Tue, 18 Apr 2023 23:46:10 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0F8DF5595
+        for <linux-trace-kernel@vger.kernel.org>; Tue, 18 Apr 2023 20:45:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1681875915;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=1YuuAJn1OCoUYnZzUOuo4+29qTgUEGG9kBKj+L9J4Ys=;
+        b=BHtlGm+jdwxMegGyqx5IaJJN/5IKLXrpWbdDfGn1NIlsMBv5lx6KuOOOUxBtNX+/4K3FCf
+        AwW+dPC7eFzz41U8HT0d/DwqhYyFzahQa/rpa9M2j6ElbHryDFMQZH0p5RK4F34/EzAE6j
+        yRKWKR4Sf1k8H7y5b+nfJcFnFkfjWsM=
+Received: from mail-oa1-f69.google.com (mail-oa1-f69.google.com
+ [209.85.160.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-626-vbmeZGvDMFiY6eQtMitC-g-1; Tue, 18 Apr 2023 23:45:14 -0400
+X-MC-Unique: vbmeZGvDMFiY6eQtMitC-g-1
+Received: by mail-oa1-f69.google.com with SMTP id 586e51a60fabf-1878fb22699so521390fac.1
+        for <linux-trace-kernel@vger.kernel.org>; Tue, 18 Apr 2023 20:45:14 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1681832336; x=1684424336;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=xRhoPtoWvk9JTnFy49QmkeA3jHwK2uTwQ5tD3o618bk=;
-        b=KBclxZgE9bS2ImYOM3OhVqp3j6B2FJiz5Srp6PUQ18LUGu/aMm0h8HtZqNDegetIiG
-         hexSCVA0iSILqOgNJtZF3bUV/HKJSg4bvcLUXvS+Tob1jJo97mX9kI7y31+hBYR3L8W/
-         OYV7iIKzeBqQ2EJqnL38MpofWE/cLkCjmUee9EVtnOzve3T9lahFRiOF5rbLjMVWBq0/
-         P+YTpD7Ht1K+D/xT1DjaUuc4PfSAHBXTFq4tdGB0UnedFsOICmC3ghpbzZL0G9gpPJB4
-         A6fmpTdguvGHlCTgDwGLObFXaUfKqkmpBTwHZROovbW/sHEsd/8LgAS7bnZ9OgRR/15W
-         C7Ew==
-X-Gm-Message-State: AAQBX9cfF9K1Vc8UCezae3fLKrTnTEtxtBwdP/ch3HkMB0f5WXoAJKyA
-        TWrKv434+lW14Sy/gehKuXqSi3ZprURsmW8Sokk=
-X-Google-Smtp-Source: AKy350YjYYKN64Ltm6I9TaT/Oe8KxeMlHKbfYR55/dIdgsNWH7uNEiBi2JkswaP62CDU57Y9tnFgMkMrYjhv05ezGWk=
-X-Received: by 2002:a50:d716:0:b0:506:34d8:c710 with SMTP id
- t22-20020a50d716000000b0050634d8c710mr1396132edi.3.1681832335506; Tue, 18 Apr
- 2023 08:38:55 -0700 (PDT)
-MIME-Version: 1.0
-References: <20230417154737.12740-1-laoar.shao@gmail.com> <20230417154737.12740-6-laoar.shao@gmail.com>
- <20230417201457.c43xfcukjzm4u6vx@dhcp-172-26-102-232.dhcp.thefacebook.com> <CALOAHbC4Bz_VX52zmv=sScBf0hzscMAC4+EwMCpnd1BcaSVJSw@mail.gmail.com>
-In-Reply-To: <CALOAHbC4Bz_VX52zmv=sScBf0hzscMAC4+EwMCpnd1BcaSVJSw@mail.gmail.com>
-From:   Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Date:   Tue, 18 Apr 2023 08:38:44 -0700
-Message-ID: <CAADnVQJw9BCK2itE5bZWdQYz7D-8KdcH96E885zUakEDAOrC+Q@mail.gmail.com>
-Subject: Re: [PATCH bpf-next 5/6] bpf: Improve tracing recursion prevention mechanism
-To:     Yafang Shao <laoar.shao@gmail.com>
-Cc:     Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Andrii Nakryiko <andrii@kernel.org>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        John Fastabend <john.fastabend@gmail.com>,
-        KP Singh <kpsingh@kernel.org>,
-        Stanislav Fomichev <sdf@google.com>,
-        Hao Luo <haoluo@google.com>, Jiri Olsa <jolsa@kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
+        d=1e100.net; s=20221208; t=1681875914; x=1684467914;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=1YuuAJn1OCoUYnZzUOuo4+29qTgUEGG9kBKj+L9J4Ys=;
+        b=DZDWKLV5HVYdC9TT4dhTSIPEdtBisBk5eUN0Tl3mfNj9A6S7Ewwh9lFlSZM8T7LO0/
+         lL7BvbLyMhokOVBwgerv+QjBE5W6KDcplWlpJCn50quRdePlR91eBTqKRGFVYomFLE8M
+         JsjD9pFSUmRhpSHvBm914st/PEMgnnXLGMREgKu0hTUHAIDnSfIZThfqI5HFjKRagfeu
+         j1GVrVIuBR3pTsH9DcZb8xM68JEE39bZUMvqmhZQ288o9ctV5zzK7TLlAJbjTsXSKs6R
+         OvBkioxxVyobbz+9BoCg+PkTyvuUomwjjuUvoZ804esEQ8qdHylokrmOMcB9rnrIUnoD
+         TIhA==
+X-Gm-Message-State: AAQBX9cEVdWE7iDJyvA7iR91ZjKup7G5m5bw9B8DOASlDT+STB5E/UYE
+        dSSsrIKFp9DbsS6Nojd/3mnGoufEVH5wgqsEPt0VWVQBSd4VNTde8stz+DAnJ3LeAwGT4SUcilF
+        0wIz8G6lptC0C23yNgfr5Ymrzj7xK1g4r
+X-Received: by 2002:a05:6870:a10e:b0:180:13a4:4256 with SMTP id m14-20020a056870a10e00b0018013a44256mr3219164oae.36.1681875913980;
+        Tue, 18 Apr 2023 20:45:13 -0700 (PDT)
+X-Google-Smtp-Source: AKy350Zc/n0XS5LBqwVMuTKQ0TMzDYd+d6AXCJnHrNrZG1OgEaTKc8AHKb0V0BCzMHgpOmku1E/Azg==
+X-Received: by 2002:a05:6870:a10e:b0:180:13a4:4256 with SMTP id m14-20020a056870a10e00b0018013a44256mr3219155oae.36.1681875913749;
+        Tue, 18 Apr 2023 20:45:13 -0700 (PDT)
+Received: from ?IPv6:2804:1b3:a802:873a:dbfb:e929:5eb5:6a2c? ([2804:1b3:a802:873a:dbfb:e929:5eb5:6a2c])
+        by smtp.gmail.com with ESMTPSA id 26-20020aca101a000000b0038e34b0a0ecsm1249499oiq.8.2023.04.18.20.45.09
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 18 Apr 2023 20:45:13 -0700 (PDT)
+Message-ID: <f294a74cd17bf932621a6a746d592f49770d25ec.camel@redhat.com>
+Subject: Re: [RFC PATCH 1/1] smp: Add tracepoints for functions called with
+ smp_call_function*()
+From:   Leonardo =?ISO-8859-1?Q?Br=E1s?= <leobras@redhat.com>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Steven Rostedt <rostedt@goodmis.org>,
         Masami Hiramatsu <mhiramat@kernel.org>,
-        bpf <bpf@vger.kernel.org>, linux-trace-kernel@vger.kernel.org,
-        LKML <linux-kernel@vger.kernel.org>
+        Thomas Gleixner <tglx@linutronix.de>,
+        Yury Norov <yury.norov@gmail.com>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Nadav Amit <namit@vmware.com>,
+        Zhen Lei <thunder.leizhen@huawei.com>,
+        Chen Zhongjin <chenzhongjin@huawei.com>,
+        linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+        Marcelo Tosatti <mtosatti@redhat.com>
+Date:   Wed, 19 Apr 2023 00:45:08 -0300
+In-Reply-To: <20230406095519.GG386572@hirez.programming.kicks-ass.net>
+References: <20230406075718.68672-1-leobras@redhat.com>
+         <20230406095519.GG386572@hirez.programming.kicks-ass.net>
+User-Agent: Evolution 3.46.4
+MIME-Version: 1.0
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: redhat.com
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On Mon, Apr 17, 2023 at 6:49=E2=80=AFPM Yafang Shao <laoar.shao@gmail.com> =
-wrote:
->
-> On Tue, Apr 18, 2023 at 4:15=E2=80=AFAM Alexei Starovoitov
-> <alexei.starovoitov@gmail.com> wrote:
-> >
-> > On Mon, Apr 17, 2023 at 03:47:36PM +0000, Yafang Shao wrote:
-> > > diff --git a/kernel/bpf/trampoline.c b/kernel/bpf/trampoline.c
-> > > index f61d513..3df39a5 100644
-> > > --- a/kernel/bpf/trampoline.c
-> > > +++ b/kernel/bpf/trampoline.c
-> > > @@ -842,15 +842,21 @@ static __always_inline u64 notrace bpf_prog_sta=
-rt_time(void)
-> > >  static u64 notrace __bpf_prog_enter_recur(struct bpf_prog *prog, str=
-uct bpf_tramp_run_ctx *run_ctx)
-> > >       __acquires(RCU)
-> > >  {
-> > > -     rcu_read_lock();
-> > > -     migrate_disable();
-> > > -
-> > > -     run_ctx->saved_run_ctx =3D bpf_set_run_ctx(&run_ctx->run_ctx);
-> > > +     int bit;
-> > >
-> > > -     if (unlikely(this_cpu_inc_return(*(prog->active)) !=3D 1)) {
-> > > +     rcu_read_lock();
-> > > +     bit =3D test_recursion_try_acquire(_THIS_IP_, _RET_IP_);
-> >
-> > and bpf will prevent ftrace to run and vice versa.
-> > Not a good idea.
-> >
-> > One bpf prog will prevent different bpf prog to run since they share cu=
-rrent task.
-> > Not a good idea either.
->
-> That shouldn't happen. test_recursion_try_acquire() uses a
-> per-task_struct value. One single task_struct can't run in parallel,
-> right?
-> Note that the bpf program running in softirq or irq context won't be
-> prevented by it.
-> IIUC, the bpf program should run in serial in one single task, right?
-> That said, one bpf program can only run after another bpf program
-> finished in the same task?
+On Thu, 2023-04-06 at 11:55 +0200, Peter Zijlstra wrote:
+> On Thu, Apr 06, 2023 at 04:57:18AM -0300, Leonardo Bras wrote:
+> > When running RT workloads in isolated CPUs, many cases of deadline miss=
+es
+> > are caused by remote CPU requests such as smp_call_function*().
+> >=20
+> > For those cases, having the names of those functions running around the
+> > deadline miss moment could help finding a target for the next improveme=
+nts.
+> >=20
+> > Add tracepoints for acquiring the funtion name & argument before entry =
+and
+> > after exitting the called function.
+> >=20
+> > Signed-off-by: Leonardo Bras <leobras@redhat.com>
+>=20
+> How are the patches queued there not sufficient?
+>=20
+> https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git/log/?h=3Dsmp/=
+core
+>=20
 
-bpf progs can nest in the same task.
+IIUC the last commits add tracepoints that are collected in the
+requesting CPU, at the moment of scheduling the IPI, which are also useful =
+in
+some scenarios.
+
+On my scenario, it could help a little,=C2=A0since it makes possible to fil=
+ter what
+all other cpus are scheduling on the requested cpu. OTOH it could be also b=
+e
+misleading, as the requested cpu could be running something that was schedu=
+led
+way before.
+
+The change I propose does exactly what my scenario need: track exactly whic=
+h
+function was running at given time in the requested CPU. With this info, we=
+ can
+check which (if any) remotely requested function was running on given time
+window.
+
+(An unrelated thing I just thought: We could even use the commits you point=
+ed
+together with my proposed change in order to measure how long does it take =
+for a
+requested function to run / complete in the requested cpu)
+
+Thanks for reviewing!
+
+Leo
+
