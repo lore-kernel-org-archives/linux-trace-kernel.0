@@ -2,199 +2,339 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F077C77B73
-	for <linux-trace-kernel@archiver.kernel.org>; Wed, 19 Apr 2023 18:27:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A8C69C6FD18
+	for <linux-trace-kernel@archiver.kernel.org>; Wed, 19 Apr 2023 20:28:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229519AbjDSS11 (ORCPT
+        id S231448AbjDSU24 (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Wed, 19 Apr 2023 14:27:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44496 "EHLO
+        Wed, 19 Apr 2023 16:28:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45408 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229477AbjDSS10 (ORCPT
+        with ESMTP id S229544AbjDSU2y (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Wed, 19 Apr 2023 14:27:26 -0400
-Received: from mga07.intel.com (mga07.intel.com [134.134.136.100])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ADE832D70;
-        Wed, 19 Apr 2023 11:27:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1681928844; x=1713464844;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=hMwknj2fnthEuseGk77ISBlfTv6f5/iv+yEnHLXoIAw=;
-  b=enySk25qFvEgyqJuaqDTOT4XNft8bVq+RrUoLT/U7i+TNAn4V0BKnIT0
-   pbIp6cNfelMQUCYRwB2fB7fStfuAXKu1KtsUIW9UwSwTDhsBDdDuemOez
-   pAJPt8OnBb1D6KeYvJyBIf6i190rjdZ8X0ci/r26lD6ur8IoUqdDqpaJZ
-   S9W1GNnmAmgBlHTFcKlu98MzaBiKN5JaTlcwFEhNyrreVYzOd/uDfHvBq
-   OA00H2CWNqFd4ytUkctpOPy+AwILBldaafIb98l/3Orc/BTPSXn3zPZe1
-   IszqjTv/Sf6sJK89uyi5QTtZD48MDrAAkbHSvRzsHCbkVUJ5Beq2Zx1Ca
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10685"; a="410757548"
-X-IronPort-AV: E=Sophos;i="5.99,210,1677571200"; 
-   d="scan'208";a="410757548"
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Apr 2023 11:26:04 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10685"; a="937765285"
-X-IronPort-AV: E=Sophos;i="5.99,208,1677571200"; 
-   d="scan'208";a="937765285"
-Received: from lkp-server01.sh.intel.com (HELO b613635ddfff) ([10.239.97.150])
-  by fmsmga006.fm.intel.com with ESMTP; 19 Apr 2023 11:26:00 -0700
-Received: from kbuild by b613635ddfff with local (Exim 4.96)
-        (envelope-from <lkp@intel.com>)
-        id 1ppCVD-000f5y-2o;
-        Wed, 19 Apr 2023 18:25:59 +0000
-Date:   Thu, 20 Apr 2023 02:25:19 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     Mao Jinlong <quic_jinlmao@quicinc.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue <alexandre.torgue@foss.st.com>,
-        Tingwei Zhang <quic_tingweiz@quicinc.com>
-Cc:     oe-kbuild-all@lists.linux.dev,
-        Mao Jinlong <quic_jinlmao@quicinc.com>,
-        linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
-        linux-doc@vger.kernel.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-arm-kernel@lists.infradead.org,
-        linux-arm-msm@vger.kernel.org,
-        Yuanfang Zhang <quic_yuanfang@quicinc.com>,
-        Tao Zhang <quic_taozha@quicinc.com>,
-        Hao Zhang <quic_hazha@quicinc.com>
-Subject: Re: [PATCH v2] stm: class: Add MIPI OST protocol support
-Message-ID: <202304200216.kvZgZcao-lkp@intel.com>
-References: <20230419141328.37472-1-quic_jinlmao@quicinc.com>
+        Wed, 19 Apr 2023 16:28:54 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DA41B7D9A;
+        Wed, 19 Apr 2023 13:28:45 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 34D3463875;
+        Wed, 19 Apr 2023 20:28:45 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 290CEC433EF;
+        Wed, 19 Apr 2023 20:28:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1681936124;
+        bh=MSsSheeg5fGf437QacQci3glGSqLc1kiU4gOJI2sAtI=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=Wnoj4+N+sye7VKuYWb7LXqDKB+f0FwQCzzCzrOUGmB6Xi8SNq199ziBXI4sCahXKh
+         63ErzGOvZ/BwAUvBQqd6UEOHUXzGWAclaAkTxaLNJdIV2Th3229JTc5QQ3y7BdjueY
+         XuT4CW5cE23vEGu9Q4nsEdqkHd4r4ue82QAFD5Gvl8zTusx9qNmYRoe4C/kpLEUtnh
+         CEl9L/bMnYJNq7c8556C2pnQmenllgBcaPHFPxeCf2p2Fwr8Rz5ePdBBP87T8vGJ5v
+         4hmJgZCSO526xn9PvcVv72mddSAW0PLAun0W/KVdtZon1/uNk363lj4z+vru8bTCKX
+         BO4fFk6oXiKVw==
+Date:   Wed, 19 Apr 2023 13:28:42 -0700
+From:   Jaegeuk Kim <jaegeuk@kernel.org>
+To:     Daejun Park <daejun7.park@samsung.com>
+Cc:     "chao@kernel.org" <chao@kernel.org>,
+        "corbet@lwn.net" <corbet@lwn.net>,
+        "rostedt@goodmis.org" <rostedt@goodmis.org>,
+        "mhiramat@kernel.org" <mhiramat@kernel.org>,
+        "linux-f2fs-devel@lists.sourceforge.net" 
+        <linux-f2fs-devel@lists.sourceforge.net>,
+        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-trace-kernel@vger.kernel.org" 
+        <linux-trace-kernel@vger.kernel.org>,
+        Seokhwan Kim <sukka.kim@samsung.com>,
+        beomsu kim <beomsu7.kim@samsung.com>,
+        Yonggil Song <yonggil.song@samsung.com>
+Subject: Re: [PATCH] f2fs: add async reset zone command support
+Message-ID: <ZEBO+qOLXbnYusw5@google.com>
+References: <CGME20230414025921epcms2p5736ebf6a215201e0c2a2c1a3f73ee06a@epcms2p5>
+ <20230414025921epcms2p5736ebf6a215201e0c2a2c1a3f73ee06a@epcms2p5>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20230419141328.37472-1-quic_jinlmao@quicinc.com>
+In-Reply-To: <20230414025921epcms2p5736ebf6a215201e0c2a2c1a3f73ee06a@epcms2p5>
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-Hi Mao,
+On 04/14, Daejun Park wrote:
+> This patch enables submit reset zone command asynchornously. It helps
+> decrease average latency of write IOs in high utilization scenario by
+> faster checkpointing.
+> 
+> Signed-off-by: Daejun Park <daejun7.park@samsung.com>
+> ---
+>  Documentation/filesystems/f2fs.rst |  4 ++
+>  fs/f2fs/f2fs.h                     |  1 +
+>  fs/f2fs/segment.c                  | 92 +++++++++++++++++++++++++++++-
+>  fs/f2fs/super.c                    |  8 +++
+>  include/trace/events/f2fs.h        | 18 +++++-
+>  5 files changed, 119 insertions(+), 4 deletions(-)
+> 
+> diff --git a/Documentation/filesystems/f2fs.rst b/Documentation/filesystems/f2fs.rst
+> index 2055e72871fe..4cfabf831a79 100644
+> --- a/Documentation/filesystems/f2fs.rst
+> +++ b/Documentation/filesystems/f2fs.rst
+> @@ -342,6 +342,10 @@ discard_unit=%s		 Control discard unit, the argument can be "block", "segment"
+>  			 default, it is helpful for large sized SMR or ZNS devices to
+>  			 reduce memory cost by getting rid of fs metadata supports small
+>  			 discard.
+> +async_reset_zone         Enable the RESET WRITE POINTER command to be submitted asynchronously.
+> +                         With this option, the RESET WRITE POINTER command can be processed by
+> +                         the discard thread like a discard command. It can reduce checkpoint
+> +                         latency by asynchronously checking for completion of the RESET WRITE POINTER command.
 
-kernel test robot noticed the following build errors:
+Do we need to set this by default instead of mount option?
 
-[auto build test ERROR on atorgue-stm32/stm32-next]
-[also build test ERROR on linus/master v6.3-rc7 next-20230418]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+>  memory=%s		 Control memory mode. This supports "normal" and "low" modes.
+>  			 "low" mode is introduced to support low memory devices.
+>  			 Because of the nature of low memory devices, in this mode, f2fs
+> diff --git a/fs/f2fs/f2fs.h b/fs/f2fs/f2fs.h
+> index 4e2596dacbf1..021e55c5d1a8 100644
+> --- a/fs/f2fs/f2fs.h
+> +++ b/fs/f2fs/f2fs.h
+> @@ -167,6 +167,7 @@ struct f2fs_mount_info {
+>  					 * be aligned to this unit: block,
+>  					 * segment or section
+>  					 */
+> +	bool async_zone_reset;          /* async zone reset */
+>  	struct fscrypt_dummy_policy dummy_enc_policy; /* test dummy encryption */
+>  	block_t unusable_cap_perc;	/* percentage for cap */
+>  	block_t unusable_cap;		/* Amount of space allowed to be
+> diff --git a/fs/f2fs/segment.c b/fs/f2fs/segment.c
+> index 45128694eefa..60cfe97c9dbd 100644
+> --- a/fs/f2fs/segment.c
+> +++ b/fs/f2fs/segment.c
+> @@ -1189,6 +1189,46 @@ static void __init_discard_policy(struct f2fs_sb_info *sbi,
+>  static void __update_discard_tree_range(struct f2fs_sb_info *sbi,
+>  				struct block_device *bdev, block_t lstart,
+>  				block_t start, block_t len);
+> +
+> +#ifdef CONFIG_BLK_DEV_ZONED
+> +static int __submit_zone_reset_cmd(struct f2fs_sb_info *sbi,
+> +				   struct discard_cmd *dc, blk_opf_t flag,
+> +				   struct list_head *wait_list,
+> +				   unsigned int *issued)
+> +{
+> +	struct discard_cmd_control *dcc = SM_I(sbi)->dcc_info;
+> +	struct block_device *bdev = dc->bdev;
+> +	struct bio *bio = bio_alloc(bdev, 0, REQ_OP_ZONE_RESET | flag, GFP_NOFS);
+> +	unsigned long flags;
+> +
+> +	trace_f2fs_issue_reset_zone(bdev, SECTOR_FROM_BLOCK(dc->di.start));
+> +
+> +	spin_lock_irqsave(&dc->lock, flags);
+> +	dc->state = D_SUBMIT;
+> +	dc->bio_ref++;
+> +	spin_unlock_irqrestore(&dc->lock, flags);
+> +
+> +	if (issued)
+> +		(*issued)++;
+> +
+> +	atomic_inc(&dcc->queued_discard);
+> +	dc->queued++;
+> +	list_move_tail(&dc->list, wait_list);
+> +
+> +	/* sanity check on discard range */
+> +	__check_sit_bitmap(sbi, dc->di.lstart, dc->di.lstart + dc->di.len);
+> +
+> +	bio->bi_iter.bi_sector = SECTOR_FROM_BLOCK(dc->di.start);
+> +	bio->bi_private = dc;
+> +	bio->bi_end_io = f2fs_submit_discard_endio;
+> +	submit_bio(bio);
+> +
+> +	atomic_inc(&dcc->issued_discard);
+> +
+> +	return 0;
+> +}
+> +#endif
+> +
+>  /* this function is copied from blkdev_issue_discard from block/blk-lib.c */
+>  static int __submit_discard_cmd(struct f2fs_sb_info *sbi,
+>  				struct discard_policy *dpolicy,
+> @@ -1210,6 +1250,11 @@ static int __submit_discard_cmd(struct f2fs_sb_info *sbi,
+>  	if (is_sbi_flag_set(sbi, SBI_NEED_FSCK))
+>  		return 0;
+>  
+> +#ifdef CONFIG_BLK_DEV_ZONED
+> +	if (f2fs_sb_has_blkzoned(sbi) && bdev_is_zoned(bdev))
+> +		return __submit_zone_reset_cmd(sbi, dc, flag, wait_list, issued);
+> +#endif
+> +
+>  	trace_f2fs_issue_discard(bdev, dc->di.start, dc->di.len);
+>  
+>  	lstart = dc->di.lstart;
+> @@ -1454,21 +1499,42 @@ static void __update_discard_tree_range(struct f2fs_sb_info *sbi,
+>  	}
+>  }
+>  
+> +#ifdef CONFIG_BLK_DEV_ZONED
+> +static void __queue_zone_reset_cmd(struct f2fs_sb_info *sbi,
+> +		struct block_device *bdev, block_t blkstart, block_t blklen)
+> +{
+> +	block_t lblkstart = blkstart;
+> +
+> +	if (f2fs_is_multi_device(sbi)) {
+> +		int devi = f2fs_target_device_index(sbi, blkstart);
+> +
+> +		blkstart -= FDEV(devi).start_blk;
+> +	}
+> +
+> +	trace_f2fs_queue_reset_zone(bdev, blkstart);
+> +
+> +	mutex_lock(&SM_I(sbi)->dcc_info->cmd_lock);
+> +	__insert_discard_cmd(sbi, bdev, lblkstart, blkstart, blklen);
+> +	mutex_unlock(&SM_I(sbi)->dcc_info->cmd_lock);
+> +}
+> +#endif
+> +
+>  static void __queue_discard_cmd(struct f2fs_sb_info *sbi,
+>  		struct block_device *bdev, block_t blkstart, block_t blklen)
+>  {
+>  	block_t lblkstart = blkstart;
+>  
+> +	trace_f2fs_queue_discard(bdev, blkstart, blklen);
+> +
+>  	if (!f2fs_bdev_support_discard(bdev))
+>  		return;
+>  
+> -	trace_f2fs_queue_discard(bdev, blkstart, blklen);
+> -
+>  	if (f2fs_is_multi_device(sbi)) {
+>  		int devi = f2fs_target_device_index(sbi, blkstart);
+>  
+>  		blkstart -= FDEV(devi).start_blk;
+>  	}
+> +
+>  	mutex_lock(&SM_I(sbi)->dcc_info->cmd_lock);
+>  	__update_discard_tree_range(sbi, bdev, lblkstart, blkstart, blklen);
+>  	mutex_unlock(&SM_I(sbi)->dcc_info->cmd_lock);
+> @@ -1719,7 +1785,22 @@ static void f2fs_wait_discard_bio(struct f2fs_sb_info *sbi, block_t blkaddr)
+>  	dc = __lookup_discard_cmd(sbi, blkaddr);
+>  	if (dc) {
+>  		if (dc->state == D_PREP) {
+> +#ifdef CONFIG_BLK_DEV_ZONED
+> +			if (f2fs_sb_has_blkzoned(sbi) &&
+> +			    bdev_is_zoned(dc->bdev)) {
+> +				struct discard_policy dpolicy;
+> +				/* force submit zone reset */
+> +				__init_discard_policy(sbi, &dpolicy,
+> +						      DPOLICY_FORCE, 1);
+> +				__submit_discard_cmd(sbi, &dpolicy, dc, NULL);
+> +				dc->ref++;
+> +				need_wait = true;
+> +			} else {
+> +				__punch_discard_cmd(sbi, dc, blkaddr);
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Mao-Jinlong/stm-class-Add-MIPI-OST-protocol-support/20230419-221653
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/atorgue/stm32.git stm32-next
-patch link:    https://lore.kernel.org/r/20230419141328.37472-1-quic_jinlmao%40quicinc.com
-patch subject: [PATCH v2] stm: class: Add MIPI OST protocol support
-config: sparc-allyesconfig (https://download.01.org/0day-ci/archive/20230420/202304200216.kvZgZcao-lkp@intel.com/config)
-compiler: sparc64-linux-gcc (GCC) 12.1.0
-reproduce (this is a W=1 build):
-        wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
-        chmod +x ~/bin/make.cross
-        # https://github.com/intel-lab-lkp/linux/commit/54db7d137859caf5a14de2b166d80913b0c80218
-        git remote add linux-review https://github.com/intel-lab-lkp/linux
-        git fetch --no-tags linux-review Mao-Jinlong/stm-class-Add-MIPI-OST-protocol-support/20230419-221653
-        git checkout 54db7d137859caf5a14de2b166d80913b0c80218
-        # save the config file
-        mkdir build_dir && cp config build_dir/.config
-        COMPILER_INSTALL_PATH=$HOME/0day COMPILER=gcc-12.1.0 make.cross W=1 O=build_dir ARCH=sparc olddefconfig
-        COMPILER_INSTALL_PATH=$HOME/0day COMPILER=gcc-12.1.0 make.cross W=1 O=build_dir ARCH=sparc SHELL=/bin/bash drivers/
+Can be consolidated in both cases below.
 
-If you fix the issue, kindly add following tag where applicable
-| Reported-by: kernel test robot <lkp@intel.com>
-| Link: https://lore.kernel.org/oe-kbuild-all/202304200216.kvZgZcao-lkp@intel.com/
+> +			}
+> +#else
+>  			__punch_discard_cmd(sbi, dc, blkaddr);
+> +#endif
+>  		} else {
+>  			dc->ref++;
+>  			need_wait = true;
+> @@ -1869,6 +1950,13 @@ static int __f2fs_issue_discard_zone(struct f2fs_sb_info *sbi,
+>  				 blkstart, blklen);
+>  			return -EIO;
+>  		}
+> +
+> +		if (likely(!is_sbi_flag_set(sbi, SBI_POR_DOING)) &&
+> +			   F2FS_OPTION(sbi).async_zone_reset) {
+> +			__queue_zone_reset_cmd(sbi, bdev, lblkstart, blklen);
+> +			return 0;
+> +		}
 
-All error/warnings (new ones prefixed by >>):
+Can make a sigle case above and below, if we set this by default.
 
-   drivers/hwtracing/stm/p_ost.c: In function 'ost_write':
->> drivers/hwtracing/stm/p_ost.c:174:46: error: implicit declaration of function 'get_current'; did you mean 'get_cred'? [-Werror=implicit-function-declaration]
-     174 |         *(u64 *)(trc_hdr + 8) = task_tgid_nr(get_current());
-         |                                              ^~~~~~~~~~~
-         |                                              get_cred
->> drivers/hwtracing/stm/p_ost.c:174:46: warning: passing argument 1 of 'task_tgid_nr' makes pointer from integer without a cast [-Wint-conversion]
-     174 |         *(u64 *)(trc_hdr + 8) = task_tgid_nr(get_current());
-         |                                              ^~~~~~~~~~~~~
-         |                                              |
-         |                                              int
-   In file included from include/linux/sched/mm.h:7,
-                    from include/linux/xarray.h:19,
-                    from include/linux/radix-tree.h:21,
-                    from include/linux/idr.h:15,
-                    from include/linux/kernfs.h:12,
-                    from include/linux/sysfs.h:16,
-                    from include/linux/kobject.h:20,
-                    from include/linux/module.h:21,
-                    from drivers/hwtracing/stm/p_ost.c:9:
-   include/linux/sched.h:1582:54: note: expected 'struct task_struct *' but argument is of type 'int'
-    1582 | static inline pid_t task_tgid_nr(struct task_struct *tsk)
-         |                                  ~~~~~~~~~~~~~~~~~~~~^~~
-   cc1: some warnings being treated as errors
-
-
-vim +174 drivers/hwtracing/stm/p_ost.c
-
-   131	
-   132	static ssize_t notrace ost_write(struct stm_data *data,
-   133			struct stm_output *output, unsigned int chan,
-   134			const char *buf, size_t count)
-   135	{
-   136		unsigned int c = output->channel + chan;
-   137		unsigned int m = output->master;
-   138		const unsigned char nil = 0;
-   139		u32 header = DATA_HEADER;
-   140		u8 trc_hdr[16];
-   141		ssize_t sz;
-   142	
-   143		struct ost_output *op = output->pdrv_private;
-   144	
-   145		/*
-   146		 * Identify the source by entity type.
-   147		 * If entity type is not set, return error value.
-   148		 */
-   149		if (op->node.entity_type == OST_ENTITY_TYPE_FTRACE) {
-   150			header |= OST_ENTITY_FTRACE;
-   151		} else if (op->node.entity_type == OST_ENTITY_TYPE_CONSOLE) {
-   152			header |= OST_ENTITY_CONSOLE;
-   153		} else {
-   154			pr_debug("p_ost: Entity must be set for trace data.");
-   155			return -EINVAL;
-   156		}
-   157	
-   158		/*
-   159		 * STP framing rules for OST frames:
-   160		 *   * the first packet of the OST frame is marked;
-   161		 *   * the last packet is a FLAG with timestamped tag.
-   162		 */
-   163		/* Message layout: HEADER / DATA / TAIL */
-   164		/* HEADER */
-   165		sz = data->packet(data, m, c, STP_PACKET_DATA, STP_PACKET_MARKED,
-   166				  4, (u8 *)&header);
-   167		if (sz <= 0)
-   168			return sz;
-   169	
-   170		/* DATA */
-   171		*(u16 *)(trc_hdr) = STM_MAKE_VERSION(0, 4);
-   172		*(u16 *)(trc_hdr + 2) = STM_HEADER_MAGIC;
-   173		*(u32 *)(trc_hdr + 4) = raw_smp_processor_id();
- > 174		*(u64 *)(trc_hdr + 8) = task_tgid_nr(get_current());
-   175		sz = stm_data_write(data, m, c, false, trc_hdr, sizeof(trc_hdr));
-   176		if (sz <= 0)
-   177			return sz;
-   178	
-   179		sz = stm_data_write(data, m, c, false, buf, count);
-   180	
-   181		/* TAIL */
-   182		if (sz > 0)
-   183			data->packet(data, m, c, STP_PACKET_FLAG,
-   184				STP_PACKET_TIMESTAMPED, 0, &nil);
-   185	
-   186		return sz;
-   187	}
-   188	
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests
+> +
+>  		trace_f2fs_issue_reset_zone(bdev, blkstart);
+>  		return blkdev_zone_mgmt(bdev, REQ_OP_ZONE_RESET,
+>  					sector, nr_sects, GFP_NOFS);
+> diff --git a/fs/f2fs/super.c b/fs/f2fs/super.c
+> index 7d0202f7b317..48198112cbbc 100644
+> --- a/fs/f2fs/super.c
+> +++ b/fs/f2fs/super.c
+> @@ -162,6 +162,7 @@ enum {
+>  	Opt_gc_merge,
+>  	Opt_nogc_merge,
+>  	Opt_discard_unit,
+> +	Opt_async_zone_reset,
+>  	Opt_memory_mode,
+>  	Opt_age_extent_cache,
+>  	Opt_err,
+> @@ -241,6 +242,7 @@ static match_table_t f2fs_tokens = {
+>  	{Opt_gc_merge, "gc_merge"},
+>  	{Opt_nogc_merge, "nogc_merge"},
+>  	{Opt_discard_unit, "discard_unit=%s"},
+> +	{Opt_async_zone_reset, "async_zone_reset"},
+>  	{Opt_memory_mode, "memory=%s"},
+>  	{Opt_age_extent_cache, "age_extent_cache"},
+>  	{Opt_err, NULL},
+> @@ -1249,6 +1251,9 @@ static int parse_options(struct super_block *sb, char *options, bool is_remount)
+>  			}
+>  			kfree(name);
+>  			break;
+> +		case Opt_async_zone_reset:
+> +			F2FS_OPTION(sbi).async_zone_reset = true;
+> +			break;
+>  		case Opt_memory_mode:
+>  			name = match_strdup(&args[0]);
+>  			if (!name)
+> @@ -2047,6 +2052,9 @@ static int f2fs_show_options(struct seq_file *seq, struct dentry *root)
+>  	if (test_opt(sbi, ATGC))
+>  		seq_puts(seq, ",atgc");
+>  
+> +	if (F2FS_OPTION(sbi).async_zone_reset)
+> +		seq_puts(seq, ",async_zone_reset");
+> +
+>  	if (F2FS_OPTION(sbi).memory_mode == MEMORY_MODE_NORMAL)
+>  		seq_printf(seq, ",memory=%s", "normal");
+>  	else if (F2FS_OPTION(sbi).memory_mode == MEMORY_MODE_LOW)
+> diff --git a/include/trace/events/f2fs.h b/include/trace/events/f2fs.h
+> index 99cbc5949e3c..ee1477de8324 100644
+> --- a/include/trace/events/f2fs.h
+> +++ b/include/trace/events/f2fs.h
+> @@ -1512,7 +1512,7 @@ DEFINE_EVENT(f2fs_discard, f2fs_remove_discard,
+>  	TP_ARGS(dev, blkstart, blklen)
+>  );
+>  
+> -TRACE_EVENT(f2fs_issue_reset_zone,
+> +DECLARE_EVENT_CLASS(f2fs_reset_zone,
+>  
+>  	TP_PROTO(struct block_device *dev, block_t blkstart),
+>  
+> @@ -1528,11 +1528,25 @@ TRACE_EVENT(f2fs_issue_reset_zone,
+>  		__entry->blkstart = blkstart;
+>  	),
+>  
+> -	TP_printk("dev = (%d,%d), reset zone at block = 0x%llx",
+> +	TP_printk("dev = (%d,%d), zone at block = 0x%llx",
+>  		show_dev(__entry->dev),
+>  		(unsigned long long)__entry->blkstart)
+>  );
+>  
+> +DEFINE_EVENT(f2fs_reset_zone, f2fs_queue_reset_zone,
+> +
+> +	TP_PROTO(struct block_device *dev, block_t blkstart),
+> +
+> +	TP_ARGS(dev, blkstart)
+> +);
+> +
+> +DEFINE_EVENT(f2fs_reset_zone, f2fs_issue_reset_zone,
+> +
+> +	TP_PROTO(struct block_device *dev, block_t blkstart),
+> +
+> +	TP_ARGS(dev, blkstart)
+> +);
+> +
+>  TRACE_EVENT(f2fs_issue_flush,
+>  
+>  	TP_PROTO(struct block_device *dev, unsigned int nobarrier,
+> -- 
+> 2.25.1
