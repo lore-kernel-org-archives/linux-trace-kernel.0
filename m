@@ -2,318 +2,199 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A39EC77B73
-	for <linux-trace-kernel@archiver.kernel.org>; Wed, 19 Apr 2023 15:01:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F077C77B73
+	for <linux-trace-kernel@archiver.kernel.org>; Wed, 19 Apr 2023 18:27:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232405AbjDSPBH (ORCPT
+        id S229519AbjDSS11 (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Wed, 19 Apr 2023 11:01:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55002 "EHLO
+        Wed, 19 Apr 2023 14:27:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44496 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231822AbjDSPBF (ORCPT
+        with ESMTP id S229477AbjDSS10 (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Wed, 19 Apr 2023 11:01:05 -0400
-Received: from mail-pl1-x62f.google.com (mail-pl1-x62f.google.com [IPv6:2607:f8b0:4864:20::62f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A9658527C;
-        Wed, 19 Apr 2023 08:01:00 -0700 (PDT)
-Received: by mail-pl1-x62f.google.com with SMTP id d9443c01a7336-1a6762fd23cso472685ad.3;
-        Wed, 19 Apr 2023 08:01:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1681916460; x=1684508460;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Kop7LhZoVrKBA/ST70vjwH94OaZGQqZPRDxyeLg7D6k=;
-        b=Hvl2PdRa3vo8xmJmQsqsf93wWOorioA9ZYWAO9knBmzcAq5PXm87b80AGsPqenqIf8
-         MPuw1mxRdqOXIo1WbbDdtYTpvK/c33ySYVTBIG072rAevSYzoG2Ex7FOSn6ypPkJHsh9
-         qPc2DguboKugZkSew1B/QwO+VyPLhtUoHIpKYT4tTXMAjXP4G1Fmldo+zbBonwfFirdr
-         19klzCiONcCIbHr5KkPeMWyScLm0Qhc9A/jaHtLYJpULT4bIp0Kp3F23XdDKQ1p0bDYn
-         w03vcgYGICV5Gxfaqjw3w5/iVAo6r/h82ARI5w2nYj8AYQXJqcoMhezt7c/JkCUQdMJ/
-         zlJg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1681916460; x=1684508460;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Kop7LhZoVrKBA/ST70vjwH94OaZGQqZPRDxyeLg7D6k=;
-        b=Nyziki7bHMvgTu6jNqKfV54HxPuBP7XJfgp/UjAHfW4OWKhDBUUZjBOzOb9QafiKmU
-         wuLSwG8aN0I8goS0q3/MRkSy4R5M+LXlfl6TaLzaamo9Zy7jjz3cm7WlQ78wyyUV/JoT
-         YjI1GTjRq8T5NblbSpEaWa2emw/F5nDvctsp8U+midCzWTzr0WBo1pHgqBfbDZ/wnZNP
-         SnN6B5pGDZiBjU80t358fd/XJ2c50eXfYI86PmuUW+9P1CBeWhC3sSiDfSnU0978xbuX
-         6FNoT8wBGCKyVJrJ819YVyQ1E+DfLOjqzGClFO/oL4QIZVoe+DJzlKgaZPWc0aW3obqE
-         WWBw==
-X-Gm-Message-State: AAQBX9dzbyl5YQh6i5qjbvVnn8mQozUNcNJ/A+Y70egE3Nrfw+cUtipH
-        jdd4w3UMYsHclK6apABMVRJRoxlRGSz8avVC/0w=
-X-Google-Smtp-Source: AKy350ZbqznWiNkGijDCMuDYRDtdisEfcQxTVBN0yqHDahMc1uTcOHGO0nJCb8Q2cyYyjZNPA7lhpxdchS6zyKf01MA=
-X-Received: by 2002:a17:902:daca:b0:1a0:1f4e:a890 with SMTP id
- q10-20020a170902daca00b001a01f4ea890mr2322957plx.1.1681916460024; Wed, 19 Apr
- 2023 08:01:00 -0700 (PDT)
+        Wed, 19 Apr 2023 14:27:26 -0400
+Received: from mga07.intel.com (mga07.intel.com [134.134.136.100])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ADE832D70;
+        Wed, 19 Apr 2023 11:27:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1681928844; x=1713464844;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=hMwknj2fnthEuseGk77ISBlfTv6f5/iv+yEnHLXoIAw=;
+  b=enySk25qFvEgyqJuaqDTOT4XNft8bVq+RrUoLT/U7i+TNAn4V0BKnIT0
+   pbIp6cNfelMQUCYRwB2fB7fStfuAXKu1KtsUIW9UwSwTDhsBDdDuemOez
+   pAJPt8OnBb1D6KeYvJyBIf6i190rjdZ8X0ci/r26lD6ur8IoUqdDqpaJZ
+   S9W1GNnmAmgBlHTFcKlu98MzaBiKN5JaTlcwFEhNyrreVYzOd/uDfHvBq
+   OA00H2CWNqFd4ytUkctpOPy+AwILBldaafIb98l/3Orc/BTPSXn3zPZe1
+   IszqjTv/Sf6sJK89uyi5QTtZD48MDrAAkbHSvRzsHCbkVUJ5Beq2Zx1Ca
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10685"; a="410757548"
+X-IronPort-AV: E=Sophos;i="5.99,210,1677571200"; 
+   d="scan'208";a="410757548"
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Apr 2023 11:26:04 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10685"; a="937765285"
+X-IronPort-AV: E=Sophos;i="5.99,208,1677571200"; 
+   d="scan'208";a="937765285"
+Received: from lkp-server01.sh.intel.com (HELO b613635ddfff) ([10.239.97.150])
+  by fmsmga006.fm.intel.com with ESMTP; 19 Apr 2023 11:26:00 -0700
+Received: from kbuild by b613635ddfff with local (Exim 4.96)
+        (envelope-from <lkp@intel.com>)
+        id 1ppCVD-000f5y-2o;
+        Wed, 19 Apr 2023 18:25:59 +0000
+Date:   Thu, 20 Apr 2023 02:25:19 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     Mao Jinlong <quic_jinlmao@quicinc.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue <alexandre.torgue@foss.st.com>,
+        Tingwei Zhang <quic_tingweiz@quicinc.com>
+Cc:     oe-kbuild-all@lists.linux.dev,
+        Mao Jinlong <quic_jinlmao@quicinc.com>,
+        linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+        linux-doc@vger.kernel.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-arm-kernel@lists.infradead.org,
+        linux-arm-msm@vger.kernel.org,
+        Yuanfang Zhang <quic_yuanfang@quicinc.com>,
+        Tao Zhang <quic_taozha@quicinc.com>,
+        Hao Zhang <quic_hazha@quicinc.com>
+Subject: Re: [PATCH v2] stm: class: Add MIPI OST protocol support
+Message-ID: <202304200216.kvZgZcao-lkp@intel.com>
+References: <20230419141328.37472-1-quic_jinlmao@quicinc.com>
 MIME-Version: 1.0
-References: <20230324033342.3177979-1-suagrfillet@gmail.com>
-In-Reply-To: <20230324033342.3177979-1-suagrfillet@gmail.com>
-From:   Song Shuai <suagrfillet@gmail.com>
-Date:   Wed, 19 Apr 2023 23:00:51 +0800
-Message-ID: <CAAYs2=it1F6e8JzHiC2rC+cEybMePcZSWB11+Q+==TPDTzq7sQ@mail.gmail.com>
-Subject: Re: [PATCH V8 0/4] riscv: Optimize function trace
-To:     paul.walmsley@sifive.com, palmer@dabbelt.com,
-        aou@eecs.berkeley.edu, rostedt@goodmis.org, mhiramat@kernel.org,
-        mark.rutland@arm.com, guoren@kernel.org, e.shatokhin@yadro.com
-Cc:     linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-trace-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230419141328.37472-1-quic_jinlmao@quicinc.com>
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-ping...
+Hi Mao,
 
-Song Shuai <suagrfillet@gmail.com> =E4=BA=8E2023=E5=B9=B43=E6=9C=8824=E6=97=
-=A5=E5=91=A8=E4=BA=94 11:33=E5=86=99=E9=81=93=EF=BC=9A
->
-> The first 3 independent patches has been picked in the V7 version of
-> this series, this version continues the following 4 patches.
->
-> select FTRACE_MCOUNT_USE_PATCHABLE_FUNCTION_ENTRY [1] (patch 1)
-> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D
->
-> In RISC-V, -fpatchable-function-entry option is used to support
-> dynamic ftrace in this commit afc76b8b8011 ("riscv: Using
-> PATCHABLE_FUNCTION_ENTRY instead of MCOUNT"). So recordmcount
-> don't have to be called to create the __mcount_loc section before
-> the vmlinux linking.
->
-> Here selects FTRACE_MCOUNT_USE_PATCHABLE_FUNCTION_ENTRY to tell
-> Makefile not to run recordmcount.
->
-> Make function graph use ftrace directly [2] (patch 2)
-> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D
->
-> In RISC-V architecture, when we enable the ftrace_graph tracer on some
-> functions, the function tracings on other functions will suffer extra
-> graph tracing work. In essence, graph_ops isn't limited by its func_hash
-> due to the global ftrace_graph_[regs]_call label. That should be
-> corrected.
->
-> What inspires me is the commit 0c0593b45c9b ("x86/ftrace: Make function
-> graph use ftrace directly") that uses graph_ops::func function to
-> install return_hooker and makes the function called against its
-> func_hash.
->
-> This series of patches makes function graph use ftrace directly for
-> riscv.
->
-> If FTRACE_WITH_REGS isn't defined, ftrace_caller keeps ftrace_graph_call
-> so that it can be replaced with the calling of prepare_ftrace_return by
-> the enable/disable helper.
->
-> As for defining FTRACE_WITH_REGS, ftrace_caller is adjusted to save the
-> necessary regs against the pt_regs layout, so it can reasonably call the
-> graph_ops::func function - ftrace_graph_func. And
-> ftrace_graph_[regs]_call
-> and its enable/disable helper aren't needed.
->
-> Test log:
->
-> The tests generated by CONFIG_FTRACE_STARTUP_TEST have passed in the
-> local
-> qemu-system-riscv64 virt machine. The following is the log during
-> startup.
->
-> ```
-> Nov 15 03:07:13 stage4 kernel: Testing tracer function: PASSED
-> Nov 15 03:07:13 stage4 kernel: Testing dynamic ftrace: PASSED
-> Nov 15 03:07:13 stage4 kernel: Testing dynamic ftrace ops #1:
-> Nov 15 03:07:13 stage4 kernel: (1 0 1 0 0)
-> Nov 15 03:07:13 stage4 kernel: (1 1 2 0 0)
-> Nov 15 03:07:13 stage4 kernel: (2 1 3 0 365)
-> Nov 15 03:07:13 stage4 kernel: (2 2 4 0 399)
-> Nov 15 03:07:13 stage4 kernel: (3 2 4 0 146071)
-> Nov 15 03:07:13 stage4 kernel: (3 3 5 0 146105) PASSED
-> Nov 15 03:07:13 stage4 kernel: Testing dynamic ftrace ops #2:
-> Nov 15 03:07:13 stage4 kernel: (1 0 1 589 0)
-> Nov 15 03:07:13 stage4 kernel: (1 1 2 635 0)
-> Nov 15 03:07:13 stage4 kernel: (2 1 3 1 2)
-> Nov 15 03:07:13 stage4 kernel: (2 2 4 125 126)
-> Nov 15 03:07:13 stage4 kernel: (3 2 4 146001 146078)
-> Nov 15 03:07:13 stage4 kernel: (3 3 5 146035 146112) PASSED
-> Nov 15 03:07:13 stage4 kernel: Testing ftrace recursion: PASSED
-> Nov 15 03:07:13 stage4 kernel: Testing ftrace recursion safe: PASSED
-> Nov 15 03:07:13 stage4 kernel: Testing ftrace regs: PASSED
-> Nov 15 03:07:13 stage4 kernel: Testing tracer nop: PASSED
-> Nov 15 03:07:13 stage4 kernel: Testing tracer irqsoff: PASSED
-> Nov 15 03:07:13 stage4 kernel: Testing tracer wakeup:
-> Nov 15 03:07:13 stage4 kernel: sched: DL replenish lagged too much
-> Nov 15 03:07:13 stage4 kernel: PASSED
-> Nov 15 03:07:13 stage4 kernel: Testing tracer wakeup_rt: PASSED
-> Nov 15 03:07:13 stage4 kernel: Testing tracer wakeup_dl: PASSED
-> Nov 15 03:07:13 stage4 kernel: Testing tracer function_graph: PASSED
-> ```
->
-> Add WITH_DIRECT_CALLS support [3] (patch 3, 4)
-> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
->
-> This series adds DYNAMIC_FTRACE_WITH_DIRECT_CALLS support for RISC-V.
-> SAMPLE_FTRACE_DIRECT and SAMPLE_FTRACE_DIRECT_MULTI are also included
-> here as the samples for testing DIRECT_CALLS related interface.
->
-> First, select the DYNAMIC_FTRACE_WITH_DIRECT_CALLS to provide
-> register_ftrace_direct[_multi] interfaces allowing user to register
-> the customed trampoline (direct_caller) as the mcount for one or
-> more target functions. And modify_ftrace_direct[_multi] are also
-> provided for modify direct_caller.
->
-> At the same time, the samples in ./samples/ftrace/ can be built
-> as kerenl module for testing these interfaces with SAMPLE_FTRACE_DIRECT
-> and SAMPLE_FTRACE_DIRECT_MULTI selected.
->
-> Second, to make the direct_caller and the other ftrace hooks
-> (eg. function/fgraph tracer, k[ret]probes) co-exist, a temporary register
-> are nominated to store the address of direct_caller in ftrace_regs_caller=
-.
-> After the setting of the address direct_caller by direct_ops->func and
-> the RESTORE_REGS in ftrace_regs_caller, direct_caller will be jumped to
-> by the `jr` inst.
->
-> The following tests have been passed in my local qemu-riscv64 virt
-> machine.
->
-> 1. tests with CONFIG_FTRACE_STARTUP_TEST
-> 2. tests of samples/ftrace/ftrace*.ko
-> 3. manual tests with any combination of the following hooks
->   - function/function_graph tracer
->   - ftrace*.ko
->   - kprobe/kretprobe
->
-> For your reference, here is the log when function tracer, kretprobe and
-> ftrace-direct-too.ko co-hooks the handle_mm_fault function.
->
-> ```
-> [root@stage4 tracing]# echo handle_mm_fault > set_ftrace_filter
-> [root@stage4 tracing]# echo 'r:myr handle_mm_fault' > kprobe_events
-> [root@stage4 tracing]# echo function > current_tracer
-> [root@stage4 tracing]# echo 1 > events/kprobes/myr/enable
-> [root@stage4 tracing]# insmod /root/ftrace-direct-too.ko
-> [root@stage4 tracing]#
-> [root@stage4 tracing]# cat trace | tail
->              cat-388     [000] ...1.   583.051438: myr:
-> (do_page_fault+0x16c/0x5f2 <- handle_mm_fault)
->              cat-388     [000] ...2.   583.057930: handle_mm_fault
-> <-do_page_fault
->              cat-388     [000] .....   583.057990: my_direct_func:
-> handle mm fault vma=3D000000002d9fe19c address=3Dffffffae9b7000 flags=3D2=
-15
->              cat-388     [000] ...1.   583.058284: myr:
-> (do_page_fault+0x16c/0x5f2 <- handle_mm_fault)
->             tail-389     [001] ...2.   583.059062: handle_mm_fault
-> <-do_page_fault
->             tail-389     [001] .....   583.059104: my_direct_func:
-> handle mm fault vma=3D0000000017f3c48e address=3Daaaaaabebf3000 flags=3D2=
-15
->             tail-389     [001] ...1.   583.059325: myr:
-> (do_page_fault+0x16c/0x5f2 <- handle_mm_fault)
->             tail-389     [001] ...2.   583.060371: handle_mm_fault
-> <-do_page_fault
->             tail-389     [001] .....   583.060410: my_direct_func:
-> handle mm fault vma=3D0000000017f3c48e address=3Daaaaaabebf1000 flags=3D2=
-55
->             tail-389     [001] ...1.   583.060996: myr:
-> (do_page_fault+0x16c/0x5f2 <- handle_mm_fault)
-> ```
-> Note1:
->
-> The checkpatch.pl will output some warnings on this series, like this
->
-> ```
-> WARNING: Prefer using '"%s...", __func__' to using 'my_direct_func2',
-> this function's name, in a string
-> 111: FILE: samples/ftrace/ftrace-direct-multi-modify.c:48:
-> +"       call my_direct_func2\n"
-> ```
-> The reason is that checkpatch depends on patch context providing the
-> function name. In the above warning, my_direct_func2 has some codeline
-> distance with the changed trunk, so its declaration doesn't come into
-> the patch, and then the warning jumps out.
->
-> You may notice the location of `my_ip` variable changes in the 2nd
-> patch. I did that for reducing the warnings to some extent. But killing
-> all the warnings will makes the patch less readable, so I stopped here.
->
-> [1]
-> https://lore.kernel.org/linux-riscv/CAAYs2=3Dj3Eak9vU6xbAw0zPuoh00rh8v5C2=
-U3fePkokZFibWs2g@mail.gmail.com/T/#t
-> [2]
-> https://lore.kernel.org/lkml/20221120084230.910152-1-suagrfillet@gmail.co=
-m/
-> [3]
-> https://lore.kernel.org/linux-riscv/20221123142025.1504030-1-suagrfillet@=
-gmail.com/
->
-> The series's changes related these patches
-> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
->
-> Changes in v8:
->  - Fix incorrect address values in the 4nd patch
->  - Rebased on v6.3-rc2
->
-> Changes in v7:
-> https://lore.kernel.org/linux-riscv/20230112090603.1295340-1-guoren@kerne=
-l.org/
->  - Fixup RESTORE_ABI_REGS by remove PT_T0(sp) overwrite.
->  - Add FTRACE_MCOUNT_USE_PATCHABLE_FUNCTION_ENTRY
->  - Fixup kconfig with HAVE_SAMPLE_FTRACE_DIRECT &
->    HAVE_SAMPLE_FTRACE_DIRECT_MULTI
->
-> Changes in v6:
-> https://lore.kernel.org/linux-riscv/20230107133549.4192639-1-guoren@kerne=
-l.org/
->  - Replace 8 with MCOUNT_INSN_SIZE
->  - Replace "REG_L a1, PT_RA(sp)" with "mv a1, ra"
->  - Add Evgenii Shatokhin comment
->
-> Changes in v5:
-> https://lore.kernel.org/linux-riscv/20221208091244.203407-1-guoren@kernel=
-.org/
->  - Sort Kconfig entries in alphabetical order.
->
-> Changes in v4:
-> https://lore.kernel.org/linux-riscv/20221129033230.255947-1-guoren@kernel=
-.org/
->  - Include [3] for maintenance. [Song Shuai]
->
-> Changes in V3:
-> https://lore.kernel.org/linux-riscv/20221123153950.2911981-1-guoren@kerne=
-l.org/
->  - Include [2] for maintenance. [Song Shuai]
->
-> Song Shuai (4):
->   riscv: select FTRACE_MCOUNT_USE_PATCHABLE_FUNCTION_ENTRY
->   riscv: ftrace: Add ftrace_graph_func
->   riscv: ftrace: Add DYNAMIC_FTRACE_WITH_DIRECT_CALLS support
->   samples: ftrace: Add riscv support for SAMPLE_FTRACE_DIRECT[_MULTI]
->
->  arch/riscv/Kconfig                          |   4 +
->  arch/riscv/include/asm/ftrace.h             |  19 ++-
->  arch/riscv/kernel/ftrace.c                  |  30 ++--
->  arch/riscv/kernel/mcount-dyn.S              | 143 +++++++++++++++-----
->  samples/ftrace/ftrace-direct-modify.c       |  33 +++++
->  samples/ftrace/ftrace-direct-multi-modify.c |  39 ++++++
->  samples/ftrace/ftrace-direct-multi.c        |  23 ++++
->  samples/ftrace/ftrace-direct-too.c          |  26 ++++
->  samples/ftrace/ftrace-direct.c              |  22 +++
->  9 files changed, 284 insertions(+), 55 deletions(-)
->
-> --
-> 2.20.1
->
+kernel test robot noticed the following build errors:
+
+[auto build test ERROR on atorgue-stm32/stm32-next]
+[also build test ERROR on linus/master v6.3-rc7 next-20230418]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
+
+url:    https://github.com/intel-lab-lkp/linux/commits/Mao-Jinlong/stm-class-Add-MIPI-OST-protocol-support/20230419-221653
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/atorgue/stm32.git stm32-next
+patch link:    https://lore.kernel.org/r/20230419141328.37472-1-quic_jinlmao%40quicinc.com
+patch subject: [PATCH v2] stm: class: Add MIPI OST protocol support
+config: sparc-allyesconfig (https://download.01.org/0day-ci/archive/20230420/202304200216.kvZgZcao-lkp@intel.com/config)
+compiler: sparc64-linux-gcc (GCC) 12.1.0
+reproduce (this is a W=1 build):
+        wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
+        chmod +x ~/bin/make.cross
+        # https://github.com/intel-lab-lkp/linux/commit/54db7d137859caf5a14de2b166d80913b0c80218
+        git remote add linux-review https://github.com/intel-lab-lkp/linux
+        git fetch --no-tags linux-review Mao-Jinlong/stm-class-Add-MIPI-OST-protocol-support/20230419-221653
+        git checkout 54db7d137859caf5a14de2b166d80913b0c80218
+        # save the config file
+        mkdir build_dir && cp config build_dir/.config
+        COMPILER_INSTALL_PATH=$HOME/0day COMPILER=gcc-12.1.0 make.cross W=1 O=build_dir ARCH=sparc olddefconfig
+        COMPILER_INSTALL_PATH=$HOME/0day COMPILER=gcc-12.1.0 make.cross W=1 O=build_dir ARCH=sparc SHELL=/bin/bash drivers/
+
+If you fix the issue, kindly add following tag where applicable
+| Reported-by: kernel test robot <lkp@intel.com>
+| Link: https://lore.kernel.org/oe-kbuild-all/202304200216.kvZgZcao-lkp@intel.com/
+
+All error/warnings (new ones prefixed by >>):
+
+   drivers/hwtracing/stm/p_ost.c: In function 'ost_write':
+>> drivers/hwtracing/stm/p_ost.c:174:46: error: implicit declaration of function 'get_current'; did you mean 'get_cred'? [-Werror=implicit-function-declaration]
+     174 |         *(u64 *)(trc_hdr + 8) = task_tgid_nr(get_current());
+         |                                              ^~~~~~~~~~~
+         |                                              get_cred
+>> drivers/hwtracing/stm/p_ost.c:174:46: warning: passing argument 1 of 'task_tgid_nr' makes pointer from integer without a cast [-Wint-conversion]
+     174 |         *(u64 *)(trc_hdr + 8) = task_tgid_nr(get_current());
+         |                                              ^~~~~~~~~~~~~
+         |                                              |
+         |                                              int
+   In file included from include/linux/sched/mm.h:7,
+                    from include/linux/xarray.h:19,
+                    from include/linux/radix-tree.h:21,
+                    from include/linux/idr.h:15,
+                    from include/linux/kernfs.h:12,
+                    from include/linux/sysfs.h:16,
+                    from include/linux/kobject.h:20,
+                    from include/linux/module.h:21,
+                    from drivers/hwtracing/stm/p_ost.c:9:
+   include/linux/sched.h:1582:54: note: expected 'struct task_struct *' but argument is of type 'int'
+    1582 | static inline pid_t task_tgid_nr(struct task_struct *tsk)
+         |                                  ~~~~~~~~~~~~~~~~~~~~^~~
+   cc1: some warnings being treated as errors
 
 
---=20
-Thanks,
-Song
+vim +174 drivers/hwtracing/stm/p_ost.c
+
+   131	
+   132	static ssize_t notrace ost_write(struct stm_data *data,
+   133			struct stm_output *output, unsigned int chan,
+   134			const char *buf, size_t count)
+   135	{
+   136		unsigned int c = output->channel + chan;
+   137		unsigned int m = output->master;
+   138		const unsigned char nil = 0;
+   139		u32 header = DATA_HEADER;
+   140		u8 trc_hdr[16];
+   141		ssize_t sz;
+   142	
+   143		struct ost_output *op = output->pdrv_private;
+   144	
+   145		/*
+   146		 * Identify the source by entity type.
+   147		 * If entity type is not set, return error value.
+   148		 */
+   149		if (op->node.entity_type == OST_ENTITY_TYPE_FTRACE) {
+   150			header |= OST_ENTITY_FTRACE;
+   151		} else if (op->node.entity_type == OST_ENTITY_TYPE_CONSOLE) {
+   152			header |= OST_ENTITY_CONSOLE;
+   153		} else {
+   154			pr_debug("p_ost: Entity must be set for trace data.");
+   155			return -EINVAL;
+   156		}
+   157	
+   158		/*
+   159		 * STP framing rules for OST frames:
+   160		 *   * the first packet of the OST frame is marked;
+   161		 *   * the last packet is a FLAG with timestamped tag.
+   162		 */
+   163		/* Message layout: HEADER / DATA / TAIL */
+   164		/* HEADER */
+   165		sz = data->packet(data, m, c, STP_PACKET_DATA, STP_PACKET_MARKED,
+   166				  4, (u8 *)&header);
+   167		if (sz <= 0)
+   168			return sz;
+   169	
+   170		/* DATA */
+   171		*(u16 *)(trc_hdr) = STM_MAKE_VERSION(0, 4);
+   172		*(u16 *)(trc_hdr + 2) = STM_HEADER_MAGIC;
+   173		*(u32 *)(trc_hdr + 4) = raw_smp_processor_id();
+ > 174		*(u64 *)(trc_hdr + 8) = task_tgid_nr(get_current());
+   175		sz = stm_data_write(data, m, c, false, trc_hdr, sizeof(trc_hdr));
+   176		if (sz <= 0)
+   177			return sz;
+   178	
+   179		sz = stm_data_write(data, m, c, false, buf, count);
+   180	
+   181		/* TAIL */
+   182		if (sz > 0)
+   183			data->packet(data, m, c, STP_PACKET_FLAG,
+   184				STP_PACKET_TIMESTAMPED, 0, &nil);
+   185	
+   186		return sz;
+   187	}
+   188	
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests
