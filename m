@@ -2,45 +2,50 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EBEABC77B61
-	for <linux-trace-kernel@archiver.kernel.org>; Mon, 24 Apr 2023 20:11:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EE07DC7618E
+	for <linux-trace-kernel@archiver.kernel.org>; Mon, 24 Apr 2023 20:23:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232213AbjDXULf (ORCPT
+        id S231985AbjDXUXH (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Mon, 24 Apr 2023 16:11:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36428 "EHLO
+        Mon, 24 Apr 2023 16:23:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41618 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231364AbjDXULe (ORCPT
+        with ESMTP id S229872AbjDXUXG (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Mon, 24 Apr 2023 16:11:34 -0400
+        Mon, 24 Apr 2023 16:23:06 -0400
 Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C30E140E0;
-        Mon, 24 Apr 2023 13:11:33 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9626A5FDD;
+        Mon, 24 Apr 2023 13:23:05 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 5F6D1628BF;
-        Mon, 24 Apr 2023 20:11:33 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B17D9C433D2;
-        Mon, 24 Apr 2023 20:11:31 +0000 (UTC)
-Date:   Mon, 24 Apr 2023 16:11:29 -0400
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 375A062139;
+        Mon, 24 Apr 2023 20:23:05 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 37CD0C433D2;
+        Mon, 24 Apr 2023 20:23:02 +0000 (UTC)
+Date:   Mon, 24 Apr 2023 16:23:00 -0400
 From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Tze-nan Wu <Tze-nan.Wu@mediatek.com>
-Cc:     <mhiramat@kernel.org>, <bobule.chang@mediatek.com>,
-        <wsd_upstream@mediatek.com>, <cheng-jui.wang@mediatek.com>,
-        <npiggin@gmail.com>, <stable@vger.kernel.org>,
-        AngeloGioacchino Del Regno 
-        <angelogioacchino.delregno@collabora.com>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-trace-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-mediatek@lists.infradead.org>
-Subject: Re: [PATCH v4] ring-buffer: Ensure proper resetting of atomic
- variables in ring_buffer_reset_online_cpus
-Message-ID: <20230424161129.27e75db1@rorschach.local.home>
-In-Reply-To: <20230412112401.25081-1-Tze-nan.Wu@mediatek.com>
-References: <20230412112401.25081-1-Tze-nan.Wu@mediatek.com>
+To:     Donglin Peng <pengdonglin@sangfor.com.cn>
+Cc:     mhiramat@kernel.org, huangcun@sangfor.com.cn,
+        dinghui@sangfor.com.cn, catalin.marinas@arm.com,
+        mark.rutland@arm.com, paul.walmsley@sifive.com, palmer@dabbelt.com,
+        bp@alien8.de, tglx@linutronix.de, aou@eecs.berkeley.edu,
+        rmk+kernel@armlinux.org.uk, linux@armlinux.org.uk, will@kernel.org,
+        peterz@infradead.org, mingo@redhat.com, zhangqing@loongson.cn,
+        chenhuacai@kernel.org, kernel@xen0n.name, dolinux.peng@gmail.com,
+        x86@kernel.org, linux-trace-kernel@vger.kernel.org,
+        loongarch@lists.linux.dev, linux-riscv@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Florian Kauer <florian.kauer@linutronix.de>,
+        dave.hansen@linux.intel.com, hpa@zytor.com, xiehuan09@gmail.com
+Subject: Re: [PATCH v11 1/8] function_graph: Support recording and printing
+ the return value of function
+Message-ID: <20230424162300.67daca4f@rorschach.local.home>
+In-Reply-To: <7eabae11-6a65-c51d-ff39-8205057e497a@sangfor.com.cn>
+References: <cover.1680954589.git.pengdonglin@sangfor.com.cn>
+        <1fc502712c981e0e6742185ba242992170ac9da8.1680954589.git.pengdonglin@sangfor.com.cn>
+        <66fe9288-05ff-1bf3-dd40-e7b3cbdf1af9@sangfor.com.cn>
+        <7eabae11-6a65-c51d-ff39-8205057e497a@sangfor.com.cn>
 X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
@@ -49,87 +54,12 @@ Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On Wed, 12 Apr 2023 19:23:56 +0800
-Tze-nan Wu <Tze-nan.Wu@mediatek.com> wrote:
+On Fri, 14 Apr 2023 15:55:05 +0800
+Donglin Peng <pengdonglin@sangfor.com.cn> wrote:
 
-> In ring_buffer_reset_online_cpus, the buffer_size_kb write operation
-> may permanently fail if the cpu_online_mask changes between two
-> for_each_online_buffer_cpu loops. The number of increases and decreases
-> on both cpu_buffer->resize_disabled and cpu_buffer->record_disabled may be
-> inconsistent, causing some CPUs to have non-zero values for these atomic
-> variables after the function returns.
-> 
-> This issue can be reproduced by "echo 0 > trace" while hotplugging cpu.
-> After reproducing success, we can find out buffer_size_kb will not be
-> functional anymore.
-> 
-> To prevent leaving 'resize_disabled' and 'record_disabled' non-zero after
-> ring_buffer_reset_online_cpus returns, we ensure that each atomic variable
-> has been set up before atomic_sub() to it.
-> 
-> Cc: stable@vger.kernel.org
-> Cc: npiggin@gmail.com
-> Fixes: b23d7a5f4a07 ("ring-buffer: speed up buffer resets by avoiding synchronize_rcu for each CPU")
-> Reviewed-by: Cheng-Jui Wang <cheng-jui.wang@mediatek.com>
-> Signed-off-by: Tze-nan Wu <Tze-nan.Wu@mediatek.com>
-> ---
-> Changes from v1 to v3: https://lore.kernel.org/all/20230408052226.25268-1-Tze-nan.Wu@mediatek.com/
->   - Declare the cpumask variable statically rather than dynamically.
-> 
-> Changes from v2 to v3: https://lore.kernel.org/all/20230409024616.31099-1-Tze-nan.Wu@mediatek.com/
->   - Considering holding cpu_hotplug_lock too long because of the
->     synchronize_rcu(), maybe it's better to prevent the issue by copying
->     cpu_online_mask at the entry of the function as V1 does, instead of
->     using cpus_read_lock().
-> 
-> Changes from v3 to v4: https://lore.kernel.org/all/20230410073512.13362-1-Tze-nan.Wu@mediatek.com/
->   - Considering that the size of cpumask may not be too big on some machines
->     We no longer adopt the approach of copying cpumask at the beginning of
->     the function. Instead, we ensure that atomic variables have been set up
->     before atomic_sub() is called.
->   - Change the title of the patch.
-> ---
->  kernel/trace/ring_buffer.c | 14 +++++++++++---
->  1 file changed, 11 insertions(+), 3 deletions(-)
-> 
-> diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
-> index 76a2d91eecad..8c647d8b5bb4 100644
-> --- a/kernel/trace/ring_buffer.c
-> +++ b/kernel/trace/ring_buffer.c
-> @@ -5361,20 +5361,28 @@ void ring_buffer_reset_online_cpus(struct trace_buffer *buffer)
->  	for_each_online_buffer_cpu(buffer, cpu) {
->  		cpu_buffer = buffer->buffers[cpu];
->  
-> -		atomic_inc(&cpu_buffer->resize_disabled);
-> +#define RESET_BIT	(1 << 30)
+> Hi Steve, could you please correct this mistake before merging it into
+> linux-next?
 
-Nit, please add the define outside the function. You could do it right
-before the function, but defines like this make the code somewhat ugly.
+Will do.
 
-> +		atomic_add(RESET_BIT, &cpu_buffer->resize_disabled);
->  		atomic_inc(&cpu_buffer->record_disabled);
->  	}
->  
->  	/* Make sure all commits have finished */
->  	synchronize_rcu();
->  
-> -	for_each_online_buffer_cpu(buffer, cpu) {
-> +	for_each_buffer_cpu(buffer, cpu) {
->  		cpu_buffer = buffer->buffers[cpu];
->  
-> +		/*
-> +		 * If a CPU came online during the synchronize_rcu(), then
-> +		 * ignore it.
-> +		 */
-> +		if (!(atomic_read(&cpu_buffer->resize_disabled) & RESET_BIT))
-> +			continue;
-> +
->  		reset_disabled_cpu_buffer(cpu_buffer);
->  
->  		atomic_dec(&cpu_buffer->record_disabled);
-> -		atomic_dec(&cpu_buffer->resize_disabled);
-> +		atomic_sub(RESET_BIT, &cpu_buffer->resize_disabled);
->  	}
->  
->  	mutex_unlock(&buffer->mutex);
-
+-- Steve
