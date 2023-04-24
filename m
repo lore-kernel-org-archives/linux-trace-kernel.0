@@ -2,120 +2,190 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A33F0C7618E
-	for <linux-trace-kernel@archiver.kernel.org>; Mon, 24 Apr 2023 11:10:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F1BBCC77B78
+	for <linux-trace-kernel@archiver.kernel.org>; Mon, 24 Apr 2023 14:46:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231661AbjDXLKf (ORCPT
+        id S230343AbjDXOqE (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Mon, 24 Apr 2023 07:10:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50444 "EHLO
+        Mon, 24 Apr 2023 10:46:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33996 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231633AbjDXLKY (ORCPT
+        with ESMTP id S231600AbjDXOqC (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Mon, 24 Apr 2023 07:10:24 -0400
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7B19D358C;
-        Mon, 24 Apr 2023 04:10:13 -0700 (PDT)
-Received: from pps.filterd (m0353729.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 33OAR9Oo001016;
-        Mon, 24 Apr 2023 11:10:04 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=date : from : subject :
- to : cc : references : in-reply-to : message-id : content-type :
- content-transfer-encoding : mime-version; s=pp1;
- bh=8hPFfdVQwoiFN6Qn44U3psCF9HoNZt/Gws7mwbEAWJU=;
- b=l+MDyEmFIGNWikjCT1J2wuSlMyQcr0iCtsOIabI2jr9BhMd5IcPz5Sp6xYOCJXV49ZjV
- AY9zKeekZLkCJUKUo6jaRmleKmvLOQpIMFQrx8jTPKixXegNcxogZO5VHH8Dn1N1dWet
- zW5Jm9ykubXsCf1li7g7YeZLpHOzrUgNC8r/UqX5IvHxcDFCtnirjkn97Tt+9kQgW//3
- sTut7LEgsTB5H5fmN7Ae3vNQ8zmvu8d5Y9OA8gxHnEpAQEb0mBNriA3tBE7PissDv6eg
- gEWrgv84plnHrNOA31l6QTwVg66Pt3wyHLo+NLxeTs0sRVMKKK3cG4Uvo9vCx7fO1lTi Nw== 
-Received: from ppma03fra.de.ibm.com (6b.4a.5195.ip4.static.sl-reverse.com [149.81.74.107])
-        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3q48jkqvua-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 24 Apr 2023 11:10:03 +0000
-Received: from pps.filterd (ppma03fra.de.ibm.com [127.0.0.1])
-        by ppma03fra.de.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 33O4vmVX007076;
-        Mon, 24 Apr 2023 11:10:00 GMT
-Received: from smtprelay02.fra02v.mail.ibm.com ([9.218.2.226])
-        by ppma03fra.de.ibm.com (PPS) with ESMTPS id 3q47770vu5-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 24 Apr 2023 11:10:00 +0000
-Received: from smtpav06.fra02v.mail.ibm.com (smtpav06.fra02v.mail.ibm.com [10.20.54.105])
-        by smtprelay02.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 33OB9wEc8127156
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 24 Apr 2023 11:09:58 GMT
-Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 5F90220043;
-        Mon, 24 Apr 2023 11:09:58 +0000 (GMT)
-Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id AC4FC2004D;
-        Mon, 24 Apr 2023 11:09:57 +0000 (GMT)
-Received: from localhost (unknown [9.43.54.88])
-        by smtpav06.fra02v.mail.ibm.com (Postfix) with ESMTP;
-        Mon, 24 Apr 2023 11:09:57 +0000 (GMT)
-Date:   Mon, 24 Apr 2023 16:39:56 +0530
-From:   "Naveen N. Rao" <naveen.n.rao@linux.ibm.com>
-Subject: Re: [PATCH v2 0/2] selftests/ftrace: Add tests for kprobes and
- optimized probes
-To:     Akanksha J N <akanksha@linux.ibm.com>,
-        linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
-        linux-trace-kernel@vger.kernel.org
-Cc:     mhiramat@kernel.org, rostedt@goodmis.org, shuah@kernel.org
-References: <20230418095557.19061-1-akanksha@linux.ibm.com>
-In-Reply-To: <20230418095557.19061-1-akanksha@linux.ibm.com>
-User-Agent: astroid/4d6b06ad (https://github.com/astroidmail/astroid)
-Message-Id: <1682334408.u49nhd1gk9.naveen@linux.ibm.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: dJXrY_vZ2fqyep9r8yIEL06CgfzaDFhj
-X-Proofpoint-GUID: dJXrY_vZ2fqyep9r8yIEL06CgfzaDFhj
-Content-Transfer-Encoding: quoted-printable
-X-Proofpoint-UnRewURL: 0 URL was un-rewritten
+        Mon, 24 Apr 2023 10:46:02 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B48BE59F5;
+        Mon, 24 Apr 2023 07:46:01 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 4FC7C62207;
+        Mon, 24 Apr 2023 14:46:01 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D5D8DC433EF;
+        Mon, 24 Apr 2023 14:45:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1682347560;
+        bh=atXhJJhwd5MHAOfI4qFdF5QYcFwglLv91Lc3dXq2Wxo=;
+        h=From:To:Cc:Subject:Date:From;
+        b=oxr9iMh7QLBjOO0QMvW5Rhitp37gczodx/GZuj+Mebl7IKAgUm84bTPQ4N4cOZRvi
+         W17JSRCeV56uKHUGCgC7ioiIArVbPH1bmbdwBXge22FHRzprRzbizjHGCyEHNVDNxj
+         wxfvErg4FMIhSaI2yGhDSG8EklF0q/YlHzV4e+EtsSjUgdNo+jxl4UrG+OX2bK94Nz
+         gWeMe6v/B/NSo+N+YAsf8MJz+ukiW86HKOphk+h9SNYj2R1QUmxFHXgBlkl7mXmLkc
+         MWpfvfNHwGZqXa2pTzu0pf8TfUObT18FtdNl9yVHPRzA9Q+aJFB84rpfoJhaVjGh/x
+         iJpooafR4wXVw==
+From:   "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
+To:     linux-trace-kernel@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>,
+        mhiramat@kernel.org, Florent Revest <revest@chromium.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Martin KaFai Lau <martin.lau@linux.dev>, bpf@vger.kernel.org
+Subject: [PATCH v6 00/10] tracing: Add fprobe events
+Date:   Mon, 24 Apr 2023 23:45:56 +0900
+Message-ID:  <168234755610.2210510.12133559313738141202.stgit@mhiramat.roam.corp.google.com>
+X-Mailer: git-send-email 2.40.0.634.g4ca3ef3211-goog
+User-Agent: StGit/0.19
 MIME-Version: 1.0
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.254,Aquarius:18.0.942,Hydra:6.0.573,FMLib:17.11.170.22
- definitions=2023-04-24_07,2023-04-21_01,2023-02-09_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0
- priorityscore=1501 adultscore=0 suspectscore=0 lowpriorityscore=0
- phishscore=0 bulkscore=0 mlxscore=0 spamscore=0 mlxlogscore=594
- malwarescore=0 clxscore=1011 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-2303200000 definitions=main-2304240100
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-Akanksha J N wrote:
-> This patchset adds a stress test for kprobes and a test for checking
-> optimized probes.
-> The two tests are being added based on the below discussion:
-> https://lore.kernel.org/all/20230128101622.ce6f8e64d929e29d36b08b73@kerne=
-l.org/
->=20
-> Changelog:
->=20
->=20
-> * Add an explicit fork after enabling the events ( echo "forked" )
-> * Remove the extended test from multiple_kprobe_types.tc which adds=20
->   multiple consecutive probes in a function and add it as a=20
->   separate test case.=20
-> * Add new test case which checks for optimized probes.
->=20
-> Akanksha J N (2):
->   selftests/ftrace: Add new test case which adds multiple consecutive
->     probes in a function
->   selftests/ftrace: Add new test case which checks for optimized probes
->=20
->  .../test.d/kprobe/kprobe_insn_boundary.tc     | 19 +++++++++++
->  .../ftrace/test.d/kprobe/kprobe_opt_types.tc  | 34 +++++++++++++++++++
->  2 files changed, 53 insertions(+)
->  create mode 100644 tools/testing/selftests/ftrace/test.d/kprobe/kprobe_i=
-nsn_boundary.tc
->  create mode 100644 tools/testing/selftests/ftrace/test.d/kprobe/kprobe_o=
-pt_types.tc
+Hi,
 
-This series looks good to me.
-Acked-by: Naveen N. Rao <naveen.n.rao@linux.vnet.ibm.com>
+Here is the 6th version of improve fprobe and add a basic fprobe event
+support for ftrace (tracefs) and perf. Here is the previous version.
+
+https://lore.kernel.org/all/168198993129.1795549.8306571027057356176.stgit@mhiramat.roam.corp.google.com/
+
+I applied some feedbacks about BPF and BTF related code, and fix patch
+description. Major code changes are dropping the bpf_prog call [2/10],
+Making find_tracepoint() static [4/10], and using bpf_get_btf_vmlinux()
+[6/10]. This version also added a documentation about the fprobe events
+[10/10].
+
+You can also get this series from:
+
+git://git.kernel.org/pub/scm/linux/kernel/git/mhiramat/linux.git topic/fprobe-event-ext
+
+With this fprobe events, we can continue to trace function entry/exit
+even if the CONFIG_KPROBES_ON_FTRACE is not available. Since
+CONFIG_KPROBES_ON_FTRACE requires the CONFIG_DYNAMIC_FTRACE_WITH_REGS,
+it is not available if the architecture only supports
+CONFIG_DYNAMIC_FTRACE_WITH_ARGS (e.g. arm64). And that means kprobe
+events can not probe function entry/exit effectively on such architecture.
+But this problem can be solved if the dynamic events supports fprobe events
+because fprobe events doesn't use kprobe but ftrace via fprobe.
+
+FPROBE EVENTS
+=============
+
+Fprobe events allows user to add new events on the entry and exit of kernel
+functions (which can be ftraced). Unlike kprobe events, the fprobe events
+can only probe the function entry and exit, and it can only trace the
+function args, return value, and stacks. (no registers)
+For probing function body, users can continue to use the kprobe events.
+
+The tracepoint probe events (tprobe events) also allows user to add new
+events dynamically on the tracepoint. Most of the tracepoint already has
+trace-events, so this feature is useful if you only want to know a
+specific parameter, or trace the tracepoints which has no trace-events
+(e.g. sched_*_tp tracepoints only exposes the tracepoints.)
+
+The fprobe events syntax is;
+
+ f[:[GRP/][EVENT]] FUNCTION [FETCHARGS]
+ f[MAXACTIVE][:[GRP/][EVENT]] FUNCTION%return [FETCHARGS]
+
+And tracepoint probe events syntax is;
+
+ t[:[GRP/][EVENT]] TRACEPOINT [FETCHARGS]
+
+This series includes BTF argument support for fprobe/tracepoint events,
+and kprobe events. This allows us to fetch a specific function parameter
+by name, and all parameters by '$$args'.
+Note that enabling this feature, you need to enable CONFIG_BPF_SYSCALL and
+confirm that your arch supports CONFIG_HAVE_FUNCTION_ARG_ACCESS_API.
+
+E.g.
+
+ # echo 't kfree ptr' >> dynamic_events
+ # echo 'f kfree object' >> dynamic_events
+ # cat dynamic_events 
+t:tracepoints/kfree kfree ptr=ptr
+f:fprobes/kfree__entry kfree object=object
+ # echo 1 > events/fprobes/enable
+ # echo 1 > events/tracepoints/enable
+ # echo > trace
+ # head -n 20 trace | tail
+#           TASK-PID     CPU#  |||||  TIMESTAMP  FUNCTION
+#              | |         |   |||||     |         |
+            tail-84      [000] .....  1324.561958: kfree__entry: (kfree+0x4/0x140) object=0xffff888006383c00
+            tail-84      [000] ...1.  1324.561961: kfree: (__probestub_kfree+0x4/0x10) ptr=0xffff888006383c00
+            tail-84      [000] .....  1324.561988: kfree__entry: (kfree+0x4/0x140) object=0x0
+            tail-84      [000] ...1.  1324.561988: kfree: (__probestub_kfree+0x4/0x10) ptr=0x0
+            tail-84      [000] .....  1324.561989: kfree__entry: (kfree+0x4/0x140) object=0xffff88800671e600
+            tail-84      [000] ...1.  1324.561989: kfree: (__probestub_kfree+0x4/0x10) ptr=0xffff88800671e600
+            tail-84      [000] .....  1324.562368: kfree__entry: (kfree+0x4/0x140) object=0xffff8880065e0580
+            tail-84      [000] ...1.  1324.562369: kfree: (__probestub_kfree+0x4/0x10) ptr=0xffff8880065e0580
 
 
+Thank you,
 
-- Naveen
+---
 
+Masami Hiramatsu (Google) (10):
+      fprobe: Pass return address to the handlers
+      tracing/probes: Add fprobe events for tracing function entry and exit.
+      selftests/ftrace: Add fprobe related testcases
+      tracing/probes: Add tracepoint support on fprobe_events
+      tracing/probes: Move event parameter fetching code to common parser
+      tracing/probes: Support function parameters if BTF is available
+      tracing/probes: Add $$args meta argument for all function args
+      selftests/ftrace: Add tracepoint probe test case
+      selftests/ftrace: Add BTF arguments test cases
+      Documentation: tracing/probes: Add fprobe event tracing document
+
+
+ Documentation/trace/fprobetrace.rst                |  184 +++
+ Documentation/trace/index.rst                      |    1 
+ include/linux/fprobe.h                             |   11 
+ include/linux/rethook.h                            |    2 
+ include/linux/trace_events.h                       |    3 
+ include/linux/tracepoint-defs.h                    |    1 
+ include/linux/tracepoint.h                         |    5 
+ kernel/kprobes.c                                   |    1 
+ kernel/trace/Kconfig                               |   25 
+ kernel/trace/Makefile                              |    1 
+ kernel/trace/bpf_trace.c                           |    6 
+ kernel/trace/fprobe.c                              |   17 
+ kernel/trace/rethook.c                             |    3 
+ kernel/trace/trace.c                               |   13 
+ kernel/trace/trace.h                               |   11 
+ kernel/trace/trace_eprobe.c                        |   44 -
+ kernel/trace/trace_fprobe.c                        | 1194 ++++++++++++++++++++
+ kernel/trace/trace_kprobe.c                        |   33 -
+ kernel/trace/trace_probe.c                         |  440 ++++++-
+ kernel/trace/trace_probe.h                         |   42 +
+ kernel/trace/trace_uprobe.c                        |    8 
+ lib/test_fprobe.c                                  |   10 
+ samples/fprobe/fprobe_example.c                    |    6 
+ .../ftrace/test.d/dynevent/add_remove_btfarg.tc    |   54 +
+ .../ftrace/test.d/dynevent/add_remove_fprobe.tc    |   26 
+ .../ftrace/test.d/dynevent/add_remove_tprobe.tc    |   27 
+ .../ftrace/test.d/dynevent/fprobe_syntax_errors.tc |   98 ++
+ .../ftrace/test.d/dynevent/tprobe_syntax_errors.tc |   82 +
+ .../ftrace/test.d/kprobe/kprobe_syntax_errors.tc   |   12 
+ 29 files changed, 2221 insertions(+), 139 deletions(-)
+ create mode 100644 Documentation/trace/fprobetrace.rst
+ create mode 100644 kernel/trace/trace_fprobe.c
+ create mode 100644 tools/testing/selftests/ftrace/test.d/dynevent/add_remove_btfarg.tc
+ create mode 100644 tools/testing/selftests/ftrace/test.d/dynevent/add_remove_fprobe.tc
+ create mode 100644 tools/testing/selftests/ftrace/test.d/dynevent/add_remove_tprobe.tc
+ create mode 100644 tools/testing/selftests/ftrace/test.d/dynevent/fprobe_syntax_errors.tc
+ create mode 100644 tools/testing/selftests/ftrace/test.d/dynevent/tprobe_syntax_errors.tc
+
+--
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
