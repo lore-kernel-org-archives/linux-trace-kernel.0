@@ -2,108 +2,65 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB606C77B61
-	for <linux-trace-kernel@archiver.kernel.org>; Mon, 24 Apr 2023 19:47:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 85AC5C77B61
+	for <linux-trace-kernel@archiver.kernel.org>; Mon, 24 Apr 2023 20:09:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231945AbjDXTro (ORCPT
+        id S229872AbjDXUJS (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Mon, 24 Apr 2023 15:47:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46336 "EHLO
+        Mon, 24 Apr 2023 16:09:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35554 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231625AbjDXTrn (ORCPT
+        with ESMTP id S231276AbjDXUJR (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Mon, 24 Apr 2023 15:47:43 -0400
-Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:3::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CBA22527A;
-        Mon, 24 Apr 2023 12:47:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20210309; h=Sender:In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=2Do1yeWHcPCiwl4CRls3I2dXsK6tP8pVag3VeASBUgM=; b=RyH62nvw+N9oAHQvClmlrR4pX/
-        SpU0VpnH5pHC3JlgThqshqVS9+S7lZpNq5wWmiM1Qsk6GvDKAG3RJXHwdPmJe6XLw4RaibFu7ZR5Y
-        7dK/tfunxoAHK6R94go/rtGwAXdDGYFRnnSvf1V0EskrwFBgpSzlsLHIOMCx2/OHksSsNJeCaCdUx
-        2KVMF1YuANBj0u+orQWi9ZmZXpmZLuiTO//JIZeNUbU2wHLP27mL1SuZoWK6oyR2e6nIL6XJlt/Ja
-        MxxUHQNFIkJiLIdTKEFMCp2zHisoe3ZjegT5FIsyuXypwi1UGca6kvC3s107nlbnBzpQvh1Mo33Dc
-        CYzHLEDQ==;
-Received: from mcgrof by bombadil.infradead.org with local (Exim 4.96 #2 (Red Hat Linux))
-        id 1pr29z-00H4WN-1E;
-        Mon, 24 Apr 2023 19:47:39 +0000
-Date:   Mon, 24 Apr 2023 12:47:39 -0700
-From:   Luis Chamberlain <mcgrof@kernel.org>
-To:     Josh Poimboeuf <jpoimboe@kernel.org>
-Cc:     Nick Alcock <nick.alcock@oracle.com>, masahiroy@kernel.org,
-        linux-modules@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
-        linux-kernel@vger.kernel.org, arnd@arndb.de,
-        akpm@linux-foundation.org, eugene.loh@oracle.com,
-        kris.van.hees@oracle.com, live-patching@vger.kernel.org,
-        Peter Zijlstra <peterz@infradead.org>,
-        Steven Rostedt <rostedt@goodmis.org>
-Subject: Re: [PATCH modules-next v10 00/13] kallsyms: reliable
- symbol->address lookup with /proc/kallmodsyms
-Message-ID: <ZEbc20oRFR0f8Qj6@bombadil.infradead.org>
-References: <20221205163157.269335-1-nick.alcock@oracle.com>
- <20230407232118.o2x5lakfgyzy56gz@treble>
+        Mon, 24 Apr 2023 16:09:17 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4153C5B8C;
+        Mon, 24 Apr 2023 13:09:17 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id D13FD628BF;
+        Mon, 24 Apr 2023 20:09:16 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C997BC433EF;
+        Mon, 24 Apr 2023 20:09:14 +0000 (UTC)
+Date:   Mon, 24 Apr 2023 16:09:08 -0400
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     Mark Rutland <mark.rutland@arm.com>
+Cc:     Will Deacon <will@kernel.org>,
+        Florent Revest <revest@chromium.org>, catalin.marinas@arm.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-trace-kernel@vger.kernel.org, bpf@vger.kernel.org,
+        mhiramat@kernel.org, ast@kernel.org, daniel@iogearbox.net,
+        andrii@kernel.org, kpsingh@kernel.org, jolsa@kernel.org,
+        xukuohai@huaweicloud.com, lihuafei1@huawei.com,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: Re: [PATCH v6 0/5] Add ftrace direct call for arm64
+Message-ID: <20230424160908.44c80452@rorschach.local.home>
+In-Reply-To: <ZDZ+3dNnIdEpmWiP@FVFF77S0Q05N>
+References: <20230405180250.2046566-1-revest@chromium.org>
+        <ZDWDPUY2tZiMbk8V@FVFF77S0Q05N>
+        <20230411124749.7aeea715@gandalf.local.home>
+        <20230411170807.GA23143@willie-the-truck>
+        <20230411134456.728551f8@gandalf.local.home>
+        <20230411175423.GD23143@willie-the-truck>
+        <ZDZ+3dNnIdEpmWiP@FVFF77S0Q05N>
+X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230407232118.o2x5lakfgyzy56gz@treble>
-Sender: Luis Chamberlain <mcgrof@infradead.org>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On Fri, Apr 07, 2023 at 04:21:18PM -0700, Josh Poimboeuf wrote:
-> Anyway, I was nodding along with the above cover letter until I got to
-> the third paragraph.
-> 
-> A "built-in kernel module" is not actually a module, as it's built in to
-> vmlinux.  I suspect the point is that if you rebuild with a different
-> config, it might become a module.  But many other changes could also
-> occur with a changed config, including changed inlining decisions and
-> GCC IPA optimization function renaming, in which case the symbol might
-> no longer exist with the new config.
+On Wed, 12 Apr 2023 10:50:21 +0100
+Mark Rutland <mark.rutland@arm.com> wrote:
 
-Yes it does not matter, for his tooling effort it was just to be able
-to map a possible module to a symbol so tooling can display this to
-disambiguate.
+> Perhaps we could queue 1 and 2 via the arm64 tree, 3 and 4 via the ftrace tree,
+> and follow up with patch 5 via the bpf tree after -rc1?
 
-> Also I'm confused what it means for a symbol to be "used by multiple
-> modules".  If the same TU or inline symbol is linked into two modules,
-> it will be loaded twice at two different addresses, and the
-> implementations could even differ.
+Any patches that you want through the ftrace tree, please send as a
+separate queue to the linux-trace-kernel mailing list (and lkml) if you
+haven't done that already. I'm still a thousand emails behind, and
+walking through them while at the airport lounge.
 
-He just wants to be able to map if a symbol with the same name but
-different addresses is due to a built-in or a module declaration of
-the same symbol so it can use it.
-
-> It sounds like there are two problems being conflated:
-> 
->   1) how to uniquely identify symbols in the current kernel
-> 
->      For this, all we really need is file+sym.
-> 
->      Or, enable -zunique-symbols in the linker.
-> 
->   2) how to uniquely identify symbols across multiple kernels/configs
-> 
->      This seems much trickier, as much can change across kernels and
->      configs, including compiler inlining and naming decisions, not to
->      mention actual code changes.
-> 
-> The problems are related, but distinct.
-> 
-> #2 seems significantly harder to implement properly.
-> 
-> Would solving #1 give you most of what you need?
-
-I'm not nick but my reading of his goals is that if you peg a
-"possible_module" prefix or postfix or whatever, then yes.
-
-For 2) I think it would be good to see if one could just force Kconfig
-tristate to add -DPOSSIBLE_MODULE, that would be an easier approach
-than the possible-obj-m thing [0] I had suggested last
-
-[0] https://lore.kernel.org/all/Y/kXDqW+7d71C4wz@bombadil.infradead.org/
-
-  Luis
+-- Steve
