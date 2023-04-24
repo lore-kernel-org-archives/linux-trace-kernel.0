@@ -2,157 +2,120 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 36691C77B7C
-	for <linux-trace-kernel@archiver.kernel.org>; Mon, 24 Apr 2023 07:38:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A33F0C7618E
+	for <linux-trace-kernel@archiver.kernel.org>; Mon, 24 Apr 2023 11:10:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231354AbjDXHim (ORCPT
+        id S231661AbjDXLKf (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Mon, 24 Apr 2023 03:38:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57404 "EHLO
+        Mon, 24 Apr 2023 07:10:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50444 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231348AbjDXHil (ORCPT
+        with ESMTP id S231633AbjDXLKY (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Mon, 24 Apr 2023 03:38:41 -0400
-Received: from mail-wm1-x32f.google.com (mail-wm1-x32f.google.com [IPv6:2a00:1450:4864:20::32f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E186AE7F;
-        Mon, 24 Apr 2023 00:38:39 -0700 (PDT)
-Received: by mail-wm1-x32f.google.com with SMTP id 5b1f17b1804b1-3f1950f5628so27701625e9.3;
-        Mon, 24 Apr 2023 00:38:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1682321918; x=1684913918;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=fCpnNeC1GLxVO8cSBcSgQyBm7wF8gZpeuq5aHD7x5G4=;
-        b=Fg4I+0EdGe2GGPzVYk2u/uA9mp7pU0Nn/8vdjJQ14QAnvPszIsHu9hC752YWdWtuBw
-         /QX2ZDzmSB18gF6SzzWu7+YbPCyEMkfQ6tLmdIfyjMA4IzNRCF+VHGgb0JBmB2TNwMPv
-         leP9jhGfApZBMP+gS4sMhBOh9M6/fBbJg8QzoPxcUXi259wBpZhsbAXbSURa+pQhJuxY
-         S2g2KcYotyxAs/pF7grKxVRPtRD9SBtnC+TqG6fWmWdHvHs2QPm1buWMCyVHtLVTzf/Z
-         0B0nxjs/3Ga0Qw0moOi7YWNy0Vb1wHbIhGHsFi3swLjssfLYBLcXodhW3yc79spXcAO+
-         LjVQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1682321918; x=1684913918;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=fCpnNeC1GLxVO8cSBcSgQyBm7wF8gZpeuq5aHD7x5G4=;
-        b=Xxz2QbRT9TbvgNi0pKJ1AQEDHcelXSEs22zTxi0S+EjjmFzUdcZ6rgDErs4dUsda1Y
-         60R1RjnOBja2MhQrD7pbGkhtN9IRyMvlRSm7t2cwcNFmTAWG84duiXHCnXPippFr4/sz
-         wQM7HBbvLK0oDxuZqmdzSFpBjqlB5t6PI/ze1VHfdwSNnrkc6KBLP8PZZwTL4AZuZiES
-         jlgkwOFBe5R9i8aH1Hk6s5jNfNORtTeVqxVEVgYQICQsLmmE0nBebIAdnrPSEAgTooty
-         Hnex/cCKxwaP3j9lcpH8QNqS8wvHOJ24kzJvk17iRk7IK2BXL2ckhH94K/DOyKVPfZ1L
-         IbvA==
-X-Gm-Message-State: AAQBX9egz2315vI3lkPPE8bKkYZDvK+dLHMm25gNTNDRMGHl/P+/rXqx
-        CRcUaDNNEitP+se5nWNCDeo=
-X-Google-Smtp-Source: AKy350buA3FaT3ukDXDRelkwQFzWxvJfvb84LyWD9Xca8LqdvqE/k8wLgICUzrtQO3JAJESieYfVbg==
-X-Received: by 2002:a7b:c5c7:0:b0:3f1:75d0:6151 with SMTP id n7-20020a7bc5c7000000b003f175d06151mr7010464wmk.1.1682321918225;
-        Mon, 24 Apr 2023 00:38:38 -0700 (PDT)
-Received: from krava (2001-1ae9-1c2-4c00-726e-c10f-8833-ff22.ip6.tmcz.cz. [2001:1ae9:1c2:4c00:726e:c10f:8833:ff22])
-        by smtp.gmail.com with ESMTPSA id d3-20020a05600c3ac300b003f19b3d89e9sm5174845wms.33.2023.04.24.00.38.37
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 24 Apr 2023 00:38:37 -0700 (PDT)
-From:   Jiri Olsa <olsajiri@gmail.com>
-X-Google-Original-From: Jiri Olsa <jolsa@kernel.org>
-Date:   Mon, 24 Apr 2023 09:38:35 +0200
-To:     Masami Hiramatsu <mhiramat@kernel.org>
-Cc:     Jiri Olsa <olsajiri@gmail.com>, linux-trace-kernel@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>,
-        Florent Revest <revest@chromium.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Martin KaFai Lau <martin.lau@linux.dev>, bpf@vger.kernel.org
-Subject: Re: [PATCH v5 4/9] tracing/probes: Add tracepoint support on
- fprobe_event
-Message-ID: <ZEYx+2WWixBkDbTn@krava>
-References: <168198993129.1795549.8306571027057356176.stgit@mhiramat.roam.corp.google.com>
- <168198997089.1795549.1009510263722958117.stgit@mhiramat.roam.corp.google.com>
- <ZEThQgkJV7esVGdR@krava>
- <20230423223740.9f1186a08b3b316b5a0156e7@kernel.org>
+        Mon, 24 Apr 2023 07:10:24 -0400
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7B19D358C;
+        Mon, 24 Apr 2023 04:10:13 -0700 (PDT)
+Received: from pps.filterd (m0353729.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 33OAR9Oo001016;
+        Mon, 24 Apr 2023 11:10:04 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=date : from : subject :
+ to : cc : references : in-reply-to : message-id : content-type :
+ content-transfer-encoding : mime-version; s=pp1;
+ bh=8hPFfdVQwoiFN6Qn44U3psCF9HoNZt/Gws7mwbEAWJU=;
+ b=l+MDyEmFIGNWikjCT1J2wuSlMyQcr0iCtsOIabI2jr9BhMd5IcPz5Sp6xYOCJXV49ZjV
+ AY9zKeekZLkCJUKUo6jaRmleKmvLOQpIMFQrx8jTPKixXegNcxogZO5VHH8Dn1N1dWet
+ zW5Jm9ykubXsCf1li7g7YeZLpHOzrUgNC8r/UqX5IvHxcDFCtnirjkn97Tt+9kQgW//3
+ sTut7LEgsTB5H5fmN7Ae3vNQ8zmvu8d5Y9OA8gxHnEpAQEb0mBNriA3tBE7PissDv6eg
+ gEWrgv84plnHrNOA31l6QTwVg66Pt3wyHLo+NLxeTs0sRVMKKK3cG4Uvo9vCx7fO1lTi Nw== 
+Received: from ppma03fra.de.ibm.com (6b.4a.5195.ip4.static.sl-reverse.com [149.81.74.107])
+        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3q48jkqvua-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 24 Apr 2023 11:10:03 +0000
+Received: from pps.filterd (ppma03fra.de.ibm.com [127.0.0.1])
+        by ppma03fra.de.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 33O4vmVX007076;
+        Mon, 24 Apr 2023 11:10:00 GMT
+Received: from smtprelay02.fra02v.mail.ibm.com ([9.218.2.226])
+        by ppma03fra.de.ibm.com (PPS) with ESMTPS id 3q47770vu5-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 24 Apr 2023 11:10:00 +0000
+Received: from smtpav06.fra02v.mail.ibm.com (smtpav06.fra02v.mail.ibm.com [10.20.54.105])
+        by smtprelay02.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 33OB9wEc8127156
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 24 Apr 2023 11:09:58 GMT
+Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 5F90220043;
+        Mon, 24 Apr 2023 11:09:58 +0000 (GMT)
+Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id AC4FC2004D;
+        Mon, 24 Apr 2023 11:09:57 +0000 (GMT)
+Received: from localhost (unknown [9.43.54.88])
+        by smtpav06.fra02v.mail.ibm.com (Postfix) with ESMTP;
+        Mon, 24 Apr 2023 11:09:57 +0000 (GMT)
+Date:   Mon, 24 Apr 2023 16:39:56 +0530
+From:   "Naveen N. Rao" <naveen.n.rao@linux.ibm.com>
+Subject: Re: [PATCH v2 0/2] selftests/ftrace: Add tests for kprobes and
+ optimized probes
+To:     Akanksha J N <akanksha@linux.ibm.com>,
+        linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
+        linux-trace-kernel@vger.kernel.org
+Cc:     mhiramat@kernel.org, rostedt@goodmis.org, shuah@kernel.org
+References: <20230418095557.19061-1-akanksha@linux.ibm.com>
+In-Reply-To: <20230418095557.19061-1-akanksha@linux.ibm.com>
+User-Agent: astroid/4d6b06ad (https://github.com/astroidmail/astroid)
+Message-Id: <1682334408.u49nhd1gk9.naveen@linux.ibm.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: dJXrY_vZ2fqyep9r8yIEL06CgfzaDFhj
+X-Proofpoint-GUID: dJXrY_vZ2fqyep9r8yIEL06CgfzaDFhj
+Content-Transfer-Encoding: quoted-printable
+X-Proofpoint-UnRewURL: 0 URL was un-rewritten
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230423223740.9f1186a08b3b316b5a0156e7@kernel.org>
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.254,Aquarius:18.0.942,Hydra:6.0.573,FMLib:17.11.170.22
+ definitions=2023-04-24_07,2023-04-21_01,2023-02-09_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0
+ priorityscore=1501 adultscore=0 suspectscore=0 lowpriorityscore=0
+ phishscore=0 bulkscore=0 mlxscore=0 spamscore=0 mlxlogscore=594
+ malwarescore=0 clxscore=1011 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-2303200000 definitions=main-2304240100
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On Sun, Apr 23, 2023 at 10:37:40PM +0900, Masami Hiramatsu wrote:
-> On Sun, 23 Apr 2023 09:41:54 +0200
-> Jiri Olsa <olsajiri@gmail.com> wrote:
-> 
-> > On Thu, Apr 20, 2023 at 08:26:10PM +0900, Masami Hiramatsu (Google) wrote:
-> > > From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-> > > 
-> > > Allow fprobe_event to trace raw tracepoints so that user can trace
-> > > tracepoints which don't have traceevent wrappers. This new event is
-> > > always available if fprobe event is enabled since the tracepoint is
-> > > disabled, trace-event and dynamic event is also not available.
-> > 
-> > I thought of ftrace tracepoints wrappers as standard in distros,
-> > could you specify which config options that involves?
-> 
-> Ah, sorry, I'm completely confused you.
-> 
-> ----
-> This new event is always available if fprobe event is enabled. If the
-> tracepoint is disabled, trace-event and dynamic event including
-> fprobe is also not available.
-> ----
+Akanksha J N wrote:
+> This patchset adds a stress test for kprobes and a test for checking
+> optimized probes.
+> The two tests are being added based on the below discussion:
+> https://lore.kernel.org/all/20230128101622.ce6f8e64d929e29d36b08b73@kerne=
+l.org/
+>=20
+> Changelog:
+>=20
+>=20
+> * Add an explicit fork after enabling the events ( echo "forked" )
+> * Remove the extended test from multiple_kprobe_types.tc which adds=20
+>   multiple consecutive probes in a function and add it as a=20
+>   separate test case.=20
+> * Add new test case which checks for optimized probes.
+>=20
+> Akanksha J N (2):
+>   selftests/ftrace: Add new test case which adds multiple consecutive
+>     probes in a function
+>   selftests/ftrace: Add new test case which checks for optimized probes
+>=20
+>  .../test.d/kprobe/kprobe_insn_boundary.tc     | 19 +++++++++++
+>  .../ftrace/test.d/kprobe/kprobe_opt_types.tc  | 34 +++++++++++++++++++
+>  2 files changed, 53 insertions(+)
+>  create mode 100644 tools/testing/selftests/ftrace/test.d/kprobe/kprobe_i=
+nsn_boundary.tc
+>  create mode 100644 tools/testing/selftests/ftrace/test.d/kprobe/kprobe_o=
+pt_types.tc
 
-so this basically adds another way of attaching to tracepoint through ftrace
-dynamic_events file interface.. but we can already attach to tracepoints
-through ftrace via /sys/kernel/debug/tracing/events/* right?
+This series looks good to me.
+Acked-by: Naveen N. Rao <naveen.n.rao@linux.vnet.ibm.com>
 
-I'm trying to find out what's the config for which this new way of attaching
-tracepoints is useful
 
-thanks,
-jirka
 
-> 
-> > 
-> > > +	if (trace_fprobe_is_tracepoint(tf)) {
-> > > +		struct tracepoint *tpoint = tf->tpoint;
-> > > +		unsigned long ip = (unsigned long)tpoint->probestub;
-> > > +		/*
-> > > +		 * Here, we do 2 steps to enable fprobe on a tracepoint.
-> > > +		 * At first, put __probestub_##TP function on the tracepoint
-> > > +		 * and put a fprobe on the stub function.
-> > > +		 */
-> > > +		ret = tracepoint_probe_register_prio_may_exist(tpoint,
-> > > +					tpoint->probestub, NULL, 0);
-> > > +		if (ret < 0)
-> > > +			return ret;
-> > > +		return register_fprobe_ips(&tf->fp, &ip, 1);
-> > 
-> > nice idea
-> 
-> Thanks!
-> 
-> 
-> > 
-> > jirka
-> > 
-> > > +	}
-> > > +
-> > >  	/* TODO: handle filter, nofilter or symbol list */
-> > >  	return register_fprobe(&tf->fp, tf->symbol, NULL);
-> > >  }
-> > > @@ -699,6 +723,12 @@ static void __unregister_trace_fprobe(struct trace_fprobe *tf)
-> > >  	if (trace_fprobe_is_registered(tf)) {
-> > >  		unregister_fprobe(&tf->fp);
-> > >  		memset(&tf->fp, 0, sizeof(tf->fp));
-> > > +		if (trace_fprobe_is_tracepoint(tf)) {
-> > > +			tracepoint_probe_unregister(tf->tpoint,
-> > > +					tf->tpoint->probestub, NULL);
-> > > +			tf->tpoint = NULL;
-> > > +			tf->mod = NULL;
-> > > +		}
-> > >  	}
-> > >  }
-> > 
-> > SNIP
-> 
-> 
-> -- 
-> Masami Hiramatsu (Google) <mhiramat@kernel.org>
+- Naveen
+
