@@ -2,47 +2,39 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 706B7C77B61
-	for <linux-trace-kernel@archiver.kernel.org>; Tue, 25 Apr 2023 00:25:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A02AC77B61
+	for <linux-trace-kernel@archiver.kernel.org>; Tue, 25 Apr 2023 01:40:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231332AbjDYAZQ (ORCPT
+        id S232896AbjDYBkD (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Mon, 24 Apr 2023 20:25:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42452 "EHLO
+        Mon, 24 Apr 2023 21:40:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41844 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230355AbjDYAZP (ORCPT
+        with ESMTP id S230379AbjDYBkC (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Mon, 24 Apr 2023 20:25:15 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0F2695585;
-        Mon, 24 Apr 2023 17:25:15 -0700 (PDT)
+        Mon, 24 Apr 2023 21:40:02 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AC573AF0A;
+        Mon, 24 Apr 2023 18:40:01 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 9D86262A74;
-        Tue, 25 Apr 2023 00:25:14 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B3DF1C433D2;
-        Tue, 25 Apr 2023 00:25:11 +0000 (UTC)
-Date:   Mon, 24 Apr 2023 20:25:09 -0400
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 4641E6203D;
+        Tue, 25 Apr 2023 01:40:01 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A8E2DC433EF;
+        Tue, 25 Apr 2023 01:39:59 +0000 (UTC)
+Date:   Mon, 24 Apr 2023 21:39:57 -0400
 From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Donglin Peng <pengdonglin@sangfor.com.cn>
-Cc:     mhiramat@kernel.org, linux@armlinux.org.uk, mark.rutland@arm.com,
-        will@kernel.org, catalin.marinas@arm.com,
-        rmk+kernel@armlinux.org.uk, palmer@dabbelt.com,
-        paul.walmsley@sifive.com, aou@eecs.berkeley.edu,
-        tglx@linutronix.de, dave.hansen@linux.intel.com, x86@kernel.org,
-        bp@alien8.de, hpa@zytor.com, chenhuacai@kernel.org,
-        zhangqing@loongson.cn, kernel@xen0n.name, mingo@redhat.com,
-        peterz@infradead.org, xiehuan09@gmail.com, dinghui@sangfor.com.cn,
-        huangcun@sangfor.com.cn, dolinux.peng@gmail.com,
-        linux-trace-kernel@vger.kernel.org, loongarch@lists.linux.dev,
-        linux-riscv@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v11 0/8] function_graph: Support recording and printing
- the return value of function
-Message-ID: <20230424202509.716c6136@rorschach.local.home>
-In-Reply-To: <cover.1680954589.git.pengdonglin@sangfor.com.cn>
-References: <cover.1680954589.git.pengdonglin@sangfor.com.cn>
+To:     Beau Belgrave <beaub@linux.microsoft.com>
+Cc:     mhiramat@kernel.org, mathieu.desnoyers@efficios.com,
+        dcook@linux.microsoft.com, alanau@linux.microsoft.com,
+        linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/3] tracing/user_events: Ensure bit is cleared on
+ unregister
+Message-ID: <20230424213957.55c503c1@rorschach.local.home>
+In-Reply-To: <20230411211709.15018-3-beaub@linux.microsoft.com>
+References: <20230411211709.15018-1-beaub@linux.microsoft.com>
+        <20230411211709.15018-3-beaub@linux.microsoft.com>
 X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
@@ -51,27 +43,42 @@ Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On Sat,  8 Apr 2023 05:42:14 -0700
-Donglin Peng <pengdonglin@sangfor.com.cn> wrote:
+On Tue, 11 Apr 2023 14:17:08 -0700
+Beau Belgrave <beaub@linux.microsoft.com> wrote:
 
-> When using the function_graph tracer to analyze system call failures,
-> it can be time-consuming to analyze the trace logs and locate the kernel
-> function that first returns an error. This change aims to simplify the
-> process by recording the function return value to the 'retval' member of
-> 'ftrace_graph_ent' and printing it when outputing the trace log.
-> 
-> Note that even if a function's return type is void, a return value will
-> still be printed, so it should be ignored. If you care about this, the
-> BTF file can be used to obtain the details of function return type. We
-> can implement a tool to process the trace log and display the return
-> value based on its actual type.
-> 
-> Here is an example:
-> 
-> 
+> +static int user_event_mm_clear_bit(struct user_event_mm *user_mm,
+> +				   unsigned long uaddr, unsigned char bit)
+> +{
+> +	struct user_event_enabler enabler;
+> +	int result;
+> +
+> +	memset(&enabler, 0, sizeof(enabler));
+> +	enabler.addr = uaddr;
+> +	enabler.values = bit;
+> +retry:
+> +	/* Prevents state changes from racing with new enablers */
+> +	mutex_lock(&event_mutex);
+> +
+> +	/* Force the bit to be cleared, since no event is attached */
+> +	mmap_read_lock(user_mm->mm);
+> +	result = user_event_enabler_write(user_mm, &enabler, false);
+> +	mmap_read_unlock(user_mm->mm);
+> +
+> +	mutex_unlock(&event_mutex);
+> +
+> +	if (result) {
+> +		/* Attempt to fault-in and retry if it worked */
+> +		if (!user_event_mm_fault_in(user_mm, uaddr))
+> +			goto retry;
 
-I like this series, but since the merge window for 6.4 just opened, I'm
-going to hold off and pull this in for the 6.5 series (after a bit more
-review and testing).
+Without looking into the functions of this call, I wonder if this can
+get into an infinite loop?
 
 -- Steve
+
+
+> +	}
+> +
+> +	return result;
+> +}
+> +
