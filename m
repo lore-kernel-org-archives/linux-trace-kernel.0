@@ -2,83 +2,106 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1260DC77B71
-	for <linux-trace-kernel@archiver.kernel.org>; Tue, 25 Apr 2023 08:28:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3453DC77B61
+	for <linux-trace-kernel@archiver.kernel.org>; Tue, 25 Apr 2023 09:16:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233630AbjDYI16 (ORCPT
+        id S233588AbjDYJQu (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Tue, 25 Apr 2023 04:27:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48726 "EHLO
+        Tue, 25 Apr 2023 05:16:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56554 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233592AbjDYI14 (ORCPT
+        with ESMTP id S230491AbjDYJQu (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Tue, 25 Apr 2023 04:27:56 -0400
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [IPv6:2001:67c:2178:6::1d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 053FD49C3;
-        Tue, 25 Apr 2023 01:27:49 -0700 (PDT)
-Received: from relay2.suse.de (relay2.suse.de [149.44.160.134])
-        by smtp-out2.suse.de (Postfix) with ESMTP id 187F31FDA6;
-        Tue, 25 Apr 2023 08:27:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
-        t=1682411267; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=JLB7kXBwD6M3L2ptdlJ1RgiEVolFGhSHXNJBDXePmiQ=;
-        b=tKqQdtrPgsQzoBCwf1xVC9ezD0o09G725durIPriNpoWDj+KTM+R3Yn6rphCy+nrdhpCmP
-        e53k/de1aXflSQalIJ9h0q4ZCkmLRSDLUauYiqngel4Q3qvvj21mZsMo8lIqIxzHGh4pUS
-        Gso8q3PreoZelIC87zLP1oo7AeBGD3k=
-Received: from suse.cz (unknown [10.100.201.202])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by relay2.suse.de (Postfix) with ESMTPS id 616EB2C141;
-        Tue, 25 Apr 2023 08:27:45 +0000 (UTC)
-Date:   Tue, 25 Apr 2023 10:27:42 +0200
-From:   Petr Mladek <pmladek@suse.com>
-To:     Luis Chamberlain <mcgrof@kernel.org>
-Cc:     Josh Poimboeuf <jpoimboe@kernel.org>,
-        Nick Alcock <nick.alcock@oracle.com>, masahiroy@kernel.org,
-        linux-modules@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
-        linux-kernel@vger.kernel.org, arnd@arndb.de,
-        akpm@linux-foundation.org, eugene.loh@oracle.com,
-        kris.van.hees@oracle.com, live-patching@vger.kernel.org,
-        Peter Zijlstra <peterz@infradead.org>,
-        Steven Rostedt <rostedt@goodmis.org>
-Subject: Re: [PATCH modules-next v10 00/13] kallsyms: reliable
- symbol->address lookup with /proc/kallmodsyms
-Message-ID: <ZEeO_rWL4bDh5vui@alley>
-References: <20221205163157.269335-1-nick.alcock@oracle.com>
- <20230407232118.o2x5lakfgyzy56gz@treble>
- <ZEbc20oRFR0f8Qj6@bombadil.infradead.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ZEbc20oRFR0f8Qj6@bombadil.infradead.org>
+        Tue, 25 Apr 2023 05:16:50 -0400
+Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ABE7D1990;
+        Tue, 25 Apr 2023 02:16:48 -0700 (PDT)
+Received: from pps.filterd (m0333520.ppops.net [127.0.0.1])
+        by mx0b-00069f02.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 33P0hubY031057;
+        Tue, 25 Apr 2023 09:16:42 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
+ subject : date : message-id; s=corp-2023-03-30;
+ bh=Iwmnk6jemfDA0DsukXRfx0JJvZc9lihQgqmhxRnNZys=;
+ b=M0PTmqi877pQHTATqTSa56VT01zFtPJeom+dJ23/l13uM971UE+tTumhtzOnYscu+f6K
+ BfttEa4eTx9oTQUks1jT8sMDRHESQgmMyjqL7A1qql8/oAxnQO5XiyXqmn/rXIlfeZZD
+ bsQI6OwS66Wyizem5ZpHNNow5J+PVwmLYtwajFRgDdXB0ZxIX9JF/JTfmT7v76c1lhji
+ wlSmfCWfiRAIisN+mjp/8ZZBLt4bY9oz2wXsgT1REfHbzZegkP+VzYF+chWl+6JodIRz
+ JWZKFPi2BKvk6Oz3us9qNuK5E2TFCy6Vy9TuNRC0Z85+59WIsu0molkBWz4jVOKCE3t8 jg== 
+Received: from iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta03.appoci.oracle.com [130.35.103.27])
+        by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3q47mcvw50-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 25 Apr 2023 09:16:42 +0000
+Received: from pps.filterd (iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
+        by iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (8.17.1.19/8.17.1.19) with ESMTP id 33P812Bx024915;
+        Tue, 25 Apr 2023 09:16:41 GMT
+Received: from pps.reinject (localhost [127.0.0.1])
+        by iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 3q461cdwbd-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 25 Apr 2023 09:16:41 +0000
+Received: from iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
+        by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 33P93LCP024482;
+        Tue, 25 Apr 2023 09:16:41 GMT
+Received: from myrouter.uk.oracle.com (dhcp-10-175-181-126.vpn.oracle.com [10.175.181.126])
+        by iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTP id 3q461cdwa1-1;
+        Tue, 25 Apr 2023 09:16:40 +0000
+From:   Alan Maguire <alan.maguire@oracle.com>
+To:     rostedt@goodmis.org, mhiramat@kernel.org
+Cc:     corbet@lwn.net, shuah@kernel.org, linux-kernel@vger.kernel.org,
+        linux-trace-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
+        linux-kselftest@vger.kernel.org,
+        Alan Maguire <alan.maguire@oracle.com>
+Subject: [PATCH tracing 0/3] tracing: support > 8 byte filter predicates
+Date:   Tue, 25 Apr 2023 10:16:34 +0100
+Message-Id: <1682414197-13173-1-git-send-email-alan.maguire@oracle.com>
+X-Mailer: git-send-email 1.8.3.1
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.254,Aquarius:18.0.942,Hydra:6.0.573,FMLib:17.11.170.22
+ definitions=2023-04-25_03,2023-04-21_01,2023-02-09_01
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=999 suspectscore=0
+ malwarescore=0 mlxscore=0 spamscore=0 adultscore=0 phishscore=0
+ bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2303200000 definitions=main-2304250082
+X-Proofpoint-GUID: H9pAMddPxafTDDtF7HRUPqL9esPPsQqF
+X-Proofpoint-ORIG-GUID: H9pAMddPxafTDDtF7HRUPqL9esPPsQqF
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On Mon 2023-04-24 12:47:39, Luis Chamberlain wrote:
-> On Fri, Apr 07, 2023 at 04:21:18PM -0700, Josh Poimboeuf wrote:
-> > Anyway, I was nodding along with the above cover letter until I got to
-> > the third paragraph.
-> > 
-> > A "built-in kernel module" is not actually a module, as it's built in to
-> > vmlinux.  I suspect the point is that if you rebuild with a different
-> > config, it might become a module.  But many other changes could also
-> > occur with a changed config, including changed inlining decisions and
-> > GCC IPA optimization function renaming, in which case the symbol might
-> > no longer exist with the new config.
-> 
-> Yes it does not matter, for his tooling effort it was just to be able
-> to map a possible module to a symbol so tooling can display this to
-> disambiguate.
+For cases like IPv6 addresses, having a means to supply tracing
+predicates for fields with more than 8 bytes would be convenient.
+This series provides a simple way to support this by allowing
+simple ==, != memory comparison with the predicate supplied when
+the size of the field exceeds 8 bytes.  For example, to trace
+::1, the predicate
 
-Note that the same symbol name might be used many times even within
-one module. The module might be linked from more .o files. And
-more .o files might have a local symbol with the same name.
+	"dst == 0x00000000000000000000000000000001"
 
-I think that the best solution is to associate the symbol with
-the file name and line. These is very useful information in general.
+..could be used.
 
-Best Regards,
-Petr
+Patch 1 provides the support for > 8 byte fields via a memcmp()-style
+predicate.  Patch 2 adds tests for filter predicates, and patch 3
+documents the fact that for > 8 bytes. only == and != are supported.
+
+Changes since RFC [1]:
+
+- originally a fix was intermixed with the new functionality as
+  patch 1 in series [1]; the fix landed separately
+- small tweaks to how filter predicates are defined via fn_num as
+  opposed to via fn directly
+
+[1] https://lore.kernel.org/lkml/1659910883-18223-1-git-send-email-alan.maguire@oracle.com/
+
+Alan Maguire (3):
+  tracing: support > 8 byte array filter predicates
+  selftests/ftrace: add test coverage for filter predicates
+  tracing: document > 8 byte numeric filtering support
+
+ Documentation/trace/events.rst                |  9 +++
+ kernel/trace/trace_events_filter.c            | 55 +++++++++++++++-
+ .../selftests/ftrace/test.d/event/filter.tc   | 62 +++++++++++++++++++
+ 3 files changed, 125 insertions(+), 1 deletion(-)
+ create mode 100644 tools/testing/selftests/ftrace/test.d/event/filter.tc
+
+-- 
+2.31.1
+
