@@ -2,36 +2,37 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 21CC5C77B61
-	for <linux-trace-kernel@archiver.kernel.org>; Tue, 25 Apr 2023 19:02:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BC0BFC77B61
+	for <linux-trace-kernel@archiver.kernel.org>; Tue, 25 Apr 2023 19:02:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235125AbjDYTCC convert rfc822-to-8bit (ORCPT
+        id S235150AbjDYTCp convert rfc822-to-8bit (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Tue, 25 Apr 2023 15:02:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60800 "EHLO
+        Tue, 25 Apr 2023 15:02:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33662 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235121AbjDYTCB (ORCPT
+        with ESMTP id S235138AbjDYTCn (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Tue, 25 Apr 2023 15:02:01 -0400
+        Tue, 25 Apr 2023 15:02:43 -0400
 Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4FE9A16F3C;
-        Tue, 25 Apr 2023 12:01:58 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7B1AF5FDD;
+        Tue, 25 Apr 2023 12:02:41 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id E106D63107;
-        Tue, 25 Apr 2023 19:01:57 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C2613C4339B;
-        Tue, 25 Apr 2023 19:01:56 +0000 (UTC)
-Date:   Tue, 25 Apr 2023 15:01:54 -0400
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 51C2963113;
+        Tue, 25 Apr 2023 19:02:40 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 34811C433D2;
+        Tue, 25 Apr 2023 19:02:39 +0000 (UTC)
+Date:   Tue, 25 Apr 2023 15:02:36 -0400
 From:   Steven Rostedt <rostedt@goodmis.org>
 To:     sunying@nj.iscas.ac.cn
 Cc:     mhiramat@kernel.org, linux-kernel@vger.kernel.org,
         linux-trace-kernel@vger.kernel.org
-Subject: Re: [PATCH] trace/recordmcount: add the necessary dependencies
-Message-ID: <20230425150154.255b238a@gandalf.local.home>
-In-Reply-To: <20230412101840.13601-1-sunying@nj.iscas.ac.cn>
-References: <20230412101840.13601-1-sunying@nj.iscas.ac.cn>
+Subject: Re: [PATCH v1] trace: add the necessary dependencies of
+ configuration options
+Message-ID: <20230425150236.005e2e8b@gandalf.local.home>
+In-Reply-To: <20230414082756.24119-1-sunying@nj.iscas.ac.cn>
+References: <20230414082756.24119-1-sunying@nj.iscas.ac.cn>
 X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -40,25 +41,15 @@ Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On Wed, 12 Apr 2023 18:18:40 +0800
+On Fri, 14 Apr 2023 16:27:56 +0800
 sunying@nj.iscas.ac.cn wrote:
 
 > From: Ying Sun <sunying@nj.iscas.ac.cn>
 > 
-> HAVE_C_RECORDMCOUNT is used only if the condition
-> "ifdef CONFIG_FTRACE_MCOUNT_USE_RECORDMCOUNT" is met in the Makefile,
+> HAVE_NOP_MCOUNT is used only if the condition
+> "ifdef CONFIG_FTRACE_MCOUNT_USE_CC" is met in the Makefile,
 > adding a dependency constraint on this configuration option
 >  to prevent it from being set ‘y' but not taking effect.
-
-Why do we care?
-
-The HAVE_* configs are only there to allow architectures to say if they
-support it or not. They usually have no effect themselves\ and require
-other configs to be enabled something. This is "Works as designed".
-
--- Steve
-
-
 > 
 > Suggested-by: Yanjie Ren <renyanjie01@gmail.com>
 > Signed-off-by: Ying Sun <sunying@nj.iscas.ac.cn>
@@ -67,15 +58,24 @@ other configs to be enabled something. This is "Works as designed".
 >  1 file changed, 1 insertion(+)
 > 
 > diff --git a/kernel/trace/Kconfig b/kernel/trace/Kconfig
-> index 8cf97fa4a4b3..69bb70b6bdd7 100644
+> index 8cf97fa4a4b3..c640f405cc91 100644
 > --- a/kernel/trace/Kconfig
 > +++ b/kernel/trace/Kconfig
-> @@ -94,6 +94,7 @@ config HAVE_OBJTOOL_NOP_MCOUNT
+> @@ -77,6 +77,7 @@ config HAVE_FENTRY
 >  
->  config HAVE_C_RECORDMCOUNT
+>  config HAVE_NOP_MCOUNT
 >  	bool
-> +	depends on FTRACE_MCOUNT_USE_RECORDMCOUNT
+> +	depends on FTRACE_MCOUNT_USE_CC
+
+As I replied to the other email. The HAVE_* configs are only for
+architectures to say if they support something or not. There's no need to
+add dependencies here.
+
+-- Steve
+
+
+
 >  	help
->  	  C version of recordmcount available?
+>  	  Arch supports the gcc options -pg with -mrecord-mcount and -nop-mcount
 >  
 
