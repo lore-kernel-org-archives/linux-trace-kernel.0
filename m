@@ -2,178 +2,305 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 14D6BC6FD18
-	for <linux-trace-kernel@archiver.kernel.org>; Tue, 25 Apr 2023 05:28:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 80BD0C6FD18
+	for <linux-trace-kernel@archiver.kernel.org>; Tue, 25 Apr 2023 08:11:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233244AbjDYF2p (ORCPT
+        id S233529AbjDYIL2 (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Tue, 25 Apr 2023 01:28:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50368 "EHLO
+        Tue, 25 Apr 2023 04:11:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39778 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229637AbjDYF2o (ORCPT
+        with ESMTP id S230195AbjDYIL1 (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Tue, 25 Apr 2023 01:28:44 -0400
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 931AA5FF3;
-        Mon, 24 Apr 2023 22:28:43 -0700 (PDT)
-Received: from pps.filterd (m0353722.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 33P5R6xv010807;
-        Tue, 25 Apr 2023 05:28:37 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=date : from : subject :
- to : cc : references : in-reply-to : mime-version : message-id :
- content-type : content-transfer-encoding; s=pp1;
- bh=0hViQHH/4MsPGsHuWIXp0SGYVzHMq4LYsDI7u76Jy04=;
- b=c1jv+N8a/m4q90g1RRTdOHTAAW0YP+43EMY41tWNLtp6LnSMSUcuRK2wpR2Ppq/glwsL
- TzECfAU1ChblkbsNunHvMl5aE5C9IOUEBrhGc0v4qxJA1qkBxovjfdD8NXER7sJJjosw
- Cp/eLMG+mMtYyGZ6jENlj4tcbeNd3AGA8HpNNw+366IbpXqPxPkBb8KfdscC89Jf2Cls
- 13vcnZVlELfOdo+na8XSZ440rVJBBuOaNREVQb4yNSqyQ3YlD3AzAV6KG51nmBxNzAcu
- rnB3y84IWOsNTJc3nxP9FeGYbg3+7n5Bp3aYWZ+C6gidLC/bkTnAZIJ+Otqa/fXYagUC VQ== 
-Received: from ppma05fra.de.ibm.com (6c.4a.5195.ip4.static.sl-reverse.com [149.81.74.108])
-        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3q63vbgcen-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 25 Apr 2023 05:28:36 +0000
-Received: from pps.filterd (ppma05fra.de.ibm.com [127.0.0.1])
-        by ppma05fra.de.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 33P4dAZJ021378;
-        Tue, 25 Apr 2023 05:28:35 GMT
-Received: from smtprelay01.fra02v.mail.ibm.com ([9.218.2.227])
-        by ppma05fra.de.ibm.com (PPS) with ESMTPS id 3q4776s8fr-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 25 Apr 2023 05:28:34 +0000
-Received: from smtpav04.fra02v.mail.ibm.com (smtpav04.fra02v.mail.ibm.com [10.20.54.103])
-        by smtprelay01.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 33P5SW0O21234290
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 25 Apr 2023 05:28:32 GMT
-Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 4D90B20043;
-        Tue, 25 Apr 2023 05:28:32 +0000 (GMT)
-Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id F317F20040;
-        Tue, 25 Apr 2023 05:28:31 +0000 (GMT)
-Received: from localhost (unknown [9.43.8.91])
-        by smtpav04.fra02v.mail.ibm.com (Postfix) with ESMTP;
-        Tue, 25 Apr 2023 05:28:31 +0000 (GMT)
-Date:   Tue, 25 Apr 2023 10:58:30 +0530
-From:   "Naveen N. Rao" <naveen.n.rao@linux.ibm.com>
-Subject: Re: [PATCH v2 2/2] selftests/ftrace: Add new test case which checks
- for optimized probes
-To:     Akanksha J N <akanksha@linux.ibm.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>
-Cc:     linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
-        linux-trace-kernel@vger.kernel.org, rostedt@goodmis.org,
-        shuah@kernel.org
-References: <20230418095557.19061-1-akanksha@linux.ibm.com>
-        <20230418095557.19061-3-akanksha@linux.ibm.com>
-        <20230425091039.9fd523dfdf7be5e800bac4fe@kernel.org>
-In-Reply-To: <20230425091039.9fd523dfdf7be5e800bac4fe@kernel.org>
-MIME-Version: 1.0
-User-Agent: astroid/4d6b06ad (https://github.com/astroidmail/astroid)
-Message-Id: <1682400251.pez54ergiy.naveen@linux.ibm.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: quoted-printable
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: Y_7jfsOHM_jR4lNPmyvvoiFdhy7vAPho
-X-Proofpoint-GUID: Y_7jfsOHM_jR4lNPmyvvoiFdhy7vAPho
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.254,Aquarius:18.0.942,Hydra:6.0.573,FMLib:17.11.170.22
- definitions=2023-04-25_03,2023-04-21_01,2023-02-09_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0 phishscore=0
- lowpriorityscore=0 mlxscore=0 mlxlogscore=999 impostorscore=0 bulkscore=0
- clxscore=1015 priorityscore=1501 adultscore=0 malwarescore=0 spamscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2303200000
- definitions=main-2304250046
+        Tue, 25 Apr 2023 04:11:27 -0400
+Received: from mailout3.samsung.com (mailout3.samsung.com [203.254.224.33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B2221A2
+        for <linux-trace-kernel@vger.kernel.org>; Tue, 25 Apr 2023 01:11:22 -0700 (PDT)
+Received: from epcas2p2.samsung.com (unknown [182.195.41.54])
+        by mailout3.samsung.com (KnoxPortal) with ESMTP id 20230425081120epoutp038ec2cf690077664c7d6527819e367720~ZHzx2GRUB3022330223epoutp03L
+        for <linux-trace-kernel@vger.kernel.org>; Tue, 25 Apr 2023 08:11:20 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout3.samsung.com 20230425081120epoutp038ec2cf690077664c7d6527819e367720~ZHzx2GRUB3022330223epoutp03L
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1682410280;
+        bh=N9nZClz1ANv1MSriHoOK5Bg8AtRXHwknq59cqaN77a4=;
+        h=Subject:Reply-To:From:To:CC:Date:References:From;
+        b=JPa8CrndElNzSJWpeOsGXwQC+8o6nAe5vbZIuIT7Trin2OzMPOe03uAWRa2V70hpR
+         qtSv176bCa9oVUFdrt2gTns5vKovX0whwoDnmzUDiry2hvE64bCuS58u0FrSxfb0lV
+         3zj28oAoUOOUtXZuvnXmyVokfhYolURM+bT0An9o=
+Received: from epsnrtp1.localdomain (unknown [182.195.42.162]) by
+        epcas2p3.samsung.com (KnoxPortal) with ESMTP id
+        20230425081119epcas2p362a5ce622a454811946cb125facd264a~ZHzxQFGPs1780917809epcas2p3A;
+        Tue, 25 Apr 2023 08:11:19 +0000 (GMT)
+Received: from epsmges2p4.samsung.com (unknown [182.195.36.97]) by
+        epsnrtp1.localdomain (Postfix) with ESMTP id 4Q5F7q19vfz4x9QN; Tue, 25 Apr
+        2023 08:11:19 +0000 (GMT)
+X-AuditID: b6c32a48-c8660a8000005998-9c-64478b26d1f2
+Received: from epcas2p4.samsung.com ( [182.195.41.56]) by
+        epsmges2p4.samsung.com (Symantec Messaging Gateway) with SMTP id
+        69.24.22936.62B87446; Tue, 25 Apr 2023 17:11:19 +0900 (KST)
+Mime-Version: 1.0
+Subject: [PATCH v2] f2fs: add async reset zone command support
+Reply-To: daejun7.park@samsung.com
+Sender: Daejun Park <daejun7.park@samsung.com>
+From:   Daejun Park <daejun7.park@samsung.com>
+To:     "jaegeuk@kernel.org" <jaegeuk@kernel.org>,
+        "chao@kernel.org" <chao@kernel.org>,
+        "rostedt@goodmis.org" <rostedt@goodmis.org>,
+        "mhiramat@kernel.org" <mhiramat@kernel.org>,
+        "linux-f2fs-devel@lists.sourceforge.net" 
+        <linux-f2fs-devel@lists.sourceforge.net>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-trace-kernel@vger.kernel.org" 
+        <linux-trace-kernel@vger.kernel.org>
+CC:     Daejun Park <daejun7.park@samsung.com>,
+        Seokhwan Kim <sukka.kim@samsung.com>,
+        Yonggil Song <yonggil.song@samsung.com>,
+        beomsu kim <beomsu7.kim@samsung.com>
+X-Priority: 3
+X-Content-Kind-Code: NORMAL
+X-CPGS-Detection: blocking_info_exchange
+X-Drm-Type: N,general
+X-Msg-Generator: Mail
+X-Msg-Type: PERSONAL
+X-Reply-Demand: N
+Message-ID: <20230425081018epcms2p8fefa94810f0b341d2cbd70ba587e9e8c@epcms2p8>
+Date:   Tue, 25 Apr 2023 17:10:18 +0900
+X-CMS-MailID: 20230425081018epcms2p8fefa94810f0b341d2cbd70ba587e9e8c
+Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+X-Sendblock-Type: AUTO_CONFIDENTIAL
+CMS-TYPE: 102P
+X-CPGSPASS: Y
+X-CPGSPASS: Y
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprFJsWRmVeSWpSXmKPExsWy7bCmha56t3uKwbm7TBYX5n1ktjg99SyT
+        xctDmharHoRbPFk/i9ni0iJ3i8u75rBZHFl/lsVi8XI1i30dD5gsVnXMZbSYev4IkwOPR8u+
+        W+wem1Z1snnsXvCZyaNvyypGj8+b5AJYo7JtMlITU1KLFFLzkvNTMvPSbZW8g+Od403NDAx1
+        DS0tzJUU8hJzU22VXHwCdN0yc4BuU1IoS8wpBQoFJBYXK+nb2RTll5akKmTkF5fYKqUWpOQU
+        mBfoFSfmFpfmpevlpZZYGRoYGJkCFSZkZ0x7s4+5YJlhxeT791gbGN9qdDFyckgImEgs+HGf
+        vYuRi0NIYAejRO/tZpYuRg4OXgFBib87hEFqhAXsJDYt3sYIYgsJKEmsvziLHSKuJ3Hr4Rqw
+        OJuAjsT0E/fB4iICU5klDm9KBZnJLLCYUWLtohlMEMt4JWa0P2WBsKUlti/fyghha0j8WNbL
+        DGGLStxc/ZYdxn5/bD5UjYhE672zUDWCEg9+7oaKS0rcnrsJqj5f4v+V5VB2jcS2A/OgbH2J
+        ax0bwfbyCvhKnF14GizOIqAq8XLfA1aIGheJ21vegc1nFpCX2P52DjMoHJgFNCXW79IHMSUE
+        lCWO3GKBqOCT6Dj8lx3mq4aNv7Gyd8x7AvW5msS6n+uZIMbISNyaxziBUWkWIpxnIVk7C2Ht
+        AkbmVYxiqQXFuempxUYFJvCoTc7P3cQITqRaHjsYZ7/9oHeIkYmD8RCjBAezkggvb6V7ihBv
+        SmJlVWpRfnxRaU5q8SFGU6CHJzJLiSbnA1N5Xkm8oYmlgYmZmaG5kamBuZI478cO5RQhgfTE
+        ktTs1NSC1CKYPiYOTqkGpujkxt8rwpxr2WZX/Sk/2cfSlVm6nkGna4bOM4d/r+zn3m+ffuhR
+        fsG0jb8iNljeZdq5UshX7Nbv+hgxqcs6E+a6uX2u843wu6ye/EjyeZVlybK+e9dvP1x7hXfT
+        id1Psg48/n/+p4xL/QrxJfrqfjWbF54NYfX6z8y+WlvOOeV6MNeUWRfeyBv9uh/OfZz1stXG
+        NzOrzfaL3VuaKr/N826L3M4rR3dpz1BeaxRnm5b8/8irM8Knclc7Xj9a8vudZ6pzd3qi3jXl
+        jq6adze2rilx/BV9QX6vTeCfnSxnVz9MXVYvuH7GhMsfLBR9l6mb/mRb/JI9IJ5rbcasjNCf
+        ruHmM1LPMnGmOmSczcpzXaTEUpyRaKjFXFScCABwcRX+LQQAAA==
+DLP-Filter: Pass
+X-CFilter-Loop: Reflected
+X-CMS-RootMailID: 20230425081018epcms2p8fefa94810f0b341d2cbd70ba587e9e8c
+References: <CGME20230425081018epcms2p8fefa94810f0b341d2cbd70ba587e9e8c@epcms2p8>
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-Masami Hiramatsu wrote:
-> On Tue, 18 Apr 2023 15:25:57 +0530
-> Akanksha J N <akanksha@linux.ibm.com> wrote:
->=20
->> Add new test case kprobe_opt_types.tc which enables and checks
->> if each probe has been optimized in order to test potential issues with
->> optimized probes.
->> The '|| continue' is added with the echo statement to ignore errors that
->> are caused by trying to add kprobes to non probeable lines and continue
->> with the test.
->> Signed-off-by: Akanksha J N <akanksha@linux.ibm.com>
->> ---
->>  .../ftrace/test.d/kprobe/kprobe_opt_types.tc  | 34 +++++++++++++++++++
->>  1 file changed, 34 insertions(+)
->>  create mode 100644 tools/testing/selftests/ftrace/test.d/kprobe/kprobe_=
-opt_types.tc
->>=20
->> diff --git a/tools/testing/selftests/ftrace/test.d/kprobe/kprobe_opt_typ=
-es.tc b/tools/testing/selftests/ftrace/test.d/kprobe/kprobe_opt_types.tc
->> new file mode 100644
->> index 000000000000..54e4800b8a13
->> --- /dev/null
->> +++ b/tools/testing/selftests/ftrace/test.d/kprobe/kprobe_opt_types.tc
->> @@ -0,0 +1,34 @@
->> +#!/bin/sh
->> +# SPDX-License-Identifier: GPL-2.0-or-later
->> +# Copyright (C) 2023 Akanksha J N, IBM corporation
->> +# description: Register/unregister optimized probe
->> +# requires: kprobe_events
->> +
->> +case `uname -m` in
->> +x86_64)
->> +;;
->> +arm*)
->> +;;
->> +ppc*)
->> +;;
->> +*)
->> +  echo "Please implement other architecture here"
->> +  exit_unsupported
->> +esac
->> +
->> +DEFAULT=3D$(cat /proc/sys/debug/kprobes-optimization)
->> +echo 1 > /proc/sys/debug/kprobes-optimization
->> +for i in `seq 0 255`; do
->> +        echo  "p:testprobe $FUNCTION_FORK+${i}" > kprobe_events || cont=
-inue
->> +        echo 1 > events/kprobes/enable || continue
->> +        (echo "forked")
->> +        PROBE_TYPE=3D$(cat /sys/kernel/debug/kprobes/list | grep $FUNCT=
-ION_FORK | awk '{print $4}' | awk '{print substr($0,2,length($0)-2)}')
->=20
-> I think we can make it simply;
->=20
-> PROBE=3D$(grep $FUNCTION_FORK /sys/kernel/debug/kprobes/list)
->=20
->> +        echo 0 > events/kprobes/enable
->> +        echo > kprobe_events
->> +        if [ $PROBE_TYPE =3D "OPTIMIZED" ]; then
->=20
-> and
->=20
-> if echo $PROBE | grep -q OPTIMIZED; then
->=20
->> +                echo "$DEFAULT" >  /proc/sys/debug/kprobes-optimization
->> +                exit_pass
->> +        fi
->> +done
->> +echo "$DEFAULT" >  /proc/sys/debug/kprobes-optimization
->> +echo "Done"
->=20
-> Hmm, this test does NOT return any error. It always returns success.
+Changelog:
 
-Good catch!
-
-> I understand that optimization may not be possible within 256 bytes
-> from the beginning of the function.
-
-Is that true in practice? Looking at x86 and ppc64le, it looks like we=20
-will almost always be able to optimize at least one of the instructions=20
-within the first 256 bytes of kernel_clone(). That's one of the primary=20
-purposes of this test.
-
-Are there valid reasons why we may not be able to optimize instructions?
-
-> In that case, you can return
-> "unresolved", and not echoing "Done" but the reason why it is
-> unresolved.
+v1 -> v2
+Changed to apply the optional async reset write pointer by default.
 
 
-- Naveen
+This patch enables submit reset zone command asynchornously. It helps
+decrease average latency of write IOs in high utilization scenario by
+faster checkpointing.
+
+Signed-off-by: Daejun Park <daejun7.park@samsung.com>
+---
+ fs/f2fs/segment.c           | 95 ++++++++++++++++++++++++++++++++++---
+ include/trace/events/f2fs.h | 18 ++++++-
+ 2 files changed, 105 insertions(+), 8 deletions(-)
+
+diff --git a/fs/f2fs/segment.c b/fs/f2fs/segment.c
+index 82430f80c5da..27074a6eaf20 100644
+--- a/fs/f2fs/segment.c
++++ b/fs/f2fs/segment.c
+@@ -1195,6 +1195,46 @@ static void __init_discard_policy(struct f2fs_sb_info *sbi,
+ static void __update_discard_tree_range(struct f2fs_sb_info *sbi,
+ 				struct block_device *bdev, block_t lstart,
+ 				block_t start, block_t len);
++
++#ifdef CONFIG_BLK_DEV_ZONED
++static int __submit_zone_reset_cmd(struct f2fs_sb_info *sbi,
++				   struct discard_cmd *dc, blk_opf_t flag,
++				   struct list_head *wait_list,
++				   unsigned int *issued)
++{
++	struct discard_cmd_control *dcc = SM_I(sbi)->dcc_info;
++	struct block_device *bdev = dc->bdev;
++	struct bio *bio = bio_alloc(bdev, 0, REQ_OP_ZONE_RESET | flag, GFP_NOFS);
++	unsigned long flags;
++
++	trace_f2fs_issue_reset_zone(bdev, SECTOR_FROM_BLOCK(dc->di.start));
++
++	spin_lock_irqsave(&dc->lock, flags);
++	dc->state = D_SUBMIT;
++	dc->bio_ref++;
++	spin_unlock_irqrestore(&dc->lock, flags);
++
++	if (issued)
++		(*issued)++;
++
++	atomic_inc(&dcc->queued_discard);
++	dc->queued++;
++	list_move_tail(&dc->list, wait_list);
++
++	/* sanity check on discard range */
++	__check_sit_bitmap(sbi, dc->di.lstart, dc->di.lstart + dc->di.len);
++
++	bio->bi_iter.bi_sector = SECTOR_FROM_BLOCK(dc->di.start);
++	bio->bi_private = dc;
++	bio->bi_end_io = f2fs_submit_discard_endio;
++	submit_bio(bio);
++
++	atomic_inc(&dcc->issued_discard);
++
++	return 0;
++}
++#endif
++
+ /* this function is copied from blkdev_issue_discard from block/blk-lib.c */
+ static int __submit_discard_cmd(struct f2fs_sb_info *sbi,
+ 				struct discard_policy *dpolicy,
+@@ -1216,6 +1256,11 @@ static int __submit_discard_cmd(struct f2fs_sb_info *sbi,
+ 	if (is_sbi_flag_set(sbi, SBI_NEED_FSCK))
+ 		return 0;
+ 
++#ifdef CONFIG_BLK_DEV_ZONED
++	if (f2fs_sb_has_blkzoned(sbi) && bdev_is_zoned(bdev))
++		return __submit_zone_reset_cmd(sbi, dc, flag, wait_list, issued);
++#endif
++
+ 	trace_f2fs_issue_discard(bdev, dc->di.start, dc->di.len);
+ 
+ 	lstart = dc->di.lstart;
+@@ -1460,21 +1505,42 @@ static void __update_discard_tree_range(struct f2fs_sb_info *sbi,
+ 	}
+ }
+ 
++#ifdef CONFIG_BLK_DEV_ZONED
++static void __queue_zone_reset_cmd(struct f2fs_sb_info *sbi,
++		struct block_device *bdev, block_t blkstart, block_t blklen)
++{
++	block_t lblkstart = blkstart;
++
++	if (f2fs_is_multi_device(sbi)) {
++		int devi = f2fs_target_device_index(sbi, blkstart);
++
++		blkstart -= FDEV(devi).start_blk;
++	}
++
++	trace_f2fs_queue_reset_zone(bdev, blkstart);
++
++	mutex_lock(&SM_I(sbi)->dcc_info->cmd_lock);
++	__insert_discard_cmd(sbi, bdev, lblkstart, blkstart, blklen);
++	mutex_unlock(&SM_I(sbi)->dcc_info->cmd_lock);
++}
++#endif
++
+ static void __queue_discard_cmd(struct f2fs_sb_info *sbi,
+ 		struct block_device *bdev, block_t blkstart, block_t blklen)
+ {
+ 	block_t lblkstart = blkstart;
+ 
++	trace_f2fs_queue_discard(bdev, blkstart, blklen);
++
+ 	if (!f2fs_bdev_support_discard(bdev))
+ 		return;
+ 
+-	trace_f2fs_queue_discard(bdev, blkstart, blklen);
+-
+ 	if (f2fs_is_multi_device(sbi)) {
+ 		int devi = f2fs_target_device_index(sbi, blkstart);
+ 
+ 		blkstart -= FDEV(devi).start_blk;
+ 	}
++
+ 	mutex_lock(&SM_I(sbi)->dcc_info->cmd_lock);
+ 	__update_discard_tree_range(sbi, bdev, lblkstart, blkstart, blklen);
+ 	mutex_unlock(&SM_I(sbi)->dcc_info->cmd_lock);
+@@ -1725,7 +1791,18 @@ static void f2fs_wait_discard_bio(struct f2fs_sb_info *sbi, block_t blkaddr)
+ 	dc = __lookup_discard_cmd(sbi, blkaddr);
+ 	if (dc) {
+ 		if (dc->state == D_PREP) {
+-			__punch_discard_cmd(sbi, dc, blkaddr);
++			if (f2fs_sb_has_blkzoned(sbi) &&
++			    bdev_is_zoned(dc->bdev)) {
++				struct discard_policy dpolicy;
++				/* force submit zone reset */
++				__init_discard_policy(sbi, &dpolicy,
++						      DPOLICY_FORCE, 1);
++				__submit_discard_cmd(sbi, &dpolicy, dc, NULL);
++				dc->ref++;
++				need_wait = true;
++			} else {
++				__punch_discard_cmd(sbi, dc, blkaddr);
++			}
+ 		} else {
+ 			dc->ref++;
+ 			need_wait = true;
+@@ -1875,9 +1952,15 @@ static int __f2fs_issue_discard_zone(struct f2fs_sb_info *sbi,
+ 				 blkstart, blklen);
+ 			return -EIO;
+ 		}
+-		trace_f2fs_issue_reset_zone(bdev, blkstart);
+-		return blkdev_zone_mgmt(bdev, REQ_OP_ZONE_RESET,
+-					sector, nr_sects, GFP_NOFS);
++
++		if (unlikely(!is_sbi_flag_set(sbi, SBI_POR_DOING))) {
++			trace_f2fs_issue_reset_zone(bdev, blkstart);
++			return blkdev_zone_mgmt(bdev, REQ_OP_ZONE_RESET,
++						sector, nr_sects, GFP_NOFS);
++		}
++
++		__queue_zone_reset_cmd(sbi, bdev, lblkstart, blklen);
++		return 0;
+ 	}
+ 
+ 	/* For conventional zones, use regular discard if supported */
+diff --git a/include/trace/events/f2fs.h b/include/trace/events/f2fs.h
+index 99cbc5949e3c..ee1477de8324 100644
+--- a/include/trace/events/f2fs.h
++++ b/include/trace/events/f2fs.h
+@@ -1512,7 +1512,7 @@ DEFINE_EVENT(f2fs_discard, f2fs_remove_discard,
+ 	TP_ARGS(dev, blkstart, blklen)
+ );
+ 
+-TRACE_EVENT(f2fs_issue_reset_zone,
++DECLARE_EVENT_CLASS(f2fs_reset_zone,
+ 
+ 	TP_PROTO(struct block_device *dev, block_t blkstart),
+ 
+@@ -1528,11 +1528,25 @@ TRACE_EVENT(f2fs_issue_reset_zone,
+ 		__entry->blkstart = blkstart;
+ 	),
+ 
+-	TP_printk("dev = (%d,%d), reset zone at block = 0x%llx",
++	TP_printk("dev = (%d,%d), zone at block = 0x%llx",
+ 		show_dev(__entry->dev),
+ 		(unsigned long long)__entry->blkstart)
+ );
+ 
++DEFINE_EVENT(f2fs_reset_zone, f2fs_queue_reset_zone,
++
++	TP_PROTO(struct block_device *dev, block_t blkstart),
++
++	TP_ARGS(dev, blkstart)
++);
++
++DEFINE_EVENT(f2fs_reset_zone, f2fs_issue_reset_zone,
++
++	TP_PROTO(struct block_device *dev, block_t blkstart),
++
++	TP_ARGS(dev, blkstart)
++);
++
+ TRACE_EVENT(f2fs_issue_flush,
+ 
+ 	TP_PROTO(struct block_device *dev, unsigned int nobarrier,
+-- 
+2.25.1
 
