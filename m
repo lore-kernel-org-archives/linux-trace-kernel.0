@@ -2,287 +2,300 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D6BC2C6FD18
-	for <linux-trace-kernel@archiver.kernel.org>; Tue, 25 Apr 2023 15:04:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E0BB0C6FD18
+	for <linux-trace-kernel@archiver.kernel.org>; Tue, 25 Apr 2023 16:01:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234279AbjDYPEY (ORCPT
+        id S234576AbjDYQBT (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Tue, 25 Apr 2023 11:04:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37368 "EHLO
+        Tue, 25 Apr 2023 12:01:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40538 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233991AbjDYPEX (ORCPT
+        with ESMTP id S233966AbjDYQBP (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Tue, 25 Apr 2023 11:04:23 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 643237EF4;
-        Tue, 25 Apr 2023 08:04:18 -0700 (PDT)
+        Tue, 25 Apr 2023 12:01:15 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5D32013C19;
+        Tue, 25 Apr 2023 09:01:13 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id D68286136C;
-        Tue, 25 Apr 2023 15:04:17 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 28A4DC433D2;
-        Tue, 25 Apr 2023 15:04:13 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id DE4EA62F7E;
+        Tue, 25 Apr 2023 16:01:12 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E2BE3C433EF;
+        Tue, 25 Apr 2023 16:01:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1682435057;
-        bh=O3ezZk4F0u+EDnSCgMTllu+XmCUbpS7GFbM9vxhBf20=;
-        h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-        b=kwdCyVKB3PWhdDCUwgl4iLtMu2yDPZIL3XHVoB6depYYTASgegorif0quoy5FBcMD
-         7mvgCAArpzVHTpX0gnNdEptlYb3Souf04h25iz8elTKAncwXyTcUwAtk23oDWmjL6O
-         4hXr4Cibu0AEnfPJQHlKHU7deFfFp8EO+N7ILvtheGezIgHxUczrvisNBLdCHeom5z
-         bZzmyMvitjABKAF4fjFvQzvXSVB6537zfInvLsMKMsTprp6OodqLKY+DHa+N5wGfuL
-         6Pk2mA5kUrA/yuz5KwkqUfKklZ4Zyusy5vTy90is0evCL3cyvYSn+GDnOmIOy4dWtG
-         cLxHfNZNeAreg==
-Message-ID: <e5a26c5c-65f6-0c96-0915-cf751f53b7fc@kernel.org>
-Date:   Tue, 25 Apr 2023 23:04:11 +0800
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.10.0
-Subject: Re: [PATCH v2] f2fs: add async reset zone command support
-To:     daejun7.park@samsung.com,
-        "jaegeuk@kernel.org" <jaegeuk@kernel.org>,
-        "rostedt@goodmis.org" <rostedt@goodmis.org>,
-        "mhiramat@kernel.org" <mhiramat@kernel.org>,
-        "linux-f2fs-devel@lists.sourceforge.net" 
-        <linux-f2fs-devel@lists.sourceforge.net>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-trace-kernel@vger.kernel.org" 
-        <linux-trace-kernel@vger.kernel.org>
-Cc:     Seokhwan Kim <sukka.kim@samsung.com>,
-        Yonggil Song <yonggil.song@samsung.com>,
-        beomsu kim <beomsu7.kim@samsung.com>
-References: <CGME20230425081018epcms2p8fefa94810f0b341d2cbd70ba587e9e8c@epcms2p8>
- <20230425081018epcms2p8fefa94810f0b341d2cbd70ba587e9e8c@epcms2p8>
-Content-Language: en-US
-From:   Chao Yu <chao@kernel.org>
-In-Reply-To: <20230425081018epcms2p8fefa94810f0b341d2cbd70ba587e9e8c@epcms2p8>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+        s=k20201202; t=1682438472;
+        bh=6Yrx9edyKSHeZsGFemGRrrlnf8qH6XswXiSIsdYmwXQ=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=ush8rZM3eb00Hb51tg+A8ZXm+shFZhNHKvT5BIaiTGIc6+U/u6xcXnuvf4RxgN2br
+         +1vbJ9ssyO7AmzqOv2z29KgUyJSmptxH63jNTKLj/tpyP1b0KPBi6H0Zrpa6SNKqps
+         UGrzkHvbcLzCno1M5PktVHdbdurffu9oZ/vuWHysfnzODopEBsyrzwlY4MYI/LMdTH
+         D9Xla0z0n8WYStFbY7nAqqjbwC8E0bjdYB+txBTDoWpvKS4NpRQAhkkkMcsn/1/0ey
+         1ZtsnTF5kFS0j34Vt3mTimh5TYV4FX3ixWLHTWW06AQr5xzBIFOZvPgwDI1S3bMCzR
+         P8/aJshUQSOCw==
+Date:   Wed, 26 Apr 2023 01:01:07 +0900
+From:   Masami Hiramatsu (Google) <mhiramat@kernel.org>
+To:     Mark Brown <broonie@kernel.org>
+Cc:     Steven Rostedt <rostedt@goodmis.org>,
+        Shuah Khan <shuah@kernel.org>, linux-kernel@vger.kernel.org,
+        linux-trace-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org
+Subject: Re: [PATCH RESEND] selftests/ftrace: Improve integration with
+ kselftest runner
+Message-Id: <20230426010107.0858c3c8f435734624221a21@kernel.org>
+In-Reply-To: <20230302-ftrace-kselftest-ktap-v1-1-1270085b4cd5@kernel.org>
+References: <20230302-ftrace-kselftest-ktap-v1-1-1270085b4cd5@kernel.org>
+X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On 2023/4/25 16:10, Daejun Park wrote:
-> Changelog:
+On Tue, 11 Apr 2023 12:19:30 +0100
+Mark Brown <broonie@kernel.org> wrote:
+
+> The ftrace selftests do not currently produce KTAP output, they produce a
+> custom format much nicer for human consumption. This means that when run in
+> automated test systems we just get a single result for the suite as a whole
+> rather than recording results for individual test cases, making it harder
+> to look at the test data and masking things like inappropriate skips.
 > 
-> v1 -> v2
-> Changed to apply the optional async reset write pointer by default.
+> Address this by adding support for KTAP output to the ftracetest script and
+> providing a trivial wrapper which will be invoked by the kselftest runner
+> to generate output in this format by default, users using ftracetest
+> directly will continue to get the existing output.
 > 
+> This is not the most elegant solution but it is simple and effective. I
+> did consider implementing this by post processing the existing output
+> format but that felt more complex and likely to result in all output being
+> lost if something goes seriously wrong during the run which would not be
+> helpful. I did also consider just writing a separate runner script but
+> there's enough going on with things like the signal handling for that to
+> seem like it would be duplicating too much.
 > 
-> This patch enables submit reset zone command asynchornously. It helps
-> decrease average latency of write IOs in high utilization scenario by
-> faster checkpointing.
-> 
-> Signed-off-by: Daejun Park <daejun7.park@samsung.com>
+> Signed-off-by: Mark Brown <broonie@kernel.org>
 > ---
->   fs/f2fs/segment.c           | 95 ++++++++++++++++++++++++++++++++++---
->   include/trace/events/f2fs.h | 18 ++++++-
->   2 files changed, 105 insertions(+), 8 deletions(-)
+>  tools/testing/selftests/ftrace/Makefile        |  3 +-
+>  tools/testing/selftests/ftrace/ftracetest      | 63 ++++++++++++++++++++++++--
+>  tools/testing/selftests/ftrace/ftracetest-ktap |  8 ++++
+>  3 files changed, 70 insertions(+), 4 deletions(-)
 > 
-> diff --git a/fs/f2fs/segment.c b/fs/f2fs/segment.c
-> index 82430f80c5da..27074a6eaf20 100644
-> --- a/fs/f2fs/segment.c
-> +++ b/fs/f2fs/segment.c
-> @@ -1195,6 +1195,46 @@ static void __init_discard_policy(struct f2fs_sb_info *sbi,
->   static void __update_discard_tree_range(struct f2fs_sb_info *sbi,
->   				struct block_device *bdev, block_t lstart,
->   				block_t start, block_t len);
-> +
-> +#ifdef CONFIG_BLK_DEV_ZONED
-> +static int __submit_zone_reset_cmd(struct f2fs_sb_info *sbi,
-> +				   struct discard_cmd *dc, blk_opf_t flag,
-> +				   struct list_head *wait_list,
-> +				   unsigned int *issued)
-> +{
-> +	struct discard_cmd_control *dcc = SM_I(sbi)->dcc_info;
-> +	struct block_device *bdev = dc->bdev;
-> +	struct bio *bio = bio_alloc(bdev, 0, REQ_OP_ZONE_RESET | flag, GFP_NOFS);
-> +	unsigned long flags;
-> +
-> +	trace_f2fs_issue_reset_zone(bdev, SECTOR_FROM_BLOCK(dc->di.start));
+> diff --git a/tools/testing/selftests/ftrace/Makefile b/tools/testing/selftests/ftrace/Makefile
+> index d6e106fbce11..a1e955d2de4c 100644
+> --- a/tools/testing/selftests/ftrace/Makefile
+> +++ b/tools/testing/selftests/ftrace/Makefile
+> @@ -1,7 +1,8 @@
+>  # SPDX-License-Identifier: GPL-2.0
+>  all:
+>  
+> -TEST_PROGS := ftracetest
+> +TEST_PROGS_EXTENDED := ftracetest
+> +TEST_PROGS := ftracetest-ktap
+>  TEST_FILES := test.d settings
+>  EXTRA_CLEAN := $(OUTPUT)/logs/*
+>  
+> diff --git a/tools/testing/selftests/ftrace/ftracetest b/tools/testing/selftests/ftrace/ftracetest
+> index c3311c8c4089..539c8d6d5d71 100755
+> --- a/tools/testing/selftests/ftrace/ftracetest
+> +++ b/tools/testing/selftests/ftrace/ftracetest
+> @@ -13,6 +13,7 @@ echo "Usage: ftracetest [options] [testcase(s)] [testcase-directory(s)]"
+>  echo " Options:"
+>  echo "		-h|--help  Show help message"
+>  echo "		-k|--keep  Keep passed test logs"
+> +echo "		-K|--KTAP  Output in KTAP format"
 
-trace_f2fs_issue_reset_zone(bdev, dc->di.start); ?
+This should be "-K|--ktap".
 
-> +
-> +	spin_lock_irqsave(&dc->lock, flags);
-> +	dc->state = D_SUBMIT;
-> +	dc->bio_ref++;
-> +	spin_unlock_irqrestore(&dc->lock, flags);
-> +
-> +	if (issued)
-> +		(*issued)++;
-> +
-> +	atomic_inc(&dcc->queued_discard);
-> +	dc->queued++;
-> +	list_move_tail(&dc->list, wait_list);
-> +
-> +	/* sanity check on discard range */
-> +	__check_sit_bitmap(sbi, dc->di.lstart, dc->di.lstart + dc->di.len);
-> +
-> +	bio->bi_iter.bi_sector = SECTOR_FROM_BLOCK(dc->di.start);
-> +	bio->bi_private = dc;
-> +	bio->bi_end_io = f2fs_submit_discard_endio;
-> +	submit_bio(bio);
-> +
-> +	atomic_inc(&dcc->issued_discard);
-> +
-> +	return 0;
+Others looks good to me. Can you update it with my Ack?
 
-Unneeded return value?
+Acked-by: Masami Hiramatsu (Google) <mhiramat@kernel.org> # with above fix.
 
+Thank you,
+
+
+>  echo "		-v|--verbose Increase verbosity of test messages"
+>  echo "		-vv        Alias of -v -v (Show all results in stdout)"
+>  echo "		-vvv       Alias of -v -v -v (Show all commands immediately)"
+> @@ -85,6 +86,10 @@ parse_opts() { # opts
+>        KEEP_LOG=1
+>        shift 1
+>      ;;
+> +    --ktap|-K)
+> +      KTAP=1
+> +      shift 1
+> +    ;;
+>      --verbose|-v|-vv|-vvv)
+>        if [ $VERBOSE -eq -1 ]; then
+>  	usage "--console can not use with --verbose"
+> @@ -178,6 +183,7 @@ TEST_DIR=$TOP_DIR/test.d
+>  TEST_CASES=`find_testcases $TEST_DIR`
+>  LOG_DIR=$TOP_DIR/logs/`date +%Y%m%d-%H%M%S`/
+>  KEEP_LOG=0
+> +KTAP=0
+>  DEBUG=0
+>  VERBOSE=0
+>  UNSUPPORTED_RESULT=0
+> @@ -229,7 +235,7 @@ prlog() { # messages
+>      newline=
+>      shift
+>    fi
+> -  printf "$*$newline"
+> +  [ "$KTAP" != "1" ] && printf "$*$newline"
+>    [ "$LOG_FILE" ] && printf "$*$newline" | strip_esc >> $LOG_FILE
+>  }
+>  catlog() { #file
+> @@ -260,11 +266,11 @@ TOTAL_RESULT=0
+>  
+>  INSTANCE=
+>  CASENO=0
+> +CASENAME=
+>  
+>  testcase() { # testfile
+>    CASENO=$((CASENO+1))
+> -  desc=`grep "^#[ \t]*description:" $1 | cut -f2- -d:`
+> -  prlog -n "[$CASENO]$INSTANCE$desc"
+> +  CASENAME=`grep "^#[ \t]*description:" $1 | cut -f2- -d:`
+>  }
+>  
+>  checkreq() { # testfile
+> @@ -277,40 +283,68 @@ test_on_instance() { # testfile
+>    grep -q "^#[ \t]*flags:.*instance" $1
+>  }
+>  
+> +ktaptest() { # result comment
+> +  if [ "$KTAP" != "1" ]; then
+> +    return
+> +  fi
+> +
+> +  local result=
+> +  if [ "$1" = "1" ]; then
+> +    result="ok"
+> +  else
+> +    result="not ok"
+> +  fi
+> +  shift
+> +
+> +  local comment=$*
+> +  if [ "$comment" != "" ]; then
+> +    comment="# $comment"
+> +  fi
+> +
+> +  echo $CASENO $result $INSTANCE$CASENAME $comment
 > +}
-> +#endif
 > +
->   /* this function is copied from blkdev_issue_discard from block/blk-lib.c */
->   static int __submit_discard_cmd(struct f2fs_sb_info *sbi,
->   				struct discard_policy *dpolicy,
-> @@ -1216,6 +1256,11 @@ static int __submit_discard_cmd(struct f2fs_sb_info *sbi,
->   	if (is_sbi_flag_set(sbi, SBI_NEED_FSCK))
->   		return 0;
->   
-> +#ifdef CONFIG_BLK_DEV_ZONED
-> +	if (f2fs_sb_has_blkzoned(sbi) && bdev_is_zoned(bdev))
-> +		return __submit_zone_reset_cmd(sbi, dc, flag, wait_list, issued);
-> +#endif
+>  eval_result() { # sigval
+>    case $1 in
+>      $PASS)
+>        prlog "	[${color_green}PASS${color_reset}]"
+> +      ktaptest 1
+>        PASSED_CASES="$PASSED_CASES $CASENO"
+>        return 0
+>      ;;
+>      $FAIL)
+>        prlog "	[${color_red}FAIL${color_reset}]"
+> +      ktaptest 0
+>        FAILED_CASES="$FAILED_CASES $CASENO"
+>        return 1 # this is a bug.
+>      ;;
+>      $UNRESOLVED)
+>        prlog "	[${color_blue}UNRESOLVED${color_reset}]"
+> +      ktaptest 0 UNRESOLVED
+>        UNRESOLVED_CASES="$UNRESOLVED_CASES $CASENO"
+>        return $UNRESOLVED_RESULT # depends on use case
+>      ;;
+>      $UNTESTED)
+>        prlog "	[${color_blue}UNTESTED${color_reset}]"
+> +      ktaptest 1 SKIP
+>        UNTESTED_CASES="$UNTESTED_CASES $CASENO"
+>        return 0
+>      ;;
+>      $UNSUPPORTED)
+>        prlog "	[${color_blue}UNSUPPORTED${color_reset}]"
+> +      ktaptest 1 SKIP
+>        UNSUPPORTED_CASES="$UNSUPPORTED_CASES $CASENO"
+>        return $UNSUPPORTED_RESULT # depends on use case
+>      ;;
+>      $XFAIL)
+>        prlog "	[${color_green}XFAIL${color_reset}]"
+> +      ktaptest 1 XFAIL
+>        XFAILED_CASES="$XFAILED_CASES $CASENO"
+>        return 0
+>      ;;
+>      *)
+>        prlog "	[${color_blue}UNDEFINED${color_reset}]"
+> +      ktaptest 0 error
+>        UNDEFINED_CASES="$UNDEFINED_CASES $CASENO"
+>        return 1 # this must be a test bug
+>      ;;
+> @@ -371,6 +405,7 @@ __run_test() { # testfile
+>  run_test() { # testfile
+>    local testname=`basename $1`
+>    testcase $1
+> +  prlog -n "[$CASENO]$INSTANCE$CASENAME"
+>    if [ ! -z "$LOG_FILE" ] ; then
+>      local testlog=`mktemp $LOG_DIR/${CASENO}-${testname}-log.XXXXXX`
+>    else
+> @@ -405,6 +440,17 @@ run_test() { # testfile
+>  # load in the helper functions
+>  . $TEST_DIR/functions
+>  
+> +if [ "$KTAP" = "1" ]; then
+> +  echo "TAP version 13"
 > +
->   	trace_f2fs_issue_discard(bdev, dc->di.start, dc->di.len);
->   
->   	lstart = dc->di.lstart;
-> @@ -1460,21 +1505,42 @@ static void __update_discard_tree_range(struct f2fs_sb_info *sbi,
->   	}
->   }
->   
-> +#ifdef CONFIG_BLK_DEV_ZONED
-> +static void __queue_zone_reset_cmd(struct f2fs_sb_info *sbi,
-> +		struct block_device *bdev, block_t blkstart, block_t blklen)
+> +  casecount=`echo $TEST_CASES | wc -w`
+> +  for t in $TEST_CASES; do
+> +    test_on_instance $t || continue
+> +    casecount=$((casecount+1))
+> +  done
+> +  echo "1..${casecount}"
+> +fi
+> +
+>  # Main loop
+>  for t in $TEST_CASES; do
+>    run_test $t
+> @@ -439,6 +485,17 @@ prlog "# of unsupported: " `echo $UNSUPPORTED_CASES | wc -w`
+>  prlog "# of xfailed: " `echo $XFAILED_CASES | wc -w`
+>  prlog "# of undefined(test bug): " `echo $UNDEFINED_CASES | wc -w`
+>  
+> +if [ "$KTAP" = "1" ]; then
+> +  echo -n "# Totals:"
+> +  echo -n " pass:"`echo $PASSED_CASES | wc -w`
+> +  echo -n " faii:"`echo $FAILED_CASES | wc -w`
+> +  echo -n " xfail:"`echo $XFAILED_CASES | wc -w`
+> +  echo -n " xpass:0"
+> +  echo -n " skip:"`echo $UNTESTED_CASES $UNSUPPORTED_CASES | wc -w`
+> +  echo -n " error:"`echo $UNRESOLVED_CASES $UNDEFINED_CASES | wc -w`
+> +  echo
+> +fi
+> +
+>  cleanup
+>  
+>  # if no error, return 0
+> diff --git a/tools/testing/selftests/ftrace/ftracetest-ktap b/tools/testing/selftests/ftrace/ftracetest-ktap
+> new file mode 100755
+> index 000000000000..b3284679ef3a
+> --- /dev/null
+> +++ b/tools/testing/selftests/ftrace/ftracetest-ktap
+> @@ -0,0 +1,8 @@
+> +#!/bin/sh -e
+> +# SPDX-License-Identifier: GPL-2.0-only
+> +#
+> +# ftracetest-ktap: Wrapper to integrate ftracetest with the kselftest runner
+> +#
+> +# Copyright (C) Arm Ltd., 2023
+> +
+> +./ftracetest -K
+> 
+> ---
+> base-commit: fe15c26ee26efa11741a7b632e9f23b01aca4cc6
+> change-id: 20230302-ftrace-kselftest-ktap-9d7878691557
+> 
+> Best regards,
+> -- 
+> Mark Brown <broonie@kernel.org>
+> 
 
-block_t lblkstart,
 
-> +{
-> +	block_t lblkstart = blkstart;
-
-block_t blkstart = lblkstart;
-
-> +
-> +	if (f2fs_is_multi_device(sbi)) {
-> +		int devi = f2fs_target_device_index(sbi, blkstart);
-> +
-> +		blkstart -= FDEV(devi).start_blk;
-> +	}
-> +
-> +	trace_f2fs_queue_reset_zone(bdev, blkstart);
-> +
-> +	mutex_lock(&SM_I(sbi)->dcc_info->cmd_lock);
-> +	__insert_discard_cmd(sbi, bdev, lblkstart, blkstart, blklen);
-> +	mutex_unlock(&SM_I(sbi)->dcc_info->cmd_lock);
-> +}
-> +#endif
-> +
->   static void __queue_discard_cmd(struct f2fs_sb_info *sbi,
->   		struct block_device *bdev, block_t blkstart, block_t blklen)
->   {
->   	block_t lblkstart = blkstart;
->   
-> +	trace_f2fs_queue_discard(bdev, blkstart, blklen);
-
-If device doesn't support discard, it's better not show above tracepoint?
-
-> +
->   	if (!f2fs_bdev_support_discard(bdev))
->   		return;
->   
-> -	trace_f2fs_queue_discard(bdev, blkstart, blklen);
-> -
->   	if (f2fs_is_multi_device(sbi)) {
->   		int devi = f2fs_target_device_index(sbi, blkstart);
->   
->   		blkstart -= FDEV(devi).start_blk;
->   	}
-> +
->   	mutex_lock(&SM_I(sbi)->dcc_info->cmd_lock);
->   	__update_discard_tree_range(sbi, bdev, lblkstart, blkstart, blklen);
->   	mutex_unlock(&SM_I(sbi)->dcc_info->cmd_lock);
-> @@ -1725,7 +1791,18 @@ static void f2fs_wait_discard_bio(struct f2fs_sb_info *sbi, block_t blkaddr)
->   	dc = __lookup_discard_cmd(sbi, blkaddr);
->   	if (dc) {
->   		if (dc->state == D_PREP) {
-> -			__punch_discard_cmd(sbi, dc, blkaddr);
-> +			if (f2fs_sb_has_blkzoned(sbi) &&
-> +			    bdev_is_zoned(dc->bdev)) {
-> +				struct discard_policy dpolicy;
-> +				/* force submit zone reset */
-> +				__init_discard_policy(sbi, &dpolicy,
-> +						      DPOLICY_FORCE, 1);
-> +				__submit_discard_cmd(sbi, &dpolicy, dc, NULL);
-
-Can we call __submit_zone_reset_cmd() directly?
-
-Thanks,
-
-> +				dc->ref++;
-> +				need_wait = true;
-> +			} else {
-> +				__punch_discard_cmd(sbi, dc, blkaddr);
-> +			}
->   		} else {
->   			dc->ref++;
->   			need_wait = true;
-> @@ -1875,9 +1952,15 @@ static int __f2fs_issue_discard_zone(struct f2fs_sb_info *sbi,
->   				 blkstart, blklen);
->   			return -EIO;
->   		}
-> -		trace_f2fs_issue_reset_zone(bdev, blkstart);
-> -		return blkdev_zone_mgmt(bdev, REQ_OP_ZONE_RESET,
-> -					sector, nr_sects, GFP_NOFS);
-> +
-> +		if (unlikely(!is_sbi_flag_set(sbi, SBI_POR_DOING))) {
-> +			trace_f2fs_issue_reset_zone(bdev, blkstart);
-> +			return blkdev_zone_mgmt(bdev, REQ_OP_ZONE_RESET,
-> +						sector, nr_sects, GFP_NOFS);
-> +		}
-> +
-> +		__queue_zone_reset_cmd(sbi, bdev, lblkstart, blklen);
-> +		return 0;
->   	}
->   
->   	/* For conventional zones, use regular discard if supported */
-> diff --git a/include/trace/events/f2fs.h b/include/trace/events/f2fs.h
-> index 99cbc5949e3c..ee1477de8324 100644
-> --- a/include/trace/events/f2fs.h
-> +++ b/include/trace/events/f2fs.h
-> @@ -1512,7 +1512,7 @@ DEFINE_EVENT(f2fs_discard, f2fs_remove_discard,
->   	TP_ARGS(dev, blkstart, blklen)
->   );
->   
-> -TRACE_EVENT(f2fs_issue_reset_zone,
-> +DECLARE_EVENT_CLASS(f2fs_reset_zone,
->   
->   	TP_PROTO(struct block_device *dev, block_t blkstart),
->   
-> @@ -1528,11 +1528,25 @@ TRACE_EVENT(f2fs_issue_reset_zone,
->   		__entry->blkstart = blkstart;
->   	),
->   
-> -	TP_printk("dev = (%d,%d), reset zone at block = 0x%llx",
-> +	TP_printk("dev = (%d,%d), zone at block = 0x%llx",
->   		show_dev(__entry->dev),
->   		(unsigned long long)__entry->blkstart)
->   );
->   
-> +DEFINE_EVENT(f2fs_reset_zone, f2fs_queue_reset_zone,
-> +
-> +	TP_PROTO(struct block_device *dev, block_t blkstart),
-> +
-> +	TP_ARGS(dev, blkstart)
-> +);
-> +
-> +DEFINE_EVENT(f2fs_reset_zone, f2fs_issue_reset_zone,
-> +
-> +	TP_PROTO(struct block_device *dev, block_t blkstart),
-> +
-> +	TP_ARGS(dev, blkstart)
-> +);
-> +
->   TRACE_EVENT(f2fs_issue_flush,
->   
->   	TP_PROTO(struct block_device *dev, unsigned int nobarrier,
+-- 
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
