@@ -2,39 +2,38 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 88276C7618E
-	for <linux-trace-kernel@archiver.kernel.org>; Tue, 25 Apr 2023 01:41:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C9B6C77B61
+	for <linux-trace-kernel@archiver.kernel.org>; Tue, 25 Apr 2023 01:43:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230327AbjDYBlY (ORCPT
+        id S230093AbjDYBnB (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Mon, 24 Apr 2023 21:41:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42380 "EHLO
+        Mon, 24 Apr 2023 21:43:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43318 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229637AbjDYBlX (ORCPT
+        with ESMTP id S233255AbjDYBmx (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Mon, 24 Apr 2023 21:41:23 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 71C88AF04;
-        Mon, 24 Apr 2023 18:41:22 -0700 (PDT)
+        Mon, 24 Apr 2023 21:42:53 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D5F0CAF21;
+        Mon, 24 Apr 2023 18:42:49 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 0C9E962074;
-        Tue, 25 Apr 2023 01:41:22 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A26C3C433EF;
-        Tue, 25 Apr 2023 01:41:20 +0000 (UTC)
-Date:   Mon, 24 Apr 2023 21:41:18 -0400
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 6D54262AD5;
+        Tue, 25 Apr 2023 01:42:49 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 52618C433D2;
+        Tue, 25 Apr 2023 01:42:48 +0000 (UTC)
+Date:   Mon, 24 Apr 2023 21:42:46 -0400
 From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Beau Belgrave <beaub@linux.microsoft.com>
-Cc:     mhiramat@kernel.org, mathieu.desnoyers@efficios.com,
-        dcook@linux.microsoft.com, alanau@linux.microsoft.com,
-        linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
-Subject: Re: [PATCH 3/3] tracing/user_events: Prevent same address and bit
- per process
-Message-ID: <20230424214118.06b7ee07@rorschach.local.home>
-In-Reply-To: <20230411211709.15018-4-beaub@linux.microsoft.com>
-References: <20230411211709.15018-1-beaub@linux.microsoft.com>
-        <20230411211709.15018-4-beaub@linux.microsoft.com>
+To:     Mark Brown <broonie@kernel.org>
+Cc:     Masami Hiramatsu <mhiramat@kernel.org>,
+        Shuah Khan <shuah@kernel.org>, linux-kernel@vger.kernel.org,
+        linux-trace-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org
+Subject: Re: [PATCH RESEND] selftests/ftrace: Improve integration with
+ kselftest runner
+Message-ID: <20230424214246.3e158fb6@rorschach.local.home>
+In-Reply-To: <20230302-ftrace-kselftest-ktap-v1-1-1270085b4cd5@kernel.org>
+References: <20230302-ftrace-kselftest-ktap-v1-1-1270085b4cd5@kernel.org>
 X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
@@ -43,35 +42,30 @@ Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On Tue, 11 Apr 2023 14:17:09 -0700
-Beau Belgrave <beaub@linux.microsoft.com> wrote:
+On Tue, 11 Apr 2023 12:19:30 +0100
+Mark Brown <broonie@kernel.org> wrote:
 
-> +static bool user_event_enabler_exists(struct user_event_mm *mm,
-> +				      unsigned long uaddr, unsigned char bit)
-> +{
-> +	struct user_event_enabler *enabler;
-> +	struct user_event_enabler *next;
-> +
-> +	list_for_each_entry_safe(enabler, next, &mm->enablers, link)
-> +		if (enabler->addr == uaddr &&
-> +		    (enabler->values & ENABLE_VAL_BIT_MASK) == bit)
-> +			return true;
-> +
+> The ftrace selftests do not currently produce KTAP output, they produce a
+> custom format much nicer for human consumption. This means that when run in
+> automated test systems we just get a single result for the suite as a whole
+> rather than recording results for individual test cases, making it harder
+> to look at the test data and masking things like inappropriate skips.
+> 
+> Address this by adding support for KTAP output to the ftracetest script and
+> providing a trivial wrapper which will be invoked by the kselftest runner
+> to generate output in this format by default, users using ftracetest
+> directly will continue to get the existing output.
+> 
+> This is not the most elegant solution but it is simple and effective. I
+> did consider implementing this by post processing the existing output
+> format but that felt more complex and likely to result in all output being
+> lost if something goes seriously wrong during the run which would not be
+> helpful. I did also consider just writing a separate runner script but
+> there's enough going on with things like the signal handling for that to
+> seem like it would be duplicating too much.
 
-Please add brackets around complex calls like the above. The no bracket
-rule is not if you can get away without using it, but if there's only a
-single line.
+Acked-by: Steven Rostedt (Google) <rostedt@goodmis.org>
 
-	list_for_each_entry_safe(enabler, next, &mm->enablers, link) {
-		if (enabler->addr == uaddr &&
-		    (enabler->values & ENABLE_VAL_BIT_MASK) == bit)
-			return true;
-	}
+Shuah, care to take this?
 
 -- Steve
-
-
-
-> +	return false;
-> +}
-> +
