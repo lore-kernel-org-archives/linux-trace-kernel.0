@@ -2,70 +2,148 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C9B6C77B61
-	for <linux-trace-kernel@archiver.kernel.org>; Tue, 25 Apr 2023 01:43:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 825BCC6FD18
+	for <linux-trace-kernel@archiver.kernel.org>; Tue, 25 Apr 2023 03:55:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230093AbjDYBnB (ORCPT
+        id S231335AbjDYDzQ (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Mon, 24 Apr 2023 21:43:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43318 "EHLO
+        Mon, 24 Apr 2023 23:55:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58398 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233255AbjDYBmx (ORCPT
+        with ESMTP id S229637AbjDYDzO (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Mon, 24 Apr 2023 21:42:53 -0400
+        Mon, 24 Apr 2023 23:55:14 -0400
 Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D5F0CAF21;
-        Mon, 24 Apr 2023 18:42:49 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C13634EC0;
+        Mon, 24 Apr 2023 20:55:10 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 6D54262AD5;
-        Tue, 25 Apr 2023 01:42:49 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 52618C433D2;
-        Tue, 25 Apr 2023 01:42:48 +0000 (UTC)
-Date:   Mon, 24 Apr 2023 21:42:46 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Mark Brown <broonie@kernel.org>
-Cc:     Masami Hiramatsu <mhiramat@kernel.org>,
-        Shuah Khan <shuah@kernel.org>, linux-kernel@vger.kernel.org,
-        linux-trace-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org
-Subject: Re: [PATCH RESEND] selftests/ftrace: Improve integration with
- kselftest runner
-Message-ID: <20230424214246.3e158fb6@rorschach.local.home>
-In-Reply-To: <20230302-ftrace-kselftest-ktap-v1-1-1270085b4cd5@kernel.org>
-References: <20230302-ftrace-kselftest-ktap-v1-1-1270085b4cd5@kernel.org>
-X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
-MIME-Version: 1.0
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 5B8FC62269;
+        Tue, 25 Apr 2023 03:55:10 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DB284C433EF;
+        Tue, 25 Apr 2023 03:55:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1682394909;
+        bh=uVme7c/++qsefUV47B4cdTguxdMoQe4SjR4FK0ZWBuE=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=bhJgaQg0jONknwAgfyUZsJd86mofpx1fv6cGEYRensyGZ+mdutXYDxFJcXvnEprz/
+         5YyfplT28AC/idDSHd2E0GuZ1TDCm64l/nt/0luZ9Dwz3T7tbjj7udX/wOc3dPS6dy
+         GbgaTyMSN1YVKyHp9tOYKdro0VPpwjPnsepNwSwabfrDHbYL/2w8kc2HC6r22NMSJl
+         h6XfSvQdYVcka76l7JiVyOgkKzR1kEvBTzmmY6ualZL3nDu/wdIeFU0yq/i9i0+9ts
+         lX57+vBOZXjP3iewDcAmNOs48zGMobA1Em4xGAzl9iIA58CodQbXhxJ/s0Av06E/iw
+         Ok8Q/bY7tRZkQ==
+Date:   Tue, 25 Apr 2023 12:55:02 +0900
+From:   Masami Hiramatsu (Google) <mhiramat@kernel.org>
+To:     Donglin Peng <pengdonglin@sangfor.com.cn>
+Cc:     rostedt@goodmis.org, linux@armlinux.org.uk, mark.rutland@arm.com,
+        will@kernel.org, catalin.marinas@arm.com,
+        rmk+kernel@armlinux.org.uk, palmer@dabbelt.com,
+        paul.walmsley@sifive.com, aou@eecs.berkeley.edu,
+        tglx@linutronix.de, dave.hansen@linux.intel.com, x86@kernel.org,
+        bp@alien8.de, hpa@zytor.com, chenhuacai@kernel.org,
+        zhangqing@loongson.cn, kernel@xen0n.name, mingo@redhat.com,
+        peterz@infradead.org, xiehuan09@gmail.com, dinghui@sangfor.com.cn,
+        huangcun@sangfor.com.cn, dolinux.peng@gmail.com,
+        linux-trace-kernel@vger.kernel.org, loongarch@lists.linux.dev,
+        linux-riscv@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v11 8/8] selftests/ftrace: Add funcgraph-retval test
+ case
+Message-Id: <20230425125502.074e098a6ecf8fc3a9f19dd0@kernel.org>
+In-Reply-To: <9fedbd25e63f012cade5dad13be21225fec2fb5d.1680954589.git.pengdonglin@sangfor.com.cn>
+References: <cover.1680954589.git.pengdonglin@sangfor.com.cn>
+        <9fedbd25e63f012cade5dad13be21225fec2fb5d.1680954589.git.pengdonglin@sangfor.com.cn>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On Tue, 11 Apr 2023 12:19:30 +0100
-Mark Brown <broonie@kernel.org> wrote:
+On Sat,  8 Apr 2023 05:42:22 -0700
+Donglin Peng <pengdonglin@sangfor.com.cn> wrote:
 
-> The ftrace selftests do not currently produce KTAP output, they produce a
-> custom format much nicer for human consumption. This means that when run in
-> automated test systems we just get a single result for the suite as a whole
-> rather than recording results for individual test cases, making it harder
-> to look at the test data and masking things like inappropriate skips.
+> Add a test case for the funcgraph-retval and funcgraph-retval-hex
+> trace options.
 > 
-> Address this by adding support for KTAP output to the ftracetest script and
-> providing a trivial wrapper which will be invoked by the kselftest runner
-> to generate output in this format by default, users using ftracetest
-> directly will continue to get the existing output.
+
+This looks good to me.
+
+Acked-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+
+Thank you!
+
+> Signed-off-by: Donglin Peng <pengdonglin@sangfor.com.cn>
+> ---
+> v11:
+>  - Fix selftest issues
 > 
-> This is not the most elegant solution but it is simple and effective. I
-> did consider implementing this by post processing the existing output
-> format but that felt more complex and likely to result in all output being
-> lost if something goes seriously wrong during the run which would not be
-> helpful. I did also consider just writing a separate runner script but
-> there's enough going on with things like the signal handling for that to
-> seem like it would be duplicating too much.
+> v10:
+>  - Fix issues in selftest
+> 
+> v8:
+>  - Fix issues in selftest
+> ---
+>  .../ftrace/test.d/ftrace/fgraph-retval.tc     | 44 +++++++++++++++++++
+>  1 file changed, 44 insertions(+)
+>  create mode 100644 tools/testing/selftests/ftrace/test.d/ftrace/fgraph-retval.tc
+> 
+> diff --git a/tools/testing/selftests/ftrace/test.d/ftrace/fgraph-retval.tc b/tools/testing/selftests/ftrace/test.d/ftrace/fgraph-retval.tc
+> new file mode 100644
+> index 000000000000..e34c0bdef3ed
+> --- /dev/null
+> +++ b/tools/testing/selftests/ftrace/test.d/ftrace/fgraph-retval.tc
+> @@ -0,0 +1,44 @@
+> +#!/bin/sh
+> +# SPDX-License-Identifier: GPL-2.0
+> +# description: ftrace - function graph print function return value
+> +# requires: options/funcgraph-retval options/funcgraph-retval-hex function_graph:tracer
+> +
+> +# Make sure that funcgraph-retval works
+> +
+> +fail() { # msg
+> +    echo $1
+> +    exit_fail
+> +}
+> +
+> +disable_tracing
+> +clear_trace
+> +
+> +# get self PID, can not use $$, because it is PPID
+> +read PID _ < /proc/self/stat
+> +
+> +[ -f set_ftrace_filter ] && echo proc_reg_write > set_ftrace_filter
+> +[ -f set_ftrace_pid ] && echo ${PID} > set_ftrace_pid
+> +echo function_graph > current_tracer
+> +echo 1 > options/funcgraph-retval
+> +
+> +set +e
+> +enable_tracing
+> +echo > /proc/interrupts
+> +disable_tracing
+> +set -e
+> +
+> +: "Test printing the error code in signed decimal format"
+> +echo 0 > options/funcgraph-retval-hex
+> +count=`cat trace | grep 'proc_reg_write' | grep '= -5' | wc -l`
+> +if [ $count -eq 0 ]; then
+> +    fail "Return value can not be printed in signed decimal format"
+> +fi
+> +
+> +: "Test printing the error code in hexadecimal format"
+> +echo 1 > options/funcgraph-retval-hex
+> +count=`cat trace | grep 'proc_reg_write' | grep 'fffffffb' | wc -l`
+> +if [ $count -eq 0 ]; then
+> +    fail "Return value can not be printed in hexadecimal format"
+> +fi
+> +
+> +exit 0
+> -- 
+> 2.25.1
+> 
 
-Acked-by: Steven Rostedt (Google) <rostedt@goodmis.org>
 
-Shuah, care to take this?
-
--- Steve
+-- 
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
