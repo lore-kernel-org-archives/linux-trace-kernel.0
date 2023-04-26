@@ -2,147 +2,93 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 170EAC77B61
-	for <linux-trace-kernel@archiver.kernel.org>; Wed, 26 Apr 2023 02:58:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1975BC77B61
+	for <linux-trace-kernel@archiver.kernel.org>; Wed, 26 Apr 2023 03:23:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239069AbjDZC6k (ORCPT
+        id S239332AbjDZDX1 (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Tue, 25 Apr 2023 22:58:40 -0400
-Received: from shards.monkeyblade.net ([23.128.96.9]:36634 "EHLO
-        mail.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230435AbjDZC6j (ORCPT
+        Tue, 25 Apr 2023 23:23:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47818 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S239185AbjDZDXS (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Tue, 25 Apr 2023 22:58:39 -0400
-Received: from [IPV6:2620:137:e001:0:c663:d265:4cca:c19] (unknown [IPv6:2620:137:e001:0:c663:d265:4cca:c19])
-        by mail.monkeyblade.net (Postfix) with ESMTPSA id C5DFA8420026;
-        Tue, 25 Apr 2023 19:58:37 -0700 (PDT)
-Message-ID: <e3d77a20-fd14-5846-5d46-de2db69af45b@eaglescrag.net>
-Date:   Tue, 25 Apr 2023 19:58:36 -0700
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.7.1
-Subject: Re: [PATCH v5] ring-buffer: Ensure proper resetting of atomic
- variables in ring_buffer_reset_online_cpus
-Content-Language: en-MW
-To:     Steven Rostedt <rostedt@goodmis.org>,
-        "Tze-nan.Wu" <Tze-nan.Wu@mediatek.com>
-Cc:     mhiramat@kernel.org, bobule.chang@mediatek.com,
-        cheng-jui.wang@mediatek.com, wsd_upstream@mediatek.com,
-        stable@vger.kernel.org, npiggin@gmail.com,
-        AngeloGioacchino Del Regno 
-        <angelogioacchino.delregno@collabora.com>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org
-References: <20230426010446.10753-1-Tze-nan.Wu@mediatek.com>
- <20230425211737.757208b3@gandalf.local.home>
-From:   John 'Warthog9' Hawley <warthog9@eaglescrag.net>
-In-Reply-To: <20230425211737.757208b3@gandalf.local.home>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.6.2 (mail.monkeyblade.net [0.0.0.0]); Tue, 25 Apr 2023 19:58:38 -0700 (PDT)
+        Tue, 25 Apr 2023 23:23:18 -0400
+Received: from mail-pl1-x649.google.com (mail-pl1-x649.google.com [IPv6:2607:f8b0:4864:20::649])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5F4F435AC
+        for <linux-trace-kernel@vger.kernel.org>; Tue, 25 Apr 2023 20:23:15 -0700 (PDT)
+Received: by mail-pl1-x649.google.com with SMTP id d9443c01a7336-1a697b64beaso42481415ad.1
+        for <linux-trace-kernel@vger.kernel.org>; Tue, 25 Apr 2023 20:23:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20221208; t=1682479395; x=1685071395;
+        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=GprFFKPXx2RqkeiVQsck1rqQO3e+bSYuG2v+cq5MA2o=;
+        b=zG8dWV9YQYGogBf4sPw4WVCUPNbo01U7qJjyVSZgW0dMMWE/csSxij64YMjW47WXMr
+         UqSLZdwQqkvWJeTf7TTx3joW47ivyJdK3qLoyt/DtnIuv6oIToeLBjzriQoO52YpUXmu
+         u5TXAL4ILR6DZboKzKdk4bKjxDFEXPBUvO6xgRaAonU01xfDvC95Fllr9PDlVAJLuGae
+         hRztRCc+bnRt3oELFhD2RnqAsebqUnVD9RMkD+jKJmXVl7p+tR0PgotwJ++Zfww7qqyj
+         EeuL+KYKP+0/p3ATtjdtHKiUgIQqLqaViD2niN14y+t8Kw+5GLCvl/z6O+UEq8UbczVo
+         MGLQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1682479395; x=1685071395;
+        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=GprFFKPXx2RqkeiVQsck1rqQO3e+bSYuG2v+cq5MA2o=;
+        b=Nia2tQqLu1GH/KBIv4xEliPy+WmW8KxpYnj6bBrBZyUOoP+kG8yksFPeXD87gsb88N
+         HdakGVdSua+2rrm/YFbtZC1M9ERBZK9wU2QLiQumrjuyMXo2IsfCy9RIsOpsIh1U52oi
+         eAf4JAL8RxlT5r9TVUySe2BsyxMAQqDw/IfHKzJu8GpCku7WH6Cwgvy70Y4j99J/eBkg
+         uX4KAyEPD7Xf0W89wCAJgHP6Pxt1jcWg0e11TKkd2weHF93tolQN/kfelrGlB3Plc3da
+         XsJgaBTprHdoLIIQjJvEKphYwdwIULM3PyDnsIiznC2ucEG1VTtTumsIGZ9kdTaReHu0
+         S14Q==
+X-Gm-Message-State: AAQBX9crAAtNTVoZBNBAOdvSvzMbwuJleOnIkBb1SOiL7DnKvwscpq0R
+        YjwH/UtNt4erPGmWhhzRkK0pD+A/9WnzJg==
+X-Google-Smtp-Source: AKy350ZRoCLFcTyyFEvF5QtfiEvLZsdibFceuXM7THIILhocaE/DRKxNJrFTO28Xy6zCv05NvLpT8gof7WgbBQ==
+X-Received: from lyenting.c.googlers.com ([fda3:e722:ac3:cc00:3:22c1:c0a8:1090])
+ (user=lyenting job=sendgmr) by 2002:a17:903:11c4:b0:1a2:1674:3902 with SMTP
+ id q4-20020a17090311c400b001a216743902mr6244670plh.10.1682479394899; Tue, 25
+ Apr 2023 20:23:14 -0700 (PDT)
+Date:   Wed, 26 Apr 2023 03:22:57 +0000
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.40.1.495.gc816e09b53d-goog
+Message-ID: <20230426032257.3157247-1-lyenting@google.com>
+Subject: [PATCH] tracing: Add missing spaces in trace_print_hex_seq()
+From:   Ken Lin <lyenting@google.com>
+To:     rostedt@goodmis.org, mhiramat@kernel.org
+Cc:     linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+        Ken Lin <lyenting@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-Ran afoul of the taboo filters:
+If the buffer length is larger than 16 and concatenate is set to false,
+there would be missing spaces every 16 bytes.
+Example:
+  Before: c5 11 10 50 05 4d 31 40 00 40 00 40 00 4d 31 4000 40 00
+  After:  c5 11 10 50 05 4d 31 40 00 40 00 40 00 4d 31 40 00 40 00
 
-Illegal-Object: Syntax error in From: address found on vger.kernel.org:
-         From:   Tze-nan.Wu<Tze-nan.Wu@mediatek.com>
-                                   ^-missing end of mailbox
+Signed-off-by: Ken Lin <lyenting@google.com>
+---
+ kernel/trace/trace_output.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-I've seen a few of these but I've been unable to replicate the problem. 
-I've a suspicion but so far been unable to prove the theory on what's wrong.
+diff --git a/kernel/trace/trace_output.c b/kernel/trace/trace_output.c
+index bd475a00f96d..6e45cf18d816 100644
+--- a/kernel/trace/trace_output.c
++++ b/kernel/trace/trace_output.c
+@@ -221,8 +221,11 @@ trace_print_hex_seq(struct trace_seq *p, const unsigned char *buf, int buf_len,
+ 	const char *ret = trace_seq_buffer_ptr(p);
+ 	const char *fmt = concatenate ? "%*phN" : "%*ph";
+ 
+-	for (i = 0; i < buf_len; i += 16)
++	for (i = 0; i < buf_len; i += 16) {
++		if (!concatenate && i != 0)
++			trace_seq_putc(p, ' ');
+ 		trace_seq_printf(p, fmt, min(buf_len - i, 16), &buf[i]);
++	}
+ 	trace_seq_putc(p, 0);
+ 
+ 	return ret;
+-- 
+2.40.1.495.gc816e09b53d-goog
 
-- John
-
-On 4/25/23 18:17, Steven Rostedt wrote:
-> 
-> For some reason, this email did not make it to
-> linux-trace-kernel@vger.kernel.org, and therefore did not make it into
-> patchwork?
-> 
-> John?
-> 
-> -- Steve
-> 
-> 
-> On Wed, 26 Apr 2023 09:04:44 +0800
-> Tze-nan.Wu <Tze-nan.Wu@mediatek.com> wrote:
-> 
->> From: "Tze-nan Wu" <Tze-nan.Wu@mediatek.com>
->>
->> In ring_buffer_reset_online_cpus, the buffer_size_kb write operation
->> may permanently fail if the cpu_online_mask changes between two
->> for_each_online_buffer_cpu loops. The number of increases and decreases
->> on both cpu_buffer->resize_disabled and cpu_buffer->record_disabled may be
->> inconsistent, causing some CPUs to have non-zero values for these atomic
->> variables after the function returns.
->>
->> This issue can be reproduced by "echo 0 > trace" while hotplugging cpu.
->> After reproducing success, we can find out buffer_size_kb will not be
->> functional anymore.
->>
->> To prevent leaving 'resize_disabled' and 'record_disabled' non-zero after
->> ring_buffer_reset_online_cpus returns, we ensure that each atomic variable
->> has been set up before atomic_sub() to it.
->>
->> Cc: stable@vger.kernel.org
->> Cc: npiggin@gmail.com
->> Fixes: b23d7a5f4a07 ("ring-buffer: speed up buffer resets by avoiding synchronize_rcu for each CPU")
->> Reviewed-by: Cheng-Jui Wang <cheng-jui.wang@mediatek.com>
->> Signed-off-by: Tze-nan Wu <Tze-nan.Wu@mediatek.com>
->> ---
->> Changes from v4 to v5: https://lore.kernel.org/lkml/20230412112401.25081-1-Tze-nan.Wu@mediatek.com/
->>    - Move the define before the function
->> ---
->>   kernel/trace/ring_buffer.c | 16 +++++++++++++---
->>   1 file changed, 13 insertions(+), 3 deletions(-)
->>
->> diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
->> index 76a2d91eecad..253ef85a9ec3 100644
->> --- a/kernel/trace/ring_buffer.c
->> +++ b/kernel/trace/ring_buffer.c
->> @@ -5345,6 +5345,9 @@ void ring_buffer_reset_cpu(struct trace_buffer *buffer, int cpu)
->>   }
->>   EXPORT_SYMBOL_GPL(ring_buffer_reset_cpu);
->>   
->> +/* Flag to ensure proper resetting of atomic variables */
->> +#define RESET_BIT	(1 << 30)
->> +
->>   /**
->>    * ring_buffer_reset_online_cpus - reset a ring buffer per CPU buffer
->>    * @buffer: The ring buffer to reset a per cpu buffer of
->> @@ -5361,20 +5364,27 @@ void ring_buffer_reset_online_cpus(struct trace_buffer *buffer)
->>   	for_each_online_buffer_cpu(buffer, cpu) {
->>   		cpu_buffer = buffer->buffers[cpu];
->>   
->> -		atomic_inc(&cpu_buffer->resize_disabled);
->> +		atomic_add(RESET_BIT, &cpu_buffer->resize_disabled);
->>   		atomic_inc(&cpu_buffer->record_disabled);
->>   	}
->>   
->>   	/* Make sure all commits have finished */
->>   	synchronize_rcu();
->>   
->> -	for_each_online_buffer_cpu(buffer, cpu) {
->> +	for_each_buffer_cpu(buffer, cpu) {
->>   		cpu_buffer = buffer->buffers[cpu];
->>   
->> +		/*
->> +		 * If a CPU came online during the synchronize_rcu(), then
->> +		 * ignore it.
->> +		 */
->> +		if (!(atomic_read(&cpu_buffer->resize_disabled) & RESET_BIT))
->> +			continue;
->> +
->>   		reset_disabled_cpu_buffer(cpu_buffer);
->>   
->>   		atomic_dec(&cpu_buffer->record_disabled);
->> -		atomic_dec(&cpu_buffer->resize_disabled);
->> +		atomic_sub(RESET_BIT, &cpu_buffer->resize_disabled);
->>   	}
->>   
->>   	mutex_unlock(&buffer->mutex);
-> 
