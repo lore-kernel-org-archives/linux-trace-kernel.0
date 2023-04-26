@@ -2,188 +2,58 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 842DBC77B60
-	for <linux-trace-kernel@archiver.kernel.org>; Wed, 26 Apr 2023 13:43:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 84066C77B60
+	for <linux-trace-kernel@archiver.kernel.org>; Wed, 26 Apr 2023 14:08:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240922AbjDZNn2 (ORCPT
+        id S241093AbjDZOIr (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Wed, 26 Apr 2023 09:43:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37750 "EHLO
+        Wed, 26 Apr 2023 10:08:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51604 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S240734AbjDZNn2 (ORCPT
+        with ESMTP id S229889AbjDZOIp (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Wed, 26 Apr 2023 09:43:28 -0400
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id CB9F84EC8;
-        Wed, 26 Apr 2023 06:43:24 -0700 (PDT)
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 5E72F4B3;
-        Wed, 26 Apr 2023 06:44:08 -0700 (PDT)
-Received: from FVFF77S0Q05N (unknown [10.57.20.164])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id D910C3F64C;
-        Wed, 26 Apr 2023 06:43:22 -0700 (PDT)
-Date:   Wed, 26 Apr 2023 14:43:17 +0100
-From:   Mark Rutland <mark.rutland@arm.com>
-To:     Youling Tang <tangyouling@loongson.cn>
-Cc:     Huacai Chen <chenhuacai@kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        WANG Xuerui <kernel@xen0n.name>, linux-kernel@vger.kernel.org,
-        linux-trace-kernel@vger.kernel.org, loongarch@lists.linux.dev,
-        loongson-kernel@lists.loongnix.cn,
-        Qing Zhang <zhangqing@loongson.cn>
-Subject: Re: [PATCH 3/5] LoongArch: ftrace: Add direct call support
-Message-ID: <ZEkqdfNk4YKVvxxM@FVFF77S0Q05N>
-References: <1682473754-25077-1-git-send-email-tangyouling@loongson.cn>
- <1682473754-25077-4-git-send-email-tangyouling@loongson.cn>
+        Wed, 26 Apr 2023 10:08:45 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A9BD9659E;
+        Wed, 26 Apr 2023 07:08:44 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 43FF663539;
+        Wed, 26 Apr 2023 14:08:44 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B5484C433EF;
+        Wed, 26 Apr 2023 14:08:42 +0000 (UTC)
+Date:   Wed, 26 Apr 2023 10:08:40 -0400
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     Alan Maguire <alan.maguire@oracle.com>
+Cc:     "Masami Hiramatsu (Google)" <mhiramat@kernel.org>, corbet@lwn.net,
+        shuah@kernel.org, linux-kernel@vger.kernel.org,
+        linux-trace-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
+        linux-kselftest@vger.kernel.org
+Subject: Re: [PATCH tracing 0/3] tracing: support > 8 byte filter predicates
+Message-ID: <20230426100840.69d29b68@gandalf.local.home>
+In-Reply-To: <57d8f27c-7737-8af9-490b-a33b2783fc9f@oracle.com>
+References: <1682414197-13173-1-git-send-email-alan.maguire@oracle.com>
+        <20230425233233.2ad5168c630b4c1349ab3398@kernel.org>
+        <9c4cebb7-514c-f7fd-1f95-50837460eb66@oracle.com>
+        <20230425132028.7d16e04c@gandalf.local.home>
+        <57d8f27c-7737-8af9-490b-a33b2783fc9f@oracle.com>
+X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1682473754-25077-4-git-send-email-tangyouling@loongson.cn>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-Hi,
+On Wed, 26 Apr 2023 09:51:00 +0100
+Alan Maguire <alan.maguire@oracle.com> wrote:
 
-On Wed, Apr 26, 2023 at 09:49:12AM +0800, Youling Tang wrote:
-> select the DYNAMIC_FTRACE_WITH_DIRECT_CALLS to provide the
-> register_ftrace_direct[_multi] interfaces allowing users to register
-> the customed trampoline (direct_caller) as the mcount for one or
-> more target functions. And modify_ftrace_direct[_multi] are also
-> provided for modifying direct_caller.
-> 
-> There are a few cases to distinguish:
-> - If a direct call ops is the only one tracing a function:
->   - If the direct called trampoline is within the reach of a 'bl'
->     instruction
->      -> the ftrace patchsite jumps to the trampoline
->   - Else
->      -> the ftrace patchsite jumps to the ftrace_regs_caller trampoline
-> 	which reads the ops pointer in the patchsite and jumps to the
->  	direct call address stored in the ops
+> - 16 byte field with ':'; convert from IPv6 address before memcmp()ing
+> - 6 byte field with ':'; convert from MAC address before memcmp()ing
+> - 4 byte field with '.'; convert from IPv4 address before memcmp()ing
+> - 0x prefix, any other size; basic memcmp
 
-I think you forgot to update this wording; there's no ops pointer in the
-patchsite as you don't implement DYNAMIC_FTRACE_WITH_CALL_OPS.
+Sure.
 
-I think you can delete the "Else" case here, and replace the above with:
-
-- If a direct call ops is the only one tracing a function AND the direct called
-  trampoline is within the reach of a 'bl' instruction
-  -> the ftrace patchsite jumps to the trampoline 
-
-> - Else
->   -> the ftrace patchsite jumps to the ftrace_regs_caller trampoline and
->      its ops literal points to ftrace_list_ops so it iterates over all
->      registered ftrace ops, including the direct call ops and calls its
->      call_direct_funcs handler which stores the direct called trampoline's
->      address in the ftrace_regs and the ftrace_regs_caller trampoline will
-
-Likewise here, there's no "ops literal" associated with the patchsite.
-
-Otherwise, this looks sane to me.
-
-Mark.
-
->      return to that address instead of returning to the traced function
-> 
-> Signed-off-by: Qing Zhang <zhangqing@loongson.cn>
-> Signed-off-by: Youling Tang <tangyouling@loongson.cn>
-> ---
->  arch/loongarch/Kconfig              |  1 +
->  arch/loongarch/include/asm/ftrace.h | 12 ++++++++++++
->  arch/loongarch/kernel/ftrace_dyn.c  |  8 ++++++++
->  arch/loongarch/kernel/mcount_dyn.S  |  7 ++++++-
->  4 files changed, 27 insertions(+), 1 deletion(-)
-> 
-> diff --git a/arch/loongarch/Kconfig b/arch/loongarch/Kconfig
-> index 3ddde336e6a5..d6068a88d53f 100644
-> --- a/arch/loongarch/Kconfig
-> +++ b/arch/loongarch/Kconfig
-> @@ -92,6 +92,7 @@ config LOONGARCH
->  	select HAVE_DMA_CONTIGUOUS
->  	select HAVE_DYNAMIC_FTRACE
->  	select HAVE_DYNAMIC_FTRACE_WITH_ARGS
-> +	select HAVE_DYNAMIC_FTRACE_WITH_DIRECT_CALLS
->  	select HAVE_DYNAMIC_FTRACE_WITH_REGS
->  	select HAVE_EBPF_JIT
->  	select HAVE_EFFICIENT_UNALIGNED_ACCESS if !ARCH_STRICT_ALIGN
-> diff --git a/arch/loongarch/include/asm/ftrace.h b/arch/loongarch/include/asm/ftrace.h
-> index 3418d32d4fc7..f789e680f633 100644
-> --- a/arch/loongarch/include/asm/ftrace.h
-> +++ b/arch/loongarch/include/asm/ftrace.h
-> @@ -57,6 +57,18 @@ static __always_inline struct pt_regs *arch_ftrace_get_regs(struct ftrace_regs *
->  #define ftrace_graph_func ftrace_graph_func
->  void ftrace_graph_func(unsigned long ip, unsigned long parent_ip,
->  		       struct ftrace_ops *op, struct ftrace_regs *fregs);
-> +
-> +#ifdef CONFIG_DYNAMIC_FTRACE_WITH_DIRECT_CALLS
-> +static inline void
-> +__arch_ftrace_set_direct_caller(struct pt_regs *regs, unsigned long addr)
-> +{
-> +	regs->regs[13] = addr;	/* t1 */
-> +}
-> +
-> +#define arch_ftrace_set_direct_caller(fregs, addr) \
-> +	__arch_ftrace_set_direct_caller(&(fregs)->regs, addr)
-> +#endif /* CONFIG_DYNAMIC_FTRACE_WITH_DIRECT_CALLS */
-> +
->  #endif
->  
->  #endif /* __ASSEMBLY__ */
-> diff --git a/arch/loongarch/kernel/ftrace_dyn.c b/arch/loongarch/kernel/ftrace_dyn.c
-> index 3cc4f8159f48..4062a7e63137 100644
-> --- a/arch/loongarch/kernel/ftrace_dyn.c
-> +++ b/arch/loongarch/kernel/ftrace_dyn.c
-> @@ -66,6 +66,14 @@ static bool ftrace_find_callable_addr(struct dyn_ftrace *rec, struct module *mod
->  	unsigned long pc = rec->ip + LOONGARCH_INSN_SIZE;
->  	struct plt_entry *plt;
->  
-> +	/*
-> +	 * If a custom trampoline is unreachable, rely on the ftrace_regs_caller
-> +	 * trampoline which knows how to indirectly reach that trampoline
-> +	 * through ops->direct_call.
-> +	 */
-> +	if (*addr != FTRACE_ADDR && *addr != FTRACE_REGS_ADDR && !reachable_by_bl(*addr, pc))
-> +		*addr = FTRACE_REGS_ADDR;
-> +
->  	/*
->  	 * When the target is within range of the 'bl' instruction, use 'addr'
->  	 * as-is and branch to that directly.
-> diff --git a/arch/loongarch/kernel/mcount_dyn.S b/arch/loongarch/kernel/mcount_dyn.S
-> index bbabf06244c2..1008fbc3cabc 100644
-> --- a/arch/loongarch/kernel/mcount_dyn.S
-> +++ b/arch/loongarch/kernel/mcount_dyn.S
-> @@ -42,7 +42,6 @@
->  	.if \allregs
->  	PTR_S		tp, sp, PT_R2
->  	PTR_S		t0, sp, PT_R12
-> -	PTR_S		t1, sp, PT_R13
->  	PTR_S		t2, sp, PT_R14
->  	PTR_S		t3, sp, PT_R15
->  	PTR_S		t4, sp, PT_R16
-> @@ -64,6 +63,8 @@
->  	PTR_S		zero, sp, PT_R0
->  	.endif
->  	PTR_S		ra, sp, PT_ERA /* Save trace function ra at PT_ERA */
-> +	move		t1, zero
-> +	PTR_S		t1, sp, PT_R13
->  	PTR_ADDI	t8, sp, PT_SIZE
->  	PTR_S		t8, sp, PT_R3
->  	.endm
-> @@ -104,8 +105,12 @@ ftrace_common_return:
->  	PTR_L		a7, sp, PT_R11
->  	PTR_L		fp, sp, PT_R22
->  	PTR_L		t0, sp, PT_ERA
-> +	PTR_L		t1, sp, PT_R13
->  	PTR_ADDI	sp, sp, PT_SIZE
-> +	bnez		t1,.Ldirect
->  	jr		t0
-> +.Ldirect:
-> +	jr		t1
->  SYM_CODE_END(ftrace_common)
->  
->  SYM_CODE_START(ftrace_caller)
-> -- 
-> 2.37.1
-> 
+-- Steve
