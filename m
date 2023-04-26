@@ -2,203 +2,188 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 29060C7EE21
-	for <linux-trace-kernel@archiver.kernel.org>; Wed, 26 Apr 2023 11:45:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 842DBC77B60
+	for <linux-trace-kernel@archiver.kernel.org>; Wed, 26 Apr 2023 13:43:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240627AbjDZLpA (ORCPT
+        id S240922AbjDZNn2 (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Wed, 26 Apr 2023 07:45:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42560 "EHLO
+        Wed, 26 Apr 2023 09:43:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37750 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230023AbjDZLo6 (ORCPT
+        with ESMTP id S240734AbjDZNn2 (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Wed, 26 Apr 2023 07:44:58 -0400
-Received: from frasgout13.his.huawei.com (frasgout13.his.huawei.com [14.137.139.46])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B34304C3F;
-        Wed, 26 Apr 2023 04:44:56 -0700 (PDT)
-Received: from mail02.huawei.com (unknown [172.18.147.229])
-        by frasgout13.his.huawei.com (SkyGuard) with ESMTP id 4Q5xcg6yW2z9v7H0;
-        Wed, 26 Apr 2023 19:35:15 +0800 (CST)
-Received: from roberto-ThinkStation-P620 (unknown [10.204.63.22])
-        by APP1 (Coremail) with SMTP id LxC2BwDXQOyNDklkVnlZAg--.7127S2;
-        Wed, 26 Apr 2023 12:44:27 +0100 (CET)
-Message-ID: <ade93f7324c5f07511a0793f702024d41889636d.camel@huaweicloud.com>
-Subject: Re: [RFC][PATCH 4/6] bpf: Introduce bpf_verify_umd_signature() kfunc
-From:   Roberto Sassu <roberto.sassu@huaweicloud.com>
-To:     Yonghong Song <yhs@meta.com>, dhowells@redhat.com,
-        dwmw2@infradead.org, herbert@gondor.apana.org.au,
-        davem@davemloft.net, jarkko@kernel.org, ast@kernel.org,
-        daniel@iogearbox.net, andrii@kernel.org, martin.lau@linux.dev,
-        song@kernel.org, yhs@fb.com, john.fastabend@gmail.com,
-        kpsingh@kernel.org, sdf@google.com, haoluo@google.com,
-        jolsa@kernel.org, rostedt@goodmis.org, mhiramat@kernel.org,
-        mykolal@fb.com, shuah@kernel.org
-Cc:     linux-kernel@vger.kernel.org, keyrings@vger.kernel.org,
-        linux-crypto@vger.kernel.org, bpf@vger.kernel.org,
-        linux-trace-kernel@vger.kernel.org,
-        linux-kselftest@vger.kernel.org,
-        Roberto Sassu <roberto.sassu@huawei.com>
-Date:   Wed, 26 Apr 2023 13:44:09 +0200
-In-Reply-To: <23649e1d-8fee-079a-21de-87f7024add81@meta.com>
-References: <20230425173557.724688-1-roberto.sassu@huaweicloud.com>
-         <20230425173557.724688-5-roberto.sassu@huaweicloud.com>
-         <23649e1d-8fee-079a-21de-87f7024add81@meta.com>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.36.5-0ubuntu1 
+        Wed, 26 Apr 2023 09:43:28 -0400
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id CB9F84EC8;
+        Wed, 26 Apr 2023 06:43:24 -0700 (PDT)
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 5E72F4B3;
+        Wed, 26 Apr 2023 06:44:08 -0700 (PDT)
+Received: from FVFF77S0Q05N (unknown [10.57.20.164])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id D910C3F64C;
+        Wed, 26 Apr 2023 06:43:22 -0700 (PDT)
+Date:   Wed, 26 Apr 2023 14:43:17 +0100
+From:   Mark Rutland <mark.rutland@arm.com>
+To:     Youling Tang <tangyouling@loongson.cn>
+Cc:     Huacai Chen <chenhuacai@kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        WANG Xuerui <kernel@xen0n.name>, linux-kernel@vger.kernel.org,
+        linux-trace-kernel@vger.kernel.org, loongarch@lists.linux.dev,
+        loongson-kernel@lists.loongnix.cn,
+        Qing Zhang <zhangqing@loongson.cn>
+Subject: Re: [PATCH 3/5] LoongArch: ftrace: Add direct call support
+Message-ID: <ZEkqdfNk4YKVvxxM@FVFF77S0Q05N>
+References: <1682473754-25077-1-git-send-email-tangyouling@loongson.cn>
+ <1682473754-25077-4-git-send-email-tangyouling@loongson.cn>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-CM-TRANSID: LxC2BwDXQOyNDklkVnlZAg--.7127S2
-X-Coremail-Antispam: 1UD129KBjvJXoWxCr48Gr1Utw4kWF4UJry8Grg_yoWrZw15pF
-        W8KF4F9ry8JF1xtFyUXa13Za4Skws2qw17G3sFya4fGFnavr1fCw18tF45W3sYk348trZ5
-        ZrW0q34a93W5GaDanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-        9KBjDU0xBIdaVrnRJUUUk0b4IE77IF4wAFF20E14v26rWj6s0DM7CY07I20VC2zVCF04k2
-        6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4
-        vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Jr0_JF4l84ACjcxK6xIIjxv20xvEc7Cj
-        xVAFwI0_Cr0_Gr1UM28EF7xvwVC2z280aVAFwI0_Gr0_Cr1l84ACjcxK6I8E87Iv6xkF7I
-        0E14v26r4j6r4UJwAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG
-        6I80ewAv7VC0I7IYx2IY67AKxVWUGVWUXwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFV
-        Cjc4AY6r1j6r4UM4x0Y48IcVAKI48JM4IIrI8v6xkF7I0E8cxan2IY04v7MxAIw28IcxkI
-        7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxV
-        Cjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVW8ZVWrXwCIc40Y0x0EwIxGrwCI42IY
-        6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVWxJVW8Jr1lIxAIcV
-        CF04k26cxKx2IYs7xG6Fyj6rWUJwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv
-        6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjxUOlksDUUUU
-X-CM-SenderInfo: purev21wro2thvvxqx5xdzvxpfor3voofrz/1tbiAQATBF1jj4yCiQABsh
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1682473754-25077-4-git-send-email-tangyouling@loongson.cn>
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On Tue, 2023-04-25 at 14:25 -0700, Yonghong Song wrote:
+Hi,
+
+On Wed, Apr 26, 2023 at 09:49:12AM +0800, Youling Tang wrote:
+> select the DYNAMIC_FTRACE_WITH_DIRECT_CALLS to provide the
+> register_ftrace_direct[_multi] interfaces allowing users to register
+> the customed trampoline (direct_caller) as the mcount for one or
+> more target functions. And modify_ftrace_direct[_multi] are also
+> provided for modifying direct_caller.
 > 
-> On 4/25/23 10:35 AM, Roberto Sassu wrote:
-> > From: Roberto Sassu <roberto.sassu@huawei.com>
-> > 
-> > Introduce the bpf_verify_umd_signature() kfunc, to verify UMD-parsed
-> > signatures. The parameters and usage are the same as for
-> > bpf_verify_pkcs7_signature().
-> > 
-> > Signed-off-by: Roberto Sassu <roberto.sassu@huawei.com>
-> > ---
-> >   kernel/trace/bpf_trace.c | 69 ++++++++++++++++++++++++++++++++--------
-> >   1 file changed, 55 insertions(+), 14 deletions(-)
-> > 
-> > diff --git a/kernel/trace/bpf_trace.c b/kernel/trace/bpf_trace.c
-> > index e8da032bb6f..c9cae337596 100644
-> > --- a/kernel/trace/bpf_trace.c
-> > +++ b/kernel/trace/bpf_trace.c
-> > @@ -1271,7 +1271,7 @@ __bpf_kfunc struct bpf_key *bpf_lookup_user_key(u32 serial, u64 flags)
-> >    * The key pointer is marked as invalid, to prevent bpf_key_put() from
-> >    * attempting to decrement the key reference count on that pointer. The key
-> >    * pointer set in such way is currently understood only by
-> > - * verify_pkcs7_signature().
-> > + * verify_pkcs7_signature() and verify_umd_signature().
-> >    *
-> >    * Set *id* to one of the values defined in include/linux/verification.h:
-> >    * 0 for the primary keyring (immutable keyring of system keys);
-> > @@ -1317,6 +1317,27 @@ __bpf_kfunc void bpf_key_put(struct bpf_key *bkey)
-> >   }
-> >   
-> >   #ifdef CONFIG_SYSTEM_DATA_VERIFICATION
-> > +static int validate_key(struct bpf_key *trusted_keyring)
-> > +{
-> > +	int ret = 0;
-> > +
-> > +	if (trusted_keyring->has_ref) {
-> > +		/*
-> > +		 * Do the permission check deferred in bpf_lookup_user_key().
-> > +		 * See bpf_lookup_user_key() for more details.
-> > +		 *
-> > +		 * A call to key_task_permission() here would be redundant, as
-> > +		 * it is already done by keyring_search() called by
-> > +		 * find_asymmetric_key().
-> > +		 */
-> > +		ret = key_validate(trusted_keyring->key);
-> > +		if (ret < 0)
-> > +			return ret;
+> There are a few cases to distinguish:
+> - If a direct call ops is the only one tracing a function:
+>   - If the direct called trampoline is within the reach of a 'bl'
+>     instruction
+>      -> the ftrace patchsite jumps to the trampoline
+>   - Else
+>      -> the ftrace patchsite jumps to the ftrace_regs_caller trampoline
+> 	which reads the ops pointer in the patchsite and jumps to the
+>  	direct call address stored in the ops
+
+I think you forgot to update this wording; there's no ops pointer in the
+patchsite as you don't implement DYNAMIC_FTRACE_WITH_CALL_OPS.
+
+I think you can delete the "Else" case here, and replace the above with:
+
+- If a direct call ops is the only one tracing a function AND the direct called
+  trampoline is within the reach of a 'bl' instruction
+  -> the ftrace patchsite jumps to the trampoline 
+
+> - Else
+>   -> the ftrace patchsite jumps to the ftrace_regs_caller trampoline and
+>      its ops literal points to ftrace_list_ops so it iterates over all
+>      registered ftrace ops, including the direct call ops and calls its
+>      call_direct_funcs handler which stores the direct called trampoline's
+>      address in the ftrace_regs and the ftrace_regs_caller trampoline will
+
+Likewise here, there's no "ops literal" associated with the patchsite.
+
+Otherwise, this looks sane to me.
+
+Mark.
+
+>      return to that address instead of returning to the traced function
 > 
-> The above
-> 	if (ret < 0)
-> 		return ret;
-> can be removed.
-
-Right, thanks!
-
-Roberto
-
-> > +	}
-> > +
-> > +	return ret;
-> > +}
-> > +
-> >   /**
-> >    * bpf_verify_pkcs7_signature - verify a PKCS#7 signature
-> >    * @data_ptr: data to verify
-> > @@ -1334,19 +1355,9 @@ __bpf_kfunc int bpf_verify_pkcs7_signature(struct bpf_dynptr_kern *data_ptr,
-> >   {
-> >   	int ret;
-> >   
-> > -	if (trusted_keyring->has_ref) {
-> > -		/*
-> > -		 * Do the permission check deferred in bpf_lookup_user_key().
-> > -		 * See bpf_lookup_user_key() for more details.
-> > -		 *
-> > -		 * A call to key_task_permission() here would be redundant, as
-> > -		 * it is already done by keyring_search() called by
-> > -		 * find_asymmetric_key().
-> > -		 */
-> > -		ret = key_validate(trusted_keyring->key);
-> > -		if (ret < 0)
-> > -			return ret;
-> > -	}
-> > +	ret = validate_key(trusted_keyring);
-> > +	if (ret < 0)
-> > +		return ret;
-> >   
-> >   	return verify_pkcs7_signature(data_ptr->data,
-> >   				      bpf_dynptr_get_size(data_ptr),
-> > @@ -1356,6 +1367,35 @@ __bpf_kfunc int bpf_verify_pkcs7_signature(struct bpf_dynptr_kern *data_ptr,
-> >   				      VERIFYING_UNSPECIFIED_SIGNATURE, NULL,
-> >   				      NULL);
-> >   }
-> > +
-> > +/**
-> > + * bpf_verify_umd_signature - Verify a UMD-parsed signature
-> > + * @data_ptr: Data to verify
-> > + * @sig_ptr: Signature of the data
-> > + * @trusted_keyring: Keyring with keys trusted for signature verification
-> > + *
-> > + * Verify the UMD-parsed signature *sig_ptr* against the supplied *data_ptr*
-> > + * with keys in a keyring referenced by *trusted_keyring*.
-> > + *
-> > + * Return: 0 on success, a negative value on error.
-> > + */
-> > +__bpf_kfunc int bpf_verify_umd_signature(struct bpf_dynptr_kern *data_ptr,
-> > +					 struct bpf_dynptr_kern *sig_ptr,
-> > +					 struct bpf_key *trusted_keyring)
-> > +{
-> > +	int ret;
-> > +
-> > +	ret = validate_key(trusted_keyring);
-> > +	if (ret < 0)
-> > +		return ret;
-> > +
-> > +	return verify_umd_signature(data_ptr->data,
-> > +				    bpf_dynptr_get_size(data_ptr),
-> > +				    sig_ptr->data, bpf_dynptr_get_size(sig_ptr),
-> > +				    trusted_keyring->key,
-> > +				    VERIFYING_UNSPECIFIED_SIGNATURE, NULL,
-> > +				    NULL);
-> > +}
-> >   #endif /* CONFIG_SYSTEM_DATA_VERIFICATION */
-> >   
-> >   __diag_pop();
-> > @@ -1366,6 +1406,7 @@ BTF_ID_FLAGS(func, bpf_lookup_system_key, KF_ACQUIRE | KF_RET_NULL)
-> >   BTF_ID_FLAGS(func, bpf_key_put, KF_RELEASE)
-> >   #ifdef CONFIG_SYSTEM_DATA_VERIFICATION
-> >   BTF_ID_FLAGS(func, bpf_verify_pkcs7_signature, KF_SLEEPABLE)
-> > +BTF_ID_FLAGS(func, bpf_verify_umd_signature, KF_SLEEPABLE)
-> >   #endif
-> >   BTF_SET8_END(key_sig_kfunc_set)
-> >   
-
+> Signed-off-by: Qing Zhang <zhangqing@loongson.cn>
+> Signed-off-by: Youling Tang <tangyouling@loongson.cn>
+> ---
+>  arch/loongarch/Kconfig              |  1 +
+>  arch/loongarch/include/asm/ftrace.h | 12 ++++++++++++
+>  arch/loongarch/kernel/ftrace_dyn.c  |  8 ++++++++
+>  arch/loongarch/kernel/mcount_dyn.S  |  7 ++++++-
+>  4 files changed, 27 insertions(+), 1 deletion(-)
+> 
+> diff --git a/arch/loongarch/Kconfig b/arch/loongarch/Kconfig
+> index 3ddde336e6a5..d6068a88d53f 100644
+> --- a/arch/loongarch/Kconfig
+> +++ b/arch/loongarch/Kconfig
+> @@ -92,6 +92,7 @@ config LOONGARCH
+>  	select HAVE_DMA_CONTIGUOUS
+>  	select HAVE_DYNAMIC_FTRACE
+>  	select HAVE_DYNAMIC_FTRACE_WITH_ARGS
+> +	select HAVE_DYNAMIC_FTRACE_WITH_DIRECT_CALLS
+>  	select HAVE_DYNAMIC_FTRACE_WITH_REGS
+>  	select HAVE_EBPF_JIT
+>  	select HAVE_EFFICIENT_UNALIGNED_ACCESS if !ARCH_STRICT_ALIGN
+> diff --git a/arch/loongarch/include/asm/ftrace.h b/arch/loongarch/include/asm/ftrace.h
+> index 3418d32d4fc7..f789e680f633 100644
+> --- a/arch/loongarch/include/asm/ftrace.h
+> +++ b/arch/loongarch/include/asm/ftrace.h
+> @@ -57,6 +57,18 @@ static __always_inline struct pt_regs *arch_ftrace_get_regs(struct ftrace_regs *
+>  #define ftrace_graph_func ftrace_graph_func
+>  void ftrace_graph_func(unsigned long ip, unsigned long parent_ip,
+>  		       struct ftrace_ops *op, struct ftrace_regs *fregs);
+> +
+> +#ifdef CONFIG_DYNAMIC_FTRACE_WITH_DIRECT_CALLS
+> +static inline void
+> +__arch_ftrace_set_direct_caller(struct pt_regs *regs, unsigned long addr)
+> +{
+> +	regs->regs[13] = addr;	/* t1 */
+> +}
+> +
+> +#define arch_ftrace_set_direct_caller(fregs, addr) \
+> +	__arch_ftrace_set_direct_caller(&(fregs)->regs, addr)
+> +#endif /* CONFIG_DYNAMIC_FTRACE_WITH_DIRECT_CALLS */
+> +
+>  #endif
+>  
+>  #endif /* __ASSEMBLY__ */
+> diff --git a/arch/loongarch/kernel/ftrace_dyn.c b/arch/loongarch/kernel/ftrace_dyn.c
+> index 3cc4f8159f48..4062a7e63137 100644
+> --- a/arch/loongarch/kernel/ftrace_dyn.c
+> +++ b/arch/loongarch/kernel/ftrace_dyn.c
+> @@ -66,6 +66,14 @@ static bool ftrace_find_callable_addr(struct dyn_ftrace *rec, struct module *mod
+>  	unsigned long pc = rec->ip + LOONGARCH_INSN_SIZE;
+>  	struct plt_entry *plt;
+>  
+> +	/*
+> +	 * If a custom trampoline is unreachable, rely on the ftrace_regs_caller
+> +	 * trampoline which knows how to indirectly reach that trampoline
+> +	 * through ops->direct_call.
+> +	 */
+> +	if (*addr != FTRACE_ADDR && *addr != FTRACE_REGS_ADDR && !reachable_by_bl(*addr, pc))
+> +		*addr = FTRACE_REGS_ADDR;
+> +
+>  	/*
+>  	 * When the target is within range of the 'bl' instruction, use 'addr'
+>  	 * as-is and branch to that directly.
+> diff --git a/arch/loongarch/kernel/mcount_dyn.S b/arch/loongarch/kernel/mcount_dyn.S
+> index bbabf06244c2..1008fbc3cabc 100644
+> --- a/arch/loongarch/kernel/mcount_dyn.S
+> +++ b/arch/loongarch/kernel/mcount_dyn.S
+> @@ -42,7 +42,6 @@
+>  	.if \allregs
+>  	PTR_S		tp, sp, PT_R2
+>  	PTR_S		t0, sp, PT_R12
+> -	PTR_S		t1, sp, PT_R13
+>  	PTR_S		t2, sp, PT_R14
+>  	PTR_S		t3, sp, PT_R15
+>  	PTR_S		t4, sp, PT_R16
+> @@ -64,6 +63,8 @@
+>  	PTR_S		zero, sp, PT_R0
+>  	.endif
+>  	PTR_S		ra, sp, PT_ERA /* Save trace function ra at PT_ERA */
+> +	move		t1, zero
+> +	PTR_S		t1, sp, PT_R13
+>  	PTR_ADDI	t8, sp, PT_SIZE
+>  	PTR_S		t8, sp, PT_R3
+>  	.endm
+> @@ -104,8 +105,12 @@ ftrace_common_return:
+>  	PTR_L		a7, sp, PT_R11
+>  	PTR_L		fp, sp, PT_R22
+>  	PTR_L		t0, sp, PT_ERA
+> +	PTR_L		t1, sp, PT_R13
+>  	PTR_ADDI	sp, sp, PT_SIZE
+> +	bnez		t1,.Ldirect
+>  	jr		t0
+> +.Ldirect:
+> +	jr		t1
+>  SYM_CODE_END(ftrace_common)
+>  
+>  SYM_CODE_START(ftrace_caller)
+> -- 
+> 2.37.1
+> 
