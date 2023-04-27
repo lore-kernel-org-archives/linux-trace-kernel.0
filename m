@@ -2,37 +2,37 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BF5AC7618E
-	for <linux-trace-kernel@archiver.kernel.org>; Thu, 27 Apr 2023 01:19:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E2903C77B7F
+	for <linux-trace-kernel@archiver.kernel.org>; Thu, 27 Apr 2023 01:19:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S242870AbjD0BTS (ORCPT
+        id S242722AbjD0BTU (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Wed, 26 Apr 2023 21:19:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43110 "EHLO
+        Wed, 26 Apr 2023 21:19:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42870 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S242722AbjD0BTG (ORCPT
+        with ESMTP id S242900AbjD0BTK (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Wed, 26 Apr 2023 21:19:06 -0400
+        Wed, 26 Apr 2023 21:19:10 -0400
 Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6307F4219;
-        Wed, 26 Apr 2023 18:18:38 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1ED35423A;
+        Wed, 26 Apr 2023 18:18:57 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id E5586637E7;
-        Thu, 27 Apr 2023 01:18:37 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 77B4EC433D2;
-        Thu, 27 Apr 2023 01:18:35 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id AC72460DDE;
+        Thu, 27 Apr 2023 01:18:56 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 698F0C433D2;
+        Thu, 27 Apr 2023 01:18:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1682558317;
-        bh=OloUz/G37GWBxT5sqJWbjzrMkStsrRpYsiQqECxng3g=;
+        s=k20201202; t=1682558336;
+        bh=8mniL9+4FrB6k7OubdeD6PkVGGfKPDXaTg619EQY+6s=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=sMZ7m0xxVMVTNiFHtIrQVvAl0O0o/Tc/xkE0MN8u6n6O7txnyG5ltKe2p93Xq4UPN
-         LPVXqUINDmdtrJmml3pwZierHhgLPAQsCxzGPgphgTdDsTo4A5Bsqq/fHZ9Z+LNixU
-         xZCC72tXvUSurZdRQiY6wzyXnlWlkl42ElTOsGKczznQsaaYCNXJBn1omDq5BNMQNN
-         SOcRlVGY4c/uWBDWjE4HtmW0BqKzNonV2KEenaYQPYqqgDbYlv9M36Bk1sbv0FYD8h
-         1SZ4RGjF4q5LNbMBv3VDJVJ9MXSIXJrlzYmSjV+mNWQz1mRaJ05WW1reJ1PhFw4XyW
-         HZO7dtnl83hBw==
+        b=l2pratEY9l1ygshxz14RQK1hgFxZEiYmKDOIb77tGNIcEk01uTOqF1FxyK8+vO/2h
+         zL0/lEuQtIeaj8846Icek8BXyo854daQ4HfOvOTu7ITUcFUcd8Ed1GSql0wi5Nffuc
+         3fG0DGz2jpBlyNNaDRLt+jibzfUlFs8NJjZaV9iKzzOzn1ElI/Ii+Os1nwY/IUgEs6
+         W0S4D6iorL27FyCoqkGQaFPaDBQ0GFWNytgjpxlG5edWLzh60srS4ZG1b2yy8x+P1u
+         MYIjwQQT/lVMo9I6N0R8z7EVr6C0vIzhKoG1oXLKlrdxoVARx/BpPaseQAwoMYVyrQ
+         HcYuQxfKwNUXw==
 From:   "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
 To:     linux-trace-kernel@vger.kernel.org
 Cc:     linux-kernel@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>,
@@ -41,9 +41,9 @@ Cc:     linux-kernel@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>,
         Will Deacon <will@kernel.org>,
         Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
         Martin KaFai Lau <martin.lau@linux.dev>, bpf@vger.kernel.org
-Subject: [PATCH v7 05/11] tracing/probes: Move event parameter fetching code to common parser
-Date:   Thu, 27 Apr 2023 10:18:33 +0900
-Message-ID:  <168255831323.2565678.10390264636735283585.stgit@mhiramat.roam.corp.google.com>
+Subject: [PATCH v7 07/11] tracing/probes: Add $$args meta argument for all function args
+Date:   Thu, 27 Apr 2023 10:18:52 +0900
+Message-ID:  <168255833206.2565678.11847356335859371449.stgit@mhiramat.roam.corp.google.com>
 X-Mailer: git-send-email 2.40.1.495.gc816e09b53d-goog
 In-Reply-To:  <168255826500.2565678.17719875734305974633.stgit@mhiramat.roam.corp.google.com>
 References:  <168255826500.2565678.17719875734305974633.stgit@mhiramat.roam.corp.google.com>
@@ -57,606 +57,308 @@ X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
 From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 
-Move trace event parameter fetching code to common parser in
-trace_probe.c. This simplifies eprobe's trace-event variable fetching
-code by introducing a parse context data structure.
+Add the '$$args' meta fetch argument for function-entry probe events. This
+will be expanded to the all arguments of the function and the tracepoint
+using BTF function argument information.
+
+e.g.
+ #  echo 'p vfs_read $$args' >> dynamic_events
+ #  echo 'f vfs_write $$args' >> dynamic_events
+ #  echo 't sched_overutilized_tp $$args' >> dynamic_events
+ # cat dynamic_events
+p:kprobes/p_vfs_read_0 vfs_read file=file buf=buf count=count pos=pos
+f:fprobes/vfs_write__entry vfs_write file=file buf=buf count=count pos=pos
+t:tracepoints/sched_overutilized_tp sched_overutilized_tp rd=rd overutilized=overutilized
 
 Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 ---
- kernel/trace/trace_eprobe.c |   44 +-----------
- kernel/trace/trace_fprobe.c |    4 +
- kernel/trace/trace_kprobe.c |    4 +
- kernel/trace/trace_probe.c  |  156 ++++++++++++++++++++++++++-----------------
- kernel/trace/trace_probe.h  |    9 ++
- kernel/trace/trace_uprobe.c |    8 +-
- 6 files changed, 117 insertions(+), 108 deletions(-)
+ Changes in v6:
+  - update patch description.
+---
+ kernel/trace/trace_fprobe.c |   21 ++++++++--
+ kernel/trace/trace_kprobe.c |   23 +++++++++--
+ kernel/trace/trace_probe.c  |   93 +++++++++++++++++++++++++++++++++++++++++++
+ kernel/trace/trace_probe.h  |    9 ++++
+ 4 files changed, 138 insertions(+), 8 deletions(-)
 
-diff --git a/kernel/trace/trace_eprobe.c b/kernel/trace/trace_eprobe.c
-index fd64cd5d5745..cb0077ba2b49 100644
---- a/kernel/trace/trace_eprobe.c
-+++ b/kernel/trace/trace_eprobe.c
-@@ -227,37 +227,6 @@ static struct trace_eprobe *alloc_event_probe(const char *group,
- 	return ERR_PTR(ret);
- }
- 
--static int trace_eprobe_tp_arg_update(struct trace_eprobe *ep, int i)
--{
--	struct probe_arg *parg = &ep->tp.args[i];
--	struct ftrace_event_field *field;
--	struct list_head *head;
--	int ret = -ENOENT;
--
--	head = trace_get_fields(ep->event);
--	list_for_each_entry(field, head, link) {
--		if (!strcmp(parg->code->data, field->name)) {
--			kfree(parg->code->data);
--			parg->code->data = field;
--			return 0;
--		}
--	}
--
--	/*
--	 * Argument not found on event. But allow for comm and COMM
--	 * to be used to get the current->comm.
--	 */
--	if (strcmp(parg->code->data, "COMM") == 0 ||
--	    strcmp(parg->code->data, "comm") == 0) {
--		parg->code->op = FETCH_OP_COMM;
--		ret = 0;
--	}
--
--	kfree(parg->code->data);
--	parg->code->data = NULL;
--	return ret;
--}
--
- static int eprobe_event_define_fields(struct trace_event_call *event_call)
- {
- 	struct eprobe_trace_entry_head field;
-@@ -817,19 +786,16 @@ find_and_get_event(const char *system, const char *event_name)
- 
- static int trace_eprobe_tp_update_arg(struct trace_eprobe *ep, const char *argv[], int i)
- {
--	unsigned int flags = TPARG_FL_KERNEL | TPARG_FL_TEVENT;
-+	struct traceprobe_parse_context ctx = {
-+		.event = ep->event,
-+		.flags = TPARG_FL_KERNEL | TPARG_FL_TEVENT,
-+	};
- 	int ret;
- 
--	ret = traceprobe_parse_probe_arg(&ep->tp, i, argv[i], flags);
-+	ret = traceprobe_parse_probe_arg(&ep->tp, i, argv[i], &ctx);
- 	if (ret)
- 		return ret;
- 
--	if (ep->tp.args[i].code->op == FETCH_OP_TP_ARG) {
--		ret = trace_eprobe_tp_arg_update(ep, i);
--		if (ret)
--			trace_probe_log_err(0, BAD_ATTACH_ARG);
--	}
--
- 	/* Handle symbols "@" */
- 	if (!ret)
- 		ret = traceprobe_update_arg(&ep->tp.args[i]);
 diff --git a/kernel/trace/trace_fprobe.c b/kernel/trace/trace_fprobe.c
-index 7c8be8a3616f..1dba45dfd234 100644
+index a34081113fa8..aa3e4ac9c259 100644
 --- a/kernel/trace/trace_fprobe.c
 +++ b/kernel/trace/trace_fprobe.c
-@@ -1044,8 +1044,10 @@ static int __trace_fprobe_create(int argc, const char *argv[])
+@@ -924,14 +924,16 @@ static int __trace_fprobe_create(int argc, const char *argv[])
+ 	 *  FETCHARG:TYPE : use TYPE instead of unsigned long.
+ 	 */
+ 	struct trace_fprobe *tf = NULL;
+-	int i, len, ret = 0;
++	int i, len, new_argc = 0, ret = 0;
+ 	bool is_return = false;
+ 	char *symbol = NULL, *tmp = NULL;
+ 	const char *event = NULL, *group = FPROBE_EVENT_SYSTEM;
++	const char **new_argv = NULL;
+ 	int maxactive = 0;
+ 	char buf[MAX_EVENT_NAME_LEN];
+ 	char gbuf[MAX_EVENT_NAME_LEN];
+ 	char sbuf[KSYM_NAME_LEN];
++	char abuf[MAX_BTF_ARGS_LEN];
+ 	bool is_tracepoint = false;
+ 	struct tracepoint *tpoint = NULL;
+ 	struct traceprobe_parse_context ctx = {
+@@ -1037,9 +1039,22 @@ static int __trace_fprobe_create(int argc, const char *argv[])
+ 	} else
+ 		ctx.funcname = symbol;
  
++	argc -= 2; argv += 2;
++	new_argv = traceprobe_expand_meta_args(argc, argv, &new_argc,
++					       abuf, MAX_BTF_ARGS_LEN, &ctx);
++	if (IS_ERR(new_argv)) {
++		ret = PTR_ERR(new_argv);
++		new_argv = NULL;
++		goto out;
++	}
++	if (new_argv) {
++		argc = new_argc;
++		argv = new_argv;
++	}
++
+ 	/* setup a probe */
+ 	tf = alloc_trace_fprobe(group, event, symbol, tpoint, maxactive,
+-				argc - 2, is_return);
++				argc, is_return);
+ 	if (IS_ERR(tf)) {
+ 		ret = PTR_ERR(tf);
+ 		/* This must return -ENOMEM, else there is a bug */
+@@ -1051,7 +1066,6 @@ static int __trace_fprobe_create(int argc, const char *argv[])
+ 		tf->mod = __module_text_address(
+ 				(unsigned long)tf->tpoint->probestub);
+ 
+-	argc -= 2; argv += 2;
  	/* parse arguments */
  	for (i = 0; i < argc && i < MAX_TRACE_ARGS; i++) {
-+		struct traceprobe_parse_context ctx = { .flags = flags };
-+
  		trace_probe_log_set_index(i + 2);
--		ret = traceprobe_parse_probe_arg(&tf->tp, i, argv[i], flags);
-+		ret = traceprobe_parse_probe_arg(&tf->tp, i, argv[i], &ctx);
- 		if (ret)
- 			goto error;	/* This can be -ENOMEM */
- 	}
+@@ -1080,6 +1094,7 @@ static int __trace_fprobe_create(int argc, const char *argv[])
+ 
+ out:
+ 	trace_probe_log_clear();
++	kfree(new_argv);
+ 	kfree(symbol);
+ 	return ret;
+ 
 diff --git a/kernel/trace/trace_kprobe.c b/kernel/trace/trace_kprobe.c
-index 38e34ed89d55..fd62de2a2f51 100644
+index aff6c1a5e161..2d7c0188c2b1 100644
 --- a/kernel/trace/trace_kprobe.c
 +++ b/kernel/trace/trace_kprobe.c
-@@ -867,8 +867,10 @@ static int __trace_kprobe_create(int argc, const char *argv[])
+@@ -732,9 +732,10 @@ static int __trace_kprobe_create(int argc, const char *argv[])
+ 	 *  FETCHARG:TYPE : use TYPE instead of unsigned long.
+ 	 */
+ 	struct trace_kprobe *tk = NULL;
+-	int i, len, ret = 0;
++	int i, len, new_argc = 0, ret = 0;
+ 	bool is_return = false;
+ 	char *symbol = NULL, *tmp = NULL;
++	const char **new_argv = NULL;
+ 	const char *event = NULL, *group = KPROBE_EVENT_SYSTEM;
+ 	enum probe_print_type ptype;
+ 	int maxactive = 0;
+@@ -742,6 +743,7 @@ static int __trace_kprobe_create(int argc, const char *argv[])
+ 	void *addr = NULL;
+ 	char buf[MAX_EVENT_NAME_LEN];
+ 	char gbuf[MAX_EVENT_NAME_LEN];
++	char abuf[MAX_BTF_ARGS_LEN];
+ 	struct traceprobe_parse_context ctx = { .flags = TPARG_FL_KERNEL };
+ 
+ 	switch (argv[0][0]) {
+@@ -854,19 +856,31 @@ static int __trace_kprobe_create(int argc, const char *argv[])
+ 		event = buf;
+ 	}
+ 
++	argc -= 2; argv += 2;
++	ctx.funcname = symbol;
++	new_argv = traceprobe_expand_meta_args(argc, argv, &new_argc,
++					       abuf, MAX_BTF_ARGS_LEN, &ctx);
++	if (IS_ERR(new_argv)) {
++		ret = PTR_ERR(new_argv);
++		new_argv = NULL;
++		goto out;
++	}
++	if (new_argv) {
++		argc = new_argc;
++		argv = new_argv;
++	}
++
+ 	/* setup a probe */
+ 	tk = alloc_trace_kprobe(group, event, addr, symbol, offset, maxactive,
+-				argc - 2, is_return);
++				argc, is_return);
+ 	if (IS_ERR(tk)) {
+ 		ret = PTR_ERR(tk);
+ 		/* This must return -ENOMEM, else there is a bug */
+ 		WARN_ON_ONCE(ret != -ENOMEM);
+ 		goto out;	/* We know tk is not allocated */
+ 	}
+-	argc -= 2; argv += 2;
  
  	/* parse arguments */
+-	ctx.funcname = symbol;
  	for (i = 0; i < argc && i < MAX_TRACE_ARGS; i++) {
-+		struct traceprobe_parse_context ctx = { .flags = flags };
-+
  		trace_probe_log_set_index(i + 2);
--		ret = traceprobe_parse_probe_arg(&tk->tp, i, argv[i], flags);
-+		ret = traceprobe_parse_probe_arg(&tk->tp, i, argv[i], &ctx);
- 		if (ret)
- 			goto error;	/* This can be -ENOMEM */
- 	}
+ 		ctx.offset = 0;
+@@ -894,6 +908,7 @@ static int __trace_kprobe_create(int argc, const char *argv[])
+ 
+ out:
+ 	trace_probe_log_clear();
++	kfree(new_argv);
+ 	kfree(symbol);
+ 	return ret;
+ 
 diff --git a/kernel/trace/trace_probe.c b/kernel/trace/trace_probe.c
-index dffbed2ddae9..84a9f0446390 100644
+index 346673e9dfd4..4c3c70862a9a 100644
 --- a/kernel/trace/trace_probe.c
 +++ b/kernel/trace/trace_probe.c
-@@ -283,27 +283,53 @@ int traceprobe_parse_event_name(const char **pevent, const char **pgroup,
- 	return 0;
+@@ -451,12 +451,18 @@ static const struct fetch_type *parse_btf_arg_type(int arg_idx,
+ 
+ 	return find_fetch_type(typestr, ctx->flags);
+ }
++
+ #else
+ static struct btf *traceprobe_get_btf(void)
+ {
+ 	return NULL;
  }
  
-+static int parse_trace_event_arg(char *arg, struct fetch_insn *code,
-+				 struct traceprobe_parse_context *ctx)
++static const struct btf_param *find_btf_func_param(const char *funcname, s32 *nr)
 +{
-+	struct ftrace_event_field *field;
-+	struct list_head *head;
-+
-+	head = trace_get_fields(ctx->event);
-+	list_for_each_entry(field, head, link) {
-+		if (!strcmp(arg, field->name)) {
-+			code->op = FETCH_OP_TP_ARG;
-+			code->data = field;
-+			return 0;
-+		}
-+	}
-+	return -ENOENT;
++	return ERR_PTR(-EOPNOTSUPP);
 +}
 +
- #define PARAM_MAX_STACK (THREAD_SIZE / sizeof(unsigned long))
- 
- static int parse_probe_vars(char *arg, const struct fetch_type *t,
--			struct fetch_insn *code, unsigned int flags, int offs)
-+			    struct fetch_insn *code,
-+			    struct traceprobe_parse_context *ctx)
+ static int parse_btf_arg(const char *varname, struct fetch_insn *code,
+ 			 struct traceprobe_parse_context *ctx)
  {
- 	unsigned long param;
- 	int ret = 0;
- 	int len;
+@@ -1080,6 +1086,93 @@ void traceprobe_free_probe_arg(struct probe_arg *arg)
+ 	kfree(arg->fmt);
+ }
  
--	if (flags & TPARG_FL_TEVENT) {
-+	if (ctx->flags & TPARG_FL_TEVENT) {
- 		if (code->data)
- 			return -EFAULT;
--		code->data = kstrdup(arg, GFP_KERNEL);
--		if (!code->data)
--			return -ENOMEM;
--		code->op = FETCH_OP_TP_ARG;
--	} else if (strcmp(arg, "retval") == 0) {
--		if (flags & TPARG_FL_RETURN) {
-+		ret = parse_trace_event_arg(arg, code, ctx);
-+		if (!ret)
-+			return 0;
-+		if (strcmp(arg, "comm") == 0 || strcmp(arg, "COMM") == 0) {
-+			code->op = FETCH_OP_COMM;
-+			return 0;
++/* Return new_argv which must be freed after use */
++const char **traceprobe_expand_meta_args(int argc, const char *argv[],
++					 int *new_argc, char *buf, int bufsize,
++					 struct traceprobe_parse_context *ctx)
++{
++	struct btf *btf = traceprobe_get_btf();
++	const struct btf_param *params = NULL;
++	int i, j, used, ret, args_idx = -1;
++	const char **new_argv = NULL;
++	int nr_skipped;
++
++	/* The first argument of tracepoint should be skipped. */
++	nr_skipped = ctx->flags & TPARG_FL_TPOINT ? 1 : 0;
++	for (i = 0; i < argc; i++)
++		if (!strcmp(argv[i], "$$args")) {
++			trace_probe_log_set_index(i + 2);
++
++			if (!tparg_is_function_entry(ctx->flags)) {
++				trace_probe_log_err(0, NOFENTRY_ARGS);
++				return ERR_PTR(-EINVAL);
++			}
++
++			if (args_idx >= 0) {
++				trace_probe_log_err(0, DOUBLE_ARGS);
++				return ERR_PTR(-EINVAL);
++			}
++
++			args_idx = i;
++			params = find_btf_func_param(ctx->funcname, &ctx->nr_params);
++			if (IS_ERR(params)) {
++				trace_probe_log_err(0, NOSUP_BTFARG);
++				return (const char **)params;
++			}
++			ctx->params = params;
 +		}
-+		/* backward compatibility */
-+		ctx->offset = 0;
-+		goto inval_var;
++
++	/* If target has no arguments, return NULL and the original argc. */
++	if (args_idx < 0 || ctx->nr_params < nr_skipped) {
++		*new_argc = argc;
++		return NULL;
 +	}
 +
-+	if (strcmp(arg, "retval") == 0) {
-+		if (ctx->flags & TPARG_FL_RETURN) {
- 			code->op = FETCH_OP_RETVAL;
- 		} else {
--			trace_probe_log_err(offs, RETVAL_ON_PROBE);
-+			trace_probe_log_err(ctx->offset, RETVAL_ON_PROBE);
- 			ret = -EINVAL;
- 		}
- 	} else if ((len = str_has_prefix(arg, "stack"))) {
-@@ -313,9 +339,9 @@ static int parse_probe_vars(char *arg, const struct fetch_type *t,
- 			ret = kstrtoul(arg + len, 10, &param);
- 			if (ret) {
- 				goto inval_var;
--			} else if ((flags & TPARG_FL_KERNEL) &&
-+			} else if ((ctx->flags & TPARG_FL_KERNEL) &&
- 				    param > PARAM_MAX_STACK) {
--				trace_probe_log_err(offs, BAD_STACK_NUM);
-+				trace_probe_log_err(ctx->offset, BAD_STACK_NUM);
- 				ret = -EINVAL;
- 			} else {
- 				code->op = FETCH_OP_STACK;
-@@ -326,13 +352,13 @@ static int parse_probe_vars(char *arg, const struct fetch_type *t,
- 	} else if (strcmp(arg, "comm") == 0 || strcmp(arg, "COMM") == 0) {
- 		code->op = FETCH_OP_COMM;
- #ifdef CONFIG_HAVE_FUNCTION_ARG_ACCESS_API
--	} else if (tparg_is_function_entry(flags) &&
-+	} else if (tparg_is_function_entry(ctx->flags) &&
- 		   (len = str_has_prefix(arg, "arg"))) {
- 		ret = kstrtoul(arg + len, 10, &param);
- 		if (ret) {
- 			goto inval_var;
- 		} else if (!param || param > PARAM_MAX_STACK) {
--			trace_probe_log_err(offs, BAD_ARG_NUM);
-+			trace_probe_log_err(ctx->offset, BAD_ARG_NUM);
- 			return -EINVAL;
- 		}
- 		code->op = FETCH_OP_ARG;
-@@ -341,7 +367,7 @@ static int parse_probe_vars(char *arg, const struct fetch_type *t,
- 		 * The tracepoint probe will probe a stub function, and the
- 		 * first parameter of the stub is a dummy and should be ignored.
- 		 */
--		if (flags & TPARG_FL_TPOINT)
-+		if (ctx->flags & TPARG_FL_TPOINT)
- 			code->param++;
- #endif
- 	} else
-@@ -350,7 +376,7 @@ static int parse_probe_vars(char *arg, const struct fetch_type *t,
- 	return ret;
- 
- inval_var:
--	trace_probe_log_err(offs, BAD_VAR);
-+	trace_probe_log_err(ctx->offset, BAD_VAR);
- 	return -EINVAL;
- }
- 
-@@ -383,7 +409,7 @@ static int __parse_imm_string(char *str, char **pbuf, int offs)
- static int
- parse_probe_arg(char *arg, const struct fetch_type *type,
- 		struct fetch_insn **pcode, struct fetch_insn *end,
--		unsigned int flags, int offs)
-+		struct traceprobe_parse_context *ctx)
- {
- 	struct fetch_insn *code = *pcode;
- 	unsigned long param;
-@@ -394,13 +420,13 @@ parse_probe_arg(char *arg, const struct fetch_type *type,
- 
- 	switch (arg[0]) {
- 	case '$':
--		ret = parse_probe_vars(arg + 1, type, code, flags, offs);
-+		ret = parse_probe_vars(arg + 1, type, code, ctx);
- 		break;
- 
- 	case '%':	/* named register */
--		if (flags & (TPARG_FL_TEVENT | TPARG_FL_FPROBE)) {
-+		if (ctx->flags & (TPARG_FL_TEVENT | TPARG_FL_FPROBE)) {
- 			/* eprobe and fprobe do not handle registers */
--			trace_probe_log_err(offs, BAD_VAR);
-+			trace_probe_log_err(ctx->offset, BAD_VAR);
- 			break;
- 		}
- 		ret = regs_query_register_offset(arg + 1);
-@@ -409,14 +435,14 @@ parse_probe_arg(char *arg, const struct fetch_type *type,
- 			code->param = (unsigned int)ret;
- 			ret = 0;
- 		} else
--			trace_probe_log_err(offs, BAD_REG_NAME);
-+			trace_probe_log_err(ctx->offset, BAD_REG_NAME);
- 		break;
- 
- 	case '@':	/* memory, file-offset or symbol */
- 		if (isdigit(arg[1])) {
- 			ret = kstrtoul(arg + 1, 0, &param);
- 			if (ret) {
--				trace_probe_log_err(offs, BAD_MEM_ADDR);
-+				trace_probe_log_err(ctx->offset, BAD_MEM_ADDR);
- 				break;
- 			}
- 			/* load address */
-@@ -424,13 +450,13 @@ parse_probe_arg(char *arg, const struct fetch_type *type,
- 			code->immediate = param;
- 		} else if (arg[1] == '+') {
- 			/* kprobes don't support file offsets */
--			if (flags & TPARG_FL_KERNEL) {
--				trace_probe_log_err(offs, FILE_ON_KPROBE);
-+			if (ctx->flags & TPARG_FL_KERNEL) {
-+				trace_probe_log_err(ctx->offset, FILE_ON_KPROBE);
- 				return -EINVAL;
- 			}
- 			ret = kstrtol(arg + 2, 0, &offset);
- 			if (ret) {
--				trace_probe_log_err(offs, BAD_FILE_OFFS);
-+				trace_probe_log_err(ctx->offset, BAD_FILE_OFFS);
- 				break;
- 			}
- 
-@@ -438,8 +464,8 @@ parse_probe_arg(char *arg, const struct fetch_type *type,
- 			code->immediate = (unsigned long)offset;  // imm64?
- 		} else {
- 			/* uprobes don't support symbols */
--			if (!(flags & TPARG_FL_KERNEL)) {
--				trace_probe_log_err(offs, SYM_ON_UPROBE);
-+			if (!(ctx->flags & TPARG_FL_KERNEL)) {
-+				trace_probe_log_err(ctx->offset, SYM_ON_UPROBE);
- 				return -EINVAL;
- 			}
- 			/* Preserve symbol for updating */
-@@ -448,7 +474,7 @@ parse_probe_arg(char *arg, const struct fetch_type *type,
- 			if (!code->data)
- 				return -ENOMEM;
- 			if (++code == end) {
--				trace_probe_log_err(offs, TOO_MANY_OPS);
-+				trace_probe_log_err(ctx->offset, TOO_MANY_OPS);
- 				return -EINVAL;
- 			}
- 			code->op = FETCH_OP_IMM;
-@@ -456,7 +482,7 @@ parse_probe_arg(char *arg, const struct fetch_type *type,
- 		}
- 		/* These are fetching from memory */
- 		if (++code == end) {
--			trace_probe_log_err(offs, TOO_MANY_OPS);
-+			trace_probe_log_err(ctx->offset, TOO_MANY_OPS);
- 			return -EINVAL;
- 		}
- 		*pcode = code;
-@@ -475,36 +501,38 @@ parse_probe_arg(char *arg, const struct fetch_type *type,
- 			arg++;	/* Skip '+', because kstrtol() rejects it. */
- 		tmp = strchr(arg, '(');
- 		if (!tmp) {
--			trace_probe_log_err(offs, DEREF_NEED_BRACE);
-+			trace_probe_log_err(ctx->offset, DEREF_NEED_BRACE);
- 			return -EINVAL;
- 		}
- 		*tmp = '\0';
- 		ret = kstrtol(arg, 0, &offset);
- 		if (ret) {
--			trace_probe_log_err(offs, BAD_DEREF_OFFS);
-+			trace_probe_log_err(ctx->offset, BAD_DEREF_OFFS);
- 			break;
- 		}
--		offs += (tmp + 1 - arg) + (arg[0] != '-' ? 1 : 0);
-+		ctx->offset += (tmp + 1 - arg) + (arg[0] != '-' ? 1 : 0);
- 		arg = tmp + 1;
- 		tmp = strrchr(arg, ')');
- 		if (!tmp) {
--			trace_probe_log_err(offs + strlen(arg),
-+			trace_probe_log_err(ctx->offset + strlen(arg),
- 					    DEREF_OPEN_BRACE);
- 			return -EINVAL;
- 		} else {
--			const struct fetch_type *t2 = find_fetch_type(NULL, flags);
-+			const struct fetch_type *t2 = find_fetch_type(NULL, ctx->flags);
-+			int cur_offs = ctx->offset;
- 
- 			*tmp = '\0';
--			ret = parse_probe_arg(arg, t2, &code, end, flags, offs);
-+			ret = parse_probe_arg(arg, t2, &code, end, ctx);
- 			if (ret)
- 				break;
-+			ctx->offset = cur_offs;
- 			if (code->op == FETCH_OP_COMM ||
- 			    code->op == FETCH_OP_DATA) {
--				trace_probe_log_err(offs, COMM_CANT_DEREF);
-+				trace_probe_log_err(ctx->offset, COMM_CANT_DEREF);
- 				return -EINVAL;
- 			}
- 			if (++code == end) {
--				trace_probe_log_err(offs, TOO_MANY_OPS);
-+				trace_probe_log_err(ctx->offset, TOO_MANY_OPS);
- 				return -EINVAL;
- 			}
- 			*pcode = code;
-@@ -515,7 +543,7 @@ parse_probe_arg(char *arg, const struct fetch_type *type,
- 		break;
- 	case '\\':	/* Immediate value */
- 		if (arg[1] == '"') {	/* Immediate string */
--			ret = __parse_imm_string(arg + 2, &tmp, offs + 2);
-+			ret = __parse_imm_string(arg + 2, &tmp, ctx->offset + 2);
- 			if (ret)
- 				break;
- 			code->op = FETCH_OP_DATA;
-@@ -523,7 +551,7 @@ parse_probe_arg(char *arg, const struct fetch_type *type,
- 		} else {
- 			ret = str_to_immediate(arg + 1, &code->immediate);
- 			if (ret)
--				trace_probe_log_err(offs + 1, BAD_IMM);
-+				trace_probe_log_err(ctx->offset + 1, BAD_IMM);
- 			else
- 				code->op = FETCH_OP_IMM;
- 		}
-@@ -531,7 +559,7 @@ parse_probe_arg(char *arg, const struct fetch_type *type,
- 	}
- 	if (!ret && code->op == FETCH_OP_NOP) {
- 		/* Parsed, but do not find fetch method */
--		trace_probe_log_err(offs, BAD_FETCH_ARG);
-+		trace_probe_log_err(ctx->offset, BAD_FETCH_ARG);
- 		ret = -EINVAL;
- 	}
- 	return ret;
-@@ -576,12 +604,13 @@ static int __parse_bitfield_probe_arg(const char *bf,
- 
- /* String length checking wrapper */
- static int traceprobe_parse_probe_arg_body(const char *argv, ssize_t *size,
--		struct probe_arg *parg, unsigned int flags, int offset)
-+					   struct probe_arg *parg,
-+					   struct traceprobe_parse_context *ctx)
- {
- 	struct fetch_insn *code, *scode, *tmp = NULL;
- 	char *t, *t2, *t3;
--	char *arg;
- 	int ret, len;
-+	char *arg;
- 
- 	arg = kstrdup(argv, GFP_KERNEL);
- 	if (!arg)
-@@ -590,10 +619,10 @@ static int traceprobe_parse_probe_arg_body(const char *argv, ssize_t *size,
- 	ret = -EINVAL;
- 	len = strlen(arg);
- 	if (len > MAX_ARGSTR_LEN) {
--		trace_probe_log_err(offset, ARG_TOO_LONG);
-+		trace_probe_log_err(ctx->offset, ARG_TOO_LONG);
- 		goto out;
- 	} else if (len == 0) {
--		trace_probe_log_err(offset, NO_ARG_BODY);
-+		trace_probe_log_err(ctx->offset, NO_ARG_BODY);
- 		goto out;
- 	}
- 
-@@ -611,23 +640,24 @@ static int traceprobe_parse_probe_arg_body(const char *argv, ssize_t *size,
- 			*t2++ = '\0';
- 			t3 = strchr(t2, ']');
- 			if (!t3) {
--				offset += t2 + strlen(t2) - arg;
--				trace_probe_log_err(offset,
-+				int offs = t2 + strlen(t2) - arg;
++	*new_argc = argc - 1 + ctx->nr_params - nr_skipped;
 +
-+				trace_probe_log_err(ctx->offset + offs,
- 						    ARRAY_NO_CLOSE);
- 				goto out;
- 			} else if (t3[1] != '\0') {
--				trace_probe_log_err(offset + t3 + 1 - arg,
-+				trace_probe_log_err(ctx->offset + t3 + 1 - arg,
- 						    BAD_ARRAY_SUFFIX);
- 				goto out;
- 			}
- 			*t3 = '\0';
- 			if (kstrtouint(t2, 0, &parg->count) || !parg->count) {
--				trace_probe_log_err(offset + t2 - arg,
-+				trace_probe_log_err(ctx->offset + t2 - arg,
- 						    BAD_ARRAY_NUM);
- 				goto out;
- 			}
- 			if (parg->count > MAX_ARRAY_LEN) {
--				trace_probe_log_err(offset + t2 - arg,
-+				trace_probe_log_err(ctx->offset + t2 - arg,
- 						    ARRAY_TOO_BIG);
- 				goto out;
- 			}
-@@ -638,17 +668,17 @@ static int traceprobe_parse_probe_arg_body(const char *argv, ssize_t *size,
- 	 * Since $comm and immediate string can not be dereferenced,
- 	 * we can find those by strcmp. But ignore for eprobes.
- 	 */
--	if (!(flags & TPARG_FL_TEVENT) &&
-+	if (!(ctx->flags & TPARG_FL_TEVENT) &&
- 	    (strcmp(arg, "$comm") == 0 || strcmp(arg, "$COMM") == 0 ||
- 	     strncmp(arg, "\\\"", 2) == 0)) {
- 		/* The type of $comm must be "string", and not an array. */
- 		if (parg->count || (t && strcmp(t, "string")))
- 			goto out;
--		parg->type = find_fetch_type("string", flags);
-+		parg->type = find_fetch_type("string", ctx->flags);
- 	} else
--		parg->type = find_fetch_type(t, flags);
-+		parg->type = find_fetch_type(t, ctx->flags);
- 	if (!parg->type) {
--		trace_probe_log_err(offset + (t ? (t - arg) : 0), BAD_TYPE);
-+		trace_probe_log_err(ctx->offset + (t ? (t - arg) : 0), BAD_TYPE);
- 		goto out;
- 	}
- 	parg->offset = *size;
-@@ -670,7 +700,7 @@ static int traceprobe_parse_probe_arg_body(const char *argv, ssize_t *size,
- 	code[FETCH_INSN_MAX - 1].op = FETCH_OP_END;
- 
- 	ret = parse_probe_arg(arg, parg->type, &code, &code[FETCH_INSN_MAX - 1],
--			      flags, offset);
-+			      ctx);
- 	if (ret)
- 		goto fail;
- 
-@@ -681,7 +711,7 @@ static int traceprobe_parse_probe_arg_body(const char *argv, ssize_t *size,
- 			if (code->op != FETCH_OP_REG && code->op != FETCH_OP_STACK &&
- 			    code->op != FETCH_OP_RETVAL && code->op != FETCH_OP_ARG &&
- 			    code->op != FETCH_OP_DEREF && code->op != FETCH_OP_TP_ARG) {
--				trace_probe_log_err(offset + (t ? (t - arg) : 0),
-+				trace_probe_log_err(ctx->offset + (t ? (t - arg) : 0),
- 						    BAD_SYMSTRING);
- 				goto fail;
- 			}
-@@ -689,7 +719,7 @@ static int traceprobe_parse_probe_arg_body(const char *argv, ssize_t *size,
- 			if (code->op != FETCH_OP_DEREF && code->op != FETCH_OP_UDEREF &&
- 			    code->op != FETCH_OP_IMM && code->op != FETCH_OP_COMM &&
- 			    code->op != FETCH_OP_DATA && code->op != FETCH_OP_TP_ARG) {
--				trace_probe_log_err(offset + (t ? (t - arg) : 0),
-+				trace_probe_log_err(ctx->offset + (t ? (t - arg) : 0),
- 						    BAD_STRING);
- 				goto fail;
- 			}
-@@ -708,7 +738,7 @@ static int traceprobe_parse_probe_arg_body(const char *argv, ssize_t *size,
- 			 */
- 			code++;
- 			if (code->op != FETCH_OP_NOP) {
--				trace_probe_log_err(offset, TOO_MANY_OPS);
-+				trace_probe_log_err(ctx->offset, TOO_MANY_OPS);
- 				goto fail;
- 			}
- 		}
-@@ -731,7 +761,7 @@ static int traceprobe_parse_probe_arg_body(const char *argv, ssize_t *size,
- 	} else {
- 		code++;
- 		if (code->op != FETCH_OP_NOP) {
--			trace_probe_log_err(offset, TOO_MANY_OPS);
-+			trace_probe_log_err(ctx->offset, TOO_MANY_OPS);
- 			goto fail;
- 		}
- 		code->op = FETCH_OP_ST_RAW;
-@@ -742,7 +772,7 @@ static int traceprobe_parse_probe_arg_body(const char *argv, ssize_t *size,
- 	if (t != NULL) {
- 		ret = __parse_bitfield_probe_arg(t, parg->type, &code);
- 		if (ret) {
--			trace_probe_log_err(offset + t - arg, BAD_BITFIELD);
-+			trace_probe_log_err(ctx->offset + t - arg, BAD_BITFIELD);
- 			goto fail;
- 		}
- 	}
-@@ -752,13 +782,13 @@ static int traceprobe_parse_probe_arg_body(const char *argv, ssize_t *size,
- 		if (scode->op != FETCH_OP_ST_MEM &&
- 		    scode->op != FETCH_OP_ST_STRING &&
- 		    scode->op != FETCH_OP_ST_USTRING) {
--			trace_probe_log_err(offset + (t ? (t - arg) : 0),
-+			trace_probe_log_err(ctx->offset + (t ? (t - arg) : 0),
- 					    BAD_STRING);
- 			goto fail;
- 		}
- 		code++;
- 		if (code->op != FETCH_OP_NOP) {
--			trace_probe_log_err(offset, TOO_MANY_OPS);
-+			trace_probe_log_err(ctx->offset, TOO_MANY_OPS);
- 			goto fail;
- 		}
- 		code->op = FETCH_OP_LP_ARRAY;
-@@ -807,7 +837,7 @@ static int traceprobe_conflict_field_name(const char *name,
- }
- 
- int traceprobe_parse_probe_arg(struct trace_probe *tp, int i, const char *arg,
--				unsigned int flags)
-+			       struct traceprobe_parse_context *ctx)
++	new_argv = kcalloc(*new_argc, sizeof(char *), GFP_KERNEL);
++	if (!new_argv)
++		return ERR_PTR(-ENOMEM);
++
++	for (i = 0; i < args_idx; i++)
++		new_argv[i] = argv[i];
++
++	used = 0;
++	trace_probe_log_set_index(args_idx + 2);
++	for (i = 0; i < ctx->nr_params - nr_skipped; i++) {
++		const char *name;
++
++		name = btf_name_by_offset(btf, params[i + nr_skipped].name_off);
++		if (!name) {
++			trace_probe_log_err(0, NO_BTF_ENTRY);
++			ret = -ENOENT;
++			goto error;
++		}
++		ret = snprintf(buf + used, bufsize - used, "%s", name);
++		if (ret >= bufsize - used) {
++			trace_probe_log_err(0, ARGS_2LONG);
++			ret = -E2BIG;
++			goto error;
++		}
++		new_argv[args_idx + i] = buf + used;
++		used += ret + 1; /* include null byte */
++	}
++
++	/* Note: we have to skip $$args */
++	j = args_idx + ctx->nr_params - nr_skipped;
++	for (i = args_idx + 1; i < argc; i++, j++) {
++		if (WARN_ON(j >= *new_argc))
++			goto error;
++		new_argv[j] = argv[i];
++	}
++
++	return new_argv;
++
++error:
++	kfree(new_argv);
++	return ERR_PTR(ret);
++}
++
+ int traceprobe_update_arg(struct probe_arg *arg)
  {
- 	struct probe_arg *parg = &tp->args[i];
- 	const char *body;
-@@ -842,9 +872,9 @@ int traceprobe_parse_probe_arg(struct trace_probe *tp, int i, const char *arg,
- 		trace_probe_log_err(0, USED_ARG_NAME);
- 		return -EINVAL;
- 	}
-+	ctx->offset = body - arg;
- 	/* Parse fetch argument */
--	return traceprobe_parse_probe_arg_body(body, &tp->size, parg, flags,
--					       body - arg);
-+	return traceprobe_parse_probe_arg_body(body, &tp->size, parg, ctx);
- }
- 
- void traceprobe_free_probe_arg(struct probe_arg *arg)
+ 	struct fetch_insn *code = arg->code;
 diff --git a/kernel/trace/trace_probe.h b/kernel/trace/trace_probe.h
-index 6b23206068f7..2dc1e5c4c9e8 100644
+index 9ea5c7e8753f..8c5b029c5d62 100644
 --- a/kernel/trace/trace_probe.h
 +++ b/kernel/trace/trace_probe.h
-@@ -374,8 +374,15 @@ static inline bool tparg_is_function_entry(unsigned int flags)
- 	return (flags & mask) == (TPARG_FL_KERNEL | TPARG_FL_FENTRY);
- }
+@@ -33,6 +33,7 @@
+ #define MAX_ARGSTR_LEN		63
+ #define MAX_ARRAY_LEN		64
+ #define MAX_ARG_NAME_LEN	32
++#define MAX_BTF_ARGS_LEN	128
+ #define MAX_STRING_SIZE		PATH_MAX
  
-+struct traceprobe_parse_context {
-+	struct trace_event_call *event;
-+	unsigned int flags;
-+	int offset;
-+};
-+
+ /* Reserved field names */
+@@ -387,6 +388,9 @@ struct traceprobe_parse_context {
  extern int traceprobe_parse_probe_arg(struct trace_probe *tp, int i,
--				const char *argv, unsigned int flags);
-+				      const char *argv,
-+				      struct traceprobe_parse_context *ctx);
+ 				      const char *argv,
+ 				      struct traceprobe_parse_context *ctx);
++const char **traceprobe_expand_meta_args(int argc, const char *argv[],
++					 int *new_argc, char *buf, int bufsize,
++					 struct traceprobe_parse_context *ctx);
  
  extern int traceprobe_update_arg(struct probe_arg *arg);
  extern void traceprobe_free_probe_arg(struct probe_arg *arg);
-diff --git a/kernel/trace/trace_uprobe.c b/kernel/trace/trace_uprobe.c
-index 8b92e34ff0c8..fa09b33ee731 100644
---- a/kernel/trace/trace_uprobe.c
-+++ b/kernel/trace/trace_uprobe.c
-@@ -686,10 +686,12 @@ static int __trace_uprobe_create(int argc, const char **argv)
+@@ -481,7 +485,10 @@ extern int traceprobe_define_arg_fields(struct trace_event_call *event_call,
+ 	C(NO_EP_FILTER,		"No filter rule after 'if'"),		\
+ 	C(NOSUP_BTFARG,		"BTF is not available or not supported"),	\
+ 	C(NO_BTFARG,		"This variable is not found at this probe point"),\
+-	C(NO_BTF_ENTRY,		"No BTF entry for this probe point"),
++	C(NO_BTF_ENTRY,		"No BTF entry for this probe point"),	\
++	C(NOFENTRY_ARGS,	"$$args can be used only on function entry"),	\
++	C(DOUBLE_ARGS,		"$$args can be used only once in the parameter"),	\
++	C(ARGS_2LONG,		"$$args failed because the argument is too long"),
  
- 	/* parse arguments */
- 	for (i = 0; i < argc && i < MAX_TRACE_ARGS; i++) {
-+		struct traceprobe_parse_context ctx = {
-+			.flags = (is_return ? TPARG_FL_RETURN : 0) | TPARG_FL_USER,
-+		};
-+
- 		trace_probe_log_set_index(i + 2);
--		ret = traceprobe_parse_probe_arg(&tu->tp, i, argv[i],
--					(is_return ? TPARG_FL_RETURN : 0) |
--					TPARG_FL_USER);
-+		ret = traceprobe_parse_probe_arg(&tu->tp, i, argv[i], &ctx);
- 		if (ret)
- 			goto error;
- 	}
+ #undef C
+ #define C(a, b)		TP_ERR_##a
 
