@@ -2,126 +2,185 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0508BC77B61
-	for <linux-trace-kernel@archiver.kernel.org>; Thu, 27 Apr 2023 11:59:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CE6B8C77B73
+	for <linux-trace-kernel@archiver.kernel.org>; Thu, 27 Apr 2023 12:16:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S243658AbjD0L7L (ORCPT
+        id S243789AbjD0MQN (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Thu, 27 Apr 2023 07:59:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50704 "EHLO
+        Thu, 27 Apr 2023 08:16:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34872 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S243771AbjD0L7K (ORCPT
+        with ESMTP id S243761AbjD0MQN (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Thu, 27 Apr 2023 07:59:10 -0400
-Received: from mail-ed1-x534.google.com (mail-ed1-x534.google.com [IPv6:2a00:1450:4864:20::534])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BCD3E5FCB;
-        Thu, 27 Apr 2023 04:59:07 -0700 (PDT)
-Received: by mail-ed1-x534.google.com with SMTP id 4fb4d7f45d1cf-507bdc5ca2aso14786464a12.3;
-        Thu, 27 Apr 2023 04:59:07 -0700 (PDT)
+        Thu, 27 Apr 2023 08:16:13 -0400
+Received: from mail-qv1-xf34.google.com (mail-qv1-xf34.google.com [IPv6:2607:f8b0:4864:20::f34])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 91C9759FD;
+        Thu, 27 Apr 2023 05:15:55 -0700 (PDT)
+Received: by mail-qv1-xf34.google.com with SMTP id 6a1803df08f44-5ef4885bc39so37463006d6.2;
+        Thu, 27 Apr 2023 05:15:55 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1682596746; x=1685188746;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=OIM5opgixvrOYalE8rCsEBOmPPvBNCuLSu9kQtrDeAQ=;
-        b=HI8KTtnQHBV1ybyYVgTYdz26k/XYeAgozGRgAxu2OQmy502C2CDtyqPUnws7Of+FDg
-         ajXRiV3AwNW1xHiRHK/S+F5vdi7gitBQp7NioL6eLChKkzOt8JgecVzRhy/kN8DqNJdT
-         7S04h2e9oQhmGupfLgCrcUmEKLfiY4HuqgN9kyuKQGcz3OpzFDK1lQOtdH3rW1Dfr99K
-         fsjx0uv40Arcim58LyUFivc2BrIm1w6ULBRW6b9R/Thy7a5utJk8WzZWQyfM13IwILTr
-         wEDLr8rMfe5LQH+3jUI0/LscQOBVsIftK5G/DbN2Y7p8UxNrRavQEw8aOBzpEROi/M2w
-         7Cyg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1682596746; x=1685188746;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
+        d=gmail.com; s=20221208; t=1682597754; x=1685189754;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=OIM5opgixvrOYalE8rCsEBOmPPvBNCuLSu9kQtrDeAQ=;
-        b=aIvEzO2oPuvz6MNWDDgtxBSVPXm5qiUb7/lLEBaLtAw0cPgUv25wF2SiNn2ORAX5ux
-         hXPj8N0X4V56fDlH6A/DyWWOAAp79coVwqtgyU3c7oagAN6jlQQiSIWwC92WF9aOZg6w
-         e/R/Q4SvUyaw8UzQQ0xtNTbJgJUVDohNgS+Myd/NuY0sQOn3PegY7sPPATRQqB5xi+Yg
-         U0OiWchkq69CnnHVwLjb6Aj6Y6ivKNRmGo9Nceemkp8hvQ5vdXLPcuiOcby3VCyL4iKy
-         E86bSSQ8e4WX5/NWl4r55hO0k+jHsuJ31Jrkdm0XMWGjAp4FfQ3RJSH7yFxUayIe4Ali
-         3BSg==
-X-Gm-Message-State: AC+VfDwT12MNFlW5ZHzjlYAXgVVJQjFfeIW4jTEkDYEv61HGVZuMm3+9
-        fjWR7bNVIOrWKG2/7OQn794=
-X-Google-Smtp-Source: ACHHUZ4fNiKwcvlMh2GfpcNoIS7nMpK86ksuE9z6U09wmUPgwtDsZp4HVklswGAF+ABRSEM1MTFFUQ==
-X-Received: by 2002:aa7:d054:0:b0:506:b2a3:a8cd with SMTP id n20-20020aa7d054000000b00506b2a3a8cdmr1215762edo.40.1682596745539;
-        Thu, 27 Apr 2023 04:59:05 -0700 (PDT)
-Received: from krava (2001-1ae9-1c2-4c00-8b88-53b7-c55c-8535.ip6.tmcz.cz. [2001:1ae9:1c2:4c00:8b88:53b7:c55c:8535])
-        by smtp.gmail.com with ESMTPSA id o25-20020aa7d3d9000000b00509bd19b869sm6722435edr.48.2023.04.27.04.59.04
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 27 Apr 2023 04:59:05 -0700 (PDT)
-From:   Jiri Olsa <olsajiri@gmail.com>
-X-Google-Original-From: Jiri Olsa <jolsa@kernel.org>
-Date:   Thu, 27 Apr 2023 13:59:03 +0200
-To:     "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
-Cc:     linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Florent Revest <revest@chromium.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Martin KaFai Lau <martin.lau@linux.dev>, bpf@vger.kernel.org
-Subject: Re: [PATCH v7 04/11] tracing/probes: Add tracepoint support on
- fprobe_events
-Message-ID: <ZEpjh8ZfZMch2Av/@krava>
-References: <168255826500.2565678.17719875734305974633.stgit@mhiramat.roam.corp.google.com>
- <168255830406.2565678.710162679499561673.stgit@mhiramat.roam.corp.google.com>
+        bh=aGVb0EWRnfJN9McMLRCtk+0SPSO6GWCEI8WRdlgALXM=;
+        b=FF/oiEep2XYHShVm4kipE4bafyndFC0DfAXJc9l0ivmUrLkt21SEnV65kOsxWqw8Dy
+         jcsnbofKaTnOcuk0COs5VhHtWz1b0e1ij1rWfV0tyEKcf18FJhkUd0NKoVYbH3yeRwtL
+         5gtT6g0JgFlc80Jbl7cOmY8oZFjl1/Y2WQ433tMBKM4BrlQqVCbKz2JEaYjK0yJ6Zvzr
+         i4u1E1IHI2cF91ppXiqMoXHZ6Yw96AmUYfVUE8CeweBxj/DuMNTZV9Lt6cfr1GLgGGVE
+         6kBeAFaLWga3IXeDM7/w1XxdaaehEXUWO1CB5V5BcBY4mHTW/D+cDhAA8iaFXUnXhPp/
+         MAFQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1682597754; x=1685189754;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=aGVb0EWRnfJN9McMLRCtk+0SPSO6GWCEI8WRdlgALXM=;
+        b=Ke4l+aFamJsuTdZChGAYUkszEtjjFOlEKCI+rb1gwWhXHgprzWa7RlGtQXsQQlYR2b
+         1Ttz/xenNL6gY5w6XzHZINmvbhrJG7OO7qn3+RdBXTI6ZIJhK553BMCFc1jGWbAOVO+l
+         osy//eaZb3tXD/Yebsftj/aj2UuQCYc86guDOUjWoYPpFSK2IVF2HWRgdSonlwYlYfnM
+         zxlZbG6zG60FtpIkzSANryizBHftaL/ve505kYyLQfiKKJ+Hw4xg3i2IxBci/8UwnV+a
+         eFptCUd9N+hUDul45Odl9GnuTYllbB2YTpqu2Ihd2RaT6RLHbJ4I4RkfOr1hF1VLNzzd
+         mVyg==
+X-Gm-Message-State: AC+VfDwcPYel5i19TJ7dlNBhtkrPcno96l27IKigAeBHKJbKZwlIlNPG
+        910+nhNzJIJhwOH97BX05LEPJ2oqBe4UOkt/Fc8=
+X-Google-Smtp-Source: ACHHUZ7a21m2eQtsYoV3x5/rC5U45LhJAu9nbaQYI/P0MUx5/lQB2gpnRF92NoVovkByY/W79j0gZXsRexjLdh1xoUQ=
+X-Received: by 2002:a05:6214:1253:b0:616:7cf5:ff70 with SMTP id
+ r19-20020a056214125300b006167cf5ff70mr957371qvv.22.1682597754385; Thu, 27 Apr
+ 2023 05:15:54 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <168255830406.2565678.710162679499561673.stgit@mhiramat.roam.corp.google.com>
+References: <20230417154737.12740-1-laoar.shao@gmail.com> <20230417154737.12740-6-laoar.shao@gmail.com>
+ <20230417201457.c43xfcukjzm4u6vx@dhcp-172-26-102-232.dhcp.thefacebook.com>
+ <CALOAHbC4Bz_VX52zmv=sScBf0hzscMAC4+EwMCpnd1BcaSVJSw@mail.gmail.com>
+ <CAADnVQJw9BCK2itE5bZWdQYz7D-8KdcH96E885zUakEDAOrC+Q@mail.gmail.com>
+ <CALOAHbCtPR26it_Wdk7T_TETMTh2se6rgEbL_KC5XKtzvObjiA@mail.gmail.com>
+ <CAADnVQ+FO-+1OALTtgVkcpH3Adc6xS9qjzORyq2vwVtwY2UoxQ@mail.gmail.com>
+ <20230424174049.1c9e54dd@rorschach.local.home> <CALOAHbAx+W3-iBS6=FsPPShbEuSSZeyQWvLque+uF9Suwe3-HA@mail.gmail.com>
+In-Reply-To: <CALOAHbAx+W3-iBS6=FsPPShbEuSSZeyQWvLque+uF9Suwe3-HA@mail.gmail.com>
+From:   Yafang Shao <laoar.shao@gmail.com>
+Date:   Thu, 27 Apr 2023 20:15:18 +0800
+Message-ID: <CALOAHbAqsSq+gVg9xTYGAkrdZaFXc=PVoOYqej33dCEjWtHfFw@mail.gmail.com>
+Subject: Re: [PATCH bpf-next 5/6] bpf: Improve tracing recursion prevention mechanism
+To:     Steven Rostedt <rostedt@goodmis.org>,
+        Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Cc:     Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Andrii Nakryiko <andrii@kernel.org>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        John Fastabend <john.fastabend@gmail.com>,
+        KP Singh <kpsingh@kernel.org>,
+        Stanislav Fomichev <sdf@google.com>,
+        Hao Luo <haoluo@google.com>, Jiri Olsa <jolsa@kernel.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        bpf <bpf@vger.kernel.org>, linux-trace-kernel@vger.kernel.org,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On Thu, Apr 27, 2023 at 10:18:24AM +0900, Masami Hiramatsu (Google) wrote:
+On Thu, Apr 27, 2023 at 5:57=E2=80=AFPM Yafang Shao <laoar.shao@gmail.com> =
+wrote:
+>
+> On Tue, Apr 25, 2023 at 5:40=E2=80=AFAM Steven Rostedt <rostedt@goodmis.o=
+rg> wrote:
+> >
+> > On Wed, 19 Apr 2023 15:46:34 -0700
+> > Alexei Starovoitov <alexei.starovoitov@gmail.com> wrote:
+> >
+> > > No. Just one prog at entry into any of the kernel functions
+> > > and another prog at entry of funcs that 1st bpf prog called indirectl=
+y.
+> > > Like one prog is tracing networking events while another
+> > > is focusing on mm. They should not conflict.
+> >
+> > You mean that you have:
+> >
+> > function start:
+> >   __bpf_prog_enter_recur()
+> >     bpf_program1()
+> >       __bpf_prog_enter_recur()
+> >         bpf_program2();
+> >       __bpf_prog_exit_recur()
+> >   __bpf_prog_exit_recur()
+> >
+> >   rest of function
+> >
+> > That is, a bpf program can be called within another bpf pogram between
+> > the prog_enter and prog_exit(), that is in the same context (normal,
+> > softirq, irq, etc)?
+> >
+>
+> Right, that can happen per my verification. Below is a simple bpf
+> program to verify it.
+>
+> struct {
+>     __uint(type, BPF_MAP_TYPE_LPM_TRIE);
+>     __type(key, __u64);
+>     __type(value, __u64);
+>     __uint(max_entries, 1024);
+>     __uint(map_flags, BPF_F_NO_PREALLOC);
+> } write_map SEC(".maps");
+>
+> __u64 key;
+>
+> SEC("fentry/kernel_clone")
+> int program1()
+> {
+>     __u64 value =3D 1;
+>
+>     bpf_printk("before update");
+>     // It will call trie_update_elem and thus trigger program2.
+>     bpf_map_update_elem(&write_map, &key, &value, BPF_ANY);
+>     __sync_fetch_and_add(&key, 1);
+>     bpf_printk("after update");
+>     return 0;
+> }
+>
+> SEC("fentry/trie_update_elem")
+> int program2()
+> {
+>     bpf_printk("trie_update_elem");
+>     return 0;
+> }
+>
+> The result as follows,
+>
+>          kubelet-203203  [018] ....1  9579.862862:
+> __bpf_prog_enter_recur: __bpf_prog_enter_recur
+>          kubelet-203203  [018] ...11  9579.862869: bpf_trace_printk:
+> before update
+>          kubelet-203203  [018] ....2  9579.862869:
+> __bpf_prog_enter_recur: __bpf_prog_enter_recur
+>          kubelet-203203  [018] ...12  9579.862870: bpf_trace_printk:
+> trie_update_elem
+>          kubelet-203203  [018] ....2  9579.862870:
+> __bpf_prog_exit_recur: __bpf_prog_exit_recur
+>          kubelet-203203  [018] ...11  9579.862870: bpf_trace_printk:
+> after update
+>          kubelet-203203  [018] ....1  9579.862871:
+> __bpf_prog_exit_recur: __bpf_prog_exit_recur
+>
+> Note that we can't trace __bpf_prog_enter_recur and
+> __bpf_prog_exit_recur, so we have to modify the kernel to print them.
+>
 
-SNIP
+... However, surprisingly it still works even after this patchset is
+applied, because the hardirq/softirq flag is set when the program2 is
+running, see also the flags in the above trace_pipe output. Is that
+expected ?!
+I need  some time to figure it out, but maybe you have a quick answer...
 
->  	ret = traceprobe_parse_probe_arg(&ep->tp, i, argv[i], flags);
-> diff --git a/kernel/trace/trace_fprobe.c b/kernel/trace/trace_fprobe.c
-> index 0049d9ef2402..7c8be8a3616f 100644
-> --- a/kernel/trace/trace_fprobe.c
-> +++ b/kernel/trace/trace_fprobe.c
-> @@ -9,6 +9,7 @@
->  #include <linux/module.h>
->  #include <linux/rculist.h>
->  #include <linux/security.h>
-> +#include <linux/tracepoint.h>
->  #include <linux/uaccess.h>
->  
->  #include "trace_dynevent.h"
-> @@ -17,6 +18,7 @@
->  #include "trace_probe_tmpl.h"
->  
->  #define FPROBE_EVENT_SYSTEM "fprobes"
-> +#define TRACEPOINT_EVENT_SYSTEM "tracepoints"
+> > The protection is on the trampoline where the bpf program is called.
+> > Not sure how ftrace can stop BPF or BPF stop ftrace, unless bpf is
+> > tracing a ftrace callback, or ftrace is tracing a bpf function.
+> >
+> > -- Steve
+>
 
-so the created tracepoints go under 'events/tracepoints' directory,
-should the name be more fprobe specific? like under 'events/fprobe/tracepoints' ?
 
-jirka
-
->  #define RETHOOK_MAXACTIVE_MAX 4096
->  
->  static int trace_fprobe_create(const char *raw_command);
-> @@ -41,6 +43,8 @@ struct trace_fprobe {
->  	struct dyn_event	devent;
->  	struct fprobe		fp;
->  	const char		*symbol;
-> +	struct tracepoint	*tpoint;
-> +	struct module		*mod;
->  	struct trace_probe	tp;
->  };
->  
-> @@ -68,6 +72,11 @@ static bool trace_fprobe_is_return(struct trace_fprobe *tf)
->  	return tf->fp.exit_handler != NULL;
->  }
->  
-> +static bool trace_fprobe_is_tracepoint(struct trace_fprobe *tf)
-> +{
-> +	return tf->tpoint != NULL;
-> +}
-> +
-
-SNIP
+--=20
+Regards
+Yafang
