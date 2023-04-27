@@ -2,108 +2,190 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C2ADEC7EE23
-	for <linux-trace-kernel@archiver.kernel.org>; Wed, 26 Apr 2023 18:27:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AB73AC7618E
+	for <linux-trace-kernel@archiver.kernel.org>; Thu, 27 Apr 2023 01:18:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233605AbjDZS1M (ORCPT
+        id S242833AbjD0BR7 (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Wed, 26 Apr 2023 14:27:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49742 "EHLO
+        Wed, 26 Apr 2023 21:17:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42160 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231858AbjDZS1K (ORCPT
+        with ESMTP id S242812AbjD0BRy (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Wed, 26 Apr 2023 14:27:10 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 047EC83D7;
-        Wed, 26 Apr 2023 11:27:09 -0700 (PDT)
+        Wed, 26 Apr 2023 21:17:54 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4E58240C0;
+        Wed, 26 Apr 2023 18:17:50 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 89B5B623FF;
-        Wed, 26 Apr 2023 18:27:08 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5F236C433D2;
-        Wed, 26 Apr 2023 18:27:02 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id D0F1E639B2;
+        Thu, 27 Apr 2023 01:17:49 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4426AC433D2;
+        Thu, 27 Apr 2023 01:17:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1682533628;
-        bh=XjpZgSLFOOvX267eN8h6dAOz4CT6SQS7yqNv+natzUs=;
-        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=kHH4KU3uGCjXSR151XiaTSdiKDEg2oUdTUTGnnr2dOw5QjifPjh/LalHKLWuAyZap
-         PfQobUkacMwEehfBB1oeJRg+WAwLLRPB+fKdXLbSPcW14u221agQL3hPt0sHLiziYt
-         DPuAxA2s9FR/GEDamD33A+I8AgV1LhaPAfMeMYCUjT/rl1+pd+DDifCZ2EczDl/Gld
-         gTIl/7223EjFxNKburaOfqEA/LZsKeNEru6wP8Hf3nqpInatXdnUgaP1cl4IdVPK5P
-         N+7QUNH5GQSEYz5BT8e+SKMamhh2AbLgzEZqZEIpkJwEeuGUkCCeaPMdUckXCv0yHo
-         8aqkiz9Ul6ZBA==
-Message-ID: <c5bfefc4653226e24195f5c87499c3292ecc15f5.camel@kernel.org>
-Subject: Re: [RFC][PATCH 3/6] verification: Introduce verify_umd_signature()
- and verify_umd_message_sig()
-From:   Jarkko Sakkinen <jarkko@kernel.org>
-To:     Roberto Sassu <roberto.sassu@huaweicloud.com>, dhowells@redhat.com,
-        dwmw2@infradead.org, herbert@gondor.apana.org.au,
-        davem@davemloft.net, ast@kernel.org, daniel@iogearbox.net,
-        andrii@kernel.org, martin.lau@linux.dev, song@kernel.org,
-        yhs@fb.com, john.fastabend@gmail.com, kpsingh@kernel.org,
-        sdf@google.com, haoluo@google.com, jolsa@kernel.org,
-        rostedt@goodmis.org, mhiramat@kernel.org, mykolal@fb.com,
-        shuah@kernel.org
-Cc:     linux-kernel@vger.kernel.org, keyrings@vger.kernel.org,
-        linux-crypto@vger.kernel.org, bpf@vger.kernel.org,
-        linux-trace-kernel@vger.kernel.org,
-        linux-kselftest@vger.kernel.org,
-        Roberto Sassu <roberto.sassu@huawei.com>
-Date:   Wed, 26 Apr 2023 21:27:00 +0300
-In-Reply-To: <3a1cb6691bd913cadccbfaccf5ff642460eeac83.camel@kernel.org>
-References: <20230425173557.724688-1-roberto.sassu@huaweicloud.com>
-         <20230425173557.724688-4-roberto.sassu@huaweicloud.com>
-         <CS69GBAMXJ1X.1T8NO0CZUBXLG@suppilovahvero>
-         <40fbededd8dbe3b70fffb179574f344e9b0aed17.camel@huaweicloud.com>
-         <3a1cb6691bd913cadccbfaccf5ff642460eeac83.camel@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.48.0-1 
+        s=k20201202; t=1682558269;
+        bh=FABAoRqVbw20oe41N800uwj2LNMxav062B7Ytby3tmQ=;
+        h=From:To:Cc:Subject:Date:From;
+        b=fOOXe3BcwkMsZsyd2v6lLGEe4cQKO0vVAe2ljiAzWHGvJEbY6lF5JIDKaAV16EEJ5
+         j5ClYBYoIhzYOhjzuIZ5tgixJCVrAIF7ErmKXBONsQEJAhggQ4DTexjZOLpOGfTh8a
+         H7tErRFgLefKciWEZ/wvKvYakjL6zKvv25napbONsSSVSaUyI1cQRfluIHwaZ4dzqN
+         AEeYu1O6xxmWralx6KdjthvTcckSYfGiNa7osCw9O2zSgrCcS31yaoPXmWVc4tnhTW
+         T0DCK9Izu5ChUommducF7HhGn1pSnmu5sqWZLGxyCTcC4R87vduNLq5DQ8+4hSqsKL
+         U90iLalCNlaIw==
+From:   "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
+To:     linux-trace-kernel@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>,
+        mhiramat@kernel.org, Florent Revest <revest@chromium.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Martin KaFai Lau <martin.lau@linux.dev>, bpf@vger.kernel.org
+Subject: [PATCH v7 00/11] tracing: Add fprobe events
+Date:   Thu, 27 Apr 2023 10:17:45 +0900
+Message-ID:  <168255826500.2565678.17719875734305974633.stgit@mhiramat.roam.corp.google.com>
+X-Mailer: git-send-email 2.40.1.495.gc816e09b53d-goog
+User-Agent: StGit/0.19
 MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On Wed, 2023-04-26 at 21:25 +0300, Jarkko Sakkinen wrote:
-> On Wed, 2023-04-26 at 13:42 +0200, Roberto Sassu wrote:
-> > On Wed, 2023-04-26 at 03:28 +0300, Jarkko Sakkinen wrote:
-> > > On Tue Apr 25, 2023 at 8:35 PM EEST, Roberto Sassu wrote:
-> > > > From: Roberto Sassu <roberto.sassu@huawei.com>
-> > > >=20
-> > > > Introduce verify_umd_signature() and verify_umd_message_sig(), to v=
-erify
-> > > > UMD-parsed signatures from detached data. It aims to be used by ker=
-nel
-> > > > subsystems wishing to verify the authenticity of system data, with
-> > > > system-defined keyrings as trust anchor.
-> > >=20
-> > > UMD is not generic knowledge. It is a term coined up in this patch se=
-t
-> > > so please open code it to each patch.
-> >=20
-> > Yes, Linus also commented on this:
-> >=20
-> > https://lwn.net/ml/linux-kernel/CAHk-=3DwihqhksXHkcjuTrYmC-vajeRcNh3s6e=
-eoJNxS7wp77dFQ@mail.gmail.com/
-> >=20
-> > I will check if the full name is mentioned at least once. So far, it
-> > seems that using umd for function names should be ok.
->=20
-> Also: "UMD-based parser for the asymmetric key type"
->=20
-> It is a tautology:
->=20
-> UMD is based on parser which based on UMD.
->=20
-> I.e. makes no sense.
->=20
-> Everyone hates three letter acronyms so I would consider not
-> inventing a new one out of the void.
->=20
-> So the corrective step would be to rename Kconfig flags as
-> USER_ASYMMETRIC_KEY_PARSER and USER_ASYMMETRIC_SIGNATURE_PARSER.
+Hi,
 
-(or along the lines)
+Here is the 7th version of improve fprobe and add a basic fprobe event
+support for ftrace (tracefs) and perf. Here is the previous version.
 
-BR, Jarkko
+https://lore.kernel.org/all/168234755610.2210510.12133559313738141202.stgit@mhiramat.roam.corp.google.com/
+
+This version is rebased on the latest linux-trace/for-next, fixes
+bpf_get_btf_vmlinux() return value check [6/11] and adds new BTF $retval
+type support [9/11] (I forgot to implement this feature last time).
+Also updates according to the BTF $retval type support.
+
+You can also get this series from:
+
+git://git.kernel.org/pub/scm/linux/kernel/git/mhiramat/linux.git topic/fprobe-event-ext
+
+With this fprobe events, we can continue to trace function entry/exit
+even if the CONFIG_KPROBES_ON_FTRACE is not available. Since
+CONFIG_KPROBES_ON_FTRACE requires the CONFIG_DYNAMIC_FTRACE_WITH_REGS,
+it is not available if the architecture only supports
+CONFIG_DYNAMIC_FTRACE_WITH_ARGS (e.g. arm64). And that means kprobe
+events can not probe function entry/exit effectively on such architecture.
+But this problem can be solved if the dynamic events supports fprobe events
+because fprobe events doesn't use kprobe but ftrace via fprobe.
+
+FPROBE EVENTS
+=============
+
+Fprobe events allows user to add new events on the entry and exit of kernel
+functions (which can be ftraced). Unlike kprobe events, the fprobe events
+can only probe the function entry and exit, and it can only trace the
+function args, return value, and stacks. (no registers)
+For probing function body, users can continue to use the kprobe events.
+
+The tracepoint probe events (tprobe events) also allows user to add new
+events dynamically on the tracepoint. Most of the tracepoint already has
+trace-events, so this feature is useful if you only want to know a
+specific parameter, or trace the tracepoints which has no trace-events
+(e.g. sched_*_tp tracepoints only exposes the tracepoints.)
+
+The fprobe events syntax is;
+
+ f[:[GRP/][EVENT]] FUNCTION [FETCHARGS]
+ f[MAXACTIVE][:[GRP/][EVENT]] FUNCTION%return [FETCHARGS]
+
+And tracepoint probe events syntax is;
+
+ t[:[GRP/][EVENT]] TRACEPOINT [FETCHARGS]
+
+This series includes BTF argument support for fprobe/tracepoint events,
+and kprobe events. This allows us to fetch a specific function parameter
+by name, and all parameters by '$$args'.
+Note that enabling this feature, you need to enable CONFIG_BPF_SYSCALL and
+confirm that your arch supports CONFIG_HAVE_FUNCTION_ARG_ACCESS_API.
+
+E.g.
+
+ # echo 't kfree ptr' >> dynamic_events
+ # echo 'f kfree object' >> dynamic_events
+ # cat dynamic_events 
+t:tracepoints/kfree kfree ptr=ptr
+f:fprobes/kfree__entry kfree object=object
+ # echo 1 > events/fprobes/enable
+ # echo 1 > events/tracepoints/enable
+ # echo > trace
+ # head -n 20 trace | tail
+#           TASK-PID     CPU#  |||||  TIMESTAMP  FUNCTION
+#              | |         |   |||||     |         |
+            tail-84      [000] .....  1324.561958: kfree__entry: (kfree+0x4/0x140) object=0xffff888006383c00
+            tail-84      [000] ...1.  1324.561961: kfree: (__probestub_kfree+0x4/0x10) ptr=0xffff888006383c00
+            tail-84      [000] .....  1324.561988: kfree__entry: (kfree+0x4/0x140) object=0x0
+            tail-84      [000] ...1.  1324.561988: kfree: (__probestub_kfree+0x4/0x10) ptr=0x0
+            tail-84      [000] .....  1324.561989: kfree__entry: (kfree+0x4/0x140) object=0xffff88800671e600
+            tail-84      [000] ...1.  1324.561989: kfree: (__probestub_kfree+0x4/0x10) ptr=0xffff88800671e600
+            tail-84      [000] .....  1324.562368: kfree__entry: (kfree+0x4/0x140) object=0xffff8880065e0580
+            tail-84      [000] ...1.  1324.562369: kfree: (__probestub_kfree+0x4/0x10) ptr=0xffff8880065e0580
+
+
+Thank you,
+
+---
+
+Masami Hiramatsu (Google) (11):
+      fprobe: Pass return address to the handlers
+      tracing/probes: Add fprobe events for tracing function entry and exit.
+      selftests/ftrace: Add fprobe related testcases
+      tracing/probes: Add tracepoint support on fprobe_events
+      tracing/probes: Move event parameter fetching code to common parser
+      tracing/probes: Support function parameters if BTF is available
+      tracing/probes: Add $$args meta argument for all function args
+      tracing/probes: Add BTF retval type support
+      selftests/ftrace: Add tracepoint probe test case
+      selftests/ftrace: Add BTF arguments test cases
+      Documentation: tracing/probes: Add fprobe event tracing document
+
+
+ Documentation/trace/fprobetrace.rst                |  187 +++
+ Documentation/trace/index.rst                      |    1 
+ include/linux/fprobe.h                             |   11 
+ include/linux/rethook.h                            |    2 
+ include/linux/trace_events.h                       |    3 
+ include/linux/tracepoint-defs.h                    |    1 
+ include/linux/tracepoint.h                         |    5 
+ kernel/kprobes.c                                   |    1 
+ kernel/trace/Kconfig                               |   25 
+ kernel/trace/Makefile                              |    1 
+ kernel/trace/bpf_trace.c                           |    6 
+ kernel/trace/fprobe.c                              |   17 
+ kernel/trace/rethook.c                             |    3 
+ kernel/trace/trace.c                               |   13 
+ kernel/trace/trace.h                               |   11 
+ kernel/trace/trace_eprobe.c                        |   44 -
+ kernel/trace/trace_fprobe.c                        | 1194 ++++++++++++++++++++
+ kernel/trace/trace_kprobe.c                        |   33 -
+ kernel/trace/trace_probe.c                         |  504 +++++++-
+ kernel/trace/trace_probe.h                         |   43 +
+ kernel/trace/trace_uprobe.c                        |    8 
+ lib/test_fprobe.c                                  |   10 
+ samples/fprobe/fprobe_example.c                    |    6 
+ .../ftrace/test.d/dynevent/add_remove_btfarg.tc    |   54 +
+ .../ftrace/test.d/dynevent/add_remove_fprobe.tc    |   26 
+ .../ftrace/test.d/dynevent/add_remove_tprobe.tc    |   27 
+ .../ftrace/test.d/dynevent/fprobe_syntax_errors.tc |   99 ++
+ .../ftrace/test.d/dynevent/tprobe_syntax_errors.tc |   82 +
+ .../ftrace/test.d/kprobe/kprobe_syntax_errors.tc   |   13 
+ 29 files changed, 2290 insertions(+), 140 deletions(-)
+ create mode 100644 Documentation/trace/fprobetrace.rst
+ create mode 100644 kernel/trace/trace_fprobe.c
+ create mode 100644 tools/testing/selftests/ftrace/test.d/dynevent/add_remove_btfarg.tc
+ create mode 100644 tools/testing/selftests/ftrace/test.d/dynevent/add_remove_fprobe.tc
+ create mode 100644 tools/testing/selftests/ftrace/test.d/dynevent/add_remove_tprobe.tc
+ create mode 100644 tools/testing/selftests/ftrace/test.d/dynevent/fprobe_syntax_errors.tc
+ create mode 100644 tools/testing/selftests/ftrace/test.d/dynevent/tprobe_syntax_errors.tc
+
+--
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
