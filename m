@@ -2,277 +2,114 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DF04FC77B60
-	for <linux-trace-kernel@archiver.kernel.org>; Thu, 27 Apr 2023 01:20:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4DA19C77B60
+	for <linux-trace-kernel@archiver.kernel.org>; Thu, 27 Apr 2023 02:13:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S242978AbjD0BUp (ORCPT
+        id S242797AbjD0CNm (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Wed, 26 Apr 2023 21:20:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43778 "EHLO
+        Wed, 26 Apr 2023 22:13:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57056 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S242808AbjD0BU1 (ORCPT
+        with ESMTP id S242707AbjD0CNl (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Wed, 26 Apr 2023 21:20:27 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3325C4687;
-        Wed, 26 Apr 2023 18:20:00 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 39F98639AE;
-        Thu, 27 Apr 2023 01:19:34 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id ACB26C433D2;
-        Thu, 27 Apr 2023 01:19:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1682558373;
-        bh=/ZshWXbkJAwJ3w5jxnFmXGG6dcyY5NQhIKW41FzqCqY=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=MAY5jjthvld/zX3zQEz6114kMqSMjwm8XFWn5BRnPRLpyXIpM5EIHoL1028O1EhCO
-         dXvc75peUFRkwraYnswjB9VGSjYJD+8710fdyBx19uN4Ireg4aZc+pP7e6iDhqJX4I
-         YSxzPpCr5MzMufqjkkTNgRDq8i5DvX6sPl9p3aCRSkVtos0Wsk6kK8CK8Zpclnijrj
-         hm9wjM88MA2gXsNS+V6HmqGcBbvwovmUrk/TDS9PSgFj5Opi9sG6yY+ct5wh/zxaxN
-         Jn/xMnMMg95ufV8kNbYCXSXYX8BVaJcq+i08RJObXnn7JxgmewzjbA5NwPga7NFXkf
-         8EJHz8pFgphZw==
-From:   "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
-To:     linux-trace-kernel@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>,
-        mhiramat@kernel.org, Florent Revest <revest@chromium.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Martin KaFai Lau <martin.lau@linux.dev>, bpf@vger.kernel.org
-Subject: [PATCH v7 11/11] Documentation: tracing/probes: Add fprobe event tracing document
-Date:   Thu, 27 Apr 2023 10:19:29 +0900
-Message-ID:  <168255836970.2565678.8607383327794602960.stgit@mhiramat.roam.corp.google.com>
-X-Mailer: git-send-email 2.40.1.495.gc816e09b53d-goog
-In-Reply-To:  <168255826500.2565678.17719875734305974633.stgit@mhiramat.roam.corp.google.com>
-References:  <168255826500.2565678.17719875734305974633.stgit@mhiramat.roam.corp.google.com>
-User-Agent: StGit/0.19
+        Wed, 26 Apr 2023 22:13:41 -0400
+Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id BE1114682;
+        Wed, 26 Apr 2023 19:12:39 -0700 (PDT)
+Received: from loongson.cn (unknown [113.200.148.30])
+        by gateway (Coremail) with SMTP id _____8Bxb+sW2klkyV4BAA--.2295S3;
+        Thu, 27 Apr 2023 10:12:38 +0800 (CST)
+Received: from bogon.localdomain (unknown [113.200.148.30])
+        by localhost.localdomain (Coremail) with SMTP id AQAAf8CxqrYQ2klkZ_U9AA--.18515S3;
+        Thu, 27 Apr 2023 10:12:36 +0800 (CST)
+From:   Youling Tang <tangyouling@loongson.cn>
+To:     Huacai Chen <chenhuacai@kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>
+Cc:     WANG Xuerui <kernel@xen0n.name>, linux-kernel@vger.kernel.org,
+        linux-trace-kernel@vger.kernel.org, loongarch@lists.linux.dev,
+        loongson-kernel@lists.loongnix.cn
+Subject: [PATCH v2 1/5] LoongArch: Fix build error if CONFIG_DYNAMIC_FTRACE_WITH_REGS is not set
+Date:   Thu, 27 Apr 2023 10:12:28 +0800
+Message-Id: <1682561552-32324-2-git-send-email-tangyouling@loongson.cn>
+X-Mailer: git-send-email 2.1.0
+In-Reply-To: <1682561552-32324-1-git-send-email-tangyouling@loongson.cn>
+References: <1682561552-32324-1-git-send-email-tangyouling@loongson.cn>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
+X-CM-TRANSID: AQAAf8CxqrYQ2klkZ_U9AA--.18515S3
+X-CM-SenderInfo: 5wdqw5prxox03j6o00pqjv00gofq/
+X-Coremail-Antispam: 1Uk129KBjvJXoW7tr13Gw1fWr13ur18Xw43ZFb_yoW8Aw4xpr
+        W2kw1DJ3yUKFs7KF9F9ryrWrnrWrZrG34aqa17K34FkrWqq3WUXryUZr1DWa45t3s7WrWf
+        ZFyfZrWqya17XwUanT9S1TB71UUUUj7qnTZGkaVYY2UrUUUUj1kv1TuYvTs0mT0YCTnIWj
+        qI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUIcSsGvfJTRUUU
+        bSxYFVCjjxCrM7AC8VAFwI0_Jr0_Gr1l1xkIjI8I6I8E6xAIw20EY4v20xvaj40_Wr0E3s
+        1l1IIY67AEw4v_JF0_JFyl8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xv
+        wVC0I7IYx2IY67AKxVW5JVW7JwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwA2z4
+        x0Y4vEx4A2jsIE14v26r4UJVWxJr1l84ACjcxK6I8E87Iv6xkF7I0E14v26r4UJVWxJr1l
+        n4kS14v26r126r1DM2AIxVAIcxkEcVAq07x20xvEncxIr21l57IF6xkI12xvs2x26I8E6x
+        ACxx1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1q6rW5McIj6I8E
+        87Iv67AKxVW8JVWxJwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41lc7CjxV
+        Aaw2AFwI0_JF0_Jw1l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1l4IxY
+        O2xFxVAFwI0_JF0_Jw1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGV
+        WUWwC2zVAF1VAY17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_
+        Gr0_Xr1lIxAIcVC0I7IYx2IY6xkF7I0E14v26r4j6F4UMIIF0xvE42xK8VAvwI8IcIk0rV
+        WUJVWUCwCI42IY6I8E87Iv67AKxVW8JVWxJwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4U
+        JbIYCTnIWIevJa73UjIFyTuYvjxU4eMKDUUUU
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+We can see the following build error on LoongArch if CONFIG_DYNAMIC_FTRACE_WITH_REGS
+is not set:
 
-Add a documentation about fprobe event tracing including
-tracepoint probe event and BTF argument.
+arch/loongarch/kernel/ftrace_dyn.c: In function ‘ftrace_make_call’:
+arch/loongarch/kernel/ftrace_dyn.c:167:23: error: implicit declaration of function ‘__get_mod’
+  167 |                 ret = __get_mod(&mod, pc);
+      |                       ^~~~~~~~~
+arch/loongarch/kernel/ftrace_dyn.c:171:24: error: implicit declaration of function ‘get_plt_addr’
+  171 |                 addr = get_plt_addr(mod, addr);
+      |                        ^~~~~~~~~~~~
 
-Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+The reason is that the __get_mod and get_plt_addr functions will be called
+in ftrace_make_{call,nop}.
+
+Signed-off-by: Youling Tang <tangyouling@loongson.cn>
 ---
- Changes in v7:
-  - Update about BTF auto type casting for $retval.
----
- Documentation/trace/fprobetrace.rst |  187 +++++++++++++++++++++++++++++++++++
- Documentation/trace/index.rst       |    1 
- 2 files changed, 188 insertions(+)
- create mode 100644 Documentation/trace/fprobetrace.rst
+ arch/loongarch/kernel/ftrace_dyn.c | 4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
 
-diff --git a/Documentation/trace/fprobetrace.rst b/Documentation/trace/fprobetrace.rst
-new file mode 100644
-index 000000000000..df3cf273bd43
---- /dev/null
-+++ b/Documentation/trace/fprobetrace.rst
-@@ -0,0 +1,187 @@
-+.. SPDX-License-Identifier: GPL-2.0
-+
-+==========================
-+Fprobe-based Event Tracing
-+==========================
-+
-+.. Author: Masami Hiramatsu <mhiramat@kernel.org>
-+
-+Overview
-+--------
-+
-+Fprobe event is similar to the kprobe event, but limited to probe on
-+the function entry and exit only. It is good enough for many use cases
-+which only traces some specific functions.
-+
-+This document also covers tracepoint probe events (tprobe) since this
-+is also works only on the tracepoint entry. User can trace a part of
-+tracepoint argument, or the tracepoint without trace-event, which is
-+not exposed on tracefs.
-+
-+As same as other dynamic events, fprobe events and tracepoint probe
-+events are defined via `dynamic_events` interface file on tracefs.
-+
-+Synopsis of fprobe-events
-+-------------------------
-+::
-+
-+  f[:[GRP1/][EVENT1]] SYM [FETCHARGS]                       : Probe on function entry
-+  f[MAXACTIVE][:[GRP1/][EVENT1]] SYM%return [FETCHARGS]     : Probe on function exit
-+  t[:[GRP2/][EVENT2]] TRACEPOINT [FETCHARGS]                : Probe on tracepoint
-+
-+ GRP1           : Group name for fprobe. If omitted, use "fprobes" for it.
-+ GRP2           : Group name for tprobe. If omitted, use "tracepoints" for it.
-+ EVENT1         : Event name for fprobe. If omitted, the event name is
-+                  "SYM__entry" or "SYM__exit".
-+ EVENT2         : Event name for tprobe. If omitted, the event name is
-+                  the same as "TRACEPOINT", but if the "TRACEPOINT" starts
-+                  with a digit character, "_TRACEPOINT" is used.
-+ MAXACTIVE      : Maximum number of instances of the specified function that
-+                  can be probed simultaneously, or 0 for the default value
-+                  as defined in Documentation/trace/fprobes.rst
-+
-+ FETCHARGS      : Arguments. Each probe can have up to 128 args.
-+  ARG           : Fetch "ARG" function argument using BTF (only for function
-+                  entry or tracepoint.) (\*1)
-+  @ADDR         : Fetch memory at ADDR (ADDR should be in kernel)
-+  @SYM[+|-offs] : Fetch memory at SYM +|- offs (SYM should be a data symbol)
-+  $stackN       : Fetch Nth entry of stack (N >= 0)
-+  $stack        : Fetch stack address.
-+  $argN         : Fetch the Nth function argument. (N >= 1) (\*2)
-+  $retval       : Fetch return value.(\*3)
-+  $comm         : Fetch current task comm.
-+  +|-[u]OFFS(FETCHARG) : Fetch memory at FETCHARG +|- OFFS address.(\*4)(\*5)
-+  \IMM          : Store an immediate value to the argument.
-+  NAME=FETCHARG : Set NAME as the argument name of FETCHARG.
-+  FETCHARG:TYPE : Set TYPE as the type of FETCHARG. Currently, basic types
-+                  (u8/u16/u32/u64/s8/s16/s32/s64), hexadecimal types
-+                  (x8/x16/x32/x64), "char", "string", "ustring", "symbol", "symstr"
-+                  and bitfield are supported.
-+
-+  (\*1) This is available only when BTF is enabled.
-+  (\*2) only for the probe on function entry (offs == 0).
-+  (\*3) only for return probe.
-+  (\*4) this is useful for fetching a field of data structures.
-+  (\*5) "u" means user-space dereference.
-+
-+For the details of TYPE, see :file:`Documentation/trace/kprobetrace.rst`.
-+
-+BTF arguments
-+-------------
-+BTF (BPF Type Format) argument allows user to trace function and tracepoint
-+parameters by its name instead of `$argN`. This feature is available if the
-+kernel is configured with CONFIG_BPF_SYSCALL and CONFIG_DEBUG_INFO_BTF.
-+If user only specify the BTF argument, the event's argument name is also
-+automatically set by the given name. ::
-+
-+ # echo 'f:myprobe vfs_read count pos' >> dynamic_events
-+ # cat dynamic_events
-+ f:fprobes/myprobe vfs_read count=count pos=pos
-+
-+It also chooses the fetch type from BTF information. For example, in the above
-+example, the `count` is unsigned long, and the `pos` is a pointer. Thus, both
-+are converted to 64bit unsigned long, but only `pos` has `%Lx` print-format ::
-+
-+ # cat events/fprobes/myprobe/format
-+ name: myprobe
-+ ID: 1313
-+ format:
-+ 	field:unsigned short common_type;	offset:0;	size:2;	signed:0;
-+ 	field:unsigned char common_flags;	offset:2;	size:1;	signed:0;
-+ 	field:unsigned char common_preempt_count;	offset:3;	size:1;	signed:0;
-+ 	field:int common_pid;	offset:4;	size:4;	signed:1;
-+
-+ 	field:unsigned long __probe_ip;	offset:8;	size:8;	signed:0;
-+ 	field:u64 count;	offset:16;	size:8;	signed:0;
-+ 	field:u64 pos;	offset:24;	size:8;	signed:0;
-+
-+ print fmt: "(%lx) count=%Lu pos=0x%Lx", REC->__probe_ip, REC->count, REC->pos
-+
-+If user unsures the name of arguments, `$$args` will be helpful. The `$$args`
-+is expanded to all function arguments of the function or the tracepoint. ::
-+
-+ # echo 'f:myprobe vfs_read $$args' >> dynamic_events
-+ # cat dynamic_events
-+ f:fprobes/myprobe vfs_read file=file buf=buf count=count pos=pos
-+
-+BTF also affects the $retval. If user doesn't set any type, the retval type is
-+automatically picked from the BTF. If the function returns 'void', $retval is
-+rejected.
-+
-+Usage examples
-+--------------
-+Here is an example to add fprobe events on `vfs_read()` function entry
-+and exit, with BTF arguments.
-+::
-+
-+  # echo 'f vfs_read $$args' >> dynamic_events
-+  # echo 'f vfs_read%return $retval' >> dynamic_events
-+  # cat dynamic_events
-+ f:fprobes/vfs_read__entry vfs_read file=file buf=buf count=count pos=pos
-+ f:fprobes/vfs_read__exit vfs_read%return arg1=$retval
-+  # echo 1 > events/fprobes/enable
-+  # head -n 20 trace | tail
-+ #           TASK-PID     CPU#  |||||  TIMESTAMP  FUNCTION
-+ #              | |         |   |||||     |         |
-+               sh-70      [000] ...1.   335.883195: vfs_read__entry: (vfs_read+0x4/0x340) file=0xffff888005cf9a80 buf=0x7ffef36c6879 count=1 pos=0xffffc900005aff08
-+               sh-70      [000] .....   335.883208: vfs_read__exit: (ksys_read+0x75/0x100 <- vfs_read) arg1=1
-+               sh-70      [000] ...1.   335.883220: vfs_read__entry: (vfs_read+0x4/0x340) file=0xffff888005cf9a80 buf=0x7ffef36c6879 count=1 pos=0xffffc900005aff08
-+               sh-70      [000] .....   335.883224: vfs_read__exit: (ksys_read+0x75/0x100 <- vfs_read) arg1=1
-+               sh-70      [000] ...1.   335.883232: vfs_read__entry: (vfs_read+0x4/0x340) file=0xffff888005cf9a80 buf=0x7ffef36c687a count=1 pos=0xffffc900005aff08
-+               sh-70      [000] .....   335.883237: vfs_read__exit: (ksys_read+0x75/0x100 <- vfs_read) arg1=1
-+               sh-70      [000] ...1.   336.050329: vfs_read__entry: (vfs_read+0x4/0x340) file=0xffff888005cf9a80 buf=0x7ffef36c6879 count=1 pos=0xffffc900005aff08
-+               sh-70      [000] .....   336.050343: vfs_read__exit: (ksys_read+0x75/0x100 <- vfs_read) arg1=1
-+
-+You can see all function arguments and return values are recorded as signed int.
-+
-+Also, here is tracepoint events on `sched_switch` tracepoint. To compare the
-+result, this also enables the `sched_switch` traceevent too.
-+::
-+
-+  # echo 't sched_switch $$args' >> dynamic_events
-+  # echo 1 > events/sched/sched_switch/enable
-+  # echo 1 > events/tracepoints/sched_switch/enable
-+  # echo > trace
-+  # head -n 20 trace | tail
-+ #           TASK-PID     CPU#  |||||  TIMESTAMP  FUNCTION
-+ #              | |         |   |||||     |         |
-+               sh-70      [000] d..2.  3912.083993: sched_switch: prev_comm=sh prev_pid=70 prev_prio=120 prev_state=S ==> next_comm=swapper/0 next_pid=0 next_prio=120
-+               sh-70      [000] d..3.  3912.083995: sched_switch: (__probestub_sched_switch+0x4/0x10) preempt=0 prev=0xffff88800664e100 next=0xffffffff828229c0 prev_state=1
-+           <idle>-0       [000] d..2.  3912.084183: sched_switch: prev_comm=swapper/0 prev_pid=0 prev_prio=120 prev_state=R ==> next_comm=rcu_preempt next_pid=16 next_prio=120
-+           <idle>-0       [000] d..3.  3912.084184: sched_switch: (__probestub_sched_switch+0x4/0x10) preempt=0 prev=0xffffffff828229c0 next=0xffff888004208000 prev_state=0
-+      rcu_preempt-16      [000] d..2.  3912.084196: sched_switch: prev_comm=rcu_preempt prev_pid=16 prev_prio=120 prev_state=I ==> next_comm=swapper/0 next_pid=0 next_prio=120
-+      rcu_preempt-16      [000] d..3.  3912.084196: sched_switch: (__probestub_sched_switch+0x4/0x10) preempt=0 prev=0xffff888004208000 next=0xffffffff828229c0 prev_state=1026
-+           <idle>-0       [000] d..2.  3912.085191: sched_switch: prev_comm=swapper/0 prev_pid=0 prev_prio=120 prev_state=R ==> next_comm=rcu_preempt next_pid=16 next_prio=120
-+           <idle>-0       [000] d..3.  3912.085191: sched_switch: (__probestub_sched_switch+0x4/0x10) preempt=0 prev=0xffffffff828229c0 next=0xffff888004208000 prev_state=0
-+
-+As you can see, the `sched_switch` trace-event shows *cooked* parameters, on
-+the other hand, the `sched_switch` tracepoint probe event shows *raw*
-+parameters. This means you can dereference any field values in the task
-+structure pointed by the `prev` and `next` arguments.
-+
-+For example, usually `task_struct::start_time` is not traced, but with this
-+traceprobe event, you can trace it as below.
-+::
-+
-+  # echo 't sched_switch comm=+1896(next):string start_time=+1728(next):u64' > dynamic_events
-+  # head -n 20 trace | tail
-+ #           TASK-PID     CPU#  |||||  TIMESTAMP  FUNCTION
-+ #              | |         |   |||||     |         |
-+               sh-70      [000] d..3.  5606.686577: sched_switch: (__probestub_sched_switch+0x4/0x10) comm="rcu_preempt" usage=1 start_time=245000000
-+      rcu_preempt-16      [000] d..3.  5606.686602: sched_switch: (__probestub_sched_switch+0x4/0x10) comm="sh" usage=1 start_time=1596095526
-+               sh-70      [000] d..3.  5606.686637: sched_switch: (__probestub_sched_switch+0x4/0x10) comm="swapper/0" usage=2 start_time=0
-+           <idle>-0       [000] d..3.  5606.687190: sched_switch: (__probestub_sched_switch+0x4/0x10) comm="rcu_preempt" usage=1 start_time=245000000
-+      rcu_preempt-16      [000] d..3.  5606.687202: sched_switch: (__probestub_sched_switch+0x4/0x10) comm="swapper/0" usage=2 start_time=0
-+           <idle>-0       [000] d..3.  5606.690317: sched_switch: (__probestub_sched_switch+0x4/0x10) comm="kworker/0:1" usage=1 start_time=137000000
-+      kworker/0:1-14      [000] d..3.  5606.690339: sched_switch: (__probestub_sched_switch+0x4/0x10) comm="swapper/0" usage=2 start_time=0
-+           <idle>-0       [000] d..3.  5606.692368: sched_switch: (__probestub_sched_switch+0x4/0x10) comm="kworker/0:1" usage=1 start_time=137000000
-+
-+Currently, to find the offset of a specific field in the data structure,
-+you need to build kernel with debuginfo and run `perf probe` command with
-+`-D` option. e.g.
-+::
-+
-+ # perf probe -D "__probestub_sched_switch next->comm:string next->start_time"
-+ p:probe/__probestub_sched_switch __probestub_sched_switch+0 comm=+1896(%cx):string start_time=+1728(%cx):u64
-+
-+And replace the `%cx` with the `next`.
-diff --git a/Documentation/trace/index.rst b/Documentation/trace/index.rst
-index ea25a9220f92..5092d6c13af5 100644
---- a/Documentation/trace/index.rst
-+++ b/Documentation/trace/index.rst
-@@ -13,6 +13,7 @@ Linux Tracing Technologies
-    kprobes
-    kprobetrace
-    uprobetracer
-+   fprobetrace
-    tracepoints
-    events
-    events-kmem
+diff --git a/arch/loongarch/kernel/ftrace_dyn.c b/arch/loongarch/kernel/ftrace_dyn.c
+index 4a3ef8516ccc..c5f4b4681ddc 100644
+--- a/arch/loongarch/kernel/ftrace_dyn.c
++++ b/arch/loongarch/kernel/ftrace_dyn.c
+@@ -30,8 +30,6 @@ static int ftrace_modify_code(unsigned long pc, u32 old, u32 new, bool validate)
+ 	return 0;
+ }
+ 
+-#ifdef CONFIG_DYNAMIC_FTRACE_WITH_REGS
+-
+ #ifdef CONFIG_MODULES
+ static inline int __get_mod(struct module **mod, unsigned long addr)
+ {
+@@ -72,6 +70,7 @@ static unsigned long get_plt_addr(struct module *mod, unsigned long addr)
+ }
+ #endif
+ 
++#ifdef CONFIG_DYNAMIC_FTRACE_WITH_REGS
+ int ftrace_modify_call(struct dyn_ftrace *rec, unsigned long old_addr, unsigned long addr)
+ {
+ 	u32 old, new;
+@@ -102,7 +101,6 @@ int ftrace_modify_call(struct dyn_ftrace *rec, unsigned long old_addr, unsigned
+ 
+ 	return ftrace_modify_code(pc, old, new, true);
+ }
+-
+ #endif /* CONFIG_DYNAMIC_FTRACE_WITH_REGS */
+ 
+ int ftrace_update_ftrace_func(ftrace_func_t func)
+-- 
+2.37.1
 
