@@ -2,346 +2,184 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 31361C77B7C
-	for <linux-trace-kernel@archiver.kernel.org>; Thu, 27 Apr 2023 14:07:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B5C7DC77B73
+	for <linux-trace-kernel@archiver.kernel.org>; Thu, 27 Apr 2023 14:23:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S243808AbjD0OHh (ORCPT
+        id S243431AbjD0OXm (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Thu, 27 Apr 2023 10:07:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57626 "EHLO
+        Thu, 27 Apr 2023 10:23:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39918 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S243780AbjD0OH2 (ORCPT
+        with ESMTP id S243764AbjD0OXZ (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Thu, 27 Apr 2023 10:07:28 -0400
-Received: from mail-wm1-x332.google.com (mail-wm1-x332.google.com [IPv6:2a00:1450:4864:20::332])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3ADBA170A
-        for <linux-trace-kernel@vger.kernel.org>; Thu, 27 Apr 2023 07:07:18 -0700 (PDT)
-Received: by mail-wm1-x332.google.com with SMTP id 5b1f17b1804b1-3f19a80a330so40765065e9.2
-        for <linux-trace-kernel@vger.kernel.org>; Thu, 27 Apr 2023 07:07:18 -0700 (PDT)
+        Thu, 27 Apr 2023 10:23:25 -0400
+Received: from mail-qk1-x735.google.com (mail-qk1-x735.google.com [IPv6:2607:f8b0:4864:20::735])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E4A124EFE;
+        Thu, 27 Apr 2023 07:22:59 -0700 (PDT)
+Received: by mail-qk1-x735.google.com with SMTP id af79cd13be357-74dfa88c65aso732109085a.3;
+        Thu, 27 Apr 2023 07:22:59 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1682604436; x=1685196436;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+        d=gmail.com; s=20221208; t=1682605378; x=1685197378;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=EVGI/9TRxcLl2jjt/VjqKdsC9yR4uWTAAN6xoAYLhYc=;
-        b=mrmISWdRcfSKZ/TELjixBZkldgX9bvmQALdjTOTRCke4xcU+66ukcYg7lUESr0xOJD
-         D8VtVkHLr9erkJ0NQxaVc11J7IeMdSEisAcV4/FH6/EaiP8a1Cnp1P4sS+PQF9AsoNaB
-         /lYJaiMPSreHA8HsU1+U0oGAw320zbOTs1BJU=
+        bh=Ihii9EjlXiAdx0f82DQddbpxiD6F+hujfxzkjDoYupw=;
+        b=iam8C2iaAP/nvY5obUIGDwucNtlXUMapen7RQk6Z8yC/DSoLZX8WOqaIdZ4TazF1CT
+         ukjcsikbQkOmptMQNd7ezTGku69ABKA01nlOOn5LZMnxR1oidIRTZlv+NPnnBF6Qf0B4
+         lqhFD+HPQ2e3IdE/v0NKSY3cGVz6LllwSWUsEZeBq8jFAkThpeDLW+ekekD8cYJ/L0ik
+         uWC9YvmuudvtwdbslkFQ4agjAti5LH7vRlwy7kNPj0EX1Y5qRKnPD9tjDb0pniN4hZi4
+         Fhdf6mGXgZScubch6BhgXLkgPplKk7gRKuVt4V8mfmJb16NRRJ51BHzpj41yNIAjBUYu
+         8zCA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1682604436; x=1685196436;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20221208; t=1682605378; x=1685197378;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=EVGI/9TRxcLl2jjt/VjqKdsC9yR4uWTAAN6xoAYLhYc=;
-        b=UeDlC0YFMyakkvX9/cAyHUXE2ERh2qgTvEMmutTqqvMXgT65hcAvBAMYmN6232i/0X
-         oFocFJbkJIAPvdyASoGGgA3fyBl+Iyf+P+NjYn+6WFEYLb5K7+pkUAmEqmufQk6RIFEh
-         OQCn3wd9XfRB7CRvSQMNeGHn1j3BrjmvK4aQvyHkeZLGjXR9AP9pVHO+6D5+TbAcECEa
-         oYhmg1E94qFzQbcEXd4EGkjQaDs7rdfZgptW9mFO1+5HpC0hp7waCDaGzlFPBftwFspg
-         C5hQBijTFd+htpLkrrIapiR8Va06vHBmN3mV/4pQid5NdbYbZriTJxIEiSH9cLBBn2KU
-         vcvA==
-X-Gm-Message-State: AC+VfDzdKFr2mvqoJW9PlgOUOBMURDo2DRlU8SJmiXL4qB0184bKjinx
-        k0dD3Zbdtu6UfegclUNBx0A7zg==
-X-Google-Smtp-Source: ACHHUZ4K3PPKKlaZ/R79tIDkH7zSecjZC+2ioI2Q7A/hyl19zgUG3pkWMIIrMnJ34kN0KHQVtWIK4w==
-X-Received: by 2002:a05:600c:ac8:b0:3f1:819d:d050 with SMTP id c8-20020a05600c0ac800b003f1819dd050mr1405441wmr.37.1682604436589;
-        Thu, 27 Apr 2023 07:07:16 -0700 (PDT)
-Received: from revest.zrh.corp.google.com ([2a00:79e0:9d:6:a66d:4f2c:7ce5:e8ea])
-        by smtp.gmail.com with ESMTPSA id c21-20020a7bc855000000b003f17300c7dcsm21285075wml.48.2023.04.27.07.07.15
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 27 Apr 2023 07:07:16 -0700 (PDT)
-From:   Florent Revest <revest@chromium.org>
-To:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-trace-kernel@vger.kernel.org
-Cc:     rostedt@goodmis.org, mhiramat@kernel.org, mark.rutland@arm.com,
-        kpsingh@kernel.org, xukuohai@huaweicloud.com,
-        Florent Revest <revest@chromium.org>
-Subject: [PATCH 2/2] arm64: ftrace: Add direct call trampoline samples support
-Date:   Thu, 27 Apr 2023 16:07:00 +0200
-Message-ID: <20230427140700.625241-3-revest@chromium.org>
-X-Mailer: git-send-email 2.40.1.495.gc816e09b53d-goog
-In-Reply-To: <20230427140700.625241-1-revest@chromium.org>
-References: <20230427140700.625241-1-revest@chromium.org>
+        bh=Ihii9EjlXiAdx0f82DQddbpxiD6F+hujfxzkjDoYupw=;
+        b=jhR3mjeD5X4zg/jxqUI8Olw4WSYAsDPW1nEopCXKIvTDQLX6FZIYVswxbxM/dJiZEv
+         eVYCMpXwTAcRylE807/M4CQo2uImIoxN5/ZPKulLIaB0PPQ6yj3RR8VriM1UZAAdDEHI
+         I/hOIH4WV3Ht4g6bDsGB/uZKvDuXppRLGpjnjdEbmwOO0d+yilsZCPLLXiucUwRhhnTC
+         5mrTu92gBfDQdbMlFmnLpAjoY45l5vXGajj9x8qK3TXvEoaKQLqAK5lvtj46fTNmuWHw
+         hpmx/bDXfwUwHvR2UGLXjIErRtcy8J+TzAjGkhdXEK6nDTj3gLKvvaX6bDRsccfe79Em
+         vZZA==
+X-Gm-Message-State: AC+VfDxFuhtfeuHs7S7PsRmLmooW9ZWx/cHXYAneSkDue9TNx+CtdeSF
+        a8lFtQMb2MNJoSuoTpWzhNabhnvG+Zgy3n/mK9VEXVaaqWPkTQ==
+X-Google-Smtp-Source: ACHHUZ6ZE8lQRjSnUKI0P72E0fIK02tEQnqR5cJJdB9neS/jgZIcacpO4/4gzyf+g4w51NIAvTh1WNLJhyqyirfznv4=
+X-Received: by 2002:a05:6214:1c4e:b0:5f0:23be:a301 with SMTP id
+ if14-20020a0562141c4e00b005f023bea301mr2631139qvb.5.1682605378480; Thu, 27
+ Apr 2023 07:22:58 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20230417154737.12740-1-laoar.shao@gmail.com> <20230417154737.12740-6-laoar.shao@gmail.com>
+ <20230427092628.21fd23e4@gandalf.local.home>
+In-Reply-To: <20230427092628.21fd23e4@gandalf.local.home>
+From:   Yafang Shao <laoar.shao@gmail.com>
+Date:   Thu, 27 Apr 2023 22:22:22 +0800
+Message-ID: <CALOAHbBX1C-eg93Hf3xPLsdsaBzoGn1pHh9jb3Z_-T-7HD60wA@mail.gmail.com>
+Subject: Re: [PATCH bpf-next 5/6] bpf: Improve tracing recursion prevention mechanism
+To:     Steven Rostedt <rostedt@goodmis.org>
+Cc:     ast@kernel.org, daniel@iogearbox.net, andrii@kernel.org,
+        kafai@fb.com, songliubraving@fb.com, yhs@fb.com,
+        john.fastabend@gmail.com, kpsingh@kernel.org, sdf@google.com,
+        haoluo@google.com, jolsa@kernel.org, mhiramat@kernel.org,
+        bpf@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-The ftrace samples need per-architecture trampoline implementations
-to save and restore argument registers around the calls to
-my_direct_func* and to restore polluted registers (eg: x30).
+On Thu, Apr 27, 2023 at 9:26=E2=80=AFPM Steven Rostedt <rostedt@goodmis.org=
+> wrote:
+>
+> On Mon, 17 Apr 2023 15:47:36 +0000
+> Yafang Shao <laoar.shao@gmail.com> wrote:
+>
+> > diff --git a/kernel/bpf/trampoline.c b/kernel/bpf/trampoline.c
+> > index f61d513..3df39a5 100644
+> > --- a/kernel/bpf/trampoline.c
+> > +++ b/kernel/bpf/trampoline.c
+> > @@ -842,15 +842,21 @@ static __always_inline u64 notrace bpf_prog_start=
+_time(void)
+> >  static u64 notrace __bpf_prog_enter_recur(struct bpf_prog *prog, struc=
+t bpf_tramp_run_ctx *run_ctx)
+> >       __acquires(RCU)
+>
+> Because __bpf_prog_enter_recur() and __bpf_prog_exit_recur() can
+> legitimately nest (as you pointed out later in the thread), I think my
+> original plan is the way to go.
+>
+>
+>
+> >  {
+> > -     rcu_read_lock();
+> > -     migrate_disable();
+> > -
+> > -     run_ctx->saved_run_ctx =3D bpf_set_run_ctx(&run_ctx->run_ctx);
+> > +     int bit;
+> >
+> > -     if (unlikely(this_cpu_inc_return(*(prog->active)) !=3D 1)) {
+> > +     rcu_read_lock();
+> > +     bit =3D test_recursion_try_acquire(_THIS_IP_, _RET_IP_);
+> > +     run_ctx->recursion_bit =3D bit;
+> > +     if (bit < 0) {
+> > +             preempt_disable_notrace();
+> >               bpf_prog_inc_misses_counter(prog);
+> > +             preempt_enable_notrace();
+> >               return 0;
+> >       }
+> > +
+> > +     migrate_disable();
+>
+> Just encompass the migrate_disable/enable() with the recursion protection=
+.
+>
+> That is, here add:
+>
+>         test_recursion_release(recursion_bit);
+>
+> No need to save it in the run_ctx, as you can use a local variable.
+>
+> As I mentioned, if it passes when checking migrate_disable() it will also
+> pass when checking around migrate_enable() so the two will still be paire=
+d
+> properly, even if only the migrate_enable() starts recursing.
+>
+>
+>   bit =3D test_recursion_try_acquire() // OK
+>   if (bit < 0)
+>         return;
+>   migrate_disable();
+>   test_recursion_release(bit);
+>
+>   [..]
+>
+>   bit =3D test_recursion_try_acquire() // OK
+>   migrate_enable() // traced and recurses...
+>
+>     bit =3D test_recursion_try_acquire() // fails
+>     if (bit < 0)
+>           return; // returns here
+>     migrate_disable() // does not get called.
+>
+> The recursion around migrate_disable/enable() is needed because it's done
+> before other checks. You can't attach the test_recursion logic to the
+> __bpf_prog_enter/exit() routines, because those can legitimately recurse.
+>
 
-These samples also include <asm/asm-offsets.h> which, on arm64, is not
-necessary and redefines previously defined macros (resulting in
-warnings) so these includes are guarded by !CONFIG_ARM64.
+IIUC, the acquire/release pair works as follows,
 
-Reviewed-by: Mark Rutland <mark.rutland@arm.com>
-Tested-by: Mark Rutland <mark.rutland@arm.com>
-Signed-off-by: Florent Revest <revest@chromium.org>
----
- arch/arm64/Kconfig                          |  2 ++
- samples/ftrace/ftrace-direct-modify.c       | 34 ++++++++++++++++++
- samples/ftrace/ftrace-direct-multi-modify.c | 40 +++++++++++++++++++++
- samples/ftrace/ftrace-direct-multi.c        | 24 +++++++++++++
- samples/ftrace/ftrace-direct-too.c          | 26 ++++++++++++++
- samples/ftrace/ftrace-direct.c              | 24 +++++++++++++
- 6 files changed, 150 insertions(+)
+   test_recursion_try_acquire
+     [ protection area ]
+   test_recursion_release
 
-diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
-index 3f5bf55050e8..e98d6b7845c4 100644
---- a/arch/arm64/Kconfig
-+++ b/arch/arm64/Kconfig
-@@ -195,6 +195,8 @@ config ARM64
- 		    !CC_OPTIMIZE_FOR_SIZE)
- 	select FTRACE_MCOUNT_USE_PATCHABLE_FUNCTION_ENTRY \
- 		if DYNAMIC_FTRACE_WITH_ARGS
-+	select HAVE_SAMPLE_FTRACE_DIRECT
-+	select HAVE_SAMPLE_FTRACE_DIRECT_MULTI
- 	select HAVE_EFFICIENT_UNALIGNED_ACCESS
- 	select HAVE_FAST_GUP
- 	select HAVE_FTRACE_MCOUNT_RECORD
-diff --git a/samples/ftrace/ftrace-direct-modify.c b/samples/ftrace/ftrace-direct-modify.c
-index 25fba66f61c0..98d1b7385f08 100644
---- a/samples/ftrace/ftrace-direct-modify.c
-+++ b/samples/ftrace/ftrace-direct-modify.c
-@@ -2,7 +2,9 @@
- #include <linux/module.h>
- #include <linux/kthread.h>
- #include <linux/ftrace.h>
-+#ifndef CONFIG_ARM64
- #include <asm/asm-offsets.h>
-+#endif
- 
- extern void my_direct_func1(void);
- extern void my_direct_func2(void);
-@@ -96,6 +98,38 @@ asm (
- 
- #endif /* CONFIG_S390 */
- 
-+#ifdef CONFIG_ARM64
-+
-+asm (
-+"	.pushsection    .text, \"ax\", @progbits\n"
-+"	.type		my_tramp1, @function\n"
-+"	.globl		my_tramp1\n"
-+"   my_tramp1:"
-+"	bti	c\n"
-+"	sub	sp, sp, #16\n"
-+"	stp	x9, x30, [sp]\n"
-+"	bl	my_direct_func1\n"
-+"	ldp	x30, x9, [sp]\n"
-+"	add	sp, sp, #16\n"
-+"	ret	x9\n"
-+"	.size		my_tramp1, .-my_tramp1\n"
-+
-+"	.type		my_tramp2, @function\n"
-+"	.globl		my_tramp2\n"
-+"   my_tramp2:"
-+"	bti	c\n"
-+"	sub	sp, sp, #16\n"
-+"	stp	x9, x30, [sp]\n"
-+"	bl	my_direct_func2\n"
-+"	ldp	x30, x9, [sp]\n"
-+"	add	sp, sp, #16\n"
-+"	ret	x9\n"
-+"	.size		my_tramp2, .-my_tramp2\n"
-+"	.popsection\n"
-+);
-+
-+#endif /* CONFIG_ARM64 */
-+
- static struct ftrace_ops direct;
- 
- static unsigned long my_tramp = (unsigned long)my_tramp1;
-diff --git a/samples/ftrace/ftrace-direct-multi-modify.c b/samples/ftrace/ftrace-direct-multi-modify.c
-index f72623899602..26956c8fc513 100644
---- a/samples/ftrace/ftrace-direct-multi-modify.c
-+++ b/samples/ftrace/ftrace-direct-multi-modify.c
-@@ -2,7 +2,9 @@
- #include <linux/module.h>
- #include <linux/kthread.h>
- #include <linux/ftrace.h>
-+#ifndef CONFIG_ARM64
- #include <asm/asm-offsets.h>
-+#endif
- 
- extern void my_direct_func1(unsigned long ip);
- extern void my_direct_func2(unsigned long ip);
-@@ -103,6 +105,44 @@ asm (
- 
- #endif /* CONFIG_S390 */
- 
-+#ifdef CONFIG_ARM64
-+
-+asm (
-+"	.pushsection    .text, \"ax\", @progbits\n"
-+"	.type		my_tramp1, @function\n"
-+"	.globl		my_tramp1\n"
-+"   my_tramp1:"
-+"	bti	c\n"
-+"	sub	sp, sp, #32\n"
-+"	stp	x9, x30, [sp]\n"
-+"	str	x0, [sp, #16]\n"
-+"	mov	x0, x30\n"
-+"	bl	my_direct_func1\n"
-+"	ldp	x30, x9, [sp]\n"
-+"	ldr	x0, [sp, #16]\n"
-+"	add	sp, sp, #32\n"
-+"	ret	x9\n"
-+"	.size		my_tramp1, .-my_tramp1\n"
-+
-+"	.type		my_tramp2, @function\n"
-+"	.globl		my_tramp2\n"
-+"   my_tramp2:"
-+"	bti	c\n"
-+"	sub	sp, sp, #32\n"
-+"	stp	x9, x30, [sp]\n"
-+"	str	x0, [sp, #16]\n"
-+"	mov	x0, x30\n"
-+"	bl	my_direct_func2\n"
-+"	ldp	x30, x9, [sp]\n"
-+"	ldr	x0, [sp, #16]\n"
-+"	add	sp, sp, #32\n"
-+"	ret	x9\n"
-+"	.size		my_tramp2, .-my_tramp2\n"
-+"	.popsection\n"
-+);
-+
-+#endif /* CONFIG_ARM64 */
-+
- static unsigned long my_tramp = (unsigned long)my_tramp1;
- static unsigned long tramps[2] = {
- 	(unsigned long)my_tramp1,
-diff --git a/samples/ftrace/ftrace-direct-multi.c b/samples/ftrace/ftrace-direct-multi.c
-index 1547c2c6be02..b2ac90e0c02e 100644
---- a/samples/ftrace/ftrace-direct-multi.c
-+++ b/samples/ftrace/ftrace-direct-multi.c
-@@ -4,7 +4,9 @@
- #include <linux/mm.h> /* for handle_mm_fault() */
- #include <linux/ftrace.h>
- #include <linux/sched/stat.h>
-+#ifndef CONFIG_ARM64
- #include <asm/asm-offsets.h>
-+#endif
- 
- extern void my_direct_func(unsigned long ip);
- 
-@@ -66,6 +68,28 @@ asm (
- 
- #endif /* CONFIG_S390 */
- 
-+#ifdef CONFIG_ARM64
-+
-+asm (
-+"	.pushsection	.text, \"ax\", @progbits\n"
-+"	.type		my_tramp, @function\n"
-+"	.globl		my_tramp\n"
-+"   my_tramp:"
-+"	bti	c\n"
-+"	sub	sp, sp, #32\n"
-+"	stp	x9, x30, [sp]\n"
-+"	str	x0, [sp, #16]\n"
-+"	mov	x0, x30\n"
-+"	bl	my_direct_func\n"
-+"	ldp	x30, x9, [sp]\n"
-+"	ldr	x0, [sp, #16]\n"
-+"	add	sp, sp, #32\n"
-+"	ret	x9\n"
-+"	.size		my_tramp, .-my_tramp\n"
-+"	.popsection\n"
-+);
-+
-+#endif /* CONFIG_ARM64 */
- static struct ftrace_ops direct;
- 
- static int __init ftrace_direct_multi_init(void)
-diff --git a/samples/ftrace/ftrace-direct-too.c b/samples/ftrace/ftrace-direct-too.c
-index 71ed4ee8cb4a..38f6f677f913 100644
---- a/samples/ftrace/ftrace-direct-too.c
-+++ b/samples/ftrace/ftrace-direct-too.c
-@@ -3,7 +3,9 @@
- 
- #include <linux/mm.h> /* for handle_mm_fault() */
- #include <linux/ftrace.h>
-+#ifndef CONFIG_ARM64
- #include <asm/asm-offsets.h>
-+#endif
- 
- extern void my_direct_func(struct vm_area_struct *vma, unsigned long address,
- 			   unsigned int flags, struct pt_regs *regs);
-@@ -72,6 +74,30 @@ asm (
- 
- #endif /* CONFIG_S390 */
- 
-+#ifdef CONFIG_ARM64
-+
-+asm (
-+"	.pushsection	.text, \"ax\", @progbits\n"
-+"	.type		my_tramp, @function\n"
-+"	.globl		my_tramp\n"
-+"   my_tramp:"
-+"	bti	c\n"
-+"	sub	sp, sp, #48\n"
-+"	stp	x9, x30, [sp]\n"
-+"	stp	x0, x1, [sp, #16]\n"
-+"	stp	x2, x3, [sp, #32]\n"
-+"	bl	my_direct_func\n"
-+"	ldp	x30, x9, [sp]\n"
-+"	ldp	x0, x1, [sp, #16]\n"
-+"	ldp	x2, x3, [sp, #32]\n"
-+"	add	sp, sp, #48\n"
-+"	ret	x9\n"
-+"	.size		my_tramp, .-my_tramp\n"
-+"	.popsection\n"
-+);
-+
-+#endif /* CONFIG_ARM64 */
-+
- static struct ftrace_ops direct;
- 
- static int __init ftrace_direct_init(void)
-diff --git a/samples/ftrace/ftrace-direct.c b/samples/ftrace/ftrace-direct.c
-index d81a9473b585..e5312f9c15d3 100644
---- a/samples/ftrace/ftrace-direct.c
-+++ b/samples/ftrace/ftrace-direct.c
-@@ -3,7 +3,9 @@
- 
- #include <linux/sched.h> /* for wake_up_process() */
- #include <linux/ftrace.h>
-+#ifndef CONFIG_ARM64
- #include <asm/asm-offsets.h>
-+#endif
- 
- extern void my_direct_func(struct task_struct *p);
- 
-@@ -63,6 +65,28 @@ asm (
- 
- #endif /* CONFIG_S390 */
- 
-+#ifdef CONFIG_ARM64
-+
-+asm (
-+"	.pushsection	.text, \"ax\", @progbits\n"
-+"	.type		my_tramp, @function\n"
-+"	.globl		my_tramp\n"
-+"   my_tramp:"
-+"	bti	c\n"
-+"	sub	sp, sp, #32\n"
-+"	stp	x9, x30, [sp]\n"
-+"	str	x0, [sp, #16]\n"
-+"	bl	my_direct_func\n"
-+"	ldp	x30, x9, [sp]\n"
-+"	ldr	x0, [sp, #16]\n"
-+"	add	sp, sp, #32\n"
-+"	ret	x9\n"
-+"	.size		my_tramp, .-my_tramp\n"
-+"	.popsection\n"
-+);
-+
-+#endif /* CONFIG_ARM64 */
-+
- static struct ftrace_ops direct;
- 
- static int __init ftrace_direct_init(void)
--- 
-2.40.1.495.gc816e09b53d-goog
+After release, there will be no protection, and thus it will fail the
+tools/testing/selftests/bpf/progs/recursion.c[1] test case, because
+the recursion occurs in the bpf_prog_run() itself,
 
+  __bpf_prog_enter
+     test_recursion_try_acquire
+     [...]
+     test_recursion_release
+  // no protection after the release
+  bpf_prog_run()
+    bpf_prog_run() // the recursion can't be prevented.
+        __bpf_prog_enter
+            test_recursion_try_acquire
+            [...]
+            test_recursion_release
+       bpf_prog_run()
+           bpf_prog_run()
+               __bpf_prog_enter
+                  test_recursion_try_acquire
+                  [...]
+                  test_recursion_release
+              bpf_prog_run()
+              [ And so on ... ]
+
+[1]. https://git.kernel.org/pub/scm/linux/kernel/git/bpf/bpf-next.git/tree/=
+tools/testing/selftests/bpf/progs/recursion.c#n38
+
+--=20
+Regards
+Yafang
