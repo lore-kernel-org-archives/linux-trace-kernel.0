@@ -2,155 +2,173 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 231C2C77B61
-	for <linux-trace-kernel@archiver.kernel.org>; Thu, 27 Apr 2023 06:48:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 34F31C77B73
+	for <linux-trace-kernel@archiver.kernel.org>; Thu, 27 Apr 2023 09:58:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S242586AbjD0GsE (ORCPT
+        id S243451AbjD0J61 (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Thu, 27 Apr 2023 02:48:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45958 "EHLO
+        Thu, 27 Apr 2023 05:58:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42628 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229601AbjD0GsD (ORCPT
+        with ESMTP id S243445AbjD0J6Z (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Thu, 27 Apr 2023 02:48:03 -0400
-Received: from loongson.cn (mail.loongson.cn [114.242.206.163])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 3ABEA2D76;
-        Wed, 26 Apr 2023 23:48:01 -0700 (PDT)
-Received: from loongson.cn (unknown [192.168.200.1])
-        by gateway (Coremail) with SMTP id _____8Bx7eqfGkpk9XABAA--.2494S3;
-        Thu, 27 Apr 2023 14:47:59 +0800 (CST)
-Received: from [0.0.0.0] (unknown [192.168.200.1])
-        by localhost.localdomain (Coremail) with SMTP id AQAAf8DxsrSZGkpkNDo+AA--.18663S3;
-        Thu, 27 Apr 2023 14:47:54 +0800 (CST)
-Subject: Re: [PATCH v2 5/5] LoongArch: Abstract DYNAMIC_FTRACE_WITH_ARGS
- accesses
-To:     Enze Li <lienze@kylinos.cn>
-References: <1682561552-32324-1-git-send-email-tangyouling@loongson.cn>
- <1682561552-32324-6-git-send-email-tangyouling@loongson.cn>
- <87h6t17sux.fsf@kylinos.cn>
-Cc:     Huacai Chen <chenhuacai@kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        WANG Xuerui <kernel@xen0n.name>, linux-kernel@vger.kernel.org,
-        linux-trace-kernel@vger.kernel.org, loongarch@lists.linux.dev,
-        loongson-kernel@lists.loongnix.cn,
-        Qing Zhang <zhangqing@loongson.cn>
-From:   Youling Tang <tangyouling@loongson.cn>
-Message-ID: <b52aff74-17a6-3a91-62b3-d11477645e81@loongson.cn>
-Date:   Thu, 27 Apr 2023 14:47:53 +0800
-User-Agent: Mozilla/5.0 (X11; Linux mips64; rv:45.0) Gecko/20100101
- Thunderbird/45.4.0
+        Thu, 27 Apr 2023 05:58:25 -0400
+Received: from mail-qv1-xf2a.google.com (mail-qv1-xf2a.google.com [IPv6:2607:f8b0:4864:20::f2a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6C3171BC5;
+        Thu, 27 Apr 2023 02:58:24 -0700 (PDT)
+Received: by mail-qv1-xf2a.google.com with SMTP id 6a1803df08f44-5ef8aaf12bdso35177926d6.3;
+        Thu, 27 Apr 2023 02:58:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1682589503; x=1685181503;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=5H4urfMx4Jh2e9EbQKPkIyXjRe2bh/qiE1leyX/3eWw=;
+        b=ZZ4KYW4275a1rgyrsslbI7/3BzMp2MIeDquIgk3X8jaeJ1B+fKh7sTOfSzsiodmmP9
+         pO/XqdQWyUwE60nK72vKdRvGvU935a23v2EmrkspzAptxdj+eds0XbQxbQs3vfElNMe7
+         AH7gOE4+u691GNUIBO10Vuuqy7G1jhEaQcmQoSFWVAdkWCDDLdxLyOc7btvypV3VoRJ/
+         AnzZIn7D3C5LZ/HxVZRieXTG3Rb7DQRtSU03RIXFKTMCVKOSfdvu8CyPhsj1HJ0YWwEH
+         q6yz8sL4uDFcSJ4elutLXi7PSNC2oxRn1UFlacEzUgHr06JClFNv+KA0bdH8Jj8qVuUe
+         cDEA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1682589503; x=1685181503;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=5H4urfMx4Jh2e9EbQKPkIyXjRe2bh/qiE1leyX/3eWw=;
+        b=Xo0F8GBuZGkHnTVFbSZCh5oGpcS9x1DoiymVx01tKSeAzxsR3p0nndSOzL1UzourKp
+         7hL6WayRXonbo21hhlDenynjZDVIHr9GNAEfAbs62e0wBbHiH6wPKrN1iAzMVdGbbCdP
+         t/L4HYVGP4BwybmiOz9hJQMyN/JYyrSHsLNCr782Nf1wv8CdnGzZG7SdQb3r1LxjyGdp
+         k1AtVR3u5NzYOZvefIYXoeiutiERfdHIRG1ZUCltlJxrknBTXjz2QUop1nySjAFI2jAz
+         lFnVh2Qz0wa07+BB7Z3vFi0BSgQxax510LTUuUwGRtd+racpOuPGc00EabOt4lo00Ktu
+         cmHA==
+X-Gm-Message-State: AC+VfDySbNeZs4/kg//hugK3JT2ZuJ2go39F/01Q8pIEl/un8iRrTPbG
+        PKUu/aBRg4Y6CjObUTovQJ62imjVX3henF2x/easWpTcufBvZg==
+X-Google-Smtp-Source: ACHHUZ5u74XYCV+RmAscIBZt0+JZKqc5mfORjXgiD4PA4KTJH2oLwAvfseKa73Y6mOzKOm7PyHO6nDmyeKz+eXPMAbc=
+X-Received: by 2002:a05:6214:2589:b0:5f1:6bee:f58e with SMTP id
+ fq9-20020a056214258900b005f16beef58emr885006qvb.35.1682589503483; Thu, 27 Apr
+ 2023 02:58:23 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <87h6t17sux.fsf@kylinos.cn>
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-X-CM-TRANSID: AQAAf8DxsrSZGkpkNDo+AA--.18663S3
-X-CM-SenderInfo: 5wdqw5prxox03j6o00pqjv00gofq/
-X-Coremail-Antispam: 1Uk129KBjvJXoWxZrW3uFW8ZFy7WFyDXr15XFb_yoW5Zr1xpF
-        Zak3Z8GFW7AFZ2kF429w45XryrJryrJry8Cr92kw13AFyDXr1kGrW29ryqkF1jyry8JryI
-        vF1Yqwnxurn0va7anT9S1TB71UUUUjDqnTZGkaVYY2UrUUUUj1kv1TuYvTs0mT0YCTnIWj
-        qI5I8CrVACY4xI64kE6c02F40Ex7xfYxn0WfASr-VFAUDa7-sFnT9fnUUIcSsGvfJTRUUU
-        bsAFc2x0x2IEx4CE42xK8VAvwI8IcIk0rVWrJVCq3wA2ocxC64kIII0Yj41l84x0c7CEw4
-        AK67xGY2AK021l84ACjcxK6xIIjxv20xvE14v26r4j6ryUM28EF7xvwVC0I7IYx2IY6xkF
-        7I0E14v26r4j6F4UM28EF7xvwVC2z280aVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIEc7
-        CjxVAFwI0_Gr1j6F4UJwAaw2AFwI0_JF0_Jw1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAq
-        jxCEc2xF0cIa020Ex4CE44I27wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E74AGY7Cv6c
-        x26rWlOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcVAKI48JMxk0xIA0c2IEe2xFo4CEbIxv
-        r21lc7CjxVAaw2AFwI0_JF0_Jw1l42xK82IYc2Ij64vIr41l42xK82IY6x8ErcxFaVAv8V
-        WrMxC20s026xCaFVCjc4AY6r1j6r4UMxCIbckI1I0E14v26r126r1DMI8I3I0E5I8CrVAF
-        wI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8ZwCIc4
-        0Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1I6r4UMIIF0xvE2Ix0cI8IcVCY1x0267AK
-        xVWUJVW8JwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Gr0_Cr
-        1lIxAIcVC2z280aVCY1x0267AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7xRiTKZJUU
-        UUU==
+References: <20230417154737.12740-1-laoar.shao@gmail.com> <20230417154737.12740-6-laoar.shao@gmail.com>
+ <20230417201457.c43xfcukjzm4u6vx@dhcp-172-26-102-232.dhcp.thefacebook.com>
+ <CALOAHbC4Bz_VX52zmv=sScBf0hzscMAC4+EwMCpnd1BcaSVJSw@mail.gmail.com>
+ <CAADnVQJw9BCK2itE5bZWdQYz7D-8KdcH96E885zUakEDAOrC+Q@mail.gmail.com>
+ <CALOAHbCtPR26it_Wdk7T_TETMTh2se6rgEbL_KC5XKtzvObjiA@mail.gmail.com>
+ <CAADnVQ+FO-+1OALTtgVkcpH3Adc6xS9qjzORyq2vwVtwY2UoxQ@mail.gmail.com> <20230424174049.1c9e54dd@rorschach.local.home>
+In-Reply-To: <20230424174049.1c9e54dd@rorschach.local.home>
+From:   Yafang Shao <laoar.shao@gmail.com>
+Date:   Thu, 27 Apr 2023 17:57:47 +0800
+Message-ID: <CALOAHbAx+W3-iBS6=FsPPShbEuSSZeyQWvLque+uF9Suwe3-HA@mail.gmail.com>
+Subject: Re: [PATCH bpf-next 5/6] bpf: Improve tracing recursion prevention mechanism
+To:     Steven Rostedt <rostedt@goodmis.org>
+Cc:     Alexei Starovoitov <alexei.starovoitov@gmail.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Andrii Nakryiko <andrii@kernel.org>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        John Fastabend <john.fastabend@gmail.com>,
+        KP Singh <kpsingh@kernel.org>,
+        Stanislav Fomichev <sdf@google.com>,
+        Hao Luo <haoluo@google.com>, Jiri Olsa <jolsa@kernel.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        bpf <bpf@vger.kernel.org>, linux-trace-kernel@vger.kernel.org,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-Hi, Enze
-
-On 04/27/2023 02:16 PM, Enze Li wrote:
-> On Thu, Apr 27 2023 at 10:12:32 AM +0800, Youling Tang wrote:
+On Tue, Apr 25, 2023 at 5:40=E2=80=AFAM Steven Rostedt <rostedt@goodmis.org=
+> wrote:
 >
->> From: Qing Zhang <zhangqing@loongson.cn>
->>
->> 1. Adds new ftrace_regs_{get,set}_*() helpers which can be used to manipulate
->> ftrace_regs. When CONFIG_HAVE_DYNAMIC_FTRACE_WITH_ARGS=y, these can always
->> be used on any ftrace_regs, and when CONFIG_HAVE_DYNAMIC_FTRACE_WITH_ARGS=n
->> these can be used when regs are available. A new ftrace_regs_has_args(fregs)
->> helper is added which code can use to check when these are usable.
->>
->> 2. Prepare ftrace_regs_set_instruction_pointer support in advance.
->>
->> Signed-off-by: Qing Zhang <zhangqing@loongson.cn>
->> ---
->>  arch/loongarch/include/asm/ftrace.h | 25 +++++++++++++++++++++++++
->>  1 file changed, 25 insertions(+)
->>
->> diff --git a/arch/loongarch/include/asm/ftrace.h b/arch/loongarch/include/asm/ftrace.h
->> index f789e680f633..30ee01243416 100644
->> --- a/arch/loongarch/include/asm/ftrace.h
->> +++ b/arch/loongarch/include/asm/ftrace.h
->> @@ -54,6 +54,31 @@ static __always_inline struct pt_regs *arch_ftrace_get_regs(struct ftrace_regs *
->>  	return &fregs->regs;
->>  }
->>
->> +static __always_inline void
->> +ftrace_regs_set_instruction_pointer(struct ftrace_regs *fregs,
->> +				    unsigned long ip)
->> +{
->> +	regs_set_return_value(&fregs->regs, ip);
->> +}
->> +
->> +static __always_inline unsigned long
->> +ftrace_regs_get_instruction_pointer(struct ftrace_regs *fregs)
->> +{
->> +	return instruction_pointer(&fregs->regs);
->> +}
->> +
->> +#define ftrace_regs_get_argument(fregs, n) \
->> +	regs_get_kernel_argument(&(fregs)->regs, n)
->> +#define ftrace_regs_get_stack_pointer(fregs) \
->> +	kernel_stack_pointer(&(fregs)->regs)
->> +#define ftrace_regs_return_value(fregs) \
->> +	regs_return_value(&(fregs)->regs)
->> +#define ftrace_regs_set_return_value(fregs, ret) \
+> On Wed, 19 Apr 2023 15:46:34 -0700
+> Alexei Starovoitov <alexei.starovoitov@gmail.com> wrote:
 >
-> Hi Youling,
+> > No. Just one prog at entry into any of the kernel functions
+> > and another prog at entry of funcs that 1st bpf prog called indirectly.
+> > Like one prog is tracing networking events while another
+> > is focusing on mm. They should not conflict.
 >
->> +	regs_set_return_value(&(fregs)->regs, ret)
->        ^^^^^^^^^^^^^^^^^^^^^^^^
-> I can not find the implementation of this function, am I missing
-> something?
-Note: This patch depends on regs_set_return_value() in the patch
-"LoongArch: Add support for function error injection".
-
-https://github.com/chenhuacai/linux/commit/c78e80c75b98feeb02b9a6eefb9de759f9036f42
-
+> You mean that you have:
 >
->> +#define ftrace_override_function_with_return(fregs) \
->> +	override_function_with_return(&(fregs)->regs)
->> +#define ftrace_regs_query_register_offset(name) \
->                                                  ^^^^^^
-> There seems to be a missing function here.  Otherwise, the backslash
-> should be redundant.  Did I understand correctly?
-Sorry for my oversight.
-
-ftrace_regs_query_register_offset() will reuse
-regs_query_register_offset(), I will modify it as follows,
-
-#define ftrace_regs_query_register_offset(name) \
-          regs_query_register_offset(name)
-
-Thanks,
-Youling.
+> function start:
+>   __bpf_prog_enter_recur()
+>     bpf_program1()
+>       __bpf_prog_enter_recur()
+>         bpf_program2();
+>       __bpf_prog_exit_recur()
+>   __bpf_prog_exit_recur()
 >
-> Best Regards,
-> Enze
+>   rest of function
 >
->> +
->>  #define ftrace_graph_func ftrace_graph_func
->>  void ftrace_graph_func(unsigned long ip, unsigned long parent_ip,
->>  		       struct ftrace_ops *op, struct ftrace_regs *fregs);
+> That is, a bpf program can be called within another bpf pogram between
+> the prog_enter and prog_exit(), that is in the same context (normal,
+> softirq, irq, etc)?
+>
 
+Right, that can happen per my verification. Below is a simple bpf
+program to verify it.
+
+struct {
+    __uint(type, BPF_MAP_TYPE_LPM_TRIE);
+    __type(key, __u64);
+    __type(value, __u64);
+    __uint(max_entries, 1024);
+    __uint(map_flags, BPF_F_NO_PREALLOC);
+} write_map SEC(".maps");
+
+__u64 key;
+
+SEC("fentry/kernel_clone")
+int program1()
+{
+    __u64 value =3D 1;
+
+    bpf_printk("before update");
+    // It will call trie_update_elem and thus trigger program2.
+    bpf_map_update_elem(&write_map, &key, &value, BPF_ANY);
+    __sync_fetch_and_add(&key, 1);
+    bpf_printk("after update");
+    return 0;
+}
+
+SEC("fentry/trie_update_elem")
+int program2()
+{
+    bpf_printk("trie_update_elem");
+    return 0;
+}
+
+The result as follows,
+
+         kubelet-203203  [018] ....1  9579.862862:
+__bpf_prog_enter_recur: __bpf_prog_enter_recur
+         kubelet-203203  [018] ...11  9579.862869: bpf_trace_printk:
+before update
+         kubelet-203203  [018] ....2  9579.862869:
+__bpf_prog_enter_recur: __bpf_prog_enter_recur
+         kubelet-203203  [018] ...12  9579.862870: bpf_trace_printk:
+trie_update_elem
+         kubelet-203203  [018] ....2  9579.862870:
+__bpf_prog_exit_recur: __bpf_prog_exit_recur
+         kubelet-203203  [018] ...11  9579.862870: bpf_trace_printk:
+after update
+         kubelet-203203  [018] ....1  9579.862871:
+__bpf_prog_exit_recur: __bpf_prog_exit_recur
+
+Note that we can't trace __bpf_prog_enter_recur and
+__bpf_prog_exit_recur, so we have to modify the kernel to print them.
+
+> The protection is on the trampoline where the bpf program is called.
+> Not sure how ftrace can stop BPF or BPF stop ftrace, unless bpf is
+> tracing a ftrace callback, or ftrace is tracing a bpf function.
+>
+> -- Steve
+
+
+
+--=20
+Regards
+Yafang
