@@ -2,173 +2,174 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 34F31C77B73
-	for <linux-trace-kernel@archiver.kernel.org>; Thu, 27 Apr 2023 09:58:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D76A4C77B73
+	for <linux-trace-kernel@archiver.kernel.org>; Thu, 27 Apr 2023 11:59:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S243451AbjD0J61 (ORCPT
+        id S243370AbjD0L7D (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Thu, 27 Apr 2023 05:58:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42628 "EHLO
+        Thu, 27 Apr 2023 07:59:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50546 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S243445AbjD0J6Z (ORCPT
+        with ESMTP id S243283AbjD0L7C (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Thu, 27 Apr 2023 05:58:25 -0400
-Received: from mail-qv1-xf2a.google.com (mail-qv1-xf2a.google.com [IPv6:2607:f8b0:4864:20::f2a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6C3171BC5;
-        Thu, 27 Apr 2023 02:58:24 -0700 (PDT)
-Received: by mail-qv1-xf2a.google.com with SMTP id 6a1803df08f44-5ef8aaf12bdso35177926d6.3;
-        Thu, 27 Apr 2023 02:58:24 -0700 (PDT)
+        Thu, 27 Apr 2023 07:59:02 -0400
+Received: from mail-ej1-x631.google.com (mail-ej1-x631.google.com [IPv6:2a00:1450:4864:20::631])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EE6FA4C3D;
+        Thu, 27 Apr 2023 04:59:00 -0700 (PDT)
+Received: by mail-ej1-x631.google.com with SMTP id a640c23a62f3a-959a626b622so797830466b.0;
+        Thu, 27 Apr 2023 04:59:00 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1682589503; x=1685181503;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=5H4urfMx4Jh2e9EbQKPkIyXjRe2bh/qiE1leyX/3eWw=;
-        b=ZZ4KYW4275a1rgyrsslbI7/3BzMp2MIeDquIgk3X8jaeJ1B+fKh7sTOfSzsiodmmP9
-         pO/XqdQWyUwE60nK72vKdRvGvU935a23v2EmrkspzAptxdj+eds0XbQxbQs3vfElNMe7
-         AH7gOE4+u691GNUIBO10Vuuqy7G1jhEaQcmQoSFWVAdkWCDDLdxLyOc7btvypV3VoRJ/
-         AnzZIn7D3C5LZ/HxVZRieXTG3Rb7DQRtSU03RIXFKTMCVKOSfdvu8CyPhsj1HJ0YWwEH
-         q6yz8sL4uDFcSJ4elutLXi7PSNC2oxRn1UFlacEzUgHr06JClFNv+KA0bdH8Jj8qVuUe
-         cDEA==
+        d=gmail.com; s=20221208; t=1682596739; x=1685188739;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=AE7Pspd28nFtHWfyIzA120GvJp4aroY+ZH6NEOLYSVY=;
+        b=fgKLrUtQzL7xid5SkT14yLFXtyHM4Krt/K+Vesqq6FddnrKpdE5lN4tQ9YDsDTkFr3
+         bHfJDJHTjHFfGsTr9C5XddTJyIs3JmngwkkCJHilsVQPJKkRdK06+zYr7YSUrfaLAh7Z
+         FzRTDZcBCuy7rmzM7XJ8G61tUIEWr/aiwDchxCqv6rQnLk0zjJ5mubKQUx7Z/zsq+iuo
+         lg7TsEiQbQSUqrx29E6BRsvePZvHTeEwoAS9QKlGxRvpXx/naySV8aPifxKfhXBDNt0N
+         aE3DPFNJyU+r0r4TTqTzfakJGrnbFJ75RB80NoJ1qKTp8ZqczciQRFZCDKP6oyMsH3dF
+         vcsw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1682589503; x=1685181503;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=5H4urfMx4Jh2e9EbQKPkIyXjRe2bh/qiE1leyX/3eWw=;
-        b=Xo0F8GBuZGkHnTVFbSZCh5oGpcS9x1DoiymVx01tKSeAzxsR3p0nndSOzL1UzourKp
-         7hL6WayRXonbo21hhlDenynjZDVIHr9GNAEfAbs62e0wBbHiH6wPKrN1iAzMVdGbbCdP
-         t/L4HYVGP4BwybmiOz9hJQMyN/JYyrSHsLNCr782Nf1wv8CdnGzZG7SdQb3r1LxjyGdp
-         k1AtVR3u5NzYOZvefIYXoeiutiERfdHIRG1ZUCltlJxrknBTXjz2QUop1nySjAFI2jAz
-         lFnVh2Qz0wa07+BB7Z3vFi0BSgQxax510LTUuUwGRtd+racpOuPGc00EabOt4lo00Ktu
-         cmHA==
-X-Gm-Message-State: AC+VfDySbNeZs4/kg//hugK3JT2ZuJ2go39F/01Q8pIEl/un8iRrTPbG
-        PKUu/aBRg4Y6CjObUTovQJ62imjVX3henF2x/easWpTcufBvZg==
-X-Google-Smtp-Source: ACHHUZ5u74XYCV+RmAscIBZt0+JZKqc5mfORjXgiD4PA4KTJH2oLwAvfseKa73Y6mOzKOm7PyHO6nDmyeKz+eXPMAbc=
-X-Received: by 2002:a05:6214:2589:b0:5f1:6bee:f58e with SMTP id
- fq9-20020a056214258900b005f16beef58emr885006qvb.35.1682589503483; Thu, 27 Apr
- 2023 02:58:23 -0700 (PDT)
+        d=1e100.net; s=20221208; t=1682596739; x=1685188739;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=AE7Pspd28nFtHWfyIzA120GvJp4aroY+ZH6NEOLYSVY=;
+        b=i9yIHrduY3WzqSL1zjqeD6MUrxIxSeij6qsR4FgrL5E9hivIK3V5YpAgC+uAwByrd1
+         AjVMx+uxBd4Wubku/gL89Rk+/YwSM09Vqb/O60S9o8DMpdxPB5NLqqdQQheuE1A3KHgj
+         7fUaTKgyAJ+5hEKi+jyfFKmincUSjnn46n8+xQkpB06zqG0ejjIJnt6SEgak/NKV0P5L
+         0UyJQsWDiL+7/FoRG8ecPOpeMsDxImAAU2y1oIs/94t2xCwo7BVfMcTjYrtzrZzg5wH2
+         4lKpex75tZdtUTaEO5WYxxtpbdqeEYJzXI0VLGEO3wK0/lFtGq8Z0NIOw7mz/L8PxJ0H
+         HUFQ==
+X-Gm-Message-State: AC+VfDxvXngGkBAbNr0MmD955tyDCKM1stRwFLHw1D/FQiDmbJtpjGAS
+        /MPR5lSD6yd4czpcpYsALzs=
+X-Google-Smtp-Source: ACHHUZ7lpvqWveupZjInIJ3m9ZqG439Xu8iO1z3t4DXYCmhoeZazsYr/aAslTH1pP9VgZXhTerGgUA==
+X-Received: by 2002:a17:907:968a:b0:939:e870:2b37 with SMTP id hd10-20020a170907968a00b00939e8702b37mr1610565ejc.70.1682596739003;
+        Thu, 27 Apr 2023 04:58:59 -0700 (PDT)
+Received: from krava (2001-1ae9-1c2-4c00-8b88-53b7-c55c-8535.ip6.tmcz.cz. [2001:1ae9:1c2:4c00:8b88:53b7:c55c:8535])
+        by smtp.gmail.com with ESMTPSA id e1-20020a17090681c100b0094f67ea6598sm9491285ejx.193.2023.04.27.04.58.57
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 27 Apr 2023 04:58:58 -0700 (PDT)
+From:   Jiri Olsa <olsajiri@gmail.com>
+X-Google-Original-From: Jiri Olsa <jolsa@kernel.org>
+Date:   Thu, 27 Apr 2023 13:58:56 +0200
+To:     "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
+Cc:     linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Florent Revest <revest@chromium.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Martin KaFai Lau <martin.lau@linux.dev>, bpf@vger.kernel.org
+Subject: Re: [PATCH v7 00/11] tracing: Add fprobe events
+Message-ID: <ZEpjgKmDwg1GTCTR@krava>
+References: <168255826500.2565678.17719875734305974633.stgit@mhiramat.roam.corp.google.com>
 MIME-Version: 1.0
-References: <20230417154737.12740-1-laoar.shao@gmail.com> <20230417154737.12740-6-laoar.shao@gmail.com>
- <20230417201457.c43xfcukjzm4u6vx@dhcp-172-26-102-232.dhcp.thefacebook.com>
- <CALOAHbC4Bz_VX52zmv=sScBf0hzscMAC4+EwMCpnd1BcaSVJSw@mail.gmail.com>
- <CAADnVQJw9BCK2itE5bZWdQYz7D-8KdcH96E885zUakEDAOrC+Q@mail.gmail.com>
- <CALOAHbCtPR26it_Wdk7T_TETMTh2se6rgEbL_KC5XKtzvObjiA@mail.gmail.com>
- <CAADnVQ+FO-+1OALTtgVkcpH3Adc6xS9qjzORyq2vwVtwY2UoxQ@mail.gmail.com> <20230424174049.1c9e54dd@rorschach.local.home>
-In-Reply-To: <20230424174049.1c9e54dd@rorschach.local.home>
-From:   Yafang Shao <laoar.shao@gmail.com>
-Date:   Thu, 27 Apr 2023 17:57:47 +0800
-Message-ID: <CALOAHbAx+W3-iBS6=FsPPShbEuSSZeyQWvLque+uF9Suwe3-HA@mail.gmail.com>
-Subject: Re: [PATCH bpf-next 5/6] bpf: Improve tracing recursion prevention mechanism
-To:     Steven Rostedt <rostedt@goodmis.org>
-Cc:     Alexei Starovoitov <alexei.starovoitov@gmail.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Andrii Nakryiko <andrii@kernel.org>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        John Fastabend <john.fastabend@gmail.com>,
-        KP Singh <kpsingh@kernel.org>,
-        Stanislav Fomichev <sdf@google.com>,
-        Hao Luo <haoluo@google.com>, Jiri Olsa <jolsa@kernel.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        bpf <bpf@vger.kernel.org>, linux-trace-kernel@vger.kernel.org,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <168255826500.2565678.17719875734305974633.stgit@mhiramat.roam.corp.google.com>
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On Tue, Apr 25, 2023 at 5:40=E2=80=AFAM Steven Rostedt <rostedt@goodmis.org=
-> wrote:
->
-> On Wed, 19 Apr 2023 15:46:34 -0700
-> Alexei Starovoitov <alexei.starovoitov@gmail.com> wrote:
->
-> > No. Just one prog at entry into any of the kernel functions
-> > and another prog at entry of funcs that 1st bpf prog called indirectly.
-> > Like one prog is tracing networking events while another
-> > is focusing on mm. They should not conflict.
->
-> You mean that you have:
->
-> function start:
->   __bpf_prog_enter_recur()
->     bpf_program1()
->       __bpf_prog_enter_recur()
->         bpf_program2();
->       __bpf_prog_exit_recur()
->   __bpf_prog_exit_recur()
->
->   rest of function
->
-> That is, a bpf program can be called within another bpf pogram between
-> the prog_enter and prog_exit(), that is in the same context (normal,
-> softirq, irq, etc)?
->
+On Thu, Apr 27, 2023 at 10:17:45AM +0900, Masami Hiramatsu (Google) wrote:
+> Hi,
+> 
+> Here is the 7th version of improve fprobe and add a basic fprobe event
+> support for ftrace (tracefs) and perf. Here is the previous version.
+> 
+> https://lore.kernel.org/all/168234755610.2210510.12133559313738141202.stgit@mhiramat.roam.corp.google.com/
+> 
+> This version is rebased on the latest linux-trace/for-next, fixes
+> bpf_get_btf_vmlinux() return value check [6/11] and adds new BTF $retval
+> type support [9/11] (I forgot to implement this feature last time).
+> Also updates according to the BTF $retval type support.
+> 
+> You can also get this series from:
+> 
+> git://git.kernel.org/pub/scm/linux/kernel/git/mhiramat/linux.git topic/fprobe-event-ext
+> 
+> With this fprobe events, we can continue to trace function entry/exit
+> even if the CONFIG_KPROBES_ON_FTRACE is not available. Since
+> CONFIG_KPROBES_ON_FTRACE requires the CONFIG_DYNAMIC_FTRACE_WITH_REGS,
+> it is not available if the architecture only supports
+> CONFIG_DYNAMIC_FTRACE_WITH_ARGS (e.g. arm64). And that means kprobe
+> events can not probe function entry/exit effectively on such architecture.
+> But this problem can be solved if the dynamic events supports fprobe events
+> because fprobe events doesn't use kprobe but ftrace via fprobe.
+> 
+> FPROBE EVENTS
+> =============
+> 
+> Fprobe events allows user to add new events on the entry and exit of kernel
+> functions (which can be ftraced). Unlike kprobe events, the fprobe events
+> can only probe the function entry and exit, and it can only trace the
+> function args, return value, and stacks. (no registers)
+> For probing function body, users can continue to use the kprobe events.
+> 
+> The tracepoint probe events (tprobe events) also allows user to add new
+> events dynamically on the tracepoint. Most of the tracepoint already has
+> trace-events, so this feature is useful if you only want to know a
+> specific parameter, or trace the tracepoints which has no trace-events
+> (e.g. sched_*_tp tracepoints only exposes the tracepoints.)
+> 
+> The fprobe events syntax is;
+> 
+>  f[:[GRP/][EVENT]] FUNCTION [FETCHARGS]
+>  f[MAXACTIVE][:[GRP/][EVENT]] FUNCTION%return [FETCHARGS]
+> 
+> And tracepoint probe events syntax is;
+> 
+>  t[:[GRP/][EVENT]] TRACEPOINT [FETCHARGS]
+> 
+> This series includes BTF argument support for fprobe/tracepoint events,
+> and kprobe events. This allows us to fetch a specific function parameter
+> by name, and all parameters by '$$args'.
 
-Right, that can happen per my verification. Below is a simple bpf
-program to verify it.
+are you planning to fetch and display more complicated types in future?
+like strings or dereferencing struct field from argument pointer
 
-struct {
-    __uint(type, BPF_MAP_TYPE_LPM_TRIE);
-    __type(key, __u64);
-    __type(value, __u64);
-    __uint(max_entries, 1024);
-    __uint(map_flags, BPF_F_NO_PREALLOC);
-} write_map SEC(".maps");
+> Note that enabling this feature, you need to enable CONFIG_BPF_SYSCALL and
+> confirm that your arch supports CONFIG_HAVE_FUNCTION_ARG_ACCESS_API.
+> 
+> E.g.
+> 
+>  # echo 't kfree ptr' >> dynamic_events
+>  # echo 'f kfree object' >> dynamic_events
+>  # cat dynamic_events 
+> t:tracepoints/kfree kfree ptr=ptr
+> f:fprobes/kfree__entry kfree object=object
+>  # echo 1 > events/fprobes/enable
+>  # echo 1 > events/tracepoints/enable
+>  # echo > trace
+>  # head -n 20 trace | tail
+> #           TASK-PID     CPU#  |||||  TIMESTAMP  FUNCTION
+> #              | |         |   |||||     |         |
+>             tail-84      [000] .....  1324.561958: kfree__entry: (kfree+0x4/0x140) object=0xffff888006383c00
+>             tail-84      [000] ...1.  1324.561961: kfree: (__probestub_kfree+0x4/0x10) ptr=0xffff888006383c00
+>             tail-84      [000] .....  1324.561988: kfree__entry: (kfree+0x4/0x140) object=0x0
+>             tail-84      [000] ...1.  1324.561988: kfree: (__probestub_kfree+0x4/0x10) ptr=0x0
+>             tail-84      [000] .....  1324.561989: kfree__entry: (kfree+0x4/0x140) object=0xffff88800671e600
+>             tail-84      [000] ...1.  1324.561989: kfree: (__probestub_kfree+0x4/0x10) ptr=0xffff88800671e600
+>             tail-84      [000] .....  1324.562368: kfree__entry: (kfree+0x4/0x140) object=0xffff8880065e0580
+>             tail-84      [000] ...1.  1324.562369: kfree: (__probestub_kfree+0x4/0x10) ptr=0xffff8880065e0580
 
-__u64 key;
+I checked with perf and record/stat/script seem to work fine with this
 
-SEC("fentry/kernel_clone")
-int program1()
-{
-    __u64 value =3D 1;
+  # ./perf record -e 'fprobes:myprobe'
+  ^C[ perf record: Woken up 1 times to write data ]
+  [ perf record: Captured and wrote 0.162 MB perf.data (1 samples) ]
 
-    bpf_printk("before update");
-    // It will call trie_update_elem and thus trigger program2.
-    bpf_map_update_elem(&write_map, &key, &value, BPF_ANY);
-    __sync_fetch_and_add(&key, 1);
-    bpf_printk("after update");
-    return 0;
-}
+  # ./perf script
+    systemd-oomd   479 [001] 14550.722079: fprobes:myprobe: (ffffffff81505be0) filename=0x557b033662b0
 
-SEC("fentry/trie_update_elem")
-int program2()
-{
-    bpf_printk("trie_update_elem");
-    return 0;
-}
+perf trace seems to be off with __probe_ip for some reason:
 
-The result as follows,
+  # ./perf trace -e 'fprobes:myprobe'
+     0.000 systemd-oomd/479 fprobes:myprobe(__probe_ip: -2125440032, filename: 93986839069680)
+     1.189 systemd-oomd/479 fprobes:myprobe(__probe_ip: -2125440032, filename: 93986839070144)
 
-         kubelet-203203  [018] ....1  9579.862862:
-__bpf_prog_enter_recur: __bpf_prog_enter_recur
-         kubelet-203203  [018] ...11  9579.862869: bpf_trace_printk:
-before update
-         kubelet-203203  [018] ....2  9579.862869:
-__bpf_prog_enter_recur: __bpf_prog_enter_recur
-         kubelet-203203  [018] ...12  9579.862870: bpf_trace_printk:
-trie_update_elem
-         kubelet-203203  [018] ....2  9579.862870:
-__bpf_prog_exit_recur: __bpf_prog_exit_recur
-         kubelet-203203  [018] ...11  9579.862870: bpf_trace_printk:
-after update
-         kubelet-203203  [018] ....1  9579.862871:
-__bpf_prog_exit_recur: __bpf_prog_exit_recur
+but it's probably perf issue
 
-Note that we can't trace __bpf_prog_enter_recur and
-__bpf_prog_exit_recur, so we have to modify the kernel to print them.
-
-> The protection is on the trampoline where the bpf program is called.
-> Not sure how ftrace can stop BPF or BPF stop ftrace, unless bpf is
-> tracing a ftrace callback, or ftrace is tracing a bpf function.
->
-> -- Steve
-
-
-
---=20
-Regards
-Yafang
+thanks,
+jirka
