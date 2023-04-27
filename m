@@ -2,52 +2,52 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CE6B8C77B73
-	for <linux-trace-kernel@archiver.kernel.org>; Thu, 27 Apr 2023 12:16:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F632C77B61
+	for <linux-trace-kernel@archiver.kernel.org>; Thu, 27 Apr 2023 12:36:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S243789AbjD0MQN (ORCPT
+        id S243373AbjD0MgX (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Thu, 27 Apr 2023 08:16:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34872 "EHLO
+        Thu, 27 Apr 2023 08:36:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51214 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S243761AbjD0MQN (ORCPT
+        with ESMTP id S229636AbjD0MgW (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Thu, 27 Apr 2023 08:16:13 -0400
-Received: from mail-qv1-xf34.google.com (mail-qv1-xf34.google.com [IPv6:2607:f8b0:4864:20::f34])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 91C9759FD;
-        Thu, 27 Apr 2023 05:15:55 -0700 (PDT)
-Received: by mail-qv1-xf34.google.com with SMTP id 6a1803df08f44-5ef4885bc39so37463006d6.2;
-        Thu, 27 Apr 2023 05:15:55 -0700 (PDT)
+        Thu, 27 Apr 2023 08:36:22 -0400
+Received: from mail-qk1-x72e.google.com (mail-qk1-x72e.google.com [IPv6:2607:f8b0:4864:20::72e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D989B3AAA;
+        Thu, 27 Apr 2023 05:36:21 -0700 (PDT)
+Received: by mail-qk1-x72e.google.com with SMTP id af79cd13be357-74de7635180so809485185a.3;
+        Thu, 27 Apr 2023 05:36:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1682597754; x=1685189754;
+        d=gmail.com; s=20221208; t=1682598981; x=1685190981;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=aGVb0EWRnfJN9McMLRCtk+0SPSO6GWCEI8WRdlgALXM=;
-        b=FF/oiEep2XYHShVm4kipE4bafyndFC0DfAXJc9l0ivmUrLkt21SEnV65kOsxWqw8Dy
-         jcsnbofKaTnOcuk0COs5VhHtWz1b0e1ij1rWfV0tyEKcf18FJhkUd0NKoVYbH3yeRwtL
-         5gtT6g0JgFlc80Jbl7cOmY8oZFjl1/Y2WQ433tMBKM4BrlQqVCbKz2JEaYjK0yJ6Zvzr
-         i4u1E1IHI2cF91ppXiqMoXHZ6Yw96AmUYfVUE8CeweBxj/DuMNTZV9Lt6cfr1GLgGGVE
-         6kBeAFaLWga3IXeDM7/w1XxdaaehEXUWO1CB5V5BcBY4mHTW/D+cDhAA8iaFXUnXhPp/
-         MAFQ==
+        bh=uamYaAPiGbEuD/CCuWzrQEEft21M2zokyUeiq+isD7s=;
+        b=BTlbPFOcy9ohq/rnIcEzr3ktsmGoIkLS5TIak2p0WjRjIS7tVD1nIqK8H28Io6XqVb
+         9aLFzRITd38OHn++1iixe4l+zH9eVbZwDAfhDkBPWusPk/VSHTt3diuofZ1nXTms4rWa
+         JJDnLuoNxKzEPHBsTTAesrqHvIflWeuCV+ypelKfuvD4O+TPSpqMCXAzeoegikWjB/Xn
+         oB//Q9Oj0JVMjfEMXdE+932BDwJurikQ3prEJSDaerswpy8Wg2pAA2X1sKEPI4tHB6Go
+         ZHMRvXK14JUWYrPAmxUScss3xazUqYC7wB2ZNdtCocebfo9MWUezS6nhOC52uXfScmbO
+         Xkvg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1682597754; x=1685189754;
+        d=1e100.net; s=20221208; t=1682598981; x=1685190981;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=aGVb0EWRnfJN9McMLRCtk+0SPSO6GWCEI8WRdlgALXM=;
-        b=Ke4l+aFamJsuTdZChGAYUkszEtjjFOlEKCI+rb1gwWhXHgprzWa7RlGtQXsQQlYR2b
-         1Ttz/xenNL6gY5w6XzHZINmvbhrJG7OO7qn3+RdBXTI6ZIJhK553BMCFc1jGWbAOVO+l
-         osy//eaZb3tXD/Yebsftj/aj2UuQCYc86guDOUjWoYPpFSK2IVF2HWRgdSonlwYlYfnM
-         zxlZbG6zG60FtpIkzSANryizBHftaL/ve505kYyLQfiKKJ+Hw4xg3i2IxBci/8UwnV+a
-         eFptCUd9N+hUDul45Odl9GnuTYllbB2YTpqu2Ihd2RaT6RLHbJ4I4RkfOr1hF1VLNzzd
-         mVyg==
-X-Gm-Message-State: AC+VfDwcPYel5i19TJ7dlNBhtkrPcno96l27IKigAeBHKJbKZwlIlNPG
-        910+nhNzJIJhwOH97BX05LEPJ2oqBe4UOkt/Fc8=
-X-Google-Smtp-Source: ACHHUZ7a21m2eQtsYoV3x5/rC5U45LhJAu9nbaQYI/P0MUx5/lQB2gpnRF92NoVovkByY/W79j0gZXsRexjLdh1xoUQ=
-X-Received: by 2002:a05:6214:1253:b0:616:7cf5:ff70 with SMTP id
- r19-20020a056214125300b006167cf5ff70mr957371qvv.22.1682597754385; Thu, 27 Apr
- 2023 05:15:54 -0700 (PDT)
+        bh=uamYaAPiGbEuD/CCuWzrQEEft21M2zokyUeiq+isD7s=;
+        b=kbVIus5Zlt1nLD/D602IavKg+fKqXa8euUDk5wNeoKeKslEGCRlnf/+FguDfLS7nNr
+         J6OS79tYntZJI5mU8S0NEMJtcagDbH23QkSrOQTJWkoaC/7KZbmAFJ9+aJ/EqObjj/Y3
+         VIpIh7k+9564H7g/f607IQDM+muou5KLm35tSuqVBKwA3ZWSyDUCZf6NWXsF9ztJEqZN
+         XR+OHdg9S99O2R8wQuWrQdVUn9uXvDjenVOGaTr1ah+kcyRFgCTsbBT6N7BbxoHDkBMl
+         U3PAvPdg5UG624P4gmPagdoy7DtOAxfHxAF2cW6HB6nTfR+GG2xwJ9N0XXgOPCTS1vNJ
+         IiWg==
+X-Gm-Message-State: AC+VfDxH0DdzGYSmcdfON4HaNzKOiGX6g63VQOGlZ8rfJB4Iu66akujw
+        aDTw+E6YwojY5QuMYT4n6TkG8IA+UJ1Met7kKKQ=
+X-Google-Smtp-Source: ACHHUZ6z1cQlttoN0k2H76P2WsRE9QHnUy28HBxx03rn8CVmetWUfgyzpbwJvo84hWza6TQwkxJK0ed6dgn0FdEClcE=
+X-Received: by 2002:ad4:5fca:0:b0:615:29ab:e4c6 with SMTP id
+ jq10-20020ad45fca000000b0061529abe4c6mr2008193qvb.45.1682598981060; Thu, 27
+ Apr 2023 05:36:21 -0700 (PDT)
 MIME-Version: 1.0
 References: <20230417154737.12740-1-laoar.shao@gmail.com> <20230417154737.12740-6-laoar.shao@gmail.com>
  <20230417201457.c43xfcukjzm4u6vx@dhcp-172-26-102-232.dhcp.thefacebook.com>
@@ -56,10 +56,11 @@ References: <20230417154737.12740-1-laoar.shao@gmail.com> <20230417154737.12740-
  <CALOAHbCtPR26it_Wdk7T_TETMTh2se6rgEbL_KC5XKtzvObjiA@mail.gmail.com>
  <CAADnVQ+FO-+1OALTtgVkcpH3Adc6xS9qjzORyq2vwVtwY2UoxQ@mail.gmail.com>
  <20230424174049.1c9e54dd@rorschach.local.home> <CALOAHbAx+W3-iBS6=FsPPShbEuSSZeyQWvLque+uF9Suwe3-HA@mail.gmail.com>
-In-Reply-To: <CALOAHbAx+W3-iBS6=FsPPShbEuSSZeyQWvLque+uF9Suwe3-HA@mail.gmail.com>
+ <CALOAHbAqsSq+gVg9xTYGAkrdZaFXc=PVoOYqej33dCEjWtHfFw@mail.gmail.com>
+In-Reply-To: <CALOAHbAqsSq+gVg9xTYGAkrdZaFXc=PVoOYqej33dCEjWtHfFw@mail.gmail.com>
 From:   Yafang Shao <laoar.shao@gmail.com>
-Date:   Thu, 27 Apr 2023 20:15:18 +0800
-Message-ID: <CALOAHbAqsSq+gVg9xTYGAkrdZaFXc=PVoOYqej33dCEjWtHfFw@mail.gmail.com>
+Date:   Thu, 27 Apr 2023 20:35:45 +0800
+Message-ID: <CALOAHbCXRwp9--MV2k8z3aJyAL6vzQLimtHgkeza7g0C=Edb8g@mail.gmail.com>
 Subject: Re: [PATCH bpf-next 5/6] bpf: Improve tracing recursion prevention mechanism
 To:     Steven Rostedt <rostedt@goodmis.org>,
         Alexei Starovoitov <alexei.starovoitov@gmail.com>
@@ -81,104 +82,105 @@ Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On Thu, Apr 27, 2023 at 5:57=E2=80=AFPM Yafang Shao <laoar.shao@gmail.com> =
+On Thu, Apr 27, 2023 at 8:15=E2=80=AFPM Yafang Shao <laoar.shao@gmail.com> =
 wrote:
 >
-> On Tue, Apr 25, 2023 at 5:40=E2=80=AFAM Steven Rostedt <rostedt@goodmis.o=
-rg> wrote:
+> On Thu, Apr 27, 2023 at 5:57=E2=80=AFPM Yafang Shao <laoar.shao@gmail.com=
+> wrote:
 > >
-> > On Wed, 19 Apr 2023 15:46:34 -0700
-> > Alexei Starovoitov <alexei.starovoitov@gmail.com> wrote:
+> > On Tue, Apr 25, 2023 at 5:40=E2=80=AFAM Steven Rostedt <rostedt@goodmis=
+.org> wrote:
+> > >
+> > > On Wed, 19 Apr 2023 15:46:34 -0700
+> > > Alexei Starovoitov <alexei.starovoitov@gmail.com> wrote:
+> > >
+> > > > No. Just one prog at entry into any of the kernel functions
+> > > > and another prog at entry of funcs that 1st bpf prog called indirec=
+tly.
+> > > > Like one prog is tracing networking events while another
+> > > > is focusing on mm. They should not conflict.
+> > >
+> > > You mean that you have:
+> > >
+> > > function start:
+> > >   __bpf_prog_enter_recur()
+> > >     bpf_program1()
+> > >       __bpf_prog_enter_recur()
+> > >         bpf_program2();
+> > >       __bpf_prog_exit_recur()
+> > >   __bpf_prog_exit_recur()
+> > >
+> > >   rest of function
+> > >
+> > > That is, a bpf program can be called within another bpf pogram betwee=
+n
+> > > the prog_enter and prog_exit(), that is in the same context (normal,
+> > > softirq, irq, etc)?
+> > >
 > >
-> > > No. Just one prog at entry into any of the kernel functions
-> > > and another prog at entry of funcs that 1st bpf prog called indirectl=
-y.
-> > > Like one prog is tracing networking events while another
-> > > is focusing on mm. They should not conflict.
+> > Right, that can happen per my verification. Below is a simple bpf
+> > program to verify it.
 > >
-> > You mean that you have:
+> > struct {
+> >     __uint(type, BPF_MAP_TYPE_LPM_TRIE);
+> >     __type(key, __u64);
+> >     __type(value, __u64);
+> >     __uint(max_entries, 1024);
+> >     __uint(map_flags, BPF_F_NO_PREALLOC);
+> > } write_map SEC(".maps");
 > >
-> > function start:
-> >   __bpf_prog_enter_recur()
-> >     bpf_program1()
-> >       __bpf_prog_enter_recur()
-> >         bpf_program2();
-> >       __bpf_prog_exit_recur()
-> >   __bpf_prog_exit_recur()
+> > __u64 key;
 > >
-> >   rest of function
+> > SEC("fentry/kernel_clone")
+> > int program1()
+> > {
+> >     __u64 value =3D 1;
 > >
-> > That is, a bpf program can be called within another bpf pogram between
-> > the prog_enter and prog_exit(), that is in the same context (normal,
-> > softirq, irq, etc)?
+> >     bpf_printk("before update");
+> >     // It will call trie_update_elem and thus trigger program2.
+> >     bpf_map_update_elem(&write_map, &key, &value, BPF_ANY);
+> >     __sync_fetch_and_add(&key, 1);
+> >     bpf_printk("after update");
+> >     return 0;
+> > }
+> >
+> > SEC("fentry/trie_update_elem")
+> > int program2()
+> > {
+> >     bpf_printk("trie_update_elem");
+> >     return 0;
+> > }
+> >
+> > The result as follows,
+> >
+> >          kubelet-203203  [018] ....1  9579.862862:
+> > __bpf_prog_enter_recur: __bpf_prog_enter_recur
+> >          kubelet-203203  [018] ...11  9579.862869: bpf_trace_printk:
+> > before update
+> >          kubelet-203203  [018] ....2  9579.862869:
+> > __bpf_prog_enter_recur: __bpf_prog_enter_recur
+> >          kubelet-203203  [018] ...12  9579.862870: bpf_trace_printk:
+> > trie_update_elem
+> >          kubelet-203203  [018] ....2  9579.862870:
+> > __bpf_prog_exit_recur: __bpf_prog_exit_recur
+> >          kubelet-203203  [018] ...11  9579.862870: bpf_trace_printk:
+> > after update
+> >          kubelet-203203  [018] ....1  9579.862871:
+> > __bpf_prog_exit_recur: __bpf_prog_exit_recur
+> >
+> > Note that we can't trace __bpf_prog_enter_recur and
+> > __bpf_prog_exit_recur, so we have to modify the kernel to print them.
 > >
 >
-> Right, that can happen per my verification. Below is a simple bpf
-> program to verify it.
->
-> struct {
->     __uint(type, BPF_MAP_TYPE_LPM_TRIE);
->     __type(key, __u64);
->     __type(value, __u64);
->     __uint(max_entries, 1024);
->     __uint(map_flags, BPF_F_NO_PREALLOC);
-> } write_map SEC(".maps");
->
-> __u64 key;
->
-> SEC("fentry/kernel_clone")
-> int program1()
-> {
->     __u64 value =3D 1;
->
->     bpf_printk("before update");
->     // It will call trie_update_elem and thus trigger program2.
->     bpf_map_update_elem(&write_map, &key, &value, BPF_ANY);
->     __sync_fetch_and_add(&key, 1);
->     bpf_printk("after update");
->     return 0;
-> }
->
-> SEC("fentry/trie_update_elem")
-> int program2()
-> {
->     bpf_printk("trie_update_elem");
->     return 0;
-> }
->
-> The result as follows,
->
->          kubelet-203203  [018] ....1  9579.862862:
-> __bpf_prog_enter_recur: __bpf_prog_enter_recur
->          kubelet-203203  [018] ...11  9579.862869: bpf_trace_printk:
-> before update
->          kubelet-203203  [018] ....2  9579.862869:
-> __bpf_prog_enter_recur: __bpf_prog_enter_recur
->          kubelet-203203  [018] ...12  9579.862870: bpf_trace_printk:
-> trie_update_elem
->          kubelet-203203  [018] ....2  9579.862870:
-> __bpf_prog_exit_recur: __bpf_prog_exit_recur
->          kubelet-203203  [018] ...11  9579.862870: bpf_trace_printk:
-> after update
->          kubelet-203203  [018] ....1  9579.862871:
-> __bpf_prog_exit_recur: __bpf_prog_exit_recur
->
-> Note that we can't trace __bpf_prog_enter_recur and
-> __bpf_prog_exit_recur, so we have to modify the kernel to print them.
->
+> ... However, surprisingly it still works even after this patchset is
+> applied, because the hardirq/softirq flag is set when the program2 is
+> running, see also the flags in the above trace_pipe output. Is that
+> expected ?!
+> I need  some time to figure it out, but maybe you have a quick answer...
 
-... However, surprisingly it still works even after this patchset is
-applied, because the hardirq/softirq flag is set when the program2 is
-running, see also the flags in the above trace_pipe output. Is that
-expected ?!
-I need  some time to figure it out, but maybe you have a quick answer...
-
-> > The protection is on the trampoline where the bpf program is called.
-> > Not sure how ftrace can stop BPF or BPF stop ftrace, unless bpf is
-> > tracing a ftrace callback, or ftrace is tracing a bpf function.
-> >
-> > -- Steve
->
+Answer it by myself, that is because of the
+allowing-one-single-recursion rule. I misread the trace flags before.
+Sorry about the noise.
 
 
 --=20
