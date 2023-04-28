@@ -2,48 +2,52 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 72BFAC77B73
-	for <linux-trace-kernel@archiver.kernel.org>; Fri, 28 Apr 2023 02:58:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A535C77B61
+	for <linux-trace-kernel@archiver.kernel.org>; Fri, 28 Apr 2023 06:16:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1344806AbjD1C57 (ORCPT
+        id S1345372AbjD1GQ2 (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Thu, 27 Apr 2023 22:57:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45386 "EHLO
+        Fri, 28 Apr 2023 02:16:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37810 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1344466AbjD1C56 (ORCPT
+        with ESMTP id S230137AbjD1GQ1 (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Thu, 27 Apr 2023 22:57:58 -0400
-Received: from mailout1.samsung.com (mailout1.samsung.com [203.254.224.24])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 79FF9273B
-        for <linux-trace-kernel@vger.kernel.org>; Thu, 27 Apr 2023 19:57:54 -0700 (PDT)
-Received: from epcas2p1.samsung.com (unknown [182.195.41.53])
-        by mailout1.samsung.com (KnoxPortal) with ESMTP id 20230428025749epoutp01842ff77a968e08c23cd0cf1f789b849e~Z_d5yKz_U0195401954epoutp01k
-        for <linux-trace-kernel@vger.kernel.org>; Fri, 28 Apr 2023 02:57:49 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.samsung.com 20230428025749epoutp01842ff77a968e08c23cd0cf1f789b849e~Z_d5yKz_U0195401954epoutp01k
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1682650669;
-        bh=iLjn4qcsbkWRcY3G4A9+GX3c/kvOnVDtZ9RCmfpN/c0=;
-        h=Subject:Reply-To:From:To:CC:Date:References:From;
-        b=iH1XbDZHXA28QsOed3HUYdPClD2dczqSdWorlFifwEvx471wwYZS75oy94gyuo14U
-         V3oWABHXb127hleeVZd3vLNOlzXWJSMIrVqPq300CMyYoFErfthNQOAhuOlzxAC5J3
-         TcfQVoY1TnBrsSn8bgWDJyQNT1gRwZgpoWEQT2Ew=
-Received: from epsnrtp3.localdomain (unknown [182.195.42.164]) by
-        epcas2p1.samsung.com (KnoxPortal) with ESMTP id
-        20230428025748epcas2p1ac14073aedee8ec2bea8482e64acedf2~Z_d4cmodN2314923149epcas2p1K;
-        Fri, 28 Apr 2023 02:57:48 +0000 (GMT)
-Received: from epsmges2p3.samsung.com (unknown [182.195.36.102]) by
-        epsnrtp3.localdomain (Postfix) with ESMTP id 4Q6y2g41krz4x9Q2; Fri, 28 Apr
-        2023 02:57:47 +0000 (GMT)
-X-AuditID: b6c32a47-e99fd70000002007-7d-644b362b8aab
-Received: from epcas2p1.samsung.com ( [182.195.41.53]) by
-        epsmges2p3.samsung.com (Symantec Messaging Gateway) with SMTP id
-        1E.CA.08199.B263B446; Fri, 28 Apr 2023 11:57:47 +0900 (KST)
-Mime-Version: 1.0
-Subject: [PATCH v3] f2fs: add async reset zone command support
-Reply-To: daejun7.park@samsung.com
-Sender: Daejun Park <daejun7.park@samsung.com>
-From:   Daejun Park <daejun7.park@samsung.com>
-To:     "jaegeuk@kernel.org" <jaegeuk@kernel.org>,
+        Fri, 28 Apr 2023 02:16:27 -0400
+Received: from mga18.intel.com (mga18.intel.com [134.134.136.126])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1BDDE26A1;
+        Thu, 27 Apr 2023 23:16:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1682662586; x=1714198586;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=sfL9oKdMGiqAv8zuZWM1sYcfhkWY/sjDNL9L6OdNe28=;
+  b=BmnPGtAmW9hxTPiprK2JaIJCrxg8rYh4fPTlZNBLyfiGgZ/R2Ta4vJuC
+   jJ0LPo6IpUv69P+7i8R9x74OUteL4wszmCcNIHspYzizPZXvqk/CcSjzO
+   oK3DYY54bbAKeb/XHgLTmsk109dD/lZTqLSzkGq37K5yZshlNPIzRFWW5
+   eVlMNmupDg7u/EOeuzEddUaXa52Mhg0Gnzlw8mV/cCuYxAodnNeCdqdPk
+   14zAfZyuCDQZRvOIaYtiR3AylhmZCBiH6lpEZs43zS06ryIm+lu9OtPFr
+   lP82xFn93YtTVlGYeb8cbz1qQ3ivMNOi0/5HICJVUhfPCNSZFtd6LDTTd
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10693"; a="331963738"
+X-IronPort-AV: E=Sophos;i="5.99,233,1677571200"; 
+   d="scan'208";a="331963738"
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Apr 2023 23:16:25 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10693"; a="672037937"
+X-IronPort-AV: E=Sophos;i="5.99,233,1677571200"; 
+   d="scan'208";a="672037937"
+Received: from lkp-server01.sh.intel.com (HELO 5bad9d2b7fcb) ([10.239.97.150])
+  by orsmga006.jf.intel.com with ESMTP; 27 Apr 2023 23:16:22 -0700
+Received: from kbuild by 5bad9d2b7fcb with local (Exim 4.96)
+        (envelope-from <lkp@intel.com>)
+        id 1psHP3-0000C1-0k;
+        Fri, 28 Apr 2023 06:16:21 +0000
+Date:   Fri, 28 Apr 2023 14:16:15 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     Daejun Park <daejun7.park@samsung.com>,
+        "jaegeuk@kernel.org" <jaegeuk@kernel.org>,
         "chao@kernel.org" <chao@kernel.org>,
         "rostedt@goodmis.org" <rostedt@goodmis.org>,
         "mhiramat@kernel.org" <mhiramat@kernel.org>,
@@ -52,239 +56,100 @@ To:     "jaegeuk@kernel.org" <jaegeuk@kernel.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
         "linux-trace-kernel@vger.kernel.org" 
         <linux-trace-kernel@vger.kernel.org>
-CC:     Seokhwan Kim <sukka.kim@samsung.com>,
+Cc:     oe-kbuild-all@lists.linux.dev,
+        Seokhwan Kim <sukka.kim@samsung.com>,
         Yonggil Song <yonggil.song@samsung.com>,
         beomsu kim <beomsu7.kim@samsung.com>,
         Daejun Park <daejun7.park@samsung.com>
-X-Priority: 3
-X-Content-Kind-Code: NORMAL
-X-CPGS-Detection: blocking_info_exchange
-X-Drm-Type: N,general
-X-Msg-Generator: Mail
-X-Msg-Type: PERSONAL
-X-Reply-Demand: N
-Message-ID: <20230428025646epcms2p35acbea45ee80d36808861edba8a3c84a@epcms2p3>
-Date:   Fri, 28 Apr 2023 11:56:46 +0900
-X-CMS-MailID: 20230428025646epcms2p35acbea45ee80d36808861edba8a3c84a
-Content-Transfer-Encoding: 7bit
-Content-Type: text/plain; charset="utf-8"
-X-Sendblock-Type: AUTO_CONFIDENTIAL
-CMS-TYPE: 102P
-X-CPGSPASS: Y
-X-CPGSPASS: Y
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprJJsWRmVeSWpSXmKPExsWy7bCmqa62mXeKwa8t0hYX5n1ktjg99SyT
-        xctDmharHoRbPFk/i9ni0iJ3i8u75rBZHFl/lsVi8XI1i30dD5gsVnXMZbSYev4IkwOPR8u+
-        W+wem1Z1snnsXvCZyaNvyypGj8+b5AJYo7JtMlITU1KLFFLzkvNTMvPSbZW8g+Od403NDAx1
-        DS0tzJUU8hJzU22VXHwCdN0yc4BuU1IoS8wpBQoFJBYXK+nb2RTll5akKmTkF5fYKqUWpOQU
-        mBfoFSfmFpfmpevlpZZYGRoYGJkCFSZkZ7z4cpu1oF+v4tm2o4wNjHPVuhg5OSQETCSO9Dxm
-        BbGFBHYwSrxZDmRzcPAKCEr83SEMEhYWsJPomPibBaJESWL9xVnsEHE9iVsP1zCC2GwCOhLT
-        T9wHi4sITGWWOLwptYuRi4NZYDGjxNb/F1kgdvFKzGh/CmVLS2xfvpURwtaQ+LGslxnCFpW4
-        ufotO4z9/th8qBoRidZ7Z6FqBCUe/NwNFZeUuD13E1R9vsT/K8uh7BqJbQfmQdn6Etc6NoLt
-        5RXwlfh9ch5YL4uAqsTz6/+hZrpI3Do8EyzOLCAvsf3tHGZQODALaEqs36UPYkoIKEscucUC
-        UcEn0XH4LzvMVw0bf2Nl75j3hAnCVpNY93M9E8QYGYlb8xgnMCrNQoTzLCRrZyGsXcDIvIpR
-        LLWgODc9tdiowBges8n5uZsYwWlUy30H44y3H/QOMTJxMB5ilOBgVhLh5a10TxHiTUmsrEot
-        yo8vKs1JLT7EaAr08ERmKdHkfGAizyuJNzSxNDAxMzM0NzI1MFcS55W2PZksJJCeWJKanZpa
-        kFoE08fEwSnVwDRtkfXZrLKyNxqhx171Zre5zpdvq5l0v8ZOq0Wibbvm7P/S0tG7d/SauOYl
-        7KyxvBAqz3olTiNW7I9JTxjb0T+84T/s6udffGT70mWV7+Hy/2ZH3Dkfvjp560aeeMb1SXuf
-        bxd++/MCS1Ta+yyfTvkmyU016rt+/e6Nam6drfqKZ3nots3Brsr8r+caXmBp2GTE+flCuVbY
-        5olndm/b8z/X4nft80uh996x57/z87v0VyC2beJi0ZUq0TPk8l+blkS9Z/r0bkbXmduKFUt4
-        e87nPD542M2/6OLjktiJNe96roos+cVyw/F6fOjfTYqs9zdGvVErslerjH8ddWmDi8WuX2GV
-        ds+P3Fvx+c755q9KLMUZiYZazEXFiQC5WNUpLAQAAA==
-DLP-Filter: Pass
-X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20230428025646epcms2p35acbea45ee80d36808861edba8a3c84a
-References: <CGME20230428025646epcms2p35acbea45ee80d36808861edba8a3c84a@epcms2p3>
+Subject: Re: [PATCH v3] f2fs: add async reset zone command support
+Message-ID: <202304281424.WrTeoZ4B-lkp@intel.com>
+References: <20230428025646epcms2p35acbea45ee80d36808861edba8a3c84a@epcms2p3>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230428025646epcms2p35acbea45ee80d36808861edba8a3c84a@epcms2p3>
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-Changelog:
+Hi Daejun,
 
-v2 -> v3
-Modified arguments to be correct for ftrace parameter.
-Changed __submit_zone_reset_cmd to void return.
-Refactored the f2fs_wait_discard_bio function.
-Fixed code that was previously incorrectly merged.
+kernel test robot noticed the following build errors:
 
-v1 -> v2
-Changed to apply the optional async reset write pointer by default.
+[auto build test ERROR on jaegeuk-f2fs/dev-test]
+[also build test ERROR on jaegeuk-f2fs/dev linus/master next-20230427]
+[cannot apply to v6.3]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
-This patch enables submit reset zone command asynchornously. It helps
-decrease average latency of write IOs in high utilization scenario by
-faster checkpointing.
+url:    https://github.com/intel-lab-lkp/linux/commits/Daejun-Park/f2fs-add-async-reset-zone-command-support/20230428-105944
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/jaegeuk/f2fs.git dev-test
+patch link:    https://lore.kernel.org/r/20230428025646epcms2p35acbea45ee80d36808861edba8a3c84a%40epcms2p3
+patch subject: [PATCH v3] f2fs: add async reset zone command support
+config: microblaze-randconfig-r024-20230427 (https://download.01.org/0day-ci/archive/20230428/202304281424.WrTeoZ4B-lkp@intel.com/config)
+compiler: microblaze-linux-gcc (GCC) 12.1.0
+reproduce (this is a W=1 build):
+        wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
+        chmod +x ~/bin/make.cross
+        # https://github.com/intel-lab-lkp/linux/commit/2f3e641e3de509a5ed879fb10fdf3377fd9ca0d9
+        git remote add linux-review https://github.com/intel-lab-lkp/linux
+        git fetch --no-tags linux-review Daejun-Park/f2fs-add-async-reset-zone-command-support/20230428-105944
+        git checkout 2f3e641e3de509a5ed879fb10fdf3377fd9ca0d9
+        # save the config file
+        mkdir build_dir && cp config build_dir/.config
+        COMPILER_INSTALL_PATH=$HOME/0day COMPILER=gcc-12.1.0 make.cross W=1 O=build_dir ARCH=microblaze olddefconfig
+        COMPILER_INSTALL_PATH=$HOME/0day COMPILER=gcc-12.1.0 make.cross W=1 O=build_dir ARCH=microblaze SHELL=/bin/bash fs/f2fs/
 
-Signed-off-by: Daejun Park <daejun7.park@samsung.com>
----
- fs/f2fs/segment.c           | 85 ++++++++++++++++++++++++++++++++++---
- include/trace/events/f2fs.h | 18 +++++++-
- 2 files changed, 95 insertions(+), 8 deletions(-)
+If you fix the issue, kindly add following tag where applicable
+| Reported-by: kernel test robot <lkp@intel.com>
+| Link: https://lore.kernel.org/oe-kbuild-all/202304281424.WrTeoZ4B-lkp@intel.com/
 
-diff --git a/fs/f2fs/segment.c b/fs/f2fs/segment.c
-index 6db410f1bb8c..d5be88fada0f 100644
---- a/fs/f2fs/segment.c
-+++ b/fs/f2fs/segment.c
-@@ -1196,6 +1196,44 @@ static void __init_discard_policy(struct f2fs_sb_info *sbi,
- static void __update_discard_tree_range(struct f2fs_sb_info *sbi,
- 				struct block_device *bdev, block_t lstart,
- 				block_t start, block_t len);
-+
-+#ifdef CONFIG_BLK_DEV_ZONED
-+static void __submit_zone_reset_cmd(struct f2fs_sb_info *sbi,
-+				   struct discard_cmd *dc, blk_opf_t flag,
-+				   struct list_head *wait_list,
-+				   unsigned int *issued)
-+{
-+	struct discard_cmd_control *dcc = SM_I(sbi)->dcc_info;
-+	struct block_device *bdev = dc->bdev;
-+	struct bio *bio = bio_alloc(bdev, 0, REQ_OP_ZONE_RESET | flag, GFP_NOFS);
-+	unsigned long flags;
-+
-+	trace_f2fs_issue_reset_zone(bdev, dc->di.start);
-+
-+	spin_lock_irqsave(&dc->lock, flags);
-+	dc->state = D_SUBMIT;
-+	dc->bio_ref++;
-+	spin_unlock_irqrestore(&dc->lock, flags);
-+
-+	if (issued)
-+		(*issued)++;
-+
-+	atomic_inc(&dcc->queued_discard);
-+	dc->queued++;
-+	list_move_tail(&dc->list, wait_list);
-+
-+	/* sanity check on discard range */
-+	__check_sit_bitmap(sbi, dc->di.lstart, dc->di.lstart + dc->di.len);
-+
-+	bio->bi_iter.bi_sector = SECTOR_FROM_BLOCK(dc->di.start);
-+	bio->bi_private = dc;
-+	bio->bi_end_io = f2fs_submit_discard_endio;
-+	submit_bio(bio);
-+
-+	atomic_inc(&dcc->issued_discard);
-+}
-+#endif
-+
- /* this function is copied from blkdev_issue_discard from block/blk-lib.c */
- static int __submit_discard_cmd(struct f2fs_sb_info *sbi,
- 				struct discard_policy *dpolicy,
-@@ -1217,6 +1255,13 @@ static int __submit_discard_cmd(struct f2fs_sb_info *sbi,
- 	if (is_sbi_flag_set(sbi, SBI_NEED_FSCK))
- 		return 0;
- 
-+#ifdef CONFIG_BLK_DEV_ZONED
-+	if (f2fs_sb_has_blkzoned(sbi) && bdev_is_zoned(bdev)) {
-+		__submit_zone_reset_cmd(sbi, dc, flag, wait_list, issued);
-+		return 0;
-+	}
-+#endif
-+
- 	trace_f2fs_issue_discard(bdev, dc->di.start, dc->di.len);
- 
- 	lstart = dc->di.lstart;
-@@ -1461,6 +1506,19 @@ static void __update_discard_tree_range(struct f2fs_sb_info *sbi,
- 	}
- }
- 
-+#ifdef CONFIG_BLK_DEV_ZONED
-+static void __queue_zone_reset_cmd(struct f2fs_sb_info *sbi,
-+		struct block_device *bdev, block_t blkstart, block_t lblkstart,
-+		block_t blklen)
-+{
-+	trace_f2fs_queue_reset_zone(bdev, blkstart);
-+
-+	mutex_lock(&SM_I(sbi)->dcc_info->cmd_lock);
-+	__insert_discard_cmd(sbi, bdev, lblkstart, blkstart, blklen);
-+	mutex_unlock(&SM_I(sbi)->dcc_info->cmd_lock);
-+}
-+#endif
-+
- static void __queue_discard_cmd(struct f2fs_sb_info *sbi,
- 		struct block_device *bdev, block_t blkstart, block_t blklen)
- {
-@@ -1725,11 +1783,20 @@ static void f2fs_wait_discard_bio(struct f2fs_sb_info *sbi, block_t blkaddr)
- 	mutex_lock(&dcc->cmd_lock);
- 	dc = __lookup_discard_cmd(sbi, blkaddr);
- 	if (dc) {
--		if (dc->state == D_PREP) {
--			__punch_discard_cmd(sbi, dc, blkaddr);
--		} else {
-+		if (f2fs_sb_has_blkzoned(sbi) && bdev_is_zoned(dc->bdev)) {
-+			/* force submit zone reset */
-+			if (dc->state == D_PREP)
-+				__submit_zone_reset_cmd(sbi, dc, REQ_SYNC,
-+							&dcc->wait_list, NULL);
- 			dc->ref++;
- 			need_wait = true;
-+		} else {
-+			if (dc->state == D_PREP) {
-+				__punch_discard_cmd(sbi, dc, blkaddr);
-+			} else {
-+				dc->ref++;
-+				need_wait = true;
-+			}
- 		}
- 	}
- 	mutex_unlock(&dcc->cmd_lock);
-@@ -1876,9 +1943,15 @@ static int __f2fs_issue_discard_zone(struct f2fs_sb_info *sbi,
- 				 blkstart, blklen);
- 			return -EIO;
- 		}
--		trace_f2fs_issue_reset_zone(bdev, blkstart);
--		return blkdev_zone_mgmt(bdev, REQ_OP_ZONE_RESET,
--					sector, nr_sects, GFP_NOFS);
-+
-+		if (unlikely(!is_sbi_flag_set(sbi, SBI_POR_DOING))) {
-+			trace_f2fs_issue_reset_zone(bdev, blkstart);
-+			return blkdev_zone_mgmt(bdev, REQ_OP_ZONE_RESET,
-+						sector, nr_sects, GFP_NOFS);
-+		}
-+
-+		__queue_zone_reset_cmd(sbi, bdev, blkstart, lblkstart, blklen);
-+		return 0;
- 	}
- 
- 	/* For conventional zones, use regular discard if supported */
-diff --git a/include/trace/events/f2fs.h b/include/trace/events/f2fs.h
-index 99cbc5949e3c..ee1477de8324 100644
---- a/include/trace/events/f2fs.h
-+++ b/include/trace/events/f2fs.h
-@@ -1512,7 +1512,7 @@ DEFINE_EVENT(f2fs_discard, f2fs_remove_discard,
- 	TP_ARGS(dev, blkstart, blklen)
- );
- 
--TRACE_EVENT(f2fs_issue_reset_zone,
-+DECLARE_EVENT_CLASS(f2fs_reset_zone,
- 
- 	TP_PROTO(struct block_device *dev, block_t blkstart),
- 
-@@ -1528,11 +1528,25 @@ TRACE_EVENT(f2fs_issue_reset_zone,
- 		__entry->blkstart = blkstart;
- 	),
- 
--	TP_printk("dev = (%d,%d), reset zone at block = 0x%llx",
-+	TP_printk("dev = (%d,%d), zone at block = 0x%llx",
- 		show_dev(__entry->dev),
- 		(unsigned long long)__entry->blkstart)
- );
- 
-+DEFINE_EVENT(f2fs_reset_zone, f2fs_queue_reset_zone,
-+
-+	TP_PROTO(struct block_device *dev, block_t blkstart),
-+
-+	TP_ARGS(dev, blkstart)
-+);
-+
-+DEFINE_EVENT(f2fs_reset_zone, f2fs_issue_reset_zone,
-+
-+	TP_PROTO(struct block_device *dev, block_t blkstart),
-+
-+	TP_ARGS(dev, blkstart)
-+);
-+
- TRACE_EVENT(f2fs_issue_flush,
- 
- 	TP_PROTO(struct block_device *dev, unsigned int nobarrier,
+All errors (new ones prefixed by >>):
+
+   fs/f2fs/segment.c: In function 'f2fs_wait_discard_bio':
+>> fs/f2fs/segment.c:1789:33: error: implicit declaration of function '__submit_zone_reset_cmd' [-Werror=implicit-function-declaration]
+    1789 |                                 __submit_zone_reset_cmd(sbi, dc, REQ_SYNC,
+         |                                 ^~~~~~~~~~~~~~~~~~~~~~~
+   cc1: some warnings being treated as errors
+
+
+vim +/__submit_zone_reset_cmd +1789 fs/f2fs/segment.c
+
+  1775	
+  1776	/* This should be covered by global mutex, &sit_i->sentry_lock */
+  1777	static void f2fs_wait_discard_bio(struct f2fs_sb_info *sbi, block_t blkaddr)
+  1778	{
+  1779		struct discard_cmd_control *dcc = SM_I(sbi)->dcc_info;
+  1780		struct discard_cmd *dc;
+  1781		bool need_wait = false;
+  1782	
+  1783		mutex_lock(&dcc->cmd_lock);
+  1784		dc = __lookup_discard_cmd(sbi, blkaddr);
+  1785		if (dc) {
+  1786			if (f2fs_sb_has_blkzoned(sbi) && bdev_is_zoned(dc->bdev)) {
+  1787				/* force submit zone reset */
+  1788				if (dc->state == D_PREP)
+> 1789					__submit_zone_reset_cmd(sbi, dc, REQ_SYNC,
+  1790								&dcc->wait_list, NULL);
+  1791				dc->ref++;
+  1792				need_wait = true;
+  1793			} else {
+  1794				if (dc->state == D_PREP) {
+  1795					__punch_discard_cmd(sbi, dc, blkaddr);
+  1796				} else {
+  1797					dc->ref++;
+  1798					need_wait = true;
+  1799				}
+  1800			}
+  1801		}
+  1802		mutex_unlock(&dcc->cmd_lock);
+  1803	
+  1804		if (need_wait)
+  1805			__wait_one_discard_bio(sbi, dc);
+  1806	}
+  1807	
+
 -- 
-2.25.1
-
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests
