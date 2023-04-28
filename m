@@ -2,120 +2,137 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A5F58C7EE24
-	for <linux-trace-kernel@archiver.kernel.org>; Fri, 28 Apr 2023 15:35:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DC49C77B61
+	for <linux-trace-kernel@archiver.kernel.org>; Fri, 28 Apr 2023 16:39:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1346521AbjD1PfS (ORCPT
+        id S1346264AbjD1QjZ (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Fri, 28 Apr 2023 11:35:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49272 "EHLO
+        Fri, 28 Apr 2023 12:39:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56740 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1346539AbjD1PfN (ORCPT
+        with ESMTP id S1346268AbjD1QjY (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Fri, 28 Apr 2023 11:35:13 -0400
-Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 05DA2210C;
-        Fri, 28 Apr 2023 08:35:12 -0700 (PDT)
-Received: from pps.filterd (m0246632.ppops.net [127.0.0.1])
-        by mx0b-00069f02.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 33SF3oxp020054;
-        Fri, 28 Apr 2023 15:35:08 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
- subject : date : message-id : in-reply-to : references; s=corp-2023-03-30;
- bh=RSxC4dWNE/2O3qu1GoLDyqzY8ygixzh0e37oJcbfFXY=;
- b=iE5bg7XhGAAl+xGcwP7EklzRB8jLyYEGDDv1PWq2bjXYArMTddijJXlsRkXULWl8fvYZ
- OsYz69q1GOeeLUEBcE9VC3BC0AhwyQsIESr3fIysJHbn8jRkkdWgPLndqyLsp/qs5Dw1
- oGzovernceL5RcvS2iR1hzUy89KerdDBUqiLiQ0sX/s0EugMZ25cL/wclsk9lkS9D+om
- 1MlpnOZ6BlmIM1rbxttfZiGBHPqBnh/mRbXokZolrGeC+vsZamXM9CbZs7ijIQaTsc7a
- ysO2bWwMIOG8nBGf39BjfW5fbVttC/mI0Mvqd6JiuvSX/cEV7Duit7hOVavAMj27RxHs UA== 
-Received: from phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta02.appoci.oracle.com [147.154.114.232])
-        by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3q476u6ged-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 28 Apr 2023 15:35:08 +0000
-Received: from pps.filterd (phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
-        by phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (8.17.1.19/8.17.1.19) with ESMTP id 33SE5vmh028177;
-        Fri, 28 Apr 2023 15:35:07 GMT
-Received: from pps.reinject (localhost [127.0.0.1])
-        by phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 3q461b4rvq-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 28 Apr 2023 15:35:07 +0000
-Received: from phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
-        by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 33SFYqUM028134;
-        Fri, 28 Apr 2023 15:35:07 GMT
-Received: from myrouter.uk.oracle.com (dhcp-10-175-188-60.vpn.oracle.com [10.175.188.60])
-        by phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTP id 3q461b4rm0-7;
-        Fri, 28 Apr 2023 15:35:06 +0000
-From:   Alan Maguire <alan.maguire@oracle.com>
-To:     rostedt@goodmis.org, mhiramat@kernel.org
-Cc:     corbet@lwn.net, shuah@kernel.org,
-        linux-trace-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
-        linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Alan Maguire <alan.maguire@oracle.com>
-Subject: [PATCH v2 tracing 6/6] tracing: document IPv4, IPv6, MAC address and > 8 byte numeric filtering support
-Date:   Fri, 28 Apr 2023 16:34:49 +0100
-Message-Id: <1682696089-27937-7-git-send-email-alan.maguire@oracle.com>
-X-Mailer: git-send-email 1.8.3.1
-In-Reply-To: <1682696089-27937-1-git-send-email-alan.maguire@oracle.com>
-References: <1682696089-27937-1-git-send-email-alan.maguire@oracle.com>
+        Fri, 28 Apr 2023 12:39:24 -0400
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 735ED5276;
+        Fri, 28 Apr 2023 09:39:21 -0700 (PDT)
+Received: from pps.filterd (m0353724.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 33SGcT9G026413;
+        Fri, 28 Apr 2023 16:39:11 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
+ : date : message-id : in-reply-to : references : mime-version :
+ content-transfer-encoding; s=pp1;
+ bh=GkWUZ+AiZYDZ8lPFP0cYY8qVuunWl/Oa38WVcl3CSo4=;
+ b=mBgpnPH8u3sozvBr+/nBbT7+42i6v5SxnpbIo0QWa4TZicZ+vwt7o9VfIVRXEBxBqluE
+ jzGFp7c6hoze4CiZezfZRQKreNNcY0OL6x6NOlmKuURXIXxLzJkYdSBrwuIqJicAM4vO
+ y5AJzmsmha3h1/VcbdxAvlubfOEuxFUL13cdnOWzVZHAopbY2orjOB5hNX8VbIJ1fxRm
+ QJ5NbdfVGwJi0clIGAoRIiTubiFfeDiBXI2Z+sHCN9FpYIb3tFVxrxIroQ7FZFu6esxL
+ GEtnW3wBxKs0Zin0d2CVybmWSecuonsYmpy9uv5wsqVdLN8k2bL420E+zSoVBj0zZna+ gA== 
+Received: from ppma01fra.de.ibm.com (46.49.7a9f.ip4.static.sl-reverse.com [159.122.73.70])
+        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3q8hmv0a2c-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 28 Apr 2023 16:39:10 +0000
+Received: from pps.filterd (ppma01fra.de.ibm.com [127.0.0.1])
+        by ppma01fra.de.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 33S8a88K030297;
+        Fri, 28 Apr 2023 16:39:03 GMT
+Received: from smtprelay06.fra02v.mail.ibm.com ([9.218.2.230])
+        by ppma01fra.de.ibm.com (PPS) with ESMTPS id 3q4777310h-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 28 Apr 2023 16:39:03 +0000
+Received: from smtpav07.fra02v.mail.ibm.com (smtpav07.fra02v.mail.ibm.com [10.20.54.106])
+        by smtprelay06.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 33SGcxDw21758306
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 28 Apr 2023 16:38:59 GMT
+Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 62E2E20040;
+        Fri, 28 Apr 2023 16:38:59 +0000 (GMT)
+Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 0A19D20043;
+        Fri, 28 Apr 2023 16:38:57 +0000 (GMT)
+Received: from li-ed75614c-32e0-11b2-a85c-ba2953069b43.ibm.com.com (unknown [9.43.42.160])
+        by smtpav07.fra02v.mail.ibm.com (Postfix) with ESMTP;
+        Fri, 28 Apr 2023 16:38:56 +0000 (GMT)
+From:   Akanksha J N <akanksha@linux.ibm.com>
+To:     linux-kselftest@vger.kernel.org,
+        linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     rostedt@goodmis.org, mhiramat@kernel.org, shuah@kernel.org,
+        naveen.n.rao@linux.ibm.com, akanksha@linux.ibm.com
+Subject: [PATCH v3 2/2] selftests/ftrace: Add new test case which checks for optimized probes
+Date:   Fri, 28 Apr 2023 22:08:42 +0530
+Message-Id: <20230428163842.95118-3-akanksha@linux.ibm.com>
+X-Mailer: git-send-email 2.31.1
+In-Reply-To: <20230428163842.95118-1-akanksha@linux.ibm.com>
+References: <20230428163842.95118-1-akanksha@linux.ibm.com>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: WZJgrL13sgQp55Lh4Ubt2UphYzW1cY3H
+X-Proofpoint-ORIG-GUID: WZJgrL13sgQp55Lh4Ubt2UphYzW1cY3H
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.254,Aquarius:18.0.942,Hydra:6.0.573,FMLib:17.11.170.22
  definitions=2023-04-28_04,2023-04-27_01,2023-02-09_01
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 mlxscore=0 phishscore=0
- mlxlogscore=999 adultscore=0 suspectscore=0 malwarescore=0 bulkscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2303200000
- definitions=main-2304280125
-X-Proofpoint-GUID: jp-r6OidS0SqBkV1800aMVkzMX12rjV8
-X-Proofpoint-ORIG-GUID: jp-r6OidS0SqBkV1800aMVkzMX12rjV8
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ suspectscore=0 mlxlogscore=875 mlxscore=0 bulkscore=0 impostorscore=0
+ spamscore=0 adultscore=0 clxscore=1015 lowpriorityscore=0 phishscore=0
+ malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2303200000 definitions=main-2304280133
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-Document that only == and != predicates are supported for
-IPv4, IPv6 and MAC addresses.
+Add new test case kprobe_opt_types.tc which enables and checks
+if each probe has been optimized in order to test potential issues with
+optimized probes.
+The '|| continue' is added with the echo statement to ignore errors that
+are caused by trying to add kprobes to non probeable lines and continue
+with the test.
 
-For values > 8 bytes in size, only == and != filter predicates are
-supported; document this also.
-
-Signed-off-by: Alan Maguire <alan.maguire@oracle.com>
+Signed-off-by: Akanksha J N <akanksha@linux.ibm.com>
 ---
- Documentation/trace/events.rst | 21 +++++++++++++++++++++
- 1 file changed, 21 insertions(+)
+ .../ftrace/test.d/kprobe/kprobe_opt_types.tc  | 34 +++++++++++++++++++
+ 1 file changed, 34 insertions(+)
+ create mode 100644 tools/testing/selftests/ftrace/test.d/kprobe/kprobe_opt_types.tc
 
-diff --git a/Documentation/trace/events.rst b/Documentation/trace/events.rst
-index f5fcb8e1218f..6a75e4e256c9 100644
---- a/Documentation/trace/events.rst
-+++ b/Documentation/trace/events.rst
-@@ -182,10 +182,31 @@ The field-names available for use in filters can be found in the
- 
- The relational-operators depend on the type of the field being tested:
- 
-+For IPv4, IPv6 and MAC addresses, the available operators are:
+diff --git a/tools/testing/selftests/ftrace/test.d/kprobe/kprobe_opt_types.tc b/tools/testing/selftests/ftrace/test.d/kprobe/kprobe_opt_types.tc
+new file mode 100644
+index 000000000000..9f5d99328086
+--- /dev/null
++++ b/tools/testing/selftests/ftrace/test.d/kprobe/kprobe_opt_types.tc
+@@ -0,0 +1,34 @@
++#!/bin/sh
++# SPDX-License-Identifier: GPL-2.0-or-later
++# Copyright (C) 2023 Akanksha J N, IBM corporation
++# description: Register/unregister optimized probe
++# requires: kprobe_events
 +
-+==, !=
++case `uname -m` in
++x86_64)
++;;
++arm*)
++;;
++ppc*)
++;;
++*)
++  echo "Please implement other architecture here"
++  exit_unsupported
++esac
 +
-+For example
-+
-+"dst == 127.0.0.1"
-+
-+"src != ::1"
-+
-+"mac_addr == ab:cd:ef:12:34:56"
-+
- The operators available for numeric fields are:
- 
- ==, !=, <, <=, >, >=, &
- 
-+For numeric fields larger than 8 bytes, only
-+
-+==, !=
-+
-+...are allowed, and values for comparison must match field size exactly.
-+For example, to match the "::1" IPv6 address:
-+
-+"dst == 0x00000000000000000000000000000001"
-+
- And for string fields they are:
- 
- ==, !=, ~
++DEFAULT=$(cat /proc/sys/debug/kprobes-optimization)
++echo 1 > /proc/sys/debug/kprobes-optimization
++for i in `seq 0 255`; do
++        echo  "p:testprobe $FUNCTION_FORK+${i}" > kprobe_events || continue
++        echo 1 > events/kprobes/enable || continue
++        (echo "forked")
++	PROBE=$(grep $FUNCTION_FORK /sys/kernel/debug/kprobes/list)
++        echo 0 > events/kprobes/enable
++        echo > kprobe_events
++	if echo $PROBE | grep -q OPTIMIZED; then
++                echo "$DEFAULT" >  /proc/sys/debug/kprobes-optimization
++                exit_pass
++        fi
++done
++echo "$DEFAULT" >  /proc/sys/debug/kprobes-optimization
++exit_unresolved
 -- 
 2.31.1
 
