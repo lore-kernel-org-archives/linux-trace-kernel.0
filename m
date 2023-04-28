@@ -2,135 +2,177 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D7C0DC77B61
-	for <linux-trace-kernel@archiver.kernel.org>; Thu, 27 Apr 2023 15:59:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 366EBC77B61
+	for <linux-trace-kernel@archiver.kernel.org>; Fri, 28 Apr 2023 00:40:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S243979AbjD0P7m (ORCPT
+        id S1344368AbjD1AkN (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Thu, 27 Apr 2023 11:59:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42654 "EHLO
+        Thu, 27 Apr 2023 20:40:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37488 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S243864AbjD0P7l (ORCPT
+        with ESMTP id S229508AbjD1AkN (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Thu, 27 Apr 2023 11:59:41 -0400
-Received: from sipsolutions.net (s3.sipsolutions.net [IPv6:2a01:4f8:191:4433::2])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 01FE9F9;
-        Thu, 27 Apr 2023 08:59:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=sipsolutions.net; s=mail; h=Content-Transfer-Encoding:MIME-Version:
-        Message-Id:Date:Subject:Cc:To:From:Content-Type:Sender:Reply-To:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-To:Resent-Cc:
-        Resent-Message-ID:In-Reply-To:References;
-        bh=Cuucxv7D/U/64Bqs7uWjVu3OA9YWTZvXVvV+4QELO6Q=; t=1682611180; x=1683820780; 
-        b=B5Binqu88hbf3CBRFF0zAu3u6eA/cgIo5oaHBcOa8Sm1CmCAIrrgW1k9P+U+G8EZnom8VEF/1uj
-        aP45T570CoJ+h/YnbGpC/C39gqrS0RixK/BAMN+59ZBMhNOzTd6KdfFeMu76wG3DsNhEqD/bmLjJv
-        Wsi5114MfdzWF8ktrzBCXhT70Y+GbSWeJDihA/V0ZE6TXRWq4HRq1thHSZ+Pa13g45m4OlfAz1YjK
-        mAN23mqHe3A8jhhghUfFQ6KiK8ia7jdjZbulFcbAbzAJDYiVKK+KnA8CGTabpEKHouDXp4ACZrbWM
-        8AepqrFXFj1Nx5SoaQ0vluz6cdlBwaOjRqOQ==;
-Received: by sipsolutions.net with esmtpsa (TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
-        (Exim 4.96)
-        (envelope-from <johannes@sipsolutions.net>)
-        id 1ps41k-00AJvd-1D;
-        Thu, 27 Apr 2023 17:59:24 +0200
-From:   Johannes Berg <johannes@sipsolutions.net>
-To:     linux-trace-kernel@vger.kernel.org
-Cc:     Steven Rostedt <rostedt@goodmis.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        linux-kernel@vger.kernel.org,
-        Johannes Berg <johannes.berg@intel.com>
-Subject: [PATCH] tracing: ring-buffer: sync IRQ works before buffer destruction
-Date:   Thu, 27 Apr 2023 17:59:20 +0200
-Message-Id: <20230427175920.a76159263122.I8295e405c44362a86c995e9c2c37e3e03810aa56@changeid>
-X-Mailer: git-send-email 2.40.0
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Thu, 27 Apr 2023 20:40:13 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D8709213A;
+        Thu, 27 Apr 2023 17:40:11 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 6F165640A5;
+        Fri, 28 Apr 2023 00:40:11 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0E8D8C433D2;
+        Fri, 28 Apr 2023 00:40:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1682642410;
+        bh=HBZ9LJ8/7gelW0e3hNFH3mKrs+p2XBy1gBkw9/WVGDw=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=EBeLOerbxR3am7drGe0il1lide8MozrpM9KFv9Yh9qhkN7uwvqCirSX8jKxozYJ1U
+         3kFFW+FyMFx7pRRgL417+81AeryNX7YP5HKpAAGtA+TOt4s+2XvvZINu6qCQITPUdC
+         W7Hoej5bTCWSsqQuI+3T5Zg+ELudyJsUcc44nInTjmaSL9NaNCRn77dqYUjRWFOMTE
+         Kx/RHZ4cE+jbXM9gC8P5chJLhYcycbYjR9+NyY6IcNlpF8FHP9Z6Yic01AUyIMZ6fe
+         F+1OadHM9AidbsTj9y15NLsvuTPgVjobeDygU8U0mdLJeA6g29h7HKhosILhHqY4+4
+         aqejdUIDrS5Xg==
+Date:   Fri, 28 Apr 2023 09:40:06 +0900
+From:   Masami Hiramatsu (Google) <mhiramat@kernel.org>
+To:     Jiri Olsa <olsajiri@gmail.com>
+Cc:     linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Florent Revest <revest@chromium.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Martin KaFai Lau <martin.lau@linux.dev>, bpf@vger.kernel.org
+Subject: Re: [PATCH v7 00/11] tracing: Add fprobe events
+Message-Id: <20230428094006.49275a20ab80e0142a6c43c0@kernel.org>
+In-Reply-To: <ZEpjgKmDwg1GTCTR@krava>
+References: <168255826500.2565678.17719875734305974633.stgit@mhiramat.roam.corp.google.com>
+        <ZEpjgKmDwg1GTCTR@krava>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-From: Johannes Berg <johannes.berg@intel.com>
+On Thu, 27 Apr 2023 13:58:56 +0200
+Jiri Olsa <olsajiri@gmail.com> wrote:
 
-If something was written to the buffer just before destruction,
-it may be possible (maybe not in a real system, but it did
-happen in ARCH=um with time-travel) to destroy the ringbuffer
-before the IRQ work ran, leading this KASAN report (or a crash
-without KASAN):
+> On Thu, Apr 27, 2023 at 10:17:45AM +0900, Masami Hiramatsu (Google) wrote:
+> > Hi,
+> > 
+> > Here is the 7th version of improve fprobe and add a basic fprobe event
+> > support for ftrace (tracefs) and perf. Here is the previous version.
+> > 
+> > https://lore.kernel.org/all/168234755610.2210510.12133559313738141202.stgit@mhiramat.roam.corp.google.com/
+> > 
+> > This version is rebased on the latest linux-trace/for-next, fixes
+> > bpf_get_btf_vmlinux() return value check [6/11] and adds new BTF $retval
+> > type support [9/11] (I forgot to implement this feature last time).
+> > Also updates according to the BTF $retval type support.
+> > 
+> > You can also get this series from:
+> > 
+> > git://git.kernel.org/pub/scm/linux/kernel/git/mhiramat/linux.git topic/fprobe-event-ext
+> > 
+> > With this fprobe events, we can continue to trace function entry/exit
+> > even if the CONFIG_KPROBES_ON_FTRACE is not available. Since
+> > CONFIG_KPROBES_ON_FTRACE requires the CONFIG_DYNAMIC_FTRACE_WITH_REGS,
+> > it is not available if the architecture only supports
+> > CONFIG_DYNAMIC_FTRACE_WITH_ARGS (e.g. arm64). And that means kprobe
+> > events can not probe function entry/exit effectively on such architecture.
+> > But this problem can be solved if the dynamic events supports fprobe events
+> > because fprobe events doesn't use kprobe but ftrace via fprobe.
+> > 
+> > FPROBE EVENTS
+> > =============
+> > 
+> > Fprobe events allows user to add new events on the entry and exit of kernel
+> > functions (which can be ftraced). Unlike kprobe events, the fprobe events
+> > can only probe the function entry and exit, and it can only trace the
+> > function args, return value, and stacks. (no registers)
+> > For probing function body, users can continue to use the kprobe events.
+> > 
+> > The tracepoint probe events (tprobe events) also allows user to add new
+> > events dynamically on the tracepoint. Most of the tracepoint already has
+> > trace-events, so this feature is useful if you only want to know a
+> > specific parameter, or trace the tracepoints which has no trace-events
+> > (e.g. sched_*_tp tracepoints only exposes the tracepoints.)
+> > 
+> > The fprobe events syntax is;
+> > 
+> >  f[:[GRP/][EVENT]] FUNCTION [FETCHARGS]
+> >  f[MAXACTIVE][:[GRP/][EVENT]] FUNCTION%return [FETCHARGS]
+> > 
+> > And tracepoint probe events syntax is;
+> > 
+> >  t[:[GRP/][EVENT]] TRACEPOINT [FETCHARGS]
+> > 
+> > This series includes BTF argument support for fprobe/tracepoint events,
+> > and kprobe events. This allows us to fetch a specific function parameter
+> > by name, and all parameters by '$$args'.
+> 
+> are you planning to fetch and display more complicated types in future?
+> like strings or dereferencing struct field from argument pointer
 
-    BUG: KASAN: slab-use-after-free in irq_work_run_list+0x11a/0x13a
-    Read of size 8 at addr 000000006d640a48 by task swapper/0
+Yes, that's on my next TODO list. The string thing is a bit problematic,
+but I think in most case, "const char *" is used for the strings.
 
-    CPU: 0 PID: 0 Comm: swapper Tainted: G        W  O       6.3.0-rc1 #7
-    Stack:
-     60c4f20f 0c203d48 41b58ab3 60f224fc
-     600477fa 60f35687 60c4f20f 601273dd
-     00000008 6101eb00 6101eab0 615be548
-    Call Trace:
-     [<60047a58>] show_stack+0x25e/0x282
-     [<60c609e0>] dump_stack_lvl+0x96/0xfd
-     [<60c50d4c>] print_report+0x1a7/0x5a8
-     [<603078d3>] kasan_report+0xc1/0xe9
-     [<60308950>] __asan_report_load8_noabort+0x1b/0x1d
-     [<60232844>] irq_work_run_list+0x11a/0x13a
-     [<602328b4>] irq_work_tick+0x24/0x34
-     [<6017f9dc>] update_process_times+0x162/0x196
-     [<6019f335>] tick_sched_handle+0x1a4/0x1c3
-     [<6019fd9e>] tick_sched_timer+0x79/0x10c
-     [<601812b9>] __hrtimer_run_queues.constprop.0+0x425/0x695
-     [<60182913>] hrtimer_interrupt+0x16c/0x2c4
-     [<600486a3>] um_timer+0x164/0x183
-     [...]
+> 
+> > Note that enabling this feature, you need to enable CONFIG_BPF_SYSCALL and
+> > confirm that your arch supports CONFIG_HAVE_FUNCTION_ARG_ACCESS_API.
+> > 
+> > E.g.
+> > 
+> >  # echo 't kfree ptr' >> dynamic_events
+> >  # echo 'f kfree object' >> dynamic_events
+> >  # cat dynamic_events 
+> > t:tracepoints/kfree kfree ptr=ptr
+> > f:fprobes/kfree__entry kfree object=object
+> >  # echo 1 > events/fprobes/enable
+> >  # echo 1 > events/tracepoints/enable
+> >  # echo > trace
+> >  # head -n 20 trace | tail
+> > #           TASK-PID     CPU#  |||||  TIMESTAMP  FUNCTION
+> > #              | |         |   |||||     |         |
+> >             tail-84      [000] .....  1324.561958: kfree__entry: (kfree+0x4/0x140) object=0xffff888006383c00
+> >             tail-84      [000] ...1.  1324.561961: kfree: (__probestub_kfree+0x4/0x10) ptr=0xffff888006383c00
+> >             tail-84      [000] .....  1324.561988: kfree__entry: (kfree+0x4/0x140) object=0x0
+> >             tail-84      [000] ...1.  1324.561988: kfree: (__probestub_kfree+0x4/0x10) ptr=0x0
+> >             tail-84      [000] .....  1324.561989: kfree__entry: (kfree+0x4/0x140) object=0xffff88800671e600
+> >             tail-84      [000] ...1.  1324.561989: kfree: (__probestub_kfree+0x4/0x10) ptr=0xffff88800671e600
+> >             tail-84      [000] .....  1324.562368: kfree__entry: (kfree+0x4/0x140) object=0xffff8880065e0580
+> >             tail-84      [000] ...1.  1324.562369: kfree: (__probestub_kfree+0x4/0x10) ptr=0xffff8880065e0580
+> 
+> I checked with perf and record/stat/script seem to work fine with this
+> 
+>   # ./perf record -e 'fprobes:myprobe'
+>   ^C[ perf record: Woken up 1 times to write data ]
+>   [ perf record: Captured and wrote 0.162 MB perf.data (1 samples) ]
+> 
+>   # ./perf script
+>     systemd-oomd   479 [001] 14550.722079: fprobes:myprobe: (ffffffff81505be0) filename=0x557b033662b0
 
-    Allocated by task 411:
-     save_stack_trace+0x99/0xb5
-     stack_trace_save+0x81/0x9b
-     kasan_save_stack+0x2d/0x54
-     kasan_set_track+0x34/0x3e
-     kasan_save_alloc_info+0x25/0x28
-     ____kasan_kmalloc+0x8b/0x97
-     __kasan_kmalloc+0x10/0x12
-     __kmalloc+0xb2/0xe8
-     load_elf_phdrs+0xee/0x182
-     [...]
+Thanks for testing!
 
-    The buggy address belongs to the object at 000000006d640800
-     which belongs to the cache kmalloc-1k of size 1024
-    The buggy address is located 584 bytes inside of
-     freed 1024-byte region [000000006d640800, 000000006d640c00)
+> 
+> perf trace seems to be off with __probe_ip for some reason:
+> 
+>   # ./perf trace -e 'fprobes:myprobe'
+>      0.000 systemd-oomd/479 fprobes:myprobe(__probe_ip: -2125440032, filename: 93986839069680)
+>      1.189 systemd-oomd/479 fprobes:myprobe(__probe_ip: -2125440032, filename: 93986839070144)
+> 
+> but it's probably perf issue
 
-Add the appropriate irq_work_sync() so the work finishes before
-the buffers are destroyed.
+Yeah, it seems that the perf trace handles __probe_ip as signed long.
+Does that happen with kprobe events too?
 
-Prior to the commit in the Fixes tag below, there was only a
-single global IRQ work, so this issue didn't exist.
+Thank you,
+> 
+> thanks,
+> jirka
 
-Fixes: 15693458c4bc ("tracing/ring-buffer: Move poll wake ups into ring buffer code")
-Signed-off-by: Johannes Berg <johannes.berg@intel.com>
----
- kernel/trace/ring_buffer.c | 4 ++++
- 1 file changed, 4 insertions(+)
 
-diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
-index af50d931b020..271997076029 100644
---- a/kernel/trace/ring_buffer.c
-+++ b/kernel/trace/ring_buffer.c
-@@ -1778,6 +1778,8 @@ static void rb_free_cpu_buffer(struct ring_buffer_per_cpu *cpu_buffer)
- 	struct list_head *head = cpu_buffer->pages;
- 	struct buffer_page *bpage, *tmp;
- 
-+	irq_work_sync(&cpu_buffer->irq_work.work);
-+
- 	free_buffer_page(cpu_buffer->reader_page);
- 
- 	if (head) {
-@@ -1884,6 +1886,8 @@ ring_buffer_free(struct trace_buffer *buffer)
- 
- 	cpuhp_state_remove_instance(CPUHP_TRACE_RB_PREPARE, &buffer->node);
- 
-+	irq_work_sync(&buffer->irq_work.work);
-+
- 	for_each_buffer_cpu(buffer, cpu)
- 		rb_free_cpu_buffer(buffer->buffers[cpu]);
- 
 -- 
-2.40.0
-
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
