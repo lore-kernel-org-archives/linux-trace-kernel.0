@@ -2,259 +2,153 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DE26DC77B61
-	for <linux-trace-kernel@archiver.kernel.org>; Fri, 28 Apr 2023 10:02:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 024CDC77B60
+	for <linux-trace-kernel@archiver.kernel.org>; Fri, 28 Apr 2023 13:24:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1346009AbjD1KCO (ORCPT
+        id S1345591AbjD1NY6 (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Fri, 28 Apr 2023 06:02:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44570 "EHLO
+        Fri, 28 Apr 2023 09:24:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37192 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230341AbjD1KBv (ORCPT
+        with ESMTP id S229835AbjD1NY5 (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Fri, 28 Apr 2023 06:01:51 -0400
-Received: from out0-214.mail.aliyun.com (out0-214.mail.aliyun.com [140.205.0.214])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 84B1061BE;
-        Fri, 28 Apr 2023 03:01:27 -0700 (PDT)
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R171e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018047187;MF=houwenlong.hwl@antgroup.com;NM=1;PH=DS;RN=17;SR=0;TI=SMTPD_---.STCEPeI_1682675581;
-Received: from localhost(mailfrom:houwenlong.hwl@antgroup.com fp:SMTPD_---.STCEPeI_1682675581)
-          by smtp.aliyun-inc.com;
-          Fri, 28 Apr 2023 17:53:01 +0800
-From:   "Hou Wenlong" <houwenlong.hwl@antgroup.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     "Thomas Garnier" <thgarnie@chromium.org>,
-        "Lai Jiangshan" <jiangshan.ljs@antgroup.com>,
-        "Kees Cook" <keescook@chromium.org>,
-        "Hou Wenlong" <houwenlong.hwl@antgroup.com>,
-        "Steven Rostedt" <rostedt@goodmis.org>,
-        "Masami Hiramatsu" <mhiramat@kernel.org>,
-        "Mark Rutland" <mark.rutland@arm.com>,
-        "Thomas Gleixner" <tglx@linutronix.de>,
-        "Ingo Molnar" <mingo@redhat.com>, "Borislav Petkov" <bp@alien8.de>,
-        "Dave Hansen" <dave.hansen@linux.intel.com>, <x86@kernel.org>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        "Huacai Chen" <chenhuacai@kernel.org>,
-        "Qing Zhang" <zhangqing@loongson.cn>,
+        Fri, 28 Apr 2023 09:24:57 -0400
+Received: from mga14.intel.com (mga14.intel.com [192.55.52.115])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4C4CF2735;
+        Fri, 28 Apr 2023 06:24:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1682688278; x=1714224278;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=oB6VWPH6ulg8K295XZM6A23hQpKHxYtitORTOenls3A=;
+  b=ByAzJ1VAV7m1TAx4GZ7ZsnTyMIyPSsS9/JdbmoSn4Y7MPVh5dNf8TAze
+   sFYS3ghv6FSE2IWCP9RjyFGiqInBoVzWOlYyG/H1oIT2bnjjsmb2iEtnc
+   Un1KjndOsn5gA7xrrl6RUB67KhiFi9pVceLCF9coD2z4QmaNaiSXiQJwv
+   jhJ2XM8ljp/4gK0cJiJSkQks/IfWW/l3XK4SWNL3VkBJo83EnF6njR2dV
+   Qq0FvOaj+mn20ZdcpGE+WvLG3figdO8q/3CC3hiiJwGAVxO20BODoKug4
+   Jq9L+kpZQ79p5ZfyxWyW3rTf01TYipfYUVK3iQN/5dZKyHt+bL/Q1bwD1
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10694"; a="347769127"
+X-IronPort-AV: E=Sophos;i="5.99,234,1677571200"; 
+   d="scan'208";a="347769127"
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Apr 2023 06:24:37 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10694"; a="819010528"
+X-IronPort-AV: E=Sophos;i="5.99,234,1677571200"; 
+   d="scan'208";a="819010528"
+Received: from lkp-server01.sh.intel.com (HELO 5bad9d2b7fcb) ([10.239.97.150])
+  by orsmga004.jf.intel.com with ESMTP; 28 Apr 2023 06:24:34 -0700
+Received: from kbuild by 5bad9d2b7fcb with local (Exim 4.96)
+        (envelope-from <lkp@intel.com>)
+        id 1psO5R-0000SF-10;
+        Fri, 28 Apr 2023 13:24:33 +0000
+Date:   Fri, 28 Apr 2023 21:24:18 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     Daejun Park <daejun7.park@samsung.com>,
+        "jaegeuk@kernel.org" <jaegeuk@kernel.org>,
+        "chao@kernel.org" <chao@kernel.org>,
+        "rostedt@goodmis.org" <rostedt@goodmis.org>,
+        "mhiramat@kernel.org" <mhiramat@kernel.org>,
+        "linux-f2fs-devel@lists.sourceforge.net" 
+        <linux-f2fs-devel@lists.sourceforge.net>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-trace-kernel@vger.kernel.org" 
         <linux-trace-kernel@vger.kernel.org>
-Subject: [PATCH RFC 22/43] x86/ftrace: Adapt ftrace nop patching for PIE support
-Date:   Fri, 28 Apr 2023 17:51:02 +0800
-Message-Id: <38a5029cd2590e04209117740f8912db36eff58f.1682673543.git.houwenlong.hwl@antgroup.com>
-X-Mailer: git-send-email 2.31.1
-In-Reply-To: <cover.1682673542.git.houwenlong.hwl@antgroup.com>
-References: <cover.1682673542.git.houwenlong.hwl@antgroup.com>
+Cc:     llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
+        Seokhwan Kim <sukka.kim@samsung.com>,
+        Yonggil Song <yonggil.song@samsung.com>,
+        beomsu kim <beomsu7.kim@samsung.com>,
+        Daejun Park <daejun7.park@samsung.com>
+Subject: Re: [PATCH v3] f2fs: add async reset zone command support
+Message-ID: <202304282103.nYW33DnO-lkp@intel.com>
+References: <20230428025646epcms2p35acbea45ee80d36808861edba8a3c84a@epcms2p3>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230428025646epcms2p35acbea45ee80d36808861edba8a3c84a@epcms2p3>
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-From: Thomas Garnier <thgarnie@chromium.org>
+Hi Daejun,
 
-From: Thomas Garnier <thgarnie@chromium.org>
+kernel test robot noticed the following build errors:
 
-When using PIE with function tracing, the compiler generates a
-call through the GOT (call *__fentry__@GOTPCREL). This instruction
-takes 6-bytes instead of 5-bytes with a relative call. And -mnop-mcount
-option is not implemented for -fPIE now.
+[auto build test ERROR on jaegeuk-f2fs/dev-test]
+[also build test ERROR on jaegeuk-f2fs/dev linus/master next-20230427]
+[cannot apply to v6.3]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
-If PIE is enabled, replace the 6th byte of the GOT call by a 1-byte nop
-so ftrace can handle the previous 5-bytes as before.
+url:    https://github.com/intel-lab-lkp/linux/commits/Daejun-Park/f2fs-add-async-reset-zone-command-support/20230428-105944
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/jaegeuk/f2fs.git dev-test
+patch link:    https://lore.kernel.org/r/20230428025646epcms2p35acbea45ee80d36808861edba8a3c84a%40epcms2p3
+patch subject: [PATCH v3] f2fs: add async reset zone command support
+config: i386-randconfig-a013 (https://download.01.org/0day-ci/archive/20230428/202304282103.nYW33DnO-lkp@intel.com/config)
+compiler: clang version 14.0.6 (https://github.com/llvm/llvm-project f28c006a5895fc0e329fe15fead81e37457cb1d1)
+reproduce (this is a W=1 build):
+        wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
+        chmod +x ~/bin/make.cross
+        # https://github.com/intel-lab-lkp/linux/commit/2f3e641e3de509a5ed879fb10fdf3377fd9ca0d9
+        git remote add linux-review https://github.com/intel-lab-lkp/linux
+        git fetch --no-tags linux-review Daejun-Park/f2fs-add-async-reset-zone-command-support/20230428-105944
+        git checkout 2f3e641e3de509a5ed879fb10fdf3377fd9ca0d9
+        # save the config file
+        mkdir build_dir && cp config build_dir/.config
+        COMPILER_INSTALL_PATH=$HOME/0day COMPILER=clang make.cross W=1 O=build_dir ARCH=i386 olddefconfig
+        COMPILER_INSTALL_PATH=$HOME/0day COMPILER=clang make.cross W=1 O=build_dir ARCH=i386 SHELL=/bin/bash fs/f2fs/
 
-[Hou Wenlong: Adapt code change and fix wrong offset calculation in
-make_nop_x86()]
+If you fix the issue, kindly add following tag where applicable
+| Reported-by: kernel test robot <lkp@intel.com>
+| Link: https://lore.kernel.org/oe-kbuild-all/202304282103.nYW33DnO-lkp@intel.com/
 
-Signed-off-by: Thomas Garnier <thgarnie@chromium.org>
-Co-developed-by: Hou Wenlong <houwenlong.hwl@antgroup.com>
-Signed-off-by: Hou Wenlong <houwenlong.hwl@antgroup.com>
-Cc: Lai Jiangshan <jiangshan.ljs@antgroup.com>
-Cc: Kees Cook <keescook@chromium.org>
----
- arch/x86/kernel/ftrace.c | 46 ++++++++++++++++++++++-
- scripts/recordmcount.c   | 81 ++++++++++++++++++++++++++--------------
- 2 files changed, 98 insertions(+), 29 deletions(-)
+All errors (new ones prefixed by >>):
 
-diff --git a/arch/x86/kernel/ftrace.c b/arch/x86/kernel/ftrace.c
-index 5e7ead52cfdb..b795f9dde561 100644
---- a/arch/x86/kernel/ftrace.c
-+++ b/arch/x86/kernel/ftrace.c
-@@ -124,6 +124,50 @@ ftrace_modify_code_direct(unsigned long ip, const char *old_code,
- 	return 0;
- }
- 
-+/* Bytes before call GOT offset */
-+static const unsigned char got_call_preinsn[] = { 0xff, 0x15 };
-+
-+static int __ref
-+ftrace_modify_initial_code(unsigned long ip, unsigned const char *old_code,
-+			   unsigned const char *new_code)
-+{
-+	unsigned char replaced[MCOUNT_INSN_SIZE + 1];
-+
-+	/*
-+	 * If PIE is not enabled default to the original approach to code
-+	 * modification.
-+	 */
-+	if (!IS_ENABLED(CONFIG_X86_PIE))
-+		return ftrace_modify_code_direct(ip, old_code, new_code);
-+
-+	ftrace_expected = old_code;
-+
-+	/* Ensure the instructions point to a call to the GOT */
-+	if (copy_from_kernel_nofault(replaced, (void *)ip, sizeof(replaced))) {
-+		WARN_ONCE(1, "invalid function");
-+		return -EFAULT;
-+	}
-+
-+	if (memcmp(replaced, got_call_preinsn, sizeof(got_call_preinsn))) {
-+		WARN_ONCE(1, "invalid function call");
-+		return -EINVAL;
-+	}
-+
-+	/*
-+	 * Build a nop slide with a 5-byte nop and 1-byte nop to keep the ftrace
-+	 * hooking algorithm working with the expected 5 bytes instruction.
-+	 */
-+	memset(replaced, x86_nops[1][0], sizeof(replaced));
-+	memcpy(replaced, new_code, MCOUNT_INSN_SIZE);
-+
-+	/* replace the text with the new text */
-+	if (ftrace_poke_late)
-+		text_poke_queue((void *)ip, replaced, MCOUNT_INSN_SIZE + 1, NULL);
-+	else
-+		text_poke_early((void *)ip, replaced, MCOUNT_INSN_SIZE + 1);
-+	return 0;
-+}
-+
- int ftrace_make_nop(struct module *mod, struct dyn_ftrace *rec, unsigned long addr)
- {
- 	unsigned long ip = rec->ip;
-@@ -141,7 +185,7 @@ int ftrace_make_nop(struct module *mod, struct dyn_ftrace *rec, unsigned long ad
- 	 * just modify the code directly.
- 	 */
- 	if (addr == MCOUNT_ADDR)
--		return ftrace_modify_code_direct(ip, old, new);
-+		return ftrace_modify_initial_code(ip, old, new);
- 
- 	/*
- 	 * x86 overrides ftrace_replace_code -- this function will never be used
-diff --git a/scripts/recordmcount.c b/scripts/recordmcount.c
-index e30216525325..02783a29d428 100644
---- a/scripts/recordmcount.c
-+++ b/scripts/recordmcount.c
-@@ -218,36 +218,10 @@ static void *mmap_file(char const *fname)
- 	return file_map;
- }
- 
--
--static unsigned char ideal_nop5_x86_64[5] = { 0x0f, 0x1f, 0x44, 0x00, 0x00 };
--static unsigned char ideal_nop5_x86_32[5] = { 0x3e, 0x8d, 0x74, 0x26, 0x00 };
--static unsigned char *ideal_nop;
--
- static char rel_type_nop;
--
- static int (*make_nop)(void *map, size_t const offset);
- 
--static int make_nop_x86(void *map, size_t const offset)
--{
--	uint32_t *ptr;
--	unsigned char *op;
--
--	/* Confirm we have 0xe8 0x0 0x0 0x0 0x0 */
--	ptr = map + offset;
--	if (*ptr != 0)
--		return -1;
--
--	op = map + offset - 1;
--	if (*op != 0xe8)
--		return -1;
--
--	/* convert to nop */
--	if (ulseek(offset - 1, SEEK_SET) < 0)
--		return -1;
--	if (uwrite(ideal_nop, 5) < 0)
--		return -1;
--	return 0;
--}
-+static unsigned char *ideal_nop;
- 
- static unsigned char ideal_nop4_arm_le[4] = { 0x00, 0x00, 0xa0, 0xe1 }; /* mov r0, r0 */
- static unsigned char ideal_nop4_arm_be[4] = { 0xe1, 0xa0, 0x00, 0x00 }; /* mov r0, r0 */
-@@ -504,6 +478,50 @@ static void MIPS64_r_info(Elf64_Rel *const rp, unsigned sym, unsigned type)
- 	}).r_info;
- }
- 
-+static unsigned char ideal_nop5_x86_64[5] = { 0x0f, 0x1f, 0x44, 0x00, 0x00 };
-+static unsigned char ideal_nop6_x86_64[6] = { 0x66, 0x0f, 0x1f, 0x44, 0x00, 0x00 };
-+static unsigned char ideal_nop5_x86_32[5] = { 0x3e, 0x8d, 0x74, 0x26, 0x00 };
-+static size_t ideal_nop_x86_size;
-+
-+static unsigned char stub_default_x86[2] = { 0xe8, 0x00 };   /* call relative */
-+static unsigned char stub_got_x86[3] = { 0xff, 0x15, 0x00 }; /* call .got */
-+static unsigned char *stub_x86;
-+static size_t stub_x86_size;
-+
-+static int make_nop_x86(void *map, size_t const offset)
-+{
-+	uint32_t *ptr;
-+	size_t stub_offset = offset + 1 - stub_x86_size;
-+
-+	/* Confirm we have the expected stub */
-+	ptr = map + stub_offset;
-+	if (memcmp(ptr, stub_x86, stub_x86_size))
-+		return -1;
-+
-+	/* convert to nop */
-+	if (ulseek(stub_offset, SEEK_SET) < 0)
-+		return -1;
-+	if (uwrite(ideal_nop, ideal_nop_x86_size) < 0)
-+		return -1;
-+	return 0;
-+}
-+
-+/* Swap the stub and nop for a got call if the binary is built with PIE */
-+static int is_fake_mcount_x86_x64(Elf64_Rel const *rp)
-+{
-+	if (ELF64_R_TYPE(rp->r_info) == R_X86_64_GOTPCREL) {
-+		ideal_nop = ideal_nop6_x86_64;
-+		ideal_nop_x86_size = sizeof(ideal_nop6_x86_64);
-+		stub_x86 = stub_got_x86;
-+		stub_x86_size = sizeof(stub_got_x86);
-+		mcount_adjust_64 = 1 - stub_x86_size;
-+	}
-+
-+	/* Once the relocation was checked, rollback to default */
-+	is_fake_mcount64 = fn_is_fake_mcount64;
-+	return is_fake_mcount64(rp);
-+}
-+
- static int do_file(char const *const fname)
- {
- 	unsigned int reltype = 0;
-@@ -568,6 +586,9 @@ static int do_file(char const *const fname)
- 		rel_type_nop = R_386_NONE;
- 		make_nop = make_nop_x86;
- 		ideal_nop = ideal_nop5_x86_32;
-+		ideal_nop_x86_size = sizeof(ideal_nop5_x86_32);
-+		stub_x86 = stub_default_x86;
-+		stub_x86_size = sizeof(stub_default_x86);
- 		mcount_adjust_32 = -1;
- 		gpfx = 0;
- 		break;
-@@ -597,9 +618,13 @@ static int do_file(char const *const fname)
- 	case EM_X86_64:
- 		make_nop = make_nop_x86;
- 		ideal_nop = ideal_nop5_x86_64;
-+		ideal_nop_x86_size = sizeof(ideal_nop5_x86_64);
-+		stub_x86 = stub_default_x86;
-+		stub_x86_size = sizeof(stub_default_x86);
- 		reltype = R_X86_64_64;
- 		rel_type_nop = R_X86_64_NONE;
--		mcount_adjust_64 = -1;
-+		is_fake_mcount64 = is_fake_mcount_x86_x64;
-+		mcount_adjust_64 = 1 - stub_x86_size;
- 		gpfx = 0;
- 		break;
- 	}  /* end switch */
+>> fs/f2fs/segment.c:1789:5: error: implicit declaration of function '__submit_zone_reset_cmd' is invalid in C99 [-Werror,-Wimplicit-function-declaration]
+                                   __submit_zone_reset_cmd(sbi, dc, REQ_SYNC,
+                                   ^
+   1 error generated.
+
+
+vim +/__submit_zone_reset_cmd +1789 fs/f2fs/segment.c
+
+  1775	
+  1776	/* This should be covered by global mutex, &sit_i->sentry_lock */
+  1777	static void f2fs_wait_discard_bio(struct f2fs_sb_info *sbi, block_t blkaddr)
+  1778	{
+  1779		struct discard_cmd_control *dcc = SM_I(sbi)->dcc_info;
+  1780		struct discard_cmd *dc;
+  1781		bool need_wait = false;
+  1782	
+  1783		mutex_lock(&dcc->cmd_lock);
+  1784		dc = __lookup_discard_cmd(sbi, blkaddr);
+  1785		if (dc) {
+  1786			if (f2fs_sb_has_blkzoned(sbi) && bdev_is_zoned(dc->bdev)) {
+  1787				/* force submit zone reset */
+  1788				if (dc->state == D_PREP)
+> 1789					__submit_zone_reset_cmd(sbi, dc, REQ_SYNC,
+  1790								&dcc->wait_list, NULL);
+  1791				dc->ref++;
+  1792				need_wait = true;
+  1793			} else {
+  1794				if (dc->state == D_PREP) {
+  1795					__punch_discard_cmd(sbi, dc, blkaddr);
+  1796				} else {
+  1797					dc->ref++;
+  1798					need_wait = true;
+  1799				}
+  1800			}
+  1801		}
+  1802		mutex_unlock(&dcc->cmd_lock);
+  1803	
+  1804		if (need_wait)
+  1805			__wait_one_discard_bio(sbi, dc);
+  1806	}
+  1807	
+
 -- 
-2.31.1
-
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests
