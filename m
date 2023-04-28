@@ -2,28 +2,28 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D16CBC77B61
-	for <linux-trace-kernel@archiver.kernel.org>; Fri, 28 Apr 2023 13:37:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 33948C77B60
+	for <linux-trace-kernel@archiver.kernel.org>; Fri, 28 Apr 2023 13:45:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1345489AbjD1NhZ (ORCPT
+        id S1346332AbjD1NpB (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Fri, 28 Apr 2023 09:37:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45934 "EHLO
+        Fri, 28 Apr 2023 09:45:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48304 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229643AbjD1NhZ (ORCPT
+        with ESMTP id S229471AbjD1NpA (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Fri, 28 Apr 2023 09:37:25 -0400
+        Fri, 28 Apr 2023 09:45:00 -0400
 Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7CBD5173E;
-        Fri, 28 Apr 2023 06:37:24 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1588E268D;
+        Fri, 28 Apr 2023 06:45:00 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 1B456643D9;
-        Fri, 28 Apr 2023 13:37:24 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 19CF9C433D2;
-        Fri, 28 Apr 2023 13:37:22 +0000 (UTC)
-Date:   Fri, 28 Apr 2023 09:37:19 -0400
+        by dfw.source.kernel.org (Postfix) with ESMTPS id A017663532;
+        Fri, 28 Apr 2023 13:44:59 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 55576C433EF;
+        Fri, 28 Apr 2023 13:44:57 +0000 (UTC)
+Date:   Fri, 28 Apr 2023 09:44:54 -0400
 From:   Steven Rostedt <rostedt@goodmis.org>
 To:     "Hou Wenlong" <houwenlong.hwl@antgroup.com>
 Cc:     linux-kernel@vger.kernel.org,
@@ -36,12 +36,15 @@ Cc:     linux-kernel@vger.kernel.org,
         "Ingo Molnar" <mingo@redhat.com>, "Borislav Petkov" <bp@alien8.de>,
         "Dave Hansen" <dave.hansen@linux.intel.com>, <x86@kernel.org>,
         "H. Peter Anvin" <hpa@zytor.com>,
+        "Huacai Chen" <chenhuacai@kernel.org>,
+        "Qing Zhang" <zhangqing@loongson.cn>,
         <linux-trace-kernel@vger.kernel.org>
-Subject: Re: [PATCH RFC 21/43] x86/ftrace: Adapt assembly for PIE support
-Message-ID: <20230428093719.037081e3@gandalf.local.home>
-In-Reply-To: <0092ce94b325ad8eb47ff4f95e012f9af1a127de.1682673543.git.houwenlong.hwl@antgroup.com>
+Subject: Re: [PATCH RFC 22/43] x86/ftrace: Adapt ftrace nop patching for PIE
+ support
+Message-ID: <20230428094454.0f2f5049@gandalf.local.home>
+In-Reply-To: <38a5029cd2590e04209117740f8912db36eff58f.1682673543.git.houwenlong.hwl@antgroup.com>
 References: <cover.1682673542.git.houwenlong.hwl@antgroup.com>
-        <0092ce94b325ad8eb47ff4f95e012f9af1a127de.1682673543.git.houwenlong.hwl@antgroup.com>
+        <38a5029cd2590e04209117740f8912db36eff58f.1682673543.git.houwenlong.hwl@antgroup.com>
 X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
@@ -50,69 +53,40 @@ Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On Fri, 28 Apr 2023 17:51:01 +0800
+On Fri, 28 Apr 2023 17:51:02 +0800
 "Hou Wenlong" <houwenlong.hwl@antgroup.com> wrote:
 
-> Change the assembly code to use only relative references of symbols for
-> the kernel to be PIE compatible.
+> From: Thomas Garnier <thgarnie@chromium.org>
 > 
-> Signed-off-by: Hou Wenlong <houwenlong.hwl@antgroup.com>
-> Cc: Thomas Garnier <thgarnie@chromium.org>
-> Cc: Lai Jiangshan <jiangshan.ljs@antgroup.com>
-> Cc: Kees Cook <keescook@chromium.org>
-> ---
->  arch/x86/kernel/ftrace_64.S | 9 ++++++++-
->  1 file changed, 8 insertions(+), 1 deletion(-)
+> From: Thomas Garnier <thgarnie@chromium.org>
 > 
-> diff --git a/arch/x86/kernel/ftrace_64.S b/arch/x86/kernel/ftrace_64.S
-> index eddb4fabc16f..411fa4148e18 100644
-> --- a/arch/x86/kernel/ftrace_64.S
-> +++ b/arch/x86/kernel/ftrace_64.S
-> @@ -315,7 +315,14 @@ STACK_FRAME_NON_STANDARD_FP(ftrace_regs_caller)
->  SYM_FUNC_START(__fentry__)
->  	CALL_DEPTH_ACCOUNT
->  
-> +#ifdef CONFIG_X86_PIE
-> +	pushq %r8
-> +	leaq ftrace_stub(%rip), %r8
-> +	cmpq %r8, ftrace_trace_function(%rip)
-> +	popq %r8
-> +#else
->  	cmpq $ftrace_stub, ftrace_trace_function
-> +#endif
->  	jnz trace
->  	RET
->  
-> @@ -329,7 +336,7 @@ trace:
->  	 * ip and parent ip are used and the list function is called when
->  	 * function tracing is enabled.
->  	 */
-> -	movq ftrace_trace_function, %r8
-> +	movq ftrace_trace_function(%rip), %r8
->  	CALL_NOSPEC r8
->  	restore_mcount_regs
->  
+> When using PIE with function tracing, the compiler generates a
+> call through the GOT (call *__fentry__@GOTPCREL). This instruction
+> takes 6-bytes instead of 5-bytes with a relative call. And -mnop-mcount
+> option is not implemented for -fPIE now.
+> 
+> If PIE is enabled, replace the 6th byte of the GOT call by a 1-byte nop
+> so ftrace can handle the previous 5-bytes as before.
 
-I really don't want to add more updates to !DYNAMIC_FTRACE. This code only
-exists to make sure I don't break it for other architectures.
+Wait! This won't work!
 
-How about
+You can't just append another nop to fill in the blanks here. We must
+either have a single 6 byte nop, or we need to refactor the entire logic to
+something that other archs have.
 
-diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
-index 442eccc00960..ee4d0713139d 100644
---- a/arch/x86/Kconfig
-+++ b/arch/x86/Kconfig
-@@ -37,7 +37,7 @@ config X86_64
- 
- config FORCE_DYNAMIC_FTRACE
- 	def_bool y
--	depends on X86_32
-+	depends on X86_32 || X86_PIE
- 	depends on FUNCTION_TRACER
- 	select DYNAMIC_FTRACE
- 	help
+The two nops means that the CPU can take it as two separate commands.
+There's nothing stopping the computer from preempting a task between the
+two. If that happens, and you modify the 1byte nop and 5byte nop with a
+single 6 byte command, when the task get's rescheduled, it will execute the
+last 5 bytes of that 6 byte command and take a general protection fault, and
+likely crash the machine.
 
-
-?
+NACK on this. It needs a better solution.
 
 -- Steve
+
+
+> 
+> [Hou Wenlong: Adapt code change and fix wrong offset calculation in
+> make_nop_x86()]
+> 
