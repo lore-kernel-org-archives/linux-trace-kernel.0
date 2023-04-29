@@ -2,25 +2,25 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C04B1C77B7C
-	for <linux-trace-kernel@archiver.kernel.org>; Sat, 29 Apr 2023 03:38:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 39CEAC7618E
+	for <linux-trace-kernel@archiver.kernel.org>; Sat, 29 Apr 2023 03:43:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230191AbjD2Dih (ORCPT
+        id S230077AbjD2Dn1 (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Fri, 28 Apr 2023 23:38:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45928 "EHLO
+        Fri, 28 Apr 2023 23:43:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47038 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229598AbjD2Dif (ORCPT
+        with ESMTP id S229498AbjD2Dn0 (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Fri, 28 Apr 2023 23:38:35 -0400
-Received: from out0-205.mail.aliyun.com (out0-205.mail.aliyun.com [140.205.0.205])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E0E1C26A6;
-        Fri, 28 Apr 2023 20:38:32 -0700 (PDT)
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R131e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018047198;MF=houwenlong.hwl@antgroup.com;NM=1;PH=DS;RN=16;SR=0;TI=SMTPD_---.STlDLfd_1682739506;
-Received: from localhost(mailfrom:houwenlong.hwl@antgroup.com fp:SMTPD_---.STlDLfd_1682739506)
+        Fri, 28 Apr 2023 23:43:26 -0400
+Received: from out0-218.mail.aliyun.com (out0-218.mail.aliyun.com [140.205.0.218])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C4B002680;
+        Fri, 28 Apr 2023 20:43:20 -0700 (PDT)
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R731e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018047209;MF=houwenlong.hwl@antgroup.com;NM=1;PH=DS;RN=14;SR=0;TI=SMTPD_---.STmyWyg_1682739796;
+Received: from localhost(mailfrom:houwenlong.hwl@antgroup.com fp:SMTPD_---.STmyWyg_1682739796)
           by smtp.aliyun-inc.com;
-          Sat, 29 Apr 2023 11:38:27 +0800
-Date:   Sat, 29 Apr 2023 11:38:26 +0800
+          Sat, 29 Apr 2023 11:43:16 +0800
+Date:   Sat, 29 Apr 2023 11:43:15 +0800
 From:   "Hou Wenlong" <houwenlong.hwl@antgroup.com>
 To:     Steven Rostedt <rostedt@goodmis.org>
 Cc:     <linux-kernel@vger.kernel.org>,
@@ -33,74 +33,90 @@ Cc:     <linux-kernel@vger.kernel.org>,
         "Ingo Molnar" <mingo@redhat.com>, "Borislav Petkov" <bp@alien8.de>,
         "Dave Hansen" <dave.hansen@linux.intel.com>, <x86@kernel.org>,
         "H. Peter Anvin" <hpa@zytor.com>,
-        "Huacai Chen" <chenhuacai@kernel.org>,
-        "Qing Zhang" <zhangqing@loongson.cn>,
         <linux-trace-kernel@vger.kernel.org>
-Subject: Re: [PATCH RFC 22/43] x86/ftrace: Adapt ftrace nop patching for PIE
- support
-Message-ID: <20230429033826.GA91541@k08j02272.eu95sqa>
+Subject: Re: [PATCH RFC 21/43] x86/ftrace: Adapt assembly for PIE support
+Message-ID: <20230429034315.GB91541@k08j02272.eu95sqa>
 References: <cover.1682673542.git.houwenlong.hwl@antgroup.com>
- <38a5029cd2590e04209117740f8912db36eff58f.1682673543.git.houwenlong.hwl@antgroup.com>
- <20230428094454.0f2f5049@gandalf.local.home>
+ <0092ce94b325ad8eb47ff4f95e012f9af1a127de.1682673543.git.houwenlong.hwl@antgroup.com>
+ <20230428093719.037081e3@gandalf.local.home>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20230428094454.0f2f5049@gandalf.local.home>
+In-Reply-To: <20230428093719.037081e3@gandalf.local.home>
 User-Agent: Mutt/1.5.21 (2010-09-15)
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On Fri, Apr 28, 2023 at 09:44:54PM +0800, Steven Rostedt wrote:
-> On Fri, 28 Apr 2023 17:51:02 +0800
+On Fri, Apr 28, 2023 at 09:37:19PM +0800, Steven Rostedt wrote:
+> On Fri, 28 Apr 2023 17:51:01 +0800
 > "Hou Wenlong" <houwenlong.hwl@antgroup.com> wrote:
 > 
-> > From: Thomas Garnier <thgarnie@chromium.org>
+> > Change the assembly code to use only relative references of symbols for
+> > the kernel to be PIE compatible.
 > > 
-> > From: Thomas Garnier <thgarnie@chromium.org>
+> > Signed-off-by: Hou Wenlong <houwenlong.hwl@antgroup.com>
+> > Cc: Thomas Garnier <thgarnie@chromium.org>
+> > Cc: Lai Jiangshan <jiangshan.ljs@antgroup.com>
+> > Cc: Kees Cook <keescook@chromium.org>
+> > ---
+> >  arch/x86/kernel/ftrace_64.S | 9 ++++++++-
+> >  1 file changed, 8 insertions(+), 1 deletion(-)
 > > 
-> > When using PIE with function tracing, the compiler generates a
-> > call through the GOT (call *__fentry__@GOTPCREL). This instruction
-> > takes 6-bytes instead of 5-bytes with a relative call. And -mnop-mcount
-> > option is not implemented for -fPIE now.
-> > 
-> > If PIE is enabled, replace the 6th byte of the GOT call by a 1-byte nop
-> > so ftrace can handle the previous 5-bytes as before.
+> > diff --git a/arch/x86/kernel/ftrace_64.S b/arch/x86/kernel/ftrace_64.S
+> > index eddb4fabc16f..411fa4148e18 100644
+> > --- a/arch/x86/kernel/ftrace_64.S
+> > +++ b/arch/x86/kernel/ftrace_64.S
+> > @@ -315,7 +315,14 @@ STACK_FRAME_NON_STANDARD_FP(ftrace_regs_caller)
+> >  SYM_FUNC_START(__fentry__)
+> >  	CALL_DEPTH_ACCOUNT
+> >  
+> > +#ifdef CONFIG_X86_PIE
+> > +	pushq %r8
+> > +	leaq ftrace_stub(%rip), %r8
+> > +	cmpq %r8, ftrace_trace_function(%rip)
+> > +	popq %r8
+> > +#else
+> >  	cmpq $ftrace_stub, ftrace_trace_function
+> > +#endif
+> >  	jnz trace
+> >  	RET
+> >  
+> > @@ -329,7 +336,7 @@ trace:
+> >  	 * ip and parent ip are used and the list function is called when
+> >  	 * function tracing is enabled.
+> >  	 */
+> > -	movq ftrace_trace_function, %r8
+> > +	movq ftrace_trace_function(%rip), %r8
+> >  	CALL_NOSPEC r8
+> >  	restore_mcount_regs
+> >  
 > 
-> Wait! This won't work!
+> I really don't want to add more updates to !DYNAMIC_FTRACE. This code only
+> exists to make sure I don't break it for other architectures.
 > 
-> You can't just append another nop to fill in the blanks here. We must
-> either have a single 6 byte nop, or we need to refactor the entire logic to
-> something that other archs have.
+> How about
 > 
-> The two nops means that the CPU can take it as two separate commands.
-> There's nothing stopping the computer from preempting a task between the
-> two. If that happens, and you modify the 1byte nop and 5byte nop with a
-> single 6 byte command, when the task get's rescheduled, it will execute the
-> last 5 bytes of that 6 byte command and take a general protection fault, and
-> likely crash the machine.
+> diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
+> index 442eccc00960..ee4d0713139d 100644
+> --- a/arch/x86/Kconfig
+> +++ b/arch/x86/Kconfig
+> @@ -37,7 +37,7 @@ config X86_64
+>  
+>  config FORCE_DYNAMIC_FTRACE
+>  	def_bool y
+> -	depends on X86_32
+> +	depends on X86_32 || X86_PIE
+>  	depends on FUNCTION_TRACER
+>  	select DYNAMIC_FTRACE
+>  	help
 > 
-> NACK on this. It needs a better solution.
 > 
-> -- Steve
-> 
+> ?
 >
-Hi Steve,
+OK, I'll drop it. Actually, I select DYNAMIC_FTRACE when
+CONFIG_RETPOLINE is enabled for PIE due to the indirect call for
+__fentry__() in patch 34.
 
-Sorry for not providing the original patch link:
-https://lore.kernel.org/all/20190131192533.34130-22-thgarnie@chromium.org/
-
-I drop the Reviewed-by tag due to the change described in commit
-message.
-
-This nop patching is only used for the first time (addr = MCOUNT) before
-SMP or executing code in module. And ftrace_make_call() is not modified,
-then we would use 5 byte direct call to replace the first 5 byte nop
-when tracepoint is enabled like before, it's still one instruction. So,
-the logic is same like before, patch the first 5 byte when tracepoint is
-enabled or disabled during running.
-
-> > 
-> > [Hou Wenlong: Adapt code change and fix wrong offset calculation in
-> > make_nop_x86()]
-> > 
+Thanks.
+> -- Steve
