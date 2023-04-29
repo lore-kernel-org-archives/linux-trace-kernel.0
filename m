@@ -2,130 +2,105 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 96589C77B61
-	for <linux-trace-kernel@archiver.kernel.org>; Fri, 28 Apr 2023 16:39:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C04B1C77B7C
+	for <linux-trace-kernel@archiver.kernel.org>; Sat, 29 Apr 2023 03:38:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1346283AbjD1Qj7 (ORCPT
+        id S230191AbjD2Dih (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Fri, 28 Apr 2023 12:39:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57456 "EHLO
+        Fri, 28 Apr 2023 23:38:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45928 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229997AbjD1Qj6 (ORCPT
+        with ESMTP id S229598AbjD2Dif (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Fri, 28 Apr 2023 12:39:58 -0400
-Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 61DC459DC;
-        Fri, 28 Apr 2023 09:39:50 -0700 (PDT)
-Received: from pps.filterd (m0353726.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 33SGbMfm029807;
-        Fri, 28 Apr 2023 16:39:48 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
- : date : message-id : in-reply-to : references : mime-version :
- content-transfer-encoding; s=pp1;
- bh=1VFq6zyI75ZkAy0GmVMbORMhJmkyPnnRdcx8uJyRGqc=;
- b=hBg76IQPZU3C0X57/Yzuon3bKGAoht2zXv3xMlz6wEm8GRQoQVNaL7IgUCvl3HrTMWE1
- OVr+AXTZoL3c90Lz46QCDi+4/lNGrhoUcwEMNqio6DNnnoT09DiRlWtAPZkIeCpkHOuz
- 4RDFdm9j0vjKFDkqgGzmxcMruCvj7dRKGS1+ZRbVEpBCP3inPajmSlbwpUxwcODEeq9N
- EW6sdJMbMVxik0i7P+6YMGILEvWmUXhRAT7yBUGOQFD75HxZ6h/ml6WCH0jBjDFGneI1
- IeG9fy2VXMUJz1KkubtWDPaudvgCcUpgmvHd6FXBAf5LDNEwMU4te5JN1WO8sKtPSrkp 7g== 
-Received: from ppma03ams.nl.ibm.com (62.31.33a9.ip4.static.sl-reverse.com [169.51.49.98])
-        by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3q8gjw2ggp-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 28 Apr 2023 16:39:46 +0000
-Received: from pps.filterd (ppma03ams.nl.ibm.com [127.0.0.1])
-        by ppma03ams.nl.ibm.com (8.17.1.19/8.17.1.19) with ESMTP id 33SGbMhA027503;
-        Fri, 28 Apr 2023 16:38:58 GMT
-Received: from smtprelay03.fra02v.mail.ibm.com ([9.218.2.224])
-        by ppma03ams.nl.ibm.com (PPS) with ESMTPS id 3q47773nsr-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 28 Apr 2023 16:38:58 +0000
-Received: from smtpav07.fra02v.mail.ibm.com (smtpav07.fra02v.mail.ibm.com [10.20.54.106])
-        by smtprelay03.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 33SGct7c36831502
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 28 Apr 2023 16:38:55 GMT
-Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id F2DE32004D;
-        Fri, 28 Apr 2023 16:38:54 +0000 (GMT)
-Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 71DA020043;
-        Fri, 28 Apr 2023 16:38:52 +0000 (GMT)
-Received: from li-ed75614c-32e0-11b2-a85c-ba2953069b43.ibm.com.com (unknown [9.43.42.160])
-        by smtpav07.fra02v.mail.ibm.com (Postfix) with ESMTP;
-        Fri, 28 Apr 2023 16:38:52 +0000 (GMT)
-From:   Akanksha J N <akanksha@linux.ibm.com>
-To:     linux-kselftest@vger.kernel.org,
-        linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     rostedt@goodmis.org, mhiramat@kernel.org, shuah@kernel.org,
-        naveen.n.rao@linux.ibm.com, akanksha@linux.ibm.com,
-        "Naveen N . Rao" <naveen.n.rao@linux.vnet.ibm.com>
-Subject: [PATCH v3 1/2] selftests/ftrace: Add new test case which adds multiple consecutive probes in a function
-Date:   Fri, 28 Apr 2023 22:08:41 +0530
-Message-Id: <20230428163842.95118-2-akanksha@linux.ibm.com>
-X-Mailer: git-send-email 2.31.1
-In-Reply-To: <20230428163842.95118-1-akanksha@linux.ibm.com>
-References: <20230428163842.95118-1-akanksha@linux.ibm.com>
+        Fri, 28 Apr 2023 23:38:35 -0400
+Received: from out0-205.mail.aliyun.com (out0-205.mail.aliyun.com [140.205.0.205])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E0E1C26A6;
+        Fri, 28 Apr 2023 20:38:32 -0700 (PDT)
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R131e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018047198;MF=houwenlong.hwl@antgroup.com;NM=1;PH=DS;RN=16;SR=0;TI=SMTPD_---.STlDLfd_1682739506;
+Received: from localhost(mailfrom:houwenlong.hwl@antgroup.com fp:SMTPD_---.STlDLfd_1682739506)
+          by smtp.aliyun-inc.com;
+          Sat, 29 Apr 2023 11:38:27 +0800
+Date:   Sat, 29 Apr 2023 11:38:26 +0800
+From:   "Hou Wenlong" <houwenlong.hwl@antgroup.com>
+To:     Steven Rostedt <rostedt@goodmis.org>
+Cc:     <linux-kernel@vger.kernel.org>,
+        "Thomas Garnier" <thgarnie@chromium.org>,
+        "Lai Jiangshan" <jiangshan.ljs@antgroup.com>,
+        "Kees Cook" <keescook@chromium.org>,
+        "Masami Hiramatsu" <mhiramat@kernel.org>,
+        "Mark Rutland" <mark.rutland@arm.com>,
+        "Thomas Gleixner" <tglx@linutronix.de>,
+        "Ingo Molnar" <mingo@redhat.com>, "Borislav Petkov" <bp@alien8.de>,
+        "Dave Hansen" <dave.hansen@linux.intel.com>, <x86@kernel.org>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        "Huacai Chen" <chenhuacai@kernel.org>,
+        "Qing Zhang" <zhangqing@loongson.cn>,
+        <linux-trace-kernel@vger.kernel.org>
+Subject: Re: [PATCH RFC 22/43] x86/ftrace: Adapt ftrace nop patching for PIE
+ support
+Message-ID: <20230429033826.GA91541@k08j02272.eu95sqa>
+References: <cover.1682673542.git.houwenlong.hwl@antgroup.com>
+ <38a5029cd2590e04209117740f8912db36eff58f.1682673543.git.houwenlong.hwl@antgroup.com>
+ <20230428094454.0f2f5049@gandalf.local.home>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: dLm0FE2YlPeEtHARPFhB-2Drxon920ql
-X-Proofpoint-ORIG-GUID: dLm0FE2YlPeEtHARPFhB-2Drxon920ql
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.254,Aquarius:18.0.942,Hydra:6.0.573,FMLib:17.11.170.22
- definitions=2023-04-28_04,2023-04-27_01,2023-02-09_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501 mlxscore=0
- malwarescore=0 lowpriorityscore=0 mlxlogscore=999 clxscore=1015
- impostorscore=0 bulkscore=0 spamscore=0 suspectscore=0 phishscore=0
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2303200000 definitions=main-2304280133
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230428094454.0f2f5049@gandalf.local.home>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-Commit 97f88a3d723162 ("powerpc/kprobes: Fix null pointer reference in
-arch_prepare_kprobe()") fixed a recent kernel oops that was caused as
-ftrace-based kprobe does not generate kprobe::ainsn::insn and it gets
-set to NULL.
-Add new test case kprobe_insn_boundary.tc which adds a
-kprobe at every byte within $FUNCTION_FORK up to an offset of 256 bytes,
-to be able to test potential issues with kprobes on
-successive instructions.
-The '|| continue' is added with the echo statement to ignore errors that
-are caused by trying to add kprobes to non probeable lines and continue
-with the test.
+On Fri, Apr 28, 2023 at 09:44:54PM +0800, Steven Rostedt wrote:
+> On Fri, 28 Apr 2023 17:51:02 +0800
+> "Hou Wenlong" <houwenlong.hwl@antgroup.com> wrote:
+> 
+> > From: Thomas Garnier <thgarnie@chromium.org>
+> > 
+> > From: Thomas Garnier <thgarnie@chromium.org>
+> > 
+> > When using PIE with function tracing, the compiler generates a
+> > call through the GOT (call *__fentry__@GOTPCREL). This instruction
+> > takes 6-bytes instead of 5-bytes with a relative call. And -mnop-mcount
+> > option is not implemented for -fPIE now.
+> > 
+> > If PIE is enabled, replace the 6th byte of the GOT call by a 1-byte nop
+> > so ftrace can handle the previous 5-bytes as before.
+> 
+> Wait! This won't work!
+> 
+> You can't just append another nop to fill in the blanks here. We must
+> either have a single 6 byte nop, or we need to refactor the entire logic to
+> something that other archs have.
+> 
+> The two nops means that the CPU can take it as two separate commands.
+> There's nothing stopping the computer from preempting a task between the
+> two. If that happens, and you modify the 1byte nop and 5byte nop with a
+> single 6 byte command, when the task get's rescheduled, it will execute the
+> last 5 bytes of that 6 byte command and take a general protection fault, and
+> likely crash the machine.
+> 
+> NACK on this. It needs a better solution.
+> 
+> -- Steve
+> 
+>
+Hi Steve,
 
-Signed-off-by: Akanksha J N <akanksha@linux.ibm.com>
-Acked-by: Naveen N. Rao <naveen.n.rao@linux.vnet.ibm.com>
-Acked-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
----
- .../test.d/kprobe/kprobe_insn_boundary.tc     | 19 +++++++++++++++++++
- 1 file changed, 19 insertions(+)
- create mode 100644 tools/testing/selftests/ftrace/test.d/kprobe/kprobe_insn_boundary.tc
+Sorry for not providing the original patch link:
+https://lore.kernel.org/all/20190131192533.34130-22-thgarnie@chromium.org/
 
-diff --git a/tools/testing/selftests/ftrace/test.d/kprobe/kprobe_insn_boundary.tc b/tools/testing/selftests/ftrace/test.d/kprobe/kprobe_insn_boundary.tc
-new file mode 100644
-index 000000000000..4f7cc318f331
---- /dev/null
-+++ b/tools/testing/selftests/ftrace/test.d/kprobe/kprobe_insn_boundary.tc
-@@ -0,0 +1,19 @@
-+#!/bin/sh
-+# SPDX-License-Identifier: GPL-2.0-or-later
-+# Copyright (C) 2023 Akanksha J N, IBM corporation
-+# description: Register multiple kprobe events in a function
-+# requires: kprobe_events
-+
-+for i in `seq 0 255`; do
-+  echo p $FUNCTION_FORK+${i} >> kprobe_events || continue
-+done
-+
-+cat kprobe_events >> $testlog
-+
-+echo 1 > events/kprobes/enable
-+( echo "forked" )
-+echo 0 > events/kprobes/enable
-+echo > kprobe_events
-+echo "Waiting for unoptimizing & freeing"
-+sleep 5
-+echo "Done"
--- 
-2.31.1
+I drop the Reviewed-by tag due to the change described in commit
+message.
 
+This nop patching is only used for the first time (addr = MCOUNT) before
+SMP or executing code in module. And ftrace_make_call() is not modified,
+then we would use 5 byte direct call to replace the first 5 byte nop
+when tracepoint is enabled like before, it's still one instruction. So,
+the logic is same like before, patch the first 5 byte when tracepoint is
+enabled or disabled during running.
+
+> > 
+> > [Hou Wenlong: Adapt code change and fix wrong offset calculation in
+> > make_nop_x86()]
+> > 
