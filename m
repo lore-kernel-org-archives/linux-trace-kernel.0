@@ -2,121 +2,123 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 39CEAC7618E
-	for <linux-trace-kernel@archiver.kernel.org>; Sat, 29 Apr 2023 03:43:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 843F3C77B7E
+	for <linux-trace-kernel@archiver.kernel.org>; Sun, 30 Apr 2023 01:52:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230077AbjD2Dn1 (ORCPT
+        id S229721AbjD3Bwh (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Fri, 28 Apr 2023 23:43:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47038 "EHLO
+        Sat, 29 Apr 2023 21:52:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34464 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229498AbjD2Dn0 (ORCPT
+        with ESMTP id S229453AbjD3Bwg (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Fri, 28 Apr 2023 23:43:26 -0400
-Received: from out0-218.mail.aliyun.com (out0-218.mail.aliyun.com [140.205.0.218])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C4B002680;
-        Fri, 28 Apr 2023 20:43:20 -0700 (PDT)
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R731e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=ay29a033018047209;MF=houwenlong.hwl@antgroup.com;NM=1;PH=DS;RN=14;SR=0;TI=SMTPD_---.STmyWyg_1682739796;
-Received: from localhost(mailfrom:houwenlong.hwl@antgroup.com fp:SMTPD_---.STmyWyg_1682739796)
-          by smtp.aliyun-inc.com;
-          Sat, 29 Apr 2023 11:43:16 +0800
-Date:   Sat, 29 Apr 2023 11:43:15 +0800
-From:   "Hou Wenlong" <houwenlong.hwl@antgroup.com>
-To:     Steven Rostedt <rostedt@goodmis.org>
-Cc:     <linux-kernel@vger.kernel.org>,
-        "Thomas Garnier" <thgarnie@chromium.org>,
-        "Lai Jiangshan" <jiangshan.ljs@antgroup.com>,
-        "Kees Cook" <keescook@chromium.org>,
-        "Masami Hiramatsu" <mhiramat@kernel.org>,
-        "Mark Rutland" <mark.rutland@arm.com>,
-        "Thomas Gleixner" <tglx@linutronix.de>,
-        "Ingo Molnar" <mingo@redhat.com>, "Borislav Petkov" <bp@alien8.de>,
-        "Dave Hansen" <dave.hansen@linux.intel.com>, <x86@kernel.org>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        <linux-trace-kernel@vger.kernel.org>
-Subject: Re: [PATCH RFC 21/43] x86/ftrace: Adapt assembly for PIE support
-Message-ID: <20230429034315.GB91541@k08j02272.eu95sqa>
-References: <cover.1682673542.git.houwenlong.hwl@antgroup.com>
- <0092ce94b325ad8eb47ff4f95e012f9af1a127de.1682673543.git.houwenlong.hwl@antgroup.com>
- <20230428093719.037081e3@gandalf.local.home>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230428093719.037081e3@gandalf.local.home>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+        Sat, 29 Apr 2023 21:52:36 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8B1661995;
+        Sat, 29 Apr 2023 18:52:35 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 2349460A4E;
+        Sun, 30 Apr 2023 01:52:35 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2AFAAC433EF;
+        Sun, 30 Apr 2023 01:52:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1682819554;
+        bh=ZhxqaDEN86XmxUi8KbuYL4Tf06ROel7RYWuePCb+syI=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=npqsfDHWJpY6BH2oOxznuazADeDTN0eAV0JGypgI7Ab66IfNeEMEteraDFRx2Pczi
+         AAuwWb8OQNiWzPUaoiwuHiVoxX67Dg5BGZH+/obIWf+nEjf9Eo6wgGtp8TirTe4Bfk
+         pgNNqp11go9cgszpyvlK2k9GzdjuHFCwvTe6EQPPiNAZadVqZp0a8ByoiSeGtxpsZO
+         CYrN3roOJpHfDm+GIB8TRa50wbAxp8xAO0RJYoK9zp0D9jgdnJxAu79vvNbTTJvzFL
+         GSCpZAiBYK/LSJGZbpNLH+yC/JN8L8VN2yfkOxiqcbSbLCT+YC2WkvscFN3Ah40kbv
+         oRfv7PjcphBQw==
+Date:   Sun, 30 Apr 2023 10:52:31 +0900
+From:   Masami Hiramatsu (Google) <mhiramat@kernel.org>
+To:     Akanksha J N <akanksha@linux.ibm.com>
+Cc:     linux-kselftest@vger.kernel.org,
+        linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        rostedt@goodmis.org, mhiramat@kernel.org, shuah@kernel.org,
+        naveen.n.rao@linux.ibm.com
+Subject: Re: [PATCH v3 2/2] selftests/ftrace: Add new test case which checks
+ for optimized probes
+Message-Id: <20230430105231.2e7f5bd8a3f879d2330485d2@kernel.org>
+In-Reply-To: <20230428163842.95118-3-akanksha@linux.ibm.com>
+References: <20230428163842.95118-1-akanksha@linux.ibm.com>
+        <20230428163842.95118-3-akanksha@linux.ibm.com>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On Fri, Apr 28, 2023 at 09:37:19PM +0800, Steven Rostedt wrote:
-> On Fri, 28 Apr 2023 17:51:01 +0800
-> "Hou Wenlong" <houwenlong.hwl@antgroup.com> wrote:
-> 
-> > Change the assembly code to use only relative references of symbols for
-> > the kernel to be PIE compatible.
-> > 
-> > Signed-off-by: Hou Wenlong <houwenlong.hwl@antgroup.com>
-> > Cc: Thomas Garnier <thgarnie@chromium.org>
-> > Cc: Lai Jiangshan <jiangshan.ljs@antgroup.com>
-> > Cc: Kees Cook <keescook@chromium.org>
-> > ---
-> >  arch/x86/kernel/ftrace_64.S | 9 ++++++++-
-> >  1 file changed, 8 insertions(+), 1 deletion(-)
-> > 
-> > diff --git a/arch/x86/kernel/ftrace_64.S b/arch/x86/kernel/ftrace_64.S
-> > index eddb4fabc16f..411fa4148e18 100644
-> > --- a/arch/x86/kernel/ftrace_64.S
-> > +++ b/arch/x86/kernel/ftrace_64.S
-> > @@ -315,7 +315,14 @@ STACK_FRAME_NON_STANDARD_FP(ftrace_regs_caller)
-> >  SYM_FUNC_START(__fentry__)
-> >  	CALL_DEPTH_ACCOUNT
-> >  
-> > +#ifdef CONFIG_X86_PIE
-> > +	pushq %r8
-> > +	leaq ftrace_stub(%rip), %r8
-> > +	cmpq %r8, ftrace_trace_function(%rip)
-> > +	popq %r8
-> > +#else
-> >  	cmpq $ftrace_stub, ftrace_trace_function
-> > +#endif
-> >  	jnz trace
-> >  	RET
-> >  
-> > @@ -329,7 +336,7 @@ trace:
-> >  	 * ip and parent ip are used and the list function is called when
-> >  	 * function tracing is enabled.
-> >  	 */
-> > -	movq ftrace_trace_function, %r8
-> > +	movq ftrace_trace_function(%rip), %r8
-> >  	CALL_NOSPEC r8
-> >  	restore_mcount_regs
-> >  
-> 
-> I really don't want to add more updates to !DYNAMIC_FTRACE. This code only
-> exists to make sure I don't break it for other architectures.
-> 
-> How about
-> 
-> diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
-> index 442eccc00960..ee4d0713139d 100644
-> --- a/arch/x86/Kconfig
-> +++ b/arch/x86/Kconfig
-> @@ -37,7 +37,7 @@ config X86_64
->  
->  config FORCE_DYNAMIC_FTRACE
->  	def_bool y
-> -	depends on X86_32
-> +	depends on X86_32 || X86_PIE
->  	depends on FUNCTION_TRACER
->  	select DYNAMIC_FTRACE
->  	help
-> 
-> 
-> ?
->
-OK, I'll drop it. Actually, I select DYNAMIC_FTRACE when
-CONFIG_RETPOLINE is enabled for PIE due to the indirect call for
-__fentry__() in patch 34.
+On Fri, 28 Apr 2023 22:08:42 +0530
+Akanksha J N <akanksha@linux.ibm.com> wrote:
 
-Thanks.
-> -- Steve
+> Add new test case kprobe_opt_types.tc which enables and checks
+> if each probe has been optimized in order to test potential issues with
+> optimized probes.
+> The '|| continue' is added with the echo statement to ignore errors that
+> are caused by trying to add kprobes to non probeable lines and continue
+> with the test.
+> 
+> Signed-off-by: Akanksha J N <akanksha@linux.ibm.com>
+
+Thanks! This looks good to me.
+
+Acked-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+
+> ---
+>  .../ftrace/test.d/kprobe/kprobe_opt_types.tc  | 34 +++++++++++++++++++
+>  1 file changed, 34 insertions(+)
+>  create mode 100644 tools/testing/selftests/ftrace/test.d/kprobe/kprobe_opt_types.tc
+> 
+> diff --git a/tools/testing/selftests/ftrace/test.d/kprobe/kprobe_opt_types.tc b/tools/testing/selftests/ftrace/test.d/kprobe/kprobe_opt_types.tc
+> new file mode 100644
+> index 000000000000..9f5d99328086
+> --- /dev/null
+> +++ b/tools/testing/selftests/ftrace/test.d/kprobe/kprobe_opt_types.tc
+> @@ -0,0 +1,34 @@
+> +#!/bin/sh
+> +# SPDX-License-Identifier: GPL-2.0-or-later
+> +# Copyright (C) 2023 Akanksha J N, IBM corporation
+> +# description: Register/unregister optimized probe
+> +# requires: kprobe_events
+> +
+> +case `uname -m` in
+> +x86_64)
+> +;;
+> +arm*)
+> +;;
+> +ppc*)
+> +;;
+> +*)
+> +  echo "Please implement other architecture here"
+> +  exit_unsupported
+> +esac
+> +
+> +DEFAULT=$(cat /proc/sys/debug/kprobes-optimization)
+> +echo 1 > /proc/sys/debug/kprobes-optimization
+> +for i in `seq 0 255`; do
+> +        echo  "p:testprobe $FUNCTION_FORK+${i}" > kprobe_events || continue
+> +        echo 1 > events/kprobes/enable || continue
+> +        (echo "forked")
+> +	PROBE=$(grep $FUNCTION_FORK /sys/kernel/debug/kprobes/list)
+> +        echo 0 > events/kprobes/enable
+> +        echo > kprobe_events
+> +	if echo $PROBE | grep -q OPTIMIZED; then
+> +                echo "$DEFAULT" >  /proc/sys/debug/kprobes-optimization
+> +                exit_pass
+> +        fi
+> +done
+> +echo "$DEFAULT" >  /proc/sys/debug/kprobes-optimization
+> +exit_unresolved
+> -- 
+> 2.31.1
+> 
+
+
+-- 
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
