@@ -2,172 +2,288 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A6A54C77B7C
-	for <linux-trace-kernel@archiver.kernel.org>; Tue,  2 May 2023 02:19:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 44508C77B7E
+	for <linux-trace-kernel@archiver.kernel.org>; Tue,  2 May 2023 04:17:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233494AbjEBCTu (ORCPT
+        id S232958AbjEBERq (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Mon, 1 May 2023 22:19:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45664 "EHLO
+        Tue, 2 May 2023 00:17:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38424 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231915AbjEBCTp (ORCPT
+        with ESMTP id S231397AbjEBERh (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Mon, 1 May 2023 22:19:45 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5DB394496;
-        Mon,  1 May 2023 19:19:13 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id CBC6A620DD;
-        Tue,  2 May 2023 02:18:51 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A6751C433EF;
-        Tue,  2 May 2023 02:18:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1682993931;
-        bh=Q8X75uxojwl36z/185Vnp5NwxkrdQsauwtqJ820GtUs=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=h8QItl89kGoy39zLksWOeEpDGjkFuCO38Mt6uBjZMvBB3tqr8qu1t1s/dfE73Vz3w
-         QtLGVQPF1HbB8W/v+VlTeHc7hZbI2gRvzDkkydNcwdh4qGVBnVv09ItUzz/lI5vKXy
-         Fi6/aZQTJoYVhkG/PjB+U9SJay2FjDNxAwbVxAHlF1Xecwiw6DNkRlYJnqdVVnCQeV
-         pPmmqGbOSU4K+2SdDGMt5kDbHm5yfpRmTYulbQUEQo3pluEmnTKqCowPNRZVf1yNh8
-         q3UverX62X2/FHY2TIJVEpNXlGE7E8GMRGo6xEYfpLqEnTauM316s8npTxV55bn2xF
-         y09ACrPKt4c+Q==
-From:   "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
-To:     linux-trace-kernel@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>,
-        mhiramat@kernel.org, Florent Revest <revest@chromium.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Martin KaFai Lau <martin.lau@linux.dev>, bpf@vger.kernel.org
-Subject: [PATCH v9.1 10/11] selftests/ftrace: Add BTF arguments test cases
-Date:   Tue,  2 May 2023 11:18:47 +0900
-Message-ID:  <168299392783.3242086.1546512576090950143.stgit@mhiramat.roam.corp.google.com>
-X-Mailer: git-send-email 2.40.1.495.gc816e09b53d-goog
-In-Reply-To:  <168299383880.3242086.7182498102007986127.stgit@mhiramat.roam.corp.google.com>
-References:  <168299383880.3242086.7182498102007986127.stgit@mhiramat.roam.corp.google.com>
-User-Agent: StGit/0.19
-MIME-Version: 1.0
+        Tue, 2 May 2023 00:17:37 -0400
+Received: from mailout4.samsung.com (mailout4.samsung.com [203.254.224.34])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 14D573AA4
+        for <linux-trace-kernel@vger.kernel.org>; Mon,  1 May 2023 21:17:34 -0700 (PDT)
+Received: from epcas2p3.samsung.com (unknown [182.195.41.55])
+        by mailout4.samsung.com (KnoxPortal) with ESMTP id 20230502041730epoutp04d888619ff31a97f799d6f66657cd5c9f~bOInRcmdJ0950209502epoutp04T
+        for <linux-trace-kernel@vger.kernel.org>; Tue,  2 May 2023 04:17:30 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout4.samsung.com 20230502041730epoutp04d888619ff31a97f799d6f66657cd5c9f~bOInRcmdJ0950209502epoutp04T
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1683001050;
+        bh=h4HpTDjrPqp6n1tHtvG6n2IcLGmnTi88PxPVIUpI41Q=;
+        h=Subject:Reply-To:From:To:CC:Date:References:From;
+        b=kdMt3j9kvspriM3mSFNkVxDVXTtSMcbvLhXZgYgalkcLNxkkzBcZAMp639aFN/PQ4
+         vGDQGh1ghWDGX5eozD1Ffgdyk0s6OvjF/8Su38yYgQ9JqAOyjkv0W1SMAh8iNYElOP
+         dpcpsQWN4J8i5q7Rdo1RTHbgCBSw8O9cTQRlzkJU=
+Received: from epsnrtp1.localdomain (unknown [182.195.42.162]) by
+        epcas2p3.samsung.com (KnoxPortal) with ESMTP id
+        20230502041729epcas2p30506747b2e5967ca9c6e3037045aa594~bOImw2bLF0659306593epcas2p3Q;
+        Tue,  2 May 2023 04:17:29 +0000 (GMT)
+Received: from epsmges2p3.samsung.com (unknown [182.195.36.69]) by
+        epsnrtp1.localdomain (Postfix) with ESMTP id 4Q9Rcn1HGqz4x9QN; Tue,  2 May
+        2023 04:17:29 +0000 (GMT)
+X-AuditID: b6c32a47-e99fd70000002007-a4-64508ed955ae
+Received: from epcas2p2.samsung.com ( [182.195.41.54]) by
+        epsmges2p3.samsung.com (Symantec Messaging Gateway) with SMTP id
+        4E.4A.08199.9DE80546; Tue,  2 May 2023 13:17:29 +0900 (KST)
+Mime-Version: 1.0
+Subject: [PATCH v4] f2fs: add async reset zone command support
+Reply-To: daejun7.park@samsung.com
+Sender: Daejun Park <daejun7.park@samsung.com>
+From:   Daejun Park <daejun7.park@samsung.com>
+To:     "jaegeuk@kernel.org" <jaegeuk@kernel.org>,
+        "chao@kernel.org" <chao@kernel.org>,
+        "rostedt@goodmis.org" <rostedt@goodmis.org>,
+        "mhiramat@kernel.org" <mhiramat@kernel.org>,
+        "linux-f2fs-devel@lists.sourceforge.net" 
+        <linux-f2fs-devel@lists.sourceforge.net>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-trace-kernel@vger.kernel.org" 
+        <linux-trace-kernel@vger.kernel.org>
+CC:     Seokhwan Kim <sukka.kim@samsung.com>,
+        Yonggil Song <yonggil.song@samsung.com>,
+        beomsu kim <beomsu7.kim@samsung.com>,
+        Daejun Park <daejun7.park@samsung.com>
+X-Priority: 3
+X-Content-Kind-Code: NORMAL
+X-CPGS-Detection: blocking_info_exchange
+X-Drm-Type: N,general
+X-Msg-Generator: Mail
+X-Msg-Type: PERSONAL
+X-Reply-Demand: N
+Message-ID: <20230502041628epcms2p7233a97389cebafb73fc525a47215e707@epcms2p7>
+Date:   Tue, 02 May 2023 13:16:28 +0900
+X-CMS-MailID: 20230502041628epcms2p7233a97389cebafb73fc525a47215e707
+Content-Transfer-Encoding: 7bit
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+X-Sendblock-Type: AUTO_CONFIDENTIAL
+CMS-TYPE: 102P
+X-CPGSPASS: Y
+X-CPGSPASS: Y
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprFJsWRmVeSWpSXmKPExsWy7bCmme7NvoAUg6dT2SwuzPvIbHF66lkm
+        i5eHNC1WPQi3eLJ+FrPFpUXuFpd3zWGzOLL+LIvF4uVqFvs6HjBZrOqYy2gx9fwRJgcej5Z9
+        t9g9Nq3qZPPYveAzk0ffllWMHp83yQWwRmXbZKQmpqQWKaTmJeenZOal2yp5B8c7x5uaGRjq
+        GlpamCsp5CXmptoqufgE6Lpl5gDdpqRQlphTChQKSCwuVtK3synKLy1JVcjILy6xVUotSMkp
+        MC/QK07MLS7NS9fLSy2xMjQwMDIFKkzIztg5fwJzwW/dii9vfrE0MK5S62Lk5JAQMJHY92EH
+        axcjF4eQwA5Gif8nD7N1MXJw8AoISvzdIQxSIyxgJ9HxdSc7iC0koCSx/uIsdoi4nsSth2sY
+        QWw2AR2J6Sfug8VFBKYySxzelAoyk1lgMaPE1v8XWSCW8UrMaH8KZUtLbF++lRHC1pD4sayX
+        GcIWlbi5+i07jP3+2HyoGhGJ1ntnoWoEJR783A0Vl5S4PXcTVH2+xP8ry6HsGoltB+ZB2foS
+        1zo2gu3lFfCVeHl6AhOIzSKgKtHybiPUHBeJppuvwWqYBeQltr+dwwwKB2YBTYn1u/RBTAkB
+        ZYkjt6Aq+CQ6Dv9lh/mqYeNvrOwd854wQdhqEut+rmeCGCMjcWse4wRGpVmIcJ6FZO0shLUL
+        GJlXMYqlFhTnpqcWGxUYw6M2OT93EyM4kWq572Cc8faD3iFGJg7GQ4wSHMxKIrwfCv1ShHhT
+        EiurUovy44tKc1KLDzGaAj08kVlKNDkfmMrzSuINTSwNTMzMDM2NTA3MlcR5pW1PJgsJpCeW
+        pGanphakFsH0MXFwSjUwdXgp8qZ+WvJOev4p66OujDe1pxW580iLuLAvium0CLL/PVEisqaw
+        /FeFvLx1wF/mht0tq5miVtQ0vc+XVH7JtfvP968Kk26IbfiiJVoiGbvv0TMLQb3a0ndTF56a
+        IXfu7Gf9BTe3zFgWP4fN/JKD+N7v1Xddkn9/8lO48d01X8BqqmbvBo3U/Ka4qQ8+bu0urJY8
+        qhRkP3PPnof7/9dcitjufeCggJkz9+e6qQcWSu+PKzBqMq/nMpzTtfz//okLb3gYNUQ81fjX
+        HzAzmE9y1pHedau3NeUZ/2teXbNa7feyn2tbta8ekWy18JW9JbDcbU7S+UcXOD9ffnPbjz80
+        xVFMMCZSwiAyN9H6svVkJZbijERDLeai4kQAfh01zS0EAAA=
+DLP-Filter: Pass
+X-CFilter-Loop: Reflected
+X-CMS-RootMailID: 20230502041628epcms2p7233a97389cebafb73fc525a47215e707
+References: <CGME20230502041628epcms2p7233a97389cebafb73fc525a47215e707@epcms2p7>
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+Changelog:
 
-Add test cases to check the BTF arguments correctly supported.
+v3 -> v4
+Fixed build error caused by unused function.
 
-Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+v2 -> v3
+Modified arguments to be correct for ftrace parameter.
+Changed __submit_zone_reset_cmd to void return.
+Refactored the f2fs_wait_discard_bio function.
+Fixed code that was previously incorrectly merged.
+
+v1 -> v2
+Changed to apply the optional async reset write pointer by default.
+
+This patch enables submit reset zone command asynchornously. It helps
+decrease average latency of write IOs in high utilization scenario by
+faster checkpointing.
+
+Signed-off-by: Daejun Park <daejun7.park@samsung.com>
 ---
-Changes in v7:
- - Add BTF void retval test case
----
- .../ftrace/test.d/dynevent/add_remove_btfarg.tc    |   54 ++++++++++++++++++++
- .../ftrace/test.d/dynevent/fprobe_syntax_errors.tc |   11 ++++
- .../ftrace/test.d/kprobe/kprobe_syntax_errors.tc   |   11 ++++
- 3 files changed, 76 insertions(+)
- create mode 100644 tools/testing/selftests/ftrace/test.d/dynevent/add_remove_btfarg.tc
+ fs/f2fs/segment.c           | 83 +++++++++++++++++++++++++++++++++++--
+ include/trace/events/f2fs.h | 18 +++++++-
+ 2 files changed, 96 insertions(+), 5 deletions(-)
 
-diff --git a/tools/testing/selftests/ftrace/test.d/dynevent/add_remove_btfarg.tc b/tools/testing/selftests/ftrace/test.d/dynevent/add_remove_btfarg.tc
-new file mode 100644
-index 000000000000..15515f0a8c9a
---- /dev/null
-+++ b/tools/testing/selftests/ftrace/test.d/dynevent/add_remove_btfarg.tc
-@@ -0,0 +1,54 @@
-+#!/bin/sh
-+# SPDX-License-Identifier: GPL-2.0
-+# description: Generic dynamic event - add/remove probes with BTF arguments
-+# requires: dynamic_events "<argname>":README
+diff --git a/fs/f2fs/segment.c b/fs/f2fs/segment.c
+index 6db410f1bb8c..ec7a8de71198 100644
+--- a/fs/f2fs/segment.c
++++ b/fs/f2fs/segment.c
+@@ -1196,6 +1196,44 @@ static void __init_discard_policy(struct f2fs_sb_info *sbi,
+ static void __update_discard_tree_range(struct f2fs_sb_info *sbi,
+ 				struct block_device *bdev, block_t lstart,
+ 				block_t start, block_t len);
 +
-+KPROBES=
-+FPROBES=
++#ifdef CONFIG_BLK_DEV_ZONED
++static void __submit_zone_reset_cmd(struct f2fs_sb_info *sbi,
++				   struct discard_cmd *dc, blk_opf_t flag,
++				   struct list_head *wait_list,
++				   unsigned int *issued)
++{
++	struct discard_cmd_control *dcc = SM_I(sbi)->dcc_info;
++	struct block_device *bdev = dc->bdev;
++	struct bio *bio = bio_alloc(bdev, 0, REQ_OP_ZONE_RESET | flag, GFP_NOFS);
++	unsigned long flags;
 +
-+if grep -qF "p[:[<group>/][<event>]] <place> [<args>]" README ; then
-+  KPROBES=yes
-+fi
-+if grep -qF "f[:[<group>/][<event>]] <func-name>[%return] [<args>]" README ; then
-+  FPROBES=yes
-+fi
++	trace_f2fs_issue_reset_zone(bdev, dc->di.start);
 +
-+if [ -z "$KPROBES" -a "$FPROBES" ] ; then
-+  exit_unsupported
-+fi
++	spin_lock_irqsave(&dc->lock, flags);
++	dc->state = D_SUBMIT;
++	dc->bio_ref++;
++	spin_unlock_irqrestore(&dc->lock, flags);
 +
-+echo 0 > events/enable
-+echo > dynamic_events
++	if (issued)
++		(*issued)++;
 +
-+TP=kfree
++	atomic_inc(&dcc->queued_discard);
++	dc->queued++;
++	list_move_tail(&dc->list, wait_list);
 +
-+if [ "$FPROBES" ] ; then
-+echo "f:fpevent $TP object" >> dynamic_events
-+echo "t:tpevent $TP ptr" >> dynamic_events
++	/* sanity check on discard range */
++	__check_sit_bitmap(sbi, dc->di.lstart, dc->di.lstart + dc->di.len);
 +
-+grep -q "fpevent.*object=object" dynamic_events
-+grep -q "tpevent.*ptr=ptr" dynamic_events
++	bio->bi_iter.bi_sector = SECTOR_FROM_BLOCK(dc->di.start);
++	bio->bi_private = dc;
++	bio->bi_end_io = f2fs_submit_discard_endio;
++	submit_bio(bio);
 +
-+echo > dynamic_events
++	atomic_inc(&dcc->issued_discard);
++}
++#endif
 +
-+echo "f:fpevent $TP "'$$args' >> dynamic_events
-+echo "t:tpevent $TP "'$$args' >> dynamic_events
-+
-+grep -q "fpevent.*object=object" dynamic_events
-+grep -q "tpevent.*ptr=ptr" dynamic_events
-+! grep -q "tpevent.*_data" dynamic_events
-+fi
-+
-+echo > dynamic_events
-+
-+if [ "$KPROBES" ] ; then
-+echo "p:kpevent $TP object" >> dynamic_events
-+grep -q "kpevent.*object=object" dynamic_events
-+
-+echo > dynamic_events
-+
-+echo "p:kpevent $TP "'$$args' >> dynamic_events
-+grep -q "kpevent.*object=object" dynamic_events
-+fi
-+
-+clear_trace
-diff --git a/tools/testing/selftests/ftrace/test.d/dynevent/fprobe_syntax_errors.tc b/tools/testing/selftests/ftrace/test.d/dynevent/fprobe_syntax_errors.tc
-index 549daa162d84..f2d000bf6371 100644
---- a/tools/testing/selftests/ftrace/test.d/dynevent/fprobe_syntax_errors.tc
-+++ b/tools/testing/selftests/ftrace/test.d/dynevent/fprobe_syntax_errors.tc
-@@ -85,4 +85,15 @@ fi
- # %return suffix errors
- check_error 'f vfs_read^%hoge'		# BAD_ADDR_SUFFIX
+ /* this function is copied from blkdev_issue_discard from block/blk-lib.c */
+ static int __submit_discard_cmd(struct f2fs_sb_info *sbi,
+ 				struct discard_policy *dpolicy,
+@@ -1217,6 +1255,13 @@ static int __submit_discard_cmd(struct f2fs_sb_info *sbi,
+ 	if (is_sbi_flag_set(sbi, SBI_NEED_FSCK))
+ 		return 0;
  
-+# BTF arguments errors
-+if grep -q "<argname>" README; then
-+check_error 'f vfs_read $$args ^$$args'		# DOUBLE_ARGS
-+check_error 'f vfs_read%return ^$$args'		# NOFENTRY_ARGS
-+check_error 'f vfs_read ^hoge'			# NO_BTFARG
-+check_error 'f kfree%return ^$retval'		# NO_RETVAL
-+else
-+check_error 'f vfs_read $$args'			# NOSUP_BTFARG
-+check_error 't kfree $$args'			# NOSUP_BTFARG
-+fi
++#ifdef CONFIG_BLK_DEV_ZONED
++	if (f2fs_sb_has_blkzoned(sbi) && bdev_is_zoned(bdev)) {
++		__submit_zone_reset_cmd(sbi, dc, flag, wait_list, issued);
++		return 0;
++	}
++#endif
 +
- exit 0
-diff --git a/tools/testing/selftests/ftrace/test.d/kprobe/kprobe_syntax_errors.tc b/tools/testing/selftests/ftrace/test.d/kprobe/kprobe_syntax_errors.tc
-index 97c08867490a..d9add5d408f0 100644
---- a/tools/testing/selftests/ftrace/test.d/kprobe/kprobe_syntax_errors.tc
-+++ b/tools/testing/selftests/ftrace/test.d/kprobe/kprobe_syntax_errors.tc
-@@ -103,4 +103,15 @@ check_error 'p vfs_read^%hoge'		# BAD_ADDR_SUFFIX
- check_error 'p ^vfs_read+10%return'	# BAD_RETPROBE
- fi
+ 	trace_f2fs_issue_discard(bdev, dc->di.start, dc->di.len);
  
-+# BTF arguments errors
-+if grep -q "<argname>" README; then
-+check_error 'p vfs_read $$args ^$$args'		# DOUBLE_ARGS
-+check_error 'r vfs_read ^$$args'		# NOFENTRY_ARGS
-+check_error 'p vfs_read+8 ^$$args'		# NOFENTRY_ARGS
-+check_error 'p vfs_read ^hoge'			# NO_BTFARG
-+check_error 'r vfs_read ^$retval'		# NO_RETVAL
-+else
-+check_error 'p vfs_read $$args'			# NOSUP_BTFARG
-+fi
+ 	lstart = dc->di.lstart;
+@@ -1461,6 +1506,19 @@ static void __update_discard_tree_range(struct f2fs_sb_info *sbi,
+ 	}
+ }
+ 
++#ifdef CONFIG_BLK_DEV_ZONED
++static void __queue_zone_reset_cmd(struct f2fs_sb_info *sbi,
++		struct block_device *bdev, block_t blkstart, block_t lblkstart,
++		block_t blklen)
++{
++	trace_f2fs_queue_reset_zone(bdev, blkstart);
 +
- exit 0
++	mutex_lock(&SM_I(sbi)->dcc_info->cmd_lock);
++	__insert_discard_cmd(sbi, bdev, lblkstart, blkstart, blklen);
++	mutex_unlock(&SM_I(sbi)->dcc_info->cmd_lock);
++}
++#endif
++
+ static void __queue_discard_cmd(struct f2fs_sb_info *sbi,
+ 		struct block_device *bdev, block_t blkstart, block_t blklen)
+ {
+@@ -1724,6 +1782,19 @@ static void f2fs_wait_discard_bio(struct f2fs_sb_info *sbi, block_t blkaddr)
+ 
+ 	mutex_lock(&dcc->cmd_lock);
+ 	dc = __lookup_discard_cmd(sbi, blkaddr);
++#ifdef CONFIG_BLK_DEV_ZONED
++	if (dc && f2fs_sb_has_blkzoned(sbi) && bdev_is_zoned(dc->bdev)) {
++		/* force submit zone reset */
++		if (dc->state == D_PREP)
++			__submit_zone_reset_cmd(sbi, dc, REQ_SYNC,
++						&dcc->wait_list, NULL);
++		dc->ref++;
++		mutex_unlock(&dcc->cmd_lock);
++		/* wait zone reset */
++		__wait_one_discard_bio(sbi, dc);
++		return;
++	}
++#endif
+ 	if (dc) {
+ 		if (dc->state == D_PREP) {
+ 			__punch_discard_cmd(sbi, dc, blkaddr);
+@@ -1876,9 +1947,15 @@ static int __f2fs_issue_discard_zone(struct f2fs_sb_info *sbi,
+ 				 blkstart, blklen);
+ 			return -EIO;
+ 		}
+-		trace_f2fs_issue_reset_zone(bdev, blkstart);
+-		return blkdev_zone_mgmt(bdev, REQ_OP_ZONE_RESET,
+-					sector, nr_sects, GFP_NOFS);
++
++		if (unlikely(is_sbi_flag_set(sbi, SBI_POR_DOING))) {
++			trace_f2fs_issue_reset_zone(bdev, blkstart);
++			return blkdev_zone_mgmt(bdev, REQ_OP_ZONE_RESET,
++						sector, nr_sects, GFP_NOFS);
++		}
++
++		__queue_zone_reset_cmd(sbi, bdev, blkstart, lblkstart, blklen);
++		return 0;
+ 	}
+ 
+ 	/* For conventional zones, use regular discard if supported */
+diff --git a/include/trace/events/f2fs.h b/include/trace/events/f2fs.h
+index 99cbc5949e3c..ee1477de8324 100644
+--- a/include/trace/events/f2fs.h
++++ b/include/trace/events/f2fs.h
+@@ -1512,7 +1512,7 @@ DEFINE_EVENT(f2fs_discard, f2fs_remove_discard,
+ 	TP_ARGS(dev, blkstart, blklen)
+ );
+ 
+-TRACE_EVENT(f2fs_issue_reset_zone,
++DECLARE_EVENT_CLASS(f2fs_reset_zone,
+ 
+ 	TP_PROTO(struct block_device *dev, block_t blkstart),
+ 
+@@ -1528,11 +1528,25 @@ TRACE_EVENT(f2fs_issue_reset_zone,
+ 		__entry->blkstart = blkstart;
+ 	),
+ 
+-	TP_printk("dev = (%d,%d), reset zone at block = 0x%llx",
++	TP_printk("dev = (%d,%d), zone at block = 0x%llx",
+ 		show_dev(__entry->dev),
+ 		(unsigned long long)__entry->blkstart)
+ );
+ 
++DEFINE_EVENT(f2fs_reset_zone, f2fs_queue_reset_zone,
++
++	TP_PROTO(struct block_device *dev, block_t blkstart),
++
++	TP_ARGS(dev, blkstart)
++);
++
++DEFINE_EVENT(f2fs_reset_zone, f2fs_issue_reset_zone,
++
++	TP_PROTO(struct block_device *dev, block_t blkstart),
++
++	TP_ARGS(dev, blkstart)
++);
++
+ TRACE_EVENT(f2fs_issue_flush,
+ 
+ 	TP_PROTO(struct block_device *dev, unsigned int nobarrier,
+-- 
+2.25.1
 
