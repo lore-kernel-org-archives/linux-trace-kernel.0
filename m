@@ -2,288 +2,159 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44508C77B7E
-	for <linux-trace-kernel@archiver.kernel.org>; Tue,  2 May 2023 04:17:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BE749C7EE24
+	for <linux-trace-kernel@archiver.kernel.org>; Tue,  2 May 2023 11:24:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232958AbjEBERq (ORCPT
+        id S233620AbjEBLY1 (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Tue, 2 May 2023 00:17:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38424 "EHLO
+        Tue, 2 May 2023 07:24:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37904 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231397AbjEBERh (ORCPT
+        with ESMTP id S233775AbjEBLY0 (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Tue, 2 May 2023 00:17:37 -0400
-Received: from mailout4.samsung.com (mailout4.samsung.com [203.254.224.34])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 14D573AA4
-        for <linux-trace-kernel@vger.kernel.org>; Mon,  1 May 2023 21:17:34 -0700 (PDT)
-Received: from epcas2p3.samsung.com (unknown [182.195.41.55])
-        by mailout4.samsung.com (KnoxPortal) with ESMTP id 20230502041730epoutp04d888619ff31a97f799d6f66657cd5c9f~bOInRcmdJ0950209502epoutp04T
-        for <linux-trace-kernel@vger.kernel.org>; Tue,  2 May 2023 04:17:30 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout4.samsung.com 20230502041730epoutp04d888619ff31a97f799d6f66657cd5c9f~bOInRcmdJ0950209502epoutp04T
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1683001050;
-        bh=h4HpTDjrPqp6n1tHtvG6n2IcLGmnTi88PxPVIUpI41Q=;
-        h=Subject:Reply-To:From:To:CC:Date:References:From;
-        b=kdMt3j9kvspriM3mSFNkVxDVXTtSMcbvLhXZgYgalkcLNxkkzBcZAMp639aFN/PQ4
-         vGDQGh1ghWDGX5eozD1Ffgdyk0s6OvjF/8Su38yYgQ9JqAOyjkv0W1SMAh8iNYElOP
-         dpcpsQWN4J8i5q7Rdo1RTHbgCBSw8O9cTQRlzkJU=
-Received: from epsnrtp1.localdomain (unknown [182.195.42.162]) by
-        epcas2p3.samsung.com (KnoxPortal) with ESMTP id
-        20230502041729epcas2p30506747b2e5967ca9c6e3037045aa594~bOImw2bLF0659306593epcas2p3Q;
-        Tue,  2 May 2023 04:17:29 +0000 (GMT)
-Received: from epsmges2p3.samsung.com (unknown [182.195.36.69]) by
-        epsnrtp1.localdomain (Postfix) with ESMTP id 4Q9Rcn1HGqz4x9QN; Tue,  2 May
-        2023 04:17:29 +0000 (GMT)
-X-AuditID: b6c32a47-e99fd70000002007-a4-64508ed955ae
-Received: from epcas2p2.samsung.com ( [182.195.41.54]) by
-        epsmges2p3.samsung.com (Symantec Messaging Gateway) with SMTP id
-        4E.4A.08199.9DE80546; Tue,  2 May 2023 13:17:29 +0900 (KST)
-Mime-Version: 1.0
-Subject: [PATCH v4] f2fs: add async reset zone command support
-Reply-To: daejun7.park@samsung.com
-Sender: Daejun Park <daejun7.park@samsung.com>
-From:   Daejun Park <daejun7.park@samsung.com>
-To:     "jaegeuk@kernel.org" <jaegeuk@kernel.org>,
-        "chao@kernel.org" <chao@kernel.org>,
-        "rostedt@goodmis.org" <rostedt@goodmis.org>,
-        "mhiramat@kernel.org" <mhiramat@kernel.org>,
-        "linux-f2fs-devel@lists.sourceforge.net" 
-        <linux-f2fs-devel@lists.sourceforge.net>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-trace-kernel@vger.kernel.org" 
-        <linux-trace-kernel@vger.kernel.org>
-CC:     Seokhwan Kim <sukka.kim@samsung.com>,
-        Yonggil Song <yonggil.song@samsung.com>,
-        beomsu kim <beomsu7.kim@samsung.com>,
-        Daejun Park <daejun7.park@samsung.com>
-X-Priority: 3
-X-Content-Kind-Code: NORMAL
-X-CPGS-Detection: blocking_info_exchange
-X-Drm-Type: N,general
-X-Msg-Generator: Mail
-X-Msg-Type: PERSONAL
-X-Reply-Demand: N
-Message-ID: <20230502041628epcms2p7233a97389cebafb73fc525a47215e707@epcms2p7>
-Date:   Tue, 02 May 2023 13:16:28 +0900
-X-CMS-MailID: 20230502041628epcms2p7233a97389cebafb73fc525a47215e707
-Content-Transfer-Encoding: 7bit
-Content-Type: text/plain; charset="utf-8"
-X-Sendblock-Type: AUTO_CONFIDENTIAL
-CMS-TYPE: 102P
-X-CPGSPASS: Y
-X-CPGSPASS: Y
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprFJsWRmVeSWpSXmKPExsWy7bCmme7NvoAUg6dT2SwuzPvIbHF66lkm
-        i5eHNC1WPQi3eLJ+FrPFpUXuFpd3zWGzOLL+LIvF4uVqFvs6HjBZrOqYy2gx9fwRJgcej5Z9
-        t9g9Nq3qZPPYveAzk0ffllWMHp83yQWwRmXbZKQmpqQWKaTmJeenZOal2yp5B8c7x5uaGRjq
-        GlpamCsp5CXmptoqufgE6Lpl5gDdpqRQlphTChQKSCwuVtK3synKLy1JVcjILy6xVUotSMkp
-        MC/QK07MLS7NS9fLSy2xMjQwMDIFKkzIztg5fwJzwW/dii9vfrE0MK5S62Lk5JAQMJHY92EH
-        axcjF4eQwA5Gif8nD7N1MXJw8AoISvzdIQxSIyxgJ9HxdSc7iC0koCSx/uIsdoi4nsSth2sY
-        QWw2AR2J6Sfug8VFBKYySxzelAoyk1lgMaPE1v8XWSCW8UrMaH8KZUtLbF++lRHC1pD4sayX
-        GcIWlbi5+i07jP3+2HyoGhGJ1ntnoWoEJR783A0Vl5S4PXcTVH2+xP8ry6HsGoltB+ZB2foS
-        1zo2gu3lFfCVeHl6AhOIzSKgKtHybiPUHBeJppuvwWqYBeQltr+dwwwKB2YBTYn1u/RBTAkB
-        ZYkjt6Aq+CQ6Dv9lh/mqYeNvrOwd854wQdhqEut+rmeCGCMjcWse4wRGpVmIcJ6FZO0shLUL
-        GJlXMYqlFhTnpqcWGxUYw6M2OT93EyM4kWq572Cc8faD3iFGJg7GQ4wSHMxKIrwfCv1ShHhT
-        EiurUovy44tKc1KLDzGaAj08kVlKNDkfmMrzSuINTSwNTMzMDM2NTA3MlcR5pW1PJgsJpCeW
-        pGanphakFsH0MXFwSjUwdXgp8qZ+WvJOev4p66OujDe1pxW580iLuLAvium0CLL/PVEisqaw
-        /FeFvLx1wF/mht0tq5miVtQ0vc+XVH7JtfvP968Kk26IbfiiJVoiGbvv0TMLQb3a0ndTF56a
-        IXfu7Gf9BTe3zFgWP4fN/JKD+N7v1Xddkn9/8lO48d01X8BqqmbvBo3U/Ka4qQ8+bu0urJY8
-        qhRkP3PPnof7/9dcitjufeCggJkz9+e6qQcWSu+PKzBqMq/nMpzTtfz//okLb3gYNUQ81fjX
-        HzAzmE9y1pHedau3NeUZ/2teXbNa7feyn2tbta8ekWy18JW9JbDcbU7S+UcXOD9ffnPbjz80
-        xVFMMCZSwiAyN9H6svVkJZbijERDLeai4kQAfh01zS0EAAA=
-DLP-Filter: Pass
-X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20230502041628epcms2p7233a97389cebafb73fc525a47215e707
-References: <CGME20230502041628epcms2p7233a97389cebafb73fc525a47215e707@epcms2p7>
+        Tue, 2 May 2023 07:24:26 -0400
+Received: from BL0PR02CU006.outbound.protection.outlook.com (mail-eastusazon11013011.outbound.protection.outlook.com [52.101.54.11])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2017E40E6;
+        Tue,  2 May 2023 04:24:21 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=KLm5i4PCkVd3ALTrW/0d5kAg8l1aQshmTsQokI7V4RAgQNEvj11RdaEGBym6bBOmt3Mto9xjCSHMoxkmI6spRpPFZ8nVD/vb2R8vSkWNlg8Sg6xeTAmz9pBfHFWCPkbwY0TtgmEJiDb1EaXWQkuwbFnu3mzYga5eWRRaEj3sCi8c2LJ8zRpFkaw3SBbVjmoHiHhQbBd+USEvyOe8pVCObR+kwjwT8MY2d8ZdN0+QqIxZjuDiw8l+xr/wVxxMaDQO3d52Zc3PXsC4waBv2B6xJyCbPlhMuCT1EYQvpvM65mzV+gTa8tgVLRx27p78CrvlKj5u8AkMvYZ+VEhpsl9JpQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=dlCPd3vNHGByGM0hm5PDXXFbIMxMpTMUSeky/W6jDj0=;
+ b=daekoN3Bl2l1TLNGB8wr1GvM+ixmQWo0/OGkNyiSjxbFaPOcii9po18ZdfJJpeLC9f2AJ2i90sPmlYaMG6sZxfd3JUHn6kCHZoIuM+DYpZVy256FYmncIXRRrBq5pugbwXo2XjmL2AaPABJ6MlQXHQuTM3xSu3N5aclMDwZu7qjlp9eS+GGtyILLOFupeV+u+8tRRUXbg67o95fjMNUW2LxOAiFOC35snzr7PdfJ4/WnSsSmpR6Ui7a7nc7xt9mtfdlQHJqtVpDoZ/dCLCog/ZnD6UZCwfQjVdlogcmmii6OQShlZ8NUgoUtZTCObTZtp3MoKLG6wXo2Sq+Ds48zLQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=vmware.com; dmarc=pass action=none header.from=vmware.com;
+ dkim=pass header.d=vmware.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=vmware.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=dlCPd3vNHGByGM0hm5PDXXFbIMxMpTMUSeky/W6jDj0=;
+ b=tW3mset+FM4L+hnCVE0MHg4xZY76M0Q3gbcpmJWnFjraZTOxWnHw96KNnGvZeuUC9HEpYQ77JFVCvchcI8hKU8Pk2JYjgZTaJLuvWRHxlQksnVdyVK90gW0uVeWeskU3BhmDihpl+d4gXcA5a9CnOtfJG7oLOEm3EmaicwsNcBw=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=vmware.com;
+Received: from PH0PR05MB8703.namprd05.prod.outlook.com (2603:10b6:510:bd::5)
+ by BYAPR05MB6648.namprd05.prod.outlook.com (2603:10b6:a03:ed::11) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6340.31; Tue, 2 May
+ 2023 11:24:14 +0000
+Received: from PH0PR05MB8703.namprd05.prod.outlook.com
+ ([fe80::5631:475a:58d4:cf66]) by PH0PR05MB8703.namprd05.prod.outlook.com
+ ([fe80::5631:475a:58d4:cf66%7]) with mapi id 15.20.6363.020; Tue, 2 May 2023
+ 11:24:14 +0000
+From:   Ajay Kaher <akaher@vmware.com>
+To:     rostedt@goodmis.org, mhiramat@kernel.org, shuah@kernel.org
+Cc:     linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+        linux-kselftest@vger.kernel.org, chinglinyu@google.com,
+        namit@vmware.com, srivatsab@vmware.com, srivatsa@csail.mit.edu,
+        amakhalov@vmware.com, vsirnapalli@vmware.com, tkundu@vmware.com,
+        er.ajay.kaher@gmail.com, Ajay Kaher <akaher@vmware.com>
+Subject: [PATCH v2 0/9] tracing: introducing eventfs
+Date:   Tue,  2 May 2023 16:53:11 +0530
+Message-Id: <1683026600-13485-1-git-send-email-akaher@vmware.com>
+X-Mailer: git-send-email 2.7.4
+Content-Type: text/plain
+X-ClientProxiedBy: BYAPR11CA0101.namprd11.prod.outlook.com
+ (2603:10b6:a03:f4::42) To PH0PR05MB8703.namprd05.prod.outlook.com
+ (2603:10b6:510:bd::5)
+MIME-Version: 1.0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PH0PR05MB8703:EE_|BYAPR05MB6648:EE_
+X-MS-Office365-Filtering-Correlation-Id: ba833ae9-63fb-46ce-6267-08db4affc22b
+X-LD-Processed: b39138ca-3cee-4b4a-a4d6-cd83d9dd62f0,ExtAddr
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: HCgn2zO6BEubNn21akEMDBsRLPrTA9ficiWjA7JTOoOeHLE5nvAF6yY9R8TjDofljUDboPy9J2nxEMkYjLDJSUXoKBjFwUz6T8qaBoQNXERJwmnOyfsLRABzTCvbaDfEa1AlqCetrawLYNrZuIE1P4zZ/MavmL2tAuSkezLPFhFYF4GeWU06Fnrhx7N4d3FK4PdXdbIT/K3NNueiQ8AZ4SGZpJKtfVn8W8ge6pgG0AQcKJaiu7Mb97hUpCN7xikzVF/lFQohJX7ogS2MDcmCZ2NPdBovceuGb01YHzlfJk1Cv8Yvov+kbjBqE/0wsAdBK/u4MdTUyZvHw1hrJzN/J6co86rJjXvM2XlPQqIxi2lTn6m9xmUQwaugmx0bLzI8MuFv2eafvgUdefQ8FfRheS1K+MJZqUnwqoaVhM35kV3Et/CclRZ/nTOxvDnIEGD9Wpoov6iFUsyXdXqM4UpGtfSiLGuAqlrZiRTtu909Zj7JlYJ21G1UwgSlQtEXjKK6KOvzoJBr9Z7C7Oq0vJP0bOn7AzE9VS6CW1UK8luOwFIZsluFUWxZ1mBJH62BLgP5fmkUZpd42wezBh+0arNV+fb9CjC0EWB8XmeznlhFHx5pfOWNyGkUFCdtU7dJAt2O
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH0PR05MB8703.namprd05.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230028)(4636009)(136003)(346002)(396003)(39860400002)(376002)(366004)(451199021)(6486002)(6666004)(52116002)(107886003)(38100700002)(38350700002)(2906002)(86362001)(41300700001)(66946007)(66556008)(66476007)(4326008)(478600001)(316002)(5660300002)(8676002)(8936002)(36756003)(6506007)(26005)(6512007)(186003)(2616005)(83380400001);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?5rXaKzd2bG7UQQ/OUuOWTuOLEgPm1EqtHTOaqwjtRbfoP+SUuCF/K/PIZ0p7?=
+ =?us-ascii?Q?zw21xTTWSl/ew0/86wDt4HmDqkuf4wG8era6JXVCW3IH1S2wBDXbkq4YD5Oh?=
+ =?us-ascii?Q?xtAnerwC11QVQj+eG9GUX4HCc+J28R5UAE77FmixiH7WMvnjx03LbyVtqlng?=
+ =?us-ascii?Q?skfbLgxeWCQNuSk8QWICaOIAGlggf9aAUcFT+7zn/wwkG3/k8eLibOOmFWxM?=
+ =?us-ascii?Q?7LFuNNtd3VGOsrscSbYR7e3IxoFZErl2FAU1h6UTUGKjuKQdK5ObrDFYaRin?=
+ =?us-ascii?Q?71ZrdDO2H0xJfqZCHPVYnWBujwO46NWETqXRJHfbxIQkn5c7j/fCWR2zR6v4?=
+ =?us-ascii?Q?bhWx8ZyKcJSXTTxggiF79950d9XF+jTL7FjZd+azOxlzb/B9vd3oSdcqx2Lz?=
+ =?us-ascii?Q?zXvH8ELKm7S8fKjsixp0q2kvHAX22OLIO45b0w3gYbWGQvDE5vEzzo3kfnsB?=
+ =?us-ascii?Q?ZXh0+YCuyTXcpl1HH2R5v2EjgW3nIM2geOuOF6pVlyQkAPmaTxWZAZ1Jt5Eo?=
+ =?us-ascii?Q?JgkAUrpHZT114mhsuIls6AGgDZqrvmxAHHHEIl7PT5dYIfmPR8zTfn4lC+dT?=
+ =?us-ascii?Q?ZUEKbEZhxBfKY5mSfAbPsh8VZEArB4gz1HVD9JxmCAceSTcu5VC0c23iMiy7?=
+ =?us-ascii?Q?NpHvIiTexflfc4N2U0kIMt5VRk2DEl0Gr7Rb4CV5+iUU9Z0iKxDXBxOGP9R1?=
+ =?us-ascii?Q?6yNZWp01tWdieuPYiagFZImUFVcGvSJN+T04Yx3f/l0Jqa+SzdS9wSRGIrgj?=
+ =?us-ascii?Q?htsdoScdNaS6/f3ZitSlnNHMQ3WngsU+b8kfupSAok3qjkXPpHXrMlAUS9RL?=
+ =?us-ascii?Q?wwIRuqFgxQEUtUsl6U8XqQbzvBTQLeWB+ZOPNqjx4okTeirwB9QjTSCXLrwJ?=
+ =?us-ascii?Q?SX9ll+fhm2m4Nmzu9XouqQ6Bhl3GqGaL07RXNBMQf4oCbqHy3SWvNRN8eB21?=
+ =?us-ascii?Q?l6seENs18ggnnbDHoFBmWGcxYW3OzlfARNaBZhs21p6Hqlu0hWmWzrGA87Ut?=
+ =?us-ascii?Q?2XEiw0G7n5WxdUgHeEveJFSf0Fx63pOX0ngs8/UKFgexW/6i4E29QIyBihq5?=
+ =?us-ascii?Q?NSj1x41vsq8RsvKcM9nYh4OCEXD+ZChRtmVxGR1g9ahiPjjFY0LLaf7MHR+i?=
+ =?us-ascii?Q?Q4BFlmvHLtqP2zMAzKcMIIFB1b4F7XfejvX5FjruLCVEmBXvkXOFl4UOl9OL?=
+ =?us-ascii?Q?awJWzHKVV41fDjDFnQYaAEwh1n3+9LRDUjFhLWsQp2ga9NbBuYCtzAcUgy4D?=
+ =?us-ascii?Q?UVm/0Jr+5XfBDbLVA8GqiKO35r6N0zkuLPR3w90ACcW8wNO+O7/SQ2zJZTsR?=
+ =?us-ascii?Q?DxqVXyqLBMb7N0yItWBLdRaUj94XOzIkaBRi3H2Sc79yoNza7dbl/ooRtfFL?=
+ =?us-ascii?Q?LISvR8CIi3Zs0ZKWnpNf5mOPz8QgW2OgrPejILbb1Y1yiFPhH/CYPjFv1wSj?=
+ =?us-ascii?Q?/AqUiW3NrMfde2lx2GeC9xW9ErLwrsE/71l5JBhKxNKs/Zc96Uxa6ZBRxBCz?=
+ =?us-ascii?Q?KtzdXVUqqOQ8r45QAe6ZR1eHW3wZAmTB1FYjpew1Hn/n0Z/OL4405hfZt0Hq?=
+ =?us-ascii?Q?4yv8dgGvhhlD6lM0G7Hrszyj2saC717NUe/GQilp?=
+X-OriginatorOrg: vmware.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: ba833ae9-63fb-46ce-6267-08db4affc22b
+X-MS-Exchange-CrossTenant-AuthSource: PH0PR05MB8703.namprd05.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 02 May 2023 11:24:13.9515
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: b39138ca-3cee-4b4a-a4d6-cd83d9dd62f0
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: eVkerRUHI+bLkdaxcpbDKXMFfSy+kC2oJpKAAGY5AhEl1hY4X+AwljWn3L4n3mZcE34WTMxIeV30qU0eg36hrQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR05MB6648
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-Changelog:
+Events Tracing infrastructure contains lot of files, directories
+(internally in terms of inodes, dentries). And ends up by consuming
+memory in MBs. We can have multiple events of Events Tracing, which
+further requires more memory.
 
-v3 -> v4
-Fixed build error caused by unused function.
+Instead of creating inodes/dentries, eventfs could keep meta-data and
+skip the creation of inodes/dentries. As and when require, eventfs will
+create the inodes/dentries only for required files/directories.
+Also eventfs would delete the inodes/dentries once no more requires
+but preserve the meta data.
 
-v2 -> v3
-Modified arguments to be correct for ftrace parameter.
-Changed __submit_zone_reset_cmd to void return.
-Refactored the f2fs_wait_discard_bio function.
-Fixed code that was previously incorrectly merged.
+Tracing events took ~9MB, with this approach it took ~4.5MB
+for ~10K files/dir.
 
-v1 -> v2
-Changed to apply the optional async reset write pointer by default.
+Diff from v1:
+Patch 1: add header file
+Patch 2: resolved kernel test robot issues
+         protecting eventfs lists using nested eventfs_rwsem
+Patch 3: protecting eventfs lists using nested eventfs_rwsem
+Patch 4: improve events cleanup code to fix crashes
+Patch 5: resolved kernel test robot issues
+         removed d_instantiate_anon() calls
+Patch 6: resolved kernel test robot issues
+         fix kprobe test in eventfs_root_lookup()
+         protecting eventfs lists using nested eventfs_rwsem
+Patch 7: remove header file
+Patch 8: pass eventfs_rwsem as argument to eventfs functions
+         called eventfs_remove_events_dir() instead of tracefs_remove()
+         from event_trace_del_tracer()
+Patch 9: new patch to fix kprobe test case
 
-This patch enables submit reset zone command asynchornously. It helps
-decrease average latency of write IOs in high utilization scenario by
-faster checkpointing.
+ fs/tracefs/Makefile                           |   1 +
+ fs/tracefs/event_inode.c                      | 761 ++++++++++++++++++
+ fs/tracefs/inode.c                            | 124 ++-
+ fs/tracefs/internal.h                         |  25 +
+ include/linux/trace_events.h                  |   1 +
+ include/linux/tracefs.h                       |  49 ++
+ kernel/trace/trace.h                          |   3 +-
+ kernel/trace/trace_events.c                   |  66 +-
+ .../ftrace/test.d/kprobe/kprobe_args_char.tc  |   4 +-
+ .../test.d/kprobe/kprobe_args_string.tc       |   4 +-
+ 10 files changed, 992 insertions(+), 46 deletions(-)
+ create mode 100644 fs/tracefs/event_inode.c
+ create mode 100644 fs/tracefs/internal.h
 
-Signed-off-by: Daejun Park <daejun7.park@samsung.com>
----
- fs/f2fs/segment.c           | 83 +++++++++++++++++++++++++++++++++++--
- include/trace/events/f2fs.h | 18 +++++++-
- 2 files changed, 96 insertions(+), 5 deletions(-)
-
-diff --git a/fs/f2fs/segment.c b/fs/f2fs/segment.c
-index 6db410f1bb8c..ec7a8de71198 100644
---- a/fs/f2fs/segment.c
-+++ b/fs/f2fs/segment.c
-@@ -1196,6 +1196,44 @@ static void __init_discard_policy(struct f2fs_sb_info *sbi,
- static void __update_discard_tree_range(struct f2fs_sb_info *sbi,
- 				struct block_device *bdev, block_t lstart,
- 				block_t start, block_t len);
-+
-+#ifdef CONFIG_BLK_DEV_ZONED
-+static void __submit_zone_reset_cmd(struct f2fs_sb_info *sbi,
-+				   struct discard_cmd *dc, blk_opf_t flag,
-+				   struct list_head *wait_list,
-+				   unsigned int *issued)
-+{
-+	struct discard_cmd_control *dcc = SM_I(sbi)->dcc_info;
-+	struct block_device *bdev = dc->bdev;
-+	struct bio *bio = bio_alloc(bdev, 0, REQ_OP_ZONE_RESET | flag, GFP_NOFS);
-+	unsigned long flags;
-+
-+	trace_f2fs_issue_reset_zone(bdev, dc->di.start);
-+
-+	spin_lock_irqsave(&dc->lock, flags);
-+	dc->state = D_SUBMIT;
-+	dc->bio_ref++;
-+	spin_unlock_irqrestore(&dc->lock, flags);
-+
-+	if (issued)
-+		(*issued)++;
-+
-+	atomic_inc(&dcc->queued_discard);
-+	dc->queued++;
-+	list_move_tail(&dc->list, wait_list);
-+
-+	/* sanity check on discard range */
-+	__check_sit_bitmap(sbi, dc->di.lstart, dc->di.lstart + dc->di.len);
-+
-+	bio->bi_iter.bi_sector = SECTOR_FROM_BLOCK(dc->di.start);
-+	bio->bi_private = dc;
-+	bio->bi_end_io = f2fs_submit_discard_endio;
-+	submit_bio(bio);
-+
-+	atomic_inc(&dcc->issued_discard);
-+}
-+#endif
-+
- /* this function is copied from blkdev_issue_discard from block/blk-lib.c */
- static int __submit_discard_cmd(struct f2fs_sb_info *sbi,
- 				struct discard_policy *dpolicy,
-@@ -1217,6 +1255,13 @@ static int __submit_discard_cmd(struct f2fs_sb_info *sbi,
- 	if (is_sbi_flag_set(sbi, SBI_NEED_FSCK))
- 		return 0;
- 
-+#ifdef CONFIG_BLK_DEV_ZONED
-+	if (f2fs_sb_has_blkzoned(sbi) && bdev_is_zoned(bdev)) {
-+		__submit_zone_reset_cmd(sbi, dc, flag, wait_list, issued);
-+		return 0;
-+	}
-+#endif
-+
- 	trace_f2fs_issue_discard(bdev, dc->di.start, dc->di.len);
- 
- 	lstart = dc->di.lstart;
-@@ -1461,6 +1506,19 @@ static void __update_discard_tree_range(struct f2fs_sb_info *sbi,
- 	}
- }
- 
-+#ifdef CONFIG_BLK_DEV_ZONED
-+static void __queue_zone_reset_cmd(struct f2fs_sb_info *sbi,
-+		struct block_device *bdev, block_t blkstart, block_t lblkstart,
-+		block_t blklen)
-+{
-+	trace_f2fs_queue_reset_zone(bdev, blkstart);
-+
-+	mutex_lock(&SM_I(sbi)->dcc_info->cmd_lock);
-+	__insert_discard_cmd(sbi, bdev, lblkstart, blkstart, blklen);
-+	mutex_unlock(&SM_I(sbi)->dcc_info->cmd_lock);
-+}
-+#endif
-+
- static void __queue_discard_cmd(struct f2fs_sb_info *sbi,
- 		struct block_device *bdev, block_t blkstart, block_t blklen)
- {
-@@ -1724,6 +1782,19 @@ static void f2fs_wait_discard_bio(struct f2fs_sb_info *sbi, block_t blkaddr)
- 
- 	mutex_lock(&dcc->cmd_lock);
- 	dc = __lookup_discard_cmd(sbi, blkaddr);
-+#ifdef CONFIG_BLK_DEV_ZONED
-+	if (dc && f2fs_sb_has_blkzoned(sbi) && bdev_is_zoned(dc->bdev)) {
-+		/* force submit zone reset */
-+		if (dc->state == D_PREP)
-+			__submit_zone_reset_cmd(sbi, dc, REQ_SYNC,
-+						&dcc->wait_list, NULL);
-+		dc->ref++;
-+		mutex_unlock(&dcc->cmd_lock);
-+		/* wait zone reset */
-+		__wait_one_discard_bio(sbi, dc);
-+		return;
-+	}
-+#endif
- 	if (dc) {
- 		if (dc->state == D_PREP) {
- 			__punch_discard_cmd(sbi, dc, blkaddr);
-@@ -1876,9 +1947,15 @@ static int __f2fs_issue_discard_zone(struct f2fs_sb_info *sbi,
- 				 blkstart, blklen);
- 			return -EIO;
- 		}
--		trace_f2fs_issue_reset_zone(bdev, blkstart);
--		return blkdev_zone_mgmt(bdev, REQ_OP_ZONE_RESET,
--					sector, nr_sects, GFP_NOFS);
-+
-+		if (unlikely(is_sbi_flag_set(sbi, SBI_POR_DOING))) {
-+			trace_f2fs_issue_reset_zone(bdev, blkstart);
-+			return blkdev_zone_mgmt(bdev, REQ_OP_ZONE_RESET,
-+						sector, nr_sects, GFP_NOFS);
-+		}
-+
-+		__queue_zone_reset_cmd(sbi, bdev, blkstart, lblkstart, blklen);
-+		return 0;
- 	}
- 
- 	/* For conventional zones, use regular discard if supported */
-diff --git a/include/trace/events/f2fs.h b/include/trace/events/f2fs.h
-index 99cbc5949e3c..ee1477de8324 100644
---- a/include/trace/events/f2fs.h
-+++ b/include/trace/events/f2fs.h
-@@ -1512,7 +1512,7 @@ DEFINE_EVENT(f2fs_discard, f2fs_remove_discard,
- 	TP_ARGS(dev, blkstart, blklen)
- );
- 
--TRACE_EVENT(f2fs_issue_reset_zone,
-+DECLARE_EVENT_CLASS(f2fs_reset_zone,
- 
- 	TP_PROTO(struct block_device *dev, block_t blkstart),
- 
-@@ -1528,11 +1528,25 @@ TRACE_EVENT(f2fs_issue_reset_zone,
- 		__entry->blkstart = blkstart;
- 	),
- 
--	TP_printk("dev = (%d,%d), reset zone at block = 0x%llx",
-+	TP_printk("dev = (%d,%d), zone at block = 0x%llx",
- 		show_dev(__entry->dev),
- 		(unsigned long long)__entry->blkstart)
- );
- 
-+DEFINE_EVENT(f2fs_reset_zone, f2fs_queue_reset_zone,
-+
-+	TP_PROTO(struct block_device *dev, block_t blkstart),
-+
-+	TP_ARGS(dev, blkstart)
-+);
-+
-+DEFINE_EVENT(f2fs_reset_zone, f2fs_issue_reset_zone,
-+
-+	TP_PROTO(struct block_device *dev, block_t blkstart),
-+
-+	TP_ARGS(dev, blkstart)
-+);
-+
- TRACE_EVENT(f2fs_issue_flush,
- 
- 	TP_PROTO(struct block_device *dev, unsigned int nobarrier,
 -- 
-2.25.1
+2.39.0
 
