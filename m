@@ -2,49 +2,49 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2708EC77B7E
-	for <linux-trace-kernel@archiver.kernel.org>; Tue,  2 May 2023 16:07:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A9C6C77B73
+	for <linux-trace-kernel@archiver.kernel.org>; Tue,  2 May 2023 18:12:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232598AbjEBQHZ (ORCPT
+        id S233923AbjEBSM0 (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Tue, 2 May 2023 12:07:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40478 "EHLO
+        Tue, 2 May 2023 14:12:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52290 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229457AbjEBQHY (ORCPT
+        with ESMTP id S233523AbjEBSMZ (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Tue, 2 May 2023 12:07:24 -0400
-Received: from mga02.intel.com (mga02.intel.com [134.134.136.20])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D5FBD1997;
-        Tue,  2 May 2023 09:07:22 -0700 (PDT)
+        Tue, 2 May 2023 14:12:25 -0400
+Received: from mga04.intel.com (mga04.intel.com [192.55.52.120])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6CEC4197;
+        Tue,  2 May 2023 11:12:23 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1683043643; x=1714579643;
+  t=1683051143; x=1714587143;
   h=date:from:to:cc:subject:message-id:references:
    mime-version:in-reply-to;
-  bh=I2QZzh9qzfdA9J2tzysHsjo8wxyPgdS/fULekpS2MxY=;
-  b=SaDX/cbyrYqWsQWRUqNL/jikPr4MQnNnmit81WvwgMmjTVpHVy6IRemF
-   grJ+s9eonlk3/XjqoZ8hPngiX63BU6SLPj0mU11MsGrzRTBR689MOaWyF
-   mocVWAVRRt9qmrRL0qlSN+nqt6z2FOXAG+IFMhS2O76Z7PEZoLJBbX0W8
-   EC41utJMdM5zmfPBFyLH6erU0i7OxQzUPjxPZyokg14K3F+ETRru3a+/Z
-   Yp65CuW1DUdBo+xX/FXm9M8cyWGbsRlpMv1lmdtkZ8nU8XCO9qChtp5hh
-   RYs3kMEpq5dRs2C/tZtFglplrzn0Y89ZxtJkpgXNpGtPKmiT4xqhKoq6Y
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10698"; a="337563677"
+  bh=U0sG9yZo/74wvsF1+m0dJT/5G45+XpYD3sb3gmNWYeA=;
+  b=XLcnJYuPFZpejUhF9d5ecgD5vD/HU2nBxtBv4bJC+KBE0ZFAwjE5dTsh
+   UPlJQMTyC4U5SdfmasDXGGPWzntNHwhRJ2xgjE62O/bxi2p1TMLrk6EI4
+   NglTMEkRaeuRW8MTC35u3QDHJs3YvrNegTJv8pZsvVPeA63ZiOyW5unUb
+   A9zLG2TZ8Kl/rzXyzlSOKXSgeJN/MaxvHzq320YT9UzWNI62Pg74LID98
+   ZicJD4s+w0tS7grvMzlSP0RQy37Hztg1ofCPVV0V9YmarMo3jnbqONN2K
+   sT5s44Vtpo2mMULPePdacfDXshhPRvzeISdoGiVCrmzeD6Pm/5MTRk9XJ
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10698"; a="347292910"
 X-IronPort-AV: E=Sophos;i="5.99,244,1677571200"; 
-   d="scan'208";a="337563677"
+   d="scan'208";a="347292910"
 Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 May 2023 09:04:35 -0700
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 May 2023 11:08:37 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10698"; a="696238977"
+X-IronPort-AV: E=McAfee;i="6600,9927,10698"; a="696288855"
 X-IronPort-AV: E=Sophos;i="5.99,244,1677571200"; 
-   d="scan'208";a="696238977"
+   d="scan'208";a="696288855"
 Received: from lkp-server01.sh.intel.com (HELO e3434d64424d) ([10.239.97.150])
-  by orsmga002.jf.intel.com with ESMTP; 02 May 2023 09:04:30 -0700
+  by orsmga002.jf.intel.com with ESMTP; 02 May 2023 11:08:33 -0700
 Received: from kbuild by e3434d64424d with local (Exim 4.96)
         (envelope-from <lkp@intel.com>)
-        id 1ptsUP-000196-0O;
-        Tue, 02 May 2023 16:04:29 +0000
-Date:   Wed, 3 May 2023 00:04:28 +0800
+        id 1ptuQS-0001Ca-1k;
+        Tue, 02 May 2023 18:08:32 +0000
+Date:   Wed, 3 May 2023 02:07:42 +0800
 From:   kernel test robot <lkp@intel.com>
 To:     Ajay Kaher <akaher@vmware.com>, rostedt@goodmis.org,
         mhiramat@kernel.org, shuah@kernel.org
@@ -54,14 +54,13 @@ Cc:     llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
         namit@vmware.com, srivatsab@vmware.com, srivatsa@csail.mit.edu,
         amakhalov@vmware.com, vsirnapalli@vmware.com, tkundu@vmware.com,
         er.ajay.kaher@gmail.com, Ajay Kaher <akaher@vmware.com>
-Subject: Re: [PATCH v2 4/9] eventfs: adding eventfs file, directory remove
- function
-Message-ID: <202305022354.fzV9RKTT-lkp@intel.com>
-References: <1683026600-13485-5-git-send-email-akaher@vmware.com>
+Subject: Re: [PATCH v2 8/9] eventfs: moving tracing/events to eventfs
+Message-ID: <202305030116.Gu6yyvKj-lkp@intel.com>
+References: <1683026600-13485-9-git-send-email-akaher@vmware.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1683026600-13485-5-git-send-email-akaher@vmware.com>
+In-Reply-To: <1683026600-13485-9-git-send-email-akaher@vmware.com>
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
@@ -78,81 +77,69 @@ https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
 url:    https://github.com/intel-lab-lkp/linux/commits/Ajay-Kaher/eventfs-introducing-struct-tracefs_inode/20230502-192949
 base:   https://git.kernel.org/pub/scm/linux/kernel/git/shuah/linux-kselftest.git next
-patch link:    https://lore.kernel.org/r/1683026600-13485-5-git-send-email-akaher%40vmware.com
-patch subject: [PATCH v2 4/9] eventfs: adding eventfs file, directory remove function
-config: i386-randconfig-a011-20230501 (https://download.01.org/0day-ci/archive/20230502/202305022354.fzV9RKTT-lkp@intel.com/config)
+patch link:    https://lore.kernel.org/r/1683026600-13485-9-git-send-email-akaher%40vmware.com
+patch subject: [PATCH v2 8/9] eventfs: moving tracing/events to eventfs
+config: i386-randconfig-a011-20230501 (https://download.01.org/0day-ci/archive/20230503/202305030116.Gu6yyvKj-lkp@intel.com/config)
 compiler: clang version 14.0.6 (https://github.com/llvm/llvm-project f28c006a5895fc0e329fe15fead81e37457cb1d1)
 reproduce (this is a W=1 build):
         wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
         chmod +x ~/bin/make.cross
-        # https://github.com/intel-lab-lkp/linux/commit/9a36b39da0c3fbfe15a3c3a0ed71b52013bac292
+        # https://github.com/intel-lab-lkp/linux/commit/2fe2002efb23a715f5eb7a58891ff85f4e37b084
         git remote add linux-review https://github.com/intel-lab-lkp/linux
         git fetch --no-tags linux-review Ajay-Kaher/eventfs-introducing-struct-tracefs_inode/20230502-192949
-        git checkout 9a36b39da0c3fbfe15a3c3a0ed71b52013bac292
+        git checkout 2fe2002efb23a715f5eb7a58891ff85f4e37b084
         # save the config file
         mkdir build_dir && cp config build_dir/.config
         COMPILER_INSTALL_PATH=$HOME/0day COMPILER=clang make.cross W=1 O=build_dir ARCH=i386 olddefconfig
-        COMPILER_INSTALL_PATH=$HOME/0day COMPILER=clang make.cross W=1 O=build_dir ARCH=i386 SHELL=/bin/bash fs/tracefs/ kernel/trace/
+        COMPILER_INSTALL_PATH=$HOME/0day COMPILER=clang make.cross W=1 O=build_dir ARCH=i386 SHELL=/bin/bash kernel/trace/
 
 If you fix the issue, kindly add following tag where applicable
 | Reported-by: kernel test robot <lkp@intel.com>
-| Link: https://lore.kernel.org/oe-kbuild-all/202305022354.fzV9RKTT-lkp@intel.com/
+| Link: https://lore.kernel.org/oe-kbuild-all/202305030116.Gu6yyvKj-lkp@intel.com/
 
 All warnings (new ones prefixed by >>):
 
->> fs/tracefs/event_inode.c:379:6: warning: no previous prototype for function 'eventfs_remove_rec' [-Wmissing-prototypes]
-   void eventfs_remove_rec(struct eventfs_file *ef)
-        ^
-   fs/tracefs/event_inode.c:379:1: note: declare 'static' if the function is not intended to be used outside of this translation unit
-   void eventfs_remove_rec(struct eventfs_file *ef)
-   ^
-   static 
-   fs/tracefs/event_inode.c:31:29: warning: unused function 'eventfs_dentry_to_rwsem' [-Wunused-function]
-   static struct rw_semaphore *eventfs_dentry_to_rwsem(struct dentry *dentry)
-                               ^
-   fs/tracefs/event_inode.c:47:13: warning: unused function 'eventfs_down_read' [-Wunused-function]
-   static void eventfs_down_read(struct rw_semaphore *eventfs_rwsem)
-               ^
-   fs/tracefs/event_inode.c:58:13: warning: unused function 'eventfs_up_read' [-Wunused-function]
-   static void eventfs_up_read(struct rw_semaphore *eventfs_rwsem)
-               ^
-   4 warnings generated.
+>> kernel/trace/trace_events.c:2424:17: warning: variable 'd_events' set but not used [-Wunused-but-set-variable]
+           struct dentry *d_events;
+                          ^
+   1 warning generated.
 
 
-vim +/eventfs_remove_rec +379 fs/tracefs/event_inode.c
+vim +/d_events +2424 kernel/trace/trace_events.c
 
-   371	
-   372	/**
-   373	 * eventfs_remove_rec - remove eventfs dir or file from list
-   374	 * @ef: a pointer to eventfs_file to be removed.
-   375	 *
-   376	 * This function recursively remove eventfs_file which
-   377	 * contains info of file or dir.
-   378	 */
- > 379	void eventfs_remove_rec(struct eventfs_file *ef)
-   380	{
-   381		struct eventfs_file *ef_child, *n;
-   382	
-   383		if (!ef)
-   384			return;
-   385	
-   386		if (ef->ei) {
-   387			/* search for nested folders or files */
-   388			list_for_each_entry_safe(ef_child, n, &ef->ei->e_top_files, list) {
-   389				eventfs_remove_rec(ef_child);
-   390			}
-   391			kfree(ef->ei);
-   392		}
-   393	
-   394		if (ef->created && ef->dentry) {
-   395			d_invalidate(ef->dentry);
-   396			dput(ef->dentry);
-   397		}
-   398		list_del(&ef->list);
-   399		kfree(ef->name);
-   400		kfree(ef);
-   401	}
-   402	
+ac343da7bc9048 Masami Hiramatsu         2020-09-10  2417  
+1473e4417c79f1 Steven Rostedt           2009-02-24  2418  static int
+7f1d2f8210195c Steven Rostedt (Red Hat  2015-05-05  2419) event_create_dir(struct dentry *parent, struct trace_event_file *file)
+1473e4417c79f1 Steven Rostedt           2009-02-24  2420  {
+2425bcb9240f8c Steven Rostedt (Red Hat  2015-05-05  2421) 	struct trace_event_call *call = file->event_call;
+ae63b31e4d0e2e Steven Rostedt           2012-05-03  2422  	struct trace_array *tr = file->tr;
+2fe2002efb23a7 Ajay Kaher               2023-05-02  2423  	struct eventfs_file *ef_subsystem = NULL;
+ae63b31e4d0e2e Steven Rostedt           2012-05-03 @2424  	struct dentry *d_events;
+de7b2973903c6c Mathieu Desnoyers        2014-04-08  2425  	const char *name;
+fd99498989f3b3 Steven Rostedt           2009-02-28  2426  	int ret;
+1473e4417c79f1 Steven Rostedt           2009-02-24  2427  
+6ecc2d1ca39177 Steven Rostedt           2009-02-27  2428  	/*
+6ecc2d1ca39177 Steven Rostedt           2009-02-27  2429  	 * If the trace point header did not define TRACE_SYSTEM
+6ecc2d1ca39177 Steven Rostedt           2009-02-27  2430  	 * then the system would be called "TRACE_SYSTEM".
+6ecc2d1ca39177 Steven Rostedt           2009-02-27  2431  	 */
+ae63b31e4d0e2e Steven Rostedt           2012-05-03  2432  	if (strcmp(call->class->system, TRACE_SYSTEM) != 0) {
+2fe2002efb23a7 Ajay Kaher               2023-05-02  2433  		ef_subsystem = event_subsystem_dir(tr, call->class->system, file, parent);
+2fe2002efb23a7 Ajay Kaher               2023-05-02  2434  		if (!ef_subsystem)
+ae63b31e4d0e2e Steven Rostedt           2012-05-03  2435  			return -ENOMEM;
+ae63b31e4d0e2e Steven Rostedt           2012-05-03  2436  	} else
+ae63b31e4d0e2e Steven Rostedt           2012-05-03  2437  		d_events = parent;
+6ecc2d1ca39177 Steven Rostedt           2009-02-27  2438  
+687fcc4aee4567 Steven Rostedt (Red Hat  2015-05-13  2439) 	name = trace_event_name(call);
+2fe2002efb23a7 Ajay Kaher               2023-05-02  2440  	file->ef = eventfs_add_dir(name, ef_subsystem, &tr->eventfs_rwsem);
+2fe2002efb23a7 Ajay Kaher               2023-05-02  2441  	if (IS_ERR(file->ef)) {
+8434dc9340cd2e Steven Rostedt (Red Hat  2015-01-20  2442) 		pr_warn("Could not create tracefs '%s' directory\n", name);
+1473e4417c79f1 Steven Rostedt           2009-02-24  2443  		return -1;
+1473e4417c79f1 Steven Rostedt           2009-02-24  2444  	}
+1473e4417c79f1 Steven Rostedt           2009-02-24  2445  
+9b63776fa3ca96 Steven Rostedt           2012-05-10  2446  	if (call->class->reg && !(call->flags & TRACE_EVENT_FL_IGNORE_ENABLE))
+2fe2002efb23a7 Ajay Kaher               2023-05-02  2447  		eventfs_add_file("enable", TRACE_MODE_WRITE, file->ef, file,
+620a30e97febc8 Oleg Nesterov            2013-07-31  2448  				  &ftrace_enable_fops);
+1473e4417c79f1 Steven Rostedt           2009-02-24  2449  
 
 -- 
 0-DAY CI Kernel Test Service
