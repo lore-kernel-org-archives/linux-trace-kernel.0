@@ -2,106 +2,148 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 225FDC77B78
-	for <linux-trace-kernel@archiver.kernel.org>; Tue,  2 May 2023 22:15:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 85F37C77B75
+	for <linux-trace-kernel@archiver.kernel.org>; Tue,  2 May 2023 22:25:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229487AbjEBWPr (ORCPT
+        id S229714AbjEBWZa (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Tue, 2 May 2023 18:15:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47896 "EHLO
+        Tue, 2 May 2023 18:25:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50506 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229457AbjEBWPq (ORCPT
+        with ESMTP id S229457AbjEBWZ3 (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Tue, 2 May 2023 18:15:46 -0400
-Received: from mga03.intel.com (mga03.intel.com [134.134.136.65])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 97BD31BDF;
-        Tue,  2 May 2023 15:15:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1683065745; x=1714601745;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=0I5ig81uZ02aMnVMkminXlKbbHCg627kqdairoEgsuE=;
-  b=jKWFKLIY3FXQLG7vyYXCFxZ8Jj7bIezT9iZUXPx39aNqlZJatEdpBLDI
-   GuB9/ZAgHqXoy+fYhX6a6IbDdTHgaLoNL68BbWc0rrpBh+3e7X/aCmV06
-   z+hGiDxohihLAc+qZRg3bPZOr9HpZ9Vn6shh/TYg2Vr+V5wQ3YKMpfRVx
-   zyYFDvP034ATW6Igvc10rk2BH5e1mReaINNL+ZoDj1pCBstGeZEyFZWWT
-   FW5Ci4OfJq0YKw7/fFgInZqqWtlAyWuxchUXKvCTupQ/ZWJregMklC3pb
-   r8eQE1j/GN4RNyZ2pn3SPu6sxsDJjjb81pJn3Pn2c3sRFQ6kf0c7TexQX
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10698"; a="351496616"
-X-IronPort-AV: E=Sophos;i="5.99,245,1677571200"; 
-   d="scan'208";a="351496616"
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 May 2023 15:15:45 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10698"; a="870717195"
-X-IronPort-AV: E=Sophos;i="5.99,245,1677571200"; 
-   d="scan'208";a="870717195"
-Received: from lkp-server01.sh.intel.com (HELO e3434d64424d) ([10.239.97.150])
-  by orsmga005.jf.intel.com with ESMTP; 02 May 2023 15:15:41 -0700
-Received: from kbuild by e3434d64424d with local (Exim 4.96)
-        (envelope-from <lkp@intel.com>)
-        id 1ptyHc-0001JS-0Y;
-        Tue, 02 May 2023 22:15:40 +0000
-Date:   Wed, 3 May 2023 06:15:11 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     Ajay Kaher <akaher@vmware.com>, rostedt@goodmis.org,
-        mhiramat@kernel.org, shuah@kernel.org
-Cc:     oe-kbuild-all@lists.linux.dev, linux-kernel@vger.kernel.org,
-        linux-trace-kernel@vger.kernel.org,
-        linux-kselftest@vger.kernel.org, chinglinyu@google.com,
-        namit@vmware.com, srivatsab@vmware.com, srivatsa@csail.mit.edu,
-        amakhalov@vmware.com, vsirnapalli@vmware.com, tkundu@vmware.com,
-        er.ajay.kaher@gmail.com, Ajay Kaher <akaher@vmware.com>
-Subject: Re: [PATCH v2 4/9] eventfs: adding eventfs file, directory remove
- function
-Message-ID: <202305030611.Kas747Ev-lkp@intel.com>
-References: <1683026600-13485-5-git-send-email-akaher@vmware.com>
+        Tue, 2 May 2023 18:25:29 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A2EB610E7;
+        Tue,  2 May 2023 15:25:28 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 399C062916;
+        Tue,  2 May 2023 22:25:28 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8E3A9C433A4;
+        Tue,  2 May 2023 22:25:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1683066327;
+        bh=p6tGDs6cfabXvT/biu59cKim9mysMg3Q5CdtBG9oN3U=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=VnvGj4y0t06kGlOynnuR4B5RpXXLAZtmaEP39DSRpE8zgeDNVN4Yg62o4Y0NB9Sn5
+         6bnGvHLxJiq2RI8I5KBQVbZI4qhIBVBrFFzA/Otx3mmfUkh3cpNZd0R9ycEgFqEIfW
+         wpS1cIJyE9uffrTCCUL56y52GznK68OJAcdzGfzcdtprgWSXCWrWFcBsjQQXTd1Vcz
+         LFQ9HuVd9EQXMAl9VRNWyQXs9b6DH3bpJ8pVYuQo6oCy91VjIn5DF5q9K9ITbB+nkh
+         qBDD0SeRV7FUc8PscJd/nWOnwtYahMr0R3cksIezVqXSXgijzV9ezCP55beJvahWnO
+         O+6qkHVdd6+Iw==
+Received: by mail-lj1-f172.google.com with SMTP id 38308e7fff4ca-2a8c51ba511so43413541fa.1;
+        Tue, 02 May 2023 15:25:27 -0700 (PDT)
+X-Gm-Message-State: AC+VfDwl5TYpJdROPp5Ui/1hCrZmE3Et/nKVlRFT8VZIIO7STccht3x1
+        2+kklkplD2tR7XPtDqJubvCVsy/8zgRHOFAqZ6A=
+X-Google-Smtp-Source: ACHHUZ4avdpthadjO3gTttNI6hwHrd0BY/FTJBOc8OGJj8VI9BZbqcEwFzhqWiZTr4yxUlkxlDBcL/zfsHuzd1eGp1k=
+X-Received: by 2002:ac2:5608:0:b0:4ef:f64b:65b4 with SMTP id
+ v8-20020ac25608000000b004eff64b65b4mr380429lfd.26.1683066325488; Tue, 02 May
+ 2023 15:25:25 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1683026600-13485-5-git-send-email-akaher@vmware.com>
+References: <20230502164102.1a51cdb4@gandalf.local.home>
+In-Reply-To: <20230502164102.1a51cdb4@gandalf.local.home>
+From:   Song Liu <song@kernel.org>
+Date:   Tue, 2 May 2023 15:25:13 -0700
+X-Gmail-Original-Message-ID: <CAPhsuW76--qgbEWn8YZY7Hj1GjB9__kfSjWnHz=WNBSV8GyCXQ@mail.gmail.com>
+Message-ID: <CAPhsuW76--qgbEWn8YZY7Hj1GjB9__kfSjWnHz=WNBSV8GyCXQ@mail.gmail.com>
+Subject: Re: [PATCH] ftrace: Allow inline functions not inlined to be traced
+To:     Steven Rostedt <rostedt@goodmis.org>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Linux Trace Kernel <linux-trace-kernel@vger.kernel.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        live-patching@vger.kernel.org, Kees Cook <keescook@chromium.org>,
+        Miguel Ojeda <ojeda@kernel.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Ingo Molnar <mingo@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-Hi Ajay,
+On Tue, May 2, 2023 at 1:41=E2=80=AFPM Steven Rostedt <rostedt@goodmis.org>=
+ wrote:
+>
+> From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
+>
+> Over 10 years ago there were many bugs that caused function tracing to
+> crash because some inlined function was not inlined and should not have
+> been traced. This made it hard to debug because when the developer tried
+> to reproduce it, if their compiler still inlined the function, the bug
+> would not trigger. The solution back then was simply to add "notrace" to
+> "inline" which would make sure all functions that are marked inline are
+> never traced even when the compiler decides to not inline them.
+>
+> A lot has changed over the last 10 years.
+>
+> 1) ftrace_test_recursion_trylock() is now used by all ftrace hooks which
+>    will prevent the recursive crashes from happening that was caused by
+>    inlined functions being traced.
+>
+> 2) noinstr is now used to mark pretty much all functions that would also
+>    cause problems if they are traced.
+>
+> Today, it is no longer a problem if an inlined function is not inlined an=
+d
+> is traced. Removing notrace from inline has been requested several times
+> over the years. I believe it is now safe to do so.
+>
+> Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
 
-kernel test robot noticed the following build warnings:
+Acked-by: Song Liu <song@kernel.org>
 
-[auto build test WARNING on shuah-kselftest/next]
-[also build test WARNING on shuah-kselftest/fixes linus/master rostedt-trace/for-next v6.3 next-20230428]
-[cannot apply to rostedt-trace/for-next-urgent]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+Thanks!
+Song
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Ajay-Kaher/eventfs-introducing-struct-tracefs_inode/20230502-192949
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/shuah/linux-kselftest.git next
-patch link:    https://lore.kernel.org/r/1683026600-13485-5-git-send-email-akaher%40vmware.com
-patch subject: [PATCH v2 4/9] eventfs: adding eventfs file, directory remove function
-config: i386-randconfig-s002 (https://download.01.org/0day-ci/archive/20230503/202305030611.Kas747Ev-lkp@intel.com/config)
-compiler: gcc-11 (Debian 11.3.0-12) 11.3.0
-reproduce:
-        # apt-get install sparse
-        # sparse version: v0.6.4-39-gce1a6720-dirty
-        # https://github.com/intel-lab-lkp/linux/commit/9a36b39da0c3fbfe15a3c3a0ed71b52013bac292
-        git remote add linux-review https://github.com/intel-lab-lkp/linux
-        git fetch --no-tags linux-review Ajay-Kaher/eventfs-introducing-struct-tracefs_inode/20230502-192949
-        git checkout 9a36b39da0c3fbfe15a3c3a0ed71b52013bac292
-        # save the config file
-        mkdir build_dir && cp config build_dir/.config
-        make W=1 C=1 CF='-fdiagnostic-prefix -D__CHECK_ENDIAN__' O=build_dir ARCH=i386 olddefconfig
-        make W=1 C=1 CF='-fdiagnostic-prefix -D__CHECK_ENDIAN__' O=build_dir ARCH=i386 SHELL=/bin/bash fs/tracefs/
-
-If you fix the issue, kindly add following tag where applicable
-| Reported-by: kernel test robot <lkp@intel.com>
-| Link: https://lore.kernel.org/oe-kbuild-all/202305030611.Kas747Ev-lkp@intel.com/
-
-sparse warnings: (new ones prefixed by >>)
->> fs/tracefs/event_inode.c:379:6: sparse: sparse: symbol 'eventfs_remove_rec' was not declared. Should it be static?
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests
+> ---
+>  include/linux/compiler_types.h | 7 +++----
+>  1 file changed, 3 insertions(+), 4 deletions(-)
+>
+> diff --git a/include/linux/compiler_types.h b/include/linux/compiler_type=
+s.h
+> index 547ea1ff806e..c8f23ba1c339 100644
+> --- a/include/linux/compiler_types.h
+> +++ b/include/linux/compiler_types.h
+> @@ -182,9 +182,8 @@ struct ftrace_likely_data {
+>   * externally visible function. This makes extern inline behave as per g=
+nu89
+>   * semantics rather than c99. This prevents multiple symbol definition e=
+rrors
+>   * of extern inline functions at link time.
+> - * A lot of inline functions can cause havoc with function tracing.
+>   */
+> -#define inline inline __gnu_inline __inline_maybe_unused notrace
+> +#define inline inline __gnu_inline __inline_maybe_unused
+>
+>  /*
+>   * gcc provides both __inline__ and __inline as alternate spellings of
+> @@ -230,7 +229,7 @@ struct ftrace_likely_data {
+>   *     https://gcc.gnu.org/bugzilla/show_bug.cgi?id=3D67368
+>   * '__maybe_unused' allows us to avoid defined-but-not-used warnings.
+>   */
+> -# define __no_kasan_or_inline __no_sanitize_address notrace __maybe_unus=
+ed
+> +# define __no_kasan_or_inline __no_sanitize_address __maybe_unused
+>  # define __no_sanitize_or_inline __no_kasan_or_inline
+>  #else
+>  # define __no_kasan_or_inline __always_inline
+> @@ -247,7 +246,7 @@ struct ftrace_likely_data {
+>   * disable all instrumentation. See Kconfig.kcsan where this is mandator=
+y.
+>   */
+>  # define __no_kcsan __no_sanitize_thread __disable_sanitizer_instrumenta=
+tion
+> -# define __no_sanitize_or_inline __no_kcsan notrace __maybe_unused
+> +# define __no_sanitize_or_inline __no_kcsan __maybe_unused
+>  #else
+>  # define __no_kcsan
+>  #endif
+> --
+> 2.39.2
+>
