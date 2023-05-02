@@ -2,145 +2,112 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A9C6C77B73
-	for <linux-trace-kernel@archiver.kernel.org>; Tue,  2 May 2023 18:12:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 85F57C77B78
+	for <linux-trace-kernel@archiver.kernel.org>; Tue,  2 May 2023 20:41:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233923AbjEBSM0 (ORCPT
+        id S229998AbjEBUlN (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Tue, 2 May 2023 14:12:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52290 "EHLO
+        Tue, 2 May 2023 16:41:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33500 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233523AbjEBSMZ (ORCPT
+        with ESMTP id S229506AbjEBUlL (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Tue, 2 May 2023 14:12:25 -0400
-Received: from mga04.intel.com (mga04.intel.com [192.55.52.120])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6CEC4197;
-        Tue,  2 May 2023 11:12:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1683051143; x=1714587143;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=U0sG9yZo/74wvsF1+m0dJT/5G45+XpYD3sb3gmNWYeA=;
-  b=XLcnJYuPFZpejUhF9d5ecgD5vD/HU2nBxtBv4bJC+KBE0ZFAwjE5dTsh
-   UPlJQMTyC4U5SdfmasDXGGPWzntNHwhRJ2xgjE62O/bxi2p1TMLrk6EI4
-   NglTMEkRaeuRW8MTC35u3QDHJs3YvrNegTJv8pZsvVPeA63ZiOyW5unUb
-   A9zLG2TZ8Kl/rzXyzlSOKXSgeJN/MaxvHzq320YT9UzWNI62Pg74LID98
-   ZicJD4s+w0tS7grvMzlSP0RQy37Hztg1ofCPVV0V9YmarMo3jnbqONN2K
-   sT5s44Vtpo2mMULPePdacfDXshhPRvzeISdoGiVCrmzeD6Pm/5MTRk9XJ
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10698"; a="347292910"
-X-IronPort-AV: E=Sophos;i="5.99,244,1677571200"; 
-   d="scan'208";a="347292910"
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 May 2023 11:08:37 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10698"; a="696288855"
-X-IronPort-AV: E=Sophos;i="5.99,244,1677571200"; 
-   d="scan'208";a="696288855"
-Received: from lkp-server01.sh.intel.com (HELO e3434d64424d) ([10.239.97.150])
-  by orsmga002.jf.intel.com with ESMTP; 02 May 2023 11:08:33 -0700
-Received: from kbuild by e3434d64424d with local (Exim 4.96)
-        (envelope-from <lkp@intel.com>)
-        id 1ptuQS-0001Ca-1k;
-        Tue, 02 May 2023 18:08:32 +0000
-Date:   Wed, 3 May 2023 02:07:42 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     Ajay Kaher <akaher@vmware.com>, rostedt@goodmis.org,
-        mhiramat@kernel.org, shuah@kernel.org
-Cc:     llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
-        linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
-        linux-kselftest@vger.kernel.org, chinglinyu@google.com,
-        namit@vmware.com, srivatsab@vmware.com, srivatsa@csail.mit.edu,
-        amakhalov@vmware.com, vsirnapalli@vmware.com, tkundu@vmware.com,
-        er.ajay.kaher@gmail.com, Ajay Kaher <akaher@vmware.com>
-Subject: Re: [PATCH v2 8/9] eventfs: moving tracing/events to eventfs
-Message-ID: <202305030116.Gu6yyvKj-lkp@intel.com>
-References: <1683026600-13485-9-git-send-email-akaher@vmware.com>
+        Tue, 2 May 2023 16:41:11 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8B7DB1FD7;
+        Tue,  2 May 2023 13:41:07 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 0061D622AA;
+        Tue,  2 May 2023 20:41:07 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DF5B0C433EF;
+        Tue,  2 May 2023 20:41:04 +0000 (UTC)
+Date:   Tue, 2 May 2023 16:41:02 -0400
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     LKML <linux-kernel@vger.kernel.org>,
+        Linux Trace Kernel <linux-trace-kernel@vger.kernel.org>
+Cc:     Masami Hiramatsu <mhiramat@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Song Liu <song@kernel.org>, live-patching@vger.kernel.org,
+        Kees Cook <keescook@chromium.org>,
+        Miguel Ojeda <ojeda@kernel.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Ingo Molnar <mingo@kernel.org>
+Subject: [PATCH] ftrace: Allow inline functions not inlined to be traced
+Message-ID: <20230502164102.1a51cdb4@gandalf.local.home>
+X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1683026600-13485-9-git-send-email-akaher@vmware.com>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-Hi Ajay,
+From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
 
-kernel test robot noticed the following build warnings:
+Over 10 years ago there were many bugs that caused function tracing to
+crash because some inlined function was not inlined and should not have
+been traced. This made it hard to debug because when the developer tried
+to reproduce it, if their compiler still inlined the function, the bug
+would not trigger. The solution back then was simply to add "notrace" to
+"inline" which would make sure all functions that are marked inline are
+never traced even when the compiler decides to not inline them.
 
-[auto build test WARNING on shuah-kselftest/next]
-[also build test WARNING on shuah-kselftest/fixes linus/master v6.3 next-20230428]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+A lot has changed over the last 10 years.
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Ajay-Kaher/eventfs-introducing-struct-tracefs_inode/20230502-192949
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/shuah/linux-kselftest.git next
-patch link:    https://lore.kernel.org/r/1683026600-13485-9-git-send-email-akaher%40vmware.com
-patch subject: [PATCH v2 8/9] eventfs: moving tracing/events to eventfs
-config: i386-randconfig-a011-20230501 (https://download.01.org/0day-ci/archive/20230503/202305030116.Gu6yyvKj-lkp@intel.com/config)
-compiler: clang version 14.0.6 (https://github.com/llvm/llvm-project f28c006a5895fc0e329fe15fead81e37457cb1d1)
-reproduce (this is a W=1 build):
-        wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
-        chmod +x ~/bin/make.cross
-        # https://github.com/intel-lab-lkp/linux/commit/2fe2002efb23a715f5eb7a58891ff85f4e37b084
-        git remote add linux-review https://github.com/intel-lab-lkp/linux
-        git fetch --no-tags linux-review Ajay-Kaher/eventfs-introducing-struct-tracefs_inode/20230502-192949
-        git checkout 2fe2002efb23a715f5eb7a58891ff85f4e37b084
-        # save the config file
-        mkdir build_dir && cp config build_dir/.config
-        COMPILER_INSTALL_PATH=$HOME/0day COMPILER=clang make.cross W=1 O=build_dir ARCH=i386 olddefconfig
-        COMPILER_INSTALL_PATH=$HOME/0day COMPILER=clang make.cross W=1 O=build_dir ARCH=i386 SHELL=/bin/bash kernel/trace/
+1) ftrace_test_recursion_trylock() is now used by all ftrace hooks which
+   will prevent the recursive crashes from happening that was caused by
+   inlined functions being traced.
 
-If you fix the issue, kindly add following tag where applicable
-| Reported-by: kernel test robot <lkp@intel.com>
-| Link: https://lore.kernel.org/oe-kbuild-all/202305030116.Gu6yyvKj-lkp@intel.com/
+2) noinstr is now used to mark pretty much all functions that would also
+   cause problems if they are traced.
 
-All warnings (new ones prefixed by >>):
+Today, it is no longer a problem if an inlined function is not inlined and
+is traced. Removing notrace from inline has been requested several times
+over the years. I believe it is now safe to do so.
 
->> kernel/trace/trace_events.c:2424:17: warning: variable 'd_events' set but not used [-Wunused-but-set-variable]
-           struct dentry *d_events;
-                          ^
-   1 warning generated.
+Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+---
+ include/linux/compiler_types.h | 7 +++----
+ 1 file changed, 3 insertions(+), 4 deletions(-)
 
-
-vim +/d_events +2424 kernel/trace/trace_events.c
-
-ac343da7bc9048 Masami Hiramatsu         2020-09-10  2417  
-1473e4417c79f1 Steven Rostedt           2009-02-24  2418  static int
-7f1d2f8210195c Steven Rostedt (Red Hat  2015-05-05  2419) event_create_dir(struct dentry *parent, struct trace_event_file *file)
-1473e4417c79f1 Steven Rostedt           2009-02-24  2420  {
-2425bcb9240f8c Steven Rostedt (Red Hat  2015-05-05  2421) 	struct trace_event_call *call = file->event_call;
-ae63b31e4d0e2e Steven Rostedt           2012-05-03  2422  	struct trace_array *tr = file->tr;
-2fe2002efb23a7 Ajay Kaher               2023-05-02  2423  	struct eventfs_file *ef_subsystem = NULL;
-ae63b31e4d0e2e Steven Rostedt           2012-05-03 @2424  	struct dentry *d_events;
-de7b2973903c6c Mathieu Desnoyers        2014-04-08  2425  	const char *name;
-fd99498989f3b3 Steven Rostedt           2009-02-28  2426  	int ret;
-1473e4417c79f1 Steven Rostedt           2009-02-24  2427  
-6ecc2d1ca39177 Steven Rostedt           2009-02-27  2428  	/*
-6ecc2d1ca39177 Steven Rostedt           2009-02-27  2429  	 * If the trace point header did not define TRACE_SYSTEM
-6ecc2d1ca39177 Steven Rostedt           2009-02-27  2430  	 * then the system would be called "TRACE_SYSTEM".
-6ecc2d1ca39177 Steven Rostedt           2009-02-27  2431  	 */
-ae63b31e4d0e2e Steven Rostedt           2012-05-03  2432  	if (strcmp(call->class->system, TRACE_SYSTEM) != 0) {
-2fe2002efb23a7 Ajay Kaher               2023-05-02  2433  		ef_subsystem = event_subsystem_dir(tr, call->class->system, file, parent);
-2fe2002efb23a7 Ajay Kaher               2023-05-02  2434  		if (!ef_subsystem)
-ae63b31e4d0e2e Steven Rostedt           2012-05-03  2435  			return -ENOMEM;
-ae63b31e4d0e2e Steven Rostedt           2012-05-03  2436  	} else
-ae63b31e4d0e2e Steven Rostedt           2012-05-03  2437  		d_events = parent;
-6ecc2d1ca39177 Steven Rostedt           2009-02-27  2438  
-687fcc4aee4567 Steven Rostedt (Red Hat  2015-05-13  2439) 	name = trace_event_name(call);
-2fe2002efb23a7 Ajay Kaher               2023-05-02  2440  	file->ef = eventfs_add_dir(name, ef_subsystem, &tr->eventfs_rwsem);
-2fe2002efb23a7 Ajay Kaher               2023-05-02  2441  	if (IS_ERR(file->ef)) {
-8434dc9340cd2e Steven Rostedt (Red Hat  2015-01-20  2442) 		pr_warn("Could not create tracefs '%s' directory\n", name);
-1473e4417c79f1 Steven Rostedt           2009-02-24  2443  		return -1;
-1473e4417c79f1 Steven Rostedt           2009-02-24  2444  	}
-1473e4417c79f1 Steven Rostedt           2009-02-24  2445  
-9b63776fa3ca96 Steven Rostedt           2012-05-10  2446  	if (call->class->reg && !(call->flags & TRACE_EVENT_FL_IGNORE_ENABLE))
-2fe2002efb23a7 Ajay Kaher               2023-05-02  2447  		eventfs_add_file("enable", TRACE_MODE_WRITE, file->ef, file,
-620a30e97febc8 Oleg Nesterov            2013-07-31  2448  				  &ftrace_enable_fops);
-1473e4417c79f1 Steven Rostedt           2009-02-24  2449  
-
+diff --git a/include/linux/compiler_types.h b/include/linux/compiler_types.h
+index 547ea1ff806e..c8f23ba1c339 100644
+--- a/include/linux/compiler_types.h
++++ b/include/linux/compiler_types.h
+@@ -182,9 +182,8 @@ struct ftrace_likely_data {
+  * externally visible function. This makes extern inline behave as per gnu89
+  * semantics rather than c99. This prevents multiple symbol definition errors
+  * of extern inline functions at link time.
+- * A lot of inline functions can cause havoc with function tracing.
+  */
+-#define inline inline __gnu_inline __inline_maybe_unused notrace
++#define inline inline __gnu_inline __inline_maybe_unused
+ 
+ /*
+  * gcc provides both __inline__ and __inline as alternate spellings of
+@@ -230,7 +229,7 @@ struct ftrace_likely_data {
+  *     https://gcc.gnu.org/bugzilla/show_bug.cgi?id=67368
+  * '__maybe_unused' allows us to avoid defined-but-not-used warnings.
+  */
+-# define __no_kasan_or_inline __no_sanitize_address notrace __maybe_unused
++# define __no_kasan_or_inline __no_sanitize_address __maybe_unused
+ # define __no_sanitize_or_inline __no_kasan_or_inline
+ #else
+ # define __no_kasan_or_inline __always_inline
+@@ -247,7 +246,7 @@ struct ftrace_likely_data {
+  * disable all instrumentation. See Kconfig.kcsan where this is mandatory.
+  */
+ # define __no_kcsan __no_sanitize_thread __disable_sanitizer_instrumentation
+-# define __no_sanitize_or_inline __no_kcsan notrace __maybe_unused
++# define __no_sanitize_or_inline __no_kcsan __maybe_unused
+ #else
+ # define __no_kcsan
+ #endif
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests
+2.39.2
+
