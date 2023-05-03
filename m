@@ -2,101 +2,121 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F0ECC77B75
-	for <linux-trace-kernel@archiver.kernel.org>; Wed,  3 May 2023 14:02:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CB7FC77B75
+	for <linux-trace-kernel@archiver.kernel.org>; Wed,  3 May 2023 14:59:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230165AbjECOCH (ORCPT
+        id S229978AbjECO7k (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Wed, 3 May 2023 10:02:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34492 "EHLO
+        Wed, 3 May 2023 10:59:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37550 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229650AbjECOCG (ORCPT
+        with ESMTP id S229675AbjECO7j (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Wed, 3 May 2023 10:02:06 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 71BA85FC9
-        for <linux-trace-kernel@vger.kernel.org>; Wed,  3 May 2023 07:01:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1683122478;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=9Il2Tq+zS33ksY9INyL3IhsljNXln+sovSvsBut32DE=;
-        b=TfryoDBdJ5bxcvSPpSpLhgGHqmfzSYP/SZH/9SfFlkxIGkAynH+jJEHpwCLVMISdaN1Rna
-        j9DOlZHRVKgsoNHXWGtsyLvvU+lK3v1sw+Bxpx00ztSONSi2R6vKP+W4IncOdvYUjIjBOq
-        Iph049Sep+n7gAdMJLq5wBs2LFLWrG0=
-Received: from mail-ej1-f70.google.com (mail-ej1-f70.google.com
- [209.85.218.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-246-gcDtzzbgPaapbcopztTvKg-1; Wed, 03 May 2023 10:01:17 -0400
-X-MC-Unique: gcDtzzbgPaapbcopztTvKg-1
-Received: by mail-ej1-f70.google.com with SMTP id a640c23a62f3a-953429dac27so468676066b.0
-        for <linux-trace-kernel@vger.kernel.org>; Wed, 03 May 2023 07:01:17 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1683122476; x=1685714476;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=9Il2Tq+zS33ksY9INyL3IhsljNXln+sovSvsBut32DE=;
-        b=CO6zb2oO+00hdnThtQRDGXLCYFNjNpJbLNU+Ias7UPNegDDYVR0Fw+U2qZNFUTalkc
-         J8pv1+ITc9NiE5jpmxRCORl1xRQIv4TLk6a2OdkJuZQ9oTKR1SQYnzxRmos4+7fcnfj4
-         ScG7PA5ke9VszymwZxqwjXvY3OR8zCIaEBRUHbnUrjhsVzbnh9aQ3f8Q4nRXSBdiRBmF
-         UOejmz39MteNoCCOjjynRWE3RxihG59o95KKynztdQCoI38XNcHXFzHqXtzJ95NPuJ5E
-         2IJtH9MRclNcBkuu4hYxlKWd/fFxRttMSQPlB9HTTjh3LldVQJgtIFOS20L2jsge41Et
-         brhw==
-X-Gm-Message-State: AC+VfDysjRiUPJe4zGExsnn5d/Eu2K2F96RGTlujaaxiYeImfbn/EEFd
-        ku14bz9BQ7BQX6HTSj7YwehvvRpQDPz0HLC7JDYn5wtlvkB2cTyFPcqkMcLiPHXgyaLKtAm1N3+
-        Zy44AFMFXhUTAAhHh7sXq9WxyNL06AS+g
-X-Received: by 2002:a17:907:daa:b0:94f:3eec:f6b5 with SMTP id go42-20020a1709070daa00b0094f3eecf6b5mr3366049ejc.57.1683122476183;
-        Wed, 03 May 2023 07:01:16 -0700 (PDT)
-X-Google-Smtp-Source: ACHHUZ7VGaXLvHuYIGWrNA1RjvkxhdE9GKsPgniiA5ySFOrm4GhYLdn+pfujLnUmJ0M1BEq8eVZZ4Q==
-X-Received: by 2002:a17:907:daa:b0:94f:3eec:f6b5 with SMTP id go42-20020a1709070daa00b0094f3eecf6b5mr3366020ejc.57.1683122475887;
-        Wed, 03 May 2023 07:01:15 -0700 (PDT)
-Received: from localhost.localdomain (nat-pool-brq-t.redhat.com. [213.175.37.10])
-        by smtp.gmail.com with ESMTPSA id re4-20020a170906d8c400b0094a82a236cbsm17196221ejb.129.2023.05.03.07.01.14
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 03 May 2023 07:01:15 -0700 (PDT)
-From:   Ondrej Mosnacek <omosnace@redhat.com>
-To:     Steven Rostedt <rostedt@goodmis.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>
-Cc:     linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] tracing: Fix permissions for the buffer_percent file
-Date:   Wed,  3 May 2023 16:01:14 +0200
-Message-Id: <20230503140114.3280002-1-omosnace@redhat.com>
-X-Mailer: git-send-email 2.40.1
+        Wed, 3 May 2023 10:59:39 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 22BE449F9;
+        Wed,  3 May 2023 07:59:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Transfer-Encoding:
+        Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:
+        Sender:Reply-To:Content-ID:Content-Description;
+        bh=JAgcGCa0iriRDIyulwuKYkDgWlBOM5XWRjlSwXqyJII=; b=G1Zex2TAl4dZV3a31P0gQgnMta
+        x8hsYyMh0VoT+gBaPejSZ/jDxzfuM62caV//+sXBaIRCRjwKI6t4QXzvsHZWj8YN9xSTOHhWdikk9
+        cvE4AdB9nfURRccj93tKNbu5lH2bEplLU1ZnOP6/6/ADFeKM+J8CvWfwNk3BCR5EH8ovb8wr6ZOia
+        0hSiMiE7akTrxstEGLRa5cE6F+mu0BNG0mH2H7erYfQAP3fUd/yn6QRyFE/WqWQzlcRLIpgQYNMyV
+        6Y8SjvWYKrb/bNpSRRC+xcn5Q+ZqmGxawMzCF1jeCtPkJy8bJz5eVY9PtQ6c5Ur9cPjmRBqQbmxq8
+        Nh8BCCUg==;
+Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
+        by casper.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
+        id 1puDwe-009eL7-RX; Wed, 03 May 2023 14:59:05 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id D1AFC30339B;
+        Wed,  3 May 2023 16:59:00 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id B2CCE241DA2D7; Wed,  3 May 2023 16:59:00 +0200 (CEST)
+Date:   Wed, 3 May 2023 16:59:00 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Leonardo =?iso-8859-1?Q?Br=E1s?= <leobras@redhat.com>
+Cc:     Steven Rostedt <rostedt@goodmis.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Yury Norov <yury.norov@gmail.com>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Nadav Amit <namit@vmware.com>,
+        Zhen Lei <thunder.leizhen@huawei.com>,
+        Chen Zhongjin <chenzhongjin@huawei.com>,
+        linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+        Marcelo Tosatti <mtosatti@redhat.com>, vschneid@redhat.com
+Subject: Re: [RFC PATCH 1/1] smp: Add tracepoints for functions called with
+ smp_call_function*()
+Message-ID: <20230503145900.GC1689514@hirez.programming.kicks-ass.net>
+References: <20230406075718.68672-1-leobras@redhat.com>
+ <20230406095519.GG386572@hirez.programming.kicks-ass.net>
+ <f294a74cd17bf932621a6a746d592f49770d25ec.camel@redhat.com>
 MIME-Version: 1.0
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain; charset="US-ASCII"; x-default=true
+In-Reply-To: <f294a74cd17bf932621a6a746d592f49770d25ec.camel@redhat.com>
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-This file defines both read and write operations, yet it is being
-created as read-only. This means that it can't be written to without the
-CAP_DAC_OVERRIDE capability. Fix the permissions to allow root to write
-to it without the need to override DAC perms.
+On Wed, Apr 19, 2023 at 12:45:08AM -0300, Leonardo Brás wrote:
+> On Thu, 2023-04-06 at 11:55 +0200, Peter Zijlstra wrote:
+> > On Thu, Apr 06, 2023 at 04:57:18AM -0300, Leonardo Bras wrote:
+> > > When running RT workloads in isolated CPUs, many cases of deadline misses
+> > > are caused by remote CPU requests such as smp_call_function*().
+> > > 
+> > > For those cases, having the names of those functions running around the
+> > > deadline miss moment could help finding a target for the next improvements.
+> > > 
+> > > Add tracepoints for acquiring the funtion name & argument before entry and
+> > > after exitting the called function.
+> > > 
+> > > Signed-off-by: Leonardo Bras <leobras@redhat.com>
+> > 
+> > How are the patches queued there not sufficient?
+> > 
+> > https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git/log/?h=smp/core
+> > 
+> 
+> IIUC the last commits add tracepoints that are collected in the
+> requesting CPU, at the moment of scheduling the IPI, which are also useful in
+> some scenarios.
+> 
+> On my scenario, it could help a little, since it makes possible to filter what
+> all other cpus are scheduling on the requested cpu. OTOH it could be also be
+> misleading, as the requested cpu could be running something that was scheduled
+> way before.
+> 
+> The change I propose does exactly what my scenario need: track exactly which
+> function was running at given time in the requested CPU. With this info, we can
+> check which (if any) remotely requested function was running on given time
+> window.
 
-Fixes: 03329f993978 ("tracing: Add tracefs file buffer_percentage")
-Signed-off-by: Ondrej Mosnacek <omosnace@redhat.com>
----
- kernel/trace/trace.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+I was thinking you could simply (graph)-trace
+__flush_smp_call_function_queue() with a max_graph_depth or so (Steve
+says that ought to work).
 
-diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
-index 45551c7b4c365..e278f4202a7ed 100644
---- a/kernel/trace/trace.c
-+++ b/kernel/trace/trace.c
-@@ -9655,7 +9655,7 @@ init_tracer_tracefs(struct trace_array *tr, struct dentry *d_tracer)
- 
- 	tr->buffer_percent = 50;
- 
--	trace_create_file("buffer_percent", TRACE_MODE_READ, d_tracer,
-+	trace_create_file("buffer_percent", TRACE_MODE_WRITE, d_tracer,
- 			tr, &buffer_percent_fops);
- 
- 	create_trace_options_dir(tr);
--- 
-2.40.1
+But even that might be too specific, your use case sounds more like what
+we have the irq-off latency tracer for, and that thing will immediately
+tell you what functions were being ran.
 
+> (An unrelated thing I just thought: We could even use the commits you pointed
+> together with my proposed change in order to measure how long does it take for a
+> requested function to run / complete in the requested cpu)
+
+I don't think you could actually do that; the send tracepoints Valentin
+added don't log the csd address, this means you cannot distinguish
+two CSDs with the same function send from different CPUs.
+
+To do this you'd need to add the csd address to the the ipi_send
+tracepoints and your own (possibly replacing info -- because I don't
+think that's too useful).
+
+Valentin -- is any of this something you'd also find useful?
