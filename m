@@ -2,165 +2,55 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BF95C7EE23
-	for <linux-trace-kernel@archiver.kernel.org>; Wed,  3 May 2023 15:54:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 82173C77B78
+	for <linux-trace-kernel@archiver.kernel.org>; Wed,  3 May 2023 16:47:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230017AbjECPyn (ORCPT
+        id S229729AbjECQqn (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Wed, 3 May 2023 11:54:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38026 "EHLO
+        Wed, 3 May 2023 12:46:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35378 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230323AbjECPym (ORCPT
+        with ESMTP id S229746AbjECQqX (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Wed, 3 May 2023 11:54:42 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BBB4F4EEB
-        for <linux-trace-kernel@vger.kernel.org>; Wed,  3 May 2023 08:53:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1683129239;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=zaXOdx5RzMMt9je58DC++0q1DfDYxLeLjbzEKbIDLkc=;
-        b=fHL23McNAnAFip3UqnqdoHqwq7e/gW1CROShMMTnsWlaEUteFtxOvtaFVu0/ZzLnQeU3Jt
-        PrMGrQ8F13F2HCVkhSPYYy2TPkN6Ou7GRZ8AdAcGoktnq15MWdx4xBF/+1y7UVBVlFNpb5
-        tvLTiJFM2znQCECOGko86KUg1FCDXK4=
-Received: from mail-qt1-f198.google.com (mail-qt1-f198.google.com
- [209.85.160.198]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-248-a5_Ns_v5OCKtUbpZlldTMg-1; Wed, 03 May 2023 11:53:58 -0400
-X-MC-Unique: a5_Ns_v5OCKtUbpZlldTMg-1
-Received: by mail-qt1-f198.google.com with SMTP id d75a77b69052e-3f17f39d3deso68594141cf.3
-        for <linux-trace-kernel@vger.kernel.org>; Wed, 03 May 2023 08:53:57 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1683129237; x=1685721237;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=zaXOdx5RzMMt9je58DC++0q1DfDYxLeLjbzEKbIDLkc=;
-        b=bgPaj9XDAXniJuhXvOYyfHLOExijmM2z0K3ZU4y/Y1I1zgUDe3LGJaY49cKJLsgQ0g
-         L7LW3JlUVr1Fw4L+cXxBRWkYI5QR3Vr9rkJEfzj6XlNYuW/TTwrlVtVacfgftXA4TKeN
-         ftM13hvyTmkVW75bOSNpBlTcSkkHS/R5O9vmsh+QbuY3ebLqhHmERgSMxxDFCj8j8rsQ
-         8/pQzGYlPj/srIbi+V4NoocRRx/HnMncllowwS3WxU0aFYJ9OyPzAACIpNGzY5tQ1RSa
-         kmUjg/uwsgaSyi6ota4dv2MDXc4nehwCZuEyELCwieaRz4d1rbVXRDlE7WDhrGxX3MJd
-         GRRQ==
-X-Gm-Message-State: AC+VfDzuWueUMPUwGyWXII42LWB1PNKpWznl6FmuP8E86rQlxU5H700u
-        fSHR5bZfadg4t2+r0fLisTjbiHBW4m2WVIvtZ6SNUceO9Q6VZit8rjVVQc3JJJ9LKw3Zyc1vWpV
-        9gRUUQteBSxrBiPXOWXgm4wSox6O8DX8tr8I3ec8SzUkPhY5i
-X-Received: by 2002:ac8:5e50:0:b0:3e6:459c:1312 with SMTP id i16-20020ac85e50000000b003e6459c1312mr920210qtx.11.1683129237589;
-        Wed, 03 May 2023 08:53:57 -0700 (PDT)
-X-Google-Smtp-Source: ACHHUZ6rvaqv1WbZEfZYS183wbZtAC3JfsVneO2IeD3Z+R1CbnjLfvSWoJ/+hTw9/OwgxWpY1iS8Akingxz9eUoCZBk=
-X-Received: by 2002:ac8:5e50:0:b0:3e6:459c:1312 with SMTP id
- i16-20020ac85e50000000b003e6459c1312mr920183qtx.11.1683129237340; Wed, 03 May
- 2023 08:53:57 -0700 (PDT)
+        Wed, 3 May 2023 12:46:23 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4243955A9;
+        Wed,  3 May 2023 09:46:22 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id D21F96223F;
+        Wed,  3 May 2023 16:46:21 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A2BECC433D2;
+        Wed,  3 May 2023 16:46:20 +0000 (UTC)
+Date:   Wed, 3 May 2023 12:46:18 -0400
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     Ondrej Mosnacek <omosnace@redhat.com>
+Cc:     Masami Hiramatsu <mhiramat@kernel.org>,
+        linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] tracing: Fix permissions for the buffer_percent file
+Message-ID: <20230503124618.3baf9a98@gandalf.local.home>
+In-Reply-To: <20230503140114.3280002-1-omosnace@redhat.com>
+References: <20230503140114.3280002-1-omosnace@redhat.com>
+X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-References: <20230406075718.68672-1-leobras@redhat.com> <20230406095519.GG386572@hirez.programming.kicks-ass.net>
- <f294a74cd17bf932621a6a746d592f49770d25ec.camel@redhat.com> <20230503145900.GC1689514@hirez.programming.kicks-ass.net>
-In-Reply-To: <20230503145900.GC1689514@hirez.programming.kicks-ass.net>
-From:   Leonardo Bras Soares Passos <leobras@redhat.com>
-Date:   Wed, 3 May 2023 12:53:44 -0300
-Message-ID: <CAJ6HWG44mSBBVK28rH4WyG4777iAnwWE5KqWaPemj8SSpohJ9Q@mail.gmail.com>
-Subject: Re: [RFC PATCH 1/1] smp: Add tracepoints for functions called with smp_call_function*()
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Steven Rostedt <rostedt@goodmis.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Yury Norov <yury.norov@gmail.com>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Nadav Amit <namit@vmware.com>,
-        Zhen Lei <thunder.leizhen@huawei.com>,
-        Chen Zhongjin <chenzhongjin@huawei.com>,
-        linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
-        Marcelo Tosatti <mtosatti@redhat.com>, vschneid@redhat.com
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On Wed, May 3, 2023 at 12:17=E2=80=AFPM Peter Zijlstra <peterz@infradead.or=
-g> wrote:
->
-> On Wed, Apr 19, 2023 at 12:45:08AM -0300, Leonardo Br=C4=AFs wrote:
-> > On Thu, 2023-04-06 at 11:55 +0200, Peter Zijlstra wrote:
-> > > On Thu, Apr 06, 2023 at 04:57:18AM -0300, Leonardo Bras wrote:
-> > > > When running RT workloads in isolated CPUs, many cases of deadline =
-misses
-> > > > are caused by remote CPU requests such as smp_call_function*().
-> > > >
-> > > > For those cases, having the names of those functions running around=
- the
-> > > > deadline miss moment could help finding a target for the next impro=
-vements.
-> > > >
-> > > > Add tracepoints for acquiring the funtion name & argument before en=
-try and
-> > > > after exitting the called function.
-> > > >
-> > > > Signed-off-by: Leonardo Bras <leobras@redhat.com>
-> > >
-> > > How are the patches queued there not sufficient?
-> > >
-> > > https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git/log/?h=3D=
-smp/core
-> > >
-> >
-> > IIUC the last commits add tracepoints that are collected in the
-> > requesting CPU, at the moment of scheduling the IPI, which are also use=
-ful in
-> > some scenarios.
-> >
-> > On my scenario, it could help a little, since it makes possible to filt=
-er what
-> > all other cpus are scheduling on the requested cpu. OTOH it could be al=
-so be
-> > misleading, as the requested cpu could be running something that was sc=
-heduled
-> > way before.
-> >
-> > The change I propose does exactly what my scenario need: track exactly =
-which
-> > function was running at given time in the requested CPU. With this info=
-, we can
-> > check which (if any) remotely requested function was running on given t=
-ime
-> > window.
->
-> I was thinking you could simply (graph)-trace
-> __flush_smp_call_function_queue() with a max_graph_depth or so (Steve
-> says that ought to work).
->
-> But even that might be too specific, your use case sounds more like what
-> we have the irq-off latency tracer for, and that thing will immediately
-> tell you what functions were being ran.
->
-> > (An unrelated thing I just thought: We could even use the commits you p=
-ointed
-> > together with my proposed change in order to measure how long does it t=
-ake for a
-> > requested function to run / complete in the requested cpu)
->
-> I don't think you could actually do that; the send tracepoints Valentin
-> added don't log the csd address, this means you cannot distinguish
-> two CSDs with the same function send from different CPUs.
->
-> To do this you'd need to add the csd address to the the ipi_send
-> tracepoints and your own (possibly replacing info -- because I don't
-> think that's too useful).
+On Wed,  3 May 2023 16:01:14 +0200
+Ondrej Mosnacek <omosnace@redhat.com> wrote:
 
-Sure, I will improve this in my patch.
+> This file defines both read and write operations, yet it is being
+> created as read-only. This means that it can't be written to without the
+> CAP_DAC_OVERRIDE capability. Fix the permissions to allow root to write
+> to it without the need to override DAC perms.
+> 
+> Fixes: 03329f993978 ("tracing: Add tracefs file buffer_percentage")
+> Signed-off-by: Ondrej Mosnacek <omosnace@redhat.com>
 
-You think I should rebase it on top of tip/smp/core in order to add it
-to the set?
+Applied. Thanks Ondrej!
 
-Thanks!
-Leo
-
->
-> Valentin -- is any of this something you'd also find useful?
->
-
+-- Steve
