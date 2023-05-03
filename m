@@ -2,74 +2,165 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 785F5C77B78
-	for <linux-trace-kernel@archiver.kernel.org>; Wed,  3 May 2023 15:10:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BF95C7EE23
+	for <linux-trace-kernel@archiver.kernel.org>; Wed,  3 May 2023 15:54:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230377AbjECPKh (ORCPT
+        id S230017AbjECPyn (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Wed, 3 May 2023 11:10:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42876 "EHLO
+        Wed, 3 May 2023 11:54:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38026 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230398AbjECPKf (ORCPT
+        with ESMTP id S230323AbjECPym (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Wed, 3 May 2023 11:10:35 -0400
-Received: from mail-lf1-x132.google.com (mail-lf1-x132.google.com [IPv6:2a00:1450:4864:20::132])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5660361B2
-        for <linux-trace-kernel@vger.kernel.org>; Wed,  3 May 2023 08:10:30 -0700 (PDT)
-Received: by mail-lf1-x132.google.com with SMTP id 2adb3069b0e04-4eca9c8dd57so1040442e87.1
-        for <linux-trace-kernel@vger.kernel.org>; Wed, 03 May 2023 08:10:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1683126628; x=1685718628;
-        h=content-transfer-encoding:subject:to:from:mime-version:date
-         :message-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=1FOOYbd4dNFDyiEsaPE2X+b61t9SVPlgw+HWMJw8nPQ=;
-        b=NCxlBbe0yHp+orLaVoMilefwUbSkmvgou3PONq4ikA9yt8Ne2iagEvZcru+HHSK5X5
-         LBk1cHCtTFSIpW1QbOpGzKQv8XkqwNW99AeHImeBDaXVakHkiBSNCP0Z7M9upLhe/HIM
-         exqaGNKwY9NA3AVxU1xYMoz3f6Wyh7811YjCyZIDJ6OrAWtrflW2Lq2PpBq7QQlCYTFZ
-         VneunO+17q3eV7jPYeIevzebbFtxL0DuqU3OJQC0PsM3LvyKEegD+PNVRoDBSzqC+NVo
-         dTtaIJws0AK3VsH5FptgOui5/ddKoVH81G9c5KuISLZ69hg96h30nmAtA61gvzoNEkis
-         A7OQ==
+        Wed, 3 May 2023 11:54:42 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BBB4F4EEB
+        for <linux-trace-kernel@vger.kernel.org>; Wed,  3 May 2023 08:53:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1683129239;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=zaXOdx5RzMMt9je58DC++0q1DfDYxLeLjbzEKbIDLkc=;
+        b=fHL23McNAnAFip3UqnqdoHqwq7e/gW1CROShMMTnsWlaEUteFtxOvtaFVu0/ZzLnQeU3Jt
+        PrMGrQ8F13F2HCVkhSPYYy2TPkN6Ou7GRZ8AdAcGoktnq15MWdx4xBF/+1y7UVBVlFNpb5
+        tvLTiJFM2znQCECOGko86KUg1FCDXK4=
+Received: from mail-qt1-f198.google.com (mail-qt1-f198.google.com
+ [209.85.160.198]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-248-a5_Ns_v5OCKtUbpZlldTMg-1; Wed, 03 May 2023 11:53:58 -0400
+X-MC-Unique: a5_Ns_v5OCKtUbpZlldTMg-1
+Received: by mail-qt1-f198.google.com with SMTP id d75a77b69052e-3f17f39d3deso68594141cf.3
+        for <linux-trace-kernel@vger.kernel.org>; Wed, 03 May 2023 08:53:57 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1683126628; x=1685718628;
-        h=content-transfer-encoding:subject:to:from:mime-version:date
-         :message-id:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=1FOOYbd4dNFDyiEsaPE2X+b61t9SVPlgw+HWMJw8nPQ=;
-        b=eS6iZpUwtWPhmjBXk3bB8NpeJDq+ZXkcYTkRiSvuPWrMz4lQAxFU/rErHEa1vq17z7
-         44k1aNMaAQ9gwmJF/F5eezy2LS2CcOPsOk3qdovc0j+ZyFJJ/8tQn5LoyZFNyvoBzpAr
-         Oq/0vzajWoj11kgfE5JMWxwqiBIlOelPP//dIpK4fxhO1yxZMiMg94z5FVKqAzKWOkXc
-         o2rCbuOKF5DrUhEgCOqKEoDEfiqsK7yN2OweOdEwpr3s9naLzV2jd/OemYdrz2LOBs0E
-         nL1CwOmxS0uue/awJjwzPNNPp/igJ1aYhy5yZBf54EVGONw5AbWoLtXrPjq5T183WwdL
-         3Dbw==
-X-Gm-Message-State: AC+VfDzeaRD0pA2OY3QU/9mONQ+fvtxkMfSmUlbKjBlJH6ZpokVtBx47
-        hnqkfEyDn9VjeZT3rOon+yBRiOlv80U=
-X-Google-Smtp-Source: ACHHUZ5hE/JhzHwVocGO3sb5keG2LJ35ysmsUethpNftdurDqk9OVoLqNtTbCNq3qNnQQmxZ7zu0Jw==
-X-Received: by 2002:ac2:4470:0:b0:4f0:13bb:690 with SMTP id y16-20020ac24470000000b004f013bb0690mr1668939lfl.4.1683126628276;
-        Wed, 03 May 2023 08:10:28 -0700 (PDT)
-Received: from DESKTOP-BKF2J9E ([203.109.40.79])
-        by smtp.gmail.com with ESMTPSA id y27-20020ac2447b000000b004f13d5825c9sm214195lfl.51.2023.05.03.08.10.27
-        for <linux-trace-kernel@vger.kernel.org>
-        (version=TLS1 cipher=ECDHE-ECDSA-AES128-SHA bits=128/128);
-        Wed, 03 May 2023 08:10:27 -0700 (PDT)
-Message-ID: <64527963.c20a0220.16763.074a@mx.google.com>
-Date:   Wed, 03 May 2023 08:10:27 -0700 (PDT)
-X-Google-Original-Date: 3 May 2023 20:10:28 +0500
+        d=1e100.net; s=20221208; t=1683129237; x=1685721237;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=zaXOdx5RzMMt9je58DC++0q1DfDYxLeLjbzEKbIDLkc=;
+        b=bgPaj9XDAXniJuhXvOYyfHLOExijmM2z0K3ZU4y/Y1I1zgUDe3LGJaY49cKJLsgQ0g
+         L7LW3JlUVr1Fw4L+cXxBRWkYI5QR3Vr9rkJEfzj6XlNYuW/TTwrlVtVacfgftXA4TKeN
+         ftM13hvyTmkVW75bOSNpBlTcSkkHS/R5O9vmsh+QbuY3ebLqhHmERgSMxxDFCj8j8rsQ
+         8/pQzGYlPj/srIbi+V4NoocRRx/HnMncllowwS3WxU0aFYJ9OyPzAACIpNGzY5tQ1RSa
+         kmUjg/uwsgaSyi6ota4dv2MDXc4nehwCZuEyELCwieaRz4d1rbVXRDlE7WDhrGxX3MJd
+         GRRQ==
+X-Gm-Message-State: AC+VfDzuWueUMPUwGyWXII42LWB1PNKpWznl6FmuP8E86rQlxU5H700u
+        fSHR5bZfadg4t2+r0fLisTjbiHBW4m2WVIvtZ6SNUceO9Q6VZit8rjVVQc3JJJ9LKw3Zyc1vWpV
+        9gRUUQteBSxrBiPXOWXgm4wSox6O8DX8tr8I3ec8SzUkPhY5i
+X-Received: by 2002:ac8:5e50:0:b0:3e6:459c:1312 with SMTP id i16-20020ac85e50000000b003e6459c1312mr920210qtx.11.1683129237589;
+        Wed, 03 May 2023 08:53:57 -0700 (PDT)
+X-Google-Smtp-Source: ACHHUZ6rvaqv1WbZEfZYS183wbZtAC3JfsVneO2IeD3Z+R1CbnjLfvSWoJ/+hTw9/OwgxWpY1iS8Akingxz9eUoCZBk=
+X-Received: by 2002:ac8:5e50:0:b0:3e6:459c:1312 with SMTP id
+ i16-20020ac85e50000000b003e6459c1312mr920183qtx.11.1683129237340; Wed, 03 May
+ 2023 08:53:57 -0700 (PDT)
 MIME-Version: 1.0
-From:   erwinshrader438@gmail.com
-To:     linux-trace-kernel@vger.kernel.org
-Subject: Estimating Services
-Content-Type: text/plain; charset=us-ascii
+References: <20230406075718.68672-1-leobras@redhat.com> <20230406095519.GG386572@hirez.programming.kicks-ass.net>
+ <f294a74cd17bf932621a6a746d592f49770d25ec.camel@redhat.com> <20230503145900.GC1689514@hirez.programming.kicks-ass.net>
+In-Reply-To: <20230503145900.GC1689514@hirez.programming.kicks-ass.net>
+From:   Leonardo Bras Soares Passos <leobras@redhat.com>
+Date:   Wed, 3 May 2023 12:53:44 -0300
+Message-ID: <CAJ6HWG44mSBBVK28rH4WyG4777iAnwWE5KqWaPemj8SSpohJ9Q@mail.gmail.com>
+Subject: Re: [RFC PATCH 1/1] smp: Add tracepoints for functions called with smp_call_function*()
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Steven Rostedt <rostedt@goodmis.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Yury Norov <yury.norov@gmail.com>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Nadav Amit <namit@vmware.com>,
+        Zhen Lei <thunder.leizhen@huawei.com>,
+        Chen Zhongjin <chenzhongjin@huawei.com>,
+        linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+        Marcelo Tosatti <mtosatti@redhat.com>, vschneid@redhat.com
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: redhat.com
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-=0D=0AHi,=0D=0A=0D=0AWe are an estimating firm and offer our serv=
-ices to GC's, Sub Contractors and Architects. We perform commerci=
-al and residential estimates & takeoffs.=0D=0A=0D=0AIf you have a=
-ny job for estimating or designing just send over the project pla=
-ns/details after reviewing the drawings, We will give you 85% off=
- market price. You may also ask us for samples of our recent work=
-.=0D=0A=0D=0AThanks.=0D=0ARegards,=0D=0AErwin Shrader=0D=0AMarket=
-ing Manager=0D=0ACrown Estimation, LLC
+On Wed, May 3, 2023 at 12:17=E2=80=AFPM Peter Zijlstra <peterz@infradead.or=
+g> wrote:
+>
+> On Wed, Apr 19, 2023 at 12:45:08AM -0300, Leonardo Br=C4=AFs wrote:
+> > On Thu, 2023-04-06 at 11:55 +0200, Peter Zijlstra wrote:
+> > > On Thu, Apr 06, 2023 at 04:57:18AM -0300, Leonardo Bras wrote:
+> > > > When running RT workloads in isolated CPUs, many cases of deadline =
+misses
+> > > > are caused by remote CPU requests such as smp_call_function*().
+> > > >
+> > > > For those cases, having the names of those functions running around=
+ the
+> > > > deadline miss moment could help finding a target for the next impro=
+vements.
+> > > >
+> > > > Add tracepoints for acquiring the funtion name & argument before en=
+try and
+> > > > after exitting the called function.
+> > > >
+> > > > Signed-off-by: Leonardo Bras <leobras@redhat.com>
+> > >
+> > > How are the patches queued there not sufficient?
+> > >
+> > > https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git/log/?h=3D=
+smp/core
+> > >
+> >
+> > IIUC the last commits add tracepoints that are collected in the
+> > requesting CPU, at the moment of scheduling the IPI, which are also use=
+ful in
+> > some scenarios.
+> >
+> > On my scenario, it could help a little, since it makes possible to filt=
+er what
+> > all other cpus are scheduling on the requested cpu. OTOH it could be al=
+so be
+> > misleading, as the requested cpu could be running something that was sc=
+heduled
+> > way before.
+> >
+> > The change I propose does exactly what my scenario need: track exactly =
+which
+> > function was running at given time in the requested CPU. With this info=
+, we can
+> > check which (if any) remotely requested function was running on given t=
+ime
+> > window.
+>
+> I was thinking you could simply (graph)-trace
+> __flush_smp_call_function_queue() with a max_graph_depth or so (Steve
+> says that ought to work).
+>
+> But even that might be too specific, your use case sounds more like what
+> we have the irq-off latency tracer for, and that thing will immediately
+> tell you what functions were being ran.
+>
+> > (An unrelated thing I just thought: We could even use the commits you p=
+ointed
+> > together with my proposed change in order to measure how long does it t=
+ake for a
+> > requested function to run / complete in the requested cpu)
+>
+> I don't think you could actually do that; the send tracepoints Valentin
+> added don't log the csd address, this means you cannot distinguish
+> two CSDs with the same function send from different CPUs.
+>
+> To do this you'd need to add the csd address to the the ipi_send
+> tracepoints and your own (possibly replacing info -- because I don't
+> think that's too useful).
+
+Sure, I will improve this in my patch.
+
+You think I should rebase it on top of tip/smp/core in order to add it
+to the set?
+
+Thanks!
+Leo
+
+>
+> Valentin -- is any of this something you'd also find useful?
+>
 
