@@ -2,48 +2,45 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A94ECC77B7F
-	for <linux-trace-kernel@archiver.kernel.org>; Thu,  4 May 2023 02:09:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7512DC77B75
+	for <linux-trace-kernel@archiver.kernel.org>; Thu,  4 May 2023 02:22:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229643AbjEDCJU (ORCPT
+        id S229505AbjEDCWT (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Wed, 3 May 2023 22:09:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48978 "EHLO
+        Wed, 3 May 2023 22:22:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52832 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229459AbjEDCJT (ORCPT
+        with ESMTP id S229482AbjEDCWT (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Wed, 3 May 2023 22:09:19 -0400
-Received: from mailout4.samsung.com (mailout4.samsung.com [203.254.224.34])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 18AEC11A
-        for <linux-trace-kernel@vger.kernel.org>; Wed,  3 May 2023 19:09:16 -0700 (PDT)
-Received: from epcas2p2.samsung.com (unknown [182.195.41.54])
-        by mailout4.samsung.com (KnoxPortal) with ESMTP id 20230504020912epoutp04cc57ad0c4553d075347c5cac8e3fba82~bzrKWOfYc2247722477epoutp042
-        for <linux-trace-kernel@vger.kernel.org>; Thu,  4 May 2023 02:09:12 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout4.samsung.com 20230504020912epoutp04cc57ad0c4553d075347c5cac8e3fba82~bzrKWOfYc2247722477epoutp042
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1683166152;
-        bh=ldq7GVI/B8Lcs7yFVEBDLCKixZga1LX/ZvWn2gAjL4w=;
-        h=Subject:Reply-To:From:To:CC:In-Reply-To:Date:References:From;
-        b=fMkJx5uNWeKQMl9dVMs/lXlwBFeUz+nZioN6yVfERW0R7kZJrDuBzDLYteDX4PWXu
-         dqtWbnOdgvAY/sxuPWZQl4PoY3c5vh9J9DkDo1pBHmRuhz9HNsK5T2PB5f6kCISiwB
-         r9ov1wU0OVrcMEJtQpW8QoTvT+zZ6ghi19CQaR90=
-Received: from epsnrtp3.localdomain (unknown [182.195.42.164]) by
-        epcas2p2.samsung.com (KnoxPortal) with ESMTP id
-        20230504020911epcas2p2cc8f03fc11f0d5ce5ba9dfab2165ea59~bzrKF6EyH0750707507epcas2p21;
-        Thu,  4 May 2023 02:09:11 +0000 (GMT)
-Received: from epsmges2p2.samsung.com (unknown [182.195.36.98]) by
-        epsnrtp3.localdomain (Postfix) with ESMTP id 4QBcgq2KlQz4x9Q3; Thu,  4 May
-        2023 02:09:11 +0000 (GMT)
-X-AuditID: b6c32a46-8b7ff7000001438d-6f-645313c7d2cb
-Received: from epcas2p4.samsung.com ( [182.195.41.56]) by
-        epsmges2p2.samsung.com (Symantec Messaging Gateway) with SMTP id
-        C9.14.17293.7C313546; Thu,  4 May 2023 11:09:11 +0900 (KST)
-Mime-Version: 1.0
-Subject: RE:(2) [PATCH v4] f2fs: add async reset zone command support
-Reply-To: daejun7.park@samsung.com
-Sender: Daejun Park <daejun7.park@samsung.com>
-From:   Daejun Park <daejun7.park@samsung.com>
-To:     Chao Yu <chao@kernel.org>, Daejun Park <daejun7.park@samsung.com>,
+        Wed, 3 May 2023 22:22:19 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DF0D51A1;
+        Wed,  3 May 2023 19:22:16 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 6312F61BF0;
+        Thu,  4 May 2023 02:22:16 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 75496C433EF;
+        Thu,  4 May 2023 02:22:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1683166935;
+        bh=zYg+Thhfj2kqapZClkQyeQ4gfvuTkn6TncHltGVj3Mg=;
+        h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+        b=EmJwl+6TMhzhxzJNU/dKkD9bblgEI1Rf7ZX+f5QlDfb3wjpY/2NmZcWKBQtcrc9Ac
+         yCvi3P6sPxSQUX9j3lfTa8HDL1qhZGSr/zsz43NsaH3htcymRwQP2LcOeVySQLCqHq
+         MHKQYBroNYAgRw6bfV/+QWpQS8GTY2w6lcn9GAEvN3qDmhV/1xwOXU3iIkmxl08nDx
+         rJXdX+2ZNpQbhlNV6av5RvqsjdBWO1KFdPy9bWQk0QE+vDH4Kc8OCZ2tft1iTg7Oon
+         XIJT1PnRDVWYw+CbBhIDebHoz6NtgBTL5GsocG0V69AERRjRSldUtfJl/loIY1ZRkO
+         Vjx/u49EJGC2g==
+Message-ID: <306ff487-06d2-4ec7-c3c0-65ac066aa0f4@kernel.org>
+Date:   Thu, 4 May 2023 10:22:03 +0800
+MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.10.0
+Subject: Re: (2) [PATCH v4] f2fs: add async reset zone command support
+Content-Language: en-US
+To:     daejun7.park@samsung.com,
         "jaegeuk@kernel.org" <jaegeuk@kernel.org>,
         "rostedt@goodmis.org" <rostedt@goodmis.org>,
         "mhiramat@kernel.org" <mhiramat@kernel.org>,
@@ -52,280 +49,248 @@ To:     Chao Yu <chao@kernel.org>, Daejun Park <daejun7.park@samsung.com>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
         "linux-trace-kernel@vger.kernel.org" 
         <linux-trace-kernel@vger.kernel.org>
-CC:     Seokhwan Kim <sukka.kim@samsung.com>,
+Cc:     Seokhwan Kim <sukka.kim@samsung.com>,
         Yonggil Song <yonggil.song@samsung.com>,
         beomsu kim <beomsu7.kim@samsung.com>
-X-Priority: 3
-X-Content-Kind-Code: NORMAL
-In-Reply-To: <6596335b-2448-20f7-30ea-42ba40f1af72@kernel.org>
-X-CPGS-Detection: blocking_info_exchange
-X-Drm-Type: N,general
-X-Msg-Generator: Mail
-X-Msg-Type: PERSONAL
-X-Reply-Demand: N
-Message-ID: <20230504020810epcms2p2511cc27f9824fee69563e2be99284f78@epcms2p2>
-Date:   Thu, 04 May 2023 11:08:10 +0900
-X-CMS-MailID: 20230504020810epcms2p2511cc27f9824fee69563e2be99284f78
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset="utf-8"
-X-Sendblock-Type: AUTO_CONFIDENTIAL
-CMS-TYPE: 102P
-X-CPGSPASS: Y
-X-CPGSPASS: Y
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprDJsWRmVeSWpSXmKPExsWy7bCmhe5x4eAUg8NTuCwuzPvIbHF66lkm
-        i5eHNC1WPQi3eLJ+FrPFpUXuFpd3zWGzOLL+LIvF4uVqFvs6HjBZrOqYy2gx9fwRJgcej5Z9
-        t9g9Nq3qZPPYveAzk0ffllWMHp83yQWwRmXbZKQmpqQWKaTmJeenZOal2yp5B8c7x5uaGRjq
-        GlpamCsp5CXmptoqufgE6Lpl5gDdpqRQlphTChQKSCwuVtK3synKLy1JVcjILy6xVUotSMkp
-        MC/QK07MLS7NS9fLSy2xMjQwMDIFKkzIzrh16Bxjwf0Oxor/R2+zNjB2tDJ2MXJySAiYSGz+
-        9Z69i5GLQ0hgB6PEou4+ti5GDg5eAUGJvzuEQWqEBVwl/p1pZQexhQSUJNZfnMUOEdeTuPVw
-        DdgcNgEdiekn7oPNERHYzCzxZNEDJpA5zAKVEp/POUDs4pWY0f6UBcKWlti+fCtYL6eAncTM
-        uXvYIeIaEj+W9TJD2KISN1e/ZYex3x+bD3WziETrvbNQNYISD37uhopLStyeuwmqPl/i/5Xl
-        UHaNxLYD86BsfYlrHRvBbuAV8JVoebIYLM4ioCox58EvqNtcJG7N28cEYjMLaEssW/iaGeIV
-        TYn1u/RBTAkBZYkjt1ggKvgkOg7/ZYf5sGHjb6zsHfOeMEHYahLrfq5nmsCoPAsRzrOQ7JqF
-        sGsBI/MqRrHUguLc9NRiowIjeOQm5+duYgQnUy23HYxT3n7QO8TIxMF4iFGCg1lJhPdDoV+K
-        EG9KYmVValF+fFFpTmrxIUZToC8nMkuJJucD03leSbyhiaWBiZmZobmRqYG5kjivtO3JZCGB
-        9MSS1OzU1ILUIpg+Jg5OqQamI6IqGx1+62ywD5hnuc79mV25wIRUOwbZ/d3qEjG/eVoPhAba
-        HU2+6VI9RfzLq3zh+2eU/Kf+nq3xdpLBr/UPIi3dz2jsOWDH9JbVdNvv5+crmE/JnxBgFt9f
-        uuHq5/3fZ8vZKZ26HfbwCPuFU9qv9r3729b96/m3/xZBq/zspj8u/vf7NNusYAnRziTxipmO
-        FhrTc98oubrbmr5fJBCRnrT/6ccl+f3OWhsdY06ynt2lduPryTDltStUJt3fb/7ivc+dVJ/P
-        S+6WSzk2NZnurFL5e3RjwNmDd/ZsX2g6SSdd6lyE3seHoSGnFNdp3Xp16fD3budw2/pSacaw
-        /2kmJ+6Xngv+0XbtV0Hl3KpFE5VYijMSDbWYi4oTAeMt/uQvBAAA
-DLP-Filter: Pass
-X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20230502041628epcms2p7233a97389cebafb73fc525a47215e707
 References: <6596335b-2448-20f7-30ea-42ba40f1af72@kernel.org>
-        <20230502041628epcms2p7233a97389cebafb73fc525a47215e707@epcms2p7>
-        <CGME20230502041628epcms2p7233a97389cebafb73fc525a47215e707@epcms2p2>
+ <20230502041628epcms2p7233a97389cebafb73fc525a47215e707@epcms2p7>
+ <CGME20230502041628epcms2p7233a97389cebafb73fc525a47215e707@epcms2p2>
+ <20230504020810epcms2p2511cc27f9824fee69563e2be99284f78@epcms2p2>
+From:   Chao Yu <chao@kernel.org>
+In-Reply-To: <20230504020810epcms2p2511cc27f9824fee69563e2be99284f78@epcms2p2>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-Thank you for reviewing the patch.
+On 2023/5/4 10:08, Daejun Park wrote:
+> Thank you for reviewing the patch.
+> 
+>> --------- Original Message ---------
+>> Sender : Chao Yu <chao@kernel.org>
+>> Date : 2023-05-04 10:43 (GMT+9)
+>> Title : Re: [PATCH v4] f2fs: add async reset zone command support
+>> To : 박대준<daejun7.park@samsung.com>, jaegeuk@kernel.org<jaegeuk@kernel.org>, rostedt@goodmis.org<rostedt@goodmis.org>, mhiramat@kernel.org<mhiramat@kernel.org>, linux-f2fs-devel@lists.sourceforge.net<linux-f2fs-devel@lists.sourceforge.net>, linux-kernel@vger.kernel.org<linux-kernel@vger.kernel.org>, linux-trace-kernel@vger.kernel.org<linux-trace-kernel@vger.kernel.org>
+>> CC : 김석환<sukka.kim@samsung.com>, 송용길<yonggil.song@samsung.com>, 김범수<beomsu7.kim@samsung.com>
+>>   
+>> On 2023/5/2 12:16, Daejun Park wrote:
+>>> Changelog:
+>>>
+>>> v3 -> v4
+>>> Fixed build error caused by unused function.
+>>>
+>>> v2 -> v3
+>>> Modified arguments to be correct for ftrace parameter.
+>>> Changed __submit_zone_reset_cmd to void return.
+>>> Refactored the f2fs_wait_discard_bio function.
+>>> Fixed code that was previously incorrectly merged.
+>>>
+>>> v1 -> v2
+>>> Changed to apply the optional async reset write pointer by default.
+>>>
+>>> This patch enables submit reset zone command asynchornously. It helps
+>>> decrease average latency of write IOs in high utilization scenario by
+>>> faster checkpointing.
+>>>
+>>> Signed-off-by: Daejun Park <daejun7.park@samsung.com>
+>>> ---
+>>>    fs/f2fs/segment.c           | 83 +++++++++++++++++++++++++++++++++++--
+>>>    include/trace/events/f2fs.h | 18 +++++++-
+>>>    2 files changed, 96 insertions(+), 5 deletions(-)
+>>>
+>>> diff --git a/fs/f2fs/segment.c b/fs/f2fs/segment.c
+>>> index 6db410f1bb8c..ec7a8de71198 100644
+>>> --- a/fs/f2fs/segment.c
+>>> +++ b/fs/f2fs/segment.c
+>>> @@ -1196,6 +1196,44 @@ static void __init_discard_policy(struct f2fs_sb_info *sbi,
+>>>    static void __update_discard_tree_range(struct f2fs_sb_info *sbi,
+>>>                                    struct block_device *bdev, block_t lstart,
+>>>                                    block_t start, block_t len);
+>>> +
+>>> +#ifdef CONFIG_BLK_DEV_ZONED
+>>> +static void __submit_zone_reset_cmd(struct f2fs_sb_info *sbi,
+>>> +                                   struct discard_cmd *dc, blk_opf_t flag,
+>>> +                                   struct list_head *wait_list,
+>>> +                                   unsigned int *issued)
+>>> +{
+>>> +        struct discard_cmd_control *dcc = SM_I(sbi)->dcc_info;
+>>> +        struct block_device *bdev = dc->bdev;
+>>> +        struct bio *bio = bio_alloc(bdev, 0, REQ_OP_ZONE_RESET | flag, GFP_NOFS);
+>>> +        unsigned long flags;
+>>> +
+>>> +        trace_f2fs_issue_reset_zone(bdev, dc->di.start);
+>>> +
+>>> +        spin_lock_irqsave(&dc->lock, flags);
+>>> +        dc->state = D_SUBMIT;
+>>> +        dc->bio_ref++;
+>>> +        spin_unlock_irqrestore(&dc->lock, flags);
+>>> +
+>>> +        if (issued)
+>>> +                (*issued)++;
+>>> +
+>>> +        atomic_inc(&dcc->queued_discard);
+>>> +        dc->queued++;
+>>> +        list_move_tail(&dc->list, wait_list);
+>>> +
+>>> +        /* sanity check on discard range */
+>>> +        __check_sit_bitmap(sbi, dc->di.lstart, dc->di.lstart + dc->di.len);
+>>> +
+>>> +        bio->bi_iter.bi_sector = SECTOR_FROM_BLOCK(dc->di.start);
+>>> +        bio->bi_private = dc;
+>>> +        bio->bi_end_io = f2fs_submit_discard_endio;
+>>> +        submit_bio(bio);
+>>
+>> How about accounting iostat info for zone reset command?
+>>
+>> f2fs_update_iostat(sbi, NULL, FS_ZONE_RESET_IO, len * F2FS_BLKSIZE);
+> 
+> Sure, I will do.
+>   
+>>> +
+>>> +        atomic_inc(&dcc->issued_discard);
+>>> +}
+>>> +#endif
+>>> +
+>>>    /* this function is copied from blkdev_issue_discard from block/blk-lib.c */
+>>>    static int __submit_discard_cmd(struct f2fs_sb_info *sbi,
+>>>                                    struct discard_policy *dpolicy,
+>>> @@ -1217,6 +1255,13 @@ static int __submit_discard_cmd(struct f2fs_sb_info *sbi,
+>>>            if (is_sbi_flag_set(sbi, SBI_NEED_FSCK))
+>>>                    return 0;
+>>>    
+>>> +#ifdef CONFIG_BLK_DEV_ZONED
+>>> +        if (f2fs_sb_has_blkzoned(sbi) && bdev_is_zoned(bdev)) {
+>>> +                __submit_zone_reset_cmd(sbi, dc, flag, wait_list, issued);
+>>> +                return 0;
+>>> +        }
+>>> +#endif
+>>> +
+>>>            trace_f2fs_issue_discard(bdev, dc->di.start, dc->di.len);
+>>>    
+>>>            lstart = dc->di.lstart;
+>>> @@ -1461,6 +1506,19 @@ static void __update_discard_tree_range(struct f2fs_sb_info *sbi,
+>>>            }
+>>>    }
+>>>    
+>>> +#ifdef CONFIG_BLK_DEV_ZONED
+>>> +static void __queue_zone_reset_cmd(struct f2fs_sb_info *sbi,
+>>> +                struct block_device *bdev, block_t blkstart, block_t lblkstart,
+>>> +                block_t blklen)
+>>> +{
+>>> +        trace_f2fs_queue_reset_zone(bdev, blkstart);
+>>> +
+>>> +        mutex_lock(&SM_I(sbi)->dcc_info->cmd_lock);
+>>> +        __insert_discard_cmd(sbi, bdev, lblkstart, blkstart, blklen);
+>>> +        mutex_unlock(&SM_I(sbi)->dcc_info->cmd_lock);
+>>> +}
+>>> +#endif
+>>> +
+>>>    static void __queue_discard_cmd(struct f2fs_sb_info *sbi,
+>>>                    struct block_device *bdev, block_t blkstart, block_t blklen)
+>>>    {
+>>> @@ -1724,6 +1782,19 @@ static void f2fs_wait_discard_bio(struct f2fs_sb_info *sbi, block_t blkaddr)
+>>>    
+>>>            mutex_lock(&dcc->cmd_lock);
+>>>            dc = __lookup_discard_cmd(sbi, blkaddr);
+>>> +#ifdef CONFIG_BLK_DEV_ZONED
+>>> +        if (dc && f2fs_sb_has_blkzoned(sbi) && bdev_is_zoned(dc->bdev)) {
+>>> +                /* force submit zone reset */
+>>> +                if (dc->state == D_PREP)
+>>> +                        __submit_zone_reset_cmd(sbi, dc, REQ_SYNC,
+>>> +                                                &dcc->wait_list, NULL);
+>>> +                dc->ref++;
+>>
+>> IIUC, should be?
+>>
+>> else
+>>          dc->ref++;
+>>
+>> Thanks,
+> 
+> In case of discard, we can delete a pending discard via __punch_discard_cmd().
+> However, we cannot remove the pending zone reset command.
+> And, we should always wait for the completion of the zone reset command,
+> so I increased the reference counter.
 
-> --------- Original Message ---------
-> Sender : Chao Yu=C2=A0<chao=40kernel.org>=0D=0A>=20Date=20:=202023-05-04=
-=2010:43=20(GMT+9)=0D=0A>=20Title=20:=20Re:=20=5BPATCH=20v4=5D=20f2fs:=20ad=
-d=20async=20reset=20zone=20command=20support=0D=0A>=20To=20:=20=EB=B0=95=EB=
-=8C=80=EC=A4=80<daejun7.park=40samsung.com>,=20jaegeuk=40kernel.org<jaegeuk=
-=40kernel.org>,=20rostedt=40goodmis.org<rostedt=40goodmis.org>,=20mhiramat=
-=40kernel.org<mhiramat=40kernel.org>,=20linux-f2fs-devel=40lists.sourceforg=
-e.net<linux-f2fs-devel=40lists.sourceforge.net>,=20linux-kernel=40vger.kern=
-el.org<linux-kernel=40vger.kernel.org>,=20linux-trace-kernel=40vger.kernel.=
-org<linux-trace-kernel=40vger.kernel.org>=0D=0A>=20CC=20:=20=EA=B9=80=EC=84=
-=9D=ED=99=98<sukka.kim=40samsung.com>,=20=EC=86=A1=EC=9A=A9=EA=B8=B8<yonggi=
-l.song=40samsung.com>,=20=EA=B9=80=EB=B2=94=EC=88=98<beomsu7.kim=40samsung.=
-com>=0D=0A>=20=C2=A0=0D=0A>=20On=202023/5/2=2012:16,=20Daejun=20Park=20wrot=
-e:=0D=0A>=20>=20Changelog:=0D=0A>=20>=20=0D=0A>=20>=20v3=20->=20v4=0D=0A>=
-=20>=20Fixed=20build=20error=20caused=20by=20unused=20function.=0D=0A>=20>=
-=20=0D=0A>=20>=20v2=20->=20v3=0D=0A>=20>=20Modified=20arguments=20to=20be=
-=20correct=20for=20ftrace=20parameter.=0D=0A>=20>=20Changed=20__submit_zone=
-_reset_cmd=20to=20void=20return.=0D=0A>=20>=20Refactored=20the=20f2fs_wait_=
-discard_bio=20function.=0D=0A>=20>=20Fixed=20code=20that=20was=20previously=
-=20incorrectly=20merged.=0D=0A>=20>=20=0D=0A>=20>=20v1=20->=20v2=0D=0A>=20>=
-=20Changed=20to=20apply=20the=20optional=20async=20reset=20write=20pointer=
-=20by=20default.=0D=0A>=20>=20=0D=0A>=20>=20This=20patch=20enables=20submit=
-=20reset=20zone=20command=20asynchornously.=20It=20helps=0D=0A>=20>=20decre=
-ase=20average=20latency=20of=20write=20IOs=20in=20high=20utilization=20scen=
-ario=20by=0D=0A>=20>=20faster=20checkpointing.=0D=0A>=20>=20=0D=0A>=20>=20S=
-igned-off-by:=20Daejun=20Park=20<daejun7.park=40samsung.com>=0D=0A>=20>=20-=
---=0D=0A>=20>=20=C2=A0=20fs/f2fs/segment.c=20=C2=A0=20=C2=A0=20=C2=A0=20=C2=
-=A0=20=C2=A0=20=7C=2083=20+++++++++++++++++++++++++++++++++++--=0D=0A>=20>=
-=20=C2=A0=20include/trace/events/f2fs.h=20=7C=2018=20+++++++-=0D=0A>=20>=20=
-=C2=A0=202=20files=20changed,=2096=20insertions(+),=205=20deletions(-)=0D=
-=0A>=20>=20=0D=0A>=20>=20diff=20--git=20a/fs/f2fs/segment.c=20b/fs/f2fs/seg=
-ment.c=0D=0A>=20>=20index=206db410f1bb8c..ec7a8de71198=20100644=0D=0A>=20>=
-=20---=20a/fs/f2fs/segment.c=0D=0A>=20>=20+++=20b/fs/f2fs/segment.c=0D=0A>=
-=20>=20=40=40=20-1196,6=20+1196,44=20=40=40=20static=20void=20__init_discar=
-d_policy(struct=20f2fs_sb_info=20*sbi,=0D=0A>=20>=20=C2=A0=20static=20void=
-=20__update_discard_tree_range(struct=20f2fs_sb_info=20*sbi,=0D=0A>=20>=20=
-=C2=A0=20=C2=A0=C2=A0=20=C2=A0=20=C2=A0=20=C2=A0=20=C2=A0=20=C2=A0=20=C2=A0=
-=20=C2=A0=20=C2=A0=20=C2=A0=20=C2=A0=20=C2=A0=20=C2=A0=20=C2=A0=20=C2=A0=20=
-=C2=A0struct=20block_device=20*bdev,=20block_t=20lstart,=0D=0A>=20>=20=C2=
-=A0=20=C2=A0=C2=A0=20=C2=A0=20=C2=A0=20=C2=A0=20=C2=A0=20=C2=A0=20=C2=A0=20=
-=C2=A0=20=C2=A0=20=C2=A0=20=C2=A0=20=C2=A0=20=C2=A0=20=C2=A0=20=C2=A0=20=C2=
-=A0block_t=20start,=20block_t=20len);=0D=0A>=20>=20+=0D=0A>=20>=20+=23ifdef=
-=20CONFIG_BLK_DEV_ZONED=0D=0A>=20>=20+static=20void=20__submit_zone_reset_c=
-md(struct=20f2fs_sb_info=20*sbi,=0D=0A>=20>=20+=20=C2=A0=20=C2=A0=20=C2=A0=
-=20=C2=A0=20=C2=A0=20=C2=A0=20=C2=A0=20=C2=A0=20=C2=A0=20=C2=A0=20=C2=A0=20=
-=C2=A0=20=C2=A0=20=C2=A0=20=C2=A0=20=C2=A0=20=C2=A0=20struct=20discard_cmd=
-=20*dc,=20blk_opf_t=20flag,=0D=0A>=20>=20+=20=C2=A0=20=C2=A0=20=C2=A0=20=C2=
-=A0=20=C2=A0=20=C2=A0=20=C2=A0=20=C2=A0=20=C2=A0=20=C2=A0=20=C2=A0=20=C2=A0=
-=20=C2=A0=20=C2=A0=20=C2=A0=20=C2=A0=20=C2=A0=20struct=20list_head=20*wait_=
-list,=0D=0A>=20>=20+=20=C2=A0=20=C2=A0=20=C2=A0=20=C2=A0=20=C2=A0=20=C2=A0=
-=20=C2=A0=20=C2=A0=20=C2=A0=20=C2=A0=20=C2=A0=20=C2=A0=20=C2=A0=20=C2=A0=20=
-=C2=A0=20=C2=A0=20=C2=A0=20unsigned=20int=20*issued)=0D=0A>=20>=20+=7B=0D=
-=0A>=20>=20+=20=C2=A0=20=C2=A0=20=C2=A0=20=C2=A0struct=20discard_cmd_contro=
-l=20*dcc=20=3D=20SM_I(sbi)->dcc_info;=0D=0A>=20>=20+=20=C2=A0=20=C2=A0=20=
-=C2=A0=20=C2=A0struct=20block_device=20*bdev=20=3D=20dc->bdev;=0D=0A>=20>=
-=20+=20=C2=A0=20=C2=A0=20=C2=A0=20=C2=A0struct=20bio=20*bio=20=3D=20bio_all=
-oc(bdev,=200,=20REQ_OP_ZONE_RESET=20=7C=20flag,=20GFP_NOFS);=0D=0A>=20>=20+=
-=20=C2=A0=20=C2=A0=20=C2=A0=20=C2=A0unsigned=20long=20flags;=0D=0A>=20>=20+=
-=0D=0A>=20>=20+=20=C2=A0=20=C2=A0=20=C2=A0=20=C2=A0trace_f2fs_issue_reset_z=
-one(bdev,=20dc->di.start);=0D=0A>=20>=20+=0D=0A>=20>=20+=20=C2=A0=20=C2=A0=
-=20=C2=A0=20=C2=A0spin_lock_irqsave(&dc->lock,=20flags);=0D=0A>=20>=20+=20=
-=C2=A0=20=C2=A0=20=C2=A0=20=C2=A0dc->state=20=3D=20D_SUBMIT;=0D=0A>=20>=20+=
-=20=C2=A0=20=C2=A0=20=C2=A0=20=C2=A0dc->bio_ref++;=0D=0A>=20>=20+=20=C2=A0=
-=20=C2=A0=20=C2=A0=20=C2=A0spin_unlock_irqrestore(&dc->lock,=20flags);=0D=
-=0A>=20>=20+=0D=0A>=20>=20+=20=C2=A0=20=C2=A0=20=C2=A0=20=C2=A0if=20(issued=
-)=0D=0A>=20>=20+=20=C2=A0=20=C2=A0=20=C2=A0=20=C2=A0=20=C2=A0=20=C2=A0=20=
-=C2=A0=20=C2=A0(*issued)++;=0D=0A>=20>=20+=0D=0A>=20>=20+=20=C2=A0=20=C2=A0=
-=20=C2=A0=20=C2=A0atomic_inc(&dcc->queued_discard);=0D=0A>=20>=20+=20=C2=A0=
-=20=C2=A0=20=C2=A0=20=C2=A0dc->queued++;=0D=0A>=20>=20+=20=C2=A0=20=C2=A0=
-=20=C2=A0=20=C2=A0list_move_tail(&dc->list,=20wait_list);=0D=0A>=20>=20+=0D=
-=0A>=20>=20+=20=C2=A0=20=C2=A0=20=C2=A0=20=C2=A0/*=20sanity=20check=20on=20=
-discard=20range=20*/=0D=0A>=20>=20+=20=C2=A0=20=C2=A0=20=C2=A0=20=C2=A0__ch=
-eck_sit_bitmap(sbi,=20dc->di.lstart,=20dc->di.lstart=20+=20dc->di.len);=0D=
-=0A>=20>=20+=0D=0A>=20>=20+=20=C2=A0=20=C2=A0=20=C2=A0=20=C2=A0bio->bi_iter=
-.bi_sector=20=3D=20SECTOR_FROM_BLOCK(dc->di.start);=0D=0A>=20>=20+=20=C2=A0=
-=20=C2=A0=20=C2=A0=20=C2=A0bio->bi_private=20=3D=20dc;=0D=0A>=20>=20+=20=C2=
-=A0=20=C2=A0=20=C2=A0=20=C2=A0bio->bi_end_io=20=3D=20f2fs_submit_discard_en=
-dio;=0D=0A>=20>=20+=20=C2=A0=20=C2=A0=20=C2=A0=20=C2=A0submit_bio(bio);=0D=
-=0A>=20=0D=0A>=20How=20about=20accounting=20iostat=20info=20for=20zone=20re=
-set=20command?=0D=0A>=20=0D=0A>=20f2fs_update_iostat(sbi,=20NULL,=20FS_ZONE=
-_RESET_IO,=20len=20*=20F2FS_BLKSIZE);=0D=0A=0D=0ASure,=20I=20will=20do.=0D=
-=0A=20=0D=0A>=20>=20+=0D=0A>=20>=20+=20=C2=A0=20=C2=A0=20=C2=A0=20=C2=A0ato=
-mic_inc(&dcc->issued_discard);=0D=0A>=20>=20+=7D=0D=0A>=20>=20+=23endif=0D=
-=0A>=20>=20+=0D=0A>=20>=20=C2=A0=20/*=20this=20function=20is=20copied=20fro=
-m=20blkdev_issue_discard=20from=20block/blk-lib.c=20*/=0D=0A>=20>=20=C2=A0=
-=20static=20int=20__submit_discard_cmd(struct=20f2fs_sb_info=20*sbi,=0D=0A>=
-=20>=20=C2=A0=20=C2=A0=C2=A0=20=C2=A0=20=C2=A0=20=C2=A0=20=C2=A0=20=C2=A0=
-=20=C2=A0=20=C2=A0=20=C2=A0=20=C2=A0=20=C2=A0=20=C2=A0=20=C2=A0=20=C2=A0=20=
-=C2=A0=20=C2=A0struct=20discard_policy=20*dpolicy,=0D=0A>=20>=20=40=40=20-1=
-217,6=20+1255,13=20=40=40=20static=20int=20__submit_discard_cmd(struct=20f2=
-fs_sb_info=20*sbi,=0D=0A>=20>=20=C2=A0=20=C2=A0=C2=A0=20=C2=A0=20=C2=A0=20=
-=C2=A0if=20(is_sbi_flag_set(sbi,=20SBI_NEED_FSCK))=0D=0A>=20>=20=C2=A0=20=
-=C2=A0=C2=A0=20=C2=A0=20=C2=A0=20=C2=A0=20=C2=A0=20=C2=A0=20=C2=A0=20=C2=A0=
-return=200;=0D=0A>=20>=20=C2=A0=20=0D=0A>=20>=20+=23ifdef=20CONFIG_BLK_DEV_=
-ZONED=0D=0A>=20>=20+=20=C2=A0=20=C2=A0=20=C2=A0=20=C2=A0if=20(f2fs_sb_has_b=
-lkzoned(sbi)=20&&=20bdev_is_zoned(bdev))=20=7B=0D=0A>=20>=20+=20=C2=A0=20=
-=C2=A0=20=C2=A0=20=C2=A0=20=C2=A0=20=C2=A0=20=C2=A0=20=C2=A0__submit_zone_r=
-eset_cmd(sbi,=20dc,=20flag,=20wait_list,=20issued);=0D=0A>=20>=20+=20=C2=A0=
-=20=C2=A0=20=C2=A0=20=C2=A0=20=C2=A0=20=C2=A0=20=C2=A0=20=C2=A0return=200;=
-=0D=0A>=20>=20+=20=C2=A0=20=C2=A0=20=C2=A0=20=C2=A0=7D=0D=0A>=20>=20+=23end=
-if=0D=0A>=20>=20+=0D=0A>=20>=20=C2=A0=20=C2=A0=C2=A0=20=C2=A0=20=C2=A0=20=
-=C2=A0trace_f2fs_issue_discard(bdev,=20dc->di.start,=20dc->di.len);=0D=0A>=
-=20>=20=C2=A0=20=0D=0A>=20>=20=C2=A0=20=C2=A0=C2=A0=20=C2=A0=20=C2=A0=20=C2=
-=A0lstart=20=3D=20dc->di.lstart;=0D=0A>=20>=20=40=40=20-1461,6=20+1506,19=
-=20=40=40=20static=20void=20__update_discard_tree_range(struct=20f2fs_sb_in=
-fo=20*sbi,=0D=0A>=20>=20=C2=A0=20=C2=A0=C2=A0=20=C2=A0=20=C2=A0=20=C2=A0=7D=
-=0D=0A>=20>=20=C2=A0=20=7D=0D=0A>=20>=20=C2=A0=20=0D=0A>=20>=20+=23ifdef=20=
-CONFIG_BLK_DEV_ZONED=0D=0A>=20>=20+static=20void=20__queue_zone_reset_cmd(s=
-truct=20f2fs_sb_info=20*sbi,=0D=0A>=20>=20+=20=C2=A0=20=C2=A0=20=C2=A0=20=
-=C2=A0=20=C2=A0=20=C2=A0=20=C2=A0=20=C2=A0struct=20block_device=20*bdev,=20=
-block_t=20blkstart,=20block_t=20lblkstart,=0D=0A>=20>=20+=20=C2=A0=20=C2=A0=
-=20=C2=A0=20=C2=A0=20=C2=A0=20=C2=A0=20=C2=A0=20=C2=A0block_t=20blklen)=0D=
-=0A>=20>=20+=7B=0D=0A>=20>=20+=20=C2=A0=20=C2=A0=20=C2=A0=20=C2=A0trace_f2f=
-s_queue_reset_zone(bdev,=20blkstart);=0D=0A>=20>=20+=0D=0A>=20>=20+=20=C2=
-=A0=20=C2=A0=20=C2=A0=20=C2=A0mutex_lock(&SM_I(sbi)->dcc_info->cmd_lock);=
-=0D=0A>=20>=20+=20=C2=A0=20=C2=A0=20=C2=A0=20=C2=A0__insert_discard_cmd(sbi=
-,=20bdev,=20lblkstart,=20blkstart,=20blklen);=0D=0A>=20>=20+=20=C2=A0=20=C2=
-=A0=20=C2=A0=20=C2=A0mutex_unlock(&SM_I(sbi)->dcc_info->cmd_lock);=0D=0A>=
-=20>=20+=7D=0D=0A>=20>=20+=23endif=0D=0A>=20>=20+=0D=0A>=20>=20=C2=A0=20sta=
-tic=20void=20__queue_discard_cmd(struct=20f2fs_sb_info=20*sbi,=0D=0A>=20>=
-=20=C2=A0=20=C2=A0=C2=A0=20=C2=A0=20=C2=A0=20=C2=A0=20=C2=A0=20=C2=A0=20=C2=
-=A0=20=C2=A0struct=20block_device=20*bdev,=20block_t=20blkstart,=20block_t=
-=20blklen)=0D=0A>=20>=20=C2=A0=20=7B=0D=0A>=20>=20=40=40=20-1724,6=20+1782,=
-19=20=40=40=20static=20void=20f2fs_wait_discard_bio(struct=20f2fs_sb_info=
-=20*sbi,=20block_t=20blkaddr)=0D=0A>=20>=20=C2=A0=20=0D=0A>=20>=20=C2=A0=20=
-=C2=A0=C2=A0=20=C2=A0=20=C2=A0=20=C2=A0mutex_lock(&dcc->cmd_lock);=0D=0A>=
-=20>=20=C2=A0=20=C2=A0=C2=A0=20=C2=A0=20=C2=A0=20=C2=A0dc=20=3D=20__lookup_=
-discard_cmd(sbi,=20blkaddr);=0D=0A>=20>=20+=23ifdef=20CONFIG_BLK_DEV_ZONED=
-=0D=0A>=20>=20+=20=C2=A0=20=C2=A0=20=C2=A0=20=C2=A0if=20(dc=20&&=20f2fs_sb_=
-has_blkzoned(sbi)=20&&=20bdev_is_zoned(dc->bdev))=20=7B=0D=0A>=20>=20+=20=
-=C2=A0=20=C2=A0=20=C2=A0=20=C2=A0=20=C2=A0=20=C2=A0=20=C2=A0=20=C2=A0/*=20f=
-orce=20submit=20zone=20reset=20*/=0D=0A>=20>=20+=20=C2=A0=20=C2=A0=20=C2=A0=
-=20=C2=A0=20=C2=A0=20=C2=A0=20=C2=A0=20=C2=A0if=20(dc->state=20=3D=3D=20D_P=
-REP)=0D=0A>=20>=20+=20=C2=A0=20=C2=A0=20=C2=A0=20=C2=A0=20=C2=A0=20=C2=A0=
-=20=C2=A0=20=C2=A0=20=C2=A0=20=C2=A0=20=C2=A0=20=C2=A0__submit_zone_reset_c=
-md(sbi,=20dc,=20REQ_SYNC,=0D=0A>=20>=20+=20=C2=A0=20=C2=A0=20=C2=A0=20=C2=
-=A0=20=C2=A0=20=C2=A0=20=C2=A0=20=C2=A0=20=C2=A0=20=C2=A0=20=C2=A0=20=C2=A0=
-=20=C2=A0=20=C2=A0=20=C2=A0=20=C2=A0=20=C2=A0=20=C2=A0=20=C2=A0=20=C2=A0=20=
-=C2=A0=20=C2=A0=20=C2=A0=20=C2=A0&dcc->wait_list,=20NULL);=0D=0A>=20>=20+=
-=20=C2=A0=20=C2=A0=20=C2=A0=20=C2=A0=20=C2=A0=20=C2=A0=20=C2=A0=20=C2=A0dc-=
->ref++;=0D=0A>=20=0D=0A>=20IIUC,=20should=20be?=0D=0A>=20=0D=0A>=20else=0D=
-=0A>=20=20=C2=A0=20=C2=A0=20=C2=A0=20=C2=A0dc->ref++;=0D=0A>=20=0D=0A>=20Th=
-anks,=0D=0A=0D=0AIn=20case=20of=20discard,=20we=20can=20delete=20a=20pendin=
-g=20discard=20via=20__punch_discard_cmd().=0D=0AHowever,=20we=20cannot=20re=
-move=20the=20pending=20zone=20reset=20command.=0D=0AAnd,=20we=20should=20al=
-ways=20wait=20for=20the=20completion=20of=20the=20zone=20reset=20command,=
-=20=0D=0Aso=20I=20increased=20the=20reference=20counter.=0D=0A=0D=0AThanks,=
-=0D=0ADaejun=0D=0A=0D=0A=20=0D=0A>=20>=20+=20=C2=A0=20=C2=A0=20=C2=A0=20=C2=
-=A0=20=C2=A0=20=C2=A0=20=C2=A0=20=C2=A0mutex_unlock(&dcc->cmd_lock);=0D=0A>=
-=20>=20+=20=C2=A0=20=C2=A0=20=C2=A0=20=C2=A0=20=C2=A0=20=C2=A0=20=C2=A0=20=
-=C2=A0/*=20wait=20zone=20reset=20*/=0D=0A>=20>=20+=20=C2=A0=20=C2=A0=20=C2=
-=A0=20=C2=A0=20=C2=A0=20=C2=A0=20=C2=A0=20=C2=A0__wait_one_discard_bio(sbi,=
-=20dc);=0D=0A>=20>=20+=20=C2=A0=20=C2=A0=20=C2=A0=20=C2=A0=20=C2=A0=20=C2=
-=A0=20=C2=A0=20=C2=A0return;=0D=0A>=20>=20+=20=C2=A0=20=C2=A0=20=C2=A0=20=
-=C2=A0=7D=0D=0A>=20>=20+=23endif=0D=0A>=20>=20=C2=A0=20=C2=A0=C2=A0=20=C2=
-=A0=20=C2=A0=20=C2=A0if=20(dc)=20=7B=0D=0A>=20>=20=C2=A0=20=C2=A0=C2=A0=20=
-=C2=A0=20=C2=A0=20=C2=A0=20=C2=A0=20=C2=A0=20=C2=A0=20=C2=A0if=20(dc->state=
-=20=3D=3D=20D_PREP)=20=7B=0D=0A>=20>=20=C2=A0=20=C2=A0=C2=A0=20=C2=A0=20=C2=
-=A0=20=C2=A0=20=C2=A0=20=C2=A0=20=C2=A0=20=C2=A0=20=C2=A0=20=C2=A0=20=C2=A0=
-=20=C2=A0__punch_discard_cmd(sbi,=20dc,=20blkaddr);=0D=0A>=20>=20=40=40=20-=
-1876,9=20+1947,15=20=40=40=20static=20int=20__f2fs_issue_discard_zone(struc=
-t=20f2fs_sb_info=20*sbi,=0D=0A>=20>=20=C2=A0=20=C2=A0=C2=A0=20=C2=A0=20=C2=
-=A0=20=C2=A0=20=C2=A0=20=C2=A0=20=C2=A0=20=C2=A0=20=C2=A0=20=C2=A0=20=C2=A0=
-=20=C2=A0=20=C2=A0=20=C2=A0=20=C2=A0=20=C2=A0=20blkstart,=20blklen);=0D=0A>=
-=20>=20=C2=A0=20=C2=A0=C2=A0=20=C2=A0=20=C2=A0=20=C2=A0=20=C2=A0=20=C2=A0=
-=20=C2=A0=20=C2=A0=20=C2=A0=20=C2=A0=20=C2=A0=20=C2=A0return=20-EIO;=0D=0A>=
-=20>=20=C2=A0=20=C2=A0=C2=A0=20=C2=A0=20=C2=A0=20=C2=A0=20=C2=A0=20=C2=A0=
-=20=C2=A0=20=C2=A0=7D=0D=0A>=20>=20-=20=C2=A0=20=C2=A0=20=C2=A0=20=C2=A0=20=
-=C2=A0=20=C2=A0=20=C2=A0=20=C2=A0trace_f2fs_issue_reset_zone(bdev,=20blksta=
-rt);=0D=0A>=20>=20-=20=C2=A0=20=C2=A0=20=C2=A0=20=C2=A0=20=C2=A0=20=C2=A0=
-=20=C2=A0=20=C2=A0return=20blkdev_zone_mgmt(bdev,=20REQ_OP_ZONE_RESET,=0D=
-=0A>=20>=20-=20=C2=A0=20=C2=A0=20=C2=A0=20=C2=A0=20=C2=A0=20=C2=A0=20=C2=A0=
-=20=C2=A0=20=C2=A0=20=C2=A0=20=C2=A0=20=C2=A0=20=C2=A0=20=C2=A0=20=C2=A0=20=
-=C2=A0=20=C2=A0=20=C2=A0=20=C2=A0=20=C2=A0sector,=20nr_sects,=20GFP_NOFS);=
-=0D=0A>=20>=20+=0D=0A>=20>=20+=20=C2=A0=20=C2=A0=20=C2=A0=20=C2=A0=20=C2=A0=
-=20=C2=A0=20=C2=A0=20=C2=A0if=20(unlikely(is_sbi_flag_set(sbi,=20SBI_POR_DO=
-ING)))=20=7B=0D=0A>=20>=20+=20=C2=A0=20=C2=A0=20=C2=A0=20=C2=A0=20=C2=A0=20=
-=C2=A0=20=C2=A0=20=C2=A0=20=C2=A0=20=C2=A0=20=C2=A0=20=C2=A0trace_f2fs_issu=
-e_reset_zone(bdev,=20blkstart);=0D=0A>=20>=20+=20=C2=A0=20=C2=A0=20=C2=A0=
-=20=C2=A0=20=C2=A0=20=C2=A0=20=C2=A0=20=C2=A0=20=C2=A0=20=C2=A0=20=C2=A0=20=
-=C2=A0return=20blkdev_zone_mgmt(bdev,=20REQ_OP_ZONE_RESET,=0D=0A>=20>=20+=
-=20=C2=A0=20=C2=A0=20=C2=A0=20=C2=A0=20=C2=A0=20=C2=A0=20=C2=A0=20=C2=A0=20=
-=C2=A0=20=C2=A0=20=C2=A0=20=C2=A0=20=C2=A0=20=C2=A0=20=C2=A0=20=C2=A0=20=C2=
-=A0=20=C2=A0=20=C2=A0=20=C2=A0=20=C2=A0=20=C2=A0=20=C2=A0=20=C2=A0sector,=
-=20nr_sects,=20GFP_NOFS);=0D=0A>=20>=20+=20=C2=A0=20=C2=A0=20=C2=A0=20=C2=
-=A0=20=C2=A0=20=C2=A0=20=C2=A0=20=C2=A0=7D=0D=0A>=20>=20+=0D=0A>=20>=20+=20=
-=C2=A0=20=C2=A0=20=C2=A0=20=C2=A0=20=C2=A0=20=C2=A0=20=C2=A0=20=C2=A0__queu=
-e_zone_reset_cmd(sbi,=20bdev,=20blkstart,=20lblkstart,=20blklen);=0D=0A>=20=
->=20+=20=C2=A0=20=C2=A0=20=C2=A0=20=C2=A0=20=C2=A0=20=C2=A0=20=C2=A0=20=C2=
-=A0return=200;=0D=0A>=20>=20=C2=A0=20=C2=A0=C2=A0=20=C2=A0=20=C2=A0=20=C2=
-=A0=7D=0D=0A>=20>=20=C2=A0=20=0D=0A>=20>=20=C2=A0=20=C2=A0=C2=A0=20=C2=A0=
-=20=C2=A0=20=C2=A0/*=20For=20conventional=20zones,=20use=20regular=20discar=
-d=20if=20supported=20*/=0D=0A>=20>=20diff=20--git=20a/include/trace/events/=
-f2fs.h=20b/include/trace/events/f2fs.h=0D=0A>=20>=20index=2099cbc5949e3c..e=
-e1477de8324=20100644=0D=0A>=20>=20---=20a/include/trace/events/f2fs.h=0D=0A=
->=20>=20+++=20b/include/trace/events/f2fs.h=0D=0A>=20>=20=40=40=20-1512,7=
-=20+1512,7=20=40=40=20DEFINE_EVENT(f2fs_discard,=20f2fs_remove_discard,=0D=
-=0A>=20>=20=C2=A0=20=C2=A0=C2=A0=20=C2=A0=20=C2=A0=20=C2=A0TP_ARGS(dev,=20b=
-lkstart,=20blklen)=0D=0A>=20>=20=C2=A0=20);=0D=0A>=20>=20=C2=A0=20=0D=0A>=
-=20>=20-TRACE_EVENT(f2fs_issue_reset_zone,=0D=0A>=20>=20+DECLARE_EVENT_CLAS=
-S(f2fs_reset_zone,=0D=0A>=20>=20=C2=A0=20=0D=0A>=20>=20=C2=A0=20=C2=A0=C2=
-=A0=20=C2=A0=20=C2=A0=20=C2=A0TP_PROTO(struct=20block_device=20*dev,=20bloc=
-k_t=20blkstart),=0D=0A>=20>=20=C2=A0=20=0D=0A>=20>=20=40=40=20-1528,11=20+1=
-528,25=20=40=40=20TRACE_EVENT(f2fs_issue_reset_zone,=0D=0A>=20>=20=C2=A0=20=
-=C2=A0=C2=A0=20=C2=A0=20=C2=A0=20=C2=A0=20=C2=A0=20=C2=A0=20=C2=A0=20=C2=A0=
-__entry->blkstart=20=3D=20blkstart;=0D=0A>=20>=20=C2=A0=20=C2=A0=C2=A0=20=
-=C2=A0=20=C2=A0=20=C2=A0),=0D=0A>=20>=20=C2=A0=20=0D=0A>=20>=20-=20=C2=A0=
-=20=C2=A0=20=C2=A0=20=C2=A0TP_printk(=22dev=20=3D=20(%d,%d),=20reset=20zone=
-=20at=20block=20=3D=200x%llx=22,=0D=0A>=20>=20+=20=C2=A0=20=C2=A0=20=C2=A0=
-=20=C2=A0TP_printk(=22dev=20=3D=20(%d,%d),=20zone=20at=20block=20=3D=200x%l=
-lx=22,=0D=0A>=20>=20=C2=A0=20=C2=A0=C2=A0=20=C2=A0=20=C2=A0=20=C2=A0=20=C2=
-=A0=20=C2=A0=20=C2=A0=20=C2=A0show_dev(__entry->dev),=0D=0A>=20>=20=C2=A0=
-=20=C2=A0=C2=A0=20=C2=A0=20=C2=A0=20=C2=A0=20=C2=A0=20=C2=A0=20=C2=A0=20=C2=
-=A0(unsigned=20long=20long)__entry->blkstart)=0D=0A>=20>=20=C2=A0=20);=0D=
-=0A>=20>=20=C2=A0=20=0D=0A>=20>=20+DEFINE_EVENT(f2fs_reset_zone,=20f2fs_que=
-ue_reset_zone,=0D=0A>=20>=20+=0D=0A>=20>=20+=20=C2=A0=20=C2=A0=20=C2=A0=20=
-=C2=A0TP_PROTO(struct=20block_device=20*dev,=20block_t=20blkstart),=0D=0A>=
-=20>=20+=0D=0A>=20>=20+=20=C2=A0=20=C2=A0=20=C2=A0=20=C2=A0TP_ARGS(dev,=20b=
-lkstart)=0D=0A>=20>=20+);=0D=0A>=20>=20+=0D=0A>=20>=20+DEFINE_EVENT(f2fs_re=
-set_zone,=20f2fs_issue_reset_zone,=0D=0A>=20>=20+=0D=0A>=20>=20+=20=C2=A0=
-=20=C2=A0=20=C2=A0=20=C2=A0TP_PROTO(struct=20block_device=20*dev,=20block_t=
-=20blkstart),=0D=0A>=20>=20+=0D=0A>=20>=20+=20=C2=A0=20=C2=A0=20=C2=A0=20=
-=C2=A0TP_ARGS(dev,=20blkstart)=0D=0A>=20>=20+);=0D=0A>=20>=20+=0D=0A>=20>=
-=20=C2=A0=20TRACE_EVENT(f2fs_issue_flush,=0D=0A>=20>=20=C2=A0=20=0D=0A>=20>=
-=20=C2=A0=20=C2=A0=C2=A0=20=C2=A0=20=C2=A0=20=C2=A0TP_PROTO(struct=20block_=
-device=20*dev,=20unsigned=20int=20nobarrier,=0D=0A>=20=0D=0A>=20=C2=A0=0D=
-=0A>=20=C2=A0
+Oh, I missed that we always call __wait_one_discard_bio() for zone reset case,
+thanks for the explanation anyway.
+
+Thanks,
+
+> 
+> Thanks,
+> Daejun
+> 
+>   
+>>> +                mutex_unlock(&dcc->cmd_lock);
+>>> +                /* wait zone reset */
+>>> +                __wait_one_discard_bio(sbi, dc);
+>>> +                return;
+>>> +        }
+>>> +#endif
+>>>            if (dc) {
+>>>                    if (dc->state == D_PREP) {
+>>>                            __punch_discard_cmd(sbi, dc, blkaddr);
+>>> @@ -1876,9 +1947,15 @@ static int __f2fs_issue_discard_zone(struct f2fs_sb_info *sbi,
+>>>                                     blkstart, blklen);
+>>>                            return -EIO;
+>>>                    }
+>>> -                trace_f2fs_issue_reset_zone(bdev, blkstart);
+>>> -                return blkdev_zone_mgmt(bdev, REQ_OP_ZONE_RESET,
+>>> -                                        sector, nr_sects, GFP_NOFS);
+>>> +
+>>> +                if (unlikely(is_sbi_flag_set(sbi, SBI_POR_DOING))) {
+>>> +                        trace_f2fs_issue_reset_zone(bdev, blkstart);
+>>> +                        return blkdev_zone_mgmt(bdev, REQ_OP_ZONE_RESET,
+>>> +                                                sector, nr_sects, GFP_NOFS);
+>>> +                }
+>>> +
+>>> +                __queue_zone_reset_cmd(sbi, bdev, blkstart, lblkstart, blklen);
+>>> +                return 0;
+>>>            }
+>>>    
+>>>            /* For conventional zones, use regular discard if supported */
+>>> diff --git a/include/trace/events/f2fs.h b/include/trace/events/f2fs.h
+>>> index 99cbc5949e3c..ee1477de8324 100644
+>>> --- a/include/trace/events/f2fs.h
+>>> +++ b/include/trace/events/f2fs.h
+>>> @@ -1512,7 +1512,7 @@ DEFINE_EVENT(f2fs_discard, f2fs_remove_discard,
+>>>            TP_ARGS(dev, blkstart, blklen)
+>>>    );
+>>>    
+>>> -TRACE_EVENT(f2fs_issue_reset_zone,
+>>> +DECLARE_EVENT_CLASS(f2fs_reset_zone,
+>>>    
+>>>            TP_PROTO(struct block_device *dev, block_t blkstart),
+>>>    
+>>> @@ -1528,11 +1528,25 @@ TRACE_EVENT(f2fs_issue_reset_zone,
+>>>                    __entry->blkstart = blkstart;
+>>>            ),
+>>>    
+>>> -        TP_printk("dev = (%d,%d), reset zone at block = 0x%llx",
+>>> +        TP_printk("dev = (%d,%d), zone at block = 0x%llx",
+>>>                    show_dev(__entry->dev),
+>>>                    (unsigned long long)__entry->blkstart)
+>>>    );
+>>>    
+>>> +DEFINE_EVENT(f2fs_reset_zone, f2fs_queue_reset_zone,
+>>> +
+>>> +        TP_PROTO(struct block_device *dev, block_t blkstart),
+>>> +
+>>> +        TP_ARGS(dev, blkstart)
+>>> +);
+>>> +
+>>> +DEFINE_EVENT(f2fs_reset_zone, f2fs_issue_reset_zone,
+>>> +
+>>> +        TP_PROTO(struct block_device *dev, block_t blkstart),
+>>> +
+>>> +        TP_ARGS(dev, blkstart)
+>>> +);
+>>> +
+>>>    TRACE_EVENT(f2fs_issue_flush,
+>>>    
+>>>            TP_PROTO(struct block_device *dev, unsigned int nobarrier,
+>>
+>>   
+>>   
