@@ -2,134 +2,86 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E224C77B78
-	for <linux-trace-kernel@archiver.kernel.org>; Thu,  4 May 2023 14:59:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9AC92C77B78
+	for <linux-trace-kernel@archiver.kernel.org>; Thu,  4 May 2023 15:02:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230436AbjEDO7d (ORCPT
+        id S231373AbjEDPCo (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Thu, 4 May 2023 10:59:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52458 "EHLO
+        Thu, 4 May 2023 11:02:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52452 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231268AbjEDO7J (ORCPT
+        with ESMTP id S229638AbjEDPCZ (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Thu, 4 May 2023 10:59:09 -0400
-Received: from mail-wr1-x435.google.com (mail-wr1-x435.google.com [IPv6:2a00:1450:4864:20::435])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 12D222D7C
-        for <linux-trace-kernel@vger.kernel.org>; Thu,  4 May 2023 07:58:50 -0700 (PDT)
-Received: by mail-wr1-x435.google.com with SMTP id ffacd0b85a97d-3064099f9b6so422245f8f.1
-        for <linux-trace-kernel@vger.kernel.org>; Thu, 04 May 2023 07:58:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1683212324; x=1685804324;
-        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=TBMo/EIkGym5CsFwSf/m+tZPgy36IMdnUP4Ys9HtEAo=;
-        b=EORlQYepVljQy1nVawpVkXfJ2rQijHa9PpGhJKZNLG3r421tBoMd+rtS3i127DO1wP
-         CHAZI3gfzoVLfAtLyvJHe3r3yn/5N1mMpu2/SMywt3IYXHGi8ocIL9hXbmkrfHakVXZX
-         ltmEoZqZOPBeiNxdc7ywwHUSBYOEZut2lifnTZXDG8D5+Spiy4/6Y79BLI+19Pq50eay
-         rRR0XedReHLJ3ELK1QJnBzjPHjL+PY0x8Hb/sQwdfXKyXcfFVxy/0SHzR84QWiFudfwj
-         E3o5ZS6r3sWZH5UaDMZx7GdfpsQSbsEOgrQ2MoHkBZfM71db3ifDG6VuJwiVW0MMq82v
-         e61Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1683212324; x=1685804324;
-        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=TBMo/EIkGym5CsFwSf/m+tZPgy36IMdnUP4Ys9HtEAo=;
-        b=KjPuzrbrTEkjx2+Telxxi4UEgJpB5P75dNnwXCGYh5g4svXVlOUqH7CEGxGSuRTMvD
-         24X9LG2cSQke4qXOoeyD0t9lIJw0L7Chvs+W4subZ+1KK7ds1jHLIJZKflwi1nNZyqhW
-         tc4gbfYvNJMakcgyOJmPrGLokRzPVzb6zUuaxTeB2jOlO+p3v+th2rsJIMf57ubrVMaf
-         j6KPepOnn1JZHTMCVwJ1LTcKsrn+OU8hJLlbo9mGzfCNir7tP/CLaxgN2DmiEOKLI92+
-         ERcnziLAIeMSWIKy86zWT6umNNJRxxz218WBdZoQA73eKDGJUr4OVDwirQAw3IgKHgZV
-         b8BA==
-X-Gm-Message-State: AC+VfDxisYySlR2+9yqyQRD9zwBfsozLuvAc24iQYTQaq5L8XawGyj+B
-        38t2KaT4G1U7gAtcBJMLF3v3Pg6TiGlNx9JtfIs=
-X-Google-Smtp-Source: ACHHUZ4WQI8bMTJYvqirQVWruukRwNtT/VC/i7yd+2EWqDTORnYv6fEvMB+7UatZMGkO48pU55/LcQ==
-X-Received: by 2002:adf:fc83:0:b0:306:3be9:6ab with SMTP id g3-20020adffc83000000b003063be906abmr2961099wrr.54.1683212324478;
-        Thu, 04 May 2023 07:58:44 -0700 (PDT)
-Received: from localhost ([102.36.222.112])
-        by smtp.gmail.com with ESMTPSA id x9-20020a5d60c9000000b002fbdb797483sm36768730wrt.49.2023.05.04.07.58.31
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 04 May 2023 07:58:43 -0700 (PDT)
-Date:   Thu, 4 May 2023 14:57:53 +0300
-From:   Dan Carpenter <dan.carpenter@linaro.org>
-To:     beaub@linux.microsoft.com
-Cc:     linux-trace-kernel@vger.kernel.org
-Subject: [bug report] tracing/user_events: Add ioctl for disabling addresses
-Message-ID: <6f758683-4e5e-41c3-9b05-9efc703e827c@kili.mountain>
+        Thu, 4 May 2023 11:02:25 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 80EB740F2;
+        Thu,  4 May 2023 08:01:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=J9lcuz0U78xiVesYVTRvv8JVCKEh3ZCKl4adkGMz7q8=; b=A3tkeyDTbxVkt6nED1FtXwR7g1
+        zZTYBRWgzTAAp9BZC1qV19RLdqwHus5AQdNJk4QDytJqfu0d3fusfZd6tmpLHnup1qMzIq1UrlO3r
+        jA6uWCDheYZh0N1afd4u6dydMh83H4G0C7c0LyDOr1Qr40sZHIjHkJkow0b886Qh4GbbmeqrET+yC
+        BKxh99Ux1Z2HW5bHnTcfrJMEd9lz//bcPqHa45Sgaoqw9q3Kc56na7ZITUjHj87fDXB5OTA+CPbNJ
+        Z7SX69si5EG372gxmdBynOePTt2mscU8e3Oeylz4MD/j1jNX9ZkD6PiiSxjMnfY1tl6QpLBO6zlfn
+        g1uP3SFA==;
+Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
+        by casper.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
+        id 1puaSJ-00AhL6-Rb; Thu, 04 May 2023 15:01:16 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (4096 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 00C7B3003CF;
+        Thu,  4 May 2023 17:01:13 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id D677D2407F43F; Thu,  4 May 2023 17:01:13 +0200 (CEST)
+Date:   Thu, 4 May 2023 17:01:13 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Valentin Schneider <vschneid@redhat.com>
+Cc:     Leonardo =?iso-8859-1?Q?Br=E1s?= <leobras@redhat.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Yury Norov <yury.norov@gmail.com>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Nadav Amit <namit@vmware.com>,
+        Zhen Lei <thunder.leizhen@huawei.com>,
+        Chen Zhongjin <chenzhongjin@huawei.com>,
+        linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+        Marcelo Tosatti <mtosatti@redhat.com>,
+        Daniel Bristot de Oliveira <bristot@kernel.org>
+Subject: Re: [RFC PATCH 1/1] smp: Add tracepoints for functions called with
+ smp_call_function*()
+Message-ID: <20230504150113.GB1744142@hirez.programming.kicks-ass.net>
+References: <20230406075718.68672-1-leobras@redhat.com>
+ <20230406095519.GG386572@hirez.programming.kicks-ass.net>
+ <f294a74cd17bf932621a6a746d592f49770d25ec.camel@redhat.com>
+ <20230503145900.GC1689514@hirez.programming.kicks-ass.net>
+ <xhsmh7ctojoia.mognet@vschneid.remote.csb>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+In-Reply-To: <xhsmh7ctojoia.mognet@vschneid.remote.csb>
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-Hello Beau Belgrave,
+On Thu, May 04, 2023 at 12:59:41PM +0100, Valentin Schneider wrote:
 
-The patch dcb8177c1395: "tracing/user_events: Add ioctl for disabling
-addresses" from Mar 28, 2023, leads to the following Smatch static
-checker warning:
+> With that said, I suppose this could still be helpful for e.g. osnoise to
+> hook into and point the finger at which CPU/context sent the problematic
+> IPI. Or more generally, as Leonardo suggested, to measure CSD IPI delivery
+> times.
+> 
+> One thing though is that trace_ipi_send_cpu*() is not used solely for
+> CSD's, cf. irq_work_raise() or smp_send_reschedule(). We might want to
+> split that into e.g. trace_csd_queue_cpu*() + trace_ipi_send*().
+> 
+> Something like so...
+> 
 
-	kernel/trace/trace_events_user.c:2278 user_events_ioctl_unreg()
-	warn: passing casted pointer '&enabler->values' to 'generic_test_bit()' 32 vs 64.
-
-kernel/trace/trace_events_user.c
-    2246 static long user_events_ioctl_unreg(unsigned long uarg)
-    2247 {
-    2248         struct user_unreg __user *ureg = (struct user_unreg __user *)uarg;
-    2249         struct user_event_mm *mm = current->user_event_mm;
-    2250         struct user_event_enabler *enabler, *next;
-    2251         struct user_unreg reg;
-    2252         long ret;
-    2253 
-    2254         ret = user_unreg_get(ureg, &reg);
-    2255 
-    2256         if (ret)
-    2257                 return ret;
-    2258 
-    2259         if (!mm)
-    2260                 return -ENOENT;
-    2261 
-    2262         ret = -ENOENT;
-    2263 
-    2264         /*
-    2265          * Flags freeing and faulting are used to indicate if the enabler is in
-    2266          * use at all. When faulting is set a page-fault is occurring asyncly.
-    2267          * During async fault if freeing is set, the enabler will be destroyed.
-    2268          * If no async fault is happening, we can destroy it now since we hold
-    2269          * the event_mutex during these checks.
-    2270          */
-    2271         mutex_lock(&event_mutex);
-    2272 
-    2273         list_for_each_entry_safe(enabler, next, &mm->enablers, link)
-    2274                 if (enabler->addr == reg.disable_addr &&
-    2275                     (enabler->values & ENABLE_VAL_BIT_MASK) == reg.disable_bit) {
-    2276                         set_bit(ENABLE_VAL_FREEING_BIT, ENABLE_BITOPS(enabler));
-    2277 
---> 2278                         if (!test_bit(ENABLE_VAL_FAULTING_BIT, ENABLE_BITOPS(enabler)))
-
-This patch just warns about suspicious casting really...  There is a
-hidden cast in ENABLE_BITOPS().
-
-The concern is that this would lead to memory corruption on big endian
-64bit machines.  Those are not super common in real life...  But why not
-just declare enabler->values as an unsigned long.  64bit systems are
-going to have a struct hole after ->values anyway so it doesn't use any
-more space than before.
-
-    2279                                 user_event_enabler_destroy(enabler);
-    2280 
-    2281                         /* Removed at least one */
-    2282                         ret = 0;
-    2283                 }
-    2284 
-    2285         mutex_unlock(&event_mutex);
-    2286 
-    2287         /* Ensure bit is now cleared for user, regardless of event status */
-    2288         if (!ret)
-    2289                 ret = user_event_mm_clear_bit(mm, reg.disable_addr,
-    2290                                               reg.disable_bit);
-    2291 
-    2292         return ret;
-    2293 }
-
-regards,
-dan carpenter
+Yeah, looks about right I suppose.. it generates more events, but given
+we need the csd that's inevitable.
