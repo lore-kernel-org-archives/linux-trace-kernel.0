@@ -2,128 +2,200 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 59CB1C7EE21
-	for <linux-trace-kernel@archiver.kernel.org>; Thu,  4 May 2023 17:31:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 56402C7EE21
+	for <linux-trace-kernel@archiver.kernel.org>; Fri,  5 May 2023 03:16:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229822AbjEDRbS (ORCPT
+        id S229535AbjEEDQX (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Thu, 4 May 2023 13:31:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60994 "EHLO
+        Thu, 4 May 2023 23:16:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49112 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229459AbjEDRbS (ORCPT
+        with ESMTP id S229472AbjEEDQV (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Thu, 4 May 2023 13:31:18 -0400
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 5C93F526E
-        for <linux-trace-kernel@vger.kernel.org>; Thu,  4 May 2023 10:31:17 -0700 (PDT)
-Received: from W11-BEAU-MD.localdomain (unknown [76.135.27.212])
-        by linux.microsoft.com (Postfix) with ESMTPSA id A39AB20EA209;
-        Thu,  4 May 2023 10:31:16 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com A39AB20EA209
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-        s=default; t=1683221476;
-        bh=VRq2HdOuHxLXd88diSRXezZdyPSd6O0qzLpvNeuRvzE=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=OqMhZuFzkABb9CFp76mWeMgsEMk77IUOoZGRHBCvO+UqcNnHvHrFjRB3j7gFHuGBD
-         +obXBWyA8Tk2fSvTJBrcHd7oIeQLyQ3l/d7W/KJ98JW7BSv4liYl3pTxrPIeaqgDvN
-         prDQwYnIjYbGJL0xFXVPfbGRc26P9PQef+lIJJBg=
-Date:   Thu, 4 May 2023 10:31:10 -0700
-From:   Beau Belgrave <beaub@linux.microsoft.com>
-To:     Dan Carpenter <dan.carpenter@linaro.org>
-Cc:     linux-trace-kernel@vger.kernel.org
-Subject: Re: [bug report] tracing/user_events: Add ioctl for disabling
- addresses
-Message-ID: <20230504173110.GA117@W11-BEAU-MD.localdomain>
-References: <6f758683-4e5e-41c3-9b05-9efc703e827c@kili.mountain>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <6f758683-4e5e-41c3-9b05-9efc703e827c@kili.mountain>
+        Thu, 4 May 2023 23:16:21 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6B69712083;
+        Thu,  4 May 2023 20:16:20 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 00C5D6321C;
+        Fri,  5 May 2023 03:16:20 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0E5DCC433EF;
+        Fri,  5 May 2023 03:16:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1683256579;
+        bh=t04jtxmwgsvQs+oh6DllcYakpZ5ayPd6hkvde2EHe9o=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=skcjGJX+iYp2Lt3CnxQStPTyA41Bl2BHqJuNFMkU2M5I9kv5zCODZeepghIqcxLrP
+         Tz0l/IEVBJpsQEaVclJgstiGxNf4uQAn54MirwdvSmlXYDOqDve+zAeYJ1yqIEOA5I
+         PgxvP/FHH7QTyqw8vWDziT1YTyOVpNLrDrh8rWgYNuHf/smYFnTfng2odHnq7mt/tu
+         ru/x+VN4HngYx2uggEDQLRrGj7Y3JyhPnHU87N0yiLfOX0o+xLz0oOfZdeaViW6jQ2
+         AIjQImBghE7QaNb0mQk0ogm0Q6LDYdcmNCJy8JVNiHrc75OvJV7BKQYozNrqNj/+oI
+         rhNkFd6UbgSOA==
+Date:   Fri, 5 May 2023 12:16:15 +0900
+From:   Masami Hiramatsu (Google) <mhiramat@kernel.org>
+To:     Steven Rostedt <rostedt@goodmis.org>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Linux Trace Kernel <linux-trace-kernel@vger.kernel.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>
+Subject: Re: [PATCH] ftrace: Add MODIFIED flag to show if IPMODIFY or direct
+ was attached
+Message-Id: <20230505121615.c228cb5896a74484ca519556@kernel.org>
+In-Reply-To: <20230502213233.004e3ae4@gandalf.local.home>
+References: <20230502213233.004e3ae4@gandalf.local.home>
+X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On Thu, May 04, 2023 at 02:57:53PM +0300, Dan Carpenter wrote:
-> Hello Beau Belgrave,
+On Tue, 2 May 2023 21:32:33 -0400
+Steven Rostedt <rostedt@goodmis.org> wrote:
+
+> From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
+> 
+> If a function had ever had IPMODIFY or DIRECT attached to it, where this
+> is how live kernel patching and BPF overrides work, mark them and display
+> an "M" in the enabled_functions and touched_functions files. This can be
+> used for debugging. If a function had been modified and later there's a bug
+> in the code related to that function, this can be used to know if the cause
+> is possibly from a live kernel patch or a BPF program that changed the
+> behavior of the code.
+> 
+> Also update the documentation on the enabled_functions and
+> touched_functions output, as it was missing direct callers and CALL_OPS.
+> And include this new modify attribute.
 > 
 
-Hey Dan, thanks for taking the time to report this.
+Ineed, this is very useful for checking. This looks good to me.
 
-> The patch dcb8177c1395: "tracing/user_events: Add ioctl for disabling
-> addresses" from Mar 28, 2023, leads to the following Smatch static
-> checker warning:
+Acked-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+
+Thank you!
+
+> Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+> ---
+>  Documentation/trace/ftrace.rst | 25 +++++++++++++++++++++++++
+>  include/linux/ftrace.h         |  4 +++-
+>  kernel/trace/ftrace.c          | 12 +++++++++---
+>  3 files changed, 37 insertions(+), 4 deletions(-)
 > 
-> 	kernel/trace/trace_events_user.c:2278 user_events_ioctl_unreg()
-> 	warn: passing casted pointer '&enabler->values' to 'generic_test_bit()' 32 vs 64.
-> 
-> kernel/trace/trace_events_user.c
->     2246 static long user_events_ioctl_unreg(unsigned long uarg)
->     2247 {
->     2248         struct user_unreg __user *ureg = (struct user_unreg __user *)uarg;
->     2249         struct user_event_mm *mm = current->user_event_mm;
->     2250         struct user_event_enabler *enabler, *next;
->     2251         struct user_unreg reg;
->     2252         long ret;
->     2253 
->     2254         ret = user_unreg_get(ureg, &reg);
->     2255 
->     2256         if (ret)
->     2257                 return ret;
->     2258 
->     2259         if (!mm)
->     2260                 return -ENOENT;
->     2261 
->     2262         ret = -ENOENT;
->     2263 
->     2264         /*
->     2265          * Flags freeing and faulting are used to indicate if the enabler is in
->     2266          * use at all. When faulting is set a page-fault is occurring asyncly.
->     2267          * During async fault if freeing is set, the enabler will be destroyed.
->     2268          * If no async fault is happening, we can destroy it now since we hold
->     2269          * the event_mutex during these checks.
->     2270          */
->     2271         mutex_lock(&event_mutex);
->     2272 
->     2273         list_for_each_entry_safe(enabler, next, &mm->enablers, link)
->     2274                 if (enabler->addr == reg.disable_addr &&
->     2275                     (enabler->values & ENABLE_VAL_BIT_MASK) == reg.disable_bit) {
->     2276                         set_bit(ENABLE_VAL_FREEING_BIT, ENABLE_BITOPS(enabler));
->     2277 
-> --> 2278                         if (!test_bit(ENABLE_VAL_FAULTING_BIT, ENABLE_BITOPS(enabler)))
-> 
-> This patch just warns about suspicious casting really...  There is a
-> hidden cast in ENABLE_BITOPS().
-> 
-> The concern is that this would lead to memory corruption on big endian
-> 64bit machines.  Those are not super common in real life...  But why not
-> just declare enabler->values as an unsigned long.  64bit systems are
-> going to have a struct hole after ->values anyway so it doesn't use any
-> more space than before.
+> diff --git a/Documentation/trace/ftrace.rst b/Documentation/trace/ftrace.rst
+> index aaebb821912e..d5766229c71a 100644
+> --- a/Documentation/trace/ftrace.rst
+> +++ b/Documentation/trace/ftrace.rst
+> @@ -350,6 +350,19 @@ of ftrace. Here is a list of some of the key files:
+>  	an 'I' will be displayed on the same line as the function that
+>  	can be overridden.
+>  
+> +	If a non ftrace trampoline is attached (BPF) a 'D' will be displayed.
+> +	Note, normal ftrace trampolines can also be attached, but only one
+> +	"direct" trampoline can be attached to a given function at a time.
+> +
+> +	Some architectures can not call direct trampolines, but instead have
+> +	the ftrace ops function located above the function entry point. In
+> +	such cases an 'O' will be displayed.
+> +
+> +	If a function had either the "ip modify" or a "direct" call attached to
+> +	it in the past, a 'M' will be shown. This flag is never cleared. It is
+> +	used to know if a function was every modified by the ftrace infrastructure,
+> +	and can be used for debugging.
+> +
+>  	If the architecture supports it, it will also show what callback
+>  	is being directly called by the function. If the count is greater
+>  	than 1 it most likely will be ftrace_ops_list_func().
+> @@ -359,6 +372,18 @@ of ftrace. Here is a list of some of the key files:
+>  	its address will be printed as well as the function that the
+>  	trampoline calls.
+>  
+> +  touched_functions:
+> +
+> +	This file contains all the functions that ever had a function callback
+> +	to it via the ftrace infrastructure. It has the same format as
+> +	enabled_functions but shows all functions that have every been
+> +	traced.
+> +
+> +	To see any function that has every been modified by "ip modify" or a
+> +	direct trampoline, one can perform the following command:
+> +
+> +	grep ' M ' /sys/kernel/tracing/touched_functions
+> +
+>    function_profile_enabled:
+>  
+>  	When set it will enable all functions with either the function
+> diff --git a/include/linux/ftrace.h b/include/linux/ftrace.h
+> index 327046f1278d..7dffd740e784 100644
+> --- a/include/linux/ftrace.h
+> +++ b/include/linux/ftrace.h
+> @@ -549,6 +549,7 @@ bool is_ftrace_trampoline(unsigned long addr);
+>   *  CALL_OPS - the record can use callsite-specific ops
+>   *  CALL_OPS_EN - the function is set up to use callsite-specific ops
+>   *  TOUCHED  - A callback was added since boot up
+> + *  MODIFIED - The function had IPMODIFY or DIRECT attached to it
+>   *
+>   * When a new ftrace_ops is registered and wants a function to save
+>   * pt_regs, the rec->flags REGS is set. When the function has been
+> @@ -569,9 +570,10 @@ enum {
+>  	FTRACE_FL_CALL_OPS	= (1UL << 22),
+>  	FTRACE_FL_CALL_OPS_EN	= (1UL << 21),
+>  	FTRACE_FL_TOUCHED	= (1UL << 20),
+> +	FTRACE_FL_MODIFIED	= (1UL << 19),
+>  };
+>  
+> -#define FTRACE_REF_MAX_SHIFT	20
+> +#define FTRACE_REF_MAX_SHIFT	19
+>  #define FTRACE_REF_MAX		((1UL << FTRACE_REF_MAX_SHIFT) - 1)
+>  
+>  #define ftrace_rec_count(rec)	((rec)->flags & FTRACE_REF_MAX)
+> diff --git a/kernel/trace/ftrace.c b/kernel/trace/ftrace.c
+> index db8532a4d5c8..885845fc851d 100644
+> --- a/kernel/trace/ftrace.c
+> +++ b/kernel/trace/ftrace.c
+> @@ -46,7 +46,8 @@
+>  #include "trace_stat.h"
+>  
+>  /* Flags that do not get reset */
+> -#define FTRACE_NOCLEAR_FLAGS	(FTRACE_FL_DISABLED | FTRACE_FL_TOUCHED)
+> +#define FTRACE_NOCLEAR_FLAGS	(FTRACE_FL_DISABLED | FTRACE_FL_TOUCHED | \
+> +				 FTRACE_FL_MODIFIED)
+>  
+>  #define FTRACE_INVALID_FUNCTION		"__ftrace_invalid_address__"
+>  
+> @@ -2273,6 +2274,10 @@ static int ftrace_check_record(struct dyn_ftrace *rec, bool enable, bool update)
+>  					rec->flags &= ~FTRACE_FL_TRAMP_EN;
+>  			}
+>  
+> +			/* Keep track of anything that modifies the function */
+> +			if (rec->flags & (FTRACE_FL_DIRECT | FTRACE_FL_IPMODIFY))
+> +				rec->flags |= FTRACE_FL_MODIFIED;
+> +
+>  			if (flag & FTRACE_FL_DIRECT) {
+>  				/*
+>  				 * If there's only one user (direct_ops helper)
+> @@ -3866,12 +3871,13 @@ static int t_show(struct seq_file *m, void *v)
+>  	if (iter->flags & (FTRACE_ITER_ENABLED | FTRACE_ITER_TOUCHED)) {
+>  		struct ftrace_ops *ops;
+>  
+> -		seq_printf(m, " (%ld)%s%s%s%s",
+> +		seq_printf(m, " (%ld)%s%s%s%s%s",
+>  			   ftrace_rec_count(rec),
+>  			   rec->flags & FTRACE_FL_REGS ? " R" : "  ",
+>  			   rec->flags & FTRACE_FL_IPMODIFY ? " I" : "  ",
+>  			   rec->flags & FTRACE_FL_DIRECT ? " D" : "  ",
+> -			   rec->flags & FTRACE_FL_CALL_OPS ? " O" : "  ");
+> +			   rec->flags & FTRACE_FL_CALL_OPS ? " O" : "  ",
+> +			   rec->flags & FTRACE_FL_MODIFIED ? " M " : "   ");
+>  		if (rec->flags & FTRACE_FL_TRAMP_EN) {
+>  			ops = ftrace_find_tramp_ops_any(rec);
+>  			if (ops) {
+> -- 
+> 2.39.2
 > 
 
-Good catch and points, I'll work on a fix. Changing to unsigned long vs
-int requires a few places to change as well, but I think is the right
-choice. The values is masked and passed as the bit to set/clear in
-other places I'll need to clean up.
 
->     2279                                 user_event_enabler_destroy(enabler);
->     2280 
->     2281                         /* Removed at least one */
->     2282                         ret = 0;
->     2283                 }
->     2284 
->     2285         mutex_unlock(&event_mutex);
->     2286 
->     2287         /* Ensure bit is now cleared for user, regardless of event status */
->     2288         if (!ret)
->     2289                 ret = user_event_mm_clear_bit(mm, reg.disable_addr,
->     2290                                               reg.disable_bit);
->     2291 
->     2292         return ret;
->     2293 }
-> 
-> regards,
-> dan carpenter
-
-Thanks,
--Beau
+-- 
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
