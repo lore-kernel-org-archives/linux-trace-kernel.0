@@ -2,291 +2,118 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 18100C77B7C
-	for <linux-trace-kernel@archiver.kernel.org>; Fri,  5 May 2023 16:12:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AA957C77B7C
+	for <linux-trace-kernel@archiver.kernel.org>; Fri,  5 May 2023 20:59:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231686AbjEEQMS (ORCPT
+        id S231271AbjEEU7N (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Fri, 5 May 2023 12:12:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51638 "EHLO
+        Fri, 5 May 2023 16:59:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44728 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231236AbjEEQMR (ORCPT
+        with ESMTP id S233185AbjEEU7L (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Fri, 5 May 2023 12:12:17 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 096DF11D96;
-        Fri,  5 May 2023 09:12:16 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 9B49063F0D;
-        Fri,  5 May 2023 16:12:15 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 073E9C433EF;
-        Fri,  5 May 2023 16:12:13 +0000 (UTC)
-Date:   Fri, 5 May 2023 12:12:12 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
-Cc:     linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Florent Revest <revest@chromium.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Martin KaFai Lau <martin.lau@linux.dev>, bpf@vger.kernel.org
-Subject: Re: [PATCH v9.1 02/11] tracing/probes: Add fprobe events for
- tracing function entry and exit.
-Message-ID: <20230505121212.7569c9b9@gandalf.local.home>
-In-Reply-To: <168299385687.3242086.18384268741128867952.stgit@mhiramat.roam.corp.google.com>
-References: <168299383880.3242086.7182498102007986127.stgit@mhiramat.roam.corp.google.com>
-        <168299385687.3242086.18384268741128867952.stgit@mhiramat.roam.corp.google.com>
-X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+        Fri, 5 May 2023 16:59:11 -0400
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id B1EF44EE1;
+        Fri,  5 May 2023 13:59:04 -0700 (PDT)
+Received: from W11-BEAU-MD.localdomain (unknown [76.135.27.212])
+        by linux.microsoft.com (Postfix) with ESMTPSA id 00CEF20EA205;
+        Fri,  5 May 2023 13:59:03 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 00CEF20EA205
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+        s=default; t=1683320344;
+        bh=Sy+d1mqucnUH/6CC12rPWwsujA9U/FCYF4OoGbHtNc0=;
+        h=From:To:Cc:Subject:Date:From;
+        b=kqbbjL167LT11+ZWPWWZ8LrgjqgxyKUm0TBDZBDHDeDEg+ZFonBELkxv3OKKaHCUV
+         vxiICGhP8bjW7aY2DU0lTw3gu3CMBvw7mHKpXhQ1MAjMLERihdMf9hWPlonFm1i5I2
+         SKTcxR8gGr/4WR6SR2oRkNrZ9XmcN2PyppJ/wWVY=
+From:   Beau Belgrave <beaub@linux.microsoft.com>
+To:     rostedt@goodmis.org, mhiramat@kernel.org
+Cc:     linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+        dan.carpenter@linaro.org
+Subject: [PATCH] tracing/user_events: Use long vs int for atomic bit ops
+Date:   Fri,  5 May 2023 13:58:55 -0700
+Message-Id: <20230505205855.6407-1-beaub@linux.microsoft.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On Tue,  2 May 2023 11:17:36 +0900
-"Masami Hiramatsu (Google)" <mhiramat@kernel.org> wrote:
+Each event stores a int to track which bit to set/clear when enablement
+changes. On big endian 64-bit configurations, it's possible this could
+cause memory corruption when it's used for atomic bit operations.
 
-> diff --git a/kernel/trace/trace_fprobe.c b/kernel/trace/trace_fprobe.c
-> new file mode 100644
-> index 000000000000..0049d9ef2402
-> --- /dev/null
-> +++ b/kernel/trace/trace_fprobe.c
-> @@ -0,0 +1,1053 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * Fprobe-based tracing events
-> + * Copyright (C) 2022 Google LLC.
-> + */
-> +#define pr_fmt(fmt)	"trace_fprobe: " fmt
-> +
-> +#include <linux/fprobe.h>
-> +#include <linux/module.h>
-> +#include <linux/rculist.h>
-> +#include <linux/security.h>
-> +#include <linux/uaccess.h>
-> +
-> +#include "trace_dynevent.h"
-> +#include "trace_probe.h"
-> +#include "trace_probe_kernel.h"
-> +#include "trace_probe_tmpl.h"
-> +
-> +#define FPROBE_EVENT_SYSTEM "fprobes"
-> +#define RETHOOK_MAXACTIVE_MAX 4096
-> +
-> +static int trace_fprobe_create(const char *raw_command);
-> +static int trace_fprobe_show(struct seq_file *m, struct dyn_event *ev);
-> +static int trace_fprobe_release(struct dyn_event *ev);
-> +static bool trace_fprobe_is_busy(struct dyn_event *ev);
-> +static bool trace_fprobe_match(const char *system, const char *event,
-> +			int argc, const char **argv, struct dyn_event *ev);
-> +
-> +static struct dyn_event_operations trace_fprobe_ops = {
-> +	.create = trace_fprobe_create,
-> +	.show = trace_fprobe_show,
-> +	.is_busy = trace_fprobe_is_busy,
-> +	.free = trace_fprobe_release,
-> +	.match = trace_fprobe_match,
-> +};
-> +
-> +/*
-> + * Fprobe event core functions
-> + */
-> +struct trace_fprobe {
-> +	struct dyn_event	devent;
-> +	struct fprobe		fp;
-> +	const char		*symbol;
-> +	struct trace_probe	tp;
-> +};
-> +
-> +static bool is_trace_fprobe(struct dyn_event *ev)
-> +{
-> +	return ev->ops == &trace_fprobe_ops;
-> +}
-> +
-> +static struct trace_fprobe *to_trace_fprobe(struct dyn_event *ev)
-> +{
-> +	return container_of(ev, struct trace_fprobe, devent);
-> +}
-> +
-> +/**
-> + * for_each_trace_fprobe - iterate over the trace_fprobe list
-> + * @pos:	the struct trace_fprobe * for each entry
-> + * @dpos:	the struct dyn_event * to use as a loop cursor
-> + */
-> +#define for_each_trace_fprobe(pos, dpos)	\
-> +	for_each_dyn_event(dpos)		\
-> +		if (is_trace_fprobe(dpos) && (pos = to_trace_fprobe(dpos)))
-> +
-> +static bool trace_fprobe_is_return(struct trace_fprobe *tf)
-> +{
-> +	return tf->fp.exit_handler != NULL;
-> +}
-> +
-> +static const char *trace_fprobe_symbol(struct trace_fprobe *tf)
-> +{
-> +	return tf->symbol ? tf->symbol : "unknown";
-> +}
-> +
-> +static bool trace_fprobe_is_busy(struct dyn_event *ev)
-> +{
-> +	struct trace_fprobe *tf = to_trace_fprobe(ev);
-> +
-> +	return trace_probe_is_enabled(&tf->tp);
-> +}
-> +
-> +static bool trace_fprobe_match_command_head(struct trace_fprobe *tf,
-> +					    int argc, const char **argv)
-> +{
-> +	char buf[MAX_ARGSTR_LEN + 1];
-> +
-> +	if (!argc)
-> +		return true;
-> +
-> +	snprintf(buf, sizeof(buf), "%s", trace_fprobe_symbol(tf));
-> +	if (strcmp(buf, argv[0]))
-> +		return false;
-> +	argc--; argv++;
-> +
-> +	return trace_probe_match_command_args(&tf->tp, argc, argv);
-> +}
-> +
-> +static bool trace_fprobe_match(const char *system, const char *event,
-> +			int argc, const char **argv, struct dyn_event *ev)
-> +{
-> +	struct trace_fprobe *tf = to_trace_fprobe(ev);
-> +
-> +	return (event[0] == '\0' ||
-> +		strcmp(trace_probe_name(&tf->tp), event) == 0) &&
-> +	    (!system || strcmp(trace_probe_group_name(&tf->tp), system) == 0) &&
-> +	    trace_fprobe_match_command_head(tf, argc, argv);
+Use unsigned long for enablement values to ensure any possible
+corruption cannot occur. Downcast to int after mask for the bit target.
 
-The above is really hard to read, and Linus hates these kinds of
-statements. Please break it up (the compiler should do the right thing).
+Link: https://lore.kernel.org/all/6f758683-4e5e-41c3-9b05-9efc703e827c@kili.mountain/
 
-Reversing the tests to return false:
+Fixes: dcb8177c1395 ("tracing/user_events: Add ioctl for disabling addresses")
+Reported-by: Dan Carpenter <dan.carpenter@linaro.org>
+Signed-off-by: Beau Belgrave <beaub@linux.microsoft.com>
+---
+ kernel/trace/trace_events_user.c | 15 ++++++++-------
+ 1 file changed, 8 insertions(+), 7 deletions(-)
 
-	if (event[0] != '\0' &&
-	    strcmp(trace_probe_name(&tf->tp), event) != 0))
-		return false;
+diff --git a/kernel/trace/trace_events_user.c b/kernel/trace/trace_events_user.c
+index b1ecd7677642..e37c7f168c44 100644
+--- a/kernel/trace/trace_events_user.c
++++ b/kernel/trace/trace_events_user.c
+@@ -101,7 +101,7 @@ struct user_event_enabler {
+ 	unsigned long		addr;
+ 
+ 	/* Track enable bit, flags, etc. Aligned for bitops. */
+-	unsigned int		values;
++	unsigned long		values;
+ };
+ 
+ /* Bits 0-5 are for the bit to update upon enable/disable (0-63 allowed) */
+@@ -116,7 +116,9 @@ struct user_event_enabler {
+ /* Only duplicate the bit value */
+ #define ENABLE_VAL_DUP_MASK ENABLE_VAL_BIT_MASK
+ 
+-#define ENABLE_BITOPS(e) ((unsigned long *)&(e)->values)
++#define ENABLE_BITOPS(e) (&(e)->values)
++
++#define ENABLE_BIT(e) ((int)((e)->values & ENABLE_VAL_BIT_MASK))
+ 
+ /* Used for asynchronous faulting in of pages */
+ struct user_event_enabler_fault {
+@@ -423,9 +425,9 @@ static int user_event_enabler_write(struct user_event_mm *mm,
+ 
+ 	/* Update bit atomically, user tracers must be atomic as well */
+ 	if (enabler->event && enabler->event->status)
+-		set_bit(enabler->values & ENABLE_VAL_BIT_MASK, ptr);
++		set_bit(ENABLE_BIT(enabler), ptr);
+ 	else
+-		clear_bit(enabler->values & ENABLE_VAL_BIT_MASK, ptr);
++		clear_bit(ENABLE_BIT(enabler), ptr);
+ 
+ 	kunmap_local(kaddr);
+ 	unpin_user_pages_dirty_lock(&page, 1, true);
+@@ -440,8 +442,7 @@ static bool user_event_enabler_exists(struct user_event_mm *mm,
+ 	struct user_event_enabler *next;
+ 
+ 	list_for_each_entry_safe(enabler, next, &mm->enablers, link) {
+-		if (enabler->addr == uaddr &&
+-		    (enabler->values & ENABLE_VAL_BIT_MASK) == bit)
++		if (enabler->addr == uaddr && ENABLE_BIT(enabler) == bit)
+ 			return true;
+ 	}
+ 
+@@ -2272,7 +2273,7 @@ static long user_events_ioctl_unreg(unsigned long uarg)
+ 
+ 	list_for_each_entry_safe(enabler, next, &mm->enablers, link)
+ 		if (enabler->addr == reg.disable_addr &&
+-		    (enabler->values & ENABLE_VAL_BIT_MASK) == reg.disable_bit) {
++		    ENABLE_BIT(enabler) == reg.disable_bit) {
+ 			set_bit(ENABLE_VAL_FREEING_BIT, ENABLE_BITOPS(enabler));
+ 
+ 			if (!test_bit(ENABLE_VAL_FAULTING_BIT, ENABLE_BITOPS(enabler)))
 
-	if (system && strcmp(trace_probe_group_name(&tf->tp), system) != 0))
-		return false;
+base-commit: 3862f86c1529fa0016de6344eb974877b4cd3838
+-- 
+2.25.1
 
-	return trace_fprobe_match_command_head(tf, argc, argv);
-
-
-> +}
-> +
-> +static bool trace_fprobe_is_registered(struct trace_fprobe *tf)
-> +{
-> +	return fprobe_is_registered(&tf->fp);
-> +}
-> +
-> +/* Note that we don't verify it, since the code does not come from user space */
-
-Verify what?
-
-Hmm, I see this is a copy of the comment from both trace_kprobe.c and
-trace_uprobe.c. I think this requires a bit more explanation (and also in
-those locations as well).
-
-> +static int
-> +process_fetch_insn(struct fetch_insn *code, void *rec, void *dest,
-> +		   void *base)
-> +{
-> +	struct pt_regs *regs = rec;
-> +	unsigned long val;
-> +
-> +retry:
-> +	/* 1st stage: get value from context */
-> +	switch (code->op) {
-> +	case FETCH_OP_REG:
-> +		val = regs_get_register(regs, code->param);
-> +		break;
-> +	case FETCH_OP_STACK:
-> +		val = regs_get_kernel_stack_nth(regs, code->param);
-> +		break;
-> +	case FETCH_OP_STACKP:
-> +		val = kernel_stack_pointer(regs);
-> +		break;
-> +	case FETCH_OP_RETVAL:
-> +		val = regs_return_value(regs);
-> +		break;
-
-
-> +	case FETCH_OP_IMM:
-> +		val = code->immediate;
-> +		break;
-> +	case FETCH_OP_COMM:
-> +		val = (unsigned long)current->comm;
-> +		break;
-> +	case FETCH_OP_DATA:
-> +		val = (unsigned long)code->data;
-> +		break;
-
-These are new and not part of trace_kprobe.c. Should we have a version that
-the two could share?
-
-Probably a helper function that can be called by these two.
-
-> +#ifdef CONFIG_HAVE_FUNCTION_ARG_ACCESS_API
-> +	case FETCH_OP_ARG:
-> +		val = regs_get_kernel_argument(regs, code->param);
-> +		break;
-> +#endif
-> +	case FETCH_NOP_SYMBOL:	/* Ignore a place holder */
-> +		code++;
-> +		goto retry;
-> +	default:
-> +		return -EILSEQ;
-> +	}
-> +	code++;
-> +
-> +	return process_fetch_insn_bottom(code, val, dest, base);
-> +}
-> +NOKPROBE_SYMBOL(process_fetch_insn)
-> +
-> +/* function entry handler */
-> +static nokprobe_inline void
-> +__fentry_trace_func(struct trace_fprobe *tf, unsigned long entry_ip,
-> +		    struct pt_regs *regs,
-> +		    struct trace_event_file *trace_file)
-> +{
-> +	struct fentry_trace_entry_head *entry;
-> +	struct trace_event_call *call = trace_probe_event_call(&tf->tp);
-> +	struct trace_event_buffer fbuffer;
-> +	int dsize;
-> +
-> +	WARN_ON(call != trace_file->event_call);
-
- WARN_ON_ONCE()?
-
-And if you are doing the check, perhaps even:
-
-	if (WARN_ON_ONCE(call != trace_file->event_call))
-		return;
-
--- Steve
-
-> +
-> +	if (trace_trigger_soft_disabled(trace_file))
-> +		return;
-> +
-> +	dsize = __get_data_size(&tf->tp, regs);
-> +
-> +	entry = trace_event_buffer_reserve(&fbuffer, trace_file,
-> +					   sizeof(*entry) + tf->tp.size + dsize);
-> +	if (!entry)
-> +		return;
-> +
-> +	fbuffer.regs = regs;
-> +	entry = fbuffer.entry = ring_buffer_event_data(fbuffer.event);
-> +	entry->ip = entry_ip;
-> +	store_trace_args(&entry[1], &tf->tp, regs, sizeof(*entry), dsize);
-> +
-> +	trace_event_buffer_commit(&fbuffer);
-> +}
-> +
