@@ -2,53 +2,42 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EFFB8C7EE22
-	for <linux-trace-kernel@archiver.kernel.org>; Fri,  5 May 2023 13:58:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9494FC77B7C
+	for <linux-trace-kernel@archiver.kernel.org>; Fri,  5 May 2023 15:20:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232024AbjEEN6M (ORCPT
+        id S232343AbjEEPUb (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Fri, 5 May 2023 09:58:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40464 "EHLO
+        Fri, 5 May 2023 11:20:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52676 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231981AbjEEN6L (ORCPT
+        with ESMTP id S231941AbjEEPUa (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Fri, 5 May 2023 09:58:11 -0400
+        Fri, 5 May 2023 11:20:30 -0400
 Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D76141569C;
-        Fri,  5 May 2023 06:58:09 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 189B71815F;
+        Fri,  5 May 2023 08:20:30 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 5976D63AE5;
-        Fri,  5 May 2023 13:58:09 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2998EC433EF;
-        Fri,  5 May 2023 13:58:07 +0000 (UTC)
-Date:   Fri, 5 May 2023 09:58:05 -0400
+        by dfw.source.kernel.org (Postfix) with ESMTPS id AA264615B9;
+        Fri,  5 May 2023 15:20:29 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1DE85C4339B;
+        Fri,  5 May 2023 15:20:27 +0000 (UTC)
+Date:   Fri, 5 May 2023 11:20:26 -0400
 From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Peter Collingbourne <pcc@google.com>
-Cc:     Marco Elver <elver@google.com>, andrey.konovalov@linux.dev,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Andrey Konovalov <andreyknvl@gmail.com>,
-        Alexander Potapenko <glider@google.com>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Andrey Ryabinin <ryabinin.a.a@gmail.com>,
-        kasan-dev@googlegroups.com, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org,
-        Andrey Konovalov <andreyknvl@google.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        linux-trace-kernel@vger.kernel.org,
-        Nick Desaulniers <ndesaulniers@google.com>
-Subject: Re: [PATCH v3 1/3] kasan: switch kunit tests to console tracepoints
-Message-ID: <20230505095805.759153de@gandalf.local.home>
-In-Reply-To: <CAMn1gO6heXaovFy6jvpWS8TFLBhTomqNuxJmt_chrd5sYtskvw@mail.gmail.com>
-References: <ebf96ea600050f00ed567e80505ae8f242633640.1666113393.git.andreyknvl@google.com>
-        <CAMn1gO7Ve4-d6vP4jvASQsTZ2maHsMF6gKHL3RXSuD9N3tAOfQ@mail.gmail.com>
-        <CANpmjNNvGL--j-20UxqX_WjeXGiAcjfDAQpfds+Orajz0ZeBsg@mail.gmail.com>
-        <CAMn1gO6reT+MTmogLOrOVoNqzLH+fKmQ2JRAGy-tDOTLx-fpyw@mail.gmail.com>
-        <CANpmjNN7Gf_aeX+Y6g0UBL-cmTGEF9zgE7hQ1VK8F+0Yeg5Rvg@mail.gmail.com>
-        <20230215143306.2d563215@rorschach.local.home>
-        <CAMn1gO4_+-0x4ibpcASy4bLeZ+7rsmjx=0AYKGVDUApUbanSrQ@mail.gmail.com>
-        <CAMn1gO6heXaovFy6jvpWS8TFLBhTomqNuxJmt_chrd5sYtskvw@mail.gmail.com>
+To:     "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
+Cc:     linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Florent Revest <revest@chromium.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Martin KaFai Lau <martin.lau@linux.dev>, bpf@vger.kernel.org
+Subject: Re: [PATCH v9.1 11/11] Documentation: tracing/probes: Add fprobe
+ event tracing document
+Message-ID: <20230505112026.6a46bcec@gandalf.local.home>
+In-Reply-To: <168299393654.3242086.4099482065080890890.stgit@mhiramat.roam.corp.google.com>
+References: <168299383880.3242086.7182498102007986127.stgit@mhiramat.roam.corp.google.com>
+        <168299393654.3242086.4099482065080890890.stgit@mhiramat.roam.corp.google.com>
 X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
@@ -57,30 +46,29 @@ Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On Mon, 1 May 2023 15:02:37 -0700
-Peter Collingbourne <pcc@google.com> wrote:
+On Tue,  2 May 2023 11:18:56 +0900
+"Masami Hiramatsu (Google)" <mhiramat@kernel.org> wrote:
 
-> > > "ftrace" is really for just the function tracing, but CONFIG_FTRACE
-> > > really should just be for the function tracing infrastructure, and
-> > > perhaps not even include trace events :-/ But at the time it was
-> > > created, it was for all the "tracers" (this was added before trace
-> > > events).  
-> >
-> > It would be great to see this cleaned up. I found this aspect of how
-> > tracing works rather confusing.
-> >
-> > So do you think it makes sense for the KASAN tests to "select TRACING"
-> > for now if the code depends on the trace event infrastructure?  
-> 
-> Any thoughts? It looks like someone else got tripped up by this:
-> https://reviews.llvm.org/D144057
+> + # cat events/fprobes/myprobe/format
+> + name: myprobe
+> + ID: 1313
+> + format:
+> + 	field:unsigned short common_type;	offset:0;	size:2;	signed:0;
+> + 	field:unsigned char common_flags;	offset:2;	size:1;	signed:0;
+> + 	field:unsigned char common_preempt_count;	offset:3;	size:1;	signed:0;
+> + 	field:int common_pid;	offset:4;	size:4;	signed:1;
+> +
+> + 	field:unsigned long __probe_ip;	offset:8;	size:8;	signed:0;
+> + 	field:u64 count;	offset:16;	size:8;	signed:0;
+> + 	field:u64 pos;	offset:24;	size:8;	signed:0;
 
-Yeah, it really does need to get cleaned up, but unfortunately it's not
-going to be a trivial change. We need to make sure it's done in a way that
-an old .config still keeps the same things enabled with the new config
-settings. That takes some trickery in the dependency.
+git complained when I pulled this in because there above lines is:
 
-I'll add this to my todo list, hopefully it doesn't fall into the abyss
-portion of that list :-p
+<space><tab>field...
+
+Where, the space should be removed.
 
 -- Steve
+
+> +
+> + print fmt: "(%lx) count=%Lu pos=0x%Lx", REC->__probe_ip, REC->count, REC->pos
