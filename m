@@ -2,118 +2,290 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AA957C77B7C
-	for <linux-trace-kernel@archiver.kernel.org>; Fri,  5 May 2023 20:59:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 372CFC77B75
+	for <linux-trace-kernel@archiver.kernel.org>; Fri,  5 May 2023 21:41:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231271AbjEEU7N (ORCPT
+        id S233575AbjEEVlT (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Fri, 5 May 2023 16:59:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44728 "EHLO
+        Fri, 5 May 2023 17:41:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39644 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233185AbjEEU7L (ORCPT
+        with ESMTP id S233594AbjEEVlR (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Fri, 5 May 2023 16:59:11 -0400
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id B1EF44EE1;
-        Fri,  5 May 2023 13:59:04 -0700 (PDT)
-Received: from W11-BEAU-MD.localdomain (unknown [76.135.27.212])
-        by linux.microsoft.com (Postfix) with ESMTPSA id 00CEF20EA205;
-        Fri,  5 May 2023 13:59:03 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 00CEF20EA205
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-        s=default; t=1683320344;
-        bh=Sy+d1mqucnUH/6CC12rPWwsujA9U/FCYF4OoGbHtNc0=;
-        h=From:To:Cc:Subject:Date:From;
-        b=kqbbjL167LT11+ZWPWWZ8LrgjqgxyKUm0TBDZBDHDeDEg+ZFonBELkxv3OKKaHCUV
-         vxiICGhP8bjW7aY2DU0lTw3gu3CMBvw7mHKpXhQ1MAjMLERihdMf9hWPlonFm1i5I2
-         SKTcxR8gGr/4WR6SR2oRkNrZ9XmcN2PyppJ/wWVY=
-From:   Beau Belgrave <beaub@linux.microsoft.com>
-To:     rostedt@goodmis.org, mhiramat@kernel.org
-Cc:     linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
-        dan.carpenter@linaro.org
-Subject: [PATCH] tracing/user_events: Use long vs int for atomic bit ops
-Date:   Fri,  5 May 2023 13:58:55 -0700
-Message-Id: <20230505205855.6407-1-beaub@linux.microsoft.com>
-X-Mailer: git-send-email 2.25.1
+        Fri, 5 May 2023 17:41:17 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4BF035BA5;
+        Fri,  5 May 2023 14:40:36 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id C10FE640F7;
+        Fri,  5 May 2023 21:40:35 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 272CEC433EF;
+        Fri,  5 May 2023 21:40:34 +0000 (UTC)
+Date:   Fri, 5 May 2023 17:40:32 -0400
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
+Cc:     linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Florent Revest <revest@chromium.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Martin KaFai Lau <martin.lau@linux.dev>, bpf@vger.kernel.org
+Subject: Re: [PATCH v9.1 05/11] tracing/probes: Move event parameter
+ fetching code to common parser
+Message-ID: <20230505174032.052cbc7c@gandalf.local.home>
+In-Reply-To: <168299388376.3242086.1033501163178915960.stgit@mhiramat.roam.corp.google.com>
+References: <168299383880.3242086.7182498102007986127.stgit@mhiramat.roam.corp.google.com>
+        <168299388376.3242086.1033501163178915960.stgit@mhiramat.roam.corp.google.com>
+X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-Each event stores a int to track which bit to set/clear when enablement
-changes. On big endian 64-bit configurations, it's possible this could
-cause memory corruption when it's used for atomic bit operations.
+On Tue,  2 May 2023 11:18:03 +0900
+"Masami Hiramatsu (Google)" <mhiramat@kernel.org> wrote:
 
-Use unsigned long for enablement values to ensure any possible
-corruption cannot occur. Downcast to int after mask for the bit target.
+> --- a/kernel/trace/trace_probe.c
+> +++ b/kernel/trace/trace_probe.c
+> @@ -283,27 +283,53 @@ int traceprobe_parse_event_name(const char **pevent, const char **pgroup,
+>  	return 0;
+>  }
+>  
+> +static int parse_trace_event_arg(char *arg, struct fetch_insn *code,
+> +				 struct traceprobe_parse_context *ctx)
+> +{
+> +	struct ftrace_event_field *field;
+> +	struct list_head *head;
+> +
+> +	head = trace_get_fields(ctx->event);
+> +	list_for_each_entry(field, head, link) {
+> +		if (!strcmp(arg, field->name)) {
+> +			code->op = FETCH_OP_TP_ARG;
+> +			code->data = field;
+> +			return 0;
+> +		}
+> +	}
+> +	return -ENOENT;
+> +}
+> +
+>  #define PARAM_MAX_STACK (THREAD_SIZE / sizeof(unsigned long))
+>  
+>  static int parse_probe_vars(char *arg, const struct fetch_type *t,
+> -			struct fetch_insn *code, unsigned int flags, int offs)
+> +			    struct fetch_insn *code,
+> +			    struct traceprobe_parse_context *ctx)
+>  {
+>  	unsigned long param;
+>  	int ret = 0;
+>  	int len;
+>  
+> -	if (flags & TPARG_FL_TEVENT) {
+> +	if (ctx->flags & TPARG_FL_TEVENT) {
+>  		if (code->data)
+>  			return -EFAULT;
+> -		code->data = kstrdup(arg, GFP_KERNEL);
+> -		if (!code->data)
+> -			return -ENOMEM;
+> -		code->op = FETCH_OP_TP_ARG;
+> -	} else if (strcmp(arg, "retval") == 0) {
+> -		if (flags & TPARG_FL_RETURN) {
+> +		ret = parse_trace_event_arg(arg, code, ctx);
+> +		if (!ret)
+> +			return 0;
+> +		if (strcmp(arg, "comm") == 0 || strcmp(arg, "COMM") == 0) {
+> +			code->op = FETCH_OP_COMM;
+> +			return 0;
+> +		}
+> +		/* backward compatibility */
+> +		ctx->offset = 0;
+> +		goto inval_var;
+> +	}
 
-Link: https://lore.kernel.org/all/6f758683-4e5e-41c3-9b05-9efc703e827c@kili.mountain/
+So this is a bit inconsistent in this function. We have here an if
+statement that returns 0 on success, and jumps to inval_var if it reaches
+the end.
 
-Fixes: dcb8177c1395 ("tracing/user_events: Add ioctl for disabling addresses")
-Reported-by: Dan Carpenter <dan.carpenter@linaro.org>
-Signed-off-by: Beau Belgrave <beaub@linux.microsoft.com>
----
- kernel/trace/trace_events_user.c | 15 ++++++++-------
- 1 file changed, 8 insertions(+), 7 deletions(-)
+The rest of the if statements below, also goes to inval_var, or returns
+error, or just falls through the if statement to return ret. It's somewhat
+random.
 
-diff --git a/kernel/trace/trace_events_user.c b/kernel/trace/trace_events_user.c
-index b1ecd7677642..e37c7f168c44 100644
---- a/kernel/trace/trace_events_user.c
-+++ b/kernel/trace/trace_events_user.c
-@@ -101,7 +101,7 @@ struct user_event_enabler {
- 	unsigned long		addr;
+This should be cleaned up (see patch at the end).
+
+> +
+> +	if (strcmp(arg, "retval") == 0) {
+> +		if (ctx->flags & TPARG_FL_RETURN) {
+>  			code->op = FETCH_OP_RETVAL;
+>  		} else {
+> -			trace_probe_log_err(offs, RETVAL_ON_PROBE);
+> +			trace_probe_log_err(ctx->offset, RETVAL_ON_PROBE);
+>  			ret = -EINVAL;
+>  		}
+>  	} else if ((len = str_has_prefix(arg, "stack"))) {
+> @@ -313,9 +339,9 @@ static int parse_probe_vars(char *arg, const struct fetch_type *t,
+>  			ret = kstrtoul(arg + len, 10, &param);
+>  			if (ret) {
+>  				goto inval_var;
+> -			} else if ((flags & TPARG_FL_KERNEL) &&
+> +			} else if ((ctx->flags & TPARG_FL_KERNEL) &&
+>  				    param > PARAM_MAX_STACK) {
+> -				trace_probe_log_err(offs, BAD_STACK_NUM);
+> +				trace_probe_log_err(ctx->offset, BAD_STACK_NUM);
+>  				ret = -EINVAL;
+>  			} else {
+>  				code->op = FETCH_OP_STACK;
+> @@ -326,13 +352,13 @@ static int parse_probe_vars(char *arg, const struct fetch_type *t,
+>  	} else if (strcmp(arg, "comm") == 0 || strcmp(arg, "COMM") == 0) {
+>  		code->op = FETCH_OP_COMM;
+>  #ifdef CONFIG_HAVE_FUNCTION_ARG_ACCESS_API
+> -	} else if (tparg_is_function_entry(flags) &&
+> +	} else if (tparg_is_function_entry(ctx->flags) &&
+>  		   (len = str_has_prefix(arg, "arg"))) {
+>  		ret = kstrtoul(arg + len, 10, &param);
+>  		if (ret) {
+>  			goto inval_var;
+>  		} else if (!param || param > PARAM_MAX_STACK) {
+> -			trace_probe_log_err(offs, BAD_ARG_NUM);
+> +			trace_probe_log_err(ctx->offset, BAD_ARG_NUM);
+>  			return -EINVAL;
+>  		}
+>  		code->op = FETCH_OP_ARG;
+> @@ -341,7 +367,7 @@ static int parse_probe_vars(char *arg, const struct fetch_type *t,
+>  		 * The tracepoint probe will probe a stub function, and the
+>  		 * first parameter of the stub is a dummy and should be ignored.
+>  		 */
+> -		if (flags & TPARG_FL_TPOINT)
+> +		if (ctx->flags & TPARG_FL_TPOINT)
+>  			code->param++;
+>  #endif
+>  	} else
+> @@ -350,7 +376,7 @@ static int parse_probe_vars(char *arg, const struct fetch_type *t,
+>  	return ret;
+>  
+>  inval_var:
+> -	trace_probe_log_err(offs, BAD_VAR);
+> +	trace_probe_log_err(ctx->offset, BAD_VAR);
+>  	return -EINVAL;
+>  }
+>  
+
+
+diff --git a/kernel/trace/trace_probe.c b/kernel/trace/trace_probe.c
+index 84a9f0446390..a30aab8cef7f 100644
+--- a/kernel/trace/trace_probe.c
++++ b/kernel/trace/trace_probe.c
+@@ -307,6 +307,7 @@ static int parse_probe_vars(char *arg, const struct fetch_type *t,
+ 			    struct traceprobe_parse_context *ctx)
+ {
+ 	unsigned long param;
++	int err = BAD_VAR;
+ 	int ret = 0;
+ 	int len;
  
- 	/* Track enable bit, flags, etc. Aligned for bitops. */
--	unsigned int		values;
-+	unsigned long		values;
- };
- 
- /* Bits 0-5 are for the bit to update upon enable/disable (0-63 allowed) */
-@@ -116,7 +116,9 @@ struct user_event_enabler {
- /* Only duplicate the bit value */
- #define ENABLE_VAL_DUP_MASK ENABLE_VAL_BIT_MASK
- 
--#define ENABLE_BITOPS(e) ((unsigned long *)&(e)->values)
-+#define ENABLE_BITOPS(e) (&(e)->values)
-+
-+#define ENABLE_BIT(e) ((int)((e)->values & ENABLE_VAL_BIT_MASK))
- 
- /* Used for asynchronous faulting in of pages */
- struct user_event_enabler_fault {
-@@ -423,9 +425,9 @@ static int user_event_enabler_write(struct user_event_mm *mm,
- 
- 	/* Update bit atomically, user tracers must be atomic as well */
- 	if (enabler->event && enabler->event->status)
--		set_bit(enabler->values & ENABLE_VAL_BIT_MASK, ptr);
-+		set_bit(ENABLE_BIT(enabler), ptr);
- 	else
--		clear_bit(enabler->values & ENABLE_VAL_BIT_MASK, ptr);
-+		clear_bit(ENABLE_BIT(enabler), ptr);
- 
- 	kunmap_local(kaddr);
- 	unpin_user_pages_dirty_lock(&page, 1, true);
-@@ -440,8 +442,7 @@ static bool user_event_enabler_exists(struct user_event_mm *mm,
- 	struct user_event_enabler *next;
- 
- 	list_for_each_entry_safe(enabler, next, &mm->enablers, link) {
--		if (enabler->addr == uaddr &&
--		    (enabler->values & ENABLE_VAL_BIT_MASK) == bit)
-+		if (enabler->addr == uaddr && ENABLE_BIT(enabler) == bit)
- 			return true;
+@@ -322,45 +323,61 @@ static int parse_probe_vars(char *arg, const struct fetch_type *t,
+ 		}
+ 		/* backward compatibility */
+ 		ctx->offset = 0;
+-		goto inval_var;
++		goto inval;
  	}
  
-@@ -2272,7 +2273,7 @@ static long user_events_ioctl_unreg(unsigned long uarg)
+ 	if (strcmp(arg, "retval") == 0) {
+ 		if (ctx->flags & TPARG_FL_RETURN) {
+ 			code->op = FETCH_OP_RETVAL;
+-		} else {
+-			trace_probe_log_err(ctx->offset, RETVAL_ON_PROBE);
+-			ret = -EINVAL;
++			return 0;
+ 		}
+-	} else if ((len = str_has_prefix(arg, "stack"))) {
++		err = RETVAL_ON_PROBE;
++		ret = -EINVAL;
++		goto inval;
++	}
++
++	if ((len = str_has_prefix(arg, "stack"))) {
++
+ 		if (arg[len] == '\0') {
+ 			code->op = FETCH_OP_STACKP;
+-		} else if (isdigit(arg[len])) {
++			return 0;
++		}
++
++		if (isdigit(arg[len])) {
+ 			ret = kstrtoul(arg + len, 10, &param);
+-			if (ret) {
+-				goto inval_var;
+-			} else if ((ctx->flags & TPARG_FL_KERNEL) &&
+-				    param > PARAM_MAX_STACK) {
+-				trace_probe_log_err(ctx->offset, BAD_STACK_NUM);
++			if (ret)
++				goto inval;
++
++			if ((ctx->flags & TPARG_FL_KERNEL) &&
++			    param > PARAM_MAX_STACK) {
++				err = BAD_STACK_NUM;
+ 				ret = -EINVAL;
+-			} else {
+-				code->op = FETCH_OP_STACK;
+-				code->param = (unsigned int)param;
++				goto inval;
+ 			}
+-		} else
+-			goto inval_var;
+-	} else if (strcmp(arg, "comm") == 0 || strcmp(arg, "COMM") == 0) {
++			code->op = FETCH_OP_STACK;
++			code->param = (unsigned int)param;
++			return 0;
++		}
++		goto inval;
++	}
++
++	if (strcmp(arg, "comm") == 0 || strcmp(arg, "COMM") == 0) {
+ 		code->op = FETCH_OP_COMM;
++		return 0;
++	}
++
+ #ifdef CONFIG_HAVE_FUNCTION_ARG_ACCESS_API
+-	} else if (tparg_is_function_entry(ctx->flags) &&
+-		   (len = str_has_prefix(arg, "arg"))) {
++	if (tparg_is_function_entry(ctx->flags) &&
++	    (len = str_has_prefix(arg, "arg"))) {
+ 		ret = kstrtoul(arg + len, 10, &param);
+-		if (ret) {
+-			goto inval_var;
+-		} else if (!param || param > PARAM_MAX_STACK) {
+-			trace_probe_log_err(ctx->offset, BAD_ARG_NUM);
+-			return -EINVAL;
++		if (ret)
++			goto inval;
++
++		if (!param || param > PARAM_MAX_STACK) {
++			err = BAD_ARG_NUM;
++			goto inval;
+ 		}
++
+ 		code->op = FETCH_OP_ARG;
+ 		code->param = (unsigned int)param - 1;
+ 		/*
+@@ -369,14 +386,11 @@ static int parse_probe_vars(char *arg, const struct fetch_type *t,
+ 		 */
+ 		if (ctx->flags & TPARG_FL_TPOINT)
+ 			code->param++;
++		return 0;
+ #endif
+-	} else
+-		goto inval_var;
+-
+-	return ret;
  
- 	list_for_each_entry_safe(enabler, next, &mm->enablers, link)
- 		if (enabler->addr == reg.disable_addr &&
--		    (enabler->values & ENABLE_VAL_BIT_MASK) == reg.disable_bit) {
-+		    ENABLE_BIT(enabler) == reg.disable_bit) {
- 			set_bit(ENABLE_VAL_FREEING_BIT, ENABLE_BITOPS(enabler));
+-inval_var:
+-	trace_probe_log_err(ctx->offset, BAD_VAR);
++inval:
++	trace_probe_log_err(ctx->offset, err);
+ 	return -EINVAL;
+ }
  
- 			if (!test_bit(ENABLE_VAL_FAULTING_BIT, ENABLE_BITOPS(enabler)))
-
-base-commit: 3862f86c1529fa0016de6344eb974877b4cd3838
--- 
-2.25.1
-
