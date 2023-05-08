@@ -2,351 +2,479 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E141AC77B73
-	for <linux-trace-kernel@archiver.kernel.org>; Mon,  8 May 2023 08:11:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E9C42C77B73
+	for <linux-trace-kernel@archiver.kernel.org>; Mon,  8 May 2023 09:32:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229616AbjEHILy (ORCPT
+        id S232854AbjEHJcd (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Mon, 8 May 2023 04:11:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41886 "EHLO
+        Mon, 8 May 2023 05:32:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35082 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233170AbjEHILx (ORCPT
+        with ESMTP id S230187AbjEHJcT (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Mon, 8 May 2023 04:11:53 -0400
-Received: from mailout4.samsung.com (mailout4.samsung.com [203.254.224.34])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ABB493C34
-        for <linux-trace-kernel@vger.kernel.org>; Mon,  8 May 2023 01:11:48 -0700 (PDT)
-Received: from epcas2p3.samsung.com (unknown [182.195.41.55])
-        by mailout4.samsung.com (KnoxPortal) with ESMTP id 20230508081144epoutp04b7890f103f9b20fa91026db2582a0925~dHM1z8Jiy0497604976epoutp04Z
-        for <linux-trace-kernel@vger.kernel.org>; Mon,  8 May 2023 08:11:44 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout4.samsung.com 20230508081144epoutp04b7890f103f9b20fa91026db2582a0925~dHM1z8Jiy0497604976epoutp04Z
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1683533504;
-        bh=yDLIrghah5Nq9w1zHb2JAr9X6r6l9mF3EzuVTGurF8Q=;
-        h=Subject:Reply-To:From:To:CC:Date:References:From;
-        b=Qd8a0i7zCGSmgucPJbG+NwEq4e5aRivJ9U5ThnzGk1yddIIJUEJHJIDkKGnzCd4ar
-         5qlJW95lCDrhZUXOVXhgxp5iZGUU2Z3cyx8Xqb2DSHJ8GxrwqKkj9Y/6Yg+wgxmanv
-         mE5atB4QtG+QDsaggjsJnEdGvq6VvTFlzdgZontA=
-Received: from epsnrtp2.localdomain (unknown [182.195.42.163]) by
-        epcas2p2.samsung.com (KnoxPortal) with ESMTP id
-        20230508081143epcas2p2f6e6149ac35656956768d00085b1e8a2~dHM1KzgTr2764627646epcas2p2-;
-        Mon,  8 May 2023 08:11:43 +0000 (GMT)
-Received: from epsmges2p2.samsung.com (unknown [182.195.36.98]) by
-        epsnrtp2.localdomain (Postfix) with ESMTP id 4QFDXH1bHRz4x9Q4; Mon,  8 May
-        2023 08:11:43 +0000 (GMT)
-X-AuditID: b6c32a46-b23fd7000001438d-1c-6458aebf90eb
-Received: from epcas2p2.samsung.com ( [182.195.41.54]) by
-        epsmges2p2.samsung.com (Symantec Messaging Gateway) with SMTP id
-        D0.8E.17293.FBEA8546; Mon,  8 May 2023 17:11:43 +0900 (KST)
-Mime-Version: 1.0
-Subject: [PATCH v6] f2fs: add async reset zone command support
-Reply-To: daejun7.park@samsung.com
-Sender: Daejun Park <daejun7.park@samsung.com>
-From:   Daejun Park <daejun7.park@samsung.com>
-To:     "jaegeuk@kernel.org" <jaegeuk@kernel.org>,
-        "chao@kernel.org" <chao@kernel.org>,
-        "rostedt@goodmis.org" <rostedt@goodmis.org>,
-        "mhiramat@kernel.org" <mhiramat@kernel.org>,
-        "linux-f2fs-devel@lists.sourceforge.net" 
-        <linux-f2fs-devel@lists.sourceforge.net>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-trace-kernel@vger.kernel.org" 
-        <linux-trace-kernel@vger.kernel.org>
-CC:     Seokhwan Kim <sukka.kim@samsung.com>,
-        Yonggil Song <yonggil.song@samsung.com>,
-        beomsu kim <beomsu7.kim@samsung.com>,
-        Daejun Park <daejun7.park@samsung.com>
-X-Priority: 3
-X-Content-Kind-Code: NORMAL
-X-CPGS-Detection: blocking_info_exchange
-X-Drm-Type: N,general
-X-Msg-Generator: Mail
-X-Msg-Type: PERSONAL
-X-Reply-Demand: N
-Message-ID: <20230508081042epcms2p8a637deae7de1829f54614e09d5fde5e5@epcms2p8>
-Date:   Mon, 08 May 2023 17:10:42 +0900
-X-CMS-MailID: 20230508081042epcms2p8a637deae7de1829f54614e09d5fde5e5
+        Mon, 8 May 2023 05:32:19 -0400
+Received: from szxga03-in.huawei.com (szxga03-in.huawei.com [45.249.212.189])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D9DE82269E;
+        Mon,  8 May 2023 02:32:11 -0700 (PDT)
+Received: from dggpeml500012.china.huawei.com (unknown [172.30.72.55])
+        by szxga03-in.huawei.com (SkyGuard) with ESMTP id 4QFGHk3MWHzpWB4;
+        Mon,  8 May 2023 17:30:58 +0800 (CST)
+Received: from [10.67.110.218] (10.67.110.218) by
+ dggpeml500012.china.huawei.com (7.185.36.15) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.23; Mon, 8 May 2023 17:32:09 +0800
+Message-ID: <ba8b6072-42b6-4275-83fd-5497654d77db@huawei.com>
+Date:   Mon, 8 May 2023 17:32:09 +0800
+MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.6.0
+Subject: Re: [PATCH v2 2/9] eventfs: adding eventfs dir add functions
+Content-Language: en-US
+To:     Ajay Kaher <akaher@vmware.com>, <rostedt@goodmis.org>,
+        <mhiramat@kernel.org>, <shuah@kernel.org>
+CC:     <linux-kernel@vger.kernel.org>,
+        <linux-trace-kernel@vger.kernel.org>,
+        <linux-kselftest@vger.kernel.org>, <chinglinyu@google.com>,
+        <namit@vmware.com>, <srivatsab@vmware.com>,
+        <srivatsa@csail.mit.edu>, <amakhalov@vmware.com>,
+        <vsirnapalli@vmware.com>, <tkundu@vmware.com>,
+        <er.ajay.kaher@gmail.com>
+References: <1683026600-13485-1-git-send-email-akaher@vmware.com>
+ <1683026600-13485-3-git-send-email-akaher@vmware.com>
+From:   Zheng Yejian <zhengyejian1@huawei.com>
+In-Reply-To: <1683026600-13485-3-git-send-email-akaher@vmware.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
 Content-Transfer-Encoding: 7bit
-Content-Type: text/plain; charset="utf-8"
-X-Sendblock-Type: AUTO_CONFIDENTIAL
-CMS-TYPE: 102P
-X-CPGSPASS: Y
-X-CPGSPASS: Y
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprJJsWRmVeSWpSXmKPExsWy7bCmme7+dREpBse3c1pcmPeR2eL01LNM
-        Fi8PaVqsehBu8WT9LGaLS4vcLS7vmsNmcWT9WRaLxcvVLPZ1PGCyWNUxl9Fi6vkjTA48Hi37
-        brF7bFrVyeaxe8FnJo++LasYPT5vkgtgjcq2yUhNTEktUkjNS85PycxLt1XyDo53jjc1MzDU
-        NbS0MFdSyEvMTbVVcvEJ0HXLzAG6TUmhLDGnFCgUkFhcrKRvZ1OUX1qSqpCRX1xiq5RakJJT
-        YF6gV5yYW1yal66Xl1piZWhgYGQKVJiQnbH56wPGglsOFTebfjI3ML4z7WLk5JAQMJFY8uEK
-        axcjF4eQwA5Gie6zv9m7GDk4eAUEJf7uEAapERawk9i8bzITiC0koCSx/uIsdoi4nsSth2sY
-        QWw2AR2J6Sfug8VFBKYySxzelAoyk1lgMaPE1v8XWSCW8UrMaH8KZUtLbF++lRHC1pD4sayX
-        GcIWlbi5+i07jP3+2HyoGhGJ1ntnoWoEJR783A0Vl5S4PXcTVH2+xP8ry6HsGoltB+ZB2foS
-        1zo2gu3lFfCV+H7tFdiPLAKqEv0LMyBKXCT6nj4CG8ksIC+x/e0cZpASZgFNifW79EFMCQFl
-        iSO3WCAq+CQ6Dv9lh3mqYeNvrOwd854wQdhqEut+rmeCGCMjcWse4wRGpVmIYJ6FZO0shLUL
-        GJlXMYqlFhTnpqcWGxUYwWM2OT93EyM4jWq57WCc8vaD3iFGJg7GQ4wSHMxKIryrEsJShHhT
-        EiurUovy44tKc1KLDzGaAv07kVlKNDkfmMjzSuINTSwNTMzMDM2NTA3MlcR5pW1PJgsJpCeW
-        pGanphakFsH0MXFwSjUw2bDuvnc2dIMWJ3PNgZaAknfh77z8Xb5fqj1VfPOE1Kq0JsZbxy3b
-        FcWahUQtVJw0YrSNnE8WxV+S7dSbWOVopZzz/aGQJdeyBV8vnV/7zUbnnEmSzy233cdSI5h8
-        L89WvbTqwaNfD8+e053F1Hvm3vMXvK97v8tePWsz/6mBf6KAhIR5kedvP2kVIUuHhZkZ+2as
-        r70TZphudfv1nmUpd69wX9pWms+1JGeRhcDGW59zBb61vjmlscBkZou7keDhZbJL2XsCJkg8
-        mlVoeUhEMtxeYd2HL80FTJfz4y0nrc0VOM7ecX7Lgxubu3evbciw38zVycD7xG/jho6axcvj
-        Vt9pvbWpKTqg0/rAvc96SizFGYmGWsxFxYkAkK26GCwEAAA=
-DLP-Filter: Pass
+X-Originating-IP: [10.67.110.218]
+X-ClientProxiedBy: dggems705-chm.china.huawei.com (10.3.19.182) To
+ dggpeml500012.china.huawei.com (7.185.36.15)
 X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20230508081042epcms2p8a637deae7de1829f54614e09d5fde5e5
-References: <CGME20230508081042epcms2p8a637deae7de1829f54614e09d5fde5e5@epcms2p8>
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-v5 -> v6
-Added trace_f2fs_iostat support for zone reset command.
+On 2023/5/2 19:23, Ajay Kaher wrote:
+> Adding eventfs_file structure which will hold properties of file or dir.
+> 
+> Adding following functions to add dir in eventfs:
+> 
+> eventfs_create_events_dir() will directly create events dir with-in
+> tracing folder.
+> 
+> eventfs_add_subsystem_dir() will adds the info of subsystem_dir to
+> eventfs and dynamically create subsystem_dir as and when requires.
+> 
+> eventfs_add_dir() will add the info of dir (which is with-in
+> subsystem_dir) to eventfs and dynamically create these dir as
+> and when requires.
+> 
+> Signed-off-by: Ajay Kaher <akaher@vmware.com>
+> Co-developed-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+> Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+> Tested-by: Ching-lin Yu <chinglinyu@google.com>
+> ---
+>   fs/tracefs/Makefile      |   1 +
+>   fs/tracefs/event_inode.c | 252 +++++++++++++++++++++++++++++++++++++++
+>   include/linux/tracefs.h  |  29 +++++
+>   kernel/trace/trace.h     |   1 +
+>   4 files changed, 283 insertions(+)
+>   create mode 100644 fs/tracefs/event_inode.c
+> 
+> diff --git a/fs/tracefs/Makefile b/fs/tracefs/Makefile
+> index 7c35a282b..73c56da8e 100644
+> --- a/fs/tracefs/Makefile
+> +++ b/fs/tracefs/Makefile
+> @@ -1,5 +1,6 @@
+>   # SPDX-License-Identifier: GPL-2.0-only
+>   tracefs-objs	:= inode.o
+> +tracefs-objs	+= event_inode.o
+>   
+>   obj-$(CONFIG_TRACING)	+= tracefs.o
+>   
+> diff --git a/fs/tracefs/event_inode.c b/fs/tracefs/event_inode.c
+> new file mode 100644
+> index 000000000..82caba7e9
+> --- /dev/null
+> +++ b/fs/tracefs/event_inode.c
+> @@ -0,0 +1,252 @@
+> +// SPDX-License-Identifier: GPL-2.0-only
+> +/*
+> + *  event_inode.c - part of tracefs, a pseudo file system for activating tracing
+> + *
+> + *  Copyright (C) 2020-22 VMware Inc, author: Steven Rostedt (VMware) <rostedt@goodmis.org>
+> + *  Copyright (C) 2020-22 VMware Inc, author: Ajay Kaher <akaher@vmware.com>
+> + *
+> + *  eventfs is used to show trace events with one set of dentries
+> + *
+> + *  eventfs stores meta-data of files/dirs and skip to create object of
+> + *  inodes/dentries. As and when requires, eventfs will create the
+> + *  inodes/dentries for only required files/directories. Also eventfs
+> + *  would delete the inodes/dentries once no more requires but preserve
+> + *  the meta data.
+> + */
+> +#include <linux/fsnotify.h>
+> +#include <linux/fs.h>
+> +#include <linux/namei.h>
+> +#include <linux/security.h>
+> +#include <linux/tracefs.h>
+> +#include <linux/kref.h>
+> +#include <linux/delay.h>
+> +#include "internal.h"
+> +
+> +/**
+> + * eventfs_dentry_to_rwsem - Return corresponding eventfs_rwsem
+> + * @dentry: a pointer to dentry
+> + *
+> + * helper function to return crossponding eventfs_rwsem for given dentry
+> + */
+> +static struct rw_semaphore *eventfs_dentry_to_rwsem(struct dentry *dentry)
+> +{
+> +	if (S_ISDIR(dentry->d_inode->i_mode))
+> +		return (struct rw_semaphore *)dentry->d_inode->i_private;
+> +	else
+> +		return (struct rw_semaphore *)dentry->d_parent->d_inode->i_private;
+> +}
+> +
+> +/**
+> + * eventfs_down_read - acquire read lock function
+> + * @eventfs_rwsem: a pointer to rw_semaphore
+> + *
+> + * helper function to perform read lock, skip locking if caller task already
+> + * own the lock. read lock requires for lookup(), release() and these also
+> + * called with-in open(), remove() which already hold the read/write lock.
+> + */
+> +static void eventfs_down_read(struct rw_semaphore *eventfs_rwsem)
+> +{
+> +	down_read_nested(eventfs_rwsem, SINGLE_DEPTH_NESTING);
+> +}
+> +
+> +/**
+> + * eventfs_up_read - release read lock function
+> + * @eventfs_rwsem: a pointer to rw_semaphore
+> + *
+> + * helper function to release eventfs_rwsem lock if locked
+> + */
+> +static void eventfs_up_read(struct rw_semaphore *eventfs_rwsem)
+> +{
+> +	up_read(eventfs_rwsem);
+> +}
+> +
+> +/**
+> + * eventfs_down_write - acquire write lock function
+> + * @eventfs_rwsem: a pointer to rw_semaphore
+> + *
+> + * helper function to perform write lock on eventfs_rwsem
+> + */
+> +static void eventfs_down_write(struct rw_semaphore *eventfs_rwsem)
+> +{
+> +	while (!down_write_trylock(eventfs_rwsem))
+> +		msleep(10);
+> +}
+> +
+> +/**
+> + * eventfs_up_write - release write lock function
+> + * @eventfs_rwsem: a pointer to rw_semaphore
+> + *
+> + * helper function to perform write lock on eventfs_rwsem
+> + */
+> +static void eventfs_up_write(struct rw_semaphore *eventfs_rwsem)
+> +{
+> +	up_write(eventfs_rwsem);
+> +}
+> +
+> +static const struct file_operations eventfs_file_operations = {
+> +};
+> +
+> +static const struct inode_operations eventfs_root_dir_inode_operations = {
+> +};
+> +
+> +/**
+> + * eventfs_create_events_dir - create the trace event structure
+> + * @name: a pointer to a string containing the name of the directory to
+> + *        create.
+> + * @parent: a pointer to the parent dentry for this file.  This should be a
+> + *          directory dentry if set.  If this parameter is NULL, then the
+> + *          directory will be created in the root of the tracefs filesystem.
+> + * @eventfs_rwsem: a pointer to rw_semaphore
+> + *
+> + * This function creates the top of the trace event directory.
+> + */
+> +struct dentry *eventfs_create_events_dir(const char *name,
+> +					 struct dentry *parent,
+> +					 struct rw_semaphore *eventfs_rwsem)
+> +{
+> +	struct dentry *dentry = tracefs_start_creating(name, parent);
+> +	struct eventfs_inode *ei;
+> +	struct tracefs_inode *ti;
+> +	struct inode *inode;
+> +
+> +	if (IS_ERR(dentry))
+> +		return dentry;
+> +
+> +	ei = kzalloc(sizeof(*ei), GFP_KERNEL);
+> +	if (!ei)
+> +		return ERR_PTR(-ENOMEM);
+> +	inode = tracefs_get_inode(dentry->d_sb);
+> +	if (unlikely(!inode)) {
+> +		kfree(ei);
+> +		tracefs_failed_creating(dentry);
+> +		return ERR_PTR(-ENOMEM);
+> +	}
+> +
+> +	init_rwsem(eventfs_rwsem);
+> +	INIT_LIST_HEAD(&ei->e_top_files);
+> +
+> +	ti = get_tracefs(inode);
+> +	ti->flags |= TRACEFS_EVENT_INODE;
+> +	ti->private = ei;
+> +
+> +	inode->i_mode = S_IFDIR | S_IRWXU | S_IRUGO | S_IXUGO;
+> +	inode->i_op = &eventfs_root_dir_inode_operations;
+> +	inode->i_fop = &eventfs_file_operations;
+> +	inode->i_private = eventfs_rwsem;
+> +
+> +	/* directory inodes start off with i_nlink == 2 (for "." entry) */
+> +	inc_nlink(inode);
+> +	d_instantiate(dentry, inode);
+> +	inc_nlink(dentry->d_parent->d_inode);
+> +	fsnotify_mkdir(dentry->d_parent->d_inode, dentry);
+> +	return tracefs_end_creating(dentry);
+> +}
+> +
+> +/**
+> + * eventfs_add_subsystem_dir - add eventfs subsystem_dir to list to create later
+> + * @name: a pointer to a string containing the name of the file to create.
+> + * @parent: a pointer to the parent dentry for this dir.
+> + * @eventfs_rwsem: a pointer to rw_semaphore
+> + *
+> + * This function adds eventfs subsystem dir to list.
+> + * And all these dirs are created on the fly when they are looked up,
+> + * and the dentry and inodes will be removed when they are done.
+> + */
+> +struct eventfs_file *eventfs_add_subsystem_dir(const char *name,
+> +					       struct dentry *parent,
+> +					       struct rw_semaphore *eventfs_rwsem)
+> +{
+> +	struct tracefs_inode *ti_parent;
+> +	struct eventfs_inode *ei_parent;
+> +	struct eventfs_file *ef;
+> +
+> +	if (!parent)
+> +		return ERR_PTR(-EINVAL);
+> +
+> +	ti_parent = get_tracefs(parent->d_inode);
+> +	ei_parent = ti_parent->private;
+> +
+> +	ef = kzalloc(sizeof(*ef), GFP_KERNEL);
+> +	if (!ef)
+> +		return ERR_PTR(-ENOMEM);
+> +
+> +	ef->ei = kzalloc(sizeof(*ef->ei), GFP_KERNEL);
+> +	if (!ef->ei) {
+> +		kfree(ef);
+> +		return ERR_PTR(-ENOMEM);
+> +	}
+> +
+> +	INIT_LIST_HEAD(&ef->ei->e_top_files);
+> +
+> +	ef->name = kstrdup(name, GFP_KERNEL);
+> +	if (!ef->name) {
+> +		kfree(ef->ei);
+> +		kfree(ef);
+> +		return ERR_PTR(-ENOMEM);
+> +	}
+> +
+> +	ef->mode = S_IFDIR | S_IRWXU | S_IRUGO | S_IXUGO;
+> +	ef->iop = &eventfs_root_dir_inode_operations;
+> +	ef->fop =  &eventfs_file_operations;
+> +	ef->dentry = NULL;
+> +	ef->created = false;
+> +	ef->d_parent = parent;
+> +	ef->data = eventfs_rwsem;
+> +
+> +	eventfs_down_write(eventfs_rwsem);
+> +	list_add_tail(&ef->list, &ei_parent->e_top_files);
+> +	eventfs_up_write(eventfs_rwsem);
+> +	return ef;
+> +}
+> +
+> +/**
+> + * eventfs_add_dir - add eventfs dir to list to create later
+> + * @name: a pointer to a string containing the name of the file to create.
+> + * @ef_parent: a pointer to the parent eventfs_file for this dir.
+> + * @eventfs_rwsem: a pointer to rw_semaphore
+> + *
+> + * This function adds eventfs dir to list.
+> + * And all these dirs are created on the fly when they are looked up,
+> + * and the dentry and inodes will be removed when they are done.
+> + */
+> +struct eventfs_file *eventfs_add_dir(const char *name,
+> +				     struct eventfs_file *ef_parent,
+> +				     struct rw_semaphore *eventfs_rwsem)
+> +{
+> +	struct eventfs_file *ef;
+> +
+> +	if (!ef_parent)
+> +		return ERR_PTR(-EINVAL);
+> +
+> +	ef = kzalloc(sizeof(*ef), GFP_KERNEL);
+> +	if (!ef)
+> +		return ERR_PTR(-ENOMEM);
+> +
+> +	ef->ei = kzalloc(sizeof(*ef->ei), GFP_KERNEL);
+> +	if (!ef->ei) {
+> +		kfree(ef);
+> +		return ERR_PTR(-ENOMEM);
+> +	}
+> +
+> +	INIT_LIST_HEAD(&ef->ei->e_top_files);
+> +
+> +	ef->name = kstrdup(name, GFP_KERNEL);
+> +	if (!ef->name) {
+> +		kfree(ef->ei);
+> +		kfree(ef);
+> +		return ERR_PTR(-ENOMEM);
+> +	}
+> +
+> +	ef->mode = S_IFDIR | S_IRWXU | S_IRUGO | S_IXUGO;
+> +	ef->iop = &eventfs_root_dir_inode_operations;
+> +	ef->fop =  &eventfs_file_operations;
+> +	ef->created = false;
+> +	ef->dentry = NULL;
+> +	ef->d_parent = NULL;
+> +	ef->data = eventfs_rwsem;
+> +
+> +	eventfs_down_write(eventfs_rwsem);
+> +	list_add_tail(&ef->list, &ef_parent->ei->e_top_files);
+> +	eventfs_up_write(eventfs_rwsem);
+> +	return ef;
+> +}
 
-v4 -> v5
-Added f2fs iostat for zone reset command.
+Hi,
+eventfs_add_subsystem_dir() and eventfs_add_dir() are almost the same,
+how about extract a common help function to simplify them, like:
 
-v3 -> v4
-Fixed build error caused by unused function.
-
-v2 -> v3
-Modified arguments to be correct for ftrace parameter.
-Changed __submit_zone_reset_cmd to void return.
-Refactored the f2fs_wait_discard_bio function.
-Fixed code that was previously incorrectly merged.
-
-v1 -> v2
-Changed to apply the optional async reset write pointer by default.
-
-This patch enables submit reset zone command asynchornously. It helps
-decrease average latency of write IOs in high utilization scenario by
-faster checkpointing.
-
-Signed-off-by: Daejun Park <daejun7.park@samsung.com>
----
- fs/f2fs/f2fs.h              |  1 +
- fs/f2fs/iostat.c            |  1 +
- fs/f2fs/segment.c           | 84 +++++++++++++++++++++++++++++++++++--
- include/trace/events/f2fs.h | 24 +++++++++--
- 4 files changed, 104 insertions(+), 6 deletions(-)
-
-diff --git a/fs/f2fs/f2fs.h b/fs/f2fs/f2fs.h
-index d211ee89c158..51b68a629814 100644
---- a/fs/f2fs/f2fs.h
-+++ b/fs/f2fs/f2fs.h
-@@ -1175,6 +1175,7 @@ enum iostat_type {
- 	/* other */
- 	FS_DISCARD_IO,			/* discard */
- 	FS_FLUSH_IO,			/* flush */
-+	FS_ZONE_RESET_IO,		/* zone reset */
- 	NR_IO_TYPE,
- };
- 
-diff --git a/fs/f2fs/iostat.c b/fs/f2fs/iostat.c
-index 3d5bfb1ad585..f8703038e1d8 100644
---- a/fs/f2fs/iostat.c
-+++ b/fs/f2fs/iostat.c
-@@ -80,6 +80,7 @@ int __maybe_unused iostat_info_seq_show(struct seq_file *seq, void *offset)
- 	seq_puts(seq, "[OTHER]\n");
- 	IOSTAT_INFO_SHOW("fs discard", FS_DISCARD_IO);
- 	IOSTAT_INFO_SHOW("fs flush", FS_FLUSH_IO);
-+	IOSTAT_INFO_SHOW("fs zone reset", FS_ZONE_RESET_IO);
- 
- 	return 0;
- }
-diff --git a/fs/f2fs/segment.c b/fs/f2fs/segment.c
-index 6db410f1bb8c..4802b05a795b 100644
---- a/fs/f2fs/segment.c
-+++ b/fs/f2fs/segment.c
-@@ -1196,6 +1196,45 @@ static void __init_discard_policy(struct f2fs_sb_info *sbi,
- static void __update_discard_tree_range(struct f2fs_sb_info *sbi,
- 				struct block_device *bdev, block_t lstart,
- 				block_t start, block_t len);
-+
-+#ifdef CONFIG_BLK_DEV_ZONED
-+static void __submit_zone_reset_cmd(struct f2fs_sb_info *sbi,
-+				   struct discard_cmd *dc, blk_opf_t flag,
-+				   struct list_head *wait_list,
-+				   unsigned int *issued)
++static struct eventfs_file *__eventfs_add_dir(const char *name,
++                                             struct dentry *d_parent,
++                                             struct eventfs_inode 
+*ei_parent,
++                                             struct rw_semaphore 
+*eventfs_rwsem)
 +{
-+	struct discard_cmd_control *dcc = SM_I(sbi)->dcc_info;
-+	struct block_device *bdev = dc->bdev;
-+	struct bio *bio = bio_alloc(bdev, 0, REQ_OP_ZONE_RESET | flag, GFP_NOFS);
-+	unsigned long flags;
++       struct eventfs_file *ef;
 +
-+	trace_f2fs_issue_reset_zone(bdev, dc->di.start);
++       ef = kzalloc(sizeof(*ef), GFP_KERNEL);
++       if (!ef)
++               return ERR_PTR(-ENOMEM);
 +
-+	spin_lock_irqsave(&dc->lock, flags);
-+	dc->state = D_SUBMIT;
-+	dc->bio_ref++;
-+	spin_unlock_irqrestore(&dc->lock, flags);
++       ef->ei = kzalloc(sizeof(*ef->ei), GFP_KERNEL);
++       if (!ef->ei) {
++               kfree(ef);
++               return ERR_PTR(-ENOMEM);
++       }
 +
-+	if (issued)
-+		(*issued)++;
++       INIT_LIST_HEAD(&ef->ei->e_top_files);
 +
-+	atomic_inc(&dcc->queued_discard);
-+	dc->queued++;
-+	list_move_tail(&dc->list, wait_list);
++       ef->name = kstrdup(name, GFP_KERNEL);
++       if (!ef->name) {
++               kfree(ef->ei);
++               kfree(ef);
++               return ERR_PTR(-ENOMEM);
++       }
 +
-+	/* sanity check on discard range */
-+	__check_sit_bitmap(sbi, dc->di.lstart, dc->di.lstart + dc->di.len);
++       ef->mode = S_IFDIR | S_IRWXU | S_IRUGO | S_IXUGO;
++       ef->iop = &eventfs_root_dir_inode_operations;
++       ef->fop = &eventfs_file_operations;
++       ef->dentry = NULL;
++       ef->created = false;
++       ef->d_parent = d_parent;
++       ef->data = eventfs_rwsem;
 +
-+	bio->bi_iter.bi_sector = SECTOR_FROM_BLOCK(dc->di.start);
-+	bio->bi_private = dc;
-+	bio->bi_end_io = f2fs_submit_discard_endio;
-+	submit_bio(bio);
-+
-+	atomic_inc(&dcc->issued_discard);
-+	f2fs_update_iostat(sbi, NULL, FS_ZONE_RESET_IO, dc->di.len * F2FS_BLKSIZE);
++       eventfs_down_write(eventfs_rwsem);
++       list_add_tail(&ef->list, &ei_parent->e_top_files);
++       eventfs_up_write(eventfs_rwsem);
++       return ef;
 +}
-+#endif
 +
- /* this function is copied from blkdev_issue_discard from block/blk-lib.c */
- static int __submit_discard_cmd(struct f2fs_sb_info *sbi,
- 				struct discard_policy *dpolicy,
-@@ -1217,6 +1256,13 @@ static int __submit_discard_cmd(struct f2fs_sb_info *sbi,
- 	if (is_sbi_flag_set(sbi, SBI_NEED_FSCK))
- 		return 0;
- 
-+#ifdef CONFIG_BLK_DEV_ZONED
-+	if (f2fs_sb_has_blkzoned(sbi) && bdev_is_zoned(bdev)) {
-+		__submit_zone_reset_cmd(sbi, dc, flag, wait_list, issued);
-+		return 0;
-+	}
-+#endif
-+
- 	trace_f2fs_issue_discard(bdev, dc->di.start, dc->di.len);
- 
- 	lstart = dc->di.lstart;
-@@ -1461,6 +1507,19 @@ static void __update_discard_tree_range(struct f2fs_sb_info *sbi,
- 	}
- }
- 
-+#ifdef CONFIG_BLK_DEV_ZONED
-+static void __queue_zone_reset_cmd(struct f2fs_sb_info *sbi,
-+		struct block_device *bdev, block_t blkstart, block_t lblkstart,
-+		block_t blklen)
++struct eventfs_file *eventfs_add_subsystem_dir(const char *name,
++                                              struct dentry *parent,
++                                              struct rw_semaphore 
+*eventfs_rwsem)
 +{
-+	trace_f2fs_queue_reset_zone(bdev, blkstart);
++       struct tracefs_inode *ti_parent;
++       struct eventfs_inode *ei_parent;
 +
-+	mutex_lock(&SM_I(sbi)->dcc_info->cmd_lock);
-+	__insert_discard_cmd(sbi, bdev, lblkstart, blkstart, blklen);
-+	mutex_unlock(&SM_I(sbi)->dcc_info->cmd_lock);
++       if (!parent)
++               return ERR_PTR(-EINVAL);
++       ti_parent = get_tracefs(parent->d_inode);
++       ei_parent = ti_parent->private;
++       return __eventfs_add_dir(name, parent, ei_parent, eventfs_rwsem);
 +}
-+#endif
 +
- static void __queue_discard_cmd(struct f2fs_sb_info *sbi,
- 		struct block_device *bdev, block_t blkstart, block_t blklen)
- {
-@@ -1724,6 +1783,19 @@ static void f2fs_wait_discard_bio(struct f2fs_sb_info *sbi, block_t blkaddr)
- 
- 	mutex_lock(&dcc->cmd_lock);
- 	dc = __lookup_discard_cmd(sbi, blkaddr);
-+#ifdef CONFIG_BLK_DEV_ZONED
-+	if (dc && f2fs_sb_has_blkzoned(sbi) && bdev_is_zoned(dc->bdev)) {
-+		/* force submit zone reset */
-+		if (dc->state == D_PREP)
-+			__submit_zone_reset_cmd(sbi, dc, REQ_SYNC,
-+						&dcc->wait_list, NULL);
-+		dc->ref++;
-+		mutex_unlock(&dcc->cmd_lock);
-+		/* wait zone reset */
-+		__wait_one_discard_bio(sbi, dc);
-+		return;
-+	}
-+#endif
- 	if (dc) {
- 		if (dc->state == D_PREP) {
- 			__punch_discard_cmd(sbi, dc, blkaddr);
-@@ -1876,9 +1948,15 @@ static int __f2fs_issue_discard_zone(struct f2fs_sb_info *sbi,
- 				 blkstart, blklen);
- 			return -EIO;
- 		}
--		trace_f2fs_issue_reset_zone(bdev, blkstart);
--		return blkdev_zone_mgmt(bdev, REQ_OP_ZONE_RESET,
--					sector, nr_sects, GFP_NOFS);
-+
-+		if (unlikely(is_sbi_flag_set(sbi, SBI_POR_DOING))) {
-+			trace_f2fs_issue_reset_zone(bdev, blkstart);
-+			return blkdev_zone_mgmt(bdev, REQ_OP_ZONE_RESET,
-+						sector, nr_sects, GFP_NOFS);
-+		}
-+
-+		__queue_zone_reset_cmd(sbi, bdev, blkstart, lblkstart, blklen);
-+		return 0;
- 	}
- 
- 	/* For conventional zones, use regular discard if supported */
-diff --git a/include/trace/events/f2fs.h b/include/trace/events/f2fs.h
-index 99cbc5949e3c..793f82cc1515 100644
---- a/include/trace/events/f2fs.h
-+++ b/include/trace/events/f2fs.h
-@@ -1512,7 +1512,7 @@ DEFINE_EVENT(f2fs_discard, f2fs_remove_discard,
- 	TP_ARGS(dev, blkstart, blklen)
- );
- 
--TRACE_EVENT(f2fs_issue_reset_zone,
-+DECLARE_EVENT_CLASS(f2fs_reset_zone,
- 
- 	TP_PROTO(struct block_device *dev, block_t blkstart),
- 
-@@ -1528,11 +1528,25 @@ TRACE_EVENT(f2fs_issue_reset_zone,
- 		__entry->blkstart = blkstart;
- 	),
- 
--	TP_printk("dev = (%d,%d), reset zone at block = 0x%llx",
-+	TP_printk("dev = (%d,%d), zone at block = 0x%llx",
- 		show_dev(__entry->dev),
- 		(unsigned long long)__entry->blkstart)
- );
- 
-+DEFINE_EVENT(f2fs_reset_zone, f2fs_queue_reset_zone,
-+
-+	TP_PROTO(struct block_device *dev, block_t blkstart),
-+
-+	TP_ARGS(dev, blkstart)
-+);
-+
-+DEFINE_EVENT(f2fs_reset_zone, f2fs_issue_reset_zone,
-+
-+	TP_PROTO(struct block_device *dev, block_t blkstart),
-+
-+	TP_ARGS(dev, blkstart)
-+);
-+
- TRACE_EVENT(f2fs_issue_flush,
- 
- 	TP_PROTO(struct block_device *dev, unsigned int nobarrier,
-@@ -1979,6 +1993,7 @@ TRACE_EVENT(f2fs_iostat,
- 		__field(unsigned long long,	fs_nrio)
- 		__field(unsigned long long,	fs_mrio)
- 		__field(unsigned long long,	fs_discard)
-+		__field(unsigned long long,	fs_reset_zone)
- 	),
- 
- 	TP_fast_assign(
-@@ -2010,12 +2025,14 @@ TRACE_EVENT(f2fs_iostat,
- 		__entry->fs_nrio	= iostat[FS_NODE_READ_IO];
- 		__entry->fs_mrio	= iostat[FS_META_READ_IO];
- 		__entry->fs_discard	= iostat[FS_DISCARD_IO];
-+		__entry->fs_reset_zone	= iostat[FS_ZONE_RESET_IO];
- 	),
- 
- 	TP_printk("dev = (%d,%d), "
- 		"app [write=%llu (direct=%llu, buffered=%llu), mapped=%llu, "
- 		"compr(buffered=%llu, mapped=%llu)], "
--		"fs [data=%llu, cdata=%llu, node=%llu, meta=%llu, discard=%llu], "
-+		"fs [data=%llu, cdata=%llu, node=%llu, meta=%llu, discard=%llu, "
-+		"reset_zone=%llu], "
- 		"gc [data=%llu, node=%llu], "
- 		"cp [data=%llu, node=%llu, meta=%llu], "
- 		"app [read=%llu (direct=%llu, buffered=%llu), mapped=%llu], "
-@@ -2026,6 +2043,7 @@ TRACE_EVENT(f2fs_iostat,
- 		__entry->app_bio, __entry->app_mio, __entry->app_bcdio,
- 		__entry->app_mcdio, __entry->fs_dio, __entry->fs_cdio,
- 		__entry->fs_nio, __entry->fs_mio, __entry->fs_discard,
-+		__entry->fs_reset_zone,
- 		__entry->fs_gc_dio, __entry->fs_gc_nio, __entry->fs_cp_dio,
- 		__entry->fs_cp_nio, __entry->fs_cp_mio,
- 		__entry->app_rio, __entry->app_drio, __entry->app_brio,
--- 
-2.25.1
++struct eventfs_file *eventfs_add_dir(const char *name,
++                                    struct eventfs_file *ef_parent,
++                                    struct rw_semaphore *eventfs_rwsem)
++{
++       if (!ef_parent)
++               return ERR_PTR(-EINVAL);
++       return __eventfs_add_dir(name, NULL, ef_parent->ei, eventfs_rwsem);
++}
+
+--
+
+Best regards,
+Zheng Yejian
+
+> diff --git a/include/linux/tracefs.h b/include/linux/tracefs.h
+> index 999124459..aeca6761f 100644
+> --- a/include/linux/tracefs.h
+> +++ b/include/linux/tracefs.h
+> @@ -21,6 +21,35 @@ struct file_operations;
+>   
+>   #ifdef CONFIG_TRACING
+>   
+> +struct eventfs_inode {
+> +	struct list_head		e_top_files;
+> +};
+> +
+> +struct eventfs_file {
+> +	const char                      *name;
+> +	struct dentry                   *d_parent;
+> +	struct dentry                   *dentry;
+> +	struct list_head                list;
+> +	struct eventfs_inode            *ei;
+> +	const struct file_operations    *fop;
+> +	const struct inode_operations   *iop;
+> +	void                            *data;
+> +	umode_t                         mode;
+> +	bool                            created;
+> +};
+> +
+> +struct dentry *eventfs_create_events_dir(const char *name,
+> +					 struct dentry *parent,
+> +					 struct rw_semaphore *eventfs_rwsem);
+> +
+> +struct eventfs_file *eventfs_add_subsystem_dir(const char *name,
+> +					       struct dentry *parent,
+> +					       struct rw_semaphore *eventfs_rwsem);
+> +
+> +struct eventfs_file *eventfs_add_dir(const char *name,
+> +				     struct eventfs_file *ef_parent,
+> +				     struct rw_semaphore *eventfs_rwsem);
+> +
+>   struct dentry *tracefs_create_file(const char *name, umode_t mode,
+>   				   struct dentry *parent, void *data,
+>   				   const struct file_operations *fops);
+> diff --git a/kernel/trace/trace.h b/kernel/trace/trace.h
+> index 616e1aa1c..3726725c8 100644
+> --- a/kernel/trace/trace.h
+> +++ b/kernel/trace/trace.h
+> @@ -359,6 +359,7 @@ struct trace_array {
+>   	struct dentry		*options;
+>   	struct dentry		*percpu_dir;
+>   	struct dentry		*event_dir;
+> +	struct rw_semaphore     eventfs_rwsem;
+>   	struct trace_options	*topts;
+>   	struct list_head	systems;
+>   	struct list_head	events;
 
