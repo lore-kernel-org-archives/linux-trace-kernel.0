@@ -2,53 +2,44 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 20AF7C77B75
-	for <linux-trace-kernel@archiver.kernel.org>; Tue,  9 May 2023 16:46:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 01BE3C77B7C
+	for <linux-trace-kernel@archiver.kernel.org>; Tue,  9 May 2023 17:05:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233293AbjEIQqH convert rfc822-to-8bit (ORCPT
+        id S230150AbjEIRFk convert rfc822-to-8bit (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Tue, 9 May 2023 12:46:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58576 "EHLO
+        Tue, 9 May 2023 13:05:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50428 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229489AbjEIQqG (ORCPT
+        with ESMTP id S235873AbjEIRFS (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Tue, 9 May 2023 12:46:06 -0400
+        Tue, 9 May 2023 13:05:18 -0400
 Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 26B0740C2;
-        Tue,  9 May 2023 09:46:03 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 149E75590;
+        Tue,  9 May 2023 10:02:45 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id A910862CFC;
-        Tue,  9 May 2023 16:46:02 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8B120C433D2;
-        Tue,  9 May 2023 16:46:01 +0000 (UTC)
-Date:   Tue, 9 May 2023 12:45:59 -0400
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 7F8AE64775;
+        Tue,  9 May 2023 17:01:14 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 817A2C433D2;
+        Tue,  9 May 2023 17:01:13 +0000 (UTC)
+Date:   Tue, 9 May 2023 13:01:11 -0400
 From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Ajay Kaher <akaher@vmware.com>
-Cc:     kernel test robot <lkp@intel.com>,
-        "mhiramat@kernel.org" <mhiramat@kernel.org>,
-        "shuah@kernel.org" <shuah@kernel.org>,
-        "llvm@lists.linux.dev" <llvm@lists.linux.dev>,
-        "oe-kbuild-all@lists.linux.dev" <oe-kbuild-all@lists.linux.dev>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-trace-kernel@vger.kernel.org" 
-        <linux-trace-kernel@vger.kernel.org>,
-        "linux-kselftest@vger.kernel.org" <linux-kselftest@vger.kernel.org>,
-        "chinglinyu@google.com" <chinglinyu@google.com>,
-        Nadav Amit <namit@vmware.com>,
-        Srivatsa Bhat <srivatsab@vmware.com>,
-        "srivatsa@csail.mit.edu" <srivatsa@csail.mit.edu>,
-        Alexey Makhalov <amakhalov@vmware.com>,
-        Vasavi Sirnapalli <vsirnapalli@vmware.com>,
-        Tapas Kundu <tkundu@vmware.com>,
-        "er.ajay.kaher@gmail.com" <er.ajay.kaher@gmail.com>
-Subject: Re: [PATCH v2 8/9] eventfs: moving tracing/events to eventfs
-Message-ID: <20230509124559.0d5557ad@rorschach.local.home>
-In-Reply-To: <1CAC8265-A4F3-4AF6-80E4-8F264ED670A9@vmware.com>
-References: <1683026600-13485-9-git-send-email-akaher@vmware.com>
-        <202305030116.Gu6yyvKj-lkp@intel.com>
-        <1CAC8265-A4F3-4AF6-80E4-8F264ED670A9@vmware.com>
+To:     Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Cc:     Beau Belgrave <beaub@linux.microsoft.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-trace-kernel@vger.kernel.org,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Andrii Nakryiko <andrii@kernel.org>, bpf <bpf@vger.kernel.org>,
+        David Vernet <void@manifault.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: Re: [PATCH] tracing/user_events: Run BPF program if attached
+Message-ID: <20230509130111.62d587f1@rorschach.local.home>
+In-Reply-To: <CAADnVQLYL-ZaP_2vViaktw0G4UKkmpOK2q4ZXBa+f=M7cC25Rg@mail.gmail.com>
+References: <20230508163751.841-1-beaub@linux.microsoft.com>
+        <CAADnVQLYL-ZaP_2vViaktw0G4UKkmpOK2q4ZXBa+f=M7cC25Rg@mail.gmail.com>
 X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -57,86 +48,47 @@ Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On Tue, 9 May 2023 12:29:23 +0000
-Ajay Kaher <akaher@vmware.com> wrote:
+On Tue, 9 May 2023 08:24:29 -0700
+Alexei Starovoitov <alexei.starovoitov@gmail.com> wrote:
 
-> ﻿> On 02/05/23, 11:42 PM, "kernel test robot" <lkp@intel.com> wrote:  
-> >   >> kernel/trace/trace_events.c:2424:17: warning: variable 'd_events' set but not used [-Wunused-but-set-variable]  
-> >           struct dentry *d_events;
-> >                       ^
-> >    1 warning generated.
-> >  
+> On Mon, May 8, 2023 at 9:38 AM Beau Belgrave <beaub@linux.microsoft.com> wrote:
+> >
+> > Programs that utilize user_events today only get the event payloads via
+> > perf or ftrace when writing event data. When BPF programs are attached
+> > to tracepoints created by user_events the BPF programs do not get run
+> > even though the attach succeeds. This causes confusion by the users of
+> > the programs, as they expect the data to be available via BPF programs
+> > they write. We have several projects that have hit this and requested
+> > BPF program support when publishing data via user_events from their
+> > user processes in production.
+> >
+> > Swap out perf_trace_buf_submit() for perf_trace_run_bpf_submit() to
+> > ensure BPF programs that are attached are run in addition to writing to
+> > perf or ftrace buffers. This requires no changes to the BPF infrastructure
+> > and only utilizes the GPL exported function that modules and other
+> > components may use for the same purpose. This keeps user_events consistent
+> > with how other kernel, modules, and probes expose tracepoint data to allow
+> > attachment of a BPF program.  
 > 
-> Steve, with-in event_create_dir(), do we have any scenario when file->event_call->class->system
-> doesn't have TRACE_SYSTEM? And need to execute following:
+> Sorry, I have to keep my Nack here.
 > 
-> ae63b31e4d0e2e Steven Rostedt           2012-05-03  2437                d_events = parent;
+> I see no practical use case for bpf progs to be connected to user events.
+
+That's not a technical reason. Obviously they have a use case.
+
+This is only connecting to BPF through the API. It makes no changes to
+BPF itself, so I'm not sure your NACK has jurisdiction here. Their
+alternative is to to do it with an external module as the only
+connections to BPF it uses is via an EXPORT_SYMBOL_GPL() function!
+
+Again, what is your technical reason for nacking this? It's like me
+nacking a user of ftrace because I don't see a use case for it. That's
+not a valid reason to issue a nack.
+
 > 
-> looking for your input if we could remove d_events from event_create_dir().
-> 
+> There must be a different way to solve your user needs
+> and this is not bpf.
 
-I have hit this in the beginning, but I don't think it's an issue
-anymore. Perhaps just have it be:
-
-        if (WARN_ON_ONCE(strcmp(call->class->system, TRACE_SYSTEM) == 0))
-		return -ENODEV;
-
-        ef_subsystem = event_subsystem_dir(tr, call->class->system, file, parent);
-
-Hmm, how about just add this patch before your patch set:
+Why not use BPF?
 
 -- Steve
-
-From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
-Subject: [PATCH] tracing: Require all trace events to have a TRACE_SYSTEM
-
-The creation of the trace event directory requires that a TRACE_SYSTEM is
-defined that the trace event directory is added within the system it was
-defined in.
-
-The code handled the case where a TRACE_SYSTEM was not added, and would
-then add the event at the events directory. But nothing should be doing
-this. This code also prevents the implementation of creating dynamic
-dentrys for the eventfs system.
-
-As this path has never been hit on correct code, remove it. If it does get
-hit, issues a WARN_ON_ONCE() and return ENODEV.
-
-Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
----
-
-  (lightly tested)
-
- kernel/trace/trace_events.c | 15 ++++++++-------
- 1 file changed, 8 insertions(+), 7 deletions(-)
-
-diff --git a/kernel/trace/trace_events.c b/kernel/trace/trace_events.c
-index 654ffa40457a..16bc5ba45507 100644
---- a/kernel/trace/trace_events.c
-+++ b/kernel/trace/trace_events.c
-@@ -2424,14 +2424,15 @@ event_create_dir(struct dentry *parent, struct trace_event_file *file)
- 
- 	/*
- 	 * If the trace point header did not define TRACE_SYSTEM
--	 * then the system would be called "TRACE_SYSTEM".
-+	 * then the system would be called "TRACE_SYSTEM". This should
-+	 * never happen.
- 	 */
--	if (strcmp(call->class->system, TRACE_SYSTEM) != 0) {
--		d_events = event_subsystem_dir(tr, call->class->system, file, parent);
--		if (!d_events)
--			return -ENOMEM;
--	} else
--		d_events = parent;
-+	if (WARN_ON_ONCE(strcmp(call->class->system, TRACE_SYSTEM) == 0))
-+		return -ENODEV;
-+
-+	d_events = event_subsystem_dir(tr, call->class->system, file, parent);
-+	if (!d_events)
-+		return -ENOMEM;
- 
- 	name = trace_event_name(call);
- 	file->dir = tracefs_create_dir(name, d_events);
--- 
-2.39.2
-
