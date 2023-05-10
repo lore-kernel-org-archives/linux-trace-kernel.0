@@ -2,247 +2,424 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CE34C77B7D
-	for <linux-trace-kernel@archiver.kernel.org>; Wed, 10 May 2023 20:21:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 29733C77B7D
+	for <linux-trace-kernel@archiver.kernel.org>; Wed, 10 May 2023 20:28:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236042AbjEJUVQ (ORCPT
+        id S236154AbjEJU21 (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Wed, 10 May 2023 16:21:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50494 "EHLO
+        Wed, 10 May 2023 16:28:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53190 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229536AbjEJUVO (ORCPT
+        with ESMTP id S233420AbjEJU20 (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Wed, 10 May 2023 16:21:14 -0400
-Received: from mx0a-00082601.pphosted.com (mx0a-00082601.pphosted.com [67.231.145.42])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8E7A230D4;
-        Wed, 10 May 2023 13:21:13 -0700 (PDT)
-Received: from pps.filterd (m0044010.ppops.net [127.0.0.1])
-        by mx0a-00082601.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 34AHqMK0009447;
-        Wed, 10 May 2023 13:20:41 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=meta.com; h=message-id : date :
- subject : to : cc : references : from : in-reply-to : content-type :
- content-transfer-encoding : mime-version; s=s2048-2021-q4;
- bh=ZyB2BM9y03a8im5zcybivrvxbCDbIgL6k9xXiNcjJss=;
- b=lD1DFTWpqXcRoq9YuC6qpnt5SwEocobA0BDo3ZBOwed/9l5R9oZ1LsmosszBeOyJeZOf
- fJE0h6NAhbgdJUajsdTIIvBgjoTdHoB8evDUD6457sS5CV34kkFd7dviAV0JzfaZ8a2I
- JtDRslQudt+pfmaO+ogt21331rzCx/rbgMe+jDwNrzijulylC4YYkppbY3/SAUOpSY22
- OqZc1ChivP/ErqCf8bHKTL/VyoR8HoGF9Kx/LBkj3IosBq/wMqZrOjvTrR7DDxVoYmTy
- AcXLJaXPcYfWrh+fHOzWwtfo4i/szDKNvf73tKBoSDOq2hSlm8+nOfbrXhAU+mK0RN3P lw== 
-Received: from nam04-dm6-obe.outbound.protection.outlook.com (mail-dm6nam04lp2044.outbound.protection.outlook.com [104.47.73.44])
-        by mx0a-00082601.pphosted.com (PPS) with ESMTPS id 3qg28kxfa3-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 10 May 2023 13:20:41 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=ERrfAhY4DwYOxDl6Utp0hpke4k3cfGjV3F9cw6tIjtgZWR9b/GPNcwjqcZ+vUp2OvluyRDdbaEaYif+dTCtZH22+uNBbu2l6Y6jpIiYzuS5A2O5AqiJGu3KmlHjA2jI5CGLhJqQUPV6C7Iz3ucrhEseVZ287Jq+z6LZexOqViCgkoQthR6i34Qb34RzZQ8Lmdo6VDRGOfwSk9JxSgrYrVF/pAZaMg/EkUTjyhaOP8ytlQBgOurt448B8eLm2PRVK+0l4IdAbzdmvibywURfs7roQ+/coaZNPTAjiImL4JlppxzxyZtZIjrngdxdKswGNYLFWu6ZCQZTqEf7RjW1LOA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=ZyB2BM9y03a8im5zcybivrvxbCDbIgL6k9xXiNcjJss=;
- b=LufpmM0nXhkc0iuZjupogsFVJVF7qjYLCRRvBUZ1IUpQ470jrPBDHeTNZkxp2U9Sa5NKSPKpBvvF98SujCAYzW14CF+fG5jZzCh0HdVcjZOKuODpPyDxaPAunkCI8qJdTJ9p9wmJW/rokmwYv4Aig3lZ7+/juFG6L+zvJxvCvpMiLculUT68wtpNkA/e2tNgllwhrPR8T4JcvFU9PQop+SKtuS0Fyn/K/lWxWEAiXxTB/whv7ZaTc0hCoftwHOxyac33YLfcKS2TFD1DLmdBeqCajZO8yuZFXlVAoT2sBXooBZ+jGS6OOkS+1dnwoljHuNTaWAG5AsmgKxoF1L7tiQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=meta.com; dmarc=pass action=none header.from=meta.com;
- dkim=pass header.d=meta.com; arc=none
-Received: from SN6PR1501MB2064.namprd15.prod.outlook.com (2603:10b6:805:d::27)
- by BLAPR15MB3859.namprd15.prod.outlook.com (2603:10b6:208:275::10) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6387.20; Wed, 10 May
- 2023 20:20:35 +0000
-Received: from SN6PR1501MB2064.namprd15.prod.outlook.com
- ([fe80::589f:9230:518:7f53]) by SN6PR1501MB2064.namprd15.prod.outlook.com
- ([fe80::589f:9230:518:7f53%6]) with mapi id 15.20.6363.032; Wed, 10 May 2023
- 20:20:34 +0000
-Message-ID: <1195c4bd-ef54-2f1d-b079-2a11af42c62f@meta.com>
-Date:   Wed, 10 May 2023 13:20:30 -0700
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:102.0)
- Gecko/20100101 Thunderbird/102.10.1
-Subject: Re: [PATCH] bpf: reject blacklisted symbols in kprobe_multi to avoid
- recursive trap
-To:     Jiri Olsa <olsajiri@gmail.com>
-Cc:     Ze Gao <zegao2021@gmail.com>, Song Liu <song@kernel.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Andrii Nakryiko <andrii@kernel.org>,
-        Martin KaFai Lau <martin.lau@linux.dev>,
-        Yonghong Song <yhs@fb.com>,
-        John Fastabend <john.fastabend@gmail.com>,
-        KP Singh <kpsingh@kernel.org>,
-        Stanislav Fomichev <sdf@google.com>,
-        Hao Luo <haoluo@google.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
+        Wed, 10 May 2023 16:28:26 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 23BD84C12
+        for <linux-trace-kernel@vger.kernel.org>; Wed, 10 May 2023 13:27:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1683750456;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=nv0DavZHzZ5p/wUdxoEPxOI+8uSA5PDGpnh2Hw9aExo=;
+        b=H/WrOMKcD5eW+eHgGjenUa81PKImVzaaGCAfsb5xfmGHsXe1ZHwMvYq7KreCwA8M0eXOjc
+        4o4fztr/8ehKbu/gXRU+cdWPWjQwuB4EswP+TLfLnwAT1bt16uEjqoEugSTeSW5fkGrPLK
+        J6pSyvRylsNsBa/yB8RE6TehaAFHHQ8=
+Received: from mail-ot1-f70.google.com (mail-ot1-f70.google.com
+ [209.85.210.70]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-329-9zqvtKGpMKaIlqZ-OMe43Q-1; Wed, 10 May 2023 16:27:35 -0400
+X-MC-Unique: 9zqvtKGpMKaIlqZ-OMe43Q-1
+Received: by mail-ot1-f70.google.com with SMTP id 46e09a7af769-6ab389bd0e4so755333a34.0
+        for <linux-trace-kernel@vger.kernel.org>; Wed, 10 May 2023 13:27:34 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1683750454; x=1686342454;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=L6t0uwhXM8LP+yxd68T/L0PMOcquVZp/F/3y9ewickU=;
+        b=aImrI+IOr2N8DHr+qDqMtcV8/5FhxuDrHaNB2+U3xxAtiytAsJXgJJ9JVO2cn3tYHa
+         lmQa/4f+wAhgGWQmhUceOPS2++RO6FV+LlBehZ9pi1gUUjzDEbnrQOw/MJVX7WNuaYOX
+         a7AkDJVV0Qr0WNTE8WN+/JcFO11hanH8tLpH7fK/6ujbjiRLDYK7jUGi6LCHyVwAM6sE
+         Ig2h4NpE9E36YVJ6o8zbPn1ppdNLWgWyLqagHo5bcgvhCok1DUIoCWmNNHjEz8kBO/f1
+         tw0vO4yq/lDWYY2cOaddQb6JbRaoHnk9NyW+ZRSIKiVNj6teFgFDOpDBBXhIkQ0QgLT0
+         cN5A==
+X-Gm-Message-State: AC+VfDw3SWrt/ZrVgQC4ZEjBp2ylLkTygNnrDjEJmRPy//6DinaM2gnW
+        1X6CP5EiC9fmhe7Hyy9PeJMSiXLqrxEEgYvolgnTmP7miFlFmXw7PKp08s3grrh0c8y6G8pencw
+        DiDsyr5ufvL3OmSSVe6Fa3+3JP7K4sWL9
+X-Received: by 2002:a05:6830:1e55:b0:6ab:b4e:8337 with SMTP id e21-20020a0568301e5500b006ab0b4e8337mr3453424otj.8.1683750454181;
+        Wed, 10 May 2023 13:27:34 -0700 (PDT)
+X-Google-Smtp-Source: ACHHUZ6gSG8Cn3TGMgViFum8yITL8dsIGl5p6kQC2Vph9UBCHl8XLi9tKVFEJmMwRGbvhHP1CXz2Pw==
+X-Received: by 2002:a05:6830:1e55:b0:6ab:b4e:8337 with SMTP id e21-20020a0568301e5500b006ab0b4e8337mr3453416otj.8.1683750453830;
+        Wed, 10 May 2023 13:27:33 -0700 (PDT)
+Received: from ?IPv6:2804:1b3:a803:3602:abec:117:3c19:43b8? ([2804:1b3:a803:3602:abec:117:3c19:43b8])
+        by smtp.gmail.com with ESMTPSA id e7-20020a05683013c700b006a3bd777dfdsm6630725otq.12.2023.05.10.13.27.28
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 10 May 2023 13:27:32 -0700 (PDT)
+Message-ID: <f96442e9166e4f73be772656a93c89093eddbb8b.camel@redhat.com>
+Subject: Re: [RFC PATCH 1/1] smp: Add tracepoints for functions called with
+ smp_call_function*()
+From:   Leonardo =?ISO-8859-1?Q?Br=E1s?= <leobras@redhat.com>
+To:     Valentin Schneider <vschneid@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>
+Cc:     Steven Rostedt <rostedt@goodmis.org>,
         Masami Hiramatsu <mhiramat@kernel.org>,
-        Ze Gao <zegao@tencent.com>, bpf@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
-References: <20230510122045.2259-1-zegao@tencent.com>
- <6308b8e0-8a54-e574-a312-0a97cfbf810c@meta.com> <ZFvUH+p0ebcgnwEg@krava>
-Content-Language: en-US
-From:   Yonghong Song <yhs@meta.com>
-In-Reply-To: <ZFvUH+p0ebcgnwEg@krava>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: BYAPR07CA0025.namprd07.prod.outlook.com
- (2603:10b6:a02:bc::38) To SN6PR1501MB2064.namprd15.prod.outlook.com
- (2603:10b6:805:d::27)
+        Thomas Gleixner <tglx@linutronix.de>,
+        Yury Norov <yury.norov@gmail.com>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Nadav Amit <namit@vmware.com>,
+        Zhen Lei <thunder.leizhen@huawei.com>,
+        Chen Zhongjin <chenzhongjin@huawei.com>,
+        linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+        Marcelo Tosatti <mtosatti@redhat.com>,
+        Daniel Bristot de Oliveira <bristot@kernel.org>
+Date:   Wed, 10 May 2023 17:27:26 -0300
+In-Reply-To: <xhsmh7ctojoia.mognet@vschneid.remote.csb>
+References: <20230406075718.68672-1-leobras@redhat.com>
+         <20230406095519.GG386572@hirez.programming.kicks-ass.net>
+         <f294a74cd17bf932621a6a746d592f49770d25ec.camel@redhat.com>
+         <20230503145900.GC1689514@hirez.programming.kicks-ass.net>
+         <xhsmh7ctojoia.mognet@vschneid.remote.csb>
+User-Agent: Evolution 3.48.1
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SN6PR1501MB2064:EE_|BLAPR15MB3859:EE_
-X-MS-Office365-Filtering-Correlation-Id: d39e2250-071a-4f54-b751-08db519402c4
-X-FB-Source: Internal
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: WOBH/Njb5srNPmhmoJ7ALxJrD1QdslweR6UF6nXg44Cd8ljHM7NXvpiMkngH0U7MY5Mcp5+XHVQBFdycYe3NiUR20yd6sNuuQwpxeC0Y2C+qwTiWdPB37su/v2dQaDo91y5d0cAbPLbyteDnjRn8zRfC4xE5mdsd2hFfb1WFcUdn2K14GfjABFzxNX9tdqhbQwmp+EgCrFYVpE0/8cVmuJCLXCsnNN0GdK7p2YtGhIIbB2INnnrS6U9/8sT4DB8X1RhUQot2dDWM3k9IK6GzzSHKSSewWdagGPm04ICiYFQVOXX8tJtE5tS0KZiRtxX0iei1055RKLNnmkYpRFnKD/W+u1iV7wXRY/NxEPF4AYvLqshjPiW44d/gEWd/GZF+2K2rHoMxBx5Zt5sPbT8e1jx7ORETVYDAxOjzHFtb2kQgKwpBSBrnqDN+/gt4d4HUAVtNOLRawcDNtfyigAovddBHdfo3kGFq1vPukWGhQEczaGDcfwcfg7FjLb2yNiPapPlzAeHejqS3NCZvnRYz3BVqcghe2eO26FKl3MM4nWDiBVipc7DEriUxeUYjAIaZ3hqco1E6zCeavFyhHAc5/I+6odvMD8hhlFoaU0ZUbXuEhmOsQXebg9WWwSgRCYBcDyJDLhOhyqrY8xocxv/88g==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SN6PR1501MB2064.namprd15.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230028)(4636009)(136003)(346002)(376002)(366004)(39860400002)(396003)(451199021)(4326008)(66556008)(66476007)(6916009)(316002)(31696002)(36756003)(6512007)(6506007)(53546011)(66946007)(186003)(54906003)(86362001)(5660300002)(7416002)(8936002)(2616005)(8676002)(2906002)(83380400001)(38100700002)(41300700001)(31686004)(6486002)(6666004)(478600001)(45980500001)(43740500002);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?WlpZWjFhSGdTclRnWFRKa0dBZFZNSGRMb25zc2grREtPQVpyWFV3YkZYUEJz?=
- =?utf-8?B?bTFZSWd5Vnk4ZFdxWmpKMGo0aTkrbTBpZ1JKWjBRNjBkRVNkZVdVc2piL0gv?=
- =?utf-8?B?c0lFUDJrSXMrRk5UVWdhS04vV3RyZkZzZmU5aXZSZTNyOWF5RVhNcmJzVzZz?=
- =?utf-8?B?c29zSFdMeDVhYmNxWElhd1dRZzdTQ3lhN2VHbkVPa1lseW1pUmhVVjFUaHpy?=
- =?utf-8?B?WHIwL2xFaFBKSXg3MDkwWUQyWElTdlBoZVg5R2ZDTHplWGtpaG55SmYzZkRY?=
- =?utf-8?B?bklqZElqS01MTGJDWklOaTJMTVNjZ0RqNTI3eFNSaG1qbWljdkJRckk0R25P?=
- =?utf-8?B?TTlqc0F4Y3AwcjM1RXBGUUdUYmJ3aUZmc3F1aTYya2dQQ2FwWmswRGhrcEhZ?=
- =?utf-8?B?aVNoWlRvRXZiak9Qa1FDczFpMlVMN1ZqNUxQMzVLTG1YVGl5OTFmazByc0tn?=
- =?utf-8?B?VGlOMEdLWWh3bXBEUDBFZWp6dXJOM2pWeFVaME5GWHhMdkhHUnNQWjQ1YU1i?=
- =?utf-8?B?NG82N09JNW12cHA5OGtSR2xpZ1NmeEpLMVJ3R21yMm5NK1oreG1QbmNHZlJQ?=
- =?utf-8?B?S1dmcC9aamFRMnF5elZUSjJvRGFucGxPUnhwTWdveVZUYlFKQmd3Uy9sVHFz?=
- =?utf-8?B?anhlZTJ4UFpodmE0ZWM3S3VuaUJ2UEVDUXltYlkvV0YvL2IxbWd3QUVPODZS?=
- =?utf-8?B?YittN3RacEx4TTZ1NWZsandkK2xHbVNOTitLaXo5Y1RHdGd5c2RWOW92STQ5?=
- =?utf-8?B?S2E1YWs1WEtpb0FMMjBBS3UrNFpjeTN1eDQrSXpxeG5HVXdQODlmNE10MTZr?=
- =?utf-8?B?dnJXM2JxMmVFYm9Wc01BYjU5ODJTMzhWaUFVcjEzNmVkOWtRR2tpVFhpdVhR?=
- =?utf-8?B?MkE1bll5MlNhQ2F6TWN4WXJORkZtL0xUOXhJM0xMWVpKZlV3bGhFV1pLdGVQ?=
- =?utf-8?B?Sk03TjJMWmxHYmczNGtPaFpPUkVIa1Vjb3UzSTV2OHF4eHM4djI2bXI0T20r?=
- =?utf-8?B?RCtwUmN5VHpTWWV5dHdtYkVPMTkrVGFOeVpqVW5tNmFTa1lyM0tGUXhqQXlZ?=
- =?utf-8?B?VEZNeEFLYW9VVEp4WTJDNTZjdFl6MFVJTmRZY09CUVExcUJEUHJLWm9Xa3BC?=
- =?utf-8?B?WDY5bW52bXliRldtZzdBaU1aYzZVak11V2N3OWpkQ3JlU1QzaGJkVC9rcjJH?=
- =?utf-8?B?MHEzVVA4K1FGS0pmUi9udGFobzkyZTNoN1BRV0J2YTZjZnROc3BWeENkWCta?=
- =?utf-8?B?ekdTdjVrTTNrUHdkb20rVU5TTEgvOU0yNkRTNnRWWGlxZTlpNDJHd21qMzV6?=
- =?utf-8?B?YlhCUHkyb0JaQnNLRUt2K2FYWndpY1pTczJyTm5nUjBvbGNsMnBIQjVlWGtU?=
- =?utf-8?B?OE8yU1VncnEzcDJOcDJiYmJNdkJjb3JzcWQ2azVtdGhycGJoNUZFdmlPN2li?=
- =?utf-8?B?ZEtyKzhLU3hhTHAvL3pDc3llN0lnT2hRdkR5Y2l1cjdEUjVZWm5Bb0dTVVVZ?=
- =?utf-8?B?R3ZyeEVOTUFackJzSU1vMXA2WTBudUtiTHcrNXpsVVpwc2VKS0FXd0h1ZGw1?=
- =?utf-8?B?Um4vekM5bFh6SWdGNjFxaml0UkVvSU5iK0tUOVB3eVRISlkzNUVKdVIzZlYy?=
- =?utf-8?B?QlNLNkZNdkFFNzF1RWRtSlFVaHlaZWhWRXZJOWJkTHpUT1I1amt4MkdJdm1o?=
- =?utf-8?B?MzVnT0VmeE11blJjWllZNE5jREpJSk5nWUFOSXhEOTZycU9ReDNTUjUyUkN0?=
- =?utf-8?B?VVJWb2p4Y0tVYzdqZk43R0VOTjNhN1RqYTd1YWorRlY3UGdXR21lRkROVFdh?=
- =?utf-8?B?YVJudytUTnJiYXEwMUlBUDA1QXI4VERHTmxaMGFQdEd3U2VGOXBFL0R1RkIr?=
- =?utf-8?B?aXZpenhCN0NNZ2NZMmprOFlaL2JGS2pyL0N4RDNXVDNjMlBsMUx5S0YxNGZq?=
- =?utf-8?B?RXQ5a1Z4NC83WWhNbzAwNWwvaUZWdElVb3YxUHdDNFJEd0NkM3Q1enI4K1Zl?=
- =?utf-8?B?QkZIWktoUWpUcm5lcWowRDJQK3o5MzFEL2I3NW50dDMxTERac0lKQ1FLZzg5?=
- =?utf-8?B?T3FtdXJ2N09WdWFvcWllYVZ3cjQyZnBhTDQrbFd1VFlGRFA2M0tmN0M0YzdO?=
- =?utf-8?B?bi9NTno4a1pJaGxGTlFNNFV4cmNKbVl4azV0Z2NnTU1NQ05jNmx5eUVGMnZS?=
- =?utf-8?B?bnc9PQ==?=
-X-OriginatorOrg: meta.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: d39e2250-071a-4f54-b751-08db519402c4
-X-MS-Exchange-CrossTenant-AuthSource: SN6PR1501MB2064.namprd15.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 10 May 2023 20:20:34.9115
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 8ae927fe-1255-47a7-a2af-5f3a069daaa2
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: KdtOiI8CZQp0Z5GRkz+/tsSP3gxklSvHyISA5ZA/IIjTmi6jb6a0sF62wmuLyDJP
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BLAPR15MB3859
-X-Proofpoint-GUID: bWN-3fyqV8N449bdHH6upYe3g5-R4rKe
-X-Proofpoint-ORIG-GUID: bWN-3fyqV8N449bdHH6upYe3g5-R4rKe
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.254,Aquarius:18.0.942,Hydra:6.0.573,FMLib:17.11.170.22
- definitions=2023-05-10_04,2023-05-05_01,2023-02-09_01
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: redhat.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
+On Thu, 2023-05-04 at 12:59 +0100, Valentin Schneider wrote:
+> +Daniel
+>=20
+> On 03/05/23 16:59, Peter Zijlstra wrote:
+> > On Wed, Apr 19, 2023 at 12:45:08AM -0300, Leonardo Br=C3=A1s wrote:
+> > >=20
+> > > IIUC the last commits add tracepoints that are collected in the
+> > > requesting CPU, at the moment of scheduling the IPI, which are also u=
+seful in
+> > > some scenarios.
+> > >=20
+> > > On my scenario, it could help a little,=C2=A0since it makes possible =
+to filter what
+> > > all other cpus are scheduling on the requested cpu. OTOH it could be =
+also be
+> > > misleading, as the requested cpu could be running something that was =
+scheduled
+> > > way before.
+> > >=20
+> > > The change I propose does exactly what my scenario need: track exactl=
+y which
+> > > function was running at given time in the requested CPU. With this in=
+fo, we can
+> > > check which (if any) remotely requested function was running on given=
+ time
+> > > window.
+> >=20
+> > I was thinking you could simply (graph)-trace
+> > __flush_smp_call_function_queue() with a max_graph_depth or so (Steve
+> > says that ought to work).
+> >=20
+> > But even that might be too specific, your use case sounds more like wha=
+t
+> > we have the irq-off latency tracer for, and that thing will immediately
+> > tell you what functions were being ran.
+> >=20
+> > > (An unrelated thing I just thought: We could even use the commits you=
+ pointed
+> > > together with my proposed change in order to measure how long does it=
+ take for a
+> > > requested function to run / complete in the requested cpu)
+> >=20
+> > I don't think you could actually do that; the send tracepoints Valentin
+> > added don't log the csd address, this means you cannot distinguish
+> > two CSDs with the same function send from different CPUs.
+> >=20
+> > To do this you'd need to add the csd address to the the ipi_send
+> > tracepoints and your own (possibly replacing info -- because I don't
+> > think that's too useful).
+> >=20
+> > Valentin -- is any of this something you'd also find useful?
+>=20
+> Conceptually yeah, however:
+>=20
+> With isolcpus + NOHZ_FULL, *any* IPI sent to an isolated CPU is game over=
+,
+> you interrupt the userspace task and you eat the full meal that is
+> NOHZ_FULL kernel entry. Pretty much any such IPI will show up when
+> evaluating your setup with rteval/rlta/whatever, so having an event at
+> IPI reception is redundant.
+>=20
+> IIUC Leonardo's looking at a setup with isolcpus but not necessarily
+> NOHZ_FULL, so he wants to look at *which* IPIs (if any) are pushing the
+> isolated task over its deadline/period. I would argue any IPI received
+> there is at risk of doing that, so it's the same fight as with NOHZ_FULL.
+>=20
+> With that said, I suppose this could still be helpful for e.g. osnoise to
+> hook into and point the finger at which CPU/context sent the problematic
+> IPI. Or more generally, as Leonardo suggested, to measure CSD IPI deliver=
+y
+> times.
+>=20
+> One thing though is that trace_ipi_send_cpu*() is not used solely for
+> CSD's, cf. irq_work_raise() or smp_send_reschedule(). We might want to
+> split that into e.g. trace_csd_queue_cpu*() + trace_ipi_send*().
+>=20
+> Something like so...
+>=20
+> ---
+> diff --git a/include/trace/events/smp.h b/include/trace/events/smp.h
+> new file mode 100644
+> index 0000000000000..8fc725a2b45b9
+> --- /dev/null
+> +++ b/include/trace/events/smp.h
+> @@ -0,0 +1,69 @@
+> +/* SPDX-License-Identifier: GPL-2.0 */
+> +#undef TRACE_SYSTEM
+> +#define TRACE_SYSTEM smp
+> +
+> +#if !defined(_TRACE_SMP_H) || defined(TRACE_HEADER_MULTI_READ)
+> +#define _TRACE_SMP_H
+> +
+> +#include <linux/tracepoint.h>
+> +
+> +TRACE_EVENT(csd_queue_cpu,
+> +
+> +=09TP_PROTO(const unsigned int cpu,
+> +=09=09 unsigned long callsite,
+> +=09=09 smp_call_func_t func,
+> +=09=09 call_single_data_t *csd),
+> +
+> +=09TP_ARGS(cpu, callsite, func, csd),
+> +
+> +=09TP_STRUCT__entry(
+> +=09=09__field(unsigned int, cpu)
+> +=09=09__field(void *, callsite)
+> +=09=09__field(void *, func)
+> +=09=09__field(void *, csd)
+> +=09),
+> +
+> +=09TP_fast_assign(
+> +=09=09__entry->cpu =3D cpu;
+> +=09=09__entry->callsite =3D (void *)callsite;
+> +=09=09__entry->func =3D func;
+> +=09=09__entry->csd  =3D csd;
+> +=09),
+> +
+> +=09TP_printk("cpu=3D%u callsite=3D%pS func=3D%pS csd=3D%p",
+> +=09=09  __entry->cpu, __entry->callsite, __entry->func, __entry->csd)
+> +);
+
+This is for the caller side, right?
+
+> +
+> +DECLARE_EVENT_CLASS(csd_function,
+> +
+> +=09TP_PROTO(smp_call_func_t func, call_single_data_t *csd),
+> +
+> +=09TP_ARGS(func, csd),
+> +
+> +=09TP_STRUCT__entry(
+> +=09=09__field(void *,=09func)
+> +=09=09__field(void *,=09csd)
+> +=09),
+> +
+> +=09TP_fast_assign(
+> +=09=09__entry->func=09=3D func;
+> +=09=09__entry->csd=09=3D csd;
+> +=09),
+> +
+> +=09TP_printk("func=3D%pS csd=3D%p", __entry->func, __entry->csd)
+> +);
+> +
+> +DEFINE_EVENT(csd_function, csd_function_entry,
+> +=09TP_PROTO(smp_call_func_t func, call_single_data_t *csd),
+> +=09TP_ARGS(func, csd)
+> +);
+> +
+> +DEFINE_EVENT(csd_function, csd_function_exit,
+> +=09TP_PROTO(smp_call_func_t func, call_single_data_t *csd),
+> +=09TP_ARGS(func, csd)
+> +);
+
+Oh, this is what event_class is for. Thanks for the example :)
+
+> +
+> +#endif /* _TRACE_SMP_H */
+> +
+> +/* This part must be outside protection */
+> +#include <trace/define_trace.h>
+> diff --git a/kernel/smp.c b/kernel/smp.c
+> index ab3e5dad6cfe9..7d28db303e9bc 100644
+> --- a/kernel/smp.c
+> +++ b/kernel/smp.c
+> @@ -27,6 +27,9 @@
+>  #include <linux/jump_label.h>
+> =20
+>  #include <trace/events/ipi.h>
+> +#define CREATE_TRACE_POINTS
+> +#include <trace/events/smp.h>
+> +#undef CREATE_TRACE_POINTS
+> =20
+>  #include "smpboot.h"
+>  #include "sched/smp.h"
+> @@ -121,6 +124,14 @@ send_call_function_ipi_mask(struct cpumask *mask)
+>  =09arch_send_call_function_ipi_mask(mask);
+>  }
+> =20
+> +static __always_inline void
+> +csd_do_func(smp_call_func_t func, void *info, call_single_data_t *csd)
+> +{
+> +=09trace_csd_function_entry(func, csd);
+> +=09func(info);
+> +=09trace_csd_function_exit(func, csd);
+> +}
+> +
+
+Good one, a helper to avoid calling those traces everywhere.=20
+
+Honest question:=C2=A0
+Since info =3D=3D csd->info and func =3D=3D csd->func, we could just pass c=
+sd, right?
+I suppose the suggestion on the 3-argument version is to use the values alr=
+eady
+fetched from memory instead of fetching them again. Is that correct?
+
+>  #ifdef CONFIG_CSD_LOCK_WAIT_DEBUG
+> =20
+>  static DEFINE_STATIC_KEY_MAYBE(CONFIG_CSD_LOCK_WAIT_DEBUG_DEFAULT, csdlo=
+ck_debug_enabled);
+> @@ -329,7 +340,7 @@ void __smp_call_single_queue(int cpu, struct llist_no=
+de *node)
+>  =09 * even if we haven't sent the smp_call IPI yet (e.g. the stopper
+>  =09 * executes migration_cpu_stop() on the remote CPU).
+>  =09 */
+> -=09if (trace_ipi_send_cpu_enabled()) {
+> +=09if (trace_csd_queue_cpu_enabled()) {
+>  =09=09call_single_data_t *csd;
+>  =09=09smp_call_func_t func;
+> =20
+> @@ -337,7 +348,7 @@ void __smp_call_single_queue(int cpu, struct llist_no=
+de *node)
+>  =09=09func =3D CSD_TYPE(csd) =3D=3D CSD_TYPE_TTWU ?
+>  =09=09=09sched_ttwu_pending : csd->func;
+> =20
+> -=09=09trace_ipi_send_cpu(cpu, _RET_IP_, func);
+> +=09=09trace_csd_queue_cpu(cpu, _RET_IP_, func, csd);
+>  =09}
+> =20
+>  =09/*
+> @@ -375,7 +386,7 @@ static int generic_exec_single(int cpu, struct __call=
+_single_data *csd)
+>  =09=09csd_lock_record(csd);
+>  =09=09csd_unlock(csd);
+>  =09=09local_irq_save(flags);
+> -=09=09func(info);
+> +=09=09csd_do_func(func, info, NULL);
+>  =09=09csd_lock_record(NULL);
+>  =09=09local_irq_restore(flags);
+>  =09=09return 0;
+> @@ -477,7 +488,7 @@ static void __flush_smp_call_function_queue(bool warn=
+_cpu_offline)
+>  =09=09=09}
+> =20
+>  =09=09=09csd_lock_record(csd);
+> -=09=09=09func(info);
+> +=09=09=09csd_do_func(func, info, csd);
+>  =09=09=09csd_unlock(csd);
+>  =09=09=09csd_lock_record(NULL);
+>  =09=09} else {
+> @@ -508,7 +519,7 @@ static void __flush_smp_call_function_queue(bool warn=
+_cpu_offline)
+> =20
+>  =09=09=09=09csd_lock_record(csd);
+>  =09=09=09=09csd_unlock(csd);
+> -=09=09=09=09func(info);
+> +=09=09=09=09csd_do_func(func, info, csd);
+>  =09=09=09=09csd_lock_record(NULL);
+>  =09=09=09} else if (type =3D=3D CSD_TYPE_IRQ_WORK) {
+>  =09=09=09=09irq_work_single(csd);
+> @@ -522,8 +533,10 @@ static void __flush_smp_call_function_queue(bool war=
+n_cpu_offline)
+>  =09/*
+>  =09 * Third; only CSD_TYPE_TTWU is left, issue those.
+>  =09 */
+> -=09if (entry)
+> -=09=09sched_ttwu_pending(entry);
+> +=09if (entry) {
+> +=09=09csd =3D llist_entry(entry, typeof(*csd), node.llist);
+> +=09=09csd_do_func(sched_ttwu_pending, entry, csd);
+> +=09}
+>  }
+> =20
+> =20
+> @@ -624,7 +637,7 @@ EXPORT_SYMBOL(smp_call_function_single);
+> =20
+>  /**
+>   * smp_call_function_single_async() - Run an asynchronous function on a
+> - * =09=09=09         specific CPU.
+> + *=09=09=09=09 specific CPU.
+>   * @cpu: The CPU to run on.
+>   * @csd: Pre-allocated and setup data structure
+>   *
+> @@ -728,7 +741,7 @@ static void smp_call_function_many_cond(const struct =
+cpumask *mask,
+>  =09int cpu, last_cpu, this_cpu =3D smp_processor_id();
+>  =09struct call_function_data *cfd;
+>  =09bool wait =3D scf_flags & SCF_WAIT;
+> -=09int nr_cpus =3D 0, nr_queued =3D 0;
+> +=09int nr_cpus =3D 0;
+>  =09bool run_remote =3D false;
+>  =09bool run_local =3D false;
+> =20
+> @@ -786,21 +799,16 @@ static void smp_call_function_many_cond(const struc=
+t cpumask *mask,
+>  =09=09=09csd->node.src =3D smp_processor_id();
+>  =09=09=09csd->node.dst =3D cpu;
+>  #endif
+> +
+> +=09=09=09trace_csd_queue_cpu(cpu, _RET_IP_, func, csd);
+> +
+>  =09=09=09if (llist_add(&csd->node.llist, &per_cpu(call_single_queue, cpu=
+))) {
+>  =09=09=09=09__cpumask_set_cpu(cpu, cfd->cpumask_ipi);
+>  =09=09=09=09nr_cpus++;
+>  =09=09=09=09last_cpu =3D cpu;
+>  =09=09=09}
+> -=09=09=09nr_queued++;
+>  =09=09}
+> =20
+> -=09=09/*
+> -=09=09 * Trace each smp_function_call_*() as an IPI, actual IPIs
+> -=09=09 * will be traced with func=3D=3Dgeneric_smp_call_function_single_=
+ipi().
+> -=09=09 */
+> -=09=09if (nr_queued)
+> -=09=09=09trace_ipi_send_cpumask(cfd->cpumask, _RET_IP_, func);
+> -
+>  =09=09/*
+>  =09=09 * Choose the most efficient way to send an IPI. Note that the
+>  =09=09 * number of CPUs might be zero due to concurrent changes to the
+> @@ -816,7 +824,7 @@ static void smp_call_function_many_cond(const struct =
+cpumask *mask,
+>  =09=09unsigned long flags;
+> =20
+>  =09=09local_irq_save(flags);
+> -=09=09func(info);
+> +=09=09csd_do_func(func, info, NULL);
+>  =09=09local_irq_restore(flags);
+>  =09}
+> =20
+>=20
+
+I will rebase my patch on top of tip/smp/core and apply the suggested chang=
+es.
+A v2 will be send shortly.
+
+Thank you all for reviewing!
+Leo
 
 
-On 5/10/23 10:27 AM, Jiri Olsa wrote:
-> On Wed, May 10, 2023 at 07:13:58AM -0700, Yonghong Song wrote:
->>
->>
->> On 5/10/23 5:20 AM, Ze Gao wrote:
->>> BPF_LINK_TYPE_KPROBE_MULTI attaches kprobe programs through fprobe,
->>> however it does not takes those kprobe blacklisted into consideration,
->>> which likely introduce recursive traps and blows up stacks.
->>>
->>> this patch adds simple check and remove those are in kprobe_blacklist
->>> from one fprobe during bpf_kprobe_multi_link_attach. And also
->>> check_kprobe_address_safe is open for more future checks.
->>>
->>> note that ftrace provides recursion detection mechanism, but for kprobe
->>> only, we can directly reject those cases early without turning to ftrace.
->>>
->>> Signed-off-by: Ze Gao <zegao@tencent.com>
->>> ---
->>>    kernel/trace/bpf_trace.c | 37 +++++++++++++++++++++++++++++++++++++
->>>    1 file changed, 37 insertions(+)
->>>
->>> diff --git a/kernel/trace/bpf_trace.c b/kernel/trace/bpf_trace.c
->>> index 9a050e36dc6c..44c68bc06bbd 100644
->>> --- a/kernel/trace/bpf_trace.c
->>> +++ b/kernel/trace/bpf_trace.c
->>> @@ -2764,6 +2764,37 @@ static int get_modules_for_addrs(struct module ***mods, unsigned long *addrs, u3
->>>    	return arr.mods_cnt;
->>>    }
->>> +static inline int check_kprobe_address_safe(unsigned long addr)
->>> +{
->>> +	if (within_kprobe_blacklist(addr))
->>> +		return -EINVAL;
->>> +	else
->>> +		return 0;
->>> +}
->>> +
->>> +static int check_bpf_kprobe_addrs_safe(unsigned long *addrs, int num)
->>> +{
->>> +	int i, cnt;
->>> +	char symname[KSYM_NAME_LEN];
->>> +
->>> +	for (i = 0; i < num; ++i) {
->>> +		if (check_kprobe_address_safe((unsigned long)addrs[i])) {
->>> +			lookup_symbol_name(addrs[i], symname);
->>> +			pr_warn("bpf_kprobe: %s at %lx is blacklisted\n", symname, addrs[i]);
->>
->> So user request cannot be fulfilled and a warning is issued and some
->> of user requests are discarded and the rest is proceeded. Does not
->> sound a good idea.
->>
->> Maybe we should do filtering in user space, e.g., in libbpf, check
->> /sys/kernel/debug/kprobes/blacklist and return error
->> earlier? bpftrace/libbpf-tools/bcc-tools all do filtering before
->> requesting kprobe in the kernel.
-> 
-> also fprobe uses ftrace drectly without paths in kprobe, so I wonder
-> some of the kprobe blacklisted functions are actually safe
-
-Could you give a pointer about 'some of the kprobe blacklisted
-functions are actually safe'?
-
-> 
-> jirka
-> 
->>
->>> +			/* mark blacklisted symbol for remove */
->>> +			addrs[i] = 0;
->>> +		}
->>> +	}
->>> +
->>> +	/* remove blacklisted symbol from addrs */
->>> +	for (i = 0, cnt = 0; i < num; ++i) {
->>> +		if (addrs[i])
->>> +			addrs[cnt++]  = addrs[i];
->>> +	}
->>> +
->>> +	return cnt;
->>> +}
->>> +
->>>    int bpf_kprobe_multi_link_attach(const union bpf_attr *attr, struct bpf_prog *prog)
->>>    {
->>>    	struct bpf_kprobe_multi_link *link = NULL;
->>> @@ -2859,6 +2890,12 @@ int bpf_kprobe_multi_link_attach(const union bpf_attr *attr, struct bpf_prog *pr
->>>    	else
->>>    		link->fp.entry_handler = kprobe_multi_link_handler;
->>> +	cnt = check_bpf_kprobe_addrs_safe(addrs, cnt);
->>> +	if (!cnt) {
->>> +		err = -EINVAL;
->>> +		goto error;
->>> +	}
->>> +
->>>    	link->addrs = addrs;
->>>    	link->cookies = cookies;
->>>    	link->cnt = cnt;
