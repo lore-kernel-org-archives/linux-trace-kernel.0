@@ -2,79 +2,75 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 399AEC7EE22
-	for <linux-trace-kernel@archiver.kernel.org>; Tue,  9 May 2023 20:42:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 24567C7EE22
+	for <linux-trace-kernel@archiver.kernel.org>; Wed, 10 May 2023 07:09:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235067AbjEIUmv (ORCPT
+        id S236409AbjEJHJ2 (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Tue, 9 May 2023 16:42:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37414 "EHLO
+        Wed, 10 May 2023 03:09:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40736 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234791AbjEIUmt (ORCPT
+        with ESMTP id S236424AbjEJHJV (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Tue, 9 May 2023 16:42:49 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4422D1BDB;
-        Tue,  9 May 2023 13:42:48 -0700 (PDT)
+        Wed, 10 May 2023 03:09:21 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 06B3355B9;
+        Wed, 10 May 2023 00:09:15 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id CDC10618EB;
-        Tue,  9 May 2023 20:42:47 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C8F6DC433EF;
-        Tue,  9 May 2023 20:42:46 +0000 (UTC)
-Date:   Tue, 9 May 2023 16:42:44 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Cc:     Beau Belgrave <beaub@linux.microsoft.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 8A0D362D6E;
+        Wed, 10 May 2023 07:09:14 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2D514C433D2;
+        Wed, 10 May 2023 07:09:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1683702553;
+        bh=+clB4KgowCdBV0mrjLZYn4tmrVpCL43g49dGwUiETu4=;
+        h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+        b=NHPuozW3dvsESE/msZt0irjjsu/dRADQ1xYQSJhylIncQnOybYMKXulAUagHRx9Ji
+         ET5SSGdHhQYzxHr8YrjVSMzEoqIcOhLalVoNaz2SOf8FJ0IntrSZTwdQ7s/rJwMlw1
+         jngEZWbe9zJAbezg/bFvX6IJAmIUC+J4iJI6CRHWBRI4Oci7P6Mo9MFniuIMsxcERZ
+         tC9Kd4HZwZ/Yi3+VfdCKq6qJjelMpjrIc4uENdoX7XJHeuRgHU7y+InHSkuJnTnyOQ
+         4JUyZvgfcq8Rv7BGR1emIpGw1xT0tYi3Q2K+1RF/D88jnO/5cZq2Gh/ePugcJ2n8u8
+         gCc5Er1UP6EMQ==
+From:   =?utf-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn@kernel.org>
+To:     Song Shuai <suagrfillet@gmail.com>, paul.walmsley@sifive.com,
+        palmer@dabbelt.com, aou@eecs.berkeley.edu, rostedt@goodmis.org,
+        mhiramat@kernel.org, mark.rutland@arm.com, guoren@kernel.org,
+        e.shatokhin@yadro.com
+Cc:     linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
         linux-trace-kernel@vger.kernel.org,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Andrii Nakryiko <andrii@kernel.org>, bpf <bpf@vger.kernel.org>,
-        David Vernet <void@manifault.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: Re: [PATCH] tracing/user_events: Run BPF program if attached
-Message-ID: <20230509164244.3163e421@rorschach.local.home>
-In-Reply-To: <20230509163050.127d5123@rorschach.local.home>
-References: <20230508163751.841-1-beaub@linux.microsoft.com>
-        <CAADnVQLYL-ZaP_2vViaktw0G4UKkmpOK2q4ZXBa+f=M7cC25Rg@mail.gmail.com>
-        <20230509130111.62d587f1@rorschach.local.home>
-        <20230509163050.127d5123@rorschach.local.home>
-X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+        Song Shuai <suagrfillet@gmail.com>
+Subject: Re: [PATCH V8 1/4] riscv: select
+ FTRACE_MCOUNT_USE_PATCHABLE_FUNCTION_ENTRY
+In-Reply-To: <20230324033342.3177979-2-suagrfillet@gmail.com>
+References: <20230324033342.3177979-1-suagrfillet@gmail.com>
+ <20230324033342.3177979-2-suagrfillet@gmail.com>
+Date:   Wed, 10 May 2023 09:09:10 +0200
+Message-ID: <87a5ycfysp.fsf@all.your.base.are.belong.to.us>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On Tue, 9 May 2023 16:30:50 -0400
-Steven Rostedt <rostedt@goodmis.org> wrote:
+Song Shuai <suagrfillet@gmail.com> writes:
 
-> >From the user space side, which does:  
-> 
-> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/samples/user_events/example.c#n60
-> 
-> 	/* Check if anyone is listening */
-> 	if (enabled) {
+> In RISC-V, -fpatchable-function-entry option is used to support
+> dynamic ftrace in this commit afc76b8b8011 ("riscv: Using
+> PATCHABLE_FUNCTION_ENTRY instead of MCOUNT"). So recordmcount
+> don't have to be called to create the __mcount_loc section before
+> the vmlinux linking.
+>
+> Here selects FTRACE_MCOUNT_USE_PATCHABLE_FUNCTION_ENTRY to tell
+> Makefile not to run recordmcount.
+>
+> Link: https://lore.kernel.org/linux-riscv/CAAYs2=3Dj3Eak9vU6xbAw0zPuoh00r=
+h8v5C2U3fePkokZFibWs2g@mail.gmail.com/T/#t
+> Link: https://lore.kernel.org/linux-riscv/Y4jtfrJt+%2FQ5nMOz@spud/
+> Signed-off-by: Song Shuai <suagrfillet@gmail.com>
+> Tested-by: Guo Ren <guoren@kernel.org>
+> Signed-off-by: Guo Ren <guoren@kernel.org>
 
-Hmm, looking at this deeper, we should update it to prevent the
-compiler from optimizing it, and keeping "enabled" in a register. Which
-would not work. Should probably add:
-
-	if (*(const volatile int *)&enabled) {
-
--- Steve
-
-
-> 		/* Yep, trace out our data */
-> 		writev(data_fd, (const struct iovec *)io, 2);
-> 
-> 		/* Increase the count */
-> 		count++;
-> 
-> 		printf("Something was attached, wrote data\n");
-> 	}
-
+Acked-by: Bj=C3=B6rn T=C3=B6pel <bjorn@rivosinc.com>
