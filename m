@@ -2,244 +2,185 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CFB60C77B7F
-	for <linux-trace-kernel@archiver.kernel.org>; Thu, 11 May 2023 10:57:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6908BC7EE2A
+	for <linux-trace-kernel@archiver.kernel.org>; Thu, 11 May 2023 13:31:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237912AbjEKK5T (ORCPT
+        id S229847AbjEKNbf (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Thu, 11 May 2023 06:57:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43748 "EHLO
+        Thu, 11 May 2023 09:31:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47322 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237871AbjEKK5S (ORCPT
+        with ESMTP id S238018AbjEKNbU (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Thu, 11 May 2023 06:57:18 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 925AA7EEA
-        for <linux-trace-kernel@vger.kernel.org>; Thu, 11 May 2023 03:56:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1683802588;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=tJZQ2TQo82z6Oemv+3a/ZReUoAgQPxK5a+WyIZI499E=;
-        b=YVv34xLd9inl1TZ/tyA21PRYg6/RHz0RhC+EjHQhIdD9PeIrVPEsEk7Prgdegjkw3jUVmJ
-        AD5r8nEDXbmVplrxXkDP1SxtYKLakTY/Fnl/mjJovYf9F6JTw5ValYC4RE+03A33Azkym7
-        aiqYbjU1KdZfL7f4ZzB8TS1B70/yrHQ=
-Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
- [209.85.128.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-626-cAe_9S9sO8qvR4cOo9sOSw-1; Thu, 11 May 2023 06:56:28 -0400
-X-MC-Unique: cAe_9S9sO8qvR4cOo9sOSw-1
-Received: by mail-wm1-f70.google.com with SMTP id 5b1f17b1804b1-3f42d18a079so16122935e9.2
-        for <linux-trace-kernel@vger.kernel.org>; Thu, 11 May 2023 03:56:27 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1683802585; x=1686394585;
-        h=mime-version:message-id:date:references:in-reply-to:subject:cc:to
-         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=tJZQ2TQo82z6Oemv+3a/ZReUoAgQPxK5a+WyIZI499E=;
-        b=mAy9n7svO90hYZ5scIR4JOllJk/I8lGln+ojXKjZ1cjGIRe4aF8gAi9Kwo2SuD7agt
-         MaBcLI/uoJBvKNQcky0YZuswKWJF2LHsFyvxwm4OEHuqLI9XhiZsA8fnhJU4aV46WpBN
-         xqEKUZPE75hvR7JKuaXdBjXW7tFvnaRLBvuO1CiPwRsO5X12pTR4SgBIDq6dXYXI3C6Z
-         Bywj80pW23QVAZxa5N/av6UyHNz6tLft7r838yEaUhldZwpVlwe/qq9IAU0RHCj3+TPc
-         mpseJrRU7isKUJl9UFolT1B0ohlYkgL0kKJPqaLEwCigIzAnIkZkvLvTUfnuM/xbORno
-         CGfA==
-X-Gm-Message-State: AC+VfDwku13H3s+315l4ZuLCBr+f6MlF3fL1HlzKzqrkDQhSRUcTOUs0
-        Tr45vbA8ozW8jlGljCprZ7qJCsxwYeWqCqofi36cxB/+3qVLCouwjmw3/F1QMroz3IIj8QIQvK6
-        cAeQbeTNJJIfiJRCAmIi9qtJH+wIMMeir23dj9mGw9z9EyXthYXBQqc1RyRQ+YDSIC2Ko3AlMhm
-        SYGJGwwgLGryy/yNnE
-X-Received: by 2002:a7b:cc13:0:b0:3f3:468d:d017 with SMTP id f19-20020a7bcc13000000b003f3468dd017mr15288300wmh.6.1683802585090;
-        Thu, 11 May 2023 03:56:25 -0700 (PDT)
-X-Google-Smtp-Source: ACHHUZ4H/cgL05AV28bp78/4RrLkVyRmBQBkCfDxojUE6Q4dcoXKlU4gD3MeQOb/1rNztmQYtxnPcQ==
-X-Received: by 2002:a7b:cc13:0:b0:3f3:468d:d017 with SMTP id f19-20020a7bcc13000000b003f3468dd017mr15288266wmh.6.1683802584736;
-        Thu, 11 May 2023 03:56:24 -0700 (PDT)
-Received: from vschneid.remote.csb ([154.57.232.159])
-        by smtp.gmail.com with ESMTPSA id l4-20020a5d4104000000b00304832cd960sm19965543wrp.10.2023.05.11.03.56.23
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 11 May 2023 03:56:24 -0700 (PDT)
-From:   Valentin Schneider <vschneid@redhat.com>
-To:     Leonardo Bras <leobras@redhat.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Leonardo Bras <leobras@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        Juergen Gross <jgross@suse.com>,
-        Yury Norov <yury.norov@gmail.com>,
-        Chen Zhongjin <chenzhongjin@huawei.com>,
-        Zhen Lei <thunder.leizhen@huawei.com>,
-        Marcelo Tosatti <mtosatti@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Nadav Amit <namit@vmware.com>,
-        Daniel Bristot de Oliveira <bristot@kernel.org>
-Cc:     linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
-Subject: Re: [RFC PATCH v3 1/1] trace,smp: Add tracepoints around remotelly
- called functions
-In-Reply-To: <20230510230128.150384-1-leobras@redhat.com>
-References: <20230510230128.150384-1-leobras@redhat.com>
-Date:   Thu, 11 May 2023 11:56:23 +0100
-Message-ID: <xhsmhsfc3i1bc.mognet@vschneid.remote.csb>
+        Thu, 11 May 2023 09:31:20 -0400
+Received: from mta-01.yadro.com (mta-02.yadro.com [89.207.88.252])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 340308A7D;
+        Thu, 11 May 2023 06:30:48 -0700 (PDT)
+Received: from mta-01.yadro.com (localhost.localdomain [127.0.0.1])
+        by mta-01.yadro.com (Proxmox) with ESMTP id D4CDC34257E;
+        Thu, 11 May 2023 16:30:45 +0300 (MSK)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yadro.com; h=cc
+        :cc:content-transfer-encoding:content-type:content-type:date
+        :from:from:in-reply-to:message-id:mime-version:references
+        :reply-to:subject:subject:to:to; s=mta-01; bh=9JSAwBIFENdjbz+Vq+
+        nThd7WXvA6GppuJ7tkjnIXu/k=; b=gWsLhjlCdbmdg+EGw4lMtZRCfZM5VZAuLg
+        BnY9a/x+66pOGpC38TjYzZY4xa8fuenks3nZkuRRhl7x3hcLRKKHQXoP6NWCyFmk
+        qgYP4MqlU+njE2Tgf2GnF5GMv9Co3i/CTqkegqnSBRcMF1oChw5ANOE1abLz2HZc
+        hdilUnOB4=
+Received: from T-EXCH-08.corp.yadro.com (unknown [172.17.10.14])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mta-01.yadro.com (Proxmox) with ESMTPS id CB119342574;
+        Thu, 11 May 2023 16:30:45 +0300 (MSK)
+Received: from [10.178.154.27] (10.178.154.27) by T-EXCH-08.corp.yadro.com
+ (172.17.11.58) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.2.1118.9; Thu, 11 May
+ 2023 16:30:44 +0300
+Message-ID: <50d56c9c-49c7-8d93-6698-3d0e90d89c54@yadro.com>
+Date:   Thu, 11 May 2023 16:30:44 +0300
 MIME-Version: 1.0
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
-Content-Type: text/plain
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.10.0
+Subject: Re: [PATCH V9 3/4] riscv: ftrace: Add
+ DYNAMIC_FTRACE_WITH_DIRECT_CALLS support
+To:     =?UTF-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn@kernel.org>,
+        Song Shuai <suagrfillet@gmail.com>
+CC:     <linux-riscv@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
+        <linux-trace-kernel@vger.kernel.org>, <paul.walmsley@sifive.com>,
+        <rostedt@goodmis.org>, <palmer@dabbelt.com>,
+        <aou@eecs.berkeley.edu>, <mhiramat@kernel.org>,
+        <mark.rutland@arm.com>, <guoren@kernel.org>, <jszhang@kernel.org>
+References: <20230510101857.2953955-1-suagrfillet@gmail.com>
+ <20230510101857.2953955-4-suagrfillet@gmail.com>
+ <87ttwjjpx8.fsf@all.your.base.are.belong.to.us>
+Content-Language: en-US
+From:   Evgenii Shatokhin <e.shatokhin@yadro.com>
+In-Reply-To: <87ttwjjpx8.fsf@all.your.base.are.belong.to.us>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.178.154.27]
+X-ClientProxiedBy: T-EXCH-01.corp.yadro.com (172.17.10.101) To
+ T-EXCH-08.corp.yadro.com (172.17.11.58)
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On 10/05/23 20:01, Leonardo Bras wrote:
-> When running RT workloads in isolated CPUs, many cases of deadline misses
-> are caused by remote CPU requests such as smp_call_function*().
->
-> For those cases, having the names of those functions running around the
-> deadline miss moment could help (a lot) finding a target for the next
-> improvements.
->
-> Add tracepoints for acquiring the function name & csd before entry and
-> after returning from the remote-cpu requested function.
->
-> Also, add tracepoints on the remote cpus requesting them.
+Hi,
 
-Per the v1 thread, I got some context as to why we want this, but this
-changelog is quite sparse on the subject. How about:
+On 11.05.2023 10:19, Björn Töpel wrote:
+> Song Shuai <suagrfillet@gmail.com> writes:
+> 
+>> This patch adds DYNAMIC_FTRACE_WITH_DIRECT_CALLS support for RISC-V.
+>>
+>> select the DYNAMIC_FTRACE_WITH_DIRECT_CALLS to provide the
+>> register_ftrace_direct[_multi] interfaces allowing users to register
+>> the customed trampoline (direct_caller) as the mcount for one or
+>> more target functions. And modify_ftrace_direct[_multi] are also
+>> provided for modifying direct_caller.
+>>
+>> To make the direct_caller and the other ftrace hooks (eg. function/fgraph
+>> tracer, k[ret]probes) co-exist, a temporary register is nominated to
+>> store the address of direct_caller in ftrace_regs_caller. After the
+>> setting of the address direct_caller by direct_ops->func and the
+>> RESTORE_REGS in ftrace_regs_caller, direct_caller will be jumped to
+>> by the `jr` inst.
+>>
+>> Signed-off-by: Song Shuai <suagrfillet@gmail.com>
+>> Tested-by: Guo Ren <guoren@kernel.org>
+>> Signed-off-by: Guo Ren <guoren@kernel.org>
+>> ---
+>>   arch/riscv/Kconfig              |  1 +
+>>   arch/riscv/include/asm/ftrace.h |  8 ++++++++
+>>   arch/riscv/kernel/mcount-dyn.S  | 10 ++++++++++
+>>   3 files changed, 19 insertions(+)
+>>
+>> diff --git a/arch/riscv/Kconfig b/arch/riscv/Kconfig
+>> index e0632493482f..fdf0b219a02c 100644
+>> --- a/arch/riscv/Kconfig
+>> +++ b/arch/riscv/Kconfig
+>> @@ -144,6 +144,7 @@ config RISCV
+>>        select UACCESS_MEMCPY if !MMU
+>>        select ZONE_DMA32 if 64BIT
+>>        select HAVE_DYNAMIC_FTRACE if !XIP_KERNEL && MMU && (CLANG_SUPPORTS_DYNAMIC_FTRACE || GCC_SUPPORTS_DYNAMIC_FTRACE)
+>> +     select HAVE_DYNAMIC_FTRACE_WITH_DIRECT_CALLS
+>>        select HAVE_DYNAMIC_FTRACE_WITH_REGS if HAVE_DYNAMIC_FTRACE
+>>        select HAVE_FTRACE_MCOUNT_RECORD if !XIP_KERNEL
+>>        select HAVE_FUNCTION_GRAPH_TRACER
+>> diff --git a/arch/riscv/include/asm/ftrace.h b/arch/riscv/include/asm/ftrace.h
+>> index 84f856a3286e..84904c1e4369 100644
+>> --- a/arch/riscv/include/asm/ftrace.h
+>> +++ b/arch/riscv/include/asm/ftrace.h
+>> @@ -114,6 +114,14 @@ struct ftrace_regs;
+>>   void ftrace_graph_func(unsigned long ip, unsigned long parent_ip,
+>>                       struct ftrace_ops *op, struct ftrace_regs *fregs);
+>>   #define ftrace_graph_func ftrace_graph_func
+>> +
+>> +static inline void
+>> +__arch_ftrace_set_direct_caller(struct pt_regs *regs, unsigned long addr)
+>> +{
+>> +             regs->t1 = addr;
+>> +}
+>> +#define arch_ftrace_set_direct_caller(fregs, addr) \
+>> +     __arch_ftrace_set_direct_caller(&(fregs)->regs, addr)
+>>   #endif /* CONFIG_DYNAMIC_FTRACE_WITH_REGS */
+>>
+>>   #endif /* __ASSEMBLY__ */
+>> diff --git a/arch/riscv/kernel/mcount-dyn.S b/arch/riscv/kernel/mcount-dyn.S
+>> index f26e9f6e2fed..9d405baedb52 100644
+>> --- a/arch/riscv/kernel/mcount-dyn.S
+>> +++ b/arch/riscv/kernel/mcount-dyn.S
+>> @@ -231,6 +231,7 @@ ENDPROC(ftrace_caller)
+>>
+>>   #else /* CONFIG_DYNAMIC_FTRACE_WITH_REGS */
+>>   ENTRY(ftrace_regs_caller)
+>> +     move    t1, zero
+> 
+> Please use "mv", and not "move" [1].
+> 
+>>        SAVE_ABI_REGS 1
+>>        PREPARE_ARGS
+>>
+>> @@ -239,7 +240,10 @@ ftrace_regs_call:
+>>        call    ftrace_stub
+>>
+>>        RESTORE_ABI_REGS 1
+>> +     bnez    t1,.Ldirect
+>>        jr t0
+>> +.Ldirect:
+>> +     jr t1
+> 
+> Again, while you're doing changes here, please try to align op/operands.
+> 
+> Wearing my BPF hat, I'm happy to finally get DIRECT_CALLS support!
+> 
+> This does not take the WITH_CALL_OPS approach Mark suggested in the v7
+> threads, but given that text patching story on RISC-V is still a bit sad
+> (inconsistency in the RV tree, no specification, cannot work with
+> preempt, ...) I'd say this approach is OK for now, and we can change to
+> WITH_CALL_OPS later in a wider "let's improve RISC-V textpatching" work.
+> 
+> Thoughts?
 
-"""
-The recently added ipi_send_{cpu,cpumask} tracepoints allow finding sources
-of IPIs targeting CPUs running latency-sensitive applications.
+The WITH_CALL_OPS approach seems to need much more time and effort, so, 
+yes, I'd also use this implementation of DIRECT_CALLS for now. Other 
+improvements could wait for the future "big patching rework".
 
-For NOHZ_FULL CPUs, all IPIs are interference, and those tracepoints are
-sufficient to find them and work on getting rid of them. In some setups
-however, not *all* IPIs are to be suppressed, but long-running IPI
-callbacks can still be problematic.
+FWIW, the implementation of kprobes for RISC-V has been improving 
+gradually too, not everything was done in the first very patchset, but 
+it was usable nonetheless.
 
-Add a pair of tracepoints to mark the start and end of processing a CSD IPI
-callback, similar to what exists for softirq, workqueue or timer callbacks.
-"""
+I have not tested this particular version of this 
+DYNAMIC_FTRACE_WITH_DIRECT_CALLS series, only some previous ones - there 
+were no outstanding problems there. The code looks sane to me.
 
-And you can probably split the csd_queue_cpu TP into a separate commit,
-with something along the lines of:
+> 
+> 
+> Björn
+> 
+> [1] https://github.com/riscv-non-isa/riscv-asm-manual/blob/master/riscv-asm.md#-a-listing-of-standard-risc-v-pseudoinstructions
+> 
 
-"""
-Add a tracepoint for when a CSD is queued to a remote CPU's
-call_single_queue. This allows finding exactly which CPU queued a given CSD
-when looking at a csd_function_{entry,exit} event, and also enables us to
-accurately measure IPI delivery time with e.g. a synthetic event:
+Regards,
+Evgenii
 
-  $ echo 'hist:keys=cpu,csd.hex:ts=common_timestamp.usecs' >\
-      /sys/kernel/tracing/events/smp/csd_queue_cpu/trigger
-  $ echo 'csd_latency unsigned int dst_cpu; unsigned long csd; u64 time' >\
-      /sys/kernel/tracing/synthetic_events
-  $ echo \
-  'hist:keys=common_cpu,csd.hex:'\
-  'time=common_timestamp.usecs-$ts:'\
-  'onmatch(smp.csd_queue_cpu).trace(csd_latency,common_cpu,csd,$time)' >\
-      /sys/kernel/tracing/events/smp/csd_function_entry/trigger
-
-  $ trace-cmd record -e 'synthetic:csd_latency' hackbench
-  $ trace-cmd report
-  <...>-467   [001]    21.824263: csd_queue_cpu:        cpu=0 callsite=try_to_wake_up+0x2ea func=sched_ttwu_pending csd=0xffff8880076148b8
-  <...>-467   [001]    21.824280: ipi_send_cpu:         cpu=0 callsite=try_to_wake_up+0x2ea callback=generic_smp_call_function_single_interrupt+0x0
-  <...>-489   [000]    21.824299: csd_function_entry:   func=sched_ttwu_pending csd=0xffff8880076148b8
-  <...>-489   [000]    21.824320: csd_latency:          dst_cpu=0, csd=18446612682193848504, time=36
-"""
-
->
-> Signed-off-by: Leonardo Bras <leobras@redhat.com>
-
-Overall I like the CSD vs IPI split, it's a saner approach than logging it
-all as IPIs, even if it does generate more events as we have to emit an
-event for every csd queued (i.e. no _cpumask() variant is possible).
-
-Some nitpicks below, and one other thing: are we happy with the smp event
-namespace, and with the new TP names? Should the namespace be csd instead,
-to match the trace_<namespace>_* nomenclature?
-
-> ---
->
-> Changes since RFCv2:
-> - Fixed some spacing issues and trace calls
->
-> Changes since RFCv1:
-> - Implemented trace_csd_queue_cpu() as suggested by Valentin Schneider
-> - Using EVENT_CLASS in order to avoid duplication
-> - Introduced new helper: csd_do_func()
-> - Name change from smp_call_function_* to csd_function_*
-> - Rebased on top of torvalds/master
->
->  include/trace/events/smp.h | 72 ++++++++++++++++++++++++++++++++++++++
->  kernel/smp.c               | 41 +++++++++++++---------
->  2 files changed, 96 insertions(+), 17 deletions(-)
->  create mode 100644 include/trace/events/smp.h
->
-> diff --git a/include/trace/events/smp.h b/include/trace/events/smp.h
-> new file mode 100644
-> index 000000000000..c304318a0203
-> --- /dev/null
-> +++ b/include/trace/events/smp.h
-> @@ -0,0 +1,72 @@
-> +/* SPDX-License-Identifier: GPL-2.0 */
-> +#undef TRACE_SYSTEM
-> +#define TRACE_SYSTEM smp
-> +
-> +#if !defined(_TRACE_SMP_H) || defined(TRACE_HEADER_MULTI_READ)
-> +#define _TRACE_SMP_H
-> +
-> +#include <linux/tracepoint.h>
-> +
-> +TRACE_EVENT(csd_queue_cpu,
-> +
-> +	TP_PROTO(const unsigned int cpu,
-> +		 unsigned long callsite,
-> +		 smp_call_func_t func,
-> +		 call_single_data_t *csd),
-> +
-> +	TP_ARGS(cpu, callsite, func, csd),
-> +
-> +	TP_STRUCT__entry(
-> +		__field(unsigned int, cpu)
-> +		__field(void *, callsite)
-> +		__field(void *, func)
-> +		__field(void *, csd)
-> +	),
-> +
-> +	TP_fast_assign(
-> +		__entry->cpu = cpu;
-> +		__entry->callsite = (void *)callsite;
-> +		__entry->func = func;
-> +		__entry->csd  = csd;
-> +	),
-> +
-> +	TP_printk("cpu=%u callsite=%pS func=%pS csd=%p",
-                                       ^^^^^^^^
-This can be func=%ps, offsets should always be 0 so not very useful (I know
-I put %pS for the IPI TPs, that's a force of habit...)
-
-> +		  __entry->cpu, __entry->callsite, __entry->func, __entry->csd)
-> +);
-
-> +
-> +/*
-> + * Tracepoints for a function which is called as an effect of smp_call_function.*
-> + */
-> +DECLARE_EVENT_CLASS(csd_function,
-> +
-> +	TP_PROTO(smp_call_func_t func, call_single_data_t *csd),
-> +
-> +	TP_ARGS(func, csd),
-> +
-> +	TP_STRUCT__entry(
-> +		__field(void *,	func)
-> +		__field(void *,	csd)
-> +	),
-> +
-> +	TP_fast_assign(
-> +		__entry->func	= func;
-> +		__entry->csd	= csd;
-> +	),
-> +
-> +	TP_printk("function %ps, csd = %p", __entry->func, __entry->csd)
-
-To match the style of the other TPs, that should be:
-
-        TP_printk("func=%ps csd=%p", __entry->func, __entry->csd)
 
