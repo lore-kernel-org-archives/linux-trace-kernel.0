@@ -2,236 +2,209 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA359C77B7F
-	for <linux-trace-kernel@archiver.kernel.org>; Thu, 11 May 2023 09:27:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D6E28C7EE24
+	for <linux-trace-kernel@archiver.kernel.org>; Thu, 11 May 2023 09:32:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237689AbjEKJ1T (ORCPT
+        id S237579AbjEKJcv (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Thu, 11 May 2023 05:27:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48532 "EHLO
+        Thu, 11 May 2023 05:32:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53898 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234000AbjEKJ0o (ORCPT
+        with ESMTP id S237560AbjEKJcp (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Thu, 11 May 2023 05:26:44 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6E4E36E9D
-        for <linux-trace-kernel@vger.kernel.org>; Thu, 11 May 2023 02:25:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1683797140;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=nv3K94+E4w0eulJx7qgnISp/XkLo7GNu+tDWDqLNLbc=;
-        b=DNwTlFtwf4Q8enSNP1A4QmWP8kSsnrR7cX9F1/9b9m02C+Yof3HQk+X+eb1yaL4YFbevsj
-        eNbe8uQTHX2AAYPNMeXjti/cSVHrxKUk0ToqIjL+NvhQHYIv9gip596M7ajRQgv69mm9QC
-        KuYrYXs1gIh/tvgJAkZ9dD1C/LocJMo=
-Received: from mail-qk1-f199.google.com (mail-qk1-f199.google.com
- [209.85.222.199]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-474-YGVboHTOORywZiLBXOszGg-1; Thu, 11 May 2023 05:25:39 -0400
-X-MC-Unique: YGVboHTOORywZiLBXOszGg-1
-Received: by mail-qk1-f199.google.com with SMTP id af79cd13be357-757987559c7so392408985a.0
-        for <linux-trace-kernel@vger.kernel.org>; Thu, 11 May 2023 02:25:39 -0700 (PDT)
+        Thu, 11 May 2023 05:32:45 -0400
+Received: from mail-pf1-x432.google.com (mail-pf1-x432.google.com [IPv6:2607:f8b0:4864:20::432])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5974A9EF3;
+        Thu, 11 May 2023 02:32:44 -0700 (PDT)
+Received: by mail-pf1-x432.google.com with SMTP id d2e1a72fcca58-643846c006fso8889814b3a.0;
+        Thu, 11 May 2023 02:32:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1683797564; x=1686389564;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=6vXnMURHEJ8PAq/yF+MqschLuaBTTxiauhRnntfE9HU=;
+        b=XsF+kvP7FH3fy3Wnl2+NuuJ22RKhSaKhWque41ruq7UcHrgEKYwwKB6V6MpWEz0CY/
+         gRQzKllmXqpG+zQEGohBhhrQsyFZVzWxIVlHCgaE8E/60qAlodVIGpASrJ742FAAbQZy
+         AHWnHQYihyvynxSewwrGL7b3zmtG3SDH6a3hV3vBybioRbUww8HImWeFRkOyzhRMJwLz
+         8/BS08MA4AMiiyVbMqRH/GPelSVDQJQ2ltI8DT6dQAvvpdqRVfNaP8TBr+gd2KxiMCCf
+         CJ+ias5XljlmVPQxtTA7PW+g2ZAp1yFTr08RcixyL2EsTUbyDFhr9e7OD/PN5QohNV9U
+         oLfw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1683797139; x=1686389139;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=nv3K94+E4w0eulJx7qgnISp/XkLo7GNu+tDWDqLNLbc=;
-        b=WXyGY4uaSifoP+XYN0rZ6A2ZyMxb/YVGE2kMlQ4WQifMnmaP1P+pxo2tYW0rNUI4DN
-         hhqSmRi1fkS7g/sgT2ZqFF8SK01bDfdKdjcd7MQtgPrO6M/wkZevyL/z2G0tsnjNsEvv
-         xB7lOTPkSewLTrkm/gjy5DzJtTeipQif5GQT/h4wpODmaiAIK6TV151Gcwez590nF0rK
-         rOTXIuPIZ96DAEnie+gtYJRW6Z1k0IHTmfYt0+lt0brW+VKqk+JI5tiDMw6vYx05Y7lN
-         qW9EaowbqP+S5EfAMrCRGiPIkBEvt1u7pDfo3C7RySlGMHOhTUodUG/GjMbO3xsCE72y
-         29og==
-X-Gm-Message-State: AC+VfDxQvVdFs+sFOQr7yZUqF2XgZOXzZJSBiDc4g1qo4QCX9aBJ5twl
-        k14LZ0VPY8mgOSTXB1UmI6BJ3FExYoN/yt2XhxMvi2W71IJK27eRq4GPGy9dJp9C0opWuo2/J41
-        o3oBOgbCW/zqG3fqUkwA2h9w9lJovyCNYhGTLY2CYrA/iRe67
-X-Received: by 2002:ac8:5b50:0:b0:3d9:45a4:e7b9 with SMTP id n16-20020ac85b50000000b003d945a4e7b9mr29625325qtw.45.1683797139036;
-        Thu, 11 May 2023 02:25:39 -0700 (PDT)
-X-Google-Smtp-Source: ACHHUZ6CfC+bzRY7It1UM9llGJVITAqGcpFflzAfkOiFZXTD0kgT1jc1DuCUQIWmLykpBNhVTPaWN1QFNLpoEV2gonE=
-X-Received: by 2002:ac8:5b50:0:b0:3d9:45a4:e7b9 with SMTP id
- n16-20020ac85b50000000b003d945a4e7b9mr29625303qtw.45.1683797138774; Thu, 11
- May 2023 02:25:38 -0700 (PDT)
+        d=1e100.net; s=20221208; t=1683797564; x=1686389564;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=6vXnMURHEJ8PAq/yF+MqschLuaBTTxiauhRnntfE9HU=;
+        b=eq6ph6vJik/tNgkFp2IrcbZHrzjaJ7SKEUv3kJHv6VAHOWIvlvtFgd9KzxL8iAhJvm
+         iLO0rWVUf2ibSklVE0EojFYvXY1vkp8eRadtPWOZghfa/+zlb+VERTw1z+vSJxu2oTjq
+         eE+SNVoWUdYfW/qOkHrL7PTLcQVHysZvwzocDrNNtQu2Dk0mtuwFJRTi46dBjFOaSIe4
+         EiorODmeI0BM8IhbWm9w6GRvimHFCgyfjnqnQI91TKgqTYZmMK5KqZsLZjxQ8lIhMNom
+         kNzXif8bmziHGocyl8wgmC0fiePbx+2+2RrEHGt9YjO3J8oo7l6uaUP0dq8mX9UFuDOd
+         oz9g==
+X-Gm-Message-State: AC+VfDyZheA/odIIaew+QP3s/XJMy/LGTIgiWuMzKrzpFy+NEcx6bQhr
+        PaxxZqyTUVC5rqD0BxJPXVI=
+X-Google-Smtp-Source: ACHHUZ7XOztf4r9M4LeORS3FUN/4uqoeVPPvSkfvXK+e2PGtjpfcE0wMaxX+pLUUI1zbbJdnz1A9eQ==
+X-Received: by 2002:a05:6a00:2189:b0:63d:4446:18ab with SMTP id h9-20020a056a00218900b0063d444618abmr25889461pfi.23.1683797563678;
+        Thu, 11 May 2023 02:32:43 -0700 (PDT)
+Received: from localhost.localdomain ([221.226.144.218])
+        by smtp.gmail.com with ESMTPSA id v16-20020aa78510000000b00627e87f51a5sm4875400pfn.161.2023.05.11.02.32.40
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 11 May 2023 02:32:43 -0700 (PDT)
+From:   Song Shuai <suagrfillet@gmail.com>
+To:     paul.walmsley@sifive.com, palmer@dabbelt.com,
+        aou@eecs.berkeley.edu, rostedt@goodmis.org, mhiramat@kernel.org,
+        mark.rutland@arm.com, guoren@kernel.org, suagrfillet@gmail.com,
+        jszhang@kernel.org, e.shatokhin@yadro.com, bjorn@rivosinc.com
+Cc:     linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-trace-kernel@vger.kernel.org
+Subject: [PATCH V10 0/4] riscv: Optimize function trace
+Date:   Thu, 11 May 2023 17:32:30 +0800
+Message-Id: <20230511093234.3123181-1-suagrfillet@gmail.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-References: <20230406075718.68672-1-leobras@redhat.com> <20230406095519.GG386572@hirez.programming.kicks-ass.net>
- <f294a74cd17bf932621a6a746d592f49770d25ec.camel@redhat.com>
- <20230503145900.GC1689514@hirez.programming.kicks-ass.net>
- <xhsmh7ctojoia.mognet@vschneid.remote.csb> <f96442e9166e4f73be772656a93c89093eddbb8b.camel@redhat.com>
- <xhsmhv8gzi8uw.mognet@vschneid.remote.csb>
-In-Reply-To: <xhsmhv8gzi8uw.mognet@vschneid.remote.csb>
-From:   Leonardo Bras Soares Passos <leobras@redhat.com>
-Date:   Thu, 11 May 2023 06:25:27 -0300
-Message-ID: <CAJ6HWG4g+KgqbJR+AsAKGG9vPViJpwXO-8bMSPzMZzYKXD_rWg@mail.gmail.com>
-Subject: Re: [RFC PATCH 1/1] smp: Add tracepoints for functions called with smp_call_function*()
-To:     Valentin Schneider <vschneid@redhat.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Yury Norov <yury.norov@gmail.com>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Nadav Amit <namit@vmware.com>,
-        Zhen Lei <thunder.leizhen@huawei.com>,
-        Chen Zhongjin <chenzhongjin@huawei.com>,
-        linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
-        Marcelo Tosatti <mtosatti@redhat.com>,
-        Daniel Bristot de Oliveira <bristot@kernel.org>
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On Thu, May 11, 2023 at 5:13=E2=80=AFAM Valentin Schneider <vschneid@redhat=
-.com> wrote:
->
-> On 10/05/23 17:27, Leonardo Br=C3=A1s wrote:
-> > On Thu, 2023-05-04 at 12:59 +0100, Valentin Schneider wrote:
-> >> +TRACE_EVENT(csd_queue_cpu,
-> >> +
-> >> +    TP_PROTO(const unsigned int cpu,
-> >> +             unsigned long callsite,
-> >> +             smp_call_func_t func,
-> >> +             call_single_data_t *csd),
-> >> +
-> >> +    TP_ARGS(cpu, callsite, func, csd),
-> >> +
-> >> +    TP_STRUCT__entry(
-> >> +            __field(unsigned int, cpu)
-> >> +            __field(void *, callsite)
-> >> +            __field(void *, func)
-> >> +            __field(void *, csd)
-> >> +    ),
-> >> +
-> >> +    TP_fast_assign(
-> >> +            __entry->cpu =3D cpu;
-> >> +            __entry->callsite =3D (void *)callsite;
-> >> +            __entry->func =3D func;
-> >> +            __entry->csd  =3D csd;
-> >> +    ),
-> >> +
-> >> +    TP_printk("cpu=3D%u callsite=3D%pS func=3D%pS csd=3D%p",
-> >> +              __entry->cpu, __entry->callsite, __entry->func, __entry=
-->csd)
-> >> +);
-> >
-> > This is for the caller side, right?
-> >
->
-> Yep, see usage lower down.
->
-> >> +
-> >> +DECLARE_EVENT_CLASS(csd_function,
-> >> +
-> >> +    TP_PROTO(smp_call_func_t func, call_single_data_t *csd),
-> >> +
-> >> +    TP_ARGS(func, csd),
-> >> +
-> >> +    TP_STRUCT__entry(
-> >> +            __field(void *, func)
-> >> +            __field(void *, csd)
-> >> +    ),
-> >> +
-> >> +    TP_fast_assign(
-> >> +            __entry->func   =3D func;
-> >> +            __entry->csd    =3D csd;
-> >> +    ),
-> >> +
-> >> +    TP_printk("func=3D%pS csd=3D%p", __entry->func, __entry->csd)
-> >> +);
-> >> +
-> >> +DEFINE_EVENT(csd_function, csd_function_entry,
-> >> +    TP_PROTO(smp_call_func_t func, call_single_data_t *csd),
-> >> +    TP_ARGS(func, csd)
-> >> +);
-> >> +
-> >> +DEFINE_EVENT(csd_function, csd_function_exit,
-> >> +    TP_PROTO(smp_call_func_t func, call_single_data_t *csd),
-> >> +    TP_ARGS(func, csd)
-> >> +);
-> >
-> > Oh, this is what event_class is for. Thanks for the example :)
-> >
-> >> +
-> >> +#endif /* _TRACE_SMP_H */
-> >> +
-> >> +/* This part must be outside protection */
-> >> +#include <trace/define_trace.h>
-> >> diff --git a/kernel/smp.c b/kernel/smp.c
-> >> index ab3e5dad6cfe9..7d28db303e9bc 100644
-> >> --- a/kernel/smp.c
-> >> +++ b/kernel/smp.c
-> >> @@ -27,6 +27,9 @@
-> >>  #include <linux/jump_label.h>
-> >>
-> >>  #include <trace/events/ipi.h>
-> >> +#define CREATE_TRACE_POINTS
-> >> +#include <trace/events/smp.h>
-> >> +#undef CREATE_TRACE_POINTS
-> >>
-> >>  #include "smpboot.h"
-> >>  #include "sched/smp.h"
-> >> @@ -121,6 +124,14 @@ send_call_function_ipi_mask(struct cpumask *mask)
-> >>      arch_send_call_function_ipi_mask(mask);
-> >>  }
-> >>
-> >> +static __always_inline void
-> >> +csd_do_func(smp_call_func_t func, void *info, call_single_data_t *csd=
-)
-> >> +{
-> >> +    trace_csd_function_entry(func, csd);
-> >> +    func(info);
-> >> +    trace_csd_function_exit(func, csd);
-> >> +}
-> >> +
-> >
-> > Good one, a helper to avoid calling those traces everywhere.
-> >
-> > Honest question:
-> > Since info =3D=3D csd->info and func =3D=3D csd->func, we could just pa=
-ss csd, right?
-> > I suppose the suggestion on the 3-argument version is to use the values=
- already
-> > fetched from memory instead of fetching them again. Is that correct?
-> >
->
-> There's also the special case of CSD_TYPE_TTWU where there is no csd->fun=
-c,
-> instead we have an implicit func mapping to sched_ttwu_pending). I think
-> it's preferable to directly feed the right things to the TP than to
-> duplicate the "decoding" logic against the *csd passed as TP argument.
->
+Changes in v10:
 
-Quite interesting, thank you for sharing!
+- add Acked-by from Björn Töpel in patch 2 and patch 4 
+- replace `move` with `mv` in patch3 
+- prettify patch 2/4 with proper tabs
 
-I sent a v3 which got a warning from the kernel testing robot. I
-already solved the warning, so please provide feedback on the rest of
-the patch.
+You can directly try it with:
 
-About the warning:
-It is an alignment error between 'struct __call_single_data' from
-generic_exec_single() and 'call_single_data_t' from csd_do_func(): the
-first is 8-byte aligned, and the second is 32-byte aligned according
-to the typedef.
-
-My first idea was to convert my patches' parameters from
-call_single_data_t to 'struct __call_single_data', but then I found
-out the 'struct' option allows splitting csd between 2 cachelines,
-which is usually bad.
-Then I decided to send a patchset [1] fixing generic_exec_single() and
-its callers. If it's accepted, the warning will go away, and v3 will
-merge cleanly.
-
-If not, I will send a v4 changing the parameters.
-
-Thanks for reviewing,
-Leo
+https://github.com/sugarfillet/linux/tree/6.4-rc1-rv-ftrace-v10
 
 
-1. https://lore.kernel.org/lkml/20230511085836.579679-1-leobras@redhat.com
+This series optimizes function trace. The first 3 independent 
+patches has been picked in the V7 version of this series, the
+subsequent version continues the following 4 patches:
+
+select FTRACE_MCOUNT_USE_PATCHABLE_FUNCTION_ENTRY [1] (patch 1)
+==========================================================
+
+In RISC-V, -fpatchable-function-entry option is used to support
+dynamic ftrace in this commit afc76b8b8011 ("riscv: Using
+PATCHABLE_FUNCTION_ENTRY instead of MCOUNT"). So recordmcount
+don't have to be called to create the __mcount_loc section before
+the vmlinux linking.
+
+Here selects FTRACE_MCOUNT_USE_PATCHABLE_FUNCTION_ENTRY to tell
+Makefile not to run recordmcount.
+
+Make function graph use ftrace directly [2] (patch 2)
+======================================================== 
+
+In RISC-V architecture, when we enable the ftrace_graph tracer on some
+functions, the function tracings on other functions will suffer extra
+graph tracing work. In essence, graph_ops isn't limited by its func_hash
+due to the global ftrace_graph_[regs]_call label. That should be
+corrected.
+
+What inspires me is the commit 0c0593b45c9b ("x86/ftrace: Make function
+graph use ftrace directly") that uses graph_ops::func function to
+install return_hooker and makes the function called against its
+func_hash.
+
+Add WITH_DIRECT_CALLS support [3] (patch 3, 4)
+==============================================
+
+This series adds DYNAMIC_FTRACE_WITH_DIRECT_CALLS support for RISC-V.
+SAMPLE_FTRACE_DIRECT and SAMPLE_FTRACE_DIRECT_MULTI are also included
+here as the samples for testing DIRECT_CALLS related interface.
+
+First, select the DYNAMIC_FTRACE_WITH_DIRECT_CALLS to provide 
+register_ftrace_direct[_multi] interfaces allowing user to register 
+the customed trampoline (direct_caller) as the mcount for one or 
+more target functions. And modify_ftrace_direct[_multi] are also 
+provided for modify direct_caller.
+
+At the same time, the samples in ./samples/ftrace/ can be built
+as kerenl module for testing these interfaces with SAMPLE_FTRACE_DIRECT
+and SAMPLE_FTRACE_DIRECT_MULTI selected.
+
+Second, to make the direct_caller and the other ftrace hooks
+(eg. function/fgraph tracer, k[ret]probes) co-exist, a temporary
+register
+are nominated to store the address of direct_caller in
+ftrace_regs_caller.
+After the setting of the address direct_caller by direct_ops->func and
+the RESTORE_REGS in ftrace_regs_caller, direct_caller will be jumped to
+by the `jr` inst.
+
+The series's old changes related these patches
+==========================================
+
+Changes in v9:
+https://lore.kernel.org/linux-riscv/20230510101857.2953955-1-suagrfillet@gmail.com/
+
+1. add Acked-by from Björn Töpel in patch 1
+
+2. rebase patch2/patch3 on Linux v6.4-rc1
+
+  - patch 2: to make the `SAVE_ABI_REGS` configurable, revert the
+    modification of mcount-dyn.S from commit (45b32b946a97 "riscv:
+entry: Consolidate general regs saving/restoring")
+
+  - patch 3: to pass the trace_selftest, add the implement of
+    `ftrace_stub_direct_tramp` from commit (fee86a4ed536 "ftrace:
+selftest: remove broken trace_direct_tramp") ; and fixup the context
+conflict in Kconfig 
+
+Changes in v8:
+https://lore.kernel.org/linux-riscv/20230324033342.3177979-1-suagrfillet@gmail.com/
+ - Fix incorrect address values in the 4nd patch 
+ - Rebased on v6.3-rc2
+
+Changes in v7:
+https://lore.kernel.org/linux-riscv/20230112090603.1295340-1-guoren@kernel.org/
+ - Fixup RESTORE_ABI_REGS by remove PT_T0(sp) overwrite.
+ - Add FTRACE_MCOUNT_USE_PATCHABLE_FUNCTION_ENTRY [1]
+ - Fixup kconfig with HAVE_SAMPLE_FTRACE_DIRECT &
+   HAVE_SAMPLE_FTRACE_DIRECT_MULTI
+
+Changes in v6:
+https://lore.kernel.org/linux-riscv/20230107133549.4192639-1-guoren@kernel.org/
+ - Replace 8 with MCOUNT_INSN_SIZE
+ - Replace "REG_L a1, PT_RA(sp)" with "mv a1, ra"
+ - Add Evgenii Shatokhin comment
+
+Changes in v5:
+https://lore.kernel.org/linux-riscv/20221208091244.203407-1-guoren@kernel.org/
+ - Sort Kconfig entries in alphabetical order.
+
+Changes in v4:
+https://lore.kernel.org/linux-riscv/20221129033230.255947-1-guoren@kernel.org/
+ - Include [3] for maintenance. [Song Shuai]
+
+Changes in V3:
+https://lore.kernel.org/linux-riscv/20221123153950.2911981-1-guoren@kernel.org/
+ - Include [2] for maintenance. [Song Shuai]
+
+[1]: https://lore.kernel.org/linux-riscv/CAAYs2=j3Eak9vU6xbAw0zPuoh00rh8v5C2U3fePkokZFibWs2g@mail.gmail.com/T/#t
+[2]: https://lore.kernel.org/lkml/20221120084230.910152-1-suagrfillet@gmail.com/
+[3]: https://lore.kernel.org/linux-riscv/20221123142025.1504030-1-suagrfillet@gmail.com/ 
+
+Song Shuai (4):
+  riscv: select FTRACE_MCOUNT_USE_PATCHABLE_FUNCTION_ENTRY
+  riscv: ftrace: Add ftrace_graph_func
+  riscv: ftrace: Add DYNAMIC_FTRACE_WITH_DIRECT_CALLS support
+  samples: ftrace: Add riscv support for SAMPLE_FTRACE_DIRECT[_MULTI]
+
+ arch/riscv/Kconfig                          |   4 +
+ arch/riscv/include/asm/ftrace.h             |  19 +-
+ arch/riscv/kernel/ftrace.c                  |  30 ++-
+ arch/riscv/kernel/mcount-dyn.S              | 200 ++++++++++++++++----
+ samples/ftrace/ftrace-direct-modify.c       |  34 ++++
+ samples/ftrace/ftrace-direct-multi-modify.c |  40 ++++
+ samples/ftrace/ftrace-direct-multi.c        |  24 +++
+ samples/ftrace/ftrace-direct-too.c          |  27 +++
+ samples/ftrace/ftrace-direct.c              |  23 +++
+ 9 files changed, 345 insertions(+), 56 deletions(-)
+
+-- 
+2.20.1
 
