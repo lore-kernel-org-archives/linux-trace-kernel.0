@@ -2,81 +2,199 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6842EC77B7F
-	for <linux-trace-kernel@archiver.kernel.org>; Thu, 11 May 2023 19:44:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D75B4C77B7C
+	for <linux-trace-kernel@archiver.kernel.org>; Fri, 12 May 2023 05:53:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239431AbjEKToI (ORCPT
+        id S239886AbjELFxX (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Thu, 11 May 2023 15:44:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57784 "EHLO
+        Fri, 12 May 2023 01:53:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37770 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S239333AbjEKTns (ORCPT
+        with ESMTP id S239603AbjELFxW (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Thu, 11 May 2023 15:43:48 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BFBBDE72B;
-        Thu, 11 May 2023 12:43:02 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 008C26515C;
-        Thu, 11 May 2023 19:42:07 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 17D80C433EF;
-        Thu, 11 May 2023 19:42:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1683834126;
-        bh=QpVinai7JL1pP3rlbbUdOOyw1HmQ+Nd16p9jSiVEw10=;
-        h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-        b=bwcXVRwxBue8gU9VyMRjLJ8rs6LCJhDK0kQ2Ju9IpqIOHGLQVIJ3J05dZPj8j7w9a
-         buxnKBKltkT8RTR5qxgDcACuogbG2AtMvMDBIhjzI6ofeDtRYEN3m0xR19e8hu3D1P
-         rxaD66Wmlvz9lZojNlRbBIyDdzL+vA7uNZWUH+XcFxT53luDEqvnDIqUgGVsFa4/N0
-         bjN8PKO8K3VBsJjtRI7gZ/+urSSHoPMS0dNjWPkBmqV7ZbDO69Tdz5OXBg9VL0/eua
-         NsF6cwVfOb1g/A6ZgmzWJo/RIcE/RsB7LQSX5qe4FV3NU/inG9qNGhBFXvrTOeqHAR
-         ltCoUnfR6sPqA==
-From:   =?utf-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn@kernel.org>
-To:     Song Shuai <suagrfillet@gmail.com>, paul.walmsley@sifive.com,
-        palmer@dabbelt.com, aou@eecs.berkeley.edu, rostedt@goodmis.org,
-        mhiramat@kernel.org, mark.rutland@arm.com, guoren@kernel.org,
-        suagrfillet@gmail.com, jszhang@kernel.org, e.shatokhin@yadro.com,
-        bjorn@rivosinc.com
-Cc:     linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-trace-kernel@vger.kernel.org
-Subject: Re: [PATCH V10 3/4] riscv: ftrace: Add
- DYNAMIC_FTRACE_WITH_DIRECT_CALLS support
-In-Reply-To: <20230511093234.3123181-4-suagrfillet@gmail.com>
-References: <20230511093234.3123181-1-suagrfillet@gmail.com>
- <20230511093234.3123181-4-suagrfillet@gmail.com>
-Date:   Thu, 11 May 2023 21:42:03 +0200
-Message-ID: <87zg6ad59w.fsf@all.your.base.are.belong.to.us>
+        Fri, 12 May 2023 01:53:22 -0400
+Received: from mail-ed1-x52a.google.com (mail-ed1-x52a.google.com [IPv6:2a00:1450:4864:20::52a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4A6CB30E1;
+        Thu, 11 May 2023 22:53:21 -0700 (PDT)
+Received: by mail-ed1-x52a.google.com with SMTP id 4fb4d7f45d1cf-50bc4ba28cbso16829188a12.0;
+        Thu, 11 May 2023 22:53:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1683870800; x=1686462800;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=zxEocq0cfbYqCnvqhVYRjwnXYTxjRtW9m6JsKrCrFjQ=;
+        b=brIEtQeiBhOcopDhT/dmPSOsg8BwWq0rrYoH3l62MzdBqpGWO1YOtQ252k+4PnaIH/
+         RjuoYyyi+cqmj7otFmPpRIx//Oz8yLLfoBe9RwC6a8BnQ+KYG0CqElWKfLuMa6cHw0fG
+         WEVRhrfiwTnxtNYxz3BBVC2/dE29DSmpdQwmL9pJm5qbXIVC+YQhX1D4KUngrIA9u1bK
+         /nkwJ6459gqfHyhYrOFbQ16vrGtjnjgNFzLgLkVoRhRvRwb6o9q/R5882wOXRxPhnP+u
+         Wg/OIsFjRfbL5r8Il93oFcpV9oYjpIWu5w3Ysptvk4jFMmprBh+T5B8zIKiU5HQxnXgN
+         +j6Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1683870800; x=1686462800;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=zxEocq0cfbYqCnvqhVYRjwnXYTxjRtW9m6JsKrCrFjQ=;
+        b=ht9UYXWHNn5friLaUg4wbY25AsNbnEfVwOduo4QfhZZ9lLSNA/Pu7Lld9pIU5S+FVM
+         kgpFy8eKtR/fqlW/HmU74l1oUXkjhFX9UpRV5bZSSQjBMFZUDrc2RYu4ZcdlRdpc499C
+         fcHxVekctKAyuJNxI5VQrhinKJyaU+9zXdAqODhaatuLCgJZVdUoCXEEW5vkZDx1iHHx
+         keUHiNmkSSBivkPyYsd0bXnYGNy294b9oGHvlShAaFucW+EXSD25e9Z5cnICtQUrRkuc
+         McxLdAN37J36XzWfRfS5iRnaxgawoYnz+7mGMszquGJlGM0CgpMNdusRkoknRkaqGapt
+         XliA==
+X-Gm-Message-State: AC+VfDx2Km/VJ0DhtkIVQImnW133/ET6ztdgBMFN2bAjWccQaEYB200s
+        Yttabku+b2AD7px1yDkL6sOOmPZj2fPA6+cZDI5cXKWU4f9xfQ==
+X-Google-Smtp-Source: ACHHUZ4FynjIPPaRLICd8flpj3EVm6gbWqtiVTs85jGrlqaTN3rWa9GbkNK5KELWuXPd1X32nxP0j7kzOPHLSIIlAg4=
+X-Received: by 2002:aa7:c546:0:b0:4be:b39b:ea8f with SMTP id
+ s6-20020aa7c546000000b004beb39bea8fmr17653998edr.2.1683870799671; Thu, 11 May
+ 2023 22:53:19 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+References: <20230510122045.2259-1-zegao@tencent.com> <6308b8e0-8a54-e574-a312-0a97cfbf810c@meta.com>
+ <ZFvUH+p0ebcgnwEg@krava>
+In-Reply-To: <ZFvUH+p0ebcgnwEg@krava>
+From:   Ze Gao <zegao2021@gmail.com>
+Date:   Fri, 12 May 2023 13:53:08 +0800
+Message-ID: <CAD8CoPC_=d+Aocp8pnSi9cbU6HWBNc697bKUS1UydtB-4DFzrA@mail.gmail.com>
+Subject: Re: [PATCH] bpf: reject blacklisted symbols in kprobe_multi to avoid
+ recursive trap
+To:     Jiri Olsa <olsajiri@gmail.com>
+Cc:     Yonghong Song <yhs@meta.com>, Song Liu <song@kernel.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Andrii Nakryiko <andrii@kernel.org>,
+        Martin KaFai Lau <martin.lau@linux.dev>,
+        Yonghong Song <yhs@fb.com>,
+        John Fastabend <john.fastabend@gmail.com>,
+        KP Singh <kpsingh@kernel.org>,
+        Stanislav Fomichev <sdf@google.com>,
+        Hao Luo <haoluo@google.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Ze Gao <zegao@tencent.com>, bpf@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-Song Shuai <suagrfillet@gmail.com> writes:
+Yes, Jiri. Thanks for pointing it out. It's true that not all probe
+blacklisted functions should be banned from bpf_kprobe.
 
-> This patch adds DYNAMIC_FTRACE_WITH_DIRECT_CALLS support for RISC-V.
->
-> select the DYNAMIC_FTRACE_WITH_DIRECT_CALLS to provide the
-> register_ftrace_direct[_multi] interfaces allowing users to register
-> the customed trampoline (direct_caller) as the mcount for one or
-> more target functions. And modify_ftrace_direct[_multi] are also
-> provided for modifying direct_caller.
->
-> To make the direct_caller and the other ftrace hooks (eg. function/fgraph
-> tracer, k[ret]probes) co-exist, a temporary register is nominated to
-> store the address of direct_caller in ftrace_regs_caller. After the
-> setting of the address direct_caller by direct_ops->func and the
-> RESTORE_REGS in ftrace_regs_caller, direct_caller will be jumped to
-> by the `jr` inst.
->
-> Signed-off-by: Song Shuai <suagrfillet@gmail.com>
-> Tested-by: Guo Ren <guoren@kernel.org>
-> Signed-off-by: Guo Ren <guoren@kernel.org>
+I tried some of them, and all kprobe blacklisted symbols I hooked
+works fine except preempt_count_{sub, add}.
+so the takeaway here is preempt_cout_{sub, add} must be rejected at
+least for now since kprobe_multi_link_prog_run
+( i.e., the fprobe handler) and rethook_trampoline_handler( i.e. the
+rethook handler) calls preempt_cout_{sub, add}.
 
-Thank you for addressing my comments, and for your work on
-WITH_DIRECT_CALLS!
+I'm considering providing a general  fprobe_blacklist framework just
+like what kprobe does to allow others to mark
+functions used inside fprobe handler or rethook handler as NOFPROBE to
+avoid potential stack recursion. But only after
+I figure out how ftrace handles recursion problems currently and why
+it fails in the case I ran into.
 
-Acked-by: Bj=C3=B6rn T=C3=B6pel <bjorn@rivosinc.com>
+Thanks
+Ze
+
+On Thu, May 11, 2023 at 1:28=E2=80=AFAM Jiri Olsa <olsajiri@gmail.com> wrot=
+e:
+>
+> On Wed, May 10, 2023 at 07:13:58AM -0700, Yonghong Song wrote:
+> >
+> >
+> > On 5/10/23 5:20 AM, Ze Gao wrote:
+> > > BPF_LINK_TYPE_KPROBE_MULTI attaches kprobe programs through fprobe,
+> > > however it does not takes those kprobe blacklisted into consideration=
+,
+> > > which likely introduce recursive traps and blows up stacks.
+> > >
+> > > this patch adds simple check and remove those are in kprobe_blacklist
+> > > from one fprobe during bpf_kprobe_multi_link_attach. And also
+> > > check_kprobe_address_safe is open for more future checks.
+> > >
+> > > note that ftrace provides recursion detection mechanism, but for kpro=
+be
+> > > only, we can directly reject those cases early without turning to ftr=
+ace.
+> > >
+> > > Signed-off-by: Ze Gao <zegao@tencent.com>
+> > > ---
+> > >   kernel/trace/bpf_trace.c | 37 +++++++++++++++++++++++++++++++++++++
+> > >   1 file changed, 37 insertions(+)
+> > >
+> > > diff --git a/kernel/trace/bpf_trace.c b/kernel/trace/bpf_trace.c
+> > > index 9a050e36dc6c..44c68bc06bbd 100644
+> > > --- a/kernel/trace/bpf_trace.c
+> > > +++ b/kernel/trace/bpf_trace.c
+> > > @@ -2764,6 +2764,37 @@ static int get_modules_for_addrs(struct module=
+ ***mods, unsigned long *addrs, u3
+> > >     return arr.mods_cnt;
+> > >   }
+> > > +static inline int check_kprobe_address_safe(unsigned long addr)
+> > > +{
+> > > +   if (within_kprobe_blacklist(addr))
+> > > +           return -EINVAL;
+> > > +   else
+> > > +           return 0;
+> > > +}
+> > > +
+> > > +static int check_bpf_kprobe_addrs_safe(unsigned long *addrs, int num=
+)
+> > > +{
+> > > +   int i, cnt;
+> > > +   char symname[KSYM_NAME_LEN];
+> > > +
+> > > +   for (i =3D 0; i < num; ++i) {
+> > > +           if (check_kprobe_address_safe((unsigned long)addrs[i])) {
+> > > +                   lookup_symbol_name(addrs[i], symname);
+> > > +                   pr_warn("bpf_kprobe: %s at %lx is blacklisted\n",=
+ symname, addrs[i]);
+> >
+> > So user request cannot be fulfilled and a warning is issued and some
+> > of user requests are discarded and the rest is proceeded. Does not
+> > sound a good idea.
+> >
+> > Maybe we should do filtering in user space, e.g., in libbpf, check
+> > /sys/kernel/debug/kprobes/blacklist and return error
+> > earlier? bpftrace/libbpf-tools/bcc-tools all do filtering before
+> > requesting kprobe in the kernel.
+>
+> also fprobe uses ftrace drectly without paths in kprobe, so I wonder
+> some of the kprobe blacklisted functions are actually safe
+>
+> jirka
+>
+> >
+> > > +                   /* mark blacklisted symbol for remove */
+> > > +                   addrs[i] =3D 0;
+> > > +           }
+> > > +   }
+> > > +
+> > > +   /* remove blacklisted symbol from addrs */
+> > > +   for (i =3D 0, cnt =3D 0; i < num; ++i) {
+> > > +           if (addrs[i])
+> > > +                   addrs[cnt++]  =3D addrs[i];
+> > > +   }
+> > > +
+> > > +   return cnt;
+> > > +}
+> > > +
+> > >   int bpf_kprobe_multi_link_attach(const union bpf_attr *attr, struct=
+ bpf_prog *prog)
+> > >   {
+> > >     struct bpf_kprobe_multi_link *link =3D NULL;
+> > > @@ -2859,6 +2890,12 @@ int bpf_kprobe_multi_link_attach(const union b=
+pf_attr *attr, struct bpf_prog *pr
+> > >     else
+> > >             link->fp.entry_handler =3D kprobe_multi_link_handler;
+> > > +   cnt =3D check_bpf_kprobe_addrs_safe(addrs, cnt);
+> > > +   if (!cnt) {
+> > > +           err =3D -EINVAL;
+> > > +           goto error;
+> > > +   }
+> > > +
+> > >     link->addrs =3D addrs;
+> > >     link->cookies =3D cookies;
+> > >     link->cnt =3D cnt;
