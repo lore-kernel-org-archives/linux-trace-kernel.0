@@ -2,54 +2,54 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 18891C77B7C
-	for <linux-trace-kernel@archiver.kernel.org>; Sat, 13 May 2023 08:18:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B3CEC77B7C
+	for <linux-trace-kernel@archiver.kernel.org>; Sat, 13 May 2023 08:24:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229653AbjEMISc (ORCPT
+        id S229756AbjEMIYJ (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Sat, 13 May 2023 04:18:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36608 "EHLO
+        Sat, 13 May 2023 04:24:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38190 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229463AbjEMISb (ORCPT
+        with ESMTP id S229463AbjEMIYI (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Sat, 13 May 2023 04:18:31 -0400
-Received: from mail-pl1-x635.google.com (mail-pl1-x635.google.com [IPv6:2607:f8b0:4864:20::635])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D334E270E;
-        Sat, 13 May 2023 01:18:30 -0700 (PDT)
-Received: by mail-pl1-x635.google.com with SMTP id d9443c01a7336-1ab267e3528so77365685ad.0;
-        Sat, 13 May 2023 01:18:30 -0700 (PDT)
+        Sat, 13 May 2023 04:24:08 -0400
+Received: from mail-pf1-x429.google.com (mail-pf1-x429.google.com [IPv6:2607:f8b0:4864:20::429])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 358552D78;
+        Sat, 13 May 2023 01:24:01 -0700 (PDT)
+Received: by mail-pf1-x429.google.com with SMTP id d2e1a72fcca58-643b7b8f8ceso5978327b3a.1;
+        Sat, 13 May 2023 01:24:01 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1683965910; x=1686557910;
+        d=gmail.com; s=20221208; t=1683966241; x=1686558241;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=hxa4rxa1h1xXqvZgIrJ/FdwQTgDs+stW88TIUg6eXhY=;
-        b=SJNnPIeB9h82iR0tlVUJNt0KW7TwWNV2/y7dxWcDwaUx1rRP/XBrywImTgs1RJ6DH+
-         2RaEH3qpmDPQjfcd/qha4tYV5mPRIMp+/tzTi2iU0QXBLPlY5ePv7px0VuUmNhvFjOgq
-         Se2bYk/0hr1aHVWID2g8MLI6EdH7W6mZEcpRAqdovCG7+f1NXqvpXvz+ROZCA8Utu6Q9
-         K2Sa6R/Ks6voIvv4zysGqvRGltjYt+yLJ8mErd9IUvU+92othwIqHNZhhI9CQMd/VVFt
-         Wgj+mxJDJRgWskf17J2mL0xF0Q/fipkTdzpo73t3sM2ucpoVU3jbkm0UjsSt0XOKcDcY
-         43og==
+        bh=HfO0FQe7LL8tpwg2PdMURaHU+jV7nrgpfKB4jccXJDQ=;
+        b=ZAJFRRMR9pPP9o8YhqxKzCA9OjaxaDllBGMYW0Qepx86qrG33daV5b3vhW5/QwNj7G
+         zubAiIlXTdHGzUTfo2pLtGj0s2Ca0qE+m34cFf+/3/zU2H0OPS8igLSELCbTGw/5UaZo
+         xL3a2c4ODXw0KzRRSHNkzY/quP+MapWc0cCS1VurCvNpwxK6WzQx4ztxNgHI2iBRbgtg
+         PHp4meI7XOYNPuRDf8naCAj2p21ni46WiBukE67MKoKhF7eAX0th5qCQogN7oWK8nfd5
+         DjL9r7eyZ0KaETXLJqG3oQmXrR8I9REiNxEUksYuN6uX/1KBc/lTwkQmJP8Js3/l0A0v
+         pmXg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1683965910; x=1686557910;
+        d=1e100.net; s=20221208; t=1683966241; x=1686558241;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=hxa4rxa1h1xXqvZgIrJ/FdwQTgDs+stW88TIUg6eXhY=;
-        b=VU/mTSbVkEdoNWLowzrg/c65efhMGdyTNF8Ij4vUTUYM2HA0nm6Nwv3WW2r7e+wQho
-         VXzZGCPubzHhc/iUGq1RH6tvBW47YmTaO+2wQRF8ilfDvVI212AkyOtxTGHkLQY1lfwJ
-         HOT9cL3+qJRp0tzGEiLt1CsfrklPB+hm4cLvfsrRZJBEDF6HgCMhKk1mnQeJ4iWSqPXo
-         b49CKRi/ESMRQaBMm7KyrLi30vFxBTQWNUpMtU0n1jyRKLQu3zbxjFScj91jZDQIDNzl
-         tGzXXKx23Uwiw9GjP1skGWRtWtngNM+ej2N7hNYOdkAlBdnNV7q+v87yqJIblSuGuJbG
-         XxBA==
-X-Gm-Message-State: AC+VfDw8GMIzD9r/m+hzAchpCWsbGNa+EYQommnRYflZwVoFzrNE7mXf
-        8z80zO1vD5NDjAOadbDshEaTal/cUhUn4g==
-X-Google-Smtp-Source: ACHHUZ6koZqghO760PzfPP7MBCnirNYhEDdAW61bzbl3IwRrdrevvHTrmiRF2hY++jAz+ZIbC4az4g==
-X-Received: by 2002:a17:903:64c:b0:1ab:107b:c127 with SMTP id kh12-20020a170903064c00b001ab107bc127mr25375943plb.59.1683965910229;
-        Sat, 13 May 2023 01:18:30 -0700 (PDT)
+        bh=HfO0FQe7LL8tpwg2PdMURaHU+jV7nrgpfKB4jccXJDQ=;
+        b=Y8l9pzBCi0phpetBnsXcjKa4eGA2Pw3q290h/bgCZVOYHTFhjRdbKNa2iMVChzCIFL
+         4tm+CPyl9oCakYfhlFPZ4a0wQ+2uVdzVsvsMCWbhCJ18js2moCHNKvfqluhZaKV/Q2jY
+         Q0X+A+lp9mRjy7m+XuqG64ttxC7/qnJvJCpJfAkhIAYTN+TqTsXu2kiy2ZuHtA73VOj1
+         bI3dDjo5Uq8LonB+UUXeERgr7UpuTljHNwKObUHFAwml9viHP7y767GcKxscsTQVA+sf
+         gFoYQAsJf7T1T+ivvSQ+U8LLNRIeH3IGz+eBmD4TLphTEG4bEL2D3ZfFCct2e0PsCV3l
+         Gfqg==
+X-Gm-Message-State: AC+VfDyAxMN4kw4plqZJx5MQxAUT5c8veKiF0KGiBWeSvPV+OhXDBa7s
+        oFZZIcIe2QQHSiEy2+bH2XE=
+X-Google-Smtp-Source: ACHHUZ4WRaqyhABODUFMw9aMNHW2FAxzuSYUm7PP6cP2LtxKukbrck/qGndKV/n3gPK60xTaF3pgJw==
+X-Received: by 2002:a05:6a00:1415:b0:641:558:8e2e with SMTP id l21-20020a056a00141500b0064105588e2emr33219775pfu.15.1683966241160;
+        Sat, 13 May 2023 01:24:01 -0700 (PDT)
 Received: from localhost.localdomain ([43.132.98.116])
-        by smtp.googlemail.com with ESMTPSA id d23-20020a170902729700b001a216d44440sm9239286pll.200.2023.05.13.01.18.28
+        by smtp.googlemail.com with ESMTPSA id g4-20020a62e304000000b00627ed4e23e0sm8225021pfh.101.2023.05.13.01.23.59
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 13 May 2023 01:18:29 -0700 (PDT)
+        Sat, 13 May 2023 01:24:00 -0700 (PDT)
 From:   Ze Gao <zegao2021@gmail.com>
 X-Google-Original-From: Ze Gao <zegao@tencent.com>
 To:     Steven Rostedt <rostedt@goodmis.org>,
@@ -57,8 +57,8 @@ To:     Steven Rostedt <rostedt@goodmis.org>,
 Cc:     Ze Gao <zegao@tencent.com>, linux-kernel@vger.kernel.org,
         linux-trace-kernel@vger.kernel.org
 Subject: [PATCH] rethook: use preempt_{disable, enable}_notrace in rethook_trampoline_handler
-Date:   Sat, 13 May 2023 16:16:56 +0800
-Message-Id: <20230513081656.375846-1-zegao@tencent.com>
+Date:   Sat, 13 May 2023 16:23:46 +0800
+Message-Id: <20230513082346.375928-1-zegao@tencent.com>
 X-Mailer: git-send-email 2.40.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -67,7 +67,7 @@ List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
 This patch replace preempt_{disable, enable} with its corresponding
-notrace version in rethook_trampoline_handler so worries about stack
+notrace version in rethook_trampoline_handler so no worries about stack
 recursion or overflow introduced by preempt_count_{add, sub} under
 fprobe + rethook context.
 
