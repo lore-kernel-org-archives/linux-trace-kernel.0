@@ -2,106 +2,139 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5ECBCC77B7F
-	for <linux-trace-kernel@archiver.kernel.org>; Sat, 13 May 2023 09:06:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A56DBC77B7C
+	for <linux-trace-kernel@archiver.kernel.org>; Sat, 13 May 2023 09:19:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231358AbjEMJGj (ORCPT
+        id S237517AbjEMJTt (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Sat, 13 May 2023 05:06:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50794 "EHLO
+        Sat, 13 May 2023 05:19:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55852 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229671AbjEMJGi (ORCPT
+        with ESMTP id S237453AbjEMJTq (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Sat, 13 May 2023 05:06:38 -0400
-Received: from mail-pf1-x432.google.com (mail-pf1-x432.google.com [IPv6:2607:f8b0:4864:20::432])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C74A4527A;
-        Sat, 13 May 2023 02:06:37 -0700 (PDT)
-Received: by mail-pf1-x432.google.com with SMTP id d2e1a72fcca58-643aad3bc41so10111034b3a.0;
-        Sat, 13 May 2023 02:06:37 -0700 (PDT)
+        Sat, 13 May 2023 05:19:46 -0400
+Received: from mail-ed1-x530.google.com (mail-ed1-x530.google.com [IPv6:2a00:1450:4864:20::530])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C5C4A35AD;
+        Sat, 13 May 2023 02:19:45 -0700 (PDT)
+Received: by mail-ed1-x530.google.com with SMTP id 4fb4d7f45d1cf-50b37f3e664so19049701a12.1;
+        Sat, 13 May 2023 02:19:45 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1683968797; x=1686560797;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=tHUxgE5ue7JMe+Nf+qn19ijZt00ZmZK/FLyVzzo0+kI=;
-        b=fL0X73L0z0cDS0zzMyUyLw30hurpYzUmAU2mdpkb5BAZ1JqFtJ20sP++/oGihohViC
-         I920md0zcNQ5pnBAWpvEs3YHjJ2Vd6I5JKMIf9qG6MR18ejL6YWZN7Cj3vn8xEtdqMmJ
-         GJvfy8ZRIVLOowF3iTtmDfUC7DGwe7v0KJCM/bgbv7TOCsy9mTIh3lUKddw1Q5D0tmWM
-         XmDS/IQe4mqgKgoNVWdQfWV8Yo0hkVjZAvrI+xGXltW776d1mCJvJvg73kPdg2tFgCwt
-         YopiD9n6WSgoiFthYWURa44tXXFz+21zJjSHkGXp6bknt0yhqdYmr7ghENjUt2XWqrBI
-         UeHg==
+        d=gmail.com; s=20221208; t=1683969584; x=1686561584;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=V/ffD06cwDqqYw9ZZG01Fo5tfB2NmW+1D8qbzBkTPeA=;
+        b=LmwSMi02wUb7imyTUGCdjBF3bcsZMsz0W7Y+n+AgTjFQ2omGRi0diD5jOswF3DmkgR
+         O5yJygYBDy4gGsW18EBQEtG64HsubWz+WnQlkK4jzdtMSbGcH5qTyf0BUB9ZhwhJxGth
+         Y2XQRrK3Th+PRjNhtggJLt8UNEn60p9KNqG3YjPUewtgcfKnXl4Z7n2YA6V23b+P3LZ4
+         vEaxEmAscJsu41kUQWtUbI17SKsWL9LSK07xuhO9yWrmJkTyUL164RsPcU0o8+PGQMK6
+         6T2GjcPICWuHoaJXMgHSiS6q94qCUv9hRTEfxE/iDLPjL/LvGhqySUCc2XWvUgHb2qBs
+         C/ng==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1683968797; x=1686560797;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=tHUxgE5ue7JMe+Nf+qn19ijZt00ZmZK/FLyVzzo0+kI=;
-        b=MucClyW4v+breYRF3COG87PGC2CEwcmEa7uZp6KdRMeItbWHGCecEhvbWx4TnUEwC4
-         OQOMMva+71815pepvM55hse2+ziSznfrQwL6HSJk79E/sApeH9XpDyH9kKNVWRYjzB5g
-         q67EdAO+JJuZvUfw7YV8UKIwEexXf8OF1x9piqKJt05uovMOO3NwEI6TyyJo3zLRgHtl
-         er/h50F8UI3YJY3DvhEBbnMw4Yp2Vo18xlRWtUILQau34M+Xughyl7gdZjn6tNkNQ7q4
-         /SwMOle6gw4mSdxyScb0+CHVVrOsTzUn/f2A3jy0gxJgoSrQOMqm75JHtu65mJZqeiNV
-         s1FQ==
-X-Gm-Message-State: AC+VfDyBS+S3wys+OHv1N4fz3Qxf61SOTfGBHFjZfFYZRwYLbqd5nBJy
-        sSny1xYiKMf2pTvsqNoDWk0=
-X-Google-Smtp-Source: ACHHUZ6Gd26eUNxOkI/AgQNmZxXwkAcvliCN1sDKofh/wV3wHLWPCX3xWK0k4XLHdylf5tlo7UWXVw==
-X-Received: by 2002:a05:6a00:2e05:b0:63e:6b8a:7975 with SMTP id fc5-20020a056a002e0500b0063e6b8a7975mr33876328pfb.9.1683968797071;
-        Sat, 13 May 2023 02:06:37 -0700 (PDT)
-Received: from localhost.localdomain ([43.132.98.116])
-        by smtp.googlemail.com with ESMTPSA id c25-20020a62e819000000b0063f172b1c47sm2057652pfi.35.2023.05.13.02.06.34
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 13 May 2023 02:06:36 -0700 (PDT)
-From:   Ze Gao <zegao2021@gmail.com>
-X-Google-Original-From: Ze Gao <zegao@tencent.com>
-To:     "Naveen N. Rao" <naveen.n.rao@linux.ibm.com>,
-        Anil S Keshavamurthy <anil.s.keshavamurthy@intel.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Masami Hiramatsu <mhiramat@kernel.org>
-Cc:     Ze Gao <zegao@tencent.com>, linux-kernel@vger.kernel.org,
-        linux-trace-kernel@vger.kernel.org
-Subject: [PATCH] kprobe: use preempt_{disable, enable}_notrace in kprobe_busy_{begin, end}
-Date:   Sat, 13 May 2023 17:05:48 +0800
-Message-Id: <20230513090548.376522-1-zegao@tencent.com>
-X-Mailer: git-send-email 2.40.1
+        d=1e100.net; s=20221208; t=1683969584; x=1686561584;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=V/ffD06cwDqqYw9ZZG01Fo5tfB2NmW+1D8qbzBkTPeA=;
+        b=YcfQr0ZSjpeEQjr3qCAUKK87VqI+gP2StL7TCNyVEtKp6i+3CnWj8YSITZbfIE3jn/
+         Yi+bX1TjCXlkl3kymEXjXcCuYjcwa5OM10ACgnSS0CL+j3nIPqwdsRRmrnOmsyXOc5Sp
+         HFn0gWSjZwsnjmNPYtVTgXkuUM1T+JqrGrNn58yl712HlAH1T7+lvz9o7qbI4q4J2Zxq
+         LAIlohwF102OiNc2JgAdyEPNKGwcJ9gwR96/5NZhtk2LFudsviOweRMivbhSlayWbvWi
+         HhJtacAQ4BkjBn667oatC5w9ILfVMOhpsCZneQ8UYeUt8ikkEs0DXjJI/WtmvCrXFjjg
+         y76w==
+X-Gm-Message-State: AC+VfDwe5votAg5Jxx44AY4JQZ5wf+Vcehbu/8SwSS9S26tKJmql4nXg
+        UFQxeAqlSsyr1qz8R5COsxLjRgA6FpMDAgDcTLWOCA+vWSssqQ==
+X-Google-Smtp-Source: ACHHUZ7DaW4VctCEmtrHbde+hfICyYiY0rVh/EkpovE1xbD08Yhm4ZkW6TZILWDyHTadFqYDWa70SgLN6pjyi7tuWP0=
+X-Received: by 2002:a05:6402:605:b0:50d:91c8:9e10 with SMTP id
+ n5-20020a056402060500b0050d91c89e10mr20037487edv.10.1683969584084; Sat, 13
+ May 2023 02:19:44 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20230510122045.2259-1-zegao@tencent.com> <6308b8e0-8a54-e574-a312-0a97cfbf810c@meta.com>
+ <ZFvUH+p0ebcgnwEg@krava> <CAD8CoPC_=d+Aocp8pnSi9cbU6HWBNc697bKUS1UydtB-4DFzrA@mail.gmail.com>
+ <ee28e791-b3ab-3dfd-161b-4e7ec055c6ff@meta.com> <20230513001757.75ae0d1b@rorschach.local.home>
+In-Reply-To: <20230513001757.75ae0d1b@rorschach.local.home>
+From:   Ze Gao <zegao2021@gmail.com>
+Date:   Sat, 13 May 2023 17:19:32 +0800
+Message-ID: <CAD8CoPBYfAyb6FtQ8KsqO-f4jfsYXoqe9heWcQkFprX=TQ50PA@mail.gmail.com>
+Subject: Re: [PATCH] bpf: reject blacklisted symbols in kprobe_multi to avoid
+ recursive trap
+To:     Steven Rostedt <rostedt@goodmis.org>
+Cc:     Yonghong Song <yhs@meta.com>, Jiri Olsa <olsajiri@gmail.com>,
+        Song Liu <song@kernel.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Andrii Nakryiko <andrii@kernel.org>,
+        Martin KaFai Lau <martin.lau@linux.dev>,
+        Yonghong Song <yhs@fb.com>,
+        John Fastabend <john.fastabend@gmail.com>,
+        KP Singh <kpsingh@kernel.org>,
+        Stanislav Fomichev <sdf@google.com>,
+        Hao Luo <haoluo@google.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Ze Gao <zegao@tencent.com>, bpf@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-Replacing preempt_{disable, enable} with its corresponding notrace
-version in kprobe_busy_{begin, end} because they are called by
-fprobe_kprobe_handler. Such changes would resolve the potential
-stack recursion or overflow problem introduced by preempt_count
-_{add, sub} when these functions themselves accidentally traced
-by fprobe+rethook, and does not break the original semantics.
+Exactly, and rethook_trampoline_handler suffers the same problem.
 
-Signed-off-by: Ze Gao <zegao@tencent.com>
----
- kernel/kprobes.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+And I've posted two patches for kprobe and rethook by using the
+notrace verison of preempt_
+{disable, enable} to fix fprobe+rethook.
+[1] https://lore.kernel.org/all/20230513081656.375846-1-zegao@tencent.com/T=
+/#u
+[2] https://lore.kernel.org/all/20230513090548.376522-1-zegao@tencent.com/T=
+/#u
 
-diff --git a/kernel/kprobes.c b/kernel/kprobes.c
-index 00e177de91cc..94d01b5d0646 100644
---- a/kernel/kprobes.c
-+++ b/kernel/kprobes.c
-@@ -1242,7 +1242,7 @@ void kprobe_busy_begin(void)
- {
- 	struct kprobe_ctlblk *kcb;
- 
--	preempt_disable();
-+	preempt_disable_notrace();
- 	__this_cpu_write(current_kprobe, &kprobe_busy);
- 	kcb = get_kprobe_ctlblk();
- 	kcb->kprobe_status = KPROBE_HIT_ACTIVE;
-@@ -1251,7 +1251,7 @@ void kprobe_busy_begin(void)
- void kprobe_busy_end(void)
- {
- 	__this_cpu_write(current_kprobe, NULL);
--	preempt_enable();
-+	preempt_enable_notrace();
- }
- 
- /* Add the new probe to 'ap->list'. */
--- 
-2.40.1
+Even worse, bpf callback introduces more such use cases, which is
+typically organized as follows
+to guard the lifetime of bpf related resources ( per-cpu access or trampoli=
+ne).
 
+migrate_disable()
+rcu_read_lock()
+...
+bpf_prog_run()
+...
+rcu_read_unlock()
+migrate_enable().
+
+But this may need to introduce fprobe_blacklist and
+bpf_kprobe_blacklist to solve such bugs at all,
+just like what Jiri and Yonghong suggested. Since bpf kprobe works on
+a different (higher and
+constrained) level than fprobe and ftrace and we cannot blindly mark
+functions (migrate_disable,
+__rcu_read_lock, etc.) used in tracer callbacks from external
+subsystems in case of semantic breakage.
+And I will try to implement these ideas later.
+
+Thanks,
+Ze
+
+On Sat, May 13, 2023 at 12:18=E2=80=AFPM Steven Rostedt <rostedt@goodmis.or=
+g> wrote:
+>
+> On Fri, 12 May 2023 07:29:02 -0700
+> Yonghong Song <yhs@meta.com> wrote:
+>
+> > A fprobe_blacklist might make sense indeed as fprobe and kprobe are
+> > quite different... Thanks for working on this.
+>
+> Hmm, I think I see the problem:
+>
+> fprobe_kprobe_handler() {
+>    kprobe_busy_begin() {
+>       preempt_disable() {
+>          preempt_count_add() {  <-- trace
+>             fprobe_kprobe_handler() {
+>                 [ wash, rinse, repeat, CRASH!!! ]
+>
+> Either the kprobe_busy_begin() needs to use preempt_disable_notrace()
+> versions, or fprobe_kprobe_handle() needs a
+> ftrace_test_recursion_trylock() call.
+>
+> -- Steve
