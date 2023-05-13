@@ -2,78 +2,102 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D197C77B7F
-	for <linux-trace-kernel@archiver.kernel.org>; Sat, 13 May 2023 04:18:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 18891C77B7C
+	for <linux-trace-kernel@archiver.kernel.org>; Sat, 13 May 2023 08:18:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229799AbjEMESD (ORCPT
+        id S229653AbjEMISc (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Sat, 13 May 2023 00:18:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40964 "EHLO
+        Sat, 13 May 2023 04:18:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36608 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229449AbjEMESC (ORCPT
+        with ESMTP id S229463AbjEMISb (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Sat, 13 May 2023 00:18:02 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2F4CA3C1E;
-        Fri, 12 May 2023 21:18:01 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id A9EA860BEA;
-        Sat, 13 May 2023 04:18:00 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 97846C433EF;
-        Sat, 13 May 2023 04:17:59 +0000 (UTC)
-Date:   Sat, 13 May 2023 00:17:57 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Yonghong Song <yhs@meta.com>
-Cc:     Ze Gao <zegao2021@gmail.com>, Jiri Olsa <olsajiri@gmail.com>,
-        Song Liu <song@kernel.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Andrii Nakryiko <andrii@kernel.org>,
-        Martin KaFai Lau <martin.lau@linux.dev>,
-        Yonghong Song <yhs@fb.com>,
-        John Fastabend <john.fastabend@gmail.com>,
-        KP Singh <kpsingh@kernel.org>,
-        Stanislav Fomichev <sdf@google.com>,
-        Hao Luo <haoluo@google.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Ze Gao <zegao@tencent.com>, bpf@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
-Subject: Re: [PATCH] bpf: reject blacklisted symbols in kprobe_multi to
- avoid recursive trap
-Message-ID: <20230513001757.75ae0d1b@rorschach.local.home>
-In-Reply-To: <ee28e791-b3ab-3dfd-161b-4e7ec055c6ff@meta.com>
-References: <20230510122045.2259-1-zegao@tencent.com>
-        <6308b8e0-8a54-e574-a312-0a97cfbf810c@meta.com>
-        <ZFvUH+p0ebcgnwEg@krava>
-        <CAD8CoPC_=d+Aocp8pnSi9cbU6HWBNc697bKUS1UydtB-4DFzrA@mail.gmail.com>
-        <ee28e791-b3ab-3dfd-161b-4e7ec055c6ff@meta.com>
-X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+        Sat, 13 May 2023 04:18:31 -0400
+Received: from mail-pl1-x635.google.com (mail-pl1-x635.google.com [IPv6:2607:f8b0:4864:20::635])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D334E270E;
+        Sat, 13 May 2023 01:18:30 -0700 (PDT)
+Received: by mail-pl1-x635.google.com with SMTP id d9443c01a7336-1ab267e3528so77365685ad.0;
+        Sat, 13 May 2023 01:18:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1683965910; x=1686557910;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=hxa4rxa1h1xXqvZgIrJ/FdwQTgDs+stW88TIUg6eXhY=;
+        b=SJNnPIeB9h82iR0tlVUJNt0KW7TwWNV2/y7dxWcDwaUx1rRP/XBrywImTgs1RJ6DH+
+         2RaEH3qpmDPQjfcd/qha4tYV5mPRIMp+/tzTi2iU0QXBLPlY5ePv7px0VuUmNhvFjOgq
+         Se2bYk/0hr1aHVWID2g8MLI6EdH7W6mZEcpRAqdovCG7+f1NXqvpXvz+ROZCA8Utu6Q9
+         K2Sa6R/Ks6voIvv4zysGqvRGltjYt+yLJ8mErd9IUvU+92othwIqHNZhhI9CQMd/VVFt
+         Wgj+mxJDJRgWskf17J2mL0xF0Q/fipkTdzpo73t3sM2ucpoVU3jbkm0UjsSt0XOKcDcY
+         43og==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1683965910; x=1686557910;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=hxa4rxa1h1xXqvZgIrJ/FdwQTgDs+stW88TIUg6eXhY=;
+        b=VU/mTSbVkEdoNWLowzrg/c65efhMGdyTNF8Ij4vUTUYM2HA0nm6Nwv3WW2r7e+wQho
+         VXzZGCPubzHhc/iUGq1RH6tvBW47YmTaO+2wQRF8ilfDvVI212AkyOtxTGHkLQY1lfwJ
+         HOT9cL3+qJRp0tzGEiLt1CsfrklPB+hm4cLvfsrRZJBEDF6HgCMhKk1mnQeJ4iWSqPXo
+         b49CKRi/ESMRQaBMm7KyrLi30vFxBTQWNUpMtU0n1jyRKLQu3zbxjFScj91jZDQIDNzl
+         tGzXXKx23Uwiw9GjP1skGWRtWtngNM+ej2N7hNYOdkAlBdnNV7q+v87yqJIblSuGuJbG
+         XxBA==
+X-Gm-Message-State: AC+VfDw8GMIzD9r/m+hzAchpCWsbGNa+EYQommnRYflZwVoFzrNE7mXf
+        8z80zO1vD5NDjAOadbDshEaTal/cUhUn4g==
+X-Google-Smtp-Source: ACHHUZ6koZqghO760PzfPP7MBCnirNYhEDdAW61bzbl3IwRrdrevvHTrmiRF2hY++jAz+ZIbC4az4g==
+X-Received: by 2002:a17:903:64c:b0:1ab:107b:c127 with SMTP id kh12-20020a170903064c00b001ab107bc127mr25375943plb.59.1683965910229;
+        Sat, 13 May 2023 01:18:30 -0700 (PDT)
+Received: from localhost.localdomain ([43.132.98.116])
+        by smtp.googlemail.com with ESMTPSA id d23-20020a170902729700b001a216d44440sm9239286pll.200.2023.05.13.01.18.28
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 13 May 2023 01:18:29 -0700 (PDT)
+From:   Ze Gao <zegao2021@gmail.com>
+X-Google-Original-From: Ze Gao <zegao@tencent.com>
+To:     Steven Rostedt <rostedt@goodmis.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>
+Cc:     Ze Gao <zegao@tencent.com>, linux-kernel@vger.kernel.org,
+        linux-trace-kernel@vger.kernel.org
+Subject: [PATCH] rethook: use preempt_{disable, enable}_notrace in rethook_trampoline_handler
+Date:   Sat, 13 May 2023 16:16:56 +0800
+Message-Id: <20230513081656.375846-1-zegao@tencent.com>
+X-Mailer: git-send-email 2.40.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On Fri, 12 May 2023 07:29:02 -0700
-Yonghong Song <yhs@meta.com> wrote:
+This patch replace preempt_{disable, enable} with its corresponding
+notrace version in rethook_trampoline_handler so worries about stack
+recursion or overflow introduced by preempt_count_{add, sub} under
+fprobe + rethook context.
 
-> A fprobe_blacklist might make sense indeed as fprobe and kprobe are 
-> quite different... Thanks for working on this.
+Signed-off-by: Ze Gao <zegao@tencent.com>
+---
+ kernel/trace/rethook.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-Hmm, I think I see the problem:
+diff --git a/kernel/trace/rethook.c b/kernel/trace/rethook.c
+index 32c3dfdb4d6a..60f6cb2b486b 100644
+--- a/kernel/trace/rethook.c
++++ b/kernel/trace/rethook.c
+@@ -288,7 +288,7 @@ unsigned long rethook_trampoline_handler(struct pt_regs *regs,
+ 	 * These loops must be protected from rethook_free_rcu() because those
+ 	 * are accessing 'rhn->rethook'.
+ 	 */
+-	preempt_disable();
++	preempt_disable_notrace();
+ 
+ 	/*
+ 	 * Run the handler on the shadow stack. Do not unlink the list here because
+@@ -321,7 +321,7 @@ unsigned long rethook_trampoline_handler(struct pt_regs *regs,
+ 		first = first->next;
+ 		rethook_recycle(rhn);
+ 	}
+-	preempt_enable();
++	preempt_enable_notrace();
+ 
+ 	return correct_ret_addr;
+ }
+-- 
+2.40.1
 
-fprobe_kprobe_handler() {
-   kprobe_busy_begin() {
-      preempt_disable() {
-         preempt_count_add() {  <-- trace
-            fprobe_kprobe_handler() {
-		[ wash, rinse, repeat, CRASH!!! ]
-
-Either the kprobe_busy_begin() needs to use preempt_disable_notrace()
-versions, or fprobe_kprobe_handle() needs a
-ftrace_test_recursion_trylock() call.
-
--- Steve
