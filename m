@@ -2,139 +2,105 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A56DBC77B7C
-	for <linux-trace-kernel@archiver.kernel.org>; Sat, 13 May 2023 09:19:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E25DC77B7D
+	for <linux-trace-kernel@archiver.kernel.org>; Sun, 14 May 2023 03:02:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237517AbjEMJTt (ORCPT
+        id S229506AbjENDCn (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Sat, 13 May 2023 05:19:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55852 "EHLO
+        Sat, 13 May 2023 23:02:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42998 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237453AbjEMJTq (ORCPT
+        with ESMTP id S229447AbjENDCm (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Sat, 13 May 2023 05:19:46 -0400
-Received: from mail-ed1-x530.google.com (mail-ed1-x530.google.com [IPv6:2a00:1450:4864:20::530])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C5C4A35AD;
-        Sat, 13 May 2023 02:19:45 -0700 (PDT)
-Received: by mail-ed1-x530.google.com with SMTP id 4fb4d7f45d1cf-50b37f3e664so19049701a12.1;
-        Sat, 13 May 2023 02:19:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1683969584; x=1686561584;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=V/ffD06cwDqqYw9ZZG01Fo5tfB2NmW+1D8qbzBkTPeA=;
-        b=LmwSMi02wUb7imyTUGCdjBF3bcsZMsz0W7Y+n+AgTjFQ2omGRi0diD5jOswF3DmkgR
-         O5yJygYBDy4gGsW18EBQEtG64HsubWz+WnQlkK4jzdtMSbGcH5qTyf0BUB9ZhwhJxGth
-         Y2XQRrK3Th+PRjNhtggJLt8UNEn60p9KNqG3YjPUewtgcfKnXl4Z7n2YA6V23b+P3LZ4
-         vEaxEmAscJsu41kUQWtUbI17SKsWL9LSK07xuhO9yWrmJkTyUL164RsPcU0o8+PGQMK6
-         6T2GjcPICWuHoaJXMgHSiS6q94qCUv9hRTEfxE/iDLPjL/LvGhqySUCc2XWvUgHb2qBs
-         C/ng==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1683969584; x=1686561584;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=V/ffD06cwDqqYw9ZZG01Fo5tfB2NmW+1D8qbzBkTPeA=;
-        b=YcfQr0ZSjpeEQjr3qCAUKK87VqI+gP2StL7TCNyVEtKp6i+3CnWj8YSITZbfIE3jn/
-         Yi+bX1TjCXlkl3kymEXjXcCuYjcwa5OM10ACgnSS0CL+j3nIPqwdsRRmrnOmsyXOc5Sp
-         HFn0gWSjZwsnjmNPYtVTgXkuUM1T+JqrGrNn58yl712HlAH1T7+lvz9o7qbI4q4J2Zxq
-         LAIlohwF102OiNc2JgAdyEPNKGwcJ9gwR96/5NZhtk2LFudsviOweRMivbhSlayWbvWi
-         HhJtacAQ4BkjBn667oatC5w9ILfVMOhpsCZneQ8UYeUt8ikkEs0DXjJI/WtmvCrXFjjg
-         y76w==
-X-Gm-Message-State: AC+VfDwe5votAg5Jxx44AY4JQZ5wf+Vcehbu/8SwSS9S26tKJmql4nXg
-        UFQxeAqlSsyr1qz8R5COsxLjRgA6FpMDAgDcTLWOCA+vWSssqQ==
-X-Google-Smtp-Source: ACHHUZ7DaW4VctCEmtrHbde+hfICyYiY0rVh/EkpovE1xbD08Yhm4ZkW6TZILWDyHTadFqYDWa70SgLN6pjyi7tuWP0=
-X-Received: by 2002:a05:6402:605:b0:50d:91c8:9e10 with SMTP id
- n5-20020a056402060500b0050d91c89e10mr20037487edv.10.1683969584084; Sat, 13
- May 2023 02:19:44 -0700 (PDT)
-MIME-Version: 1.0
-References: <20230510122045.2259-1-zegao@tencent.com> <6308b8e0-8a54-e574-a312-0a97cfbf810c@meta.com>
- <ZFvUH+p0ebcgnwEg@krava> <CAD8CoPC_=d+Aocp8pnSi9cbU6HWBNc697bKUS1UydtB-4DFzrA@mail.gmail.com>
- <ee28e791-b3ab-3dfd-161b-4e7ec055c6ff@meta.com> <20230513001757.75ae0d1b@rorschach.local.home>
-In-Reply-To: <20230513001757.75ae0d1b@rorschach.local.home>
-From:   Ze Gao <zegao2021@gmail.com>
-Date:   Sat, 13 May 2023 17:19:32 +0800
-Message-ID: <CAD8CoPBYfAyb6FtQ8KsqO-f4jfsYXoqe9heWcQkFprX=TQ50PA@mail.gmail.com>
-Subject: Re: [PATCH] bpf: reject blacklisted symbols in kprobe_multi to avoid
- recursive trap
+        Sat, 13 May 2023 23:02:42 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 370A81BD8;
+        Sat, 13 May 2023 20:02:41 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id BA00460B38;
+        Sun, 14 May 2023 03:02:40 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4B317C433D2;
+        Sun, 14 May 2023 03:02:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1684033360;
+        bh=mJ7FROF21hftwJgCmZhoKpXoDuToifD8eM33mGLt0mQ=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=prQ4Wm9AAnZCqvzAN1GjX1iBSQn2GOEr1SLXvSKe9p0dqi0+vgKKeojIyijzqwBXM
+         nEFNUGuJHEvUGJl8v3186cvW6GqYvbUdioSpLPX5nNCmPOk1957meNjwQQBu5U47To
+         zw0EpK+E3hf16xPGKAobx/HB7fUUqCaSoyPOgCs52QHRuL+HpWZTR6lMBG4JMiakSy
+         9ypg6FN2zZsEHp7nH6ESpULUWvu/ou4Yqwxcc/1r16c2upH0WV2FGxWsuHpkrzxGJ4
+         QVSwNYhvodTHW42w1qQ89L9XdcVMZhKFaiLRsQlBTVqxND9Csuf6ctEk1OwyELPJeg
+         KuHMZIwBB2hIg==
+Date:   Sun, 14 May 2023 12:02:36 +0900
+From:   Masami Hiramatsu (Google) <mhiramat@kernel.org>
 To:     Steven Rostedt <rostedt@goodmis.org>
-Cc:     Yonghong Song <yhs@meta.com>, Jiri Olsa <olsajiri@gmail.com>,
-        Song Liu <song@kernel.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Andrii Nakryiko <andrii@kernel.org>,
-        Martin KaFai Lau <martin.lau@linux.dev>,
-        Yonghong Song <yhs@fb.com>,
-        John Fastabend <john.fastabend@gmail.com>,
-        KP Singh <kpsingh@kernel.org>,
-        Stanislav Fomichev <sdf@google.com>,
-        Hao Luo <haoluo@google.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Ze Gao <zegao@tencent.com>, bpf@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Cc:     linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Florent Revest <revest@chromium.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Martin KaFai Lau <martin.lau@linux.dev>, bpf@vger.kernel.org
+Subject: Re: [PATCH v9.1 07/11] tracing/probes: Add $$args meta argument for
+ all function args
+Message-Id: <20230514120236.25fd2bcb174da8ff95ba89c1@kernel.org>
+In-Reply-To: <20230505174856.04ca1e6a@gandalf.local.home>
+References: <168299383880.3242086.7182498102007986127.stgit@mhiramat.roam.corp.google.com>
+        <168299390127.3242086.2714570777321787734.stgit@mhiramat.roam.corp.google.com>
+        <20230505174856.04ca1e6a@gandalf.local.home>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-Exactly, and rethook_trampoline_handler suffers the same problem.
+On Fri, 5 May 2023 17:48:56 -0400
+Steven Rostedt <rostedt@goodmis.org> wrote:
 
-And I've posted two patches for kprobe and rethook by using the
-notrace verison of preempt_
-{disable, enable} to fix fprobe+rethook.
-[1] https://lore.kernel.org/all/20230513081656.375846-1-zegao@tencent.com/T=
-/#u
-[2] https://lore.kernel.org/all/20230513090548.376522-1-zegao@tencent.com/T=
-/#u
+> On Tue,  2 May 2023 11:18:21 +0900
+> "Masami Hiramatsu (Google)" <mhiramat@kernel.org> wrote:
+> 
+> > From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+> > 
+> > Add the '$$args' meta fetch argument for function-entry probe events. This
+> 
+> Hmm, couldn't we just use $args ? That would be different from $arg1,
+> $arg2, etc.
+> 
+> The $$ to me would be either the bash pid of current, or perhaps it would
+> be just to use a dollar sign. I don't see the precedence of $$args being a
+> "full expand".
 
-Even worse, bpf callback introduces more such use cases, which is
-typically organized as follows
-to guard the lifetime of bpf related resources ( per-cpu access or trampoli=
-ne).
+OK, I just thought it required a bit special prefix because it will be
+expanded to several arguments (it is different from other $-params) and,
+internally, it should be handled in the different path from the other
+$-params. But the latter is internal reason, we should not care about that.
+(of course I will leave a comment it.)
 
-migrate_disable()
-rcu_read_lock()
-...
-bpf_prog_run()
-...
-rcu_read_unlock()
-migrate_enable().
+Thank you!
 
-But this may need to introduce fprobe_blacklist and
-bpf_kprobe_blacklist to solve such bugs at all,
-just like what Jiri and Yonghong suggested. Since bpf kprobe works on
-a different (higher and
-constrained) level than fprobe and ftrace and we cannot blindly mark
-functions (migrate_disable,
-__rcu_read_lock, etc.) used in tracer callbacks from external
-subsystems in case of semantic breakage.
-And I will try to implement these ideas later.
-
-Thanks,
-Ze
-
-On Sat, May 13, 2023 at 12:18=E2=80=AFPM Steven Rostedt <rostedt@goodmis.or=
-g> wrote:
->
-> On Fri, 12 May 2023 07:29:02 -0700
-> Yonghong Song <yhs@meta.com> wrote:
->
-> > A fprobe_blacklist might make sense indeed as fprobe and kprobe are
-> > quite different... Thanks for working on this.
->
-> Hmm, I think I see the problem:
->
-> fprobe_kprobe_handler() {
->    kprobe_busy_begin() {
->       preempt_disable() {
->          preempt_count_add() {  <-- trace
->             fprobe_kprobe_handler() {
->                 [ wash, rinse, repeat, CRASH!!! ]
->
-> Either the kprobe_busy_begin() needs to use preempt_disable_notrace()
-> versions, or fprobe_kprobe_handle() needs a
-> ftrace_test_recursion_trylock() call.
->
+> 
 > -- Steve
+> 
+> 
+> > will be expanded to the all arguments of the function and the tracepoint
+> > using BTF function argument information.
+> > 
+> > e.g.
+> >  #  echo 'p vfs_read $$args' >> dynamic_events
+> >  #  echo 'f vfs_write $$args' >> dynamic_events
+> >  #  echo 't sched_overutilized_tp $$args' >> dynamic_events
+> >  # cat dynamic_events
+> > p:kprobes/p_vfs_read_0 vfs_read file=file buf=buf count=count pos=pos
+> > f:fprobes/vfs_write__entry vfs_write file=file buf=buf count=count pos=pos
+> > t:tracepoints/sched_overutilized_tp sched_overutilized_tp rd=rd overutilized=overutilized
+> > 
+> > Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+> > ---
+
+
+-- 
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
