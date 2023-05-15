@@ -2,366 +2,285 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 224DAC7EE23
-	for <linux-trace-kernel@archiver.kernel.org>; Mon, 15 May 2023 16:57:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 91A4BC77B7D
+	for <linux-trace-kernel@archiver.kernel.org>; Mon, 15 May 2023 18:02:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S243264AbjEOQ52 (ORCPT
+        id S243256AbjEOSCJ (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Mon, 15 May 2023 12:57:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36972 "EHLO
+        Mon, 15 May 2023 14:02:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60546 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S243275AbjEOQ5Y (ORCPT
+        with ESMTP id S242467AbjEOSBb (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Mon, 15 May 2023 12:57:24 -0400
-Received: from mail-pf1-x436.google.com (mail-pf1-x436.google.com [IPv6:2607:f8b0:4864:20::436])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 904C55278;
-        Mon, 15 May 2023 09:57:12 -0700 (PDT)
-Received: by mail-pf1-x436.google.com with SMTP id d2e1a72fcca58-643bb9cdd6eso10846514b3a.1;
-        Mon, 15 May 2023 09:57:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1684169831; x=1686761831;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=KpreuUE6kTm23wGfHPgfYB6z110qkQQg2AooPPBZmJ0=;
-        b=eCWbBnZNtdqR/VtPd2wqhHlnTp7Jt/qYgvmJJpVtdanKicVKkLBEo1P4t57Yu6ww5d
-         RYa7LqQah34/dD8Syn+uFGO8LAYJvUZlK72wEZCEHVaEkGpiSOroboBW0ZEH714q2qFz
-         VR0RaA2YkuOzVjI+mVP0/Fdi53hFXKHAWJYCbdHDgzM1sVdXH90ZOPMMBkZiV5mKe3qW
-         XRCuVe5kZchJ4Bbb5b9dbJ7Dj/WAofURauywbsyWL/LnlCCFxhMmKF4dLZ1p310p3Tlp
-         CvVyjthxKMOvdcSoYX6rBX9ESAr4tO0GHvmc8+uy9kCEqYVWgGHM1aWHt1+c10oXWK4b
-         nlZg==
+        Mon, 15 May 2023 14:01:31 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B3F6313C00
+        for <linux-trace-kernel@vger.kernel.org>; Mon, 15 May 2023 10:58:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1684173422;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=qymjO9PUusO9BZPNaA/6iVZ5Rozh7oDjfMxnGEMSH6A=;
+        b=JBnB5YCtlWDOifxjKWHztmlg9tveDi1F6IVAo4ZJmYff3O0B1EjnuJOPqFYBGu/eKnKNFc
+        KRjkf7N+K+K/m5fff5ClafERvGxh3HRgva+rs13PwcCES473MQfbelIYM85uejs18JIjMS
+        grfuKmKaJ8frHRt+vrUymTdHVJ68tdA=
+Received: from mail-oa1-f72.google.com (mail-oa1-f72.google.com
+ [209.85.160.72]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-157-pf_yQzIjNNGuZkI90vf8Mg-1; Mon, 15 May 2023 13:57:01 -0400
+X-MC-Unique: pf_yQzIjNNGuZkI90vf8Mg-1
+Received: by mail-oa1-f72.google.com with SMTP id 586e51a60fabf-192486192fbso8220563fac.1
+        for <linux-trace-kernel@vger.kernel.org>; Mon, 15 May 2023 10:57:01 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1684169831; x=1686761831;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=KpreuUE6kTm23wGfHPgfYB6z110qkQQg2AooPPBZmJ0=;
-        b=eMNJ1CP2v/9Iffp9PrdF5Fb8evTQypmG0sYRyJGjoL4IW8FenpRNNCcpf0CoU3Hjdg
-         4C8SdTsnm5oL7NsnSQ6vZLCNlyL7iox6kHtFL48BdnP4oSMSzN4wJYE5HSIjW2/UCeDu
-         aO7MW9F9uCX4ZYKmF5WaSq7kXWFI/cRJrfprdDMV4yFf/1GFvWsoVIbgl2Vxz4pfpvjY
-         Ku9K2Z1L/8TbyM1G4vG9zVs2aCHsutluLR2Pm8HnaYdLugLaDNa9rQMKGeTdXRd1IeA5
-         qbXkMCHl3s/vpEx0QYhyR6r440fspb9k0ITsweyokW97vpJUlaPAi9x+n7J4J8702t47
-         VlwQ==
-X-Gm-Message-State: AC+VfDxsTkS7nvNI9HUpT9dyvkPig8q2fVWu14wdOeXlrwCS+4K1uF/t
-        hfxKm439tM4SRHy9SwfxCwg=
-X-Google-Smtp-Source: ACHHUZ4OziP+DjD7hnGJ5rL6rAmf3N2jBC7uhex4jOLxSi0KRN1nQr6lvfaMT5sJy4782ssC20PtbQ==
-X-Received: by 2002:a05:6a00:1951:b0:64b:256:204c with SMTP id s17-20020a056a00195100b0064b0256204cmr11381057pfk.20.1684169831136;
-        Mon, 15 May 2023 09:57:11 -0700 (PDT)
-Received: from MacBook-Pro-8.local ([2620:10d:c090:400::5:2d34])
-        by smtp.gmail.com with ESMTPSA id m14-20020aa7900e000000b006466d70a30esm12395959pfo.91.2023.05.15.09.57.09
+        d=1e100.net; s=20221208; t=1684173419; x=1686765419;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=9AxRKUz43mkyWHnl3hhc85iFtDBgXfNEcSSyxnUZSGk=;
+        b=XjEBN5wWHLsWe1ilEz5Uy0IZrH+I+TRJJRHQsZomg+7U3TmoObNTlJFNMwye4zqGga
+         Kp9DUDJXJGwAPudHCPfMC+xghi9hojCgiaH3gh8oFEdeDz6q4oHIYWt83C5gHV6/L2+b
+         rNFvnqlJaq6WiTYJ0MHKi5fifWBQYBkeIGgF+FW2ipi3E0wLb4x2QmFGNMeIEni9cQ7+
+         iy72jpK2933K5GxgNBHsmNFf8PwG34xcYoibc0WNdkcTkgVhwoxtC7dd3/ATgOEPom4y
+         r4Cg7W4JQSvBm/87x8HQMD3NHQuCuH8oO39gl1gDGxT81FinFeTepUEScyrp1vG2a1Js
+         xfug==
+X-Gm-Message-State: AC+VfDwAYajM+f319KH5icIt8kGRL1JYh2ZA8huysklSw1/Q1AzwPzh1
+        4HNnUXHZuwQlcDZitr+v8h0hmlvAU3/f1P3w+A+KKNEf/As47Q66ZrP/y4wdN5+Etptgu7eGjbp
+        5gkBWMvd9Zvw1R1ic2jkEYGgMSGSGS70U
+X-Received: by 2002:a05:6870:a8ac:b0:187:b836:4d33 with SMTP id eb44-20020a056870a8ac00b00187b8364d33mr16272167oab.30.1684173419052;
+        Mon, 15 May 2023 10:56:59 -0700 (PDT)
+X-Google-Smtp-Source: ACHHUZ7MnfqueXLdJ6vZqBxL7+2U0zreUXrURbrDpvt+0D82wLc+J7YxbrsaXtWgvNHkuh5Hof4oiA==
+X-Received: by 2002:a05:6870:a8ac:b0:187:b836:4d33 with SMTP id eb44-20020a056870a8ac00b00187b8364d33mr16272148oab.30.1684173418667;
+        Mon, 15 May 2023 10:56:58 -0700 (PDT)
+Received: from ?IPv6:2804:1b3:a803:46cc:5b68:5c23:dd7a:8cb3? ([2804:1b3:a803:46cc:5b68:5c23:dd7a:8cb3])
+        by smtp.gmail.com with ESMTPSA id g5-20020a05687085c500b00187e500e7b3sm12185025oal.49.2023.05.15.10.56.54
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 15 May 2023 09:57:10 -0700 (PDT)
-Date:   Mon, 15 May 2023 09:57:07 -0700
-From:   Alexei Starovoitov <alexei.starovoitov@gmail.com>
-To:     Steven Rostedt <rostedt@goodmis.org>
-Cc:     Beau Belgrave <beaub@linux.microsoft.com>,
+        Mon, 15 May 2023 10:56:58 -0700 (PDT)
+Message-ID: <27e4a2b4557ae24e673b6fb85b34fe0e32efa06f.camel@redhat.com>
+Subject: Re: [RFC PATCH v3 1/1] trace,smp: Add tracepoints around remotelly
+ called functions
+From:   Leonardo =?ISO-8859-1?Q?Br=E1s?= <leobras@redhat.com>
+To:     Valentin Schneider <vschneid@redhat.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
         Masami Hiramatsu <mhiramat@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-trace-kernel@vger.kernel.org,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Andrii Nakryiko <andrii@kernel.org>, bpf <bpf@vger.kernel.org>,
-        David Vernet <void@manifault.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        dthaler@microsoft.com, brauner@kernel.org, hch@infradead.org
-Subject: Re: [PATCH] tracing/user_events: Run BPF program if attached
-Message-ID: <20230515165707.hv65ekwp2djkjj5i@MacBook-Pro-8.local>
-References: <20230508163751.841-1-beaub@linux.microsoft.com>
- <CAADnVQLYL-ZaP_2vViaktw0G4UKkmpOK2q4ZXBa+f=M7cC25Rg@mail.gmail.com>
- <20230509130111.62d587f1@rorschach.local.home>
- <20230509163050.127d5123@rorschach.local.home>
+        Peter Zijlstra <peterz@infradead.org>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        Juergen Gross <jgross@suse.com>,
+        Yury Norov <yury.norov@gmail.com>,
+        Chen Zhongjin <chenzhongjin@huawei.com>,
+        Zhen Lei <thunder.leizhen@huawei.com>,
+        Marcelo Tosatti <mtosatti@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Nadav Amit <namit@vmware.com>,
+        Daniel Bristot de Oliveira <bristot@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
+Date:   Mon, 15 May 2023 14:56:53 -0300
+In-Reply-To: <xhsmhsfc3i1bc.mognet@vschneid.remote.csb>
+References: <20230510230128.150384-1-leobras@redhat.com>
+         <xhsmhsfc3i1bc.mognet@vschneid.remote.csb>
+User-Agent: Evolution 3.48.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230509163050.127d5123@rorschach.local.home>
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: redhat.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On Tue, May 09, 2023 at 04:30:50PM -0400, Steven Rostedt wrote:
-> On Tue, 9 May 2023 13:01:11 -0400
-> Steven Rostedt <rostedt@goodmis.org> wrote:
-> 
-> > > I see no practical use case for bpf progs to be connected to user events.  
-> > 
-> > That's not a technical reason. Obviously they have a use case.
-> 
-> Alexei,
-> 
-> It was great having a chat with you during lunch at LSFMM/BPF!
+On Thu, 2023-05-11 at 11:56 +0100, Valentin Schneider wrote:
+> On 10/05/23 20:01, Leonardo Bras wrote:
+> > When running RT workloads in isolated CPUs, many cases of deadline miss=
+es
+> > are caused by remote CPU requests such as smp_call_function*().
+> >=20
+> > For those cases, having the names of those functions running around the
+> > deadline miss moment could help (a lot) finding a target for the next
+> > improvements.
+> >=20
+> > Add tracepoints for acquiring the function name & csd before entry and
+> > after returning from the remote-cpu requested function.
+> >=20
+> > Also, add tracepoints on the remote cpus requesting them.
+>=20
+> Per the v1 thread, I got some context as to why we want this, but this
+> changelog is quite sparse on the subject. How about:
+>=20
+> """
+> The recently added ipi_send_{cpu,cpumask} tracepoints allow finding sourc=
+es
+> of IPIs targeting CPUs running latency-sensitive applications.
+>=20
+> For NOHZ_FULL CPUs, all IPIs are interference, and those tracepoints are
+> sufficient to find them and work on getting rid of them. In some setups
+> however, not *all* IPIs are to be suppressed, but long-running IPI
+> callbacks can still be problematic.
+>=20
+> Add a pair of tracepoints to mark the start and end of processing a CSD I=
+PI
+> callback, similar to what exists for softirq, workqueue or timer callback=
+s.
+> """
+>=20
+> And you can probably split the csd_queue_cpu TP into a separate commit,
+> with something along the lines of:
+>=20
+> """
+> Add a tracepoint for when a CSD is queued to a remote CPU's
+> call_single_queue. This allows finding exactly which CPU queued a given C=
+SD
+> when looking at a csd_function_{entry,exit} event, and also enables us to
+> accurately measure IPI delivery time with e.g. a synthetic event:
+>=20
+>   $ echo 'hist:keys=3Dcpu,csd.hex:ts=3Dcommon_timestamp.usecs' >\
+>       /sys/kernel/tracing/events/smp/csd_queue_cpu/trigger
+>   $ echo 'csd_latency unsigned int dst_cpu; unsigned long csd; u64 time' =
+>\
+>       /sys/kernel/tracing/synthetic_events
+>   $ echo \
+>   'hist:keys=3Dcommon_cpu,csd.hex:'\
+>   'time=3Dcommon_timestamp.usecs-$ts:'\
+>   'onmatch(smp.csd_queue_cpu).trace(csd_latency,common_cpu,csd,$time)' >\
+>       /sys/kernel/tracing/events/smp/csd_function_entry/trigger
+>=20
+>   $ trace-cmd record -e 'synthetic:csd_latency' hackbench
+>   $ trace-cmd report
+>   <...>-467   [001]    21.824263: csd_queue_cpu:        cpu=3D0 callsite=
+=3Dtry_to_wake_up+0x2ea func=3Dsched_ttwu_pending csd=3D0xffff8880076148b8
+>   <...>-467   [001]    21.824280: ipi_send_cpu:         cpu=3D0 callsite=
+=3Dtry_to_wake_up+0x2ea callback=3Dgeneric_smp_call_function_single_interru=
+pt+0x0
+>   <...>-489   [000]    21.824299: csd_function_entry:   func=3Dsched_ttwu=
+_pending csd=3D0xffff8880076148b8
+>   <...>-489   [000]    21.824320: csd_latency:          dst_cpu=3D0, csd=
+=3D18446612682193848504, time=3D36
+> """
 
-Yeah. It was great catching up!
+Sure, I will split the patch and add the commit msg as suggested.
 
-> Looking forward to your technical response that I believe are
-> legitimate requests. I'm replying here, as during our conversation, you
-> had the misperception that the user events had a system call when the
-> event was disabled. I told you I will point out the code that shows
-> that the kernel sets the bit, and that user space does not do a system
-> call when the event is disable.
 
-Thank you for these details. Answer below...
+>=20
+> >=20
+> > Signed-off-by: Leonardo Bras <leobras@redhat.com>
+>=20
+> Overall I like the CSD vs IPI split, it's a saner approach than logging i=
+t
+> all as IPIs, even if it does generate more events as we have to emit an
+> event for every csd queued (i.e. no _cpumask() variant is possible).
+>=20
+> Some nitpicks below, and one other thing: are we happy with the smp event
+> namespace, and with the new TP names? Should the namespace be csd instead=
+,
+> to match the trace_<namespace>_* nomenclature?
 
-> From the user space side, which does:
-> 
-> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/samples/user_events/example.c#n60
-> 
-> 	/* Check if anyone is listening */
-> 	if (enabled) {
-> 		/* Yep, trace out our data */
-> 		writev(data_fd, (const struct iovec *)io, 2);
-> 
-> 		/* Increase the count */
-> 		count++;
-> 
-> 		printf("Something was attached, wrote data\n");
-> 	}
-> 
-> 
-> Where it told the kernel about that "enabled" variable:
-> 
-> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/samples/user_events/example.c#n47
-> 
-> 	if (event_reg(data_fd, "test u32 count", &write, &enabled) == -1)
-> 		return errno;
-> 
-> static int event_reg(int fd, const char *command, int *write, int *enabled)
-> {
-> 	struct user_reg reg = {0};
-> 
-> 	reg.size = sizeof(reg);
-> 	reg.enable_bit = 31;
-> 	reg.enable_size = sizeof(*enabled);
-> 	reg.enable_addr = (__u64)enabled;
-> 	reg.name_args = (__u64)command;
-> 
-> 	if (ioctl(fd, DIAG_IOCSREG, &reg) == -1)
-> 		return -1;
-> 
-> 	*write = reg.write_index;
-> 
-> 	return 0;
-> }
-> 
-> The above will add a trace event into tracefs. When someone does:
-> 
->  # echo 1 > /sys/kernel/tracing/user_events/test/enable
-> 
-> The kernel will trigger the class->reg function, defined by:
-> 
-> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/kernel/trace/trace_events_user.c#n1804
-> 
-> 	user->class.reg = user_event_reg;
-> 
-> Which calls: 
-> 
-> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/kernel/trace/trace_events_user.c#n1555
-> 
-> 	update_enable_bit_for(user);
-> 
-> Which does:
-> 
-> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/kernel/trace/trace_events_user.c#n1465
-> 
-> update_enable_bit_for() { 
-> 	[..]
-> 	user_event_enabler_update(user);
-> 
-> 
-> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/kernel/trace/trace_events_user.c#n451
-> 
-> user_event_enabler_update() {
-> 	[..]
-> 	user_event_enabler_write(mm, enabler, true, &attempt);
+I selected "smp.h" filename because those tracepoints are getting used on s=
+mp.c.
 
-Which will do
-rcu_read_lock()
-and then call user_event_enabler_write() under lock...
+I think keeping a generic name is good for any future tracepoints people en=
+d up
+designing for smp.c, but I am open to discussion.
 
-> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/kernel/trace/trace_events_user.c#n385
-> 
-> static int user_event_enabler_write(struct user_event_mm *mm,
-> 				    struct user_event_enabler *enabler,
-> 				    bool fixup_fault, int *attempt)
-> {
-> 	unsigned long uaddr = enabler->addr;
-> 	unsigned long *ptr;
-> 	struct page *page;
-> 	void *kaddr;
-> 	int ret;
-> 
-> 	lockdep_assert_held(&event_mutex);
-> 	mmap_assert_locked(mm->mm);
-> 
-> 	*attempt += 1;
-> 
-> 	/* Ensure MM has tasks, cannot use after exit_mm() */
-> 	if (refcount_read(&mm->tasks) == 0)
-> 		return -ENOENT;
-> 
-> 	if (unlikely(test_bit(ENABLE_VAL_FAULTING_BIT, ENABLE_BITOPS(enabler)) ||
-> 		     test_bit(ENABLE_VAL_FREEING_BIT, ENABLE_BITOPS(enabler))))
-> 		return -EBUSY;
-> 
-> 	ret = pin_user_pages_remote(mm->mm, uaddr, 1, FOLL_WRITE | FOLL_NOFAULT,
-> 				    &page, NULL, NULL);
+>=20
+> > ---
+> >=20
+> > Changes since RFCv2:
+> > - Fixed some spacing issues and trace calls
+> >=20
+> > Changes since RFCv1:
+> > - Implemented trace_csd_queue_cpu() as suggested by Valentin Schneider
+> > - Using EVENT_CLASS in order to avoid duplication
+> > - Introduced new helper: csd_do_func()
+> > - Name change from smp_call_function_* to csd_function_*
+> > - Rebased on top of torvalds/master
+> >=20
+> >  include/trace/events/smp.h | 72 ++++++++++++++++++++++++++++++++++++++
+> >  kernel/smp.c               | 41 +++++++++++++---------
+> >  2 files changed, 96 insertions(+), 17 deletions(-)
+> >  create mode 100644 include/trace/events/smp.h
+> >=20
+> > diff --git a/include/trace/events/smp.h b/include/trace/events/smp.h
+> > new file mode 100644
+> > index 000000000000..c304318a0203
+> > --- /dev/null
+> > +++ b/include/trace/events/smp.h
+> > @@ -0,0 +1,72 @@
+> > +/* SPDX-License-Identifier: GPL-2.0 */
+> > +#undef TRACE_SYSTEM
+> > +#define TRACE_SYSTEM smp
+> > +
+> > +#if !defined(_TRACE_SMP_H) || defined(TRACE_HEADER_MULTI_READ)
+> > +#define _TRACE_SMP_H
+> > +
+> > +#include <linux/tracepoint.h>
+> > +
+> > +TRACE_EVENT(csd_queue_cpu,
+> > +
+> > +=09TP_PROTO(const unsigned int cpu,
+> > +=09=09 unsigned long callsite,
+> > +=09=09 smp_call_func_t func,
+> > +=09=09 call_single_data_t *csd),
+> > +
+> > +=09TP_ARGS(cpu, callsite, func, csd),
+> > +
+> > +=09TP_STRUCT__entry(
+> > +=09=09__field(unsigned int, cpu)
+> > +=09=09__field(void *, callsite)
+> > +=09=09__field(void *, func)
+> > +=09=09__field(void *, csd)
+> > +=09),
+> > +
+> > +=09TP_fast_assign(
+> > +=09=09__entry->cpu =3D cpu;
+> > +=09=09__entry->callsite =3D (void *)callsite;
+> > +=09=09__entry->func =3D func;
+> > +=09=09__entry->csd  =3D csd;
+> > +=09),
+> > +
+> > +=09TP_printk("cpu=3D%u callsite=3D%pS func=3D%pS csd=3D%p",
+>                                        ^^^^^^^^
+> This can be func=3D%ps, offsets should always be 0 so not very useful (I =
+know
+> I put %pS for the IPI TPs, that's a force of habit...)
+>=20
 
-... which will call pin_user_pages_remote() in RCU CS.
-This looks buggy, since pin_user_pages_remote() may schedule.
+I agree, let's do as suggested.
 
-> 	if (unlikely(ret <= 0)) {
-> 		if (!fixup_fault)
-> 			return -EFAULT;
-> 
-> 		if (!user_event_enabler_queue_fault(mm, enabler, *attempt))
-> 			pr_warn("user_events: Unable to queue fault handler\n");
+> > +=09=09  __entry->cpu, __entry->callsite, __entry->func, __entry->csd)
+> > +);
+>=20
+> > +
+> > +/*
+> > + * Tracepoints for a function which is called as an effect of smp_call=
+_function.*
+> > + */
+> > +DECLARE_EVENT_CLASS(csd_function,
+> > +
+> > +=09TP_PROTO(smp_call_func_t func, call_single_data_t *csd),
+> > +
+> > +=09TP_ARGS(func, csd),
+> > +
+> > +=09TP_STRUCT__entry(
+> > +=09=09__field(void *,=09func)
+> > +=09=09__field(void *,=09csd)
+> > +=09),
+> > +
+> > +=09TP_fast_assign(
+> > +=09=09__entry->func=09=3D func;
+> > +=09=09__entry->csd=09=3D csd;
+> > +=09),
+> > +
+> > +=09TP_printk("function %ps, csd =3D %p", __entry->func, __entry->csd)
+>=20
+> To match the style of the other TPs, that should be:
+>=20
+>         TP_printk("func=3D%ps csd=3D%p", __entry->func, __entry->csd)
+>=20
 
-This part looks questionable.
+Done!
 
-The only users of fixup_user_fault() were futex and KVM.
-Now user_events are calling it too from user_event_mm_fault_in() where
-"bool unlocked;" is uninitialized and state of this flag is not checked
-after fixup_user_fault() call.
-Not an MM expert, but this is suspicious.
 
-> 
-> 		return -EFAULT;
-> 	}
-> 
-> 	kaddr = kmap_local_page(page);
-> 	ptr = kaddr + (uaddr & ~PAGE_MASK);
-> 
-> 	/* Update bit atomically, user tracers must be atomic as well */
-> 	if (enabler->event && enabler->event->status)
-> 		set_bit(enabler->values & ENABLE_VAL_BIT_MASK, ptr);
-> 	else
-> 		clear_bit(enabler->values & ENABLE_VAL_BIT_MASK, ptr);
+Thanks for reviewing!
+Leo
 
-Furthermore.
-Here the kernel writes bits in user pages.
-It's missing user_access_begin/end.
-Early on there was an access_ok() check during user_event registration,
-but it's not enough.
-I believe user_access_begin() has to be done before the actual access,
-since it does __uaccess_begin_nospec().
-
-Another issue is that the user space could have supplied any address as
-enabler->addr including addr in a huge page or a file backed mmaped address.
-I don't know whether above code can handle it.
-
-I'm not a GUP expert either, but direct use of pin_user_pages_remote() looks
-suspicious too.
-I think ptrace_may_access() is missing.
-I guess it has to be a root user to do 
-echo 1 > /sys/kernel/tracing/user_events/test/enable
-
-to trigger the kernel writes into various MM of user processes, but still.
-There are security/LSM checks in many paths that accesses user memory.
-These checks are bypassed here.
-
-> 	kunmap_local(kaddr);
-> 	unpin_user_pages_dirty_lock(&page, 1, true);
-> 
-> 	return 0;
-> }
-> 
-> The above maps the user space address and then sets the bit that was
-> registered.
-> 
-> That is, it changes "enabled" to true, and the if statement:
-> 
-> 	if (enabled) {
-
-and not just 'volatile' is missing, but this is buggy in general.
-The kernel only wrote one bit into 'enabled' variable.
-The user space should be checking that one bit only.
-Since samples/user_events/example.c registering with reg.enable_bit = 31;
-it probably should be
-  if (READ_ONCE(enabled) & (1u << 31))
-
-> 		/* Yep, trace out our data */
-> 		writev(data_fd, (const struct iovec *)io, 2);
-> 
-> 		/* Increase the count */
-> 		count++;
-> 
-> 		printf("Something was attached, wrote data\n");
-
-Another misleading example. The writev() could have failed,
-but the message will say "success".
-And it's easy to make mistake here.
-The iovec[0] should be write_index that was received by user space
-after registration via ioctl.
-
-If my understanding of user_events design is correct, various user
-process (all running as root) will open /sys/kernel/tracing/user_events_data
-then will do multiple ioctl(fd, DIAG_IOCSREG) for various events and
-remember write_index-es and enabled's addresses.
-Then in various places in the code they will do
-if (READ_ONCE(enabled_X) & (1u << correct_bit)) {
-    io[0].iov_base = &write_index_X;
-    io[1].iov_base = data_to_send_to_kernel;
-
-and write_index has to match with the format of data.
-During the writev() the kernel will validate user_event_validate(),
-but this is expensive.
-The design of user events looks fragile to me. One user process can write
-into user_event of another process by supplying wrong 'write_index' and the
-kernel won't catch it if data formats are compatible.
-
-All such processes have to be root to access /sys/kernel/tracing/user_events_data,
-so not a security issue, but use cases for user_events seems to be very limited.
-During LSFMMBPF, Steven, you've mentioned that you want to use user_event in chrome.
-I think you didn't imply that chrome browser will be running as root.
-You probably meant something else.
-
-Now as far as this particular patch.
-
-s/perf_trace_buf_submit/perf_trace_run_bpf_submit/
-
-may look trivial, but there is a lot to unpack here.
-
-How bpf prog was attached to user event?
-What is the life time of bpf prog?
-What happens when user process crashes?
-What happens when user event is unregistered ?
-What is bpf prog context? Like, what helpers are allowed to be called?
-Does libbpf need updating?
-etc etc
-
-No selftests were provided with this patch, so impossible to answer.
-
-In general we don't want bpf to be called in various parts of the kernel
-just because bpf was used in similar parts elsewhere.
-bpf needs to provide real value for a particular kernel subsystem.
-
-For user events it's still not clear to me what bpf can bring to the table.
-
-The commit log of this proposed patch says:
-"When BPF programs are attached to tracepoints created by user_events
-the BPF programs do not get run even though the attach succeeds."
-
-It looks to me that it's a bug in attaching.
-The kernel shouldn't have allowed attaching bpf prog to user events,
-since they cannot be run.
-
-Then the commit log says:
-"This keeps user_events consistent
-with how other kernel, modules, and probes expose tracepoint data to allow
-attachment of a BPF program."
-
-"keep consistent" is not a reason to use bpf with user_events.
-
-Beau,
-please provide a detailed explanation of your use case and how bpf helps.
-
-Also please explain why uprobe/USDT and bpf don't achieve your goals.
-Various user space applications have USDTs in them.
-This is an existing mechanism that was proven to be useful to many projects
-including glibc, python, mysql.
-
-Comparing to user_events the USDTs work fine in unprivileged applications
-and have zero overhead when not turned on. USDT is a single 'nop' instruction
-while user events need if(enabled & bit) check plus iov prep and write.
-
-When enabled the write() is probably faster than USDT trap, but all the extra
-overhead in tracepoint and user_event_validate() probably makes it the same speed.
-So why not USDT ?
