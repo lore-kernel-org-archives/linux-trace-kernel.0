@@ -2,131 +2,366 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D4F8C77B75
-	for <linux-trace-kernel@archiver.kernel.org>; Mon, 15 May 2023 15:11:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 224DAC7EE23
+	for <linux-trace-kernel@archiver.kernel.org>; Mon, 15 May 2023 16:57:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235256AbjEOPLs (ORCPT
+        id S243264AbjEOQ52 (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Mon, 15 May 2023 11:11:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57274 "EHLO
+        Mon, 15 May 2023 12:57:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36972 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S239554AbjEOPLr (ORCPT
+        with ESMTP id S243275AbjEOQ5Y (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Mon, 15 May 2023 11:11:47 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 413E9E76;
-        Mon, 15 May 2023 08:11:42 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id CC0DA625EE;
-        Mon, 15 May 2023 15:11:41 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9A98AC433EF;
-        Mon, 15 May 2023 15:11:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1684163501;
-        bh=69oUJQL5OUtRdb5coch/yX/TGFy0xmcGPw/50IS/q1c=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=hhXZz4pIDvUIX/NSgfMd1CuV/QZJUYHRLL32FVmdZ3JKb75V9iBbskZt+LneBd6RP
-         K+bZHkFCP11dGlXqzSK0p5UilgF0J9zkNrq07Ogu6CTAf8R6IHXKtUGW+MjMQRBx2G
-         yV+GelPNkVimnWy+q7HB2Kgasa+8vLlIgIt9RWURzRRnjOYq06PE4i2IbF0CjGWyAd
-         4+yrswtL4jYIgiUura7Pzpat+MDIaohrdG0QCbYKbXJd2Ji/BuaYQWfPQgS6NcIK17
-         fh+TbitzqGWfZ5bf+JZwb8gWblS8r6bcFTbLxvel7+40W1LjbDguVApGCBC7wXRuoF
-         ipO+UcoDx5QBg==
-Date:   Tue, 16 May 2023 00:11:37 +0900
-From:   Masami Hiramatsu (Google) <mhiramat@kernel.org>
+        Mon, 15 May 2023 12:57:24 -0400
+Received: from mail-pf1-x436.google.com (mail-pf1-x436.google.com [IPv6:2607:f8b0:4864:20::436])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 904C55278;
+        Mon, 15 May 2023 09:57:12 -0700 (PDT)
+Received: by mail-pf1-x436.google.com with SMTP id d2e1a72fcca58-643bb9cdd6eso10846514b3a.1;
+        Mon, 15 May 2023 09:57:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1684169831; x=1686761831;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=KpreuUE6kTm23wGfHPgfYB6z110qkQQg2AooPPBZmJ0=;
+        b=eCWbBnZNtdqR/VtPd2wqhHlnTp7Jt/qYgvmJJpVtdanKicVKkLBEo1P4t57Yu6ww5d
+         RYa7LqQah34/dD8Syn+uFGO8LAYJvUZlK72wEZCEHVaEkGpiSOroboBW0ZEH714q2qFz
+         VR0RaA2YkuOzVjI+mVP0/Fdi53hFXKHAWJYCbdHDgzM1sVdXH90ZOPMMBkZiV5mKe3qW
+         XRCuVe5kZchJ4Bbb5b9dbJ7Dj/WAofURauywbsyWL/LnlCCFxhMmKF4dLZ1p310p3Tlp
+         CvVyjthxKMOvdcSoYX6rBX9ESAr4tO0GHvmc8+uy9kCEqYVWgGHM1aWHt1+c10oXWK4b
+         nlZg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1684169831; x=1686761831;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=KpreuUE6kTm23wGfHPgfYB6z110qkQQg2AooPPBZmJ0=;
+        b=eMNJ1CP2v/9Iffp9PrdF5Fb8evTQypmG0sYRyJGjoL4IW8FenpRNNCcpf0CoU3Hjdg
+         4C8SdTsnm5oL7NsnSQ6vZLCNlyL7iox6kHtFL48BdnP4oSMSzN4wJYE5HSIjW2/UCeDu
+         aO7MW9F9uCX4ZYKmF5WaSq7kXWFI/cRJrfprdDMV4yFf/1GFvWsoVIbgl2Vxz4pfpvjY
+         Ku9K2Z1L/8TbyM1G4vG9zVs2aCHsutluLR2Pm8HnaYdLugLaDNa9rQMKGeTdXRd1IeA5
+         qbXkMCHl3s/vpEx0QYhyR6r440fspb9k0ITsweyokW97vpJUlaPAi9x+n7J4J8702t47
+         VlwQ==
+X-Gm-Message-State: AC+VfDxsTkS7nvNI9HUpT9dyvkPig8q2fVWu14wdOeXlrwCS+4K1uF/t
+        hfxKm439tM4SRHy9SwfxCwg=
+X-Google-Smtp-Source: ACHHUZ4OziP+DjD7hnGJ5rL6rAmf3N2jBC7uhex4jOLxSi0KRN1nQr6lvfaMT5sJy4782ssC20PtbQ==
+X-Received: by 2002:a05:6a00:1951:b0:64b:256:204c with SMTP id s17-20020a056a00195100b0064b0256204cmr11381057pfk.20.1684169831136;
+        Mon, 15 May 2023 09:57:11 -0700 (PDT)
+Received: from MacBook-Pro-8.local ([2620:10d:c090:400::5:2d34])
+        by smtp.gmail.com with ESMTPSA id m14-20020aa7900e000000b006466d70a30esm12395959pfo.91.2023.05.15.09.57.09
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 15 May 2023 09:57:10 -0700 (PDT)
+Date:   Mon, 15 May 2023 09:57:07 -0700
+From:   Alexei Starovoitov <alexei.starovoitov@gmail.com>
 To:     Steven Rostedt <rostedt@goodmis.org>
-Cc:     linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Florent Revest <revest@chromium.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Martin KaFai Lau <martin.lau@linux.dev>, bpf@vger.kernel.org
-Subject: Re: [PATCH v10 07/11] tracing/probes: Add $args meta argument for
- all function args
-Message-Id: <20230516001137.d5c2f16b89c26bfce31f1c2b@kernel.org>
-In-Reply-To: <20230515075701.6f49b3e7@gandalf.local.home>
-References: <168407346448.941486.15681419068846125595.stgit@mhiramat.roam.corp.google.com>
-        <168407353144.941486.592643565749157905.stgit@mhiramat.roam.corp.google.com>
-        <20230515075701.6f49b3e7@gandalf.local.home>
-X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Cc:     Beau Belgrave <beaub@linux.microsoft.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-trace-kernel@vger.kernel.org,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Andrii Nakryiko <andrii@kernel.org>, bpf <bpf@vger.kernel.org>,
+        David Vernet <void@manifault.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        dthaler@microsoft.com, brauner@kernel.org, hch@infradead.org
+Subject: Re: [PATCH] tracing/user_events: Run BPF program if attached
+Message-ID: <20230515165707.hv65ekwp2djkjj5i@MacBook-Pro-8.local>
+References: <20230508163751.841-1-beaub@linux.microsoft.com>
+ <CAADnVQLYL-ZaP_2vViaktw0G4UKkmpOK2q4ZXBa+f=M7cC25Rg@mail.gmail.com>
+ <20230509130111.62d587f1@rorschach.local.home>
+ <20230509163050.127d5123@rorschach.local.home>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230509163050.127d5123@rorschach.local.home>
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On Mon, 15 May 2023 07:57:01 -0400
-Steven Rostedt <rostedt@goodmis.org> wrote:
-
-> On Sun, 14 May 2023 23:12:11 +0900
-> "Masami Hiramatsu (Google)" <mhiramat@kernel.org> wrote:
+On Tue, May 09, 2023 at 04:30:50PM -0400, Steven Rostedt wrote:
+> On Tue, 9 May 2023 13:01:11 -0400
+> Steven Rostedt <rostedt@goodmis.org> wrote:
 > 
-> > From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+> > > I see no practical use case for bpf progs to be connected to user events.  
 > > 
-> > Add the '$args' meta fetch argument for function-entry probe events. This
-> > will be expanded to the all arguments of the function and the tracepoint
-> > using BTF function argument information.
-> > 
-> > e.g.
-> >  #  echo 'p vfs_read $args' >> dynamic_events
-> >  #  echo 'f vfs_write $args' >> dynamic_events
-> >  #  echo 't sched_overutilized_tp $args' >> dynamic_events
-> >  # cat dynamic_events
-> > p:kprobes/p_vfs_read_0 vfs_read file=file buf=buf count=count pos=pos
-> > f:fprobes/vfs_write__entry vfs_write file=file buf=buf count=count pos=pos
-> > t:tracepoints/sched_overutilized_tp sched_overutilized_tp rd=rd overutilized=overutilized
-> > 
-> > NOTE: This is not like other $-vars, you can not use this $args as a
-> > part of fetch args, e.g. specifying name "foo=$args" and using it in
-> > dereferences "+0($args)" will lead a parse error.
-> > 
-> > Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-> > ---
-> > Changes in v10:
-> >  - Change $$args to $args so that user can use $$ for current task's pid.
+> > That's not a technical reason. Obviously they have a use case.
 > 
-> I hate coming up with new apis, because you never know if what you pick is
-> correct ;-) And then you are stuck with whatever you decided on. :-/
+> Alexei,
 > 
-> I know I suggested $args, but since it is special, should we call it
->  "$arg*" ?
-> 
-> That way it follows bash wildcard semantics?
-> 
->  #  echo 'p vfs_read $arg*' >> dynamic_events
-> 
-> I think that is more along the lines of what people would expect.
-> 
-> What do you think?
+> It was great having a chat with you during lunch at LSFMM/BPF!
 
-Good idea!
+Yeah. It was great catching up!
 
-BTW, user will expect that $arg* will be expanded to available "$argN".
-But this $args does different thing at this point, it is expanded
-to something equivalent to "<BTF-name>=$argN:<BTF-type>".
-So, to give more consistency, I need one more step: when user gives
-only "$argN" on BTF supported kernel, it will be translated to
-"<BTF-name>=$argN:<BTF-type>". Then, I think it is natural to use '$arg*'.
+> Looking forward to your technical response that I believe are
+> legitimate requests. I'm replying here, as during our conversation, you
+> had the misperception that the user events had a system call when the
+> event was disabled. I told you I will point out the code that shows
+> that the kernel sets the bit, and that user space does not do a system
+> call when the event is disable.
 
-Thank you,
+Thank you for these details. Answer below...
+
+> From the user space side, which does:
+> 
+> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/samples/user_events/example.c#n60
+> 
+> 	/* Check if anyone is listening */
+> 	if (enabled) {
+> 		/* Yep, trace out our data */
+> 		writev(data_fd, (const struct iovec *)io, 2);
+> 
+> 		/* Increase the count */
+> 		count++;
+> 
+> 		printf("Something was attached, wrote data\n");
+> 	}
+> 
+> 
+> Where it told the kernel about that "enabled" variable:
+> 
+> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/samples/user_events/example.c#n47
+> 
+> 	if (event_reg(data_fd, "test u32 count", &write, &enabled) == -1)
+> 		return errno;
+> 
+> static int event_reg(int fd, const char *command, int *write, int *enabled)
+> {
+> 	struct user_reg reg = {0};
+> 
+> 	reg.size = sizeof(reg);
+> 	reg.enable_bit = 31;
+> 	reg.enable_size = sizeof(*enabled);
+> 	reg.enable_addr = (__u64)enabled;
+> 	reg.name_args = (__u64)command;
+> 
+> 	if (ioctl(fd, DIAG_IOCSREG, &reg) == -1)
+> 		return -1;
+> 
+> 	*write = reg.write_index;
+> 
+> 	return 0;
+> }
+> 
+> The above will add a trace event into tracefs. When someone does:
+> 
+>  # echo 1 > /sys/kernel/tracing/user_events/test/enable
+> 
+> The kernel will trigger the class->reg function, defined by:
+> 
+> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/kernel/trace/trace_events_user.c#n1804
+> 
+> 	user->class.reg = user_event_reg;
+> 
+> Which calls: 
+> 
+> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/kernel/trace/trace_events_user.c#n1555
+> 
+> 	update_enable_bit_for(user);
+> 
+> Which does:
+> 
+> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/kernel/trace/trace_events_user.c#n1465
+> 
+> update_enable_bit_for() { 
+> 	[..]
+> 	user_event_enabler_update(user);
+> 
+> 
+> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/kernel/trace/trace_events_user.c#n451
+> 
+> user_event_enabler_update() {
+> 	[..]
+> 	user_event_enabler_write(mm, enabler, true, &attempt);
+
+Which will do
+rcu_read_lock()
+and then call user_event_enabler_write() under lock...
+
+> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/kernel/trace/trace_events_user.c#n385
+> 
+> static int user_event_enabler_write(struct user_event_mm *mm,
+> 				    struct user_event_enabler *enabler,
+> 				    bool fixup_fault, int *attempt)
+> {
+> 	unsigned long uaddr = enabler->addr;
+> 	unsigned long *ptr;
+> 	struct page *page;
+> 	void *kaddr;
+> 	int ret;
+> 
+> 	lockdep_assert_held(&event_mutex);
+> 	mmap_assert_locked(mm->mm);
+> 
+> 	*attempt += 1;
+> 
+> 	/* Ensure MM has tasks, cannot use after exit_mm() */
+> 	if (refcount_read(&mm->tasks) == 0)
+> 		return -ENOENT;
+> 
+> 	if (unlikely(test_bit(ENABLE_VAL_FAULTING_BIT, ENABLE_BITOPS(enabler)) ||
+> 		     test_bit(ENABLE_VAL_FREEING_BIT, ENABLE_BITOPS(enabler))))
+> 		return -EBUSY;
+> 
+> 	ret = pin_user_pages_remote(mm->mm, uaddr, 1, FOLL_WRITE | FOLL_NOFAULT,
+> 				    &page, NULL, NULL);
+
+... which will call pin_user_pages_remote() in RCU CS.
+This looks buggy, since pin_user_pages_remote() may schedule.
+
+> 	if (unlikely(ret <= 0)) {
+> 		if (!fixup_fault)
+> 			return -EFAULT;
+> 
+> 		if (!user_event_enabler_queue_fault(mm, enabler, *attempt))
+> 			pr_warn("user_events: Unable to queue fault handler\n");
+
+This part looks questionable.
+
+The only users of fixup_user_fault() were futex and KVM.
+Now user_events are calling it too from user_event_mm_fault_in() where
+"bool unlocked;" is uninitialized and state of this flag is not checked
+after fixup_user_fault() call.
+Not an MM expert, but this is suspicious.
 
 > 
-> -- Steve
+> 		return -EFAULT;
+> 	}
 > 
+> 	kaddr = kmap_local_page(page);
+> 	ptr = kaddr + (uaddr & ~PAGE_MASK);
 > 
-> > Changes in v6:
-> >  - update patch description.
-> > ---
-> >  kernel/trace/trace_fprobe.c |   21 ++++++++-
-> >  kernel/trace/trace_kprobe.c |   23 ++++++++--
-> >  kernel/trace/trace_probe.c  |   98 +++++++++++++++++++++++++++++++++++++++++++
-> >  kernel/trace/trace_probe.h  |   10 ++++
-> >  4 files changed, 144 insertions(+), 8 deletions(-)
-> > 
-> >
+> 	/* Update bit atomically, user tracers must be atomic as well */
+> 	if (enabler->event && enabler->event->status)
+> 		set_bit(enabler->values & ENABLE_VAL_BIT_MASK, ptr);
+> 	else
+> 		clear_bit(enabler->values & ENABLE_VAL_BIT_MASK, ptr);
 
+Furthermore.
+Here the kernel writes bits in user pages.
+It's missing user_access_begin/end.
+Early on there was an access_ok() check during user_event registration,
+but it's not enough.
+I believe user_access_begin() has to be done before the actual access,
+since it does __uaccess_begin_nospec().
 
--- 
-Masami Hiramatsu (Google) <mhiramat@kernel.org>
+Another issue is that the user space could have supplied any address as
+enabler->addr including addr in a huge page or a file backed mmaped address.
+I don't know whether above code can handle it.
+
+I'm not a GUP expert either, but direct use of pin_user_pages_remote() looks
+suspicious too.
+I think ptrace_may_access() is missing.
+I guess it has to be a root user to do 
+echo 1 > /sys/kernel/tracing/user_events/test/enable
+
+to trigger the kernel writes into various MM of user processes, but still.
+There are security/LSM checks in many paths that accesses user memory.
+These checks are bypassed here.
+
+> 	kunmap_local(kaddr);
+> 	unpin_user_pages_dirty_lock(&page, 1, true);
+> 
+> 	return 0;
+> }
+> 
+> The above maps the user space address and then sets the bit that was
+> registered.
+> 
+> That is, it changes "enabled" to true, and the if statement:
+> 
+> 	if (enabled) {
+
+and not just 'volatile' is missing, but this is buggy in general.
+The kernel only wrote one bit into 'enabled' variable.
+The user space should be checking that one bit only.
+Since samples/user_events/example.c registering with reg.enable_bit = 31;
+it probably should be
+  if (READ_ONCE(enabled) & (1u << 31))
+
+> 		/* Yep, trace out our data */
+> 		writev(data_fd, (const struct iovec *)io, 2);
+> 
+> 		/* Increase the count */
+> 		count++;
+> 
+> 		printf("Something was attached, wrote data\n");
+
+Another misleading example. The writev() could have failed,
+but the message will say "success".
+And it's easy to make mistake here.
+The iovec[0] should be write_index that was received by user space
+after registration via ioctl.
+
+If my understanding of user_events design is correct, various user
+process (all running as root) will open /sys/kernel/tracing/user_events_data
+then will do multiple ioctl(fd, DIAG_IOCSREG) for various events and
+remember write_index-es and enabled's addresses.
+Then in various places in the code they will do
+if (READ_ONCE(enabled_X) & (1u << correct_bit)) {
+    io[0].iov_base = &write_index_X;
+    io[1].iov_base = data_to_send_to_kernel;
+
+and write_index has to match with the format of data.
+During the writev() the kernel will validate user_event_validate(),
+but this is expensive.
+The design of user events looks fragile to me. One user process can write
+into user_event of another process by supplying wrong 'write_index' and the
+kernel won't catch it if data formats are compatible.
+
+All such processes have to be root to access /sys/kernel/tracing/user_events_data,
+so not a security issue, but use cases for user_events seems to be very limited.
+During LSFMMBPF, Steven, you've mentioned that you want to use user_event in chrome.
+I think you didn't imply that chrome browser will be running as root.
+You probably meant something else.
+
+Now as far as this particular patch.
+
+s/perf_trace_buf_submit/perf_trace_run_bpf_submit/
+
+may look trivial, but there is a lot to unpack here.
+
+How bpf prog was attached to user event?
+What is the life time of bpf prog?
+What happens when user process crashes?
+What happens when user event is unregistered ?
+What is bpf prog context? Like, what helpers are allowed to be called?
+Does libbpf need updating?
+etc etc
+
+No selftests were provided with this patch, so impossible to answer.
+
+In general we don't want bpf to be called in various parts of the kernel
+just because bpf was used in similar parts elsewhere.
+bpf needs to provide real value for a particular kernel subsystem.
+
+For user events it's still not clear to me what bpf can bring to the table.
+
+The commit log of this proposed patch says:
+"When BPF programs are attached to tracepoints created by user_events
+the BPF programs do not get run even though the attach succeeds."
+
+It looks to me that it's a bug in attaching.
+The kernel shouldn't have allowed attaching bpf prog to user events,
+since they cannot be run.
+
+Then the commit log says:
+"This keeps user_events consistent
+with how other kernel, modules, and probes expose tracepoint data to allow
+attachment of a BPF program."
+
+"keep consistent" is not a reason to use bpf with user_events.
+
+Beau,
+please provide a detailed explanation of your use case and how bpf helps.
+
+Also please explain why uprobe/USDT and bpf don't achieve your goals.
+Various user space applications have USDTs in them.
+This is an existing mechanism that was proven to be useful to many projects
+including glibc, python, mysql.
+
+Comparing to user_events the USDTs work fine in unprivileged applications
+and have zero overhead when not turned on. USDT is a single 'nop' instruction
+while user events need if(enabled & bit) check plus iov prep and write.
+
+When enabled the write() is probably faster than USDT trap, but all the extra
+overhead in tracepoint and user_event_validate() probably makes it the same speed.
+So why not USDT ?
