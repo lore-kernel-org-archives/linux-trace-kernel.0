@@ -2,34 +2,30 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 47A18C7EE25
-	for <linux-trace-kernel@archiver.kernel.org>; Mon, 15 May 2023 19:35:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 598FAC77B75
+	for <linux-trace-kernel@archiver.kernel.org>; Mon, 15 May 2023 21:38:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S245166AbjEOTfm (ORCPT
+        id S245313AbjEOVi3 (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Mon, 15 May 2023 15:35:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47020 "EHLO
+        Mon, 15 May 2023 17:38:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34278 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S244201AbjEOTfm (ORCPT
+        with ESMTP id S243399AbjEOVi3 (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Mon, 15 May 2023 15:35:42 -0400
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 139D226AC;
-        Mon, 15 May 2023 12:35:41 -0700 (PDT)
-Received: from W11-BEAU-MD.localdomain (unknown [76.135.27.212])
-        by linux.microsoft.com (Postfix) with ESMTPSA id 42A012044710;
-        Mon, 15 May 2023 12:35:40 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 42A012044710
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-        s=default; t=1684179340;
-        bh=PcFG+iIa/PA7p0IIgskPb1ruV+sX7mzcczF0a582zuI=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=dZC0Y1cjSTLSoaHgLlbLJz9qTrQZ3hbcf9ZlQOPGYVMVbbgOQUi309o/v++fIOct8
-         LHS6+lCLPr2yc32sNNHeyQ5P/wGZYLepluAC+iqSDagyJ+z/heZVKg/h/vy+tMLiRH
-         PuNPVhL0D1XkdrY1gEUA1LyM//Mw+1f+cCn7ln4U=
-Date:   Mon, 15 May 2023 12:35:32 -0700
-From:   Beau Belgrave <beaub@linux.microsoft.com>
-To:     Steven Rostedt <rostedt@goodmis.org>
+        Mon, 15 May 2023 17:38:29 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1731B59FF;
+        Mon, 15 May 2023 14:38:28 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id A1ED2632C0;
+        Mon, 15 May 2023 21:38:27 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8575CC433D2;
+        Mon, 15 May 2023 21:38:25 +0000 (UTC)
+Date:   Mon, 15 May 2023 17:38:22 -0400
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     Beau Belgrave <beaub@linux.microsoft.com>
 Cc:     Alexei Starovoitov <alexei.starovoitov@gmail.com>,
         Masami Hiramatsu <mhiramat@kernel.org>,
         LKML <linux-kernel@vger.kernel.org>,
@@ -41,78 +37,58 @@ Cc:     Alexei Starovoitov <alexei.starovoitov@gmail.com>,
         Linus Torvalds <torvalds@linux-foundation.org>,
         dthaler@microsoft.com, brauner@kernel.org, hch@infradead.org
 Subject: Re: [PATCH] tracing/user_events: Run BPF program if attached
-Message-ID: <20230515193532.GA153@W11-BEAU-MD.localdomain>
+Message-ID: <20230515173822.2e571869@gandalf.local.home>
+In-Reply-To: <20230515193532.GA153@W11-BEAU-MD.localdomain>
 References: <20230508163751.841-1-beaub@linux.microsoft.com>
- <CAADnVQLYL-ZaP_2vViaktw0G4UKkmpOK2q4ZXBa+f=M7cC25Rg@mail.gmail.com>
- <20230509130111.62d587f1@rorschach.local.home>
- <20230509163050.127d5123@rorschach.local.home>
- <20230515165707.hv65ekwp2djkjj5i@MacBook-Pro-8.local>
- <20230515143305.4f731fa9@gandalf.local.home>
+        <CAADnVQLYL-ZaP_2vViaktw0G4UKkmpOK2q4ZXBa+f=M7cC25Rg@mail.gmail.com>
+        <20230509130111.62d587f1@rorschach.local.home>
+        <20230509163050.127d5123@rorschach.local.home>
+        <20230515165707.hv65ekwp2djkjj5i@MacBook-Pro-8.local>
+        <20230515143305.4f731fa9@gandalf.local.home>
+        <20230515193532.GA153@W11-BEAU-MD.localdomain>
+X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230515143305.4f731fa9@gandalf.local.home>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On Mon, May 15, 2023 at 02:33:05PM -0400, Steven Rostedt wrote:
-> On Mon, 15 May 2023 09:57:07 -0700
-> Alexei Starovoitov <alexei.starovoitov@gmail.com> wrote:
-> 
-> > Thank you for these details. Answer below...
-> 
-> Thanks for this well thought out reply!
-> 
-> 
+On Mon, 15 May 2023 12:35:32 -0700
+Beau Belgrave <beaub@linux.microsoft.com> wrote:
 
-[...]
-
+> > static int user_event_mm_fault_in()
+> > {
+> > 	bool unlocked = false;
 > > 
-> > > 	if (unlikely(ret <= 0)) {
-> > > 		if (!fixup_fault)
-> > > 			return -EFAULT;
-> > > 
-> > > 		if (!user_event_enabler_queue_fault(mm, enabler, *attempt))
-> > > 			pr_warn("user_events: Unable to queue fault handler\n");  
+> > 	[..]
 > > 
-> > This part looks questionable.
+> > out:
+> > 	if (!unlocked)
+> > 		mmap_read_unlock(mm->mm);
+> > }
 > > 
-> > The only users of fixup_user_fault() were futex and KVM.
-> > Now user_events are calling it too from user_event_mm_fault_in() where
-> > "bool unlocked;" is uninitialized and state of this flag is not checked
-> > after fixup_user_fault() call.
-> > Not an MM expert, but this is suspicious.
+> > Good catch!
+> >   
 > 
-> Hmm, yeah, this should be:
+> I don't believe that's correct. fixup_user_fault() re-acquires the
+> mmap lock, and when it does, it lets you know via unlocked getting set
+> to true. IE: Something COULD have changed in the mmap during this call,
+> but the lock is still held.
 > 
-> static int user_event_mm_fault_in()
-> {
-> 	bool unlocked = false;
-> 
-> 	[..]
-> 
-> out:
-> 	if (!unlocked)
-> 		mmap_read_unlock(mm->mm);
-> }
-> 
-> Good catch!
-> 
+> See comments here:
+> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/mm/gup.c#n1287
 
-I don't believe that's correct. fixup_user_fault() re-acquires the
-mmap lock, and when it does, it lets you know via unlocked getting set
-to true. IE: Something COULD have changed in the mmap during this call,
-but the lock is still held.
+Ah you're right. I thought it said "mmap_read_unlock()" before returning,
+but it's actually doing a "mmap_read_lock()". Note, I just got back home
+yesterday, so I blame jetlag ;-)
 
-See comments here:
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/mm/gup.c#n1287
+OK, this is good as-is.
 
-Thanks,
--Beau
+The "unlocked" is only if you want to know if the mm_read_lock() was
+unlocked in the function. You need to set it if you want it to retry, but
+you don't need to initialize it if you don't care if it was released.
 
-> 
-> Thank you Alexei for asking these. The above are all valid concerns.
-> 
-> -- Steve
-> 
+Probably could use a comment there.
+
+-- Steve
