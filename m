@@ -2,151 +2,114 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B85FC7EE26
-	for <linux-trace-kernel@archiver.kernel.org>; Tue, 16 May 2023 09:36:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C037C77B7F
+	for <linux-trace-kernel@archiver.kernel.org>; Tue, 16 May 2023 09:38:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231586AbjEPJgG (ORCPT
+        id S230374AbjEPJiG (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Tue, 16 May 2023 05:36:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46840 "EHLO
+        Tue, 16 May 2023 05:38:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48562 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231947AbjEPJgE (ORCPT
+        with ESMTP id S230517AbjEPJiG (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Tue, 16 May 2023 05:36:04 -0400
-Received: from mail-ed1-x52a.google.com (mail-ed1-x52a.google.com [IPv6:2a00:1450:4864:20::52a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5C6B3E52;
-        Tue, 16 May 2023 02:36:03 -0700 (PDT)
-Received: by mail-ed1-x52a.google.com with SMTP id 4fb4d7f45d1cf-50be17a1eceso25581094a12.2;
-        Tue, 16 May 2023 02:36:03 -0700 (PDT)
+        Tue, 16 May 2023 05:38:06 -0400
+Received: from mail-pj1-x102e.google.com (mail-pj1-x102e.google.com [IPv6:2607:f8b0:4864:20::102e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 397011A4;
+        Tue, 16 May 2023 02:38:05 -0700 (PDT)
+Received: by mail-pj1-x102e.google.com with SMTP id 98e67ed59e1d1-24e09b4153eso9537471a91.2;
+        Tue, 16 May 2023 02:38:05 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1684229762; x=1686821762;
+        d=gmail.com; s=20221208; t=1684229884; x=1686821884;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=MOYuwaGvQzB6W1rRJXfWsnaF3BnBS5m8MDev8mfwpl4=;
-        b=ZaH64FzpUsamyNTy1bzxrK/9Vm1lyGjs2o2RRvLTujZ6vLXLHQIBdR3aev7k/gnamy
-         hGo0+GakQd+1bNYbAo9jCS6xl8Rf68Ba1ZdpN5oXZT8Y6SyXg8Uo/Ez+Cggb6kageRT1
-         tcVMBuulkSRTW1PcKMR1q4EFNILYNPfAyeiMW2rgTj2WkRqLghUiPm+jdUPniKA8LbHQ
-         qTxqOSsVftohC24wAtnZ3ZZ+1GfWs3XyPm2y+VkSZN2h5TVrP5diR5+fa28FetVHL14n
-         4em+bxnRBM9A6yYq1vj0MZ++tJcS0LwiBx2CZhqG6KTyj1i6fOxoSAd/Lg8r+Eh8PZA+
-         s2kw==
+        bh=lcPyZ54ldUCQts1fa3VDXSS+xl2KucQtdFVpSxiwBxc=;
+        b=DU5/VIrFG7reTAO9QxhhODhV5q6nQbRuCcFF7dZS+vo49dM051KgUyLTkEGAY17YhA
+         NUGNaHs5g+z1g2S5tlreNpi9npqPyctgfVcd0xndJqnSK+rH/C5pdo8KDhhlMEDrJrMb
+         8jM9ZfbDgCjNowGUfj9bHMn/XwXc0dcDMrCJIj699zNypRCUhm6quAIUot8k8IuBoiS7
+         Khkjv4D+39G03t+FtvLUJzQm0f3FhID83B+2w8QYJTJh2exa6+XX6eJeeY2ZQaJNciXI
+         eawJngTYScPCmzGUv2+sDdBg+EIu8iAnjOO9eIj30DgNFWMJdg3yYUZdsJ5imJGfrseA
+         DJgA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1684229762; x=1686821762;
+        d=1e100.net; s=20221208; t=1684229884; x=1686821884;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=MOYuwaGvQzB6W1rRJXfWsnaF3BnBS5m8MDev8mfwpl4=;
-        b=MYsE4wqgoXSuq1q9+BbRDsnTSYIT86q3+PwQcHLIJkbax5t9HMXfFFO8UWYINe/v7q
-         CBxjYimy+G5yUo6jIImx70ZdPtzC+y4Xm264P9Y7k8TXJ5daN0b0Y4TgssDklrOsGIBw
-         stzuRvsYp6Aqz/i0Yfzox7nNuQv8WiPgfgTZAlJ6vR6Yp3/OYRr5nfRldWxdX/Vx3bA0
-         ss4hG10FPdUAgelPlokx2WjllIOItzgBscKEge7IflOg35k9Gu2eR8XRnrNRp9K2JHnk
-         8W5oKmT2Ycj8Bw3WM7cASv4BepOfCgMxIWeUsU33MOa/2lzYXp1cOz28oMs+b5w/yG5R
-         wYUA==
-X-Gm-Message-State: AC+VfDzzYs3kPkflx/SZYKUiw1gA2dDI0wqUVgArbZujqxJgPsl6+hxW
-        218NZVIaAdtd+VvcPdbLk4d2oxRmHLh4Nl4duuU=
-X-Google-Smtp-Source: ACHHUZ4TQCLryFERufS4j2G73LLn7fsBTUzB8Mn6JiQURp0dHneoZNIl/npAe/4hhhahWai8tAT6/j9WCU1Z7fyGQUc=
-X-Received: by 2002:aa7:db90:0:b0:50d:9a30:f305 with SMTP id
- u16-20020aa7db90000000b0050d9a30f305mr21453968edt.24.1684229761619; Tue, 16
- May 2023 02:36:01 -0700 (PDT)
+        bh=lcPyZ54ldUCQts1fa3VDXSS+xl2KucQtdFVpSxiwBxc=;
+        b=bQpgLLlKJPbeoaaj1mY0QnaQQsiZprBuE8mbbdVr0rJXUaewb9EIAUrjsw0+oFOKIN
+         wdg+8+AZ+3I2OHtIRJeCqpkqmDLdCEQ46yh4xagbIjEpA9pUSKp6xbT0sBsO2mCXoh6Y
+         8MCeASd/uCzXT3Dy48NK82pqdc64hlwNdU4rwFrtkCXY2ex3hysS/Vd+cfVaD5v2NvVR
+         jYE64av8noKBc2kRaKR8Sx85V/743wnhH4ZT1swQpw/zRiwX+XgjNjkxiXyjeAFuRpTl
+         lqfYRRG4OkOlwIiRlX5I5oPNQCn6frsDD2qaLHj7WU28SRxdXDzq/MWxBU4WgIKk2pSh
+         xRdA==
+X-Gm-Message-State: AC+VfDzUsyufdbIJHZqq5SStjBcHSjjfQwyseiXAg9fAUw3X4lcRftlW
+        hxVBD9/9hKNcvvZSCz3DxtVUFclfmZw0X+yeJRU=
+X-Google-Smtp-Source: ACHHUZ66lklqalTjUc1ffo3yWrc+bRrfEml1qJYxgf/ydcHrvZSuxhSIWWtNK8ldHQ96S4/rnUtpu1XgkdQdHu4Km8Y=
+X-Received: by 2002:a17:90a:fe05:b0:250:9d75:abe7 with SMTP id
+ ck5-20020a17090afe0500b002509d75abe7mr26052714pjb.47.1684229884532; Tue, 16
+ May 2023 02:38:04 -0700 (PDT)
 MIME-Version: 1.0
-References: <20230516071830.8190-1-zegao@tencent.com> <20230516071830.8190-3-zegao@tencent.com>
- <20230516091548.GA2587705@hirez.programming.kicks-ass.net>
-In-Reply-To: <20230516091548.GA2587705@hirez.programming.kicks-ass.net>
-From:   Ze Gao <zegao2021@gmail.com>
-Date:   Tue, 16 May 2023 17:35:50 +0800
-Message-ID: <CAD8CoPCen5Vx33Q1hYJ4T7Q9xhZa63OA52B606omkBttRWpkFg@mail.gmail.com>
-Subject: Re: [PATCH v2 2/4] fprobe: make fprobe_kprobe_handler recursion free
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Steven Rostedt <rostedt@goodmis.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        Alexander Gordeev <agordeev@linux.ibm.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Borislav Petkov <bp@alien8.de>,
-        Christian Borntraeger <borntraeger@linux.ibm.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Heiko Carstens <hca@linux.ibm.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Sven Schnelle <svens@linux.ibm.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Vasily Gorbik <gor@linux.ibm.com>, x86@kernel.org,
-        linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org,
-        linux-s390@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
-        bpf@vger.kernel.org, Conor Dooley <conor@kernel.org>,
-        Jiri Olsa <jolsa@kernel.org>, Yonghong Song <yhs@fb.com>,
-        Ze Gao <zegao@tencent.com>
+References: <20230511093234.3123181-1-suagrfillet@gmail.com>
+ <20230511093234.3123181-5-suagrfillet@gmail.com> <20230515143700.26beeacf@gandalf.local.home>
+In-Reply-To: <20230515143700.26beeacf@gandalf.local.home>
+From:   Song Shuai <suagrfillet@gmail.com>
+Date:   Tue, 16 May 2023 09:37:53 +0000
+Message-ID: <CAAYs2=hd1geHCTGrO=JohTYtgu+yj+D7EPono-ADOGfjYnLfrA@mail.gmail.com>
+Subject: Re: [PATCH V10 4/4] samples: ftrace: Add riscv support for SAMPLE_FTRACE_DIRECT[_MULTI]
+To:     Steven Rostedt <rostedt@goodmis.org>
+Cc:     paul.walmsley@sifive.com, palmer@dabbelt.com,
+        aou@eecs.berkeley.edu, mhiramat@kernel.org, mark.rutland@arm.com,
+        guoren@kernel.org, jszhang@kernel.org, e.shatokhin@yadro.com,
+        bjorn@rivosinc.com, linux-riscv@lists.infradead.org,
+        linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-Thanks for pointing this out,  I'll get it all fixed ASAP.
-
-Regards,
-Ze
-
-On Tue, May 16, 2023 at 5:16=E2=80=AFPM Peter Zijlstra <peterz@infradead.or=
-g> wrote:
+Steven Rostedt <rostedt@goodmis.org> =E4=BA=8E2023=E5=B9=B45=E6=9C=8815=E6=
+=97=A5=E5=91=A8=E4=B8=80 18:37=E5=86=99=E9=81=93=EF=BC=9A
 >
-> On Tue, May 16, 2023 at 03:18:28PM +0800, Ze Gao wrote:
+> On Thu, 11 May 2023 17:32:34 +0800
+> Song Shuai <suagrfillet@gmail.com> wrote:
 >
-> > +static void fprobe_handler(unsigned long ip, unsigned long parent_ip,
-> > +             struct ftrace_ops *ops, struct ftrace_regs *fregs)
-> > +{
-> > +     struct fprobe *fp;
-> > +     int bit;
-> > +
-> > +     fp =3D container_of(ops, struct fprobe, ops);
-> > +     if (fprobe_disabled(fp))
-> > +             return;
-> > +
-> > +     /* recursion detection has to go before any traceable function an=
-d
-> > +      * all functions before this point should be marked as notrace
-> > +      */
-> > +     bit =3D ftrace_test_recursion_trylock(ip, parent_ip);
-> > +     if (bit < 0) {
-> > +             fp->nmissed++;
-> > +             return;
-> > +     }
-> > +     __fprobe_handler(ip, parent_ip, ops, fregs);
-> >       ftrace_test_recursion_unlock(bit);
-> > +
-> >  }
-> >  NOKPROBE_SYMBOL(fprobe_handler);
+> > select HAVE_SAMPLE_FTRACE_DIRECT and HAVE_SAMPLE_FTRACE_DIRECT_MULTI
+> > for ARCH_RV64I in arch/riscv/Kconfig. And add riscv asm code for
+> > the ftrace-direct*.c files in samples/ftrace/.
 > >
-> >  static void fprobe_kprobe_handler(unsigned long ip, unsigned long pare=
-nt_ip,
-> >                                 struct ftrace_ops *ops, struct ftrace_r=
-egs *fregs)
-> >  {
-> > -     struct fprobe *fp =3D container_of(ops, struct fprobe, ops);
-> > +     struct fprobe *fp;
-> > +     int bit;
-> > +
-> > +     fp =3D container_of(ops, struct fprobe, ops);
-> > +     if (fprobe_disabled(fp))
-> > +             return;
-> > +
-> > +     /* recursion detection has to go before any traceable function an=
-d
-> > +      * all functions called before this point should be marked as not=
-race
-> > +      */
-> > +     bit =3D ftrace_test_recursion_trylock(ip, parent_ip);
-> > +     if (bit < 0) {
-> > +             fp->nmissed++;
-> > +             return;
-> > +     }
+> > Link: https://lore.kernel.org/linux-riscv/c68bac83-5c88-80b1-bac9-e1fd4=
+ea8f07e@yadro.com/T/#ma13012560331c66b051b580b3ab4a04ba44455ec
+> > Tested-by: Evgenii Shatokhin <e.shatokhin@yadro.com>
+> > Signed-off-by: Song Shuai <suagrfillet@gmail.com>
+> > Tested-by: Guo Ren <guoren@kernel.org>
+> > Signed-off-by: Guo Ren <guoren@kernel.org>
+> > Acked-by: Bj=C3=B6rn T=C3=B6pel <bjorn@rivosinc.com>
+> > ---
+> >  arch/riscv/Kconfig                          |  2 ++
+> >  samples/ftrace/ftrace-direct-modify.c       | 34 ++++++++++++++++++
+> >  samples/ftrace/ftrace-direct-multi-modify.c | 40 +++++++++++++++++++++
+> >  samples/ftrace/ftrace-direct-multi.c        | 24 +++++++++++++
+> >  samples/ftrace/ftrace-direct-too.c          | 27 ++++++++++++++
+> >  samples/ftrace/ftrace-direct.c              | 23 ++++++++++++
+> >  6 files changed, 150 insertions(+)
 >
-> Please don't use this comment style; multi line comments go like:
+> I acked v8 (which you will need my ack to get these in). Unless this patc=
+h
+> changed since v8, you should include my ack in further versions.
 >
->         /*
->          * Multi line comment ...
->          *                    ... is symmetric.
->          */
+There were no changes in this patch, except for a few tab pretties since v8=
+.
+your Acked-by will still be included.
+> Or you may be waiting longer for its acceptance.
 >
-> Same for your next patch.
+> If the patch did change, please acknowledge that in the next version (or
+> this one if it did change), asking me to ack it again.
+>
+> -- Steve
+
+
+
+--=20
+Thanks,
+Song
