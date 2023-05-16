@@ -2,141 +2,205 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DD667C77B7A
-	for <linux-trace-kernel@archiver.kernel.org>; Tue, 16 May 2023 05:33:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D54EC77B75
+	for <linux-trace-kernel@archiver.kernel.org>; Tue, 16 May 2023 05:49:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229812AbjEPFd0 (ORCPT
+        id S229572AbjEPFtP (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Tue, 16 May 2023 01:33:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51586 "EHLO
+        Tue, 16 May 2023 01:49:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55354 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229891AbjEPFd0 (ORCPT
+        with ESMTP id S229510AbjEPFtO (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Tue, 16 May 2023 01:33:26 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 352F535AC;
-        Mon, 15 May 2023 22:33:25 -0700 (PDT)
+        Tue, 16 May 2023 01:49:14 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 18CF03C32;
+        Mon, 15 May 2023 22:49:13 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id C63F1624FD;
-        Tue, 16 May 2023 05:33:24 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BD67BC433EF;
-        Tue, 16 May 2023 05:33:22 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id A309662F25;
+        Tue, 16 May 2023 05:49:12 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 95401C433D2;
+        Tue, 16 May 2023 05:49:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1684215204;
-        bh=PmuiakI4/1KEPTV0KMYZFkTULU+PVjxrYSH2hkmiMlQ=;
+        s=k20201202; t=1684216152;
+        bh=x1pTlw1V19z0aDBofMrV/rBF4TFc3StzNYctHqoKgiM=;
         h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=BpOlRoob/f9Du4uNPtsFIQrZTVSIvAOOj82McsiRStz0zZXM7ENaC1aHYXPXYrG7V
-         BmNwG77QmeIb0eI50vaEZnZ+aY9JT/73E7CQW11DNpx4J6fFevb/wWD8nMLF5ru222
-         SbljtK9ocp5iq/oi8gVqcVmyCLUWlN/EUFptYOisfjnLGl+M1+WYMv4hPIiYCQVNEy
-         eRu3GP28BSwhkuucYeW9S7jyqR4sUNmCb187//HWxEmJBD09solIYeVOWT3I/CnfNG
-         Pq70NkdOg3XBE0re3zkbSmH2WAS0ldN6RWB4q7i52AW9QC2/4wbNBjN00GdfyJeSv3
-         44eBrtRseR4yg==
-Date:   Tue, 16 May 2023 14:33:20 +0900
+        b=nA86npDtnLbRixJeEJg4inJyd169D0VJZZ0/sLDEFPzRPkAe7vbxJMs2z2lbPG5km
+         q6WbR7Rs4E52slK0McHeP0OyGPuNF+ExqWT5d3ufMurZH9QEo/ZNoaYHlVuElFxaSG
+         S0vxArdko6V6Kaxgc812/k7NIYblAYXd/UR4l410vUMJ1DrAVlwZyjVeVx0Tn0P3n+
+         WvIW2rRvuKfKWZATQlTz+siXoCIM43k2k3uv2PLjUs4ElBJ1z3i3VuoLp99BCdKtiU
+         MPEPHHqEQsfSQUen/dA9KH1krrySABXFMYaD80jLM8zUuNr4XBGuTfieqCno/Ui6k5
+         UTuTpfTQTWUCQ==
+Date:   Tue, 16 May 2023 14:49:08 +0900
 From:   Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To:     Masami Hiramatsu (Google) <mhiramat@kernel.org>
-Cc:     Ze Gao <zegao2021@gmail.com>, Steven Rostedt <rostedt@goodmis.org>,
-        Ze Gao <zegao@tencent.com>, linux-kernel@vger.kernel.org,
-        linux-trace-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/4] rethook: use preempt_{disable, enable}_notrace in
- rethook_trampoline_handler
-Message-Id: <20230516143320.f0eb438f981039e59ee4a5b1@kernel.org>
-In-Reply-To: <20230516132502.c51be728bd086b8c9005ce57@kernel.org>
-References: <cover.1684120990.git.zegao@tencent.com>
-        <a17a14abfb81cb0eea77c2ee10d7fc98d5d5a73e.1684120990.git.zegao@tencent.com>
-        <20230516132502.c51be728bd086b8c9005ce57@kernel.org>
+To:     Yonghong Song <yhs@meta.com>
+Cc:     Ze Gao <zegao2021@gmail.com>, Jiri Olsa <olsajiri@gmail.com>,
+        Song Liu <song@kernel.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Andrii Nakryiko <andrii@kernel.org>,
+        Martin KaFai Lau <martin.lau@linux.dev>,
+        Yonghong Song <yhs@fb.com>,
+        John Fastabend <john.fastabend@gmail.com>,
+        KP Singh <kpsingh@kernel.org>,
+        Stanislav Fomichev <sdf@google.com>,
+        Hao Luo <haoluo@google.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Ze Gao <zegao@tencent.com>, bpf@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
+Subject: Re: [PATCH] bpf: reject blacklisted symbols in kprobe_multi to
+ avoid recursive trap
+Message-Id: <20230516144908.f062ab19327634fc40cfc3b7@kernel.org>
+In-Reply-To: <ee28e791-b3ab-3dfd-161b-4e7ec055c6ff@meta.com>
+References: <20230510122045.2259-1-zegao@tencent.com>
+        <6308b8e0-8a54-e574-a312-0a97cfbf810c@meta.com>
+        <ZFvUH+p0ebcgnwEg@krava>
+        <CAD8CoPC_=d+Aocp8pnSi9cbU6HWBNc697bKUS1UydtB-4DFzrA@mail.gmail.com>
+        <ee28e791-b3ab-3dfd-161b-4e7ec055c6ff@meta.com>
 X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On Tue, 16 May 2023 13:25:02 +0900
-Masami Hiramatsu (Google) <mhiramat@kernel.org> wrote:
+On Fri, 12 May 2023 07:29:02 -0700
+Yonghong Song <yhs@meta.com> wrote:
 
-> Hi Ze Gao,
 > 
-> Thanks for the patch.
 > 
-> On Mon, 15 May 2023 11:26:38 +0800
-> Ze Gao <zegao2021@gmail.com> wrote:
+> On 5/11/23 10:53 PM, Ze Gao wrote:
+> > Yes, Jiri. Thanks for pointing it out. It's true that not all probe
+> > blacklisted functions should be banned from bpf_kprobe.
+> > 
+> > I tried some of them, and all kprobe blacklisted symbols I hooked
+> > works fine except preempt_count_{sub, add}.
+> > so the takeaway here is preempt_cout_{sub, add} must be rejected at
+> > least for now since kprobe_multi_link_prog_run
+> > ( i.e., the fprobe handler) and rethook_trampoline_handler( i.e. the
+> > rethook handler) calls preempt_cout_{sub, add}.
+> > 
+> > I'm considering providing a general  fprobe_blacklist framework just
+> > like what kprobe does to allow others to mark
+> > functions used inside fprobe handler or rethook handler as NOFPROBE to
+> > avoid potential stack recursion. But only after
+> > I figure out how ftrace handles recursion problems currently and why
+> > it fails in the case I ran into.
 > 
-> > This patch replace preempt_{disable, enable} with its corresponding
-> > notrace version in rethook_trampoline_handler so no worries about stack
-> > recursion or overflow introduced by preempt_count_{add, sub} under
-> > fprobe + rethook context.
-> 
-> So, have you ever see that recursion of preempt_count overflow case?
-> 
-> I intended to use the normal preempt_disable() here because it does NOT
-> prohibit any function-trace call (Note that both kprobes and
-> fprobe checks recursive call by itself) but it is used for preempt_onoff
-> tracer.
+> A fprobe_blacklist might make sense indeed as fprobe and kprobe are 
+> quite different... Thanks for working on this.
 
-OK, I got the point.
+No, I don't like fprobe_blacklist, because you can filter user given
+function with <tracefs>/available_filter_functions :)
+If the function is not listed there, you can not put fprobe on it.
+IOW, kprobe_multi_link_prog_run only covers those functions. (white-list)
 
-  rethook_trampoline_handler() {
-    preempt_disable() {
-      preempt_count_add() { => fprobe and set rethook
-      } => rethook_trampoline_handler() {
-        preempt_disable() {
-          ...   
-
-So the problem is that the preempt_disable() macro calls preempt_count_add()
-which can be tracable.
-
-So, let's make it notrace.
-
-Acked-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-
-and
-
-Fixes: 54ecbe6f1ed5 ("rethook: Add a generic return hook")
-Cc: stable@vger.kernel.org
+At the tooling side, it should check whether the probe is defined for
+single function or multiple functions, and use kprobe-blacklist (single)
+or available_filter_functions (multiple).
 
 Thank you,
 
 > 
-> Thanks,
-> 
 > > 
-> > Signed-off-by: Ze Gao <zegao@tencent.com>
-> > ---
-> >  kernel/trace/rethook.c | 4 ++--
-> >  1 file changed, 2 insertions(+), 2 deletions(-)
+> > Thanks
+> > Ze
 > > 
-> > diff --git a/kernel/trace/rethook.c b/kernel/trace/rethook.c
-> > index 32c3dfdb4d6a..60f6cb2b486b 100644
-> > --- a/kernel/trace/rethook.c
-> > +++ b/kernel/trace/rethook.c
-> > @@ -288,7 +288,7 @@ unsigned long rethook_trampoline_handler(struct pt_regs *regs,
-> >  	 * These loops must be protected from rethook_free_rcu() because those
-> >  	 * are accessing 'rhn->rethook'.
-> >  	 */
-> > -	preempt_disable();
-> > +	preempt_disable_notrace();
-> >  
-> >  	/*
-> >  	 * Run the handler on the shadow stack. Do not unlink the list here because
-> > @@ -321,7 +321,7 @@ unsigned long rethook_trampoline_handler(struct pt_regs *regs,
-> >  		first = first->next;
-> >  		rethook_recycle(rhn);
-> >  	}
-> > -	preempt_enable();
-> > +	preempt_enable_notrace();
-> >  
-> >  	return correct_ret_addr;
-> >  }
-> > -- 
-> > 2.40.1
-> > 
-> 
-> 
-> -- 
-> Masami Hiramatsu (Google) <mhiramat@kernel.org>
+> > On Thu, May 11, 2023 at 1:28 AM Jiri Olsa <olsajiri@gmail.com> wrote:
+> >>
+> >> On Wed, May 10, 2023 at 07:13:58AM -0700, Yonghong Song wrote:
+> >>>
+> >>>
+> >>> On 5/10/23 5:20 AM, Ze Gao wrote:
+> >>>> BPF_LINK_TYPE_KPROBE_MULTI attaches kprobe programs through fprobe,
+> >>>> however it does not takes those kprobe blacklisted into consideration,
+> >>>> which likely introduce recursive traps and blows up stacks.
+> >>>>
+> >>>> this patch adds simple check and remove those are in kprobe_blacklist
+> >>>> from one fprobe during bpf_kprobe_multi_link_attach. And also
+> >>>> check_kprobe_address_safe is open for more future checks.
+> >>>>
+> >>>> note that ftrace provides recursion detection mechanism, but for kprobe
+> >>>> only, we can directly reject those cases early without turning to ftrace.
+> >>>>
+> >>>> Signed-off-by: Ze Gao <zegao@tencent.com>
+> >>>> ---
+> >>>>    kernel/trace/bpf_trace.c | 37 +++++++++++++++++++++++++++++++++++++
+> >>>>    1 file changed, 37 insertions(+)
+> >>>>
+> >>>> diff --git a/kernel/trace/bpf_trace.c b/kernel/trace/bpf_trace.c
+> >>>> index 9a050e36dc6c..44c68bc06bbd 100644
+> >>>> --- a/kernel/trace/bpf_trace.c
+> >>>> +++ b/kernel/trace/bpf_trace.c
+> >>>> @@ -2764,6 +2764,37 @@ static int get_modules_for_addrs(struct module ***mods, unsigned long *addrs, u3
+> >>>>      return arr.mods_cnt;
+> >>>>    }
+> >>>> +static inline int check_kprobe_address_safe(unsigned long addr)
+> >>>> +{
+> >>>> +   if (within_kprobe_blacklist(addr))
+> >>>> +           return -EINVAL;
+> >>>> +   else
+> >>>> +           return 0;
+> >>>> +}
+> >>>> +
+> >>>> +static int check_bpf_kprobe_addrs_safe(unsigned long *addrs, int num)
+> >>>> +{
+> >>>> +   int i, cnt;
+> >>>> +   char symname[KSYM_NAME_LEN];
+> >>>> +
+> >>>> +   for (i = 0; i < num; ++i) {
+> >>>> +           if (check_kprobe_address_safe((unsigned long)addrs[i])) {
+> >>>> +                   lookup_symbol_name(addrs[i], symname);
+> >>>> +                   pr_warn("bpf_kprobe: %s at %lx is blacklisted\n", symname, addrs[i]);
+> >>>
+> >>> So user request cannot be fulfilled and a warning is issued and some
+> >>> of user requests are discarded and the rest is proceeded. Does not
+> >>> sound a good idea.
+> >>>
+> >>> Maybe we should do filtering in user space, e.g., in libbpf, check
+> >>> /sys/kernel/debug/kprobes/blacklist and return error
+> >>> earlier? bpftrace/libbpf-tools/bcc-tools all do filtering before
+> >>> requesting kprobe in the kernel.
+> >>
+> >> also fprobe uses ftrace drectly without paths in kprobe, so I wonder
+> >> some of the kprobe blacklisted functions are actually safe
+> >>
+> >> jirka
+> >>
+> >>>
+> >>>> +                   /* mark blacklisted symbol for remove */
+> >>>> +                   addrs[i] = 0;
+> >>>> +           }
+> >>>> +   }
+> >>>> +
+> >>>> +   /* remove blacklisted symbol from addrs */
+> >>>> +   for (i = 0, cnt = 0; i < num; ++i) {
+> >>>> +           if (addrs[i])
+> >>>> +                   addrs[cnt++]  = addrs[i];
+> >>>> +   }
+> >>>> +
+> >>>> +   return cnt;
+> >>>> +}
+> >>>> +
+> >>>>    int bpf_kprobe_multi_link_attach(const union bpf_attr *attr, struct bpf_prog *prog)
+> >>>>    {
+> >>>>      struct bpf_kprobe_multi_link *link = NULL;
+> >>>> @@ -2859,6 +2890,12 @@ int bpf_kprobe_multi_link_attach(const union bpf_attr *attr, struct bpf_prog *pr
+> >>>>      else
+> >>>>              link->fp.entry_handler = kprobe_multi_link_handler;
+> >>>> +   cnt = check_bpf_kprobe_addrs_safe(addrs, cnt);
+> >>>> +   if (!cnt) {
+> >>>> +           err = -EINVAL;
+> >>>> +           goto error;
+> >>>> +   }
+> >>>> +
+> >>>>      link->addrs = addrs;
+> >>>>      link->cookies = cookies;
+> >>>>      link->cnt = cnt;
 
 
 -- 
