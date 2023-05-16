@@ -2,49 +2,37 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 280AAC7EE24
-	for <linux-trace-kernel@archiver.kernel.org>; Mon, 15 May 2023 21:57:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A848C77B7D
+	for <linux-trace-kernel@archiver.kernel.org>; Tue, 16 May 2023 01:25:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S244771AbjEOV5S (ORCPT
+        id S229544AbjEPBZx (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Mon, 15 May 2023 17:57:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43508 "EHLO
+        Mon, 15 May 2023 21:25:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50124 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S242711AbjEOV5R (ORCPT
+        with ESMTP id S229514AbjEPBZw (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Mon, 15 May 2023 17:57:17 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 602DF172A;
-        Mon, 15 May 2023 14:57:16 -0700 (PDT)
+        Mon, 15 May 2023 21:25:52 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F27C71FDC;
+        Mon, 15 May 2023 18:25:50 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id F04FD63311;
-        Mon, 15 May 2023 21:57:15 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E5ED6C433D2;
-        Mon, 15 May 2023 21:57:13 +0000 (UTC)
-Date:   Mon, 15 May 2023 17:57:12 -0400
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 8864C633E5;
+        Tue, 16 May 2023 01:25:50 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 65E39C433D2;
+        Tue, 16 May 2023 01:25:49 +0000 (UTC)
+Date:   Mon, 15 May 2023 21:25:46 -0400
 From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Beau Belgrave <beaub@linux.microsoft.com>
-Cc:     Alexei Starovoitov <alexei.starovoitov@gmail.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-trace-kernel@vger.kernel.org,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Andrii Nakryiko <andrii@kernel.org>, bpf <bpf@vger.kernel.org>,
-        David Vernet <void@manifault.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        dthaler@microsoft.com, brauner@kernel.org, hch@infradead.org
-Subject: Re: [PATCH] tracing/user_events: Run BPF program if attached
-Message-ID: <20230515175712.649aa5f6@gandalf.local.home>
-In-Reply-To: <20230515192407.GA85@W11-BEAU-MD.localdomain>
-References: <20230508163751.841-1-beaub@linux.microsoft.com>
-        <CAADnVQLYL-ZaP_2vViaktw0G4UKkmpOK2q4ZXBa+f=M7cC25Rg@mail.gmail.com>
-        <20230509130111.62d587f1@rorschach.local.home>
-        <20230509163050.127d5123@rorschach.local.home>
-        <20230515165707.hv65ekwp2djkjj5i@MacBook-Pro-8.local>
-        <20230515192407.GA85@W11-BEAU-MD.localdomain>
+To:     Ze Gao <zegao2021@gmail.com>
+Cc:     Masami Hiramatsu <mhiramat@kernel.org>, Ze Gao <zegao@tencent.com>,
+        linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/4] fprobe: make fprobe_kprobe_handler recursion free
+Message-ID: <20230515212546.7a467a1f@gandalf.local.home>
+In-Reply-To: <6c428b9f74090b2780b67ca498c45aa5e8c38c44.1684120990.git.zegao@tencent.com>
+References: <cover.1684120990.git.zegao@tencent.com>
+        <6c428b9f74090b2780b67ca498c45aa5e8c38c44.1684120990.git.zegao@tencent.com>
 X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
@@ -53,44 +41,77 @@ Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On Mon, 15 May 2023 12:24:07 -0700
-Beau Belgrave <beaub@linux.microsoft.com> wrote:
+On Mon, 15 May 2023 11:26:39 +0800
+Ze Gao <zegao2021@gmail.com> wrote:
 
-> > Beau,
-> > please provide a detailed explanation of your use case and how bpf helps.
-> >   
+> Current implementation calls kprobe related functions before doing
+> ftrace recursion check in fprobe_kprobe_handler, which opens door
+> to kernel crash due to stack recursion if preempt_count_{add, sub}
+> is traceable.
 > 
-> There are teams that have existing BPF programs that want to also pull
-> in data from user processes in addition to the data they already collect
-> from the kernel.
+> Refactor the common part out of fprobe_kprobe_handler and fprobe_
+> handler and call ftrace recursion detection at the very beginning,
+> and also mark these functions notrace so that the whole fprobe_k-
+> probe_handler is free from recusion. And
 > 
-> We are also seeing a trend of teams wanting to drop buffering approaches
-> and move into non-buffered analysis of problems. An example is as soon
-> as a fault happens in a user-process, they would like the ability to see
-> what that thread has done, what the kernel did a bit before the error
-> (or other processes that have swapped in, etc).
+> Signed-off-by: Ze Gao <zegao@tencent.com>
+> ---
+>  kernel/trace/fprobe.c | 61 +++++++++++++++++++++++++++++++------------
+>  1 file changed, 45 insertions(+), 16 deletions(-)
 > 
-> We also have needs to aggregate operation duration live, and as soon as
-> they deviate, trigger corrective actions. BPF is ideal for us to use for
-> aggregating data cheaply, comparing that to other kernel and user
-> processes, and then making a decision quickly on how to mitigate or flag
-> it. We are working with OpenTelemetry teams to make this work via
-> certain exporters in various languages (C#/C++/Rust).
+> diff --git a/kernel/trace/fprobe.c b/kernel/trace/fprobe.c
+> index 9abb3905bc8e..ad9a36c87ad9 100644
+> --- a/kernel/trace/fprobe.c
+> +++ b/kernel/trace/fprobe.c
+> @@ -20,30 +20,22 @@ struct fprobe_rethook_node {
+>  	char data[];
+>  };
+>  
+> -static void fprobe_handler(unsigned long ip, unsigned long parent_ip,
+> -			   struct ftrace_ops *ops, struct ftrace_regs *fregs)
+> +static inline notrace void __fprobe_handler(unsigned long ip, unsigned long
 
-This is turning into a very productive discussion. Thank you Alexei and
-Beau for this.
 
-Beau,
+FYI, if you look in kernel/trace/Makefile you'll see:
 
-Could you possibly also add (in a separate patch), a simple use case of a
-BPF program that would be attached to some user event. Could be contrived.
-Perhaps supply a patch to ls.c[1] that adds a user event to where it reads a
-file type and the bpf program can do something special if the file belongs
-to the user. OK, I'm just pulling crazy ideas out of thin air!
+ccflags-remove-$(CONFIG_FUNCTION_TRACER) += $(CC_FLAGS_FTRACE)
 
-[1] https://github.com/coreutils/coreutils/blob/master/src/ls.c
-
-Could copy the ls with the user event to the samples directory for user
-events. It is GPL.
+Which removes the flags to add tracing. So there's no reason to add
+"notrace" here, as all functions in this directory are by default "notrace".
 
 -- Steve
+
+
+> +		parent_ip, struct ftrace_ops *ops, struct ftrace_regs *fregs)
+>  {
+>  	struct fprobe_rethook_node *fpr;
+>  	struct rethook_node *rh = NULL;
+>  	struct fprobe *fp;
+>  	void *entry_data = NULL;
+> -	int bit, ret;
+> +	int ret;
+>  
+>  	fp = container_of(ops, struct fprobe, ops);
+> -	if (fprobe_disabled(fp))
+> -		return;
+> -
+> -	bit = ftrace_test_recursion_trylock(ip, parent_ip);
+> -	if (bit < 0) {
+> -		fp->nmissed++;
+> -		return;
+> -	}
+>  
+>  	if (fp->exit_handler) {
+>  		rh = rethook_try_get(fp->rethook);
+>  		if (!rh) {
+>  			fp->nmissed++;
+> -			goto out;
+> +			return;
+>  		}
+>  		fpr = container_of(rh, struct fprobe_rethook_node, node);
+>  		fpr->entry_ip = ip;
+> @@ -61,23 +53,60 @@ static void fprobe_handler(unsigned long ip, unsigned long parent_ip,
+>  		else
+>  			rethook_hook(rh, ftrace_get_regs(fregs), true);
+>  	}
+>
