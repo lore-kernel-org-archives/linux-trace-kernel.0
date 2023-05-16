@@ -2,86 +2,120 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CCA6C77B75
-	for <linux-trace-kernel@archiver.kernel.org>; Tue, 16 May 2023 20:11:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A88FCC77B7A
+	for <linux-trace-kernel@archiver.kernel.org>; Tue, 16 May 2023 21:42:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230116AbjEPULT (ORCPT
+        id S229873AbjEPVml (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Tue, 16 May 2023 16:11:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59308 "EHLO
+        Tue, 16 May 2023 17:42:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57600 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229810AbjEPULS (ORCPT
+        with ESMTP id S229565AbjEPVmk (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Tue, 16 May 2023 16:11:18 -0400
-Received: from mail-pl1-x635.google.com (mail-pl1-x635.google.com [IPv6:2607:f8b0:4864:20::635])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BB28A59E5
-        for <linux-trace-kernel@vger.kernel.org>; Tue, 16 May 2023 13:11:17 -0700 (PDT)
-Received: by mail-pl1-x635.google.com with SMTP id d9443c01a7336-1ae3ed1b0d6so547845ad.3
-        for <linux-trace-kernel@vger.kernel.org>; Tue, 16 May 2023 13:11:17 -0700 (PDT)
+        Tue, 16 May 2023 17:42:40 -0400
+Received: from mail-ed1-x536.google.com (mail-ed1-x536.google.com [IPv6:2a00:1450:4864:20::536])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0D14C5FD2;
+        Tue, 16 May 2023 14:42:39 -0700 (PDT)
+Received: by mail-ed1-x536.google.com with SMTP id 4fb4d7f45d1cf-50bc040c7b8so25411a12.2;
+        Tue, 16 May 2023 14:42:38 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1684267877; x=1686859877;
+        d=gmail.com; s=20221208; t=1684273357; x=1686865357;
         h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=nLgrvnIbTez+ozLofGFvlDwgzYOgc3jwqI2qiIMZDlc=;
-        b=fwxxiq7jxyRdl/2cy/Sv+GQ5mQiGF2Lstfp3s18yImRvFgABuVehmXn56JwCzbRdhQ
-         KKufXmevtlLM+BTCz8VLc/cV+T/YAzLqsHnyHdPBjeUiw9eAvpKfIulQlnKV0CKwMsFA
-         jKjaL6cYIgkSXEiU+Ok8enWf1b1VtTDsVqZng=
+         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=ZCrwAPuGKXq93TXqe6WXaYC1Q/y0jn1/n3v/MjlEJns=;
+        b=JR4x/5gSL9UBOTTLzKqCYxTw+bx1mkq+N2tp0cQoZ0Ey0OJRpdCcBjj6W5Ay2ZLVGs
+         EJCBFb1qL76rpzwZC3KVUgqph2VG+pDMZgV2JH8i/qCyi2FFPDZdG7WageP4Jny+zw4B
+         VDZkf2r95FYpsV5Wcr405f9S6PDZqXTUPwUy8LmYZm1aqmFu5gw1g6m5vcnLo8WaflDv
+         PBr4RbftGq3yyvt/8YtmnaqDs4t26I1ShqQ1O4wqaTfXJNwLpYKR9d19X4JRj9OIR2dx
+         XJmjef48zWkGhhTg2pV1cmyTme7GL/9IKf4RJyQTHz3gGE7ucHp0ObCtsVBQulRN1cbp
+         DymA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1684267877; x=1686859877;
+        d=1e100.net; s=20221208; t=1684273357; x=1686865357;
         h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=nLgrvnIbTez+ozLofGFvlDwgzYOgc3jwqI2qiIMZDlc=;
-        b=Jt0xFtBE2aVGI2IEH2aVTmnjfdm5hIdIOvrpvsWstdMUYX5WNA6Bp75q7IPVy85jyw
-         bcx6ivJVV5M8cqxliC1SHPHnH5nKJx/LiUyuBrwV8n0v0jxZCv7kqZ4VMf9UZW6D3cYp
-         fcKQpbn0g3y0vKMBVSU9LiEkqLZSD/nb1HfcKfKjpc+tewZEOR0JY9xPYbtTZ22NOaL8
-         7wvNQ1aw8G3A/6ajBVV9tKlcx2GE6nHMIRCJMu81mdDiVs/sOTMbkYLFXq2XyG1vsvh9
-         u6uxczIzYnoXDHiEMXlg0pUwaArruqzZPNp5VhSiLBebUIr6KMptPswQg8hlHz2EXSJ0
-         Fsqw==
-X-Gm-Message-State: AC+VfDxfO/d5iG8J+O/pESbgUZFPb99qDgYesDY5fdnJTtmpxXI0yqqb
-        6JiRgHvmiSSksMcgVHuKb/xnWzayx6NQ5T+sw04=
-X-Google-Smtp-Source: ACHHUZ77IQniMgR4Y8NUBFcCMRu/KSrWXIuCgUNNDXjyikpYHkbmnL7WvFx0Bd2z/BIHgQdZGCLeMQ==
-X-Received: by 2002:a17:902:8c98:b0:1ad:be4d:5dfe with SMTP id t24-20020a1709028c9800b001adbe4d5dfemr21153767plo.27.1684267877266;
-        Tue, 16 May 2023 13:11:17 -0700 (PDT)
-Received: from www.outflux.net (198-0-35-241-static.hfc.comcastbusiness.net. [198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id p15-20020a1709027ecf00b001a1a07d04e6sm16019154plb.77.2023.05.16.13.11.15
+        bh=ZCrwAPuGKXq93TXqe6WXaYC1Q/y0jn1/n3v/MjlEJns=;
+        b=cEyzoMNY8+VZO6IvmFr49NKQWxZuL0AfwjGOkIYPiCV4FIDFYoiytqNwM/nWhI3XVm
+         JJ4py9yO+4cFO7gqTtXDkwfmZiMlO4R5Xt9HqO0qmC8mwZ7g1f8TbOd6uvUxgjBu6B2/
+         8uQahIMOWBXXRAaoBF0exz4Na5cUg8ccaUV21lwUArKxNWRk4/lPpDCyYWwQWtWocnQr
+         65cRc0dGNR1nYEJniNSC0loHLH15+rVngTOlaqqLojma9mGkWlASNeB3+WzUDNms2VQm
+         oqm3tVQ3Oz6RS4YAM1D8sp58cNtCtL3PpzMoeSHaKTL9uZEVEvFDBvidzSU2NtSK4GkH
+         z56g==
+X-Gm-Message-State: AC+VfDzJbhvhQE+VfGBtdBQffhOV8WSgKDOETFOYv/rz6kIOVks1A7q3
+        nb79wHnsf5HWghmrTRwUKuc=
+X-Google-Smtp-Source: ACHHUZ7d13R/4s3sMrjF0bqn81c2bBX5qIzZ4YPQLulerCv9LdqvYx0QqQG1LEiyAZhhRtZIYeV8ZQ==
+X-Received: by 2002:a17:906:c14f:b0:94d:a2c2:9aeb with SMTP id dp15-20020a170906c14f00b0094da2c29aebmr41629990ejc.49.1684273357168;
+        Tue, 16 May 2023 14:42:37 -0700 (PDT)
+Received: from krava ([83.240.62.62])
+        by smtp.gmail.com with ESMTPSA id ku11-20020a170907788b00b0094f5179540fsm11169179ejc.83.2023.05.16.14.42.36
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 16 May 2023 13:11:15 -0700 (PDT)
-Date:   Tue, 16 May 2023 13:11:14 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     Azeem Shaikh <azeemshaikh38@gmail.com>
+        Tue, 16 May 2023 14:42:36 -0700 (PDT)
+From:   Jiri Olsa <olsajiri@gmail.com>
+X-Google-Original-From: Jiri Olsa <jolsa@kernel.org>
+Date:   Tue, 16 May 2023 23:42:34 +0200
+To:     Ze Gao <zegao2021@gmail.com>
 Cc:     Steven Rostedt <rostedt@goodmis.org>,
         Masami Hiramatsu <mhiramat@kernel.org>,
-        linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-trace-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] tracing: Replace all non-returning strlcpy with
- strscpy
-Message-ID: <202305161311.0A9B37E131@keescook>
-References: <20230516143956.1367827-1-azeemshaikh38@gmail.com>
+        Albert Ou <aou@eecs.berkeley.edu>,
+        Alexander Gordeev <agordeev@linux.ibm.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Borislav Petkov <bp@alien8.de>,
+        Christian Borntraeger <borntraeger@linux.ibm.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Heiko Carstens <hca@linux.ibm.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Sven Schnelle <svens@linux.ibm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Vasily Gorbik <gor@linux.ibm.com>, x86@kernel.org,
+        linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org,
+        linux-s390@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+        bpf@vger.kernel.org, Conor Dooley <conor@kernel.org>,
+        Yonghong Song <yhs@fb.com>, Ze Gao <zegao@tencent.com>
+Subject: Re: [PATCH v2 0/4] Make fprobe + rethook immune to recursion
+Message-ID: <ZGP4ypidaxQGdp7Y@krava>
+References: <20230516071830.8190-1-zegao@tencent.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20230516143956.1367827-1-azeemshaikh38@gmail.com>
+In-Reply-To: <20230516071830.8190-1-zegao@tencent.com>
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On Tue, May 16, 2023 at 02:39:56PM +0000, Azeem Shaikh wrote:
-> strlcpy() reads the entire source buffer first.
-> This read may exceed the destination size limit.
-> This is both inefficient and can lead to linear read
-> overflows if a source string is not NUL-terminated [1].
-> In an effort to remove strlcpy() completely [2], replace
-> strlcpy() here with strscpy().
+On Tue, May 16, 2023 at 03:18:26PM +0800, Ze Gao wrote:
+> Hi all,
 > 
-> No return values were used, so direct replacement with strlcpy is safe.
+> This is the 2nd version of patch series to fix the ftrace rethook recursion problem.
 > 
-> [1] https://www.kernel.org/doc/html/latest/process/deprecated.html#strlcpy
-> [2] https://github.com/KSPP/linux/issues/89
+> v1: https://lore.kernel.org/linux-trace-kernel/cover.1684120990.git.zegao@tencent.com/T/                                 +++#md4c0bae6a6cae28dadf2a2c6105ff140b35fddea
 > 
-> Signed-off-by: Azeem Shaikh <azeemshaikh38@gmail.com>
+> As Steven suggested, this version removes unnecessary notrace annotations from fprobe
+> and rethook functions from v1 [PATCH 2,3,4/4] and replaces with makefile changes to filter
+> out compiler flags which ftrace depends upon for rethook related objects.
+> 
+> Ze Gao (4):
+>   rethook: use preempt_{disable, enable}_notrace in
+>     rethook_trampoline_handler
+>   fprobe: make fprobe_kprobe_handler recursion free
+>   fprobe: add recursion detection in fprobe_exit_handler
+>   rehook, fprobe: do not trace rethook related functions
 
-Reviewed-by: Kees Cook <keescook@chromium.org>
+hi,
+what tree is this based on? I have troubles to apply that
 
--- 
-Kees Cook
+thanks,
+jirka
+
+> 
+>  arch/riscv/kernel/probes/Makefile |  2 +
+>  arch/s390/kernel/Makefile         |  1 +
+>  arch/x86/kernel/Makefile          |  1 +
+>  kernel/trace/fprobe.c             | 72 ++++++++++++++++++++++++-------
+>  kernel/trace/rethook.c            |  4 +-
+>  5 files changed, 63 insertions(+), 17 deletions(-)
+> 
+> -- 
+> 2.40.1
+> 
