@@ -2,97 +2,84 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C523AC77B75
-	for <linux-trace-kernel@archiver.kernel.org>; Tue, 16 May 2023 19:56:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CCA6C77B75
+	for <linux-trace-kernel@archiver.kernel.org>; Tue, 16 May 2023 20:11:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230015AbjEPT4q (ORCPT
+        id S230116AbjEPULT (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Tue, 16 May 2023 15:56:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49802 "EHLO
+        Tue, 16 May 2023 16:11:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59308 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230056AbjEPT4o (ORCPT
+        with ESMTP id S229810AbjEPULS (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Tue, 16 May 2023 15:56:44 -0400
-Received: from mail-pf1-x42a.google.com (mail-pf1-x42a.google.com [IPv6:2607:f8b0:4864:20::42a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B497D7AB8
-        for <linux-trace-kernel@vger.kernel.org>; Tue, 16 May 2023 12:56:39 -0700 (PDT)
-Received: by mail-pf1-x42a.google.com with SMTP id d2e1a72fcca58-64ab2a37812so8189332b3a.1
-        for <linux-trace-kernel@vger.kernel.org>; Tue, 16 May 2023 12:56:39 -0700 (PDT)
+        Tue, 16 May 2023 16:11:18 -0400
+Received: from mail-pl1-x635.google.com (mail-pl1-x635.google.com [IPv6:2607:f8b0:4864:20::635])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BB28A59E5
+        for <linux-trace-kernel@vger.kernel.org>; Tue, 16 May 2023 13:11:17 -0700 (PDT)
+Received: by mail-pl1-x635.google.com with SMTP id d9443c01a7336-1ae3ed1b0d6so547845ad.3
+        for <linux-trace-kernel@vger.kernel.org>; Tue, 16 May 2023 13:11:17 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1684266999; x=1686858999;
+        d=chromium.org; s=google; t=1684267877; x=1686859877;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=QlgAAtiyihh7bx5P71pi2o6dPtZSer+A46AGpW/5WPM=;
-        b=kef7EitnyZ6qVVLdsWjYeAdWG/vB35cqybAGBIj/wVTjUV6BlKvSCGjnNbHNOsCEOL
-         h+BT20FpTWmXn29KSAWGRqAhQG7dYi4HpAICRT9xWClylv6xSJEyF5aX71CJi1iWwCBV
-         AskpSJ9ywL4mhKKAIE30RromysT+Wz3FHQz7w=
+        bh=nLgrvnIbTez+ozLofGFvlDwgzYOgc3jwqI2qiIMZDlc=;
+        b=fwxxiq7jxyRdl/2cy/Sv+GQ5mQiGF2Lstfp3s18yImRvFgABuVehmXn56JwCzbRdhQ
+         KKufXmevtlLM+BTCz8VLc/cV+T/YAzLqsHnyHdPBjeUiw9eAvpKfIulQlnKV0CKwMsFA
+         jKjaL6cYIgkSXEiU+Ok8enWf1b1VtTDsVqZng=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1684266999; x=1686858999;
+        d=1e100.net; s=20221208; t=1684267877; x=1686859877;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=QlgAAtiyihh7bx5P71pi2o6dPtZSer+A46AGpW/5WPM=;
-        b=O4JpfPBbcwz6kYuzDR5lK33+f6JJ2uUuQx8qfBtG2vX6dqfY77i7ujGV77M6h9Umhg
-         sL/wnFk1N7CPET9GWvgU84hYpSPn6+pMiHZF+YvjjXy6GzxLF6vrRsaKpcygYDoSK6ir
-         PfqbUS+Kp4OXOR6wrinKW8o4WeLRWAmJYuHxyN7O+gvI2AXvUq/3E8sXLMKM9u3n37bA
-         IfjrlGXjfeupAflQK5xqqOkJZ8ZiVgw5hn9Tbjr1sF1w2U1tSutglvAqTfYPfDPfZNju
-         LolJWva9e6lmoE+BqIH7zP0GFwGTtY+XukN/hM+JoTOQHSjxszHI19J77J4qjaLx07ol
-         vDSQ==
-X-Gm-Message-State: AC+VfDw7hrZWoBG6NXKlBG7jyhq9vZeoa15SYFTc5r99C5MCekZhHDv7
-        4rLRh3McBmrNqvaH3XL0+uNSjQ==
-X-Google-Smtp-Source: ACHHUZ504MnZSV1lW6m3lpadzxSZtXTyWWnmbMDexEhPigrkHEzEuE9njCOaI6ApJ1b+OCtl1rWdcQ==
-X-Received: by 2002:a05:6a00:e8f:b0:643:a6d1:b27 with SMTP id bo15-20020a056a000e8f00b00643a6d10b27mr34066068pfb.15.1684266999152;
-        Tue, 16 May 2023 12:56:39 -0700 (PDT)
+        bh=nLgrvnIbTez+ozLofGFvlDwgzYOgc3jwqI2qiIMZDlc=;
+        b=Jt0xFtBE2aVGI2IEH2aVTmnjfdm5hIdIOvrpvsWstdMUYX5WNA6Bp75q7IPVy85jyw
+         bcx6ivJVV5M8cqxliC1SHPHnH5nKJx/LiUyuBrwV8n0v0jxZCv7kqZ4VMf9UZW6D3cYp
+         fcKQpbn0g3y0vKMBVSU9LiEkqLZSD/nb1HfcKfKjpc+tewZEOR0JY9xPYbtTZ22NOaL8
+         7wvNQ1aw8G3A/6ajBVV9tKlcx2GE6nHMIRCJMu81mdDiVs/sOTMbkYLFXq2XyG1vsvh9
+         u6uxczIzYnoXDHiEMXlg0pUwaArruqzZPNp5VhSiLBebUIr6KMptPswQg8hlHz2EXSJ0
+         Fsqw==
+X-Gm-Message-State: AC+VfDxfO/d5iG8J+O/pESbgUZFPb99qDgYesDY5fdnJTtmpxXI0yqqb
+        6JiRgHvmiSSksMcgVHuKb/xnWzayx6NQ5T+sw04=
+X-Google-Smtp-Source: ACHHUZ77IQniMgR4Y8NUBFcCMRu/KSrWXIuCgUNNDXjyikpYHkbmnL7WvFx0Bd2z/BIHgQdZGCLeMQ==
+X-Received: by 2002:a17:902:8c98:b0:1ad:be4d:5dfe with SMTP id t24-20020a1709028c9800b001adbe4d5dfemr21153767plo.27.1684267877266;
+        Tue, 16 May 2023 13:11:17 -0700 (PDT)
 Received: from www.outflux.net (198-0-35-241-static.hfc.comcastbusiness.net. [198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id m3-20020aa79003000000b006466f0af9b2sm14238048pfo.179.2023.05.16.12.56.38
+        by smtp.gmail.com with ESMTPSA id p15-20020a1709027ecf00b001a1a07d04e6sm16019154plb.77.2023.05.16.13.11.15
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 16 May 2023 12:56:38 -0700 (PDT)
-Date:   Tue, 16 May 2023 12:56:38 -0700
+        Tue, 16 May 2023 13:11:15 -0700 (PDT)
+Date:   Tue, 16 May 2023 13:11:14 -0700
 From:   Kees Cook <keescook@chromium.org>
-To:     Arnd Bergmann <arnd@kernel.org>
-Cc:     Russell King <linux@armlinux.org.uk>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Steven Rostedt <rostedt@goodmis.org>,
+To:     Azeem Shaikh <azeemshaikh38@gmail.com>
+Cc:     Steven Rostedt <rostedt@goodmis.org>,
         Masami Hiramatsu <mhiramat@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Oleg Nesterov <oleg@redhat.com>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Pavel Machek <pavel@ucw.cz>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Ard Biesheuvel <ardb@kernel.org>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-trace-kernel@vger.kernel.org, linux-pm@vger.kernel.org
-Subject: Re: [PATCH 00/16] ARM: address -Wmissing-prototype warnings
-Message-ID: <202305161256.F6C079EAA@keescook>
-References: <20230516154605.517690-1-arnd@kernel.org>
+        linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-trace-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] tracing: Replace all non-returning strlcpy with
+ strscpy
+Message-ID: <202305161311.0A9B37E131@keescook>
+References: <20230516143956.1367827-1-azeemshaikh38@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20230516154605.517690-1-arnd@kernel.org>
+In-Reply-To: <20230516143956.1367827-1-azeemshaikh38@gmail.com>
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On Tue, May 16, 2023 at 05:45:49PM +0200, Arnd Bergmann wrote:
-> From: Arnd Bergmann <arnd@arndb.de>
+On Tue, May 16, 2023 at 02:39:56PM +0000, Azeem Shaikh wrote:
+> strlcpy() reads the entire source buffer first.
+> This read may exceed the destination size limit.
+> This is both inefficient and can lead to linear read
+> overflows if a source string is not NUL-terminated [1].
+> In an effort to remove strlcpy() completely [2], replace
+> strlcpy() here with strscpy().
 > 
-> This addresses all arm specific warnings outside of the mach-*/ code,
-> which I've submitted separately. The majority of the patches should be
-> straightforward, either adding an #include statement to get the right
-> header, or ensuring that an unused global function is left out of the
-> build when the prototype is hidden.
+> No return values were used, so direct replacement with strlcpy is safe.
 > 
-> The ones that are a bit awkward are those that just add a prototype to
-> shut up the warning, but the prototypes are never used for calling the
-> function because the only caller is in assembler code. I tried to come
-> up with other ways to shut up the compiler, and ideally this would be
-> triggered by the 'asmlinkage' keyword as Ard suggested in the past, but
-> I could not come up with a way to do this.
+> [1] https://www.kernel.org/doc/html/latest/process/deprecated.html#strlcpy
+> [2] https://github.com/KSPP/linux/issues/89
 > 
-> All of the warnings have to be addressed in some form before the
-> warning can be enabled by default.
-
-Thanks! These are all long overdue. For the series:
+> Signed-off-by: Azeem Shaikh <azeemshaikh38@gmail.com>
 
 Reviewed-by: Kees Cook <keescook@chromium.org>
 
