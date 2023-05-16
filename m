@@ -2,65 +2,48 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E02CBC77B75
-	for <linux-trace-kernel@archiver.kernel.org>; Tue, 16 May 2023 16:05:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 02CEAC77B7A
+	for <linux-trace-kernel@archiver.kernel.org>; Tue, 16 May 2023 16:06:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234329AbjEPQF0 (ORCPT
+        id S233925AbjEPQGu (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Tue, 16 May 2023 12:05:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57386 "EHLO
+        Tue, 16 May 2023 12:06:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58464 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234162AbjEPQFZ (ORCPT
+        with ESMTP id S233831AbjEPQGt (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Tue, 16 May 2023 12:05:25 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DC8BE130;
-        Tue, 16 May 2023 09:05:24 -0700 (PDT)
+        Tue, 16 May 2023 12:06:49 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B958EE5;
+        Tue, 16 May 2023 09:06:47 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 6F7ED633B5;
-        Tue, 16 May 2023 16:05:24 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 24D8AC433EF;
-        Tue, 16 May 2023 16:05:19 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 4A1F363397;
+        Tue, 16 May 2023 16:06:47 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7D6FDC433EF;
+        Tue, 16 May 2023 16:06:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1684253123;
-        bh=WyRb0cO3Dcn2zW5KolHtzKC/m3CXEA35/xNovR2+mVs=;
+        s=k20201202; t=1684253206;
+        bh=aaPDpdXKFo27zJIkXjU1Qd3DKHP9ARhLfJfUTFTOqEY=;
         h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=NCS2Zz8pxqjius3cIeMK7tjhFhsxId3BBRETFZma2dEBbqmn9f6SuTd2lZIRnTt9T
-         hHkK4e+Cx6MPeUDdPZ0fwTAizNgNityDFGD5sy19v/a4jq2GCTg1FF0Jn8rVwnLng9
-         a0vJmEwoIbzmK2DkBlzmLDbPkpl9DpwSFrMwC1h+6eA1tvY8GFLDSAQdH58KYn1FSC
-         ArtXT/RdjGCyQNQ2KAG7y1F3Nvc1Tpc71ewwBpAplzWKPFoKUciNxZBkonWaWUynqa
-         kWUI6Rd0tpwC9UPT9E0yyrPpVvJhSgpIlVKKtgGScC7W1FOAq+1YqbSSZALcG/dzk4
-         W49qIyvsxZq9w==
-Date:   Wed, 17 May 2023 01:05:17 +0900
+        b=Hpsa/jnho95UGexCV+NHnarr1vdLu7qZwJi8Q4AfhGFLs13dqsonyvEBZTtxjtGuI
+         03vTNJE9ZKhojPETwPzRJzKKSdi7hvSJdKGrRiqtUa0c1UEWhmnKhJ3oAvKh3N2XQz
+         yXuP69wWQOA0BaMpBesqJ+aT/lmpsPa6WLjWK3adoxk8QkTIz8hrSw9Q9mFoCXkEmE
+         4IaGl9ePacPmCvNrefM3XOyOqASZ850HoIwT59lIrzA7Ztn7zTv5dojI2iFM2LAaLn
+         75lHGyhmG3V/lZoolVpRc4dYao9yYjSz5VUyFTSaw3P8uMJXHfQy48Lq8bUAwBAgtp
+         VLEEaQem7ItOQ==
+Date:   Wed, 17 May 2023 01:06:43 +0900
 From:   Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To:     Ze Gao <zegao2021@gmail.com>
+To:     Azeem Shaikh <azeemshaikh38@gmail.com>
 Cc:     Steven Rostedt <rostedt@goodmis.org>,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        Alexander Gordeev <agordeev@linux.ibm.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Borislav Petkov <bp@alien8.de>,
-        Christian Borntraeger <borntraeger@linux.ibm.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Heiko Carstens <hca@linux.ibm.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Sven Schnelle <svens@linux.ibm.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Vasily Gorbik <gor@linux.ibm.com>, x86@kernel.org,
-        linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org,
-        linux-s390@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
-        bpf@vger.kernel.org, Conor Dooley <conor@kernel.org>,
-        Jiri Olsa <jolsa@kernel.org>, Yonghong Song <yhs@fb.com>,
-        Ze Gao <zegao@tencent.com>
-Subject: Re: [PATCH v2 4/4] rehook, fprobe: do not trace rethook related
- functions
-Message-Id: <20230517010517.9b7bf28a42067540f7a25638@kernel.org>
-In-Reply-To: <20230516071830.8190-5-zegao@tencent.com>
-References: <20230516071830.8190-1-zegao@tencent.com>
-        <20230516071830.8190-5-zegao@tencent.com>
+        linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-trace-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] tracing: Replace all non-returning strlcpy with
+ strscpy
+Message-Id: <20230517010643.aa4c5dc5e7e6787d72aa9012@kernel.org>
+In-Reply-To: <20230516143956.1367827-1-azeemshaikh38@gmail.com>
+References: <20230516143956.1367827-1-azeemshaikh38@gmail.com>
 X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Mime-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
@@ -69,63 +52,155 @@ Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On Tue, 16 May 2023 15:18:30 +0800
-Ze Gao <zegao2021@gmail.com> wrote:
+On Tue, 16 May 2023 14:39:56 +0000
+Azeem Shaikh <azeemshaikh38@gmail.com> wrote:
 
-> These functions are already marked as NOKPROBE to prevent recursion and
-> we have the same reason to blacklist them if rethook is used with fprobe,
-> since they are beyond the recursion-free region ftrace can guard.
+> strlcpy() reads the entire source buffer first.
+> This read may exceed the destination size limit.
+> This is both inefficient and can lead to linear read
+> overflows if a source string is not NUL-terminated [1].
+> In an effort to remove strlcpy() completely [2], replace
+> strlcpy() here with strscpy().
 > 
-> Signed-off-by: Ze Gao <zegao@tencent.com>
+> No return values were used, so direct replacement with strlcpy is safe.
+> 
+> [1] https://www.kernel.org/doc/html/latest/process/deprecated.html#strlcpy
+> [2] https://github.com/KSPP/linux/issues/89
+> 
+> Signed-off-by: Azeem Shaikh <azeemshaikh38@gmail.com>
 
 Looks good to me.
 
 Acked-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 
-Thank you!
+Thank you,
 
 > ---
->  arch/riscv/kernel/probes/Makefile | 2 ++
->  arch/s390/kernel/Makefile         | 1 +
->  arch/x86/kernel/Makefile          | 1 +
->  3 files changed, 4 insertions(+)
+> v1: https://lore.kernel.org/all/20230516043943.5234-1-azeemshaikh38@gmail.com/
+> Changes from v1:
+>  - Removed subsystem specific files.
+>  - Minor update to commit log.
 > 
-> diff --git a/arch/riscv/kernel/probes/Makefile b/arch/riscv/kernel/probes/Makefile
-> index c40139e9ca47..8265ff497977 100644
-> --- a/arch/riscv/kernel/probes/Makefile
-> +++ b/arch/riscv/kernel/probes/Makefile
-> @@ -4,3 +4,5 @@ obj-$(CONFIG_RETHOOK)		+= rethook.o rethook_trampoline.o
->  obj-$(CONFIG_KPROBES_ON_FTRACE)	+= ftrace.o
->  obj-$(CONFIG_UPROBES)		+= uprobes.o decode-insn.o simulate-insn.o
->  CFLAGS_REMOVE_simulate-insn.o = $(CC_FLAGS_FTRACE)
-> +CFLAGS_REMOVE_rethook.o = $(CC_FLAGS_FTRACE)
-> +CFLAGS_REMOVE_rethook_trampoline.o = $(CC_FLAGS_FTRACE)
-> diff --git a/arch/s390/kernel/Makefile b/arch/s390/kernel/Makefile
-> index 8983837b3565..6b2a051e1f8a 100644
-> --- a/arch/s390/kernel/Makefile
-> +++ b/arch/s390/kernel/Makefile
-> @@ -10,6 +10,7 @@ CFLAGS_REMOVE_ftrace.o		= $(CC_FLAGS_FTRACE)
+>  kernel/trace/trace.c               |    8 ++++----
+>  kernel/trace/trace_events.c        |    4 ++--
+>  kernel/trace/trace_events_inject.c |    4 ++--
+>  kernel/trace/trace_kprobe.c        |    2 +-
+>  kernel/trace/trace_probe.c         |    2 +-
+>  5 files changed, 10 insertions(+), 10 deletions(-)
+> 
+> diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
+> index ebc59781456a..28ccd0c9bdf0 100644
+> --- a/kernel/trace/trace.c
+> +++ b/kernel/trace/trace.c
+> @@ -196,7 +196,7 @@ static int boot_snapshot_index;
 >  
->  # Do not trace early setup code
->  CFLAGS_REMOVE_early.o		= $(CC_FLAGS_FTRACE)
-> +CFLAGS_REMOVE_rethook.o		= $(CC_FLAGS_FTRACE)
+>  static int __init set_cmdline_ftrace(char *str)
+>  {
+> -	strlcpy(bootup_tracer_buf, str, MAX_TRACER_SIZE);
+> +	strscpy(bootup_tracer_buf, str, MAX_TRACER_SIZE);
+>  	default_bootup_tracer = bootup_tracer_buf;
+>  	/* We are using ftrace early, expand it */
+>  	ring_buffer_expanded = true;
+> @@ -281,7 +281,7 @@ static char trace_boot_options_buf[MAX_TRACER_SIZE] __initdata;
 >  
->  endif
+>  static int __init set_trace_boot_options(char *str)
+>  {
+> -	strlcpy(trace_boot_options_buf, str, MAX_TRACER_SIZE);
+> +	strscpy(trace_boot_options_buf, str, MAX_TRACER_SIZE);
+>  	return 1;
+>  }
+>  __setup("trace_options=", set_trace_boot_options);
+> @@ -291,7 +291,7 @@ static char *trace_boot_clock __initdata;
 >  
-> diff --git a/arch/x86/kernel/Makefile b/arch/x86/kernel/Makefile
-> index dd61752f4c96..4070a01c11b7 100644
-> --- a/arch/x86/kernel/Makefile
-> +++ b/arch/x86/kernel/Makefile
-> @@ -17,6 +17,7 @@ CFLAGS_REMOVE_ftrace.o = -pg
->  CFLAGS_REMOVE_early_printk.o = -pg
->  CFLAGS_REMOVE_head64.o = -pg
->  CFLAGS_REMOVE_sev.o = -pg
-> +CFLAGS_REMOVE_rethook.o = -pg
->  endif
+>  static int __init set_trace_boot_clock(char *str)
+>  {
+> -	strlcpy(trace_boot_clock_buf, str, MAX_TRACER_SIZE);
+> +	strscpy(trace_boot_clock_buf, str, MAX_TRACER_SIZE);
+>  	trace_boot_clock = trace_boot_clock_buf;
+>  	return 1;
+>  }
+> @@ -2521,7 +2521,7 @@ static void __trace_find_cmdline(int pid, char comm[])
+>  	if (map != NO_CMDLINE_MAP) {
+>  		tpid = savedcmd->map_cmdline_to_pid[map];
+>  		if (tpid == pid) {
+> -			strlcpy(comm, get_saved_cmdlines(map), TASK_COMM_LEN);
+> +			strscpy(comm, get_saved_cmdlines(map), TASK_COMM_LEN);
+>  			return;
+>  		}
+>  	}
+> diff --git a/kernel/trace/trace_events.c b/kernel/trace/trace_events.c
+> index 654ffa40457a..dc83a259915b 100644
+> --- a/kernel/trace/trace_events.c
+> +++ b/kernel/trace/trace_events.c
+> @@ -2831,7 +2831,7 @@ static __init int setup_trace_triggers(char *str)
+>  	char *buf;
+>  	int i;
 >  
->  KASAN_SANITIZE_head$(BITS).o				:= n
+> -	strlcpy(bootup_trigger_buf, str, COMMAND_LINE_SIZE);
+> +	strscpy(bootup_trigger_buf, str, COMMAND_LINE_SIZE);
+>  	ring_buffer_expanded = true;
+>  	disable_tracing_selftest("running event triggers");
+>  
+> @@ -3621,7 +3621,7 @@ static char bootup_event_buf[COMMAND_LINE_SIZE] __initdata;
+>  
+>  static __init int setup_trace_event(char *str)
+>  {
+> -	strlcpy(bootup_event_buf, str, COMMAND_LINE_SIZE);
+> +	strscpy(bootup_event_buf, str, COMMAND_LINE_SIZE);
+>  	ring_buffer_expanded = true;
+>  	disable_tracing_selftest("running event tracing");
+>  
+> diff --git a/kernel/trace/trace_events_inject.c b/kernel/trace/trace_events_inject.c
+> index d6b4935a78c0..abe805d471eb 100644
+> --- a/kernel/trace/trace_events_inject.c
+> +++ b/kernel/trace/trace_events_inject.c
+> @@ -217,7 +217,7 @@ static int parse_entry(char *str, struct trace_event_call *call, void **pentry)
+>  			char *addr = (char *)(unsigned long) val;
+>  
+>  			if (field->filter_type == FILTER_STATIC_STRING) {
+> -				strlcpy(entry + field->offset, addr, field->size);
+> +				strscpy(entry + field->offset, addr, field->size);
+>  			} else if (field->filter_type == FILTER_DYN_STRING ||
+>  				   field->filter_type == FILTER_RDYN_STRING) {
+>  				int str_len = strlen(addr) + 1;
+> @@ -232,7 +232,7 @@ static int parse_entry(char *str, struct trace_event_call *call, void **pentry)
+>  				}
+>  				entry = *pentry;
+>  
+> -				strlcpy(entry + (entry_size - str_len), addr, str_len);
+> +				strscpy(entry + (entry_size - str_len), addr, str_len);
+>  				str_item = (u32 *)(entry + field->offset);
+>  				if (field->filter_type == FILTER_RDYN_STRING)
+>  					str_loc -= field->offset + field->size;
+> diff --git a/kernel/trace/trace_kprobe.c b/kernel/trace/trace_kprobe.c
+> index 59cda19a9033..1b3fa7b854aa 100644
+> --- a/kernel/trace/trace_kprobe.c
+> +++ b/kernel/trace/trace_kprobe.c
+> @@ -30,7 +30,7 @@ static char kprobe_boot_events_buf[COMMAND_LINE_SIZE] __initdata;
+>  
+>  static int __init set_kprobe_boot_events(char *str)
+>  {
+> -	strlcpy(kprobe_boot_events_buf, str, COMMAND_LINE_SIZE);
+> +	strscpy(kprobe_boot_events_buf, str, COMMAND_LINE_SIZE);
+>  	disable_tracing_selftest("running kprobe events");
+>  
+>  	return 1;
+> diff --git a/kernel/trace/trace_probe.c b/kernel/trace/trace_probe.c
+> index 2d2616678295..73055ba8d8ef 100644
+> --- a/kernel/trace/trace_probe.c
+> +++ b/kernel/trace/trace_probe.c
+> @@ -254,7 +254,7 @@ int traceprobe_parse_event_name(const char **pevent, const char **pgroup,
+>  			trace_probe_log_err(offset, GROUP_TOO_LONG);
+>  			return -EINVAL;
+>  		}
+> -		strlcpy(buf, event, slash - event + 1);
+> +		strscpy(buf, event, slash - event + 1);
+>  		if (!is_good_system_name(buf)) {
+>  			trace_probe_log_err(offset, BAD_GROUP_NAME);
+>  			return -EINVAL;
 > -- 
-> 2.40.1
+> 2.40.1.606.ga4b1b128d6-goog
+> 
 > 
 
 
