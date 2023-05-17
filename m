@@ -2,37 +2,37 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A730C77B7F
-	for <linux-trace-kernel@archiver.kernel.org>; Wed, 17 May 2023 11:00:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D288C77B7F
+	for <linux-trace-kernel@archiver.kernel.org>; Wed, 17 May 2023 11:00:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230417AbjEQLA1 (ORCPT
+        id S230358AbjEQLAb (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Wed, 17 May 2023 07:00:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44666 "EHLO
+        Wed, 17 May 2023 07:00:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44844 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231174AbjEQLAY (ORCPT
+        with ESMTP id S229935AbjEQLAa (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Wed, 17 May 2023 07:00:24 -0400
+        Wed, 17 May 2023 07:00:30 -0400
 Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F3E7B1BFB;
-        Wed, 17 May 2023 03:59:57 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8AA7F5B90;
+        Wed, 17 May 2023 04:00:05 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id A6FF66454C;
-        Wed, 17 May 2023 10:58:59 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 40E8DC433D2;
-        Wed, 17 May 2023 10:58:57 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 5A94463B5E;
+        Wed, 17 May 2023 11:00:05 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EA46AC433D2;
+        Wed, 17 May 2023 11:00:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1684321139;
-        bh=Af9bTGUuNTLA4SCJnTFf+gB49d09uzgATixv930yGBc=;
+        s=k20201202; t=1684321204;
+        bh=EDAfjVhXNNZTfw/0M4y8FYKGdj60FWofsOqnsedq2+A=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=jSPnpMfczWQaE0AcwrR4twsnKa7D6iXubcYupOW1M7TqAn3IC9XF3acqAcx3GpQ6L
-         8rp5vI5q0OYd99lWmEmxcyGfGuAbvWH7y+gWQDnkfzC+04NksMmE89cmQReeCx6LPj
-         EuGdCjiw6eiwOKeAHNsqPs+HVHtU6URFOrKJWZ7nSbhHZjDaaaNjpXWcpQIH2hGweF
-         WDe7u5szjWR1ScHQCmVMHs4s0YyWolqHPBTNpY//4Uf4B7aJUPoueZcjNaoQnsgBQP
-         +3uGYQhn/fSnBVfVbIWEJUj3jQKwwcnMKDt+cylFH2XJx07Tz0MFxd6DvyIPjw4o5v
-         skXhwvcArzYoA==
+        b=FTZLxwdqSdzsHsdafxrvez9/wJ78HG+Wu2IYcOA3IJ5/mWLE2rlxtZez9PFLFR1j4
+         aDXlDyuNCgpmUiW1dN1U9NnVk57L/0rT1yNGTIyDmLn+ilyWWGPQzQVgQp4s6CtygW
+         +WLA/Yjs+WaHohzd5tuZd0IMsUHpzekgVmn7kPqaDLqbGGqGUu4BVd2KmksZexjLNH
+         pmfznQT2eHpw6ZwIS3NFV/lMxigGGn+lCVvDirMoU9IaouOeXWLOCiC57T9eAXilIC
+         F8L+KwXikB/2HxfcJAj199qlji8b5EdWC9uYwqAQB4OyTpS6G5gg71MBKAUJMP9Okr
+         M9U5XO7ilTnyQ==
 From:   "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
 To:     linux-trace-kernel@vger.kernel.org
 Cc:     linux-kernel@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>,
@@ -41,9 +41,9 @@ Cc:     linux-kernel@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>,
         Will Deacon <will@kernel.org>,
         Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
         Martin KaFai Lau <martin.lau@linux.dev>, bpf@vger.kernel.org
-Subject: [PATCH v11 01/11] fprobe: Pass return address to the handlers
-Date:   Wed, 17 May 2023 19:58:55 +0900
-Message-ID:  <168432113499.1351929.1653789240340189053.stgit@mhiramat.roam.corp.google.com>
+Subject: [PATCH v11 08/11] tracing/probes: Add BTF retval type support
+Date:   Wed, 17 May 2023 20:00:00 +0900
+Message-ID:  <168432120056.1351929.5199467855346122973.stgit@mhiramat.roam.corp.google.com>
 X-Mailer: git-send-email 2.40.1.606.ga4b1b128d6-goog
 In-Reply-To:  <168432112492.1351929.9265172785506392923.stgit@mhiramat.roam.corp.google.com>
 References:  <168432112492.1351929.9265172785506392923.stgit@mhiramat.roam.corp.google.com>
@@ -57,202 +57,160 @@ X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
 From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 
-Pass return address as 'ret_ip' to the fprobe entry and return handlers
-so that the fprobe user handler can get the reutrn address without
-analyzing arch-dependent pt_regs.
+Check the target function has non-void retval type and set the correct
+fetch type if user doesn't specify it.
+If the function returns void, $retval is rejected as below;
+
+ # echo 'f unregister_kprobes%return $retval' >> dynamic_events
+sh: write error: No such file or directory
+ # cat error_log
+[   37.488397] trace_fprobe: error: This function returns 'void' type
+  Command: f unregister_kprobes%return $retval
+                                       ^
 
 Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 ---
-Changes in v10:
- - Add the reason why this requires in patch description.
+Changes in v8:
+ - Fix wrong indentation.
+Changes in v7:
+ - Introduce this as a new patch.
 ---
- include/linux/fprobe.h          |    6 ++++--
- include/linux/rethook.h         |    2 +-
- kernel/kprobes.c                |    1 +
- kernel/trace/bpf_trace.c        |    6 ++++--
- kernel/trace/fprobe.c           |    6 +++---
- kernel/trace/rethook.c          |    3 ++-
- lib/test_fprobe.c               |   10 +++++++---
- samples/fprobe/fprobe_example.c |    6 ++++--
- 8 files changed, 26 insertions(+), 14 deletions(-)
+ kernel/trace/trace_probe.c |   69 ++++++++++++++++++++++++++++++++++++++++----
+ kernel/trace/trace_probe.h |    1 +
+ 2 files changed, 63 insertions(+), 7 deletions(-)
 
-diff --git a/include/linux/fprobe.h b/include/linux/fprobe.h
-index 47fefc7f363b..134f0f59ffa8 100644
---- a/include/linux/fprobe.h
-+++ b/include/linux/fprobe.h
-@@ -35,9 +35,11 @@ struct fprobe {
- 	int			nr_maxactive;
- 
- 	int (*entry_handler)(struct fprobe *fp, unsigned long entry_ip,
--			     struct pt_regs *regs, void *entry_data);
-+			     unsigned long ret_ip, struct pt_regs *regs,
-+			     void *entry_data);
- 	void (*exit_handler)(struct fprobe *fp, unsigned long entry_ip,
--			     struct pt_regs *regs, void *entry_data);
-+			     unsigned long ret_ip, struct pt_regs *regs,
-+			     void *entry_data);
- };
- 
- /* This fprobe is soft-disabled. */
-diff --git a/include/linux/rethook.h b/include/linux/rethook.h
-index c8ac1e5afcd1..fdf26cd0e742 100644
---- a/include/linux/rethook.h
-+++ b/include/linux/rethook.h
-@@ -14,7 +14,7 @@
- 
- struct rethook_node;
- 
--typedef void (*rethook_handler_t) (struct rethook_node *, void *, struct pt_regs *);
-+typedef void (*rethook_handler_t) (struct rethook_node *, void *, unsigned long, struct pt_regs *);
- 
- /**
-  * struct rethook - The rethook management data structure.
-diff --git a/kernel/kprobes.c b/kernel/kprobes.c
-index 00e177de91cc..ce13f1a35251 100644
---- a/kernel/kprobes.c
-+++ b/kernel/kprobes.c
-@@ -2127,6 +2127,7 @@ static int pre_handler_kretprobe(struct kprobe *p, struct pt_regs *regs)
- NOKPROBE_SYMBOL(pre_handler_kretprobe);
- 
- static void kretprobe_rethook_handler(struct rethook_node *rh, void *data,
-+				      unsigned long ret_addr,
- 				      struct pt_regs *regs)
- {
- 	struct kretprobe *rp = (struct kretprobe *)data;
-diff --git a/kernel/trace/bpf_trace.c b/kernel/trace/bpf_trace.c
-index d804172b709c..c0a32118f08f 100644
---- a/kernel/trace/bpf_trace.c
-+++ b/kernel/trace/bpf_trace.c
-@@ -2646,7 +2646,8 @@ kprobe_multi_link_prog_run(struct bpf_kprobe_multi_link *link,
- 
- static int
- kprobe_multi_link_handler(struct fprobe *fp, unsigned long fentry_ip,
--			  struct pt_regs *regs, void *data)
-+			  unsigned long ret_ip, struct pt_regs *regs,
-+			  void *data)
- {
- 	struct bpf_kprobe_multi_link *link;
- 
-@@ -2657,7 +2658,8 @@ kprobe_multi_link_handler(struct fprobe *fp, unsigned long fentry_ip,
- 
- static void
- kprobe_multi_link_exit_handler(struct fprobe *fp, unsigned long fentry_ip,
--			       struct pt_regs *regs, void *data)
-+			       unsigned long ret_ip, struct pt_regs *regs,
-+			       void *data)
- {
- 	struct bpf_kprobe_multi_link *link;
- 
-diff --git a/kernel/trace/fprobe.c b/kernel/trace/fprobe.c
-index 9abb3905bc8e..973bc664fcc1 100644
---- a/kernel/trace/fprobe.c
-+++ b/kernel/trace/fprobe.c
-@@ -52,7 +52,7 @@ static void fprobe_handler(unsigned long ip, unsigned long parent_ip,
- 	}
- 
- 	if (fp->entry_handler)
--		ret = fp->entry_handler(fp, ip, ftrace_get_regs(fregs), entry_data);
-+		ret = fp->entry_handler(fp, ip, parent_ip, ftrace_get_regs(fregs), entry_data);
- 
- 	/* If entry_handler returns !0, nmissed is not counted. */
- 	if (rh) {
-@@ -81,7 +81,7 @@ static void fprobe_kprobe_handler(unsigned long ip, unsigned long parent_ip,
+diff --git a/kernel/trace/trace_probe.c b/kernel/trace/trace_probe.c
+index 1807eebefabe..8a6beb76a8de 100644
+--- a/kernel/trace/trace_probe.c
++++ b/kernel/trace/trace_probe.c
+@@ -371,15 +371,13 @@ static const char *type_from_btf_id(struct btf *btf, s32 id)
+ 	return NULL;
  }
  
- static void fprobe_exit_handler(struct rethook_node *rh, void *data,
--				struct pt_regs *regs)
-+				unsigned long ret_ip, struct pt_regs *regs)
+-static const struct btf_param *find_btf_func_param(const char *funcname, s32 *nr,
+-						   bool tracepoint)
++static const struct btf_type *find_btf_func_proto(const char *funcname)
  {
- 	struct fprobe *fp = (struct fprobe *)data;
- 	struct fprobe_rethook_node *fpr;
-@@ -91,7 +91,7 @@ static void fprobe_exit_handler(struct rethook_node *rh, void *data,
+ 	struct btf *btf = traceprobe_get_btf();
+-	const struct btf_param *param;
+ 	const struct btf_type *t;
+ 	s32 id;
  
- 	fpr = container_of(rh, struct fprobe_rethook_node, node);
+-	if (!btf || !funcname || !nr)
++	if (!btf || !funcname)
+ 		return ERR_PTR(-EINVAL);
  
--	fp->exit_handler(fp, fpr->entry_ip, regs,
-+	fp->exit_handler(fp, fpr->entry_ip, ret_ip, regs,
- 			 fp->entry_data_size ? (void *)fpr->data : NULL);
- }
- NOKPROBE_SYMBOL(fprobe_exit_handler);
-diff --git a/kernel/trace/rethook.c b/kernel/trace/rethook.c
-index 32c3dfdb4d6a..fc196e186737 100644
---- a/kernel/trace/rethook.c
-+++ b/kernel/trace/rethook.c
-@@ -301,7 +301,8 @@ unsigned long rethook_trampoline_handler(struct pt_regs *regs,
- 			break;
- 		handler = READ_ONCE(rhn->rethook->handler);
- 		if (handler)
--			handler(rhn, rhn->rethook->data, regs);
-+			handler(rhn, rhn->rethook->data,
-+				correct_ret_addr, regs);
+ 	id = btf_find_by_name_kind(btf, funcname, BTF_KIND_FUNC);
+@@ -396,6 +394,22 @@ static const struct btf_param *find_btf_func_param(const char *funcname, s32 *nr
+ 	if (!btf_type_is_func_proto(t))
+ 		return ERR_PTR(-ENOENT);
  
- 		if (first == node)
- 			break;
-diff --git a/lib/test_fprobe.c b/lib/test_fprobe.c
-index 0fe5273e960b..ade7e3d93dac 100644
---- a/lib/test_fprobe.c
-+++ b/lib/test_fprobe.c
-@@ -39,7 +39,8 @@ static noinline u32 fprobe_selftest_nest_target(u32 value, u32 (*nest)(u32))
- }
++	return t;
++}
++
++static const struct btf_param *find_btf_func_param(const char *funcname, s32 *nr,
++						   bool tracepoint)
++{
++	const struct btf_param *param;
++	const struct btf_type *t;
++
++	if (!funcname || !nr)
++		return ERR_PTR(-EINVAL);
++
++	t = find_btf_func_proto(funcname);
++	if (IS_ERR(t))
++		return (const struct btf_param *)t;
++
+ 	*nr = btf_type_vlen(t);
+ 	param = (const struct btf_param *)(t + 1);
  
- static notrace int fp_entry_handler(struct fprobe *fp, unsigned long ip,
--				     struct pt_regs *regs, void *data)
-+				    unsigned long ret_ip,
-+				    struct pt_regs *regs, void *data)
- {
- 	KUNIT_EXPECT_FALSE(current_test, preemptible());
- 	/* This can be called on the fprobe_selftest_target and the fprobe_selftest_target2 */
-@@ -57,6 +58,7 @@ static notrace int fp_entry_handler(struct fprobe *fp, unsigned long ip,
+@@ -462,6 +476,32 @@ static const struct fetch_type *parse_btf_arg_type(int arg_idx,
+ 	return find_fetch_type(typestr, ctx->flags);
  }
  
- static notrace void fp_exit_handler(struct fprobe *fp, unsigned long ip,
-+				    unsigned long ret_ip,
- 				    struct pt_regs *regs, void *data)
++static const struct fetch_type *parse_btf_retval_type(
++					struct traceprobe_parse_context *ctx)
++{
++	struct btf *btf = traceprobe_get_btf();
++	const char *typestr = NULL;
++	const struct btf_type *t;
++
++	if (btf && ctx->funcname) {
++		t = find_btf_func_proto(ctx->funcname);
++		if (!IS_ERR(t))
++			typestr = type_from_btf_id(btf, t->type);
++	}
++
++	return find_fetch_type(typestr, ctx->flags);
++}
++
++static bool is_btf_retval_void(const char *funcname)
++{
++	const struct btf_type *t;
++
++	t = find_btf_func_proto(funcname);
++	if (IS_ERR(t))
++		return false;
++
++	return t->type == 0;
++}
+ #else
+ static struct btf *traceprobe_get_btf(void)
  {
- 	unsigned long ret = regs_return_value(regs);
-@@ -78,14 +80,16 @@ static notrace void fp_exit_handler(struct fprobe *fp, unsigned long ip,
+@@ -480,8 +520,15 @@ static int parse_btf_arg(const char *varname, struct fetch_insn *code,
+ 	trace_probe_log_err(ctx->offset, NOSUP_BTFARG);
+ 	return -EOPNOTSUPP;
  }
++
+ #define parse_btf_arg_type(idx, ctx)		\
+ 	find_fetch_type(NULL, ctx->flags)
++
++#define parse_btf_retval_type(ctx)		\
++	find_fetch_type(NULL, ctx->flags)
++
++#define is_btf_retval_void(funcname)	(false)
++
+ #endif
  
- static notrace int nest_entry_handler(struct fprobe *fp, unsigned long ip,
--				     struct pt_regs *regs, void *data)
-+				      unsigned long ret_ip,
-+				      struct pt_regs *regs, void *data)
- {
- 	KUNIT_EXPECT_FALSE(current_test, preemptible());
- 	return 0;
- }
+ #define PARAM_MAX_STACK (THREAD_SIZE / sizeof(unsigned long))
+@@ -512,6 +559,11 @@ static int parse_probe_vars(char *arg, const struct fetch_type *t,
  
- static notrace void nest_exit_handler(struct fprobe *fp, unsigned long ip,
--				    struct pt_regs *regs, void *data)
-+				      unsigned long ret_ip,
-+				      struct pt_regs *regs, void *data)
- {
- 	KUNIT_EXPECT_FALSE(current_test, preemptible());
- 	KUNIT_EXPECT_EQ(current_test, ip, target_nest_ip);
-diff --git a/samples/fprobe/fprobe_example.c b/samples/fprobe/fprobe_example.c
-index 4efc8feb6277..64e715e7ed11 100644
---- a/samples/fprobe/fprobe_example.c
-+++ b/samples/fprobe/fprobe_example.c
-@@ -49,6 +49,7 @@ static void show_backtrace(void)
- }
+ 	if (strcmp(arg, "retval") == 0) {
+ 		if (ctx->flags & TPARG_FL_RETURN) {
++			if ((ctx->flags & TPARG_FL_KERNEL) &&
++			    is_btf_retval_void(ctx->funcname)) {
++				err = TP_ERR_NO_RETVAL;
++				goto inval;
++			}
+ 			code->op = FETCH_OP_RETVAL;
+ 			return 0;
+ 		}
+@@ -917,9 +969,12 @@ static int traceprobe_parse_probe_arg_body(const char *argv, ssize_t *size,
+ 		goto fail;
  
- static int sample_entry_handler(struct fprobe *fp, unsigned long ip,
-+				unsigned long ret_ip,
- 				struct pt_regs *regs, void *data)
- {
- 	if (use_trace)
-@@ -65,10 +66,11 @@ static int sample_entry_handler(struct fprobe *fp, unsigned long ip,
- 	return 0;
- }
+ 	/* Update storing type if BTF is available */
+-	if (IS_ENABLED(CONFIG_PROBE_EVENTS_BTF_ARGS) &&
+-	    !t && code->op == FETCH_OP_ARG)
+-		parg->type = parse_btf_arg_type(code->param, ctx);
++	if (IS_ENABLED(CONFIG_PROBE_EVENTS_BTF_ARGS) && !t) {
++		if (code->op == FETCH_OP_ARG)
++			parg->type = parse_btf_arg_type(code->param, ctx);
++		else if (code->op == FETCH_OP_RETVAL)
++			parg->type = parse_btf_retval_type(ctx);
++	}
  
--static void sample_exit_handler(struct fprobe *fp, unsigned long ip, struct pt_regs *regs,
-+static void sample_exit_handler(struct fprobe *fp, unsigned long ip,
-+				unsigned long ret_ip, struct pt_regs *regs,
- 				void *data)
- {
--	unsigned long rip = instruction_pointer(regs);
-+	unsigned long rip = ret_ip;
- 
- 	if (use_trace)
- 		/*
+ 	ret = -EINVAL;
+ 	/* Store operation */
+diff --git a/kernel/trace/trace_probe.h b/kernel/trace/trace_probe.h
+index b5f265819503..c13690b74d51 100644
+--- a/kernel/trace/trace_probe.h
++++ b/kernel/trace/trace_probe.h
+@@ -445,6 +445,7 @@ extern int traceprobe_define_arg_fields(struct trace_event_call *event_call,
+ 	C(BAD_EVENT_NAME,	"Event name must follow the same rules as C identifiers"), \
+ 	C(EVENT_EXIST,		"Given group/event name is already used by another event"), \
+ 	C(RETVAL_ON_PROBE,	"$retval is not available on probe"),	\
++	C(NO_RETVAL,		"This function returns 'void' type"),	\
+ 	C(BAD_STACK_NUM,	"Invalid stack number"),		\
+ 	C(BAD_ARG_NUM,		"Invalid argument number"),		\
+ 	C(BAD_VAR,		"Invalid $-valiable specified"),	\
 
