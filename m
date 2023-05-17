@@ -2,34 +2,73 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CC7EC77B75
-	for <linux-trace-kernel@archiver.kernel.org>; Wed, 17 May 2023 19:36:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B2EA1C77B7A
+	for <linux-trace-kernel@archiver.kernel.org>; Wed, 17 May 2023 19:37:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229895AbjEQTgR (ORCPT
+        id S229921AbjEQThV (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Wed, 17 May 2023 15:36:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54430 "EHLO
+        Wed, 17 May 2023 15:37:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56424 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229437AbjEQTgO (ORCPT
+        with ESMTP id S229555AbjEQThU (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Wed, 17 May 2023 15:36:14 -0400
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id ABC99109;
-        Wed, 17 May 2023 12:36:13 -0700 (PDT)
-Received: from W11-BEAU-MD.localdomain (unknown [76.135.27.212])
-        by linux.microsoft.com (Postfix) with ESMTPSA id EA0EE20F26AB;
-        Wed, 17 May 2023 12:36:12 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com EA0EE20F26AB
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-        s=default; t=1684352173;
-        bh=kOczaw1TlAZYv+vsEch6YqBha9eh9KoqTxDoaMXzpow=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=D8WrzbOo/RSmXAZ7HQMSpMgjIuPWUIYbH1jZWa4bcrvm7nP6GxHL5qyXaW1CidIUH
-         7jr6Nv19tpmoP6j3q/D6ZsDUCoM9CyI+fTIIMeKKz1BgMNdMT4Wd78WBrxTwr3DWID
-         k1HRFJ9da2FNue7CRgxI/EJ+8isbaJ1/y6XPeWRU=
-Date:   Wed, 17 May 2023 12:36:02 -0700
-From:   Beau Belgrave <beaub@linux.microsoft.com>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
+        Wed, 17 May 2023 15:37:20 -0400
+Received: from mail-ej1-x636.google.com (mail-ej1-x636.google.com [IPv6:2a00:1450:4864:20::636])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B89DDAD37
+        for <linux-trace-kernel@vger.kernel.org>; Wed, 17 May 2023 12:36:56 -0700 (PDT)
+Received: by mail-ej1-x636.google.com with SMTP id a640c23a62f3a-966287b0f72so211878066b.0
+        for <linux-trace-kernel@vger.kernel.org>; Wed, 17 May 2023 12:36:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google; t=1684352215; x=1686944215;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=8DJujWcgKFUPe2mSgSbivOepwby+XZ0SdDGpw6KOt6U=;
+        b=YUKLCUp0opnZL59BabfkIgSjrlevcUUcuu4BP9q8MHCvd9MpC89jZy2WbGQh8jrnk9
+         vKHSCQkGbpRGnNAZrbomB2eC0vbf9tNYPzMd0IHq1CWiClp6Oz9WYeJuiX8F1ir5pqoh
+         k4E3DN96nXMWj9kmEMdks3O4LnfzRZA1Rj4AU=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1684352215; x=1686944215;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=8DJujWcgKFUPe2mSgSbivOepwby+XZ0SdDGpw6KOt6U=;
+        b=W7t+rHjnXPSVJx9wyZO5Yc7xJGfkmvAi5U84L55cn3W5YZaNt6RLE1jjeXA+d/TLJA
+         RxPOe1y/Ec2b58PddV7i5CLkfWeEo6LwXcLp+FVdEl05Om8z2tNspBrdMi2CH/DXA+bi
+         tp6hcss5WNhJpK16Qmv+aKGgau5kA59UjZ9d4C95mywV2boSiik+Dk1F+YIGRzqcvqoA
+         mK0LXc/fRmCiBxmktKZKxpKSxapBTiKKhriaAcuzpPobKkQImF9UKlfb3dZMhK2yWmhw
+         e1dV+cPXqSxIOyt9iUhq+j7w+jXMaEtCAUNUfZe/P0OANQpZlQ1sGR2kFl16JxW+iAfi
+         HBxg==
+X-Gm-Message-State: AC+VfDyOEbTubMW5yDld4hxKFtHy44FI9ZyoA/u5fhm1khsUstZZe/fJ
+        IqXJtv8/NqjNo7i4uNWScF52kwx+CHcawOE8K8baDU0q
+X-Google-Smtp-Source: ACHHUZ5UILqGI19yyh5rGsdnII0gJiESl76mZhHRleXhUMp7KinJqHjbxHkZ/Cd+NGT5qBZaaDh6Ig==
+X-Received: by 2002:a17:907:5c3:b0:885:a62c:5a5c with SMTP id wg3-20020a17090705c300b00885a62c5a5cmr33472844ejb.46.1684352214838;
+        Wed, 17 May 2023 12:36:54 -0700 (PDT)
+Received: from mail-ej1-f46.google.com (mail-ej1-f46.google.com. [209.85.218.46])
+        by smtp.gmail.com with ESMTPSA id n4-20020a170906688400b00965f98eefc1sm12739177ejr.116.2023.05.17.12.36.53
+        for <linux-trace-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 17 May 2023 12:36:53 -0700 (PDT)
+Received: by mail-ej1-f46.google.com with SMTP id a640c23a62f3a-966287b0f72so211872166b.0
+        for <linux-trace-kernel@vger.kernel.org>; Wed, 17 May 2023 12:36:53 -0700 (PDT)
+X-Received: by 2002:a17:907:628c:b0:94f:2a13:4e01 with SMTP id
+ nd12-20020a170907628c00b0094f2a134e01mr38924382ejc.74.1684352212926; Wed, 17
+ May 2023 12:36:52 -0700 (PDT)
+MIME-Version: 1.0
+References: <20230509163050.127d5123@rorschach.local.home> <20230515165707.hv65ekwp2djkjj5i@MacBook-Pro-8.local>
+ <20230515192407.GA85@W11-BEAU-MD.localdomain> <20230517003628.aqqlvmzffj7fzzoj@MacBook-Pro-8.local>
+ <CAHk-=whBKoovtifU2eCeyuBBee-QMcbxdXDLv0mu0k2DgxiaOw@mail.gmail.com>
+ <CAHk-=wj1hh=ZUriY9pVFvD1MjqbRuzHc4yz=S2PCW7u3W0-_BQ@mail.gmail.com>
+ <20230516222919.79bba667@rorschach.local.home> <CAHk-=wh_GEr4ehJKwMM3UA0-7CfNpVH7v_T-=1u+gq9VZD70mw@mail.gmail.com>
+ <20230517172243.GA152@W11-BEAU-MD.localdomain> <CAHk-=whzzuNEW8UcV2_8OyuKcXPrk7-j_8GzOoroxz9JiZiD3w@mail.gmail.com>
+ <20230517190750.GA366@W11-BEAU-MD.localdomain> <CAHk-=whTBvXJuoi_kACo3qi5WZUmRrhyA-_=rRFsycTytmB6qw@mail.gmail.com>
+In-Reply-To: <CAHk-=whTBvXJuoi_kACo3qi5WZUmRrhyA-_=rRFsycTytmB6qw@mail.gmail.com>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Wed, 17 May 2023 12:36:35 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wi4w9bPKFFGwLULjJf9hnkL941+c4HbeEVKNzqH04wqDA@mail.gmail.com>
+Message-ID: <CAHk-=wi4w9bPKFFGwLULjJf9hnkL941+c4HbeEVKNzqH04wqDA@mail.gmail.com>
+Subject: Re: [PATCH] tracing/user_events: Run BPF program if attached
+To:     Beau Belgrave <beaub@linux.microsoft.com>
 Cc:     Steven Rostedt <rostedt@goodmis.org>,
         Alexei Starovoitov <alexei.starovoitov@gmail.com>,
         Masami Hiramatsu <mhiramat@kernel.org>,
@@ -40,157 +79,38 @@ Cc:     Steven Rostedt <rostedt@goodmis.org>,
         Andrii Nakryiko <andrii@kernel.org>, bpf <bpf@vger.kernel.org>,
         David Vernet <void@manifault.com>, dthaler@microsoft.com,
         brauner@kernel.org, hch@infradead.org
-Subject: Re: [PATCH] tracing/user_events: Run BPF program if attached
-Message-ID: <20230517193549.GA401@W11-BEAU-MD.localdomain>
-References: <20230515192407.GA85@W11-BEAU-MD.localdomain>
- <20230517003628.aqqlvmzffj7fzzoj@MacBook-Pro-8.local>
- <CAHk-=whBKoovtifU2eCeyuBBee-QMcbxdXDLv0mu0k2DgxiaOw@mail.gmail.com>
- <CAHk-=wj1hh=ZUriY9pVFvD1MjqbRuzHc4yz=S2PCW7u3W0-_BQ@mail.gmail.com>
- <20230516222919.79bba667@rorschach.local.home>
- <CAHk-=wh_GEr4ehJKwMM3UA0-7CfNpVH7v_T-=1u+gq9VZD70mw@mail.gmail.com>
- <20230517172243.GA152@W11-BEAU-MD.localdomain>
- <CAHk-=whzzuNEW8UcV2_8OyuKcXPrk7-j_8GzOoroxz9JiZiD3w@mail.gmail.com>
- <20230517190750.GA366@W11-BEAU-MD.localdomain>
- <CAHk-=whTBvXJuoi_kACo3qi5WZUmRrhyA-_=rRFsycTytmB6qw@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAHk-=whTBvXJuoi_kACo3qi5WZUmRrhyA-_=rRFsycTytmB6qw@mail.gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On Wed, May 17, 2023 at 12:26:44PM -0700, Linus Torvalds wrote:
-> On Wed, May 17, 2023 at 12:08 PM Beau Belgrave
-> <beaub@linux.microsoft.com> wrote:
-> >
-> > user_event_mm_dup() puts a new mm into the global list before the
-> > enablers list is fully populated.
-> 
-> Then that simply needs to be fixed.
-> 
-
-Agreed.
-
-> user_event_mm_dup() should not madd the mm into the global list until
-> it is *done*.
-> 
-> Because if it makes that list visible to others in a half-way state,
-> then it needs to use the proper locking and use event_mutex.
-> 
-> You can't say "this is so critical that we can't take a lock" and then
-> use that as an excuse to simply do buggy code.
-> 
-
-Didn't mean that, I just have more work to do then just the RCU walks.
-I will fix these up.
-
-> Either take the lock in user_event_mm_dup(), or make sure that the
-> data structures are all completely local so that no lock is necessary.
-> 
-> Here's a COMPLETELY UNTESTED patch that just separates out the notion
-> of "allocate" and "attach".
-> 
-> NOTE NOTE NOTE! I am *not* claiming this patch works. It builds for
-> me. It looks right. It seems like it's the right thing to do. But it
-> might have some issues.
-> 
-> With this, the newly dup'ed list is attached to the process once after
-> it is done, so nobody can see the list being built up.
-> 
+On Wed, May 17, 2023 at 12:26=E2=80=AFPM Linus Torvalds
+<torvalds@linux-foundation.org> wrote:
+>
 > Also note that this does NOT fix the incorrect RCU walks.
-> 
->            Linus
 
-Thanks for the patch and feedback!
+.. this is the patch that I think should go on top of it to fix the
+misleading "safe" and the incorrect RCU walk.
 
--Beau
+NOTE! This adds that
 
->  kernel/trace/trace_events_user.c | 29 ++++++++++++++++++-----------
->  1 file changed, 18 insertions(+), 11 deletions(-)
-> 
-> diff --git a/kernel/trace/trace_events_user.c b/kernel/trace/trace_events_user.c
-> index b1ecd7677642..b2aecbfbbd24 100644
-> --- a/kernel/trace/trace_events_user.c
-> +++ b/kernel/trace/trace_events_user.c
-> @@ -538,10 +538,9 @@ static struct user_event_mm *user_event_mm_get_all(struct user_event *user)
->  	return found;
->  }
->  
-> -static struct user_event_mm *user_event_mm_create(struct task_struct *t)
-> +static struct user_event_mm *user_event_mm_alloc(struct task_struct *t)
->  {
->  	struct user_event_mm *user_mm;
-> -	unsigned long flags;
->  
->  	user_mm = kzalloc(sizeof(*user_mm), GFP_KERNEL_ACCOUNT);
->  
-> @@ -553,12 +552,6 @@ static struct user_event_mm *user_event_mm_create(struct task_struct *t)
->  	refcount_set(&user_mm->refcnt, 1);
->  	refcount_set(&user_mm->tasks, 1);
->  
-> -	spin_lock_irqsave(&user_event_mms_lock, flags);
-> -	list_add_rcu(&user_mm->link, &user_event_mms);
-> -	spin_unlock_irqrestore(&user_event_mms_lock, flags);
-> -
-> -	t->user_event_mm = user_mm;
-> -
->  	/*
->  	 * The lifetime of the memory descriptor can slightly outlast
->  	 * the task lifetime if a ref to the user_event_mm is taken
-> @@ -572,6 +565,17 @@ static struct user_event_mm *user_event_mm_create(struct task_struct *t)
->  	return user_mm;
->  }
->  
-> +static void user_event_mm_attach(struct user_event_mm *user_mm, struct task_struct *t)
-> +{
-> +	unsigned long flags;
-> +
-> +	spin_lock_irqsave(&user_event_mms_lock, flags);
-> +	list_add_rcu(&user_mm->link, &user_event_mms);
-> +	spin_unlock_irqrestore(&user_event_mms_lock, flags);
-> +
-> +	t->user_event_mm = user_mm;
-> +}
-> +
->  static struct user_event_mm *current_user_event_mm(void)
->  {
->  	struct user_event_mm *user_mm = current->user_event_mm;
-> @@ -579,10 +583,12 @@ static struct user_event_mm *current_user_event_mm(void)
->  	if (user_mm)
->  		goto inc;
->  
-> -	user_mm = user_event_mm_create(current);
-> +	user_mm = user_event_mm_alloc(current);
->  
->  	if (!user_mm)
->  		goto error;
-> +
-> +	user_event_mm_attach(user_mm, current);
->  inc:
->  	refcount_inc(&user_mm->refcnt);
->  error:
-> @@ -670,7 +676,7 @@ void user_event_mm_remove(struct task_struct *t)
->  
->  void user_event_mm_dup(struct task_struct *t, struct user_event_mm *old_mm)
->  {
-> -	struct user_event_mm *mm = user_event_mm_create(t);
-> +	struct user_event_mm *mm = user_event_mm_alloc(t);
->  	struct user_event_enabler *enabler;
->  
->  	if (!mm)
-> @@ -684,10 +690,11 @@ void user_event_mm_dup(struct task_struct *t, struct user_event_mm *old_mm)
->  
->  	rcu_read_unlock();
->  
-> +	user_event_mm_attach(mm, t);
->  	return;
->  error:
->  	rcu_read_unlock();
-> -	user_event_mm_remove(t);
-> +	user_event_mm_destroy(mm);
->  }
->  
->  static bool current_user_event_enabler_exists(unsigned long uaddr,
+        lockdep_assert_held(&event_mutex);
 
+to user_event_enabler_update() too. It's already there in
+user_event_enabler_write(), but I'm not actually convinced this has
+gotten enough coverage checking, so I also did it in that caller.
+
+Some callers obviously hold that mutex. Others are much less obvious,
+eg that user_event_reg() -> update_enable_bit_for() chain. I *assume*
+all the 'class->reg()' callers get the event mutex, but I did not in
+any way check that it is true.
+
+So that lockdep annotation should be actually *tested* with lockdep
+enabled and somebody doing all these operations.
+
+Final note: I do not know this code *AT*ALL*. I'm literally just going
+by "this is the only correct coding pattern to use", not by some
+deeper understanding of what the code actually wants to do.
+
+                   Linus
