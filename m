@@ -2,282 +2,248 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CD32C77B7F
-	for <linux-trace-kernel@archiver.kernel.org>; Wed, 17 May 2023 11:02:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E5485C77B75
+	for <linux-trace-kernel@archiver.kernel.org>; Wed, 17 May 2023 11:10:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231200AbjEQLCB (ORCPT
+        id S229871AbjEQLKK (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Wed, 17 May 2023 07:02:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45286 "EHLO
+        Wed, 17 May 2023 07:10:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56944 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231148AbjEQLBd (ORCPT
+        with ESMTP id S229824AbjEQLKJ (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Wed, 17 May 2023 07:01:33 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C82DF7ED6;
-        Wed, 17 May 2023 04:00:56 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id C282863A7C;
-        Wed, 17 May 2023 11:00:33 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0E832C433EF;
-        Wed, 17 May 2023 11:00:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1684321233;
-        bh=Opru+2p0wZnGgR0lKafejqzhmXs4W7N/0un87eck92Y=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=swrGUpKIyz9hMhmeLtjkuDuOMvjy+IBiLWBSX23BViCmgmDFu31HiBtTvW4+ngtBn
-         Cex4BkhGAHVVzK4RgXhyd7d3ooLfGbVn6phxSMiYY4VaLfaYEdHzvLTFXfU+TWCNps
-         QHmqX5Ke9OPHmhHYsPXIoumBaEWXI5p24tipj06V/A+eEFrA15a8oKLvE1od0m98HM
-         33cFJLDsMrprT37/kte9nWIgom+60u2umyx7pkttJDEBoA/Cz9Jpe4koZ+nyN1GioC
-         8uK7jm25S+8KoAkVlr1+L1Gk/Qi/AG4OzFfXnl20kI4h8Wic9z6TYJRE7Hset6HC96
-         iUMHgoeE8Axfg==
-From:   "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
-To:     linux-trace-kernel@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>,
-        mhiramat@kernel.org, Florent Revest <revest@chromium.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Martin KaFai Lau <martin.lau@linux.dev>, bpf@vger.kernel.org
-Subject: [PATCH v11 11/11] Documentation: tracing/probes: Add fprobe event tracing document
-Date:   Wed, 17 May 2023 20:00:29 +0900
-Message-ID:  <168432122914.1351929.944185321099763072.stgit@mhiramat.roam.corp.google.com>
-X-Mailer: git-send-email 2.40.1.606.ga4b1b128d6-goog
-In-Reply-To:  <168432112492.1351929.9265172785506392923.stgit@mhiramat.roam.corp.google.com>
-References:  <168432112492.1351929.9265172785506392923.stgit@mhiramat.roam.corp.google.com>
-User-Agent: StGit/0.19
+        Wed, 17 May 2023 07:10:09 -0400
+Received: from mail-pj1-x102f.google.com (mail-pj1-x102f.google.com [IPv6:2607:f8b0:4864:20::102f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7A2B01B6;
+        Wed, 17 May 2023 04:10:04 -0700 (PDT)
+Received: by mail-pj1-x102f.google.com with SMTP id 98e67ed59e1d1-2533a03388dso500389a91.2;
+        Wed, 17 May 2023 04:10:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1684321804; x=1686913804;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=CUhqy0/rRnwuf4GYogluOIbrQ9V7WcQDnN/TpA3bEJk=;
+        b=jFqJdBszdhzfmBOsSOnEprDgUrAyOWWaq5X44klsRmMbORUDZiDWBaCJ5G9G+98iso
+         YN9ADk0BIsHPN3NTcvHqiZJenK8y8teI++49bQJhG4Y7o6xPNuqTSTMEAKWv2jYN/QKV
+         lOFPud4y9C2ZDAgqM+l24/Y3OR0hTA1kxl+Y9AKI0aBLS1jUcBwrfRzmznSHihjYIFRu
+         kCpwm7ophgfXZvQ9f8VyX3FTtbkQy3E8zhVUEP7JLVfozEllykUBxQPZLmV4DpqVKZyk
+         r8Ix0MeflnekzE9uyx+4iHwV/M+Kbq5TYemDZGg9nVwfSMUwiAuq59Y5WT8S8ABBaoVM
+         V8LQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1684321804; x=1686913804;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=CUhqy0/rRnwuf4GYogluOIbrQ9V7WcQDnN/TpA3bEJk=;
+        b=HIkqj7rrVAiWSd4JKEHs1lkhr3S2KGg6HbCpcAng9NtjBXsafrffr+5C38kp2+sw9t
+         pThSnLmRQtumQ9qG5Y58Ff7dOo4rUSg6blc3yqBH5ZkH5Gpg0iFdmBxBdrz2KCCuKupM
+         p5udqMcGzS0w4viEfIRC8CTZmOzyPX90Lfkp0Bjt5jorkyHXkop/LlTQGLKTaPU2yms1
+         +7A+SEQp7Cz3SWVNeCUqMmMIwmT6NoxNxVANv2Na8o7TQKQ93ohtXH4K2BNxc3LArAGA
+         oCYcvTb+D/V3wdUZScAuvRKg0J8mwGiSdDUc6j+xh/tOYkeoLgqaoCe13VNHlHGcKl6K
+         7eSA==
+X-Gm-Message-State: AC+VfDzS3IJBv71uiQFigLF0fs9VfN9jbSxl1dTK8bk9P9li62UgQs2I
+        18ImHsP28zzty4nhYu0b2y5xLgbk5Va6DyvRanQ=
+X-Google-Smtp-Source: ACHHUZ6Z+4EFXcm1pKxUKlQtFcvZSrHs0wVHFhJqF4KKwf7JTZOuJo/Cldx77wyrohuzEJAFLvp9rqaWMtLWsHMhtZ4=
+X-Received: by 2002:a17:90b:1e0c:b0:24d:fba9:80e9 with SMTP id
+ pg12-20020a17090b1e0c00b0024dfba980e9mr40273217pjb.23.1684321803702; Wed, 17
+ May 2023 04:10:03 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+References: <20230511093234.3123181-1-suagrfillet@gmail.com> <CAAYs2=jWwpFzjNqMmyefy6-JEVswfba5MkhaCJ0gvH0bK6zuug@mail.gmail.com>
+In-Reply-To: <CAAYs2=jWwpFzjNqMmyefy6-JEVswfba5MkhaCJ0gvH0bK6zuug@mail.gmail.com>
+From:   Song Shuai <suagrfillet@gmail.com>
+Date:   Wed, 17 May 2023 11:09:52 +0000
+Message-ID: <CAAYs2=gS+fX0v8n3GhQrb82nRNMnYqrEL7MSrLh-CgOZRLu2jg@mail.gmail.com>
+Subject: Re: [PATCH V10 0/4] riscv: Optimize function trace
+To:     palmer@dabbelt.com
+Cc:     mark.rutland@arm.com, bjorn@rivosinc.com, e.shatokhin@yadro.com,
+        jszhang@kernel.org, guoren@kernel.org, mhiramat@kernel.org,
+        rostedt@goodmis.org, aou@eecs.berkeley.edu,
+        paul.walmsley@sifive.com, linux-riscv@lists.infradead.org,
+        linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+Song Shuai <suagrfillet@gmail.com> =E4=BA=8E2023=E5=B9=B45=E6=9C=8816=E6=97=
+=A5=E5=91=A8=E4=BA=8C 09:50=E5=86=99=E9=81=93=EF=BC=9A
+>
+> Song Shuai <suagrfillet@gmail.com> =E4=BA=8E2023=E5=B9=B45=E6=9C=8811=E6=
+=97=A5=E5=91=A8=E5=9B=9B 09:32=E5=86=99=E9=81=93=EF=BC=9A
+>
+> >
+> > Changes in v10:
+> >
+> > - add Acked-by from Bj=C3=B6rn T=C3=B6pel in patch 2 and patch 4
+> > - replace `move` with `mv` in patch3
+> > - prettify patch 2/4 with proper tabs
+> >
+> > You can directly try it with:
+> >
+> > https://github.com/sugarfillet/linux/tree/6.4-rc1-rv-ftrace-v10
+> >
+> >
+> Hi, plamer:
+> This series is ready for its acceptance, you can pick it up.
+>
+Apologize for the typo in your name, Palmer.
 
-Add a documentation about fprobe event tracing including
-tracepoint probe event and BTF argument.
+> > This series optimizes function trace. The first 3 independent
+> > patches has been picked in the V7 version of this series, the
+> > subsequent version continues the following 4 patches:
+> >
+> > select FTRACE_MCOUNT_USE_PATCHABLE_FUNCTION_ENTRY [1] (patch 1)
+> > =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> >
+> > In RISC-V, -fpatchable-function-entry option is used to support
+> > dynamic ftrace in this commit afc76b8b8011 ("riscv: Using
+> > PATCHABLE_FUNCTION_ENTRY instead of MCOUNT"). So recordmcount
+> > don't have to be called to create the __mcount_loc section before
+> > the vmlinux linking.
+> >
+> > Here selects FTRACE_MCOUNT_USE_PATCHABLE_FUNCTION_ENTRY to tell
+> > Makefile not to run recordmcount.
+> >
+> > Make function graph use ftrace directly [2] (patch 2)
+> > =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D
+> >
+> > In RISC-V architecture, when we enable the ftrace_graph tracer on some
+> > functions, the function tracings on other functions will suffer extra
+> > graph tracing work. In essence, graph_ops isn't limited by its func_has=
+h
+> > due to the global ftrace_graph_[regs]_call label. That should be
+> > corrected.
+> >
+> > What inspires me is the commit 0c0593b45c9b ("x86/ftrace: Make function
+> > graph use ftrace directly") that uses graph_ops::func function to
+> > install return_hooker and makes the function called against its
+> > func_hash.
+> >
+> > Add WITH_DIRECT_CALLS support [3] (patch 3, 4)
+> > =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> >
+> > This series adds DYNAMIC_FTRACE_WITH_DIRECT_CALLS support for RISC-V.
+> > SAMPLE_FTRACE_DIRECT and SAMPLE_FTRACE_DIRECT_MULTI are also included
+> > here as the samples for testing DIRECT_CALLS related interface.
+> >
+> > First, select the DYNAMIC_FTRACE_WITH_DIRECT_CALLS to provide
+> > register_ftrace_direct[_multi] interfaces allowing user to register
+> > the customed trampoline (direct_caller) as the mcount for one or
+> > more target functions. And modify_ftrace_direct[_multi] are also
+> > provided for modify direct_caller.
+> >
+> > At the same time, the samples in ./samples/ftrace/ can be built
+> > as kerenl module for testing these interfaces with SAMPLE_FTRACE_DIRECT
+> > and SAMPLE_FTRACE_DIRECT_MULTI selected.
+> >
+> > Second, to make the direct_caller and the other ftrace hooks
+> > (eg. function/fgraph tracer, k[ret]probes) co-exist, a temporary
+> > register
+> > are nominated to store the address of direct_caller in
+> > ftrace_regs_caller.
+> > After the setting of the address direct_caller by direct_ops->func and
+> > the RESTORE_REGS in ftrace_regs_caller, direct_caller will be jumped to
+> > by the `jr` inst.
+> >
+> > The series's old changes related these patches
+> > =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> >
+> > Changes in v9:
+> > https://lore.kernel.org/linux-riscv/20230510101857.2953955-1-suagrfille=
+t@gmail.com/
+> >
+> > 1. add Acked-by from Bj=C3=B6rn T=C3=B6pel in patch 1
+> >
+> > 2. rebase patch2/patch3 on Linux v6.4-rc1
+> >
+> >   - patch 2: to make the `SAVE_ABI_REGS` configurable, revert the
+> >     modification of mcount-dyn.S from commit (45b32b946a97 "riscv:
+> > entry: Consolidate general regs saving/restoring")
+> >
+> >   - patch 3: to pass the trace_selftest, add the implement of
+> >     `ftrace_stub_direct_tramp` from commit (fee86a4ed536 "ftrace:
+> > selftest: remove broken trace_direct_tramp") ; and fixup the context
+> > conflict in Kconfig
+> >
+> > Changes in v8:
+> > https://lore.kernel.org/linux-riscv/20230324033342.3177979-1-suagrfille=
+t@gmail.com/
+> >  - Fix incorrect address values in the 4nd patch
+> >  - Rebased on v6.3-rc2
+> >
+> > Changes in v7:
+> > https://lore.kernel.org/linux-riscv/20230112090603.1295340-1-guoren@ker=
+nel.org/
+> >  - Fixup RESTORE_ABI_REGS by remove PT_T0(sp) overwrite.
+> >  - Add FTRACE_MCOUNT_USE_PATCHABLE_FUNCTION_ENTRY [1]
+> >  - Fixup kconfig with HAVE_SAMPLE_FTRACE_DIRECT &
+> >    HAVE_SAMPLE_FTRACE_DIRECT_MULTI
+> >
+> > Changes in v6:
+> > https://lore.kernel.org/linux-riscv/20230107133549.4192639-1-guoren@ker=
+nel.org/
+> >  - Replace 8 with MCOUNT_INSN_SIZE
+> >  - Replace "REG_L a1, PT_RA(sp)" with "mv a1, ra"
+> >  - Add Evgenii Shatokhin comment
+> >
+> > Changes in v5:
+> > https://lore.kernel.org/linux-riscv/20221208091244.203407-1-guoren@kern=
+el.org/
+> >  - Sort Kconfig entries in alphabetical order.
+> >
+> > Changes in v4:
+> > https://lore.kernel.org/linux-riscv/20221129033230.255947-1-guoren@kern=
+el.org/
+> >  - Include [3] for maintenance. [Song Shuai]
+> >
+> > Changes in V3:
+> > https://lore.kernel.org/linux-riscv/20221123153950.2911981-1-guoren@ker=
+nel.org/
+> >  - Include [2] for maintenance. [Song Shuai]
+> >
+> > [1]: https://lore.kernel.org/linux-riscv/CAAYs2=3Dj3Eak9vU6xbAw0zPuoh00=
+rh8v5C2U3fePkokZFibWs2g@mail.gmail.com/T/#t
+> > [2]: https://lore.kernel.org/lkml/20221120084230.910152-1-suagrfillet@g=
+mail.com/
+> > [3]: https://lore.kernel.org/linux-riscv/20221123142025.1504030-1-suagr=
+fillet@gmail.com/
+> >
+> > Song Shuai (4):
+> >   riscv: select FTRACE_MCOUNT_USE_PATCHABLE_FUNCTION_ENTRY
+> >   riscv: ftrace: Add ftrace_graph_func
+> >   riscv: ftrace: Add DYNAMIC_FTRACE_WITH_DIRECT_CALLS support
+> >   samples: ftrace: Add riscv support for SAMPLE_FTRACE_DIRECT[_MULTI]
+> >
+> >  arch/riscv/Kconfig                          |   4 +
+> >  arch/riscv/include/asm/ftrace.h             |  19 +-
+> >  arch/riscv/kernel/ftrace.c                  |  30 ++-
+> >  arch/riscv/kernel/mcount-dyn.S              | 200 ++++++++++++++++----
+> >  samples/ftrace/ftrace-direct-modify.c       |  34 ++++
+> >  samples/ftrace/ftrace-direct-multi-modify.c |  40 ++++
+> >  samples/ftrace/ftrace-direct-multi.c        |  24 +++
+> >  samples/ftrace/ftrace-direct-too.c          |  27 +++
+> >  samples/ftrace/ftrace-direct.c              |  23 +++
+> >  9 files changed, 345 insertions(+), 56 deletions(-)
+> >
+> > --
+> > 2.20.1
+> >
+>
+>
+> --
+> Thanks,
+> Song
 
-Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
----
-Changes in v11:
- - Fix $$args to $arg*.
- - Update the document.
-Changes in v10:
- - Fix space before tab.
-Changes in v7:
- - Update about BTF auto type casting for $retval.
----
- Documentation/trace/fprobetrace.rst |  187 +++++++++++++++++++++++++++++++++++
- Documentation/trace/index.rst       |    1 
- 2 files changed, 188 insertions(+)
- create mode 100644 Documentation/trace/fprobetrace.rst
 
-diff --git a/Documentation/trace/fprobetrace.rst b/Documentation/trace/fprobetrace.rst
-new file mode 100644
-index 000000000000..eca64ad7216a
---- /dev/null
-+++ b/Documentation/trace/fprobetrace.rst
-@@ -0,0 +1,187 @@
-+.. SPDX-License-Identifier: GPL-2.0
-+
-+==========================
-+Fprobe-based Event Tracing
-+==========================
-+
-+.. Author: Masami Hiramatsu <mhiramat@kernel.org>
-+
-+Overview
-+--------
-+
-+Fprobe event is similar to the kprobe event, but limited to probe on
-+the function entry and exit only. It is good enough for many use cases
-+which only traces some specific functions.
-+
-+This document also covers tracepoint probe events (tprobe) since this
-+is also works only on the tracepoint entry. User can trace a part of
-+tracepoint argument, or the tracepoint without trace-event, which is
-+not exposed on tracefs.
-+
-+As same as other dynamic events, fprobe events and tracepoint probe
-+events are defined via `dynamic_events` interface file on tracefs.
-+
-+Synopsis of fprobe-events
-+-------------------------
-+::
-+
-+  f[:[GRP1/][EVENT1]] SYM [FETCHARGS]                       : Probe on function entry
-+  f[MAXACTIVE][:[GRP1/][EVENT1]] SYM%return [FETCHARGS]     : Probe on function exit
-+  t[:[GRP2/][EVENT2]] TRACEPOINT [FETCHARGS]                : Probe on tracepoint
-+
-+ GRP1           : Group name for fprobe. If omitted, use "fprobes" for it.
-+ GRP2           : Group name for tprobe. If omitted, use "tracepoints" for it.
-+ EVENT1         : Event name for fprobe. If omitted, the event name is
-+                  "SYM__entry" or "SYM__exit".
-+ EVENT2         : Event name for tprobe. If omitted, the event name is
-+                  the same as "TRACEPOINT", but if the "TRACEPOINT" starts
-+                  with a digit character, "_TRACEPOINT" is used.
-+ MAXACTIVE      : Maximum number of instances of the specified function that
-+                  can be probed simultaneously, or 0 for the default value
-+                  as defined in Documentation/trace/fprobes.rst
-+
-+ FETCHARGS      : Arguments. Each probe can have up to 128 args.
-+  ARG           : Fetch "ARG" function argument using BTF (only for function
-+                  entry or tracepoint.) (\*1)
-+  @ADDR         : Fetch memory at ADDR (ADDR should be in kernel)
-+  @SYM[+|-offs] : Fetch memory at SYM +|- offs (SYM should be a data symbol)
-+  $stackN       : Fetch Nth entry of stack (N >= 0)
-+  $stack        : Fetch stack address.
-+  $argN         : Fetch the Nth function argument. (N >= 1) (\*2)
-+  $retval       : Fetch return value.(\*3)
-+  $comm         : Fetch current task comm.
-+  +|-[u]OFFS(FETCHARG) : Fetch memory at FETCHARG +|- OFFS address.(\*4)(\*5)
-+  \IMM          : Store an immediate value to the argument.
-+  NAME=FETCHARG : Set NAME as the argument name of FETCHARG.
-+  FETCHARG:TYPE : Set TYPE as the type of FETCHARG. Currently, basic types
-+                  (u8/u16/u32/u64/s8/s16/s32/s64), hexadecimal types
-+                  (x8/x16/x32/x64), "char", "string", "ustring", "symbol", "symstr"
-+                  and bitfield are supported.
-+
-+  (\*1) This is available only when BTF is enabled.
-+  (\*2) only for the probe on function entry (offs == 0).
-+  (\*3) only for return probe.
-+  (\*4) this is useful for fetching a field of data structures.
-+  (\*5) "u" means user-space dereference.
-+
-+For the details of TYPE, see :file:`Documentation/trace/kprobetrace.rst`.
-+
-+BTF arguments
-+-------------
-+BTF (BPF Type Format) argument allows user to trace function and tracepoint
-+parameters by its name instead of `$argN`. This feature is available if the
-+kernel is configured with CONFIG_BPF_SYSCALL and CONFIG_DEBUG_INFO_BTF.
-+If user only specify the BTF argument, the event's argument name is also
-+automatically set by the given name. ::
-+
-+ # echo 'f:myprobe vfs_read count pos' >> dynamic_events
-+ # cat dynamic_events
-+ f:fprobes/myprobe vfs_read count=count pos=pos
-+
-+It also chooses the fetch type from BTF information. For example, in the above
-+example, the `count` is unsigned long, and the `pos` is a pointer. Thus, both
-+are converted to 64bit unsigned long, but only `pos` has `%Lx` print-format ::
-+
-+ # cat events/fprobes/myprobe/format
-+ name: myprobe
-+ ID: 1313
-+ format:
-+	field:unsigned short common_type;	offset:0;	size:2;	signed:0;
-+	field:unsigned char common_flags;	offset:2;	size:1;	signed:0;
-+	field:unsigned char common_preempt_count;	offset:3;	size:1;	signed:0;
-+	field:int common_pid;	offset:4;	size:4;	signed:1;
-+
-+	field:unsigned long __probe_ip;	offset:8;	size:8;	signed:0;
-+	field:u64 count;	offset:16;	size:8;	signed:0;
-+	field:u64 pos;	offset:24;	size:8;	signed:0;
-+
-+ print fmt: "(%lx) count=%Lu pos=0x%Lx", REC->__probe_ip, REC->count, REC->pos
-+
-+If user unsures the name of arguments, `$arg*` will be helpful. The `$arg*`
-+is expanded to all function arguments of the function or the tracepoint. ::
-+
-+ # echo 'f:myprobe vfs_read $arg*' >> dynamic_events
-+ # cat dynamic_events
-+ f:fprobes/myprobe vfs_read file=file buf=buf count=count pos=pos
-+
-+BTF also affects the $retval. If user doesn't set any type, the retval type is
-+automatically picked from the BTF. If the function returns 'void', $retval is
-+rejected.
-+
-+Usage examples
-+--------------
-+Here is an example to add fprobe events on `vfs_read()` function entry
-+and exit, with BTF arguments.
-+::
-+
-+  # echo 'f vfs_read $arg*' >> dynamic_events
-+  # echo 'f vfs_read%return $retval' >> dynamic_events
-+  # cat dynamic_events
-+ f:fprobes/vfs_read__entry vfs_read file=file buf=buf count=count pos=pos
-+ f:fprobes/vfs_read__exit vfs_read%return arg1=$retval
-+  # echo 1 > events/fprobes/enable
-+  # head -n 20 trace | tail
-+ #           TASK-PID     CPU#  |||||  TIMESTAMP  FUNCTION
-+ #              | |         |   |||||     |         |
-+               sh-70      [000] ...1.   335.883195: vfs_read__entry: (vfs_read+0x4/0x340) file=0xffff888005cf9a80 buf=0x7ffef36c6879 count=1 pos=0xffffc900005aff08
-+               sh-70      [000] .....   335.883208: vfs_read__exit: (ksys_read+0x75/0x100 <- vfs_read) arg1=1
-+               sh-70      [000] ...1.   335.883220: vfs_read__entry: (vfs_read+0x4/0x340) file=0xffff888005cf9a80 buf=0x7ffef36c6879 count=1 pos=0xffffc900005aff08
-+               sh-70      [000] .....   335.883224: vfs_read__exit: (ksys_read+0x75/0x100 <- vfs_read) arg1=1
-+               sh-70      [000] ...1.   335.883232: vfs_read__entry: (vfs_read+0x4/0x340) file=0xffff888005cf9a80 buf=0x7ffef36c687a count=1 pos=0xffffc900005aff08
-+               sh-70      [000] .....   335.883237: vfs_read__exit: (ksys_read+0x75/0x100 <- vfs_read) arg1=1
-+               sh-70      [000] ...1.   336.050329: vfs_read__entry: (vfs_read+0x4/0x340) file=0xffff888005cf9a80 buf=0x7ffef36c6879 count=1 pos=0xffffc900005aff08
-+               sh-70      [000] .....   336.050343: vfs_read__exit: (ksys_read+0x75/0x100 <- vfs_read) arg1=1
-+
-+You can see all function arguments and return values are recorded as signed int.
-+
-+Also, here is an example of tracepoint events on `sched_switch` tracepoint.
-+To compare the result, this also enables the `sched_switch` traceevent too.
-+::
-+
-+  # echo 't sched_switch $arg*' >> dynamic_events
-+  # echo 1 > events/sched/sched_switch/enable
-+  # echo 1 > events/tracepoints/sched_switch/enable
-+  # echo > trace
-+  # head -n 20 trace | tail
-+ #           TASK-PID     CPU#  |||||  TIMESTAMP  FUNCTION
-+ #              | |         |   |||||     |         |
-+               sh-70      [000] d..2.  3912.083993: sched_switch: prev_comm=sh prev_pid=70 prev_prio=120 prev_state=S ==> next_comm=swapper/0 next_pid=0 next_prio=120
-+               sh-70      [000] d..3.  3912.083995: sched_switch: (__probestub_sched_switch+0x4/0x10) preempt=0 prev=0xffff88800664e100 next=0xffffffff828229c0 prev_state=1
-+           <idle>-0       [000] d..2.  3912.084183: sched_switch: prev_comm=swapper/0 prev_pid=0 prev_prio=120 prev_state=R ==> next_comm=rcu_preempt next_pid=16 next_prio=120
-+           <idle>-0       [000] d..3.  3912.084184: sched_switch: (__probestub_sched_switch+0x4/0x10) preempt=0 prev=0xffffffff828229c0 next=0xffff888004208000 prev_state=0
-+      rcu_preempt-16      [000] d..2.  3912.084196: sched_switch: prev_comm=rcu_preempt prev_pid=16 prev_prio=120 prev_state=I ==> next_comm=swapper/0 next_pid=0 next_prio=120
-+      rcu_preempt-16      [000] d..3.  3912.084196: sched_switch: (__probestub_sched_switch+0x4/0x10) preempt=0 prev=0xffff888004208000 next=0xffffffff828229c0 prev_state=1026
-+           <idle>-0       [000] d..2.  3912.085191: sched_switch: prev_comm=swapper/0 prev_pid=0 prev_prio=120 prev_state=R ==> next_comm=rcu_preempt next_pid=16 next_prio=120
-+           <idle>-0       [000] d..3.  3912.085191: sched_switch: (__probestub_sched_switch+0x4/0x10) preempt=0 prev=0xffffffff828229c0 next=0xffff888004208000 prev_state=0
-+
-+As you can see, the `sched_switch` trace-event shows *cooked* parameters, on
-+the other hand, the `sched_switch` tracepoint probe event shows *raw*
-+parameters. This means you can access any field values in the task
-+structure pointed by the `prev` and `next` arguments.
-+
-+For example, usually `task_struct::start_time` is not traced, but with this
-+traceprobe event, you can trace it as below.
-+::
-+
-+  # echo 't sched_switch comm=+1896(next):string start_time=+1728(next):u64' > dynamic_events
-+  # head -n 20 trace | tail
-+ #           TASK-PID     CPU#  |||||  TIMESTAMP  FUNCTION
-+ #              | |         |   |||||     |         |
-+               sh-70      [000] d..3.  5606.686577: sched_switch: (__probestub_sched_switch+0x4/0x10) comm="rcu_preempt" usage=1 start_time=245000000
-+      rcu_preempt-16      [000] d..3.  5606.686602: sched_switch: (__probestub_sched_switch+0x4/0x10) comm="sh" usage=1 start_time=1596095526
-+               sh-70      [000] d..3.  5606.686637: sched_switch: (__probestub_sched_switch+0x4/0x10) comm="swapper/0" usage=2 start_time=0
-+           <idle>-0       [000] d..3.  5606.687190: sched_switch: (__probestub_sched_switch+0x4/0x10) comm="rcu_preempt" usage=1 start_time=245000000
-+      rcu_preempt-16      [000] d..3.  5606.687202: sched_switch: (__probestub_sched_switch+0x4/0x10) comm="swapper/0" usage=2 start_time=0
-+           <idle>-0       [000] d..3.  5606.690317: sched_switch: (__probestub_sched_switch+0x4/0x10) comm="kworker/0:1" usage=1 start_time=137000000
-+      kworker/0:1-14      [000] d..3.  5606.690339: sched_switch: (__probestub_sched_switch+0x4/0x10) comm="swapper/0" usage=2 start_time=0
-+           <idle>-0       [000] d..3.  5606.692368: sched_switch: (__probestub_sched_switch+0x4/0x10) comm="kworker/0:1" usage=1 start_time=137000000
-+
-+Currently, to find the offset of a specific field in the data structure,
-+you need to build kernel with debuginfo and run `perf probe` command with
-+`-D` option. e.g.
-+::
-+
-+ # perf probe -D "__probestub_sched_switch next->comm:string next->start_time"
-+ p:probe/__probestub_sched_switch __probestub_sched_switch+0 comm=+1896(%cx):string start_time=+1728(%cx):u64
-+
-+And replace the `%cx` with the `next`.
-diff --git a/Documentation/trace/index.rst b/Documentation/trace/index.rst
-index ea25a9220f92..5092d6c13af5 100644
---- a/Documentation/trace/index.rst
-+++ b/Documentation/trace/index.rst
-@@ -13,6 +13,7 @@ Linux Tracing Technologies
-    kprobes
-    kprobetrace
-    uprobetracer
-+   fprobetrace
-    tracepoints
-    events
-    events-kmem
 
+--=20
+Thanks,
+Song
