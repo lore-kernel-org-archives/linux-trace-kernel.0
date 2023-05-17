@@ -2,37 +2,37 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B66CC77B7F
-	for <linux-trace-kernel@archiver.kernel.org>; Wed, 17 May 2023 11:00:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E30FC77B75
+	for <linux-trace-kernel@archiver.kernel.org>; Wed, 17 May 2023 11:00:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231137AbjEQLAx (ORCPT
+        id S230407AbjEQLAz (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Wed, 17 May 2023 07:00:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45202 "EHLO
+        Wed, 17 May 2023 07:00:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44930 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231124AbjEQLAr (ORCPT
+        with ESMTP id S231148AbjEQLAr (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
         Wed, 17 May 2023 07:00:47 -0400
 Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B02021987;
-        Wed, 17 May 2023 04:00:18 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B60476A78;
+        Wed, 17 May 2023 04:00:20 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 12F2E64534;
-        Wed, 17 May 2023 11:00:15 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3A011C433EF;
-        Wed, 17 May 2023 11:00:12 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id D346463B0C;
+        Wed, 17 May 2023 10:59:46 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D1046C433EF;
+        Wed, 17 May 2023 10:59:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1684321214;
-        bh=6vun2L7Gqdjfz6gS8Y5EPS6ytnutljhikv/zk9HDEk8=;
+        s=k20201202; t=1684321186;
+        bh=hGWg1qRWjC/R+JIZSW7eDsCRWxaJGIhfBFsAWFTRqbk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Y6jWHgvKcsJgH4adYZbS13PRBbJDsO71QNR+ICuRrfhzjw/31zsgmFgP2DR0UDPUI
-         cGnzb4n7fVmkhz5lp/IWOky1YmYZarccnEZtVl6Xut1kxjH5D+u2eVchjYeu+TA5x0
-         soQPng8YpdzmszIxpRoJ/3/ZO3hRb0SXmnAWmVpypkTTB86uktnFokCYvFyKHgbdx5
-         FlIFsA9MbUggUtM5Iv2Ki7m6Pcn+M95q/4uJCqj/02IoifEDBup0MPMdaCU16GPYIc
-         5xuQ28u1HOD5Yxl9qS1eJtTKUdAQBNYasK1MMDVHLwG+e2h11UtpwVYMIZ6hpyE32C
-         BPGLeU2dURojg==
+        b=rk4WSx9tzkVYtL2lbDGHrwYgF0r5mHjeJED5T/2stkf/8yrLQQYYqutvR3yP1U8uv
+         pDIAc8Y7VKUjdYMA/cswz7VxZxoF9d+9tmduvkOp5TWPbuLuMgzSb3VBf1cMSG7HO8
+         LELfu8OKrblIT0mbFP6V5JQe7QQms+zR4FDW5FGNDJJk2CVfchnaXk+m7Tkbxq+m/k
+         hLh0rE6vY4XPGNyqPUlyYRNq7IpI/bz6p5T9PcObm6Rwkb7TmO4brPBahzVVpWIIgd
+         SbIRr6hHrBnfN0rfAxr2aGiGN9b+Z45qIWzpq3SS2nG8kw6vlan2ZNnzqCcS4D0R+E
+         0CIPoovFwKQbg==
 From:   "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
 To:     linux-trace-kernel@vger.kernel.org
 Cc:     linux-kernel@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>,
@@ -41,9 +41,9 @@ Cc:     linux-kernel@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>,
         Will Deacon <will@kernel.org>,
         Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
         Martin KaFai Lau <martin.lau@linux.dev>, bpf@vger.kernel.org
-Subject: [PATCH v11 09/11] selftests/ftrace: Add tracepoint probe test case
-Date:   Wed, 17 May 2023 20:00:10 +0900
-Message-ID:  <168432121009.1351929.4077460131525842825.stgit@mhiramat.roam.corp.google.com>
+Subject: [PATCH v11 06/11] tracing/probes: Support function parameters if BTF is available
+Date:   Wed, 17 May 2023 19:59:41 +0900
+Message-ID:  <168432118123.1351929.264526522250995753.stgit@mhiramat.roam.corp.google.com>
 X-Mailer: git-send-email 2.40.1.606.ga4b1b128d6-goog
 In-Reply-To:  <168432112492.1351929.9265172785506392923.stgit@mhiramat.roam.corp.google.com>
 References:  <168432112492.1351929.9265172785506392923.stgit@mhiramat.roam.corp.google.com>
@@ -57,135 +57,505 @@ X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
 From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 
-Add test cases for tracepoint probe events.
+Support function or tracepoint parameters by name if BTF support is enabled
+and the event is for function entry (this feature can be used with kprobe-
+events, fprobe-events and tracepoint probe events.)
+
+Note that the BTF variable syntax does not require a prefix. If it starts
+with an alphabetic character or an underscore ('_') without a prefix like
+'$' and '%', it is considered as a BTF variable.
+If you specify only the BTF variable name, the argument name will also
+be the same name instead of 'arg*'.
+
+ # echo 'p vfs_read count pos' >> dynamic_events
+ # echo 'f vfs_write count pos' >> dynamic_events
+ # echo 't sched_overutilized_tp rd overutilized' >> dynamic_events
+ # cat dynamic_events
+p:kprobes/p_vfs_read_0 vfs_read count=count pos=pos
+f:fprobes/vfs_write__entry vfs_write count=count pos=pos
+t:tracepoints/sched_overutilized_tp sched_overutilized_tp rd=rd overutilized=overutilized
 
 Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+Reviewed-by: Alan Maguire <alan.maguire@oracle.com>
+Tested-by: Alan Maguire <alan.maguire@oracle.com>
 ---
- .../ftrace/test.d/dynevent/add_remove_tprobe.tc    |   27 +++++++
- .../ftrace/test.d/dynevent/tprobe_syntax_errors.tc |   82 ++++++++++++++++++++
- 2 files changed, 109 insertions(+)
- create mode 100644 tools/testing/selftests/ftrace/test.d/dynevent/add_remove_tprobe.tc
- create mode 100644 tools/testing/selftests/ftrace/test.d/dynevent/tprobe_syntax_errors.tc
+Changes in v8:
+ - Update Kconfig help description.
+Changes in v7:
+ - Add BTF_KIND_ENUM64 support
+ - Fix to check the ERR_PTR() type return value of bpf_get_btf_vmlinux().
+Changes in v6:
+ - update patch description.
+ - use bpf_get_btf_vmlinux() instead of btf_parse_vmlinux().
+---
+ kernel/trace/Kconfig        |   12 +++
+ kernel/trace/trace.c        |    4 +
+ kernel/trace/trace_fprobe.c |   49 +++++++----
+ kernel/trace/trace_kprobe.c |   12 +--
+ kernel/trace/trace_probe.c  |  191 +++++++++++++++++++++++++++++++++++++++++++
+ kernel/trace/trace_probe.h  |    9 ++
+ 6 files changed, 248 insertions(+), 29 deletions(-)
 
-diff --git a/tools/testing/selftests/ftrace/test.d/dynevent/add_remove_tprobe.tc b/tools/testing/selftests/ftrace/test.d/dynevent/add_remove_tprobe.tc
-new file mode 100644
-index 000000000000..afc8412fde6b
---- /dev/null
-+++ b/tools/testing/selftests/ftrace/test.d/dynevent/add_remove_tprobe.tc
-@@ -0,0 +1,27 @@
-+#!/bin/sh
-+# SPDX-License-Identifier: GPL-2.0
-+# description: Generic dynamic event - add/remove tracepoint probe events
-+# requires: dynamic_events "t[:[<group>/][<event>]] <tracepoint> [<args>]": README
+diff --git a/kernel/trace/Kconfig b/kernel/trace/Kconfig
+index 8e10a9453c96..b3f90d602896 100644
+--- a/kernel/trace/Kconfig
++++ b/kernel/trace/Kconfig
+@@ -664,6 +664,18 @@ config FPROBE_EVENTS
+ 	  and the kprobe events on function entry and exit will be
+ 	  transparently converted to this fprobe events.
+ 
++config PROBE_EVENTS_BTF_ARGS
++	depends on HAVE_FUNCTION_ARG_ACCESS_API
++	depends on FPROBE_EVENTS || KPROBE_EVENTS
++	depends on DEBUG_INFO_BTF && BPF_SYSCALL
++	bool "Support BTF function arguments for probe events"
++	default y
++	help
++	  The user can specify the arguments of the probe event using the names
++	  of the arguments of the probed function, when the probe location is a
++	  kernel function entry or a tracepoint.
++	  This is available only if BTF (BPF Type Format) support is enabled.
 +
-+echo 0 > events/enable
-+echo > dynamic_events
+ config KPROBE_EVENTS
+ 	depends on KPROBES
+ 	depends on HAVE_REGS_AND_STACK_ACCESS_API
+diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
+index abcc2ca615e8..7bd2741356ef 100644
+--- a/kernel/trace/trace.c
++++ b/kernel/trace/trace.c
+@@ -5670,7 +5670,11 @@ static const char readme_msg[] =
+ 	"\t     args: <name>=fetcharg[:type]\n"
+ 	"\t fetcharg: (%<register>|$<efield>), @<address>, @<symbol>[+|-<offset>],\n"
+ #ifdef CONFIG_HAVE_FUNCTION_ARG_ACCESS_API
++#ifdef CONFIG_PROBE_EVENTS_BTF_ARGS
++	"\t           $stack<index>, $stack, $retval, $comm, $arg<N>, <argname>\n"
++#else
+ 	"\t           $stack<index>, $stack, $retval, $comm, $arg<N>,\n"
++#endif
+ #else
+ 	"\t           $stack<index>, $stack, $retval, $comm,\n"
+ #endif
+diff --git a/kernel/trace/trace_fprobe.c b/kernel/trace/trace_fprobe.c
+index 60e1b54fe647..75130a5bdddc 100644
+--- a/kernel/trace/trace_fprobe.c
++++ b/kernel/trace/trace_fprobe.c
+@@ -366,6 +366,7 @@ static void free_trace_fprobe(struct trace_fprobe *tf)
+ static struct trace_fprobe *alloc_trace_fprobe(const char *group,
+ 					       const char *event,
+ 					       const char *symbol,
++					       struct tracepoint *tpoint,
+ 					       int maxactive,
+ 					       int nargs, bool is_return)
+ {
+@@ -385,6 +386,7 @@ static struct trace_fprobe *alloc_trace_fprobe(const char *group,
+ 	else
+ 		tf->fp.entry_handler = fentry_dispatcher;
+ 
++	tf->tpoint = tpoint;
+ 	tf->fp.nr_maxactive = maxactive;
+ 
+ 	ret = trace_probe_init(&tf->tp, event, group, false);
+@@ -930,8 +932,12 @@ static int __trace_fprobe_create(int argc, const char *argv[])
+ 	int maxactive = 0;
+ 	char buf[MAX_EVENT_NAME_LEN];
+ 	char gbuf[MAX_EVENT_NAME_LEN];
+-	unsigned int flags = TPARG_FL_KERNEL;
++	char sbuf[KSYM_NAME_LEN];
+ 	bool is_tracepoint = false;
++	struct tracepoint *tpoint = NULL;
++	struct traceprobe_parse_context ctx = {
++		.flags = TPARG_FL_KERNEL | TPARG_FL_FENTRY,
++	};
+ 
+ 	if ((argv[0][0] != 'f' && argv[0][0] != 't') || argc < 2)
+ 		return -ECANCELED;
+@@ -995,12 +1001,6 @@ static int __trace_fprobe_create(int argc, const char *argv[])
+ 		goto parse_error;
+ 	}
+ 
+-	flags |= TPARG_FL_FENTRY;
+-	if (is_return)
+-		flags |= TPARG_FL_RETURN;
+-	if (is_tracepoint)
+-		flags |= TPARG_FL_TPOINT;
+-
+ 	trace_probe_log_set_index(0);
+ 	if (event) {
+ 		ret = traceprobe_parse_event_name(&event, &group, gbuf,
+@@ -1012,7 +1012,8 @@ static int __trace_fprobe_create(int argc, const char *argv[])
+ 	if (!event) {
+ 		/* Make a new event name */
+ 		if (is_tracepoint)
+-			strscpy(buf, symbol, MAX_EVENT_NAME_LEN);
++			snprintf(buf, MAX_EVENT_NAME_LEN, "%s%s",
++				 isdigit(*symbol) ? "_" : "", symbol);
+ 		else
+ 			snprintf(buf, MAX_EVENT_NAME_LEN, "%s__%s", symbol,
+ 				 is_return ? "exit" : "entry");
+@@ -1020,8 +1021,25 @@ static int __trace_fprobe_create(int argc, const char *argv[])
+ 		event = buf;
+ 	}
+ 
++	if (is_return)
++		ctx.flags |= TPARG_FL_RETURN;
 +
-+TRACEPOINT1=kmem_cache_alloc
-+TRACEPOINT2=kmem_cache_free
++	if (is_tracepoint) {
++		ctx.flags |= TPARG_FL_TPOINT;
++		tpoint = find_tracepoint(symbol);
++		if (!tpoint) {
++			trace_probe_log_set_index(1);
++			trace_probe_log_err(0, NO_TRACEPOINT);
++			goto parse_error;
++		}
++		ctx.funcname = kallsyms_lookup(
++				(unsigned long)tpoint->probestub,
++				NULL, NULL, NULL, sbuf);
++	} else
++		ctx.funcname = symbol;
 +
-+echo "t:myevent1 $TRACEPOINT1" >> dynamic_events
-+echo "t:myevent2 $TRACEPOINT2" >> dynamic_events
+ 	/* setup a probe */
+-	tf = alloc_trace_fprobe(group, event, symbol, maxactive,
++	tf = alloc_trace_fprobe(group, event, symbol, tpoint, maxactive,
+ 				argc - 2, is_return);
+ 	if (IS_ERR(tf)) {
+ 		ret = PTR_ERR(tf);
+@@ -1030,24 +1048,15 @@ static int __trace_fprobe_create(int argc, const char *argv[])
+ 		goto out;	/* We know tf is not allocated */
+ 	}
+ 
+-	if (is_tracepoint) {
+-		tf->tpoint = find_tracepoint(tf->symbol);
+-		if (!tf->tpoint) {
+-			trace_probe_log_set_index(1);
+-			trace_probe_log_err(0, NO_TRACEPOINT);
+-			goto parse_error;
+-		}
++	if (is_tracepoint)
+ 		tf->mod = __module_text_address(
+ 				(unsigned long)tf->tpoint->probestub);
+-	}
+ 
+ 	argc -= 2; argv += 2;
+-
+ 	/* parse arguments */
+ 	for (i = 0; i < argc && i < MAX_TRACE_ARGS; i++) {
+-		struct traceprobe_parse_context ctx = { .flags = flags };
+-
+ 		trace_probe_log_set_index(i + 2);
++		ctx.offset = 0;
+ 		ret = traceprobe_parse_probe_arg(&tf->tp, i, argv[i], &ctx);
+ 		if (ret)
+ 			goto error;	/* This can be -ENOMEM */
+diff --git a/kernel/trace/trace_kprobe.c b/kernel/trace/trace_kprobe.c
+index fd62de2a2f51..aff6c1a5e161 100644
+--- a/kernel/trace/trace_kprobe.c
++++ b/kernel/trace/trace_kprobe.c
+@@ -742,7 +742,7 @@ static int __trace_kprobe_create(int argc, const char *argv[])
+ 	void *addr = NULL;
+ 	char buf[MAX_EVENT_NAME_LEN];
+ 	char gbuf[MAX_EVENT_NAME_LEN];
+-	unsigned int flags = TPARG_FL_KERNEL;
++	struct traceprobe_parse_context ctx = { .flags = TPARG_FL_KERNEL };
+ 
+ 	switch (argv[0][0]) {
+ 	case 'r':
+@@ -823,10 +823,10 @@ static int __trace_kprobe_create(int argc, const char *argv[])
+ 			goto parse_error;
+ 		}
+ 		if (is_return)
+-			flags |= TPARG_FL_RETURN;
++			ctx.flags |= TPARG_FL_RETURN;
+ 		ret = kprobe_on_func_entry(NULL, symbol, offset);
+ 		if (ret == 0)
+-			flags |= TPARG_FL_FENTRY;
++			ctx.flags |= TPARG_FL_FENTRY;
+ 		/* Defer the ENOENT case until register kprobe */
+ 		if (ret == -EINVAL && is_return) {
+ 			trace_probe_log_err(0, BAD_RETPROBE);
+@@ -856,7 +856,7 @@ static int __trace_kprobe_create(int argc, const char *argv[])
+ 
+ 	/* setup a probe */
+ 	tk = alloc_trace_kprobe(group, event, addr, symbol, offset, maxactive,
+-			       argc - 2, is_return);
++				argc - 2, is_return);
+ 	if (IS_ERR(tk)) {
+ 		ret = PTR_ERR(tk);
+ 		/* This must return -ENOMEM, else there is a bug */
+@@ -866,10 +866,10 @@ static int __trace_kprobe_create(int argc, const char *argv[])
+ 	argc -= 2; argv += 2;
+ 
+ 	/* parse arguments */
++	ctx.funcname = symbol;
+ 	for (i = 0; i < argc && i < MAX_TRACE_ARGS; i++) {
+-		struct traceprobe_parse_context ctx = { .flags = flags };
+-
+ 		trace_probe_log_set_index(i + 2);
++		ctx.offset = 0;
+ 		ret = traceprobe_parse_probe_arg(&tk->tp, i, argv[i], &ctx);
+ 		if (ret)
+ 			goto error;	/* This can be -ENOMEM */
+diff --git a/kernel/trace/trace_probe.c b/kernel/trace/trace_probe.c
+index 30eeac5e9b61..525341c42851 100644
+--- a/kernel/trace/trace_probe.c
++++ b/kernel/trace/trace_probe.c
+@@ -11,6 +11,8 @@
+  */
+ #define pr_fmt(fmt)	"trace_probe: " fmt
+ 
++#include <linux/bpf.h>
 +
-+grep -q myevent1 dynamic_events
-+grep -q myevent2 dynamic_events
-+test -d events/tracepoints/myevent1
-+test -d events/tracepoints/myevent2
+ #include "trace_probe.h"
+ 
+ #undef C
+@@ -300,6 +302,171 @@ static int parse_trace_event_arg(char *arg, struct fetch_insn *code,
+ 	return -ENOENT;
+ }
+ 
++#ifdef CONFIG_PROBE_EVENTS_BTF_ARGS
 +
-+echo "-:myevent2" >> dynamic_events
++static struct btf *traceprobe_get_btf(void)
++{
++	struct btf *btf = bpf_get_btf_vmlinux();
 +
-+grep -q myevent1 dynamic_events
-+! grep -q myevent2 dynamic_events
++	if (IS_ERR_OR_NULL(btf))
++		return NULL;
 +
-+echo > dynamic_events
-+
-+clear_trace
-diff --git a/tools/testing/selftests/ftrace/test.d/dynevent/tprobe_syntax_errors.tc b/tools/testing/selftests/ftrace/test.d/dynevent/tprobe_syntax_errors.tc
-new file mode 100644
-index 000000000000..c8dac5c1cfa8
---- /dev/null
-+++ b/tools/testing/selftests/ftrace/test.d/dynevent/tprobe_syntax_errors.tc
-@@ -0,0 +1,82 @@
-+#!/bin/sh
-+# SPDX-License-Identifier: GPL-2.0
-+# description: Tracepoint probe event parser error log check
-+# requires: dynamic_events "t[:[<group>/][<event>]] <tracepoint> [<args>]": README
-+
-+check_error() { # command-with-error-pos-by-^
-+    ftrace_errlog_check 'trace_fprobe' "$1" 'dynamic_events'
++	return btf;
 +}
 +
-+check_error 't^100 kfree'		# BAD_MAXACT_TYPE
++static u32 btf_type_int(const struct btf_type *t)
++{
++	return *(u32 *)(t + 1);
++}
 +
-+check_error 't ^non_exist_tracepoint'	# NO_TRACEPOINT
-+check_error 't:^/bar kfree'		# NO_GROUP_NAME
-+check_error 't:^12345678901234567890123456789012345678901234567890123456789012345/bar kfree'	# GROUP_TOO_LONG
++static const char *type_from_btf_id(struct btf *btf, s32 id)
++{
++	const struct btf_type *t;
++	u32 intdata;
++	s32 tid;
 +
-+check_error 't:^foo.1/bar kfree'	# BAD_GROUP_NAME
-+check_error 't:^ kfree'			# NO_EVENT_NAME
-+check_error 't:foo/^12345678901234567890123456789012345678901234567890123456789012345 kfree'	# EVENT_TOO_LONG
-+check_error 't:foo/^bar.1 kfree'	# BAD_EVENT_NAME
++	/* TODO: const char * could be converted as a string */
++	t = btf_type_skip_modifiers(btf, id, &tid);
 +
-+check_error 't kfree ^$retval'		# RETVAL_ON_PROBE
-+check_error 't kfree ^$stack10000'	# BAD_STACK_NUM
++	switch (BTF_INFO_KIND(t->info)) {
++	case BTF_KIND_ENUM:
++		/* enum is "int", so convert to "s32" */
++		return "s32";
++	case BTF_KIND_ENUM64:
++		return "s64";
++	case BTF_KIND_PTR:
++		/* pointer will be converted to "x??" */
++		if (IS_ENABLED(CONFIG_64BIT))
++			return "x64";
++		else
++			return "x32";
++	case BTF_KIND_INT:
++		intdata = btf_type_int(t);
++		if (BTF_INT_ENCODING(intdata) & BTF_INT_SIGNED) {
++			switch (BTF_INT_BITS(intdata)) {
++			case 8:
++				return "s8";
++			case 16:
++				return "s16";
++			case 32:
++				return "s32";
++			case 64:
++				return "s64";
++			}
++		} else {	/* unsigned */
++			switch (BTF_INT_BITS(intdata)) {
++			case 8:
++				return "u8";
++			case 16:
++				return "u16";
++			case 32:
++				return "u32";
++			case 64:
++				return "u64";
++			}
++		}
++	}
++	/* TODO: support other types */
 +
-+check_error 't kfree ^$arg10000'	# BAD_ARG_NUM
++	return NULL;
++}
 +
-+check_error 't kfree ^$none_var'	# BAD_VAR
-+check_error 't kfree ^%rax'		# BAD_VAR
++static const struct btf_param *find_btf_func_param(const char *funcname, s32 *nr)
++{
++	struct btf *btf = traceprobe_get_btf();
++	const struct btf_type *t;
++	s32 id;
 +
-+check_error 't kfree ^@12345678abcde'	# BAD_MEM_ADDR
-+check_error 't kfree ^@+10'		# FILE_ON_KPROBE
++	if (!btf || !funcname || !nr)
++		return ERR_PTR(-EINVAL);
 +
-+grep -q "imm-value" README && \
-+check_error 't kfree arg1=\^x'	# BAD_IMM
-+grep -q "imm-string" README && \
-+check_error 't kfree arg1=\"abcd^'	# IMMSTR_NO_CLOSE
++	id = btf_find_by_name_kind(btf, funcname, BTF_KIND_FUNC);
++	if (id <= 0)
++		return ERR_PTR(-ENOENT);
 +
-+check_error 't kfree ^+0@0)'		# DEREF_NEED_BRACE
-+check_error 't kfree ^+0ab1(@0)'	# BAD_DEREF_OFFS
-+check_error 't kfree +0(+0(@0^)'	# DEREF_OPEN_BRACE
++	/* Get BTF_KIND_FUNC type */
++	t = btf_type_by_id(btf, id);
++	if (!btf_type_is_func(t))
++		return ERR_PTR(-ENOENT);
 +
-+if grep -A1 "fetcharg:" README | grep -q '\$comm' ; then
-+check_error 't kfree +0(^$comm)'	# COMM_CANT_DEREF
-+fi
++	/* The type of BTF_KIND_FUNC is BTF_KIND_FUNC_PROTO */
++	t = btf_type_by_id(btf, t->type);
++	if (!btf_type_is_func_proto(t))
++		return ERR_PTR(-ENOENT);
 +
-+check_error 't kfree ^&1'		# BAD_FETCH_ARG
++	*nr = btf_type_vlen(t);
 +
++	if (*nr)
++		return (const struct btf_param *)(t + 1);
++	else
++		return NULL;
++}
 +
-+# We've introduced this limitation with array support
-+if grep -q ' <type>\\\[<array-size>\\\]' README; then
-+check_error 't kfree +0(^+0(+0(+0(+0(+0(+0(+0(+0(+0(+0(+0(+0(+0(@0))))))))))))))'	# TOO_MANY_OPS?
-+check_error 't kfree +0(@11):u8[10^'		# ARRAY_NO_CLOSE
-+check_error 't kfree +0(@11):u8[10]^a'		# BAD_ARRAY_SUFFIX
-+check_error 't kfree +0(@11):u8[^10a]'		# BAD_ARRAY_NUM
-+check_error 't kfree +0(@11):u8[^256]'		# ARRAY_TOO_BIG
-+fi
++static int parse_btf_arg(const char *varname, struct fetch_insn *code,
++			 struct traceprobe_parse_context *ctx)
++{
++	struct btf *btf = traceprobe_get_btf();
++	const struct btf_param *params;
++	int i;
 +
-+check_error 't kfree @11:^unknown_type'		# BAD_TYPE
-+check_error 't kfree $stack0:^string'		# BAD_STRING
-+check_error 't kfree @11:^b10@a/16'		# BAD_BITFIELD
++	if (!btf) {
++		trace_probe_log_err(ctx->offset, NOSUP_BTFARG);
++		return -EOPNOTSUPP;
++	}
 +
-+check_error 't kfree ^arg123456789012345678901234567890=@11'	# ARG_NAME_TOO_LOG
-+check_error 't kfree ^=@11'			# NO_ARG_NAME
-+check_error 't kfree ^var.1=@11'		# BAD_ARG_NAME
-+check_error 't kfree var1=@11 ^var1=@12'	# USED_ARG_NAME
-+check_error 't kfree ^+1234567(+1234567(+1234567(+1234567(+1234567(+1234567(@1234))))))'	# ARG_TOO_LONG
-+check_error 't kfree arg1=^'			# NO_ARG_BODY
++	if (WARN_ON_ONCE(!ctx->funcname))
++		return -EINVAL;
 +
++	if (!ctx->params) {
++		params = find_btf_func_param(ctx->funcname, &ctx->nr_params);
++		if (IS_ERR(params)) {
++			trace_probe_log_err(ctx->offset, NO_BTF_ENTRY);
++			return PTR_ERR(params);
++		}
++		ctx->params = params;
++	} else
++		params = ctx->params;
 +
-+# multiprobe errors
-+if grep -q "Create/append/" README && grep -q "imm-value" README; then
-+echo "t:tracepoint/testevent kfree" > dynamic_events
-+check_error '^f:tracepoint/testevent kfree'	# DIFF_PROBE_TYPE
++	for (i = 0; i < ctx->nr_params; i++) {
++		const char *name = btf_name_by_offset(btf, params[i].name_off);
 +
-+# Explicitly use printf "%s" to not interpret \1
-+printf "%s" "t:tracepoints/testevent kfree abcd=\\1" > dynamic_events
-+check_error "t:tracepoints/testevent kfree ^bcd=\\1"	# DIFF_ARG_TYPE
-+check_error "t:tracepoints/testevent kfree ^abcd=\\1:u8"	# DIFF_ARG_TYPE
-+check_error "t:tracepoints/testevent kfree ^abcd=\\\"foo\"" # DIFF_ARG_TYPE
-+check_error "^t:tracepoints/testevent kfree abcd=\\1"	# SAME_PROBE
-+fi
++		if (name && !strcmp(name, varname)) {
++			code->op = FETCH_OP_ARG;
++			code->param = i;
++			return 0;
++		}
++	}
++	trace_probe_log_err(ctx->offset, NO_BTFARG);
++	return -ENOENT;
++}
 +
-+exit 0
++static const struct fetch_type *parse_btf_arg_type(int arg_idx,
++					struct traceprobe_parse_context *ctx)
++{
++	struct btf *btf = traceprobe_get_btf();
++	const char *typestr = NULL;
++
++	if (btf && ctx->params)
++		typestr = type_from_btf_id(btf, ctx->params[arg_idx].type);
++
++	return find_fetch_type(typestr, ctx->flags);
++}
++#else
++static struct btf *traceprobe_get_btf(void)
++{
++	return NULL;
++}
++
++static int parse_btf_arg(const char *varname, struct fetch_insn *code,
++			 struct traceprobe_parse_context *ctx)
++{
++	trace_probe_log_err(ctx->offset, NOSUP_BTFARG);
++	return -EOPNOTSUPP;
++}
++#define parse_btf_arg_type(idx, ctx)		\
++	find_fetch_type(NULL, ctx->flags)
++#endif
++
+ #define PARAM_MAX_STACK (THREAD_SIZE / sizeof(unsigned long))
+ 
+ static int parse_probe_vars(char *arg, const struct fetch_type *t,
+@@ -570,6 +737,15 @@ parse_probe_arg(char *arg, const struct fetch_type *type,
+ 				code->op = FETCH_OP_IMM;
+ 		}
+ 		break;
++	default:
++		if (isalpha(arg[0]) || arg[0] == '_') {	/* BTF variable */
++			if (!tparg_is_function_entry(ctx->flags)) {
++				trace_probe_log_err(ctx->offset, NOSUP_BTFARG);
++				return -EINVAL;
++			}
++			ret = parse_btf_arg(arg, code, ctx);
++			break;
++		}
+ 	}
+ 	if (!ret && code->op == FETCH_OP_NOP) {
+ 		/* Parsed, but do not find fetch method */
+@@ -718,6 +894,11 @@ static int traceprobe_parse_probe_arg_body(const char *argv, ssize_t *size,
+ 	if (ret)
+ 		goto fail;
+ 
++	/* Update storing type if BTF is available */
++	if (IS_ENABLED(CONFIG_PROBE_EVENTS_BTF_ARGS) &&
++	    !t && code->op == FETCH_OP_ARG)
++		parg->type = parse_btf_arg_type(code->param, ctx);
++
+ 	ret = -EINVAL;
+ 	/* Store operation */
+ 	if (parg->type->is_string) {
+@@ -871,8 +1052,14 @@ int traceprobe_parse_probe_arg(struct trace_probe *tp, int i, const char *arg,
+ 		parg->name = kmemdup_nul(arg, body - arg, GFP_KERNEL);
+ 		body++;
+ 	} else {
+-		/* If argument name is omitted, set "argN" */
+-		parg->name = kasprintf(GFP_KERNEL, "arg%d", i + 1);
++		/*
++		 * If argument name is omitted, try arg as a name (BTF variable)
++		 * or "argN".
++		 */
++		if (is_good_name(arg))
++			parg->name = kstrdup(arg, GFP_KERNEL);
++		else
++			parg->name = kasprintf(GFP_KERNEL, "arg%d", i + 1);
+ 		body = arg;
+ 	}
+ 	if (!parg->name)
+diff --git a/kernel/trace/trace_probe.h b/kernel/trace/trace_probe.h
+index 2dc1e5c4c9e8..9ea5c7e8753f 100644
+--- a/kernel/trace/trace_probe.h
++++ b/kernel/trace/trace_probe.h
+@@ -23,6 +23,7 @@
+ #include <linux/limits.h>
+ #include <linux/uaccess.h>
+ #include <linux/bitops.h>
++#include <linux/btf.h>
+ #include <asm/bitsperlong.h>
+ 
+ #include "trace.h"
+@@ -376,6 +377,9 @@ static inline bool tparg_is_function_entry(unsigned int flags)
+ 
+ struct traceprobe_parse_context {
+ 	struct trace_event_call *event;
++	const struct btf_param *params;
++	s32 nr_params;
++	const char *funcname;
+ 	unsigned int flags;
+ 	int offset;
+ };
+@@ -474,7 +478,10 @@ extern int traceprobe_define_arg_fields(struct trace_event_call *event_call,
+ 	C(NO_EVENT_INFO,	"This requires both group and event name to attach"),\
+ 	C(BAD_ATTACH_EVENT,	"Attached event does not exist"),\
+ 	C(BAD_ATTACH_ARG,	"Attached event does not have this field"),\
+-	C(NO_EP_FILTER,		"No filter rule after 'if'"),
++	C(NO_EP_FILTER,		"No filter rule after 'if'"),		\
++	C(NOSUP_BTFARG,		"BTF is not available or not supported"),	\
++	C(NO_BTFARG,		"This variable is not found at this probe point"),\
++	C(NO_BTF_ENTRY,		"No BTF entry for this probe point"),
+ 
+ #undef C
+ #define C(a, b)		TP_ERR_##a
 
