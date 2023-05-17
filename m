@@ -2,131 +2,144 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 25042C77B7D
-	for <linux-trace-kernel@archiver.kernel.org>; Wed, 17 May 2023 16:51:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7802BC77B75
+	for <linux-trace-kernel@archiver.kernel.org>; Wed, 17 May 2023 17:22:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229851AbjEQQvA (ORCPT
+        id S229555AbjEQRWy (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Wed, 17 May 2023 12:51:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40828 "EHLO
+        Wed, 17 May 2023 13:22:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32958 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229748AbjEQQui (ORCPT
+        with ESMTP id S229511AbjEQRWx (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Wed, 17 May 2023 12:50:38 -0400
+        Wed, 17 May 2023 13:22:53 -0400
 Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 1E109420B;
-        Wed, 17 May 2023 09:50:37 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 3F86965B9;
+        Wed, 17 May 2023 10:22:52 -0700 (PDT)
 Received: from W11-BEAU-MD.localdomain (unknown [76.135.27.212])
-        by linux.microsoft.com (Postfix) with ESMTPSA id 3515720F2699;
-        Wed, 17 May 2023 09:50:36 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 3515720F2699
+        by linux.microsoft.com (Postfix) with ESMTPSA id 3982120F2693;
+        Wed, 17 May 2023 10:22:51 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 3982120F2693
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-        s=default; t=1684342236;
-        bh=fj5KKO+rRLmhCSwZFf6yIt3piXlGYxI9+4eHY07uVyE=;
+        s=default; t=1684344171;
+        bh=B0oIcaJ7eKE8RVMGKo2gtY9gzbix+usqvgrS1+i9Jas=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=VuxkY8BiPsTcAMUQhyaeb3RhZpN5d5IO4NfYAdpy8mk4npZ5DQ8f3cxv/xPs6l7Qa
-         C1/PUMfetPzFbFgveIVQnMzf4KmDbfGpfX/a108nY2E/tdd2G0ZR3qK4Pp49J5yOIW
-         dSYyF5+Dvir9NG2q1kGSkUyfKnRnqlBfoLxEiy2g=
-Date:   Wed, 17 May 2023 09:50:28 -0700
+        b=g6fifcHIW6sisuL0qqYxgYpP6X1RTbYeicwpLCvLbO3XEB5Lrxs5WPRfNSPUt6J0g
+         HICQ49ZBIKMT+Fk1oUF84zrIpFsCFMHMAqEnV2k3UeNBGcs49PcI28Xs9UUXYwpDu7
+         HXd+3UAhDg9ryFEFalPHO+V1L1VkaUq2mMooAF2E=
+Date:   Wed, 17 May 2023 10:22:43 -0700
 From:   Beau Belgrave <beaub@linux.microsoft.com>
-To:     Steven Rostedt <rostedt@goodmis.org>
-Cc:     Alexei Starovoitov <alexei.starovoitov@gmail.com>,
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Steven Rostedt <rostedt@goodmis.org>,
+        Alexei Starovoitov <alexei.starovoitov@gmail.com>,
         Masami Hiramatsu <mhiramat@kernel.org>,
         LKML <linux-kernel@vger.kernel.org>,
         linux-trace-kernel@vger.kernel.org,
         Alexei Starovoitov <ast@kernel.org>,
         Daniel Borkmann <daniel@iogearbox.net>,
         Andrii Nakryiko <andrii@kernel.org>, bpf <bpf@vger.kernel.org>,
-        David Vernet <void@manifault.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        dthaler@microsoft.com, brauner@kernel.org, hch@infradead.org
+        David Vernet <void@manifault.com>, dthaler@microsoft.com,
+        brauner@kernel.org, hch@infradead.org
 Subject: Re: [PATCH] tracing/user_events: Run BPF program if attached
-Message-ID: <20230517165028.GA71@W11-BEAU-MD.localdomain>
-References: <20230508163751.841-1-beaub@linux.microsoft.com>
- <CAADnVQLYL-ZaP_2vViaktw0G4UKkmpOK2q4ZXBa+f=M7cC25Rg@mail.gmail.com>
+Message-ID: <20230517172243.GA152@W11-BEAU-MD.localdomain>
+References: <CAADnVQLYL-ZaP_2vViaktw0G4UKkmpOK2q4ZXBa+f=M7cC25Rg@mail.gmail.com>
  <20230509130111.62d587f1@rorschach.local.home>
  <20230509163050.127d5123@rorschach.local.home>
  <20230515165707.hv65ekwp2djkjj5i@MacBook-Pro-8.local>
  <20230515192407.GA85@W11-BEAU-MD.localdomain>
  <20230517003628.aqqlvmzffj7fzzoj@MacBook-Pro-8.local>
- <20230516212658.2f5cc2c6@gandalf.local.home>
+ <CAHk-=whBKoovtifU2eCeyuBBee-QMcbxdXDLv0mu0k2DgxiaOw@mail.gmail.com>
+ <CAHk-=wj1hh=ZUriY9pVFvD1MjqbRuzHc4yz=S2PCW7u3W0-_BQ@mail.gmail.com>
+ <20230516222919.79bba667@rorschach.local.home>
+ <CAHk-=wh_GEr4ehJKwMM3UA0-7CfNpVH7v_T-=1u+gq9VZD70mw@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20230516212658.2f5cc2c6@gandalf.local.home>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAHk-=wh_GEr4ehJKwMM3UA0-7CfNpVH7v_T-=1u+gq9VZD70mw@mail.gmail.com>
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On Tue, May 16, 2023 at 09:26:58PM -0400, Steven Rostedt wrote:
-> On Tue, 16 May 2023 17:36:28 -0700
-> Alexei Starovoitov <alexei.starovoitov@gmail.com> wrote:
+On Tue, May 16, 2023 at 08:03:09PM -0700, Linus Torvalds wrote:
+> On Tue, May 16, 2023 at 7:29 PM Steven Rostedt <rostedt@goodmis.org> wrote:
+> >
+> > So this code path is very much in user context (called directly by a
+> > write system call). The issue that Alexei had was that it's also in an
+> > rcu_read_lock() section.
+> >
+> > I wonder if this all goes away if we switch to SRCU?
 > 
+> Yes, SRCU context would work.
 > 
-> > "
-> > The user that will generate events must have x access to the tracing directory, e.g. chmod a+x /sys/kernel/tracing
-> > The user that will generate events must have rw access to the tracing/user_events_data file, e.g. chmod a+rw /sys/kernel/tracing/user_events_data
-> > "
-> > So any unpriv user can create and operate user events.
-> > Including seeing and enabling other user's user_events with 'ls/echo/cat' in tracefs.
+> That said, how critical is this code? Because honestly, the *sanest*
+> thing to do is to just hold the lock that actually protects the list,
+> not try to walk the list in any RCU mode.
 > 
-> It can see user_events_data, but x only gives you access into the directory.
-> It does not get you the contents of the files within the directory. The
-> above only gives access to the user_events_data. Which is to create events.
+> And as far as I can tell, that's the 'event_mutex', which is already held.
 > 
-> I recommended using groups and not giving access to all tasks.
+> RCU walking of a list is only meaningful when the walk doesn't need
+> the lock that guarantees the list integrity.
 > 
-> > 
-> > Looks like user events were designed with intention to be unprivileged.
-> > When I looked at kernel/trace/trace_events_user.c I assumed root.
-> > I doubt other people reviewed it from security perspective.
-> > 
-> > Recommending "chmod a+rw /sys/kernel/tracing/user_events_data" doesn't sound like a good idea.
-> > 
-> > For example, I think the following is possible:
-> > fd = open("/sys/kernel/tracing/user_events_data")
-> > ioclt(fd, DIAG_IOCSDEL)
-> >   user_events_ioctl_del
-> >      delete_user_event(info->group, name);
-> > 
-> > 'info' is different for every FD, but info->group is the same for all users/processes/fds,
-> > because only one global init_group is created.
-> > So one user can unregister other user event by knowing 'name'.
-> > A security hole, no?
-> > 
-> > > and libside [2] will also help here.  
-> > 
-> > > [2] https://github.com/compudj/libside  
-> > 
-> > That's an interesting project. It doesn't do any user_events access afaict,
+> But *modification* of a RCU-protected list still requires locking, and
+> from a very cursory look, it really looks like 'event_mutex' is
+> already the lock that protects the list.
 > 
-> I'll let Beau answer the rest.
+> So the whole use of RCU during the list walking there in
+> user_event_enabler_update() _seems_ pointless. You hold event_mutex -
+> user_event_enabler_write() that is called in the loop already has a
+> lockdep assert to that effect.
 > 
-> -- Steve
+> So what is it that could even race and change the list that is the
+> cause of that rcu-ness?
+> 
 
-Mathieu and I have talked for the last year to align user_events with
-the ability to also run user-space tracers together. I've sent a patch
-out to Mathieu to add user_events to libside and was the main reason why
-the ABI moved toward remote writes of bits.
+Processes that fork() with previous user_events need to be duplicated.
 
-Libside uses a binary description of event data that the kernel cannot
-handle (yet). We talk about this almost each tracefs meeting, libside
-can be used with user_events, however, the kernel side decoding is hard
-to describe at the moment. We are working on a way to tell the kernel
-about events via a binary format to achieve this.
+The fork() paths do not acquire the event_mutex. In the middle of a fork
+an event could become enabled/disabled, which would call this part of
+the code, at that time the list is actively being appended to when we
+try to update the bits.
 
-Regarding deleting events, only users that are given access can delete
-events. They must know the event name, just like users with access to
-delete files must know a path (and have access to it). Since the
-write_index and other details are per-process, unless the user has
-access to either /sys/kernel/tracing/events/user_events/* or
-/sys/kernel/tracing/user_events_status, they do not know which names are
-being used.
+> Other code in that file happily just does
+> 
+>         mutex_lock(&event_mutex);
+> 
+>         list_for_each_entry_safe(enabler, next, &mm->enablers, link)
+> 
+> with no RCU anywhere. Why does user_event_enabler_update() not do that?
+> 
 
-If that is not enough, we could require CAP_SYSADMIN to be able to
-delete events even when they have access to the file. Users can also
-apply SELinux policies per-file to achieve further isolation, if
-required.
+This is due to the fork() case above without taking the event_mutex. I
+really tried to not cause fork() to stall if a process uses user_events.
+This required using RCU, maybe there is a simpler approach:
+
+One approach I can think of is that during fork() we don't add the newly
+created mm to the global list until we copy all the enablers. The COW
+pages should reflect the bits if a timing window occurs there, since I
+believe it's impossible for the newly forked() mm to cause a COW during
+that time. Then I can drop this RCU on the enablers.
+
+> Oh, and even those other loops are a bit strange. Why do they use the
+> "_safe" variant, even when they just traverse the list without
+> changing it? Look at user_event_enabler_exists(), for example.
+> 
+
+The other places in the code that do this either will remove the event
+depending on the situation during the for_each, or they only hold the
+register lock and don't hold the event_mutex. So the disabler could get
+removed out from under it.
+
+IE: user_events_ioctl_reg() -> current_user_event_enabler_exists()
+
+This is a place where we could just simply change to grab the
+event_mutex, it's pretty isolated and we take the lock anyway further
+down the path.
+
+> I must really be missing something. That code is confusing. Or I am
+> very confused.
+> 
+>             Linus
 
 Thanks,
 -Beau
