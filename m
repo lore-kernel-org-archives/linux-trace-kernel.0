@@ -2,38 +2,38 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CB340C77B7F
-	for <linux-trace-kernel@archiver.kernel.org>; Tue, 16 May 2023 23:58:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 05C41C77B7A
+	for <linux-trace-kernel@archiver.kernel.org>; Wed, 17 May 2023 00:14:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231202AbjEPX65 (ORCPT
+        id S230492AbjEQAOX (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Tue, 16 May 2023 19:58:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39984 "EHLO
+        Tue, 16 May 2023 20:14:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47026 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231451AbjEPX6z (ORCPT
+        with ESMTP id S229789AbjEQAOW (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Tue, 16 May 2023 19:58:55 -0400
+        Tue, 16 May 2023 20:14:22 -0400
 Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 39E7361AD;
-        Tue, 16 May 2023 16:58:50 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id DF436113;
+        Tue, 16 May 2023 17:14:20 -0700 (PDT)
 Received: from W11-BEAU-MD.localdomain (unknown [76.135.27.212])
-        by linux.microsoft.com (Postfix) with ESMTPSA id 19E4820ECCB3;
-        Tue, 16 May 2023 16:58:49 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 19E4820ECCB3
+        by linux.microsoft.com (Postfix) with ESMTPSA id 5891A20ECCB8;
+        Tue, 16 May 2023 17:14:20 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 5891A20ECCB8
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-        s=default; t=1684281529;
-        bh=KgFoQk+gBOrhdcQ1wdSjwMmEkduDiZjL6cKJIOny6aY=;
+        s=default; t=1684282460;
+        bh=zfvI4rOs9e+SyQp3rkkz6zejPeTjlk9i3u8F4xcNryQ=;
         h=From:To:Cc:Subject:Date:From;
-        b=GtL9MLVit6qxc7g42Vr2dlkBh8yV89gybMB3RGGhqdSqfVM8qfFzqItGNYde2tynr
-         CYiObjnosvJguo2HC1EUM75a8YcGQrGD1qpkqPJLoKnEIWkNRgyZJE0ZpITrueFfPw
-         T+GHgYv2gwzqqsYcMy00YXYBM1ToJbfQyBbLWpgw=
+        b=jYk5dM5EQcZmwOn2bDynmUK6hWXrJz28RJ5wvwKBOYwqL8KCj149agPc2PtndjvQD
+         KVWTfuf0sJmtKRBMaNYzKCrbgXaJymcwSoJuNtAFoZI5HCTR87S2GhBSLZ8N4ynftP
+         4MIct94/P9kMAxA5vLAFX91asFZhBm3AF0n+MBpY=
 From:   Beau Belgrave <beaub@linux.microsoft.com>
 To:     rostedt@goodmis.org, mhiramat@kernel.org
 Cc:     linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
         ast@kernel.org
-Subject: [PATCH] tracing/user_events: Use non-RCU context for enabler writes
-Date:   Tue, 16 May 2023 16:58:44 -0700
-Message-Id: <20230516235844.9303-1-beaub@linux.microsoft.com>
+Subject: [PATCH v2] tracing/user_events: Use non-RCU context for enabler writes
+Date:   Tue, 16 May 2023 17:14:14 -0700
+Message-Id: <20230517001414.307-1-beaub@linux.microsoft.com>
 X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -56,11 +56,15 @@ Fixes: 7235759084a4 ("tracing/user_events: Use remote writes for event enablemen
 Reported-by: Alexei Starovoitov <ast@kernel.org>
 Signed-off-by: Beau Belgrave <beaub@linux.microsoft.com>
 ---
- kernel/trace/trace_events_user.c | 69 +++++++++++++++++++++++++-------
- 1 file changed, 55 insertions(+), 14 deletions(-)
+Changes in v2:
+  - Remove break satement that prevents more than 1 enabler in MM for same
+    event (rare, but possible).
+
+ kernel/trace/trace_events_user.c | 68 +++++++++++++++++++++++++-------
+ 1 file changed, 54 insertions(+), 14 deletions(-)
 
 diff --git a/kernel/trace/trace_events_user.c b/kernel/trace/trace_events_user.c
-index b1ecd7677642..00d956e7e35a 100644
+index b1ecd7677642..3cd8133d9e42 100644
 --- a/kernel/trace/trace_events_user.c
 +++ b/kernel/trace/trace_events_user.c
 @@ -96,12 +96,15 @@ struct user_event {
@@ -129,7 +133,7 @@ index b1ecd7677642..00d956e7e35a 100644
  		user_event_mm_put(mm);
  		mm = next;
  	}
-@@ -500,6 +508,35 @@ static bool user_event_enabler_dup(struct user_event_enabler *orig,
+@@ -500,6 +508,34 @@ static bool user_event_enabler_dup(struct user_event_enabler *orig,
  	return true;
  }
  
@@ -153,7 +157,6 @@ index b1ecd7677642..00d956e7e35a 100644
 +		if (enabler->event == user) {
 +			enabler->next = found;
 +			found = enabler;
-+			break;
 +		}
 +	}
 +
@@ -165,7 +168,7 @@ index b1ecd7677642..00d956e7e35a 100644
  static struct user_event_mm *user_event_mm_get(struct user_event_mm *mm)
  {
  	refcount_inc(&mm->refcnt);
-@@ -513,6 +550,8 @@ static struct user_event_mm *user_event_mm_get_all(struct user_event *user)
+@@ -513,6 +549,8 @@ static struct user_event_mm *user_event_mm_get_all(struct user_event *user)
  	struct user_event_enabler *enabler;
  	struct user_event_mm *mm;
  
@@ -174,7 +177,7 @@ index b1ecd7677642..00d956e7e35a 100644
  	/*
  	 * We do not want to block fork/exec while enablements are being
  	 * updated, so we use RCU to walk the current tasks that have used
-@@ -525,13 +564,15 @@ static struct user_event_mm *user_event_mm_get_all(struct user_event *user)
+@@ -525,13 +563,15 @@ static struct user_event_mm *user_event_mm_get_all(struct user_event *user)
  	 */
  	rcu_read_lock();
  
