@@ -2,34 +2,73 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 35914C7EE22
-	for <linux-trace-kernel@archiver.kernel.org>; Wed, 17 May 2023 23:01:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DDA2BC77B7A
+	for <linux-trace-kernel@archiver.kernel.org>; Wed, 17 May 2023 23:15:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229454AbjEQXBI (ORCPT
+        id S229691AbjEQXPF (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Wed, 17 May 2023 19:01:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43208 "EHLO
+        Wed, 17 May 2023 19:15:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52504 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229512AbjEQXBH (ORCPT
+        with ESMTP id S229491AbjEQXPF (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Wed, 17 May 2023 19:01:07 -0400
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 440F6526E;
-        Wed, 17 May 2023 16:01:02 -0700 (PDT)
-Received: from W11-BEAU-MD.localdomain (unknown [76.135.27.212])
-        by linux.microsoft.com (Postfix) with ESMTPSA id 4AA5620F32B2;
-        Wed, 17 May 2023 16:01:01 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 4AA5620F32B2
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-        s=default; t=1684364461;
-        bh=Sx7I12MgI21IfjMTdz/sb80FwxyU0F3BNXVRLf4aVFk=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=FxrRMQa7TTr1X0TjqUCm//+svY6KZbH9tYmAPw+8nNFvginetlK4nlCkW1zTf43dy
-         5R8xZ/rgUZeKe0i93HeJXlZgswahiJepbG7A7OidHSokQ2jztFc1Dq6xrHtVoeOtBE
-         79o2I3HH9PbWv0MnCEk5aRssl/axM4kSkCii+DU8=
-Date:   Wed, 17 May 2023 16:00:54 -0700
-From:   Beau Belgrave <beaub@linux.microsoft.com>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
+        Wed, 17 May 2023 19:15:05 -0400
+Received: from mail-ed1-x531.google.com (mail-ed1-x531.google.com [IPv6:2a00:1450:4864:20::531])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C76BB268F
+        for <linux-trace-kernel@vger.kernel.org>; Wed, 17 May 2023 16:15:03 -0700 (PDT)
+Received: by mail-ed1-x531.google.com with SMTP id 4fb4d7f45d1cf-50bc456cc39so2094335a12.1
+        for <linux-trace-kernel@vger.kernel.org>; Wed, 17 May 2023 16:15:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google; t=1684365302; x=1686957302;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=vk6cd8LcbzAJxt5N/GDDi+PvU6BaObHMv6cAraPkag0=;
+        b=L3qjB3VaqsqlOiGB5yeTiiPsIIfhodMmHKQY2F8CmzC2L7OHTbVab0xh8JeM0wAPRf
+         MVnA11JyPXHzfj84mH2U6ojLkg5Bs+WuZdXTkNXfkEFxQ3AqIyqzUyF4jEc8wFX0MnLP
+         qf/BBm0TbuUJvdeQBAKk9cgSNfVYQQ9hV9DHw=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1684365302; x=1686957302;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=vk6cd8LcbzAJxt5N/GDDi+PvU6BaObHMv6cAraPkag0=;
+        b=lbvKWMqsTuXpOUd5DXkU3II++cmD6+XlMTRN+4kxN3usb1F9NFM7DKljs3SdykTsQc
+         I8S6a8f0qeOewFvXov9X4AsECIwTerqBY4VtVIFFOtD82OuBeM+nISIXWbYN2s4RvlU0
+         A2oI2UF19htQT4OKXSa9vLIw2pm/gmM5ZwDAj/68C+3z9Qrz7/SEq/jB1VP2/mwewMMf
+         YoAK8dWAVFrYBC2NvFqzgOcCfS8m3f5Q8V75Uwlrp+I+Y7LNkHZC2NZ2BlFfOcuTaIrK
+         aBuoDxD2VS/KF0tEh4SMmglkR5M9CgxJdC1qyLkxPLE10yQkSbXd829qssA4+v9xoXB+
+         nIow==
+X-Gm-Message-State: AC+VfDy0vWGwayWLioP3TrOhFL0FawglpudN8l5oCY8/gLj/oAfKm149
+        yK7mbFKoBSgeymxhPpADHCU1q4teZYlz0ZGQBFsq6viF
+X-Google-Smtp-Source: ACHHUZ4wiswY0MnRoc4x/s5Xnt1Uk86K5twICscDcvr4Q4kTF9KQFhoNIPXVQzWCvUuSAxZpasZqUg==
+X-Received: by 2002:a17:906:6a24:b0:96a:2b5a:f013 with SMTP id qw36-20020a1709066a2400b0096a2b5af013mr25963885ejc.62.1684365301876;
+        Wed, 17 May 2023 16:15:01 -0700 (PDT)
+Received: from mail-ed1-f43.google.com (mail-ed1-f43.google.com. [209.85.208.43])
+        by smtp.gmail.com with ESMTPSA id g18-20020a1709067c5200b0094e7d196aa4sm150150ejp.160.2023.05.17.16.15.00
+        for <linux-trace-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 17 May 2023 16:15:01 -0700 (PDT)
+Received: by mail-ed1-f43.google.com with SMTP id 4fb4d7f45d1cf-510d1972d5aso1840488a12.0
+        for <linux-trace-kernel@vger.kernel.org>; Wed, 17 May 2023 16:15:00 -0700 (PDT)
+X-Received: by 2002:a17:907:c26:b0:966:238a:c93 with SMTP id
+ ga38-20020a1709070c2600b00966238a0c93mr38602562ejc.68.1684365300509; Wed, 17
+ May 2023 16:15:00 -0700 (PDT)
+MIME-Version: 1.0
+References: <CAHk-=whBKoovtifU2eCeyuBBee-QMcbxdXDLv0mu0k2DgxiaOw@mail.gmail.com>
+ <CAHk-=wj1hh=ZUriY9pVFvD1MjqbRuzHc4yz=S2PCW7u3W0-_BQ@mail.gmail.com>
+ <20230516222919.79bba667@rorschach.local.home> <CAHk-=wh_GEr4ehJKwMM3UA0-7CfNpVH7v_T-=1u+gq9VZD70mw@mail.gmail.com>
+ <20230517172243.GA152@W11-BEAU-MD.localdomain> <CAHk-=whzzuNEW8UcV2_8OyuKcXPrk7-j_8GzOoroxz9JiZiD3w@mail.gmail.com>
+ <20230517190750.GA366@W11-BEAU-MD.localdomain> <CAHk-=whTBvXJuoi_kACo3qi5WZUmRrhyA-_=rRFsycTytmB6qw@mail.gmail.com>
+ <CAHk-=wi4w9bPKFFGwLULjJf9hnkL941+c4HbeEVKNzqH04wqDA@mail.gmail.com>
+ <CAHk-=wiiBfT4zNS29jA0XEsy8EmbqTH1hAPdRJCDAJMD8Gxt5A@mail.gmail.com> <20230517230054.GA195@W11-BEAU-MD.localdomain>
+In-Reply-To: <20230517230054.GA195@W11-BEAU-MD.localdomain>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Wed, 17 May 2023 16:14:43 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wgQ7qZZ1ud6nhY634eFS9g6NiOz5y2aEammoFkk+5KVcw@mail.gmail.com>
+Message-ID: <CAHk-=wgQ7qZZ1ud6nhY634eFS9g6NiOz5y2aEammoFkk+5KVcw@mail.gmail.com>
+Subject: Re: [PATCH] tracing/user_events: Run BPF program if attached
+To:     Beau Belgrave <beaub@linux.microsoft.com>
 Cc:     Steven Rostedt <rostedt@goodmis.org>,
         Alexei Starovoitov <alexei.starovoitov@gmail.com>,
         Masami Hiramatsu <mhiramat@kernel.org>,
@@ -40,107 +79,40 @@ Cc:     Steven Rostedt <rostedt@goodmis.org>,
         Andrii Nakryiko <andrii@kernel.org>, bpf <bpf@vger.kernel.org>,
         David Vernet <void@manifault.com>, dthaler@microsoft.com,
         brauner@kernel.org, hch@infradead.org
-Subject: Re: [PATCH] tracing/user_events: Run BPF program if attached
-Message-ID: <20230517230054.GA195@W11-BEAU-MD.localdomain>
-References: <CAHk-=whBKoovtifU2eCeyuBBee-QMcbxdXDLv0mu0k2DgxiaOw@mail.gmail.com>
- <CAHk-=wj1hh=ZUriY9pVFvD1MjqbRuzHc4yz=S2PCW7u3W0-_BQ@mail.gmail.com>
- <20230516222919.79bba667@rorschach.local.home>
- <CAHk-=wh_GEr4ehJKwMM3UA0-7CfNpVH7v_T-=1u+gq9VZD70mw@mail.gmail.com>
- <20230517172243.GA152@W11-BEAU-MD.localdomain>
- <CAHk-=whzzuNEW8UcV2_8OyuKcXPrk7-j_8GzOoroxz9JiZiD3w@mail.gmail.com>
- <20230517190750.GA366@W11-BEAU-MD.localdomain>
- <CAHk-=whTBvXJuoi_kACo3qi5WZUmRrhyA-_=rRFsycTytmB6qw@mail.gmail.com>
- <CAHk-=wi4w9bPKFFGwLULjJf9hnkL941+c4HbeEVKNzqH04wqDA@mail.gmail.com>
- <CAHk-=wiiBfT4zNS29jA0XEsy8EmbqTH1hAPdRJCDAJMD8Gxt5A@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAHk-=wiiBfT4zNS29jA0XEsy8EmbqTH1hAPdRJCDAJMD8Gxt5A@mail.gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On Wed, May 17, 2023 at 12:37:11PM -0700, Linus Torvalds wrote:
-> On Wed, May 17, 2023 at 12:36 PM Linus Torvalds
-> <torvalds@linux-foundation.org> wrote:
-> >
-> > .. this is the patch that I think should go on top of it to fix the
-> > misleading "safe" and the incorrect RCU walk.
-> 
-> Let's actually attach the patch too. Duh.
-> 
->                Linus
+On Wed, May 17, 2023 at 4:01=E2=80=AFPM Beau Belgrave <beaub@linux.microsof=
+t.com> wrote:
+>
+> Do you mind giving me your Signed-off-by for these?
 
->  kernel/trace/trace_events_user.c | 8 ++++----
->  1 file changed, 4 insertions(+), 4 deletions(-)
-> 
-> diff --git a/kernel/trace/trace_events_user.c b/kernel/trace/trace_events_user.c
-> index b2aecbfbbd24..054e28cc5ad4 100644
-> --- a/kernel/trace/trace_events_user.c
-> +++ b/kernel/trace/trace_events_user.c
-> @@ -439,7 +439,7 @@ static bool user_event_enabler_exists(struct user_event_mm *mm,
->  	struct user_event_enabler *enabler;
->  	struct user_event_enabler *next;
->  
-> -	list_for_each_entry_safe(enabler, next, &mm->enablers, link) {
-> +	list_for_each_entry(enabler, next, &mm->enablers, link) {
->  		if (enabler->addr == uaddr &&
->  		    (enabler->values & ENABLE_VAL_BIT_MASK) == bit)
->  			return true;
-> @@ -455,19 +455,19 @@ static void user_event_enabler_update(struct user_event *user)
->  	struct user_event_mm *next;
->  	int attempt;
->  
-> +	lockdep_assert_held(&event_mutex);
-> +
->  	while (mm) {
->  		next = mm->next;
->  		mmap_read_lock(mm->mm);
-> -		rcu_read_lock();
->  
-> -		list_for_each_entry_rcu(enabler, &mm->enablers, link) {
-> +		list_for_each_entry(enabler, &mm->enablers, link) {
->  			if (enabler->event == user) {
->  				attempt = 0;
->  				user_event_enabler_write(mm, enabler, true, &attempt);
->  			}
->  		}
->  
-> -		rcu_read_unlock();
->  		mmap_read_unlock(mm->mm);
->  		user_event_mm_put(mm);
->  		mm = next;
+Assuming you have some test-cases that you've run them through, then yes:
 
-Do you mind giving me your Signed-off-by for these?
+ Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 
-I plan to do a series where I take these patches and then also fix up a
-few comments and the link namings as you suggested.
+for both. But since I can't really test them myself, I'd really like
+that. I did these patches just by looking at the source code, and
+while I think that's an excellent way to do development, I do think
+that testing is _also_ required.
 
-First patch is clean, second patch I made the following changes and
-after that passed all the self-tests without bug splats with
-CONFIG_PROVE_LOCKING/RCU and ATOMIC_SLEEP:
+And that second patch was obviously not even build-tested, so really
+just a "something like this".
 
-diff --git a/kernel/trace/trace_events_user.c b/kernel/trace/trace_events_user.c
-index b2aecbfbbd24..2f70dabb0f71 100644
---- a/kernel/trace/trace_events_user.c
-+++ b/kernel/trace/trace_events_user.c
-@@ -437,9 +437,8 @@ static bool user_event_enabler_exists(struct user_event_mm *mm,
-                                      unsigned long uaddr, unsigned char bit)
- {
-        struct user_event_enabler *enabler;
--       struct user_event_enabler *next;
+> I plan to do a series where I take these patches and then also fix up a
+> few comments and the link namings as you suggested.
 
--       list_for_each_entry_safe(enabler, next, &mm->enablers, link) {
-+       list_for_each_entry(enabler, &mm->enablers, link) {
-                if (enabler->addr == uaddr &&
-                    (enabler->values & ENABLE_VAL_BIT_MASK) == bit)
-                        return true;
-@@ -495,7 +494,9 @@ static bool user_event_enabler_dup(struct user_event_enabler *orig,
-        enabler->values = orig->values & ENABLE_VAL_DUP_MASK;
+Sounds good.
 
-        refcount_inc(&enabler->event->refcnt);
--       list_add_rcu(&enabler->link, &mm->enablers);
-+
-+       /* Enablers not exposed yet, RCU not required */
-+       list_add(&enabler->link, &mm->enablers);
+> First patch is clean, second patch I made the following changes and
+> after that passed all the self-tests without bug splats with
+> CONFIG_PROVE_LOCKING/RCU and ATOMIC_SLEEP:
+
+Your suggested version with just "list_add()" and a comment about why
+it doesn't need RCU safety looks good. And the build fix obviously
+requited ;)
+
+                  Linus
