@@ -2,154 +2,145 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6126EC7EE22
-	for <linux-trace-kernel@archiver.kernel.org>; Wed, 17 May 2023 22:28:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 35914C7EE22
+	for <linux-trace-kernel@archiver.kernel.org>; Wed, 17 May 2023 23:01:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229485AbjEQW2V (ORCPT
+        id S229454AbjEQXBI (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Wed, 17 May 2023 18:28:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33014 "EHLO
+        Wed, 17 May 2023 19:01:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43208 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229456AbjEQW2V (ORCPT
+        with ESMTP id S229512AbjEQXBH (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Wed, 17 May 2023 18:28:21 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4C8F959DE;
-        Wed, 17 May 2023 15:28:20 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id DDABE648F9;
-        Wed, 17 May 2023 22:28:19 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7AF56C433EF;
-        Wed, 17 May 2023 22:28:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1684362499;
-        bh=KFREZcjLEiG8NztAj50tdQP1RgWuzfuivuMpu6iL7lU=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=MOMp5wi3hbzvqfoqvTmUUvhRxNtlfo0gRfrFFmV/bCdLQOO7cwZpflzzSzuuXqEB2
-         tYeAsfOOqSmRLo+su9SOHiMUxFaavhgpYZsMR0Zkva2gldyrF2Z2j7vpYw/ivMFcAa
-         l/1oFEpvLe3O30sVjNvzRi64h4PZBwcxtV0la0JFSyk92grL4l8x4TZWKkyMEPfVI2
-         w5AW9BgnguEIhVKbWrw2Qn2j++ySHAyBfTNUsI/SY6IF0lrKrPYqECvbTFMVYBMp4h
-         KGIB3tLsKC7cDlqnKP4bIqFM8r1Rz5LNQB7IlenQFlBUny35vQAHkOYuKcFDi88Jpe
-         KChVFVrEgK0cA==
-Date:   Thu, 18 May 2023 07:28:15 +0900
-From:   Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To:     Azeem Shaikh <azeemshaikh38@gmail.com>
+        Wed, 17 May 2023 19:01:07 -0400
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 440F6526E;
+        Wed, 17 May 2023 16:01:02 -0700 (PDT)
+Received: from W11-BEAU-MD.localdomain (unknown [76.135.27.212])
+        by linux.microsoft.com (Postfix) with ESMTPSA id 4AA5620F32B2;
+        Wed, 17 May 2023 16:01:01 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 4AA5620F32B2
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+        s=default; t=1684364461;
+        bh=Sx7I12MgI21IfjMTdz/sb80FwxyU0F3BNXVRLf4aVFk=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=FxrRMQa7TTr1X0TjqUCm//+svY6KZbH9tYmAPw+8nNFvginetlK4nlCkW1zTf43dy
+         5R8xZ/rgUZeKe0i93HeJXlZgswahiJepbG7A7OidHSokQ2jztFc1Dq6xrHtVoeOtBE
+         79o2I3HH9PbWv0MnCEk5aRssl/axM4kSkCii+DU8=
+Date:   Wed, 17 May 2023 16:00:54 -0700
+From:   Beau Belgrave <beaub@linux.microsoft.com>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
 Cc:     Steven Rostedt <rostedt@goodmis.org>,
-        linux-hardening@vger.kernel.org,
-        Mark Rutland <mark.rutland@arm.com>,
-        linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
-Subject: Re: [PATCH] ftrace: Replace all non-returning strlcpy with strscpy
-Message-Id: <20230518072815.53fd9f67a3423d85f133d98b@kernel.org>
-In-Reply-To: <20230517145323.1522010-1-azeemshaikh38@gmail.com>
-References: <20230517145323.1522010-1-azeemshaikh38@gmail.com>
-X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        Alexei Starovoitov <alexei.starovoitov@gmail.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-trace-kernel@vger.kernel.org,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Andrii Nakryiko <andrii@kernel.org>, bpf <bpf@vger.kernel.org>,
+        David Vernet <void@manifault.com>, dthaler@microsoft.com,
+        brauner@kernel.org, hch@infradead.org
+Subject: Re: [PATCH] tracing/user_events: Run BPF program if attached
+Message-ID: <20230517230054.GA195@W11-BEAU-MD.localdomain>
+References: <CAHk-=whBKoovtifU2eCeyuBBee-QMcbxdXDLv0mu0k2DgxiaOw@mail.gmail.com>
+ <CAHk-=wj1hh=ZUriY9pVFvD1MjqbRuzHc4yz=S2PCW7u3W0-_BQ@mail.gmail.com>
+ <20230516222919.79bba667@rorschach.local.home>
+ <CAHk-=wh_GEr4ehJKwMM3UA0-7CfNpVH7v_T-=1u+gq9VZD70mw@mail.gmail.com>
+ <20230517172243.GA152@W11-BEAU-MD.localdomain>
+ <CAHk-=whzzuNEW8UcV2_8OyuKcXPrk7-j_8GzOoroxz9JiZiD3w@mail.gmail.com>
+ <20230517190750.GA366@W11-BEAU-MD.localdomain>
+ <CAHk-=whTBvXJuoi_kACo3qi5WZUmRrhyA-_=rRFsycTytmB6qw@mail.gmail.com>
+ <CAHk-=wi4w9bPKFFGwLULjJf9hnkL941+c4HbeEVKNzqH04wqDA@mail.gmail.com>
+ <CAHk-=wiiBfT4zNS29jA0XEsy8EmbqTH1hAPdRJCDAJMD8Gxt5A@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAHk-=wiiBfT4zNS29jA0XEsy8EmbqTH1hAPdRJCDAJMD8Gxt5A@mail.gmail.com>
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On Wed, 17 May 2023 14:53:23 +0000
-Azeem Shaikh <azeemshaikh38@gmail.com> wrote:
-
-> strlcpy() reads the entire source buffer first.
-> This read may exceed the destination size limit.
-> This is both inefficient and can lead to linear read
-> overflows if a source string is not NUL-terminated [1].
-> In an effort to remove strlcpy() completely [2], replace
-> strlcpy() here with strscpy().
-> No return values were used, so direct replacement is safe.
+On Wed, May 17, 2023 at 12:37:11PM -0700, Linus Torvalds wrote:
+> On Wed, May 17, 2023 at 12:36 PM Linus Torvalds
+> <torvalds@linux-foundation.org> wrote:
+> >
+> > .. this is the patch that I think should go on top of it to fix the
+> > misleading "safe" and the incorrect RCU walk.
 > 
-> [1] https://www.kernel.org/doc/html/latest/process/deprecated.html#strlcpy
-> [2] https://github.com/KSPP/linux/issues/89
+> Let's actually attach the patch too. Duh.
 > 
-> Signed-off-by: Azeem Shaikh <azeemshaikh38@gmail.com>
+>                Linus
 
-Looks good to me.
-
-Acked-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-
-Thanks!
-
-> ---
->  kernel/trace/ftrace.c |   18 +++++++++---------
->  1 file changed, 9 insertions(+), 9 deletions(-)
+>  kernel/trace/trace_events_user.c | 8 ++++----
+>  1 file changed, 4 insertions(+), 4 deletions(-)
 > 
-> diff --git a/kernel/trace/ftrace.c b/kernel/trace/ftrace.c
-> index 764668467155..6a77edb51f18 100644
-> --- a/kernel/trace/ftrace.c
-> +++ b/kernel/trace/ftrace.c
-> @@ -5743,7 +5743,7 @@ bool ftrace_filter_param __initdata;
->  static int __init set_ftrace_notrace(char *str)
->  {
->  	ftrace_filter_param = true;
-> -	strlcpy(ftrace_notrace_buf, str, FTRACE_FILTER_SIZE);
-> +	strscpy(ftrace_notrace_buf, str, FTRACE_FILTER_SIZE);
->  	return 1;
->  }
->  __setup("ftrace_notrace=", set_ftrace_notrace);
-> @@ -5751,7 +5751,7 @@ __setup("ftrace_notrace=", set_ftrace_notrace);
->  static int __init set_ftrace_filter(char *str)
->  {
->  	ftrace_filter_param = true;
-> -	strlcpy(ftrace_filter_buf, str, FTRACE_FILTER_SIZE);
-> +	strscpy(ftrace_filter_buf, str, FTRACE_FILTER_SIZE);
->  	return 1;
->  }
->  __setup("ftrace_filter=", set_ftrace_filter);
-> @@ -5763,14 +5763,14 @@ static int ftrace_graph_set_hash(struct ftrace_hash *hash, char *buffer);
+> diff --git a/kernel/trace/trace_events_user.c b/kernel/trace/trace_events_user.c
+> index b2aecbfbbd24..054e28cc5ad4 100644
+> --- a/kernel/trace/trace_events_user.c
+> +++ b/kernel/trace/trace_events_user.c
+> @@ -439,7 +439,7 @@ static bool user_event_enabler_exists(struct user_event_mm *mm,
+>  	struct user_event_enabler *enabler;
+>  	struct user_event_enabler *next;
 >  
->  static int __init set_graph_function(char *str)
->  {
-> -	strlcpy(ftrace_graph_buf, str, FTRACE_FILTER_SIZE);
-> +	strscpy(ftrace_graph_buf, str, FTRACE_FILTER_SIZE);
->  	return 1;
->  }
->  __setup("ftrace_graph_filter=", set_graph_function);
+> -	list_for_each_entry_safe(enabler, next, &mm->enablers, link) {
+> +	list_for_each_entry(enabler, next, &mm->enablers, link) {
+>  		if (enabler->addr == uaddr &&
+>  		    (enabler->values & ENABLE_VAL_BIT_MASK) == bit)
+>  			return true;
+> @@ -455,19 +455,19 @@ static void user_event_enabler_update(struct user_event *user)
+>  	struct user_event_mm *next;
+>  	int attempt;
 >  
->  static int __init set_graph_notrace_function(char *str)
->  {
-> -	strlcpy(ftrace_graph_notrace_buf, str, FTRACE_FILTER_SIZE);
-> +	strscpy(ftrace_graph_notrace_buf, str, FTRACE_FILTER_SIZE);
->  	return 1;
->  }
->  __setup("ftrace_graph_notrace=", set_graph_notrace_function);
-> @@ -6569,8 +6569,8 @@ static int ftrace_get_trampoline_kallsym(unsigned int symnum,
->  			continue;
->  		*value = op->trampoline;
->  		*type = 't';
-> -		strlcpy(name, FTRACE_TRAMPOLINE_SYM, KSYM_NAME_LEN);
-> -		strlcpy(module_name, FTRACE_TRAMPOLINE_MOD, MODULE_NAME_LEN);
-> +		strscpy(name, FTRACE_TRAMPOLINE_SYM, KSYM_NAME_LEN);
-> +		strscpy(module_name, FTRACE_TRAMPOLINE_MOD, MODULE_NAME_LEN);
->  		*exported = 0;
->  		return 0;
->  	}
-> @@ -6933,7 +6933,7 @@ ftrace_func_address_lookup(struct ftrace_mod_map *mod_map,
->  		if (off)
->  			*off = addr - found_func->ip;
->  		if (sym)
-> -			strlcpy(sym, found_func->name, KSYM_NAME_LEN);
-> +			strscpy(sym, found_func->name, KSYM_NAME_LEN);
+> +	lockdep_assert_held(&event_mutex);
+> +
+>  	while (mm) {
+>  		next = mm->next;
+>  		mmap_read_lock(mm->mm);
+> -		rcu_read_lock();
 >  
->  		return found_func->name;
->  	}
-> @@ -6987,8 +6987,8 @@ int ftrace_mod_get_kallsym(unsigned int symnum, unsigned long *value,
+> -		list_for_each_entry_rcu(enabler, &mm->enablers, link) {
+> +		list_for_each_entry(enabler, &mm->enablers, link) {
+>  			if (enabler->event == user) {
+>  				attempt = 0;
+>  				user_event_enabler_write(mm, enabler, true, &attempt);
+>  			}
+>  		}
 >  
->  			*value = mod_func->ip;
->  			*type = 'T';
-> -			strlcpy(name, mod_func->name, KSYM_NAME_LEN);
-> -			strlcpy(module_name, mod_map->mod->name, MODULE_NAME_LEN);
-> +			strscpy(name, mod_func->name, KSYM_NAME_LEN);
-> +			strscpy(module_name, mod_map->mod->name, MODULE_NAME_LEN);
->  			*exported = 1;
->  			preempt_enable();
->  			return 0;
-> 
+> -		rcu_read_unlock();
+>  		mmap_read_unlock(mm->mm);
+>  		user_event_mm_put(mm);
+>  		mm = next;
 
+Do you mind giving me your Signed-off-by for these?
 
--- 
-Masami Hiramatsu (Google) <mhiramat@kernel.org>
+I plan to do a series where I take these patches and then also fix up a
+few comments and the link namings as you suggested.
+
+First patch is clean, second patch I made the following changes and
+after that passed all the self-tests without bug splats with
+CONFIG_PROVE_LOCKING/RCU and ATOMIC_SLEEP:
+
+diff --git a/kernel/trace/trace_events_user.c b/kernel/trace/trace_events_user.c
+index b2aecbfbbd24..2f70dabb0f71 100644
+--- a/kernel/trace/trace_events_user.c
++++ b/kernel/trace/trace_events_user.c
+@@ -437,9 +437,8 @@ static bool user_event_enabler_exists(struct user_event_mm *mm,
+                                      unsigned long uaddr, unsigned char bit)
+ {
+        struct user_event_enabler *enabler;
+-       struct user_event_enabler *next;
+
+-       list_for_each_entry_safe(enabler, next, &mm->enablers, link) {
++       list_for_each_entry(enabler, &mm->enablers, link) {
+                if (enabler->addr == uaddr &&
+                    (enabler->values & ENABLE_VAL_BIT_MASK) == bit)
+                        return true;
+@@ -495,7 +494,9 @@ static bool user_event_enabler_dup(struct user_event_enabler *orig,
+        enabler->values = orig->values & ENABLE_VAL_DUP_MASK;
+
+        refcount_inc(&enabler->event->refcnt);
+-       list_add_rcu(&enabler->link, &mm->enablers);
++
++       /* Enablers not exposed yet, RCU not required */
++       list_add(&enabler->link, &mm->enablers);
