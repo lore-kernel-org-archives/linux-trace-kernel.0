@@ -2,161 +2,58 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F2E3C77B75
-	for <linux-trace-kernel@archiver.kernel.org>; Wed, 17 May 2023 13:06:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CF44CC77B7A
+	for <linux-trace-kernel@archiver.kernel.org>; Wed, 17 May 2023 14:14:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229894AbjEQNGB (ORCPT
+        id S231872AbjEQOOd (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Wed, 17 May 2023 09:06:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45160 "EHLO
+        Wed, 17 May 2023 10:14:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39806 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229746AbjEQNGA (ORCPT
+        with ESMTP id S231905AbjEQOOa (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Wed, 17 May 2023 09:06:00 -0400
-Received: from mail-pf1-x42c.google.com (mail-pf1-x42c.google.com [IPv6:2607:f8b0:4864:20::42c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 492C21A2;
-        Wed, 17 May 2023 06:05:59 -0700 (PDT)
-Received: by mail-pf1-x42c.google.com with SMTP id d2e1a72fcca58-6439e6f5a33so514338b3a.2;
-        Wed, 17 May 2023 06:05:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1684328759; x=1686920759;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=mtyFrGfqKkakJXFw6p+ddnB6eN6diQD5RAmdRXKE4A4=;
-        b=DNj9p/rNZpttjQvvi7Jm4nTonkfssVDW8efMg1RxiXGPoGysbBJrF+4LDsaDvxEeqD
-         6FbvWZOToK3LZ1Q0i9SZ5SyANE0TtOaGzkn7h765fCrEykwM6q5JoMLReBb3uywyjjoP
-         yPAKc8r0lFrwU3HM7kP/mPbOHTwVd7Popqbgi7R3kdnJdkv3ioGzS2IW1i6nJYkkOtIa
-         Pt7JA2k5t4i2BQ3zbf0lIe83A4t25b6Pis/p2iRMQRozkHxSlglSqROG2OiCw0cRZn9Z
-         8Tw3x+vlMsHGV1y0Ockl9Ei7zUwN+MhRXxKynBLyVAcMRtRM7UgWhTCUQ/TAUAIeHYHn
-         rPJg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1684328759; x=1686920759;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=mtyFrGfqKkakJXFw6p+ddnB6eN6diQD5RAmdRXKE4A4=;
-        b=h41XeAdhUKEWZnk+Uw6NTVhs8i/MbL7rRqJ2mbBjHPgtIgCFUp9Tv82MNmrHNiOSN/
-         qY3J6LCoVSoLpbYT8eu0/77CybyGTiIs6WvE6s/kckq/2F4BwvrV+qR52qsNPEtL4dx5
-         D/x4scRkLBYEATl3ZYjVKvCiVYmhmQ3CZDddfj9W9V4OV2cJshuwHLbTGbVtHHe97Fid
-         Hh5nzv0aCRERV3szUzE5rB40+6opmfYwxKPA/NNQgtpsmMl0tCWjUwJwb1N90iFVH20t
-         x30B8mUUYQ7RKOyFjH4FWFshYChY7uwmGfIHWHDRtU09DXvJw5X5py4BYblnwgf/H2oP
-         /kDQ==
-X-Gm-Message-State: AC+VfDxdP5W1oRtPXZ6WYgx6Nc4GfZVOCUSZ44xXbOLEVO/M6WjINRX/
-        rudKf9W2ukMY8jJJPNcWfs72gRp1afD2mA==
-X-Google-Smtp-Source: ACHHUZ7IOyaW4XbBAbuRkSoKVhCmX8H25L3dq2CXvCQ9FdgToR71UHsqrgXFzLPSTpd2DDDh9MmPgA==
-X-Received: by 2002:a05:6a00:1996:b0:63d:47ab:65ed with SMTP id d22-20020a056a00199600b0063d47ab65edmr984178pfl.7.1684328758586;
-        Wed, 17 May 2023 06:05:58 -0700 (PDT)
-Received: from debian.me (subs28-116-206-12-43.three.co.id. [116.206.12.43])
-        by smtp.gmail.com with ESMTPSA id x20-20020aa793b4000000b0063d2bb0d107sm15229351pff.64.2023.05.17.06.05.57
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 17 May 2023 06:05:58 -0700 (PDT)
-Received: by debian.me (Postfix, from userid 1000)
-        id 977BC104714; Wed, 17 May 2023 20:05:54 +0700 (WIB)
-Date:   Wed, 17 May 2023 20:05:54 +0700
-From:   Bagas Sanjaya <bagasdotme@gmail.com>
-To:     "Masami Hiramatsu (Google)" <mhiramat@kernel.org>,
-        linux-trace-kernel@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>,
-        Florent Revest <revest@chromium.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Martin KaFai Lau <martin.lau@linux.dev>, bpf@vger.kernel.org
-Subject: Re: [PATCH v11 11/11] Documentation: tracing/probes: Add fprobe
- event tracing document
-Message-ID: <ZGTRMsLQ3QqvCGew@debian.me>
-References: <168432112492.1351929.9265172785506392923.stgit@mhiramat.roam.corp.google.com>
- <168432122914.1351929.944185321099763072.stgit@mhiramat.roam.corp.google.com>
+        Wed, 17 May 2023 10:14:30 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EFEA3E5C;
+        Wed, 17 May 2023 07:14:22 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 7F9AA64790;
+        Wed, 17 May 2023 14:14:22 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2443EC4339C;
+        Wed, 17 May 2023 14:14:20 +0000 (UTC)
+Date:   Wed, 17 May 2023 10:14:18 -0400
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     Ajay Kaher <akaher@vmware.com>
+Cc:     yujie.liu@intel.com, amakhalov@vmware.com, chinglinyu@google.com,
+        er.ajay.kaher@gmail.com, linux-kernel@vger.kernel.org,
+        linux-kselftest@vger.kernel.org,
+        linux-trace-kernel@vger.kernel.org, lkp@intel.com,
+        mhiramat@kernel.org, namit@vmware.com, oe-lkp@lists.linux.dev,
+        shuah@kernel.org, srivatsa@csail.mit.edu, srivatsab@vmware.com,
+        tkundu@vmware.com, vsirnapalli@vmware.com
+Subject: Re: [PATCH v2 8/9] eventfs: moving tracing/events to eventfs
+Message-ID: <20230517101418.1e4a347d@gandalf.local.home>
+In-Reply-To: <1684327207-19817-1-git-send-email-akaher@vmware.com>
+References: <202305051619.9a469a9a-yujie.liu@intel.com>
+        <1684327207-19817-1-git-send-email-akaher@vmware.com>
+X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="ky6EilGNz1vHfqqH"
-Content-Disposition: inline
-In-Reply-To: <168432122914.1351929.944185321099763072.stgit@mhiramat.roam.corp.google.com>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
+On Wed, 17 May 2023 18:10:07 +0530
+Ajay Kaher <akaher@vmware.com> wrote:
 
---ky6EilGNz1vHfqqH
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+> Steve, locally I have reproduced this issue using:
+>     lkp run job-cpu-100%-uprobe-60s.yaml
+> 
+> And also fixed, I will include this fix as well in v3.
 
-On Wed, May 17, 2023 at 08:00:29PM +0900, Masami Hiramatsu (Google) wrote:
-> +As same as other dynamic events, fprobe events and tracepoint probe
-> +events are defined via `dynamic_events` interface file on tracefs.
+Great. Thanks Ajay!
 
-Backquotes are rendered as italics instead. If you mean keyword/identifier,
-inline it with double backquotes (like ``foo``). Or you can skip formatting
-it instead (to be consistent with other keywords).
-
-> +For the details of TYPE, see :file:`Documentation/trace/kprobetrace.rst`.
-
-Did you mean using :doc: directive instead?
-
----- >8 ----
-diff --git a/Documentation/trace/fprobetrace.rst b/Documentation/trace/fpro=
-betrace.rst
-index eca64ad7216a1c..0cf8ed84bd6651 100644
---- a/Documentation/trace/fprobetrace.rst
-+++ b/Documentation/trace/fprobetrace.rst
-@@ -64,7 +64,7 @@ Synopsis of fprobe-events
-   (\*4) this is useful for fetching a field of data structures.
-   (\*5) "u" means user-space dereference.
-=20
--For the details of TYPE, see :file:`Documentation/trace/kprobetrace.rst`.
-+For the details of TYPE, see :doc:`kprobetrace`.
-=20
- BTF arguments
- -------------
-
-On the other hand, you can also directly link to intended doc section:
-
----- >8 ----
-diff --git a/Documentation/trace/fprobetrace.rst b/Documentation/trace/fpro=
-betrace.rst
-index eca64ad7216a1c..83892c7512726c 100644
---- a/Documentation/trace/fprobetrace.rst
-+++ b/Documentation/trace/fprobetrace.rst
-@@ -64,7 +64,7 @@ Synopsis of fprobe-events
-   (\*4) this is useful for fetching a field of data structures.
-   (\*5) "u" means user-space dereference.
-=20
--For the details of TYPE, see :file:`Documentation/trace/kprobetrace.rst`.
-+For the details of TYPE, see :ref:`kprobetrace documentation <kprobetrace_=
-types>`.
-=20
- BTF arguments
- -------------
-diff --git a/Documentation/trace/kprobetrace.rst b/Documentation/trace/kpro=
-betrace.rst
-index 651f9ab53f3ee9..8a2dfee3814544 100644
---- a/Documentation/trace/kprobetrace.rst
-+++ b/Documentation/trace/kprobetrace.rst
-@@ -66,6 +66,8 @@ Synopsis of kprobe_events
-   (\*3) this is useful for fetching a field of data structures.
-   (\*4) "u" means user-space dereference. See :ref:`user_mem_access`.
-=20
-+.. _kprobetrace_types:
-+
- Types
- -----
- Several types are supported for fetchargs. Kprobe tracer will access memory
-
-Thanks.
-
---=20
-An old man doll... just what I always wanted! - Clara
-
---ky6EilGNz1vHfqqH
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYKAB0WIQSSYQ6Cy7oyFNCHrUH2uYlJVVFOowUCZGTRLwAKCRD2uYlJVVFO
-owQ8AQC1x1fvlyM1knwxxY3/PxegbkGTRhiar2QW5YX+U8h14QEA+N0PVJKuJDXx
-S/hl51lE9DLUn17lZ4MQhaMmp222kQA=
-=WlLN
------END PGP SIGNATURE-----
-
---ky6EilGNz1vHfqqH--
+-- Steve
