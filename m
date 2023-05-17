@@ -2,37 +2,37 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BC424C77B75
-	for <linux-trace-kernel@archiver.kernel.org>; Wed, 17 May 2023 10:59:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B37E2C77B75
+	for <linux-trace-kernel@archiver.kernel.org>; Wed, 17 May 2023 10:59:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230501AbjEQK72 (ORCPT
+        id S230437AbjEQK7p (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Wed, 17 May 2023 06:59:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43240 "EHLO
+        Wed, 17 May 2023 06:59:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43770 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231136AbjEQK7V (ORCPT
+        with ESMTP id S230448AbjEQK7j (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Wed, 17 May 2023 06:59:21 -0400
+        Wed, 17 May 2023 06:59:39 -0400
 Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7E5B76EA9;
-        Wed, 17 May 2023 03:58:52 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 47F3E59FF;
+        Wed, 17 May 2023 03:59:18 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 50F7B64556;
-        Wed, 17 May 2023 10:58:50 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9FC54C433EF;
-        Wed, 17 May 2023 10:58:47 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 26E0964547;
+        Wed, 17 May 2023 10:59:18 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C6C8AC433EF;
+        Wed, 17 May 2023 10:59:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1684321129;
-        bh=LyqQuqxk2nIF+cCI4D2OVfVZwmdd2faUMGSMypBGGAc=;
-        h=From:To:Cc:Subject:Date:From;
-        b=DhoHaQa2loe4pjG/qm2TFREQ1/wQxMoT//PzUU839g/p2cDP9sQCoufP7KhOId/ax
-         IXfNMT4jn1tDIGDxy6a0WFugzPMAX9vdRTm6CFLvAUgdn+Irj/ShJSEAopJuuojqtE
-         WRYk+IeYmPxWyWbjUoVIF+PSdbtao+I5d6N8DybrBKnvL5HKQrLstvDv+09VaBDjIi
-         nGWn7RERe1DG5JjrnfWE1thYrh4+SXuwG4fudkEgUJZ7a1wGZ3nNk7w42/KJdVj8vQ
-         tZXJY9Z3d+lvIyTHCO7FT28NXJk5sVaUobaHm2iqzBaYr7cTSBJdW18XnQtbBBjhft
-         g92TfEPXfQlAw==
+        s=k20201202; t=1684321157;
+        bh=Rr6xQgk50Y4ZGBCzUd1zUs+X3lNoqxnJIVxDwxiF6LU=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=thZMnliCQHj/O5mAIGFfQJfpbvfatklDohgA5pu2nfHfa99YO26XY9RDTH0pS9Hgy
+         sFIMMIcMRYMuwUCtda83QPyApSgcrTum+TV7VCWC2htCxAmfA0qsJjq7UBZFketPxv
+         pVEYI2rR4mta9KvXZaZqM7wlt2A1B/vX0rCabk55EkoUrx4LqtclqAQQduPiuwrr3g
+         iCINjux6kOT6ELPB4uLTQ/5vtsVZeAXXp0gnQ7RGHNPRdz8LZoTHMZ+9jhAbzsX54S
+         qrey5x43BmWDpcvBM8FZc/+RpPacgToEcGYLW5PYmEeTTPC6KO9vKp6RHjY0Vmnfkt
+         fz8awZm022Pig==
 From:   "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
 To:     linux-trace-kernel@vger.kernel.org
 Cc:     linux-kernel@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>,
@@ -41,10 +41,12 @@ Cc:     linux-kernel@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>,
         Will Deacon <will@kernel.org>,
         Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
         Martin KaFai Lau <martin.lau@linux.dev>, bpf@vger.kernel.org
-Subject: [PATCH v11 00/11] tracing: Add fprobe/tracepoint events
-Date:   Wed, 17 May 2023 19:58:45 +0900
-Message-ID:  <168432112492.1351929.9265172785506392923.stgit@mhiramat.roam.corp.google.com>
+Subject: [PATCH v11 03/11] selftests/ftrace: Add fprobe related testcases
+Date:   Wed, 17 May 2023 19:59:13 +0900
+Message-ID:  <168432115391.1351929.18155967148867279954.stgit@mhiramat.roam.corp.google.com>
 X-Mailer: git-send-email 2.40.1.606.ga4b1b128d6-goog
+In-Reply-To:  <168432112492.1351929.9265172785506392923.stgit@mhiramat.roam.corp.google.com>
+References:  <168432112492.1351929.9265172785506392923.stgit@mhiramat.roam.corp.google.com>
 User-Agent: StGit/0.19
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
@@ -53,139 +55,144 @@ Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-Hi,
+From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 
-Here is the 11th version of add a basic fprobe event support for
-ftrace (tracefs) and perf. Here is the previous version.
+Add syntax error testcase and add-remove testcase for fprobe events.
+This ensures that the fprobe events can be added/removed and parser
+handles syntax errors correctly.
 
-https://lore.kernel.org/all/168407346448.941486.15681419068846125595.stgit@mhiramat.roam.corp.google.com/
-
-The major change is using '$argr*' instead of '$$args' and automatically
-use the argument name when user specifies '$argN' when the kernel supports
-BTF [7/11].
-This version also update test cases[10/11] and document [11/11].
-
-You can also get this series from:
-
-git://git.kernel.org/pub/scm/linux/kernel/git/mhiramat/linux.git topic/fprobe-event-ext
-
-With this fprobe events, we can continue to trace function entry/exit
-even if the CONFIG_KPROBES_ON_FTRACE is not available. Since
-CONFIG_KPROBES_ON_FTRACE requires the CONFIG_DYNAMIC_FTRACE_WITH_REGS,
-it is not available if the architecture only supports
-CONFIG_DYNAMIC_FTRACE_WITH_ARGS (e.g. arm64). And that means kprobe
-events can not probe function entry/exit effectively on such architecture.
-But this problem can be solved if the dynamic events supports fprobe events
-because fprobe events doesn't use kprobe but ftrace via fprobe.
-
-FPROBE EVENTS
-=============
-
-Fprobe events allows user to add new events on the entry and exit of kernel
-functions (which can be ftraced). Unlike kprobe events, the fprobe events
-can only probe the function entry and exit, and it can only trace the
-function args, return value, and stacks. (no registers)
-For probing function body, users can continue to use the kprobe events.
-
-The tracepoint probe events (tprobe events) also allows user to add new
-events dynamically on the tracepoint. Most of the tracepoint already has
-trace-events, so this feature is useful if you only want to know a
-specific parameter, or trace the tracepoints which has no trace-events
-(e.g. sched_*_tp tracepoints only exposes the tracepoints.)
-
-The fprobe events syntax is;
-
- f[:[GRP/][EVENT]] FUNCTION [FETCHARGS]
- f[MAXACTIVE][:[GRP/][EVENT]] FUNCTION%return [FETCHARGS]
-
-And tracepoint probe events syntax is;
-
- t[:[GRP/][EVENT]] TRACEPOINT [FETCHARGS]
-
-This series includes BTF argument support for fprobe/tracepoint events,
-and kprobe events. This allows us to fetch a specific function parameter
-by name, and all parameters by '$arg*'.
-Note that enabling this feature, you need to enable CONFIG_BPF_SYSCALL and
-confirm that your arch supports CONFIG_HAVE_FUNCTION_ARG_ACCESS_API.
-
-E.g.
-
- # echo 't kfree ptr' >> dynamic_events
- # echo 'f kfree object' >> dynamic_events
- # cat dynamic_events 
-t:tracepoints/kfree kfree ptr=ptr
-f:fprobes/kfree__entry kfree object=object
- # echo 1 > events/fprobes/enable
- # echo 1 > events/tracepoints/enable
- # echo > trace
- # head -n 20 trace | tail
-#           TASK-PID     CPU#  |||||  TIMESTAMP  FUNCTION
-#              | |         |   |||||     |         |
-            tail-84      [000] .....  1324.561958: kfree__entry: (kfree+0x4/0x140) object=0xffff888006383c00
-            tail-84      [000] ...1.  1324.561961: kfree: (__probestub_kfree+0x4/0x10) ptr=0xffff888006383c00
-            tail-84      [000] .....  1324.561988: kfree__entry: (kfree+0x4/0x140) object=0x0
-            tail-84      [000] ...1.  1324.561988: kfree: (__probestub_kfree+0x4/0x10) ptr=0x0
-            tail-84      [000] .....  1324.561989: kfree__entry: (kfree+0x4/0x140) object=0xffff88800671e600
-            tail-84      [000] ...1.  1324.561989: kfree: (__probestub_kfree+0x4/0x10) ptr=0xffff88800671e600
-            tail-84      [000] .....  1324.562368: kfree__entry: (kfree+0x4/0x140) object=0xffff8880065e0580
-            tail-84      [000] ...1.  1324.562369: kfree: (__probestub_kfree+0x4/0x10) ptr=0xffff8880065e0580
-
-
-Thank you,
-
+Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 ---
-
-Masami Hiramatsu (Google) (11):
-      fprobe: Pass return address to the handlers
-      tracing/probes: Add fprobe events for tracing function entry and exit.
-      selftests/ftrace: Add fprobe related testcases
-      tracing/probes: Add tracepoint support on fprobe_events
-      tracing/probes: Move event parameter fetching code to common parser
-      tracing/probes: Support function parameters if BTF is available
-      tracing/probes: Add $arg* meta argument for all function args
-      tracing/probes: Add BTF retval type support
-      selftests/ftrace: Add tracepoint probe test case
-      selftests/ftrace: Add BTF arguments test cases
-      Documentation: tracing/probes: Add fprobe event tracing document
-
-
- Documentation/trace/fprobetrace.rst                |  187 +++
- Documentation/trace/index.rst                      |    1 
- include/linux/fprobe.h                             |   11 
- include/linux/rethook.h                            |    2 
- include/linux/trace_events.h                       |    3 
- include/linux/tracepoint-defs.h                    |    1 
- include/linux/tracepoint.h                         |    5 
- kernel/kprobes.c                                   |    1 
- kernel/trace/Kconfig                               |   26 
- kernel/trace/Makefile                              |    1 
- kernel/trace/bpf_trace.c                           |    6 
- kernel/trace/fprobe.c                              |   17 
- kernel/trace/rethook.c                             |    3 
- kernel/trace/trace.c                               |   13 
- kernel/trace/trace.h                               |   11 
- kernel/trace/trace_eprobe.c                        |   44 -
- kernel/trace/trace_fprobe.c                        | 1197 ++++++++++++++++++++
- kernel/trace/trace_kprobe.c                        |   33 -
- kernel/trace/trace_probe.c                         |  629 +++++++++--
- kernel/trace/trace_probe.h                         |   45 +
- kernel/trace/trace_uprobe.c                        |    8 
- lib/test_fprobe.c                                  |   10 
- samples/fprobe/fprobe_example.c                    |    6 
- .../ftrace/test.d/dynevent/add_remove_btfarg.tc    |   54 +
- .../ftrace/test.d/dynevent/add_remove_fprobe.tc    |   26 
- .../ftrace/test.d/dynevent/add_remove_tprobe.tc    |   27 
- .../ftrace/test.d/dynevent/fprobe_syntax_errors.tc |  102 ++
- .../ftrace/test.d/dynevent/tprobe_syntax_errors.tc |   82 +
- .../ftrace/test.d/kprobe/kprobe_syntax_errors.tc   |   16 
- 29 files changed, 2404 insertions(+), 163 deletions(-)
- create mode 100644 Documentation/trace/fprobetrace.rst
- create mode 100644 kernel/trace/trace_fprobe.c
- create mode 100644 tools/testing/selftests/ftrace/test.d/dynevent/add_remove_btfarg.tc
+ .../ftrace/test.d/dynevent/add_remove_fprobe.tc    |   26 ++++++
+ .../ftrace/test.d/dynevent/fprobe_syntax_errors.tc |   88 ++++++++++++++++++++
+ 2 files changed, 114 insertions(+)
  create mode 100644 tools/testing/selftests/ftrace/test.d/dynevent/add_remove_fprobe.tc
- create mode 100644 tools/testing/selftests/ftrace/test.d/dynevent/add_remove_tprobe.tc
  create mode 100644 tools/testing/selftests/ftrace/test.d/dynevent/fprobe_syntax_errors.tc
- create mode 100644 tools/testing/selftests/ftrace/test.d/dynevent/tprobe_syntax_errors.tc
 
---
-Masami Hiramatsu (Google) <mhiramat@kernel.org>
+diff --git a/tools/testing/selftests/ftrace/test.d/dynevent/add_remove_fprobe.tc b/tools/testing/selftests/ftrace/test.d/dynevent/add_remove_fprobe.tc
+new file mode 100644
+index 000000000000..53e0d5671687
+--- /dev/null
++++ b/tools/testing/selftests/ftrace/test.d/dynevent/add_remove_fprobe.tc
+@@ -0,0 +1,26 @@
++#!/bin/sh
++# SPDX-License-Identifier: GPL-2.0
++# description: Generic dynamic event - add/remove fprobe events
++# requires: dynamic_events "f[:[<group>/][<event>]] <func-name>[%return] [<args>]": README
++
++echo 0 > events/enable
++echo > dynamic_events
++
++PLACE=$FUNCTION_FORK
++
++echo "f:myevent1 $PLACE" >> dynamic_events
++echo "f:myevent2 $PLACE%return" >> dynamic_events
++
++grep -q myevent1 dynamic_events
++grep -q myevent2 dynamic_events
++test -d events/fprobes/myevent1
++test -d events/fprobes/myevent2
++
++echo "-:myevent2" >> dynamic_events
++
++grep -q myevent1 dynamic_events
++! grep -q myevent2 dynamic_events
++
++echo > dynamic_events
++
++clear_trace
+diff --git a/tools/testing/selftests/ftrace/test.d/dynevent/fprobe_syntax_errors.tc b/tools/testing/selftests/ftrace/test.d/dynevent/fprobe_syntax_errors.tc
+new file mode 100644
+index 000000000000..549daa162d84
+--- /dev/null
++++ b/tools/testing/selftests/ftrace/test.d/dynevent/fprobe_syntax_errors.tc
+@@ -0,0 +1,88 @@
++#!/bin/sh
++# SPDX-License-Identifier: GPL-2.0
++# description: Fprobe event parser error log check
++# requires: dynamic_events "f[:[<group>/][<event>]] <func-name>[%return] [<args>]": README
++
++check_error() { # command-with-error-pos-by-^
++    ftrace_errlog_check 'trace_fprobe' "$1" 'dynamic_events'
++}
++
++check_error 'f^100 vfs_read'		# MAXACT_NO_KPROBE
++check_error 'f^1a111 vfs_read'		# BAD_MAXACT
++check_error 'f^100000 vfs_read'		# MAXACT_TOO_BIG
++
++check_error 'f ^non_exist_func'		# BAD_PROBE_ADDR (enoent)
++check_error 'f ^vfs_read+10'		# BAD_PROBE_ADDR
++check_error 'f:^/bar vfs_read'		# NO_GROUP_NAME
++check_error 'f:^12345678901234567890123456789012345678901234567890123456789012345/bar vfs_read'	# GROUP_TOO_LONG
++
++check_error 'f:^foo.1/bar vfs_read'	# BAD_GROUP_NAME
++check_error 'f:^ vfs_read'		# NO_EVENT_NAME
++check_error 'f:foo/^12345678901234567890123456789012345678901234567890123456789012345 vfs_read'	# EVENT_TOO_LONG
++check_error 'f:foo/^bar.1 vfs_read'	# BAD_EVENT_NAME
++
++check_error 'f vfs_read ^$retval'	# RETVAL_ON_PROBE
++check_error 'f vfs_read ^$stack10000'	# BAD_STACK_NUM
++
++check_error 'f vfs_read ^$arg10000'	# BAD_ARG_NUM
++
++check_error 'f vfs_read ^$none_var'	# BAD_VAR
++check_error 'f vfs_read ^%rax'		# BAD_VAR
++
++check_error 'f vfs_read ^@12345678abcde'	# BAD_MEM_ADDR
++check_error 'f vfs_read ^@+10'		# FILE_ON_KPROBE
++
++grep -q "imm-value" README && \
++check_error 'f vfs_read arg1=\^x'	# BAD_IMM
++grep -q "imm-string" README && \
++check_error 'f vfs_read arg1=\"abcd^'	# IMMSTR_NO_CLOSE
++
++check_error 'f vfs_read ^+0@0)'		# DEREF_NEED_BRACE
++check_error 'f vfs_read ^+0ab1(@0)'	# BAD_DEREF_OFFS
++check_error 'f vfs_read +0(+0(@0^)'	# DEREF_OPEN_BRACE
++
++if grep -A1 "fetcharg:" README | grep -q '\$comm' ; then
++check_error 'f vfs_read +0(^$comm)'	# COMM_CANT_DEREF
++fi
++
++check_error 'f vfs_read ^&1'		# BAD_FETCH_ARG
++
++
++# We've introduced this limitation with array support
++if grep -q ' <type>\\\[<array-size>\\\]' README; then
++check_error 'f vfs_read +0(^+0(+0(+0(+0(+0(+0(+0(+0(+0(+0(+0(+0(+0(@0))))))))))))))'	# TOO_MANY_OPS?
++check_error 'f vfs_read +0(@11):u8[10^'		# ARRAY_NO_CLOSE
++check_error 'f vfs_read +0(@11):u8[10]^a'	# BAD_ARRAY_SUFFIX
++check_error 'f vfs_read +0(@11):u8[^10a]'	# BAD_ARRAY_NUM
++check_error 'f vfs_read +0(@11):u8[^256]'	# ARRAY_TOO_BIG
++fi
++
++check_error 'f vfs_read @11:^unknown_type'	# BAD_TYPE
++check_error 'f vfs_read $stack0:^string'	# BAD_STRING
++check_error 'f vfs_read @11:^b10@a/16'		# BAD_BITFIELD
++
++check_error 'f vfs_read ^arg123456789012345678901234567890=@11'	# ARG_NAME_TOO_LOG
++check_error 'f vfs_read ^=@11'			# NO_ARG_NAME
++check_error 'f vfs_read ^var.1=@11'		# BAD_ARG_NAME
++check_error 'f vfs_read var1=@11 ^var1=@12'	# USED_ARG_NAME
++check_error 'f vfs_read ^+1234567(+1234567(+1234567(+1234567(+1234567(+1234567(@1234))))))'	# ARG_TOO_LONG
++check_error 'f vfs_read arg1=^'			# NO_ARG_BODY
++
++
++# multiprobe errors
++if grep -q "Create/append/" README && grep -q "imm-value" README; then
++echo "f:fprobes/testevent $FUNCTION_FORK" > dynamic_events
++check_error '^f:fprobes/testevent do_exit%return'	# DIFF_PROBE_TYPE
++
++# Explicitly use printf "%s" to not interpret \1
++printf "%s" "f:fprobes/testevent $FUNCTION_FORK abcd=\\1" > dynamic_events
++check_error "f:fprobes/testevent $FUNCTION_FORK ^bcd=\\1"	# DIFF_ARG_TYPE
++check_error "f:fprobes/testevent $FUNCTION_FORK ^abcd=\\1:u8"	# DIFF_ARG_TYPE
++check_error "f:fprobes/testevent $FUNCTION_FORK ^abcd=\\\"foo\"" # DIFF_ARG_TYPE
++check_error "^f:fprobes/testevent $FUNCTION_FORK abcd=\\1"	# SAME_PROBE
++fi
++
++# %return suffix errors
++check_error 'f vfs_read^%hoge'		# BAD_ADDR_SUFFIX
++
++exit 0
+
