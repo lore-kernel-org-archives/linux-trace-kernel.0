@@ -2,100 +2,165 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C68DDC77B7A
-	for <linux-trace-kernel@archiver.kernel.org>; Wed, 17 May 2023 11:13:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 29656C77B7F
+	for <linux-trace-kernel@archiver.kernel.org>; Wed, 17 May 2023 11:42:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229871AbjEQLNw (ORCPT
+        id S229762AbjEQLmq (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Wed, 17 May 2023 07:13:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59812 "EHLO
+        Wed, 17 May 2023 07:42:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57776 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229569AbjEQLNv (ORCPT
+        with ESMTP id S229560AbjEQLmp (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Wed, 17 May 2023 07:13:51 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8242E197;
-        Wed, 17 May 2023 04:13:50 -0700 (PDT)
+        Wed, 17 May 2023 07:42:45 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 86E523C34;
+        Wed, 17 May 2023 04:42:44 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 17D9B6391F;
-        Wed, 17 May 2023 11:13:50 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 78E0EC4339B;
-        Wed, 17 May 2023 11:13:49 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id F308663F1D;
+        Wed, 17 May 2023 11:42:43 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4E92BC433EF;
+        Wed, 17 May 2023 11:42:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1684322029;
-        bh=ivpfENKobVp/rhuC9q3XBqpYwMexIt1WJr5tlv/4oZ0=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=ulp89AX6Cr2YliUOJwEq8wLacS3EBVA2Pf2TGandRieVntdrB2QST9LGENmp2ogr0
-         kst5xaJwTRe43jhE8PKgRgYjSJZ1eg6qEdCniBaCQz6H7gx5FHK/qVPVURHImQiT0B
-         huiktQ3vwR93k7aYv49+TKdAvqRwb4bgZHEoTJCymGL3R6rPEFDLYbzBpwkMz46aLp
-         L9ue2YVuB3UwiiVtocaq9Dlz96onY5QCWugKlvaBf+eCmsI+kE61eY+zXuVbEDC5vy
-         coPSapfBy/XzLtoeP0GmRwElD5LQB28SYMZRcY1vmUb/aExLLY5NLIh8U9mTvvN78q
-         3TQ7afU3FDwFg==
-Received: by mail-lf1-f43.google.com with SMTP id 2adb3069b0e04-4efe8991b8aso879883e87.0;
-        Wed, 17 May 2023 04:13:49 -0700 (PDT)
-X-Gm-Message-State: AC+VfDwsUyETc6xvZXgrhK4pXvYndF8uUiHWOdwQh38zGRU78ZlDa/+f
-        9S35RpRv7CvE3W9F3Z7f+nPWyid/K4Nt0atdhgo=
-X-Google-Smtp-Source: ACHHUZ7+2d5wOFnG6e01YGipp51q9tg1LC1u1LEZCV6G7kOljNB4yL52v9aq23raxt6pM2043XO3f/i7p1WtmhnFA2c=
-X-Received: by 2002:ac2:490c:0:b0:4f2:e953:98b1 with SMTP id
- n12-20020ac2490c000000b004f2e95398b1mr96067lfi.65.1684322027511; Wed, 17 May
- 2023 04:13:47 -0700 (PDT)
-MIME-Version: 1.0
-References: <20230516154605.517690-1-arnd@kernel.org> <20230516154605.517690-14-arnd@kernel.org>
-In-Reply-To: <20230516154605.517690-14-arnd@kernel.org>
-From:   Ard Biesheuvel <ardb@kernel.org>
-Date:   Wed, 17 May 2023 13:13:35 +0200
-X-Gmail-Original-Message-ID: <CAMj1kXF0AQ9cc64N9kRxV8s1TDTVdAb_4s2P-rriim5DNW_cCA@mail.gmail.com>
-Message-ID: <CAMj1kXF0AQ9cc64N9kRxV8s1TDTVdAb_4s2P-rriim5DNW_cCA@mail.gmail.com>
-Subject: Re: [PATCH 13/16] ARM: vfp: add vfp_entry prototype
-To:     Arnd Bergmann <arnd@kernel.org>
-Cc:     Russell King <linux@armlinux.org.uk>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Oleg Nesterov <oleg@redhat.com>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Pavel Machek <pavel@ucw.cz>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Kees Cook <keescook@chromium.org>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-trace-kernel@vger.kernel.org, linux-pm@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+        s=k20201202; t=1684323763;
+        bh=gZs8PTPaOModQRmxiev/yHAiJdEHjNnngGNAI1ylIV4=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=b/3r14rFZqH/pXFAXD7yN1fUGpho601/AbF5SCUVKAY7mqrUjDZO7Rixiz4k6K5x0
+         5q09YQPLznIfUq4yn68RWcj3BGQQ3aKnDl3WYcNOGi/KnuoxI1obWx9g6baBPRC8hQ
+         DPJ1pg6mhBVu4bmIqVmp7NVDSQHYU9z1z/L1Pfx5fdDZo10PVer0ENUX2qSrWJey20
+         bTU0BrjRBfbX7dQrwZj50fYI9xjlXnWbSGbHvh+cTmdq+GyPhyKGVzyQf3AwVfmXEH
+         jBoY5OKrX9VIjyXOQUq5bBISYZopB+wmnIcTPubjjaUAbZk92IXmEWbTKZp2qjQ3Zl
+         Ft/OepS5JIE1Q==
+Date:   Wed, 17 May 2023 20:42:36 +0900
+From:   Masami Hiramatsu (Google) <mhiramat@kernel.org>
+To:     Jiri Olsa <olsajiri@gmail.com>
+Cc:     Ze Gao <zegao2021@gmail.com>, Steven Rostedt <rostedt@goodmis.org>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        Alexander Gordeev <agordeev@linux.ibm.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Borislav Petkov <bp@alien8.de>,
+        Christian Borntraeger <borntraeger@linux.ibm.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Heiko Carstens <hca@linux.ibm.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Sven Schnelle <svens@linux.ibm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Vasily Gorbik <gor@linux.ibm.com>, x86@kernel.org,
+        bpf@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org,
+        linux-trace-kernel@vger.kernel.org,
+        Conor Dooley <conor@kernel.org>, Yonghong Song <yhs@fb.com>,
+        Ze Gao <zegao@tencent.com>
+Subject: Re: [PATCH v3 2/4] fprobe: make fprobe_kprobe_handler recursion
+ free
+Message-Id: <20230517204236.e0f579399e5a69505a4ec7ef@kernel.org>
+In-Reply-To: <ZGSwzuM8oHgKaaga@krava>
+References: <20230517034510.15639-1-zegao@tencent.com>
+        <20230517034510.15639-3-zegao@tencent.com>
+        <ZGSwzuM8oHgKaaga@krava>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On Tue, 16 May 2023 at 17:47, Arnd Bergmann <arnd@kernel.org> wrote:
->
-> From: Arnd Bergmann <arnd@arndb.de>
->
-> vfp_entry is only called from assembler code, so it does not
-> need a declaration. Since gcc complains when extra warnings
-> are enabled, add one anyway to avoid:
->
-> arch/arm/vfp/vfpmodule.c:657:17: warning: no previous prototype for function 'vfp_entry' [-Wmissing-prototypes]
->
-> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+On Wed, 17 May 2023 12:47:42 +0200
+Jiri Olsa <olsajiri@gmail.com> wrote:
 
-This one will conflict with my VFP asm to C conversion series.
+> On Wed, May 17, 2023 at 11:45:07AM +0800, Ze Gao wrote:
+> > Current implementation calls kprobe related functions before doing
+> > ftrace recursion check in fprobe_kprobe_handler, which opens door
+> > to kernel crash due to stack recursion if preempt_count_{add, sub}
+> > is traceable in kprobe_busy_{begin, end}.
+> > 
+> > Things goes like this without this patch quoted from Steven:
+> > "
+> > fprobe_kprobe_handler() {
+> >    kprobe_busy_begin() {
+> >       preempt_disable() {
+> >          preempt_count_add() {  <-- trace
+> >             fprobe_kprobe_handler() {
+> > 		[ wash, rinse, repeat, CRASH!!! ]
+> > "
+> > 
+> > By refactoring the common part out of fprobe_kprobe_handler and
+> > fprobe_handler and call ftrace recursion detection at the very beginning,
+> > the whole fprobe_kprobe_handler is free from recursion.
+> > 
+> > Signed-off-by: Ze Gao <zegao@tencent.com>
+> > Acked-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+> > Link: https://lore.kernel.org/linux-trace-kernel/20230516071830.8190-3-zegao@tencent.com
+> > ---
+> >  kernel/trace/fprobe.c | 59 ++++++++++++++++++++++++++++++++-----------
+> >  1 file changed, 44 insertions(+), 15 deletions(-)
+> > 
+> > diff --git a/kernel/trace/fprobe.c b/kernel/trace/fprobe.c
+> > index 9abb3905bc8e..097c740799ba 100644
+> > --- a/kernel/trace/fprobe.c
+> > +++ b/kernel/trace/fprobe.c
+> > @@ -20,30 +20,22 @@ struct fprobe_rethook_node {
+> >  	char data[];
+> >  };
+> >  
+> > -static void fprobe_handler(unsigned long ip, unsigned long parent_ip,
+> > -			   struct ftrace_ops *ops, struct ftrace_regs *fregs)
+> > +static inline void __fprobe_handler(unsigned long ip, unsigned long
+> > +		parent_ip, struct ftrace_ops *ops, struct ftrace_regs *fregs)
+> >  {
+> >  	struct fprobe_rethook_node *fpr;
+> >  	struct rethook_node *rh = NULL;
+> >  	struct fprobe *fp;
+> >  	void *entry_data = NULL;
+> > -	int bit, ret;
+> > +	int ret;
+> >  
+> 
+> this change uncovered bug for me introduced by [1]
+> 
+> the bpf's kprobe multi uses either fprobe's entry_handler or exit_handler,
+> so the 'ret' value is undefined for return probe path and occasionally we
+> won't setup rethook and miss the return probe
 
+Oops, I missed to push my fix.
+
+https://lore.kernel.org/all/168100731160.79534.374827110083836722.stgit@devnote2/
+
+> 
+> we can either squash this change into your patch or I can make separate
+> patch for that.. but given that [1] is quite recent we could just silently
+> fix that ;-)
+
+Jiri, I think the above will fix the issue, right?
+
+> 
+> jirka
+> 
+> 
+> [1] 39d954200bf6 fprobe: Skip exit_handler if entry_handler returns !0
+> 
 > ---
->  arch/arm/vfp/vfp.h | 3 +++
->  1 file changed, 3 insertions(+)
->
-> diff --git a/arch/arm/vfp/vfp.h b/arch/arm/vfp/vfp.h
-> index 5cd6d5053271..10d9c0da0fd4 100644
-> --- a/arch/arm/vfp/vfp.h
-> +++ b/arch/arm/vfp/vfp.h
-> @@ -375,3 +375,6 @@ struct op {
->  };
->
->  asmlinkage void vfp_save_state(void *location, u32 fpexc);
-> +struct thread_info;
-> +asmlinkage void vfp_entry(u32 trigger, struct thread_info *ti, u32 resume_pc,
-> +                         u32 resume_return_address);
-> --
-> 2.39.2
->
+> diff --git a/kernel/trace/fprobe.c b/kernel/trace/fprobe.c
+> index 9abb3905bc8e..293184227394 100644
+> --- a/kernel/trace/fprobe.c
+> +++ b/kernel/trace/fprobe.c
+> @@ -27,7 +27,7 @@ static void fprobe_handler(unsigned long ip, unsigned long parent_ip,
+>  	struct rethook_node *rh = NULL;
+>  	struct fprobe *fp;
+>  	void *entry_data = NULL;
+> -	int bit, ret;
+> +	int bit, ret = 0;
+>  
+>  	fp = container_of(ops, struct fprobe, ops);
+>  	if (fprobe_disabled(fp))
+> 
+> 
+
+
+-- 
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
