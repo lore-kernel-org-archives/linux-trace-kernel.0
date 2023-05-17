@@ -2,216 +2,85 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D735DC77B75
-	for <linux-trace-kernel@archiver.kernel.org>; Wed, 17 May 2023 19:08:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 42515C77B75
+	for <linux-trace-kernel@archiver.kernel.org>; Wed, 17 May 2023 19:15:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229721AbjEQTIB (ORCPT
+        id S230060AbjEQTPK (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Wed, 17 May 2023 15:08:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54870 "EHLO
+        Wed, 17 May 2023 15:15:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35776 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229487AbjEQTIA (ORCPT
+        with ESMTP id S230035AbjEQTPG (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Wed, 17 May 2023 15:08:00 -0400
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 27D581FF7;
-        Wed, 17 May 2023 12:07:59 -0700 (PDT)
-Received: from W11-BEAU-MD.localdomain (unknown [76.135.27.212])
-        by linux.microsoft.com (Postfix) with ESMTPSA id 3B6D020F26B9;
-        Wed, 17 May 2023 12:07:58 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 3B6D020F26B9
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-        s=default; t=1684350478;
-        bh=WaJOQ9NdVPK9G+noT++BF6bTs8xagsFisu0TbP9AX+M=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=P2N7DiAKSItQlAiFfJ6er1Fdeu4g8LFOpR8t6qy3tKt6i/MJFzpz9hK43iwK1dmep
-         HJl1XgRo0gzKCkRmE5CWXKebVIzpxrPl13LQo1A9jjC/JSdnploZXdsf2jyTY1vZFA
-         COUujXfzx+dAz3IVIHL+m91v0Azjs/ZYBbZVkA+o=
-Date:   Wed, 17 May 2023 12:07:50 -0700
-From:   Beau Belgrave <beaub@linux.microsoft.com>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
+        Wed, 17 May 2023 15:15:06 -0400
+Received: from mail-pl1-x631.google.com (mail-pl1-x631.google.com [IPv6:2607:f8b0:4864:20::631])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 976C0D87B
+        for <linux-trace-kernel@vger.kernel.org>; Wed, 17 May 2023 12:14:46 -0700 (PDT)
+Received: by mail-pl1-x631.google.com with SMTP id d9443c01a7336-1ab1b79d3a7so9553615ad.3
+        for <linux-trace-kernel@vger.kernel.org>; Wed, 17 May 2023 12:14:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1684350886; x=1686942886;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=I86GqiU0YgzZjcmQYbWuXd34tQJA/R6gUQrAR3Ef4Vo=;
+        b=a9BUGVeBYF7ixWNiY98NX+YR8nMPaRDXPVrEzp1DMOAcTrHdtsQyseNqO7cCzSPHTq
+         hkxCLO4A3OLziF1E5Do+xEwfS6rY3QOBEJhYNvKI/HR4Dcbr96g7F1da1HYOhN2+UEgp
+         ebtEQun6/IpF4T2lpL5yftuLBzWRT4BZG8O2U=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1684350886; x=1686942886;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=I86GqiU0YgzZjcmQYbWuXd34tQJA/R6gUQrAR3Ef4Vo=;
+        b=EIIUKB4Nmu8BY/yIijXgFGmNM3hIrzLxY940nEigFQeKbyV3RffCYWtXmF7y8cJcEW
+         uE2Utlz7kGX3kF9rYEpM2eCC6T0x8yn1b3D44mMa0fC/yQKs8y1Yk2Js74jcZwPoNKCg
+         QQRwUUqga+3q0N4pNotl0Bk7S9Y99nyBb99dSyp48XRRrTYL57/t7Bt7lSQ86RGY62uC
+         2eUjW+d+Kj2kaoGa5iBQKb8DzM66Q+XXrdLhEjSdJgdJEBzXzI1WHb2mtdjmxY20V60i
+         X9Xun+1J8Q6XevheTD8vBhXOXhj7g53piqvw88m2KtdPJVRv3plCAP8gnQHbLQNKYNpQ
+         LK9g==
+X-Gm-Message-State: AC+VfDz5X4jCFn5xOQLJkLPy7dAIXI3hOl0UkXjAW4buvJ5TJ/gr1LKk
+        XxeZSdlu3Ng91FJO179FFbX38w==
+X-Google-Smtp-Source: ACHHUZ5k47l/bNRLiG9PgNcNSBM86j3ELSgSLeMZf8fFyVeviUlMsarseItJaDwcgLfSkjvALPfISA==
+X-Received: by 2002:a17:902:b594:b0:1ae:3dcd:30fc with SMTP id a20-20020a170902b59400b001ae3dcd30fcmr5365858pls.11.1684350885863;
+        Wed, 17 May 2023 12:14:45 -0700 (PDT)
+Received: from www.outflux.net (198-0-35-241-static.hfc.comcastbusiness.net. [198.0.35.241])
+        by smtp.gmail.com with ESMTPSA id j6-20020a170902c08600b001ab13f1fa82sm376964pld.85.2023.05.17.12.14.45
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 17 May 2023 12:14:45 -0700 (PDT)
+Date:   Wed, 17 May 2023 12:14:45 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     Azeem Shaikh <azeemshaikh38@gmail.com>
 Cc:     Steven Rostedt <rostedt@goodmis.org>,
-        Alexei Starovoitov <alexei.starovoitov@gmail.com>,
         Masami Hiramatsu <mhiramat@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-trace-kernel@vger.kernel.org,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Andrii Nakryiko <andrii@kernel.org>, bpf <bpf@vger.kernel.org>,
-        David Vernet <void@manifault.com>, dthaler@microsoft.com,
-        brauner@kernel.org, hch@infradead.org
-Subject: Re: [PATCH] tracing/user_events: Run BPF program if attached
-Message-ID: <20230517190750.GA366@W11-BEAU-MD.localdomain>
-References: <20230509163050.127d5123@rorschach.local.home>
- <20230515165707.hv65ekwp2djkjj5i@MacBook-Pro-8.local>
- <20230515192407.GA85@W11-BEAU-MD.localdomain>
- <20230517003628.aqqlvmzffj7fzzoj@MacBook-Pro-8.local>
- <CAHk-=whBKoovtifU2eCeyuBBee-QMcbxdXDLv0mu0k2DgxiaOw@mail.gmail.com>
- <CAHk-=wj1hh=ZUriY9pVFvD1MjqbRuzHc4yz=S2PCW7u3W0-_BQ@mail.gmail.com>
- <20230516222919.79bba667@rorschach.local.home>
- <CAHk-=wh_GEr4ehJKwMM3UA0-7CfNpVH7v_T-=1u+gq9VZD70mw@mail.gmail.com>
- <20230517172243.GA152@W11-BEAU-MD.localdomain>
- <CAHk-=whzzuNEW8UcV2_8OyuKcXPrk7-j_8GzOoroxz9JiZiD3w@mail.gmail.com>
+        linux-hardening@vger.kernel.org,
+        Mark Rutland <mark.rutland@arm.com>,
+        linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
+Subject: Re: [PATCH] ftrace: Replace all non-returning strlcpy with strscpy
+Message-ID: <202305171214.3D13652AC@keescook>
+References: <20230517145323.1522010-1-azeemshaikh38@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAHk-=whzzuNEW8UcV2_8OyuKcXPrk7-j_8GzOoroxz9JiZiD3w@mail.gmail.com>
+In-Reply-To: <20230517145323.1522010-1-azeemshaikh38@gmail.com>
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On Wed, May 17, 2023 at 11:15:14AM -0700, Linus Torvalds wrote:
-> On Wed, May 17, 2023 at 10:22 AM Beau Belgrave
-> <beaub@linux.microsoft.com> wrote:
-> >
-> > On Tue, May 16, 2023 at 08:03:09PM -0700, Linus Torvalds wrote:
-> > > So what is it that could even race and change the list that is the
-> > > cause of that rcu-ness?
-> >
-> > Processes that fork() with previous user_events need to be duplicated.
+On Wed, May 17, 2023 at 02:53:23PM +0000, Azeem Shaikh wrote:
+> strlcpy() reads the entire source buffer first.
+> This read may exceed the destination size limit.
+> This is both inefficient and can lead to linear read
+> overflows if a source string is not NUL-terminated [1].
+> In an effort to remove strlcpy() completely [2], replace
+> strlcpy() here with strscpy().
+> No return values were used, so direct replacement is safe.
 > 
-> BS.
+> [1] https://www.kernel.org/doc/html/latest/process/deprecated.html#strlcpy
+> [2] https://github.com/KSPP/linux/issues/89
 > 
-> Really. Stop making stuff up.
-> 
-> The above statement is clearly not true - just LOOK AT THE CODE.
-> 
+> Signed-off-by: Azeem Shaikh <azeemshaikh38@gmail.com>
 
-user_event_mm_dup() puts a new mm into the global list before the
-enablers list is fully populated. As it stands now, since it's in the
-global list, it can get enumerated in a small timing window via the
-tracing subsystem register callbacks when someone enables the event via
-ftrace/perf.
+Reviewed-by: Kees Cook <keescook@chromium.org>
 
-> Here's the loop in question:
-> 
->                 list_for_each_entry_rcu(enabler, &mm->enablers, link) {
->                         if (enabler->event == user) {
->                                 attempt = 0;
->                                 user_event_enabler_write(mm, enabler,
-> true, &attempt);
->                         }
->                 }
-> 
-> and AT THE VERY TOP OF user_event_enabler_write() we have this:
-> 
->         lockdep_assert_held(&event_mutex);
-> 
-> so either nobody has ever tested this code with lockdep enabled, or we
-> hold that lock.
-> 
-> And if nobody has ever tested the code, then it's broken anyway. That
-> code N#EEDS the mutex lock. It needs to stop thinking it's RCU-safe,
-> when it clearly isn't.
-> 
-> So I ask again: why is that code using RCU list traversal, when it
-> already holds the lock that makes the RCU'ness COMPLETELY POINTLESS.
-> 
-> And again, that pointless RCU locking around this all seems to be the
-> *only* reason for all these issues with pin_user_pages_remote().
-> 
-> So I claim that this code is garbage.  Somebody didn't think about locking.
-> 
-> Now, it's true that during fork, we have *another* RCU loop, but that
-> one is harmless: that's not the one that does all this page pinning.
-> 
-> Now, that one *does* do
-> 
->         list_add_rcu(&enabler->link, &mm->enablers);
-> 
-> without actually holding any locks, but in this case 'mm' is a newly
-> allocated private thing of a task that hasn't even been exposed to the
-> world yet, so nobody should be able to even see it. So that code lacks
-> the proper locking for the new list, but it does so because there is
-> nothing that can race with the new list (and the old list is
-> read-only, so RCU traversal of the old list works).
-> 
-
-Well, that's the problem I was trying to point out. The fork path calls
-user_event_mm_dup() -> user_event_mm_create(), which DO expose this to
-the trace world. I definitely need to fix that, then I can drop these RCU
-paths in the enablers. It has been exposed out to the tracing tracepoint
-paths, but it has yet to be exposed out to the newly forked process that
-could cause data writes, add new events, disable them, etc.
-
-> So that "list_add_rcu()" there could probably be just a "list_add()",
-> with a comment saying "this is new, nobody can see it".
-> 
-
-Yes, after I fix the ordering of the mm add to the tracing global list.
-That is clearly something I should have done originally and caused
-confusion and extra RCU usage that is unneeded.
-
-> And if something *can* race it it and can see the new list, then it
-> had damn well needs that mutex lock anyway, because that "something"
-> could be actually modifying it. But that's separate from the page
-> pinning situation.
-> 
-> So again, I claim that the RCU'ness of the pin_user_pages part is
-> broken and should simply not exist.
-> 
-> > > Other code in that file happily just does
-> > >
-> > >         mutex_lock(&event_mutex);
-> > >
-> > >         list_for_each_entry_safe(enabler, next, &mm->enablers, link)
-> > >
-> > > with no RCU anywhere. Why does user_event_enabler_update() not do that?
-> >
-> > This is due to the fork() case above without taking the event_mutex.
-> 
-> See above. Your thinking is confused, and the code is broken.
-> 
-> If somebody can see the new list while it is created during fork(),
-> then you need the event_mutex to protect the creation of it.
-> 
-> And if nobody can see it, then you don't need any RCU protection against it.
-> 
-> Those are the two choices. You can't have it both ways.
-> 
-> > > Oh, and even those other loops are a bit strange. Why do they use the
-> > > "_safe" variant, even when they just traverse the list without
-> > > changing it? Look at user_event_enabler_exists(), for example.
-> >
-> > The other places in the code that do this either will remove the event
-> > depending on the situation during the for_each, or they only hold the
-> > register lock and don't hold the event_mutex.
-> 
-> So?
-> 
-> That "safe" variant doesn't imply any locking. It does *not* protect
-> against events being removed. It *purely* protects against the loop
-> itself removing entries.
-> 
-> So this code:
-> 
->         list_for_each_entry_safe(enabler, next, &mm->enablers, link) {
->                 if (enabler->addr == uaddr &&
->                     (enabler->values & ENABLE_VAL_BIT_MASK) == bit)
->                         return true;
->         }
-> 
-> is simply nonsensical. There is no reason for the "safe". It does not
-> make anything safer.
-> 
-> The above loop is only safe under the mutex (it would need to be the
-> "rcu" variant to be safe to traverse without locking), and since it
-> isn't modifying the list, there's no reason for the safe.
-> 
-> End result: the "safe" part is simply wrong.
-> 
-
-Got it, I was confused.
-
-> If the intention is "rcu" because of lack of locking, then the code needs to
->  (a) get the rcu read lock
->  (b) use the _rcu variant of the list traversal
-> 
-> And if the intention is that it's done under the proper 'event_mutex'
-> lock, then the "safe" part should simply be dropped.
-> 
->                Linus
-
-Thanks,
--Beau
+-- 
+Kees Cook
