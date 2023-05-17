@@ -2,137 +2,155 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DF7D0C77B75
-	for <linux-trace-kernel@archiver.kernel.org>; Wed, 17 May 2023 14:39:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2531BC77B75
+	for <linux-trace-kernel@archiver.kernel.org>; Wed, 17 May 2023 14:54:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232047AbjEQOjT (ORCPT
+        id S231376AbjEQOyV (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Wed, 17 May 2023 10:39:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33626 "EHLO
+        Wed, 17 May 2023 10:54:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46658 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231338AbjEQOjS (ORCPT
+        with ESMTP id S232305AbjEQOyF (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Wed, 17 May 2023 10:39:18 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 90A55EA;
-        Wed, 17 May 2023 07:39:17 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 2661B63F11;
-        Wed, 17 May 2023 14:39:17 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 63637C433EF;
-        Wed, 17 May 2023 14:39:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1684334356;
-        bh=TMM7IlszKJflW8l5pRzVXZO3+eGyQe+4n2y8etas4qw=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=NPN+GQNzPcnK13UYVJxP3glr2YotECBDJK7/9w+YWgfKTUndUBjans5CVJ/9grMkL
-         Dpp48fKMI1MNE6Ce26TGf0fgeZnmV/z2wrBl+wevmOQsF/3TI+P/0bR1Jjtsv2a9Mr
-         plk6K4L7zouC5+9GkTuqmbHCCyUD+j8VJIweNYrWMnxm64+JUvF07wgK1tKy4dePk4
-         arzkXMTXeCHgRpWHamUrIkOd/m+xQdjEtWi6B/m1WtNDNKYuxM9tR773Cpq2RJbM1S
-         QoW7t5TJ79M1cRlE4sUL1wh8sUIuyCkUzrozHa0yNhKCF2VaDr/QmwYHf8lIVYejPy
-         UFIGYths2LhAw==
-Date:   Wed, 17 May 2023 23:39:12 +0900
-From:   Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To:     Bagas Sanjaya <bagasdotme@gmail.com>
-Cc:     linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Florent Revest <revest@chromium.org>,
+        Wed, 17 May 2023 10:54:05 -0400
+Received: from mail-io1-xd30.google.com (mail-io1-xd30.google.com [IPv6:2607:f8b0:4864:20::d30])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E826DAD34;
+        Wed, 17 May 2023 07:53:34 -0700 (PDT)
+Received: by mail-io1-xd30.google.com with SMTP id ca18e2360f4ac-76c7b46a261so4096639f.1;
+        Wed, 17 May 2023 07:53:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1684335213; x=1686927213;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=zAZUJozcoVKmsjLyeB1bGV79CfS9One1jPdm+WsF08I=;
+        b=aYYHo7zbKhRT/HVxBLv6M1twfy2wwHKF7qG6JhX6whSTjIiNZCnGGp6PojOLpkmq/H
+         5xkQgCbr0/zmOcBXHseD07zi7KLmEg78q020Azwm54+uqJxNmIHM683VTo/c7n8q9Hy7
+         tq/Yc4B4XcHs6qQzyTmRlpNN+JrUByMsTEQoqn1y6JNz0Nq87t11WsvdvWfciE/+jmq/
+         3L7OOVM+oU5a8XICbPPdo1N4bdDxvDTeWU05thcGM7AsVl1sR8fhf5+o3i492qd/i/Y9
+         GagukKJdk6pjpQDkNY7Fj/z1QoOJo4VNLXZv/9v0KeIbjzLuSVvVolwSry6ZdjqYbzwx
+         6StQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1684335213; x=1686927213;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=zAZUJozcoVKmsjLyeB1bGV79CfS9One1jPdm+WsF08I=;
+        b=faQD1j2jM2wSK3zk17wLNV3M7/NQQtceGdY3EJKTvAgDDwowk5RqImnwOMpaiUHWyf
+         5HcR22Mh73bCLkUooMNzfWyR1+xzyrbZ0peeaowYcwt5IefZGZu2WESnJUxxq0lrVMBy
+         Gt4CYQqK/tImYVygDGhYpWut7lLbJ7wr+bmzMrIkFszS7an6/AxhzPaYcHjsr7QrHEm6
+         st6DHnqFJAi7ZxwxKDoL5E62JLNhCmH1a3XfMqiWz9m9GJQ3mbUZwSpCzf7PC0LGceGc
+         MKpY6i+t1UwWCkKYaUX3R9D6WcY/+zsAi5fVMJeHWe2j4lHtNTikBX3aOGxcFSs3TtVy
+         gFYg==
+X-Gm-Message-State: AC+VfDwSil9riM4wverKJKQof3HeXsd9B8NADkRCBInvK66TfKP+aBtq
+        0WkKDwW4JWaa9D+DvQWZdMTtkXnCXUttXg==
+X-Google-Smtp-Source: ACHHUZ4WEsrvwhzmJcdRbyYb0lJDcP9K4xTlgtQdZ1p77RNM9llM6MVqkmJ5ulUczj1vTYSSZ6jsdg==
+X-Received: by 2002:a6b:dc0e:0:b0:76c:8d6c:9654 with SMTP id s14-20020a6bdc0e000000b0076c8d6c9654mr1655694ioc.7.1684335213494;
+        Wed, 17 May 2023 07:53:33 -0700 (PDT)
+Received: from azeems-kspp.c.googlers.com.com (54.70.188.35.bc.googleusercontent.com. [35.188.70.54])
+        by smtp.gmail.com with ESMTPSA id a18-20020a056602209200b0076c76dfdaa0sm4921681ioa.25.2023.05.17.07.53.32
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 17 May 2023 07:53:33 -0700 (PDT)
+From:   Azeem Shaikh <azeemshaikh38@gmail.com>
+To:     Steven Rostedt <rostedt@goodmis.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>
+Cc:     linux-hardening@vger.kernel.org,
+        Azeem Shaikh <azeemshaikh38@gmail.com>,
         Mark Rutland <mark.rutland@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Martin KaFai Lau <martin.lau@linux.dev>, bpf@vger.kernel.org
-Subject: Re: [PATCH v11 11/11] Documentation: tracing/probes: Add fprobe
- event tracing document
-Message-Id: <20230517233912.29d69e26b9a20e9d11e1448e@kernel.org>
-In-Reply-To: <ZGTRMsLQ3QqvCGew@debian.me>
-References: <168432112492.1351929.9265172785506392923.stgit@mhiramat.roam.corp.google.com>
-        <168432122914.1351929.944185321099763072.stgit@mhiramat.roam.corp.google.com>
-        <ZGTRMsLQ3QqvCGew@debian.me>
-X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
+Subject: [PATCH] ftrace: Replace all non-returning strlcpy with strscpy
+Date:   Wed, 17 May 2023 14:53:23 +0000
+Message-ID: <20230517145323.1522010-1-azeemshaikh38@gmail.com>
+X-Mailer: git-send-email 2.40.1.606.ga4b1b128d6-goog
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On Wed, 17 May 2023 20:05:54 +0700
-Bagas Sanjaya <bagasdotme@gmail.com> wrote:
+strlcpy() reads the entire source buffer first.
+This read may exceed the destination size limit.
+This is both inefficient and can lead to linear read
+overflows if a source string is not NUL-terminated [1].
+In an effort to remove strlcpy() completely [2], replace
+strlcpy() here with strscpy().
+No return values were used, so direct replacement is safe.
 
-> On Wed, May 17, 2023 at 08:00:29PM +0900, Masami Hiramatsu (Google) wrote:
-> > +As same as other dynamic events, fprobe events and tracepoint probe
-> > +events are defined via `dynamic_events` interface file on tracefs.
-> 
-> Backquotes are rendered as italics instead. If you mean keyword/identifier,
-> inline it with double backquotes (like ``foo``). Or you can skip formatting
-> it instead (to be consistent with other keywords).
+[1] https://www.kernel.org/doc/html/latest/process/deprecated.html#strlcpy
+[2] https://github.com/KSPP/linux/issues/89
 
-Oops, thanks for pointing it out!
-Let me fix that.
+Signed-off-by: Azeem Shaikh <azeemshaikh38@gmail.com>
+---
+ kernel/trace/ftrace.c |   18 +++++++++---------
+ 1 file changed, 9 insertions(+), 9 deletions(-)
 
-> 
-> > +For the details of TYPE, see :file:`Documentation/trace/kprobetrace.rst`.
-> 
-> Did you mean using :doc: directive instead?
+diff --git a/kernel/trace/ftrace.c b/kernel/trace/ftrace.c
+index 764668467155..6a77edb51f18 100644
+--- a/kernel/trace/ftrace.c
++++ b/kernel/trace/ftrace.c
+@@ -5743,7 +5743,7 @@ bool ftrace_filter_param __initdata;
+ static int __init set_ftrace_notrace(char *str)
+ {
+ 	ftrace_filter_param = true;
+-	strlcpy(ftrace_notrace_buf, str, FTRACE_FILTER_SIZE);
++	strscpy(ftrace_notrace_buf, str, FTRACE_FILTER_SIZE);
+ 	return 1;
+ }
+ __setup("ftrace_notrace=", set_ftrace_notrace);
+@@ -5751,7 +5751,7 @@ __setup("ftrace_notrace=", set_ftrace_notrace);
+ static int __init set_ftrace_filter(char *str)
+ {
+ 	ftrace_filter_param = true;
+-	strlcpy(ftrace_filter_buf, str, FTRACE_FILTER_SIZE);
++	strscpy(ftrace_filter_buf, str, FTRACE_FILTER_SIZE);
+ 	return 1;
+ }
+ __setup("ftrace_filter=", set_ftrace_filter);
+@@ -5763,14 +5763,14 @@ static int ftrace_graph_set_hash(struct ftrace_hash *hash, char *buffer);
+ 
+ static int __init set_graph_function(char *str)
+ {
+-	strlcpy(ftrace_graph_buf, str, FTRACE_FILTER_SIZE);
++	strscpy(ftrace_graph_buf, str, FTRACE_FILTER_SIZE);
+ 	return 1;
+ }
+ __setup("ftrace_graph_filter=", set_graph_function);
+ 
+ static int __init set_graph_notrace_function(char *str)
+ {
+-	strlcpy(ftrace_graph_notrace_buf, str, FTRACE_FILTER_SIZE);
++	strscpy(ftrace_graph_notrace_buf, str, FTRACE_FILTER_SIZE);
+ 	return 1;
+ }
+ __setup("ftrace_graph_notrace=", set_graph_notrace_function);
+@@ -6569,8 +6569,8 @@ static int ftrace_get_trampoline_kallsym(unsigned int symnum,
+ 			continue;
+ 		*value = op->trampoline;
+ 		*type = 't';
+-		strlcpy(name, FTRACE_TRAMPOLINE_SYM, KSYM_NAME_LEN);
+-		strlcpy(module_name, FTRACE_TRAMPOLINE_MOD, MODULE_NAME_LEN);
++		strscpy(name, FTRACE_TRAMPOLINE_SYM, KSYM_NAME_LEN);
++		strscpy(module_name, FTRACE_TRAMPOLINE_MOD, MODULE_NAME_LEN);
+ 		*exported = 0;
+ 		return 0;
+ 	}
+@@ -6933,7 +6933,7 @@ ftrace_func_address_lookup(struct ftrace_mod_map *mod_map,
+ 		if (off)
+ 			*off = addr - found_func->ip;
+ 		if (sym)
+-			strlcpy(sym, found_func->name, KSYM_NAME_LEN);
++			strscpy(sym, found_func->name, KSYM_NAME_LEN);
+ 
+ 		return found_func->name;
+ 	}
+@@ -6987,8 +6987,8 @@ int ftrace_mod_get_kallsym(unsigned int symnum, unsigned long *value,
+ 
+ 			*value = mod_func->ip;
+ 			*type = 'T';
+-			strlcpy(name, mod_func->name, KSYM_NAME_LEN);
+-			strlcpy(module_name, mod_map->mod->name, MODULE_NAME_LEN);
++			strscpy(name, mod_func->name, KSYM_NAME_LEN);
++			strscpy(module_name, mod_map->mod->name, MODULE_NAME_LEN);
+ 			*exported = 1;
+ 			preempt_enable();
+ 			return 0;
 
-Yes, I will fix that.
-
-> 
-> ---- >8 ----
-> diff --git a/Documentation/trace/fprobetrace.rst b/Documentation/trace/fprobetrace.rst
-> index eca64ad7216a1c..0cf8ed84bd6651 100644
-> --- a/Documentation/trace/fprobetrace.rst
-> +++ b/Documentation/trace/fprobetrace.rst
-> @@ -64,7 +64,7 @@ Synopsis of fprobe-events
->    (\*4) this is useful for fetching a field of data structures.
->    (\*5) "u" means user-space dereference.
->  
-> -For the details of TYPE, see :file:`Documentation/trace/kprobetrace.rst`.
-> +For the details of TYPE, see :doc:`kprobetrace`.
->  
->  BTF arguments
->  -------------
-> 
-> On the other hand, you can also directly link to intended doc section:
-> 
-> ---- >8 ----
-> diff --git a/Documentation/trace/fprobetrace.rst b/Documentation/trace/fprobetrace.rst
-> index eca64ad7216a1c..83892c7512726c 100644
-> --- a/Documentation/trace/fprobetrace.rst
-> +++ b/Documentation/trace/fprobetrace.rst
-> @@ -64,7 +64,7 @@ Synopsis of fprobe-events
->    (\*4) this is useful for fetching a field of data structures.
->    (\*5) "u" means user-space dereference.
->  
-> -For the details of TYPE, see :file:`Documentation/trace/kprobetrace.rst`.
-> +For the details of TYPE, see :ref:`kprobetrace documentation <kprobetrace_types>`.
-
-Good catch! Thanks!
-
->  
->  BTF arguments
->  -------------
-> diff --git a/Documentation/trace/kprobetrace.rst b/Documentation/trace/kprobetrace.rst
-> index 651f9ab53f3ee9..8a2dfee3814544 100644
-> --- a/Documentation/trace/kprobetrace.rst
-> +++ b/Documentation/trace/kprobetrace.rst
-> @@ -66,6 +66,8 @@ Synopsis of kprobe_events
->    (\*3) this is useful for fetching a field of data structures.
->    (\*4) "u" means user-space dereference. See :ref:`user_mem_access`.
->  
-> +.. _kprobetrace_types:
-> +
->  Types
->  -----
->  Several types are supported for fetchargs. Kprobe tracer will access memory
-> 
-> Thanks.
-> 
-> -- 
-> An old man doll... just what I always wanted! - Clara
-
-
--- 
-Masami Hiramatsu (Google) <mhiramat@kernel.org>
