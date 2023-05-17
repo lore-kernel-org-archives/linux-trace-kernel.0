@@ -2,37 +2,37 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BA7EC77B75
-	for <linux-trace-kernel@archiver.kernel.org>; Wed, 17 May 2023 11:01:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CD32C77B7F
+	for <linux-trace-kernel@archiver.kernel.org>; Wed, 17 May 2023 11:02:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231253AbjEQLBX (ORCPT
+        id S231200AbjEQLCB (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Wed, 17 May 2023 07:01:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45606 "EHLO
+        Wed, 17 May 2023 07:02:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45286 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231260AbjEQLA6 (ORCPT
+        with ESMTP id S231148AbjEQLBd (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Wed, 17 May 2023 07:00:58 -0400
+        Wed, 17 May 2023 07:01:33 -0400
 Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9B4B065A5;
-        Wed, 17 May 2023 04:00:33 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C82DF7ED6;
+        Wed, 17 May 2023 04:00:56 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id C90DB61252;
-        Wed, 17 May 2023 10:59:55 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8EE18C433D2;
-        Wed, 17 May 2023 10:59:53 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id C282863A7C;
+        Wed, 17 May 2023 11:00:33 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0E832C433EF;
+        Wed, 17 May 2023 11:00:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1684321195;
-        bh=8GEfIDxt0UrKcOLaZ46cHm9IOde+uxf8X/bIbn4/BQg=;
+        s=k20201202; t=1684321233;
+        bh=Opru+2p0wZnGgR0lKafejqzhmXs4W7N/0un87eck92Y=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=cZ6Ss0DKidKm05CXvuP8NCOsx0UlWnKqruDXVL680D4crr0k9WiJF7c+imPS8Nux9
-         ZFbZLn09IrEWxC5/NrVM2w4CxpErq9/0jLCMGMEQhK6m0Nn2bWxFOAgS42wJ+WIm4/
-         C7hgMUJndNV2x2W/NxEuMovO/fBLk422JpyDrXHgaxByfzxhe/pyhitrWjddtRrFp1
-         MpDwuMAMiqcEMH/XKnLneR5bg6v3u+lYrwqFBaNdLo2PFKvRcsHRdeWWEMpR6q0NW9
-         95ACaWuRT+2mxtqnvF5xAXPSWnH+2kUKY71X0asUugKg3zuFgp+7AqKVHtnezFvRoW
-         2AxxOol47kvnQ==
+        b=swrGUpKIyz9hMhmeLtjkuDuOMvjy+IBiLWBSX23BViCmgmDFu31HiBtTvW4+ngtBn
+         Cex4BkhGAHVVzK4RgXhyd7d3ooLfGbVn6phxSMiYY4VaLfaYEdHzvLTFXfU+TWCNps
+         QHmqX5Ke9OPHmhHYsPXIoumBaEWXI5p24tipj06V/A+eEFrA15a8oKLvE1od0m98HM
+         33cFJLDsMrprT37/kte9nWIgom+60u2umyx7pkttJDEBoA/Cz9Jpe4koZ+nyN1GioC
+         8uK7jm25S+8KoAkVlr1+L1Gk/Qi/AG4OzFfXnl20kI4h8Wic9z6TYJRE7Hset6HC96
+         iUMHgoeE8Axfg==
 From:   "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
 To:     linux-trace-kernel@vger.kernel.org
 Cc:     linux-kernel@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>,
@@ -41,9 +41,9 @@ Cc:     linux-kernel@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>,
         Will Deacon <will@kernel.org>,
         Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
         Martin KaFai Lau <martin.lau@linux.dev>, bpf@vger.kernel.org
-Subject: [PATCH v11 07/11] tracing/probes: Add $arg* meta argument for all function args
-Date:   Wed, 17 May 2023 19:59:51 +0900
-Message-ID:  <168432119162.1351929.7036126707115026799.stgit@mhiramat.roam.corp.google.com>
+Subject: [PATCH v11 11/11] Documentation: tracing/probes: Add fprobe event tracing document
+Date:   Wed, 17 May 2023 20:00:29 +0900
+Message-ID:  <168432122914.1351929.944185321099763072.stgit@mhiramat.roam.corp.google.com>
 X-Mailer: git-send-email 2.40.1.606.ga4b1b128d6-goog
 In-Reply-To:  <168432112492.1351929.9265172785506392923.stgit@mhiramat.roam.corp.google.com>
 References:  <168432112492.1351929.9265172785506392923.stgit@mhiramat.roam.corp.google.com>
@@ -57,429 +57,227 @@ X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
 From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 
-Add the '$arg*' meta fetch argument for function-entry probe events. This
-will be expanded to the all arguments of the function and the tracepoint
-using BTF function argument information.
-
-e.g.
- #  echo 'p vfs_read $arg*' >> dynamic_events
- #  echo 'f vfs_write $arg*' >> dynamic_events
- #  echo 't sched_overutilized_tp $arg*' >> dynamic_events
- # cat dynamic_events
-p:kprobes/p_vfs_read_0 vfs_read file=file buf=buf count=count pos=pos
-f:fprobes/vfs_write__entry vfs_write file=file buf=buf count=count pos=pos
-t:tracepoints/sched_overutilized_tp sched_overutilized_tp rd=rd overutilized=overutilized
-
-Also, single '$arg[0-9]*' will be converted to the BTF function argument.
-
-NOTE: This seems like a wildcard, but a fake one at this moment. This
-is just for telling user that this can be expanded to several arguments.
-And it is not like other $-vars, you can not use this $arg* as a part of
-fetch args, e.g. specifying name "foo=$arg*" and using it in dereferences
-"+0($arg*)" will lead a parse error.
+Add a documentation about fprobe event tracing including
+tracepoint probe event and BTF argument.
 
 Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 ---
 Changes in v11:
- - Change $args to $arg*.
- - Convert single '$arg[0-9]*' to BTF function argument.
- - Cleanup code.
+ - Fix $$args to $arg*.
+ - Update the document.
 Changes in v10:
- - Change $$args to $args so that user can use $$ for current task's pid.
-Changes in v6:
- - update patch description.
+ - Fix space before tab.
+Changes in v7:
+ - Update about BTF auto type casting for $retval.
 ---
- kernel/trace/trace_fprobe.c |   21 +++++
- kernel/trace/trace_kprobe.c |   23 +++++-
- kernel/trace/trace_probe.c  |  166 ++++++++++++++++++++++++++++++++++++++++++-
- kernel/trace/trace_probe.h  |   11 +++
- 4 files changed, 209 insertions(+), 12 deletions(-)
+ Documentation/trace/fprobetrace.rst |  187 +++++++++++++++++++++++++++++++++++
+ Documentation/trace/index.rst       |    1 
+ 2 files changed, 188 insertions(+)
+ create mode 100644 Documentation/trace/fprobetrace.rst
 
-diff --git a/kernel/trace/trace_fprobe.c b/kernel/trace/trace_fprobe.c
-index 75130a5bdddc..6573e93e7631 100644
---- a/kernel/trace/trace_fprobe.c
-+++ b/kernel/trace/trace_fprobe.c
-@@ -925,14 +925,16 @@ static int __trace_fprobe_create(int argc, const char *argv[])
- 	 *  FETCHARG:TYPE : use TYPE instead of unsigned long.
- 	 */
- 	struct trace_fprobe *tf = NULL;
--	int i, len, ret = 0;
-+	int i, len, new_argc = 0, ret = 0;
- 	bool is_return = false;
- 	char *symbol = NULL, *tmp = NULL;
- 	const char *event = NULL, *group = FPROBE_EVENT_SYSTEM;
-+	const char **new_argv = NULL;
- 	int maxactive = 0;
- 	char buf[MAX_EVENT_NAME_LEN];
- 	char gbuf[MAX_EVENT_NAME_LEN];
- 	char sbuf[KSYM_NAME_LEN];
-+	char abuf[MAX_BTF_ARGS_LEN];
- 	bool is_tracepoint = false;
- 	struct tracepoint *tpoint = NULL;
- 	struct traceprobe_parse_context ctx = {
-@@ -1038,9 +1040,22 @@ static int __trace_fprobe_create(int argc, const char *argv[])
- 	} else
- 		ctx.funcname = symbol;
- 
-+	argc -= 2; argv += 2;
-+	new_argv = traceprobe_expand_meta_args(argc, argv, &new_argc,
-+					       abuf, MAX_BTF_ARGS_LEN, &ctx);
-+	if (IS_ERR(new_argv)) {
-+		ret = PTR_ERR(new_argv);
-+		new_argv = NULL;
-+		goto out;
-+	}
-+	if (new_argv) {
-+		argc = new_argc;
-+		argv = new_argv;
-+	}
+diff --git a/Documentation/trace/fprobetrace.rst b/Documentation/trace/fprobetrace.rst
+new file mode 100644
+index 000000000000..eca64ad7216a
+--- /dev/null
++++ b/Documentation/trace/fprobetrace.rst
+@@ -0,0 +1,187 @@
++.. SPDX-License-Identifier: GPL-2.0
 +
- 	/* setup a probe */
- 	tf = alloc_trace_fprobe(group, event, symbol, tpoint, maxactive,
--				argc - 2, is_return);
-+				argc, is_return);
- 	if (IS_ERR(tf)) {
- 		ret = PTR_ERR(tf);
- 		/* This must return -ENOMEM, else there is a bug */
-@@ -1052,7 +1067,6 @@ static int __trace_fprobe_create(int argc, const char *argv[])
- 		tf->mod = __module_text_address(
- 				(unsigned long)tf->tpoint->probestub);
- 
--	argc -= 2; argv += 2;
- 	/* parse arguments */
- 	for (i = 0; i < argc && i < MAX_TRACE_ARGS; i++) {
- 		trace_probe_log_set_index(i + 2);
-@@ -1081,6 +1095,7 @@ static int __trace_fprobe_create(int argc, const char *argv[])
- 
- out:
- 	trace_probe_log_clear();
-+	kfree(new_argv);
- 	kfree(symbol);
- 	return ret;
- 
-diff --git a/kernel/trace/trace_kprobe.c b/kernel/trace/trace_kprobe.c
-index aff6c1a5e161..2d7c0188c2b1 100644
---- a/kernel/trace/trace_kprobe.c
-+++ b/kernel/trace/trace_kprobe.c
-@@ -732,9 +732,10 @@ static int __trace_kprobe_create(int argc, const char *argv[])
- 	 *  FETCHARG:TYPE : use TYPE instead of unsigned long.
- 	 */
- 	struct trace_kprobe *tk = NULL;
--	int i, len, ret = 0;
-+	int i, len, new_argc = 0, ret = 0;
- 	bool is_return = false;
- 	char *symbol = NULL, *tmp = NULL;
-+	const char **new_argv = NULL;
- 	const char *event = NULL, *group = KPROBE_EVENT_SYSTEM;
- 	enum probe_print_type ptype;
- 	int maxactive = 0;
-@@ -742,6 +743,7 @@ static int __trace_kprobe_create(int argc, const char *argv[])
- 	void *addr = NULL;
- 	char buf[MAX_EVENT_NAME_LEN];
- 	char gbuf[MAX_EVENT_NAME_LEN];
-+	char abuf[MAX_BTF_ARGS_LEN];
- 	struct traceprobe_parse_context ctx = { .flags = TPARG_FL_KERNEL };
- 
- 	switch (argv[0][0]) {
-@@ -854,19 +856,31 @@ static int __trace_kprobe_create(int argc, const char *argv[])
- 		event = buf;
- 	}
- 
-+	argc -= 2; argv += 2;
-+	ctx.funcname = symbol;
-+	new_argv = traceprobe_expand_meta_args(argc, argv, &new_argc,
-+					       abuf, MAX_BTF_ARGS_LEN, &ctx);
-+	if (IS_ERR(new_argv)) {
-+		ret = PTR_ERR(new_argv);
-+		new_argv = NULL;
-+		goto out;
-+	}
-+	if (new_argv) {
-+		argc = new_argc;
-+		argv = new_argv;
-+	}
++==========================
++Fprobe-based Event Tracing
++==========================
 +
- 	/* setup a probe */
- 	tk = alloc_trace_kprobe(group, event, addr, symbol, offset, maxactive,
--				argc - 2, is_return);
-+				argc, is_return);
- 	if (IS_ERR(tk)) {
- 		ret = PTR_ERR(tk);
- 		/* This must return -ENOMEM, else there is a bug */
- 		WARN_ON_ONCE(ret != -ENOMEM);
- 		goto out;	/* We know tk is not allocated */
- 	}
--	argc -= 2; argv += 2;
- 
- 	/* parse arguments */
--	ctx.funcname = symbol;
- 	for (i = 0; i < argc && i < MAX_TRACE_ARGS; i++) {
- 		trace_probe_log_set_index(i + 2);
- 		ctx.offset = 0;
-@@ -894,6 +908,7 @@ static int __trace_kprobe_create(int argc, const char *argv[])
- 
- out:
- 	trace_probe_log_clear();
-+	kfree(new_argv);
- 	kfree(symbol);
- 	return ret;
- 
-diff --git a/kernel/trace/trace_probe.c b/kernel/trace/trace_probe.c
-index 525341c42851..1807eebefabe 100644
---- a/kernel/trace/trace_probe.c
-+++ b/kernel/trace/trace_probe.c
-@@ -371,9 +371,11 @@ static const char *type_from_btf_id(struct btf *btf, s32 id)
- 	return NULL;
- }
- 
--static const struct btf_param *find_btf_func_param(const char *funcname, s32 *nr)
-+static const struct btf_param *find_btf_func_param(const char *funcname, s32 *nr,
-+						   bool tracepoint)
- {
- 	struct btf *btf = traceprobe_get_btf();
-+	const struct btf_param *param;
- 	const struct btf_type *t;
- 	s32 id;
- 
-@@ -395,9 +397,16 @@ static const struct btf_param *find_btf_func_param(const char *funcname, s32 *nr
- 		return ERR_PTR(-ENOENT);
- 
- 	*nr = btf_type_vlen(t);
-+	param = (const struct btf_param *)(t + 1);
- 
--	if (*nr)
--		return (const struct btf_param *)(t + 1);
-+	/* Hide the first 'data' argument of tracepoint */
-+	if (tracepoint) {
-+		(*nr)--;
-+		param++;
-+	}
++.. Author: Masami Hiramatsu <mhiramat@kernel.org>
 +
-+	if (*nr > 0)
-+		return param;
- 	else
- 		return NULL;
- }
-@@ -418,7 +427,8 @@ static int parse_btf_arg(const char *varname, struct fetch_insn *code,
- 		return -EINVAL;
- 
- 	if (!ctx->params) {
--		params = find_btf_func_param(ctx->funcname, &ctx->nr_params);
-+		params = find_btf_func_param(ctx->funcname, &ctx->nr_params,
-+					     ctx->flags & TPARG_FL_TPOINT);
- 		if (IS_ERR(params)) {
- 			trace_probe_log_err(ctx->offset, NO_BTF_ENTRY);
- 			return PTR_ERR(params);
-@@ -451,12 +461,19 @@ static const struct fetch_type *parse_btf_arg_type(int arg_idx,
- 
- 	return find_fetch_type(typestr, ctx->flags);
- }
++Overview
++--------
 +
- #else
- static struct btf *traceprobe_get_btf(void)
- {
- 	return NULL;
- }
- 
-+static const struct btf_param *find_btf_func_param(const char *funcname, s32 *nr,
-+						   bool tracepoint)
-+{
-+	return ERR_PTR(-EOPNOTSUPP);
-+}
++Fprobe event is similar to the kprobe event, but limited to probe on
++the function entry and exit only. It is good enough for many use cases
++which only traces some specific functions.
 +
- static int parse_btf_arg(const char *varname, struct fetch_insn *code,
- 			 struct traceprobe_parse_context *ctx)
- {
-@@ -535,6 +552,11 @@ static int parse_probe_vars(char *arg, const struct fetch_type *t,
- #ifdef CONFIG_HAVE_FUNCTION_ARG_ACCESS_API
- 	len = str_has_prefix(arg, "arg");
- 	if (len && tparg_is_function_entry(ctx->flags)) {
-+		if (strcmp(arg, "args") == 0) {
-+			err = TP_ERR_BAD_VAR_ARGS;
-+			goto inval;
-+		}
++This document also covers tracepoint probe events (tprobe) since this
++is also works only on the tracepoint entry. User can trace a part of
++tracepoint argument, or the tracepoint without trace-event, which is
++not exposed on tracefs.
 +
- 		ret = kstrtoul(arg + len, 10, &param);
- 		if (ret)
- 			goto inval;
-@@ -1094,6 +1116,142 @@ void traceprobe_free_probe_arg(struct probe_arg *arg)
- 	kfree(arg->fmt);
- }
- 
-+static int argv_has_var_arg(int argc, const char *argv[], int *args_idx,
-+			    struct traceprobe_parse_context *ctx)
-+{
-+	int i, found = 0;
++As same as other dynamic events, fprobe events and tracepoint probe
++events are defined via `dynamic_events` interface file on tracefs.
 +
-+	for (i = 0; i < argc; i++)
-+		if (str_has_prefix(argv[i], "$arg")) {
-+			trace_probe_log_set_index(i + 2);
++Synopsis of fprobe-events
++-------------------------
++::
 +
-+			if (!tparg_is_function_entry(ctx->flags)) {
-+				trace_probe_log_err(0, NOFENTRY_ARGS);
-+				return -EINVAL;
-+			}
++  f[:[GRP1/][EVENT1]] SYM [FETCHARGS]                       : Probe on function entry
++  f[MAXACTIVE][:[GRP1/][EVENT1]] SYM%return [FETCHARGS]     : Probe on function exit
++  t[:[GRP2/][EVENT2]] TRACEPOINT [FETCHARGS]                : Probe on tracepoint
 +
-+			if (isdigit(argv[i][4])) {
-+				found = 1;
-+				continue;
-+			}
++ GRP1           : Group name for fprobe. If omitted, use "fprobes" for it.
++ GRP2           : Group name for tprobe. If omitted, use "tracepoints" for it.
++ EVENT1         : Event name for fprobe. If omitted, the event name is
++                  "SYM__entry" or "SYM__exit".
++ EVENT2         : Event name for tprobe. If omitted, the event name is
++                  the same as "TRACEPOINT", but if the "TRACEPOINT" starts
++                  with a digit character, "_TRACEPOINT" is used.
++ MAXACTIVE      : Maximum number of instances of the specified function that
++                  can be probed simultaneously, or 0 for the default value
++                  as defined in Documentation/trace/fprobes.rst
 +
-+			if (argv[i][4] != '*') {
-+				trace_probe_log_err(0, BAD_VAR);
-+				return -EINVAL;
-+			}
++ FETCHARGS      : Arguments. Each probe can have up to 128 args.
++  ARG           : Fetch "ARG" function argument using BTF (only for function
++                  entry or tracepoint.) (\*1)
++  @ADDR         : Fetch memory at ADDR (ADDR should be in kernel)
++  @SYM[+|-offs] : Fetch memory at SYM +|- offs (SYM should be a data symbol)
++  $stackN       : Fetch Nth entry of stack (N >= 0)
++  $stack        : Fetch stack address.
++  $argN         : Fetch the Nth function argument. (N >= 1) (\*2)
++  $retval       : Fetch return value.(\*3)
++  $comm         : Fetch current task comm.
++  +|-[u]OFFS(FETCHARG) : Fetch memory at FETCHARG +|- OFFS address.(\*4)(\*5)
++  \IMM          : Store an immediate value to the argument.
++  NAME=FETCHARG : Set NAME as the argument name of FETCHARG.
++  FETCHARG:TYPE : Set TYPE as the type of FETCHARG. Currently, basic types
++                  (u8/u16/u32/u64/s8/s16/s32/s64), hexadecimal types
++                  (x8/x16/x32/x64), "char", "string", "ustring", "symbol", "symstr"
++                  and bitfield are supported.
 +
-+			if (*args_idx >= 0 && *args_idx < argc) {
-+				trace_probe_log_err(0, DOUBLE_ARGS);
-+				return -EINVAL;
-+			}
-+			found = 1;
-+			*args_idx = i;
-+		}
++  (\*1) This is available only when BTF is enabled.
++  (\*2) only for the probe on function entry (offs == 0).
++  (\*3) only for return probe.
++  (\*4) this is useful for fetching a field of data structures.
++  (\*5) "u" means user-space dereference.
 +
-+	return found;
-+}
++For the details of TYPE, see :file:`Documentation/trace/kprobetrace.rst`.
 +
-+static int sprint_nth_btf_arg(int idx, const char *type,
-+			      char *buf, int bufsize,
-+			      struct traceprobe_parse_context *ctx)
-+{
-+	struct btf *btf = traceprobe_get_btf();
-+	const char *name;
-+	int ret;
++BTF arguments
++-------------
++BTF (BPF Type Format) argument allows user to trace function and tracepoint
++parameters by its name instead of `$argN`. This feature is available if the
++kernel is configured with CONFIG_BPF_SYSCALL and CONFIG_DEBUG_INFO_BTF.
++If user only specify the BTF argument, the event's argument name is also
++automatically set by the given name. ::
 +
-+	if (idx >= ctx->nr_params) {
-+		trace_probe_log_err(0, NO_BTFARG);
-+		return -ENOENT;
-+	}
-+	name = btf_name_by_offset(btf, ctx->params[idx].name_off);
-+	if (!name) {
-+		trace_probe_log_err(0, NO_BTF_ENTRY);
-+		return -ENOENT;
-+	}
-+	ret = snprintf(buf, bufsize, "%s%s", name, type);
-+	if (ret >= bufsize) {
-+		trace_probe_log_err(0, ARGS_2LONG);
-+		return -E2BIG;
-+	}
-+	return ret;
-+}
++ # echo 'f:myprobe vfs_read count pos' >> dynamic_events
++ # cat dynamic_events
++ f:fprobes/myprobe vfs_read count=count pos=pos
 +
-+/* Return new_argv which must be freed after use */
-+const char **traceprobe_expand_meta_args(int argc, const char *argv[],
-+					 int *new_argc, char *buf, int bufsize,
-+					 struct traceprobe_parse_context *ctx)
-+{
-+	const struct btf_param *params = NULL;
-+	int i, j, n, used, ret, args_idx = -1;
-+	const char **new_argv = NULL;
-+	int nr_params;
++It also chooses the fetch type from BTF information. For example, in the above
++example, the `count` is unsigned long, and the `pos` is a pointer. Thus, both
++are converted to 64bit unsigned long, but only `pos` has `%Lx` print-format ::
 +
-+	ret = argv_has_var_arg(argc, argv, &args_idx, ctx);
-+	if (ret < 0)
-+		return ERR_PTR(ret);
++ # cat events/fprobes/myprobe/format
++ name: myprobe
++ ID: 1313
++ format:
++	field:unsigned short common_type;	offset:0;	size:2;	signed:0;
++	field:unsigned char common_flags;	offset:2;	size:1;	signed:0;
++	field:unsigned char common_preempt_count;	offset:3;	size:1;	signed:0;
++	field:int common_pid;	offset:4;	size:4;	signed:1;
 +
-+	if (!ret) {
-+		*new_argc = argc;
-+		return NULL;
-+	}
++	field:unsigned long __probe_ip;	offset:8;	size:8;	signed:0;
++	field:u64 count;	offset:16;	size:8;	signed:0;
++	field:u64 pos;	offset:24;	size:8;	signed:0;
 +
-+	params = find_btf_func_param(ctx->funcname, &nr_params,
-+				     ctx->flags & TPARG_FL_TPOINT);
-+	if (IS_ERR(params)) {
-+		trace_probe_log_err(0, NOSUP_BTFARG);
-+		return (const char **)params;
-+	}
-+	ctx->params = params;
-+	ctx->nr_params = nr_params;
++ print fmt: "(%lx) count=%Lu pos=0x%Lx", REC->__probe_ip, REC->count, REC->pos
 +
-+	*new_argc = argc - 1 + ctx->nr_params;
++If user unsures the name of arguments, `$arg*` will be helpful. The `$arg*`
++is expanded to all function arguments of the function or the tracepoint. ::
 +
-+	new_argv = kcalloc(*new_argc, sizeof(char *), GFP_KERNEL);
-+	if (!new_argv)
-+		return ERR_PTR(-ENOMEM);
++ # echo 'f:myprobe vfs_read $arg*' >> dynamic_events
++ # cat dynamic_events
++ f:fprobes/myprobe vfs_read file=file buf=buf count=count pos=pos
 +
-+	used = 0;
-+	for (i = 0, j = 0; i < argc; i++) {
-+		trace_probe_log_set_index(i + 2);
-+		if (i == args_idx) {
-+			for (n = 0; n < nr_params; n++) {
-+				ret = sprint_nth_btf_arg(n, "", buf + used,
-+							 bufsize - used, ctx);
-+				if (ret < 0)
-+					goto error;
++BTF also affects the $retval. If user doesn't set any type, the retval type is
++automatically picked from the BTF. If the function returns 'void', $retval is
++rejected.
 +
-+				new_argv[j++] = buf + used;
-+				used += ret + 1;
-+			}
-+			continue;
-+		}
++Usage examples
++--------------
++Here is an example to add fprobe events on `vfs_read()` function entry
++and exit, with BTF arguments.
++::
 +
-+		if (str_has_prefix(argv[i], "$arg")) {
-+			char *type;
++  # echo 'f vfs_read $arg*' >> dynamic_events
++  # echo 'f vfs_read%return $retval' >> dynamic_events
++  # cat dynamic_events
++ f:fprobes/vfs_read__entry vfs_read file=file buf=buf count=count pos=pos
++ f:fprobes/vfs_read__exit vfs_read%return arg1=$retval
++  # echo 1 > events/fprobes/enable
++  # head -n 20 trace | tail
++ #           TASK-PID     CPU#  |||||  TIMESTAMP  FUNCTION
++ #              | |         |   |||||     |         |
++               sh-70      [000] ...1.   335.883195: vfs_read__entry: (vfs_read+0x4/0x340) file=0xffff888005cf9a80 buf=0x7ffef36c6879 count=1 pos=0xffffc900005aff08
++               sh-70      [000] .....   335.883208: vfs_read__exit: (ksys_read+0x75/0x100 <- vfs_read) arg1=1
++               sh-70      [000] ...1.   335.883220: vfs_read__entry: (vfs_read+0x4/0x340) file=0xffff888005cf9a80 buf=0x7ffef36c6879 count=1 pos=0xffffc900005aff08
++               sh-70      [000] .....   335.883224: vfs_read__exit: (ksys_read+0x75/0x100 <- vfs_read) arg1=1
++               sh-70      [000] ...1.   335.883232: vfs_read__entry: (vfs_read+0x4/0x340) file=0xffff888005cf9a80 buf=0x7ffef36c687a count=1 pos=0xffffc900005aff08
++               sh-70      [000] .....   335.883237: vfs_read__exit: (ksys_read+0x75/0x100 <- vfs_read) arg1=1
++               sh-70      [000] ...1.   336.050329: vfs_read__entry: (vfs_read+0x4/0x340) file=0xffff888005cf9a80 buf=0x7ffef36c6879 count=1 pos=0xffffc900005aff08
++               sh-70      [000] .....   336.050343: vfs_read__exit: (ksys_read+0x75/0x100 <- vfs_read) arg1=1
 +
-+			n = simple_strtoul(argv[i] + 4, &type, 10);
-+			if (*type != ':') {
-+				trace_probe_log_err(0, BAD_VAR);
-+				ret = -ENOENT;
-+				goto error;
-+			}
-+			ret = sprint_nth_btf_arg(n, type, buf + used,
-+						 bufsize - used, ctx);
-+			if (ret < 0)
-+				goto error;
-+			new_argv[j++] = buf + used;
-+			used += ret + 1;
-+		} else
-+			new_argv[j++] = argv[i];
-+	}
++You can see all function arguments and return values are recorded as signed int.
 +
-+	return new_argv;
++Also, here is an example of tracepoint events on `sched_switch` tracepoint.
++To compare the result, this also enables the `sched_switch` traceevent too.
++::
 +
-+error:
-+	kfree(new_argv);
-+	return ERR_PTR(ret);
-+}
++  # echo 't sched_switch $arg*' >> dynamic_events
++  # echo 1 > events/sched/sched_switch/enable
++  # echo 1 > events/tracepoints/sched_switch/enable
++  # echo > trace
++  # head -n 20 trace | tail
++ #           TASK-PID     CPU#  |||||  TIMESTAMP  FUNCTION
++ #              | |         |   |||||     |         |
++               sh-70      [000] d..2.  3912.083993: sched_switch: prev_comm=sh prev_pid=70 prev_prio=120 prev_state=S ==> next_comm=swapper/0 next_pid=0 next_prio=120
++               sh-70      [000] d..3.  3912.083995: sched_switch: (__probestub_sched_switch+0x4/0x10) preempt=0 prev=0xffff88800664e100 next=0xffffffff828229c0 prev_state=1
++           <idle>-0       [000] d..2.  3912.084183: sched_switch: prev_comm=swapper/0 prev_pid=0 prev_prio=120 prev_state=R ==> next_comm=rcu_preempt next_pid=16 next_prio=120
++           <idle>-0       [000] d..3.  3912.084184: sched_switch: (__probestub_sched_switch+0x4/0x10) preempt=0 prev=0xffffffff828229c0 next=0xffff888004208000 prev_state=0
++      rcu_preempt-16      [000] d..2.  3912.084196: sched_switch: prev_comm=rcu_preempt prev_pid=16 prev_prio=120 prev_state=I ==> next_comm=swapper/0 next_pid=0 next_prio=120
++      rcu_preempt-16      [000] d..3.  3912.084196: sched_switch: (__probestub_sched_switch+0x4/0x10) preempt=0 prev=0xffff888004208000 next=0xffffffff828229c0 prev_state=1026
++           <idle>-0       [000] d..2.  3912.085191: sched_switch: prev_comm=swapper/0 prev_pid=0 prev_prio=120 prev_state=R ==> next_comm=rcu_preempt next_pid=16 next_prio=120
++           <idle>-0       [000] d..3.  3912.085191: sched_switch: (__probestub_sched_switch+0x4/0x10) preempt=0 prev=0xffffffff828229c0 next=0xffff888004208000 prev_state=0
 +
- int traceprobe_update_arg(struct probe_arg *arg)
- {
- 	struct fetch_insn *code = arg->code;
-diff --git a/kernel/trace/trace_probe.h b/kernel/trace/trace_probe.h
-index 9ea5c7e8753f..b5f265819503 100644
---- a/kernel/trace/trace_probe.h
-+++ b/kernel/trace/trace_probe.h
-@@ -33,7 +33,9 @@
- #define MAX_ARGSTR_LEN		63
- #define MAX_ARRAY_LEN		64
- #define MAX_ARG_NAME_LEN	32
-+#define MAX_BTF_ARGS_LEN	128
- #define MAX_STRING_SIZE		PATH_MAX
-+#define MAX_ARG_BUF_LEN		(MAX_TRACE_ARGS * MAX_ARG_NAME_LEN)
- 
- /* Reserved field names */
- #define FIELD_STRING_IP		"__probe_ip"
-@@ -387,6 +389,9 @@ struct traceprobe_parse_context {
- extern int traceprobe_parse_probe_arg(struct trace_probe *tp, int i,
- 				      const char *argv,
- 				      struct traceprobe_parse_context *ctx);
-+const char **traceprobe_expand_meta_args(int argc, const char *argv[],
-+					 int *new_argc, char *buf, int bufsize,
-+					 struct traceprobe_parse_context *ctx);
- 
- extern int traceprobe_update_arg(struct probe_arg *arg);
- extern void traceprobe_free_probe_arg(struct probe_arg *arg);
-@@ -481,7 +486,11 @@ extern int traceprobe_define_arg_fields(struct trace_event_call *event_call,
- 	C(NO_EP_FILTER,		"No filter rule after 'if'"),		\
- 	C(NOSUP_BTFARG,		"BTF is not available or not supported"),	\
- 	C(NO_BTFARG,		"This variable is not found at this probe point"),\
--	C(NO_BTF_ENTRY,		"No BTF entry for this probe point"),
-+	C(NO_BTF_ENTRY,		"No BTF entry for this probe point"),	\
-+	C(BAD_VAR_ARGS,		"$arg* must be an independent parameter without name etc."),\
-+	C(NOFENTRY_ARGS,	"$arg* can be used only on function entry"),	\
-+	C(DOUBLE_ARGS,		"$arg* can be used only once in the parameters"),	\
-+	C(ARGS_2LONG,		"$arg* failed because the argument list is too long"),
- 
- #undef C
- #define C(a, b)		TP_ERR_##a
++As you can see, the `sched_switch` trace-event shows *cooked* parameters, on
++the other hand, the `sched_switch` tracepoint probe event shows *raw*
++parameters. This means you can access any field values in the task
++structure pointed by the `prev` and `next` arguments.
++
++For example, usually `task_struct::start_time` is not traced, but with this
++traceprobe event, you can trace it as below.
++::
++
++  # echo 't sched_switch comm=+1896(next):string start_time=+1728(next):u64' > dynamic_events
++  # head -n 20 trace | tail
++ #           TASK-PID     CPU#  |||||  TIMESTAMP  FUNCTION
++ #              | |         |   |||||     |         |
++               sh-70      [000] d..3.  5606.686577: sched_switch: (__probestub_sched_switch+0x4/0x10) comm="rcu_preempt" usage=1 start_time=245000000
++      rcu_preempt-16      [000] d..3.  5606.686602: sched_switch: (__probestub_sched_switch+0x4/0x10) comm="sh" usage=1 start_time=1596095526
++               sh-70      [000] d..3.  5606.686637: sched_switch: (__probestub_sched_switch+0x4/0x10) comm="swapper/0" usage=2 start_time=0
++           <idle>-0       [000] d..3.  5606.687190: sched_switch: (__probestub_sched_switch+0x4/0x10) comm="rcu_preempt" usage=1 start_time=245000000
++      rcu_preempt-16      [000] d..3.  5606.687202: sched_switch: (__probestub_sched_switch+0x4/0x10) comm="swapper/0" usage=2 start_time=0
++           <idle>-0       [000] d..3.  5606.690317: sched_switch: (__probestub_sched_switch+0x4/0x10) comm="kworker/0:1" usage=1 start_time=137000000
++      kworker/0:1-14      [000] d..3.  5606.690339: sched_switch: (__probestub_sched_switch+0x4/0x10) comm="swapper/0" usage=2 start_time=0
++           <idle>-0       [000] d..3.  5606.692368: sched_switch: (__probestub_sched_switch+0x4/0x10) comm="kworker/0:1" usage=1 start_time=137000000
++
++Currently, to find the offset of a specific field in the data structure,
++you need to build kernel with debuginfo and run `perf probe` command with
++`-D` option. e.g.
++::
++
++ # perf probe -D "__probestub_sched_switch next->comm:string next->start_time"
++ p:probe/__probestub_sched_switch __probestub_sched_switch+0 comm=+1896(%cx):string start_time=+1728(%cx):u64
++
++And replace the `%cx` with the `next`.
+diff --git a/Documentation/trace/index.rst b/Documentation/trace/index.rst
+index ea25a9220f92..5092d6c13af5 100644
+--- a/Documentation/trace/index.rst
++++ b/Documentation/trace/index.rst
+@@ -13,6 +13,7 @@ Linux Tracing Technologies
+    kprobes
+    kprobetrace
+    uprobetracer
++   fprobetrace
+    tracepoints
+    events
+    events-kmem
 
