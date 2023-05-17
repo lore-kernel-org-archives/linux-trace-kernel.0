@@ -2,148 +2,154 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DDB1C7EE22
-	for <linux-trace-kernel@archiver.kernel.org>; Wed, 17 May 2023 20:09:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6126EC7EE22
+	for <linux-trace-kernel@archiver.kernel.org>; Wed, 17 May 2023 22:28:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229533AbjEQUJX (ORCPT
+        id S229485AbjEQW2V (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Wed, 17 May 2023 16:09:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44760 "EHLO
+        Wed, 17 May 2023 18:28:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33014 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229484AbjEQUJW (ORCPT
+        with ESMTP id S229456AbjEQW2V (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Wed, 17 May 2023 16:09:22 -0400
-Received: from mail-ed1-x533.google.com (mail-ed1-x533.google.com [IPv6:2a00:1450:4864:20::533])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 640797292
-        for <linux-trace-kernel@vger.kernel.org>; Wed, 17 May 2023 13:09:19 -0700 (PDT)
-Received: by mail-ed1-x533.google.com with SMTP id 4fb4d7f45d1cf-510d8ead2f1so1264421a12.3
-        for <linux-trace-kernel@vger.kernel.org>; Wed, 17 May 2023 13:09:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google; t=1684354157; x=1686946157;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=qUJuL+2WvYBnwuI2AxMqbxeUZxgtHjH0G/Zm8si7raQ=;
-        b=FswP8g2FI3659/s/93gVCGsv3xZZtGIZfyfW2LeNfXS8vk7ZVBjKBV5EubqxsPWC4B
-         DTiSzYAVTqlLfpqatXRUYC2ud7ZZO/vsf5e6eQGX32M+kzCJw+W5bHv1BObk06wK2Nh+
-         YyCLeqhvFzPSmMK/EQYkoCJ95VGK9AkRl/KJw=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1684354157; x=1686946157;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=qUJuL+2WvYBnwuI2AxMqbxeUZxgtHjH0G/Zm8si7raQ=;
-        b=kcFss9COdcpitHAz70wbcnVDCH3Zxn6OUYWg7oIMR0+UZHK1wAdUBdXkMxKuce2FC8
-         un21+c9MtqVkDcfQO634XDAifbuaLPAheGjaz8XgKZYPPLydV/OsPtATLc2hIKtr16ih
-         GSyy88CePX8oRz8dS+pJ3Fp7Pt08ZUx6TdTaHPNUwp6T4SI43KEGty1G1gquQYmngWmq
-         tpeyaaoASXj/WTlDKk9jXW2BkNdTNRtfJaY2p5s8mg3j4TzeeVVh9DlkR1D//uPH8Bbr
-         u4RjiP0ELUmMw54W1diakQrNAW7VGkPBC44jijRk1gBtkFktpWh7hAEUgkDagqqKtgCF
-         BGSA==
-X-Gm-Message-State: AC+VfDyoHlQQQOd3FNaBrMXMoU/XFC6E7NufLqZjisKKTyzriawUCvEd
-        O9a+8WiOl/yAu9vcwENM7nhjyl/QpJeD7oyBslhvRkav
-X-Google-Smtp-Source: ACHHUZ5mTy7CGyPnOC9Rr0SkTZGOa1MXGOQWxk1hb4VrlH5gkQhELKSe8m5Fi/+k0/Co3EzAD5Gqgg==
-X-Received: by 2002:a17:906:db07:b0:94f:6058:4983 with SMTP id xj7-20020a170906db0700b0094f60584983mr33520028ejb.76.1684354157664;
-        Wed, 17 May 2023 13:09:17 -0700 (PDT)
-Received: from mail-ej1-f54.google.com (mail-ej1-f54.google.com. [209.85.218.54])
-        by smtp.gmail.com with ESMTPSA id ew18-20020a170907951200b009660e775691sm12652260ejc.151.2023.05.17.13.09.16
-        for <linux-trace-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 17 May 2023 13:09:16 -0700 (PDT)
-Received: by mail-ej1-f54.google.com with SMTP id a640c23a62f3a-96a2b6de3cbso189806366b.1
-        for <linux-trace-kernel@vger.kernel.org>; Wed, 17 May 2023 13:09:16 -0700 (PDT)
-X-Received: by 2002:a17:907:7291:b0:96a:717:d452 with SMTP id
- dt17-20020a170907729100b0096a0717d452mr29868922ejc.19.1684354155799; Wed, 17
- May 2023 13:09:15 -0700 (PDT)
-MIME-Version: 1.0
-References: <20230509163050.127d5123@rorschach.local.home> <20230515165707.hv65ekwp2djkjj5i@MacBook-Pro-8.local>
- <20230515192407.GA85@W11-BEAU-MD.localdomain> <20230517003628.aqqlvmzffj7fzzoj@MacBook-Pro-8.local>
- <CAHk-=whBKoovtifU2eCeyuBBee-QMcbxdXDLv0mu0k2DgxiaOw@mail.gmail.com>
- <CAHk-=wj1hh=ZUriY9pVFvD1MjqbRuzHc4yz=S2PCW7u3W0-_BQ@mail.gmail.com>
- <20230516222919.79bba667@rorschach.local.home> <CAHk-=wh_GEr4ehJKwMM3UA0-7CfNpVH7v_T-=1u+gq9VZD70mw@mail.gmail.com>
- <20230517172243.GA152@W11-BEAU-MD.localdomain> <CAHk-=whzzuNEW8UcV2_8OyuKcXPrk7-j_8GzOoroxz9JiZiD3w@mail.gmail.com>
- <20230517190750.GA366@W11-BEAU-MD.localdomain> <CAHk-=whTBvXJuoi_kACo3qi5WZUmRrhyA-_=rRFsycTytmB6qw@mail.gmail.com>
- <CAHk-=wi4w9bPKFFGwLULjJf9hnkL941+c4HbeEVKNzqH04wqDA@mail.gmail.com>
-In-Reply-To: <CAHk-=wi4w9bPKFFGwLULjJf9hnkL941+c4HbeEVKNzqH04wqDA@mail.gmail.com>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Wed, 17 May 2023 13:08:59 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wicngggxVpbnrYHjRTwGE0WYscPRM+L2HO2BF8ia1EXgQ@mail.gmail.com>
-Message-ID: <CAHk-=wicngggxVpbnrYHjRTwGE0WYscPRM+L2HO2BF8ia1EXgQ@mail.gmail.com>
-Subject: Re: [PATCH] tracing/user_events: Run BPF program if attached
-To:     Beau Belgrave <beaub@linux.microsoft.com>
+        Wed, 17 May 2023 18:28:21 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4C8F959DE;
+        Wed, 17 May 2023 15:28:20 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id DDABE648F9;
+        Wed, 17 May 2023 22:28:19 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7AF56C433EF;
+        Wed, 17 May 2023 22:28:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1684362499;
+        bh=KFREZcjLEiG8NztAj50tdQP1RgWuzfuivuMpu6iL7lU=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=MOMp5wi3hbzvqfoqvTmUUvhRxNtlfo0gRfrFFmV/bCdLQOO7cwZpflzzSzuuXqEB2
+         tYeAsfOOqSmRLo+su9SOHiMUxFaavhgpYZsMR0Zkva2gldyrF2Z2j7vpYw/ivMFcAa
+         l/1oFEpvLe3O30sVjNvzRi64h4PZBwcxtV0la0JFSyk92grL4l8x4TZWKkyMEPfVI2
+         w5AW9BgnguEIhVKbWrw2Qn2j++ySHAyBfTNUsI/SY6IF0lrKrPYqECvbTFMVYBMp4h
+         KGIB3tLsKC7cDlqnKP4bIqFM8r1Rz5LNQB7IlenQFlBUny35vQAHkOYuKcFDi88Jpe
+         KChVFVrEgK0cA==
+Date:   Thu, 18 May 2023 07:28:15 +0900
+From:   Masami Hiramatsu (Google) <mhiramat@kernel.org>
+To:     Azeem Shaikh <azeemshaikh38@gmail.com>
 Cc:     Steven Rostedt <rostedt@goodmis.org>,
-        Alexei Starovoitov <alexei.starovoitov@gmail.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-trace-kernel@vger.kernel.org,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Andrii Nakryiko <andrii@kernel.org>, bpf <bpf@vger.kernel.org>,
-        David Vernet <void@manifault.com>, dthaler@microsoft.com,
-        brauner@kernel.org, hch@infradead.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+        linux-hardening@vger.kernel.org,
+        Mark Rutland <mark.rutland@arm.com>,
+        linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
+Subject: Re: [PATCH] ftrace: Replace all non-returning strlcpy with strscpy
+Message-Id: <20230518072815.53fd9f67a3423d85f133d98b@kernel.org>
+In-Reply-To: <20230517145323.1522010-1-azeemshaikh38@gmail.com>
+References: <20230517145323.1522010-1-azeemshaikh38@gmail.com>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On Wed, May 17, 2023 at 12:36=E2=80=AFPM Linus Torvalds
-<torvalds@linux-foundation.org> wrote:
->
-> .. this is the patch that I think should go on top of it to fix the
-> misleading "safe" and the incorrect RCU walk.
->
-> NOTE! This adds that
->
->         lockdep_assert_held(&event_mutex);
->
-> to user_event_enabler_update() too.
+On Wed, 17 May 2023 14:53:23 +0000
+Azeem Shaikh <azeemshaikh38@gmail.com> wrote:
 
-One more note: I think it would be really good to use different names
-for the "links".
+> strlcpy() reads the entire source buffer first.
+> This read may exceed the destination size limit.
+> This is both inefficient and can lead to linear read
+> overflows if a source string is not NUL-terminated [1].
+> In an effort to remove strlcpy() completely [2], replace
+> strlcpy() here with strscpy().
+> No return values were used, so direct replacement is safe.
+> 
+> [1] https://www.kernel.org/doc/html/latest/process/deprecated.html#strlcpy
+> [2] https://github.com/KSPP/linux/issues/89
+> 
+> Signed-off-by: Azeem Shaikh <azeemshaikh38@gmail.com>
 
-We have "mm->link", that is the list of mm's on the 'user_event_mms'
-list, protected by the 'user_event_mms_lock' and RCU-walked.
+Looks good to me.
 
-And then we have 'enabler->link', which is the list of enables on the
-'user_mm->enablers' list, protected by event_mutex, and _also_
-occasionally RCU-walked.
+Acked-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 
-And then we have 'validator->link', which isn't RCU-walked, and seems
-to also be protected by the event_mutex (?).
+Thanks!
 
-This is all very confusing when looking at it as an outsider.
-Particularly when you sometimes just see
+> ---
+>  kernel/trace/ftrace.c |   18 +++++++++---------
+>  1 file changed, 9 insertions(+), 9 deletions(-)
+> 
+> diff --git a/kernel/trace/ftrace.c b/kernel/trace/ftrace.c
+> index 764668467155..6a77edb51f18 100644
+> --- a/kernel/trace/ftrace.c
+> +++ b/kernel/trace/ftrace.c
+> @@ -5743,7 +5743,7 @@ bool ftrace_filter_param __initdata;
+>  static int __init set_ftrace_notrace(char *str)
+>  {
+>  	ftrace_filter_param = true;
+> -	strlcpy(ftrace_notrace_buf, str, FTRACE_FILTER_SIZE);
+> +	strscpy(ftrace_notrace_buf, str, FTRACE_FILTER_SIZE);
+>  	return 1;
+>  }
+>  __setup("ftrace_notrace=", set_ftrace_notrace);
+> @@ -5751,7 +5751,7 @@ __setup("ftrace_notrace=", set_ftrace_notrace);
+>  static int __init set_ftrace_filter(char *str)
+>  {
+>  	ftrace_filter_param = true;
+> -	strlcpy(ftrace_filter_buf, str, FTRACE_FILTER_SIZE);
+> +	strscpy(ftrace_filter_buf, str, FTRACE_FILTER_SIZE);
+>  	return 1;
+>  }
+>  __setup("ftrace_filter=", set_ftrace_filter);
+> @@ -5763,14 +5763,14 @@ static int ftrace_graph_set_hash(struct ftrace_hash *hash, char *buffer);
+>  
+>  static int __init set_graph_function(char *str)
+>  {
+> -	strlcpy(ftrace_graph_buf, str, FTRACE_FILTER_SIZE);
+> +	strscpy(ftrace_graph_buf, str, FTRACE_FILTER_SIZE);
+>  	return 1;
+>  }
+>  __setup("ftrace_graph_filter=", set_graph_function);
+>  
+>  static int __init set_graph_notrace_function(char *str)
+>  {
+> -	strlcpy(ftrace_graph_notrace_buf, str, FTRACE_FILTER_SIZE);
+> +	strscpy(ftrace_graph_notrace_buf, str, FTRACE_FILTER_SIZE);
+>  	return 1;
+>  }
+>  __setup("ftrace_graph_notrace=", set_graph_notrace_function);
+> @@ -6569,8 +6569,8 @@ static int ftrace_get_trampoline_kallsym(unsigned int symnum,
+>  			continue;
+>  		*value = op->trampoline;
+>  		*type = 't';
+> -		strlcpy(name, FTRACE_TRAMPOLINE_SYM, KSYM_NAME_LEN);
+> -		strlcpy(module_name, FTRACE_TRAMPOLINE_MOD, MODULE_NAME_LEN);
+> +		strscpy(name, FTRACE_TRAMPOLINE_SYM, KSYM_NAME_LEN);
+> +		strscpy(module_name, FTRACE_TRAMPOLINE_MOD, MODULE_NAME_LEN);
+>  		*exported = 0;
+>  		return 0;
+>  	}
+> @@ -6933,7 +6933,7 @@ ftrace_func_address_lookup(struct ftrace_mod_map *mod_map,
+>  		if (off)
+>  			*off = addr - found_func->ip;
+>  		if (sym)
+> -			strlcpy(sym, found_func->name, KSYM_NAME_LEN);
+> +			strscpy(sym, found_func->name, KSYM_NAME_LEN);
+>  
+>  		return found_func->name;
+>  	}
+> @@ -6987,8 +6987,8 @@ int ftrace_mod_get_kallsym(unsigned int symnum, unsigned long *value,
+>  
+>  			*value = mod_func->ip;
+>  			*type = 'T';
+> -			strlcpy(name, mod_func->name, KSYM_NAME_LEN);
+> -			strlcpy(module_name, mod_map->mod->name, MODULE_NAME_LEN);
+> +			strscpy(name, mod_func->name, KSYM_NAME_LEN);
+> +			strscpy(module_name, mod_map->mod->name, MODULE_NAME_LEN);
+>  			*exported = 1;
+>  			preempt_enable();
+>  			return 0;
+> 
 
-        list_del_rcu(&mm->link);
 
-and you have to figure "which 'link' are we talking about again?".
-
-Also, I have to say, I found "mm->next" *really* confusing at first.
-
-It turns out that "mm->next" is this list that is dynamically built up
-by user_event_mm_get_all(), and is only a one-shot list that is valid
-only as long as 'event_mutex' is held. But the only lock the code
-*talks* about is the RCU lock, which does *not* protect that list, and
-only exists as a way to walk that user_event_mms list without taking
-any locks.
-
-So user_event_enabler_update() actually relies on that 'event_mutex'
-lock in another way than the obvious one that is about the
-mm->enablers list that it *also* walks.
-
-Again, that all seems to work, but it's *really* confusing how
-"mm->next" always exists as a field, but is only usable and valid
-while you hold that event_mutex and have called
-user_event_mm_get_all() to gather the list.
-
-I think both user_event_enabler_update() and user_event_mm_get_all()
-should have a mention of how they require event_mutex and how that
-->next list works.
-
-Anyway, I still *think* the two patches I sent out are right, but I'm
-just mentioning this confusion I had to deal with when trying to
-decode what the rules were. Maybe all the above is obvious to
-everybody else, but it took me a while to decipher (and maybe I
-misread something).
-
-             Linus
+-- 
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
