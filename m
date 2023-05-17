@@ -2,119 +2,72 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F1505C7EE24
-	for <linux-trace-kernel@archiver.kernel.org>; Wed, 17 May 2023 02:00:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 62E69C7EE24
+	for <linux-trace-kernel@archiver.kernel.org>; Wed, 17 May 2023 02:29:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231517AbjEQCAe (ORCPT
+        id S231255AbjEQC36 (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Tue, 16 May 2023 22:00:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58240 "EHLO
+        Tue, 16 May 2023 22:29:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53690 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230436AbjEQCAd (ORCPT
+        with ESMTP id S232180AbjEQC3y (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Tue, 16 May 2023 22:00:33 -0400
-Received: from mail-ed1-x52a.google.com (mail-ed1-x52a.google.com [IPv6:2a00:1450:4864:20::52a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D865A49C1;
-        Tue, 16 May 2023 19:00:26 -0700 (PDT)
-Received: by mail-ed1-x52a.google.com with SMTP id 4fb4d7f45d1cf-50bcb4a81ceso339780a12.2;
-        Tue, 16 May 2023 19:00:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1684288825; x=1686880825;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=HKuJtUgRGoAveoB6dPRcY53BxMHmJW4YivLP7XJy1Ow=;
-        b=oEJH3YQ6WJ1R0OeRcB1/RwAm81/CWoDJLhbS/+eBIUbEEgBfrBcwY4jg02JHw4xZGl
-         2IJfYYQjgXKHbc1Ai3f81W4K9sTZCQAO+WSkEMbI1vQD/TyYDVSLtlwqQEy19TIbmi/y
-         IJ/MxVA0NVWR4uhCrNUVK513twP+NIU3bPu/zGrg+ZsRCsm7yAAOOVkPR5qvMvkucsXm
-         jG7Ood62c+ARTTr3hKMnTWA2o7RoVGHzT3y2QwOE9VPCWREMHlmxAO/DDiyFMJFJMxB6
-         q/w0HkiATVBsVpcbCZDmPe++RtEEFQXqwUBKisYQhi+wnYe9t+yadRw0fyTFkZO2Zd2M
-         nQ0A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1684288825; x=1686880825;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=HKuJtUgRGoAveoB6dPRcY53BxMHmJW4YivLP7XJy1Ow=;
-        b=VPi+8BxDzwZ3NUcno3hAt7y7XRmk8puKqtDUW0s0v5cvp9SSlxaq/bX/c6R+oGZnzL
-         DUWhNPpsLVqOMQExHcLKeBoqgKCc34dodv52FyzephKw+MYKE8zynKeQArcYGgGO54Y4
-         9M2zjlWi78AXAPwvZTtb4cGWk0+j+YUZAIwRXHMlNamudgGsyhrI1xMxlVYYgMoPjBnp
-         06htJ9aQOeRb3rQDn3TSnzKuzSxg9mwTzMSei3/epgPVCu4cxKsukHnSJPs7XiDW/2Rx
-         o8x26cLymIF1JMBZUEL/nI9No2GUI4D1h2YqO7rCc4PGCc1ctleOmgcWuPpd9oOh1Vmq
-         peEg==
-X-Gm-Message-State: AC+VfDwiavPPvboqUU1lv/blJ3LtnMotcyMoK8OJaP2sqX7mCBxJC8Bs
-        REizXsSX5GsP3tN37oWVmh7I2Zi8AfesdMqGDs4=
-X-Google-Smtp-Source: ACHHUZ5ODPhwCTAYdcAaNc6Khvr+LCB4zW0u1dxcHa+DA93pmjpNLl78rK2aOOMj6HEyRyZD4FRw1jZuCyKZ5xevtzQ=
-X-Received: by 2002:a50:fb87:0:b0:50b:c72a:2b26 with SMTP id
- e7-20020a50fb87000000b0050bc72a2b26mr857161edq.9.1684288824921; Tue, 16 May
- 2023 19:00:24 -0700 (PDT)
-MIME-Version: 1.0
-References: <20230516071830.8190-1-zegao@tencent.com> <20230516071830.8190-5-zegao@tencent.com>
- <20230516102006.76dfd68a@gandalf.local.home>
-In-Reply-To: <20230516102006.76dfd68a@gandalf.local.home>
-From:   Ze Gao <zegao2021@gmail.com>
-Date:   Wed, 17 May 2023 10:00:13 +0800
-Message-ID: <CAD8CoPA=VQOnnZujzH7n3X1t=PpoduB20vM0KQh8aPubySzCzw@mail.gmail.com>
-Subject: Re: [PATCH v2 4/4] rehook, fprobe: do not trace rethook related functions
-To:     Steven Rostedt <rostedt@goodmis.org>
-Cc:     Masami Hiramatsu <mhiramat@kernel.org>,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        Alexander Gordeev <agordeev@linux.ibm.com>,
+        Tue, 16 May 2023 22:29:54 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A45DC1BF6;
+        Tue, 16 May 2023 19:29:26 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 5B49C640EA;
+        Wed, 17 May 2023 02:29:24 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 277C9C433EF;
+        Wed, 17 May 2023 02:29:22 +0000 (UTC)
+Date:   Tue, 16 May 2023 22:29:19 -0400
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Alexei Starovoitov <alexei.starovoitov@gmail.com>,
+        Beau Belgrave <beaub@linux.microsoft.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-trace-kernel@vger.kernel.org,
         Alexei Starovoitov <ast@kernel.org>,
-        Borislav Petkov <bp@alien8.de>,
-        Christian Borntraeger <borntraeger@linux.ibm.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Heiko Carstens <hca@linux.ibm.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Sven Schnelle <svens@linux.ibm.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Vasily Gorbik <gor@linux.ibm.com>, x86@kernel.org,
-        linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org,
-        linux-s390@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
-        bpf@vger.kernel.org, Conor Dooley <conor@kernel.org>,
-        Jiri Olsa <jolsa@kernel.org>, Yonghong Song <yhs@fb.com>,
-        Ze Gao <zegao@tencent.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Andrii Nakryiko <andrii@kernel.org>, bpf <bpf@vger.kernel.org>,
+        David Vernet <void@manifault.com>, dthaler@microsoft.com,
+        brauner@kernel.org, hch@infradead.org
+Subject: Re: [PATCH] tracing/user_events: Run BPF program if attached
+Message-ID: <20230516222919.79bba667@rorschach.local.home>
+In-Reply-To: <CAHk-=wj1hh=ZUriY9pVFvD1MjqbRuzHc4yz=S2PCW7u3W0-_BQ@mail.gmail.com>
+References: <20230508163751.841-1-beaub@linux.microsoft.com>
+        <CAADnVQLYL-ZaP_2vViaktw0G4UKkmpOK2q4ZXBa+f=M7cC25Rg@mail.gmail.com>
+        <20230509130111.62d587f1@rorschach.local.home>
+        <20230509163050.127d5123@rorschach.local.home>
+        <20230515165707.hv65ekwp2djkjj5i@MacBook-Pro-8.local>
+        <20230515192407.GA85@W11-BEAU-MD.localdomain>
+        <20230517003628.aqqlvmzffj7fzzoj@MacBook-Pro-8.local>
+        <CAHk-=whBKoovtifU2eCeyuBBee-QMcbxdXDLv0mu0k2DgxiaOw@mail.gmail.com>
+        <CAHk-=wj1hh=ZUriY9pVFvD1MjqbRuzHc4yz=S2PCW7u3W0-_BQ@mail.gmail.com>
+X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-Got it!  Thank you, Steevn.  Maybe I can give it a try later :)
+On Tue, 16 May 2023 18:46:29 -0700
+Linus Torvalds <torvalds@linux-foundation.org> wrote:
 
-Regards,
-Ze
+> So don't even ask for other GUP functionality, much less the "remote"
+> kind. Not going to happen. If you think you need access to remote
+> process memory, you had better do it in process context, or you had
+> better just think again.
 
-On Tue, May 16, 2023 at 10:20=E2=80=AFPM Steven Rostedt <rostedt@goodmis.or=
-g> wrote:
->
-> On Tue, 16 May 2023 15:18:30 +0800
-> Ze Gao <zegao2021@gmail.com> wrote:
->
-> >  CFLAGS_REMOVE_early.o                =3D $(CC_FLAGS_FTRACE)
-> > +CFLAGS_REMOVE_rethook.o              =3D $(CC_FLAGS_FTRACE)
-> >
-> >  endif
-> >
-> > diff --git a/arch/x86/kernel/Makefile b/arch/x86/kernel/Makefile
-> > index dd61752f4c96..4070a01c11b7 100644
-> > --- a/arch/x86/kernel/Makefile
-> > +++ b/arch/x86/kernel/Makefile
-> > @@ -17,6 +17,7 @@ CFLAGS_REMOVE_ftrace.o =3D -pg
-> >  CFLAGS_REMOVE_early_printk.o =3D -pg
-> >  CFLAGS_REMOVE_head64.o =3D -pg
-> >  CFLAGS_REMOVE_sev.o =3D -pg
-> > +CFLAGS_REMOVE_rethook.o =3D -pg
->
-> Unrelated to this patch, but someday we need to change the -pg above to
-> $(CC_FLAGS_FTRACE).
->
-> -- Steve
->
->
-> >  endif
-> >
-> >  KASAN_SANITIZE_head$(BITS).o                         :=3D n
-> > --
+So this code path is very much in user context (called directly by a
+write system call). The issue that Alexei had was that it's also in an
+rcu_read_lock() section.
+
+I wonder if this all goes away if we switch to SRCU? That is, sleepable RCU.
+
+-- Steve
