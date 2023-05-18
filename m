@@ -2,337 +2,158 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 05A95C77B7A
-	for <linux-trace-kernel@archiver.kernel.org>; Thu, 18 May 2023 01:05:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DE2B4C77B75
+	for <linux-trace-kernel@archiver.kernel.org>; Thu, 18 May 2023 01:18:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229485AbjERBFu (ORCPT
+        id S229498AbjERBSX (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Wed, 17 May 2023 21:05:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57338 "EHLO
+        Wed, 17 May 2023 21:18:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60178 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229452AbjERBFt (ORCPT
+        with ESMTP id S229457AbjERBSW (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Wed, 17 May 2023 21:05:49 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 67C0530F3;
-        Wed, 17 May 2023 18:05:47 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id E2711647DC;
-        Thu, 18 May 2023 01:05:46 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F2F79C433EF;
-        Thu, 18 May 2023 01:05:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1684371946;
-        bh=xt3Hpg03EBIFU3chzx2Jv3j7LizWB5huuXLL7P52kpk=;
+        Wed, 17 May 2023 21:18:22 -0400
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 7454E359D;
+        Wed, 17 May 2023 18:18:21 -0700 (PDT)
+Received: from W11-BEAU-MD.localdomain (unknown [76.135.27.212])
+        by linux.microsoft.com (Postfix) with ESMTPSA id 885B120F32CC;
+        Wed, 17 May 2023 18:18:20 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 885B120F32CC
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+        s=default; t=1684372700;
+        bh=81K2zFI29GmLblWkf3Bk8py8o8c8dK06HRiAskbTDO0=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=IqbmavJ6p11BKKgn4KbdAJYTzhGnsJZ3UOSx1FIny0IW3zrT+E67LdN7X9N0oSu1F
-         GppMo4U8FepLYTQ5J/zSYLlAg7Tkte9q9U8fby8vItPR50lplvXSr/1dDhKcJepqkI
-         VkKF7zXcnY2fxB77uWZ2aiYt6OCCUY6klIVsPnxdtkyMkUn214Op5eBWiWlZb0+Gfk
-         jn1mlySe8oS31P8Qklrt9atGqG+MdUH5ZisXPMJ52Uu0m0IlJ+xFIrAOswWt4lFNrQ
-         sbBMEsVEJpEOzYMtSBtcBDGctxAYobaT92+OGvRnX38a8cdWcgzITCm+Ru9ePuIjMd
-         M9q0LK3k57DGg==
-Date:   Wed, 17 May 2023 18:05:44 -0700
-From:   Jaegeuk Kim <jaegeuk@kernel.org>
-To:     Daejun Park <daejun7.park@samsung.com>
-Cc:     "chao@kernel.org" <chao@kernel.org>,
-        "rostedt@goodmis.org" <rostedt@goodmis.org>,
-        "mhiramat@kernel.org" <mhiramat@kernel.org>,
-        "linux-f2fs-devel@lists.sourceforge.net" 
-        <linux-f2fs-devel@lists.sourceforge.net>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-trace-kernel@vger.kernel.org" 
-        <linux-trace-kernel@vger.kernel.org>,
-        Seokhwan Kim <sukka.kim@samsung.com>,
-        Yonggil Song <yonggil.song@samsung.com>,
-        beomsu kim <beomsu7.kim@samsung.com>
-Subject: Re: (2) [PATCH v6] f2fs: add async reset zone command support
-Message-ID: <ZGV56DEz54529znm@google.com>
-References: <ZFqWr3sSYMsHtHAC@google.com>
- <20230508081042epcms2p8a637deae7de1829f54614e09d5fde5e5@epcms2p8>
- <CGME20230508081042epcms2p8a637deae7de1829f54614e09d5fde5e5@epcms2p6>
- <20230511052416epcms2p617838faa71a203da6978c89ffd216e91@epcms2p6>
+        b=ogygos9xC6TT8V6lfbkWYc++EuHALPVh0L8O7UcfRo/qx2FE+nmTlo8Ph4mJoe42+
+         05oD8t7DmFYXewZZeaK8tR/O76zTzRePDNiX9noLNNMq+cfPzidDoJGA/xulRBZM4c
+         DKqleDnl6BOqLFCP6TpwT8m5VxoR4hGMh9SC5c7I=
+Date:   Wed, 17 May 2023 18:18:14 -0700
+From:   Beau Belgrave <beaub@linux.microsoft.com>
+To:     Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Cc:     Steven Rostedt <rostedt@goodmis.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-trace-kernel@vger.kernel.org,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Andrii Nakryiko <andrii@kernel.org>, bpf <bpf@vger.kernel.org>,
+        David Vernet <void@manifault.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Dave Thaler <dthaler@microsoft.com>,
+        Christian Brauner <brauner@kernel.org>,
+        Christoph Hellwig <hch@infradead.org>
+Subject: Re: [PATCH] tracing/user_events: Run BPF program if attached
+Message-ID: <20230518011814.GA294@W11-BEAU-MD.localdomain>
+References: <20230509130111.62d587f1@rorschach.local.home>
+ <20230509163050.127d5123@rorschach.local.home>
+ <20230515165707.hv65ekwp2djkjj5i@MacBook-Pro-8.local>
+ <20230515192407.GA85@W11-BEAU-MD.localdomain>
+ <20230517003628.aqqlvmzffj7fzzoj@MacBook-Pro-8.local>
+ <20230516212658.2f5cc2c6@gandalf.local.home>
+ <20230517165028.GA71@W11-BEAU-MD.localdomain>
+ <CAADnVQK3-NBLSVRVsgArUEjqsuY2S_8mWsWmLEAtTzo+U49CKQ@mail.gmail.com>
+ <20230518001916.GB254@W11-BEAU-MD.localdomain>
+ <CAADnVQJwK3p1QyYEvAn9B86M4nkX69kuUvx2W0Yqwy0e=RSPPg@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20230511052416epcms2p617838faa71a203da6978c89ffd216e91@epcms2p6>
+In-Reply-To: <CAADnVQJwK3p1QyYEvAn9B86M4nkX69kuUvx2W0Yqwy0e=RSPPg@mail.gmail.com>
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On 05/11, Daejun Park wrote:
-> > Sender : Jaegeuk Kim <jaegeuk@kernel.org>
-> > Date : 2023-05-10 03:53 (GMT+9)
-> > Title : Re: [PATCH v6] f2fs: add async reset zone command support
-> > To : 박대준<daejun7.park@samsung.com>
-> > CC : chao@kernel.org<chao@kernel.org>, rostedt@goodmis.org<rostedt@goodmis.org>, mhiramat@kernel.org<mhiramat@kernel.org>, linux-f2fs-devel@lists.sourceforge.net<linux-f2fs-devel@lists.sourceforge.net>, linux-kernel@vger.kernel.org<linux-kernel@vger.kernel.org>, linux-trace-kernel@vger.kernel.org<linux-trace-kernel@vger.kernel.org>, 김석환<sukka.kim@samsung.com>, 송용길<yonggil.song@samsung.com>, 김범수<beomsu7.kim@samsung.com>
-> >  
-> > On 05/08, Daejun Park wrote:
-> > > v5 -> v6
-> > > Added trace_f2fs_iostat support for zone reset command.
-> > > 
-> > > v4 -> v5
-> > > Added f2fs iostat for zone reset command.
-> > > 
-> > > v3 -> v4
-> > > Fixed build error caused by unused function.
-> > > 
-> > > v2 -> v3
-> > > Modified arguments to be correct for ftrace parameter.
-> > > Changed __submit_zone_reset_cmd to void return.
-> > > Refactored the f2fs_wait_discard_bio function.
-> > > Fixed code that was previously incorrectly merged.
-> > > 
-> > > v1 -> v2
-> > > Changed to apply the optional async reset write pointer by default.
-> > 
-> > Don't add the history in the patch description.
+On Wed, May 17, 2023 at 05:56:34PM -0700, Alexei Starovoitov wrote:
+> On Wed, May 17, 2023 at 5:19 PM Beau Belgrave <beaub@linux.microsoft.com> wrote:
+> >
+> > On Wed, May 17, 2023 at 05:10:47PM -0700, Alexei Starovoitov wrote:
+> > > On Wed, May 17, 2023 at 9:50 AM Beau Belgrave <beaub@linux.microsoft.com> wrote:
+> > > > >
+> > > > > >
+> > > > > > Looks like user events were designed with intention to be unprivileged.
+> > > > > > When I looked at kernel/trace/trace_events_user.c I assumed root.
+> > > > > > I doubt other people reviewed it from security perspective.
+> > > > > >
+> > > > > > Recommending "chmod a+rw /sys/kernel/tracing/user_events_data" doesn't sound like a good idea.
+> > > > > >
+> > > > > > For example, I think the following is possible:
+> > > > > > fd = open("/sys/kernel/tracing/user_events_data")
+> > > > > > ioclt(fd, DIAG_IOCSDEL)
+> > > > > >   user_events_ioctl_del
+> > > > > >      delete_user_event(info->group, name);
+> > > > > >
+> > > > > > 'info' is different for every FD, but info->group is the same for all users/processes/fds,
+> > > > > > because only one global init_group is created.
+> > > > > > So one user can unregister other user event by knowing 'name'.
+> > > > > > A security hole, no?
+> > >
+> > > ...
+> > >
+> > > > Regarding deleting events, only users that are given access can delete
+> > > > events. They must know the event name, just like users with access to
+> > > > delete files must know a path (and have access to it). Since the
+> > > > write_index and other details are per-process, unless the user has
+> > > > access to either /sys/kernel/tracing/events/user_events/* or
+> > > > /sys/kernel/tracing/user_events_status, they do not know which names are
+> > > > being used.
+> > > >
+> > > > If that is not enough, we could require CAP_SYSADMIN to be able to
+> > > > delete events even when they have access to the file. Users can also
+> > > > apply SELinux policies per-file to achieve further isolation, if
+> > > > required.
+> > >
+> > > Whether /sys/kernel/tracing/user_events_status gets g+rw
+> > > or it gets a+rw (as your documentation recommends)
+> > > it is still a security issue.
+> > > The "event name" is trivial to find out by looking at the source code
+> > > of the target process or just "string target_binary".
+> >
+> > I guess, if they have access to the binary, etc.
+> > So they need both access to the binary and to the tracefs directory.
+> > We would not give them access like this in any normal setup other than a
+> > developer environment.
+> >
+> > > Restricting to cap_sysadmin is not the answer, since you want unpriv.
+> >
+> > We do not need unpriv to delete events, only to write and create events.
+> >
+> > We allow unregistering call-sites, which would still work unpriv with
+> > this requirement.
+> >
+> > > SElinux is not the answer either.
+> > > Since it's unpriv, different processes should not be able to mess with
+> > > user events of other processes.
+> >
+> > How is this different than uprobes if we give a user access to
+> > /sys/kernel/tracing/dynamic_events? Users can delete those as well. I
+> > don't see a difference here.
 > 
-> OK, I will do.
+> Because kprobe/uprobe are root only.
+> No sane person will do chmod a+rw /sys/kernel/tracing/uprobe_events.
+> It's just like chmod a+rw /etc/passwd
 > 
-> > > 
-> > > This patch enables submit reset zone command asynchornously. It helps
-> > > decrease average latency of write IOs in high utilization scenario by
-> > > faster checkpointing.
-> > > 
-> > > Signed-off-by: Daejun Park <daejun7.park@samsung.com>
-> > > ---
-> > >  fs/f2fs/f2fs.h              |  1 +
-> > >  fs/f2fs/iostat.c            |  1 +
-> > >  fs/f2fs/segment.c           | 84 +++++++++++++++++++++++++++++++++++--
-> > >  include/trace/events/f2fs.h | 24 +++++++++--
-> > >  4 files changed, 104 insertions(+), 6 deletions(-)
-> > > 
-> > > diff --git a/fs/f2fs/f2fs.h b/fs/f2fs/f2fs.h
-> > > index d211ee89c158..51b68a629814 100644
-> > > --- a/fs/f2fs/f2fs.h
-> > > +++ b/fs/f2fs/f2fs.h
-> > > @@ -1175,6 +1175,7 @@ enum iostat_type {
-> > >          /* other */
-> > >          FS_DISCARD_IO,                        /* discard */
-> > >          FS_FLUSH_IO,                        /* flush */
-> > > +        FS_ZONE_RESET_IO,                /* zone reset */
-> > >          NR_IO_TYPE,
-> > >  };
-> > >  
-> > > diff --git a/fs/f2fs/iostat.c b/fs/f2fs/iostat.c
-> > > index 3d5bfb1ad585..f8703038e1d8 100644
-> > > --- a/fs/f2fs/iostat.c
-> > > +++ b/fs/f2fs/iostat.c
-> > > @@ -80,6 +80,7 @@ int __maybe_unused iostat_info_seq_show(struct seq_file *seq, void *offset)
-> > >          seq_puts(seq, "[OTHER]\n");
-> > >          IOSTAT_INFO_SHOW("fs discard", FS_DISCARD_IO);
-> > >          IOSTAT_INFO_SHOW("fs flush", FS_FLUSH_IO);
-> > > +        IOSTAT_INFO_SHOW("fs zone reset", FS_ZONE_RESET_IO);
-> > >  
-> > >          return 0;
-> > >  }
-> > > diff --git a/fs/f2fs/segment.c b/fs/f2fs/segment.c
-> > > index 6db410f1bb8c..4802b05a795b 100644
-> > > --- a/fs/f2fs/segment.c
-> > > +++ b/fs/f2fs/segment.c
-> > > @@ -1196,6 +1196,45 @@ static void __init_discard_policy(struct f2fs_sb_info *sbi,
-> > >  static void __update_discard_tree_range(struct f2fs_sb_info *sbi,
-> > >                                  struct block_device *bdev, block_t lstart,
-> > >                                  block_t start, block_t len);
-> > > +
-> > > +#ifdef CONFIG_BLK_DEV_ZONED
-> > > +static void __submit_zone_reset_cmd(struct f2fs_sb_info *sbi,
-> > 
-> > Why can't we use __f2fs_issue_discard_zone()?
+> Whereas this is your recommended approach for user_events.
 > 
-> In my understanding, __f2fs_issue_discard_zone is used to queue the zone reset command.
-> Which point do you think is the issue?
 
-That actually calls blkdev_zone_mgmt() which is doing the same thing.
+I believe those instructions are for development only. I'll get them
+changed to a more secure approach. We don't want to folks leaving it
+wide open.
 
+We should tell folks to use a group and give access to the group like
+Steven said earlier.
+
+> > In our production environments we are not giving out wide security to
+> > this file.
 > 
-> > 
-> > > +                                   struct discard_cmd *dc, blk_opf_t flag,
-> > > +                                   struct list_head *wait_list,
-> > > +                                   unsigned int *issued)
-> > > +{
-> > > +        struct discard_cmd_control *dcc = SM_I(sbi)->dcc_info;
-> > > +        struct block_device *bdev = dc->bdev;
-> > > +        struct bio *bio = bio_alloc(bdev, 0, REQ_OP_ZONE_RESET | flag, GFP_NOFS);
-> > > +        unsigned long flags;
-> > > +
-> > > +        trace_f2fs_issue_reset_zone(bdev, dc->di.start);
-> > > +
-> > > +        spin_lock_irqsave(&dc->lock, flags);
-> > > +        dc->state = D_SUBMIT;
-> > > +        dc->bio_ref++;
-> > > +        spin_unlock_irqrestore(&dc->lock, flags);
-> > > +
-> > > +        if (issued)
-> > > +                (*issued)++;
-> > > +
-> > > +        atomic_inc(&dcc->queued_discard);
-> > > +        dc->queued++;
-> > > +        list_move_tail(&dc->list, wait_list);
-> > > +
-> > > +        /* sanity check on discard range */
-> > > +        __check_sit_bitmap(sbi, dc->di.lstart, dc->di.lstart + dc->di.len);
-> > > +
-> > > +        bio->bi_iter.bi_sector = SECTOR_FROM_BLOCK(dc->di.start);
-> > > +        bio->bi_private = dc;
-> > > +        bio->bi_end_io = f2fs_submit_discard_endio;
-> > > +        submit_bio(bio);
-> > > +
-> > > +        atomic_inc(&dcc->issued_discard);
-> > > +        f2fs_update_iostat(sbi, NULL, FS_ZONE_RESET_IO, dc->di.len * F2FS_BLKSIZE);
-> > > +}
-> > > +#endif
-> > > +
-> > >  /* this function is copied from blkdev_issue_discard from block/blk-lib.c */
-> > >  static int __submit_discard_cmd(struct f2fs_sb_info *sbi,
-> > >                                  struct discard_policy *dpolicy,
-> > > @@ -1217,6 +1256,13 @@ static int __submit_discard_cmd(struct f2fs_sb_info *sbi,
-> > >          if (is_sbi_flag_set(sbi, SBI_NEED_FSCK))
-> > >                  return 0;
-> > >  
-> > > +#ifdef CONFIG_BLK_DEV_ZONED
-> > > +        if (f2fs_sb_has_blkzoned(sbi) && bdev_is_zoned(bdev)) {
-> > > +                __submit_zone_reset_cmd(sbi, dc, flag, wait_list, issued);
-> > > +                return 0;
-> > > +        }
-> > > +#endif
-> > > +
-> > >          trace_f2fs_issue_discard(bdev, dc->di.start, dc->di.len);
-> > >  
-> > >          lstart = dc->di.lstart;
-> > > @@ -1461,6 +1507,19 @@ static void __update_discard_tree_range(struct f2fs_sb_info *sbi,
-> > >          }
-> > >  }
-> > >  
-> > > +#ifdef CONFIG_BLK_DEV_ZONED
-> > > +static void __queue_zone_reset_cmd(struct f2fs_sb_info *sbi,
-> > > +                struct block_device *bdev, block_t blkstart, block_t lblkstart,
-> > > +                block_t blklen)
-> > > +{
-> > > +        trace_f2fs_queue_reset_zone(bdev, blkstart);
-> > > +
-> > > +        mutex_lock(&SM_I(sbi)->dcc_info->cmd_lock);
-> > > +        __insert_discard_cmd(sbi, bdev, lblkstart, blkstart, blklen);
-> > > +        mutex_unlock(&SM_I(sbi)->dcc_info->cmd_lock);
-> > > +}
-> > > +#endif
-> > > +
-> > >  static void __queue_discard_cmd(struct f2fs_sb_info *sbi,
-> > >                  struct block_device *bdev, block_t blkstart, block_t blklen)
-> > >  {
-> > > @@ -1724,6 +1783,19 @@ static void f2fs_wait_discard_bio(struct f2fs_sb_info *sbi, block_t blkaddr)
-> > >  
-> > >          mutex_lock(&dcc->cmd_lock);
-> > >          dc = __lookup_discard_cmd(sbi, blkaddr);
-> > > +#ifdef CONFIG_BLK_DEV_ZONED
-> > > +        if (dc && f2fs_sb_has_blkzoned(sbi) && bdev_is_zoned(dc->bdev)) {
-> > > +                /* force submit zone reset */
-> > > +                if (dc->state == D_PREP)
-> > > +                        __submit_zone_reset_cmd(sbi, dc, REQ_SYNC,
-> > > +                                                &dcc->wait_list, NULL);
-> > > +                dc->ref++;
-> > > +                mutex_unlock(&dcc->cmd_lock);
-> > > +                /* wait zone reset */
-> > > +                __wait_one_discard_bio(sbi, dc);
-> > > +                return;
-> > > +        }
-> > > +#endif
-> > >          if (dc) {
-> > >                  if (dc->state == D_PREP) {
-> > >                          __punch_discard_cmd(sbi, dc, blkaddr);
-> > > @@ -1876,9 +1948,15 @@ static int __f2fs_issue_discard_zone(struct f2fs_sb_info *sbi,
-> > >                                   blkstart, blklen);
-> > >                          return -EIO;
-> > >                  }
-> > > -                trace_f2fs_issue_reset_zone(bdev, blkstart);
-> > > -                return blkdev_zone_mgmt(bdev, REQ_OP_ZONE_RESET,
-> > > -                                        sector, nr_sects, GFP_NOFS);
-> > > +
-> > > +                if (unlikely(is_sbi_flag_set(sbi, SBI_POR_DOING))) {
-> > > +                        trace_f2fs_issue_reset_zone(bdev, blkstart);
-> > > +                        return blkdev_zone_mgmt(bdev, REQ_OP_ZONE_RESET,
-> > > +                                                sector, nr_sects, GFP_NOFS);
-> > > +                }
-> > > +
-> > > +                __queue_zone_reset_cmd(sbi, bdev, blkstart, lblkstart, blklen);
-> > > +                return 0;
-> > >          }
-> > >  
-> > >          /* For conventional zones, use regular discard if supported */
-> > > diff --git a/include/trace/events/f2fs.h b/include/trace/events/f2fs.h
-> > > index 99cbc5949e3c..793f82cc1515 100644
-> > > --- a/include/trace/events/f2fs.h
-> > > +++ b/include/trace/events/f2fs.h
-> > > @@ -1512,7 +1512,7 @@ DEFINE_EVENT(f2fs_discard, f2fs_remove_discard,
-> > >          TP_ARGS(dev, blkstart, blklen)
-> > >  );
-> > >  
-> > > -TRACE_EVENT(f2fs_issue_reset_zone,
-> > > +DECLARE_EVENT_CLASS(f2fs_reset_zone,
-> > >  
-> > >          TP_PROTO(struct block_device *dev, block_t blkstart),
-> > >  
-> > > @@ -1528,11 +1528,25 @@ TRACE_EVENT(f2fs_issue_reset_zone,
-> > >                  __entry->blkstart = blkstart;
-> > >          ),
-> > >  
-> > > -        TP_printk("dev = (%d,%d), reset zone at block = 0x%llx",
-> > > +        TP_printk("dev = (%d,%d), zone at block = 0x%llx",
-> > >                  show_dev(__entry->dev),
-> > >                  (unsigned long long)__entry->blkstart)
-> > >  );
-> > >  
-> > > +DEFINE_EVENT(f2fs_reset_zone, f2fs_queue_reset_zone,
-> > > +
-> > > +        TP_PROTO(struct block_device *dev, block_t blkstart),
-> > > +
-> > > +        TP_ARGS(dev, blkstart)
-> > > +);
-> > > +
-> > > +DEFINE_EVENT(f2fs_reset_zone, f2fs_issue_reset_zone,
-> > > +
-> > > +        TP_PROTO(struct block_device *dev, block_t blkstart),
-> > > +
-> > > +        TP_ARGS(dev, blkstart)
-> > > +);
-> > > +
-> > >  TRACE_EVENT(f2fs_issue_flush,
-> > >  
-> > >          TP_PROTO(struct block_device *dev, unsigned int nobarrier,
-> > > @@ -1979,6 +1993,7 @@ TRACE_EVENT(f2fs_iostat,
-> > >                  __field(unsigned long long,        fs_nrio)
-> > >                  __field(unsigned long long,        fs_mrio)
-> > >                  __field(unsigned long long,        fs_discard)
-> > > +                __field(unsigned long long,        fs_reset_zone)
-> > >          ),
-> > >  
-> > >          TP_fast_assign(
-> > > @@ -2010,12 +2025,14 @@ TRACE_EVENT(f2fs_iostat,
-> > >                  __entry->fs_nrio        = iostat[FS_NODE_READ_IO];
-> > >                  __entry->fs_mrio        = iostat[FS_META_READ_IO];
-> > >                  __entry->fs_discard        = iostat[FS_DISCARD_IO];
-> > > +                __entry->fs_reset_zone        = iostat[FS_ZONE_RESET_IO];
-> > >          ),
-> > >  
-> > >          TP_printk("dev = (%d,%d), "
-> > >                  "app [write=%llu (direct=%llu, buffered=%llu), mapped=%llu, "
-> > >                  "compr(buffered=%llu, mapped=%llu)], "
-> > > -                "fs [data=%llu, cdata=%llu, node=%llu, meta=%llu, discard=%llu], "
-> > > +                "fs [data=%llu, cdata=%llu, node=%llu, meta=%llu, discard=%llu, "
-> > > +                "reset_zone=%llu], "
-> > >                  "gc [data=%llu, node=%llu], "
-> > >                  "cp [data=%llu, node=%llu, meta=%llu], "
-> > >                  "app [read=%llu (direct=%llu, buffered=%llu), mapped=%llu], "
-> > > @@ -2026,6 +2043,7 @@ TRACE_EVENT(f2fs_iostat,
-> > >                  __entry->app_bio, __entry->app_mio, __entry->app_bcdio,
-> > >                  __entry->app_mcdio, __entry->fs_dio, __entry->fs_cdio,
-> > >                  __entry->fs_nio, __entry->fs_mio, __entry->fs_discard,
-> > > +                __entry->fs_reset_zone,
-> > >                  __entry->fs_gc_dio, __entry->fs_gc_nio, __entry->fs_cp_dio,
-> > >                  __entry->fs_cp_nio, __entry->fs_cp_mio,
-> > >                  __entry->app_rio, __entry->app_drio, __entry->app_brio,
-> > > -- 
-> > > 2.25.1
+> Fine by me. Keep it insecure and broken. Do not send bpf patches then.
+> I refuse to have bpf callable from such subsystems.
+> Somebody will inevitably blame bpf for the insecurity of user_events.
+
+The delete IOCTL is different than reg/unreg. I don't see a problem with
+adding a CAP_SYSADMIN check on the delete IOCTL (and other delete paths)
+to prevent this. It shouldn't affect anything we are doing to add this
+and it makes it so non-admins cannot delete any events if they are given
+write access to the user_events_data file.
+
+Thanks,
+-Beau
