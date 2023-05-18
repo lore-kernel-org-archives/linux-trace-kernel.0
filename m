@@ -2,301 +2,128 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4523EC77B7D
-	for <linux-trace-kernel@archiver.kernel.org>; Thu, 18 May 2023 05:27:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 44A86C77B7A
+	for <linux-trace-kernel@archiver.kernel.org>; Thu, 18 May 2023 13:36:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229852AbjERF13 (ORCPT
+        id S229989AbjERNgG convert rfc822-to-8bit (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Thu, 18 May 2023 01:27:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52658 "EHLO
+        Thu, 18 May 2023 09:36:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58134 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230004AbjERF11 (ORCPT
+        with ESMTP id S229929AbjERNgF (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Thu, 18 May 2023 01:27:27 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4D72E40DF;
-        Wed, 17 May 2023 22:26:52 -0700 (PDT)
+        Thu, 18 May 2023 09:36:05 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 57306E0;
+        Thu, 18 May 2023 06:36:04 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id DDD4164D1D;
-        Thu, 18 May 2023 05:26:35 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 87C12C433A0;
-        Thu, 18 May 2023 05:26:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1684387595;
-        bh=LP4D99wG55y2a5NiVD/jj01lJ6vWfLOrfXzDRriUPDY=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=nN0DqjqrmpOmPOSLPmgTZ9ENKUVZXQdWs9uIVXeytu77JIopbluToS4WjO0kuSXVs
-         Ofme2DsJxEq86kB9rKnePCNg8wxGk1c2IolIe4BuX3i8s9FaJT+1J/CgIRknZyx2yA
-         h/JrQGXrntFjKy2bh/zw+06AcNUCCJoEyNgeV57s8j+zQ7tfomshbFQ/B5SMr4ox1H
-         +UhRJqllWTuJ8jp8HBKgVHCDnYF52zZ5JU67r3eI1P0jY8Xr8mnhk1aLZ+E0dBvS7D
-         f80XLKZX8JHzx0hHm4dXMSOSrxp03DHa7nYT4kcJl4+nxVY+9+OUhFVPsI1gyKbxqD
-         aQwI4yHygY4Yg==
-From:   "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
-To:     linux-trace-kernel@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>,
-        mhiramat@kernel.org, Florent Revest <revest@chromium.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Martin KaFai Lau <martin.lau@linux.dev>, bpf@vger.kernel.org,
-        Bagas Sanjaya <bagasdotme@gmail.com>
-Subject: [PATCH v12 11/11] Documentation: tracing/probes: Add fprobe event tracing document
-Date:   Thu, 18 May 2023 14:26:31 +0900
-Message-ID:  <168438759098.1517340.8357153598969739502.stgit@mhiramat.roam.corp.google.com>
-X-Mailer: git-send-email 2.40.1.606.ga4b1b128d6-goog
-In-Reply-To:  <168438749373.1517340.14083401972478496211.stgit@mhiramat.roam.corp.google.com>
-References:  <168438749373.1517340.14083401972478496211.stgit@mhiramat.roam.corp.google.com>
-User-Agent: StGit/0.19
+        by dfw.source.kernel.org (Postfix) with ESMTPS id DC35364F7E;
+        Thu, 18 May 2023 13:36:03 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 39973C433EF;
+        Thu, 18 May 2023 13:36:02 +0000 (UTC)
+Date:   Thu, 18 May 2023 09:36:00 -0400
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Cc:     Beau Belgrave <beaub@linux.microsoft.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-trace-kernel@vger.kernel.org,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Andrii Nakryiko <andrii@kernel.org>, bpf <bpf@vger.kernel.org>,
+        David Vernet <void@manifault.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Dave Thaler <dthaler@microsoft.com>,
+        Christian Brauner <brauner@kernel.org>,
+        Christoph Hellwig <hch@infradead.org>
+Subject: Re: [PATCH] tracing/user_events: Run BPF program if attached
+Message-ID: <20230518093600.3f119d68@rorschach.local.home>
+In-Reply-To: <CAADnVQLtTOjHG=k5uwP_zrM_af4RdS8d5zgmLnVFSmq_=5m0Cg@mail.gmail.com>
+References: <20230509130111.62d587f1@rorschach.local.home>
+        <20230509163050.127d5123@rorschach.local.home>
+        <20230515165707.hv65ekwp2djkjj5i@MacBook-Pro-8.local>
+        <20230515192407.GA85@W11-BEAU-MD.localdomain>
+        <20230517003628.aqqlvmzffj7fzzoj@MacBook-Pro-8.local>
+        <20230516212658.2f5cc2c6@gandalf.local.home>
+        <20230517165028.GA71@W11-BEAU-MD.localdomain>
+        <CAADnVQK3-NBLSVRVsgArUEjqsuY2S_8mWsWmLEAtTzo+U49CKQ@mail.gmail.com>
+        <20230518001916.GB254@W11-BEAU-MD.localdomain>
+        <CAADnVQJwK3p1QyYEvAn9B86M4nkX69kuUvx2W0Yqwy0e=RSPPg@mail.gmail.com>
+        <20230518011814.GA294@W11-BEAU-MD.localdomain>
+        <20230517220800.3d4cbad2@gandalf.local.home>
+        <CAADnVQLtTOjHG=k5uwP_zrM_af4RdS8d5zgmLnVFSmq_=5m0Cg@mail.gmail.com>
+X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+On Wed, 17 May 2023 20:14:31 -0700
+Alexei Starovoitov <alexei.starovoitov@gmail.com> wrote:
 
-Add a documentation about fprobe event tracing including
-tracepoint probe event and BTF argument.
+> On Wed, May 17, 2023 at 7:08 PM Steven Rostedt <rostedt@goodmis.org> wrote:
 
-Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
----
-Changes in v12:
- - Use double backquotes for keywords and identifiers.
- - Use the ref link instead of file.
-Changes in v11:
- - Fix $$args to $arg*.
- - Update the document.
-Changes in v10:
- - Fix space before tab.
-Changes in v7:
- - Update about BTF auto type casting for $retval.
----
- Documentation/trace/fprobetrace.rst |  188 +++++++++++++++++++++++++++++++++++
- Documentation/trace/index.rst       |    1 
- Documentation/trace/kprobetrace.rst |    2 
- 3 files changed, 191 insertions(+)
- create mode 100644 Documentation/trace/fprobetrace.rst
+> > The delete IOCTL is different than reg/unreg. I don't see a problem with
+> > adding a CAP_SYSADMIN check on the delete IOCTL (and other delete paths)
+> > to prevent this. It shouldn't affect anything we are doing to add this
+> > and it makes it so non-admins cannot delete any events if they are given
+> > write access to the user_events_data file.  
+> 
+> sysadmin for delete is a pointless.
+> user_events_ioctl_reg() has the same issue.
+> Two different processes using you fancy TRACELOGGING_DEFINE_PROVIDER()
+> macro and picking the same name will race.
+> 
+> TRACELOGGING_DEFINE_PROVIDER( // defines the MyProvider symbol
+>     MyProvider, // Name of the provider symbol to define
+>     "MyCompany_MyComponent_MyProvider", // Human-readable provider
+> name, no ' ' or ':' chars.
+>     // {d5b90669-1aad-5db8-16c9-6286a7fcfe33} // Provider guid
+> (ignored on Linux)
+>     (0xd5b90669,0x1aad,0x5db8,0x16,0xc9,0x62,0x86,0xa7,0xfc,0xfe,0x33));
+> 
+> I totally get it that Beau is copy pasting these ideas from windows,
+> but windows is likely similarly broken if it's registering names
+> globally.
+> 
+> FD should be the isolation boundary.
+> fd = open("/sys/kernel/tracing/user_event")
+> and make sure all events are bound to that file.
+> when file is closed the events _should be auto deleted_.
+> 
+> That's another issue I just spotted.
+> Looks like user_events_release() is leaking memory.
+> user_event_refs are just lost.
+> 
+> tbh the more I look into the code the more I want to suggest to mark it
+> depends on BROKEN
+> and go back to redesign.
 
-diff --git a/Documentation/trace/fprobetrace.rst b/Documentation/trace/fprobetrace.rst
-new file mode 100644
-index 000000000000..e949bc0cff05
---- /dev/null
-+++ b/Documentation/trace/fprobetrace.rst
-@@ -0,0 +1,188 @@
-+.. SPDX-License-Identifier: GPL-2.0
-+
-+==========================
-+Fprobe-based Event Tracing
-+==========================
-+
-+.. Author: Masami Hiramatsu <mhiramat@kernel.org>
-+
-+Overview
-+--------
-+
-+Fprobe event is similar to the kprobe event, but limited to probe on
-+the function entry and exit only. It is good enough for many use cases
-+which only traces some specific functions.
-+
-+This document also covers tracepoint probe events (tprobe) since this
-+is also works only on the tracepoint entry. User can trace a part of
-+tracepoint argument, or the tracepoint without trace-event, which is
-+not exposed on tracefs.
-+
-+As same as other dynamic events, fprobe events and tracepoint probe
-+events are defined via `dynamic_events` interface file on tracefs.
-+
-+Synopsis of fprobe-events
-+-------------------------
-+::
-+
-+  f[:[GRP1/][EVENT1]] SYM [FETCHARGS]                       : Probe on function entry
-+  f[MAXACTIVE][:[GRP1/][EVENT1]] SYM%return [FETCHARGS]     : Probe on function exit
-+  t[:[GRP2/][EVENT2]] TRACEPOINT [FETCHARGS]                : Probe on tracepoint
-+
-+ GRP1           : Group name for fprobe. If omitted, use "fprobes" for it.
-+ GRP2           : Group name for tprobe. If omitted, use "tracepoints" for it.
-+ EVENT1         : Event name for fprobe. If omitted, the event name is
-+                  "SYM__entry" or "SYM__exit".
-+ EVENT2         : Event name for tprobe. If omitted, the event name is
-+                  the same as "TRACEPOINT", but if the "TRACEPOINT" starts
-+                  with a digit character, "_TRACEPOINT" is used.
-+ MAXACTIVE      : Maximum number of instances of the specified function that
-+                  can be probed simultaneously, or 0 for the default value
-+                  as defined in Documentation/trace/fprobes.rst
-+
-+ FETCHARGS      : Arguments. Each probe can have up to 128 args.
-+  ARG           : Fetch "ARG" function argument using BTF (only for function
-+                  entry or tracepoint.) (\*1)
-+  @ADDR         : Fetch memory at ADDR (ADDR should be in kernel)
-+  @SYM[+|-offs] : Fetch memory at SYM +|- offs (SYM should be a data symbol)
-+  $stackN       : Fetch Nth entry of stack (N >= 0)
-+  $stack        : Fetch stack address.
-+  $argN         : Fetch the Nth function argument. (N >= 1) (\*2)
-+  $retval       : Fetch return value.(\*3)
-+  $comm         : Fetch current task comm.
-+  +|-[u]OFFS(FETCHARG) : Fetch memory at FETCHARG +|- OFFS address.(\*4)(\*5)
-+  \IMM          : Store an immediate value to the argument.
-+  NAME=FETCHARG : Set NAME as the argument name of FETCHARG.
-+  FETCHARG:TYPE : Set TYPE as the type of FETCHARG. Currently, basic types
-+                  (u8/u16/u32/u64/s8/s16/s32/s64), hexadecimal types
-+                  (x8/x16/x32/x64), "char", "string", "ustring", "symbol", "symstr"
-+                  and bitfield are supported.
-+
-+  (\*1) This is available only when BTF is enabled.
-+  (\*2) only for the probe on function entry (offs == 0).
-+  (\*3) only for return probe.
-+  (\*4) this is useful for fetching a field of data structures.
-+  (\*5) "u" means user-space dereference.
-+
-+For the details of TYPE, see :ref:`kprobetrace documentation <kprobetrace_types>`.
-+
-+BTF arguments
-+-------------
-+BTF (BPF Type Format) argument allows user to trace function and tracepoint
-+parameters by its name instead of ``$argN``. This feature is available if the
-+kernel is configured with CONFIG_BPF_SYSCALL and CONFIG_DEBUG_INFO_BTF.
-+If user only specify the BTF argument, the event's argument name is also
-+automatically set by the given name. ::
-+
-+ # echo 'f:myprobe vfs_read count pos' >> dynamic_events
-+ # cat dynamic_events
-+ f:fprobes/myprobe vfs_read count=count pos=pos
-+
-+It also chooses the fetch type from BTF information. For example, in the above
-+example, the ``count`` is unsigned long, and the ``pos`` is a pointer. Thus, both
-+are converted to 64bit unsigned long, but only ``pos`` has "%Lx" print-format as
-+below ::
-+
-+ # cat events/fprobes/myprobe/format
-+ name: myprobe
-+ ID: 1313
-+ format:
-+	field:unsigned short common_type;	offset:0;	size:2;	signed:0;
-+	field:unsigned char common_flags;	offset:2;	size:1;	signed:0;
-+	field:unsigned char common_preempt_count;	offset:3;	size:1;	signed:0;
-+	field:int common_pid;	offset:4;	size:4;	signed:1;
-+
-+	field:unsigned long __probe_ip;	offset:8;	size:8;	signed:0;
-+	field:u64 count;	offset:16;	size:8;	signed:0;
-+	field:u64 pos;	offset:24;	size:8;	signed:0;
-+
-+ print fmt: "(%lx) count=%Lu pos=0x%Lx", REC->__probe_ip, REC->count, REC->pos
-+
-+If user unsures the name of arguments, ``$arg*`` will be helpful. The ``$arg*``
-+is expanded to all function arguments of the function or the tracepoint. ::
-+
-+ # echo 'f:myprobe vfs_read $arg*' >> dynamic_events
-+ # cat dynamic_events
-+ f:fprobes/myprobe vfs_read file=file buf=buf count=count pos=pos
-+
-+BTF also affects the ``$retval``. If user doesn't set any type, the retval type is
-+automatically picked from the BTF. If the function returns ``void``, ``$retval``
-+is rejected.
-+
-+Usage examples
-+--------------
-+Here is an example to add fprobe events on ``vfs_read()`` function entry
-+and exit, with BTF arguments.
-+::
-+
-+  # echo 'f vfs_read $arg*' >> dynamic_events
-+  # echo 'f vfs_read%return $retval' >> dynamic_events
-+  # cat dynamic_events
-+ f:fprobes/vfs_read__entry vfs_read file=file buf=buf count=count pos=pos
-+ f:fprobes/vfs_read__exit vfs_read%return arg1=$retval
-+  # echo 1 > events/fprobes/enable
-+  # head -n 20 trace | tail
-+ #           TASK-PID     CPU#  |||||  TIMESTAMP  FUNCTION
-+ #              | |         |   |||||     |         |
-+               sh-70      [000] ...1.   335.883195: vfs_read__entry: (vfs_read+0x4/0x340) file=0xffff888005cf9a80 buf=0x7ffef36c6879 count=1 pos=0xffffc900005aff08
-+               sh-70      [000] .....   335.883208: vfs_read__exit: (ksys_read+0x75/0x100 <- vfs_read) arg1=1
-+               sh-70      [000] ...1.   335.883220: vfs_read__entry: (vfs_read+0x4/0x340) file=0xffff888005cf9a80 buf=0x7ffef36c6879 count=1 pos=0xffffc900005aff08
-+               sh-70      [000] .....   335.883224: vfs_read__exit: (ksys_read+0x75/0x100 <- vfs_read) arg1=1
-+               sh-70      [000] ...1.   335.883232: vfs_read__entry: (vfs_read+0x4/0x340) file=0xffff888005cf9a80 buf=0x7ffef36c687a count=1 pos=0xffffc900005aff08
-+               sh-70      [000] .....   335.883237: vfs_read__exit: (ksys_read+0x75/0x100 <- vfs_read) arg1=1
-+               sh-70      [000] ...1.   336.050329: vfs_read__entry: (vfs_read+0x4/0x340) file=0xffff888005cf9a80 buf=0x7ffef36c6879 count=1 pos=0xffffc900005aff08
-+               sh-70      [000] .....   336.050343: vfs_read__exit: (ksys_read+0x75/0x100 <- vfs_read) arg1=1
-+
-+You can see all function arguments and return values are recorded as signed int.
-+
-+Also, here is an example of tracepoint events on ``sched_switch`` tracepoint.
-+To compare the result, this also enables the ``sched_switch`` traceevent too.
-+::
-+
-+  # echo 't sched_switch $arg*' >> dynamic_events
-+  # echo 1 > events/sched/sched_switch/enable
-+  # echo 1 > events/tracepoints/sched_switch/enable
-+  # echo > trace
-+  # head -n 20 trace | tail
-+ #           TASK-PID     CPU#  |||||  TIMESTAMP  FUNCTION
-+ #              | |         |   |||||     |         |
-+               sh-70      [000] d..2.  3912.083993: sched_switch: prev_comm=sh prev_pid=70 prev_prio=120 prev_state=S ==> next_comm=swapper/0 next_pid=0 next_prio=120
-+               sh-70      [000] d..3.  3912.083995: sched_switch: (__probestub_sched_switch+0x4/0x10) preempt=0 prev=0xffff88800664e100 next=0xffffffff828229c0 prev_state=1
-+           <idle>-0       [000] d..2.  3912.084183: sched_switch: prev_comm=swapper/0 prev_pid=0 prev_prio=120 prev_state=R ==> next_comm=rcu_preempt next_pid=16 next_prio=120
-+           <idle>-0       [000] d..3.  3912.084184: sched_switch: (__probestub_sched_switch+0x4/0x10) preempt=0 prev=0xffffffff828229c0 next=0xffff888004208000 prev_state=0
-+      rcu_preempt-16      [000] d..2.  3912.084196: sched_switch: prev_comm=rcu_preempt prev_pid=16 prev_prio=120 prev_state=I ==> next_comm=swapper/0 next_pid=0 next_prio=120
-+      rcu_preempt-16      [000] d..3.  3912.084196: sched_switch: (__probestub_sched_switch+0x4/0x10) preempt=0 prev=0xffff888004208000 next=0xffffffff828229c0 prev_state=1026
-+           <idle>-0       [000] d..2.  3912.085191: sched_switch: prev_comm=swapper/0 prev_pid=0 prev_prio=120 prev_state=R ==> next_comm=rcu_preempt next_pid=16 next_prio=120
-+           <idle>-0       [000] d..3.  3912.085191: sched_switch: (__probestub_sched_switch+0x4/0x10) preempt=0 prev=0xffffffff828229c0 next=0xffff888004208000 prev_state=0
-+
-+As you can see, the ``sched_switch`` trace-event shows *cooked* parameters, on
-+the other hand, the ``sched_switch`` tracepoint probe event shows *raw*
-+parameters. This means you can access any field values in the task
-+structure pointed by the ``prev`` and ``next`` arguments.
-+
-+For example, usually ``task_struct::start_time`` is not traced, but with this
-+traceprobe event, you can trace it as below.
-+::
-+
-+  # echo 't sched_switch comm=+1896(next):string start_time=+1728(next):u64' > dynamic_events
-+  # head -n 20 trace | tail
-+ #           TASK-PID     CPU#  |||||  TIMESTAMP  FUNCTION
-+ #              | |         |   |||||     |         |
-+               sh-70      [000] d..3.  5606.686577: sched_switch: (__probestub_sched_switch+0x4/0x10) comm="rcu_preempt" usage=1 start_time=245000000
-+      rcu_preempt-16      [000] d..3.  5606.686602: sched_switch: (__probestub_sched_switch+0x4/0x10) comm="sh" usage=1 start_time=1596095526
-+               sh-70      [000] d..3.  5606.686637: sched_switch: (__probestub_sched_switch+0x4/0x10) comm="swapper/0" usage=2 start_time=0
-+           <idle>-0       [000] d..3.  5606.687190: sched_switch: (__probestub_sched_switch+0x4/0x10) comm="rcu_preempt" usage=1 start_time=245000000
-+      rcu_preempt-16      [000] d..3.  5606.687202: sched_switch: (__probestub_sched_switch+0x4/0x10) comm="swapper/0" usage=2 start_time=0
-+           <idle>-0       [000] d..3.  5606.690317: sched_switch: (__probestub_sched_switch+0x4/0x10) comm="kworker/0:1" usage=1 start_time=137000000
-+      kworker/0:1-14      [000] d..3.  5606.690339: sched_switch: (__probestub_sched_switch+0x4/0x10) comm="swapper/0" usage=2 start_time=0
-+           <idle>-0       [000] d..3.  5606.692368: sched_switch: (__probestub_sched_switch+0x4/0x10) comm="kworker/0:1" usage=1 start_time=137000000
-+
-+Currently, to find the offset of a specific field in the data structure,
-+you need to build kernel with debuginfo and run `perf probe` command with
-+`-D` option. e.g.
-+::
-+
-+ # perf probe -D "__probestub_sched_switch next->comm:string next->start_time"
-+ p:probe/__probestub_sched_switch __probestub_sched_switch+0 comm=+1896(%cx):string start_time=+1728(%cx):u64
-+
-+And replace the ``%cx`` with the ``next``.
-diff --git a/Documentation/trace/index.rst b/Documentation/trace/index.rst
-index ea25a9220f92..5092d6c13af5 100644
---- a/Documentation/trace/index.rst
-+++ b/Documentation/trace/index.rst
-@@ -13,6 +13,7 @@ Linux Tracing Technologies
-    kprobes
-    kprobetrace
-    uprobetracer
-+   fprobetrace
-    tracepoints
-    events
-    events-kmem
-diff --git a/Documentation/trace/kprobetrace.rst b/Documentation/trace/kprobetrace.rst
-index 651f9ab53f3e..8a2dfee38145 100644
---- a/Documentation/trace/kprobetrace.rst
-+++ b/Documentation/trace/kprobetrace.rst
-@@ -66,6 +66,8 @@ Synopsis of kprobe_events
-   (\*3) this is useful for fetching a field of data structures.
-   (\*4) "u" means user-space dereference. See :ref:`user_mem_access`.
- 
-+.. _kprobetrace_types:
-+
- Types
- -----
- Several types are supported for fetchargs. Kprobe tracer will access memory
+I don't think these changes require a redesign. I do like the idea that
+the events live with the fd. That is, when the fd dies, so does the event.
+
+Although, we may keep it around for a bit (no new events, but being
+able to parse it. That is, the event itself isn't deleted until the fd
+is closed, and so is the tracing files being read are closed.
+
+Beau,
+
+How hard is it to give the event an owner, but not for task or user,
+but with the fd. That way you don't need to worry about other tasks
+deleting the event. And it also automatically cleans itself up. If we
+leave it to the sysadmin to clean up, it's going to cause leaks,
+because it's not something the sysadmin will want to do, as they will
+need to keep track of what events are created.
+
+-- Steve
+
+PS. I missed my connection due to unseasonal freezing temperatures, and
+my little airport didn't have a driver for the deicer, making my flight
+2 hours delayed (had to wait for the sun to come up and deice the
+plane!). Thus, instead of enjoying myself by the pool, I'm in an
+airport lounge without much to do.
 
