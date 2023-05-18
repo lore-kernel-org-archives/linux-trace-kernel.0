@@ -2,46 +2,46 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10C8FC7EE2E
-	for <linux-trace-kernel@archiver.kernel.org>; Thu, 18 May 2023 17:32:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D5DBC77B73
+	for <linux-trace-kernel@archiver.kernel.org>; Thu, 18 May 2023 21:56:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229711AbjERRcD (ORCPT
+        id S229737AbjERV4z (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Thu, 18 May 2023 13:32:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59906 "EHLO
+        Thu, 18 May 2023 17:56:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58342 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229654AbjERRcC (ORCPT
+        with ESMTP id S229487AbjERV4z (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Thu, 18 May 2023 13:32:02 -0400
+        Thu, 18 May 2023 17:56:55 -0400
 Received: from mga09.intel.com (mga09.intel.com [134.134.136.24])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3451EAA;
-        Thu, 18 May 2023 10:31:45 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4C7FFE7;
+        Thu, 18 May 2023 14:56:54 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1684431105; x=1715967105;
+  t=1684447014; x=1715983014;
   h=message-id:date:mime-version:subject:to:cc:references:
    from:in-reply-to:content-transfer-encoding;
-  bh=Wl8BDYVG0i7AvYNjyPawAfZhnam6nIO2zxc9kJVuY98=;
-  b=n6Zm4Of+BldnxQc0YUu+ASMgCbzK4g4rXyxfgtVIC2vl1JBt7SeLKpZp
-   qljjuxYfoDzKXUZrlcSJ89kfZoyqK51Ah7HKlru6SrdfmQjtom26vsrmd
-   TOIzyxXUW7jaHbalTuvAI6vAsv8BeJS5PSivMZqADfQvEUsb6QNBnDOmn
-   4uvBcFukVBd5uvAFCcVq2wE0EnIoU/3dqyDjA8JjMO9joNPR4DkFr1JcF
-   1eauAMqrJn+WNe3WKs76V6aTST7bAOz0hcGHGnpwt5bbMUA4UWBbmbijt
-   NHAUWy03yZZq1VYMJzqtfeiX9N23vPt6y1+9p/oqGcJzYakYCjK6DCG81
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10714"; a="354475452"
-X-IronPort-AV: E=Sophos;i="6.00,174,1681196400"; 
-   d="scan'208";a="354475452"
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 May 2023 10:31:18 -0700
+  bh=TfncyPoLkgEVKt4cWoEjhnDcsRhR4hVCsiDKfdnguT0=;
+  b=ilTUs+AtIeT5pna9Vt4ARWCoTY3z1q30bi1ndDsBKZNtZhDoy8KIdvnX
+   PeTUtmSWu0tijJHhU3XmszAlr9H3oAr1NsYl5ShbcGolL6mQdtXR7yoIl
+   V3B6IoRGw5FjLcsbMqPc/WSPdXRQZF0ba3QYkfwGrcStlGdSYAzGBzaaU
+   3atKU/JCvdWNPg7Di6oxaZ1Li743mjYZnGk7V+69cUEiuPBpd4OE1/6iY
+   AbCD+nGgvODVpmWNrL1GNADv7+32VRhJKK28YRWq8slCwW3Zc8ANSyRL5
+   O2ZSpBEPSXqWdQMk1fwFSk6ltOo4ihP63pRM6M/UonYIgnoOjoheTJsUQ
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10714"; a="354550228"
+X-IronPort-AV: E=Sophos;i="6.00,175,1681196400"; 
+   d="scan'208";a="354550228"
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 May 2023 14:56:53 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10714"; a="1032284552"
-X-IronPort-AV: E=Sophos;i="6.00,174,1681196400"; 
-   d="scan'208";a="1032284552"
+X-IronPort-AV: E=McAfee;i="6600,9927,10714"; a="948852100"
+X-IronPort-AV: E=Sophos;i="6.00,175,1681196400"; 
+   d="scan'208";a="948852100"
 Received: from nroy-mobl1.amr.corp.intel.com (HELO [10.209.81.123]) ([10.209.81.123])
-  by fmsmga005-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 May 2023 10:31:17 -0700
-Message-ID: <d03ef733-8098-69b7-97c2-304f1195e2a4@intel.com>
-Date:   Thu, 18 May 2023 10:31:16 -0700
+  by fmsmga006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 May 2023 14:56:52 -0700
+Message-ID: <a78d9dcd-0bc1-7e98-a8f1-e5d6cd0c09a3@intel.com>
+Date:   Thu, 18 May 2023 14:56:52 -0700
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.10.0
@@ -81,11 +81,25 @@ List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
 On 5/16/23 12:35, Arnd Bergmann wrote:
+> From: Arnd Bergmann <arnd@arndb.de>
+> 
+> This addresses all x86 specific prototype warnings. The majority of the
+> patches should be straightforward, either adding an #include statement
+> to get the right header, or ensuring that an unused global function is
+> left out of the build when the prototype is hidden.
+> 
 > The ones that are a bit awkward are those that just add a prototype to
 > shut up the warning, but the prototypes are never used for calling the
 > function because the only caller is in assembler code. I tried to come up
 > with other ways to shut up the compiler using the asmlinkage annotation,
 > but with no success.
+> 
+> All of the warnings have to be addressed in some form before the warning
+> can be enabled by default.
 
-I went looking for the same thing.  It's too bad gcc doesn't have an
-__attribute__ for it.
+I picked up the ones that were blatantly obvious, but left out 03, 04,
+10, 12 and 19 for the moment.
+
+BTW, I think the i386 allyesconfig is getting pretty lightly tested
+these days.  I think you and I hit the same mlx4 __bad_copy_from()
+compile issue.
