@@ -2,35 +2,31 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DE2B4C77B75
-	for <linux-trace-kernel@archiver.kernel.org>; Thu, 18 May 2023 01:18:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1AC4DC77B7D
+	for <linux-trace-kernel@archiver.kernel.org>; Thu, 18 May 2023 02:08:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229498AbjERBSX (ORCPT
+        id S229592AbjERCIJ (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Wed, 17 May 2023 21:18:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60178 "EHLO
+        Wed, 17 May 2023 22:08:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51614 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229457AbjERBSW (ORCPT
+        with ESMTP id S229468AbjERCIJ (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Wed, 17 May 2023 21:18:22 -0400
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 7454E359D;
-        Wed, 17 May 2023 18:18:21 -0700 (PDT)
-Received: from W11-BEAU-MD.localdomain (unknown [76.135.27.212])
-        by linux.microsoft.com (Postfix) with ESMTPSA id 885B120F32CC;
-        Wed, 17 May 2023 18:18:20 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 885B120F32CC
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-        s=default; t=1684372700;
-        bh=81K2zFI29GmLblWkf3Bk8py8o8c8dK06HRiAskbTDO0=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=ogygos9xC6TT8V6lfbkWYc++EuHALPVh0L8O7UcfRo/qx2FE+nmTlo8Ph4mJoe42+
-         05oD8t7DmFYXewZZeaK8tR/O76zTzRePDNiX9noLNNMq+cfPzidDoJGA/xulRBZM4c
-         DKqleDnl6BOqLFCP6TpwT8m5VxoR4hGMh9SC5c7I=
-Date:   Wed, 17 May 2023 18:18:14 -0700
-From:   Beau Belgrave <beaub@linux.microsoft.com>
-To:     Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Cc:     Steven Rostedt <rostedt@goodmis.org>,
+        Wed, 17 May 2023 22:08:09 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 559392D7D;
+        Wed, 17 May 2023 19:08:04 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id E770764C4B;
+        Thu, 18 May 2023 02:08:03 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C5346C433EF;
+        Thu, 18 May 2023 02:08:01 +0000 (UTC)
+Date:   Wed, 17 May 2023 22:08:00 -0400
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     Beau Belgrave <beaub@linux.microsoft.com>
+Cc:     Alexei Starovoitov <alexei.starovoitov@gmail.com>,
         Masami Hiramatsu <mhiramat@kernel.org>,
         LKML <linux-kernel@vger.kernel.org>,
         linux-trace-kernel@vger.kernel.org,
@@ -43,117 +39,49 @@ Cc:     Steven Rostedt <rostedt@goodmis.org>,
         Christian Brauner <brauner@kernel.org>,
         Christoph Hellwig <hch@infradead.org>
 Subject: Re: [PATCH] tracing/user_events: Run BPF program if attached
-Message-ID: <20230518011814.GA294@W11-BEAU-MD.localdomain>
+Message-ID: <20230517220800.3d4cbad2@gandalf.local.home>
+In-Reply-To: <20230518011814.GA294@W11-BEAU-MD.localdomain>
 References: <20230509130111.62d587f1@rorschach.local.home>
- <20230509163050.127d5123@rorschach.local.home>
- <20230515165707.hv65ekwp2djkjj5i@MacBook-Pro-8.local>
- <20230515192407.GA85@W11-BEAU-MD.localdomain>
- <20230517003628.aqqlvmzffj7fzzoj@MacBook-Pro-8.local>
- <20230516212658.2f5cc2c6@gandalf.local.home>
- <20230517165028.GA71@W11-BEAU-MD.localdomain>
- <CAADnVQK3-NBLSVRVsgArUEjqsuY2S_8mWsWmLEAtTzo+U49CKQ@mail.gmail.com>
- <20230518001916.GB254@W11-BEAU-MD.localdomain>
- <CAADnVQJwK3p1QyYEvAn9B86M4nkX69kuUvx2W0Yqwy0e=RSPPg@mail.gmail.com>
+        <20230509163050.127d5123@rorschach.local.home>
+        <20230515165707.hv65ekwp2djkjj5i@MacBook-Pro-8.local>
+        <20230515192407.GA85@W11-BEAU-MD.localdomain>
+        <20230517003628.aqqlvmzffj7fzzoj@MacBook-Pro-8.local>
+        <20230516212658.2f5cc2c6@gandalf.local.home>
+        <20230517165028.GA71@W11-BEAU-MD.localdomain>
+        <CAADnVQK3-NBLSVRVsgArUEjqsuY2S_8mWsWmLEAtTzo+U49CKQ@mail.gmail.com>
+        <20230518001916.GB254@W11-BEAU-MD.localdomain>
+        <CAADnVQJwK3p1QyYEvAn9B86M4nkX69kuUvx2W0Yqwy0e=RSPPg@mail.gmail.com>
+        <20230518011814.GA294@W11-BEAU-MD.localdomain>
+X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAADnVQJwK3p1QyYEvAn9B86M4nkX69kuUvx2W0Yqwy0e=RSPPg@mail.gmail.com>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On Wed, May 17, 2023 at 05:56:34PM -0700, Alexei Starovoitov wrote:
-> On Wed, May 17, 2023 at 5:19 PM Beau Belgrave <beaub@linux.microsoft.com> wrote:
-> >
-> > On Wed, May 17, 2023 at 05:10:47PM -0700, Alexei Starovoitov wrote:
-> > > On Wed, May 17, 2023 at 9:50 AM Beau Belgrave <beaub@linux.microsoft.com> wrote:
-> > > > >
-> > > > > >
-> > > > > > Looks like user events were designed with intention to be unprivileged.
-> > > > > > When I looked at kernel/trace/trace_events_user.c I assumed root.
-> > > > > > I doubt other people reviewed it from security perspective.
-> > > > > >
-> > > > > > Recommending "chmod a+rw /sys/kernel/tracing/user_events_data" doesn't sound like a good idea.
-> > > > > >
-> > > > > > For example, I think the following is possible:
-> > > > > > fd = open("/sys/kernel/tracing/user_events_data")
-> > > > > > ioclt(fd, DIAG_IOCSDEL)
-> > > > > >   user_events_ioctl_del
-> > > > > >      delete_user_event(info->group, name);
-> > > > > >
-> > > > > > 'info' is different for every FD, but info->group is the same for all users/processes/fds,
-> > > > > > because only one global init_group is created.
-> > > > > > So one user can unregister other user event by knowing 'name'.
-> > > > > > A security hole, no?
-> > >
-> > > ...
-> > >
-> > > > Regarding deleting events, only users that are given access can delete
-> > > > events. They must know the event name, just like users with access to
-> > > > delete files must know a path (and have access to it). Since the
-> > > > write_index and other details are per-process, unless the user has
-> > > > access to either /sys/kernel/tracing/events/user_events/* or
-> > > > /sys/kernel/tracing/user_events_status, they do not know which names are
-> > > > being used.
-> > > >
-> > > > If that is not enough, we could require CAP_SYSADMIN to be able to
-> > > > delete events even when they have access to the file. Users can also
-> > > > apply SELinux policies per-file to achieve further isolation, if
-> > > > required.
-> > >
-> > > Whether /sys/kernel/tracing/user_events_status gets g+rw
-> > > or it gets a+rw (as your documentation recommends)
-> > > it is still a security issue.
-> > > The "event name" is trivial to find out by looking at the source code
-> > > of the target process or just "string target_binary".
-> >
-> > I guess, if they have access to the binary, etc.
-> > So they need both access to the binary and to the tracefs directory.
-> > We would not give them access like this in any normal setup other than a
-> > developer environment.
-> >
-> > > Restricting to cap_sysadmin is not the answer, since you want unpriv.
-> >
-> > We do not need unpriv to delete events, only to write and create events.
-> >
-> > We allow unregistering call-sites, which would still work unpriv with
-> > this requirement.
-> >
-> > > SElinux is not the answer either.
-> > > Since it's unpriv, different processes should not be able to mess with
-> > > user events of other processes.
-> >
-> > How is this different than uprobes if we give a user access to
-> > /sys/kernel/tracing/dynamic_events? Users can delete those as well. I
-> > don't see a difference here.
-> 
-> Because kprobe/uprobe are root only.
-> No sane person will do chmod a+rw /sys/kernel/tracing/uprobe_events.
-> It's just like chmod a+rw /etc/passwd
-> 
-> Whereas this is your recommended approach for user_events.
-> 
+On Wed, 17 May 2023 18:18:14 -0700
+Beau Belgrave <beaub@linux.microsoft.com> wrote:
 
-I believe those instructions are for development only. I'll get them
-changed to a more secure approach. We don't want to folks leaving it
-wide open.
+> We should tell folks to use a group and give access to the group like
+> Steven said earlier.
 
-We should tell folks to use a group and give access to the group like
-Steven said earlier.
+Could we possibly add an "owner" attribute to the event. That is, the
+creator of the event is the only one that can write to that event. Or at
+least by the user that created it (not actually the process).
 
-> > In our production environments we are not giving out wide security to
-> > this file.
-> 
-> Fine by me. Keep it insecure and broken. Do not send bpf patches then.
-> I refuse to have bpf callable from such subsystems.
-> Somebody will inevitably blame bpf for the insecurity of user_events.
+So if the user "rostedt" creates an event, only "rostedt" can write to or
+delete the event.
 
-The delete IOCTL is different than reg/unreg. I don't see a problem with
-adding a CAP_SYSADMIN check on the delete IOCTL (and other delete paths)
-to prevent this. It shouldn't affect anything we are doing to add this
-and it makes it so non-admins cannot delete any events if they are given
-write access to the user_events_data file.
+Basically like how the /tmp directory works.
 
-Thanks,
--Beau
+I think this would lock down the issue that Alexei is worried about.
+
+Thoughts?
+
+-- Steve
+
+P.S. I'm about to leave on PTO and will be very late in my replies
+starting now. (Unless I'm board at the airport, I may then reply).
+
+-- Steve
