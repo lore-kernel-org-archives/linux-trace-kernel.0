@@ -2,38 +2,38 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B176BC77B7F
-	for <linux-trace-kernel@archiver.kernel.org>; Fri, 19 May 2023 23:08:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 97EADC7EE2D
+	for <linux-trace-kernel@archiver.kernel.org>; Fri, 19 May 2023 23:08:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231735AbjESXI2 (ORCPT
+        id S231758AbjESXI2 (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
         Fri, 19 May 2023 19:08:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37532 "EHLO
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37534 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231671AbjESXI0 (ORCPT
+        with ESMTP id S231672AbjESXI0 (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
         Fri, 19 May 2023 19:08:26 -0400
 Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 0DB081B0;
-        Fri, 19 May 2023 16:08:24 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 871A11B7;
+        Fri, 19 May 2023 16:08:25 -0700 (PDT)
 Received: from W11-BEAU-MD.localdomain (unknown [76.135.27.212])
-        by linux.microsoft.com (Postfix) with ESMTPSA id 69CF220FB611;
+        by linux.microsoft.com (Postfix) with ESMTPSA id E5CF920FB618;
         Fri, 19 May 2023 16:08:24 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 69CF220FB611
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com E5CF920FB618
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-        s=default; t=1684537704;
-        bh=OvAh3RxmXpSVUBx65Lv/5RIU5rX4bGiaYEjcJRexHGA=;
+        s=default; t=1684537705;
+        bh=VuJim+olM4mdhP+9flU3IJ60VgfVV5tOztn8lZStPJ4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=io/kAOLFf4UK4zU96lsgT4gbEmhCH7ceePCd+Ojb3H1Tg2OGEKDmwmqngfGech18X
-         Jgk+s6ji0vF58grp4NaNtecL4aqvvN3N9sfnDvlkr4sdglmwerLj0XFAQo85Ciwn4T
-         LNGkzJhEkJK2onr+1gV460KxFEMbvlAYAEsBNg/Y=
+        b=EA90QIJKk7Kzx8LR8kLyEGzeafYINfLECxf+o873foSJutgK6yUMqSqpFLQzJNcrg
+         Tz2xfOFTTScDouLpbyQDcjhjegnMdskIsEl00QcJHkv+qfIyHLUKsk8hL3A9VaS2nE
+         blpwdRhDpEZI+77H1b2c9W9gqGV/3MS8ziQfOuCw=
 From:   Beau Belgrave <beaub@linux.microsoft.com>
 To:     rostedt@goodmis.org, mhiramat@kernel.org
 Cc:     linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
         torvalds@linux-foundation.org, ast@kernel.org
-Subject: [PATCH v3 2/4] tracing/user_events: Remove RCU lock while pinning pages
-Date:   Fri, 19 May 2023 16:07:39 -0700
-Message-Id: <20230519230741.669-3-beaub@linux.microsoft.com>
+Subject: [PATCH v3 4/4] tracing/user_events: Document user_event_mm one-shot list usage
+Date:   Fri, 19 May 2023 16:07:41 -0700
+Message-Id: <20230519230741.669-5-beaub@linux.microsoft.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20230519230741.669-1-beaub@linux.microsoft.com>
 References: <20230519230741.669-1-beaub@linux.microsoft.com>
@@ -43,77 +43,83 @@ Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-From: Linus Torvalds <torvalds@linux-foundation.org>
+During 6.4 development it became clear that the one-shot list used by
+the user_event_mm's next field was confusing to others. It is not clear
+how this list is protected or what the next field usage is for unless
+you are familiar with the code.
 
-pin_user_pages_remote() can reschedule which means we cannot hold any
-RCU lock while using it. Now that enablers are not exposed out to the
-tracing register callbacks during fork(), there is clearly no need to
-require the RCU lock as event_mutex is enough to protect changes.
+Add comments into the user_event_mm struct indicating lock requirement
+and usage. Also document how and why this approach was used via comments
+in both user_event_enabler_update() and user_event_mm_get_all() and the
+rules to properly use it.
 
-Remove unneeded RCU usages when pinning pages and walking enablers with
-event_mutex held. Cleanup a misleading "safe" list walk that is not
-needed. During fork() duplication, remove unneeded RCU list add, since
-the list is not exposed yet.
+Link: https://lore.kernel.org/linux-trace-kernel/CAHk-=wicngggxVpbnrYHjRTwGE0WYscPRM+L2HO2BF8ia1EXgQ@mail.gmail.com/
 
-Link: https://lore.kernel.org/linux-trace-kernel/CAHk-=wiiBfT4zNS29jA0XEsy8EmbqTH1hAPdRJCDAJMD8Gxt5A@mail.gmail.com/
-
-Fixes: 7235759084a4 ("tracing/user_events: Use remote writes for event enablement")
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
-[ change log written by Beau Belgrave ]
+Suggested-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Beau Belgrave <beaub@linux.microsoft.com>
 ---
- kernel/trace/trace_events_user.c | 13 +++++++------
- 1 file changed, 7 insertions(+), 6 deletions(-)
+ include/linux/user_events.h      |  1 +
+ kernel/trace/trace_events_user.c | 23 ++++++++++++++++++++++-
+ 2 files changed, 23 insertions(+), 1 deletion(-)
 
+diff --git a/include/linux/user_events.h b/include/linux/user_events.h
+index 17d452b389de..8afa8c3a0973 100644
+--- a/include/linux/user_events.h
++++ b/include/linux/user_events.h
+@@ -20,6 +20,7 @@ struct user_event_mm {
+ 	struct list_head	mms_link;
+ 	struct list_head	enablers;
+ 	struct mm_struct	*mm;
++	/* Used for one-shot lists, protected by event_mutex */
+ 	struct user_event_mm	*next;
+ 	refcount_t		refcnt;
+ 	refcount_t		tasks;
 diff --git a/kernel/trace/trace_events_user.c b/kernel/trace/trace_events_user.c
-index b2aecbfbbd24..2f70dabb0f71 100644
+index 360d0f965cb8..6058ca2de3be 100644
 --- a/kernel/trace/trace_events_user.c
 +++ b/kernel/trace/trace_events_user.c
-@@ -437,9 +437,8 @@ static bool user_event_enabler_exists(struct user_event_mm *mm,
- 				      unsigned long uaddr, unsigned char bit)
+@@ -450,12 +450,25 @@ static bool user_event_enabler_exists(struct user_event_mm *mm,
+ static void user_event_enabler_update(struct user_event *user)
  {
  	struct user_event_enabler *enabler;
--	struct user_event_enabler *next;
- 
--	list_for_each_entry_safe(enabler, next, &mm->enablers, link) {
-+	list_for_each_entry(enabler, &mm->enablers, link) {
- 		if (enabler->addr == uaddr &&
- 		    (enabler->values & ENABLE_VAL_BIT_MASK) == bit)
- 			return true;
-@@ -455,19 +454,19 @@ static void user_event_enabler_update(struct user_event *user)
+-	struct user_event_mm *mm = user_event_mm_get_all(user);
  	struct user_event_mm *next;
++	struct user_event_mm *mm;
  	int attempt;
  
-+	lockdep_assert_held(&event_mutex);
+ 	lockdep_assert_held(&event_mutex);
+ 
++	/*
++	 * We need to build a one-shot list of all the mms that have an
++	 * enabler for the user_event passed in. This list is only valid
++	 * while holding the event_mutex. The only reason for this is due
++	 * to the global mm list being RCU protected and we use methods
++	 * which can wait (mmap_read_lock and pin_user_pages_remote).
++	 *
++	 * NOTE: user_event_mm_get_all() increments the ref count of each
++	 * mm that is added to the list to prevent removal timing windows.
++	 * We must always put each mm after they are used, which may wait.
++	 */
++	mm = user_event_mm_get_all(user);
 +
  	while (mm) {
  		next = mm->next;
  		mmap_read_lock(mm->mm);
--		rcu_read_lock();
+@@ -514,6 +527,14 @@ static struct user_event_mm *user_event_mm_get_all(struct user_event *user)
+ 	struct user_event_enabler *enabler;
+ 	struct user_event_mm *mm;
  
--		list_for_each_entry_rcu(enabler, &mm->enablers, link) {
-+		list_for_each_entry(enabler, &mm->enablers, link) {
- 			if (enabler->event == user) {
- 				attempt = 0;
- 				user_event_enabler_write(mm, enabler, true, &attempt);
- 			}
- 		}
- 
--		rcu_read_unlock();
- 		mmap_read_unlock(mm->mm);
- 		user_event_mm_put(mm);
- 		mm = next;
-@@ -495,7 +494,9 @@ static bool user_event_enabler_dup(struct user_event_enabler *orig,
- 	enabler->values = orig->values & ENABLE_VAL_DUP_MASK;
- 
- 	refcount_inc(&enabler->event->refcnt);
--	list_add_rcu(&enabler->link, &mm->enablers);
++	/*
++	 * We use the mm->next field to build a one-shot list from the global
++	 * RCU protected list. To build this list the event_mutex must be held.
++	 * This lets us build a list without requiring allocs that could fail
++	 * when user based events are most wanted for diagnostics.
++	 */
++	lockdep_assert_held(&event_mutex);
 +
-+	/* Enablers not exposed yet, RCU not required */
-+	list_add(&enabler->link, &mm->enablers);
- 
- 	return true;
- }
+ 	/*
+ 	 * We do not want to block fork/exec while enablements are being
+ 	 * updated, so we use RCU to walk the current tasks that have used
 -- 
 2.25.1
 
