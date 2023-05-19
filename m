@@ -2,49 +2,49 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 47533C77B75
-	for <linux-trace-kernel@archiver.kernel.org>; Fri, 19 May 2023 08:10:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C774EC77B75
+	for <linux-trace-kernel@archiver.kernel.org>; Fri, 19 May 2023 08:37:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229709AbjESIKs (ORCPT
+        id S229661AbjESIhs (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Fri, 19 May 2023 04:10:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50362 "EHLO
+        Fri, 19 May 2023 04:37:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60590 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230095AbjESIKq (ORCPT
+        with ESMTP id S229497AbjESIhr (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Fri, 19 May 2023 04:10:46 -0400
-Received: from mail-pg1-f194.google.com (mail-pg1-f194.google.com [209.85.215.194])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5B0CA10F;
-        Fri, 19 May 2023 01:10:45 -0700 (PDT)
-Received: by mail-pg1-f194.google.com with SMTP id 41be03b00d2f7-53467c2486cso1779539a12.3;
-        Fri, 19 May 2023 01:10:45 -0700 (PDT)
+        Fri, 19 May 2023 04:37:47 -0400
+Received: from mail-pf1-f194.google.com (mail-pf1-f194.google.com [209.85.210.194])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 689B8C2;
+        Fri, 19 May 2023 01:37:45 -0700 (PDT)
+Received: by mail-pf1-f194.google.com with SMTP id d2e1a72fcca58-64d2467d640so1597603b3a.1;
+        Fri, 19 May 2023 01:37:45 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1684483845; x=1687075845;
+        d=1e100.net; s=20221208; t=1684485465; x=1687077465;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
         bh=987mpInVG0PZHy5kjEzU+JieR5EpUHHUhR1GenDgCYU=;
-        b=JAZLfwwxYWQ8KiHDAPJJ17/K9CKsxHzPdQxIZftfR/vyT7Nupvycv1hepDWbLbbyJT
-         +EZIUtM1pBg/YlJDQzegC7KXrcxJV0KNzM/dIbQYfkvfmNnoHUFgJJXpcc+Mu7B26gYY
-         BrBwwyNkdtMB2sh8oO0BRFqGqSjOxyiBLQny96OJnzlMX7djk8sKBIyXaJP5HQCPo8JU
-         piWqBPzbg++kVwiFY1m++vz9sNlKBkrn/riGB90s0FITkhsyy3+8WNumTB2m9GL+q3XR
-         1aX628bbCSU7RNXbA/OMjXRSxS6q7EyMup/2xm2SzeCjFVHXyFkOjTbJaxSt8AN8TfY2
-         CL1A==
-X-Gm-Message-State: AC+VfDz0YzGtbcRkhpKIZOHCERICI6j5Mseg5NyQ/78L6yHHz3RFJvn5
-        uJNapJ9nFVKTFHpMjeEHe2hTfJtsr5vn
-X-Google-Smtp-Source: ACHHUZ7iGK2EO49ZKc2WzlQ+7fTX0dt6vcfnJh76yzz+dgju2PZ2PAPvdyF8S+/4PkfLrBp4GkqxfA==
-X-Received: by 2002:a17:902:f1d3:b0:1ae:4b45:27b2 with SMTP id e19-20020a170902f1d300b001ae4b4527b2mr1654059plc.20.1684483844624;
-        Fri, 19 May 2023 01:10:44 -0700 (PDT)
+        b=MsUT7WZUb5YdMB5UfmC224fC0FcSpWPwUn+VOdC71Yk7vcxkoB+8m8HeLvHxy0EOAn
+         1ZKX+222RbQ9cGGTBPReXrOajSp+QZpc07NlxT/lJMdr42i17FauBHwUqOKIZTYO6a3b
+         xShKoqGyDR/fFBhKVafBGXswrxRt/s2U7SjyO5A+oerwqGwTIk3qt7fCdcLR36mdN3ml
+         XrxEFFdhP2Z2S3MrPs6GODGhqap+4wf5goXHy1FulernUtIj7qFaEQ7WBedIul5iK8ER
+         +Ro/dpuDNxoKd6cwGI7z5em4qMFtZpzVZrpMlKzdcDmng9fu5GpPEPsu3Rgz5JNwH1Bj
+         J0Rg==
+X-Gm-Message-State: AC+VfDzUzDRiq1fMBaPM6oANNFqIEE4MaOpx2lfTmWEZwQPxUQ7W05bK
+        VGwelgKLbgyJN2Ks1DCDDg==
+X-Google-Smtp-Source: ACHHUZ58aIFVREO0uE6opjgnkNbCYwTgasZHWRUgSz/Ah30xUr81YOqzO9z/t7t7gtw51A8uAeAYBg==
+X-Received: by 2002:a05:6a20:3950:b0:100:9969:8cf with SMTP id r16-20020a056a20395000b00100996908cfmr1488553pzg.49.1684485464718;
+        Fri, 19 May 2023 01:37:44 -0700 (PDT)
 Received: from localhost.localdomain ([116.128.244.169])
-        by smtp.gmail.com with ESMTPSA id jb20-20020a170903259400b001a1b66af22fsm2830041plb.62.2023.05.19.01.10.42
+        by smtp.gmail.com with ESMTPSA id h4-20020a63c004000000b005346b9a7fe5sm2565367pgg.22.2023.05.19.01.37.43
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 19 May 2023 01:10:44 -0700 (PDT)
+        Fri, 19 May 2023 01:37:44 -0700 (PDT)
 From:   sunliming <sunliming@kylinos.cn>
 To:     rostedt@goodmis.org, mhiramat@kernel.org, sunliming@kylinos.cn
-Cc:     linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] racing/user_events: Prevent same address and bit per process
-Date:   Fri, 19 May 2023 16:10:35 +0800
-Message-Id: <20230519081035.228891-1-sunliming@kylinos.cn>
+Cc:     linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
+Subject: [PATCH RESEND] tracing/user_events: Prevent same name event per process
+Date:   Fri, 19 May 2023 16:37:40 +0800
+Message-Id: <20230519083740.232401-1-sunliming@kylinos.cn>
 X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
