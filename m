@@ -2,104 +2,123 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A5955C77B7A
-	for <linux-trace-kernel@archiver.kernel.org>; Fri, 19 May 2023 09:52:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 994DAC77B7A
+	for <linux-trace-kernel@archiver.kernel.org>; Fri, 19 May 2023 11:05:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230470AbjESJwJ (ORCPT
+        id S232016AbjESLFy (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Fri, 19 May 2023 05:52:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54898 "EHLO
+        Fri, 19 May 2023 07:05:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47572 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230469AbjESJwJ (ORCPT
+        with ESMTP id S231974AbjESLFr (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Fri, 19 May 2023 05:52:09 -0400
-Received: from mail-qk1-x730.google.com (mail-qk1-x730.google.com [IPv6:2607:f8b0:4864:20::730])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3282C19A;
-        Fri, 19 May 2023 02:52:03 -0700 (PDT)
-Received: by mail-qk1-x730.google.com with SMTP id af79cd13be357-7576deacbd6so157946785a.3;
-        Fri, 19 May 2023 02:52:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1684489922; x=1687081922;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=lYlFoKtA5IkPlUC08PPhE1HRAZ9SjNGPuMwfpP8csYw=;
-        b=nYxSjSYcaXL9wBLYYxr18nPzFhoS6t/XMYh9wWv4olQ5Ajdh0ltDPhpnV6tMT0kw2L
-         7PVzfD8g+760Xthp7t3msGPUjuZ59gQw4rwzaEmCtQ8hyGpsue8N+xUoLitFBMGgdB9W
-         jVGc5vSq1XyykVvXwliYjJhs52PRT3SjBYJ7iwE5d7/KP6vVYRumAVbxhCiJ5soKreN4
-         brAcrHDbctTGfUlLlmhxftAZM3pPIDGyFEnEQC4iY77FwsJnKWjlVhqa4CFYiyr2O4Qf
-         7YR2QIMjUYV5AhK5aiXR9mtSexGX2S4hbthpMwYW3yJ58fFaMoJ96fz6odyG79IA5mY6
-         tJ0Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1684489922; x=1687081922;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=lYlFoKtA5IkPlUC08PPhE1HRAZ9SjNGPuMwfpP8csYw=;
-        b=jzs4CRdNuMvvpVjlEsvABhNf/hd/SQOozSPbu7zEhjHJsXaSTgEY1NVRbcn32kQVMd
-         r4NFT0N+Z83rCfQpL5qrTdFS0whkD9GLpXf7XiUoG58wLRwNNlJSH7jnMw1R7u5ORLB0
-         /kDjQQE31Dj1VHUQX3OLnVUtXlFH82OExycj41hUIgpM2JhBdkljk2p4FplgcdYNKGVd
-         x8AjpaJp1kXbkyBVRSXUBZNS2kfT/vZUEQwoUVOs5NXR/dF1qQdfdnDNSlXj9qy5imk5
-         T47F8d44zEI0STbX4bHKeWqxRCWmuK1sZhVLOurVn73nWCO1dXxqsXlHlpq1VeB83vLf
-         fARQ==
-X-Gm-Message-State: AC+VfDzvpE66CBK9U06xNWbHF+UNFIqy7k5DzX4f4eW6dacblK2nG5wQ
-        +JbBo/BM8JtE3UqJkjyDyPtvk0pewktLgM8BZqos4ia5u/wBBQ==
-X-Google-Smtp-Source: ACHHUZ5LXB2GGpTth50QwGaF1r9ATLp3VHmm5/m7EW57RPp9upvSN9LQS14BGDeYC2Kr+/Vi0wX8BeWxerm5Q629S9k=
-X-Received: by 2002:a05:6214:5183:b0:61a:fe65:4481 with SMTP id
- kl3-20020a056214518300b0061afe654481mr2595650qvb.51.1684489921968; Fri, 19
- May 2023 02:52:01 -0700 (PDT)
-MIME-Version: 1.0
-References: <20230516193549.544673-1-arnd@kernel.org> <a78d9dcd-0bc1-7e98-a8f1-e5d6cd0c09a3@intel.com>
-In-Reply-To: <a78d9dcd-0bc1-7e98-a8f1-e5d6cd0c09a3@intel.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Fri, 19 May 2023 12:51:25 +0300
-Message-ID: <CAHp75VeX9=1+apLMZsidudUziO_s4WUb=HOd0mraRHL17DN+cw@mail.gmail.com>
-Subject: Re: [PATCH 00/20] x86: address -Wmissing-prototype warnings
-To:     Dave Hansen <dave.hansen@intel.com>
-Cc:     Arnd Bergmann <arnd@kernel.org>, x86@kernel.org,
-        Arnd Bergmann <arnd@arndb.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
+        Fri, 19 May 2023 07:05:47 -0400
+Received: from out1-smtp.messagingengine.com (out1-smtp.messagingengine.com [66.111.4.25])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8C3021988;
+        Fri, 19 May 2023 04:05:18 -0700 (PDT)
+Received: from compute6.internal (compute6.nyi.internal [10.202.2.47])
+        by mailout.nyi.internal (Postfix) with ESMTP id 888FD5C018C;
+        Fri, 19 May 2023 07:04:25 -0400 (EDT)
+Received: from imap51 ([10.202.2.101])
+  by compute6.internal (MEProxy); Fri, 19 May 2023 07:04:25 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
+        :cc:content-type:content-type:date:date:from:from:in-reply-to
+        :in-reply-to:message-id:mime-version:references:reply-to:sender
+        :subject:subject:to:to; s=fm3; t=1684494265; x=1684580665; bh=/C
+        wla6Z93CmdqEZ213cheaHU/C7xFoaUH7cr2bjxpHQ=; b=fgD3+fClg58VBaUs//
+        zaPCHvCJP5VwPquLsJQCejG585X4z+0cgq8+PVQLQhfsm5YWTZtpvK/KaaglSt4v
+        AZlDlbvGF3uoZD3fC2SSE25eKMeiJ6Wom5J1YcG2GkUcncWYRhxQyk68GPcM/VQp
+        34Ei3ImxNpBRwXdc9tym77ZcH2TZYznA5nJLd0dV2c5Gry+glxktVg9gmMI9439a
+        f3L5sFm8wopBNd1vAmNNyXTneaLVTBRRVuEaIadcCeApET3YIvFnFJalDw9tA0h/
+        2TZol3iqiGR+i22jK3aoA3M0ZmXVLJnvyzijOnDj+ydVHvdZRUx6GiucYtjtNpoN
+        JBTA==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:cc:content-type:content-type:date:date
+        :feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
+        :message-id:mime-version:references:reply-to:sender:subject
+        :subject:to:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender
+        :x-sasl-enc; s=fm1; t=1684494265; x=1684580665; bh=/Cwla6Z93Cmdq
+        EZ213cheaHU/C7xFoaUH7cr2bjxpHQ=; b=dFs0aALapqY2/RKBVBoRgsFC+kwwn
+        aghUbwauR7c1rX0XPL5DOBgegPR2+r/bkGNCHfJxUzqFkNmnzE8s/4FBbZi5lUoP
+        nAOFrE15xfCXbV5De8PpVHEPPQaEzx07LPV8M2YiUR692Ae414HT9CDIPsp6/adS
+        ri78lMwnrM8+0M82lszLmKjmmPSM5wfqXIhxwrHo/HhPJmcwFpyMcgcL4OhJuOKD
+        iQ+iy6dLE5E+W30aMejTZcd8FnCpaTSh3UIXb6IRU53VnkL0NvNyaDJ3yMEEg3jy
+        Amhm2R5vJ7t1jx6KTPd6J1GyNs70g8SgYMjfUjxhve2s0eAY/TVDwYw5g==
+X-ME-Sender: <xms:t1dnZJJPaJ2g_2nxuUp5GipLJ04nJ7R8n701jCM3WJMdOGe7-3CtvQ>
+    <xme:t1dnZFIpdftyeukP7ox0wWnWvdRtWV5S4-6mNAnBSP0uR5dlSKF5AEHwrDn2R_GBj
+    PS_1pR-COVEJwI7y-M>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvhedrfeeihedgfeeiucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhepofgfggfkjghffffhvfevufgtsehttdertderredtnecuhfhrohhmpedftehr
+    nhguuceuvghrghhmrghnnhdfuceorghrnhgusegrrhhnuggsrdguvgeqnecuggftrfgrth
+    htvghrnhepffehueegteeihfegtefhjefgtdeugfegjeelheejueethfefgeeghfektdek
+    teffnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomheprg
+    hrnhgusegrrhhnuggsrdguvg
+X-ME-Proxy: <xmx:t1dnZBuc-n5XDtHdGoa_Vunbhz_oDVhyhorHNRW0yPyAxt_gejgLQg>
+    <xmx:t1dnZKYlvNBeT1qmqCedxwoaVPlHQKmXv30SdUKAdaGMxpMsm1ja6g>
+    <xmx:t1dnZAbwOs_Q1raPox-9GKEVt3JVUpAGWNgWD_H68sPb8ESiQXlXfg>
+    <xmx:uVdnZLvOcIo3POIIQLS4ujcc4StrWhcyu6DRLzy0SJ32ArlhSgUt0g>
+Feedback-ID: i56a14606:Fastmail
+Received: by mailuser.nyi.internal (Postfix, from userid 501)
+        id 9A414B60089; Fri, 19 May 2023 07:04:23 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
+User-Agent: Cyrus-JMAP/3.9.0-alpha0-431-g1d6a3ebb56-fm-20230511.001-g1d6a3ebb
+Mime-Version: 1.0
+Message-Id: <1f771dae-1bc7-4fd3-8514-613cf3b12e1a@app.fastmail.com>
+In-Reply-To: <cabdd839-71d5-aabb-aee6-d37ebcabf2ab@intel.com>
+References: <20230516193549.544673-1-arnd@kernel.org>
+ <20230516193549.544673-11-arnd@kernel.org>
+ <cabdd839-71d5-aabb-aee6-d37ebcabf2ab@intel.com>
+Date:   Fri, 19 May 2023 13:04:03 +0200
+From:   "Arnd Bergmann" <arnd@arndb.de>
+To:     "Dave Hansen" <dave.hansen@intel.com>,
+        "Arnd Bergmann" <arnd@kernel.org>, x86@kernel.org
+Cc:     "Thomas Gleixner" <tglx@linutronix.de>,
+        "Ingo Molnar" <mingo@redhat.com>, "Borislav Petkov" <bp@alien8.de>,
+        "Dave Hansen" <dave.hansen@linux.intel.com>,
         "H. Peter Anvin" <hpa@zytor.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Juergen Gross <jgross@suse.com>,
+        "Andy Lutomirski" <luto@kernel.org>,
+        "Steven Rostedt" <rostedt@goodmis.org>,
+        "Masami Hiramatsu" <mhiramat@kernel.org>,
+        "Mark Rutland" <mark.rutland@arm.com>,
+        "Juergen Gross" <jgross@suse.com>,
         "Srivatsa S. Bhat (VMware)" <srivatsa@csail.mit.edu>,
-        Alexey Makhalov <amakhalov@vmware.com>,
-        VMware PV-Drivers Reviewers <pv-drivers@vmware.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Darren Hart <dvhart@infradead.org>,
-        Andy Shevchenko <andy@infradead.org>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
+        "Alexey Makhalov" <amakhalov@vmware.com>,
+        "VMware PV-Drivers Reviewers" <pv-drivers@vmware.com>,
+        "Peter Zijlstra" <peterz@infradead.org>,
+        "Darren Hart" <dvhart@infradead.org>,
+        "Andy Shevchenko" <andy@infradead.org>,
+        "Boris Ostrovsky" <boris.ostrovsky@oracle.com>,
+        "Rafael J . Wysocki" <rafael@kernel.org>,
         linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
         virtualization@lists.linux-foundation.org,
         linux-pci@vger.kernel.org, platform-driver-x86@vger.kernel.org,
         xen-devel@lists.xenproject.org, linux-pm@vger.kernel.org,
         linux-mm@kvack.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH 10/20] x86: xen: add missing prototypes
+Content-Type: text/plain
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On Fri, May 19, 2023 at 12:56=E2=80=AFAM Dave Hansen <dave.hansen@intel.com=
-> wrote:
+On Thu, May 18, 2023, at 19:28, Dave Hansen wrote:
 > On 5/16/23 12:35, Arnd Bergmann wrote:
+>> 
+>> arch/x86/xen/enlighten_pv.c:1233:34: error: no previous prototype for 'xen_start_kernel' [-Werror=missing-prototypes]
+>> arch/x86/xen/irq.c:22:14: error: no previous prototype for 'xen_force_evtchn_callback' [-Werror=missing-prototypes]
+>> arch/x86/xen/mmu_pv.c:358:20: error: no previous prototype for 'xen_pte_val' [-Werror=missing-prototypes]
+>> arch/x86/xen/mmu_pv.c:366:20: error: no previous prototype for 'xen_pgd_val' [-Werror=missing-prototypes]
+>
+> What's the deal with this one?
+>
+> The patch is doing a bunch functions on top of the ones from the commit
+> message.  Were you just showing a snippet of what the actual set of
+> warnings is?
 
-> I picked up the ones that were blatantly obvious, but left out 03, 04,
-> 10, 12 and 19 for the moment.
+I missed this one going through the changelogs before sending them out,
+I thought I had added a proper text to each one, but it fell through the
+cracks. I've followed up with a v2 patch that has a proper changelog
+now.
 
-Btw, there is series that went unnoticed
-
-https://lore.kernel.org/all/20211119110017.48510-1-andriy.shevchenko@linux.=
-intel.com/
-
-I dunno why.
-
---=20
-With Best Regards,
-Andy Shevchenko
+      Arnd
