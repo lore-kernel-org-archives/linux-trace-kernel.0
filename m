@@ -2,104 +2,105 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D5DBC77B73
-	for <linux-trace-kernel@archiver.kernel.org>; Thu, 18 May 2023 21:56:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4DD1CC77B7F
+	for <linux-trace-kernel@archiver.kernel.org>; Fri, 19 May 2023 07:45:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229737AbjERV4z (ORCPT
+        id S231487AbjESHpY (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Thu, 18 May 2023 17:56:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58342 "EHLO
+        Fri, 19 May 2023 03:45:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59186 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229487AbjERV4z (ORCPT
+        with ESMTP id S231429AbjESHoa (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Thu, 18 May 2023 17:56:55 -0400
-Received: from mga09.intel.com (mga09.intel.com [134.134.136.24])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4C7FFE7;
-        Thu, 18 May 2023 14:56:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1684447014; x=1715983014;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=TfncyPoLkgEVKt4cWoEjhnDcsRhR4hVCsiDKfdnguT0=;
-  b=ilTUs+AtIeT5pna9Vt4ARWCoTY3z1q30bi1ndDsBKZNtZhDoy8KIdvnX
-   PeTUtmSWu0tijJHhU3XmszAlr9H3oAr1NsYl5ShbcGolL6mQdtXR7yoIl
-   V3B6IoRGw5FjLcsbMqPc/WSPdXRQZF0ba3QYkfwGrcStlGdSYAzGBzaaU
-   3atKU/JCvdWNPg7Di6oxaZ1Li743mjYZnGk7V+69cUEiuPBpd4OE1/6iY
-   AbCD+nGgvODVpmWNrL1GNADv7+32VRhJKK28YRWq8slCwW3Zc8ANSyRL5
-   O2ZSpBEPSXqWdQMk1fwFSk6ltOo4ihP63pRM6M/UonYIgnoOjoheTJsUQ
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10714"; a="354550228"
-X-IronPort-AV: E=Sophos;i="6.00,175,1681196400"; 
-   d="scan'208";a="354550228"
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 May 2023 14:56:53 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10714"; a="948852100"
-X-IronPort-AV: E=Sophos;i="6.00,175,1681196400"; 
-   d="scan'208";a="948852100"
-Received: from nroy-mobl1.amr.corp.intel.com (HELO [10.209.81.123]) ([10.209.81.123])
-  by fmsmga006-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 May 2023 14:56:52 -0700
-Message-ID: <a78d9dcd-0bc1-7e98-a8f1-e5d6cd0c09a3@intel.com>
-Date:   Thu, 18 May 2023 14:56:52 -0700
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.10.0
-Subject: Re: [PATCH 00/20] x86: address -Wmissing-prototype warnings
-Content-Language: en-US
-To:     Arnd Bergmann <arnd@kernel.org>, x86@kernel.org
-Cc:     Arnd Bergmann <arnd@arndb.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Andy Lutomirski <luto@kernel.org>,
+        Fri, 19 May 2023 03:44:30 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 25B221FF6
+        for <linux-trace-kernel@vger.kernel.org>; Fri, 19 May 2023 00:42:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1684482146;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=mbYjI1mFg3thAEdOWfyRBtPSF9SFp7VqzA4DBX9XOaM=;
+        b=UfBG2unyyc6A64o49MxyDFUyiiL5aOO6t1QpHeiClWkCrdsb6aXCSByWTyKd9BDoOw7Ucu
+        wHgRrwyhGbIecWJ4wV7Ru4i6aF73tSQzXh4UKE6pd/h7+eE6djIsSGlGLkeK8XSMC0D0MA
+        nJ6LiH+TAQQpGaxgnVpFHnZGX76/kWI=
+Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
+ [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-633-8jk5gKwVNnagZwC444Xzmg-1; Fri, 19 May 2023 03:42:19 -0400
+X-MC-Unique: 8jk5gKwVNnagZwC444Xzmg-1
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.rdu2.redhat.com [10.11.54.5])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id DF47D800C81;
+        Fri, 19 May 2023 07:42:18 +0000 (UTC)
+Received: from warthog.procyon.org.uk (unknown [10.42.28.221])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 759107AE4;
+        Fri, 19 May 2023 07:42:16 +0000 (UTC)
+From:   David Howells <dhowells@redhat.com>
+To:     Jens Axboe <axboe@kernel.dk>, Al Viro <viro@zeniv.linux.org.uk>,
+        Christoph Hellwig <hch@infradead.org>
+Cc:     David Howells <dhowells@redhat.com>,
+        Matthew Wilcox <willy@infradead.org>, Jan Kara <jack@suse.cz>,
+        Jeff Layton <jlayton@kernel.org>,
+        David Hildenbrand <david@redhat.com>,
+        Jason Gunthorpe <jgg@nvidia.com>,
+        Logan Gunthorpe <logang@deltatee.com>,
+        Hillf Danton <hdanton@sina.com>,
+        Christian Brauner <brauner@kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        linux-fsdevel@vger.kernel.org, linux-block@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        Christoph Hellwig <hch@lst.de>,
         Steven Rostedt <rostedt@goodmis.org>,
         Masami Hiramatsu <mhiramat@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Juergen Gross <jgross@suse.com>,
-        "Srivatsa S. Bhat (VMware)" <srivatsa@csail.mit.edu>,
-        Alexey Makhalov <amakhalov@vmware.com>,
-        VMware PV-Drivers Reviewers <pv-drivers@vmware.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Darren Hart <dvhart@infradead.org>,
-        Andy Shevchenko <andy@infradead.org>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
-        virtualization@lists.linux-foundation.org,
-        linux-pci@vger.kernel.org, platform-driver-x86@vger.kernel.org,
-        xen-devel@lists.xenproject.org, linux-pm@vger.kernel.org,
-        linux-mm@kvack.org
-References: <20230516193549.544673-1-arnd@kernel.org>
-From:   Dave Hansen <dave.hansen@intel.com>
-In-Reply-To: <20230516193549.544673-1-arnd@kernel.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+        linux-trace-kernel@vger.kernel.org
+Subject: [PATCH v20 23/32] splice: Convert trace/seq to use direct_splice_read()
+Date:   Fri, 19 May 2023 08:40:38 +0100
+Message-Id: <20230519074047.1739879-24-dhowells@redhat.com>
+In-Reply-To: <20230519074047.1739879-1-dhowells@redhat.com>
+References: <20230519074047.1739879-1-dhowells@redhat.com>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.1 on 10.11.54.5
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On 5/16/23 12:35, Arnd Bergmann wrote:
-> From: Arnd Bergmann <arnd@arndb.de>
-> 
-> This addresses all x86 specific prototype warnings. The majority of the
-> patches should be straightforward, either adding an #include statement
-> to get the right header, or ensuring that an unused global function is
-> left out of the build when the prototype is hidden.
-> 
-> The ones that are a bit awkward are those that just add a prototype to
-> shut up the warning, but the prototypes are never used for calling the
-> function because the only caller is in assembler code. I tried to come up
-> with other ways to shut up the compiler using the asmlinkage annotation,
-> but with no success.
-> 
-> All of the warnings have to be addressed in some form before the warning
-> can be enabled by default.
+For the splice from the trace seq buffer, just use direct_splice_read().
 
-I picked up the ones that were blatantly obvious, but left out 03, 04,
-10, 12 and 19 for the moment.
+In the future, something better can probably be done by gifting pages from
+seq->buf into the pipe, but that would require changing seq->buf into a
+vmap over an array of pages.
 
-BTW, I think the i386 allyesconfig is getting pretty lightly tested
-these days.  I think you and I hit the same mlx4 __bad_copy_from()
-compile issue.
+Signed-off-by: David Howells <dhowells@redhat.com>
+cc: Christoph Hellwig <hch@lst.de>
+cc: Al Viro <viro@zeniv.linux.org.uk>
+cc: Jens Axboe <axboe@kernel.dk>
+cc: Steven Rostedt <rostedt@goodmis.org>
+cc: Masami Hiramatsu <mhiramat@kernel.org>
+cc: linux-kernel@vger.kernel.org
+cc: linux-trace-kernel@vger.kernel.org
+cc: linux-fsdevel@vger.kernel.org
+cc: linux-block@vger.kernel.org
+cc: linux-mm@kvack.org
+---
+ kernel/trace/trace.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
+index ebc59781456a..b664020efcb7 100644
+--- a/kernel/trace/trace.c
++++ b/kernel/trace/trace.c
+@@ -5171,7 +5171,7 @@ static const struct file_operations tracing_fops = {
+ 	.open		= tracing_open,
+ 	.read		= seq_read,
+ 	.read_iter	= seq_read_iter,
+-	.splice_read	= generic_file_splice_read,
++	.splice_read	= direct_splice_read,
+ 	.write		= tracing_write_stub,
+ 	.llseek		= tracing_lseek,
+ 	.release	= tracing_release,
+
