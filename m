@@ -2,105 +2,85 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A45CCC7EE2D
-	for <linux-trace-kernel@archiver.kernel.org>; Sat, 20 May 2023 00:05:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CE538C77B75
+	for <linux-trace-kernel@archiver.kernel.org>; Sat, 20 May 2023 02:16:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231909AbjETAFD (ORCPT
+        id S231268AbjETCQG (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Fri, 19 May 2023 20:05:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52596 "EHLO
+        Fri, 19 May 2023 22:16:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58108 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231917AbjETAEC (ORCPT
+        with ESMTP id S230048AbjETCQF (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Fri, 19 May 2023 20:04:02 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5BEAC1BD4
-        for <linux-trace-kernel@vger.kernel.org>; Fri, 19 May 2023 17:02:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1684540938;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=HfMcLqK7SdZvPGZvy5b2RGzipVUrB/qFQK+4kiqdRos=;
-        b=g4eUsIFhPtGa8jXXMmVGEUdgoNI6AuT1r7XHuB/EGqL5HFXhU6qsGZOLHQzfLLMIn4mNce
-        mUawGTUiIuAAwx4NTNM7+PKewKPBZCurAHn/mRzaprHy8bhtjXv9gz3iRfy25iijjbDI7P
-        wdUy3k8Vlr04fT1o1ygrenyWUREQGWM=
-Received: from mimecast-mx02.redhat.com (mx3-rdu2.redhat.com
- [66.187.233.73]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-146-uJgBlECTNdOvDKp9eNps_A-1; Fri, 19 May 2023 20:02:15 -0400
-X-MC-Unique: uJgBlECTNdOvDKp9eNps_A-1
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.rdu2.redhat.com [10.11.54.5])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 35A573C02521;
-        Sat, 20 May 2023 00:02:14 +0000 (UTC)
-Received: from warthog.procyon.org.uk (unknown [10.42.28.221])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id E51177C2A;
-        Sat, 20 May 2023 00:02:11 +0000 (UTC)
-From:   David Howells <dhowells@redhat.com>
-To:     Jens Axboe <axboe@kernel.dk>, Al Viro <viro@zeniv.linux.org.uk>,
-        Christoph Hellwig <hch@infradead.org>
-Cc:     David Howells <dhowells@redhat.com>,
-        Matthew Wilcox <willy@infradead.org>, Jan Kara <jack@suse.cz>,
-        Jeff Layton <jlayton@kernel.org>,
-        David Hildenbrand <david@redhat.com>,
-        Jason Gunthorpe <jgg@nvidia.com>,
-        Logan Gunthorpe <logang@deltatee.com>,
-        Hillf Danton <hdanton@sina.com>,
-        Christian Brauner <brauner@kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        linux-fsdevel@vger.kernel.org, linux-block@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        Christoph Hellwig <hch@lst.de>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        linux-trace-kernel@vger.kernel.org
-Subject: [PATCH v21 26/30] splice: Convert trace/seq to use copy_splice_read()
-Date:   Sat, 20 May 2023 01:00:45 +0100
-Message-Id: <20230520000049.2226926-27-dhowells@redhat.com>
-In-Reply-To: <20230520000049.2226926-1-dhowells@redhat.com>
-References: <20230520000049.2226926-1-dhowells@redhat.com>
+        Fri, 19 May 2023 22:16:05 -0400
+Received: from mail-ed1-x536.google.com (mail-ed1-x536.google.com [IPv6:2a00:1450:4864:20::536])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6CFCF1A1
+        for <linux-trace-kernel@vger.kernel.org>; Fri, 19 May 2023 19:16:00 -0700 (PDT)
+Received: by mail-ed1-x536.google.com with SMTP id 4fb4d7f45d1cf-51190fd46c3so1800868a12.1
+        for <linux-trace-kernel@vger.kernel.org>; Fri, 19 May 2023 19:16:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google; t=1684548958; x=1687140958;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=F0gJN167bDqfq0Xjot6aQ2NfScujfQQVtYPukcrFzaM=;
+        b=gCSDK8cxZ9bkLI/QiQPMUEmPNgn5oEb479hkhy5ffaI/6s6YhtuXwe+yMkcp02iyln
+         irxil6mKEl7LOWXBcMbyc+HXjsFCAhVfvg7ZP2qmqKcJGJXk6G2s0dBx22carNJ3rxc0
+         c13zrYZITxayNNiURHT8C6V+i7Z56StqeJAmw=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1684548958; x=1687140958;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=F0gJN167bDqfq0Xjot6aQ2NfScujfQQVtYPukcrFzaM=;
+        b=fKaWyDUkif007dZ22zfzq1Lel2Us7TxdqjqMvEtnbUpluSSakrMVSN2pJpU9TvE7H9
+         48C0iU6+MrFFdZXF2ImrzBLIuMsHEidrHjX/jU/Cd7UwceDnhkJ3GNhIrGaOFsBzvYIJ
+         C/7y1kSXDG8g+kLsTXYzbueKfEDAreYrxCdFEsps+/Yxdm2vImoeGKdn+ehRbriHixAI
+         ORAiyRmUqitxlijGwzOF5Og3v+YHBKS8ztQiC+w6WZL9P8n2+RTz8I+lj1YKYlXMovu5
+         HPCMN6OHZQd3Xu6RsNkD6Jc6AanyNdugjtRFWKRDqwlpPJRFcex716A2RO08oOF6D9yC
+         bOUA==
+X-Gm-Message-State: AC+VfDwrk5pHSd3KA1VyNpr8+/hbGswdptZJEnN7q3Mm2xfTg1JzD0Io
+        y1uhIeKk2RMJxzCthIiaqwPaB8ZExAy0l7TKzeE7aHdX
+X-Google-Smtp-Source: ACHHUZ7cdIJVbGfiUYeh+Xeu71rJ7Nk6vq5PL1GdwsLJekJiASGnl8QbZRz8FQLUikdplnM/aO3x+A==
+X-Received: by 2002:a17:907:3da1:b0:94f:956:b3f7 with SMTP id he33-20020a1709073da100b0094f0956b3f7mr3554891ejc.2.1684548958740;
+        Fri, 19 May 2023 19:15:58 -0700 (PDT)
+Received: from mail-ej1-f45.google.com (mail-ej1-f45.google.com. [209.85.218.45])
+        by smtp.gmail.com with ESMTPSA id kg17-20020a17090776f100b0096a6bf89259sm260638ejc.167.2023.05.19.19.15.57
+        for <linux-trace-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 19 May 2023 19:15:57 -0700 (PDT)
+Received: by mail-ej1-f45.google.com with SMTP id a640c23a62f3a-965ab8ed1c0so618157666b.2
+        for <linux-trace-kernel@vger.kernel.org>; Fri, 19 May 2023 19:15:57 -0700 (PDT)
+X-Received: by 2002:a17:906:c155:b0:94f:432f:243e with SMTP id
+ dp21-20020a170906c15500b0094f432f243emr3325059ejc.14.1684548957398; Fri, 19
+ May 2023 19:15:57 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.1 on 10.11.54.5
+References: <20230519230741.669-1-beaub@linux.microsoft.com>
+In-Reply-To: <20230519230741.669-1-beaub@linux.microsoft.com>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Fri, 19 May 2023 19:15:40 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wgi1Cbe0RV0M2Fm1j1LFgC+tFMPEQhUBC1Mtk+3w944uw@mail.gmail.com>
+Message-ID: <CAHk-=wgi1Cbe0RV0M2Fm1j1LFgC+tFMPEQhUBC1Mtk+3w944uw@mail.gmail.com>
+Subject: Re: [PATCH v3 0/4] tracing/user_events: Use non-RCU context for
+ enabler writes
+To:     Beau Belgrave <beaub@linux.microsoft.com>
+Cc:     rostedt@goodmis.org, mhiramat@kernel.org,
+        linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+        ast@kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-For the splice from the trace seq buffer, just use copy_splice_read().
+On Fri, May 19, 2023 at 4:08=E2=80=AFPM Beau Belgrave <beaub@linux.microsof=
+t.com> wrote:
+>
+> There was also feedback given that some of the code was confusing and
+> needed further comments and field renames, especially for links. I think
+> having this feedback will help others contribute to this code easier, so
+> I am grouping this into a single series to address this together.
 
-In the future, something better can probably be done by gifting pages from
-seq->buf into the pipe, but that would require changing seq->buf into a
-vmap over an array of pages.
+Thanks, added comments and renaming look sane to me,
 
-Signed-off-by: David Howells <dhowells@redhat.com>
-cc: Christoph Hellwig <hch@lst.de>
-cc: Al Viro <viro@zeniv.linux.org.uk>
-cc: Jens Axboe <axboe@kernel.dk>
-cc: Steven Rostedt <rostedt@goodmis.org>
-cc: Masami Hiramatsu <mhiramat@kernel.org>
-cc: linux-kernel@vger.kernel.org
-cc: linux-trace-kernel@vger.kernel.org
-cc: linux-fsdevel@vger.kernel.org
-cc: linux-block@vger.kernel.org
-cc: linux-mm@kvack.org
----
- kernel/trace/trace.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
-index ebc59781456a..c210d02fac97 100644
---- a/kernel/trace/trace.c
-+++ b/kernel/trace/trace.c
-@@ -5171,7 +5171,7 @@ static const struct file_operations tracing_fops = {
- 	.open		= tracing_open,
- 	.read		= seq_read,
- 	.read_iter	= seq_read_iter,
--	.splice_read	= generic_file_splice_read,
-+	.splice_read	= copy_splice_read,
- 	.write		= tracing_write_stub,
- 	.llseek		= tracing_lseek,
- 	.release	= tracing_release,
-
+                 Linus
