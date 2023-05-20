@@ -2,32 +2,59 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E19A2C7EE23
-	for <linux-trace-kernel@archiver.kernel.org>; Tue, 23 May 2023 14:11:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 843CAC77B7F
+	for <linux-trace-kernel@archiver.kernel.org>; Sat, 20 May 2023 09:56:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236358AbjEWOLo (ORCPT
+        id S230501AbjETJ4x (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Tue, 23 May 2023 10:11:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47498 "EHLO
+        Sat, 20 May 2023 05:56:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51802 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236869AbjEWOL1 (ORCPT
+        with ESMTP id S231304AbjETJ4x (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Tue, 23 May 2023 10:11:27 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7973FC4;
-        Tue, 23 May 2023 07:10:46 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 2876160B02;
-        Tue, 23 May 2023 14:10:45 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 095CFC433D2;
-        Tue, 23 May 2023 14:10:42 +0000 (UTC)
-Date:   Tue, 23 May 2023 10:10:41 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Ze Gao <zegao2021@gmail.com>
-Cc:     Jiri Olsa <olsajiri@gmail.com>, Yonghong Song <yhs@meta.com>,
-        Alexei Starovoitov <ast@kernel.org>,
+        Sat, 20 May 2023 05:56:53 -0400
+Received: from mail-pf1-x42b.google.com (mail-pf1-x42b.google.com [IPv6:2607:f8b0:4864:20::42b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 219B2B8;
+        Sat, 20 May 2023 02:56:52 -0700 (PDT)
+Received: by mail-pf1-x42b.google.com with SMTP id d2e1a72fcca58-64d3fbb8c1cso1209468b3a.3;
+        Sat, 20 May 2023 02:56:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1684576611; x=1687168611;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=4nvQucCrYnD9qDZgDIXzYYSTjdKfzVHDZRdsJ/zonNo=;
+        b=m6QzIjMyqr2ArCl+HPojqTYwNMmfA6u7dUniZztX6LJ7kURSDjb2d0gmzZUVu6y1ah
+         3Y3on1FvvA+kIC/WJ123bZzdVy+PoJDKxUu/BUSiaBBxWUKswWFgIPusmg0oVf2SeDZE
+         TsOxkq6ho4OES5ELwOvhA367mZYYex+o6v+vKr7KwQlzJL242EwV9iN40AZEj+W9VOb4
+         Wrmwv3od43MPMkXiQcHZ1LhD8HwI3hgtpklNakKnX5Hfi8wCb8pYRl8xXY0sAD5uETxq
+         l8G10vOoaHFw/c9yXUSehbFSdJbmgb/qGYfYljbBW8xzA82OKwpwA5SP6L3Bu4iX3a2q
+         4eJw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1684576611; x=1687168611;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=4nvQucCrYnD9qDZgDIXzYYSTjdKfzVHDZRdsJ/zonNo=;
+        b=EwWLTVGEeJIv199TbONWgydaPu1jsoONor20P5MeIQxuG4xg3f1gx6f4ZDPRQBAfcp
+         m7m0QbvU1e7Vb43wRH1ltSNrALpYLNIajGPaNd3mK8CEInEfWOHZ5iIOmAaKWITSDD6s
+         s9ius0dM4Sc7sW0/vm7i8i+PBIdKmbIStUu277rYvr56DaQekKzkcJ7OnEO9BHzmzbtx
+         SugsLw9eozi9Q2Ek7um0d+S5M4lriTzafeV4r42EhaXjV1E9Qs3hYndslXvTe5dTrO+m
+         Ed/cDdNKD8mCWU6mAL5BOY6y25qkQmDz+x9dC5YRQeu7Iq7OtmJ10NHWh9dPa1R8Vin+
+         sV5Q==
+X-Gm-Message-State: AC+VfDxi2UnatTIaeE8TllQvC0G/YevNWF0CVT1i1DmVzGUt/fL9xvva
+        jEqHrvkvs8abmJp7/Xeq/Vs=
+X-Google-Smtp-Source: ACHHUZ68FRvELNasJW+XPAaN83BXINRQEvnpbspnmfbuSYFZBKx83WNNydh2f217lJQCJX4xYWv8iw==
+X-Received: by 2002:a05:6a00:a21:b0:64d:2da5:4d2d with SMTP id p33-20020a056a000a2100b0064d2da54d2dmr6609122pfh.25.1684576611243;
+        Sat, 20 May 2023 02:56:51 -0700 (PDT)
+Received: from localhost.localdomain ([43.132.98.101])
+        by smtp.googlemail.com with ESMTPSA id x22-20020aa793b6000000b006439df7ed5fsm981255pff.6.2023.05.20.02.56.46
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 20 May 2023 02:56:50 -0700 (PDT)
+From:   Ze Gao <zegao2021@gmail.com>
+X-Google-Original-From: Ze Gao <zegao@tencent.com>
+To:     jolsa@kernel.org
+Cc:     Alexei Starovoitov <ast@kernel.org>,
         Andrii Nakryiko <andrii@kernel.org>,
         Daniel Borkmann <daniel@iogearbox.net>,
         Hao Luo <haoluo@google.com>,
@@ -37,44 +64,68 @@ Cc:     Jiri Olsa <olsajiri@gmail.com>, Yonghong Song <yhs@meta.com>,
         Masami Hiramatsu <mhiramat@kernel.org>,
         Song Liu <song@kernel.org>,
         Stanislav Fomichev <sdf@google.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
         Yonghong Song <yhs@fb.com>, bpf@vger.kernel.org,
         linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
         kafai@fb.com, kpsingh@chromium.org, netdev@vger.kernel.org,
         paulmck@kernel.org, songliubraving@fb.com,
         Ze Gao <zegao@tencent.com>
-Subject: Re: kprobes and rcu_is_watching()
-Message-ID: <20230523101041.23ca7cc8@rorschach.local.home>
-In-Reply-To: <CAD8CoPDASe7hpkFbK+UzJats7j4sbgsCh_P4zaQYVuKD7jWu2w@mail.gmail.com>
+Subject: 
+Date:   Sat, 20 May 2023 17:47:24 +0800
+Message-Id: <20230520094722.5393-1-zegao@tencent.com>
+X-Mailer: git-send-email 2.40.1
+In-Reply-To: <20220515203653.4039075-1-jolsa@kernel.org>
 References: <20220515203653.4039075-1-jolsa@kernel.org>
-        <20230520094722.5393-1-zegao@tencent.com>
-        <b4f66729-90ab-080a-51ec-bf435ad6199d@meta.com>
-        <CAD8CoPAXse1GKAb15O5tZJwBqMt1N_btH+qRe7c_a-ryUMjx7A@mail.gmail.com>
-        <ZGp+fW855gmWuh9W@krava>
-        <CAD8CoPDASe7hpkFbK+UzJats7j4sbgsCh_P4zaQYVuKD7jWu2w@mail.gmail.com>
-X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-[ Added a subject, as I always want to delete these emails as spam! ]
 
-On Mon, 22 May 2023 10:07:42 +0800
-Ze Gao <zegao2021@gmail.com> wrote:
+Hi Jiri,
 
-> Oops, I missed that. Thanks for pointing that out, which I thought is
-> conditional use of rcu_is_watching before.
-> 
-> One last point, I think we should double check on this
->      "fentry does not filter with !rcu_is_watching"
-> as quoted from Yonghong and argue whether it needs
-> the same check for fentry as well.
-> 
+Would you like to consider to add rcu_is_watching check in
+to solve this from the viewpoint of kprobe_multi_link_prog_run
+itself? And accounting of missed runs can be added as well
+to imporve observability.
 
-Note that trace_test_and_set_recursion() (which is used by
-ftrace_test_recursion_trylock()) checks for rcu_is_watching() and
-returns false if it isn't (and the trylock will fail).
+Regards,
+Ze
 
--- Steve
+
+-----------------
+From 29fd3cd713e65461325c2703cf5246a6fae5d4fe Mon Sep 17 00:00:00 2001
+From: Ze Gao <zegao@tencent.com>
+Date: Sat, 20 May 2023 17:32:05 +0800
+Subject: [PATCH] bpf: kprobe_multi runs bpf progs only when rcu_is_watching
+
+From the perspective of kprobe_multi_link_prog_run, any traceable
+functions can be attached while bpf progs need specical care and
+ought to be under rcu protection. To solve the likely rcu lockdep
+warns once for good, when (future) functions in idle path were
+attached accidentally, we better paying some cost to check at least
+in kernel-side, and return when rcu is not watching, which helps
+to avoid any unpredictable results.
+
+Signed-off-by: Ze Gao <zegao@tencent.com>
+---
+ kernel/trace/bpf_trace.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/kernel/trace/bpf_trace.c b/kernel/trace/bpf_trace.c
+index 9a050e36dc6c..3e6ea7274765 100644
+--- a/kernel/trace/bpf_trace.c
++++ b/kernel/trace/bpf_trace.c
+@@ -2622,7 +2622,7 @@ kprobe_multi_link_prog_run(struct bpf_kprobe_multi_link *link,
+ 	struct bpf_run_ctx *old_run_ctx;
+ 	int err;
+ 
+-	if (unlikely(__this_cpu_inc_return(bpf_prog_active) != 1)) {
++	if (unlikely(__this_cpu_inc_return(bpf_prog_active) != 1 || !rcu_is_watching())) {
+ 		err = 0;
+ 		goto out;
+ 	}
+-- 
+2.40.1
+
