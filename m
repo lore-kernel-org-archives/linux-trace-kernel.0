@@ -2,129 +2,175 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 302FCC7EE23
-	for <linux-trace-kernel@archiver.kernel.org>; Sun, 21 May 2023 12:51:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 90DD5C77B7C
+	for <linux-trace-kernel@archiver.kernel.org>; Sun, 21 May 2023 14:20:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230120AbjEUMve (ORCPT
+        id S229481AbjEUOUo (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Sun, 21 May 2023 08:51:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33282 "EHLO
+        Sun, 21 May 2023 10:20:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42530 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230033AbjEUMvd (ORCPT
+        with ESMTP id S229940AbjEUOUj (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Sun, 21 May 2023 08:51:33 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2105EC6
-        for <linux-trace-kernel@vger.kernel.org>; Sun, 21 May 2023 05:50:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1684673450;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=Da4xtSq0QdB30NCu+72mMP6X5NYk0+FQ0rBdl0VkLvU=;
-        b=Y+AJysQ7niKH7SUa9EoI/D0LDoVUgVwvJ0n8/7BgJeJ81ylquYcIRXQsfZ21PHI+lCSe7l
-        IQ4XiwLTUEHFGDyZVY/TcWrZlUdsdpoXTVHKuALgesOxbC9vRdna+zmj/4FpKZNpw40WLn
-        6B0HQsrC0mk55+hE56SiR0XjFyJH4Bg=
-Received: from mimecast-mx02.redhat.com (mx3-rdu2.redhat.com
- [66.187.233.73]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-66-5viUjdlnMoCZk6kLet-5VA-1; Sun, 21 May 2023 08:50:46 -0400
-X-MC-Unique: 5viUjdlnMoCZk6kLet-5VA-1
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.rdu2.redhat.com [10.11.54.1])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 9E2691C05154;
-        Sun, 21 May 2023 12:50:45 +0000 (UTC)
-Received: from warthog.procyon.org.uk (unknown [10.39.192.68])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 7D82F40CFD00;
-        Sun, 21 May 2023 12:50:41 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
-        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
-        Kingdom.
-        Registered in England and Wales under Company Registration No. 3798903
-From:   David Howells <dhowells@redhat.com>
-In-Reply-To: <20230521192826.825bfafa17645aacba9b1076@kernel.org>
-References: <20230521192826.825bfafa17645aacba9b1076@kernel.org> <20230520000049.2226926-1-dhowells@redhat.com> <20230520000049.2226926-27-dhowells@redhat.com>
-To:     Masami Hiramatsu (Google) <mhiramat@kernel.org>
-Cc:     dhowells@redhat.com, Jens Axboe <axboe@kernel.dk>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Christoph Hellwig <hch@infradead.org>,
-        Matthew Wilcox <willy@infradead.org>, Jan Kara <jack@suse.cz>,
-        Jeff Layton <jlayton@kernel.org>,
-        David Hildenbrand <david@redhat.com>,
-        Jason Gunthorpe <jgg@nvidia.com>,
-        Logan Gunthorpe <logang@deltatee.com>,
-        Hillf Danton <hdanton@sina.com>,
-        Christian Brauner <brauner@kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        linux-fsdevel@vger.kernel.org, linux-block@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        Christoph Hellwig <hch@lst.de>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        linux-trace-kernel@vger.kernel.org
-Subject: Re: [PATCH v21 26/30] splice: Convert trace/seq to use copy_splice_read()
+        Sun, 21 May 2023 10:20:39 -0400
+Received: from mail-ed1-x530.google.com (mail-ed1-x530.google.com [IPv6:2a00:1450:4864:20::530])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 16F49BE;
+        Sun, 21 May 2023 07:19:48 -0700 (PDT)
+Received: by mail-ed1-x530.google.com with SMTP id 4fb4d7f45d1cf-510d8ead2f1so7163501a12.3;
+        Sun, 21 May 2023 07:19:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1684678786; x=1687270786;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=g7nc8IQP1+x6u9N7+EYfITX13eAIkcVj3K/FpgMBq4Y=;
+        b=hMI+YQvgIwZ0nFTrph18YPJAPJ/xqRvgbwDk0QNL7DpOR3z2xwQQZ09Y5ZB6aKwQ1N
+         vAgB18wD4Uz/K3EB1WkMeoAAQj9DLgB56nJjPbLccvgfFoiQI74WddeHk+E7C8SRYSYL
+         HrpQLEY5WuXmBoxwAPjftuOppi/LU8kC/KLqRKQJB6t4mwXSTDzGCa2Z9HHBVeihFInM
+         +j+n2WojQy5OP7ATXwgbIfOAdr8sCKWQNah5J28W/WJwcBBQ+MvXxi6K+vUpN5+DCuKe
+         CWg64ghMVjzIgCBe5FnaHQziqCCEr23LlqmF/i8RfrDYQrd5B/cL7jrk1CAmHsXdoFvc
+         681A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1684678786; x=1687270786;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=g7nc8IQP1+x6u9N7+EYfITX13eAIkcVj3K/FpgMBq4Y=;
+        b=SFn5N4Zxm4F1FlfFFlNPK7n2xD4j56CUwEgjU5Yedq16qYyXoOyMqrpOdCQ6usMGcX
+         q3SaCqkRbADGozd/zb34GjJnx0lU8mkr9v4GnFOOmEDh2gmFXlrcL4v1l35ZdCrlRViv
+         rjRfXtrFtGD/kxnUgzXV0HXNl2+1o2S76TA1VwYwzcF09Q+br0mxmTk6t2R2vHfgBlS4
+         5FTuW+8rXYyLJ93+r3vThzycC9sQ4xOvoiffxg5icHWUuSvgKk2WSdB4UmkxeMJ31OaZ
+         PKs696XuY4fwCtKeJVZ6nxS9lb6rE2wIAYBGOCZ/B4i4vM2s6WW4rexSc/qYwRijVnLe
+         EsXg==
+X-Gm-Message-State: AC+VfDy+NxOJGF7mQ9HyZWIJOYKFT1fEaw0gOgfdEGvTed7FmLS67RxW
+        rBQm2GQhCD1Y9GTDDWVHhxB18Pwy3w71aW37v1k=
+X-Google-Smtp-Source: ACHHUZ4BVlr3vRVhKVcq01bQhG1RUX5SPWxkcsAY6aiBTMuFu3CQVjxEKjSI3NraOjSXw4ScmEjdwc7YjUWWZs4ifb0=
+X-Received: by 2002:a05:6402:1217:b0:50b:faa1:e1d5 with SMTP id
+ c23-20020a056402121700b0050bfaa1e1d5mr5627068edw.39.1684678786185; Sun, 21
+ May 2023 07:19:46 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <2332232.1684673440.1@warthog.procyon.org.uk>
-Date:   Sun, 21 May 2023 13:50:40 +0100
-Message-ID: <2332233.1684673440@warthog.procyon.org.uk>
-X-Scanned-By: MIMEDefang 3.1 on 10.11.54.1
+References: <20220515203653.4039075-1-jolsa@kernel.org> <20230520094722.5393-1-zegao@tencent.com>
+ <ZGnRjkjxWrK8HzNm@krava> <20230521190907.e4104a653583dfac785e379a@kernel.org>
+In-Reply-To: <20230521190907.e4104a653583dfac785e379a@kernel.org>
+From:   Ze Gao <zegao2021@gmail.com>
+Date:   Sun, 21 May 2023 22:19:34 +0800
+Message-ID: <CAD8CoPCNNh4_vtTQVGeoN7t7TcN9w60Fw6=r7yKwvxBSr_ZJ3Q@mail.gmail.com>
+Subject: Re:
+To:     Masami Hiramatsu <mhiramat@kernel.org>
+Cc:     Jiri Olsa <olsajiri@gmail.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Andrii Nakryiko <andrii@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Hao Luo <haoluo@google.com>,
+        John Fastabend <john.fastabend@gmail.com>,
+        KP Singh <kpsingh@kernel.org>,
+        Martin KaFai Lau <martin.lau@linux.dev>,
+        Song Liu <song@kernel.org>,
+        Stanislav Fomichev <sdf@google.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Yonghong Song <yhs@fb.com>, bpf@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+        kafai@fb.com, kpsingh@chromium.org, netdev@vger.kernel.org,
+        paulmck@kernel.org, songliubraving@fb.com,
+        Ze Gao <zegao@tencent.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-Masami Hiramatsu (Google) <mhiramat@kernel.org> wrote:
+On Sun, May 21, 2023 at 6:09=E2=80=AFPM Masami Hiramatsu <mhiramat@kernel.o=
+rg> wrote:
+>
+> On Sun, 21 May 2023 10:08:46 +0200
+> Jiri Olsa <olsajiri@gmail.com> wrote:
+>
+> > On Sat, May 20, 2023 at 05:47:24PM +0800, Ze Gao wrote:
+> > >
+> > > Hi Jiri,
+> > >
+> > > Would you like to consider to add rcu_is_watching check in
+> > > to solve this from the viewpoint of kprobe_multi_link_prog_run
+> >
+> > I think this was discussed in here:
+> >   https://lore.kernel.org/bpf/20230321020103.13494-1-laoar.shao@gmail.c=
+om/
+> >
+> > and was considered a bug, there's fix mentioned later in the thread
+> >
+> > there's also this recent patchset:
+> >   https://lore.kernel.org/bpf/20230517034510.15639-3-zegao@tencent.com/
+> >
+> > that solves related problems
+>
+> I think this rcu_is_watching() is a bit different issue. This rcu_is_watc=
+hing()
+> check is required if the kprobe_multi_link_prog_run() uses any RCU API.
+> E.g. rethook_try_get() is also checks rcu_is_watching() because it uses
+> call_rcu().
 
-> David Howells <dhowells@redhat.com> wrote:
-> 
-> > For the splice from the trace seq buffer, just use copy_splice_read().
-> 
-> So this is because you will remove generic_file_splice_read() (since
-> it's buggy), right?
+Yes, that's my point!
 
-An ITER_PIPE iterator has a problem if it gets reverted with other changes I
-want to make.  The problem is that it may not be valid to control the lifetime
-of the data in the buffer with get_page().  The pages may need a pin taking
-(FOLL_PIN) or the lifetime might be controlled with kfree() or rmmod.
+Regards,
+Ze
 
-> > In the future, something better can probably be done by gifting pages from
-> > seq->buf into the pipe, but that would require changing seq->buf into a
-> > vmap over an array of pages.
-> 
-> ... We introduced splice support for avoiding copy ringbuffer pages, but
-> this drops it. Thus this will drop performance of splice on ring buffer
-> (trace file). If it is correct, can you also add a note about that?
-
-Actually, no.  There is no special splice support for tracing_fops.  You
-currently use generic_file_splice_read(), which wends its way down into
-seq_read_iter.  However, the seqfile stuff uses kvmalloc() to allocate the
-buffer, so you are not allowed to splice page refs from kmalloc'd or vmalloc'd
-memory into a pipe, so it doesn't.  It calls copy_to_iter() which will cause
-ITER_PIPE to allocate bufferage on an as-needed basis.
-
-copy_splice_read() instead creates an ITER_BVEC and populates it up front
-using the bulk allocator, so if you're splicing a lot of data, this ought to
-be marginally faster.
-
-> So what we need is to introduce a vmap?
-
-We could implement seq_splice_read().  What we would need to do is to change
-how the buffer is allocated: bulk allocate a bunch of arbitrary pages which we
-then vmap().  When we need to splice, we read into the buffer, do a vunmap()
-and then splice the pages holding the data we used into the pipe.
-
-If we don't manage to splice all the data, we can continue splicing from the
-pages we have left next time.  If a read() comes along to view partially
-spliced data, we would need to copy from the individual pages.
-
-When we use up all the data, we discard all the pages we might have spliced
-from and shuffle down the other pages, call the bulk allocator to replenish
-the buffer and then vmap() it again.
-
-Any pages we've spliced from must be discarded and replaced and not rewritten.
-
-If a read() comes without the buffer having been spliced from, it can do as it
-does now.
-
-David
-
+>
+> >
+> > > itself? And accounting of missed runs can be added as well
+> > > to imporve observability.
+> >
+> > right, we count fprobe->nmissed but it's not exposed, we should allow
+> > to get 'missed' stats from both fprobe and kprobe_multi later, which
+> > is missing now, will check
+> >
+> > thanks,
+> > jirka
+> >
+> > >
+> > > Regards,
+> > > Ze
+> > >
+> > >
+> > > -----------------
+> > > From 29fd3cd713e65461325c2703cf5246a6fae5d4fe Mon Sep 17 00:00:00 200=
+1
+> > > From: Ze Gao <zegao@tencent.com>
+> > > Date: Sat, 20 May 2023 17:32:05 +0800
+> > > Subject: [PATCH] bpf: kprobe_multi runs bpf progs only when rcu_is_wa=
+tching
+> > >
+> > > From the perspective of kprobe_multi_link_prog_run, any traceable
+> > > functions can be attached while bpf progs need specical care and
+> > > ought to be under rcu protection. To solve the likely rcu lockdep
+> > > warns once for good, when (future) functions in idle path were
+> > > attached accidentally, we better paying some cost to check at least
+> > > in kernel-side, and return when rcu is not watching, which helps
+> > > to avoid any unpredictable results.
+> > >
+> > > Signed-off-by: Ze Gao <zegao@tencent.com>
+> > > ---
+> > >  kernel/trace/bpf_trace.c | 2 +-
+> > >  1 file changed, 1 insertion(+), 1 deletion(-)
+> > >
+> > > diff --git a/kernel/trace/bpf_trace.c b/kernel/trace/bpf_trace.c
+> > > index 9a050e36dc6c..3e6ea7274765 100644
+> > > --- a/kernel/trace/bpf_trace.c
+> > > +++ b/kernel/trace/bpf_trace.c
+> > > @@ -2622,7 +2622,7 @@ kprobe_multi_link_prog_run(struct bpf_kprobe_mu=
+lti_link *link,
+> > >     struct bpf_run_ctx *old_run_ctx;
+> > >     int err;
+> > >
+> > > -   if (unlikely(__this_cpu_inc_return(bpf_prog_active) !=3D 1)) {
+> > > +   if (unlikely(__this_cpu_inc_return(bpf_prog_active) !=3D 1 || !rc=
+u_is_watching())) {
+> > >             err =3D 0;
+> > >             goto out;
+> > >     }
+> > > --
+> > > 2.40.1
+> > >
+>
+>
+> --
+> Masami Hiramatsu (Google) <mhiramat@kernel.org>
