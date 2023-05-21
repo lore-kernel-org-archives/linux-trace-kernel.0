@@ -2,206 +2,125 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DAA90C77B7C
-	for <linux-trace-kernel@archiver.kernel.org>; Sun, 21 May 2023 15:23:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 01B3DC77B73
+	for <linux-trace-kernel@archiver.kernel.org>; Sun, 21 May 2023 20:26:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229529AbjEUPXG (ORCPT
+        id S230381AbjEUU0o (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Sun, 21 May 2023 11:23:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49608 "EHLO
+        Sun, 21 May 2023 16:26:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46508 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229497AbjEUPXF (ORCPT
+        with ESMTP id S230083AbjEUU0n (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Sun, 21 May 2023 11:23:05 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 98647BD;
-        Sun, 21 May 2023 08:23:04 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 2E80B60C94;
-        Sun, 21 May 2023 15:23:04 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 974F7C4339C;
-        Sun, 21 May 2023 15:23:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1684682583;
-        bh=lcCL7l5MucY/Bkz5R8v28fihpFuh/D4Q41f1k26mjjo=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=Gdmulyhhc5HZ35wu1nkoyEwOxCuaZ2ezbEKtjUsmS+VQ40W3w0ZysS/lm/eUwOIy4
-         wmLM2iQG/+YSwss4uCrEfWAeKowUuRI4S81XHPbuzJJKLEjl+kyLhRWo86wYUFBzZ5
-         +co6hUufbqmHqaw/SmsLe/tpM7yD3rc4b0/tasLJuqbhz57Zg8uRumymDUJtxoG0d4
-         ChlFCPtYBIf0oAHaK9yvygx3N6QWuJ+dOUcU9627bs482dEFXE27uTIQDInJAfqOS5
-         hFyckmQCJ3yayrPju3NJqnqyY1eQyvev7m86lORQv2PikSZTu7w44kvqE92WVjrhki
-         bxxWyjI04jBfQ==
-Received: by mail-ej1-f46.google.com with SMTP id a640c23a62f3a-96f53c06babso573850866b.3;
-        Sun, 21 May 2023 08:23:03 -0700 (PDT)
-X-Gm-Message-State: AC+VfDwa5ILsjx/1yRZx6S81zDabH3e8E7oq+0esYjkpubCpCfd3XfOt
-        uyiOD6xXOfUjzR8Q3izlblbJFkj1Dku+24sPUUs=
-X-Google-Smtp-Source: ACHHUZ4LaKko7cWDqd76REOTyfzZg6BnmYybNhWAiaq+pUErOMuV065M8IyxkWY+cTMVj9c33sYN7T6NSeNH3qp21lo=
-X-Received: by 2002:a17:907:9712:b0:96f:e622:6865 with SMTP id
- jg18-20020a170907971200b0096fe6226865mr39583ejc.57.1684682581700; Sun, 21 May
- 2023 08:23:01 -0700 (PDT)
+        Sun, 21 May 2023 16:26:43 -0400
+Received: from mail-ej1-x631.google.com (mail-ej1-x631.google.com [IPv6:2a00:1450:4864:20::631])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2A0ADDE;
+        Sun, 21 May 2023 13:26:41 -0700 (PDT)
+Received: by mail-ej1-x631.google.com with SMTP id a640c23a62f3a-96fb45a5258so202725966b.2;
+        Sun, 21 May 2023 13:26:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1684700799; x=1687292799;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=X69f/eGnne5uw8yiXIr7+EFlS/jdrHMk5L4Y1wX1DGQ=;
+        b=jnsY8z2hfPE31V+hrL/HzhhcAGpVZ6Mm21zRAWHOlkIBTGzfCaBM+h3RJct1KT13Qf
+         M3qx5sdy6Dkr53cnZ9gVVAgU5awrQHDS6IA5Q1EdyGPZCL9EuyiLF/CPyru/DmBYGt+n
+         ++9YboruM2OFupJ407QPbsSuQo2TYmJJOxiDkdfd12n+dS/RsjtT9/WJ/N4/62mvM1Gt
+         HqGCf/m4XCIpHPv4qTpXZnwKP5j8zqzJP6gXB7RzcCMkKi9dH3+aAt7Ja3wHpIMznLPO
+         xNqwQ8fGowGu3A3Krn3cuextzAYW3XidKaOh2papT5EgbNOZrjjsNnnt/YWlfzzzvQE4
+         LhSg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1684700799; x=1687292799;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=X69f/eGnne5uw8yiXIr7+EFlS/jdrHMk5L4Y1wX1DGQ=;
+        b=Ou/Rx+OxKXT5YzcS/rLOJ/JHh8YMBnd+pQalJS+uW5FFJ6FLg+tyFHThIdaCujG+94
+         tcNeuzNIZJbLdW9j+HqF3vUVhqDdfs0RxKoHfDo14Vys9EBPf4M9Xe8LdDkv6o+nburg
+         bnsZrbpNelWS8AsmXoK2bO9tOsuU2VgSo1msANjl8eOWgrGRcmlEtIPuo7rFvDk3ufGX
+         R5uQfBIPEbq5eQapxP3MNUBfyr74unwjxG6nTODRbL1IYUcSrC90q1O2eUOwcbR3qQnE
+         NScVnvHGxR3Fn87+Gh3P6xhgaRpyTEAzoPfumB5XmKSRRqVLk3nlIbEYCweMtuEf8HFD
+         G3jQ==
+X-Gm-Message-State: AC+VfDw1UMpOf6QnG88ISa3CwmMM8V1vUAoJ8OS9ZJT9+dugkAo/IQTW
+        mHiP2tgBAoph6DOSxnkaYdI=
+X-Google-Smtp-Source: ACHHUZ74hjAZJLte5l7Qajhb8oZ9w/ViPSQhmPHkbC3tzZjyEiPOw2sJ6WzFVmLMROXwW5AUuRvdTA==
+X-Received: by 2002:a17:907:6d26:b0:957:2e48:5657 with SMTP id sa38-20020a1709076d2600b009572e485657mr7459511ejc.68.1684700799383;
+        Sun, 21 May 2023 13:26:39 -0700 (PDT)
+Received: from krava ([83.240.61.63])
+        by smtp.gmail.com with ESMTPSA id t11-20020a17090616cb00b0094f1b8901e1sm2256648ejd.68.2023.05.21.13.26.38
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 21 May 2023 13:26:38 -0700 (PDT)
+From:   Jiri Olsa <olsajiri@gmail.com>
+X-Google-Original-From: Jiri Olsa <jolsa@kernel.org>
+Date:   Sun, 21 May 2023 22:26:37 +0200
+To:     Ze Gao <zegao2021@gmail.com>
+Cc:     Yonghong Song <yhs@meta.com>, Alexei Starovoitov <ast@kernel.org>,
+        Andrii Nakryiko <andrii@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Hao Luo <haoluo@google.com>,
+        John Fastabend <john.fastabend@gmail.com>,
+        KP Singh <kpsingh@kernel.org>,
+        Martin KaFai Lau <martin.lau@linux.dev>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Song Liu <song@kernel.org>,
+        Stanislav Fomichev <sdf@google.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Yonghong Song <yhs@fb.com>, bpf@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+        kafai@fb.com, kpsingh@chromium.org, netdev@vger.kernel.org,
+        paulmck@kernel.org, songliubraving@fb.com,
+        Ze Gao <zegao@tencent.com>
+Subject: Re:
+Message-ID: <ZGp+fW855gmWuh9W@krava>
+References: <20220515203653.4039075-1-jolsa@kernel.org>
+ <20230520094722.5393-1-zegao@tencent.com>
+ <b4f66729-90ab-080a-51ec-bf435ad6199d@meta.com>
+ <CAD8CoPAXse1GKAb15O5tZJwBqMt1N_btH+qRe7c_a-ryUMjx7A@mail.gmail.com>
 MIME-Version: 1.0
-References: <20230510101857.2953955-1-suagrfillet@gmail.com>
- <20230510101857.2953955-4-suagrfillet@gmail.com> <87ttwjjpx8.fsf@all.your.base.are.belong.to.us>
- <50d56c9c-49c7-8d93-6698-3d0e90d89c54@yadro.com>
-In-Reply-To: <50d56c9c-49c7-8d93-6698-3d0e90d89c54@yadro.com>
-From:   Guo Ren <guoren@kernel.org>
-Date:   Sun, 21 May 2023 23:22:50 +0800
-X-Gmail-Original-Message-ID: <CAJF2gTT_+Pcf5xNpa_=CTTsPfLvVLQaQ-6qm0+2gej17gdeEuA@mail.gmail.com>
-Message-ID: <CAJF2gTT_+Pcf5xNpa_=CTTsPfLvVLQaQ-6qm0+2gej17gdeEuA@mail.gmail.com>
-Subject: Re: [PATCH V9 3/4] riscv: ftrace: Add DYNAMIC_FTRACE_WITH_DIRECT_CALLS
- support
-To:     Evgenii Shatokhin <e.shatokhin@yadro.com>
-Cc:     =?UTF-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn@kernel.org>,
-        Song Shuai <suagrfillet@gmail.com>,
-        linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-trace-kernel@vger.kernel.org, paul.walmsley@sifive.com,
-        rostedt@goodmis.org, palmer@dabbelt.com, aou@eecs.berkeley.edu,
-        mhiramat@kernel.org, mark.rutland@arm.com, jszhang@kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAD8CoPAXse1GKAb15O5tZJwBqMt1N_btH+qRe7c_a-ryUMjx7A@mail.gmail.com>
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On Thu, May 11, 2023 at 9:30=E2=80=AFPM Evgenii Shatokhin <e.shatokhin@yadr=
-o.com> wrote:
->
-> Hi,
->
-> On 11.05.2023 10:19, Bj=C3=B6rn T=C3=B6pel wrote:
-> > Song Shuai <suagrfillet@gmail.com> writes:
-> >
-> >> This patch adds DYNAMIC_FTRACE_WITH_DIRECT_CALLS support for RISC-V.
-> >>
-> >> select the DYNAMIC_FTRACE_WITH_DIRECT_CALLS to provide the
-> >> register_ftrace_direct[_multi] interfaces allowing users to register
-> >> the customed trampoline (direct_caller) as the mcount for one or
-> >> more target functions. And modify_ftrace_direct[_multi] are also
-> >> provided for modifying direct_caller.
-> >>
-> >> To make the direct_caller and the other ftrace hooks (eg. function/fgr=
-aph
-> >> tracer, k[ret]probes) co-exist, a temporary register is nominated to
-> >> store the address of direct_caller in ftrace_regs_caller. After the
-> >> setting of the address direct_caller by direct_ops->func and the
-> >> RESTORE_REGS in ftrace_regs_caller, direct_caller will be jumped to
-> >> by the `jr` inst.
-> >>
-> >> Signed-off-by: Song Shuai <suagrfillet@gmail.com>
-> >> Tested-by: Guo Ren <guoren@kernel.org>
-> >> Signed-off-by: Guo Ren <guoren@kernel.org>
-> >> ---
-> >>   arch/riscv/Kconfig              |  1 +
-> >>   arch/riscv/include/asm/ftrace.h |  8 ++++++++
-> >>   arch/riscv/kernel/mcount-dyn.S  | 10 ++++++++++
-> >>   3 files changed, 19 insertions(+)
-> >>
-> >> diff --git a/arch/riscv/Kconfig b/arch/riscv/Kconfig
-> >> index e0632493482f..fdf0b219a02c 100644
-> >> --- a/arch/riscv/Kconfig
-> >> +++ b/arch/riscv/Kconfig
-> >> @@ -144,6 +144,7 @@ config RISCV
-> >>        select UACCESS_MEMCPY if !MMU
-> >>        select ZONE_DMA32 if 64BIT
-> >>        select HAVE_DYNAMIC_FTRACE if !XIP_KERNEL && MMU && (CLANG_SUPP=
-ORTS_DYNAMIC_FTRACE || GCC_SUPPORTS_DYNAMIC_FTRACE)
-> >> +     select HAVE_DYNAMIC_FTRACE_WITH_DIRECT_CALLS
-> >>        select HAVE_DYNAMIC_FTRACE_WITH_REGS if HAVE_DYNAMIC_FTRACE
-> >>        select HAVE_FTRACE_MCOUNT_RECORD if !XIP_KERNEL
-> >>        select HAVE_FUNCTION_GRAPH_TRACER
-> >> diff --git a/arch/riscv/include/asm/ftrace.h b/arch/riscv/include/asm/=
-ftrace.h
-> >> index 84f856a3286e..84904c1e4369 100644
-> >> --- a/arch/riscv/include/asm/ftrace.h
-> >> +++ b/arch/riscv/include/asm/ftrace.h
-> >> @@ -114,6 +114,14 @@ struct ftrace_regs;
-> >>   void ftrace_graph_func(unsigned long ip, unsigned long parent_ip,
-> >>                       struct ftrace_ops *op, struct ftrace_regs *fregs=
-);
-> >>   #define ftrace_graph_func ftrace_graph_func
-> >> +
-> >> +static inline void
-> >> +__arch_ftrace_set_direct_caller(struct pt_regs *regs, unsigned long a=
-ddr)
-> >> +{
-> >> +             regs->t1 =3D addr;
-> >> +}
-> >> +#define arch_ftrace_set_direct_caller(fregs, addr) \
-> >> +     __arch_ftrace_set_direct_caller(&(fregs)->regs, addr)
-> >>   #endif /* CONFIG_DYNAMIC_FTRACE_WITH_REGS */
-> >>
-> >>   #endif /* __ASSEMBLY__ */
-> >> diff --git a/arch/riscv/kernel/mcount-dyn.S b/arch/riscv/kernel/mcount=
--dyn.S
-> >> index f26e9f6e2fed..9d405baedb52 100644
-> >> --- a/arch/riscv/kernel/mcount-dyn.S
-> >> +++ b/arch/riscv/kernel/mcount-dyn.S
-> >> @@ -231,6 +231,7 @@ ENDPROC(ftrace_caller)
-> >>
-> >>   #else /* CONFIG_DYNAMIC_FTRACE_WITH_REGS */
-> >>   ENTRY(ftrace_regs_caller)
-> >> +     move    t1, zero
-> >
-> > Please use "mv", and not "move" [1].
-> >
-> >>        SAVE_ABI_REGS 1
-> >>        PREPARE_ARGS
-> >>
-> >> @@ -239,7 +240,10 @@ ftrace_regs_call:
-> >>        call    ftrace_stub
-> >>
-> >>        RESTORE_ABI_REGS 1
-> >> +     bnez    t1,.Ldirect
-> >>        jr t0
-> >> +.Ldirect:
-> >> +     jr t1
-> >
-> > Again, while you're doing changes here, please try to align op/operands=
-.
-> >
-> > Wearing my BPF hat, I'm happy to finally get DIRECT_CALLS support!
-> >
-> > This does not take the WITH_CALL_OPS approach Mark suggested in the v7
-> > threads, but given that text patching story on RISC-V is still a bit sa=
-d
-> > (inconsistency in the RV tree, no specification, cannot work with
-> > preempt, ...) I'd say this approach is OK for now, and we can change to
-> > WITH_CALL_OPS later in a wider "let's improve RISC-V textpatching" work=
-.
-> >
-> > Thoughts?
->
-> The WITH_CALL_OPS approach seems to need much more time and effort, so,
-> yes, I'd also use this implementation of DIRECT_CALLS for now. Other
-> improvements could wait for the future "big patching rework".
-I agree to make DIRECT_CALLS merged first, WITH_CALL_OPS is another
-"big patching rework".
+On Sun, May 21, 2023 at 11:10:16PM +0800, Ze Gao wrote:
+> > kprobe_multi/fprobe share the same set of attachments with fentry.
+> > Currently, fentry does not filter with !rcu_is_watching, maybe
+> > because this is an extreme corner case. Not sure whether it is
+> > worthwhile or not.
+> 
+> Agreed, it's rare, especially after Peter's patches which push narrow
+> down rcu eqs regions
+> in the idle path and reduce the chance of any traceable functions
+> happening in between.
+> 
+> However, from RCU's perspective, we ought to check if rcu_is_watching
+> theoretically
+> when there's a chance our code will run in the idle path and also we
+> need rcu to be alive,
+> And also we cannot simply make assumptions for any future changes in
+> the idle path.
+> You know, just like what was hit in the thread.
+> 
+> > Maybe if you can give a concrete example (e.g., attachment point)
+> > with current code base to show what the issue you encountered and
+> > it will make it easier to judge whether adding !rcu_is_watching()
+> > is necessary or not.
+> 
+> I can reproduce likely warnings on v6.1.18 where arch_cpu_idle is
+> traceable but not on the latest version
+> so far. But as I state above, in theory we need it. So here is a
+> gentle ping :) .
 
->
-> FWIW, the implementation of kprobes for RISC-V has been improving
-> gradually too, not everything was done in the first very patchset, but
-> it was usable nonetheless.
->
-> I have not tested this particular version of this
-> DYNAMIC_FTRACE_WITH_DIRECT_CALLS series, only some previous ones - there
-> were no outstanding problems there. The code looks sane to me.
->
-> >
-> >
-> > Bj=C3=B6rn
-> >
-> > [1] https://github.com/riscv-non-isa/riscv-asm-manual/blob/master/riscv=
--asm.md#-a-listing-of-standard-risc-v-pseudoinstructions
-> >
->
-> Regards,
-> Evgenii
->
->
+hum, this change [1] added rcu_is_watching check to ftrace_test_recursion_trylock,
+which we use in fprobe_handler and is coming to fprobe_exit_handler in [2]
+
+I might be missing something, but it seems like we don't need another
+rcu_is_watching call on kprobe_multi level
+
+jirka
 
 
---=20
-Best Regards
- Guo Ren
+[1] d099dbfd3306 cpuidle: tracing: Warn about !rcu_is_watching()
+[2] https://lore.kernel.org/bpf/20230517034510.15639-4-zegao@tencent.com/
