@@ -2,89 +2,95 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B22ABC77B7C
-	for <linux-trace-kernel@archiver.kernel.org>; Mon, 22 May 2023 02:07:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A53BC77B75
+	for <linux-trace-kernel@archiver.kernel.org>; Mon, 22 May 2023 07:34:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230163AbjEVCH5 (ORCPT
+        id S231848AbjEVHeb (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Sun, 21 May 2023 22:07:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55130 "EHLO
+        Mon, 22 May 2023 03:34:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58208 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229922AbjEVCH4 (ORCPT
+        with ESMTP id S230241AbjEVHea (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Sun, 21 May 2023 22:07:56 -0400
-Received: from mail-ed1-x534.google.com (mail-ed1-x534.google.com [IPv6:2a00:1450:4864:20::534])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 904ABB7;
-        Sun, 21 May 2023 19:07:55 -0700 (PDT)
-Received: by mail-ed1-x534.google.com with SMTP id 4fb4d7f45d1cf-510d92184faso9071618a12.1;
-        Sun, 21 May 2023 19:07:55 -0700 (PDT)
+        Mon, 22 May 2023 03:34:30 -0400
+Received: from mail-yb1-xb2a.google.com (mail-yb1-xb2a.google.com [IPv6:2607:f8b0:4864:20::b2a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5B9BCA6
+        for <linux-trace-kernel@vger.kernel.org>; Mon, 22 May 2023 00:34:29 -0700 (PDT)
+Received: by mail-yb1-xb2a.google.com with SMTP id 3f1490d57ef6-ba829e17aacso8678550276.0
+        for <linux-trace-kernel@vger.kernel.org>; Mon, 22 May 2023 00:34:29 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1684721274; x=1687313274;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=Sz0Spj8dzzse1twdFWxs7Pr1GkJdyy1KzKMZwqhjwYw=;
-        b=Z5mVGUMcyUthgWsbJz4jMz783W9DnClIAhVXFPkO3Sl1PZ84kkTS+St3Nm+j37fulr
-         sX3mOzNAPu0+dKIhT/h8nzaEofGKN0yqBGudut32cHrc+E3dvf2d7wx578LjgttU8t4s
-         O7EwM4brfMFhEMTdmaD5MyMs6SHBMdFND9VEzZa0pHOUqoirMERGER/wGBo1KoN53BCY
-         T+iMnMZ036ZPnRQFAqeaotfKFAlx8nP7Elw06lTsg6bnJjq5C1f9CPAf/He3V1HuWKVt
-         I2rKlbUzVCasktWwlPlOWr8Zj4b89yC0EVwhecTwlzbZwO909AtW1rPq6CaKmfACWwfE
-         8THw==
+        d=linaro.org; s=google; t=1684740868; x=1687332868;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=440FKliaMEptTlq4UtvRU6YU5HW2cqSIFciiwno4GUA=;
+        b=cVG70vpxIAu7iWt1YIdjkkeETweAnatAAYfZntYjMdS4IrJKmTHKinqhwpYCFydQWp
+         k5GHJmg16yNSZ1D5MyVygcuDnFjBFE9HRFcv1iVPHSwj1FT3kdpoj26qy58lRNqiKpko
+         SN7XPWRnSYBR7pzQq3MGWPQWVzC5ZqvVZB4eNZfpVZ7LDyJHiP/Gz/yJR+xIY5kWwYpN
+         YM8BYwP+i7N686Te8ie+QjnC0T0sCFjAFn+fP/UQUL4WRfo0+RLKsZGlg/854RSXSMEC
+         Qw9scHC1mn71W6QmH44TDpuFW9tjgPHJsEiSvTklxZgz+oSj26NBcI7UCKQ6uOohDcGr
+         lFxw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1684721274; x=1687313274;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=Sz0Spj8dzzse1twdFWxs7Pr1GkJdyy1KzKMZwqhjwYw=;
-        b=FSfwtzGOxHK2XjVYZP06Q4c8RopfWhIBk43JwZXwsPzSmHdGmhgRB+eUqJiMGBAtnx
-         cufK2N8rmDt2B2tqxFzjePkfxQE4SQhtO9jZKaBWHlVCZDDe4TDlAp5BpMeXpe+UX8D/
-         YQXooLySIJAbuq5YJ53BlMbWQ6ucn783j9KydYHiqRbc9ENclPQQvrG4tXNSnrFMimud
-         wMXUWEtMh3/6irD4IzmpSEjfXYTPozXt5oiHZ1fgUXzXAHalHJkISUqKdhgFd/6whHMp
-         85jKpdfekyT+el9YVSFtLzVYZ2ZrXL+n4Jp0d7cY1kVAUgd1leXJ2C0kN4RcsaW1sn/M
-         Rf8A==
-X-Gm-Message-State: AC+VfDyA8qrU4hpOG/66UNoJV5EA6NYZX7DW1wY6zRBOTEIBXohi7Ewi
-        qW1jL2YBqV2xcaXA6cZwrMf7TknUq7DEDhQZVQM=
-X-Google-Smtp-Source: ACHHUZ4wrOhEYShKyW/O1eY1HmQbKQKS6rz1bi7T5GEPQgCb9egPC4yZhclR5xQE+XYa5cZMmp8Cwd8iFnqTUqJgR/g=
-X-Received: by 2002:aa7:d80b:0:b0:50b:fe20:1c7f with SMTP id
- v11-20020aa7d80b000000b0050bfe201c7fmr7110715edq.33.1684721273786; Sun, 21
- May 2023 19:07:53 -0700 (PDT)
+        d=1e100.net; s=20221208; t=1684740868; x=1687332868;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=440FKliaMEptTlq4UtvRU6YU5HW2cqSIFciiwno4GUA=;
+        b=B3GplcosQaZHtcwQEbhqjDFvPh8myYn0ZYrQLGf7SLII49aR/j5OSDn2m1xpSYgNd7
+         9CTjeYEVPphAgKgsU/TNVf82OjtQfAnB85OzVJcyFsWyndIm6X+S6Mu7OdTiv2ZkJZck
+         WpAY0zQU6e9Twc1SUHW64mFxFae1vttaGCQvg17HNiB2BjdjgROrBj11+zU7vjep3ezg
+         yMbBY5huqZBmhILhJK/7DJvwluRkptQ7MwezGd1t1zsmOX503FxwyY2P+Jca20yOEXt+
+         4cGb7g2nC/w+XA6Uv0Ar/Iwf6QoudjLB8wXXm4LMf62tfC8qwnthx8G3+pLXazSHNwrt
+         mzfA==
+X-Gm-Message-State: AC+VfDyiviQqntdTEKiRnQ0IKuCf/UIYrR0Yn1kk/WaJsa84byHlgmhg
+        LIqc1wZTr3LBPudwUsOTXSkY0q/fl4BKPXwp6U1t/Q==
+X-Google-Smtp-Source: ACHHUZ4wB6drPuAxQtXvuP54NiFxDV/VmgeqrEN+OtgOTyNrVZaW+Pp6etDVB3idQ6Mvl9uwmtZ9wkZygsM2GAbNH84=
+X-Received: by 2002:a0d:d74a:0:b0:561:7dd2:6ba0 with SMTP id
+ z71-20020a0dd74a000000b005617dd26ba0mr11660764ywd.6.1684740868617; Mon, 22
+ May 2023 00:34:28 -0700 (PDT)
 MIME-Version: 1.0
-References: <20220515203653.4039075-1-jolsa@kernel.org> <20230520094722.5393-1-zegao@tencent.com>
- <b4f66729-90ab-080a-51ec-bf435ad6199d@meta.com> <CAD8CoPAXse1GKAb15O5tZJwBqMt1N_btH+qRe7c_a-ryUMjx7A@mail.gmail.com>
- <ZGp+fW855gmWuh9W@krava>
-In-Reply-To: <ZGp+fW855gmWuh9W@krava>
-From:   Ze Gao <zegao2021@gmail.com>
-Date:   Mon, 22 May 2023 10:07:42 +0800
-Message-ID: <CAD8CoPDASe7hpkFbK+UzJats7j4sbgsCh_P4zaQYVuKD7jWu2w@mail.gmail.com>
-Subject: Re:
-To:     Jiri Olsa <olsajiri@gmail.com>
-Cc:     Yonghong Song <yhs@meta.com>, Alexei Starovoitov <ast@kernel.org>,
-        Andrii Nakryiko <andrii@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Hao Luo <haoluo@google.com>,
-        John Fastabend <john.fastabend@gmail.com>,
-        KP Singh <kpsingh@kernel.org>,
-        Martin KaFai Lau <martin.lau@linux.dev>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Song Liu <song@kernel.org>,
-        Stanislav Fomichev <sdf@google.com>,
+References: <20230516154605.517690-1-arnd@kernel.org> <20230516154605.517690-7-arnd@kernel.org>
+In-Reply-To: <20230516154605.517690-7-arnd@kernel.org>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Mon, 22 May 2023 09:34:17 +0200
+Message-ID: <CACRpkdYyYRVnUHEg_BK7BFRCUquNDZ55oDcLTTZKw-+eiNSzbQ@mail.gmail.com>
+Subject: Re: [PATCH 06/16] ARM: tcm: move tcm_init() prototype to asm/tcm.h
+To:     Arnd Bergmann <arnd@kernel.org>
+Cc:     Russell King <linux@armlinux.org.uk>,
+        Arnd Bergmann <arnd@arndb.de>,
         Steven Rostedt <rostedt@goodmis.org>,
-        Yonghong Song <yhs@fb.com>, bpf@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
-        kafai@fb.com, kpsingh@chromium.org, netdev@vger.kernel.org,
-        paulmck@kernel.org, songliubraving@fb.com,
-        Ze Gao <zegao@tencent.com>
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Oleg Nesterov <oleg@redhat.com>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Pavel Machek <pavel@ucw.cz>, Ard Biesheuvel <ardb@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-trace-kernel@vger.kernel.org, linux-pm@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-Oops, I missed that. Thanks for pointing that out, which I thought is
-conditional use of rcu_is_watching before.
+On Tue, May 16, 2023 at 5:46=E2=80=AFPM Arnd Bergmann <arnd@kernel.org> wro=
+te:
 
-One last point, I think we should double check on this
-     "fentry does not filter with !rcu_is_watching"
-as quoted from Yonghong and argue whether it needs
-the same check for fentry as well.
+> From: Arnd Bergmann <arnd@arndb.de>
+>
+> The function definition is in a file that does not include the
+> header with the declaration:
+>
+> arch/arm/kernel/tcm.c:256:13: error: no previous prototype for 'tcm_init'
+>
+> Move the declaration to a global header where it can actually be
+> included.
+>
+> Fixes: de40614e92bf ("ARM: 7694/1: ARM, TCM: initialize TCM in paging_ini=
+t(), instead of setup_arch()")
+> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 
-Regards,
-Ze
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+
+Yours,
+Linus Walleij
