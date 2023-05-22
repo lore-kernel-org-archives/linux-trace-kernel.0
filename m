@@ -2,47 +2,32 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 71222C77B75
-	for <linux-trace-kernel@archiver.kernel.org>; Mon, 22 May 2023 13:55:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EE951C7EE26
+	for <linux-trace-kernel@archiver.kernel.org>; Mon, 22 May 2023 14:29:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234419AbjEVNzn (ORCPT
+        id S233055AbjEVO3c (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Mon, 22 May 2023 09:55:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59542 "EHLO
+        Mon, 22 May 2023 10:29:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55000 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232741AbjEVNzJ (ORCPT
+        with ESMTP id S232856AbjEVO3a (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Mon, 22 May 2023 09:55:09 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 309BD1A8
-        for <linux-trace-kernel@vger.kernel.org>; Mon, 22 May 2023 06:52:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1684763531;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=HfMcLqK7SdZvPGZvy5b2RGzipVUrB/qFQK+4kiqdRos=;
-        b=M3vixxSSgb0iQ/6frdFHzwwdhj6liruvkjJwfhRFB3tR9RgHxLx1bqw9Y/pv/YDlrIXpyq
-        wiCm1MOmqvqtaWvRRy3JBzJ+Sj1Vrx9TVTb4atcm04IMZcVMlormiWrgChJ0AxqzG3JKSg
-        oVk6g8r+R+xjOkQ6VX85PKD42umamVs=
-Received: from mimecast-mx02.redhat.com (mx3-rdu2.redhat.com
- [66.187.233.73]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-652-P98tTMU2PTmMkmG9xXy80A-1; Mon, 22 May 2023 09:52:08 -0400
-X-MC-Unique: P98tTMU2PTmMkmG9xXy80A-1
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.rdu2.redhat.com [10.11.54.2])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        Mon, 22 May 2023 10:29:30 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4046AAF;
+        Mon, 22 May 2023 07:29:25 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id E8E383C0BE2D;
-        Mon, 22 May 2023 13:52:06 +0000 (UTC)
-Received: from warthog.procyon.org.uk (unknown [10.39.192.68])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 13CC640C6CD6;
-        Mon, 22 May 2023 13:52:03 +0000 (UTC)
-From:   David Howells <dhowells@redhat.com>
-To:     Jens Axboe <axboe@kernel.dk>, Al Viro <viro@zeniv.linux.org.uk>,
-        Christoph Hellwig <hch@infradead.org>
-Cc:     David Howells <dhowells@redhat.com>,
+        by dfw.source.kernel.org (Postfix) with ESMTPS id AF03561DC1;
+        Mon, 22 May 2023 14:29:24 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 996E4C433D2;
+        Mon, 22 May 2023 14:29:22 +0000 (UTC)
+Date:   Mon, 22 May 2023 10:29:20 -0400
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     David Howells <dhowells@redhat.com>
+Cc:     Jens Axboe <axboe@kernel.dk>, Al Viro <viro@zeniv.linux.org.uk>,
+        Christoph Hellwig <hch@infradead.org>,
         Matthew Wilcox <willy@infradead.org>, Jan Kara <jack@suse.cz>,
         Jeff Layton <jlayton@kernel.org>,
         David Hildenbrand <david@redhat.com>,
@@ -54,53 +39,66 @@ Cc:     David Howells <dhowells@redhat.com>,
         linux-fsdevel@vger.kernel.org, linux-block@vger.kernel.org,
         linux-kernel@vger.kernel.org, linux-mm@kvack.org,
         Christoph Hellwig <hch@lst.de>,
-        Steven Rostedt <rostedt@goodmis.org>,
         Masami Hiramatsu <mhiramat@kernel.org>,
         linux-trace-kernel@vger.kernel.org
-Subject: [PATCH v22 26/31] trace: Convert trace/seq to use copy_splice_read()
-Date:   Mon, 22 May 2023 14:50:13 +0100
-Message-Id: <20230522135018.2742245-27-dhowells@redhat.com>
-In-Reply-To: <20230522135018.2742245-1-dhowells@redhat.com>
-References: <20230522135018.2742245-1-dhowells@redhat.com>
+Subject: Re: [PATCH v20 23/32] splice: Convert trace/seq to use
+ direct_splice_read()
+Message-ID: <20230522102920.0528d821@rorschach.local.home>
+In-Reply-To: <20230519074047.1739879-24-dhowells@redhat.com>
+References: <20230519074047.1739879-1-dhowells@redhat.com>
+        <20230519074047.1739879-24-dhowells@redhat.com>
+X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.1 on 10.11.54.2
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-For the splice from the trace seq buffer, just use copy_splice_read().
+On Fri, 19 May 2023 08:40:38 +0100
+David Howells <dhowells@redhat.com> wrote:
 
-In the future, something better can probably be done by gifting pages from
-seq->buf into the pipe, but that would require changing seq->buf into a
-vmap over an array of pages.
+> For the splice from the trace seq buffer, just use direct_splice_read().
+> 
+> In the future, something better can probably be done by gifting pages from
+> seq->buf into the pipe, but that would require changing seq->buf into a
+> vmap over an array of pages.
 
-Signed-off-by: David Howells <dhowells@redhat.com>
-cc: Christoph Hellwig <hch@lst.de>
-cc: Al Viro <viro@zeniv.linux.org.uk>
-cc: Jens Axboe <axboe@kernel.dk>
-cc: Steven Rostedt <rostedt@goodmis.org>
-cc: Masami Hiramatsu <mhiramat@kernel.org>
-cc: linux-kernel@vger.kernel.org
-cc: linux-trace-kernel@vger.kernel.org
-cc: linux-fsdevel@vger.kernel.org
-cc: linux-block@vger.kernel.org
-cc: linux-mm@kvack.org
----
- kernel/trace/trace.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+If you can give me a POC of what needs to be done, I could possibly
+implement it.
 
-diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
-index ebc59781456a..c210d02fac97 100644
---- a/kernel/trace/trace.c
-+++ b/kernel/trace/trace.c
-@@ -5171,7 +5171,7 @@ static const struct file_operations tracing_fops = {
- 	.open		= tracing_open,
- 	.read		= seq_read,
- 	.read_iter	= seq_read_iter,
--	.splice_read	= generic_file_splice_read,
-+	.splice_read	= copy_splice_read,
- 	.write		= tracing_write_stub,
- 	.llseek		= tracing_lseek,
- 	.release	= tracing_release,
+> 
+> Signed-off-by: David Howells <dhowells@redhat.com>
+> cc: Christoph Hellwig <hch@lst.de>
+> cc: Al Viro <viro@zeniv.linux.org.uk>
+> cc: Jens Axboe <axboe@kernel.dk>
+> cc: Steven Rostedt <rostedt@goodmis.org>
+> cc: Masami Hiramatsu <mhiramat@kernel.org>
+> cc: linux-kernel@vger.kernel.org
+> cc: linux-trace-kernel@vger.kernel.org
+> cc: linux-fsdevel@vger.kernel.org
+> cc: linux-block@vger.kernel.org
+> cc: linux-mm@kvack.org
+> ---
+>  kernel/trace/trace.c | 2 +-
+
+Acked-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+
+-- Steve
+
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
+> index ebc59781456a..b664020efcb7 100644
+> --- a/kernel/trace/trace.c
+> +++ b/kernel/trace/trace.c
+> @@ -5171,7 +5171,7 @@ static const struct file_operations tracing_fops = {
+>  	.open		= tracing_open,
+>  	.read		= seq_read,
+>  	.read_iter	= seq_read_iter,
+> -	.splice_read	= generic_file_splice_read,
+> +	.splice_read	= direct_splice_read,
+>  	.write		= tracing_write_stub,
+>  	.llseek		= tracing_lseek,
+>  	.release	= tracing_release,
 
