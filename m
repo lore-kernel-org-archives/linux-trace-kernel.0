@@ -2,90 +2,85 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F36DC77B73
-	for <linux-trace-kernel@archiver.kernel.org>; Mon, 22 May 2023 18:38:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F8A8C7EE23
+	for <linux-trace-kernel@archiver.kernel.org>; Mon, 22 May 2023 19:40:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229874AbjEVSiX convert rfc822-to-8bit (ORCPT
+        id S235112AbjEVTkK (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Mon, 22 May 2023 14:38:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48128 "EHLO
+        Mon, 22 May 2023 15:40:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34112 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230093AbjEVSiW (ORCPT
+        with ESMTP id S235171AbjEVTkA (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Mon, 22 May 2023 14:38:22 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 754ACB6;
-        Mon, 22 May 2023 11:38:21 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 12CAE6226A;
-        Mon, 22 May 2023 18:38:21 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 79441C433EF;
-        Mon, 22 May 2023 18:38:18 +0000 (UTC)
-Date:   Mon, 22 May 2023 14:38:14 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     David Howells <dhowells@redhat.com>, Jens Axboe <axboe@kernel.dk>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Christoph Hellwig <hch@infradead.org>,
-        Matthew Wilcox <willy@infradead.org>, Jan Kara <jack@suse.cz>,
-        Jeff Layton <jlayton@kernel.org>,
-        David Hildenbrand <david@redhat.com>,
-        Jason Gunthorpe <jgg@nvidia.com>,
-        Logan Gunthorpe <logang@deltatee.com>,
-        Hillf Danton <hdanton@sina.com>,
-        Christian Brauner <brauner@kernel.org>,
-        linux-fsdevel@vger.kernel.org, linux-block@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        Christoph Hellwig <hch@lst.de>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        linux-trace-kernel@vger.kernel.org
-Subject: Re: [PATCH v20 23/32] splice: Convert trace/seq to use
- direct_splice_read()
-Message-ID: <20230522143814.6efbbb4d@gandalf.local.home>
-In-Reply-To: <CAHk-=wgg4iDEuSN4K6S6ohAm4zd_V5h4tXGn6-2-cfOuJPFDZQ@mail.gmail.com>
-References: <20230519074047.1739879-1-dhowells@redhat.com>
-        <20230519074047.1739879-24-dhowells@redhat.com>
-        <20230522102920.0528d821@rorschach.local.home>
-        <2812412.1684767005@warthog.procyon.org.uk>
-        <CAHk-=wgg4iDEuSN4K6S6ohAm4zd_V5h4tXGn6-2-cfOuJPFDZQ@mail.gmail.com>
-X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+        Mon, 22 May 2023 15:40:00 -0400
+Received: from mail-pg1-x52f.google.com (mail-pg1-x52f.google.com [IPv6:2607:f8b0:4864:20::52f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1A5CE9E
+        for <linux-trace-kernel@vger.kernel.org>; Mon, 22 May 2023 12:39:53 -0700 (PDT)
+Received: by mail-pg1-x52f.google.com with SMTP id 41be03b00d2f7-52cb78647ecso4516423a12.1
+        for <linux-trace-kernel@vger.kernel.org>; Mon, 22 May 2023 12:39:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1684784392; x=1687376392;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ceByCrhQgy1xUUUVzV543Wg3Hs/zTuoTP3ZtYqzShtI=;
+        b=Y9+znyw3UTpuwo7EhaJN8to/oNZXF2OZjOrsPlDS8BAU5YcbHs6czktV2TGVEssfjY
+         mFQyXda376uK9q3UwNbvE3p+f/rW5QwBVE9Nj0LwehQToBVVw2BoZy5sO523UTw/7b9d
+         F+BJivvRm5xZ60d6loAyMOROFnPCWvlQp0JNM=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1684784392; x=1687376392;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=ceByCrhQgy1xUUUVzV543Wg3Hs/zTuoTP3ZtYqzShtI=;
+        b=lIRsXyeKdPJV8kzl3Q1wi3Ef0+P7a7HYUUhqQwdyU/ZTaaokC4KzEkhHUb74VspC7/
+         Tz2oBjS3XMKtt4aEf33cWZbJc685e4xctRekBkXYp94/+nTEx07eBqzCqElvEVQXS9gr
+         3e+042KQPtdF6MYTKJvXIiSX/sZqSjB9WqwJI2n+06ttQur3SkFAwG2SRXypXhIRQVTC
+         SU5CpxdcS+rSWWvWxQM3DWv0z8ly1ylDc3llZrBQH+PFNd0ZA4fXhIr84VU0PBqCieOC
+         SyKtRSpoQsvzrc0gNKI1oCrQKkN3B3sp/tPrteOGoPoLg2di5phxfAc1f99cifDHJx09
+         x3Tg==
+X-Gm-Message-State: AC+VfDzP98NErxxqJC2jabPzAd99KrGin3gKK4UaHRikzpYbLK9zlW+J
+        +vZzJ96Pxv9a4/nWVd9WUYEdVw==
+X-Google-Smtp-Source: ACHHUZ4enFeof6uNQGr38VRobeFDvzOpVKl+AZWYMMe+2ttBbmcmP+tA64Za0AZigVUFPs8S+ijvwQ==
+X-Received: by 2002:a17:902:bf06:b0:1ae:2e0f:1cf6 with SMTP id bi6-20020a170902bf0600b001ae2e0f1cf6mr11396208plb.36.1684784392569;
+        Mon, 22 May 2023 12:39:52 -0700 (PDT)
+Received: from www.outflux.net (198-0-35-241-static.hfc.comcastbusiness.net. [198.0.35.241])
+        by smtp.gmail.com with ESMTPSA id ij25-20020a170902ab5900b001ab2592ed33sm5331973plb.171.2023.05.22.12.39.48
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 22 May 2023 12:39:49 -0700 (PDT)
+From:   Kees Cook <keescook@chromium.org>
+To:     rostedt@goodmis.org, mhiramat@kernel.org, azeemshaikh38@gmail.com
+Cc:     Kees Cook <keescook@chromium.org>,
+        linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-hardening@vger.kernel.org
+Subject: Re: [PATCH v2] tracing: Replace all non-returning strlcpy with strscpy
+Date:   Mon, 22 May 2023 12:39:42 -0700
+Message-Id: <168478437626.244538.6559937483217152450.b4-ty@chromium.org>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20230516143956.1367827-1-azeemshaikh38@gmail.com>
+References: <20230516143956.1367827-1-azeemshaikh38@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On Mon, 22 May 2023 10:42:12 -0700
-Linus Torvalds <torvalds@linux-foundation.org> wrote:
-
-> On Mon, May 22, 2023 at 7:50 AM David Howells <dhowells@redhat.com> wrote:
-> >
-> > We could implement seq_splice_read().  What we would need to do is to change
-> > how the seq buffer is allocated: bulk allocate a bunch of arbitrary pages
-> > which we then vmap().  When we need to splice, we read into the buffer, do a
-> > vunmap() and then splice the pages holding the data we used into the pipe.  
+On Tue, 16 May 2023 14:39:56 +0000, Azeem Shaikh wrote:
+> strlcpy() reads the entire source buffer first.
+> This read may exceed the destination size limit.
+> This is both inefficient and can lead to linear read
+> overflows if a source string is not NUL-terminated [1].
+> In an effort to remove strlcpy() completely [2], replace
+> strlcpy() here with strscpy().
 > 
-> Please don't use vmap as a way to do zero-copy.
-> 
-> The virtual mapping games are more expensive than a small copy from
-> some random seq file.
-> 
-> Yes, yes, seq_file currently uses "kvmalloc()", which does fall back
-> to vmalloc too. But the keyword there is "falls back". Most of the
-> time it's just a regular boring kmalloc, and most of the time a
-> seq-file is tiny.
+> [...]
 
-I was thinking this change had to do with the splice callback for
-trace_pipe_raw (which is a hot path that does zero copy of the ftrace ring
-buffer into files). But looking at this further, I see that it's for just
-the "trace" file, which is a textual conversion of the tracing data (slow
-path, although some user space uses this and parses the text, which IMHO is
-wrong).
+Applied to for-next/hardening, thanks!
 
-In other words, I don't really care much about this code being "efficient".
+[1/1] tracing: Replace all non-returning strlcpy with strscpy
+      https://git.kernel.org/kees/c/4cb4e5158b89
 
--- Steve
+-- 
+Kees Cook
 
