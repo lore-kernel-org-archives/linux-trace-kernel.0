@@ -2,115 +2,108 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 042F1C77B73
-	for <linux-trace-kernel@archiver.kernel.org>; Mon, 22 May 2023 14:57:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B23BC77B75
+	for <linux-trace-kernel@archiver.kernel.org>; Mon, 22 May 2023 17:49:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234154AbjEVO5g (ORCPT
+        id S232865AbjEVRtA (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Mon, 22 May 2023 10:57:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38364 "EHLO
+        Mon, 22 May 2023 13:49:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51538 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234090AbjEVO52 (ORCPT
+        with ESMTP id S232880AbjEVRsl (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Mon, 22 May 2023 10:57:28 -0400
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 5FD9D18D;
-        Mon, 22 May 2023 07:57:21 -0700 (PDT)
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 0055D150C;
-        Mon, 22 May 2023 07:58:06 -0700 (PDT)
-Received: from e123648.arm.com (unknown [10.57.22.146])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 9E0E73F6C4;
-        Mon, 22 May 2023 07:57:17 -0700 (PDT)
-From:   Lukasz Luba <lukasz.luba@arm.com>
-To:     linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
-        rafael@kernel.org, linux-pm@vger.kernel.org
-Cc:     rostedt@goodmis.org, mhiramat@kernel.org, mingo@redhat.com,
-        peterz@infradead.org, juri.lelli@redhat.com,
-        vincent.guittot@linaro.org, dietmar.eggemann@arm.com,
-        bsegall@google.com, mgorman@suse.de, bristot@redhat.com,
-        vschneid@redhat.com, delyank@fb.com, lukasz.luba@arm.com,
-        qyousef@google.com, qyousef@layalina.io,
-        kernel test robot <lkp@intel.com>
-Subject: [RESEND][PATCH v2 3/3] schedutil: trace: Add tracing to capture filter out requests
-Date:   Mon, 22 May 2023 15:57:02 +0100
-Message-Id: <20230522145702.2419654-4-lukasz.luba@arm.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20230522145702.2419654-1-lukasz.luba@arm.com>
-References: <20230522145702.2419654-1-lukasz.luba@arm.com>
+        Mon, 22 May 2023 13:48:41 -0400
+Received: from mail-lf1-x135.google.com (mail-lf1-x135.google.com [IPv6:2a00:1450:4864:20::135])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2483910C
+        for <linux-trace-kernel@vger.kernel.org>; Mon, 22 May 2023 10:48:40 -0700 (PDT)
+Received: by mail-lf1-x135.google.com with SMTP id 2adb3069b0e04-4f24d8440c9so4834867e87.1
+        for <linux-trace-kernel@vger.kernel.org>; Mon, 22 May 2023 10:48:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google; t=1684777718; x=1687369718;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=v0vGfy2nsZav2HY5i+tp/Nl3rfKXvicFLnxzClJPsL0=;
+        b=TVNR7OBxbiFd9F8QVyibICbCMFXK5h21O5agS/2aLyyIYfIHdKQXMdxnaUJqiMslUn
+         cQ8jj7dWOvPs2dCDJ2h74Ys6Eeh/k87mRbaBde95VAIN8N8ztpuLAbLLfMf3tj9B6lGN
+         MZkIit2ZcFT6jD91MW9Mqa2vwPEGim2GwL0pE=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1684777718; x=1687369718;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=v0vGfy2nsZav2HY5i+tp/Nl3rfKXvicFLnxzClJPsL0=;
+        b=JDULHOrS5IX28C8DDGbyJCQEX3CBKQyJgsDNIk3oX+tN3UHsogTJduRLQiGa526Rzt
+         C5Sm/iDeDz5SOI25ulIT/Y2qU+keoIprkAkkPmIpJMsgU91b9cRNfQo9cpRnO6PSfQQD
+         VV6zBVrVjo9D8RNwAkdz1r8No8e3Ns9qGujzZ/atB12NHg3VlIHJo/rAIJp/5tFih9s1
+         7Hs4VLYNe3+8juw4eK92KTsKQSqYE3CsZRVA4AUUiLBlHcE3Et4R0asVKUDZTIQBuoqu
+         RIcGD1Bq55FvPBqQKXuZx5BhdIv8cBGVNOfHDt5zWYJqEiVBuJj4pfpYBbe5ujghQhVW
+         1ecA==
+X-Gm-Message-State: AC+VfDy9kdKtlcKSIfxpuSUtH8tiE2rkDm9WIkRpn17JFFlvBBoxI/Q+
+        rgE4ZF4c4kH3f0GrEI2OfCSMxEYInIyh+7hhC3JDrlMN
+X-Google-Smtp-Source: ACHHUZ59EM6yYZUPKHHQZV2V5U3Ga2URoBDyCtbURnVD1Xxgf216sCXfTtoadgIYI778605tEA87qA==
+X-Received: by 2002:ac2:539a:0:b0:4f3:a4aa:eb75 with SMTP id g26-20020ac2539a000000b004f3a4aaeb75mr4039559lfh.24.1684777718231;
+        Mon, 22 May 2023 10:48:38 -0700 (PDT)
+Received: from mail-lf1-f43.google.com (mail-lf1-f43.google.com. [209.85.167.43])
+        by smtp.gmail.com with ESMTPSA id q1-20020ac25101000000b004edbf013fe7sm1062631lfb.49.2023.05.22.10.48.37
+        for <linux-trace-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 22 May 2023 10:48:38 -0700 (PDT)
+Received: by mail-lf1-f43.google.com with SMTP id 2adb3069b0e04-4f24d8440c9so4834845e87.1
+        for <linux-trace-kernel@vger.kernel.org>; Mon, 22 May 2023 10:48:37 -0700 (PDT)
+X-Received: by 2002:a17:907:1688:b0:965:d7c7:24db with SMTP id
+ hc8-20020a170907168800b00965d7c724dbmr9757222ejc.32.1684777349281; Mon, 22
+ May 2023 10:42:29 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20230519074047.1739879-1-dhowells@redhat.com> <20230519074047.1739879-24-dhowells@redhat.com>
+ <20230522102920.0528d821@rorschach.local.home> <2812412.1684767005@warthog.procyon.org.uk>
+In-Reply-To: <2812412.1684767005@warthog.procyon.org.uk>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Mon, 22 May 2023 10:42:12 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wgg4iDEuSN4K6S6ohAm4zd_V5h4tXGn6-2-cfOuJPFDZQ@mail.gmail.com>
+Message-ID: <CAHk-=wgg4iDEuSN4K6S6ohAm4zd_V5h4tXGn6-2-cfOuJPFDZQ@mail.gmail.com>
+Subject: Re: [PATCH v20 23/32] splice: Convert trace/seq to use direct_splice_read()
+To:     David Howells <dhowells@redhat.com>
+Cc:     Steven Rostedt <rostedt@goodmis.org>, Jens Axboe <axboe@kernel.dk>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Christoph Hellwig <hch@infradead.org>,
+        Matthew Wilcox <willy@infradead.org>, Jan Kara <jack@suse.cz>,
+        Jeff Layton <jlayton@kernel.org>,
+        David Hildenbrand <david@redhat.com>,
+        Jason Gunthorpe <jgg@nvidia.com>,
+        Logan Gunthorpe <logang@deltatee.com>,
+        Hillf Danton <hdanton@sina.com>,
+        Christian Brauner <brauner@kernel.org>,
+        linux-fsdevel@vger.kernel.org, linux-block@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        Christoph Hellwig <hch@lst.de>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        linux-trace-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-Some of the frequency update requests coming form the task scheduler
-might be filter out. It can happen when the previous request was served
-not that long ago (in a period smaller than provided by the cpufreq driver
-as minimum for frequency update). In such case, we want to know if some of
-the frequency updates cannot make through.
-Export the new tracepoint as well. That would allow to handle it by a
-toolkit for trace analyzes.
+On Mon, May 22, 2023 at 7:50=E2=80=AFAM David Howells <dhowells@redhat.com>=
+ wrote:
+>
+> We could implement seq_splice_read().  What we would need to do is to cha=
+nge
+> how the seq buffer is allocated: bulk allocate a bunch of arbitrary pages
+> which we then vmap().  When we need to splice, we read into the buffer, d=
+o a
+> vunmap() and then splice the pages holding the data we used into the pipe=
+.
 
-Reported-by: kernel test robot <lkp@intel.com> # solved tricky build
-Signed-off-by: Lukasz Luba <lukasz.luba@arm.com>
----
- include/trace/events/sched.h     |  4 ++++
- kernel/sched/cpufreq_schedutil.c | 10 ++++++++--
- 2 files changed, 12 insertions(+), 2 deletions(-)
+Please don't use vmap as a way to do zero-copy.
 
-diff --git a/include/trace/events/sched.h b/include/trace/events/sched.h
-index dbfb30809f15..e34b7cd5de73 100644
---- a/include/trace/events/sched.h
-+++ b/include/trace/events/sched.h
-@@ -739,6 +739,10 @@ DECLARE_TRACE(uclamp_update_tsk_tp,
- 	TP_PROTO(struct task_struct *tsk, int uclamp_id,  unsigned int value),
- 	TP_ARGS(tsk, uclamp_id, value));
- 
-+DECLARE_TRACE(schedutil_update_filtered_tp,
-+	TP_PROTO(int cpu),
-+	TP_ARGS(cpu));
-+
- #endif /* _TRACE_SCHED_H */
- 
- /* This part must be outside protection */
-diff --git a/kernel/sched/cpufreq_schedutil.c b/kernel/sched/cpufreq_schedutil.c
-index f462496e5c07..4f9daf258a65 100644
---- a/kernel/sched/cpufreq_schedutil.c
-+++ b/kernel/sched/cpufreq_schedutil.c
-@@ -6,6 +6,8 @@
-  * Author: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-  */
- 
-+EXPORT_TRACEPOINT_SYMBOL_GPL(schedutil_update_filtered_tp);
-+
- #define IOWAIT_BOOST_MIN	(SCHED_CAPACITY_SCALE / 8)
- 
- struct sugov_tunables {
-@@ -318,8 +320,10 @@ static inline bool sugov_update_single_common(struct sugov_cpu *sg_cpu,
- 
- 	ignore_dl_rate_limit(sg_cpu);
- 
--	if (!sugov_should_update_freq(sg_cpu->sg_policy, time))
-+	if (!sugov_should_update_freq(sg_cpu->sg_policy, time)) {
-+		trace_schedutil_update_filtered_tp(sg_cpu->cpu);
- 		return false;
-+	}
- 
- 	sugov_get_util(sg_cpu);
- 	sugov_iowait_apply(sg_cpu, time, max_cap);
-@@ -446,8 +450,10 @@ sugov_update_shared(struct update_util_data *hook, u64 time, unsigned int flags)
- 
- 	ignore_dl_rate_limit(sg_cpu);
- 
--	if (!sugov_should_update_freq(sg_policy, time))
-+	if (!sugov_should_update_freq(sg_policy, time)) {
-+		trace_schedutil_update_filtered_tp(sg_cpu->cpu);
- 		goto unlock;
-+	}
- 
- 	next_f = sugov_next_freq_shared(sg_cpu, time);
- 
--- 
-2.25.1
+The virtual mapping games are more expensive than a small copy from
+some random seq file.
 
+Yes, yes, seq_file currently uses "kvmalloc()", which does fall back
+to vmalloc too. But the keyword there is "falls back". Most of the
+time it's just a regular boring kmalloc, and most of the time a
+seq-file is tiny.
+
+                      Linus
