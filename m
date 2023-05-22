@@ -2,51 +2,38 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EE951C7EE26
-	for <linux-trace-kernel@archiver.kernel.org>; Mon, 22 May 2023 14:29:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1AFF8C7EE2D
+	for <linux-trace-kernel@archiver.kernel.org>; Mon, 22 May 2023 14:32:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233055AbjEVO3c (ORCPT
+        id S231609AbjEVOc3 (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Mon, 22 May 2023 10:29:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55000 "EHLO
+        Mon, 22 May 2023 10:32:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56464 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232856AbjEVO3a (ORCPT
+        with ESMTP id S233644AbjEVOc2 (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Mon, 22 May 2023 10:29:30 -0400
+        Mon, 22 May 2023 10:32:28 -0400
 Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4046AAF;
-        Mon, 22 May 2023 07:29:25 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E5D5399;
+        Mon, 22 May 2023 07:32:27 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id AF03561DC1;
-        Mon, 22 May 2023 14:29:24 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 996E4C433D2;
-        Mon, 22 May 2023 14:29:22 +0000 (UTC)
-Date:   Mon, 22 May 2023 10:29:20 -0400
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 83940613F7;
+        Mon, 22 May 2023 14:32:27 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 85AB2C433EF;
+        Mon, 22 May 2023 14:32:26 +0000 (UTC)
+Date:   Mon, 22 May 2023 10:32:24 -0400
 From:   Steven Rostedt <rostedt@goodmis.org>
-To:     David Howells <dhowells@redhat.com>
-Cc:     Jens Axboe <axboe@kernel.dk>, Al Viro <viro@zeniv.linux.org.uk>,
-        Christoph Hellwig <hch@infradead.org>,
-        Matthew Wilcox <willy@infradead.org>, Jan Kara <jack@suse.cz>,
-        Jeff Layton <jlayton@kernel.org>,
-        David Hildenbrand <david@redhat.com>,
-        Jason Gunthorpe <jgg@nvidia.com>,
-        Logan Gunthorpe <logang@deltatee.com>,
-        Hillf Danton <hdanton@sina.com>,
-        Christian Brauner <brauner@kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        linux-fsdevel@vger.kernel.org, linux-block@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        Christoph Hellwig <hch@lst.de>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        linux-trace-kernel@vger.kernel.org
-Subject: Re: [PATCH v20 23/32] splice: Convert trace/seq to use
- direct_splice_read()
-Message-ID: <20230522102920.0528d821@rorschach.local.home>
-In-Reply-To: <20230519074047.1739879-24-dhowells@redhat.com>
-References: <20230519074047.1739879-1-dhowells@redhat.com>
-        <20230519074047.1739879-24-dhowells@redhat.com>
+To:     sunliming <sunliming@kylinos.cn>
+Cc:     mhiramat@kernel.org, linux-trace-kernel@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Beau Belgrave <beaub@linux.microsoft.com>
+Subject: Re: [PATCH] racing/user_events: Prevent same address and bit per
+ process
+Message-ID: <20230522103224.032ec78f@rorschach.local.home>
+In-Reply-To: <20230519081035.228891-1-sunliming@kylinos.cn>
+References: <20230519081035.228891-1-sunliming@kylinos.cn>
 X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
@@ -55,50 +42,45 @@ Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On Fri, 19 May 2023 08:40:38 +0100
-David Howells <dhowells@redhat.com> wrote:
 
-> For the splice from the trace seq buffer, just use direct_splice_read().
+Is the subject a Freudian slip?
+
+Added Beau. I need to add him to the maintainers file for user events ;-)
+
+On Fri, 19 May 2023 16:10:35 +0800
+sunliming <sunliming@kylinos.cn> wrote:
+
+> User processes register name_args for events. If the same name are registered
+> multiple times in the same process, it can cause undefined behavior. Because
+> the same name may be used for a diffrent event. If this event has the same
+> format as the original event, it is impossible to distinguish the trace output
+> of these two events. If the event has a different format from the original event,
+> the trace output of the new event is incorrect.
 > 
-> In the future, something better can probably be done by gifting pages from
-> seq->buf into the pipe, but that would require changing seq->buf into a
-> vmap over an array of pages.
+> Return EADDRINUSE back to the user process if the same event has being registered
+> in the same process.
 
-If you can give me a POC of what needs to be done, I could possibly
-implement it.
-
-> 
-> Signed-off-by: David Howells <dhowells@redhat.com>
-> cc: Christoph Hellwig <hch@lst.de>
-> cc: Al Viro <viro@zeniv.linux.org.uk>
-> cc: Jens Axboe <axboe@kernel.dk>
-> cc: Steven Rostedt <rostedt@goodmis.org>
-> cc: Masami Hiramatsu <mhiramat@kernel.org>
-> cc: linux-kernel@vger.kernel.org
-> cc: linux-trace-kernel@vger.kernel.org
-> cc: linux-fsdevel@vger.kernel.org
-> cc: linux-block@vger.kernel.org
-> cc: linux-mm@kvack.org
-> ---
->  kernel/trace/trace.c | 2 +-
-
-Acked-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+I'll let Beau ack this or not.
 
 -- Steve
 
+> 
+> Signed-off-by: sunliming <sunliming@kylinos.cn>
+> ---
+>  kernel/trace/trace_events_user.c | 2 +-
 >  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
-> diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
-> index ebc59781456a..b664020efcb7 100644
-> --- a/kernel/trace/trace.c
-> +++ b/kernel/trace/trace.c
-> @@ -5171,7 +5171,7 @@ static const struct file_operations tracing_fops = {
->  	.open		= tracing_open,
->  	.read		= seq_read,
->  	.read_iter	= seq_read_iter,
-> -	.splice_read	= generic_file_splice_read,
-> +	.splice_read	= direct_splice_read,
->  	.write		= tracing_write_stub,
->  	.llseek		= tracing_lseek,
->  	.release	= tracing_release,
+> diff --git a/kernel/trace/trace_events_user.c b/kernel/trace/trace_events_user.c
+> index b1ecd7677642..4ef6bdb5c07c 100644
+> --- a/kernel/trace/trace_events_user.c
+> +++ b/kernel/trace/trace_events_user.c
+> @@ -1996,7 +1996,7 @@ static int user_events_ref_add(struct user_event_file_info *info,
+>  
+>  		for (i = 0; i < count; ++i)
+>  			if (refs->events[i] == user)
+> -				return i;
+> +				return -EADDRINUSE;
+>  	}
+>  
+>  	size = struct_size(refs, events, count + 1);
 
