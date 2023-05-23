@@ -2,51 +2,43 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 186F7C7EE23
-	for <linux-trace-kernel@archiver.kernel.org>; Tue, 23 May 2023 14:27:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CB36C7EE26
+	for <linux-trace-kernel@archiver.kernel.org>; Tue, 23 May 2023 14:34:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236995AbjEWO1h (ORCPT
+        id S234683AbjEWOen (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Tue, 23 May 2023 10:27:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57690 "EHLO
+        Tue, 23 May 2023 10:34:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33788 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234679AbjEWO1g (ORCPT
+        with ESMTP id S231951AbjEWOem (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Tue, 23 May 2023 10:27:36 -0400
+        Tue, 23 May 2023 10:34:42 -0400
 Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 38E2EDD;
-        Tue, 23 May 2023 07:27:35 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9E2DE119;
+        Tue, 23 May 2023 07:34:41 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id B3B9F63313;
-        Tue, 23 May 2023 14:27:34 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A79D9C433EF;
-        Tue, 23 May 2023 14:27:32 +0000 (UTC)
-Date:   Tue, 23 May 2023 10:27:30 -0400
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 3431763330;
+        Tue, 23 May 2023 14:34:41 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D43B9C433EF;
+        Tue, 23 May 2023 14:34:39 +0000 (UTC)
+Date:   Tue, 23 May 2023 10:34:38 -0400
 From:   Steven Rostedt <rostedt@goodmis.org>
-To:     David Howells <dhowells@redhat.com>
-Cc:     Jens Axboe <axboe@kernel.dk>, Al Viro <viro@zeniv.linux.org.uk>,
-        Christoph Hellwig <hch@infradead.org>,
-        Matthew Wilcox <willy@infradead.org>, Jan Kara <jack@suse.cz>,
-        Jeff Layton <jlayton@kernel.org>,
-        David Hildenbrand <david@redhat.com>,
-        Jason Gunthorpe <jgg@nvidia.com>,
-        Logan Gunthorpe <logang@deltatee.com>,
-        Hillf Danton <hdanton@sina.com>,
-        Christian Brauner <brauner@kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        linux-fsdevel@vger.kernel.org, linux-block@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        Christoph Hellwig <hch@lst.de>,
+To:     Youling Tang <tangyouling@loongson.cn>
+Cc:     Huacai Chen <chenhuacai@kernel.org>,
         Masami Hiramatsu <mhiramat@kernel.org>,
-        linux-trace-kernel@vger.kernel.org
-Subject: Re: [PATCH v21 26/30] splice: Convert trace/seq to use
- copy_splice_read()
-Message-ID: <20230523102730.6deaca47@rorschach.local.home>
-In-Reply-To: <20230520000049.2226926-27-dhowells@redhat.com>
-References: <20230520000049.2226926-1-dhowells@redhat.com>
-        <20230520000049.2226926-27-dhowells@redhat.com>
+        Mark Rutland <mark.rutland@arm.com>,
+        WANG Xuerui <kernel@xen0n.name>, linux-kernel@vger.kernel.org,
+        linux-trace-kernel@vger.kernel.org, loongarch@lists.linux.dev,
+        loongson-kernel@lists.loongnix.cn,
+        Qing Zhang <zhangqing@loongson.cn>
+Subject: Re: [PATCH v2 4/5] LoongArch: ftrace: Add direct call trampoline
+ samples support
+Message-ID: <20230523103438.7be15275@rorschach.local.home>
+In-Reply-To: <1682561552-32324-5-git-send-email-tangyouling@loongson.cn>
+References: <1682561552-32324-1-git-send-email-tangyouling@loongson.cn>
+        <1682561552-32324-5-git-send-email-tangyouling@loongson.cn>
 X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
@@ -55,48 +47,24 @@ Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On Sat, 20 May 2023 01:00:45 +0100
-David Howells <dhowells@redhat.com> wrote:
+On Thu, 27 Apr 2023 10:12:31 +0800
+Youling Tang <tangyouling@loongson.cn> wrote:
 
-> For the splice from the trace seq buffer, just use copy_splice_read().
+> The ftrace samples need per-architecture trampoline implementations
+> to save and restore argument registers around the calls to
+> my_direct_func* and to restore polluted registers (eg: ra).
 > 
-> In the future, something better can probably be done by gifting pages from
-> seq->buf into the pipe, but that would require changing seq->buf into a
-> vmap over an array of pages.
-> 
-> Signed-off-by: David Howells <dhowells@redhat.com>
-> cc: Christoph Hellwig <hch@lst.de>
-> cc: Al Viro <viro@zeniv.linux.org.uk>
-> cc: Jens Axboe <axboe@kernel.dk>
-> cc: Steven Rostedt <rostedt@goodmis.org>
-> cc: Masami Hiramatsu <mhiramat@kernel.org>
-> cc: linux-kernel@vger.kernel.org
-> cc: linux-trace-kernel@vger.kernel.org
-> cc: linux-fsdevel@vger.kernel.org
-> cc: linux-block@vger.kernel.org
-> cc: linux-mm@kvack.org
+> Signed-off-by: Qing Zhang <zhangqing@loongson.cn>
+> Signed-off-by: Youling Tang <tangyouling@loongson.cn>
 > ---
->  kernel/trace/trace.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
-> index ebc59781456a..c210d02fac97 100644
-> --- a/kernel/trace/trace.c
-> +++ b/kernel/trace/trace.c
-> @@ -5171,7 +5171,7 @@ static const struct file_operations tracing_fops = {
->  	.open		= tracing_open,
->  	.read		= seq_read,
->  	.read_iter	= seq_read_iter,
-> -	.splice_read	= generic_file_splice_read,
-> +	.splice_read	= copy_splice_read,
-
-Anyway, for this change:
+>  arch/loongarch/Kconfig                      |  2 +
+>  samples/ftrace/ftrace-direct-modify.c       | 34 +++++++++++++++++
+>  samples/ftrace/ftrace-direct-multi-modify.c | 41 +++++++++++++++++++++
+>  samples/ftrace/ftrace-direct-multi.c        | 25 +++++++++++++
+>  samples/ftrace/ftrace-direct-too.c          | 27 ++++++++++++++
+>  samples/ftrace/ftrace-direct.c              | 23 ++++++++++++
+>  6 files changed, 152 insertions(+)
 
 Acked-by: Steven Rostedt (Google) <rostedt@goodmis.org>
 
 -- Steve
-
->  	.write		= tracing_write_stub,
->  	.llseek		= tracing_lseek,
->  	.release	= tracing_release,
-
