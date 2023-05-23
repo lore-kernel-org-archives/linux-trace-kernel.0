@@ -2,43 +2,47 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CB36C7EE26
-	for <linux-trace-kernel@archiver.kernel.org>; Tue, 23 May 2023 14:34:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 216B1C7EE2E
+	for <linux-trace-kernel@archiver.kernel.org>; Tue, 23 May 2023 14:43:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234683AbjEWOen (ORCPT
+        id S236487AbjEWOnw (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Tue, 23 May 2023 10:34:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33788 "EHLO
+        Tue, 23 May 2023 10:43:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39938 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231951AbjEWOem (ORCPT
+        with ESMTP id S231848AbjEWOnv (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Tue, 23 May 2023 10:34:42 -0400
+        Tue, 23 May 2023 10:43:51 -0400
 Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9E2DE119;
-        Tue, 23 May 2023 07:34:41 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B9DBFE9;
+        Tue, 23 May 2023 07:43:50 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 3431763330;
-        Tue, 23 May 2023 14:34:41 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D43B9C433EF;
-        Tue, 23 May 2023 14:34:39 +0000 (UTC)
-Date:   Tue, 23 May 2023 10:34:38 -0400
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 4FB0062747;
+        Tue, 23 May 2023 14:43:50 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E08C9C433D2;
+        Tue, 23 May 2023 14:43:48 +0000 (UTC)
+Date:   Tue, 23 May 2023 10:43:47 -0400
 From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Youling Tang <tangyouling@loongson.cn>
-Cc:     Huacai Chen <chenhuacai@kernel.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        WANG Xuerui <kernel@xen0n.name>, linux-kernel@vger.kernel.org,
-        linux-trace-kernel@vger.kernel.org, loongarch@lists.linux.dev,
-        loongson-kernel@lists.loongnix.cn,
-        Qing Zhang <zhangqing@loongson.cn>
-Subject: Re: [PATCH v2 4/5] LoongArch: ftrace: Add direct call trampoline
- samples support
-Message-ID: <20230523103438.7be15275@rorschach.local.home>
-In-Reply-To: <1682561552-32324-5-git-send-email-tangyouling@loongson.cn>
-References: <1682561552-32324-1-git-send-email-tangyouling@loongson.cn>
-        <1682561552-32324-5-git-send-email-tangyouling@loongson.cn>
+To:     Jaegeuk Kim <jaegeuk@kernel.org>
+Cc:     Daejun Park <daejun7.park@samsung.com>,
+        "chao@kernel.org" <chao@kernel.org>,
+        "mhiramat@kernel.org" <mhiramat@kernel.org>,
+        "linux-f2fs-devel@lists.sourceforge.net" 
+        <linux-f2fs-devel@lists.sourceforge.net>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-trace-kernel@vger.kernel.org" 
+        <linux-trace-kernel@vger.kernel.org>,
+        Seokhwan Kim <sukka.kim@samsung.com>,
+        Yonggil Song <yonggil.song@samsung.com>,
+        beomsu kim <beomsu7.kim@samsung.com>
+Subject: Re: [PATCH v6] f2fs: add async reset zone command support
+Message-ID: <20230523104347.61149ecd@rorschach.local.home>
+In-Reply-To: <ZFqWr3sSYMsHtHAC@google.com>
+References: <CGME20230508081042epcms2p8a637deae7de1829f54614e09d5fde5e5@epcms2p8>
+        <20230508081042epcms2p8a637deae7de1829f54614e09d5fde5e5@epcms2p8>
+        <ZFqWr3sSYMsHtHAC@google.com>
 X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
@@ -47,24 +51,62 @@ Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On Thu, 27 Apr 2023 10:12:31 +0800
-Youling Tang <tangyouling@loongson.cn> wrote:
+On Tue, 9 May 2023 11:53:35 -0700
+Jaegeuk Kim <jaegeuk@kernel.org> wrote:
 
-> The ftrace samples need per-architecture trampoline implementations
-> to save and restore argument registers around the calls to
-> my_direct_func* and to restore polluted registers (eg: ra).
+> On 05/08, Daejun Park wrote:
+> > v5 -> v6
+> > Added trace_f2fs_iostat support for zone reset command.
+> > 
+> > v4 -> v5
+> > Added f2fs iostat for zone reset command.
+> > 
+> > v3 -> v4
+> > Fixed build error caused by unused function.
+> > 
+> > v2 -> v3
+> > Modified arguments to be correct for ftrace parameter.
+> > Changed __submit_zone_reset_cmd to void return.
+> > Refactored the f2fs_wait_discard_bio function.
+> > Fixed code that was previously incorrectly merged.
+> > 
+> > v1 -> v2
+> > Changed to apply the optional async reset write pointer by default.  
 > 
-> Signed-off-by: Qing Zhang <zhangqing@loongson.cn>
-> Signed-off-by: Youling Tang <tangyouling@loongson.cn>
-> ---
->  arch/loongarch/Kconfig                      |  2 +
->  samples/ftrace/ftrace-direct-modify.c       | 34 +++++++++++++++++
->  samples/ftrace/ftrace-direct-multi-modify.c | 41 +++++++++++++++++++++
->  samples/ftrace/ftrace-direct-multi.c        | 25 +++++++++++++
->  samples/ftrace/ftrace-direct-too.c          | 27 ++++++++++++++
->  samples/ftrace/ftrace-direct.c              | 23 ++++++++++++
->  6 files changed, 152 insertions(+)
+> Don't add the history in the patch description.
 
-Acked-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+Well, you can (and should) ...
+
+> 
+> > 
+> > This patch enables submit reset zone command asynchornously. It helps
+> > decrease average latency of write IOs in high utilization scenario by
+> > faster checkpointing.
+> > 
+> > Signed-off-by: Daejun Park <daejun7.park@samsung.com>
+> > ---
+
+But it must go below the three dashes above. That will keep 'git am'
+from adding it to the change log.
 
 -- Steve
+
+
+> >  fs/f2fs/f2fs.h              |  1 +
+> >  fs/f2fs/iostat.c            |  1 +
+> >  fs/f2fs/segment.c           | 84 +++++++++++++++++++++++++++++++++++--
+> >  include/trace/events/f2fs.h | 24 +++++++++--
+> >  4 files changed, 104 insertions(+), 6 deletions(-)
+> > 
+> > diff --git a/fs/f2fs/f2fs.h b/fs/f2fs/f2fs.h
+> > index d211ee89c158..51b68a629814 100644
+> > --- a/fs/f2fs/f2fs.h
+> > +++ b/fs/f2fs/f2fs.h
+> > @@ -1175,6 +1175,7 @@ enum iostat_type {
+> >  	/* other */
+> >  	FS_DISCARD_IO,			/* discard */
+> >  	FS_FLUSH_IO,			/* flush */
+> > +	FS_ZONE_RESET_IO,		/* zone reset */
+> >  	NR_IO_TYPE,
+> >  };
+> >  
