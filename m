@@ -2,425 +2,258 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E0ABC77B7E
-	for <linux-trace-kernel@archiver.kernel.org>; Wed, 24 May 2023 03:09:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 99C66C7EE29
+	for <linux-trace-kernel@archiver.kernel.org>; Wed, 24 May 2023 03:13:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239238AbjEXDJf (ORCPT
+        id S239252AbjEXDNI (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Tue, 23 May 2023 23:09:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42380 "EHLO
+        Tue, 23 May 2023 23:13:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43514 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233703AbjEXDJe (ORCPT
+        with ESMTP id S230343AbjEXDNG (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Tue, 23 May 2023 23:09:34 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B8506B3;
-        Tue, 23 May 2023 20:09:32 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 3E63F63826;
-        Wed, 24 May 2023 03:09:32 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0DEFEC4339B;
-        Wed, 24 May 2023 03:09:25 +0000 (UTC)
-Date:   Tue, 23 May 2023 23:09:13 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     LKML <linux-kernel@vger.kernel.org>,
-        Linux trace kernel <linux-trace-kernel@vger.kernel.org>
-Cc:     Masami Hiramatsu <mhiramat@kernel.org>,
-        Tom Zanussi <zanussi@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>
-Subject: [RESEND][PATCH v2] tracing: Rename stacktrace field to
- common_stacktrace
-Message-ID: <20230523230913.6860e28d@rorschach.local.home>
-X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+        Tue, 23 May 2023 23:13:06 -0400
+Received: from mx0a-00082601.pphosted.com (mx0a-00082601.pphosted.com [67.231.145.42])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 448ABE9;
+        Tue, 23 May 2023 20:13:05 -0700 (PDT)
+Received: from pps.filterd (m0044010.ppops.net [127.0.0.1])
+        by mx0a-00082601.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 34NLaglm026939;
+        Tue, 23 May 2023 20:12:39 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=meta.com; h=message-id : date :
+ subject : to : cc : references : from : in-reply-to : content-type :
+ content-transfer-encoding : mime-version; s=s2048-2021-q4;
+ bh=sLbe+XRRyJ6N+eZpUT6jXv0f4wCZxIvQalngL9yzxH0=;
+ b=JcdmPSRAoeCg8xV9+D2Os+2CRQZ7RHUdQKNQ6nzZO8AuHU/ZS+iCDD/SwNg51TsTOMtv
+ 8HtYGw/kzQiC5JwaY0Y3Z1xYJLn/ImrxmX4WajtSJC3TzPEc9EbexBbLCs+K+TKK+oWn
+ u7dNcAdVmxGF9oxkNZKYPprmI7a7L8yxSEts6zGW9SoxYPsyuQ/O+lLgClytX+1OYU7C
+ 3noE/xRvRx4WAzW8eogUi97pJPqH33n1XWtKd59rlN8dN+f1PgFTQTyzJ39Gg9Sbs4jd
+ Nvv+Cula7drb9JCFWum/foZQxakMKQZTHQ7F9vwKyjapSh/1fhwQSWFhprmYYvbuYlPp 7g== 
+Received: from nam11-bn8-obe.outbound.protection.outlook.com (mail-bn8nam11lp2169.outbound.protection.outlook.com [104.47.58.169])
+        by mx0a-00082601.pphosted.com (PPS) with ESMTPS id 3qs5j49p2s-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 23 May 2023 20:12:39 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=b/UQYg2r/IedCSR/ZvHobp7+wMspJbT0mUY7qo6GQRf7NidSyfD09HbTk8IsztVZWh4tpfPcyiMcoS+p8AWrUEIQXeDfIgWFiFyMo8+fmQV2L59sYeS5mTDlOcqtoOf1lNdUcg5bv0IDbwW5+9BaXlfsEg5lOED+REJxt1Thecg1y+/pJPPBwtuN4M1zm2RMmEaslFFi+x6auS04KntDuGHpKS2bR5Trtmh8LE0AA0ojGfg2CfVkt+lhbm1/oo352+UyBYHJzwaO1mZFDOzLkJ1XhbD/lvAJtmzQ0xrLgHyIF+uNhrYfiOtdUbY6NQHytMLRUG5cSt8vJd/R5J69Rw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=sLbe+XRRyJ6N+eZpUT6jXv0f4wCZxIvQalngL9yzxH0=;
+ b=NOYCVSg5rVjqGJeKT5VAnaPcAqFLEVe5l9JlgY8zFHx4RAmTsy9mEpUrj15DrJs157S+nmmxRFha2iZyWpCm7ZhB1CWZKe398k16qTTKpgkvffghWfcViTVRtvgYZUnXn9eGhD7DnYZMfaYhYyIb0klg2S3IY9FwWQlxzCVWJEd7kdWt8w8Fy0oUxfF53jFahzd4brXfENlPSDNm2Zm+aQ/+jb6IPebznZvrHl0KiKwNhVHe6traYet7VawpioQFQFPuJSHqMEie+rqz71hcKVNQ111eBrzVeJPYju8no5gbdAShakG3KkSpnLCXAtj2ypZl2o1TSqkmKXytDTxFVQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=meta.com; dmarc=pass action=none header.from=meta.com;
+ dkim=pass header.d=meta.com; arc=none
+Received: from SN6PR1501MB2064.namprd15.prod.outlook.com (2603:10b6:805:d::27)
+ by DM4PR15MB5993.namprd15.prod.outlook.com (2603:10b6:8:189::14) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6411.29; Wed, 24 May
+ 2023 03:12:36 +0000
+Received: from SN6PR1501MB2064.namprd15.prod.outlook.com
+ ([fe80::589f:9230:518:7f53]) by SN6PR1501MB2064.namprd15.prod.outlook.com
+ ([fe80::589f:9230:518:7f53%7]) with mapi id 15.20.6411.028; Wed, 24 May 2023
+ 03:12:36 +0000
+Message-ID: <3c029fae-cb42-5a75-2858-7b8fc56a8769@meta.com>
+Date:   Tue, 23 May 2023 20:12:21 -0700
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:102.0)
+ Gecko/20100101 Thunderbird/102.11.0
+Subject: Re: [PATCH 2/2] [v2] bpf: fix bpf_probe_read_kernel prototype
+ mismatch
+Content-Language: en-US
+To:     Arnd Bergmann <arnd@kernel.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Andrii Nakryiko <andrii@kernel.org>,
+        Song Liu <song@kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>
+Cc:     Arnd Bergmann <arnd@arndb.de>, stable@vger.kernel.org,
+        Martin KaFai Lau <martin.lau@linux.dev>,
+        Yonghong Song <yhs@fb.com>,
+        John Fastabend <john.fastabend@gmail.com>,
+        KP Singh <kpsingh@kernel.org>,
+        Stanislav Fomichev <sdf@google.com>,
+        Hao Luo <haoluo@google.com>, Jiri Olsa <jolsa@kernel.org>,
+        Kumar Kartikeya Dwivedi <memxor@gmail.com>,
+        Dave Marchevsky <davemarchevsky@fb.com>,
+        Joanne Koong <joannelkoong@gmail.com>,
+        Delyan Kratunov <delyank@fb.com>,
+        Peter Zijlstra <peterz@infradead.org>, bpf@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
+References: <20230523194930.2116181-1-arnd@kernel.org>
+ <20230523194930.2116181-2-arnd@kernel.org>
+From:   Yonghong Song <yhs@meta.com>
+In-Reply-To: <20230523194930.2116181-2-arnd@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: BYAPR11CA0079.namprd11.prod.outlook.com
+ (2603:10b6:a03:f4::20) To SN6PR1501MB2064.namprd15.prod.outlook.com
+ (2603:10b6:805:d::27)
+MIME-Version: 1.0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SN6PR1501MB2064:EE_|DM4PR15MB5993:EE_
+X-MS-Office365-Filtering-Correlation-Id: 0c5cf81b-8b60-4efa-1021-08db5c04b94a
+X-FB-Source: Internal
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: Qb2z61s0sVBT56ZyZB7hIRVqLAuZ0U9uMoFl/MqyLdyBIrTm4Pidj0QJhVfvVE7gdgfdtn2V/CbUMmwQmUPN5chA1kh8TJufj6u1L1uZuiufmbxVu8u+K/UApq0KnUgj5vN3GoakRuJ1LvchQgsrpSk/cB3B+5UjobCm15Z+7eE5YjbYJ4WdyeWjRlDSEhz+VFo8gdAqVAuo81lSfjLJzzQobtdk60NINaPEPexvs5/Pw7I2LtHpHq2LbqEboInuyeNRegnSbtC+C4/JMiUVnE7ij+iTjuRXjQQa5wA4oUzuhR5wIN1Kw4TecKOo+YoibabUK+YYSsZD0yIMfdd8fMPOYmW/EZLr+zfVhaz/FqzYCcXJ14lNL/p3auVRWWqKkJ8ctmbdkQi7q3i5yrU76m9+MfiE4Wcn/WAjUGgKvPuyolT6p3X0rsdqjIvlzWKeQByZYdaiXdbGIkKYODKt91TmnMJlHV2FqI9xr4WtV81dm8hfhVHfOBA0TYRVHldksRKPm/ICCprMnMQizx+mBeddHrGvVg1qa4jdNqdoqvPGJMs2Ppwb99bXDC0ZxmskCbQZVUvMps80HyOuaNV/R+D086G85Xg0C/7LrTk1zZgY70msEqaYCcnuT5g3ROs7RqnAjCfEfKewyQe0/JoSuA==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SN6PR1501MB2064.namprd15.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230028)(4636009)(376002)(39860400002)(396003)(366004)(136003)(346002)(451199021)(6512007)(6506007)(53546011)(7416002)(2906002)(2616005)(36756003)(186003)(83380400001)(38100700002)(316002)(6666004)(66946007)(66556008)(66476007)(4326008)(86362001)(41300700001)(6486002)(54906003)(110136005)(478600001)(31696002)(31686004)(8676002)(8936002)(5660300002)(45980500001)(43740500002);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?WU9VZG52c1N0K2htemlBVjhZNWkya29XcmxMOThuNG5BNFVoSnA2ZndUcU1Y?=
+ =?utf-8?B?T1pCT3RNYzhZcjlvTDBpdTA4TUxVZURwRUErQW5DWFN4QmFsUjJNM3Ewend3?=
+ =?utf-8?B?aFBVVk5wQkdyU2pvUEhQM3JRQzIzdlg2NExLNEF6RlF0M21Hd2s5OGdiNS8y?=
+ =?utf-8?B?QmRLbkFCeVdzc3VUTUsxRjZiUXVFWTlNWEs3MjVUMHdjR1JWTm9CWHBSTGI5?=
+ =?utf-8?B?ZEtON09nNmphNFowdU9LVGxGOGVOL1paUDVBSWFaUThpTE83WHh4cDZhYXFv?=
+ =?utf-8?B?Vi9wblk3b0pydVNGMXV0NjNOeno1R08ycXl4eWhwNC9ncUZKbUR6Um90NWNp?=
+ =?utf-8?B?bk1DVE9pT3puTzhQc0VRbEV3ZmxPa2Y1dm5hRHdFMGdscWR1cE5oZFc2ak9D?=
+ =?utf-8?B?NVluWlgzSmJDc2lGRzZNUXZKWmNZWDdBU3kvWCt5Nmw1b2Z1dVo2eHJDcDJ5?=
+ =?utf-8?B?RHM1VGFMcDFvV1laWlEwMGVpbWZpQzIvb1h5eFIxNis0a082cGd0aGxMUy9C?=
+ =?utf-8?B?ZG1wN2hoZ3VTaXMzZ0d0UGNRbEN5YTdxQUVIekhYZWxicU9SWlBCd3ByVTln?=
+ =?utf-8?B?blpVRjI4c05xK3JMdFZpc0hPSnp6dVgyVDhabFlqaDA0ak10MSt0MktucDZl?=
+ =?utf-8?B?YmtmYkoreVlXM2Q2ZGtmNEVhUUMwRCtsV0RQRW5GbFdqK1pZb21nMUxFaU55?=
+ =?utf-8?B?NTBlRjB4RW9YbzVXTllLcFZ6SGc0OU5lQlc3elBCcG8rdENrbThQYXBNMzQ2?=
+ =?utf-8?B?aEQ0TTJPMllxVUZmalZ6Zm0wOTBQbWtRdlNveUlhc2dvVHBXalArUzVOdzgr?=
+ =?utf-8?B?UzlucWhMOW15NEJDZnRnVDBsYXJ3NVFTVmRyLzR1Z01UUHJ0OHJXVUJibytV?=
+ =?utf-8?B?MDE5dkZWcHhidElNRG5aUU5obWVOaDI5eWsyTEI4aG1ZQ2k2Wncrd3paZS9Q?=
+ =?utf-8?B?RWFQNVhkR1J3aGE2aVliMEdDdjRqQStQdE9oc0lBNFRVeU1Lb0tFbWNteU45?=
+ =?utf-8?B?ODNsQ1F5cnpJNzFpWE5KZkViTHFOdXhTTmxGK2MwZklFMmEyblFzbVc1TjJV?=
+ =?utf-8?B?bjUrSnZkbmtPRktWdC9ybDkzLzVHRUl3MElhNGVpVERKbnhXWUpqOU1tMDR4?=
+ =?utf-8?B?a2o4NldXQ3lYYnQwODZ6dlF2QUdtaUVCY0haWUFEWThUSGNTaTZlSGh0b01t?=
+ =?utf-8?B?OXN6Z1dwOVhtb3hqYUJsMVA1OGltYldkeDhWVFY3RDd5SHBrR0M1Z1FzWTFW?=
+ =?utf-8?B?WHIxZVJVVWRneXlaZ1dQZ1AwQ3hUN2RYeVhUYkNCdWRqenFGM1FVUkcvd05r?=
+ =?utf-8?B?a0dBREZsenhYckRpQ2tscXZMVXZTL2VKMWN0OTJXdjVkWE51bzIrQWZkWXdQ?=
+ =?utf-8?B?MFEvUEtQVElDWlEzbGptMXU5T2VTMWorN1pHeGJWblJVRTlKVk9uenVEWDJo?=
+ =?utf-8?B?cnhxWFpJZm9KTGJBckZ5MmlUbVdoaURIK2NFSk4zcncyejJOMC84ZXh3MXJZ?=
+ =?utf-8?B?L25wM2tHQTZTYUhuNFhkaUd3ZklEbTJodFBBUEpWR3pxMlNWdXYxUUdMQllt?=
+ =?utf-8?B?QUZTTTBUYzdZS0QybnNxQy9tMStUakQzUXNGU1ZMYlFYOUNtUEFBcEpyWjd2?=
+ =?utf-8?B?Z1RuVXorMGRLRklteEg1ZExjQ1ZkdG9pN3BWYlRUWVJpd1hGQ0NLeEh3aTIr?=
+ =?utf-8?B?cHQvMXF2QmU2UzFWSEFTMVJ3azJ5NjE1a2JLR1VONU5zbjI0c09nbmhBbEJR?=
+ =?utf-8?B?eTUrYTRsQzE1ZlM4WVpuWUsvdG5sREhoUGl4VGtNd3FjVkx3eEh1bXJGZEI2?=
+ =?utf-8?B?dzJWbk56Z1hlYXQrYk9QUUFZV05XeU1PS2ZpOWswLy9uRFRKa3RvU3FyQTY2?=
+ =?utf-8?B?M3YrTTdSUkpuV2VENjRSTGZ3ZEZSbUZwME1RSzR0RWIvdXF6QStmSjNjVmw1?=
+ =?utf-8?B?T1JVUnJNdFBNblB0Y2RMNys4RWxNdG9BSXpQWkpvb3NwYnVJR05INDB6LzRS?=
+ =?utf-8?B?aGh1WDVRdGpyc1d6NnJzT3RUNUZtUWdGOUpraVF5N01lbTQzb0NZaWxEaTJZ?=
+ =?utf-8?B?c2Q0dDFuT1djbG1jaEdaMGZ6MUJTL1BpMUR0cjR2bklqRmJxR004ZDZqSHRp?=
+ =?utf-8?B?MzkwelNmRHN6SmxLTmI3M21OVElkdys4R2lybjZlbGU5SjhNUlROWUs4Qkxr?=
+ =?utf-8?B?L2c9PQ==?=
+X-OriginatorOrg: meta.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 0c5cf81b-8b60-4efa-1021-08db5c04b94a
+X-MS-Exchange-CrossTenant-AuthSource: SN6PR1501MB2064.namprd15.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 24 May 2023 03:12:36.4913
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 8ae927fe-1255-47a7-a2af-5f3a069daaa2
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: VnR0KnXPuafu3phslPWv5eUdH12keiFmi6Q4fA8jdvXLxSmgqCfqnnSWc1oeBg3L
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM4PR15MB5993
+X-Proofpoint-GUID: i5dQz8konZHkIWhjuXPsM-jmujpu5s-b
+X-Proofpoint-ORIG-GUID: i5dQz8konZHkIWhjuXPsM-jmujpu5s-b
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.254,Aquarius:18.0.957,Hydra:6.0.573,FMLib:17.11.176.26
+ definitions=2023-05-23_16,2023-05-23_02,2023-05-22_02
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
 
-The histogram and synthetic events can use a pseudo event called
-"stacktrace" that will create a stacktrace at the time of the event and
-use it just like it was a normal field. We have other pseudo events such
-as "common_cpu" and "common_timestamp". To stay consistent with that,
-convert "stacktrace" to "common_stacktrace". As this was used in older
-kernels, to keep backward compatibility, this will act just like
-"common_cpu" did with "cpu". That is, "cpu" will be the same as
-"common_cpu" unless the event has a "cpu" field. In which case, the
-event's field is used. The same is true with "stacktrace".
 
-Also update the documentation to reflect this change.
+On 5/23/23 12:43 PM, Arnd Bergmann wrote:
+> From: Arnd Bergmann <arnd@arndb.de>
+> 
+> bpf_probe_read_kernel() has a __weak definition in core.c and another
+> definition with an incompatible prototype in kernel/trace/bpf_trace.c,
+> when CONFIG_BPF_EVENTS is enabled.
+> 
+> Since the two are incompatible, there cannot be a shared declaration
+> in a header file, but the lack of a prototype causes a W=1 warning:
+> 
+> kernel/bpf/core.c:1638:12: error: no previous prototype for 'bpf_probe_read_kernel' [-Werror=missing-prototypes]
+> 
+> Change the core.c file to only reference the inner
+> bpf_probe_read_kernel_common() helper and provide a prototype for that.
+> 
+> Aside from the warning, this addresses a bug on 32-bit architectures
+> from incorrect argument passing with the mismatched prototype.
 
-Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
----
-Resending to get rid of the junk I left at the top the first time.
+Could you explain what is this '32-bit architectures ... incorrect 
+argument passing' thing?
 
-Changes since v1: https://lore.kernel.org/linux-trace-kernel/20230523221108.064a5d82@rorschach.local.home/
- - Update the tracefs README to use common_stacktrace instead of
-   just stacktrace
+> 
+> Cc: stable@vger.kernel.org
+> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+> --
+> v2: rewrite completely to fix the mismatch.
+> ---
+>   include/linux/bpf.h      | 2 ++
+>   kernel/bpf/core.c        | 9 ++++++---
+>   kernel/trace/bpf_trace.c | 3 +--
+>   3 files changed, 9 insertions(+), 5 deletions(-)
+> 
+> diff --git a/include/linux/bpf.h b/include/linux/bpf.h
+> index 36e4b2d8cca2..6a231ec61a87 100644
+> --- a/include/linux/bpf.h
+> +++ b/include/linux/bpf.h
+> @@ -2619,6 +2619,8 @@ static inline void bpf_dynptr_set_rdonly(struct bpf_dynptr_kern *ptr)
+>   }
+>   #endif /* CONFIG_BPF_SYSCALL */
+>   
+> +int bpf_probe_read_kernel_common(void *dst, u32 size, const void *unsafe_ptr);
+> +
+>   void __bpf_free_used_btfs(struct bpf_prog_aux *aux,
+>   			  struct btf_mod_pair *used_btfs, u32 len);
+>   
+> diff --git a/kernel/bpf/core.c b/kernel/bpf/core.c
+> index 0926714641eb..e7f0d5f146fa 100644
+> --- a/kernel/bpf/core.c
+> +++ b/kernel/bpf/core.c
+> @@ -35,6 +35,7 @@
+>   #include <linux/bpf_verifier.h>
+>   #include <linux/nodemask.h>
+>   #include <linux/nospec.h>
+> +#include <linux/bpf.h>
+>   #include <linux/bpf_mem_alloc.h>
+>   #include <linux/memcontrol.h>
+>   
+> @@ -1635,11 +1636,13 @@ bool bpf_opcode_in_insntable(u8 code)
+>   }
+>   
+>   #ifndef CONFIG_BPF_JIT_ALWAYS_ON
+> -u64 __weak bpf_probe_read_kernel(void *dst, u32 size, const void *unsafe_ptr)
+> +#ifndef CONFIG_BPF_EVENTS
+> +int bpf_probe_read_kernel_common(void * dst, u32 size, const void *unsafe_ptr)
 
- Documentation/trace/histogram.rst | 64 +++++++++++++++----------------
- include/linux/trace_events.h      |  1 +
- kernel/trace/trace.c              |  2 +-
- kernel/trace/trace_events.c       |  2 +
- kernel/trace/trace_events_hist.c  | 16 +++++---
- 5 files changed, 46 insertions(+), 39 deletions(-)
+void * dst => void *dst
 
-diff --git a/Documentation/trace/histogram.rst b/Documentation/trace/histogram.rst
-index 479c9eac6335..3c9b263de9c2 100644
---- a/Documentation/trace/histogram.rst
-+++ b/Documentation/trace/histogram.rst
-@@ -35,7 +35,7 @@ Documentation written by Tom Zanussi
-   in place of an explicit value field - this is simply a count of
-   event hits.  If 'values' isn't specified, an implicit 'hitcount'
-   value will be automatically created and used as the only value.
--  Keys can be any field, or the special string 'stacktrace', which
-+  Keys can be any field, or the special string 'common_stacktrace', which
-   will use the event's kernel stacktrace as the key.  The keywords
-   'keys' or 'key' can be used to specify keys, and the keywords
-   'values', 'vals', or 'val' can be used to specify values.  Compound
-@@ -54,7 +54,7 @@ Documentation written by Tom Zanussi
-   'compatible' if the fields named in the trigger share the same
-   number and type of fields and those fields also have the same names.
-   Note that any two events always share the compatible 'hitcount' and
--  'stacktrace' fields and can therefore be combined using those
-+  'common_stacktrace' fields and can therefore be combined using those
-   fields, however pointless that may be.
- 
-   'hist' triggers add a 'hist' file to each event's subdirectory.
-@@ -547,9 +547,9 @@ Extended error information
-   the hist trigger display symbolic call_sites, we can have the hist
-   trigger additionally display the complete set of kernel stack traces
-   that led to each call_site.  To do that, we simply use the special
--  value 'stacktrace' for the key parameter::
-+  value 'common_stacktrace' for the key parameter::
- 
--    # echo 'hist:keys=stacktrace:values=bytes_req,bytes_alloc:sort=bytes_alloc' > \
-+    # echo 'hist:keys=common_stacktrace:values=bytes_req,bytes_alloc:sort=bytes_alloc' > \
-            /sys/kernel/tracing/events/kmem/kmalloc/trigger
- 
-   The above trigger will use the kernel stack trace in effect when an
-@@ -561,9 +561,9 @@ Extended error information
-   every callpath to a kmalloc for a kernel compile)::
- 
-     # cat /sys/kernel/tracing/events/kmem/kmalloc/hist
--    # trigger info: hist:keys=stacktrace:vals=bytes_req,bytes_alloc:sort=bytes_alloc:size=2048 [active]
-+    # trigger info: hist:keys=common_stacktrace:vals=bytes_req,bytes_alloc:sort=bytes_alloc:size=2048 [active]
- 
--    { stacktrace:
-+    { common_stacktrace:
-          __kmalloc_track_caller+0x10b/0x1a0
-          kmemdup+0x20/0x50
-          hidraw_report_event+0x8a/0x120 [hid]
-@@ -581,7 +581,7 @@ Extended error information
-          cpu_startup_entry+0x315/0x3e0
-          rest_init+0x7c/0x80
-     } hitcount:          3  bytes_req:         21  bytes_alloc:         24
--    { stacktrace:
-+    { common_stacktrace:
-          __kmalloc_track_caller+0x10b/0x1a0
-          kmemdup+0x20/0x50
-          hidraw_report_event+0x8a/0x120 [hid]
-@@ -596,7 +596,7 @@ Extended error information
-          do_IRQ+0x5a/0xf0
-          ret_from_intr+0x0/0x30
-     } hitcount:          3  bytes_req:         21  bytes_alloc:         24
--    { stacktrace:
-+    { common_stacktrace:
-          kmem_cache_alloc_trace+0xeb/0x150
-          aa_alloc_task_context+0x27/0x40
-          apparmor_cred_prepare+0x1f/0x50
-@@ -608,7 +608,7 @@ Extended error information
-     .
-     .
-     .
--    { stacktrace:
-+    { common_stacktrace:
-          __kmalloc+0x11b/0x1b0
-          i915_gem_execbuffer2+0x6c/0x2c0 [i915]
-          drm_ioctl+0x349/0x670 [drm]
-@@ -616,7 +616,7 @@ Extended error information
-          SyS_ioctl+0x81/0xa0
-          system_call_fastpath+0x12/0x6a
-     } hitcount:      17726  bytes_req:   13944120  bytes_alloc:   19593808
--    { stacktrace:
-+    { common_stacktrace:
-          __kmalloc+0x11b/0x1b0
-          load_elf_phdrs+0x76/0xa0
-          load_elf_binary+0x102/0x1650
-@@ -625,7 +625,7 @@ Extended error information
-          SyS_execve+0x3a/0x50
-          return_from_execve+0x0/0x23
-     } hitcount:      33348  bytes_req:   17152128  bytes_alloc:   20226048
--    { stacktrace:
-+    { common_stacktrace:
-          kmem_cache_alloc_trace+0xeb/0x150
-          apparmor_file_alloc_security+0x27/0x40
-          security_file_alloc+0x16/0x20
-@@ -636,7 +636,7 @@ Extended error information
-          SyS_open+0x1e/0x20
-          system_call_fastpath+0x12/0x6a
-     } hitcount:    4766422  bytes_req:    9532844  bytes_alloc:   38131376
--    { stacktrace:
-+    { common_stacktrace:
-          __kmalloc+0x11b/0x1b0
-          seq_buf_alloc+0x1b/0x50
-          seq_read+0x2cc/0x370
-@@ -1026,7 +1026,7 @@ Extended error information
-   First we set up an initially paused stacktrace trigger on the
-   netif_receive_skb event::
- 
--    # echo 'hist:key=stacktrace:vals=len:pause' > \
-+    # echo 'hist:key=common_stacktrace:vals=len:pause' > \
-            /sys/kernel/tracing/events/net/netif_receive_skb/trigger
- 
-   Next, we set up an 'enable_hist' trigger on the sched_process_exec
-@@ -1060,9 +1060,9 @@ Extended error information
-     $ wget https://www.kernel.org/pub/linux/kernel/v3.x/patch-3.19.xz
- 
-     # cat /sys/kernel/tracing/events/net/netif_receive_skb/hist
--    # trigger info: hist:keys=stacktrace:vals=len:sort=hitcount:size=2048 [paused]
-+    # trigger info: hist:keys=common_stacktrace:vals=len:sort=hitcount:size=2048 [paused]
- 
--    { stacktrace:
-+    { common_stacktrace:
-          __netif_receive_skb_core+0x46d/0x990
-          __netif_receive_skb+0x18/0x60
-          netif_receive_skb_internal+0x23/0x90
-@@ -1079,7 +1079,7 @@ Extended error information
-          kthread+0xd2/0xf0
-          ret_from_fork+0x42/0x70
-     } hitcount:         85  len:      28884
--    { stacktrace:
-+    { common_stacktrace:
-          __netif_receive_skb_core+0x46d/0x990
-          __netif_receive_skb+0x18/0x60
-          netif_receive_skb_internal+0x23/0x90
-@@ -1097,7 +1097,7 @@ Extended error information
-          irq_thread+0x11f/0x150
-          kthread+0xd2/0xf0
-     } hitcount:         98  len:     664329
--    { stacktrace:
-+    { common_stacktrace:
-          __netif_receive_skb_core+0x46d/0x990
-          __netif_receive_skb+0x18/0x60
-          process_backlog+0xa8/0x150
-@@ -1115,7 +1115,7 @@ Extended error information
-          inet_sendmsg+0x64/0xa0
-          sock_sendmsg+0x3d/0x50
-     } hitcount:        115  len:      13030
--    { stacktrace:
-+    { common_stacktrace:
-          __netif_receive_skb_core+0x46d/0x990
-          __netif_receive_skb+0x18/0x60
-          netif_receive_skb_internal+0x23/0x90
-@@ -1142,14 +1142,14 @@ Extended error information
-   into the histogram.  In order to avoid having to set everything up
-   again, we can just clear the histogram first::
- 
--    # echo 'hist:key=stacktrace:vals=len:clear' >> \
-+    # echo 'hist:key=common_stacktrace:vals=len:clear' >> \
-            /sys/kernel/tracing/events/net/netif_receive_skb/trigger
- 
-   Just to verify that it is in fact cleared, here's what we now see in
-   the hist file::
- 
-     # cat /sys/kernel/tracing/events/net/netif_receive_skb/hist
--    # trigger info: hist:keys=stacktrace:vals=len:sort=hitcount:size=2048 [paused]
-+    # trigger info: hist:keys=common_stacktrace:vals=len:sort=hitcount:size=2048 [paused]
- 
-     Totals:
-         Hits: 0
-@@ -1485,12 +1485,12 @@ Extended error information
- 
-   And here's an example that shows how to combine histogram data from
-   any two events even if they don't share any 'compatible' fields
--  other than 'hitcount' and 'stacktrace'.  These commands create a
-+  other than 'hitcount' and 'common_stacktrace'.  These commands create a
-   couple of triggers named 'bar' using those fields::
- 
--    # echo 'hist:name=bar:key=stacktrace:val=hitcount' > \
-+    # echo 'hist:name=bar:key=common_stacktrace:val=hitcount' > \
-            /sys/kernel/tracing/events/sched/sched_process_fork/trigger
--    # echo 'hist:name=bar:key=stacktrace:val=hitcount' > \
-+    # echo 'hist:name=bar:key=common_stacktrace:val=hitcount' > \
-           /sys/kernel/tracing/events/net/netif_rx/trigger
- 
-   And displaying the output of either shows some interesting if
-@@ -1501,16 +1501,16 @@ Extended error information
- 
-     # event histogram
-     #
--    # trigger info: hist:name=bar:keys=stacktrace:vals=hitcount:sort=hitcount:size=2048 [active]
-+    # trigger info: hist:name=bar:keys=common_stacktrace:vals=hitcount:sort=hitcount:size=2048 [active]
-     #
- 
--    { stacktrace:
-+    { common_stacktrace:
-              kernel_clone+0x18e/0x330
-              kernel_thread+0x29/0x30
-              kthreadd+0x154/0x1b0
-              ret_from_fork+0x3f/0x70
-     } hitcount:          1
--    { stacktrace:
-+    { common_stacktrace:
-              netif_rx_internal+0xb2/0xd0
-              netif_rx_ni+0x20/0x70
-              dev_loopback_xmit+0xaa/0xd0
-@@ -1528,7 +1528,7 @@ Extended error information
-              call_cpuidle+0x3b/0x60
-              cpu_startup_entry+0x22d/0x310
-     } hitcount:          1
--    { stacktrace:
-+    { common_stacktrace:
-              netif_rx_internal+0xb2/0xd0
-              netif_rx_ni+0x20/0x70
-              dev_loopback_xmit+0xaa/0xd0
-@@ -1543,7 +1543,7 @@ Extended error information
-              SyS_sendto+0xe/0x10
-              entry_SYSCALL_64_fastpath+0x12/0x6a
-     } hitcount:          2
--    { stacktrace:
-+    { common_stacktrace:
-              netif_rx_internal+0xb2/0xd0
-              netif_rx+0x1c/0x60
-              loopback_xmit+0x6c/0xb0
-@@ -1561,7 +1561,7 @@ Extended error information
-              sock_sendmsg+0x38/0x50
-              ___sys_sendmsg+0x14e/0x270
-     } hitcount:         76
--    { stacktrace:
-+    { common_stacktrace:
-              netif_rx_internal+0xb2/0xd0
-              netif_rx+0x1c/0x60
-              loopback_xmit+0x6c/0xb0
-@@ -1579,7 +1579,7 @@ Extended error information
-              sock_sendmsg+0x38/0x50
-              ___sys_sendmsg+0x269/0x270
-     } hitcount:         77
--    { stacktrace:
-+    { common_stacktrace:
-              netif_rx_internal+0xb2/0xd0
-              netif_rx+0x1c/0x60
-              loopback_xmit+0x6c/0xb0
-@@ -1597,7 +1597,7 @@ Extended error information
-              sock_sendmsg+0x38/0x50
-              SYSC_sendto+0xef/0x170
-     } hitcount:         88
--    { stacktrace:
-+    { common_stacktrace:
-              kernel_clone+0x18e/0x330
-              SyS_clone+0x19/0x20
-              entry_SYSCALL_64_fastpath+0x12/0x6a
-@@ -1949,7 +1949,7 @@ uninterruptible state::
- 
-   # cd /sys/kernel/tracing
-   # echo 's:block_lat pid_t pid; u64 delta; unsigned long[] stack;' > dynamic_events
--  # echo 'hist:keys=next_pid:ts=common_timestamp.usecs,st=stacktrace  if prev_state == 2' >> events/sched/sched_switch/trigger
-+  # echo 'hist:keys=next_pid:ts=common_timestamp.usecs,st=common_stacktrace  if prev_state == 2' >> events/sched/sched_switch/trigger
-   # echo 'hist:keys=prev_pid:delta=common_timestamp.usecs-$ts,s=$st:onmax($delta).trace(block_lat,prev_pid,$delta,$s)' >> events/sched/sched_switch/trigger
-   # echo 1 > events/synthetic/block_lat/enable
-   # cat trace
-diff --git a/include/linux/trace_events.h b/include/linux/trace_events.h
-index 0e373222a6df..7c4a0b72334e 100644
---- a/include/linux/trace_events.h
-+++ b/include/linux/trace_events.h
-@@ -806,6 +806,7 @@ enum {
- 	FILTER_TRACE_FN,
- 	FILTER_COMM,
- 	FILTER_CPU,
-+	FILTER_STACKTRACE,
- };
- 
- extern int trace_event_raw_init(struct trace_event_call *call);
-diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
-index ebc59781456a..81801dc31784 100644
---- a/kernel/trace/trace.c
-+++ b/kernel/trace/trace.c
-@@ -5752,7 +5752,7 @@ static const char readme_msg[] =
- 	"\t    table using the key(s) and value(s) named, and the value of a\n"
- 	"\t    sum called 'hitcount' is incremented.  Keys and values\n"
- 	"\t    correspond to fields in the event's format description.  Keys\n"
--	"\t    can be any field, or the special string 'stacktrace'.\n"
-+	"\t    can be any field, or the special string 'common_stacktrace'.\n"
- 	"\t    Compound keys consisting of up to two fields can be specified\n"
- 	"\t    by the 'keys' keyword.  Values must correspond to numeric\n"
- 	"\t    fields.  Sort keys consisting of up to two fields can be\n"
-diff --git a/kernel/trace/trace_events.c b/kernel/trace/trace_events.c
-index 654ffa40457a..57e539d47989 100644
---- a/kernel/trace/trace_events.c
-+++ b/kernel/trace/trace_events.c
-@@ -194,6 +194,8 @@ static int trace_define_generic_fields(void)
- 	__generic_field(int, common_cpu, FILTER_CPU);
- 	__generic_field(char *, COMM, FILTER_COMM);
- 	__generic_field(char *, comm, FILTER_COMM);
-+	__generic_field(char *, stacktrace, FILTER_STACKTRACE);
-+	__generic_field(char *, STACKTRACE, FILTER_STACKTRACE);
- 
- 	return ret;
- }
-diff --git a/kernel/trace/trace_events_hist.c b/kernel/trace/trace_events_hist.c
-index 543cb7dc84ad..b97d3ad832f1 100644
---- a/kernel/trace/trace_events_hist.c
-+++ b/kernel/trace/trace_events_hist.c
-@@ -1364,7 +1364,7 @@ static const char *hist_field_name(struct hist_field *field,
- 		if (field->field)
- 			field_name = field->field->name;
- 		else
--			field_name = "stacktrace";
-+			field_name = "common_stacktrace";
- 	} else if (field->flags & HIST_FIELD_FL_HITCOUNT)
- 		field_name = "hitcount";
- 
-@@ -2367,7 +2367,7 @@ parse_field(struct hist_trigger_data *hist_data, struct trace_event_file *file,
- 		hist_data->enable_timestamps = true;
- 		if (*flags & HIST_FIELD_FL_TIMESTAMP_USECS)
- 			hist_data->attrs->ts_in_usecs = true;
--	} else if (strcmp(field_name, "stacktrace") == 0) {
-+	} else if (strcmp(field_name, "common_stacktrace") == 0) {
- 		*flags |= HIST_FIELD_FL_STACKTRACE;
- 	} else if (strcmp(field_name, "common_cpu") == 0)
- 		*flags |= HIST_FIELD_FL_CPU;
-@@ -2378,11 +2378,15 @@ parse_field(struct hist_trigger_data *hist_data, struct trace_event_file *file,
- 		if (!field || !field->size) {
- 			/*
- 			 * For backward compatibility, if field_name
--			 * was "cpu", then we treat this the same as
--			 * common_cpu. This also works for "CPU".
-+			 * was "cpu" or "stacktrace", then we treat this
-+			 * the same as common_cpu and common_stacktrace
-+			 * respectively. This also works for "CPU", and
-+			 * "STACKTRACE".
- 			 */
- 			if (field && field->filter_type == FILTER_CPU) {
- 				*flags |= HIST_FIELD_FL_CPU;
-+			} else if (field && field->filter_type == FILTER_STACKTRACE) {
-+				*flags |= HIST_FIELD_FL_STACKTRACE;
- 			} else {
- 				hist_err(tr, HIST_ERR_FIELD_NOT_FOUND,
- 					 errpos(field_name));
-@@ -5394,7 +5398,7 @@ static void hist_trigger_print_key(struct seq_file *m,
- 			if (key_field->field)
- 				seq_printf(m, "%s.stacktrace", key_field->field->name);
- 			else
--				seq_puts(m, "stacktrace:\n");
-+				seq_puts(m, "common_stacktrace:\n");
- 			hist_trigger_stacktrace_print(m,
- 						      key + key_field->offset,
- 						      HIST_STACKTRACE_DEPTH);
-@@ -5977,7 +5981,7 @@ static int event_hist_trigger_print(struct seq_file *m,
- 			if (field->field)
- 				seq_printf(m, "%s.stacktrace", field->field->name);
- 			else
--				seq_puts(m, "stacktrace");
-+				seq_puts(m, "common_stacktrace");
- 		} else
- 			hist_field_print(m, field);
- 	}
--- 
-2.39.2
-
+>   {
+>   	memset(dst, 0, size);
+>   	return -EFAULT;
+>   }
+> +#endif
+>   
+>   /**
+>    *	___bpf_prog_run - run eBPF program on a given context
+> @@ -1931,8 +1934,8 @@ static u64 ___bpf_prog_run(u64 *regs, const struct bpf_insn *insn)
+>   		DST = *(SIZE *)(unsigned long) (SRC + insn->off);	\
+>   		CONT;							\
+>   	LDX_PROBE_MEM_##SIZEOP:						\
+> -		bpf_probe_read_kernel(&DST, sizeof(SIZE),		\
+> -				      (const void *)(long) (SRC + insn->off));	\
+> +		bpf_probe_read_kernel_common(&DST, sizeof(SIZE),	\
+> +			      (const void *)(long) (SRC + insn->off));	\
+>   		DST = *((SIZE *)&DST);					\
+>   		CONT;
+>   
+> diff --git a/kernel/trace/bpf_trace.c b/kernel/trace/bpf_trace.c
+> index 2bc41e6ac9fe..290fdce2ce53 100644
+> --- a/kernel/trace/bpf_trace.c
+> +++ b/kernel/trace/bpf_trace.c
+> @@ -223,8 +223,7 @@ const struct bpf_func_proto bpf_probe_read_user_str_proto = {
+>   	.arg3_type	= ARG_ANYTHING,
+>   };
+>   
+> -static __always_inline int
+> -bpf_probe_read_kernel_common(void *dst, u32 size, const void *unsafe_ptr)
+> +int bpf_probe_read_kernel_common(void *dst, u32 size, const void *unsafe_ptr)
+>   {
+>   	int ret;
+>   
