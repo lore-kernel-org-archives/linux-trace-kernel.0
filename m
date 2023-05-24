@@ -2,356 +2,114 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DF93C7EE29
-	for <linux-trace-kernel@archiver.kernel.org>; Wed, 24 May 2023 01:19:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EA5BEC7EE23
+	for <linux-trace-kernel@archiver.kernel.org>; Wed, 24 May 2023 02:11:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230359AbjEXBTy (ORCPT
+        id S239008AbjEXCLc (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Tue, 23 May 2023 21:19:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59006 "EHLO
+        Tue, 23 May 2023 22:11:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48062 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238913AbjEXBTu (ORCPT
+        with ESMTP id S232367AbjEXCL3 (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Tue, 23 May 2023 21:19:50 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 28487126;
-        Tue, 23 May 2023 18:19:48 -0700 (PDT)
+        Tue, 23 May 2023 22:11:29 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4AE7913E;
+        Tue, 23 May 2023 19:11:28 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 9F726637AE;
-        Wed, 24 May 2023 01:19:47 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9053FC4339B;
-        Wed, 24 May 2023 01:19:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1684891187;
-        bh=vgMUJ0JPuqX3GxrYfWAArh7Rs47vUDfarxjvge6QVMU=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=ZIq2ukc5kVKUSZ+gxHhSfKpQOGIZv/wynX+FZ2VTmG+R7PG+8jnH0p2mBl2zmsbHC
-         +IwIwR3Brwzbe024M0lqa4AIo8wjpNFXjrgI9J9Y27e9v9RQigBXM9x3MRtuavSS1Z
-         +hue6VisSfH1tXYeuuuhEsRDJPJenVaUA73rYQon8XZ5oWKcAawl4X67aRHCgQ35k9
-         zGcu9LzqIa3L76OZa4jDJsVqr2Hy5OT7wg1fejSyvSJqLOQOtlq/6iIBBn5ifr+Lw3
-         dIXEbyPWwYsCe+849pkIq5oXWq9CyDl8wyOxte+3Rb9pP7bryMMbJ3dV4+4sCPlBNI
-         4HXC2qNjbKTiw==
-Date:   Tue, 23 May 2023 18:19:44 -0700
-From:   Jaegeuk Kim <jaegeuk@kernel.org>
-To:     Daejun Park <daejun7.park@samsung.com>
-Cc:     "chao@kernel.org" <chao@kernel.org>,
-        "rostedt@goodmis.org" <rostedt@goodmis.org>,
-        "mhiramat@kernel.org" <mhiramat@kernel.org>,
-        "linux-f2fs-devel@lists.sourceforge.net" 
-        <linux-f2fs-devel@lists.sourceforge.net>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-trace-kernel@vger.kernel.org" 
-        <linux-trace-kernel@vger.kernel.org>,
-        Seokhwan Kim <sukka.kim@samsung.com>,
-        Yonggil Song <yonggil.song@samsung.com>,
-        beomsu kim <beomsu7.kim@samsung.com>
-Subject: Re: (2) (2) [PATCH v6] f2fs: add async reset zone command support
-Message-ID: <ZG1mMMPOO5himXhM@google.com>
-References: <ZGV56DEz54529znm@google.com>
- <ZFqWr3sSYMsHtHAC@google.com>
- <20230508081042epcms2p8a637deae7de1829f54614e09d5fde5e5@epcms2p8>
- <20230511052416epcms2p617838faa71a203da6978c89ffd216e91@epcms2p6>
- <CGME20230508081042epcms2p8a637deae7de1829f54614e09d5fde5e5@epcms2p7>
- <20230518020801epcms2p717775d12022c5371fbe9dcdf226efd4c@epcms2p7>
+        by dfw.source.kernel.org (Postfix) with ESMTPS id D8ACB637ED;
+        Wed, 24 May 2023 02:11:27 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EFEC7C433EF;
+        Wed, 24 May 2023 02:11:21 +0000 (UTC)
+Date:   Tue, 23 May 2023 22:11:08 -0400
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     LKML <linux-kernel@vger.kernel.org>,
+        Linux trace kernel <linux-trace-kernel@vger.kernel.org>
+Cc:     Masami Hiramatsu <mhiramat@kernel.org>,
+        Tom Zanussi <zanussi@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>
+Subject: [PATCH] tracing/histograms: Allow variables to have some modifiers
+Message-ID: <20230523221108.064a5d82@rorschach.local.home>
+X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20230518020801epcms2p717775d12022c5371fbe9dcdf226efd4c@epcms2p7>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On 05/18, Daejun Park wrote:
-> > On 05/11, Daejun Park wrote:
-> > > > Sender : Jaegeuk Kim <jaegeuk@kernel.org>
-> > > > Date : 2023-05-10 03:53 (GMT+9)
-> > > > Title : Re: [PATCH v6] f2fs: add async reset zone command support
-> > > > To : 박대준<daejun7.park@samsung.com>
-> > > > CC : chao@kernel.org<chao@kernel.org>, rostedt@goodmis.org<rostedt@goodmis.org>, mhiramat@kernel.org<mhiramat@kernel.org>, linux-f2fs-devel@lists.sourceforge.net<linux-f2fs-devel@lists.sourceforge.net>, linux-kernel@vger.kernel.org<linux-kernel@vger.kernel.org>, linux-trace-kernel@vger.kernel.org<linux-trace-kernel@vger.kernel.org>, 김석환<sukka.kim@samsung.com>, 송용길<yonggil.song@samsung.com>, 김범수<beomsu7.kim@samsung.com>
-> > > >  
-> > > > On 05/08, Daejun Park wrote:
-> > > > > v5 -> v6
-> > > > > Added trace_f2fs_iostat support for zone reset command.
-> > > > > 
-> > > > > v4 -> v5
-> > > > > Added f2fs iostat for zone reset command.
-> > > > > 
-> > > > > v3 -> v4
-> > > > > Fixed build error caused by unused function.
-> > > > > 
-> > > > > v2 -> v3
-> > > > > Modified arguments to be correct for ftrace parameter.
-> > > > > Changed __submit_zone_reset_cmd to void return.
-> > > > > Refactored the f2fs_wait_discard_bio function.
-> > > > > Fixed code that was previously incorrectly merged.
-> > > > > 
-> > > > > v1 -> v2
-> > > > > Changed to apply the optional async reset write pointer by default.
-> > > > 
-> > > > Don't add the history in the patch description.
-> > > 
-> > > OK, I will do.
-> > > 
-> > > > > 
-> > > > > This patch enables submit reset zone command asynchornously. It helps
-> > > > > decrease average latency of write IOs in high utilization scenario by
-> > > > > faster checkpointing.
-> > > > > 
-> > > > > Signed-off-by: Daejun Park <daejun7.park@samsung.com>
-> > > > > ---
-> > > > >  fs/f2fs/f2fs.h              |  1 +
-> > > > >  fs/f2fs/iostat.c            |  1 +
-> > > > >  fs/f2fs/segment.c           | 84 +++++++++++++++++++++++++++++++++++--
-> > > > >  include/trace/events/f2fs.h | 24 +++++++++--
-> > > > >  4 files changed, 104 insertions(+), 6 deletions(-)
-> > > > > 
-> > > > > diff --git a/fs/f2fs/f2fs.h b/fs/f2fs/f2fs.h
-> > > > > index d211ee89c158..51b68a629814 100644
-> > > > > --- a/fs/f2fs/f2fs.h
-> > > > > +++ b/fs/f2fs/f2fs.h
-> > > > > @@ -1175,6 +1175,7 @@ enum iostat_type {
-> > > > >          /* other */
-> > > > >          FS_DISCARD_IO,                        /* discard */
-> > > > >          FS_FLUSH_IO,                        /* flush */
-> > > > > +        FS_ZONE_RESET_IO,                /* zone reset */
-> > > > >          NR_IO_TYPE,
-> > > > >  };
-> > > > >  
-> > > > > diff --git a/fs/f2fs/iostat.c b/fs/f2fs/iostat.c
-> > > > > index 3d5bfb1ad585..f8703038e1d8 100644
-> > > > > --- a/fs/f2fs/iostat.c
-> > > > > +++ b/fs/f2fs/iostat.c
-> > > > > @@ -80,6 +80,7 @@ int __maybe_unused iostat_info_seq_show(struct seq_file *seq, void *offset)
-> > > > >          seq_puts(seq, "[OTHER]\n");
-> > > > >          IOSTAT_INFO_SHOW("fs discard", FS_DISCARD_IO);
-> > > > >          IOSTAT_INFO_SHOW("fs flush", FS_FLUSH_IO);
-> > > > > +        IOSTAT_INFO_SHOW("fs zone reset", FS_ZONE_RESET_IO);
-> > > > >  
-> > > > >          return 0;
-> > > > >  }
-> > > > > diff --git a/fs/f2fs/segment.c b/fs/f2fs/segment.c
-> > > > > index 6db410f1bb8c..4802b05a795b 100644
-> > > > > --- a/fs/f2fs/segment.c
-> > > > > +++ b/fs/f2fs/segment.c
-> > > > > @@ -1196,6 +1196,45 @@ static void __init_discard_policy(struct f2fs_sb_info *sbi,
-> > > > >  static void __update_discard_tree_range(struct f2fs_sb_info *sbi,
-> > > > >                                  struct block_device *bdev, block_t lstart,
-> > > > >                                  block_t start, block_t len);
-> > > > > +
-> > > > > +#ifdef CONFIG_BLK_DEV_ZONED
-> > > > > +static void __submit_zone_reset_cmd(struct f2fs_sb_info *sbi,
-> > > > 
-> > > > Why can't we use __f2fs_issue_discard_zone()?
-> > > 
-> > > In my understanding, __f2fs_issue_discard_zone is used to queue the zone reset command.
-> > > Which point do you think is the issue?
-> > 
-> > That actually calls blkdev_zone_mgmt() which is doing the same thing.
-> 
-> f2fs_clear_prefree_segments -> f2fs_issue_discard -> __issue_discard_async -> __f2fs_issue_discard_zone
-> In the case of discard in the existing code, discard can be queued by __queue_discard_cmd(). However the reset command is issued immediately.
-> 
-> In this patch, I changed the zone reset command can be queued like discard command.
-> Therefore, I changed __f2fs_issue_discard_zone() to queue the reset command, and to issue the reset command through __submit_discard_cmd() -> __submit_zone_reset_cmd().
-> 
-> Also, in blkdev_zone_mgmt(), bi_end_io cannot be specified, so waiting in f2fs_wait_discard_bio() is not possible.
-> That's why I created a new __submit_zone_reset_cmd().
+From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
 
-Hmm, I was thinking whether there's any chance to reuse __queue_discard_cmd() in
-__issue_discard_async() for the zone_reset command. Let me take a look at in
-another view.
+Modifiers are used to change the behavior of keys. For instance, they
+can grouped into buckets, converted to syscall names (from the syscall
+identifier), show task->comm of the current pid, be an array of longs
+that represent a stacktrace, and more.
 
-> 
-> > 
-> > > 
-> > > > 
-> > > > > +                                   struct discard_cmd *dc, blk_opf_t flag,
-> > > > > +                                   struct list_head *wait_list,
-> > > > > +                                   unsigned int *issued)
-> > > > > +{
-> > > > > +        struct discard_cmd_control *dcc = SM_I(sbi)->dcc_info;
-> > > > > +        struct block_device *bdev = dc->bdev;
-> > > > > +        struct bio *bio = bio_alloc(bdev, 0, REQ_OP_ZONE_RESET | flag, GFP_NOFS);
-> > > > > +        unsigned long flags;
-> > > > > +
-> > > > > +        trace_f2fs_issue_reset_zone(bdev, dc->di.start);
-> > > > > +
-> > > > > +        spin_lock_irqsave(&dc->lock, flags);
-> > > > > +        dc->state = D_SUBMIT;
-> > > > > +        dc->bio_ref++;
-> > > > > +        spin_unlock_irqrestore(&dc->lock, flags);
-> > > > > +
-> > > > > +        if (issued)
-> > > > > +                (*issued)++;
-> > > > > +
-> > > > > +        atomic_inc(&dcc->queued_discard);
-> > > > > +        dc->queued++;
-> > > > > +        list_move_tail(&dc->list, wait_list);
-> > > > > +
-> > > > > +        /* sanity check on discard range */
-> > > > > +        __check_sit_bitmap(sbi, dc->di.lstart, dc->di.lstart + dc->di.len);
-> > > > > +
-> > > > > +        bio->bi_iter.bi_sector = SECTOR_FROM_BLOCK(dc->di.start);
-> > > > > +        bio->bi_private = dc;
-> > > > > +        bio->bi_end_io = f2fs_submit_discard_endio;
-> > > > > +        submit_bio(bio);
-> > > > > +
-> > > > > +        atomic_inc(&dcc->issued_discard);
-> > > > > +        f2fs_update_iostat(sbi, NULL, FS_ZONE_RESET_IO, dc->di.len * F2FS_BLKSIZE);
-> > > > > +}
-> > > > > +#endif
-> > > > > +
-> > > > >  /* this function is copied from blkdev_issue_discard from block/blk-lib.c */
-> > > > >  static int __submit_discard_cmd(struct f2fs_sb_info *sbi,
-> > > > >                                  struct discard_policy *dpolicy,
-> > > > > @@ -1217,6 +1256,13 @@ static int __submit_discard_cmd(struct f2fs_sb_info *sbi,
-> > > > >          if (is_sbi_flag_set(sbi, SBI_NEED_FSCK))
-> > > > >                  return 0;
-> > > > >  
-> > > > > +#ifdef CONFIG_BLK_DEV_ZONED
-> > > > > +        if (f2fs_sb_has_blkzoned(sbi) && bdev_is_zoned(bdev)) {
-> > > > > +                __submit_zone_reset_cmd(sbi, dc, flag, wait_list, issued);
-> > > > > +                return 0;
-> > > > > +        }
-> > > > > +#endif
-> > > > > +
-> > > > >          trace_f2fs_issue_discard(bdev, dc->di.start, dc->di.len);
-> > > > >  
-> > > > >          lstart = dc->di.lstart;
-> > > > > @@ -1461,6 +1507,19 @@ static void __update_discard_tree_range(struct f2fs_sb_info *sbi,
-> > > > >          }
-> > > > >  }
-> > > > >  
-> > > > > +#ifdef CONFIG_BLK_DEV_ZONED
-> > > > > +static void __queue_zone_reset_cmd(struct f2fs_sb_info *sbi,
-> > > > > +                struct block_device *bdev, block_t blkstart, block_t lblkstart,
-> > > > > +                block_t blklen)
-> > > > > +{
-> > > > > +        trace_f2fs_queue_reset_zone(bdev, blkstart);
-> > > > > +
-> > > > > +        mutex_lock(&SM_I(sbi)->dcc_info->cmd_lock);
-> > > > > +        __insert_discard_cmd(sbi, bdev, lblkstart, blkstart, blklen);
-> > > > > +        mutex_unlock(&SM_I(sbi)->dcc_info->cmd_lock);
-> > > > > +}
-> > > > > +#endif
-> > > > > +
-> > > > >  static void __queue_discard_cmd(struct f2fs_sb_info *sbi,
-> > > > >                  struct block_device *bdev, block_t blkstart, block_t blklen)
-> > > > >  {
-> > > > > @@ -1724,6 +1783,19 @@ static void f2fs_wait_discard_bio(struct f2fs_sb_info *sbi, block_t blkaddr)
-> > > > >  
-> > > > >          mutex_lock(&dcc->cmd_lock);
-> > > > >          dc = __lookup_discard_cmd(sbi, blkaddr);
-> > > > > +#ifdef CONFIG_BLK_DEV_ZONED
-> > > > > +        if (dc && f2fs_sb_has_blkzoned(sbi) && bdev_is_zoned(dc->bdev)) {
-> > > > > +                /* force submit zone reset */
-> > > > > +                if (dc->state == D_PREP)
-> > > > > +                        __submit_zone_reset_cmd(sbi, dc, REQ_SYNC,
-> > > > > +                                                &dcc->wait_list, NULL);
-> > > > > +                dc->ref++;
-> > > > > +                mutex_unlock(&dcc->cmd_lock);
-> > > > > +                /* wait zone reset */
-> > > > > +                __wait_one_discard_bio(sbi, dc);
-> > > > > +                return;
-> > > > > +        }
-> > > > > +#endif
-> > > > >          if (dc) {
-> > > > >                  if (dc->state == D_PREP) {
-> > > > >                          __punch_discard_cmd(sbi, dc, blkaddr);
-> > > > > @@ -1876,9 +1948,15 @@ static int __f2fs_issue_discard_zone(struct f2fs_sb_info *sbi,
-> > > > >                                   blkstart, blklen);
-> > > > >                          return -EIO;
-> > > > >                  }
-> > > > > -                trace_f2fs_issue_reset_zone(bdev, blkstart);
-> > > > > -                return blkdev_zone_mgmt(bdev, REQ_OP_ZONE_RESET,
-> > > > > -                                        sector, nr_sects, GFP_NOFS);
-> > > > > +
-> > > > > +                if (unlikely(is_sbi_flag_set(sbi, SBI_POR_DOING))) {
-> > > > > +                        trace_f2fs_issue_reset_zone(bdev, blkstart);
-> > > > > +                        return blkdev_zone_mgmt(bdev, REQ_OP_ZONE_RESET,
-> > > > > +                                                sector, nr_sects, GFP_NOFS);
-> > > > > +                }
-> > > > > +
-> > > > > +                __queue_zone_reset_cmd(sbi, bdev, blkstart, lblkstart, blklen);
-> > > > > +                return 0;
-> > > > >          }
-> > > > >  
-> > > > >          /* For conventional zones, use regular discard if supported */
-> > > > > diff --git a/include/trace/events/f2fs.h b/include/trace/events/f2fs.h
-> > > > > index 99cbc5949e3c..793f82cc1515 100644
-> > > > > --- a/include/trace/events/f2fs.h
-> > > > > +++ b/include/trace/events/f2fs.h
-> > > > > @@ -1512,7 +1512,7 @@ DEFINE_EVENT(f2fs_discard, f2fs_remove_discard,
-> > > > >          TP_ARGS(dev, blkstart, blklen)
-> > > > >  );
-> > > > >  
-> > > > > -TRACE_EVENT(f2fs_issue_reset_zone,
-> > > > > +DECLARE_EVENT_CLASS(f2fs_reset_zone,
-> > > > >  
-> > > > >          TP_PROTO(struct block_device *dev, block_t blkstart),
-> > > > >  
-> > > > > @@ -1528,11 +1528,25 @@ TRACE_EVENT(f2fs_issue_reset_zone,
-> > > > >                  __entry->blkstart = blkstart;
-> > > > >          ),
-> > > > >  
-> > > > > -        TP_printk("dev = (%d,%d), reset zone at block = 0x%llx",
-> > > > > +        TP_printk("dev = (%d,%d), zone at block = 0x%llx",
-> > > > >                  show_dev(__entry->dev),
-> > > > >                  (unsigned long long)__entry->blkstart)
-> > > > >  );
-> > > > >  
-> > > > > +DEFINE_EVENT(f2fs_reset_zone, f2fs_queue_reset_zone,
-> > > > > +
-> > > > > +        TP_PROTO(struct block_device *dev, block_t blkstart),
-> > > > > +
-> > > > > +        TP_ARGS(dev, blkstart)
-> > > > > +);
-> > > > > +
-> > > > > +DEFINE_EVENT(f2fs_reset_zone, f2fs_issue_reset_zone,
-> > > > > +
-> > > > > +        TP_PROTO(struct block_device *dev, block_t blkstart),
-> > > > > +
-> > > > > +        TP_ARGS(dev, blkstart)
-> > > > > +);
-> > > > > +
-> > > > >  TRACE_EVENT(f2fs_issue_flush,
-> > > > >  
-> > > > >          TP_PROTO(struct block_device *dev, unsigned int nobarrier,
-> > > > > @@ -1979,6 +1993,7 @@ TRACE_EVENT(f2fs_iostat,
-> > > > >                  __field(unsigned long long,        fs_nrio)
-> > > > >                  __field(unsigned long long,        fs_mrio)
-> > > > >                  __field(unsigned long long,        fs_discard)
-> > > > > +                __field(unsigned long long,        fs_reset_zone)
-> > > > >          ),
-> > > > >  
-> > > > >          TP_fast_assign(
-> > > > > @@ -2010,12 +2025,14 @@ TRACE_EVENT(f2fs_iostat,
-> > > > >                  __entry->fs_nrio        = iostat[FS_NODE_READ_IO];
-> > > > >                  __entry->fs_mrio        = iostat[FS_META_READ_IO];
-> > > > >                  __entry->fs_discard        = iostat[FS_DISCARD_IO];
-> > > > > +                __entry->fs_reset_zone        = iostat[FS_ZONE_RESET_IO];
-> > > > >          ),
-> > > > >  
-> > > > >          TP_printk("dev = (%d,%d), "
-> > > > >                  "app [write=%llu (direct=%llu, buffered=%llu), mapped=%llu, "
-> > > > >                  "compr(buffered=%llu, mapped=%llu)], "
-> > > > > -                "fs [data=%llu, cdata=%llu, node=%llu, meta=%llu, discard=%llu], "
-> > > > > +                "fs [data=%llu, cdata=%llu, node=%llu, meta=%llu, discard=%llu, "
-> > > > > +                "reset_zone=%llu], "
-> > > > >                  "gc [data=%llu, node=%llu], "
-> > > > >                  "cp [data=%llu, node=%llu, meta=%llu], "
-> > > > >                  "app [read=%llu (direct=%llu, buffered=%llu), mapped=%llu], "
-> > > > > @@ -2026,6 +2043,7 @@ TRACE_EVENT(f2fs_iostat,
-> > > > >                  __entry->app_bio, __entry->app_mio, __entry->app_bcdio,
-> > > > >                  __entry->app_mcdio, __entry->fs_dio, __entry->fs_cdio,
-> > > > >                  __entry->fs_nio, __entry->fs_mio, __entry->fs_discard,
-> > > > > +                __entry->fs_reset_zone,
-> > > > >                  __entry->fs_gc_dio, __entry->fs_gc_nio, __entry->fs_cp_dio,
-> > > > >                  __entry->fs_cp_nio, __entry->fs_cp_mio,
-> > > > >                  __entry->app_rio, __entry->app_drio, __entry->app_brio,
-> > > > > -- 
-> > > > > 2.25.1
-> 
+It was found that nothing stopped a value from taking a modifier. As
+values are simple counters. If this happened, it would call code that
+was not expecting a modifier and crash the kernel. This was fixed by
+having the ___create_val_field() function test if a modifier was present
+and fail if one was. This fixed the crash.
+
+Now there's a problem with variables. Variables are used to pass fields
+from one event to another. Variables are allowed to have some modifiers,
+as the processing may need to happen at the time of the event (like
+stacktraces and comm names of the current pid). The issue is that it too
+uses __create_val_field(). Now that fails on modifiers, variables can no
+longer use them (this is a regression).
+
+As not all modifiers are for variables, have them use a separate check.
+
+Cc: stable@vger.kernel.org
+Fixes: e0213434fe3e4 ("tracing: Do not let histogram values have some modifiers")
+Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+---
+ kernel/trace/trace_events_hist.c | 23 ++++++++++++++++-------
+ 1 file changed, 16 insertions(+), 7 deletions(-)
+
+diff --git a/kernel/trace/trace_events_hist.c b/kernel/trace/trace_events_hist.c
+index 486cca3c2b75..543cb7dc84ad 100644
+--- a/kernel/trace/trace_events_hist.c
++++ b/kernel/trace/trace_events_hist.c
+@@ -4238,13 +4238,19 @@ static int __create_val_field(struct hist_trigger_data *hist_data,
+ 		goto out;
+ 	}
+ 
+-	/* Some types cannot be a value */
+-	if (hist_field->flags & (HIST_FIELD_FL_GRAPH | HIST_FIELD_FL_PERCENT |
+-				 HIST_FIELD_FL_BUCKET | HIST_FIELD_FL_LOG2 |
+-				 HIST_FIELD_FL_SYM | HIST_FIELD_FL_SYM_OFFSET |
+-				 HIST_FIELD_FL_SYSCALL | HIST_FIELD_FL_STACKTRACE)) {
+-		hist_err(file->tr, HIST_ERR_BAD_FIELD_MODIFIER, errpos(field_str));
+-		ret = -EINVAL;
++	/* values and variables should not have some modifiers */
++	if (hist_field->flags & HIST_FIELD_FL_VAR) {
++		/* Variable */
++		if (hist_field->flags & (HIST_FIELD_FL_GRAPH | HIST_FIELD_FL_PERCENT |
++					 HIST_FIELD_FL_BUCKET | HIST_FIELD_FL_LOG2))
++			goto err;
++	} else {
++		/* Value */
++		if (hist_field->flags & (HIST_FIELD_FL_GRAPH | HIST_FIELD_FL_PERCENT |
++					 HIST_FIELD_FL_BUCKET | HIST_FIELD_FL_LOG2 |
++					 HIST_FIELD_FL_SYM | HIST_FIELD_FL_SYM_OFFSET |
++					 HIST_FIELD_FL_SYSCALL | HIST_FIELD_FL_STACKTRACE))
++			goto err;
+ 	}
+ 
+ 	hist_data->fields[val_idx] = hist_field;
+@@ -4256,6 +4262,9 @@ static int __create_val_field(struct hist_trigger_data *hist_data,
+ 		ret = -EINVAL;
+  out:
+ 	return ret;
++ err:
++	hist_err(file->tr, HIST_ERR_BAD_FIELD_MODIFIER, errpos(field_str));
++	return -EINVAL;
+ }
+ 
+ static int create_val_field(struct hist_trigger_data *hist_data,
+-- 
+2.39.2
+
