@@ -2,45 +2,48 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D5168C7EE23
-	for <linux-trace-kernel@archiver.kernel.org>; Wed, 24 May 2023 02:25:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 00331C7EE29
+	for <linux-trace-kernel@archiver.kernel.org>; Wed, 24 May 2023 02:33:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238926AbjEXCZY (ORCPT
+        id S239111AbjEXCdO convert rfc822-to-8bit (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Tue, 23 May 2023 22:25:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54644 "EHLO
+        Tue, 23 May 2023 22:33:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57008 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230343AbjEXCZX (ORCPT
+        with ESMTP id S234580AbjEXCdN (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Tue, 23 May 2023 22:25:23 -0400
+        Tue, 23 May 2023 22:33:13 -0400
 Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 54B1E1A6;
-        Tue, 23 May 2023 19:25:19 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E5077E0;
+        Tue, 23 May 2023 19:33:10 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id C67EF6327C;
-        Wed, 24 May 2023 02:25:18 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9677DC433EF;
-        Wed, 24 May 2023 02:25:10 +0000 (UTC)
-Date:   Tue, 23 May 2023 22:24:58 -0400
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 7137861563;
+        Wed, 24 May 2023 02:33:10 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 39E58C433D2;
+        Wed, 24 May 2023 02:33:01 +0000 (UTC)
+Date:   Tue, 23 May 2023 22:32:43 -0400
 From:   Steven Rostedt <rostedt@goodmis.org>
 To:     LKML <linux-kernel@vger.kernel.org>,
         Linux trace kernel <linux-trace-kernel@vger.kernel.org>
 Cc:     Masami Hiramatsu <mhiramat@kernel.org>,
         Tom Zanussi <zanussi@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>
-Subject: [PATCH] tracing: Rename stacktrace field to common_stacktrace
-Message-ID: <20230523222458.16c5d9db@rorschach.local.home>
+Subject: [PATCH v2] tracing: Rename stacktrace field to common_stacktrace
+Message-ID: <20230523223243.479ed4c2@rorschach.local.home>
 X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8BIT
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
+From 62685b9c4d6fa6ad2999eb03b86be7fc16e827cf Mon Sep 17 00:00:00 2001
 From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
+Date: Sat, 13 May 2023 20:36:04 -0400
+Subject: [PATCH] tracing: Rename stacktrace field to common_stacktrace
 
 The histogram and synthetic events can use a pseudo event called
 "stacktrace" that will create a stacktrace at the time of the event and
@@ -56,11 +59,16 @@ Also update the documentation to reflect this change.
 
 Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
 ---
+Changes since v1: https://lore.kernel.org/linux-trace-kernel/20230523221108.064a5d82@rorschach.local.home/
+ - Update the tracefs README to use common_stacktrace instead of
+   just stacktrace
+
  Documentation/trace/histogram.rst | 64 +++++++++++++++----------------
  include/linux/trace_events.h      |  1 +
+ kernel/trace/trace.c              |  2 +-
  kernel/trace/trace_events.c       |  2 +
  kernel/trace/trace_events_hist.c  | 16 +++++---
- 4 files changed, 45 insertions(+), 38 deletions(-)
+ 5 files changed, 46 insertions(+), 39 deletions(-)
 
 diff --git a/Documentation/trace/histogram.rst b/Documentation/trace/histogram.rst
 index 479c9eac6335..3c9b263de9c2 100644
@@ -329,6 +337,19 @@ index 0e373222a6df..7c4a0b72334e 100644
  };
  
  extern int trace_event_raw_init(struct trace_event_call *call);
+diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
+index ebc59781456a..81801dc31784 100644
+--- a/kernel/trace/trace.c
++++ b/kernel/trace/trace.c
+@@ -5752,7 +5752,7 @@ static const char readme_msg[] =
+ 	"\t    table using the key(s) and value(s) named, and the value of a\n"
+ 	"\t    sum called 'hitcount' is incremented.  Keys and values\n"
+ 	"\t    correspond to fields in the event's format description.  Keys\n"
+-	"\t    can be any field, or the special string 'stacktrace'.\n"
++	"\t    can be any field, or the special string 'common_stacktrace'.\n"
+ 	"\t    Compound keys consisting of up to two fields can be specified\n"
+ 	"\t    by the 'keys' keyword.  Values must correspond to numeric\n"
+ 	"\t    fields.  Sort keys consisting of up to two fields can be\n"
 diff --git a/kernel/trace/trace_events.c b/kernel/trace/trace_events.c
 index 654ffa40457a..57e539d47989 100644
 --- a/kernel/trace/trace_events.c
