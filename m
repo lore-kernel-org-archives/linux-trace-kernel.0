@@ -2,87 +2,103 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 00D08C7EE2C
-	for <linux-trace-kernel@archiver.kernel.org>; Thu, 25 May 2023 08:53:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 97C0AC77B7E
+	for <linux-trace-kernel@archiver.kernel.org>; Thu, 25 May 2023 14:16:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236303AbjEYIx2 (ORCPT
+        id S241242AbjEYOQP (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Thu, 25 May 2023 04:53:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41906 "EHLO
+        Thu, 25 May 2023 10:16:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51448 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233661AbjEYIx1 (ORCPT
+        with ESMTP id S232848AbjEYOQO (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Thu, 25 May 2023 04:53:27 -0400
-Received: from mail-pf1-f194.google.com (mail-pf1-f194.google.com [209.85.210.194])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2B4BB18D;
-        Thu, 25 May 2023 01:53:26 -0700 (PDT)
-Received: by mail-pf1-f194.google.com with SMTP id d2e1a72fcca58-64d247a023aso1477686b3a.2;
-        Thu, 25 May 2023 01:53:26 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1685004805; x=1687596805;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=W0ktlHLUqr7tobF2W37f5gg25uCvUm1lAaeh1EoSirE=;
-        b=hdee6vG9LWjJthd9snnHvEDauHgPAtSIZkiCj3rahWp4aAVzNVV8VPsFZSasX0SpTo
-         w9Y90FwqiRswo0lF2ZnSQej6ZOV3vHVBmjUnjAJIro/P20sWxPjAof7dHVTWTjIlgrD4
-         BEGf/gHz+rNPoXC3MJZWRXm3WCgfS2eyl8aw0kNzNmhwtCQ5DUtbbDzrg/pY2UZSmfqF
-         vSxGzZdIf0yAKthSZ9e1rGMBS06q0W1NTvSh0zpP2pDu4wwo4KhwHj0Q4AlemYxTihPd
-         YF/7MFpFt7BJ8wzOopbKYUNsQHeNksx/BRl6rQvXsN4X2YFj47jp/zKS1X6HZhNr9B6Z
-         w44g==
-X-Gm-Message-State: AC+VfDywJO6Ti2pmm9rv3PZAmoBv4OtcX2adWEwrdRRI+x2R/Z3984IH
-        gYmhBASzwus/QIv35Z5ymw==
-X-Google-Smtp-Source: ACHHUZ4hZcFc6Fg4ZJATuVjsuWQ9MhBQOsCdoiNZVQBhKU6aceeP8OMAEZzTZ7HNqL1RUQhh6dWMIA==
-X-Received: by 2002:a05:6a00:22c2:b0:64c:c5f9:1533 with SMTP id f2-20020a056a0022c200b0064cc5f91533mr8940660pfj.33.1685004805442;
-        Thu, 25 May 2023 01:53:25 -0700 (PDT)
-Received: from localhost.localdomain ([116.128.244.169])
-        by smtp.gmail.com with ESMTPSA id s9-20020aa78d49000000b00643889e30c2sm730352pfe.180.2023.05.25.01.53.23
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 25 May 2023 01:53:24 -0700 (PDT)
-From:   sunliming <sunliming@kylinos.cn>
-To:     rostedt@goodmis.org, mhiramat@kernel.org
-Cc:     linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
-        kelulanainsley@gmail.com, sunliming <sunliming@kylinos.cn>
-Subject: [PATCH] tracing: Modify print_fields() for fields output order
-Date:   Thu, 25 May 2023 16:52:32 +0800
-Message-Id: <20230525085232.5096-1-sunliming@kylinos.cn>
-X-Mailer: git-send-email 2.25.1
+        Thu, 25 May 2023 10:16:14 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F28C3183;
+        Thu, 25 May 2023 07:16:12 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 8F82164610;
+        Thu, 25 May 2023 14:16:12 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 71A7CC433D2;
+        Thu, 25 May 2023 14:16:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1685024172;
+        bh=N10Xh9Jo2X7q40vW1TQk3XJXStUWPtezpNSxbAU/zag=;
+        h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+        b=L40dSOEfKkgy2DcAQS4c6miQaY5NazUDb9rtKgkFSbFms7IPoPVKWVGVy1e6ASpqa
+         f4f0t8iakbp+Emcod1MCdXDcg2CsJDV6rjwPjUu6QRnWPCmWShEqcsq/NG6sk5iHqH
+         7lQ6UrC+1vB8RsKgxg7puOoWXy4I3GN/Y2v9WtLNh8aBHlXqbVqhKG7cl1cqiRuW7+
+         pJlCxrH/H4OaoRiBqUA7AF9QCLrDhH/hYtOsC86cA0Ft2gBgLlum+AQtU6+EbZ8Bc8
+         JML2bUgdlMHRZOPZ3hOFZpA9mp6R6+68ROx8C7tazMxTRML40bnOgmxMWipuEDseAo
+         MVEa7MhZLvd+g==
+Message-ID: <4f8f78c4-2af5-5089-a243-2df1c7cfb2d3@kernel.org>
+Date:   Thu, 25 May 2023 16:16:06 +0200
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.10.0
+Subject: Re: [PATCH V2 3/3] tracing/timerlat: Add user-space interface
+To:     kernel test robot <lkp@intel.com>, linux-kernel@vger.kernel.org,
+        linux-trace-kernel@vger.kernel.org,
+        Steven Rostedt <rostedt@goodmis.org>
+Cc:     oe-kbuild-all@lists.linux.dev, Juri Lelli <juri.lelli@redhat.com>,
+        William White <chwhite@redhat.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Jonathan Corbet <corbet@lwn.net>
+References: <a7b2c215c763e95a56fa1258743332b570c81c9d.1684860626.git.bristot@kernel.org>
+ <202305242020.VlsOXEMn-lkp@intel.com>
+Content-Language: en-US
+From:   Daniel Bristot de Oliveira <bristot@kernel.org>
+In-Reply-To: <202305242020.VlsOXEMn-lkp@intel.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-Now the print_fields() print trace event fields in reverse order. Modify
-it to the positive sequence.
+On 5/24/23 14:48, kernel test robot wrote:
+> Hi Daniel,
+> 
+> kernel test robot noticed the following build errors:
+> 
+> [auto build test ERROR on linus/master]
+> [also build test ERROR on v6.4-rc3 next-20230524]
+> [cannot apply to rostedt-trace/for-next rostedt-trace/for-next-urgent]
+> [If your patch is applied to the wrong git tree, kindly drop us a note.
+> And when submitting patch, we suggest to use '--base' as documented in
+> https://git-scm.com/docs/git-format-patch#_base_tree_information]
+> 
+> url:    https://github.com/intel-lab-lkp/linux/commits/Daniel-Bristot-de-Oliveira/tracing-osnoise-Switch-from-PF_NO_SETAFFINITY-to-migrate_disable/20230524-012512
+> base:   linus/master
+> patch link:    https://lore.kernel.org/r/a7b2c215c763e95a56fa1258743332b570c81c9d.1684860626.git.bristot%40kernel.org
+> patch subject: [PATCH V2 3/3] tracing/timerlat: Add user-space interface
+> config: i386-randconfig-i014-20230523
+> compiler: gcc-11 (Debian 11.3.0-12) 11.3.0
+> reproduce (this is a W=1 build):
+>         # https://github.com/intel-lab-lkp/linux/commit/89216b54eaf490480bc1929f5780f95a688a91bb
+>         git remote add linux-review https://github.com/intel-lab-lkp/linux
+>         git fetch --no-tags linux-review Daniel-Bristot-de-Oliveira/tracing-osnoise-Switch-from-PF_NO_SETAFFINITY-to-migrate_disable/20230524-012512
+>         git checkout 89216b54eaf490480bc1929f5780f95a688a91bb
+>         # save the config file
+>         mkdir build_dir && cp config build_dir/.config
+>         make W=1 O=build_dir ARCH=i386 olddefconfig
+>         make W=1 O=build_dir ARCH=i386 SHELL=/bin/bash kernel/trace/
+> 
+> If you fix the issue, kindly add following tag where applicable
+> | Reported-by: kernel test robot <lkp@intel.com>
+> | Closes: https://lore.kernel.org/oe-kbuild-all/202305242020.VlsOXEMn-lkp@intel.com/
+> 
+> All error/warnings (new ones prefixed by >>):
+> 
+>    kernel/trace/trace_osnoise.c: In function 'timerlat_fd_open':
+>>> kernel/trace/trace_osnoise.c:2364:16: error: implicit declaration of function 'this_cpu_tmr_var'; did you mean 'this_cpu_osn_var'? [-Werror=implicit-function-declaration]
+>     2364 |         tlat = this_cpu_tmr_var();
+>          |                ^~~~~~~~~~~~~~~~
+>          |                this_cpu_osn_var
 
-Example outputs for a user event:
-	test0 u32 count1; u32 count2
 
-Output before:
-	example-2547    [000] .....   325.666387: test0: count2=0x2 (2) count1=0x1 (1)
+Thanks robot, I forgot to test without timerlat enabled. Easy to fix, an ifdef
+here and there.
 
-Output after:
-	example-2742    [002] .....   429.769370: test0: count1=0x1 (1) count2=0x2 (2)
-
-Signed-off-by: sunliming <sunliming@kylinos.cn>
----
- kernel/trace/trace_output.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/kernel/trace/trace_output.c b/kernel/trace/trace_output.c
-index 15f05faaae44..1e33f367783e 100644
---- a/kernel/trace/trace_output.c
-+++ b/kernel/trace/trace_output.c
-@@ -847,7 +847,7 @@ static void print_fields(struct trace_iterator *iter, struct trace_event_call *c
- 	int ret;
- 	void *pos;
- 
--	list_for_each_entry(field, head, link) {
-+	list_for_each_entry_reverse(field, head, link) {
- 		trace_seq_printf(&iter->seq, " %s=", field->name);
- 		if (field->offset + field->size > iter->ent_size) {
- 			trace_seq_puts(&iter->seq, "<OVERFLOW>");
--- 
-2.25.1
-
+-- Daniel
