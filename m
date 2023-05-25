@@ -2,103 +2,71 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 97C0AC77B7E
-	for <linux-trace-kernel@archiver.kernel.org>; Thu, 25 May 2023 14:16:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 57239C77B7E
+	for <linux-trace-kernel@archiver.kernel.org>; Thu, 25 May 2023 16:50:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241242AbjEYOQP (ORCPT
+        id S240089AbjEYQuV (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Thu, 25 May 2023 10:16:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51448 "EHLO
+        Thu, 25 May 2023 12:50:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50224 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232848AbjEYOQO (ORCPT
+        with ESMTP id S239398AbjEYQuS (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Thu, 25 May 2023 10:16:14 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F28C3183;
-        Thu, 25 May 2023 07:16:12 -0700 (PDT)
+        Thu, 25 May 2023 12:50:18 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C0CFF195;
+        Thu, 25 May 2023 09:50:17 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 8F82164610;
-        Thu, 25 May 2023 14:16:12 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 71A7CC433D2;
-        Thu, 25 May 2023 14:16:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1685024172;
-        bh=N10Xh9Jo2X7q40vW1TQk3XJXStUWPtezpNSxbAU/zag=;
-        h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-        b=L40dSOEfKkgy2DcAQS4c6miQaY5NazUDb9rtKgkFSbFms7IPoPVKWVGVy1e6ASpqa
-         f4f0t8iakbp+Emcod1MCdXDcg2CsJDV6rjwPjUu6QRnWPCmWShEqcsq/NG6sk5iHqH
-         7lQ6UrC+1vB8RsKgxg7puOoWXy4I3GN/Y2v9WtLNh8aBHlXqbVqhKG7cl1cqiRuW7+
-         pJlCxrH/H4OaoRiBqUA7AF9QCLrDhH/hYtOsC86cA0Ft2gBgLlum+AQtU6+EbZ8Bc8
-         JML2bUgdlMHRZOPZ3hOFZpA9mp6R6+68ROx8C7tazMxTRML40bnOgmxMWipuEDseAo
-         MVEa7MhZLvd+g==
-Message-ID: <4f8f78c4-2af5-5089-a243-2df1c7cfb2d3@kernel.org>
-Date:   Thu, 25 May 2023 16:16:06 +0200
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.10.0
-Subject: Re: [PATCH V2 3/3] tracing/timerlat: Add user-space interface
-To:     kernel test robot <lkp@intel.com>, linux-kernel@vger.kernel.org,
-        linux-trace-kernel@vger.kernel.org,
-        Steven Rostedt <rostedt@goodmis.org>
-Cc:     oe-kbuild-all@lists.linux.dev, Juri Lelli <juri.lelli@redhat.com>,
-        William White <chwhite@redhat.com>,
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 54D4260B39;
+        Thu, 25 May 2023 16:50:17 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E1129C433EF;
+        Thu, 25 May 2023 16:50:14 +0000 (UTC)
+Date:   Thu, 25 May 2023 17:50:12 +0100
+From:   Catalin Marinas <catalin.marinas@arm.com>
+To:     Arnd Bergmann <arnd@kernel.org>
+Cc:     Steven Rostedt <rostedt@goodmis.org>,
         Masami Hiramatsu <mhiramat@kernel.org>,
-        Jonathan Corbet <corbet@lwn.net>
-References: <a7b2c215c763e95a56fa1258743332b570c81c9d.1684860626.git.bristot@kernel.org>
- <202305242020.VlsOXEMn-lkp@intel.com>
-Content-Language: en-US
-From:   Daniel Bristot de Oliveira <bristot@kernel.org>
-In-Reply-To: <202305242020.VlsOXEMn-lkp@intel.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+        Arnd Bergmann <arnd@arndb.de>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Florent Revest <revest@chromium.org>,
+        linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH] tracing: avoid missing-prototype warnings
+Message-ID: <ZG+RxIIpF50ORGRS@arm.com>
+References: <20230517125215.930689-1-arnd@kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230517125215.930689-1-arnd@kernel.org>
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On 5/24/23 14:48, kernel test robot wrote:
-> Hi Daniel,
+On Wed, May 17, 2023 at 02:51:48PM +0200, Arnd Bergmann wrote:
+> From: Arnd Bergmann <arnd@arndb.de>
 > 
-> kernel test robot noticed the following build errors:
+> These are all tracing W=1 warnings in arm64 allmodconfig about missing
+> prototypes:
 > 
-> [auto build test ERROR on linus/master]
-> [also build test ERROR on v6.4-rc3 next-20230524]
-> [cannot apply to rostedt-trace/for-next rostedt-trace/for-next-urgent]
-> [If your patch is applied to the wrong git tree, kindly drop us a note.
-> And when submitting patch, we suggest to use '--base' as documented in
-> https://git-scm.com/docs/git-format-patch#_base_tree_information]
+> kernel/trace/trace_kprobe_selftest.c:7:5: error: no previous prototype for 'kprobe_trace_selftest_target' [-Werror=missing-pro
+> totypes]
+> kernel/trace/ftrace.c:329:5: error: no previous prototype for '__register_ftrace_function' [-Werror=missing-prototypes]
+> kernel/trace/ftrace.c:372:5: error: no previous prototype for '__unregister_ftrace_function' [-Werror=missing-prototypes]
+> kernel/trace/ftrace.c:4130:15: error: no previous prototype for 'arch_ftrace_match_adjust' [-Werror=missing-prototypes]
+> kernel/trace/fgraph.c:243:15: error: no previous prototype for 'ftrace_return_to_handler' [-Werror=missing-prototypes]
+> kernel/trace/fgraph.c:358:6: error: no previous prototype for 'ftrace_graph_sleep_time_control' [-Werror=missing-prototypes]
+> arch/arm64/kernel/ftrace.c:460:6: error: no previous prototype for 'prepare_ftrace_return' [-Werror=missing-prototypes]
+> arch/arm64/kernel/ptrace.c:2172:5: error: no previous prototype for 'syscall_trace_enter' [-Werror=missing-prototypes]
+> arch/arm64/kernel/ptrace.c:2195:6: error: no previous prototype for 'syscall_trace_exit' [-Werror=missing-prototypes]
 > 
-> url:    https://github.com/intel-lab-lkp/linux/commits/Daniel-Bristot-de-Oliveira/tracing-osnoise-Switch-from-PF_NO_SETAFFINITY-to-migrate_disable/20230524-012512
-> base:   linus/master
-> patch link:    https://lore.kernel.org/r/a7b2c215c763e95a56fa1258743332b570c81c9d.1684860626.git.bristot%40kernel.org
-> patch subject: [PATCH V2 3/3] tracing/timerlat: Add user-space interface
-> config: i386-randconfig-i014-20230523
-> compiler: gcc-11 (Debian 11.3.0-12) 11.3.0
-> reproduce (this is a W=1 build):
->         # https://github.com/intel-lab-lkp/linux/commit/89216b54eaf490480bc1929f5780f95a688a91bb
->         git remote add linux-review https://github.com/intel-lab-lkp/linux
->         git fetch --no-tags linux-review Daniel-Bristot-de-Oliveira/tracing-osnoise-Switch-from-PF_NO_SETAFFINITY-to-migrate_disable/20230524-012512
->         git checkout 89216b54eaf490480bc1929f5780f95a688a91bb
->         # save the config file
->         mkdir build_dir && cp config build_dir/.config
->         make W=1 O=build_dir ARCH=i386 olddefconfig
->         make W=1 O=build_dir ARCH=i386 SHELL=/bin/bash kernel/trace/
+> Move the declarations to an appropriate header where they can be seen
+> by the caller and callee, and make sure the headers are included where
+> needed.
 > 
-> If you fix the issue, kindly add following tag where applicable
-> | Reported-by: kernel test robot <lkp@intel.com>
-> | Closes: https://lore.kernel.org/oe-kbuild-all/202305242020.VlsOXEMn-lkp@intel.com/
-> 
-> All error/warnings (new ones prefixed by >>):
-> 
->    kernel/trace/trace_osnoise.c: In function 'timerlat_fd_open':
->>> kernel/trace/trace_osnoise.c:2364:16: error: implicit declaration of function 'this_cpu_tmr_var'; did you mean 'this_cpu_osn_var'? [-Werror=implicit-function-declaration]
->     2364 |         tlat = this_cpu_tmr_var();
->          |                ^~~~~~~~~~~~~~~~
->          |                this_cpu_osn_var
+> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 
-
-Thanks robot, I forgot to test without timerlat enabled. Easy to fix, an ifdef
-here and there.
-
--- Daniel
+Acked-by: Catalin Marinas <catalin.marinas@arm.com>
