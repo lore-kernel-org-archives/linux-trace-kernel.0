@@ -2,119 +2,103 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B9F88C77B7E
-	for <linux-trace-kernel@archiver.kernel.org>; Thu, 25 May 2023 16:53:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FD41C7EE2F
+	for <linux-trace-kernel@archiver.kernel.org>; Thu, 25 May 2023 17:00:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240218AbjEYQx4 (ORCPT
+        id S235677AbjEYRAt (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Thu, 25 May 2023 12:53:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51992 "EHLO
+        Thu, 25 May 2023 13:00:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54572 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234600AbjEYQxi (ORCPT
+        with ESMTP id S232561AbjEYRAs (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Thu, 25 May 2023 12:53:38 -0400
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 4F07319C;
-        Thu, 25 May 2023 09:53:36 -0700 (PDT)
-Received: from W11-BEAU-MD.localdomain (unknown [76.135.27.212])
-        by linux.microsoft.com (Postfix) with ESMTPSA id 9CF0E20FBE85;
-        Thu, 25 May 2023 09:53:35 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 9CF0E20FBE85
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-        s=default; t=1685033615;
-        bh=ZZ+c+EEe8Ld032DoWLP+pWoIJX6IUdfMjVhJYrHMqQ4=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=k6mxVBNgJk158KdcKYkckUhLj1Rn92c0CHEICBei2hRQOczKDCiLwskL6Rb4mmsj0
-         Brjhr3ceAqkfFG2IniwTfUbBrOV78SOulQTJpwVIz1lHy0Q8lR/lR+mdW7mGVcuMtm
-         xjCpW8r2gd0OgVp7Wk1MjUCXMoKoET4XcIC/gys8=
-Date:   Thu, 25 May 2023 09:53:29 -0700
-From:   Beau Belgrave <beaub@linux.microsoft.com>
-To:     sunliming <sunliming@kylinos.cn>
-Cc:     mhiramat@kernel.org, rostedt@goodmis.org,
-        linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kelulanainsley@gmail.com
-Subject: Re: [PATCH] tracing/user_events: Fix the order of the fields in the
- trace output
-Message-ID: <20230525165329.GA82@W11-BEAU-MD.localdomain>
-References: <20230525054032.29392-1-sunliming@kylinos.cn>
+        Thu, 25 May 2023 13:00:48 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 58736194;
+        Thu, 25 May 2023 10:00:47 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id D8862647AF;
+        Thu, 25 May 2023 17:00:46 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3A629C433D2;
+        Thu, 25 May 2023 17:00:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1685034046;
+        bh=NxZ51cAHmzPMD2e4CrASPFtZT14UlV6KIT2ZxbYTCKA=;
+        h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+        b=jTpMd7KwHu1bzXLxDMzEreVqrUCWyV9tublGIgD+EpCP5gjV+6xNOHzpVxvbEcdsB
+         U82Gu2P0ETHiVYTh7/Im1vDYZc9n0xpc8GD89NDTOI5Jwi7Cf8gVfko5FtyBmHEtSG
+         NnNvtxTMlQT86JZHnstd8mSQjRBluqrd5dL6OjfB9Ca5VcelPnfhsvefG1qALumdll
+         MPBHlisPKWPYM8v9h+eEDhN162kDpCabhbGFr9LR+kjFfEFkqR2PUidHWSuFXnHxip
+         0o3g7Uwmn9+4DVevDq97WlZgJbTPPz2lF898klWzvdZmiWLu3rUuIi/FPpr3CSO04i
+         NT4f7Bivgjrug==
+Message-ID: <67720a34-7519-0974-1fe6-7200f1c59ae0@kernel.org>
+Date:   Thu, 25 May 2023 19:00:41 +0200
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230525054032.29392-1-sunliming@kylinos.cn>
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.10.0
+Subject: Re: [PATCH V2 3/3] tracing/timerlat: Add user-space interface
+To:     linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+        Steven Rostedt <rostedt@goodmis.org>
+Cc:     Juri Lelli <juri.lelli@redhat.com>,
+        William White <chwhite@redhat.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Jonathan Corbet <corbet@lwn.net>
+References: <cover.1684860626.git.bristot@kernel.org>
+ <a7b2c215c763e95a56fa1258743332b570c81c9d.1684860626.git.bristot@kernel.org>
+Content-Language: en-US
+From:   Daniel Bristot de Oliveira <bristot@kernel.org>
+In-Reply-To: <a7b2c215c763e95a56fa1258743332b570c81c9d.1684860626.git.bristot@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On Thu, May 25, 2023 at 01:40:32PM +0800, sunliming wrote:
-> Commit 4bec284cc0b9 ("tracing/user_events: Use print_format_fields() for
-> trace output") use print_event_fields() as safe and gives user readable
-> output. However, due to the insertion of the struct ftrace_event_field
-> structure into the field linked list from the header, the trace output
-> oder of fields of user events is reversed. Fix the problem by insertint
-> to the tail of field linked list.
-> 
-> Signed-off-by: sunliming <sunliming@kylinos.cn>
-> ---
->  kernel/trace/trace_events_user.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/kernel/trace/trace_events_user.c b/kernel/trace/trace_events_user.c
-> index aacd22c1e9f8..e9e2ec3c7613 100644
-> --- a/kernel/trace/trace_events_user.c
-> +++ b/kernel/trace/trace_events_user.c
-> @@ -972,7 +972,7 @@ static int user_event_add_field(struct user_event *user, const char *type,
->  	if (filter_type == FILTER_OTHER)
->  		field->filter_type = filter_assign_type(type);
+[...]
+
 >  
-> -	list_add(&field->link, &user->fields);
-> +	list_add_tail(&field->link, &user->fields);
+> +static void check_timerlat_user_migration(pid_t pid, long dest_cpu);
+>  /*
+>   * trace_sched_switch - sched:sched_switch trace event handler
+>   *
+> @@ -1196,6 +1199,9 @@ trace_sched_switch_callback(void *data, bool preempt,
+>  	struct osnoise_variables *osn_var = this_cpu_osn_var();
+>  	int workload = test_bit(OSN_WORKLOAD, &osnoise_options);
 >  
->  	/*
->  	 * Min size from user writes that are required, this does not include
-> -- 
-> 2.25.1
+> +	if (unlikely(workload && timerlat_enabled()))
+> +		check_timerlat_user_migration(n->pid, smp_processor_id());
+> +
 
-Thanks for the patch, however, this breaks the tracefs format file. The
-fields are required to be put in backwards since it walks them
-backwards.
+it should be !workload, anyway, I will move this check to a sched_migrate_task
+tracepoint because it runs less frequently and...
 
-Example using this:
-echo 'u:test u32 a; u32 b;' > dynamic_events
-cat /sys/kernel/tracing/events/user_events/test/format
+[...]
 
-Before this change:
-name: test
-...
-format:
-        field:unsigned short common_type;       offset:0;       size:2; signed:0;
-        field:unsigned char common_flags;       offset:2;       size:1; signed:0;
-        field:unsigned char common_preempt_count;       offset:3;       size:1; signed:0;
-        field:int common_pid;   offset:4;       size:4; signed:1;
+the tracepoint also informs the origin CPU, so it can be passed here:
 
-        field:u32 a;    offset:8;       size:4; signed:0;
-        field:u32 b;    offset:12;      size:4; signed:0;
+> +
+> +static void check_timerlat_user_migration(pid_t pid, long dest_cpu)
+> +{
+> +	struct osnoise_variables *osn_var;
+> +	long cpu;
+> +
 
-print fmt: "a=%u b=%u", REC->a, REC->b
+and we can avoid this ugly loop.
 
-After this change:
-name: test
-...
-format:
-        field:unsigned short common_type;       offset:0;       size:2; signed:0;
-        field:unsigned char common_flags;       offset:2;       size:1; signed:0;
-        field:unsigned char common_preempt_count;       offset:3;       size:1; signed:0;
-        field:int common_pid;   offset:4;       size:4; signed:1;
+> +	for_each_possible_cpu(cpu) {
+> +		osn_var = per_cpu_ptr(&per_cpu_osnoise_var, cpu);
+> +		if (osn_var->pid == pid && dest_cpu != cpu) {
+> +			per_cpu_ptr(&per_cpu_timerlat_var, cpu)->uthread_migrate = 1;
+> +			osnoise_taint("timerlat user thread migrate\n");
+> +			osnoise_stop_tracing();
+> +			break;
+> +		}
+> +	}
 
-        field:u32 b;    offset:12;      size:4; signed:0;
-        field:u32 a;    offset:8;       size:4; signed:0;
+Lazy daniel should have had a look first, but at least now I know I also need
+to do some ifdeffery.
 
-print fmt: "b=%u a=%u", REC->b, REC->a
+-- Daniel
 
-I do agree though, that print_fields() is doing it backwards. Can you
-please fix the print_fields() function instead? (It should walk the list
-of fields backwards like tracefs format file does).
-
-Steven can then Ack that work, since it's isolated there.
-
-Thanks,
--Beau
