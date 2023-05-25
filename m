@@ -2,73 +2,98 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BB80C77B7C
-	for <linux-trace-kernel@archiver.kernel.org>; Thu, 25 May 2023 00:25:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AF936C77B73
+	for <linux-trace-kernel@archiver.kernel.org>; Thu, 25 May 2023 01:20:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230129AbjEYAZf (ORCPT
+        id S230011AbjEYBU2 (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Wed, 24 May 2023 20:25:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39620 "EHLO
+        Wed, 24 May 2023 21:20:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50224 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230152AbjEYAZf (ORCPT
+        with ESMTP id S229451AbjEYBU1 (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Wed, 24 May 2023 20:25:35 -0400
+        Wed, 24 May 2023 21:20:27 -0400
 Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0E884A4;
-        Wed, 24 May 2023 17:25:34 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6EDDBE6;
+        Wed, 24 May 2023 18:20:26 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 9CF4F63953;
-        Thu, 25 May 2023 00:25:33 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9E51DC433EF;
-        Thu, 25 May 2023 00:25:31 +0000 (UTC)
-Date:   Wed, 24 May 2023 20:25:26 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Cc:     linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>
-Subject: Re: [PATCH] tracing/timer: Add missing hrtimer modes to
- decode_hrtimer_mode().
-Message-ID: <20230524202526.289e3a65@rorschach.local.home>
-In-Reply-To: <20230524153928.p9umapxB@linutronix.de>
-References: <20230418143854.8vHWQKLM@linutronix.de>
-        <20230424174441.3baebdef@rorschach.local.home>
-        <20230524153928.p9umapxB@linutronix.de>
-X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 0B73B641C0;
+        Thu, 25 May 2023 01:20:26 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3AEFCC433EF;
+        Thu, 25 May 2023 01:20:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1684977625;
+        bh=a+sFiytLmWFLgtD3pXWApwYX6qLc2CEd0ajOsXXioqA=;
+        h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+        b=j3zVaJqyzpaKy7t8PPtnTOkfVXEuRR6axKjNtnG0nenSvIoNSCshn+Q/apuv+rHck
+         xWcRUAr5NTELSYPDZWib2+qlrWaH83HUHnLegjju1frA/kP+hRKIvOaTZ7+DRT/aph
+         p7zEphT7DYCROIaFcpaKPEH2SyDJSBrOKZDnrIBRoog/8rjMBolZhFmmQRw6BnsItf
+         4Y6mUmqtwrUHHPX2nRyvMlBpmAlvVwLJ/GRfQOxKP9Zs9N5ddVxA7g3JWMd6x8/SdF
+         E6aDyVNBPqgtJ1PKqFRj341WMT25eqF6kwsNKNnE7NziuvOppJxbx4sf/k4wPxdpAl
+         EZG70beI8mBbw==
+Message-ID: <e6a36b71-045e-4e95-f539-fd88b289e703@kernel.org>
+Date:   Thu, 25 May 2023 09:20:20 +0800
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.10.0
+Subject: Re: [PATCH v6] f2fs: add async reset zone command support
+Content-Language: en-US
+To:     Jaegeuk Kim <jaegeuk@kernel.org>,
+        Daejun Park <daejun7.park@samsung.com>
+Cc:     "rostedt@goodmis.org" <rostedt@goodmis.org>,
+        "mhiramat@kernel.org" <mhiramat@kernel.org>,
+        "linux-f2fs-devel@lists.sourceforge.net" 
+        <linux-f2fs-devel@lists.sourceforge.net>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-trace-kernel@vger.kernel.org" 
+        <linux-trace-kernel@vger.kernel.org>,
+        Seokhwan Kim <sukka.kim@samsung.com>,
+        Yonggil Song <yonggil.song@samsung.com>,
+        beomsu kim <beomsu7.kim@samsung.com>
+References: <CGME20230508081042epcms2p8a637deae7de1829f54614e09d5fde5e5@epcms2p8>
+ <20230508081042epcms2p8a637deae7de1829f54614e09d5fde5e5@epcms2p8>
+ <ZFqWr3sSYMsHtHAC@google.com>
+From:   Chao Yu <chao@kernel.org>
+In-Reply-To: <ZFqWr3sSYMsHtHAC@google.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On Wed, 24 May 2023 17:39:28 +0200
-Sebastian Andrzej Siewior <bigeasy@linutronix.de> wrote:
-
-> On 2023-04-24 17:44:41 [-0400], Steven Rostedt wrote:
-> > On Tue, 18 Apr 2023 16:38:54 +0200
-> > Sebastian Andrzej Siewior <bigeasy@linutronix.de> wrote:
-> >   
-> > > The trace output for the HRTIMER_MODE_.*_HARD modes is seen as a number
-> > > since these modes are not decoded. The author was not aware of the fancy
-> > > decoding function which makes the life easier.
-> > > 
-> > > Extend decode_hrtimer_mode() with the additional HRTIMER_MODE_.*_HARD
-> > > modes.
-> > > 
-> > > Fixes: ae6683d815895 ("hrtimer: Introduce HARD expiry mode")
-> > > Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>  
-> > 
-> > Acked-by: Steven Rostedt (Google) <rostedt@goodmis.org>  
+On 2023/5/10 2:53, Jaegeuk Kim wrote:
+> On 05/08, Daejun Park wrote:
+>> v5 -> v6
+>> Added trace_f2fs_iostat support for zone reset command.
+>>
+>> v4 -> v5
+>> Added f2fs iostat for zone reset command.
+>>
+>> v3 -> v4
+>> Fixed build error caused by unused function.
+>>
+>> v2 -> v3
+>> Modified arguments to be correct for ftrace parameter.
+>> Changed __submit_zone_reset_cmd to void return.
+>> Refactored the f2fs_wait_discard_bio function.
+>> Fixed code that was previously incorrectly merged.
+>>
+>> v1 -> v2
+>> Changed to apply the optional async reset write pointer by default.
 > 
-> Could this be either routed via the tracing tree or the tip tree but
-> please route this :)
+> Don't add the history in the patch description.
 > 
+>>
+>> This patch enables submit reset zone command asynchornously. It helps
+>> decrease average latency of write IOs in high utilization scenario by
+>> faster checkpointing.
+>>
+>> Signed-off-by: Daejun Park <daejun7.park@samsung.com>
 
-Events are normally owned by the subsystem they are used in. So it
-should go through tip. But if I get an ack from the subsystem
-maintainer, I can route it through tracing.
+Except the change log, it looks good to me.
 
--- Steve
+Reviewed-by: Chao Yu <chao@kernel.org>
+
+Thanks,
