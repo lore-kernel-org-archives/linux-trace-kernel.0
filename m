@@ -2,98 +2,191 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AF936C77B73
-	for <linux-trace-kernel@archiver.kernel.org>; Thu, 25 May 2023 01:20:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 144C7C77B73
+	for <linux-trace-kernel@archiver.kernel.org>; Thu, 25 May 2023 01:21:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230011AbjEYBU2 (ORCPT
+        id S235902AbjEYBVR (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Wed, 24 May 2023 21:20:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50224 "EHLO
+        Wed, 24 May 2023 21:21:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50640 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229451AbjEYBU1 (ORCPT
+        with ESMTP id S235996AbjEYBVQ (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Wed, 24 May 2023 21:20:27 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6EDDBE6;
-        Wed, 24 May 2023 18:20:26 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 0B73B641C0;
-        Thu, 25 May 2023 01:20:26 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3AEFCC433EF;
-        Thu, 25 May 2023 01:20:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1684977625;
-        bh=a+sFiytLmWFLgtD3pXWApwYX6qLc2CEd0ajOsXXioqA=;
-        h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-        b=j3zVaJqyzpaKy7t8PPtnTOkfVXEuRR6axKjNtnG0nenSvIoNSCshn+Q/apuv+rHck
-         xWcRUAr5NTELSYPDZWib2+qlrWaH83HUHnLegjju1frA/kP+hRKIvOaTZ7+DRT/aph
-         p7zEphT7DYCROIaFcpaKPEH2SyDJSBrOKZDnrIBRoog/8rjMBolZhFmmQRw6BnsItf
-         4Y6mUmqtwrUHHPX2nRyvMlBpmAlvVwLJ/GRfQOxKP9Zs9N5ddVxA7g3JWMd6x8/SdF
-         E6aDyVNBPqgtJ1PKqFRj341WMT25eqF6kwsNKNnE7NziuvOppJxbx4sf/k4wPxdpAl
-         EZG70beI8mBbw==
-Message-ID: <e6a36b71-045e-4e95-f539-fd88b289e703@kernel.org>
-Date:   Thu, 25 May 2023 09:20:20 +0800
+        Wed, 24 May 2023 21:21:16 -0400
+Received: from mail-pf1-f196.google.com (mail-pf1-f196.google.com [209.85.210.196])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 45D7812E;
+        Wed, 24 May 2023 18:21:14 -0700 (PDT)
+Received: by mail-pf1-f196.google.com with SMTP id d2e1a72fcca58-64d2e8a842cso1239565b3a.3;
+        Wed, 24 May 2023 18:21:14 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1684977673; x=1687569673;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=0/loXn/FY0ov0dTjdes2wKdum1jZNR3HB6zIaUVrGEs=;
+        b=F/Ymrb15GY7JX1ekZnHh/wL6JIiTEmc5C+ntP7VyI2Xh/IV1UNKPhQKNLCQRqINwY8
+         8Fpw/l5DjBUYN9rNoriXJ7xiHvyQlNdldUNzX56ntWRYkPfmSd9SooD2g6/HVeVRdpHb
+         BIMDysEzFtZhfUFsQutRiXJFp16wEEd/zkpUFNDs+EptHD+o35a4y4QiWIejXPXvesgt
+         oLI2pcq2+yhU1eNNDZ633WzIRfECVoaf8nOfj7xHwtauNiblwV0mTQcYkoNOcsm6a1IH
+         t165axy6GDPpMDmDjOPQ1ZNixB7lMyJK+TUYS2g3rYXCVULQqNyne+NYLxk7qDx088dk
+         Q6LA==
+X-Gm-Message-State: AC+VfDzNiZVYhoFO+krX3JrSXgum+lwFczUDaU9zfnKDIgTlriR0iCSM
+        xAhS+rkxpYznc7uTXfYWpOOLe9heMgZ8
+X-Google-Smtp-Source: ACHHUZ6z92pw+t8+HqlDL5U4dbttaMt5O7dOO1KPC/6Jm6zNP5yqCI7YU4/9qYlPtlOsiT0UXUPIFg==
+X-Received: by 2002:a05:6a21:6da4:b0:10d:3ff2:4531 with SMTP id wl36-20020a056a216da400b0010d3ff24531mr4721949pzb.29.1684977673199;
+        Wed, 24 May 2023 18:21:13 -0700 (PDT)
+Received: from localhost.localdomain ([116.128.244.169])
+        by smtp.gmail.com with ESMTPSA id i5-20020a63e905000000b00530277f7b0fsm8474827pgh.53.2023.05.24.18.21.11
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 24 May 2023 18:21:12 -0700 (PDT)
+From:   sunliming <sunliming@kylinos.cn>
+To:     mhiramat@kernel.org, rostedt@goodmis.org, beaub@linux.microsoft.com
+Cc:     linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kelulanainsley@gmail.com, sunliming <sunliming@kylinos.cn>
+Subject: [PATCH] tracing/user_events: Prevent same name but different args event
+Date:   Thu, 25 May 2023 09:21:05 +0800
+Message-Id: <20230525012105.7936-1-sunliming@kylinos.cn>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.10.0
-Subject: Re: [PATCH v6] f2fs: add async reset zone command support
-Content-Language: en-US
-To:     Jaegeuk Kim <jaegeuk@kernel.org>,
-        Daejun Park <daejun7.park@samsung.com>
-Cc:     "rostedt@goodmis.org" <rostedt@goodmis.org>,
-        "mhiramat@kernel.org" <mhiramat@kernel.org>,
-        "linux-f2fs-devel@lists.sourceforge.net" 
-        <linux-f2fs-devel@lists.sourceforge.net>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-trace-kernel@vger.kernel.org" 
-        <linux-trace-kernel@vger.kernel.org>,
-        Seokhwan Kim <sukka.kim@samsung.com>,
-        Yonggil Song <yonggil.song@samsung.com>,
-        beomsu kim <beomsu7.kim@samsung.com>
-References: <CGME20230508081042epcms2p8a637deae7de1829f54614e09d5fde5e5@epcms2p8>
- <20230508081042epcms2p8a637deae7de1829f54614e09d5fde5e5@epcms2p8>
- <ZFqWr3sSYMsHtHAC@google.com>
-From:   Chao Yu <chao@kernel.org>
-In-Reply-To: <ZFqWr3sSYMsHtHAC@google.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On 2023/5/10 2:53, Jaegeuk Kim wrote:
-> On 05/08, Daejun Park wrote:
->> v5 -> v6
->> Added trace_f2fs_iostat support for zone reset command.
->>
->> v4 -> v5
->> Added f2fs iostat for zone reset command.
->>
->> v3 -> v4
->> Fixed build error caused by unused function.
->>
->> v2 -> v3
->> Modified arguments to be correct for ftrace parameter.
->> Changed __submit_zone_reset_cmd to void return.
->> Refactored the f2fs_wait_discard_bio function.
->> Fixed code that was previously incorrectly merged.
->>
->> v1 -> v2
->> Changed to apply the optional async reset write pointer by default.
-> 
-> Don't add the history in the patch description.
-> 
->>
->> This patch enables submit reset zone command asynchornously. It helps
->> decrease average latency of write IOs in high utilization scenario by
->> faster checkpointing.
->>
->> Signed-off-by: Daejun Park <daejun7.park@samsung.com>
+User processes register name_args for events. If the same name but different
+args event are registered. The trace outputs of second event are printed
+as the first event. This is incorrect.
 
-Except the change log, it looks good to me.
+Return EADDRINUSE back to the user process if the same name but different args
+event has being registered.
 
-Reviewed-by: Chao Yu <chao@kernel.org>
+Signed-off-by: sunliming <sunliming@kylinos.cn>
+---
+ kernel/trace/trace_events_user.c              | 74 ++++++++++++++++---
+ .../selftests/user_events/ftrace_test.c       |  6 ++
+ 2 files changed, 68 insertions(+), 12 deletions(-)
 
-Thanks,
+diff --git a/kernel/trace/trace_events_user.c b/kernel/trace/trace_events_user.c
+index b1ecd7677642..aacd22c1e9f8 100644
+--- a/kernel/trace/trace_events_user.c
++++ b/kernel/trace/trace_events_user.c
+@@ -1741,6 +1741,46 @@ static int user_event_trace_register(struct user_event *user)
+ 	return ret;
+ }
+ 
++static int compare_ftrace_field(struct ftrace_event_field *field1,
++					struct ftrace_event_field *field2)
++{
++	if (field1->offset == field2->offset &&
++	    field1->size == field2->size &&
++	    field1->is_signed == field2->is_signed &&
++	    field1->filter_type == field2->filter_type &&
++	    !strcmp(field1->name, field2->name))
++		return 0;
++	else
++		return -1;
++}
++
++static int user_event_compare_fields(struct user_event *user1,
++						struct user_event *user2)
++{
++	struct ftrace_event_field *field1, *field2;
++
++	field1 = list_first_entry(&user1->fields,
++			struct ftrace_event_field, link);
++	field2 = list_first_entry(&user2->fields,
++			struct ftrace_event_field, link);
++
++	while (&field1->link != &user1->fields &&
++			&field2->link != &user2->fields) {
++
++		if (compare_ftrace_field(field1, field2))
++			break;
++
++		field1 = list_next_entry(field1, link);
++		field2 = list_next_entry(field2, link);
++	}
++
++	if (&field1->link == &user1->fields &&
++			&field2->link == &user2->fields)
++		return 0;
++	else
++		return -EADDRINUSE;
++}
++
+ /*
+  * Parses the event name, arguments and flags then registers if successful.
+  * The name buffer lifetime is owned by this method for success cases only.
+@@ -1752,23 +1792,13 @@ static int user_event_parse(struct user_event_group *group, char *name,
+ {
+ 	int ret;
+ 	u32 key;
+-	struct user_event *user;
++	struct user_event *user, *tmp_user;
+ 
+ 	/* Prevent dyn_event from racing */
+ 	mutex_lock(&event_mutex);
+-	user = find_user_event(group, name, &key);
++	tmp_user = find_user_event(group, name, &key);
+ 	mutex_unlock(&event_mutex);
+ 
+-	if (user) {
+-		*newuser = user;
+-		/*
+-		 * Name is allocated by caller, free it since it already exists.
+-		 * Caller only worries about failure cases for freeing.
+-		 */
+-		kfree(name);
+-		return 0;
+-	}
+-
+ 	user = kzalloc(sizeof(*user), GFP_KERNEL_ACCOUNT);
+ 
+ 	if (!user)
+@@ -1786,6 +1816,26 @@ static int user_event_parse(struct user_event_group *group, char *name,
+ 	if (ret)
+ 		goto put_user;
+ 
++	if (tmp_user) {
++		/*
++		 * Prevent users form using the same name for different fields. This
++		 * can cause unexpected output for the second event.
++		 */
++		ret = user_event_compare_fields(user, tmp_user);
++
++		if (!ret) {
++			*newuser = tmp_user;
++			/*
++			 * Name is allocated by caller, free it since it already exists.
++			 * Caller only worries about failure cases for freeing.
++			 */
++			kfree(name);
++		} else
++			refcount_dec(&tmp_user->refcnt);
++
++		goto put_user;
++	}
++
+ 	ret = user_event_create_print_fmt(user);
+ 
+ 	if (ret)
+diff --git a/tools/testing/selftests/user_events/ftrace_test.c b/tools/testing/selftests/user_events/ftrace_test.c
+index 7c99cef94a65..d738efd51daf 100644
+--- a/tools/testing/selftests/user_events/ftrace_test.c
++++ b/tools/testing/selftests/user_events/ftrace_test.c
+@@ -228,6 +228,12 @@ TEST_F(user, register_events) {
+ 	ASSERT_EQ(0, ioctl(self->data_fd, DIAG_IOCSREG, &reg));
+ 	ASSERT_EQ(0, reg.write_index);
+ 
++	/* Multipule regitsters to same name but different args should fail */
++	reg.enable_bit = 29;
++	reg.name_args = (__u64)"__test_event u32 field1;";
++	ASSERT_EQ(-1, ioctl(self->data_fd, DIAG_IOCSREG, &reg));
++	ASSERT_EQ(EADDRINUSE, errno);
++
+ 	/* Ensure disabled */
+ 	self->enable_fd = open(enable_file, O_RDWR);
+ 	ASSERT_NE(-1, self->enable_fd);
+-- 
+2.25.1
+
