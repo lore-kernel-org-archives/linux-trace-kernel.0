@@ -2,58 +2,58 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8824FC7EE31
-	for <linux-trace-kernel@archiver.kernel.org>; Fri, 26 May 2023 23:44:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A8FAC77B7A
+	for <linux-trace-kernel@archiver.kernel.org>; Fri, 26 May 2023 23:44:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237669AbjEZXox (ORCPT
+        id S235125AbjEZXoy (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Fri, 26 May 2023 19:44:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58732 "EHLO
+        Fri, 26 May 2023 19:44:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58826 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235125AbjEZXoo (ORCPT
+        with ESMTP id S237687AbjEZXou (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Fri, 26 May 2023 19:44:44 -0400
-Received: from mail-yb1-xb49.google.com (mail-yb1-xb49.google.com [IPv6:2607:f8b0:4864:20::b49])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6FB35189
-        for <linux-trace-kernel@vger.kernel.org>; Fri, 26 May 2023 16:44:42 -0700 (PDT)
-Received: by mail-yb1-xb49.google.com with SMTP id 3f1490d57ef6-ba87bd29e9dso1727264276.3
-        for <linux-trace-kernel@vger.kernel.org>; Fri, 26 May 2023 16:44:42 -0700 (PDT)
+        Fri, 26 May 2023 19:44:50 -0400
+Received: from mail-yw1-x114a.google.com (mail-yw1-x114a.google.com [IPv6:2607:f8b0:4864:20::114a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F139B1B5
+        for <linux-trace-kernel@vger.kernel.org>; Fri, 26 May 2023 16:44:46 -0700 (PDT)
+Received: by mail-yw1-x114a.google.com with SMTP id 00721157ae682-565c380565dso13130117b3.1
+        for <linux-trace-kernel@vger.kernel.org>; Fri, 26 May 2023 16:44:46 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20221208; t=1685144681; x=1687736681;
+        d=google.com; s=20221208; t=1685144686; x=1687736686;
         h=cc:to:from:subject:references:mime-version:message-id:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=kGsSI0lPP8ERxd6p+DSa9eEPYGyuTkZRYkJGde6ThZo=;
-        b=hvb8rxkERCbIh1bZc0q4NRTJ+rJW/WU+U0AR8hQmLag3Ue+qSWO6cakjY3a2+aFQIE
-         x+dhqQS7EQpNz5Tcg/879WfdtsT2g9m9IEV/ar3WsH6hpivs+AgK+n3cV9xivqmDDPOm
-         KKmHGpOcNrwi3l5Yw+fAvneY5R+j+Mh2hjIBHhqkVzBeZTwwqArwApBbzG0OmYJUYGc6
-         DRb2e1iDRkrr5VQNcGKChaSGvbQt6NfDiW4utZo1zEzUWIhsS0vIBmPt/jCICfYU7AGj
-         2EXBMubac0epYeTWkMmnp5dg4awgt7i7k/gPemJKnVVjNCrCZqeAJZJODgbRp4LsgzpY
-         rjvA==
+        bh=9t4P2GvyPz5aecPxpWswvlll2je3r362Snycxj82bkU=;
+        b=cWUN3P8rM/d3APcGkGsw1zxYbzC0SLP23YWYAHvNkl8en24zIhenJIzsgauwSrM86L
+         GtpWgjW+9PaIY51P7YD5ERtfy398MWWnA2qbOrXT+m6cJHuvmS8It0VeeYLeOMql5pG+
+         oF4R8PaA47tg1/M/GaUTjyQPHdY2Yt35bMOgs0yeO0A95+MuHExqrRIRhATT/aSAcAvS
+         DuZIw+jQWwcC1PbwFYK5fVCc5aYJ2bcpXcCLA842C0fEFJDU8WE3MLQI6mTQVW9b35Gn
+         iKpM9XslaKQGwLt7gqMS0LD/fBOZjhpB3/6lsoxW54UOFTglxZ15DmEhLn/Wm52Z8EKo
+         74zA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1685144681; x=1687736681;
+        d=1e100.net; s=20221208; t=1685144686; x=1687736686;
         h=cc:to:from:subject:references:mime-version:message-id:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=kGsSI0lPP8ERxd6p+DSa9eEPYGyuTkZRYkJGde6ThZo=;
-        b=LYvaRTQ/0/s6r+4CRZd2sBibGf66VSVyRH6R+ILx+XIwU3OHRn9RI1YH3tIRx9Ibm1
-         jYkXe0ZFrgAhO4ANalUKCUAyTUfRUVofW/e/9Nr/tTOZUQ14Xeek2xe0o0fiOWZ6rVnF
-         i6MeHK7rxnoVYF/07eWfCqBKa4k4sbWHu/mPx83mEYXJ5ElSqJnF8oy7Zcq8TrO9L2we
-         r6ZTqrE+9NHsR9Bvm1fEuh5GV1NaRKJewJJ+jejHMMUO1zqN2JhFHqWUBGEe//1mTwBb
-         nJB7Q0CVudm1q41kRWJTlT3fCLaAWG82ytvrW4UlhBqoDIyId7kPvrbtKIP8yzVgdenH
-         kS/A==
-X-Gm-Message-State: AC+VfDzvv+VmeGzu9eF59tEef319kA0eroOrc3VaHK/Y+RXwjsiGIlrX
-        v/tXEgGFa2vnLUVXQyPkm93LFdL0JGA=
-X-Google-Smtp-Source: ACHHUZ6fi8C05HO0+KMDQENWGjZ4c7vAIwn8WK8PM0ILwAQbwBWVWIEplGkrZ1gydvcndVbPZA/WyjMMkr8=
+        bh=9t4P2GvyPz5aecPxpWswvlll2je3r362Snycxj82bkU=;
+        b=ketICUsj3U/inr4duP6wuseRB3o21F2KII5ET+k/WEml/qk8tUyRMzBtFcjZ0iHeXj
+         1LYvXgeBn/rpahUS6xfjFA5O78V4jFzRY9D7VDVGwJLTgcs6tOLdfL6gqhK5VS03WB1b
+         rlUZbKcairCvF2D+1c1ynyUrHa1IwyATJzj41XfAM5WuQQsfdQtCIRIaNr1TzuUB5fNl
+         TFzzNozxQlkiEKfsJsWiaw8kbHgzNlNxvIqi74XMuOTxCCmel4ycWsLAwm6/OBmw83gE
+         MQCY5/vonbE/BQnLs6gayRSNzaxprZTHCgU3J2Rqh4A1cN9OsflaSshU1IxyoSqnvrY4
+         PhUA==
+X-Gm-Message-State: AC+VfDyKMb6JQJHm51KD4nCoEMskS5YULIzwmdd5V0+sgHNvb7iLjdYY
+        JTRKJvwjD+AxNihJKH3J/XbAG1mx8TY=
+X-Google-Smtp-Source: ACHHUZ671mv9b1WNngTqma0ZpDsFyu7jCdBVYj6cC/Q6bUpKz7y4SPqrDazly1Z4TuFOLliyXqQloqgktcM=
 X-Received: from yuzhao.bld.corp.google.com ([2620:15c:183:200:910f:8a15:592b:2087])
- (user=yuzhao job=sendgmr) by 2002:a05:6902:50d:b0:ba8:3e2d:58f8 with SMTP id
- x13-20020a056902050d00b00ba83e2d58f8mr1858255ybs.5.1685144681575; Fri, 26 May
- 2023 16:44:41 -0700 (PDT)
-Date:   Fri, 26 May 2023 17:44:26 -0600
+ (user=yuzhao job=sendgmr) by 2002:a81:b627:0:b0:559:d859:d749 with SMTP id
+ u39-20020a81b627000000b00559d859d749mr437593ywh.5.1685144686225; Fri, 26 May
+ 2023 16:44:46 -0700 (PDT)
+Date:   Fri, 26 May 2023 17:44:29 -0600
 In-Reply-To: <20230526234435.662652-1-yuzhao@google.com>
-Message-Id: <20230526234435.662652-2-yuzhao@google.com>
+Message-Id: <20230526234435.662652-5-yuzhao@google.com>
 Mime-Version: 1.0
 References: <20230526234435.662652-1-yuzhao@google.com>
 X-Mailer: git-send-email 2.41.0.rc0.172.g3f132b7071-goog
-Subject: [PATCH mm-unstable v2 01/10] mm/kvm: add mmu_notifier_ops->test_clear_young()
+Subject: [PATCH mm-unstable v2 04/10] kvm/arm64: make stage2 page tables RCU safe
 From:   Yu Zhao <yuzhao@google.com>
 To:     Andrew Morton <akpm@linux-foundation.org>,
         Paolo Bonzini <pbonzini@redhat.com>
@@ -98,332 +98,120 @@ Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-Add mmu_notifier_ops->test_clear_young() to supersede test_young()
-and clear_young().
+Stage2 page tables are currently not RCU safe against unmapping or VM
+destruction. The previous mmu_notifier_ops members rely on
+kvm->mmu_lock to synchronize with those operations.
 
-test_clear_young() has a fast path, which if supported, allows its
-callers to safely clear the accessed bit without taking
-kvm->mmu_lock.
+However, the new mmu_notifier_ops member test_clear_young() provides
+a fast path that does not take kvm->mmu_lock. To implement
+kvm_arch_test_clear_young() for that path, unmapped page tables need
+to be freed by RCU and kvm_free_stage2_pgd() needs to be after
+mmu_notifier_unregister().
 
-The fast path requires arch-specific code that generally relies on
-RCU and CAS: the former protects KVM page tables from being freed
-while the latter clears the accessed bit atomically against both the
-hardware and other software page table walkers. If the fast path is
-unsupported, test_clear_young() falls back to the existing slow path
-where kvm->mmu_lock is then taken.
-
-test_clear_young() can also operate on a range of KVM PTEs
-individually according to a bitmap, if the caller provides it.
+Remapping, specifically stage2_free_removed_table(), is already RCU
+safe.
 
 Signed-off-by: Yu Zhao <yuzhao@google.com>
 ---
- include/linux/kvm_host.h     | 22 +++++++++++
- include/linux/mmu_notifier.h | 52 ++++++++++++++++++++++++
- mm/mmu_notifier.c            | 24 ++++++++++++
- virt/kvm/kvm_main.c          | 76 +++++++++++++++++++++++++++++++++++-
- 4 files changed, 173 insertions(+), 1 deletion(-)
+ arch/arm64/include/asm/kvm_pgtable.h |  2 ++
+ arch/arm64/kvm/arm.c                 |  1 +
+ arch/arm64/kvm/hyp/pgtable.c         |  8 ++++++--
+ arch/arm64/kvm/mmu.c                 | 17 ++++++++++++++++-
+ 4 files changed, 25 insertions(+), 3 deletions(-)
 
-diff --git a/include/linux/kvm_host.h b/include/linux/kvm_host.h
-index 0e571e973bc2..374262545f96 100644
---- a/include/linux/kvm_host.h
-+++ b/include/linux/kvm_host.h
-@@ -258,6 +258,7 @@ int kvm_async_pf_wakeup_all(struct kvm_vcpu *vcpu);
- #ifdef KVM_ARCH_WANT_MMU_NOTIFIER
- struct kvm_gfn_range {
- 	struct kvm_memory_slot *slot;
-+	void *args;
- 	gfn_t start;
- 	gfn_t end;
- 	pte_t pte;
-@@ -267,6 +268,27 @@ bool kvm_unmap_gfn_range(struct kvm *kvm, struct kvm_gfn_range *range);
- bool kvm_age_gfn(struct kvm *kvm, struct kvm_gfn_range *range);
- bool kvm_test_age_gfn(struct kvm *kvm, struct kvm_gfn_range *range);
- bool kvm_set_spte_gfn(struct kvm *kvm, struct kvm_gfn_range *range);
-+bool kvm_should_clear_young(struct kvm_gfn_range *range, gfn_t gfn);
-+bool kvm_arch_test_clear_young(struct kvm *kvm, struct kvm_gfn_range *range);
-+#endif
-+
-+/*
-+ * Architectures that implement kvm_arch_test_clear_young() should override
-+ * kvm_arch_has_test_clear_young().
-+ *
-+ * kvm_arch_has_test_clear_young() is allowed to return false positive, i.e., it
-+ * can return true if kvm_arch_test_clear_young() is supported but disabled due
-+ * to some runtime constraint. In this case, kvm_arch_test_clear_young() should
-+ * return true; otherwise, it should return false.
-+ *
-+ * For each young KVM PTE, kvm_arch_test_clear_young() should call
-+ * kvm_should_clear_young() to decide whether to clear the accessed bit.
-+ */
-+#ifndef kvm_arch_has_test_clear_young
-+static inline bool kvm_arch_has_test_clear_young(void)
-+{
-+	return false;
-+}
- #endif
+diff --git a/arch/arm64/include/asm/kvm_pgtable.h b/arch/arm64/include/asm/kvm_pgtable.h
+index ff520598b62c..5cab52e3a35f 100644
+--- a/arch/arm64/include/asm/kvm_pgtable.h
++++ b/arch/arm64/include/asm/kvm_pgtable.h
+@@ -153,6 +153,7 @@ static inline bool kvm_level_supports_block_mapping(u32 level)
+  * @put_page:			Decrement the refcount on a page. When the
+  *				refcount reaches 0 the page is automatically
+  *				freed.
++ * @put_page_rcu:		RCU variant of the above.
+  * @page_count:			Return the refcount of a page.
+  * @phys_to_virt:		Convert a physical address into a virtual
+  *				address	mapped in the current context.
+@@ -170,6 +171,7 @@ struct kvm_pgtable_mm_ops {
+ 	void		(*free_removed_table)(void *addr, u32 level);
+ 	void		(*get_page)(void *addr);
+ 	void		(*put_page)(void *addr);
++	void		(*put_page_rcu)(void *addr);
+ 	int		(*page_count)(void *addr);
+ 	void*		(*phys_to_virt)(phys_addr_t phys);
+ 	phys_addr_t	(*virt_to_phys)(void *addr);
+diff --git a/arch/arm64/kvm/arm.c b/arch/arm64/kvm/arm.c
+index 14391826241c..ee93271035d9 100644
+--- a/arch/arm64/kvm/arm.c
++++ b/arch/arm64/kvm/arm.c
+@@ -191,6 +191,7 @@ vm_fault_t kvm_arch_vcpu_fault(struct kvm_vcpu *vcpu, struct vm_fault *vmf)
+  */
+ void kvm_arch_destroy_vm(struct kvm *kvm)
+ {
++	kvm_free_stage2_pgd(&kvm->arch.mmu);
+ 	bitmap_free(kvm->arch.pmu_filter);
+ 	free_cpumask_var(kvm->arch.supported_cpus);
  
- enum {
-diff --git a/include/linux/mmu_notifier.h b/include/linux/mmu_notifier.h
-index 64a3e051c3c4..dfdbb370682d 100644
---- a/include/linux/mmu_notifier.h
-+++ b/include/linux/mmu_notifier.h
-@@ -60,6 +60,8 @@ enum mmu_notifier_event {
- };
+diff --git a/arch/arm64/kvm/hyp/pgtable.c b/arch/arm64/kvm/hyp/pgtable.c
+index 24678ccba76a..dbace4c6a841 100644
+--- a/arch/arm64/kvm/hyp/pgtable.c
++++ b/arch/arm64/kvm/hyp/pgtable.c
+@@ -988,8 +988,12 @@ static int stage2_unmap_walker(const struct kvm_pgtable_visit_ctx *ctx,
+ 		mm_ops->dcache_clean_inval_poc(kvm_pte_follow(ctx->old, mm_ops),
+ 					       kvm_granule_size(ctx->level));
  
- #define MMU_NOTIFIER_RANGE_BLOCKABLE (1 << 0)
-+#define MMU_NOTIFIER_RANGE_LOCKLESS	(1 << 1)
-+#define MMU_NOTIFIER_RANGE_YOUNG	(1 << 2)
+-	if (childp)
+-		mm_ops->put_page(childp);
++	if (childp) {
++		if (mm_ops->put_page_rcu)
++			mm_ops->put_page_rcu(childp);
++		else
++			mm_ops->put_page(childp);
++	}
  
- struct mmu_notifier_ops {
- 	/*
-@@ -122,6 +124,10 @@ struct mmu_notifier_ops {
- 			  struct mm_struct *mm,
- 			  unsigned long address);
- 
-+	int (*test_clear_young)(struct mmu_notifier *mn, struct mm_struct *mm,
-+				unsigned long start, unsigned long end,
-+				bool clear, unsigned long *bitmap);
-+
- 	/*
- 	 * change_pte is called in cases that pte mapping to page is changed:
- 	 * for example, when ksm remaps pte to point to a new shared page.
-@@ -392,6 +398,9 @@ extern int __mmu_notifier_clear_young(struct mm_struct *mm,
- 				      unsigned long end);
- extern int __mmu_notifier_test_young(struct mm_struct *mm,
- 				     unsigned long address);
-+extern int __mmu_notifier_test_clear_young(struct mm_struct *mm,
-+					   unsigned long start, unsigned long end,
-+					   bool clear, unsigned long *bitmap);
- extern void __mmu_notifier_change_pte(struct mm_struct *mm,
- 				      unsigned long address, pte_t pte);
- extern int __mmu_notifier_invalidate_range_start(struct mmu_notifier_range *r);
-@@ -440,6 +449,35 @@ static inline int mmu_notifier_test_young(struct mm_struct *mm,
  	return 0;
  }
- 
-+/*
-+ * mmu_notifier_test_clear_young() returns nonzero if any of the KVM PTEs within
-+ * a given range was young. Specifically, it returns MMU_NOTIFIER_RANGE_LOCKLESS
-+ * if the fast path was successful, MMU_NOTIFIER_RANGE_YOUNG otherwise.
-+ *
-+ * The last parameter to the function is a bitmap and only the fast path
-+ * supports it: if it is NULL, the function falls back to the slow path if the
-+ * fast path was unsuccessful; otherwise, the function bails out.
-+ *
-+ * The bitmap has the following specifications:
-+ * 1. The number of bits should be at least (end-start)/PAGE_SIZE.
-+ * 2. The offset of each bit should be relative to the end, i.e., the offset
-+ *    corresponding to addr should be (end-addr)/PAGE_SIZE-1. This is convenient
-+ *    for batching while forward looping.
-+ *
-+ * When testing, this function sets the corresponding bit in the bitmap for each
-+ * young KVM PTE. When clearing, this function clears the accessed bit for each
-+ * young KVM PTE whose corresponding bit in the bitmap is set.
-+ */
-+static inline int mmu_notifier_test_clear_young(struct mm_struct *mm,
-+						unsigned long start, unsigned long end,
-+						bool clear, unsigned long *bitmap)
-+{
-+	if (mm_has_notifiers(mm))
-+		return __mmu_notifier_test_clear_young(mm, start, end, clear, bitmap);
-+
-+	return 0;
-+}
-+
- static inline void mmu_notifier_change_pte(struct mm_struct *mm,
- 					   unsigned long address, pte_t pte)
- {
-@@ -684,12 +722,26 @@ static inline int mmu_notifier_clear_flush_young(struct mm_struct *mm,
- 	return 0;
+diff --git a/arch/arm64/kvm/mmu.c b/arch/arm64/kvm/mmu.c
+index 3b9d4d24c361..c3b3e2afe26f 100644
+--- a/arch/arm64/kvm/mmu.c
++++ b/arch/arm64/kvm/mmu.c
+@@ -172,6 +172,21 @@ static int kvm_host_page_count(void *addr)
+ 	return page_count(virt_to_page(addr));
  }
  
-+static inline int mmu_notifier_clear_young(struct mm_struct *mm,
-+					   unsigned long start,
-+					   unsigned long end)
++static void kvm_s2_rcu_put_page(struct rcu_head *head)
 +{
-+	return 0;
++	put_page(container_of(head, struct page, rcu_head));
 +}
 +
- static inline int mmu_notifier_test_young(struct mm_struct *mm,
- 					  unsigned long address)
++static void kvm_s2_put_page_rcu(void *addr)
++{
++	struct page *page = virt_to_page(addr);
++
++	if (kvm_host_page_count(addr) == 1)
++		kvm_account_pgtable_pages(addr, -1);
++
++	call_rcu(&page->rcu_head, kvm_s2_rcu_put_page);
++}
++
+ static phys_addr_t kvm_host_pa(void *addr)
  {
- 	return 0;
+ 	return __pa(addr);
+@@ -704,6 +719,7 @@ static struct kvm_pgtable_mm_ops kvm_s2_mm_ops = {
+ 	.free_removed_table	= stage2_free_removed_table,
+ 	.get_page		= kvm_host_get_page,
+ 	.put_page		= kvm_s2_put_page,
++	.put_page_rcu		= kvm_s2_put_page_rcu,
+ 	.page_count		= kvm_host_page_count,
+ 	.phys_to_virt		= kvm_host_va,
+ 	.virt_to_phys		= kvm_host_pa,
+@@ -1877,7 +1893,6 @@ void kvm_arch_memslots_updated(struct kvm *kvm, u64 gen)
+ 
+ void kvm_arch_flush_shadow_all(struct kvm *kvm)
+ {
+-	kvm_free_stage2_pgd(&kvm->arch.mmu);
  }
  
-+static inline int mmu_notifier_test_clear_young(struct mm_struct *mm,
-+						unsigned long start, unsigned long end,
-+						bool clear, unsigned long *bitmap)
-+{
-+	return 0;
-+}
-+
- static inline void mmu_notifier_change_pte(struct mm_struct *mm,
- 					   unsigned long address, pte_t pte)
- {
-diff --git a/mm/mmu_notifier.c b/mm/mmu_notifier.c
-index 50c0dde1354f..7e6aba4bddcb 100644
---- a/mm/mmu_notifier.c
-+++ b/mm/mmu_notifier.c
-@@ -424,6 +424,30 @@ int __mmu_notifier_test_young(struct mm_struct *mm,
- 	return young;
- }
- 
-+int __mmu_notifier_test_clear_young(struct mm_struct *mm,
-+				    unsigned long start, unsigned long end,
-+				    bool clear, unsigned long *bitmap)
-+{
-+	int idx;
-+	struct mmu_notifier *mn;
-+	int young = 0;
-+
-+	idx = srcu_read_lock(&srcu);
-+
-+	hlist_for_each_entry_srcu(mn, &mm->notifier_subscriptions->list, hlist,
-+				  srcu_read_lock_held(&srcu)) {
-+		if (mn->ops->test_clear_young)
-+			young |= mn->ops->test_clear_young(mn, mm, start, end, clear, bitmap);
-+
-+		if (young && !clear)
-+			break;
-+	}
-+
-+	srcu_read_unlock(&srcu, idx);
-+
-+	return young;
-+}
-+
- void __mmu_notifier_change_pte(struct mm_struct *mm, unsigned long address,
- 			       pte_t pte)
- {
-diff --git a/virt/kvm/kvm_main.c b/virt/kvm/kvm_main.c
-index 51e4882d0873..31ee58754b19 100644
---- a/virt/kvm/kvm_main.c
-+++ b/virt/kvm/kvm_main.c
-@@ -541,6 +541,7 @@ typedef void (*on_lock_fn_t)(struct kvm *kvm, unsigned long start,
- typedef void (*on_unlock_fn_t)(struct kvm *kvm);
- 
- struct kvm_hva_range {
-+	void *args;
- 	unsigned long start;
- 	unsigned long end;
- 	pte_t pte;
-@@ -549,6 +550,7 @@ struct kvm_hva_range {
- 	on_unlock_fn_t on_unlock;
- 	bool flush_on_ret;
- 	bool may_block;
-+	bool lockless;
- };
- 
- /*
-@@ -602,6 +604,8 @@ static __always_inline int __kvm_handle_hva_range(struct kvm *kvm,
- 			hva_end = min(range->end, slot->userspace_addr +
- 						  (slot->npages << PAGE_SHIFT));
- 
-+			gfn_range.args = range->args;
-+
- 			/*
- 			 * To optimize for the likely case where the address
- 			 * range is covered by zero or one memslots, don't
-@@ -619,7 +623,7 @@ static __always_inline int __kvm_handle_hva_range(struct kvm *kvm,
- 			gfn_range.end = hva_to_gfn_memslot(hva_end + PAGE_SIZE - 1, slot);
- 			gfn_range.slot = slot;
- 
--			if (!locked) {
-+			if (!range->lockless && !locked) {
- 				locked = true;
- 				KVM_MMU_LOCK(kvm);
- 				if (!IS_KVM_NULL_FN(range->on_lock))
-@@ -628,6 +632,9 @@ static __always_inline int __kvm_handle_hva_range(struct kvm *kvm,
- 					break;
- 			}
- 			ret |= range->handler(kvm, &gfn_range);
-+
-+			if (range->lockless && ret)
-+				break;
- 		}
- 	}
- 
-@@ -880,6 +887,72 @@ static int kvm_mmu_notifier_test_young(struct mmu_notifier *mn,
- 					     kvm_test_age_gfn);
- }
- 
-+struct test_clear_young_args {
-+	unsigned long *bitmap;
-+	unsigned long end;
-+	bool clear;
-+	bool young;
-+};
-+
-+bool kvm_should_clear_young(struct kvm_gfn_range *range, gfn_t gfn)
-+{
-+	struct test_clear_young_args *args = range->args;
-+
-+	VM_WARN_ON_ONCE(gfn < range->start || gfn >= range->end);
-+
-+	args->young = true;
-+
-+	if (args->bitmap) {
-+		int offset = hva_to_gfn_memslot(args->end - 1, range->slot) - gfn;
-+
-+		if (args->clear)
-+			return test_bit(offset, args->bitmap);
-+
-+		__set_bit(offset, args->bitmap);
-+	}
-+
-+	return args->clear;
-+}
-+
-+static int kvm_mmu_notifier_test_clear_young(struct mmu_notifier *mn, struct mm_struct *mm,
-+					     unsigned long start, unsigned long end,
-+					     bool clear, unsigned long *bitmap)
-+{
-+	struct kvm *kvm = mmu_notifier_to_kvm(mn);
-+	struct kvm_hva_range range = {
-+		.start		= start,
-+		.end		= end,
-+		.on_lock	= (void *)kvm_null_fn,
-+		.on_unlock	= (void *)kvm_null_fn,
-+	};
-+
-+	trace_kvm_age_hva(start, end);
-+
-+	if (kvm_arch_has_test_clear_young()) {
-+		struct test_clear_young_args args = {
-+			.bitmap	= bitmap,
-+			.end	= end,
-+			.clear	= clear,
-+		};
-+
-+		range.args = &args;
-+		range.lockless = true;
-+		range.handler = kvm_arch_test_clear_young;
-+
-+		if (!__kvm_handle_hva_range(kvm, &range))
-+			return args.young ? MMU_NOTIFIER_RANGE_LOCKLESS : 0;
-+	}
-+
-+	if (bitmap)
-+		return 0;
-+
-+	range.args = NULL;
-+	range.lockless = false;
-+	range.handler = clear ? kvm_age_gfn : kvm_test_age_gfn;
-+
-+	return __kvm_handle_hva_range(kvm, &range) ? MMU_NOTIFIER_RANGE_YOUNG : 0;
-+}
-+
- static void kvm_mmu_notifier_release(struct mmu_notifier *mn,
- 				     struct mm_struct *mm)
- {
-@@ -898,6 +971,7 @@ static const struct mmu_notifier_ops kvm_mmu_notifier_ops = {
- 	.clear_flush_young	= kvm_mmu_notifier_clear_flush_young,
- 	.clear_young		= kvm_mmu_notifier_clear_young,
- 	.test_young		= kvm_mmu_notifier_test_young,
-+	.test_clear_young	= kvm_mmu_notifier_test_clear_young,
- 	.change_pte		= kvm_mmu_notifier_change_pte,
- 	.release		= kvm_mmu_notifier_release,
- };
+ void kvm_arch_flush_shadow_memslot(struct kvm *kvm,
 -- 
 2.41.0.rc0.172.g3f132b7071-goog
 
