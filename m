@@ -2,139 +2,94 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E6E72C7EE23
-	for <linux-trace-kernel@archiver.kernel.org>; Fri, 26 May 2023 10:03:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F9EFC77B7A
+	for <linux-trace-kernel@archiver.kernel.org>; Fri, 26 May 2023 15:24:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S242905AbjEZKDq (ORCPT
+        id S244125AbjEZPYL (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Fri, 26 May 2023 06:03:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54758 "EHLO
+        Fri, 26 May 2023 11:24:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59064 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236870AbjEZKDo (ORCPT
+        with ESMTP id S244115AbjEZPX5 (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Fri, 26 May 2023 06:03:44 -0400
-Received: from mail-pg1-f195.google.com (mail-pg1-f195.google.com [209.85.215.195])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CE6969E;
-        Fri, 26 May 2023 03:03:42 -0700 (PDT)
-Received: by mail-pg1-f195.google.com with SMTP id 41be03b00d2f7-53f158ecfe1so375065a12.0;
-        Fri, 26 May 2023 03:03:42 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1685095422; x=1687687422;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=MnY7ZrluZEkGW0ej4AdD1ihrdQ0ygMRjBp2cq55eo6Q=;
-        b=kFYWhREc5O5izIs4i+WPYE2orD6+B2c5frnBYsIVKrJlmU6ftaeuTtUmg2KQVzcTa3
-         sqaARrnYkTf5B4JoAc8l4R7vlc6VK3mSA6685XerQOxdp6He4WGNLOd3Lte1UdnpU4sb
-         Ym0rRoDRWlcBODwplafDZRx3rjfMeze/LxjIgm1v7jTVxvAY8uYddAUetPlS/y7+8RYv
-         OJPy3lV3+lpJRq/uJ20djAPzL6z5i941hgYJ4GwPsmCfL6+o5MyHaiZmNmnBGHy/3Aji
-         Q9+E0s+AdJWTfKYubMFKeHnSoiQ5FP286MfaMv16yguH/Cv8hXpyIEaZoId4iAtq+Jhn
-         HyXw==
-X-Gm-Message-State: AC+VfDyVxfZ4EnyB78gj5ifO9qGf3EpCkEG+Esmj5xt3IHL4QuqmjhCQ
-        MhXJj2dMvMhM5i2s9mOXkQ==
-X-Google-Smtp-Source: ACHHUZ7hjKQq2/mdMWJ09Ulse7m2pM6MN+XnX0EaQ4cHGBA5G6EjrNFoTMPaOE/4NmOirOhvJCOTig==
-X-Received: by 2002:a17:902:740b:b0:1b0:99:a22c with SMTP id g11-20020a170902740b00b001b00099a22cmr1859061pll.34.1685095422009;
-        Fri, 26 May 2023 03:03:42 -0700 (PDT)
-Received: from localhost.localdomain ([116.128.244.169])
-        by smtp.gmail.com with ESMTPSA id y14-20020a17090322ce00b001a800e03cf9sm2875892plg.256.2023.05.26.03.03.39
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 26 May 2023 03:03:41 -0700 (PDT)
-From:   sunliming <sunliming@kylinos.cn>
-To:     rostedt@goodmis.org, mhiramat@kernel.org, beaub@linux.microsoft.com
-Cc:     linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
-        linux-kselftest@vger.kernel.org, sunliming <sunliming@kylinos.cn>
-Subject: [PATCH V2] tracing/user_events: Prevent same name but different args event
-Date:   Fri, 26 May 2023 18:03:36 +0800
-Message-Id: <20230526100336.76934-1-sunliming@kylinos.cn>
-X-Mailer: git-send-email 2.25.1
+        Fri, 26 May 2023 11:23:57 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E2447E5E;
+        Fri, 26 May 2023 08:23:40 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id E0A48650E5;
+        Fri, 26 May 2023 15:23:39 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4A6B7C433D2;
+        Fri, 26 May 2023 15:23:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1685114619;
+        bh=sSJgHGhspOdtf9IZ1Lw+Z6mc2TQf02OhlSH49aYKpf0=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=TgkbPW2CX2koGBwD13BHHB9ycraKbxKDJj124gfbGxpLSf5dZkRE09eYfW56u16fp
+         mBZtQ2cwEruSCMHVE/APUDJ/Lt49KSwqxwikIOE/GHGE/Gi9gr7IxD0stinVwOUNiP
+         mplAxxjn6h88TxOKI467EUM0nvdESpqO1RBjRP7v9fJshcPggf3tG89akIJTTIQ1Iq
+         6UVr8KzKdjej2szrcuaBDW6rRe6HMMsKL7VOIoMPy5GhqLnEM8nWLoCQ6e3eEbx6uc
+         +rFVjzydlRhdGMCShhxBgJhKjSzLtV/lnzwMtDlNYJENmR2EvtepFYNaf/yl70KbEh
+         kD+vbnE+4oKqA==
+Date:   Fri, 26 May 2023 16:23:33 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Sasha Levin <sashal@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Shuah Khan <skhan@linuxfoundation.org>, shuah@kernel.org,
+        linux-trace-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org
+Subject: Re: [PATCH AUTOSEL 6.3 07/67] selftests/ftrace: Improve integration
+ with kselftest runner
+Message-ID: <276d5748-40c4-43b4-9241-9d30a5a64d0e@sirena.org.uk>
+References: <20230525183144.1717540-1-sashal@kernel.org>
+ <20230525183144.1717540-7-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="uFSV+DBTeD1SzadS"
+Content-Disposition: inline
+In-Reply-To: <20230525183144.1717540-7-sashal@kernel.org>
+X-Cookie: A Smith & Wesson beats four aces.
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-User processes register name_args for events. If the same name but different
-args event are registered. The trace outputs of second event are printed
-as the first event. This is incorrect.
 
-Return EADDRINUSE back to the user process if the same name but different args
-event has being registered.
+--uFSV+DBTeD1SzadS
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Signed-off-by: sunliming <sunliming@kylinos.cn>
----
- kernel/trace/trace_events_user.c              | 34 +++++++++++++++----
- .../selftests/user_events/ftrace_test.c       |  6 ++++
- 2 files changed, 33 insertions(+), 7 deletions(-)
+On Thu, May 25, 2023 at 02:30:44PM -0400, Sasha Levin wrote:
+> From: Mark Brown <broonie@kernel.org>
+>=20
+> [ Upstream commit dbcf76390eb9a65d5d0c37b0cd57335218564e37 ]
+>=20
+> The ftrace selftests do not currently produce KTAP output, they produce a
+> custom format much nicer for human consumption. This means that when run =
+in
+> automated test systems we just get a single result for the suite as a who=
+le
+> rather than recording results for individual test cases, making it harder
+> to look at the test data and masking things like inappropriate skips.
 
-diff --git a/kernel/trace/trace_events_user.c b/kernel/trace/trace_events_user.c
-index b1ecd7677642..bd455052ccd0 100644
---- a/kernel/trace/trace_events_user.c
-+++ b/kernel/trace/trace_events_user.c
-@@ -1753,6 +1753,8 @@ static int user_event_parse(struct user_event_group *group, char *name,
- 	int ret;
- 	u32 key;
- 	struct user_event *user;
-+	int argc = 0;
-+	char **argv;
- 
- 	/* Prevent dyn_event from racing */
- 	mutex_lock(&event_mutex);
-@@ -1760,13 +1762,31 @@ static int user_event_parse(struct user_event_group *group, char *name,
- 	mutex_unlock(&event_mutex);
- 
- 	if (user) {
--		*newuser = user;
--		/*
--		 * Name is allocated by caller, free it since it already exists.
--		 * Caller only worries about failure cases for freeing.
--		 */
--		kfree(name);
--		return 0;
-+		if (args) {
-+			argv = argv_split(GFP_KERNEL, args, &argc);
-+			if (!argv)
-+				return -ENOMEM;
-+
-+			ret = user_fields_match(user, argc, (const char **)argv);
-+			argv_free(argv);
-+
-+		} else
-+			ret = list_empty(&user->fields);
-+
-+		if (ret) {
-+			*newuser = user;
-+			/*
-+			 * Name is allocated by caller, free it since it already exists.
-+			 * Caller only worries about failure cases for freeing.
-+			 */
-+			kfree(name);
-+			ret = 0;
-+		} else {
-+			refcount_dec(&user->refcnt);
-+			ret = -EADDRINUSE;
-+		}
-+
-+		return ret;
- 	}
- 
- 	user = kzalloc(sizeof(*user), GFP_KERNEL_ACCOUNT);
-diff --git a/tools/testing/selftests/user_events/ftrace_test.c b/tools/testing/selftests/user_events/ftrace_test.c
-index 7c99cef94a65..6e8c4b47281c 100644
---- a/tools/testing/selftests/user_events/ftrace_test.c
-+++ b/tools/testing/selftests/user_events/ftrace_test.c
-@@ -228,6 +228,12 @@ TEST_F(user, register_events) {
- 	ASSERT_EQ(0, ioctl(self->data_fd, DIAG_IOCSREG, &reg));
- 	ASSERT_EQ(0, reg.write_index);
- 
-+	/* Multiple registers to same name but different args should fail */
-+	reg.enable_bit = 29;
-+	reg.name_args = (__u64)"__test_event u32 field1;";
-+	ASSERT_EQ(-1, ioctl(self->data_fd, DIAG_IOCSREG, &reg));
-+	ASSERT_EQ(EADDRINUSE, errno);
-+
- 	/* Ensure disabled */
- 	self->enable_fd = open(enable_file, O_RDWR);
- 	ASSERT_NE(-1, self->enable_fd);
--- 
-2.25.1
+This seems to be very much a new feature rather than a fix?
 
+--uFSV+DBTeD1SzadS
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmRwzvUACgkQJNaLcl1U
+h9D7LggAgOwulEbrQyGLRizOAvifu4pqbEIPNrfraY7R4yMLY92GKTHnomcrhJti
+SPWK4+mWzqJBlkgQy7fH8rGSoQB2rBo8RQ1qnWv85nkLiVF5K+uFUJVJKuBVo1k6
+X8YMdEzvgBjWuKqCeAYKEsXiGOxm+dxgVm+pLwfnZDt0QDSkAGkLTRIZpps9THCT
+UgE5GVCfklHhzT0zqXabEcYMBwc6+uFlXVtLxac5Z0I4ju2BfTHGRAOALdRP/MOM
+DKGo804L9VERy35Xs+Yf/eRHfRnI4fQA7UYGYXGel+oAXps1H8InhFWRNDbpju6n
+zSAwhu421iD24Eh68Kpmcs54I4SE7Q==
+=sfjq
+-----END PGP SIGNATURE-----
+
+--uFSV+DBTeD1SzadS--
