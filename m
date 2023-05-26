@@ -2,495 +2,218 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DAF2DC77B73
-	for <linux-trace-kernel@archiver.kernel.org>; Fri, 26 May 2023 19:39:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B48CC77B7A
+	for <linux-trace-kernel@archiver.kernel.org>; Fri, 26 May 2023 23:44:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230398AbjEZTi7 (ORCPT
+        id S230226AbjEZXom (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Fri, 26 May 2023 15:38:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55588 "EHLO
+        Fri, 26 May 2023 19:44:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58688 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229626AbjEZTi6 (ORCPT
+        with ESMTP id S229716AbjEZXom (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Fri, 26 May 2023 15:38:58 -0400
-Received: from mail-pf1-x430.google.com (mail-pf1-x430.google.com [IPv6:2607:f8b0:4864:20::430])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D00999B
-        for <linux-trace-kernel@vger.kernel.org>; Fri, 26 May 2023 12:38:56 -0700 (PDT)
-Received: by mail-pf1-x430.google.com with SMTP id d2e1a72fcca58-64d3491609fso1038838b3a.3
-        for <linux-trace-kernel@vger.kernel.org>; Fri, 26 May 2023 12:38:56 -0700 (PDT)
+        Fri, 26 May 2023 19:44:42 -0400
+Received: from mail-yb1-xb4a.google.com (mail-yb1-xb4a.google.com [IPv6:2607:f8b0:4864:20::b4a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9FBB4189
+        for <linux-trace-kernel@vger.kernel.org>; Fri, 26 May 2023 16:44:40 -0700 (PDT)
+Received: by mail-yb1-xb4a.google.com with SMTP id 3f1490d57ef6-ba8c3186735so2747339276.3
+        for <linux-trace-kernel@vger.kernel.org>; Fri, 26 May 2023 16:44:40 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1685129936; x=1687721936;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=3l6Kc6vQODAomS0iGUGAjcuJW922K8qw6M+SstzYSLs=;
-        b=HqvyLVRChHY3UO8I6ghrU2ML9KBgDNomZbZjuwNSTA9BvoMjromMxp9n6dwORJakCz
-         z2Pkm4LCDMzJ7B6YVLT4W8an4Ty4BmZ0ESX5JjC43Az2pQB+5oKIYqUO9EBS+N+Er18z
-         ke+3W0QM0dkP2QvYJQAbkH9crR4+9PP6CrZJc=
+        d=google.com; s=20221208; t=1685144680; x=1687736680;
+        h=cc:to:from:subject:mime-version:message-id:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=p2/B2gpADUVSH4+1+wdvhwwOJ3ZLS46dsub4yrmfIrY=;
+        b=gaII7xm1rKF0WflE0kwbmo9D1wFCFrrD6VH1zQ9TXwAabssHzzxcZKDpxFjf1Ep6KT
+         Z+Qr7BXS8s0v9zHiHqeN2dE3WQB88ARaW8AH1iSDJCS3cr45iCn1L9lVI9ZPcsS480+k
+         wbmFDYCaUAqowUGhuKg1M8XmNsmQHtwbdRXfkKNKftJJVvjlpX0Njj/C3Keo2/5Fq3Ip
+         rJb1BWaFB48m4r9hq6xevdAWxHKsOWbdYQ3JRHwN28GN7dhocxPWoxBC2UOWVDxNAvVb
+         KELlyeUjKRt7k8dTr6Xo/3BcetEN0kRAapuiQFxtxhRi3ZR8WdPaedyJyCpfkgSiKRr3
+         Vpww==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1685129936; x=1687721936;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=3l6Kc6vQODAomS0iGUGAjcuJW922K8qw6M+SstzYSLs=;
-        b=QbI2kBGSQtP36S+hKtISWB+lW4Uw5GTCobd7H4Gv5ECvkEvcL6nyR2dz7qfe9/N9nj
-         FskFvRwEY0kDGtxO8kM5sx6n/4gxhlJLzwbRHIVvx+gVqoAgD1WYFLbqGNB4XlY4fKJm
-         WjbkUQ8tqL0Y3jxKHHBUHtOAohIjl4rQ7gUjmhC3fq2ZHXxsD7R58BceDsRV5rW5hAiy
-         FfQEFv2v+op0gwVSXWbiU0Ku4Q/RTuWXrBofCZBv046aE/TsrFSg873pdCPTjNBi4MRO
-         MZ4hhIyDLdrCK3CP4ShUgryHYYC7ZwG+bCJ5BY0Y9aH0gzjqukewj0eIMCFGMMXztBCJ
-         CXTg==
-X-Gm-Message-State: AC+VfDwn6I8NvS/lPnZ9BmqBV8vOKJszrD7oABty+fXwJNQ783pv9u0f
-        k/l3fi/p6JBFj9TLGMbwskdTYe1Qt/mhNRX1bDYQ/w==
-X-Google-Smtp-Source: ACHHUZ4a3DwDVo1a2lffMB8xS+rLpDuciOpZ4QgklcuYp793xpHxyggusOC2rmudD1Qv2LRnN6QGHgMaGqIfTrxrvC8=
-X-Received: by 2002:a05:6a20:8e0b:b0:105:94e5:f5c2 with SMTP id
- y11-20020a056a208e0b00b0010594e5f5c2mr661415pzj.13.1685129936293; Fri, 26 May
- 2023 12:38:56 -0700 (PDT)
-MIME-Version: 1.0
-References: <168507466597.913472.10572827237387849017.stgit@mhiramat.roam.corp.google.com>
- <168507469754.913472.6112857614708350210.stgit@mhiramat.roam.corp.google.com>
-In-Reply-To: <168507469754.913472.6112857614708350210.stgit@mhiramat.roam.corp.google.com>
-From:   Florent Revest <revest@chromium.org>
-Date:   Fri, 26 May 2023 21:38:44 +0200
-Message-ID: <CABRcYm+esb8J2O1v6=C+h+HSa5NxraPUgo63w7-iZj0CXbpusg@mail.gmail.com>
-Subject: Re: [PATCH v13 03/12] tracing/probes: Add fprobe events for tracing
- function entry and exit.
-To:     "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
-Cc:     linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        d=1e100.net; s=20221208; t=1685144680; x=1687736680;
+        h=cc:to:from:subject:mime-version:message-id:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=p2/B2gpADUVSH4+1+wdvhwwOJ3ZLS46dsub4yrmfIrY=;
+        b=ADL4lk6dU6fA7BNKv4J76FfcHq9j8/B/W+JBnmyiwF+BVizr72BKE9W1U+XoZPXbui
+         uEw3BaL/uQqUVOpzE+JWJvNYp74Dlgh1SoVp3WH0D5aMRL5csD2nfoQ/7Bvl9yox2PJS
+         QJ1UFNZtYW6lKk17zYGQp2QxvPCsOKDGeMRteRO1dwBlAo+VT4qEa0bFk+/V2IgftKDa
+         lgnxXIRrjOoKLZlkeRk4DzYn6KRMM4VW5bXWqv3ywmI0uwcfGAQizOJOJFo2lPWPDLC1
+         aBg+Re9Gu9VJKdOQLiV2H/w0MoeZe1RZz8hkWb1rXgGpE1JyXmdIdyLf63KOsCdf+WOQ
+         +EDQ==
+X-Gm-Message-State: AC+VfDxebTRvqUNCDEOTk3nM2VujpgmNMdhgbg4sHlOj4iE6NdVHfrN8
+        ZR+JFx5nH5KiSDtSwox6WmkrDU9Rz3A=
+X-Google-Smtp-Source: ACHHUZ7YDXs22loXI9Hn4p7O2u7mz3EIOuiyK6CgImdELnj21szlSQpHCqRMIQPES8e6xN/3760vCEBuevA=
+X-Received: from yuzhao.bld.corp.google.com ([2620:15c:183:200:910f:8a15:592b:2087])
+ (user=yuzhao job=sendgmr) by 2002:a25:7343:0:b0:bad:99d:f086 with SMTP id
+ o64-20020a257343000000b00bad099df086mr1339084ybc.10.1685144679852; Fri, 26
+ May 2023 16:44:39 -0700 (PDT)
+Date:   Fri, 26 May 2023 17:44:25 -0600
+Message-Id: <20230526234435.662652-1-yuzhao@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.41.0.rc0.172.g3f132b7071-goog
+Subject: [PATCH mm-unstable v2 00/10] mm/kvm: locklessly clear the accessed bit
+From:   Yu Zhao <yuzhao@google.com>
+To:     Andrew Morton <akpm@linux-foundation.org>,
+        Paolo Bonzini <pbonzini@redhat.com>
+Cc:     Alistair Popple <apopple@nvidia.com>,
+        Anup Patel <anup@brainfault.org>,
+        Ben Gardon <bgardon@google.com>,
+        Borislav Petkov <bp@alien8.de>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Chao Peng <chao.p.peng@linux.intel.com>,
+        Christophe Leroy <christophe.leroy@csgroup.eu>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Fabiano Rosas <farosas@linux.ibm.com>,
+        Gaosheng Cui <cuigaosheng1@huawei.com>,
+        Gavin Shan <gshan@redhat.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
+        James Morse <james.morse@arm.com>,
+        "Jason A. Donenfeld" <Jason@zx2c4.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Marc Zyngier <maz@kernel.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Michael Larabel <michael@michaellarabel.com>,
+        Mike Rapoport <rppt@kernel.org>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        Oliver Upton <oliver.upton@linux.dev>,
+        Paul Mackerras <paulus@ozlabs.org>,
+        Peter Xu <peterx@redhat.com>,
+        Sean Christopherson <seanjc@google.com>,
         Steven Rostedt <rostedt@goodmis.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Martin KaFai Lau <martin.lau@linux.dev>, bpf@vger.kernel.org,
-        Bagas Sanjaya <bagasdotme@gmail.com>
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Thomas Huth <thuth@redhat.com>, Will Deacon <will@kernel.org>,
+        Zenghui Yu <yuzenghui@huawei.com>, kvmarm@lists.linux.dev,
+        kvm@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org, linuxppc-dev@lists.ozlabs.org,
+        linux-trace-kernel@vger.kernel.org, x86@kernel.org,
+        linux-mm@google.com, Yu Zhao <yuzhao@google.com>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On Fri, May 26, 2023 at 6:18=E2=80=AFAM Masami Hiramatsu (Google)
-<mhiramat@kernel.org> wrote:
->
-> [...] Since
-> CONFIG_KPROBES_ON_FTRACE requires the CONFIG_DYNAMIC_FTRACE_WITH_REGS,
-> it is not available if the architecture only supports
-> CONFIG_DYNAMIC_FTRACE_WITH_ARGS. And that means kprobe events can not
-> probe function entry/exit effectively on such architecture.
-> But this can be solved if the dynamic events supports fprobe events.
+TLDR
+====
+This patchset adds a fast path to clear the accessed bit without
+taking kvm->mmu_lock. It can significantly improve the performance of
+guests when the host is under heavy memory pressure.
 
-Currently CONFIG_FPROBE also requires CONFIG_DYNAMIC_FTRACE_WITH_REGS
-so iiuc this will only be true when we'll have migrated fprobe to use
-ftrace_regs instead of pt_regs right ?
+ChromeOS has been using a similar approach [1] since mid 2021 and it
+was proven successful on tens of millions devices.
 
-We discussed having fprobe use ftrace_regs instead of pt_regs in the
-past and I even had a proof of concept branch at one point but this
-patch seems to make this transition quite a bit harder. Have you tried
-to make fprobe work on ftrace_regs on top of this patch ?
+This v2 addressed previous requests [2] on refactoring code, removing
+inaccurate/redundant texts, etc.
 
-> diff --git a/kernel/trace/trace_fprobe.c b/kernel/trace/trace_fprobe.c
-> new file mode 100644
-> index 000000000000..48dbbc72b7dd
-> --- /dev/null
-> +++ b/kernel/trace/trace_fprobe.c
-> @@ -0,0 +1,1053 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * Fprobe-based tracing events
-> + * Copyright (C) 2022 Google LLC.
-> + */
-> +#define pr_fmt(fmt)    "trace_fprobe: " fmt
-> +
-> +#include <linux/fprobe.h>
-> +#include <linux/module.h>
-> +#include <linux/rculist.h>
-> +#include <linux/security.h>
-> +#include <linux/uaccess.h>
-> +
-> +#include "trace_dynevent.h"
-> +#include "trace_probe.h"
-> +#include "trace_probe_kernel.h"
-> +#include "trace_probe_tmpl.h"
-> +
-> +#define FPROBE_EVENT_SYSTEM "fprobes"
-> +#define RETHOOK_MAXACTIVE_MAX 4096
-> +
-> +static int trace_fprobe_create(const char *raw_command);
-> +static int trace_fprobe_show(struct seq_file *m, struct dyn_event *ev);
-> +static int trace_fprobe_release(struct dyn_event *ev);
-> +static bool trace_fprobe_is_busy(struct dyn_event *ev);
-> +static bool trace_fprobe_match(const char *system, const char *event,
-> +                       int argc, const char **argv, struct dyn_event *ev=
-);
-> +
-> +static struct dyn_event_operations trace_fprobe_ops =3D {
-> +       .create =3D trace_fprobe_create,
-> +       .show =3D trace_fprobe_show,
-> +       .is_busy =3D trace_fprobe_is_busy,
-> +       .free =3D trace_fprobe_release,
-> +       .match =3D trace_fprobe_match,
-> +};
-> +
-> +/*
-> + * Fprobe event core functions
-> + */
-> +struct trace_fprobe {
-> +       struct dyn_event        devent;
-> +       struct fprobe           fp;
-> +       const char              *symbol;
-> +       struct trace_probe      tp;
-> +};
-> +
-> +static bool is_trace_fprobe(struct dyn_event *ev)
-> +{
-> +       return ev->ops =3D=3D &trace_fprobe_ops;
-> +}
-> +
-> +static struct trace_fprobe *to_trace_fprobe(struct dyn_event *ev)
-> +{
-> +       return container_of(ev, struct trace_fprobe, devent);
-> +}
-> +
-> +/**
-> + * for_each_trace_fprobe - iterate over the trace_fprobe list
-> + * @pos:       the struct trace_fprobe * for each entry
-> + * @dpos:      the struct dyn_event * to use as a loop cursor
-> + */
-> +#define for_each_trace_fprobe(pos, dpos)       \
-> +       for_each_dyn_event(dpos)                \
-> +               if (is_trace_fprobe(dpos) && (pos =3D to_trace_fprobe(dpo=
-s)))
-> +
-> +static bool trace_fprobe_is_return(struct trace_fprobe *tf)
-> +{
-> +       return tf->fp.exit_handler !=3D NULL;
-> +}
-> +
-> +static const char *trace_fprobe_symbol(struct trace_fprobe *tf)
-> +{
-> +       return tf->symbol ? tf->symbol : "unknown";
-> +}
-> +
-> +static bool trace_fprobe_is_busy(struct dyn_event *ev)
-> +{
-> +       struct trace_fprobe *tf =3D to_trace_fprobe(ev);
-> +
-> +       return trace_probe_is_enabled(&tf->tp);
-> +}
-> +
-> +static bool trace_fprobe_match_command_head(struct trace_fprobe *tf,
-> +                                           int argc, const char **argv)
-> +{
-> +       char buf[MAX_ARGSTR_LEN + 1];
-> +
-> +       if (!argc)
-> +               return true;
-> +
-> +       snprintf(buf, sizeof(buf), "%s", trace_fprobe_symbol(tf));
-> +       if (strcmp(buf, argv[0]))
-> +               return false;
-> +       argc--; argv++;
-> +
-> +       return trace_probe_match_command_args(&tf->tp, argc, argv);
-> +}
-> +
-> +static bool trace_fprobe_match(const char *system, const char *event,
-> +                       int argc, const char **argv, struct dyn_event *ev=
-)
-> +{
-> +       struct trace_fprobe *tf =3D to_trace_fprobe(ev);
-> +
-> +       if (event[0] !=3D '\0' && strcmp(trace_probe_name(&tf->tp), event=
-))
-> +               return false;
-> +
-> +       if (system && strcmp(trace_probe_group_name(&tf->tp), system))
-> +               return false;
-> +
-> +       return trace_fprobe_match_command_head(tf, argc, argv);
-> +}
-> +
-> +static bool trace_fprobe_is_registered(struct trace_fprobe *tf)
-> +{
-> +       return fprobe_is_registered(&tf->fp);
-> +}
-> +
-> +/*
-> + * Note that we don't verify the fetch_insn code, since it does not come
-> + * from user space.
-> + */
-> +static int
-> +process_fetch_insn(struct fetch_insn *code, void *rec, void *dest,
-> +                  void *base)
-> +{
-> +       struct pt_regs *regs =3D rec;
+[1] https://crrev.com/c/2987928
+[2] https://lore.kernel.org/r/20230217041230.2417228-1-yuzhao@google.com/
 
-I gave it a try this week and it was mostly a matter of replacing
-pt_regs with ftrace_regs in this file. Like here for example. Not too
-bad so far.
+Overview
+========
+The goal of this patchset is to optimize the performance of guests
+when the host memory is overcommitted. It focuses on a simple yet
+common case where hardware sets the accessed bit in KVM PTEs and VMs
+are not nested. Complex cases fall back to the existing slow path
+where kvm->mmu_lock is then taken.
 
-> +       unsigned long val;
-> +       int ret;
-> +
-> +retry:
-> +       /* 1st stage: get value from context */
-> +       switch (code->op) {
-> +       case FETCH_OP_STACK:
-> +               val =3D regs_get_kernel_stack_nth(regs, code->param);
+The fast path relies on two techniques to safely clear the accessed
+bit: RCU and CAS. The former protects KVM page tables from being
+freed while the latter clears the accessed bit atomically against
+both the hardware and other software page table walkers.
 
-This does not have a ftrace_regs equivalent at the moment. I suppose
-we could introduce one without too much effort so that's probably ok.
+A new mmu_notifier_ops member, test_clear_young(), supersedes the
+existing clear_young() and test_young(). This extended callback can
+operate on a range of KVM PTEs individually according to a bitmap, if
+the caller provides it.
 
-> +               break;
-> +       case FETCH_OP_STACKP:
-> +               val =3D kernel_stack_pointer(regs);
-> +               break;
-> +       case FETCH_OP_RETVAL:
-> +               val =3D regs_return_value(regs);
-> +               break;
-> +#ifdef CONFIG_HAVE_FUNCTION_ARG_ACCESS_API
-> +       case FETCH_OP_ARG:
-> +               val =3D regs_get_kernel_argument(regs, code->param);
-> +               break;
-> +#endif
-> +       case FETCH_NOP_SYMBOL:  /* Ignore a place holder */
-> +               code++;
-> +               goto retry;
-> +       default:
-> +               ret =3D process_common_fetch_insn(code, &val);
-> +               if (ret < 0)
-> +                       return ret;
-> +       }
-> +       code++;
-> +
-> +       return process_fetch_insn_bottom(code, val, dest, base);
-> +}
-> +NOKPROBE_SYMBOL(process_fetch_insn)
-> +
-> +/* function entry handler */
-> +static nokprobe_inline void
-> +__fentry_trace_func(struct trace_fprobe *tf, unsigned long entry_ip,
-> +                   struct pt_regs *regs,
-> +                   struct trace_event_file *trace_file)
-> +{
-> +       struct fentry_trace_entry_head *entry;
-> +       struct trace_event_call *call =3D trace_probe_event_call(&tf->tp)=
-;
-> +       struct trace_event_buffer fbuffer;
-> +       int dsize;
-> +
-> +       if (WARN_ON_ONCE(call !=3D trace_file->event_call))
-> +               return;
-> +
-> +       if (trace_trigger_soft_disabled(trace_file))
-> +               return;
-> +
-> +       dsize =3D __get_data_size(&tf->tp, regs);
-> +
-> +       entry =3D trace_event_buffer_reserve(&fbuffer, trace_file,
-> +                                          sizeof(*entry) + tf->tp.size +=
- dsize);
-> +       if (!entry)
-> +               return;
-> +
-> +       fbuffer.regs =3D regs;
-> +       entry =3D fbuffer.entry =3D ring_buffer_event_data(fbuffer.event)=
-;
-> +       entry->ip =3D entry_ip;
-> +       store_trace_args(&entry[1], &tf->tp, regs, sizeof(*entry), dsize)=
-;
-> +
-> +       trace_event_buffer_commit(&fbuffer);
-> +}
-> +
-> +static void
-> +fentry_trace_func(struct trace_fprobe *tf, unsigned long entry_ip,
-> +                 struct pt_regs *regs)
-> +{
-> +       struct event_file_link *link;
-> +
-> +       trace_probe_for_each_link_rcu(link, &tf->tp)
-> +               __fentry_trace_func(tf, entry_ip, regs, link->file);
-> +}
-> +NOKPROBE_SYMBOL(fentry_trace_func);
-> +
-> +/* Kretprobe handler */
-> +static nokprobe_inline void
-> +__fexit_trace_func(struct trace_fprobe *tf, unsigned long entry_ip,
-> +                  unsigned long ret_ip, struct pt_regs *regs,
-> +                  struct trace_event_file *trace_file)
-> +{
-> +       struct fexit_trace_entry_head *entry;
-> +       struct trace_event_buffer fbuffer;
-> +       struct trace_event_call *call =3D trace_probe_event_call(&tf->tp)=
-;
-> +       int dsize;
-> +
-> +       if (WARN_ON_ONCE(call !=3D trace_file->event_call))
-> +               return;
-> +
-> +       if (trace_trigger_soft_disabled(trace_file))
-> +               return;
-> +
-> +       dsize =3D __get_data_size(&tf->tp, regs);
-> +
-> +       entry =3D trace_event_buffer_reserve(&fbuffer, trace_file,
-> +                                          sizeof(*entry) + tf->tp.size +=
- dsize);
-> +       if (!entry)
-> +               return;
-> +
-> +       fbuffer.regs =3D regs;
-> +       entry =3D fbuffer.entry =3D ring_buffer_event_data(fbuffer.event)=
-;
-> +       entry->func =3D entry_ip;
-> +       entry->ret_ip =3D ret_ip;
-> +       store_trace_args(&entry[1], &tf->tp, regs, sizeof(*entry), dsize)=
-;
-> +
-> +       trace_event_buffer_commit(&fbuffer);
-> +}
-> +
-> +static void
-> +fexit_trace_func(struct trace_fprobe *tf, unsigned long entry_ip,
-> +                unsigned long ret_ip, struct pt_regs *regs)
-> +{
-> +       struct event_file_link *link;
-> +
-> +       trace_probe_for_each_link_rcu(link, &tf->tp)
-> +               __fexit_trace_func(tf, entry_ip, ret_ip, regs, link->file=
-);
-> +}
-> +NOKPROBE_SYMBOL(fexit_trace_func);
-> +
-> +#ifdef CONFIG_PERF_EVENTS
-> +
-> +static int fentry_perf_func(struct trace_fprobe *tf, unsigned long entry=
-_ip,
-> +                           struct pt_regs *regs)
-> +{
-> +       struct trace_event_call *call =3D trace_probe_event_call(&tf->tp)=
-;
-> +       struct fentry_trace_entry_head *entry;
-> +       struct hlist_head *head;
-> +       int size, __size, dsize;
-> +       int rctx;
-> +
-> +       head =3D this_cpu_ptr(call->perf_events);
-> +       if (hlist_empty(head))
-> +               return 0;
-> +
-> +       dsize =3D __get_data_size(&tf->tp, regs);
-> +       __size =3D sizeof(*entry) + tf->tp.size + dsize;
-> +       size =3D ALIGN(__size + sizeof(u32), sizeof(u64));
-> +       size -=3D sizeof(u32);
-> +
-> +       entry =3D perf_trace_buf_alloc(size, NULL, &rctx);
-> +       if (!entry)
-> +               return 0;
-> +
-> +       entry->ip =3D entry_ip;
-> +       memset(&entry[1], 0, dsize);
-> +       store_trace_args(&entry[1], &tf->tp, regs, sizeof(*entry), dsize)=
-;
-> +       perf_trace_buf_submit(entry, size, rctx, call->event.type, 1, reg=
-s,
+Evaluation
+==========
+An existing selftest can quickly demonstrate the effectiveness of
+this patchset. On a generic workstation equipped with 128 CPUs and
+256GB DRAM:
 
-However, that call concerns me. Perf requires a pt_regs pointer here
-and it expects certain specific fields of that pt_regs to be set (the
-exact requirements don't seem to be explicitly stated anywhere).
+  $ sudo max_guest_memory_test -c 64 -m 250 -s 250
+  
+  MGLRU         run2
+  ------------------
+  Before [1]    ~64s
+  After         ~51s
+  
+  kswapd (MGLRU before)
+    100.00%  balance_pgdat
+      100.00%  shrink_node
+        100.00%  shrink_one
+          99.99%  try_to_shrink_lruvec
+            99.71%  evict_folios
+              97.29%  shrink_folio_list
+  ==>>          13.05%  folio_referenced
+                  12.83%  rmap_walk_file
+                    12.31%  folio_referenced_one
+                      7.90%  __mmu_notifier_clear_young
+                        7.72%  kvm_mmu_notifier_clear_young
+                          7.34%  _raw_write_lock
+  
+  kswapd (MGLRU after)
+    100.00%  balance_pgdat
+      100.00%  shrink_node
+        100.00%  shrink_one
+          99.99%  try_to_shrink_lruvec
+            99.59%  evict_folios
+              80.37%  shrink_folio_list
+  ==>>          3.74%  folio_referenced
+                  3.59%  rmap_walk_file
+                    3.19%  folio_referenced_one
+                      2.53%  lru_gen_look_around
+                        1.06%  __mmu_notifier_test_clear_young
 
-For example, on arm64 (the architecture without
-CONFIG_DYNAMIC_FTRACE_WITH_REGS on which I'd like to have fprobe...
-:)) perf calls the user_mode(regs) macro which expects the pstate
-register to be set in pt_regs. However, pstate is invalid outside of
-an exception entry so ftrace_regs on arm64 does not have a pstate
-field at all.
+Comprehensive benchmarks are coming soon.
 
-If we migrate fprobe to ftrace_regs and try to construct a sparse
-pt_regs out of a ftrace_regs here, it wouldn't be enough to just copy
-all the registers we know from ftrace_regs into the pt_regs: we would
-also need to make up the pstate register with the knowledge that it
-has to be set in certain way specifically to please perf... Arch code
-wouldn't only have to provide a
-"expand_ftrace_regs_into_sparse_pt_regs" macro but also a
-"invent_registers_for_perf" similar to the current
-perf_arch_fetch_caller_regs macro. This seems rough...
+[1] "mm: rmap: Don't flush TLB after checking PTE young for page
+     reference" was included so that the comparison is apples to
+     apples.
+    https://lore.kernel.org/r/20220706112041.3831-1-21cnbao@gmail.com/
 
-It sounds to me like we should have avoided the use of sparse and
-"made up" pt_regs a long time back and the more users of fprobe that
-expect pt_regs we add, the more difficult we make it to make fprobe
-work on CONFIG_DYNAMIC_FTRACE_WITH_ARGS.
+Yu Zhao (10):
+  mm/kvm: add mmu_notifier_ops->test_clear_young()
+  mm/kvm: use mmu_notifier_ops->test_clear_young()
+  kvm/arm64: export stage2_try_set_pte() and macros
+  kvm/arm64: make stage2 page tables RCU safe
+  kvm/arm64: add kvm_arch_test_clear_young()
+  kvm/powerpc: make radix page tables RCU safe
+  kvm/powerpc: add kvm_arch_test_clear_young()
+  kvm/x86: move tdp_mmu_enabled and shadow_accessed_mask
+  kvm/x86: add kvm_arch_test_clear_young()
+  mm: multi-gen LRU: use mmu_notifier_test_clear_young()
 
-> +                             head, NULL);
-> +       return 0;
-> +}
-> +NOKPROBE_SYMBOL(fentry_perf_func);
-> +
-> +static void
-> +fexit_perf_func(struct trace_fprobe *tf, unsigned long entry_ip,
-> +               unsigned long ret_ip, struct pt_regs *regs)
-> +{
-> +       struct trace_event_call *call =3D trace_probe_event_call(&tf->tp)=
-;
-> +       struct fexit_trace_entry_head *entry;
-> +       struct hlist_head *head;
-> +       int size, __size, dsize;
-> +       int rctx;
-> +
-> +       head =3D this_cpu_ptr(call->perf_events);
-> +       if (hlist_empty(head))
-> +               return;
-> +
-> +       dsize =3D __get_data_size(&tf->tp, regs);
-> +       __size =3D sizeof(*entry) + tf->tp.size + dsize;
-> +       size =3D ALIGN(__size + sizeof(u32), sizeof(u64));
-> +       size -=3D sizeof(u32);
-> +
-> +       entry =3D perf_trace_buf_alloc(size, NULL, &rctx);
-> +       if (!entry)
-> +               return;
-> +
-> +       entry->func =3D entry_ip;
-> +       entry->ret_ip =3D ret_ip;
-> +       store_trace_args(&entry[1], &tf->tp, regs, sizeof(*entry), dsize)=
-;
-> +       perf_trace_buf_submit(entry, size, rctx, call->event.type, 1, reg=
-s,
-> +                             head, NULL);
-> +}
-> +NOKPROBE_SYMBOL(fexit_perf_func);
-> +#endif /* CONFIG_PERF_EVENTS */
-> +
-> +static int fentry_dispatcher(struct fprobe *fp, unsigned long entry_ip,
-> +                            unsigned long ret_ip, struct pt_regs *regs,
-> +                            void *entry_data)
-> +{
-> +       struct trace_fprobe *tf =3D container_of(fp, struct trace_fprobe,=
- fp);
-> +       int ret =3D 0;
-> +
-> +       if (trace_probe_test_flag(&tf->tp, TP_FLAG_TRACE))
-> +               fentry_trace_func(tf, entry_ip, regs);
-> +#ifdef CONFIG_PERF_EVENTS
-> +       if (trace_probe_test_flag(&tf->tp, TP_FLAG_PROFILE))
-> +               ret =3D fentry_perf_func(tf, entry_ip, regs);
-> +#endif
-> +       return ret;
-> +}
-> +NOKPROBE_SYMBOL(fentry_dispatcher);
-> +
-> +static void fexit_dispatcher(struct fprobe *fp, unsigned long entry_ip,
-> +                            unsigned long ret_ip, struct pt_regs *regs,
-> +                            void *entry_data)
-> +{
-> +       struct trace_fprobe *tf =3D container_of(fp, struct trace_fprobe,=
- fp);
-> +
-> +       if (trace_probe_test_flag(&tf->tp, TP_FLAG_TRACE))
-> +               fexit_trace_func(tf, entry_ip, ret_ip, regs);
-> +#ifdef CONFIG_PERF_EVENTS
-> +       if (trace_probe_test_flag(&tf->tp, TP_FLAG_PROFILE))
-> +               fexit_perf_func(tf, entry_ip, ret_ip, regs);
-> +#endif
-> +}
-> +NOKPROBE_SYMBOL(fexit_dispatcher);
+ Documentation/admin-guide/mm/multigen_lru.rst |   6 +-
+ arch/arm64/include/asm/kvm_host.h             |   6 +
+ arch/arm64/include/asm/kvm_pgtable.h          |  55 +++++++
+ arch/arm64/kvm/arm.c                          |   1 +
+ arch/arm64/kvm/hyp/pgtable.c                  |  61 +-------
+ arch/arm64/kvm/mmu.c                          |  53 ++++++-
+ arch/powerpc/include/asm/kvm_host.h           |   8 +
+ arch/powerpc/include/asm/kvm_ppc.h            |   1 +
+ arch/powerpc/kvm/book3s.c                     |   6 +
+ arch/powerpc/kvm/book3s.h                     |   1 +
+ arch/powerpc/kvm/book3s_64_mmu_radix.c        |  65 +++++++-
+ arch/powerpc/kvm/book3s_hv.c                  |   5 +
+ arch/x86/include/asm/kvm_host.h               |  13 ++
+ arch/x86/kvm/mmu.h                            |   6 -
+ arch/x86/kvm/mmu/spte.h                       |   1 -
+ arch/x86/kvm/mmu/tdp_mmu.c                    |  34 +++++
+ include/linux/kvm_host.h                      |  22 +++
+ include/linux/mmu_notifier.h                  |  79 ++++++----
+ include/linux/mmzone.h                        |   6 +-
+ include/trace/events/kvm.h                    |  15 --
+ mm/mmu_notifier.c                             |  48 ++----
+ mm/rmap.c                                     |   8 +-
+ mm/vmscan.c                                   | 139 ++++++++++++++++--
+ virt/kvm/kvm_main.c                           | 114 ++++++++------
+ 24 files changed, 546 insertions(+), 207 deletions(-)
+
+-- 
+2.41.0.rc0.172.g3f132b7071-goog
+
