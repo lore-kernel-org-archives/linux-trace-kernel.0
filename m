@@ -2,290 +2,154 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 33DCAC7EE39
-	for <linux-trace-kernel@archiver.kernel.org>; Thu, 25 May 2023 18:45:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 43727C7EE2F
+	for <linux-trace-kernel@archiver.kernel.org>; Fri, 26 May 2023 01:06:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S242288AbjEYSp5 (ORCPT
+        id S229865AbjEZBGY (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Thu, 25 May 2023 14:45:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33914 "EHLO
+        Thu, 25 May 2023 21:06:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52724 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S242831AbjEYSpb (ORCPT
+        with ESMTP id S230389AbjEZBGH (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Thu, 25 May 2023 14:45:31 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 332BF3C33;
-        Thu, 25 May 2023 11:41:40 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 1B67664952;
-        Thu, 25 May 2023 18:41:13 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7B8EBC4339C;
-        Thu, 25 May 2023 18:41:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1685040072;
-        bh=fOu7aQcdH9a75fn0kj1O5zPfCCsrrlNUKFdNhS5qr+0=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=PXQ2auti+e/BlgqZOMnLk6aO+GcdHTQKW3rjuWbeh4UyqRRNXNSZjX+0buUrqdY5U
-         6bZRoZkd2yMJu6eNbo1oW2urN/GK0aQ2hKRKmDsiKmm8lEx7xpwo9QxK02AMH6iM6f
-         iMU7G7v9ETSfNT/maUfXvS2jm67xg22fLOJbrRzYjG3jc2tnDU06mDWkPhjv+YWw+b
-         qe3wcpDXFP7zk0InhfT4+9Hizgbdb0IiNd9zpdsCSRrQLrX9xGbBtfz93s05jOmwj/
-         gMiVj7GZpXAK1ZfBFqAGXwLD6EWpUg8Pw3vSfmZD1RYLDNM64EDJXD2qm/E5gnL87k
-         Q1YdamsvUUIlg==
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Mark Brown <broonie@kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Shuah Khan <skhan@linuxfoundation.org>,
-        Sasha Levin <sashal@kernel.org>, shuah@kernel.org,
-        linux-trace-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.10 02/31] selftests/ftrace: Improve integration with kselftest runner
-Date:   Thu, 25 May 2023 14:40:33 -0400
-Message-Id: <20230525184105.1909399-2-sashal@kernel.org>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20230525184105.1909399-1-sashal@kernel.org>
-References: <20230525184105.1909399-1-sashal@kernel.org>
+        Thu, 25 May 2023 21:06:07 -0400
+Received: from mail-wr1-x444.google.com (mail-wr1-x444.google.com [IPv6:2a00:1450:4864:20::444])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5DC1B125;
+        Thu, 25 May 2023 18:06:02 -0700 (PDT)
+Received: by mail-wr1-x444.google.com with SMTP id ffacd0b85a97d-3093a778089so54629f8f.1;
+        Thu, 25 May 2023 18:06:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1685063161; x=1687655161;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=GjfAJc/vDf3Um7C9noINUOIK2Cbrxb4v+Y8oX39n4kg=;
+        b=AjUrWK/5HPY7EHucm9EujcnMofUrD1UHwjKWdUfgdgu9qv0bVeQRuVjGdDMWXnh+5i
+         F/3T578M9sbwZoD8Cn3o0O9So9BUIdlEAJN7AAT6ZEfIQowleZ7yZeP1omge3gTZilr9
+         Dt4yTvbtZZ+hlaaagf4/M5U/FA9uIJXuM5fdvLTqUdUNDobpZKP+JovwYB7rm8Q9Fo05
+         VdZpVJeoLwMZoENddqPfWEhPfOn+TyEv7bavX9lUj8YvZWDoombATdU+arTFLa5bW5nD
+         OTJ5Vc8dyMXLV7O63uPHgdipppnpCORvgR7D9fqIa62JlmdctVcO8Z8/y42KhxSPpi6v
+         NtVg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1685063161; x=1687655161;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=GjfAJc/vDf3Um7C9noINUOIK2Cbrxb4v+Y8oX39n4kg=;
+        b=gOzqC7NyamhlMKC0gt9vIikq4+xgtz5baw/0XjDgHnTw7EbAQJbAoYpGkyk6tolNmn
+         ih2YImeehfTnTC5QR8HhVAzwlr62sQPXB1hqt5InIECu6yjSf55aUrv/Bo+QLr6CKoV3
+         Mk3sjsuaYkmPSNbc8ivc33oMK7sdGZoyE8MiYh9Qv+kHWbOufZfwz4W3A8LxUs2bvl2/
+         jMVNTMVmvr4RMVzQDDAeQnHQqSUmOSWGjA0JJfYO0fSdXOmU+lvjXWoyN6fRju/2qTKO
+         BxaNOZQvIVPNqZsYGdZ6km5Fiib6XCmstCiRr0ovmBOYfgapfCYdqvrXFGlupMQtRvCc
+         RgrQ==
+X-Gm-Message-State: AC+VfDyQMsFuq4c/m2tp/4jLqustE01hc1VgqNVpZMTvltxps32yEmpM
+        jkSIRVJbNJHco3Gkt+ZIULf+CIv75c0w+vpD8/gJeH9A+m6v00A=
+X-Google-Smtp-Source: ACHHUZ5V+Uy0gE609bt64VOiUno5b+O/zwj2jYS6/QwDH6ELzFziq0ShBDBMjUQo5hOuEawYwA33O/wbHlvrJysdHWI=
+X-Received: by 2002:adf:f850:0:b0:306:3b39:9a3d with SMTP id
+ d16-20020adff850000000b003063b399a3dmr74229wrq.15.1685063160565; Thu, 25 May
+ 2023 18:06:00 -0700 (PDT)
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+References: <20230525054032.29392-1-sunliming@kylinos.cn> <20230525165329.GA82@W11-BEAU-MD.localdomain>
+In-Reply-To: <20230525165329.GA82@W11-BEAU-MD.localdomain>
+From:   sunliming <kelulanainsley@gmail.com>
+Date:   Fri, 26 May 2023 09:05:49 +0800
+Message-ID: <CAJncD7SnEr9FSz7VwDx3k9jeamDqAe0e1Ce+9TubjDEO3S0eJg@mail.gmail.com>
+Subject: Re: [PATCH] tracing/user_events: Fix the order of the fields in the
+ trace output
+To:     Beau Belgrave <beaub@linux.microsoft.com>
+Cc:     mhiramat@kernel.org, rostedt@goodmis.org,
+        linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-From: Mark Brown <broonie@kernel.org>
+OK=EF=BC=8CI got it.
 
-[ Upstream commit dbcf76390eb9a65d5d0c37b0cd57335218564e37 ]
-
-The ftrace selftests do not currently produce KTAP output, they produce a
-custom format much nicer for human consumption. This means that when run in
-automated test systems we just get a single result for the suite as a whole
-rather than recording results for individual test cases, making it harder
-to look at the test data and masking things like inappropriate skips.
-
-Address this by adding support for KTAP output to the ftracetest script and
-providing a trivial wrapper which will be invoked by the kselftest runner
-to generate output in this format by default, users using ftracetest
-directly will continue to get the existing output.
-
-This is not the most elegant solution but it is simple and effective. I
-did consider implementing this by post processing the existing output
-format but that felt more complex and likely to result in all output being
-lost if something goes seriously wrong during the run which would not be
-helpful. I did also consider just writing a separate runner script but
-there's enough going on with things like the signal handling for that to
-seem like it would be duplicating too much.
-
-Acked-by: Steven Rostedt (Google) <rostedt@goodmis.org>
-Acked-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-Tested-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-Signed-off-by: Mark Brown <broonie@kernel.org>
-Signed-off-by: Shuah Khan <skhan@linuxfoundation.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- tools/testing/selftests/ftrace/Makefile       |  3 +-
- tools/testing/selftests/ftrace/ftracetest     | 63 ++++++++++++++++++-
- .../testing/selftests/ftrace/ftracetest-ktap  |  8 +++
- 3 files changed, 70 insertions(+), 4 deletions(-)
- create mode 100755 tools/testing/selftests/ftrace/ftracetest-ktap
-
-diff --git a/tools/testing/selftests/ftrace/Makefile b/tools/testing/selftests/ftrace/Makefile
-index d6e106fbce11c..a1e955d2de4cc 100644
---- a/tools/testing/selftests/ftrace/Makefile
-+++ b/tools/testing/selftests/ftrace/Makefile
-@@ -1,7 +1,8 @@
- # SPDX-License-Identifier: GPL-2.0
- all:
- 
--TEST_PROGS := ftracetest
-+TEST_PROGS_EXTENDED := ftracetest
-+TEST_PROGS := ftracetest-ktap
- TEST_FILES := test.d settings
- EXTRA_CLEAN := $(OUTPUT)/logs/*
- 
-diff --git a/tools/testing/selftests/ftrace/ftracetest b/tools/testing/selftests/ftrace/ftracetest
-index 8ec1922e974eb..9a73a110a8bfc 100755
---- a/tools/testing/selftests/ftrace/ftracetest
-+++ b/tools/testing/selftests/ftrace/ftracetest
-@@ -13,6 +13,7 @@ echo "Usage: ftracetest [options] [testcase(s)] [testcase-directory(s)]"
- echo " Options:"
- echo "		-h|--help  Show help message"
- echo "		-k|--keep  Keep passed test logs"
-+echo "		-K|--ktap  Output in KTAP format"
- echo "		-v|--verbose Increase verbosity of test messages"
- echo "		-vv        Alias of -v -v (Show all results in stdout)"
- echo "		-vvv       Alias of -v -v -v (Show all commands immediately)"
-@@ -85,6 +86,10 @@ parse_opts() { # opts
-       KEEP_LOG=1
-       shift 1
-     ;;
-+    --ktap|-K)
-+      KTAP=1
-+      shift 1
-+    ;;
-     --verbose|-v|-vv|-vvv)
-       if [ $VERBOSE -eq -1 ]; then
- 	usage "--console can not use with --verbose"
-@@ -178,6 +183,7 @@ TEST_DIR=$TOP_DIR/test.d
- TEST_CASES=`find_testcases $TEST_DIR`
- LOG_DIR=$TOP_DIR/logs/`date +%Y%m%d-%H%M%S`/
- KEEP_LOG=0
-+KTAP=0
- DEBUG=0
- VERBOSE=0
- UNSUPPORTED_RESULT=0
-@@ -229,7 +235,7 @@ prlog() { # messages
-     newline=
-     shift
-   fi
--  printf "$*$newline"
-+  [ "$KTAP" != "1" ] && printf "$*$newline"
-   [ "$LOG_FILE" ] && printf "$*$newline" | strip_esc >> $LOG_FILE
- }
- catlog() { #file
-@@ -260,11 +266,11 @@ TOTAL_RESULT=0
- 
- INSTANCE=
- CASENO=0
-+CASENAME=
- 
- testcase() { # testfile
-   CASENO=$((CASENO+1))
--  desc=`grep "^#[ \t]*description:" $1 | cut -f2- -d:`
--  prlog -n "[$CASENO]$INSTANCE$desc"
-+  CASENAME=`grep "^#[ \t]*description:" $1 | cut -f2- -d:`
- }
- 
- checkreq() { # testfile
-@@ -277,40 +283,68 @@ test_on_instance() { # testfile
-   grep -q "^#[ \t]*flags:.*instance" $1
- }
- 
-+ktaptest() { # result comment
-+  if [ "$KTAP" != "1" ]; then
-+    return
-+  fi
-+
-+  local result=
-+  if [ "$1" = "1" ]; then
-+    result="ok"
-+  else
-+    result="not ok"
-+  fi
-+  shift
-+
-+  local comment=$*
-+  if [ "$comment" != "" ]; then
-+    comment="# $comment"
-+  fi
-+
-+  echo $CASENO $result $INSTANCE$CASENAME $comment
-+}
-+
- eval_result() { # sigval
-   case $1 in
-     $PASS)
-       prlog "	[${color_green}PASS${color_reset}]"
-+      ktaptest 1
-       PASSED_CASES="$PASSED_CASES $CASENO"
-       return 0
-     ;;
-     $FAIL)
-       prlog "	[${color_red}FAIL${color_reset}]"
-+      ktaptest 0
-       FAILED_CASES="$FAILED_CASES $CASENO"
-       return 1 # this is a bug.
-     ;;
-     $UNRESOLVED)
-       prlog "	[${color_blue}UNRESOLVED${color_reset}]"
-+      ktaptest 0 UNRESOLVED
-       UNRESOLVED_CASES="$UNRESOLVED_CASES $CASENO"
-       return $UNRESOLVED_RESULT # depends on use case
-     ;;
-     $UNTESTED)
-       prlog "	[${color_blue}UNTESTED${color_reset}]"
-+      ktaptest 1 SKIP
-       UNTESTED_CASES="$UNTESTED_CASES $CASENO"
-       return 0
-     ;;
-     $UNSUPPORTED)
-       prlog "	[${color_blue}UNSUPPORTED${color_reset}]"
-+      ktaptest 1 SKIP
-       UNSUPPORTED_CASES="$UNSUPPORTED_CASES $CASENO"
-       return $UNSUPPORTED_RESULT # depends on use case
-     ;;
-     $XFAIL)
-       prlog "	[${color_green}XFAIL${color_reset}]"
-+      ktaptest 1 XFAIL
-       XFAILED_CASES="$XFAILED_CASES $CASENO"
-       return 0
-     ;;
-     *)
-       prlog "	[${color_blue}UNDEFINED${color_reset}]"
-+      ktaptest 0 error
-       UNDEFINED_CASES="$UNDEFINED_CASES $CASENO"
-       return 1 # this must be a test bug
-     ;;
-@@ -371,6 +405,7 @@ __run_test() { # testfile
- run_test() { # testfile
-   local testname=`basename $1`
-   testcase $1
-+  prlog -n "[$CASENO]$INSTANCE$CASENAME"
-   if [ ! -z "$LOG_FILE" ] ; then
-     local testlog=`mktemp $LOG_DIR/${CASENO}-${testname}-log.XXXXXX`
-   else
-@@ -405,6 +440,17 @@ run_test() { # testfile
- # load in the helper functions
- . $TEST_DIR/functions
- 
-+if [ "$KTAP" = "1" ]; then
-+  echo "TAP version 13"
-+
-+  casecount=`echo $TEST_CASES | wc -w`
-+  for t in $TEST_CASES; do
-+    test_on_instance $t || continue
-+    casecount=$((casecount+1))
-+  done
-+  echo "1..${casecount}"
-+fi
-+
- # Main loop
- for t in $TEST_CASES; do
-   run_test $t
-@@ -439,6 +485,17 @@ prlog "# of unsupported: " `echo $UNSUPPORTED_CASES | wc -w`
- prlog "# of xfailed: " `echo $XFAILED_CASES | wc -w`
- prlog "# of undefined(test bug): " `echo $UNDEFINED_CASES | wc -w`
- 
-+if [ "$KTAP" = "1" ]; then
-+  echo -n "# Totals:"
-+  echo -n " pass:"`echo $PASSED_CASES | wc -w`
-+  echo -n " faii:"`echo $FAILED_CASES | wc -w`
-+  echo -n " xfail:"`echo $XFAILED_CASES | wc -w`
-+  echo -n " xpass:0"
-+  echo -n " skip:"`echo $UNTESTED_CASES $UNSUPPORTED_CASES | wc -w`
-+  echo -n " error:"`echo $UNRESOLVED_CASES $UNDEFINED_CASES | wc -w`
-+  echo
-+fi
-+
- cleanup
- 
- # if no error, return 0
-diff --git a/tools/testing/selftests/ftrace/ftracetest-ktap b/tools/testing/selftests/ftrace/ftracetest-ktap
-new file mode 100755
-index 0000000000000..b3284679ef3af
---- /dev/null
-+++ b/tools/testing/selftests/ftrace/ftracetest-ktap
-@@ -0,0 +1,8 @@
-+#!/bin/sh -e
-+# SPDX-License-Identifier: GPL-2.0-only
-+#
-+# ftracetest-ktap: Wrapper to integrate ftracetest with the kselftest runner
-+#
-+# Copyright (C) Arm Ltd., 2023
-+
-+./ftracetest -K
--- 
-2.39.2
-
+Beau Belgrave <beaub@linux.microsoft.com> =E4=BA=8E2023=E5=B9=B45=E6=9C=882=
+6=E6=97=A5=E5=91=A8=E4=BA=94 00:53=E5=86=99=E9=81=93=EF=BC=9A
+>
+> On Thu, May 25, 2023 at 01:40:32PM +0800, sunliming wrote:
+> > Commit 4bec284cc0b9 ("tracing/user_events: Use print_format_fields() fo=
+r
+> > trace output") use print_event_fields() as safe and gives user readable
+> > output. However, due to the insertion of the struct ftrace_event_field
+> > structure into the field linked list from the header, the trace output
+> > oder of fields of user events is reversed. Fix the problem by insertint
+> > to the tail of field linked list.
+> >
+> > Signed-off-by: sunliming <sunliming@kylinos.cn>
+> > ---
+> >  kernel/trace/trace_events_user.c | 2 +-
+> >  1 file changed, 1 insertion(+), 1 deletion(-)
+> >
+> > diff --git a/kernel/trace/trace_events_user.c b/kernel/trace/trace_even=
+ts_user.c
+> > index aacd22c1e9f8..e9e2ec3c7613 100644
+> > --- a/kernel/trace/trace_events_user.c
+> > +++ b/kernel/trace/trace_events_user.c
+> > @@ -972,7 +972,7 @@ static int user_event_add_field(struct user_event *=
+user, const char *type,
+> >       if (filter_type =3D=3D FILTER_OTHER)
+> >               field->filter_type =3D filter_assign_type(type);
+> >
+> > -     list_add(&field->link, &user->fields);
+> > +     list_add_tail(&field->link, &user->fields);
+> >
+> >       /*
+> >        * Min size from user writes that are required, this does not inc=
+lude
+> > --
+> > 2.25.1
+>
+> Thanks for the patch, however, this breaks the tracefs format file. The
+> fields are required to be put in backwards since it walks them
+> backwards.
+>
+> Example using this:
+> echo 'u:test u32 a; u32 b;' > dynamic_events
+> cat /sys/kernel/tracing/events/user_events/test/format
+>
+> Before this change:
+> name: test
+> ...
+> format:
+>         field:unsigned short common_type;       offset:0;       size:2; s=
+igned:0;
+>         field:unsigned char common_flags;       offset:2;       size:1; s=
+igned:0;
+>         field:unsigned char common_preempt_count;       offset:3;       s=
+ize:1; signed:0;
+>         field:int common_pid;   offset:4;       size:4; signed:1;
+>
+>         field:u32 a;    offset:8;       size:4; signed:0;
+>         field:u32 b;    offset:12;      size:4; signed:0;
+>
+> print fmt: "a=3D%u b=3D%u", REC->a, REC->b
+>
+> After this change:
+> name: test
+> ...
+> format:
+>         field:unsigned short common_type;       offset:0;       size:2; s=
+igned:0;
+>         field:unsigned char common_flags;       offset:2;       size:1; s=
+igned:0;
+>         field:unsigned char common_preempt_count;       offset:3;       s=
+ize:1; signed:0;
+>         field:int common_pid;   offset:4;       size:4; signed:1;
+>
+>         field:u32 b;    offset:12;      size:4; signed:0;
+>         field:u32 a;    offset:8;       size:4; signed:0;
+>
+> print fmt: "b=3D%u a=3D%u", REC->b, REC->a
+>
+> I do agree though, that print_fields() is doing it backwards. Can you
+> please fix the print_fields() function instead? (It should walk the list
+> of fields backwards like tracefs format file does).
+>
+> Steven can then Ack that work, since it's isolated there.
+>
+> Thanks,
+> -Beau
