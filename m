@@ -2,32 +2,35 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F1305C77B7E
-	for <linux-trace-kernel@archiver.kernel.org>; Sun, 28 May 2023 05:26:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BDE7C77B7C
+	for <linux-trace-kernel@archiver.kernel.org>; Sun, 28 May 2023 05:26:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229476AbjE1F0s (ORCPT
+        id S229481AbjE1F0s (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
         Sun, 28 May 2023 01:26:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45190 "EHLO
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45176 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229445AbjE1F0r (ORCPT
+        with ESMTP id S229470AbjE1F0r (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
         Sun, 28 May 2023 01:26:47 -0400
+X-Greylist: delayed 525 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Sat, 27 May 2023 22:26:40 PDT
 Received: from mammoth.local.home (cpe-172-100-189-27.stny.res.rr.com [172.100.189.27])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id E05E3DF;
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 94AC7D8;
         Sat, 27 May 2023 22:26:40 -0700 (PDT)
 Received: by mammoth.local.home (Postfix, from userid 5657)
-        id B39643009DD; Sun, 28 May 2023 01:17:53 -0400 (EDT)
+        id D650C30113E; Sun, 28 May 2023 01:17:53 -0400 (EDT)
 From:   Steven Rostedt <rostedt@goodmis.org>
 To:     LKML <linux-kernel@vger.kernel.org>,
         Linux trace kernel <linux-trace-kernel@vger.kernel.org>
 Cc:     Masami Hiramatsu <mhiramat@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
         "Steven Rostedt (Google)" <rostedt@goodmis.org>
-Subject: [PATCH 0/5] tracing: Fix selftests softlockup issues
-Date:   Sun, 28 May 2023 01:17:37 -0400
-Message-Id: <20230528051742.1325503-1-rostedt@goodmis.org>
+Subject: [PATCH 5/5] tracing: Have function_graph selftest call cond_resched()
+Date:   Sun, 28 May 2023 01:17:42 -0400
+Message-Id: <20230528051742.1325503-6-rostedt@goodmis.org>
 X-Mailer: git-send-email 2.39.2
+In-Reply-To: <20230528051742.1325503-1-rostedt@goodmis.org>
+References: <20230528051742.1325503-1-rostedt@goodmis.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
@@ -36,32 +39,55 @@ X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
 From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
 
-Starting with v6.4-rc releases, the debugging of the kernel has slowed down
-text_poke and friends so much that it is triggering the softlockup detector in
-the ftrace selftests. There are two issues that I found.
+When all kernel debugging is enabled (lockdep, KSAN, etc), the function
+graph enabling and disabling can take several seconds to complete. The
+function_graph selftest enables and disables function graph tracing
+several times. With full debugging enabled, the soft lockup watchdog was
+triggering because the selftest was running without ever scheduling.
 
-1. The selftests run one after the other without a schedule.
-2. text_poke_bp_batch can take up a lot of time itself without a schedule.
+Add cond_resched() throughout the test to make sure it does not trigger
+the soft lockup detector.
 
-This addresses the first part. The second part is a x86 issue and I will be
-addressing that with a separate patch.
+Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+---
+ kernel/trace/trace_selftest.c | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
-As I'm currently in an Taiwan airport lounge with horrible internet connection,
-and ssh'd to my home machine. I'm sending this patchset with hand typed git sendemail
-If it goes bad, that's the reason!
-
-Steven Rostedt (Google) (5):
-  tracing: Move setting of tracing_selftest_running out of
-    register_tracer()
-  tracing: Have tracer selftests call cond_resched() before running
-  tracing: Make tracing_selftest_running/delete nops when not used
-  tracing: Only make selftest conditionals affect the global_trace
-  tracing: Have function_graph selftest call cond_resched()
-
- kernel/trace/trace.c          | 42 +++++++++++++++++++++++++++++------
- kernel/trace/trace_selftest.c | 10 +++++++++
- 2 files changed, 45 insertions(+), 7 deletions(-)
-
+diff --git a/kernel/trace/trace_selftest.c b/kernel/trace/trace_selftest.c
+index a931d9aaea26..529590499b1f 100644
+--- a/kernel/trace/trace_selftest.c
++++ b/kernel/trace/trace_selftest.c
+@@ -848,6 +848,12 @@ trace_selftest_startup_function_graph(struct tracer *trace,
+ 	}
+ 
+ #ifdef CONFIG_DYNAMIC_FTRACE_WITH_DIRECT_CALLS
++	/*
++	 * These tests can take some time to run. Make sure on non PREEMPT
++	 * kernels, we do not trigger the softlockup detector.
++	 */
++	cond_resched();
++
+ 	tracing_reset_online_cpus(&tr->array_buffer);
+ 	set_graph_array(tr);
+ 
+@@ -869,6 +875,8 @@ trace_selftest_startup_function_graph(struct tracer *trace,
+ 	if (ret)
+ 		goto out;
+ 
++	cond_resched();
++
+ 	ret = register_ftrace_graph(&fgraph_ops);
+ 	if (ret) {
+ 		warn_failed_init_tracer(trace, ret);
+@@ -891,6 +899,8 @@ trace_selftest_startup_function_graph(struct tracer *trace,
+ 	if (ret)
+ 		goto out;
+ 
++	cond_resched();
++
+ 	tracing_start();
+ 
+ 	if (!ret && !count) {
 -- 
 2.39.2
 
