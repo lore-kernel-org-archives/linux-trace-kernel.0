@@ -2,94 +2,84 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 486DBC77B7A
-	for <linux-trace-kernel@archiver.kernel.org>; Mon, 29 May 2023 08:21:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A266C77B7A
+	for <linux-trace-kernel@archiver.kernel.org>; Mon, 29 May 2023 08:40:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229623AbjE2IVz (ORCPT
+        id S229512AbjE2IkK (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Mon, 29 May 2023 04:21:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40872 "EHLO
+        Mon, 29 May 2023 04:40:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45706 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229572AbjE2IVy (ORCPT
+        with ESMTP id S229965AbjE2IkK (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Mon, 29 May 2023 04:21:54 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7DB9EA7;
-        Mon, 29 May 2023 01:21:53 -0700 (PDT)
+        Mon, 29 May 2023 04:40:10 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A006BB5;
+        Mon, 29 May 2023 01:40:08 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 1C3866151B;
-        Mon, 29 May 2023 08:21:53 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7B15FC433D2;
-        Mon, 29 May 2023 08:21:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1685348512;
-        bh=hlRfSmclHorz/xxdGaOQVbJyEMbb50M9sLXS/0qDFBc=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=F7aNNZ3mc+PZkqJA45ygSx+UJ6f/HCGNpzvlBHq9jxyRQqJRaZneWktBBFpKcbnDU
-         f4QKeXE4h/uITvXCEvSO10zjJ0Rc3DXxFblByeaPru1F3LSss44C/00fPnTWmCbm0O
-         h3il6LEKKXdQCfR8z+uRnfXKUYLDDtlDocAPWPr02GTbRks85+I66+/B29xgaAsqWb
-         zKywh495Z4voqVZe6OVzcrmrJTa7E7rwSt7YI21qbiGuEg2RD/pyCn68UfMRhEuXRU
-         YDCWxCUHQbIj3PxtycbFU8ylUXwC3CKsENdrqU1yVetzfy0bJiRu++oCACuhIkBa4Y
-         UZ2RZhQSNwIiA==
-Date:   Mon, 29 May 2023 17:21:49 +0900
-From:   Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To:     sunliming <sunliming@kylinos.cn>
-Cc:     rostedt@goodmis.org, beaub@linux.microsoft.com,
-        linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
-        linux-kselftest@vger.kernel.org
-Subject: Re: [PATCH] tracing/user_events: Handle matching arguments that is
- null from dyn_events
-Message-Id: <20230529172149.fec12da876356c1a679d8bcb@kernel.org>
-In-Reply-To: <20230529065110.303440-1-sunliming@kylinos.cn>
-References: <20230529065110.303440-1-sunliming@kylinos.cn>
-X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 2ABCC61260;
+        Mon, 29 May 2023 08:40:08 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 39476C433EF;
+        Mon, 29 May 2023 08:40:06 +0000 (UTC)
+Date:   Mon, 29 May 2023 04:40:02 -0400
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     LKML <linux-kernel@vger.kernel.org>,
+        Linux trace kernel <linux-trace-kernel@vger.kernel.org>
+Cc:     Masami Hiramatsu <mhiramat@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Daniel Bristot de Oliveira <bristot@redhat.com>
+Subject: [PATCH] tracing/rv/rtla: Update MAINTAINERS file to point to proper
+ mailing list
+Message-ID: <20230529044002.0481452b@rorschach.local.home>
+X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On Mon, 29 May 2023 14:51:10 +0800
-sunliming <sunliming@kylinos.cn> wrote:
+From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
 
-> When A registering user event from dyn_events has no argments, it will pass the
-> matching check, regardless of whether there is a user event with the same name
-> and arguments. Add the matching check when the arguments of registering user
-> event is null.
+The mailing list that goes to linux-trace-devel is for the tracing
+libraries, and the patchwork associated to the tracing libraries keys
+off of that mailing list.
 
-OK, since the user_events doesn't support multi-definitions on the same name
-event, this should be checked.
+For anything that lives in the Linux kernel proper (including the tools
+directory) must go through linux-trace-kernel, as the patchwork to that
+list keys off of the Linux kernel proper.
 
-Acked-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+Update the MAINTAINERS file to reflect the proper mailing lists.
 
-Thank you!
+Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+---
+ MAINTAINERS | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-> 
-> Signed-off-by: sunliming <sunliming@kylinos.cn>
-> ---
->  kernel/trace/trace_events_user.c | 2 ++
->  1 file changed, 2 insertions(+)
-> 
-> diff --git a/kernel/trace/trace_events_user.c b/kernel/trace/trace_events_user.c
-> index e90161294698..0d91dac206ff 100644
-> --- a/kernel/trace/trace_events_user.c
-> +++ b/kernel/trace/trace_events_user.c
-> @@ -1712,6 +1712,8 @@ static bool user_event_match(const char *system, const char *event,
->  
->  	if (match && argc > 0)
->  		match = user_fields_match(user, argc, argv);
-> +	else if (match && argc == 0)
-> +		match = list_empty(&user->fields);
->  
->  	return match;
->  }
-> -- 
-> 2.25.1
-> 
-
-
+diff --git a/MAINTAINERS b/MAINTAINERS
+index e0ad886d3163..5bb6dccd6ea3 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -17808,7 +17808,7 @@ F:	tools/testing/selftests/rtc/
+ Real-time Linux Analysis (RTLA) tools
+ M:	Daniel Bristot de Oliveira <bristot@kernel.org>
+ M:	Steven Rostedt <rostedt@goodmis.org>
+-L:	linux-trace-devel@vger.kernel.org
++L:	linux-trace-kernel@vger.kernel.org
+ S:	Maintained
+ F:	Documentation/tools/rtla/
+ F:	tools/tracing/rtla/
+@@ -18370,7 +18370,7 @@ F:	drivers/infiniband/ulp/rtrs/
+ RUNTIME VERIFICATION (RV)
+ M:	Daniel Bristot de Oliveira <bristot@kernel.org>
+ M:	Steven Rostedt <rostedt@goodmis.org>
+-L:	linux-trace-devel@vger.kernel.org
++L:	linux-trace-kernel@vger.kernel.org
+ S:	Maintained
+ F:	Documentation/trace/rv/
+ F:	include/linux/rv.h
 -- 
-Masami Hiramatsu (Google) <mhiramat@kernel.org>
+2.39.2
+
