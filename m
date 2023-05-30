@@ -2,38 +2,38 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F6C5C77B73
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 81F14C7EE2E
 	for <linux-trace-kernel@archiver.kernel.org>; Tue, 30 May 2023 23:53:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233820AbjE3XxR (ORCPT
+        id S233970AbjE3XxS (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Tue, 30 May 2023 19:53:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37028 "EHLO
+        Tue, 30 May 2023 19:53:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37034 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233493AbjE3XxQ (ORCPT
+        with ESMTP id S233601AbjE3XxQ (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
         Tue, 30 May 2023 19:53:16 -0400
 Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 5207DF9;
-        Tue, 30 May 2023 16:53:13 -0700 (PDT)
-Received: from W11-BEAU-MD.localdomain (unknown [76.135.27.212])
-        by linux.microsoft.com (Postfix) with ESMTPSA id 8AF2520FC475;
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id AD7BED9;
         Tue, 30 May 2023 16:53:12 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 8AF2520FC475
+Received: from W11-BEAU-MD.localdomain (unknown [76.135.27.212])
+        by linux.microsoft.com (Postfix) with ESMTPSA id 17C0020FC46E;
+        Tue, 30 May 2023 16:53:12 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 17C0020FC46E
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
         s=default; t=1685490792;
-        bh=jY9TSOdHVrfPeYA1EVOelAq4LjG1oi4wE8/rpaq0pvM=;
+        bh=7HerbMz1DFTdP2RVbzOEQ58GbkMSyi6fAKvdAGruc5c=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=KTalf09dM9FN1aKmNTp560gjdCVKv7BiWHr49EW1QWtkEc6a185AqMkvW3kzzh7+v
-         ArtAE6Os4uFfCRo5E0PcJzYcbOcZYOBOkyru6T2VoSodd0B3JNbq07AvFjcpGAxzLV
-         EaNmsJjsfUuC6cUYIIPUVOju1g8WPoBRCK13X60Y=
+        b=WhmiDcT1nPL1sVpiBaasbeIVmdU3LPTBysjeRFJgo1XpGmExRYSx6z3wN/K5ghrn8
+         Xp7beuRJz+4p6p2c2aZT1nLSRf5svBpjIZqZIIWRAnJEMCWVXnO6aJaZBBoRJx/NUz
+         i/sux5T5FmdbmLjNTBwyYp6SsL+6osTAH8vjhFTs=
 From:   Beau Belgrave <beaub@linux.microsoft.com>
 To:     rostedt@goodmis.org, mhiramat@kernel.org
 Cc:     linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
         ast@kernel.org, dcook@linux.microsoft.com
-Subject: [PATCH 4/5] tracing/user_events: Add self-test for auto-del flag
-Date:   Tue, 30 May 2023 16:53:03 -0700
-Message-Id: <20230530235304.2726-5-beaub@linux.microsoft.com>
+Subject: [PATCH 2/5] tracing/user_events: Track refcount consistently via put/get
+Date:   Tue, 30 May 2023 16:53:01 -0700
+Message-Id: <20230530235304.2726-3-beaub@linux.microsoft.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20230530235304.2726-1-beaub@linux.microsoft.com>
 References: <20230530235304.2726-1-beaub@linux.microsoft.com>
@@ -43,177 +43,213 @@ Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-A new flag for auto-deleting user_events upon the last reference exists
-now. We must ensure this flag works correctly in the common cases.
+Various parts of the code today track user_event's refcnt field directly
+via a refcount_add/dec. This makes it hard to modify the behavior of the
+last reference decrement in all code paths consistently. For example, in
+the future we will auto-delete events upon the last reference going
+away. This last reference could happen in many places, but we want it to
+be consistently handled.
 
-Update abi self test to ensure when this flag is used the user_event
-goes away at the appropriate time. Ensure last fd, enabler, and
-trace_event_call refs paths correctly delete the event.
+Add user_event_get() and user_event_put() for the add/dec. Update all
+places where direct refcounts are being used to utilize these new
+functions. In each location pass if event_mutex is locked or not. This
+allows us to drop events automatically in future patches clearly. Ensure
+when caller states the lock is held, it really is (or is not) held.
 
 Signed-off-by: Beau Belgrave <beaub@linux.microsoft.com>
 ---
- .../testing/selftests/user_events/abi_test.c  | 115 ++++++++++++++++--
- 1 file changed, 107 insertions(+), 8 deletions(-)
+ kernel/trace/trace_events_user.c | 66 +++++++++++++++++++-------------
+ 1 file changed, 40 insertions(+), 26 deletions(-)
 
-diff --git a/tools/testing/selftests/user_events/abi_test.c b/tools/testing/selftests/user_events/abi_test.c
-index 5125c42efe65..9c726616f763 100644
---- a/tools/testing/selftests/user_events/abi_test.c
-+++ b/tools/testing/selftests/user_events/abi_test.c
-@@ -22,10 +22,41 @@
+diff --git a/kernel/trace/trace_events_user.c b/kernel/trace/trace_events_user.c
+index 34aa0a5d8e2a..8f0fb6cb0f33 100644
+--- a/kernel/trace/trace_events_user.c
++++ b/kernel/trace/trace_events_user.c
+@@ -175,6 +175,28 @@ static u32 user_event_key(char *name)
+ 	return jhash(name, strlen(name), 0);
+ }
  
- const char *data_file = "/sys/kernel/tracing/user_events_data";
- const char *enable_file = "/sys/kernel/tracing/events/user_events/__abi_event/enable";
-+const char *temp_enable_file = "/sys/kernel/tracing/events/user_events/__abi_temp_event/enable";
- 
--static int change_event(bool enable)
-+static bool temp_exists(int grace_ms)
++static struct user_event *user_event_get(struct user_event *user)
 +{
-+	int fd;
++	refcount_inc(&user->refcnt);
 +
-+	usleep(grace_ms * 1000);
-+
-+	fd = open(temp_enable_file, O_RDONLY);
-+
-+	if (fd == -1)
-+		return false;
-+
-+	close(fd);
-+
-+	return true;
++	return user;
 +}
 +
-+static int clear_temp(void)
++static void user_event_put(struct user_event *user, bool locked)
 +{
-+	int fd = open(data_file, O_RDWR);
-+	int ret = 0;
++#ifdef CONFIG_LOCKDEP
++	if (locked)
++		lockdep_assert_held(&event_mutex);
++	else
++		lockdep_assert_not_held(&event_mutex);
++#endif
 +
-+	if (ioctl(fd, DIAG_IOCSDEL, "__abi_temp_event") == -1)
-+		if (errno != ENOENT)
-+			ret = -1;
++	if (unlikely(!user))
++		return;
 +
-+	close(fd);
-+
-+	return ret;
++	refcount_dec(&user->refcnt);
 +}
 +
-+static int __change_event(const char *path, bool enable)
+ static void user_event_group_destroy(struct user_event_group *group)
  {
--	int fd = open(enable_file, O_RDWR);
-+	int fd = open(path, O_RDWR);
- 	int ret;
+ 	kfree(group->system_name);
+@@ -258,12 +280,13 @@ static struct user_event_group
+ 	return NULL;
+ };
  
- 	if (fd < 0)
-@@ -46,22 +77,48 @@ static int change_event(bool enable)
+-static void user_event_enabler_destroy(struct user_event_enabler *enabler)
++static void user_event_enabler_destroy(struct user_event_enabler *enabler,
++				       bool locked)
+ {
+ 	list_del_rcu(&enabler->link);
+ 
+ 	/* No longer tracking the event via the enabler */
+-	refcount_dec(&enabler->event->refcnt);
++	user_event_put(enabler->event, locked);
+ 
+ 	kfree(enabler);
+ }
+@@ -325,7 +348,7 @@ static void user_event_enabler_fault_fixup(struct work_struct *work)
+ 
+ 	/* User asked for enabler to be removed during fault */
+ 	if (test_bit(ENABLE_VAL_FREEING_BIT, ENABLE_BITOPS(enabler))) {
+-		user_event_enabler_destroy(enabler);
++		user_event_enabler_destroy(enabler, true);
+ 		goto out;
+ 	}
+ 
+@@ -489,13 +512,12 @@ static bool user_event_enabler_dup(struct user_event_enabler *orig,
+ 	if (!enabler)
+ 		return false;
+ 
+-	enabler->event = orig->event;
++	enabler->event = user_event_get(orig->event);
+ 	enabler->addr = orig->addr;
+ 
+ 	/* Only dup part of value (ignore future flags, etc) */
+ 	enabler->values = orig->values & ENABLE_VAL_DUP_MASK;
+ 
+-	refcount_inc(&enabler->event->refcnt);
+ 	list_add_rcu(&enabler->link, &mm->enablers);
+ 
+ 	return true;
+@@ -595,7 +617,7 @@ static void user_event_mm_destroy(struct user_event_mm *mm)
+ 	struct user_event_enabler *enabler, *next;
+ 
+ 	list_for_each_entry_safe(enabler, next, &mm->enablers, link)
+-		user_event_enabler_destroy(enabler);
++		user_event_enabler_destroy(enabler, false);
+ 
+ 	mmdrop(mm->mm);
+ 	kfree(mm);
+@@ -748,7 +770,7 @@ static struct user_event_enabler
+ 	 * exit or run exec(), which includes forks and clones.
+ 	 */
+ 	if (!*write_result) {
+-		refcount_inc(&enabler->event->refcnt);
++		user_event_get(user);
+ 		list_add_rcu(&enabler->link, &user_mm->enablers);
+ 	}
+ 
+@@ -1336,10 +1358,8 @@ static struct user_event *find_user_event(struct user_event_group *group,
+ 	*outkey = key;
+ 
+ 	hash_for_each_possible(group->register_table, user, node, key)
+-		if (!strcmp(EVENT_NAME(user), name)) {
+-			refcount_inc(&user->refcnt);
+-			return user;
+-		}
++		if (!strcmp(EVENT_NAME(user), name))
++			return user_event_get(user);
+ 
+ 	return NULL;
+ }
+@@ -1553,12 +1573,12 @@ static int user_event_reg(struct trace_event_call *call,
+ 
  	return ret;
+ inc:
+-	refcount_inc(&user->refcnt);
++	user_event_get(user);
+ 	update_enable_bit_for(user);
+ 	return 0;
+ dec:
+ 	update_enable_bit_for(user);
+-	refcount_dec(&user->refcnt);
++	user_event_put(user, true);
+ 	return 0;
  }
  
--static int reg_enable(long *enable, int size, int bit)
-+static int change_temp_event(bool enable)
-+{
-+	return __change_event(temp_enable_file, enable);
-+}
-+
-+static int change_event(bool enable)
-+{
-+	return __change_event(enable_file, enable);
-+}
-+
-+static int __reg_enable(int *fd, const char *name, long *enable, int size,
-+			int bit, int flags)
- {
- 	struct user_reg reg = {0};
--	int fd = open(data_file, O_RDWR);
--	int ret;
+@@ -1592,7 +1612,7 @@ static int user_event_create(const char *raw_command)
+ 	ret = user_event_parse_cmd(group, name, &user, 0);
  
--	if (fd < 0)
-+	*fd = open(data_file, O_RDWR);
-+
-+	if (*fd < 0)
- 		return -1;
+ 	if (!ret)
+-		refcount_dec(&user->refcnt);
++		user_event_put(user, false);
  
- 	reg.size = sizeof(reg);
--	reg.name_args = (__u64)"__abi_event";
-+	reg.name_args = (__u64)name;
- 	reg.enable_bit = bit;
- 	reg.enable_addr = (__u64)enable;
- 	reg.enable_size = size;
-+	reg.flags = flags;
-+
-+	return ioctl(*fd, DIAG_IOCSREG, &reg);
-+}
+ 	mutex_unlock(&group->reg_mutex);
  
--	ret = ioctl(fd, DIAG_IOCSREG, &reg);
-+static int reg_enable_temp(int *fd, long *enable, int size, int bit)
-+{
-+	return __reg_enable(fd, "__abi_temp_event", enable, size, bit,
-+			    USER_EVENT_REG_AUTO_DEL);
-+}
-+
-+static int reg_enable(long *enable, int size, int bit)
-+{
-+	int ret;
-+	int fd;
-+
-+	ret = __reg_enable(&fd, "__abi_event", enable, size, bit, 0);
+@@ -1856,7 +1876,7 @@ static int delete_user_event(struct user_event_group *group, char *name)
+ 	if (!user)
+ 		return -ENOENT;
  
- 	close(fd);
+-	refcount_dec(&user->refcnt);
++	user_event_put(user, true);
  
-@@ -98,6 +155,7 @@ FIXTURE_SETUP(user) {
- }
+ 	if (!user_event_last_ref(user))
+ 		return -EBUSY;
+@@ -2015,9 +2035,7 @@ static int user_events_ref_add(struct user_event_file_info *info,
+ 	for (i = 0; i < count; ++i)
+ 		new_refs->events[i] = refs->events[i];
  
- FIXTURE_TEARDOWN(user) {
-+	clear_temp();
- }
+-	new_refs->events[i] = user;
+-
+-	refcount_inc(&user->refcnt);
++	new_refs->events[i] = user_event_get(user);
  
- TEST_F(user, enablement) {
-@@ -223,6 +281,47 @@ TEST_F(user, clones) {
- 	ASSERT_EQ(0, change_event(false));
- }
+ 	rcu_assign_pointer(info->refs, new_refs);
  
-+TEST_F(user, flags) {
-+	int grace = 100;
-+	int fd;
-+
-+	/* FLAG: USER_EVENT_REG_AUTO_DEL */
-+	/* Removal path 1, close on last fd ref */
-+	ASSERT_EQ(0, clear_temp());
-+	ASSERT_EQ(0, reg_enable_temp(&fd, &self->check, sizeof(int), 0));
-+	ASSERT_EQ(0, reg_disable(&self->check, 0));
-+	close(fd);
-+	ASSERT_EQ(false, temp_exists(grace));
-+
-+	/* Removal path 2, close on last enabler */
-+	ASSERT_EQ(0, clear_temp());
-+	ASSERT_EQ(0, reg_enable_temp(&fd, &self->check, sizeof(int), 0));
-+	close(fd);
-+	ASSERT_EQ(true, temp_exists(grace));
-+	ASSERT_EQ(0, reg_disable(&self->check, 0));
-+	ASSERT_EQ(false, temp_exists(grace));
-+
-+	/* Removal path 3, close on last trace_event ref */
-+	ASSERT_EQ(0, clear_temp());
-+	ASSERT_EQ(0, reg_enable_temp(&fd, &self->check, sizeof(int), 0));
-+	ASSERT_EQ(0, reg_disable(&self->check, 0));
-+	ASSERT_EQ(0, change_temp_event(true));
-+	close(fd);
-+	ASSERT_EQ(true, temp_exists(grace));
-+	ASSERT_EQ(0, change_temp_event(false));
-+	ASSERT_EQ(false, temp_exists(grace));
-+
-+	/* FLAG: Non-ABI */
-+	/* Unknown flags should fail with EINVAL */
-+	ASSERT_EQ(-1, __reg_enable(&fd, "__abi_invalid_event", &self->check,
-+				   sizeof(int), 0, USER_EVENT_REG_MAX));
-+	ASSERT_EQ(EINVAL, errno);
-+
-+	ASSERT_EQ(-1, __reg_enable(&fd, "__abi_invalid_event", &self->check,
-+				   sizeof(int), 0, USER_EVENT_REG_MAX + 1));
-+	ASSERT_EQ(EINVAL, errno);
-+}
-+
- int main(int argc, char **argv)
- {
- 	return test_harness_run(argc, argv);
+@@ -2131,7 +2149,7 @@ static long user_events_ioctl_reg(struct user_event_file_info *info,
+ 	ret = user_events_ref_add(info, user);
+ 
+ 	/* No longer need parse ref, ref_add either worked or not */
+-	refcount_dec(&user->refcnt);
++	user_event_put(user, false);
+ 
+ 	/* Positive number is index and valid */
+ 	if (ret < 0)
+@@ -2280,7 +2298,7 @@ static long user_events_ioctl_unreg(unsigned long uarg)
+ 			set_bit(ENABLE_VAL_FREEING_BIT, ENABLE_BITOPS(enabler));
+ 
+ 			if (!test_bit(ENABLE_VAL_FAULTING_BIT, ENABLE_BITOPS(enabler)))
+-				user_event_enabler_destroy(enabler);
++				user_event_enabler_destroy(enabler, true);
+ 
+ 			/* Removed at least one */
+ 			ret = 0;
+@@ -2337,7 +2355,6 @@ static int user_events_release(struct inode *node, struct file *file)
+ 	struct user_event_file_info *info = file->private_data;
+ 	struct user_event_group *group;
+ 	struct user_event_refs *refs;
+-	struct user_event *user;
+ 	int i;
+ 
+ 	if (!info)
+@@ -2361,12 +2378,9 @@ static int user_events_release(struct inode *node, struct file *file)
+ 	 * The underlying user_events are ref counted, and cannot be freed.
+ 	 * After this decrement, the user_events may be freed elsewhere.
+ 	 */
+-	for (i = 0; i < refs->count; ++i) {
+-		user = refs->events[i];
++	for (i = 0; i < refs->count; ++i)
++		user_event_put(refs->events[i], false);
+ 
+-		if (user)
+-			refcount_dec(&user->refcnt);
+-	}
+ out:
+ 	file->private_data = NULL;
+ 
 -- 
 2.25.1
 
