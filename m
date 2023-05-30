@@ -2,82 +2,86 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 51714C7EE32
-	for <linux-trace-kernel@archiver.kernel.org>; Tue, 30 May 2023 23:40:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 309E6C7EE23
+	for <linux-trace-kernel@archiver.kernel.org>; Tue, 30 May 2023 23:53:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233935AbjE3Xki (ORCPT
+        id S233869AbjE3XxQ (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Tue, 30 May 2023 19:40:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60488 "EHLO
+        Tue, 30 May 2023 19:53:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37014 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233937AbjE3Xkd (ORCPT
+        with ESMTP id S231960AbjE3XxP (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Tue, 30 May 2023 19:40:33 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 78ACB18F;
-        Tue, 30 May 2023 16:40:25 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id D47B463544;
-        Tue, 30 May 2023 23:40:24 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 2E7D5C4339E;
-        Tue, 30 May 2023 23:40:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1685490024;
-        bh=93IH1PJyULP9H9CKkenkkwO9S03yefaslN8oe+MaLpU=;
-        h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-        b=E4BXP1JocNsvJNxCns1JewTFpD978vXapuTcGmiDGO2Zn6GZdbrZRKM9IdKFWaQ2R
-         JiT7c9FdrMZvA0K0Xq182r284IX9/Z1Abp/iyhzvXqHpqlSbpXb+JDWF72baj2MyD/
-         Fr6FHawDFPFYRrqPzrQVD0n3uOuVKKFrQkdBRDrMExmGU4rRraMjVv0h3/zjm9HynU
-         BjNaSvzCeTjCSq3fZ+Axra7izOLxYd/Okq40gydDQOb/YS7F6jSWey3V6UYiLqFoCC
-         mbNPdM56bUNTI6xSURugIsqofhluRLWGfgFrG+18v4uG+t1lskmvzHOqAQbWlgnmzW
-         3QhuCEag7t0Gw==
-Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-        by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 11E2DE52BF5;
-        Tue, 30 May 2023 23:40:24 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
+        Tue, 30 May 2023 19:53:15 -0400
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 5BF86AA;
+        Tue, 30 May 2023 16:53:12 -0700 (PDT)
+Received: from W11-BEAU-MD.localdomain (unknown [76.135.27.212])
+        by linux.microsoft.com (Postfix) with ESMTPSA id 931B920FC46B;
+        Tue, 30 May 2023 16:53:11 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 931B920FC46B
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+        s=default; t=1685490791;
+        bh=Z9owk60mLsQ9CmOnrrn5zp1mIr1kGtuAxKwMw6iuEA8=;
+        h=From:To:Cc:Subject:Date:From;
+        b=bmV7NDmUKut9lVN6Gvy8cX/SOgoVrBGj33TsV9lFkCIZuKLAmFtwIhhaIuGxP/E6T
+         80lX/RosXgdoXKkJfrikQ1vp6iGSAqt5s/Tmtot07RlOwgTJPi4vxOm6YvSnCh3Rzn
+         ZkzBpfeARZOkmtoZoBBmTMPVRdM9R/tnion8VfjU=
+From:   Beau Belgrave <beaub@linux.microsoft.com>
+To:     rostedt@goodmis.org, mhiramat@kernel.org
+Cc:     linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+        ast@kernel.org, dcook@linux.microsoft.com
+Subject: [PATCH 0/5] tracing/user_events: Add auto-del flag for events
+Date:   Tue, 30 May 2023 16:52:59 -0700
+Message-Id: <20230530235304.2726-1-beaub@linux.microsoft.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Subject: Re: [f2fs-dev] [PATCH v6] f2fs: add async reset zone command support
-From:   patchwork-bot+f2fs@kernel.org
-Message-Id: <168549002406.8773.17572147089084947715.git-patchwork-notify@kernel.org>
-Date:   Tue, 30 May 2023 23:40:24 +0000
-References: <20230508081042epcms2p8a637deae7de1829f54614e09d5fde5e5@epcms2p8>
-In-Reply-To: <20230508081042epcms2p8a637deae7de1829f54614e09d5fde5e5@epcms2p8>
-To:     Daejun Park <daejun7.park@samsung.com>
-Cc:     jaegeuk@kernel.org, chao@kernel.org, rostedt@goodmis.org,
-        mhiramat@kernel.org, linux-f2fs-devel@lists.sourceforge.net,
-        linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
-        sukka.kim@samsung.com, beomsu7.kim@samsung.com
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-Hello:
+As part of the discussions for user_events aligning to be used with eBPF
+it became clear [1] we needed a way to delete events without having to rely
+upon the delete IOCTL. Steven suggested that we simply have an owner
+for the event, however, the event can be held by more than just the
+first register FD, such as perf/ftrace or additional registers. In order
+to handle all those cases, we must only delete after all references are
+gone from both user and kernel space.
 
-This patch was applied to jaegeuk/f2fs.git (dev)
-by Jaegeuk Kim <jaegeuk@kernel.org>:
+This series adds a new register flag, USER_EVENT_REG_AUTO_DEL, which
+causes the event to delete itself upon the last put reference. We cannot
+fully drop the delete IOCTL, since we still want to enable events to be
+registered early via dynamic_events and persist. If the auto delete flag
+was used during dynamic_events, the event would delete immediately.
 
-On Mon, 08 May 2023 17:10:42 +0900 you wrote:
-> v5 -> v6
-> Added trace_f2fs_iostat support for zone reset command.
-> 
-> v4 -> v5
-> Added f2fs iostat for zone reset command.
-> 
-> v3 -> v4
-> Fixed build error caused by unused function.
-> 
-> [...]
+We have a few key events that we enable immediately after boot and are
+monitored in our environments. Today this is done via dynamic events,
+however, it could also be done directly via the ABI by not passing the
+auto delete flag.
 
-Here is the summary with links:
-  - [f2fs-dev,v6] f2fs: add async reset zone command support
-    https://git.kernel.org/jaegeuk/f2fs/c/7aa6ef440cd7
+NOTE: I'll need to merge this work once we take these [2] [3] patches
+into for-next. I'm happy to do so once they land there.
 
-You are awesome, thank you!
+1: https://lore.kernel.org/linux-trace-kernel/20230518093600.3f119d68@rorschach.local.home/
+2: https://lore.kernel.org/linux-trace-kernel/20230529032100.286534-1-sunliming@kylinos.cn/
+3: https://lore.kernel.org/linux-trace-kernel/20230519230741.669-1-beaub@linux.microsoft.com/
+
+Beau Belgrave (5):
+  tracing/user_events: Store register flags on events
+  tracing/user_events: Track refcount consistently via put/get
+  tracing/user_events: Add flag to auto-delete events
+  tracing/user_events: Add self-test for auto-del flag
+  tracing/user_events: Add auto-del flag documentation
+
+ Documentation/trace/user_events.rst           |  21 +-
+ include/uapi/linux/user_events.h              |  10 +-
+ kernel/trace/trace_events_user.c              | 183 ++++++++++++++----
+ .../testing/selftests/user_events/abi_test.c  | 115 ++++++++++-
+ 4 files changed, 278 insertions(+), 51 deletions(-)
+
+
+base-commit: 3862f86c1529fa0016de6344eb974877b4cd3838
 -- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
-
+2.25.1
 
