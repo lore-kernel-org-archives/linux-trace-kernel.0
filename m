@@ -2,38 +2,38 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BAF6C77B7A
-	for <linux-trace-kernel@archiver.kernel.org>; Tue, 30 May 2023 23:53:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F6C5C77B73
+	for <linux-trace-kernel@archiver.kernel.org>; Tue, 30 May 2023 23:53:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233147AbjE3XxQ (ORCPT
+        id S233820AbjE3XxR (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Tue, 30 May 2023 19:53:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37016 "EHLO
+        Tue, 30 May 2023 19:53:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37028 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230151AbjE3XxP (ORCPT
+        with ESMTP id S233493AbjE3XxQ (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Tue, 30 May 2023 19:53:15 -0400
+        Tue, 30 May 2023 19:53:16 -0400
 Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 6CB16B2;
-        Tue, 30 May 2023 16:53:12 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 5207DF9;
+        Tue, 30 May 2023 16:53:13 -0700 (PDT)
 Received: from W11-BEAU-MD.localdomain (unknown [76.135.27.212])
-        by linux.microsoft.com (Postfix) with ESMTPSA id D449320FC46D;
-        Tue, 30 May 2023 16:53:11 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com D449320FC46D
+        by linux.microsoft.com (Postfix) with ESMTPSA id 8AF2520FC475;
+        Tue, 30 May 2023 16:53:12 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 8AF2520FC475
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
         s=default; t=1685490792;
-        bh=dz/CtqF8fC3WjlIzINF503ue//H9KjjhIANdrvLeVn4=;
+        bh=jY9TSOdHVrfPeYA1EVOelAq4LjG1oi4wE8/rpaq0pvM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=iQORsCvD6vpEbIv0pI6gHu/s66CGSc9VNmHP5zEn17G21gdKW0xyLpMqI8Gj2mSgQ
-         Q6ospDsmeMg37r9SfigYKv/2e/O4tyUZFj7ot16O2wQUDQ4fpEGx6evvGncO5etTHI
-         3QoRk85Hzl0OAZgdBza/JiNHfAThEReUerZabxBQ=
+        b=KTalf09dM9FN1aKmNTp560gjdCVKv7BiWHr49EW1QWtkEc6a185AqMkvW3kzzh7+v
+         ArtAE6Os4uFfCRo5E0PcJzYcbOcZYOBOkyru6T2VoSodd0B3JNbq07AvFjcpGAxzLV
+         EaNmsJjsfUuC6cUYIIPUVOju1g8WPoBRCK13X60Y=
 From:   Beau Belgrave <beaub@linux.microsoft.com>
 To:     rostedt@goodmis.org, mhiramat@kernel.org
 Cc:     linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
         ast@kernel.org, dcook@linux.microsoft.com
-Subject: [PATCH 1/5] tracing/user_events: Store register flags on events
-Date:   Tue, 30 May 2023 16:53:00 -0700
-Message-Id: <20230530235304.2726-2-beaub@linux.microsoft.com>
+Subject: [PATCH 4/5] tracing/user_events: Add self-test for auto-del flag
+Date:   Tue, 30 May 2023 16:53:03 -0700
+Message-Id: <20230530235304.2726-5-beaub@linux.microsoft.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20230530235304.2726-1-beaub@linux.microsoft.com>
 References: <20230530235304.2726-1-beaub@linux.microsoft.com>
@@ -43,94 +43,177 @@ Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-Currently we don't have any available flags for user processes to use to
-indicate options for user_events. We will soon have a flag to indicate
-the event should auto-delete once it's not being used by anyone.
+A new flag for auto-deleting user_events upon the last reference exists
+now. We must ensure this flag works correctly in the common cases.
 
-Add a reg_flags field to user_events and parameters to existing
-functions to allow for this in future patches.
+Update abi self test to ensure when this flag is used the user_event
+goes away at the appropriate time. Ensure last fd, enabler, and
+trace_event_call refs paths correctly delete the event.
 
 Signed-off-by: Beau Belgrave <beaub@linux.microsoft.com>
 ---
- kernel/trace/trace_events_user.c | 16 ++++++++++------
- 1 file changed, 10 insertions(+), 6 deletions(-)
+ .../testing/selftests/user_events/abi_test.c  | 115 ++++++++++++++++--
+ 1 file changed, 107 insertions(+), 8 deletions(-)
 
-diff --git a/kernel/trace/trace_events_user.c b/kernel/trace/trace_events_user.c
-index b1ecd7677642..34aa0a5d8e2a 100644
---- a/kernel/trace/trace_events_user.c
-+++ b/kernel/trace/trace_events_user.c
-@@ -87,6 +87,7 @@ struct user_event {
- 	struct list_head		validators;
- 	refcount_t			refcnt;
- 	int				min_size;
-+	int				reg_flags;
- 	char				status;
- };
+diff --git a/tools/testing/selftests/user_events/abi_test.c b/tools/testing/selftests/user_events/abi_test.c
+index 5125c42efe65..9c726616f763 100644
+--- a/tools/testing/selftests/user_events/abi_test.c
++++ b/tools/testing/selftests/user_events/abi_test.c
+@@ -22,10 +22,41 @@
  
-@@ -163,7 +164,7 @@ typedef void (*user_event_func_t) (struct user_event *user, struct iov_iter *i,
+ const char *data_file = "/sys/kernel/tracing/user_events_data";
+ const char *enable_file = "/sys/kernel/tracing/events/user_events/__abi_event/enable";
++const char *temp_enable_file = "/sys/kernel/tracing/events/user_events/__abi_temp_event/enable";
  
- static int user_event_parse(struct user_event_group *group, char *name,
- 			    char *args, char *flags,
--			    struct user_event **newuser);
-+			    struct user_event **newuser, int reg_flags);
- 
- static struct user_event_mm *user_event_mm_get(struct user_event_mm *mm);
- static struct user_event_mm *user_event_mm_get_all(struct user_event *user);
-@@ -809,7 +810,8 @@ static struct list_head *user_event_get_fields(struct trace_event_call *call)
-  * Upon success user_event has its ref count increased by 1.
-  */
- static int user_event_parse_cmd(struct user_event_group *group,
--				char *raw_command, struct user_event **newuser)
-+				char *raw_command, struct user_event **newuser,
-+				int reg_flags)
+-static int change_event(bool enable)
++static bool temp_exists(int grace_ms)
++{
++	int fd;
++
++	usleep(grace_ms * 1000);
++
++	fd = open(temp_enable_file, O_RDONLY);
++
++	if (fd == -1)
++		return false;
++
++	close(fd);
++
++	return true;
++}
++
++static int clear_temp(void)
++{
++	int fd = open(data_file, O_RDWR);
++	int ret = 0;
++
++	if (ioctl(fd, DIAG_IOCSDEL, "__abi_temp_event") == -1)
++		if (errno != ENOENT)
++			ret = -1;
++
++	close(fd);
++
++	return ret;
++}
++
++static int __change_event(const char *path, bool enable)
  {
- 	char *name = raw_command;
- 	char *args = strpbrk(name, " ");
-@@ -823,7 +825,7 @@ static int user_event_parse_cmd(struct user_event_group *group,
- 	if (flags)
- 		*flags++ = '\0';
+-	int fd = open(enable_file, O_RDWR);
++	int fd = open(path, O_RDWR);
+ 	int ret;
  
--	return user_event_parse(group, name, args, flags, newuser);
-+	return user_event_parse(group, name, args, flags, newuser, reg_flags);
+ 	if (fd < 0)
+@@ -46,22 +77,48 @@ static int change_event(bool enable)
+ 	return ret;
  }
  
- static int user_field_array_size(const char *type)
-@@ -1587,7 +1589,7 @@ static int user_event_create(const char *raw_command)
- 
- 	mutex_lock(&group->reg_mutex);
- 
--	ret = user_event_parse_cmd(group, name, &user);
-+	ret = user_event_parse_cmd(group, name, &user, 0);
- 
- 	if (!ret)
- 		refcount_dec(&user->refcnt);
-@@ -1748,7 +1750,7 @@ static int user_event_trace_register(struct user_event *user)
-  */
- static int user_event_parse(struct user_event_group *group, char *name,
- 			    char *args, char *flags,
--			    struct user_event **newuser)
-+			    struct user_event **newuser, int reg_flags)
- {
- 	int ret;
- 	u32 key;
-@@ -1819,6 +1821,8 @@ static int user_event_parse(struct user_event_group *group, char *name,
- 	if (ret)
- 		goto put_user_lock;
- 
-+	user->reg_flags = reg_flags;
+-static int reg_enable(long *enable, int size, int bit)
++static int change_temp_event(bool enable)
++{
++	return __change_event(temp_enable_file, enable);
++}
 +
- 	/* Ensure we track self ref and caller ref (2) */
- 	refcount_set(&user->refcnt, 2);
++static int change_event(bool enable)
++{
++	return __change_event(enable_file, enable);
++}
++
++static int __reg_enable(int *fd, const char *name, long *enable, int size,
++			int bit, int flags)
+ {
+ 	struct user_reg reg = {0};
+-	int fd = open(data_file, O_RDWR);
+-	int ret;
  
-@@ -2117,7 +2121,7 @@ static long user_events_ioctl_reg(struct user_event_file_info *info,
- 		return ret;
- 	}
+-	if (fd < 0)
++	*fd = open(data_file, O_RDWR);
++
++	if (*fd < 0)
+ 		return -1;
  
--	ret = user_event_parse_cmd(info->group, name, &user);
-+	ret = user_event_parse_cmd(info->group, name, &user, reg.flags);
+ 	reg.size = sizeof(reg);
+-	reg.name_args = (__u64)"__abi_event";
++	reg.name_args = (__u64)name;
+ 	reg.enable_bit = bit;
+ 	reg.enable_addr = (__u64)enable;
+ 	reg.enable_size = size;
++	reg.flags = flags;
++
++	return ioctl(*fd, DIAG_IOCSREG, &reg);
++}
  
- 	if (ret) {
- 		kfree(name);
+-	ret = ioctl(fd, DIAG_IOCSREG, &reg);
++static int reg_enable_temp(int *fd, long *enable, int size, int bit)
++{
++	return __reg_enable(fd, "__abi_temp_event", enable, size, bit,
++			    USER_EVENT_REG_AUTO_DEL);
++}
++
++static int reg_enable(long *enable, int size, int bit)
++{
++	int ret;
++	int fd;
++
++	ret = __reg_enable(&fd, "__abi_event", enable, size, bit, 0);
+ 
+ 	close(fd);
+ 
+@@ -98,6 +155,7 @@ FIXTURE_SETUP(user) {
+ }
+ 
+ FIXTURE_TEARDOWN(user) {
++	clear_temp();
+ }
+ 
+ TEST_F(user, enablement) {
+@@ -223,6 +281,47 @@ TEST_F(user, clones) {
+ 	ASSERT_EQ(0, change_event(false));
+ }
+ 
++TEST_F(user, flags) {
++	int grace = 100;
++	int fd;
++
++	/* FLAG: USER_EVENT_REG_AUTO_DEL */
++	/* Removal path 1, close on last fd ref */
++	ASSERT_EQ(0, clear_temp());
++	ASSERT_EQ(0, reg_enable_temp(&fd, &self->check, sizeof(int), 0));
++	ASSERT_EQ(0, reg_disable(&self->check, 0));
++	close(fd);
++	ASSERT_EQ(false, temp_exists(grace));
++
++	/* Removal path 2, close on last enabler */
++	ASSERT_EQ(0, clear_temp());
++	ASSERT_EQ(0, reg_enable_temp(&fd, &self->check, sizeof(int), 0));
++	close(fd);
++	ASSERT_EQ(true, temp_exists(grace));
++	ASSERT_EQ(0, reg_disable(&self->check, 0));
++	ASSERT_EQ(false, temp_exists(grace));
++
++	/* Removal path 3, close on last trace_event ref */
++	ASSERT_EQ(0, clear_temp());
++	ASSERT_EQ(0, reg_enable_temp(&fd, &self->check, sizeof(int), 0));
++	ASSERT_EQ(0, reg_disable(&self->check, 0));
++	ASSERT_EQ(0, change_temp_event(true));
++	close(fd);
++	ASSERT_EQ(true, temp_exists(grace));
++	ASSERT_EQ(0, change_temp_event(false));
++	ASSERT_EQ(false, temp_exists(grace));
++
++	/* FLAG: Non-ABI */
++	/* Unknown flags should fail with EINVAL */
++	ASSERT_EQ(-1, __reg_enable(&fd, "__abi_invalid_event", &self->check,
++				   sizeof(int), 0, USER_EVENT_REG_MAX));
++	ASSERT_EQ(EINVAL, errno);
++
++	ASSERT_EQ(-1, __reg_enable(&fd, "__abi_invalid_event", &self->check,
++				   sizeof(int), 0, USER_EVENT_REG_MAX + 1));
++	ASSERT_EQ(EINVAL, errno);
++}
++
+ int main(int argc, char **argv)
+ {
+ 	return test_harness_run(argc, argv);
 -- 
 2.25.1
 
