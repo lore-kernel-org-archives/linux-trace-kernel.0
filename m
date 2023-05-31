@@ -2,112 +2,125 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BDCCC77B7C
-	for <linux-trace-kernel@archiver.kernel.org>; Wed, 31 May 2023 09:45:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BD25BC77B73
+	for <linux-trace-kernel@archiver.kernel.org>; Wed, 31 May 2023 21:44:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234775AbjEaJpD (ORCPT
+        id S229459AbjEaVox (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Wed, 31 May 2023 05:45:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45412 "EHLO
+        Wed, 31 May 2023 17:44:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47288 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234454AbjEaJom (ORCPT
+        with ESMTP id S229925AbjEaVot (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Wed, 31 May 2023 05:44:42 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 32BDBE2;
-        Wed, 31 May 2023 02:44:39 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id C0AB9628FA;
-        Wed, 31 May 2023 09:44:38 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8E363C433D2;
-        Wed, 31 May 2023 09:44:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1685526278;
-        bh=gXpZQt0fiMNuulQi+USO5kyFDwAyiy8/7Or+1AC5GE0=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=U0PGCKlkt8+cOC9kO/FI3GYayjP9ZEKsXFEI3idqCsujVwIOjfQ/Wg0fU4yH5QSuW
-         XlEFnem7/UC5W0+8g0kpUxHspMOLRsbd0mpu02K55PoEMelvOY3bKwXj72kj68ysSb
-         /HOT0ViaRy7czmP5Icn3fCPm8Q2D1H6R0vZEkhDTb/qSXQiQRdwGEOUnogiiaLtHDu
-         J1MmYFUtiSARnJelNGW8bitE+YqYro9ASn3dXEy+Kk/wMb1liYGlGihjLzouxpNQp1
-         +9djjek8wZlGG/RgTTCK1FbMNMAgGuJ7BdcCzqFuMJUhQfHwYngT9VBaOBgZl0gew0
-         KXZCDHnSBlDIA==
-Date:   Wed, 31 May 2023 18:44:34 +0900
-From:   Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To:     Ze Gao <zegao2021@gmail.com>
-Cc:     "Naveen N. Rao" <naveen.n.rao@linux.ibm.com>,
-        Anil S Keshavamurthy <anil.s.keshavamurthy@intel.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Ze Gao <zegao@tencent.com>, linux-kernel@vger.kernel.org,
-        linux-trace-kernel@vger.kernel.org
-Subject: Re: [PATCH] kprobe: use preempt_{disable, enable}_notrace in
- kprobe_busy_{begin, end}
-Message-Id: <20230531184434.1bbc15d8ed2f192581560e4f@kernel.org>
-In-Reply-To: <20230513090548.376522-1-zegao@tencent.com>
-References: <20230513090548.376522-1-zegao@tencent.com>
-X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        Wed, 31 May 2023 17:44:49 -0400
+Received: from mail-pg1-x536.google.com (mail-pg1-x536.google.com [IPv6:2607:f8b0:4864:20::536])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ADE90A3;
+        Wed, 31 May 2023 14:44:48 -0700 (PDT)
+Received: by mail-pg1-x536.google.com with SMTP id 41be03b00d2f7-53f832298acso101952a12.0;
+        Wed, 31 May 2023 14:44:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1685569488; x=1688161488;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=D8caNu+Z//IMCGkxo6v7uAZBbgdxL0hMk+H8KUvHR80=;
+        b=iU4kkVSVjaTrW3zNUeVLWJPzb8/Z9pybDQJewnbN+R4uod9eTpqVQgijkF1M0EZRPk
+         RGTNi7GoFQTeUslvEqxaZuR1c0wHJhwAI2P68wRALdiTT293sc6agZMF3QRRk7ebLdy5
+         G6y7cVxzaFqNDVNXpA59n72piybf55ATLvbkM5XEaSs4p80REBB5kptyhntKHVwye6p0
+         uadU/ZDAE2fZKjYHIche8YpnVPkf0Cpo9od1t5MqaOYWheRq8UCs4r1TVwB7YGFvYKfe
+         hYjYpI8dQCRKYE1KwmmZQfcW4m/z+o/u8TnabqjaVRy9CHhm1coBcSbsuBfO70FjW+yW
+         hTdg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1685569488; x=1688161488;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=D8caNu+Z//IMCGkxo6v7uAZBbgdxL0hMk+H8KUvHR80=;
+        b=MpuaOKMTNPlxRXZOp13WG3Ob0F+b4G2I2zjt6WObom8FoGeCLKd6Q+W8EFw0Hqoq/d
+         TfNPgYlCZhnUYV30HFLT6VdCNaoYUPyuS9OKeKRkBnDusiWcGbJgSMIZQqtpWUe+lE8e
+         8FvFPSW7wniZXreYHJkw3EWvZ7Y4LyT9TQz/KFumHeEY1BFS6t/ncfIcXck5n+7xSdJU
+         vqhPc2CFJmA26QTjUynysml7I/RIX+h2/Rd8UUePJlgWWEaEXmMNB4hMUq0JlAl8kujO
+         UQhzzl4EeQC36VidfGfCCaHO+Vniu8wkKc1UpUZipYLVeLsjTkOKaXQIN6Kwn7r4NvIv
+         CmXw==
+X-Gm-Message-State: AC+VfDyO9whR69wOydmmerjiW2zQUCERb0qzlbIV6qvXbcqCIqvT8PpT
+        RA+rc5iuzRfR9k10R+bTitM81fapX3M=
+X-Google-Smtp-Source: ACHHUZ6ThzdhIZv/6FdYXGy/LpZxDceL+PruuH9RmuAhEouspIXPJQD2w3dd9IPutJN4Z0eHqB7F6A==
+X-Received: by 2002:a17:902:d485:b0:1ae:7421:82b5 with SMTP id c5-20020a170902d48500b001ae742182b5mr5693992plg.45.1685569488053;
+        Wed, 31 May 2023 14:44:48 -0700 (PDT)
+Received: from MacBook-Pro-8.local ([2620:10d:c090:400::5:a01a])
+        by smtp.gmail.com with ESMTPSA id a3-20020a1709027d8300b001a525705aa8sm1872797plm.136.2023.05.31.14.44.46
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 31 May 2023 14:44:47 -0700 (PDT)
+Date:   Wed, 31 May 2023 14:44:44 -0700
+From:   Alexei Starovoitov <alexei.starovoitov@gmail.com>
+To:     Beau Belgrave <beaub@linux.microsoft.com>
+Cc:     rostedt@goodmis.org, mhiramat@kernel.org,
+        linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+        ast@kernel.org, dcook@linux.microsoft.com, brauner@kernel.org,
+        dthaler@microsoft.com, bpf@vger.kernel.org
+Subject: Re: [PATCH 0/5] tracing/user_events: Add auto-del flag for events
+Message-ID: <20230531214444.5dqcbclgycfk3q77@MacBook-Pro-8.local>
+References: <20230530235304.2726-1-beaub@linux.microsoft.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230530235304.2726-1-beaub@linux.microsoft.com>
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-Hi,
+On Tue, May 30, 2023 at 04:52:59PM -0700, Beau Belgrave wrote:
+> As part of the discussions for user_events aligning to be used with eBPF
+> it became clear [1] we needed a way to delete events without having to rely
+> upon the delete IOCTL. Steven suggested that we simply have an owner
 
-On Sat, 13 May 2023 17:05:48 +0800
-Ze Gao <zegao2021@gmail.com> wrote:
+This patch set is not addressing the issues I pointed out earlier.
+It adds a new flag and new api. It's not a fix.
 
-> Replacing preempt_{disable, enable} with its corresponding notrace
-> version in kprobe_busy_{begin, end} because they are called by
-> fprobe_kprobe_handler. Such changes would resolve the potential
-> stack recursion or overflow problem introduced by preempt_count
-> _{add, sub} when these functions themselves accidentally traced
-> by fprobe+rethook, and does not break the original semantics.
-
-As I explained below;
-
-https://lore.kernel.org/all/20230517010311.f46db3f78b11cf9d92193527@kernel.org/
-
-we don't need this for kprobes because kprobes already prohibits
-probing on preempt_count_{add,sub}, and we don't want to miss
-tracing the preempt-off period by kprobes itself.
-
-Thank you,
-
+> for the event, however, the event can be held by more than just the
+> first register FD, such as perf/ftrace or additional registers. In order
+> to handle all those cases, we must only delete after all references are
+> gone from both user and kernel space.
 > 
-> Signed-off-by: Ze Gao <zegao@tencent.com>
-> ---
->  kernel/kprobes.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
+> This series adds a new register flag, USER_EVENT_REG_AUTO_DEL, which
+> causes the event to delete itself upon the last put reference. We cannot
+
+Do not introduce a new flag. Make this default.
+
+> fully drop the delete IOCTL, since we still want to enable events to be
+> registered early via dynamic_events and persist. If the auto delete flag
+> was used during dynamic_events, the event would delete immediately.
+
+You have to delete this broken "delete via ioctl" api.
+For persistent events you need a different api in its own name scope,
+so it doesn't conflict with per-fd events.
+
+> We have a few key events that we enable immediately after boot and are
+> monitored in our environments. Today this is done via dynamic events,
+> however, it could also be done directly via the ABI by not passing the
+> auto delete flag.
+>
+> NOTE: I'll need to merge this work once we take these [2] [3] patches
+> into for-next. I'm happy to do so once they land there.
 > 
-> diff --git a/kernel/kprobes.c b/kernel/kprobes.c
-> index 00e177de91cc..94d01b5d0646 100644
-> --- a/kernel/kprobes.c
-> +++ b/kernel/kprobes.c
-> @@ -1242,7 +1242,7 @@ void kprobe_busy_begin(void)
->  {
->  	struct kprobe_ctlblk *kcb;
->  
-> -	preempt_disable();
-> +	preempt_disable_notrace();
->  	__this_cpu_write(current_kprobe, &kprobe_busy);
->  	kcb = get_kprobe_ctlblk();
->  	kcb->kprobe_status = KPROBE_HIT_ACTIVE;
-> @@ -1251,7 +1251,7 @@ void kprobe_busy_begin(void)
->  void kprobe_busy_end(void)
->  {
->  	__this_cpu_write(current_kprobe, NULL);
-> -	preempt_enable();
-> +	preempt_enable_notrace();
->  }
->  
->  /* Add the new probe to 'ap->list'. */
+> 1: https://lore.kernel.org/linux-trace-kernel/20230518093600.3f119d68@rorschach.local.home/
+> 2: https://lore.kernel.org/linux-trace-kernel/20230529032100.286534-1-sunliming@kylinos.cn/
+> 3: https://lore.kernel.org/linux-trace-kernel/20230519230741.669-1-beaub@linux.microsoft.com/
+> 
+> Beau Belgrave (5):
+>   tracing/user_events: Store register flags on events
+>   tracing/user_events: Track refcount consistently via put/get
+>   tracing/user_events: Add flag to auto-delete events
+>   tracing/user_events: Add self-test for auto-del flag
+>   tracing/user_events: Add auto-del flag documentation
+> 
+>  Documentation/trace/user_events.rst           |  21 +-
+>  include/uapi/linux/user_events.h              |  10 +-
+>  kernel/trace/trace_events_user.c              | 183 ++++++++++++++----
+>  .../testing/selftests/user_events/abi_test.c  | 115 ++++++++++-
+>  4 files changed, 278 insertions(+), 51 deletions(-)
+> 
+> 
+> base-commit: 3862f86c1529fa0016de6344eb974877b4cd3838
 > -- 
-> 2.40.1
+> 2.25.1
 > 
-
-
--- 
-Masami Hiramatsu (Google) <mhiramat@kernel.org>
