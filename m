@@ -2,90 +2,171 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 800BEC77B7A
-	for <linux-trace-kernel@archiver.kernel.org>; Wed, 31 May 2023 21:50:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 35320C77B73
+	for <linux-trace-kernel@archiver.kernel.org>; Wed, 31 May 2023 23:11:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229648AbjEaVuT (ORCPT
+        id S229537AbjEaXLb (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Wed, 31 May 2023 17:50:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49816 "EHLO
+        Wed, 31 May 2023 19:11:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35078 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229499AbjEaVuT (ORCPT
+        with ESMTP id S229706AbjEaXLa (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Wed, 31 May 2023 17:50:19 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7E873A0;
-        Wed, 31 May 2023 14:50:18 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 1B21A63F71;
-        Wed, 31 May 2023 21:50:18 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0004BC433D2;
-        Wed, 31 May 2023 21:50:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1685569817;
-        bh=8S5pQOjcMMxdneL9UZGt2N8SWAwT3unke6T0NY8khZg=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=smcGeboWJKtD+WCSPuWQbH2aJC6CaODIDT/k4aAmfCr77+jKwJrzHsHnhtFBpPF2L
-         2jAdn0M9z2XIKYul8utY1932KPpjw6iQ5SNG0spZ0oYOHh7EX8lbmihqRMl31YPuOk
-         qkAMmsNuw1aJfFcvLKRWR4fEsyx6P0iOlK6bkg1QzjL5GFQk0uhn0MhzgRs0OWS/v9
-         9bsTlSZyJuS+FpeWAxRb8YezAmefnL0jeli9WGu/jhSq2xdBr6VppNjc1ALasiqbvS
-         smIlYGh1vCKCS+5lrMs02SAxwsEEGVPh4jRAi58WaEAcsHmt1XTB4ZRbfRsHYYrQBv
-         WpZwTCc37HpfQ==
-Date:   Wed, 31 May 2023 14:50:15 -0700
-From:   Josh Poimboeuf <jpoimboe@kernel.org>
-To:     Steven Rostedt <rostedt@goodmis.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Linux Trace Kernel <linux-trace-kernel@vger.kernel.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Song Liu <song@kernel.org>, live-patching@vger.kernel.org,
-        Kees Cook <keescook@chromium.org>,
-        Miguel Ojeda <ojeda@kernel.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Ingo Molnar <mingo@kernel.org>
-Subject: Re: [PATCH] ftrace: Allow inline functions not inlined to be traced
-Message-ID: <20230531215015.dxmkaouhdcat3hoe@treble>
-References: <20230502164102.1a51cdb4@gandalf.local.home>
+        Wed, 31 May 2023 19:11:30 -0400
+Received: from mail-qt1-x834.google.com (mail-qt1-x834.google.com [IPv6:2607:f8b0:4864:20::834])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 76FC012B
+        for <linux-trace-kernel@vger.kernel.org>; Wed, 31 May 2023 16:11:29 -0700 (PDT)
+Received: by mail-qt1-x834.google.com with SMTP id d75a77b69052e-3f804665702so92281cf.0
+        for <linux-trace-kernel@vger.kernel.org>; Wed, 31 May 2023 16:11:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20221208; t=1685574688; x=1688166688;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=M/MWN6rejTskcfCq1jo0OT/p1QBXsLATfA+P3wCJaoY=;
+        b=Fl9wqKb8OYiVPVPir2ykRI7L87RcY3p24K4mWUjopqQTvt6/CSKSwE9qVHRGO6ZIyW
+         IGgJ7ajDetdyJJ3J0awBrq/8PPsnnFT2U0Y+VQZlF3ypjJSsz6wb3/99o33RUgdV8q9D
+         LxgAmYusm5FQ9UhHpudVCbDtgWoGgI+YBGozKHPGQpt2VgcJVtpWrvFEyOgNyTyxzZmg
+         y4FzNbCCExTZsYgnHR8rb0eLgQOqCa2HOYwcjAeJPG8Rf8wPXO/lWazTGQJhdwBxCct5
+         ro3o47PFqt8NJqRflzi2ECtQf6klWmKPHu/KYN9vgBMNLtr5ELk17kW3gYx2FDQJWqVF
+         wK+g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1685574688; x=1688166688;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=M/MWN6rejTskcfCq1jo0OT/p1QBXsLATfA+P3wCJaoY=;
+        b=gXjSw/681D77nc38NxheKo4m0CoeWWfsX9GAERxFvuFUJsMWSfYNf6yVsRuW4ozi+K
+         8Ajuw+SENuwRNArIE3CDdX4w5+vDwhn7TDDhF+GjcYIkMwaYI4+VP5OK5WmyFgHwBb/m
+         bKfxD1oB60+gBFmVrPlgQ5ErDIWEKD4PeLOdAP8UhxBj5JrTChOtNU5vxVGIFD1K55l3
+         PqvpbDJY8B+CglEAEtW48G971/mEvo9omq96UGXvp1uTf3OAPyA5reFtQM6qgsLYNvYD
+         pReAsaOCXhjGtlcfkcK32c94RE+ommX6nhA0FU9EL0rA9nCGTKA3pf4uuOBrm5PNy+/g
+         Aw7Q==
+X-Gm-Message-State: AC+VfDwwXeOS9/7iwZC2Tm2ynQVbxGEVHbXkI7KOnGCnlWIWucK3tP4R
+        timDXytY9tQnwR4UCJuzPOOVf/eKcorHrn7Z2a9QyA==
+X-Google-Smtp-Source: ACHHUZ4fYvopsUDf0tKZluhlRdIiL+dMyvw/iJd7HM69nbbpN2GCk7JOyoWyB+QIJLSvn8t1n1/kKB5iqs8Czcu+kSs=
+X-Received: by 2002:ac8:4e45:0:b0:3db:1c01:9d95 with SMTP id
+ e5-20020ac84e45000000b003db1c019d95mr104964qtw.4.1685574688480; Wed, 31 May
+ 2023 16:11:28 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20230502164102.1a51cdb4@gandalf.local.home>
+References: <20230526234435.662652-1-yuzhao@google.com> <20230526234435.662652-5-yuzhao@google.com>
+ <ZHJHJPBF6euzOFdw@linux.dev> <CAOUHufa74CufHziHSquO5bZwbFXz2MNssBzW+AH7=Xo5RCnQ0A@mail.gmail.com>
+ <ZHZQdQAApIrw6fBu@linux.dev> <CAOUHufZOkBmZJgCU2xW2B8S3P3TWERHezy0xKWY9_TeyV9K7Rg@mail.gmail.com>
+ <ZHef0VsZvZ1Vnz0u@linux.dev>
+In-Reply-To: <ZHef0VsZvZ1Vnz0u@linux.dev>
+From:   Yu Zhao <yuzhao@google.com>
+Date:   Wed, 31 May 2023 17:10:52 -0600
+Message-ID: <CAOUHufZrfnfcbrqSzmHkejR5MA2gmGKZ3LMRhbLHV+1427z=Tw@mail.gmail.com>
+Subject: Re: [PATCH mm-unstable v2 04/10] kvm/arm64: make stage2 page tables
+ RCU safe
+To:     Oliver Upton <oliver.upton@linux.dev>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Alistair Popple <apopple@nvidia.com>,
+        Anup Patel <anup@brainfault.org>,
+        Ben Gardon <bgardon@google.com>,
+        Borislav Petkov <bp@alien8.de>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Chao Peng <chao.p.peng@linux.intel.com>,
+        Christophe Leroy <christophe.leroy@csgroup.eu>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Fabiano Rosas <farosas@linux.ibm.com>,
+        Gaosheng Cui <cuigaosheng1@huawei.com>,
+        Gavin Shan <gshan@redhat.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
+        James Morse <james.morse@arm.com>,
+        "Jason A. Donenfeld" <Jason@zx2c4.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Marc Zyngier <maz@kernel.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Michael Larabel <michael@michaellarabel.com>,
+        Mike Rapoport <rppt@kernel.org>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        Paul Mackerras <paulus@ozlabs.org>,
+        Peter Xu <peterx@redhat.com>,
+        Sean Christopherson <seanjc@google.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Thomas Huth <thuth@redhat.com>, Will Deacon <will@kernel.org>,
+        Zenghui Yu <yuzenghui@huawei.com>, kvmarm@lists.linux.dev,
+        kvm@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org, linuxppc-dev@lists.ozlabs.org,
+        linux-trace-kernel@vger.kernel.org, x86@kernel.org,
+        linux-mm@google.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On Tue, May 02, 2023 at 04:41:02PM -0400, Steven Rostedt wrote:
-> Today, it is no longer a problem if an inlined function is not inlined and
-> is traced. Removing notrace from inline has been requested several times
-> over the years. I believe it is now safe to do so.
-> 
-> Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
-> ---
->  include/linux/compiler_types.h | 7 +++----
->  1 file changed, 3 insertions(+), 4 deletions(-)
-> 
-> diff --git a/include/linux/compiler_types.h b/include/linux/compiler_types.h
-> index 547ea1ff806e..c8f23ba1c339 100644
-> --- a/include/linux/compiler_types.h
-> +++ b/include/linux/compiler_types.h
-> @@ -182,9 +182,8 @@ struct ftrace_likely_data {
->   * externally visible function. This makes extern inline behave as per gnu89
->   * semantics rather than c99. This prevents multiple symbol definition errors
->   * of extern inline functions at link time.
-> - * A lot of inline functions can cause havoc with function tracing.
->   */
-> -#define inline inline __gnu_inline __inline_maybe_unused notrace
-> +#define inline inline __gnu_inline __inline_maybe_unused
+On Wed, May 31, 2023 at 1:28=E2=80=AFPM Oliver Upton <oliver.upton@linux.de=
+v> wrote:
+>
+> On Tue, May 30, 2023 at 02:06:55PM -0600, Yu Zhao wrote:
+> > On Tue, May 30, 2023 at 1:37=E2=80=AFPM Oliver Upton <oliver.upton@linu=
+x.dev> wrote:
+> > >
+> > > Hi Yu,
+> > >
+> > > On Sat, May 27, 2023 at 02:13:07PM -0600, Yu Zhao wrote:
+> > > > On Sat, May 27, 2023 at 12:08=E2=80=AFPM Oliver Upton <oliver.upton=
+@linux.dev> wrote:
+> > > > > diff --git a/arch/arm64/kvm/hyp/pgtable.c b/arch/arm64/kvm/hyp/pg=
+table.c
+> > > > > index 3d61bd3e591d..bfbebdcb4ef0 100644
+> > > > > --- a/arch/arm64/kvm/hyp/pgtable.c
+> > > > > +++ b/arch/arm64/kvm/hyp/pgtable.c
+> > > > > @@ -1019,7 +1019,7 @@ static int stage2_unmap_walker(const struct=
+ kvm_pgtable_visit_ctx *ctx,
+> > > > >                                                kvm_granule_size(c=
+tx->level));
+> > > > >
+> > > > >         if (childp)
+> > > > > -               mm_ops->put_page(childp);
+> > > > > +               mm_ops->free_removed_table(childp, ctx->level);
+> > > >
+> > > > Thanks, Oliver.
+> > > >
+> > > > A couple of things I haven't had the chance to verify -- I'm hoping
+> > > > you could help clarify:
+> > > > 1. For unmapping, with free_removed_table(), wouldn't we have to lo=
+ok
+> > > > into the table we know it's empty unnecessarily?
+> > >
+> > > As it is currently implemented, yes. But, there's potential to fast-p=
+ath
+> > > the implementation by checking page_count() before starting the walk.
+> >
+> > Do you mind posting another patch? I'd be happy to ack it, as well as
+> > the one you suggested above.
+>
+> I'd rather not take such a patch independent of the test_clear_young
+> series if you're OK with that. Do you mind implementing something
+> similar to the above patch w/ the proposed optimization if you need it?
 
-Yes!!!  I've been wanting to do this for many years.  This will help
-live patching a lot.
+No worries. I can take the above together with the following, which
+would form a new series with its own merits, since apparently you
+think the !AF case is important.
 
-Acked-by: Josh Poimboeuf <jpoimboe@kernel.org>
+diff --git a/arch/arm64/kvm/mmu.c b/arch/arm64/kvm/mmu.c
+index 26a8d955b49c..6ce73ce9f146 100644
+--- a/arch/arm64/kvm/mmu.c
++++ b/arch/arm64/kvm/mmu.c
+@@ -1453,10 +1453,10 @@ static void handle_access_fault(struct
+kvm_vcpu *vcpu, phys_addr_t fault_ipa)
 
--- 
-Josh
+        trace_kvm_access_fault(fault_ipa);
+
+-       read_lock(&vcpu->kvm->mmu_lock);
++       rcu_read_lock();
+        mmu =3D vcpu->arch.hw_mmu;
+        pte =3D kvm_pgtable_stage2_mkyoung(mmu->pgt, fault_ipa);
+-       read_unlock(&vcpu->kvm->mmu_lock);
++       rcu_read_unlock();
+
+        if (kvm_pte_valid(pte))
+                kvm_set_pfn_accessed(kvm_pte_to_pfn(pte));
