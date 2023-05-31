@@ -2,64 +2,34 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 35320C77B73
-	for <linux-trace-kernel@archiver.kernel.org>; Wed, 31 May 2023 23:11:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 19B4BC7EE2D
+	for <linux-trace-kernel@archiver.kernel.org>; Wed, 31 May 2023 23:23:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229537AbjEaXLb (ORCPT
+        id S229603AbjEaXXJ (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Wed, 31 May 2023 19:11:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35078 "EHLO
+        Wed, 31 May 2023 19:23:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39092 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229706AbjEaXLa (ORCPT
+        with ESMTP id S229629AbjEaXXI (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Wed, 31 May 2023 19:11:30 -0400
-Received: from mail-qt1-x834.google.com (mail-qt1-x834.google.com [IPv6:2607:f8b0:4864:20::834])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 76FC012B
-        for <linux-trace-kernel@vger.kernel.org>; Wed, 31 May 2023 16:11:29 -0700 (PDT)
-Received: by mail-qt1-x834.google.com with SMTP id d75a77b69052e-3f804665702so92281cf.0
-        for <linux-trace-kernel@vger.kernel.org>; Wed, 31 May 2023 16:11:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20221208; t=1685574688; x=1688166688;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=M/MWN6rejTskcfCq1jo0OT/p1QBXsLATfA+P3wCJaoY=;
-        b=Fl9wqKb8OYiVPVPir2ykRI7L87RcY3p24K4mWUjopqQTvt6/CSKSwE9qVHRGO6ZIyW
-         IGgJ7ajDetdyJJ3J0awBrq/8PPsnnFT2U0Y+VQZlF3ypjJSsz6wb3/99o33RUgdV8q9D
-         LxgAmYusm5FQ9UhHpudVCbDtgWoGgI+YBGozKHPGQpt2VgcJVtpWrvFEyOgNyTyxzZmg
-         y4FzNbCCExTZsYgnHR8rb0eLgQOqCa2HOYwcjAeJPG8Rf8wPXO/lWazTGQJhdwBxCct5
-         ro3o47PFqt8NJqRflzi2ECtQf6klWmKPHu/KYN9vgBMNLtr5ELk17kW3gYx2FDQJWqVF
-         wK+g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1685574688; x=1688166688;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=M/MWN6rejTskcfCq1jo0OT/p1QBXsLATfA+P3wCJaoY=;
-        b=gXjSw/681D77nc38NxheKo4m0CoeWWfsX9GAERxFvuFUJsMWSfYNf6yVsRuW4ozi+K
-         8Ajuw+SENuwRNArIE3CDdX4w5+vDwhn7TDDhF+GjcYIkMwaYI4+VP5OK5WmyFgHwBb/m
-         bKfxD1oB60+gBFmVrPlgQ5ErDIWEKD4PeLOdAP8UhxBj5JrTChOtNU5vxVGIFD1K55l3
-         PqvpbDJY8B+CglEAEtW48G971/mEvo9omq96UGXvp1uTf3OAPyA5reFtQM6qgsLYNvYD
-         pReAsaOCXhjGtlcfkcK32c94RE+ommX6nhA0FU9EL0rA9nCGTKA3pf4uuOBrm5PNy+/g
-         Aw7Q==
-X-Gm-Message-State: AC+VfDwwXeOS9/7iwZC2Tm2ynQVbxGEVHbXkI7KOnGCnlWIWucK3tP4R
-        timDXytY9tQnwR4UCJuzPOOVf/eKcorHrn7Z2a9QyA==
-X-Google-Smtp-Source: ACHHUZ4fYvopsUDf0tKZluhlRdIiL+dMyvw/iJd7HM69nbbpN2GCk7JOyoWyB+QIJLSvn8t1n1/kKB5iqs8Czcu+kSs=
-X-Received: by 2002:ac8:4e45:0:b0:3db:1c01:9d95 with SMTP id
- e5-20020ac84e45000000b003db1c019d95mr104964qtw.4.1685574688480; Wed, 31 May
- 2023 16:11:28 -0700 (PDT)
-MIME-Version: 1.0
-References: <20230526234435.662652-1-yuzhao@google.com> <20230526234435.662652-5-yuzhao@google.com>
- <ZHJHJPBF6euzOFdw@linux.dev> <CAOUHufa74CufHziHSquO5bZwbFXz2MNssBzW+AH7=Xo5RCnQ0A@mail.gmail.com>
- <ZHZQdQAApIrw6fBu@linux.dev> <CAOUHufZOkBmZJgCU2xW2B8S3P3TWERHezy0xKWY9_TeyV9K7Rg@mail.gmail.com>
- <ZHef0VsZvZ1Vnz0u@linux.dev>
-In-Reply-To: <ZHef0VsZvZ1Vnz0u@linux.dev>
-From:   Yu Zhao <yuzhao@google.com>
-Date:   Wed, 31 May 2023 17:10:52 -0600
-Message-ID: <CAOUHufZrfnfcbrqSzmHkejR5MA2gmGKZ3LMRhbLHV+1427z=Tw@mail.gmail.com>
-Subject: Re: [PATCH mm-unstable v2 04/10] kvm/arm64: make stage2 page tables
- RCU safe
-To:     Oliver Upton <oliver.upton@linux.dev>
+        Wed, 31 May 2023 19:23:08 -0400
+Received: from out-20.mta1.migadu.com (out-20.mta1.migadu.com [95.215.58.20])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DFBCA123
+        for <linux-trace-kernel@vger.kernel.org>; Wed, 31 May 2023 16:23:05 -0700 (PDT)
+Date:   Wed, 31 May 2023 23:22:53 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+        t=1685575383;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=SXIoTlecMC6VxxSME1sHTXGjADcYTmN1y7mvnJvjlhM=;
+        b=lyfbrHT4Q4zo1L0ArqeQIdJoep5zRjHJ2OLTTh3iRuaDrDCmyrt6ZdUnmT8D0VRFrnKrfd
+        Fay41KvYXJP8CWHfKOE6M8su7vw1n8IEhIPvIvj0EphIHYOG0Ve9WKW9yduPpl6rDOCxtx
+        CeLsU8HW8TNpYdjp9DmTE9Euk9lTN+Y=
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From:   Oliver Upton <oliver.upton@linux.dev>
+To:     Yu Zhao <yuzhao@google.com>
 Cc:     Andrew Morton <akpm@linux-foundation.org>,
         Paolo Bonzini <pbonzini@redhat.com>,
         Alistair Popple <apopple@nvidia.com>,
@@ -97,76 +67,72 @@ Cc:     Andrew Morton <akpm@linux-foundation.org>,
         linux-mm@kvack.org, linuxppc-dev@lists.ozlabs.org,
         linux-trace-kernel@vger.kernel.org, x86@kernel.org,
         linux-mm@google.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH mm-unstable v2 04/10] kvm/arm64: make stage2 page tables
+ RCU safe
+Message-ID: <ZHfWzX04GlcNngdU@linux.dev>
+References: <20230526234435.662652-1-yuzhao@google.com>
+ <20230526234435.662652-5-yuzhao@google.com>
+ <ZHJHJPBF6euzOFdw@linux.dev>
+ <CAOUHufa74CufHziHSquO5bZwbFXz2MNssBzW+AH7=Xo5RCnQ0A@mail.gmail.com>
+ <ZHZQdQAApIrw6fBu@linux.dev>
+ <CAOUHufZOkBmZJgCU2xW2B8S3P3TWERHezy0xKWY9_TeyV9K7Rg@mail.gmail.com>
+ <ZHef0VsZvZ1Vnz0u@linux.dev>
+ <CAOUHufZrfnfcbrqSzmHkejR5MA2gmGKZ3LMRhbLHV+1427z=Tw@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAOUHufZrfnfcbrqSzmHkejR5MA2gmGKZ3LMRhbLHV+1427z=Tw@mail.gmail.com>
+X-Migadu-Flow: FLOW_OUT
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On Wed, May 31, 2023 at 1:28=E2=80=AFPM Oliver Upton <oliver.upton@linux.de=
-v> wrote:
->
-> On Tue, May 30, 2023 at 02:06:55PM -0600, Yu Zhao wrote:
-> > On Tue, May 30, 2023 at 1:37=E2=80=AFPM Oliver Upton <oliver.upton@linu=
-x.dev> wrote:
+On Wed, May 31, 2023 at 05:10:52PM -0600, Yu Zhao wrote:
+> On Wed, May 31, 2023 at 1:28 PM Oliver Upton <oliver.upton@linux.dev> wrote:
+> > On Tue, May 30, 2023 at 02:06:55PM -0600, Yu Zhao wrote:
+> > > On Tue, May 30, 2023 at 1:37 PM Oliver Upton <oliver.upton@linux.dev> wrote:
+> > > > As it is currently implemented, yes. But, there's potential to fast-path
+> > > > the implementation by checking page_count() before starting the walk.
 > > >
-> > > Hi Yu,
-> > >
-> > > On Sat, May 27, 2023 at 02:13:07PM -0600, Yu Zhao wrote:
-> > > > On Sat, May 27, 2023 at 12:08=E2=80=AFPM Oliver Upton <oliver.upton=
-@linux.dev> wrote:
-> > > > > diff --git a/arch/arm64/kvm/hyp/pgtable.c b/arch/arm64/kvm/hyp/pg=
-table.c
-> > > > > index 3d61bd3e591d..bfbebdcb4ef0 100644
-> > > > > --- a/arch/arm64/kvm/hyp/pgtable.c
-> > > > > +++ b/arch/arm64/kvm/hyp/pgtable.c
-> > > > > @@ -1019,7 +1019,7 @@ static int stage2_unmap_walker(const struct=
- kvm_pgtable_visit_ctx *ctx,
-> > > > >                                                kvm_granule_size(c=
-tx->level));
-> > > > >
-> > > > >         if (childp)
-> > > > > -               mm_ops->put_page(childp);
-> > > > > +               mm_ops->free_removed_table(childp, ctx->level);
-> > > >
-> > > > Thanks, Oliver.
-> > > >
-> > > > A couple of things I haven't had the chance to verify -- I'm hoping
-> > > > you could help clarify:
-> > > > 1. For unmapping, with free_removed_table(), wouldn't we have to lo=
-ok
-> > > > into the table we know it's empty unnecessarily?
-> > >
-> > > As it is currently implemented, yes. But, there's potential to fast-p=
-ath
-> > > the implementation by checking page_count() before starting the walk.
+> > > Do you mind posting another patch? I'd be happy to ack it, as well as
+> > > the one you suggested above.
 > >
-> > Do you mind posting another patch? I'd be happy to ack it, as well as
-> > the one you suggested above.
->
-> I'd rather not take such a patch independent of the test_clear_young
-> series if you're OK with that. Do you mind implementing something
-> similar to the above patch w/ the proposed optimization if you need it?
+> > I'd rather not take such a patch independent of the test_clear_young
+> > series if you're OK with that. Do you mind implementing something
+> > similar to the above patch w/ the proposed optimization if you need it?
+> 
+> No worries. I can take the above together with the following, which
+> would form a new series with its own merits, since apparently you
+> think the !AF case is important.
 
-No worries. I can take the above together with the following, which
-would form a new series with its own merits, since apparently you
-think the !AF case is important.
+Sorry if my suggestion was unclear.
 
-diff --git a/arch/arm64/kvm/mmu.c b/arch/arm64/kvm/mmu.c
-index 26a8d955b49c..6ce73ce9f146 100644
---- a/arch/arm64/kvm/mmu.c
-+++ b/arch/arm64/kvm/mmu.c
-@@ -1453,10 +1453,10 @@ static void handle_access_fault(struct
-kvm_vcpu *vcpu, phys_addr_t fault_ipa)
+I thought we were talking about ->free_removed_table() being called from
+the stage-2 unmap path, in which case we wind up unnecessarily visiting
+PTEs on a table known to be empty. You could fast-path that by only
+initiating a walk if  page_count() > 1:
 
-        trace_kvm_access_fault(fault_ipa);
+diff --git a/arch/arm64/kvm/hyp/pgtable.c b/arch/arm64/kvm/hyp/pgtable.c
+index 95dae02ccc2e..766563dc465c 100644
+--- a/arch/arm64/kvm/hyp/pgtable.c
++++ b/arch/arm64/kvm/hyp/pgtable.c
+@@ -1331,7 +1331,8 @@ void kvm_pgtable_stage2_free_removed(struct kvm_pgtable_mm_ops *mm_ops, void *pg
+ 		.end	= kvm_granule_size(level),
+ 	};
+ 
+-	WARN_ON(__kvm_pgtable_walk(&data, mm_ops, ptep, level + 1));
++	if (mm_ops->page_count(pgtable) > 1)
++		WARN_ON(__kvm_pgtable_walk(&data, mm_ops, ptep, level + 1));
+ 
+ 	WARN_ON(mm_ops->page_count(pgtable) != 1);
+ 	mm_ops->put_page(pgtable);
 
--       read_lock(&vcpu->kvm->mmu_lock);
-+       rcu_read_lock();
-        mmu =3D vcpu->arch.hw_mmu;
-        pte =3D kvm_pgtable_stage2_mkyoung(mmu->pgt, fault_ipa);
--       read_unlock(&vcpu->kvm->mmu_lock);
-+       rcu_read_unlock();
 
-        if (kvm_pte_valid(pte))
-                kvm_set_pfn_accessed(kvm_pte_to_pfn(pte));
+A lock-free access fault walker is interesting, but in my testing it hasn't
+led to any significant improvements over acquiring the MMU lock for
+read. Because of that I hadn't bothered with posting the series upstream.
+
+-- 
+Thanks,
+Oliver
