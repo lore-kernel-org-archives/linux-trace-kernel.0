@@ -2,75 +2,88 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B2A2C77B7A
-	for <linux-trace-kernel@archiver.kernel.org>; Thu,  1 Jun 2023 09:30:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BFBBC77B7E
+	for <linux-trace-kernel@archiver.kernel.org>; Thu,  1 Jun 2023 09:42:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232278AbjFAJav (ORCPT
+        id S232622AbjFAJmc (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Thu, 1 Jun 2023 05:30:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48814 "EHLO
+        Thu, 1 Jun 2023 05:42:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56680 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231732AbjFAJau (ORCPT
+        with ESMTP id S231529AbjFAJmX (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Thu, 1 Jun 2023 05:30:50 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D576F97;
-        Thu,  1 Jun 2023 02:30:49 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 6874D64289;
-        Thu,  1 Jun 2023 09:30:49 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A90B5C433D2;
-        Thu,  1 Jun 2023 09:30:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1685611848;
-        bh=nxbo84IOlR/x0Mz0ilNcc5GVTrThNltXID8GFyg0kV0=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=F/Om7C47aKLwfCnQvKQLwfE92UAcFrdtBziJesACLDyuxFZbL2SH+ieZe7wvJwKaI
-         ZIO2Y1t7vwYap3H2A538MX4KqKwGgAWnAYlo5cprz/lqi3s3sVsK4Vxi/yDKgkjXnq
-         tSbn6bUQx8RTOfLkeGX4SOG3uSO+cqdEwrivxA4Z2BDqww7DtmvLnpIrn3Ch11MYTO
-         17dm324W2U6X8F4qO13LJ4tyxXj9u62Jr6cFw0YvG7DAGQaJavGEGF7VHfRtD5t8F4
-         HVgwd2r5Y1W97eoukoW4DhfAN0p8dZeIFbefrKdhwwNBpXwRhiPXnX4Hgs+YzdajB0
-         paOxW+9Iy2ZJw==
-Date:   Thu, 1 Jun 2023 05:30:47 -0400
-From:   Sasha Levin <sashal@kernel.org>
-To:     Mark Brown <broonie@kernel.org>
-Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Shuah Khan <skhan@linuxfoundation.org>, shuah@kernel.org,
-        linux-trace-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org
-Subject: Re: [PATCH AUTOSEL 6.3 07/67] selftests/ftrace: Improve integration
- with kselftest runner
-Message-ID: <ZHhlR+bZO7mOGKVf@sashalap>
-References: <20230525183144.1717540-1-sashal@kernel.org>
- <20230525183144.1717540-7-sashal@kernel.org>
- <276d5748-40c4-43b4-9241-9d30a5a64d0e@sirena.org.uk>
+        Thu, 1 Jun 2023 05:42:23 -0400
+Received: from mail-ot1-f65.google.com (mail-ot1-f65.google.com [209.85.210.65])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 10F981B5;
+        Thu,  1 Jun 2023 02:42:12 -0700 (PDT)
+Received: by mail-ot1-f65.google.com with SMTP id 46e09a7af769-6af70ff2761so617918a34.0;
+        Thu, 01 Jun 2023 02:42:12 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1685612532; x=1688204532;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=xD7Vt+s/zfrb3I67O6RtMQEijSSfyZ3z20C7E6e0J4Y=;
+        b=WiQ1YXIRgNeofWs4vsRwhyvzuFjPbcTMsFRrO2sUHwGlU1X4nd+B/3i8oDwsFUJKV1
+         YeWgJug9DFtggSSHqs8H0dArJtDbF/s3kJTIxpX61zLpXldfvaARlYyVvKdxVkZvw+t+
+         qhz71LJ50H2G8lKTa/NqtWzWnMT7VIwrU2h4b2Dn+Ro/D9pUWFzps3xYKI/1zusFiYsN
+         e0obc0qMqZocOVrx7uKuDkRScnT/SG41+xaL4dtqAnDbRtVYrqpZw7NT2Ew2PoE35V9Q
+         RXTNXDpPGJ6fwS8klBs180NubXmjDttxMscJjryoHAwbxRmZpGmje9X6tAi7Z6a+Ert6
+         07Tw==
+X-Gm-Message-State: AC+VfDx0PfGyAwIlfTbZpKSnAoUu5xmF+FLQJuRyaoNQegIDFAxeeEv/
+        GU6wWcL+/FQquexCW1OyNA==
+X-Google-Smtp-Source: ACHHUZ696BwWzLLwcQ0LMduQ0GPUzk+CyMW5/XuE4T3UydrBqZzrfxMTc7k/dBTU7MhIbyuButxaNg==
+X-Received: by 2002:a05:6358:e49c:b0:123:5b98:1944 with SMTP id by28-20020a056358e49c00b001235b981944mr2815301rwb.22.1685612531922;
+        Thu, 01 Jun 2023 02:42:11 -0700 (PDT)
+Received: from localhost.localdomain ([116.128.244.169])
+        by smtp.gmail.com with ESMTPSA id ca14-20020a17090af30e00b0025023726fc4sm995437pjb.26.2023.06.01.02.42.10
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 01 Jun 2023 02:42:11 -0700 (PDT)
+From:   sunliming <sunliming@kylinos.cn>
+To:     rostedt@goodmis.org, mhiramat@kernel.org, beaub@linux.microsoft.com
+Cc:     linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+        sunliming <sunliming@kylinos.cn>
+Subject: [PATCH] tracing/user_events: Fix the incorrect trace record for null arguments events
+Date:   Thu,  1 Jun 2023 17:41:58 +0800
+Message-Id: <20230601094158.575019-1-sunliming@kylinos.cn>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <276d5748-40c4-43b4-9241-9d30a5a64d0e@sirena.org.uk>
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On Fri, May 26, 2023 at 04:23:33PM +0100, Mark Brown wrote:
->On Thu, May 25, 2023 at 02:30:44PM -0400, Sasha Levin wrote:
->> From: Mark Brown <broonie@kernel.org>
->>
->> [ Upstream commit dbcf76390eb9a65d5d0c37b0cd57335218564e37 ]
->>
->> The ftrace selftests do not currently produce KTAP output, they produce a
->> custom format much nicer for human consumption. This means that when run in
->> automated test systems we just get a single result for the suite as a whole
->> rather than recording results for individual test cases, making it harder
->> to look at the test data and masking things like inappropriate skips.
->
->This seems to be very much a new feature rather than a fix?
+The user_events support events that has null arguments. But the trace event
+is discard and not really committed when the arguments is null, fix this
+problem.
 
-Yup, I'll drop it. Thanks!
+Signed-off-by: sunliming <sunliming@kylinos.cn>
+---
+ kernel/trace/trace_events_user.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
+diff --git a/kernel/trace/trace_events_user.c b/kernel/trace/trace_events_user.c
+index 0d91dac206ff..296bdfa674cb 100644
+--- a/kernel/trace/trace_events_user.c
++++ b/kernel/trace/trace_events_user.c
+@@ -1399,7 +1399,7 @@ static void user_event_ftrace(struct user_event *user, struct iov_iter *i,
+ 	if (unlikely(!entry))
+ 		return;
+ 
+-	if (unlikely(!copy_nofault(entry + 1, i->count, i)))
++	if (unlikely(i->count && !copy_nofault(entry + 1, i->count, i)))
+ 		goto discard;
+ 
+ 	if (!list_empty(&user->validators) &&
+@@ -1440,7 +1440,7 @@ static void user_event_perf(struct user_event *user, struct iov_iter *i,
+ 
+ 		perf_fetch_caller_regs(regs);
+ 
+-		if (unlikely(!copy_nofault(perf_entry + 1, i->count, i)))
++		if (unlikely(i->count && !copy_nofault(perf_entry + 1, i->count, i)))
+ 			goto discard;
+ 
+ 		if (!list_empty(&user->validators) &&
 -- 
-Thanks,
-Sasha
+2.25.1
+
