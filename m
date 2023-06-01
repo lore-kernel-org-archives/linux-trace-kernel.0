@@ -2,174 +2,144 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 42094C77B7A
-	for <linux-trace-kernel@archiver.kernel.org>; Wed, 31 May 2023 23:42:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 75F4FC77B73
+	for <linux-trace-kernel@archiver.kernel.org>; Thu,  1 Jun 2023 00:29:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229973AbjEaXmX (ORCPT
+        id S229491AbjFAA30 (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Wed, 31 May 2023 19:42:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42124 "EHLO
+        Wed, 31 May 2023 20:29:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53522 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229553AbjEaXmW (ORCPT
+        with ESMTP id S229612AbjFAA3Z (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Wed, 31 May 2023 19:42:22 -0400
-Received: from mail-qt1-x831.google.com (mail-qt1-x831.google.com [IPv6:2607:f8b0:4864:20::831])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C82EE12C
-        for <linux-trace-kernel@vger.kernel.org>; Wed, 31 May 2023 16:42:20 -0700 (PDT)
-Received: by mail-qt1-x831.google.com with SMTP id d75a77b69052e-3f6c6320d4eso42661cf.1
-        for <linux-trace-kernel@vger.kernel.org>; Wed, 31 May 2023 16:42:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20221208; t=1685576540; x=1688168540;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=rDpz4krIKrc5w7qSPtF5SBqUynCIQ+thylT8XbaHGrk=;
-        b=WNm7FPyfhTPx3ZGuMrBHq00CD2pUQeKGlcUX8mQgn+G5dCO9p4/NX7woMudP9DApXP
-         eMJLs5SBR4fdqa3yCschb/mCpUzrZdTzCQk17xPxaPcyNXmO0GRLdFy3gHbSHxXHPTIP
-         /ozEJCi5UQdQkb2Q3mM6Zqe3S8JqvimfuEEiV/OCiDq8WYg8q9tsb/A8n35UOySEMRSe
-         cP+xGSCeNhL+QPzuxby2Y4g4uZHxNXxQLSBGnHEXmI9NR/ErERIcrgGmxuzljhndSanB
-         WP4UQiQL4UinzVp+2JgQHC1IybU3nDhwSEzellmsm7CBhp4CdyqxMsCJACyJb3WM+PYH
-         0PFw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1685576540; x=1688168540;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=rDpz4krIKrc5w7qSPtF5SBqUynCIQ+thylT8XbaHGrk=;
-        b=fspEU9DU4/emdYdGYHOH5jx+1zorky6yW5gJ5h5OZfnrUTh3h7ALesU/1DTXbNTr4F
-         0hkar75UzMfeUryxUjKx87MfUd+iGFOMeNIooZa4kdI7lB5IESVz8CoN3TJI4kWEmlBF
-         LGDGGrGCHiqD2tLwX1Vg5OWfq10Dw59iKadAcB6XWnVVOmArCkl9da1FfnpEJW7Pmv28
-         rir/e6X1iRGw6zuRQ92LjVZf3tuHSIKSCYaImgV7hwkCN5Get3FQTcHfV2dSAbtw2dia
-         zZaanrEAaaTIH1l7xCQLzxfMg9/5Z8axo4VkIkECijikt6FObggWG0CzcY+k8PODuOuG
-         T8tA==
-X-Gm-Message-State: AC+VfDwP3jorALs3/A2EYSS1hkO+L0PULox8n5Yx1C9Vg6zGc6qm5dXd
-        QaV2Fuc3/57nRlpgCEoiUfLGzRxJGPCHIdKQAnPa1A==
-X-Google-Smtp-Source: ACHHUZ5sABagGYjruKN8zRy0nDodbSiJxufLAv2SN+7MEBixn3XZ6Uymw2VwUSkM1BtzAJXGzFSFspv6fmhfCqrF5xc=
-X-Received: by 2002:ac8:7f02:0:b0:3f6:97b4:1a53 with SMTP id
- f2-20020ac87f02000000b003f697b41a53mr30800qtk.29.1685576539790; Wed, 31 May
- 2023 16:42:19 -0700 (PDT)
+        Wed, 31 May 2023 20:29:25 -0400
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 17C22124;
+        Wed, 31 May 2023 17:29:24 -0700 (PDT)
+Received: from W11-BEAU-MD.localdomain (unknown [76.135.27.212])
+        by linux.microsoft.com (Postfix) with ESMTPSA id 4232520FC4D7;
+        Wed, 31 May 2023 17:29:23 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 4232520FC4D7
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+        s=default; t=1685579363;
+        bh=Z1v23pKuDidufXUFzDrQNxKmqMUYtqq8BJ7JNDupZo4=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=qmYGJlSoh7f0xBpo5W3+HkiMx/HVXZWbN4pUegNCqMEK11HYXZgDC7HVEmqmPsjr7
+         xyyg+bFpoSa6kk3bscIa7QVMDSVKydbvV6rnGr90w6Kt1G1YfkCVmrhlpsUReHZ9OZ
+         sSer5LjpQbfPzKKgIMCWbSnYqzenSWiCWRGMX8xQ=
+Date:   Wed, 31 May 2023 17:29:17 -0700
+From:   Beau Belgrave <beaub@linux.microsoft.com>
+To:     Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Cc:     rostedt@goodmis.org, mhiramat@kernel.org,
+        linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+        ast@kernel.org, dcook@linux.microsoft.com, brauner@kernel.org,
+        dthaler@microsoft.com, bpf@vger.kernel.org
+Subject: Re: [PATCH 0/5] tracing/user_events: Add auto-del flag for events
+Message-ID: <20230601002917.GA25634@W11-BEAU-MD.localdomain>
+References: <20230530235304.2726-1-beaub@linux.microsoft.com>
+ <20230531214444.5dqcbclgycfk3q77@MacBook-Pro-8.local>
 MIME-Version: 1.0
-References: <20230526234435.662652-1-yuzhao@google.com> <20230526234435.662652-5-yuzhao@google.com>
- <ZHJHJPBF6euzOFdw@linux.dev> <CAOUHufa74CufHziHSquO5bZwbFXz2MNssBzW+AH7=Xo5RCnQ0A@mail.gmail.com>
- <ZHZQdQAApIrw6fBu@linux.dev> <CAOUHufZOkBmZJgCU2xW2B8S3P3TWERHezy0xKWY9_TeyV9K7Rg@mail.gmail.com>
- <ZHef0VsZvZ1Vnz0u@linux.dev> <CAOUHufZrfnfcbrqSzmHkejR5MA2gmGKZ3LMRhbLHV+1427z=Tw@mail.gmail.com>
- <ZHfWzX04GlcNngdU@linux.dev>
-In-Reply-To: <ZHfWzX04GlcNngdU@linux.dev>
-From:   Yu Zhao <yuzhao@google.com>
-Date:   Wed, 31 May 2023 17:41:43 -0600
-Message-ID: <CAOUHufa9X4eXkvG+=xgm4AxrtvUKSZhjSRDtnskhVrVA2w2BkQ@mail.gmail.com>
-Subject: Re: [PATCH mm-unstable v2 04/10] kvm/arm64: make stage2 page tables
- RCU safe
-To:     Oliver Upton <oliver.upton@linux.dev>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Alistair Popple <apopple@nvidia.com>,
-        Anup Patel <anup@brainfault.org>,
-        Ben Gardon <bgardon@google.com>,
-        Borislav Petkov <bp@alien8.de>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Chao Peng <chao.p.peng@linux.intel.com>,
-        Christophe Leroy <christophe.leroy@csgroup.eu>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Fabiano Rosas <farosas@linux.ibm.com>,
-        Gaosheng Cui <cuigaosheng1@huawei.com>,
-        Gavin Shan <gshan@redhat.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
-        James Morse <james.morse@arm.com>,
-        "Jason A. Donenfeld" <Jason@zx2c4.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Marc Zyngier <maz@kernel.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Michael Larabel <michael@michaellarabel.com>,
-        Mike Rapoport <rppt@kernel.org>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        Paul Mackerras <paulus@ozlabs.org>,
-        Peter Xu <peterx@redhat.com>,
-        Sean Christopherson <seanjc@google.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Thomas Huth <thuth@redhat.com>, Will Deacon <will@kernel.org>,
-        Zenghui Yu <yuzenghui@huawei.com>, kvmarm@lists.linux.dev,
-        kvm@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-mm@kvack.org, linuxppc-dev@lists.ozlabs.org,
-        linux-trace-kernel@vger.kernel.org, x86@kernel.org,
-        linux-mm@google.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230531214444.5dqcbclgycfk3q77@MacBook-Pro-8.local>
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On Wed, May 31, 2023 at 5:23=E2=80=AFPM Oliver Upton <oliver.upton@linux.de=
-v> wrote:
->
-> On Wed, May 31, 2023 at 05:10:52PM -0600, Yu Zhao wrote:
-> > On Wed, May 31, 2023 at 1:28=E2=80=AFPM Oliver Upton <oliver.upton@linu=
-x.dev> wrote:
-> > > On Tue, May 30, 2023 at 02:06:55PM -0600, Yu Zhao wrote:
-> > > > On Tue, May 30, 2023 at 1:37=E2=80=AFPM Oliver Upton <oliver.upton@=
-linux.dev> wrote:
-> > > > > As it is currently implemented, yes. But, there's potential to fa=
-st-path
-> > > > > the implementation by checking page_count() before starting the w=
-alk.
-> > > >
-> > > > Do you mind posting another patch? I'd be happy to ack it, as well =
-as
-> > > > the one you suggested above.
-> > >
-> > > I'd rather not take such a patch independent of the test_clear_young
-> > > series if you're OK with that. Do you mind implementing something
-> > > similar to the above patch w/ the proposed optimization if you need i=
-t?
+On Wed, May 31, 2023 at 02:44:44PM -0700, Alexei Starovoitov wrote:
+> On Tue, May 30, 2023 at 04:52:59PM -0700, Beau Belgrave wrote:
+> > As part of the discussions for user_events aligning to be used with eBPF
+> > it became clear [1] we needed a way to delete events without having to rely
+> > upon the delete IOCTL. Steven suggested that we simply have an owner
+> 
+> This patch set is not addressing the issues I pointed out earlier.
+> It adds a new flag and new api. It's not a fix.
+> 
+
+Can you point out the scenario you are worried about?
+
+For example, if anything is using a per-FD event, it cannot be deleted,
+it will return -EBUSY. If perf, ftrace, or any user-process still has a
+reference to the event, the delete will not go through (even without
+these changes).
+
+I read your previous issues as, we cannot let anyone delete events while
+others are using them. And I also heard Steven state, we need to not let
+things pile up, since manual deletes are unlikely.
+
+> > for the event, however, the event can be held by more than just the
+> > first register FD, such as perf/ftrace or additional registers. In order
+> > to handle all those cases, we must only delete after all references are
+> > gone from both user and kernel space.
+> > 
+> > This series adds a new register flag, USER_EVENT_REG_AUTO_DEL, which
+> > causes the event to delete itself upon the last put reference. We cannot
+> 
+> Do not introduce a new flag. Make this default.
+> 
+
+If this is to be default, then I would have to have a flag for
+persistent events, which seems reasonable.
+
+> > fully drop the delete IOCTL, since we still want to enable events to be
+> > registered early via dynamic_events and persist. If the auto delete flag
+> > was used during dynamic_events, the event would delete immediately.
+> 
+> You have to delete this broken "delete via ioctl" api.
+> For persistent events you need a different api in its own name scope,
+> so it doesn't conflict with per-fd events.
+> 
+
+We have certain events we want persistent, that don't go away if the
+process crashes, etc. and we don't yet have a ring buffer up via
+perf_events.
+
+In these cases, we want the name to be the same for all processes, since
+it's a common event. An example is a common library that emits out
+assert messages. We want to watch for any asserts on the system,
+regardless of which process emits them.
+
+I'm not sure I understand how you think they would conflict?
+
+Another process cannot come in and register the same event name while
+it's in use. They can only do so once everything has been closed down.
+
+If another process uses the same name for an event, it must match the
+previous events arguments, and is treated as the same event. If they
+don't match then the register fails. The only way to get a conflict is
+to delete the event and then create a new one, but that only works if
+no one is still using it at all.
+
+Thanks,
+-Beau
+
+> > We have a few key events that we enable immediately after boot and are
+> > monitored in our environments. Today this is done via dynamic events,
+> > however, it could also be done directly via the ABI by not passing the
+> > auto delete flag.
 > >
-> > No worries. I can take the above together with the following, which
-> > would form a new series with its own merits, since apparently you
-> > think the !AF case is important.
->
-> Sorry if my suggestion was unclear.
->
-> I thought we were talking about ->free_removed_table() being called from
-> the stage-2 unmap path
-
-Yes, we were, or in general, about how to make KVM PTs RCU safe for ARM.
-
-So I'm thinking about taking 1) your patch above, 2) what I just
-suggested and 3) what you suggested below to form a mini series, which
-could land indepently and would make my job here easier.
-
-> in which case we wind up unnecessarily visiting
-> PTEs on a table known to be empty. You could fast-path that by only
-> initiating a walk if  page_count() > 1:
-
-Yes, this is what I meant.
-
-> diff --git a/arch/arm64/kvm/hyp/pgtable.c b/arch/arm64/kvm/hyp/pgtable.c
-> index 95dae02ccc2e..766563dc465c 100644
-> --- a/arch/arm64/kvm/hyp/pgtable.c
-> +++ b/arch/arm64/kvm/hyp/pgtable.c
-> @@ -1331,7 +1331,8 @@ void kvm_pgtable_stage2_free_removed(struct kvm_pgt=
-able_mm_ops *mm_ops, void *pg
->                 .end    =3D kvm_granule_size(level),
->         };
->
-> -       WARN_ON(__kvm_pgtable_walk(&data, mm_ops, ptep, level + 1));
-> +       if (mm_ops->page_count(pgtable) > 1)
-> +               WARN_ON(__kvm_pgtable_walk(&data, mm_ops, ptep, level + 1=
-));
->
->         WARN_ON(mm_ops->page_count(pgtable) !=3D 1);
->         mm_ops->put_page(pgtable);
->
->
-> A lock-free access fault walker is interesting, but in my testing it hasn=
-'t
-> led to any significant improvements over acquiring the MMU lock for
-> read. Because of that I hadn't bothered with posting the series upstream.
-
-It's hard to measure but we have perf benchmarks on ChromeOS which should h=
-elp.
+> > NOTE: I'll need to merge this work once we take these [2] [3] patches
+> > into for-next. I'm happy to do so once they land there.
+> > 
+> > 1: https://lore.kernel.org/linux-trace-kernel/20230518093600.3f119d68@rorschach.local.home/
+> > 2: https://lore.kernel.org/linux-trace-kernel/20230529032100.286534-1-sunliming@kylinos.cn/
+> > 3: https://lore.kernel.org/linux-trace-kernel/20230519230741.669-1-beaub@linux.microsoft.com/
+> > 
+> > Beau Belgrave (5):
+> >   tracing/user_events: Store register flags on events
+> >   tracing/user_events: Track refcount consistently via put/get
+> >   tracing/user_events: Add flag to auto-delete events
+> >   tracing/user_events: Add self-test for auto-del flag
+> >   tracing/user_events: Add auto-del flag documentation
+> > 
+> >  Documentation/trace/user_events.rst           |  21 +-
+> >  include/uapi/linux/user_events.h              |  10 +-
+> >  kernel/trace/trace_events_user.c              | 183 ++++++++++++++----
+> >  .../testing/selftests/user_events/abi_test.c  | 115 ++++++++++-
+> >  4 files changed, 278 insertions(+), 51 deletions(-)
+> > 
+> > 
+> > base-commit: 3862f86c1529fa0016de6344eb974877b4cd3838
+> > -- 
+> > 2.25.1
+> > 
