@@ -2,144 +2,178 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 75F4FC77B73
-	for <linux-trace-kernel@archiver.kernel.org>; Thu,  1 Jun 2023 00:29:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B696CC7EE29
+	for <linux-trace-kernel@archiver.kernel.org>; Thu,  1 Jun 2023 09:01:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229491AbjFAA30 (ORCPT
+        id S232007AbjFAJBA (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Wed, 31 May 2023 20:29:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53522 "EHLO
+        Thu, 1 Jun 2023 05:01:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56228 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229612AbjFAA3Z (ORCPT
+        with ESMTP id S231493AbjFAJA7 (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Wed, 31 May 2023 20:29:25 -0400
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 17C22124;
-        Wed, 31 May 2023 17:29:24 -0700 (PDT)
-Received: from W11-BEAU-MD.localdomain (unknown [76.135.27.212])
-        by linux.microsoft.com (Postfix) with ESMTPSA id 4232520FC4D7;
-        Wed, 31 May 2023 17:29:23 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 4232520FC4D7
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-        s=default; t=1685579363;
-        bh=Z1v23pKuDidufXUFzDrQNxKmqMUYtqq8BJ7JNDupZo4=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=qmYGJlSoh7f0xBpo5W3+HkiMx/HVXZWbN4pUegNCqMEK11HYXZgDC7HVEmqmPsjr7
-         xyyg+bFpoSa6kk3bscIa7QVMDSVKydbvV6rnGr90w6Kt1G1YfkCVmrhlpsUReHZ9OZ
-         sSer5LjpQbfPzKKgIMCWbSnYqzenSWiCWRGMX8xQ=
-Date:   Wed, 31 May 2023 17:29:17 -0700
-From:   Beau Belgrave <beaub@linux.microsoft.com>
-To:     Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Cc:     rostedt@goodmis.org, mhiramat@kernel.org,
-        linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
-        ast@kernel.org, dcook@linux.microsoft.com, brauner@kernel.org,
-        dthaler@microsoft.com, bpf@vger.kernel.org
-Subject: Re: [PATCH 0/5] tracing/user_events: Add auto-del flag for events
-Message-ID: <20230601002917.GA25634@W11-BEAU-MD.localdomain>
-References: <20230530235304.2726-1-beaub@linux.microsoft.com>
- <20230531214444.5dqcbclgycfk3q77@MacBook-Pro-8.local>
+        Thu, 1 Jun 2023 05:00:59 -0400
+Received: from DM4PR02CU002.outbound.protection.outlook.com (mail-centralusazon11013013.outbound.protection.outlook.com [52.101.64.13])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7C769B3;
+        Thu,  1 Jun 2023 02:00:57 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=U6PLOkxBr2+Z7KnCP4H4Bk7jaE8K2yM9Vpvm9QsACBDak5eLf5Jp3h/dlAZvQxjtFG8Ylm8A2cU1bDjbJkPTHfiMY2SVR5VVhL3iGB94SydUQbI6vPm3u+nKj/cEXOyEty5faTHT2LeuT+sPvR+GVZv+KHDvfCDrJi6OVY5Kp55ImA1gEGP+kT5Y1N3y2NWBgHBDKh+euQyhICszh47ROn/yk0ZbGTS405JdhE/vDsdDzblpfHDM5wyHHg2n03jWVQr327wGbiHyG6mYcbgRFCzTWg8xClcBOHm5pj6qt8RzRL+Vif8ziw3B6VEvpOYmprACcymsoe6DcZzu2rxv3Q==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=t0XXlWq0uPPNa7k5cwB3q3MvwRr04OEmEH8Jz1GKZlI=;
+ b=jmvLP6jV9cqLJW5Txce33p4kFBK3XRlWUDSMBUuhRcdza0SVJDNZN9BeSYWfNpZngYFHI4FRtwesQPDYqEkDj/2bcKeCYIz1gHCikOWvtjwbGfsUEL3N2Oo/HiG++O7QCEu5sJ53kMgdcpAg3EHPMoazYiEr/HcFefXqbXwhfQX5zvoQ9zaDyACyGQRJEuJAcYzBnMqfUPBVvZv8huN3H7VyjWnqWXRs/QRlTNTBw4btrnfYII0lWurx5JJjm/mgldC2psudkMXeGhjKhn3iPvBuK1CsVeL7Wo8ZyAb4D3wgWSS5cTA5bfz8prBmz+bgAaakx3+Haw6gDnIKwSbTWQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=vmware.com; dmarc=pass action=none header.from=vmware.com;
+ dkim=pass header.d=vmware.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=vmware.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=t0XXlWq0uPPNa7k5cwB3q3MvwRr04OEmEH8Jz1GKZlI=;
+ b=md4A3SLMa55BTUD3x5Xkw/Tgi8rc2E4zp0e7E6/IquAi7RE4Q4+044upqCaEnd1PdMKIn63/wAcNwqELJObejEUDw4zxbAxxII27CVNajykzk9habalEKaKDqHUSHxinC2Va2p7AWvDZ6FTXRG9v7H/VyofCYJ23D/c/Zjfklx4=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=vmware.com;
+Received: from PH0PR05MB8703.namprd05.prod.outlook.com (2603:10b6:510:bd::5)
+ by MW4PR05MB8617.namprd05.prod.outlook.com (2603:10b6:303:120::20) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6455.22; Thu, 1 Jun
+ 2023 09:00:54 +0000
+Received: from PH0PR05MB8703.namprd05.prod.outlook.com
+ ([fe80::5631:475a:58d4:cf66]) by PH0PR05MB8703.namprd05.prod.outlook.com
+ ([fe80::5631:475a:58d4:cf66%6]) with mapi id 15.20.6455.020; Thu, 1 Jun 2023
+ 09:00:54 +0000
+From:   Ajay Kaher <akaher@vmware.com>
+To:     rostedt@goodmis.org, mhiramat@kernel.org, shuah@kernel.org
+Cc:     linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+        linux-kselftest@vger.kernel.org, chinglinyu@google.com,
+        namit@vmware.com, srivatsa@csail.mit.edu, amakhalov@vmware.com,
+        vsirnapalli@vmware.com, tkundu@vmware.com, er.ajay.kaher@gmail.com,
+        Ajay Kaher <akaher@vmware.com>
+Subject: [PATCH v3 00/10] tracing: introducing eventfs
+Date:   Thu,  1 Jun 2023 14:30:03 +0530
+Message-Id: <1685610013-33478-1-git-send-email-akaher@vmware.com>
+X-Mailer: git-send-email 2.7.4
+Content-Type: text/plain
+X-ClientProxiedBy: SJ0PR03CA0181.namprd03.prod.outlook.com
+ (2603:10b6:a03:2ef::6) To PH0PR05MB8703.namprd05.prod.outlook.com
+ (2603:10b6:510:bd::5)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230531214444.5dqcbclgycfk3q77@MacBook-Pro-8.local>
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PH0PR05MB8703:EE_|MW4PR05MB8617:EE_
+X-MS-Office365-Filtering-Correlation-Id: f27c6882-996f-40b7-033f-08db627eb4d1
+X-LD-Processed: b39138ca-3cee-4b4a-a4d6-cd83d9dd62f0,ExtAddr
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: kYUk40JpqhB04BaSzkI/5ajZ1ABLexttVUs33OMGh90PQZYQchk7iKWlF10Hat12rlksQGU/dw2xFNmjkbgtPOX51wDrRg35RvzaF0Ueheph8RbnMs4lSIArH3UMNyaHv0GKQPPRHyyy3lvKVKI7z4xQR/VeqOWL6zm4kK1D//0topqfcrgaSSfuS7fN0I94G5LgIpfoocDOdbp3ex2obqMP6DFAd+ipJwuKA6vTVTnG2cjNHTZK2GxVfGpStXEw0u70mbcld6qXmcJKyvQo/51YkxcnNf/9RAsScBnsS2/St6aEony7GIWNgekKQkiCpqedUF3Dvz0PDbqk+BvqNgbBuBBhOp7H8T/LP4VTgEeHF2reUnefG1AKY0k/kA8kIrq8Q2g1iMDXHDmGaGULjsFtlqNkFHBvzmfkfbT1mCljpimoa9nXLPwJG8dS5hn9FAv5hesfAfXvjPz/RFVc6NTpp5n/UIsCX4J0h5ZiE8g+IOb7HNTYPiNN0OKc+jxkCC4B/mY2cSLJrceNZOFADH/i6GK+MqJjfeh3ifMZ+FGvLpIDmyhmGUMFN2xAEG4g3FG4QiCmjE8s4VhdOJc+wGkjzUZ5qBQ4WSAjqCTEhNgASmlO0UcZbRPMzFFqdiMv
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH0PR05MB8703.namprd05.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230028)(4636009)(396003)(39860400002)(346002)(136003)(376002)(366004)(451199021)(52116002)(6486002)(186003)(5660300002)(6666004)(41300700001)(107886003)(36756003)(8676002)(38100700002)(8936002)(26005)(6506007)(38350700002)(83380400001)(4326008)(66946007)(2906002)(66556008)(478600001)(66476007)(2616005)(6512007)(86362001)(316002);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?8qiBejyOGrKzvjlUnZE60JsNOJZW5WvEu/iBEbwdELwhPVj3zgZfb1Nas1Zi?=
+ =?us-ascii?Q?bacQvDn5s/lVBbXPwpX9HNd0fdYU7Ep6cDXGz+LPp6WopvAWbXlhTSVXSznH?=
+ =?us-ascii?Q?4yPQJDUn7Zq1rnLIw/iinc4rx7GCL2WEjZcoS9bBPbEE0CY7SNULLXq6tR2s?=
+ =?us-ascii?Q?ob4C6ZxeQg3HVe3MLu3IyrbgczOoSiPYcH8WQR/XKTua0XjZTD/nMm+7IgM2?=
+ =?us-ascii?Q?ZonYrjpLVn46zoi8ZpMqUjNn2s9JUEgkc4xdOyKl6mvAlMGgI9tlKlEoUQYO?=
+ =?us-ascii?Q?cV7CBJL6OLpO2tFHOIjnw4W/yY0CX65Dlvr/ahL2jJsx5sKs1skDspb/OC+a?=
+ =?us-ascii?Q?++f1RkDs0MoBSDWSIMsZoIv1Ix58+drGat4gyPvUkoNG5//6j2QGMdwG3LJ5?=
+ =?us-ascii?Q?csPZjGfBDjPqsMTv/sVpqYSGkSdrQgpQTXsV0IR1LywaTO3gZiypSHj9Mtq2?=
+ =?us-ascii?Q?8TY3T4Svh545xU6pFPyOhmez2CWHVYsu/6EF2j7nMC26T+FJkR7PC3UIMZ+h?=
+ =?us-ascii?Q?yGf5vern0wQ2DGmvZIDOVQI82vocRIOcbbJe0iy7MHI3nHOQ/VZ2/4XV57rL?=
+ =?us-ascii?Q?HErQRgFrErLB9J6Gf20PdGmNjVSyohLFKPGLvpBR6vDSreCa4Fs0F+nSGTAC?=
+ =?us-ascii?Q?GQ9Ej9OII5XX+ekU4gw6G9IspJqSknu09iN+2YwVegIFomELWFGOOk3xvB/1?=
+ =?us-ascii?Q?QxG15PWmpWyrjxEj73l11ywD+htELoksZmQHit0mi+vQKtmdpl8DF1dfFHYt?=
+ =?us-ascii?Q?CSrMCQ7l8nnECztO9Mt12CCwK+9qRkTNd57IEyDf2wBzRzB9oZ8vdp8meaSG?=
+ =?us-ascii?Q?UNPQFmUzIYYtTeE7vh7W6Fp3w6EjiWoYWIqvLNM6Rlv2ltFF8whP90aTKV5U?=
+ =?us-ascii?Q?QOuv/Rbzly90bLx2ttu9UyXpT4ZQ9ZiXRfJfShotsCniT120sYQZIx1HDABN?=
+ =?us-ascii?Q?bgnAk8XB/8DVYc6n67RxJN3qNWP8jg6vSw5/wgE2eo76jt4Vt3fbiOOobUwf?=
+ =?us-ascii?Q?B34iHZ+joqPXMHg3ZZHh5XAqQ/mVlaLK+Lhg4RUpdGgkYSqnZj1U0saHl73n?=
+ =?us-ascii?Q?devTrr8L2+ok7oOI7Owack16PSVD+6cpqlltLaWr9IRTxXmVXXSjRjGsdTNi?=
+ =?us-ascii?Q?dcZYuckFoWlYFQrybYIxzQ//vo8LPEamVVujGOVXvLv2FN7zfHawNb/p6eCC?=
+ =?us-ascii?Q?3CCDPc51BU+qp6P1qwT/lu+SHx/c8aVmk8Odn1frKd/+7NBKFAgmRs4jON57?=
+ =?us-ascii?Q?psR69dVEeBnCs0Yh/3U+HwjW7kS77uKp6Ov+pA/J23hwMmTFe7QXRswJbklO?=
+ =?us-ascii?Q?YzsrPY1jA8sefPzYSYAmFbd3Upq49CtqifrDxFdJ1hvs0xd0/4VGVlzq+cmR?=
+ =?us-ascii?Q?7VGscj3rRgKle1dlffnrEG2sIz2c6DT2rlJSZqkwwZc2ElFl3KEkWPVlrZeD?=
+ =?us-ascii?Q?Pt7HTIqTQFx7iVZ9BoWByWsAGqbGndz+7ED4VHUxWU2HlVm8mW6CJn3szNsH?=
+ =?us-ascii?Q?flHiyzb98tqhaAzOFnKVBpkdqlEjIu2OsiIIYJ0UWWeOIJIFnWOeqaym83b/?=
+ =?us-ascii?Q?fjaE3fuy0QsoRRum+/38FoUUlsEY6kwV7+kScj7Z?=
+X-OriginatorOrg: vmware.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: f27c6882-996f-40b7-033f-08db627eb4d1
+X-MS-Exchange-CrossTenant-AuthSource: PH0PR05MB8703.namprd05.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 01 Jun 2023 09:00:54.4282
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: b39138ca-3cee-4b4a-a4d6-cd83d9dd62f0
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: H70jLVt9kXIScuUAGou17hMqCdeg/SsgCbG0x1o/l7YgjSl03ErBQcZrHgfFk7DSkn2FaTFyOqCelz7PO0o90A==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW4PR05MB8617
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On Wed, May 31, 2023 at 02:44:44PM -0700, Alexei Starovoitov wrote:
-> On Tue, May 30, 2023 at 04:52:59PM -0700, Beau Belgrave wrote:
-> > As part of the discussions for user_events aligning to be used with eBPF
-> > it became clear [1] we needed a way to delete events without having to rely
-> > upon the delete IOCTL. Steven suggested that we simply have an owner
-> 
-> This patch set is not addressing the issues I pointed out earlier.
-> It adds a new flag and new api. It's not a fix.
-> 
+Events Tracing infrastructure contains lot of files, directories
+(internally in terms of inodes, dentries). And ends up by consuming
+memory in MBs. We can have multiple events of Events Tracing, which
+further requires more memory.
 
-Can you point out the scenario you are worried about?
+Instead of creating inodes/dentries, eventfs could keep meta-data and
+skip the creation of inodes/dentries. As and when require, eventfs will
+create the inodes/dentries only for required files/directories.
+Also eventfs would delete the inodes/dentries once no more requires
+but preserve the meta data.
 
-For example, if anything is using a per-FD event, it cannot be deleted,
-it will return -EBUSY. If perf, ftrace, or any user-process still has a
-reference to the event, the delete will not go through (even without
-these changes).
+Tracing events took ~9MB, with this approach it took ~4.5MB
+for ~10K files/dir.
 
-I read your previous issues as, we cannot let anyone delete events while
-others are using them. And I also heard Steven state, we need to not let
-things pile up, since manual deletes are unlikely.
+v2:
+Patch 01: new patch:'Require all trace events to have a TRACE_SYSTEM'
+Patch 02: moved from v1 1/9
+Patch 03: moved from v1 2/9
+          As suggested by Zheng Yejian, introduced eventfs_prepare_ef()
+          helper function to add files or directories to eventfs
+          fix WARNING reported by kernel test robot in v1 8/9
+Patch 04: moved from v1 3/9
+          used eventfs_prepare_ef() to add files
+          fix WARNING reported by kernel test robot in v1 8/9
+Patch 05: moved from v1 4/9
+          fix compiling warning reported by kernel test robot in v1 4/9
+Patch 06: moved from v1 5/9
+Patch 07: moved from v1 6/9
+Patch 08: moved from v1 7/9
+Patch 09: moved from v1 8/9
+          rebased because of v3 01/10
+Patch 10: moved from v1 9/9
 
-> > for the event, however, the event can be held by more than just the
-> > first register FD, such as perf/ftrace or additional registers. In order
-> > to handle all those cases, we must only delete after all references are
-> > gone from both user and kernel space.
-> > 
-> > This series adds a new register flag, USER_EVENT_REG_AUTO_DEL, which
-> > causes the event to delete itself upon the last put reference. We cannot
-> 
-> Do not introduce a new flag. Make this default.
-> 
+v1:
+Patch 1: add header file
+Patch 2: resolved kernel test robot issues
+         protecting eventfs lists using nested eventfs_rwsem
+Patch 3: protecting eventfs lists using nested eventfs_rwsem
+Patch 4: improve events cleanup code to fix crashes
+Patch 5: resolved kernel test robot issues
+         removed d_instantiate_anon() calls
+Patch 6: resolved kernel test robot issues
+         fix kprobe test in eventfs_root_lookup()
+         protecting eventfs lists using nested eventfs_rwsem
+Patch 7: remove header file
+Patch 8: pass eventfs_rwsem as argument to eventfs functions
+         called eventfs_remove_events_dir() instead of tracefs_remove()
+         from event_trace_del_tracer()
+Patch 9: new patch to fix kprobe test case
 
-If this is to be default, then I would have to have a flag for
-persistent events, which seems reasonable.
+ fs/tracefs/Makefile                           |   1 +
+ fs/tracefs/event_inode.c                      | 757 ++++++++++++++++++
+ fs/tracefs/inode.c                            | 124 ++-
+ fs/tracefs/internal.h                         |  25 +
+ include/linux/trace_events.h                  |   1 +
+ include/linux/tracefs.h                       |  49 ++
+ kernel/trace/trace.h                          |   3 +-
+ kernel/trace/trace_events.c                   |  78 +-
+ .../ftrace/test.d/kprobe/kprobe_args_char.tc  |   4 +-
+ .../test.d/kprobe/kprobe_args_string.tc       |   4 +-
+ 10 files changed, 994 insertions(+), 52 deletions(-)
+ create mode 100644 fs/tracefs/event_inode.c
+ create mode 100644 fs/tracefs/internal.h
 
-> > fully drop the delete IOCTL, since we still want to enable events to be
-> > registered early via dynamic_events and persist. If the auto delete flag
-> > was used during dynamic_events, the event would delete immediately.
-> 
-> You have to delete this broken "delete via ioctl" api.
-> For persistent events you need a different api in its own name scope,
-> so it doesn't conflict with per-fd events.
-> 
+-- 
+2.40.0
 
-We have certain events we want persistent, that don't go away if the
-process crashes, etc. and we don't yet have a ring buffer up via
-perf_events.
-
-In these cases, we want the name to be the same for all processes, since
-it's a common event. An example is a common library that emits out
-assert messages. We want to watch for any asserts on the system,
-regardless of which process emits them.
-
-I'm not sure I understand how you think they would conflict?
-
-Another process cannot come in and register the same event name while
-it's in use. They can only do so once everything has been closed down.
-
-If another process uses the same name for an event, it must match the
-previous events arguments, and is treated as the same event. If they
-don't match then the register fails. The only way to get a conflict is
-to delete the event and then create a new one, but that only works if
-no one is still using it at all.
-
-Thanks,
--Beau
-
-> > We have a few key events that we enable immediately after boot and are
-> > monitored in our environments. Today this is done via dynamic events,
-> > however, it could also be done directly via the ABI by not passing the
-> > auto delete flag.
-> >
-> > NOTE: I'll need to merge this work once we take these [2] [3] patches
-> > into for-next. I'm happy to do so once they land there.
-> > 
-> > 1: https://lore.kernel.org/linux-trace-kernel/20230518093600.3f119d68@rorschach.local.home/
-> > 2: https://lore.kernel.org/linux-trace-kernel/20230529032100.286534-1-sunliming@kylinos.cn/
-> > 3: https://lore.kernel.org/linux-trace-kernel/20230519230741.669-1-beaub@linux.microsoft.com/
-> > 
-> > Beau Belgrave (5):
-> >   tracing/user_events: Store register flags on events
-> >   tracing/user_events: Track refcount consistently via put/get
-> >   tracing/user_events: Add flag to auto-delete events
-> >   tracing/user_events: Add self-test for auto-del flag
-> >   tracing/user_events: Add auto-del flag documentation
-> > 
-> >  Documentation/trace/user_events.rst           |  21 +-
-> >  include/uapi/linux/user_events.h              |  10 +-
-> >  kernel/trace/trace_events_user.c              | 183 ++++++++++++++----
-> >  .../testing/selftests/user_events/abi_test.c  | 115 ++++++++++-
-> >  4 files changed, 278 insertions(+), 51 deletions(-)
-> > 
-> > 
-> > base-commit: 3862f86c1529fa0016de6344eb974877b4cd3838
-> > -- 
-> > 2.25.1
-> > 
