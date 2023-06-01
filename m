@@ -2,90 +2,220 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CCE43C77B7E
-	for <linux-trace-kernel@archiver.kernel.org>; Thu,  1 Jun 2023 15:31:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E09EFC7EE23
+	for <linux-trace-kernel@archiver.kernel.org>; Thu,  1 Jun 2023 15:57:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234945AbjFAPbE (ORCPT
+        id S233972AbjFAP5c (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Thu, 1 Jun 2023 11:31:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41012 "EHLO
+        Thu, 1 Jun 2023 11:57:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56354 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235085AbjFAPa7 (ORCPT
+        with ESMTP id S233990AbjFAP5a (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Thu, 1 Jun 2023 11:30:59 -0400
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 91641198;
-        Thu,  1 Jun 2023 08:30:39 -0700 (PDT)
-Received: from W11-BEAU-MD.localdomain (unknown [76.135.27.212])
-        by linux.microsoft.com (Postfix) with ESMTPSA id 4DA7B20FC4F7;
-        Thu,  1 Jun 2023 08:30:27 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 4DA7B20FC4F7
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-        s=default; t=1685633427;
-        bh=hc9nGqrPH8riQQfJDxNUI70MfSIahTTT1yY8knG+iNo=;
+        Thu, 1 Jun 2023 11:57:30 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 603F6E4;
+        Thu,  1 Jun 2023 08:57:29 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id EC9FE64709;
+        Thu,  1 Jun 2023 15:57:28 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 730CBC4339C;
+        Thu,  1 Jun 2023 15:57:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1685635048;
+        bh=9OaGz13+l/QA7z5cUOU0i8QKJYWZwhghRWXY61VApNA=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=PFSKKE7KoS3ygfgDLQSRCUOMa1qQLU5bvXgYrhVGC3Cj7YRc53eNVc/sAkMQOqgWl
-         NiOQDHeXeHy69Mc4Ege5qkp/zAcCta0riz4tsy2nxh9e6Kc4IrbSD0bTQ5+HBpLLkj
-         OAMpGXafvd6gJU+Teh6x8syXqspc5FmaLiUFGW2Q=
-Date:   Thu, 1 Jun 2023 08:30:23 -0700
-From:   Beau Belgrave <beaub@linux.microsoft.com>
-To:     sunliming <sunliming@kylinos.cn>
-Cc:     rostedt@goodmis.org, mhiramat@kernel.org,
-        linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
-Subject: Re: [PATCH] tracing/user_events: Fix the incorrect trace record for
- null arguments events
-Message-ID: <20230601153023.GB71@W11-BEAU-MD.localdomain>
-References: <20230601094158.575019-1-sunliming@kylinos.cn>
+        b=DrobPMMy+p/lPPl1dOLW42/3j+hyiMevHbh4W5grijSs2Pza7pX6Pdjj4nbskGGfq
+         Z7FBLZnteFZjvRZeaPG5HE+13t+h7AzaHR5A9hrhDRRqxhTB56OW/X82ysNLXylEna
+         uwSISr++vZ1oROigYthFsDGc0IHUYApcFOoevGUhxpwN3GZbJWg2coomug4IyJjc4S
+         p/0Z4/03qOi5koeVNUudR/pPWVgGpP5s+4AxWX3EplyCKcyTluRyXb6BlSrFVwP6Ei
+         PoNTSEsoyVFmrRib8RQxdvOj+UIcerWXzpyDlP4eo2kHloegyNJletnVX4lFZBfGgU
+         bfGLPhckypMTQ==
+Date:   Thu, 1 Jun 2023 17:57:22 +0200
+From:   Christian Brauner <brauner@kernel.org>
+To:     Beau Belgrave <beaub@linux.microsoft.com>
+Cc:     Alexei Starovoitov <alexei.starovoitov@gmail.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-trace-kernel@vger.kernel.org,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Andrii Nakryiko <andrii@kernel.org>, bpf <bpf@vger.kernel.org>,
+        David Vernet <void@manifault.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Dave Thaler <dthaler@microsoft.com>,
+        Christoph Hellwig <hch@infradead.org>
+Subject: Re: [PATCH] tracing/user_events: Run BPF program if attached
+Message-ID: <20230601-legten-festplatten-fe053c6f16a4@brauner>
+References: <20230509130111.62d587f1@rorschach.local.home>
+ <20230509163050.127d5123@rorschach.local.home>
+ <20230515165707.hv65ekwp2djkjj5i@MacBook-Pro-8.local>
+ <20230515192407.GA85@W11-BEAU-MD.localdomain>
+ <20230517003628.aqqlvmzffj7fzzoj@MacBook-Pro-8.local>
+ <20230516212658.2f5cc2c6@gandalf.local.home>
+ <20230517165028.GA71@W11-BEAU-MD.localdomain>
+ <CAADnVQK3-NBLSVRVsgArUEjqsuY2S_8mWsWmLEAtTzo+U49CKQ@mail.gmail.com>
+ <20230601-urenkel-holzofen-cd9403b9cadd@brauner>
+ <20230601152414.GA71@W11-BEAU-MD.localdomain>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20230601094158.575019-1-sunliming@kylinos.cn>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20230601152414.GA71@W11-BEAU-MD.localdomain>
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On Thu, Jun 01, 2023 at 05:41:58PM +0800, sunliming wrote:
-> The user_events support events that has null arguments. But the trace event
-> is discard and not really committed when the arguments is null, fix this
-> problem.
+On Thu, Jun 01, 2023 at 08:24:14AM -0700, Beau Belgrave wrote:
+> On Thu, Jun 01, 2023 at 11:46:13AM +0200, Christian Brauner wrote:
+> > On Wed, May 17, 2023 at 05:10:47PM -0700, Alexei Starovoitov wrote:
+> > > On Wed, May 17, 2023 at 9:50 AM Beau Belgrave <beaub@linux.microsoft.com> wrote:
+> > > > >
+> > > > > >
+> > > > > > Looks like user events were designed with intention to be unprivileged.
+> > > > > > When I looked at kernel/trace/trace_events_user.c I assumed root.
+> > > > > > I doubt other people reviewed it from security perspective.
+> > > > > >
+> > > > > > Recommending "chmod a+rw /sys/kernel/tracing/user_events_data" doesn't sound like a good idea.
+> > > > > >
+> > > > > > For example, I think the following is possible:
+> > > > > > fd = open("/sys/kernel/tracing/user_events_data")
+> > > > > > ioclt(fd, DIAG_IOCSDEL)
+> > > > > >   user_events_ioctl_del
+> > > > > >      delete_user_event(info->group, name);
+> > > > > >
+> > > > > > 'info' is different for every FD, but info->group is the same for all users/processes/fds,
+> > > > > > because only one global init_group is created.
+> > > > > > So one user can unregister other user event by knowing 'name'.
+> > > > > > A security hole, no?
+> > > 
+> > > ...
+> > > 
+> > > > Regarding deleting events, only users that are given access can delete
+> > > > events. They must know the event name, just like users with access to
+> > > > delete files must know a path (and have access to it). Since the
+> > > > write_index and other details are per-process, unless the user has
+> > > > access to either /sys/kernel/tracing/events/user_events/* or
+> > > > /sys/kernel/tracing/user_events_status, they do not know which names are
+> > > > being used.
+> > > >
+> > > > If that is not enough, we could require CAP_SYSADMIN to be able to
+> > > > delete events even when they have access to the file. Users can also
+> > > > apply SELinux policies per-file to achieve further isolation, if
+> > > > required.
+> > > 
+> > > Whether /sys/kernel/tracing/user_events_status gets g+rw
+> > > or it gets a+rw (as your documentation recommends)
+> > > it is still a security issue.
+> > > The "event name" is trivial to find out by looking at the source code
+> > > of the target process or just "string target_binary".
+> > > Restricting to cap_sysadmin is not the answer, since you want unpriv.
+> > > SElinux is not the answer either.
+> > > Since it's unpriv, different processes should not be able to mess with
+> > > user events of other processes.
+> > > It's a fundamental requirement of any kernel api.
+> > > This has to be fixed before any bpf discussion.
+> > > If it means that you need to redesign user_events do it now and
+> > > excuses like "it's uapi now, so we cannot fix it" are not going to fly.
+> > 
+> > Looking at this a little because I have a few minutes.
+> > What's all this unused code?
+> > 
 > 
+> These are stubs to integrate namespace support. I've been working on a
+> series that adds a tracing namespace support similiar to the IMA
+> namespace work [1]. That series is ending up taking more time than I
 
-Thanks for the patch, this is a good catch! Can you reword this a bit?
-"fix this problem" could be reworded to "Fix this by not attempting to
-copy in non-zero data".
+Look, this is all well and nice but you've integrated user events with
+tracefs. This is currently a single-instance global filesystem. So what
+you're effectively implying is that you're namespacing tracefs by
+hanging it off of struct user namespace making it mountable by
+unprivileged users. Or what's the plan?
 
-Would you mind adding this case to either the perf or ftrace self-test?
-It's a really good edge case.
+That alone is massive work with _wild_ security implications. My
+appetite for exposing more stuff under user namespaces is very low given
+the amount of CVEs we've had over the years.
 
-Thanks,
--Beau
+> anticipated.
 
-> Signed-off-by: sunliming <sunliming@kylinos.cn>
-> ---
->  kernel/trace/trace_events_user.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
+Yet you were confident enough to leave the namespacing stubs for this
+functionality in the code. ;)
+
+What is the overall goal here? Letting arbitrary unprivileged containers
+define their own custom user event type by mounting tracefs inside
+unprivileged containers? If so, what security story is going to
+guarantee that writing arbitrary tracepoints from random unprivileged
+containers is safe?
+
 > 
-> diff --git a/kernel/trace/trace_events_user.c b/kernel/trace/trace_events_user.c
-> index 0d91dac206ff..296bdfa674cb 100644
-> --- a/kernel/trace/trace_events_user.c
-> +++ b/kernel/trace/trace_events_user.c
-> @@ -1399,7 +1399,7 @@ static void user_event_ftrace(struct user_event *user, struct iov_iter *i,
->  	if (unlikely(!entry))
->  		return;
->  
-> -	if (unlikely(!copy_nofault(entry + 1, i->count, i)))
-> +	if (unlikely(i->count && !copy_nofault(entry + 1, i->count, i)))
->  		goto discard;
->  
->  	if (!list_empty(&user->validators) &&
-> @@ -1440,7 +1440,7 @@ static void user_event_perf(struct user_event *user, struct iov_iter *i,
->  
->  		perf_fetch_caller_regs(regs);
->  
-> -		if (unlikely(!copy_nofault(perf_entry + 1, i->count, i)))
-> +		if (unlikely(i->count && !copy_nofault(perf_entry + 1, i->count, i)))
->  			goto discard;
->  
->  		if (!list_empty(&user->validators) &&
-> -- 
-> 2.25.1
+> > static inline struct user_event_group
+> > *user_event_group_from_user_ns(struct user_namespace *user_ns)
+> > {
+> >         if (user_ns == &init_user_ns)
+> >                 return init_group;
+> > 
+> >         return NULL;
+> > }
+> > 
+> > static struct user_event_group *current_user_event_group(void)
+> > {
+> >         struct user_namespace *user_ns = current_user_ns();
+> >         struct user_event_group *group = NULL;
+> > 
+> >         while (user_ns) {
+> >                 group = user_event_group_from_user_ns(user_ns);
+> > 
+> >                 if (group)
+> >                         break;
+> > 
+> >                 user_ns = user_ns->parent;
+> >         }
+> > 
+> >         return group;
+> > }
+> > 
+> > User namespaces form strict hierarchies so you always end up at
+> > init_user_ns no matter where you start from in the hierarchy. Return the
+> > init_group and delete that code above.
+> > 
+> 
+> This is a good point, I'll delete this code and bring it back as part of
+> the namespace support patch series when appropriate.
+> 
+> > static char *user_event_group_system_name(struct user_namespace *user_ns)
+> > {
+> >         char *system_name;
+> >         int len = sizeof(USER_EVENTS_SYSTEM) + 1;
+> > 
+> >         if (user_ns != &init_user_ns) {
+> >                 /*
+> >                  * Unexpected at this point:
+> >                  * We only currently support init_user_ns.
+> >                  * When we enable more, this will trigger a failure so log.
+> >                  */
+> >                 pr_warn("user_events: Namespace other than init_user_ns!\n");
+> >                 return NULL;
+> >         }
+> > 
+> > Your delegation model is premised on file permissions of a single file
+> > in global tracefs. It won't work with user namespaces so let's not give
+> > the false impression that this is on the table.
+> > 
+> 
+> Users that are given access to the single file still should be able to
+> be isolated for each other. The series I'm working on does this by
+
+How? You currently have a single file that will have to be shared across
+all unprivileged containers which ultimately can only mean that you need
+to either bind-mount tracefs or bind-mount the single file into each
+container. If you have 1000 containers each with isolated idmaps from
+each other you're going to have a lot of fun trying to ensure that each
+container has access rights to that file.
+
+> changing the system name of user_events on a per-namespace basis.
+
+What is the "system name" and how does it protect against namespaces
+messing with each other?
