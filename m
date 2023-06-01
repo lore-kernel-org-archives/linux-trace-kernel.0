@@ -2,141 +2,199 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4EFBFC7EE31
-	for <linux-trace-kernel@archiver.kernel.org>; Thu,  1 Jun 2023 11:07:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 52615C77B7E
+	for <linux-trace-kernel@archiver.kernel.org>; Thu,  1 Jun 2023 15:24:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232509AbjFALHz (ORCPT
+        id S233109AbjFAPYY (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Thu, 1 Jun 2023 07:07:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57166 "EHLO
+        Thu, 1 Jun 2023 11:24:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35148 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230268AbjFALHw (ORCPT
+        with ESMTP id S233650AbjFAPYY (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Thu, 1 Jun 2023 07:07:52 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 01D04107;
-        Thu,  1 Jun 2023 04:07:50 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 9216B63FCB;
-        Thu,  1 Jun 2023 11:07:50 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A781FC433D2;
-        Thu,  1 Jun 2023 11:07:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1685617670;
-        bh=+Yjm8puKI4qcOhrAjHQoPXnOlN6+/fj9nQ2KMrVKq+A=;
+        Thu, 1 Jun 2023 11:24:24 -0400
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 64C76180;
+        Thu,  1 Jun 2023 08:24:21 -0700 (PDT)
+Received: from W11-BEAU-MD.localdomain (unknown [76.135.27.212])
+        by linux.microsoft.com (Postfix) with ESMTPSA id 615A520FC4F7;
+        Thu,  1 Jun 2023 08:24:20 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 615A520FC4F7
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+        s=default; t=1685633060;
+        bh=edxnEpFJ4Hj6NmttSexMjCk8JmvOYStgFd1bZIF7afQ=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=RhP2k+/FQSvli7tGw2eOKlboTIMhAX1rWIMmQojkSItsf7Pbu27Voz4XKQfKsJMv+
-         yk64a7+GnLa0AXm5NTg7oxgCbiU/vvM5YtvO42iXWm3c1dvWeuqaT9QYECD04AjLI8
-         +kurm3Gcj765DCLAHDCbNzTJmkHWERuX8j+NWUQrH79TGx2XeQSd0dO1NOebia9EMt
-         dJu6ZE7ylH9284d9jqvK6St/2YUkHNw8jD2OIGo2TbwtTLSoShdT9QABDGhevJVWTD
-         pUczYlcvfwWLpOJgcn012xrthp2r+mfy68euX8CFvo6UC393XjO1m9JQnHYF6C6kEn
-         C9f6ivmZ7x+Ew==
-Date:   Thu, 1 Jun 2023 14:07:13 +0300
-From:   Mike Rapoport <rppt@kernel.org>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     linux-kernel@vger.kernel.org,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Christophe Leroy <christophe.leroy@csgroup.eu>,
-        "David S. Miller" <davem@davemloft.net>,
-        Dinh Nguyen <dinguyen@kernel.org>,
-        Heiko Carstens <hca@linux.ibm.com>,
-        Helge Deller <deller@gmx.de>,
-        Huacai Chen <chenhuacai@kernel.org>,
-        Kent Overstreet <kent.overstreet@linux.dev>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        "Naveen N. Rao" <naveen.n.rao@linux.ibm.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Russell King <linux@armlinux.org.uk>,
-        Song Liu <song@kernel.org>,
+        b=NSR5eNhcPEhH7MfW1yw1FJwRgl+eKjbWudIV1/WByc4CQc2BPzhqLnKopTO2Sp9tn
+         4mn53BZuLBcByf9kaHrn+aFF8peURqjbB+L/6Tcak83Q/G4STosugNVj8BryLtLZeS
+         AR0kFWIKVCEFco0Lo5+oK/4Ak0KoYEQAdA8QdbuA=
+Date:   Thu, 1 Jun 2023 08:24:14 -0700
+From:   Beau Belgrave <beaub@linux.microsoft.com>
+To:     Christian Brauner <brauner@kernel.org>
+Cc:     Alexei Starovoitov <alexei.starovoitov@gmail.com>,
         Steven Rostedt <rostedt@goodmis.org>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Will Deacon <will@kernel.org>, bpf@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-mips@vger.kernel.org,
-        linux-mm@kvack.org, linux-modules@vger.kernel.org,
-        linux-parisc@vger.kernel.org, linux-riscv@lists.infradead.org,
-        linux-s390@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, loongarch@lists.linux.dev,
-        netdev@vger.kernel.org, sparclinux@vger.kernel.org, x86@kernel.org
-Subject: Re: [PATCH 12/13] x86/jitalloc: prepare to allocate exectuatble
- memory as ROX
-Message-ID: <20230601110713.GE395338@kernel.org>
-References: <20230601101257.530867-1-rppt@kernel.org>
- <20230601101257.530867-13-rppt@kernel.org>
- <20230601103050.GT4253@hirez.programming.kicks-ass.net>
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-trace-kernel@vger.kernel.org,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Andrii Nakryiko <andrii@kernel.org>, bpf <bpf@vger.kernel.org>,
+        David Vernet <void@manifault.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Dave Thaler <dthaler@microsoft.com>,
+        Christoph Hellwig <hch@infradead.org>
+Subject: Re: [PATCH] tracing/user_events: Run BPF program if attached
+Message-ID: <20230601152414.GA71@W11-BEAU-MD.localdomain>
+References: <CAADnVQLYL-ZaP_2vViaktw0G4UKkmpOK2q4ZXBa+f=M7cC25Rg@mail.gmail.com>
+ <20230509130111.62d587f1@rorschach.local.home>
+ <20230509163050.127d5123@rorschach.local.home>
+ <20230515165707.hv65ekwp2djkjj5i@MacBook-Pro-8.local>
+ <20230515192407.GA85@W11-BEAU-MD.localdomain>
+ <20230517003628.aqqlvmzffj7fzzoj@MacBook-Pro-8.local>
+ <20230516212658.2f5cc2c6@gandalf.local.home>
+ <20230517165028.GA71@W11-BEAU-MD.localdomain>
+ <CAADnVQK3-NBLSVRVsgArUEjqsuY2S_8mWsWmLEAtTzo+U49CKQ@mail.gmail.com>
+ <20230601-urenkel-holzofen-cd9403b9cadd@brauner>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20230601103050.GT4253@hirez.programming.kicks-ass.net>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20230601-urenkel-holzofen-cd9403b9cadd@brauner>
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On Thu, Jun 01, 2023 at 12:30:50PM +0200, Peter Zijlstra wrote:
-> On Thu, Jun 01, 2023 at 01:12:56PM +0300, Mike Rapoport wrote:
+On Thu, Jun 01, 2023 at 11:46:13AM +0200, Christian Brauner wrote:
+> On Wed, May 17, 2023 at 05:10:47PM -0700, Alexei Starovoitov wrote:
+> > On Wed, May 17, 2023 at 9:50 AM Beau Belgrave <beaub@linux.microsoft.com> wrote:
+> > > >
+> > > > >
+> > > > > Looks like user events were designed with intention to be unprivileged.
+> > > > > When I looked at kernel/trace/trace_events_user.c I assumed root.
+> > > > > I doubt other people reviewed it from security perspective.
+> > > > >
+> > > > > Recommending "chmod a+rw /sys/kernel/tracing/user_events_data" doesn't sound like a good idea.
+> > > > >
+> > > > > For example, I think the following is possible:
+> > > > > fd = open("/sys/kernel/tracing/user_events_data")
+> > > > > ioclt(fd, DIAG_IOCSDEL)
+> > > > >   user_events_ioctl_del
+> > > > >      delete_user_event(info->group, name);
+> > > > >
+> > > > > 'info' is different for every FD, but info->group is the same for all users/processes/fds,
+> > > > > because only one global init_group is created.
+> > > > > So one user can unregister other user event by knowing 'name'.
+> > > > > A security hole, no?
+> > 
+> > ...
+> > 
+> > > Regarding deleting events, only users that are given access can delete
+> > > events. They must know the event name, just like users with access to
+> > > delete files must know a path (and have access to it). Since the
+> > > write_index and other details are per-process, unless the user has
+> > > access to either /sys/kernel/tracing/events/user_events/* or
+> > > /sys/kernel/tracing/user_events_status, they do not know which names are
+> > > being used.
+> > >
+> > > If that is not enough, we could require CAP_SYSADMIN to be able to
+> > > delete events even when they have access to the file. Users can also
+> > > apply SELinux policies per-file to achieve further isolation, if
+> > > required.
+> > 
+> > Whether /sys/kernel/tracing/user_events_status gets g+rw
+> > or it gets a+rw (as your documentation recommends)
+> > it is still a security issue.
+> > The "event name" is trivial to find out by looking at the source code
+> > of the target process or just "string target_binary".
+> > Restricting to cap_sysadmin is not the answer, since you want unpriv.
+> > SElinux is not the answer either.
+> > Since it's unpriv, different processes should not be able to mess with
+> > user events of other processes.
+> > It's a fundamental requirement of any kernel api.
+> > This has to be fixed before any bpf discussion.
+> > If it means that you need to redesign user_events do it now and
+> > excuses like "it's uapi now, so we cannot fix it" are not going to fly.
 > 
-> > +static void __init_or_module do_text_poke(void *addr, const void *opcode, size_t len)
-> > +{
-> > +	if (system_state < SYSTEM_RUNNING) {
-> > +		text_poke_early(addr, opcode, len);
-> > +	} else {
-> > +		mutex_lock(&text_mutex);
-> > +		text_poke(addr, opcode, len);
-> > +		mutex_unlock(&text_mutex);
-> > +	}
-> > +}
+> Looking at this a little because I have a few minutes.
+> What's all this unused code?
 > 
-> So I don't much like do_text_poke(); why?
 
-I believe the idea was to keep memcpy for early boot before the kernel
-image is protected without going and adding if (is_module_text_address())
-all over the place.
+These are stubs to integrate namespace support. I've been working on a
+series that adds a tracing namespace support similiar to the IMA
+namespace work [1]. That series is ending up taking more time than I
+anticipated.
 
-I think this can be used instead without updating all the call sites of
-text_poke_early():
-
-diff --git a/arch/x86/kernel/alternative.c b/arch/x86/kernel/alternative.c
-index 91057de8e6bc..f994e63e9903 100644
---- a/arch/x86/kernel/alternative.c
-+++ b/arch/x86/kernel/alternative.c
-@@ -1458,7 +1458,7 @@ void __init_or_module text_poke_early(void *addr, const void *opcode,
- 		 * code cannot be running and speculative code-fetches are
- 		 * prevented. Just change the code.
- 		 */
--		memcpy(addr, opcode, len);
-+		text_poke_copy(addr, opcode, len);
- 	} else {
- 		local_irq_save(flags);
- 		memcpy(addr, opcode, len);
- 
-> > diff --git a/arch/x86/kernel/ftrace.c b/arch/x86/kernel/ftrace.c
-> > index aa99536b824c..d50595f2c1a6 100644
-> > --- a/arch/x86/kernel/ftrace.c
-> > +++ b/arch/x86/kernel/ftrace.c
-> > @@ -118,10 +118,13 @@ ftrace_modify_code_direct(unsigned long ip, const char *old_code,
-> >  		return ret;
-> >  
-> >  	/* replace the text with the new text */
-> > -	if (ftrace_poke_late)
-> > +	if (ftrace_poke_late) {
-> >  		text_poke_queue((void *)ip, new_code, MCOUNT_INSN_SIZE, NULL);
-> > -	else
-> > -		text_poke_early((void *)ip, new_code, MCOUNT_INSN_SIZE);
-> > +	} else {
-> > +		mutex_lock(&text_mutex);
-> > +		text_poke((void *)ip, new_code, MCOUNT_INSN_SIZE);
-> > +		mutex_unlock(&text_mutex);
-> > +	}
-> >  	return 0;
-> >  }
+> static inline struct user_event_group
+> *user_event_group_from_user_ns(struct user_namespace *user_ns)
+> {
+>         if (user_ns == &init_user_ns)
+>                 return init_group;
 > 
-> And in the above case it's actively wrong for loosing the _queue()
-> thing.
+>         return NULL;
+> }
+> 
+> static struct user_event_group *current_user_event_group(void)
+> {
+>         struct user_namespace *user_ns = current_user_ns();
+>         struct user_event_group *group = NULL;
+> 
+>         while (user_ns) {
+>                 group = user_event_group_from_user_ns(user_ns);
+> 
+>                 if (group)
+>                         break;
+> 
+>                 user_ns = user_ns->parent;
+>         }
+> 
+>         return group;
+> }
+> 
+> User namespaces form strict hierarchies so you always end up at
+> init_user_ns no matter where you start from in the hierarchy. Return the
+> init_group and delete that code above.
+> 
 
--- 
-Sincerely yours,
-Mike.
+This is a good point, I'll delete this code and bring it back as part of
+the namespace support patch series when appropriate.
+
+> static char *user_event_group_system_name(struct user_namespace *user_ns)
+> {
+>         char *system_name;
+>         int len = sizeof(USER_EVENTS_SYSTEM) + 1;
+> 
+>         if (user_ns != &init_user_ns) {
+>                 /*
+>                  * Unexpected at this point:
+>                  * We only currently support init_user_ns.
+>                  * When we enable more, this will trigger a failure so log.
+>                  */
+>                 pr_warn("user_events: Namespace other than init_user_ns!\n");
+>                 return NULL;
+>         }
+> 
+> Your delegation model is premised on file permissions of a single file
+> in global tracefs. It won't work with user namespaces so let's not give
+> the false impression that this is on the table.
+> 
+
+Users that are given access to the single file still should be able to
+be isolated for each other. The series I'm working on does this by
+changing the system name of user_events on a per-namespace basis.
+
+This prevents one namespace from messing with another, such as deleting
+their events, etc. I'll reach out to you for some time to discuss this
+direction to ensure I'm not off base.
+
+> Plus, all of this is also called in a single place during
+> trace_events_user_init() which is called from fs_initcall() so you
+> couldn't even pass a different user namespace if you wanted to because
+> only init_user_ns exists.
+
+In later series this is also called upon file open of user_events_data
+to find the right group, etc. I'll get this code removed for now and
+bring it back later.
+
+Thanks,
+-Beau
+
+1. https://lore.kernel.org/linux-kernel/20230206140253.3755945-1-stefanb@linux.ibm.com/
