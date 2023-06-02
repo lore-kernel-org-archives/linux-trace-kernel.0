@@ -2,55 +2,30 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7085EC7EE2E
-	for <linux-trace-kernel@archiver.kernel.org>; Fri,  2 Jun 2023 00:36:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 434DBC7EE2E
+	for <linux-trace-kernel@archiver.kernel.org>; Fri,  2 Jun 2023 09:35:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233007AbjFBAgj (ORCPT
+        id S234900AbjFBJfi (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Thu, 1 Jun 2023 20:36:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56674 "EHLO
+        Fri, 2 Jun 2023 05:35:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50320 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231241AbjFBAgi (ORCPT
+        with ESMTP id S234687AbjFBJff (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Thu, 1 Jun 2023 20:36:38 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 16869123;
-        Thu,  1 Jun 2023 17:36:37 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id AF7C3647BA;
-        Fri,  2 Jun 2023 00:36:36 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 01E5AC433A1;
-        Fri,  2 Jun 2023 00:36:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1685666196;
-        bh=8680DMzx0gtVOisbuW5F5FI58VdZiV3S7sDNyC66jIs=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=XTmFrz6x8P+uu4p7+8CwwHHAR8ToxETybv3aokjIkUt8au2/bliIWtKwA0GAbEtXU
-         35MXE4ZwOYCOUbquOW3LQoZZDXhPbam+LWuZhJ0mqETvOfa2/rMGWxD+GJruYpNbS6
-         ci30bYJW5Xs8iSRMEPad+knzjZDpipv9dxPxlL70NiYXhKXJnUs1HWnqvirj5dSWAN
-         B2cCO/rarwHERSu66gvzGkFtyDmlSmQAJPI3dJJQqihBq56qTMR5zptT8HtrJ2b10S
-         TMFJdORTSry9D8pvsZGiWSqPLVC1lC/A7oq6hOwBZbEcU0/jUM34HuLUgEBSnU29a0
-         P+mvZ51/iQCoA==
-Received: by mail-lf1-f50.google.com with SMTP id 2adb3069b0e04-4f60bc818d7so1269054e87.1;
-        Thu, 01 Jun 2023 17:36:35 -0700 (PDT)
-X-Gm-Message-State: AC+VfDz01X/xqtBxs2VBC7kbZ7774EbwDGMYrk1Mdk03I6HzRaiW0yxT
-        U5plHKTKxbuE+J/FKIt2iVbdgdr0HQJB0Rp5MwY=
-X-Google-Smtp-Source: ACHHUZ4rAYUoiHYEWWqFuntxOuL06QmDCDII8lO4o2SuljgVgQXswY+xn62uFOnPiNtfcw4WXcIV+P9v/6p/Zkld05w=
-X-Received: by 2002:ac2:44ca:0:b0:4f3:b18a:6497 with SMTP id
- d10-20020ac244ca000000b004f3b18a6497mr927744lfm.52.1685666193979; Thu, 01 Jun
- 2023 17:36:33 -0700 (PDT)
-MIME-Version: 1.0
-References: <20230601101257.530867-1-rppt@kernel.org>
-In-Reply-To: <20230601101257.530867-1-rppt@kernel.org>
-From:   Song Liu <song@kernel.org>
-Date:   Thu, 1 Jun 2023 17:36:21 -0700
-X-Gmail-Original-Message-ID: <CAPhsuW5Em5Sj9uCGyfM6BheTuvA4pviavRTUK-3MbGsd9yCRbQ@mail.gmail.com>
-Message-ID: <CAPhsuW5Em5Sj9uCGyfM6BheTuvA4pviavRTUK-3MbGsd9yCRbQ@mail.gmail.com>
-Subject: Re: [PATCH 00/13] mm: jit/text allocator
-To:     Mike Rapoport <rppt@kernel.org>
-Cc:     linux-kernel@vger.kernel.org,
+        Fri, 2 Jun 2023 05:35:35 -0400
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id A00EF99;
+        Fri,  2 Jun 2023 02:35:20 -0700 (PDT)
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 2ACE41063;
+        Fri,  2 Jun 2023 02:36:05 -0700 (PDT)
+Received: from FVFF77S0Q05N (unknown [10.57.24.167])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id AF4863F7BD;
+        Fri,  2 Jun 2023 02:35:14 -0700 (PDT)
+Date:   Fri, 2 Jun 2023 10:35:09 +0100
+From:   Mark Rutland <mark.rutland@arm.com>
+To:     Kent Overstreet <kent.overstreet@linux.dev>
+Cc:     Mike Rapoport <rppt@kernel.org>, linux-kernel@vger.kernel.org,
         Andrew Morton <akpm@linux-foundation.org>,
         Catalin Marinas <catalin.marinas@arm.com>,
         Christophe Leroy <christophe.leroy@csgroup.eu>,
@@ -59,12 +34,12 @@ Cc:     linux-kernel@vger.kernel.org,
         Heiko Carstens <hca@linux.ibm.com>,
         Helge Deller <deller@gmx.de>,
         Huacai Chen <chenhuacai@kernel.org>,
-        Kent Overstreet <kent.overstreet@linux.dev>,
         Luis Chamberlain <mcgrof@kernel.org>,
         Michael Ellerman <mpe@ellerman.id.au>,
         "Naveen N. Rao" <naveen.n.rao@linux.ibm.com>,
         Palmer Dabbelt <palmer@dabbelt.com>,
         Russell King <linux@armlinux.org.uk>,
+        Song Liu <song@kernel.org>,
         Steven Rostedt <rostedt@goodmis.org>,
         Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
         Thomas Gleixner <tglx@linutronix.de>,
@@ -75,68 +50,72 @@ Cc:     linux-kernel@vger.kernel.org,
         linux-s390@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
         linuxppc-dev@lists.ozlabs.org, loongarch@lists.linux.dev,
         netdev@vger.kernel.org, sparclinux@vger.kernel.org, x86@kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH 00/13] mm: jit/text allocator
+Message-ID: <ZHm3zUUbwqlsZBBF@FVFF77S0Q05N>
+References: <20230601101257.530867-1-rppt@kernel.org>
+ <ZHjDU/mxE+cugpLj@FVFF77S0Q05N.cambridge.arm.com>
+ <ZHjgIH3aX9dCvVZc@moria.home.lan>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ZHjgIH3aX9dCvVZc@moria.home.lan>
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On Thu, Jun 1, 2023 at 3:13=E2=80=AFAM Mike Rapoport <rppt@kernel.org> wrot=
-e:
->
-> From: "Mike Rapoport (IBM)" <rppt@kernel.org>
->
-> Hi,
->
-> module_alloc() is used everywhere as a mean to allocate memory for code.
->
-> Beside being semantically wrong, this unnecessarily ties all subsystmes
-> that need to allocate code, such as ftrace, kprobes and BPF to modules
-> and puts the burden of code allocation to the modules code.
->
-> Several architectures override module_alloc() because of various
-> constraints where the executable memory can be located and this causes
-> additional obstacles for improvements of code allocation.
->
-> This set splits code allocation from modules by introducing
-> jit_text_alloc(), jit_data_alloc() and jit_free() APIs, replaces call
-> sites of module_alloc() and module_memfree() with the new APIs and
-> implements core text and related allocation in a central place.
->
-> Instead of architecture specific overrides for module_alloc(), the
-> architectures that require non-default behaviour for text allocation must
-> fill jit_alloc_params structure and implement jit_alloc_arch_params() tha=
-t
-> returns a pointer to that structure. If an architecture does not implemen=
-t
-> jit_alloc_arch_params(), the defaults compatible with the current
-> modules::module_alloc() are used.
->
-> The new jitalloc infrastructure allows decoupling of kprobes and ftrace
-> from modules, and most importantly it enables ROX allocations for
-> executable memory.
+On Thu, Jun 01, 2023 at 02:14:56PM -0400, Kent Overstreet wrote:
+> On Thu, Jun 01, 2023 at 05:12:03PM +0100, Mark Rutland wrote:
+> > For a while I have wanted to give kprobes its own allocator so that it can work
+> > even with CONFIG_MODULES=n, and so that it doesn't have to waste VA space in
+> > the modules area.
+> > 
+> > Given that, I think these should have their own allocator functions that can be
+> > provided independently, even if those happen to use common infrastructure.
+> 
+> How much memory can kprobes conceivably use? I think we also want to try
+> to push back on combinatorial new allocators, if we can.
 
-This set does look cleaner than my version [1]. However, this is
-partially because this set only separates text and data; while [1]
-also separates rw data, ro data, and ro_after_init data. We need
-such separation to fully cover module usage, and to remove
-VM_FLUSH_RESET_PERMS. Once we add these logic to this
-set, the two versions will look similar.
+That depends on who's using it, and how (e.g. via BPF).
 
-OTOH, I do like the fact this version enables kprobes (and
-potentially ftrace and bpf) without CONFIG_MODULES. And
-mm/ seems a better home for the logic.
+To be clear, I'm not necessarily asking for entirely different allocators, but
+I do thinkg that we want wrappers that can at least pass distinct start+end
+parameters to a common allocator, and for arm64's modules code I'd expect that
+we'd keep the range falblack logic out of the common allcoator, and just call
+it twice.
 
-That being said, besides comments in a few patches, this
-version looks good to me. With the fix I suggested for patch
-12/13, it passed my tests on x86_64 with modules, kprobes,
-ftrace, and BPF.
+> > > Several architectures override module_alloc() because of various
+> > > constraints where the executable memory can be located and this causes
+> > > additional obstacles for improvements of code allocation.
+> > > 
+> > > This set splits code allocation from modules by introducing
+> > > jit_text_alloc(), jit_data_alloc() and jit_free() APIs, replaces call
+> > > sites of module_alloc() and module_memfree() with the new APIs and
+> > > implements core text and related allocation in a central place.
+> > > 
+> > > Instead of architecture specific overrides for module_alloc(), the
+> > > architectures that require non-default behaviour for text allocation must
+> > > fill jit_alloc_params structure and implement jit_alloc_arch_params() that
+> > > returns a pointer to that structure. If an architecture does not implement
+> > > jit_alloc_arch_params(), the defaults compatible with the current
+> > > modules::module_alloc() are used.
+> > 
+> > As above, I suspect that each of the callsites should probably be using common
+> > infrastructure, but I don't think that a single jit_alloc_arch_params() makes
+> > sense, since the parameters for each case may need to be distinct.
+> 
+> I don't see how that follows. The whole point of function parameters is
+> that they may be different :)
 
-If we decided to ship this version, I would appreciate it if I
-could get more credit for my work in [1] and research work
-before that.
+What I mean is that jit_alloc_arch_params() tries to aggregate common
+parameters, but they aren't actually common (e.g. the actual start+end range
+for allocation).
+
+> Can you give more detail on what parameters you need? If the only extra
+> parameter is just "does this allocation need to live close to kernel
+> text", that's not that big of a deal.
+
+My thinking was that we at least need the start + end for each caller. That
+might be it, tbh.
 
 Thanks,
-Song
-
-[1] https://lore.kernel.org/lkml/20230526051529.3387103-1-song@kernel.org/
+Mark.
