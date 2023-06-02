@@ -2,172 +2,168 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 31410C77B7A
-	for <linux-trace-kernel@archiver.kernel.org>; Fri,  2 Jun 2023 13:52:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D461C7EE2D
+	for <linux-trace-kernel@archiver.kernel.org>; Fri,  2 Jun 2023 18:21:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232213AbjFBNwA (ORCPT
+        id S236089AbjFBSVS (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Fri, 2 Jun 2023 09:52:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51498 "EHLO
+        Fri, 2 Jun 2023 14:21:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40102 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235912AbjFBNv7 (ORCPT
+        with ESMTP id S235519AbjFBSVQ (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Fri, 2 Jun 2023 09:51:59 -0400
+        Fri, 2 Jun 2023 14:21:16 -0400
 Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 640C31BB;
-        Fri,  2 Jun 2023 06:51:57 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 253991A1;
+        Fri,  2 Jun 2023 11:21:15 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id E609F650A4;
-        Fri,  2 Jun 2023 13:51:56 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 239A4C433D2;
-        Fri,  2 Jun 2023 13:51:50 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id B4DF36523F;
+        Fri,  2 Jun 2023 18:21:14 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1C87DC433AA;
+        Fri,  2 Jun 2023 18:21:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1685713916;
-        bh=8hDakrUZAZcYTZfGnQ3DNtCp7igSQOT1sESi2A5X7JQ=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=iftz4zlbGT83MJweTTJpH3wQdggzYX6b+QAx9Koo1cv+16rmDoY0nvXO6m3xj06gj
-         lFhzkTunQOpyko5GnC4nfOhIHj0SkwImYV4qStyONP6+MJKD0dulfUFetxSZe67aM7
-         OPzMQ8lUQagZ5mhexu5mPM8oUZ4Hw5WftHXsVwsRSapgjTRKvcG0sUatLogGT9Gndk
-         GsEKI6E55mt4WjfPQBgknPAfxt6v2njHB9PZzPFQ1nhCz+KZYC939jBFpWEAJ2q3Ib
-         W/rzdigetrW5OnLbh9inqnOBhVFXERpFmS/veBTt+MblQ1zwbPw7WBODQVTgySSLp4
-         LV91jautrX54g==
-From:   Arnd Bergmann <arnd@kernel.org>
-To:     Yonghong Song <yhs@meta.com>, Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Andrii Nakryiko <andrii@kernel.org>,
-        Song Liu <song@kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>
-Cc:     Arnd Bergmann <arnd@arndb.de>, stable@vger.kernel.org,
-        John Fastabend <john.fastabend@gmail.com>,
-        Martin KaFai Lau <martin.lau@linux.dev>,
-        Yonghong Song <yhs@fb.com>, KP Singh <kpsingh@kernel.org>,
-        Stanislav Fomichev <sdf@google.com>,
-        Hao Luo <haoluo@google.com>, Jiri Olsa <jolsa@kernel.org>,
-        Kumar Kartikeya Dwivedi <memxor@gmail.com>,
-        Dave Marchevsky <davemarchevsky@fb.com>,
-        Delyan Kratunov <delyank@fb.com>,
-        Joanne Koong <joannelkoong@gmail.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        "Jason A. Donenfeld" <Jason@zx2c4.com>,
-        Roberto Sassu <roberto.sassu@huawei.com>, bpf@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
-Subject: [PATCH 2/2] [v3] bpf: fix bpf_probe_read_kernel prototype mismatch
-Date:   Fri,  2 Jun 2023 15:50:19 +0200
-Message-Id: <20230602135128.1498362-2-arnd@kernel.org>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20230602135128.1498362-1-arnd@kernel.org>
-References: <20230602135128.1498362-1-arnd@kernel.org>
+        s=k20201202; t=1685730074;
+        bh=X+6D25ac/ynfkYhL6CVIatM+QSgTz3ZdfLV95/xOw/s=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=m8QqKBlwUZ1OdVsi3iL4i/wpx/dFY6BbtHjhKMAoPALO9d9S1Of5z7SZF4QL6sTbP
+         1AkumCJkUSaKm4k7dCVk+lOGEFZdfq22cqjqj27S/pPlmB3p+6xXv2CNvliSMKoASM
+         /hdXoCMRwv6EJy8J6GYtUkCvLB9u0rcyusLTXlpDOf8Lr4f24TWYjjjFg1gay1e8Ak
+         p/JJ9xBOtMt5dIZYwKQ9oFJD8MWj9f1lt6ZhCj0XTqBGpkRKgNx/tS3niGcx/Matut
+         0hwyzJfj74d+iBjmUiHb0LPXzSLbkWfgBPmkBtc2NCOoUpEnhn1N5112VQidBofQtB
+         l46PC2/nl/Dww==
+Received: by mail-lj1-f182.google.com with SMTP id 38308e7fff4ca-2af189d323fso46352391fa.1;
+        Fri, 02 Jun 2023 11:21:14 -0700 (PDT)
+X-Gm-Message-State: AC+VfDy6tUtSTkY4WimD0ve8ZiSIIh10ZMJfMY+q87EfuCPbr3gZqly6
+        Qk5lO3wACNYGAPPmYAAU39rdvk/Wpx+a3HieDNM=
+X-Google-Smtp-Source: ACHHUZ7u+3QRkPB700ZRWSkZS34WuzRLSBXiPs+mDMX8Rtj0TALCowhBg47HVf6nzRS8a/FS2UP95/Ck0Au4nvQTBcE=
+X-Received: by 2002:a2e:b55a:0:b0:2b0:59c3:29c9 with SMTP id
+ a26-20020a2eb55a000000b002b059c329c9mr217540ljn.6.1685730071990; Fri, 02 Jun
+ 2023 11:21:11 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20230601101257.530867-1-rppt@kernel.org> <ZHjDU/mxE+cugpLj@FVFF77S0Q05N.cambridge.arm.com>
+ <ZHjgIH3aX9dCvVZc@moria.home.lan> <ZHm3zUUbwqlsZBBF@FVFF77S0Q05N>
+In-Reply-To: <ZHm3zUUbwqlsZBBF@FVFF77S0Q05N>
+From:   Song Liu <song@kernel.org>
+Date:   Fri, 2 Jun 2023 11:20:58 -0700
+X-Gmail-Original-Message-ID: <CAPhsuW7Euczff_KB70nuH=Hhf2EYHAf=xiQR7mFqVfByhD34XA@mail.gmail.com>
+Message-ID: <CAPhsuW7Euczff_KB70nuH=Hhf2EYHAf=xiQR7mFqVfByhD34XA@mail.gmail.com>
+Subject: Re: [PATCH 00/13] mm: jit/text allocator
+To:     Mark Rutland <mark.rutland@arm.com>
+Cc:     Kent Overstreet <kent.overstreet@linux.dev>,
+        Mike Rapoport <rppt@kernel.org>, linux-kernel@vger.kernel.org,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Christophe Leroy <christophe.leroy@csgroup.eu>,
+        "David S. Miller" <davem@davemloft.net>,
+        Dinh Nguyen <dinguyen@kernel.org>,
+        Heiko Carstens <hca@linux.ibm.com>,
+        Helge Deller <deller@gmx.de>,
+        Huacai Chen <chenhuacai@kernel.org>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        "Naveen N. Rao" <naveen.n.rao@linux.ibm.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Russell King <linux@armlinux.org.uk>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Will Deacon <will@kernel.org>, bpf@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-mips@vger.kernel.org,
+        linux-mm@kvack.org, linux-modules@vger.kernel.org,
+        linux-parisc@vger.kernel.org, linux-riscv@lists.infradead.org,
+        linux-s390@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, loongarch@lists.linux.dev,
+        netdev@vger.kernel.org, sparclinux@vger.kernel.org, x86@kernel.org,
+        Puranjay Mohan <puranjay12@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-From: Arnd Bergmann <arnd@arndb.de>
+On Fri, Jun 2, 2023 at 2:35=E2=80=AFAM Mark Rutland <mark.rutland@arm.com> =
+wrote:
+>
+> On Thu, Jun 01, 2023 at 02:14:56PM -0400, Kent Overstreet wrote:
+> > On Thu, Jun 01, 2023 at 05:12:03PM +0100, Mark Rutland wrote:
+> > > For a while I have wanted to give kprobes its own allocator so that i=
+t can work
+> > > even with CONFIG_MODULES=3Dn, and so that it doesn't have to waste VA=
+ space in
+> > > the modules area.
+> > >
+> > > Given that, I think these should have their own allocator functions t=
+hat can be
+> > > provided independently, even if those happen to use common infrastruc=
+ture.
+> >
+> > How much memory can kprobes conceivably use? I think we also want to tr=
+y
+> > to push back on combinatorial new allocators, if we can.
+>
+> That depends on who's using it, and how (e.g. via BPF).
+>
+> To be clear, I'm not necessarily asking for entirely different allocators=
+, but
+> I do thinkg that we want wrappers that can at least pass distinct start+e=
+nd
+> parameters to a common allocator, and for arm64's modules code I'd expect=
+ that
+> we'd keep the range falblack logic out of the common allcoator, and just =
+call
+> it twice.
+>
+> > > > Several architectures override module_alloc() because of various
+> > > > constraints where the executable memory can be located and this cau=
+ses
+> > > > additional obstacles for improvements of code allocation.
+> > > >
+> > > > This set splits code allocation from modules by introducing
+> > > > jit_text_alloc(), jit_data_alloc() and jit_free() APIs, replaces ca=
+ll
+> > > > sites of module_alloc() and module_memfree() with the new APIs and
+> > > > implements core text and related allocation in a central place.
+> > > >
+> > > > Instead of architecture specific overrides for module_alloc(), the
+> > > > architectures that require non-default behaviour for text allocatio=
+n must
+> > > > fill jit_alloc_params structure and implement jit_alloc_arch_params=
+() that
+> > > > returns a pointer to that structure. If an architecture does not im=
+plement
+> > > > jit_alloc_arch_params(), the defaults compatible with the current
+> > > > modules::module_alloc() are used.
+> > >
+> > > As above, I suspect that each of the callsites should probably be usi=
+ng common
+> > > infrastructure, but I don't think that a single jit_alloc_arch_params=
+() makes
+> > > sense, since the parameters for each case may need to be distinct.
+> >
+> > I don't see how that follows. The whole point of function parameters is
+> > that they may be different :)
+>
+> What I mean is that jit_alloc_arch_params() tries to aggregate common
+> parameters, but they aren't actually common (e.g. the actual start+end ra=
+nge
+> for allocation).
+>
+> > Can you give more detail on what parameters you need? If the only extra
+> > parameter is just "does this allocation need to live close to kernel
+> > text", that's not that big of a deal.
+>
+> My thinking was that we at least need the start + end for each caller. Th=
+at
+> might be it, tbh.
 
-bpf_probe_read_kernel() has a __weak definition in core.c and another
-definition with an incompatible prototype in kernel/trace/bpf_trace.c,
-when CONFIG_BPF_EVENTS is enabled.
+IIUC, arm64 uses VMALLOC address space for BPF programs. The reason
+is each BPF program uses at least 64kB (one page) out of the 128MB
+address space. Puranjay Mohan (CC'ed) is working on enabling
+bpf_prog_pack for arm64. Once this work is done, multiple BPF programs
+will be able to share a page. Will this improvement remove the need to
+specify a different address range for BPF programs?
 
-Since the two are incompatible, there cannot be a shared declaration in
-a header file, but the lack of a prototype causes a W=1 warning:
-
-kernel/bpf/core.c:1638:12: error: no previous prototype for 'bpf_probe_read_kernel' [-Werror=missing-prototypes]
-
-On 32-bit architectures, the local prototype
-
-u64 __weak bpf_probe_read_kernel(void *dst, u32 size, const void *unsafe_ptr)
-
-passes arguments in other registers as the one in bpf_trace.c
-
-BPF_CALL_3(bpf_probe_read_kernel, void *, dst, u32, size,
-            const void *, unsafe_ptr)
-
-which uses 64-bit arguments in pairs of registers.
-
-Change the core.c file to only reference the inner
-bpf_probe_read_kernel_common() helper and provide a prototype for that,
-to ensure this is compatible with both definitions.
-
-Cc: stable@vger.kernel.org
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
---
-v3: clarify changelog text further.
-v2: rewrite completely to fix the mismatch.
----
- include/linux/bpf.h      | 2 ++
- kernel/bpf/core.c        | 9 ++++++---
- kernel/trace/bpf_trace.c | 3 +--
- 3 files changed, 9 insertions(+), 5 deletions(-)
-
-diff --git a/include/linux/bpf.h b/include/linux/bpf.h
-index f58895830adae..55826398acfba 100644
---- a/include/linux/bpf.h
-+++ b/include/linux/bpf.h
-@@ -2619,6 +2619,8 @@ static inline void bpf_dynptr_set_rdonly(struct bpf_dynptr_kern *ptr)
- }
- #endif /* CONFIG_BPF_SYSCALL */
- 
-+int bpf_probe_read_kernel_common(void *dst, u32 size, const void *unsafe_ptr);
-+
- void __bpf_free_used_btfs(struct bpf_prog_aux *aux,
- 			  struct btf_mod_pair *used_btfs, u32 len);
- 
-diff --git a/kernel/bpf/core.c b/kernel/bpf/core.c
-index 0926714641eb5..565ef6950c7a8 100644
---- a/kernel/bpf/core.c
-+++ b/kernel/bpf/core.c
-@@ -35,6 +35,7 @@
- #include <linux/bpf_verifier.h>
- #include <linux/nodemask.h>
- #include <linux/nospec.h>
-+#include <linux/bpf.h>
- #include <linux/bpf_mem_alloc.h>
- #include <linux/memcontrol.h>
- 
-@@ -1635,11 +1636,13 @@ bool bpf_opcode_in_insntable(u8 code)
- }
- 
- #ifndef CONFIG_BPF_JIT_ALWAYS_ON
--u64 __weak bpf_probe_read_kernel(void *dst, u32 size, const void *unsafe_ptr)
-+#ifndef CONFIG_BPF_EVENTS
-+int bpf_probe_read_kernel_common(void *dst, u32 size, const void *unsafe_ptr)
- {
- 	memset(dst, 0, size);
- 	return -EFAULT;
- }
-+#endif
- 
- /**
-  *	___bpf_prog_run - run eBPF program on a given context
-@@ -1931,8 +1934,8 @@ static u64 ___bpf_prog_run(u64 *regs, const struct bpf_insn *insn)
- 		DST = *(SIZE *)(unsigned long) (SRC + insn->off);	\
- 		CONT;							\
- 	LDX_PROBE_MEM_##SIZEOP:						\
--		bpf_probe_read_kernel(&DST, sizeof(SIZE),		\
--				      (const void *)(long) (SRC + insn->off));	\
-+		bpf_probe_read_kernel_common(&DST, sizeof(SIZE),	\
-+			      (const void *)(long) (SRC + insn->off));	\
- 		DST = *((SIZE *)&DST);					\
- 		CONT;
- 
-diff --git a/kernel/trace/bpf_trace.c b/kernel/trace/bpf_trace.c
-index 2bc41e6ac9fe0..290fdce2ce535 100644
---- a/kernel/trace/bpf_trace.c
-+++ b/kernel/trace/bpf_trace.c
-@@ -223,8 +223,7 @@ const struct bpf_func_proto bpf_probe_read_user_str_proto = {
- 	.arg3_type	= ARG_ANYTHING,
- };
- 
--static __always_inline int
--bpf_probe_read_kernel_common(void *dst, u32 size, const void *unsafe_ptr)
-+int bpf_probe_read_kernel_common(void *dst, u32 size, const void *unsafe_ptr)
- {
- 	int ret;
- 
--- 
-2.39.2
-
+Thanks,
+Song
