@@ -2,150 +2,172 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 43E6FC77B7A
-	for <linux-trace-kernel@archiver.kernel.org>; Fri,  2 Jun 2023 11:16:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 31410C77B7A
+	for <linux-trace-kernel@archiver.kernel.org>; Fri,  2 Jun 2023 13:52:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234872AbjFBLQW (ORCPT
+        id S232213AbjFBNwA (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Fri, 2 Jun 2023 07:16:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53282 "EHLO
+        Fri, 2 Jun 2023 09:52:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51498 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234562AbjFBLQV (ORCPT
+        with ESMTP id S235912AbjFBNv7 (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Fri, 2 Jun 2023 07:16:21 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1F475133
-        for <linux-trace-kernel@vger.kernel.org>; Fri,  2 Jun 2023 04:15:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1685704533;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=imQ8hkrYLqR8ckCqlA+Lim20RdkOae7FAIksRB3MKCQ=;
-        b=Lj4Iqpv37dBE4eLoM5bFWcviYP55erk9QemEqtd2L/WxjMvU8WqHz6OoG0WGhQLiN6sL70
-        PgMOA4ObvgqVyQ5ydhLDFUbNrpuRaPUeCa38efAOowuVDIHEyJjTQr5VBGXqjn6kgx2Gws
-        v7JQGc2j20HwgZG7eoJPF842dC394hA=
-Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
- [209.85.128.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-376-_UCql0wZN92QX1znFgHvLQ-1; Fri, 02 Jun 2023 07:15:32 -0400
-X-MC-Unique: _UCql0wZN92QX1znFgHvLQ-1
-Received: by mail-wm1-f72.google.com with SMTP id 5b1f17b1804b1-3f42bcef2acso10889975e9.2
-        for <linux-trace-kernel@vger.kernel.org>; Fri, 02 Jun 2023 04:15:31 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1685704531; x=1688296531;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=imQ8hkrYLqR8ckCqlA+Lim20RdkOae7FAIksRB3MKCQ=;
-        b=hdnw+owXdldiV1Hm2+GN2EyYpZhjWBvTmLZRCMu/uul8iWSSxzaBGx3n7wrfYLt5Mc
-         bo86X5mj6aJZuiEruuMganKxIBris2MVVhi+w0H/1ZxLIuC+peFQGywhc5nuIf1we1lq
-         8xbzyItwyqHqd4WC68U57Grt9feI+cdbCyQkvj4+OKdl16IvfVBJUMTofFNba8ZBqVs3
-         60BXB2C7TxKCI7zNOjewkwdke8IrUtgWbdh9vsfofeEtjZie1c1o8+idmsY5xV4jcXNz
-         RMG11y5QI5A29mCKfEGQkrSN1svbkB+cWVJUs8MR4qJxQoYKpmU1NJg07J1ZvpyrIgRG
-         5Aag==
-X-Gm-Message-State: AC+VfDzWxfALineg5Xvgdsj1VWjfUyjM4BeMV2SU++hRgCCGmRLp2ECF
-        WrW5xRJu3b6LqBuZODbJ8rbGtU/z0WVMU1CCNE8EgjLx9J6zOCZIq+Qzo/fAK/NDj7vRTp9ux3R
-        mxyGrQmg9yXiM7e+dByztBBZUWCCZc8cu
-X-Received: by 2002:a7b:c841:0:b0:3f7:26f8:f9c3 with SMTP id c1-20020a7bc841000000b003f726f8f9c3mr1064701wml.5.1685704530892;
-        Fri, 02 Jun 2023 04:15:30 -0700 (PDT)
-X-Google-Smtp-Source: ACHHUZ6UWcaTAnKc4xQxzU4UjZxKiFiySGLh197x+LFMig+w4H4npT0uQes1m4bOREHyF9AKJ4OAiw==
-X-Received: by 2002:a7b:c841:0:b0:3f7:26f8:f9c3 with SMTP id c1-20020a7bc841000000b003f726f8f9c3mr1064685wml.5.1685704530633;
-        Fri, 02 Jun 2023 04:15:30 -0700 (PDT)
-Received: from redhat.com ([2.55.4.169])
-        by smtp.gmail.com with ESMTPSA id w11-20020a1cf60b000000b003f423f5b659sm1630095wmc.10.2023.06.02.04.15.28
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 02 Jun 2023 04:15:29 -0700 (PDT)
-Date:   Fri, 2 Jun 2023 07:15:26 -0400
-From:   "Michael S. Tsirkin" <mst@redhat.com>
-To:     Ross Zwisler <zwisler@chromium.org>
-Cc:     linux-kernel@vger.kernel.org, Ross Zwisler <zwisler@google.com>,
-        Jason Wang <jasowang@redhat.com>,
-        virtualization@lists.linux-foundation.org,
-        linux-trace-kernel@vger.kernel.org,
-        Steven Rostedt <rostedt@goodmis.org>
-Subject: Re: [PATCH v2 5/6] tools/virtio: use canonical ftrace path
-Message-ID: <20230602071517-mutt-send-email-mst@kernel.org>
-References: <20230215223350.2658616-1-zwisler@google.com>
- <20230215223350.2658616-6-zwisler@google.com>
+        Fri, 2 Jun 2023 09:51:59 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 640C31BB;
+        Fri,  2 Jun 2023 06:51:57 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id E609F650A4;
+        Fri,  2 Jun 2023 13:51:56 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 239A4C433D2;
+        Fri,  2 Jun 2023 13:51:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1685713916;
+        bh=8hDakrUZAZcYTZfGnQ3DNtCp7igSQOT1sESi2A5X7JQ=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=iftz4zlbGT83MJweTTJpH3wQdggzYX6b+QAx9Koo1cv+16rmDoY0nvXO6m3xj06gj
+         lFhzkTunQOpyko5GnC4nfOhIHj0SkwImYV4qStyONP6+MJKD0dulfUFetxSZe67aM7
+         OPzMQ8lUQagZ5mhexu5mPM8oUZ4Hw5WftHXsVwsRSapgjTRKvcG0sUatLogGT9Gndk
+         GsEKI6E55mt4WjfPQBgknPAfxt6v2njHB9PZzPFQ1nhCz+KZYC939jBFpWEAJ2q3Ib
+         W/rzdigetrW5OnLbh9inqnOBhVFXERpFmS/veBTt+MblQ1zwbPw7WBODQVTgySSLp4
+         LV91jautrX54g==
+From:   Arnd Bergmann <arnd@kernel.org>
+To:     Yonghong Song <yhs@meta.com>, Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Andrii Nakryiko <andrii@kernel.org>,
+        Song Liu <song@kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>
+Cc:     Arnd Bergmann <arnd@arndb.de>, stable@vger.kernel.org,
+        John Fastabend <john.fastabend@gmail.com>,
+        Martin KaFai Lau <martin.lau@linux.dev>,
+        Yonghong Song <yhs@fb.com>, KP Singh <kpsingh@kernel.org>,
+        Stanislav Fomichev <sdf@google.com>,
+        Hao Luo <haoluo@google.com>, Jiri Olsa <jolsa@kernel.org>,
+        Kumar Kartikeya Dwivedi <memxor@gmail.com>,
+        Dave Marchevsky <davemarchevsky@fb.com>,
+        Delyan Kratunov <delyank@fb.com>,
+        Joanne Koong <joannelkoong@gmail.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        "Jason A. Donenfeld" <Jason@zx2c4.com>,
+        Roberto Sassu <roberto.sassu@huawei.com>, bpf@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
+Subject: [PATCH 2/2] [v3] bpf: fix bpf_probe_read_kernel prototype mismatch
+Date:   Fri,  2 Jun 2023 15:50:19 +0200
+Message-Id: <20230602135128.1498362-2-arnd@kernel.org>
+X-Mailer: git-send-email 2.39.2
+In-Reply-To: <20230602135128.1498362-1-arnd@kernel.org>
+References: <20230602135128.1498362-1-arnd@kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <20230215223350.2658616-6-zwisler@google.com>
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On Wed, Feb 15, 2023 at 03:33:49PM -0700, Ross Zwisler wrote:
-> The canonical location for the tracefs filesystem is at /sys/kernel/tracing.
-> 
-> But, from Documentation/trace/ftrace.rst:
-> 
->   Before 4.1, all ftrace tracing control files were within the debugfs
->   file system, which is typically located at /sys/kernel/debug/tracing.
->   For backward compatibility, when mounting the debugfs file system,
->   the tracefs file system will be automatically mounted at:
-> 
->   /sys/kernel/debug/tracing
-> 
-> A few spots in tools/virtio still refer to this older debugfs
-> path, so let's update them to avoid confusion.
-> 
-> Signed-off-by: Ross Zwisler <zwisler@google.com>
+From: Arnd Bergmann <arnd@arndb.de>
 
-queued this too. thanks!
+bpf_probe_read_kernel() has a __weak definition in core.c and another
+definition with an incompatible prototype in kernel/trace/bpf_trace.c,
+when CONFIG_BPF_EVENTS is enabled.
 
-> ---
->  tools/virtio/virtio-trace/README        |  2 +-
->  tools/virtio/virtio-trace/trace-agent.c | 12 ++++++++----
->  2 files changed, 9 insertions(+), 5 deletions(-)
-> 
-> diff --git a/tools/virtio/virtio-trace/README b/tools/virtio/virtio-trace/README
-> index b64845b823ab..cea29a2a4c0a 100644
-> --- a/tools/virtio/virtio-trace/README
-> +++ b/tools/virtio/virtio-trace/README
-> @@ -95,7 +95,7 @@ Run
->  
->  1) Enable ftrace in the guest
->   <Example>
-> -	# echo 1 > /sys/kernel/debug/tracing/events/sched/enable
-> +	# echo 1 > /sys/kernel/tracing/events/sched/enable
->  
->  2) Run trace agent in the guest
->   This agent must be operated as root.
-> diff --git a/tools/virtio/virtio-trace/trace-agent.c b/tools/virtio/virtio-trace/trace-agent.c
-> index cdfe77c2b4c8..7e2d9bbf0b84 100644
-> --- a/tools/virtio/virtio-trace/trace-agent.c
-> +++ b/tools/virtio/virtio-trace/trace-agent.c
-> @@ -18,8 +18,9 @@
->  #define PIPE_DEF_BUFS		16
->  #define PIPE_MIN_SIZE		(PAGE_SIZE*PIPE_DEF_BUFS)
->  #define PIPE_MAX_SIZE		(1024*1024)
-> -#define READ_PATH_FMT	\
-> -		"/sys/kernel/debug/tracing/per_cpu/cpu%d/trace_pipe_raw"
-> +#define TRACEFS 		"/sys/kernel/tracing"
-> +#define DEBUGFS 		"/sys/kernel/debug/tracing"
-> +#define READ_PATH_FMT		"%s/per_cpu/cpu%d/trace_pipe_raw"
->  #define WRITE_PATH_FMT		"/dev/virtio-ports/trace-path-cpu%d"
->  #define CTL_PATH		"/dev/virtio-ports/agent-ctl-path"
->  
-> @@ -120,9 +121,12 @@ static const char *make_path(int cpu_num, bool this_is_write_path)
->  	if (this_is_write_path)
->  		/* write(output) path */
->  		ret = snprintf(buf, PATH_MAX, WRITE_PATH_FMT, cpu_num);
-> -	else
-> +	else {
->  		/* read(input) path */
-> -		ret = snprintf(buf, PATH_MAX, READ_PATH_FMT, cpu_num);
-> +		ret = snprintf(buf, PATH_MAX, READ_PATH_FMT, TRACEFS, cpu_num);
-> +		if (ret > 0 && access(buf, F_OK) != 0)
-> +			ret = snprintf(buf, PATH_MAX, READ_PATH_FMT, DEBUGFS, cpu_num);
-> +	}
->  
->  	if (ret <= 0) {
->  		pr_err("Failed to generate %s path(CPU#%d):%d\n",
-> -- 
-> 2.39.1.637.g21b0678d19-goog
+Since the two are incompatible, there cannot be a shared declaration in
+a header file, but the lack of a prototype causes a W=1 warning:
+
+kernel/bpf/core.c:1638:12: error: no previous prototype for 'bpf_probe_read_kernel' [-Werror=missing-prototypes]
+
+On 32-bit architectures, the local prototype
+
+u64 __weak bpf_probe_read_kernel(void *dst, u32 size, const void *unsafe_ptr)
+
+passes arguments in other registers as the one in bpf_trace.c
+
+BPF_CALL_3(bpf_probe_read_kernel, void *, dst, u32, size,
+            const void *, unsafe_ptr)
+
+which uses 64-bit arguments in pairs of registers.
+
+Change the core.c file to only reference the inner
+bpf_probe_read_kernel_common() helper and provide a prototype for that,
+to ensure this is compatible with both definitions.
+
+Cc: stable@vger.kernel.org
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+--
+v3: clarify changelog text further.
+v2: rewrite completely to fix the mismatch.
+---
+ include/linux/bpf.h      | 2 ++
+ kernel/bpf/core.c        | 9 ++++++---
+ kernel/trace/bpf_trace.c | 3 +--
+ 3 files changed, 9 insertions(+), 5 deletions(-)
+
+diff --git a/include/linux/bpf.h b/include/linux/bpf.h
+index f58895830adae..55826398acfba 100644
+--- a/include/linux/bpf.h
++++ b/include/linux/bpf.h
+@@ -2619,6 +2619,8 @@ static inline void bpf_dynptr_set_rdonly(struct bpf_dynptr_kern *ptr)
+ }
+ #endif /* CONFIG_BPF_SYSCALL */
+ 
++int bpf_probe_read_kernel_common(void *dst, u32 size, const void *unsafe_ptr);
++
+ void __bpf_free_used_btfs(struct bpf_prog_aux *aux,
+ 			  struct btf_mod_pair *used_btfs, u32 len);
+ 
+diff --git a/kernel/bpf/core.c b/kernel/bpf/core.c
+index 0926714641eb5..565ef6950c7a8 100644
+--- a/kernel/bpf/core.c
++++ b/kernel/bpf/core.c
+@@ -35,6 +35,7 @@
+ #include <linux/bpf_verifier.h>
+ #include <linux/nodemask.h>
+ #include <linux/nospec.h>
++#include <linux/bpf.h>
+ #include <linux/bpf_mem_alloc.h>
+ #include <linux/memcontrol.h>
+ 
+@@ -1635,11 +1636,13 @@ bool bpf_opcode_in_insntable(u8 code)
+ }
+ 
+ #ifndef CONFIG_BPF_JIT_ALWAYS_ON
+-u64 __weak bpf_probe_read_kernel(void *dst, u32 size, const void *unsafe_ptr)
++#ifndef CONFIG_BPF_EVENTS
++int bpf_probe_read_kernel_common(void *dst, u32 size, const void *unsafe_ptr)
+ {
+ 	memset(dst, 0, size);
+ 	return -EFAULT;
+ }
++#endif
+ 
+ /**
+  *	___bpf_prog_run - run eBPF program on a given context
+@@ -1931,8 +1934,8 @@ static u64 ___bpf_prog_run(u64 *regs, const struct bpf_insn *insn)
+ 		DST = *(SIZE *)(unsigned long) (SRC + insn->off);	\
+ 		CONT;							\
+ 	LDX_PROBE_MEM_##SIZEOP:						\
+-		bpf_probe_read_kernel(&DST, sizeof(SIZE),		\
+-				      (const void *)(long) (SRC + insn->off));	\
++		bpf_probe_read_kernel_common(&DST, sizeof(SIZE),	\
++			      (const void *)(long) (SRC + insn->off));	\
+ 		DST = *((SIZE *)&DST);					\
+ 		CONT;
+ 
+diff --git a/kernel/trace/bpf_trace.c b/kernel/trace/bpf_trace.c
+index 2bc41e6ac9fe0..290fdce2ce535 100644
+--- a/kernel/trace/bpf_trace.c
++++ b/kernel/trace/bpf_trace.c
+@@ -223,8 +223,7 @@ const struct bpf_func_proto bpf_probe_read_user_str_proto = {
+ 	.arg3_type	= ARG_ANYTHING,
+ };
+ 
+-static __always_inline int
+-bpf_probe_read_kernel_common(void *dst, u32 size, const void *unsafe_ptr)
++int bpf_probe_read_kernel_common(void *dst, u32 size, const void *unsafe_ptr)
+ {
+ 	int ret;
+ 
+-- 
+2.39.2
 
