@@ -2,83 +2,83 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 75F41C77B73
-	for <linux-trace-kernel@archiver.kernel.org>; Sun,  4 Jun 2023 02:29:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4940BC7EE23
+	for <linux-trace-kernel@archiver.kernel.org>; Sun,  4 Jun 2023 18:03:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229485AbjFDC3S (ORCPT
+        id S231807AbjFDSDA (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Sat, 3 Jun 2023 22:29:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43046 "EHLO
+        Sun, 4 Jun 2023 14:03:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34540 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229881AbjFDC3R (ORCPT
+        with ESMTP id S232250AbjFDSC7 (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Sat, 3 Jun 2023 22:29:17 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 54DCD197;
-        Sat,  3 Jun 2023 19:29:16 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id DDE9160C02;
-        Sun,  4 Jun 2023 02:29:15 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6A632C433EF;
-        Sun,  4 Jun 2023 02:29:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1685845755;
-        bh=y88we4Ac5oqKMeA+6cCyWjkxfe/UMHngQ2wGime+q2c=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=aeGo+OzExfIcaVTrUQgTEBsZvOwNXFMpeRHOsfIOqR4FtAA6UqEW7LVaIYZIDsl2u
-         WMsWqdYzcamlrzjxlusrQwktdYNJFZmgpOI1TG34aSijw7JWc3Mk9vzz4CUdmvzDEr
-         6xYT86fkLlBMAxt2rQX9sLyRgf68ZfApkE88zg+lkKgSYw9FGuuKBSz6WmsPwqqABl
-         7f7kQNa7Mq6mwlnmvKgxgYL7MT5O5Z5Xyl8lcOjvUtiTvp4uSJr8dy4NdXlAhhr3Po
-         +s7jEP0HcpPIvv4pKU1+HXbLNEgVsPvUOpumgmyhNOpZZq/GO5zqiW1ZcTueeFT/g4
-         P2Hg2Uicv39vg==
-From:   "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
-To:     linux-trace-kernel@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>,
-        mhiramat@kernel.org, Florent Revest <revest@chromium.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Martin KaFai Lau <martin.lau@linux.dev>, bpf@vger.kernel.org,
-        Bagas Sanjaya <bagasdotme@gmail.com>,
-        kernel test robot <lkp@intel.com>
-Subject: [PATCH 2/2] Documentation: Fix typo of reference file name
-Date:   Sun,  4 Jun 2023 11:29:11 +0900
-Message-ID:  <168584575125.2056209.5771945721143181243.stgit@mhiramat.roam.corp.google.com>
-X-Mailer: git-send-email 2.41.0.rc0.172.g3f132b7071-goog
-In-Reply-To:  <168584574094.2056209.2694238431743782342.stgit@mhiramat.roam.corp.google.com>
-References:  <168584574094.2056209.2694238431743782342.stgit@mhiramat.roam.corp.google.com>
-User-Agent: StGit/0.19
+        Sun, 4 Jun 2023 14:02:59 -0400
+Received: from out-46.mta1.migadu.com (out-46.mta1.migadu.com [IPv6:2001:41d0:203:375::2e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 00300F0
+        for <linux-trace-kernel@vger.kernel.org>; Sun,  4 Jun 2023 11:02:55 -0700 (PDT)
+Date:   Sun, 4 Jun 2023 14:02:44 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+        t=1685901772;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=8eVzj7/BTcLqy7wFCwl6xnZsISP/KN6jro+z/mha3Xk=;
+        b=PqQAVjJ04ndqRoRQANhzjXtWIXqTHWREPNCE9YGBCSItM5aGzg9r4emrFDvZxP/xuQ2bpU
+        DTvQnUtepgxbciT5z6M6Z+EoNGC8g2gnKTdxk1x+F2TTQDaLu6DFNHuJfLzV07K3aFkiY5
+        e/eoFzp+TyP07cOwDSzIUjGa6eo5mqQ=
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From:   Kent Overstreet <kent.overstreet@linux.dev>
+To:     Song Liu <song@kernel.org>
+Cc:     Mark Rutland <mark.rutland@arm.com>,
+        Mike Rapoport <rppt@kernel.org>, linux-kernel@vger.kernel.org,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Christophe Leroy <christophe.leroy@csgroup.eu>,
+        "David S. Miller" <davem@davemloft.net>,
+        Dinh Nguyen <dinguyen@kernel.org>,
+        Heiko Carstens <hca@linux.ibm.com>,
+        Helge Deller <deller@gmx.de>,
+        Huacai Chen <chenhuacai@kernel.org>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        "Naveen N. Rao" <naveen.n.rao@linux.ibm.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Russell King <linux@armlinux.org.uk>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Will Deacon <will@kernel.org>, bpf@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-mips@vger.kernel.org,
+        linux-mm@kvack.org, linux-modules@vger.kernel.org,
+        linux-parisc@vger.kernel.org, linux-riscv@lists.infradead.org,
+        linux-s390@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, loongarch@lists.linux.dev,
+        netdev@vger.kernel.org, sparclinux@vger.kernel.org, x86@kernel.org,
+        Puranjay Mohan <puranjay12@gmail.com>
+Subject: Re: [PATCH 00/13] mm: jit/text allocator
+Message-ID: <ZHzRxE5V6YzGVsHy@moria.home.lan>
+References: <20230601101257.530867-1-rppt@kernel.org>
+ <ZHjDU/mxE+cugpLj@FVFF77S0Q05N.cambridge.arm.com>
+ <ZHjgIH3aX9dCvVZc@moria.home.lan>
+ <ZHm3zUUbwqlsZBBF@FVFF77S0Q05N>
+ <CAPhsuW7Euczff_KB70nuH=Hhf2EYHAf=xiQR7mFqVfByhD34XA@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAPhsuW7Euczff_KB70nuH=Hhf2EYHAf=xiQR7mFqVfByhD34XA@mail.gmail.com>
+X-Migadu-Flow: FLOW_OUT
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+On Fri, Jun 02, 2023 at 11:20:58AM -0700, Song Liu wrote:
+> IIUC, arm64 uses VMALLOC address space for BPF programs. The reason
+> is each BPF program uses at least 64kB (one page) out of the 128MB
+> address space. Puranjay Mohan (CC'ed) is working on enabling
+> bpf_prog_pack for arm64. Once this work is done, multiple BPF programs
+> will be able to share a page. Will this improvement remove the need to
+> specify a different address range for BPF programs?
 
-Fix a typo of Documentation/trace/fprobe.rst.
-
-Reported-by: kernel test robot <lkp@intel.com>
-Closes: https://lore.kernel.org/oe-kbuild-all/202306040144.aD72UzkF-lkp@intel.com/
-Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
----
- Documentation/trace/fprobetrace.rst |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/Documentation/trace/fprobetrace.rst b/Documentation/trace/fprobetrace.rst
-index e949bc0cff05..7297f9478459 100644
---- a/Documentation/trace/fprobetrace.rst
-+++ b/Documentation/trace/fprobetrace.rst
-@@ -38,7 +38,7 @@ Synopsis of fprobe-events
-                   with a digit character, "_TRACEPOINT" is used.
-  MAXACTIVE      : Maximum number of instances of the specified function that
-                   can be probed simultaneously, or 0 for the default value
--                  as defined in Documentation/trace/fprobes.rst
-+                  as defined in Documentation/trace/fprobe.rst
- 
-  FETCHARGS      : Arguments. Each probe can have up to 128 args.
-   ARG           : Fetch "ARG" function argument using BTF (only for function
-
+Can we please stop working on BPF specific sub page allocation and focus
+on doing this in mm/? This never should have been in BPF in the first
+place.
