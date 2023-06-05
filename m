@@ -2,95 +2,99 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DEEFFC7EE24
-	for <linux-trace-kernel@archiver.kernel.org>; Mon,  5 Jun 2023 16:52:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA516C77B73
+	for <linux-trace-kernel@archiver.kernel.org>; Mon,  5 Jun 2023 19:32:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233924AbjFEQwy (ORCPT
+        id S235544AbjFETcd (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Mon, 5 Jun 2023 12:52:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56836 "EHLO
+        Mon, 5 Jun 2023 15:32:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50376 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235161AbjFEQwx (ORCPT
+        with ESMTP id S235737AbjFETcb (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Mon, 5 Jun 2023 12:52:53 -0400
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 6C862E8;
-        Mon,  5 Jun 2023 09:52:52 -0700 (PDT)
-Received: from W11-BEAU-MD.localdomain (unknown [76.135.27.212])
-        by linux.microsoft.com (Postfix) with ESMTPSA id ABD8120BCFC0;
-        Mon,  5 Jun 2023 09:52:51 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com ABD8120BCFC0
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-        s=default; t=1685983971;
-        bh=WNAcW4ZNKgmMTBdX8dnLj9J/dbA41pDD5x7Q9LxEEFI=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=kgGzae1GIuDruLlQYioh1xuNiOBwErEHYDOFjOlyR5lpzdCPdVKnkvIelxKQzIZBz
-         4Ymahx5CRkk4fYXxiyS+iBN+boXskz/E/S5czNBNQdQz9pirHfXiNO6bygDWpkpgRb
-         qY5LwT3cnWMSHT7oT/syldRQ55qXKa4zKln5DcBA=
-Date:   Mon, 5 Jun 2023 09:52:45 -0700
-From:   Beau Belgrave <beaub@linux.microsoft.com>
-To:     sunliming <sunliming@kylinos.cn>
-Cc:     mhiramat@kernel.org, rostedt@goodmis.org, shuah@kernel.org,
-        linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
-        linux-kselftest@vger.kernel.org, kelulanainsley@gmail.com
-Subject: Re: [PATCH V2 1/4] tracing/user_events: Fix the incorrect trace
- record for empty arguments events
-Message-ID: <20230605165245.GA140@W11-BEAU-MD.localdomain>
-References: <20230605073023.923316-1-sunliming@kylinos.cn>
+        Mon, 5 Jun 2023 15:32:31 -0400
+Received: from mail-il1-x12d.google.com (mail-il1-x12d.google.com [IPv6:2607:f8b0:4864:20::12d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F3D24103
+        for <linux-trace-kernel@vger.kernel.org>; Mon,  5 Jun 2023 12:32:27 -0700 (PDT)
+Received: by mail-il1-x12d.google.com with SMTP id e9e14a558f8ab-33bcc8f0d21so2424465ab.1
+        for <linux-trace-kernel@vger.kernel.org>; Mon, 05 Jun 2023 12:32:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linuxfoundation.org; s=google; t=1685993547; x=1688585547;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=vhr2lAV911N9w6qOC4Bl8VDt3wGt4nmSLltxDhRWdPM=;
+        b=ZV+nugYv6uGpnZqVmkYA7FKCRurQ5jAol+M6MWCUFCjQGidv5JPTur0hGB2/7mZ9lP
+         2UoLnsvHenY916/PTUJ6qlEyMzoA1RbXPx5DHixWJr13J/0nD2JdkP4J/bgWM/dTdk3U
+         uriedVLS9HD28WubInvxOdLH+bKP4L93iWe5g=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1685993547; x=1688585547;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=vhr2lAV911N9w6qOC4Bl8VDt3wGt4nmSLltxDhRWdPM=;
+        b=iPngTqM+jRPhs1SdyNZ6ITS9k4Mr7CeUng58Q3HBvbgV81+rsjsselLR87S/+EpXte
+         JevPy9kdrX40UzQiVHSQ08ksBDHWQ11yk6fBvvie/B3tY0YSJJyAN4hPW5+v7Uy08xYn
+         yT2MHwyAOSuXnBuW9hVb8lj8GMHJanh6g9s5ToR4WHs6ZY48c9CZ7b2W29xOWlf8fWM2
+         NLL+ChHlkwQ1u2B4NkHFp+KKHoJ2/9rHqTe/ag/N2toEBYj1o1bPNV93V+aiE9/ubPQk
+         EuxUm2+9nyiTGg7QD63KYgVeQEeA1fc8kU3czIvdX2uTuqMOYVhIpp3Oh6raNC2/sezQ
+         vo1w==
+X-Gm-Message-State: AC+VfDwrAMz23uClruShpPKbONekhn5ZXihjcpvza5BEV2bVHPMspO2c
+        T2gGBDOXacuGrMSUOBcP0O0QqQ==
+X-Google-Smtp-Source: ACHHUZ6KHh1oVsrNW2D/ZW3X6D326obvjwPX9XVKIX4IeLt0y2mOCL7Bvt0P2Wf6po1/yAhWO20VFQ==
+X-Received: by 2002:a05:6602:3999:b0:777:b6a9:64ba with SMTP id bw25-20020a056602399900b00777b6a964bamr118881iob.2.1685993547357;
+        Mon, 05 Jun 2023 12:32:27 -0700 (PDT)
+Received: from [192.168.1.128] ([38.15.45.1])
+        by smtp.gmail.com with ESMTPSA id z18-20020a029f12000000b0041a9c4e0f1csm2330096jal.109.2023.06.05.12.32.26
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 05 Jun 2023 12:32:26 -0700 (PDT)
+Message-ID: <9f726045-e9fa-5c8c-fd1c-ace5cf967617@linuxfoundation.org>
+Date:   Mon, 5 Jun 2023 13:32:26 -0600
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230605073023.923316-1-sunliming@kylinos.cn>
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.11.0
+Subject: Re: [PATCH] tracing/selftests: Update synthetic event selftest to use
+ common_stacktrace
+Content-Language: en-US
+To:     "Masami Hiramatsu (Google)" <mhiramat@kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Linux trace kernel <linux-trace-kernel@vger.kernel.org>,
+        Tom Zanussi <zanussi@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Shuah Khan <shuah@kernel.org>, linux-kselftest@vger.kernel.org,
+        Shuah Khan <skhan@linuxfoundation.org>
+References: <20230523225402.55951f2f@rorschach.local.home>
+ <20230525102408.4b2750621cb1deeb05e58980@kernel.org>
+From:   Shuah Khan <skhan@linuxfoundation.org>
+In-Reply-To: <20230525102408.4b2750621cb1deeb05e58980@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On Mon, Jun 05, 2023 at 03:30:20PM +0800, sunliming wrote:
-> The user_events support events that has empty arguments. But the trace event
-> is discarded and not really committed when the arguments is empty. Fix this
-> by not attempting to copy in zero-length data.
+On 5/24/23 20:24, Masami Hiramatsu (Google) wrote:
+> On Tue, 23 May 2023 22:54:29 -0400
+> Steven Rostedt <rostedt@goodmis.org> wrote:
 > 
-> Signed-off-by: sunliming <sunliming@kylinos.cn>
-> ---
-
-This series looks good to me, functionally. I applied it locally and ran
-this code with the new test additions. Everything works well. Thank you!
-
-The only thing I ask before an ACK is patch 2 and 4 in the series only use
-"user_events: " prefix. Can you change these to "selftests/user_events: "?
-
-You marked 3 this way, so I'd like to stick with a consistent form:
-I think it would be good going forward we use "tracing/user_events"
-for functional changes and "selftests/user_events" for self test
-changes.
-
-Thanks,
--Beau
-
->  kernel/trace/trace_events_user.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
+>> From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
+>>
+>> With the rename of the stacktrace field to common_stacktrace, update the
+>> selftests to reflect this change. Copy the current selftest to test the
+>> backward compatibility "stacktrace" keyword. Also the "requires" of that
+>> test was incorrect, so it would never actually ran before. That is fixed
+>> now.
+>>
+>> Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
 > 
-> diff --git a/kernel/trace/trace_events_user.c b/kernel/trace/trace_events_user.c
-> index 0d91dac206ff..698703a3d234 100644
-> --- a/kernel/trace/trace_events_user.c
-> +++ b/kernel/trace/trace_events_user.c
-> @@ -1399,7 +1399,7 @@ static void user_event_ftrace(struct user_event *user, struct iov_iter *i,
->  	if (unlikely(!entry))
->  		return;
->  
-> -	if (unlikely(!copy_nofault(entry + 1, i->count, i)))
-> +	if (unlikely(i->count != 0 && !copy_nofault(entry + 1, i->count, i)))
->  		goto discard;
->  
->  	if (!list_empty(&user->validators) &&
-> @@ -1440,7 +1440,7 @@ static void user_event_perf(struct user_event *user, struct iov_iter *i,
->  
->  		perf_fetch_caller_regs(regs);
->  
-> -		if (unlikely(!copy_nofault(perf_entry + 1, i->count, i)))
-> +		if (unlikely(i->count != 0 && !copy_nofault(perf_entry + 1, i->count, i)))
->  			goto discard;
->  
->  		if (!list_empty(&user->validators) &&
-> -- 
-> 2.25.1
+> Looks good to me.
+> 
+> Acked-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+> 
+
+Applied to linux-kselftest next for Linux 6.5-rc1
+
+thanks,
+-- Shuah
+
