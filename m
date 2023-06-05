@@ -2,99 +2,185 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA516C77B73
-	for <linux-trace-kernel@archiver.kernel.org>; Mon,  5 Jun 2023 19:32:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F2D9C7EE32
+	for <linux-trace-kernel@archiver.kernel.org>; Mon,  5 Jun 2023 20:43:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235544AbjFETcd (ORCPT
+        id S233306AbjFEUnb (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Mon, 5 Jun 2023 15:32:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50376 "EHLO
+        Mon, 5 Jun 2023 16:43:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58146 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235737AbjFETcb (ORCPT
+        with ESMTP id S231667AbjFEUn3 (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Mon, 5 Jun 2023 15:32:31 -0400
-Received: from mail-il1-x12d.google.com (mail-il1-x12d.google.com [IPv6:2607:f8b0:4864:20::12d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F3D24103
-        for <linux-trace-kernel@vger.kernel.org>; Mon,  5 Jun 2023 12:32:27 -0700 (PDT)
-Received: by mail-il1-x12d.google.com with SMTP id e9e14a558f8ab-33bcc8f0d21so2424465ab.1
-        for <linux-trace-kernel@vger.kernel.org>; Mon, 05 Jun 2023 12:32:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google; t=1685993547; x=1688585547;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=vhr2lAV911N9w6qOC4Bl8VDt3wGt4nmSLltxDhRWdPM=;
-        b=ZV+nugYv6uGpnZqVmkYA7FKCRurQ5jAol+M6MWCUFCjQGidv5JPTur0hGB2/7mZ9lP
-         2UoLnsvHenY916/PTUJ6qlEyMzoA1RbXPx5DHixWJr13J/0nD2JdkP4J/bgWM/dTdk3U
-         uriedVLS9HD28WubInvxOdLH+bKP4L93iWe5g=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1685993547; x=1688585547;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=vhr2lAV911N9w6qOC4Bl8VDt3wGt4nmSLltxDhRWdPM=;
-        b=iPngTqM+jRPhs1SdyNZ6ITS9k4Mr7CeUng58Q3HBvbgV81+rsjsselLR87S/+EpXte
-         JevPy9kdrX40UzQiVHSQ08ksBDHWQ11yk6fBvvie/B3tY0YSJJyAN4hPW5+v7Uy08xYn
-         yT2MHwyAOSuXnBuW9hVb8lj8GMHJanh6g9s5ToR4WHs6ZY48c9CZ7b2W29xOWlf8fWM2
-         NLL+ChHlkwQ1u2B4NkHFp+KKHoJ2/9rHqTe/ag/N2toEBYj1o1bPNV93V+aiE9/ubPQk
-         EuxUm2+9nyiTGg7QD63KYgVeQEeA1fc8kU3czIvdX2uTuqMOYVhIpp3Oh6raNC2/sezQ
-         vo1w==
-X-Gm-Message-State: AC+VfDwrAMz23uClruShpPKbONekhn5ZXihjcpvza5BEV2bVHPMspO2c
-        T2gGBDOXacuGrMSUOBcP0O0QqQ==
-X-Google-Smtp-Source: ACHHUZ6KHh1oVsrNW2D/ZW3X6D326obvjwPX9XVKIX4IeLt0y2mOCL7Bvt0P2Wf6po1/yAhWO20VFQ==
-X-Received: by 2002:a05:6602:3999:b0:777:b6a9:64ba with SMTP id bw25-20020a056602399900b00777b6a964bamr118881iob.2.1685993547357;
-        Mon, 05 Jun 2023 12:32:27 -0700 (PDT)
-Received: from [192.168.1.128] ([38.15.45.1])
-        by smtp.gmail.com with ESMTPSA id z18-20020a029f12000000b0041a9c4e0f1csm2330096jal.109.2023.06.05.12.32.26
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 05 Jun 2023 12:32:26 -0700 (PDT)
-Message-ID: <9f726045-e9fa-5c8c-fd1c-ace5cf967617@linuxfoundation.org>
-Date:   Mon, 5 Jun 2023 13:32:26 -0600
+        Mon, 5 Jun 2023 16:43:29 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8A778F2;
+        Mon,  5 Jun 2023 13:43:28 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 07ABA62AB7;
+        Mon,  5 Jun 2023 20:43:28 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B0414C433D2;
+        Mon,  5 Jun 2023 20:43:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1685997807;
+        bh=We5qywEUXFBvYr91+f59TuYCdj8cINMwKn3eQvO6qKo=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=I7xvXQXLM0Tk+V+96RzBdr/UoRB92a3ftHnZrilLQZvr5w3AlNjzmN9wbeCqkkbCl
+         DDUm1W1zxfiZwe+gjXC6K0QMqz8d9USg05gKXvmHLfrAf+FqT+OTOcMK6aGFqzG1zb
+         E86H0paXXm7ihSYO0CbgPPXfw8rIsLX4qwzhB6/StpLTRz6eVNJy8R0u2bcXb5AObl
+         Ay16QdoRp1sSVGG9bP4FMnVsq9x+ifwOZH0isH9pe4CqYdVcIo5Tq1wLxq/sUlyaRg
+         pXJxzrOzrppU5klX4Kcg/mPHvek90M1w/P5hCMfIv1PTbM22Z3AvfuML6Ql3ohsT7Q
+         qhU+5loHIlZWg==
+Date:   Mon, 5 Jun 2023 23:42:56 +0300
+From:   Mike Rapoport <rppt@kernel.org>
+To:     "Edgecombe, Rick P" <rick.p.edgecombe@intel.com>
+Cc:     "rostedt@goodmis.org" <rostedt@goodmis.org>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "deller@gmx.de" <deller@gmx.de>,
+        "mcgrof@kernel.org" <mcgrof@kernel.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "nadav.amit@gmail.com" <nadav.amit@gmail.com>,
+        "linux@armlinux.org.uk" <linux@armlinux.org.uk>,
+        "davem@davemloft.net" <davem@davemloft.net>,
+        "linux-mips@vger.kernel.org" <linux-mips@vger.kernel.org>,
+        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
+        "hca@linux.ibm.com" <hca@linux.ibm.com>,
+        "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "kent.overstreet@linux.dev" <kent.overstreet@linux.dev>,
+        "linux-s390@vger.kernel.org" <linux-s390@vger.kernel.org>,
+        "palmer@dabbelt.com" <palmer@dabbelt.com>,
+        "chenhuacai@kernel.org" <chenhuacai@kernel.org>,
+        "tsbogend@alpha.franken.de" <tsbogend@alpha.franken.de>,
+        "linux-trace-kernel@vger.kernel.org" 
+        <linux-trace-kernel@vger.kernel.org>,
+        "mpe@ellerman.id.au" <mpe@ellerman.id.au>,
+        "linux-parisc@vger.kernel.org" <linux-parisc@vger.kernel.org>,
+        "x86@kernel.org" <x86@kernel.org>,
+        "christophe.leroy@csgroup.eu" <christophe.leroy@csgroup.eu>,
+        "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>,
+        "will@kernel.org" <will@kernel.org>,
+        "dinguyen@kernel.org" <dinguyen@kernel.org>,
+        "naveen.n.rao@linux.ibm.com" <naveen.n.rao@linux.ibm.com>,
+        "sparclinux@vger.kernel.org" <sparclinux@vger.kernel.org>,
+        "linux-modules@vger.kernel.org" <linux-modules@vger.kernel.org>,
+        "bpf@vger.kernel.org" <bpf@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "song@kernel.org" <song@kernel.org>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        "loongarch@lists.linux.dev" <loongarch@lists.linux.dev>,
+        "akpm@linux-foundation.org" <akpm@linux-foundation.org>
+Subject: Re: [PATCH 12/13] x86/jitalloc: prepare to allocate exectuatble
+ memory as ROX
+Message-ID: <20230605204256.GA52412@kernel.org>
+References: <20230601101257.530867-13-rppt@kernel.org>
+ <0f50ac52a5280d924beeb131e6e4717b6ad9fdf7.camel@intel.com>
+ <ZHjcr26YskTm+0EF@moria.home.lan>
+ <a51c041b61e2916d2b91c990349aabc6cb9836aa.camel@intel.com>
+ <ZHjljJfQjhVV/jNS@moria.home.lan>
+ <68b8160454518387c53508717ba5ed5545ff0283.camel@intel.com>
+ <50D768D7-15BF-43B8-A5FD-220B25595336@gmail.com>
+ <20230604225244.65be9103@rorschach.local.home>
+ <20230605081143.GA3460@kernel.org>
+ <88a62f834688ed77d08c778e1e427014cf7d3c1b.camel@intel.com>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.11.0
-Subject: Re: [PATCH] tracing/selftests: Update synthetic event selftest to use
- common_stacktrace
-Content-Language: en-US
-To:     "Masami Hiramatsu (Google)" <mhiramat@kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Linux trace kernel <linux-trace-kernel@vger.kernel.org>,
-        Tom Zanussi <zanussi@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Shuah Khan <shuah@kernel.org>, linux-kselftest@vger.kernel.org,
-        Shuah Khan <skhan@linuxfoundation.org>
-References: <20230523225402.55951f2f@rorschach.local.home>
- <20230525102408.4b2750621cb1deeb05e58980@kernel.org>
-From:   Shuah Khan <skhan@linuxfoundation.org>
-In-Reply-To: <20230525102408.4b2750621cb1deeb05e58980@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <88a62f834688ed77d08c778e1e427014cf7d3c1b.camel@intel.com>
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On 5/24/23 20:24, Masami Hiramatsu (Google) wrote:
-> On Tue, 23 May 2023 22:54:29 -0400
-> Steven Rostedt <rostedt@goodmis.org> wrote:
+On Mon, Jun 05, 2023 at 04:10:21PM +0000, Edgecombe, Rick P wrote:
+> On Mon, 2023-06-05 at 11:11 +0300, Mike Rapoport wrote:
+> > On Sun, Jun 04, 2023 at 10:52:44PM -0400, Steven Rostedt wrote:
+> > > On Thu, 1 Jun 2023 16:54:36 -0700
+> > > Nadav Amit <nadav.amit@gmail.com> wrote:
+> > > 
+> > > > > The way text_poke() is used here, it is creating a new writable
+> > > > > alias
+> > > > > and flushing it for *each* write to the module (like for each
+> > > > > write of
+> > > > > an individual relocation, etc). I was just thinking it might
+> > > > > warrant
+> > > > > some batching or something.  
+> > 
+> > > > I am not advocating to do so, but if you want to have many
+> > > > efficient
+> > > > writes, perhaps you can just disable CR0.WP. Just saying that if
+> > > > you
+> > > > are about to write all over the memory, text_poke() does not
+> > > > provide
+> > > > too much security for the poking thread.
+> > 
+> > Heh, this is definitely and easier hack to implement :)
 > 
->> From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
->>
->> With the rename of the stacktrace field to common_stacktrace, update the
->> selftests to reflect this change. Copy the current selftest to test the
->> backward compatibility "stacktrace" keyword. Also the "requires" of that
->> test was incorrect, so it would never actually ran before. That is fixed
->> now.
->>
->> Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
-> 
-> Looks good to me.
-> 
-> Acked-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-> 
+> I don't know the details, but previously there was some strong dislike
+> of CR0.WP toggling. And now there is also the problem of CET. Setting
+> CR0.WP=0 will #GP if CR4.CET is 1 (as it currently is for kernel IBT).
+> I guess you might get away with toggling them both in some controlled
+> situation, but it might be a lot easier to hack up then to be made
+> fully acceptable. It does sound much more efficient though.
+ 
+I don't think we'd really want that, especially looking at 
 
-Applied to linux-kselftest next for Linux 6.5-rc1
+		WARN_ONCE(bits_missing, "CR0 WP bit went missing!?\n");
 
-thanks,
--- Shuah
+at native_write_cr0().
+ 
+> > > Batching does exist, which is what the text_poke_queue() thing
+> > > does.
+> > 
+> > For module loading text_poke_queue() will still be much slower than a
+> > bunch
+> > of memset()s for no good reason because we don't need all the
+> > complexity of
+> > text_poke_bp_batch() for module initialization because we are sure we
+> > are
+> > not patching live code.
+> > 
+> > What we'd need here is a new batching mode that will create a
+> > writable
+> > alias mapping at the beginning of apply_relocate_*() and
+> > module_finalize(),
+> > then it will use memcpy() to that writable alias and will tear the
+> > mapping
+> > down in the end.
+> 
+> It's probably only a tiny bit faster than keeping a separate writable
+> allocation and text_poking it in at the end.
 
+Right, but it still will be faster than text_poking every relocation.
+ 
+> > Another option is to teach alternatives to update a writable copy
+> > rather
+> > than do in place changes like Song suggested. My feeling is that it
+> > will be
+> > more intrusive change though.
+> 
+> You mean keeping a separate RW allocation and then text_poking() the
+> whole thing in when you are done? That is what I was trying to say at
+> the beginning of this thread. The other benefit is you don't make the
+> intermediate loading states of the module, executable.
+> 
+> I tried this technique previously [0], and I thought it was not too
+> bad. In most of the callers it looks similar to what you have in
+> do_text_poke(). Sometimes less, sometimes more. It might need
+> enlightening of some of the stuff currently using text_poke() during
+> module loading, like jump labels. So that bit is more intrusive, yea.
+> But it sounds so much cleaner and well controlled. Did you have a
+> particular trouble spot in mind?
+
+Nothing in particular, except the intrusive part. Except the changes in
+modules.c we'd need to teach alternatives to deal with a writable copy.
+ 
+> [0]
+> https://lore.kernel.org/lkml/20201120202426.18009-5-rick.p.edgecombe@intel.com/
+
+-- 
+Sincerely yours,
+Mike.
