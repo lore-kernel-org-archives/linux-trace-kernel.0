@@ -2,38 +2,38 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BC94FC7EE2C
-	for <linux-trace-kernel@archiver.kernel.org>; Mon,  5 Jun 2023 23:39:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A1429C7EE32
+	for <linux-trace-kernel@archiver.kernel.org>; Mon,  5 Jun 2023 23:39:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233516AbjFEXjJ (ORCPT
+        id S233538AbjFEXjK (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Mon, 5 Jun 2023 19:39:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56618 "EHLO
+        Mon, 5 Jun 2023 19:39:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56622 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233453AbjFEXjI (ORCPT
+        with ESMTP id S233465AbjFEXjI (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
         Mon, 5 Jun 2023 19:39:08 -0400
 Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 8FF94F2;
-        Mon,  5 Jun 2023 16:39:06 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 5861AEC;
+        Mon,  5 Jun 2023 16:39:07 -0700 (PDT)
 Received: from W11-BEAU-MD.localdomain (unknown [76.135.27.212])
-        by linux.microsoft.com (Postfix) with ESMTPSA id 0074020BCFD1;
-        Mon,  5 Jun 2023 16:39:05 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 0074020BCFD1
+        by linux.microsoft.com (Postfix) with ESMTPSA id B7E1520BE169;
+        Mon,  5 Jun 2023 16:39:06 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com B7E1520BE169
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
         s=default; t=1686008346;
-        bh=7HerbMz1DFTdP2RVbzOEQ58GbkMSyi6fAKvdAGruc5c=;
+        bh=qnYype7JSfB3XhEdWuDY5z5z2M5sVSUXVc5FgH32LG4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=fElDeCc6cZT5ljFjefxjBMK2DZRLH6sfH8EKsYxhs+clOn/VxvgqfwhcRy5dwLSdE
-         mRdhVQ3gYfiPaJrv5Aq+T0jnJEfYhKiKrVapsW/+ms1gQC6AOUOf6dCwuKNTGkCGYU
-         m3ApaFjh5K01nun214FXp+k9P8/pSMO8RciIpJg0=
+        b=asQxKbkkYvi6HydgOHl5hyqwliXm+PEvNYs4t6Zb8l6ekyyaVcMQA/M88jj5sGp4r
+         d5yLQstjlC3+JfLxoevYS7mpUjHMe6G4s/SP1ovksq9UVIBuYUYHHKT+Q9C01+CfhG
+         sUB6Rko4IyXpghGhd3lrii3dpt7Bakv+bUjgK2C8=
 From:   Beau Belgrave <beaub@linux.microsoft.com>
 To:     rostedt@goodmis.org, mhiramat@kernel.org
 Cc:     linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
         ast@kernel.org, dcook@linux.microsoft.com
-Subject: [PATCH v2 2/5] tracing/user_events: Track refcount consistently via put/get
-Date:   Mon,  5 Jun 2023 16:38:57 -0700
-Message-Id: <20230605233900.2838-3-beaub@linux.microsoft.com>
+Subject: [PATCH v2 5/5] tracing/user_events: Add persist flag documentation
+Date:   Mon,  5 Jun 2023 16:39:00 -0700
+Message-Id: <20230605233900.2838-6-beaub@linux.microsoft.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20230605233900.2838-1-beaub@linux.microsoft.com>
 References: <20230605233900.2838-1-beaub@linux.microsoft.com>
@@ -43,213 +43,62 @@ Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-Various parts of the code today track user_event's refcnt field directly
-via a refcount_add/dec. This makes it hard to modify the behavior of the
-last reference decrement in all code paths consistently. For example, in
-the future we will auto-delete events upon the last reference going
-away. This last reference could happen in many places, but we want it to
-be consistently handled.
-
-Add user_event_get() and user_event_put() for the add/dec. Update all
-places where direct refcounts are being used to utilize these new
-functions. In each location pass if event_mutex is locked or not. This
-allows us to drop events automatically in future patches clearly. Ensure
-when caller states the lock is held, it really is (or is not) held.
+There is now a flag for user_events to use when registering events to
+have events continue to exist upon the last reference put. Add the new
+flag, USER_EVENT_REG_PERSIST, to user_events documentation files to let
+people know when to use it.
 
 Signed-off-by: Beau Belgrave <beaub@linux.microsoft.com>
 ---
- kernel/trace/trace_events_user.c | 66 +++++++++++++++++++-------------
- 1 file changed, 40 insertions(+), 26 deletions(-)
+ Documentation/trace/user_events.rst | 21 ++++++++++++++++-----
+ 1 file changed, 16 insertions(+), 5 deletions(-)
 
-diff --git a/kernel/trace/trace_events_user.c b/kernel/trace/trace_events_user.c
-index 34aa0a5d8e2a..8f0fb6cb0f33 100644
---- a/kernel/trace/trace_events_user.c
-+++ b/kernel/trace/trace_events_user.c
-@@ -175,6 +175,28 @@ static u32 user_event_key(char *name)
- 	return jhash(name, strlen(name), 0);
- }
+diff --git a/Documentation/trace/user_events.rst b/Documentation/trace/user_events.rst
+index f79987e16cf4..6736e5a32293 100644
+--- a/Documentation/trace/user_events.rst
++++ b/Documentation/trace/user_events.rst
+@@ -39,6 +39,14 @@ DIAG_IOCSREG.
  
-+static struct user_event *user_event_get(struct user_event *user)
-+{
-+	refcount_inc(&user->refcnt);
+ This command takes a packed struct user_reg as an argument::
+ 
++  enum user_reg_flag {
++        /* Event will not delete upon last reference closing */
++        USER_EVENT_REG_PERSIST		= 1U << 0,
 +
-+	return user;
-+}
++        /* This value or above is currently non-ABI */
++        USER_EVENT_REG_MAX		= 1U << 1,
++  };
 +
-+static void user_event_put(struct user_event *user, bool locked)
-+{
-+#ifdef CONFIG_LOCKDEP
-+	if (locked)
-+		lockdep_assert_held(&event_mutex);
-+	else
-+		lockdep_assert_not_held(&event_mutex);
-+#endif
+   struct user_reg {
+         /* Input: Size of the user_reg structure being used */
+         __u32 size;
+@@ -49,7 +57,7 @@ This command takes a packed struct user_reg as an argument::
+         /* Input: Enable size in bytes at address */
+         __u8 enable_size;
+ 
+-        /* Input: Flags for future use, set to 0 */
++        /* Input: Flags can be any of the above user_reg_flag values */
+         __u16 flags;
+ 
+         /* Input: Address to update when enabled */
+@@ -73,10 +81,13 @@ The struct user_reg requires all the above inputs to be set appropriately.
+   This must be 4 (32-bit) or 8 (64-bit). 64-bit values are only allowed to be
+   used on 64-bit kernels, however, 32-bit can be used on all kernels.
+ 
+-+ flags: The flags to use, if any. For the initial version this must be 0.
+-  Callers should first attempt to use flags and retry without flags to ensure
+-  support for lower versions of the kernel. If a flag is not supported -EINVAL
+-  is returned.
+++ flags: The flags to use, if any. Callers should first attempt to use flags
++  and retry without flags to ensure support for lower versions of the kernel.
++  If a flag is not supported -EINVAL is returned.
 +
-+	if (unlikely(!user))
-+		return;
-+
-+	refcount_dec(&user->refcnt);
-+}
-+
- static void user_event_group_destroy(struct user_event_group *group)
- {
- 	kfree(group->system_name);
-@@ -258,12 +280,13 @@ static struct user_event_group
- 	return NULL;
- };
++  **USER_EVENT_REG_PERSIST**
++        When the last reference is closed for the event, the event will continue
++        to exist until a delete IOCTL is issued by a user.
  
--static void user_event_enabler_destroy(struct user_event_enabler *enabler)
-+static void user_event_enabler_destroy(struct user_event_enabler *enabler,
-+				       bool locked)
- {
- 	list_del_rcu(&enabler->link);
- 
- 	/* No longer tracking the event via the enabler */
--	refcount_dec(&enabler->event->refcnt);
-+	user_event_put(enabler->event, locked);
- 
- 	kfree(enabler);
- }
-@@ -325,7 +348,7 @@ static void user_event_enabler_fault_fixup(struct work_struct *work)
- 
- 	/* User asked for enabler to be removed during fault */
- 	if (test_bit(ENABLE_VAL_FREEING_BIT, ENABLE_BITOPS(enabler))) {
--		user_event_enabler_destroy(enabler);
-+		user_event_enabler_destroy(enabler, true);
- 		goto out;
- 	}
- 
-@@ -489,13 +512,12 @@ static bool user_event_enabler_dup(struct user_event_enabler *orig,
- 	if (!enabler)
- 		return false;
- 
--	enabler->event = orig->event;
-+	enabler->event = user_event_get(orig->event);
- 	enabler->addr = orig->addr;
- 
- 	/* Only dup part of value (ignore future flags, etc) */
- 	enabler->values = orig->values & ENABLE_VAL_DUP_MASK;
- 
--	refcount_inc(&enabler->event->refcnt);
- 	list_add_rcu(&enabler->link, &mm->enablers);
- 
- 	return true;
-@@ -595,7 +617,7 @@ static void user_event_mm_destroy(struct user_event_mm *mm)
- 	struct user_event_enabler *enabler, *next;
- 
- 	list_for_each_entry_safe(enabler, next, &mm->enablers, link)
--		user_event_enabler_destroy(enabler);
-+		user_event_enabler_destroy(enabler, false);
- 
- 	mmdrop(mm->mm);
- 	kfree(mm);
-@@ -748,7 +770,7 @@ static struct user_event_enabler
- 	 * exit or run exec(), which includes forks and clones.
- 	 */
- 	if (!*write_result) {
--		refcount_inc(&enabler->event->refcnt);
-+		user_event_get(user);
- 		list_add_rcu(&enabler->link, &user_mm->enablers);
- 	}
- 
-@@ -1336,10 +1358,8 @@ static struct user_event *find_user_event(struct user_event_group *group,
- 	*outkey = key;
- 
- 	hash_for_each_possible(group->register_table, user, node, key)
--		if (!strcmp(EVENT_NAME(user), name)) {
--			refcount_inc(&user->refcnt);
--			return user;
--		}
-+		if (!strcmp(EVENT_NAME(user), name))
-+			return user_event_get(user);
- 
- 	return NULL;
- }
-@@ -1553,12 +1573,12 @@ static int user_event_reg(struct trace_event_call *call,
- 
- 	return ret;
- inc:
--	refcount_inc(&user->refcnt);
-+	user_event_get(user);
- 	update_enable_bit_for(user);
- 	return 0;
- dec:
- 	update_enable_bit_for(user);
--	refcount_dec(&user->refcnt);
-+	user_event_put(user, true);
- 	return 0;
- }
- 
-@@ -1592,7 +1612,7 @@ static int user_event_create(const char *raw_command)
- 	ret = user_event_parse_cmd(group, name, &user, 0);
- 
- 	if (!ret)
--		refcount_dec(&user->refcnt);
-+		user_event_put(user, false);
- 
- 	mutex_unlock(&group->reg_mutex);
- 
-@@ -1856,7 +1876,7 @@ static int delete_user_event(struct user_event_group *group, char *name)
- 	if (!user)
- 		return -ENOENT;
- 
--	refcount_dec(&user->refcnt);
-+	user_event_put(user, true);
- 
- 	if (!user_event_last_ref(user))
- 		return -EBUSY;
-@@ -2015,9 +2035,7 @@ static int user_events_ref_add(struct user_event_file_info *info,
- 	for (i = 0; i < count; ++i)
- 		new_refs->events[i] = refs->events[i];
- 
--	new_refs->events[i] = user;
--
--	refcount_inc(&user->refcnt);
-+	new_refs->events[i] = user_event_get(user);
- 
- 	rcu_assign_pointer(info->refs, new_refs);
- 
-@@ -2131,7 +2149,7 @@ static long user_events_ioctl_reg(struct user_event_file_info *info,
- 	ret = user_events_ref_add(info, user);
- 
- 	/* No longer need parse ref, ref_add either worked or not */
--	refcount_dec(&user->refcnt);
-+	user_event_put(user, false);
- 
- 	/* Positive number is index and valid */
- 	if (ret < 0)
-@@ -2280,7 +2298,7 @@ static long user_events_ioctl_unreg(unsigned long uarg)
- 			set_bit(ENABLE_VAL_FREEING_BIT, ENABLE_BITOPS(enabler));
- 
- 			if (!test_bit(ENABLE_VAL_FAULTING_BIT, ENABLE_BITOPS(enabler)))
--				user_event_enabler_destroy(enabler);
-+				user_event_enabler_destroy(enabler, true);
- 
- 			/* Removed at least one */
- 			ret = 0;
-@@ -2337,7 +2355,6 @@ static int user_events_release(struct inode *node, struct file *file)
- 	struct user_event_file_info *info = file->private_data;
- 	struct user_event_group *group;
- 	struct user_event_refs *refs;
--	struct user_event *user;
- 	int i;
- 
- 	if (!info)
-@@ -2361,12 +2378,9 @@ static int user_events_release(struct inode *node, struct file *file)
- 	 * The underlying user_events are ref counted, and cannot be freed.
- 	 * After this decrement, the user_events may be freed elsewhere.
- 	 */
--	for (i = 0; i < refs->count; ++i) {
--		user = refs->events[i];
-+	for (i = 0; i < refs->count; ++i)
-+		user_event_put(refs->events[i], false);
- 
--		if (user)
--			refcount_dec(&user->refcnt);
--	}
- out:
- 	file->private_data = NULL;
- 
+ + enable_addr: The address of the value to use to reflect event status. This
+   must be naturally aligned and write accessible within the user program.
 -- 
 2.25.1
 
