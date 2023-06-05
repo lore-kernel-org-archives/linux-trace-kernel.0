@@ -2,133 +2,132 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4AE93C7EE2A
-	for <linux-trace-kernel@archiver.kernel.org>; Mon,  5 Jun 2023 07:31:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 490CBC7EE2F
+	for <linux-trace-kernel@archiver.kernel.org>; Mon,  5 Jun 2023 08:12:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229900AbjFEHbo (ORCPT
+        id S229837AbjFEIMP (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Mon, 5 Jun 2023 03:31:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55982 "EHLO
+        Mon, 5 Jun 2023 04:12:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52858 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229940AbjFEHbk (ORCPT
+        with ESMTP id S229626AbjFEIMO (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Mon, 5 Jun 2023 03:31:40 -0400
-Received: from mail-ot1-f67.google.com (mail-ot1-f67.google.com [209.85.210.67])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 430AF118;
-        Mon,  5 Jun 2023 00:31:24 -0700 (PDT)
-Received: by mail-ot1-f67.google.com with SMTP id 46e09a7af769-6af81142b6dso4282034a34.2;
-        Mon, 05 Jun 2023 00:31:24 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1685950283; x=1688542283;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=JjH9eOPUMgvUuYzrotRDm7fc4vW9NrXoyCCMM1Pnj9g=;
-        b=PzoCWjDIfjBUXkIQSRxM3jQGUVhZWCaVNkL6zVdxA6TxvlpmEqkwD7Zb2dsPyGVxKi
-         jKuPWXiuIgZlVmx845eo/rSEpBOOnT7fLi6zbzwonOBUpNiMDtWWSs+K4/oKYIEXF7Je
-         Jrws/5NaoT3SKTJZlv5WJCt9aC5eLzIIi+0pSWaIgpKrii4lR0RSK2PaJ1JewFy8uTCb
-         jOQVkHBJQYLMa4OSx0WMbR+0+1g466tx4lYKqWWZP+VJztwobrDIHmFuStNNj8xhTuVJ
-         9/alDi9T4tpEmH+AgKFGKBF5xePFkjGCg0Q30KaXTYbzoEXWZhAnoQoGjHKwSF5w9/g4
-         kVRQ==
-X-Gm-Message-State: AC+VfDzSo/lx65dgEpewcYguqeAEUnSGw8WULJQpnQTxzkdAnICph/0R
-        j6BkXhDGIIOZk5O6X9jDPQ==
-X-Google-Smtp-Source: ACHHUZ7eiClij7spmG73QbIuI4ywtDluEPQnki3nFEPvmFkWEfZ8FCRSvGZySA0GRuT1y4Zl1DLl3g==
-X-Received: by 2002:a9d:7a91:0:b0:6af:7e7e:d7b with SMTP id l17-20020a9d7a91000000b006af7e7e0d7bmr9926291otn.15.1685950283566;
-        Mon, 05 Jun 2023 00:31:23 -0700 (PDT)
-Received: from localhost.localdomain ([116.128.244.169])
-        by smtp.gmail.com with ESMTPSA id 128-20020a630786000000b0053ba104c113sm5200419pgh.72.2023.06.05.00.31.21
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 05 Jun 2023 00:31:23 -0700 (PDT)
-From:   sunliming <sunliming@kylinos.cn>
-To:     mhiramat@kernel.org, beaub@linux.microsoft.com,
-        rostedt@goodmis.org, shuah@kernel.org
-Cc:     linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
-        linux-kselftest@vger.kernel.org, kelulanainsley@gmail.com,
-        sunliming <sunliming@kylinos.cn>
-Subject: [PATCH V2 4/4] user_events: Add perf self-test for empty arguments events
-Date:   Mon,  5 Jun 2023 15:30:23 +0800
-Message-Id: <20230605073023.923316-4-sunliming@kylinos.cn>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20230605073023.923316-1-sunliming@kylinos.cn>
-References: <20230605073023.923316-1-sunliming@kylinos.cn>
+        Mon, 5 Jun 2023 04:12:14 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 42E82A1;
+        Mon,  5 Jun 2023 01:12:13 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id CEBAF61349;
+        Mon,  5 Jun 2023 08:12:12 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CD463C433D2;
+        Mon,  5 Jun 2023 08:12:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1685952732;
+        bh=0a3Erj1+y05IXqjDMWsbKoIt+bMhOMaYKv6SbF8QYx8=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=Zu6xmXaSJOaYGEZ1M18sqNTyQoodb/FtprpnZS9jE7WS1RsqZh7vr80D82GP+H1i8
+         Qbu+kLGLXkmXcf2oXs54XG8W5AAc+Szj5iw7w1esJF0pl3B4pku9TUNP0nnZRtgroI
+         L7ysBaeg9qWTT4omm1x3jmC2/a5iIXjq4VNltoSIXSnirdvBxVCgizUUrQFclxA9A9
+         JI6H8n/NsAtikP0Klus6G9HwEipbiVd/EmoeyXvbNSuuqp00lQftKP5siTorJJyFWk
+         NlQqlLQB4dqezssu+rEQF7hm50+nogklsOxP5i6Esuay261E/tRiQMISJtPYoOP/Ua
+         Cp41VdtuUrJ+Q==
+Date:   Mon, 5 Jun 2023 11:11:43 +0300
+From:   Mike Rapoport <rppt@kernel.org>
+To:     Steven Rostedt <rostedt@goodmis.org>
+Cc:     Nadav Amit <nadav.amit@gmail.com>,
+        "Edgecombe, Rick P" <rick.p.edgecombe@intel.com>,
+        "kent.overstreet@linux.dev" <kent.overstreet@linux.dev>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "mcgrof@kernel.org" <mcgrof@kernel.org>,
+        "deller@gmx.de" <deller@gmx.de>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "davem@davemloft.net" <davem@davemloft.net>,
+        "linux@armlinux.org.uk" <linux@armlinux.org.uk>,
+        "linux-mips@vger.kernel.org" <linux-mips@vger.kernel.org>,
+        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
+        "hca@linux.ibm.com" <hca@linux.ibm.com>,
+        "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>,
+        "linux-s390@vger.kernel.org" <linux-s390@vger.kernel.org>,
+        "palmer@dabbelt.com" <palmer@dabbelt.com>,
+        "chenhuacai@kernel.org" <chenhuacai@kernel.org>,
+        "mpe@ellerman.id.au" <mpe@ellerman.id.au>,
+        "x86@kernel.org" <x86@kernel.org>,
+        "tsbogend@alpha.franken.de" <tsbogend@alpha.franken.de>,
+        "linux-trace-kernel@vger.kernel.org" 
+        <linux-trace-kernel@vger.kernel.org>,
+        "linux-parisc@vger.kernel.org" <linux-parisc@vger.kernel.org>,
+        "christophe.leroy@csgroup.eu" <christophe.leroy@csgroup.eu>,
+        Will Deacon <will@kernel.org>,
+        "dinguyen@kernel.org" <dinguyen@kernel.org>,
+        "naveen.n.rao@linux.ibm.com" <naveen.n.rao@linux.ibm.com>,
+        "sparclinux@vger.kernel.org" <sparclinux@vger.kernel.org>,
+        "linux-modules@vger.kernel.org" <linux-modules@vger.kernel.org>,
+        "bpf@vger.kernel.org" <bpf@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "song@kernel.org" <song@kernel.org>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        "loongarch@lists.linux.dev" <loongarch@lists.linux.dev>,
+        Andrew Morton <akpm@linux-foundation.org>
+Subject: Re: [PATCH 12/13] x86/jitalloc: prepare to allocate exectuatble
+ memory as ROX
+Message-ID: <20230605081143.GA3460@kernel.org>
+References: <20230601101257.530867-1-rppt@kernel.org>
+ <20230601101257.530867-13-rppt@kernel.org>
+ <0f50ac52a5280d924beeb131e6e4717b6ad9fdf7.camel@intel.com>
+ <ZHjcr26YskTm+0EF@moria.home.lan>
+ <a51c041b61e2916d2b91c990349aabc6cb9836aa.camel@intel.com>
+ <ZHjljJfQjhVV/jNS@moria.home.lan>
+ <68b8160454518387c53508717ba5ed5545ff0283.camel@intel.com>
+ <50D768D7-15BF-43B8-A5FD-220B25595336@gmail.com>
+ <20230604225244.65be9103@rorschach.local.home>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230604225244.65be9103@rorschach.local.home>
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-Tests to ensure events that has empty arguments can input trace record
-correctly when using perf.
+On Sun, Jun 04, 2023 at 10:52:44PM -0400, Steven Rostedt wrote:
+> On Thu, 1 Jun 2023 16:54:36 -0700
+> Nadav Amit <nadav.amit@gmail.com> wrote:
+> 
+> > > The way text_poke() is used here, it is creating a new writable alias
+> > > and flushing it for *each* write to the module (like for each write of
+> > > an individual relocation, etc). I was just thinking it might warrant
+> > > some batching or something.  
 
-Signed-off-by: sunliming <sunliming@kylinos.cn>
----
- .../testing/selftests/user_events/perf_test.c | 53 +++++++++++++++++++
- 1 file changed, 53 insertions(+)
+> > I am not advocating to do so, but if you want to have many efficient
+> > writes, perhaps you can just disable CR0.WP. Just saying that if you
+> > are about to write all over the memory, text_poke() does not provide
+> > too much security for the poking thread.
 
-diff --git a/tools/testing/selftests/user_events/perf_test.c b/tools/testing/selftests/user_events/perf_test.c
-index e97f24ab6e2f..c0e7eb7fab0b 100644
---- a/tools/testing/selftests/user_events/perf_test.c
-+++ b/tools/testing/selftests/user_events/perf_test.c
-@@ -189,6 +189,59 @@ TEST_F(user, perf_write) {
- 	ASSERT_EQ(0, self->check);
- }
- 
-+TEST_F(user, perf_empty_events) {
-+	struct perf_event_attr pe = {0};
-+	struct user_reg reg = {0};
-+	struct perf_event_mmap_page *perf_page;
-+	int page_size = sysconf(_SC_PAGESIZE);
-+	int id, fd;
-+	__u32 *val;
-+
-+	reg.size = sizeof(reg);
-+	reg.name_args = (__u64)"__test_event";
-+	reg.enable_bit = 31;
-+	reg.enable_addr = (__u64)&self->check;
-+	reg.enable_size = sizeof(self->check);
-+
-+	/* Register should work */
-+	ASSERT_EQ(0, ioctl(self->data_fd, DIAG_IOCSREG, &reg));
-+	ASSERT_EQ(0, reg.write_index);
-+	ASSERT_EQ(0, self->check);
-+
-+	/* Id should be there */
-+	id = get_id();
-+	ASSERT_NE(-1, id);
-+
-+	pe.type = PERF_TYPE_TRACEPOINT;
-+	pe.size = sizeof(pe);
-+	pe.config = id;
-+	pe.sample_type = PERF_SAMPLE_RAW;
-+	pe.sample_period = 1;
-+	pe.wakeup_events = 1;
-+
-+	/* Tracepoint attach should work */
-+	fd = perf_event_open(&pe, 0, -1, -1, 0);
-+	ASSERT_NE(-1, fd);
-+
-+	perf_page = mmap(NULL, page_size * 2, PROT_READ, MAP_SHARED, fd, 0);
-+	ASSERT_NE(MAP_FAILED, perf_page);
-+
-+	/* Status should be updated */
-+	ASSERT_EQ(1 << reg.enable_bit, self->check);
-+
-+	/* Ensure write shows up at correct offset */
-+	ASSERT_NE(-1, write(self->data_fd, &reg.write_index,
-+				sizeof(reg.write_index)));
-+	val = (void *)(((char *)perf_page) + perf_page->data_offset);
-+	ASSERT_EQ(PERF_RECORD_SAMPLE, *val);
-+
-+	munmap(perf_page, page_size * 2);
-+	close(fd);
-+
-+	/* Status should be updated */
-+	ASSERT_EQ(0, self->check);
-+}
-+
- int main(int argc, char **argv)
- {
- 	return test_harness_run(argc, argv);
+Heh, this is definitely and easier hack to implement :)
+
+> Batching does exist, which is what the text_poke_queue() thing does.
+
+For module loading text_poke_queue() will still be much slower than a bunch
+of memset()s for no good reason because we don't need all the complexity of
+text_poke_bp_batch() for module initialization because we are sure we are
+not patching live code.
+
+What we'd need here is a new batching mode that will create a writable
+alias mapping at the beginning of apply_relocate_*() and module_finalize(),
+then it will use memcpy() to that writable alias and will tear the mapping
+down in the end.
+
+Another option is to teach alternatives to update a writable copy rather
+than do in place changes like Song suggested. My feeling is that it will be
+more intrusive change though.
+
+> -- Steve
+> 
+
 -- 
-2.25.1
-
+Sincerely yours,
+Mike.
