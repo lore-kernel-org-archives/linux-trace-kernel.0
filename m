@@ -2,136 +2,90 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9752EC7EE33
-	for <linux-trace-kernel@archiver.kernel.org>; Mon,  5 Jun 2023 04:06:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A3E2C7EE2E
+	for <linux-trace-kernel@archiver.kernel.org>; Mon,  5 Jun 2023 07:31:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232694AbjFEEGF (ORCPT
+        id S230359AbjFEHa7 (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Mon, 5 Jun 2023 00:06:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43496 "EHLO
+        Mon, 5 Jun 2023 03:30:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55170 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230493AbjFEEGD (ORCPT
+        with ESMTP id S230336AbjFEHag (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Mon, 5 Jun 2023 00:06:03 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 87EE2BC;
-        Sun,  4 Jun 2023 21:06:02 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 2291B61DF5;
-        Mon,  5 Jun 2023 04:06:02 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8398BC433AA;
-        Mon,  5 Jun 2023 04:06:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1685937961;
-        bh=WtI1jY3mnr9zb4/0mcezfP7YgsPqPtpWRWa72DAZTTg=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=uxKGktXNqn49bEfc54rxrLont7pLs83GyZuzAufBwsGBjuGMKdcRP/bEdwYmfXXxU
-         WvxTYj5OfeXmTt5HLnDLwPgr67Lkt70CP1EvdU2veiDINIXLIDAS+iKL+CqrOBDxNc
-         W/VQJXu20GHLghTy7G8UfIn1gM+F5ueXv0na8lU8CSN0FmokvQ65P4mX8K8i05YG/W
-         fPh72tKYwA3H59nPmnDH3bp9qH5k5y+9C+A7tg1dtcxIc9fAAEgtE2WRW9gNO+56RG
-         rnpEhaZc8TsRLxnuELVYU2NxAebO69dROiM74lzh42BNKszJ2YPFsTB9bCrjTQGdS0
-         SNLJmYWsBwYSA==
-Received: by mail-lj1-f176.google.com with SMTP id 38308e7fff4ca-2b1adf27823so35252641fa.2;
-        Sun, 04 Jun 2023 21:06:01 -0700 (PDT)
-X-Gm-Message-State: AC+VfDwCe4FyYQHbfZPYf7I4NNzADGVq13v4+AW1jwl6kw8WPAgC6a/m
-        tGJRzUBMrz7zFnv4A85zkg5CkI3mcMK886mx3dE=
-X-Google-Smtp-Source: ACHHUZ5GrSEK3PQNTobRaaPR4GI9Q/dG/dH9vtDqov4NPtsLbAuvSoOBGIqnwRO1u3fwexaWyE5OrfsdUvjgUci7FZk=
-X-Received: by 2002:a2e:2419:0:b0:2ad:d6cd:efdd with SMTP id
- k25-20020a2e2419000000b002add6cdefddmr3089294ljk.32.1685937959380; Sun, 04
- Jun 2023 21:05:59 -0700 (PDT)
+        Mon, 5 Jun 2023 03:30:36 -0400
+Received: from mail-pf1-f194.google.com (mail-pf1-f194.google.com [209.85.210.194])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8A967AD;
+        Mon,  5 Jun 2023 00:30:35 -0700 (PDT)
+Received: by mail-pf1-f194.google.com with SMTP id d2e1a72fcca58-6532671ccc7so3281078b3a.2;
+        Mon, 05 Jun 2023 00:30:35 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1685950235; x=1688542235;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=21KuDm7E1j2X3eQMy2+wyemXDR46+T1mk758fuRtSIk=;
+        b=A+Pm9AHqWhyveo120GfD7atXQovD87STrmE+NDVi+DsK5MlM139SVxs53py0xS8OXo
+         oNZ1QCe//0aKE+sz3DP+igig8MP2buKRah2lWfIwOS+3Cgc5PkGF0zHY04jZdt7mqCCE
+         6Sx8ajnAROBO2M2tKUfPz1KXiJQBPLVCeLlk55P1bmW69TER7C0Hu9uYAJAajum3y+NG
+         cMZ1cg9OQM6oMeRcVPtqLA1m/itvmhQCGCrKtzQ1ELZY8OxkOZFp5a65RgrisT8Ibvz5
+         0Cf6DovTmOdQ3aXijEhHeH/EvIZpnDY+uFaPiWUM+iTU7C9DS5ypv2F9iykPKYczfPyL
+         OKnw==
+X-Gm-Message-State: AC+VfDyVlEe4ze0rSP/l9pdNPdxasQ7T3q184ulov/QMjmkAwpsFRvXC
+        wSYTu/StxdHEZxh5/8GQuw==
+X-Google-Smtp-Source: ACHHUZ7ChMAQp+vzlxKyflCK6VPC2O6GMjChXE7QQC6hkM9zpe9c3D4YQmRAdK98Dmpmd4xpLk9ZBw==
+X-Received: by 2002:a05:6a20:8e19:b0:116:e916:4b5b with SMTP id y25-20020a056a208e1900b00116e9164b5bmr1229383pzj.25.1685950234884;
+        Mon, 05 Jun 2023 00:30:34 -0700 (PDT)
+Received: from localhost.localdomain ([116.128.244.169])
+        by smtp.gmail.com with ESMTPSA id 128-20020a630786000000b0053ba104c113sm5200419pgh.72.2023.06.05.00.30.32
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 05 Jun 2023 00:30:34 -0700 (PDT)
+From:   sunliming <sunliming@kylinos.cn>
+To:     mhiramat@kernel.org, beaub@linux.microsoft.com,
+        rostedt@goodmis.org, shuah@kernel.org
+Cc:     linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+        linux-kselftest@vger.kernel.org, kelulanainsley@gmail.com,
+        sunliming <sunliming@kylinos.cn>
+Subject: [PATCH V2 1/4] tracing/user_events: Fix the incorrect trace record for empty arguments events
+Date:   Mon,  5 Jun 2023 15:30:20 +0800
+Message-Id: <20230605073023.923316-1-sunliming@kylinos.cn>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-References: <20230601101257.530867-1-rppt@kernel.org> <ZHjDU/mxE+cugpLj@FVFF77S0Q05N.cambridge.arm.com>
- <ZHjgIH3aX9dCvVZc@moria.home.lan> <ZHm3zUUbwqlsZBBF@FVFF77S0Q05N>
- <CAPhsuW7Euczff_KB70nuH=Hhf2EYHAf=xiQR7mFqVfByhD34XA@mail.gmail.com>
- <ZHzRxE5V6YzGVsHy@moria.home.lan> <CAPhsuW7iEDa44jxc_7Cj4KnVhtct-UTO2JtVK-U7o2ynn2iX8Q@mail.gmail.com>
- <ZH0EseWI9F1n9yJx@moria.home.lan>
-In-Reply-To: <ZH0EseWI9F1n9yJx@moria.home.lan>
-From:   Song Liu <song@kernel.org>
-Date:   Sun, 4 Jun 2023 21:05:47 -0700
-X-Gmail-Original-Message-ID: <CAPhsuW7S40xCz_e0fdimfC+ybO=kvMg3SSzTd1s4qiOcvmJJcA@mail.gmail.com>
-Message-ID: <CAPhsuW7S40xCz_e0fdimfC+ybO=kvMg3SSzTd1s4qiOcvmJJcA@mail.gmail.com>
-Subject: Re: [PATCH 00/13] mm: jit/text allocator
-To:     Kent Overstreet <kent.overstreet@linux.dev>
-Cc:     Mark Rutland <mark.rutland@arm.com>,
-        Mike Rapoport <rppt@kernel.org>, linux-kernel@vger.kernel.org,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Christophe Leroy <christophe.leroy@csgroup.eu>,
-        "David S. Miller" <davem@davemloft.net>,
-        Dinh Nguyen <dinguyen@kernel.org>,
-        Heiko Carstens <hca@linux.ibm.com>,
-        Helge Deller <deller@gmx.de>,
-        Huacai Chen <chenhuacai@kernel.org>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        "Naveen N. Rao" <naveen.n.rao@linux.ibm.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Russell King <linux@armlinux.org.uk>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Will Deacon <will@kernel.org>, bpf@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-mips@vger.kernel.org,
-        linux-mm@kvack.org, linux-modules@vger.kernel.org,
-        linux-parisc@vger.kernel.org, linux-riscv@lists.infradead.org,
-        linux-s390@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, loongarch@lists.linux.dev,
-        netdev@vger.kernel.org, sparclinux@vger.kernel.org, x86@kernel.org,
-        Puranjay Mohan <puranjay12@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On Sun, Jun 4, 2023 at 2:40=E2=80=AFPM Kent Overstreet
-<kent.overstreet@linux.dev> wrote:
->
-> On Sun, Jun 04, 2023 at 02:22:30PM -0700, Song Liu wrote:
-> > On Sun, Jun 4, 2023 at 11:02=E2=80=AFAM Kent Overstreet
-> > <kent.overstreet@linux.dev> wrote:
-> > >
-> > > On Fri, Jun 02, 2023 at 11:20:58AM -0700, Song Liu wrote:
-> > > > IIUC, arm64 uses VMALLOC address space for BPF programs. The reason
-> > > > is each BPF program uses at least 64kB (one page) out of the 128MB
-> > > > address space. Puranjay Mohan (CC'ed) is working on enabling
-> > > > bpf_prog_pack for arm64. Once this work is done, multiple BPF progr=
-ams
-> > > > will be able to share a page. Will this improvement remove the need=
- to
-> > > > specify a different address range for BPF programs?
-> > >
-> > > Can we please stop working on BPF specific sub page allocation and fo=
-cus
-> > > on doing this in mm/? This never should have been in BPF in the first
-> > > place.
-> >
-> > That work is mostly independent of the allocator work we are discussing=
- here.
-> > The goal Puranjay's work is to enable the arm64 BPF JIT engine to use a
-> > ROX allocator. The allocator could be the bpf_prog_pack allocator, or j=
-italloc,
-> > or module_alloc_type. Puranjay is using bpf_prog_alloc for now. But onc=
-e
-> > jitalloc or module_alloc_type (either one) is merged, we will migrate B=
-PF
-> > JIT engines (x86_64 and arm64) to the new allocator and then tear down
-> > bpf_prog_pack.
-> >
-> > Does this make sense?
->
-> Yeah, as long as that's the plan. Maybe one of you could tell us what
-> issues were preventing prog_pack from being used in the first place, it
-> might be relevant - this is the time to get the new allocator API right.
+The user_events support events that has empty arguments. But the trace event
+is discarded and not really committed when the arguments is empty. Fix this
+by not attempting to copy in zero-length data.
 
-The JIT engine does a lot of writes. Instead of doing many text_poke(),
-we are using a temporary RW write buffer, and then do text_poke_copy()
-at the end. To make this work, we need the JIT engine to be able to
-handle an RW temporary buffer and an RO final memory region. There
-is nothing preventing prog_pack to work. It is just we need to do the
-work.
+Signed-off-by: sunliming <sunliming@kylinos.cn>
+---
+ kernel/trace/trace_events_user.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-Thanks,
-Song
+diff --git a/kernel/trace/trace_events_user.c b/kernel/trace/trace_events_user.c
+index 0d91dac206ff..698703a3d234 100644
+--- a/kernel/trace/trace_events_user.c
++++ b/kernel/trace/trace_events_user.c
+@@ -1399,7 +1399,7 @@ static void user_event_ftrace(struct user_event *user, struct iov_iter *i,
+ 	if (unlikely(!entry))
+ 		return;
+ 
+-	if (unlikely(!copy_nofault(entry + 1, i->count, i)))
++	if (unlikely(i->count != 0 && !copy_nofault(entry + 1, i->count, i)))
+ 		goto discard;
+ 
+ 	if (!list_empty(&user->validators) &&
+@@ -1440,7 +1440,7 @@ static void user_event_perf(struct user_event *user, struct iov_iter *i,
+ 
+ 		perf_fetch_caller_regs(regs);
+ 
+-		if (unlikely(!copy_nofault(perf_entry + 1, i->count, i)))
++		if (unlikely(i->count != 0 && !copy_nofault(perf_entry + 1, i->count, i)))
+ 			goto discard;
+ 
+ 		if (!list_empty(&user->validators) &&
+-- 
+2.25.1
+
