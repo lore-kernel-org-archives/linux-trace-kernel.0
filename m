@@ -2,109 +2,131 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F672C77B73
-	for <linux-trace-kernel@archiver.kernel.org>; Tue,  6 Jun 2023 08:35:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EA9E2C7EE31
+	for <linux-trace-kernel@archiver.kernel.org>; Tue,  6 Jun 2023 10:16:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236949AbjFFIfm (ORCPT
+        id S234732AbjFFKQp (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Tue, 6 Jun 2023 04:35:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60862 "EHLO
+        Tue, 6 Jun 2023 06:16:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43176 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237105AbjFFIeq (ORCPT
+        with ESMTP id S232817AbjFFKQl (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Tue, 6 Jun 2023 04:34:46 -0400
+        Tue, 6 Jun 2023 06:16:41 -0400
 Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AD991E68;
-        Tue,  6 Jun 2023 01:34:25 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2A440E47;
+        Tue,  6 Jun 2023 03:16:40 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id E5536612B8;
-        Tue,  6 Jun 2023 08:34:24 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E8EF9C4339B;
-        Tue,  6 Jun 2023 08:34:17 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 986FB6305D;
+        Tue,  6 Jun 2023 10:16:39 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 16CCDC433EF;
+        Tue,  6 Jun 2023 10:16:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1686040464;
-        bh=IBidPa4YTyIF5atWcJcRcHpMTfYQvXCVIu3C1ReCwe8=;
+        s=k20201202; t=1686046599;
+        bh=K3mQNwoT9j+uKtNH0+N5SGAruipqVMe0nyrOVYu8zmA=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=FtdmKnJTbh0Th4rLzQVdzsyHI4nobuWxYORj11iWeWhGlMgvLcF7mRuKDFP/3SjWj
-         E5Za6vAzdwMhU2Fl7W+Yd14DBVHDobnBWLRAmob+EsEIFyB5d80PGYjA3JIjQUBajb
-         InBHOAv0cNMXRLtMH0xOOu4RRhUp3kA2MYZeOzlJOygnQC7JmPUZ5PDtqTXJfHRnP2
-         1AWELankUVH81S+2sDfidjLYiiUjlwt7jNuRuO9T4Eih88JdAH2XgOt0pTjw3cIR7b
-         lmQCCanbigXkSgQ/AIlWp5wfiem/MA7KeHluPdl6au2zq8eAq591Yb0A87DeofIIFq
-         Tf4L4UWn/XCBw==
-Date:   Tue, 6 Jun 2023 16:34:15 +0800
-From:   Tzung-Bi Shih <tzungbi@kernel.org>
-To:     Yu Zhao <yuzhao@google.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Alistair Popple <apopple@nvidia.com>,
-        Anup Patel <anup@brainfault.org>,
-        Ben Gardon <bgardon@google.com>,
-        Borislav Petkov <bp@alien8.de>,
+        b=Ex2boOSbFX9F8vILoj2ER6OMGqZieI/qXxa+Cl88F6P5WueebucHT8gXYMljU/UwF
+         W4Vwtw16CB66Ckf8CUcEwiMgsp0Rl7Zp+sWmc7WhCTWF54CsHU5is7Yegd2qZ+FcpB
+         7HYr90xDXGc4Q+jlXpM3iwKf1+z1TAE79jym8dBpk7/sIwryEOoaJwZE+mZ+/dgO9Q
+         jbUZZ/yVspF9cToZ4ExktC3lUSHmqXSahqJcQT5b1PfE/IsSC9GrwIVg8JzQsfRBlA
+         +FWytBECVY5td4H8LIUSl6ZWwnci/X0OdWg6sGet7yNw0Tt3OFZ9/6khP83arPzxeP
+         mpCOpEPlPas8A==
+Date:   Tue, 6 Jun 2023 13:16:08 +0300
+From:   Mike Rapoport <rppt@kernel.org>
+To:     Mark Rutland <mark.rutland@arm.com>
+Cc:     Kent Overstreet <kent.overstreet@linux.dev>,
+        linux-kernel@vger.kernel.org,
+        Andrew Morton <akpm@linux-foundation.org>,
         Catalin Marinas <catalin.marinas@arm.com>,
-        Chao Peng <chao.p.peng@linux.intel.com>,
         Christophe Leroy <christophe.leroy@csgroup.eu>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Fabiano Rosas <farosas@linux.ibm.com>,
-        Gaosheng Cui <cuigaosheng1@huawei.com>,
-        Gavin Shan <gshan@redhat.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
-        James Morse <james.morse@arm.com>,
-        "Jason A. Donenfeld" <Jason@zx2c4.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Marc Zyngier <maz@kernel.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Dinh Nguyen <dinguyen@kernel.org>,
+        Heiko Carstens <hca@linux.ibm.com>,
+        Helge Deller <deller@gmx.de>,
+        Huacai Chen <chenhuacai@kernel.org>,
+        Luis Chamberlain <mcgrof@kernel.org>,
         Michael Ellerman <mpe@ellerman.id.au>,
-        Michael Larabel <michael@michaellarabel.com>,
-        Mike Rapoport <rppt@kernel.org>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        Oliver Upton <oliver.upton@linux.dev>,
-        Paul Mackerras <paulus@ozlabs.org>,
-        Peter Xu <peterx@redhat.com>,
-        Sean Christopherson <seanjc@google.com>,
+        "Naveen N. Rao" <naveen.n.rao@linux.ibm.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Russell King <linux@armlinux.org.uk>,
+        Song Liu <song@kernel.org>,
         Steven Rostedt <rostedt@goodmis.org>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
         Thomas Gleixner <tglx@linutronix.de>,
-        Thomas Huth <thuth@redhat.com>, Will Deacon <will@kernel.org>,
-        Zenghui Yu <yuzenghui@huawei.com>, kvmarm@lists.linux.dev,
-        kvm@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-mm@kvack.org, linuxppc-dev@lists.ozlabs.org,
-        linux-trace-kernel@vger.kernel.org, x86@kernel.org,
-        linux-mm@google.com
-Subject: Re: [PATCH mm-unstable v2 01/10] mm/kvm: add
- mmu_notifier_ops->test_clear_young()
-Message-ID: <ZH7vh1GmsV+UCPwv@google.com>
-References: <20230526234435.662652-1-yuzhao@google.com>
- <20230526234435.662652-2-yuzhao@google.com>
+        Will Deacon <will@kernel.org>, bpf@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-mips@vger.kernel.org,
+        linux-mm@kvack.org, linux-modules@vger.kernel.org,
+        linux-parisc@vger.kernel.org, linux-riscv@lists.infradead.org,
+        linux-s390@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, loongarch@lists.linux.dev,
+        netdev@vger.kernel.org, sparclinux@vger.kernel.org, x86@kernel.org
+Subject: Re: [PATCH 00/13] mm: jit/text allocator
+Message-ID: <20230606101608.GC52412@kernel.org>
+References: <20230601101257.530867-1-rppt@kernel.org>
+ <ZHjDU/mxE+cugpLj@FVFF77S0Q05N.cambridge.arm.com>
+ <ZHjgIH3aX9dCvVZc@moria.home.lan>
+ <ZHm3zUUbwqlsZBBF@FVFF77S0Q05N>
+ <20230605092040.GB3460@kernel.org>
+ <ZH20XkD74prrdN4u@FVFF77S0Q05N>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20230526234435.662652-2-yuzhao@google.com>
+In-Reply-To: <ZH20XkD74prrdN4u@FVFF77S0Q05N>
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On Fri, May 26, 2023 at 05:44:26PM -0600, Yu Zhao wrote:
-> +/*
-> + * Architectures that implement kvm_arch_test_clear_young() should override
-> + * kvm_arch_has_test_clear_young().
-> + *
-> + * kvm_arch_has_test_clear_young() is allowed to return false positive, i.e., it
-> + * can return true if kvm_arch_test_clear_young() is supported but disabled due
-> + * to some runtime constraint. In this case, kvm_arch_test_clear_young() should
+On Mon, Jun 05, 2023 at 11:09:34AM +0100, Mark Rutland wrote:
+> On Mon, Jun 05, 2023 at 12:20:40PM +0300, Mike Rapoport wrote:
+> > On Fri, Jun 02, 2023 at 10:35:09AM +0100, Mark Rutland wrote:
+> >
+> > It sill can be achieved with a single jit_alloc_arch_params(), just by
+> > adding enum jit_type parameter to jit_text_alloc().
+> 
+> That feels backwards to me; it centralizes a bunch of information about
+> distinct users to be able to shove that into a static array, when the callsites
+> can pass that information. 
 
-Is it a typo here?  s/kvm_arch_test_clear_young/kvm_arch_has_test_clear_young/.
+The goal was not to shove everything into an array, but centralize
+architecture requirements for code allocations. The callsites don't have
+that information per se, they get it from the arch code, so having this
+information in a single place per arch is better than spreading
+MODULE_START, KPROBES_START etc all over.
 
-> +static inline int mmu_notifier_clear_young(struct mm_struct *mm,
-> +					   unsigned long start,
-> +					   unsigned long end)
-> +{
-> +	return 0;
-> +}
-> +
+I'd agree though that having types for jit_text_alloc is ugly and this
+should be handled differently.
+ 
+> What's *actually* common after separating out the ranges? Is it just the
+> permissions?
 
-This looks irrelevant to the patch but a fix for commit 1d7715c676a1
-("mmu-notifier: add clear_young callback") instead.
+On x86 everything, on arm64 apparently just the permissions.
+
+I've started to summarize what are the restrictions for code placement for
+modules, kprobes and bpf on different architectures, that's roughly what
+I've got so far:
+
+* x86 and s390 need everything within modules address space because of
+PC-relative
+* arm, arm64, loongarch, sparc64, riscv64, some of mips and
+powerpc32 configurations require a dedicated modules address space; the
+rest just use vmalloc address space
+* all architectures that support kprobes except x86 and s390 don't use
+relative jumps, so they don't care where kprobes insn_page will live
+* not sure yet about BPF. Looks like on arm and arm64 it does not use
+relative jumps, so it can be anywhere, didn't dig enough about the others.
+
+> If we want this to be able to share allocations and so on, why can't we do this
+> like a kmem_cache, and have the callsite pass a pointer to the allocator data?
+> That would make it easy for callsites to share an allocator or use a distinct
+> one.
+
+This maybe something worth exploring.
+ 
+> Thanks,
+> Mark.
+
+-- 
+Sincerely yours,
+Mike.
