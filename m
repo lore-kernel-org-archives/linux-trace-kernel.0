@@ -2,77 +2,177 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D3D24C77B73
-	for <linux-trace-kernel@archiver.kernel.org>; Tue,  6 Jun 2023 18:53:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 107C5C7EE37
+	for <linux-trace-kernel@archiver.kernel.org>; Tue,  6 Jun 2023 20:57:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239120AbjFFSxh (ORCPT
+        id S232045AbjFFU5k (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Tue, 6 Jun 2023 14:53:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33928 "EHLO
+        Tue, 6 Jun 2023 16:57:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58740 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S239099AbjFFSxe (ORCPT
+        with ESMTP id S231706AbjFFU5j (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Tue, 6 Jun 2023 14:53:34 -0400
+        Tue, 6 Jun 2023 16:57:39 -0400
 Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id A165B10FA;
-        Tue,  6 Jun 2023 11:53:30 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id D3EBD1707;
+        Tue,  6 Jun 2023 13:57:37 -0700 (PDT)
 Received: from W11-BEAU-MD.localdomain (unknown [76.135.27.212])
-        by linux.microsoft.com (Postfix) with ESMTPSA id D34FB20BE490;
-        Tue,  6 Jun 2023 11:53:29 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com D34FB20BE490
+        by linux.microsoft.com (Postfix) with ESMTPSA id E580820BE492;
+        Tue,  6 Jun 2023 13:57:36 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com E580820BE492
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-        s=default; t=1686077610;
-        bh=KyenbPXmihAvbpfjDuLbp/6mMOtj/AGfe8T4xRgkpoI=;
+        s=default; t=1686085057;
+        bh=0ETLWs8Ceu9GxJZiRavPxUta0//U9m1gAOQEZ5ERUwU=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=l+/n9Q1FTBT2G549Gke3wzZtakJkEehgn6BnaU13nD4PgzA+1GN/J4dxQHcXziVg4
-         Va/vYbqSCCZOwmWBpRaF8M+8U2yAZMfAPELSMxvA6Cjc55DB/VVt3vj+t5q6Bx013W
-         DaWNlCQ/7mLYKpJlCEuV+fsBuNl30FYAJs+v8H1I=
-Date:   Tue, 6 Jun 2023 11:53:22 -0700
+        b=L8o1R6hOw20Q2OWIIrmyxakKURspNvlCCiRArHQP/p4Lbia0vbpaHE0XIODGn0J7a
+         qrJJbcbRtKDznCwU5ka91xEZMOmRPqe6/rIaCfxPTn9CT/zkyXE2iA6Ltz7AWuqx+a
+         MUkr3uiaEvsb+g67+0KFrI9OqGW8WzTVYC6H97fk=
+Date:   Tue, 6 Jun 2023 13:57:30 -0700
 From:   Beau Belgrave <beaub@linux.microsoft.com>
-To:     sunliming <sunliming@kylinos.cn>
-Cc:     mhiramat@kernel.org, rostedt@goodmis.org, shuah@kernel.org,
-        linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
-        linux-kselftest@vger.kernel.org, kelulanainsley@gmail.com
-Subject: Re: [PATCH v3 0/4] tracing/user_events: Add empty arguments events
-Message-ID: <20230606185322.GA86@W11-BEAU-MD.localdomain>
-References: <20230606062027.1008398-1-sunliming@kylinos.cn>
+To:     Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Cc:     Masami Hiramatsu <mhiramat@kernel.org>,
+        Alexei Starovoitov <alexei.starovoitov@gmail.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-trace-kernel@vger.kernel.org,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Andrii Nakryiko <andrii@kernel.org>, bpf <bpf@vger.kernel.org>,
+        David Vernet <void@manifault.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        dthaler@microsoft.com, brauner@kernel.org, hch@infradead.orgl,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Subject: Re: [PATCH] tracing/user_events: Run BPF program if attached
+Message-ID: <20230606205730.GA163@W11-BEAU-MD.localdomain>
+References: <20230508163751.841-1-beaub@linux.microsoft.com>
+ <CAADnVQLYL-ZaP_2vViaktw0G4UKkmpOK2q4ZXBa+f=M7cC25Rg@mail.gmail.com>
+ <20230509130111.62d587f1@rorschach.local.home>
+ <20230509163050.127d5123@rorschach.local.home>
+ <20230515165707.hv65ekwp2djkjj5i@MacBook-Pro-8.local>
+ <20230515192407.GA85@W11-BEAU-MD.localdomain>
+ <20230517003628.aqqlvmzffj7fzzoj@MacBook-Pro-8.local>
+ <20230606225741.a9d8003a22451db96545b5a8@kernel.org>
+ <CAEf4BzbhvBTQ2c1ENk2pVXdQ=SrXwTFXVjpopTANZsdn1EEeMA@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20230606062027.1008398-1-sunliming@kylinos.cn>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAEf4BzbhvBTQ2c1ENk2pVXdQ=SrXwTFXVjpopTANZsdn1EEeMA@mail.gmail.com>
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On Tue, Jun 06, 2023 at 02:20:23PM +0800, sunliming wrote:
-> This series patches fix the incorrect trace record for empty arguments
-> events and add correspondent selftests.
+On Tue, Jun 06, 2023 at 09:57:14AM -0700, Andrii Nakryiko wrote:
+> On Tue, Jun 6, 2023 at 6:57 AM Masami Hiramatsu <mhiramat@kernel.org> wrote:
+> >
+> > Hi,
+> >
+> > On Tue, 16 May 2023 17:36:28 -0700
+> > Alexei Starovoitov <alexei.starovoitov@gmail.com> wrote:
+> >
+> > > BPF progs have three ways to access kernel tracepoints:
+> > > 1. traditional tracepoint
+> >
+> > This is the trace_events, which is used by ftrace, right?
+> >
+> > > 2. raw tracepoint
+> > > 3. raw tracepoint with BTF
+> > >
+> > > 1 was added first and now rarely used (only by old tools), since it's slow.
+> > > 2 was added later to address performance concerns.
+> > > 3 was added after BTF was introduced to provide accurate types.
+> > >
+> > > 3 is the only one that bpf community recommends and is the one that is used most often.
+> > >
+> > > As far as I know trace_events were never connected to bpf.
+> > > Unless somebody sneaked the code in without us seeing it.
+> >
+> > With this design, I understand that you may not want to connect BPF
+> > directly to user_events. It needs a different model.
+> >
+> > >
+> > > I think you're trying to model user_events+bpf as 1.
+> > > Which means that you'll be repeating the same mistakes.
+> >
+> > The user_events is completely different from the traceppoint and
+> > must have no BTF with it.
+> > Also, all information must be sent in the user-written data packet.
+> > (No data structure, event if there is a structure, it must be fully
+> > contained in the packet.)
+> >
+> > For the tracepoint, there is a function call with some values or
+> > pointers of data structure. So it is meaningful to skip using the
+> > traceevent (which converts all pointers to actual field values of
+> > the data structure and store it to ftrace buffer) because most of
+> > the values can be ignored in the BPF prog.
+> >
+> > However, for the user_events, the data is just passed from the
+> > user as a data packet, and BPF prog can access to the data packet
+> > (to avoid accessing malicious data, data validator can not be
+> > skipped). So this seems like 1. but actually you can access to
+> > the validated data on perf buffer. Maybe we can allow BPF to
+> > hook the write syscall and access user-space data, but it may
+> > not safe. I think this is the safest way to do that.
 > 
-> V3:
->   Improve modification descriptions to maintain consistent formatting
+> I'm trying to understand why we need a new kernel concept for all
+> this. It looks like we are just creating a poor man's
+> publisher/subscriber solution in the kernel, but mostly intend to use
+> it from user-space? Why not just use Unix domain sockets for this,
+> though? Use SOCK_SEQPACKET, put "event data" into a single packet
+> that's guaranteed to not be broken up. Expose this to other processes
+> through named pipes, if necessary.
 > 
-> v2:
->   Change "i->count" to "i->count !=0 " to prevent compiler optimization
->   Add correspondent selftests
+> Sorry if it's naive questions, but it's not clear what problem
+> user_events are solving and why we need a new thing and can't use
+> existing kernel primitives?
 > 
-> sunliming (4):
->   tracing/user_events: Fix the incorrect trace record for empty
->     arguments events
->   selftests/user_events: Add ftrace self-test for empty arguments events
->   selftests/user_events: Clear the events after perf self-test
->   selftests/user_events: Add perf self-test for empty arguments events
-> 
->  kernel/trace/trace_events_user.c              |  4 +-
->  .../selftests/user_events/ftrace_test.c       | 33 ++++++++
->  .../testing/selftests/user_events/perf_test.c | 82 +++++++++++++++++++
->  3 files changed, 117 insertions(+), 2 deletions(-)
-> 
-> -- 
-> 2.25.1
 
-Thank you, this series looks good to me.
+There's a number of reasons why we did not do as you suggest.
 
-Acked-by: Beau Belgrave <beaub@linux.microsoft.com>
+The first reason is we want to only take the write() syscall cost when
+events are wanting to be monitored. This is done at a per-trace_event
+level and is not at a per-process level. user_events gives us the
+ability to know cheaply when an event is or is not to be written. It
+does this by setting/clearing a bit in each process when the trace_event
+classes register function is invoked to attach/detach perf or ftrace.
+By using a bit instead of bytes, we also have the ability to share
+tracing out to the kernel as well as any local user tracer in the
+future, this work was started by Mathieu Desnoyers via libside [1].
+
+The second reason is we have found user based buffers to be unreliable
+when either the user process is crashing or has a corruption bug. By
+having the data buffers reside within the kernel, we prevent this from
+happening. If the kernel panics, we can also pull events out of the
+perf_event buffers via GDB to understand what our user processes were
+doing before the time of the panic.
+
+The third reason is we want to make use of all the features that perf,
+ftrace, and eBPF have. We do not want to have to re-write all of those
+features. The main things are being able to filter upon event payloads
+and aggregate them together. We also selectively turn on and off stack
+walking for some events (not all). Perf lets us selectively do this on a
+per-event basis in addition to grabbing raw stack data to enable
+unwinding via DWARF instructions. When we monitor events via
+perf/ftrace, we can find each offset and type for the fields within the
+event. We need to know these to properly decode events and analyze them.
+Tracefs gives a us a single place to see all of these events and
+efficiently decode them, including a stable event ID. We would have to
+replicate all of that work in userspace in addition to the other
+features we rely upon.
+
+The fourth reason is related to the third, we have a lot of existing
+diagnostics that rely upon and setup perf ring buffers. We want the user
+and kernel diagnostics to land in the same buffers with the same
+timestamps so we can see a full picture of what is going on.
 
 Thanks,
 -Beau
+
+1. https://github.com/compudj/libside
+
+> 
+> >
+> > Thank you,
+> >
+> > --
+> > Masami Hiramatsu (Google) <mhiramat@kernel.org>
