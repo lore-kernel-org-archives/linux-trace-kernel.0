@@ -2,190 +2,143 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 22DB0C7EE37
-	for <linux-trace-kernel@archiver.kernel.org>; Tue,  6 Jun 2023 22:50:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2AAEAC7EE2F
+	for <linux-trace-kernel@archiver.kernel.org>; Tue,  6 Jun 2023 23:38:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240091AbjFFWuo (ORCPT
+        id S239907AbjFFXiM (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Tue, 6 Jun 2023 18:50:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39894 "EHLO
+        Tue, 6 Jun 2023 19:38:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60026 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S240033AbjFFWuR (ORCPT
+        with ESMTP id S239876AbjFFXiL (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Tue, 6 Jun 2023 18:50:17 -0400
-Received: from mx0a-00082601.pphosted.com (mx0b-00082601.pphosted.com [67.231.153.30])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 29FA310FD;
-        Tue,  6 Jun 2023 15:50:16 -0700 (PDT)
-Received: from pps.filterd (m0089730.ppops.net [127.0.0.1])
-        by m0089730.ppops.net (8.17.1.19/8.17.1.19) with ESMTP id 356If9ca003697;
-        Tue, 6 Jun 2023 15:49:38 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=meta.com; h=message-id : date :
- subject : to : cc : references : from : in-reply-to : content-type :
- content-transfer-encoding : mime-version; s=s2048-2021-q4;
- bh=LqPXx4L6BCWPcSer+OWYQUG2Ect6UFtZPTwiqv9voBg=;
- b=VIcTilEzfdmTviiLN5eMRLIBHszmYc4I56zCF7EnyRJ4Md16xh72h/GkYaBPG6vLWw13
- WcCSI191n1tT75pMjeO2bl+Lqb+j3zNGmX8PiUIVQ7UdcL01hTYIWGagToVgxPJLn4E7
- vyOTF+Lav+thU5dTCzeNe2BvSkj4QUC3MeoMN9eNHuLG9c6bU3aYG1msD+ScP6UZXmez
- W1WRYtVnSadwMdS7gsz9V0bnPv+9JY1+t3K7roMss2LnQuF35VAdCfH3x4L6yMXDnkTm
- lwKlicsO9fpNYZcC3UguUux+sWFznNwJ0r9td4G57XlT1wvnb4E8EWIsY8xiPXYgndWH vA== 
-Received: from nam04-dm6-obe.outbound.protection.outlook.com (mail-dm6nam04lp2049.outbound.protection.outlook.com [104.47.73.49])
-        by m0089730.ppops.net (PPS) with ESMTPS id 3r2a82hrps-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 06 Jun 2023 15:49:37 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=A5SUee9SJcqXT60g8cS9tOeFjZxTw8Iw3rwbKM3wq+WCuCuiVRKV6NUnu0Wd8Yz2TojrmyQS2i/LTaac6S6trQ8bHRWWLdK7zGXdLo2/VQqLva0XyuswBgUUcilDS6kg6h4j+fw9QVhHWlbKLa7GofsIlHjT+ZLCYgBNcP2jb6dn3nMKELOCE9E9S3DqL43u5V1niYCqrkq5NZqn6k/nbcu7+1gmSO6WKBvMwKjZsqvPeYWOd+unHr9AuIWXI5MWfTQblzk/urylCZI7TDrQPph8mx9BPxyBQMvbJ1+7PZqjEG+icr82rUCS70xlIiwkKeOoIgJAM7vcGu0JIeVwew==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=LqPXx4L6BCWPcSer+OWYQUG2Ect6UFtZPTwiqv9voBg=;
- b=WmAfxHh0qZd0VzNQYBxQ2Y7MigEZEqQAyxewlY5EmX1PJfwo9Iw1v4cr622N3dqvQk+zngVj9qW4Ivw5wSk+CYWhbO4CvRsAvb0Wmb64+Y/dce0/x8u4HIU2jYX3SnuTY+a6rMeWEzTFgeuGNH1iHaLY0uq0gCTNxKWr7TsLWdtB2L6nI55f3QHPtghDIXu9e3E1fsUF9j8z7/Owp75Cd7/kk4axzagPintz3I24Ytm6aQjHcJfvn4I7Qe1C9LirKmR6LGsIHozuDzLByTP1+QSUz3LcR25jtUvwxnybVgRYMjEJnZNQvPDDtCKUr3dqzOLAi9JrU77ArrM3Gcm6Ug==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=meta.com; dmarc=pass action=none header.from=meta.com;
- dkim=pass header.d=meta.com; arc=none
-Received: from SN6PR1501MB2064.namprd15.prod.outlook.com (2603:10b6:805:d::27)
- by MW4PR15MB4586.namprd15.prod.outlook.com (2603:10b6:303:107::5) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6455.33; Tue, 6 Jun
- 2023 22:49:09 +0000
-Received: from SN6PR1501MB2064.namprd15.prod.outlook.com
- ([fe80::bf7d:a453:b8d9:cf0]) by SN6PR1501MB2064.namprd15.prod.outlook.com
- ([fe80::bf7d:a453:b8d9:cf0%6]) with mapi id 15.20.6455.030; Tue, 6 Jun 2023
- 22:49:09 +0000
-Message-ID: <ec58af39-9c97-2032-585a-6dbaa890206f@meta.com>
-Date:   Tue, 6 Jun 2023 15:49:05 -0700
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:102.0)
- Gecko/20100101 Thunderbird/102.11.2
-Subject: Re: [PATCH 2/2] [v3] bpf: fix bpf_probe_read_kernel prototype
- mismatch
-Content-Language: en-US
-To:     Arnd Bergmann <arnd@kernel.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Andrii Nakryiko <andrii@kernel.org>,
-        Song Liu <song@kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>
-Cc:     Arnd Bergmann <arnd@arndb.de>, stable@vger.kernel.org,
-        John Fastabend <john.fastabend@gmail.com>,
-        Martin KaFai Lau <martin.lau@linux.dev>,
-        Yonghong Song <yhs@fb.com>, KP Singh <kpsingh@kernel.org>,
-        Stanislav Fomichev <sdf@google.com>,
-        Hao Luo <haoluo@google.com>, Jiri Olsa <jolsa@kernel.org>,
-        Kumar Kartikeya Dwivedi <memxor@gmail.com>,
-        Dave Marchevsky <davemarchevsky@fb.com>,
-        Delyan Kratunov <delyank@fb.com>,
-        Joanne Koong <joannelkoong@gmail.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        "Jason A. Donenfeld" <Jason@zx2c4.com>,
-        Roberto Sassu <roberto.sassu@huawei.com>, bpf@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
-References: <20230602135128.1498362-1-arnd@kernel.org>
- <20230602135128.1498362-2-arnd@kernel.org>
-From:   Yonghong Song <yhs@meta.com>
-In-Reply-To: <20230602135128.1498362-2-arnd@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: SJ0PR05CA0034.namprd05.prod.outlook.com
- (2603:10b6:a03:33f::9) To SN6PR1501MB2064.namprd15.prod.outlook.com
- (2603:10b6:805:d::27)
+        Tue, 6 Jun 2023 19:38:11 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DE09F170B
+        for <linux-trace-kernel@vger.kernel.org>; Tue,  6 Jun 2023 16:37:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1686094646;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=j899oAscb6cex41LPnjVmfNp2o1cfXB+0VQl+ebVWlM=;
+        b=KSZ93sM0ib1d4GMOyjFBrGStdrQI/eqQEsa0S/NQNpXuNujINHRwZ9+3270xtqxl1oJI0n
+        G6xH209lCQqKfZtFBHZEW22i0cUfiBve3sLa3FTqDSz6KC3uZL1qykqq2AgeItqwAgA7Q2
+        nttPLu6x6PsRQv4V//MYRFfGXlOgqYc=
+Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
+ [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-21-2SyWs4g3OyWkn5jowNs9ig-1; Tue, 06 Jun 2023 19:37:23 -0400
+X-MC-Unique: 2SyWs4g3OyWkn5jowNs9ig-1
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.rdu2.redhat.com [10.11.54.1])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 8F9D280120A;
+        Tue,  6 Jun 2023 23:37:22 +0000 (UTC)
+Received: from optiplex-lnx.redhat.com (unknown [10.22.17.159])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id D6C8A40CFD46;
+        Tue,  6 Jun 2023 23:37:13 +0000 (UTC)
+From:   Rafael Aquini <aquini@redhat.com>
+To:     Andrew Morton <akpm@linux-foundation.org>,
+        Yafang Shao <laoar.shao@gmail.com>
+Cc:     linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+        linux-mm@kvack.org, stable@vger.kernel.org,
+        Aristeu Rozanski <aris@redhat.com>,
+        Rafael Aquini <aquini@redhat.com>
+Subject: [PATCH] writeback: fix dereferencing NULL mapping->host on writeback_page_template
+Date:   Tue,  6 Jun 2023 19:36:13 -0400
+Message-Id: <20230606233613.1290819-1-aquini@redhat.com>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SN6PR1501MB2064:EE_|MW4PR15MB4586:EE_
-X-MS-Office365-Filtering-Correlation-Id: b312cdd3-1c88-4941-d613-08db66e03d30
-X-FB-Source: Internal
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: 7tbjdGFW2wm5ty9A7U4C+dU+jJaJk+UT+E+970tUixGVSf/AtN7768hRc8yJwbLDQuaEFTwxHeGnwaek2+F++I1anaXWLWo1K45E8xH2FAigboXu09jiYf30fxkPnOqFrSR314ZHgmI0/qgIK9+f0TJhN4lFCvmNOrlbC0Lif/8zgndcrXhX9JLYwwTCN+beiGjG/WsipMxMGC0RFQxp+AGHQkpSEblPfH8yvApdplyNqZw5uPE5bHpIBkHn6/QQApQekVB5EG9s2etujc/R6LjxOQO7ltGJcubxg1fClCesLQfQCk2xqNVbMV2x+n4t5pscoFiSLlbJe6Vlii03XKA/76Gsp4zhnRRBn+g1VRqLmDWXFl0gs/Kc6RZ2xJTdifkUkM30yqGpLgkydW3amdEXOmsukVm2crp4wbld9k+oN5lDouNMnXCyFEkVNt9EFzXW4SRhziEdWgMgf3i2vLq0E64AAJsdb4MEexAB02HAWAcQ9MkZ+sKOkTQtjIGCd3QsfZ8S2HkKRgpO0Jv0ov1nC0LkA8bgYfvF59qa5YW6zci0rW3wOzxIV7NEXVvm2eQf2pnBh1/y9BaEtzhwUv7s3p/W81wIQYqfk9aUOPiTKzKrFFgK52QdRMVSNzpfHh48TUHi/nOHJHulMTp2pQ==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SN6PR1501MB2064.namprd15.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230028)(4636009)(396003)(346002)(366004)(39860400002)(376002)(136003)(451199021)(6506007)(53546011)(6512007)(36756003)(83380400001)(31696002)(86362001)(38100700002)(186003)(2616005)(8676002)(4326008)(41300700001)(110136005)(54906003)(66946007)(478600001)(66476007)(2906002)(316002)(8936002)(31686004)(5660300002)(7416002)(6486002)(66556008)(6666004)(45980500001)(43740500002);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?NGlXditFbnhXbWJOMDRMaHg2ZStleGNIZitWSXRDOEpsbzFHcXMzRFVQaFM0?=
- =?utf-8?B?RERNdEJleWVZanA1QlJ2bysrRWpUZm1NZFZjdUE5OEFhYVR3YzBmOHBqc1pE?=
- =?utf-8?B?MVZpWDVzWFM4Y29WV243TVNvcDJSTkp6QWQ4TXo5T1o5aDJvS1RQams2MzUz?=
- =?utf-8?B?WmFPVk80ZW8zQXFPNTFmSVlRNk1WOCtoZlJIaWptMFNVN1A2VW5FQXllZzlU?=
- =?utf-8?B?ZllWLzQxWndnQVNqdTlQa3JPdTNmUDZuVVRLeHFERVE0ei9oUmdweTNid1pI?=
- =?utf-8?B?anhITGo5RElGaCsrYklYaFd4T1BrV0xvWFpUQ3FuMkJMdjlSQXQ0ZU5SVHJN?=
- =?utf-8?B?aTlCaE02c1Ztb0p5U205aUlIOVBhMHBNc1grY212RklPUmNwVTBDRGxISFNK?=
- =?utf-8?B?RkNNVzhGZ0NOUnFqanRiSi9uWGRvL2xuSnZtR1ZKVnhiOU41dE5lVWQ5cEtL?=
- =?utf-8?B?S1NXUTNqOWFkVS9YWkZyQjBYSnFGRVFtd0VYclRDU08vTTJ1YVBaZk1TV3h5?=
- =?utf-8?B?UVc2OFYwc3hlZ2F0a1pSQnlHZTJGSVNUQ045R1FGZE5IaEFnMWRzNHpHaU9C?=
- =?utf-8?B?K3NYOWZXcHB6L21WMzdTUThSd2JTdlpZRTEyZ0ZnV0hRVlhuamdEL09DV0dU?=
- =?utf-8?B?SFNCYzNFUUNtSlJEbXYyemtkTmxMeVljOVVwVGRoaDRSK1pRRExkV0t2T2ZP?=
- =?utf-8?B?YUlkREpWM2RDeTBMay9CRS9XMFlsa05mL0RUQlZjRHpMNGRnNVRnTTJVRWdp?=
- =?utf-8?B?Nk1LOHB0Y0V2WjRBVk9wbjFxUmFaSnRxRnlWSEVzS0M4NGU4aWROdC85WmJH?=
- =?utf-8?B?QTBaV0RPTy96VFBsMDdnaGNoWmhVM0JWd1YxYXRZeDQxZElFRnhPTVdvbFZs?=
- =?utf-8?B?N25LamVmUDRkMFdyWEY4VUZwNkltR255QTR3QzRkKzNuL1Y3NDJ2R25pcGsw?=
- =?utf-8?B?UU55NytJSkdsVkc4bjVoSlBxTzBIZHE3L3RmR1hIaHRKTkNKS1o3THV0clpu?=
- =?utf-8?B?ZzRYdTdhRWpybldGS3lTOVlQSUpkUktiRVJBR2Uwei8zY2dndnd1Yk1CZEto?=
- =?utf-8?B?SFV5Z2hHMjhLblVjSXNwcDlqK3F5cXNjNTlQV2FkSUR1Z3dFdXN2anJRMnB5?=
- =?utf-8?B?N0NCc0EzYlZlSFFaanQxZGJJcTJOY0w3QU5HeTZxSVhqRyt6b1FuenVYSDBV?=
- =?utf-8?B?Y1hhaXluUTVUMFpXSDhDb3I5N0lOaGpUdGp4TGs1TmtiN3RwT0ZUa2lhWU9p?=
- =?utf-8?B?MnhWWkpZRnNiNkRwL0tQaFdoK2N6Z3kyM1RaaHNTYm5KREUzTTQ3aFZSREJv?=
- =?utf-8?B?L09Vd3ZYOHdaNVB3QjFzNFd3Mk9FUWZEZHhIQ1UrclUvZlZvV2RBL2VYbDli?=
- =?utf-8?B?ZWtKb0ptZ3J3Y1J1M3RITzYvUVdYQ1E1Y0s2SzIrNG0xOGpCd25yTmtvb2Y0?=
- =?utf-8?B?VUgzRDlVVWR2WHBKalRSTmZTYlB0eUNJbDlJa01sbHY5K2ZVRnVlTHl6eUly?=
- =?utf-8?B?di9TcGt3KzBPMjRkKzlyMTR0cEw1VWxrUHRPUDhXL3FBNDFVRUhEK0lMYVhW?=
- =?utf-8?B?OUdlUXhoMTBYbXYvVURaL2I0eEI3WU80QUIvU2hUNXBWanh4eXlaY2UxT2NH?=
- =?utf-8?B?SVhFZ1E0MXZybHJzdVY5eFZSSG1DQmRkcUNHUVRYSGZTQ2tGUTYwQkZJR0Rk?=
- =?utf-8?B?QjNtM25FYnZBS0xrWVJUc3JuaEhDTEYyNHNWQTg1R25pOUhJbkJ5M0psWWRm?=
- =?utf-8?B?anNycTF5a1lUeDZqcDFDejZjTis0Z3NXY1RWSEExL01sSGQ2ajk5bXo5Lyt6?=
- =?utf-8?B?SC9CMUEvckdFV2FzSkNzeU9xR1NmZy81Yis4RkdEallaeTNtWlI3WGE2aFNo?=
- =?utf-8?B?bCtYSncvMWptNFNOWitTTGl2cE1BdWdDMUdONXc5ODNtMjhNbEpOTmk3T3Qz?=
- =?utf-8?B?NjhPTVdYSXVsb3l1cGo0dGxPNnE0UWlpWmNUcFlqOWVPSDd2dHF0VG9KQnZv?=
- =?utf-8?B?TXdOaFUvVjk4eVgwM0FMZGMrSS8rZjdSRENtU1UyUDUyaWtxRDFSMUV1YktY?=
- =?utf-8?B?Um83dW1GMEk1VFIyZWpWbTNpOEsrUEZ0NFR5clRNaXhRSFRkNkoweVdXODlF?=
- =?utf-8?B?SmRGNFg1VytvNGR0V1ZvT2FNUlp3cm5oczJoRXhIUmF6VEE0dkNLSGtkQkEv?=
- =?utf-8?B?Snc9PQ==?=
-X-OriginatorOrg: meta.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: b312cdd3-1c88-4941-d613-08db66e03d30
-X-MS-Exchange-CrossTenant-AuthSource: SN6PR1501MB2064.namprd15.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 06 Jun 2023 22:49:09.0138
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 8ae927fe-1255-47a7-a2af-5f3a069daaa2
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: YuqZgFYkjdo40uH0eNR98Am1SW+1Aymfrkz0sQunUnvYi9zKibnb7z4nxQSNo/5/
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW4PR15MB4586
-X-Proofpoint-GUID: y1FJtwYZeb6m1ISP4oY-BPV_LC5CUCwZ
-X-Proofpoint-ORIG-GUID: y1FJtwYZeb6m1ISP4oY-BPV_LC5CUCwZ
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.254,Aquarius:18.0.957,Hydra:6.0.573,FMLib:17.11.176.26
- definitions=2023-06-06_16,2023-06-06_02,2023-05-22_02
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.1 on 10.11.54.1
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
+When commit 19343b5bdd16 ("mm/page-writeback: introduce tracepoint for
+wait_on_page_writeback()") repurposed the writeback_dirty_page trace event
+as a template to create its new wait_on_page_writeback trace event, it
+ended up opening a window to NULL pointer dereference crashes due to
+the (infrequent) occurrence of a race where an access to a page in the
+swap-cache happens concurrently with the moment this page is being
+written to disk and the tracepoint is enabled:
 
+    BUG: kernel NULL pointer dereference, address: 0000000000000040
+    #PF: supervisor read access in kernel mode
+    #PF: error_code(0x0000) - not-present page
+    PGD 800000010ec0a067 P4D 800000010ec0a067 PUD 102353067 PMD 0
+    Oops: 0000 [#1] PREEMPT SMP PTI
+    CPU: 1 PID: 1320 Comm: shmem-worker Kdump: loaded Not tainted 6.4.0-rc5+ #13
+    Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS edk2-20230301gitf80f052277c8-1.fc37 03/01/2023
+    RIP: 0010:trace_event_raw_event_writeback_folio_template+0x76/0xf0
+    Code: 4d 85 e4 74 5c 49 8b 3c 24 e8 06 98 ee ff 48 89 c7 e8 9e 8b ee ff ba 20 00 00 00 48 89 ef 48 89 c6 e8 fe d4 1a 00 49 8b 04 24 <48> 8b 40 40 48 89 43 28 49 8b 45 20 48 89 e7 48 89 43 30 e8 a2 4d
+    RSP: 0000:ffffaad580b6fb60 EFLAGS: 00010246
+    RAX: 0000000000000000 RBX: ffff90e38035c01c RCX: 0000000000000000
+    RDX: 0000000000000000 RSI: 0000000000000000 RDI: ffff90e38035c044
+    RBP: ffff90e38035c024 R08: 0000000000000002 R09: 0000000000000006
+    R10: ffff90e38035c02e R11: 0000000000000020 R12: ffff90e380bac000
+    R13: ffffe3a7456d9200 R14: 0000000000001b81 R15: ffffe3a7456d9200
+    FS:  00007f2e4e8a15c0(0000) GS:ffff90e3fbc80000(0000) knlGS:0000000000000000
+    CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+    CR2: 0000000000000040 CR3: 00000001150c6003 CR4: 0000000000170ee0
+    Call Trace:
+     <TASK>
+     ? __die+0x20/0x70
+     ? page_fault_oops+0x76/0x170
+     ? kernelmode_fixup_or_oops+0x84/0x110
+     ? exc_page_fault+0x65/0x150
+     ? asm_exc_page_fault+0x22/0x30
+     ? trace_event_raw_event_writeback_folio_template+0x76/0xf0
+     folio_wait_writeback+0x6b/0x80
+     shmem_swapin_folio+0x24a/0x500
+     ? filemap_get_entry+0xe3/0x140
+     shmem_get_folio_gfp+0x36e/0x7c0
+     ? find_busiest_group+0x43/0x1a0
+     shmem_fault+0x76/0x2a0
+     ? __update_load_avg_cfs_rq+0x281/0x2f0
+     __do_fault+0x33/0x130
+     do_read_fault+0x118/0x160
+     do_pte_missing+0x1ed/0x2a0
+     __handle_mm_fault+0x566/0x630
+     handle_mm_fault+0x91/0x210
+     do_user_addr_fault+0x22c/0x740
+     exc_page_fault+0x65/0x150
+     asm_exc_page_fault+0x22/0x30
 
-On 6/2/23 6:50 AM, Arnd Bergmann wrote:
-> From: Arnd Bergmann <arnd@arndb.de>
-> 
-> bpf_probe_read_kernel() has a __weak definition in core.c and another
-> definition with an incompatible prototype in kernel/trace/bpf_trace.c,
-> when CONFIG_BPF_EVENTS is enabled.
-> 
-> Since the two are incompatible, there cannot be a shared declaration in
-> a header file, but the lack of a prototype causes a W=1 warning:
-> 
-> kernel/bpf/core.c:1638:12: error: no previous prototype for 'bpf_probe_read_kernel' [-Werror=missing-prototypes]
-> 
-> On 32-bit architectures, the local prototype
-> 
-> u64 __weak bpf_probe_read_kernel(void *dst, u32 size, const void *unsafe_ptr)
-> 
-> passes arguments in other registers as the one in bpf_trace.c
-> 
-> BPF_CALL_3(bpf_probe_read_kernel, void *, dst, u32, size,
->              const void *, unsafe_ptr)
-> 
-> which uses 64-bit arguments in pairs of registers.
-> 
-> Change the core.c file to only reference the inner
-> bpf_probe_read_kernel_common() helper and provide a prototype for that,
-> to ensure this is compatible with both definitions.
-> 
-> Cc: stable@vger.kernel.org
-> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+This problem arises from the fact that the repurposed writeback_dirty_page
+trace event code was written assuming that every pointer to mapping
+(struct address_space) would come from a file-mapped page-cache object,
+thus mapping->host would always be populated, and that was a valid case
+before commit 19343b5bdd16. The swap-cache address space (swapper_spaces),
+however, doesn't populate its ->host (struct inode) pointer, thus leading
+to the crashes in the corner-case aforementioned.
 
-Acked-by: Yonghong Song <yhs@fb.com>
+commit 19343b5bdd16 ended up breaking the assignment of __entry->name and
+__entry->ino for the wait_on_page_writeback tracepoint -- both dependent
+on mapping->host carrying a pointer to a valid inode. The assignment of
+__entry->name was fixed by commit 68f23b89067f ("memcg: fix a crash in
+wb_workfn when a device disappears"), and this commit fixes the remaining
+case, for __entry->ino.
+
+Fixes: 19343b5bdd16 ("mm/page-writeback: introduce tracepoint for wait_on_page_writeback()")
+Signed-off-by: Rafael Aquini <aquini@redhat.com>
+---
+ include/trace/events/writeback.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/include/trace/events/writeback.h b/include/trace/events/writeback.h
+index 86b2a82da546..54e353c9f919 100644
+--- a/include/trace/events/writeback.h
++++ b/include/trace/events/writeback.h
+@@ -68,7 +68,7 @@ DECLARE_EVENT_CLASS(writeback_folio_template,
+ 		strscpy_pad(__entry->name,
+ 			    bdi_dev_name(mapping ? inode_to_bdi(mapping->host) :
+ 					 NULL), 32);
+-		__entry->ino = mapping ? mapping->host->i_ino : 0;
++		__entry->ino = (mapping && mapping->host) ? mapping->host->i_ino : 0;
+ 		__entry->index = folio->index;
+ 	),
+ 
+-- 
+2.39.2
+
