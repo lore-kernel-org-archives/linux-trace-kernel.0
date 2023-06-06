@@ -2,133 +2,109 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8397CC77B73
-	for <linux-trace-kernel@archiver.kernel.org>; Tue,  6 Jun 2023 06:21:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F672C77B73
+	for <linux-trace-kernel@archiver.kernel.org>; Tue,  6 Jun 2023 08:35:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235325AbjFFGVv (ORCPT
+        id S236949AbjFFIfm (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Tue, 6 Jun 2023 02:21:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34230 "EHLO
+        Tue, 6 Jun 2023 04:35:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60862 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235057AbjFFGVR (ORCPT
+        with ESMTP id S237105AbjFFIeq (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Tue, 6 Jun 2023 02:21:17 -0400
-Received: from mail-qk1-f196.google.com (mail-qk1-f196.google.com [209.85.222.196])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 27971E7A;
-        Mon,  5 Jun 2023 23:21:01 -0700 (PDT)
-Received: by mail-qk1-f196.google.com with SMTP id af79cd13be357-75d46c7cd6cso236203285a.3;
-        Mon, 05 Jun 2023 23:21:01 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1686032460; x=1688624460;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=rc7PLQvFEE8X9O2VY6JsXWP7Dk9wQWFYyen6iuJwNw0=;
-        b=PlQleMlrvEziD3KF10E3UJhzXd4aIVHD0MsKcsLCor46sY6E10l+OGahrbAtqJeGxN
-         KcTPhsQ8QvUN9T65TKOEmvLSmbyZKWmXQzn9AQ37bupJDkJK3oP/tYrZE/u3JOx5kpLB
-         LxRS/ANQHDg7cOIxEujCWr+E5n0UX4XmwuRaK1+3QMcyFjUaupPejRJb/AXJIB8irtPL
-         NE6zKNLg9lDWgDk/wBG4BY1AQ/8dNEmiKdu2UWLiYo1KjCVZOS+iF7A/Kz87uQeoJAZy
-         RcnxxgQuYqbc9Kc5wJiA1f20gRcRj0sRrorZHajvg/GqA5QbwZ6KAz57oXJJm0JK/qVU
-         mEkw==
-X-Gm-Message-State: AC+VfDxjbxxQyu3osBDJxI7D1kkmk0NuUxB92is65WbR/b4SJDSTFX07
-        Ri+zDj16jOTGxKNXzMtrCg==
-X-Google-Smtp-Source: ACHHUZ6MTemUniypbt8RB6q/OMvYfJGTX2Zc6eFR1oaXfgXtfhvZBVGdVIf2m/ROdkWZBhlS5FO0Gw==
-X-Received: by 2002:a05:620a:26a2:b0:75b:23a1:833d with SMTP id c34-20020a05620a26a200b0075b23a1833dmr830213qkp.56.1686032460250;
-        Mon, 05 Jun 2023 23:21:00 -0700 (PDT)
-Received: from localhost.localdomain ([116.128.244.169])
-        by smtp.gmail.com with ESMTPSA id w7-20020a634907000000b0052c3f0ae381sm4960841pga.78.2023.06.05.23.20.57
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 05 Jun 2023 23:20:59 -0700 (PDT)
-From:   sunliming <sunliming@kylinos.cn>
-To:     mhiramat@kernel.org, beaub@linux.microsoft.com,
-        rostedt@goodmis.org, shuah@kernel.org
-Cc:     linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
-        linux-kselftest@vger.kernel.org, kelulanainsley@gmail.com,
-        sunliming <sunliming@kylinos.cn>
-Subject: [PATCH v3 4/4] selftests/user_events: Add perf self-test for empty arguments events
-Date:   Tue,  6 Jun 2023 14:20:27 +0800
-Message-Id: <20230606062027.1008398-5-sunliming@kylinos.cn>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20230606062027.1008398-1-sunliming@kylinos.cn>
-References: <20230606062027.1008398-1-sunliming@kylinos.cn>
+        Tue, 6 Jun 2023 04:34:46 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AD991E68;
+        Tue,  6 Jun 2023 01:34:25 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id E5536612B8;
+        Tue,  6 Jun 2023 08:34:24 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E8EF9C4339B;
+        Tue,  6 Jun 2023 08:34:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1686040464;
+        bh=IBidPa4YTyIF5atWcJcRcHpMTfYQvXCVIu3C1ReCwe8=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=FtdmKnJTbh0Th4rLzQVdzsyHI4nobuWxYORj11iWeWhGlMgvLcF7mRuKDFP/3SjWj
+         E5Za6vAzdwMhU2Fl7W+Yd14DBVHDobnBWLRAmob+EsEIFyB5d80PGYjA3JIjQUBajb
+         InBHOAv0cNMXRLtMH0xOOu4RRhUp3kA2MYZeOzlJOygnQC7JmPUZ5PDtqTXJfHRnP2
+         1AWELankUVH81S+2sDfidjLYiiUjlwt7jNuRuO9T4Eih88JdAH2XgOt0pTjw3cIR7b
+         lmQCCanbigXkSgQ/AIlWp5wfiem/MA7KeHluPdl6au2zq8eAq591Yb0A87DeofIIFq
+         Tf4L4UWn/XCBw==
+Date:   Tue, 6 Jun 2023 16:34:15 +0800
+From:   Tzung-Bi Shih <tzungbi@kernel.org>
+To:     Yu Zhao <yuzhao@google.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Alistair Popple <apopple@nvidia.com>,
+        Anup Patel <anup@brainfault.org>,
+        Ben Gardon <bgardon@google.com>,
+        Borislav Petkov <bp@alien8.de>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Chao Peng <chao.p.peng@linux.intel.com>,
+        Christophe Leroy <christophe.leroy@csgroup.eu>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Fabiano Rosas <farosas@linux.ibm.com>,
+        Gaosheng Cui <cuigaosheng1@huawei.com>,
+        Gavin Shan <gshan@redhat.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
+        James Morse <james.morse@arm.com>,
+        "Jason A. Donenfeld" <Jason@zx2c4.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Marc Zyngier <maz@kernel.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Michael Larabel <michael@michaellarabel.com>,
+        Mike Rapoport <rppt@kernel.org>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        Oliver Upton <oliver.upton@linux.dev>,
+        Paul Mackerras <paulus@ozlabs.org>,
+        Peter Xu <peterx@redhat.com>,
+        Sean Christopherson <seanjc@google.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Thomas Huth <thuth@redhat.com>, Will Deacon <will@kernel.org>,
+        Zenghui Yu <yuzenghui@huawei.com>, kvmarm@lists.linux.dev,
+        kvm@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org, linuxppc-dev@lists.ozlabs.org,
+        linux-trace-kernel@vger.kernel.org, x86@kernel.org,
+        linux-mm@google.com
+Subject: Re: [PATCH mm-unstable v2 01/10] mm/kvm: add
+ mmu_notifier_ops->test_clear_young()
+Message-ID: <ZH7vh1GmsV+UCPwv@google.com>
+References: <20230526234435.662652-1-yuzhao@google.com>
+ <20230526234435.662652-2-yuzhao@google.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230526234435.662652-2-yuzhao@google.com>
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-Tests to ensure events that has empty arguments can input trace record
-correctly when using perf.
+On Fri, May 26, 2023 at 05:44:26PM -0600, Yu Zhao wrote:
+> +/*
+> + * Architectures that implement kvm_arch_test_clear_young() should override
+> + * kvm_arch_has_test_clear_young().
+> + *
+> + * kvm_arch_has_test_clear_young() is allowed to return false positive, i.e., it
+> + * can return true if kvm_arch_test_clear_young() is supported but disabled due
+> + * to some runtime constraint. In this case, kvm_arch_test_clear_young() should
 
-Signed-off-by: sunliming <sunliming@kylinos.cn>
----
- .../testing/selftests/user_events/perf_test.c | 53 +++++++++++++++++++
- 1 file changed, 53 insertions(+)
+Is it a typo here?  s/kvm_arch_test_clear_young/kvm_arch_has_test_clear_young/.
 
-diff --git a/tools/testing/selftests/user_events/perf_test.c b/tools/testing/selftests/user_events/perf_test.c
-index e97f24ab6e2f..8b09be566fa2 100644
---- a/tools/testing/selftests/user_events/perf_test.c
-+++ b/tools/testing/selftests/user_events/perf_test.c
-@@ -189,6 +189,59 @@ TEST_F(user, perf_write) {
- 	ASSERT_EQ(0, self->check);
- }
- 
-+TEST_F(user, perf_empty_events) {
-+	struct perf_event_attr pe = {0};
-+	struct user_reg reg = {0};
-+	struct perf_event_mmap_page *perf_page;
-+	int page_size = sysconf(_SC_PAGESIZE);
-+	int id, fd;
-+	__u32 *val;
-+
-+	reg.size = sizeof(reg);
-+	reg.name_args = (__u64)"__test_event";
-+	reg.enable_bit = 31;
-+	reg.enable_addr = (__u64)&self->check;
-+	reg.enable_size = sizeof(self->check);
-+
-+	/* Register should work */
-+	ASSERT_EQ(0, ioctl(self->data_fd, DIAG_IOCSREG, &reg));
-+	ASSERT_EQ(0, reg.write_index);
-+	ASSERT_EQ(0, self->check);
-+
-+	/* Id should be there */
-+	id = get_id();
-+	ASSERT_NE(-1, id);
-+
-+	pe.type = PERF_TYPE_TRACEPOINT;
-+	pe.size = sizeof(pe);
-+	pe.config = id;
-+	pe.sample_type = PERF_SAMPLE_RAW;
-+	pe.sample_period = 1;
-+	pe.wakeup_events = 1;
-+
-+	/* Tracepoint attach should work */
-+	fd = perf_event_open(&pe, 0, -1, -1, 0);
-+	ASSERT_NE(-1, fd);
-+
-+	perf_page = mmap(NULL, page_size * 2, PROT_READ, MAP_SHARED, fd, 0);
-+	ASSERT_NE(MAP_FAILED, perf_page);
-+
-+	/* Status should be updated */
-+	ASSERT_EQ(1 << reg.enable_bit, self->check);
-+
-+	/* Ensure write shows up at correct offset */
-+	ASSERT_NE(-1, write(self->data_fd, &reg.write_index,
-+					sizeof(reg.write_index)));
-+	val = (void *)(((char *)perf_page) + perf_page->data_offset);
-+	ASSERT_EQ(PERF_RECORD_SAMPLE, *val);
-+
-+	munmap(perf_page, page_size * 2);
-+	close(fd);
-+
-+	/* Status should be updated */
-+	ASSERT_EQ(0, self->check);
-+}
-+
- int main(int argc, char **argv)
- {
- 	return test_harness_run(argc, argv);
--- 
-2.25.1
+> +static inline int mmu_notifier_clear_young(struct mm_struct *mm,
+> +					   unsigned long start,
+> +					   unsigned long end)
+> +{
+> +	return 0;
+> +}
+> +
 
+This looks irrelevant to the patch but a fix for commit 1d7715c676a1
+("mmu-notifier: add clear_young callback") instead.
