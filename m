@@ -2,83 +2,150 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E12F4C7EE29
-	for <linux-trace-kernel@archiver.kernel.org>; Tue,  6 Jun 2023 16:13:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A316BC7EE24
+	for <linux-trace-kernel@archiver.kernel.org>; Tue,  6 Jun 2023 16:57:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238544AbjFFQNz (ORCPT
+        id S232583AbjFFQ5f (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Tue, 6 Jun 2023 12:13:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48304 "EHLO
+        Tue, 6 Jun 2023 12:57:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46894 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237776AbjFFQN1 (ORCPT
+        with ESMTP id S237469AbjFFQ5e (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Tue, 6 Jun 2023 12:13:27 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 92E9719BD;
-        Tue,  6 Jun 2023 09:13:05 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 2DF4462DE6;
-        Tue,  6 Jun 2023 16:13:04 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8CEEBC4339E;
-        Tue,  6 Jun 2023 16:13:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1686067983;
-        bh=SNMZc0L/b6GLmVD1yPrxAZQaDWAwMEPVbWJyNUZPapU=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ISrLLMAQMED7jumB7rUxj4NLoUAL1EUyBok+B70FXLeTV8RbWw2YEyhDwpUUt2W+8
-         BSxK7qj0Xsy1sBuOEiYEIDscWsMI8kOhRR5UpQ1uYg9B2NN7A3Omlc1BfNFBZY0dvi
-         4brp+zhcc4iOG+YQwY906r240v+Ox0bb7YrQqkZA2AgpiYnVG/xEO7OM3wnAUf3T1a
-         tC7uJTlisTSrjMOg93qS/eQVXTnpCtKJ4KNPzc+VxwQ0RwYF7suOc5KDTQFRGDOVrk
-         M4xRJ0dhiRl0bQyu6vIGQpuwUPKNMeKGpLwXJPqYVcPlyuNBp7fyJKxA9iF59EasAc
-         mSJfqaSQpNEEQ==
-From:   Daniel Bristot de Oliveira <bristot@kernel.org>
-To:     linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
-        Steven Rostedt <rostedt@goodmis.org>
-Cc:     linux-doc@vger.kernel.org, Juri Lelli <juri.lelli@redhat.com>,
-        William White <chwhite@redhat.com>,
-        Daniel Bristot de Oliveira <bristot@kernel.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Jonathan Corbet <corbet@lwn.net>
-Subject: [PATCH V3 11/11] Documentation: Add tools/rtla timerlat -u option documentation
-Date:   Tue,  6 Jun 2023 18:12:25 +0200
-Message-Id: <bf727c8ccb8f50792200ae620141e047edf4af7a.1686066600.git.bristot@kernel.org>
-X-Mailer: git-send-email 2.38.1
-In-Reply-To: <cover.1686066600.git.bristot@kernel.org>
-References: <cover.1686066600.git.bristot@kernel.org>
+        Tue, 6 Jun 2023 12:57:34 -0400
+Received: from mail-ed1-x52c.google.com (mail-ed1-x52c.google.com [IPv6:2a00:1450:4864:20::52c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0988610F7;
+        Tue,  6 Jun 2023 09:57:28 -0700 (PDT)
+Received: by mail-ed1-x52c.google.com with SMTP id 4fb4d7f45d1cf-51491b87565so9707525a12.1;
+        Tue, 06 Jun 2023 09:57:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1686070646; x=1688662646;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=azHlI+5GippCBf+WKiWbax8dCCkxyDQeSHE9lPulApk=;
+        b=cAdIexgYX7eMxZwDXRGZe6tFBNMeVXsn0iXgO7qEVBR31xLVNNXiUzs+rU1ujxr8+l
+         xc2Siv7O0EeBu6KrkLJKiO75GANZYLZ0rdsS9Hsq2CSTR7TT6A9skn20Q/E1uz6smdur
+         g8oZYkLJKo+2f4lFyEW4vkdj49eWdnMwCHaw93vVTXKLVwtJ9aeF/NmBdaIoPhPheFWG
+         +1cj1hCTogVby16q+SKIJrWJiLwZBOJ0G6So/rsCSj0Ua8D4r806OgKG83NUqfq2hS8F
+         u0uMiEAjb533nPaOswu5r7Bn5Fu7GaKAgXiNezXmlwz9OJpYKzORIGvMH6rXFT6kYJv9
+         S8tg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1686070646; x=1688662646;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=azHlI+5GippCBf+WKiWbax8dCCkxyDQeSHE9lPulApk=;
+        b=XLOiHfsm4YJt8d30oFv6lEy3GOjMu7KLr3KnSU2lUJ6nuQ/63vmIf/P0tXeUajxg1d
+         XUHkYvK4fpYZGgWThRu+VvgOuMWrvT9xGSr4sls+kW3nyi16oCeq6v+SzwSWyNv+/h26
+         OKdYuhXdNnNlDA94UQKSuT1T2q22Z23om2ZkllJPHP4GVIGj8J/X1FcovWYUe6KSdgF0
+         DOShNVeRQHzN5iZ7PkzQPO/XqRVo4ROLga43fuFcsov1KdtE3DIa0T/Os55vr3n5kesF
+         AwEGVFxX0TOYc8izkSDa/lQCs91uI1ldhVuyqTtP46xhfZFKTExtlHxZ5edw4XJrcdZy
+         NNXg==
+X-Gm-Message-State: AC+VfDwCnyw1vQ0vL5y8bAYth0qGtueV0L12ykhJTgGystErR0AIBG/s
+        pOJ5Nmlv6GUGVQBvzdr0Ao9mYTO2XcBOSDC+N+A=
+X-Google-Smtp-Source: ACHHUZ64KAAOfaapxB1O5y4diCyCaL/i6oJvY6ppizyMVQcI2dZbltNucxts1w4q7XRdRBeu3lz6OS6aANGrLihG8Lo=
+X-Received: by 2002:a05:6402:1647:b0:510:b636:4073 with SMTP id
+ s7-20020a056402164700b00510b6364073mr2293592edx.3.1686070646336; Tue, 06 Jun
+ 2023 09:57:26 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20230508163751.841-1-beaub@linux.microsoft.com>
+ <CAADnVQLYL-ZaP_2vViaktw0G4UKkmpOK2q4ZXBa+f=M7cC25Rg@mail.gmail.com>
+ <20230509130111.62d587f1@rorschach.local.home> <20230509163050.127d5123@rorschach.local.home>
+ <20230515165707.hv65ekwp2djkjj5i@MacBook-Pro-8.local> <20230515192407.GA85@W11-BEAU-MD.localdomain>
+ <20230517003628.aqqlvmzffj7fzzoj@MacBook-Pro-8.local> <20230606225741.a9d8003a22451db96545b5a8@kernel.org>
+In-Reply-To: <20230606225741.a9d8003a22451db96545b5a8@kernel.org>
+From:   Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Date:   Tue, 6 Jun 2023 09:57:14 -0700
+Message-ID: <CAEf4BzbhvBTQ2c1ENk2pVXdQ=SrXwTFXVjpopTANZsdn1EEeMA@mail.gmail.com>
+Subject: Re: [PATCH] tracing/user_events: Run BPF program if attached
+To:     Masami Hiramatsu <mhiramat@kernel.org>
+Cc:     Alexei Starovoitov <alexei.starovoitov@gmail.com>,
+        Beau Belgrave <beaub@linux.microsoft.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-trace-kernel@vger.kernel.org,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Andrii Nakryiko <andrii@kernel.org>, bpf <bpf@vger.kernel.org>,
+        David Vernet <void@manifault.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        dthaler@microsoft.com, brauner@kernel.org, hch@infradead.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-Add the -u/--user-thread option documentation for timerlat top/hist.
+On Tue, Jun 6, 2023 at 6:57=E2=80=AFAM Masami Hiramatsu <mhiramat@kernel.or=
+g> wrote:
+>
+> Hi,
+>
+> On Tue, 16 May 2023 17:36:28 -0700
+> Alexei Starovoitov <alexei.starovoitov@gmail.com> wrote:
+>
+> > BPF progs have three ways to access kernel tracepoints:
+> > 1. traditional tracepoint
+>
+> This is the trace_events, which is used by ftrace, right?
+>
+> > 2. raw tracepoint
+> > 3. raw tracepoint with BTF
+> >
+> > 1 was added first and now rarely used (only by old tools), since it's s=
+low.
+> > 2 was added later to address performance concerns.
+> > 3 was added after BTF was introduced to provide accurate types.
+> >
+> > 3 is the only one that bpf community recommends and is the one that is =
+used most often.
+> >
+> > As far as I know trace_events were never connected to bpf.
+> > Unless somebody sneaked the code in without us seeing it.
+>
+> With this design, I understand that you may not want to connect BPF
+> directly to user_events. It needs a different model.
+>
+> >
+> > I think you're trying to model user_events+bpf as 1.
+> > Which means that you'll be repeating the same mistakes.
+>
+> The user_events is completely different from the traceppoint and
+> must have no BTF with it.
+> Also, all information must be sent in the user-written data packet.
+> (No data structure, event if there is a structure, it must be fully
+> contained in the packet.)
+>
+> For the tracepoint, there is a function call with some values or
+> pointers of data structure. So it is meaningful to skip using the
+> traceevent (which converts all pointers to actual field values of
+> the data structure and store it to ftrace buffer) because most of
+> the values can be ignored in the BPF prog.
+>
+> However, for the user_events, the data is just passed from the
+> user as a data packet, and BPF prog can access to the data packet
+> (to avoid accessing malicious data, data validator can not be
+> skipped). So this seems like 1. but actually you can access to
+> the validated data on perf buffer. Maybe we can allow BPF to
+> hook the write syscall and access user-space data, but it may
+> not safe. I think this is the safest way to do that.
 
-Cc: Steven Rostedt <rostedt@goodmis.org>
-Cc: Daniel Bristot de Oliveira <bristot@kernel.org>
-Cc: Masami Hiramatsu <mhiramat@kernel.org>
-Cc: Jonathan Corbet <corbet@lwn.net>
-Signed-off-by: Daniel Bristot de Oliveira <bristot@kernel.org>
----
- Documentation/tools/rtla/common_timerlat_options.rst | 7 +++++++
- 1 file changed, 7 insertions(+)
+I'm trying to understand why we need a new kernel concept for all
+this. It looks like we are just creating a poor man's
+publisher/subscriber solution in the kernel, but mostly intend to use
+it from user-space? Why not just use Unix domain sockets for this,
+though? Use SOCK_SEQPACKET, put "event data" into a single packet
+that's guaranteed to not be broken up. Expose this to other processes
+through named pipes, if necessary.
 
-diff --git a/Documentation/tools/rtla/common_timerlat_options.rst b/Documentation/tools/rtla/common_timerlat_options.rst
-index bacdea6de7a3..88506b397c2d 100644
---- a/Documentation/tools/rtla/common_timerlat_options.rst
-+++ b/Documentation/tools/rtla/common_timerlat_options.rst
-@@ -26,3 +26,10 @@
-         Set the /dev/cpu_dma_latency to *us*, aiming to bound exit from idle latencies.
-         *cyclictest* sets this value to *0* by default, use **--dma-latency** *0* to have
-         similar results.
-+
-+**-u**, **--user-threads**
-+
-+        Set timerlat to run without a workload, and then dispatches user-space workloads
-+        to wait on the timerlat_fd. Once the workload is awakes, it goes to sleep again
-+        adding so the measurement for the kernel-to-user and user-to-kernel to the tracer
-+        output.
--- 
-2.38.1
+Sorry if it's naive questions, but it's not clear what problem
+user_events are solving and why we need a new thing and can't use
+existing kernel primitives?
 
+
+>
+> Thank you,
+>
+> --
+> Masami Hiramatsu (Google) <mhiramat@kernel.org>
