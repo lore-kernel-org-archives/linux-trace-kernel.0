@@ -2,177 +2,190 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 107C5C7EE37
-	for <linux-trace-kernel@archiver.kernel.org>; Tue,  6 Jun 2023 20:57:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 22DB0C7EE37
+	for <linux-trace-kernel@archiver.kernel.org>; Tue,  6 Jun 2023 22:50:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232045AbjFFU5k (ORCPT
+        id S240091AbjFFWuo (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Tue, 6 Jun 2023 16:57:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58740 "EHLO
+        Tue, 6 Jun 2023 18:50:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39894 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231706AbjFFU5j (ORCPT
+        with ESMTP id S240033AbjFFWuR (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Tue, 6 Jun 2023 16:57:39 -0400
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id D3EBD1707;
-        Tue,  6 Jun 2023 13:57:37 -0700 (PDT)
-Received: from W11-BEAU-MD.localdomain (unknown [76.135.27.212])
-        by linux.microsoft.com (Postfix) with ESMTPSA id E580820BE492;
-        Tue,  6 Jun 2023 13:57:36 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com E580820BE492
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-        s=default; t=1686085057;
-        bh=0ETLWs8Ceu9GxJZiRavPxUta0//U9m1gAOQEZ5ERUwU=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=L8o1R6hOw20Q2OWIIrmyxakKURspNvlCCiRArHQP/p4Lbia0vbpaHE0XIODGn0J7a
-         qrJJbcbRtKDznCwU5ka91xEZMOmRPqe6/rIaCfxPTn9CT/zkyXE2iA6Ltz7AWuqx+a
-         MUkr3uiaEvsb+g67+0KFrI9OqGW8WzTVYC6H97fk=
-Date:   Tue, 6 Jun 2023 13:57:30 -0700
-From:   Beau Belgrave <beaub@linux.microsoft.com>
-To:     Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Cc:     Masami Hiramatsu <mhiramat@kernel.org>,
-        Alexei Starovoitov <alexei.starovoitov@gmail.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-trace-kernel@vger.kernel.org,
+        Tue, 6 Jun 2023 18:50:17 -0400
+Received: from mx0a-00082601.pphosted.com (mx0b-00082601.pphosted.com [67.231.153.30])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 29FA310FD;
+        Tue,  6 Jun 2023 15:50:16 -0700 (PDT)
+Received: from pps.filterd (m0089730.ppops.net [127.0.0.1])
+        by m0089730.ppops.net (8.17.1.19/8.17.1.19) with ESMTP id 356If9ca003697;
+        Tue, 6 Jun 2023 15:49:38 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=meta.com; h=message-id : date :
+ subject : to : cc : references : from : in-reply-to : content-type :
+ content-transfer-encoding : mime-version; s=s2048-2021-q4;
+ bh=LqPXx4L6BCWPcSer+OWYQUG2Ect6UFtZPTwiqv9voBg=;
+ b=VIcTilEzfdmTviiLN5eMRLIBHszmYc4I56zCF7EnyRJ4Md16xh72h/GkYaBPG6vLWw13
+ WcCSI191n1tT75pMjeO2bl+Lqb+j3zNGmX8PiUIVQ7UdcL01hTYIWGagToVgxPJLn4E7
+ vyOTF+Lav+thU5dTCzeNe2BvSkj4QUC3MeoMN9eNHuLG9c6bU3aYG1msD+ScP6UZXmez
+ W1WRYtVnSadwMdS7gsz9V0bnPv+9JY1+t3K7roMss2LnQuF35VAdCfH3x4L6yMXDnkTm
+ lwKlicsO9fpNYZcC3UguUux+sWFznNwJ0r9td4G57XlT1wvnb4E8EWIsY8xiPXYgndWH vA== 
+Received: from nam04-dm6-obe.outbound.protection.outlook.com (mail-dm6nam04lp2049.outbound.protection.outlook.com [104.47.73.49])
+        by m0089730.ppops.net (PPS) with ESMTPS id 3r2a82hrps-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 06 Jun 2023 15:49:37 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=A5SUee9SJcqXT60g8cS9tOeFjZxTw8Iw3rwbKM3wq+WCuCuiVRKV6NUnu0Wd8Yz2TojrmyQS2i/LTaac6S6trQ8bHRWWLdK7zGXdLo2/VQqLva0XyuswBgUUcilDS6kg6h4j+fw9QVhHWlbKLa7GofsIlHjT+ZLCYgBNcP2jb6dn3nMKELOCE9E9S3DqL43u5V1niYCqrkq5NZqn6k/nbcu7+1gmSO6WKBvMwKjZsqvPeYWOd+unHr9AuIWXI5MWfTQblzk/urylCZI7TDrQPph8mx9BPxyBQMvbJ1+7PZqjEG+icr82rUCS70xlIiwkKeOoIgJAM7vcGu0JIeVwew==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=LqPXx4L6BCWPcSer+OWYQUG2Ect6UFtZPTwiqv9voBg=;
+ b=WmAfxHh0qZd0VzNQYBxQ2Y7MigEZEqQAyxewlY5EmX1PJfwo9Iw1v4cr622N3dqvQk+zngVj9qW4Ivw5wSk+CYWhbO4CvRsAvb0Wmb64+Y/dce0/x8u4HIU2jYX3SnuTY+a6rMeWEzTFgeuGNH1iHaLY0uq0gCTNxKWr7TsLWdtB2L6nI55f3QHPtghDIXu9e3E1fsUF9j8z7/Owp75Cd7/kk4axzagPintz3I24Ytm6aQjHcJfvn4I7Qe1C9LirKmR6LGsIHozuDzLByTP1+QSUz3LcR25jtUvwxnybVgRYMjEJnZNQvPDDtCKUr3dqzOLAi9JrU77ArrM3Gcm6Ug==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=meta.com; dmarc=pass action=none header.from=meta.com;
+ dkim=pass header.d=meta.com; arc=none
+Received: from SN6PR1501MB2064.namprd15.prod.outlook.com (2603:10b6:805:d::27)
+ by MW4PR15MB4586.namprd15.prod.outlook.com (2603:10b6:303:107::5) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6455.33; Tue, 6 Jun
+ 2023 22:49:09 +0000
+Received: from SN6PR1501MB2064.namprd15.prod.outlook.com
+ ([fe80::bf7d:a453:b8d9:cf0]) by SN6PR1501MB2064.namprd15.prod.outlook.com
+ ([fe80::bf7d:a453:b8d9:cf0%6]) with mapi id 15.20.6455.030; Tue, 6 Jun 2023
+ 22:49:09 +0000
+Message-ID: <ec58af39-9c97-2032-585a-6dbaa890206f@meta.com>
+Date:   Tue, 6 Jun 2023 15:49:05 -0700
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:102.0)
+ Gecko/20100101 Thunderbird/102.11.2
+Subject: Re: [PATCH 2/2] [v3] bpf: fix bpf_probe_read_kernel prototype
+ mismatch
+Content-Language: en-US
+To:     Arnd Bergmann <arnd@kernel.org>,
         Alexei Starovoitov <ast@kernel.org>,
         Daniel Borkmann <daniel@iogearbox.net>,
-        Andrii Nakryiko <andrii@kernel.org>, bpf <bpf@vger.kernel.org>,
-        David Vernet <void@manifault.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        dthaler@microsoft.com, brauner@kernel.org, hch@infradead.orgl,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Subject: Re: [PATCH] tracing/user_events: Run BPF program if attached
-Message-ID: <20230606205730.GA163@W11-BEAU-MD.localdomain>
-References: <20230508163751.841-1-beaub@linux.microsoft.com>
- <CAADnVQLYL-ZaP_2vViaktw0G4UKkmpOK2q4ZXBa+f=M7cC25Rg@mail.gmail.com>
- <20230509130111.62d587f1@rorschach.local.home>
- <20230509163050.127d5123@rorschach.local.home>
- <20230515165707.hv65ekwp2djkjj5i@MacBook-Pro-8.local>
- <20230515192407.GA85@W11-BEAU-MD.localdomain>
- <20230517003628.aqqlvmzffj7fzzoj@MacBook-Pro-8.local>
- <20230606225741.a9d8003a22451db96545b5a8@kernel.org>
- <CAEf4BzbhvBTQ2c1ENk2pVXdQ=SrXwTFXVjpopTANZsdn1EEeMA@mail.gmail.com>
+        Andrii Nakryiko <andrii@kernel.org>,
+        Song Liu <song@kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>
+Cc:     Arnd Bergmann <arnd@arndb.de>, stable@vger.kernel.org,
+        John Fastabend <john.fastabend@gmail.com>,
+        Martin KaFai Lau <martin.lau@linux.dev>,
+        Yonghong Song <yhs@fb.com>, KP Singh <kpsingh@kernel.org>,
+        Stanislav Fomichev <sdf@google.com>,
+        Hao Luo <haoluo@google.com>, Jiri Olsa <jolsa@kernel.org>,
+        Kumar Kartikeya Dwivedi <memxor@gmail.com>,
+        Dave Marchevsky <davemarchevsky@fb.com>,
+        Delyan Kratunov <delyank@fb.com>,
+        Joanne Koong <joannelkoong@gmail.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        "Jason A. Donenfeld" <Jason@zx2c4.com>,
+        Roberto Sassu <roberto.sassu@huawei.com>, bpf@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
+References: <20230602135128.1498362-1-arnd@kernel.org>
+ <20230602135128.1498362-2-arnd@kernel.org>
+From:   Yonghong Song <yhs@meta.com>
+In-Reply-To: <20230602135128.1498362-2-arnd@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: SJ0PR05CA0034.namprd05.prod.outlook.com
+ (2603:10b6:a03:33f::9) To SN6PR1501MB2064.namprd15.prod.outlook.com
+ (2603:10b6:805:d::27)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAEf4BzbhvBTQ2c1ENk2pVXdQ=SrXwTFXVjpopTANZsdn1EEeMA@mail.gmail.com>
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SN6PR1501MB2064:EE_|MW4PR15MB4586:EE_
+X-MS-Office365-Filtering-Correlation-Id: b312cdd3-1c88-4941-d613-08db66e03d30
+X-FB-Source: Internal
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: 7tbjdGFW2wm5ty9A7U4C+dU+jJaJk+UT+E+970tUixGVSf/AtN7768hRc8yJwbLDQuaEFTwxHeGnwaek2+F++I1anaXWLWo1K45E8xH2FAigboXu09jiYf30fxkPnOqFrSR314ZHgmI0/qgIK9+f0TJhN4lFCvmNOrlbC0Lif/8zgndcrXhX9JLYwwTCN+beiGjG/WsipMxMGC0RFQxp+AGHQkpSEblPfH8yvApdplyNqZw5uPE5bHpIBkHn6/QQApQekVB5EG9s2etujc/R6LjxOQO7ltGJcubxg1fClCesLQfQCk2xqNVbMV2x+n4t5pscoFiSLlbJe6Vlii03XKA/76Gsp4zhnRRBn+g1VRqLmDWXFl0gs/Kc6RZ2xJTdifkUkM30yqGpLgkydW3amdEXOmsukVm2crp4wbld9k+oN5lDouNMnXCyFEkVNt9EFzXW4SRhziEdWgMgf3i2vLq0E64AAJsdb4MEexAB02HAWAcQ9MkZ+sKOkTQtjIGCd3QsfZ8S2HkKRgpO0Jv0ov1nC0LkA8bgYfvF59qa5YW6zci0rW3wOzxIV7NEXVvm2eQf2pnBh1/y9BaEtzhwUv7s3p/W81wIQYqfk9aUOPiTKzKrFFgK52QdRMVSNzpfHh48TUHi/nOHJHulMTp2pQ==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SN6PR1501MB2064.namprd15.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230028)(4636009)(396003)(346002)(366004)(39860400002)(376002)(136003)(451199021)(6506007)(53546011)(6512007)(36756003)(83380400001)(31696002)(86362001)(38100700002)(186003)(2616005)(8676002)(4326008)(41300700001)(110136005)(54906003)(66946007)(478600001)(66476007)(2906002)(316002)(8936002)(31686004)(5660300002)(7416002)(6486002)(66556008)(6666004)(45980500001)(43740500002);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?NGlXditFbnhXbWJOMDRMaHg2ZStleGNIZitWSXRDOEpsbzFHcXMzRFVQaFM0?=
+ =?utf-8?B?RERNdEJleWVZanA1QlJ2bysrRWpUZm1NZFZjdUE5OEFhYVR3YzBmOHBqc1pE?=
+ =?utf-8?B?MVZpWDVzWFM4Y29WV243TVNvcDJSTkp6QWQ4TXo5T1o5aDJvS1RQams2MzUz?=
+ =?utf-8?B?WmFPVk80ZW8zQXFPNTFmSVlRNk1WOCtoZlJIaWptMFNVN1A2VW5FQXllZzlU?=
+ =?utf-8?B?ZllWLzQxWndnQVNqdTlQa3JPdTNmUDZuVVRLeHFERVE0ei9oUmdweTNid1pI?=
+ =?utf-8?B?anhITGo5RElGaCsrYklYaFd4T1BrV0xvWFpUQ3FuMkJMdjlSQXQ0ZU5SVHJN?=
+ =?utf-8?B?aTlCaE02c1Ztb0p5U205aUlIOVBhMHBNc1grY212RklPUmNwVTBDRGxISFNK?=
+ =?utf-8?B?RkNNVzhGZ0NOUnFqanRiSi9uWGRvL2xuSnZtR1ZKVnhiOU41dE5lVWQ5cEtL?=
+ =?utf-8?B?S1NXUTNqOWFkVS9YWkZyQjBYSnFGRVFtd0VYclRDU08vTTJ1YVBaZk1TV3h5?=
+ =?utf-8?B?UVc2OFYwc3hlZ2F0a1pSQnlHZTJGSVNUQ045R1FGZE5IaEFnMWRzNHpHaU9C?=
+ =?utf-8?B?K3NYOWZXcHB6L21WMzdTUThSd2JTdlpZRTEyZ0ZnV0hRVlhuamdEL09DV0dU?=
+ =?utf-8?B?SFNCYzNFUUNtSlJEbXYyemtkTmxMeVljOVVwVGRoaDRSK1pRRExkV0t2T2ZP?=
+ =?utf-8?B?YUlkREpWM2RDeTBMay9CRS9XMFlsa05mL0RUQlZjRHpMNGRnNVRnTTJVRWdp?=
+ =?utf-8?B?Nk1LOHB0Y0V2WjRBVk9wbjFxUmFaSnRxRnlWSEVzS0M4NGU4aWROdC85WmJH?=
+ =?utf-8?B?QTBaV0RPTy96VFBsMDdnaGNoWmhVM0JWd1YxYXRZeDQxZElFRnhPTVdvbFZs?=
+ =?utf-8?B?N25LamVmUDRkMFdyWEY4VUZwNkltR255QTR3QzRkKzNuL1Y3NDJ2R25pcGsw?=
+ =?utf-8?B?UU55NytJSkdsVkc4bjVoSlBxTzBIZHE3L3RmR1hIaHRKTkNKS1o3THV0clpu?=
+ =?utf-8?B?ZzRYdTdhRWpybldGS3lTOVlQSUpkUktiRVJBR2Uwei8zY2dndnd1Yk1CZEto?=
+ =?utf-8?B?SFV5Z2hHMjhLblVjSXNwcDlqK3F5cXNjNTlQV2FkSUR1Z3dFdXN2anJRMnB5?=
+ =?utf-8?B?N0NCc0EzYlZlSFFaanQxZGJJcTJOY0w3QU5HeTZxSVhqRyt6b1FuenVYSDBV?=
+ =?utf-8?B?Y1hhaXluUTVUMFpXSDhDb3I5N0lOaGpUdGp4TGs1TmtiN3RwT0ZUa2lhWU9p?=
+ =?utf-8?B?MnhWWkpZRnNiNkRwL0tQaFdoK2N6Z3kyM1RaaHNTYm5KREUzTTQ3aFZSREJv?=
+ =?utf-8?B?L09Vd3ZYOHdaNVB3QjFzNFd3Mk9FUWZEZHhIQ1UrclUvZlZvV2RBL2VYbDli?=
+ =?utf-8?B?ZWtKb0ptZ3J3Y1J1M3RITzYvUVdYQ1E1Y0s2SzIrNG0xOGpCd25yTmtvb2Y0?=
+ =?utf-8?B?VUgzRDlVVWR2WHBKalRSTmZTYlB0eUNJbDlJa01sbHY5K2ZVRnVlTHl6eUly?=
+ =?utf-8?B?di9TcGt3KzBPMjRkKzlyMTR0cEw1VWxrUHRPUDhXL3FBNDFVRUhEK0lMYVhW?=
+ =?utf-8?B?OUdlUXhoMTBYbXYvVURaL2I0eEI3WU80QUIvU2hUNXBWanh4eXlaY2UxT2NH?=
+ =?utf-8?B?SVhFZ1E0MXZybHJzdVY5eFZSSG1DQmRkcUNHUVRYSGZTQ2tGUTYwQkZJR0Rk?=
+ =?utf-8?B?QjNtM25FYnZBS0xrWVJUc3JuaEhDTEYyNHNWQTg1R25pOUhJbkJ5M0psWWRm?=
+ =?utf-8?B?anNycTF5a1lUeDZqcDFDejZjTis0Z3NXY1RWSEExL01sSGQ2ajk5bXo5Lyt6?=
+ =?utf-8?B?SC9CMUEvckdFV2FzSkNzeU9xR1NmZy81Yis4RkdEallaeTNtWlI3WGE2aFNo?=
+ =?utf-8?B?bCtYSncvMWptNFNOWitTTGl2cE1BdWdDMUdONXc5ODNtMjhNbEpOTmk3T3Qz?=
+ =?utf-8?B?NjhPTVdYSXVsb3l1cGo0dGxPNnE0UWlpWmNUcFlqOWVPSDd2dHF0VG9KQnZv?=
+ =?utf-8?B?TXdOaFUvVjk4eVgwM0FMZGMrSS8rZjdSRENtU1UyUDUyaWtxRDFSMUV1YktY?=
+ =?utf-8?B?Um83dW1GMEk1VFIyZWpWbTNpOEsrUEZ0NFR5clRNaXhRSFRkNkoweVdXODlF?=
+ =?utf-8?B?SmRGNFg1VytvNGR0V1ZvT2FNUlp3cm5oczJoRXhIUmF6VEE0dkNLSGtkQkEv?=
+ =?utf-8?B?Snc9PQ==?=
+X-OriginatorOrg: meta.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: b312cdd3-1c88-4941-d613-08db66e03d30
+X-MS-Exchange-CrossTenant-AuthSource: SN6PR1501MB2064.namprd15.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 06 Jun 2023 22:49:09.0138
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 8ae927fe-1255-47a7-a2af-5f3a069daaa2
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: YuqZgFYkjdo40uH0eNR98Am1SW+1Aymfrkz0sQunUnvYi9zKibnb7z4nxQSNo/5/
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW4PR15MB4586
+X-Proofpoint-GUID: y1FJtwYZeb6m1ISP4oY-BPV_LC5CUCwZ
+X-Proofpoint-ORIG-GUID: y1FJtwYZeb6m1ISP4oY-BPV_LC5CUCwZ
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.254,Aquarius:18.0.957,Hydra:6.0.573,FMLib:17.11.176.26
+ definitions=2023-06-06_16,2023-06-06_02,2023-05-22_02
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On Tue, Jun 06, 2023 at 09:57:14AM -0700, Andrii Nakryiko wrote:
-> On Tue, Jun 6, 2023 at 6:57 AM Masami Hiramatsu <mhiramat@kernel.org> wrote:
-> >
-> > Hi,
-> >
-> > On Tue, 16 May 2023 17:36:28 -0700
-> > Alexei Starovoitov <alexei.starovoitov@gmail.com> wrote:
-> >
-> > > BPF progs have three ways to access kernel tracepoints:
-> > > 1. traditional tracepoint
-> >
-> > This is the trace_events, which is used by ftrace, right?
-> >
-> > > 2. raw tracepoint
-> > > 3. raw tracepoint with BTF
-> > >
-> > > 1 was added first and now rarely used (only by old tools), since it's slow.
-> > > 2 was added later to address performance concerns.
-> > > 3 was added after BTF was introduced to provide accurate types.
-> > >
-> > > 3 is the only one that bpf community recommends and is the one that is used most often.
-> > >
-> > > As far as I know trace_events were never connected to bpf.
-> > > Unless somebody sneaked the code in without us seeing it.
-> >
-> > With this design, I understand that you may not want to connect BPF
-> > directly to user_events. It needs a different model.
-> >
-> > >
-> > > I think you're trying to model user_events+bpf as 1.
-> > > Which means that you'll be repeating the same mistakes.
-> >
-> > The user_events is completely different from the traceppoint and
-> > must have no BTF with it.
-> > Also, all information must be sent in the user-written data packet.
-> > (No data structure, event if there is a structure, it must be fully
-> > contained in the packet.)
-> >
-> > For the tracepoint, there is a function call with some values or
-> > pointers of data structure. So it is meaningful to skip using the
-> > traceevent (which converts all pointers to actual field values of
-> > the data structure and store it to ftrace buffer) because most of
-> > the values can be ignored in the BPF prog.
-> >
-> > However, for the user_events, the data is just passed from the
-> > user as a data packet, and BPF prog can access to the data packet
-> > (to avoid accessing malicious data, data validator can not be
-> > skipped). So this seems like 1. but actually you can access to
-> > the validated data on perf buffer. Maybe we can allow BPF to
-> > hook the write syscall and access user-space data, but it may
-> > not safe. I think this is the safest way to do that.
+
+
+On 6/2/23 6:50 AM, Arnd Bergmann wrote:
+> From: Arnd Bergmann <arnd@arndb.de>
 > 
-> I'm trying to understand why we need a new kernel concept for all
-> this. It looks like we are just creating a poor man's
-> publisher/subscriber solution in the kernel, but mostly intend to use
-> it from user-space? Why not just use Unix domain sockets for this,
-> though? Use SOCK_SEQPACKET, put "event data" into a single packet
-> that's guaranteed to not be broken up. Expose this to other processes
-> through named pipes, if necessary.
+> bpf_probe_read_kernel() has a __weak definition in core.c and another
+> definition with an incompatible prototype in kernel/trace/bpf_trace.c,
+> when CONFIG_BPF_EVENTS is enabled.
 > 
-> Sorry if it's naive questions, but it's not clear what problem
-> user_events are solving and why we need a new thing and can't use
-> existing kernel primitives?
+> Since the two are incompatible, there cannot be a shared declaration in
+> a header file, but the lack of a prototype causes a W=1 warning:
 > 
-
-There's a number of reasons why we did not do as you suggest.
-
-The first reason is we want to only take the write() syscall cost when
-events are wanting to be monitored. This is done at a per-trace_event
-level and is not at a per-process level. user_events gives us the
-ability to know cheaply when an event is or is not to be written. It
-does this by setting/clearing a bit in each process when the trace_event
-classes register function is invoked to attach/detach perf or ftrace.
-By using a bit instead of bytes, we also have the ability to share
-tracing out to the kernel as well as any local user tracer in the
-future, this work was started by Mathieu Desnoyers via libside [1].
-
-The second reason is we have found user based buffers to be unreliable
-when either the user process is crashing or has a corruption bug. By
-having the data buffers reside within the kernel, we prevent this from
-happening. If the kernel panics, we can also pull events out of the
-perf_event buffers via GDB to understand what our user processes were
-doing before the time of the panic.
-
-The third reason is we want to make use of all the features that perf,
-ftrace, and eBPF have. We do not want to have to re-write all of those
-features. The main things are being able to filter upon event payloads
-and aggregate them together. We also selectively turn on and off stack
-walking for some events (not all). Perf lets us selectively do this on a
-per-event basis in addition to grabbing raw stack data to enable
-unwinding via DWARF instructions. When we monitor events via
-perf/ftrace, we can find each offset and type for the fields within the
-event. We need to know these to properly decode events and analyze them.
-Tracefs gives a us a single place to see all of these events and
-efficiently decode them, including a stable event ID. We would have to
-replicate all of that work in userspace in addition to the other
-features we rely upon.
-
-The fourth reason is related to the third, we have a lot of existing
-diagnostics that rely upon and setup perf ring buffers. We want the user
-and kernel diagnostics to land in the same buffers with the same
-timestamps so we can see a full picture of what is going on.
-
-Thanks,
--Beau
-
-1. https://github.com/compudj/libside
-
+> kernel/bpf/core.c:1638:12: error: no previous prototype for 'bpf_probe_read_kernel' [-Werror=missing-prototypes]
 > 
-> >
-> > Thank you,
-> >
-> > --
-> > Masami Hiramatsu (Google) <mhiramat@kernel.org>
+> On 32-bit architectures, the local prototype
+> 
+> u64 __weak bpf_probe_read_kernel(void *dst, u32 size, const void *unsafe_ptr)
+> 
+> passes arguments in other registers as the one in bpf_trace.c
+> 
+> BPF_CALL_3(bpf_probe_read_kernel, void *, dst, u32, size,
+>              const void *, unsafe_ptr)
+> 
+> which uses 64-bit arguments in pairs of registers.
+> 
+> Change the core.c file to only reference the inner
+> bpf_probe_read_kernel_common() helper and provide a prototype for that,
+> to ensure this is compatible with both definitions.
+> 
+> Cc: stable@vger.kernel.org
+> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+
+Acked-by: Yonghong Song <yhs@fb.com>
