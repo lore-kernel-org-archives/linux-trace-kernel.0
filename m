@@ -2,204 +2,169 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D4CCC77B7A
-	for <linux-trace-kernel@archiver.kernel.org>; Tue,  6 Jun 2023 17:06:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 64D51C7EE31
+	for <linux-trace-kernel@archiver.kernel.org>; Tue,  6 Jun 2023 18:22:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238479AbjFFRGH (ORCPT
+        id S238388AbjFFSWU (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Tue, 6 Jun 2023 13:06:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50514 "EHLO
+        Tue, 6 Jun 2023 14:22:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39200 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238399AbjFFRGC (ORCPT
+        with ESMTP id S238431AbjFFSWQ (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Tue, 6 Jun 2023 13:06:02 -0400
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id A572A10C6;
-        Tue,  6 Jun 2023 10:06:00 -0700 (PDT)
-Received: from W11-BEAU-MD.localdomain (unknown [76.135.27.212])
-        by linux.microsoft.com (Postfix) with ESMTPSA id BFE8820BE48E;
-        Tue,  6 Jun 2023 10:05:59 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com BFE8820BE48E
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-        s=default; t=1686071160;
-        bh=C5G5CGzQLvGwCuG7fKF39otqK61tGv1JhHkxwm7VmaE=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=mNt1DgjgK8pon/ox1T9IjWRTVQR+F1MiR9bl6Q/CgCyGEsBfSm7u6YD85e7xnec6q
-         DORbyL8K0udoXc/J+rH1sa0TCIG8dJcc8c+Y72b27OJsmab8p1mVTeOeyK2mZgyCGB
-         g0VPiRBjohNo6ZLfGFi2OrcaGWRtbKQelid/3WYw=
-Date:   Tue, 6 Jun 2023 10:05:49 -0700
-From:   Beau Belgrave <beaub@linux.microsoft.com>
-To:     Masami Hiramatsu <mhiramat@kernel.org>
-Cc:     Christian Brauner <brauner@kernel.org>,
-        Alexei Starovoitov <alexei.starovoitov@gmail.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-trace-kernel@vger.kernel.org,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Andrii Nakryiko <andrii@kernel.org>, bpf <bpf@vger.kernel.org>,
-        David Vernet <void@manifault.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Dave Thaler <dthaler@microsoft.com>,
-        Christoph Hellwig <hch@infradead.org>
-Subject: Re: [PATCH] tracing/user_events: Run BPF program if attached
-Message-ID: <20230606170549.GA71@W11-BEAU-MD.localdomain>
-References: <20230515192407.GA85@W11-BEAU-MD.localdomain>
- <20230517003628.aqqlvmzffj7fzzoj@MacBook-Pro-8.local>
- <20230516212658.2f5cc2c6@gandalf.local.home>
- <20230517165028.GA71@W11-BEAU-MD.localdomain>
- <CAADnVQK3-NBLSVRVsgArUEjqsuY2S_8mWsWmLEAtTzo+U49CKQ@mail.gmail.com>
- <20230601-urenkel-holzofen-cd9403b9cadd@brauner>
- <20230601152414.GA71@W11-BEAU-MD.localdomain>
- <20230601-legten-festplatten-fe053c6f16a4@brauner>
- <20230601162921.GA152@W11-BEAU-MD.localdomain>
- <20230606223752.65dd725c04b11346b45e0546@kernel.org>
+        Tue, 6 Jun 2023 14:22:16 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AA00F170A;
+        Tue,  6 Jun 2023 11:22:14 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 4586963696;
+        Tue,  6 Jun 2023 18:22:14 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A236EC433A8;
+        Tue,  6 Jun 2023 18:22:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1686075733;
+        bh=08bgDTu6K2r14VqmkEIMfCPJQ/ZZrnAx7Zh60inB9tQ=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=PvVbLJcYr9sEPc4KvXnz7da5hnzjz64447Y1vyViBiCb+fl59qj0pvbLDlkg7Wuob
+         rzrnBjSOFtiQecuq+LZ/SRRxmzgXLdbIbqyyYrcYGhY29RsiV56QlreCUSnVm+stVt
+         UoVEGKhBSdT54YRh1gXdKSmvd62cZB1711kSzDIW8D76YUK3gBLlfz43UtqujOAa4M
+         WNIOBkfcw2WKv0IUzEzdSsuoiqNT0iAk+aytnzF0p5Ex5Qs+2o2gd4vHHiQKTwquZM
+         rFReB/rrpz7owlp/MdxR2Mp3uAIDm8MwdFNdtC8Gq4wlspi7VJYfgsGIf9GhxSZs3/
+         0v9cbIwE3cmiA==
+Received: by mail-lj1-f169.google.com with SMTP id 38308e7fff4ca-2b1a4250b07so75710911fa.3;
+        Tue, 06 Jun 2023 11:22:13 -0700 (PDT)
+X-Gm-Message-State: AC+VfDzCXm5+70Ovpz7W746cGaUigh8vo5Bs482Vva0c0k6BOaC8cWYw
+        xXE/STitpg+B5AXPalqdCtTYAhMWQ+XDi+gPtfw=
+X-Google-Smtp-Source: ACHHUZ5bLSr3tA3IB8xCjeC0rEYdnEDeq7vmc1y/QuS5oHjyhnnuqZDpSw2PwmODz4CMTnRxT8zG59Qp1zLSa+hdG70=
+X-Received: by 2002:a2e:82d0:0:b0:2b0:297c:cbdf with SMTP id
+ n16-20020a2e82d0000000b002b0297ccbdfmr1546782ljh.1.1686075731505; Tue, 06 Jun
+ 2023 11:22:11 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230606223752.65dd725c04b11346b45e0546@kernel.org>
+References: <20230601101257.530867-1-rppt@kernel.org> <ZHjDU/mxE+cugpLj@FVFF77S0Q05N.cambridge.arm.com>
+ <ZHjgIH3aX9dCvVZc@moria.home.lan> <ZHm3zUUbwqlsZBBF@FVFF77S0Q05N>
+ <20230605092040.GB3460@kernel.org> <ZH20XkD74prrdN4u@FVFF77S0Q05N>
+In-Reply-To: <ZH20XkD74prrdN4u@FVFF77S0Q05N>
+From:   Song Liu <song@kernel.org>
+Date:   Tue, 6 Jun 2023 11:21:59 -0700
+X-Gmail-Original-Message-ID: <CAPhsuW7ntn_HpVWdGK_hYVd3zsPEFToBNfmtt0m6K8SwfxJ66Q@mail.gmail.com>
+Message-ID: <CAPhsuW7ntn_HpVWdGK_hYVd3zsPEFToBNfmtt0m6K8SwfxJ66Q@mail.gmail.com>
+Subject: Re: [PATCH 00/13] mm: jit/text allocator
+To:     Mark Rutland <mark.rutland@arm.com>
+Cc:     Mike Rapoport <rppt@kernel.org>,
+        Kent Overstreet <kent.overstreet@linux.dev>,
+        linux-kernel@vger.kernel.org,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Christophe Leroy <christophe.leroy@csgroup.eu>,
+        "David S. Miller" <davem@davemloft.net>,
+        Dinh Nguyen <dinguyen@kernel.org>,
+        Heiko Carstens <hca@linux.ibm.com>,
+        Helge Deller <deller@gmx.de>,
+        Huacai Chen <chenhuacai@kernel.org>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        "Naveen N. Rao" <naveen.n.rao@linux.ibm.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Russell King <linux@armlinux.org.uk>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Will Deacon <will@kernel.org>, bpf@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-mips@vger.kernel.org,
+        linux-mm@kvack.org, linux-modules@vger.kernel.org,
+        linux-parisc@vger.kernel.org, linux-riscv@lists.infradead.org,
+        linux-s390@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, loongarch@lists.linux.dev,
+        netdev@vger.kernel.org, sparclinux@vger.kernel.org, x86@kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On Tue, Jun 06, 2023 at 10:37:52PM +0900, Masami Hiramatsu wrote:
-> Hi Beau,
-> 
-> On Thu, 1 Jun 2023 09:29:21 -0700
-> Beau Belgrave <beaub@linux.microsoft.com> wrote:
-> 
-> > > > These are stubs to integrate namespace support. I've been working on a
-> > > > series that adds a tracing namespace support similiar to the IMA
-> > > > namespace work [1]. That series is ending up taking more time than I
-> > > 
-> > > Look, this is all well and nice but you've integrated user events with
-> > > tracefs. This is currently a single-instance global filesystem. So what
-> > > you're effectively implying is that you're namespacing tracefs by
-> > > hanging it off of struct user namespace making it mountable by
-> > > unprivileged users. Or what's the plan?
-> > > 
-> > 
-> > We don't have plans for unprivileged users currently. I think that is a
-> > great goal and requires a proper tracing namespace, which we currently
-> > don't have. I've done some thinking on this, but I would like to hear
-> > your thoughts and others on how to do this properly. We do talk about
-> > this in the tracefs meetings (those might be out of your time zone
-> > unfortunately).
-> > 
-> > > That alone is massive work with _wild_ security implications. My
-> > > appetite for exposing more stuff under user namespaces is very low given
-> > > the amount of CVEs we've had over the years.
-> > > 
-> > 
-> > Ok, I based that approach on the feedback given in LPC 2022 - Containers
-> > and Checkpoint/Retore MC [1]. I believe you gave feedback to use user
-> > namespaces to provide the encapsulation that was required :)
-> 
-> Even with the user namespace, I think we still need to provide separate
-> "eventname-space" for each application, since it may depend on the context
-> who and where it is launched. I think the easiest solution is (perhaps)
-> providing a PID-based new groups for each instance (the PID-prefix or 
-> suffix will be hidden from the application).
-> I think it may not good to allow unprivileged user processes to detect
-> the registered event name each other by default.
-> 
+On Mon, Jun 5, 2023 at 3:09=E2=80=AFAM Mark Rutland <mark.rutland@arm.com> =
+wrote:
 
-Regarding PID, are you referring the PID namespace the application
-resides within? Or the actual single PID of the process?
+[...]
 
-In production we monitor things in sets that encompass more than a
-single application. A requirement we need is the ability to group
-like-processes together for monitoring purposes.
+> > > > Can you give more detail on what parameters you need? If the only e=
+xtra
+> > > > parameter is just "does this allocation need to live close to kerne=
+l
+> > > > text", that's not that big of a deal.
+> > >
+> > > My thinking was that we at least need the start + end for each caller=
+. That
+> > > might be it, tbh.
+> >
+> > Do you mean that modules will have something like
+> >
+> >       jit_text_alloc(size, MODULES_START, MODULES_END);
+> >
+> > and kprobes will have
+> >
+> >       jit_text_alloc(size, KPROBES_START, KPROBES_END);
+> > ?
+>
+> Yes.
 
-We really need a way to know these set of events are for this group, the
-easiest way to do that is by the system name provided on each event. If
-this were to be single PID (and not the PID namespace), then we wouldn't
-be able to achieve this requirement. Ideally an admin would be able to
-setup the name in some way that means something to them in user-space.
+How about we start with two APIs:
+     jit_text_alloc(size);
+     jit_text_alloc_range(size, start, end);
 
-IE: user_events_critical as a system name, vs knowing (user_events_5
-or user_events_6 or user_events_8) are "critical".
+AFAICT, arm64 is the only arch that requires the latter API. And TBH, I am
+not quite convinced it is needed.
 
-Another simple example is the same "application" but it gets exec'd more
-than once. Each time it execs the system name would change if it was
-really by the actual PID vs PID namespace. This would be very hard to
-manage on a perf_event or eBPF level for us. It would also vastly
-increase the number of trace_events that would get created on the
-system.
+>
+> > It sill can be achieved with a single jit_alloc_arch_params(), just by
+> > adding enum jit_type parameter to jit_text_alloc().
+>
+> That feels backwards to me; it centralizes a bunch of information about
+> distinct users to be able to shove that into a static array, when the cal=
+lsites
+> can pass that information.
 
-> > 
-> > > > anticipated.
-> > > 
-> > > Yet you were confident enough to leave the namespacing stubs for this
-> > > functionality in the code. ;)
-> > > 
-> > > What is the overall goal here? Letting arbitrary unprivileged containers
-> > > define their own custom user event type by mounting tracefs inside
-> > > unprivileged containers? If so, what security story is going to
-> > > guarantee that writing arbitrary tracepoints from random unprivileged
-> > > containers is safe?
-> > > 
-> > 
-> > Unprivileged containers is not a goal, however, having a per-pod
-> > user_event system name, such as user_event_<pod_name>, would be ideal
-> > for certain diagnostic scenarios, such as monitoring the entire pod.
-> 
-> That can be done in the user-space tools, not in the kernel.
-> 
+I think we only two type of users: module and everything else (ftrace, kpro=
+be,
+bpf stuff). The key differences are:
 
-Right, during k8s pod creation we would create the group and name it
-something that makes sense to the operator as an example. I'm sure there
-are lots of scenarios user-space can do. However, they almost always
-involve more than 1 application together in our scenarios.
+  1. module uses text and data; while everything else only uses text.
+  2. module code is generated by the compiler, and thus has stronger
+  requirements in address ranges; everything else are generated via some
+  JIT or manual written assembly, so they are more flexible with address
+  ranges (in JIT, we can avoid using instructions that requires a specific
+  address range).
 
-> > When you have a lot of containers, you also want to limit how many
-> > tracepoints each container can create, even if they are given access to
-> > the tracefs file. The per-group can limit how many events/tracepoints
-> > that container can go create, since we currently only have 16-bit
-> > identifiers for trace_event's we need to be cautious we don't run out.
-> 
-> I agree, we need to have a knob to limit it to avoid DoS attack.
-> 
-> > user_events in general has tracepoint validators to ensure the payloads
-> > coming in are "safe" from what the kernel might do with them, such as
-> > filtering out data.
-> 
-> [...]
-> > > > changing the system name of user_events on a per-namespace basis.
-> > > 
-> > > What is the "system name" and how does it protect against namespaces
-> > > messing with each other?
-> > 
-> > trace_events in the tracing facility require both a system name and an
-> > event name. IE: sched/sched_waking, sched is the system name,
-> > sched_waking is the event name. For user_events in the root group, the
-> > system name is "user_events". When groups are introduced, the system
-> > name can be "user_events_<GUID>" for example.
-> 
-> So my suggestion is using PID in root pid namespace instead of GUID
-> by default.
-> 
+The next question is, can we have the two types of users share the same
+address ranges? If not, we can reserve the preferred range for modules,
+and let everything else use the other range. I don't see reasons to further
+separate users in the "everything else" group.
 
-By default this would be fine as long as admins can change this to a larger
-group before activation for our purposes. PID however, might be a bit
-too granular of an identifier for our scenarios as I've explained above.
+>
+> What's *actually* common after separating out the ranges? Is it just the
+> permissions?
 
-I think these logical steps make sense:
-1. Create "event namespace" (Default system name suffix, max count)
-2. Setup "event namespace" (Change system name suffix, max count)
-3. Attach "event namespace"
+I believe permission is the key, as we need the hardware to enforce
+permission.
 
-I'm not sure we know what to attach to in #3 yet, so far both a tracer
-namespace and user namespace have been proposed. I think we need to
-answer that. Right now everything is in the root "event namespace" and
-is simply referred to by default as "user_events" as the system name
-without a suffix, and with the boot configured max event count.
+>
+> If we want this to be able to share allocations and so on, why can't we d=
+o this
+> like a kmem_cache, and have the callsite pass a pointer to the allocator =
+data?
+> That would make it easy for callsites to share an allocator or use a dist=
+inct
+> one.
+
+Sharing among different call sites will give us more benefit (in TLB
+misses rate,
+etc.). For example, a 2MB page may host text of two kernel modules, 4 kprob=
+es,
+6 ftrace trampolines, and 10 BPF programs. All of these only require one en=
+try
+in the iTLB.
 
 Thanks,
--Beau
-
-> Thank you,
-> 
-> 
-> -- 
-> Masami Hiramatsu (Google) <mhiramat@kernel.org>
+Song
