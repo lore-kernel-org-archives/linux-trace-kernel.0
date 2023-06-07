@@ -2,145 +2,260 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DD014C7EE23
-	for <linux-trace-kernel@archiver.kernel.org>; Wed,  7 Jun 2023 13:42:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 69FE2C7EE23
+	for <linux-trace-kernel@archiver.kernel.org>; Wed,  7 Jun 2023 14:08:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235653AbjFGNm5 (ORCPT
+        id S234318AbjFGOIc (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Wed, 7 Jun 2023 09:42:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59028 "EHLO
+        Wed, 7 Jun 2023 10:08:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41614 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234716AbjFGNm4 (ORCPT
+        with ESMTP id S235770AbjFGOIb (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Wed, 7 Jun 2023 09:42:56 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D1E6C1993
-        for <linux-trace-kernel@vger.kernel.org>; Wed,  7 Jun 2023 06:42:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1686145324;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=spKLLuP6O+r1s/hdstXAgJMud94UgSfX2gIBHfXK4vw=;
-        b=fjoPV+ycY9+Dm23t51L2wBmjUSHk2YPH5tfF0HWSUVxdLKZl22rhoJmdo80v+RcCrZvBgx
-        cGR0LeAcNZayYilV1PDtYtH+OI0nhoNK3LfM1wnbh4Il8ZEh4cW1RU+FcG0oiLWS4loqgr
-        YmoajfrK5LJWPt6EYjBJkNNpaJyUZ80=
-Received: from mail-qv1-f72.google.com (mail-qv1-f72.google.com
- [209.85.219.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-421-qcFmgaD_OnKBh3hcmeBEFg-1; Wed, 07 Jun 2023 09:42:04 -0400
-X-MC-Unique: qcFmgaD_OnKBh3hcmeBEFg-1
-Received: by mail-qv1-f72.google.com with SMTP id 6a1803df08f44-62856d3d316so73770656d6.1
-        for <linux-trace-kernel@vger.kernel.org>; Wed, 07 Jun 2023 06:42:03 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1686145323; x=1688737323;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=spKLLuP6O+r1s/hdstXAgJMud94UgSfX2gIBHfXK4vw=;
-        b=N0vZclwe/ek+ZDRkT3zxp5tN/7G/VW6zoijgIAG1NZMau+B/f/A2+wkZ+MEGA/zqtY
-         sGgY4rBYWZ2fx21fvsEOO7gbA67oC6pJqicoFZ6je3mHzeU9hQIOooa/oXVSqvvRmJ3Z
-         dIfXmTQlwrr8xdTZ8jx3KyNOEa3+DQx0PsGJVv9jMZ/7SvsH9qhhszuRf3okPHKtuyfk
-         zcT0RTu4TE6g7eQnaYzFTagaVSLGc/3T3tCv8xv3TZQU9xzGVX9kcLTT+Nf20FHAKBzs
-         eO7RL0V/Yp3vjPM6vIg52jTdAyyHEqYWmWtL7Oq1aF4evJU4AmX+CvO2+3230rlQ3lax
-         1C2g==
-X-Gm-Message-State: AC+VfDyywlOdaLBsolc1LQFdJZHHVeV0SODJ0DO1dWpEtlpHVCZazzwI
-        Uoxgz33/bypy8ahOn6LdFEF3OTFdomkk8k4u4Nvd0LbZ2EZO6dVONWU54eq9QzFbI/JUNUrX6XR
-        v8InQrKj5PDXlhrCxK64kEPkXnId35XrR4At0KCKj
-X-Received: by 2002:a05:620a:8d1:b0:75e:c57b:474c with SMTP id z17-20020a05620a08d100b0075ec57b474cmr2068446qkz.13.1686145323169;
-        Wed, 07 Jun 2023 06:42:03 -0700 (PDT)
-X-Google-Smtp-Source: ACHHUZ5l7U5JgSV5T13cY5RpvTXXPfzQF/3Pku47suOZclV2+2Jk7neTSNpvNSmo/U6zAtW9LufRcg==
-X-Received: by 2002:a05:620a:8d1:b0:75e:c57b:474c with SMTP id z17-20020a05620a08d100b0075ec57b474cmr2068424qkz.13.1686145322889;
-        Wed, 07 Jun 2023 06:42:02 -0700 (PDT)
-Received: from optiplex-fbsd (c-73-249-122-233.hsd1.nh.comcast.net. [73.249.122.233])
-        by smtp.gmail.com with ESMTPSA id c25-20020a05620a11b900b0075c9e048b19sm3139720qkk.29.2023.06.07.06.42.01
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 07 Jun 2023 06:42:02 -0700 (PDT)
-Date:   Wed, 7 Jun 2023 09:41:59 -0400
-From:   Rafael Aquini <aquini@redhat.com>
-To:     Andrew Morton <akpm@linux-foundation.org>
-Cc:     Yafang Shao <laoar.shao@gmail.com>, linux-kernel@vger.kernel.org,
-        linux-trace-kernel@vger.kernel.org, linux-mm@kvack.org,
-        stable@vger.kernel.org, Aristeu Rozanski <aris@redhat.com>
-Subject: Re: [PATCH] writeback: fix dereferencing NULL mapping->host on
- writeback_page_template
-Message-ID: <ZICJJxBtxoy_Jz8u@optiplex-fbsd>
-References: <20230606233613.1290819-1-aquini@redhat.com>
- <20230606174448.ba45510067bcb35b9ac7e739@linux-foundation.org>
-MIME-Version: 1.0
-In-Reply-To: <20230606174448.ba45510067bcb35b9ac7e739@linux-foundation.org>
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+        Wed, 7 Jun 2023 10:08:31 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7B39E2111;
+        Wed,  7 Jun 2023 07:08:08 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 91DFA63FD4;
+        Wed,  7 Jun 2023 14:07:08 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1F951C433EF;
+        Wed,  7 Jun 2023 14:07:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1686146828;
+        bh=UV2zssrn4SLa819wdBOQcAyVUiKzBt5trejALTuMqCo=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=su5lxnVILPzLHMe7TtugCI/lxooWR5AMDMrBjZ0s8jslwoPu6LQsL8xjMmAAUXlvv
+         zxa9Xqo5XTConvVviM+BEvf25rWGFeLFduJG4ZiZVhjwJBMGr6ilCjoTMVGv1NlwLa
+         dykHXQ4FNbGaEYe08Z2iLqC/12cmfhmTSfnDCrRtQkUcxBekGs/0ebabMvJrh7QcC/
+         P3wRBJcedDilvIIwO8WBGGBZFZzH2bNBkk+IIDyWdk49E8NpLBhT+U8h5exU/9m9RZ
+         eebTj3ybfInRDUr5cVsxxTneMQ74nsSbwcNd+QMY7JExQmw8ZAcIhQcXlHDY/riIop
+         BofGH4GOd3NHQ==
+Date:   Wed, 7 Jun 2023 23:07:02 +0900
+From:   Masami Hiramatsu (Google) <mhiramat@kernel.org>
+To:     Beau Belgrave <beaub@linux.microsoft.com>
+Cc:     Christian Brauner <brauner@kernel.org>,
+        Alexei Starovoitov <alexei.starovoitov@gmail.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-trace-kernel@vger.kernel.org,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Andrii Nakryiko <andrii@kernel.org>, bpf <bpf@vger.kernel.org>,
+        David Vernet <void@manifault.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Dave Thaler <dthaler@microsoft.com>,
+        Christoph Hellwig <hch@infradead.org>
+Subject: Re: [PATCH] tracing/user_events: Run BPF program if attached
+Message-Id: <20230607230702.03c6d3a213d527a221bdc533@kernel.org>
+In-Reply-To: <20230606170549.GA71@W11-BEAU-MD.localdomain>
+References: <20230515192407.GA85@W11-BEAU-MD.localdomain>
+        <20230517003628.aqqlvmzffj7fzzoj@MacBook-Pro-8.local>
+        <20230516212658.2f5cc2c6@gandalf.local.home>
+        <20230517165028.GA71@W11-BEAU-MD.localdomain>
+        <CAADnVQK3-NBLSVRVsgArUEjqsuY2S_8mWsWmLEAtTzo+U49CKQ@mail.gmail.com>
+        <20230601-urenkel-holzofen-cd9403b9cadd@brauner>
+        <20230601152414.GA71@W11-BEAU-MD.localdomain>
+        <20230601-legten-festplatten-fe053c6f16a4@brauner>
+        <20230601162921.GA152@W11-BEAU-MD.localdomain>
+        <20230606223752.65dd725c04b11346b45e0546@kernel.org>
+        <20230606170549.GA71@W11-BEAU-MD.localdomain>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On Tue, Jun 06, 2023 at 05:44:48PM -0700, Andrew Morton wrote:
-> On Tue,  6 Jun 2023 19:36:13 -0400 Rafael Aquini <aquini@redhat.com> wrote:
+On Tue, 6 Jun 2023 10:05:49 -0700
+Beau Belgrave <beaub@linux.microsoft.com> wrote:
+
+> On Tue, Jun 06, 2023 at 10:37:52PM +0900, Masami Hiramatsu wrote:
+> > Hi Beau,
+> > 
+> > On Thu, 1 Jun 2023 09:29:21 -0700
+> > Beau Belgrave <beaub@linux.microsoft.com> wrote:
+> > 
+> > > > > These are stubs to integrate namespace support. I've been working on a
+> > > > > series that adds a tracing namespace support similiar to the IMA
+> > > > > namespace work [1]. That series is ending up taking more time than I
+> > > > 
+> > > > Look, this is all well and nice but you've integrated user events with
+> > > > tracefs. This is currently a single-instance global filesystem. So what
+> > > > you're effectively implying is that you're namespacing tracefs by
+> > > > hanging it off of struct user namespace making it mountable by
+> > > > unprivileged users. Or what's the plan?
+> > > > 
+> > > 
+> > > We don't have plans for unprivileged users currently. I think that is a
+> > > great goal and requires a proper tracing namespace, which we currently
+> > > don't have. I've done some thinking on this, but I would like to hear
+> > > your thoughts and others on how to do this properly. We do talk about
+> > > this in the tracefs meetings (those might be out of your time zone
+> > > unfortunately).
+> > > 
+> > > > That alone is massive work with _wild_ security implications. My
+> > > > appetite for exposing more stuff under user namespaces is very low given
+> > > > the amount of CVEs we've had over the years.
+> > > > 
+> > > 
+> > > Ok, I based that approach on the feedback given in LPC 2022 - Containers
+> > > and Checkpoint/Retore MC [1]. I believe you gave feedback to use user
+> > > namespaces to provide the encapsulation that was required :)
+> > 
+> > Even with the user namespace, I think we still need to provide separate
+> > "eventname-space" for each application, since it may depend on the context
+> > who and where it is launched. I think the easiest solution is (perhaps)
+> > providing a PID-based new groups for each instance (the PID-prefix or 
+> > suffix will be hidden from the application).
+> > I think it may not good to allow unprivileged user processes to detect
+> > the registered event name each other by default.
+> > 
 > 
-> > When commit 19343b5bdd16 ("mm/page-writeback: introduce tracepoint for
-> > wait_on_page_writeback()") repurposed the writeback_dirty_page trace event
-> > as a template to create its new wait_on_page_writeback trace event, it
-> > ended up opening a window to NULL pointer dereference crashes due to
-> > the (infrequent) occurrence of a race where an access to a page in the
-> > swap-cache happens concurrently with the moment this page is being
-> > written to disk and the tracepoint is enabled:
+> Regarding PID, are you referring the PID namespace the application
+> resides within? Or the actual single PID of the process?
+
+I meant the actual single PID of the process. That will be the safest
+way by default.
+
 > 
-> I don't see what the race is, or why a race is involved.
+> In production we monitor things in sets that encompass more than a
+> single application. A requirement we need is the ability to group
+> like-processes together for monitoring purposes.
 > 
-> >     BUG: kernel NULL pointer dereference, address: 0000000000000040
-> >     #PF: supervisor read access in kernel mode
-> >     #PF: error_code(0x0000) - not-present page
-> >     PGD 800000010ec0a067 P4D 800000010ec0a067 PUD 102353067 PMD 0
-> >     Oops: 0000 [#1] PREEMPT SMP PTI
-> >     CPU: 1 PID: 1320 Comm: shmem-worker Kdump: loaded Not tainted 6.4.0-rc5+ #13
-> >     Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS edk2-20230301gitf80f052277c8-1.fc37 03/01/2023
-> >     RIP: 0010:trace_event_raw_event_writeback_folio_template+0x76/0xf0
-> >     Code: 4d 85 e4 74 5c 49 8b 3c 24 e8 06 98 ee ff 48 89 c7 e8 9e 8b ee ff ba 20 00 00 00 48 89 ef 48 89 c6 e8 fe d4 1a 00 49 8b 04 24 <48> 8b 40 40 48 89 43 28 49 8b 45 20 48 89 e7 48 89 43 30 e8 a2 4d
-> >     RSP: 0000:ffffaad580b6fb60 EFLAGS: 00010246
-> >     RAX: 0000000000000000 RBX: ffff90e38035c01c RCX: 0000000000000000
-> >     RDX: 0000000000000000 RSI: 0000000000000000 RDI: ffff90e38035c044
-> >     RBP: ffff90e38035c024 R08: 0000000000000002 R09: 0000000000000006
-> >     R10: ffff90e38035c02e R11: 0000000000000020 R12: ffff90e380bac000
-> >     R13: ffffe3a7456d9200 R14: 0000000000001b81 R15: ffffe3a7456d9200
-> >     FS:  00007f2e4e8a15c0(0000) GS:ffff90e3fbc80000(0000) knlGS:0000000000000000
-> >     CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> >     CR2: 0000000000000040 CR3: 00000001150c6003 CR4: 0000000000170ee0
-> >     Call Trace:
-> >      <TASK>
-> >      ? __die+0x20/0x70
-> >      ? page_fault_oops+0x76/0x170
-> >      ? kernelmode_fixup_or_oops+0x84/0x110
-> >      ? exc_page_fault+0x65/0x150
-> >      ? asm_exc_page_fault+0x22/0x30
-> >      ? trace_event_raw_event_writeback_folio_template+0x76/0xf0
-> >      folio_wait_writeback+0x6b/0x80
-> >      shmem_swapin_folio+0x24a/0x500
+> We really need a way to know these set of events are for this group, the
+> easiest way to do that is by the system name provided on each event. If
+> this were to be single PID (and not the PID namespace), then we wouldn't
+> be able to achieve this requirement. Ideally an admin would be able to
+> setup the name in some way that means something to them in user-space.
+
+Would you mean using the same events between several different processes?
+I think it needs more care about security concerns. More on this later.
+
+If not, I think admin has a way to identify which processes are running in
+the same group outside of ftrace, and can set the filter correctly.
+
 > 
-> shmem_swapin_folio->folio_wait_writeback will always pass in a page
-> which has ->mapping==NULL, won't it?  So why doesn't it crash every
-> time?
->
+> IE: user_events_critical as a system name, vs knowing (user_events_5
+> or user_events_6 or user_events_8) are "critical".
 
-Hey Andrew,
+My thought is the latter. Then the process can not access to the
+other process's namespace each other.
 
-Here's why we end up looking at the swapper_spaces[] address space, for
-this particular case:
+> 
+> Another simple example is the same "application" but it gets exec'd more
+> than once. Each time it execs the system name would change if it was
+> really by the actual PID vs PID namespace. This would be very hard to
+> manage on a perf_event or eBPF level for us. It would also vastly
+> increase the number of trace_events that would get created on the
+> system.
 
-void folio_wait_writeback(struct folio *folio)
-{
-    while (folio_test_writeback(folio)) {
-        trace_folio_wait_writeback(folio, folio_mapping(folio));
-            struct address_space *folio_mapping(struct folio *folio)
-            ... 
-                if (unlikely(folio_test_swapcache(folio)))
-                    return swap_address_space(folio_swap_entry(folio));
+Indeed. But fundamentally allowing user to create (register) the new 
+event means such DoS attack can happen. That's why we have a limitation
+of the max number of user_events. (BTW, I want to make this number
+controllable from sysctl or tracefs. Also, we need something against the
+event-id space contamination by this DoS attack.) 
+I also think it would be better to have some rate-limit about registering
+new events.
 
-when the shmem swap-in path stumbles on a page in the swapcache that is still
-under its way to disk (via swap_writepage->swap_writepage_bdev_async->submit_bio)
-the tracepoint, will get a swap_address_space pointer back from folio_mapping()
+> 
+> > > 
+> > > > > anticipated.
+> > > > 
+> > > > Yet you were confident enough to leave the namespacing stubs for this
+> > > > functionality in the code. ;)
+> > > > 
+> > > > What is the overall goal here? Letting arbitrary unprivileged containers
+> > > > define their own custom user event type by mounting tracefs inside
+> > > > unprivileged containers? If so, what security story is going to
+> > > > guarantee that writing arbitrary tracepoints from random unprivileged
+> > > > containers is safe?
+> > > > 
+> > > 
+> > > Unprivileged containers is not a goal, however, having a per-pod
+> > > user_event system name, such as user_event_<pod_name>, would be ideal
+> > > for certain diagnostic scenarios, such as monitoring the entire pod.
+> > 
+> > That can be done in the user-space tools, not in the kernel.
+> > 
+> 
+> Right, during k8s pod creation we would create the group and name it
+> something that makes sense to the operator as an example. I'm sure there
+> are lots of scenarios user-space can do. However, they almost always
+> involve more than 1 application together in our scenarios.
+
+Yeah, if it is always used with k8s in the backend servers, it maybe OK.
+But if it is used in more unreliable environment, we need to consider
+about malicious normal users.
+
+> 
+> > > When you have a lot of containers, you also want to limit how many
+> > > tracepoints each container can create, even if they are given access to
+> > > the tracefs file. The per-group can limit how many events/tracepoints
+> > > that container can go create, since we currently only have 16-bit
+> > > identifiers for trace_event's we need to be cautious we don't run out.
+> > 
+> > I agree, we need to have a knob to limit it to avoid DoS attack.
+> > 
+> > > user_events in general has tracepoint validators to ensure the payloads
+> > > coming in are "safe" from what the kernel might do with them, such as
+> > > filtering out data.
+> > 
+> > [...]
+> > > > > changing the system name of user_events on a per-namespace basis.
+> > > > 
+> > > > What is the "system name" and how does it protect against namespaces
+> > > > messing with each other?
+> > > 
+> > > trace_events in the tracing facility require both a system name and an
+> > > event name. IE: sched/sched_waking, sched is the system name,
+> > > sched_waking is the event name. For user_events in the root group, the
+> > > system name is "user_events". When groups are introduced, the system
+> > > name can be "user_events_<GUID>" for example.
+> > 
+> > So my suggestion is using PID in root pid namespace instead of GUID
+> > by default.
+> > 
+> 
+> By default this would be fine as long as admins can change this to a larger
+> group before activation for our purposes. PID however, might be a bit
+> too granular of an identifier for our scenarios as I've explained above.
+> 
+> I think these logical steps make sense:
+> 1. Create "event namespace" (Default system name suffix, max count)
+> 2. Setup "event namespace" (Change system name suffix, max count)
+> 3. Attach "event namespace"
+> 
+> I'm not sure we know what to attach to in #3 yet, so far both a tracer
+> namespace and user namespace have been proposed. I think we need to
+> answer that. Right now everything is in the root "event namespace" and
+> is simply referred to by default as "user_events" as the system name
+> without a suffix, and with the boot configured max event count.
+
+OK, so I think we are on the same page :)
+
+I think the user namespace is not enough for protecting events on
+multi-user system without containers. So it has less flexibility.
+The new tracer namespace may be OK, we still need a helper user
+program like 'user_eventd' for managing access based on some policy.
+If we have a way to manage it with SELinux etc. it will be the best
+I think. (Perhaps using UNIX domain socket will give us such flexibility.)
+
+Thank you,
+
+> 
+> Thanks,
+> -Beau
+> 
+> > Thank you,
+> > 
+> > 
+> > -- 
+> > Masami Hiramatsu (Google) <mhiramat@kernel.org>
 
 
-
+-- 
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
