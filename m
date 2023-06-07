@@ -2,138 +2,149 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D8EAC7EE2F
-	for <linux-trace-kernel@archiver.kernel.org>; Wed,  7 Jun 2023 16:42:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C4893C77B7A
+	for <linux-trace-kernel@archiver.kernel.org>; Wed,  7 Jun 2023 19:17:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229837AbjFGQmh (ORCPT
+        id S229974AbjFGTRA (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Wed, 7 Jun 2023 12:42:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60824 "EHLO
+        Wed, 7 Jun 2023 15:17:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42384 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229641AbjFGQmh (ORCPT
+        with ESMTP id S229580AbjFGTQ7 (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Wed, 7 Jun 2023 12:42:37 -0400
-Received: from mail-pg1-x535.google.com (mail-pg1-x535.google.com [IPv6:2607:f8b0:4864:20::535])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 67D871FD7;
-        Wed,  7 Jun 2023 09:42:34 -0700 (PDT)
-Received: by mail-pg1-x535.google.com with SMTP id 41be03b00d2f7-528cdc9576cso3858536a12.0;
-        Wed, 07 Jun 2023 09:42:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1686156154; x=1688748154;
-        h=content-disposition:mime-version:message-id:subject:cc:to:date:from
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=pNtQsqwcFl/cHA8FXUAC3pwd32NzZkO9EqSyIbOcyco=;
-        b=lqBbMWYtgQwb2e9GiOTqPvz4mdI1YVqPmHtmWQCmULRjFGUp84mM12ddNWfwBc//37
-         jt5oQnwu3g/vfBjBhX6IiXwYKLsuOw2ryTvyeEkXSgpZTJryxVHarPq0rOAd85HkIPF+
-         2q5Fcv81XB5jIzLz+sdydNl1i4/b/uayaqZsZ059DoGa8+VbvY3WebXon92xlrkOJdvN
-         Uq8ECg4lBA3QdwoIIISprFaq6QydgjKll46UHhbL2wKyi3rz/Ywqp1K852xtCQ2fy04x
-         OaxTe16+p19NFT9T/RB6YZ4/pesvMvWwRJ6UQn/Gig4Px2c2v2trO5SkaBrjjQwlEEFe
-         RhZw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1686156154; x=1688748154;
-        h=content-disposition:mime-version:message-id:subject:cc:to:date:from
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=pNtQsqwcFl/cHA8FXUAC3pwd32NzZkO9EqSyIbOcyco=;
-        b=SgEf1TZiZ3jUrZcHxzq2d85yaRfGczzQiYI674RCQ7KkCGiKJOszSRHtdJboCEhNo/
-         YD0baKPMH3iA8o/NdnD8cJVWf6mR+1eCZyUthq3khowmPuk5cJ52obw8P1U8DqP7YsBA
-         1MBtjc+JC/v6XSYKO67hWqoxnEqU4JDOXR3RJZoSRL7BLwt/H+Q2Kx/OJteOkGjW/+IL
-         uZ5Pjnlh/HYwOhEvIp4nLgQjvJaaAuLgvEFcPk+BZBSiH77wLSZBHjKaAIY+H9cru3UD
-         XrYaR6UxT0cfI+szyKR9Z6yWATo/0bApTtUepuAi6jRyKzGUokP6RLXrBFNep99QF24y
-         HJsg==
-X-Gm-Message-State: AC+VfDx46sg/Xp7gVpWbuiOOoH+AjWbVzE//fC4LsK+vyG31z1CQsed6
-        N5MvVRTuqnq3zZxgOPq3luA=
-X-Google-Smtp-Source: ACHHUZ5x797qgEOmmP2yN4igJvBd6Ap5yVl4IpECKeDgF/IM4SX0es4JjtuBNb4zxg647LMBjGShkQ==
-X-Received: by 2002:a17:902:d487:b0:1b0:46af:7f15 with SMTP id c7-20020a170902d48700b001b046af7f15mr3229541plg.64.1686156153623;
-        Wed, 07 Jun 2023 09:42:33 -0700 (PDT)
-Received: from krava (c-67-160-222-115.hsd1.ca.comcast.net. [67.160.222.115])
-        by smtp.gmail.com with ESMTPSA id g16-20020a170902869000b001b02162c86bsm10703357plo.80.2023.06.07.09.42.32
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 07 Jun 2023 09:42:33 -0700 (PDT)
-From:   Jiri Olsa <olsajiri@gmail.com>
-X-Google-Original-From: Jiri Olsa <jolsa@kernel.org>
-Date:   Wed, 7 Jun 2023 09:42:30 -0700
-To:     "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Linux Trace Kernel <linux-trace-kernel@vger.kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>, bpf@vger.kernel.org
-Subject: [RFC] fprobe call of rethook_try_get faults
-Message-ID: <ZICzdpvp46Xk1rIv@krava>
+        Wed, 7 Jun 2023 15:16:59 -0400
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 5196C19D;
+        Wed,  7 Jun 2023 12:16:58 -0700 (PDT)
+Received: from W11-BEAU-MD.localdomain (unknown [76.135.27.212])
+        by linux.microsoft.com (Postfix) with ESMTPSA id 73C4520C1440;
+        Wed,  7 Jun 2023 12:16:57 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 73C4520C1440
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+        s=default; t=1686165417;
+        bh=pYYzhbmZt7Sf9oZRbG0KFxG6URBGYIxxrSNs2hGYJ2w=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=Otze/uJzHUvL8i48n/kF0mN8sq3q2ZphOdehU36zn7kHx0P8VHNbMjp0GAhkMwOuJ
+         3Yb7syLKS28tSprq5Rzemogz60k0UCU94KONTb/szKuQmAYivGyBbw0GLb9swPMvB8
+         UDzfLfL0O1xxclFqA+XlF0OorjbCAfypF18vRtc8=
+Date:   Wed, 7 Jun 2023 12:16:52 -0700
+From:   Beau Belgrave <beaub@linux.microsoft.com>
+To:     Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Cc:     Christian Brauner <brauner@kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-trace-kernel@vger.kernel.org,
+        Alexei Starovoitov <ast@kernel.org>, dcook@linux.microsoft.com
+Subject: Re: [PATCH v2 3/5] tracing/user_events: Add auto cleanup and a flag
+ to persist events
+Message-ID: <20230607191652.GA85@W11-BEAU-MD.localdomain>
+References: <20230605233900.2838-1-beaub@linux.microsoft.com>
+ <20230605233900.2838-4-beaub@linux.microsoft.com>
+ <CAADnVQL3bJaXW6mzTrTFTbAyCaBfiHYet+gNorF1N69a0X5TXQ@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAADnVQL3bJaXW6mzTrTFTbAyCaBfiHYet+gNorF1N69a0X5TXQ@mail.gmail.com>
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-hi,
-I occasionally get following fault:
+On Tue, Jun 06, 2023 at 06:26:56PM -0700, Alexei Starovoitov wrote:
+> On Mon, Jun 5, 2023 at 4:39 PM Beau Belgrave <beaub@linux.microsoft.com> wrote:
+> > +       /*
+> > +        * When the event is not enabled for auto-delete there will always
+> > +        * be at least 1 reference to the event. During the event creation
+> > +        * we initially set the refcnt to 2 to achieve this. In those cases
+> > +        * the caller must acquire event_mutex and after decrement check if
+> > +        * the refcnt is 1, meaning this is the last reference. When auto
+> > +        * delete is enabled, there will only be 1 ref, IE: refcnt will be
+> > +        * only set to 1 during creation to allow the below checks to go
+> > +        * through upon the last put. The last put must always be done with
+> > +        * the event mutex held.
+> > +        */
+> > +       if (!locked) {
+> > +               lockdep_assert_not_held(&event_mutex);
+> > +               delete = refcount_dec_and_mutex_lock(&user->refcnt, &event_mutex);
+> > +       } else {
+> > +               lockdep_assert_held(&event_mutex);
+> > +               delete = refcount_dec_and_test(&user->refcnt);
+> > +       }
+> > +
+> > +       if (!delete)
+> > +               return;
+> > +
+> > +       /* We now have the event_mutex in all cases */
+> > +
+> > +       if (user->reg_flags & USER_EVENT_REG_PERSIST) {
+> > +               /* We should not get here when persist flag is set */
+> > +               pr_alert("BUG: Auto-delete engaged on persistent event\n");
+> > +               goto out;
+> > +       }
+> > +
+> > +       /*
+> > +        * Unfortunately we have to attempt the actual destroy in a work
+> > +        * queue. This is because not all cases handle a trace_event_call
+> > +        * being removed within the class->reg() operation for unregister.
+> > +        */
+> > +       INIT_WORK(&user->put_work, delayed_destroy_user_event);
+> > +
+> > +       /*
+> > +        * Since the event is still in the hashtable, we have to re-inc
+> > +        * the ref count to 1. This count will be decremented and checked
+> > +        * in the work queue to ensure it's still the last ref. This is
+> > +        * needed because a user-process could register the same event in
+> > +        * between the time of event_mutex release and the work queue
+> > +        * running the delayed destroy. If we removed the item now from
+> > +        * the hashtable, this would result in a timing window where a
+> > +        * user process would fail a register because the trace_event_call
+> > +        * register would fail in the tracing layers.
+> > +        */
+> > +       refcount_set(&user->refcnt, 1);
+> 
+> The recnt-ing scheme is quite unorthodox.
 
-  general protection fault, probably for non-canonical address 0x6b6b6b6b6b6b6b6b: 0000 [#1] PREEMPT SMP DEBUG_PAGEALLOC NOPTI
-  CPU: 3 PID: 28438 Comm: test_progs Tainted: G           OE      6.4.0-rc3+ #448 dad92bc91c459c664b308990ada0799837010e31
-  Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.2-1.fc37 04/01/2014
-  RIP: 0010:rethook_try_get+0x34/0xf0
-  Code: 48 8b 47 08 85 d2 74 0b 65 8b 15 af 26 eb 7e 85 d2 74 57 48 85 c0 74 73 e8 39 8e f0 ff 84 c0 74 6a 48 8b 53 10 48 85 d2 74 >
-  RSP: 0018:ffffc90003ccfcf0 EFLAGS: 00010202
-  RAX: 0000000000000001 RBX: ffff88810920db40 RCX: 0000000000000003
-  RDX: 6b6b6b6b6b6b6b6b RSI: ffffffff82c0a371 RDI: ffffffff82bcbddb
-  RBP: ffffffff81f5a5f0 R08: 0000000000000001 R09: 0000000000000000
-  R10: 0000000000000000 R11: 0000000000014000 R12: ffffffffa02ec3f2
-  R13: fffffffffffffff7 R14: ffffc90003ccfd38 R15: 0000000000000000
-  FS:  00007f2f8195eb80(0000) GS:ffff88846da00000(0000) knlGS:0000000000000000
-  CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-  CR2: 00007f2f819c0140 CR3: 0000000189cb8006 CR4: 0000000000770ee0
-  PKRU: 55555554
-  Call Trace:
-   <TASK>
-   fprobe_handler+0xc1/0x270
-   ? __pfx_bpf_testmod_init+0x10/0x10 [bpf_testmod b0bc3019aa6d6bdb2afc30cf6381f510d7e5abbe]
-   ? __pfx_bpf_testmod_init+0x10/0x10 [bpf_testmod b0bc3019aa6d6bdb2afc30cf6381f510d7e5abbe]
-   ? bpf_fentry_test1+0x5/0x10
-   ? bpf_fentry_test1+0x5/0x10
-   ? bpf_testmod_init+0x22/0x80 [bpf_testmod b0bc3019aa6d6bdb2afc30cf6381f510d7e5abbe]
-   ? do_one_initcall+0x63/0x2e0
-   ? rcu_is_watching+0xd/0x40
-   ? kmalloc_trace+0xaf/0xc0
-   ? do_init_module+0x60/0x250
-   ? __do_sys_finit_module+0xac/0x120
-   ? do_syscall_64+0x37/0x90
-   ? entry_SYSCALL_64_after_hwframe+0x72/0xdc
-   </TASK>
-  Modules linked in: bpf_testmod(OE+) loop bpf_preload intel_rapl_msr intel_rapl_common crct10dif_pclmul crc32_pclmul crc32c_intel >
+Yes, it's unfortunately because we have to keep the event in the hashtable.
 
+Typically we'd just remove the event from the hashtable, ref_dec and
+then upon final ref_dec free it. The problem with that is the event in
+the hashtable is an actual trace_event exposed via tracefs/perf. It
+prevents us from removing it at this time as the comment tries to
+explain.
 
-I can't really reliable reproduce this, but while checking the code, I wonder
-we should call rethook_free only after we call unregister_ftrace_function like
-in the patch below
+> Atomically decrementing it to zero and then immediately set it back to 1?
+> Smells racy.
 
-jirka
+Thanks for pointing this out, I likely need another comment in the code
+explaining why this is ok.
 
+It might smell that way :) But the only way once it's zero to get
+another reference is by acquiring event_mutex and then calling
+find_user_event(). This is why it's important that at this phase we hold
+the event_mutex in all cases.
 
----
-diff --git a/kernel/trace/fprobe.c b/kernel/trace/fprobe.c
-index 18d36842faf5..0121e8c0d54e 100644
---- a/kernel/trace/fprobe.c
-+++ b/kernel/trace/fprobe.c
-@@ -364,19 +364,13 @@ int unregister_fprobe(struct fprobe *fp)
- 		    fp->ops.saved_func != fprobe_kprobe_handler))
- 		return -EINVAL;
- 
--	/*
--	 * rethook_free() starts disabling the rethook, but the rethook handlers
--	 * may be running on other processors at this point. To make sure that all
--	 * current running handlers are finished, call unregister_ftrace_function()
--	 * after this.
--	 */
--	if (fp->rethook)
--		rethook_free(fp->rethook);
--
- 	ret = unregister_ftrace_function(&fp->ops);
- 	if (ret < 0)
- 		return ret;
- 
-+	if (fp->rethook)
-+		rethook_free(fp->rethook);
-+
- 	ftrace_free_filter(&fp->ops);
- 
- 	return ret;
+> Another process can go through the same code and do another dec and set to 1
+> and we'll have two work queued?
+
+Once we set it to 1, we cannot get into this code path again until the
+work that was queued is finished. The scheduled work acquires
+event_mutex and ensures it's still the last reference before doing any
+actual deletion or a refcount_dec that would allow for another work
+queue via this path.
+
+> Will mutex_lock help somehow? If yes, then why atomic refcnt?
+
+I hopefully fully explained the mutex_lock above, if it's confusing
+still let me know. The rason for the atomic refcnt though is because you
+initially get a reference to a user_event via find_user_event() under
+the lock, but then each FD (and each enabler) has a reference to the
+underlying user_event (and thus the trace_event). Fork() and enablement
+registers are done outside of this lock for performance reasons. When
+the task exits, we also close down the enablers for that mm/task, and so
+the lock is not there either (and why having the less used
+refcount_dec_and_mutex_lock being required on put when it's not
+acquired).
+
+Thanks,
+-Beau
