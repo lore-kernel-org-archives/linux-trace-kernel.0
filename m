@@ -2,135 +2,91 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 968D9C7EE23
-	for <linux-trace-kernel@archiver.kernel.org>; Thu,  8 Jun 2023 09:51:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 47294C7EE23
+	for <linux-trace-kernel@archiver.kernel.org>; Thu,  8 Jun 2023 17:19:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234006AbjFHJvA (ORCPT
+        id S235799AbjFHRTf (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Thu, 8 Jun 2023 05:51:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50294 "EHLO
+        Thu, 8 Jun 2023 13:19:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44620 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232759AbjFHJu7 (ORCPT
+        with ESMTP id S236776AbjFHRTe (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Thu, 8 Jun 2023 05:50:59 -0400
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 11B8C26B0;
-        Thu,  8 Jun 2023 02:50:57 -0700 (PDT)
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 34FEAAB6;
-        Thu,  8 Jun 2023 02:51:42 -0700 (PDT)
-Received: from FVFF77S0Q05N (unknown [10.57.24.103])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id B0B0E3F71E;
-        Thu,  8 Jun 2023 02:50:54 -0700 (PDT)
-Date:   Thu, 8 Jun 2023 10:50:51 +0100
-From:   Mark Rutland <mark.rutland@arm.com>
-To:     Steven Rostedt <rostedt@goodmis.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Linux Trace Kernel <linux-trace-kernel@vger.kernel.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Song Liu <song@kernel.org>, live-patching@vger.kernel.org,
-        Kees Cook <keescook@chromium.org>,
-        Miguel Ojeda <ojeda@kernel.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Ingo Molnar <mingo@kernel.org>
-Subject: Re: [PATCH] ftrace: Allow inline functions not inlined to be traced
-Message-ID: <ZIGkezEx87zehzJr@FVFF77S0Q05N>
-References: <20230502164102.1a51cdb4@gandalf.local.home>
+        Thu, 8 Jun 2023 13:19:34 -0400
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 5E14D271D;
+        Thu,  8 Jun 2023 10:19:29 -0700 (PDT)
+Received: from W11-BEAU-MD.localdomain (unknown [76.135.27.212])
+        by linux.microsoft.com (Postfix) with ESMTPSA id 9500F20C145B;
+        Thu,  8 Jun 2023 10:19:28 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 9500F20C145B
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+        s=default; t=1686244768;
+        bh=vHFWL4OmnL1LTZcnfAluMeMCHwhUx7iXNArGhpAQSi8=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=K6XHKEUfkN5VuiTCYtCMbDTGGv6zSKNNBs91L3J+lb8pp1iYn8WFfu/N00LSRc/mZ
+         QYlenr88SGfE8D75o0GQAQs8G4aRETh8oj45NBDOtLZC0LFwsmGmHRxzxZZBGonoV4
+         KDfA7hzWgHHguNI7eh08Di0ydhKriOnKKgSaiSdc=
+Date:   Thu, 8 Jun 2023 10:19:21 -0700
+From:   Beau Belgrave <beaub@linux.microsoft.com>
+To:     sunliming <sunliming@kylinos.cn>
+Cc:     mhiramat@kernel.org, rostedt@goodmis.org, shuah@kernel.org,
+        linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+        linux-kselftest@vger.kernel.org, kelulanainsley@gmail.com
+Subject: Re: [PATCH 1/3] tracing/user_events: Fix incorrect return value for
+ writing operation when events are disabled
+Message-ID: <20230608171921.GA74@W11-BEAU-MD.localdomain>
+References: <20230608011554.1181097-1-sunliming@kylinos.cn>
+ <20230608011554.1181097-2-sunliming@kylinos.cn>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20230502164102.1a51cdb4@gandalf.local.home>
+In-Reply-To: <20230608011554.1181097-2-sunliming@kylinos.cn>
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On Tue, May 02, 2023 at 04:41:02PM -0400, Steven Rostedt wrote:
-> From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
+On Thu, Jun 08, 2023 at 09:15:52AM +0800, sunliming wrote:
+> The writing operation return the count of writes whether events are
+> enabled or disabled. This is incorrect when events are disabled. Fix
+> this by just return -EFAULT when events are disabled.
 > 
-> Over 10 years ago there were many bugs that caused function tracing to
-> crash because some inlined function was not inlined and should not have
-> been traced. This made it hard to debug because when the developer tried
-> to reproduce it, if their compiler still inlined the function, the bug
-> would not trigger. The solution back then was simply to add "notrace" to
-> "inline" which would make sure all functions that are marked inline are
-> never traced even when the compiler decides to not inline them.
+> Signed-off-by: sunliming <sunliming@kylinos.cn>
+> ---
+>  kernel/trace/trace_events_user.c | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
 > 
-> A lot has changed over the last 10 years.
-> 
-> 1) ftrace_test_recursion_trylock() is now used by all ftrace hooks which
->    will prevent the recursive crashes from happening that was caused by
->    inlined functions being traced.
-> 
-> 2) noinstr is now used to mark pretty much all functions that would also
->    cause problems if they are traced.
-> 
-> Today, it is no longer a problem if an inlined function is not inlined and
-> is traced. Removing notrace from inline has been requested several times
-> over the years. I believe it is now safe to do so.
-> 
-> Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+> diff --git a/kernel/trace/trace_events_user.c b/kernel/trace/trace_events_user.c
+> index 1ac5ba5685ed..970bac0503fd 100644
+> --- a/kernel/trace/trace_events_user.c
+> +++ b/kernel/trace/trace_events_user.c
+> @@ -1957,7 +1957,8 @@ static ssize_t user_events_write_core(struct file *file, struct iov_iter *i)
+>  
+>  		if (unlikely(faulted))
+>  			return -EFAULT;
+> -	}
+> +	} else
+> +		return -EFAULT;
+>  
 
-Unfortunately, from a quick build-test of arm64 there are a bunch of places
-that are currently inline that need to be __always_inline for this to be safe.
-Notably we have a few low-level helpers like is_kernel_in_hyp_mode() that are
-only inlines, and those get used in the bowels of our entry code before we've
-restored some HW state (e.g. in arch_nmi_enter()).
+I'm not sure this is a good idea. Imagine this scenario:
+A user process writes out a user_event and it hits a fault that gets
+returned as errno (EFAULT).
 
-I'm happy to go audit and fixup arm64, but that will take some work.
+The user process is likely to either forget it and say, not worth
+retrying, or it will retry (potentially in a loop).
 
-Maybe it's worth having something like:
+If the process does retry and it's now disabled, it might try many
+times.
 
-#ifdef ARCH_CAN_TRACE_INLINE
-#define __notrace_inline
-#else
-#define __notrace_inline	notrace
-#endif
-
-... so that we can opt-in where this is safe, (e.g. on x86)?
+I think that -ENOENT is a better error to use here. That way a user
+process will know it got disabled mid-write vs a fault that might want
+to be re-attempted.
 
 Thanks,
-Mark.
+-Beau
 
-> ---
->  include/linux/compiler_types.h | 7 +++----
->  1 file changed, 3 insertions(+), 4 deletions(-)
-> 
-> diff --git a/include/linux/compiler_types.h b/include/linux/compiler_types.h
-> index 547ea1ff806e..c8f23ba1c339 100644
-> --- a/include/linux/compiler_types.h
-> +++ b/include/linux/compiler_types.h
-> @@ -182,9 +182,8 @@ struct ftrace_likely_data {
->   * externally visible function. This makes extern inline behave as per gnu89
->   * semantics rather than c99. This prevents multiple symbol definition errors
->   * of extern inline functions at link time.
-> - * A lot of inline functions can cause havoc with function tracing.
->   */
-> -#define inline inline __gnu_inline __inline_maybe_unused notrace
-> +#define inline inline __gnu_inline __inline_maybe_unused
->  
->  /*
->   * gcc provides both __inline__ and __inline as alternate spellings of
-> @@ -230,7 +229,7 @@ struct ftrace_likely_data {
->   *     https://gcc.gnu.org/bugzilla/show_bug.cgi?id=67368
->   * '__maybe_unused' allows us to avoid defined-but-not-used warnings.
->   */
-> -# define __no_kasan_or_inline __no_sanitize_address notrace __maybe_unused
-> +# define __no_kasan_or_inline __no_sanitize_address __maybe_unused
->  # define __no_sanitize_or_inline __no_kasan_or_inline
->  #else
->  # define __no_kasan_or_inline __always_inline
-> @@ -247,7 +246,7 @@ struct ftrace_likely_data {
->   * disable all instrumentation. See Kconfig.kcsan where this is mandatory.
->   */
->  # define __no_kcsan __no_sanitize_thread __disable_sanitizer_instrumentation
-> -# define __no_sanitize_or_inline __no_kcsan notrace __maybe_unused
-> +# define __no_sanitize_or_inline __no_kcsan __maybe_unused
->  #else
->  # define __no_kcsan
->  #endif
+>  	return ret;
+>  }
 > -- 
-> 2.39.2
-> 
+> 2.25.1
