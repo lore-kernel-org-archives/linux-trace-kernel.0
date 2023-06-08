@@ -2,79 +2,239 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FC58C7EE23
-	for <linux-trace-kernel@archiver.kernel.org>; Thu,  8 Jun 2023 17:21:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F7E4C7EE23
+	for <linux-trace-kernel@archiver.kernel.org>; Thu,  8 Jun 2023 18:41:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231144AbjFHRVv (ORCPT
+        id S233921AbjFHSlx (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Thu, 8 Jun 2023 13:21:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46566 "EHLO
+        Thu, 8 Jun 2023 14:41:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48406 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236852AbjFHRVu (ORCPT
+        with ESMTP id S229471AbjFHSlw (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Thu, 8 Jun 2023 13:21:50 -0400
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 7D7A72D61;
-        Thu,  8 Jun 2023 10:21:47 -0700 (PDT)
-Received: from W11-BEAU-MD.localdomain (unknown [76.135.27.212])
-        by linux.microsoft.com (Postfix) with ESMTPSA id D83DE20B92C2;
-        Thu,  8 Jun 2023 10:21:46 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com D83DE20B92C2
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-        s=default; t=1686244907;
-        bh=VBaFkE6GX3eC/7r1EJyEukf/dkEnREgtJAdwAFf6fgI=;
+        Thu, 8 Jun 2023 14:41:52 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CE0AB11A;
+        Thu,  8 Jun 2023 11:41:51 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 5B78C6506C;
+        Thu,  8 Jun 2023 18:41:51 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A486DC433D2;
+        Thu,  8 Jun 2023 18:41:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1686249710;
+        bh=4a7fPJtZnT2G3XUHjxk53JytGZ7vtRhXAZPweGPLJ7Y=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=PRUnpGMPyM/oASGKLPfI+Y43/nnlBH8E54/JaJa+Tmz8oum5swWUqwgpBjJEQUTi+
-         NHl0IvSGeGD5SSdRshDGqeVHJR2XdclvYsARIhq6LO23qcB0BbdXucXbgf/ozYtzg6
-         bGshuHgl/6TvS9jcXwAvIFAULQTCQZcux+67tvzk=
-Date:   Thu, 8 Jun 2023 10:21:43 -0700
-From:   Beau Belgrave <beaub@linux.microsoft.com>
-To:     sunliming <sunliming@kylinos.cn>
-Cc:     mhiramat@kernel.org, rostedt@goodmis.org, shuah@kernel.org,
-        linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
-        linux-kselftest@vger.kernel.org, kelulanainsley@gmail.com
-Subject: Re: [PATCH 3/3] selftests/user_events: Add test cases when event is
- disabled
-Message-ID: <20230608172143.GB74@W11-BEAU-MD.localdomain>
-References: <20230608011554.1181097-1-sunliming@kylinos.cn>
- <20230608011554.1181097-4-sunliming@kylinos.cn>
+        b=Zf6igQH5RfRjPL1LLNRp2u8iNNy6O+kF/bGYFX3Nrh8fUdglTmP/qjkVHeDHFuQNr
+         jn2Uh6KySMX6f0GTo02MvlJp6Rv68cW/69I/MFZtSdKzOt0NBFweVHnVybdzHgWXfl
+         KvtLJ4ESmigmI/uc0oNYGCIO7NHmoF2IrKkybPAl+gdBXFQ0P23XDeYWK4z9h15oKv
+         ZKGiTpWdZVp/QxM4gHnWF1LN14ykgAc8/vUL3ndVfxx63Am/uu3wKbhKbUkF+Bi6Ox
+         4oM/zbXXCqLIwER2tnq6O7dDS4+mh/aE4qybCY5QC5PMes/KnyWH9l0FxBIq6F8Dg4
+         8wj5ZhMvd7MFQ==
+Date:   Thu, 8 Jun 2023 21:41:16 +0300
+From:   Mike Rapoport <rppt@kernel.org>
+To:     Song Liu <song@kernel.org>
+Cc:     Mark Rutland <mark.rutland@arm.com>,
+        Kent Overstreet <kent.overstreet@linux.dev>,
+        linux-kernel@vger.kernel.org,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Christophe Leroy <christophe.leroy@csgroup.eu>,
+        "David S. Miller" <davem@davemloft.net>,
+        Dinh Nguyen <dinguyen@kernel.org>,
+        Heiko Carstens <hca@linux.ibm.com>,
+        Helge Deller <deller@gmx.de>,
+        Huacai Chen <chenhuacai@kernel.org>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        "Naveen N. Rao" <naveen.n.rao@linux.ibm.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Russell King <linux@armlinux.org.uk>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Will Deacon <will@kernel.org>, bpf@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-mips@vger.kernel.org,
+        linux-mm@kvack.org, linux-modules@vger.kernel.org,
+        linux-parisc@vger.kernel.org, linux-riscv@lists.infradead.org,
+        linux-s390@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, loongarch@lists.linux.dev,
+        netdev@vger.kernel.org, sparclinux@vger.kernel.org, x86@kernel.org
+Subject: Re: [PATCH 00/13] mm: jit/text allocator
+Message-ID: <20230608184116.GJ52412@kernel.org>
+References: <20230601101257.530867-1-rppt@kernel.org>
+ <ZHjDU/mxE+cugpLj@FVFF77S0Q05N.cambridge.arm.com>
+ <ZHjgIH3aX9dCvVZc@moria.home.lan>
+ <ZHm3zUUbwqlsZBBF@FVFF77S0Q05N>
+ <20230605092040.GB3460@kernel.org>
+ <ZH20XkD74prrdN4u@FVFF77S0Q05N>
+ <CAPhsuW7ntn_HpVWdGK_hYVd3zsPEFToBNfmtt0m6K8SwfxJ66Q@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20230608011554.1181097-4-sunliming@kylinos.cn>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAPhsuW7ntn_HpVWdGK_hYVd3zsPEFToBNfmtt0m6K8SwfxJ66Q@mail.gmail.com>
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On Thu, Jun 08, 2023 at 09:15:54AM +0800, sunliming wrote:
-> When user_events are disabled, it's write operation should be fail. Add
-> this test cases.
+On Tue, Jun 06, 2023 at 11:21:59AM -0700, Song Liu wrote:
+> On Mon, Jun 5, 2023 at 3:09 AM Mark Rutland <mark.rutland@arm.com> wrote:
 > 
-> Signed-off-by: sunliming <sunliming@kylinos.cn>
-> ---
->  tools/testing/selftests/user_events/ftrace_test.c | 3 +++
->  1 file changed, 3 insertions(+)
+> [...]
 > 
-> diff --git a/tools/testing/selftests/user_events/ftrace_test.c b/tools/testing/selftests/user_events/ftrace_test.c
-> index d33bd31425db..d3240a97f23d 100644
-> --- a/tools/testing/selftests/user_events/ftrace_test.c
-> +++ b/tools/testing/selftests/user_events/ftrace_test.c
-> @@ -297,6 +297,9 @@ TEST_F(user, write_events) {
->  	io[0].iov_base = &reg.write_index;
->  	io[0].iov_len = sizeof(reg.write_index);
->  
-> +	/* Write should fail when event is not enabled */
-> +	ASSERT_EQ(-1, writev(self->data_fd, (const struct iovec *)io, 3));
-> +
+> > > > > Can you give more detail on what parameters you need? If the only extra
+> > > > > parameter is just "does this allocation need to live close to kernel
+> > > > > text", that's not that big of a deal.
+> > > >
+> > > > My thinking was that we at least need the start + end for each caller. That
+> > > > might be it, tbh.
+> > >
+> > > Do you mean that modules will have something like
+> > >
+> > >       jit_text_alloc(size, MODULES_START, MODULES_END);
+> > >
+> > > and kprobes will have
+> > >
+> > >       jit_text_alloc(size, KPROBES_START, KPROBES_END);
+> > > ?
+> >
+> > Yes.
+> 
+> How about we start with two APIs:
+>      jit_text_alloc(size);
+>      jit_text_alloc_range(size, start, end);
+> 
+> AFAICT, arm64 is the only arch that requires the latter API. And TBH, I am
+> not quite convinced it is needed.
+ 
+Right now arm64 and riscv override bpf and kprobes allocations to use the
+entire vmalloc address space, but having the ability to allocate generated
+code outside of modules area may be useful for other architectures.
 
-We should also check errno value in this case. See my reply in the other
-patch about -EFAULT vs -ENOENT in this case.
+Still the start + end for the callers feels backwards to me because the
+callers do not define the ranges, but rather the architectures, so we still
+need a way for architectures to define how they want allocate memory for
+the generated code.
 
-Thanks,
--Beau
+> > > It sill can be achieved with a single jit_alloc_arch_params(), just by
+> > > adding enum jit_type parameter to jit_text_alloc().
+> >
+> > That feels backwards to me; it centralizes a bunch of information about
+> > distinct users to be able to shove that into a static array, when the callsites
+> > can pass that information.
+> 
+> I think we only two type of users: module and everything else (ftrace, kprobe,
+> bpf stuff). The key differences are:
+> 
+>   1. module uses text and data; while everything else only uses text.
+>   2. module code is generated by the compiler, and thus has stronger
+>   requirements in address ranges; everything else are generated via some
+>   JIT or manual written assembly, so they are more flexible with address
+>   ranges (in JIT, we can avoid using instructions that requires a specific
+>   address range).
+> 
+> The next question is, can we have the two types of users share the same
+> address ranges? If not, we can reserve the preferred range for modules,
+> and let everything else use the other range. I don't see reasons to further
+> separate users in the "everything else" group.
+ 
+I agree that we can define only two types: modules and everything else and
+let the architectures define if they need different ranges for these two
+types, or want the same range for everything.
 
->  	/* Enable event */
->  	self->enable_fd = open(enable_file, O_RDWR);
->  	ASSERT_NE(-1, write(self->enable_fd, "1", sizeof("1")))
-> -- 
-> 2.25.1
+With only two types we can have two API calls for alloc, and a single
+structure that defines the ranges etc from the architecture side rather
+than spread all over.
+
+Like something along these lines:
+
+	struct execmem_range {
+		unsigned long   start;
+		unsigned long   end;
+		unsigned long   fallback_start;
+		unsigned long   fallback_end;
+		pgprot_t        pgprot;
+		unsigned int	alignment;
+	};
+
+	struct execmem_modules_range {
+		enum execmem_module_flags flags;
+		struct execmem_range text;
+		struct execmem_range data;
+	};
+
+	struct execmem_jit_range {
+		struct execmem_range text;
+	};
+
+	struct execmem_params {
+		struct execmem_modules_range	modules;
+		struct execmem_jit_range	jit;
+	};
+
+	struct execmem_params *execmem_arch_params(void);
+
+	void *execmem_text_alloc(size_t size);
+	void *execmem_data_alloc(size_t size);
+	void execmem_free(void *ptr);
+
+	void *jit_text_alloc(size_t size);
+	void jit_free(void *ptr);
+
+Modules or anything that must live close to the kernel image can use
+execmem_*_alloc() and the callers that don't generally care about relative
+addressing will use jit_text_alloc(), presuming that arch will restrict jit
+range if necessary, like e.g. below for arm64 jit can be anywhere in
+vmalloc and for x86 and s390 it will share the modules range. 
+
+
+	struct execmem_params arm64_execmem = {
+		.modules = {
+			.flags = KASAN,
+			.text = {
+				.start = MODULES_VADDR,
+				.end = MODULES_END,
+				.pgprot = PAGE_KERNEL_ROX,
+				.fallback_start = VMALLOC_START,
+				.fallback_start = VMALLOC_END,
+			},
+		},
+		.jit = {
+			.text = {
+				.start = VMALLOC_START,
+				.end = VMALLOC_END,
+				.pgprot = PAGE_KERNEL_ROX,
+			},
+		},
+	};
+
+	/* x86 and s390 */
+	struct execmem_params cisc_execmem = {
+		.modules = {
+			.flags = KASAN,
+			.text = {
+				.start = MODULES_VADDR,
+				.end = MODULES_END,
+				.pgprot = PAGE_KERNEL_ROX,
+			},
+		},
+		.jit_range = {},	/* impplies reusing .modules */
+	};
+
+	struct execmem_params default_execmem = {
+		.modules = {
+			.flags = KASAN,
+			.text = {
+				.start = VMALLOC_START,
+				.end = VMALLOC_END,
+				.pgprot = PAGE_KERNEL_EXEC,
+			},
+		},
+	};
+
+-- 
+Sincerely yours,
+Mike.
