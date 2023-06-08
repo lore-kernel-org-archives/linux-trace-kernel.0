@@ -2,165 +2,218 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BBC9DC7EE29
-	for <linux-trace-kernel@archiver.kernel.org>; Thu,  8 Jun 2023 21:23:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 55E4DC7EE23
+	for <linux-trace-kernel@archiver.kernel.org>; Thu,  8 Jun 2023 21:26:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230162AbjFHVXI (ORCPT
+        id S233252AbjFHV0R (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Thu, 8 Jun 2023 17:23:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35548 "EHLO
+        Thu, 8 Jun 2023 17:26:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36562 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236177AbjFHVXH (ORCPT
+        with ESMTP id S232870AbjFHV0Q (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Thu, 8 Jun 2023 17:23:07 -0400
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 159E62D51;
-        Thu,  8 Jun 2023 14:23:06 -0700 (PDT)
-Received: from W11-BEAU-MD.localdomain (unknown [76.135.27.212])
-        by linux.microsoft.com (Postfix) with ESMTPSA id 47F3E20C145C;
-        Thu,  8 Jun 2023 14:23:05 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 47F3E20C145C
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-        s=default; t=1686259385;
-        bh=Nvrn68Ucat+XefKIbkKsoNwVILT76QIukgyRjjI67b8=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Qo0M3T/QCmZMtpJ2HLB404s0zg8InmVkCqpBZL/o/ipvc+HGmwQlq7A/CqvEFmclK
-         EpawRhNjfgB+2pvPNsQJhDtftkrbBfRB9aTcBPh2JJ2bDyIIkFJn3N7t7xB3IZ0vqI
-         UKMVcZobolxtIM3UwHSvOMyv4oGWWeln+5FDvPNQ=
-Date:   Thu, 8 Jun 2023 14:22:56 -0700
-From:   Beau Belgrave <beaub@linux.microsoft.com>
-To:     Steven Rostedt <rostedt@goodmis.org>
-Cc:     mhiramat@kernel.org, linux-kernel@vger.kernel.org,
-        linux-trace-kernel@vger.kernel.org, ast@kernel.org,
-        dcook@linux.microsoft.com
-Subject: Re: [PATCH v2 3/5] tracing/user_events: Add auto cleanup and a flag
- to persist events
-Message-ID: <20230608212256.GA134@W11-BEAU-MD.localdomain>
-References: <20230605233900.2838-1-beaub@linux.microsoft.com>
- <20230605233900.2838-4-beaub@linux.microsoft.com>
- <20230608162557.00be5f89@gandalf.local.home>
+        Thu, 8 Jun 2023 17:26:16 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7DAA02D51;
+        Thu,  8 Jun 2023 14:26:15 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 1A77D64DE0;
+        Thu,  8 Jun 2023 21:26:15 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 00DCCC433EF;
+        Thu,  8 Jun 2023 21:26:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1686259574;
+        bh=ITtbb2m5joG2PhMvkk68U8ttOkLZ/iKTC5sxkONv3mY=;
+        h=From:To:Cc:Subject:Date:From;
+        b=l+JXQ8Os5oW8XuYO/N7ZWh3xTXCZtjccXlQESFcDSdzmUS19fWjqkYv+SbpGSthy0
+         3xAvaklhjyYof3kCn7k6ozpzixT3maFiicfTegCQf3uEZyFdsLl8ANpzfVFrm3Yubu
+         LqMniL3M9n7kbhBvramj1K+q92Qftp29SAHKcf8vV5rMPiSdKlClH4Ej3lqEdOeP3r
+         RVqwZpTJQJCOLgYMUNVBYpGnlialAFgOowU3+tr5pjZ5Z++szZlxJlqwmSJ9xNMeJT
+         8daZgIJI/OZka3MEPvAnxq2plHMi0f3qb29mgb7/LJR0P+izRh4bn92n2axCFaLfCJ
+         YKjuuvdBrqtnw==
+From:   Jiri Olsa <jolsa@kernel.org>
+To:     Steven Rostedt <rostedt@goodmis.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>
+Cc:     Andrii Nakryiko <andrii@kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        linux-trace-kernel@vger.kernel.org, bpf@vger.kernel.org,
+        Andrii Nakryiko <andrii.nakryiko@gmail.com>,
+        Jackie Liu <liu.yun@linux.dev>
+Subject: [PATCH RFC] ftrace: Show all functions with addresses in available_filter_functions_addrs
+Date:   Thu,  8 Jun 2023 14:26:13 -0700
+Message-Id: <20230608212613.424070-1-jolsa@kernel.org>
+X-Mailer: git-send-email 2.40.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230608162557.00be5f89@gandalf.local.home>
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On Thu, Jun 08, 2023 at 04:25:57PM -0400, Steven Rostedt wrote:
-> On Mon,  5 Jun 2023 16:38:58 -0700
-> Beau Belgrave <beaub@linux.microsoft.com> wrote:
-> 
-> > Currently user events need to be manually deleted via the delete IOCTL
-> > call or via the dynamic_events file. Most operators and processes wish
-> > to have these events auto cleanup when they are no longer used by
-> > anything to prevent them piling without manual maintenance. However,
-> > some operators may not want this, such as pre-registering events via the
-> > dynamic_events tracefs file.
-> > 
-> > Add a persist flag to user facing header and honor it within the
-> > register IOCTL call. Add max flag as well to ensure that only known
-> > flags can be used now and in the future. Update user_event_put() to
-> > attempt an auto delete of the event if it's the last reference. The
-> > auto delete must run in a work queue to ensure proper behavior of
-> > class->reg() invocations that don't expect the call to go away from
-> > underneath them during the unregister. Add work_struct to user_event
-> > struct to ensure we can do this reliably.
-> > 
-> > Link: https://lore.kernel.org/linux-trace-kernel/20230518093600.3f119d68@rorschach.local.home/
-> 
-> Since there still seems to be some controversy over the persistent events,
-> could we hold off on implementing them until next merge window? That is, I
-> would like to only have the fd owned events for this release, which would
-> give us time to hash out any of the issues with persistent events.
-> 
-> If they are not in, then they are not an API, but once they are in, then we
-> are stuck with them. I believe everyone is fine with the fd owned events,
-> right?
-> 
 
-I am fine with this approach, however, FD owned events only means that
-anyone using the /sys/kernel/tracing/dynamic_events will have the event
-deleted immediately.
+hi,
+when ftrace based tracers we need to cross check available_filter_functions
+with /proc/kallsyms. For example for kprobe_multi bpf link (based on fprobe)
+we need to make sure that symbol regex resolves to traceable symbols and
+that we get proper addresses for them.
 
-Should we flat out issue an error instead of having it work, but then
-removed immediately?
+Looks like on the last last LSF/MM/BPF there was an agreement to add new
+file that will have available_filter_functions symbols plus addresses.
 
-NOTE:
-I'm waiting for the other user_event patches to land in the tracing
-for-next since there will be conflicts and I want to make sure I get
-good coverage with catching all the put/get refs.
+This RFC is to kick off the discussion, I'm not sure Steven wants to do
+that differently ;-)
 
-> > 
-> > Suggested-by: Steven Rostedt <rostedt@goodmis.org>
-> > Signed-off-by: Beau Belgrave <beaub@linux.microsoft.com>
-> > ---
-> >  include/uapi/linux/user_events.h |  10 ++-
-> >  kernel/trace/trace_events_user.c | 118 +++++++++++++++++++++++++++----
-> >  2 files changed, 114 insertions(+), 14 deletions(-)
-> > 
-> >
-> 
-> That is we can keep all the code of this patch, but:
-> 
-> >  static __always_inline __must_check
-> > @@ -1609,7 +1695,8 @@ static int user_event_create(const char *raw_command)
-> >  
-> >  	mutex_lock(&group->reg_mutex);
-> >  
-> > -	ret = user_event_parse_cmd(group, name, &user, 0);
-> > +	/* Dyn events persist, otherwise they would cleanup immediately */
-> > +	ret = user_event_parse_cmd(group, name, &user, USER_EVENT_REG_PERSIST);
-> >  
-> >  	if (!ret)
-> >  		user_event_put(user, false);
-> > @@ -1843,8 +1930,13 @@ static int user_event_parse(struct user_event_group *group, char *name,
-> >  
-> 
-> Add here:
-> 
-> 	if (reg_flags) {
-> 		/* Holding off implementing PERSIST events */
-> 		ret = -EINVAL;
-> 		goto put_user_lock;
-> 	}
-> 
-> Which also reminds me. We should return EINVAL if any flags that we do not
-> know about is set. Otherwise when we do implement new flags, the user will
-> not know if they are taking effect or not.
-> 
+thanks,
+jirka
 
-We do that in user_reg_get, but point taken, some flag could come
-through dynamic_events interface and then we'd miss it.
 
-Thanks,
--Beau
+---
+Adding new available_filter_functions_addrs file that shows all available
+functions (same as available_filter_functions) together with addresses,
+like:
 
-> -- Steve
-> 
-> 
-> >  	user->reg_flags = reg_flags;
-> >  
-> > -	/* Ensure we track self ref and caller ref (2) */
-> > -	refcount_set(&user->refcnt, 2);
-> > +	if (user->reg_flags & USER_EVENT_REG_PERSIST) {
-> > +		/* Ensure we track self ref and caller ref (2) */
-> > +		refcount_set(&user->refcnt, 2);
-> > +	} else {
-> > +		/* Ensure we track only caller ref (1) */
-> > +		refcount_set(&user->refcnt, 1);
-> > +	}
-> >  
-> >  	dyn_event_init(&user->devent, &user_event_dops);
-> >  	dyn_event_add(&user->devent, &user->call);
-> > @@ -2066,8 +2158,8 @@ static long user_reg_get(struct user_reg __user *ureg, struct user_reg *kreg)
-> >  	if (ret)
-> >  		return ret;
-> >  
-> > -	/* Ensure no flags, since we don't support any yet */
-> > -	if (kreg->flags != 0)
-> > +	/* Ensure only valid flags */
-> > +	if (kreg->flags & ~(USER_EVENT_REG_MAX-1))
-> >  		return -EINVAL;
-> >  
-> >  	/* Ensure supported size */
+  # cat available_filter_functions_addrs | head
+  ffffffff81000770 __traceiter_initcall_level
+  ffffffff810007c0 __traceiter_initcall_start
+  ffffffff81000810 __traceiter_initcall_finish
+  ffffffff81000860 trace_initcall_finish_cb
+  ...
+
+It's useful to have address avilable for traceable symbols, so we don't
+need to allways cross check kallsyms with available_filter_functions
+(or the other way around) and have all the data in single file.
+
+For backwards compatibility reasons we can't change the existing
+available_filter_functions file output, but we need to add new file.
+
+Suggested-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+Suggested-by: Andrii Nakryiko <andrii@kernel.org>
+Signed-off-by: Jiri Olsa <jolsa@kernel.org>
+---
+ include/linux/ftrace.h |  1 +
+ kernel/trace/ftrace.c  | 52 ++++++++++++++++++++++++++++++++++++++----
+ 2 files changed, 48 insertions(+), 5 deletions(-)
+
+diff --git a/include/linux/ftrace.h b/include/linux/ftrace.h
+index b23bdd414394..6e372575a8e9 100644
+--- a/include/linux/ftrace.h
++++ b/include/linux/ftrace.h
+@@ -633,6 +633,7 @@ enum {
+ 	FTRACE_ITER_MOD		= (1 << 5),
+ 	FTRACE_ITER_ENABLED	= (1 << 6),
+ 	FTRACE_ITER_TOUCHED	= (1 << 7),
++	FTRACE_ITER_ADDRS	= (1 << 8),
+ };
+ 
+ void arch_ftrace_update_code(int command);
+diff --git a/kernel/trace/ftrace.c b/kernel/trace/ftrace.c
+index 764668467155..1f33e1f04834 100644
+--- a/kernel/trace/ftrace.c
++++ b/kernel/trace/ftrace.c
+@@ -3804,7 +3804,7 @@ static int __init ftrace_check_sync(void)
+ late_initcall_sync(ftrace_check_sync);
+ subsys_initcall(ftrace_check_for_weak_functions);
+ 
+-static int print_rec(struct seq_file *m, unsigned long ip)
++static int print_rec(struct seq_file *m, unsigned long ip, bool print_addr)
+ {
+ 	unsigned long offset;
+ 	char str[KSYM_SYMBOL_LEN];
+@@ -3819,7 +3819,11 @@ static int print_rec(struct seq_file *m, unsigned long ip)
+ 		ret = NULL;
+ 	}
+ 
+-	seq_puts(m, str);
++	if (print_addr)
++		seq_printf(m, "%lx %s", ip, str);
++	else
++		seq_puts(m, str);
++
+ 	if (modname)
+ 		seq_printf(m, " [%s]", modname);
+ 	return ret == NULL ? -1 : 0;
+@@ -3830,9 +3834,13 @@ static inline int test_for_valid_rec(struct dyn_ftrace *rec)
+ 	return 1;
+ }
+ 
+-static inline int print_rec(struct seq_file *m, unsigned long ip)
++static inline int print_rec(struct seq_file *m, unsigned long ip, bool print_addr)
+ {
+-	seq_printf(m, "%ps", (void *)ip);
++	if (print_addr)
++		seq_printf(m, "%lx %ps", ip, (void *)ip);
++	else
++		seq_printf(m, "%ps", (void *)ip);
++
+ 	return 0;
+ }
+ #endif
+@@ -3861,7 +3869,7 @@ static int t_show(struct seq_file *m, void *v)
+ 	if (!rec)
+ 		return 0;
+ 
+-	if (print_rec(m, rec->ip)) {
++	if (print_rec(m, rec->ip, iter->flags & FTRACE_ITER_ADDRS)) {
+ 		/* This should only happen when a rec is disabled */
+ 		WARN_ON_ONCE(!(rec->flags & FTRACE_FL_DISABLED));
+ 		seq_putc(m, '\n');
+@@ -3996,6 +4004,30 @@ ftrace_touched_open(struct inode *inode, struct file *file)
+ 	return 0;
+ }
+ 
++static int
++ftrace_avail_addrs_open(struct inode *inode, struct file *file)
++{
++	struct ftrace_iterator *iter;
++	int ret;
++
++	ret = security_locked_down(LOCKDOWN_TRACEFS);
++	if (ret)
++		return ret;
++
++	if (unlikely(ftrace_disabled))
++		return -ENODEV;
++
++	iter = __seq_open_private(file, &show_ftrace_seq_ops, sizeof(*iter));
++	if (!iter)
++		return -ENOMEM;
++
++	iter->pg = ftrace_pages_start;
++	iter->flags = FTRACE_ITER_ADDRS;
++	iter->ops = &global_ops;
++
++	return 0;
++}
++
+ /**
+  * ftrace_regex_open - initialize function tracer filter files
+  * @ops: The ftrace_ops that hold the hash filters
+@@ -5916,6 +5948,13 @@ static const struct file_operations ftrace_touched_fops = {
+ 	.release = seq_release_private,
+ };
+ 
++static const struct file_operations ftrace_avail_addrs_fops = {
++	.open = ftrace_avail_addrs_open,
++	.read = seq_read,
++	.llseek = seq_lseek,
++	.release = seq_release_private,
++};
++
+ static const struct file_operations ftrace_filter_fops = {
+ 	.open = ftrace_filter_open,
+ 	.read = seq_read,
+@@ -6377,6 +6416,9 @@ static __init int ftrace_init_dyn_tracefs(struct dentry *d_tracer)
+ 	trace_create_file("available_filter_functions", TRACE_MODE_READ,
+ 			d_tracer, NULL, &ftrace_avail_fops);
+ 
++	trace_create_file("available_filter_functions_addrs", TRACE_MODE_READ,
++			d_tracer, NULL, &ftrace_avail_addrs_fops);
++
+ 	trace_create_file("enabled_functions", TRACE_MODE_READ,
+ 			d_tracer, NULL, &ftrace_enabled_fops);
+ 
+-- 
+2.40.1
+
