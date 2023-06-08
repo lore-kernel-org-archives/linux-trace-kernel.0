@@ -2,39 +2,42 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 414BFC7EE23
-	for <linux-trace-kernel@archiver.kernel.org>; Thu,  8 Jun 2023 20:26:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C4AEC7EE25
+	for <linux-trace-kernel@archiver.kernel.org>; Thu,  8 Jun 2023 20:52:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231626AbjFHU0G (ORCPT
+        id S229678AbjFHUwk (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Thu, 8 Jun 2023 16:26:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39148 "EHLO
+        Thu, 8 Jun 2023 16:52:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50486 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231550AbjFHU0F (ORCPT
+        with ESMTP id S232338AbjFHUwj (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Thu, 8 Jun 2023 16:26:05 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 513D02D68;
-        Thu,  8 Jun 2023 13:26:01 -0700 (PDT)
+        Thu, 8 Jun 2023 16:52:39 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 61FC7E61;
+        Thu,  8 Jun 2023 13:52:38 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id D9EE361575;
-        Thu,  8 Jun 2023 20:26:00 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6189FC4339B;
-        Thu,  8 Jun 2023 20:25:59 +0000 (UTC)
-Date:   Thu, 8 Jun 2023 16:25:57 -0400
+        by dfw.source.kernel.org (Postfix) with ESMTPS id F2C2864EA2;
+        Thu,  8 Jun 2023 20:52:37 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7DC6EC433EF;
+        Thu,  8 Jun 2023 20:52:36 +0000 (UTC)
+Date:   Thu, 8 Jun 2023 16:52:34 -0400
 From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Beau Belgrave <beaub@linux.microsoft.com>
-Cc:     mhiramat@kernel.org, linux-kernel@vger.kernel.org,
-        linux-trace-kernel@vger.kernel.org, ast@kernel.org,
-        dcook@linux.microsoft.com
-Subject: Re: [PATCH v2 3/5] tracing/user_events: Add auto cleanup and a flag
- to persist events
-Message-ID: <20230608162557.00be5f89@gandalf.local.home>
-In-Reply-To: <20230605233900.2838-4-beaub@linux.microsoft.com>
-References: <20230605233900.2838-1-beaub@linux.microsoft.com>
-        <20230605233900.2838-4-beaub@linux.microsoft.com>
+To:     "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
+Cc:     linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Florent Revest <revest@chromium.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Martin KaFai Lau <martin.lau@linux.dev>, bpf@vger.kernel.org
+Subject: Re: [PATCH v11 02/11] tracing/probes: Add fprobe events for tracing
+ function entry and exit.
+Message-ID: <20230608165234.0c00c146@gandalf.local.home>
+In-Reply-To: <168432114441.1351929.4695419422051966931.stgit@mhiramat.roam.corp.google.com>
+References: <168432112492.1351929.9265172785506392923.stgit@mhiramat.roam.corp.google.com>
+        <168432114441.1351929.4695419422051966931.stgit@mhiramat.roam.corp.google.com>
 X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
@@ -43,100 +46,58 @@ Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On Mon,  5 Jun 2023 16:38:58 -0700
-Beau Belgrave <beaub@linux.microsoft.com> wrote:
+On Wed, 17 May 2023 19:59:04 +0900
+"Masami Hiramatsu (Google)" <mhiramat@kernel.org> wrote:
 
-> Currently user events need to be manually deleted via the delete IOCTL
-> call or via the dynamic_events file. Most operators and processes wish
-> to have these events auto cleanup when they are no longer used by
-> anything to prevent them piling without manual maintenance. However,
-> some operators may not want this, such as pre-registering events via the
-> dynamic_events tracefs file.
+> Add fprobe events for tracing function entry and exit instead of kprobe
+> events. With this change, we can continue to trace function entry/exit
+> even if the CONFIG_KPROBES_ON_FTRACE is not available. Since
+> CONFIG_KPROBES_ON_FTRACE requires the CONFIG_DYNAMIC_FTRACE_WITH_REGS,
+> it is not available if the architecture only supports
+> CONFIG_DYNAMIC_FTRACE_WITH_ARGS. And that means kprobe events can not
+> probe function entry/exit effectively on such architecture.
+> But this can be solved if the dynamic events supports fprobe events.
 > 
-> Add a persist flag to user facing header and honor it within the
-> register IOCTL call. Add max flag as well to ensure that only known
-> flags can be used now and in the future. Update user_event_put() to
-> attempt an auto delete of the event if it's the last reference. The
-> auto delete must run in a work queue to ensure proper behavior of
-> class->reg() invocations that don't expect the call to go away from
-> underneath them during the unregister. Add work_struct to user_event
-> struct to ensure we can do this reliably.
+> The fprobe event is a new dynamic events which is only for the function
+> (symbol) entry and exit. This event accepts non register fetch arguments
+> so that user can trace the function arguments and return values.
 > 
-> Link: https://lore.kernel.org/linux-trace-kernel/20230518093600.3f119d68@rorschach.local.home/
+> The fprobe events syntax is here;
+> 
+>  f[:[GRP/][EVENT]] FUNCTION [FETCHARGS]
+>  f[MAXACTIVE][:[GRP/][EVENT]] FUNCTION%return [FETCHARGS]
 
-Since there still seems to be some controversy over the persistent events,
-could we hold off on implementing them until next merge window? That is, I
-would like to only have the fd owned events for this release, which would
-give us time to hash out any of the issues with persistent events.
-
-If they are not in, then they are not an API, but once they are in, then we
-are stuck with them. I believe everyone is fine with the fd owned events,
-right?
+I finally got around to look at these (I know you already queued them), but
+looking at the above, the "%return" is redundant.
 
 > 
-> Suggested-by: Steven Rostedt <rostedt@goodmis.org>
-> Signed-off-by: Beau Belgrave <beaub@linux.microsoft.com>
-> ---
->  include/uapi/linux/user_events.h |  10 ++-
->  kernel/trace/trace_events_user.c | 118 +++++++++++++++++++++++++++----
->  2 files changed, 114 insertions(+), 14 deletions(-)
+> E.g.
 > 
->
+>  # echo 'f vfs_read $arg1'  >> dynamic_events
+>  # echo 'f vfs_read%return $retval'  >> dynamic_events
+>  # cat dynamic_events
+>  f:fprobes/vfs_read__entry vfs_read arg1=$arg1
+>  f:fprobes/vfs_read__exit vfs_read%return arg1=$retval
 
-That is we can keep all the code of this patch, but:
+Can't we just have:
 
->  static __always_inline __must_check
-> @@ -1609,7 +1695,8 @@ static int user_event_create(const char *raw_command)
->  
->  	mutex_lock(&group->reg_mutex);
->  
-> -	ret = user_event_parse_cmd(group, name, &user, 0);
-> +	/* Dyn events persist, otherwise they would cleanup immediately */
-> +	ret = user_event_parse_cmd(group, name, &user, USER_EVENT_REG_PERSIST);
->  
->  	if (!ret)
->  		user_event_put(user, false);
-> @@ -1843,8 +1930,13 @@ static int user_event_parse(struct user_event_group *group, char *name,
->  
+  f:fprobes/vfs_read__entry vfs_read arg1=$arg1
+  f:fprobes/vfs_read__exit vfs_read arg1=$retval
 
-Add here:
+Where if "$retval" is specified, it automatically becomes a return? If
+anything else is specified, it errors out. That is, if $retval is
+specified, it becomes a return probe, as a return probe can only have
+$retval. If anything else is specified, it errors out if $retval is also
+specified.
 
-	if (reg_flags) {
-		/* Holding off implementing PERSIST events */
-		ret = -EINVAL;
-		goto put_user_lock;
-	}
+Now if it's a void function, and you just want to make it a return then we
+can have your:
 
-Which also reminds me. We should return EINVAL if any flags that we do not
-know about is set. Otherwise when we do implement new flags, the user will
-not know if they are taking effect or not.
+  f:fprobes/vfs_read__exit vfs_read%return
+
+Thoughts?
 
 -- Steve
 
 
->  	user->reg_flags = reg_flags;
->  
-> -	/* Ensure we track self ref and caller ref (2) */
-> -	refcount_set(&user->refcnt, 2);
-> +	if (user->reg_flags & USER_EVENT_REG_PERSIST) {
-> +		/* Ensure we track self ref and caller ref (2) */
-> +		refcount_set(&user->refcnt, 2);
-> +	} else {
-> +		/* Ensure we track only caller ref (1) */
-> +		refcount_set(&user->refcnt, 1);
-> +	}
->  
->  	dyn_event_init(&user->devent, &user_event_dops);
->  	dyn_event_add(&user->devent, &user->call);
-> @@ -2066,8 +2158,8 @@ static long user_reg_get(struct user_reg __user *ureg, struct user_reg *kreg)
->  	if (ret)
->  		return ret;
->  
-> -	/* Ensure no flags, since we don't support any yet */
-> -	if (kreg->flags != 0)
-> +	/* Ensure only valid flags */
-> +	if (kreg->flags & ~(USER_EVENT_REG_MAX-1))
->  		return -EINVAL;
->  
->  	/* Ensure supported size */
 
