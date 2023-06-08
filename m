@@ -2,239 +2,141 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F7E4C7EE23
-	for <linux-trace-kernel@archiver.kernel.org>; Thu,  8 Jun 2023 18:41:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 414BFC7EE23
+	for <linux-trace-kernel@archiver.kernel.org>; Thu,  8 Jun 2023 20:26:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233921AbjFHSlx (ORCPT
+        id S231626AbjFHU0G (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Thu, 8 Jun 2023 14:41:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48406 "EHLO
+        Thu, 8 Jun 2023 16:26:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39148 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229471AbjFHSlw (ORCPT
+        with ESMTP id S231550AbjFHU0F (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Thu, 8 Jun 2023 14:41:52 -0400
+        Thu, 8 Jun 2023 16:26:05 -0400
 Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CE0AB11A;
-        Thu,  8 Jun 2023 11:41:51 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 513D02D68;
+        Thu,  8 Jun 2023 13:26:01 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 5B78C6506C;
-        Thu,  8 Jun 2023 18:41:51 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A486DC433D2;
-        Thu,  8 Jun 2023 18:41:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1686249710;
-        bh=4a7fPJtZnT2G3XUHjxk53JytGZ7vtRhXAZPweGPLJ7Y=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Zf6igQH5RfRjPL1LLNRp2u8iNNy6O+kF/bGYFX3Nrh8fUdglTmP/qjkVHeDHFuQNr
-         jn2Uh6KySMX6f0GTo02MvlJp6Rv68cW/69I/MFZtSdKzOt0NBFweVHnVybdzHgWXfl
-         KvtLJ4ESmigmI/uc0oNYGCIO7NHmoF2IrKkybPAl+gdBXFQ0P23XDeYWK4z9h15oKv
-         ZKGiTpWdZVp/QxM4gHnWF1LN14ykgAc8/vUL3ndVfxx63Am/uu3wKbhKbUkF+Bi6Ox
-         4oM/zbXXCqLIwER2tnq6O7dDS4+mh/aE4qybCY5QC5PMes/KnyWH9l0FxBIq6F8Dg4
-         8wj5ZhMvd7MFQ==
-Date:   Thu, 8 Jun 2023 21:41:16 +0300
-From:   Mike Rapoport <rppt@kernel.org>
-To:     Song Liu <song@kernel.org>
-Cc:     Mark Rutland <mark.rutland@arm.com>,
-        Kent Overstreet <kent.overstreet@linux.dev>,
-        linux-kernel@vger.kernel.org,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Christophe Leroy <christophe.leroy@csgroup.eu>,
-        "David S. Miller" <davem@davemloft.net>,
-        Dinh Nguyen <dinguyen@kernel.org>,
-        Heiko Carstens <hca@linux.ibm.com>,
-        Helge Deller <deller@gmx.de>,
-        Huacai Chen <chenhuacai@kernel.org>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        "Naveen N. Rao" <naveen.n.rao@linux.ibm.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Russell King <linux@armlinux.org.uk>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Will Deacon <will@kernel.org>, bpf@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-mips@vger.kernel.org,
-        linux-mm@kvack.org, linux-modules@vger.kernel.org,
-        linux-parisc@vger.kernel.org, linux-riscv@lists.infradead.org,
-        linux-s390@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, loongarch@lists.linux.dev,
-        netdev@vger.kernel.org, sparclinux@vger.kernel.org, x86@kernel.org
-Subject: Re: [PATCH 00/13] mm: jit/text allocator
-Message-ID: <20230608184116.GJ52412@kernel.org>
-References: <20230601101257.530867-1-rppt@kernel.org>
- <ZHjDU/mxE+cugpLj@FVFF77S0Q05N.cambridge.arm.com>
- <ZHjgIH3aX9dCvVZc@moria.home.lan>
- <ZHm3zUUbwqlsZBBF@FVFF77S0Q05N>
- <20230605092040.GB3460@kernel.org>
- <ZH20XkD74prrdN4u@FVFF77S0Q05N>
- <CAPhsuW7ntn_HpVWdGK_hYVd3zsPEFToBNfmtt0m6K8SwfxJ66Q@mail.gmail.com>
+        by dfw.source.kernel.org (Postfix) with ESMTPS id D9EE361575;
+        Thu,  8 Jun 2023 20:26:00 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6189FC4339B;
+        Thu,  8 Jun 2023 20:25:59 +0000 (UTC)
+Date:   Thu, 8 Jun 2023 16:25:57 -0400
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     Beau Belgrave <beaub@linux.microsoft.com>
+Cc:     mhiramat@kernel.org, linux-kernel@vger.kernel.org,
+        linux-trace-kernel@vger.kernel.org, ast@kernel.org,
+        dcook@linux.microsoft.com
+Subject: Re: [PATCH v2 3/5] tracing/user_events: Add auto cleanup and a flag
+ to persist events
+Message-ID: <20230608162557.00be5f89@gandalf.local.home>
+In-Reply-To: <20230605233900.2838-4-beaub@linux.microsoft.com>
+References: <20230605233900.2838-1-beaub@linux.microsoft.com>
+        <20230605233900.2838-4-beaub@linux.microsoft.com>
+X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAPhsuW7ntn_HpVWdGK_hYVd3zsPEFToBNfmtt0m6K8SwfxJ66Q@mail.gmail.com>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On Tue, Jun 06, 2023 at 11:21:59AM -0700, Song Liu wrote:
-> On Mon, Jun 5, 2023 at 3:09 AM Mark Rutland <mark.rutland@arm.com> wrote:
+On Mon,  5 Jun 2023 16:38:58 -0700
+Beau Belgrave <beaub@linux.microsoft.com> wrote:
+
+> Currently user events need to be manually deleted via the delete IOCTL
+> call or via the dynamic_events file. Most operators and processes wish
+> to have these events auto cleanup when they are no longer used by
+> anything to prevent them piling without manual maintenance. However,
+> some operators may not want this, such as pre-registering events via the
+> dynamic_events tracefs file.
 > 
-> [...]
+> Add a persist flag to user facing header and honor it within the
+> register IOCTL call. Add max flag as well to ensure that only known
+> flags can be used now and in the future. Update user_event_put() to
+> attempt an auto delete of the event if it's the last reference. The
+> auto delete must run in a work queue to ensure proper behavior of
+> class->reg() invocations that don't expect the call to go away from
+> underneath them during the unregister. Add work_struct to user_event
+> struct to ensure we can do this reliably.
 > 
-> > > > > Can you give more detail on what parameters you need? If the only extra
-> > > > > parameter is just "does this allocation need to live close to kernel
-> > > > > text", that's not that big of a deal.
-> > > >
-> > > > My thinking was that we at least need the start + end for each caller. That
-> > > > might be it, tbh.
-> > >
-> > > Do you mean that modules will have something like
-> > >
-> > >       jit_text_alloc(size, MODULES_START, MODULES_END);
-> > >
-> > > and kprobes will have
-> > >
-> > >       jit_text_alloc(size, KPROBES_START, KPROBES_END);
-> > > ?
-> >
-> > Yes.
+> Link: https://lore.kernel.org/linux-trace-kernel/20230518093600.3f119d68@rorschach.local.home/
+
+Since there still seems to be some controversy over the persistent events,
+could we hold off on implementing them until next merge window? That is, I
+would like to only have the fd owned events for this release, which would
+give us time to hash out any of the issues with persistent events.
+
+If they are not in, then they are not an API, but once they are in, then we
+are stuck with them. I believe everyone is fine with the fd owned events,
+right?
+
 > 
-> How about we start with two APIs:
->      jit_text_alloc(size);
->      jit_text_alloc_range(size, start, end);
+> Suggested-by: Steven Rostedt <rostedt@goodmis.org>
+> Signed-off-by: Beau Belgrave <beaub@linux.microsoft.com>
+> ---
+>  include/uapi/linux/user_events.h |  10 ++-
+>  kernel/trace/trace_events_user.c | 118 +++++++++++++++++++++++++++----
+>  2 files changed, 114 insertions(+), 14 deletions(-)
 > 
-> AFAICT, arm64 is the only arch that requires the latter API. And TBH, I am
-> not quite convinced it is needed.
- 
-Right now arm64 and riscv override bpf and kprobes allocations to use the
-entire vmalloc address space, but having the ability to allocate generated
-code outside of modules area may be useful for other architectures.
+>
 
-Still the start + end for the callers feels backwards to me because the
-callers do not define the ranges, but rather the architectures, so we still
-need a way for architectures to define how they want allocate memory for
-the generated code.
+That is we can keep all the code of this patch, but:
 
-> > > It sill can be achieved with a single jit_alloc_arch_params(), just by
-> > > adding enum jit_type parameter to jit_text_alloc().
-> >
-> > That feels backwards to me; it centralizes a bunch of information about
-> > distinct users to be able to shove that into a static array, when the callsites
-> > can pass that information.
-> 
-> I think we only two type of users: module and everything else (ftrace, kprobe,
-> bpf stuff). The key differences are:
-> 
->   1. module uses text and data; while everything else only uses text.
->   2. module code is generated by the compiler, and thus has stronger
->   requirements in address ranges; everything else are generated via some
->   JIT or manual written assembly, so they are more flexible with address
->   ranges (in JIT, we can avoid using instructions that requires a specific
->   address range).
-> 
-> The next question is, can we have the two types of users share the same
-> address ranges? If not, we can reserve the preferred range for modules,
-> and let everything else use the other range. I don't see reasons to further
-> separate users in the "everything else" group.
- 
-I agree that we can define only two types: modules and everything else and
-let the architectures define if they need different ranges for these two
-types, or want the same range for everything.
+>  static __always_inline __must_check
+> @@ -1609,7 +1695,8 @@ static int user_event_create(const char *raw_command)
+>  
+>  	mutex_lock(&group->reg_mutex);
+>  
+> -	ret = user_event_parse_cmd(group, name, &user, 0);
+> +	/* Dyn events persist, otherwise they would cleanup immediately */
+> +	ret = user_event_parse_cmd(group, name, &user, USER_EVENT_REG_PERSIST);
+>  
+>  	if (!ret)
+>  		user_event_put(user, false);
+> @@ -1843,8 +1930,13 @@ static int user_event_parse(struct user_event_group *group, char *name,
+>  
 
-With only two types we can have two API calls for alloc, and a single
-structure that defines the ranges etc from the architecture side rather
-than spread all over.
+Add here:
 
-Like something along these lines:
+	if (reg_flags) {
+		/* Holding off implementing PERSIST events */
+		ret = -EINVAL;
+		goto put_user_lock;
+	}
 
-	struct execmem_range {
-		unsigned long   start;
-		unsigned long   end;
-		unsigned long   fallback_start;
-		unsigned long   fallback_end;
-		pgprot_t        pgprot;
-		unsigned int	alignment;
-	};
+Which also reminds me. We should return EINVAL if any flags that we do not
+know about is set. Otherwise when we do implement new flags, the user will
+not know if they are taking effect or not.
 
-	struct execmem_modules_range {
-		enum execmem_module_flags flags;
-		struct execmem_range text;
-		struct execmem_range data;
-	};
-
-	struct execmem_jit_range {
-		struct execmem_range text;
-	};
-
-	struct execmem_params {
-		struct execmem_modules_range	modules;
-		struct execmem_jit_range	jit;
-	};
-
-	struct execmem_params *execmem_arch_params(void);
-
-	void *execmem_text_alloc(size_t size);
-	void *execmem_data_alloc(size_t size);
-	void execmem_free(void *ptr);
-
-	void *jit_text_alloc(size_t size);
-	void jit_free(void *ptr);
-
-Modules or anything that must live close to the kernel image can use
-execmem_*_alloc() and the callers that don't generally care about relative
-addressing will use jit_text_alloc(), presuming that arch will restrict jit
-range if necessary, like e.g. below for arm64 jit can be anywhere in
-vmalloc and for x86 and s390 it will share the modules range. 
+-- Steve
 
 
-	struct execmem_params arm64_execmem = {
-		.modules = {
-			.flags = KASAN,
-			.text = {
-				.start = MODULES_VADDR,
-				.end = MODULES_END,
-				.pgprot = PAGE_KERNEL_ROX,
-				.fallback_start = VMALLOC_START,
-				.fallback_start = VMALLOC_END,
-			},
-		},
-		.jit = {
-			.text = {
-				.start = VMALLOC_START,
-				.end = VMALLOC_END,
-				.pgprot = PAGE_KERNEL_ROX,
-			},
-		},
-	};
+>  	user->reg_flags = reg_flags;
+>  
+> -	/* Ensure we track self ref and caller ref (2) */
+> -	refcount_set(&user->refcnt, 2);
+> +	if (user->reg_flags & USER_EVENT_REG_PERSIST) {
+> +		/* Ensure we track self ref and caller ref (2) */
+> +		refcount_set(&user->refcnt, 2);
+> +	} else {
+> +		/* Ensure we track only caller ref (1) */
+> +		refcount_set(&user->refcnt, 1);
+> +	}
+>  
+>  	dyn_event_init(&user->devent, &user_event_dops);
+>  	dyn_event_add(&user->devent, &user->call);
+> @@ -2066,8 +2158,8 @@ static long user_reg_get(struct user_reg __user *ureg, struct user_reg *kreg)
+>  	if (ret)
+>  		return ret;
+>  
+> -	/* Ensure no flags, since we don't support any yet */
+> -	if (kreg->flags != 0)
+> +	/* Ensure only valid flags */
+> +	if (kreg->flags & ~(USER_EVENT_REG_MAX-1))
+>  		return -EINVAL;
+>  
+>  	/* Ensure supported size */
 
-	/* x86 and s390 */
-	struct execmem_params cisc_execmem = {
-		.modules = {
-			.flags = KASAN,
-			.text = {
-				.start = MODULES_VADDR,
-				.end = MODULES_END,
-				.pgprot = PAGE_KERNEL_ROX,
-			},
-		},
-		.jit_range = {},	/* impplies reusing .modules */
-	};
-
-	struct execmem_params default_execmem = {
-		.modules = {
-			.flags = KASAN,
-			.text = {
-				.start = VMALLOC_START,
-				.end = VMALLOC_END,
-				.pgprot = PAGE_KERNEL_EXEC,
-			},
-		},
-	};
-
--- 
-Sincerely yours,
-Mike.
