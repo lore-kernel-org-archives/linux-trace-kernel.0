@@ -2,135 +2,126 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DA53CC7EE29
-	for <linux-trace-kernel@archiver.kernel.org>; Fri,  9 Jun 2023 15:07:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EC118C7EE29
+	for <linux-trace-kernel@archiver.kernel.org>; Fri,  9 Jun 2023 16:44:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239400AbjFIPHb (ORCPT
+        id S229773AbjFIQo5 (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Fri, 9 Jun 2023 11:07:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46534 "EHLO
+        Fri, 9 Jun 2023 12:44:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48852 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S239790AbjFIPHa (ORCPT
+        with ESMTP id S229803AbjFIQoz (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Fri, 9 Jun 2023 11:07:30 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D1C3D35A3
-        for <linux-trace-kernel@vger.kernel.org>; Fri,  9 Jun 2023 08:06:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1686323187;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=HhCGDFDeE6330wjTb7+eVdOM5sDQ6eAc/Pd0Q124xLM=;
-        b=XCOLcq3N0RtxwxyMV5G1epM4iyIsgYU3nh8+nyKNMl/iWE5sY6W5gN/X/AOd630rY8Twk1
-        1schNugwd2LAlsa0rGpCN0YBoFjdPbCf8NZhjhmRD0bLIjcqiYGdbWHDrxvc+4KOy553Rt
-        sYJY0tWMiv2iWi533SEewGt5I1DdZms=
-Received: from mimecast-mx02.redhat.com (mx3-rdu2.redhat.com
- [66.187.233.73]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-609-Tk9tFEnVO-ePKnVkh1JcRA-1; Fri, 09 Jun 2023 11:04:26 -0400
-X-MC-Unique: Tk9tFEnVO-ePKnVkh1JcRA-1
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.rdu2.redhat.com [10.11.54.2])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 4CDA43C0D1A5;
-        Fri,  9 Jun 2023 15:04:18 +0000 (UTC)
-Received: from vschneid.remote.csb (unknown [10.42.28.16])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id BD1BC4087C6A;
-        Fri,  9 Jun 2023 15:04:16 +0000 (UTC)
-From:   Valentin Schneider <vschneid@redhat.com>
-To:     linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
-        linux-doc@vger.kernel.org
-Cc:     Steven Rostedt <rostedt@goodmis.org>,
+        Fri, 9 Jun 2023 12:44:55 -0400
+Received: from mail-pl1-x62e.google.com (mail-pl1-x62e.google.com [IPv6:2607:f8b0:4864:20::62e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A7FCB3A97;
+        Fri,  9 Jun 2023 09:44:40 -0700 (PDT)
+Received: by mail-pl1-x62e.google.com with SMTP id d9443c01a7336-1b23f04e333so7588725ad.3;
+        Fri, 09 Jun 2023 09:44:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1686329080; x=1688921080;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:date:from:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=EdaYmroOCsHHIxQ/Q7Hjtm846vg4ZSkKlVHycee4hiQ=;
+        b=fGFbD5PSbYF99UQlwiVez/cMM9upAZnvHfzE4RaHFwWfjw17nkaOCvOZpLpPtoQAij
+         xMoQyyojMpceSiBfMVxxKBtqFuAZ1bteNFeokFwvw4xdRiHFeo7p+uSe3Gvnf1zwTSZO
+         yRqJvkSXFzHblv8HanMN2qCueh7KW0d/pggBUjK2bRaOJvPc7Aj/Los949p1Qf6IXibb
+         4FMsBIqiYod1z7PxL/8aUilmdT8U4Lj57DDuYxgvKa7gZJ+6oISrKphYW46Nzxm5ZxXf
+         5dHPIbUsnTcGkjUh7t6nz0IzqyzC0aC0CfANwexff4iDtKpGIVpuEnnY/Oz92YpvXCaR
+         wLZQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1686329080; x=1688921080;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:date:from
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=EdaYmroOCsHHIxQ/Q7Hjtm846vg4ZSkKlVHycee4hiQ=;
+        b=A+0mdWmagCOoRyLCpJILbdCCDtWufsT6f6cCIxuIx4mGihhQPH5ifO+UpGDYc57sk2
+         6n6fuu7+49Ow+NiRPTCBLhJCvEFyGxD6vop4QQwaOQKxTDV1s06s08UJE55v5LKwgnNm
+         IKAQl/HRJQJJjyWQl+Pai6Lk8FGbNhgIiBxn6TxNlfbME2UF4CJxJ1M1zwK0CiEs+9a9
+         4HrgcFM70BpbEPbiFYVjmspnHNpZCezNWPej9958NDmKl6FUERx+tj3cLskvdLYH0iMi
+         VMYQcxFRaglTZ8Q+GI2ET+W3XvhkfpuZqB9v9Y5BM8FpTqPYaalmbYYQEfS+/bJqpF02
+         jEEg==
+X-Gm-Message-State: AC+VfDyWN+qo8iEizZJtU2zM7/q/hamEXTRhfADQdz0vZsjpYoTSS14W
+        t6x31RQbohu7zjSb657Zi10=
+X-Google-Smtp-Source: ACHHUZ6l2kj86foQyBHiwjzuw87gKyWlXzVwE8Z1dgEyeSxEIoWlyLrFxaHRW1b7uUEAzA082BypKQ==
+X-Received: by 2002:a17:902:8b81:b0:1b1:9272:55f3 with SMTP id ay1-20020a1709028b8100b001b1927255f3mr1198845plb.66.1686329079895;
+        Fri, 09 Jun 2023 09:44:39 -0700 (PDT)
+Received: from krava (c-67-160-222-115.hsd1.ca.comcast.net. [67.160.222.115])
+        by smtp.gmail.com with ESMTPSA id p5-20020a170902bd0500b00186a2274382sm3514760pls.76.2023.06.09.09.44.38
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 09 Jun 2023 09:44:39 -0700 (PDT)
+From:   Jiri Olsa <olsajiri@gmail.com>
+X-Google-Original-From: Jiri Olsa <jolsa@kernel.org>
+Date:   Fri, 9 Jun 2023 09:44:36 -0700
+To:     Mark Rutland <mark.rutland@arm.com>
+Cc:     Andrii Nakryiko <andrii.nakryiko@gmail.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
         Masami Hiramatsu <mhiramat@kernel.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Daniel Bristot de Oliveira <bristot@redhat.com>,
-        Marcelo Tosatti <mtosatti@redhat.com>,
-        Leonardo Bras <leobras@redhat.com>,
-        Frederic Weisbecker <frederic@kernel.org>
-Subject: [RFC PATCH 4/5] tracing/filters: Enable filtering the CPU common field by a cpumask
-Date:   Fri,  9 Jun 2023 16:03:23 +0100
-Message-Id: <20230609150324.143538-5-vschneid@redhat.com>
-In-Reply-To: <20230609150324.143538-1-vschneid@redhat.com>
-References: <20230609150324.143538-1-vschneid@redhat.com>
+        Andrii Nakryiko <andrii@kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        linux-trace-kernel@vger.kernel.org, bpf@vger.kernel.org,
+        Jackie Liu <liu.yun@linux.dev>
+Subject: Re: [PATCH RFC] ftrace: Show all functions with addresses in
+ available_filter_functions_addrs
+Message-ID: <ZINW9FqIoja76DRa@krava>
+References: <20230608212613.424070-1-jolsa@kernel.org>
+ <CAEf4BzbNakGzcycJJJqLsFwonOmya8=hKLD41TWX2zCJbh=r-Q@mail.gmail.com>
+ <20230608192748.435a1dbf@gandalf.local.home>
+ <CAEf4BzYkNHu7hiMYWQWs_gpYOfHL0FVuf-O0787Si2ze=PFX5w@mail.gmail.com>
+ <ZILhqvrjeFIPHauy@FVFF77S0Q05N>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.1 on 10.11.54.2
+In-Reply-To: <ZILhqvrjeFIPHauy@FVFF77S0Q05N>
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-The tracing_cpumask lets us specify which CPUs are traced in a buffer
-instance, but doesn't let us do this on a per-event basis (unless one
-creates an instance per event).
+On Fri, Jun 09, 2023 at 09:24:10AM +0100, Mark Rutland wrote:
+> On Thu, Jun 08, 2023 at 04:55:40PM -0700, Andrii Nakryiko wrote:
+> > On Thu, Jun 8, 2023 at 4:27 PM Steven Rostedt <rostedt@goodmis.org> wrote:
+> > > On Thu, 8 Jun 2023 15:43:03 -0700 Andrii Nakryiko <andrii.nakryiko@gmail.com> wrote:
+> > > > On Thu, Jun 8, 2023 at 2:26 PM Jiri Olsa <jolsa@kernel.org> wrote:
+>  
+> > There are BPF tools that allow user to specify regex/glob of kernel
+> > functions to attach to. This regex/glob is checked against
+> > available_filter_functions to check which functions are traceable. All
+> > good. But then also it's important to have corresponding memory
+> > addresses for selected functions (for many reasons, e.g., to have
+> > non-ambiguous and fast attachment by address instead of by name, or
+> > for some post-processing based on captured IP addresses, etc). And
+> > that means that now we need to also parse /proc/kallsyms and
+> > cross-join it with data fetched from available_filter_functions.
+> > 
+> > All this is unnecessary if avalable_filter_functions would just
+> > provide function address in the first place. It's a huge
+> > simplification. And saves memory and CPU.
+> 
+> Do you need the address of the function entry-point or the address of the
+> patch-site within the function? Those can differ, and the rec->ip address won't
+> necessarily equal the address in /proc/kallsyms, so the pointer in
+> /proc/kallsyms won't (always) match the address we could print for the ftrace site.
+> 
+> On arm64, today we can have offsets of +0, +4, and +8, and within a single
+> kernel image different functions can have different offsets. I suspect in
+> future that we may have more potential offsets (e.g. due to changes for HW/SW
+> CFI).
 
-A previous commit added filtering scalar fields by a user-given cpumask,
-make this work with the CPU common field as well.
+so we need that for kprobe_multi bpf link, which is based on fprobe,
+and that uses ftrace_set_filter_ips to setup the ftrace_ops filter
 
-This enables doing things like
+and ftrace_set_filter_ips works fine with ip address being the address
+of the patched instruction (it's matched in ftrace_location)
 
-$ trace-cmd record -e 'sched_switch' -f 'CPU & MASK{12-52}' \
-		   -e 'sched_wakeup' -f 'target_cpu & MASK{12-52}'
+but right, I did not realize this.. it might cause confusion if people
+don't know it's patch-side addresses..  not sure if there's easy way to
+get real function address out of rec->ip, but it will also get more
+complicated on x86 when IBT is enabled, will check
 
-Signed-off-by: Valentin Schneider <vschneid@redhat.com>
----
- kernel/trace/trace_events_filter.c | 13 +++++++++++++
- 1 file changed, 13 insertions(+)
+or we could just use patch-side addresses and reflect that in the file's
+name like 'available_filter_functions_patch_addrs' .. it's already long
+name ;-)
 
-diff --git a/kernel/trace/trace_events_filter.c b/kernel/trace/trace_events_filter.c
-index 99e111c237a93..b3d2612d4670a 100644
---- a/kernel/trace/trace_events_filter.c
-+++ b/kernel/trace/trace_events_filter.c
-@@ -68,6 +68,7 @@ enum filter_pred_fn {
- 	FILTER_PRED_FN_PCHAR_USER,
- 	FILTER_PRED_FN_PCHAR,
- 	FILTER_PRED_FN_CPU,
-+	FILTER_PRED_FN_CPU_CPUMASK,
- 	FILTER_PRED_FN_CPUMASK,
- 	FILTER_PRED_FN_FUNCTION,
- 	FILTER_PRED_FN_,
-@@ -933,6 +934,13 @@ static int filter_pred_cpu(struct filter_pred *pred, void *event)
- 	}
- }
- 
-+static int filter_pred_cpu_cpumask(struct filter_pred *pred, void *event)
-+{
-+	int cpu = raw_smp_processor_id();
-+
-+	return do_filter_cpumask_scalar(pred->op, cpu, pred->mask);
-+}
-+
- /* Filter predicate for cpumasks. */
- static int filter_pred_cpumask(struct filter_pred *pred, void *event)
- {
-@@ -1436,6 +1444,8 @@ static int filter_pred_fn_call(struct filter_pred *pred, void *event)
- 		return filter_pred_pchar(pred, event);
- 	case FILTER_PRED_FN_CPU:
- 		return filter_pred_cpu(pred, event);
-+	case FILTER_PRED_FN_CPU_CPUMASK:
-+		return filter_pred_cpu_cpumask(pred, event);
- 	case FILTER_PRED_FN_CPUMASK:
- 		return filter_pred_cpumask(pred, event);
- 	case FILTER_PRED_FN_FUNCTION:
-@@ -1654,6 +1664,7 @@ static int parse_pred(const char *str, void *data,
- 		char *tmp;
- 
- 		if (field->filter_type != FILTER_CPUMASK &&
-+		    field->filter_type != FILTER_CPU &&
- 		    field->filter_type != FILTER_OTHER) {
- 			parse_error(pe, FILT_ERR_ILLEGAL_FIELD_OP, pos + i);
- 			goto err_free;
-@@ -1698,6 +1709,8 @@ static int parse_pred(const char *str, void *data,
- 		i++;
- 		if (field->filter_type == FILTER_CPUMASK) {
- 			pred->fn_num = FILTER_PRED_FN_CPUMASK;
-+		} else if (field->filter_type == FILTER_CPU) {
-+			pred->fn_num = FILTER_PRED_FN_CPU_CPUMASK;
- 		} else {
- 			switch (field->size) {
- 			case 8:
--- 
-2.31.1
-
+jirka
