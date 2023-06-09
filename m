@@ -2,84 +2,195 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 356A5C7EE23
-	for <linux-trace-kernel@archiver.kernel.org>; Fri,  9 Jun 2023 03:05:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C8586C7EE25
+	for <linux-trace-kernel@archiver.kernel.org>; Fri,  9 Jun 2023 03:36:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238265AbjFIDFS (ORCPT
+        id S230190AbjFIDg2 (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Thu, 8 Jun 2023 23:05:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52662 "EHLO
+        Thu, 8 Jun 2023 23:36:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33740 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238228AbjFIDEz (ORCPT
+        with ESMTP id S229615AbjFIDg0 (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Thu, 8 Jun 2023 23:04:55 -0400
-Received: from mail-ot1-f65.google.com (mail-ot1-f65.google.com [209.85.210.65])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 14A6D30C3;
-        Thu,  8 Jun 2023 20:04:34 -0700 (PDT)
-Received: by mail-ot1-f65.google.com with SMTP id 46e09a7af769-6b16cbe4fb6so287553a34.1;
-        Thu, 08 Jun 2023 20:04:34 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1686279873; x=1688871873;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=ETnK27P5xF7JUmROEHyWwtf42DA9xFAclMKuefb0oy8=;
-        b=cdwAT6tcq0pwv2adOHav6DgMtseybTtV9/JAEXAgO+FmLlX2sxpQIz6xL/MnP20E4j
-         P28pSrHwoT/HmFuxOkdKGrrDk62OWnS6OfwQtATbN5xEbR2PwncJ6xz5WUYYK852Fr+0
-         fAPCjsMkQvwvks7REpWhDf5K7YOJ1gV5Skox9W5uoXnXmhi3C3+JoYotU0Yk04gvQAAr
-         qYnJvcJuYkYZhnbRZVwiEO9a7MEW/Ddnj3qemRQODXfin2UbYNthz12jC4M5pLAbnMsf
-         +zqAaQO6C1+w358Dwfvoc2bVAhOCHhprSUWso6/zcWiQuxSzGJcFd/tu9sHruUAWupEC
-         curw==
-X-Gm-Message-State: AC+VfDyt0qHcUDb1JevCGavg4+M8UmJtTnncexSXBP99sgL3dlwwetqY
-        VCFLAHSKG7SKArqW7gcwgw==
-X-Google-Smtp-Source: ACHHUZ7eBVoXvUzpnEf3GDChtDNenCaQKoZcCkXzXJ5F3K0hrKVdPhoCC8kS4fBa8omxMLrFjrMlNA==
-X-Received: by 2002:a9d:7858:0:b0:6ab:3367:795b with SMTP id c24-20020a9d7858000000b006ab3367795bmr257752otm.12.1686279873419;
-        Thu, 08 Jun 2023 20:04:33 -0700 (PDT)
-Received: from localhost.localdomain ([116.128.244.169])
-        by smtp.gmail.com with ESMTPSA id a16-20020a62bd10000000b0065ecdefa57fsm1713778pff.0.2023.06.08.20.04.31
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 08 Jun 2023 20:04:33 -0700 (PDT)
-From:   sunliming <sunliming@kylinos.cn>
-To:     mhiramat@kernel.org, beaub@linux.microsoft.com,
-        rostedt@goodmis.org, shuah@kernel.org
-Cc:     linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
-        linux-kselftest@vger.kernel.org, kelulanainsley@gmail.com,
-        sunliming <sunliming@kylinos.cn>
-Subject: [PATCH v2 3/3] selftests/user_events: Add test cases when event is disabled
-Date:   Fri,  9 Jun 2023 11:03:02 +0800
-Message-Id: <20230609030302.1278716-4-sunliming@kylinos.cn>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20230609030302.1278716-1-sunliming@kylinos.cn>
-References: <20230609030302.1278716-1-sunliming@kylinos.cn>
+        Thu, 8 Jun 2023 23:36:26 -0400
+X-Greylist: delayed 792 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Thu, 08 Jun 2023 20:36:24 PDT
+Received: from mail-m11877.qiye.163.com (mail-m11877.qiye.163.com [115.236.118.77])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4222B30F0;
+        Thu,  8 Jun 2023 20:36:23 -0700 (PDT)
+Received: from [172.23.197.13] (unknown [121.32.254.149])
+        by mail-m11877.qiye.163.com (Hmail) with ESMTPA id CD1954001E6;
+        Fri,  9 Jun 2023 11:22:51 +0800 (CST)
+Message-ID: <64f5298c-6712-de7e-7f90-5aeb0d0d770c@sangfor.com.cn>
+Date:   Fri, 9 Jun 2023 11:22:51 +0800
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.10.0
+Subject: Re: [PATCH v11 3/8] ARM: ftrace: Enable HAVE_FUNCTION_GRAPH_RETVAL
+To:     linux@armlinux.org.uk
+Cc:     mhiramat@kernel.org, Steven Rostedt <rostedt@goodmis.org>,
+        mark.rutland@arm.com, will@kernel.org, catalin.marinas@arm.com,
+        rmk+kernel@armlinux.org.uk, palmer@dabbelt.com,
+        paul.walmsley@sifive.com, aou@eecs.berkeley.edu,
+        tglx@linutronix.de, dave.hansen@linux.intel.com, x86@kernel.org,
+        bp@alien8.de, hpa@zytor.com, chenhuacai@kernel.org,
+        zhangqing@loongson.cn, kernel@xen0n.name, mingo@redhat.com,
+        peterz@infradead.org, xiehuan09@gmail.com, dinghui@sangfor.com.cn,
+        huangcun@sangfor.com.cn, dolinux.peng@gmail.com,
+        linux-trace-kernel@vger.kernel.org, loongarch@lists.linux.dev,
+        linux-riscv@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+References: <cover.1680954589.git.pengdonglin@sangfor.com.cn>
+ <c61eb9290c3e817d4d70c429c0e987e3ec51a3c4.1680954589.git.pengdonglin@sangfor.com.cn>
+ <20230608215719.7537ce38@gandalf.local.home>
+Content-Language: en-US
+From:   Donglin Peng <pengdonglin@sangfor.com.cn>
+In-Reply-To: <20230608215719.7537ce38@gandalf.local.home>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-HM-Spam-Status: e1kfGhgUHx5ZQUpXWQgPGg8OCBgUHx5ZQUlOS1dZFg8aDwILHllBWSg2Ly
+        tZV1koWUFITzdXWS1ZQUlXWQ8JGhUIEh9ZQVkZTUxMVhhIH0pMHhlKH0kfGVUTARMWGhIXJBQOD1
+        lXWRgSC1lBWUpJSlVISVVJTk9VSk9CWVdZFhoPEhUdFFlBWU9LSFVKTkxJSklVSktLVUpCWQY+
+X-HM-Tid: 0a889e2daa942eb3kusncd1954001e6
+X-HM-MType: 1
+X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6OFE6Tzo4LD1IMi0WEhBLOTcf
+        CCEKCzdVSlVKTUNNSUNLQkxIT0lKVTMWGhIXVQseFRwfFBUcFxIVOwgaFRwdFAlVGBQWVRgVRVlX
+        WRILWUFZSklKVUhJVUlOT1VKT0JZV1kIAVlBTE9CTTcG
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-When user_events are disabled, it's write operation should be fail. Add
-this test cases.
+On 2023/6/9 9:57, Steven Rostedt wrote:
+> On Sat,  8 Apr 2023 05:42:17 -0700
+> Donglin Peng <pengdonglin@sangfor.com.cn> wrote:
+> 
+>> The previous patch ("function_graph: Support recording and printing
+>> the return value of function") has laid the groundwork for the for
+>> the funcgraph-retval, and this modification makes it available on
+>> the ARM platform.
+>>
+>> We introduce a new structure called fgraph_ret_regs for the ARM platform
+>> to hold return registers and the frame pointer. We then fill its content
+>> in the return_to_handler and pass its address to the function
+>> ftrace_return_to_handler to record the return value.
+>>
+>> Signed-off-by: Donglin Peng <pengdonglin@sangfor.com.cn>
+> 
+> I really don't want to add this without an ack from an arm maintainer.
+> 
+> I have the patches queued (for testing), but I may remove the ones that do
+> not have the appropriate acks.
+> 
+> -- Steve
+> 
 
-Signed-off-by: sunliming <sunliming@kylinos.cn>
----
- tools/testing/selftests/user_events/ftrace_test.c | 4 ++++
- 1 file changed, 4 insertions(+)
+Hi Russell, can I get a ack for arm?
 
-diff --git a/tools/testing/selftests/user_events/ftrace_test.c b/tools/testing/selftests/user_events/ftrace_test.c
-index d33bd31425db..cf52789bafda 100644
---- a/tools/testing/selftests/user_events/ftrace_test.c
-+++ b/tools/testing/selftests/user_events/ftrace_test.c
-@@ -297,6 +297,10 @@ TEST_F(user, write_events) {
- 	io[0].iov_base = &reg.write_index;
- 	io[0].iov_len = sizeof(reg.write_index);
- 
-+	/* Write should fail when event is not enabled */
-+	ASSERT_EQ(-1, writev(self->data_fd, (const struct iovec *)io, 3));
-+	ASSERT_EQ(ENOENT, errno);
-+
- 	/* Enable event */
- 	self->enable_fd = open(enable_file, O_RDWR);
- 	ASSERT_NE(-1, write(self->enable_fd, "1", sizeof("1")))
--- 
-2.25.1
+> 
+>> ---
+>> v10:
+>>   - Use CONFIG_FUNCTION_GRAPH_TRACER to control fgraph_ret_regs definition
+>>
+>> v9:
+>>   - Fix stack pointer align issues
+>>   - Update the commit message
+>>
+>> v8:
+>>   - Modify the control range of CONFIG_HAVE_FUNCTION_GRAPH_RETVAL
+>> ---
+>>   arch/arm/Kconfig               |  1 +
+>>   arch/arm/include/asm/ftrace.h  | 22 ++++++++++++++++++++++
+>>   arch/arm/kernel/asm-offsets.c  |  8 +++++++-
+>>   arch/arm/kernel/entry-ftrace.S | 10 ++++++----
+>>   4 files changed, 36 insertions(+), 5 deletions(-)
+>>
+>> diff --git a/arch/arm/Kconfig b/arch/arm/Kconfig
+>> index e24a9820e12f..73061379855a 100644
+>> --- a/arch/arm/Kconfig
+>> +++ b/arch/arm/Kconfig
+>> @@ -98,6 +98,7 @@ config ARM
+>>   	select HAVE_FAST_GUP if ARM_LPAE
+>>   	select HAVE_FTRACE_MCOUNT_RECORD if !XIP_KERNEL
+>>   	select HAVE_FUNCTION_ERROR_INJECTION
+>> +	select HAVE_FUNCTION_GRAPH_RETVAL if HAVE_FUNCTION_GRAPH_TRACER
+>>   	select HAVE_FUNCTION_GRAPH_TRACER
+>>   	select HAVE_FUNCTION_TRACER if !XIP_KERNEL
+>>   	select HAVE_GCC_PLUGINS
+>> diff --git a/arch/arm/include/asm/ftrace.h b/arch/arm/include/asm/ftrace.h
+>> index 7e9251ca29fe..3c457902b355 100644
+>> --- a/arch/arm/include/asm/ftrace.h
+>> +++ b/arch/arm/include/asm/ftrace.h
+>> @@ -77,4 +77,26 @@ static inline bool arch_syscall_match_sym_name(const char *sym,
+>>   
+>>   #endif /* ifndef __ASSEMBLY__ */
+>>   
+>> +#ifndef __ASSEMBLY__
+>> +#ifdef CONFIG_FUNCTION_GRAPH_TRACER
+>> +struct fgraph_ret_regs {
+>> +	/* r0 - r3 */
+>> +	unsigned long regs[4];
+>> +
+>> +	unsigned long fp;
+>> +	unsigned long __unused;
+>> +};
+>> +
+>> +static inline unsigned long fgraph_ret_regs_return_value(struct fgraph_ret_regs *ret_regs)
+>> +{
+>> +	return ret_regs->regs[0];
+>> +}
+>> +
+>> +static inline unsigned long fgraph_ret_regs_frame_pointer(struct fgraph_ret_regs *ret_regs)
+>> +{
+>> +	return ret_regs->fp;
+>> +}
+>> +#endif /* ifdef CONFIG_FUNCTION_GRAPH_TRACER */
+>> +#endif
+>> +
+>>   #endif /* _ASM_ARM_FTRACE */
+>> diff --git a/arch/arm/kernel/asm-offsets.c b/arch/arm/kernel/asm-offsets.c
+>> index 38121c59cbc2..18bb85115b21 100644
+>> --- a/arch/arm/kernel/asm-offsets.c
+>> +++ b/arch/arm/kernel/asm-offsets.c
+>> @@ -23,6 +23,7 @@
+>>   #include <asm/suspend.h>
+>>   #include <asm/vdso_datapage.h>
+>>   #include <asm/hardware/cache-l2x0.h>
+>> +#include <asm/ftrace.h>
+>>   #include <linux/kbuild.h>
+>>   #include <linux/arm-smccc.h>
+>>   #include "signal.h"
+>> @@ -170,5 +171,10 @@ int main(void)
+>>     DEFINE(KEXEC_INDIR_PAGE,	offsetof(struct kexec_relocate_data, kexec_indirection_page));
+>>     DEFINE(KEXEC_MACH_TYPE,	offsetof(struct kexec_relocate_data, kexec_mach_type));
+>>     DEFINE(KEXEC_R2,		offsetof(struct kexec_relocate_data, kexec_r2));
+>> -  return 0;
+>> +#ifdef CONFIG_FUNCTION_GRAPH_TRACER
+>> +  BLANK();
+>> +  DEFINE(FGRET_REGS_SIZE,	sizeof(struct fgraph_ret_regs));
+>> +  BLANK();
+>> +#endif
+>> +  return 0;
+>>   }
+>> diff --git a/arch/arm/kernel/entry-ftrace.S b/arch/arm/kernel/entry-ftrace.S
+>> index 3e7bcaca5e07..d41a1676608c 100644
+>> --- a/arch/arm/kernel/entry-ftrace.S
+>> +++ b/arch/arm/kernel/entry-ftrace.S
+>> @@ -257,11 +257,13 @@ ENDPROC(ftrace_graph_regs_caller)
+>>   
+>>   #ifdef CONFIG_FUNCTION_GRAPH_TRACER
+>>   ENTRY(return_to_handler)
+>> -	stmdb	sp!, {r0-r3}
+>> -	add	r0, sp, #16		@ sp at exit of instrumented routine
+>> +	mov	ip, sp				@ sp at exit of instrumented routine
+>> +	stmdb	sp!, {r0-r3, ip, lr}		@ fill fgraph_ret_regs
+>> +	mov	r0, sp
+>>   	bl	ftrace_return_to_handler
+>> -	mov	lr, r0			@ r0 has real ret addr
+>> -	ldmia	sp!, {r0-r3}
+>> +	mov	lr, r0				@ r0 has real ret addr
+>> +	ldmia	sp, {r0-r3}
+>> +	add	sp, sp, #FGRET_REGS_SIZE	@ restore stack pointer
+>>   	ret	lr
+>>   ENDPROC(return_to_handler)
+>>   #endif
+> 
 
