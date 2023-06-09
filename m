@@ -2,150 +2,84 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BFA76C7EE37
-	for <linux-trace-kernel@archiver.kernel.org>; Fri,  9 Jun 2023 01:58:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F412C83005
+	for <linux-trace-kernel@archiver.kernel.org>; Fri,  9 Jun 2023 03:04:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237773AbjFIB6p (ORCPT
+        id S237571AbjFIDE0 (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Thu, 8 Jun 2023 21:58:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56702 "EHLO
+        Thu, 8 Jun 2023 23:04:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52376 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238057AbjFIB6n (ORCPT
+        with ESMTP id S237892AbjFIDEW (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Thu, 8 Jun 2023 21:58:43 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 55C6430C5;
-        Thu,  8 Jun 2023 18:58:40 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id D580E61AFB;
-        Fri,  9 Jun 2023 01:58:39 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2DF6BC433EF;
-        Fri,  9 Jun 2023 01:58:36 +0000 (UTC)
-Date:   Thu, 8 Jun 2023 21:58:34 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Donglin Peng <pengdonglin@sangfor.com.cn>
-Cc:     mhiramat@kernel.org, linux@armlinux.org.uk, mark.rutland@arm.com,
-        will@kernel.org, catalin.marinas@arm.com,
-        rmk+kernel@armlinux.org.uk, palmer@dabbelt.com,
-        paul.walmsley@sifive.com, aou@eecs.berkeley.edu,
-        tglx@linutronix.de, dave.hansen@linux.intel.com, x86@kernel.org,
-        bp@alien8.de, hpa@zytor.com, chenhuacai@kernel.org,
-        zhangqing@loongson.cn, kernel@xen0n.name, mingo@redhat.com,
-        peterz@infradead.org, xiehuan09@gmail.com, dinghui@sangfor.com.cn,
-        huangcun@sangfor.com.cn, dolinux.peng@gmail.com,
-        linux-trace-kernel@vger.kernel.org, loongarch@lists.linux.dev,
-        linux-riscv@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v11 5/8] riscv: ftrace: Enable
- HAVE_FUNCTION_GRAPH_RETVAL
-Message-ID: <20230608215834.729cfda2@gandalf.local.home>
-In-Reply-To: <a8d71b12259f90e7e63d0ea654fcac95b0232bbc.1680954589.git.pengdonglin@sangfor.com.cn>
-References: <cover.1680954589.git.pengdonglin@sangfor.com.cn>
-        <a8d71b12259f90e7e63d0ea654fcac95b0232bbc.1680954589.git.pengdonglin@sangfor.com.cn>
-X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+        Thu, 8 Jun 2023 23:04:22 -0400
+Received: from mail-pf1-f194.google.com (mail-pf1-f194.google.com [209.85.210.194])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E7B4230E8;
+        Thu,  8 Jun 2023 20:04:20 -0700 (PDT)
+Received: by mail-pf1-f194.google.com with SMTP id d2e1a72fcca58-653f9c7b3e4so1022860b3a.2;
+        Thu, 08 Jun 2023 20:04:20 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1686279860; x=1688871860;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=PcKARLPblfhsOqgdK39JcUbv8MjDLZ8IvMWHzSBNScQ=;
+        b=NmRQRMaxM0+7angDvMYYf6yLkZ4m6S9gu+3FQujEUmAoGSOylV6PKKh4c6Rr5Ez0Ny
+         1ExgMMZLKcL9CadORIpPXlumnAbIvuv5ONAGDtHzrJLy2zEhypmD1W6TMXKmaZ8ji/fI
+         WWNpC10Qzj9NC9zatuV/mWDG8K1OttCaZNgDtqoIoLg8Vssrvr5/8B4Hq5x4Nalcxjp+
+         EXbfVTPYw/WguXryW26gKXYIwxsoDYzsx3f2Afxz+w8Scx23YXKi64wkshHXbJrrSaLv
+         HuIjjNBG6vGCUYEN4fCbU8RGrGf3EBH20ytxke/lrGB0UciQ+5l1uCoY44kKutqAr5bD
+         b3ug==
+X-Gm-Message-State: AC+VfDwK6hQWaxghY80Aexe3BgH55bvVUtiDFrSwSRCfFfW8/tAHBfmC
+        vWJC2jD+LBqr5sfogUVWmw==
+X-Google-Smtp-Source: ACHHUZ65Jiks2flBKktsFvZoSfjAD0b1fcxC3t0e5+cOSXnVdrYpThYCVKd7XmYBGt0YZ8n7EvLKhQ==
+X-Received: by 2002:a05:6a00:1a4e:b0:662:b5de:27f6 with SMTP id h14-20020a056a001a4e00b00662b5de27f6mr52364pfv.17.1686279860393;
+        Thu, 08 Jun 2023 20:04:20 -0700 (PDT)
+Received: from localhost.localdomain ([116.128.244.169])
+        by smtp.gmail.com with ESMTPSA id a16-20020a62bd10000000b0065ecdefa57fsm1713778pff.0.2023.06.08.20.04.18
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 08 Jun 2023 20:04:20 -0700 (PDT)
+From:   sunliming <sunliming@kylinos.cn>
+To:     mhiramat@kernel.org, beaub@linux.microsoft.com,
+        rostedt@goodmis.org, shuah@kernel.org
+Cc:     linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+        linux-kselftest@vger.kernel.org, kelulanainsley@gmail.com,
+        sunliming <sunliming@kylinos.cn>
+Subject: [PATCH v2 1/3] tracing/user_events: Fix incorrect return value for writing operation when events are disabled
+Date:   Fri,  9 Jun 2023 11:03:00 +0800
+Message-Id: <20230609030302.1278716-2-sunliming@kylinos.cn>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20230609030302.1278716-1-sunliming@kylinos.cn>
+References: <20230609030302.1278716-1-sunliming@kylinos.cn>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
+The writing operation return the count of writes whether events are
+enabled or disabled. This is incorrect when events are disabled. Fix
+this by just return -ENOENT when events are disabled.
 
-Can I get an ack from a RISC-V maintainer?
+Signed-off-by: sunliming <sunliming@kylinos.cn>
+---
+ kernel/trace/trace_events_user.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
--- Steve
-
-
-On Sat,  8 Apr 2023 05:42:19 -0700
-Donglin Peng <pengdonglin@sangfor.com.cn> wrote:
-
-> The previous patch ("function_graph: Support recording and printing
-> the return value of function") has laid the groundwork for the for
-> the funcgraph-retval, and this modification makes it available on
-> the RISC-V platform.
-> 
-> We introduce a new structure called fgraph_ret_regs for the RISC-V
-> platform to hold return registers and the frame pointer. We then
-> fill its content in the return_to_handler and pass its address to
-> the function ftrace_return_to_handler to record the return value.
-> 
-> Signed-off-by: Donglin Peng <pengdonglin@sangfor.com.cn>
-> ---
-> v10:
->  - Use CONFIG_FUNCTION_GRAPH_TRACER to control fgraph_ret_regs definition
-> 
-> v9:
->  - Update the commit message
-> 
-> v8:
->  - Modify the control range of CONFIG_HAVE_FUNCTION_GRAPH_RETVAL
-> ---
->  arch/riscv/Kconfig              |  1 +
->  arch/riscv/include/asm/ftrace.h | 21 +++++++++++++++++++++
->  arch/riscv/kernel/mcount.S      |  7 +------
->  3 files changed, 23 insertions(+), 6 deletions(-)
-> 
-> diff --git a/arch/riscv/Kconfig b/arch/riscv/Kconfig
-> index eb7f29a412f8..108538815309 100644
-> --- a/arch/riscv/Kconfig
-> +++ b/arch/riscv/Kconfig
-> @@ -139,6 +139,7 @@ config RISCV
->  	select HAVE_DYNAMIC_FTRACE if !XIP_KERNEL && MMU && $(cc-option,-fpatchable-function-entry=8)
->  	select HAVE_DYNAMIC_FTRACE_WITH_REGS if HAVE_DYNAMIC_FTRACE
->  	select HAVE_FTRACE_MCOUNT_RECORD if !XIP_KERNEL
-> +	select HAVE_FUNCTION_GRAPH_RETVAL if HAVE_FUNCTION_GRAPH_TRACER
->  	select HAVE_FUNCTION_GRAPH_TRACER
->  	select HAVE_FUNCTION_TRACER if !XIP_KERNEL && !PREEMPTION
->  
-> diff --git a/arch/riscv/include/asm/ftrace.h b/arch/riscv/include/asm/ftrace.h
-> index d47d87c2d7e3..740a979171e5 100644
-> --- a/arch/riscv/include/asm/ftrace.h
-> +++ b/arch/riscv/include/asm/ftrace.h
-> @@ -111,4 +111,25 @@ int ftrace_init_nop(struct module *mod, struct dyn_ftrace *rec);
->  
->  #endif /* CONFIG_DYNAMIC_FTRACE */
->  
-> +#ifndef __ASSEMBLY__
-> +#ifdef CONFIG_FUNCTION_GRAPH_TRACER
-> +struct fgraph_ret_regs {
-> +	unsigned long a1;
-> +	unsigned long a0;
-> +	unsigned long s0;
-> +	unsigned long ra;
-> +};
-> +
-> +static inline unsigned long fgraph_ret_regs_return_value(struct fgraph_ret_regs *ret_regs)
-> +{
-> +	return ret_regs->a0;
-> +}
-> +
-> +static inline unsigned long fgraph_ret_regs_frame_pointer(struct fgraph_ret_regs *ret_regs)
-> +{
-> +	return ret_regs->s0;
-> +}
-> +#endif /* ifdef CONFIG_FUNCTION_GRAPH_TRACER */
-> +#endif
-> +
->  #endif /* _ASM_RISCV_FTRACE_H */
-> diff --git a/arch/riscv/kernel/mcount.S b/arch/riscv/kernel/mcount.S
-> index 30102aadc4d7..8a6e5a9e842a 100644
-> --- a/arch/riscv/kernel/mcount.S
-> +++ b/arch/riscv/kernel/mcount.S
-> @@ -65,13 +65,8 @@ ENTRY(return_to_handler)
->   * So alternatively we check the *old* frame pointer position, that is, the
->   * value stored in -16(s0) on entry, and the s0 on return.
->   */
-> -#ifdef HAVE_FUNCTION_GRAPH_FP_TEST
-> -	mv	t6, s0
-> -#endif
->  	SAVE_RET_ABI_STATE
-> -#ifdef HAVE_FUNCTION_GRAPH_FP_TEST
-> -	mv	a0, t6
-> -#endif
-> +	mv	a0, sp
->  	call	ftrace_return_to_handler
->  	mv	a2, a0
->  	RESTORE_RET_ABI_STATE
+diff --git a/kernel/trace/trace_events_user.c b/kernel/trace/trace_events_user.c
+index 1ac5ba5685ed..92204bbe79da 100644
+--- a/kernel/trace/trace_events_user.c
++++ b/kernel/trace/trace_events_user.c
+@@ -1957,7 +1957,8 @@ static ssize_t user_events_write_core(struct file *file, struct iov_iter *i)
+ 
+ 		if (unlikely(faulted))
+ 			return -EFAULT;
+-	}
++	} else
++		return -ENOENT;
+ 
+ 	return ret;
+ }
+-- 
+2.25.1
 
