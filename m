@@ -2,71 +2,71 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F1F6C7EE2E
-	for <linux-trace-kernel@archiver.kernel.org>; Fri,  9 Jun 2023 09:06:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F4D2C7EE25
+	for <linux-trace-kernel@archiver.kernel.org>; Fri,  9 Jun 2023 09:10:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239804AbjFIJFq (ORCPT
+        id S241202AbjFIJJ3 (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Fri, 9 Jun 2023 05:05:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33622 "EHLO
+        Fri, 9 Jun 2023 05:09:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34670 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S240947AbjFIJF2 (ORCPT
+        with ESMTP id S241181AbjFIJG7 (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Fri, 9 Jun 2023 05:05:28 -0400
+        Fri, 9 Jun 2023 05:06:59 -0400
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7476B2720
-        for <linux-trace-kernel@vger.kernel.org>; Fri,  9 Jun 2023 02:04:35 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F2AC12737
+        for <linux-trace-kernel@vger.kernel.org>; Fri,  9 Jun 2023 02:06:08 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1686301475;
+        s=mimecast20190719; t=1686301567;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=TLk6gSKtsM+p9Rtgq5+IZGVTEjc3fvT8GmlHeUGj3wU=;
-        b=ehUwn+5fAisgAEtAIMl5EIJdeclqSq8CTML5XxKV3vnBdSoKWM2gHwMxwSDWO0iw5VXJLh
-        8SS/MgxwDJJJA3Tt6AO+Slri6c8ud7wu7sku5IGptOdbBlKOktrAg+YkIdnNEDgtpKVACA
-        bxrEekcdTsq3Acc+35VY7WKEzTLjEFM=
-Received: from mail-ej1-f69.google.com (mail-ej1-f69.google.com
- [209.85.218.69]) by relay.mimecast.com with ESMTP with STARTTLS
+        bh=eyj9qAaMTXhV0BDBMXgw3bkhoC43Djt8OMEq06UECOo=;
+        b=EpEzYbuFJzJ16t3cdUerq6nBDlvoivWJ3MML+Iyfnbd9IV1J+lbRAWAGTC/WE/nnuDkpl6
+        tmgga0QiW/vgwKCuBiGxXIdelZsc6ZbDhUQFR4otrSRuKhUIV059Ykvp0/WPBjZhMP/X8X
+        lxRNrnwMOi2/nlWxG1ZLVtp2G0u1jZM=
+Received: from mail-ed1-f70.google.com (mail-ed1-f70.google.com
+ [209.85.208.70]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-572-bB2ZOT2-PHqp24ycBMpq_A-1; Fri, 09 Jun 2023 05:04:34 -0400
-X-MC-Unique: bB2ZOT2-PHqp24ycBMpq_A-1
-Received: by mail-ej1-f69.google.com with SMTP id a640c23a62f3a-94a35b0d4ceso149184066b.3
-        for <linux-trace-kernel@vger.kernel.org>; Fri, 09 Jun 2023 02:04:33 -0700 (PDT)
+ us-mta-526-Xv3JKeohMp6Lo1Ph6OCGrg-1; Fri, 09 Jun 2023 05:06:06 -0400
+X-MC-Unique: Xv3JKeohMp6Lo1Ph6OCGrg-1
+Received: by mail-ed1-f70.google.com with SMTP id 4fb4d7f45d1cf-51566dc6066so1498209a12.3
+        for <linux-trace-kernel@vger.kernel.org>; Fri, 09 Jun 2023 02:06:06 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1686301473; x=1688893473;
+        d=1e100.net; s=20221208; t=1686301565; x=1688893565;
         h=content-transfer-encoding:in-reply-to:from:references:cc:to
          :content-language:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=TLk6gSKtsM+p9Rtgq5+IZGVTEjc3fvT8GmlHeUGj3wU=;
-        b=QqGTecikeRP+TO0Q8vNUAulXWtSLQRaWwwU1Htf0LGrhhYN/40xpEn8Yu9cXDJtxCb
-         tIXEaKYAxwuGFHM3SOGYUifjabz5q8dP7QwrIr9W+kYkFBGraHi6xXU/9mmw8CHnUb2U
-         F5/u5OjuSrnNt0Cas5lWv7Qig+xRbCE8X0Y2AXlwCE+sKAHPWQQcCsJyxq/gR4TdygoW
-         7HXh3l9t7oC+SLlakh+pNI9lOG7asgR7/KnPpBfIm3Af9jTg32TffpnHz4wApcEnCoRu
-         PJEybfM0PUUHoeY6i0GadPvaClojcj0VGjHDV3txgFNx3+bDKrioBMJA8tZ+MzmPhCdo
-         xDcA==
-X-Gm-Message-State: AC+VfDx1f3/qu3f4j9KPhHGMvkEXAJNpIl3lrYpLSMuCFjQRiEBwxUEj
-        0d5w62cjWxtVyWms+Az7n+m777UYkCu9LF3OSfxVpNdPA8/od2Pe/ibKldAkWRlSq+j+5pVxTb8
-        RSsw7bUAsalzShPch/heaFW8CmDEJGaLI
-X-Received: by 2002:a17:907:c15:b0:94e:1764:b09b with SMTP id ga21-20020a1709070c1500b0094e1764b09bmr1027451ejc.45.1686301472967;
-        Fri, 09 Jun 2023 02:04:32 -0700 (PDT)
-X-Google-Smtp-Source: ACHHUZ4KrasOi5l6sCNShc9kV8qfG1eq+fRbvkSLL3UxeHKWwdsKczbSQdc/+63BzxHLxAbWxA2H7A==
-X-Received: by 2002:a17:907:c15:b0:94e:1764:b09b with SMTP id ga21-20020a1709070c1500b0094e1764b09bmr1027414ejc.45.1686301472616;
-        Fri, 09 Jun 2023 02:04:32 -0700 (PDT)
+        bh=eyj9qAaMTXhV0BDBMXgw3bkhoC43Djt8OMEq06UECOo=;
+        b=dmsR4/iVOlxJSg4j486ir+6JVTTU26UuwjPKrm0CFe+Dbisfo9LnJqy0N83G8jHX4s
+         FpGYiWKqO4S0O41Qdb0RHmtb8K2fWlEl+XyBPcyuSHboPByAjyy9d5taFNQOAhYsvw1K
+         ZrWZ+SZwxfq6J/6gV/Bx0hcypFXk/pTpaqU0EBPlz1af1BhJ+wpPNdEP1ebzyL52+P6o
+         c6iWHcjG6PkqtWZ/SJXnPFAzhYCvsdUNT7gw2Nv6DldRZZZF4HAwcHYqWi1v8SvuqnIJ
+         J90GyU/wsQ7JM1+5jl5ZW33112Sz2LkUMbYDNysZx979dk7Ie8dYgF64+ZVdtSnCDnfM
+         Wdrg==
+X-Gm-Message-State: AC+VfDzhDJkjkptu50I3mf4kwmcPPVaneIp50mz0WxCbudJ8x5C92h+r
+        PeZ39L2/QMbgZbO8g4X1cA/h8TAOlRgVtaymchlOdNnpbolqrwHv65horT+jwEoal7fXkN/v7zh
+        bwpM7SqUcKBA6/S3q07giNociTw2VWjn1
+X-Received: by 2002:a05:6402:643:b0:510:82b4:844d with SMTP id u3-20020a056402064300b0051082b4844dmr902451edx.2.1686301565418;
+        Fri, 09 Jun 2023 02:06:05 -0700 (PDT)
+X-Google-Smtp-Source: ACHHUZ5Eo2fL8sg8ZAFF9ExDb1hoz+RWsXilNiiceAqQ1jh6YF+h+q2Lb+V5P8mQdJn5E/+DPP6p2g==
+X-Received: by 2002:a05:6402:643:b0:510:82b4:844d with SMTP id u3-20020a056402064300b0051082b4844dmr902445edx.2.1686301565157;
+        Fri, 09 Jun 2023 02:06:05 -0700 (PDT)
 Received: from ?IPV6:2001:b07:6468:f312:9af8:e5f5:7516:fa89? ([2001:b07:6468:f312:9af8:e5f5:7516:fa89])
-        by smtp.googlemail.com with ESMTPSA id v5-20020a170906858500b0096f72424e00sm1013932ejx.131.2023.06.09.02.04.30
+        by smtp.googlemail.com with ESMTPSA id f9-20020a056402068900b0051495ce23absm1517006edy.10.2023.06.09.02.06.02
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 09 Jun 2023 02:04:32 -0700 (PDT)
-Message-ID: <e948d02f-cd93-b6e2-72fd-123e483f66fe@redhat.com>
-Date:   Fri, 9 Jun 2023 11:04:29 +0200
+        Fri, 09 Jun 2023 02:06:04 -0700 (PDT)
+Message-ID: <f0fc6e43-ffe3-dc38-03c1-77b2105cd0fb@redhat.com>
+Date:   Fri, 9 Jun 2023 11:06:02 +0200
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.10.0
-Subject: Re: [PATCH mm-unstable v2 01/10] mm/kvm: add
- mmu_notifier_ops->test_clear_young()
-To:     Jason Gunthorpe <jgg@ziepe.ca>, Yu Zhao <yuzhao@google.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Alistair Popple <apopple@nvidia.com>,
+Subject: Re: [PATCH mm-unstable v2 09/10] kvm/x86: add
+ kvm_arch_test_clear_young()
+To:     Yu Zhao <yuzhao@google.com>,
+        Andrew Morton <akpm@linux-foundation.org>
+Cc:     Alistair Popple <apopple@nvidia.com>,
         Anup Patel <anup@brainfault.org>,
         Ben Gardon <bgardon@google.com>,
         Borislav Petkov <bp@alien8.de>,
@@ -80,6 +80,7 @@ Cc:     Andrew Morton <akpm@linux-foundation.org>,
         "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
         James Morse <james.morse@arm.com>,
         "Jason A. Donenfeld" <Jason@zx2c4.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
         Jonathan Corbet <corbet@lwn.net>,
         Marc Zyngier <maz@kernel.org>,
         Masami Hiramatsu <mhiramat@kernel.org>,
@@ -102,9 +103,9 @@ Cc:     Andrew Morton <akpm@linux-foundation.org>,
         linux-trace-kernel@vger.kernel.org, x86@kernel.org,
         linux-mm@google.com
 References: <20230526234435.662652-1-yuzhao@google.com>
- <20230526234435.662652-2-yuzhao@google.com> <ZHedMX470b7EMwbe@ziepe.ca>
+ <20230526234435.662652-10-yuzhao@google.com>
 From:   Paolo Bonzini <pbonzini@redhat.com>
-In-Reply-To: <ZHedMX470b7EMwbe@ziepe.ca>
+In-Reply-To: <20230526234435.662652-10-yuzhao@google.com>
 X-Mimecast-Spam-Score: 0
 X-Mimecast-Originator: redhat.com
 Content-Language: en-US
@@ -114,34 +115,18 @@ Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On 5/31/23 21:17, Jason Gunthorpe wrote:
->> +	int (*test_clear_young)(struct mmu_notifier *mn, struct mm_struct *mm,
->> +				unsigned long start, unsigned long end,
->> +				bool clear, unsigned long *bitmap);
->> +
-> Why leave clear_young behind? Just make a NULL bitmap mean
-> clear_young?
+On 5/27/23 01:44, Yu Zhao wrote:
+> +#define kvm_arch_has_test_clear_young kvm_arch_has_test_clear_young
+> +static inline bool kvm_arch_has_test_clear_young(void)
+> +{
+> +	return IS_ENABLED(CONFIG_X86_64) &&
+> +	       (!IS_REACHABLE(CONFIG_KVM) || (tdp_mmu_enabled && shadow_accessed_mask));
+> +}
 
-It goes away in patch 2, together with:
+I don't think you need IS_REACHABLE(CONFIG_KVM) here, it would be a bug 
+if this is called from outside KVM code.
 
-@@ -437,7 +412,7 @@ static inline int mmu_notifier_clear_young(struct mm_struct *mm,
-  					   unsigned long end)
-  {
-  	if (mm_has_notifiers(mm))
--		return __mmu_notifier_clear_young(mm, start, end);
-+		return __mmu_notifier_test_clear_young(mm, start, end, true, NULL);
-  	return 0;
-  }
-  
-@@ -445,7 +420,7 @@ static inline int mmu_notifier_test_young(struct mm_struct *mm,
-  					  unsigned long address)
-  {
-  	if (mm_has_notifiers(mm))
--		return __mmu_notifier_test_young(mm, address);
-+		return __mmu_notifier_test_clear_young(mm, address, address + 1, false, NULL);
-  	return 0;
-  }
-  
+Maybe make it a BUILD_BUG_ON?
 
 Paolo
 
