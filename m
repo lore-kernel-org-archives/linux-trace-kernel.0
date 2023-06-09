@@ -2,170 +2,285 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EE46AC7EE45
-	for <linux-trace-kernel@archiver.kernel.org>; Fri,  9 Jun 2023 00:14:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 565EAC83005
+	for <linux-trace-kernel@archiver.kernel.org>; Fri,  9 Jun 2023 00:59:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234568AbjFIAOF (ORCPT
+        id S230340AbjFIA7n (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Thu, 8 Jun 2023 20:14:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40532 "EHLO
+        Thu, 8 Jun 2023 20:59:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55196 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229981AbjFIAOD (ORCPT
+        with ESMTP id S229726AbjFIA7m (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Thu, 8 Jun 2023 20:14:03 -0400
-Received: from mail-pl1-x62e.google.com (mail-pl1-x62e.google.com [IPv6:2607:f8b0:4864:20::62e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0A0362D68;
-        Thu,  8 Jun 2023 17:14:02 -0700 (PDT)
-Received: by mail-pl1-x62e.google.com with SMTP id d9443c01a7336-1b00ecabdf2so2698305ad.2;
-        Thu, 08 Jun 2023 17:14:02 -0700 (PDT)
+        Thu, 8 Jun 2023 20:59:42 -0400
+Received: from mail-yw1-x114a.google.com (mail-yw1-x114a.google.com [IPv6:2607:f8b0:4864:20::114a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6F61326B0
+        for <linux-trace-kernel@vger.kernel.org>; Thu,  8 Jun 2023 17:59:40 -0700 (PDT)
+Received: by mail-yw1-x114a.google.com with SMTP id 00721157ae682-565d1b86a64so16231387b3.3
+        for <linux-trace-kernel@vger.kernel.org>; Thu, 08 Jun 2023 17:59:40 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1686269641; x=1688861641;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:date:from:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=TsTE3qmxIV7pG9azb/NVqbAFzY56xIALD3o7FLY1GW8=;
-        b=XjnlrHuVLqvBaR6lTNTwM/UYSJ4Z0+uyzIaJixshSWSguI3Dx77ZE6c33YZVD7UB//
-         yaXNDXgjPX+uIP8KPtW7Izj/t5NTp78Og9Jzt8TZlT6qjHgoMzxQXYw6U9D53Fr2WZfR
-         w19lMJcknE4ScXne3h44D93yhSXgWfDTjlEiXiiW/qfLqEXxIa3bZ+AmO+mUa7JT/qZ2
-         yoHhYQsNTwgo1TdmJSKwI7vRgl1HpzrwAIFHFyQi518bu9t0L/wfPzfaZGSKCtB2c8P8
-         G8p1y9UQJ+8eBbCkRAiaY5xN5nsm7KuNge+qS186ModIPFBUk+/zfo4ci/2YXmKJBu3w
-         WmIQ==
+        d=google.com; s=20221208; t=1686272379; x=1688864379;
+        h=cc:to:from:subject:references:mime-version:message-id:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=0D7F9pDbG9FXqs6+iQJrvOEyVDkJYxW5kzmn8NxTXSM=;
+        b=BDzc1aMRHWXMiLk4E+pANQvv85EBP8Fbmqip6g4XnCghOWEy+T3hHMA98y7gu3MrzJ
+         m9ZUmOHYqjH9lz2cLAdIslB62deMkVm5FAytrF1l0ADpuk18V34OtWN8S0hJyOMsYZKG
+         DZ3FeQwAgU/HrpcxXBWW2H8tt/UuIX4ypLlLVKfqSh3rXART4r4Tw/QKjnEtg7JS8CHS
+         CWcIW0q6hoRoggptEjKDZYq373BjG6IuT0/lhqlLaPYC66B04C52gE09wIc5hlW88owA
+         Gr5feq82Y0tlKosId/vUE/V228jTsXcOxUsj2CaGmnAfl6wsi8uq3/SNbii3CwrF5QN8
+         PobQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1686269641; x=1688861641;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:date:from
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=TsTE3qmxIV7pG9azb/NVqbAFzY56xIALD3o7FLY1GW8=;
-        b=LqApAMJrnsuIlg9HqBsLwNNL0ou1SbtjrIZuIj/tBKeAiz4QpozwMSJYSB5DV1pCF3
-         nJwC00fB4m5z+H60MoCF7yf6hkgc+rLB8GeZ1FhYlkXzmm80Wq+KNL3iMUMbCCYqpdT2
-         /C4t9UpR/o7T4UrEEj24m5PfW1GAvSq5uLvSvAFlsWHPZyl02Q1kVOqG4JGaqzFZKDct
-         LLCp9J0XQxMfbOhgrmAk01MxsCOntJVSgXwtLn9HBBSt+VpoeXrxpb9AEn4bWd8L8BDH
-         1c2PXURXIU7yJNBLxnE+DQeVcfnc71vZWU4sO6T9Xk2T9P0Ns/CwbhqkPzL4s8URlZR2
-         pziQ==
-X-Gm-Message-State: AC+VfDw0SbXURzcQWP2lp0pqVJ9PKn1QuCg0C4q1j8S6dGLmrJW4bli2
-        Lk9wPlC2QoSRftlTaxWUi7c=
-X-Google-Smtp-Source: ACHHUZ4Mh9UGZY5QhTCUEZsaIgVIl2TyYkb9IKjwX68B38is0xZbxtvRI2M8Ce+jngvNWl6Xif3EKw==
-X-Received: by 2002:a17:903:44c:b0:1b2:43a5:a5e5 with SMTP id iw12-20020a170903044c00b001b243a5a5e5mr7407916plb.34.1686269641307;
-        Thu, 08 Jun 2023 17:14:01 -0700 (PDT)
-Received: from krava (c-67-160-222-115.hsd1.ca.comcast.net. [67.160.222.115])
-        by smtp.gmail.com with ESMTPSA id p5-20020a170902bd0500b00186a2274382sm1968478pls.76.2023.06.08.17.14.00
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 08 Jun 2023 17:14:00 -0700 (PDT)
-From:   Jiri Olsa <olsajiri@gmail.com>
-X-Google-Original-From: Jiri Olsa <jolsa@kernel.org>
-Date:   Thu, 8 Jun 2023 17:13:57 -0700
-To:     Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Cc:     Steven Rostedt <rostedt@goodmis.org>,
+        d=1e100.net; s=20221208; t=1686272379; x=1688864379;
+        h=cc:to:from:subject:references:mime-version:message-id:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=0D7F9pDbG9FXqs6+iQJrvOEyVDkJYxW5kzmn8NxTXSM=;
+        b=A7ULWrojBh0FyK0HAxsJq4o2oyCOYQBLLkwsZvGAuJ5kzjXGvZ+fUOLq73JQm80Zom
+         I1f76UM0rLhtSsU0PNgvma1XxvjtKj0cdeH7Vh8hCky7V4gbY2rshRibfQuPsF+xu12r
+         7SkxPMZ57ijqHwd8e7FkLBF9qCx+vBr161yXDCdLv2H/UjX3A8vaupaFfXKyZjdMOpw3
+         gEarzjcayuyYSEWZeAKGeukbBgEngSwTVz3/KLOFPsEZF68sYYvJtKHjhqXCUdvyrA/e
+         1N67EoJtSW1mFQClzHqsK0nes9ORC8cVhdRd4ovo/VrOqGbx0VIvaDN3iNoDljXrStDM
+         43CQ==
+X-Gm-Message-State: AC+VfDwEMOs9XtrL+ofaKlRrothAiPvvddYGIxRHBiXLIUi19uMV1tDm
+        fY1+PbU38ZTVPK7VR/bfUeDqlBzcMjM=
+X-Google-Smtp-Source: ACHHUZ4+oKNZvW2k4pUHaG+wjpqVYAXO5ZmY9/JryBcaWXlbxmXfyr05oUuxiW1jF2Vui38QPi/ByPbILxk=
+X-Received: from yuzhao.bld.corp.google.com ([2620:15c:183:200:f582:c9e5:6c95:4461])
+ (user=yuzhao job=sendgmr) by 2002:a81:ae60:0:b0:565:e712:422c with SMTP id
+ g32-20020a81ae60000000b00565e712422cmr809562ywk.1.1686272379675; Thu, 08 Jun
+ 2023 17:59:39 -0700 (PDT)
+Date:   Thu,  8 Jun 2023 18:59:35 -0600
+In-Reply-To: <20230526234435.662652-1-yuzhao@google.com>
+Message-Id: <20230609005935.42390-1-yuzhao@google.com>
+Mime-Version: 1.0
+References: <20230526234435.662652-1-yuzhao@google.com>
+X-Mailer: git-send-email 2.41.0.162.gfafddb0af9-goog
+Subject: kvm/arm64: Spark benchmark
+From:   Yu Zhao <yuzhao@google.com>
+To:     Andrew Morton <akpm@linux-foundation.org>,
+        Paolo Bonzini <pbonzini@redhat.com>
+Cc:     Alistair Popple <apopple@nvidia.com>,
+        Anup Patel <anup@brainfault.org>,
+        Ben Gardon <bgardon@google.com>,
+        Borislav Petkov <bp@alien8.de>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Chao Peng <chao.p.peng@linux.intel.com>,
+        Christophe Leroy <christophe.leroy@csgroup.eu>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Fabiano Rosas <farosas@linux.ibm.com>,
+        Gaosheng Cui <cuigaosheng1@huawei.com>,
+        Gavin Shan <gshan@redhat.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
+        James Morse <james.morse@arm.com>,
+        "Jason A. Donenfeld" <Jason@zx2c4.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Marc Zyngier <maz@kernel.org>,
         Masami Hiramatsu <mhiramat@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Andrii Nakryiko <andrii@kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        linux-trace-kernel@vger.kernel.org, bpf@vger.kernel.org,
-        Jackie Liu <liu.yun@linux.dev>
-Subject: Re: [PATCH RFC] ftrace: Show all functions with addresses in
- available_filter_functions_addrs
-Message-ID: <ZIJuxc34CBu/zpuN@krava>
-References: <20230608212613.424070-1-jolsa@kernel.org>
- <CAEf4BzbNakGzcycJJJqLsFwonOmya8=hKLD41TWX2zCJbh=r-Q@mail.gmail.com>
- <20230608192748.435a1dbf@gandalf.local.home>
- <CAEf4BzYkNHu7hiMYWQWs_gpYOfHL0FVuf-O0787Si2ze=PFX5w@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAEf4BzYkNHu7hiMYWQWs_gpYOfHL0FVuf-O0787Si2ze=PFX5w@mail.gmail.com>
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Michael Larabel <michael@michaellarabel.com>,
+        Mike Rapoport <rppt@kernel.org>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        Oliver Upton <oliver.upton@linux.dev>,
+        Paul Mackerras <paulus@ozlabs.org>,
+        Peter Xu <peterx@redhat.com>,
+        Sean Christopherson <seanjc@google.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Thomas Huth <thuth@redhat.com>, Will Deacon <will@kernel.org>,
+        Zenghui Yu <yuzenghui@huawei.com>, kvmarm@lists.linux.dev,
+        kvm@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org, linuxppc-dev@lists.ozlabs.org,
+        linux-trace-kernel@vger.kernel.org, x86@kernel.org,
+        linux-mm@google.com
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On Thu, Jun 08, 2023 at 04:55:40PM -0700, Andrii Nakryiko wrote:
-> On Thu, Jun 8, 2023 at 4:27 PM Steven Rostedt <rostedt@goodmis.org> wrote:
-> >
-> > On Thu, 8 Jun 2023 15:43:03 -0700
-> > Andrii Nakryiko <andrii.nakryiko@gmail.com> wrote:
-> >
-> > > On Thu, Jun 8, 2023 at 2:26 PM Jiri Olsa <jolsa@kernel.org> wrote:
-> > > >
-> > > >
-> > > > hi,
-> > > > when ftrace based tracers we need to cross check available_filter_functions
-> > > > with /proc/kallsyms. For example for kprobe_multi bpf link (based on fprobe)
-> > > > we need to make sure that symbol regex resolves to traceable symbols and
-> > > > that we get proper addresses for them.
-> >
-> > I forgot, what was the problem with doing the above?
-> 
-> More code, more memory, more CPU to parse all the text files. Parsing
-> kallsyms is quite expensive, so avoiding this would be great.
+TLDR
+====
+Apache Spark spent 12% less time sorting four billion random integers twenty times (in ~4 hours) after this patchset [1].
 
-yes, reading both kallsyms and available_filter_functions parsing often
-shows up in perf profiles
+Hardware
+========
+HOST $ lscpu
+Architecture:           aarch64
+  CPU op-mode(s):       32-bit, 64-bit
+  Byte Order:           Little Endian
+CPU(s):                 128
+  On-line CPU(s) list:  0-127
+Vendor ID:              ARM
+  Model name:           Neoverse-N1
+    Model:              1
+    Thread(s) per core: 1
+    Core(s) per socket: 64
+    Socket(s):          2
+    Stepping:           r3p1
+    Frequency boost:    disabled
+    CPU max MHz:        2800.0000
+    CPU min MHz:        1000.0000
+    BogoMIPS:           50.00
+    Flags:              fp asimd evtstrm aes pmull sha1 sha2 crc32 atomics fphp asimdhp cpuid asimdrdm lrcpc dcpop asimddp ssbs
+Caches (sum of all):
+  L1d:                  8 MiB (128 instances)
+  L1i:                  8 MiB (128 instances)
+  L2:                   128 MiB (128 instances)
+NUMA:
+  NUMA node(s):         2
+  NUMA node0 CPU(s):    0-63
+  NUMA node1 CPU(s):    64-127
+Vulnerabilities:
+  Itlb multihit:        Not affected
+  L1tf:                 Not affected
+  Mds:                  Not affected
+  Meltdown:             Not affected
+  Mmio stale data:      Not affected
+  Retbleed:             Not affected
+  Spec store bypass:    Mitigation; Speculative Store Bypass disabled via prctl
+  Spectre v1:           Mitigation; __user pointer sanitization
+  Spectre v2:           Mitigation; CSV2, BHB
+  Srbds:                Not affected
+  Tsx async abort:      Not affected
 
-> 
-> >
-> > > >
-> > > > Looks like on the last last LSF/MM/BPF there was an agreement to add new
-> > > > file that will have available_filter_functions symbols plus addresses.
-> > > >
-> > > > This RFC is to kick off the discussion, I'm not sure Steven wants to do
-> > > > that differently ;-)
-> >
-> > I'm not totally against this, but I'd like to know the full issue its
-> > solving. Perhaps I need to know more about what is being done, and what is
-> > needed too.
-> 
-> There are BPF tools that allow user to specify regex/glob of kernel
-> functions to attach to. This regex/glob is checked against
-> available_filter_functions to check which functions are traceable. All
-> good. But then also it's important to have corresponding memory
-> addresses for selected functions (for many reasons, e.g., to have
-> non-ambiguous and fast attachment by address instead of by name, or
-> for some post-processing based on captured IP addresses, etc). And
-> that means that now we need to also parse /proc/kallsyms and
-> cross-join it with data fetched from available_filter_functions.
-> 
-> All this is unnecessary if avalable_filter_functions would just
-> provide function address in the first place. It's a huge
-> simplification. And saves memory and CPU.
-> 
-> >
-> > > >
-> > > > thanks,
-> > > > jirka
-> > > >
-> > > >
-> > > > ---
-> > > > Adding new available_filter_functions_addrs file that shows all available
-> > > > functions (same as available_filter_functions) together with addresses,
-> > > > like:
-> > > >
-> > > >   # cat available_filter_functions_addrs | head
-> > >
-> > > nit: can we have some more succinct name, like "traceable_funcs" or
-> >
-> >
-> > It's to match avaliable_filter_functions
-> 
-> it's minor, I'm fine with whatever name, I'm searching for it in my
-> history every single time anyways :)
-> 
-> >
-> > Another way is to add a tracing option to make the address show up in the
-> > available_filter_functions file. That would be my preferred choice.
-> >
-> >   echo 1 > options/available_filter_addrs
-> >
-> > Or something like that.
-> 
-> This would modify behavior for entire system, right? I think this is
-> very bad. Just because one application is aware of this option and
-> wants to turn this on, doesn't mean that all other applications that
-> might also use available_filter_functions should immediately break on
-> that machine.
-> 
-> Please, let's have a separate file. There is no downside to that.
+HOST $ numactl -H
+available: 2 nodes (0-1)
+node 0 cpus: 0-63
+node 0 size: 257730 MB
+node 0 free: 1447 MB
+node 1 cpus: 64-127
+node 1 size: 256877 MB
+node 1 free: 256093 MB
+node distances:
+node   0   1
+  0:  10  20
+  1:  20  10
 
-+1 for file, AFAIU the option would change that globaly so we could race
-with another app and break each other
+HOST $ cat /sys/class/nvme/nvme0/model
+INTEL SSDPF21Q800GB
 
-jirka
+HOST $ cat /sys/class/nvme/nvme0/numa_node
+0
+
+Software
+========
+HOST $ cat /etc/lsb-release
+DISTRIB_ID=Ubuntu
+DISTRIB_RELEASE=22.04
+DISTRIB_CODENAME=jammy
+DISTRIB_DESCRIPTION="Ubuntu 22.04.1 LTS"
+
+HOST $ uname -a
+Linux arm 6.4.0-rc4 #1 SMP Sat Jun  3 05:30:06 UTC 2023 aarch64 aarch64 aarch64 GNU/Linux
+
+HOST $ cat /proc/swaps
+Filename				Type		Size		Used		Priority
+/dev/nvme0n1p2                          partition	466838356	116922112	-2
+
+HOST $ cat /sys/kernel/mm/lru_gen/enabled
+0x000b
+
+HOST $ cat /sys/kernel/mm/transparent_hugepage/enabled
+always madvise [never]
+
+HOST $ cat /sys/kernel/mm/transparent_hugepage/defrag
+always defer defer+madvise madvise [never]
+
+HOST $ qemu-system-aarch64 --version
+QEMU emulator version 6.2.0 (Debian 1:6.2+dfsg-2ubuntu6.6)
+Copyright (c) 2003-2021 Fabrice Bellard and the QEMU Project developers
+
+GUEST $ cat /etc/lsb-release
+DISTRIB_ID=Ubuntu
+DISTRIB_RELEASE=22.04
+DISTRIB_CODENAME=jammy
+DISTRIB_DESCRIPTION="Ubuntu 22.04.2 LTS"
+
+GUEST $ java --version
+openjdk 17.0.7 2023-04-18
+OpenJDK Runtime Environment (build 17.0.7+7-Ubuntu-0ubuntu122.04.2)
+OpenJDK 64-Bit Server VM (build 17.0.7+7-Ubuntu-0ubuntu122.04.2, mixed mode, sharing)
+
+GUEST $ spark-shell --version
+Welcome to
+      ____              __
+     / __/__  ___ _____/ /__
+    _\ \/ _ \/ _ `/ __/  '_/
+   /___/ .__/\_,_/_/ /_/\_\   version 3.4.0
+      /_/
+
+Using Scala version 2.12.17, OpenJDK 64-Bit Server VM, 17.0.7
+Branch HEAD
+Compiled by user xinrong.meng on 2023-04-07T02:18:01Z
+Revision 87a5442f7ed96b11051d8a9333476d080054e5a0
+Url https://github.com/apache/spark
+Type --help for more information.
+
+Procedure
+=========
+HOST $ sudo numactl -N 0 -m 0 qemu-system-aarch64 \
+    -M virt,accel=kvm -cpu host -smp 64 -m 300g -nographic -nic user \
+    -bios /usr/share/qemu-efi-aarch64/QEMU_EFI.fd \
+    -drive if=virtio,format=raw,file=/dev/nvme0n1p1
+
+GUEST $ cat gen.scala
+import java.io._
+import scala.collection.mutable.ArrayBuffer
+
+object GenData {
+    def main(args: Array[String]): Unit = {
+        val file = new File("/dev/shm/dataset.txt")
+        val writer = new BufferedWriter(new FileWriter(file))
+        val buf = ArrayBuffer(0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L, 0L)
+        for(_ <- 0 until 400000000) {
+            for (i <- 0 until 10) {
+                buf.update(i, scala.util.Random.nextLong())
+            }
+            writer.write(s"${buf.mkString(",")}\n")
+        }
+        writer.close()
+    }
+}
+GenData.main(Array())
+
+GUEST $ cat sort.scala
+import java.time.temporal.ChronoUnit
+import org.apache.spark.sql.SparkSession
+
+object SparkSort {
+    def main(args: Array[String]): Unit = {
+        val spark = SparkSession.builder().getOrCreate()
+        val file = sc.textFile("/dev/shm/dataset.txt", 64)
+        val results = file.flatMap(_.split(",")).map(x => (x, 1)).sortByKey().takeOrdered(10)
+        results.foreach(println)
+        spark.stop()
+    }
+}
+SparkSort.main(Array())
+
+GUEST $ cat run_spark.sh
+export SPARK_LOCAL_DIRS=/dev/shm/
+
+spark-shell <gen.scala
+
+start=$SECONDS
+
+for ((i=0; i<20; i++))
+do
+	spark-3.4.0-bin-hadoop3/bin/spark-shell --master "local[64]" --driver-memory 160g <sort.scala
+done
+
+echo "wall time: $((SECONDS - start))"
+
+Results
+=======
+                       Before [1]    After    Change
+----------------------------------------------------
+Wall time (seconds)    14455         12865    -12%
+
+Notes
+=====
+[1] "mm: rmap: Don't flush TLB after checking PTE young for page
+    reference" was included so that the comparison is apples to
+    Apples.
+    https://lore.kernel.org/r/20220706112041.3831-1-21cnbao@gmail.com/
