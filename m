@@ -2,117 +2,101 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F0FBC7EE2E
-	for <linux-trace-kernel@archiver.kernel.org>; Fri,  9 Jun 2023 13:04:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BEA8AC7EE2E
+	for <linux-trace-kernel@archiver.kernel.org>; Fri,  9 Jun 2023 15:05:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239410AbjFINEg (ORCPT
+        id S241773AbjFIPFA (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Fri, 9 Jun 2023 09:04:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33330 "EHLO
+        Fri, 9 Jun 2023 11:05:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44654 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238814AbjFINEf (ORCPT
+        with ESMTP id S241741AbjFIPEv (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Fri, 9 Jun 2023 09:04:35 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 06B052D72;
-        Fri,  9 Jun 2023 06:04:35 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Fri, 9 Jun 2023 11:04:51 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3A03E269A
+        for <linux-trace-kernel@vger.kernel.org>; Fri,  9 Jun 2023 08:04:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1686323050;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=+w+pZDopk4F8CHu/k4rB5TG5TqlSH5TY9yzQonWJ8Y4=;
+        b=iQTKzrovBxg+pISTjnR4mXuN6FFojPJUgXc/GmhyRusLutyxIDpnXXNDnScTjNTfDQxc0n
+        9Ty4gzzidPTtQSAcfXc/BcpCkE6DaVGwuER0QYcvOLuyjfMl3aQz7ajH4O9dqsczaZpei4
+        7zNN6B9roOpiWdYL8eFExhnd5O3Imgs=
+Received: from mimecast-mx02.redhat.com (mx3-rdu2.redhat.com
+ [66.187.233.73]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-288-zq0WDYJOMYmSGdON1cGHBA-1; Fri, 09 Jun 2023 11:04:06 -0400
+X-MC-Unique: zq0WDYJOMYmSGdON1cGHBA-1
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.rdu2.redhat.com [10.11.54.2])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 97BBB61234;
-        Fri,  9 Jun 2023 13:04:34 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EC01EC433EF;
-        Fri,  9 Jun 2023 13:04:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1686315874;
-        bh=90rVHTRs/3F5on7zL7vvDRpDwafaR4yvoFsAW9sVsUU=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=ct18ILo60TPRsRZeRF0MA6HqVV541momQ/jF4nftPln9ac11WPptBUohnWBmUvWqE
-         vnbarfiPcuydHingkmODEEfgyBqMNPOYeP2WxeWyeZBtXUQLPWlTQiK3YoRCoQuOkz
-         ykp2yROWej+XaTRvcPNC1Mj4JCwFi/idPxZcvWKMzoJB4BmjIGu9z7nSlgQ6TTTjIl
-         qP4PTzdDzoU3b8crpqEvZ0W3ktzTOLFYBKjsvJzANfoNoi8mgwX007iMF+sc9WNoo4
-         c5+GV/8GYH3NerKeEbysr3Xjw/+GD6dgRglU5pvXYup5qB/zjHokXJytURgg3jzfRS
-         C5Xro19M414WQ==
-Received: from 152.5.30.93.rev.sfr.net ([93.30.5.152] helo=wait-a-minute.misterjones.org)
-        by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-        (Exim 4.95)
-        (envelope-from <maz@kernel.org>)
-        id 1q7bn5-0045UR-GR;
-        Fri, 09 Jun 2023 14:04:31 +0100
-Date:   Fri, 09 Jun 2023 14:04:27 +0100
-Message-ID: <873530okh0.wl-maz@kernel.org>
-From:   Marc Zyngier <maz@kernel.org>
-To:     Yu Zhao <yuzhao@google.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Alistair Popple <apopple@nvidia.com>,
-        Anup Patel <anup@brainfault.org>,
-        Ben Gardon <bgardon@google.com>,
-        Borislav Petkov <bp@alien8.de>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Chao Peng <chao.p.peng@linux.intel.com>,
-        Christophe Leroy <christophe.leroy@csgroup.eu>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Fabiano Rosas <farosas@linux.ibm.com>,
-        Gaosheng Cui <cuigaosheng1@huawei.com>,
-        Gavin Shan <gshan@redhat.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
-        James Morse <james.morse@arm.com>,
-        "Jason A. Donenfeld" <Jason@zx2c4.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Jonathan Corbet <corbet@lwn.net>,
+        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id B2EF23825BAB;
+        Fri,  9 Jun 2023 15:04:05 +0000 (UTC)
+Received: from vschneid.remote.csb (unknown [10.42.28.16])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id A2B034087C62;
+        Fri,  9 Jun 2023 15:03:56 +0000 (UTC)
+From:   Valentin Schneider <vschneid@redhat.com>
+To:     linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+        linux-doc@vger.kernel.org
+Cc:     Steven Rostedt <rostedt@goodmis.org>,
         Masami Hiramatsu <mhiramat@kernel.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Michael Larabel <michael@michaellarabel.com>,
-        Mike Rapoport <rppt@kernel.org>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        Oliver Upton <oliver.upton@linux.dev>,
-        Paul Mackerras <paulus@ozlabs.org>,
-        Peter Xu <peterx@redhat.com>,
-        Sean Christopherson <seanjc@google.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Thomas Huth <thuth@redhat.com>, Will Deacon <will@kernel.org>,
-        Zenghui Yu <yuzenghui@huawei.com>, kvmarm@lists.linux.dev,
-        kvm@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-mm@kvack.org, linuxppc-dev@lists.ozlabs.org,
-        linux-trace-kernel@vger.kernel.org, x86@kernel.org,
-        linux-mm@google.com
-Subject: Re: kvm/arm64: Spark benchmark
-In-Reply-To: <20230609005935.42390-1-yuzhao@google.com>
-References: <20230526234435.662652-1-yuzhao@google.com>
-        <20230609005935.42390-1-yuzhao@google.com>
-User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
- FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/28.2
- (x86_64-pc-linux-gnu) MULE/6.0 (HANACHIRUSATO)
-MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
-Content-Type: text/plain; charset=US-ASCII
-X-SA-Exim-Connect-IP: 93.30.5.152
-X-SA-Exim-Rcpt-To: yuzhao@google.com, akpm@linux-foundation.org, pbonzini@redhat.com, apopple@nvidia.com, anup@brainfault.org, bgardon@google.com, bp@alien8.de, catalin.marinas@arm.com, chao.p.peng@linux.intel.com, christophe.leroy@csgroup.eu, dave.hansen@linux.intel.com, farosas@linux.ibm.com, cuigaosheng1@huawei.com, gshan@redhat.com, hpa@zytor.com, mingo@redhat.com, james.morse@arm.com, Jason@zx2c4.com, jgg@ziepe.ca, corbet@lwn.net, mhiramat@kernel.org, mpe@ellerman.id.au, michael@michaellarabel.com, rppt@kernel.org, npiggin@gmail.com, oliver.upton@linux.dev, paulus@ozlabs.org, peterx@redhat.com, seanjc@google.com, rostedt@goodmis.org, suzuki.poulose@arm.com, tglx@linutronix.de, thuth@redhat.com, will@kernel.org, yuzenghui@huawei.com, kvmarm@lists.linux.dev, kvm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mm@kvack.org, linuxppc-dev@lists.ozlabs.org, linux-trace-kernel@vger.kernel.org, x86@kernel.org, linux-m
- m@google.com
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+        Jonathan Corbet <corbet@lwn.net>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Daniel Bristot de Oliveira <bristot@redhat.com>,
+        Marcelo Tosatti <mtosatti@redhat.com>,
+        Leonardo Bras <leobras@redhat.com>,
+        Frederic Weisbecker <frederic@kernel.org>
+Subject: [RFC PATCH 0/5] tracing/filters: filtering event fields with a cpumask
+Date:   Fri,  9 Jun 2023 16:03:19 +0100
+Message-Id: <20230609150324.143538-1-vschneid@redhat.com>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.1 on 10.11.54.2
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On Fri, 09 Jun 2023 01:59:35 +0100,
-Yu Zhao <yuzhao@google.com> wrote:
-> 
-> TLDR
-> ====
-> Apache Spark spent 12% less time sorting four billion random integers twenty times (in ~4 hours) after this patchset [1].
+Hi folks,
 
-Why are the 3 architectures you have considered being evaluated with 3
-different benchmarks? I am not suspecting you to have cherry-picked
-the best results, but I'd really like to see a variety of benchmarks
-that exercise this stuff differently.
+In the context of CPU isolation / NOHZ_FULL interference investigation, we now
+have the ipi_send_cpu and ipi_send_cpumask events. However, enabling these
+events without any filtering can yield pretty massive traces with a lot of
+uninteresting or irrelevant data (e.g. everything targeting housekeeping CPUs).
 
-Thanks,
+This series is about adding event filtering via a user-provided cpumask. This
+enables filtering using cpumask fields (e.g. ipi_send_cpumask) and extends this
+to scalar and the local CPU common fields.
 
-	M.
+With this, it becomes fairly easy to trace events both happening on and
+targeting CPUs of interest, e.g.:
 
--- 
-Without deviation from the norm, progress is not possible.
+  trace-cmd record -e 'sched_switch' -f "CPU & MASK{$ISOLATED_CPUS}"         \
+		   -e 'sched_wakeup' -f "target_cpu & MASK{$ISOLATED_CPUS}"  \
+		   -e 'ipi_send_cpu' -f "cpu & MASK{$ISOLATED_CPUS}"         \
+		   -e 'ipi_send_cpumask' -f "cpumask & MASK{$ISOLATED_CPUS}" \
+		   hackbench
+
+The MASK{} thing is a bit crude but seems to work well enough without break^C
+overhauling the predicate parsing logic.
+
+Cheers,
+Valentin
+
+Valentin Schneider (5):
+  tracing/filters: Dynamically allocate filter_pred.regex
+  tracing/filters: Enable filtering a cpumask field by another cpumask
+  tracing/filters: Enable filtering a scalar field by a cpumask
+  tracing/filters: Enable filtering the CPU common field by a cpumask
+  tracing/filters: Document cpumask filtering
+
+ Documentation/trace/events.rst     |  14 ++
+ include/linux/trace_events.h       |   1 +
+ kernel/trace/trace_events_filter.c | 228 +++++++++++++++++++++++++----
+ 3 files changed, 216 insertions(+), 27 deletions(-)
+
+--
+2.31.1
+
