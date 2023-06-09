@@ -2,41 +2,38 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E279C7EE25
-	for <linux-trace-kernel@archiver.kernel.org>; Fri,  9 Jun 2023 20:15:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 43A1EC7EE2E
+	for <linux-trace-kernel@archiver.kernel.org>; Fri,  9 Jun 2023 20:22:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229827AbjFIUPZ (ORCPT
+        id S232406AbjFIUW2 (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Fri, 9 Jun 2023 16:15:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58530 "EHLO
+        Fri, 9 Jun 2023 16:22:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33088 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229586AbjFIUPZ (ORCPT
+        with ESMTP id S232726AbjFIUWO (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Fri, 9 Jun 2023 16:15:25 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4EDC7B9;
-        Fri,  9 Jun 2023 13:15:24 -0700 (PDT)
+        Fri, 9 Jun 2023 16:22:14 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2BE7249C8;
+        Fri,  9 Jun 2023 13:21:35 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id DD8A665BBC;
-        Fri,  9 Jun 2023 20:15:23 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9433EC433D2;
-        Fri,  9 Jun 2023 20:15:22 +0000 (UTC)
-Date:   Fri, 9 Jun 2023 16:15:20 -0400
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 62F8165BEA;
+        Fri,  9 Jun 2023 20:20:51 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9818AC433A4;
+        Fri,  9 Jun 2023 20:20:49 +0000 (UTC)
+Date:   Fri, 9 Jun 2023 16:20:46 -0400
 From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Cc:     linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>
-Subject: Re: [PATCH] tracing/timer: Add missing hrtimer modes to
- decode_hrtimer_mode().
-Message-ID: <20230609161520.449dfad4@gandalf.local.home>
-In-Reply-To: <20230524202526.289e3a65@rorschach.local.home>
-References: <20230418143854.8vHWQKLM@linutronix.de>
-        <20230424174441.3baebdef@rorschach.local.home>
-        <20230524153928.p9umapxB@linutronix.de>
-        <20230524202526.289e3a65@rorschach.local.home>
+To:     Florent Revest <revest@chromium.org>
+Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-trace-kernel@vger.kernel.org, mhiramat@kernel.org,
+        mark.rutland@arm.com, kpsingh@kernel.org, xukuohai@huaweicloud.com,
+        Catalin Marinas <catalin.marinas@arm.com>
+Subject: Re: [PATCH 0/2] Ftrace direct call samples improvements
+Message-ID: <20230609162046.13d19398@gandalf.local.home>
+In-Reply-To: <20230427140700.625241-1-revest@chromium.org>
+References: <20230427140700.625241-1-revest@chromium.org>
 X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
@@ -45,13 +42,39 @@ Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On Wed, 24 May 2023 20:25:26 -0400
-Steven Rostedt <rostedt@goodmis.org> wrote:
+On Thu, 27 Apr 2023 16:06:58 +0200
+Florent Revest <revest@chromium.org> wrote:
 
-> Events are normally owned by the subsystem they are used in. So it
-> should go through tip. But if I get an ack from the subsystem
-> maintainer, I can route it through tracing.
+> This series is a subset of [1] that didn't go through the arm64 tree.
+> 
+> - The first patch fixes a small bug when a direct call sample is loaded on x86
+> - The second patch adds arm64 support to all direct calls samples
+> 
+> They are sent together because the second one depends on the first one.
+> 
+> This series applies cleanly on Linus's master branch. It needs the first two
+> patches of [1] which, at the time of writing, don't seem to have made it to the
+> trace/linux-trace tree but I suppose they could be pulled from Linus's master
+> 
+> 1: https://lore.kernel.org/bpf/20230405180250.2046566-1-revest@chromium.org/
+> 
+> Florent Revest (2):
+>   samples: ftrace: Save required argument registers in sample
+>     trampolines
+>   arm64: ftrace: Add direct call trampoline samples support
 
-Thomas, care to give me an ack? Or do you want to take it?
+Is this going through the arm64 tree, or should it go through mine?
 
 -- Steve
+
+
+> 
+>  arch/arm64/Kconfig                          |  2 ++
+>  samples/ftrace/ftrace-direct-modify.c       | 34 ++++++++++++++++++
+>  samples/ftrace/ftrace-direct-multi-modify.c | 40 +++++++++++++++++++++
+>  samples/ftrace/ftrace-direct-multi.c        | 24 +++++++++++++
+>  samples/ftrace/ftrace-direct-too.c          | 40 +++++++++++++++++----
+>  samples/ftrace/ftrace-direct.c              | 24 +++++++++++++
+>  6 files changed, 158 insertions(+), 6 deletions(-)
+> 
+
