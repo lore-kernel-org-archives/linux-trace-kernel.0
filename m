@@ -2,98 +2,81 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 42B8FC77B7A
-	for <linux-trace-kernel@archiver.kernel.org>; Sat, 10 Jun 2023 14:28:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B3A7C7EE37
+	for <linux-trace-kernel@archiver.kernel.org>; Sat, 10 Jun 2023 15:07:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233311AbjFJO2D (ORCPT
+        id S234995AbjFJPHt (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Sat, 10 Jun 2023 10:28:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38786 "EHLO
+        Sat, 10 Jun 2023 11:07:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48232 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232422AbjFJO2C (ORCPT
+        with ESMTP id S235161AbjFJPHs (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Sat, 10 Jun 2023 10:28:02 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2C255C0;
-        Sat, 10 Jun 2023 07:28:02 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 9E70C60BA6;
-        Sat, 10 Jun 2023 14:28:01 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6C98CC433D2;
-        Sat, 10 Jun 2023 14:27:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1686407281;
-        bh=3Pl5NNj2WQ4a63Fd2+LlFzfDj6G+Cm0dgJqNQzNyZQ8=;
-        h=From:Date:Subject:To:Cc:From;
-        b=StLs+5sSCfED37rmgsW+raG3Uanrv72zHKlmWZKgPQemF0Mu8zr0/aCo/Bcv6Wwk3
-         EBPtwcgKnfYmfvEKmdjW9ByC/rftbzUqJ4dtEW8QEiChxTkTryPBTMujF2fYhEetzR
-         WOIGpZlBkjsbrOKYzkhLHU6k7FFRBxJMWT2xmfvQuvujHi7mUATB7U3Yg9G7vc4rkU
-         rV4bZ26oxyHN5dN6N8wCcGuJk9ao99UoZGE53ZcC4vn46JNCDtKj+l2q/G8CLG/wXr
-         mmByefGRTsM6876KuxvkQYRvxQmxstGc0uhPhkLqDq4N/dUjh5xj7iRwcUFdnB3dny
-         SD+VKeOQNZ5vA==
-From:   Mark Brown <broonie@kernel.org>
-Date:   Sat, 10 Jun 2023 15:27:55 +0100
-Subject: [PATCH] selftests/ftace: Fix KTAP output ordering
-MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20230609-ftrace-ktap-order-v1-1-0abf4d0d6922@kernel.org>
-X-B4-Tracking: v=1; b=H4sIAGqIhGQC/x2NQQqDMBAAvyJ77kKqVrFfKR42yVoXIZGNqCD+3
- ehxBoY5ILEKJ/gWByivkiSGDO9XAW6k8GcUnxlKU1amMR0Oi5JjnBaaMapnRf+xTU1t7V3bQe4
- sJUarFNx4l1vU6daz8iD7s/r153kBAXYY/HoAAAA=
-To:     Steven Rostedt <rostedt@goodmis.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Shuah Khan <shuah@kernel.org>
-Cc:     Shuah Khan <skhan@linuxfoundation.org>,
+        Sat, 10 Jun 2023 11:07:48 -0400
+Received: from mail-pf1-x42e.google.com (mail-pf1-x42e.google.com [IPv6:2607:f8b0:4864:20::42e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D2C153AA7
+        for <linux-trace-kernel@vger.kernel.org>; Sat, 10 Jun 2023 08:07:45 -0700 (PDT)
+Received: by mail-pf1-x42e.google.com with SMTP id d2e1a72fcca58-651ffcc1d3dso2253873b3a.3
+        for <linux-trace-kernel@vger.kernel.org>; Sat, 10 Jun 2023 08:07:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=networkplumber-org.20221208.gappssmtp.com; s=20221208; t=1686409665; x=1689001665;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=N+OwDas9lj8b/o3V8lkOk9a6MOfWBvvSjFJASd1oAkw=;
+        b=OOATwZuJz1XpIayU6qEWJsTjt3CY+4SMX0O0hFz4qhukDiqKsW+2HfODMVSjDY0PS8
+         dM86VQyjvRTSnncMd8NEQ1Y3ajqSyztqwK1L4AHsdyCggJCjMPhoHDYKqNNW/QTmsvkl
+         My6SqZzBK775E7qllyKf/D3HPM+CU0UogJlokXdyYcF3DIiOmW498DR8UJaYMOxa4taL
+         sO3cymRYwckFon9LanxHS8e9U/hC5GpwfPqq9UwNBxRTStvS4jMi3j+bn53NCB2HcAzM
+         zZwpBqsJYUp+qDWJUUO7vVRWb6hTATh/04CW99B7zboxr6WE5Dc4EPBPdzzm3JjPAp3M
+         PTTw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1686409665; x=1689001665;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=N+OwDas9lj8b/o3V8lkOk9a6MOfWBvvSjFJASd1oAkw=;
+        b=ePo/DOcnqH0SuPXd6JPc+QGJUJWAZL9OZ6W27F6JruFOcv4w/xdaYnIdGAGOD/dFfy
+         /pKiWzwcxctq5zGpCFEoOx2RxcNh3KtdkWnIX5ermuHT0kl5t5S3NuI+wBwmu7Q8xUtA
+         0YH87b8MzNZPLegMqZPydTnnrNtZ+4StvnyQHBQJZfykFaN3SGqbPBrGIOOqtBh1Xii/
+         FEJx9BZH5HWmMMqpF6ZFd1zSHJ6iUYnueGgdcFmijp1cSF3Dn9OIMM/Yfh0mQH8b+CmX
+         k1NNQNZ67DXfPCjzSr9LgWnCRYb1EzQcO9+xQXuakRi8VpzC4fm9uqQVxp1bnyASgrhe
+         S8UQ==
+X-Gm-Message-State: AC+VfDxth8HSXM7c+dvOuZ6Dcp+m9DRddxI8hCLsn8KTMYHNN0355tHQ
+        Zla20pP5Za/WTw6FnPfkLb5KOw==
+X-Google-Smtp-Source: ACHHUZ4r4eCGoy6iuu0IW9XAISMqoeXHH/Fv2bhIfewU3fQ3CD19OKfSes9kinrORhYOGStJ4RF3lw==
+X-Received: by 2002:a05:6a00:22c4:b0:646:b165:1b29 with SMTP id f4-20020a056a0022c400b00646b1651b29mr5033723pfj.23.1686409665296;
+        Sat, 10 Jun 2023 08:07:45 -0700 (PDT)
+Received: from hermes.local (204-195-120-218.wavecable.com. [204.195.120.218])
+        by smtp.gmail.com with ESMTPSA id 5-20020aa79145000000b0064cb6206463sm4231318pfi.85.2023.06.10.08.07.44
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 10 Jun 2023 08:07:45 -0700 (PDT)
+Date:   Sat, 10 Jun 2023 08:07:42 -0700
+From:   Stephen Hemminger <stephen@networkplumber.org>
+To:     Yi He <clangllvm@126.com>
+Cc:     ast@kernel.org, daniel@iogearbox.net, andrii@kernel.org,
+        song@kernel.org, yhs@fb.com, john.fastabend@gmail.com,
+        kpsingh@kernel.org, sdf@google.com, haoluo@google.com,
+        jolsa@kernel.org, rostedt@goodmis.org, mhiramat@kernel.org,
+        davem@davemloft.net, kuba@kernel.org, hawk@kernel.org,
         linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
-        linux-kselftest@vger.kernel.org, Mark Brown <broonie@kernel.org>
-X-Mailer: b4 0.13-dev-bfdf5
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1045; i=broonie@kernel.org;
- h=from:subject:message-id; bh=3Pl5NNj2WQ4a63Fd2+LlFzfDj6G+Cm0dgJqNQzNyZQ8=;
- b=owEBbQGS/pANAwAKASTWi3JdVIfQAcsmYgBkhIhuaqKU9QXH2Pd0o8iH20hNSB1wgszxiKpcyQG8
- LrJ3CViJATMEAAEKAB0WIQSt5miqZ1cYtZ/in+ok1otyXVSH0AUCZISIbgAKCRAk1otyXVSH0PZ7B/
- 96xG/o6pwehdllnuUNb0odnFd8tIOYO6YiGGQub0HRhsU3Gp6d8FQfkc4DlEXgS0dBSZe+ZQO1Rndo
- D2S094tGQeyYk+Zj1vFmk/K+E1J2GMQhgONIaBovcAqEmOiBn833BY4IBLtPbcRbVi2zyjmkWywpjy
- UXJDmLvQqZEEBBBLKsawcOlc/BNolOirV3IX3CQtBbxN71CAZJHYNjj4g5VLmdKHopSqi9SSwl736o
- +hFfKiX/lk+6Wa74JToobApkYEzwoA0U2o/oEqpvSK25LMfCSiIRny9IO9yZjuA7tKXYnPVyNS/RG4
- tlt+V8Rv3QI1qnrEvQg6meRk3lxFYY
-X-Developer-Key: i=broonie@kernel.org; a=openpgp;
- fpr=3F2568AAC26998F9E813A1C5C3F436CA30F5D8EB
+        netdev@vger.kernel.org, bpf@vger.kernel.org,
+        linux-security-module@vger.kernel.org
+Subject: Re: [PATCH] Add a sysctl option to disable bpf offensive helpers.
+Message-ID: <20230610080742.5b51a721@hermes.local>
+In-Reply-To: <20230610110518.123183-1-clangllvm@126.com>
+References: <20230610110518.123183-1-clangllvm@126.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-The KTAP parser I used to test the KTAP output for ftracetest was overly
-robust and did not notice that the test number and pass/fail result were
-reversed. Fix this.
+On Sat, 10 Jun 2023 11:05:18 +0000
+Yi He <clangllvm@126.com> wrote:
 
-Fixes: dbcf76390eb9 ("elftests/ftrace: Improve integration with kselftest runner")
-Signed-off-by: Mark Brown <broonie@kernel.org>
----
- tools/testing/selftests/ftrace/ftracetest | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+> Signed-off-by: fripSide <clangllvm@126.com>
 
-diff --git a/tools/testing/selftests/ftrace/ftracetest b/tools/testing/selftests/ftrace/ftracetest
-index 2506621e75df..cb5f18c06593 100755
---- a/tools/testing/selftests/ftrace/ftracetest
-+++ b/tools/testing/selftests/ftrace/ftracetest
-@@ -301,7 +301,7 @@ ktaptest() { # result comment
-     comment="# $comment"
-   fi
- 
--  echo $CASENO $result $INSTANCE$CASENAME $comment
-+  echo $result $CASENO $INSTANCE$CASENAME $comment
- }
- 
- eval_result() { # sigval
-
----
-base-commit: dbcf76390eb9a65d5d0c37b0cd57335218564e37
-change-id: 20230609-ftrace-ktap-order-d5b64a74dc79
-
-Best regards,
--- 
-Mark Brown <broonie@kernel.org>
-
+You need to use your legal name not a hacker alias
+in DCO since DCO is intended to be a legally binding assertion.
