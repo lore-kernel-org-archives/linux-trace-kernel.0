@@ -2,252 +2,188 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E1FDC7EE2F
-	for <linux-trace-kernel@archiver.kernel.org>; Sat, 10 Jun 2023 15:46:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 77099C77B7A
+	for <linux-trace-kernel@archiver.kernel.org>; Sun, 11 Jun 2023 13:00:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233234AbjFJPq3 (ORCPT
+        id S229624AbjFKNAh (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Sat, 10 Jun 2023 11:46:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57424 "EHLO
+        Sun, 11 Jun 2023 09:00:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52808 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231775AbjFJPq2 (ORCPT
+        with ESMTP id S229562AbjFKNAg (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Sat, 10 Jun 2023 11:46:28 -0400
-X-Greylist: delayed 939 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Sat, 10 Jun 2023 08:46:25 PDT
-Received: from m126.mail.126.com (m126.mail.126.com [220.181.12.37])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 8B1E1A9;
-        Sat, 10 Jun 2023 08:46:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=126.com;
-        s=s110527; h=From:Subject:Date:Message-Id:MIME-Version; bh=ojuQh
-        y4Q0fNAGbQHQt4L923YZW1AQX7hIjcgJshUQ6o=; b=eR1LD84Ip/QMcMD1F1hR5
-        Nfa7fGKU8XBbBkexa2yqOQ7CMVvHV8eVI6weV1xrk6BskfqTDW4zaBgfyqKq5Um/
-        O+njEZM5vB12iz51lsnXvarqCvYvVIgR0iPRXljJQqPet+Mbxbi7G8UNWZc2STu5
-        Dp93l84rnkIKkCbm4IBLcc=
-Received: from localhost.localdomain (unknown [202.112.238.192])
-        by zwqz-smtp-mta-g4-0 (Coremail) with SMTP id _____wCHTwJGloRk6S4vAA--.58808S2;
-        Sat, 10 Jun 2023 23:27:04 +0800 (CST)
-From:   Yi He <clangllvm@126.com>
-To:     ast@kernel.org
-Cc:     daniel@iogearbox.net, andrii@kernel.org, song@kernel.org,
-        yhs@fb.com, john.fastabend@gmail.com, kpsingh@kernel.org,
-        sdf@google.com, haoluo@google.com, jolsa@kernel.org,
-        rostedt@goodmis.org, mhiramat@kernel.org, davem@davemloft.net,
-        kuba@kernel.org, hawk@kernel.org, linux-kernel@vger.kernel.org,
-        linux-trace-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        bpf@vger.kernel.org, linux-security-module@vger.kernel.org,
-        Yi He <clangllvm@126.com>
-Subject: [PATCH] Add a sysctl option to disable bpf offensive helpers.
-Date:   Sat, 10 Jun 2023 15:26:18 +0000
-Message-Id: <20230610152618.105518-1-clangllvm@126.com>
-X-Mailer: git-send-email 2.34.1
+        Sun, 11 Jun 2023 09:00:36 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4D23DE48;
+        Sun, 11 Jun 2023 06:00:35 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id D16FE61130;
+        Sun, 11 Jun 2023 13:00:34 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0E93EC433EF;
+        Sun, 11 Jun 2023 13:00:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1686488434;
+        bh=w5GEviuZiSz6ulTNLoenUvOQvB5v/kxoYUOgOfhqU7g=;
+        h=From:To:Cc:Subject:Date:From;
+        b=BaAM7/6YXRn1g/lvATq61O+eRKqA4Ls7KaD2s8I4X4LfW6PIVpQMOgvdMYPf0m3a7
+         2gqzhFQFGsOnbRKivcBIk/nbuRPCTG0LqhTvg6bpgg3wTQ6gfeVcfoq8dWEAxS57Vk
+         lAYLfx27JXewKrZoeb9Yw6fDI6X0eRbBuXuLKxVKgjn94EZ0B2MFXwSdLXh4Yfgjbj
+         DIKMMNt3ZVLWNSM03fWoOvbRB5/Ylg4EA7CYqbaA1g9dQCgT+9IX15+7E+hDRGdqaD
+         MTMmTgMu+NAhOlzgRev/LeMRlxLQTh0cFoO1hzase3lwL9em0DrZsiyqGLYbLxecv5
+         7567EaTg46pfA==
+From:   Jiri Olsa <jolsa@kernel.org>
+To:     Steven Rostedt <rostedt@goodmis.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>
+Cc:     Andrii Nakryiko <andrii@kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        linux-trace-kernel@vger.kernel.org, bpf@vger.kernel.org,
+        Andrii Nakryiko <andrii.nakryiko@gmail.com>,
+        Jackie Liu <liu.yun@linux.dev>
+Subject: [PATCHv2] ftrace: Show all functions with addresses in available_filter_functions_addrs
+Date:   Sun, 11 Jun 2023 15:00:29 +0200
+Message-Id: <20230611130029.1202298-1-jolsa@kernel.org>
+X-Mailer: git-send-email 2.40.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID: _____wCHTwJGloRk6S4vAA--.58808S2
-X-Coremail-Antispam: 1Uf129KBjvJXoWxKrWxWr43CFW3uryrZrWUJwb_yoW3trWrpF
-        97tryjyr40qF4IvrW7J3y8GryFkw4DXrW7Ca4kK3yfZF43XrZ2qr1kKF4agF1rXrZFg3ya
-        vws2vFW5ua1Ika7anT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-        9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x0zR17KxUUUUU=
-X-Originating-IP: [202.112.238.192]
-X-CM-SenderInfo: xfod0wpooyzqqrswhudrp/1tbiYBKKy1pELScmDQABsN
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-Some eBPF helper functions have been long regarded as problematic[1].
-More than just used for powerful rootkit, these features can also be 
-exploited to harm the containers by perform various attacks to the 
-processes outside the container in the enrtire VM, such as process 
-DoS, information theft, and container escape.  
+Adding new available_filter_functions_addrs file that shows all available
+functions (same as available_filter_functions) together with addresses,
+like:
 
-When a container is granted to run eBPF tracing programs (which 
-need CAP_SYS_ADMIN), it can use the eBPF KProbe programs to hijack the 
-process outside the contianer and to escape the containers. This kind 
-of risks is limited as privieleged containers are warned and can hardly
- be accessed by the attackers.
+  # cat available_filter_functions_addrs | head
+  ffffffff81000770 __traceiter_initcall_level
+  ffffffff810007c0 __traceiter_initcall_start
+  ffffffff81000810 __traceiter_initcall_finish
+  ffffffff81000860 trace_initcall_finish_cb
+  ...
 
-Even without CAP_SYS_ADMIN, since Linux 5.6, programs with CAP_BPF + 
-CAP_PERFMON can use dangerous eBPF helpers such as bpf_read_user to steal 
-sensitive data (e.g., sshd/nginx private key) in other containers. 
+Note displayed address is the patch-site address and can differ from
+/proc/kallsyms address.
 
-Currently, eBPF users just enable CAP_SYS_ADMIN and also enable the 
-offensive features. Since lots of eBPF tools are distributed via 
-containers, attackers may perform supply chain attacks to create and 
-spread their eBPF malware, To prevent the abuse of these helpers, we 
-introduce a new sysctl option (sysctl_offensive_bpf_disabled) to 
-cofine the usages of five dangerous helpers:
-- bpf_probe_write_user
-- bpf_probe_read_user
-- bpf_probe_read_kernel
-- bpf_send_signal
-- bpf_override_return
+It's useful to have address avilable for traceable symbols, so we don't
+need to allways cross check kallsyms with available_filter_functions
+(or the other way around) and have all the data in single file.
 
-The default value of sysctl_offensive_bpf_disabled is 0, which means 
-all the five helpers are enabled. By setting sysctl_offensive_bpf_disabled 
-to 1, these helpers cannot be used util a reboot. By setting it to 2, 
-these helpers cannot be used but privieleged users can modify this flag
-to 0.
+For backwards compatibility reasons we can't change the existing
+available_filter_functions file output, but we need to add new file.
 
-For benign eBPF programs such as Cillium, they do not need these features
-and can set the sysctl_offensive_bpf_disabled to 1 after initialization.
-
-
-[1] https://embracethered.com/blog/posts/2021/offensive-bpf/
-
-
-Signed-off-by: Yi He <clangllvm@126.com>
+Suggested-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+Suggested-by: Andrii Nakryiko <andrii@kernel.org>
+Signed-off-by: Jiri Olsa <jolsa@kernel.org>
 ---
- include/linux/bpf.h                       |  2 ++
- kernel/bpf/syscall.c                      | 33 +++++++++++++++++++++++
- kernel/configs/android-recommended.config |  1 +
- kernel/trace/bpf_trace.c                  | 21 ++++++++-------
- tools/testing/selftests/bpf/config        |  1 +
- 5 files changed, 48 insertions(+), 10 deletions(-)
+ Documentation/trace/ftrace.rst |  6 ++++++
+ include/linux/ftrace.h         |  1 +
+ kernel/trace/ftrace.c          | 37 ++++++++++++++++++++++++++++++++++
+ 3 files changed, 44 insertions(+)
 
-diff --git a/include/linux/bpf.h b/include/linux/bpf.h
-index 456f33b9d205..61c723a589f8 100644
---- a/include/linux/bpf.h
-+++ b/include/linux/bpf.h
-@@ -2043,6 +2043,8 @@ bpf_map_alloc_percpu(const struct bpf_map *map, size_t size, size_t align,
+v2 changes:
+  - simplified address print [Steven]
+  - added doc entry for the new file
+
+diff --git a/Documentation/trace/ftrace.rst b/Documentation/trace/ftrace.rst
+index 027437b745a0..e97573e3fc4a 100644
+--- a/Documentation/trace/ftrace.rst
++++ b/Documentation/trace/ftrace.rst
+@@ -324,6 +324,12 @@ of ftrace. Here is a list of some of the key files:
+ 	"set_graph_function", or "set_graph_notrace".
+ 	(See the section "dynamic ftrace" below for more details.)
  
- extern int sysctl_unprivileged_bpf_disabled;
- 
-+extern int sysctl_offensive_bpf_disabled;
++  available_filter_functions_addrs:
 +
- static inline bool bpf_allow_ptr_leaks(void)
- {
- 	return perfmon_capable();
-diff --git a/kernel/bpf/syscall.c b/kernel/bpf/syscall.c
-index 14f39c1e573e..6b8c8ee1ea22 100644
---- a/kernel/bpf/syscall.c
-+++ b/kernel/bpf/syscall.c
-@@ -58,6 +58,9 @@ static DEFINE_SPINLOCK(link_idr_lock);
- int sysctl_unprivileged_bpf_disabled __read_mostly =
- 	IS_BUILTIN(CONFIG_BPF_UNPRIV_DEFAULT_OFF) ? 2 : 0;
- 
-+int sysctl_offensive_bpf_disabled __read_mostly =
-+	IS_BUILTIN(CONFIG_BPF_OFFENSIVE_BPF_OFF) ? 2 : 0;
++	Similar to available_filter_functions, but with address displayed
++	for each function. The displayed address is the patch-site address
++	and can differ from /proc/kallsyms address.
 +
- static const struct bpf_map_ops * const bpf_map_types[] = {
- #define BPF_PROG_TYPE(_id, _name, prog_ctx_type, kern_ctx_type)
- #define BPF_MAP_TYPE(_id, _ops) \
-@@ -5385,6 +5388,27 @@ static int bpf_unpriv_handler(struct ctl_table *table, int write,
- 	return ret;
+   dyn_ftrace_total_info:
+ 
+ 	This file is for debugging purposes. The number of functions that
+diff --git a/include/linux/ftrace.h b/include/linux/ftrace.h
+index b23bdd414394..6e372575a8e9 100644
+--- a/include/linux/ftrace.h
++++ b/include/linux/ftrace.h
+@@ -633,6 +633,7 @@ enum {
+ 	FTRACE_ITER_MOD		= (1 << 5),
+ 	FTRACE_ITER_ENABLED	= (1 << 6),
+ 	FTRACE_ITER_TOUCHED	= (1 << 7),
++	FTRACE_ITER_ADDRS	= (1 << 8),
+ };
+ 
+ void arch_ftrace_update_code(int command);
+diff --git a/kernel/trace/ftrace.c b/kernel/trace/ftrace.c
+index 764668467155..b24c573934af 100644
+--- a/kernel/trace/ftrace.c
++++ b/kernel/trace/ftrace.c
+@@ -3861,6 +3861,9 @@ static int t_show(struct seq_file *m, void *v)
+ 	if (!rec)
+ 		return 0;
+ 
++	if (iter->flags & FTRACE_ITER_ADDRS)
++		seq_printf(m, "%lx ", rec->ip);
++
+ 	if (print_rec(m, rec->ip)) {
+ 		/* This should only happen when a rec is disabled */
+ 		WARN_ON_ONCE(!(rec->flags & FTRACE_FL_DISABLED));
+@@ -3996,6 +3999,30 @@ ftrace_touched_open(struct inode *inode, struct file *file)
+ 	return 0;
  }
  
-+static int bpf_offensive_handler(struct ctl_table *table, int write,
-+			      void *buffer, size_t *lenp, loff_t *ppos)
++static int
++ftrace_avail_addrs_open(struct inode *inode, struct file *file)
 +{
-+	int ret, offensive_enable = *(int *)table->data;
-+	bool locked_state = offensive_enable == 1;
-+	struct ctl_table tmp = *table;
++	struct ftrace_iterator *iter;
++	int ret;
 +
-+	if (write && !capable(CAP_SYS_ADMIN))
-+		return -EPERM;
++	ret = security_locked_down(LOCKDOWN_TRACEFS);
++	if (ret)
++		return ret;
 +
-+	tmp.data = &offensive_enable;
-+	ret = proc_dointvec_minmax(&tmp, write, buffer, lenp, ppos);
-+	if (write && !ret) {
-+		if (locked_state && offensive_enable != 1)
-+			return -EPERM;
-+		*(int *)table->data = offensive_enable;
-+	}
++	if (unlikely(ftrace_disabled))
++		return -ENODEV;
 +
-+	return ret;
++	iter = __seq_open_private(file, &show_ftrace_seq_ops, sizeof(*iter));
++	if (!iter)
++		return -ENOMEM;
++
++	iter->pg = ftrace_pages_start;
++	iter->flags = FTRACE_ITER_ADDRS;
++	iter->ops = &global_ops;
++
++	return 0;
 +}
 +
- static struct ctl_table bpf_syscall_table[] = {
- 	{
- 		.procname	= "unprivileged_bpf_disabled",
-@@ -5395,6 +5419,15 @@ static struct ctl_table bpf_syscall_table[] = {
- 		.extra1		= SYSCTL_ZERO,
- 		.extra2		= SYSCTL_TWO,
- 	},
-+	{
-+		.procname	= "offensive_bpf_disabled",
-+		.data		= &sysctl_offensive_bpf_disabled,
-+		.maxlen		= sizeof(sysctl_offensive_bpf_disabled),
-+		.mode		= 0644,
-+		.proc_handler	= bpf_offensive_handler,
-+		.extra1		= SYSCTL_ZERO,
-+		.extra2		= SYSCTL_TWO,
-+	},
- 	{
- 		.procname	= "bpf_stats_enabled",
- 		.data		= &bpf_stats_enabled_key.key,
-diff --git a/kernel/configs/android-recommended.config b/kernel/configs/android-recommended.config
-index e400fbbc8aba..cca75258af72 100644
---- a/kernel/configs/android-recommended.config
-+++ b/kernel/configs/android-recommended.config
-@@ -1,5 +1,6 @@
- #  KEEP ALPHABETICALLY SORTED
- # CONFIG_BPF_UNPRIV_DEFAULT_OFF is not set
-+# CONFIG_BPF_OFFENSIVE_BPF_OFF is not set
- # CONFIG_CORE_DUMP_DEFAULT_ELF_HEADERS is not set
- # CONFIG_INPUT_MOUSE is not set
- # CONFIG_LEGACY_PTYS is not set
-diff --git a/kernel/trace/bpf_trace.c b/kernel/trace/bpf_trace.c
-index 8deb22a99abe..5bdd0bee3e45 100644
---- a/kernel/trace/bpf_trace.c
-+++ b/kernel/trace/bpf_trace.c
-@@ -1432,17 +1432,18 @@ bpf_tracing_func_proto(enum bpf_func_id func_id, const struct bpf_prog *prog)
- 	case BPF_FUNC_get_prandom_u32:
- 		return &bpf_get_prandom_u32_proto;
- 	case BPF_FUNC_probe_write_user:
--		return security_locked_down(LOCKDOWN_BPF_WRITE_USER) < 0 ?
--		       NULL : bpf_get_probe_write_proto();
-+		return (security_locked_down(LOCKDOWN_BPF_WRITE_USER) < 0 ||
-+		       sysctl_offensive_bpf_disabled) ? NULL : bpf_get_probe_write_proto();
- 	case BPF_FUNC_probe_read_user:
--		return &bpf_probe_read_user_proto;
-+		return sysctl_offensive_bpf_disabled ? NULL : &bpf_probe_read_user_proto;
- 	case BPF_FUNC_probe_read_kernel:
--		return security_locked_down(LOCKDOWN_BPF_READ_KERNEL) < 0 ?
--		       NULL : &bpf_probe_read_kernel_proto;
-+		return (security_locked_down(LOCKDOWN_BPF_READ_KERNEL) < 0 ||
-+		       sysctl_offensive_bpf_disabled) ? NULL : &bpf_probe_read_kernel_proto;
- 	case BPF_FUNC_probe_read_user_str:
--		return &bpf_probe_read_user_str_proto;
-+		return sysctl_offensive_bpf_disabled ? NULL : &bpf_probe_read_user_str_proto;
- 	case BPF_FUNC_probe_read_kernel_str:
--		return security_locked_down(LOCKDOWN_BPF_READ_KERNEL) < 0 ?
-+		return (security_locked_down(LOCKDOWN_BPF_READ_KERNEL) < 0 ||
-+		       sysctl_offensive_bpf_disabled) ?
- 		       NULL : &bpf_probe_read_kernel_str_proto;
- #ifdef CONFIG_ARCH_HAS_NON_OVERLAPPING_ADDRESS_SPACE
- 	case BPF_FUNC_probe_read:
-@@ -1459,9 +1460,9 @@ bpf_tracing_func_proto(enum bpf_func_id func_id, const struct bpf_prog *prog)
- 		return &bpf_cgrp_storage_delete_proto;
- #endif
- 	case BPF_FUNC_send_signal:
--		return &bpf_send_signal_proto;
-+		return sysctl_offensive_bpf_disabled ? NULL : &bpf_send_signal_proto;
- 	case BPF_FUNC_send_signal_thread:
--		return &bpf_send_signal_thread_proto;
-+		return sysctl_offensive_bpf_disabled ? NULL : &bpf_send_signal_thread_proto;
- 	case BPF_FUNC_perf_event_read_value:
- 		return &bpf_perf_event_read_value_proto;
- 	case BPF_FUNC_get_ns_current_pid_tgid:
-@@ -1527,7 +1528,7 @@ kprobe_prog_func_proto(enum bpf_func_id func_id, const struct bpf_prog *prog)
- 		return &bpf_get_stack_proto;
- #ifdef CONFIG_BPF_KPROBE_OVERRIDE
- 	case BPF_FUNC_override_return:
--		return &bpf_override_return_proto;
-+		return sysctl_offensive_bpf_disabled ? NULL : &bpf_override_return_proto;
- #endif
- 	case BPF_FUNC_get_func_ip:
- 		return prog->expected_attach_type == BPF_TRACE_KPROBE_MULTI ?
-diff --git a/tools/testing/selftests/bpf/config b/tools/testing/selftests/bpf/config
-index 63cd4ab70171..1a15d7451f19 100644
---- a/tools/testing/selftests/bpf/config
-+++ b/tools/testing/selftests/bpf/config
-@@ -9,6 +9,7 @@ CONFIG_BPF_LSM=y
- CONFIG_BPF_STREAM_PARSER=y
- CONFIG_BPF_SYSCALL=y
- # CONFIG_BPF_UNPRIV_DEFAULT_OFF is not set
-+# CONFIG_BPF_OFFENSIVE_BPF_OFF is not set
- CONFIG_CGROUP_BPF=y
- CONFIG_CRYPTO_HMAC=y
- CONFIG_CRYPTO_SHA256=y
+ /**
+  * ftrace_regex_open - initialize function tracer filter files
+  * @ops: The ftrace_ops that hold the hash filters
+@@ -5916,6 +5943,13 @@ static const struct file_operations ftrace_touched_fops = {
+ 	.release = seq_release_private,
+ };
+ 
++static const struct file_operations ftrace_avail_addrs_fops = {
++	.open = ftrace_avail_addrs_open,
++	.read = seq_read,
++	.llseek = seq_lseek,
++	.release = seq_release_private,
++};
++
+ static const struct file_operations ftrace_filter_fops = {
+ 	.open = ftrace_filter_open,
+ 	.read = seq_read,
+@@ -6377,6 +6411,9 @@ static __init int ftrace_init_dyn_tracefs(struct dentry *d_tracer)
+ 	trace_create_file("available_filter_functions", TRACE_MODE_READ,
+ 			d_tracer, NULL, &ftrace_avail_fops);
+ 
++	trace_create_file("available_filter_functions_addrs", TRACE_MODE_READ,
++			d_tracer, NULL, &ftrace_avail_addrs_fops);
++
+ 	trace_create_file("enabled_functions", TRACE_MODE_READ,
+ 			d_tracer, NULL, &ftrace_enabled_fops);
+ 
 -- 
-2.34.1
+2.40.1
 
