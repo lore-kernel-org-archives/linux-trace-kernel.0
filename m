@@ -2,52 +2,76 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C7058C7EE2F
-	for <linux-trace-kernel@archiver.kernel.org>; Mon, 12 Jun 2023 14:10:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A9052C88CB2
+	for <linux-trace-kernel@archiver.kernel.org>; Mon, 12 Jun 2023 14:24:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235611AbjFLOKn (ORCPT
+        id S238648AbjFLOYa (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Mon, 12 Jun 2023 10:10:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52482 "EHLO
+        Mon, 12 Jun 2023 10:24:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33206 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237034AbjFLOKm (ORCPT
+        with ESMTP id S237975AbjFLOYH (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Mon, 12 Jun 2023 10:10:42 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A018510D3;
-        Mon, 12 Jun 2023 07:10:40 -0700 (PDT)
+        Mon, 12 Jun 2023 10:24:07 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BCEB3294D;
+        Mon, 12 Jun 2023 07:22:30 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 34D3E629A6;
-        Mon, 12 Jun 2023 14:10:40 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C126AC4339B;
-        Mon, 12 Jun 2023 14:10:38 +0000 (UTC)
-Date:   Mon, 12 Jun 2023 10:10:36 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
-Cc:     Mark Brown <broonie@kernel.org>, Shuah Khan <shuah@kernel.org>,
-        Shuah Khan <skhan@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
-        linux-kselftest@vger.kernel.org
-Subject: Re: [PATCH] selftests/ftace: Fix KTAP output ordering
-Message-ID: <20230612101036.2c20c86d@gandalf.local.home>
-In-Reply-To: <20230612143316.1851a0fd7a49971f1b2209bf@kernel.org>
-References: <20230609-ftrace-ktap-order-v1-1-0abf4d0d6922@kernel.org>
-        <20230612143316.1851a0fd7a49971f1b2209bf@kernel.org>
-X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id D7E566286F;
+        Mon, 12 Jun 2023 14:21:41 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5812AC433EF;
+        Mon, 12 Jun 2023 14:21:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1686579701;
+        bh=bSUbZg2GY9GL7g7yiiN7tqLp1+VLUW4pVV34E8slSwo=;
+        h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+        b=lk0U0vNCLXQ1jivG/UTk76PB3arKqpixoHqJxze+Y0oeKQYI25nfxIRv9g7FkYVIx
+         F8wVXE0VeX09NSrfb19zCwclIB1bs51uXd/uTAVZonb+t/LhSq76sGtK8vFKgtP4We
+         /h7LeE3Fc9ZmBewyd4Onfs/WH29sWmtjrjs/w0Tu+DPUWeQFxlNwA7ZK+UlmpKr2me
+         yWkAS+rvrfAnVzak8Iu0biKpUHP7Ea8MI8JeVjIq7DaFzFhjWGNLCQ3bpdWkqcM282
+         cBoDHFPDO475XTpOvyhfFO4cQx8W89mA+6fdK8VJCRa9DMgf6PxytEXcQa/evvB8Ai
+         tUUHO95sQgenw==
+Message-ID: <8cbfa5c1-bc6b-741e-3739-f251edeecfbf@kernel.org>
+Date:   Mon, 12 Jun 2023 16:21:35 +0200
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.9.1
+Subject: Re: [PATCH V3 02/11] rtla: Add --house-keeping option
+Content-Language: en-US
+To:     "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+        Steven Rostedt <rostedt@goodmis.org>,
+        linux-doc@vger.kernel.org, Juri Lelli <juri.lelli@redhat.com>,
+        William White <chwhite@redhat.com>,
+        Jonathan Corbet <corbet@lwn.net>
+References: <cover.1686066600.git.bristot@kernel.org>
+ <6a6c78a579a96ba8b02ae67ee1e0ba2cb5e03c4a.1686066600.git.bristot@kernel.org>
+ <20230612230600.7e009782e8365cd5f1bce444@kernel.org>
+From:   Daniel Bristot de Oliveira <bristot@kernel.org>
+In-Reply-To: <20230612230600.7e009782e8365cd5f1bce444@kernel.org>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-
-> Acked-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+On 6/12/23 16:06, Masami Hiramatsu (Google) wrote:
+> On Tue,  6 Jun 2023 18:12:16 +0200
+> Daniel Bristot de Oliveira <bristot@kernel.org> wrote:
 > 
-> Shuah, could you pick this?
+>> To avoid having rtla interfering with the measurement threads, add an
+>> option for the user to set the CPUs in which rtla should run. For
+>> instance:
+>>
+>>   # rtla timerlat top -H 0 -C 1-7
+> Isn't it '-c 1-7' instead of '-C', because -C is for cgroup name?
 
-Acked-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+Ooops, you are right.
 
--- Steve
+-- Daniel
+
+> Thanks,
+> 
+
