@@ -2,73 +2,67 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F2E73C77B7A
-	for <linux-trace-kernel@archiver.kernel.org>; Mon, 12 Jun 2023 02:58:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 78BA8C7EE25
+	for <linux-trace-kernel@archiver.kernel.org>; Mon, 12 Jun 2023 04:18:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233932AbjFLC6A (ORCPT
+        id S229476AbjFLESp (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Sun, 11 Jun 2023 22:58:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41034 "EHLO
+        Mon, 12 Jun 2023 00:18:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35110 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229476AbjFLC57 (ORCPT
+        with ESMTP id S229455AbjFLESp (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Sun, 11 Jun 2023 22:57:59 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B32C2E42;
-        Sun, 11 Jun 2023 19:57:58 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 4FA4261BBA;
-        Mon, 12 Jun 2023 02:57:58 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 84A66C433EF;
-        Mon, 12 Jun 2023 02:57:56 +0000 (UTC)
-Date:   Sun, 11 Jun 2023 22:57:54 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Yonghong Song <yhs@meta.com>
-Cc:     Jiri Olsa <jolsa@kernel.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Andrii Nakryiko <andrii@kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        linux-trace-kernel@vger.kernel.org, bpf@vger.kernel.org,
-        Andrii Nakryiko <andrii.nakryiko@gmail.com>,
-        Jackie Liu <liu.yun@linux.dev>
-Subject: Re: [PATCHv2] ftrace: Show all functions with addresses in
- available_filter_functions_addrs
-Message-ID: <20230611225754.01350a50@gandalf.local.home>
-In-Reply-To: <20230611225407.3e9b8ad2@gandalf.local.home>
-References: <20230611130029.1202298-1-jolsa@kernel.org>
-        <53a11f31-256d-e7bc-eca5-597571076dc5@meta.com>
-        <20230611225407.3e9b8ad2@gandalf.local.home>
-X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+        Mon, 12 Jun 2023 00:18:45 -0400
+Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:3::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9BFF491;
+        Sun, 11 Jun 2023 21:18:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20210309; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=7VuDlLSYJdW+nNu3X898l9wqFn63pIrv3O6konR/Pjs=; b=l5yxoaiDbF4Ou9V0nCQhlIWYsk
+        RvKJmlX4OqkVLWP/g42QdE1H/0q529Wq0qDLw9jJgvDorAOir6w45u5eJPIeDVquDB4bSpeV4Wl9/
+        jq8OVYC8HWqFZhYN/nJ5OOA+IQijKAlcdHkoX/HSUVd3D3EwkdEM8AB6z3Ioq1yVhzZGL87ip574U
+        EPotdZX9edn5ho9GSBE6c+AtugqdQq7hGTj4ZTTi/S9QQaGA2t3pX62/b6ZsyGj2GTatWNCIdXdNL
+        qG+a+hK6+ORfHc+Bm5FwR1ICJIlN1GtBY/Y2vGS/TsSKKb9S64Ia3hyPR198Qp2r4LjjVghOpzE6B
+        CMjzDNlw==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.96 #2 (Red Hat Linux))
+        id 1q8Z0b-002Vpz-10;
+        Mon, 12 Jun 2023 04:18:25 +0000
+Date:   Sun, 11 Jun 2023 21:18:25 -0700
+From:   Christoph Hellwig <hch@infradead.org>
+To:     Yi He <clangllvm@126.com>
+Cc:     ast@kernel.org, daniel@iogearbox.net, andrii@kernel.org,
+        song@kernel.org, yhs@fb.com, john.fastabend@gmail.com,
+        kpsingh@kernel.org, sdf@google.com, haoluo@google.com,
+        jolsa@kernel.org, rostedt@goodmis.org, mhiramat@kernel.org,
+        davem@davemloft.net, kuba@kernel.org, hawk@kernel.org,
+        linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+        netdev@vger.kernel.org, bpf@vger.kernel.org,
+        linux-security-module@vger.kernel.org
+Subject: Re: [PATCH] Add a sysctl option to disable bpf offensive helpers.
+Message-ID: <ZIackaLpA3APFFvj@infradead.org>
+References: <20230610152618.105518-1-clangllvm@126.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230610152618.105518-1-clangllvm@126.com>
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On Sun, 11 Jun 2023 22:54:07 -0400
-Steven Rostedt <rostedt@goodmis.org> wrote:
+On Sat, Jun 10, 2023 at 03:26:18PM +0000, Yi He wrote:
+> The default value of sysctl_offensive_bpf_disabled is 0, which means 
+> all the five helpers are enabled. By setting sysctl_offensive_bpf_disabled 
+> to 1, these helpers cannot be used util a reboot. By setting it to 2, 
+> these helpers cannot be used but privieleged users can modify this flag
+> to 0.
 
-> > Also, if there are multiple same static functions with
-> > different addresses, user space might need to check dwarf or
-> > proposed BTF_KIND_KFUNC (which encode kallsyms addresses)
-> > to find whether entry in available_filter_functions_addrs
-> > to be used. But addresses may not match. How this issue could
-> > be resolved?  
-> 
-> Easy, you use the address between two other addresses in kallsyms. The
-> address is still in the function. The addresses in kallsyms is the starting
-> address, but there's cases that the patch location is not at the start.
+That's just a nightmare API.  The right thing is to not allow
+program types that can use the helpers from anything but a global
+fully privileged context.
 
-Not to mention, you can still use the kallsyms address. If you did the work
-to find it, then use it (it may not be as efficient as I mentioned before).
-That's basically what is done today (so I am told), and this patch was to
-create a file where you don't need to look up kallsyms when you know which
-function to use. The functions are sorted by address, so if you know of a
-unique function near the duplicate, you just find the duplicate that's near
-the unique function name.
-
--- Steve
+And offensive is in this context a really weird term.  Nothing is
+offensive here, invasive or allowing to change kernel state might be
+better terms.
