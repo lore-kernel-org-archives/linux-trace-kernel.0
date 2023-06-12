@@ -2,186 +2,302 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AB4F4C7EE2E
-	for <linux-trace-kernel@archiver.kernel.org>; Mon, 12 Jun 2023 14:50:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 651A6C7EE2F
+	for <linux-trace-kernel@archiver.kernel.org>; Mon, 12 Jun 2023 15:01:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237130AbjFLOuP (ORCPT
+        id S238652AbjFLPB4 (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Mon, 12 Jun 2023 10:50:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58154 "EHLO
+        Mon, 12 Jun 2023 11:01:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35568 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237746AbjFLOuM (ORCPT
+        with ESMTP id S239215AbjFLPBy (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Mon, 12 Jun 2023 10:50:12 -0400
-Received: from mx0a-00082601.pphosted.com (mx0a-00082601.pphosted.com [67.231.145.42])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9A4FAB2;
-        Mon, 12 Jun 2023 07:50:11 -0700 (PDT)
-Received: from pps.filterd (m0044012.ppops.net [127.0.0.1])
-        by mx0a-00082601.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 35C6cNFt030663;
-        Mon, 12 Jun 2023 07:49:59 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=meta.com; h=message-id : date :
- subject : to : cc : references : from : in-reply-to : content-type :
- content-transfer-encoding : mime-version; s=s2048-2021-q4;
- bh=wrWaTdfxqfXRlIs42cGQ1NBhSEmRQfgqK2gKGpqeG/U=;
- b=Oq8M2tAH04/zwSgyuOPofKTAzUolzYkbyfa4cjxahu3/M1n7hrJ0h/wERMXNtca3QD1h
- fkbhJ51ZqcSmzQqK96KNBlTNYHvTsmWdChoTlrWfNePypgQIYd40XHlC42hR5Irbx1Iz
- 6UezTMxyPfwxqbl2ADexGOmEp3lUK1E/pemsuoKGLMlR5dpYxbguK4fm0YcDMsfNrBNv
- BZkgGD7da1J6623EzwDTafx4RCZVRq1u/3PT217Dl8mIMP7q5VwEU3QfC8YtG+ZlmkYU
- dpGVyFD4JBoZfyFk966Yt+x6OUeDGLUiS5OWElANTozCFaXhF+ldUrGhsv0OxmPbR9by +w== 
-Received: from nam04-bn8-obe.outbound.protection.outlook.com (mail-bn8nam04lp2043.outbound.protection.outlook.com [104.47.74.43])
-        by mx0a-00082601.pphosted.com (PPS) with ESMTPS id 3r5x8yjkm5-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 12 Jun 2023 07:49:59 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=ZBJWJBXY9+LdnLTK3tYc6yJXRPjJvc+3Kcv+Oz1F5qYrZ/cQVwGgsYAOBjp/xG24aScZ7/siVJ4UdmT1yjvMTzadxd/Dy934/TaRWHA4/5oqdaX+VRxn+4bWf0kVdchjhgsiPQQ2v2WjE8awW0Z+rOPR3vdEUW1LuzNwkBsNiN7L4YcjTyt3v9EkaaVu8N+ox7IJ/DCkiSz2X44Dxp5nzsSOltlm9XWss9nN7jERf6SqjlpSnrw0w2TGxDyMAs2my4YEjYUccYZiqp+cNituawg6svrNDjLsuHQDuEK7x5pMdMoz++StDI3PivCu7KjZasMIF8G79cyO5vwdjt4nUw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=wrWaTdfxqfXRlIs42cGQ1NBhSEmRQfgqK2gKGpqeG/U=;
- b=QkS93rdPlk2DUjzs5Bof24XAl55MrHtsDYOzEcAzIv2KfrHt9YgNUta8ykK6Ca6EEjQpdO9X0wqWP+hBGeIKycerkY+ALLoPYyyTQ8yeFALPQ0d3fV42tbnOwGMkurXGEDboUp056E+NVuti3ndnYiNjaGvQRc6EJ75rR0YXKOzId6iahhEj4MHDKERA+V3GQBGXG/mfbK5+thkMxyqqf7IFMwkv3AaUXjafPxXeaXQkKXTAyPl/zVEuBeejwqgfGk9+xSnDRXB/Rn85J0J2Lk2lSA2VG5Y55Jc/KiShjWkS+sVBJ55B330xEkaZq4bzm09cQ78g9A3QDSkBWNTYNQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=meta.com; dmarc=pass action=none header.from=meta.com;
- dkim=pass header.d=meta.com; arc=none
-Received: from SN6PR1501MB2064.namprd15.prod.outlook.com (2603:10b6:805:d::27)
- by DS0PR15MB5922.namprd15.prod.outlook.com (2603:10b6:8:f9::12) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6455.33; Mon, 12 Jun
- 2023 14:49:56 +0000
-Received: from SN6PR1501MB2064.namprd15.prod.outlook.com
- ([fe80::428f:acec:2c1f:c812]) by SN6PR1501MB2064.namprd15.prod.outlook.com
- ([fe80::428f:acec:2c1f:c812%6]) with mapi id 15.20.6455.043; Mon, 12 Jun 2023
- 14:49:56 +0000
-Message-ID: <d5ffd64c-65b7-e28c-b8ee-0d2ff9dcd78b@meta.com>
-Date:   Mon, 12 Jun 2023 07:49:53 -0700
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:102.0)
- Gecko/20100101 Thunderbird/102.12.0
-Subject: Re: [PATCHv2] ftrace: Show all functions with addresses in
- available_filter_functions_addrs
-Content-Language: en-US
-To:     Steven Rostedt <rostedt@goodmis.org>
-Cc:     Jiri Olsa <jolsa@kernel.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Andrii Nakryiko <andrii@kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        linux-trace-kernel@vger.kernel.org, bpf@vger.kernel.org,
-        Andrii Nakryiko <andrii.nakryiko@gmail.com>,
-        Jackie Liu <liu.yun@linux.dev>
-References: <20230611130029.1202298-1-jolsa@kernel.org>
- <53a11f31-256d-e7bc-eca5-597571076dc5@meta.com>
- <20230611225407.3e9b8ad2@gandalf.local.home>
- <20230611225754.01350a50@gandalf.local.home>
-From:   Yonghong Song <yhs@meta.com>
-In-Reply-To: <20230611225754.01350a50@gandalf.local.home>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: BY5PR16CA0003.namprd16.prod.outlook.com
- (2603:10b6:a03:1a0::16) To SN6PR1501MB2064.namprd15.prod.outlook.com
- (2603:10b6:805:d::27)
+        Mon, 12 Jun 2023 11:01:54 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 47B30CC
+        for <linux-trace-kernel@vger.kernel.org>; Mon, 12 Jun 2023 08:01:52 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id C187E62A5C
+        for <linux-trace-kernel@vger.kernel.org>; Mon, 12 Jun 2023 15:01:51 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 27562C433AC
+        for <linux-trace-kernel@vger.kernel.org>; Mon, 12 Jun 2023 15:01:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1686582111;
+        bh=b9ANP3Hp1MF8lhPj5vX8FwH4gFUxMf9AygCj2ueMZLQ=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=HwN9Ri5e8hxCA95hxfZZYGCL/wmVMSl6sAifLYWuFgTOTQ39S8LMHkRKX85RjlMr8
+         fk3YkqyuYlNR/NIr2ArOm8B8YZJTvgRUpqaO3zAPLC89YxPxxeJf7kHeWgWXnmMoKR
+         EVbMPMHjQIsH7iD1BOvD4Fs7ZbO3W6ouJHkq2Wd7pvr5WR4Ep4xju2TnfJ+RPPNALD
+         IYJ4Dan+O8HPs8PcSpBP1XOzoPoAvsjLrI4qW+a58RKGN6jWe1reTUQEJfRVuZotOW
+         9h/dZ8HfyBFk8+L7k8umrep/mTyGeaz5SZ5MngVXo0vv9v/UsxbNlG7R0uVAYstTFd
+         BAexUD0YD+7rA==
+Received: by mail-ed1-f46.google.com with SMTP id 4fb4d7f45d1cf-5186c90e3bbso247624a12.3
+        for <linux-trace-kernel@vger.kernel.org>; Mon, 12 Jun 2023 08:01:51 -0700 (PDT)
+X-Gm-Message-State: AC+VfDwMvZKNjo9xZ9oUqJ4vsv0DscPqtNXuClHSjHeILRLW470jp0v0
+        6n3Dhm7rYwXPna8XijZwt5kUGugQmEF8KwaIt523fA==
+X-Google-Smtp-Source: ACHHUZ4NwpHBk4WiP9cW5gQV9nUavflhEpxk5+JEUepLjBFLDP6rLijhmwW+f3KnzKbFAwSkCD3lPdu8bgmYZg02v3M=
+X-Received: by 2002:aa7:c489:0:b0:516:459d:d912 with SMTP id
+ m9-20020aa7c489000000b00516459dd912mr4799830edq.28.1686582109044; Mon, 12 Jun
+ 2023 08:01:49 -0700 (PDT)
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SN6PR1501MB2064:EE_|DS0PR15MB5922:EE_
-X-MS-Office365-Filtering-Correlation-Id: e87f1a05-aac2-4e08-e80b-08db6b5449e9
-X-FB-Source: Internal
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: /tQiIKOcApPpWgo+Ko2o5luVgzWKaPw6l5q1c8vit539SGOZTfNHon1Mew2EsSrWI5zlhzeYTy858Ab4RGF5u+AdccoJUaQyfBEKD4goiVcS9l+n+RA3jXQ4f00v4wGcgjekj7znQfOIETRKEY6JGALeztTVml2usJs5dZUmA6nh7auJhwWVlBuiZLKQvpVQuO5qhHt8RWSg0PeCuNbMRKc+D20eF0CC+POxEKOrB4Y/ODygvtxkSlwcIwXPki090j2M4q8piWH5gScSICWGQq1h9ZHyHw9no2o7lHCNSoJcst/h8SYgCk9/grkfb8lTK7zrJ2Lth19jsW0mw8/100DNScbos1IelY8HJWQ4BAJoTS3fyKZLCWvGztZ+wNhwVjqkEdu2IiY88XG2GypYbrrLApbijHVowPp0UuLZ1YLDcPINhavEDjngIcYL6wXqWt2IiioRHJIbuAWjHbCk4wOLqf7SNrId8adqblIkOVa0U6CkG7Pl+1VsXg5GN3nYqbvBdZaVk8fcXzI5PYH42J814knlffhSWZIlCpja89u7f3zsdZBHJiyUEwmwRGhLR0bnI4nLWERc58lHVhPystTxaFA1GfHpdICLCecCa7WMvxjvJbjbpXAozexrvf++2EBlfgjkOrHqeLij4e13yg==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SN6PR1501MB2064.namprd15.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230028)(4636009)(396003)(346002)(376002)(136003)(366004)(39860400002)(451199021)(31686004)(2616005)(54906003)(6506007)(186003)(6512007)(53546011)(478600001)(41300700001)(4326008)(36756003)(7416002)(66556008)(66476007)(2906002)(6916009)(38100700002)(66946007)(8936002)(6486002)(8676002)(316002)(6666004)(31696002)(5660300002)(86362001)(45980500001)(43740500002);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?QjdqM0g1czYyMEdXV29RVlVwSFdQOUE4L2FiWnQ4c09YZUtyNU5LOEJCOHU3?=
- =?utf-8?B?SEFqNjlITWo0TXlHYUM0ZjB5TjhrU1dVaG1EcTBFUm1wbG9pM0ZDTEpsZVdD?=
- =?utf-8?B?WDZwNDBIdDFibTNRNVV5TjI0UmZsbEtuYVRsK0syelYzeGNDMk02RXp6SUx2?=
- =?utf-8?B?aVlzbm1ETlRKMlVucTk1UVpiUDRxeWZRUmc1UkJFL0VMU3NaUmw2eDBJSFdp?=
- =?utf-8?B?M1VWM3VUNWU1VWEvYzR0cml3dWlXaUc3dlk4S3llOUJwMHhpVlVyN0JkbzdD?=
- =?utf-8?B?dnMwMGtqSERraHhMTC9LWEtsME9BNmFSMTNieWdoSHZicU5vSzViTUMxWVBi?=
- =?utf-8?B?a2dMcHljSnphQktjU0RuTjk1TTJqckl0Z3hmcUcrZ0k1aUFZZzFqOEFvbmQz?=
- =?utf-8?B?NXVqV3BWWmV1QXd3RFpuNXFKcTJEYmc0K21IVFl5dGx1aERreExrY3puRmth?=
- =?utf-8?B?UkFtUHQ4a0cxVlgwQ1oxeW5CandHODNPNkZoR3J1TmFLbGpNOUNCWlA3MlhY?=
- =?utf-8?B?M3JNcDl0R2pXL1RvcUpUMEtZYWhWTE5EL0hVcDhVQjNuLzQ4cDBDcHB2RGNk?=
- =?utf-8?B?ZEZ4MndsMXlPMGRCdjJVYXR2aElSNUtXSS9zUnBwV1NTRUFyN1ZzZUJ2YVJv?=
- =?utf-8?B?aVVYbFhzbjBFbDNZUGRzYjVVcWswSFVLSm9sdGJwQVhBb2JOWlh1YU5jdlh5?=
- =?utf-8?B?MXdqSHFYYVZQbk9OYzhXbHRNblpVWWtxU2l1R25QbkVCdnM3NWlPYjRWaDR2?=
- =?utf-8?B?aks3OVVHdU1MUlVQeGh2ZktwaENtTGIreExISFVzdkZvYjZuNUpQSUNsaU1M?=
- =?utf-8?B?MTNhc3AvTHlhaXo0Nkk3ems3MklGUnBreC9JMXE3MWNxOGZIY3M3NGFMTWFq?=
- =?utf-8?B?SDU3YmlkNmxTcGNuV1FVVG4xbVN2bHo3UXh4Y2Y3TTVYcW0zRHNpa0ZTU2xT?=
- =?utf-8?B?a0ZJNFl3MVo3RXp6eGlNY1RiYWpuZkR3aU1IK0pqaFdkdnljSldFZ0wvNFEx?=
- =?utf-8?B?UDlyYy9YYXJ1bGZNbVFxN3pkMStiVExwSzk3T09ScHB3LzBtbGhzZXIxZHg3?=
- =?utf-8?B?bmp4dTJWSWdWSnAxQUN5Smxiem9WK3FNUDBsNWN1SEtVRTlvTUZYYUNYTHZt?=
- =?utf-8?B?MlQzSVpzaWxUckg1RWpZZGhhWHR0d2VhZngydmZWa2VRTGdwM21UTkdFTlZ1?=
- =?utf-8?B?bHd6b0JRRHBXTE9YVVcwVUZwaTNUT2NxRVVSbXQyeEZ0Y0NxT2hPeHBJYkdE?=
- =?utf-8?B?aVQ2VE5qUDQrcTZTMUs1VDZrdFBnRUFaZFgzWFlteEl2SC8yOW5IMS9Rb2Vv?=
- =?utf-8?B?a3VGdjVjd1RHNnY3T2pSOGc0Zk5Pc2tQZC9UTVIzMnNqQ2FNTHN1cU9HZTlk?=
- =?utf-8?B?UnhXSjNrL2I5NFB6NzJhaVdTL0hxNTVyZ1lzK2JPc01wREorMkY5T2xWdlBr?=
- =?utf-8?B?Q3V6aEhINndRemxLaGl1bVFuV1NZWGkwYy8zOWNRL1FlNzZGenpsRXcyblpQ?=
- =?utf-8?B?VXVvSGlrcHUzaEJhRDllMjl2a3IwQjQyTFMwZEZLVjBvQ3o1anpkV3cwRE1O?=
- =?utf-8?B?aDhUSGFqaGphb0htWldFcE5vTWZ6Vjg2ZWVta095SGN2WDFkSUVoYjBIdWtU?=
- =?utf-8?B?RlgvdXk0a3VJSE5kZExQMUhXVWJDVk9FK25YT2JxSzVqczF2NFcrYzlvVzRx?=
- =?utf-8?B?WVp1MFh4bU5NOTlvZXozYS8venFLakx0QVlaUUhPUWtHYitFbzZ1aEtieGZK?=
- =?utf-8?B?OTVLODZGbnM2anQ0dmUzVXB3MnpoQ2JYTlpDOW9vOFQxR2N2MEJRSkhBYnRp?=
- =?utf-8?B?WGpsT0lQVVJZTUtFSXhkai9XQmh1ZDUvV1ppZEhlUmNaWVY4aW1vWElhNitK?=
- =?utf-8?B?bHRILzBiK0xvcFM0SW15L3ZwS3FxV0xVbHBBNERDVXhjaDlPd1FseGtNUjAv?=
- =?utf-8?B?T1lsdHprZXBnaW11RXVZNDNLUVdNTnV3VnA2ZWRTYXMxRHo0L2Jzd2U2THRt?=
- =?utf-8?B?MHU3c3JpZ2QwMGtrYmFkZG5Hc002RnhndUx3UEZqcmJHRkVOQ0JodndjNnhX?=
- =?utf-8?B?dW1Uakx2cHA1UlJlRGM0OU4yWmNOSmQ1VkRiUFdTUHl4WTU4cllyMkZKam55?=
- =?utf-8?B?djJ4R2xIQllpUGF6cTBQcUZzQjcrMnJMSXd4Uys5QVptVkJSRFljL0VWbnky?=
- =?utf-8?B?L0E9PQ==?=
-X-OriginatorOrg: meta.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: e87f1a05-aac2-4e08-e80b-08db6b5449e9
-X-MS-Exchange-CrossTenant-AuthSource: SN6PR1501MB2064.namprd15.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 12 Jun 2023 14:49:56.7404
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 8ae927fe-1255-47a7-a2af-5f3a069daaa2
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: AFsAMy4Df+iHKG+iY3yemvJ58yod9IYlmb8JxvBcQPRELVnieOWqIemONgvytRr9
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS0PR15MB5922
-X-Proofpoint-GUID: pIahGWN-3FEScoBgy7dt2KywqPmG5rm_
-X-Proofpoint-ORIG-GUID: pIahGWN-3FEScoBgy7dt2KywqPmG5rm_
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.254,Aquarius:18.0.957,Hydra:6.0.573,FMLib:17.11.176.26
- definitions=2023-06-12_06,2023-06-09_01,2023-05-22_02
+References: <20230610152618.105518-1-clangllvm@126.com>
+In-Reply-To: <20230610152618.105518-1-clangllvm@126.com>
+From:   KP Singh <kpsingh@kernel.org>
+Date:   Mon, 12 Jun 2023 17:01:38 +0200
+X-Gmail-Original-Message-ID: <CACYkzJ5JwUt7vvOe3bEnaTErYdcp9D4EwEfOdc63Ck196ZynAg@mail.gmail.com>
+Message-ID: <CACYkzJ5JwUt7vvOe3bEnaTErYdcp9D4EwEfOdc63Ck196ZynAg@mail.gmail.com>
+Subject: Re: [PATCH] Add a sysctl option to disable bpf offensive helpers.
+To:     Yi He <clangllvm@126.com>
+Cc:     ast@kernel.org, daniel@iogearbox.net, andrii@kernel.org,
+        song@kernel.org, yhs@fb.com, john.fastabend@gmail.com,
+        sdf@google.com, haoluo@google.com, jolsa@kernel.org,
+        rostedt@goodmis.org, mhiramat@kernel.org, davem@davemloft.net,
+        kuba@kernel.org, hawk@kernel.org, linux-kernel@vger.kernel.org,
+        linux-trace-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        bpf@vger.kernel.org, linux-security-module@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
+On Sat, Jun 10, 2023 at 5:46=E2=80=AFPM Yi He <clangllvm@126.com> wrote:
+>
+> Some eBPF helper functions have been long regarded as problematic[1].
+> More than just used for powerful rootkit, these features can also be
+> exploited to harm the containers by perform various attacks to the
+> processes outside the container in the enrtire VM, such as process
+> DoS, information theft, and container escape.
+>
+> When a container is granted to run eBPF tracing programs (which
+> need CAP_SYS_ADMIN), it can use the eBPF KProbe programs to hijack the
+> process outside the contianer and to escape the containers. This kind
+> of risks is limited as privieleged containers are warned and can hardly
+>  be accessed by the attackers.
+>
+> Even without CAP_SYS_ADMIN, since Linux 5.6, programs with CAP_BPF +
+> CAP_PERFMON can use dangerous eBPF helpers such as bpf_read_user to steal
+> sensitive data (e.g., sshd/nginx private key) in other containers.
+>
+> Currently, eBPF users just enable CAP_SYS_ADMIN and also enable the
+> offensive features. Since lots of eBPF tools are distributed via
+> containers, attackers may perform supply chain attacks to create and
 
+I don't understand "supply chain" here.
 
-On 6/11/23 7:57 PM, Steven Rostedt wrote:
-> On Sun, 11 Jun 2023 22:54:07 -0400
-> Steven Rostedt <rostedt@goodmis.org> wrote:
-> 
->>> Also, if there are multiple same static functions with
->>> different addresses, user space might need to check dwarf or
->>> proposed BTF_KIND_KFUNC (which encode kallsyms addresses)
->>> to find whether entry in available_filter_functions_addrs
->>> to be used. But addresses may not match. How this issue could
->>> be resolved?
->>
->> Easy, you use the address between two other addresses in kallsyms. The
->> address is still in the function. The addresses in kallsyms is the starting
->> address, but there's cases that the patch location is not at the start.
-> 
-> Not to mention, you can still use the kallsyms address. If you did the work
-> to find it, then use it (it may not be as efficient as I mentioned before).
-> That's basically what is done today (so I am told), and this patch was to
-> create a file where you don't need to look up kallsyms when you know which
-> function to use. The functions are sorted by address, so if you know of a
-> unique function near the duplicate, you just find the duplicate that's near
-> the unique function name.
+> spread their eBPF malware, To prevent the abuse of these helpers, we
 
-Thanks for explanation. IIUC, typically with endbr enabled, the patch
-address typically is the entry_addr + 4. So it is indeed easy to
-correlate the entry in available_filter_functions_addrs and in
-kallsyms.
+Are you saying attackers will provide BPF programs that will be loaded
+in privileged contexts (e.g. privileged containers)? Please understand
+that this threat model does not hold well. Even without these helpers
+a CAP_BPF + CAP_PERFMON container is a part of your trusted compute
+base and needs to run trusted code.
 
-I am actually interested in how available_filter_functions_addrs
-will be used. For example, bpf_program__attach_kprobe_multi_opts()
-can already take addresses from kallsyms. How to use
-available_filter_functions_addrs to facilitate kprobe_multi?
-Do we need to change kernel APIs? It would be great at least we
-got a RFC patch to answer these questions.
+> introduce a new sysctl option (sysctl_offensive_bpf_disabled) to
+> cofine the usages of five dangerous helpers:
+> - bpf_probe_write_user
+> - bpf_probe_read_user
+> - bpf_probe_read_kernel
+> - bpf_send_signal
+> - bpf_override_return
+>
+> The default value of sysctl_offensive_bpf_disabled is 0, which means
+> all the five helpers are enabled. By setting sysctl_offensive_bpf_disable=
+d
+> to 1, these helpers cannot be used util a reboot. By setting it to 2,
+> these helpers cannot be used but privieleged users can modify this flag
+> to 0.
+>
+> For benign eBPF programs such as Cillium, they do not need these features
+> and can set the sysctl_offensive_bpf_disabled to 1 after initialization.
 
-> 
-> -- Steve
+Again, a container running Cilium needs to only run trusted code.
+What's the threat model here? There are components in the cilium
+container that are attacker controlled?
+
+>
+>
+> [1] https://embracethered.com/blog/posts/2021/offensive-bpf/
+>
+>
+> Signed-off-by: Yi He <clangllvm@126.com>
+> ---
+>  include/linux/bpf.h                       |  2 ++
+>  kernel/bpf/syscall.c                      | 33 +++++++++++++++++++++++
+>  kernel/configs/android-recommended.config |  1 +
+>  kernel/trace/bpf_trace.c                  | 21 ++++++++-------
+>  tools/testing/selftests/bpf/config        |  1 +
+>  5 files changed, 48 insertions(+), 10 deletions(-)
+>
+> diff --git a/include/linux/bpf.h b/include/linux/bpf.h
+> index 456f33b9d205..61c723a589f8 100644
+> --- a/include/linux/bpf.h
+> +++ b/include/linux/bpf.h
+> @@ -2043,6 +2043,8 @@ bpf_map_alloc_percpu(const struct bpf_map *map, siz=
+e_t size, size_t align,
+>
+>  extern int sysctl_unprivileged_bpf_disabled;
+>
+> +extern int sysctl_offensive_bpf_disabled;
+> +
+>  static inline bool bpf_allow_ptr_leaks(void)
+>  {
+>         return perfmon_capable();
+> diff --git a/kernel/bpf/syscall.c b/kernel/bpf/syscall.c
+> index 14f39c1e573e..6b8c8ee1ea22 100644
+> --- a/kernel/bpf/syscall.c
+> +++ b/kernel/bpf/syscall.c
+> @@ -58,6 +58,9 @@ static DEFINE_SPINLOCK(link_idr_lock);
+>  int sysctl_unprivileged_bpf_disabled __read_mostly =3D
+>         IS_BUILTIN(CONFIG_BPF_UNPRIV_DEFAULT_OFF) ? 2 : 0;
+>
+> +int sysctl_offensive_bpf_disabled __read_mostly =3D
+> +       IS_BUILTIN(CONFIG_BPF_OFFENSIVE_BPF_OFF) ? 2 : 0;
+> +
+>  static const struct bpf_map_ops * const bpf_map_types[] =3D {
+>  #define BPF_PROG_TYPE(_id, _name, prog_ctx_type, kern_ctx_type)
+>  #define BPF_MAP_TYPE(_id, _ops) \
+> @@ -5385,6 +5388,27 @@ static int bpf_unpriv_handler(struct ctl_table *ta=
+ble, int write,
+>         return ret;
+>  }
+>
+> +static int bpf_offensive_handler(struct ctl_table *table, int write,
+> +                             void *buffer, size_t *lenp, loff_t *ppos)
+> +{
+> +       int ret, offensive_enable =3D *(int *)table->data;
+> +       bool locked_state =3D offensive_enable =3D=3D 1;
+> +       struct ctl_table tmp =3D *table;
+> +
+> +       if (write && !capable(CAP_SYS_ADMIN))
+> +               return -EPERM;
+> +
+> +       tmp.data =3D &offensive_enable;
+> +       ret =3D proc_dointvec_minmax(&tmp, write, buffer, lenp, ppos);
+> +       if (write && !ret) {
+> +               if (locked_state && offensive_enable !=3D 1)
+> +                       return -EPERM;
+> +               *(int *)table->data =3D offensive_enable;
+> +       }
+> +
+> +       return ret;
+> +}
+> +
+>  static struct ctl_table bpf_syscall_table[] =3D {
+>         {
+>                 .procname       =3D "unprivileged_bpf_disabled",
+> @@ -5395,6 +5419,15 @@ static struct ctl_table bpf_syscall_table[] =3D {
+>                 .extra1         =3D SYSCTL_ZERO,
+>                 .extra2         =3D SYSCTL_TWO,
+>         },
+> +       {
+> +               .procname       =3D "offensive_bpf_disabled",
+> +               .data           =3D &sysctl_offensive_bpf_disabled,
+> +               .maxlen         =3D sizeof(sysctl_offensive_bpf_disabled)=
+,
+> +               .mode           =3D 0644,
+> +               .proc_handler   =3D bpf_offensive_handler,
+> +               .extra1         =3D SYSCTL_ZERO,
+> +               .extra2         =3D SYSCTL_TWO,
+> +       },
+>         {
+>                 .procname       =3D "bpf_stats_enabled",
+>                 .data           =3D &bpf_stats_enabled_key.key,
+> diff --git a/kernel/configs/android-recommended.config b/kernel/configs/a=
+ndroid-recommended.config
+> index e400fbbc8aba..cca75258af72 100644
+> --- a/kernel/configs/android-recommended.config
+> +++ b/kernel/configs/android-recommended.config
+> @@ -1,5 +1,6 @@
+>  #  KEEP ALPHABETICALLY SORTED
+>  # CONFIG_BPF_UNPRIV_DEFAULT_OFF is not set
+> +# CONFIG_BPF_OFFENSIVE_BPF_OFF is not set
+>  # CONFIG_CORE_DUMP_DEFAULT_ELF_HEADERS is not set
+>  # CONFIG_INPUT_MOUSE is not set
+>  # CONFIG_LEGACY_PTYS is not set
+> diff --git a/kernel/trace/bpf_trace.c b/kernel/trace/bpf_trace.c
+> index 8deb22a99abe..5bdd0bee3e45 100644
+> --- a/kernel/trace/bpf_trace.c
+> +++ b/kernel/trace/bpf_trace.c
+> @@ -1432,17 +1432,18 @@ bpf_tracing_func_proto(enum bpf_func_id func_id, =
+const struct bpf_prog *prog)
+>         case BPF_FUNC_get_prandom_u32:
+>                 return &bpf_get_prandom_u32_proto;
+>         case BPF_FUNC_probe_write_user:
+> -               return security_locked_down(LOCKDOWN_BPF_WRITE_USER) < 0 =
+?
+> -                      NULL : bpf_get_probe_write_proto();
+> +               return (security_locked_down(LOCKDOWN_BPF_WRITE_USER) < 0=
+ ||
+> +                      sysctl_offensive_bpf_disabled) ? NULL : bpf_get_pr=
+obe_write_proto();
+>         case BPF_FUNC_probe_read_user:
+> -               return &bpf_probe_read_user_proto;
+> +               return sysctl_offensive_bpf_disabled ? NULL : &bpf_probe_=
+read_user_proto;
+>         case BPF_FUNC_probe_read_kernel:
+> -               return security_locked_down(LOCKDOWN_BPF_READ_KERNEL) < 0=
+ ?
+> -                      NULL : &bpf_probe_read_kernel_proto;
+> +               return (security_locked_down(LOCKDOWN_BPF_READ_KERNEL) < =
+0 ||
+> +                      sysctl_offensive_bpf_disabled) ? NULL : &bpf_probe=
+_read_kernel_proto;
+>         case BPF_FUNC_probe_read_user_str:
+> -               return &bpf_probe_read_user_str_proto;
+> +               return sysctl_offensive_bpf_disabled ? NULL : &bpf_probe_=
+read_user_str_proto;
+>         case BPF_FUNC_probe_read_kernel_str:
+> -               return security_locked_down(LOCKDOWN_BPF_READ_KERNEL) < 0=
+ ?
+> +               return (security_locked_down(LOCKDOWN_BPF_READ_KERNEL) < =
+0 ||
+> +                      sysctl_offensive_bpf_disabled) ?
+>                        NULL : &bpf_probe_read_kernel_str_proto;
+>  #ifdef CONFIG_ARCH_HAS_NON_OVERLAPPING_ADDRESS_SPACE
+>         case BPF_FUNC_probe_read:
+> @@ -1459,9 +1460,9 @@ bpf_tracing_func_proto(enum bpf_func_id func_id, co=
+nst struct bpf_prog *prog)
+>                 return &bpf_cgrp_storage_delete_proto;
+>  #endif
+>         case BPF_FUNC_send_signal:
+> -               return &bpf_send_signal_proto;
+> +               return sysctl_offensive_bpf_disabled ? NULL : &bpf_send_s=
+ignal_proto;
+>         case BPF_FUNC_send_signal_thread:
+> -               return &bpf_send_signal_thread_proto;
+> +               return sysctl_offensive_bpf_disabled ? NULL : &bpf_send_s=
+ignal_thread_proto;
+>         case BPF_FUNC_perf_event_read_value:
+>                 return &bpf_perf_event_read_value_proto;
+>         case BPF_FUNC_get_ns_current_pid_tgid:
+> @@ -1527,7 +1528,7 @@ kprobe_prog_func_proto(enum bpf_func_id func_id, co=
+nst struct bpf_prog *prog)
+>                 return &bpf_get_stack_proto;
+>  #ifdef CONFIG_BPF_KPROBE_OVERRIDE
+>         case BPF_FUNC_override_return:
+> -               return &bpf_override_return_proto;
+> +               return sysctl_offensive_bpf_disabled ? NULL : &bpf_overri=
+de_return_proto;
+>  #endif
+>         case BPF_FUNC_get_func_ip:
+>                 return prog->expected_attach_type =3D=3D BPF_TRACE_KPROBE=
+_MULTI ?
+> diff --git a/tools/testing/selftests/bpf/config b/tools/testing/selftests=
+/bpf/config
+> index 63cd4ab70171..1a15d7451f19 100644
+> --- a/tools/testing/selftests/bpf/config
+> +++ b/tools/testing/selftests/bpf/config
+> @@ -9,6 +9,7 @@ CONFIG_BPF_LSM=3Dy
+>  CONFIG_BPF_STREAM_PARSER=3Dy
+>  CONFIG_BPF_SYSCALL=3Dy
+>  # CONFIG_BPF_UNPRIV_DEFAULT_OFF is not set
+> +# CONFIG_BPF_OFFENSIVE_BPF_OFF is not set
+>  CONFIG_CGROUP_BPF=3Dy
+>  CONFIG_CRYPTO_HMAC=3Dy
+>  CONFIG_CRYPTO_SHA256=3Dy
+> --
+> 2.34.1
+>
