@@ -2,57 +2,51 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D5FE2C88CB7
-	for <linux-trace-kernel@archiver.kernel.org>; Mon, 12 Jun 2023 13:55:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 12080C88CB6
+	for <linux-trace-kernel@archiver.kernel.org>; Mon, 12 Jun 2023 14:06:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237013AbjFLNz2 (ORCPT
+        id S236894AbjFLOGI (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Mon, 12 Jun 2023 09:55:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42664 "EHLO
+        Mon, 12 Jun 2023 10:06:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49726 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237392AbjFLNzS (ORCPT
+        with ESMTP id S236880AbjFLOGH (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Mon, 12 Jun 2023 09:55:18 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 170FD1730;
-        Mon, 12 Jun 2023 06:54:53 -0700 (PDT)
+        Mon, 12 Jun 2023 10:06:07 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 47882A1;
+        Mon, 12 Jun 2023 07:06:05 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 040B2615F6;
-        Mon, 12 Jun 2023 13:54:37 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3A024C433D2;
-        Mon, 12 Jun 2023 13:54:34 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id B60916299A;
+        Mon, 12 Jun 2023 14:06:04 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 846A3C433D2;
+        Mon, 12 Jun 2023 14:06:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1686578076;
-        bh=UnO5F2AUHeEwb6H7h3Ylb54nZuSur/fxclUCXZ8wjQo=;
+        s=k20201202; t=1686578764;
+        bh=uLqyqxD/9IhBKEZaxugIUrvoO6jx00t64M+mDxwyjAI=;
         h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=sKO+IHXMWBadTMedjIs4aEUTvey7/wws4t+HZFQXJJTaVEHTkRfMqcO5uIwle15KF
-         UumbyyuoydFgXac9oOUHPmli691YgGPg1pK7AIWrkQa4oT3LCFlwj2gvhoVVqM86wW
-         HZvu3CaG9XznPRsrw3MaNH7pEEvDOx1UrylTVfXvmIlPCpEHpXBetLcymQ0NvD/iEs
-         lvi8XpLTLyM5C3VLF/ueSEMvZuTXYphZjT6dvdjubb3OkhPwFiw5ELJ1fbgjeASpzF
-         /NTcQ4R8T4XkO+rof5E1NdMG8Bb/s+QjrJ0tyBYvZpMhoUi6Esx+/wK6IM/sZcz9wY
-         t/MBXgG8zW9rQ==
-Date:   Mon, 12 Jun 2023 22:54:32 +0900
+        b=d6CuA0ouuekx/0n3pYEXbEm/dNvT7l8ZpihmKPASY/LvaLV4qeGftT1UtCB/Esfud
+         N7ty5BCguycdFafR8l6pBCovphP89qc5PXOf/KpI1J4UYBuzCXSJtqnjBy0deQWc/v
+         Ni6BgD30Z7fsPwnri2jMW04zOcOeeQvFBtjow3I95HoabEL3XqkGq3HEuQ+/h0L+AP
+         26/QzElOH/JCHMPTT/oTDue2b81z4obe5law3aTUtLUNPEE2uqR3nB+JfRByhA9/P/
+         tHl+zk9YVKvwHRipZQ5hbevCakr8ri7yVYdIBGtKJs4opRyDpPu5j6B87+XhtC7602
+         nrqrvj4oeYmrg==
+Date:   Mon, 12 Jun 2023 23:06:00 +0900
 From:   Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To:     Steven Rostedt <rostedt@goodmis.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Linux Trace Kernel <linux-trace-kernel@vger.kernel.org>,
+To:     Daniel Bristot de Oliveira <bristot@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+        Steven Rostedt <rostedt@goodmis.org>,
+        linux-doc@vger.kernel.org, Juri Lelli <juri.lelli@redhat.com>,
+        William White <chwhite@redhat.com>,
         Masami Hiramatsu <mhiramat@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Kees Cook <keescook@chromium.org>,
-        Miguel Ojeda <ojeda@kernel.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Ingo Molnar <mingo@kernel.org>, Song Liu <song@kernel.org>,
-        Josh Poimboeuf <jpoimboe@kernel.org>
-Subject: Re: [PATCH v2] ftrace: Allow inline functions not inlined to be
- traced
-Message-Id: <20230612225432.1e89e8f50dafff9858ad3b3f@kernel.org>
-In-Reply-To: <20230609174422.04824a9e@gandalf.local.home>
-References: <20230609174422.04824a9e@gandalf.local.home>
+        Jonathan Corbet <corbet@lwn.net>
+Subject: Re: [PATCH V3 02/11] rtla: Add --house-keeping option
+Message-Id: <20230612230600.7e009782e8365cd5f1bce444@kernel.org>
+In-Reply-To: <6a6c78a579a96ba8b02ae67ee1e0ba2cb5e03c4a.1686066600.git.bristot@kernel.org>
+References: <cover.1686066600.git.bristot@kernel.org>
+        <6a6c78a579a96ba8b02ae67ee1e0ba2cb5e03c4a.1686066600.git.bristot@kernel.org>
 X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Mime-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
@@ -61,138 +55,531 @@ Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On Fri, 9 Jun 2023 17:44:22 -0400
-Steven Rostedt <rostedt@goodmis.org> wrote:
+On Tue,  6 Jun 2023 18:12:16 +0200
+Daniel Bristot de Oliveira <bristot@kernel.org> wrote:
 
-> From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
+> To avoid having rtla interfering with the measurement threads, add an
+> option for the user to set the CPUs in which rtla should run. For
+> instance:
 > 
-> Over 10 years ago there were many bugs that caused function tracing to
-> crash because some inlined function was not inlined and should not have
-> been traced. This made it hard to debug because when the developer tried
-> to reproduce it, if their compiler still inlined the function, the bug
-> would not trigger. The solution back then was simply to add "notrace" to
-> "inline" which would make sure all functions that are marked inline are
-> never traced even when the compiler decides to not inline them.
+>   # rtla timerlat top -H 0 -C 1-7
+
+Isn't it '-c 1-7' instead of '-C', because -C is for cgroup name?
+
+Thanks,
+
 > 
-> A lot has changed over the last 10 years.
+> Will place rtla in the CPU 0, while running the measurement threads in
+> the CPU 1-7.
 > 
-> 1) ftrace_test_recursion_trylock() is now used by all ftrace hooks which
->    will prevent the recursive crashes from happening that was caused by
->    inlined functions being traced.
-> 
-> 2) noinstr is now used to mark pretty much all functions that would also
->    cause problems if they are traced.
-> 
-> Today, it is no longer a problem if an inlined function is not inlined and
-> is traced, at least on x86. Removing notrace from inline has been requested
-> several times over the years. I believe it is now safe to do so.
-> 
-> Currently only x86 uses this.
-> 
-> Acked-by: Song Liu <song@kernel.org>
-> Acked-by: Josh Poimboeuf <jpoimboe@kernel.org>
-> Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+> Cc: Steven Rostedt <rostedt@goodmis.org>
+> Cc: Daniel Bristot de Oliveira <bristot@kernel.org>
+> Cc: Masami Hiramatsu <mhiramat@kernel.org>
+> Cc: Jonathan Corbet <corbet@lwn.net>
+> Suggested-by: Juri Lelli <juri.lelli@redhat.com>
+> Signed-off-by: Daniel Bristot de Oliveira <bristot@kernel.org>
 > ---
-> Changes since v1: https://lore.kernel.org/linux-trace-kernel/20230502164102.1a51cdb4@gandalf.local.home
+>  Documentation/tools/rtla/common_options.rst |  4 ++
+>  tools/tracing/rtla/src/osnoise_hist.c       | 29 +++++++++--
+>  tools/tracing/rtla/src/osnoise_top.c        | 27 +++++++++-
+>  tools/tracing/rtla/src/timerlat_hist.c      | 27 +++++++++-
+>  tools/tracing/rtla/src/timerlat_top.c       | 27 +++++++++-
+>  tools/tracing/rtla/src/utils.c              | 58 +++++++++++++++++++++
+>  tools/tracing/rtla/src/utils.h              |  3 ++
+>  7 files changed, 166 insertions(+), 9 deletions(-)
 > 
->  - have it opted in by architecture. Currently only x86 adds it. (Mark Rutland)
-> 
->  arch/x86/Kconfig               |  1 +
->  include/linux/compiler_types.h | 16 +++++++++++++---
->  kernel/trace/Kconfig           |  7 +++++++
->  3 files changed, 21 insertions(+), 3 deletions(-)
-> 
-> diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
-> index da5c081d64a5..1ddebf832534 100644
-> --- a/arch/x86/Kconfig
-> +++ b/arch/x86/Kconfig
-> @@ -61,6 +61,7 @@ config X86
->  	select ACPI_LEGACY_TABLES_LOOKUP	if ACPI
->  	select ACPI_SYSTEM_POWER_STATES_SUPPORT	if ACPI
->  	select ARCH_32BIT_OFF_T			if X86_32
-> +	select ARCH_CAN_TRACE_INLINE
->  	select ARCH_CLOCKSOURCE_INIT
->  	select ARCH_CORRECT_STACKTRACE_ON_KRETPROBE
->  	select ARCH_ENABLE_HUGEPAGE_MIGRATION if X86_64 && HUGETLB_PAGE && MIGRATION
-> diff --git a/include/linux/compiler_types.h b/include/linux/compiler_types.h
-> index 547ea1ff806e..f827e2a98500 100644
-> --- a/include/linux/compiler_types.h
-> +++ b/include/linux/compiler_types.h
-> @@ -169,6 +169,16 @@ struct ftrace_likely_data {
->  #define notrace			__attribute__((__no_instrument_function__))
->  #endif
+> diff --git a/Documentation/tools/rtla/common_options.rst b/Documentation/tools/rtla/common_options.rst
+> index ede07359d93c..aeb91ff3bd68 100644
+> --- a/Documentation/tools/rtla/common_options.rst
+> +++ b/Documentation/tools/rtla/common_options.rst
+> @@ -2,6 +2,10 @@
+>  
+>          Set the osnoise tracer to run the sample threads in the cpu-list.
+>  
+> +**-H**, **--house-keeping** *cpu-list*
+> +
+> +        Run rtla control threads only on the given cpu-list.
+> +
+>  **-d**, **--duration** *time[s|m|h|d]*
+>  
+>          Set the duration of the session.
+> diff --git a/tools/tracing/rtla/src/osnoise_hist.c b/tools/tracing/rtla/src/osnoise_hist.c
+> index 076f4c6af3dd..d2b68177ffac 100644
+> --- a/tools/tracing/rtla/src/osnoise_hist.c
+> +++ b/tools/tracing/rtla/src/osnoise_hist.c
+> @@ -3,6 +3,7 @@
+>   * Copyright (C) 2021 Red Hat Inc, Daniel Bristot de Oliveira <bristot@kernel.org>
+>   */
+>  
+> +#define _GNU_SOURCE
+>  #include <getopt.h>
+>  #include <stdlib.h>
+>  #include <string.h>
+> @@ -11,6 +12,7 @@
+>  #include <errno.h>
+>  #include <stdio.h>
+>  #include <time.h>
+> +#include <sched.h>
+>  
+>  #include "utils.h"
+>  #include "osnoise.h"
+> @@ -30,6 +32,8 @@ struct osnoise_hist_params {
+>  	int			set_sched;
+>  	int			output_divisor;
+>  	int			cgroup;
+> +	int			hk_cpus;
+> +	cpu_set_t		hk_cpu_set;
+>  	struct sched_attr	sched_param;
+>  	struct trace_events	*events;
+>  
+> @@ -434,8 +438,8 @@ static void osnoise_hist_usage(char *usage)
+>  		"",
+>  		"  usage: rtla osnoise hist [-h] [-D] [-d s] [-a us] [-p us] [-r us] [-s us] [-S us] \\",
+>  		"	  [-T us] [-t[=file]] [-e sys[:event]] [--filter <filter>] [--trigger <trigger>] \\",
+> -		"	  [-c cpu-list] [-P priority] [-b N] [-E N] [--no-header] [--no-summary] [--no-index] \\",
+> -		"	  [--with-zeros] [-C[=cgroup_name]]",
+> +		"	  [-c cpu-list] [-H cpu-list] [-P priority] [-b N] [-E N] [--no-header] [--no-summary] \\",
+> +		"	  [--no-index] [--with-zeros] [-C[=cgroup_name]]",
+>  		"",
+>  		"	  -h/--help: print this menu",
+>  		"	  -a/--auto: set automatic trace mode, stopping the session if argument in us sample is hit",
+> @@ -445,6 +449,7 @@ static void osnoise_hist_usage(char *usage)
+>  		"	  -S/--stop-total us: stop trace if the total sample is higher than the argument in us",
+>  		"	  -T/--threshold us: the minimum delta to be considered a noise",
+>  		"	  -c/--cpus cpu-list: list of cpus to run osnoise threads",
+> +		"	  -H/--house-keeping cpus: run rtla control threads only on the given cpus",
+>  		"	  -C/--cgroup[=cgroup_name]: set cgroup, if no cgroup_name is passed, the rtla's cgroup will be inherited",
+>  		"	  -d/--duration time[s|m|h|d]: duration of the session",
+>  		"	  -D/--debug: print debug info",
+> @@ -507,6 +512,7 @@ static struct osnoise_hist_params
+>  			{"cgroup",		optional_argument,	0, 'C'},
+>  			{"debug",		no_argument,		0, 'D'},
+>  			{"duration",		required_argument,	0, 'd'},
+> +			{"house-keeping",	required_argument,		0, 'H'},
+>  			{"help",		no_argument,		0, 'h'},
+>  			{"period",		required_argument,	0, 'p'},
+>  			{"priority",		required_argument,	0, 'P'},
+> @@ -528,7 +534,7 @@ static struct osnoise_hist_params
+>  		/* getopt_long stores the option index here. */
+>  		int option_index = 0;
+>  
+> -		c = getopt_long(argc, argv, "a:c:C::b:d:e:E:Dhp:P:r:s:S:t::T:01234:5:",
+> +		c = getopt_long(argc, argv, "a:c:C::b:d:e:E:DhH:p:P:r:s:S:t::T:01234:5:",
+>  				 long_options, &option_index);
+>  
+>  		/* detect the end of the options. */
+> @@ -597,6 +603,14 @@ static struct osnoise_hist_params
+>  		case '?':
+>  			osnoise_hist_usage(NULL);
+>  			break;
+> +		case 'H':
+> +			params->hk_cpus = 1;
+> +			retval = parse_cpu_set(optarg, &params->hk_cpu_set);
+> +			if (retval) {
+> +				err_msg("Error parsing house keeping CPUs\n");
+> +				exit(EXIT_FAILURE);
+> +			}
+> +			break;
+>  		case 'p':
+>  			params->period = get_llong_from_str(optarg);
+>  			if (params->period > 10000000)
+> @@ -732,6 +746,15 @@ osnoise_hist_apply_config(struct osnoise_tool *tool, struct osnoise_hist_params
+>  		}
+>  	}
+>  
+> +	if (params->hk_cpus) {
+> +		retval = sched_setaffinity(getpid(), sizeof(params->hk_cpu_set),
+> +					   &params->hk_cpu_set);
+> +		if (retval == -1) {
+> +			err_msg("Failed to set rtla to the house keeping CPUs\n");
+> +			goto out_err;
+> +		}
+> +	}
+> +
+>  	return 0;
+>  
+>  out_err:
+> diff --git a/tools/tracing/rtla/src/osnoise_top.c b/tools/tracing/rtla/src/osnoise_top.c
+> index 139d8d392540..fcf6c14ce1bc 100644
+> --- a/tools/tracing/rtla/src/osnoise_top.c
+> +++ b/tools/tracing/rtla/src/osnoise_top.c
+> @@ -3,6 +3,7 @@
+>   * Copyright (C) 2021 Red Hat Inc, Daniel Bristot de Oliveira <bristot@kernel.org>
+>   */
+>  
+> +#define _GNU_SOURCE
+>  #include <getopt.h>
+>  #include <stdlib.h>
+>  #include <string.h>
+> @@ -10,6 +11,7 @@
+>  #include <unistd.h>
+>  #include <stdio.h>
+>  #include <time.h>
+> +#include <sched.h>
+>  
+>  #include "osnoise.h"
+>  #include "utils.h"
+> @@ -37,6 +39,8 @@ struct osnoise_top_params {
+>  	int			quiet;
+>  	int			set_sched;
+>  	int			cgroup;
+> +	int			hk_cpus;
+> +	cpu_set_t		hk_cpu_set;
+>  	struct sched_attr	sched_param;
+>  	struct trace_events	*events;
+>  	enum osnoise_mode	mode;
+> @@ -278,7 +282,7 @@ static void osnoise_top_usage(struct osnoise_top_params *params, char *usage)
+>  	static const char * const msg[] = {
+>  		" [-h] [-q] [-D] [-d s] [-a us] [-p us] [-r us] [-s us] [-S us] \\",
+>  		"	  [-T us] [-t[=file]] [-e sys[:event]] [--filter <filter>] [--trigger <trigger>] \\",
+> -		"	  [-c cpu-list] [-P priority] [-C[=cgroup_name]]",
+> +		"	  [-c cpu-list] [-H cpu-list] [-P priority] [-C[=cgroup_name]]",
+>  		"",
+>  		"	  -h/--help: print this menu",
+>  		"	  -a/--auto: set automatic trace mode, stopping the session if argument in us sample is hit",
+> @@ -288,6 +292,7 @@ static void osnoise_top_usage(struct osnoise_top_params *params, char *usage)
+>  		"	  -S/--stop-total us: stop trace if the total sample is higher than the argument in us",
+>  		"	  -T/--threshold us: the minimum delta to be considered a noise",
+>  		"	  -c/--cpus cpu-list: list of cpus to run osnoise threads",
+> +		"	  -H/--house-keeping cpus: run rtla control threads only on the given cpus",
+>  		"	  -C/--cgroup[=cgroup_name]: set cgroup, if no cgroup_name is passed, the rtla's cgroup will be inherited",
+>  		"	  -d/--duration time[s|m|h|d]: duration of the session",
+>  		"	  -D/--debug: print debug info",
+> @@ -354,6 +359,7 @@ struct osnoise_top_params *osnoise_top_parse_args(int argc, char **argv)
+>  			{"debug",		no_argument,		0, 'D'},
+>  			{"duration",		required_argument,	0, 'd'},
+>  			{"event",		required_argument,	0, 'e'},
+> +			{"house-keeping",	required_argument,	0, 'H'},
+>  			{"help",		no_argument,		0, 'h'},
+>  			{"period",		required_argument,	0, 'p'},
+>  			{"priority",		required_argument,	0, 'P'},
+> @@ -371,7 +377,7 @@ struct osnoise_top_params *osnoise_top_parse_args(int argc, char **argv)
+>  		/* getopt_long stores the option index here. */
+>  		int option_index = 0;
+>  
+> -		c = getopt_long(argc, argv, "a:c:C::d:De:hp:P:qr:s:S:t::T:0:1:",
+> +		c = getopt_long(argc, argv, "a:c:C::d:De:hH:p:P:qr:s:S:t::T:0:1:",
+>  				 long_options, &option_index);
+>  
+>  		/* Detect the end of the options. */
+> @@ -430,6 +436,14 @@ struct osnoise_top_params *osnoise_top_parse_args(int argc, char **argv)
+>  		case '?':
+>  			osnoise_top_usage(params, NULL);
+>  			break;
+> +		case 'H':
+> +			params->hk_cpus = 1;
+> +			retval = parse_cpu_set(optarg, &params->hk_cpu_set);
+> +			if (retval) {
+> +				err_msg("Error parsing house keeping CPUs\n");
+> +				exit(EXIT_FAILURE);
+> +			}
+> +			break;
+>  		case 'p':
+>  			params->period = get_llong_from_str(optarg);
+>  			if (params->period > 10000000)
+> @@ -561,6 +575,15 @@ osnoise_top_apply_config(struct osnoise_tool *tool, struct osnoise_top_params *p
+>  		}
+>  	}
+>  
+> +	if (params->hk_cpus) {
+> +		retval = sched_setaffinity(getpid(), sizeof(params->hk_cpu_set),
+> +					   &params->hk_cpu_set);
+> +		if (retval == -1) {
+> +			err_msg("Failed to set rtla to the house keeping CPUs\n");
+> +			goto out_err;
+> +		}
+> +	}
+> +
+>  	return 0;
+>  
+>  out_err:
+> diff --git a/tools/tracing/rtla/src/timerlat_hist.c b/tools/tracing/rtla/src/timerlat_hist.c
+> index 459c159923e8..d48c05d238f9 100644
+> --- a/tools/tracing/rtla/src/timerlat_hist.c
+> +++ b/tools/tracing/rtla/src/timerlat_hist.c
+> @@ -3,6 +3,7 @@
+>   * Copyright (C) 2021 Red Hat Inc, Daniel Bristot de Oliveira <bristot@kernel.org>
+>   */
+>  
+> +#define _GNU_SOURCE
+>  #include <getopt.h>
+>  #include <stdlib.h>
+>  #include <string.h>
+> @@ -10,6 +11,7 @@
+>  #include <unistd.h>
+>  #include <stdio.h>
+>  #include <time.h>
+> +#include <sched.h>
+>  
+>  #include "utils.h"
+>  #include "osnoise.h"
+> @@ -31,6 +33,8 @@ struct timerlat_hist_params {
+>  	int			set_sched;
+>  	int			dma_latency;
+>  	int			cgroup;
+> +	int			hk_cpus;
+> +	cpu_set_t		hk_cpu_set;
+>  	struct sched_attr	sched_param;
+>  	struct trace_events	*events;
+>  	char			no_irq;
+> @@ -432,7 +436,7 @@ static void timerlat_hist_usage(char *usage)
+>  	char *msg[] = {
+>  		"",
+>  		"  usage: [rtla] timerlat hist [-h] [-q] [-d s] [-D] [-n] [-a us] [-p us] [-i us] [-T us] [-s us] \\",
+> -		"         [-t[=file]] [-e sys[:event]] [--filter <filter>] [--trigger <trigger>] [-c cpu-list] \\",
+> +		"         [-t[=file]] [-e sys[:event]] [--filter <filter>] [--trigger <trigger>] [-c cpu-list] [-H cpu-list]\\",
+>  		"	  [-P priority] [-E N] [-b N] [--no-irq] [--no-thread] [--no-header] [--no-summary] \\",
+>  		"	  [--no-index] [--with-zeros] [--dma-latency us] [-C[=cgroup_name]]",
+>  		"",
+> @@ -443,6 +447,7 @@ static void timerlat_hist_usage(char *usage)
+>  		"	  -T/--thread us: stop trace if the thread latency is higher than the argument in us",
+>  		"	  -s/--stack us: save the stack trace at the IRQ if a thread latency is higher than the argument in us",
+>  		"	  -c/--cpus cpus: run the tracer only on the given cpus",
+> +		"	  -H/--house-keeping cpus: run rtla control threads only on the given cpus",
+>  		"	  -C/--cgroup[=cgroup_name]: set cgroup, if no cgroup_name is passed, the rtla's cgroup will be inherited",
+>  		"	  -d/--duration time[m|h|d]: duration of the session in seconds",
+>  		"	  -D/--debug: print debug info",
+> @@ -513,6 +518,7 @@ static struct timerlat_hist_params
+>  			{"debug",		no_argument,		0, 'D'},
+>  			{"entries",		required_argument,	0, 'E'},
+>  			{"duration",		required_argument,	0, 'd'},
+> +			{"house-keeping",	required_argument,	0, 'H'},
+>  			{"help",		no_argument,		0, 'h'},
+>  			{"irq",			required_argument,	0, 'i'},
+>  			{"nano",		no_argument,		0, 'n'},
+> @@ -537,7 +543,7 @@ static struct timerlat_hist_params
+>  		/* getopt_long stores the option index here. */
+>  		int option_index = 0;
+>  
+> -		c = getopt_long(argc, argv, "a:c:C::b:d:e:E:Dhi:np:P:s:t::T:0123456:7:8:",
+> +		c = getopt_long(argc, argv, "a:c:C::b:d:e:E:DhH:i:np:P:s:t::T:0123456:7:8:",
+>  				 long_options, &option_index);
+>  
+>  		/* detect the end of the options. */
+> @@ -608,6 +614,14 @@ static struct timerlat_hist_params
+>  		case '?':
+>  			timerlat_hist_usage(NULL);
+>  			break;
+> +		case 'H':
+> +			params->hk_cpus = 1;
+> +			retval = parse_cpu_set(optarg, &params->hk_cpu_set);
+> +			if (retval) {
+> +				err_msg("Error parsing house keeping CPUs\n");
+> +				exit(EXIT_FAILURE);
+> +			}
+> +			break;
+>  		case 'i':
+>  			params->stop_us = get_llong_from_str(optarg);
+>  			break;
+> @@ -755,6 +769,15 @@ timerlat_hist_apply_config(struct osnoise_tool *tool, struct timerlat_hist_param
+>  		}
+>  	}
+>  
+> +	if (params->hk_cpus) {
+> +		retval = sched_setaffinity(getpid(), sizeof(params->hk_cpu_set),
+> +					   &params->hk_cpu_set);
+> +		if (retval == -1) {
+> +			err_msg("Failed to set rtla to the house keeping CPUs\n");
+> +			goto out_err;
+> +		}
+> +	}
+> +
+>  	return 0;
+>  
+>  out_err:
+> diff --git a/tools/tracing/rtla/src/timerlat_top.c b/tools/tracing/rtla/src/timerlat_top.c
+> index a19cbc2aa1f4..5395d1c5921e 100644
+> --- a/tools/tracing/rtla/src/timerlat_top.c
+> +++ b/tools/tracing/rtla/src/timerlat_top.c
+> @@ -3,6 +3,7 @@
+>   * Copyright (C) 2021 Red Hat Inc, Daniel Bristot de Oliveira <bristot@kernel.org>
+>   */
+>  
+> +#define _GNU_SOURCE
+>  #include <getopt.h>
+>  #include <stdlib.h>
+>  #include <string.h>
+> @@ -11,6 +12,7 @@
+>  #include <stdio.h>
+>  #include <time.h>
+>  #include <errno.h>
+> +#include <sched.h>
+>  
+>  #include "utils.h"
+>  #include "osnoise.h"
+> @@ -37,6 +39,8 @@ struct timerlat_top_params {
+>  	int			aa_only;
+>  	int			dump_tasks;
+>  	int			cgroup;
+> +	int			hk_cpus;
+> +	cpu_set_t		hk_cpu_set;
+>  	struct sched_attr	sched_param;
+>  	struct trace_events	*events;
+>  };
+> @@ -286,7 +290,7 @@ static void timerlat_top_usage(char *usage)
+>  	static const char *const msg[] = {
+>  		"",
+>  		"  usage: rtla timerlat [top] [-h] [-q] [-a us] [-d s] [-D] [-n] [-p us] [-i us] [-T us] [-s us] \\",
+> -		"	  [[-t[=file]] [-e sys[:event]] [--filter <filter>] [--trigger <trigger>] [-c cpu-list] \\",
+> +		"	  [[-t[=file]] [-e sys[:event]] [--filter <filter>] [--trigger <trigger>] [-c cpu-list] [-H cpu-list]\\",
+>  		"	  [-P priority] [--dma-latency us] [--aa-only us] [-C[=cgroup_name]]",
+>  		"",
+>  		"	  -h/--help: print this menu",
+> @@ -297,6 +301,7 @@ static void timerlat_top_usage(char *usage)
+>  		"	  -T/--thread us: stop trace if the thread latency is higher than the argument in us",
+>  		"	  -s/--stack us: save the stack trace at the IRQ if a thread latency is higher than the argument in us",
+>  		"	  -c/--cpus cpus: run the tracer only on the given cpus",
+> +		"	  -H/--house-keeping cpus: run rtla control threads only on the given cpus",
+>  		"	  -C/--cgroup[=cgroup_name]: set cgroup, if no cgroup_name is passed, the rtla's cgroup will be inherited",
+>  		"	  -d/--duration time[m|h|d]: duration of the session in seconds",
+>  		"	  -D/--debug: print debug info",
+> @@ -360,6 +365,7 @@ static struct timerlat_top_params
+>  			{"duration",		required_argument,	0, 'd'},
+>  			{"event",		required_argument,	0, 'e'},
+>  			{"help",		no_argument,		0, 'h'},
+> +			{"house-keeping",	required_argument,	0, 'H'},
+>  			{"irq",			required_argument,	0, 'i'},
+>  			{"nano",		no_argument,		0, 'n'},
+>  			{"period",		required_argument,	0, 'p'},
+> @@ -380,7 +386,7 @@ static struct timerlat_top_params
+>  		/* getopt_long stores the option index here. */
+>  		int option_index = 0;
+>  
+> -		c = getopt_long(argc, argv, "a:c:C::d:De:hi:np:P:qs:t::T:0:1:2:345:",
+> +		c = getopt_long(argc, argv, "a:c:C::d:De:hH:i:np:P:qs:t::T:0:1:2:345:",
+>  				 long_options, &option_index);
+>  
+>  		/* detect the end of the options. */
+> @@ -454,6 +460,14 @@ static struct timerlat_top_params
+>  		case '?':
+>  			timerlat_top_usage(NULL);
+>  			break;
+> +		case 'H':
+> +			params->hk_cpus = 1;
+> +			retval = parse_cpu_set(optarg, &params->hk_cpu_set);
+> +			if (retval) {
+> +				err_msg("Error parsing house keeping CPUs\n");
+> +				exit(EXIT_FAILURE);
+> +			}
+> +			break;
+>  		case 'i':
+>  			params->stop_us = get_llong_from_str(optarg);
+>  			break;
+> @@ -598,6 +612,15 @@ timerlat_top_apply_config(struct osnoise_tool *top, struct timerlat_top_params *
+>  		}
+>  	}
+>  
+> +	if (params->hk_cpus) {
+> +		retval = sched_setaffinity(getpid(), sizeof(params->hk_cpu_set),
+> +					   &params->hk_cpu_set);
+> +		if (retval == -1) {
+> +			err_msg("Failed to set rtla to the house keeping CPUs\n");
+> +			goto out_err;
+> +		}
+> +	}
+> +
+>  	return 0;
+>  
+>  out_err:
+> diff --git a/tools/tracing/rtla/src/utils.c b/tools/tracing/rtla/src/utils.c
+> index bcc0a9f39cfe..ee6fab09acae 100644
+> --- a/tools/tracing/rtla/src/utils.c
+> +++ b/tools/tracing/rtla/src/utils.c
+> @@ -3,6 +3,7 @@
+>   * Copyright (C) 2021 Red Hat Inc, Daniel Bristot de Oliveira <bristot@kernel.org>
+>   */
+>  
+> +#define _GNU_SOURCE
+>  #include <dirent.h>
+>  #include <stdarg.h>
+>  #include <stdlib.h>
+> @@ -150,6 +151,63 @@ int parse_cpu_list(char *cpu_list, char **monitored_cpus)
+>  	return 1;
+>  }
 >  
 > +/*
-> + * If all inline code not marked as __always_inline is safe to trace,
-> + * then allow the architecture to do so.
+> + * parse_cpu_set - parse a cpu_list filling cpu_set_t argument
+> + *
+> + * Receives a cpu list, like 1-3,5 (cpus 1, 2, 3, 5), and then set
+> + * filling cpu_set_t argument.
+> + *
+> + * Returns 1 on success, 0 otherwise.
 > + */
-> +#ifdef CONFIG_ARCH_CAN_TRACE_INLINE
-> +#define __notrace_inline
-> +#else
-> +#define __notrace_inline	notrace
-> +#endif
-
-I think I understand what the purpose of this patch. But I'm confusing the
-above change, it looks like a literal contradiction :)
-I mean, __notrace_inline functions shouldn't be notrace?
-
-What about call it __may_notrace_inline or __maybe_notrace?
-
-Others looks good to me.
-
-Thank you,
-
+> +int parse_cpu_set(char *cpu_list, cpu_set_t *set)
+> +{
+> +	const char *p;
+> +	int end_cpu;
+> +	int nr_cpus;
+> +	int cpu;
+> +	int i;
+> +
+> +	CPU_ZERO(set);
+> +
+> +	nr_cpus = sysconf(_SC_NPROCESSORS_CONF);
+> +
+> +	for (p = cpu_list; *p; ) {
+> +		cpu = atoi(p);
+> +		if (cpu < 0 || (!cpu && *p != '0') || cpu >= nr_cpus)
+> +			goto err;
+> +
+> +		while (isdigit(*p))
+> +			p++;
+> +		if (*p == '-') {
+> +			p++;
+> +			end_cpu = atoi(p);
+> +			if (end_cpu < cpu || (!end_cpu && *p != '0') || end_cpu >= nr_cpus)
+> +				goto err;
+> +			while (isdigit(*p))
+> +				p++;
+> +		} else
+> +			end_cpu = cpu;
+> +
+> +		if (cpu == end_cpu) {
+> +			debug_msg("cpu_set: adding cpu %d\n", cpu);
+> +			CPU_SET(cpu, set);
+> +		} else {
+> +			for (i = cpu; i <= end_cpu; i++) {
+> +				debug_msg("cpu_set: adding cpu %d\n", i);
+> +				CPU_SET(i, set);
+> +			}
+> +		}
+> +
+> +		if (*p == ',')
+> +			p++;
+> +	}
+> +
+> +	return 0;
+> +err:
+> +	debug_msg("Error parsing the cpu set %s\n", cpu_list);
+> +	return 1;
+> +}
 > +
 >  /*
->   * it doesn't make sense on ARM (currently the only user of __naked)
->   * to trace naked functions because then mcount is called without
-> @@ -184,7 +194,7 @@ struct ftrace_likely_data {
->   * of extern inline functions at link time.
->   * A lot of inline functions can cause havoc with function tracing.
+>   * parse_duration - parse duration with s/m/h/d suffix converting it to seconds
 >   */
-> -#define inline inline __gnu_inline __inline_maybe_unused notrace
-> +#define inline inline __gnu_inline __inline_maybe_unused __notrace_inline
+> diff --git a/tools/tracing/rtla/src/utils.h b/tools/tracing/rtla/src/utils.h
+> index 42b6f099d10a..9ab2f0d7bc1c 100644
+> --- a/tools/tracing/rtla/src/utils.h
+> +++ b/tools/tracing/rtla/src/utils.h
+> @@ -1,6 +1,8 @@
+>  // SPDX-License-Identifier: GPL-2.0
+> +
+>  #include <stdint.h>
+>  #include <time.h>
+> +#include <sched.h>
 >  
 >  /*
->   * gcc provides both __inline__ and __inline as alternate spellings of
-> @@ -230,7 +240,7 @@ struct ftrace_likely_data {
->   *     https://gcc.gnu.org/bugzilla/show_bug.cgi?id=67368
->   * '__maybe_unused' allows us to avoid defined-but-not-used warnings.
->   */
-> -# define __no_kasan_or_inline __no_sanitize_address notrace __maybe_unused
-> +# define __no_kasan_or_inline __no_sanitize_address __notrace_inline __maybe_unused
->  # define __no_sanitize_or_inline __no_kasan_or_inline
->  #else
->  # define __no_kasan_or_inline __always_inline
-> @@ -247,7 +257,7 @@ struct ftrace_likely_data {
->   * disable all instrumentation. See Kconfig.kcsan where this is mandatory.
->   */
->  # define __no_kcsan __no_sanitize_thread __disable_sanitizer_instrumentation
-> -# define __no_sanitize_or_inline __no_kcsan notrace __maybe_unused
-> +# define __no_sanitize_or_inline __no_kcsan __notrace_inline __maybe_unused
->  #else
->  # define __no_kcsan
->  #endif
-> diff --git a/kernel/trace/Kconfig b/kernel/trace/Kconfig
-> index abe5c583bd59..b66ab0e6ce19 100644
-> --- a/kernel/trace/Kconfig
-> +++ b/kernel/trace/Kconfig
-> @@ -106,6 +106,13 @@ config HAVE_BUILDTIME_MCOUNT_SORT
->           An architecture selects this if it sorts the mcount_loc section
->  	 at build time.
+>   * '18446744073709551615\0'
+> @@ -54,6 +56,7 @@ struct sched_attr {
+>  };
 >  
-> +config ARCH_CAN_TRACE_INLINE
-> +       bool
-> +       help
-> +         It is safe for an architecture to trace any function marked
-> +	 as inline (not __always_inline) that the compiler decides to
-> +	 not inline.
-> +
->  config BUILDTIME_MCOUNT_SORT
->         bool
->         default y
+>  int parse_prio(char *arg, struct sched_attr *sched_param);
+> +int parse_cpu_set(char *cpu_list, cpu_set_t *set);
+>  int set_comm_sched_attr(const char *comm_prefix, struct sched_attr *attr);
+>  int set_comm_cgroup(const char *comm_prefix, const char *cgroup);
+>  int set_cpu_dma_latency(int32_t latency);
 > -- 
-> 2.39.2
+> 2.38.1
 > 
 
 
