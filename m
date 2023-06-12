@@ -2,49 +2,35 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E1CFC7EE2E
-	for <linux-trace-kernel@archiver.kernel.org>; Mon, 12 Jun 2023 23:32:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A5B5C7EE43
+	for <linux-trace-kernel@archiver.kernel.org>; Mon, 12 Jun 2023 23:33:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233202AbjFLXcO (ORCPT
+        id S230337AbjFLXdn (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Mon, 12 Jun 2023 19:32:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36988 "EHLO
+        Mon, 12 Jun 2023 19:33:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37776 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230337AbjFLXcN (ORCPT
+        with ESMTP id S236781AbjFLXdm (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Mon, 12 Jun 2023 19:32:13 -0400
+        Mon, 12 Jun 2023 19:33:42 -0400
 Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8589710CC;
-        Mon, 12 Jun 2023 16:32:09 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0252510B;
+        Mon, 12 Jun 2023 16:33:41 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id E2DA961048;
-        Mon, 12 Jun 2023 23:32:02 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3D421C433D2;
-        Mon, 12 Jun 2023 23:32:01 +0000 (UTC)
-Date:   Mon, 12 Jun 2023 19:31:59 -0400
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 8BE3061DC6;
+        Mon, 12 Jun 2023 23:33:40 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 68615C433D2;
+        Mon, 12 Jun 2023 23:33:39 +0000 (UTC)
+Date:   Mon, 12 Jun 2023 19:33:37 -0400
 From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Cc:     Jiri Olsa <olsajiri@gmail.com>, Yonghong Song <yhs@meta.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Andrii Nakryiko <andrii@kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        linux-trace-kernel@vger.kernel.org, bpf@vger.kernel.org,
-        Jackie Liu <liu.yun@linux.dev>
-Subject: Re: [PATCHv2] ftrace: Show all functions with addresses in
- available_filter_functions_addrs
-Message-ID: <20230612193159.2b3d81ff@gandalf.local.home>
-In-Reply-To: <CAEf4Bza+n3sTUuuseZA19PQG2GN6bLezu_gdUqU6mnHfPA77xg@mail.gmail.com>
-References: <20230611130029.1202298-1-jolsa@kernel.org>
-        <53a11f31-256d-e7bc-eca5-597571076dc5@meta.com>
-        <20230611225407.3e9b8ad2@gandalf.local.home>
-        <20230611225754.01350a50@gandalf.local.home>
-        <d5ffd64c-65b7-e28c-b8ee-0d2ff9dcd78b@meta.com>
-        <20230612110222.50c254f3@gandalf.local.home>
-        <ZId/UL/iujOdgel+@krava>
-        <CAEf4Bza+n3sTUuuseZA19PQG2GN6bLezu_gdUqU6mnHfPA77xg@mail.gmail.com>
+To:     LKML <linux-kernel@vger.kernel.org>,
+        Linux Trace Kernel <linux-trace-kernel@vger.kernel.org>
+Cc:     Masami Hiramatsu <mhiramat@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>
+Subject: [PATCH] tracing: Add a debug_trace_printk() function
+Message-ID: <20230612193337.0fb0d3ca@gandalf.local.home>
 X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
@@ -53,20 +39,134 @@ Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On Mon, 12 Jun 2023 16:28:49 -0700
-Andrii Nakryiko <andrii.nakryiko@gmail.com> wrote:
+From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
 
+While doing some tracing and kernel debugging, I found that some of my
+trace_printk()s were being lost in the noise of the other code that was
+being traced. Having a way to write trace_printk() not in the top level
+trace buffer would have been useful.
 
-> If Steven would be ok with it, can we land this change through the
-> bpf-next tree? Then we can have BPF selftest added in the same patch
-> set that parses a new file and uses bpf_program__attach_kprobe_multi()
-> to attach using explicit addresses.
-> 
-> This should make it clear to everyone how this is meant to be used and
-> will be a good test that everything works end-to-end.
-> 
+There was also a time I needed to debug ftrace itself, where
+trace_printk() did not hit the paths that were being debugged. But because
+the trace that was being debugged, was going into the top level ring
+buffer, it was causing issues for seeing what is to be traced.
 
-This touches some of the code I'm working with, so I rather have it be in
-my tree.
+To solve both of the above, add a debug_trace_printk() that can be used
+just like trace_printk() except that it goes into a "debug" instance
+buffer instead. This can be used at boot up as well.
 
--- Steve
+Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+---
+ include/linux/kernel.h | 14 ++++++++++++++
+ kernel/trace/Kconfig   | 20 ++++++++++++++++++++
+ kernel/trace/trace.c   | 29 +++++++++++++++++++++++++++++
+ 3 files changed, 63 insertions(+)
+
+diff --git a/include/linux/kernel.h b/include/linux/kernel.h
+index 0d91e0af0125..594c9ba17fd4 100644
+--- a/include/linux/kernel.h
++++ b/include/linux/kernel.h
+@@ -432,6 +432,20 @@ __ftrace_vbprintk(unsigned long ip, const char *fmt, va_list ap);
+ extern __printf(2, 0) int
+ __ftrace_vprintk(unsigned long ip, const char *fmt, va_list ap);
+ 
++#ifdef CONFIG_FTRACE_DEBUG_PRINT
++extern __printf(2,0) void do_debug_trace_printk(unsigned long ip, const char *fmt, ...);
++#define debug_trace_printk(fmt, ...) \
++do {							\
++	do_debug_trace_printk(_THIS_IP_, fmt, ##__VA_ARGS__);	\
++} while (0)
++
++extern void debug_tracing_stop(void);
++#else
++#define debug_trace_printk(fmt, ...) do { } while (0)
++static inline void debug_tracing_stop(void) { }
++#endif
++
++
+ extern void ftrace_dump(enum ftrace_dump_mode oops_dump_mode);
+ #else
+ static inline void tracing_start(void) { }
+diff --git a/kernel/trace/Kconfig b/kernel/trace/Kconfig
+index abe5c583bd59..eb102070e9e6 100644
+--- a/kernel/trace/Kconfig
++++ b/kernel/trace/Kconfig
+@@ -974,6 +974,26 @@ config GCOV_PROFILE_FTRACE
+ 	  Note that on a kernel compiled with this config, ftrace will
+ 	  run significantly slower.
+ 
++config FTRACE_DEBUG_PRINT
++	bool
++	depends on TRACING
++	help
++	  This option enables the use of debug_trace_printk() instead of
++	  using trace_printk(). The difference between the two is that
++	  debug_trace_printk() traces are visible in the "debug" instance
++	  found in:
++
++	  /sys/kernel/tracing/instances/debug
++
++	  This is useful when the trace printks should not interfere with
++	  the normal top level tracing. It is also useful if the top level
++	  tracing is very noisy and critical trace printks are dropped.
++	  By using debug_trace_printk() the traces goes into as separate
++	  ring buffer that will not be overridden by other trace events.
++
++	  If unsure say N (In fact, only say Y if you are debugging a
++	                   kernel and require this)
++
+ config FTRACE_SELFTEST
+ 	bool
+ 
+diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
+index 64a4dde073ef..c21a93cf5fd8 100644
+--- a/kernel/trace/trace.c
++++ b/kernel/trace/trace.c
+@@ -490,6 +490,10 @@ static struct trace_array global_trace = {
+ 	.trace_flags = TRACE_DEFAULT_FLAGS,
+ };
+ 
++#ifdef CONFIG_FTRACE_DEBUG_PRINT
++static struct trace_array *debug_trace;
++#endif
++
+ LIST_HEAD(ftrace_trace_arrays);
+ 
+ int trace_array_get(struct trace_array *this_tr)
+@@ -10455,8 +10459,33 @@ void __init early_trace_init(void)
+ 	tracer_alloc_buffers();
+ 
+ 	init_events();
++
++#ifdef CONFIG_FTRACE_DEBUG_PRINT
++	debug_trace = trace_array_get_by_name("debug");
++	if (WARN_ON(!debug_trace))
++		return;
++	trace_array_init_printk(debug_trace);
++#endif
+ }
+ 
++#ifdef CONFIG_FTRACE_DEBUG_PRINT
++__printf(2, 0)
++void do_debug_trace_printk(unsigned long ip, const char *fmt, ...)
++{
++	va_list ap;
++
++	va_start(ap, fmt);
++	trace_array_vprintk(debug_trace, ip, fmt, ap);
++	va_end(ap);
++}
++
++void debug_tracing_stop(void)
++{
++	debug_trace_printk("Stopping debug tracing\n");
++	tracing_stop_tr(debug_trace);
++}
++#endif
++
+ void __init trace_init(void)
+ {
+ 	trace_event_init();
+-- 
+2.39.2
+
