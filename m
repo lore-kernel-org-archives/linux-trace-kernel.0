@@ -2,155 +2,237 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BD70C7EE2E
-	for <linux-trace-kernel@archiver.kernel.org>; Mon, 12 Jun 2023 20:26:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 86C64C88CB8
+	for <linux-trace-kernel@archiver.kernel.org>; Mon, 12 Jun 2023 21:35:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235872AbjFLU0P (ORCPT
+        id S236108AbjFLVfB (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Mon, 12 Jun 2023 16:26:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51324 "EHLO
+        Mon, 12 Jun 2023 17:35:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49264 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236948AbjFLU0O (ORCPT
+        with ESMTP id S237084AbjFLVex (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Mon, 12 Jun 2023 16:26:14 -0400
-Received: from mail-ej1-x629.google.com (mail-ej1-x629.google.com [IPv6:2a00:1450:4864:20::629])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B135E19B;
-        Mon, 12 Jun 2023 13:25:57 -0700 (PDT)
-Received: by mail-ej1-x629.google.com with SMTP id a640c23a62f3a-97881a996a0so847463366b.0;
-        Mon, 12 Jun 2023 13:25:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1686601556; x=1689193556;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=Vdv3vzNPkrrapPOhx9OkW0gebiaW56nR0p2AcI7Bl0s=;
-        b=YtKUkr7aYmpsscebasGh8jqgUj5/RFK5S0z5Vojx92Ai+P7xlRaZJZZw08ZgOJaAh9
-         tYprzwpmWpRnaVbG5+ooVLNyL6fKx9LI46l6r/JZ7IrIUwgqjc6R4onX0se8NTB9XYva
-         /YFRBczWG//nlp3Vw71eUQ01RVjG8xcrP305D6e2MJyt6nP6WoLY+u/AzPF9e3ZwrHh/
-         0Q7k9wqT1FyfVOMfj5mD5WxppPbYiFp2j7gf85nDVb2DcYf+rDNKIN72McnVeSfu3hZY
-         u5dVqvCwxgKgZ0sxbn+8TgjY1raC8UUQF/go2LnfZOkTkoCgwVXb7/V0IU88eq4LwdcA
-         MDvw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1686601556; x=1689193556;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Vdv3vzNPkrrapPOhx9OkW0gebiaW56nR0p2AcI7Bl0s=;
-        b=Pb8q7FOoOEMxYeAwugMbkllq8bzn3+GmLzGZlJJxG4tk7soQB3cXI1FHMIc6VckzLQ
-         4PCvJxVEuIilWoiBjTPQacD4b9Lqqi2ZxMPPYOMgoB/Y6U/KSKqseIxSzha3tPCCxfM9
-         EA0Tm2FXdNxfYyuU9WOL+peZiNydPGcxd23UoX3RexNcpJ+Z18VRgBGlMESfkRqiKx0e
-         Zt1aeklECtgwks2l+h1eUmWuj/23LBFI4ocUKNenlRAxw3bfYdU8eFTV4m1vfzbHPEWJ
-         RUcR3nQrhDBp5Q8XqdTaL1l/wqPlsWsAPJfRANWa+ne5CEQ0vnHNiiJRnwprk/W8nkX3
-         2Z3Q==
-X-Gm-Message-State: AC+VfDw7ewjLVM1gkP/JQLkwTTigWRqMQhaAC26BDELtYjk1npa/dz34
-        XmWb2ocvOa5gPN09+Z/umk0=
-X-Google-Smtp-Source: ACHHUZ68tbqVprHJAzbsOB+yLTYiQ1Lh4TimLjN9ifwSPBOKlpqNOeM8ktKZXpxvMRzjr/SWYGnNKg==
-X-Received: by 2002:a17:907:728b:b0:97d:a87a:f4db with SMTP id dt11-20020a170907728b00b0097da87af4dbmr8539757ejc.66.1686601555829;
-        Mon, 12 Jun 2023 13:25:55 -0700 (PDT)
-Received: from krava ([83.240.63.222])
-        by smtp.gmail.com with ESMTPSA id sa1-20020a170906eda100b009745a6d1b37sm5574871ejb.202.2023.06.12.13.25.54
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 12 Jun 2023 13:25:55 -0700 (PDT)
-From:   Jiri Olsa <olsajiri@gmail.com>
-X-Google-Original-From: Jiri Olsa <jolsa@kernel.org>
-Date:   Mon, 12 Jun 2023 22:25:52 +0200
-To:     Steven Rostedt <rostedt@goodmis.org>
-Cc:     Yonghong Song <yhs@meta.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Andrii Nakryiko <andrii@kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        linux-trace-kernel@vger.kernel.org, bpf@vger.kernel.org,
-        Andrii Nakryiko <andrii.nakryiko@gmail.com>,
-        Jackie Liu <liu.yun@linux.dev>
-Subject: Re: [PATCHv2] ftrace: Show all functions with addresses in
- available_filter_functions_addrs
-Message-ID: <ZId/UL/iujOdgel+@krava>
-References: <20230611130029.1202298-1-jolsa@kernel.org>
- <53a11f31-256d-e7bc-eca5-597571076dc5@meta.com>
- <20230611225407.3e9b8ad2@gandalf.local.home>
- <20230611225754.01350a50@gandalf.local.home>
- <d5ffd64c-65b7-e28c-b8ee-0d2ff9dcd78b@meta.com>
- <20230612110222.50c254f3@gandalf.local.home>
+        Mon, 12 Jun 2023 17:34:53 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AFC46B3;
+        Mon, 12 Jun 2023 14:34:51 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 54D2362BBD;
+        Mon, 12 Jun 2023 21:34:51 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7D36BC433EF;
+        Mon, 12 Jun 2023 21:34:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1686605690;
+        bh=h0CRiC60VVAZqmO+EH1iTk5RAONQQFwe4r5bnxWeBYM=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=WWGX6EsmQ2I3j/HZk09nSijqLsLqKh2zR9pZKyLx/B0jIXGPm7WOm6aHPsipPOPiY
+         jbuqr2L5NdxGQ25vQ0efNR0RvVTA/m99hLadgsoxeMr2Yr4F8lHDdx8RspQzi7W43/
+         mLC5DXypQ1i3u7doi7r5ZuwkTyjLzEfegN8R501cyMOXLvlLRW9VI2Ncve7nqZpdCc
+         NEaiFAjaKVxiKSOlPYg1cGzREgYQilsaa62hJ0h6RiWVYxtKmWXyFXZ0lBGx5e1JWW
+         26oQT3m1G5nZ691Qq/SnJu3UQtk8Wk6rKOBVtLl9V+SVu1rHNR6YSCJNrSY+wvrhZ3
+         1QMTS9aeu3yow==
+Date:   Tue, 13 Jun 2023 00:34:11 +0300
+From:   Mike Rapoport <rppt@kernel.org>
+To:     Song Liu <song@kernel.org>
+Cc:     Mark Rutland <mark.rutland@arm.com>,
+        Kent Overstreet <kent.overstreet@linux.dev>,
+        linux-kernel@vger.kernel.org,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Christophe Leroy <christophe.leroy@csgroup.eu>,
+        "David S. Miller" <davem@davemloft.net>,
+        Dinh Nguyen <dinguyen@kernel.org>,
+        Heiko Carstens <hca@linux.ibm.com>,
+        Helge Deller <deller@gmx.de>,
+        Huacai Chen <chenhuacai@kernel.org>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        "Naveen N. Rao" <naveen.n.rao@linux.ibm.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Russell King <linux@armlinux.org.uk>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Will Deacon <will@kernel.org>, bpf@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-mips@vger.kernel.org,
+        linux-mm@kvack.org, linux-modules@vger.kernel.org,
+        linux-parisc@vger.kernel.org, linux-riscv@lists.infradead.org,
+        linux-s390@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, loongarch@lists.linux.dev,
+        netdev@vger.kernel.org, sparclinux@vger.kernel.org, x86@kernel.org
+Subject: Re: [PATCH 00/13] mm: jit/text allocator
+Message-ID: <20230612213411.GP52412@kernel.org>
+References: <20230601101257.530867-1-rppt@kernel.org>
+ <ZHjDU/mxE+cugpLj@FVFF77S0Q05N.cambridge.arm.com>
+ <ZHjgIH3aX9dCvVZc@moria.home.lan>
+ <ZHm3zUUbwqlsZBBF@FVFF77S0Q05N>
+ <20230605092040.GB3460@kernel.org>
+ <ZH20XkD74prrdN4u@FVFF77S0Q05N>
+ <CAPhsuW7ntn_HpVWdGK_hYVd3zsPEFToBNfmtt0m6K8SwfxJ66Q@mail.gmail.com>
+ <20230608184116.GJ52412@kernel.org>
+ <CAPhsuW5YYa6nQhO2=zor75XkdKpFysZD42DgDRkKZvQT6aMqcA@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20230612110222.50c254f3@gandalf.local.home>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAPhsuW5YYa6nQhO2=zor75XkdKpFysZD42DgDRkKZvQT6aMqcA@mail.gmail.com>
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On Mon, Jun 12, 2023 at 11:02:22AM -0400, Steven Rostedt wrote:
-> On Mon, 12 Jun 2023 07:49:53 -0700
-> Yonghong Song <yhs@meta.com> wrote:
+On Fri, Jun 09, 2023 at 10:02:16AM -0700, Song Liu wrote:
+> On Thu, Jun 8, 2023 at 11:41 AM Mike Rapoport <rppt@kernel.org> wrote:
+> >
+> > On Tue, Jun 06, 2023 at 11:21:59AM -0700, Song Liu wrote:
+> > > On Mon, Jun 5, 2023 at 3:09 AM Mark Rutland <mark.rutland@arm.com> wrote:
+> > >
+> > > [...]
+> > >
+> > > > > > > Can you give more detail on what parameters you need? If the only extra
+> > > > > > > parameter is just "does this allocation need to live close to kernel
+> > > > > > > text", that's not that big of a deal.
+> > > > > >
+> > > > > > My thinking was that we at least need the start + end for each caller. That
+> > > > > > might be it, tbh.
+> > > > >
+> > > > > Do you mean that modules will have something like
+> > > > >
+> > > > >       jit_text_alloc(size, MODULES_START, MODULES_END);
+> > > > >
+> > > > > and kprobes will have
+> > > > >
+> > > > >       jit_text_alloc(size, KPROBES_START, KPROBES_END);
+> > > > > ?
+> > > >
+> > > > Yes.
+> > >
+> > > How about we start with two APIs:
+> > >      jit_text_alloc(size);
+> > >      jit_text_alloc_range(size, start, end);
+> > >
+> > > AFAICT, arm64 is the only arch that requires the latter API. And TBH, I am
+> > > not quite convinced it is needed.
+> >
+> > Right now arm64 and riscv override bpf and kprobes allocations to use the
+> > entire vmalloc address space, but having the ability to allocate generated
+> > code outside of modules area may be useful for other architectures.
+> >
+> > Still the start + end for the callers feels backwards to me because the
+> > callers do not define the ranges, but rather the architectures, so we still
+> > need a way for architectures to define how they want allocate memory for
+> > the generated code.
 > 
-> > I am actually interested in how available_filter_functions_addrs
-> > will be used. For example, bpf_program__attach_kprobe_multi_opts()
-> > can already take addresses from kallsyms. How to use
-> > available_filter_functions_addrs to facilitate kprobe_multi?
-
-the problem is that we need to do 2 passes:
-
- - through available_filter_functions and find out if the function is traceable
- - through /proc/kallsyms to get the address for traceable function
-
-having available_filter_functions symbols together with addresses allow
-us to skip the kallsyms step
-
-and we are ok with the address in available_filter_functions_addr not being the
-function entry, because kprobe_multi uses fprobe and that handles both entry and
-patch-site address properly
-
-> > Do we need to change kernel APIs? It would be great at least we
-> > got a RFC patch to answer these questions.
+> Yeah, this makes sense.
 > 
-> I agree, having that information would also be useful to me.
+> >
+> > > > > It sill can be achieved with a single jit_alloc_arch_params(), just by
+> > > > > adding enum jit_type parameter to jit_text_alloc().
+> > > >
+> > > > That feels backwards to me; it centralizes a bunch of information about
+> > > > distinct users to be able to shove that into a static array, when the callsites
+> > > > can pass that information.
+> > >
+> > > I think we only two type of users: module and everything else (ftrace, kprobe,
+> > > bpf stuff). The key differences are:
+> > >
+> > >   1. module uses text and data; while everything else only uses text.
+> > >   2. module code is generated by the compiler, and thus has stronger
+> > >   requirements in address ranges; everything else are generated via some
+> > >   JIT or manual written assembly, so they are more flexible with address
+> > >   ranges (in JIT, we can avoid using instructions that requires a specific
+> > >   address range).
+> > >
+> > > The next question is, can we have the two types of users share the same
+> > > address ranges? If not, we can reserve the preferred range for modules,
+> > > and let everything else use the other range. I don't see reasons to further
+> > > separate users in the "everything else" group.
+> >
+> > I agree that we can define only two types: modules and everything else and
+> > let the architectures define if they need different ranges for these two
+> > types, or want the same range for everything.
+> >
+> > With only two types we can have two API calls for alloc, and a single
+> > structure that defines the ranges etc from the architecture side rather
+> > than spread all over.
+> >
+> > Like something along these lines:
+> >
+> >         struct execmem_range {
+> >                 unsigned long   start;
+> >                 unsigned long   end;
+> >                 unsigned long   fallback_start;
+> >                 unsigned long   fallback_end;
+> >                 pgprot_t        pgprot;
+> >                 unsigned int    alignment;
+> >         };
+> >
+> >         struct execmem_modules_range {
+> >                 enum execmem_module_flags flags;
+> >                 struct execmem_range text;
+> >                 struct execmem_range data;
+> >         };
+> >
+> >         struct execmem_jit_range {
+> >                 struct execmem_range text;
+> >         };
+> >
+> >         struct execmem_params {
+> >                 struct execmem_modules_range    modules;
+> >                 struct execmem_jit_range        jit;
+> >         };
+> >
+> >         struct execmem_params *execmem_arch_params(void);
+> >
+> >         void *execmem_text_alloc(size_t size);
+> >         void *execmem_data_alloc(size_t size);
+> >         void execmem_free(void *ptr);
 > 
-> Jiri? Andrii?
+> With the jit variation, maybe we can just call these
+> module_[text|data]_alloc()?
 
-so we have 2 interfaces how to create kprobe_multi link:
+I was thinking about "execmem_*_alloc()" for allocations that must be close to kernel
+image, like modules, ftrace on x86 and s390 and maybe something else in the
+future.
 
-  a) passing symbols to kernel
+And jit_text_alloc() for allocations that can reside anywhere.
 
-     1) user gathers symbols and need to ensure that they are
-        trace-able -> pass through available_filter_functions file
+I tried to find a different name for 'struct execmem_modules_range' but
+couldn't think of anything better than 'struct execmem_close_to_kernel', so
+I've left modules in the name.
+ 
+> btw: Depending on the implementation of the allocator, we may also
+> need separate free()s for text and data.
+> 
+> >
+> >         void *jit_text_alloc(size_t size);
+> >         void jit_free(void *ptr);
+> >
 
-     2) kernel takes those symbols and translates them to addresses
-        through kallsyms api
+Let's just add jit_free() for completeness even if it will be the same as
+execmem_free() for now.
+ 
+> [...]
+> 
+> How should we move ahead from here?
+> 
+> AFAICT, all these changes can be easily extended and refactored
+> in the future, so we don't have to make it perfect the first time.
+> OTOH, having the interface committed (either this set or my
+> module_alloc_type version) can unblock works in the binpack
+> allocator and the users side. Therefore, I think we can move
+> relatively fast here?
 
-     3) addresses are passed to fprobe/ftrace through:
+Once the interface and architecture abstraction is ready we can work on the
+allocator and the users. We also need to update text_poking/alternatives on
+architectures that would allocate executable memory as ROX. I did some
+quick tests and with these patches 'modprobe xfs' takes tens time more than
+before.
+ 
+> Thanks,
+> Song
 
-         register_fprobe_ips
-         -> ftrace_set_filter_ips
-
-  b) passing addresses to kernel
-
-     1) user gathers symbols and needs to ensure that they are
-        trace-able -> pass through available_filter_functions file
-
-     2) user takes those symbols and translates them to addresses
-       through /proc/kallsyms
-
-     3) addresses are passed to the kernel and kernel calls:
-
-         register_fprobe_ips
-         -> ftrace_set_filter_ips
-
-
-The new available_filter_functions_addrs file helps us with option b),
-because we can make 'b 1' and 'b 2' in one step - while filtering traceable
-functions, we get the address directly.
-
-I tested the new available_filter_functions_addrs changes with some hacked
-selftest changes, you can check it in here [1].
-
-I assume Jackie Liu will send new version of her patchset [2] based on this
-new available_filter_functions_addrs file.
-
-I think we should have these changes coming together and add some perf
-measurements from before and after to make the benefit apparent.
-
-jirka
-
-
-[1] https://git.kernel.org/pub/scm/linux/kernel/git/jolsa/perf.git/commit/?h=bpf/avail_addrs&id=fecaeeaf40bae034715ab2e9a46ca1dc16371e8e
-[2] https://lore.kernel.org/bpf/20230526155026.1419390-1-liu.yun@linux.dev/#r
+-- 
+Sincerely yours,
+Mike.
