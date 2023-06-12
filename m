@@ -2,67 +2,144 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DCBF5C7EE2F
-	for <linux-trace-kernel@archiver.kernel.org>; Mon, 12 Jun 2023 15:02:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A544C88CB2
+	for <linux-trace-kernel@archiver.kernel.org>; Mon, 12 Jun 2023 15:09:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S238842AbjFLPC2 (ORCPT
+        id S239266AbjFLPJg (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Mon, 12 Jun 2023 11:02:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35970 "EHLO
+        Mon, 12 Jun 2023 11:09:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40800 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S239171AbjFLPC0 (ORCPT
+        with ESMTP id S238463AbjFLPJf (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Mon, 12 Jun 2023 11:02:26 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E0D51186;
-        Mon, 12 Jun 2023 08:02:25 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 7244461629;
-        Mon, 12 Jun 2023 15:02:25 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B4C75C433EF;
-        Mon, 12 Jun 2023 15:02:23 +0000 (UTC)
-Date:   Mon, 12 Jun 2023 11:02:22 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Yonghong Song <yhs@meta.com>
-Cc:     Jiri Olsa <jolsa@kernel.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
+        Mon, 12 Jun 2023 11:09:35 -0400
+Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 67B3C8F;
+        Mon, 12 Jun 2023 08:09:34 -0700 (PDT)
+From:   Thomas Gleixner <tglx@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020; t=1686582572;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=aXQIH8oNCmgfEv4lgu8d01Kz+SNn/6yEMUmZ6FI8ajg=;
+        b=qFtkG4kEpETNMmN0zUn0MTf2XyKCcoOjttv8AkKnRmTSDEtZH94TkR7MMmTqpbszfQLyqv
+        HuBZotDzPpDV2Zwg3HCwLTizT5ViESA9ENeKlg14BnOpCXQQNOxoDRZ7TAc4lXEdoCL8L/
+        TPS8Nz+LQNxT6FgycXQARmwfJZGWu7suzuNYM6OaTUwXFhjqMaKMZF2VyuXP9RknsEMdtO
+        NbO5/6bLVSDkpN5tv0lelEKlQY+lNsreUdJSgZEOR6SWpucpn1o8pOsc2NSilz+qn/8ul6
+        3yWHKcpHWMEbLM84HlIzE+VUtZaDbvxLZ7R7Qs+WQjd8XlQk6sKiMfQyt6E0WQ==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+        s=2020e; t=1686582572;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=aXQIH8oNCmgfEv4lgu8d01Kz+SNn/6yEMUmZ6FI8ajg=;
+        b=JltDw6Wqffv5XMWWPyKKrpW1vaVy25YN5FolP/jU7dAkBVry5zO5oYFT688E/y0v2zW5tD
+        tNp4x9hWiBlKqMBw==
+To:     Steven Rostedt <rostedt@goodmis.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linux Trace Kernel <linux-trace-kernel@vger.kernel.org>
+Cc:     Masami Hiramatsu <mhiramat@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Peter Zijlstra <peterz@infradead.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        Andrii Nakryiko <andrii@kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        linux-trace-kernel@vger.kernel.org, bpf@vger.kernel.org,
-        Andrii Nakryiko <andrii.nakryiko@gmail.com>,
-        Jackie Liu <liu.yun@linux.dev>
-Subject: Re: [PATCHv2] ftrace: Show all functions with addresses in
- available_filter_functions_addrs
-Message-ID: <20230612110222.50c254f3@gandalf.local.home>
-In-Reply-To: <d5ffd64c-65b7-e28c-b8ee-0d2ff9dcd78b@meta.com>
-References: <20230611130029.1202298-1-jolsa@kernel.org>
-        <53a11f31-256d-e7bc-eca5-597571076dc5@meta.com>
-        <20230611225407.3e9b8ad2@gandalf.local.home>
-        <20230611225754.01350a50@gandalf.local.home>
-        <d5ffd64c-65b7-e28c-b8ee-0d2ff9dcd78b@meta.com>
-X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+        Kees Cook <keescook@chromium.org>,
+        Miguel Ojeda <ojeda@kernel.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Ingo Molnar <mingo@kernel.org>, Song Liu <song@kernel.org>,
+        Josh Poimboeuf <jpoimboe@kernel.org>
+Subject: Re: [PATCH v2] ftrace: Allow inline functions not inlined to be traced
+In-Reply-To: <20230609174422.04824a9e@gandalf.local.home>
+References: <20230609174422.04824a9e@gandalf.local.home>
+Date:   Mon, 12 Jun 2023 17:09:31 +0200
+Message-ID: <87lego7m50.ffs@tglx>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On Mon, 12 Jun 2023 07:49:53 -0700
-Yonghong Song <yhs@meta.com> wrote:
+On Fri, Jun 09 2023 at 17:44, Steven Rostedt wrote:
+> From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
+>
+> Over 10 years ago there were many bugs that caused function tracing to
+> crash because some inlined function was not inlined and should not have
+> been traced. This made it hard to debug because when the developer tried
+> to reproduce it, if their compiler still inlined the function, the bug
+> would not trigger. The solution back then was simply to add "notrace" to
+> "inline" which would make sure all functions that are marked inline are
+> never traced even when the compiler decides to not inline them.
+>
+> A lot has changed over the last 10 years.
+>
+> 1) ftrace_test_recursion_trylock() is now used by all ftrace hooks which
+>    will prevent the recursive crashes from happening that was caused by
+>    inlined functions being traced.
+>
+> 2) noinstr is now used to mark pretty much all functions that would also
+>    cause problems if they are traced.
+>
+> Today, it is no longer a problem if an inlined function is not inlined and
+> is traced, at least on x86. Removing notrace from inline has been requested
+> several times over the years. I believe it is now safe to do so.
+>
+> Currently only x86 uses this.
 
-> I am actually interested in how available_filter_functions_addrs
-> will be used. For example, bpf_program__attach_kprobe_multi_opts()
-> can already take addresses from kallsyms. How to use
-> available_filter_functions_addrs to facilitate kprobe_multi?
-> Do we need to change kernel APIs? It would be great at least we
-> got a RFC patch to answer these questions.
+I assume this passes the objtool noinstr validation. If so, if would be
+helpful to document that.
+>  /*
+>   * gcc provides both __inline__ and __inline as alternate spellings of
+> @@ -230,7 +240,7 @@ struct ftrace_likely_data {
+>   *     https://gcc.gnu.org/bugzilla/show_bug.cgi?id=67368
+>   * '__maybe_unused' allows us to avoid defined-but-not-used warnings.
+>   */
+> -# define __no_kasan_or_inline __no_sanitize_address notrace __maybe_unused
+> +# define __no_kasan_or_inline __no_sanitize_address __notrace_inline __maybe_unused
 
-I agree, having that information would also be useful to me.
+I'm not convinced that this is correct
 
-Jiri? Andrii?
+>  # define __no_sanitize_or_inline __no_kasan_or_inline
+>  #else
 
--- Steve
+given that the !__SANITIZE_ADDRESS__ variant is:
+
+>  # define __no_kasan_or_inline __always_inline
+
+which cannot be traced.
+
+> @@ -247,7 +257,7 @@ struct ftrace_likely_data {
+>   * disable all instrumentation. See Kconfig.kcsan where this is mandatory.
+>   */
+>  # define __no_kcsan __no_sanitize_thread __disable_sanitizer_instrumentation
+> -# define __no_sanitize_or_inline __no_kcsan notrace __maybe_unused
+> +# define __no_sanitize_or_inline __no_kcsan __notrace_inline  __maybe_unused
+
+Ditto. 
+
+>  #else
+>  # define __no_kcsan
+>  #endif
+> diff --git a/kernel/trace/Kconfig b/kernel/trace/Kconfig
+> index abe5c583bd59..b66ab0e6ce19 100644
+> --- a/kernel/trace/Kconfig
+> +++ b/kernel/trace/Kconfig
+> @@ -106,6 +106,13 @@ config HAVE_BUILDTIME_MCOUNT_SORT
+>           An architecture selects this if it sorts the mcount_loc section
+>  	 at build time.
+>  
+> +config ARCH_CAN_TRACE_INLINE
+> +       bool
+> +       help
+> +         It is safe for an architecture to trace any function marked
+
+Spaces instead of tab.
+
+> +	 as inline (not __always_inline) that the compiler decides to
+
+and this one has a tab.
+
+> +	 not inline.
+> +
+>  config BUILDTIME_MCOUNT_SORT
+>         bool
+>         default y
