@@ -2,144 +2,143 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A544C88CB2
-	for <linux-trace-kernel@archiver.kernel.org>; Mon, 12 Jun 2023 15:09:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F09ADC88CB2
+	for <linux-trace-kernel@archiver.kernel.org>; Mon, 12 Jun 2023 15:16:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239266AbjFLPJg (ORCPT
+        id S239497AbjFLPQ1 (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Mon, 12 Jun 2023 11:09:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40800 "EHLO
+        Mon, 12 Jun 2023 11:16:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44584 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S238463AbjFLPJf (ORCPT
+        with ESMTP id S237592AbjFLPQS (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Mon, 12 Jun 2023 11:09:35 -0400
-Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 67B3C8F;
-        Mon, 12 Jun 2023 08:09:34 -0700 (PDT)
-From:   Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020; t=1686582572;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=aXQIH8oNCmgfEv4lgu8d01Kz+SNn/6yEMUmZ6FI8ajg=;
-        b=qFtkG4kEpETNMmN0zUn0MTf2XyKCcoOjttv8AkKnRmTSDEtZH94TkR7MMmTqpbszfQLyqv
-        HuBZotDzPpDV2Zwg3HCwLTizT5ViESA9ENeKlg14BnOpCXQQNOxoDRZ7TAc4lXEdoCL8L/
-        TPS8Nz+LQNxT6FgycXQARmwfJZGWu7suzuNYM6OaTUwXFhjqMaKMZF2VyuXP9RknsEMdtO
-        NbO5/6bLVSDkpN5tv0lelEKlQY+lNsreUdJSgZEOR6SWpucpn1o8pOsc2NSilz+qn/8ul6
-        3yWHKcpHWMEbLM84HlIzE+VUtZaDbvxLZ7R7Qs+WQjd8XlQk6sKiMfQyt6E0WQ==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-        s=2020e; t=1686582572;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=aXQIH8oNCmgfEv4lgu8d01Kz+SNn/6yEMUmZ6FI8ajg=;
-        b=JltDw6Wqffv5XMWWPyKKrpW1vaVy25YN5FolP/jU7dAkBVry5zO5oYFT688E/y0v2zW5tD
-        tNp4x9hWiBlKqMBw==
-To:     Steven Rostedt <rostedt@goodmis.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Linux Trace Kernel <linux-trace-kernel@vger.kernel.org>
-Cc:     Masami Hiramatsu <mhiramat@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Kees Cook <keescook@chromium.org>,
-        Miguel Ojeda <ojeda@kernel.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Ingo Molnar <mingo@kernel.org>, Song Liu <song@kernel.org>,
-        Josh Poimboeuf <jpoimboe@kernel.org>
-Subject: Re: [PATCH v2] ftrace: Allow inline functions not inlined to be traced
-In-Reply-To: <20230609174422.04824a9e@gandalf.local.home>
-References: <20230609174422.04824a9e@gandalf.local.home>
-Date:   Mon, 12 Jun 2023 17:09:31 +0200
-Message-ID: <87lego7m50.ffs@tglx>
+        Mon, 12 Jun 2023 11:16:18 -0400
+Received: from mail-vk1-xa30.google.com (mail-vk1-xa30.google.com [IPv6:2607:f8b0:4864:20::a30])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4C781E5F;
+        Mon, 12 Jun 2023 08:16:17 -0700 (PDT)
+Received: by mail-vk1-xa30.google.com with SMTP id 71dfb90a1353d-465db156268so1210545e0c.3;
+        Mon, 12 Jun 2023 08:16:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1686582976; x=1689174976;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=q1zV05vX5FrXpt+4ScqDlwqn2wRbh7AS+yzbx0x5IFE=;
+        b=rmR/cDpWkmFR7Rj8kGucBQmlZ+26ZkX8wN4O6Iy2hCRBgJL9FOo4yzIQcutakdxfvJ
+         tWdOb3b+JWEBmMKM6kIOqu4xLTyZhC8cjyo+DBH5/4n1CY0OWPT1g9y7iI3QXbJxh4+K
+         q5m0ZbkYk5p0KrkbyEsf9O7NZEGiF+v0YR+qeGw/ZpGmVyWZFZLAtawlpYw4peFaE/l6
+         clJ3GWi041l5C0HXRotHMYJBMTXRdSdLxdRmk/FGUOHt4Nf7WUXXegMrFb22oXUjbcH5
+         4nrM5Tdpj+5Conty06BlMVyNZUbR06xzJux1+rjvJPZmels6UyxE2rmfr7vbItIOuv2E
+         lUsQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1686582976; x=1689174976;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=q1zV05vX5FrXpt+4ScqDlwqn2wRbh7AS+yzbx0x5IFE=;
+        b=IBOJFj0qdzEGhlwAUQbYx/cAnf6KkvGoD4OOZhHVsEL84xwiwPqz3Ur8wrSFyp2bhD
+         MGkn2YlO64dIw91udQPO7HruiRUUM4G+5sUloQWW9tJ5GZJlLYB1TXEZUX+a4Xu7I0Hp
+         FYj15Uj2Kt7TlpK8rSiVZ5HXx9X3QxNPpZSZja4imI4mFWKRhHHdTrwGR+dKW3rrdPzK
+         4EbIVRdhVKqYMe4BJYVUdnOofYUWDQZX8YpJIVfNrEUUgE6k/Wb+wnshslmlafWyQDY/
+         dwXKNNsEtoicUJz+0dZPB0FMo0ucQrrpbh2P6aMVT47Z0j/M6wu1YR/+Nq0R1DWj0dVF
+         szJg==
+X-Gm-Message-State: AC+VfDzd1zyEYCrBTC734ZRfe1gW8DdhAYuI9RiASdGwZ+NejtNFtspt
+        Odzcz5QFlgTyOdG/AsRHkr8=
+X-Google-Smtp-Source: ACHHUZ7/f6cuG9bVLe2BRduLqopKNspoei8KhdWswr84bS8R/1QO3Pu4i/XnjlydATWbxWEcpkHNEg==
+X-Received: by 2002:a1f:4c81:0:b0:45d:edef:788c with SMTP id z123-20020a1f4c81000000b0045dedef788cmr3844385vka.1.1686582976257;
+        Mon, 12 Jun 2023 08:16:16 -0700 (PDT)
+Received: from vultr.guest ([108.61.23.146])
+        by smtp.gmail.com with ESMTPSA id o17-20020a0cf4d1000000b0062de0dde008sm1533953qvm.64.2023.06.12.08.16.15
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 12 Jun 2023 08:16:15 -0700 (PDT)
+From:   Yafang Shao <laoar.shao@gmail.com>
+To:     ast@kernel.org, daniel@iogearbox.net, john.fastabend@gmail.com,
+        andrii@kernel.org, martin.lau@linux.dev, song@kernel.org,
+        yhs@fb.com, kpsingh@kernel.org, sdf@google.com, haoluo@google.com,
+        jolsa@kernel.org, quentin@isovalent.com, rostedt@goodmis.org,
+        mhiramat@kernel.org
+Cc:     bpf@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+        Yafang Shao <laoar.shao@gmail.com>
+Subject: [PATCH v3 bpf-next 00/10] bpf: Support ->fill_link_info for kprobe_multi and perf_event links
+Date:   Mon, 12 Jun 2023 15:15:58 +0000
+Message-Id: <20230612151608.99661-1-laoar.shao@gmail.com>
+X-Mailer: git-send-email 2.39.3
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On Fri, Jun 09 2023 at 17:44, Steven Rostedt wrote:
-> From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
->
-> Over 10 years ago there were many bugs that caused function tracing to
-> crash because some inlined function was not inlined and should not have
-> been traced. This made it hard to debug because when the developer tried
-> to reproduce it, if their compiler still inlined the function, the bug
-> would not trigger. The solution back then was simply to add "notrace" to
-> "inline" which would make sure all functions that are marked inline are
-> never traced even when the compiler decides to not inline them.
->
-> A lot has changed over the last 10 years.
->
-> 1) ftrace_test_recursion_trylock() is now used by all ftrace hooks which
->    will prevent the recursive crashes from happening that was caused by
->    inlined functions being traced.
->
-> 2) noinstr is now used to mark pretty much all functions that would also
->    cause problems if they are traced.
->
-> Today, it is no longer a problem if an inlined function is not inlined and
-> is traced, at least on x86. Removing notrace from inline has been requested
-> several times over the years. I believe it is now safe to do so.
->
-> Currently only x86 uses this.
+This patchset enhances the usability of kprobe_multi programs by introducing
+support for ->fill_link_info. This allows users to easily determine the
+probed functions associated with a kprobe_multi program. While
+`bpftool perf show` already provides information about functions probed by
+perf_event programs, supporting ->fill_link_info ensures consistent access to
+this information across all bpf links.
 
-I assume this passes the objtool noinstr validation. If so, if would be
-helpful to document that.
->  /*
->   * gcc provides both __inline__ and __inline as alternate spellings of
-> @@ -230,7 +240,7 @@ struct ftrace_likely_data {
->   *     https://gcc.gnu.org/bugzilla/show_bug.cgi?id=67368
->   * '__maybe_unused' allows us to avoid defined-but-not-used warnings.
->   */
-> -# define __no_kasan_or_inline __no_sanitize_address notrace __maybe_unused
-> +# define __no_kasan_or_inline __no_sanitize_address __notrace_inline __maybe_unused
+In addition, this patch extends support to generic perf events, which are
+currently not covered by `bpftool perf show`. While userspace is exposed to
+only the perf type and config, other attributes such as sample_period and
+sample_freq are disregarded.
 
-I'm not convinced that this is correct
+To ensure accurate identification of probed functions, it is preferable to
+expose the address directly rather than relying solely on the symbol name.
+However, this implementation respects the kptr_restrict setting and avoids
+exposing the address if it is not permitted.
 
->  # define __no_sanitize_or_inline __no_kasan_or_inline
->  #else
+v2->v3:
+- Expose flags instead of retporbe (Andrii)
+- Simplify the check on kmulti_link->cnt (Andrii)
+- Use kallsyms_show_value() instead (Andrii)
+- Show also the module name for kprobe_multi (Andrii)
+- Add new enum bpf_perf_link_type (Andrii)
+- Move perf event names into bpftool (Andrii, Quentin, Jiri)
+- Keep perf event names in sync with perf tools (Jiri) 
 
-given that the !__SANITIZE_ADDRESS__ variant is:
+v1->v2:
+- Fix sparse warning (Stanislav, lkp@intel.com)
+- Fix BPF CI build error
+- Reuse kernel_syms_load() (Alexei)
+- Print 'name' instead of 'func' (Alexei)
+- Show whether the probe is retprobe or not (Andrii)
+- Add comment for the meaning of perf_event name (Andrii)
+- Add support for generic perf event
+- Adhere to the kptr_restrict setting
 
->  # define __no_kasan_or_inline __always_inline
+RFC->v1:
+- Use a single copy_to_user() instead (Jiri)
+- Show also the symbol name in bpftool (Quentin, Alexei)
+- Use calloc() instead of malloc() in bpftool (Quentin)
+- Avoid having conditional entries in the JSON output (Quentin)
+- Drop ->show_fdinfo (Alexei)
+- Use __u64 instead of __aligned_u64 for the field addr (Alexei)
+- Avoid the contradiction in perf_event name length (Alexei)
+- Address a build warning reported by kernel test robot <lkp@intel.com>
 
-which cannot be traced.
+Yafang Shao (10):
+  bpf: Support ->fill_link_info for kprobe_multi
+  bpftool: Dump the kernel symbol's module name
+  bpftool: Show probed function in kprobe_multi link info
+  bpf: Protect probed address based on kptr_restrict setting
+  bpf: Clear the probe_addr for uprobe
+  bpf: Expose symbol's respective address
+  bpf: Add a common helper bpf_copy_to_user()
+  bpf: Support ->fill_link_info for perf_event
+  bpftool: Add perf event names
+  bpftool: Show probed function in perf_event link info
 
-> @@ -247,7 +257,7 @@ struct ftrace_likely_data {
->   * disable all instrumentation. See Kconfig.kcsan where this is mandatory.
->   */
->  # define __no_kcsan __no_sanitize_thread __disable_sanitizer_instrumentation
-> -# define __no_sanitize_or_inline __no_kcsan notrace __maybe_unused
-> +# define __no_sanitize_or_inline __no_kcsan __notrace_inline  __maybe_unused
+ include/uapi/linux/bpf.h          |  37 +++++
+ kernel/bpf/syscall.c              | 158 +++++++++++++++++--
+ kernel/trace/bpf_trace.c          |  32 +++-
+ kernel/trace/trace_kprobe.c       |   7 +-
+ tools/bpf/bpftool/link.c          | 322 +++++++++++++++++++++++++++++++++++++-
+ tools/bpf/bpftool/perf.c          | 107 +++++++++++++
+ tools/bpf/bpftool/perf.h          |  11 ++
+ tools/bpf/bpftool/xlated_dumper.c |   6 +-
+ tools/bpf/bpftool/xlated_dumper.h |   2 +
+ tools/include/uapi/linux/bpf.h    |  37 +++++
+ 10 files changed, 700 insertions(+), 19 deletions(-)
+ create mode 100644 tools/bpf/bpftool/perf.h
 
-Ditto. 
+-- 
+1.8.3.1
 
->  #else
->  # define __no_kcsan
->  #endif
-> diff --git a/kernel/trace/Kconfig b/kernel/trace/Kconfig
-> index abe5c583bd59..b66ab0e6ce19 100644
-> --- a/kernel/trace/Kconfig
-> +++ b/kernel/trace/Kconfig
-> @@ -106,6 +106,13 @@ config HAVE_BUILDTIME_MCOUNT_SORT
->           An architecture selects this if it sorts the mcount_loc section
->  	 at build time.
->  
-> +config ARCH_CAN_TRACE_INLINE
-> +       bool
-> +       help
-> +         It is safe for an architecture to trace any function marked
-
-Spaces instead of tab.
-
-> +	 as inline (not __always_inline) that the compiler decides to
-
-and this one has a tab.
-
-> +	 not inline.
-> +
->  config BUILDTIME_MCOUNT_SORT
->         bool
->         default y
