@@ -2,225 +2,149 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D465C7EE2E
-	for <linux-trace-kernel@archiver.kernel.org>; Mon, 12 Jun 2023 08:36:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A245C7EE25
+	for <linux-trace-kernel@archiver.kernel.org>; Mon, 12 Jun 2023 10:00:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233099AbjFLIgd (ORCPT
+        id S236558AbjFLKAT (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Mon, 12 Jun 2023 04:36:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43428 "EHLO
+        Mon, 12 Jun 2023 06:00:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35310 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232992AbjFLIgb (ORCPT
+        with ESMTP id S235983AbjFLJ57 (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Mon, 12 Jun 2023 04:36:31 -0400
-X-Greylist: delayed 2068 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Mon, 12 Jun 2023 01:36:24 PDT
-Received: from mail-m11877.qiye.163.com (mail-m11877.qiye.163.com [115.236.118.77])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4A83419A;
-        Mon, 12 Jun 2023 01:36:23 -0700 (PDT)
-Received: from [172.23.197.27] (unknown [121.32.254.147])
-        by mail-m11877.qiye.163.com (Hmail) with ESMTPA id 92F0A40040C;
-        Mon, 12 Jun 2023 15:29:20 +0800 (CST)
-Message-ID: <cb07ac16-cc0f-7e8d-6271-cde2e02e739d@sangfor.com.cn>
-Date:   Mon, 12 Jun 2023 15:29:00 +0800
+        Mon, 12 Jun 2023 05:57:59 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 09480270F
+        for <linux-trace-kernel@vger.kernel.org>; Mon, 12 Jun 2023 02:42:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1686562921;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=D3WIPm4z3+5JGaYbfhg2L2EMz9XADf68AcDZRHShQv4=;
+        b=YtNaAegPlqnYHR4MwgJwANLlIwHLT/g9qq94nbP8tCha99AGPTj5PQeFYaUOFboLWsImY9
+        tt/YPuVhmtK8AskHWMEWYueiprKs/P/lslcXLl6P6OVGnh4XM4ZyuEaUGmEBs2OT6HbooG
+        dyCc5C8XUJ1YoNj/nUC5SzXYmeM3jt8=
+Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
+ [209.85.128.72]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-241-Pgz91t7SOtaqeIM6zbg_NQ-1; Mon, 12 Jun 2023 05:41:59 -0400
+X-MC-Unique: Pgz91t7SOtaqeIM6zbg_NQ-1
+Received: by mail-wm1-f72.google.com with SMTP id 5b1f17b1804b1-3f7e835ce65so17503915e9.3
+        for <linux-trace-kernel@vger.kernel.org>; Mon, 12 Jun 2023 02:41:59 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1686562918; x=1689154918;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=D3WIPm4z3+5JGaYbfhg2L2EMz9XADf68AcDZRHShQv4=;
+        b=NIrGFH5oJPcFl2jcKtZ+cJU9FzDk8qA8w2Tj2NMHUt/Nq62gKrd+kapcR58KRd6E8Z
+         8qGaAaKx5pvX7FlUMQuYNT4EH9wHEB9n+fZO5oV3YH4AHvO51btylVF+rNw/HsXssMaI
+         kS8ycrktkhvm0GZvAEjnKkbCit5nBSPINruXiEk43BHSNbO/XvWevzONCW7ILISW5819
+         qyNy1y5nT4EqNeHZNMWpo/wGbLUyxiHya1w10qVCXC17OlSSjiB2C5NBUilx9HvmPJka
+         vVce9Skuwz6QiXHRe5zoUtKELTtxgVgLLOHP2QDjpxYzAYDbNSchfurmeN684Yx+4fDw
+         1JjQ==
+X-Gm-Message-State: AC+VfDwK2qM5o4I6L7nTLYm8ivl+tSYz/PBMAZ3MzTa6AfJhWCfMToTU
+        EG+ZDTkYJ8ZmhJPk6+EcKsKw22jRzKJTQAYomMDLpbIzEL2tRfKTpMsjQGb6oiQwN/8jq48LtHy
+        YWpj6QusmEsUlImlSdZt3Eh4MT0M2MuUN
+X-Received: by 2002:a05:600c:2254:b0:3f7:e535:ff3b with SMTP id a20-20020a05600c225400b003f7e535ff3bmr5477922wmm.3.1686562918184;
+        Mon, 12 Jun 2023 02:41:58 -0700 (PDT)
+X-Google-Smtp-Source: ACHHUZ7Sm436YTX68TNCme7HngotSe4eDUtAGeZuBK92RHWCc1ajo1ryGkbEfHpBQKOiPAD0EO+q1A==
+X-Received: by 2002:a05:600c:2254:b0:3f7:e535:ff3b with SMTP id a20-20020a05600c225400b003f7e535ff3bmr5477906wmm.3.1686562917812;
+        Mon, 12 Jun 2023 02:41:57 -0700 (PDT)
+Received: from localhost.localdomain ([151.29.46.22])
+        by smtp.gmail.com with ESMTPSA id y10-20020a1c4b0a000000b003f5ffba9ae1sm10886705wma.24.2023.06.12.02.41.56
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 12 Jun 2023 02:41:57 -0700 (PDT)
+Date:   Mon, 12 Jun 2023 11:41:55 +0200
+From:   Juri Lelli <juri.lelli@redhat.com>
+To:     Daniel Bristot de Oliveira <bristot@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+        Steven Rostedt <rostedt@goodmis.org>,
+        linux-doc@vger.kernel.org, William White <chwhite@redhat.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Jonathan Corbet <corbet@lwn.net>
+Subject: Re: [PATCH V3 00/11] rtla improvements
+Message-ID: <ZIboY08U6SMS1tiO@localhost.localdomain>
+References: <cover.1686066600.git.bristot@kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.10.0
-Subject: Re: [PATCH v13 09/12] tracing/probes: Add BTF retval type support
-Content-Language: en-US
-To:     "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
-Cc:     linux-kernel@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>,
-        Florent Revest <revest@chromium.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Martin KaFai Lau <martin.lau@linux.dev>, bpf@vger.kernel.org,
-        Bagas Sanjaya <bagasdotme@gmail.com>,
-        linux-trace-kernel@vger.kernel.org,
-        Ding Hui <dinghui@sangfor.com.cn>, huangcun@sangfor.com.cn
-References: <168507466597.913472.10572827237387849017.stgit@mhiramat.roam.corp.google.com>
- <168507476195.913472.16290308831790216609.stgit@mhiramat.roam.corp.google.com>
-From:   Donglin Peng <pengdonglin@sangfor.com.cn>
-In-Reply-To: <168507476195.913472.16290308831790216609.stgit@mhiramat.roam.corp.google.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-HM-Spam-Status: e1kfGhgUHx5ZQUpXWQgPGg8OCBgUHx5ZQUlOS1dZFg8aDwILHllBWSg2Ly
-        tZV1koWUFITzdXWS1ZQUlXWQ8JGhUIEh9ZQVlDT0wYVkxKSx9DGUlDQkhCGlUTARMWGhIXJBQOD1
-        lXWRgSC1lBWUpJSlVISVVJTk9VSk9MWVdZFhoPEhUdFFlBWU9LSFVKSktISkxVSktLVUtZBg++
-X-HM-Tid: 0a88ae8264f62eb3kusn92f0a40040c
-X-HM-MType: 1
-X-HM-Sender-Digest: e1kMHhlZQR0aFwgeV1kSHx4VD1lBWUc6PAg6Dxw5PT1IKho*MTQ#QglO
-        LyhPCUJVSlVKTUNNTk5PQk1KTE9OVTMWGhIXVQseFRwfFBUcFxIVOwgaFRwdFAlVGBQWVRgVRVlX
-        WRILWUFZSklKVUhJVUlOT1VKT0xZV1kIAVlBTEJCTzcG
+In-Reply-To: <cover.1686066600.git.bristot@kernel.org>
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: redhat.com
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On 2023/5/26 12:19, Masami Hiramatsu (Google) wrote:
-> From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-> 
-> Check the target function has non-void retval type and set the correct
-> fetch type if user doesn't specify it.
-> If the function returns void, $retval is rejected as below;
-> 
->   # echo 'f unregister_kprobes%return $retval' >> dynamic_events
-> sh: write error: No such file or directory
->   # cat error_log
-> [   37.488397] trace_fprobe: error: This function returns 'void' type
->    Command: f unregister_kprobes%return $retval
->                                         ^
-> 
-> Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-> ---
-> Changes in v8:
->   - Fix wrong indentation.
-> Changes in v7:
->   - Introduce this as a new patch.
-> ---
->   kernel/trace/trace_probe.c |   69 ++++++++++++++++++++++++++++++++++++++++----
->   kernel/trace/trace_probe.h |    1 +
->   2 files changed, 63 insertions(+), 7 deletions(-)
-> 
-> diff --git a/kernel/trace/trace_probe.c b/kernel/trace/trace_probe.c
-> index 7318642aceb3..dfe3e1823eec 100644
-> --- a/kernel/trace/trace_probe.c
-> +++ b/kernel/trace/trace_probe.c
-> @@ -371,15 +371,13 @@ static const char *type_from_btf_id(struct btf *btf, s32 id)
->   	return NULL;
->   }
->   
-> -static const struct btf_param *find_btf_func_param(const char *funcname, s32 *nr,
-> -						   bool tracepoint)
-> +static const struct btf_type *find_btf_func_proto(const char *funcname)
->   {
->   	struct btf *btf = traceprobe_get_btf();
-> -	const struct btf_param *param;
->   	const struct btf_type *t;
->   	s32 id;
->   
-> -	if (!btf || !funcname || !nr)
-> +	if (!btf || !funcname)
->   		return ERR_PTR(-EINVAL);
->   
->   	id = btf_find_by_name_kind(btf, funcname, BTF_KIND_FUNC);
-> @@ -396,6 +394,22 @@ static const struct btf_param *find_btf_func_param(const char *funcname, s32 *nr
->   	if (!btf_type_is_func_proto(t))
->   		return ERR_PTR(-ENOENT);
->   
-> +	return t;
-> +}
-> +
-> +static const struct btf_param *find_btf_func_param(const char *funcname, s32 *nr,
-> +						   bool tracepoint)
-> +{
-> +	const struct btf_param *param;
-> +	const struct btf_type *t;
-> +
-> +	if (!funcname || !nr)
-> +		return ERR_PTR(-EINVAL);
-> +
-> +	t = find_btf_func_proto(funcname);
-> +	if (IS_ERR(t))
-> +		return (const struct btf_param *)t;
-> +
->   	*nr = btf_type_vlen(t);
->   	param = (const struct btf_param *)(t + 1);
->   
-> @@ -462,6 +476,32 @@ static const struct fetch_type *parse_btf_arg_type(int arg_idx,
->   	return find_fetch_type(typestr, ctx->flags);
->   }
->   
-> +static const struct fetch_type *parse_btf_retval_type(
-> +					struct traceprobe_parse_context *ctx)
-> +{
+Hi,
 
-Can we make this a common interface so that the funcgraph-retval can
-  also use it to get the return type?
+On 06/06/23 18:12, Daniel Bristot de Oliveira wrote:
+> This is a series of improvements for rtla, mainly as a result of our
+> daily usage of the tool debugging problems at red hat.
+> 
+> The cgroup support and house keeping options are from our usage
+> of the tool debugging containers.
+> 
+> The auto-analysis overhead reduction is needed when we go to
+> large boxes - but it is really hand in practice, as it gives an idea
+> of the problem without having to look at the trace.
+> 
+> Running hwnoise 100 % of CPU time might cause some systems
+> to slow down too much. Reduce its utilization to 75% by default to
+> avoid problems for people using it for the first time.
+> 
+> Finally, it adds support for running timerlat user-space threads,
+> and to collect the additional field via rtla timerlat top/hist.
+> 
+> Changes from V2:
+>   - Add timerlat hist -u option
+>   - Link: https://lore.kernel.org/lkml/cover.1684863094.git.bristot@kernel.org/
+> Changes from V1:
+>   - Add the user-space thread support to rtla timerlat top
+>   - Link: https://lore.kernel.org/lkml/cover.1683827510.git.bristot@kernel.org/
+> 
+> Daniel Bristot de Oliveira (11):
+>   rtla: Add -C cgroup support
+>   rtla: Add --house-keeping option
+>   rtla: Change monitored_cpus from char * to cpu_set_t
+>   rtla: Automatically move rtla to a house-keeping cpu
+>   rtla/timerlat: Give timerlat auto analysis its own instance
+>   rtla/timerlat_hist: Add auto-analysis support
+>   rtla: Start the tracers after creating all instances
+>   rtla/hwnoise: Reduce runtime to 75%
+>   rtla: Add timerlat user-space support for timerlat top
+>   rtla: Add timerlat user-space support for
+>   Documentation: Add tools/rtla timerlat -u option documentation
+> 
+>  Documentation/tools/rtla/common_options.rst   |   8 +
+>  .../tools/rtla/common_timerlat_aa.rst         |   7 -
+>  .../tools/rtla/common_timerlat_options.rst    |   7 +
+>  .../tools/rtla/rtla-timerlat-hist.rst         |   7 +-
+>  .../tools/rtla/rtla-timerlat-top.rst          |   7 +
+>  tools/tracing/rtla/src/osnoise.c              |  65 ++++
+>  tools/tracing/rtla/src/osnoise.h              |   5 +
+>  tools/tracing/rtla/src/osnoise_hist.c         |  90 ++++-
+>  tools/tracing/rtla/src/osnoise_top.c          |  83 ++++-
+>  tools/tracing/rtla/src/timerlat_aa.c          |  35 +-
+>  tools/tracing/rtla/src/timerlat_aa.h          |   5 +-
+>  tools/tracing/rtla/src/timerlat_hist.c        | 262 ++++++++++++--
+>  tools/tracing/rtla/src/timerlat_top.c         | 229 +++++++++++--
+>  tools/tracing/rtla/src/timerlat_u.c           | 224 ++++++++++++
+>  tools/tracing/rtla/src/timerlat_u.h           |  18 +
+>  tools/tracing/rtla/src/utils.c                | 324 +++++++++++++++++-
+>  tools/tracing/rtla/src/utils.h                |   7 +
+>  17 files changed, 1277 insertions(+), 106 deletions(-)
+>  create mode 100644 tools/tracing/rtla/src/timerlat_u.c
+>  create mode 100644 tools/tracing/rtla/src/timerlat_u.h
+> 
+> -- 
 
--- Donglin Peng
+I've been heavily relying on these for debugging various issues with
+latency sensitive workloads and they work like a charm.
 
-> +	struct btf *btf = traceprobe_get_btf();
-> +	const char *typestr = NULL;
-> +	const struct btf_type *t;
-> +
-> +	if (btf && ctx->funcname) {
-> +		t = find_btf_func_proto(ctx->funcname);
-> +		if (!IS_ERR(t))
-> +			typestr = type_from_btf_id(btf, t->type);
-> +	}
-> +
-> +	return find_fetch_type(typestr, ctx->flags);
-> +}
-> +
-> +static bool is_btf_retval_void(const char *funcname)
-> +{
-> +	const struct btf_type *t;
-> +
-> +	t = find_btf_func_proto(funcname);
-> +	if (IS_ERR(t))
-> +		return false;
-> +
-> +	return t->type == 0;
-> +}
->   #else
->   static struct btf *traceprobe_get_btf(void)
->   {
-> @@ -480,8 +520,15 @@ static int parse_btf_arg(const char *varname, struct fetch_insn *code,
->   	trace_probe_log_err(ctx->offset, NOSUP_BTFARG);
->   	return -EOPNOTSUPP;
->   }
-> +
->   #define parse_btf_arg_type(idx, ctx)		\
->   	find_fetch_type(NULL, ctx->flags)
-> +
-> +#define parse_btf_retval_type(ctx)		\
-> +	find_fetch_type(NULL, ctx->flags)
-> +
-> +#define is_btf_retval_void(funcname)	(false)
-> +
->   #endif
->   
->   #define PARAM_MAX_STACK (THREAD_SIZE / sizeof(unsigned long))
-> @@ -512,6 +559,11 @@ static int parse_probe_vars(char *arg, const struct fetch_type *t,
->   
->   	if (strcmp(arg, "retval") == 0) {
->   		if (ctx->flags & TPARG_FL_RETURN) {
-> +			if ((ctx->flags & TPARG_FL_KERNEL) &&
-> +			    is_btf_retval_void(ctx->funcname)) {
-> +				err = TP_ERR_NO_RETVAL;
-> +				goto inval;
-> +			}
->   			code->op = FETCH_OP_RETVAL;
->   			return 0;
->   		}
-> @@ -912,9 +964,12 @@ static int traceprobe_parse_probe_arg_body(const char *argv, ssize_t *size,
->   		goto fail;
->   
->   	/* Update storing type if BTF is available */
-> -	if (IS_ENABLED(CONFIG_PROBE_EVENTS_BTF_ARGS) &&
-> -	    !t && code->op == FETCH_OP_ARG)
-> -		parg->type = parse_btf_arg_type(code->param, ctx);
-> +	if (IS_ENABLED(CONFIG_PROBE_EVENTS_BTF_ARGS) && !t) {
-> +		if (code->op == FETCH_OP_ARG)
-> +			parg->type = parse_btf_arg_type(code->param, ctx);
-> +		else if (code->op == FETCH_OP_RETVAL)
-> +			parg->type = parse_btf_retval_type(ctx);
-> +	}
->   
->   	ret = -EINVAL;
->   	/* Store operation */
-> diff --git a/kernel/trace/trace_probe.h b/kernel/trace/trace_probe.h
-> index c864e6dea10f..eb43bea5c168 100644
-> --- a/kernel/trace/trace_probe.h
-> +++ b/kernel/trace/trace_probe.h
-> @@ -449,6 +449,7 @@ extern int traceprobe_define_arg_fields(struct trace_event_call *event_call,
->   	C(BAD_EVENT_NAME,	"Event name must follow the same rules as C identifiers"), \
->   	C(EVENT_EXIST,		"Given group/event name is already used by another event"), \
->   	C(RETVAL_ON_PROBE,	"$retval is not available on probe"),	\
-> +	C(NO_RETVAL,		"This function returns 'void' type"),	\
->   	C(BAD_STACK_NUM,	"Invalid stack number"),		\
->   	C(BAD_ARG_NUM,		"Invalid argument number"),		\
->   	C(BAD_VAR,		"Invalid $-valiable specified"),	\
-> 
-> 
-> 
+Tested-by: Juri Lelli <juri.lelli@redhat.com>
+
+Best,
+Juri
 
