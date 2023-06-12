@@ -2,237 +2,122 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 86C64C88CB8
-	for <linux-trace-kernel@archiver.kernel.org>; Mon, 12 Jun 2023 21:35:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 96AF3C88CB2
+	for <linux-trace-kernel@archiver.kernel.org>; Mon, 12 Jun 2023 22:03:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236108AbjFLVfB (ORCPT
+        id S238348AbjFLWD6 (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Mon, 12 Jun 2023 17:35:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49264 "EHLO
+        Mon, 12 Jun 2023 18:03:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33270 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237084AbjFLVex (ORCPT
+        with ESMTP id S238368AbjFLWDw (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Mon, 12 Jun 2023 17:34:53 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AFC46B3;
-        Mon, 12 Jun 2023 14:34:51 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 54D2362BBD;
-        Mon, 12 Jun 2023 21:34:51 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7D36BC433EF;
-        Mon, 12 Jun 2023 21:34:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1686605690;
-        bh=h0CRiC60VVAZqmO+EH1iTk5RAONQQFwe4r5bnxWeBYM=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=WWGX6EsmQ2I3j/HZk09nSijqLsLqKh2zR9pZKyLx/B0jIXGPm7WOm6aHPsipPOPiY
-         jbuqr2L5NdxGQ25vQ0efNR0RvVTA/m99hLadgsoxeMr2Yr4F8lHDdx8RspQzi7W43/
-         mLC5DXypQ1i3u7doi7r5ZuwkTyjLzEfegN8R501cyMOXLvlLRW9VI2Ncve7nqZpdCc
-         NEaiFAjaKVxiKSOlPYg1cGzREgYQilsaa62hJ0h6RiWVYxtKmWXyFXZ0lBGx5e1JWW
-         26oQT3m1G5nZ691Qq/SnJu3UQtk8Wk6rKOBVtLl9V+SVu1rHNR6YSCJNrSY+wvrhZ3
-         1QMTS9aeu3yow==
-Date:   Tue, 13 Jun 2023 00:34:11 +0300
-From:   Mike Rapoport <rppt@kernel.org>
-To:     Song Liu <song@kernel.org>
-Cc:     Mark Rutland <mark.rutland@arm.com>,
-        Kent Overstreet <kent.overstreet@linux.dev>,
-        linux-kernel@vger.kernel.org,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Christophe Leroy <christophe.leroy@csgroup.eu>,
-        "David S. Miller" <davem@davemloft.net>,
-        Dinh Nguyen <dinguyen@kernel.org>,
-        Heiko Carstens <hca@linux.ibm.com>,
-        Helge Deller <deller@gmx.de>,
-        Huacai Chen <chenhuacai@kernel.org>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        "Naveen N. Rao" <naveen.n.rao@linux.ibm.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Russell King <linux@armlinux.org.uk>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Will Deacon <will@kernel.org>, bpf@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-mips@vger.kernel.org,
-        linux-mm@kvack.org, linux-modules@vger.kernel.org,
-        linux-parisc@vger.kernel.org, linux-riscv@lists.infradead.org,
-        linux-s390@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, loongarch@lists.linux.dev,
-        netdev@vger.kernel.org, sparclinux@vger.kernel.org, x86@kernel.org
-Subject: Re: [PATCH 00/13] mm: jit/text allocator
-Message-ID: <20230612213411.GP52412@kernel.org>
-References: <20230601101257.530867-1-rppt@kernel.org>
- <ZHjDU/mxE+cugpLj@FVFF77S0Q05N.cambridge.arm.com>
- <ZHjgIH3aX9dCvVZc@moria.home.lan>
- <ZHm3zUUbwqlsZBBF@FVFF77S0Q05N>
- <20230605092040.GB3460@kernel.org>
- <ZH20XkD74prrdN4u@FVFF77S0Q05N>
- <CAPhsuW7ntn_HpVWdGK_hYVd3zsPEFToBNfmtt0m6K8SwfxJ66Q@mail.gmail.com>
- <20230608184116.GJ52412@kernel.org>
- <CAPhsuW5YYa6nQhO2=zor75XkdKpFysZD42DgDRkKZvQT6aMqcA@mail.gmail.com>
+        Mon, 12 Jun 2023 18:03:52 -0400
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CAA3010C2;
+        Mon, 12 Jun 2023 15:03:50 -0700 (PDT)
+Received: from pps.filterd (m0279862.ppops.net [127.0.0.1])
+        by mx0a-0031df01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 35CLpUjG007363;
+        Mon, 12 Jun 2023 22:03:45 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=from : to : cc :
+ subject : date : message-id : mime-version : content-transfer-encoding :
+ content-type; s=qcppdkim1;
+ bh=g0jcez2nstLVW2iarNEvZx6vEL3dr5pkytXSctylQjQ=;
+ b=e/aJOlohe9H3ZE05c9nybpvUrEeN7wI8yes0OH38tU6QdytTW6rkNQCbB4c+K96USYt8
+ Gg0tvuPHeuG5Yt57q5wKOVrNow/aYP5HkcqZPWYDi7B3alX772qYiv9dTkper2vkVDBq
+ ghHmPLxpvyig17Ws1KLIsK/+X2srF/ceI64vLRlX0CQUFHM98FSJWlleDSyIJVu7QbQX
+ vCNVp4IhbA+O3dKsjwk3fnnYE/4mYV4hIRz61WK310zpHzaijAS3DVEpAml9WaF6HdnA
+ 9l4GobkiV43fDtqgu0Qqo3XIbZaGyVqBuUW40Wa0rmwaqSF4KU1hqGM4WufKXxJCyWuJ iw== 
+Received: from nalasppmta02.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+        by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3r68x9896g-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 12 Jun 2023 22:03:45 +0000
+Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
+        by NALASPPMTA02.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 35CM3i0g009912
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 12 Jun 2023 22:03:44 GMT
+Received: from hu-gokukris-sd.qualcomm.com (10.80.80.8) by
+ nalasex01a.na.qualcomm.com (10.47.209.196) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.986.42; Mon, 12 Jun 2023 15:03:44 -0700
+From:   Gokul krishna Krishnakumar <quic_gokukris@quicinc.com>
+To:     <linux-arm-msm@vger.kernel.org>,
+        <linux-remoteproc@vger.kernel.org>,
+        <linux-trace-kernel@vger.kernel.org>
+CC:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <andersson@kernel.org>,
+        Konrad Dybcio <konrad.dybcio@linaro.org>,
+        <linux-kernel@vger.kernel.org>,
+        Trilok Soni <quic_tsoni@quicinc.com>,
+        Satya Durga Srinivasu Prabhala <quic_satyap@quicinc.com>,
+        Rajendra Nayak <quic_rjendra@quicinc.com>,
+        "Elliot Berman" <quic_eberman@quicinc.com>,
+        Guru Das Srinagesh <quic_gurus@quicinc.com>,
+        Sibi Sankar <quic_sibis@quicinc.com>,
+        Melody Olvera <quic_molvera@quicinc.com>,
+        Gokul krishna Krishnakumar <quic_gokukris@quicinc.com>
+Subject: [PATCH v5 0/2] Patches for introducing traces in remoteproc.
+Date:   Mon, 12 Jun 2023 15:03:24 -0700
+Message-ID: <cover.1686606835.git.quic_gokukris@quicinc.com>
+X-Mailer: git-send-email 2.40.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAPhsuW5YYa6nQhO2=zor75XkdKpFysZD42DgDRkKZvQT6aMqcA@mail.gmail.com>
+Content-Type: text/plain
+X-Originating-IP: [10.80.80.8]
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nalasex01a.na.qualcomm.com (10.47.209.196)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: cyt0ApF6NnSrwASddo5e5zU5arhUfkZk
+X-Proofpoint-ORIG-GUID: cyt0ApF6NnSrwASddo5e5zU5arhUfkZk
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.254,Aquarius:18.0.957,Hydra:6.0.573,FMLib:17.11.176.26
+ definitions=2023-06-12_16,2023-06-12_02,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0
+ priorityscore=1501 lowpriorityscore=0 impostorscore=0 spamscore=0
+ suspectscore=0 mlxlogscore=737 mlxscore=0 adultscore=0 malwarescore=0
+ clxscore=1011 bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2305260000 definitions=main-2306120189
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On Fri, Jun 09, 2023 at 10:02:16AM -0700, Song Liu wrote:
-> On Thu, Jun 8, 2023 at 11:41 AM Mike Rapoport <rppt@kernel.org> wrote:
-> >
-> > On Tue, Jun 06, 2023 at 11:21:59AM -0700, Song Liu wrote:
-> > > On Mon, Jun 5, 2023 at 3:09 AM Mark Rutland <mark.rutland@arm.com> wrote:
-> > >
-> > > [...]
-> > >
-> > > > > > > Can you give more detail on what parameters you need? If the only extra
-> > > > > > > parameter is just "does this allocation need to live close to kernel
-> > > > > > > text", that's not that big of a deal.
-> > > > > >
-> > > > > > My thinking was that we at least need the start + end for each caller. That
-> > > > > > might be it, tbh.
-> > > > >
-> > > > > Do you mean that modules will have something like
-> > > > >
-> > > > >       jit_text_alloc(size, MODULES_START, MODULES_END);
-> > > > >
-> > > > > and kprobes will have
-> > > > >
-> > > > >       jit_text_alloc(size, KPROBES_START, KPROBES_END);
-> > > > > ?
-> > > >
-> > > > Yes.
-> > >
-> > > How about we start with two APIs:
-> > >      jit_text_alloc(size);
-> > >      jit_text_alloc_range(size, start, end);
-> > >
-> > > AFAICT, arm64 is the only arch that requires the latter API. And TBH, I am
-> > > not quite convinced it is needed.
-> >
-> > Right now arm64 and riscv override bpf and kprobes allocations to use the
-> > entire vmalloc address space, but having the ability to allocate generated
-> > code outside of modules area may be useful for other architectures.
-> >
-> > Still the start + end for the callers feels backwards to me because the
-> > callers do not define the ranges, but rather the architectures, so we still
-> > need a way for architectures to define how they want allocate memory for
-> > the generated code.
-> 
-> Yeah, this makes sense.
-> 
-> >
-> > > > > It sill can be achieved with a single jit_alloc_arch_params(), just by
-> > > > > adding enum jit_type parameter to jit_text_alloc().
-> > > >
-> > > > That feels backwards to me; it centralizes a bunch of information about
-> > > > distinct users to be able to shove that into a static array, when the callsites
-> > > > can pass that information.
-> > >
-> > > I think we only two type of users: module and everything else (ftrace, kprobe,
-> > > bpf stuff). The key differences are:
-> > >
-> > >   1. module uses text and data; while everything else only uses text.
-> > >   2. module code is generated by the compiler, and thus has stronger
-> > >   requirements in address ranges; everything else are generated via some
-> > >   JIT or manual written assembly, so they are more flexible with address
-> > >   ranges (in JIT, we can avoid using instructions that requires a specific
-> > >   address range).
-> > >
-> > > The next question is, can we have the two types of users share the same
-> > > address ranges? If not, we can reserve the preferred range for modules,
-> > > and let everything else use the other range. I don't see reasons to further
-> > > separate users in the "everything else" group.
-> >
-> > I agree that we can define only two types: modules and everything else and
-> > let the architectures define if they need different ranges for these two
-> > types, or want the same range for everything.
-> >
-> > With only two types we can have two API calls for alloc, and a single
-> > structure that defines the ranges etc from the architecture side rather
-> > than spread all over.
-> >
-> > Like something along these lines:
-> >
-> >         struct execmem_range {
-> >                 unsigned long   start;
-> >                 unsigned long   end;
-> >                 unsigned long   fallback_start;
-> >                 unsigned long   fallback_end;
-> >                 pgprot_t        pgprot;
-> >                 unsigned int    alignment;
-> >         };
-> >
-> >         struct execmem_modules_range {
-> >                 enum execmem_module_flags flags;
-> >                 struct execmem_range text;
-> >                 struct execmem_range data;
-> >         };
-> >
-> >         struct execmem_jit_range {
-> >                 struct execmem_range text;
-> >         };
-> >
-> >         struct execmem_params {
-> >                 struct execmem_modules_range    modules;
-> >                 struct execmem_jit_range        jit;
-> >         };
-> >
-> >         struct execmem_params *execmem_arch_params(void);
-> >
-> >         void *execmem_text_alloc(size_t size);
-> >         void *execmem_data_alloc(size_t size);
-> >         void execmem_free(void *ptr);
-> 
-> With the jit variation, maybe we can just call these
-> module_[text|data]_alloc()?
+V5: Add more text to Kconfig
+    Move this trace point to function rproc_load_segments() and rename
+    it to trace_rproc_load_segment_event()
+    
+V4: Add config symbol REMOTEPROC_TRACEPOINTS to enable traces
+    Rename rproc_qcom.h to remoteproc_tracepoints.h
+    Rename qcom_tracepoints.c to remoteproc_tracepoints.c
+    Switch to EXPORT_SYMBOL_GPL
 
-I was thinking about "execmem_*_alloc()" for allocations that must be close to kernel
-image, like modules, ftrace on x86 and s390 and maybe something else in the
-future.
+V3: Split the Patch to 2 as per suggestion from Mukesh, fixed format
+error from v2. 
 
-And jit_text_alloc() for allocations that can reside anywhere.
+V2: Moved the traces to common code from the qcom_pas driver as per
+Bjorns review, fixed text as per Triloks suggestion, Updated QuiC
+copyright to 2023.
 
-I tried to find a different name for 'struct execmem_modules_range' but
-couldn't think of anything better than 'struct execmem_close_to_kernel', so
-I've left modules in the name.
- 
-> btw: Depending on the implementation of the allocator, we may also
-> need separate free()s for text and data.
-> 
-> >
-> >         void *jit_text_alloc(size_t size);
-> >         void jit_free(void *ptr);
-> >
+[1]: https://lore.kernel.org/all/20230224165142.17745-2-quic_gokukris@quicinc.com/
 
-Let's just add jit_free() for completeness even if it will be the same as
-execmem_free() for now.
- 
-> [...]
-> 
-> How should we move ahead from here?
-> 
-> AFAICT, all these changes can be easily extended and refactored
-> in the future, so we don't have to make it perfect the first time.
-> OTOH, having the interface committed (either this set or my
-> module_alloc_type version) can unblock works in the binpack
-> allocator and the users side. Therefore, I think we can move
-> relatively fast here?
+Gokul krishna Krishnakumar (2):
+  remoteproc: Introduce traces for remoteproc events
+  remoteproc: qcom: Add remoteproc tracing
 
-Once the interface and architecture abstraction is ready we can work on the
-allocator and the users. We also need to update text_poking/alternatives on
-architectures that would allocate executable memory as ROX. I did some
-quick tests and with these patches 'modprobe xfs' takes tens time more than
-before.
- 
-> Thanks,
-> Song
+ drivers/remoteproc/Kconfig                    |   9 ++
+ drivers/remoteproc/Makefile                   |   1 +
+ drivers/remoteproc/qcom_common.c              |  37 +++++
+ drivers/remoteproc/qcom_q6v5.c                |   9 ++
+ drivers/remoteproc/remoteproc_core.c          |   5 +
+ drivers/remoteproc/remoteproc_internal.h      |   9 +-
+ drivers/remoteproc/remoteproc_tracepoints.c   |  14 ++
+ include/trace/events/remoteproc_tracepoints.h | 152 ++++++++++++++++++
+ 8 files changed, 234 insertions(+), 2 deletions(-)
+ create mode 100644 drivers/remoteproc/remoteproc_tracepoints.c
+ create mode 100644 include/trace/events/remoteproc_tracepoints.h
 
+
+base-commit: 1ca04f21b204e99dd704146231adfb79ea2fb366
 -- 
-Sincerely yours,
-Mike.
+2.40.1
+
