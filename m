@@ -2,475 +2,285 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 18604EB64D8
-	for <linux-trace-kernel@archiver.kernel.org>; Tue, 13 Jun 2023 13:42:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A34CDEB64D0
+	for <linux-trace-kernel@archiver.kernel.org>; Tue, 13 Jun 2023 13:45:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S242552AbjFMNmS (ORCPT
+        id S242626AbjFMNpS (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Tue, 13 Jun 2023 09:42:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46052 "EHLO
+        Tue, 13 Jun 2023 09:45:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48278 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S242555AbjFMNmM (ORCPT
+        with ESMTP id S242629AbjFMNpI (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Tue, 13 Jun 2023 09:42:12 -0400
-Received: from mail-wm1-x335.google.com (mail-wm1-x335.google.com [IPv6:2a00:1450:4864:20::335])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 04F74B4
-        for <linux-trace-kernel@vger.kernel.org>; Tue, 13 Jun 2023 06:42:04 -0700 (PDT)
-Received: by mail-wm1-x335.google.com with SMTP id 5b1f17b1804b1-3f8d61cb36cso2628825e9.1
-        for <linux-trace-kernel@vger.kernel.org>; Tue, 13 Jun 2023 06:42:03 -0700 (PDT)
+        Tue, 13 Jun 2023 09:45:08 -0400
+Received: from mail-ej1-x62f.google.com (mail-ej1-x62f.google.com [IPv6:2a00:1450:4864:20::62f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3166510DA;
+        Tue, 13 Jun 2023 06:44:53 -0700 (PDT)
+Received: by mail-ej1-x62f.google.com with SMTP id a640c23a62f3a-98220bb31c6so320206666b.3;
+        Tue, 13 Jun 2023 06:44:53 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=isovalent.com; s=google; t=1686663722; x=1689255722;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=XNJiILYHPWhdjN2t4sY8KGNSl7ZB0k4TdhE6UxfhbUU=;
-        b=Wr+SXAkvWKSafC+7fLISNW3A6KpB4v+HdoiTXJOmQy6ZAK22ajGU6erqySSbl2kpna
-         SQUWlEsepmumstRk+e0Sq1asqMzkt516CVjsIaUUzx/mh+MzouUe29xrIW5pQRgzZUwC
-         bsg8XqvrVm620ZdhM0Dun+zELBL5gNf4GdNZ91B/GatfPzyzr6U1CfPClQbEvdIYxrR/
-         Is7KrKxXB4FBoflz5/DfKhOPFyXSDjRK1Mu5OtrUUzhFY4QgND2C1Xqq87aeK9CGJwqi
-         ZrSdSWsvt8EWCaHWfGwrxuHUrRDbSvnEfAiav6Cuz6FXwtMvsCOcH3cIdrua/AKK5j54
-         Fitw==
+        d=gmail.com; s=20221208; t=1686663891; x=1689255891;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=qIPTkEm+x3SAmqMtuyLsXbQowkmoWE26dGFQXuJ4pnc=;
+        b=ruD/BSoCNOUlocmTtUMmfF4n/YygzrQiQTT0qyLgY6CT5h5XRwufrZFJsXuOxxQMCq
+         oEM/ML+s3MWQGkN8E3kx3+YABngBd6Ud0WtTLs4nw/YdC8p/Xd+v6tfoxWdYKD1kxsgB
+         dKl7JpPkI+Xs8JwmBrhezlJ5qCdHfdwZs1af8xLexH592botbnfFrqhj3YL0FB6yKu2E
+         +kHnUm3+eSkvoEsQEwgnFFUi1JpI0mfOm5SaRlCV/UCCwnKWNpMNZPc8hRIep9UJxTi4
+         7zjAf6Lujf44MQAZ3frovCQ598gHa5KyKRcTZ3Sbh6GWi/NHG/m90UO+Xih2ALqRsXoz
+         ofwQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1686663722; x=1689255722;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=XNJiILYHPWhdjN2t4sY8KGNSl7ZB0k4TdhE6UxfhbUU=;
-        b=MhN87RrCZMboREPki2klMclKWCVBwsYwHuscenbekn73xaJCADyc1QQZfw0n2UJmJI
-         g5n08W+A0S8TzohR2HQIKRN57ablF76K2XSm2YbS6tQZ6aYsJIkkxODRTSWNmtg0gtZ+
-         ZU1khMW2LCwGM+/6zbWLAlxOOKLE4cSgGNYi62VlJgP44x58drzIAfVWS1VeCXvmqF2t
-         lddl1xjR7faMNj2KIyFxjoynICa1FW6A02MMZn0RyK4aq/Xy8yzwI/DQDgrAWBcdDTzj
-         +JG55GH9fqmsOWfvv3iiw1vg43chi3KEh+5yVW8u09meyHqQ851XRxEzSC3Dhtf2suaB
-         4wOw==
-X-Gm-Message-State: AC+VfDwPpeaWewB/AQ8buhls9hVlsY0w7qJ4ZVPSTK3D5V8hRU85lcLP
-        6235556xYCLyGWRSTG2i8nmuPg==
-X-Google-Smtp-Source: ACHHUZ7ziclHwDVkDkGPplJtBQmutOUNirDXL2hy4oCYb5ut4DPYqVcS2phQzffGvbfAL1nwcRceSg==
-X-Received: by 2002:a7b:cd11:0:b0:3f7:4961:52ad with SMTP id f17-20020a7bcd11000000b003f7496152admr9423484wmj.3.1686663722429;
-        Tue, 13 Jun 2023 06:42:02 -0700 (PDT)
-Received: from ?IPV6:2a02:8011:e80c:0:a03e:3034:b6bf:fd8e? ([2a02:8011:e80c:0:a03e:3034:b6bf:fd8e])
-        by smtp.gmail.com with ESMTPSA id f9-20020a7bc8c9000000b003f8140763c7sm9378164wml.30.2023.06.13.06.42.01
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 13 Jun 2023 06:42:02 -0700 (PDT)
-Message-ID: <98bd7ece-2058-d4bf-dab9-fc566eb655b3@isovalent.com>
-Date:   Tue, 13 Jun 2023 14:42:01 +0100
+        d=1e100.net; s=20221208; t=1686663891; x=1689255891;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=qIPTkEm+x3SAmqMtuyLsXbQowkmoWE26dGFQXuJ4pnc=;
+        b=IZ/mrq/Pdt/G6ErBGYu+usI/h9AlbFDc890QbGspE/NlrNIb72yWRJ1XKzEWiFSh7X
+         U9sB4N6uC4nNktVUxpMMkDuE1FFlKt7XlBN5jr6Q5P/Z3jeE2v5jF4+VNLJUVMMPAgoR
+         7ZAep145HJF1y9LeiTL+g0IkUmiwqtlXbFXh4APO/BQAWe8eOttV3ofwzIn2OTV3Eiwm
+         j5tZ9YPCeSi91TaQSbWODj6rPsrut2T8d9QhY3QshtaubfmyHwgJcziLII0KXRuwWsAy
+         /DXjQkwkQ1b6z4Eq9wzpjWEqtHyV06LlXProLLJE45+GZw+BI9I3EdQ75xkYD42/AkMK
+         JxXg==
+X-Gm-Message-State: AC+VfDyl21tGEeSQPnEBKBVlUEPWGoJqdctglM/ww4rbSHyAnypHcZRa
+        uQpJNWgoQVkxC3HPW9pq7aI=
+X-Google-Smtp-Source: ACHHUZ7d5iDJs1skj28GuyTneKjdn63hb1OG2DPCbvt7f9LzvHwU1I0m7wnmnKRBCCI98JY30fLANQ==
+X-Received: by 2002:a17:907:3e9f:b0:971:2ead:e161 with SMTP id hs31-20020a1709073e9f00b009712eade161mr16992395ejc.6.1686663891308;
+        Tue, 13 Jun 2023 06:44:51 -0700 (PDT)
+Received: from krava ([83.240.63.222])
+        by smtp.gmail.com with ESMTPSA id r26-20020a1709067fda00b0096a1ba4e0d1sm6697546ejs.32.2023.06.13.06.44.49
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 13 Jun 2023 06:44:50 -0700 (PDT)
+From:   Jiri Olsa <olsajiri@gmail.com>
+X-Google-Original-From: Jiri Olsa <jolsa@kernel.org>
+Date:   Tue, 13 Jun 2023 15:44:48 +0200
+To:     Steven Rostedt <rostedt@goodmis.org>
+Cc:     Yonghong Song <yhs@meta.com>, Jiri Olsa <olsajiri@gmail.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Andrii Nakryiko <andrii@kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        linux-trace-kernel@vger.kernel.org, bpf@vger.kernel.org,
+        Andrii Nakryiko <andrii.nakryiko@gmail.com>,
+        Jackie Liu <liu.yun@linux.dev>
+Subject: Re: [PATCHv2] ftrace: Show all functions with addresses in
+ available_filter_functions_addrs
+Message-ID: <ZIhy0BXEW65TV8sS@krava>
+References: <20230611130029.1202298-1-jolsa@kernel.org>
+ <53a11f31-256d-e7bc-eca5-597571076dc5@meta.com>
+ <20230611225407.3e9b8ad2@gandalf.local.home>
+ <20230611225754.01350a50@gandalf.local.home>
+ <d5ffd64c-65b7-e28c-b8ee-0d2ff9dcd78b@meta.com>
+ <20230612110222.50c254f3@gandalf.local.home>
+ <ZId/UL/iujOdgel+@krava>
+ <4c87727b-0b3f-ffc1-d55b-90e75dcae52b@meta.com>
+ <20230613093606.069a70da@gandalf.local.home>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.12.0
-Subject: Re: [PATCH v3 bpf-next 10/10] bpftool: Show probed function in
- perf_event link info
-Content-Language: en-GB
-To:     Yafang Shao <laoar.shao@gmail.com>, ast@kernel.org,
-        daniel@iogearbox.net, john.fastabend@gmail.com, andrii@kernel.org,
-        martin.lau@linux.dev, song@kernel.org, yhs@fb.com,
-        kpsingh@kernel.org, sdf@google.com, haoluo@google.com,
-        jolsa@kernel.org, rostedt@goodmis.org, mhiramat@kernel.org
-Cc:     bpf@vger.kernel.org, linux-trace-kernel@vger.kernel.org
-References: <20230612151608.99661-1-laoar.shao@gmail.com>
- <20230612151608.99661-11-laoar.shao@gmail.com>
-From:   Quentin Monnet <quentin@isovalent.com>
-In-Reply-To: <20230612151608.99661-11-laoar.shao@gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230613093606.069a70da@gandalf.local.home>
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-2023-06-12 15:16 UTC+0000 ~ Yafang Shao <laoar.shao@gmail.com>
-> Enhance bpftool to display comprehensive information about exposed
-> perf_event links, covering uprobe, kprobe, tracepoint, and generic perf=
+On Tue, Jun 13, 2023 at 09:36:06AM -0400, Steven Rostedt wrote:
+> On Mon, 12 Jun 2023 22:04:28 -0700
+> Yonghong Song <yhs@meta.com> wrote:
+> 
+> > Thanks for explanation! It would be great if we can put more details in
+> > this email into the commit message!
+> 
+> I agree.
+> 
+> This is the patch I just pulled into my queue:
 
-> event. The resulting output will include the following details:
->=20
-> $ tools/bpf/bpftool/bpftool link show
-> 3: perf_event  prog 14
->         event_type software  event_config cpu-clock
->         bpf_cookie 0
->         pids perf_event(1379330)
-> 4: perf_event  prog 14
->         event_type hw-cache  event_config LLC-load-misses
->         bpf_cookie 0
->         pids perf_event(1379330)
-> 5: perf_event  prog 14
->         event_type hardware  event_config cpu-cycles
->         bpf_cookie 0
->         pids perf_event(1379330)
-> 6: perf_event  prog 20
->         retprobe 0  file_name /home/yafang/bpf/uprobe/a.out  offset 0x1=
-338
->         bpf_cookie 0
->         pids uprobe(1379706)
-> 7: perf_event  prog 21
->         retprobe 1  file_name /home/yafang/bpf/uprobe/a.out  offset 0x1=
-338
->         bpf_cookie 0
->         pids uprobe(1379706)
-> 8: perf_event  prog 27
->         tp_name sched_switch
->         bpf_cookie 0
->         pids tracepoint(1381734)
-> 10: perf_event  prog 43
->         retprobe 0  func_name kernel_clone  addr ffffffffad0a9660
+great, thanks
 
-Could we swap the name and the address, for consistency with the
-kprobe_multi case?
+jirka
 
-Also do we really need the "_name" suffix in "func_name" and "file_name"
-for plain output? I don't mind in JSON, but I think the result is a bit
-long for plain output.
-
->         bpf_cookie 0
->         pids kprobe(1384186)
-> 11: perf_event  prog 41
->         retprobe 1  func_name kernel_clone  addr ffffffffad0a9660
->         bpf_cookie 0
->         pids kprobe(1384186)
->=20
-> $ tools/bpf/bpftool/bpftool link show -j
-> [{"id":3,"type":"perf_event","prog_id":14,"event_type":"software","even=
-t_config":"cpu-clock","bpf_cookie":0,"pids":[{"pid":1379330,"comm":"perf_=
-event"}]},{"id":4,"type":"perf_event","prog_id":14,"event_type":"hw-cache=
-","event_config":"LLC-load-misses","bpf_cookie":0,"pids":[{"pid":1379330,=
-"comm":"perf_event"}]},{"id":5,"type":"perf_event","prog_id":14,"event_ty=
-pe":"hardware","event_config":"cpu-cycles","bpf_cookie":0,"pids":[{"pid":=
-1379330,"comm":"perf_event"}]},{"id":6,"type":"perf_event","prog_id":20,"=
-retprobe":0,"file_name":"/home/yafang/bpf/uprobe/a.out","offset":4920,"bp=
-f_cookie":0,"pids":[{"pid":1379706,"comm":"uprobe"}]},{"id":7,"type":"per=
-f_event","prog_id":21,"retprobe":1,"file_name":"/home/yafang/bpf/uprobe/a=
-=2Eout","offset":4920,"bpf_cookie":0,"pids":[{"pid":1379706,"comm":"uprob=
-e"}]},{"id":8,"type":"perf_event","prog_id":27,"tp_name":"sched_switch","=
-bpf_cookie":0,"pids":[{"pid":1381734,"comm":"tracepoint"}]},{"id":10,"typ=
-e":"perf_event","prog_id":43,"retprobe":0,"func_name":"kernel_clone","off=
-set":0,"addr":18446744072317736544,"bpf_cookie":0,"pids":[{"pid":1384186,=
-"comm":"kprobe"}]},{"id":11,"type":"perf_event","prog_id":41,"retprobe":1=
-,"func_name":"kernel_clone","offset":0,"addr":18446744072317736544,"bpf_c=
-ookie":0,"pids":[{"pid":1384186,"comm":"kprobe"}]}]
->=20
-> For generic perf events, the displayed information in bpftool is limite=
-d to
-> the type and configuration, while other attributes such as sample_perio=
-d,
-> sample_freq, etc., are not included.
->=20
-> The kernel function address won't be exposed if it is not permitted by
-> kptr_restrict. The result as follows when kptr_restrict is 2.
->=20
-> $ tools/bpf/bpftool/bpftool link show
-> 3: perf_event  prog 14
->         event_type software  event_config cpu-clock
-> 4: perf_event  prog 14
->         event_type hw-cache  event_config LLC-load-misses
-> 5: perf_event  prog 14
->         event_type hardware  event_config cpu-cycles
-> 6: perf_event  prog 20
->         retprobe 0  file_name /home/yafang/bpf/uprobe/a.out  offset 0x1=
-338
-> 7: perf_event  prog 21
->         retprobe 1  file_name /home/yafang/bpf/uprobe/a.out  offset 0x1=
-338
-> 8: perf_event  prog 27
->         tp_name sched_switch
-> 10: perf_event  prog 43
->         retprobe 0  func_name kernel_clone
-> 11: perf_event  prog 41
->         retprobe 1  func_name kernel_clone
->=20
-> Signed-off-by: Yafang Shao <laoar.shao@gmail.com>
+> 
+> From: Jiri Olsa <jolsa@kernel.org>
+> Date: Sun, 11 Jun 2023 15:00:29 +0200
+> Subject: [PATCH] ftrace: Show all functions with addresses in
+>  available_filter_functions_addrs
+> 
+> Adding new available_filter_functions_addrs file that shows all available
+> functions (same as available_filter_functions) together with addresses,
+> like:
+> 
+>   # cat available_filter_functions_addrs | head
+>   ffffffff81000770 __traceiter_initcall_level
+>   ffffffff810007c0 __traceiter_initcall_start
+>   ffffffff81000810 __traceiter_initcall_finish
+>   ffffffff81000860 trace_initcall_finish_cb
+>   ...
+> 
+> Note displayed address is the patch-site address and can differ from
+> /proc/kallsyms address.
+> 
+> It's useful to have address avilable for traceable symbols, so we don't
+> need to allways cross check kallsyms with available_filter_functions
+> (or the other way around) and have all the data in single file.
+> 
+> For backwards compatibility reasons we can't change the existing
+> available_filter_functions file output, but we need to add new file.
+> 
+> The problem is that we need to do 2 passes:
+> 
+>  - through available_filter_functions and find out if the function is traceable
+>  - through /proc/kallsyms to get the address for traceable function
+> 
+> Having available_filter_functions symbols together with addresses allow
+> us to skip the kallsyms step and we are ok with the address in
+> available_filter_functions_addr not being the function entry, because
+> kprobe_multi uses fprobe and that handles both entry and patch-site
+> address properly.
+> 
+> We have 2 interfaces how to create kprobe_multi link:
+> 
+>   a) passing symbols to kernel
+> 
+>      1) user gathers symbols and need to ensure that they are
+>         trace-able -> pass through available_filter_functions file
+> 
+>      2) kernel takes those symbols and translates them to addresses
+>         through kallsyms api
+> 
+>      3) addresses are passed to fprobe/ftrace through:
+> 
+>          register_fprobe_ips
+>          -> ftrace_set_filter_ips
+> 
+>   b) passing addresses to kernel
+> 
+>      1) user gathers symbols and needs to ensure that they are
+>         trace-able -> pass through available_filter_functions file
+> 
+>      2) user takes those symbols and translates them to addresses
+>        through /proc/kallsyms
+> 
+>      3) addresses are passed to the kernel and kernel calls:
+> 
+>          register_fprobe_ips
+>          -> ftrace_set_filter_ips
+> 
+> The new available_filter_functions_addrs file helps us with option b),
+> because we can make 'b 1' and 'b 2' in one step - while filtering traceable
+> functions, we get the address directly.
+> 
+> Link: https://lore.kernel.org/linux-trace-kernel/20230611130029.1202298-1-jolsa@kernel.org
+> 
+> Cc: Masami Hiramatsu <mhiramat@kernel.org>
+> Cc: Mark Rutland <mark.rutland@arm.com>
+> Cc: Andrii Nakryiko <andrii.nakryiko@gmail.com>
+> Cc: Jackie Liu <liu.yun@linux.dev>
+> Suggested-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+> Suggested-by: Andrii Nakryiko <andrii@kernel.org>
+> Signed-off-by: Jiri Olsa <jolsa@kernel.org>
+> Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
 > ---
->  tools/bpf/bpftool/link.c | 213 +++++++++++++++++++++++++++++++++++++++=
-++++++++
->  1 file changed, 213 insertions(+)
->=20
-> diff --git a/tools/bpf/bpftool/link.c b/tools/bpf/bpftool/link.c
-> index 0015582..c16f71d 100644
-> --- a/tools/bpf/bpftool/link.c
-> +++ b/tools/bpf/bpftool/link.c
-> @@ -15,6 +15,7 @@
->  #include "json_writer.h"
->  #include "main.h"
->  #include "xlated_dumper.h"
-> +#include "perf.h"
-> =20
->  static struct hashmap *link_table;
->  static struct dump_data dd =3D {};
-> @@ -207,6 +208,109 @@ static int cmp_u64(const void *A, const void *B)
->  	jsonw_end_array(json_wtr);
+>  Documentation/trace/ftrace.rst |  6 ++++++
+>  include/linux/ftrace.h         |  1 +
+>  kernel/trace/ftrace.c          | 37 ++++++++++++++++++++++++++++++++++
+>  3 files changed, 44 insertions(+)
+> 
+> diff --git a/Documentation/trace/ftrace.rst b/Documentation/trace/ftrace.rst
+> index df2d3e57a83f..b7308ab10c0e 100644
+> --- a/Documentation/trace/ftrace.rst
+> +++ b/Documentation/trace/ftrace.rst
+> @@ -324,6 +324,12 @@ of ftrace. Here is a list of some of the key files:
+>  	"set_graph_function", or "set_graph_notrace".
+>  	(See the section "dynamic ftrace" below for more details.)
+>  
+> +  available_filter_functions_addrs:
+> +
+> +	Similar to available_filter_functions, but with address displayed
+> +	for each function. The displayed address is the patch-site address
+> +	and can differ from /proc/kallsyms address.
+> +
+>    dyn_ftrace_total_info:
+>  
+>  	This file is for debugging purposes. The number of functions that
+> diff --git a/include/linux/ftrace.h b/include/linux/ftrace.h
+> index 49f279f4c3a1..8e59bd954153 100644
+> --- a/include/linux/ftrace.h
+> +++ b/include/linux/ftrace.h
+> @@ -633,6 +633,7 @@ enum {
+>  	FTRACE_ITER_MOD		= (1 << 5),
+>  	FTRACE_ITER_ENABLED	= (1 << 6),
+>  	FTRACE_ITER_TOUCHED	= (1 << 7),
+> +	FTRACE_ITER_ADDRS	= (1 << 8),
+>  };
+>  
+>  void arch_ftrace_update_code(int command);
+> diff --git a/kernel/trace/ftrace.c b/kernel/trace/ftrace.c
+> index 764668467155..b24c573934af 100644
+> --- a/kernel/trace/ftrace.c
+> +++ b/kernel/trace/ftrace.c
+> @@ -3861,6 +3861,9 @@ static int t_show(struct seq_file *m, void *v)
+>  	if (!rec)
+>  		return 0;
+>  
+> +	if (iter->flags & FTRACE_ITER_ADDRS)
+> +		seq_printf(m, "%lx ", rec->ip);
+> +
+>  	if (print_rec(m, rec->ip)) {
+>  		/* This should only happen when a rec is disabled */
+>  		WARN_ON_ONCE(!(rec->flags & FTRACE_FL_DISABLED));
+> @@ -3996,6 +3999,30 @@ ftrace_touched_open(struct inode *inode, struct file *file)
+>  	return 0;
 >  }
-> =20
-> +static void
-> +show_perf_event_kprobe_json(struct bpf_link_info *info, json_writer_t =
-*wtr)
+>  
+> +static int
+> +ftrace_avail_addrs_open(struct inode *inode, struct file *file)
 > +{
-> +	jsonw_uint_field(wtr, "retprobe", info->kprobe.flags & 0x1);
-
-"retprobe" should likely be a boolean here too (and below), I don't see
-them taking any other values than 0 or 1?
-
-> +	jsonw_string_field(wtr, "func_name",
-> +			   u64_to_ptr(info->kprobe.func_name));
-> +	jsonw_uint_field(wtr, "offset", info->kprobe.offset);
-> +	jsonw_uint_field(wtr, "addr", info->kprobe.addr);
+> +	struct ftrace_iterator *iter;
+> +	int ret;
+> +
+> +	ret = security_locked_down(LOCKDOWN_TRACEFS);
+> +	if (ret)
+> +		return ret;
+> +
+> +	if (unlikely(ftrace_disabled))
+> +		return -ENODEV;
+> +
+> +	iter = __seq_open_private(file, &show_ftrace_seq_ops, sizeof(*iter));
+> +	if (!iter)
+> +		return -ENOMEM;
+> +
+> +	iter->pg = ftrace_pages_start;
+> +	iter->flags = FTRACE_ITER_ADDRS;
+> +	iter->ops = &global_ops;
+> +
+> +	return 0;
 > +}
 > +
-> +static void
-> +show_perf_event_uprobe_json(struct bpf_link_info *info, json_writer_t =
-*wtr)
-> +{
-> +	jsonw_uint_field(wtr, "retprobe", info->uprobe.flags & 0x1);
-> +	jsonw_string_field(wtr, "file_name",
-> +			   u64_to_ptr(info->uprobe.file_name));
-> +	jsonw_uint_field(wtr, "offset", info->uprobe.offset);
-> +}
+>  /**
+>   * ftrace_regex_open - initialize function tracer filter files
+>   * @ops: The ftrace_ops that hold the hash filters
+> @@ -5916,6 +5943,13 @@ static const struct file_operations ftrace_touched_fops = {
+>  	.release = seq_release_private,
+>  };
+>  
+> +static const struct file_operations ftrace_avail_addrs_fops = {
+> +	.open = ftrace_avail_addrs_open,
+> +	.read = seq_read,
+> +	.llseek = seq_lseek,
+> +	.release = seq_release_private,
+> +};
 > +
-> +static void
-> +show_perf_event_tp_json(struct bpf_link_info *info, json_writer_t *wtr=
-)
-> +{
-> +	jsonw_string_field(wtr, "tp_name",
-> +			   u64_to_ptr(info->tracepoint.tp_name));
-> +}
+>  static const struct file_operations ftrace_filter_fops = {
+>  	.open = ftrace_filter_open,
+>  	.read = seq_read,
+> @@ -6377,6 +6411,9 @@ static __init int ftrace_init_dyn_tracefs(struct dentry *d_tracer)
+>  	trace_create_file("available_filter_functions", TRACE_MODE_READ,
+>  			d_tracer, NULL, &ftrace_avail_fops);
+>  
+> +	trace_create_file("available_filter_functions_addrs", TRACE_MODE_READ,
+> +			d_tracer, NULL, &ftrace_avail_addrs_fops);
 > +
-> +static const char *perf_config_hw_cache_str(__u64 config)
-
-The returned "str" is not a "const char *"? Why not simply a "char *"
-and avoiding the cast when we free() it?
-
-> +{
-> +#define PERF_HW_CACHE_LEN 128
-
-Let's move the #define to the top of the file, please.
-
-> +	const char *hw_cache, *result, *op;
-> +	char *str =3D malloc(PERF_HW_CACHE_LEN);
-> +
-> +	if (!str) {
-> +		p_err("mem alloc failed");
-> +		return NULL;
-> +	}
-> +	hw_cache =3D perf_hw_cache_str(config & 0xff);
-> +	if (hw_cache)
-> +		snprintf(str, PERF_HW_CACHE_LEN, "%s-", hw_cache);
-> +	else
-> +		snprintf(str, PERF_HW_CACHE_LEN, "%lld-", config & 0xff);
-> +	op =3D perf_hw_cache_op_str((config >> 8) & 0xff);
-> +	if (op)
-> +		snprintf(str + strlen(str), PERF_HW_CACHE_LEN - strlen(str),
-> +			 "%s-", op);
-> +	else
-> +		snprintf(str + strlen(str), PERF_HW_CACHE_LEN - strlen(str),
-> +			 "%lld-", (config >> 8) & 0xff);
-> +	result =3D perf_hw_cache_op_result_str(config >> 16);
-> +	if (result)
-> +		snprintf(str + strlen(str), PERF_HW_CACHE_LEN - strlen(str),
-> +			 "%s", result);
-> +	else
-> +		snprintf(str + strlen(str), PERF_HW_CACHE_LEN - strlen(str),
-> +			 "%lld", config >> 16);
-> +
-> +	return str;
-> +}
-> +
-> +static const char *perf_config_str(__u32 type, __u64 config)
-> +{
-> +	const char *perf_config;
-> +
-> +	switch (type) {
-> +	case PERF_TYPE_HARDWARE:
-> +		perf_config =3D perf_hw_str(config);
-> +		break;
-> +	case PERF_TYPE_SOFTWARE:
-> +		perf_config =3D perf_sw_str(config);
-> +		break;
-> +	case PERF_TYPE_HW_CACHE:
-> +		perf_config =3D perf_config_hw_cache_str(config);
-> +		break;
-> +	default:
-> +		perf_config =3D NULL;
-> +		break;
-> +	}
-> +	return perf_config;
-> +}
-> +
-> +static void
-> +show_perf_event_event_json(struct bpf_link_info *info, json_writer_t *=
-wtr)
-> +{
-> +	__u64 config =3D info->perf_event.config;
-> +	__u32 type =3D info->perf_event.type;
-> +	const char *perf_type, *perf_config;
-> +
-> +	perf_type =3D perf_type_str(type);
-> +	if (perf_type)
-> +		jsonw_string_field(wtr, "event_type", perf_type);
-> +	else
-> +		jsonw_uint_field(wtr, "event_type", type);
-> +
-> +	perf_config =3D perf_config_str(type, config);
-> +	if (perf_config)
-> +		jsonw_string_field(wtr, "event_config", perf_config);
-> +	else
-> +		jsonw_uint_field(wtr, "event_config", config);
-> +
-> +	if (type =3D=3D PERF_TYPE_HW_CACHE && perf_config)
-> +		free((void *)perf_config);
-> +}
-> +
->  static int show_link_close_json(int fd, struct bpf_link_info *info)
->  {
->  	struct bpf_prog_info prog_info;
-> @@ -262,6 +366,16 @@ static int show_link_close_json(int fd, struct bpf=
-_link_info *info)
->  	case BPF_LINK_TYPE_KPROBE_MULTI:
->  		show_kprobe_multi_json(info, json_wtr);
->  		break;
-> +	case BPF_LINK_TYPE_PERF_EVENT:
-> +		if (info->perf_link_type =3D=3D BPF_PERF_LINK_PERF_EVENT)
-> +			show_perf_event_event_json(info, json_wtr);
-> +		else if (info->perf_link_type =3D=3D BPF_PERF_LINK_TRACEPOINT)
-> +			show_perf_event_tp_json(info, json_wtr);
-> +		else if (info->perf_link_type =3D=3D BPF_PERF_LINK_KPROBE)
-> +			show_perf_event_kprobe_json(info, json_wtr);
-> +		else if (info->perf_link_type =3D=3D BPF_PERF_LINK_UPROBE)
-> +			show_perf_event_uprobe_json(info, json_wtr);
-
-It would be clearer to me with another switch/case I think (same for
-plain output), but I don't mind much.
-
-> +		break;
->  	default:
->  		break;
->  	}
-> @@ -433,6 +547,71 @@ static void show_kprobe_multi_plain(struct bpf_lin=
-k_info *info)
->  	}
->  }
-> =20
-> +static void show_perf_event_kprobe_plain(struct bpf_link_info *info)
-> +{
-> +	const char *buf;
-> +	__u32 retprobe;
-> +
-> +	buf =3D (const char *)u64_to_ptr(info->kprobe.func_name);
-> +	if (buf[0] =3D=3D '\0' && !info->kprobe.addr)
-> +		return;
-> +
-> +	retprobe =3D info->kprobe.flags & 0x1;
-> +	printf("\n\tretprobe %u  func_name %s  ", retprobe, buf);
-> +	if (info->kprobe.offset)
-> +		printf("offset %#x  ", info->kprobe.offset);
-> +	if (info->kprobe.addr)
-> +		printf("addr %llx  ", info->kprobe.addr);
-> +}
-> +
-> +static void show_perf_event_uprobe_plain(struct bpf_link_info *info)
-> +{
-> +	const char *buf;
-> +	__u32 retprobe;
-> +
-> +	buf =3D (const char *)u64_to_ptr(info->uprobe.file_name);
-> +	if (buf[0] =3D=3D '\0')
-> +		return;
-> +
-> +	retprobe =3D info->uprobe.flags & 0x1;
-> +	printf("\n\tretprobe %u  file_name %s  ", retprobe, buf);
-> +	if (info->uprobe.offset)
-> +		printf("offset %#x  ", info->kprobe.offset);
-> +}
-> +
-> +static void show_perf_event_tp_plain(struct bpf_link_info *info)
-> +{
-> +	const char *buf;
-> +
-> +	buf =3D (const char *)u64_to_ptr(info->tracepoint.tp_name);
-> +	if (buf[0] =3D=3D '\0')
-> +		return;
-> +
-> +	printf("\n\ttp_name %s  ", buf);
-> +}
-> +
-> +static void show_perf_event_event_plain(struct bpf_link_info *info)
-> +{
-> +	__u64 config =3D info->perf_event.config;
-> +	__u32 type =3D info->perf_event.type;
-> +	const char *perf_type, *perf_config;
-> +
-> +	perf_type =3D perf_type_str(type);
-> +	if (perf_type)
-> +		printf("\n\tevent_type %s  ", perf_type);
-> +	else
-> +		printf("\n\tevent_type %u  ", type);
-> +
-> +	perf_config =3D perf_config_str(type, config);
-> +	if (perf_config)
-> +		printf("event_config %s  ", perf_config);
-> +	else
-> +		printf("event_config %llu  ", config);
-> +
-> +	if (type =3D=3D PERF_TYPE_HW_CACHE && perf_config)
-> +		free((void *)perf_config);
-> +}
-> +
->  static int show_link_close_plain(int fd, struct bpf_link_info *info)
->  {
->  	struct bpf_prog_info prog_info;
-> @@ -481,6 +660,16 @@ static int show_link_close_plain(int fd, struct bp=
-f_link_info *info)
->  	case BPF_LINK_TYPE_KPROBE_MULTI:
->  		show_kprobe_multi_plain(info);
->  		break;
-> +	case BPF_LINK_TYPE_PERF_EVENT:
-> +		if (info->perf_link_type =3D=3D BPF_PERF_LINK_PERF_EVENT)
-> +			show_perf_event_event_plain(info);
-> +		else if (info->perf_link_type =3D=3D BPF_PERF_LINK_TRACEPOINT)
-> +			show_perf_event_tp_plain(info);
-> +		else if (info->perf_link_type =3D=3D BPF_PERF_LINK_KPROBE)
-> +			show_perf_event_kprobe_plain(info);
-> +		else if (info->perf_link_type =3D=3D BPF_PERF_LINK_UPROBE)
-> +			show_perf_event_uprobe_plain(info);
-> +		break;
->  	default:
->  		break;
->  	}
-> @@ -508,6 +697,7 @@ static int do_show_link(int fd)
->  	int err;
-> =20
->  	memset(&info, 0, sizeof(info));
-> +	buf[0] =3D '\0';
->  again:
->  	err =3D bpf_link_get_info_by_fd(fd, &info, &len);
->  	if (err) {
-> @@ -542,7 +732,30 @@ static int do_show_link(int fd)
->  			goto again;
->  		}
->  	}
-> +	if (info.type =3D=3D BPF_LINK_TYPE_PERF_EVENT) {
-> +		if (info.perf_link_type =3D=3D BPF_PERF_LINK_PERF_EVENT)
-> +			goto out;
-> +		if (info.perf_link_type =3D=3D BPF_PERF_LINK_TRACEPOINT &&
-> +		    !info.tracepoint.tp_name) {
-> +			info.tracepoint.tp_name =3D (unsigned long)&buf;
-> +			info.tracepoint.name_len =3D sizeof(buf);
-> +			goto again;
-> +		}
-> +		if (info.perf_link_type =3D=3D BPF_PERF_LINK_KPROBE &&
-> +		    !info.kprobe.func_name) {
-> +			info.kprobe.func_name =3D (unsigned long)&buf;
-> +			info.kprobe.name_len =3D sizeof(buf);
-> +			goto again;
-> +		}
-> +		if (info.perf_link_type =3D=3D BPF_PERF_LINK_UPROBE &&
-> +		    !info.uprobe.file_name) {
-> +			info.uprobe.file_name =3D (unsigned long)&buf;
-> +			info.uprobe.name_len =3D sizeof(buf);
-
-Maybe increase the size of buf to accommodate for long paths?
-
-> +			goto again;
-> +		}
-> +	}
-> =20
-> +out:
->  	if (json_output)
->  		show_link_close_json(fd, &info);
->  	else
-
-Thanks for this work!
+>  	trace_create_file("enabled_functions", TRACE_MODE_READ,
+>  			d_tracer, NULL, &ftrace_enabled_fops);
+>  
+> -- 
+> 2.39.2
+> 
