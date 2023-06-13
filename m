@@ -2,115 +2,126 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C09BEC77B7A
-	for <linux-trace-kernel@archiver.kernel.org>; Tue, 13 Jun 2023 07:43:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 91B0CC88CB2
+	for <linux-trace-kernel@archiver.kernel.org>; Tue, 13 Jun 2023 08:21:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S239732AbjFMHn1 (ORCPT
+        id S239393AbjFMIVu (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Tue, 13 Jun 2023 03:43:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41408 "EHLO
+        Tue, 13 Jun 2023 04:21:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37852 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S240556AbjFMHnG (ORCPT
+        with ESMTP id S241082AbjFMIVs (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Tue, 13 Jun 2023 03:43:06 -0400
-Received: from mga17.intel.com (mga17.intel.com [192.55.52.151])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C8C0D171A;
-        Tue, 13 Jun 2023 00:42:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1686642165; x=1718178165;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=3Ak4/m1xzWc3DziD0sz6Zov4RGEsJQMuHazVQwECIsQ=;
-  b=WRkI+BI0s7PgSqBJAoLA+ypko5V+OURoFyjpquhD7nIGfV/bGP0CaJZq
-   nHQYYGC/Sx0yjvHCWxioyC1RVHq8sg0PzSs/9ldbIL6cC1B3Z8KBW337c
-   +S4tsI1AqfO33M2grzTq6/LF+JWbaE/u3eBzXUzXQwMBSe8e9R6oGwUzm
-   dKNjlie+ikeyqdYYJQ0JfXoBBA5njzTxKxoLIiCvpkJmcTmRKJnHKHP11
-   UiIv+CPFoeDVj1XzXlbSyiuycq18u2YHUbFdiIJaaPX68z/n1jJyPb2tB
-   8GJRvSCj/rNfjkw7TOA4BFONrm04FDYq7Jg8+cP6vZaMai09qvK5AIJn9
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10739"; a="338614737"
-X-IronPort-AV: E=Sophos;i="6.00,239,1681196400"; 
-   d="scan'208";a="338614737"
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Jun 2023 00:42:45 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10739"; a="781552009"
-X-IronPort-AV: E=Sophos;i="6.00,239,1681196400"; 
-   d="scan'208";a="781552009"
-Received: from lkp-server01.sh.intel.com (HELO 211f47bdb1cb) ([10.239.97.150])
-  by fmsmga004.fm.intel.com with ESMTP; 13 Jun 2023 00:42:42 -0700
-Received: from kbuild by 211f47bdb1cb with local (Exim 4.96)
-        (envelope-from <lkp@intel.com>)
-        id 1q8yfp-00016c-14;
-        Tue, 13 Jun 2023 07:42:41 +0000
-Date:   Tue, 13 Jun 2023 15:42:01 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     Gokul krishna Krishnakumar <quic_gokukris@quicinc.com>,
-        linux-arm-msm@vger.kernel.org, linux-remoteproc@vger.kernel.org,
-        linux-trace-kernel@vger.kernel.org
-Cc:     oe-kbuild-all@lists.linux.dev, Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <andersson@kernel.org>,
-        Konrad Dybcio <konrad.dybcio@linaro.org>,
-        linux-kernel@vger.kernel.org, Trilok Soni <quic_tsoni@quicinc.com>,
-        Satya Durga Srinivasu Prabhala <quic_satyap@quicinc.com>,
-        Rajendra Nayak <quic_rjendra@quicinc.com>,
-        Elliot Berman <quic_eberman@quicinc.com>,
-        Guru Das Srinagesh <quic_gurus@quicinc.com>,
-        Sibi Sankar <quic_sibis@quicinc.com>,
-        Melody Olvera <quic_molvera@quicinc.com>,
-        Gokul krishna Krishnakumar <quic_gokukris@quicinc.com>
-Subject: Re: [PATCH v5 2/2] remoteproc: qcom: Add remoteproc tracing
-Message-ID: <202306131523.EwZZ3cVl-lkp@intel.com>
-References: <12b533c73b8c6b039e90f20afef1c8dcd30b80de.1686606835.git.quic_gokukris@quicinc.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <12b533c73b8c6b039e90f20afef1c8dcd30b80de.1686606835.git.quic_gokukris@quicinc.com>
+        Tue, 13 Jun 2023 04:21:48 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 04573128;
+        Tue, 13 Jun 2023 01:21:48 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 7B91C62B41;
+        Tue, 13 Jun 2023 08:21:47 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CA046C433EF;
+        Tue, 13 Jun 2023 08:21:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1686644506;
+        bh=OvLFTlujnYmRs+UiOmoVGndpXhBiBH1WD26me7bcPpY=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=dVQatewwwGOGeOvRrgjR3jiRVM+VbW/gBL56ydxMN2py/G7MwL8vIdIq3257EobNS
+         6HMf2eEmpGMuiS8QHp2PgVvpVx2KnFewrogZwN9etq315vl/TUM0lSNHre54ugPOya
+         Ur8FAAABTzxnGDovO79hiJqorymrJcEoiPWDGWAy+eH5xNs3eQlQuD/bK1ylkRAqMn
+         /Crlv22H1x3jJDAiddK+EvqU4OU6d38Xi0Ok4udckOdbWhFkWPckjdexErm0HH5yP4
+         gE3juNJ4459F1MzJWZ7LvGWO7RGfMUfEvns7K8fL8rXnP9iVujVLOu8m065eVkeHIg
+         YCYO4SPRv+J0w==
+Date:   Tue, 13 Jun 2023 17:21:42 +0900
+From:   Masami Hiramatsu (Google) <mhiramat@kernel.org>
+To:     Ajay Kaher <akaher@vmware.com>
+Cc:     rostedt@goodmis.org, shuah@kernel.org,
+        linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+        linux-kselftest@vger.kernel.org, chinglinyu@google.com,
+        namit@vmware.com, srivatsa@csail.mit.edu, amakhalov@vmware.com,
+        vsirnapalli@vmware.com, tkundu@vmware.com, er.ajay.kaher@gmail.com
+Subject: Re: [PATCH v3 10/10] test: ftrace: fix kprobe test for eventfs
+Message-Id: <20230613172142.5dfb0511b7875790f6d71f50@kernel.org>
+In-Reply-To: <1685610013-33478-11-git-send-email-akaher@vmware.com>
+References: <1685610013-33478-1-git-send-email-akaher@vmware.com>
+        <1685610013-33478-11-git-send-email-akaher@vmware.com>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-Hi Gokul,
+On Thu,  1 Jun 2023 14:30:13 +0530
+Ajay Kaher <akaher@vmware.com> wrote:
 
-kernel test robot noticed the following build errors:
+> kprobe_args_char.tc, kprobe_args_string.tc has validation check
+> for tracefs_create_dir, for eventfs it should be eventfs_create_dir.
+> 
 
-[auto build test ERROR on 1ca04f21b204e99dd704146231adfb79ea2fb366]
+This looks good to me.
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Gokul-krishna-Krishnakumar/remoteproc-Introduce-traces-for-remoteproc-events/20230613-060527
-base:   1ca04f21b204e99dd704146231adfb79ea2fb366
-patch link:    https://lore.kernel.org/r/12b533c73b8c6b039e90f20afef1c8dcd30b80de.1686606835.git.quic_gokukris%40quicinc.com
-patch subject: [PATCH v5 2/2] remoteproc: qcom: Add remoteproc tracing
-config: microblaze-randconfig-r003-20230612 (https://download.01.org/0day-ci/archive/20230613/202306131523.EwZZ3cVl-lkp@intel.com/config)
-compiler: microblaze-linux-gcc (GCC) 12.3.0
-reproduce (this is a W=1 build):
-        mkdir -p ~/bin
-        wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
-        chmod +x ~/bin/make.cross
-        git checkout 1ca04f21b204e99dd704146231adfb79ea2fb366
-        b4 shazam https://lore.kernel.org/r/12b533c73b8c6b039e90f20afef1c8dcd30b80de.1686606835.git.quic_gokukris@quicinc.com
-        # save the config file
-        mkdir build_dir && cp config build_dir/.config
-        COMPILER_INSTALL_PATH=$HOME/0day COMPILER=gcc-12.3.0 ~/bin/make.cross W=1 O=build_dir ARCH=microblaze olddefconfig
-        COMPILER_INSTALL_PATH=$HOME/0day COMPILER=gcc-12.3.0 ~/bin/make.cross W=1 O=build_dir ARCH=microblaze SHELL=/bin/bash
+Acked-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202306131523.EwZZ3cVl-lkp@intel.com/
+Thanks,
 
-All errors (new ones prefixed by >>):
+> Signed-off-by: Ajay Kaher <akaher@vmware.com>
+> Co-developed-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+> Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+> Tested-by: Ching-lin Yu <chinglinyu@google.com>
+> ---
+>  .../selftests/ftrace/test.d/kprobe/kprobe_args_char.tc        | 4 ++--
+>  .../selftests/ftrace/test.d/kprobe/kprobe_args_string.tc      | 4 ++--
+>  2 files changed, 4 insertions(+), 4 deletions(-)
+> 
+> diff --git a/tools/testing/selftests/ftrace/test.d/kprobe/kprobe_args_char.tc b/tools/testing/selftests/ftrace/test.d/kprobe/kprobe_args_char.tc
+> index 285b4770e..523cfb645 100644
+> --- a/tools/testing/selftests/ftrace/test.d/kprobe/kprobe_args_char.tc
+> +++ b/tools/testing/selftests/ftrace/test.d/kprobe/kprobe_args_char.tc
+> @@ -34,14 +34,14 @@ mips*)
+>  esac
+>  
+>  : "Test get argument (1)"
+> -echo "p:testprobe tracefs_create_dir arg1=+0(${ARG1}):char" > kprobe_events
+> +echo "p:testprobe eventfs_add_dir arg1=+0(${ARG1}):char" > kprobe_events
+>  echo 1 > events/kprobes/testprobe/enable
+>  echo "p:test $FUNCTION_FORK" >> kprobe_events
+>  grep -qe "testprobe.* arg1='t'" trace
+>  
+>  echo 0 > events/kprobes/testprobe/enable
+>  : "Test get argument (2)"
+> -echo "p:testprobe tracefs_create_dir arg1=+0(${ARG1}):char arg2=+0(${ARG1}):char[4]" > kprobe_events
+> +echo "p:testprobe eventfs_add_dir arg1=+0(${ARG1}):char arg2=+0(${ARG1}):char[4]" > kprobe_events
+>  echo 1 > events/kprobes/testprobe/enable
+>  echo "p:test $FUNCTION_FORK" >> kprobe_events
+>  grep -qe "testprobe.* arg1='t' arg2={'t','e','s','t'}" trace
+> diff --git a/tools/testing/selftests/ftrace/test.d/kprobe/kprobe_args_string.tc b/tools/testing/selftests/ftrace/test.d/kprobe/kprobe_args_string.tc
+> index a4f8e7c53..b9f8c3f8b 100644
+> --- a/tools/testing/selftests/ftrace/test.d/kprobe/kprobe_args_string.tc
+> +++ b/tools/testing/selftests/ftrace/test.d/kprobe/kprobe_args_string.tc
+> @@ -37,14 +37,14 @@ loongarch*)
+>  esac
+>  
+>  : "Test get argument (1)"
+> -echo "p:testprobe tracefs_create_dir arg1=+0(${ARG1}):string" > kprobe_events
+> +echo "p:testprobe eventfs_add_dir arg1=+0(${ARG1}):string" > kprobe_events
+>  echo 1 > events/kprobes/testprobe/enable
+>  echo "p:test $FUNCTION_FORK" >> kprobe_events
+>  grep -qe "testprobe.* arg1=\"test\"" trace
+>  
+>  echo 0 > events/kprobes/testprobe/enable
+>  : "Test get argument (2)"
+> -echo "p:testprobe tracefs_create_dir arg1=+0(${ARG1}):string arg2=+0(${ARG1}):string" > kprobe_events
+> +echo "p:testprobe eventfs_add_dir arg1=+0(${ARG1}):string arg2=+0(${ARG1}):string" > kprobe_events
+>  echo 1 > events/kprobes/testprobe/enable
+>  echo "p:test $FUNCTION_FORK" >> kprobe_events
+>  grep -qe "testprobe.* arg1=\"test\" arg2=\"test\"" trace
+> -- 
+> 2.40.0
+> 
 
-   microblaze-linux-ld: drivers/remoteproc/remoteproc_core.o: in function `rproc_stop':
->> .tmp_gl_remoteproc_core.o:(.text+0xe1c): undefined reference to `__tracepoint_rproc_stop_event'
->> microblaze-linux-ld: .tmp_gl_remoteproc_core.o:(.text+0xe94): undefined reference to `__traceiter_rproc_stop_event'
-   microblaze-linux-ld: drivers/remoteproc/remoteproc_core.o: in function `rproc_start':
->> .tmp_gl_remoteproc_core.o:(.text.unlikely+0x664): undefined reference to `__tracepoint_rproc_load_segment_event'
->> microblaze-linux-ld: .tmp_gl_remoteproc_core.o:(.text.unlikely+0x6dc): undefined reference to `__traceiter_rproc_load_segment_event'
-   microblaze-linux-ld: drivers/remoteproc/remoteproc_core.o: in function `trace_rproc_start_event':
->> .tmp_gl_remoteproc_core.o:(.text.unlikely+0x8c8): undefined reference to `__tracepoint_rproc_start_event'
->> microblaze-linux-ld: .tmp_gl_remoteproc_core.o:(.text.unlikely+0x948): undefined reference to `__traceiter_rproc_start_event'
 
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
