@@ -2,49 +2,47 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E64EFEB64D0
-	for <linux-trace-kernel@archiver.kernel.org>; Tue, 13 Jun 2023 15:28:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ECD02EB64D7
+	for <linux-trace-kernel@archiver.kernel.org>; Tue, 13 Jun 2023 15:41:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S242801AbjFMP2x (ORCPT
+        id S235653AbjFMPlF (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Tue, 13 Jun 2023 11:28:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47858 "EHLO
+        Tue, 13 Jun 2023 11:41:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57334 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S242809AbjFMP2w (ORCPT
+        with ESMTP id S239942AbjFMPlE (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Tue, 13 Jun 2023 11:28:52 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4FA9210E9;
-        Tue, 13 Jun 2023 08:28:50 -0700 (PDT)
+        Tue, 13 Jun 2023 11:41:04 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5597B1A5;
+        Tue, 13 Jun 2023 08:40:54 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 554D1637B9;
-        Tue, 13 Jun 2023 15:28:49 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3B9A7C433F0;
-        Tue, 13 Jun 2023 15:28:47 +0000 (UTC)
-Date:   Tue, 13 Jun 2023 11:28:45 -0400
+        by dfw.source.kernel.org (Postfix) with ESMTPS id CF11B6253F;
+        Tue, 13 Jun 2023 15:40:53 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E1E1FC433F0;
+        Tue, 13 Jun 2023 15:40:51 +0000 (UTC)
+Date:   Tue, 13 Jun 2023 11:40:49 -0400
 From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Gokul krishna Krishnakumar <quic_gokukris@quicinc.com>
-Cc:     <linux-arm-msm@vger.kernel.org>,
-        <linux-remoteproc@vger.kernel.org>,
-        <linux-trace-kernel@vger.kernel.org>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <andersson@kernel.org>,
-        Konrad Dybcio <konrad.dybcio@linaro.org>,
-        <linux-kernel@vger.kernel.org>,
-        Trilok Soni <quic_tsoni@quicinc.com>,
-        Satya Durga Srinivasu Prabhala <quic_satyap@quicinc.com>,
-        Rajendra Nayak <quic_rjendra@quicinc.com>,
-        "Elliot Berman" <quic_eberman@quicinc.com>,
-        Guru Das Srinagesh <quic_gurus@quicinc.com>,
-        Sibi Sankar <quic_sibis@quicinc.com>,
-        Melody Olvera <quic_molvera@quicinc.com>
-Subject: Re: [PATCH v5 2/2] remoteproc: qcom: Add remoteproc tracing
-Message-ID: <20230613112845.626670df@gandalf.local.home>
-In-Reply-To: <12b533c73b8c6b039e90f20afef1c8dcd30b80de.1686606835.git.quic_gokukris@quicinc.com>
-References: <cover.1686606835.git.quic_gokukris@quicinc.com>
-        <12b533c73b8c6b039e90f20afef1c8dcd30b80de.1686606835.git.quic_gokukris@quicinc.com>
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Linux Trace Kernel <linux-trace-kernel@vger.kernel.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Kees Cook <keescook@chromium.org>,
+        Miguel Ojeda <ojeda@kernel.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Ingo Molnar <mingo@kernel.org>, Song Liu <song@kernel.org>,
+        Josh Poimboeuf <jpoimboe@kernel.org>
+Subject: Re: [PATCH v2] ftrace: Allow inline functions not inlined to be
+ traced
+Message-ID: <20230613114049.096a8844@gandalf.local.home>
+In-Reply-To: <87lego7m50.ffs@tglx>
+References: <20230609174422.04824a9e@gandalf.local.home>
+        <87lego7m50.ffs@tglx>
 X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
@@ -53,60 +51,81 @@ Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On Mon, 12 Jun 2023 15:03:26 -0700
-Gokul krishna Krishnakumar <quic_gokukris@quicinc.com> wrote:
+On Mon, 12 Jun 2023 17:09:31 +0200
+Thomas Gleixner <tglx@linutronix.de> wrote:
 
-> diff --git a/drivers/remoteproc/remoteproc_internal.h b/drivers/remoteproc/remoteproc_internal.h
-> index d4dbb8d1d80c..f7cb31b94a60 100644
-> --- a/drivers/remoteproc/remoteproc_internal.h
-> +++ b/drivers/remoteproc/remoteproc_internal.h
-> @@ -14,6 +14,7 @@
->  
->  #include <linux/irqreturn.h>
->  #include <linux/firmware.h>
-> +#include <trace/events/remoteproc_tracepoints.h>
->  
->  struct rproc;
->  
-> @@ -171,8 +172,13 @@ u64 rproc_get_boot_addr(struct rproc *rproc, const struct firmware *fw)
->  static inline
->  int rproc_load_segments(struct rproc *rproc, const struct firmware *fw)
->  {
-> -	if (rproc->ops->load)
-> -		return rproc->ops->load(rproc, fw);
-> +	if (rproc->ops->load) {
-> +		int ret;
-> +
-> +		ret = rproc->ops->load(rproc, fw);
-> +		trace_rproc_load_segment_event(rproc, ret);
-> +		return ret;
-> +	}
->  
->  	return -EINVAL;
->  }
+> >
+> > Currently only x86 uses this.  
+> 
+> I assume this passes the objtool noinstr validation. If so, if would be
+> helpful to document that.
 
-So, tracepoints in header files tend to cause problems due to the way they
-are created. See the comment in include/linux/tracepoint-defs.h.
+I haven't run this through the full test suite. But I will check.
 
-What you need to do is:
+> >  /*
+> >   * gcc provides both __inline__ and __inline as alternate spellings of
+> > @@ -230,7 +240,7 @@ struct ftrace_likely_data {
+> >   *     https://gcc.gnu.org/bugzilla/show_bug.cgi?id=67368
+> >   * '__maybe_unused' allows us to avoid defined-but-not-used warnings.
+> >   */
+> > -# define __no_kasan_or_inline __no_sanitize_address notrace __maybe_unused
+> > +# define __no_kasan_or_inline __no_sanitize_address __notrace_inline __maybe_unused  
+> 
+> I'm not convinced that this is correct
+> 
+> >  # define __no_sanitize_or_inline __no_kasan_or_inline
+> >  #else  
+> 
+> given that the !__SANITIZE_ADDRESS__ variant is:
+> 
+> >  # define __no_kasan_or_inline __always_inline  
+> 
+> which cannot be traced.
+> 
+> > @@ -247,7 +257,7 @@ struct ftrace_likely_data {
+> >   * disable all instrumentation. See Kconfig.kcsan where this is mandatory.
+> >   */
+> >  # define __no_kcsan __no_sanitize_thread __disable_sanitizer_instrumentation
+> > -# define __no_sanitize_or_inline __no_kcsan notrace __maybe_unused
+> > +# define __no_sanitize_or_inline __no_kcsan __notrace_inline  __maybe_unused  
+> 
+> Ditto. 
 
-#include <linux/tracepoint-defs.h>
+I'll just keep the notrace on these.
 
-DECLARE_TRACEPOINT(rproc_load_segment_event);
+> 
+> >  #else
+> >  # define __no_kcsan
+> >  #endif
+> > diff --git a/kernel/trace/Kconfig b/kernel/trace/Kconfig
+> > index abe5c583bd59..b66ab0e6ce19 100644
+> > --- a/kernel/trace/Kconfig
+> > +++ b/kernel/trace/Kconfig
+> > @@ -106,6 +106,13 @@ config HAVE_BUILDTIME_MCOUNT_SORT
+> >           An architecture selects this if it sorts the mcount_loc section
+> >  	 at build time.
+> >  
+> > +config ARCH_CAN_TRACE_INLINE
+> > +       bool
+> > +       help
+> > +         It is safe for an architecture to trace any function marked  
+> 
+> Spaces instead of tab.
 
-extern void call_trace_rproc_load_segment_event(struct rproc *rproc, int ret);
+Bah, I noticed that my emacs is doing this on other configs I just added.
+It adds spaces for the first entry, then tabs for the rest.
 
-static inline void test_trace_rproc_load_segment_event(struct rproc *rproc, int ret)
-{
-	if (trace_rproc_load_segment_event_enabled())
-		call_trace_rproc_load_segment_event(rproc, ret);
-}
+> 
+> > +	 as inline (not __always_inline) that the compiler decides to  
+> 
+> and this one has a tab.
+> 
+> > +	 not inline.
+> > +
+> >  config BUILDTIME_MCOUNT_SORT
+> >         bool
+> >         default y  
 
-After adding the above in the header. In the C file, add:
-
-void call_trace_rproc_load_segment_event(struct rproc *rproc, int ret)
-{
-	trace_rproc_load_segment_event(rproc, ret);
-}
+Thanks for the review!
 
 -- Steve
