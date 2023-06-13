@@ -2,211 +2,251 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7344AC77B7A
-	for <linux-trace-kernel@archiver.kernel.org>; Tue, 13 Jun 2023 08:35:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2744DC0729B
+	for <linux-trace-kernel@archiver.kernel.org>; Tue, 13 Jun 2023 13:28:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S241302AbjFMIf3 (ORCPT
+        id S236188AbjFMNgP (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Tue, 13 Jun 2023 04:35:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44178 "EHLO
+        Tue, 13 Jun 2023 09:36:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42352 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S241295AbjFMIf3 (ORCPT
+        with ESMTP id S241006AbjFMNgO (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Tue, 13 Jun 2023 04:35:29 -0400
-Received: from mail-wm1-x349.google.com (mail-wm1-x349.google.com [IPv6:2a00:1450:4864:20::349])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C9761D2
-        for <linux-trace-kernel@vger.kernel.org>; Tue, 13 Jun 2023 01:35:27 -0700 (PDT)
-Received: by mail-wm1-x349.google.com with SMTP id 5b1f17b1804b1-3f7f2d9a660so20176045e9.2
-        for <linux-trace-kernel@vger.kernel.org>; Tue, 13 Jun 2023 01:35:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20221208; t=1686645326; x=1689237326;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=idAAT7Bu38PyLwdgVJzIw2LhWBOsmVWg1cRqwUSMs3c=;
-        b=iC7aqWyh5guGQ8w2RsWJlR+Gt6z8z/IRLsbShnWPEnE/6BuKjltRc1ZvvLoTOUJ+sA
-         e86rcGyhDEbWTQJSFyuVxpwbbgroNhEXexSnAM15DpvMypfzOdRCEdUHqkiTHh4AIBrL
-         TwnMMbGyE3zdWjj0vfWS+ZiVhR6d2+wXIkW6DlRhey3s5ejNhnCFL2vEah3VzWnaBFyx
-         3P3w0mPaL/Q77VfhMpP3+hMorNDJa83pAVSNIsvrwP8OXNn3zpoHAO+xsI4HcftbtZDU
-         8J1U43RiKQFPEy5pS8n7hFQ2PGg6FUpvtylW7xC5uyFjth3BhP/9Ry7JaRr8lWfMW325
-         +kvg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1686645326; x=1689237326;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=idAAT7Bu38PyLwdgVJzIw2LhWBOsmVWg1cRqwUSMs3c=;
-        b=h3k5sB3fCAgLscWo+TIqd4SRx11+2kStMHZcM36GCRbtYCw0FDCcQHwCM5WRqF/Wie
-         1614YqPyPK3ilQFYrv/U+aWhdQpr/LW4F00kdScdJcv1pMq/FKib0ZbAMCK0XNJq73wR
-         ibz3LKdHoiHHv1TgjBD3ifYauUl/8PJMC+CaTA/rLLp/A+jLiAyMRhb1WmfXEHqu+160
-         ZuKU7wYk1w0xi6TG6ap2+AvTe7rOMsOA/w23RhdfFmQ+e1xvSGG5SFYaDw/EPvVBghDg
-         CxbJoKPswTimIoaZ4K+3p1edWAlfyJ+UzgAx7XHl4MiwQ/nW5kWGQzGaz9D8lRTpXNpZ
-         wdpA==
-X-Gm-Message-State: AC+VfDxd3BS1/qE6KXykbUPUk4SPj/5rOaPWASSJlmlLMDkfaYXw+t3g
-        XdCij0DndqasKllyaDqV/i3w5ZgScl6t7o/1
-X-Google-Smtp-Source: ACHHUZ6BB9LQNmvz3OBHDcP4izKCFJjELfYij7NbhEc05xqwReS9Wmy2mk3JHK18tWhu6KubN1Z6Ux1zlRcxdG9v
-X-Received: from vdonnefort.c.googlers.com ([fda3:e722:ac3:cc00:28:9cb1:c0a8:2eea])
- (user=vdonnefort job=sendgmr) by 2002:a1c:750a:0:b0:3f7:38dd:5ea8 with SMTP
- id o10-20020a1c750a000000b003f738dd5ea8mr1901891wmc.8.1686645326337; Tue, 13
- Jun 2023 01:35:26 -0700 (PDT)
-Date:   Tue, 13 Jun 2023 09:35:13 +0100
-In-Reply-To: <20230613083513.3312612-1-vdonnefort@google.com>
-Mime-Version: 1.0
-References: <20230613083513.3312612-1-vdonnefort@google.com>
-X-Mailer: git-send-email 2.41.0.162.gfafddb0af9-goog
-Message-ID: <20230613083513.3312612-3-vdonnefort@google.com>
-Subject: [PATCH v4 2/2] tracing: Allow user-space mapping of the ring-buffer
-From:   Vincent Donnefort <vdonnefort@google.com>
-To:     rostedt@goodmis.org, mhiramat@kernel.org,
-        linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
-Cc:     kernel-team@android.com, Vincent Donnefort <vdonnefort@google.com>
-Content-Type: text/plain; charset="UTF-8"
+        Tue, 13 Jun 2023 09:36:14 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D88AF1B2;
+        Tue, 13 Jun 2023 06:36:12 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 6D7D76233A;
+        Tue, 13 Jun 2023 13:36:12 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 276A3C433F0;
+        Tue, 13 Jun 2023 13:36:08 +0000 (UTC)
+Date:   Tue, 13 Jun 2023 09:36:06 -0400
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     Yonghong Song <yhs@meta.com>
+Cc:     Jiri Olsa <olsajiri@gmail.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Andrii Nakryiko <andrii@kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        linux-trace-kernel@vger.kernel.org, bpf@vger.kernel.org,
+        Andrii Nakryiko <andrii.nakryiko@gmail.com>,
+        Jackie Liu <liu.yun@linux.dev>
+Subject: Re: [PATCHv2] ftrace: Show all functions with addresses in
+ available_filter_functions_addrs
+Message-ID: <20230613093606.069a70da@gandalf.local.home>
+In-Reply-To: <4c87727b-0b3f-ffc1-d55b-90e75dcae52b@meta.com>
+References: <20230611130029.1202298-1-jolsa@kernel.org>
+        <53a11f31-256d-e7bc-eca5-597571076dc5@meta.com>
+        <20230611225407.3e9b8ad2@gandalf.local.home>
+        <20230611225754.01350a50@gandalf.local.home>
+        <d5ffd64c-65b7-e28c-b8ee-0d2ff9dcd78b@meta.com>
+        <20230612110222.50c254f3@gandalf.local.home>
+        <ZId/UL/iujOdgel+@krava>
+        <4c87727b-0b3f-ffc1-d55b-90e75dcae52b@meta.com>
+X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-Currently, user-space extracts data from the ring-buffer via splice,
-which is handy for storage or network sharing. However, due to splice
-limitations, it is imposible to do real-time analysis without a copy.
+On Mon, 12 Jun 2023 22:04:28 -0700
+Yonghong Song <yhs@meta.com> wrote:
 
-A solution for that problem is to let the user-space map the ring-buffer
-directly.
+> Thanks for explanation! It would be great if we can put more details in
+> this email into the commit message!
 
-The mapping exposed via the per-CPU file trace_pipe_raw. The first page
-is the meta-page and is followed by each page of the ring-buffer,
-ordered by their unique page ID. It is therefore easy to translate a
-page-ID to an offset in the mapping.
+I agree.
 
-  * Meta-page -- include/uapi/linux/trace_mmap.h for a description
-  * Page ID 0
-  * Page ID 1
-     ...
+This is the patch I just pulled into my queue:
 
-The mapper must then do what use to be the kernel job: swap the reader
-with the head. This is done with a newly introduced ioctl:
-TRACE_MMAP_IOCTL_GET_READER_PAGE.
+From: Jiri Olsa <jolsa@kernel.org>
+Date: Sun, 11 Jun 2023 15:00:29 +0200
+Subject: [PATCH] ftrace: Show all functions with addresses in
+ available_filter_functions_addrs
 
-Signed-off-by: Vincent Donnefort <vdonnefort@google.com>
+Adding new available_filter_functions_addrs file that shows all available
+functions (same as available_filter_functions) together with addresses,
+like:
 
-diff --git a/include/uapi/linux/trace_mmap.h b/include/uapi/linux/trace_mmap.h
-index 653176cc50bc..fd323a92cf78 100644
---- a/include/uapi/linux/trace_mmap.h
-+++ b/include/uapi/linux/trace_mmap.h
-@@ -23,4 +23,6 @@ struct ring_buffer_meta {
- 	} reader_page;
+  # cat available_filter_functions_addrs | head
+  ffffffff81000770 __traceiter_initcall_level
+  ffffffff810007c0 __traceiter_initcall_start
+  ffffffff81000810 __traceiter_initcall_finish
+  ffffffff81000860 trace_initcall_finish_cb
+  ...
+
+Note displayed address is the patch-site address and can differ from
+/proc/kallsyms address.
+
+It's useful to have address avilable for traceable symbols, so we don't
+need to allways cross check kallsyms with available_filter_functions
+(or the other way around) and have all the data in single file.
+
+For backwards compatibility reasons we can't change the existing
+available_filter_functions file output, but we need to add new file.
+
+The problem is that we need to do 2 passes:
+
+ - through available_filter_functions and find out if the function is traceable
+ - through /proc/kallsyms to get the address for traceable function
+
+Having available_filter_functions symbols together with addresses allow
+us to skip the kallsyms step and we are ok with the address in
+available_filter_functions_addr not being the function entry, because
+kprobe_multi uses fprobe and that handles both entry and patch-site
+address properly.
+
+We have 2 interfaces how to create kprobe_multi link:
+
+  a) passing symbols to kernel
+
+     1) user gathers symbols and need to ensure that they are
+        trace-able -> pass through available_filter_functions file
+
+     2) kernel takes those symbols and translates them to addresses
+        through kallsyms api
+
+     3) addresses are passed to fprobe/ftrace through:
+
+         register_fprobe_ips
+         -> ftrace_set_filter_ips
+
+  b) passing addresses to kernel
+
+     1) user gathers symbols and needs to ensure that they are
+        trace-able -> pass through available_filter_functions file
+
+     2) user takes those symbols and translates them to addresses
+       through /proc/kallsyms
+
+     3) addresses are passed to the kernel and kernel calls:
+
+         register_fprobe_ips
+         -> ftrace_set_filter_ips
+
+The new available_filter_functions_addrs file helps us with option b),
+because we can make 'b 1' and 'b 2' in one step - while filtering traceable
+functions, we get the address directly.
+
+Link: https://lore.kernel.org/linux-trace-kernel/20230611130029.1202298-1-jolsa@kernel.org
+
+Cc: Masami Hiramatsu <mhiramat@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Cc: Jackie Liu <liu.yun@linux.dev>
+Suggested-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+Suggested-by: Andrii Nakryiko <andrii@kernel.org>
+Signed-off-by: Jiri Olsa <jolsa@kernel.org>
+Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+---
+ Documentation/trace/ftrace.rst |  6 ++++++
+ include/linux/ftrace.h         |  1 +
+ kernel/trace/ftrace.c          | 37 ++++++++++++++++++++++++++++++++++
+ 3 files changed, 44 insertions(+)
+
+diff --git a/Documentation/trace/ftrace.rst b/Documentation/trace/ftrace.rst
+index df2d3e57a83f..b7308ab10c0e 100644
+--- a/Documentation/trace/ftrace.rst
++++ b/Documentation/trace/ftrace.rst
+@@ -324,6 +324,12 @@ of ftrace. Here is a list of some of the key files:
+ 	"set_graph_function", or "set_graph_notrace".
+ 	(See the section "dynamic ftrace" below for more details.)
+ 
++  available_filter_functions_addrs:
++
++	Similar to available_filter_functions, but with address displayed
++	for each function. The displayed address is the patch-site address
++	and can differ from /proc/kallsyms address.
++
+   dyn_ftrace_total_info:
+ 
+ 	This file is for debugging purposes. The number of functions that
+diff --git a/include/linux/ftrace.h b/include/linux/ftrace.h
+index 49f279f4c3a1..8e59bd954153 100644
+--- a/include/linux/ftrace.h
++++ b/include/linux/ftrace.h
+@@ -633,6 +633,7 @@ enum {
+ 	FTRACE_ITER_MOD		= (1 << 5),
+ 	FTRACE_ITER_ENABLED	= (1 << 6),
+ 	FTRACE_ITER_TOUCHED	= (1 << 7),
++	FTRACE_ITER_ADDRS	= (1 << 8),
  };
  
-+#define TRACE_MMAP_IOCTL_GET_READER_PAGE	_IO('T', 0x1)
+ void arch_ftrace_update_code(int command);
+diff --git a/kernel/trace/ftrace.c b/kernel/trace/ftrace.c
+index 764668467155..b24c573934af 100644
+--- a/kernel/trace/ftrace.c
++++ b/kernel/trace/ftrace.c
+@@ -3861,6 +3861,9 @@ static int t_show(struct seq_file *m, void *v)
+ 	if (!rec)
+ 		return 0;
+ 
++	if (iter->flags & FTRACE_ITER_ADDRS)
++		seq_printf(m, "%lx ", rec->ip);
 +
- #endif /* _UAPI_TRACE_MMAP_H_ */
-diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
-index 64a4dde073ef..ccc0e1dd7d0d 100644
---- a/kernel/trace/trace.c
-+++ b/kernel/trace/trace.c
-@@ -6432,7 +6432,7 @@ static void tracing_set_nop(struct trace_array *tr)
- {
- 	if (tr->current_trace == &nop_trace)
- 		return;
--	
-+
- 	tr->current_trace->enabled--;
- 
- 	if (tr->current_trace->reset)
-@@ -8465,15 +8465,21 @@ tracing_buffers_splice_read(struct file *file, loff_t *ppos,
- 	return ret;
- }
- 
--/* An ioctl call with cmd 0 to the ring buffer file will wake up all waiters */
- static long tracing_buffers_ioctl(struct file *file, unsigned int cmd, unsigned long arg)
- {
- 	struct ftrace_buffer_info *info = file->private_data;
- 	struct trace_iterator *iter = &info->iter;
- 
--	if (cmd)
--		return -ENOIOCTLCMD;
-+	if (cmd == TRACE_MMAP_IOCTL_GET_READER_PAGE)
-+		return ring_buffer_map_get_reader_page(iter->array_buffer->buffer,
-+						       iter->cpu_file);
-+	else if (cmd)
-+		return -ENOTTY;
- 
-+	/*
-+	 * An ioctl call with cmd 0 to the ring buffer file will wake up all
-+	 * waiters
-+	 */
- 	mutex_lock(&trace_types_lock);
- 
- 	iter->wait_index++;
-@@ -8486,6 +8492,63 @@ static long tracing_buffers_ioctl(struct file *file, unsigned int cmd, unsigned
+ 	if (print_rec(m, rec->ip)) {
+ 		/* This should only happen when a rec is disabled */
+ 		WARN_ON_ONCE(!(rec->flags & FTRACE_FL_DISABLED));
+@@ -3996,6 +3999,30 @@ ftrace_touched_open(struct inode *inode, struct file *file)
  	return 0;
  }
  
-+static vm_fault_t tracing_buffers_mmap_fault(struct vm_fault *vmf)
++static int
++ftrace_avail_addrs_open(struct inode *inode, struct file *file)
 +{
-+	struct ftrace_buffer_info *info = vmf->vma->vm_file->private_data;
-+	struct trace_iterator *iter = &info->iter;
-+	vm_fault_t ret = VM_FAULT_SIGBUS;
-+	struct page *page;
++	struct ftrace_iterator *iter;
++	int ret;
 +
-+	page = ring_buffer_map_fault(iter->array_buffer->buffer, iter->cpu_file,
-+				     vmf->pgoff);
-+	if (!page)
++	ret = security_locked_down(LOCKDOWN_TRACEFS);
++	if (ret)
 +		return ret;
 +
-+	vmf->page = page;
++	if (unlikely(ftrace_disabled))
++		return -ENODEV;
 +
-+	get_page(vmf->page);
-+	vmf->page->mapping = vmf->vma->vm_file->f_mapping;
-+	vmf->page->index   = vmf->pgoff;
++	iter = __seq_open_private(file, &show_ftrace_seq_ops, sizeof(*iter));
++	if (!iter)
++		return -ENOMEM;
++
++	iter->pg = ftrace_pages_start;
++	iter->flags = FTRACE_ITER_ADDRS;
++	iter->ops = &global_ops;
 +
 +	return 0;
 +}
 +
-+static void tracing_buffers_mmap_close(struct vm_area_struct *vma)
-+{
-+	struct ftrace_buffer_info *info = vma->vm_file->private_data;
-+	struct trace_iterator *iter = &info->iter;
-+
-+	ring_buffer_unmap(iter->array_buffer->buffer, iter->cpu_file);
-+}
-+
-+static void tracing_buffers_mmap_open(struct vm_area_struct *vma)
-+{
-+	struct ftrace_buffer_info *info = vma->vm_file->private_data;
-+	struct trace_iterator *iter = &info->iter;
-+
-+	WARN_ON(ring_buffer_map(iter->array_buffer->buffer, iter->cpu_file));
-+}
-+
-+static const struct vm_operations_struct tracing_buffers_vmops = {
-+	.open		= tracing_buffers_mmap_open,
-+	.close		= tracing_buffers_mmap_close,
-+	.fault		= tracing_buffers_mmap_fault,
-+};
-+
-+static int tracing_buffers_mmap(struct file *filp, struct vm_area_struct *vma)
-+{
-+	struct ftrace_buffer_info *info = filp->private_data;
-+	struct trace_iterator *iter = &info->iter;
-+
-+	if (vma->vm_flags & VM_WRITE)
-+		return -EPERM;
-+
-+	vm_flags_mod(vma, VM_DONTCOPY | VM_DONTDUMP, VM_MAYWRITE);
-+	vma->vm_ops = &tracing_buffers_vmops;
-+
-+	return ring_buffer_map(iter->array_buffer->buffer, iter->cpu_file);
-+}
-+
- static const struct file_operations tracing_buffers_fops = {
- 	.open		= tracing_buffers_open,
- 	.read		= tracing_buffers_read,
-@@ -8494,6 +8557,7 @@ static const struct file_operations tracing_buffers_fops = {
- 	.splice_read	= tracing_buffers_splice_read,
- 	.unlocked_ioctl = tracing_buffers_ioctl,
- 	.llseek		= no_llseek,
-+	.mmap		= tracing_buffers_mmap,
+ /**
+  * ftrace_regex_open - initialize function tracer filter files
+  * @ops: The ftrace_ops that hold the hash filters
+@@ -5916,6 +5943,13 @@ static const struct file_operations ftrace_touched_fops = {
+ 	.release = seq_release_private,
  };
  
- static ssize_t
++static const struct file_operations ftrace_avail_addrs_fops = {
++	.open = ftrace_avail_addrs_open,
++	.read = seq_read,
++	.llseek = seq_lseek,
++	.release = seq_release_private,
++};
++
+ static const struct file_operations ftrace_filter_fops = {
+ 	.open = ftrace_filter_open,
+ 	.read = seq_read,
+@@ -6377,6 +6411,9 @@ static __init int ftrace_init_dyn_tracefs(struct dentry *d_tracer)
+ 	trace_create_file("available_filter_functions", TRACE_MODE_READ,
+ 			d_tracer, NULL, &ftrace_avail_fops);
+ 
++	trace_create_file("available_filter_functions_addrs", TRACE_MODE_READ,
++			d_tracer, NULL, &ftrace_avail_addrs_fops);
++
+ 	trace_create_file("enabled_functions", TRACE_MODE_READ,
+ 			d_tracer, NULL, &ftrace_enabled_fops);
+ 
 -- 
-2.41.0.162.gfafddb0af9-goog
+2.39.2
 
