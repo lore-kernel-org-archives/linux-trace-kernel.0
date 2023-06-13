@@ -2,171 +2,129 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A5B5C7EE43
-	for <linux-trace-kernel@archiver.kernel.org>; Mon, 12 Jun 2023 23:33:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 553EDC7EE2F
+	for <linux-trace-kernel@archiver.kernel.org>; Tue, 13 Jun 2023 00:41:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230337AbjFLXdn (ORCPT
+        id S234190AbjFMAla (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Mon, 12 Jun 2023 19:33:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37776 "EHLO
+        Mon, 12 Jun 2023 20:41:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39360 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236781AbjFLXdm (ORCPT
+        with ESMTP id S233694AbjFMAl3 (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Mon, 12 Jun 2023 19:33:42 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0252510B;
-        Mon, 12 Jun 2023 16:33:41 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 8BE3061DC6;
-        Mon, 12 Jun 2023 23:33:40 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 68615C433D2;
-        Mon, 12 Jun 2023 23:33:39 +0000 (UTC)
-Date:   Mon, 12 Jun 2023 19:33:37 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     LKML <linux-kernel@vger.kernel.org>,
-        Linux Trace Kernel <linux-trace-kernel@vger.kernel.org>
-Cc:     Masami Hiramatsu <mhiramat@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>
-Subject: [PATCH] tracing: Add a debug_trace_printk() function
-Message-ID: <20230612193337.0fb0d3ca@gandalf.local.home>
-X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+        Mon, 12 Jun 2023 20:41:29 -0400
+Received: from mail-il1-x130.google.com (mail-il1-x130.google.com [IPv6:2607:f8b0:4864:20::130])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0F5F7192;
+        Mon, 12 Jun 2023 17:41:29 -0700 (PDT)
+Received: by mail-il1-x130.google.com with SMTP id e9e14a558f8ab-34070ecad56so139915ab.3;
+        Mon, 12 Jun 2023 17:41:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1686616888; x=1689208888;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=5rTOQWFVA6khqHtVp7GD0MN95ozRngFd7SU7JpSTOX8=;
+        b=HrrgygdGd34c3hZG9Ko9EXMPUVsYt81zKlXAISkhIkWi4VGAIIeUB8yV4tMn6EH5Ft
+         +TbZAoQg0H0yz2aG4uOjIOx9fmzXD/nfPETyD8Ircp6qYdBOtOxWCzwH6rQR0rHov4SZ
+         1tl9uHdNkhC9HMvwDreHqjE+VjO/HFT6SoHrVHnqxQmqy0qdZWEcEFOaWo3gsckMZZd6
+         Xmta/E1NggY5feulbzO82qkYgZvQ7FJJQ6Zi/ZESTfDHapp08v8sJvd5ue31SHClqXA6
+         uMm9qy0zYxvgph/jQvXdKYcR2xNTWWWJhf9z99/JQ3pIB7JfUQ110GXyjT02KBZLFchX
+         2iyQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1686616888; x=1689208888;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=5rTOQWFVA6khqHtVp7GD0MN95ozRngFd7SU7JpSTOX8=;
+        b=Z0F32AuQ/6M/ISeNfOhNnYFIYneCmGBbw4rSNNq8WkVPvPd/zYEXmnFcSvYOhMu35N
+         MClxvY7MYSqyX+kUVESJyqJyXQG3zEPrBDqPTSUlnKIrpgq6veMU3qWRJu9zDyM2yb7z
+         H1jJB0kNNBd+wos2oufDo8X17ladGfLwMdyPCGKAvspFfAguAOrZ3H82Ma3YhNX1FWAT
+         O5Yy2dIVWZMRvbWG654bh9UplsMfwp15cSO2YtzeNvPoP5TqXJ+S0TnKWnUdlhRsTNZa
+         hOTEZCbImVHZU8QVw4MDH2FqKgxXUl3mPUl20pfEBxe0Ba+56N/Y0Mwal9cF9gTQooCC
+         pfyg==
+X-Gm-Message-State: AC+VfDx9mh+23bZL1rHQPBYKZX4rzhTpEWKqEIe+WhQkrG8U8FZ97s/f
+        KYEdFC7eivD+Z7K+wtMLWFE=
+X-Google-Smtp-Source: ACHHUZ5+aBw/9fdFocQCVdMI2dhsI0WYOI12EJh5UbhGeU2wuKe9u6YaezCaTrv9JoLIcSljChYktg==
+X-Received: by 2002:a92:d8c9:0:b0:334:f662:6406 with SMTP id l9-20020a92d8c9000000b00334f6626406mr8041778ilo.25.1686616888245;
+        Mon, 12 Jun 2023 17:41:28 -0700 (PDT)
+Received: from azeems-kspp.c.googlers.com.com (54.70.188.35.bc.googleusercontent.com. [35.188.70.54])
+        by smtp.gmail.com with ESMTPSA id l5-20020a92d8c5000000b00338a1272ce1sm3510408ilo.52.2023.06.12.17.41.27
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 12 Jun 2023 17:41:27 -0700 (PDT)
+From:   Azeem Shaikh <azeemshaikh38@gmail.com>
+To:     Steven Rostedt <rostedt@goodmis.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>
+Cc:     linux-hardening@vger.kernel.org,
+        Azeem Shaikh <azeemshaikh38@gmail.com>,
+        linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
+Subject: [PATCH] tracing/boot: Replace strlcpy with strscpy
+Date:   Tue, 13 Jun 2023 00:41:25 +0000
+Message-ID: <20230613004125.3539934-1-azeemshaikh38@gmail.com>
+X-Mailer: git-send-email 2.41.0.162.gfafddb0af9-goog
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
+strlcpy() reads the entire source buffer first.
+This read may exceed the destination size limit.
+This is both inefficient and can lead to linear read
+overflows if a source string is not NUL-terminated [1].
+In an effort to remove strlcpy() completely [2], replace
+strlcpy() here with strscpy().
 
-While doing some tracing and kernel debugging, I found that some of my
-trace_printk()s were being lost in the noise of the other code that was
-being traced. Having a way to write trace_printk() not in the top level
-trace buffer would have been useful.
+Direct replacement is safe here since return value of -E2BIG
+is used to check for truncation instead of sizeof(dest).
 
-There was also a time I needed to debug ftrace itself, where
-trace_printk() did not hit the paths that were being debugged. But because
-the trace that was being debugged, was going into the top level ring
-buffer, it was causing issues for seeing what is to be traced.
+[1] https://www.kernel.org/doc/html/latest/process/deprecated.html#strlcpy
+[2] https://github.com/KSPP/linux/issues/89
 
-To solve both of the above, add a debug_trace_printk() that can be used
-just like trace_printk() except that it goes into a "debug" instance
-buffer instead. This can be used at boot up as well.
-
-Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+Signed-off-by: Azeem Shaikh <azeemshaikh38@gmail.com>
 ---
- include/linux/kernel.h | 14 ++++++++++++++
- kernel/trace/Kconfig   | 20 ++++++++++++++++++++
- kernel/trace/trace.c   | 29 +++++++++++++++++++++++++++++
- 3 files changed, 63 insertions(+)
+ kernel/trace/trace_boot.c |    8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/include/linux/kernel.h b/include/linux/kernel.h
-index 0d91e0af0125..594c9ba17fd4 100644
---- a/include/linux/kernel.h
-+++ b/include/linux/kernel.h
-@@ -432,6 +432,20 @@ __ftrace_vbprintk(unsigned long ip, const char *fmt, va_list ap);
- extern __printf(2, 0) int
- __ftrace_vprintk(unsigned long ip, const char *fmt, va_list ap);
+diff --git a/kernel/trace/trace_boot.c b/kernel/trace/trace_boot.c
+index 778200dd8ede..5fe525f1b8cc 100644
+--- a/kernel/trace/trace_boot.c
++++ b/kernel/trace/trace_boot.c
+@@ -31,7 +31,7 @@ trace_boot_set_instance_options(struct trace_array *tr, struct xbc_node *node)
  
-+#ifdef CONFIG_FTRACE_DEBUG_PRINT
-+extern __printf(2,0) void do_debug_trace_printk(unsigned long ip, const char *fmt, ...);
-+#define debug_trace_printk(fmt, ...) \
-+do {							\
-+	do_debug_trace_printk(_THIS_IP_, fmt, ##__VA_ARGS__);	\
-+} while (0)
-+
-+extern void debug_tracing_stop(void);
-+#else
-+#define debug_trace_printk(fmt, ...) do { } while (0)
-+static inline void debug_tracing_stop(void) { }
-+#endif
-+
-+
- extern void ftrace_dump(enum ftrace_dump_mode oops_dump_mode);
- #else
- static inline void tracing_start(void) { }
-diff --git a/kernel/trace/Kconfig b/kernel/trace/Kconfig
-index abe5c583bd59..eb102070e9e6 100644
---- a/kernel/trace/Kconfig
-+++ b/kernel/trace/Kconfig
-@@ -974,6 +974,26 @@ config GCOV_PROFILE_FTRACE
- 	  Note that on a kernel compiled with this config, ftrace will
- 	  run significantly slower.
+ 	/* Common ftrace options */
+ 	xbc_node_for_each_array_value(node, "options", anode, p) {
+-		if (strlcpy(buf, p, ARRAY_SIZE(buf)) >= ARRAY_SIZE(buf)) {
++		if (strscpy(buf, p, ARRAY_SIZE(buf)) == -E2BIG) {
+ 			pr_err("String is too long: %s\n", p);
+ 			continue;
+ 		}
+@@ -87,7 +87,7 @@ trace_boot_enable_events(struct trace_array *tr, struct xbc_node *node)
+ 	const char *p;
  
-+config FTRACE_DEBUG_PRINT
-+	bool
-+	depends on TRACING
-+	help
-+	  This option enables the use of debug_trace_printk() instead of
-+	  using trace_printk(). The difference between the two is that
-+	  debug_trace_printk() traces are visible in the "debug" instance
-+	  found in:
-+
-+	  /sys/kernel/tracing/instances/debug
-+
-+	  This is useful when the trace printks should not interfere with
-+	  the normal top level tracing. It is also useful if the top level
-+	  tracing is very noisy and critical trace printks are dropped.
-+	  By using debug_trace_printk() the traces goes into as separate
-+	  ring buffer that will not be overridden by other trace events.
-+
-+	  If unsure say N (In fact, only say Y if you are debugging a
-+	                   kernel and require this)
-+
- config FTRACE_SELFTEST
- 	bool
+ 	xbc_node_for_each_array_value(node, "events", anode, p) {
+-		if (strlcpy(buf, p, ARRAY_SIZE(buf)) >= ARRAY_SIZE(buf)) {
++		if (strscpy(buf, p, ARRAY_SIZE(buf)) == -E2BIG) {
+ 			pr_err("String is too long: %s\n", p);
+ 			continue;
+ 		}
+@@ -486,7 +486,7 @@ trace_boot_init_one_event(struct trace_array *tr, struct xbc_node *gnode,
  
-diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
-index 64a4dde073ef..c21a93cf5fd8 100644
---- a/kernel/trace/trace.c
-+++ b/kernel/trace/trace.c
-@@ -490,6 +490,10 @@ static struct trace_array global_trace = {
- 	.trace_flags = TRACE_DEFAULT_FLAGS,
- };
+ 	p = xbc_node_find_value(enode, "filter", NULL);
+ 	if (p && *p != '\0') {
+-		if (strlcpy(buf, p, ARRAY_SIZE(buf)) >= ARRAY_SIZE(buf))
++		if (strscpy(buf, p, ARRAY_SIZE(buf)) == -E2BIG)
+ 			pr_err("filter string is too long: %s\n", p);
+ 		else if (apply_event_filter(file, buf) < 0)
+ 			pr_err("Failed to apply filter: %s\n", buf);
+@@ -494,7 +494,7 @@ trace_boot_init_one_event(struct trace_array *tr, struct xbc_node *gnode,
  
-+#ifdef CONFIG_FTRACE_DEBUG_PRINT
-+static struct trace_array *debug_trace;
-+#endif
-+
- LIST_HEAD(ftrace_trace_arrays);
- 
- int trace_array_get(struct trace_array *this_tr)
-@@ -10455,8 +10459,33 @@ void __init early_trace_init(void)
- 	tracer_alloc_buffers();
- 
- 	init_events();
-+
-+#ifdef CONFIG_FTRACE_DEBUG_PRINT
-+	debug_trace = trace_array_get_by_name("debug");
-+	if (WARN_ON(!debug_trace))
-+		return;
-+	trace_array_init_printk(debug_trace);
-+#endif
- }
- 
-+#ifdef CONFIG_FTRACE_DEBUG_PRINT
-+__printf(2, 0)
-+void do_debug_trace_printk(unsigned long ip, const char *fmt, ...)
-+{
-+	va_list ap;
-+
-+	va_start(ap, fmt);
-+	trace_array_vprintk(debug_trace, ip, fmt, ap);
-+	va_end(ap);
-+}
-+
-+void debug_tracing_stop(void)
-+{
-+	debug_trace_printk("Stopping debug tracing\n");
-+	tracing_stop_tr(debug_trace);
-+}
-+#endif
-+
- void __init trace_init(void)
- {
- 	trace_event_init();
+ 	if (IS_ENABLED(CONFIG_HIST_TRIGGERS)) {
+ 		xbc_node_for_each_array_value(enode, "actions", anode, p) {
+-			if (strlcpy(buf, p, ARRAY_SIZE(buf)) >= ARRAY_SIZE(buf))
++			if (strscpy(buf, p, ARRAY_SIZE(buf)) == -E2BIG)
+ 				pr_err("action string is too long: %s\n", p);
+ 			else if (trigger_process_regex(file, buf) < 0)
+ 				pr_err("Failed to apply an action: %s\n", p);
 -- 
-2.39.2
+2.41.0.162.gfafddb0af9-goog
+
 
