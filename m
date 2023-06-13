@@ -2,69 +2,135 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B861EB64D7
-	for <linux-trace-kernel@archiver.kernel.org>; Tue, 13 Jun 2023 20:27:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EDDCEC0015E
+	for <linux-trace-kernel@archiver.kernel.org>; Tue, 13 Jun 2023 21:10:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230117AbjFMU1J (ORCPT
+        id S235145AbjFMVKu (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Tue, 13 Jun 2023 16:27:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37238 "EHLO
+        Tue, 13 Jun 2023 17:10:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58384 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232290AbjFMU1G (ORCPT
+        with ESMTP id S239627AbjFMVJm (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Tue, 13 Jun 2023 16:27:06 -0400
+        Tue, 13 Jun 2023 17:09:42 -0400
 Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6F8FA1BE4;
-        Tue, 13 Jun 2023 13:27:05 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 623131BC6;
+        Tue, 13 Jun 2023 14:09:41 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 04FEC63AB4;
-        Tue, 13 Jun 2023 20:27:05 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7B8F0C433C0;
-        Tue, 13 Jun 2023 20:27:03 +0000 (UTC)
-Date:   Tue, 13 Jun 2023 16:27:01 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Daniel Bristot de Oliveira <bristot@kernel.org>
-Cc:     "Masami Hiramatsu (Google)" <mhiramat@kernel.org>,
-        linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
-        linux-doc@vger.kernel.org, Juri Lelli <juri.lelli@redhat.com>,
-        William White <chwhite@redhat.com>,
-        Jonathan Corbet <corbet@lwn.net>
-Subject: Re: [PATCH V3 02/11] rtla: Add --house-keeping option
-Message-ID: <20230613162701.3730af5d@gandalf.local.home>
-In-Reply-To: <8cbfa5c1-bc6b-741e-3739-f251edeecfbf@kernel.org>
-References: <cover.1686066600.git.bristot@kernel.org>
-        <6a6c78a579a96ba8b02ae67ee1e0ba2cb5e03c4a.1686066600.git.bristot@kernel.org>
-        <20230612230600.7e009782e8365cd5f1bce444@kernel.org>
-        <8cbfa5c1-bc6b-741e-3739-f251edeecfbf@kernel.org>
-X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 42CA961864;
+        Tue, 13 Jun 2023 21:09:41 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C1CA2C433C0;
+        Tue, 13 Jun 2023 21:09:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1686690580;
+        bh=CnDPIeLogwBWCfXwDFCGYSnn6freMhcPiMKmnauZmK8=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=ZwHrH/UtQy5gtJuV6CZdRxLuHzTaAkiUGIx/JgEU65AMLsBIKZ0sWdlw1vTEQYgdy
+         gSLYt19YIoeRBe5zYzLlgTuRTMMo3kgRmlRYZUwN9+y0DX2gj67q8Dp8pJtQUo0gHp
+         Oy60KuQPQMSSexOGqUQrMmT3Fgb1GBewXzaMMxDEmcoyUN9bNnKzEk/bEsVagentbs
+         IrjokONRoY0TE+yzqvQqq0avTQyKOfbb7gZycLtP7znx6sVR7tnvKBFHLqFKSVwEs2
+         kIA6GPsL9JTaWmKMWc1Wdyo1oerK/huG9zsVu6RfIYfLEAg8ULTJ9IL3DRtm5ddTXF
+         JrMlJp241w1cA==
+Date:   Wed, 14 Jun 2023 00:09:00 +0300
+From:   Mike Rapoport <rppt@kernel.org>
+To:     Kent Overstreet <kent.overstreet@linux.dev>
+Cc:     Song Liu <song@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+        linux-kernel@vger.kernel.org,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Christophe Leroy <christophe.leroy@csgroup.eu>,
+        "David S. Miller" <davem@davemloft.net>,
+        Dinh Nguyen <dinguyen@kernel.org>,
+        Heiko Carstens <hca@linux.ibm.com>,
+        Helge Deller <deller@gmx.de>,
+        Huacai Chen <chenhuacai@kernel.org>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        "Naveen N. Rao" <naveen.n.rao@linux.ibm.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Russell King <linux@armlinux.org.uk>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Will Deacon <will@kernel.org>, bpf@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-mips@vger.kernel.org,
+        linux-mm@kvack.org, linux-modules@vger.kernel.org,
+        linux-parisc@vger.kernel.org, linux-riscv@lists.infradead.org,
+        linux-s390@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, loongarch@lists.linux.dev,
+        netdev@vger.kernel.org, sparclinux@vger.kernel.org, x86@kernel.org
+Subject: Re: [PATCH 00/13] mm: jit/text allocator
+Message-ID: <20230613210900.GV52412@kernel.org>
+References: <20230601101257.530867-1-rppt@kernel.org>
+ <ZHjDU/mxE+cugpLj@FVFF77S0Q05N.cambridge.arm.com>
+ <ZHjgIH3aX9dCvVZc@moria.home.lan>
+ <ZHm3zUUbwqlsZBBF@FVFF77S0Q05N>
+ <20230605092040.GB3460@kernel.org>
+ <ZH20XkD74prrdN4u@FVFF77S0Q05N>
+ <CAPhsuW7ntn_HpVWdGK_hYVd3zsPEFToBNfmtt0m6K8SwfxJ66Q@mail.gmail.com>
+ <20230608184116.GJ52412@kernel.org>
+ <ZIi7zmey0w61EG25@moria.home.lan>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <ZIi7zmey0w61EG25@moria.home.lan>
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On Mon, 12 Jun 2023 16:21:35 +0200
-Daniel Bristot de Oliveira <bristot@kernel.org> wrote:
-
-> On 6/12/23 16:06, Masami Hiramatsu (Google) wrote:
-> > On Tue,  6 Jun 2023 18:12:16 +0200
-> > Daniel Bristot de Oliveira <bristot@kernel.org> wrote:
-> >   
-> >> To avoid having rtla interfering with the measurement threads, add an
-> >> option for the user to set the CPUs in which rtla should run. For
-> >> instance:
-> >>
-> >>   # rtla timerlat top -H 0 -C 1-7  
-> > Isn't it '-c 1-7' instead of '-C', because -C is for cgroup name?  
+On Tue, Jun 13, 2023 at 02:56:14PM -0400, Kent Overstreet wrote:
+> On Thu, Jun 08, 2023 at 09:41:16PM +0300, Mike Rapoport wrote:
+> > On Tue, Jun 06, 2023 at 11:21:59AM -0700, Song Liu wrote:
+> > > On Mon, Jun 5, 2023 at 3:09 AM Mark Rutland <mark.rutland@arm.com> wrote:
+> > > 
+> > > [...]
+> > > 
+> > > > > > > Can you give more detail on what parameters you need? If the only extra
+> > > > > > > parameter is just "does this allocation need to live close to kernel
+> > > > > > > text", that's not that big of a deal.
+> > > > > >
+> > > > > > My thinking was that we at least need the start + end for each caller. That
+> > > > > > might be it, tbh.
+> > > > >
+> > > > > Do you mean that modules will have something like
+> > > > >
+> > > > >       jit_text_alloc(size, MODULES_START, MODULES_END);
+> > > > >
+> > > > > and kprobes will have
+> > > > >
+> > > > >       jit_text_alloc(size, KPROBES_START, KPROBES_END);
+> > > > > ?
+> > > >
+> > > > Yes.
+> > > 
+> > > How about we start with two APIs:
+> > >      jit_text_alloc(size);
+> > >      jit_text_alloc_range(size, start, end);
+> > > 
+> > > AFAICT, arm64 is the only arch that requires the latter API. And TBH, I am
+> > > not quite convinced it is needed.
+> >  
+> > Right now arm64 and riscv override bpf and kprobes allocations to use the
+> > entire vmalloc address space, but having the ability to allocate generated
+> > code outside of modules area may be useful for other architectures.
+> > 
+> > Still the start + end for the callers feels backwards to me because the
+> > callers do not define the ranges, but rather the architectures, so we still
+> > need a way for architectures to define how they want allocate memory for
+> > the generated code.
 > 
-> Ooops, you are right.
-> 
+> So, the start + end just comes from the need to keep relative pointers
+> under a certain size. I think this could be just a flag, I see no reason
+> to expose actual addresses here.
 
-Unless something else comes up, I updated the change log here.
+It's the other way around. The start + end comes from the need to restrict
+allocation to certain range because of the relative addressing. I don't see
+how a flag can help here.
 
--- Steve
-
+-- 
+Sincerely yours,
+Mike.
