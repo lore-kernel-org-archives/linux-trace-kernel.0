@@ -2,98 +2,145 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E45D6EB64D7
-	for <linux-trace-kernel@archiver.kernel.org>; Tue, 13 Jun 2023 21:48:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 78853C0015E
+	for <linux-trace-kernel@archiver.kernel.org>; Tue, 13 Jun 2023 22:16:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229559AbjFMVsz (ORCPT
+        id S231732AbjFMWQ2 (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Tue, 13 Jun 2023 17:48:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44512 "EHLO
+        Tue, 13 Jun 2023 18:16:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57364 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234300AbjFMVsx (ORCPT
+        with ESMTP id S229785AbjFMWQ1 (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Tue, 13 Jun 2023 17:48:53 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CCD441BD2;
-        Tue, 13 Jun 2023 14:48:48 -0700 (PDT)
+        Tue, 13 Jun 2023 18:16:27 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BC66B10CC;
+        Tue, 13 Jun 2023 15:16:25 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange X25519 server-signature RSA-PSS (2048 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 6238B63B41;
-        Tue, 13 Jun 2023 21:48:48 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2F151C433C8;
-        Tue, 13 Jun 2023 21:48:47 +0000 (UTC)
-Date:   Tue, 13 Jun 2023 17:48:44 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Jiri Olsa <olsajiri@gmail.com>
-Cc:     "Masami Hiramatsu (Google)" <mhiramat@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Linux Trace Kernel <linux-trace-kernel@vger.kernel.org>,
-        bpf@vger.kernel.org
-Subject: Re: [RFC] fprobe call of rethook_try_get faults
-Message-ID: <20230613174844.4d50991d@gandalf.local.home>
-In-Reply-To: <ZICzdpvp46Xk1rIv@krava>
-References: <ZICzdpvp46Xk1rIv@krava>
-X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 7E87960A5A;
+        Tue, 13 Jun 2023 22:16:23 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E27C1C433C0;
+        Tue, 13 Jun 2023 22:16:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1686694582;
+        bh=+WIGytSpx4hFIJZtH+suKZCZHkq5JBHItki5+7BFPsc=;
+        h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+        b=KvuDR5kbBMLh2VXVzw7NO5wtSshJHEiPMI72MOW96V4/U71ZPwOvtZcgx4igXxMM9
+         em+vyycTpMJAdlxzRDVkQnWhkW0lpSv1w5OfUlveeKzndjtlhfIAlz6KkyJhYm9vAL
+         YeOSX6iUcPzAZQxfDfXnUCMYGVKsXS4ueWqr5sAFUnmWDNkxen775E7afX9ThgAUDG
+         /zY+Rb3OkZn0TBkz1JEvYtOijN22lxlf2MhOYND5RFEYMsncR0Ru0UtWG3QgShOTYr
+         rTOglNLVYb9iCLUk1lIGArlo4nilYPoAaYiuRtfBAW2VjixrTzTJsPA6zdb5t+Q6uZ
+         QAuDp1N4POaTw==
+Message-ID: <032f8239-bb82-e20e-e42b-e7a54754298b@kernel.org>
+Date:   Tue, 13 Jun 2023 17:16:18 -0500
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.11.0
+Subject: Re: [PATCH 01/13] nios2: define virtual address space for modules
+Content-Language: en-US
+To:     Mike Rapoport <rppt@kernel.org>, linux-kernel@vger.kernel.org
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Christophe Leroy <christophe.leroy@csgroup.eu>,
+        "David S. Miller" <davem@davemloft.net>,
+        Heiko Carstens <hca@linux.ibm.com>,
+        Helge Deller <deller@gmx.de>,
+        Huacai Chen <chenhuacai@kernel.org>,
+        Kent Overstreet <kent.overstreet@linux.dev>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        "Naveen N. Rao" <naveen.n.rao@linux.ibm.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Russell King <linux@armlinux.org.uk>,
+        Song Liu <song@kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Will Deacon <will@kernel.org>, bpf@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-mips@vger.kernel.org,
+        linux-mm@kvack.org, linux-modules@vger.kernel.org,
+        linux-parisc@vger.kernel.org, linux-riscv@lists.infradead.org,
+        linux-s390@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, loongarch@lists.linux.dev,
+        netdev@vger.kernel.org, sparclinux@vger.kernel.org, x86@kernel.org
+References: <20230601101257.530867-1-rppt@kernel.org>
+ <20230601101257.530867-2-rppt@kernel.org>
+From:   Dinh Nguyen <dinguyen@kernel.org>
+In-Reply-To: <20230601101257.530867-2-rppt@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On Wed, 7 Jun 2023 09:42:30 -0700
-Jiri Olsa <olsajiri@gmail.com> wrote:
 
-> I can't really reliable reproduce this, but while checking the code, I wonder
-> we should call rethook_free only after we call unregister_ftrace_function like
-> in the patch below
 
-Yeah, I think you're right!
-
+On 6/1/23 05:12, Mike Rapoport wrote:
+> From: "Mike Rapoport (IBM)" <rppt@kernel.org>
 > 
-> jirka
+> nios2 uses kmalloc() to implement module_alloc() because CALL26/PCREL26
+> cannot reach all of vmalloc address space.
 > 
+> Define module space as 32MiB below the kernel base and switch nios2 to
+> use vmalloc for module allocations.
 > 
+> Suggested-by: Thomas Gleixner <tglx@linutronix.de>
+> Signed-off-by: Mike Rapoport (IBM) <rppt@kernel.org>
 > ---
-> diff --git a/kernel/trace/fprobe.c b/kernel/trace/fprobe.c
-> index 18d36842faf5..0121e8c0d54e 100644
-> --- a/kernel/trace/fprobe.c
-> +++ b/kernel/trace/fprobe.c
-> @@ -364,19 +364,13 @@ int unregister_fprobe(struct fprobe *fp)
->  		    fp->ops.saved_func != fprobe_kprobe_handler))
->  		return -EINVAL;
->  
-> -	/*
-> -	 * rethook_free() starts disabling the rethook, but the rethook handlers
-> -	 * may be running on other processors at this point. To make sure that all
-> -	 * current running handlers are finished, call unregister_ftrace_function()
-> -	 * after this.
-> -	 */
-> -	if (fp->rethook)
-> -		rethook_free(fp->rethook);
-
-The above only waits for RCU to finish and then starts to free rethook.
-
-This also means that something could be on the trampoline already and was
-preempted. It could be that this code path gets preempted. Anyway, I don't
-see how freeing rethook is safe before disabling all users.
-
-Reviewed-by: Steven Rostedt (Google) <rostedt@goodmis.org>
-
--- Steve
-
-
-> -
->  	ret = unregister_ftrace_function(&fp->ops);
->  	if (ret < 0)
->  		return ret;
->  
-> +	if (fp->rethook)
-> +		rethook_free(fp->rethook);
+>   arch/nios2/include/asm/pgtable.h |  5 ++++-
+>   arch/nios2/kernel/module.c       | 19 ++++---------------
+>   2 files changed, 8 insertions(+), 16 deletions(-)
+> 
+> diff --git a/arch/nios2/include/asm/pgtable.h b/arch/nios2/include/asm/pgtable.h
+> index 0f5c2564e9f5..0073b289c6a4 100644
+> --- a/arch/nios2/include/asm/pgtable.h
+> +++ b/arch/nios2/include/asm/pgtable.h
+> @@ -25,7 +25,10 @@
+>   #include <asm-generic/pgtable-nopmd.h>
+>   
+>   #define VMALLOC_START		CONFIG_NIOS2_KERNEL_MMU_REGION_BASE
+> -#define VMALLOC_END		(CONFIG_NIOS2_KERNEL_REGION_BASE - 1)
+> +#define VMALLOC_END		(CONFIG_NIOS2_KERNEL_REGION_BASE - SZ_32M - 1)
 > +
->  	ftrace_free_filter(&fp->ops);
->  
->  	return ret;
+> +#define MODULES_VADDR		(CONFIG_NIOS2_KERNEL_REGION_BASE - SZ_32M)
+> +#define MODULES_END		(CONFIG_NIOS2_KERNEL_REGION_BASE - 1)
+>   
+>   struct mm_struct;
+>   
+> diff --git a/arch/nios2/kernel/module.c b/arch/nios2/kernel/module.c
+> index 76e0a42d6e36..9c97b7513853 100644
+> --- a/arch/nios2/kernel/module.c
+> +++ b/arch/nios2/kernel/module.c
+> @@ -21,23 +21,12 @@
+>   
+>   #include <asm/cacheflush.h>
+>   
+> -/*
+> - * Modules should NOT be allocated with kmalloc for (obvious) reasons.
+> - * But we do it for now to avoid relocation issues. CALL26/PCREL26 cannot reach
+> - * from 0x80000000 (vmalloc area) to 0xc00000000 (kernel) (kmalloc returns
+> - * addresses in 0xc0000000)
+> - */
+>   void *module_alloc(unsigned long size)
+>   {
+> -	if (size == 0)
+> -		return NULL;
+> -	return kmalloc(size, GFP_KERNEL);
+> -}
+> -
+> -/* Free memory returned from module_alloc */
+> -void module_memfree(void *module_region)
+> -{
+> -	kfree(module_region);
+> +	return __vmalloc_node_range(size, 1, MODULES_VADDR, MODULES_END,
+> +				    GFP_KERNEL, PAGE_KERNEL_EXEC,
+> +				    VM_FLUSH_RESET_PERMS, NUMA_NO_NODE,
+> +				    __builtin_return_address(0));
+>   }
+>   
+>   int apply_relocate_add(Elf32_Shdr *sechdrs, const char *strtab,
 
+Acked-by: Dinh Nguyen <dinguyen@kernel.org>
