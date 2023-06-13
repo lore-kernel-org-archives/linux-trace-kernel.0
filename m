@@ -2,129 +2,144 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 553EDC7EE2F
-	for <linux-trace-kernel@archiver.kernel.org>; Tue, 13 Jun 2023 00:41:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D1C7C88CB4
+	for <linux-trace-kernel@archiver.kernel.org>; Tue, 13 Jun 2023 01:30:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234190AbjFMAla (ORCPT
+        id S238116AbjFMBav (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Mon, 12 Jun 2023 20:41:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39360 "EHLO
+        Mon, 12 Jun 2023 21:30:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54944 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233694AbjFMAl3 (ORCPT
+        with ESMTP id S237495AbjFMBav (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Mon, 12 Jun 2023 20:41:29 -0400
-Received: from mail-il1-x130.google.com (mail-il1-x130.google.com [IPv6:2607:f8b0:4864:20::130])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0F5F7192;
-        Mon, 12 Jun 2023 17:41:29 -0700 (PDT)
-Received: by mail-il1-x130.google.com with SMTP id e9e14a558f8ab-34070ecad56so139915ab.3;
-        Mon, 12 Jun 2023 17:41:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1686616888; x=1689208888;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=5rTOQWFVA6khqHtVp7GD0MN95ozRngFd7SU7JpSTOX8=;
-        b=HrrgygdGd34c3hZG9Ko9EXMPUVsYt81zKlXAISkhIkWi4VGAIIeUB8yV4tMn6EH5Ft
-         +TbZAoQg0H0yz2aG4uOjIOx9fmzXD/nfPETyD8Ircp6qYdBOtOxWCzwH6rQR0rHov4SZ
-         1tl9uHdNkhC9HMvwDreHqjE+VjO/HFT6SoHrVHnqxQmqy0qdZWEcEFOaWo3gsckMZZd6
-         Xmta/E1NggY5feulbzO82qkYgZvQ7FJJQ6Zi/ZESTfDHapp08v8sJvd5ue31SHClqXA6
-         uMm9qy0zYxvgph/jQvXdKYcR2xNTWWWJhf9z99/JQ3pIB7JfUQ110GXyjT02KBZLFchX
-         2iyQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1686616888; x=1689208888;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=5rTOQWFVA6khqHtVp7GD0MN95ozRngFd7SU7JpSTOX8=;
-        b=Z0F32AuQ/6M/ISeNfOhNnYFIYneCmGBbw4rSNNq8WkVPvPd/zYEXmnFcSvYOhMu35N
-         MClxvY7MYSqyX+kUVESJyqJyXQG3zEPrBDqPTSUlnKIrpgq6veMU3qWRJu9zDyM2yb7z
-         H1jJB0kNNBd+wos2oufDo8X17ladGfLwMdyPCGKAvspFfAguAOrZ3H82Ma3YhNX1FWAT
-         O5Yy2dIVWZMRvbWG654bh9UplsMfwp15cSO2YtzeNvPoP5TqXJ+S0TnKWnUdlhRsTNZa
-         hOTEZCbImVHZU8QVw4MDH2FqKgxXUl3mPUl20pfEBxe0Ba+56N/Y0Mwal9cF9gTQooCC
-         pfyg==
-X-Gm-Message-State: AC+VfDx9mh+23bZL1rHQPBYKZX4rzhTpEWKqEIe+WhQkrG8U8FZ97s/f
-        KYEdFC7eivD+Z7K+wtMLWFE=
-X-Google-Smtp-Source: ACHHUZ5+aBw/9fdFocQCVdMI2dhsI0WYOI12EJh5UbhGeU2wuKe9u6YaezCaTrv9JoLIcSljChYktg==
-X-Received: by 2002:a92:d8c9:0:b0:334:f662:6406 with SMTP id l9-20020a92d8c9000000b00334f6626406mr8041778ilo.25.1686616888245;
-        Mon, 12 Jun 2023 17:41:28 -0700 (PDT)
-Received: from azeems-kspp.c.googlers.com.com (54.70.188.35.bc.googleusercontent.com. [35.188.70.54])
-        by smtp.gmail.com with ESMTPSA id l5-20020a92d8c5000000b00338a1272ce1sm3510408ilo.52.2023.06.12.17.41.27
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 12 Jun 2023 17:41:27 -0700 (PDT)
-From:   Azeem Shaikh <azeemshaikh38@gmail.com>
-To:     Steven Rostedt <rostedt@goodmis.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>
-Cc:     linux-hardening@vger.kernel.org,
-        Azeem Shaikh <azeemshaikh38@gmail.com>,
-        linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
-Subject: [PATCH] tracing/boot: Replace strlcpy with strscpy
-Date:   Tue, 13 Jun 2023 00:41:25 +0000
-Message-ID: <20230613004125.3539934-1-azeemshaikh38@gmail.com>
-X-Mailer: git-send-email 2.41.0.162.gfafddb0af9-goog
+        Mon, 12 Jun 2023 21:30:51 -0400
+X-Greylist: delayed 458 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Mon, 12 Jun 2023 18:30:50 PDT
+Received: from out-56.mta0.migadu.com (out-56.mta0.migadu.com [IPv6:2001:41d0:1004:224b::38])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2A53E170C
+        for <linux-trace-kernel@vger.kernel.org>; Mon, 12 Jun 2023 18:30:49 -0700 (PDT)
+Message-ID: <6a2e8f05-ce2f-bbbb-e6ad-f9db524db997@linux.dev>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+        t=1686619387;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=Az7NwX67Bf/1j76+8r8hc++AaCY3OLyQFY+NixwvQvo=;
+        b=hz2mq9yqhmWY9nieZx4gzwS/YE9ZWGp0bHn91oSDu5eSjBRB9SRXnmvgpPAJubxIw+lad3
+        15MT5ruvlPl+He8bSCbg1jwtPCIZyJwsmKxR+IgJJsr5SHdFcFZW+2c8DBNF6KZDPS50ba
+        t/vgfYxefzC2GSqhuwsaeUuBww6SoFA=
+Date:   Tue, 13 Jun 2023 09:22:41 +0800
 MIME-Version: 1.0
+Subject: Re: [PATCHv2] ftrace: Show all functions with addresses in
+ available_filter_functions_addrs
+To:     Jiri Olsa <olsajiri@gmail.com>,
+        Steven Rostedt <rostedt@goodmis.org>
+Cc:     Yonghong Song <yhs@meta.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Andrii Nakryiko <andrii@kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        linux-trace-kernel@vger.kernel.org, bpf@vger.kernel.org,
+        Andrii Nakryiko <andrii.nakryiko@gmail.com>
+References: <20230611130029.1202298-1-jolsa@kernel.org>
+ <53a11f31-256d-e7bc-eca5-597571076dc5@meta.com>
+ <20230611225407.3e9b8ad2@gandalf.local.home>
+ <20230611225754.01350a50@gandalf.local.home>
+ <d5ffd64c-65b7-e28c-b8ee-0d2ff9dcd78b@meta.com>
+ <20230612110222.50c254f3@gandalf.local.home> <ZId/UL/iujOdgel+@krava>
+Content-Language: en-US
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From:   Jackie Liu <liu.yun@linux.dev>
+In-Reply-To: <ZId/UL/iujOdgel+@krava>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
+X-Migadu-Flow: FLOW_OUT
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-strlcpy() reads the entire source buffer first.
-This read may exceed the destination size limit.
-This is both inefficient and can lead to linear read
-overflows if a source string is not NUL-terminated [1].
-In an effort to remove strlcpy() completely [2], replace
-strlcpy() here with strscpy().
 
-Direct replacement is safe here since return value of -E2BIG
-is used to check for truncation instead of sizeof(dest).
 
-[1] https://www.kernel.org/doc/html/latest/process/deprecated.html#strlcpy
-[2] https://github.com/KSPP/linux/issues/89
+在 2023/6/13 04:25, Jiri Olsa 写道:
+> On Mon, Jun 12, 2023 at 11:02:22AM -0400, Steven Rostedt wrote:
+>> On Mon, 12 Jun 2023 07:49:53 -0700
+>> Yonghong Song <yhs@meta.com> wrote:
+>>
+>>> I am actually interested in how available_filter_functions_addrs
+>>> will be used. For example, bpf_program__attach_kprobe_multi_opts()
+>>> can already take addresses from kallsyms. How to use
+>>> available_filter_functions_addrs to facilitate kprobe_multi?
+> 
+> the problem is that we need to do 2 passes:
+> 
+>   - through available_filter_functions and find out if the function is traceable
+>   - through /proc/kallsyms to get the address for traceable function
+> 
+> having available_filter_functions symbols together with addresses allow
+> us to skip the kallsyms step
+> 
+> and we are ok with the address in available_filter_functions_addr not being the
+> function entry, because kprobe_multi uses fprobe and that handles both entry and
+> patch-site address properly
+> 
+>>> Do we need to change kernel APIs? It would be great at least we
+>>> got a RFC patch to answer these questions.
+>>
+>> I agree, having that information would also be useful to me.
+>>
+>> Jiri? Andrii?
+> 
+> so we have 2 interfaces how to create kprobe_multi link:
+> 
+>    a) passing symbols to kernel
+> 
+>       1) user gathers symbols and need to ensure that they are
+>          trace-able -> pass through available_filter_functions file
+> 
+>       2) kernel takes those symbols and translates them to addresses
+>          through kallsyms api
+> 
+>       3) addresses are passed to fprobe/ftrace through:
+> 
+>           register_fprobe_ips
+>           -> ftrace_set_filter_ips
+> 
+>    b) passing addresses to kernel
+> 
+>       1) user gathers symbols and needs to ensure that they are
+>          trace-able -> pass through available_filter_functions file
+> 
+>       2) user takes those symbols and translates them to addresses
+>         through /proc/kallsyms
+> 
+>       3) addresses are passed to the kernel and kernel calls:
+> 
+>           register_fprobe_ips
+>           -> ftrace_set_filter_ips
+> 
+> 
+> The new available_filter_functions_addrs file helps us with option b),
+> because we can make 'b 1' and 'b 2' in one step - while filtering traceable
+> functions, we get the address directly.
+> 
+> I tested the new available_filter_functions_addrs changes with some hacked
+> selftest changes, you can check it in here [1].
+> 
+> I assume Jackie Liu will send new version of her patchset [2] based on this
+> new available_filter_functions_addrs file.
 
-Signed-off-by: Azeem Shaikh <azeemshaikh38@gmail.com>
----
- kernel/trace/trace_boot.c |    8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+Yes, once the new interface is released, I will release a v2 version 
+patch based on it.
 
-diff --git a/kernel/trace/trace_boot.c b/kernel/trace/trace_boot.c
-index 778200dd8ede..5fe525f1b8cc 100644
---- a/kernel/trace/trace_boot.c
-+++ b/kernel/trace/trace_boot.c
-@@ -31,7 +31,7 @@ trace_boot_set_instance_options(struct trace_array *tr, struct xbc_node *node)
- 
- 	/* Common ftrace options */
- 	xbc_node_for_each_array_value(node, "options", anode, p) {
--		if (strlcpy(buf, p, ARRAY_SIZE(buf)) >= ARRAY_SIZE(buf)) {
-+		if (strscpy(buf, p, ARRAY_SIZE(buf)) == -E2BIG) {
- 			pr_err("String is too long: %s\n", p);
- 			continue;
- 		}
-@@ -87,7 +87,7 @@ trace_boot_enable_events(struct trace_array *tr, struct xbc_node *node)
- 	const char *p;
- 
- 	xbc_node_for_each_array_value(node, "events", anode, p) {
--		if (strlcpy(buf, p, ARRAY_SIZE(buf)) >= ARRAY_SIZE(buf)) {
-+		if (strscpy(buf, p, ARRAY_SIZE(buf)) == -E2BIG) {
- 			pr_err("String is too long: %s\n", p);
- 			continue;
- 		}
-@@ -486,7 +486,7 @@ trace_boot_init_one_event(struct trace_array *tr, struct xbc_node *gnode,
- 
- 	p = xbc_node_find_value(enode, "filter", NULL);
- 	if (p && *p != '\0') {
--		if (strlcpy(buf, p, ARRAY_SIZE(buf)) >= ARRAY_SIZE(buf))
-+		if (strscpy(buf, p, ARRAY_SIZE(buf)) == -E2BIG)
- 			pr_err("filter string is too long: %s\n", p);
- 		else if (apply_event_filter(file, buf) < 0)
- 			pr_err("Failed to apply filter: %s\n", buf);
-@@ -494,7 +494,7 @@ trace_boot_init_one_event(struct trace_array *tr, struct xbc_node *gnode,
- 
- 	if (IS_ENABLED(CONFIG_HIST_TRIGGERS)) {
- 		xbc_node_for_each_array_value(enode, "actions", anode, p) {
--			if (strlcpy(buf, p, ARRAY_SIZE(buf)) >= ARRAY_SIZE(buf))
-+			if (strscpy(buf, p, ARRAY_SIZE(buf)) == -E2BIG)
- 				pr_err("action string is too long: %s\n", p);
- 			else if (trigger_process_regex(file, buf) < 0)
- 				pr_err("Failed to apply an action: %s\n", p);
 -- 
-2.41.0.162.gfafddb0af9-goog
+Jackie Liu
 
-
+> 
+> I think we should have these changes coming together and add some perf
+> measurements from before and after to make the benefit apparent.
+> 
+> jirka
+> 
+> 
+> [1] https://git.kernel.org/pub/scm/linux/kernel/git/jolsa/perf.git/commit/?h=bpf/avail_addrs&id=fecaeeaf40bae034715ab2e9a46ca1dc16371e8e
+> [2] https://lore.kernel.org/bpf/20230526155026.1419390-1-liu.yun@linux.dev/#r
