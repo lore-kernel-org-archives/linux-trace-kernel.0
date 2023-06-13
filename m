@@ -2,119 +2,89 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DC465EB64D7
-	for <linux-trace-kernel@archiver.kernel.org>; Tue, 13 Jun 2023 18:56:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BC57EB64D7
+	for <linux-trace-kernel@archiver.kernel.org>; Tue, 13 Jun 2023 19:26:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S240112AbjFMS42 (ORCPT
+        id S229601AbjFMT0c convert rfc822-to-8bit (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Tue, 13 Jun 2023 14:56:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46184 "EHLO
+        Tue, 13 Jun 2023 15:26:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34750 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233057AbjFMS40 (ORCPT
+        with ESMTP id S231675AbjFMT0b (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Tue, 13 Jun 2023 14:56:26 -0400
-Received: from out-20.mta1.migadu.com (out-20.mta1.migadu.com [95.215.58.20])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B59F2E5
-        for <linux-trace-kernel@vger.kernel.org>; Tue, 13 Jun 2023 11:56:24 -0700 (PDT)
-Date:   Tue, 13 Jun 2023 14:56:14 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-        t=1686682581;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=cI/+VKexODe7tgazUH0uBbszHN+Sh5VjQJKMcYicSKU=;
-        b=UteSpuaAfbQ2NCJDHT0DaE6LH+0KCxqxliA1u1CiHpYLEp/BHx0yHT4z2wyOm1k0K155IH
-        1TdtqXMsJtk9bqAzUZ31aQXTksL2s2n1Q4RGfHebraQUDr3MhWO8yy+4wsaox2mGxQ3YRe
-        XgmITo5ci4OCni1zywcC85bIuHv1vdI=
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From:   Kent Overstreet <kent.overstreet@linux.dev>
-To:     Mike Rapoport <rppt@kernel.org>
-Cc:     Song Liu <song@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
-        linux-kernel@vger.kernel.org,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Christophe Leroy <christophe.leroy@csgroup.eu>,
-        "David S. Miller" <davem@davemloft.net>,
-        Dinh Nguyen <dinguyen@kernel.org>,
-        Heiko Carstens <hca@linux.ibm.com>,
-        Helge Deller <deller@gmx.de>,
-        Huacai Chen <chenhuacai@kernel.org>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        "Naveen N. Rao" <naveen.n.rao@linux.ibm.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Russell King <linux@armlinux.org.uk>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Will Deacon <will@kernel.org>, bpf@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-mips@vger.kernel.org,
-        linux-mm@kvack.org, linux-modules@vger.kernel.org,
-        linux-parisc@vger.kernel.org, linux-riscv@lists.infradead.org,
-        linux-s390@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, loongarch@lists.linux.dev,
-        netdev@vger.kernel.org, sparclinux@vger.kernel.org, x86@kernel.org
-Subject: Re: [PATCH 00/13] mm: jit/text allocator
-Message-ID: <ZIi7zmey0w61EG25@moria.home.lan>
-References: <20230601101257.530867-1-rppt@kernel.org>
- <ZHjDU/mxE+cugpLj@FVFF77S0Q05N.cambridge.arm.com>
- <ZHjgIH3aX9dCvVZc@moria.home.lan>
- <ZHm3zUUbwqlsZBBF@FVFF77S0Q05N>
- <20230605092040.GB3460@kernel.org>
- <ZH20XkD74prrdN4u@FVFF77S0Q05N>
- <CAPhsuW7ntn_HpVWdGK_hYVd3zsPEFToBNfmtt0m6K8SwfxJ66Q@mail.gmail.com>
- <20230608184116.GJ52412@kernel.org>
+        Tue, 13 Jun 2023 15:26:31 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1EE441BFB;
+        Tue, 13 Jun 2023 12:26:11 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 8628663A24;
+        Tue, 13 Jun 2023 19:26:10 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3B798C433F0;
+        Tue, 13 Jun 2023 19:26:09 +0000 (UTC)
+Date:   Tue, 13 Jun 2023 15:26:06 -0400
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     Beau Belgrave <beaub@linux.microsoft.com>
+Cc:     mhiramat@kernel.org, linux-kernel@vger.kernel.org,
+        linux-trace-kernel@vger.kernel.org, ast@kernel.org,
+        dcook@linux.microsoft.com
+Subject: Re: [PATCH v2 3/5] tracing/user_events: Add auto cleanup and a flag
+ to persist events
+Message-ID: <20230613152606.3ace5547@gandalf.local.home>
+In-Reply-To: <20230605233900.2838-4-beaub@linux.microsoft.com>
+References: <20230605233900.2838-1-beaub@linux.microsoft.com>
+        <20230605233900.2838-4-beaub@linux.microsoft.com>
+X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20230608184116.GJ52412@kernel.org>
-X-Migadu-Flow: FLOW_OUT
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 8BIT
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On Thu, Jun 08, 2023 at 09:41:16PM +0300, Mike Rapoport wrote:
-> On Tue, Jun 06, 2023 at 11:21:59AM -0700, Song Liu wrote:
-> > On Mon, Jun 5, 2023 at 3:09 AM Mark Rutland <mark.rutland@arm.com> wrote:
-> > 
-> > [...]
-> > 
-> > > > > > Can you give more detail on what parameters you need? If the only extra
-> > > > > > parameter is just "does this allocation need to live close to kernel
-> > > > > > text", that's not that big of a deal.
-> > > > >
-> > > > > My thinking was that we at least need the start + end for each caller. That
-> > > > > might be it, tbh.
-> > > >
-> > > > Do you mean that modules will have something like
-> > > >
-> > > >       jit_text_alloc(size, MODULES_START, MODULES_END);
-> > > >
-> > > > and kprobes will have
-> > > >
-> > > >       jit_text_alloc(size, KPROBES_START, KPROBES_END);
-> > > > ?
-> > >
-> > > Yes.
-> > 
-> > How about we start with two APIs:
-> >      jit_text_alloc(size);
-> >      jit_text_alloc_range(size, start, end);
-> > 
-> > AFAICT, arm64 is the only arch that requires the latter API. And TBH, I am
-> > not quite convinced it is needed.
->  
-> Right now arm64 and riscv override bpf and kprobes allocations to use the
-> entire vmalloc address space, but having the ability to allocate generated
-> code outside of modules area may be useful for other architectures.
-> 
-> Still the start + end for the callers feels backwards to me because the
-> callers do not define the ranges, but rather the architectures, so we still
-> need a way for architectures to define how they want allocate memory for
-> the generated code.
+On Mon,  5 Jun 2023 16:38:58 -0700
+Beau Belgrave <beaub@linux.microsoft.com> wrote:
 
-So, the start + end just comes from the need to keep relative pointers
-under a certain size. I think this could be just a flag, I see no reason
-to expose actual addresses here.
+Continuing on what Alexei was saying ...
+
+> +	/*
+> +	 * Unfortunately we have to attempt the actual destroy in a work
+> +	 * queue. This is because not all cases handle a trace_event_call
+> +	 * being removed within the class->reg() operation for unregister.
+> +	 */
+> +	INIT_WORK(&user->put_work, delayed_destroy_user_event);
+
+We initialize the work here.
+
+> +
+> +	/*
+> +	 * Since the event is still in the hashtable, we have to re-inc
+> +	 * the ref count to 1. This count will be decremented and checked
+> +	 * in the work queue to ensure it's still the last ref. This is
+> +	 * needed because a user-process could register the same event in
+> +	 * between the time of event_mutex release and the work queue
+> +	 * running the delayed destroy. If we removed the item now from
+> +	 * the hashtable, this would result in a timing window where a
+> +	 * user process would fail a register because the trace_event_call
+> +	 * register would fail in the tracing layers.
+> +	 */
+> +	refcount_set(&user->refcnt, 1);
+> +
+> +	if (!schedule_work(&user->put_work)) {
+
+From what I understand, schedule_work() can only fail if the work is
+already queued. That should never happen if we just initialized it.
+
+That means we need a WARN_ON_ONCE() here. Because it's a major bug if that
+does return false.
+
+-- Steve
+
+
+> +		/*
+> +		 * If we fail we must wait for an admin to attempt delete or
+> +		 * another register/close of the event, whichever is first.
+> +		 */
+> +		pr_warn("user_events: Unable to queue delayed destroy\n");
+> +	}
