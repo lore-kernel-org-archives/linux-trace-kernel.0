@@ -2,176 +2,129 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E937EB64D0
-	for <linux-trace-kernel@archiver.kernel.org>; Tue, 13 Jun 2023 13:55:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F3D3BEB64D0
+	for <linux-trace-kernel@archiver.kernel.org>; Tue, 13 Jun 2023 14:57:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235247AbjFMNzm (ORCPT
+        id S242943AbjFMO5C (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Tue, 13 Jun 2023 09:55:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54234 "EHLO
+        Tue, 13 Jun 2023 10:57:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34172 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233859AbjFMNzl (ORCPT
+        with ESMTP id S242946AbjFMO46 (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Tue, 13 Jun 2023 09:55:41 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4BBD4A6;
-        Tue, 13 Jun 2023 06:55:40 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id D44C063149;
-        Tue, 13 Jun 2023 13:55:39 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B2F6AC433D9;
-        Tue, 13 Jun 2023 13:55:38 +0000 (UTC)
-Date:   Tue, 13 Jun 2023 09:55:37 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     LKML <linux-kernel@vger.kernel.org>,
-        Linux Trace Kernel <linux-trace-kernel@vger.kernel.org>
-Cc:     Masami Hiramatsu <mhiramat@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>
-Subject: [PATCH v2] tracing: Add a debug_trace_printk() function
-Message-ID: <20230613095537.0ecf2459@gandalf.local.home>
-X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+        Tue, 13 Jun 2023 10:56:58 -0400
+Received: from mail-qv1-xf2f.google.com (mail-qv1-xf2f.google.com [IPv6:2607:f8b0:4864:20::f2f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2D1EE1713;
+        Tue, 13 Jun 2023 07:56:53 -0700 (PDT)
+Received: by mail-qv1-xf2f.google.com with SMTP id 6a1803df08f44-62de30780dfso9336446d6.3;
+        Tue, 13 Jun 2023 07:56:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1686668212; x=1689260212;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=fhVGroCgc0u9hI1EagkjV3Nxh511ZVxUSQa0Z6i5YNM=;
+        b=ocSDBQwvWW+KxB516ki+A7dQcj1twPn6BDgJ+Sx8I//9zXDEXWBnlJrtx/MsUMRI3G
+         eAboW9n1PDRyMae0C41nNRB64kd3QHrDZ5uPqnNSpRmn3Rch86bJfpbY6LP+KnwlmPA2
+         byWOFQYj59/XmHXQ92twcfizd+pjiBDruM7QE7UeDP42XwkgfpPk4GOtCrohzd1W9NFO
+         m/1Bp0Bi2cMhMSln5ep5Rmw/iGD+It0a0fCpqXpsF9pDjWUscS6375uj1w69viAwmdVF
+         HQ0d6mHRmYNAfU6xmeHpFIry8slj5+rgaTFExbwrGHpXrntVc4tpNEDWjmhbB9KIu5Ro
+         gKAg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1686668212; x=1689260212;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=fhVGroCgc0u9hI1EagkjV3Nxh511ZVxUSQa0Z6i5YNM=;
+        b=CV5pbuDqKVeMr2V7gpiWdqezo3LzCsHIHie0yoMklsJVr+olIQ1jkulLJC/TYkWfXN
+         KyCmRO7QL0UfR4296oRI4AYOxwpBq7kzS3GQdhc7yCEGd5oYpbh44mJPRirvpXxyT6yy
+         lIkM5auPlrp+90koayMzkS1PVp/xIbC4q12rHpgfCf65SVIoBg7ZTip5ykhp1iHK6ux9
+         04smyNTRqKm+q5ku3AhAPoeHKcRCBxv2H9l+FeoO2usxYOXMpgMQMfAAbYrnmyzJs17o
+         8x277mufwK5M6oH7s0SEUbyndlClIIPDk3PqyLa7ib+fpFSosMgw3R9zNgzqU8PtiCCk
+         o1Og==
+X-Gm-Message-State: AC+VfDyoOydUs8flQc+Wread4KbM3KqGSxRl+/4g9zDz0yyWnrCK9WMw
+        j66SB5tKdvo9h/m3KbaB78twMJsu6WB1LuJED/4=
+X-Google-Smtp-Source: ACHHUZ7sS1ZQulLlbmOyT7GGzWZQmhUJxKz1Y/7ZT4BPtNqwuaNgVkja0p/2mtakaBpFQM1U36TI6KxnASfEgDYHmFI=
+X-Received: by 2002:a05:6214:248e:b0:62d:f3f2:a53 with SMTP id
+ gi14-20020a056214248e00b0062df3f20a53mr3773472qvb.35.1686668212169; Tue, 13
+ Jun 2023 07:56:52 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+References: <20230612151608.99661-1-laoar.shao@gmail.com> <20230612151608.99661-3-laoar.shao@gmail.com>
+ <ffe856f4-9c25-2b6c-a508-bf474df39b7d@isovalent.com>
+In-Reply-To: <ffe856f4-9c25-2b6c-a508-bf474df39b7d@isovalent.com>
+From:   Yafang Shao <laoar.shao@gmail.com>
+Date:   Tue, 13 Jun 2023 22:56:13 +0800
+Message-ID: <CALOAHbBOE36Bg64oo-DrNG2k6uZSyUnj3t60aQBUk4kw8ntbPg@mail.gmail.com>
+Subject: Re: [PATCH v3 bpf-next 02/10] bpftool: Dump the kernel symbol's
+ module name
+To:     Quentin Monnet <quentin@isovalent.com>
+Cc:     ast@kernel.org, daniel@iogearbox.net, john.fastabend@gmail.com,
+        andrii@kernel.org, martin.lau@linux.dev, song@kernel.org,
+        yhs@fb.com, kpsingh@kernel.org, sdf@google.com, haoluo@google.com,
+        jolsa@kernel.org, rostedt@goodmis.org, mhiramat@kernel.org,
+        bpf@vger.kernel.org, linux-trace-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
+On Tue, Jun 13, 2023 at 9:41=E2=80=AFPM Quentin Monnet <quentin@isovalent.c=
+om> wrote:
+>
+> 2023-06-12 15:16 UTC+0000 ~ Yafang Shao <laoar.shao@gmail.com>
+> > If the kernel symbol is in a module, we will dump the module name as
+> > well.
+> >
+> > Signed-off-by: Yafang Shao <laoar.shao@gmail.com>
+> > ---
+> >  tools/bpf/bpftool/xlated_dumper.c | 6 +++++-
+> >  tools/bpf/bpftool/xlated_dumper.h | 2 ++
+> >  2 files changed, 7 insertions(+), 1 deletion(-)
+> >
+> > diff --git a/tools/bpf/bpftool/xlated_dumper.c b/tools/bpf/bpftool/xlat=
+ed_dumper.c
+> > index da608e1..dd917f3 100644
+> > --- a/tools/bpf/bpftool/xlated_dumper.c
+> > +++ b/tools/bpf/bpftool/xlated_dumper.c
+> > @@ -46,7 +46,11 @@ void kernel_syms_load(struct dump_data *dd)
+> >               }
+> >               dd->sym_mapping =3D tmp;
+> >               sym =3D &dd->sym_mapping[dd->sym_count];
+> > -             if (sscanf(buff, "%p %*c %s", &address, sym->name) !=3D 2=
+)
+> > +
+> > +             /* module is optional */
+> > +             sym->module[0] =3D '\0';
+> > +             if (sscanf(buff, "%p %*c %s %s", &address, sym->name,
+> > +                 sym->module) < 2)
+> >                       continue;
+> >               sym->address =3D (unsigned long)address;
+> >               if (!strcmp(sym->name, "__bpf_call_base")) {
+> > diff --git a/tools/bpf/bpftool/xlated_dumper.h b/tools/bpf/bpftool/xlat=
+ed_dumper.h
+> > index 9a94637..5df8025 100644
+> > --- a/tools/bpf/bpftool/xlated_dumper.h
+> > +++ b/tools/bpf/bpftool/xlated_dumper.h
+> > @@ -5,12 +5,14 @@
+> >  #define __BPF_TOOL_XLATED_DUMPER_H
+> >
+> >  #define SYM_MAX_NAME 256
+> > +#define MODULE_NAME_LEN      64
+> >
+> >  struct bpf_prog_linfo;
+> >
+> >  struct kernel_sym {
+> >       unsigned long address;
+> >       char name[SYM_MAX_NAME];
+> > +     char module[MODULE_NAME_LEN];
+>
+> Nit: MODULE_MAX_NAME would be more consistent and would make more sense
+> to me? And it would avoid confusion with MODULE_NAME_LEN from kernel,
+> which doesn't have the same value.
 
-While doing some tracing and kernel debugging, I found that some of my
-trace_printk()s were being lost in the noise of the other code that was
-being traced. Having a way to write trace_printk() not in the top level
-trace buffer would have been useful.
+Will use MODULE_MAX_NAME instead.
 
-There was also a time I needed to debug ftrace itself, where
-trace_printk() did not hit the paths that were being debugged. But because
-the trace that was being debugged, was going into the top level ring
-buffer, it was causing issues for seeing what is to be traced.
-
-To solve both of the above, add a debug_trace_printk() that can be used
-just like trace_printk() except that it goes into a "debug" instance
-buffer instead. This can be used at boot up as well.
-
-Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
----
-Changes since v1: https://lore.kernel.org/linux-trace-kernel/20230612193337.0fb0d3ca@gandalf.local.home/
-
-  - I had added a prompt to the kconfig but never committed it.
-    It's now part of the patch.
-
- include/linux/kernel.h | 14 ++++++++++++++
- kernel/trace/Kconfig   | 20 ++++++++++++++++++++
- kernel/trace/trace.c   | 29 +++++++++++++++++++++++++++++
- 3 files changed, 63 insertions(+)
-
-diff --git a/include/linux/kernel.h b/include/linux/kernel.h
-index 0d91e0af0125..594c9ba17fd4 100644
---- a/include/linux/kernel.h
-+++ b/include/linux/kernel.h
-@@ -432,6 +432,20 @@ __ftrace_vbprintk(unsigned long ip, const char *fmt, va_list ap);
- extern __printf(2, 0) int
- __ftrace_vprintk(unsigned long ip, const char *fmt, va_list ap);
- 
-+#ifdef CONFIG_FTRACE_DEBUG_PRINT
-+extern __printf(2,0) void do_debug_trace_printk(unsigned long ip, const char *fmt, ...);
-+#define debug_trace_printk(fmt, ...) \
-+do {							\
-+	do_debug_trace_printk(_THIS_IP_, fmt, ##__VA_ARGS__);	\
-+} while (0)
-+
-+extern void debug_tracing_stop(void);
-+#else
-+#define debug_trace_printk(fmt, ...) do { } while (0)
-+static inline void debug_tracing_stop(void) { }
-+#endif
-+
-+
- extern void ftrace_dump(enum ftrace_dump_mode oops_dump_mode);
- #else
- static inline void tracing_start(void) { }
-diff --git a/kernel/trace/Kconfig b/kernel/trace/Kconfig
-index abe5c583bd59..e07bca39dec9 100644
---- a/kernel/trace/Kconfig
-+++ b/kernel/trace/Kconfig
-@@ -974,6 +974,26 @@ config GCOV_PROFILE_FTRACE
- 	  Note that on a kernel compiled with this config, ftrace will
- 	  run significantly slower.
- 
-+config FTRACE_DEBUG_PRINT
-+	bool "Enable debug_trace_printk()"
-+	depends on TRACING
-+	help
-+	  This option enables the use of debug_trace_printk() instead of
-+	  using trace_printk(). The difference between the two is that
-+	  debug_trace_printk() traces are visible in the "debug" instance
-+	  found in:
-+
-+	  /sys/kernel/tracing/instances/debug
-+
-+	  This is useful when the trace printks should not interfere with
-+	  the normal top level tracing. It is also useful if the top level
-+	  tracing is very noisy and critical trace printks are dropped.
-+	  By using debug_trace_printk() the traces goes into as separate
-+	  ring buffer that will not be overridden by other trace events.
-+
-+	  If unsure say N (In fact, only say Y if you are debugging a
-+	                   kernel and require this)
-+
- config FTRACE_SELFTEST
- 	bool
- 
-diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
-index 64a4dde073ef..c21a93cf5fd8 100644
---- a/kernel/trace/trace.c
-+++ b/kernel/trace/trace.c
-@@ -490,6 +490,10 @@ static struct trace_array global_trace = {
- 	.trace_flags = TRACE_DEFAULT_FLAGS,
- };
- 
-+#ifdef CONFIG_FTRACE_DEBUG_PRINT
-+static struct trace_array *debug_trace;
-+#endif
-+
- LIST_HEAD(ftrace_trace_arrays);
- 
- int trace_array_get(struct trace_array *this_tr)
-@@ -10455,8 +10459,33 @@ void __init early_trace_init(void)
- 	tracer_alloc_buffers();
- 
- 	init_events();
-+
-+#ifdef CONFIG_FTRACE_DEBUG_PRINT
-+	debug_trace = trace_array_get_by_name("debug");
-+	if (WARN_ON(!debug_trace))
-+		return;
-+	trace_array_init_printk(debug_trace);
-+#endif
- }
- 
-+#ifdef CONFIG_FTRACE_DEBUG_PRINT
-+__printf(2, 0)
-+void do_debug_trace_printk(unsigned long ip, const char *fmt, ...)
-+{
-+	va_list ap;
-+
-+	va_start(ap, fmt);
-+	trace_array_vprintk(debug_trace, ip, fmt, ap);
-+	va_end(ap);
-+}
-+
-+void debug_tracing_stop(void)
-+{
-+	debug_trace_printk("Stopping debug tracing\n");
-+	tracing_stop_tr(debug_trace);
-+}
-+#endif
-+
- void __init trace_init(void)
- {
- 	trace_event_init();
--- 
-2.39.2
-
+--=20
+Regards
+Yafang
