@@ -2,130 +2,119 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ECD02EB64D7
-	for <linux-trace-kernel@archiver.kernel.org>; Tue, 13 Jun 2023 15:41:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DC465EB64D7
+	for <linux-trace-kernel@archiver.kernel.org>; Tue, 13 Jun 2023 18:56:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235653AbjFMPlF (ORCPT
+        id S240112AbjFMS42 (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Tue, 13 Jun 2023 11:41:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57334 "EHLO
+        Tue, 13 Jun 2023 14:56:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46184 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S239942AbjFMPlE (ORCPT
+        with ESMTP id S233057AbjFMS40 (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Tue, 13 Jun 2023 11:41:04 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5597B1A5;
-        Tue, 13 Jun 2023 08:40:54 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id CF11B6253F;
-        Tue, 13 Jun 2023 15:40:53 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E1E1FC433F0;
-        Tue, 13 Jun 2023 15:40:51 +0000 (UTC)
-Date:   Tue, 13 Jun 2023 11:40:49 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Linux Trace Kernel <linux-trace-kernel@vger.kernel.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
+        Tue, 13 Jun 2023 14:56:26 -0400
+Received: from out-20.mta1.migadu.com (out-20.mta1.migadu.com [95.215.58.20])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B59F2E5
+        for <linux-trace-kernel@vger.kernel.org>; Tue, 13 Jun 2023 11:56:24 -0700 (PDT)
+Date:   Tue, 13 Jun 2023 14:56:14 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+        t=1686682581;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=cI/+VKexODe7tgazUH0uBbszHN+Sh5VjQJKMcYicSKU=;
+        b=UteSpuaAfbQ2NCJDHT0DaE6LH+0KCxqxliA1u1CiHpYLEp/BHx0yHT4z2wyOm1k0K155IH
+        1TdtqXMsJtk9bqAzUZ31aQXTksL2s2n1Q4RGfHebraQUDr3MhWO8yy+4wsaox2mGxQ3YRe
+        XgmITo5ci4OCni1zywcC85bIuHv1vdI=
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From:   Kent Overstreet <kent.overstreet@linux.dev>
+To:     Mike Rapoport <rppt@kernel.org>
+Cc:     Song Liu <song@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+        linux-kernel@vger.kernel.org,
         Andrew Morton <akpm@linux-foundation.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Kees Cook <keescook@chromium.org>,
-        Miguel Ojeda <ojeda@kernel.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Ingo Molnar <mingo@kernel.org>, Song Liu <song@kernel.org>,
-        Josh Poimboeuf <jpoimboe@kernel.org>
-Subject: Re: [PATCH v2] ftrace: Allow inline functions not inlined to be
- traced
-Message-ID: <20230613114049.096a8844@gandalf.local.home>
-In-Reply-To: <87lego7m50.ffs@tglx>
-References: <20230609174422.04824a9e@gandalf.local.home>
-        <87lego7m50.ffs@tglx>
-X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Christophe Leroy <christophe.leroy@csgroup.eu>,
+        "David S. Miller" <davem@davemloft.net>,
+        Dinh Nguyen <dinguyen@kernel.org>,
+        Heiko Carstens <hca@linux.ibm.com>,
+        Helge Deller <deller@gmx.de>,
+        Huacai Chen <chenhuacai@kernel.org>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        "Naveen N. Rao" <naveen.n.rao@linux.ibm.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Russell King <linux@armlinux.org.uk>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Will Deacon <will@kernel.org>, bpf@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-mips@vger.kernel.org,
+        linux-mm@kvack.org, linux-modules@vger.kernel.org,
+        linux-parisc@vger.kernel.org, linux-riscv@lists.infradead.org,
+        linux-s390@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, loongarch@lists.linux.dev,
+        netdev@vger.kernel.org, sparclinux@vger.kernel.org, x86@kernel.org
+Subject: Re: [PATCH 00/13] mm: jit/text allocator
+Message-ID: <ZIi7zmey0w61EG25@moria.home.lan>
+References: <20230601101257.530867-1-rppt@kernel.org>
+ <ZHjDU/mxE+cugpLj@FVFF77S0Q05N.cambridge.arm.com>
+ <ZHjgIH3aX9dCvVZc@moria.home.lan>
+ <ZHm3zUUbwqlsZBBF@FVFF77S0Q05N>
+ <20230605092040.GB3460@kernel.org>
+ <ZH20XkD74prrdN4u@FVFF77S0Q05N>
+ <CAPhsuW7ntn_HpVWdGK_hYVd3zsPEFToBNfmtt0m6K8SwfxJ66Q@mail.gmail.com>
+ <20230608184116.GJ52412@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20230608184116.GJ52412@kernel.org>
+X-Migadu-Flow: FLOW_OUT
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On Mon, 12 Jun 2023 17:09:31 +0200
-Thomas Gleixner <tglx@linutronix.de> wrote:
+On Thu, Jun 08, 2023 at 09:41:16PM +0300, Mike Rapoport wrote:
+> On Tue, Jun 06, 2023 at 11:21:59AM -0700, Song Liu wrote:
+> > On Mon, Jun 5, 2023 at 3:09 AM Mark Rutland <mark.rutland@arm.com> wrote:
+> > 
+> > [...]
+> > 
+> > > > > > Can you give more detail on what parameters you need? If the only extra
+> > > > > > parameter is just "does this allocation need to live close to kernel
+> > > > > > text", that's not that big of a deal.
+> > > > >
+> > > > > My thinking was that we at least need the start + end for each caller. That
+> > > > > might be it, tbh.
+> > > >
+> > > > Do you mean that modules will have something like
+> > > >
+> > > >       jit_text_alloc(size, MODULES_START, MODULES_END);
+> > > >
+> > > > and kprobes will have
+> > > >
+> > > >       jit_text_alloc(size, KPROBES_START, KPROBES_END);
+> > > > ?
+> > >
+> > > Yes.
+> > 
+> > How about we start with two APIs:
+> >      jit_text_alloc(size);
+> >      jit_text_alloc_range(size, start, end);
+> > 
+> > AFAICT, arm64 is the only arch that requires the latter API. And TBH, I am
+> > not quite convinced it is needed.
+>  
+> Right now arm64 and riscv override bpf and kprobes allocations to use the
+> entire vmalloc address space, but having the ability to allocate generated
+> code outside of modules area may be useful for other architectures.
+> 
+> Still the start + end for the callers feels backwards to me because the
+> callers do not define the ranges, but rather the architectures, so we still
+> need a way for architectures to define how they want allocate memory for
+> the generated code.
 
-> >
-> > Currently only x86 uses this.  
-> 
-> I assume this passes the objtool noinstr validation. If so, if would be
-> helpful to document that.
-
-I haven't run this through the full test suite. But I will check.
-
-> >  /*
-> >   * gcc provides both __inline__ and __inline as alternate spellings of
-> > @@ -230,7 +240,7 @@ struct ftrace_likely_data {
-> >   *     https://gcc.gnu.org/bugzilla/show_bug.cgi?id=67368
-> >   * '__maybe_unused' allows us to avoid defined-but-not-used warnings.
-> >   */
-> > -# define __no_kasan_or_inline __no_sanitize_address notrace __maybe_unused
-> > +# define __no_kasan_or_inline __no_sanitize_address __notrace_inline __maybe_unused  
-> 
-> I'm not convinced that this is correct
-> 
-> >  # define __no_sanitize_or_inline __no_kasan_or_inline
-> >  #else  
-> 
-> given that the !__SANITIZE_ADDRESS__ variant is:
-> 
-> >  # define __no_kasan_or_inline __always_inline  
-> 
-> which cannot be traced.
-> 
-> > @@ -247,7 +257,7 @@ struct ftrace_likely_data {
-> >   * disable all instrumentation. See Kconfig.kcsan where this is mandatory.
-> >   */
-> >  # define __no_kcsan __no_sanitize_thread __disable_sanitizer_instrumentation
-> > -# define __no_sanitize_or_inline __no_kcsan notrace __maybe_unused
-> > +# define __no_sanitize_or_inline __no_kcsan __notrace_inline  __maybe_unused  
-> 
-> Ditto. 
-
-I'll just keep the notrace on these.
-
-> 
-> >  #else
-> >  # define __no_kcsan
-> >  #endif
-> > diff --git a/kernel/trace/Kconfig b/kernel/trace/Kconfig
-> > index abe5c583bd59..b66ab0e6ce19 100644
-> > --- a/kernel/trace/Kconfig
-> > +++ b/kernel/trace/Kconfig
-> > @@ -106,6 +106,13 @@ config HAVE_BUILDTIME_MCOUNT_SORT
-> >           An architecture selects this if it sorts the mcount_loc section
-> >  	 at build time.
-> >  
-> > +config ARCH_CAN_TRACE_INLINE
-> > +       bool
-> > +       help
-> > +         It is safe for an architecture to trace any function marked  
-> 
-> Spaces instead of tab.
-
-Bah, I noticed that my emacs is doing this on other configs I just added.
-It adds spaces for the first entry, then tabs for the rest.
-
-> 
-> > +	 as inline (not __always_inline) that the compiler decides to  
-> 
-> and this one has a tab.
-> 
-> > +	 not inline.
-> > +
-> >  config BUILDTIME_MCOUNT_SORT
-> >         bool
-> >         default y  
-
-Thanks for the review!
-
--- Steve
+So, the start + end just comes from the need to keep relative pointers
+under a certain size. I think this could be just a flag, I see no reason
+to expose actual addresses here.
