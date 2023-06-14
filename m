@@ -2,105 +2,71 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 15415EB64D9
-	for <linux-trace-kernel@archiver.kernel.org>; Wed, 14 Jun 2023 09:57:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FA75EB64D9
+	for <linux-trace-kernel@archiver.kernel.org>; Wed, 14 Jun 2023 10:50:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235339AbjFNJ5m convert rfc822-to-8bit (ORCPT
+        id S235309AbjFNKuz (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Wed, 14 Jun 2023 05:57:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54944 "EHLO
+        Wed, 14 Jun 2023 06:50:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56412 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233408AbjFNJ5l (ORCPT
+        with ESMTP id S243590AbjFNKuv (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Wed, 14 Jun 2023 05:57:41 -0400
-Received: from eu-smtp-delivery-151.mimecast.com (eu-smtp-delivery-151.mimecast.com [185.58.85.151])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 39107AC
-        for <linux-trace-kernel@vger.kernel.org>; Wed, 14 Jun 2023 02:57:40 -0700 (PDT)
-Received: from AcuMS.aculab.com (156.67.243.121 [156.67.243.121]) by
- relay.mimecast.com with ESMTP with both STARTTLS and AUTH (version=TLSv1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
- uk-mta-318-cYKJ_jYvN-aJa4XviMzn4A-1; Wed, 14 Jun 2023 10:57:37 +0100
-X-MC-Unique: cYKJ_jYvN-aJa4XviMzn4A-1
-Received: from AcuMS.Aculab.com (10.202.163.6) by AcuMS.aculab.com
- (10.202.163.6) with Microsoft SMTP Server (TLS) id 15.0.1497.48; Wed, 14 Jun
- 2023 10:57:33 +0100
-Received: from AcuMS.Aculab.com ([::1]) by AcuMS.aculab.com ([::1]) with mapi
- id 15.00.1497.048; Wed, 14 Jun 2023 10:57:33 +0100
-From:   David Laight <David.Laight@ACULAB.COM>
-To:     'Steven Rostedt' <rostedt@goodmis.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Linux Trace Kernel <linux-trace-kernel@vger.kernel.org>
-CC:     Masami Hiramatsu <mhiramat@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>
-Subject: RE: [PATCH] tracing: Add a debug_trace_printk() function
-Thread-Topic: [PATCH] tracing: Add a debug_trace_printk() function
-Thread-Index: AQHZnYZXodJCXa8lT0+2rDQCqxMQQa+KDaeA
-Date:   Wed, 14 Jun 2023 09:57:33 +0000
-Message-ID: <e2f3ce97329d488d8ecd4fea5fbdb4f6@AcuMS.aculab.com>
-References: <20230612193337.0fb0d3ca@gandalf.local.home>
-In-Reply-To: <20230612193337.0fb0d3ca@gandalf.local.home>
-Accept-Language: en-GB, en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.202.205.107]
+        Wed, 14 Jun 2023 06:50:51 -0400
+Received: from smtp-relay-canonical-1.canonical.com (smtp-relay-canonical-1.canonical.com [185.125.188.121])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AC2231BF3;
+        Wed, 14 Jun 2023 03:50:49 -0700 (PDT)
+Received: from Thibf-fixed.fritz.box (unknown [45.83.232.52])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+        (No client certificate requested)
+        by smtp-relay-canonical-1.canonical.com (Postfix) with ESMTPSA id 3BB0540269;
+        Wed, 14 Jun 2023 10:50:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
+        s=20210705; t=1686739846;
+        bh=eUY0/Bvf/dV+JXrlyqFmfN8YtkIS7qP5DzuIMO7NVls=;
+        h=From:To:Cc:Subject:Date:Message-Id:MIME-Version;
+        b=FJFbaQ7iaItC1FdadVLPBPRJXijOtiyZhwSTd71P6xJ+tP6X+pTJbhNud9Y1wvgFJ
+         zl/MxUBBeOqdFsbIGchizgV84xwSNTjhss4CvFAN9lru8fOpXEDs+NImUct64Gblce
+         N8C/xBeCbxF92hcWXjeN6uIVde7OFdr4aMNhZPCWZD1+S6Cn/PF5vx20hlwXkigtXe
+         z2v+liNI7X12Gz68JChLN2BOvugC7Cx7JVrtN3xNPhrASoivhLTfA/Z7Z6OIDjIoSN
+         V465Z7mVbTIY2/VPDG6oyBhhCB077vfmzQ16rE9BD2aOxInOGzeziilgf4xeTIhzIs
+         Y1HgljHRoYzEQ==
+From:   Thibault Ferrante <thibault.ferrante@canonical.com>
+To:     shuah@kernel.org, rostedt@goodmis.org
+Cc:     thibault.ferrante@canonical.com, linux-kernel@vger.kernel.org,
+        linux-trace-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org
+Subject: [PATCH] selftests/ftrace: Add test dependency
+Date:   Wed, 14 Jun 2023 12:50:31 +0200
+Message-Id: <20230614105031.13543-1-thibault.ferrante@canonical.com>
+X-Mailer: git-send-email 2.39.2
 MIME-Version: 1.0
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: aculab.com
-Content-Language: en-US
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-From: Steven Rostedt
-> Sent: 13 June 2023 00:34
-> 
-> From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
-> 
-> While doing some tracing and kernel debugging, I found that some of my
-> trace_printk()s were being lost in the noise of the other code that was
-> being traced. Having a way to write trace_printk() not in the top level
-> trace buffer would have been useful.
-> 
-> There was also a time I needed to debug ftrace itself, where
-> trace_printk() did not hit the paths that were being debugged. But because
-> the trace that was being debugged, was going into the top level ring
-> buffer, it was causing issues for seeing what is to be traced.
-> 
-> To solve both of the above, add a debug_trace_printk() that can be used
-> just like trace_printk() except that it goes into a "debug" instance
-> buffer instead. This can be used at boot up as well.
-...
-> +#ifdef CONFIG_FTRACE_DEBUG_PRINT
-> +	debug_trace = trace_array_get_by_name("debug");
-> +	if (WARN_ON(!debug_trace))
-> +		return;
-> +	trace_array_init_printk(debug_trace);
-> +#endif
+test_duplicates miss a running dependency and leads to test failures
+on kernel with specific configuration.
 
-I was wondering if that could be done whenever the "debug"
-trace_array is created?
-(perhaps only if trace_prink() has been used?)
-Since (AFAICT) it could be created at any time??
+Signed-off-by: Thibault Ferrante <thibault.ferrante@canonical.com>
+---
+ .../testing/selftests/ftrace/test.d/dynevent/test_duplicates.tc | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-So you wouldn't really need an extra kernel knob?
-(Except to get the boot time trace diverted.)
-The trace could go to the global buffer if the debug one
-isn't created.
-
-OTOH I'm missing what trace_array_init_prink() does?
-It seems to just call alloc_percpu_trace_buffer() with
-no arguments.
-
-It looks like alloc_percpu_trace_buffer() is called if there
-are any trace_printk() formats in the main kernel.
-Hopefully they aren't just in modules??
-
-	David
-
--
-Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1PT, UK
-Registration No: 1397386 (Wales)
+diff --git a/tools/testing/selftests/ftrace/test.d/dynevent/test_duplicates.tc b/tools/testing/selftests/ftrace/test.d/dynevent/test_duplicates.tc
+index d3a79da215c8..0b5e4543e70b 100644
+--- a/tools/testing/selftests/ftrace/test.d/dynevent/test_duplicates.tc
++++ b/tools/testing/selftests/ftrace/test.d/dynevent/test_duplicates.tc
+@@ -1,7 +1,7 @@
+ #!/bin/sh
+ # SPDX-License-Identifier: GPL-2.0
+ # description: Generic dynamic event - check if duplicate events are caught
+-# requires: dynamic_events "e[:[<group>/][<event>]] <attached-group>.<attached-event> [<args>]":README
++# requires: dynamic_events events/syscalls/sys_enter_openat "e[:[<group>/][<event>]] <attached-group>.<attached-event> [<args>]":README
+ 
+ echo 0 > events/enable
+ 
+-- 
+2.39.2
 
