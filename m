@@ -2,225 +2,117 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FA0BEB64D7
-	for <linux-trace-kernel@archiver.kernel.org>; Wed, 14 Jun 2023 02:46:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 356A8EB64D8
+	for <linux-trace-kernel@archiver.kernel.org>; Wed, 14 Jun 2023 04:11:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231906AbjFNCqT (ORCPT
+        id S233720AbjFNELK (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Tue, 13 Jun 2023 22:46:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36788 "EHLO
+        Wed, 14 Jun 2023 00:11:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59946 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229955AbjFNCqT (ORCPT
+        with ESMTP id S242308AbjFNELJ (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Tue, 13 Jun 2023 22:46:19 -0400
-Received: from mail-qv1-xf29.google.com (mail-qv1-xf29.google.com [IPv6:2607:f8b0:4864:20::f29])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 459271BDA;
-        Tue, 13 Jun 2023 19:46:18 -0700 (PDT)
-Received: by mail-qv1-xf29.google.com with SMTP id 6a1803df08f44-62dfd7e6f54so6641756d6.0;
-        Tue, 13 Jun 2023 19:46:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1686710777; x=1689302777;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=im+kxzJ/Bvuphs8OzZJlVaJGx4HnTKQJFj+CmJbpbpY=;
-        b=S4+h6TgpwtJDtZxbTOpWj3Omratic9odTNDLBenu2bDdgzP4aNAX+h5wR9oB0YH7EG
-         Tq1NqDePvMIZHy+PNKUi9PP5wDGT9N9ux6GtWQ8BFdajzUNiYpFav8X6Oxfw/1Dqlmdc
-         q/PW2DqdaKVQh24+xhOi0yyU1gNoBjtCokxxSKSKHRT/3gfxfyQ69KyYzQUveIpWUaDI
-         Z/jQQaijg1iXEiTxY0CRFaWKpZuHS5tsiC1EPf42R96yKvaUMb5JCl0kyYrtUTCqPLsL
-         QCEIBHdSwHR2wv2uORxz1/lbb3yGktqGo4NrghCkZsAjQjDOP83aO+o7li5sI+4KD/yX
-         lB9A==
+        Wed, 14 Jun 2023 00:11:09 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2D36C19B6
+        for <linux-trace-kernel@vger.kernel.org>; Tue, 13 Jun 2023 21:10:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1686715822;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=apBkNGMEYE+N3GwoyYOeikY/4uKgz9iLGzWWWnCUdRs=;
+        b=PjA5W1FftvO5apfRiJVmVGNd2ghB7zz2M2HWQcYQ3hTOSGIZAib+X8hgp/wimm9c7v+1y6
+        od0eoyMNb5i2GuuFgZNiFbBeFO+IG+VqJPlmZG50gkMkoD61ChSjWw3C+NMnnok/sdgbiJ
+        pyBrQSUPM4RfWmRJ+9p6jclfAcJKR60=
+Received: from mail-qk1-f200.google.com (mail-qk1-f200.google.com
+ [209.85.222.200]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-458-RnHm_OxVMdmp7S16-yanIA-1; Wed, 14 Jun 2023 00:10:19 -0400
+X-MC-Unique: RnHm_OxVMdmp7S16-yanIA-1
+Received: by mail-qk1-f200.google.com with SMTP id af79cd13be357-75d4fb030a8so220480685a.2
+        for <linux-trace-kernel@vger.kernel.org>; Tue, 13 Jun 2023 21:10:19 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1686710777; x=1689302777;
+        d=1e100.net; s=20221208; t=1686715819; x=1689307819;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=im+kxzJ/Bvuphs8OzZJlVaJGx4HnTKQJFj+CmJbpbpY=;
-        b=l1ST1ywMddlwa7qOx19nfl6DA1o9LkPfufnP+AWgXjJEfjqqT/XMKGvrCpNmOeGrXo
-         GGRuLXCVpbx2pmKkecbEMzvZ8bX65BWIp8+RwLPDod5drvvZpouYnVWkZC8lEPaaS17+
-         Rkzo7/RpSjYvybo4pVBp+dBn/sAHdg9IIqBVgOlO+VAoZ//fqpB6ZApCHgGjX8WurPGx
-         +e6tHgHlcIR+DtJ8kxRI5qYj/xfXu7W5TOpfac44zrcxDb50YTJ/AnPkykHrq8uNKqnZ
-         Kx7JNFcgRQIMcjTFSdAsRjJ/+3nJ5Feoihj5EHgc76+lVUoWQoaMC2TZ7miFaSswjEu9
-         fZ/A==
-X-Gm-Message-State: AC+VfDy0cwZZItj89eenTvurlfcpGVBCiqMT660sxyGjr+qxkgmJ666w
-        f+ykQNFDsLEUGnScmzsYHS+f0TdcK0Q+KUrMpWM=
-X-Google-Smtp-Source: ACHHUZ6obxkQXvLqCl0yjzOyR3SH99z/DFcm0KTshbGrMVVZnZuf7u/8h75i2YgiSN85c5j9jos26Ji2Tf/rpA2hqLU=
-X-Received: by 2002:ad4:5de3:0:b0:626:101a:f8 with SMTP id jn3-20020ad45de3000000b00626101a00f8mr16281233qvb.25.1686710777363;
- Tue, 13 Jun 2023 19:46:17 -0700 (PDT)
+        bh=apBkNGMEYE+N3GwoyYOeikY/4uKgz9iLGzWWWnCUdRs=;
+        b=MF6kplx7cfTFdF5vNDses3xQd2s4zLd9CLbUL1ijoqAewV9EvmoGkW+QUmdwiJBRLF
+         XA2qW20wvLBOBnr3e0VZgEk8PKmGzLfpg9ZovFKTbLW8+IGcX1KiKe+72kAcUwOwYVIS
+         N9Xn9uC+5vHwJWWEdonl0cMSJO2RkmyQQWKIKBEXqfcIuZMVs5MVuITv0ShpyNg9f05G
+         WFwislswh8oLJVmEumEAg6jqzA+GZQttaPyMIDBa5vYVu6XJC5jOAZPVOdFuMsKaE2QU
+         TqZmqqKyZklTE1K8efyxRvMuYINVH8ZD8yjjUkmLZJbG2lWOQYRBXzIuT6COKgI2ewK7
+         is+Q==
+X-Gm-Message-State: AC+VfDzAy+Cz3DwGHvj9YiQqoYRJcWIrjOKiJb4/if++0Ec57N06FqCQ
+        +J1nbXO8kVGgiRTi6kJuKVi2H+fGfV8LASRh+IEdKYMdruukB2FItXjxKymW5dYL8T1wlz6LJqN
+        ih+Ymh0HZ/gM+WamqEt+cFw3q7Ch1ApnXYissFtdnTzdz/ThC
+X-Received: by 2002:a05:622a:130e:b0:3f8:6eaa:dcce with SMTP id v14-20020a05622a130e00b003f86eaadccemr1040073qtk.27.1686715819024;
+        Tue, 13 Jun 2023 21:10:19 -0700 (PDT)
+X-Google-Smtp-Source: ACHHUZ5sRQ8XUksUCnGvFQNbEecZBTDO2TVo8cHS+eoF0AFJEddvKBtc5OUH1TSB1de8EDJyszhrISLyLKeiWdmwefY=
+X-Received: by 2002:a05:622a:130e:b0:3f8:6eaa:dcce with SMTP id
+ v14-20020a05622a130e00b003f86eaadccemr1040063qtk.27.1686715818834; Tue, 13
+ Jun 2023 21:10:18 -0700 (PDT)
 MIME-Version: 1.0
-References: <20230612151608.99661-1-laoar.shao@gmail.com> <20230612151608.99661-9-laoar.shao@gmail.com>
- <09da5bbd-1ef1-edd3-d83c-bba04b4f53da@meta.com> <CALOAHbCfEDmkbLeQG1wmBF7q3AaMSyZpxRGyFJ=9VugUdDpCsQ@mail.gmail.com>
- <394cb661-4d19-8d44-d211-526fb80024ec@gmail.com>
-In-Reply-To: <394cb661-4d19-8d44-d211-526fb80024ec@gmail.com>
-From:   Yafang Shao <laoar.shao@gmail.com>
-Date:   Wed, 14 Jun 2023 10:45:41 +0800
-Message-ID: <CALOAHbCVJh5ZWDjUb46Y+XG+sD83rPoeoCnyWhA4qgfaZ2jzpw@mail.gmail.com>
-Subject: Re: [PATCH v3 bpf-next 08/10] bpf: Support ->fill_link_info for perf_event
-To:     Kui-Feng Lee <sinquersw@gmail.com>
-Cc:     Yonghong Song <yhs@meta.com>, ast@kernel.org, daniel@iogearbox.net,
-        john.fastabend@gmail.com, andrii@kernel.org, martin.lau@linux.dev,
-        song@kernel.org, yhs@fb.com, kpsingh@kernel.org, sdf@google.com,
-        haoluo@google.com, jolsa@kernel.org, quentin@isovalent.com,
-        rostedt@goodmis.org, mhiramat@kernel.org, bpf@vger.kernel.org,
-        linux-trace-kernel@vger.kernel.org
+References: <20230515183045.654199-1-leobras@redhat.com> <20230515183045.654199-2-leobras@redhat.com>
+ <xhsmh353ep0m7.mognet@vschneid.remote.csb>
+In-Reply-To: <xhsmh353ep0m7.mognet@vschneid.remote.csb>
+From:   Leonardo Bras Soares Passos <leobras@redhat.com>
+Date:   Wed, 14 Jun 2023 01:10:08 -0300
+Message-ID: <CAJ6HWG6x4WgLtr3RGNar4jFoccD4bCocid-_WzSFofDRP8+2gA@mail.gmail.com>
+Subject: Re: [RFC PATCH v4 1/2] trace,smp: Add tracepoints around remotelly
+ called functions
+To:     Valentin Schneider <vschneid@redhat.com>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Nadav Amit <namit@vmware.com>,
+        Chen Zhongjin <chenzhongjin@huawei.com>,
+        Daniel Bristot de Oliveira <bristot@kernel.org>,
+        Marcelo Tosatti <mtosatti@redhat.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        Juergen Gross <jgross@suse.com>,
+        Yury Norov <yury.norov@gmail.com>,
+        linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: redhat.com
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On Wed, Jun 14, 2023 at 10:34=E2=80=AFAM Kui-Feng Lee <sinquersw@gmail.com>=
- wrote:
->
->
->
-> On 6/12/23 19:47, Yafang Shao wrote:
-> > On Tue, Jun 13, 2023 at 1:36=E2=80=AFAM Yonghong Song <yhs@meta.com> wr=
-ote:
-> >>
-> >>
-> >>
-> >> On 6/12/23 8:16 AM, Yafang Shao wrote:
-> >>> By introducing support for ->fill_link_info to the perf_event link, u=
-sers
-> >>> gain the ability to inspect it using `bpftool link show`. While the c=
-urrent
-> >>> approach involves accessing this information via `bpftool perf show`,
-> >>> consolidating link information for all link types in one place offers
-> >>> greater convenience. Additionally, this patch extends support to the
-> >>> generic perf event, which is not currently accommodated by
-> >>> `bpftool perf show`. While only the perf type and config are exposed =
-to
-> >>> userspace, other attributes such as sample_period and sample_freq are
-> >>> ignored. It's important to note that if kptr_restrict is not permitte=
-d, the
-> >>> probed address will not be exposed, maintaining security measures.
-> >>>
-> >>> A new enum bpf_link_perf_event_type is introduced to help the user
-> >>> understand which struct is relevant.
-> >>>
-> >>> Signed-off-by: Yafang Shao <laoar.shao@gmail.com>
-> >>> ---
-> >>>    include/uapi/linux/bpf.h       |  32 +++++++++++
-> >>>    kernel/bpf/syscall.c           | 124 +++++++++++++++++++++++++++++=
-++++++++++++
-> >>>    tools/include/uapi/linux/bpf.h |  32 +++++++++++
-> >>>    3 files changed, 188 insertions(+)
-> >>>
-> >>> diff --git a/include/uapi/linux/bpf.h b/include/uapi/linux/bpf.h
-> >>> index 23691ea..8d4556e 100644
-> >>> --- a/include/uapi/linux/bpf.h
-> >>> +++ b/include/uapi/linux/bpf.h
-> >>> @@ -1056,6 +1056,16 @@ enum bpf_link_type {
-> >>>        MAX_BPF_LINK_TYPE,
-> >>>    };
-> >>>
-> >>> +enum bpf_perf_link_type {
-> >>> +     BPF_PERF_LINK_UNSPEC =3D 0,
-> >>> +     BPF_PERF_LINK_UPROBE =3D 1,
-> >>> +     BPF_PERF_LINK_KPROBE =3D 2,
-> >>> +     BPF_PERF_LINK_TRACEPOINT =3D 3,
-> >>> +     BPF_PERF_LINK_PERF_EVENT =3D 4,
-> >>> +
-> >>> +     MAX_BPF_LINK_PERF_EVENT_TYPE,
-> >>> +};
-> >>> +
-> >>>    /* cgroup-bpf attach flags used in BPF_PROG_ATTACH command
-> >>>     *
-> >>>     * NONE(default): No further bpf programs allowed in the subtree.
-> >>> @@ -6443,7 +6453,29 @@ struct bpf_link_info {
-> >>>                        __u32 count;
-> >>>                        __u32 flags;
-> >>>                } kprobe_multi;
-> >>> +             struct {
-> >>> +                     __u64 config;
-> >>> +                     __u32 type;
-> >>> +             } perf_event; /* BPF_LINK_PERF_EVENT_PERF_EVENT */
-> >>> +             struct {
-> >>> +                     __aligned_u64 file_name; /* in/out: buff ptr */
-> >>> +                     __u32 name_len;
-> >>> +                     __u32 offset;            /* offset from name */
-> >>> +                     __u32 flags;
-> >>> +             } uprobe; /* BPF_LINK_PERF_EVENT_UPROBE */
-> >>> +             struct {
-> >>> +                     __aligned_u64 func_name; /* in/out: buff ptr */
-> >>> +                     __u32 name_len;
-> >>> +                     __u32 offset;            /* offset from name */
-> >>> +                     __u64 addr;
-> >>> +                     __u32 flags;
-> >>> +             } kprobe; /* BPF_LINK_PERF_EVENT_KPROBE */
-> >>> +             struct {
-> >>> +                     __aligned_u64 tp_name;   /* in/out: buff ptr */
-> >>> +                     __u32 name_len;
-> >>> +             } tracepoint; /* BPF_LINK_PERF_EVENT_TRACEPOINT */
-> >>>        };
-> >>> +     __u32 perf_link_type; /* enum bpf_perf_link_type */
-> >>
-> >> I think put perf_link_type into each indivual struct is better.
-> >> It won't increase the bpf_link_info struct size. It will allow
-> >> extensions for all structs in the big union (raw_tracepoint,
-> >> tracing, cgroup, iter, ..., kprobe_multi, ...) etc.
-> >
-> > If we put it into each individual struct, we have to choose one
-> > specific struct to get the type before we use the real struct, for
-> > example,
-> >      if (info.perf_event.type =3D=3D BPF_PERF_LINK_PERF_EVENT)
-> >                goto out;
-> >      if (info.perf_event.type =3D=3D BPF_PERF_LINK_TRACEPOINT &&
-> >                 !info.tracepoint.tp_name) {
-> >                 info.tracepoint.tp_name =3D (unsigned long)&buf;
-> >                 info.tracepoint.name_len =3D sizeof(buf);
-> >                 goto again;
-> >        }
-> >        ...
-> >
-> > That doesn't look perfect.
->
-> How about adding a common struct?
->
->   struct {
->         __u32 type;
->   } perf_common;
->
-> Then you check info.perf_common.type.
+Hello Valentin, thanks for the feedback!
 
-I perfer below struct,
-                struct {
-                        __u32 type; /* enum bpf_perf_link_type */
-                        union {
-                                struct {
-                                        __u64 config;
-                                        __u32 type;
-                                } perf_event; /* BPF_PERF_LINK_PERF_EVENT *=
-/
-                                struct {
-                                        __aligned_u64 file_name; /* in/out =
-*/
-                                        __u32 name_len;
-                                        __u32 offset;/* offset from file_na=
-me */
-                                        __u32 flags;
-                                } uprobe; /* BPF_PERF_LINK_UPROBE */
-                                struct {
-                                        __aligned_u64 func_name; /* in/out =
-*/
-                                        __u32 name_len;
-                                        __u32 offset;/* offset from func_na=
-me */
-                                        __u64 addr;
-                                        __u32 flags;
-                                } kprobe; /* BPF_PERF_LINK_KPROBE */
-                                struct {
-                                        __aligned_u64 tp_name;   /* in/out =
-*/
-                                        __u32 name_len;
-                                } tracepoint; /* BPF_PERF_LINK_TRACEPOINT *=
-/
-                        };
-                } perf_link;
+On Tue, May 30, 2023 at 7:36=E2=80=AFAM Valentin Schneider <vschneid@redhat=
+.com> wrote:
+>
+> On 15/05/23 15:30, Leonardo Bras wrote:
+> > @@ -375,7 +386,7 @@ static int generic_exec_single(int cpu, call_single=
+_data_t *csd)
+> >               csd_lock_record(csd);
+> >               csd_unlock(csd);
+> >               local_irq_save(flags);
+> > -             func(info);
+> > +             csd_do_func(func, info, csd);
+>
+> I'd suggest making this match the local case of
+> smp_call_function_many_cond(), IOW pass NULL as the csd when executing
+> locally.
 
-I think that would be more clear.
+Sure, done!
 
---=20
-Regards
-Yafang
+>
+> IMO this is required for postprocessing with e.g. synthetic events for CS=
+D
+> delivery measurement, otherwise we'll try to match this execution with a
+> previous CSD enqueue.
+>
+> >               csd_lock_record(NULL);
+> >               local_irq_restore(flags);
+> >               return 0;
+>
+
