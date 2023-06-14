@@ -2,132 +2,282 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A12D9EB64D8
-	for <linux-trace-kernel@archiver.kernel.org>; Wed, 14 Jun 2023 06:42:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1AA83EB64D9
+	for <linux-trace-kernel@archiver.kernel.org>; Wed, 14 Jun 2023 08:33:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233996AbjFNGmz (ORCPT
+        id S243263AbjFNIdw (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Wed, 14 Jun 2023 02:42:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51126 "EHLO
+        Wed, 14 Jun 2023 04:33:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58918 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233721AbjFNGmx (ORCPT
+        with ESMTP id S243633AbjFNIdp (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Wed, 14 Jun 2023 02:42:53 -0400
-Received: from mail-wr1-x430.google.com (mail-wr1-x430.google.com [IPv6:2a00:1450:4864:20::430])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 40C841A3;
-        Tue, 13 Jun 2023 23:42:52 -0700 (PDT)
-Received: by mail-wr1-x430.google.com with SMTP id ffacd0b85a97d-310b631c644so512977f8f.0;
-        Tue, 13 Jun 2023 23:42:52 -0700 (PDT)
+        Wed, 14 Jun 2023 04:33:45 -0400
+Received: from mail-wm1-x333.google.com (mail-wm1-x333.google.com [IPv6:2a00:1450:4864:20::333])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C1EB41BD3
+        for <linux-trace-kernel@vger.kernel.org>; Wed, 14 Jun 2023 01:33:42 -0700 (PDT)
+Received: by mail-wm1-x333.google.com with SMTP id 5b1f17b1804b1-3f8d0d684f3so3053425e9.2
+        for <linux-trace-kernel@vger.kernel.org>; Wed, 14 Jun 2023 01:33:42 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1686724970; x=1689316970;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=tmdEkfLeOgGxB3Q9AIBuyne+hWdSajk51LvARVCqqic=;
-        b=bb5a5z6Jj/LuTLtvf9GgxMLUdTQKDG9xeM7fb/9DhVTvbOQKwhKhvRsQMx1mdV2EjB
-         1P1WkD89YMLWXoxF+UwharvRk/SKA7mUfMVJfNFjC4d9OUKfaXXNfIA5/Bd8uslIZsl+
-         Ws1hNMvTtkDo+0qMpEohZjQcDN8yi2ovWMhhUr/yp5mozx0+W8Skh3v4qezHtBvGCIBX
-         rHpgy+cj6mSVBcVcG4Csjd4PAdhmC9RGNvUauCMEQ9SZlSTEMrTTElvsxN1UuAylahXP
-         O4DtqU8Ua2KvLTzIUhJTmHeNjP+9uNWR1ZTTon7DfunYdZlhzhcygzd3g9c6+6uv7X1A
-         cFAA==
+        d=isovalent.com; s=google; t=1686731621; x=1689323621;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=kRpCXoZix0pOWS728xP7zdE75KY3Fmxsvn5IvxdZ5gQ=;
+        b=FSiBWwRkjVYFMKCNKi9FE762JYyR8MUIfSIrKN5jU+ikKdC5Uq7nXjwnBiz94w+sSN
+         w0G3Gk2/xNMgbyqPUm1vpzYSK0PC9Mi5cJBkszkPRFeEaKtc51S2nSb21x0pbyIPSRnQ
+         aO/6fuetP9lb5cVhd83pK7KzHXLEuoOa2/jnWDT1TUrPYbrZVfIyI2bRJjIdgH/6bIoX
+         D/7xGNs7p3mSOKKRPLdkDE+kdEPFT6dU34lwh1CaacriDIKYbKuE5u4Dc4nNNPhC1Y+I
+         v6ZPyd60ziEV4WgUmI0QG265UpAJZIMZ6c5g2AqrzNhR7YVBzmSQLlr/dRUAJtL6QzhJ
+         k72w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1686724970; x=1689316970;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=tmdEkfLeOgGxB3Q9AIBuyne+hWdSajk51LvARVCqqic=;
-        b=TeZaeLd6akPXSwsJmgC/f0+I0FDjtGBJWghA/1VPUTwyo70T1fVmp48vJHs41MMjeU
-         Qu9WL/UatFer+yzcbrNDkMZ7BqGV0tU3an6KAz2N729eEGquk2YbzLgKe+2P/at7fbx2
-         QCa8V6oZy7rYConIKeXCJx3lzdMcSXyhApBvZhbu0Hb2uAiRt0zq0NeJz2WDeUqXLj9N
-         AWKhyd1L8df8LVs0OiYgGNdwIkZJufoRSnB5Uk6ZNsR8PXrFSn+tovZhbPfwhVghbINB
-         Ex8ohdHLj0wbM4ws5Wz7ocafmnYUS0UorBLmJSRcAV/HWTqxdZmVfa2wqd0rhyHSmydM
-         34Gw==
-X-Gm-Message-State: AC+VfDw7mH6SdqRKWglSaVdVQ8KnHlsUarv3raVR6VsQ7UJ6JGkkTM5u
-        iN+AgsaT5DfMJuJdnjza9Z4=
-X-Google-Smtp-Source: ACHHUZ6TYA0Ii1kImtzYdAbRoLNit9gVczXVEMxUjSMRl8RC/73ZOWvWsBHLwgdfFVWQ0ksjSQy/xg==
-X-Received: by 2002:a05:6000:46:b0:301:8551:446a with SMTP id k6-20020a056000004600b003018551446amr10343725wrx.2.1686724970365;
-        Tue, 13 Jun 2023 23:42:50 -0700 (PDT)
-Received: from krava (2001-1ae9-1c2-4c00-726e-c10f-8833-ff22.ip6.tmcz.cz. [2001:1ae9:1c2:4c00:726e:c10f:8833:ff22])
-        by smtp.gmail.com with ESMTPSA id e17-20020a05600c219100b003f18b942338sm16490823wme.3.2023.06.13.23.42.49
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 13 Jun 2023 23:42:49 -0700 (PDT)
-From:   Jiri Olsa <olsajiri@gmail.com>
-X-Google-Original-From: Jiri Olsa <jolsa@kernel.org>
-Date:   Wed, 14 Jun 2023 08:42:47 +0200
-To:     Steven Rostedt <rostedt@goodmis.org>
-Cc:     Jiri Olsa <olsajiri@gmail.com>,
-        "Masami Hiramatsu (Google)" <mhiramat@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Linux Trace Kernel <linux-trace-kernel@vger.kernel.org>,
-        bpf@vger.kernel.org
-Subject: Re: [RFC] fprobe call of rethook_try_get faults
-Message-ID: <ZIlhZ6gbhfvmZP2r@krava>
-References: <ZICzdpvp46Xk1rIv@krava>
- <20230613174844.4d50991d@gandalf.local.home>
+        d=1e100.net; s=20221208; t=1686731621; x=1689323621;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=kRpCXoZix0pOWS728xP7zdE75KY3Fmxsvn5IvxdZ5gQ=;
+        b=Mnzkb5uu8l9cy3rwjSNR1bJ+OGi+6jfSV/Kreg5XKzCQ4wIB2kpGvucsH9Mnmt78TD
+         QhHlf8tpNzMBaQCOmVifJccUghdbo4rkEYO1NSKXGX8Qb5IjFrrEVMOAIyNaDec9OmBm
+         slj8s0wN4ggh+1moA/5i/yhDwM6dMN1c2FnegrsNUdG8x1TJCOENEWZrIpAdSgfBCRvA
+         IlQus+gwPAL0CYiXUFWJiJS1dfM45pNaqo9pyIdPxE8B77Jrk04vX91AdGL7KRj6Ufw7
+         twiaag1sdPd0IOw2PXFBGGa9wWk6FaoSR+nNT5QNsDZQinuhqCX1gR1Y7TzIe5HU+rd4
+         tN0Q==
+X-Gm-Message-State: AC+VfDyqafRcpVRaOqQvsI3A2UeMsk9jBjgvEG0OcscolKWUTfFxi2bs
+        GfoqxtMPZ1+AhkPxD9mX0soiSA==
+X-Google-Smtp-Source: ACHHUZ58N58pxV7jLB0NP5FDfdcY0M4gjTYHerFcwYdZqj1QbF2Tg837vyped0uQPV3DW9HNEl+AiA==
+X-Received: by 2002:a7b:cd0d:0:b0:3f7:e497:aa03 with SMTP id f13-20020a7bcd0d000000b003f7e497aa03mr9862064wmj.28.1686731620926;
+        Wed, 14 Jun 2023 01:33:40 -0700 (PDT)
+Received: from ?IPV6:2a02:8011:e80c:0:e9c4:e1ca:ed10:31ea? ([2a02:8011:e80c:0:e9c4:e1ca:ed10:31ea])
+        by smtp.gmail.com with ESMTPSA id p7-20020a05600c204700b003f7a562ff31sm16729579wmg.6.2023.06.14.01.33.40
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 14 Jun 2023 01:33:40 -0700 (PDT)
+Message-ID: <df9ffd9e-9c0d-c3c8-b96a-c697319be1ac@isovalent.com>
+Date:   Wed, 14 Jun 2023 09:33:39 +0100
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230613174844.4d50991d@gandalf.local.home>
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.12.0
+Subject: Re: [PATCH v3 bpf-next 03/10] bpftool: Show probed function in
+ kprobe_multi link info
+Content-Language: en-GB
+To:     Yafang Shao <laoar.shao@gmail.com>,
+        Kui-Feng Lee <sinquersw@gmail.com>
+Cc:     ast@kernel.org, daniel@iogearbox.net, john.fastabend@gmail.com,
+        andrii@kernel.org, martin.lau@linux.dev, song@kernel.org,
+        yhs@fb.com, kpsingh@kernel.org, sdf@google.com, haoluo@google.com,
+        jolsa@kernel.org, rostedt@goodmis.org, mhiramat@kernel.org,
+        bpf@vger.kernel.org, linux-trace-kernel@vger.kernel.org
+References: <20230612151608.99661-1-laoar.shao@gmail.com>
+ <20230612151608.99661-4-laoar.shao@gmail.com>
+ <06f219e8-9ae5-01a1-f955-25f556ad5077@gmail.com>
+ <CALOAHbCjmn5_E8W+JG1_KYaprBm6k0PUGDFsydHbfSDzLmFxOQ@mail.gmail.com>
+From:   Quentin Monnet <quentin@isovalent.com>
+In-Reply-To: <CALOAHbCjmn5_E8W+JG1_KYaprBm6k0PUGDFsydHbfSDzLmFxOQ@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On Tue, Jun 13, 2023 at 05:48:44PM -0400, Steven Rostedt wrote:
-> On Wed, 7 Jun 2023 09:42:30 -0700
-> Jiri Olsa <olsajiri@gmail.com> wrote:
-> 
-> > I can't really reliable reproduce this, but while checking the code, I wonder
-> > we should call rethook_free only after we call unregister_ftrace_function like
-> > in the patch below
-> 
-> Yeah, I think you're right!
-> 
-> > 
-> > jirka
-> > 
-> > 
-> > ---
-> > diff --git a/kernel/trace/fprobe.c b/kernel/trace/fprobe.c
-> > index 18d36842faf5..0121e8c0d54e 100644
-> > --- a/kernel/trace/fprobe.c
-> > +++ b/kernel/trace/fprobe.c
-> > @@ -364,19 +364,13 @@ int unregister_fprobe(struct fprobe *fp)
-> >  		    fp->ops.saved_func != fprobe_kprobe_handler))
-> >  		return -EINVAL;
-> >  
-> > -	/*
-> > -	 * rethook_free() starts disabling the rethook, but the rethook handlers
-> > -	 * may be running on other processors at this point. To make sure that all
-> > -	 * current running handlers are finished, call unregister_ftrace_function()
-> > -	 * after this.
-> > -	 */
-> > -	if (fp->rethook)
-> > -		rethook_free(fp->rethook);
-> 
-> The above only waits for RCU to finish and then starts to free rethook.
-> 
-> This also means that something could be on the trampoline already and was
-> preempted. It could be that this code path gets preempted. Anyway, I don't
-> see how freeing rethook is safe before disabling all users.
-> 
-> Reviewed-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+2023-06-14 10:42 UTC+0800 ~ Yafang Shao <laoar.shao@gmail.com>
+> On Wed, Jun 14, 2023 at 6:36=E2=80=AFAM Kui-Feng Lee <sinquersw@gmail.c=
+om> wrote:
+>>
+>>
+>>
+>> On 6/12/23 08:16, Yafang Shao wrote:
+>>> Show the already expose kprobe_multi link info in bpftool. The result=
+ as
+>>> follows,
+>>>
+>>> 52: kprobe_multi  prog 381
+>>>          retprobe 0  func_cnt 7
+>>>          addrs ffffffff9ec44f20  funcs schedule_timeout_interruptible=
 
-thanks, I'll send formal patch
+>>>                ffffffff9ec44f60        schedule_timeout_killable
+>>>                ffffffff9ec44fa0        schedule_timeout_uninterruptib=
+le
+>>>                ffffffff9ec44fe0        schedule_timeout_idle
+>>>                ffffffffc09468d0        xfs_trans_get_efd [xfs]
+>>>                ffffffffc0953a10        xfs_trans_get_buf_map [xfs]
+>>>                ffffffffc0957320        xfs_trans_get_dqtrx [xfs]
+>>>          pids kprobe_multi(559862)
+>>> 53: kprobe_multi  prog 381
+>>>          retprobe 1  func_cnt 7
+>>>          addrs ffffffff9ec44f20  funcs schedule_timeout_interruptible=
 
-jirka
+>>>                ffffffff9ec44f60        schedule_timeout_killable
+>>>                ffffffff9ec44fa0        schedule_timeout_uninterruptib=
+le
+>>>                ffffffff9ec44fe0        schedule_timeout_idle
+>>>                ffffffffc09468d0        xfs_trans_get_efd [xfs]
+>>>                ffffffffc0953a10        xfs_trans_get_buf_map [xfs]
+>>>                ffffffffc0957320        xfs_trans_get_dqtrx [xfs]
+>>>          pids kprobe_multi(559862)
+>>>
+>>> $ tools/bpf/bpftool/bpftool link show -j
+>>> [{"id":52,"type":"kprobe_multi","prog_id":381,"retprobe":0,"func_cnt"=
+:7,"funcs":[{"addr":18446744072078249760,"func":"schedule_timeout_interru=
+ptible","module":""},{"addr":18446744072078249824,"func":"schedule_timeou=
+t_killable","module":""},{"addr":18446744072078249888,"func":"schedule_ti=
+meout_uninterruptible","module":""},{"addr":18446744072078249952,"func":"=
+schedule_timeout_idle","module":""},{"addr":18446744072645535952,"func":"=
+xfs_trans_get_efd","module":"[xfs]"},{"addr":18446744072645589520,"func":=
+"xfs_trans_get_buf_map","module":"[xfs]"},{"addr":18446744072645604128,"f=
+unc":"xfs_trans_get_dqtrx","module":"[xfs]"}],"pids":[{"pid":559862,"comm=
+":"kprobe_multi"}]},{"id":53,"type":"kprobe_multi","prog_id":381,"retprob=
+e":1,"func_cnt":7,"funcs":[{"addr":18446744072078249760,"func":"schedule_=
+timeout_interruptible","module":""},{"addr":18446744072078249824,"func":"=
+schedule_timeout_killable","module":""},{"addr":18446744072078249888,"fun=
+c":"schedule_timeout_uninterruptible","module":""},{"addr":18446744072078=
+249952,"func":"schedule_timeout_idle","module":""},{"addr":18446744072645=
+535952,"func":"xfs_trans_get_efd","module":"[xfs]"},{"addr":1844674407264=
+5589520,"func":"xfs_trans_get_buf_map","module":"[xfs]"},{"addr":18446744=
+072645604128,"func":"xfs_trans_get_dqtrx","module":"[xfs]"}],"pids":[{"pi=
+d":559862,"comm":"kprobe_multi"}]}]
+>>>
+>>> Signed-off-by: Yafang Shao <laoar.shao@gmail.com>
+>>> ---
+>>>   tools/bpf/bpftool/link.c | 109 ++++++++++++++++++++++++++++++++++++=
+++++++++++-
+>>>   1 file changed, 108 insertions(+), 1 deletion(-)
+>>>
+>>> diff --git a/tools/bpf/bpftool/link.c b/tools/bpf/bpftool/link.c
+>>> index 2d78607..0015582 100644
+>>> --- a/tools/bpf/bpftool/link.c
+>>> +++ b/tools/bpf/bpftool/link.c
+>>> @@ -14,8 +14,10 @@
+>>>
+>>>   #include "json_writer.h"
+>>>   #include "main.h"
+>>> +#include "xlated_dumper.h"
+>>>
+>>>   static struct hashmap *link_table;
+>>> +static struct dump_data dd =3D {};
+>>>
+>>>   static int link_parse_fd(int *argc, char ***argv)
+>>>   {
+>>> @@ -166,6 +168,45 @@ static int get_prog_info(int prog_id, struct bpf=
+_prog_info *info)
+>>>       return err;
+>>>   }
+>>>
+>>> +static int cmp_u64(const void *A, const void *B)
+>>> +{
+>>> +     const __u64 *a =3D A, *b =3D B;
+>>> +
+>>> +     return *a - *b;
+>>> +}
+>>> +
+>>> +static void
+>>> +show_kprobe_multi_json(struct bpf_link_info *info, json_writer_t *wt=
+r)
+>>> +{
+>>> +     __u32 i, j =3D 0;
+>>> +     __u64 *addrs;
+>>> +
+>>> +     jsonw_uint_field(json_wtr, "retprobe",
+>>> +                      info->kprobe_multi.flags & BPF_F_KPROBE_MULTI_=
+RETURN);
+>>> +     jsonw_uint_field(json_wtr, "func_cnt", info->kprobe_multi.count=
+);
+>>> +     jsonw_name(json_wtr, "funcs");
+>>> +     jsonw_start_array(json_wtr);
+>>> +     addrs =3D (__u64 *)u64_to_ptr(info->kprobe_multi.addrs);
+>>> +     qsort((void *)addrs, info->kprobe_multi.count, sizeof(__u64), c=
+mp_u64);
+>>> +
+>>> +     /* Load it once for all. */
+>>> +     if (!dd.sym_count)
+>>> +             kernel_syms_load(&dd);
+>>> +     for (i =3D 0; i < dd.sym_count; i++) {
+>>> +             if (dd.sym_mapping[i].address !=3D addrs[j])
+>>> +                     continue;
+>>> +             jsonw_start_object(json_wtr);
+>>> +             jsonw_uint_field(json_wtr, "addr", dd.sym_mapping[i].ad=
+dress);
+>>> +             jsonw_string_field(json_wtr, "func", dd.sym_mapping[i].=
+name);
+>>> +             /* Print none if it is vmlinux */
+>>> +             jsonw_string_field(json_wtr, "module", dd.sym_mapping[i=
+].module);
+>>> +             jsonw_end_object(json_wtr);
+>>> +             if (j++ =3D=3D info->kprobe_multi.count)
+>>> +                     break;
+>>> +     }
+>>> +     jsonw_end_array(json_wtr);
+>>> +}
+>>> +
+>>>   static int show_link_close_json(int fd, struct bpf_link_info *info)=
 
-> 
-> -- Steve
-> 
-> 
-> > -
-> >  	ret = unregister_ftrace_function(&fp->ops);
-> >  	if (ret < 0)
-> >  		return ret;
-> >  
-> > +	if (fp->rethook)
-> > +		rethook_free(fp->rethook);
-> > +
-> >  	ftrace_free_filter(&fp->ops);
-> >  
-> >  	return ret;
-> 
+>>>   {
+>>>       struct bpf_prog_info prog_info;
+>>> @@ -218,6 +259,9 @@ static int show_link_close_json(int fd, struct bp=
+f_link_info *info)
+>>>               jsonw_uint_field(json_wtr, "map_id",
+>>>                                info->struct_ops.map_id);
+>>>               break;
+>>> +     case BPF_LINK_TYPE_KPROBE_MULTI:
+>>> +             show_kprobe_multi_json(info, json_wtr);
+>>> +             break;
+>>>       default:
+>>>               break;
+>>>       }
+>>> @@ -351,6 +395,44 @@ void netfilter_dump_plain(const struct bpf_link_=
+info *info)
+>>>               printf(" flags 0x%x", info->netfilter.flags);
+>>>   }
+>>>
+>>> +static void show_kprobe_multi_plain(struct bpf_link_info *info)
+>>> +{
+>>> +     __u32 i, j =3D 0;
+>>> +     __u64 *addrs;
+>>> +
+>>> +     if (!info->kprobe_multi.count)
+>>> +             return;
+>>> +
+>>> +     printf("\n\tretprobe %d  func_cnt %u  ",
+>>> +            info->kprobe_multi.flags & BPF_F_KPROBE_MULTI_RETURN,
+>>> +            info->kprobe_multi.count);
+>>> +     addrs =3D (__u64 *)u64_to_ptr(info->kprobe_multi.addrs);
+>>> +     qsort((void *)addrs, info->kprobe_multi.count, sizeof(__u64), c=
+mp_u64);
+>>> +
+>>> +     /* Load it once for all. */
+>>> +     if (!dd.sym_count)
+>>> +             kernel_syms_load(&dd);
+>>> +     for (i =3D 0; i < dd.sym_count; i++) {
+>>> +             if (dd.sym_mapping[i].address !=3D addrs[j])
+>>> +                     continue;
+>>> +             if (!j)
+>>> +                     printf("\n\taddrs %016lx  funcs %s",
+>>> +                            dd.sym_mapping[i].address,
+>>> +                            dd.sym_mapping[i].name);
+>>> +             else
+>>> +                     printf("\n\t      %016lx        %s",
+>>> +                            dd.sym_mapping[i].address,
+>>> +                            dd.sym_mapping[i].name);
+>>> +             if (dd.sym_mapping[i].module[0] !=3D '\0')
+>>> +                     printf(" %s  ", dd.sym_mapping[i].module);
+>>> +             else
+>>> +                     printf("  ");
+>>
+>> Could you explain what these extra spaces after module names are for?
+>=20
+> There are two spaces. We use two spaces to seperate different items
+> printed in bpftool. For example,
+>   "4: kprobe_multi  prog 16"
+> There are two spaces between the "type" and the "prog".
+>=20
+> We always print these two spaces after one item is printed:
+>   printf("type %u  ", info->type);
+>   printf("prog %u  ", info->prog_id);
+> That way, we can add new item easily and consistently.
+>=20
+
+I'm not sure we _always_ do it at the end of lines, but it seems to be
+rather consistent in link.c at least. For my part I don't know if this
+printf("  ") is really necessary - I'd rather avoid spaces at the end of
+lines, but then there would be several other locations to update. So I
+don't have any objection, either.
+
+Quentin
