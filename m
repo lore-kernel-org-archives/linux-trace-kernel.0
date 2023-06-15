@@ -2,343 +2,137 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 279D2EB64DB
-	for <linux-trace-kernel@archiver.kernel.org>; Thu, 15 Jun 2023 17:43:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CBF5EB64D9
+	for <linux-trace-kernel@archiver.kernel.org>; Thu, 15 Jun 2023 18:04:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237788AbjFORnF (ORCPT
+        id S229660AbjFOSE0 (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Thu, 15 Jun 2023 13:43:05 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50664 "EHLO
+        Thu, 15 Jun 2023 14:04:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58646 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235531AbjFORnE (ORCPT
+        with ESMTP id S230093AbjFOSEZ (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Thu, 15 Jun 2023 13:43:04 -0400
-Received: from mail-pl1-x64a.google.com (mail-pl1-x64a.google.com [IPv6:2607:f8b0:4864:20::64a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E68DB294A
-        for <linux-trace-kernel@vger.kernel.org>; Thu, 15 Jun 2023 10:42:59 -0700 (PDT)
-Received: by mail-pl1-x64a.google.com with SMTP id d9443c01a7336-1b521e4e88bso3736805ad.2
-        for <linux-trace-kernel@vger.kernel.org>; Thu, 15 Jun 2023 10:42:59 -0700 (PDT)
+        Thu, 15 Jun 2023 14:04:25 -0400
+Received: from mail-il1-x130.google.com (mail-il1-x130.google.com [IPv6:2607:f8b0:4864:20::130])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CE33C294A;
+        Thu, 15 Jun 2023 11:04:23 -0700 (PDT)
+Received: by mail-il1-x130.google.com with SMTP id e9e14a558f8ab-33aa60f4094so4118675ab.1;
+        Thu, 15 Jun 2023 11:04:23 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20221208; t=1686850979; x=1689442979;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=3VaVpYnKKIXM0ZMJBv2BahWS6rKgSDR5ikxQlp7Qm5M=;
-        b=CRqM4fJoSy0TOwQEM+dwNf4YLmN8ZNvadtNeqmejsTpkrhB3fUKCS5gVORcT3YAFGF
-         i/3D4htNDkxjLmMQr6ex9h88D9Mn3b3BcimZjQyHYDLLHrnhvGGLYYK4DnkhEsQ6CVaZ
-         cXJTMz7MEXsf3MpnUFcr6Mx0t4RSwdzHZHJMQ/Gw529RF41s9TMoKGTDzFQ40JREZYAz
-         j/q5bFPXA1TGS/pjeQnxzb2ibh5u61Yat52z5h2i3whlu/NZWmrHHKlNBlQzVnj3NGqb
-         fUd5ZYUT6Xx5VG3C07mjHJV5Ti0lFZylCk6cioTWTVk9aptHHtPLM7okEk048bn6RBzX
-         EGGw==
+        d=gmail.com; s=20221208; t=1686852263; x=1689444263;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=/u+///EcupbIJP0wmwzWwwhqxbaWqaZ46VmaNSEFYns=;
+        b=NwXE6DH7KcGFqGahn7YCqVt/g6QP3KBqz0tDM1qLmE/9igLwfk2duRLPGN/GtJn6jU
+         Rwyg0UkRwZ1rz/JdQiDm+V0VodKkd0MvXTPpa9ZZmNdDnI2sed5D2pbzoHJdBrQt2WwN
+         3Zj3ibXFxp5Fw8jGzOI6gHa8hEFGFkWBsNEOXb7vv/sGK9ZvTPetn3VooYDBErUDVhMU
+         4uClS8KpJ7vDGKrUq9uKrsPJd6fMp0YcPgvDxwMNQwYCfZdpE8rWj/caC9Q7ZVBCsBjy
+         c+LD5iDkvLmzWguOcKUiWz/Ttna8GBYaLU9zh5khbuMGyqy5ZvbKkK44CrZaJIxGVYtg
+         sRDg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1686850979; x=1689442979;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=3VaVpYnKKIXM0ZMJBv2BahWS6rKgSDR5ikxQlp7Qm5M=;
-        b=DqUEHwPX0dvLArMfz4CvdJMaHI6lpSIS0/0XZs3NI6quSQ6b1+bUG98M/abrBt5FSo
-         LhVF7vUVoByMjM6B1wuVSc9MkF2NjzNVSF1yQRPD+Dxs8JO24DNfZxlWq1OFWmVmtkW6
-         nKmJp9/VxfJ7vW6d1vNi6ATmnPiLeXoZbzxqn9BKO/Owb2dnjGxiE6oGl5pE3E09FENk
-         5/jFLK8JN5ly0d/T2ZmI0gV55vqXKh/HW5wZt56p3xAShNmD2vtdyadmF89HCuyf4zQw
-         rLPqK5w+OxK1abzuqGswbNo8DeuV6Pqj4rvhdlMLXnRB8aFviAQdYXxbmxLWD7oigfXF
-         qZJA==
-X-Gm-Message-State: AC+VfDz1nNrLHOmBMJJtzsDBJXrGaIESYa/YxLklrBdwqqPG6zwoVpTf
-        C2IFJLCL1xCgxE5SMFIIclH+ZMzggks=
-X-Google-Smtp-Source: ACHHUZ4cQlpzVe0KczazAvYqGjGYoNkXv8UVqui26XxKS9kOBWmazT/WNj+BhRRRMGskVfw0J/AilzSk6Q0=
-X-Received: from zagreus.c.googlers.com ([fda3:e722:ac3:cc00:7f:e700:c0a8:5c37])
- (user=seanjc job=sendgmr) by 2002:a17:902:f7d3:b0:1b5:147f:d8d1 with SMTP id
- h19-20020a170902f7d300b001b5147fd8d1mr547182plw.3.1686850979254; Thu, 15 Jun
- 2023 10:42:59 -0700 (PDT)
-Date:   Thu, 15 Jun 2023 10:42:57 -0700
-In-Reply-To: <20230526234435.662652-2-yuzhao@google.com>
-Mime-Version: 1.0
-References: <20230526234435.662652-1-yuzhao@google.com> <20230526234435.662652-2-yuzhao@google.com>
-Message-ID: <ZItNoeWriZgLUaon@google.com>
-Subject: Re: [PATCH mm-unstable v2 01/10] mm/kvm: add mmu_notifier_ops->test_clear_young()
-From:   Sean Christopherson <seanjc@google.com>
-To:     Yu Zhao <yuzhao@google.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Alistair Popple <apopple@nvidia.com>,
-        Anup Patel <anup@brainfault.org>,
-        Ben Gardon <bgardon@google.com>,
-        Borislav Petkov <bp@alien8.de>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Chao Peng <chao.p.peng@linux.intel.com>,
-        Christophe Leroy <christophe.leroy@csgroup.eu>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Fabiano Rosas <farosas@linux.ibm.com>,
-        Gaosheng Cui <cuigaosheng1@huawei.com>,
-        Gavin Shan <gshan@redhat.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
-        James Morse <james.morse@arm.com>,
-        "Jason A. Donenfeld" <Jason@zx2c4.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Marc Zyngier <maz@kernel.org>,
+        d=1e100.net; s=20221208; t=1686852263; x=1689444263;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=/u+///EcupbIJP0wmwzWwwhqxbaWqaZ46VmaNSEFYns=;
+        b=g9C+73OTJQaedG0T/sQbjASxELabJ8FbzYTJ7lQyGuY7HQGVIfT9h1F+MMy/w6j9d+
+         Podoq7q9VKoXOcrMxANiYh+xhSlNFikKtBNBpgkBOG3JK4yB970g61PLjGsbkXadEJ1j
+         LGmu/uPwVskRw3xfyaGNEuBiL1DH5Xx9lIP/E94guZBcEn3P4/6bTTbr6UPl6O72WtM5
+         QINSGORrJQwqcgAtLprkfX8lJGyrOJ8luUeK+Ylso5ozwR/Yt0klmqeIrInQ4ooWeLrv
+         j2MSUU1NFh0ytUhZRFXkgbiOqemALza/KSuORiwuNxaRahZh0+caYIHqO6GvxuUKdwBP
+         0LFg==
+X-Gm-Message-State: AC+VfDxAuB4G9rJw6TljM1awSVGKCBv0WfRmnVHHfttieDnWNqVKVsCy
+        iB0pA1gf0eVA2qVotfnyi4U=
+X-Google-Smtp-Source: ACHHUZ7zHUNNjFwo+XUa1IpVOBDaASLdVU8eFLjZMuf3xpn0Ypd/YbViRraMO9er1ZfPRv82PKSxMg==
+X-Received: by 2002:a05:6e02:ca9:b0:341:df27:8a97 with SMTP id 9-20020a056e020ca900b00341df278a97mr781250ilg.12.1686852262994;
+        Thu, 15 Jun 2023 11:04:22 -0700 (PDT)
+Received: from azeems-kspp.c.googlers.com.com (54.70.188.35.bc.googleusercontent.com. [35.188.70.54])
+        by smtp.gmail.com with ESMTPSA id a11-20020a92a30b000000b0033ce0ef231bsm3039027ili.23.2023.06.15.11.04.22
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 15 Jun 2023 11:04:22 -0700 (PDT)
+From:   Azeem Shaikh <azeemshaikh38@gmail.com>
+To:     Steven Rostedt <rostedt@goodmis.org>,
         Masami Hiramatsu <mhiramat@kernel.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Michael Larabel <michael@michaellarabel.com>,
-        Mike Rapoport <rppt@kernel.org>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        Oliver Upton <oliver.upton@linux.dev>,
-        Paul Mackerras <paulus@ozlabs.org>,
-        Peter Xu <peterx@redhat.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Thomas Huth <thuth@redhat.com>, Will Deacon <will@kernel.org>,
-        Zenghui Yu <yuzenghui@huawei.com>, kvmarm@lists.linux.dev,
-        kvm@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-mm@kvack.org, linuxppc-dev@lists.ozlabs.org,
-        linux-trace-kernel@vger.kernel.org, x86@kernel.org,
-        linux-mm@google.com
-Content-Type: text/plain; charset="us-ascii"
+        Kees Cook <keescook@chromium.org>,
+        Eric Biggers <ebiggers@kernel.org>
+Cc:     linux-hardening@vger.kernel.org,
+        Azeem Shaikh <azeemshaikh38@gmail.com>,
+        linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
+Subject: [PATCH v2] tracing/boot: Replace strlcpy with strscpy
+Date:   Thu, 15 Jun 2023 18:04:20 +0000
+Message-ID: <20230615180420.400769-1-azeemshaikh38@gmail.com>
+X-Mailer: git-send-email 2.41.0.162.gfafddb0af9-goog
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On Fri, May 26, 2023, Yu Zhao wrote:
-> diff --git a/include/linux/kvm_host.h b/include/linux/kvm_host.h
-> index 0e571e973bc2..374262545f96 100644
-> --- a/include/linux/kvm_host.h
-> +++ b/include/linux/kvm_host.h
-> @@ -258,6 +258,7 @@ int kvm_async_pf_wakeup_all(struct kvm_vcpu *vcpu);
->  #ifdef KVM_ARCH_WANT_MMU_NOTIFIER
->  struct kvm_gfn_range {
->  	struct kvm_memory_slot *slot;
-> +	void *args;
+strlcpy() reads the entire source buffer first.
+This read may exceed the destination size limit.
+This is both inefficient and can lead to linear read
+overflows if a source string is not NUL-terminated [1].
+In an effort to remove strlcpy() completely [2], replace
+strlcpy() here with strscpy().
 
-There's no reason to make this "void *", just declare "struct test_clear_young_args"
-in the header.  Arch code won't be able to use it regardless.  And I vote for
-something more like "test_clear_young_metadata", as there's far more information
-in there than just function arguments.
+Direct replacement is safe here since return value of -errno
+is used to check for truncation instead of sizeof(dest).
 
-And to stave off the argument that "void *" would allow reuse, take this opportunity
-to unionize the test_clear_young field with the change_pte field, e.g.
+[1] https://www.kernel.org/doc/html/latest/process/deprecated.html#strlcpy
+[2] https://github.com/KSPP/linux/issues/89
 
-	/* comment about these fields being callback specific. */
-	union {
-		struct test_clear_young_metadata *metadata;
-		pte_t pte;
-		unsigned long callback_arg; /* needs a better name */
-	};
-
-> diff --git a/virt/kvm/kvm_main.c b/virt/kvm/kvm_main.c
-> index 51e4882d0873..31ee58754b19 100644
-> --- a/virt/kvm/kvm_main.c
-> +++ b/virt/kvm/kvm_main.c
-> @@ -541,6 +541,7 @@ typedef void (*on_lock_fn_t)(struct kvm *kvm, unsigned long start,
->  typedef void (*on_unlock_fn_t)(struct kvm *kvm);
->  
->  struct kvm_hva_range {
-> +	void *args;
-
-Same feedback as kvm_gfn_range.
-
->  	unsigned long start;
->  	unsigned long end;
->  	pte_t pte;
-> @@ -549,6 +550,7 @@ struct kvm_hva_range {
->  	on_unlock_fn_t on_unlock;
->  	bool flush_on_ret;
->  	bool may_block;
-> +	bool lockless;
->  };
->  
->  /*
-> @@ -602,6 +604,8 @@ static __always_inline int __kvm_handle_hva_range(struct kvm *kvm,
->  			hva_end = min(range->end, slot->userspace_addr +
->  						  (slot->npages << PAGE_SHIFT));
->  
-> +			gfn_range.args = range->args;
-
-And this goes away because the generic callback_arg is what gets propagated.
-
-> +
->  			/*
->  			 * To optimize for the likely case where the address
->  			 * range is covered by zero or one memslots, don't
-> @@ -619,7 +623,7 @@ static __always_inline int __kvm_handle_hva_range(struct kvm *kvm,
->  			gfn_range.end = hva_to_gfn_memslot(hva_end + PAGE_SIZE - 1, slot);
->  			gfn_range.slot = slot;
->  
-> -			if (!locked) {
-> +			if (!range->lockless && !locked) {
->  				locked = true;
->  				KVM_MMU_LOCK(kvm);
->  				if (!IS_KVM_NULL_FN(range->on_lock))
-> @@ -628,6 +632,9 @@ static __always_inline int __kvm_handle_hva_range(struct kvm *kvm,
->  					break;
->  			}
->  			ret |= range->handler(kvm, &gfn_range);
-> +
-> +			if (range->lockless && ret)
-
-I don't like overloading "lockless" to also mean "stop on ret".  Just add another
-flag, there's literally no cost for most callbacks as everything is constant at
-compile time and gets optimized away.
-
-> +		range.args = &args;
-> +		range.lockless = true;
-
-The lockless and stop_on_ret behavior needs comments.
-
-> +		range.handler = kvm_arch_test_clear_young;
-> +
-> +		if (!__kvm_handle_hva_range(kvm, &range))
-> +			return args.young ? MMU_NOTIFIER_RANGE_LOCKLESS : 0;
-> +	}
-> +
-> +	if (bitmap)
-> +		return 0;
-> +
-> +	range.args = NULL;
-> +	range.lockless = false;
-
-No need to manually clear these, they'll be zeroed by the initialization code.
-
-E.g. all in all, something like so
-
+Signed-off-by: Azeem Shaikh <azeemshaikh38@gmail.com>
 ---
- include/linux/kvm_host.h |  9 +++++++--
- virt/kvm/kvm_main.c      | 29 +++++++++++++++++------------
- 2 files changed, 24 insertions(+), 14 deletions(-)
+v2:
+ * Use "< 0" instead of -E2BIG.
 
-diff --git a/include/linux/kvm_host.h b/include/linux/kvm_host.h
-index 7a0922cbc36f..e04605061f5e 100644
---- a/include/linux/kvm_host.h
-+++ b/include/linux/kvm_host.h
-@@ -256,12 +256,17 @@ int kvm_async_pf_wakeup_all(struct kvm_vcpu *vcpu);
- #endif
+v1:
+ * https://lore.kernel.org/all/20230613004125.3539934-1-azeemshaikh38@gmail.com/
+
+ kernel/trace/trace_boot.c |    8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
+
+diff --git a/kernel/trace/trace_boot.c b/kernel/trace/trace_boot.c
+index 778200dd8ede..7ccc7a8e155b 100644
+--- a/kernel/trace/trace_boot.c
++++ b/kernel/trace/trace_boot.c
+@@ -31,7 +31,7 @@ trace_boot_set_instance_options(struct trace_array *tr, struct xbc_node *node)
  
- #ifdef KVM_ARCH_WANT_MMU_NOTIFIER
-+struct test_clear_young_metadata;
-+
- struct kvm_gfn_range {
- 	struct kvm_memory_slot *slot;
--	void *args;
- 	gfn_t start;
- 	gfn_t end;
--	pte_t pte;
-+	union {
-+		struct test_clear_young_metadata *metadata;
-+		pte_t pte;
-+		unsigned long callback_arg;
-+	};
- 	bool may_block;
- };
- 
-diff --git a/virt/kvm/kvm_main.c b/virt/kvm/kvm_main.c
-index ac83cfb30771..8cf4fee9cd8b 100644
---- a/virt/kvm/kvm_main.c
-+++ b/virt/kvm/kvm_main.c
-@@ -536,16 +536,20 @@ typedef void (*on_lock_fn_t)(struct kvm *kvm, unsigned long start,
- typedef void (*on_unlock_fn_t)(struct kvm *kvm);
- 
- struct kvm_hva_range {
--	void *args;
- 	unsigned long start;
- 	unsigned long end;
--	pte_t pte;
- 	hva_handler_t handler;
-+	union {
-+		struct test_clear_young_metadata *metadata;
-+		pte_t pte;
-+		unsigned long callback_arg;
-+	};
- 	on_lock_fn_t on_lock;
- 	on_unlock_fn_t on_unlock;
- 	bool flush_on_ret;
- 	bool may_block;
- 	bool lockless;
-+	bool stop_on_ret;
- };
- 
- /*
-@@ -576,6 +580,9 @@ static __always_inline int __kvm_handle_hva_range(struct kvm *kvm,
- 	struct kvm_memslots *slots;
- 	int i, idx;
- 
-+	BUILD_BUG_ON(sizeof(gfn_range.callback_arg) != sizeof(gfn_range.pte) ||
-+		     sizeof(gfn_range.callback_arg) != sizeof(gfn_range.metadata));
-+
- 	if (WARN_ON_ONCE(range->end <= range->start))
- 		return 0;
- 
-@@ -599,16 +606,14 @@ static __always_inline int __kvm_handle_hva_range(struct kvm *kvm,
- 			hva_end = min(range->end, slot->userspace_addr +
- 						  (slot->npages << PAGE_SHIFT));
- 
--			gfn_range.args = range->args;
--
- 			/*
- 			 * To optimize for the likely case where the address
- 			 * range is covered by zero or one memslots, don't
- 			 * bother making these conditional (to avoid writes on
- 			 * the second or later invocation of the handler).
- 			 */
--			gfn_range.pte = range->pte;
- 			gfn_range.may_block = range->may_block;
-+			gfn_range.callback_arg = range->callback_arg;
- 
- 			/*
- 			 * {gfn(page) | page intersects with [hva_start, hva_end)} =
-@@ -628,7 +633,8 @@ static __always_inline int __kvm_handle_hva_range(struct kvm *kvm,
- 			}
- 			ret |= range->handler(kvm, &gfn_range);
- 
--			if (range->lockless && ret)
-+			/* comment goes here. */
-+			if (range->stop_on_ret && ret)
- 				break;
+ 	/* Common ftrace options */
+ 	xbc_node_for_each_array_value(node, "options", anode, p) {
+-		if (strlcpy(buf, p, ARRAY_SIZE(buf)) >= ARRAY_SIZE(buf)) {
++		if (strscpy(buf, p, ARRAY_SIZE(buf)) < 0) {
+ 			pr_err("String is too long: %s\n", p);
+ 			continue;
  		}
- 	}
-@@ -830,7 +836,7 @@ static int kvm_mmu_notifier_clear_flush_young(struct mmu_notifier *mn,
- 	return kvm_handle_hva_range(mn, start, end, __pte(0), kvm_age_gfn);
- }
+@@ -87,7 +87,7 @@ trace_boot_enable_events(struct trace_array *tr, struct xbc_node *node)
+ 	const char *p;
  
--struct test_clear_young_args {
-+struct test_clear_young_metadata {
- 	unsigned long *bitmap;
- 	unsigned long end;
- 	bool clear;
-@@ -839,7 +845,7 @@ struct test_clear_young_args {
+ 	xbc_node_for_each_array_value(node, "events", anode, p) {
+-		if (strlcpy(buf, p, ARRAY_SIZE(buf)) >= ARRAY_SIZE(buf)) {
++		if (strscpy(buf, p, ARRAY_SIZE(buf)) < 0) {
+ 			pr_err("String is too long: %s\n", p);
+ 			continue;
+ 		}
+@@ -486,7 +486,7 @@ trace_boot_init_one_event(struct trace_array *tr, struct xbc_node *gnode,
  
- bool kvm_should_clear_young(struct kvm_gfn_range *range, gfn_t gfn)
- {
--	struct test_clear_young_args *args = range->args;
-+	struct test_clear_young_metadata *args = range->metadata;
+ 	p = xbc_node_find_value(enode, "filter", NULL);
+ 	if (p && *p != '\0') {
+-		if (strlcpy(buf, p, ARRAY_SIZE(buf)) >= ARRAY_SIZE(buf))
++		if (strscpy(buf, p, ARRAY_SIZE(buf)) < 0)
+ 			pr_err("filter string is too long: %s\n", p);
+ 		else if (apply_event_filter(file, buf) < 0)
+ 			pr_err("Failed to apply filter: %s\n", buf);
+@@ -494,7 +494,7 @@ trace_boot_init_one_event(struct trace_array *tr, struct xbc_node *gnode,
  
- 	VM_WARN_ON_ONCE(gfn < range->start || gfn >= range->end);
- 
-@@ -880,14 +886,15 @@ static int kvm_mmu_notifier_test_clear_young(struct mmu_notifier *mn, struct mm_
- 	trace_kvm_age_hva(start, end);
- 
- 	if (kvm_test_clear_young) {
--		struct test_clear_young_args args = {
-+		struct test_clear_young_metadata args = {
- 			.bitmap	= bitmap,
- 			.end	= end,
- 			.clear	= clear,
- 		};
- 
--		range.args = &args;
- 		range.lockless = true;
-+		range.stop_on_ret = true;
-+		range.metadata = &args;
- 		range.handler = kvm_test_clear_young;
- 
- 		if (!__kvm_handle_hva_range(kvm, &range))
-@@ -897,8 +904,6 @@ static int kvm_mmu_notifier_test_clear_young(struct mmu_notifier *mn, struct mm_
- 	if (bitmap)
- 		return 0;
- 
--	range.args = NULL;
--	range.lockless = false;
- 	range.handler = clear ? kvm_age_gfn : kvm_test_age_gfn;
- 
- 	return __kvm_handle_hva_range(kvm, &range) ? MMU_NOTIFIER_RANGE_YOUNG : 0;
-
-base-commit: 7a5d8be2c18415b73b9380741095f439d6983a40
+ 	if (IS_ENABLED(CONFIG_HIST_TRIGGERS)) {
+ 		xbc_node_for_each_array_value(enode, "actions", anode, p) {
+-			if (strlcpy(buf, p, ARRAY_SIZE(buf)) >= ARRAY_SIZE(buf))
++			if (strscpy(buf, p, ARRAY_SIZE(buf)) < 0)
+ 				pr_err("action string is too long: %s\n", p);
+ 			else if (trigger_process_regex(file, buf) < 0)
+ 				pr_err("Failed to apply an action: %s\n", p);
 -- 
+2.41.0.162.gfafddb0af9-goog
+
 
