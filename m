@@ -2,100 +2,187 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B3561EB64DA
-	for <linux-trace-kernel@archiver.kernel.org>; Thu, 15 Jun 2023 18:09:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F782EB64DC
+	for <linux-trace-kernel@archiver.kernel.org>; Thu, 15 Jun 2023 18:26:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236173AbjFOSJP (ORCPT
+        id S229842AbjFOS0z (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Thu, 15 Jun 2023 14:09:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60324 "EHLO
+        Thu, 15 Jun 2023 14:26:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38662 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S237546AbjFOSJA (ORCPT
+        with ESMTP id S229700AbjFOS0z (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Thu, 15 Jun 2023 14:09:00 -0400
-Received: from mail-wr1-x42e.google.com (mail-wr1-x42e.google.com [IPv6:2a00:1450:4864:20::42e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5E0DB2978;
-        Thu, 15 Jun 2023 11:08:59 -0700 (PDT)
-Received: by mail-wr1-x42e.google.com with SMTP id ffacd0b85a97d-307d58b3efbso6040223f8f.0;
-        Thu, 15 Jun 2023 11:08:59 -0700 (PDT)
+        Thu, 15 Jun 2023 14:26:55 -0400
+Received: from mail-pl1-x64a.google.com (mail-pl1-x64a.google.com [IPv6:2607:f8b0:4864:20::64a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 32F2B1BF9
+        for <linux-trace-kernel@vger.kernel.org>; Thu, 15 Jun 2023 11:26:53 -0700 (PDT)
+Received: by mail-pl1-x64a.google.com with SMTP id d9443c01a7336-1b4fe2d438bso16627235ad.1
+        for <linux-trace-kernel@vger.kernel.org>; Thu, 15 Jun 2023 11:26:53 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1686852538; x=1689444538;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=X3eNHuBwA4/Xh/5OxuPE103hqMngMlGAmXZaUXgFWmU=;
-        b=D471ChgwfJ68SiQheJFmqdRP4BL4u0/AlkXDuax25+AZY6PpFAaRAIWHaJjrwEfrB3
-         2hCnUHfGnI2p7hxvztIbONYI/fIoWU8Yu1FZsipMF5nHCkH7Kn89cAHfiFLtJdJQ0AlE
-         6Xsoi53Vwlp6AyPQVa6lzRMl6wltWtT001eTCmDIpBLAwFQvJ1A9hFkH5A8l5AGUDF8t
-         YFUKz9fkDssqgklQoC87ngdNu6tS710/6QZIJQE5VuI1DAqU7T/utVtNvFVd+IwqoHJ7
-         D9n7DjwzX217NPHOyegakfFrh7VGaaCkdJz7YPDQzkB7cP8iPUDf+xPXtD3vVBG8Ogr3
-         NBXA==
+        d=google.com; s=20221208; t=1686853612; x=1689445612;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=v5j0wCZPnfsM4/SjEwwVDfexZdOw0uK6iqseA0HQUzE=;
+        b=pVetr2jEMF5lF1mCTvADonXqP6bFE0nxsdmxOn0ASTw2/bFTnBCX3GM5/ND7idJYcK
+         WLJ9v5Jtgv7YkQ2t1A7zr6BtWjGAUd3nGNd07s8rKjBzK87V1SPxXbBBFz/A0h4/TJ+6
+         PGmBMXeXE9iwEFyxsQoXFCV8sBkm29Ah7+IBIGN34Rgv+Rsgl1RNt8i9bBt7KJ4b5QVP
+         kObHHMIWjacSwTjfHlphojvQG6ZoJtxmutK76LuVb5zNph2otTKjSu6e9v7dG85CX5qp
+         /ZUeWSJZa6+15VCNA95293lQnjitxNStYywqEhGfprGR2cMKGHH5r/UDSXD2EdD+dK2Z
+         XA6g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1686852538; x=1689444538;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=X3eNHuBwA4/Xh/5OxuPE103hqMngMlGAmXZaUXgFWmU=;
-        b=GSZI/J6CCoQt8OxoTMNtwGdQwuGJQ91/UdDLqw7ZaFUq01DatXX9do2ClEOd4YmqPj
-         Z+uC3sBqNt0e+Ksjb5ahoYWY74TpXO680AOkFvlMJD/IEhH4veIZ9jI9Aodty83PzSyq
-         XLdMEDDYobNjYhL5iOKipuW4Oi/RPuV387mO1Z812HVFrx1MR0WYMBDl7DLpV0blQ6sh
-         fpI8f90UWsELHvTCvNbJmOEfQaB3JtjSUWVdtr6YEzIoWQhPfKOHhj6aFTNVuQBOKO0x
-         KsSHJaZM07Sqgf0hRF+2HwcRw7lZgCB+0jSjchELqOYx2gdZro5mS00nFCya8se8m2uu
-         RHdw==
-X-Gm-Message-State: AC+VfDyuf+XwW18xn41uGz1AlvtWL1bEfGu1KnYusQrBJyCCQooPRQef
-        Ui44smn8NSmh0Ka7E7EUHRPoEjwVBvhcpEJUD7Q=
-X-Google-Smtp-Source: ACHHUZ7N5KmIyc/eNAUi8a4eUiuM2tRF9hBjkAYMCMidtVpcyL1HJSRK4q7vY72yTHMitNHQhDFj052a9fSViMgTBYw=
-X-Received: by 2002:adf:f1d0:0:b0:30e:3ccf:d4b1 with SMTP id
- z16-20020adff1d0000000b0030e3ccfd4b1mr11349449wro.4.1686852537627; Thu, 15
- Jun 2023 11:08:57 -0700 (PDT)
-MIME-Version: 1.0
-References: <20230613004125.3539934-1-azeemshaikh38@gmail.com>
- <202306131227.26F90584F7@keescook> <CADmuW3WeRG-_WsFVCogRzRNXoqtVr+gA84ryqDZ2URUu3wh6Tg@mail.gmail.com>
- <20230614171330.GA1146@sol.localdomain>
-In-Reply-To: <20230614171330.GA1146@sol.localdomain>
-From:   Azeem Shaikh <azeemshaikh38@gmail.com>
-Date:   Thu, 15 Jun 2023 14:08:46 -0400
-Message-ID: <CADmuW3UyFY8cnf=S9hVMsYrqOyYAn5hCQ258uVpaz9J-6qaw6g@mail.gmail.com>
-Subject: Re: [PATCH] tracing/boot: Replace strlcpy with strscpy
-To:     Eric Biggers <ebiggers@kernel.org>
-Cc:     Kees Cook <keescook@chromium.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
+        d=1e100.net; s=20221208; t=1686853612; x=1689445612;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=v5j0wCZPnfsM4/SjEwwVDfexZdOw0uK6iqseA0HQUzE=;
+        b=eE83/sED+swPPceE70wDNKv9sDiFym/oGQJGUmxz+7fERGGkg34j7VUqGpeNwzbzGw
+         JmgUt05Nd9GuIVwQnXrpPv70GIJM8jgbC/4DsPGmBxXkRSk2T6Qmsib0vLFFsjGAk5j9
+         ZdAaCPOboXANhdE04uZrDnERsJHk8ejFvVPcIfENZ2hms6DRURqyZUfNX8z7jMvG4t+A
+         5dbVQLqu/debWA0j+KShYvHlaTITyVUdrU/41r2+muZngO7D1S4g4W+GHv/pEf6O1zAf
+         aTBtaGeOxuiohnzGO44dPBBYhzm4Akl0n1qS9k6roV186I7TvUeMHvhl5qCzwMuSRKQj
+         KU9A==
+X-Gm-Message-State: AC+VfDy4F76eXw9VfTbVVmQ8F2ne/MvNAgcGWOAa5bifMhwV547gHZiZ
+        TriACFspcvlzqxGvidnfYgltT6j7USU=
+X-Google-Smtp-Source: ACHHUZ4XblfvtELYfPfTXYv/mZguDzYqVYK+D/wTZAy9MdyrQSECLLlB+UmOM8NMKOmXv6Fwf6a/c1+W5jI=
+X-Received: from zagreus.c.googlers.com ([fda3:e722:ac3:cc00:7f:e700:c0a8:5c37])
+ (user=seanjc job=sendgmr) by 2002:a17:902:a70f:b0:1b5:64:1862 with SMTP id
+ w15-20020a170902a70f00b001b500641862mr893196plq.9.1686853612603; Thu, 15 Jun
+ 2023 11:26:52 -0700 (PDT)
+Date:   Thu, 15 Jun 2023 11:26:51 -0700
+In-Reply-To: <20230526234435.662652-10-yuzhao@google.com>
+Mime-Version: 1.0
+References: <20230526234435.662652-1-yuzhao@google.com> <20230526234435.662652-10-yuzhao@google.com>
+Message-ID: <ZItX64Bbx5vdjo9M@google.com>
+Subject: Re: [PATCH mm-unstable v2 09/10] kvm/x86: add kvm_arch_test_clear_young()
+From:   Sean Christopherson <seanjc@google.com>
+To:     Yu Zhao <yuzhao@google.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Alistair Popple <apopple@nvidia.com>,
+        Anup Patel <anup@brainfault.org>,
+        Ben Gardon <bgardon@google.com>,
+        Borislav Petkov <bp@alien8.de>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Chao Peng <chao.p.peng@linux.intel.com>,
+        Christophe Leroy <christophe.leroy@csgroup.eu>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Fabiano Rosas <farosas@linux.ibm.com>,
+        Gaosheng Cui <cuigaosheng1@huawei.com>,
+        Gavin Shan <gshan@redhat.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
+        James Morse <james.morse@arm.com>,
+        "Jason A. Donenfeld" <Jason@zx2c4.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Marc Zyngier <maz@kernel.org>,
         Masami Hiramatsu <mhiramat@kernel.org>,
-        linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-trace-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Michael Larabel <michael@michaellarabel.com>,
+        Mike Rapoport <rppt@kernel.org>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        Oliver Upton <oliver.upton@linux.dev>,
+        Paul Mackerras <paulus@ozlabs.org>,
+        Peter Xu <peterx@redhat.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Thomas Huth <thuth@redhat.com>, Will Deacon <will@kernel.org>,
+        Zenghui Yu <yuzenghui@huawei.com>, kvmarm@lists.linux.dev,
+        kvm@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org, linuxppc-dev@lists.ozlabs.org,
+        linux-trace-kernel@vger.kernel.org, x86@kernel.org,
+        linux-mm@google.com
+Content-Type: text/plain; charset="us-ascii"
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On Wed, Jun 14, 2023 at 1:13=E2=80=AFPM Eric Biggers <ebiggers@kernel.org> =
-wrote:
->
-> On Wed, Jun 14, 2023 at 10:01:57AM -0400, Azeem Shaikh wrote:
-> > On Tue, Jun 13, 2023 at 3:27=E2=80=AFPM Kees Cook <keescook@chromium.or=
-g> wrote:
-> > >
-> > > On Tue, Jun 13, 2023 at 12:41:25AM +0000, Azeem Shaikh wrote:
-> > > > strlcpy() reads the entire source buffer first.
-> > > > This read may exceed the destination size limit.
-> > > > This is both inefficient and can lead to linear read
-> > > > overflows if a source string is not NUL-terminated [1].
-> > > > In an effort to remove strlcpy() completely [2], replace
-> > > > strlcpy() here with strscpy().
-> > > >
-> > > > Direct replacement is safe here since return value of -E2BIG
-> > > > is used to check for truncation instead of sizeof(dest).
-> > >
-> > > This looks technically correct, but I wonder if "< 0" is a better tes=
-t?
-> >
-> > Agreed. "< 0" might more generically represent -errno. Happy to send
-> > over a v2 if you prefer that instead of sticking with this patch.
->
-> Please go with "< 0", since it's easier to read and less error-prone.  (I=
-t would
-> be easy to mistype -E2BIG as -EFBIG, or E2BIG, for example...)
->
+On Fri, May 26, 2023, Yu Zhao wrote:
+> diff --git a/arch/x86/kvm/mmu/tdp_mmu.c b/arch/x86/kvm/mmu/tdp_mmu.c
+> index 08340219c35a..6875a819e007 100644
+> --- a/arch/x86/kvm/mmu/tdp_mmu.c
+> +++ b/arch/x86/kvm/mmu/tdp_mmu.c
+> @@ -1232,6 +1232,40 @@ bool kvm_tdp_mmu_test_age_gfn(struct kvm *kvm, struct kvm_gfn_range *range)
+>  	return kvm_tdp_mmu_handle_gfn(kvm, range, test_age_gfn);
+>  }
+>  
+> +bool kvm_arch_test_clear_young(struct kvm *kvm, struct kvm_gfn_range *range)
+> +{
+> +	struct kvm_mmu_page *root;
+> +	int offset = ffs(shadow_accessed_mask) - 1;
+> +
+> +	if (kvm_shadow_root_allocated(kvm))
 
-Thanks, sent out a v2 with this change.
+This needs a comment.
+
+> +		return true;
+> +
+> +	rcu_read_lock();
+> +
+> +	list_for_each_entry_rcu(root, &kvm->arch.tdp_mmu_roots, link) {
+
+As requested in v1[1], please add a macro for a lockless walk.
+
+[1] https://lkml.kernel.org/r/Y%2Fed0XYAPx%2B7pukA%40google.com
+
+> +		struct tdp_iter iter;
+> +
+> +		if (kvm_mmu_page_as_id(root) != range->slot->as_id)
+> +			continue;
+> +
+> +		tdp_root_for_each_leaf_pte(iter, root, range->start, range->end) {
+> +			u64 *sptep = rcu_dereference(iter.sptep);
+> +
+> +			VM_WARN_ON_ONCE(!page_count(virt_to_page(sptep)));
+
+Hrm, I don't like adding this in KVM.  The primary MMU might guarantee that this
+callback is invoked if and only if the SPTE is backed by struct page memory, but
+there's no reason to assume that's true in KVM.  If we want the sanity check, then
+this needs to use kvm_pfn_to_refcounted_page().
+
+And it should use KVM's MMU_WARN_ON(), which is a mess and effectively dead code,
+but I'm working on changing that[*], i.e. by the time this gets to Linus' tree,
+the sanity check should have a much cleaner implementation.
+
+[2] https://lore.kernel.org/all/20230511235917.639770-8-seanjc@google.com
+
+> +
+> +			if (!(iter.old_spte & shadow_accessed_mask))
+> +				continue;
+> +
+> +			if (kvm_should_clear_young(range, iter.gfn))
+> +				clear_bit(offset, (unsigned long *)sptep);
+
+If/when you rebase on https://github.com/kvm-x86/linux/tree/next, can you pull
+out the atomic bits of tdp_mmu_clear_spte_bits() and use that new helper? E.g.
+
+diff --git a/arch/x86/kvm/mmu/tdp_iter.h b/arch/x86/kvm/mmu/tdp_iter.h
+index fae559559a80..914c34518829 100644
+--- a/arch/x86/kvm/mmu/tdp_iter.h
++++ b/arch/x86/kvm/mmu/tdp_iter.h
+@@ -58,15 +58,18 @@ static inline u64 kvm_tdp_mmu_write_spte(tdp_ptep_t sptep, u64 old_spte,
+        return old_spte;
+ }
+ 
++static inline u64 tdp_mmu_clear_spte_bits_atomic(tdp_ptep_t sptep, u64 mask)
++{
++       atomic64_t *sptep_atomic = (atomic64_t *)rcu_dereference(sptep);
++
++       return (u64)atomic64_fetch_and(~mask, sptep_atomic);
++}
++
+ static inline u64 tdp_mmu_clear_spte_bits(tdp_ptep_t sptep, u64 old_spte,
+                                          u64 mask, int level)
+ {
+-       atomic64_t *sptep_atomic;
+-
+-       if (kvm_tdp_mmu_spte_need_atomic_write(old_spte, level)) {
+-               sptep_atomic = (atomic64_t *)rcu_dereference(sptep);
+-               return (u64)atomic64_fetch_and(~mask, sptep_atomic);
+-       }
++       if (kvm_tdp_mmu_spte_need_atomic_write(old_spte, level))
++               return tdp_mmu_clear_spte_bits_atomic(sptep, mask);
+ 
+        __kvm_tdp_mmu_write_spte(sptep, old_spte & ~mask);
+        return old_spte;
+
