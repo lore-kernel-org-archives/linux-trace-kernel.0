@@ -2,158 +2,168 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FBFCC0015E
-	for <linux-trace-kernel@archiver.kernel.org>; Thu, 15 Jun 2023 08:50:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CECAEB64D9
+	for <linux-trace-kernel@archiver.kernel.org>; Thu, 15 Jun 2023 10:04:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236343AbjFOIuO (ORCPT
+        id S238214AbjFOKE3 (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Thu, 15 Jun 2023 04:50:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37246 "EHLO
+        Thu, 15 Jun 2023 06:04:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56782 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S245475AbjFOItm (ORCPT
+        with ESMTP id S245445AbjFOKE1 (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Thu, 15 Jun 2023 04:49:42 -0400
-Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 46B0D2D60;
-        Thu, 15 Jun 2023 01:49:25 -0700 (PDT)
-Received: from dggpeml500012.china.huawei.com (unknown [172.30.72.57])
-        by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4QhbVc4z8WzMpP3;
-        Thu, 15 Jun 2023 16:46:16 +0800 (CST)
-Received: from localhost.localdomain (10.67.175.61) by
- dggpeml500012.china.huawei.com (7.185.36.15) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.23; Thu, 15 Jun 2023 16:49:22 +0800
-From:   Zheng Yejian <zhengyejian1@huawei.com>
-To:     <rostedt@goodmis.org>, <gregkh@linuxfoundation.org>
-CC:     <mhiramat@kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-trace-kernel@vger.kernel.org>, <stable@vger.kernel.org>,
-        <zhengyejian1@huawei.com>
-Subject: [PATCH 5.10] tracing: Add tracing_reset_all_online_cpus_unlocked() function
-Date:   Fri, 16 Jun 2023 04:49:31 +0800
-Message-ID: <20230615204931.3250659-1-zhengyejian1@huawei.com>
-X-Mailer: git-send-email 2.25.1
+        Thu, 15 Jun 2023 06:04:27 -0400
+Received: from mail-ej1-x630.google.com (mail-ej1-x630.google.com [IPv6:2a00:1450:4864:20::630])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 83C9126AD;
+        Thu, 15 Jun 2023 03:04:26 -0700 (PDT)
+Received: by mail-ej1-x630.google.com with SMTP id a640c23a62f3a-9827109c6e9so214715866b.3;
+        Thu, 15 Jun 2023 03:04:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1686823465; x=1689415465;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=Ok1RCaPEvQ0tJ/tEaiFFRHFRRfRdw+t0MV9fn+13hjA=;
+        b=Ysn7ww3yrG2dJ9rSKMG0hlefoaR5S81/hrsrbxUPq7iVBNX02FIP4fRRJZ4bNgzsAo
+         K4fNx8B7PWBUFYK20SraE1o5FpD6H9UphKy9KMqiIq1KbXNNO6NozuDXhwWq8znMeQeS
+         uoCXgnyLXJ8wOnpeFcau2QO7BSmlrk17GDpE1zzRQvOUY5Jue323/QFANv6GLsoP3J6o
+         LDefEUDZVqDl9hQ+AZzoXVtBc+qakl6fsFH0h7TCja9Vr0mjYOTb/BeLONxJqECmQ+GN
+         p9ErEI17FljLdKBYUC1AVZgRp/CGpFq1kGahNAxL/pS2PAuaPyTa8yd4kN81ZiSnJwYs
+         g0CA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1686823465; x=1689415465;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Ok1RCaPEvQ0tJ/tEaiFFRHFRRfRdw+t0MV9fn+13hjA=;
+        b=Ae4MjR+jV7G7wcINQMH7BAoaeGW8atHcklIhZuTbss+xPtisZYpJI3nG15uxeICj61
+         bGhBk6vAmK+dZtQigk5eJUGti4mIO/rEdGFLebAqiTSTta2EifAEn/wnZGdtpWtcElkv
+         oXrYtxEf7LCetk3Hj1Yo4KpDGjzSnonh3B5JYuaNvB8H6d7CysTvIRnSxGYnT2YG1IAa
+         QtZH8EtBfSqTEN9vYJRoa7p+zJI2nJVN0Iet7hMPbZ7m/9avmKtxbPxghZRktT2PLqOO
+         kAo3lfVeBw3p2HuIhrSEpCzWhwAqEe/nxeQFuXTLcA5wSrmCZwkD5nJqj39y0Gs3gNp4
+         EWhg==
+X-Gm-Message-State: AC+VfDxQUz0g/GgblfcgZZz9iqEKORxu/jn/dlV6mowLdRC1+sp4US5e
+        P54i7MfRcXg4v9j0xGODN20=
+X-Google-Smtp-Source: ACHHUZ4mi4t8qIVEqDZlTWWTCXH/vi5TtE5x4p7rzC66H3mATJ7J+e0u2iGhIOC3pcDT9Ac2DlcZZA==
+X-Received: by 2002:a17:907:7b92:b0:982:9b01:a582 with SMTP id ne18-20020a1709077b9200b009829b01a582mr1567985ejc.1.1686823464750;
+        Thu, 15 Jun 2023 03:04:24 -0700 (PDT)
+Received: from krava (2001-1ae9-1c2-4c00-726e-c10f-8833-ff22.ip6.tmcz.cz. [2001:1ae9:1c2:4c00:726e:c10f:8833:ff22])
+        by smtp.gmail.com with ESMTPSA id u3-20020a170906654300b0098238141deasm3652662ejn.90.2023.06.15.03.04.23
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 15 Jun 2023 03:04:24 -0700 (PDT)
+From:   Jiri Olsa <olsajiri@gmail.com>
+X-Google-Original-From: Jiri Olsa <jolsa@kernel.org>
+Date:   Thu, 15 Jun 2023 12:04:22 +0200
+To:     Yafang Shao <laoar.shao@gmail.com>
+Cc:     ast@kernel.org, daniel@iogearbox.net, john.fastabend@gmail.com,
+        andrii@kernel.org, martin.lau@linux.dev, song@kernel.org,
+        yhs@fb.com, kpsingh@kernel.org, sdf@google.com, haoluo@google.com,
+        quentin@isovalent.com, rostedt@goodmis.org, mhiramat@kernel.org,
+        bpf@vger.kernel.org, linux-trace-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 bpf-next 00/10] bpf: Support ->fill_link_info for
+ kprobe_multi and perf_event links
+Message-ID: <ZIriJs5qvMYBq7DZ@krava>
+References: <20230612151608.99661-1-laoar.shao@gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [10.67.175.61]
-X-ClientProxiedBy: dggems704-chm.china.huawei.com (10.3.19.181) To
- dggpeml500012.china.huawei.com (7.185.36.15)
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230612151608.99661-1-laoar.shao@gmail.com>
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
+On Mon, Jun 12, 2023 at 03:15:58PM +0000, Yafang Shao wrote:
+> This patchset enhances the usability of kprobe_multi programs by introducing
+> support for ->fill_link_info. This allows users to easily determine the
+> probed functions associated with a kprobe_multi program. While
+> `bpftool perf show` already provides information about functions probed by
+> perf_event programs, supporting ->fill_link_info ensures consistent access to
+> this information across all bpf links.
+> 
+> In addition, this patch extends support to generic perf events, which are
+> currently not covered by `bpftool perf show`. While userspace is exposed to
+> only the perf type and config, other attributes such as sample_period and
+> sample_freq are disregarded.
+> 
+> To ensure accurate identification of probed functions, it is preferable to
+> expose the address directly rather than relying solely on the symbol name.
+> However, this implementation respects the kptr_restrict setting and avoids
+> exposing the address if it is not permitted.
+> 
+> v2->v3:
+> - Expose flags instead of retporbe (Andrii)
+> - Simplify the check on kmulti_link->cnt (Andrii)
+> - Use kallsyms_show_value() instead (Andrii)
+> - Show also the module name for kprobe_multi (Andrii)
+> - Add new enum bpf_perf_link_type (Andrii)
+> - Move perf event names into bpftool (Andrii, Quentin, Jiri)
+> - Keep perf event names in sync with perf tools (Jiri) 
 
-commit e18eb8783ec4949adebc7d7b0fdb65f65bfeefd9 upstream.
+hi,
+I'm getting some failing tests with this version:
 
-Currently the tracing_reset_all_online_cpus() requires the
-trace_types_lock held. But only one caller of this function actually has
-that lock held before calling it, and the other just takes the lock so
-that it can call it. More users of this function is needed where the lock
-is not held.
+#11/2    bpf_cookie/multi_kprobe_link_api:FAIL
+#11/3    bpf_cookie/multi_kprobe_attach_api:FAIL
+#11      bpf_cookie:FAIL
 
-Add a tracing_reset_all_online_cpus_unlocked() function for the one use
-case that calls it without being held, and also add a lockdep_assert to
-make sure it is held when called.
+#104/1   kprobe_multi_test/skel_api:FAIL
+#104/2   kprobe_multi_test/link_api_addrs:FAIL
+#104/3   kprobe_multi_test/link_api_syms:FAIL
+#104/4   kprobe_multi_test/attach_api_pattern:FAIL
+#104/5   kprobe_multi_test/attach_api_addrs:FAIL
+#104/6   kprobe_multi_test/attach_api_syms:FAIL
+#104     kprobe_multi_test:FAIL
+#105/1   kprobe_multi_testmod_test/testmod_attach_api_syms:FAIL
+#105/2   kprobe_multi_testmod_test/testmod_attach_api_addrs:FAIL
+#105     kprobe_multi_testmod_test:FAIL
 
-Then have tracing_reset_all_online_cpus() take the lock internally, such
-that callers do not need to worry about taking it.
+jirka
 
-Link: https://lkml.kernel.org/r/20221123192741.658273220@goodmis.org
-
-Cc: Masami Hiramatsu <mhiramat@kernel.org>
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: Zheng Yejian <zhengyejian1@huawei.com>
-Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
-[this patch is pre-depended by be111ebd8868d4b7c041cb3c6102e1ae27d6dc1d
-due to tracing_reset_all_online_cpus() should be called after taking lock]
-Fixes: be111ebd8868 ("tracing: Free buffers when a used dynamic event is removed")
-Signed-off-by: Zheng Yejian <zhengyejian1@huawei.com>
----
- kernel/trace/trace.c              | 11 ++++++++++-
- kernel/trace/trace.h              |  1 +
- kernel/trace/trace_events.c       |  2 +-
- kernel/trace/trace_events_synth.c |  2 --
- 4 files changed, 12 insertions(+), 4 deletions(-)
-
-diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
-index 482ec6606b7b..70526400e05c 100644
---- a/kernel/trace/trace.c
-+++ b/kernel/trace/trace.c
-@@ -2178,10 +2178,12 @@ void tracing_reset_online_cpus(struct array_buffer *buf)
- }
- 
- /* Must have trace_types_lock held */
--void tracing_reset_all_online_cpus(void)
-+void tracing_reset_all_online_cpus_unlocked(void)
- {
- 	struct trace_array *tr;
- 
-+	lockdep_assert_held(&trace_types_lock);
-+
- 	list_for_each_entry(tr, &ftrace_trace_arrays, list) {
- 		if (!tr->clear_trace)
- 			continue;
-@@ -2193,6 +2195,13 @@ void tracing_reset_all_online_cpus(void)
- 	}
- }
- 
-+void tracing_reset_all_online_cpus(void)
-+{
-+	mutex_lock(&trace_types_lock);
-+	tracing_reset_all_online_cpus_unlocked();
-+	mutex_unlock(&trace_types_lock);
-+}
-+
- /*
-  * The tgid_map array maps from pid to tgid; i.e. the value stored at index i
-  * is the tgid last observed corresponding to pid=i.
-diff --git a/kernel/trace/trace.h b/kernel/trace/trace.h
-index 37f616bf5fa9..e5b505b5b7d0 100644
---- a/kernel/trace/trace.h
-+++ b/kernel/trace/trace.h
-@@ -725,6 +725,7 @@ int tracing_is_enabled(void);
- void tracing_reset_online_cpus(struct array_buffer *buf);
- void tracing_reset_current(int cpu);
- void tracing_reset_all_online_cpus(void);
-+void tracing_reset_all_online_cpus_unlocked(void);
- int tracing_open_generic(struct inode *inode, struct file *filp);
- int tracing_open_generic_tr(struct inode *inode, struct file *filp);
- bool tracing_is_disabled(void);
-diff --git a/kernel/trace/trace_events.c b/kernel/trace/trace_events.c
-index bac13f24a96e..f8ed66f38175 100644
---- a/kernel/trace/trace_events.c
-+++ b/kernel/trace/trace_events.c
-@@ -2661,7 +2661,7 @@ static void trace_module_remove_events(struct module *mod)
- 	 * over from this module may be passed to the new module events and
- 	 * unexpected results may occur.
- 	 */
--	tracing_reset_all_online_cpus();
-+	tracing_reset_all_online_cpus_unlocked();
- }
- 
- static int trace_module_notify(struct notifier_block *self,
-diff --git a/kernel/trace/trace_events_synth.c b/kernel/trace/trace_events_synth.c
-index 18291ab35657..ee174de0b8f6 100644
---- a/kernel/trace/trace_events_synth.c
-+++ b/kernel/trace/trace_events_synth.c
-@@ -1363,7 +1363,6 @@ int synth_event_delete(const char *event_name)
- 	mutex_unlock(&event_mutex);
- 
- 	if (mod) {
--		mutex_lock(&trace_types_lock);
- 		/*
- 		 * It is safest to reset the ring buffer if the module
- 		 * being unloaded registered any events that were
-@@ -1375,7 +1374,6 @@ int synth_event_delete(const char *event_name)
- 		 * occur.
- 		 */
- 		tracing_reset_all_online_cpus();
--		mutex_unlock(&trace_types_lock);
- 	}
- 
- 	return ret;
--- 
-2.25.1
-
+> 
+> v1->v2:
+> - Fix sparse warning (Stanislav, lkp@intel.com)
+> - Fix BPF CI build error
+> - Reuse kernel_syms_load() (Alexei)
+> - Print 'name' instead of 'func' (Alexei)
+> - Show whether the probe is retprobe or not (Andrii)
+> - Add comment for the meaning of perf_event name (Andrii)
+> - Add support for generic perf event
+> - Adhere to the kptr_restrict setting
+> 
+> RFC->v1:
+> - Use a single copy_to_user() instead (Jiri)
+> - Show also the symbol name in bpftool (Quentin, Alexei)
+> - Use calloc() instead of malloc() in bpftool (Quentin)
+> - Avoid having conditional entries in the JSON output (Quentin)
+> - Drop ->show_fdinfo (Alexei)
+> - Use __u64 instead of __aligned_u64 for the field addr (Alexei)
+> - Avoid the contradiction in perf_event name length (Alexei)
+> - Address a build warning reported by kernel test robot <lkp@intel.com>
+> 
+> Yafang Shao (10):
+>   bpf: Support ->fill_link_info for kprobe_multi
+>   bpftool: Dump the kernel symbol's module name
+>   bpftool: Show probed function in kprobe_multi link info
+>   bpf: Protect probed address based on kptr_restrict setting
+>   bpf: Clear the probe_addr for uprobe
+>   bpf: Expose symbol's respective address
+>   bpf: Add a common helper bpf_copy_to_user()
+>   bpf: Support ->fill_link_info for perf_event
+>   bpftool: Add perf event names
+>   bpftool: Show probed function in perf_event link info
+> 
+>  include/uapi/linux/bpf.h          |  37 +++++
+>  kernel/bpf/syscall.c              | 158 +++++++++++++++++--
+>  kernel/trace/bpf_trace.c          |  32 +++-
+>  kernel/trace/trace_kprobe.c       |   7 +-
+>  tools/bpf/bpftool/link.c          | 322 +++++++++++++++++++++++++++++++++++++-
+>  tools/bpf/bpftool/perf.c          | 107 +++++++++++++
+>  tools/bpf/bpftool/perf.h          |  11 ++
+>  tools/bpf/bpftool/xlated_dumper.c |   6 +-
+>  tools/bpf/bpftool/xlated_dumper.h |   2 +
+>  tools/include/uapi/linux/bpf.h    |  37 +++++
+>  10 files changed, 700 insertions(+), 19 deletions(-)
+>  create mode 100644 tools/bpf/bpftool/perf.h
+> 
+> -- 
+> 1.8.3.1
+> 
