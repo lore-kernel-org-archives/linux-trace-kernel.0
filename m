@@ -2,137 +2,100 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CBF5EB64D9
-	for <linux-trace-kernel@archiver.kernel.org>; Thu, 15 Jun 2023 18:04:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B3561EB64DA
+	for <linux-trace-kernel@archiver.kernel.org>; Thu, 15 Jun 2023 18:09:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229660AbjFOSE0 (ORCPT
+        id S236173AbjFOSJP (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Thu, 15 Jun 2023 14:04:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58646 "EHLO
+        Thu, 15 Jun 2023 14:09:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60324 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230093AbjFOSEZ (ORCPT
+        with ESMTP id S237546AbjFOSJA (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Thu, 15 Jun 2023 14:04:25 -0400
-Received: from mail-il1-x130.google.com (mail-il1-x130.google.com [IPv6:2607:f8b0:4864:20::130])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CE33C294A;
-        Thu, 15 Jun 2023 11:04:23 -0700 (PDT)
-Received: by mail-il1-x130.google.com with SMTP id e9e14a558f8ab-33aa60f4094so4118675ab.1;
-        Thu, 15 Jun 2023 11:04:23 -0700 (PDT)
+        Thu, 15 Jun 2023 14:09:00 -0400
+Received: from mail-wr1-x42e.google.com (mail-wr1-x42e.google.com [IPv6:2a00:1450:4864:20::42e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5E0DB2978;
+        Thu, 15 Jun 2023 11:08:59 -0700 (PDT)
+Received: by mail-wr1-x42e.google.com with SMTP id ffacd0b85a97d-307d58b3efbso6040223f8f.0;
+        Thu, 15 Jun 2023 11:08:59 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1686852263; x=1689444263;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=/u+///EcupbIJP0wmwzWwwhqxbaWqaZ46VmaNSEFYns=;
-        b=NwXE6DH7KcGFqGahn7YCqVt/g6QP3KBqz0tDM1qLmE/9igLwfk2duRLPGN/GtJn6jU
-         Rwyg0UkRwZ1rz/JdQiDm+V0VodKkd0MvXTPpa9ZZmNdDnI2sed5D2pbzoHJdBrQt2WwN
-         3Zj3ibXFxp5Fw8jGzOI6gHa8hEFGFkWBsNEOXb7vv/sGK9ZvTPetn3VooYDBErUDVhMU
-         4uClS8KpJ7vDGKrUq9uKrsPJd6fMp0YcPgvDxwMNQwYCfZdpE8rWj/caC9Q7ZVBCsBjy
-         c+LD5iDkvLmzWguOcKUiWz/Ttna8GBYaLU9zh5khbuMGyqy5ZvbKkK44CrZaJIxGVYtg
-         sRDg==
+        d=gmail.com; s=20221208; t=1686852538; x=1689444538;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=X3eNHuBwA4/Xh/5OxuPE103hqMngMlGAmXZaUXgFWmU=;
+        b=D471ChgwfJ68SiQheJFmqdRP4BL4u0/AlkXDuax25+AZY6PpFAaRAIWHaJjrwEfrB3
+         2hCnUHfGnI2p7hxvztIbONYI/fIoWU8Yu1FZsipMF5nHCkH7Kn89cAHfiFLtJdJQ0AlE
+         6Xsoi53Vwlp6AyPQVa6lzRMl6wltWtT001eTCmDIpBLAwFQvJ1A9hFkH5A8l5AGUDF8t
+         YFUKz9fkDssqgklQoC87ngdNu6tS710/6QZIJQE5VuI1DAqU7T/utVtNvFVd+IwqoHJ7
+         D9n7DjwzX217NPHOyegakfFrh7VGaaCkdJz7YPDQzkB7cP8iPUDf+xPXtD3vVBG8Ogr3
+         NBXA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1686852263; x=1689444263;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=/u+///EcupbIJP0wmwzWwwhqxbaWqaZ46VmaNSEFYns=;
-        b=g9C+73OTJQaedG0T/sQbjASxELabJ8FbzYTJ7lQyGuY7HQGVIfT9h1F+MMy/w6j9d+
-         Podoq7q9VKoXOcrMxANiYh+xhSlNFikKtBNBpgkBOG3JK4yB970g61PLjGsbkXadEJ1j
-         LGmu/uPwVskRw3xfyaGNEuBiL1DH5Xx9lIP/E94guZBcEn3P4/6bTTbr6UPl6O72WtM5
-         QINSGORrJQwqcgAtLprkfX8lJGyrOJ8luUeK+Ylso5ozwR/Yt0klmqeIrInQ4ooWeLrv
-         j2MSUU1NFh0ytUhZRFXkgbiOqemALza/KSuORiwuNxaRahZh0+caYIHqO6GvxuUKdwBP
-         0LFg==
-X-Gm-Message-State: AC+VfDxAuB4G9rJw6TljM1awSVGKCBv0WfRmnVHHfttieDnWNqVKVsCy
-        iB0pA1gf0eVA2qVotfnyi4U=
-X-Google-Smtp-Source: ACHHUZ7zHUNNjFwo+XUa1IpVOBDaASLdVU8eFLjZMuf3xpn0Ypd/YbViRraMO9er1ZfPRv82PKSxMg==
-X-Received: by 2002:a05:6e02:ca9:b0:341:df27:8a97 with SMTP id 9-20020a056e020ca900b00341df278a97mr781250ilg.12.1686852262994;
-        Thu, 15 Jun 2023 11:04:22 -0700 (PDT)
-Received: from azeems-kspp.c.googlers.com.com (54.70.188.35.bc.googleusercontent.com. [35.188.70.54])
-        by smtp.gmail.com with ESMTPSA id a11-20020a92a30b000000b0033ce0ef231bsm3039027ili.23.2023.06.15.11.04.22
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 15 Jun 2023 11:04:22 -0700 (PDT)
-From:   Azeem Shaikh <azeemshaikh38@gmail.com>
-To:     Steven Rostedt <rostedt@goodmis.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Eric Biggers <ebiggers@kernel.org>
-Cc:     linux-hardening@vger.kernel.org,
-        Azeem Shaikh <azeemshaikh38@gmail.com>,
-        linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
-Subject: [PATCH v2] tracing/boot: Replace strlcpy with strscpy
-Date:   Thu, 15 Jun 2023 18:04:20 +0000
-Message-ID: <20230615180420.400769-1-azeemshaikh38@gmail.com>
-X-Mailer: git-send-email 2.41.0.162.gfafddb0af9-goog
+        d=1e100.net; s=20221208; t=1686852538; x=1689444538;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=X3eNHuBwA4/Xh/5OxuPE103hqMngMlGAmXZaUXgFWmU=;
+        b=GSZI/J6CCoQt8OxoTMNtwGdQwuGJQ91/UdDLqw7ZaFUq01DatXX9do2ClEOd4YmqPj
+         Z+uC3sBqNt0e+Ksjb5ahoYWY74TpXO680AOkFvlMJD/IEhH4veIZ9jI9Aodty83PzSyq
+         XLdMEDDYobNjYhL5iOKipuW4Oi/RPuV387mO1Z812HVFrx1MR0WYMBDl7DLpV0blQ6sh
+         fpI8f90UWsELHvTCvNbJmOEfQaB3JtjSUWVdtr6YEzIoWQhPfKOHhj6aFTNVuQBOKO0x
+         KsSHJaZM07Sqgf0hRF+2HwcRw7lZgCB+0jSjchELqOYx2gdZro5mS00nFCya8se8m2uu
+         RHdw==
+X-Gm-Message-State: AC+VfDyuf+XwW18xn41uGz1AlvtWL1bEfGu1KnYusQrBJyCCQooPRQef
+        Ui44smn8NSmh0Ka7E7EUHRPoEjwVBvhcpEJUD7Q=
+X-Google-Smtp-Source: ACHHUZ7N5KmIyc/eNAUi8a4eUiuM2tRF9hBjkAYMCMidtVpcyL1HJSRK4q7vY72yTHMitNHQhDFj052a9fSViMgTBYw=
+X-Received: by 2002:adf:f1d0:0:b0:30e:3ccf:d4b1 with SMTP id
+ z16-20020adff1d0000000b0030e3ccfd4b1mr11349449wro.4.1686852537627; Thu, 15
+ Jun 2023 11:08:57 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20230613004125.3539934-1-azeemshaikh38@gmail.com>
+ <202306131227.26F90584F7@keescook> <CADmuW3WeRG-_WsFVCogRzRNXoqtVr+gA84ryqDZ2URUu3wh6Tg@mail.gmail.com>
+ <20230614171330.GA1146@sol.localdomain>
+In-Reply-To: <20230614171330.GA1146@sol.localdomain>
+From:   Azeem Shaikh <azeemshaikh38@gmail.com>
+Date:   Thu, 15 Jun 2023 14:08:46 -0400
+Message-ID: <CADmuW3UyFY8cnf=S9hVMsYrqOyYAn5hCQ258uVpaz9J-6qaw6g@mail.gmail.com>
+Subject: Re: [PATCH] tracing/boot: Replace strlcpy with strscpy
+To:     Eric Biggers <ebiggers@kernel.org>
+Cc:     Kees Cook <keescook@chromium.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-trace-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-strlcpy() reads the entire source buffer first.
-This read may exceed the destination size limit.
-This is both inefficient and can lead to linear read
-overflows if a source string is not NUL-terminated [1].
-In an effort to remove strlcpy() completely [2], replace
-strlcpy() here with strscpy().
+On Wed, Jun 14, 2023 at 1:13=E2=80=AFPM Eric Biggers <ebiggers@kernel.org> =
+wrote:
+>
+> On Wed, Jun 14, 2023 at 10:01:57AM -0400, Azeem Shaikh wrote:
+> > On Tue, Jun 13, 2023 at 3:27=E2=80=AFPM Kees Cook <keescook@chromium.or=
+g> wrote:
+> > >
+> > > On Tue, Jun 13, 2023 at 12:41:25AM +0000, Azeem Shaikh wrote:
+> > > > strlcpy() reads the entire source buffer first.
+> > > > This read may exceed the destination size limit.
+> > > > This is both inefficient and can lead to linear read
+> > > > overflows if a source string is not NUL-terminated [1].
+> > > > In an effort to remove strlcpy() completely [2], replace
+> > > > strlcpy() here with strscpy().
+> > > >
+> > > > Direct replacement is safe here since return value of -E2BIG
+> > > > is used to check for truncation instead of sizeof(dest).
+> > >
+> > > This looks technically correct, but I wonder if "< 0" is a better tes=
+t?
+> >
+> > Agreed. "< 0" might more generically represent -errno. Happy to send
+> > over a v2 if you prefer that instead of sticking with this patch.
+>
+> Please go with "< 0", since it's easier to read and less error-prone.  (I=
+t would
+> be easy to mistype -E2BIG as -EFBIG, or E2BIG, for example...)
+>
 
-Direct replacement is safe here since return value of -errno
-is used to check for truncation instead of sizeof(dest).
-
-[1] https://www.kernel.org/doc/html/latest/process/deprecated.html#strlcpy
-[2] https://github.com/KSPP/linux/issues/89
-
-Signed-off-by: Azeem Shaikh <azeemshaikh38@gmail.com>
----
-v2:
- * Use "< 0" instead of -E2BIG.
-
-v1:
- * https://lore.kernel.org/all/20230613004125.3539934-1-azeemshaikh38@gmail.com/
-
- kernel/trace/trace_boot.c |    8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
-
-diff --git a/kernel/trace/trace_boot.c b/kernel/trace/trace_boot.c
-index 778200dd8ede..7ccc7a8e155b 100644
---- a/kernel/trace/trace_boot.c
-+++ b/kernel/trace/trace_boot.c
-@@ -31,7 +31,7 @@ trace_boot_set_instance_options(struct trace_array *tr, struct xbc_node *node)
- 
- 	/* Common ftrace options */
- 	xbc_node_for_each_array_value(node, "options", anode, p) {
--		if (strlcpy(buf, p, ARRAY_SIZE(buf)) >= ARRAY_SIZE(buf)) {
-+		if (strscpy(buf, p, ARRAY_SIZE(buf)) < 0) {
- 			pr_err("String is too long: %s\n", p);
- 			continue;
- 		}
-@@ -87,7 +87,7 @@ trace_boot_enable_events(struct trace_array *tr, struct xbc_node *node)
- 	const char *p;
- 
- 	xbc_node_for_each_array_value(node, "events", anode, p) {
--		if (strlcpy(buf, p, ARRAY_SIZE(buf)) >= ARRAY_SIZE(buf)) {
-+		if (strscpy(buf, p, ARRAY_SIZE(buf)) < 0) {
- 			pr_err("String is too long: %s\n", p);
- 			continue;
- 		}
-@@ -486,7 +486,7 @@ trace_boot_init_one_event(struct trace_array *tr, struct xbc_node *gnode,
- 
- 	p = xbc_node_find_value(enode, "filter", NULL);
- 	if (p && *p != '\0') {
--		if (strlcpy(buf, p, ARRAY_SIZE(buf)) >= ARRAY_SIZE(buf))
-+		if (strscpy(buf, p, ARRAY_SIZE(buf)) < 0)
- 			pr_err("filter string is too long: %s\n", p);
- 		else if (apply_event_filter(file, buf) < 0)
- 			pr_err("Failed to apply filter: %s\n", buf);
-@@ -494,7 +494,7 @@ trace_boot_init_one_event(struct trace_array *tr, struct xbc_node *gnode,
- 
- 	if (IS_ENABLED(CONFIG_HIST_TRIGGERS)) {
- 		xbc_node_for_each_array_value(enode, "actions", anode, p) {
--			if (strlcpy(buf, p, ARRAY_SIZE(buf)) >= ARRAY_SIZE(buf))
-+			if (strscpy(buf, p, ARRAY_SIZE(buf)) < 0)
- 				pr_err("action string is too long: %s\n", p);
- 			else if (trigger_process_regex(file, buf) < 0)
- 				pr_err("Failed to apply an action: %s\n", p);
--- 
-2.41.0.162.gfafddb0af9-goog
-
-
+Thanks, sent out a v2 with this change.
