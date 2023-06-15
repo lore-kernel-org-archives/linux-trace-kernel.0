@@ -2,131 +2,115 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A6838EB64D8
-	for <linux-trace-kernel@archiver.kernel.org>; Wed, 14 Jun 2023 19:50:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 537FAEB64DC
+	for <linux-trace-kernel@archiver.kernel.org>; Thu, 15 Jun 2023 07:01:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233044AbjFNTuk (ORCPT
+        id S244380AbjFOHBK (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Wed, 14 Jun 2023 15:50:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38144 "EHLO
+        Thu, 15 Jun 2023 03:01:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33306 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229630AbjFNTuj (ORCPT
+        with ESMTP id S244464AbjFOHBG (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Wed, 14 Jun 2023 15:50:39 -0400
-Received: from mail-pj1-x1032.google.com (mail-pj1-x1032.google.com [IPv6:2607:f8b0:4864:20::1032])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 50E151B2;
-        Wed, 14 Jun 2023 12:50:38 -0700 (PDT)
-Received: by mail-pj1-x1032.google.com with SMTP id 98e67ed59e1d1-25e89791877so260869a91.2;
-        Wed, 14 Jun 2023 12:50:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1686772237; x=1689364237;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=gp+AR3/vLmcKpBmQRw80wRDt4ktiTGG+Gs0p9LJEj1M=;
-        b=KE+FkRfXXTGlRgRRQDiDF+n9tcPoR3XGPXHNurpuijBlbjcVim2wkjKIS6lApWTwnc
-         1l8eikOXUCblB49LKt846s4v+ykWC2Pi9WN3bb2o8g+X65KX0Kl5YMUdVdDUHu6eEVzN
-         uF6tWpO6EAhvbbaZhBtgfDK85D0evsz83uRN74dg/1YzDye0e1fO3tDmAS8KwmuVbOtU
-         Hs8fvl3YAz6hnYKzH2ySTDGvwkWJLNokZbaGPWM8Gzl4+HkZ8zq4ezu5OxiC2pgHL+bT
-         WdTeJo0i3imibnRbhxpFKsDOBVEFTbS48PIp/Kn4gMcX17JVkHdPJm8aI6psJnNGWz88
-         Z6hg==
+        Thu, 15 Jun 2023 03:01:06 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 19FC4189
+        for <linux-trace-kernel@vger.kernel.org>; Thu, 15 Jun 2023 00:00:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1686812419;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=OThjLmbvI6Zpg0mK9QSJewa4TGDoveYEJmGg/Gpz19Y=;
+        b=a7AgCQ8tYRk7lIKN7GUo0ph1fcf9p+LzPZaYWFCvQ3nWYgY6lsTp32gbGWkpKkpyTCsn5R
+        fdpu5UgNReQnhOMdbgkRJbaH70qAS/TQcqisc6+3EfnJSP0z9x1p6uJa7yiTml14TMOR8i
+        5tx8oNzJoSj9fIxIfjPYY+NVp0Ph+xs=
+Received: from mail-ot1-f71.google.com (mail-ot1-f71.google.com
+ [209.85.210.71]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-191-CWPQNBGpNg2lzRQdrsrRCg-1; Thu, 15 Jun 2023 03:00:17 -0400
+X-MC-Unique: CWPQNBGpNg2lzRQdrsrRCg-1
+Received: by mail-ot1-f71.google.com with SMTP id 46e09a7af769-6b15dcc80c6so370208a34.1
+        for <linux-trace-kernel@vger.kernel.org>; Thu, 15 Jun 2023 00:00:17 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1686772237; x=1689364237;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=gp+AR3/vLmcKpBmQRw80wRDt4ktiTGG+Gs0p9LJEj1M=;
-        b=BNFKHYu9vrOIXcU0JatRBsGJbzT/Vp2Tn8Jr51DJX2JYCBht41tQoJ0IWlcg+adPl5
-         satNL+pD/vgHIdPVZ66Cv7kA7gOuB5n1EDduudhtfs49x0d7WrTWcJPZXU+5Ba9ro4SI
-         lCGUlmEUD65RmLOzBUCWRGQ7wx/O+FNczqRzkFNn1McmN/8wq77OhiAvOcnBh7YHZArd
-         F1Vz7hYzUh9vaBHE7/CuZIFfkeVund7oGs9aQ1HW6j3a44uDyG3ARjZR4MBuZv9/UiNL
-         0BR5m/I4hAKYRv4v95M/OWLpOIjiaI2qjRHt8/vb7UOjQ1XKJ8W+X/yFHWmDvQu1ax/U
-         C33w==
-X-Gm-Message-State: AC+VfDxmYmybX92KmM8FQtwKdxrJtzDMA6ObckPOr1lnlUIORHfwLLTX
-        XNCebKQyR5+nXQw6vuyYQHRiLjrnjbM=
-X-Google-Smtp-Source: ACHHUZ7+ZwrH2Nffp3z5kNDqI0XxcNAaUzM5pui3u4gcrNTXNbdB2i1Q17e1VObsABYRvA6YkdJq3w==
-X-Received: by 2002:a17:90b:1c0f:b0:25b:b4c6:d13e with SMTP id oc15-20020a17090b1c0f00b0025bb4c6d13emr2189948pjb.8.1686772237423;
-        Wed, 14 Jun 2023 12:50:37 -0700 (PDT)
-Received: from ?IPV6:2a03:83e0:1156:1:c68c:b00b:182a:614f? ([2620:10d:c090:500::7:1e87])
-        by smtp.gmail.com with ESMTPSA id qa2-20020a17090b4fc200b002310ed024adsm13225677pjb.12.2023.06.14.12.50.35
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 14 Jun 2023 12:50:36 -0700 (PDT)
-Message-ID: <12b0c61d-1270-ab34-63bf-a5c389fd45bc@gmail.com>
-Date:   Wed, 14 Jun 2023 12:50:34 -0700
+        d=1e100.net; s=20221208; t=1686812417; x=1689404417;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=OThjLmbvI6Zpg0mK9QSJewa4TGDoveYEJmGg/Gpz19Y=;
+        b=RUoea5po4s97jLfwBZKVxlZ6kMxwCj2z7ngqDRlv97jpUsH11VslLneF68qt5T16Vy
+         RyODpzFji5bPcZTHWwAjNGYJHO+wBfN9nSkzMR9OaN1zZ2+qyrL89HAorwZXgomjR2g0
+         uAkbrXdvhCbV0OPaitcSDDqC0FzNHKd06WADEtthcAo5J2hZpJFmQ0ppJVZIQ3R7wIMt
+         Hb715rnkiTwp+3CNrDRfha4X0U1V9hTFYxgZ/Hl9eyJ1v7FzLYC0bgzhJwe7Rh5D5+Lt
+         a3y3njphd29UpqhRviJdVFdlZEtTaHfGxX1JZHDXzm/0Dm8LNy4izIkOlXUvQDF6gMbV
+         Rt1g==
+X-Gm-Message-State: AC+VfDxsvfjwBD3syR6/b2LXXZ+anPrubbfkF54ff3gzaOZOJ1AKFcfX
+        FY/O29jQbJ7R/rYXPgCVZOjRIl9my0GvS7keaM3nR05zUksN1K7oSt5jvLfscoIIzZRCHey4qhd
+        e2fIWXyadb+NNr658BdU5fYqHnMGxamjC
+X-Received: by 2002:a05:6830:4865:b0:6b4:39e7:578e with SMTP id dx5-20020a056830486500b006b439e7578emr375179otb.6.1686812417229;
+        Thu, 15 Jun 2023 00:00:17 -0700 (PDT)
+X-Google-Smtp-Source: ACHHUZ7JFZym9YWY4SWWz2Zn7e4z04gbS62xCM/8gAHNSJXHNpERTLzqrjaJyctqTIs9qYe8XmHn1g==
+X-Received: by 2002:a05:6830:4865:b0:6b4:39e7:578e with SMTP id dx5-20020a056830486500b006b439e7578emr375165otb.6.1686812416876;
+        Thu, 15 Jun 2023 00:00:16 -0700 (PDT)
+Received: from localhost.localdomain ([2804:1b3:a800:60ac:48e:4eb0:11b4:f1e8])
+        by smtp.gmail.com with ESMTPSA id d4-20020a0568301b6400b006b2b51fd2ebsm6472317ote.81.2023.06.15.00.00.13
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 15 Jun 2023 00:00:16 -0700 (PDT)
+From:   Leonardo Bras <leobras@redhat.com>
+To:     Steven Rostedt <rostedt@goodmis.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Leonardo Bras <leobras@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        Valentin Schneider <vschneid@redhat.com>,
+        Juergen Gross <jgross@suse.com>,
+        Yury Norov <yury.norov@gmail.com>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Cc:     linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
+Subject: [RFC PATCH v5 0/2] trace,smp: Add tracepoints for csd
+Date:   Thu, 15 Jun 2023 03:59:43 -0300
+Message-ID: <20230615065944.188876-3-leobras@redhat.com>
+X-Mailer: git-send-email 2.41.0
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.11.0
-Subject: Re: [PATCH] tracing/probes: Fix tracepoint event with $arg* to fetch
- correct argument
-Content-Language: en-US
-To:     "Masami Hiramatsu (Google)" <mhiramat@kernel.org>,
-        linux-trace-kernel@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>,
-        Florent Revest <revest@chromium.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Martin KaFai Lau <martin.lau@linux.dev>, bpf@vger.kernel.org,
-        Bagas Sanjaya <bagasdotme@gmail.com>,
-        kernel test robot <lkp@intel.com>
-References: <168657113778.3038017.12245893750241701312.stgit@mhiramat.roam.corp.google.com>
-From:   Kui-Feng Lee <sinquersw@gmail.com>
-In-Reply-To: <168657113778.3038017.12245893750241701312.stgit@mhiramat.roam.corp.google.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: redhat.com
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="US-ASCII"; x-default=true
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
+Changes since RFCv4:
+- Moved from trace/events/smp.h to trace/events/csd.h
+- Using TRACE_SYSTEM csd, instead of smp
+- generic_exec_single() trace uses NULL instead of csd for current cpu.
+- Trace function csd type moved from call_single_data_t to 
+  struct __call_single_data to avoid alignment errors on blk code.
 
+Changes since RFCv3:
+- Split the patch in 2: entry/exit and queue
+- Fix 'struct __call_single_data' & call_single_data_t alignment issue
+- Made all TP_printk follow the same pattern
 
-On 6/12/23 04:58, Masami Hiramatsu (Google) wrote:
-> From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-> 
-> To hide the first dummy 'data' argument on the tracepoint probe events,
-> the BTF argument array was modified (skip the first argument for tracepoint),
-> but the '$arg*' meta argument parser missed that.
-> 
-> Fix to increment the argument index if it is tracepoint probe. And decrement
-> the index when searching the type of the argument.
-> 
-> Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-> ---
->   kernel/trace/trace_probe.c |   10 ++++++++--
->   1 file changed, 8 insertions(+), 2 deletions(-)
-> 
-> diff --git a/kernel/trace/trace_probe.c b/kernel/trace/trace_probe.c
-> index 473e1c43bc57..643aa3a51d5a 100644
-> --- a/kernel/trace/trace_probe.c
-> +++ b/kernel/trace/trace_probe.c
-> @@ -456,7 +456,10 @@ static int parse_btf_arg(const char *varname, struct fetch_insn *code,
->   
->   		if (name && !strcmp(name, varname)) {
->   			code->op = FETCH_OP_ARG;
-> -			code->param = i;
-> +			if (ctx->flags & TPARG_FL_TPOINT)
-> +				code->param = i + 1;
-> +			else
-> +				code->param = i;
->   			return 0;
->   		}
->   	}
-> @@ -470,8 +473,11 @@ static const struct fetch_type *parse_btf_arg_type(int arg_idx,
->   	struct btf *btf = traceprobe_get_btf();
->   	const char *typestr = NULL;
->   
-> -	if (btf && ctx->params)
-> +	if (btf && ctx->params) {
-> +		if (ctx->flags & TPARG_FL_TPOINT)
-> +			arg_idx--;
->   		typestr = type_from_btf_id(btf, ctx->params[arg_idx].type);
-> +	}
->   
->   	return find_fetch_type(typestr, ctx->flags);
->   }
-> 
-> 
+Changes since RFCv2:
+- Fixed some spacing issues and trace calls
 
-I failed to apply this patch.
-Would you mind to rebase this patch?
+Changes since RFCv1:
+- Implemented trace_csd_queue_cpu() as suggested by Valentin Schneider
+- Using EVENT_CLASS in order to avoid duplication
+- Introduced new helper: csd_do_func()
+- Name change from smp_call_function_* to csd_function_*
+- Rebased on top of torvalds/master
+
+Leonardo Bras (2):
+  trace,smp: Add tracepoints around remotelly called functions
+  trace,smp: Add tracepoints for scheduling remotelly called functions
+
+ include/trace/events/csd.h | 72 ++++++++++++++++++++++++++++++++++++++
+ kernel/smp.c               | 41 +++++++++++++---------
+ 2 files changed, 96 insertions(+), 17 deletions(-)
+ create mode 100644 include/trace/events/csd.h
+
+-- 
+2.41.0
 
