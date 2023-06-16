@@ -2,139 +2,166 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 29E67EB64D7
-	for <linux-trace-kernel@archiver.kernel.org>; Fri, 16 Jun 2023 17:30:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C6D8EB64DD
+	for <linux-trace-kernel@archiver.kernel.org>; Fri, 16 Jun 2023 18:14:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232171AbjFPRad (ORCPT
+        id S1343979AbjFPSOz (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Fri, 16 Jun 2023 13:30:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59056 "EHLO
+        Fri, 16 Jun 2023 14:14:55 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48458 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229542AbjFPRac (ORCPT
+        with ESMTP id S1344018AbjFPSOs (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Fri, 16 Jun 2023 13:30:32 -0400
-Received: from mail-ed1-x536.google.com (mail-ed1-x536.google.com [IPv6:2a00:1450:4864:20::536])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B14D5269E;
-        Fri, 16 Jun 2023 10:30:31 -0700 (PDT)
-Received: by mail-ed1-x536.google.com with SMTP id 4fb4d7f45d1cf-51a2c60c529so1248115a12.3;
-        Fri, 16 Jun 2023 10:30:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1686936630; x=1689528630;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=3pNmnngxiEhIiRvBXuB1ZJgxGNhge5uLTtwEosNjp94=;
-        b=FGfUbbwEAPbQVuu9zcediuO2rg8ejYXvYrvBl8ry+3wnmeYBJkl59ALuvYT6ua7shz
-         KbaSvWaIr/XMvmh+oCgUayYpU+lvCBskwfSco55XqO0dFy6YtnSAHDNvwsENuh/9onXm
-         IlBeCREeLpRmZvIer+PdK4LcjAkLaY0sGi3jeRg6w90h/Ba75ez20xmyqdnYXc0vhj8z
-         FflCx7rURdM8zt/5FLUn5/i1j4054eFRqum6eANHLVFErPJzAV1oS5/3UlSzwheT9cQt
-         Gm7MPhtGkRstIz4957zDELm6fHn6QjAFuy91vDzZOnCHY9zG6ibYl6GbrcmzKa851skY
-         bm2w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1686936630; x=1689528630;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=3pNmnngxiEhIiRvBXuB1ZJgxGNhge5uLTtwEosNjp94=;
-        b=NXkLz4pr2ngpWAQvtPzelmjQISFC8ZWR9m+keggiciWbBzwqQpp1L52oDKB5m6r32X
-         EMS9eblqNEb4hexleRrErjq8KKJpizFYzzASCvabz+Tt6fLl0m0oTahi9dOq2Akh7EIu
-         0K6l7mYzszOfboMcHEqq7k+3Si9MJEsAFIPB2mkK4MzjxcUUhE4qi//JFBmdcG/5CitO
-         TO9djFFzFct475VOpo0VRPuVwGwaywdisgEBU7ry/1kLB0s3UKG0xU0kSXDKL3YoaRBU
-         ByWYRuGxgPQjuOw3GEYXPEmJLlGd6a55pB3NshTMiN7Fs6bej/0VUZdYwaclyxM6kxoG
-         o1HQ==
-X-Gm-Message-State: AC+VfDxM+8Kh5x1YDcqTfWW9VEeLUOyWX5P9EIufU9m8sH7wsBjtTpV8
-        urFE/hPwHFVCMS7J2axJ5Xxnr0e+eERr9fsXpdM=
-X-Google-Smtp-Source: ACHHUZ5ojqU+hKiLZbtlwA/RqPBGowaA6L8WZhUb7bZkXOJMGZu/2lBFh4fuEX2PDABMANw1/KBrGa9jxiHBs6+4qXc=
-X-Received: by 2002:aa7:d287:0:b0:518:7bc3:4cec with SMTP id
- w7-20020aa7d287000000b005187bc34cecmr1753533edq.22.1686936630095; Fri, 16 Jun
- 2023 10:30:30 -0700 (PDT)
+        Fri, 16 Jun 2023 14:14:48 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 76B4435AC;
+        Fri, 16 Jun 2023 11:14:46 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id E8F9A60EFA;
+        Fri, 16 Jun 2023 18:14:45 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4DE44C43391;
+        Fri, 16 Jun 2023 18:14:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1686939285;
+        bh=BGYZV1Km+8ZgDrE9neT/E0fU3u3ixvSh8AYCC3TbmE4=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=MRdJy0RgrSJF59KF/EC7N3hN4NM7JkZeq3KagnV0DWy1PIpTqhhanwN+rGe8zgC2V
+         MRnDgp8J0NexGL29v4Mucemw/3yZahpXPMUqiEhZDo6PLZ3uYpYsxd3ZL1fbGvwWwe
+         p/R8vyd2pT+khqUskQVZmRQf+jE0REJ8n2qSSkUm6kasMtDdPJCEzuxpbIe8qI0/Ui
+         gBxANtpHkUielBt2ehqqh3PqnGUAKKbbWba+orljx4X0xezuIPakLsTrSk3Gr6J6ZG
+         8yTxdvadfsX9qXvWVMaa8ZKkExpaD1sIFaCwY2WSngDPZW1skSPKVqWoP3yaiF1YJ9
+         Nln3oL3E93qMg==
+Received: by mail-lf1-f52.google.com with SMTP id 2adb3069b0e04-4f62b512fe2so1433702e87.1;
+        Fri, 16 Jun 2023 11:14:45 -0700 (PDT)
+X-Gm-Message-State: AC+VfDxwQUWCu6tmRoI+BsvqbJNP5p7Fj2QoKu4gc46NnqER1XFteijC
+        BIY2SecOEQhYFc9tPP49acRIW8YocA8eJ488Vkw=
+X-Google-Smtp-Source: ACHHUZ76yiO622Uh9+9rKEsm8ImEC4jXzUaBUsNUHgrPnEQ5V1l0GL/PgIuvK/efbFnHaYtpj3eltn1zagg/5cT90Eo=
+X-Received: by 2002:a19:ab11:0:b0:4f3:bbfe:db4e with SMTP id
+ u17-20020a19ab11000000b004f3bbfedb4emr1747329lfe.56.1686939283176; Fri, 16
+ Jun 2023 11:14:43 -0700 (PDT)
 MIME-Version: 1.0
-References: <20230612151608.99661-1-laoar.shao@gmail.com> <20230612151608.99661-4-laoar.shao@gmail.com>
-In-Reply-To: <20230612151608.99661-4-laoar.shao@gmail.com>
-From:   Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Date:   Fri, 16 Jun 2023 10:30:18 -0700
-Message-ID: <CAEf4BzaZEb_Uz21WDmQr7UC8Q50EfHDr2=dK477Z8fGEinCZ7w@mail.gmail.com>
-Subject: Re: [PATCH v3 bpf-next 03/10] bpftool: Show probed function in
- kprobe_multi link info
-To:     Yafang Shao <laoar.shao@gmail.com>
-Cc:     ast@kernel.org, daniel@iogearbox.net, john.fastabend@gmail.com,
-        andrii@kernel.org, martin.lau@linux.dev, song@kernel.org,
-        yhs@fb.com, kpsingh@kernel.org, sdf@google.com, haoluo@google.com,
-        jolsa@kernel.org, quentin@isovalent.com, rostedt@goodmis.org,
-        mhiramat@kernel.org, bpf@vger.kernel.org,
-        linux-trace-kernel@vger.kernel.org
+References: <20230616085038.4121892-1-rppt@kernel.org> <20230616085038.4121892-2-rppt@kernel.org>
+In-Reply-To: <20230616085038.4121892-2-rppt@kernel.org>
+From:   Song Liu <song@kernel.org>
+Date:   Fri, 16 Jun 2023 11:14:31 -0700
+X-Gmail-Original-Message-ID: <CAPhsuW4nDne7L=Qh142w+dMX2pqM_4k+SZSB=QBJ8ruG_j8dug@mail.gmail.com>
+Message-ID: <CAPhsuW4nDne7L=Qh142w+dMX2pqM_4k+SZSB=QBJ8ruG_j8dug@mail.gmail.com>
+Subject: Re: [PATCH v2 01/12] nios2: define virtual address space for modules
+To:     Mike Rapoport <rppt@kernel.org>
+Cc:     linux-kernel@vger.kernel.org,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Christophe Leroy <christophe.leroy@csgroup.eu>,
+        "David S. Miller" <davem@davemloft.net>,
+        Dinh Nguyen <dinguyen@kernel.org>,
+        Heiko Carstens <hca@linux.ibm.com>,
+        Helge Deller <deller@gmx.de>,
+        Huacai Chen <chenhuacai@kernel.org>,
+        Kent Overstreet <kent.overstreet@linux.dev>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Nadav Amit <nadav.amit@gmail.com>,
+        "Naveen N. Rao" <naveen.n.rao@linux.ibm.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Puranjay Mohan <puranjay12@gmail.com>,
+        Rick Edgecombe <rick.p.edgecombe@intel.com>,
+        Russell King <linux@armlinux.org.uk>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Will Deacon <will@kernel.org>, bpf@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-mips@vger.kernel.org,
+        linux-mm@kvack.org, linux-modules@vger.kernel.org,
+        linux-parisc@vger.kernel.org, linux-riscv@lists.infradead.org,
+        linux-s390@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, loongarch@lists.linux.dev,
+        netdev@vger.kernel.org, sparclinux@vger.kernel.org, x86@kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On Mon, Jun 12, 2023 at 8:16=E2=80=AFAM Yafang Shao <laoar.shao@gmail.com> =
-wrote:
+On Fri, Jun 16, 2023 at 1:51=E2=80=AFAM Mike Rapoport <rppt@kernel.org> wro=
+te:
 >
-> Show the already expose kprobe_multi link info in bpftool. The result as
-> follows,
+> From: "Mike Rapoport (IBM)" <rppt@kernel.org>
 >
-> 52: kprobe_multi  prog 381
->         retprobe 0  func_cnt 7
->         addrs ffffffff9ec44f20  funcs schedule_timeout_interruptible
->               ffffffff9ec44f60        schedule_timeout_killable
->               ffffffff9ec44fa0        schedule_timeout_uninterruptible
->               ffffffff9ec44fe0        schedule_timeout_idle
->               ffffffffc09468d0        xfs_trans_get_efd [xfs]
->               ffffffffc0953a10        xfs_trans_get_buf_map [xfs]
->               ffffffffc0957320        xfs_trans_get_dqtrx [xfs]
->         pids kprobe_multi(559862)
-> 53: kprobe_multi  prog 381
->         retprobe 1  func_cnt 7
->         addrs ffffffff9ec44f20  funcs schedule_timeout_interruptible
->               ffffffff9ec44f60        schedule_timeout_killable
->               ffffffff9ec44fa0        schedule_timeout_uninterruptible
->               ffffffff9ec44fe0        schedule_timeout_idle
->               ffffffffc09468d0        xfs_trans_get_efd [xfs]
->               ffffffffc0953a10        xfs_trans_get_buf_map [xfs]
->               ffffffffc0957320        xfs_trans_get_dqtrx [xfs]
-
-it all subjective, but this format is a bit weird where "addrs" and
-"funcs" is in first row to the left. Just makes everything wider. Why
-not something like
-
-addr              func
-ffffffff9ec44f20  schedule_timeout_interruptible
-ffffffff9ec44f60  schedule_timeout_killable
-ffffffffc0953a10  xfs_trans_get_buf_map [xfs]
-ffffffffc0957320  xfs_trans_get_dqtrx [xfs]
-
-Not it's singular (addr and func) because it's column names,
-basically. Can also do "addr func [module]".
-
->         pids kprobe_multi(559862)
+> nios2 uses kmalloc() to implement module_alloc() because CALL26/PCREL26
+> cannot reach all of vmalloc address space.
 >
-> $ tools/bpf/bpftool/bpftool link show -j
-> [{"id":52,"type":"kprobe_multi","prog_id":381,"retprobe":0,"func_cnt":7,"=
-funcs":[{"addr":18446744072078249760,"func":"schedule_timeout_interruptible=
-","module":""},{"addr":18446744072078249824,"func":"schedule_timeout_killab=
-le","module":""},{"addr":18446744072078249888,"func":"schedule_timeout_unin=
-terruptible","module":""},{"addr":18446744072078249952,"func":"schedule_tim=
-eout_idle","module":""},{"addr":18446744072645535952,"func":"xfs_trans_get_=
-efd","module":"[xfs]"},{"addr":18446744072645589520,"func":"xfs_trans_get_b=
-uf_map","module":"[xfs]"},{"addr":18446744072645604128,"func":"xfs_trans_ge=
-t_dqtrx","module":"[xfs]"}],"pids":[{"pid":559862,"comm":"kprobe_multi"}]},=
-{"id":53,"type":"kprobe_multi","prog_id":381,"retprobe":1,"func_cnt":7,"fun=
-cs":[{"addr":18446744072078249760,"func":"schedule_timeout_interruptible","=
-module":""},{"addr":18446744072078249824,"func":"schedule_timeout_killable"=
-,"module":""},{"addr":18446744072078249888,"func":"schedule_timeout_uninter=
-ruptible","module":""},{"addr":18446744072078249952,"func":"schedule_timeou=
-t_idle","module":""},{"addr":18446744072645535952,"func":"xfs_trans_get_efd=
-","module":"[xfs]"},{"addr":18446744072645589520,"func":"xfs_trans_get_buf_=
-map","module":"[xfs]"},{"addr":18446744072645604128,"func":"xfs_trans_get_d=
-qtrx","module":"[xfs]"}],"pids":[{"pid":559862,"comm":"kprobe_multi"}]}]
+> Define module space as 32MiB below the kernel base and switch nios2 to
+> use vmalloc for module allocations.
 >
-> Signed-off-by: Yafang Shao <laoar.shao@gmail.com>
+> Suggested-by: Thomas Gleixner <tglx@linutronix.de>
+> Signed-off-by: Mike Rapoport (IBM) <rppt@kernel.org>
+> Acked-by: Dinh Nguyen <dinguyen@kernel.org>
+
+Acked-by: Song Liu <song@kernel.org>
+
+
 > ---
->  tools/bpf/bpftool/link.c | 109 +++++++++++++++++++++++++++++++++++++++++=
-+++++-
->  1 file changed, 108 insertions(+), 1 deletion(-)
+>  arch/nios2/include/asm/pgtable.h |  5 ++++-
+>  arch/nios2/kernel/module.c       | 19 ++++---------------
+>  2 files changed, 8 insertions(+), 16 deletions(-)
 >
-
-[...]
+> diff --git a/arch/nios2/include/asm/pgtable.h b/arch/nios2/include/asm/pg=
+table.h
+> index 0f5c2564e9f5..0073b289c6a4 100644
+> --- a/arch/nios2/include/asm/pgtable.h
+> +++ b/arch/nios2/include/asm/pgtable.h
+> @@ -25,7 +25,10 @@
+>  #include <asm-generic/pgtable-nopmd.h>
+>
+>  #define VMALLOC_START          CONFIG_NIOS2_KERNEL_MMU_REGION_BASE
+> -#define VMALLOC_END            (CONFIG_NIOS2_KERNEL_REGION_BASE - 1)
+> +#define VMALLOC_END            (CONFIG_NIOS2_KERNEL_REGION_BASE - SZ_32M=
+ - 1)
+> +
+> +#define MODULES_VADDR          (CONFIG_NIOS2_KERNEL_REGION_BASE - SZ_32M=
+)
+> +#define MODULES_END            (CONFIG_NIOS2_KERNEL_REGION_BASE - 1)
+>
+>  struct mm_struct;
+>
+> diff --git a/arch/nios2/kernel/module.c b/arch/nios2/kernel/module.c
+> index 76e0a42d6e36..9c97b7513853 100644
+> --- a/arch/nios2/kernel/module.c
+> +++ b/arch/nios2/kernel/module.c
+> @@ -21,23 +21,12 @@
+>
+>  #include <asm/cacheflush.h>
+>
+> -/*
+> - * Modules should NOT be allocated with kmalloc for (obvious) reasons.
+> - * But we do it for now to avoid relocation issues. CALL26/PCREL26 canno=
+t reach
+> - * from 0x80000000 (vmalloc area) to 0xc00000000 (kernel) (kmalloc retur=
+ns
+> - * addresses in 0xc0000000)
+> - */
+>  void *module_alloc(unsigned long size)
+>  {
+> -       if (size =3D=3D 0)
+> -               return NULL;
+> -       return kmalloc(size, GFP_KERNEL);
+> -}
+> -
+> -/* Free memory returned from module_alloc */
+> -void module_memfree(void *module_region)
+> -{
+> -       kfree(module_region);
+> +       return __vmalloc_node_range(size, 1, MODULES_VADDR, MODULES_END,
+> +                                   GFP_KERNEL, PAGE_KERNEL_EXEC,
+> +                                   VM_FLUSH_RESET_PERMS, NUMA_NO_NODE,
+> +                                   __builtin_return_address(0));
+>  }
+>
+>  int apply_relocate_add(Elf32_Shdr *sechdrs, const char *strtab,
+> --
+> 2.35.1
+>
