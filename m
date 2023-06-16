@@ -2,187 +2,235 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F782EB64DC
-	for <linux-trace-kernel@archiver.kernel.org>; Thu, 15 Jun 2023 18:26:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1438FC001B1
+	for <linux-trace-kernel@archiver.kernel.org>; Fri, 16 Jun 2023 08:51:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229842AbjFOS0z (ORCPT
+        id S1343576AbjFPIvC (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Thu, 15 Jun 2023 14:26:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38662 "EHLO
+        Fri, 16 Jun 2023 04:51:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45280 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229700AbjFOS0z (ORCPT
+        with ESMTP id S230505AbjFPIvB (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Thu, 15 Jun 2023 14:26:55 -0400
-Received: from mail-pl1-x64a.google.com (mail-pl1-x64a.google.com [IPv6:2607:f8b0:4864:20::64a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 32F2B1BF9
-        for <linux-trace-kernel@vger.kernel.org>; Thu, 15 Jun 2023 11:26:53 -0700 (PDT)
-Received: by mail-pl1-x64a.google.com with SMTP id d9443c01a7336-1b4fe2d438bso16627235ad.1
-        for <linux-trace-kernel@vger.kernel.org>; Thu, 15 Jun 2023 11:26:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20221208; t=1686853612; x=1689445612;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=v5j0wCZPnfsM4/SjEwwVDfexZdOw0uK6iqseA0HQUzE=;
-        b=pVetr2jEMF5lF1mCTvADonXqP6bFE0nxsdmxOn0ASTw2/bFTnBCX3GM5/ND7idJYcK
-         WLJ9v5Jtgv7YkQ2t1A7zr6BtWjGAUd3nGNd07s8rKjBzK87V1SPxXbBBFz/A0h4/TJ+6
-         PGmBMXeXE9iwEFyxsQoXFCV8sBkm29Ah7+IBIGN34Rgv+Rsgl1RNt8i9bBt7KJ4b5QVP
-         kObHHMIWjacSwTjfHlphojvQG6ZoJtxmutK76LuVb5zNph2otTKjSu6e9v7dG85CX5qp
-         /ZUeWSJZa6+15VCNA95293lQnjitxNStYywqEhGfprGR2cMKGHH5r/UDSXD2EdD+dK2Z
-         XA6g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1686853612; x=1689445612;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=v5j0wCZPnfsM4/SjEwwVDfexZdOw0uK6iqseA0HQUzE=;
-        b=eE83/sED+swPPceE70wDNKv9sDiFym/oGQJGUmxz+7fERGGkg34j7VUqGpeNwzbzGw
-         JmgUt05Nd9GuIVwQnXrpPv70GIJM8jgbC/4DsPGmBxXkRSk2T6Qmsib0vLFFsjGAk5j9
-         ZdAaCPOboXANhdE04uZrDnERsJHk8ejFvVPcIfENZ2hms6DRURqyZUfNX8z7jMvG4t+A
-         5dbVQLqu/debWA0j+KShYvHlaTITyVUdrU/41r2+muZngO7D1S4g4W+GHv/pEf6O1zAf
-         aTBtaGeOxuiohnzGO44dPBBYhzm4Akl0n1qS9k6roV186I7TvUeMHvhl5qCzwMuSRKQj
-         KU9A==
-X-Gm-Message-State: AC+VfDy4F76eXw9VfTbVVmQ8F2ne/MvNAgcGWOAa5bifMhwV547gHZiZ
-        TriACFspcvlzqxGvidnfYgltT6j7USU=
-X-Google-Smtp-Source: ACHHUZ4XblfvtELYfPfTXYv/mZguDzYqVYK+D/wTZAy9MdyrQSECLLlB+UmOM8NMKOmXv6Fwf6a/c1+W5jI=
-X-Received: from zagreus.c.googlers.com ([fda3:e722:ac3:cc00:7f:e700:c0a8:5c37])
- (user=seanjc job=sendgmr) by 2002:a17:902:a70f:b0:1b5:64:1862 with SMTP id
- w15-20020a170902a70f00b001b500641862mr893196plq.9.1686853612603; Thu, 15 Jun
- 2023 11:26:52 -0700 (PDT)
-Date:   Thu, 15 Jun 2023 11:26:51 -0700
-In-Reply-To: <20230526234435.662652-10-yuzhao@google.com>
-Mime-Version: 1.0
-References: <20230526234435.662652-1-yuzhao@google.com> <20230526234435.662652-10-yuzhao@google.com>
-Message-ID: <ZItX64Bbx5vdjo9M@google.com>
-Subject: Re: [PATCH mm-unstable v2 09/10] kvm/x86: add kvm_arch_test_clear_young()
-From:   Sean Christopherson <seanjc@google.com>
-To:     Yu Zhao <yuzhao@google.com>
+        Fri, 16 Jun 2023 04:51:01 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 091B71FEC;
+        Fri, 16 Jun 2023 01:51:00 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 8B018623BF;
+        Fri, 16 Jun 2023 08:50:59 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9D119C433C0;
+        Fri, 16 Jun 2023 08:50:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1686905458;
+        bh=UifOGBhwjuFfbJuOcG7ahrWbKbx6ngB0ASSIbVF4SDg=;
+        h=From:To:Cc:Subject:Date:From;
+        b=ck0ec7mnOXOJHNfyR0Cuz10mDHrTJaqzBdkJJzGI4J5mxsDw+S1o8grrhlLF0PRRJ
+         Blj2mY565pFuuPac9zqDUVIJhp2GAgrXs6ZInsTC/6pWhSlWp11aHMJNQn9eODGEeh
+         VSvFVRn4+rUIJbQbY7eRV1WOekMqiki5eGyfHIlx8ZQ2xx8xQp/apWKMDOp78uimel
+         sukig/TwDMPtoPPprD/GNVQGbNgwIMeqg0FWBqqu8wfvHogW2g7+TEtlFT4sJSL93V
+         o47E4rKDkN2DN+bQ/ziUVnSQt1N7BfNFA4zob4IPcJj+QLlo2BCg+LbIduSrfniXxn
+         WV2mvb8jIG0NA==
+From:   Mike Rapoport <rppt@kernel.org>
+To:     linux-kernel@vger.kernel.org
 Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Alistair Popple <apopple@nvidia.com>,
-        Anup Patel <anup@brainfault.org>,
-        Ben Gardon <bgardon@google.com>,
-        Borislav Petkov <bp@alien8.de>,
         Catalin Marinas <catalin.marinas@arm.com>,
-        Chao Peng <chao.p.peng@linux.intel.com>,
         Christophe Leroy <christophe.leroy@csgroup.eu>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Fabiano Rosas <farosas@linux.ibm.com>,
-        Gaosheng Cui <cuigaosheng1@huawei.com>,
-        Gavin Shan <gshan@redhat.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
-        James Morse <james.morse@arm.com>,
-        "Jason A. Donenfeld" <Jason@zx2c4.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Marc Zyngier <maz@kernel.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Dinh Nguyen <dinguyen@kernel.org>,
+        Heiko Carstens <hca@linux.ibm.com>,
+        Helge Deller <deller@gmx.de>,
+        Huacai Chen <chenhuacai@kernel.org>,
+        Kent Overstreet <kent.overstreet@linux.dev>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
         Michael Ellerman <mpe@ellerman.id.au>,
-        Michael Larabel <michael@michaellarabel.com>,
         Mike Rapoport <rppt@kernel.org>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        Oliver Upton <oliver.upton@linux.dev>,
-        Paul Mackerras <paulus@ozlabs.org>,
-        Peter Xu <peterx@redhat.com>,
+        Nadav Amit <nadav.amit@gmail.com>,
+        "Naveen N. Rao" <naveen.n.rao@linux.ibm.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Puranjay Mohan <puranjay12@gmail.com>,
+        Rick Edgecombe <rick.p.edgecombe@intel.com>,
+        Russell King <linux@armlinux.org.uk>,
+        Song Liu <song@kernel.org>,
         Steven Rostedt <rostedt@goodmis.org>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
         Thomas Gleixner <tglx@linutronix.de>,
-        Thomas Huth <thuth@redhat.com>, Will Deacon <will@kernel.org>,
-        Zenghui Yu <yuzenghui@huawei.com>, kvmarm@lists.linux.dev,
-        kvm@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-mm@kvack.org, linuxppc-dev@lists.ozlabs.org,
-        linux-trace-kernel@vger.kernel.org, x86@kernel.org,
-        linux-mm@google.com
-Content-Type: text/plain; charset="us-ascii"
+        Will Deacon <will@kernel.org>, bpf@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-mips@vger.kernel.org,
+        linux-mm@kvack.org, linux-modules@vger.kernel.org,
+        linux-parisc@vger.kernel.org, linux-riscv@lists.infradead.org,
+        linux-s390@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, loongarch@lists.linux.dev,
+        netdev@vger.kernel.org, sparclinux@vger.kernel.org, x86@kernel.org
+Subject: [PATCH v2 00/12] mm: jit/text allocator
+Date:   Fri, 16 Jun 2023 11:50:26 +0300
+Message-Id: <20230616085038.4121892-1-rppt@kernel.org>
+X-Mailer: git-send-email 2.35.1
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On Fri, May 26, 2023, Yu Zhao wrote:
-> diff --git a/arch/x86/kvm/mmu/tdp_mmu.c b/arch/x86/kvm/mmu/tdp_mmu.c
-> index 08340219c35a..6875a819e007 100644
-> --- a/arch/x86/kvm/mmu/tdp_mmu.c
-> +++ b/arch/x86/kvm/mmu/tdp_mmu.c
-> @@ -1232,6 +1232,40 @@ bool kvm_tdp_mmu_test_age_gfn(struct kvm *kvm, struct kvm_gfn_range *range)
->  	return kvm_tdp_mmu_handle_gfn(kvm, range, test_age_gfn);
->  }
->  
-> +bool kvm_arch_test_clear_young(struct kvm *kvm, struct kvm_gfn_range *range)
-> +{
-> +	struct kvm_mmu_page *root;
-> +	int offset = ffs(shadow_accessed_mask) - 1;
-> +
-> +	if (kvm_shadow_root_allocated(kvm))
+From: "Mike Rapoport (IBM)" <rppt@kernel.org>
 
-This needs a comment.
+Hi,
 
-> +		return true;
-> +
-> +	rcu_read_lock();
-> +
-> +	list_for_each_entry_rcu(root, &kvm->arch.tdp_mmu_roots, link) {
+module_alloc() is used everywhere as a mean to allocate memory for code.
 
-As requested in v1[1], please add a macro for a lockless walk.
+Beside being semantically wrong, this unnecessarily ties all subsystmes
+that need to allocate code, such as ftrace, kprobes and BPF to modules and
+puts the burden of code allocation to the modules code.
 
-[1] https://lkml.kernel.org/r/Y%2Fed0XYAPx%2B7pukA%40google.com
+Several architectures override module_alloc() because of various
+constraints where the executable memory can be located and this causes
+additional obstacles for improvements of code allocation.
 
-> +		struct tdp_iter iter;
-> +
-> +		if (kvm_mmu_page_as_id(root) != range->slot->as_id)
-> +			continue;
-> +
-> +		tdp_root_for_each_leaf_pte(iter, root, range->start, range->end) {
-> +			u64 *sptep = rcu_dereference(iter.sptep);
-> +
-> +			VM_WARN_ON_ONCE(!page_count(virt_to_page(sptep)));
+A centralized infrastructure for code allocation allows allocations of
+executable memory as ROX, and future optimizations such as caching large
+pages for better iTLB performance and providing sub-page allocations for
+users that only need small jit code snippets.
 
-Hrm, I don't like adding this in KVM.  The primary MMU might guarantee that this
-callback is invoked if and only if the SPTE is backed by struct page memory, but
-there's no reason to assume that's true in KVM.  If we want the sanity check, then
-this needs to use kvm_pfn_to_refcounted_page().
+Rick Edgecombe proposed perm_alloc extension to vmalloc [1] and Song Liu
+proposed execmem_alloc [2], but both these approaches were targeting BPF
+allocations and lacked the ground work to abstract executable allocations
+and split them from the modules core.
 
-And it should use KVM's MMU_WARN_ON(), which is a mess and effectively dead code,
-but I'm working on changing that[*], i.e. by the time this gets to Linus' tree,
-the sanity check should have a much cleaner implementation.
+Thomas Gleixner's suggested to express module allocation restrictions and
+requirements as struct mod_alloc_type_params [3] that would define ranges,
+protections and other parameters for different types of allocations used by
+modules and following that suggestion Song separated allocations of
+different types in modules (commit ac3b43283923 ("module: replace
+module_layout with module_memory")) and posted "Type aware module
+allocator" set [4].
 
-[2] https://lore.kernel.org/all/20230511235917.639770-8-seanjc@google.com
+I liked the idea of parametrising code allocation requirements as a
+structure, but I believe the original proposal and Song's module allocator
+were too module centric, so I came up with these patches.
 
-> +
-> +			if (!(iter.old_spte & shadow_accessed_mask))
-> +				continue;
-> +
-> +			if (kvm_should_clear_young(range, iter.gfn))
-> +				clear_bit(offset, (unsigned long *)sptep);
+This set splits code allocation from modules by introducing
+execmem_text_alloc(), execmem_data_alloc(), execmem_free(),
+jit_text_alloc() and jit_free() APIs, replaces call sites of module_alloc()
+and module_memfree() with the new APIs and implements core text and related
+allocation in a central place.
 
-If/when you rebase on https://github.com/kvm-x86/linux/tree/next, can you pull
-out the atomic bits of tdp_mmu_clear_spte_bits() and use that new helper? E.g.
+Instead of architecture specific overrides for module_alloc(), the
+architectures that require non-default behaviour for text allocation must
+fill execmem_alloc_params structure and implement execmem_arch_params()
+that returns a pointer to that structure. If an architecture does not
+implement execmem_arch_params(), the defaults compatible with the current
+modules::module_alloc() are used.
 
-diff --git a/arch/x86/kvm/mmu/tdp_iter.h b/arch/x86/kvm/mmu/tdp_iter.h
-index fae559559a80..914c34518829 100644
---- a/arch/x86/kvm/mmu/tdp_iter.h
-+++ b/arch/x86/kvm/mmu/tdp_iter.h
-@@ -58,15 +58,18 @@ static inline u64 kvm_tdp_mmu_write_spte(tdp_ptep_t sptep, u64 old_spte,
-        return old_spte;
- }
- 
-+static inline u64 tdp_mmu_clear_spte_bits_atomic(tdp_ptep_t sptep, u64 mask)
-+{
-+       atomic64_t *sptep_atomic = (atomic64_t *)rcu_dereference(sptep);
-+
-+       return (u64)atomic64_fetch_and(~mask, sptep_atomic);
-+}
-+
- static inline u64 tdp_mmu_clear_spte_bits(tdp_ptep_t sptep, u64 old_spte,
-                                          u64 mask, int level)
- {
--       atomic64_t *sptep_atomic;
--
--       if (kvm_tdp_mmu_spte_need_atomic_write(old_spte, level)) {
--               sptep_atomic = (atomic64_t *)rcu_dereference(sptep);
--               return (u64)atomic64_fetch_and(~mask, sptep_atomic);
--       }
-+       if (kvm_tdp_mmu_spte_need_atomic_write(old_spte, level))
-+               return tdp_mmu_clear_spte_bits_atomic(sptep, mask);
- 
-        __kvm_tdp_mmu_write_spte(sptep, old_spte & ~mask);
-        return old_spte;
+The intended semantics of the new APIs is that execmem APIs should be used
+to allocate memory that must reside close to the kernel image because of
+addressing mode restrictions, e.g modules on many architectures or dynamic
+ftrace trampolines on x86.
+
+The jit APIs are intended for users that can place code anywhere in vmalloc
+area, like kprobes on most architectures and BPF on arm/arm64.
+
+While two distinct API cover the major cases, there is still might be need
+for arch-specific overrides for some of the usecases. For example, riscv
+uses a dedicated range for BPF allocations in order to be able to use
+relative addressing, but for kprobes riscv can use the entire vmalloc area.
+For such overrides we might introduce jit_text_alloc variant that gets
+start + end parameters to restrict the range like Mark Rutland suggested
+and then use that variant in arch override.
+
+The new infrastructure allows decoupling of kprobes and ftrace from
+modules, and most importantly it paves the way for ROX allocations for
+executable memory.
+
+For now I've dropped patches that enable ROX allocations on x86 because
+with them modprobe takes ten times more. To make modprobe fast with ROX
+allocations more work is required to text poking infrastructure, but this
+work is not a prerequisite for this series.
+
+[1] https://lore.kernel.org/lkml/20201120202426.18009-1-rick.p.edgecombe@intel.com/
+[2] https://lore.kernel.org/all/20221107223921.3451913-1-song@kernel.org/
+[3] https://lore.kernel.org/all/87v8mndy3y.ffs@tglx/
+[4] https://lore.kernel.org/all/20230526051529.3387103-1-song@kernel.org
+
+v2 changes:
+* Separate "module" and "others" allocations with execmem_text_alloc()
+and jit_text_alloc()
+* Drop ROX entablement on x86
+* Add ack for nios2 changes, thanks Dinh Nguyen
+
+v1: https://lore.kernel.org/all/20230601101257.530867-1-rppt@kernel.org
+
+Mike Rapoport (IBM) (12):
+  nios2: define virtual address space for modules
+  mm: introduce execmem_text_alloc() and jit_text_alloc()
+  mm/execmem, arch: convert simple overrides of module_alloc to execmem
+  mm/execmem, arch: convert remaining overrides of module_alloc to execmem
+  modules, execmem: drop module_alloc
+  mm/execmem: introduce execmem_data_alloc()
+  arm64, execmem: extend execmem_params for generated code definitions
+  riscv: extend execmem_params for kprobes allocations
+  powerpc: extend execmem_params for kprobes allocations
+  arch: make execmem setup available regardless of CONFIG_MODULES
+  x86/ftrace: enable dynamic ftrace without CONFIG_MODULES
+  kprobes: remove dependcy on CONFIG_MODULES
+
+ arch/Kconfig                       |   2 +-
+ arch/arm/kernel/module.c           |  32 ------
+ arch/arm/mm/init.c                 |  36 ++++++
+ arch/arm64/include/asm/memory.h    |   8 ++
+ arch/arm64/include/asm/module.h    |   6 -
+ arch/arm64/kernel/kaslr.c          |   3 +-
+ arch/arm64/kernel/module.c         |  47 --------
+ arch/arm64/kernel/probes/kprobes.c |   7 --
+ arch/arm64/mm/init.c               |  56 +++++++++
+ arch/loongarch/kernel/module.c     |   6 -
+ arch/loongarch/mm/init.c           |  20 ++++
+ arch/mips/kernel/module.c          |  10 +-
+ arch/mips/mm/init.c                |  19 ++++
+ arch/nios2/include/asm/pgtable.h   |   5 +-
+ arch/nios2/kernel/module.c         |  28 +++--
+ arch/parisc/kernel/module.c        |  12 +-
+ arch/parisc/mm/init.c              |  22 +++-
+ arch/powerpc/kernel/kprobes.c      |  16 +--
+ arch/powerpc/kernel/module.c       |  37 ------
+ arch/powerpc/mm/mem.c              |  59 ++++++++++
+ arch/riscv/kernel/module.c         |  10 --
+ arch/riscv/kernel/probes/kprobes.c |  10 --
+ arch/riscv/mm/init.c               |  34 ++++++
+ arch/s390/kernel/ftrace.c          |   4 +-
+ arch/s390/kernel/kprobes.c         |   4 +-
+ arch/s390/kernel/module.c          |  42 +------
+ arch/s390/mm/init.c                |  41 +++++++
+ arch/sparc/kernel/module.c         |  33 +-----
+ arch/sparc/mm/Makefile             |   2 +
+ arch/sparc/mm/execmem.c            |  25 ++++
+ arch/sparc/net/bpf_jit_comp_32.c   |   8 +-
+ arch/x86/Kconfig                   |   1 +
+ arch/x86/kernel/ftrace.c           |  16 +--
+ arch/x86/kernel/kprobes/core.c     |   4 +-
+ arch/x86/kernel/module.c           |  51 ---------
+ arch/x86/mm/init.c                 |  54 +++++++++
+ include/linux/execmem.h            | 155 +++++++++++++++++++++++++
+ include/linux/moduleloader.h       |  15 ---
+ kernel/bpf/core.c                  |  14 +--
+ kernel/kprobes.c                   |  51 +++++----
+ kernel/module/Kconfig              |   1 +
+ kernel/module/main.c               |  45 ++------
+ kernel/trace/trace_kprobe.c        |  11 ++
+ mm/Kconfig                         |   3 +
+ mm/Makefile                        |   1 +
+ mm/execmem.c                       | 177 +++++++++++++++++++++++++++++
+ mm/mm_init.c                       |   2 +
+ 47 files changed, 813 insertions(+), 432 deletions(-)
+ create mode 100644 arch/sparc/mm/execmem.c
+ create mode 100644 include/linux/execmem.h
+ create mode 100644 mm/execmem.c
+
+
+base-commit: 44c026a73be8038f03dbdeef028b642880cf1511
+-- 
+2.35.1
 
