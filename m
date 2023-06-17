@@ -2,182 +2,124 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F988EB64D9
-	for <linux-trace-kernel@archiver.kernel.org>; Sat, 17 Jun 2023 03:29:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DFC07EB64DD
+	for <linux-trace-kernel@archiver.kernel.org>; Sat, 17 Jun 2023 05:53:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229952AbjFQD3x (ORCPT
+        id S233266AbjFQFxp (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Fri, 16 Jun 2023 23:29:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60888 "EHLO
+        Sat, 17 Jun 2023 01:53:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53568 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233937AbjFQD3u (ORCPT
+        with ESMTP id S229493AbjFQFxo (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Fri, 16 Jun 2023 23:29:50 -0400
-Received: from mail-qt1-x832.google.com (mail-qt1-x832.google.com [IPv6:2607:f8b0:4864:20::832])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 71D4010C8;
-        Fri, 16 Jun 2023 20:29:49 -0700 (PDT)
-Received: by mail-qt1-x832.google.com with SMTP id d75a77b69052e-3f9b2b7109dso11746961cf.0;
-        Fri, 16 Jun 2023 20:29:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1686972588; x=1689564588;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=irlWWANwbFv9WUSPO04X12DVZBYZ8ZDthJKp+8AQcVs=;
-        b=Cvm+I8uFOumY9HA949yVpP8/xfbfW6hIv9hh/s7GpqLrazyPAAkzXks8mo0D9u9RI7
-         AmRQJsHRffBXGqVAkvMi6wdHTwL/xsuyvMPyn/9KlOvwAiCAxkC26ghIPoBWQ5aFezI8
-         1RbCnWltMB5kJQqN0M7fo7D05OJO8iI5nYSGawZt87KPbZ9tVLS6LIZ3HyPtV6JreY7X
-         jwVoYJdoqJe3dD55HGvpC4r9Mbat0ZaDnBVNc1S80zZ0di1N/lUUZFcIRWUZZ23Bjz3o
-         IAseZFmiWR5mDAjv6+u7GBZJaJ+Zs5iCOeIKmat+RoCCYdIjxhRGgGOqDW9j3yhedQM7
-         jmyw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1686972588; x=1689564588;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=irlWWANwbFv9WUSPO04X12DVZBYZ8ZDthJKp+8AQcVs=;
-        b=gvkPVirbdhAqdp39J+ODqw4ygzLwlEFoo5JP3W5xQiP2BwsGkjBlLk12V6bHjECr0l
-         ElpFk6SEHKF8y1mHhe4yDUvV6Ub/T4/lomeLLYCiJFS7Q6saal7KMbAM0AQ1uDvQEKG0
-         rP/2ZBlLl1RyATe5sSkba1Td87qUDYDwcuDEzmdkqu6YmmG89Aw5ZOKOhUY0VWrg7org
-         3KWN138/kRIYnHXGjlvVA0ubqfOLSOSxo86vdp5XIdWMwp57Tl5j7lQyRsQz31paCaUF
-         FSkCy9gXs8H5Hhm/BxH/YnKM4s6bjUcGmj7IhFwln7A8RrZBt9jwbglKrjVHtBWNiefl
-         SHtQ==
-X-Gm-Message-State: AC+VfDz04rUVw+Mn+rQFgMUxrm0ZUGw2IlSaK+WjUuPFpLGprUcLfllZ
-        FEcj5hC4kKE6g4K3QqqgLP3tPRR1lrHj2POOqCY=
-X-Google-Smtp-Source: ACHHUZ56HEma2uylJu2hvdQ1E2uGt4n3b7EAlrKHC4q8M//MIosInZ1tYBSm8NlHkYjG21TJ8paGj2o4i3JKB+EmETw=
-X-Received: by 2002:ad4:5be9:0:b0:62f:e5f7:8383 with SMTP id
- k9-20020ad45be9000000b0062fe5f78383mr3710768qvc.15.1686972588518; Fri, 16 Jun
- 2023 20:29:48 -0700 (PDT)
+        Sat, 17 Jun 2023 01:53:44 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 41A5F1987;
+        Fri, 16 Jun 2023 22:53:43 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id C4E2161142;
+        Sat, 17 Jun 2023 05:53:42 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 24536C433C8;
+        Sat, 17 Jun 2023 05:53:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1686981222;
+        bh=TluszqxdgR0a0IwbMuuhT/6JAXY40kPgAznuGjSXri0=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=lpj2dpfi9Ji3xzZ2kbgOQVYp/ZmysDx8WqNHlHmdTvMZEZsbjfL4hE6m7SXkjz4Zo
+         Mkq0iog3xkwtSwK3WOjB9XwUu05VRpcB0eogiPxG2WXCBK0aumyezzFkPPpZnGtjc7
+         5x++BGdF8JI0RHFvISKKMXQLn7exxg6GH1B4T2YCX3C0Zr0t9A89VOCr3b7IhrP+qG
+         ZzJIZ0zukBYcwghAr54w2jBQdBKljd+YnNYrk8GHhTFw3utqrXxsX2NC3voAWygO8q
+         svafETOLy9nPtmeHj06Y/0ZWzWAt+idrvmT6go/EJzAEpVusozQOwG5k1TndPIMv23
+         z+o01h8acz8Lg==
+Date:   Sat, 17 Jun 2023 08:52:56 +0300
+From:   Mike Rapoport <rppt@kernel.org>
+To:     "Edgecombe, Rick P" <rick.p.edgecombe@intel.com>
+Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "mcgrof@kernel.org" <mcgrof@kernel.org>,
+        "deller@gmx.de" <deller@gmx.de>,
+        "davem@davemloft.net" <davem@davemloft.net>,
+        "nadav.amit@gmail.com" <nadav.amit@gmail.com>,
+        "linux@armlinux.org.uk" <linux@armlinux.org.uk>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-mips@vger.kernel.org" <linux-mips@vger.kernel.org>,
+        "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>,
+        "hca@linux.ibm.com" <hca@linux.ibm.com>,
+        "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
+        "kent.overstreet@linux.dev" <kent.overstreet@linux.dev>,
+        "puranjay12@gmail.com" <puranjay12@gmail.com>,
+        "linux-s390@vger.kernel.org" <linux-s390@vger.kernel.org>,
+        "palmer@dabbelt.com" <palmer@dabbelt.com>,
+        "chenhuacai@kernel.org" <chenhuacai@kernel.org>,
+        "tsbogend@alpha.franken.de" <tsbogend@alpha.franken.de>,
+        "linux-trace-kernel@vger.kernel.org" 
+        <linux-trace-kernel@vger.kernel.org>,
+        "linux-parisc@vger.kernel.org" <linux-parisc@vger.kernel.org>,
+        "christophe.leroy@csgroup.eu" <christophe.leroy@csgroup.eu>,
+        "x86@kernel.org" <x86@kernel.org>,
+        "mpe@ellerman.id.au" <mpe@ellerman.id.au>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "rostedt@goodmis.org" <rostedt@goodmis.org>,
+        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
+        "will@kernel.org" <will@kernel.org>,
+        "dinguyen@kernel.org" <dinguyen@kernel.org>,
+        "naveen.n.rao@linux.ibm.com" <naveen.n.rao@linux.ibm.com>,
+        "sparclinux@vger.kernel.org" <sparclinux@vger.kernel.org>,
+        "linux-modules@vger.kernel.org" <linux-modules@vger.kernel.org>,
+        "bpf@vger.kernel.org" <bpf@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "song@kernel.org" <song@kernel.org>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        "loongarch@lists.linux.dev" <loongarch@lists.linux.dev>,
+        "akpm@linux-foundation.org" <akpm@linux-foundation.org>
+Subject: Re: [PATCH v2 01/12] nios2: define virtual address space for modules
+Message-ID: <20230617055256.GM52412@kernel.org>
+References: <20230616085038.4121892-1-rppt@kernel.org>
+ <20230616085038.4121892-2-rppt@kernel.org>
+ <6f9e9c385096bd965e53c49065848953398f5b8e.camel@intel.com>
 MIME-Version: 1.0
-References: <20230612151608.99661-1-laoar.shao@gmail.com> <20230612151608.99661-11-laoar.shao@gmail.com>
- <CAEf4BzYTxEeaXLLajU-ka=OxPVh4LZERq210_A75mDZH+7t-yg@mail.gmail.com> <CALOAHbBNzu4YeDSwFQvUcZ4ATj-FgbWG--6BgeQryzMRq=mCRQ@mail.gmail.com>
-In-Reply-To: <CALOAHbBNzu4YeDSwFQvUcZ4ATj-FgbWG--6BgeQryzMRq=mCRQ@mail.gmail.com>
-From:   Yafang Shao <laoar.shao@gmail.com>
-Date:   Sat, 17 Jun 2023 11:29:12 +0800
-Message-ID: <CALOAHbDxU94m8DQ_8AwKRyJ5DOw-NJDER7K7AjCLD3=hkPV4=w@mail.gmail.com>
-Subject: Re: [PATCH v3 bpf-next 10/10] bpftool: Show probed function in
- perf_event link info
-To:     Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Cc:     ast@kernel.org, daniel@iogearbox.net, john.fastabend@gmail.com,
-        andrii@kernel.org, martin.lau@linux.dev, song@kernel.org,
-        yhs@fb.com, kpsingh@kernel.org, sdf@google.com, haoluo@google.com,
-        jolsa@kernel.org, quentin@isovalent.com, rostedt@goodmis.org,
-        mhiramat@kernel.org, bpf@vger.kernel.org,
-        linux-trace-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <6f9e9c385096bd965e53c49065848953398f5b8e.camel@intel.com>
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On Sat, Jun 17, 2023 at 11:20=E2=80=AFAM Yafang Shao <laoar.shao@gmail.com>=
- wrote:
->
-> On Sat, Jun 17, 2023 at 4:41=E2=80=AFAM Andrii Nakryiko
-> <andrii.nakryiko@gmail.com> wrote:
-> >
-> > On Mon, Jun 12, 2023 at 8:16=E2=80=AFAM Yafang Shao <laoar.shao@gmail.c=
-om> wrote:
-> > >
-> > > Enhance bpftool to display comprehensive information about exposed
-> > > perf_event links, covering uprobe, kprobe, tracepoint, and generic pe=
-rf
-> > > event. The resulting output will include the following details:
-> > >
-> > > $ tools/bpf/bpftool/bpftool link show
-> > > 3: perf_event  prog 14
-> > >         event_type software  event_config cpu-clock
-> > >         bpf_cookie 0
-> > >         pids perf_event(1379330)
-> > > 4: perf_event  prog 14
-> > >         event_type hw-cache  event_config LLC-load-misses
-> > >         bpf_cookie 0
-> > >         pids perf_event(1379330)
-> > > 5: perf_event  prog 14
-> > >         event_type hardware  event_config cpu-cycles
-> >
-> > how about
-> >
-> > "event hardware:cpu-cycles" for events
->
-> Agree. That is better.
->
-> >
-> > >         bpf_cookie 0
-> > >         pids perf_event(1379330)
-> > > 6: perf_event  prog 20
-> > >         retprobe 0  file_name /home/yafang/bpf/uprobe/a.out  offset 0=
-x1338
-> >
-> > for uprobes: "uprobe /home/yafang/bpf/uprobe/a.out+0x1338"
-> > for retprobes: "uretprobe /home/yafang/bpf/uprobe/a.out+0x1338"
->
-> Agree.
+On Fri, Jun 16, 2023 at 04:00:19PM +0000, Edgecombe, Rick P wrote:
+> On Fri, 2023-06-16 at 11:50 +0300, Mike Rapoport wrote:
+> >  void *module_alloc(unsigned long size)
+> >  {
+> > -       if (size == 0)
+> > -               return NULL;
+> > -       return kmalloc(size, GFP_KERNEL);
+> > -}
+> > -
+> > -/* Free memory returned from module_alloc */
+> > -void module_memfree(void *module_region)
+> > -{
+> > -       kfree(module_region);
+> > +       return __vmalloc_node_range(size, 1, MODULES_VADDR,
+> > MODULES_END,
+> > +                                   GFP_KERNEL, PAGE_KERNEL_EXEC,
+> > +                                   VM_FLUSH_RESET_PERMS,
+> > NUMA_NO_NODE,
+> > +                                   __builtin_return_address(0));
+> >  }
+> >  
+> >  int apply_relocate_add(Elf32_Shdr *sechdrs, const char *s
+> 
+> I wonder if the (size == 0) check is really needed, but
+> __vmalloc_node_range() will WARN on this case where the old code won't.
 
-BTW, should we also change the output of `bpftool perf show` that way?
+module_alloc() should not be called with zero size, so a warning there
+would be appropriate.
+Besides, no other module_alloc() had this check.
 
-- Old
-$ bpftool perf show
-pid 11898  fd 7: prog_id 6  kprobe  func kernel_clone  offset 0
-pid 11898  fd 9: prog_id 5  kretprobe  func kernel_clone  offset 0
-pid 11966  fd 9: prog_id 13  uprobe  filename
-/home/dev/waken/bpf/uprobe/a.out  offset 4920
-pid 11966  fd 11: prog_id 14  uretprobe  filename
-/home/dev/waken/bpf/uprobe/a.out  offset 4920
-
-- New ?
-$ bpftool perf show
-pid 11898  fd 7: prog_id 6  kprobe kernel_clone
-pid 11898  fd 9: prog_id 5  kretprobe kernel_clone
-pid 11966  fd 9: prog_id 13  uprobe /home/dev/waken/bpf/uprobe/a.out+0x1338
-pid 11966  fd 11: prog_id 14  uretprobe /home/dev/waken/bpf/uprobe/a.out+0x=
-1338
-
->
-> >
-> > >         bpf_cookie 0
-> > >         pids uprobe(1379706)
-> > > 7: perf_event  prog 21
-> > >         retprobe 1  file_name /home/yafang/bpf/uprobe/a.out  offset 0=
-x1338
-> > >         bpf_cookie 0
-> > >         pids uprobe(1379706)
-> > > 8: perf_event  prog 27
-> > >         tp_name sched_switch
-> >
-> > "tracepoint  sched_switch" ?
->
-> Agree.
->
-> >
-> > >         bpf_cookie 0
-> > >         pids tracepoint(1381734)
-> > > 10: perf_event  prog 43
-> > >         retprobe 0  func_name kernel_clone  addr ffffffffad0a9660
-> >
-> > similar to uprobes:
-> >
-> > "kprobe kernel_clone  0xffffffffad0a9660"
-> > "kretprobe kernel_clone  0xffffffffad0a9660"
-> >
-> >
-> > That is, make this more human readable instead of mechanically
-> > translated from kernel info? retprobe 1/0 is quite cumbersome,
-> > "uprobe" vs "uretprobe" makes more sense?
->
-> Agree. Will do it.
->
-> >
-> > JSON is where it could be completely mechanically translated, IMO.
->
-> Agree.
->
-> --
-> Regards
-> Yafang
-
-
-
---=20
-Regards
-Yafang
+-- 
+Sincerely yours,
+Mike.
