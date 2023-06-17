@@ -2,145 +2,94 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B8EF1EB64DA
-	for <linux-trace-kernel@archiver.kernel.org>; Sat, 17 Jun 2023 09:48:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D09AEB64DB
+	for <linux-trace-kernel@archiver.kernel.org>; Sat, 17 Jun 2023 15:37:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1346127AbjFQJsH (ORCPT
+        id S235784AbjFQPhK (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Sat, 17 Jun 2023 05:48:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47308 "EHLO
+        Sat, 17 Jun 2023 11:37:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36312 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1346227AbjFQJr6 (ORCPT
+        with ESMTP id S229675AbjFQPhJ (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Sat, 17 Jun 2023 05:47:58 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 906192702;
-        Sat, 17 Jun 2023 02:47:47 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 1C34C60C78;
-        Sat, 17 Jun 2023 09:47:47 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1F483C433C8;
-        Sat, 17 Jun 2023 09:47:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1686995266;
-        bh=wcKHQ83tUBIj4P7lFgG+UJ1CdvhUlPrZ2dz37C5OMt8=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=lMUmoh/DayBP4TRAA2aa5Pr3Ju0C9Dby8NsXJt6cQVtdvbFu6qLj1Zj90fd0HZsWD
-         5Px+qh8uJRL/LZBy39ie7kcc4XAufO5rJO6sTEnxco/o0X5wpxE2Sk5xFhrIkuw7do
-         tkpQAkpF6tGYIm92QePx1nAicbxGChsNzYZFpOF7jbxzyYZ9z+WVBwUhureoA+yjig
-         yBK2Otsl1LnJYSacXDuC2+/33jnLOe03/ovlyArKOYS0lwwXY+Fifi4iVF97r52EaL
-         H+rU/bizpwjTJP0UxR+UvIq4nqCRu8leAlRj0XQLQHkl2AByR5yYiIpYA76UW/9RCr
-         GakVeg6prv9vg==
-From:   "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
-To:     linux-trace-kernel@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>,
-        mhiramat@kernel.org, Martin KaFai Lau <martin.lau@linux.dev>,
-        bpf@vger.kernel.org
-Subject: [PATCH 5/5] Documentation: tracing: Update fprobe event example with BTF field
-Date:   Sat, 17 Jun 2023 18:47:43 +0900
-Message-ID:  <168699526301.528797.1373223673372258578.stgit@mhiramat.roam.corp.google.com>
-X-Mailer: git-send-email 2.41.0.162.gfafddb0af9-goog
-In-Reply-To:  <168699521817.528797.13179901018528120324.stgit@mhiramat.roam.corp.google.com>
-References:  <168699521817.528797.13179901018528120324.stgit@mhiramat.roam.corp.google.com>
-User-Agent: StGit/0.19
+        Sat, 17 Jun 2023 11:37:09 -0400
+Received: from out-25.mta0.migadu.com (out-25.mta0.migadu.com [IPv6:2001:41d0:1004:224b::19])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1FCA610DD
+        for <linux-trace-kernel@vger.kernel.org>; Sat, 17 Jun 2023 08:37:06 -0700 (PDT)
+Date:   Sat, 17 Jun 2023 11:36:58 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+        t=1687016225;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=gkXjdfOcfNeiSkHnMLeI301HhtsXBRoYstWMSEINMeY=;
+        b=bYJe9WRiSRM7w/M47iLquWHHUju4li/dPcwoEprDi3YlwcaYBjxpWs1nL0UujvT6xyWL/M
+        S2Ghsqn2fpzAD+9R1F0Wx9PyfySyz0oJLdRx0TD6TfwLRge4cekLdS4qLEUtsEWtm6ack0
+        XRAL5F0yJ/NulC1WuvN1fyiNm3tO1UM=
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From:   Kent Overstreet <kent.overstreet@linux.dev>
+To:     Mike Rapoport <rppt@kernel.org>
+Cc:     Song Liu <song@kernel.org>, linux-kernel@vger.kernel.org,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Christophe Leroy <christophe.leroy@csgroup.eu>,
+        "David S. Miller" <davem@davemloft.net>,
+        Dinh Nguyen <dinguyen@kernel.org>,
+        Heiko Carstens <hca@linux.ibm.com>,
+        Helge Deller <deller@gmx.de>,
+        Huacai Chen <chenhuacai@kernel.org>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Nadav Amit <nadav.amit@gmail.com>,
+        "Naveen N. Rao" <naveen.n.rao@linux.ibm.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Puranjay Mohan <puranjay12@gmail.com>,
+        Rick Edgecombe <rick.p.edgecombe@intel.com>,
+        Russell King <linux@armlinux.org.uk>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Will Deacon <will@kernel.org>, bpf@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-mips@vger.kernel.org,
+        linux-mm@kvack.org, linux-modules@vger.kernel.org,
+        linux-parisc@vger.kernel.org, linux-riscv@lists.infradead.org,
+        linux-s390@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, loongarch@lists.linux.dev,
+        netdev@vger.kernel.org, sparclinux@vger.kernel.org, x86@kernel.org
+Subject: Re: [PATCH v2 07/12] arm64, execmem: extend execmem_params for
+ generated code definitions
+Message-ID: <ZI3TGhJ2y5SBWmnA@moria.home.lan>
+References: <20230616085038.4121892-1-rppt@kernel.org>
+ <20230616085038.4121892-8-rppt@kernel.org>
+ <CAPhsuW6BG2oVrGDOpCKyOEvU9fBOboYYhducv96KUBe276Mvng@mail.gmail.com>
+ <20230617065759.GT52412@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230617065759.GT52412@kernel.org>
+X-Migadu-Flow: FLOW_OUT
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+On Sat, Jun 17, 2023 at 09:57:59AM +0300, Mike Rapoport wrote:
+> > This is growing fast. :) We have 3 now: text, data, jit. And it will be
+> > 5 when we split data into rw data, ro data, ro after init data. I wonder
+> > whether we should still do some type enum here. But we can revisit
+> > this topic later.
+> 
+> I don't think we'd need 5. Four at most :)
+> 
+> I don't know yet what would be the best way to differentiate RW and RO
+> data, but ro_after_init surely won't need a new type. It either will be
+> allocated as RW and then the caller will have to set it RO after
+> initialization is done, or it will be allocated as RO and the caller will
+> have to do something like text_poke to update it.
 
-Update fprobe event example with BTF data structure field specification.
+Perhaps ro_after_init could use the same allocation interface and share
+pages with ro pages - if we just added a refcount for "this page
+currently needs to be rw, module is still loading?"
 
-Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
----
- Documentation/trace/fprobetrace.rst |   50 ++++++++++++++++++++++-------------
- 1 file changed, 32 insertions(+), 18 deletions(-)
-
-diff --git a/Documentation/trace/fprobetrace.rst b/Documentation/trace/fprobetrace.rst
-index 7297f9478459..c141f900afda 100644
---- a/Documentation/trace/fprobetrace.rst
-+++ b/Documentation/trace/fprobetrace.rst
-@@ -79,9 +79,9 @@ automatically set by the given name. ::
-  f:fprobes/myprobe vfs_read count=count pos=pos
- 
- It also chooses the fetch type from BTF information. For example, in the above
--example, the ``count`` is unsigned long, and the ``pos`` is a pointer. Thus, both
--are converted to 64bit unsigned long, but only ``pos`` has "%Lx" print-format as
--below ::
-+example, the ``count`` is unsigned long, and the ``pos`` is a pointer. Thus,
-+both are converted to 64bit unsigned long, but only ``pos`` has "%Lx"
-+print-format as below ::
- 
-  # cat events/fprobes/myprobe/format
-  name: myprobe
-@@ -105,9 +105,33 @@ is expanded to all function arguments of the function or the tracepoint. ::
-  # cat dynamic_events
-  f:fprobes/myprobe vfs_read file=file buf=buf count=count pos=pos
- 
--BTF also affects the ``$retval``. If user doesn't set any type, the retval type is
--automatically picked from the BTF. If the function returns ``void``, ``$retval``
--is rejected.
-+BTF also affects the ``$retval``. If user doesn't set any type, the retval
-+type is automatically picked from the BTF. If the function returns ``void``,
-+``$retval`` is rejected.
-+
-+You can access the data fields of a data structure using allow operator ``->``
-+(for pointer type) and dot operator ``.`` (for data structure type.)::
-+
-+# echo 't sched_switch preempt prev_pid=prev->pid next_pid=next->pid' >> dynamic_events
-+
-+This data field access is available for the return value, for this purpose
-+``retval`` special variable name needs to be used. e.g. ``retval->name``.
-+
-+For these BTF arguments and fields, ``:string`` and ``:ustring`` change the
-+behavior. If these are used for BTF argument or field, it checks whether
-+the BTF type of the argument or the data field is ``char *`` or ``char []``,
-+or not.  If not, it rejects applying the string types. Also, with the BTF
-+support, you don't need a memory dereference operator (``+0(PTR)``) for
-+accessing the string pointed by a ``PTR``. It automatically adds the memory
-+dereference operator according to the BTF type. e.g. ::
-+
-+# echo 't sched_switch prev->comm:string' >> dynamic_events
-+# echo 'f getname_flags%return retval->name:string' >> dynamic_events
-+
-+The ``prev->comm`` is an embedded char array in the data structure, and
-+``retval->name`` is a char pointer in the data structure. But in both
-+cases, you can use ``:string`` type to get the string.
-+
- 
- Usage examples
- --------------
-@@ -161,10 +185,10 @@ parameters. This means you can access any field values in the task
- structure pointed by the ``prev`` and ``next`` arguments.
- 
- For example, usually ``task_struct::start_time`` is not traced, but with this
--traceprobe event, you can trace it as below.
-+traceprobe event, you can trace that field as below.
- ::
- 
--  # echo 't sched_switch comm=+1896(next):string start_time=+1728(next):u64' > dynamic_events
-+  # echo 't sched_switch comm=next->comm:string next->start_time' > dynamic_events
-   # head -n 20 trace | tail
-  #           TASK-PID     CPU#  |||||  TIMESTAMP  FUNCTION
-  #              | |         |   |||||     |         |
-@@ -176,13 +200,3 @@ traceprobe event, you can trace it as below.
-            <idle>-0       [000] d..3.  5606.690317: sched_switch: (__probestub_sched_switch+0x4/0x10) comm="kworker/0:1" usage=1 start_time=137000000
-       kworker/0:1-14      [000] d..3.  5606.690339: sched_switch: (__probestub_sched_switch+0x4/0x10) comm="swapper/0" usage=2 start_time=0
-            <idle>-0       [000] d..3.  5606.692368: sched_switch: (__probestub_sched_switch+0x4/0x10) comm="kworker/0:1" usage=1 start_time=137000000
--
--Currently, to find the offset of a specific field in the data structure,
--you need to build kernel with debuginfo and run `perf probe` command with
--`-D` option. e.g.
--::
--
-- # perf probe -D "__probestub_sched_switch next->comm:string next->start_time"
-- p:probe/__probestub_sched_switch __probestub_sched_switch+0 comm=+1896(%cx):string start_time=+1728(%cx):u64
--
--And replace the ``%cx`` with the ``next``.
-
+text_poke() approach wouldn't be workable, you'd have to audit and fix
+all module init code in the entire kernel.
