@@ -2,61 +2,61 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D0C7EB64D7
-	for <linux-trace-kernel@archiver.kernel.org>; Fri, 16 Jun 2023 20:41:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 75D6FEB64D7
+	for <linux-trace-kernel@archiver.kernel.org>; Sat, 17 Jun 2023 02:49:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229950AbjFPUlm (ORCPT
+        id S232851AbjFQCtg (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Fri, 16 Jun 2023 16:41:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59208 "EHLO
+        Fri, 16 Jun 2023 22:49:36 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55454 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232085AbjFPUll (ORCPT
+        with ESMTP id S232048AbjFQCtf (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Fri, 16 Jun 2023 16:41:41 -0400
-Received: from mail-lj1-x230.google.com (mail-lj1-x230.google.com [IPv6:2a00:1450:4864:20::230])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 00A8E3A91;
-        Fri, 16 Jun 2023 13:41:39 -0700 (PDT)
-Received: by mail-lj1-x230.google.com with SMTP id 38308e7fff4ca-2b45e6e1b73so9322021fa.0;
-        Fri, 16 Jun 2023 13:41:39 -0700 (PDT)
+        Fri, 16 Jun 2023 22:49:35 -0400
+Received: from mail-qv1-xf34.google.com (mail-qv1-xf34.google.com [IPv6:2607:f8b0:4864:20::f34])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 72AED30DE;
+        Fri, 16 Jun 2023 19:49:34 -0700 (PDT)
+Received: by mail-qv1-xf34.google.com with SMTP id 6a1803df08f44-5ed99ebe076so12466426d6.2;
+        Fri, 16 Jun 2023 19:49:34 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1686948098; x=1689540098;
+        d=gmail.com; s=20221208; t=1686970173; x=1689562173;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=ki5b2++CnhmaytZ7my3uDRSJyQZZ4BLsbJIbBjIvEhw=;
-        b=Y1gz+I0eAGdt3SPU8fv7HZvYNAYbSgesd0UPhimP2S60FaqzDcRVTUweO9JRmf5+d4
-         CVDfuYIKN0OiLhjwniWt3jOqX5Z/r0NcTRyTeT8c7ZdzCVFfv6zMRKi7zAxHOj8VQHSY
-         JajixoVED3R9oILpmOZB8Zz7fKkulvFRcpUb6OYjWjpwXCPROYXGbSr62YrlBbiDQdeK
-         HEpSm2hVlXVaKGwb8gYs+Oplpk4PDmNx6opnTlywgS3wXDhXAmWcLTQE9G9tXLUddf2G
-         3+fK9IjbGkGWq5231pxVCtH2Fit0fWqlPwdIOYx/SyVLmeu3kO1v6idIgZqGdjYzW8BJ
-         oKDQ==
+        bh=8K8M3QRuHMyB39RWCtaG8MbUx309vyML41zc9Nqsd5M=;
+        b=l2u2xCsD9nDZ3tN3rY3VXidwjeV1Pgqopj+O48e7vMrJiOvOVsH4+QG9D/t64GdPdm
+         UkQuI7fmYNbdpDON+zY/qqVb7pKZsrhziFqr4LjOsMTBTTAdA9noqgl4sg8HBd2NYTjY
+         KOmUefC65gtb7KswRI+CHIDQt+jXTjSx2wHRU/meDaxtW0cSdPRSJ0aNB84o586VaAdY
+         HefIvr7Rdd1DLdjE2Me7VYUddGYMfd1+ensAtZthE8yzvfqWYOjj3UO6I+bfsKCColeI
+         wXSFwGBFp/Ruz6TVB3kd3q7r6b6Bi5Lde6j5O6rwbbjmmsZnFqfU02K0RovhblSeq8Pc
+         jPQA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1686948098; x=1689540098;
+        d=1e100.net; s=20221208; t=1686970173; x=1689562173;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=ki5b2++CnhmaytZ7my3uDRSJyQZZ4BLsbJIbBjIvEhw=;
-        b=EH/D/+OEVbp3cN22TDflMIC/tySl5wNbo17RI+s3GFf+u2d97NHnlQwCiqXewtvFfh
-         WmBAu7olIb3mwo8b6QIfqhF2DyQ2PPr6cz54WP59CRZdm/1hcx16c3d9fiAyZAosI25u
-         OJB82XAuEHi+rF+6ga58Mc5BjU6QbdzK2ysVQHkXDI5G7MEHNRwM22+JMM1X48Sdf3de
-         egDsQFh2TMc2DAe0dCe6ShiRoKkji1UTnN4qobgsnJg1A1FE2rPqG4g0O0+exRy6RWvq
-         3E/RcyJMaoVYdPTwPMndkgWYy1pFAdPnbmut4QL24ijPHKngSkV31ZPruOP4KaL9G27n
-         kihw==
-X-Gm-Message-State: AC+VfDx3IjJBQKiyJPv5p5BYy073kRN+3hJjQCNHXRXIuMUGZ/PT+2UI
-        lvd6kpxvOf0yvMOfaVzRwahciMhYtZUSqKwRPLY=
-X-Google-Smtp-Source: ACHHUZ5naXwCp1m0N1E8kO1pncwEcJ+uz0TRmeUU77f85NsMGlyQVxGksnWUS+hfPUvyK1VniLF8sw7CJzmlpgOYwhc=
-X-Received: by 2002:a2e:6e07:0:b0:2b1:ed29:7c47 with SMTP id
- j7-20020a2e6e07000000b002b1ed297c47mr2498336ljc.8.1686948097905; Fri, 16 Jun
- 2023 13:41:37 -0700 (PDT)
+        bh=8K8M3QRuHMyB39RWCtaG8MbUx309vyML41zc9Nqsd5M=;
+        b=JS2rHO4zXq0x7pqcvgG2eVO652ADhoKXutpMRMkgmAmpZx0YFNbZ/cNIFsDu+1acqA
+         Z03ZqlECmIHraw3EljwG68GtL9LU0b2wS+muCFJg3muHkzUhIHe9FSaKqHIu4cchC1AP
+         YEkldYN8MdEN8ntwbcgBkHTR6bBNlXmWPc1DnW/r7XGWFZQ/9snAC4mDRs8lm5aU0lti
+         nWJifoTNhRSXVuqBwdZE7edhCn7n0Ih87/+Z3TXp90O8PvEcAY/nM8b8kLxuBo9f8g6S
+         oQuornLUfbLwAr9LnN0uhU7WsmoVGNOarA+JLrh7rQ+rMaqjMSwK7jq7dUdBxCBp/uur
+         /1gA==
+X-Gm-Message-State: AC+VfDxcydyaIq2Gx/mLKcFarrLbnx4OdIGjkCZwrRlEIt36kxN7sQz0
+        jRE6kjlP9P/8hA10ltaj3cYptPzpHl/Cv6b+fYg=
+X-Google-Smtp-Source: ACHHUZ69k/AHAVp+l6MLdcSpDK9toSZpTfYBp594BcJfATYAe/kpoAzK4QQGQoydlTtsPHbPCXnx8XW2p2z3UX5HPNk=
+X-Received: by 2002:a05:6214:250e:b0:5b5:9c2:8c29 with SMTP id
+ gf14-20020a056214250e00b005b509c28c29mr5522427qvb.12.1686970173357; Fri, 16
+ Jun 2023 19:49:33 -0700 (PDT)
 MIME-Version: 1.0
-References: <20230612151608.99661-1-laoar.shao@gmail.com> <20230612151608.99661-11-laoar.shao@gmail.com>
-In-Reply-To: <20230612151608.99661-11-laoar.shao@gmail.com>
-From:   Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Date:   Fri, 16 Jun 2023 13:41:26 -0700
-Message-ID: <CAEf4BzYTxEeaXLLajU-ka=OxPVh4LZERq210_A75mDZH+7t-yg@mail.gmail.com>
-Subject: Re: [PATCH v3 bpf-next 10/10] bpftool: Show probed function in
- perf_event link info
-To:     Yafang Shao <laoar.shao@gmail.com>
+References: <20230612151608.99661-1-laoar.shao@gmail.com> <20230612151608.99661-2-laoar.shao@gmail.com>
+ <CAEf4BzaKg88jxQEUAT5-BPYbbi6yERDUeHu0qJb4pqSF2JEGig@mail.gmail.com>
+In-Reply-To: <CAEf4BzaKg88jxQEUAT5-BPYbbi6yERDUeHu0qJb4pqSF2JEGig@mail.gmail.com>
+From:   Yafang Shao <laoar.shao@gmail.com>
+Date:   Sat, 17 Jun 2023 10:48:57 +0800
+Message-ID: <CALOAHbCFZngUxRF3v1ZogCh09MLMUmjog3jG5hh=H+u_17b7xQ@mail.gmail.com>
+Subject: Re: [PATCH v3 bpf-next 01/10] bpf: Support ->fill_link_info for kprobe_multi
+To:     Andrii Nakryiko <andrii.nakryiko@gmail.com>
 Cc:     ast@kernel.org, daniel@iogearbox.net, john.fastabend@gmail.com,
         andrii@kernel.org, martin.lau@linux.dev, song@kernel.org,
         yhs@fb.com, kpsingh@kernel.org, sdf@google.com, haoluo@google.com,
@@ -69,127 +69,86 @@ Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On Mon, Jun 12, 2023 at 8:16=E2=80=AFAM Yafang Shao <laoar.shao@gmail.com> =
-wrote:
+On Sat, Jun 17, 2023 at 1:24=E2=80=AFAM Andrii Nakryiko
+<andrii.nakryiko@gmail.com> wrote:
 >
-> Enhance bpftool to display comprehensive information about exposed
-> perf_event links, covering uprobe, kprobe, tracepoint, and generic perf
-> event. The resulting output will include the following details:
+> On Mon, Jun 12, 2023 at 8:16=E2=80=AFAM Yafang Shao <laoar.shao@gmail.com=
+> wrote:
+> >
+> > With the addition of support for fill_link_info to the kprobe_multi lin=
+k,
+> > users will gain the ability to inspect it conveniently using the
+> > `bpftool link show`. This enhancement provides valuable information to =
+the
+> > user, including the count of probed functions and their respective
+> > addresses. It's important to note that if the kptr_restrict setting is =
+not
+> > permitted, the probed address will not be exposed, ensuring security.
+> >
+> > Signed-off-by: Yafang Shao <laoar.shao@gmail.com>
+> > ---
+> >  include/uapi/linux/bpf.h       |  5 +++++
+> >  kernel/trace/bpf_trace.c       | 28 ++++++++++++++++++++++++++++
+> >  tools/include/uapi/linux/bpf.h |  5 +++++
+> >  3 files changed, 38 insertions(+)
+> >
+> > diff --git a/include/uapi/linux/bpf.h b/include/uapi/linux/bpf.h
+> > index a7b5e91..23691ea 100644
+> > --- a/include/uapi/linux/bpf.h
+> > +++ b/include/uapi/linux/bpf.h
+> > @@ -6438,6 +6438,11 @@ struct bpf_link_info {
+> >                         __s32 priority;
+> >                         __u32 flags;
+> >                 } netfilter;
+> > +               struct {
+> > +                       __aligned_u64 addrs; /* in/out: addresses buffe=
+r ptr */
+> > +                       __u32 count;
+> > +                       __u32 flags;
+> > +               } kprobe_multi;
+> >         };
+> >  } __attribute__((aligned(8)));
+> >
+> > diff --git a/kernel/trace/bpf_trace.c b/kernel/trace/bpf_trace.c
+> > index 2bc41e6..742047c 100644
+> > --- a/kernel/trace/bpf_trace.c
+> > +++ b/kernel/trace/bpf_trace.c
+> > @@ -2548,9 +2548,36 @@ static void bpf_kprobe_multi_link_dealloc(struct=
+ bpf_link *link)
+> >         kfree(kmulti_link);
+> >  }
+> >
+> > +static int bpf_kprobe_multi_link_fill_link_info(const struct bpf_link =
+*link,
+> > +                                               struct bpf_link_info *i=
+nfo)
+> > +{
+> > +       u64 __user *uaddrs =3D u64_to_user_ptr(info->kprobe_multi.addrs=
+);
+> > +       struct bpf_kprobe_multi_link *kmulti_link;
+> > +       u32 ucount =3D info->kprobe_multi.count;
+> > +
+> > +       if (!uaddrs ^ !ucount)
+> > +               return -EINVAL;
+> > +
+> > +       kmulti_link =3D container_of(link, struct bpf_kprobe_multi_link=
+, link);
+> > +       if (!uaddrs) {
+> > +               info->kprobe_multi.count =3D kmulti_link->cnt;
+> > +               return 0;
+> > +       }
+> > +
+> > +       if (ucount < kmulti_link->cnt)
+> > +               return -EINVAL;
+> > +       info->kprobe_multi.flags =3D kmulti_link->fp.flags;
 >
-> $ tools/bpf/bpftool/bpftool link show
-> 3: perf_event  prog 14
->         event_type software  event_config cpu-clock
->         bpf_cookie 0
->         pids perf_event(1379330)
-> 4: perf_event  prog 14
->         event_type hw-cache  event_config LLC-load-misses
->         bpf_cookie 0
->         pids perf_event(1379330)
-> 5: perf_event  prog 14
->         event_type hardware  event_config cpu-cycles
+> besides what Jiri said, flags should always be returned, just like
+> cnt. So structure code instead around uaddrs being optional, that will
+> everything more straightforward (i.e., fill out everything but uaddrs
+> and then at the end fill out addrs if uaddrs is not zero)
 
-how about
+Agree. That will be more straightforward. Will change it.
 
-"event hardware:cpu-cycles" for events
-
->         bpf_cookie 0
->         pids perf_event(1379330)
-> 6: perf_event  prog 20
->         retprobe 0  file_name /home/yafang/bpf/uprobe/a.out  offset 0x133=
-8
-
-for uprobes: "uprobe /home/yafang/bpf/uprobe/a.out+0x1338"
-for retprobes: "uretprobe /home/yafang/bpf/uprobe/a.out+0x1338"
-
->         bpf_cookie 0
->         pids uprobe(1379706)
-> 7: perf_event  prog 21
->         retprobe 1  file_name /home/yafang/bpf/uprobe/a.out  offset 0x133=
-8
->         bpf_cookie 0
->         pids uprobe(1379706)
-> 8: perf_event  prog 27
->         tp_name sched_switch
-
-"tracepoint  sched_switch" ?
-
->         bpf_cookie 0
->         pids tracepoint(1381734)
-> 10: perf_event  prog 43
->         retprobe 0  func_name kernel_clone  addr ffffffffad0a9660
-
-similar to uprobes:
-
-"kprobe kernel_clone  0xffffffffad0a9660"
-"kretprobe kernel_clone  0xffffffffad0a9660"
-
-
-That is, make this more human readable instead of mechanically
-translated from kernel info? retprobe 1/0 is quite cumbersome,
-"uprobe" vs "uretprobe" makes more sense?
-
-JSON is where it could be completely mechanically translated, IMO.
-
->         bpf_cookie 0
->         pids kprobe(1384186)
-> 11: perf_event  prog 41
->         retprobe 1  func_name kernel_clone  addr ffffffffad0a9660
->         bpf_cookie 0
->         pids kprobe(1384186)
->
-> $ tools/bpf/bpftool/bpftool link show -j
-> [{"id":3,"type":"perf_event","prog_id":14,"event_type":"software","event_=
-config":"cpu-clock","bpf_cookie":0,"pids":[{"pid":1379330,"comm":"perf_even=
-t"}]},{"id":4,"type":"perf_event","prog_id":14,"event_type":"hw-cache","eve=
-nt_config":"LLC-load-misses","bpf_cookie":0,"pids":[{"pid":1379330,"comm":"=
-perf_event"}]},{"id":5,"type":"perf_event","prog_id":14,"event_type":"hardw=
-are","event_config":"cpu-cycles","bpf_cookie":0,"pids":[{"pid":1379330,"com=
-m":"perf_event"}]},{"id":6,"type":"perf_event","prog_id":20,"retprobe":0,"f=
-ile_name":"/home/yafang/bpf/uprobe/a.out","offset":4920,"bpf_cookie":0,"pid=
-s":[{"pid":1379706,"comm":"uprobe"}]},{"id":7,"type":"perf_event","prog_id"=
-:21,"retprobe":1,"file_name":"/home/yafang/bpf/uprobe/a.out","offset":4920,=
-"bpf_cookie":0,"pids":[{"pid":1379706,"comm":"uprobe"}]},{"id":8,"type":"pe=
-rf_event","prog_id":27,"tp_name":"sched_switch","bpf_cookie":0,"pids":[{"pi=
-d":1381734,"comm":"tracepoint"}]},{"id":10,"type":"perf_event","prog_id":43=
-,"retprobe":0,"func_name":"kernel_clone","offset":0,"addr":1844674407231773=
-6544,"bpf_cookie":0,"pids":[{"pid":1384186,"comm":"kprobe"}]},{"id":11,"typ=
-e":"perf_event","prog_id":41,"retprobe":1,"func_name":"kernel_clone","offse=
-t":0,"addr":18446744072317736544,"bpf_cookie":0,"pids":[{"pid":1384186,"com=
-m":"kprobe"}]}]
->
-> For generic perf events, the displayed information in bpftool is limited =
-to
-> the type and configuration, while other attributes such as sample_period,
-> sample_freq, etc., are not included.
->
-> The kernel function address won't be exposed if it is not permitted by
-> kptr_restrict. The result as follows when kptr_restrict is 2.
->
-> $ tools/bpf/bpftool/bpftool link show
-> 3: perf_event  prog 14
->         event_type software  event_config cpu-clock
-> 4: perf_event  prog 14
->         event_type hw-cache  event_config LLC-load-misses
-> 5: perf_event  prog 14
->         event_type hardware  event_config cpu-cycles
-> 6: perf_event  prog 20
->         retprobe 0  file_name /home/yafang/bpf/uprobe/a.out  offset 0x133=
-8
-> 7: perf_event  prog 21
->         retprobe 1  file_name /home/yafang/bpf/uprobe/a.out  offset 0x133=
-8
-> 8: perf_event  prog 27
->         tp_name sched_switch
-> 10: perf_event  prog 43
->         retprobe 0  func_name kernel_clone
-> 11: perf_event  prog 41
->         retprobe 1  func_name kernel_clone
->
-> Signed-off-by: Yafang Shao <laoar.shao@gmail.com>
-> ---
->  tools/bpf/bpftool/link.c | 213 +++++++++++++++++++++++++++++++++++++++++=
-++++++
->  1 file changed, 213 insertions(+)
->
-
-[...]
+--=20
+Regards
+Yafang
