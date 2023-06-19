@@ -2,136 +2,116 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 08868EB64DB
-	for <linux-trace-kernel@archiver.kernel.org>; Mon, 19 Jun 2023 08:53:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 46952C001DB
+	for <linux-trace-kernel@archiver.kernel.org>; Mon, 19 Jun 2023 11:34:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230157AbjFSIx3 (ORCPT
+        id S231352AbjFSLej (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Mon, 19 Jun 2023 04:53:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52892 "EHLO
+        Mon, 19 Jun 2023 07:34:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52096 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230236AbjFSIxS (ORCPT
+        with ESMTP id S231420AbjFSLeh (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Mon, 19 Jun 2023 04:53:18 -0400
-Received: from mail-wr1-x443.google.com (mail-wr1-x443.google.com [IPv6:2a00:1450:4864:20::443])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D8D9D1987;
-        Mon, 19 Jun 2023 01:52:09 -0700 (PDT)
-Received: by mail-wr1-x443.google.com with SMTP id ffacd0b85a97d-30fcda210cfso2884983f8f.3;
-        Mon, 19 Jun 2023 01:52:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1687164728; x=1689756728;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=eBEZFKfyfFh7Lx6RyyuflCIxHFiXm98adeAgy3n5TSc=;
-        b=AaBhLhhg61OBKlARK2zycZbvlLMQhyhSwO/xGIjyxOC1cFkmc3rrVzTxwQKmvLOjGx
-         hEdzbdEbq19wPg4JYymfmbv0EReojIEiDubFP/Law9/MOZq3Z5aFsUMHf2P7Fvun3QmS
-         WeRpm7kZuSj0ljHOZX2LJVuZ9SGcoLo6QdKaVYriD3PT+bjfWf6EJ3Gab78BiVtlEbpH
-         3inNXolHZywUckCFMfKd9ztFpucG9shp2/XCpNHHkpvuqTI5fGyicC3Zp0WEFlltoOSN
-         MwUtW4OHM607kWzdw7VYCzyHx+Ic+4hmUvyS0f44oUtBYJ/V30k2xRc8YKWpaIcuvurE
-         MnfA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1687164728; x=1689756728;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=eBEZFKfyfFh7Lx6RyyuflCIxHFiXm98adeAgy3n5TSc=;
-        b=DcQmp9zHaBwqZr8MAvdiNysWBDB0P0ULyBmwng38KrFhQf0rpADch7u8feXThJyp8Z
-         BpE/detFVw6b75ox1lpZMeHd5yqGD89HORUsRv6ve7EQDZqs5npgWZwNzLhZCV4K1G2H
-         v9fw+52J2F+G9oQP4YMJ1WmInmGvgmserncZ4KI6lTfY0bELzciV9yzuNH2MC+srvuqF
-         qNvmNfKrrYpXPAv55EzhLytfMBvLrOpbNwV3qzyqzeWD7o4D9SAZk1SalYlXQqiLumnb
-         7zozMYCXndgA3Xcgi98FJw1sYKCWSNGVLpwFbOrQIZggkhkPG2XHSCURF2EnaIItiUOu
-         4Aig==
-X-Gm-Message-State: AC+VfDywJZKkhtpYPsbiMbX2WxAe5+u0RkbjVrkD3cODm5zbyITpNjBo
-        LX07N/hef81yq47PJ7NQvzgSVXmu/FGfRZotAZHY6weSxpG8
-X-Google-Smtp-Source: ACHHUZ43WkXQAAGZFkQ4ZSL/gsUvjznIJocOX5L7/QQJoORw4wNJjZ94ATGxo1vuA9Inm4faX0YYZFyfGnfzZyaTzYw=
-X-Received: by 2002:adf:d0c8:0:b0:2ee:f77f:3d02 with SMTP id
- z8-20020adfd0c8000000b002eef77f3d02mr6453841wrh.0.1687164727869; Mon, 19 Jun
- 2023 01:52:07 -0700 (PDT)
+        Mon, 19 Jun 2023 07:34:37 -0400
+X-Greylist: delayed 158248 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Mon, 19 Jun 2023 04:34:34 PDT
+Received: from out-47.mta0.migadu.com (out-47.mta0.migadu.com [IPv6:2001:41d0:1004:224b::2f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D1283BF;
+        Mon, 19 Jun 2023 04:34:34 -0700 (PDT)
+Date:   Mon, 19 Jun 2023 07:34:26 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+        t=1687174472;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=Tt3RWh8BEKoqLhK86LDh7llJ14l6KCTXk/okAyPXAzA=;
+        b=i+cENnWbA17Y+F/fishc8UmKkX2d11aFrfbkEA/RSeJGs8DaK+pP54Vf1C7aoZ8NsEj74R
+        cXaE50KWXHIuXWZXVuGC783hgIjWLesjrEEDAYhwTaqLKdCoI85w4n4+GuOUgBvzA2QigP
+        oa1A17/zsm0VN2UgH6YNfjC3Cc/g4gI=
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From:   Kent Overstreet <kent.overstreet@linux.dev>
+To:     Andy Lutomirski <luto@kernel.org>
+Cc:     Mike Rapoport <rppt@kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Christophe Leroy <christophe.leroy@csgroup.eu>,
+        "David S. Miller" <davem@davemloft.net>,
+        Dinh Nguyen <dinguyen@kernel.org>,
+        Heiko Carstens <hca@linux.ibm.com>,
+        Helge Deller <deller@gmx.de>,
+        Huacai Chen <chenhuacai@kernel.org>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Nadav Amit <nadav.amit@gmail.com>,
+        "Naveen N. Rao" <naveen.n.rao@linux.ibm.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Puranjay Mohan <puranjay12@gmail.com>,
+        Rick P Edgecombe <rick.p.edgecombe@intel.com>,
+        "Russell King (Oracle)" <linux@armlinux.org.uk>,
+        Song Liu <song@kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Will Deacon <will@kernel.org>, bpf@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-mips@vger.kernel.org,
+        linux-mm@kvack.org, linux-modules@vger.kernel.org,
+        linux-parisc@vger.kernel.org, linux-riscv@lists.infradead.org,
+        linux-s390@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, loongarch@lists.linux.dev,
+        netdev@vger.kernel.org, sparclinux@vger.kernel.org,
+        the arch/x86 maintainers <x86@kernel.org>
+Subject: Re: [PATCH v2 02/12] mm: introduce execmem_text_alloc() and
+ jit_text_alloc()
+Message-ID: <20230619113426.c37bpwvdagbzyevn@moria.home.lan>
+References: <20230616085038.4121892-1-rppt@kernel.org>
+ <20230616085038.4121892-3-rppt@kernel.org>
+ <f9a7eebe-d36e-4587-b99d-35d4edefdd14@app.fastmail.com>
 MIME-Version: 1.0
-References: <20230609030302.1278716-1-sunliming@kylinos.cn>
- <20230609030302.1278716-2-sunliming@kylinos.cn> <20230616160845.GA88@W11-BEAU-MD.localdomain>
-In-Reply-To: <20230616160845.GA88@W11-BEAU-MD.localdomain>
-From:   sunliming <kelulanainsley@gmail.com>
-Date:   Mon, 19 Jun 2023 16:51:56 +0800
-Message-ID: <CAJncD7Sfasoe4-hKZP4c3bPZ892S2Kk5JaMo-aca6eBDwLjLNQ@mail.gmail.com>
-Subject: Re: [PATCH v2 1/3] tracing/user_events: Fix incorrect return value
- for writing operation when events are disabled
-To:     Beau Belgrave <beaub@linux.microsoft.com>
-Cc:     mhiramat@kernel.org, rostedt@goodmis.org, shuah@kernel.org,
-        linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
-        linux-kselftest@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <f9a7eebe-d36e-4587-b99d-35d4edefdd14@app.fastmail.com>
+X-Migadu-Flow: FLOW_OUT
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-Beau Belgrave <beaub@linux.microsoft.com> =E4=BA=8E2023=E5=B9=B46=E6=9C=881=
-7=E6=97=A5=E5=91=A8=E5=85=AD 00:08=E5=86=99=E9=81=93=EF=BC=9A
->
-> On Fri, Jun 09, 2023 at 11:03:00AM +0800, sunliming wrote:
-> > The writing operation return the count of writes whether events are
-> > enabled or disabled. This is incorrect when events are disabled. Fix
-> > this by just return -ENOENT when events are disabled.
+On Sat, Jun 17, 2023 at 01:38:29PM -0700, Andy Lutomirski wrote:
+> On Fri, Jun 16, 2023, at 1:50 AM, Mike Rapoport wrote:
+> > From: "Mike Rapoport (IBM)" <rppt@kernel.org>
 > >
->
-> When testing this patch locally I found that we would occasionally get
-> -ENOENT when events were enabled, but then become disabled, since writes
-> do not have any locking around the tracepoint checks for performance
-> reasons.
->
-> I've asked a few peers of mine their thoughts on this, whether an error
-> should result when there are no enabled events. The consensus I've heard
-> back is that they would not consider this case an actual error, just as
-> writing to /dev/null does not actually return an error.
->
-> However, if you feel strongly we need this and have a good use case, it
-> seems better to enable this logic behind a flag instead of having it
-> default based on my conversations with others.
->
-> Thanks,
-> -Beau
-
-
-
-There is indeed a problem. Once enabled, perform the write operation
-immediately.
-
-Now=EF=BC=8Cwhen the event is disabled, the trace record appears to be lost=
-.
-In some situations
-where data timing is sensitive, it may cause confusion. In this case,
-not returning an
-error (as mentioned in your reply, it is not considered this case an
-actual error) and
-returning 0 ( meaning that the number of data to be written is 0) may
-be a good way
-to handle it?
-Thanks,
--Sunliming
-
->
-> > Signed-off-by: sunliming <sunliming@kylinos.cn>
-> > ---
-> >  kernel/trace/trace_events_user.c | 3 ++-
-> >  1 file changed, 2 insertions(+), 1 deletion(-)
+> > module_alloc() is used everywhere as a mean to allocate memory for code.
 > >
-> > diff --git a/kernel/trace/trace_events_user.c b/kernel/trace/trace_even=
-ts_user.c
-> > index 1ac5ba5685ed..92204bbe79da 100644
-> > --- a/kernel/trace/trace_events_user.c
-> > +++ b/kernel/trace/trace_events_user.c
-> > @@ -1957,7 +1957,8 @@ static ssize_t user_events_write_core(struct file=
- *file, struct iov_iter *i)
+> > Beside being semantically wrong, this unnecessarily ties all subsystems
+> > that need to allocate code, such as ftrace, kprobes and BPF to modules
+> > and puts the burden of code allocation to the modules code.
 > >
-> >               if (unlikely(faulted))
-> >                       return -EFAULT;
-> > -     }
-> > +     } else
-> > +             return -ENOENT;
+> > Several architectures override module_alloc() because of various
+> > constraints where the executable memory can be located and this causes
+> > additional obstacles for improvements of code allocation.
 > >
-> >       return ret;
-> >  }
-> > --
-> > 2.25.1
+> > Start splitting code allocation from modules by introducing
+> > execmem_text_alloc(), execmem_free(), jit_text_alloc(), jit_free() APIs.
+> >
+> > Initially, execmem_text_alloc() and jit_text_alloc() are wrappers for
+> > module_alloc() and execmem_free() and jit_free() are replacements of
+> > module_memfree() to allow updating all call sites to use the new APIs.
+> >
+> > The intention semantics for new allocation APIs:
+> >
+> > * execmem_text_alloc() should be used to allocate memory that must reside
+> >   close to the kernel image, like loadable kernel modules and generated
+> >   code that is restricted by relative addressing.
+> >
+> > * jit_text_alloc() should be used to allocate memory for generated code
+> >   when there are no restrictions for the code placement. For
+> >   architectures that require that any code is within certain distance
+> >   from the kernel image, jit_text_alloc() will be essentially aliased to
+> >   execmem_text_alloc().
+> >
+> 
+> Is there anything in this series to help users do the appropriate synchronization when the actually populate the allocated memory with code?  See here, for example:
+> 
+> https://lore.kernel.org/linux-fsdevel/cb6533c6-cea0-4f04-95cf-b8240c6ab405@app.fastmail.com/T/#u
+
+We're still in need of an arch independent text_poke() api.
