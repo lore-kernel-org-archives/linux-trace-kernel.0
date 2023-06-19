@@ -2,201 +2,144 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C35EC001DD
-	for <linux-trace-kernel@archiver.kernel.org>; Mon, 19 Jun 2023 17:09:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5879CEB64DB
+	for <linux-trace-kernel@archiver.kernel.org>; Mon, 19 Jun 2023 18:40:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230505AbjFSRJc (ORCPT
+        id S229458AbjFSSkx (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Mon, 19 Jun 2023 13:09:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56504 "EHLO
+        Mon, 19 Jun 2023 14:40:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55450 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231351AbjFSRJa (ORCPT
+        with ESMTP id S232087AbjFSSkw (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Mon, 19 Jun 2023 13:09:30 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 74487130;
-        Mon, 19 Jun 2023 10:09:28 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id D8EBF60E84;
-        Mon, 19 Jun 2023 17:09:27 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E2BBEC433C0;
-        Mon, 19 Jun 2023 17:09:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1687194567;
-        bh=JAKwTrp1uinVAtoLWlXEGNS+fEBZEu6il2wWrUqzEzo=;
-        h=In-Reply-To:References:Date:From:To:Cc:Subject:From;
-        b=YEOROC7YGunxOkL9NsbJwROPW3V877k09rIaiwwEQBd6bVLJWdMjusQxoVnbsuD5D
-         SKibXVd7FHc2nMr1tudbdYIZvJGYXAOuK4akurudUoPTNxoZjnK21I5AdFijJrVbol
-         wMmYZdLv8Hw2umDYdeUGRbNj+IGHaRZ0DomN5ubTCsJ6NBLT+yY4qE1y7ajOHRP1RW
-         KGFKHX9UnHaE0jcV0Lk398WnGNpxO+L8j061yUD+7F16bO6b13PKK3oASVquk5plTv
-         fi30eJK4gcno8KPn/VoCZ0cPaw9JHH45FBctirdWyvzfVojpY1MuX3tVhu6B84K6vz
-         1DQlrW9fvYTQw==
-Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
-        by mailauth.nyi.internal (Postfix) with ESMTP id BDC6027C0054;
-        Mon, 19 Jun 2023 13:09:24 -0400 (EDT)
-Received: from imap48 ([10.202.2.98])
-  by compute3.internal (MEProxy); Mon, 19 Jun 2023 13:09:24 -0400
-X-ME-Sender: <xms:wouQZL1KKgLu09W-gITBMTpyAXyCop721KHeRNSzShP91di0wPWHmw>
-    <xme:wouQZKG8Wf_3R-mPlBMuIdAgUtqSh1IoF1oSxFnk9i4TgZk6ENhss3V_yoaRPv-RL
-    TAuvGDsGQbdSiWuWsY>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvhedrgeefvddguddtjecutefuodetggdotefrod
-    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfgh
-    necuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmd
-    enucfjughrpefofgggkfgjfhffhffvvefutgesthdtredtreertdenucfhrhhomhepfdet
-    nhguhicunfhuthhomhhirhhskhhifdcuoehluhhtoheskhgvrhhnvghlrdhorhhgqeenuc
-    ggtffrrghtthgvrhhnpedvhfeuvddthfdufffhkeekffetgffhledtleegffetheeugeej
-    ffduhefgteeihfenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfh
-    hrohhmpegrnhguhidomhgvshhmthhprghuthhhphgvrhhsohhnrghlihhthidqudduiedu
-    keehieefvddqvdeifeduieeitdekqdhluhhtoheppehkvghrnhgvlhdrohhrgheslhhinh
-    hugidrlhhuthhordhush
-X-ME-Proxy: <xmx:wouQZL5OetLa4Clx3-k8PoL2vfJibp2bgnqmJ2SvMc_usNTskAjOCQ>
-    <xmx:wouQZA2n3SB0X1LUMOotkjWhlqzrq7LHl-_hgrAS7-wGIbb0zOE8Fw>
-    <xmx:wouQZOGStaRHYVBRbGjqqlxYN_stg3xW85Vh8QJme5E9zOhMY7GQOQ>
-    <xmx:xIuQZOK5iPdRAlFtT5-Mu5Cjdtszefp8KfJWF6OppfL2ayIjz9WFYA>
-Feedback-ID: ieff94742:Fastmail
-Received: by mailuser.nyi.internal (Postfix, from userid 501)
-        id 5BFB531A0063; Mon, 19 Jun 2023 13:09:22 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
-User-Agent: Cyrus-JMAP/3.9.0-alpha0-496-g8c46984af0-fm-20230615.001-g8c46984a
-Mime-Version: 1.0
-Message-Id: <a17c65c6-863f-4026-9c6f-a04b659e9ab4@app.fastmail.com>
-In-Reply-To: <20230618080027.GA52412@kernel.org>
-References: <20230616085038.4121892-1-rppt@kernel.org>
- <20230616085038.4121892-3-rppt@kernel.org>
- <f9a7eebe-d36e-4587-b99d-35d4edefdd14@app.fastmail.com>
- <20230618080027.GA52412@kernel.org>
-Date:   Mon, 19 Jun 2023 10:09:02 -0700
-From:   "Andy Lutomirski" <luto@kernel.org>
-To:     "Mike Rapoport" <rppt@kernel.org>,
-        "Mark Rutland" <mark.rutland@arm.com>,
-        "Kees Cook" <keescook@chromium.org>
-Cc:     "Linux Kernel Mailing List" <linux-kernel@vger.kernel.org>,
-        "Andrew Morton" <akpm@linux-foundation.org>,
-        "Catalin Marinas" <catalin.marinas@arm.com>,
-        "Christophe Leroy" <christophe.leroy@csgroup.eu>,
-        "David S. Miller" <davem@davemloft.net>,
-        "Dinh Nguyen" <dinguyen@kernel.org>,
-        "Heiko Carstens" <hca@linux.ibm.com>,
-        "Helge Deller" <deller@gmx.de>,
-        "Huacai Chen" <chenhuacai@kernel.org>,
-        "Kent Overstreet" <kent.overstreet@linux.dev>,
-        "Luis Chamberlain" <mcgrof@kernel.org>,
-        "Mark Rutland" <mark.rutland@arm.com>,
-        "Michael Ellerman" <mpe@ellerman.id.au>,
-        "Nadav Amit" <nadav.amit@gmail.com>,
-        "Naveen N. Rao" <naveen.n.rao@linux.ibm.com>,
-        "Palmer Dabbelt" <palmer@dabbelt.com>,
-        "Puranjay Mohan" <puranjay12@gmail.com>,
-        "Rick P Edgecombe" <rick.p.edgecombe@intel.com>,
-        "Russell King (Oracle)" <linux@armlinux.org.uk>,
-        "Song Liu" <song@kernel.org>,
-        "Steven Rostedt" <rostedt@goodmis.org>,
-        "Thomas Bogendoerfer" <tsbogend@alpha.franken.de>,
-        "Thomas Gleixner" <tglx@linutronix.de>,
-        "Will Deacon" <will@kernel.org>, bpf@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-mips@vger.kernel.org,
-        linux-mm@kvack.org, linux-modules@vger.kernel.org,
-        linux-parisc@vger.kernel.org, linux-riscv@lists.infradead.org,
-        linux-s390@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, loongarch@lists.linux.dev,
-        netdev@vger.kernel.org, sparclinux@vger.kernel.org,
-        "the arch/x86 maintainers" <x86@kernel.org>
-Subject: Re: [PATCH v2 02/12] mm: introduce execmem_text_alloc() and jit_text_alloc()
-Content-Type: text/plain
+        Mon, 19 Jun 2023 14:40:52 -0400
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 2A63D18C;
+        Mon, 19 Jun 2023 11:40:51 -0700 (PDT)
+Received: from W11-BEAU-MD.localdomain (unknown [76.135.27.212])
+        by linux.microsoft.com (Postfix) with ESMTPSA id 77862210DDA3;
+        Mon, 19 Jun 2023 11:40:50 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 77862210DDA3
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+        s=default; t=1687200050;
+        bh=qo6WhpT1uRSqMbsupvdaieoE2v8tvR0YEzNpA1DiJWw=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=cyk+6dMT8YaqJtnwfjGNxxzVmIrLKjDtWYtPaPvZ2y+oLBYTW8jrJZ5SxplYeaK9S
+         KjWtqX5EYMjTBiuBZnkRjhAylPCC0u6sfqFnFxUTKyfnfz8uc87UheW0h19oOfdGfX
+         EY0W1j40j7qLmZoUB1pV6EnwAMaG/0zlNKaqhWpY=
+Date:   Mon, 19 Jun 2023 11:40:44 -0700
+From:   Beau Belgrave <beaub@linux.microsoft.com>
+To:     sunliming <kelulanainsley@gmail.com>
+Cc:     mhiramat@kernel.org, rostedt@goodmis.org, shuah@kernel.org,
+        linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+        linux-kselftest@vger.kernel.org
+Subject: Re: [PATCH v2 1/3] tracing/user_events: Fix incorrect return value
+ for writing operation when events are disabled
+Message-ID: <20230619184044.GA88@W11-BEAU-MD.localdomain>
+References: <20230609030302.1278716-1-sunliming@kylinos.cn>
+ <20230609030302.1278716-2-sunliming@kylinos.cn>
+ <20230616160845.GA88@W11-BEAU-MD.localdomain>
+ <CAJncD7Sfasoe4-hKZP4c3bPZ892S2Kk5JaMo-aca6eBDwLjLNQ@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAJncD7Sfasoe4-hKZP4c3bPZ892S2Kk5JaMo-aca6eBDwLjLNQ@mail.gmail.com>
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
+On Mon, Jun 19, 2023 at 04:51:56PM +0800, sunliming wrote:
+> Beau Belgrave <beaub@linux.microsoft.com> 于2023年6月17日周六 00:08写道：
+> >
+> > On Fri, Jun 09, 2023 at 11:03:00AM +0800, sunliming wrote:
+> > > The writing operation return the count of writes whether events are
+> > > enabled or disabled. This is incorrect when events are disabled. Fix
+> > > this by just return -ENOENT when events are disabled.
+> > >
+> >
+> > When testing this patch locally I found that we would occasionally get
+> > -ENOENT when events were enabled, but then become disabled, since writes
+> > do not have any locking around the tracepoint checks for performance
+> > reasons.
+> >
+> > I've asked a few peers of mine their thoughts on this, whether an error
+> > should result when there are no enabled events. The consensus I've heard
+> > back is that they would not consider this case an actual error, just as
+> > writing to /dev/null does not actually return an error.
+> >
+> > However, if you feel strongly we need this and have a good use case, it
+> > seems better to enable this logic behind a flag instead of having it
+> > default based on my conversations with others.
+> >
+> > Thanks,
+> > -Beau
+> 
+> 
+> 
+> There is indeed a problem. Once enabled, perform the write operation
+> immediately.
+> 
 
+The immediate write does work, and gets put into a buffer. The ftrace
+and perf self tests do the above case. So, no worries at this point.
 
-On Sun, Jun 18, 2023, at 1:00 AM, Mike Rapoport wrote:
-> On Sat, Jun 17, 2023 at 01:38:29PM -0700, Andy Lutomirski wrote:
->> On Fri, Jun 16, 2023, at 1:50 AM, Mike Rapoport wrote:
->> > From: "Mike Rapoport (IBM)" <rppt@kernel.org>
->> >
->> > module_alloc() is used everywhere as a mean to allocate memory for code.
->> >
->> > Beside being semantically wrong, this unnecessarily ties all subsystems
->> > that need to allocate code, such as ftrace, kprobes and BPF to modules
->> > and puts the burden of code allocation to the modules code.
->> >
->> > Several architectures override module_alloc() because of various
->> > constraints where the executable memory can be located and this causes
->> > additional obstacles for improvements of code allocation.
->> >
->> > Start splitting code allocation from modules by introducing
->> > execmem_text_alloc(), execmem_free(), jit_text_alloc(), jit_free() APIs.
->> >
->> > Initially, execmem_text_alloc() and jit_text_alloc() are wrappers for
->> > module_alloc() and execmem_free() and jit_free() are replacements of
->> > module_memfree() to allow updating all call sites to use the new APIs.
->> >
->> > The intention semantics for new allocation APIs:
->> >
->> > * execmem_text_alloc() should be used to allocate memory that must reside
->> >   close to the kernel image, like loadable kernel modules and generated
->> >   code that is restricted by relative addressing.
->> >
->> > * jit_text_alloc() should be used to allocate memory for generated code
->> >   when there are no restrictions for the code placement. For
->> >   architectures that require that any code is within certain distance
->> >   from the kernel image, jit_text_alloc() will be essentially aliased to
->> >   execmem_text_alloc().
->> >
->> 
->> Is there anything in this series to help users do the appropriate
->> synchronization when the actually populate the allocated memory with
->> code?  See here, for example:
->
-> This series only factors out the executable allocations from modules and
-> puts them in a central place.
-> Anything else would go on top after this lands.
+> Now，when the event is disabled, the trace record appears to be lost.
 
-Hmm.
+I'm taking this to mean, if in between the time of the bit check and the
+actual write() /writev() syscall the event becomes disabled, the event
+won't write to the buffer. Yes, that is expected.
 
-On the one hand, there's nothing wrong with factoring out common code. On the other hand, this is probably the right time to at least start thinking about synchronization, at least to the extent that it might make us want to change this API.  (I'm not at all saying that this series should require changes -- I'm just saying that this is a good time to think about how this should work.)
+> In some situations
+> where data timing is sensitive, it may cause confusion. In this case,
+> not returning an
+> error (as mentioned in your reply, it is not considered this case an
+> actual error) and
+> returning 0 ( meaning that the number of data to be written is 0) may
+> be a good way
+> to handle it?
 
-The current APIs, *and* the proposed jit_text_alloc() API, don't actually look like the one think in the Linux ecosystem that actually intelligently and efficiently maps new text into an address space: mmap().
+This is where I get a little lost. What would a user process do with a
+return of 0 bytes? It shouldn't retry, since it just hit that small
+timing window. In reality, it just incurred a temporary excessive
+syscall cost, but no real data loss (the operator/admin turned the event
+off).
 
-On x86, you can mmap() an existing file full of executable code PROT_EXEC and jump to it with minimal synchronization (just the standard implicit ordering in the kernel that populates the pages before setting up the PTEs and whatever user synchronization is needed to avoid jumping into the mapping before mmap() finishes).  It works across CPUs, and the only possible way userspace can screw it up (for a read-only mapping of read-only text, anyway) is to jump to the mapping too early, in which case userspace gets a page fault.  Incoherence is impossible, and no one needs to "serialize" (in the SDM sense).
+I'm missing why you feel it's important the user process know such a
+window was hit?
 
-I think the same sequence (from userspace's perspective) works on other architectures, too, although I think more cache management is needed on the kernel's end.  As far as I know, no Linux SMP architecture needs an IPI to map executable text into usermode, but I could easily be wrong.  (IIRC RISC-V has very developer-unfriendly icache management, but I don't remember the details.)
+Can you help me understand that?
 
-Of course, using ptrace or any other FOLL_FORCE to modify text on x86 is rather fraught, and I bet many things do it wrong when userspace is multithreaded.  But not in production because it's mostly not used in production.)
+I do think returning 0 bytes is better than an error here, but I'd
+really like to know why the user process wants to know at all. Maybe
+they have user-space only logging and want to be able to mark there if
+it's in both spots (kernel and user buffers)?
 
-But jit_text_alloc() can't do this, because the order of operations doesn't match.  With jit_text_alloc(), the executable mapping shows up before the text is populated, so there is no atomic change from not-there to populated-and-executable.  Which means that there is an opportunity for CPUs, speculatively or otherwise, to start filling various caches with intermediate states of the text, which means that various architectures (even x86!) may need serialization.
+Thanks,
+-Beau
 
-For eBPF- and module- like use cases, where JITting/code gen is quite coarse-grained, perhaps something vaguely like:
-
-jit_text_alloc() -> returns a handle and an executable virtual address, but does *not* map it there
-jit_text_write() -> write to that handle
-jit_text_map() -> map it and synchronize if needed (no sync needed on x86, I think)
-
-could be more efficient and/or safer.
-
-(Modules could use this too.  Getting alternatives right might take some fiddling, because off the top of my head, this doesn't match how it works now.)
-
-To make alternatives easier, this could work, maybe (haven't fully thought it through):
-
-jit_text_alloc()
-jit_text_map_rw_inplace() -> map at the target address, but RW, !X
-
-write the text and apply alternatives
-
-jit_text_finalize() -> change from RW to RX *and synchronize*
-
-jit_text_finalize() would either need to wait for RCU (possibly extra heavy weight RCU to get "serialization") or send an IPI.
-
-This is slower than the alloc, write, map solution, but allows alternatives to be applied at the final address.
-
-
-Even fancier variants where the writing is some using something like use_temporary_mm() might even make sense.
-
-
-To what extent does performance matter for the various users?  module loading is slow, and I don't think we care that much.  eBPF loaded is not super fast, and we care to a limited extent.  I *think* the bcachefs use case needs to be very fast, but I'm not sure it can be fast and supportable.
-
-Anyway, food for thought.
-
+> Thanks,
+> -Sunliming
+> 
+> >
+> > > Signed-off-by: sunliming <sunliming@kylinos.cn>
+> > > ---
+> > >  kernel/trace/trace_events_user.c | 3 ++-
+> > >  1 file changed, 2 insertions(+), 1 deletion(-)
+> > >
+> > > diff --git a/kernel/trace/trace_events_user.c b/kernel/trace/trace_events_user.c
+> > > index 1ac5ba5685ed..92204bbe79da 100644
+> > > --- a/kernel/trace/trace_events_user.c
+> > > +++ b/kernel/trace/trace_events_user.c
+> > > @@ -1957,7 +1957,8 @@ static ssize_t user_events_write_core(struct file *file, struct iov_iter *i)
+> > >
+> > >               if (unlikely(faulted))
+> > >                       return -EFAULT;
+> > > -     }
+> > > +     } else
+> > > +             return -ENOENT;
+> > >
+> > >       return ret;
+> > >  }
+> > > --
+> > > 2.25.1
