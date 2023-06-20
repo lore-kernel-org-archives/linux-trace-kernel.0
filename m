@@ -2,189 +2,107 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ECFFCEB64DB
-	for <linux-trace-kernel@archiver.kernel.org>; Tue, 20 Jun 2023 17:25:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A8C8EB64D7
+	for <linux-trace-kernel@archiver.kernel.org>; Tue, 20 Jun 2023 17:36:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230366AbjFTRZE (ORCPT
+        id S229799AbjFTRgx convert rfc822-to-8bit (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Tue, 20 Jun 2023 13:25:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58036 "EHLO
+        Tue, 20 Jun 2023 13:36:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36858 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229922AbjFTRY4 (ORCPT
+        with ESMTP id S229717AbjFTRgw (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Tue, 20 Jun 2023 13:24:56 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 32F02FC;
-        Tue, 20 Jun 2023 10:24:55 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id B8D946132D;
-        Tue, 20 Jun 2023 17:24:54 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F40CCC433C8;
-        Tue, 20 Jun 2023 17:24:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1687281894;
-        bh=Rd2KQT7Sg/jj2vpD/+cypNQq21vO707uBhL4Wt60ONQ=;
-        h=In-Reply-To:References:Date:From:To:Cc:Subject:From;
-        b=qVLzEw3DYllRsW1kHmBV862G6LOZFXc4fKTQnIpsgdD3rkTdoAKKcvq1gRTVFpyy5
-         XbCuDXOA1g1mZTF7xKYW2DvV4WvN2nArEOEJgYcwd4dfupuNCgrJ1TcrC087JauSrD
-         bRc/e3gFOmGsVaMU9qcLfWmy5T2ln7Jbkx9hx3XU2mUqramf+q8rMAFYMpM7+uX76N
-         kL3uRI0aY94qeKbLwAOT9R5Vt7d0a4F/1qUypEQw4GZYFbdsYPH/DlFJM0rqVnm3R6
-         pFduwHV7iGgrpKWkxEPmXRIlBYyw1sOUEKglC1dG6CWAHw+KOuedQ+eu2dj3ec+4eB
-         /QpIQ01kgaTbg==
-Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
-        by mailauth.nyi.internal (Postfix) with ESMTP id C920427C005A;
-        Tue, 20 Jun 2023 13:24:51 -0400 (EDT)
-Received: from imap48 ([10.202.2.98])
-  by compute3.internal (MEProxy); Tue, 20 Jun 2023 13:24:51 -0400
-X-ME-Sender: <xms:4uCRZGPuv7m8KaXFojrVeCbfWrMZ7IJoui-4aoDexdm_V34ZG0-I6g>
-    <xme:4uCRZE-OH2xt14uLz-FF7dbdv-gHG5w14JwsdNtUTTBditVKBbvq_q8tXxJx8iDzO
-    WaowhDX_m63-nZ50aI>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvhedrgeefhedgleduucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepofgfggfkjghffffhvfevufgtgfesthhqredtreerjeenucfhrhhomhepfdet
-    nhguhicunfhuthhomhhirhhskhhifdcuoehluhhtoheskhgvrhhnvghlrdhorhhgqeenuc
-    ggtffrrghtthgvrhhnpeduveffvdegvdefhfegjeejlefgtdffueekudfgkeduvdetvddu
-    ieeluefgjeeggfenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfh
-    hrohhmpegrnhguhidomhgvshhmthhprghuthhhphgvrhhsohhnrghlihhthidqudduiedu
-    keehieefvddqvdeifeduieeitdekqdhluhhtoheppehkvghrnhgvlhdrohhrgheslhhinh
-    hugidrlhhuthhordhush
-X-ME-Proxy: <xmx:4uCRZNTpfg2cGu-JZbGK0lauKT6LTXTvSpjwrRQTqsoePCHX_VolEg>
-    <xmx:4uCRZGtzcXFiHy54TUV3vETkj3W0NygxpQUty3hSE43wjAfN8bvT-A>
-    <xmx:4uCRZOcK6KfTYx9uY7noUEoncUDShNm2IP8FjLgB4nFv3QpkDL6MpA>
-    <xmx:4-CRZOAOrENLDeV3AOynkkTJ3wDHPyrZf0jxchqFsnzGmPnTrQoXvQ>
-Feedback-ID: ieff94742:Fastmail
-Received: by mailuser.nyi.internal (Postfix, from userid 501)
-        id 85C9831A0063; Tue, 20 Jun 2023 13:24:50 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
-User-Agent: Cyrus-JMAP/3.9.0-alpha0-499-gf27bbf33e2-fm-20230619.001-gf27bbf33
-Mime-Version: 1.0
-Message-Id: <6145cabf-d016-4dba-b5d2-0fb793352058@app.fastmail.com>
-In-Reply-To: <7F566E60-C371-449B-992B-0C435AD6016B@gmail.com>
-References: <20230616085038.4121892-1-rppt@kernel.org>
- <20230616085038.4121892-3-rppt@kernel.org>
- <f9a7eebe-d36e-4587-b99d-35d4edefdd14@app.fastmail.com>
- <20230618080027.GA52412@kernel.org>
- <a17c65c6-863f-4026-9c6f-a04b659e9ab4@app.fastmail.com>
- <7F566E60-C371-449B-992B-0C435AD6016B@gmail.com>
-Date:   Tue, 20 Jun 2023 10:24:29 -0700
-From:   "Andy Lutomirski" <luto@kernel.org>
-To:     "Nadav Amit" <nadav.amit@gmail.com>, "Song Liu" <song@kernel.org>
-Cc:     "Mike Rapoport" <rppt@kernel.org>,
-        "Mark Rutland" <mark.rutland@arm.com>,
-        "Kees Cook" <keescook@chromium.org>,
-        "Linux Kernel Mailing List" <linux-kernel@vger.kernel.org>,
-        "Andrew Morton" <akpm@linux-foundation.org>,
-        "Catalin Marinas" <catalin.marinas@arm.com>,
-        "Christophe Leroy" <christophe.leroy@csgroup.eu>,
-        "David S. Miller" <davem@davemloft.net>,
-        "Dinh Nguyen" <dinguyen@kernel.org>,
-        "Heiko Carstens" <hca@linux.ibm.com>,
-        "Helge Deller" <deller@gmx.de>,
-        "Huacai Chen" <chenhuacai@kernel.org>,
-        "Kent Overstreet" <kent.overstreet@linux.dev>,
-        "Luis Chamberlain" <mcgrof@kernel.org>,
-        "Michael Ellerman" <mpe@ellerman.id.au>,
-        "Naveen N. Rao" <naveen.n.rao@linux.ibm.com>,
-        "Palmer Dabbelt" <palmer@dabbelt.com>,
-        "Puranjay Mohan" <puranjay12@gmail.com>,
-        "Rick P Edgecombe" <rick.p.edgecombe@intel.com>,
-        "Russell King (Oracle)" <linux@armlinux.org.uk>,
-        "Steven Rostedt" <rostedt@goodmis.org>,
-        "Thomas Bogendoerfer" <tsbogend@alpha.franken.de>,
-        "Thomas Gleixner" <tglx@linutronix.de>,
-        "Will Deacon" <will@kernel.org>, bpf <bpf@vger.kernel.org>,
-        linux-arm-kernel@lists.infradead.org, linux-mips@vger.kernel.org,
-        linux-mm <linux-mm@kvack.org>, linux-modules@vger.kernel.org,
-        linux-parisc@vger.kernel.org, linux-riscv@lists.infradead.org,
-        linux-s390 <linux-s390@vger.kernel.org>,
-        linux-trace-kernel@vger.kernel.org,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
-        loongarch@lists.linux.dev, netdev@vger.kernel.org,
-        sparclinux@vger.kernel.org,
-        "the arch/x86 maintainers" <x86@kernel.org>
-Subject: Re: [PATCH v2 02/12] mm: introduce execmem_text_alloc() and jit_text_alloc()
-Content-Type: text/plain;charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+        Tue, 20 Jun 2023 13:36:52 -0400
+Received: from mail-ej1-f52.google.com (mail-ej1-f52.google.com [209.85.218.52])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A6D6E10C1;
+        Tue, 20 Jun 2023 10:36:48 -0700 (PDT)
+Received: by mail-ej1-f52.google.com with SMTP id a640c23a62f3a-988a4a7be58so75775666b.0;
+        Tue, 20 Jun 2023 10:36:48 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1687282607; x=1689874607;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=VuvZxVykzv8i0fEnOLvP4a311RK4pUX7xiEei9YewKE=;
+        b=EVC980wri9bA+J3Fjmeg/irfpK0xBr9kBoZVtAXhkec73VPkZJy4gn0+ywLJ2rYmmK
+         RyVJK4hQtybp2HkZ4REwP32RlIBTqv8AEI0hMbS5xh9JYZoKjje6T8rLHLOlQT+GiKKD
+         pgq536YHrbHUUqnC2a31KHSS2yJWmrCHZJLe8t8aNi6GtnrfNq2xJIWI9jP07pJyN4y+
+         bquSQMoIBD/2kQJs5RKl45gUN437Wj1RwhVt70tbhH/WjnGmj71HDHUIu4UzHFF0U0YW
+         JzbsLPWAHsaDxUmXz37le+5BvzO2cBd0i9pAnCZC3qd2l/5fkTF0SHRwvgd9IOC+u1nY
+         NiJA==
+X-Gm-Message-State: AC+VfDyZeWN/3hsZrmKq6s8b7MjiUy7f92zYKKiV3f0t4t9/tBg+vUiT
+        9S0mjgjMeMyXgcGitlYhcB56CL093uk2NuvgfcymldRx
+X-Google-Smtp-Source: ACHHUZ76ayD0RiZmNi9FXWKMvBgdyu3CdmRmeJgZQ3kWfHy1tkdC5fkppGjuV11Q8hHn3RHClQ/a+c3QZMWwE+Buyio=
+X-Received: by 2002:a17:906:74da:b0:974:5480:6270 with SMTP id
+ z26-20020a17090674da00b0097454806270mr9076756ejl.0.1687282607075; Tue, 20 Jun
+ 2023 10:36:47 -0700 (PDT)
+MIME-Version: 1.0
+References: <20230522145702.2419654-1-lukasz.luba@arm.com> <20230522145702.2419654-3-lukasz.luba@arm.com>
+In-Reply-To: <20230522145702.2419654-3-lukasz.luba@arm.com>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Tue, 20 Jun 2023 19:36:36 +0200
+Message-ID: <CAJZ5v0i+iY-xknvEZn8Se06XS3Cqyqo3p=fYcsLoFBQ7geKRHA@mail.gmail.com>
+Subject: Re: [RESEND][PATCH v2 2/3] cpufreq: schedutil: Refactor
+ sugov_update_shared() internals
+To:     Lukasz Luba <lukasz.luba@arm.com>
+Cc:     linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+        rafael@kernel.org, linux-pm@vger.kernel.org, rostedt@goodmis.org,
+        mhiramat@kernel.org, mingo@redhat.com, peterz@infradead.org,
+        juri.lelli@redhat.com, vincent.guittot@linaro.org,
+        dietmar.eggemann@arm.com, bsegall@google.com, mgorman@suse.de,
+        bristot@redhat.com, vschneid@redhat.com, delyank@fb.com,
+        qyousef@google.com, qyousef@layalina.io
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-
-
-On Mon, Jun 19, 2023, at 1:18 PM, Nadav Amit wrote:
->> On Jun 19, 2023, at 10:09 AM, Andy Lutomirski <luto@kernel.org> wrote:
->>=20
->> But jit_text_alloc() can't do this, because the order of operations d=
-oesn't match.  With jit_text_alloc(), the executable mapping shows up be=
-fore the text is populated, so there is no atomic change from not-there =
-to populated-and-executable.  Which means that there is an opportunity f=
-or CPUs, speculatively or otherwise, to start filling various caches wit=
-h intermediate states of the text, which means that various architecture=
-s (even x86!) may need serialization.
->>=20
->> For eBPF- and module- like use cases, where JITting/code gen is quite=
- coarse-grained, perhaps something vaguely like:
->>=20
->> jit_text_alloc() -> returns a handle and an executable virtual addres=
-s, but does *not* map it there
->> jit_text_write() -> write to that handle
->> jit_text_map() -> map it and synchronize if needed (no sync needed on=
- x86, I think)
+On Mon, May 22, 2023 at 4:57 PM Lukasz Luba <lukasz.luba@arm.com> wrote:
 >
-> Andy, would you mind explaining why you think a sync is not needed? I=20
-> mean I have a =E2=80=9Cfeeling=E2=80=9D that perhaps TSO can guarantee=
- something based=20
-> on the order of write and page-table update. Is that the argument?
-
-Sorry, when I say "no sync" I mean no cross-CPU synchronization.  I'm as=
-suming the underlying sequence of events is:
-
-allocate physical pages (jit_text_alloc)
-
-write to them (with MOV, memcpy, whatever), via the direct map or via a =
-temporary mm
-
-do an appropriate *local* barrier (which, on x86, is probably implied by=
- TSO, as the subsequent pagetable change is at least a release; also, an=
-y any previous temporary mm stuff would have done MOV CR3 afterwards, wh=
-ich is a full "serializing" barrier)
-
-optionally zap the direct map via IPI, assuming the pages are direct map=
-ped (but this could be avoided with a smart enough allocator and tempora=
-ry_mm above)
-
-install the final RX PTE (jit_text_map), which does a MOV or maybe a LOC=
-K CMPXCHG16B.  Note that the virtual address in question was not readabl=
-e or executable before this, and all CPUs have serialized since the last=
- time it was executable.
-
-either jump to the new text locally, or:
-
-1. Do a store-release to tell other CPUs that the text is mapped
-2. Other CPU does a load-acquire to detect that the text is mapped and j=
-umps to the text
-
-This is all approximately the same thing that plain old mmap(..., PROT_E=
-XEC, ...) does.
-
+> Remove the if section block. Use the simple check to bail out
+> and jump to the unlock at the end. That makes the code more readable
+> and ready for some future tracing.
 >
-> On this regard, one thing that I clearly do not understand is why=20
-> *today* it is ok for users of bpf_arch_text_copy() not to call=20
-> text_poke_sync(). Am I missing something?
+> Signed-off-by: Lukasz Luba <lukasz.luba@arm.com>
+> ---
+>  kernel/sched/cpufreq_schedutil.c | 20 +++++++++++---------
+>  1 file changed, 11 insertions(+), 9 deletions(-)
+>
+> diff --git a/kernel/sched/cpufreq_schedutil.c b/kernel/sched/cpufreq_schedutil.c
+> index e3211455b203..f462496e5c07 100644
+> --- a/kernel/sched/cpufreq_schedutil.c
+> +++ b/kernel/sched/cpufreq_schedutil.c
+> @@ -446,17 +446,19 @@ sugov_update_shared(struct update_util_data *hook, u64 time, unsigned int flags)
+>
+>         ignore_dl_rate_limit(sg_cpu);
+>
+> -       if (sugov_should_update_freq(sg_policy, time)) {
+> -               next_f = sugov_next_freq_shared(sg_cpu, time);
+> +       if (!sugov_should_update_freq(sg_policy, time))
+> +               goto unlock;
+>
+> -               if (!sugov_update_next_freq(sg_policy, time, next_f))
+> -                       goto unlock;
+> +       next_f = sugov_next_freq_shared(sg_cpu, time);
+> +
+> +       if (!sugov_update_next_freq(sg_policy, time, next_f))
+> +               goto unlock;
+> +
+> +       if (sg_policy->policy->fast_switch_enabled)
+> +               cpufreq_driver_fast_switch(sg_policy->policy, next_f);
+> +       else
+> +               sugov_deferred_update(sg_policy);
+>
+> -               if (sg_policy->policy->fast_switch_enabled)
+> -                       cpufreq_driver_fast_switch(sg_policy->policy, next_f);
+> -               else
+> -                       sugov_deferred_update(sg_policy);
+> -       }
+>  unlock:
+>         raw_spin_unlock(&sg_policy->update_lock);
+>  }
+> --
 
-I cannot explain this, because I suspect the current code is wrong.  But=
- it's only wrong across CPUs, because bpf_arch_text_copy goes through te=
-xt_poke_copy, which calls unuse_temporary_mm(), which is serializing.  A=
-nd it's plausible that most eBPF use cases don't actually cause the load=
-ed program to get used on a different CPU without first serializing on t=
-he CPU that ends up using it.  (Context switches and interrupts are seri=
-alizing.)
-
-FRED could make interrupts non-serializing. I sincerely hope that FRED d=
-oesn't cause this all to fall apart.
-
---Andy
+The first patch in the series needs some feedback from the scheduler
+people, but I can apply this one right away if you want me to.
