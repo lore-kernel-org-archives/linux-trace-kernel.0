@@ -2,55 +2,55 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 95B71EB64D7
-	for <linux-trace-kernel@archiver.kernel.org>; Tue, 20 Jun 2023 16:30:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6385EEB64DB
+	for <linux-trace-kernel@archiver.kernel.org>; Tue, 20 Jun 2023 16:30:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230422AbjFTQac (ORCPT
+        id S229647AbjFTQae (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Tue, 20 Jun 2023 12:30:32 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55918 "EHLO
+        Tue, 20 Jun 2023 12:30:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56228 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231629AbjFTQa0 (ORCPT
+        with ESMTP id S230194AbjFTQab (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Tue, 20 Jun 2023 12:30:26 -0400
-Received: from mail-pj1-x102b.google.com (mail-pj1-x102b.google.com [IPv6:2607:f8b0:4864:20::102b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AC292172C;
-        Tue, 20 Jun 2023 09:30:24 -0700 (PDT)
-Received: by mail-pj1-x102b.google.com with SMTP id 98e67ed59e1d1-25f0e0bbcaaso1336121a91.3;
-        Tue, 20 Jun 2023 09:30:24 -0700 (PDT)
+        Tue, 20 Jun 2023 12:30:31 -0400
+Received: from mail-pj1-x1033.google.com (mail-pj1-x1033.google.com [IPv6:2607:f8b0:4864:20::1033])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8618B171F;
+        Tue, 20 Jun 2023 09:30:30 -0700 (PDT)
+Received: by mail-pj1-x1033.google.com with SMTP id 98e67ed59e1d1-25e89791877so2231753a91.2;
+        Tue, 20 Jun 2023 09:30:30 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1687278624; x=1689870624;
+        d=gmail.com; s=20221208; t=1687278630; x=1689870630;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=lzAEwWz2g31UMs4g4MUixj1iNbtJ/dM5TZGhqlQXR9c=;
-        b=UQ6WFD4h9OxD0y4f9f3LdKVC6o2VYevQHKIdBZBY9ZsUWR0wlgh+hJFK7TFmZHxh3P
-         5FmQjvBFlqgfg6B8OQLMLZb0ZJyuAthh38Y/k4FxqZJiBpfL9titLy73qAFOC+a+5dCJ
-         Ulvyxi08lUcpnzw44NJRg1Q4n4CJPgJygHBjhJ0dcgW8CFFJ7oyOzdwmKkueUdfLji7R
-         Q4OeI3PvjxGfi2CbSz8B34J+p5qIT0T5GowFiGJpUrZpqzWdogBxIb+Rc54qixkTpKEw
-         PYCSEESKzutUXkwmc6NcZ/XWPupCooEEX6D/NQymlPDq7BVE+bkHupZ9y5/fGmflM7tc
-         khVg==
+        bh=MAQhcd36ZACkATZxiZq5szSI+Xon4GOwdKbkiICwAjg=;
+        b=DKahbAEF5rWmYfNxytZBAmdngVIMQrFw3E1D0EfiwMwzi17VX3VXNzqi3hSUbYV7yh
+         85QXE6Yc4tilzJ/BcvY1XM1ziMi0C5PnKDHRmuP0vXJc1J9wSEA+/fqN4c5lqrADQebZ
+         ia4FnfKE3o8ZxBcQCWstPrSc9EjwndXQjxRt9KGqT8UDmC2Hr5KOXyY0Sabfq9e3Re8c
+         zzR1FxsRegwGoGA/L0vqj/P5OpHKCb03IaqoWkuzZorcin76kxRDQ3628PhToKlVpg79
+         5hNcmLgbdNe//uD4jiPuN+6g4pSPjO5DdfxiQFEbsGZsIcVe15DJN7UL4PR8ddiokvib
+         2THA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1687278624; x=1689870624;
+        d=1e100.net; s=20221208; t=1687278630; x=1689870630;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=lzAEwWz2g31UMs4g4MUixj1iNbtJ/dM5TZGhqlQXR9c=;
-        b=dnp5mxahvONCD1BIpQejKgzY58xpyJxtf8qtdpxL5z+/Ie9hVw3k6Ag9bbQzcFr5BH
-         hF6k8EKQaj60UEodFulHe5Zy/WlHZY/UjgWOUautvfvp0GJKpb0B73xFtbIxhJZVk35q
-         l9fYZATrI62oY0/yMmYTjuzeD4WLgADMdggQnyneNv0Jo2DOX/vMH9lRL9Yi6vRztTLN
-         z+7kViw2i1/3r46YPcLF1PX/6l0/skUQcTl57XRoe5EtydwxQ4C9Zz8kiMlkRxeXJ0G2
-         T3ig9CRC2Xn51ahgi5A3+pi8fH1rvxyHTFus40/VWYSvm15KumRUdM6N+5/vxVgzAbHY
-         ycRg==
-X-Gm-Message-State: AC+VfDyxnROwYVqXia6R2DoWbcfozGV88seEPtSW/y2CuX6zofSpT2Hc
-        1TTX+ZBwho7lvzjs4NCHUPI=
-X-Google-Smtp-Source: ACHHUZ7C0y/gigQKKulCdgk5D0IrXKAkn7+AtANMzbaiQVx00e4ZZnlvu4oc7X76Z0zcZ6Z9o86XhQ==
-X-Received: by 2002:a17:90b:30c9:b0:25b:bff5:5310 with SMTP id hi9-20020a17090b30c900b0025bbff55310mr7291590pjb.14.1687278623951;
-        Tue, 20 Jun 2023 09:30:23 -0700 (PDT)
+        bh=MAQhcd36ZACkATZxiZq5szSI+Xon4GOwdKbkiICwAjg=;
+        b=PZO9SVf2WcD/7dC0piakrJ7vmR6gA+N+VvFcmau5rSuzsGqMmjoMnt16Hqwxjwk+LY
+         o+bf9FjH8zIpS6DVaHDmoFMzR1TAMD8gCli9zyVcHtk1Y2c3CGkq37+3daYyq/SfDI1A
+         wfeF+dbZvyeR+zNamZcVGS3H3RG2gC0nHfX9wwyr9FFw2mTG/pVh4od/6m5m19G/z2f3
+         r2+T5J5+7fMW9X4On54axhQuPwkFf+8uDROV7tHurRf06+G/gfHiEetCkVVJOgjjHkUD
+         eHaONrjw6KGZvBGklDi3SwnGhot8Wjh31K26GoVuR463bKlFC3HTiKK932v/p2IIyUI4
+         3WQg==
+X-Gm-Message-State: AC+VfDz5P7BYq7rPhc/E7bsFWY25LVPmfKVl3u4CKaSPutjISKouLUbJ
+        77q0HSRyzwrNREf7QGwDIYQ=
+X-Google-Smtp-Source: ACHHUZ409+etT6fEoE+GNlbUmxhwCza62ZoKLuH9rdyEdqHZgGlYj9zhNYZRBwee21cos3uOqUit6A==
+X-Received: by 2002:a17:90a:189:b0:25f:982:2d73 with SMTP id 9-20020a17090a018900b0025f09822d73mr3949947pjc.15.1687278629921;
+        Tue, 20 Jun 2023 09:30:29 -0700 (PDT)
 Received: from vultr.guest ([2001:19f0:ac02:b96:5400:4ff:fe7b:3b23])
-        by smtp.gmail.com with ESMTPSA id t8-20020a17090a3b4800b0025c1cfdb93esm1854286pjf.13.2023.06.20.09.30.22
+        by smtp.gmail.com with ESMTPSA id t8-20020a17090a3b4800b0025c1cfdb93esm1854286pjf.13.2023.06.20.09.30.28
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 20 Jun 2023 09:30:23 -0700 (PDT)
+        Tue, 20 Jun 2023 09:30:29 -0700 (PDT)
 From:   Yafang Shao <laoar.shao@gmail.com>
 To:     ast@kernel.org, daniel@iogearbox.net, john.fastabend@gmail.com,
         andrii@kernel.org, martin.lau@linux.dev, song@kernel.org,
@@ -59,9 +59,9 @@ To:     ast@kernel.org, daniel@iogearbox.net, john.fastabend@gmail.com,
         mhiramat@kernel.org
 Cc:     bpf@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
         Yafang Shao <laoar.shao@gmail.com>
-Subject: [PATCH v4 bpf-next 04/11] bpf: Protect probed address based on kptr_restrict setting
-Date:   Tue, 20 Jun 2023 16:30:01 +0000
-Message-Id: <20230620163008.3718-5-laoar.shao@gmail.com>
+Subject: [PATCH v4 bpf-next 07/11] bpf: Add a common helper bpf_copy_to_user()
+Date:   Tue, 20 Jun 2023 16:30:04 +0000
+Message-Id: <20230620163008.3718-8-laoar.shao@gmail.com>
 X-Mailer: git-send-email 2.39.3
 In-Reply-To: <20230620163008.3718-1-laoar.shao@gmail.com>
 References: <20230620163008.3718-1-laoar.shao@gmail.com>
@@ -71,31 +71,67 @@ Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-The probed address can be accessed by userspace through querying the task
-file descriptor (fd). However, it is crucial to adhere to the kptr_restrict
-setting and refrain from exposing the address if it is not permitted.
+Add a common helper bpf_copy_to_user(), which will be used at multiple
+places.
+No functional change.
 
 Signed-off-by: Yafang Shao <laoar.shao@gmail.com>
 ---
- kernel/trace/trace_kprobe.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+ kernel/bpf/syscall.c | 34 ++++++++++++++++++++--------------
+ 1 file changed, 20 insertions(+), 14 deletions(-)
 
-diff --git a/kernel/trace/trace_kprobe.c b/kernel/trace/trace_kprobe.c
-index 59cda19..e4554db 100644
---- a/kernel/trace/trace_kprobe.c
-+++ b/kernel/trace/trace_kprobe.c
-@@ -1551,7 +1551,10 @@ int bpf_get_kprobe_info(const struct perf_event *event, u32 *fd_type,
- 	} else {
- 		*symbol = NULL;
- 		*probe_offset = 0;
--		*probe_addr = (unsigned long)tk->rp.kp.addr;
-+		if (kallsyms_show_value(current_cred()))
-+			*probe_addr = (unsigned long)tk->rp.kp.addr;
-+		else
-+			*probe_addr = 0;
- 	}
- 	return 0;
+diff --git a/kernel/bpf/syscall.c b/kernel/bpf/syscall.c
+index 1295541..6af003d 100644
+--- a/kernel/bpf/syscall.c
++++ b/kernel/bpf/syscall.c
+@@ -3237,6 +3237,25 @@ static void bpf_raw_tp_link_show_fdinfo(const struct bpf_link *link,
+ 		   raw_tp_link->btp->tp->name);
  }
+ 
++static int bpf_copy_to_user(char __user *ubuf, const char *buf, u32 ulen,
++			    u32 len)
++{
++	if (ulen >= len + 1) {
++		if (copy_to_user(ubuf, buf, len + 1))
++			return -EFAULT;
++	} else {
++		char zero = '\0';
++
++		if (copy_to_user(ubuf, buf, ulen - 1))
++			return -EFAULT;
++		if (put_user(zero, ubuf + ulen - 1))
++			return -EFAULT;
++		return -ENOSPC;
++	}
++
++	return 0;
++}
++
+ static int bpf_raw_tp_link_fill_link_info(const struct bpf_link *link,
+ 					  struct bpf_link_info *info)
+ {
+@@ -3255,20 +3274,7 @@ static int bpf_raw_tp_link_fill_link_info(const struct bpf_link *link,
+ 	if (!ubuf)
+ 		return 0;
+ 
+-	if (ulen >= tp_len + 1) {
+-		if (copy_to_user(ubuf, tp_name, tp_len + 1))
+-			return -EFAULT;
+-	} else {
+-		char zero = '\0';
+-
+-		if (copy_to_user(ubuf, tp_name, ulen - 1))
+-			return -EFAULT;
+-		if (put_user(zero, ubuf + ulen - 1))
+-			return -EFAULT;
+-		return -ENOSPC;
+-	}
+-
+-	return 0;
++	return bpf_copy_to_user(ubuf, tp_name, ulen, tp_len);
+ }
+ 
+ static const struct bpf_link_ops bpf_raw_tp_link_lops = {
 -- 
 1.8.3.1
 
