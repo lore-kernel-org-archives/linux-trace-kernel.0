@@ -2,126 +2,184 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DFF2BEB64D7
-	for <linux-trace-kernel@archiver.kernel.org>; Tue, 20 Jun 2023 18:08:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 59537EB64DB
+	for <linux-trace-kernel@archiver.kernel.org>; Tue, 20 Jun 2023 19:54:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229675AbjFTSIC (ORCPT
+        id S229779AbjFTTyu (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Tue, 20 Jun 2023 14:08:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49680 "EHLO
+        Tue, 20 Jun 2023 15:54:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40414 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229618AbjFTSIB (ORCPT
+        with ESMTP id S229782AbjFTTyt (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Tue, 20 Jun 2023 14:08:01 -0400
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id C39DB198;
-        Tue, 20 Jun 2023 11:07:59 -0700 (PDT)
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 540291063;
-        Tue, 20 Jun 2023 11:08:43 -0700 (PDT)
-Received: from [10.57.24.104] (unknown [10.57.24.104])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 983373F64C;
-        Tue, 20 Jun 2023 11:07:55 -0700 (PDT)
-Message-ID: <a464e8ee-a1b9-10dd-5be0-d9dee994d7b8@arm.com>
-Date:   Tue, 20 Jun 2023 19:08:12 +0100
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.11.0
-Subject: Re: [RESEND][PATCH v2 3/3] schedutil: trace: Add tracing to capture
- filter out requests
-Content-Language: en-US
-To:     "Rafael J. Wysocki" <rafael@kernel.org>
-Cc:     linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
-        linux-pm@vger.kernel.org, rostedt@goodmis.org, mhiramat@kernel.org,
-        mingo@redhat.com, peterz@infradead.org, juri.lelli@redhat.com,
-        vincent.guittot@linaro.org, dietmar.eggemann@arm.com,
-        bsegall@google.com, mgorman@suse.de, bristot@redhat.com,
-        vschneid@redhat.com, delyank@fb.com, qyousef@google.com,
-        qyousef@layalina.io, kernel test robot <lkp@intel.com>
-References: <20230522145702.2419654-1-lukasz.luba@arm.com>
- <20230522145702.2419654-4-lukasz.luba@arm.com>
- <CAJZ5v0g45=0+uLqPD5jib8aQrw8syjMxzd9uPqnTUzxgVCDVkQ@mail.gmail.com>
-From:   Lukasz Luba <lukasz.luba@arm.com>
-In-Reply-To: <CAJZ5v0g45=0+uLqPD5jib8aQrw8syjMxzd9uPqnTUzxgVCDVkQ@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+        Tue, 20 Jun 2023 15:54:49 -0400
+Received: from mail-pl1-x629.google.com (mail-pl1-x629.google.com [IPv6:2607:f8b0:4864:20::629])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5D39B173F
+        for <linux-trace-kernel@vger.kernel.org>; Tue, 20 Jun 2023 12:54:46 -0700 (PDT)
+Received: by mail-pl1-x629.google.com with SMTP id d9443c01a7336-1b52d14df27so23888535ad.0
+        for <linux-trace-kernel@vger.kernel.org>; Tue, 20 Jun 2023 12:54:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=dabbelt-com.20221208.gappssmtp.com; s=20221208; t=1687290886; x=1689882886;
+        h=content-transfer-encoding:mime-version:message-id:to:from:cc
+         :in-reply-to:subject:date:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=RsIaqKRLY/w55XA5LB9E3AHeTBdImbhhaSspjOmTz+k=;
+        b=vQNccOY1KmXZzmbpNdP7pNP+MGN+VFDpqBaXrFLe4BPVoy0GqRf5L1qcnF3R5mR1ar
+         iRa5MKJp0hqSDMwuMZ+jX5hc6S2Vrhbhb9mDzX0xgrvK9X0d4dQjwNDHpcguTuZZB/XU
+         SXfdhzPvzMURg2rHJk+8bx2kuVIJkLQ4E6jQ65u3IU1r0qna5Z1dgE+LVQ460QQ/erb2
+         4GK1smNIW1+qGDi80nQD7j/Va9D5gMPABFXJ8e9rfIlgiShEgzPu11pUvvnSDB1Ibia/
+         GXn6gE/uw6JtBS3YAuWOZI/C93SRIP0kbb5rGKdr9MFt2JO/353px5ga5qz2LqtS6tu3
+         lqTQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1687290886; x=1689882886;
+        h=content-transfer-encoding:mime-version:message-id:to:from:cc
+         :in-reply-to:subject:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=RsIaqKRLY/w55XA5LB9E3AHeTBdImbhhaSspjOmTz+k=;
+        b=V3cOy/hexHracS9S32CcDR0O7+A1/JcEahaYHgJEuIiEjBXP+0YReUx/IUooP51g3m
+         geKbpFP3jdXeuTl1hfmr2qYzUUUOHZfVMT/cQf6bBNOOtf7og++IvaG1OQLoVHNlEjjb
+         c8/suixz4yW+8owsh56Eh5nWrVeQpZbEl8yzCS41FauMwqum/1WW/asYyKu5OezXzNdx
+         bPMS1cD6pZxkQfDecM6ctUS5w01/1Mju/i/p7uFfSRVHj8m4JWTrKDjj9eNNy3YLXzNn
+         JvWJ8pSu/HwTQXhDb95tn1w65HTulZZXKHUyzNnVQ7Bd31UAlskP+1gV3fDNyhY+UqG1
+         rfbA==
+X-Gm-Message-State: AC+VfDxgc70Lq7XahAVa+hNKqrnJGCFBCi23+r6xcb24RzRHbEhM/tg2
+        GtfxcoYc2oUhY9fKMVMQ4NBJgg==
+X-Google-Smtp-Source: ACHHUZ4Kpx293K87FtkleDrYAYa0rwjXy2nPbgIEJGuxBo6nVZF7ASkOQcfG7zuhiqz3kJZ1Xdj1hQ==
+X-Received: by 2002:a17:902:e884:b0:1b5:16f2:a4e3 with SMTP id w4-20020a170902e88400b001b516f2a4e3mr9879390plg.30.1687290885633;
+        Tue, 20 Jun 2023 12:54:45 -0700 (PDT)
+Received: from localhost ([50.221.140.188])
+        by smtp.gmail.com with ESMTPSA id n21-20020a170902969500b001b016313b1esm2010616plp.82.2023.06.20.12.54.44
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 20 Jun 2023 12:54:44 -0700 (PDT)
+Date:   Tue, 20 Jun 2023 12:54:44 -0700 (PDT)
+X-Google-Original-Date: Tue, 20 Jun 2023 12:54:05 PDT (-0700)
+Subject:     Re: [PATCH v11 5/8] riscv: ftrace: Enable HAVE_FUNCTION_GRAPH_RETVAL
+In-Reply-To: <20230608215834.729cfda2@gandalf.local.home>
+CC:     pengdonglin@sangfor.com.cn, mhiramat@kernel.org,
+        linux@armlinux.org.uk, Mark Rutland <mark.rutland@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        rmk+kernel@armlinux.org.uk,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        aou@eecs.berkeley.edu, tglx@linutronix.de,
+        dave.hansen@linux.intel.com, x86@kernel.org, bp@alien8.de,
+        hpa@zytor.com, chenhuacai@kernel.org, zhangqing@loongson.cn,
+        kernel@xen0n.name, mingo@redhat.com, peterz@infradead.org,
+        xiehuan09@gmail.com, dinghui@sangfor.com.cn,
+        huangcun@sangfor.com.cn, dolinux.peng@gmail.com,
+        linux-trace-kernel@vger.kernel.org, loongarch@lists.linux.dev,
+        linux-riscv@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+From:   Palmer Dabbelt <palmer@dabbelt.com>
+To:     rostedt@goodmis.org
+Message-ID: <mhng-672b0efa-aeba-4cb2-808d-6ef271844449@palmer-ri-x1c9a>
+Mime-Version: 1.0 (MHng)
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-Hi Rafael,
+On Thu, 08 Jun 2023 18:58:34 PDT (-0700), rostedt@goodmis.org wrote:
+>
+> Can I get an ack from a RISC-V maintainer?
 
-On 6/20/23 18:40, Rafael J. Wysocki wrote:
-> On Mon, May 22, 2023 at 4:57 PM Lukasz Luba <lukasz.luba@arm.com> wrote:
+Sorry I missed this.
+
+Acked-by: Palmer Dabbelt <palmer@rivosinc.com>
+
+>
+> -- Steve
+>
+>
+> On Sat,  8 Apr 2023 05:42:19 -0700
+> Donglin Peng <pengdonglin@sangfor.com.cn> wrote:
+>
+>> The previous patch ("function_graph: Support recording and printing
+>> the return value of function") has laid the groundwork for the for
+>> the funcgraph-retval, and this modification makes it available on
+>> the RISC-V platform.
 >>
->> Some of the frequency update requests coming form the task scheduler
->> might be filter out. It can happen when the previous request was served
->> not that long ago (in a period smaller than provided by the cpufreq driver
->> as minimum for frequency update). In such case, we want to know if some of
->> the frequency updates cannot make through.
->> Export the new tracepoint as well. That would allow to handle it by a
->> toolkit for trace analyzes.
+>> We introduce a new structure called fgraph_ret_regs for the RISC-V
+>> platform to hold return registers and the frame pointer. We then
+>> fill its content in the return_to_handler and pass its address to
+>> the function ftrace_return_to_handler to record the return value.
 >>
->> Reported-by: kernel test robot <lkp@intel.com> # solved tricky build
->> Signed-off-by: Lukasz Luba <lukasz.luba@arm.com>
+>> Signed-off-by: Donglin Peng <pengdonglin@sangfor.com.cn>
 >> ---
->>   include/trace/events/sched.h     |  4 ++++
->>   kernel/sched/cpufreq_schedutil.c | 10 ++++++++--
->>   2 files changed, 12 insertions(+), 2 deletions(-)
+>> v10:
+>>  - Use CONFIG_FUNCTION_GRAPH_TRACER to control fgraph_ret_regs definition
 >>
->> diff --git a/include/trace/events/sched.h b/include/trace/events/sched.h
->> index dbfb30809f15..e34b7cd5de73 100644
->> --- a/include/trace/events/sched.h
->> +++ b/include/trace/events/sched.h
->> @@ -739,6 +739,10 @@ DECLARE_TRACE(uclamp_update_tsk_tp,
->>          TP_PROTO(struct task_struct *tsk, int uclamp_id,  unsigned int value),
->>          TP_ARGS(tsk, uclamp_id, value));
+>> v9:
+>>  - Update the commit message
 >>
->> +DECLARE_TRACE(schedutil_update_filtered_tp,
->> +       TP_PROTO(int cpu),
->> +       TP_ARGS(cpu));
+>> v8:
+>>  - Modify the control range of CONFIG_HAVE_FUNCTION_GRAPH_RETVAL
+>> ---
+>>  arch/riscv/Kconfig              |  1 +
+>>  arch/riscv/include/asm/ftrace.h | 21 +++++++++++++++++++++
+>>  arch/riscv/kernel/mcount.S      |  7 +------
+>>  3 files changed, 23 insertions(+), 6 deletions(-)
+>>
+>> diff --git a/arch/riscv/Kconfig b/arch/riscv/Kconfig
+>> index eb7f29a412f8..108538815309 100644
+>> --- a/arch/riscv/Kconfig
+>> +++ b/arch/riscv/Kconfig
+>> @@ -139,6 +139,7 @@ config RISCV
+>>  	select HAVE_DYNAMIC_FTRACE if !XIP_KERNEL && MMU && $(cc-option,-fpatchable-function-entry=8)
+>>  	select HAVE_DYNAMIC_FTRACE_WITH_REGS if HAVE_DYNAMIC_FTRACE
+>>  	select HAVE_FTRACE_MCOUNT_RECORD if !XIP_KERNEL
+>> +	select HAVE_FUNCTION_GRAPH_RETVAL if HAVE_FUNCTION_GRAPH_TRACER
+>>  	select HAVE_FUNCTION_GRAPH_TRACER
+>>  	select HAVE_FUNCTION_TRACER if !XIP_KERNEL && !PREEMPTION
+>>
+>> diff --git a/arch/riscv/include/asm/ftrace.h b/arch/riscv/include/asm/ftrace.h
+>> index d47d87c2d7e3..740a979171e5 100644
+>> --- a/arch/riscv/include/asm/ftrace.h
+>> +++ b/arch/riscv/include/asm/ftrace.h
+>> @@ -111,4 +111,25 @@ int ftrace_init_nop(struct module *mod, struct dyn_ftrace *rec);
+>>
+>>  #endif /* CONFIG_DYNAMIC_FTRACE */
+>>
+>> +#ifndef __ASSEMBLY__
+>> +#ifdef CONFIG_FUNCTION_GRAPH_TRACER
+>> +struct fgraph_ret_regs {
+>> +	unsigned long a1;
+>> +	unsigned long a0;
+>> +	unsigned long s0;
+>> +	unsigned long ra;
+>> +};
 >> +
->>   #endif /* _TRACE_SCHED_H */
->>
->>   /* This part must be outside protection */
->> diff --git a/kernel/sched/cpufreq_schedutil.c b/kernel/sched/cpufreq_schedutil.c
->> index f462496e5c07..4f9daf258a65 100644
->> --- a/kernel/sched/cpufreq_schedutil.c
->> +++ b/kernel/sched/cpufreq_schedutil.c
->> @@ -6,6 +6,8 @@
->>    * Author: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
->>    */
->>
->> +EXPORT_TRACEPOINT_SYMBOL_GPL(schedutil_update_filtered_tp);
+>> +static inline unsigned long fgraph_ret_regs_return_value(struct fgraph_ret_regs *ret_regs)
+>> +{
+>> +	return ret_regs->a0;
+>> +}
 >> +
->>   #define IOWAIT_BOOST_MIN       (SCHED_CAPACITY_SCALE / 8)
->>
->>   struct sugov_tunables {
->> @@ -318,8 +320,10 @@ static inline bool sugov_update_single_common(struct sugov_cpu *sg_cpu,
->>
->>          ignore_dl_rate_limit(sg_cpu);
->>
->> -       if (!sugov_should_update_freq(sg_cpu->sg_policy, time))
->> +       if (!sugov_should_update_freq(sg_cpu->sg_policy, time)) {
->> +               trace_schedutil_update_filtered_tp(sg_cpu->cpu);
-> 
-> It looks like the tracepoint can be added to
-> sugov_should_update_freq() for less code duplication.
-> 
+>> +static inline unsigned long fgraph_ret_regs_frame_pointer(struct fgraph_ret_regs *ret_regs)
+>> +{
+>> +	return ret_regs->s0;
+>> +}
+>> +#endif /* ifdef CONFIG_FUNCTION_GRAPH_TRACER */
+>> +#endif
+>> +
+>>  #endif /* _ASM_RISCV_FTRACE_H */
+>> diff --git a/arch/riscv/kernel/mcount.S b/arch/riscv/kernel/mcount.S
+>> index 30102aadc4d7..8a6e5a9e842a 100644
+>> --- a/arch/riscv/kernel/mcount.S
+>> +++ b/arch/riscv/kernel/mcount.S
+>> @@ -65,13 +65,8 @@ ENTRY(return_to_handler)
+>>   * So alternatively we check the *old* frame pointer position, that is, the
+>>   * value stored in -16(s0) on entry, and the s0 on return.
+>>   */
+>> -#ifdef HAVE_FUNCTION_GRAPH_FP_TEST
+>> -	mv	t6, s0
+>> -#endif
+>>  	SAVE_RET_ABI_STATE
+>> -#ifdef HAVE_FUNCTION_GRAPH_FP_TEST
+>> -	mv	a0, t6
+>> -#endif
+>> +	mv	a0, sp
+>>  	call	ftrace_return_to_handler
+>>  	mv	a2, a0
+>>  	RESTORE_RET_ABI_STATE
 
-Make sense. I will move that trace there.
-
-In such case, of movement that trace call...
-Based on your comment for patch 2/3 I got impression
-that you still want it. For me it looks more 'aligned' w/ that
-patch 2/3. The two functions code flows:
-sugov_update_shared() and sugov_update_single_common() - how
-they call and interpret result from
-sugov_should_update_freq() - is more clear IMO.
-
-So I will keep that patch 2/3 in the next version. Although,
-if you don't like it - please tell me and I will drop it.
-
-Thanks for the review!
-
-Lukasz
