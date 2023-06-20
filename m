@@ -2,185 +2,191 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D6EEEB64D8
-	for <linux-trace-kernel@archiver.kernel.org>; Tue, 20 Jun 2023 08:01:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CED7CEB64DB
+	for <linux-trace-kernel@archiver.kernel.org>; Tue, 20 Jun 2023 09:07:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231723AbjFTIBi (ORCPT
+        id S231629AbjFTJHs (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Tue, 20 Jun 2023 04:01:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56706 "EHLO
+        Tue, 20 Jun 2023 05:07:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33032 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231639AbjFTIB0 (ORCPT
+        with ESMTP id S231179AbjFTJHr (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Tue, 20 Jun 2023 04:01:26 -0400
-Received: from mail-qt1-x82c.google.com (mail-qt1-x82c.google.com [IPv6:2607:f8b0:4864:20::82c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EC9C910C2
-        for <linux-trace-kernel@vger.kernel.org>; Tue, 20 Jun 2023 01:01:23 -0700 (PDT)
-Received: by mail-qt1-x82c.google.com with SMTP id d75a77b69052e-3fde9bfb3c8so434181cf.0
-        for <linux-trace-kernel@vger.kernel.org>; Tue, 20 Jun 2023 01:01:23 -0700 (PDT)
+        Tue, 20 Jun 2023 05:07:47 -0400
+Received: from mail-lf1-x144.google.com (mail-lf1-x144.google.com [IPv6:2a00:1450:4864:20::144])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 68588B9;
+        Tue, 20 Jun 2023 02:07:44 -0700 (PDT)
+Received: by mail-lf1-x144.google.com with SMTP id 2adb3069b0e04-4f955def3a5so59551e87.0;
+        Tue, 20 Jun 2023 02:07:44 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20221208; t=1687248083; x=1689840083;
+        d=gmail.com; s=20221208; t=1687252062; x=1689844062;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=Y0soM3eBW17TUN7zlLidBNvK+EaFBcT8rKMwsr5hx58=;
-        b=6oEmMLuUKY8JFmpDg5+v8E4MdTfurRjLoX1ABWiD8rzU/LoDjwWm0ElBunYvvTrVA9
-         8jootSjhRUZ8mYyleJGBxXK5CcUGV9LC89/FsE1fwM3MFc18DbQLdNMT/KUlg2oXiLnf
-         3hYu82RMtbq9gvVpHdRYAhY1c5cul9XOj4lfNfa8XuMmfActB+whqEOf7AttaUfJ7c0C
-         3vzpiNwE1EtKzD+/va+/gJE+1XGIbiurMGkbGIv3LXcIiB+WsYskiA7/AEN02+rUbgu0
-         NlCzIuWkeu5kq2y4PCTaglIB6hcUeYig1h/77sLoDyWgn/n47w+phuzDHthZW/SS7dfY
-         7K6w==
+        bh=kGS7NeM6a0TRa9MgngivWkVQd9RoCsbI/u1bjUhzsAY=;
+        b=Z3A5SgoMsZZI/IOZKA0EJeuqa+VEjhwotQ6RMv+8YdadbUAbhwEbX+cslIcrrfurEe
+         84NkEhfl3GT7GYhMBK4iAMwWuOvJWB6vAr8F/7kKzcFLKIxY0gFdYs8I/JTthK2UlMik
+         VTxrLLOPTBwfa4VNSCsLeTDHN0qRaetCLgB/hN+kjb6rYJSNK9ill+xSeqhhCxYWGiax
+         zK8iU553FUZ0bsTMFmFwzf/Xx+YppsR7Ft8Qls+O5e/r7TLlMcWGgkNPC/xVVRqWoVi6
+         EEU21cIwjJi2reiJ/9xM0iuJV04NxmInvnNGxORDoMCz8X7/57sK6dCww1+IV59eCwVg
+         uiYA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1687248083; x=1689840083;
+        d=1e100.net; s=20221208; t=1687252062; x=1689844062;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=Y0soM3eBW17TUN7zlLidBNvK+EaFBcT8rKMwsr5hx58=;
-        b=ACB44pas5ZohxW2atbmBZLVLFcYvUMCDOzDAB+giKF6vLrKTvF+SysnJm3nP88DNvW
-         /lTp1B73tDHu9hAVvrdN/1Mx8LSJJ8JuHgGroZAed1rkZY4i+aR9LEiQ0o4w3zsd0QGv
-         /B/XsRXM81g5wT2e3I65y+8X+fgXHZxHVJ47UxgTGEtUqV7hO31ZALGdmFry6jNduWxa
-         9+/m9XLfS/H9MAAoiDhmWyY9wFTkO5Iy5VIFDEhCgmIY4F3+5LAcpjO3eVhnXwP6ZPN4
-         jp/XQsI+kU3NodQtQMge9TnM5fgb50bmivMSKb535TwuMuM0N1qPaTJVm/G83BF7qsIg
-         39BQ==
-X-Gm-Message-State: AC+VfDzo+swQmcyR1YQdkTsfeLO3hs4V1c2l6eK0MopRoxFbrJiIRbDm
-        pjF+3hYhU3WZH4uMxEMZ3rUOVJBNwgezelBtcCikXw==
-X-Google-Smtp-Source: ACHHUZ4xBX0RlLFDAXi6zryiB7+5YG80ltFJqS/gHVwlzdVsIwOci9YnZ/I3ji95of7DLw9rWv+GufohPkCcn7y0vzA=
-X-Received: by 2002:a05:622a:589:b0:3ed:210b:e698 with SMTP id
- c9-20020a05622a058900b003ed210be698mr1007941qtb.7.1687248082908; Tue, 20 Jun
- 2023 01:01:22 -0700 (PDT)
+        bh=kGS7NeM6a0TRa9MgngivWkVQd9RoCsbI/u1bjUhzsAY=;
+        b=Wuyh656WFr3ZxERwG56Plxp7D2B0B9bGlatRiLR3SmIcF66gJFMyYsk3LIUG2LLTsu
+         SiSVu/FOpK814OXaSjjfBxVdBYz4vWTawzuBXAxiWlpvevHP0FrQTvki6ZWJQhQoOCrQ
+         QrIZBvo2DGCXsLpBQltT3asOmm21KFz3WGjyjUYVk3Uory0Suqg4LhfkLYQu8pqzxwjt
+         OUn2ujTCrHP57KbV4e+/Abm4c6GFfPlv47jAWngvroJZU7mo74NPvYiRcz0o41bakRrY
+         vHZBfZQzV1MHnT6QAxllslL0691sQvsv3LFGwZ4Zd1mOYOo90tS8hPEvAUtOVA8+d4Tv
+         stAQ==
+X-Gm-Message-State: AC+VfDz6Bj4FOXqjYWCn2IxMVaWXsEuFliyeSKmwxUklAXmK0lBo7iHK
+        A6+8UaHKrcyIx/lADVx/zR23EO7Ut8bemZw3LA==
+X-Google-Smtp-Source: ACHHUZ5vfpktClWHjrxt+djdq7PbNWMenSFwb/G6DRupMMWPlnOXD6+NIv1/HNuBKBIZzb9xYHQfHVYTcKailZ9Bbb8=
+X-Received: by 2002:a19:7719:0:b0:4f3:ac64:84f5 with SMTP id
+ s25-20020a197719000000b004f3ac6484f5mr5962706lfc.36.1687252061967; Tue, 20
+ Jun 2023 02:07:41 -0700 (PDT)
 MIME-Version: 1.0
-References: <20230526234435.662652-1-yuzhao@google.com> <20230526234435.662652-7-yuzhao@google.com>
- <CTH9N6UYDUM2.1974CRL32YFQC@wheely>
-In-Reply-To: <CTH9N6UYDUM2.1974CRL32YFQC@wheely>
-From:   Yu Zhao <yuzhao@google.com>
-Date:   Tue, 20 Jun 2023 02:00:46 -0600
-Message-ID: <CAOUHufY8egkNrxQwd6ms4j6ziyUW5uDjD=yhkxHLqAAOGB4Ccw@mail.gmail.com>
-Subject: Re: [PATCH mm-unstable v2 06/10] kvm/powerpc: make radix page tables
- RCU safe
-To:     Nicholas Piggin <npiggin@gmail.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Alistair Popple <apopple@nvidia.com>,
-        Anup Patel <anup@brainfault.org>,
-        Ben Gardon <bgardon@google.com>,
-        Borislav Petkov <bp@alien8.de>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Chao Peng <chao.p.peng@linux.intel.com>,
-        Christophe Leroy <christophe.leroy@csgroup.eu>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Fabiano Rosas <farosas@linux.ibm.com>,
-        Gaosheng Cui <cuigaosheng1@huawei.com>,
-        Gavin Shan <gshan@redhat.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
-        James Morse <james.morse@arm.com>,
-        "Jason A. Donenfeld" <Jason@zx2c4.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Marc Zyngier <maz@kernel.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Michael Larabel <michael@michaellarabel.com>,
-        Mike Rapoport <rppt@kernel.org>,
-        Oliver Upton <oliver.upton@linux.dev>,
-        Paul Mackerras <paulus@ozlabs.org>,
-        Peter Xu <peterx@redhat.com>,
-        Sean Christopherson <seanjc@google.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Thomas Huth <thuth@redhat.com>, Will Deacon <will@kernel.org>,
-        Zenghui Yu <yuzenghui@huawei.com>, kvmarm@lists.linux.dev,
-        kvm@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-mm@kvack.org, linuxppc-dev@lists.ozlabs.org,
-        linux-trace-kernel@vger.kernel.org, x86@kernel.org,
-        linux-mm@google.com
+References: <20230609030302.1278716-1-sunliming@kylinos.cn>
+ <20230609030302.1278716-2-sunliming@kylinos.cn> <20230616160845.GA88@W11-BEAU-MD.localdomain>
+ <CAJncD7Sfasoe4-hKZP4c3bPZ892S2Kk5JaMo-aca6eBDwLjLNQ@mail.gmail.com> <20230619184044.GA88@W11-BEAU-MD.localdomain>
+In-Reply-To: <20230619184044.GA88@W11-BEAU-MD.localdomain>
+From:   sunliming <kelulanainsley@gmail.com>
+Date:   Tue, 20 Jun 2023 17:07:30 +0800
+Message-ID: <CAJncD7SSAcHpSA5tVHCahg=m6dFb0EzERardWk6diUa52npq7g@mail.gmail.com>
+Subject: Re: [PATCH v2 1/3] tracing/user_events: Fix incorrect return value
+ for writing operation when events are disabled
+To:     Beau Belgrave <beaub@linux.microsoft.com>
+Cc:     mhiramat@kernel.org, rostedt@goodmis.org, shuah@kernel.org,
+        linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+        linux-kselftest@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On Tue, Jun 20, 2023 at 12:33=E2=80=AFAM Nicholas Piggin <npiggin@gmail.com=
-> wrote:
+Beau Belgrave <beaub@linux.microsoft.com> =E4=BA=8E2023=E5=B9=B46=E6=9C=882=
+0=E6=97=A5=E5=91=A8=E4=BA=8C 02:40=E5=86=99=E9=81=93=EF=BC=9A
 >
-> On Sat May 27, 2023 at 9:44 AM AEST, Yu Zhao wrote:
-> > KVM page tables are currently not RCU safe against remapping, i.e.,
-> > kvmppc_unmap_free_pmd_entry_table() et al. The previous
->
-> Minor nit but the "page table" is not RCU-safe against something. It
-> is RCU-freed, and therefore some algorithm that accesses it can have
-> the existence guarantee provided by RCU (usually there still needs
-> to be more to it).
->
-> > mmu_notifier_ops members rely on kvm->mmu_lock to synchronize with
-> > that operation.
+> On Mon, Jun 19, 2023 at 04:51:56PM +0800, sunliming wrote:
+> > Beau Belgrave <beaub@linux.microsoft.com> =E4=BA=8E2023=E5=B9=B46=E6=9C=
+=8817=E6=97=A5=E5=91=A8=E5=85=AD 00:08=E5=86=99=E9=81=93=EF=BC=9A
+> > >
+> > > On Fri, Jun 09, 2023 at 11:03:00AM +0800, sunliming wrote:
+> > > > The writing operation return the count of writes whether events are
+> > > > enabled or disabled. This is incorrect when events are disabled. Fi=
+x
+> > > > this by just return -ENOENT when events are disabled.
+> > > >
+> > >
+> > > When testing this patch locally I found that we would occasionally ge=
+t
+> > > -ENOENT when events were enabled, but then become disabled, since wri=
+tes
+> > > do not have any locking around the tracepoint checks for performance
+> > > reasons.
+> > >
+> > > I've asked a few peers of mine their thoughts on this, whether an err=
+or
+> > > should result when there are no enabled events. The consensus I've he=
+ard
+> > > back is that they would not consider this case an actual error, just =
+as
+> > > writing to /dev/null does not actually return an error.
+> > >
+> > > However, if you feel strongly we need this and have a good use case, =
+it
+> > > seems better to enable this logic behind a flag instead of having it
+> > > default based on my conversations with others.
+> > >
+> > > Thanks,
+> > > -Beau
 > >
-> > However, the new mmu_notifier_ops member test_clear_young() provides
-> > a fast path that does not take kvm->mmu_lock. To implement
-> > kvm_arch_test_clear_young() for that path, orphan page tables need to
-> > be freed by RCU.
->
-> Short version: clear the referenced bit using RCU instead of MMU lock
-> to protect against page table freeing, and there is no problem with
-> clearing the bit in a table that has been freed.
->
-> Seems reasonable.
-
-Thanks. All above points taken.
-
-> > Unmapping, specifically kvm_unmap_radix(), does not free page tables,
-> > hence not a concern.
->
-> Not sure if you really need to make the distinction about why the page
-> table is freed, we might free them via unmapping. The point is just
-> anything that frees them while there can be concurrent access, right?
-
-Correct.
-
-> > Signed-off-by: Yu Zhao <yuzhao@google.com>
-> > ---
-> >  arch/powerpc/kvm/book3s_64_mmu_radix.c | 6 ++++--
-> >  1 file changed, 4 insertions(+), 2 deletions(-)
 > >
-> > diff --git a/arch/powerpc/kvm/book3s_64_mmu_radix.c b/arch/powerpc/kvm/=
-book3s_64_mmu_radix.c
-> > index 461307b89c3a..3b65b3b11041 100644
-> > --- a/arch/powerpc/kvm/book3s_64_mmu_radix.c
-> > +++ b/arch/powerpc/kvm/book3s_64_mmu_radix.c
-> > @@ -1469,13 +1469,15 @@ int kvmppc_radix_init(void)
-> >  {
-> >       unsigned long size =3D sizeof(void *) << RADIX_PTE_INDEX_SIZE;
 > >
-> > -     kvm_pte_cache =3D kmem_cache_create("kvm-pte", size, size, 0, pte=
-_ctor);
-> > +     kvm_pte_cache =3D kmem_cache_create("kvm-pte", size, size,
-> > +                                       SLAB_TYPESAFE_BY_RCU, pte_ctor)=
-;
-> >       if (!kvm_pte_cache)
-> >               return -ENOMEM;
+> > There is indeed a problem. Once enabled, perform the write operation
+> > immediately.
 > >
-> >       size =3D sizeof(void *) << RADIX_PMD_INDEX_SIZE;
-> >
-> > -     kvm_pmd_cache =3D kmem_cache_create("kvm-pmd", size, size, 0, pmd=
-_ctor);
-> > +     kvm_pmd_cache =3D kmem_cache_create("kvm-pmd", size, size,
-> > +                                       SLAB_TYPESAFE_BY_RCU, pmd_ctor)=
-;
-> >       if (!kvm_pmd_cache) {
-> >               kmem_cache_destroy(kvm_pte_cache);
-> >               return -ENOMEM;
 >
-> KVM PPC HV radix PUD level page tables use the arch/powerpc allocators
-> (for some reason), which are not RCU freed. I think you need them too?
+> The immediate write does work, and gets put into a buffer. The ftrace
+> and perf self tests do the above case. So, no worries at this point.
+>
+> > Now=EF=BC=8Cwhen the event is disabled, the trace record appears to be =
+lost.
+>
+> I'm taking this to mean, if in between the time of the bit check and the
+> actual write() /writev() syscall the event becomes disabled, the event
+> won't write to the buffer. Yes, that is expected.
+>
+Yes , got it, thank you for your explanation.
 
-We don't. The use of the arch/powerpc allocator for PUD tables seems
-appropriate to me because, unlike PMD/PTE tables, we never free PUD
-tables during the lifetime of a VM:
-* We don't free PUD/PMD/PTE tables when they become empty, i.e., not
-mapping any pages but still attached. (We could in theory, as
-x86/aarch64 do.)
-* We have to free PMD/PTE tables when we replace them with 1GB/2MB
-pages. (Otherwise we'd lose track of detached tables.) And we
-currently don't support huge pages at P4D level, so we never detach
-and free PUD tables.
+> > In some situations
+> > where data timing is sensitive, it may cause confusion. In this case,
+> > not returning an
+> > error (as mentioned in your reply, it is not considered this case an
+> > actual error) and
+> > returning 0 ( meaning that the number of data to be written is 0) may
+> > be a good way
+> > to handle it?
+>
+> This is where I get a little lost. What would a user process do with a
+> return of 0 bytes? It shouldn't retry, since it just hit that small
+> timing window. In reality, it just incurred a temporary excessive
+> syscall cost, but no real data loss (the operator/admin turned the event
+> off).
+>
+> I'm missing why you feel it's important the user process know such a
+> window was hit?
+>
+> Can you help me understand that?
+>
+I haven't encountered a specific scenario that it's important the user proc=
+ess
+know such a window was hit. This may be a mistake in my understanding.
+When someone uses user events checking the output of an event to confirm
+the execution status of a program, it may cause confusion if someone else
+prohibits the event. This shouldn't be a serious issue, this patch just mak=
+es
+things look better.
+
+Thanks,
+-Sunliming
+
+> I do think returning 0 bytes is better than an error here, but I'd
+> really like to know why the user process wants to know at all. Maybe
+> they have user-space only logging and want to be able to mark there if
+> it's in both spots (kernel and user buffers)?
+>
+> Thanks,
+> -Beau
+>
+> > Thanks,
+> > -Sunliming
+> >
+> > >
+> > > > Signed-off-by: sunliming <sunliming@kylinos.cn>
+> > > > ---
+> > > >  kernel/trace/trace_events_user.c | 3 ++-
+> > > >  1 file changed, 2 insertions(+), 1 deletion(-)
+> > > >
+> > > > diff --git a/kernel/trace/trace_events_user.c b/kernel/trace/trace_=
+events_user.c
+> > > > index 1ac5ba5685ed..92204bbe79da 100644
+> > > > --- a/kernel/trace/trace_events_user.c
+> > > > +++ b/kernel/trace/trace_events_user.c
+> > > > @@ -1957,7 +1957,8 @@ static ssize_t user_events_write_core(struct =
+file *file, struct iov_iter *i)
+> > > >
+> > > >               if (unlikely(faulted))
+> > > >                       return -EFAULT;
+> > > > -     }
+> > > > +     } else
+> > > > +             return -ENOENT;
+> > > >
+> > > >       return ret;
+> > > >  }
+> > > > --
+> > > > 2.25.1
