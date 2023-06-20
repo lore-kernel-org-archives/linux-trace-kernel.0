@@ -2,117 +2,168 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E015EB64DB
-	for <linux-trace-kernel@archiver.kernel.org>; Tue, 20 Jun 2023 15:32:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 65D08EB64D7
+	for <linux-trace-kernel@archiver.kernel.org>; Tue, 20 Jun 2023 16:30:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233747AbjFTPcs (ORCPT
+        id S231131AbjFTQaW (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Tue, 20 Jun 2023 11:32:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56126 "EHLO
+        Tue, 20 Jun 2023 12:30:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55964 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231945AbjFTPcr (ORCPT
+        with ESMTP id S230429AbjFTQaT (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Tue, 20 Jun 2023 11:32:47 -0400
-Received: from mail-ed1-x52f.google.com (mail-ed1-x52f.google.com [IPv6:2a00:1450:4864:20::52f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4B49C186;
-        Tue, 20 Jun 2023 08:32:46 -0700 (PDT)
-Received: by mail-ed1-x52f.google.com with SMTP id 4fb4d7f45d1cf-5186a157b85so6726562a12.0;
-        Tue, 20 Jun 2023 08:32:46 -0700 (PDT)
+        Tue, 20 Jun 2023 12:30:19 -0400
+Received: from mail-oi1-x22b.google.com (mail-oi1-x22b.google.com [IPv6:2607:f8b0:4864:20::22b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6BBB210A;
+        Tue, 20 Jun 2023 09:30:17 -0700 (PDT)
+Received: by mail-oi1-x22b.google.com with SMTP id 5614622812f47-39ce64700cbso3797241b6e.0;
+        Tue, 20 Jun 2023 09:30:17 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1687275165; x=1689867165;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=P0jVFIWxWqZ/TuBplqDvmEEANKo26b83Dz5MygWHhzo=;
-        b=R2BhcgahF4eA1vnlN0qyJmASSGyaKyq8k8oOrUAtCf6A4nOmgevBEhPzEV8rIbjTgF
-         yXzVElUQYcMdeYQTQkO+X2Y+9ZuwgkppnVdZSXyRsEkPbs6x/ssnctoQke0QTIMErPf3
-         qLgAPk3+Vpo3W0G2QiGZq35LggwDfRrpFYUUYGCVB1g7szVQ79eBlKEygcj7p7OVjxQf
-         pa51oJokqPD+3D2MoPj8cm17qxZzYmsGb5TOKjwNPuJs0U4g/8S2QCH5/u+vSkwhFWvm
-         3m8n5V/yFyRQTrN52yzRlNSqLm1w2gZ7QUzER3KDhhogdRbdvNc25JV4yGkEnTVq2UW0
-         ShAA==
+        d=gmail.com; s=20221208; t=1687278616; x=1689870616;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=uw8xFghZACHfpfTlPJ5+GUSznmqFHJLwRA11RjESET8=;
+        b=ed1t9uhNIYuXH/mWAopT6d+KDokjY5Bjlrd4Rc/prnTdWGjRJnTH2+gQYRc1EP1MrM
+         yp4ZRWAM1uQe96nqdfcGn9rUjh9xRTTexNQmzlIVfB3ZB6EJLNGhdePx3gAx3JVmQrAE
+         ZZqx1Pnh3CFC39/gOSC1JX9wj1LSUhTFc9IjduRo5ylRY/RvFcx7UYlUgHWvr6uh4fkn
+         hrrfhkZX/GhJYRDSbhrlHg9l3n4I1HC+sCS1C5WSssHpjztPpatAEYiIjcPsG6uiq1pA
+         S4oixdVSOJySiz2aYVF5yS6lCdcC8eUf31u9f5aJ8rCGfM5JInGG5jTZZtvSpW3/uYH6
+         hDtQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1687275165; x=1689867165;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=P0jVFIWxWqZ/TuBplqDvmEEANKo26b83Dz5MygWHhzo=;
-        b=XS2HZDXys8QaRBHr+MImx1H5MzU9FyVaONq+gPKBJvkypyXU/vBxA0/GeRIr2FnRCL
-         W7SWmbfRZJreWd71BT5PHLOQp9B3W7uEW6ZthYgscyaifrV9dSYqf2yGToWc0q5afq4W
-         w+2/oirKs2srAlLQcj2n7YRTTSk/r7d0mWsshc76/H8dGrSVIcjIp+DWteirPnsE+l1Z
-         EH8xXhpamEgG9BcKPb2NmmJJZnQtwBBU1gjm9uu287ERcnYe+mXuAUX5p63VWvuIHesl
-         xVcC1Y17+bneyPS2ewkN4e0xkVlQ1XUvhc4NFl7C/pbP9+T/PWWcHhlwFxLmenRmJPLu
-         0I6Q==
-X-Gm-Message-State: AC+VfDwp0VBv8JoND5a7qw1QUc1/XgKqldfKBeZgmw2CaobiuBO/mbdl
-        Wr48MLFVqbZaBJK9bSWgd6scnfvJgltCAHsNxac=
-X-Google-Smtp-Source: ACHHUZ5ux98lA0dfOqVXfQP0ndlYyBoHuqHpCIjpPqNu3qgP8TLa7JJDdMIHBmrGJ6oD7j3SfcbrFl7+8TyeQPspzGA=
-X-Received: by 2002:aa7:cf16:0:b0:51a:40ca:d081 with SMTP id
- a22-20020aa7cf16000000b0051a40cad081mr7305340edy.27.1687275164525; Tue, 20
- Jun 2023 08:32:44 -0700 (PDT)
+        d=1e100.net; s=20221208; t=1687278616; x=1689870616;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=uw8xFghZACHfpfTlPJ5+GUSznmqFHJLwRA11RjESET8=;
+        b=kCis13uGnAnn4A9YZA+PapczoBEtNVLDsb8lEOQ/F9Npy0UoYGc0nqTuNs1tPyiA2j
+         jJ4PAFoiKCqdGOBsbWl1t/y3GvblO0umsDj43Oh2kVX7PaRz5tThjZ5QG+bZ9rUr0UNh
+         /0VVtUEH6v0j0tFgVBL8Y3Vg/828dZR+OmExOyL2SdkcAxhhXwBw5zCiQPfd2Jhz1vvs
+         wPgl72gInzUEcYOSj8OVN4jNhV82mfwj6V1pvTQL9Hx5VoQE1WYmBJz6eC8GQzD7Kr7F
+         qXjLCbozwEyESDQkIfSlGSO8ToPTVyboTMqBbN1HjnEEnfxgCM+/ST4UhBY9b0qGhwXZ
+         ct4w==
+X-Gm-Message-State: AC+VfDyuTXiLMw5BdBaqro+ysQzoDC6Tb1cawMzrrUa5fj8iCEifkVGI
+        XP+6VKC4j2aavm22Vis1re8=
+X-Google-Smtp-Source: ACHHUZ4kGZiv869CKucv2ru87YD3BX6kCpnR4+qySIPpvmbHTVoKCnoaleokMTXSTEguyLf4JFvQ3Q==
+X-Received: by 2002:a54:4383:0:b0:3a0:4282:1153 with SMTP id u3-20020a544383000000b003a042821153mr761417oiv.40.1687278616560;
+        Tue, 20 Jun 2023 09:30:16 -0700 (PDT)
+Received: from vultr.guest ([2001:19f0:ac02:b96:5400:4ff:fe7b:3b23])
+        by smtp.gmail.com with ESMTPSA id t8-20020a17090a3b4800b0025c1cfdb93esm1854286pjf.13.2023.06.20.09.30.14
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 20 Jun 2023 09:30:15 -0700 (PDT)
+From:   Yafang Shao <laoar.shao@gmail.com>
+To:     ast@kernel.org, daniel@iogearbox.net, john.fastabend@gmail.com,
+        andrii@kernel.org, martin.lau@linux.dev, song@kernel.org,
+        yhs@fb.com, kpsingh@kernel.org, sdf@google.com, haoluo@google.com,
+        jolsa@kernel.org, quentin@isovalent.com, rostedt@goodmis.org,
+        mhiramat@kernel.org
+Cc:     bpf@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+        Yafang Shao <laoar.shao@gmail.com>
+Subject: [PATCH v4 bpf-next 00/11] bpf: Support ->fill_link_info for kprobe_multi and perf_event links 
+Date:   Tue, 20 Jun 2023 16:29:57 +0000
+Message-Id: <20230620163008.3718-1-laoar.shao@gmail.com>
+X-Mailer: git-send-email 2.39.3
 MIME-Version: 1.0
-References: <20230616085038.4121892-1-rppt@kernel.org> <20230616085038.4121892-7-rppt@kernel.org>
- <87jzw0qu3s.ffs@tglx> <20230618231431.4aj3k5ujye22sqai@moria.home.lan>
- <87h6r4qo1d.ffs@tglx> <20230620105104.60cb64d8@gandalf.local.home>
-In-Reply-To: <20230620105104.60cb64d8@gandalf.local.home>
-From:   Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Date:   Tue, 20 Jun 2023 08:32:33 -0700
-Message-ID: <CAADnVQK_dWhPxdjs4HuAXWBTeVAf01er15dZU8tC+d=g6QCPXw@mail.gmail.com>
-Subject: Re: [PATCH v2 06/12] mm/execmem: introduce execmem_data_alloc()
-To:     Steven Rostedt <rostedt@goodmis.org>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Kent Overstreet <kent.overstreet@linux.dev>,
-        Mike Rapoport <rppt@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Christophe Leroy <christophe.leroy@csgroup.eu>,
-        "David S. Miller" <davem@davemloft.net>,
-        Dinh Nguyen <dinguyen@kernel.org>,
-        Heiko Carstens <hca@linux.ibm.com>,
-        Helge Deller <deller@gmx.de>,
-        Huacai Chen <chenhuacai@kernel.org>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Nadav Amit <nadav.amit@gmail.com>,
-        "Naveen N. Rao" <naveen.n.rao@linux.ibm.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Puranjay Mohan <puranjay12@gmail.com>,
-        Rick Edgecombe <rick.p.edgecombe@intel.com>,
-        Russell King <linux@armlinux.org.uk>,
-        Song Liu <song@kernel.org>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Will Deacon <will@kernel.org>, bpf <bpf@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        linux-mips@vger.kernel.org, linux-mm <linux-mm@kvack.org>,
-        linux-modules@vger.kernel.org, linux-parisc@vger.kernel.org,
-        linux-riscv <linux-riscv@lists.infradead.org>,
-        linux-s390 <linux-s390@vger.kernel.org>,
-        linux-trace-kernel@vger.kernel.org,
-        ppc-dev <linuxppc-dev@lists.ozlabs.org>,
-        loongarch@lists.linux.dev,
-        Network Development <netdev@vger.kernel.org>,
-        sparclinux@vger.kernel.org, X86 ML <x86@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On Tue, Jun 20, 2023 at 7:51=E2=80=AFAM Steven Rostedt <rostedt@goodmis.org=
-> wrote:
->
-> On Mon, 19 Jun 2023 02:43:58 +0200
-> Thomas Gleixner <tglx@linutronix.de> wrote:
->
-> > Now you might argue that it _is_ a "hotpath" due to the BPF usage, but
-> > then even more so as any intermediate wrapper which converts from one
-> > data representation to another data representation is not going to
-> > increase performance, right?
->
-> Just as a side note. BPF can not attach its return calling code to
-> functions that have more than 6 parameters (3 on 32 bit x86), because of
-> the way BPF return path trampoline works. It is a requirement that all
-> parameters live in registers, and none on the stack.
+This patchset enhances the usability of kprobe_multi program by introducing
+support for ->fill_link_info. This allows users to easily determine the
+probed functions associated with a kprobe_multi program. While
+`bpftool perf show` already provides information about functions probed by
+perf_event programs, supporting ->fill_link_info ensures consistent access
+to this information across all bpf links.
 
-It's actually 7 and that restriction is being lifted.
-The patch set to attach to <=3D 12 is being discussed.
+In addition, this patch extends support to generic perf events, which are
+currently not covered by `bpftool perf show`. While userspace is exposed to
+only the perf type and config, other attributes such as sample_period and
+sample_freq are disregarded.
+
+To ensure accurate identification of probed functions, it is preferable to
+expose the address directly rather than relying solely on the symbol name.
+However, this implementation respects the kptr_restrict setting and avoids
+exposing the address if it is not permitted.
+
+v3->v4:
+- From Quentin
+  - Rename MODULE_NAME_LEN to MODULE_MAX_NAME
+  - Convert retprobe to boolean for json output
+  - Trim the square brackets around module names for json output
+  - Move perf names into link.c
+  - Use a generic helper to get perf names
+  - Show address before func name, for consistency
+  - Use switch-case instead of if-else
+  - Increase the buff len to PATH_MAX
+  - Move macros to the top of the file
+- From Andrii
+  - kprobe_multi flags should always be returned
+  - Keep it single line if it fits in under 100 characters
+  - Change the output format when showing kprobe_multi
+  - Imporve the format of perf_event names
+  - Rename struct perf_link to struct perf_event, and change the names of the
+    enum consequently
+- From Yonghong
+  - Avoid disallowing extensions for all structs in the big union
+- From Jiri
+  - Add flags to bpf_kprobe_multi_link
+  - Report kprobe_multi selftests errors
+  - Rename bpf_perf_link_fill_name and make it a separate patch
+  - Avoid breaking compilation when CONFIG_KPROBE_EVENTS or
+    CONFIG_UPROBE_EVENTS options are not defined
+
+v2->v3:
+- Expose flags instead of retporbe (Andrii)
+- Simplify the check on kmulti_link->cnt (Andrii)
+- Use kallsyms_show_value() instead (Andrii)
+- Show also the module name for kprobe_multi (Andrii)
+- Add new enum bpf_perf_link_type (Andrii)
+- Move perf event names into bpftool (Andrii, Quentin, Jiri)
+- Keep perf event names in sync with perf tools (Jiri) 
+
+v1->v2:
+- Fix sparse warning (Stanislav, lkp@intel.com)
+- Fix BPF CI build error
+- Reuse kernel_syms_load() (Alexei)
+- Print 'name' instead of 'func' (Alexei)
+- Show whether the probe is retprobe or not (Andrii)
+- Add comment for the meaning of perf_event name (Andrii)
+- Add support for generic perf event
+- Adhere to the kptr_restrict setting
+
+RFC->v1:
+- Use a single copy_to_user() instead (Jiri)
+- Show also the symbol name in bpftool (Quentin, Alexei)
+- Use calloc() instead of malloc() in bpftool (Quentin)
+- Avoid having conditional entries in the JSON output (Quentin)
+- Drop ->show_fdinfo (Alexei)
+- Use __u64 instead of __aligned_u64 for the field addr (Alexei)
+- Avoid the contradiction in perf_event name length (Alexei)
+- Address a build warning reported by kernel test robot <lkp@intel.com>
+
+Yafang Shao (11):
+  bpf: Support ->fill_link_info for kprobe_multi
+  bpftool: Dump the kernel symbol's module name
+  bpftool: Show kprobe_multi link info
+  bpf: Protect probed address based on kptr_restrict setting
+  bpf: Clear the probe_addr for uprobe
+  bpf: Expose symbol's respective address
+  bpf: Add a common helper bpf_copy_to_user()
+  bpf: Add bpf_perf_link_fill_common()
+  bpf: Support ->fill_link_info for perf_event
+  bpftool: Add perf event names
+  bpftool: Show perf link info
+
+ include/uapi/linux/bpf.h          |  41 ++++
+ kernel/bpf/syscall.c              | 183 +++++++++++++++--
+ kernel/trace/bpf_trace.c          |  32 ++-
+ kernel/trace/trace_kprobe.c       |   7 +-
+ tools/bpf/bpftool/link.c          | 413 +++++++++++++++++++++++++++++++++++++-
+ tools/bpf/bpftool/xlated_dumper.c |   6 +-
+ tools/bpf/bpftool/xlated_dumper.h |   2 +
+ tools/include/uapi/linux/bpf.h    |  41 ++++
+ 8 files changed, 705 insertions(+), 20 deletions(-)
+
+-- 
+1.8.3.1
+
