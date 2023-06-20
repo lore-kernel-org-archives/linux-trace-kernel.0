@@ -2,136 +2,139 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B2814C001DD
-	for <linux-trace-kernel@archiver.kernel.org>; Mon, 19 Jun 2023 20:18:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1569AEB64DA
+	for <linux-trace-kernel@archiver.kernel.org>; Tue, 20 Jun 2023 02:19:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230165AbjFSUSf (ORCPT
+        id S229933AbjFTCTv (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Mon, 19 Jun 2023 16:18:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60690 "EHLO
+        Mon, 19 Jun 2023 22:19:51 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38424 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230187AbjFSUSc (ORCPT
+        with ESMTP id S229922AbjFTCTu (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Mon, 19 Jun 2023 16:18:32 -0400
-Received: from mail-pg1-x52d.google.com (mail-pg1-x52d.google.com [IPv6:2607:f8b0:4864:20::52d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 45A8FD3;
-        Mon, 19 Jun 2023 13:18:30 -0700 (PDT)
-Received: by mail-pg1-x52d.google.com with SMTP id 41be03b00d2f7-53fbf2c42bfso3185177a12.3;
-        Mon, 19 Jun 2023 13:18:30 -0700 (PDT)
+        Mon, 19 Jun 2023 22:19:50 -0400
+Received: from mail-qt1-x830.google.com (mail-qt1-x830.google.com [IPv6:2607:f8b0:4864:20::830])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 956B4A6
+        for <linux-trace-kernel@vger.kernel.org>; Mon, 19 Jun 2023 19:19:48 -0700 (PDT)
+Received: by mail-qt1-x830.google.com with SMTP id d75a77b69052e-3ff242aae7aso241901cf.0
+        for <linux-trace-kernel@vger.kernel.org>; Mon, 19 Jun 2023 19:19:48 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1687205909; x=1689797909;
-        h=to:references:message-id:content-transfer-encoding:cc:date
-         :in-reply-to:from:subject:mime-version:from:to:cc:subject:date
+        d=google.com; s=20221208; t=1687227587; x=1689819587;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=UmEEut0OCJI0jheFei8v4KFIgPFEx+9Zr0oYZPTVJvw=;
-        b=ML1POuSF5TNYpNiqkU7Wmm/FZLBDFoP32DY+WPylpmv43DoaA/AoXnTGG2wwzhld3j
-         kjkKToRZCKl1S0ycKV+IUNrHAQ8Dvck3h+D7ZuCxy/PFvkOP44vPViwvWsYYl0BBuNgy
-         b/5HPeUCxmK/jPGro6a0V6gtwlQJxSWG+MjbaRDV7mR48t508gCxLWi7cw8WSlTAdLEO
-         3p+win9LgLE5lOsK+rw7eJ7na0iRAHUh7i2pWPNrn0k/YllS2kfgOgB31VmT4hCseChr
-         k2Wm+WLNvD9nhPcsjkRc0OVcXyGOSUiyWGCOpqitL1ReK2kli6NusXAAxFAtCrHDui7k
-         NzgA==
+        bh=3EPXA9p2JzuvzKzWgCYYXlon3hk90pdnuUAk2cg5+oQ=;
+        b=jSijuw7X4DVOl/gcJeGmpxPfObtZeHzM/kRouNnow3lf3toxpNV1RRCp3JeAUXAEL+
+         iI70y/J5y5xneoxSH6lE1u2JjNb0sxP+WH/AcOV6J04IM66xuGr7kVVJvlJSVYl2nzdw
+         GpO9zFbTU/Jt9P+AzXUBhThLJZOMv2S6GysxYZc9QRsartfZ/Ng1pFrBF4i1QYEA0ja5
+         v+DJgaciPtBrnG+fF3nFrq1OXvndAf9QJ9iH3cDovlvik+Boqnlxq+8ktld9BK552lGf
+         9SQiMGWZ6yfz+SN6OYZeEIGzY2Jw4LCJPZ9hxA2TtbBcyZj9yfzbfjehAIRUIUV41fPH
+         6wuw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1687205909; x=1689797909;
-        h=to:references:message-id:content-transfer-encoding:cc:date
-         :in-reply-to:from:subject:mime-version:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20221208; t=1687227587; x=1689819587;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=UmEEut0OCJI0jheFei8v4KFIgPFEx+9Zr0oYZPTVJvw=;
-        b=It+aTU9JCM2y7jL4p7lJlCjfG6o20JcbSLehxu66Jm7q+BrmhwyasusDO7rtoEYi0K
-         NQC42j8tDLAiznlhd9DM+8ji0LNBcwmYv4s6Wd5EYYYOgs2BLMp/9JZJf2MEorJpzz15
-         qYBYq6EcyQwBh68GSgejoX8hbxuwkwUmA5iFIiIo+L9ktPqpHDfCefrQVFH4t5HymodN
-         VMMjSjzQrvwLpQnZk3AFvwIDid3Ym95fETh/4F/BAzBwmlRgfZ+IRx6cYR0NX/uJMgC3
-         VRJi8WxiHl5cSH+u4ZFuCqDwUL4XbrpqAshCkqXHXDL3mBanL547g8fkomBST3m8drWn
-         PKRw==
-X-Gm-Message-State: AC+VfDxw8bplcNLipbtq/ZaFPEuPUKARHC4Hn+6fqHRohKEldkAiOKiB
-        LaBTrPeAOLr9MLpyTpcTXXM=
-X-Google-Smtp-Source: ACHHUZ4MAGz/Bbdlo+4DcmVI4O990mBmojRaVLNYuDWhcs7i7MC/1uf1G62Dkn3iaVvHJNN3c8J+8g==
-X-Received: by 2002:a05:6a21:78a9:b0:10a:cb95:5aa3 with SMTP id bf41-20020a056a2178a900b0010acb955aa3mr14231287pzc.7.1687205909086;
-        Mon, 19 Jun 2023 13:18:29 -0700 (PDT)
-Received: from smtpclient.apple ([66.170.99.1])
-        by smtp.gmail.com with ESMTPSA id k18-20020a637b52000000b005538bf7e3d6sm87568pgn.88.2023.06.19.13.18.26
-        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 19 Jun 2023 13:18:28 -0700 (PDT)
-Content-Type: text/plain;
-        charset=utf-8
-Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3731.600.7\))
-Subject: Re: [PATCH v2 02/12] mm: introduce execmem_text_alloc() and
- jit_text_alloc()
-From:   Nadav Amit <nadav.amit@gmail.com>
-In-Reply-To: <a17c65c6-863f-4026-9c6f-a04b659e9ab4@app.fastmail.com>
-Date:   Mon, 19 Jun 2023 13:18:15 -0700
-Cc:     Mike Rapoport <rppt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Kees Cook <keescook@chromium.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
+        bh=3EPXA9p2JzuvzKzWgCYYXlon3hk90pdnuUAk2cg5+oQ=;
+        b=iFQGGoN6/EbjFhO86xydFPDs0GVqyBjOdxtQjX/2Z/+A/UH1zYmwFS9K84t3awLIz2
+         XgIY9EQ8zoNIAtMkdDbYGkkUC9RRFjpOrmhGxgAWWajf1c1NgvP3bmr90sxTuv14rqv5
+         //PLOPZ5NjAibdBdltwx/0jI3UVAlifYSQXAhlRnpCUVo4KBXK9YBmzn4r4qnJrZIeVf
+         zpQWNCgQTTJl782jw8XwEFj9q63DB0F3h8cgc8Se1cr+uq28LkVLF01bSM9g6jffxYhp
+         2IdEQiK6DgHpFWwe0jkKpqrdwKhsxZtZAy2ZcUAvDxMgzASYtNSrYlpR1oQItPHD2Mgx
+         ttuA==
+X-Gm-Message-State: AC+VfDzCFQN8y5oBFWBjUrLmc96DtyrygCnvhlGNZxDrvQB36w+IvGdz
+        eNuVC/WT30jj6BsH1Qrb70S+x4ZlHgx/x1HajkQl7w==
+X-Google-Smtp-Source: ACHHUZ4X3CzpwwHdrmJnCxXIBAk6HQXykSsn31iNLJMOP1aC/6DP8FnJZ+MTQ6AdfTjiGdmwOfd3hduXZamO7zy5qTQ=
+X-Received: by 2002:ac8:7f93:0:b0:3ef:404a:b291 with SMTP id
+ z19-20020ac87f93000000b003ef404ab291mr104628qtj.7.1687227587619; Mon, 19 Jun
+ 2023 19:19:47 -0700 (PDT)
+MIME-Version: 1.0
+References: <20230526234435.662652-1-yuzhao@google.com> <26cf0b0a-cda5-08a9-a669-6966f9e626b1@redhat.com>
+In-Reply-To: <26cf0b0a-cda5-08a9-a669-6966f9e626b1@redhat.com>
+From:   Yu Zhao <yuzhao@google.com>
+Date:   Mon, 19 Jun 2023 20:19:11 -0600
+Message-ID: <CAOUHufagkd2Jk3_HrVoFFptRXM=hX2CV8f+M-dka-hJU4bP8kw@mail.gmail.com>
+Subject: Re: [PATCH mm-unstable v2 00/10] mm/kvm: locklessly clear the
+ accessed bit
+To:     Paolo Bonzini <pbonzini@redhat.com>,
+        Andrew Morton <akpm@linux-foundation.org>
+Cc:     Alistair Popple <apopple@nvidia.com>,
+        Anup Patel <anup@brainfault.org>,
+        Ben Gardon <bgardon@google.com>,
+        Borislav Petkov <bp@alien8.de>,
         Catalin Marinas <catalin.marinas@arm.com>,
+        Chao Peng <chao.p.peng@linux.intel.com>,
         Christophe Leroy <christophe.leroy@csgroup.eu>,
-        "David S. Miller" <davem@davemloft.net>,
-        Dinh Nguyen <dinguyen@kernel.org>,
-        Heiko Carstens <hca@linux.ibm.com>,
-        Helge Deller <deller@gmx.de>,
-        Huacai Chen <chenhuacai@kernel.org>,
-        Kent Overstreet <kent.overstreet@linux.dev>,
-        Luis Chamberlain <mcgrof@kernel.org>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Fabiano Rosas <farosas@linux.ibm.com>,
+        Gaosheng Cui <cuigaosheng1@huawei.com>,
+        Gavin Shan <gshan@redhat.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
+        James Morse <james.morse@arm.com>,
+        "Jason A. Donenfeld" <Jason@zx2c4.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Marc Zyngier <maz@kernel.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
         Michael Ellerman <mpe@ellerman.id.au>,
-        "Naveen N. Rao" <naveen.n.rao@linux.ibm.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Puranjay Mohan <puranjay12@gmail.com>,
-        Rick P Edgecombe <rick.p.edgecombe@intel.com>,
-        "Russell King (Oracle)" <linux@armlinux.org.uk>,
+        Michael Larabel <michael@michaellarabel.com>,
+        Mike Rapoport <rppt@kernel.org>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        Oliver Upton <oliver.upton@linux.dev>,
+        Paul Mackerras <paulus@ozlabs.org>,
+        Peter Xu <peterx@redhat.com>,
+        Sean Christopherson <seanjc@google.com>,
         Steven Rostedt <rostedt@goodmis.org>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
         Thomas Gleixner <tglx@linutronix.de>,
-        Will Deacon <will@kernel.org>, bpf <bpf@vger.kernel.org>,
-        linux-arm-kernel@lists.infradead.org, linux-mips@vger.kernel.org,
-        linux-mm <linux-mm@kvack.org>, linux-modules@vger.kernel.org,
-        linux-parisc@vger.kernel.org, linux-riscv@lists.infradead.org,
-        linux-s390 <linux-s390@vger.kernel.org>,
-        linux-trace-kernel@vger.kernel.org,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
-        loongarch@lists.linux.dev, netdev@vger.kernel.org,
-        sparclinux@vger.kernel.org,
-        the arch/x86 maintainers <x86@kernel.org>
+        Thomas Huth <thuth@redhat.com>, Will Deacon <will@kernel.org>,
+        Zenghui Yu <yuzenghui@huawei.com>, kvmarm@lists.linux.dev,
+        kvm@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org, linuxppc-dev@lists.ozlabs.org,
+        linux-trace-kernel@vger.kernel.org, x86@kernel.org,
+        linux-mm@google.com
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-Message-Id: <7F566E60-C371-449B-992B-0C435AD6016B@gmail.com>
-References: <20230616085038.4121892-1-rppt@kernel.org>
- <20230616085038.4121892-3-rppt@kernel.org>
- <f9a7eebe-d36e-4587-b99d-35d4edefdd14@app.fastmail.com>
- <20230618080027.GA52412@kernel.org>
- <a17c65c6-863f-4026-9c6f-a04b659e9ab4@app.fastmail.com>
-To:     Andy Lutomirski <luto@kernel.org>, Song Liu <song@kernel.org>
-X-Mailer: Apple Mail (2.3731.600.7)
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
+On Fri, Jun 9, 2023 at 3:08=E2=80=AFAM Paolo Bonzini <pbonzini@redhat.com> =
+wrote:
+>
+> On 5/27/23 01:44, Yu Zhao wrote:
+> > TLDR
+> > =3D=3D=3D=3D
+> > This patchset adds a fast path to clear the accessed bit without
+> > taking kvm->mmu_lock. It can significantly improve the performance of
+> > guests when the host is under heavy memory pressure.
+> >
+> > ChromeOS has been using a similar approach [1] since mid 2021 and it
+> > was proven successful on tens of millions devices.
+> >
+> > This v2 addressed previous requests [2] on refactoring code, removing
+> > inaccurate/redundant texts, etc.
+> >
+> > [1]https://crrev.com/c/2987928
+> > [2]https://lore.kernel.org/r/20230217041230.2417228-1-yuzhao@google.com=
+/
+>
+>  From the KVM point of view the patches look good (though I wouldn't
+> mind if Nicholas took a look at the ppc part).  Jason's comment on the
+> MMU notifier side are promising as well.  Can you send v3 with Oliver's
+> comments addressed?
 
+Thanks. I'll address all the comments in v3 and post it asap.
 
-> On Jun 19, 2023, at 10:09 AM, Andy Lutomirski <luto@kernel.org> wrote:
->=20
-> But jit_text_alloc() can't do this, because the order of operations =
-doesn't match.  With jit_text_alloc(), the executable mapping shows up =
-before the text is populated, so there is no atomic change from =
-not-there to populated-and-executable.  Which means that there is an =
-opportunity for CPUs, speculatively or otherwise, to start filling =
-various caches with intermediate states of the text, which means that =
-various architectures (even x86!) may need serialization.
->=20
-> For eBPF- and module- like use cases, where JITting/code gen is quite =
-coarse-grained, perhaps something vaguely like:
->=20
-> jit_text_alloc() -> returns a handle and an executable virtual =
-address, but does *not* map it there
-> jit_text_write() -> write to that handle
-> jit_text_map() -> map it and synchronize if needed (no sync needed on =
-x86, I think)
-
-Andy, would you mind explaining why you think a sync is not needed? I =
-mean I have a =E2=80=9Cfeeling=E2=80=9D that perhaps TSO can guarantee =
-something based on the order of write and page-table update. Is that the =
-argument?
-
-On this regard, one thing that I clearly do not understand is why =
-*today* it is ok for users of bpf_arch_text_copy() not to call =
-text_poke_sync(). Am I missing something?
-
+Meanwhile, some updates on the recent progress from my side:
+1. I've asked some downstream kernels to pick up v2 for testing, the
+Archlinux Zen kernel did. I don't really expect its enthusiastic
+testers to find this series relevant to their use cases. But who
+knows.
+2. I've also asked openbenchmarking.org to run their popular highmem
+benchmark suites with v2. Hopefully they'll have some independent
+results soon.
+3. I've backported v2 to v5.15 and v6.1 and started an A/B experiment
+involving ~1 million devices, as I mentioned in another email in this
+thread. I should have some results to share when posting v3.
