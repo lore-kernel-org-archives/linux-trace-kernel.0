@@ -2,184 +2,86 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 59537EB64DB
-	for <linux-trace-kernel@archiver.kernel.org>; Tue, 20 Jun 2023 19:54:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D8822EB64D7
+	for <linux-trace-kernel@archiver.kernel.org>; Tue, 20 Jun 2023 20:29:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229779AbjFTTyu (ORCPT
+        id S229707AbjFTU33 (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Tue, 20 Jun 2023 15:54:50 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40414 "EHLO
+        Tue, 20 Jun 2023 16:29:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33210 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229782AbjFTTyt (ORCPT
+        with ESMTP id S229776AbjFTU3U (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Tue, 20 Jun 2023 15:54:49 -0400
-Received: from mail-pl1-x629.google.com (mail-pl1-x629.google.com [IPv6:2607:f8b0:4864:20::629])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5D39B173F
-        for <linux-trace-kernel@vger.kernel.org>; Tue, 20 Jun 2023 12:54:46 -0700 (PDT)
-Received: by mail-pl1-x629.google.com with SMTP id d9443c01a7336-1b52d14df27so23888535ad.0
-        for <linux-trace-kernel@vger.kernel.org>; Tue, 20 Jun 2023 12:54:46 -0700 (PDT)
+        Tue, 20 Jun 2023 16:29:20 -0400
+Received: from mail-pl1-x62c.google.com (mail-pl1-x62c.google.com [IPv6:2607:f8b0:4864:20::62c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7C9FB1727
+        for <linux-trace-kernel@vger.kernel.org>; Tue, 20 Jun 2023 13:29:16 -0700 (PDT)
+Received: by mail-pl1-x62c.google.com with SMTP id d9443c01a7336-1b5422163f4so33028455ad.2
+        for <linux-trace-kernel@vger.kernel.org>; Tue, 20 Jun 2023 13:29:16 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=dabbelt-com.20221208.gappssmtp.com; s=20221208; t=1687290886; x=1689882886;
-        h=content-transfer-encoding:mime-version:message-id:to:from:cc
-         :in-reply-to:subject:date:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=RsIaqKRLY/w55XA5LB9E3AHeTBdImbhhaSspjOmTz+k=;
-        b=vQNccOY1KmXZzmbpNdP7pNP+MGN+VFDpqBaXrFLe4BPVoy0GqRf5L1qcnF3R5mR1ar
-         iRa5MKJp0hqSDMwuMZ+jX5hc6S2Vrhbhb9mDzX0xgrvK9X0d4dQjwNDHpcguTuZZB/XU
-         SXfdhzPvzMURg2rHJk+8bx2kuVIJkLQ4E6jQ65u3IU1r0qna5Z1dgE+LVQ460QQ/erb2
-         4GK1smNIW1+qGDi80nQD7j/Va9D5gMPABFXJ8e9rfIlgiShEgzPu11pUvvnSDB1Ibia/
-         GXn6gE/uw6JtBS3YAuWOZI/C93SRIP0kbb5rGKdr9MFt2JO/353px5ga5qz2LqtS6tu3
-         lqTQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1687290886; x=1689882886;
-        h=content-transfer-encoding:mime-version:message-id:to:from:cc
-         :in-reply-to:subject:date:x-gm-message-state:from:to:cc:subject:date
+        d=chromium.org; s=google; t=1687292955; x=1689884955;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=RsIaqKRLY/w55XA5LB9E3AHeTBdImbhhaSspjOmTz+k=;
-        b=V3cOy/hexHracS9S32CcDR0O7+A1/JcEahaYHgJEuIiEjBXP+0YReUx/IUooP51g3m
-         geKbpFP3jdXeuTl1hfmr2qYzUUUOHZfVMT/cQf6bBNOOtf7og++IvaG1OQLoVHNlEjjb
-         c8/suixz4yW+8owsh56Eh5nWrVeQpZbEl8yzCS41FauMwqum/1WW/asYyKu5OezXzNdx
-         bPMS1cD6pZxkQfDecM6ctUS5w01/1Mju/i/p7uFfSRVHj8m4JWTrKDjj9eNNy3YLXzNn
-         JvWJ8pSu/HwTQXhDb95tn1w65HTulZZXKHUyzNnVQ7Bd31UAlskP+1gV3fDNyhY+UqG1
-         rfbA==
-X-Gm-Message-State: AC+VfDxgc70Lq7XahAVa+hNKqrnJGCFBCi23+r6xcb24RzRHbEhM/tg2
-        GtfxcoYc2oUhY9fKMVMQ4NBJgg==
-X-Google-Smtp-Source: ACHHUZ4Kpx293K87FtkleDrYAYa0rwjXy2nPbgIEJGuxBo6nVZF7ASkOQcfG7zuhiqz3kJZ1Xdj1hQ==
-X-Received: by 2002:a17:902:e884:b0:1b5:16f2:a4e3 with SMTP id w4-20020a170902e88400b001b516f2a4e3mr9879390plg.30.1687290885633;
-        Tue, 20 Jun 2023 12:54:45 -0700 (PDT)
-Received: from localhost ([50.221.140.188])
-        by smtp.gmail.com with ESMTPSA id n21-20020a170902969500b001b016313b1esm2010616plp.82.2023.06.20.12.54.44
+        bh=/9ELUq3rJWL5sgo40NB2P+V6d1pA3XgW7pgmlamzmlM=;
+        b=UvZQVlZS84/m3wV3wlFzhagqhFWBUDZ46Gy3jimB5RGHEVy2o3P56PUW8kbKz39Pz8
+         fvfFbfbNGtmLDU0rKaEsK35wzyBCpdYhg6Qs3HZaw5VOU++7U+cxyo1JeYuGxG7D24GC
+         ayNyOm5yNQrrs64EwOo5E58Kr7i3jU830En18=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1687292955; x=1689884955;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=/9ELUq3rJWL5sgo40NB2P+V6d1pA3XgW7pgmlamzmlM=;
+        b=fgFc6U7LQwDwaKP7+uxD/PdQfzG0u/GTAXFuKs4a6eX/DHlCIfsjWHRiJpF3oPmwhs
+         D/cHN2ictouat/3lpfpyTgS3XvO9epr5hxSkbfaLLmGxUS8c0SJZhIY9EsxJepw6sajU
+         5YXnOdkL8hzyTwMpj6WYheou+kp3u1YoZEZak/MnMnrplhs88CfbI5dMBOjzyPUDGucf
+         G3yovkiGn8ZZvQN7Ebz8tFsVjFamAmQ0xMlFc5A95wDlH58TuPmwNe9EMlhf/yGPmn8h
+         vHafkag8NEbASgWBhUJ5cpEowKlRkRfCHeNukRFs3FV0PBbB5kth/dfmgK7ArVBTZLVB
+         6LIQ==
+X-Gm-Message-State: AC+VfDzI/QlTzFQ/nPr1JOuHOSc18rWCzdsQeCw/HcmTf8aVtONxx7U/
+        z9Crigery4sGFPaMLSohpBx7fw==
+X-Google-Smtp-Source: ACHHUZ7e240sChvlDd+PFC2zltR3tT++pyV+t6swp4zGp5p8LR6AxBH7sOI9UpTanPkq9zNlTqO53w==
+X-Received: by 2002:a17:902:d489:b0:1af:d812:d27 with SMTP id c9-20020a170902d48900b001afd8120d27mr17881464plg.9.1687292955676;
+        Tue, 20 Jun 2023 13:29:15 -0700 (PDT)
+Received: from www.outflux.net (198-0-35-241-static.hfc.comcastbusiness.net. [198.0.35.241])
+        by smtp.gmail.com with ESMTPSA id s2-20020a170902ea0200b001ae3f73b9c1sm2007982plg.101.2023.06.20.13.29.14
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 20 Jun 2023 12:54:44 -0700 (PDT)
-Date:   Tue, 20 Jun 2023 12:54:44 -0700 (PDT)
-X-Google-Original-Date: Tue, 20 Jun 2023 12:54:05 PDT (-0700)
-Subject:     Re: [PATCH v11 5/8] riscv: ftrace: Enable HAVE_FUNCTION_GRAPH_RETVAL
-In-Reply-To: <20230608215834.729cfda2@gandalf.local.home>
-CC:     pengdonglin@sangfor.com.cn, mhiramat@kernel.org,
-        linux@armlinux.org.uk, Mark Rutland <mark.rutland@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        rmk+kernel@armlinux.org.uk,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        aou@eecs.berkeley.edu, tglx@linutronix.de,
-        dave.hansen@linux.intel.com, x86@kernel.org, bp@alien8.de,
-        hpa@zytor.com, chenhuacai@kernel.org, zhangqing@loongson.cn,
-        kernel@xen0n.name, mingo@redhat.com, peterz@infradead.org,
-        xiehuan09@gmail.com, dinghui@sangfor.com.cn,
-        huangcun@sangfor.com.cn, dolinux.peng@gmail.com,
-        linux-trace-kernel@vger.kernel.org, loongarch@lists.linux.dev,
-        linux-riscv@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-From:   Palmer Dabbelt <palmer@dabbelt.com>
-To:     rostedt@goodmis.org
-Message-ID: <mhng-672b0efa-aeba-4cb2-808d-6ef271844449@palmer-ri-x1c9a>
-Mime-Version: 1.0 (MHng)
-Content-Type: text/plain; charset=utf-8; format=flowed
+        Tue, 20 Jun 2023 13:29:14 -0700 (PDT)
+From:   Kees Cook <keescook@chromium.org>
+To:     mhiramat@kernel.org, ebiggers@kernel.org, rostedt@goodmis.org,
+        azeemshaikh38@gmail.com
+Cc:     Kees Cook <keescook@chromium.org>,
+        linux-trace-kernel@vger.kernel.org,
+        linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] tracing/boot: Replace strlcpy with strscpy
+Date:   Tue, 20 Jun 2023 13:28:26 -0700
+Message-Id: <168729290245.455922.11993639418267016143.b4-ty@chromium.org>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20230615180420.400769-1-azeemshaikh38@gmail.com>
+References: <20230615180420.400769-1-azeemshaikh38@gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On Thu, 08 Jun 2023 18:58:34 PDT (-0700), rostedt@goodmis.org wrote:
->
-> Can I get an ack from a RISC-V maintainer?
+On Thu, 15 Jun 2023 18:04:20 +0000, Azeem Shaikh wrote:
+> strlcpy() reads the entire source buffer first.
+> This read may exceed the destination size limit.
+> This is both inefficient and can lead to linear read
+> overflows if a source string is not NUL-terminated [1].
+> In an effort to remove strlcpy() completely [2], replace
+> strlcpy() here with strscpy().
+> 
+> [...]
 
-Sorry I missed this.
+Applied to for-next/hardening, thanks!
 
-Acked-by: Palmer Dabbelt <palmer@rivosinc.com>
+[1/1] tracing/boot: Replace strlcpy with strscpy
+      https://git.kernel.org/kees/c/b1c38314f756
 
->
-> -- Steve
->
->
-> On Sat,  8 Apr 2023 05:42:19 -0700
-> Donglin Peng <pengdonglin@sangfor.com.cn> wrote:
->
->> The previous patch ("function_graph: Support recording and printing
->> the return value of function") has laid the groundwork for the for
->> the funcgraph-retval, and this modification makes it available on
->> the RISC-V platform.
->>
->> We introduce a new structure called fgraph_ret_regs for the RISC-V
->> platform to hold return registers and the frame pointer. We then
->> fill its content in the return_to_handler and pass its address to
->> the function ftrace_return_to_handler to record the return value.
->>
->> Signed-off-by: Donglin Peng <pengdonglin@sangfor.com.cn>
->> ---
->> v10:
->>  - Use CONFIG_FUNCTION_GRAPH_TRACER to control fgraph_ret_regs definition
->>
->> v9:
->>  - Update the commit message
->>
->> v8:
->>  - Modify the control range of CONFIG_HAVE_FUNCTION_GRAPH_RETVAL
->> ---
->>  arch/riscv/Kconfig              |  1 +
->>  arch/riscv/include/asm/ftrace.h | 21 +++++++++++++++++++++
->>  arch/riscv/kernel/mcount.S      |  7 +------
->>  3 files changed, 23 insertions(+), 6 deletions(-)
->>
->> diff --git a/arch/riscv/Kconfig b/arch/riscv/Kconfig
->> index eb7f29a412f8..108538815309 100644
->> --- a/arch/riscv/Kconfig
->> +++ b/arch/riscv/Kconfig
->> @@ -139,6 +139,7 @@ config RISCV
->>  	select HAVE_DYNAMIC_FTRACE if !XIP_KERNEL && MMU && $(cc-option,-fpatchable-function-entry=8)
->>  	select HAVE_DYNAMIC_FTRACE_WITH_REGS if HAVE_DYNAMIC_FTRACE
->>  	select HAVE_FTRACE_MCOUNT_RECORD if !XIP_KERNEL
->> +	select HAVE_FUNCTION_GRAPH_RETVAL if HAVE_FUNCTION_GRAPH_TRACER
->>  	select HAVE_FUNCTION_GRAPH_TRACER
->>  	select HAVE_FUNCTION_TRACER if !XIP_KERNEL && !PREEMPTION
->>
->> diff --git a/arch/riscv/include/asm/ftrace.h b/arch/riscv/include/asm/ftrace.h
->> index d47d87c2d7e3..740a979171e5 100644
->> --- a/arch/riscv/include/asm/ftrace.h
->> +++ b/arch/riscv/include/asm/ftrace.h
->> @@ -111,4 +111,25 @@ int ftrace_init_nop(struct module *mod, struct dyn_ftrace *rec);
->>
->>  #endif /* CONFIG_DYNAMIC_FTRACE */
->>
->> +#ifndef __ASSEMBLY__
->> +#ifdef CONFIG_FUNCTION_GRAPH_TRACER
->> +struct fgraph_ret_regs {
->> +	unsigned long a1;
->> +	unsigned long a0;
->> +	unsigned long s0;
->> +	unsigned long ra;
->> +};
->> +
->> +static inline unsigned long fgraph_ret_regs_return_value(struct fgraph_ret_regs *ret_regs)
->> +{
->> +	return ret_regs->a0;
->> +}
->> +
->> +static inline unsigned long fgraph_ret_regs_frame_pointer(struct fgraph_ret_regs *ret_regs)
->> +{
->> +	return ret_regs->s0;
->> +}
->> +#endif /* ifdef CONFIG_FUNCTION_GRAPH_TRACER */
->> +#endif
->> +
->>  #endif /* _ASM_RISCV_FTRACE_H */
->> diff --git a/arch/riscv/kernel/mcount.S b/arch/riscv/kernel/mcount.S
->> index 30102aadc4d7..8a6e5a9e842a 100644
->> --- a/arch/riscv/kernel/mcount.S
->> +++ b/arch/riscv/kernel/mcount.S
->> @@ -65,13 +65,8 @@ ENTRY(return_to_handler)
->>   * So alternatively we check the *old* frame pointer position, that is, the
->>   * value stored in -16(s0) on entry, and the s0 on return.
->>   */
->> -#ifdef HAVE_FUNCTION_GRAPH_FP_TEST
->> -	mv	t6, s0
->> -#endif
->>  	SAVE_RET_ABI_STATE
->> -#ifdef HAVE_FUNCTION_GRAPH_FP_TEST
->> -	mv	a0, t6
->> -#endif
->> +	mv	a0, sp
->>  	call	ftrace_return_to_handler
->>  	mv	a2, a0
->>  	RESTORE_RET_ABI_STATE
+-- 
+Kees Cook
 
