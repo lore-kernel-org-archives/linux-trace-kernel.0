@@ -2,116 +2,161 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 46952C001DB
-	for <linux-trace-kernel@archiver.kernel.org>; Mon, 19 Jun 2023 11:34:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C075EB64D9
+	for <linux-trace-kernel@archiver.kernel.org>; Mon, 19 Jun 2023 13:30:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231352AbjFSLej (ORCPT
+        id S229546AbjFSNap (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Mon, 19 Jun 2023 07:34:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52096 "EHLO
+        Mon, 19 Jun 2023 09:30:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36670 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231420AbjFSLeh (ORCPT
+        with ESMTP id S231961AbjFSNao (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Mon, 19 Jun 2023 07:34:37 -0400
-X-Greylist: delayed 158248 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Mon, 19 Jun 2023 04:34:34 PDT
-Received: from out-47.mta0.migadu.com (out-47.mta0.migadu.com [IPv6:2001:41d0:1004:224b::2f])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D1283BF;
-        Mon, 19 Jun 2023 04:34:34 -0700 (PDT)
-Date:   Mon, 19 Jun 2023 07:34:26 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-        t=1687174472;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=Tt3RWh8BEKoqLhK86LDh7llJ14l6KCTXk/okAyPXAzA=;
-        b=i+cENnWbA17Y+F/fishc8UmKkX2d11aFrfbkEA/RSeJGs8DaK+pP54Vf1C7aoZ8NsEj74R
-        cXaE50KWXHIuXWZXVuGC783hgIjWLesjrEEDAYhwTaqLKdCoI85w4n4+GuOUgBvzA2QigP
-        oa1A17/zsm0VN2UgH6YNfjC3Cc/g4gI=
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From:   Kent Overstreet <kent.overstreet@linux.dev>
-To:     Andy Lutomirski <luto@kernel.org>
-Cc:     Mike Rapoport <rppt@kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Christophe Leroy <christophe.leroy@csgroup.eu>,
-        "David S. Miller" <davem@davemloft.net>,
-        Dinh Nguyen <dinguyen@kernel.org>,
-        Heiko Carstens <hca@linux.ibm.com>,
-        Helge Deller <deller@gmx.de>,
-        Huacai Chen <chenhuacai@kernel.org>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Nadav Amit <nadav.amit@gmail.com>,
-        "Naveen N. Rao" <naveen.n.rao@linux.ibm.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Puranjay Mohan <puranjay12@gmail.com>,
-        Rick P Edgecombe <rick.p.edgecombe@intel.com>,
-        "Russell King (Oracle)" <linux@armlinux.org.uk>,
-        Song Liu <song@kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Will Deacon <will@kernel.org>, bpf@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-mips@vger.kernel.org,
-        linux-mm@kvack.org, linux-modules@vger.kernel.org,
-        linux-parisc@vger.kernel.org, linux-riscv@lists.infradead.org,
-        linux-s390@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, loongarch@lists.linux.dev,
-        netdev@vger.kernel.org, sparclinux@vger.kernel.org,
-        the arch/x86 maintainers <x86@kernel.org>
-Subject: Re: [PATCH v2 02/12] mm: introduce execmem_text_alloc() and
- jit_text_alloc()
-Message-ID: <20230619113426.c37bpwvdagbzyevn@moria.home.lan>
-References: <20230616085038.4121892-1-rppt@kernel.org>
- <20230616085038.4121892-3-rppt@kernel.org>
- <f9a7eebe-d36e-4587-b99d-35d4edefdd14@app.fastmail.com>
+        Mon, 19 Jun 2023 09:30:44 -0400
+Received: from szxga03-in.huawei.com (szxga03-in.huawei.com [45.249.212.189])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7EB2C1A4;
+        Mon, 19 Jun 2023 06:30:41 -0700 (PDT)
+Received: from dggpeml500012.china.huawei.com (unknown [172.30.72.54])
+        by szxga03-in.huawei.com (SkyGuard) with ESMTP id 4Ql9Zg5ZdFzLmq5;
+        Mon, 19 Jun 2023 21:28:43 +0800 (CST)
+Received: from localhost.localdomain (10.67.175.61) by
+ dggpeml500012.china.huawei.com (7.185.36.15) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.27; Mon, 19 Jun 2023 21:30:39 +0800
+From:   Zheng Yejian <zhengyejian1@huawei.com>
+To:     <gregkh@linuxfoundation.org>, <rostedt@goodmis.org>,
+        <mhiramat@kernel.org>
+CC:     <linux-kernel@vger.kernel.org>,
+        <linux-trace-kernel@vger.kernel.org>, <stable@vger.kernel.org>,
+        <zhengyejian1@huawei.com>
+Subject: [PATCH 5.15] tracing: Add tracing_reset_all_online_cpus_unlocked() function
+Date:   Tue, 20 Jun 2023 09:30:52 +0800
+Message-ID: <20230620013052.1127047-1-zhengyejian1@huawei.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <f9a7eebe-d36e-4587-b99d-35d4edefdd14@app.fastmail.com>
-X-Migadu-Flow: FLOW_OUT
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [10.67.175.61]
+X-ClientProxiedBy: dggems704-chm.china.huawei.com (10.3.19.181) To
+ dggpeml500012.china.huawei.com (7.185.36.15)
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On Sat, Jun 17, 2023 at 01:38:29PM -0700, Andy Lutomirski wrote:
-> On Fri, Jun 16, 2023, at 1:50 AM, Mike Rapoport wrote:
-> > From: "Mike Rapoport (IBM)" <rppt@kernel.org>
-> >
-> > module_alloc() is used everywhere as a mean to allocate memory for code.
-> >
-> > Beside being semantically wrong, this unnecessarily ties all subsystems
-> > that need to allocate code, such as ftrace, kprobes and BPF to modules
-> > and puts the burden of code allocation to the modules code.
-> >
-> > Several architectures override module_alloc() because of various
-> > constraints where the executable memory can be located and this causes
-> > additional obstacles for improvements of code allocation.
-> >
-> > Start splitting code allocation from modules by introducing
-> > execmem_text_alloc(), execmem_free(), jit_text_alloc(), jit_free() APIs.
-> >
-> > Initially, execmem_text_alloc() and jit_text_alloc() are wrappers for
-> > module_alloc() and execmem_free() and jit_free() are replacements of
-> > module_memfree() to allow updating all call sites to use the new APIs.
-> >
-> > The intention semantics for new allocation APIs:
-> >
-> > * execmem_text_alloc() should be used to allocate memory that must reside
-> >   close to the kernel image, like loadable kernel modules and generated
-> >   code that is restricted by relative addressing.
-> >
-> > * jit_text_alloc() should be used to allocate memory for generated code
-> >   when there are no restrictions for the code placement. For
-> >   architectures that require that any code is within certain distance
-> >   from the kernel image, jit_text_alloc() will be essentially aliased to
-> >   execmem_text_alloc().
-> >
-> 
-> Is there anything in this series to help users do the appropriate synchronization when the actually populate the allocated memory with code?  See here, for example:
-> 
-> https://lore.kernel.org/linux-fsdevel/cb6533c6-cea0-4f04-95cf-b8240c6ab405@app.fastmail.com/T/#u
+From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
 
-We're still in need of an arch independent text_poke() api.
+commit e18eb8783ec4949adebc7d7b0fdb65f65bfeefd9 upstream.
+
+Currently the tracing_reset_all_online_cpus() requires the
+trace_types_lock held. But only one caller of this function actually has
+that lock held before calling it, and the other just takes the lock so
+that it can call it. More users of this function is needed where the lock
+is not held.
+
+Add a tracing_reset_all_online_cpus_unlocked() function for the one use
+case that calls it without being held, and also add a lockdep_assert to
+make sure it is held when called.
+
+Then have tracing_reset_all_online_cpus() take the lock internally, such
+that callers do not need to worry about taking it.
+
+Link: https://lkml.kernel.org/r/20221123192741.658273220@goodmis.org
+
+Cc: Masami Hiramatsu <mhiramat@kernel.org>
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: Zheng Yejian <zhengyejian1@huawei.com>
+Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+
+[Refers to commit message of 417d5ea6e735e5d88ffb6c436cf2938f3f476dd1,
+this patch is pre-depended, and tracing_reset_all_online_cpus() should
+be called after trace_types_lock is held as its comment describes.]
+Fixes: 417d5ea6e735 ("tracing: Free buffers when a used dynamic event is removed")
+Signed-off-by: Zheng Yejian <zhengyejian1@huawei.com>
+---
+ kernel/trace/trace.c              | 11 ++++++++++-
+ kernel/trace/trace.h              |  1 +
+ kernel/trace/trace_events.c       |  2 +-
+ kernel/trace/trace_events_synth.c |  2 --
+ 4 files changed, 12 insertions(+), 4 deletions(-)
+
+diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
+index f8b5abd6e36c..0202f23ae960 100644
+--- a/kernel/trace/trace.c
++++ b/kernel/trace/trace.c
+@@ -2175,10 +2175,12 @@ void tracing_reset_online_cpus(struct array_buffer *buf)
+ }
+ 
+ /* Must have trace_types_lock held */
+-void tracing_reset_all_online_cpus(void)
++void tracing_reset_all_online_cpus_unlocked(void)
+ {
+ 	struct trace_array *tr;
+ 
++	lockdep_assert_held(&trace_types_lock);
++
+ 	list_for_each_entry(tr, &ftrace_trace_arrays, list) {
+ 		if (!tr->clear_trace)
+ 			continue;
+@@ -2190,6 +2192,13 @@ void tracing_reset_all_online_cpus(void)
+ 	}
+ }
+ 
++void tracing_reset_all_online_cpus(void)
++{
++	mutex_lock(&trace_types_lock);
++	tracing_reset_all_online_cpus_unlocked();
++	mutex_unlock(&trace_types_lock);
++}
++
+ /*
+  * The tgid_map array maps from pid to tgid; i.e. the value stored at index i
+  * is the tgid last observed corresponding to pid=i.
+diff --git a/kernel/trace/trace.h b/kernel/trace/trace.h
+index 66b6c8395fbc..2c3d9b6ce148 100644
+--- a/kernel/trace/trace.h
++++ b/kernel/trace/trace.h
+@@ -580,6 +580,7 @@ int tracing_is_enabled(void);
+ void tracing_reset_online_cpus(struct array_buffer *buf);
+ void tracing_reset_current(int cpu);
+ void tracing_reset_all_online_cpus(void);
++void tracing_reset_all_online_cpus_unlocked(void);
+ int tracing_open_generic(struct inode *inode, struct file *filp);
+ int tracing_open_generic_tr(struct inode *inode, struct file *filp);
+ bool tracing_is_disabled(void);
+diff --git a/kernel/trace/trace_events.c b/kernel/trace/trace_events.c
+index 1aadc9a6487b..160298d285c0 100644
+--- a/kernel/trace/trace_events.c
++++ b/kernel/trace/trace_events.c
+@@ -2974,7 +2974,7 @@ static void trace_module_remove_events(struct module *mod)
+ 	 * over from this module may be passed to the new module events and
+ 	 * unexpected results may occur.
+ 	 */
+-	tracing_reset_all_online_cpus();
++	tracing_reset_all_online_cpus_unlocked();
+ }
+ 
+ static int trace_module_notify(struct notifier_block *self,
+diff --git a/kernel/trace/trace_events_synth.c b/kernel/trace/trace_events_synth.c
+index 2fdf3fd591e1..08c7df42ade7 100644
+--- a/kernel/trace/trace_events_synth.c
++++ b/kernel/trace/trace_events_synth.c
+@@ -1416,7 +1416,6 @@ int synth_event_delete(const char *event_name)
+ 	mutex_unlock(&event_mutex);
+ 
+ 	if (mod) {
+-		mutex_lock(&trace_types_lock);
+ 		/*
+ 		 * It is safest to reset the ring buffer if the module
+ 		 * being unloaded registered any events that were
+@@ -1428,7 +1427,6 @@ int synth_event_delete(const char *event_name)
+ 		 * occur.
+ 		 */
+ 		tracing_reset_all_online_cpus();
+-		mutex_unlock(&trace_types_lock);
+ 	}
+ 
+ 	return ret;
+-- 
+2.25.1
+
