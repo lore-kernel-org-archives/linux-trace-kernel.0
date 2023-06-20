@@ -2,59 +2,58 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6774FEB64D7
-	for <linux-trace-kernel@archiver.kernel.org>; Tue, 20 Jun 2023 17:52:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DFF2BEB64D7
+	for <linux-trace-kernel@archiver.kernel.org>; Tue, 20 Jun 2023 18:08:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230138AbjFTRwt (ORCPT
+        id S229675AbjFTSIC (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Tue, 20 Jun 2023 13:52:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43364 "EHLO
+        Tue, 20 Jun 2023 14:08:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49680 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229832AbjFTRws (ORCPT
+        with ESMTP id S229618AbjFTSIB (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Tue, 20 Jun 2023 13:52:48 -0400
+        Tue, 20 Jun 2023 14:08:01 -0400
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 787211728;
-        Tue, 20 Jun 2023 10:52:46 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id C39DB198;
+        Tue, 20 Jun 2023 11:07:59 -0700 (PDT)
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id AE5841063;
-        Tue, 20 Jun 2023 10:53:29 -0700 (PDT)
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 540291063;
+        Tue, 20 Jun 2023 11:08:43 -0700 (PDT)
 Received: from [10.57.24.104] (unknown [10.57.24.104])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id AD4D43F64C;
-        Tue, 20 Jun 2023 10:52:42 -0700 (PDT)
-Message-ID: <a0101269-1d8b-d4e1-52b4-250a99b395fa@arm.com>
-Date:   Tue, 20 Jun 2023 18:52:59 +0100
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 983373F64C;
+        Tue, 20 Jun 2023 11:07:55 -0700 (PDT)
+Message-ID: <a464e8ee-a1b9-10dd-5be0-d9dee994d7b8@arm.com>
+Date:   Tue, 20 Jun 2023 19:08:12 +0100
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.11.0
 Subject: Re: [RESEND][PATCH v2 3/3] schedutil: trace: Add tracing to capture
  filter out requests
 Content-Language: en-US
-To:     Qais Yousef <qyousef@layalina.io>
+To:     "Rafael J. Wysocki" <rafael@kernel.org>
 Cc:     linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
-        rafael@kernel.org, linux-pm@vger.kernel.org, rostedt@goodmis.org,
-        mhiramat@kernel.org, mingo@redhat.com, peterz@infradead.org,
-        juri.lelli@redhat.com, vincent.guittot@linaro.org,
-        dietmar.eggemann@arm.com, bsegall@google.com, mgorman@suse.de,
-        bristot@redhat.com, vschneid@redhat.com, delyank@fb.com,
-        qyousef@google.com, kernel test robot <lkp@intel.com>
+        linux-pm@vger.kernel.org, rostedt@goodmis.org, mhiramat@kernel.org,
+        mingo@redhat.com, peterz@infradead.org, juri.lelli@redhat.com,
+        vincent.guittot@linaro.org, dietmar.eggemann@arm.com,
+        bsegall@google.com, mgorman@suse.de, bristot@redhat.com,
+        vschneid@redhat.com, delyank@fb.com, qyousef@google.com,
+        qyousef@layalina.io, kernel test robot <lkp@intel.com>
 References: <20230522145702.2419654-1-lukasz.luba@arm.com>
  <20230522145702.2419654-4-lukasz.luba@arm.com>
- <20230531183105.r5tqpdx5axoogkzp@airbuntu>
+ <CAJZ5v0g45=0+uLqPD5jib8aQrw8syjMxzd9uPqnTUzxgVCDVkQ@mail.gmail.com>
 From:   Lukasz Luba <lukasz.luba@arm.com>
-In-Reply-To: <20230531183105.r5tqpdx5axoogkzp@airbuntu>
+In-Reply-To: <CAJZ5v0g45=0+uLqPD5jib8aQrw8syjMxzd9uPqnTUzxgVCDVkQ@mail.gmail.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-Hi Qais,
+Hi Rafael,
 
-I have somehow missed your feedback on this series.
-
-On 5/31/23 19:31, Qais Yousef wrote:
-> On 05/22/23 15:57, Lukasz Luba wrote:
+On 6/20/23 18:40, Rafael J. Wysocki wrote:
+> On Mon, May 22, 2023 at 4:57 PM Lukasz Luba <lukasz.luba@arm.com> wrote:
+>>
 >> Some of the frequency update requests coming form the task scheduler
 >> might be filter out. It can happen when the previous request was served
 >> not that long ago (in a period smaller than provided by the cpufreq driver
@@ -75,15 +74,15 @@ On 5/31/23 19:31, Qais Yousef wrote:
 >> --- a/include/trace/events/sched.h
 >> +++ b/include/trace/events/sched.h
 >> @@ -739,6 +739,10 @@ DECLARE_TRACE(uclamp_update_tsk_tp,
->>   	TP_PROTO(struct task_struct *tsk, int uclamp_id,  unsigned int value),
->>   	TP_ARGS(tsk, uclamp_id, value));
->>   
+>>          TP_PROTO(struct task_struct *tsk, int uclamp_id,  unsigned int value),
+>>          TP_ARGS(tsk, uclamp_id, value));
+>>
 >> +DECLARE_TRACE(schedutil_update_filtered_tp,
->> +	TP_PROTO(int cpu),
->> +	TP_ARGS(cpu));
+>> +       TP_PROTO(int cpu),
+>> +       TP_ARGS(cpu));
 >> +
 >>   #endif /* _TRACE_SCHED_H */
->>   
+>>
 >>   /* This part must be outside protection */
 >> diff --git a/kernel/sched/cpufreq_schedutil.c b/kernel/sched/cpufreq_schedutil.c
 >> index f462496e5c07..4f9daf258a65 100644
@@ -92,46 +91,37 @@ On 5/31/23 19:31, Qais Yousef wrote:
 >> @@ -6,6 +6,8 @@
 >>    * Author: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 >>    */
->>   
+>>
 >> +EXPORT_TRACEPOINT_SYMBOL_GPL(schedutil_update_filtered_tp);
 >> +
->>   #define IOWAIT_BOOST_MIN	(SCHED_CAPACITY_SCALE / 8)
->>   
+>>   #define IOWAIT_BOOST_MIN       (SCHED_CAPACITY_SCALE / 8)
+>>
 >>   struct sugov_tunables {
 >> @@ -318,8 +320,10 @@ static inline bool sugov_update_single_common(struct sugov_cpu *sg_cpu,
->>   
->>   	ignore_dl_rate_limit(sg_cpu);
->>   
->> -	if (!sugov_should_update_freq(sg_cpu->sg_policy, time))
->> +	if (!sugov_should_update_freq(sg_cpu->sg_policy, time)) {
->> +		trace_schedutil_update_filtered_tp(sg_cpu->cpu);
->>   		return false;
->> +	}
+>>
+>>          ignore_dl_rate_limit(sg_cpu);
+>>
+>> -       if (!sugov_should_update_freq(sg_cpu->sg_policy, time))
+>> +       if (!sugov_should_update_freq(sg_cpu->sg_policy, time)) {
+>> +               trace_schedutil_update_filtered_tp(sg_cpu->cpu);
 > 
-> Can't we have something more generic here too? Are you interested to count
-> these events? How do you plan to use it?
-
-The plan is to record those events, count them and maybe adjust the FW
-if the frequency switching capabilities are too low, e.g. 4ms...
-
-We need those numbers to point out that there is a need for faster
-FW micro-controller to serve those incoming requests.
-
+> It looks like the tracepoint can be added to
+> sugov_should_update_freq() for less code duplication.
 > 
-> I think this will be a very noisy event by the way.
 
-Could be, but on the other hand for those statistical analysis
-'the more the better'. It will also depend on number of
-CPUs in the cluster, e.g. 4 CPUs vs 1 CPU.
+Make sense. I will move that trace there.
 
-I don't know when we will switch to this per-cpu cpufreq mode
-when all CPUs behave like independent DVFS. Juno mainline kernel and FW
-supports that mode. We would have to compare those two modes and
-measure how much we gain/loose when using one and not the other.
+In such case, of movement that trace call...
+Based on your comment for patch 2/3 I got impression
+that you still want it. For me it looks more 'aligned' w/ that
+patch 2/3. The two functions code flows:
+sugov_update_shared() and sugov_update_single_common() - how
+they call and interpret result from
+sugov_should_update_freq() - is more clear IMO.
 
-Furthermore, we already suspect some of our integration testing for
-EAS-mainline (on Juno) failing due to filtered out requests. How much
-that would impact other boards - it would be nice to see in traces.
+So I will keep that patch 2/3 in the next version. Although,
+if you don't like it - please tell me and I will drop it.
 
-Thanks for your feedback!
+Thanks for the review!
+
 Lukasz
