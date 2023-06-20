@@ -2,93 +2,91 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 583DBEB64DB
-	for <linux-trace-kernel@archiver.kernel.org>; Tue, 20 Jun 2023 20:35:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 42A6FEB64D8
+	for <linux-trace-kernel@archiver.kernel.org>; Tue, 20 Jun 2023 21:22:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229918AbjFTUfR (ORCPT
+        id S229648AbjFTVWO (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Tue, 20 Jun 2023 16:35:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36312 "EHLO
+        Tue, 20 Jun 2023 17:22:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51018 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229736AbjFTUfR (ORCPT
+        with ESMTP id S229538AbjFTVWN (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Tue, 20 Jun 2023 16:35:17 -0400
-Received: from mail-pl1-x62e.google.com (mail-pl1-x62e.google.com [IPv6:2607:f8b0:4864:20::62e])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E9212E6C
-        for <linux-trace-kernel@vger.kernel.org>; Tue, 20 Jun 2023 13:35:15 -0700 (PDT)
-Received: by mail-pl1-x62e.google.com with SMTP id d9443c01a7336-1b50d7b4aaaso22809745ad.3
-        for <linux-trace-kernel@vger.kernel.org>; Tue, 20 Jun 2023 13:35:15 -0700 (PDT)
+        Tue, 20 Jun 2023 17:22:13 -0400
+Received: from mail-ed1-x52b.google.com (mail-ed1-x52b.google.com [IPv6:2a00:1450:4864:20::52b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 04571DC;
+        Tue, 20 Jun 2023 14:22:13 -0700 (PDT)
+Received: by mail-ed1-x52b.google.com with SMTP id 4fb4d7f45d1cf-519b771f23aso6816165a12.1;
+        Tue, 20 Jun 2023 14:22:12 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1687293315; x=1689885315;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=HKfNB5u3nFNglXnsp9o7gsrnCr6dmCCW3qYFfaBUwUA=;
-        b=LcMw4psdStH5MFHVQS2kMwJv0T05uTa/co1p38cNr68MBOrTjNM+712n9/v/DKI+ZH
-         YiNok73TyBu5n+604Shv46N9t0icaw0NxBDvfwHDA4j/sLzUpIRdl6FmA0KTVCYKqgDv
-         4leuNt3EISe1P5Za4zKHxr1OS7t4zK8tJwHhc=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1687293315; x=1689885315;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+        d=gmail.com; s=20221208; t=1687296131; x=1689888131;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=HKfNB5u3nFNglXnsp9o7gsrnCr6dmCCW3qYFfaBUwUA=;
-        b=Zwcx2iyC49acCqvpLvezd4bxN554rRMN27SNApiZOFTlCBa2bRHkjoglf/CRMqQeqw
-         5Fr6WRf8NO5wSE67iz4tIwqfKS6IyRyKiaf2QSKekYYI9/QM6uHr4PTvXapJn1yKgj8R
-         GB9+010ek33VgoP12K4L2PNfRpkk/2qW9TLPzceXBuk8Dnp6rrlFcrkPym5RuShQ7W/r
-         gP7nAlPcCnsWnWWAON3y7DURrRHYs1c4VkcwjRvQuR6BocoZMkpm5vGq4ZADYC0MroxT
-         8URt7NIFrgjX4kJ8Dycy8PbXeiu/7/KTJ27LSmhX5r2x0zxgZf4sRfcK9hQiQrIe6nwy
-         iOQQ==
-X-Gm-Message-State: AC+VfDxMkRHOzZrHMmmN0gYIzyTUzIk+2Tf6fBtYTKiY7qRmzhQwV2ZC
-        AA/s8LkrGKri3cGJnt474K/HlA==
-X-Google-Smtp-Source: ACHHUZ4aNFZGT2jrBdXRcHnhNkSHBJJUK1GpV1xH4w7UkAwhaU9F0+YC0le2l80CDW7oZ0eAQ8AYMQ==
-X-Received: by 2002:a17:902:f7d1:b0:1ad:edbd:8547 with SMTP id h17-20020a170902f7d100b001adedbd8547mr7662452plw.15.1687293315404;
-        Tue, 20 Jun 2023 13:35:15 -0700 (PDT)
-Received: from www.outflux.net (198-0-35-241-static.hfc.comcastbusiness.net. [198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id g14-20020a1709029f8e00b001b23eb0b4bbsm2009835plq.147.2023.06.20.13.35.14
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 20 Jun 2023 13:35:14 -0700 (PDT)
-Date:   Tue, 20 Jun 2023 13:35:14 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     Steven Rostedt <rostedt@goodmis.org>
-Cc:     mhiramat@kernel.org, ebiggers@kernel.org, azeemshaikh38@gmail.com,
-        linux-trace-kernel@vger.kernel.org,
-        linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] tracing/boot: Replace strlcpy with strscpy
-Message-ID: <202306201335.D6D772A@keescook>
-References: <20230615180420.400769-1-azeemshaikh38@gmail.com>
- <168729290245.455922.11993639418267016143.b4-ty@chromium.org>
- <20230620163325.35c9203c@gandalf.local.home>
+        bh=l25q0nDbX64Q4NQ/7YLY/l1l/6F0DR4cuAypL+FKwEA=;
+        b=WM1Yb2Ik3akdQ+w2usD9eiDDO7nRcNDFoDjr/UbUSBXpbGVhtoKaqzRufOek6yLZB2
+         +fchhqCemVgP7A5MSaaYjFhwd6R5RXo5dREqT/77fTzGyPtBESqXgNi9IQLX+5v5pwCb
+         +lKlyBZWl80l02nVyV4gknoY3TAkCQ9qmBKXfc1xMIWjB4ePVHhzwLx15AZZFDF5FD/F
+         dqF06hD+UBjsnsolTmfQ67v/axs9EqgcoRK+IcbhIUI9T5TBup98uAtEvycS3AQEcVW/
+         gLD4cuUjE3Qzf9fo9eeAiTcw/RmUoppOuYurGx1+pVxqPOooEFW3DKoXeu7qYO9ArUog
+         pFjQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1687296131; x=1689888131;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=l25q0nDbX64Q4NQ/7YLY/l1l/6F0DR4cuAypL+FKwEA=;
+        b=TyLU4k2xtLPfDo6gaWN/Ph6W0GFqLEtKDhUfASYNmpI7blvzu+QhrdbtMmumFnKZWm
+         idP7MNizIP45ZMwTGXHFx2UYW1/iPKVjD7Vp89zyQnLjNyI0RXlPBD54PIzq12LfLUEz
+         rSFAFCh9vznLDOTUk6LYwOKf957Ylx2hjaVqD6EYigXzahxTx+QgcBlnfNKvGvgNje0Q
+         WXxWEdaR+JE0OBRC1YRHYi4PlJDGkWSOV5eiMpr/Z3Gi+sKEE5kJQo24SGx6R1G+hSY8
+         5XfrrqwkuueHB048ag7L5EUhAiXCTTl8rhvyUyh226JCyzHzitfX00XbQjoqShRqaoGw
+         FTwQ==
+X-Gm-Message-State: AC+VfDxfJh+s5ANk+hCvBphmmLfqf4DYjwGDyAtD+Jve/kxbeP+FbiQH
+        A6Ashf2MzCyK22ahU985116kkZONhypL2kQOAVk=
+X-Google-Smtp-Source: ACHHUZ6sKZeI9lMkfEwPbiRy8jlZ95af+fSx1XHpNiG77d/mGdJWIeSei7RDjJ+MpSj9vpRGfZ+6qrMf8UriaBJqQA0=
+X-Received: by 2002:aa7:d9c3:0:b0:51a:3df4:5697 with SMTP id
+ v3-20020aa7d9c3000000b0051a3df45697mr8894950eds.35.1687296131216; Tue, 20 Jun
+ 2023 14:22:11 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230620163325.35c9203c@gandalf.local.home>
+References: <20230620163008.3718-1-laoar.shao@gmail.com> <20230620163008.3718-10-laoar.shao@gmail.com>
+In-Reply-To: <20230620163008.3718-10-laoar.shao@gmail.com>
+From:   Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Date:   Tue, 20 Jun 2023 14:22:00 -0700
+Message-ID: <CAADnVQLjaKbe6JgPFe+=dJWxmNwdo9rQzCjvoqJ9Frn_DOSpCw@mail.gmail.com>
+Subject: Re: [PATCH v4 bpf-next 09/11] bpf: Support ->fill_link_info for perf_event
+To:     Yafang Shao <laoar.shao@gmail.com>
+Cc:     Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        John Fastabend <john.fastabend@gmail.com>,
+        Andrii Nakryiko <andrii@kernel.org>,
+        Martin KaFai Lau <martin.lau@linux.dev>,
+        Song Liu <song@kernel.org>, Yonghong Song <yhs@fb.com>,
+        KP Singh <kpsingh@kernel.org>,
+        Stanislav Fomichev <sdf@google.com>,
+        Hao Luo <haoluo@google.com>, Jiri Olsa <jolsa@kernel.org>,
+        Quentin Monnet <quentin@isovalent.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        bpf <bpf@vger.kernel.org>, linux-trace-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On Tue, Jun 20, 2023 at 04:33:25PM -0400, Steven Rostedt wrote:
-> On Tue, 20 Jun 2023 13:28:26 -0700
-> Kees Cook <keescook@chromium.org> wrote:
-> 
-> > On Thu, 15 Jun 2023 18:04:20 +0000, Azeem Shaikh wrote:
-> > > strlcpy() reads the entire source buffer first.
-> > > This read may exceed the destination size limit.
-> > > This is both inefficient and can lead to linear read
-> > > overflows if a source string is not NUL-terminated [1].
-> > > In an effort to remove strlcpy() completely [2], replace
-> > > strlcpy() here with strscpy().
-> > > 
-> > > [...]  
-> > 
-> > Applied to for-next/hardening, thanks!
-> > 
-> > [1/1] tracing/boot: Replace strlcpy with strscpy
-> >       https://git.kernel.org/kees/c/b1c38314f756
-> > 
-> 
-> I was going to add this to my queue.
+On Tue, Jun 20, 2023 at 9:30=E2=80=AFAM Yafang Shao <laoar.shao@gmail.com> =
+wrote:
+>
+> +enum bpf_perf_event_type {
+> +       BPF_PERF_EVENT_UNSPEC =3D 0,
+> +       BPF_PERF_EVENT_UPROBE =3D 1,
+> +       BPF_PERF_EVENT_KPROBE =3D 2,
+> +       BPF_PERF_EVENT_TRACEPOINT =3D 3,
+> +       BPF_PERF_EVENT_EVENT =3D 4,
+> +
+> +       MAX_BPF_PERF_EVENT_TYPE,
+> +};
 
-Ah, okay, no worries. I will drop it from mine.
-
--- 
-Kees Cook
+afaics MAX_BPF_PERF_EVENT_TYPE is completely unused.
+Every patch should be focusing on minimizing additions to uapi.
