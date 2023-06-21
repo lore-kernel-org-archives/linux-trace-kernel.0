@@ -2,82 +2,84 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F0E1BEB64D8
-	for <linux-trace-kernel@archiver.kernel.org>; Wed, 21 Jun 2023 16:46:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D62D3EB64D8
+	for <linux-trace-kernel@archiver.kernel.org>; Wed, 21 Jun 2023 18:41:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229870AbjFUQq1 (ORCPT
+        id S230143AbjFUSlQ (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Wed, 21 Jun 2023 12:46:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37026 "EHLO
+        Wed, 21 Jun 2023 14:41:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33220 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229909AbjFUQqR (ORCPT
+        with ESMTP id S229692AbjFUSlP (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Wed, 21 Jun 2023 12:46:17 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 59E032100;
-        Wed, 21 Jun 2023 09:46:01 -0700 (PDT)
+        Wed, 21 Jun 2023 14:41:15 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9821AC6;
+        Wed, 21 Jun 2023 11:41:14 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange X25519 server-signature RSA-PSS (2048 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id E3480615D9;
-        Wed, 21 Jun 2023 16:46:00 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 283ECC433C8;
-        Wed, 21 Jun 2023 16:45:59 +0000 (UTC)
-Date:   Wed, 21 Jun 2023 12:45:57 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
-Cc:     linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Florent Revest <revest@chromium.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Martin KaFai Lau <martin.lau@linux.dev>, bpf@vger.kernel.org,
-        Bagas Sanjaya <bagasdotme@gmail.com>,
-        kernel test robot <lkp@intel.com>
-Subject: Re: [PATCH 2/2] Documentation: Fix typo of reference file name
-Message-ID: <20230621124557.40200450@gandalf.local.home>
-In-Reply-To: <168584575125.2056209.5771945721143181243.stgit@mhiramat.roam.corp.google.com>
-References: <168584574094.2056209.2694238431743782342.stgit@mhiramat.roam.corp.google.com>
-        <168584575125.2056209.5771945721143181243.stgit@mhiramat.roam.corp.google.com>
-X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 33A966169A;
+        Wed, 21 Jun 2023 18:41:14 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0F183C433C0;
+        Wed, 21 Jun 2023 18:41:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+        s=korg; t=1687372873;
+        bh=/eu9LOf9IBDwc7TLl8h8hH75VKdFAoP/+wYaxVHBtPE=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=tIKxkJclYIC1H1i6c7VFzQeWJXyzaWkWHwsmj2zAIkjzJknPVjMIMl3fQUN4gK8OM
+         7KvXLWwBXjiveHLKflQiShgC2xN2RkNl7q5TV2iSST16pfVzQOTQikvA0n24cCxgHM
+         4piHuwDn/wqneKwNr85n6eGjxqUt0oHHRfmBOlL0=
+Date:   Wed, 21 Jun 2023 20:41:10 +0200
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Zheng Yejian <zhengyejian1@huawei.com>
+Cc:     rostedt@goodmis.org, mhiramat@kernel.org,
+        linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+        stable@vger.kernel.org
+Subject: Re: [PATCH 5.15] tracing: Add
+ tracing_reset_all_online_cpus_unlocked() function
+Message-ID: <2023062102-catchable-obituary-934c@gregkh>
+References: <20230620013052.1127047-1-zhengyejian1@huawei.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230620013052.1127047-1-zhengyejian1@huawei.com>
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On Sun,  4 Jun 2023 11:29:11 +0900
-"Masami Hiramatsu (Google)" <mhiramat@kernel.org> wrote:
-
-> From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+On Tue, Jun 20, 2023 at 09:30:52AM +0800, Zheng Yejian wrote:
+> From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
 > 
-> Fix a typo of Documentation/trace/fprobe.rst.
+> commit e18eb8783ec4949adebc7d7b0fdb65f65bfeefd9 upstream.
 > 
-> Reported-by: kernel test robot <lkp@intel.com>
-> Closes: https://lore.kernel.org/oe-kbuild-all/202306040144.aD72UzkF-lkp@intel.com/
-> Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-
-Reviewed-by: Steven Rostedt (Google) <rostedt@goodmis.org>
-
--- Steve
-
-> ---
->  Documentation/trace/fprobetrace.rst |    2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+> Currently the tracing_reset_all_online_cpus() requires the
+> trace_types_lock held. But only one caller of this function actually has
+> that lock held before calling it, and the other just takes the lock so
+> that it can call it. More users of this function is needed where the lock
+> is not held.
 > 
-> diff --git a/Documentation/trace/fprobetrace.rst b/Documentation/trace/fprobetrace.rst
-> index e949bc0cff05..7297f9478459 100644
-> --- a/Documentation/trace/fprobetrace.rst
-> +++ b/Documentation/trace/fprobetrace.rst
-> @@ -38,7 +38,7 @@ Synopsis of fprobe-events
->                    with a digit character, "_TRACEPOINT" is used.
->   MAXACTIVE      : Maximum number of instances of the specified function that
->                    can be probed simultaneously, or 0 for the default value
-> -                  as defined in Documentation/trace/fprobes.rst
-> +                  as defined in Documentation/trace/fprobe.rst
->  
->   FETCHARGS      : Arguments. Each probe can have up to 128 args.
->    ARG           : Fetch "ARG" function argument using BTF (only for function
+> Add a tracing_reset_all_online_cpus_unlocked() function for the one use
+> case that calls it without being held, and also add a lockdep_assert to
+> make sure it is held when called.
+> 
+> Then have tracing_reset_all_online_cpus() take the lock internally, such
+> that callers do not need to worry about taking it.
+> 
+> Link: https://lkml.kernel.org/r/20221123192741.658273220@goodmis.org
+> 
+> Cc: Masami Hiramatsu <mhiramat@kernel.org>
+> Cc: Andrew Morton <akpm@linux-foundation.org>
+> Cc: Zheng Yejian <zhengyejian1@huawei.com>
+> Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+> 
+> [Refers to commit message of 417d5ea6e735e5d88ffb6c436cf2938f3f476dd1,
+> this patch is pre-depended, and tracing_reset_all_online_cpus() should
+> be called after trace_types_lock is held as its comment describes.]
+> Fixes: 417d5ea6e735 ("tracing: Free buffers when a used dynamic event is removed")
+> Signed-off-by: Zheng Yejian <zhengyejian1@huawei.com>
 
+All now queued up, thanks.
+
+greg k-h
