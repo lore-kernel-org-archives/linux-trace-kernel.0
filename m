@@ -2,151 +2,82 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D712EB64D7
-	for <linux-trace-kernel@archiver.kernel.org>; Wed, 21 Jun 2023 03:27:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A892BEB64D8
+	for <linux-trace-kernel@archiver.kernel.org>; Wed, 21 Jun 2023 06:08:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230128AbjFUD1R (ORCPT
+        id S230131AbjFUGIl (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Tue, 20 Jun 2023 23:27:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36100 "EHLO
+        Wed, 21 Jun 2023 02:08:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50894 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230171AbjFUD0f (ORCPT
+        with ESMTP id S230078AbjFUGIj (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Tue, 20 Jun 2023 23:26:35 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3CAF7199C;
-        Tue, 20 Jun 2023 20:25:19 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 5B63D6145D;
-        Wed, 21 Jun 2023 03:25:19 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7E800C433C0;
-        Wed, 21 Jun 2023 03:25:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1687317918;
-        bh=NGs11l/3B8YfeCe/z4oIs1N3Mm5E/col3XvNEFUUXn0=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=A9yw8wR5gnNbP8vG+w1Ktt1f/FkaFUuyC2Seh1jsOkpYmmGwJFH8lgQ7I7G8Qn4Mn
-         XL6xH5Ne75d8izn4HSWmrNlOdFBGAqIH8zIKdMjpmRlOLfs9vh08Dh3C5DUi+T1E+i
-         9kJu80fipHNPqIXfbbKEsFU7Wr+N+PBVbOPGfNTXC/OwQcRZB7QzJkwi+2/+PM0ART
-         TD28FaVAqStqrTgUUx1GliFn+0vcB5t4/eeEMqgUUeQWEXybygBgM+z8bGCXzVJrIG
-         7X+KNCM8c+zqKavirD9ZL+uoc4o5XvWgy69IK+gcHDesZXLR8207zoHuqR3bcCQZw5
-         3dRW4J/tJGbyg==
-Date:   Wed, 21 Jun 2023 12:25:13 +0900
-From:   Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To:     Qais Yousef <qyousef@layalina.io>
-Cc:     Lukasz Luba <lukasz.luba@arm.com>, linux-kernel@vger.kernel.org,
-        linux-trace-kernel@vger.kernel.org, rafael@kernel.org,
-        linux-pm@vger.kernel.org, rostedt@goodmis.org, mhiramat@kernel.org,
-        mingo@redhat.com, peterz@infradead.org, juri.lelli@redhat.com,
-        vincent.guittot@linaro.org, dietmar.eggemann@arm.com,
-        bsegall@google.com, mgorman@suse.de, bristot@redhat.com,
-        vschneid@redhat.com, delyank@fb.com, qyousef@google.com
-Subject: Re: [RESEND][PATCH v2 1/3] sched/tp: Add new tracepoint to track
- uclamp set from user-space
-Message-Id: <20230621122513.2aa3bc0d29321197e3d38441@kernel.org>
-In-Reply-To: <20230531182629.nztie5rwhjl53v3d@airbuntu>
-References: <20230522145702.2419654-1-lukasz.luba@arm.com>
-        <20230522145702.2419654-2-lukasz.luba@arm.com>
-        <20230531182629.nztie5rwhjl53v3d@airbuntu>
-X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        Wed, 21 Jun 2023 02:08:39 -0400
+Received: from mail-oi1-f196.google.com (mail-oi1-f196.google.com [209.85.167.196])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0BE30172C;
+        Tue, 20 Jun 2023 23:08:39 -0700 (PDT)
+Received: by mail-oi1-f196.google.com with SMTP id 5614622812f47-3a03ff70c1aso836538b6e.1;
+        Tue, 20 Jun 2023 23:08:39 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1687327718; x=1689919718;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=n5/ibBv767hMPWz9rN9brRTXkDseA5y39L5B6lIVEsY=;
+        b=VZSPm7x4p9SqeUbWPbzoYr3PEsy0B6fXgeEqrT4qw96zCt4RQlEaiwDGQijlrB9SxA
+         gxwexRxJnP0+VP2YrHQScojJFmaZ8q6+ROc61buctbnzxeA1FRK6WuZ2BKX6/eSDn/55
+         N+axYlh37HUqDOEzMf3WzZ/rCzRJ6cjfAO/nysHQeBmHMAEIsiMHDgUdT4g2Y9ZLxUBS
+         XUQqtqjh+4w2Pru+yvT4CKkIPtHdIw0y9hJEH009SyGPTGADEMeLLGcuHl7ZXCRCnatI
+         zH4Hlb1YojHjnP9l7+iNllOTUFwJ0EfF2Kqe1VuSpPa/NRQKFltYL2O3Q5edba1YNPBe
+         dRgw==
+X-Gm-Message-State: AC+VfDxleMMxJmY0cbmVQv5JYsT2mGAl1GjPjacn/nthHnIJqiwnF9Fm
+        jI5XA33X/l9M5xU0NxSqpg==
+X-Google-Smtp-Source: ACHHUZ7pDI+7OOHhAviNtXk4kP8st4badHVapsOBMfyv6deuqqy8RsiADE+LLn57e5VwMD2+/YWV7A==
+X-Received: by 2002:a05:6808:f88:b0:39e:1d17:d689 with SMTP id o8-20020a0568080f8800b0039e1d17d689mr14321758oiw.56.1687327718239;
+        Tue, 20 Jun 2023 23:08:38 -0700 (PDT)
+Received: from localhost.localdomain ([116.128.244.169])
+        by smtp.gmail.com with ESMTPSA id d28-20020a630e1c000000b00528da88275bsm2323621pgl.47.2023.06.20.23.08.36
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 20 Jun 2023 23:08:37 -0700 (PDT)
+From:   sunliming <sunliming@kylinos.cn>
+To:     rostedt@goodmis.org, mhiramat@kernel.org, beaub@linux.microsoft.com
+Cc:     kelulanainsley@gmail.com, linux-trace-kernel@vger.kernel.org,
+        linux-kernel@vger.kernel.org, sunliming <sunliming@kylinos.cn>
+Subject: [PATCH v3 1/3] tracing/user_events: Fix incorrect return value for writing operation when events are disable
+Date:   Wed, 21 Jun 2023 14:08:24 +0800
+Message-Id: <20230621060827.151564-2-sunliming@kylinos.cn>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20230621060827.151564-1-sunliming@kylinos.cn>
+References: <20230621060827.151564-1-sunliming@kylinos.cn>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On Wed, 31 May 2023 19:26:29 +0100
-Qais Yousef <qyousef@layalina.io> wrote:
+The writing operation return the count of writes regardless of whether events
+are enabled or disabled. Switch it to return 0 to indicates that the event
+is disabled.
 
-> On 05/22/23 15:57, Lukasz Luba wrote:
-> > The user-space can set uclamp value for a given task. It impacts task
-> > placement decisions made by the scheduler. This is very useful information
-> > and helps to understand the system behavior or track improvements in
-> > middleware and applications which start using uclamp mechanisms and report
-> > better performance in tests.
-> 
-> Do you mind adding a generic one instead please? And explain why we can't just
-> attach to the syscall via kprobes? I think you want to bypass the permission
-> checks, so maybe a generic tracepoint after that might be justifiable?
+Signed-off-by: sunliming <sunliming@kylinos.cn>
+---
+ kernel/trace/trace_events_user.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-Could you tell me more about this point? I would like to know what kind of
-permission checks can be bypassed with tracepoints.
-
-> Then anyone can use it to track how userspace has changed any attributes for
-> a task, not just uclamp.
-
-I guess Uclamp is not controlled by syscall but from kernel internal
-sched_setattr/setscheduler() too. Anyway I agree that it can be more generic
-tracepoint, something like trace_sched_set_scheduer(task, attr).
-
-Thank you,
-
-> 
-> 
-> Thanks
-> 
-> --
-> Qais Yousef
-> 
-> > 
-> > Signed-off-by: Lukasz Luba <lukasz.luba@arm.com>
-> > ---
-> >  include/trace/events/sched.h | 4 ++++
-> >  kernel/sched/core.c          | 5 +++++
-> >  2 files changed, 9 insertions(+)
-> > 
-> > diff --git a/include/trace/events/sched.h b/include/trace/events/sched.h
-> > index fbb99a61f714..dbfb30809f15 100644
-> > --- a/include/trace/events/sched.h
-> > +++ b/include/trace/events/sched.h
-> > @@ -735,6 +735,10 @@ DECLARE_TRACE(sched_update_nr_running_tp,
-> >  	TP_PROTO(struct rq *rq, int change),
-> >  	TP_ARGS(rq, change));
-> >  
-> > +DECLARE_TRACE(uclamp_update_tsk_tp,
-> > +	TP_PROTO(struct task_struct *tsk, int uclamp_id,  unsigned int value),
-> > +	TP_ARGS(tsk, uclamp_id, value));
-> > +
-> >  #endif /* _TRACE_SCHED_H */
-> >  
-> >  /* This part must be outside protection */
-> > diff --git a/kernel/sched/core.c b/kernel/sched/core.c
-> > index 944c3ae39861..7b9b800ebb6c 100644
-> > --- a/kernel/sched/core.c
-> > +++ b/kernel/sched/core.c
-> > @@ -114,6 +114,7 @@ EXPORT_TRACEPOINT_SYMBOL_GPL(sched_overutilized_tp);
-> >  EXPORT_TRACEPOINT_SYMBOL_GPL(sched_util_est_cfs_tp);
-> >  EXPORT_TRACEPOINT_SYMBOL_GPL(sched_util_est_se_tp);
-> >  EXPORT_TRACEPOINT_SYMBOL_GPL(sched_update_nr_running_tp);
-> > +EXPORT_TRACEPOINT_SYMBOL_GPL(uclamp_update_tsk_tp);
-> >  
-> >  DEFINE_PER_CPU_SHARED_ALIGNED(struct rq, runqueues);
-> >  
-> > @@ -1956,12 +1957,16 @@ static void __setscheduler_uclamp(struct task_struct *p,
-> >  	    attr->sched_util_min != -1) {
-> >  		uclamp_se_set(&p->uclamp_req[UCLAMP_MIN],
-> >  			      attr->sched_util_min, true);
-> > +		trace_uclamp_update_tsk_tp(p, UCLAMP_MIN,
-> > +					   attr->sched_util_min);
-> >  	}
-> >  
-> >  	if (attr->sched_flags & SCHED_FLAG_UTIL_CLAMP_MAX &&
-> >  	    attr->sched_util_max != -1) {
-> >  		uclamp_se_set(&p->uclamp_req[UCLAMP_MAX],
-> >  			      attr->sched_util_max, true);
-> > +		trace_uclamp_update_tsk_tp(p, UCLAMP_MAX,
-> > +					   attr->sched_util_max);
-> >  	}
-> >  }
-> >  
-> > -- 
-> > 2.25.1
-> > 
-
-
+diff --git a/kernel/trace/trace_events_user.c b/kernel/trace/trace_events_user.c
+index 1ac5ba5685ed..c085ff829a58 100644
+--- a/kernel/trace/trace_events_user.c
++++ b/kernel/trace/trace_events_user.c
+@@ -1957,7 +1957,8 @@ static ssize_t user_events_write_core(struct file *file, struct iov_iter *i)
+ 
+ 		if (unlikely(faulted))
+ 			return -EFAULT;
+-	}
++	} else
++		return 0;
+ 
+ 	return ret;
+ }
 -- 
-Masami Hiramatsu (Google) <mhiramat@kernel.org>
+2.25.1
+
