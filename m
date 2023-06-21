@@ -2,340 +2,151 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B3D50EB64DB
-	for <linux-trace-kernel@archiver.kernel.org>; Wed, 21 Jun 2023 02:51:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D712EB64D7
+	for <linux-trace-kernel@archiver.kernel.org>; Wed, 21 Jun 2023 03:27:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229977AbjFUCvw (ORCPT
+        id S230128AbjFUD1R (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Tue, 20 Jun 2023 22:51:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53188 "EHLO
+        Tue, 20 Jun 2023 23:27:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36100 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229676AbjFUCvv (ORCPT
+        with ESMTP id S230171AbjFUD0f (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Tue, 20 Jun 2023 22:51:51 -0400
-Received: from mail-ot1-x330.google.com (mail-ot1-x330.google.com [IPv6:2607:f8b0:4864:20::330])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0A0E71B4;
-        Tue, 20 Jun 2023 19:51:50 -0700 (PDT)
-Received: by mail-ot1-x330.google.com with SMTP id 46e09a7af769-6b470ebd670so2607799a34.0;
-        Tue, 20 Jun 2023 19:51:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1687315909; x=1689907909;
-        h=in-reply-to:references:subject:cc:to:from:message-id:date
-         :content-transfer-encoding:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=qJNr1vyPvHbMEk8O8XldE8NbrEXH2idSMvV3eZDgIT4=;
-        b=J9rhQVz1R8lKDLiKwNIPca+zvG5Tv3NsIAj1Ji/wwJWZ5NGPo67uNji7TMbGfymVWO
-         GMr37w69IFJ1a/xO2A5DmceFjN0O32RpzdAIssyO44XqTHGckAF25peyXSxvQDN3Hon3
-         nm7yK6UQvcoGWP40qbNg1er6nj4r5UQsT0ym99rNBvogtZMf2i5gafTMS+lgcgzNQGKq
-         aoUmdiGQ3/vjF0fTi0Y3GwgVLDETdD79PdEDbQpGXiviLmWKyCtsFqxqvYfIKO+j7cmH
-         1dwMi6f30X6ti1+jJ2sfUBHAIRnjtvhicwwWnFeGYhp7QveaAM4i9Fm9K8L5dJwflH0T
-         aPMw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1687315909; x=1689907909;
-        h=in-reply-to:references:subject:cc:to:from:message-id:date
-         :content-transfer-encoding:mime-version:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=qJNr1vyPvHbMEk8O8XldE8NbrEXH2idSMvV3eZDgIT4=;
-        b=Cvs8PH9gXi5I5TbvEm6ueuUXfr4+MzUBGnZsj2anRhFeqsMeb68yjyAHEOjfFU8s4v
-         VXBiwh95vcPcDhe3BmyGWVvBY9OItxL0M0KSE18VzppnO1vvcJ2PlxoDQDSqNvFMSwJg
-         L6JnlscCqqw2og4/k4hmW9Wu5799g3corNzPHE4hYYIX+xL/3eRcvT8eVg2djie7Xl/C
-         dAGItrlaC9AWUvsMgBbswlQxJWe/dAdwobkGZv77e+6WrgthYQaebnucq4UNkoJvWcYW
-         MCQsB/Lxs1I7WNuYt6kNPJpkX6CQgqbyL59lvLTWaQj6lRdx47z+hq4PQGYj/VUzMkrg
-         88bA==
-X-Gm-Message-State: AC+VfDyiYbN5KLQbblO6vQ/QNWBMZcLJpiPTgCb5c+yIhXc1TaSmL9dE
-        pFwSPTKWDnwy0634pBABP7nOGid4Xvs=
-X-Google-Smtp-Source: ACHHUZ4vmFcBnDcvLrBXtT15BOX4k0uY1EIRYfrVxGT80rydywp/6szlGIEPs7lB1lYg1S65G5/lLQ==
-X-Received: by 2002:a05:6359:a26:b0:12c:9960:ec1e with SMTP id el38-20020a0563590a2600b0012c9960ec1emr8123207rwb.19.1687315909090;
-        Tue, 20 Jun 2023 19:51:49 -0700 (PDT)
-Received: from localhost (193-116-203-37.tpgi.com.au. [193.116.203.37])
-        by smtp.gmail.com with ESMTPSA id q15-20020a170902bd8f00b001a5fccab02dsm2246983pls.177.2023.06.20.19.51.33
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 20 Jun 2023 19:51:48 -0700 (PDT)
+        Tue, 20 Jun 2023 23:26:35 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3CAF7199C;
+        Tue, 20 Jun 2023 20:25:19 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 5B63D6145D;
+        Wed, 21 Jun 2023 03:25:19 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7E800C433C0;
+        Wed, 21 Jun 2023 03:25:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1687317918;
+        bh=NGs11l/3B8YfeCe/z4oIs1N3Mm5E/col3XvNEFUUXn0=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=A9yw8wR5gnNbP8vG+w1Ktt1f/FkaFUuyC2Seh1jsOkpYmmGwJFH8lgQ7I7G8Qn4Mn
+         XL6xH5Ne75d8izn4HSWmrNlOdFBGAqIH8zIKdMjpmRlOLfs9vh08Dh3C5DUi+T1E+i
+         9kJu80fipHNPqIXfbbKEsFU7Wr+N+PBVbOPGfNTXC/OwQcRZB7QzJkwi+2/+PM0ART
+         TD28FaVAqStqrTgUUx1GliFn+0vcB5t4/eeEMqgUUeQWEXybygBgM+z8bGCXzVJrIG
+         7X+KNCM8c+zqKavirD9ZL+uoc4o5XvWgy69IK+gcHDesZXLR8207zoHuqR3bcCQZw5
+         3dRW4J/tJGbyg==
+Date:   Wed, 21 Jun 2023 12:25:13 +0900
+From:   Masami Hiramatsu (Google) <mhiramat@kernel.org>
+To:     Qais Yousef <qyousef@layalina.io>
+Cc:     Lukasz Luba <lukasz.luba@arm.com>, linux-kernel@vger.kernel.org,
+        linux-trace-kernel@vger.kernel.org, rafael@kernel.org,
+        linux-pm@vger.kernel.org, rostedt@goodmis.org, mhiramat@kernel.org,
+        mingo@redhat.com, peterz@infradead.org, juri.lelli@redhat.com,
+        vincent.guittot@linaro.org, dietmar.eggemann@arm.com,
+        bsegall@google.com, mgorman@suse.de, bristot@redhat.com,
+        vschneid@redhat.com, delyank@fb.com, qyousef@google.com
+Subject: Re: [RESEND][PATCH v2 1/3] sched/tp: Add new tracepoint to track
+ uclamp set from user-space
+Message-Id: <20230621122513.2aa3bc0d29321197e3d38441@kernel.org>
+In-Reply-To: <20230531182629.nztie5rwhjl53v3d@airbuntu>
+References: <20230522145702.2419654-1-lukasz.luba@arm.com>
+        <20230522145702.2419654-2-lukasz.luba@arm.com>
+        <20230531182629.nztie5rwhjl53v3d@airbuntu>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date:   Wed, 21 Jun 2023 12:51:31 +1000
-Message-Id: <CTHZKBJCQRHR.11CFMPICJ8XQP@wheely>
-From:   "Nicholas Piggin" <npiggin@gmail.com>
-To:     "Yu Zhao" <yuzhao@google.com>
-Cc:     "Andrew Morton" <akpm@linux-foundation.org>,
-        "Paolo Bonzini" <pbonzini@redhat.com>,
-        "Alistair Popple" <apopple@nvidia.com>,
-        "Anup Patel" <anup@brainfault.org>,
-        "Ben Gardon" <bgardon@google.com>,
-        "Borislav Petkov" <bp@alien8.de>,
-        "Catalin Marinas" <catalin.marinas@arm.com>,
-        "Chao Peng" <chao.p.peng@linux.intel.com>,
-        "Christophe Leroy" <christophe.leroy@csgroup.eu>,
-        "Dave Hansen" <dave.hansen@linux.intel.com>,
-        "Fabiano Rosas" <farosas@linux.ibm.com>,
-        "Gaosheng Cui" <cuigaosheng1@huawei.com>,
-        "Gavin Shan" <gshan@redhat.com>, "H. Peter Anvin" <hpa@zytor.com>,
-        "Ingo Molnar" <mingo@redhat.com>,
-        "James Morse" <james.morse@arm.com>,
-        "Jason A. Donenfeld" <Jason@zx2c4.com>,
-        "Jason Gunthorpe" <jgg@ziepe.ca>,
-        "Jonathan Corbet" <corbet@lwn.net>,
-        "Marc Zyngier" <maz@kernel.org>,
-        "Masami Hiramatsu" <mhiramat@kernel.org>,
-        "Michael Ellerman" <mpe@ellerman.id.au>,
-        "Michael Larabel" <michael@michaellarabel.com>,
-        "Mike Rapoport" <rppt@kernel.org>,
-        "Oliver Upton" <oliver.upton@linux.dev>,
-        "Paul Mackerras" <paulus@ozlabs.org>,
-        "Peter Xu" <peterx@redhat.com>,
-        "Sean Christopherson" <seanjc@google.com>,
-        "Steven Rostedt" <rostedt@goodmis.org>,
-        "Suzuki K Poulose" <suzuki.poulose@arm.com>,
-        "Thomas Gleixner" <tglx@linutronix.de>,
-        "Thomas Huth" <thuth@redhat.com>, "Will Deacon" <will@kernel.org>,
-        "Zenghui Yu" <yuzenghui@huawei.com>, <kvmarm@lists.linux.dev>,
-        <kvm@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
-        <linux-doc@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-mm@kvack.org>, <linuxppc-dev@lists.ozlabs.org>,
-        <linux-trace-kernel@vger.kernel.org>, <x86@kernel.org>,
-        <linux-mm@google.com>
-Subject: Re: [PATCH mm-unstable v2 07/10] kvm/powerpc: add
- kvm_arch_test_clear_young()
-X-Mailer: aerc 0.14.0
-References: <20230526234435.662652-1-yuzhao@google.com>
- <20230526234435.662652-8-yuzhao@google.com>
- <CTHB6A4EL3IH.3UJFAJ4LV85X6@wheely>
- <CAOUHufaEpyXjr-zPRXRsGdiJV9ZDo2qxA32swcJ30=7Nmyg3vQ@mail.gmail.com>
-In-Reply-To: <CAOUHufaEpyXjr-zPRXRsGdiJV9ZDo2qxA32swcJ30=7Nmyg3vQ@mail.gmail.com>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On Wed Jun 21, 2023 at 10:38 AM AEST, Yu Zhao wrote:
-> On Tue, Jun 20, 2023 at 1:48=E2=80=AFAM Nicholas Piggin <npiggin@gmail.co=
-m> wrote:
-> >
-> > On Sat May 27, 2023 at 9:44 AM AEST, Yu Zhao wrote:
-> > > Implement kvm_arch_test_clear_young() to support the fast path in
-> > > mmu_notifier_ops->test_clear_young().
-> > >
-> > > It focuses on a simple case, i.e., radix MMU sets the accessed bit in
-> > > KVM PTEs and VMs are not nested, where it can rely on RCU and
-> > > pte_xchg() to safely clear the accessed bit without taking
-> > > kvm->mmu_lock. Complex cases fall back to the existing slow path
-> > > where kvm->mmu_lock is then taken.
-> > >
-> > > Signed-off-by: Yu Zhao <yuzhao@google.com>
-> > > ---
-> > >  arch/powerpc/include/asm/kvm_host.h    |  8 ++++
-> > >  arch/powerpc/include/asm/kvm_ppc.h     |  1 +
-> > >  arch/powerpc/kvm/book3s.c              |  6 +++
-> > >  arch/powerpc/kvm/book3s.h              |  1 +
-> > >  arch/powerpc/kvm/book3s_64_mmu_radix.c | 59 ++++++++++++++++++++++++=
-++
-> > >  arch/powerpc/kvm/book3s_hv.c           |  5 +++
-> > >  6 files changed, 80 insertions(+)
-> > >
-> > > diff --git a/arch/powerpc/include/asm/kvm_host.h b/arch/powerpc/inclu=
-de/asm/kvm_host.h
-> > > index 14ee0dece853..75c260ea8a9e 100644
-> > > --- a/arch/powerpc/include/asm/kvm_host.h
-> > > +++ b/arch/powerpc/include/asm/kvm_host.h
-> > > @@ -883,4 +883,12 @@ static inline void kvm_arch_sched_in(struct kvm_=
-vcpu *vcpu, int cpu) {}
-> > >  static inline void kvm_arch_vcpu_blocking(struct kvm_vcpu *vcpu) {}
-> > >  static inline void kvm_arch_vcpu_unblocking(struct kvm_vcpu *vcpu) {=
-}
-> > >
-> > > +#define kvm_arch_has_test_clear_young kvm_arch_has_test_clear_young
-> > > +static inline bool kvm_arch_has_test_clear_young(void)
-> > > +{
-> > > +     return IS_ENABLED(CONFIG_KVM_BOOK3S_HV_POSSIBLE) &&
-> > > +            cpu_has_feature(CPU_FTR_HVMODE) && cpu_has_feature(CPU_F=
-TR_ARCH_300) &&
-> > > +            radix_enabled();
-> >
-> > This could probably be radix_enabled() && !kvmhv_on_pseries().
->
-> Will do. (I used !kvmhv_on_pseries() in v1 but had second thoughts on
-> moving kvmhv_on_pseries() into this file.)
+On Wed, 31 May 2023 19:26:29 +0100
+Qais Yousef <qyousef@layalina.io> wrote:
 
-That should be okay. kvmhv_on_pseries is a property of the host so it
-seems reasonable to move it here if needed.
+> On 05/22/23 15:57, Lukasz Luba wrote:
+> > The user-space can set uclamp value for a given task. It impacts task
+> > placement decisions made by the scheduler. This is very useful information
+> > and helps to understand the system behavior or track improvements in
+> > middleware and applications which start using uclamp mechanisms and report
+> > better performance in tests.
+> 
+> Do you mind adding a generic one instead please? And explain why we can't just
+> attach to the syscall via kprobes? I think you want to bypass the permission
+> checks, so maybe a generic tracepoint after that might be justifiable?
 
-> > Although unclear why not nested hypervisor... I'd have to think about i=
-t a bit
-> > more. Do you have any idea what might go wrong, or just didn't have the
-> > time to consider it? (Not just powerpc nested but any others).
->
-> Yes, this series excludes nested KVM support on all architures. The
-> common reason for such a decision on powerpc and x86 (aarch64 doesn't
-> support nested yet) is that it's quite challenging to make the rmap, a
-> complex data structure that maps one PFN to multiple GFNs, lockless.
-> (See kvmhv_insert_nest_rmap().) It might be possible, however, the
-> potential ROI would be in question.
+Could you tell me more about this point? I would like to know what kind of
+permission checks can be bypassed with tracepoints.
 
-Okay just wondering. rmap (at least the powerpc one) is just a list
-I think, with a few details. If that is all it is, it might not be
-so hard to make that lock-free or a fine-grained lock on the rmap
-chains maybe. But fine to ignore it to start with.
+> Then anyone can use it to track how userspace has changed any attributes for
+> a task, not just uclamp.
 
-> > > +}
-> > > +
-> > >  #endif /* __POWERPC_KVM_HOST_H__ */
-> > > diff --git a/arch/powerpc/include/asm/kvm_ppc.h b/arch/powerpc/includ=
-e/asm/kvm_ppc.h
-> > > index 79a9c0bb8bba..ff1af6a7b44f 100644
-> > > --- a/arch/powerpc/include/asm/kvm_ppc.h
-> > > +++ b/arch/powerpc/include/asm/kvm_ppc.h
-> > > @@ -287,6 +287,7 @@ struct kvmppc_ops {
-> > >       bool (*unmap_gfn_range)(struct kvm *kvm, struct kvm_gfn_range *=
-range);
-> > >       bool (*age_gfn)(struct kvm *kvm, struct kvm_gfn_range *range);
-> > >       bool (*test_age_gfn)(struct kvm *kvm, struct kvm_gfn_range *ran=
-ge);
-> > > +     bool (*test_clear_young)(struct kvm *kvm, struct kvm_gfn_range =
-*range);
-> > >       bool (*set_spte_gfn)(struct kvm *kvm, struct kvm_gfn_range *ran=
-ge);
-> > >       void (*free_memslot)(struct kvm_memory_slot *slot);
-> > >       int (*init_vm)(struct kvm *kvm);
-> > > diff --git a/arch/powerpc/kvm/book3s.c b/arch/powerpc/kvm/book3s.c
-> > > index 686d8d9eda3e..37bf40b0c4ff 100644
-> > > --- a/arch/powerpc/kvm/book3s.c
-> > > +++ b/arch/powerpc/kvm/book3s.c
-> > > @@ -899,6 +899,12 @@ bool kvm_test_age_gfn(struct kvm *kvm, struct kv=
-m_gfn_range *range)
-> > >       return kvm->arch.kvm_ops->test_age_gfn(kvm, range);
-> > >  }
-> > >
-> > > +bool kvm_arch_test_clear_young(struct kvm *kvm, struct kvm_gfn_range=
- *range)
-> > > +{
-> > > +     return !kvm->arch.kvm_ops->test_clear_young ||
-> > > +            kvm->arch.kvm_ops->test_clear_young(kvm, range);
-> > > +}
-> > > +
-> > >  bool kvm_set_spte_gfn(struct kvm *kvm, struct kvm_gfn_range *range)
-> > >  {
-> > >       return kvm->arch.kvm_ops->set_spte_gfn(kvm, range);
-> > > diff --git a/arch/powerpc/kvm/book3s.h b/arch/powerpc/kvm/book3s.h
-> > > index 58391b4b32ed..fa2659e21ccc 100644
-> > > --- a/arch/powerpc/kvm/book3s.h
-> > > +++ b/arch/powerpc/kvm/book3s.h
-> > > @@ -12,6 +12,7 @@ extern void kvmppc_core_flush_memslot_hv(struct kvm=
- *kvm,
-> > >  extern bool kvm_unmap_gfn_range_hv(struct kvm *kvm, struct kvm_gfn_r=
-ange *range);
-> > >  extern bool kvm_age_gfn_hv(struct kvm *kvm, struct kvm_gfn_range *ra=
-nge);
-> > >  extern bool kvm_test_age_gfn_hv(struct kvm *kvm, struct kvm_gfn_rang=
-e *range);
-> > > +extern bool kvm_test_clear_young_hv(struct kvm *kvm, struct kvm_gfn_=
-range *range);
-> > >  extern bool kvm_set_spte_gfn_hv(struct kvm *kvm, struct kvm_gfn_rang=
-e *range);
-> > >
-> > >  extern int kvmppc_mmu_init_pr(struct kvm_vcpu *vcpu);
-> > > diff --git a/arch/powerpc/kvm/book3s_64_mmu_radix.c b/arch/powerpc/kv=
-m/book3s_64_mmu_radix.c
-> > > index 3b65b3b11041..0a392e9a100a 100644
-> > > --- a/arch/powerpc/kvm/book3s_64_mmu_radix.c
-> > > +++ b/arch/powerpc/kvm/book3s_64_mmu_radix.c
-> > > @@ -1088,6 +1088,65 @@ bool kvm_test_age_radix(struct kvm *kvm, struc=
-t kvm_memory_slot *memslot,
-> > >       return ref;
-> > >  }
-> > >
-> > > +bool kvm_test_clear_young_hv(struct kvm *kvm, struct kvm_gfn_range *=
-range)
-> > > +{
-> > > +     bool err;
-> > > +     gfn_t gfn =3D range->start;
-> > > +
-> > > +     rcu_read_lock();
-> > > +
-> > > +     err =3D !kvm_is_radix(kvm);
-> > > +     if (err)
-> > > +             goto unlock;
-> > > +
-> > > +     /*
-> > > +      * Case 1:  This function          kvmppc_switch_mmu_to_hpt()
-> > > +      *
-> > > +      *          rcu_read_lock()
-> > > +      *          Test kvm_is_radix()    kvm->arch.radix =3D 0
-> > > +      *          Use kvm->arch.pgtable  synchronize_rcu()
-> > > +      *          rcu_read_unlock()
-> > > +      *                                 kvmppc_free_radix()
-> > > +      *
-> > > +      *
-> > > +      * Case 2:  This function          kvmppc_switch_mmu_to_radix()
-> > > +      *
-> > > +      *                                 kvmppc_init_vm_radix()
-> > > +      *                                 smp_wmb()
-> > > +      *          Test kvm_is_radix()    kvm->arch.radix =3D 1
-> > > +      *          smp_rmb()
-> > > +      *          Use kvm->arch.pgtable
-> > > +      */
-> > > +     smp_rmb();
-> >
-> > Comment could stand to expand slightly on what you are solving, in
-> > words.
->
-> Will do.
->
-> > If you use synchronize_rcu() on both sides, you wouldn't need the
-> > barrier, right?
->
-> Case 2 is about memory ordering, which is orthogonal to case 1 (RCU
-> freeing). So we need the r/w barrier regardless.
+I guess Uclamp is not controlled by syscall but from kernel internal
+sched_setattr/setscheduler() too. Anyway I agree that it can be more generic
+tracepoint, something like trace_sched_set_scheduer(task, attr).
 
-RCU can take care of memory ordering too though. If you had
-synchronize_rcu() where smp_wmb() is, then no smp_rmb() neeed here.
+Thank you,
 
->
-> > > +     while (gfn < range->end) {
-> > > +             pte_t *ptep;
-> > > +             pte_t old, new;
-> > > +             unsigned int shift;
-> > > +
-> > > +             ptep =3D find_kvm_secondary_pte_unlocked(kvm, gfn * PAG=
-E_SIZE, &shift);
-> > > +             if (!ptep)
-> > > +                     goto next;
-> > > +
-> > > +             VM_WARN_ON_ONCE(!page_count(virt_to_page(ptep)));
-> >
-> > Not really appropriate at the KVM level. mm enforces this kind of
-> > thing (with notifiers).
->
-> Will remove this.
->
-> > > +
-> > > +             old =3D READ_ONCE(*ptep);
-> > > +             if (!pte_present(old) || !pte_young(old))
-> > > +                     goto next;
-> > > +
-> > > +             new =3D pte_mkold(old);
-> > > +
-> > > +             if (kvm_should_clear_young(range, gfn))
-> > > +                     pte_xchg(ptep, old, new);
-> >
-> > *Probably* will work. I can't think of a reason why not at the
-> > moment anyway :)
->
-> My reasoning:
-> * It should work if we only change the dedicated A bit, i.e., not
-> shared for other purposes, because races are safe (the case here).
-> * It may not work for x86 EPT without the A bit (excluded in this
-> series) where accesses are trapped by the R/X bits, because races in
-> changing the R/X bits can be unsafe.
+> 
+> 
+> Thanks
+> 
+> --
+> Qais Yousef
+> 
+> > 
+> > Signed-off-by: Lukasz Luba <lukasz.luba@arm.com>
+> > ---
+> >  include/trace/events/sched.h | 4 ++++
+> >  kernel/sched/core.c          | 5 +++++
+> >  2 files changed, 9 insertions(+)
+> > 
+> > diff --git a/include/trace/events/sched.h b/include/trace/events/sched.h
+> > index fbb99a61f714..dbfb30809f15 100644
+> > --- a/include/trace/events/sched.h
+> > +++ b/include/trace/events/sched.h
+> > @@ -735,6 +735,10 @@ DECLARE_TRACE(sched_update_nr_running_tp,
+> >  	TP_PROTO(struct rq *rq, int change),
+> >  	TP_ARGS(rq, change));
+> >  
+> > +DECLARE_TRACE(uclamp_update_tsk_tp,
+> > +	TP_PROTO(struct task_struct *tsk, int uclamp_id,  unsigned int value),
+> > +	TP_ARGS(tsk, uclamp_id, value));
+> > +
+> >  #endif /* _TRACE_SCHED_H */
+> >  
+> >  /* This part must be outside protection */
+> > diff --git a/kernel/sched/core.c b/kernel/sched/core.c
+> > index 944c3ae39861..7b9b800ebb6c 100644
+> > --- a/kernel/sched/core.c
+> > +++ b/kernel/sched/core.c
+> > @@ -114,6 +114,7 @@ EXPORT_TRACEPOINT_SYMBOL_GPL(sched_overutilized_tp);
+> >  EXPORT_TRACEPOINT_SYMBOL_GPL(sched_util_est_cfs_tp);
+> >  EXPORT_TRACEPOINT_SYMBOL_GPL(sched_util_est_se_tp);
+> >  EXPORT_TRACEPOINT_SYMBOL_GPL(sched_update_nr_running_tp);
+> > +EXPORT_TRACEPOINT_SYMBOL_GPL(uclamp_update_tsk_tp);
+> >  
+> >  DEFINE_PER_CPU_SHARED_ALIGNED(struct rq, runqueues);
+> >  
+> > @@ -1956,12 +1957,16 @@ static void __setscheduler_uclamp(struct task_struct *p,
+> >  	    attr->sched_util_min != -1) {
+> >  		uclamp_se_set(&p->uclamp_req[UCLAMP_MIN],
+> >  			      attr->sched_util_min, true);
+> > +		trace_uclamp_update_tsk_tp(p, UCLAMP_MIN,
+> > +					   attr->sched_util_min);
+> >  	}
+> >  
+> >  	if (attr->sched_flags & SCHED_FLAG_UTIL_CLAMP_MAX &&
+> >  	    attr->sched_util_max != -1) {
+> >  		uclamp_se_set(&p->uclamp_req[UCLAMP_MAX],
+> >  			      attr->sched_util_max, true);
+> > +		trace_uclamp_update_tsk_tp(p, UCLAMP_MAX,
+> > +					   attr->sched_util_max);
+> >  	}
+> >  }
+> >  
+> > -- 
+> > 2.25.1
+> > 
 
-(For the benefit of others reading, it works because powerpc's pte_xchg
-is actually a cmpxchg, for some reason which we really should fix).
-Although it can fail to clear the bit if the cmpxchg fails.
 
-I think pte_xchg is only used on with hash MMU in Linux before this
-change. I think we may want to keep it that way and use something
-like kvmppc_radix_update_pte() here to clear out the bit. But don't
-worry too much about fine details so much before sorting out the
-core changes I will have a better look after that.
-
-Thanks,
-Nick
+-- 
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
