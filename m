@@ -2,365 +2,141 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F2A47EB64D8
-	for <linux-trace-kernel@archiver.kernel.org>; Wed, 21 Jun 2023 00:38:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 91029EB64D7
+	for <linux-trace-kernel@archiver.kernel.org>; Wed, 21 Jun 2023 01:29:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229918AbjFUAi7 (ORCPT
+        id S229478AbjFUB3u (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Tue, 20 Jun 2023 20:38:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49164 "EHLO
+        Tue, 20 Jun 2023 21:29:50 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33136 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229887AbjFUAi6 (ORCPT
+        with ESMTP id S229486AbjFUB3q (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Tue, 20 Jun 2023 20:38:58 -0400
-Received: from mail-qt1-x835.google.com (mail-qt1-x835.google.com [IPv6:2607:f8b0:4864:20::835])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E9B9319B1
-        for <linux-trace-kernel@vger.kernel.org>; Tue, 20 Jun 2023 17:38:49 -0700 (PDT)
-Received: by mail-qt1-x835.google.com with SMTP id d75a77b69052e-3ff242aae7aso63601cf.0
-        for <linux-trace-kernel@vger.kernel.org>; Tue, 20 Jun 2023 17:38:49 -0700 (PDT)
+        Tue, 20 Jun 2023 21:29:46 -0400
+Received: from mail-qv1-xf32.google.com (mail-qv1-xf32.google.com [IPv6:2607:f8b0:4864:20::f32])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3FA3F10F9;
+        Tue, 20 Jun 2023 18:29:45 -0700 (PDT)
+Received: by mail-qv1-xf32.google.com with SMTP id 6a1803df08f44-6300f6ab032so33352646d6.2;
+        Tue, 20 Jun 2023 18:29:45 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20221208; t=1687307928; x=1689899928;
+        d=gmail.com; s=20221208; t=1687310984; x=1689902984;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=UbeEtUy9SR2M7k28TLFp+3oTL4iFQyUyRuoTI6dZXb8=;
-        b=0kug6R+GWSxgd5hSxLlcycwxHzz/P0efqWWmQ0XJGjPTw0p18ICZI+ckgtCD2EgDM0
-         tpETl0tLYLIg0uN3zbUrotFafJfZ99YCdjPSCVmb8+2eqsLu2yK2G6zzoy2tS7GGZGS6
-         FkCkh37ZJEcrXrkFNC8KktqvO9y1ghN5ZT05cmxNTPiRsvVHDwzcUsXc+UtzA2a9Q6+t
-         7jJbW0Wafek2eGbY7aWKk2RLY7wgWd175TmL/pFPlLDjbat4owzU/m1qg7mJTSxvGJpY
-         BmQyB24jIDfoMSdHUCS1pi/9MXSiZo79glRZ8ODdRwUIngU3r17N7qtKchHOQMg1ICkb
-         aGjw==
+        bh=0dJ+y6an3ZyYlZhJ1PwrQ2SfTniPJELOXrnVqRBZUys=;
+        b=elMxAphxwB2YZmqHv3WRjzTLi+x4PN9gIP20gurXhoELnXKQ9g6tDyYEEHB8VdmGV4
+         8F+5GBfpxDAQZX5qs+sevXKAyHn4dvljkNyt9eUEC+s01ontLWnGOPc7R+9yuKsHYuPX
+         t0c5IqiXWFyTXuyrIS4E/S8hpTWP9uGg08ElATdxJBmGRSC5nnKOy5/GkijxeCR8l5q+
+         OsU8bZIv+6hLVcMvK2asEmmuM5CMwTofUz4Puc3Vw6xO87GczPKiFjE0fBOKTZwycZz2
+         pwdSxRbUNXgYM9CMWTw59uJ9fK6Gu5cMuCkUSVpHIvNAZ3oZ/Ofw27apTicDhUOmyLVx
+         USCw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1687307928; x=1689899928;
+        d=1e100.net; s=20221208; t=1687310984; x=1689902984;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=UbeEtUy9SR2M7k28TLFp+3oTL4iFQyUyRuoTI6dZXb8=;
-        b=DJOGaGXjGOYh4OtB8lDQsc8PMXsPb11gjQhY60clRVIhbOk4RkT5FrEBOUQzYObLxE
-         Bl0prSPKtx5DIcL0BnITogsevPgBPYtGTIDXSC9/hggav9Xn+AhXBqcR1KdNNDdCQsZ3
-         8mRS4NQHHk8JBMmGCY32DFnDlSDUx9i16+YzFpQ0Bg3ib4aYwOujelb9Lte4kXXYeod/
-         KkO30p22b/sZVRZWP4NypRGR9hsyF/ZLaBj8iQgCeffI2zYi9QFVrUIzmouDr4R5Pw7g
-         k/POeUdPtZ4WlyFrGPZg1HeTGdkoWusUi63BoG/I76lqnrTyVGClUMGVFcgAJsZloshb
-         r+uQ==
-X-Gm-Message-State: AC+VfDxl/HStwJrNaw3Vaf9pIzv9LuGBasxtExc6l5xsJHPw/EL5lQUR
-        loPheSDZTMoO6i6SlJU0Zt0r2Xa6QG2/b+UviSVGLw==
-X-Google-Smtp-Source: ACHHUZ7DuWH27EJU0J2gyK8ww3GkEqCk3IcP9Lpwqnc/rAmLtX0jV9Bm68MFgueqO2IKbOsYe97TGNyxr+bVvBWc0gU=
-X-Received: by 2002:ac8:7f93:0:b0:3ef:404a:b291 with SMTP id
- z19-20020ac87f93000000b003ef404ab291mr397682qtj.7.1687307928570; Tue, 20 Jun
- 2023 17:38:48 -0700 (PDT)
+        bh=0dJ+y6an3ZyYlZhJ1PwrQ2SfTniPJELOXrnVqRBZUys=;
+        b=B+HdwhMqtBnFoQcF9z4F63cU2eJ62t+kz9zGK5Vu0Aa6f0sBpSYHcegkALMRaNc6Zf
+         0MlksxnDpRdu7gg/IOig1wSKWB25TV6jZODO/rZncLYQ61lPKFCnU6YtI2OXuO4MU5ub
+         s3/wySjRgtBjgtqdFKmAR6sTGdFEixMh2Zw6gAu4NmDqGcy29568F4gPfutNDngZnusc
+         UMNS0yFMYclWwujKMXtr30HOYgRsl0kWU+DWOCcCd3eXgzTf7+oI4osm44ThVT9+Fspq
+         x4iZprsUcDh+78IaspVoflYw3NWren3Mq2nkALGlemdnFk3A7MnSqMoiOKKZi0A50I4Y
+         W5Rw==
+X-Gm-Message-State: AC+VfDy9zk9vZkaCAmIAb7E6ip8KD7RvvdBIw6HQt2SHCFWvVgHjx2Wu
+        2D3qoXAq2PgyawjhqPTEKp9z5X8TFv//13dhcZ0=
+X-Google-Smtp-Source: ACHHUZ4v1LoOQx2MrnHTV7KNQXvsVcfKxisqdfFkZJn/xA3Ktb+NeRY+6fhhcklKWDzc6J7m0l0KuNHVIS4CuD/NbzU=
+X-Received: by 2002:a05:6214:518f:b0:630:228d:6d38 with SMTP id
+ kl15-20020a056214518f00b00630228d6d38mr7580844qvb.46.1687310984270; Tue, 20
+ Jun 2023 18:29:44 -0700 (PDT)
 MIME-Version: 1.0
-References: <20230526234435.662652-1-yuzhao@google.com> <20230526234435.662652-8-yuzhao@google.com>
- <CTHB6A4EL3IH.3UJFAJ4LV85X6@wheely>
-In-Reply-To: <CTHB6A4EL3IH.3UJFAJ4LV85X6@wheely>
-From:   Yu Zhao <yuzhao@google.com>
-Date:   Tue, 20 Jun 2023 18:38:12 -0600
-Message-ID: <CAOUHufaEpyXjr-zPRXRsGdiJV9ZDo2qxA32swcJ30=7Nmyg3vQ@mail.gmail.com>
-Subject: Re: [PATCH mm-unstable v2 07/10] kvm/powerpc: add kvm_arch_test_clear_young()
-To:     Nicholas Piggin <npiggin@gmail.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Alistair Popple <apopple@nvidia.com>,
-        Anup Patel <anup@brainfault.org>,
-        Ben Gardon <bgardon@google.com>,
-        Borislav Petkov <bp@alien8.de>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Chao Peng <chao.p.peng@linux.intel.com>,
-        Christophe Leroy <christophe.leroy@csgroup.eu>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Fabiano Rosas <farosas@linux.ibm.com>,
-        Gaosheng Cui <cuigaosheng1@huawei.com>,
-        Gavin Shan <gshan@redhat.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
-        James Morse <james.morse@arm.com>,
-        "Jason A. Donenfeld" <Jason@zx2c4.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Marc Zyngier <maz@kernel.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Michael Larabel <michael@michaellarabel.com>,
-        Mike Rapoport <rppt@kernel.org>,
-        Oliver Upton <oliver.upton@linux.dev>,
-        Paul Mackerras <paulus@ozlabs.org>,
-        Peter Xu <peterx@redhat.com>,
-        Sean Christopherson <seanjc@google.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Thomas Huth <thuth@redhat.com>, Will Deacon <will@kernel.org>,
-        Zenghui Yu <yuzenghui@huawei.com>, kvmarm@lists.linux.dev,
-        kvm@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-mm@kvack.org, linuxppc-dev@lists.ozlabs.org,
-        linux-trace-kernel@vger.kernel.org, x86@kernel.org,
-        linux-mm@google.com
+References: <20230612151608.99661-1-laoar.shao@gmail.com> <20230612151608.99661-4-laoar.shao@gmail.com>
+ <CAEf4BzaZEb_Uz21WDmQr7UC8Q50EfHDr2=dK477Z8fGEinCZ7w@mail.gmail.com>
+ <CALOAHbC=fJfsE=r=o87sT36gq_OP-rLGv4yb-BuTxadu1KQ-pw@mail.gmail.com> <CAEf4BzaySGo4UOxA1YkehPkW4n2A9XpUoeUTOM6zcBCQOB-gGw@mail.gmail.com>
+In-Reply-To: <CAEf4BzaySGo4UOxA1YkehPkW4n2A9XpUoeUTOM6zcBCQOB-gGw@mail.gmail.com>
+From:   Yafang Shao <laoar.shao@gmail.com>
+Date:   Wed, 21 Jun 2023 09:29:07 +0800
+Message-ID: <CALOAHbD+QAqjeCzCHKuz+=3cvA6ujDb9P=SnPLbscC-Ut2UUfA@mail.gmail.com>
+Subject: Re: [PATCH v3 bpf-next 03/10] bpftool: Show probed function in
+ kprobe_multi link info
+To:     Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Cc:     ast@kernel.org, daniel@iogearbox.net, john.fastabend@gmail.com,
+        andrii@kernel.org, martin.lau@linux.dev, song@kernel.org,
+        yhs@fb.com, kpsingh@kernel.org, sdf@google.com, haoluo@google.com,
+        jolsa@kernel.org, quentin@isovalent.com, rostedt@goodmis.org,
+        mhiramat@kernel.org, bpf@vger.kernel.org,
+        linux-trace-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On Tue, Jun 20, 2023 at 1:48=E2=80=AFAM Nicholas Piggin <npiggin@gmail.com>=
- wrote:
+On Wed, Jun 21, 2023 at 1:17=E2=80=AFAM Andrii Nakryiko
+<andrii.nakryiko@gmail.com> wrote:
 >
-> On Sat May 27, 2023 at 9:44 AM AEST, Yu Zhao wrote:
-> > Implement kvm_arch_test_clear_young() to support the fast path in
-> > mmu_notifier_ops->test_clear_young().
+> On Fri, Jun 16, 2023 at 8:09=E2=80=AFPM Yafang Shao <laoar.shao@gmail.com=
+> wrote:
 > >
-> > It focuses on a simple case, i.e., radix MMU sets the accessed bit in
-> > KVM PTEs and VMs are not nested, where it can rely on RCU and
-> > pte_xchg() to safely clear the accessed bit without taking
-> > kvm->mmu_lock. Complex cases fall back to the existing slow path
-> > where kvm->mmu_lock is then taken.
+> > On Sat, Jun 17, 2023 at 1:30=E2=80=AFAM Andrii Nakryiko
+> > <andrii.nakryiko@gmail.com> wrote:
+> > >
+> > > On Mon, Jun 12, 2023 at 8:16=E2=80=AFAM Yafang Shao <laoar.shao@gmail=
+.com> wrote:
+> > > >
+> > > > Show the already expose kprobe_multi link info in bpftool. The resu=
+lt as
+> > > > follows,
+> > > >
+> > > > 52: kprobe_multi  prog 381
+> > > >         retprobe 0  func_cnt 7
+> > > >         addrs ffffffff9ec44f20  funcs schedule_timeout_interruptibl=
+e
+> > > >               ffffffff9ec44f60        schedule_timeout_killable
+> > > >               ffffffff9ec44fa0        schedule_timeout_uninterrupti=
+ble
+> > > >               ffffffff9ec44fe0        schedule_timeout_idle
+> > > >               ffffffffc09468d0        xfs_trans_get_efd [xfs]
+> > > >               ffffffffc0953a10        xfs_trans_get_buf_map [xfs]
+> > > >               ffffffffc0957320        xfs_trans_get_dqtrx [xfs]
+> > > >         pids kprobe_multi(559862)
+> > > > 53: kprobe_multi  prog 381
+> > > >         retprobe 1  func_cnt 7
+> > > >         addrs ffffffff9ec44f20  funcs schedule_timeout_interruptibl=
+e
+> > > >               ffffffff9ec44f60        schedule_timeout_killable
+> > > >               ffffffff9ec44fa0        schedule_timeout_uninterrupti=
+ble
+> > > >               ffffffff9ec44fe0        schedule_timeout_idle
+> > > >               ffffffffc09468d0        xfs_trans_get_efd [xfs]
+> > > >               ffffffffc0953a10        xfs_trans_get_buf_map [xfs]
+> > > >               ffffffffc0957320        xfs_trans_get_dqtrx [xfs]
+> > >
+> > > it all subjective, but this format is a bit weird where "addrs" and
+> > > "funcs" is in first row to the left. Just makes everything wider. Why
+> > > not something like
+> > >
+> > > addr              func
+> > > ffffffff9ec44f20  schedule_timeout_interruptible
+> > > ffffffff9ec44f60  schedule_timeout_killable
+> > > ffffffffc0953a10  xfs_trans_get_buf_map [xfs]
+> > > ffffffffc0957320  xfs_trans_get_dqtrx [xfs]
 > >
-> > Signed-off-by: Yu Zhao <yuzhao@google.com>
-> > ---
-> >  arch/powerpc/include/asm/kvm_host.h    |  8 ++++
-> >  arch/powerpc/include/asm/kvm_ppc.h     |  1 +
-> >  arch/powerpc/kvm/book3s.c              |  6 +++
-> >  arch/powerpc/kvm/book3s.h              |  1 +
-> >  arch/powerpc/kvm/book3s_64_mmu_radix.c | 59 ++++++++++++++++++++++++++
-> >  arch/powerpc/kvm/book3s_hv.c           |  5 +++
-> >  6 files changed, 80 insertions(+)
+> > It may be a little strange if there's only one function, but I don't
+> > mind doing it as you suggested.
 > >
-> > diff --git a/arch/powerpc/include/asm/kvm_host.h b/arch/powerpc/include=
-/asm/kvm_host.h
-> > index 14ee0dece853..75c260ea8a9e 100644
-> > --- a/arch/powerpc/include/asm/kvm_host.h
-> > +++ b/arch/powerpc/include/asm/kvm_host.h
-> > @@ -883,4 +883,12 @@ static inline void kvm_arch_sched_in(struct kvm_vc=
-pu *vcpu, int cpu) {}
-> >  static inline void kvm_arch_vcpu_blocking(struct kvm_vcpu *vcpu) {}
-> >  static inline void kvm_arch_vcpu_unblocking(struct kvm_vcpu *vcpu) {}
+> > >
+> > > Not it's singular (addr and func) because it's column names,
+> > > basically. Can also do "addr func [module]".
 > >
-> > +#define kvm_arch_has_test_clear_young kvm_arch_has_test_clear_young
-> > +static inline bool kvm_arch_has_test_clear_young(void)
-> > +{
-> > +     return IS_ENABLED(CONFIG_KVM_BOOK3S_HV_POSSIBLE) &&
-> > +            cpu_has_feature(CPU_FTR_HVMODE) && cpu_has_feature(CPU_FTR=
-_ARCH_300) &&
-> > +            radix_enabled();
+> > The length of the function name is variable, so it is not easy to
+> > determine where to put the "[module]". So I prefer to not show  the
+> > "[module]".
 >
-> This could probably be radix_enabled() && !kvmhv_on_pseries().
+> "func [module]" in the header will give a hint of what is that value
+> in square brackets. I didn't mean to align it into a third column
 
-Will do. (I used !kvmhv_on_pseries() in v1 but had second thoughts on
-moving kvmhv_on_pseries() into this file.)
+Thanks for the clarification. Will change it.
 
-> Although unclear why not nested hypervisor... I'd have to think about it =
-a bit
-> more. Do you have any idea what might go wrong, or just didn't have the
-> time to consider it? (Not just powerpc nested but any others).
-
-Yes, this series excludes nested KVM support on all architures. The
-common reason for such a decision on powerpc and x86 (aarch64 doesn't
-support nested yet) is that it's quite challenging to make the rmap, a
-complex data structure that maps one PFN to multiple GFNs, lockless.
-(See kvmhv_insert_nest_rmap().) It might be possible, however, the
-potential ROI would be in question.
-
-> > +}
-> > +
-> >  #endif /* __POWERPC_KVM_HOST_H__ */
-> > diff --git a/arch/powerpc/include/asm/kvm_ppc.h b/arch/powerpc/include/=
-asm/kvm_ppc.h
-> > index 79a9c0bb8bba..ff1af6a7b44f 100644
-> > --- a/arch/powerpc/include/asm/kvm_ppc.h
-> > +++ b/arch/powerpc/include/asm/kvm_ppc.h
-> > @@ -287,6 +287,7 @@ struct kvmppc_ops {
-> >       bool (*unmap_gfn_range)(struct kvm *kvm, struct kvm_gfn_range *ra=
-nge);
-> >       bool (*age_gfn)(struct kvm *kvm, struct kvm_gfn_range *range);
-> >       bool (*test_age_gfn)(struct kvm *kvm, struct kvm_gfn_range *range=
-);
-> > +     bool (*test_clear_young)(struct kvm *kvm, struct kvm_gfn_range *r=
-ange);
-> >       bool (*set_spte_gfn)(struct kvm *kvm, struct kvm_gfn_range *range=
-);
-> >       void (*free_memslot)(struct kvm_memory_slot *slot);
-> >       int (*init_vm)(struct kvm *kvm);
-> > diff --git a/arch/powerpc/kvm/book3s.c b/arch/powerpc/kvm/book3s.c
-> > index 686d8d9eda3e..37bf40b0c4ff 100644
-> > --- a/arch/powerpc/kvm/book3s.c
-> > +++ b/arch/powerpc/kvm/book3s.c
-> > @@ -899,6 +899,12 @@ bool kvm_test_age_gfn(struct kvm *kvm, struct kvm_=
-gfn_range *range)
-> >       return kvm->arch.kvm_ops->test_age_gfn(kvm, range);
-> >  }
-> >
-> > +bool kvm_arch_test_clear_young(struct kvm *kvm, struct kvm_gfn_range *=
-range)
-> > +{
-> > +     return !kvm->arch.kvm_ops->test_clear_young ||
-> > +            kvm->arch.kvm_ops->test_clear_young(kvm, range);
-> > +}
-> > +
-> >  bool kvm_set_spte_gfn(struct kvm *kvm, struct kvm_gfn_range *range)
-> >  {
-> >       return kvm->arch.kvm_ops->set_spte_gfn(kvm, range);
-> > diff --git a/arch/powerpc/kvm/book3s.h b/arch/powerpc/kvm/book3s.h
-> > index 58391b4b32ed..fa2659e21ccc 100644
-> > --- a/arch/powerpc/kvm/book3s.h
-> > +++ b/arch/powerpc/kvm/book3s.h
-> > @@ -12,6 +12,7 @@ extern void kvmppc_core_flush_memslot_hv(struct kvm *=
-kvm,
-> >  extern bool kvm_unmap_gfn_range_hv(struct kvm *kvm, struct kvm_gfn_ran=
-ge *range);
-> >  extern bool kvm_age_gfn_hv(struct kvm *kvm, struct kvm_gfn_range *rang=
-e);
-> >  extern bool kvm_test_age_gfn_hv(struct kvm *kvm, struct kvm_gfn_range =
-*range);
-> > +extern bool kvm_test_clear_young_hv(struct kvm *kvm, struct kvm_gfn_ra=
-nge *range);
-> >  extern bool kvm_set_spte_gfn_hv(struct kvm *kvm, struct kvm_gfn_range =
-*range);
-> >
-> >  extern int kvmppc_mmu_init_pr(struct kvm_vcpu *vcpu);
-> > diff --git a/arch/powerpc/kvm/book3s_64_mmu_radix.c b/arch/powerpc/kvm/=
-book3s_64_mmu_radix.c
-> > index 3b65b3b11041..0a392e9a100a 100644
-> > --- a/arch/powerpc/kvm/book3s_64_mmu_radix.c
-> > +++ b/arch/powerpc/kvm/book3s_64_mmu_radix.c
-> > @@ -1088,6 +1088,65 @@ bool kvm_test_age_radix(struct kvm *kvm, struct =
-kvm_memory_slot *memslot,
-> >       return ref;
-> >  }
-> >
-> > +bool kvm_test_clear_young_hv(struct kvm *kvm, struct kvm_gfn_range *ra=
-nge)
-> > +{
-> > +     bool err;
-> > +     gfn_t gfn =3D range->start;
-> > +
-> > +     rcu_read_lock();
-> > +
-> > +     err =3D !kvm_is_radix(kvm);
-> > +     if (err)
-> > +             goto unlock;
-> > +
-> > +     /*
-> > +      * Case 1:  This function          kvmppc_switch_mmu_to_hpt()
-> > +      *
-> > +      *          rcu_read_lock()
-> > +      *          Test kvm_is_radix()    kvm->arch.radix =3D 0
-> > +      *          Use kvm->arch.pgtable  synchronize_rcu()
-> > +      *          rcu_read_unlock()
-> > +      *                                 kvmppc_free_radix()
-> > +      *
-> > +      *
-> > +      * Case 2:  This function          kvmppc_switch_mmu_to_radix()
-> > +      *
-> > +      *                                 kvmppc_init_vm_radix()
-> > +      *                                 smp_wmb()
-> > +      *          Test kvm_is_radix()    kvm->arch.radix =3D 1
-> > +      *          smp_rmb()
-> > +      *          Use kvm->arch.pgtable
-> > +      */
-> > +     smp_rmb();
->
-> Comment could stand to expand slightly on what you are solving, in
-> words.
-
-Will do.
-
-> If you use synchronize_rcu() on both sides, you wouldn't need the
-> barrier, right?
-
-Case 2 is about memory ordering, which is orthogonal to case 1 (RCU
-freeing). So we need the r/w barrier regardless.
-
-> > +     while (gfn < range->end) {
-> > +             pte_t *ptep;
-> > +             pte_t old, new;
-> > +             unsigned int shift;
-> > +
-> > +             ptep =3D find_kvm_secondary_pte_unlocked(kvm, gfn * PAGE_=
-SIZE, &shift);
-> > +             if (!ptep)
-> > +                     goto next;
-> > +
-> > +             VM_WARN_ON_ONCE(!page_count(virt_to_page(ptep)));
->
-> Not really appropriate at the KVM level. mm enforces this kind of
-> thing (with notifiers).
-
-Will remove this.
-
-> > +
-> > +             old =3D READ_ONCE(*ptep);
-> > +             if (!pte_present(old) || !pte_young(old))
-> > +                     goto next;
-> > +
-> > +             new =3D pte_mkold(old);
-> > +
-> > +             if (kvm_should_clear_young(range, gfn))
-> > +                     pte_xchg(ptep, old, new);
->
-> *Probably* will work. I can't think of a reason why not at the
-> moment anyway :)
-
-My reasoning:
-* It should work if we only change the dedicated A bit, i.e., not
-shared for other purposes, because races are safe (the case here).
-* It may not work for x86 EPT without the A bit (excluded in this
-series) where accesses are trapped by the R/X bits, because races in
-changing the R/X bits can be unsafe.
-
-> > +next:
-> > +             gfn +=3D shift ? BIT(shift - PAGE_SHIFT) : 1;
-> > +     }
-> > +unlock:
-> > +     rcu_read_unlock();
-> > +
-> > +     return err;
-> > +}
-> > +
-> >  /* Returns the number of PAGE_SIZE pages that are dirty */
-> >  static int kvm_radix_test_clear_dirty(struct kvm *kvm,
-> >                               struct kvm_memory_slot *memslot, int page=
-num)
-> > diff --git a/arch/powerpc/kvm/book3s_hv.c b/arch/powerpc/kvm/book3s_hv.=
-c
-> > index 130bafdb1430..20a81ec9fde8 100644
-> > --- a/arch/powerpc/kvm/book3s_hv.c
-> > +++ b/arch/powerpc/kvm/book3s_hv.c
-> > @@ -5262,6 +5262,8 @@ int kvmppc_switch_mmu_to_hpt(struct kvm *kvm)
-> >       spin_lock(&kvm->mmu_lock);
-> >       kvm->arch.radix =3D 0;
-> >       spin_unlock(&kvm->mmu_lock);
-> > +     /* see the comments in kvm_test_clear_young_hv() */
->
-> I'm guilty of such comments at times, but it wouldn't hurt to say
->         /* Finish concurrent kvm_test_clear_young_hv access to page table=
-s */
->
-> Then you know where to look for more info and you have a vague
-> idea what it's for.
-
-Will do.
-
-> > +     synchronize_rcu();
->
-> >       kvmppc_free_radix(kvm);
-> >
-> >       lpcr =3D LPCR_VPM1;
-> > @@ -5286,6 +5288,8 @@ int kvmppc_switch_mmu_to_radix(struct kvm *kvm)
-> >       if (err)
-> >               return err;
-> >       kvmppc_rmap_reset(kvm);
-> > +     /* see the comments in kvm_test_clear_young_hv() */
-> > +     smp_wmb();
-> >       /* Mutual exclusion with kvm_unmap_gfn_range etc. */
-> >       spin_lock(&kvm->mmu_lock);
-> >       kvm->arch.radix =3D 1;
-> > @@ -6185,6 +6189,7 @@ static struct kvmppc_ops kvm_ops_hv =3D {
-> >       .unmap_gfn_range =3D kvm_unmap_gfn_range_hv,
-> >       .age_gfn =3D kvm_age_gfn_hv,
-> >       .test_age_gfn =3D kvm_test_age_gfn_hv,
-> > +     .test_clear_young =3D kvm_test_clear_young_hv,
-> >       .set_spte_gfn =3D kvm_set_spte_gfn_hv,
-> >       .free_memslot =3D kvmppc_core_free_memslot_hv,
-> >       .init_vm =3D  kvmppc_core_init_vm_hv,
->
-> Thanks for looking at the powerpc conversion!
-
-Thanks for reviewing!
+--=20
+Regards
+Yafang
