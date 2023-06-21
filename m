@@ -2,50 +2,50 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 43C2AEB64D7
-	for <linux-trace-kernel@archiver.kernel.org>; Wed, 21 Jun 2023 06:08:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 62F4FEB64DD
+	for <linux-trace-kernel@archiver.kernel.org>; Wed, 21 Jun 2023 06:36:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230090AbjFUGIk (ORCPT
+        id S230424AbjFUGg1 (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Wed, 21 Jun 2023 02:08:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50890 "EHLO
+        Wed, 21 Jun 2023 02:36:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34666 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229875AbjFUGIj (ORCPT
+        with ESMTP id S230428AbjFUGf7 (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Wed, 21 Jun 2023 02:08:39 -0400
-Received: from mail-ot1-f65.google.com (mail-ot1-f65.google.com [209.85.210.65])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9C8D51726;
-        Tue, 20 Jun 2023 23:08:37 -0700 (PDT)
-Received: by mail-ot1-f65.google.com with SMTP id 46e09a7af769-6b46831fd13so3306810a34.3;
-        Tue, 20 Jun 2023 23:08:37 -0700 (PDT)
+        Wed, 21 Jun 2023 02:35:59 -0400
+Received: from mail-pf1-f194.google.com (mail-pf1-f194.google.com [209.85.210.194])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 417E21FF5;
+        Tue, 20 Jun 2023 23:35:16 -0700 (PDT)
+Received: by mail-pf1-f194.google.com with SMTP id d2e1a72fcca58-6687446eaccso2784668b3a.3;
+        Tue, 20 Jun 2023 23:35:16 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1687327717; x=1689919717;
+        d=1e100.net; s=20221208; t=1687329286; x=1689921286;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=NQu7yQb5csSSHJ7nBU/IUnjQhId+NDJJip5y+n97vEg=;
-        b=LeIPVXIw8CD52fqluKOfPkV9HgdOtVWFjkZ4bmOcKJMgJSXrPAwy8vuv07vT5UEoVD
-         WC0dXj2v8KzPzeFFPgpS31+tXJRoU4wGwV5iFpm1MNloTdrVKYZyX+a0zbe1C0Lc8g/d
-         r1hKyCy6m75RhBabwBhIGddbBwJtEH6EHylIQQqhVb8wGfxxxWZkj89YAYP8TNSRj+Q7
-         MLOqArC6h6ToRSoy9QsExCxuvFU8g7YqHBzbOnYnamZ4leQ7FU8u+NIgIUsHbG5i3hj9
-         Dy1MQQ6W3BbYQ1N3VMicwC5bC1X9HoLQOBHjaFNAU4A/L/QAU924uB/csXZ5bnb4G2s4
-         J9uw==
-X-Gm-Message-State: AC+VfDyoNIFuG/JLkQ2h1Smwxyl6yzc/B+A2Qmm/sK8FaT6+IKIok58z
-        NKrUEgdM3Njs0ItTcC90MA==
-X-Google-Smtp-Source: ACHHUZ4q/VUU5rO08raP7Wcd2haYrjhocRfR+rnudbHAEeakSs+BmSAT3d9NcLof8fM06P7RVtFqzQ==
-X-Received: by 2002:a05:6358:ce24:b0:131:22f2:8185 with SMTP id gt36-20020a056358ce2400b0013122f28185mr426093rwb.12.1687327715912;
-        Tue, 20 Jun 2023 23:08:35 -0700 (PDT)
+        bh=UwLBYM4w/H7KoFqtcB4hQtAsyswAe46iM2ztf4QLeWA=;
+        b=COJbwxBxfLaJFS0hvhVtk93zfccR4O+Msv0xAle/hAmP1tPByHcBYsYjIpTtsr17Ey
+         fTIp98oH3oF6VEImZYXYBEQxqfoUTcDVJCNpKbsneans6aXMzvqpalPb6Ai/GmBCkoWH
+         a9V26DaaOPc+Sb3e6WRqkycWfa8d7zKDzDAJxxOwqftKAWRcPGXey5YuQMEQ6PP9Y9vv
+         whj7G31T6IHRi2OYxso0Zp04yszxR4XofO4SM9wErNOoHyRe6F9H4c9SZyNTaPH5h6Bm
+         gAw9isAXq96x56hGhRN89RU4I0VjLQKZ+XUr6W5nuJ4fkZmUQlzqRsuO+t5AcLNrwYL4
+         SNMA==
+X-Gm-Message-State: AC+VfDzrvkeTWJ97fwGkKxaaF7hzfMhxBjddcVXki7jABMkSjs1siXE7
+        +K37D5M9xF8lpD+CmL6yrw==
+X-Google-Smtp-Source: ACHHUZ4VjU0MwUo7X5EhB5iTtxuauMxunWUWBc7vFtY9ck4VfMOvMDrNcKLLqgFDf3BORuPgsIPKLA==
+X-Received: by 2002:a05:6a00:1a56:b0:658:c1a9:becc with SMTP id h22-20020a056a001a5600b00658c1a9beccmr20749626pfv.12.1687329286205;
+        Tue, 20 Jun 2023 23:34:46 -0700 (PDT)
 Received: from localhost.localdomain ([116.128.244.169])
-        by smtp.gmail.com with ESMTPSA id d28-20020a630e1c000000b00528da88275bsm2323621pgl.47.2023.06.20.23.08.33
+        by smtp.gmail.com with ESMTPSA id c25-20020a62e819000000b00666d7ef2310sm2306298pfi.94.2023.06.20.23.34.44
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 20 Jun 2023 23:08:35 -0700 (PDT)
+        Tue, 20 Jun 2023 23:34:45 -0700 (PDT)
 From:   sunliming <sunliming@kylinos.cn>
 To:     rostedt@goodmis.org, mhiramat@kernel.org, beaub@linux.microsoft.com
 Cc:     kelulanainsley@gmail.com, linux-trace-kernel@vger.kernel.org,
         linux-kernel@vger.kernel.org, sunliming <sunliming@kylinos.cn>
-Subject: [PATCH v3 0/3] tracing/user_events: Fix incorrect return value for
-Date:   Wed, 21 Jun 2023 14:08:23 +0800
-Message-Id: <20230621060827.151564-1-sunliming@kylinos.cn>
+Subject: [PATCH v3 2/3] selftests/user_events: Enable the event before write_fault test in ftrace self-test
+Date:   Wed, 21 Jun 2023 14:34:38 +0800
+Message-Id: <20230621063438.154271-1-sunliming@kylinos.cn>
 X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -53,28 +53,29 @@ Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-Now the writing operation return the count of writes regardless of whether
-events are enabled or disabled. Fix this by just return zero when events
-are disabled.
+The user_event has not be enabled in write_fault test in ftrace
+self-test, Just enable it.
 
-v2 -> v3:
-- Change the return value from -ENOENT to zero
+Signed-off-by: sunliming <sunliming@kylinos.cn>
+---
+ tools/testing/selftests/user_events/ftrace_test.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-v1 -> v2:
-- Change the return value from -EFAULT to -ENOENT
-
-
-sunliming (3):
-  tracing/user_events: Fix incorrect return value for writing operation
-    when events are disable
-  selftests/user_events: Enable the event before write_fault test in
-    ftrace self-test
-  selftests/user_events: Add test cases when event is diabled
-
- kernel/trace/trace_events_user.c                  | 3 ++-
- tools/testing/selftests/user_events/ftrace_test.c | 7 +++++++
- 2 files changed, 9 insertions(+), 1 deletion(-)
-
+diff --git a/tools/testing/selftests/user_events/ftrace_test.c b/tools/testing/selftests/user_events/ftrace_test.c
+index abfb49558a26..d33bd31425db 100644
+--- a/tools/testing/selftests/user_events/ftrace_test.c
++++ b/tools/testing/selftests/user_events/ftrace_test.c
+@@ -373,6 +373,10 @@ TEST_F(user, write_fault) {
+ 	ASSERT_EQ(0, ioctl(self->data_fd, DIAG_IOCSREG, &reg));
+ 	ASSERT_EQ(0, reg.write_index);
+ 
++	/* Enable event */
++	self->enable_fd = open(enable_file, O_RDWR);
++	ASSERT_NE(-1, write(self->enable_fd, "1", sizeof("1")))
++
+ 	/* Write should work normally */
+ 	ASSERT_NE(-1, writev(self->data_fd, (const struct iovec *)io, 2));
+ 
 -- 
 2.25.1
 
