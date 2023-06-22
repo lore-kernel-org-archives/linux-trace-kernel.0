@@ -2,129 +2,147 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 51ECDEB64D8
-	for <linux-trace-kernel@archiver.kernel.org>; Thu, 22 Jun 2023 03:31:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BE86CEB64D8
+	for <linux-trace-kernel@archiver.kernel.org>; Thu, 22 Jun 2023 04:22:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229593AbjFVDbq (ORCPT
+        id S230342AbjFVEWI (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Wed, 21 Jun 2023 23:31:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52234 "EHLO
+        Thu, 22 Jun 2023 00:22:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41688 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229513AbjFVDbp (ORCPT
+        with ESMTP id S230417AbjFVEWF (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Wed, 21 Jun 2023 23:31:45 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 206EE1A4;
-        Wed, 21 Jun 2023 20:31:42 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 5AAE761735;
-        Thu, 22 Jun 2023 03:31:42 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 13E1DC433C0;
-        Thu, 22 Jun 2023 03:31:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1687404701;
-        bh=WBmd0nq3sx1Y1vI60yLf61g1XYsV04DTZ0OhzpLUGBA=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=qKpiAZdZxPraq1RHCCL2jgP4YMW8kD2nFTP6eBOg6qczrJnu9ZGo/6DDbPxBeDNVY
-         TaEwXKKO2PSwiHanFWf48B0ZTZvbh58cGgfPY37mVnHWMmGSMtmWy2YjFnLV/r5BfS
-         PDY0A84VD1Cqhib3Ux1c+imtQkS40Z8CGN4+HvzG9q6iz3G9VNq5uWjXw234FqTLZT
-         BdkMdjZUBX7/Q2lhWxiyfDaY2oogiVdU1zdJ/jARqLAaQJ+3/fYNILN798xC6rWmbM
-         M2u49QkBp9ekoyCGigaqRW7jCPn1uoDzvESuzSeLg3cGNFH7IermGnIOQxG6kZooGP
-         bWOwX+R1fud7Q==
-Date:   Thu, 22 Jun 2023 12:31:37 +0900
-From:   Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To:     Ajay Kaher <akaher@vmware.com>
-Cc:     Steven Rostedt <rostedt@goodmis.org>,
-        "mhiramat@kernel.org" <mhiramat@kernel.org>,
-        "shuah@kernel.org" <shuah@kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-trace-kernel@vger.kernel.org" 
-        <linux-trace-kernel@vger.kernel.org>,
-        "linux-kselftest@vger.kernel.org" <linux-kselftest@vger.kernel.org>,
-        Ching-lin Yu <chinglinyu@google.com>,
-        Nadav Amit <namit@vmware.com>,
-        "srivatsa@csail.mit.edu" <srivatsa@csail.mit.edu>,
-        Alexey Makhalov <amakhalov@vmware.com>,
-        Vasavi Sirnapalli <vsirnapalli@vmware.com>,
-        Tapas Kundu <tkundu@vmware.com>,
-        "er.ajay.kaher@gmail.com" <er.ajay.kaher@gmail.com>
-Subject: Re: [PATCH v3 00/10] tracing: introducing eventfs
-Message-Id: <20230622123137.4b74a306c9032de70cd99c51@kernel.org>
-In-Reply-To: <1C7D95B2-3DF0-43AB-8F8B-7D3F7AE7FC0D@vmware.com>
-References: <1685610013-33478-1-git-send-email-akaher@vmware.com>
-        <34E6364B-2B3D-4597-8143-1EEA645B6CDD@vmware.com>
-        <20230620110227.6a944a19@gandalf.local.home>
-        <1C7D95B2-3DF0-43AB-8F8B-7D3F7AE7FC0D@vmware.com>
-X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+        Thu, 22 Jun 2023 00:22:05 -0400
+Received: from mail-wr1-f53.google.com (mail-wr1-f53.google.com [209.85.221.53])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 421F61BE3;
+        Wed, 21 Jun 2023 21:21:54 -0700 (PDT)
+Received: by mail-wr1-f53.google.com with SMTP id ffacd0b85a97d-311394406d0so4220831f8f.2;
+        Wed, 21 Jun 2023 21:21:54 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1687407713; x=1689999713;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=2ECnfbr1yMldiaqGJ4AwBQXH8Qu2uEGTBBXNGiQr9KY=;
+        b=JdM4u+HlPkJEwG2PTTdNk6gkZLEAipSkMuxkwuy29Nswu7Rv6kci/ZauLKY5zfJoye
+         F2sDO0PLowady/RMAVVpVdh/7lJ5Z2W+d7N4xJ6zyt9zd8S3dGvzrehGAWNVr6ATYJKg
+         c5Fbbcs5IFsGpQr7gnERMMjwunT3Q3+V6IXwvbb4Igf6IyTSVLTi5npSDK8ZU/796eOD
+         8dFfe0zPPP34IqOG86+nn7chj5/Tvhsy/00jGSw6CMv/lqEX49Rjn2QqHcBwR1ZiGMGe
+         TCkCuP9xP7zKWHk/u23csS43ipN2qov8LqhWcIy5DaU00mmQHo1KH/AF7SvvLK2sUJDn
+         W9yQ==
+X-Gm-Message-State: AC+VfDzl+QuYSxQQ+2TgzOp5M1c576ipciyMyO+wRvhKvjU32phktY1D
+        A72Xtc9Jy0QYfc4VwnXf8VY=
+X-Google-Smtp-Source: ACHHUZ6noBUR8iTvT8VR1EETx/SJbcA6a56KL+Jlcz/+OUxvfjHqkrQVqSA29+PLsepDYKMNhlEycQ==
+X-Received: by 2002:a05:6000:10ce:b0:312:9eb6:33da with SMTP id b14-20020a05600010ce00b003129eb633damr17577wrx.20.1687407712404;
+        Wed, 21 Jun 2023 21:21:52 -0700 (PDT)
+Received: from [192.168.1.58] (185-219-167-24-static.vivo.cz. [185.219.167.24])
+        by smtp.gmail.com with ESMTPSA id j10-20020a5d604a000000b0031272fced4dsm5942680wrt.52.2023.06.21.21.21.49
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 21 Jun 2023 21:21:51 -0700 (PDT)
+Message-ID: <fc37eccc-b9b3-d888-6b57-78cd61986a11@kernel.org>
+Date:   Thu, 22 Jun 2023 06:21:48 +0200
+MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.12.0
+Subject: Re: [PATCH 08/11] sysctl: Add size to register_sysctl_init
+Content-Language: en-US
+To:     Joel Granados <j.granados@samsung.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     mcgrof@kernel.org, Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+        Theodore Ts'o <tytso@mit.edu>,
+        "Jason A. Donenfeld" <Jason@zx2c4.com>,
+        Juergen Gross <jgross@suse.com>,
+        Stefano Stabellini <sstabellini@kernel.org>,
+        Benjamin LaHaise <bcrl@kvack.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Christian Brauner <brauner@kernel.org>,
+        Jeff Layton <jlayton@kernel.org>,
+        Chuck Lever <chuck.lever@oracle.com>, Jan Kara <jack@suse.cz>,
+        Kees Cook <keescook@chromium.org>,
+        Iurii Zaikin <yzaikin@google.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Andrii Nakryiko <andrii@kernel.org>,
+        Balbir Singh <bsingharora@gmail.com>,
+        Eric Biederman <ebiederm@xmission.com>,
+        "Naveen N. Rao" <naveen.n.rao@linux.ibm.com>,
+        Anil S Keshavamurthy <anil.s.keshavamurthy@intel.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Will Deacon <will@kernel.org>, Petr Mladek <pmladek@suse.com>,
+        Sergey Senozhatsky <senozhatsky@chromium.org>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        Muchun Song <muchun.song@linux.dev>,
+        Naoya Horiguchi <naoya.horiguchi@nec.com>,
+        "Matthew Wilcox (Oracle)" <willy@infradead.org>,
+        David Howells <dhowells@redhat.com>,
+        Jarkko Sakkinen <jarkko@kernel.org>,
+        Paul Moore <paul@paul-moore.com>,
+        James Morris <jmorris@namei.org>,
+        "Serge E. Hallyn" <serge@hallyn.com>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Oleksandr Tyshchenko <oleksandr_tyshchenko@epam.com>,
+        Amir Goldstein <amir73il@gmail.com>,
+        John Fastabend <john.fastabend@gmail.com>,
+        Martin KaFai Lau <martin.lau@linux.dev>,
+        Song Liu <song@kernel.org>, Yonghong Song <yhs@fb.com>,
+        KP Singh <kpsingh@kernel.org>,
+        Stanislav Fomichev <sdf@google.com>,
+        Hao Luo <haoluo@google.com>, Jiri Olsa <jolsa@kernel.org>,
+        Waiman Long <longman@redhat.com>,
+        Boqun Feng <boqun.feng@gmail.com>,
+        John Ogness <john.ogness@linutronix.de>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
+        Daniel Bristot de Oliveira <bristot@redhat.com>,
+        Valentin Schneider <vschneid@redhat.com>,
+        Andy Lutomirski <luto@amacapital.net>,
+        Will Drewry <wad@chromium.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Miaohe Lin <linmiaohe@huawei.com>,
+        linux-kernel@vger.kernel.org, xen-devel@lists.xenproject.org,
+        linux-aio@kvack.org, linux-fsdevel@vger.kernel.org,
+        linux-mm@kvack.org, bpf@vger.kernel.org, kexec@lists.infradead.org,
+        linux-trace-kernel@vger.kernel.org, keyrings@vger.kernel.org,
+        linux-security-module@vger.kernel.org
+References: <20230621091000.424843-1-j.granados@samsung.com>
+ <CGME20230621091037eucas1p188e11d8064526a5a0549217d5a419647@eucas1p1.samsung.com>
+ <20230621091000.424843-9-j.granados@samsung.com>
+ <2023062150-outbound-quiet-2609@gregkh>
+ <20230621131552.pqsordxcjmiopciq@localhost>
+From:   Jiri Slaby <jirislaby@kernel.org>
+In-Reply-To: <20230621131552.pqsordxcjmiopciq@localhost>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On Wed, 21 Jun 2023 11:42:24 +0000
-Ajay Kaher <akaher@vmware.com> wrote:
+On 21. 06. 23, 15:15, Joel Granados wrote:
+> On Wed, Jun 21, 2023 at 12:47:58PM +0200, Greg Kroah-Hartman wrote:
+>> On Wed, Jun 21, 2023 at 11:09:57AM +0200, Joel Granados wrote:
+>>>   static int __init random_sysctls_init(void)
+>>>   {
+>>> -	register_sysctl_init("kernel/random", random_table);
+>>> +	register_sysctl_init("kernel/random", random_table,
+>>> +			     ARRAY_SIZE(random_table));
+>>
+>> As mentioned before, why not just do:
+>>
+>> #define register_sysctl_init(string, table)	\
+>> 	__register_sysctl_init(string, table, ARRAY_SIZE(table);
+> Answered you in the original mail where you suggested it.
 
-> 
-> 
-> > On 20-Jun-2023, at 8:32 PM, Steven Rostedt <rostedt@goodmis.org> wrote:
-> > 
-> > !! External Email
-> > 
-> > On Mon, 19 Jun 2023 05:38:25 +0000
-> > Ajay Kaher <akaher@vmware.com> wrote:
-> > 
-> >> # of passed:  65
-> >> # of failed:  3
-> > 
-> > Unrelated to your patches, but have you checked why these fail? Do you have
-> > the latest tests running on the latest kernel?
-> > 
-> 
-> Failed test got passed after enabling /proc/kallsyms, using:
-> echo 0  > /proc/sys/kernel/kptr_restrict
-
-Oh, interesting. It should be 'unresolved' (skipped) if that happens.
-
-[23] event filter function - test event filtering on functions [FAIL]
-[60] Kprobe events - probe points [FAIL]
-[106] (instance)  event filter function - test event filtering on functions [FAIL]
-
-OK, let me see.
-
-Thanks for reporting!
-
-> Following is the report of ftracetest on Linux v6.4.0-rc7 (with/without eventfs):
-> # of passed:  68
-> # of failed:  0
-> # of unresolved:  6
-> # of untested:  0
-> # of unsupported:  45
-> # of xfailed:  0
-> # of undefined(test bug):  0 
-> 
-> If lockdep is enabled getting same warning as reported by 'kernel test robot' for v3 09/10:
-> https://lore.kernel.org/all/1686640004-47546-1-git-send-email-akaher@vmware.com/
-> 
-> >> # of unresolved:  6
-> >> # of untested:  0
-> >> # of unsupported:  44
-> >> # of xfailed:  0
-> >> # of undefined(test bug):  0
-> >> 
-> >> These results are same with/without eventfs.
-> > 
-> > I'm hoping to look at these patches this week.
-> 
-> Yes, please. Thanks.
-> 
-> -Ajay
-> 
-
+I am curious what that was, do you have a link?
 
 -- 
-Masami Hiramatsu (Google) <mhiramat@kernel.org>
+js
+suse labs
+
