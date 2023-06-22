@@ -2,126 +2,139 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 98E87EB64D7
-	for <linux-trace-kernel@archiver.kernel.org>; Thu, 22 Jun 2023 00:39:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EB845EB64D7
+	for <linux-trace-kernel@archiver.kernel.org>; Thu, 22 Jun 2023 00:54:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229453AbjFVAjM (ORCPT
+        id S229839AbjFVAyy (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Wed, 21 Jun 2023 20:39:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33402 "EHLO
+        Wed, 21 Jun 2023 20:54:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37334 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229521AbjFVAjL (ORCPT
+        with ESMTP id S229605AbjFVAyx (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Wed, 21 Jun 2023 20:39:11 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 815AF1738;
-        Wed, 21 Jun 2023 17:39:10 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id A13C261720;
-        Thu, 22 Jun 2023 00:39:09 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E8F92C433C0;
-        Thu, 22 Jun 2023 00:39:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1687394349;
-        bh=ADfuTglLpoDdSOwtLMSK5Y7dt3qf8/05EDWHsVK5rSM=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=DX0CNIqmY5CYNtGeRLD0YVHIQlVVdUPWbV2YAu1buysLIy0ZSxLKDP0YbQMMYQYGi
-         YElyvlmv8fG2fKKcCCu5A+qnEM3/uNCSeEA1yMLzXfRh2kSoIWMzymWeUYXn649z82
-         nRc+ijBZ/RPD3qGQO0oISxQr83E854IAhlpOYZoy330foH33q7LIW2xkt2LLIJEoyR
-         w65wzkdKVOYrEW7NdHj0xeWj0MEqdHF/Tfh2aE5Izc5YaLYa/hSF9hm21DjkMqWPrp
-         ATiITRvlfzIFZe0EuR1mL+ZREKWBqZR7PnCt4Q2jUPZNuu4YHR+QUnpgykKGQWeM40
-         gELQPDUzPTWIw==
-Date:   Thu, 22 Jun 2023 09:39:05 +0900
-From:   Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To:     Kui-Feng Lee <sinquersw@gmail.com>
-Cc:     linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Florent Revest <revest@chromium.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Martin KaFai Lau <martin.lau@linux.dev>, bpf@vger.kernel.org,
-        Bagas Sanjaya <bagasdotme@gmail.com>,
-        kernel test robot <lkp@intel.com>
-Subject: Re: [PATCH] tracing/probes: Fix tracepoint event with $arg* to
- fetch correct argument
-Message-Id: <20230622093905.e0619ea5e1fa3db9772d26eb@kernel.org>
-In-Reply-To: <12b0c61d-1270-ab34-63bf-a5c389fd45bc@gmail.com>
-References: <168657113778.3038017.12245893750241701312.stgit@mhiramat.roam.corp.google.com>
-        <12b0c61d-1270-ab34-63bf-a5c389fd45bc@gmail.com>
-X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        Wed, 21 Jun 2023 20:54:53 -0400
+Received: from mail-qv1-xf2b.google.com (mail-qv1-xf2b.google.com [IPv6:2607:f8b0:4864:20::f2b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 62D20AC;
+        Wed, 21 Jun 2023 17:54:52 -0700 (PDT)
+Received: by mail-qv1-xf2b.google.com with SMTP id 6a1803df08f44-62fe1e6dc65so56730306d6.0;
+        Wed, 21 Jun 2023 17:54:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1687395291; x=1689987291;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=FhEbBWHIypMw61JOOPLGvDdxXLPKK9jdyQmx1O7IWlo=;
+        b=JVmKYqjrNwCLvgqL9E0hZ2ZF3TbMO53A1GQDXa4UbTlI7b4tQ8AXb2ZPJ9z9V9yiOt
+         nxUtqpLoFIQT2GjxPoIrFQJJFxN7XJA+1yNeJmdrQGvDf1OHVl177jJvbhgBJn95KN3k
+         6S758I00Ms2k5gOvSgSlriPCdoQS9A2gPf1KVKJFEhNRt5y4NXdE1PgRmHbROh7ReN0b
+         Sl7e41CY0odz/qzwlPxuEgmB3iY6Rep9gmmISJz9MMEmyYW4BGNZmG9/8Hrn0MyFNtSg
+         ihfAqK+X51UidtYvzZwjH1/DT71LAKpEAWqivPiYeJRmDNxljy89h2PWxnPvdNRA6Tmg
+         C0VA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1687395291; x=1689987291;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=FhEbBWHIypMw61JOOPLGvDdxXLPKK9jdyQmx1O7IWlo=;
+        b=XJ9XouREQ+PYcf1seMrL8R+bRZShDq1/aGKfm/14XSOJiHs/Y3K6xdGo+zmm3GqGJZ
+         4x1oz/xmsZqMAzaylv4nDglpjodtIyp1zjd4wSdOeZJDRhZ0Fj/W8k38QoLl8mE5QFwJ
+         Ro4+dMvq9XG/OvBvt3AuKHILRMGstbZdnDCcgeOOwmjTFOg2AluCzCCc480yKAsHyxqu
+         GG1L7ZJr60LDcurfC2frq+WaiVpJQwijrxY3ASDq3u9eZVwPqj1MCVRWeJOQeMtJz850
+         K1D4d6gRiLyrmOCYSEVjhltzZpheGHr+kP7UhBEEJzyqm8YNCfrB0BCK41jGxeWYNF/5
+         LjHQ==
+X-Gm-Message-State: AC+VfDw15ema8OJgdcLe2ahTeyZ7gjCFD40oU+kHxTn14xV+IF3oucav
+        2alrOqa9D1KTNDYUOu+ra2nsJm+WMb2ueMNw1TM=
+X-Google-Smtp-Source: ACHHUZ4TaIVIbBI/Acb0+B/6fagXLWc8nE2mIGvg0bPg0Kd+7E4Ursgl/9aFa/+omdKikkuFKFPFEfEFcbWKHlCg3ts=
+X-Received: by 2002:a05:6214:21ec:b0:62f:f276:39fe with SMTP id
+ p12-20020a05621421ec00b0062ff27639femr20466604qvj.15.1687395291247; Wed, 21
+ Jun 2023 17:54:51 -0700 (PDT)
+MIME-Version: 1.0
+References: <20230620163008.3718-1-laoar.shao@gmail.com> <20230620163008.3718-10-laoar.shao@gmail.com>
+ <e28f69ce-e3c0-37ab-f139-7b6d73814445@meta.com>
+In-Reply-To: <e28f69ce-e3c0-37ab-f139-7b6d73814445@meta.com>
+From:   Yafang Shao <laoar.shao@gmail.com>
+Date:   Thu, 22 Jun 2023 08:54:13 +0800
+Message-ID: <CALOAHbBB8YvzCfR7CrZpbO4JqTAvBd6Ukjd9ozE750da1DLCUQ@mail.gmail.com>
+Subject: Re: [PATCH v4 bpf-next 09/11] bpf: Support ->fill_link_info for perf_event
+To:     Yonghong Song <yhs@meta.com>
+Cc:     ast@kernel.org, daniel@iogearbox.net, john.fastabend@gmail.com,
+        andrii@kernel.org, martin.lau@linux.dev, song@kernel.org,
+        yhs@fb.com, kpsingh@kernel.org, sdf@google.com, haoluo@google.com,
+        jolsa@kernel.org, quentin@isovalent.com, rostedt@goodmis.org,
+        mhiramat@kernel.org, bpf@vger.kernel.org,
+        linux-trace-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On Wed, 14 Jun 2023 12:50:34 -0700
-Kui-Feng Lee <sinquersw@gmail.com> wrote:
-
-> 
-> 
-> On 6/12/23 04:58, Masami Hiramatsu (Google) wrote:
-> > From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-> > 
-> > To hide the first dummy 'data' argument on the tracepoint probe events,
-> > the BTF argument array was modified (skip the first argument for tracepoint),
-> > but the '$arg*' meta argument parser missed that.
-> > 
-> > Fix to increment the argument index if it is tracepoint probe. And decrement
-> > the index when searching the type of the argument.
-> > 
-> > Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+On Thu, Jun 22, 2023 at 7:00=E2=80=AFAM Yonghong Song <yhs@meta.com> wrote:
+>
+>
+>
+> On 6/20/23 9:30 AM, Yafang Shao wrote:
+> > By introducing support for ->fill_link_info to the perf_event link, use=
+rs
+> > gain the ability to inspect it using `bpftool link show`. While the cur=
+rent
+> > approach involves accessing this information via `bpftool perf show`,
+> > consolidating link information for all link types in one place offers
+> > greater convenience. Additionally, this patch extends support to the
+> > generic perf event, which is not currently accommodated by
+> > `bpftool perf show`. While only the perf type and config are exposed to
+> > userspace, other attributes such as sample_period and sample_freq are
+> > ignored. It's important to note that if kptr_restrict is not permitted,=
+ the
+> > probed address will not be exposed, maintaining security measures.
+> >
+> > A new enum bpf_perf_event_type is introduced to help the user understan=
+d
+> > which struct is relevant.
+> >
+> > Signed-off-by: Yafang Shao <laoar.shao@gmail.com>
 > > ---
-> >   kernel/trace/trace_probe.c |   10 ++++++++--
-> >   1 file changed, 8 insertions(+), 2 deletions(-)
-> > 
-> > diff --git a/kernel/trace/trace_probe.c b/kernel/trace/trace_probe.c
-> > index 473e1c43bc57..643aa3a51d5a 100644
-> > --- a/kernel/trace/trace_probe.c
-> > +++ b/kernel/trace/trace_probe.c
-> > @@ -456,7 +456,10 @@ static int parse_btf_arg(const char *varname, struct fetch_insn *code,
-> >   
-> >   		if (name && !strcmp(name, varname)) {
-> >   			code->op = FETCH_OP_ARG;
-> > -			code->param = i;
-> > +			if (ctx->flags & TPARG_FL_TPOINT)
-> > +				code->param = i + 1;
-> > +			else
-> > +				code->param = i;
-> >   			return 0;
-> >   		}
-> >   	}
-> > @@ -470,8 +473,11 @@ static const struct fetch_type *parse_btf_arg_type(int arg_idx,
-> >   	struct btf *btf = traceprobe_get_btf();
-> >   	const char *typestr = NULL;
-> >   
-> > -	if (btf && ctx->params)
-> > +	if (btf && ctx->params) {
-> > +		if (ctx->flags & TPARG_FL_TPOINT)
-> > +			arg_idx--;
-> >   		typestr = type_from_btf_id(btf, ctx->params[arg_idx].type);
-> > +	}
-> >   
-> >   	return find_fetch_type(typestr, ctx->flags);
-> >   }
-> > 
-> > 
-> 
-> I failed to apply this patch.
-> Would you mind to rebase this patch?
+> >   include/uapi/linux/bpf.h       |  36 +++++++++++++
+> >   kernel/bpf/syscall.c           | 115 ++++++++++++++++++++++++++++++++=
++++++++++
+> >   tools/include/uapi/linux/bpf.h |  36 +++++++++++++
+> >   3 files changed, 187 insertions(+)
+> >
+> > diff --git a/include/uapi/linux/bpf.h b/include/uapi/linux/bpf.h
+> > index 23691ea..56528dd 100644
+> > --- a/include/uapi/linux/bpf.h
+> > +++ b/include/uapi/linux/bpf.h
+> > @@ -1056,6 +1056,16 @@ enum bpf_link_type {
+> >       MAX_BPF_LINK_TYPE,
+> >   };
+> >
+> > +enum bpf_perf_event_type {
+> > +     BPF_PERF_EVENT_UNSPEC =3D 0,
+> > +     BPF_PERF_EVENT_UPROBE =3D 1,
+> > +     BPF_PERF_EVENT_KPROBE =3D 2,
+> > +     BPF_PERF_EVENT_TRACEPOINT =3D 3,
+> > +     BPF_PERF_EVENT_EVENT =3D 4,
+> > +
+> > +     MAX_BPF_PERF_EVENT_TYPE,
+> > +};
+> > +
+> >   /* cgroup-bpf attach flags used in BPF_PROG_ATTACH command
+> >    *
+> >    * NONE(default): No further bpf programs allowed in the subtree.
+> > @@ -6443,6 +6453,32 @@ struct bpf_link_info {
+> >                       __u32 count;
+> >                       __u32 flags;
+> >               } kprobe_multi;
+> > +             struct {
+> > +                     __u32 type; /* enum bpf_perf_event_type */
+>
+> Maybe add the following
+>                         __u32 :32;
+> so later on this field can be reused if another u32 is needed in
+> the future?
 
-Ah, this is against for the probes/for-next branch on
-git://git.kernel.org/pub/scm/linux/kernel/git/trace/linux-trace.git
+Good point. Will do it.
 
-Thanks,
-
-> 
-
-
--- 
-Masami Hiramatsu (Google) <mhiramat@kernel.org>
+--=20
+Regards
+Yafang
