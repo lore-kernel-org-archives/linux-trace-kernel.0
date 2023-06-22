@@ -2,70 +2,84 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B8598EB64DA
-	for <linux-trace-kernel@archiver.kernel.org>; Thu, 22 Jun 2023 20:30:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 280AEEB64DA
+	for <linux-trace-kernel@archiver.kernel.org>; Thu, 22 Jun 2023 20:50:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229921AbjFVUal (ORCPT
+        id S230100AbjFVUup (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Thu, 22 Jun 2023 16:30:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40548 "EHLO
+        Thu, 22 Jun 2023 16:50:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45736 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229673AbjFVUak (ORCPT
+        with ESMTP id S231287AbjFVUum (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Thu, 22 Jun 2023 16:30:40 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E74DE1FF0;
-        Thu, 22 Jun 2023 13:30:39 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 83AAA618D7;
-        Thu, 22 Jun 2023 20:30:39 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 065BDC433C8;
-        Thu, 22 Jun 2023 20:30:37 +0000 (UTC)
-Date:   Thu, 22 Jun 2023 16:30:36 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Beau Belgrave <beaub@linux.microsoft.com>
+        Thu, 22 Jun 2023 16:50:42 -0400
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 0BB1D2133;
+        Thu, 22 Jun 2023 13:50:32 -0700 (PDT)
+Received: from CPC-beaub-VBQ1L.localdomain (unknown [4.155.48.121])
+        by linux.microsoft.com (Postfix) with ESMTPSA id 79F7A21C20B1;
+        Thu, 22 Jun 2023 13:50:32 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 79F7A21C20B1
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+        s=default; t=1687467032;
+        bh=PTggkHNckUu7CgoZ5GCLKrdt98eLD2Ch+hR6UTGKCy4=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=ZfT40bb4PhfdUo2AsTKUGo/NY8BzOomVqkTHztHvR99AbDIelwaFgchO7PeAx4Svt
+         955PAdgMHWl6n/blDfxCKUhVb3DqBbUea4MPN/U/EGnLVCRwT155G7OEwL6GCLwf4Y
+         72G4HqIdTFwtPlRW30LVzP1O0SHBI0l5hclBLs2g=
+Date:   Thu, 22 Jun 2023 20:50:27 +0000
+From:   Beau Belgrave <beaub@linux.microsoft.com>
+To:     Steven Rostedt <rostedt@goodmis.org>
 Cc:     sunliming <sunliming@kylinos.cn>, mhiramat@kernel.org,
         kelulanainsley@gmail.com, linux-trace-kernel@vger.kernel.org,
         linux-kernel@vger.kernel.org
 Subject: Re: [PATCH v3 3/3] selftests/user_events: Add test cases when event
  is diabled
-Message-ID: <20230622163036.1e68d25b@gandalf.local.home>
-In-Reply-To: <ZJSuvC9bfcTQMWvI@CPC-beaub-VBQ1L.localdomain>
+Message-ID: <ZJS0EyaneKuS9Rsh@CPC-beaub-VBQ1L.localdomain>
 References: <20230621063502.154378-1-sunliming@kylinos.cn>
-        <ZJSuvC9bfcTQMWvI@CPC-beaub-VBQ1L.localdomain>
-X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+ <ZJSuvC9bfcTQMWvI@CPC-beaub-VBQ1L.localdomain>
+ <20230622163036.1e68d25b@gandalf.local.home>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230622163036.1e68d25b@gandalf.local.home>
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On Thu, 22 Jun 2023 20:27:40 +0000
-Beau Belgrave <beaub@linux.microsoft.com> wrote:
-
-> On Wed, Jun 21, 2023 at 02:35:02PM +0800, sunliming wrote:
-> > When user_events are disabled, it's write operation should return zero.
-> > Add this test cases.
-> > 
-> > Signed-off-by: sunliming <sunliming@kylinos.cn>  
+On Thu, Jun 22, 2023 at 04:30:36PM -0400, Steven Rostedt wrote:
+> On Thu, 22 Jun 2023 20:27:40 +0000
+> Beau Belgrave <beaub@linux.microsoft.com> wrote:
 > 
-> I don't have a problem with the chagne to the test, however, the patch
-> title has a typo in it for "disabled" that should be corrected. I've
-> ACK'd the other 2 patches, so you only need to resubmit this one with a
-> correct title.
+> > On Wed, Jun 21, 2023 at 02:35:02PM +0800, sunliming wrote:
+> > > When user_events are disabled, it's write operation should return zero.
+> > > Add this test cases.
+> > > 
+> > > Signed-off-by: sunliming <sunliming@kylinos.cn>  
+> > 
+> > I don't have a problem with the chagne to the test, however, the patch
+> > title has a typo in it for "disabled" that should be corrected. I've
+> > ACK'd the other 2 patches, so you only need to resubmit this one with a
+> > correct title.
+> 
+> Ah, I misunderstood when we talked earlier today. I thought the typo was in
+> the text of the start selftest. That is, it was part of the patch.
+> 
+> For a typo in the subject, I can make that fix when I pulled it in. I just
+> avoid touching content of the patch itself.
+> 
 
-Ah, I misunderstood when we talked earlier today. I thought the typo was in
-the text of the start selftest. That is, it was part of the patch.
+Great, thanks!
 
-For a typo in the subject, I can make that fix when I pulled it in. I just
-avoid touching content of the patch itself.
+> Care to ack it?
+> 
 
-Care to ack it?
+Sure thing:
+Acked-by: Beau Belgrave <beaub@linux.microsoft.com>
 
-Thanks!
+Thanks,
+-Beau
 
--- Steve
+> Thanks!
+> 
+> -- Steve
