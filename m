@@ -2,258 +2,163 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D63DEC001DB
-	for <linux-trace-kernel@archiver.kernel.org>; Fri, 23 Jun 2023 12:43:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 51717EB64D7
+	for <linux-trace-kernel@archiver.kernel.org>; Fri, 23 Jun 2023 14:16:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231683AbjFWMnU (ORCPT
+        id S230459AbjFWOQT (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Fri, 23 Jun 2023 08:43:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60946 "EHLO
+        Fri, 23 Jun 2023 10:16:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48740 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229961AbjFWMnN (ORCPT
+        with ESMTP id S230008AbjFWOQT (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Fri, 23 Jun 2023 08:43:13 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BDE7C2969;
-        Fri, 23 Jun 2023 05:42:28 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 8268861A44;
-        Fri, 23 Jun 2023 12:42:27 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9DB4BC433C8;
-        Fri, 23 Jun 2023 12:41:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1687524146;
-        bh=ljQRDIRYG4TydFhjD0LuSn8BREerPmb4Ipkpa2QAq6Q=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=apfm6xvoeO6UvUfxPwNSOl0FaLWJ7ShkzzPeuSOb0bank70626+jFCCnlqxUCd2NX
-         mV+Eb3SlbyeKtShM0cPnGoccCVrProiQPYgaM4HyeW5epsbNbu8US+O9nrIP4r+ghW
-         Y8FmG2CVOdPNZ1eNovI71PsOzsGS/p5EOkEcjtA4zTWfFdhpQkNKBq1hEMuzxsWytK
-         w9zTBeB4xmhiyjllhLtRaoNC8lgBTTH19xNIsLsgb+18yFVUlxxLoSku7XQ5A1i1lR
-         WF4IRekFC21BVGIj1AxyqNGVCxMph3jwY74VjiaGchsSc5v31PlBNGYvRkbk2aFmu+
-         9KQZIm3JpdS0g==
-Date:   Fri, 23 Jun 2023 14:41:42 +0200
-From:   Christian Brauner <brauner@kernel.org>
-To:     Jeff Layton <jlayton@kernel.org>
-Cc:     Steven Rostedt <rostedt@goodmis.org>, Jeremy Kerr <jk@ozlabs.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        Christophe Leroy <christophe.leroy@csgroup.eu>,
-        Heiko Carstens <hca@linux.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Alexander Gordeev <agordeev@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@linux.ibm.com>,
-        Sven Schnelle <svens@linux.ibm.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Arve =?utf-8?B?SGrDuG5uZXbDpWc=?= <arve@android.com>,
-        Todd Kjos <tkjos@android.com>,
-        Martijn Coenen <maco@android.com>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Carlos Llamas <cmllamas@google.com>,
-        Suren Baghdasaryan <surenb@google.com>,
-        Dennis Dalessandro <dennis.dalessandro@cornelisnetworks.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Leon Romanovsky <leon@kernel.org>,
-        Brad Warrum <bwarrum@linux.ibm.com>,
-        Ritu Agarwal <rituagar@linux.ibm.com>,
-        Eric Van Hensbergen <ericvh@kernel.org>,
-        Latchesar Ionkov <lucho@ionkov.net>,
-        Dominique Martinet <asmadeus@codewreck.org>,
-        Christian Schoenebeck <linux_oss@crudebyte.com>,
-        David Sterba <dsterba@suse.com>,
-        David Howells <dhowells@redhat.com>,
-        Marc Dionne <marc.dionne@auristor.com>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Ian Kent <raven@themaw.net>,
-        Luis de Bethencourt <luisbg@kernel.org>,
-        Salah Triki <salah.triki@gmail.com>,
-        "Tigran A. Aivazian" <aivazian.tigran@gmail.com>,
-        Eric Biederman <ebiederm@xmission.com>,
-        Kees Cook <keescook@chromium.org>, Chris Mason <clm@fb.com>,
-        Josef Bacik <josef@toxicpanda.com>,
-        Xiubo Li <xiubli@redhat.com>,
-        Ilya Dryomov <idryomov@gmail.com>,
-        Jan Harkes <jaharkes@cs.cmu.edu>, coda@cs.cmu.edu,
-        Joel Becker <jlbec@evilplan.org>,
-        Christoph Hellwig <hch@lst.de>,
-        Nicolas Pitre <nico@fluxnic.net>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Tyler Hicks <code@tyhicks.com>,
-        Ard Biesheuvel <ardb@kernel.org>, Gao Xiang <xiang@kernel.org>,
-        Chao Yu <chao@kernel.org>, Yue Hu <huyue2@coolpad.com>,
-        Jeffle Xu <jefflexu@linux.alibaba.com>,
-        Namjae Jeon <linkinjeon@kernel.org>,
-        Sungjong Seo <sj1557.seo@samsung.com>,
-        Jan Kara <jack@suse.com>, Theodore Ts'o <tytso@mit.edu>,
-        Andreas Dilger <adilger.kernel@dilger.ca>,
-        Jaegeuk Kim <jaegeuk@kernel.org>,
-        OGAWA Hirofumi <hirofumi@mail.parknet.co.jp>,
-        Miklos Szeredi <miklos@szeredi.hu>,
-        Bob Peterson <rpeterso@redhat.com>,
-        Andreas Gruenbacher <agruenba@redhat.com>,
-        Richard Weinberger <richard@nod.at>,
-        Anton Ivanov <anton.ivanov@cambridgegreys.com>,
-        Johannes Berg <johannes@sipsolutions.net>,
-        Mikulas Patocka <mikulas@artax.karlin.mff.cuni.cz>,
-        Mike Kravetz <mike.kravetz@oracle.com>,
-        Muchun Song <muchun.song@linux.dev>,
-        David Woodhouse <dwmw2@infradead.org>,
-        Dave Kleikamp <shaggy@kernel.org>, Tejun Heo <tj@kernel.org>,
-        Trond Myklebust <trond.myklebust@hammerspace.com>,
-        Anna Schumaker <anna@kernel.org>,
-        Chuck Lever <chuck.lever@oracle.com>,
-        Ryusuke Konishi <konishi.ryusuke@gmail.com>,
-        Anton Altaparmakov <anton@tuxera.com>,
-        Konstantin Komarov <almaz.alexandrovich@paragon-software.com>,
-        Mark Fasheh <mark@fasheh.com>,
-        Joseph Qi <joseph.qi@linux.alibaba.com>,
-        Bob Copeland <me@bobcopeland.com>,
-        Mike Marshall <hubcap@omnibond.com>,
-        Martin Brandenburg <martin@omnibond.com>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Iurii Zaikin <yzaikin@google.com>,
-        Tony Luck <tony.luck@intel.com>,
-        "Guilherme G. Piccoli" <gpiccoli@igalia.com>,
-        Anders Larsen <al@alarsen.net>,
-        Steve French <sfrench@samba.org>,
-        Paulo Alcantara <pc@manguebit.com>,
-        Ronnie Sahlberg <lsahlber@redhat.com>,
-        Shyam Prasad N <sprasad@microsoft.com>,
-        Tom Talpey <tom@talpey.com>,
-        Sergey Senozhatsky <senozhatsky@chromium.org>,
-        Phillip Lougher <phillip@squashfs.org.uk>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Evgeniy Dushistov <dushistov@mail.ru>,
-        Hans de Goede <hdegoede@redhat.com>,
-        "Darrick J. Wong" <djwong@kernel.org>,
-        Damien Le Moal <dlemoal@kernel.org>,
-        Naohiro Aota <naohiro.aota@wdc.com>,
-        Johannes Thumshirn <jth@kernel.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Andrii Nakryiko <andrii@kernel.org>,
-        Martin KaFai Lau <martin.lau@linux.dev>,
-        Song Liu <song@kernel.org>, Yonghong Song <yhs@fb.com>,
-        John Fastabend <john.fastabend@gmail.com>,
-        KP Singh <kpsingh@kernel.org>,
-        Stanislav Fomichev <sdf@google.com>,
-        Hao Luo <haoluo@google.com>, Jiri Olsa <jolsa@kernel.org>,
-        Hugh Dickins <hughd@google.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Eric Dumazet <edumazet@google.com>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Paolo Abeni <pabeni@redhat.com>,
-        John Johansen <john.johansen@canonical.com>,
-        Paul Moore <paul@paul-moore.com>,
-        James Morris <jmorris@namei.org>,
-        "Serge E. Hallyn" <serge@hallyn.com>,
-        Stephen Smalley <stephen.smalley.work@gmail.com>,
-        Eric Paris <eparis@parisplace.org>,
-        Juergen Gross <jgross@suse.com>,
-        Ruihan Li <lrh2000@pku.edu.cn>,
-        Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>,
-        Wolfram Sang <wsa+renesas@sang-engineering.com>,
-        Udipto Goswami <quic_ugoswami@quicinc.com>,
-        Linyu Yuan <quic_linyyuan@quicinc.com>,
-        John Keeping <john@keeping.me.uk>,
-        Andrzej Pietrasiewicz <andrzej.p@collabora.com>,
-        Dan Carpenter <error27@gmail.com>,
-        Yuta Hayama <hayama@lineo.co.jp>,
-        Jozef Martiniak <jomajm@gmail.com>,
-        Jens Axboe <axboe@kernel.dk>,
-        Alan Stern <stern@rowland.harvard.edu>,
-        Sandeep Dhavale <dhavale@google.com>,
-        Dave Chinner <dchinner@redhat.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        ZhangPeng <zhangpeng362@huawei.com>,
-        Viacheslav Dubeyko <slava@dubeyko.com>,
-        Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>,
-        Aditya Garg <gargaditya08@live.com>,
-        Erez Zadok <ezk@cs.stonybrook.edu>,
-        Yifei Liu <yifeliu@cs.stonybrook.edu>,
-        Yu Zhe <yuzhe@nfschina.com>,
-        "Matthew Wilcox (Oracle)" <willy@infradead.org>,
-        Oleg Kanatov <okanatov@gmail.com>,
-        "Dr. David Alan Gilbert" <linux@treblig.org>,
-        Jiangshan Yi <yijiangshan@kylinos.cn>,
-        xu xin <cgel.zte@gmail.com>, Stefan Roesch <shr@devkernel.io>,
-        Zhihao Cheng <chengzhihao1@huawei.com>,
-        "Liam R. Howlett" <Liam.Howlett@Oracle.com>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Minghao Chi <chi.minghao@zte.com.cn>,
-        Seth Forshee <sforshee@digitalocean.com>,
-        Zeng Jingxiang <linuszeng@tencent.com>,
-        Bart Van Assche <bvanassche@acm.org>,
-        Mimi Zohar <zohar@linux.ibm.com>,
-        Roberto Sassu <roberto.sassu@huawei.com>,
-        Zhang Yi <yi.zhang@huawei.com>, Tom Rix <trix@redhat.com>,
-        "Fabio M. De Francesco" <fmdefrancesco@gmail.com>,
-        Chen Zhongjin <chenzhongjin@huawei.com>,
-        Zhengchao Shao <shaozhengchao@huawei.com>,
-        Rik van Riel <riel@surriel.com>,
-        Jingyu Wang <jingyuwang_vip@163.com>,
-        Hangyu Hua <hbh25y@gmail.com>, linuxppc-dev@lists.ozlabs.org,
-        linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org,
-        linux-rdma@vger.kernel.org, linux-usb@vger.kernel.org,
-        v9fs@lists.linux.dev, linux-fsdevel@vger.kernel.org,
-        linux-afs@lists.infradead.org, autofs@vger.kernel.org,
-        linux-mm@kvack.org, linux-btrfs@vger.kernel.org,
-        ceph-devel@vger.kernel.org, codalist@coda.cs.cmu.edu,
-        ecryptfs@vger.kernel.org, linux-efi@vger.kernel.org,
-        linux-erofs@lists.ozlabs.org, linux-ext4@vger.kernel.org,
-        linux-f2fs-devel@lists.sourceforge.net, cluster-devel@redhat.com,
-        linux-um@lists.infradead.org, linux-mtd@lists.infradead.org,
-        jfs-discussion@lists.sourceforge.net, linux-nfs@vger.kernel.org,
-        linux-nilfs@vger.kernel.org, linux-ntfs-dev@lists.sourceforge.net,
-        ntfs3@lists.linux.dev, ocfs2-devel@oss.oracle.com,
-        linux-karma-devel@lists.sourceforge.net, devel@lists.orangefs.org,
-        linux-unionfs@vger.kernel.org, linux-hardening@vger.kernel.org,
-        reiserfs-devel@vger.kernel.org, linux-cifs@vger.kernel.org,
-        samba-technical@lists.samba.org,
-        linux-trace-kernel@vger.kernel.org, linux-xfs@vger.kernel.org,
-        bpf@vger.kernel.org, netdev@vger.kernel.org,
-        apparmor@lists.ubuntu.com, linux-security-module@vger.kernel.org,
-        selinux@vger.kernel.org
-Subject: Re: [PATCH 00/79] fs: new accessors for inode->i_ctime
-Message-ID: <20230623-wegelagerei-kanzlei-45cdcf5da157@brauner>
-References: <20230621144507.55591-1-jlayton@kernel.org>
- <20230621152141.5961cf5f@gandalf.local.home>
- <2a5a069572b46b59dd16fe8d54e549a9b5bbb6eb.camel@kernel.org>
+        Fri, 23 Jun 2023 10:16:19 -0400
+Received: from mail-oa1-x30.google.com (mail-oa1-x30.google.com [IPv6:2001:4860:4864:20::30])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 12B002135;
+        Fri, 23 Jun 2023 07:16:17 -0700 (PDT)
+Received: by mail-oa1-x30.google.com with SMTP id 586e51a60fabf-1a98cf01151so529523fac.2;
+        Fri, 23 Jun 2023 07:16:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1687529776; x=1690121776;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=3opNLfaofO4XDCJOexejaNUpNBSFcotehkIKcHQoks8=;
+        b=WIYgG7ZqUDc+/2yhaP8uOLlHKmIPhUoFJRghb9WbmAZ9LdG+4CvnE7PHSpPhN4A7AN
+         z2RSatXw656h+zQAfv+RdO5d4DqTR6PqN8g5U9FIQzXN8sSh9PZa9L/y3GP5vfLnNF0H
+         YPhPylwz28YUFxxnQwi9hGQhUxtfd7SbkD4wZC7uhlHOxfuKqHi65yz1dnDkDbN2UGHt
+         e/Cn5fA7mN0j6h2++eS6uFsnN1Zmi63f1oSj/Fsv4E/DaQc98Q+IA+Wl+4RMitkU65T6
+         dlrO/M/jU4JA9UxCpSSvXr94CDQwKx08fhsJNNGOGWRyHsfhTMCuZC2987cWPgWQdsgd
+         KFtw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1687529776; x=1690121776;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=3opNLfaofO4XDCJOexejaNUpNBSFcotehkIKcHQoks8=;
+        b=fsmpQvu1WjuaDCqBjrALgLJAk2UgpAFlxN1aipdyWS723EWWTC2b9aisHA/sZhSztM
+         qlTt7Jr2VNTHO58jKr6sO26sKIhAyjbLK70GwlaLpbRIALXcJfTdCXY4rIcy20VcoCoM
+         L8nZYWJL++th6JHKMC/UUr3RRy5VfMsrdv4/m1gghtc3JmlZ1o/yufyLowfuqZbpZ1pl
+         YZ0i37/6GG7aO9ilBDDj56kdzpXu/QbKhv6g4mXrc4zGbQdWKMitxsRZmRDbAwhxqDUW
+         X2K3XPaIfHVvUnRMVFyY+JIZmE4mrmEgd+QERFryi+/fUCTkYAhn9wzOYK1q8wpcIilO
+         qdbQ==
+X-Gm-Message-State: AC+VfDyac5Y9KyTNxB6eSM1g2b911iutgTAVQ/qBRYjMPbF9sPbTXdOT
+        xfBet9YML98oFJiG1lgxjC8=
+X-Google-Smtp-Source: ACHHUZ6vb2KZVS65PMxFWWabJvydHNvxI3HDf7lW6YN6SMdKNb4LsKrm12mfiIFGS8qPKRnUv1hbfg==
+X-Received: by 2002:a05:6871:8506:b0:1a9:a12d:f7b8 with SMTP id sx6-20020a056871850600b001a9a12df7b8mr23055121oab.41.1687529775680;
+        Fri, 23 Jun 2023 07:16:15 -0700 (PDT)
+Received: from vultr.guest ([2001:19f0:ac01:1058:5400:4ff:fe7c:972])
+        by smtp.gmail.com with ESMTPSA id p14-20020a63e64e000000b005533c53f550sm6505942pgj.45.2023.06.23.07.16.14
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 23 Jun 2023 07:16:15 -0700 (PDT)
+From:   Yafang Shao <laoar.shao@gmail.com>
+To:     ast@kernel.org, daniel@iogearbox.net, john.fastabend@gmail.com,
+        andrii@kernel.org, martin.lau@linux.dev, song@kernel.org,
+        yhs@fb.com, kpsingh@kernel.org, sdf@google.com, haoluo@google.com,
+        jolsa@kernel.org, quentin@isovalent.com, rostedt@goodmis.org,
+        mhiramat@kernel.org
+Cc:     bpf@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+        Yafang Shao <laoar.shao@gmail.com>
+Subject: [PATCH v5 bpf-next 00/11] bpf: Support ->fill_link_info for kprobe_multi and perf_event links 
+Date:   Fri, 23 Jun 2023 14:15:35 +0000
+Message-Id: <20230623141546.3751-1-laoar.shao@gmail.com>
+X-Mailer: git-send-email 2.39.3
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <2a5a069572b46b59dd16fe8d54e549a9b5bbb6eb.camel@kernel.org>
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On Wed, Jun 21, 2023 at 03:52:27PM -0400, Jeff Layton wrote:
-> On Wed, 2023-06-21 at 15:21 -0400, Steven Rostedt wrote:
-> > On Wed, 21 Jun 2023 10:45:05 -0400
-> > Jeff Layton <jlayton@kernel.org> wrote:
-> > 
-> > > Most of this conversion was done via coccinelle, with a few of the more
-> > > non-standard accesses done by hand. There should be no behavioral
-> > > changes with this set. That will come later, as we convert individual
-> > > filesystems to use multigrain timestamps.
-> > 
-> > BTW, Linus has suggested to me that whenever a conccinelle script is used,
-> > it should be included in the change log.
-> > 
-> 
-> Ok, here's what I have. I note again that my usage of coccinelle is
-> pretty primitive, so I ended up doing a fair bit of by-hand fixing after
-> applying these.
-> 
-> Given the way that this change is broken up into 77 patches by
-> subsystem, to which changelogs should I add it? I could add it to the
-> "infrastructure" patch, but that's the one where I _didn't_ use it. 
-> 
-> Maybe to patch #79 (the one that renames i_ctime)?
+This patchset enhances the usability of kprobe_multi program by introducing
+support for ->fill_link_info. This allows users to easily determine the
+probed functions associated with a kprobe_multi program. While
+`bpftool perf show` already provides information about functions probed by
+perf_event programs, supporting ->fill_link_info ensures consistent access
+to this information across all bpf links.
 
-That works. I can also put this into a merge commit or pr message.
+In addition, this patch extends support to generic perf events, which are
+currently not covered by `bpftool perf show`. While userspace is exposed to
+only the perf type and config, other attributes such as sample_period and
+sample_freq are disregarded.
+
+To ensure accurate identification of probed functions, it is preferable to
+expose the address directly rather than relying solely on the symbol name.
+However, this implementation respects the kptr_restrict setting and avoids
+exposing the address if it is not permitted.
+
+v4->v5:
+- Print "func [module]" in the kprobe_multi header (Andrii)
+- Remove MAX_BPF_PERF_EVENT_TYPE (Alexei)
+- Add padding field for future reuse (Yonghong)
+
+v3->v4:
+- From Quentin
+  - Rename MODULE_NAME_LEN to MODULE_MAX_NAME
+  - Convert retprobe to boolean for json output
+  - Trim the square brackets around module names for json output
+  - Move perf names into link.c
+  - Use a generic helper to get perf names
+  - Show address before func name, for consistency
+  - Use switch-case instead of if-else
+  - Increase the buff len to PATH_MAX
+  - Move macros to the top of the file
+- From Andrii
+  - kprobe_multi flags should always be returned
+  - Keep it single line if it fits in under 100 characters
+  - Change the output format when showing kprobe_multi
+  - Imporve the format of perf_event names
+  - Rename struct perf_link to struct perf_event, and change the names of
+    the enum consequently
+- From Yonghong
+  - Avoid disallowing extensions for all structs in the big union
+- From Jiri
+  - Add flags to bpf_kprobe_multi_link
+  - Report kprobe_multi selftests errors
+  - Rename bpf_perf_link_fill_name and make it a separate patch
+  - Avoid breaking compilation when CONFIG_KPROBE_EVENTS or
+    CONFIG_UPROBE_EVENTS options are not defined
+
+v2->v3:
+- Expose flags instead of retporbe (Andrii)
+- Simplify the check on kmulti_link->cnt (Andrii)
+- Use kallsyms_show_value() instead (Andrii)
+- Show also the module name for kprobe_multi (Andrii)
+- Add new enum bpf_perf_link_type (Andrii)
+- Move perf event names into bpftool (Andrii, Quentin, Jiri)
+- Keep perf event names in sync with perf tools (Jiri) 
+
+v1->v2:
+- Fix sparse warning (Stanislav, lkp@intel.com)
+- Fix BPF CI build error
+- Reuse kernel_syms_load() (Alexei)
+- Print 'name' instead of 'func' (Alexei)
+- Show whether the probe is retprobe or not (Andrii)
+- Add comment for the meaning of perf_event name (Andrii)
+- Add support for generic perf event
+- Adhere to the kptr_restrict setting
+
+Yafang Shao (11):
+  bpf: Support ->fill_link_info for kprobe_multi
+  bpftool: Dump the kernel symbol's module name
+  bpftool: Show kprobe_multi link info
+  bpf: Protect probed address based on kptr_restrict setting
+  bpf: Clear the probe_addr for uprobe
+  bpf: Expose symbol's respective address
+  bpf: Add a common helper bpf_copy_to_user()
+  bpf: Add bpf_perf_link_fill_common()
+  bpf: Support ->fill_link_info for perf_event
+  bpftool: Add perf event names
+  bpftool: Show perf link info
+
+ include/uapi/linux/bpf.h          |  40 ++++
+ kernel/bpf/syscall.c              | 183 +++++++++++++++--
+ kernel/trace/bpf_trace.c          |  32 ++-
+ kernel/trace/trace_kprobe.c       |   7 +-
+ tools/bpf/bpftool/link.c          | 413 +++++++++++++++++++++++++++++++++++++-
+ tools/bpf/bpftool/xlated_dumper.c |   6 +-
+ tools/bpf/bpftool/xlated_dumper.h |   2 +
+ tools/include/uapi/linux/bpf.h    |  40 ++++
+ 8 files changed, 703 insertions(+), 20 deletions(-)
+
+-- 
+1.8.3.1
+
