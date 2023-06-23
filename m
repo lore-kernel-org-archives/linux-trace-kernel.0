@@ -2,201 +2,94 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EF55BEB64DD
-	for <linux-trace-kernel@archiver.kernel.org>; Fri, 23 Jun 2023 16:50:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CD703C001B0
+	for <linux-trace-kernel@archiver.kernel.org>; Fri, 23 Jun 2023 17:14:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229972AbjFWQur (ORCPT
+        id S230373AbjFWROK (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Fri, 23 Jun 2023 12:50:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55708 "EHLO
+        Fri, 23 Jun 2023 13:14:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43694 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232560AbjFWQtq (ORCPT
+        with ESMTP id S230501AbjFWROJ (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Fri, 23 Jun 2023 12:49:46 -0400
-Received: from mail-wr1-x434.google.com (mail-wr1-x434.google.com [IPv6:2a00:1450:4864:20::434])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 35EDE359F
-        for <linux-trace-kernel@vger.kernel.org>; Fri, 23 Jun 2023 09:49:01 -0700 (PDT)
-Received: by mail-wr1-x434.google.com with SMTP id ffacd0b85a97d-312863a983fso930000f8f.2
-        for <linux-trace-kernel@vger.kernel.org>; Fri, 23 Jun 2023 09:49:01 -0700 (PDT)
+        Fri, 23 Jun 2023 13:14:09 -0400
+Received: from mail-lj1-x229.google.com (mail-lj1-x229.google.com [IPv6:2a00:1450:4864:20::229])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4FE5C1731;
+        Fri, 23 Jun 2023 10:14:08 -0700 (PDT)
+Received: by mail-lj1-x229.google.com with SMTP id 38308e7fff4ca-2b45b6adffbso14928051fa.3;
+        Fri, 23 Jun 2023 10:14:08 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=isovalent.com; s=google; t=1687538939; x=1690130939;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=rTBeA/FzEfP72IdxLJwhOZ/Bhgt0h3YUEwVMoMjK02w=;
-        b=SO2pNAGJfPuaKlgPn0sA0mRGLQl/7VaeClw7hhQYUTDCJwjTOyH6cSo4dUPTFxuf/d
-         gFeG53pZdqgu50Zf12RT46EY9u9IOfLp9QzK4fMpGe+lPXVrtPl/BBm90G/0ADq7pfKF
-         yySK6i3nD+n5y5ypC5zzaPSIvFmB4IRPORrvOS3kN7gO9lj7iWsYEFZvjEwkKeh7vfZG
-         sIi5OtVrGgp2vhXlnGj9eH6HQ1cEhIvrIkAjGvJBVPfH26epymDPWDfbc8q2tLbzUHCw
-         nJmL67UJRNakW2JpB3zxu2YRxwt13YX+G7lpnBdx75pPZs55bdeHo6v+imyfMI0ptDlQ
-         GDJQ==
+        d=gmail.com; s=20221208; t=1687540446; x=1690132446;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=oNBYW2wHc9QjZxDDA2F8viEB3UJaejuAIETj8SdangU=;
+        b=Pw8d/jio3zpgOoOWi8eUyxmA6YfPSzp6HJ3RItOkwOOuhPCkDc/l4jL/y60kq4bwEb
+         oDhKmK89G2Su0A4pS2NWTkSXZ51795BWmz4PmYt8z8hqczIPEDOb1IztT0ixl+jWrViW
+         N7MEMS08Pmj98nB1As4VZSWYGAL2K53X7zyowCvLItNhOJmDfDmHmkbuL2ZNPNf7f7hX
+         WIiEb1KqtKzqirCbg6dUXHaVc/vBJKdR3LDzHbI1Uyt5GDBcCPsDkmXmRavXdNn4oI+T
+         KnnusBKj7GfDsQntnkF7B6CnLDu1vYjjWGyOpSeOh6K/EzOwVpFp/3bMDx39X13bqlYM
+         hrUA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1687538939; x=1690130939;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=rTBeA/FzEfP72IdxLJwhOZ/Bhgt0h3YUEwVMoMjK02w=;
-        b=Kd8f7lzZoYdKYFwcnyWshWSa6hHkTxxTXwAdp7IrUah8nvjiQt5TVBWe8HfRvUT1Gh
-         AjNsme48xWAsZ4aXi/rr4wCH6ZkMcO7oSViKcZmfUVlIMncCiY1rt9kbHVeX5doKUGN4
-         J373NYI2WsmBpr7HIS83WVrHkmuS0g5y6uYEhruhYvKhVI9socF5ifJ5qPVgUJcUsn1L
-         dXvPf+OUEb4Ag/TsapDsNyc5lUicOEWya5i1mqLh8dO665I5IROdtyxwwxRs+v4o5TIO
-         8Mx8r4SjS65fOWCoqmhM0h5ucI3Z0fs+7tvM0qg5WdFdaH9NgoBkvV9ABTPi6ei4jFPR
-         URZw==
-X-Gm-Message-State: AC+VfDyOkMFAB//isje9rpakzGTv0WAVj2iIAJVRVevFs1YosBhkU2B7
-        W1VHk/vu2QPNfV4hfZhbH6sECw==
-X-Google-Smtp-Source: ACHHUZ4K1bAHgE9V5cjP+9CEZDbOywmn25/9yexaJ4UYxWzd5bSiUZc4WyfmGhoCmPP1ipbcfLhoUw==
-X-Received: by 2002:a5d:6386:0:b0:2f9:c2ab:e1de with SMTP id p6-20020a5d6386000000b002f9c2abe1demr17284423wru.14.1687538939640;
-        Fri, 23 Jun 2023 09:48:59 -0700 (PDT)
-Received: from ?IPV6:2a02:8011:e80c:0:9cb8:f81f:3342:3b44? ([2a02:8011:e80c:0:9cb8:f81f:3342:3b44])
-        by smtp.gmail.com with ESMTPSA id a17-20020a5d5711000000b003062b2c5255sm9915908wrv.40.2023.06.23.09.48.58
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 23 Jun 2023 09:48:59 -0700 (PDT)
-Message-ID: <3ad842a7-32cb-a06e-5e15-a13c3c80e1d5@isovalent.com>
-Date:   Fri, 23 Jun 2023 17:48:58 +0100
+        d=1e100.net; s=20221208; t=1687540446; x=1690132446;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=oNBYW2wHc9QjZxDDA2F8viEB3UJaejuAIETj8SdangU=;
+        b=NRhtd30Y+YwsonrmHIHARKZHNtuf/zONuowkByj2Q0quX+bhttb5ml6IqDPDBu2gih
+         MDLdgKPFNsviLP0dYbdE88tf0n4IhE85AU9OuMO/XoT77zW7cnYBEr+DaGZZ7iUUklGs
+         Fz54RU9XHkf3LSD+wQ3/St2+TZ3NEsjsK9BIqPx19lxC4OnD2IPwRlLb00OLdD/kJsBA
+         yUQrlP+gyNInX3pr5o+YXRSCfoixWrroDRhurvwr9WMwCG8MNw5LBHvzYId2lB2vgghz
+         IctUO6EDSpbx1XJqtRHFahQhNmnp+mejsi5c40PFZB8X0pDPt8I1mIxBJXJl1+jsFjcS
+         51VQ==
+X-Gm-Message-State: AC+VfDwcBDQpQgpv8dIrgv+Evbbnh+XIvVgHrFKKZq1UEvDMoVj/IC3x
+        tyuZBBrFqaT2y9s5fkHrZNBMU33xbW234nhO4no=
+X-Google-Smtp-Source: ACHHUZ6rhL8tSX7f/fRfFTQCU7NJFD1+Y90OCRMl2C9BXB7rjUTy/i3FzWk9uK09fHWQnrjlHZZX+SQq8Ki5bspib9w=
+X-Received: by 2002:a2e:8085:0:b0:2b4:76d9:e6cc with SMTP id
+ i5-20020a2e8085000000b002b476d9e6ccmr11264075ljg.17.1687540446187; Fri, 23
+ Jun 2023 10:14:06 -0700 (PDT)
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.12.0
-Subject: Re: [PATCH v5 bpf-next 03/11] bpftool: Show kprobe_multi link info
-Content-Language: en-GB
-To:     Yafang Shao <laoar.shao@gmail.com>, ast@kernel.org,
-        daniel@iogearbox.net, john.fastabend@gmail.com, andrii@kernel.org,
-        martin.lau@linux.dev, song@kernel.org, yhs@fb.com,
-        kpsingh@kernel.org, sdf@google.com, haoluo@google.com,
-        jolsa@kernel.org, rostedt@goodmis.org, mhiramat@kernel.org
-Cc:     bpf@vger.kernel.org, linux-trace-kernel@vger.kernel.org
-References: <20230623141546.3751-1-laoar.shao@gmail.com>
- <20230623141546.3751-4-laoar.shao@gmail.com>
-From:   Quentin Monnet <quentin@isovalent.com>
-In-Reply-To: <20230623141546.3751-4-laoar.shao@gmail.com>
-Content-Type: text/plain; charset=UTF-8
+References: <20230623141546.3751-1-laoar.shao@gmail.com> <20230623141546.3751-12-laoar.shao@gmail.com>
+In-Reply-To: <20230623141546.3751-12-laoar.shao@gmail.com>
+From:   Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Date:   Fri, 23 Jun 2023 10:13:54 -0700
+Message-ID: <CAADnVQL5b+qnKc74bqi1UJ+PXjE81ZvATDEJJcsjV=1UDaSpdg@mail.gmail.com>
+Subject: Re: [PATCH v5 bpf-next 11/11] bpftool: Show perf link info
+To:     Yafang Shao <laoar.shao@gmail.com>
+Cc:     Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        John Fastabend <john.fastabend@gmail.com>,
+        Andrii Nakryiko <andrii@kernel.org>,
+        Martin KaFai Lau <martin.lau@linux.dev>,
+        Song Liu <song@kernel.org>, Yonghong Song <yhs@fb.com>,
+        KP Singh <kpsingh@kernel.org>,
+        Stanislav Fomichev <sdf@google.com>,
+        Hao Luo <haoluo@google.com>, Jiri Olsa <jolsa@kernel.org>,
+        Quentin Monnet <quentin@isovalent.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        bpf <bpf@vger.kernel.org>, linux-trace-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-2023-06-23 14:15 UTC+0000 ~ Yafang Shao <laoar.shao@gmail.com>
-> Show the already expose kprobe_multi link info in bpftool. The result a=
-s
-> follows,
->=20
-> $ tools/bpf/bpftool/bpftool link show
-> 4: kprobe_multi  prog 22
->         kprobe.multi  func_cnt 7
->         addr             func [module]
->         ffffffffbbc44f20 schedule_timeout_interruptible
->         ffffffffbbc44f60 schedule_timeout_killable
->         ffffffffbbc44fa0 schedule_timeout_uninterruptible
->         ffffffffbbc44fe0 schedule_timeout_idle
->         ffffffffc08028d0 xfs_trans_get_efd [xfs]
->         ffffffffc080fa10 xfs_trans_get_buf_map [xfs]
->         ffffffffc0813320 xfs_trans_get_dqtrx [xfs]
->         pids kprobe_multi(1434978)
-> 5: kprobe_multi  prog 22
->         kretprobe.multi  func_cnt 7
->         addr             func [module]
->         ffffffffbbc44f20 schedule_timeout_interruptible
->         ffffffffbbc44f60 schedule_timeout_killable
->         ffffffffbbc44fa0 schedule_timeout_uninterruptible
->         ffffffffbbc44fe0 schedule_timeout_idle
->         ffffffffc08028d0 xfs_trans_get_efd [xfs]
->         ffffffffc080fa10 xfs_trans_get_buf_map [xfs]
->         ffffffffc0813320 xfs_trans_get_dqtrx [xfs]
->         pids kprobe_multi(1434978)
->=20
-> $ tools/bpf/bpftool/bpftool link show -j
-> [{"id":4,"type":"kprobe_multi","prog_id":22,"retprobe":false,"func_cnt"=
-:7,"funcs":[{"addr":18446744072564789024,"func":"schedule_timeout_interru=
-ptible","module":""},{"addr":18446744072564789088,"func":"schedule_timeou=
-t_killable","module":""},{"addr":18446744072564789152,"func":"schedule_ti=
-meout_uninterruptible","module":""},{"addr":18446744072564789216,"func":"=
-schedule_timeout_idle","module":""},{"addr":18446744072644208848,"func":"=
-xfs_trans_get_efd","module":"xfs"},{"addr":18446744072644262416,"func":"x=
-fs_trans_get_buf_map","module":"xfs"},{"addr":18446744072644277024,"func"=
-:"xfs_trans_get_dqtrx","module":"xfs"}],"pids":[{"pid":1434978,"comm":"kp=
-robe_multi"}]},{"id":5,"type":"kprobe_multi","prog_id":22,"retprobe":true=
-,"func_cnt":7,"funcs":[{"addr":18446744072564789024,"func":"schedule_time=
-out_interruptible","module":""},{"addr":18446744072564789088,"func":"sche=
-dule_timeout_killable","module":""},{"addr":18446744072564789152,"func":"=
-schedule_timeout_uninterruptible","module":""},{"addr":184467440725647892=
-16,"func":"schedule_timeout_idle","module":""},{"addr":184467440726442088=
-48,"func":"xfs_trans_get_efd","module":"xfs"},{"addr":1844674407264426241=
-6,"func":"xfs_trans_get_buf_map","module":"xfs"},{"addr":1844674407264427=
-7024,"func":"xfs_trans_get_dqtrx","module":"xfs"}],"pids":[{"pid":1434978=
-,"comm":"kprobe_multi"}]}]
->=20
-> When kptr_restrict is 2, the result is,
->=20
-> $ tools/bpf/bpftool/bpftool link show
-> 4: kprobe_multi  prog 22
->         kprobe.multi  func_cnt 7
-> 5: kprobe_multi  prog 22
->         kretprobe.multi  func_cnt 7
->=20
-> Signed-off-by: Yafang Shao <laoar.shao@gmail.com>
-> ---
->  tools/bpf/bpftool/link.c | 109 +++++++++++++++++++++++++++++++++++++++=
-+++++++-
->  1 file changed, 108 insertions(+), 1 deletion(-)
->=20
-> diff --git a/tools/bpf/bpftool/link.c b/tools/bpf/bpftool/link.c
-> index 2d78607..8461e6d 100644
-> --- a/tools/bpf/bpftool/link.c
-> +++ b/tools/bpf/bpftool/link.c
-> @@ -14,8 +14,10 @@
-> =20
->  #include "json_writer.h"
->  #include "main.h"
-> +#include "xlated_dumper.h"
-> =20
->  static struct hashmap *link_table;
-> +static struct dump_data dd =3D {};
-> =20
->  static int link_parse_fd(int *argc, char ***argv)
->  {
-> @@ -166,6 +168,45 @@ static int get_prog_info(int prog_id, struct bpf_p=
-rog_info *info)
->  	return err;
->  }
-> =20
-> +static int cmp_u64(const void *A, const void *B)
-> +{
-> +	const __u64 *a =3D A, *b =3D B;
-> +
-> +	return *a - *b;
-> +}
-> +
-> +static void
-> +show_kprobe_multi_json(struct bpf_link_info *info, json_writer_t *wtr)=
+On Fri, Jun 23, 2023 at 7:16=E2=80=AFAM Yafang Shao <laoar.shao@gmail.com> =
+wrote:
+>         pids uprobe(27503)
+> 6: perf_event  prog 31
+...
+>         pids kprobe(27777)
+> 7: perf_event  prog 30
+...
+>         pids kprobe(27777)
+> 8: perf_event  prog 37
+>         tracepoint sched_switch
+>         bpf_cookie 0
+>         pids tracepoint(28036)
 
-> +{
-> +	__u32 i, j =3D 0;
-> +	__u64 *addrs;
-> +
-> +	jsonw_bool_field(json_wtr, "retprobe",
-> +			 info->kprobe_multi.flags & BPF_F_KPROBE_MULTI_RETURN);
-> +	jsonw_uint_field(json_wtr, "func_cnt", info->kprobe_multi.count);
-> +	jsonw_name(json_wtr, "funcs");
-> +	jsonw_start_array(json_wtr);
-> +	addrs =3D (__u64 *)u64_to_ptr(info->kprobe_multi.addrs);
-> +	qsort((void *)addrs, info->kprobe_multi.count, sizeof(__u64), cmp_u64=
-);
-> +
-> +	/* Load it once for all. */
-> +	if (!dd.sym_count)
-> +		kernel_syms_load(&dd);
-> +	for (i =3D 0; i < dd.sym_count; i++) {
-> +		if (dd.sym_mapping[i].address !=3D addrs[j])
-> +			continue;
-> +		jsonw_start_object(json_wtr);
-> +		jsonw_uint_field(json_wtr, "addr", dd.sym_mapping[i].address);
-> +		jsonw_string_field(json_wtr, "func", dd.sym_mapping[i].name);
-> +		/* Print none if it is vmlinux */
-> +		jsonw_string_field(json_wtr, "module", dd.sym_mapping[i].module);
+uprobe/kprobe/tracepoint are really the names of your user space applicatio=
+ns?
 
-We could maybe print null ("jsonw_null(json_wtr);") instead of an empty
-string here when we have no module name. Although I'm not sure it
-matters too much. Let's see whether the series needs another respin.
-
-Anyway:
-
-Reviewed-by: Quentin Monnet <quentin@isovalent.com>
+or something broke in bpftool that it doesn't show comm correctly?
