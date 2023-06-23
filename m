@@ -2,180 +2,126 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A375CEB64D7
-	for <linux-trace-kernel@archiver.kernel.org>; Fri, 23 Jun 2023 15:20:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EE5F9EB64D7
+	for <linux-trace-kernel@archiver.kernel.org>; Fri, 23 Jun 2023 16:50:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231755AbjFWPUj (ORCPT
+        id S232439AbjFWQuS (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Fri, 23 Jun 2023 11:20:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38408 "EHLO
+        Fri, 23 Jun 2023 12:50:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56874 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232747AbjFWPUb (ORCPT
+        with ESMTP id S232509AbjFWQtc (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Fri, 23 Jun 2023 11:20:31 -0400
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.220.29])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 238FC10C1;
-        Fri, 23 Jun 2023 08:20:29 -0700 (PDT)
-Received: from relay2.suse.de (relay2.suse.de [149.44.160.134])
-        by smtp-out2.suse.de (Postfix) with ESMTP id D24151F45F;
-        Fri, 23 Jun 2023 15:20:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
-        t=1687533627; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=1mTZQB6E8gpW9xyv3IdX7kwRMApo1npl8Ta69cylcgI=;
-        b=cw+6g9R2o/Umv74/BGjs0HZFU73NXkDTjRhAwElwD9yLjkG2loVWkX98zsq+Jw9f7GWEbv
-        1LhcZAdPyuPlH6OaETf856CLkRN01mJSpFOO8X/jovaGWHnPkt2fDQYbq4M0K8/oavd3Ir
-        XsYDO2FS6i0HJDFn6EWyGK6+OhLducU=
-Received: from suse.cz (pmladek.udp.ovpn2.prg.suse.de [10.100.201.202])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by relay2.suse.de (Postfix) with ESMTPS id 1AE602C141;
-        Fri, 23 Jun 2023 15:20:22 +0000 (UTC)
-Date:   Fri, 23 Jun 2023 17:20:17 +0200
-From:   Petr Mladek <pmladek@suse.com>
-To:     Joel Granados <j.granados@samsung.com>
-Cc:     Jiri Slaby <jirislaby@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        mcgrof@kernel.org, Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
-        Theodore Ts'o <tytso@mit.edu>,
-        "Jason A. Donenfeld" <Jason@zx2c4.com>,
-        Juergen Gross <jgross@suse.com>,
-        Stefano Stabellini <sstabellini@kernel.org>,
-        Benjamin LaHaise <bcrl@kvack.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Christian Brauner <brauner@kernel.org>,
-        Jeff Layton <jlayton@kernel.org>,
-        Chuck Lever <chuck.lever@oracle.com>, Jan Kara <jack@suse.cz>,
-        Kees Cook <keescook@chromium.org>,
-        Iurii Zaikin <yzaikin@google.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Andrii Nakryiko <andrii@kernel.org>,
-        Balbir Singh <bsingharora@gmail.com>,
-        Eric Biederman <ebiederm@xmission.com>,
-        "Naveen N. Rao" <naveen.n.rao@linux.ibm.com>,
-        Anil S Keshavamurthy <anil.s.keshavamurthy@intel.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Will Deacon <will@kernel.org>,
-        Sergey Senozhatsky <senozhatsky@chromium.org>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Mike Kravetz <mike.kravetz@oracle.com>,
-        Muchun Song <muchun.song@linux.dev>,
-        Naoya Horiguchi <naoya.horiguchi@nec.com>,
-        "Matthew Wilcox (Oracle)" <willy@infradead.org>,
-        David Howells <dhowells@redhat.com>,
-        Jarkko Sakkinen <jarkko@kernel.org>,
-        Paul Moore <paul@paul-moore.com>,
-        James Morris <jmorris@namei.org>,
-        "Serge E. Hallyn" <serge@hallyn.com>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Oleksandr Tyshchenko <oleksandr_tyshchenko@epam.com>,
-        Amir Goldstein <amir73il@gmail.com>,
-        John Fastabend <john.fastabend@gmail.com>,
-        Martin KaFai Lau <martin.lau@linux.dev>,
-        Song Liu <song@kernel.org>, Yonghong Song <yhs@fb.com>,
-        KP Singh <kpsingh@kernel.org>,
-        Stanislav Fomichev <sdf@google.com>,
-        Hao Luo <haoluo@google.com>, Jiri Olsa <jolsa@kernel.org>,
-        Waiman Long <longman@redhat.com>,
-        Boqun Feng <boqun.feng@gmail.com>,
-        John Ogness <john.ogness@linutronix.de>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
-        Daniel Bristot de Oliveira <bristot@redhat.com>,
-        Valentin Schneider <vschneid@redhat.com>,
-        Andy Lutomirski <luto@amacapital.net>,
-        Will Drewry <wad@chromium.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Miaohe Lin <linmiaohe@huawei.com>,
-        linux-kernel@vger.kernel.org, xen-devel@lists.xenproject.org,
-        linux-aio@kvack.org, linux-fsdevel@vger.kernel.org,
-        linux-mm@kvack.org, bpf@vger.kernel.org, kexec@lists.infradead.org,
-        linux-trace-kernel@vger.kernel.org, keyrings@vger.kernel.org,
-        linux-security-module@vger.kernel.org
-Subject: Re: [PATCH 08/11] sysctl: Add size to register_sysctl_init
-Message-ID: <ZJW4MdIvrWjbKtVy@alley>
-References: <20230621091000.424843-1-j.granados@samsung.com>
- <CGME20230621091037eucas1p188e11d8064526a5a0549217d5a419647@eucas1p1.samsung.com>
- <20230621091000.424843-9-j.granados@samsung.com>
- <2023062150-outbound-quiet-2609@gregkh>
- <20230621131552.pqsordxcjmiopciq@localhost>
- <fc37eccc-b9b3-d888-6b57-78cd61986a11@kernel.org>
- <20230622140021.g3odhui75ybwuai5@localhost>
+        Fri, 23 Jun 2023 12:49:32 -0400
+Received: from mail-wr1-x42b.google.com (mail-wr1-x42b.google.com [IPv6:2a00:1450:4864:20::42b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CB3A13583
+        for <linux-trace-kernel@vger.kernel.org>; Fri, 23 Jun 2023 09:48:50 -0700 (PDT)
+Received: by mail-wr1-x42b.google.com with SMTP id ffacd0b85a97d-312863a983fso929761f8f.2
+        for <linux-trace-kernel@vger.kernel.org>; Fri, 23 Jun 2023 09:48:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=isovalent.com; s=google; t=1687538929; x=1690130929;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=em8e/YdhU6uGDSaxJVcqLoWFsW+6uVuPv5+TwUmAu9Q=;
+        b=ZpQOsUe0EGOAhpfXlLwq9xAiz1yWkubYRPrNtXLwc3NWChQvsEPU1IrDFAwfXmVCgj
+         j0dfPf0zausQCBd5OT5KUNg+XDus6AmbbmyQx80IPl4btZxt92ifswli6f7TXkLw3edP
+         XyAeQM2te5yM5wlY5TnVMROtdUKfCLDZQ0GHoyxcTiUdbpRFy7MzOv8hQJ/pjPUXhvU0
+         rRF1Y2CQv2o9N1uJIqqGbAQnOh0n76RyldkmYIyqMtvqUlSL3dEvlTbbZHrf88YgTfSC
+         w73/A8OVyZehxyGdQY6BEXhfcaR+Yk5vj863YXdEXKhaproJK9PR+ldWE+DF6rYsV/Tu
+         8vpA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1687538929; x=1690130929;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=em8e/YdhU6uGDSaxJVcqLoWFsW+6uVuPv5+TwUmAu9Q=;
+        b=RluCndsxvz7B3n7mI6Y1zpc7/+IW54Mw45AeURVJN/c6DRTwppnspnWRMLxpL1u65H
+         mca8w1gnjiQCplSz5A5Vuk9iJihjOJ6fIFFtFaV5VgBKF/i5hHxG0Fxw6why2NMlmCdE
+         oPFEB78VnYd8yJfHPMJjtOOv1epcm00KpEyT0Zy938MSjv0Xp0W81eveucjMZ2Yn/z+b
+         crtUvBFVf3TSyxYaqXddbwbTKUacmf7R+kZXUmmsnXPUmBQG4S/XjfkPW+BuIh2rtXFd
+         tlQI9xIh+0MSBj2BXhcFYU6Pv480OogFlT6WjHmjgsUw2LpWgF3QsaF7L2xWbCONVtF1
+         R6hA==
+X-Gm-Message-State: AC+VfDyfUcmMm+z9MycSgzIEoWG43eHY52JQ1K1DbOpbfthwv5MdH1iz
+        gBkSQIM5OozoPpIgGISkdMTUpQ==
+X-Google-Smtp-Source: ACHHUZ6FI5xT6Fucht1rSOdcV0HV0pBx4JEy4L1XUgEdYiFBYWHdoi0tA8nGnK+IEZbcvdRgCRqopg==
+X-Received: by 2002:a5d:43c2:0:b0:311:1cd8:b97a with SMTP id v2-20020a5d43c2000000b003111cd8b97amr4447081wrr.47.1687538929236;
+        Fri, 23 Jun 2023 09:48:49 -0700 (PDT)
+Received: from ?IPV6:2a02:8011:e80c:0:9cb8:f81f:3342:3b44? ([2a02:8011:e80c:0:9cb8:f81f:3342:3b44])
+        by smtp.gmail.com with ESMTPSA id j18-20020adff012000000b0030e56a9ff25sm9985240wro.31.2023.06.23.09.48.48
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 23 Jun 2023 09:48:49 -0700 (PDT)
+Message-ID: <a2835797-a0da-2c7f-5494-2edb820146e0@isovalent.com>
+Date:   Fri, 23 Jun 2023 17:48:48 +0100
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230622140021.g3odhui75ybwuai5@localhost>
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.12.0
+Subject: Re: [PATCH v5 bpf-next 02/11] bpftool: Dump the kernel symbol's
+ module name
+Content-Language: en-GB
+To:     Yafang Shao <laoar.shao@gmail.com>, ast@kernel.org,
+        daniel@iogearbox.net, john.fastabend@gmail.com, andrii@kernel.org,
+        martin.lau@linux.dev, song@kernel.org, yhs@fb.com,
+        kpsingh@kernel.org, sdf@google.com, haoluo@google.com,
+        jolsa@kernel.org, rostedt@goodmis.org, mhiramat@kernel.org
+Cc:     bpf@vger.kernel.org, linux-trace-kernel@vger.kernel.org
+References: <20230623141546.3751-1-laoar.shao@gmail.com>
+ <20230623141546.3751-3-laoar.shao@gmail.com>
+From:   Quentin Monnet <quentin@isovalent.com>
+In-Reply-To: <20230623141546.3751-3-laoar.shao@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On Thu 2023-06-22 16:00:21, Joel Granados wrote:
-> On Thu, Jun 22, 2023 at 06:21:48AM +0200, Jiri Slaby wrote:
-> > On 21. 06. 23, 15:15, Joel Granados wrote:
-> > > On Wed, Jun 21, 2023 at 12:47:58PM +0200, Greg Kroah-Hartman wrote:
-> > > > On Wed, Jun 21, 2023 at 11:09:57AM +0200, Joel Granados wrote:
-> > > > >   static int __init random_sysctls_init(void)
-> > > > >   {
-> > > > > -	register_sysctl_init("kernel/random", random_table);
-> > > > > +	register_sysctl_init("kernel/random", random_table,
-> > > > > +			     ARRAY_SIZE(random_table));
-> > > > 
-> > > > As mentioned before, why not just do:
-> > > > 
-> > > > #define register_sysctl_init(string, table)	\
-> > > > 	__register_sysctl_init(string, table, ARRAY_SIZE(table);
-> > > Answered you in the original mail where you suggested it.
-> > 
-> > I am curious what that was, do you have a link?
-> of course. I think you will find it here https://lore.kernel.org/all/20230621123816.ufqbob6qthz4hujx@localhost/
+2023-06-23 14:15 UTC+0000 ~ Yafang Shao <laoar.shao@gmail.com>
+> If the kernel symbol is in a module, we will dump the module name as
+> well. The square brackets around the module name are trimmed.
+> 
+> Signed-off-by: Yafang Shao <laoar.shao@gmail.com>
+> ---
+>  tools/bpf/bpftool/xlated_dumper.c | 6 +++++-
+>  tools/bpf/bpftool/xlated_dumper.h | 2 ++
+>  2 files changed, 7 insertions(+), 1 deletion(-)
+> 
+> diff --git a/tools/bpf/bpftool/xlated_dumper.c b/tools/bpf/bpftool/xlated_dumper.c
+> index da608e1..567f56d 100644
+> --- a/tools/bpf/bpftool/xlated_dumper.c
+> +++ b/tools/bpf/bpftool/xlated_dumper.c
+> @@ -46,7 +46,11 @@ void kernel_syms_load(struct dump_data *dd)
+>  		}
+>  		dd->sym_mapping = tmp;
+>  		sym = &dd->sym_mapping[dd->sym_count];
+> -		if (sscanf(buff, "%p %*c %s", &address, sym->name) != 2)
+> +
+> +		/* module is optional */
+> +		sym->module[0] = '\0';
+> +		/* trim the square brackets around the module name */
+> +		if (sscanf(buff, "%p %*c %s [%[^]]s", &address, sym->name, sym->module) < 2)
+>  			continue;
+>  		sym->address = (unsigned long)address;
+>  		if (!strcmp(sym->name, "__bpf_call_base")) {
+> diff --git a/tools/bpf/bpftool/xlated_dumper.h b/tools/bpf/bpftool/xlated_dumper.h
+> index 9a94637..db3ba067 100644
+> --- a/tools/bpf/bpftool/xlated_dumper.h
+> +++ b/tools/bpf/bpftool/xlated_dumper.h
+> @@ -5,12 +5,14 @@
+>  #define __BPF_TOOL_XLATED_DUMPER_H
+>  
+>  #define SYM_MAX_NAME	256
+> +#define MODULE_MAX_NAME	64
+>  
+>  struct bpf_prog_linfo;
+>  
+>  struct kernel_sym {
+>  	unsigned long address;
+>  	char name[SYM_MAX_NAME];
+> +	char module[MODULE_MAX_NAME];
+>  };
+>  
+>  struct dump_data {
 
-Let me to copy the answer here:
+Reviewed-by: Quentin Monnet <quentin@isovalent.com>
 
-<paste>
-I considered this at the outset, but it will not work with callers that
-use a pointer instead of the actual array.
-Additionally, we would not avoid big commits as we would have to go
-looking in all the files where register is called directly or indirectly
-and make sure the logic is sound.
-</paste>
-
-For the callers using a pointer. A solution would be to create another
-wrapper which would take the array size, e.g.
-
-#define register_sysctl_init_limited(string, table, size)	\
-	__register_sysctl_init(string, table, size);
-
-
-And ARRAY_SIZE() is defined in include/linux/kernel.h as:
-
-#define ARRAY_SIZE(arr) (sizeof(arr) / sizeof((arr)[0]) + __must_be_array(arr))
-
-It will create a compiler error when either an array[] or *array is
-passed.
-
-When using this:
-
-1. The compiler will tell us where the other wrapper is needed.
-
-2. Some locations might need the @size parameter even when a static
-   array is passed. For example, neigh_sysctl_register() terminates
-   the array early.
-
-   But this will work when __register_sysctl_init() supports
-   both ways.I mean that it will stop either on @size or empty
-   element, as discussed in the other subthread.
-
-   This should be caught when the final "empty" is removed
-   from the particular caller.
-
-Best Regards,
-Petr
+Thanks!
