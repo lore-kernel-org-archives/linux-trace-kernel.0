@@ -2,155 +2,258 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 20E26EB64D7
-	for <linux-trace-kernel@archiver.kernel.org>; Fri, 23 Jun 2023 11:11:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D63DEC001DB
+	for <linux-trace-kernel@archiver.kernel.org>; Fri, 23 Jun 2023 12:43:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229712AbjFWLLo (ORCPT
+        id S231683AbjFWMnU (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Fri, 23 Jun 2023 07:11:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53826 "EHLO
+        Fri, 23 Jun 2023 08:43:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60946 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231671AbjFWLLn (ORCPT
+        with ESMTP id S229961AbjFWMnN (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Fri, 23 Jun 2023 07:11:43 -0400
-Received: from mail-lf1-x134.google.com (mail-lf1-x134.google.com [IPv6:2a00:1450:4864:20::134])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CB26510F6;
-        Fri, 23 Jun 2023 04:11:41 -0700 (PDT)
-Received: by mail-lf1-x134.google.com with SMTP id 2adb3069b0e04-4f973035d60so494415e87.3;
-        Fri, 23 Jun 2023 04:11:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1687518700; x=1690110700;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=do2bpdVMJ85bRb47mVgKbZvqePYWno5Te4+1xoLO+cA=;
-        b=rAxKMbv6GqbOHjUiDS8dFT6/c0ePaFssDunkFQr3S5e+t+4F35gxilj77Tk8q7MQkC
-         e4Dep24F5Yy6ZmT2PDgYXix7AYefI8wsJ0p5iJvAvLqqR84cl94I1Lhge5eTQFf63Dyr
-         eK1vz+ynecIclLPAxSchNaK0fmn7s9kFllsgtIRYRz/V8eFqa238MQmiU10FZQtmd9Ql
-         8gOEsXyC6PBQzEvNTHvVf8RU3muJKRG5QCiccxPP2OhdQXwrMDBs7mJFzkmkBDdkQcBK
-         AcI6haW9a49UHk1qmsxk/7vEGA1G7Y+HD5D8DGtpih0IzR2Df1A0oJEyiKFGXDPrJbFq
-         iVOA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1687518700; x=1690110700;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=do2bpdVMJ85bRb47mVgKbZvqePYWno5Te4+1xoLO+cA=;
-        b=Zazk28F+R6v0VbnyEbvtoo9uZs1oLZPEDGEOOADJMZmp6BNwgMfAhhs9s6N97/3Zuh
-         d5ePPJutfbvRp0L1GVs+oFBoLEV5mE7dBy3jWzqCNrMUfTVPTJ7SlwLtyMSkISLU57eU
-         yoiUrdpZccrRBBt9qOJIbsiqfxhloiq880BKof4s+GO3GGCo1wyzU97/rfJwGSuIij+8
-         mCuu1fo6jkz+ggT9gdU0x/KfAfsharjCB0YRuJaQuonjAzdK4Qj5ugmdTGTGp/yi/qJg
-         lLbeCMfWRelxB9IWUTjucL5HnzgvXyaA2b7zBE6lCbhL536hr2HIGWehuyXgDYmUkqt9
-         KUAA==
-X-Gm-Message-State: AC+VfDwBvKfh/j6+J48FchWvTu0b2CILxVsbP1F/aC3r/v/OIK0hQtsP
-        2cgUr2vfK7721ZW1ZqIin7/UXHhG38I=
-X-Google-Smtp-Source: ACHHUZ4803QgZmjT5Dlbvcvt9KwmbS0zzuCrnTbJO0AFMNORcAcWIN2QouoqCxwoMM/Mg4OTgZGMyQ==
-X-Received: by 2002:a19:ab11:0:b0:4f8:7614:48a5 with SMTP id u17-20020a19ab11000000b004f8761448a5mr7273219lfe.66.1687518699691;
-        Fri, 23 Jun 2023 04:11:39 -0700 (PDT)
-Received: from krava (2001-1ae9-1c2-4c00-726e-c10f-8833-ff22.ip6.tmcz.cz. [2001:1ae9:1c2:4c00:726e:c10f:8833:ff22])
-        by smtp.gmail.com with ESMTPSA id c14-20020a7bc84e000000b003f8126bcf34sm2009848wml.48.2023.06.23.04.11.38
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 23 Jun 2023 04:11:38 -0700 (PDT)
-From:   Jiri Olsa <olsajiri@gmail.com>
-X-Google-Original-From: Jiri Olsa <jolsa@kernel.org>
-Date:   Fri, 23 Jun 2023 13:11:36 +0200
-To:     Steven Rostedt <rostedt@goodmis.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>
-Cc:     Mark Rutland <mark.rutland@arm.com>,
-        lkml <linux-kernel@vger.kernel.org>,
-        linux-trace-kernel@vger.kernel.org, bpf@vger.kernel.org
-Subject: Re: [PATCH] fprobe: Release rethook after the ftrace_ops is
- unregistered
-Message-ID: <ZJV96BqF8EAXAOOd@krava>
-References: <20230615115236.3476617-1-jolsa@kernel.org>
- <20230615085920.7dadac74@gandalf.local.home>
+        Fri, 23 Jun 2023 08:43:13 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BDE7C2969;
+        Fri, 23 Jun 2023 05:42:28 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 8268861A44;
+        Fri, 23 Jun 2023 12:42:27 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9DB4BC433C8;
+        Fri, 23 Jun 2023 12:41:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1687524146;
+        bh=ljQRDIRYG4TydFhjD0LuSn8BREerPmb4Ipkpa2QAq6Q=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=apfm6xvoeO6UvUfxPwNSOl0FaLWJ7ShkzzPeuSOb0bank70626+jFCCnlqxUCd2NX
+         mV+Eb3SlbyeKtShM0cPnGoccCVrProiQPYgaM4HyeW5epsbNbu8US+O9nrIP4r+ghW
+         Y8FmG2CVOdPNZ1eNovI71PsOzsGS/p5EOkEcjtA4zTWfFdhpQkNKBq1hEMuzxsWytK
+         w9zTBeB4xmhiyjllhLtRaoNC8lgBTTH19xNIsLsgb+18yFVUlxxLoSku7XQ5A1i1lR
+         WF4IRekFC21BVGIj1AxyqNGVCxMph3jwY74VjiaGchsSc5v31PlBNGYvRkbk2aFmu+
+         9KQZIm3JpdS0g==
+Date:   Fri, 23 Jun 2023 14:41:42 +0200
+From:   Christian Brauner <brauner@kernel.org>
+To:     Jeff Layton <jlayton@kernel.org>
+Cc:     Steven Rostedt <rostedt@goodmis.org>, Jeremy Kerr <jk@ozlabs.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        Christophe Leroy <christophe.leroy@csgroup.eu>,
+        Heiko Carstens <hca@linux.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Alexander Gordeev <agordeev@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@linux.ibm.com>,
+        Sven Schnelle <svens@linux.ibm.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Arve =?utf-8?B?SGrDuG5uZXbDpWc=?= <arve@android.com>,
+        Todd Kjos <tkjos@android.com>,
+        Martijn Coenen <maco@android.com>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Carlos Llamas <cmllamas@google.com>,
+        Suren Baghdasaryan <surenb@google.com>,
+        Dennis Dalessandro <dennis.dalessandro@cornelisnetworks.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Leon Romanovsky <leon@kernel.org>,
+        Brad Warrum <bwarrum@linux.ibm.com>,
+        Ritu Agarwal <rituagar@linux.ibm.com>,
+        Eric Van Hensbergen <ericvh@kernel.org>,
+        Latchesar Ionkov <lucho@ionkov.net>,
+        Dominique Martinet <asmadeus@codewreck.org>,
+        Christian Schoenebeck <linux_oss@crudebyte.com>,
+        David Sterba <dsterba@suse.com>,
+        David Howells <dhowells@redhat.com>,
+        Marc Dionne <marc.dionne@auristor.com>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Ian Kent <raven@themaw.net>,
+        Luis de Bethencourt <luisbg@kernel.org>,
+        Salah Triki <salah.triki@gmail.com>,
+        "Tigran A. Aivazian" <aivazian.tigran@gmail.com>,
+        Eric Biederman <ebiederm@xmission.com>,
+        Kees Cook <keescook@chromium.org>, Chris Mason <clm@fb.com>,
+        Josef Bacik <josef@toxicpanda.com>,
+        Xiubo Li <xiubli@redhat.com>,
+        Ilya Dryomov <idryomov@gmail.com>,
+        Jan Harkes <jaharkes@cs.cmu.edu>, coda@cs.cmu.edu,
+        Joel Becker <jlbec@evilplan.org>,
+        Christoph Hellwig <hch@lst.de>,
+        Nicolas Pitre <nico@fluxnic.net>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Tyler Hicks <code@tyhicks.com>,
+        Ard Biesheuvel <ardb@kernel.org>, Gao Xiang <xiang@kernel.org>,
+        Chao Yu <chao@kernel.org>, Yue Hu <huyue2@coolpad.com>,
+        Jeffle Xu <jefflexu@linux.alibaba.com>,
+        Namjae Jeon <linkinjeon@kernel.org>,
+        Sungjong Seo <sj1557.seo@samsung.com>,
+        Jan Kara <jack@suse.com>, Theodore Ts'o <tytso@mit.edu>,
+        Andreas Dilger <adilger.kernel@dilger.ca>,
+        Jaegeuk Kim <jaegeuk@kernel.org>,
+        OGAWA Hirofumi <hirofumi@mail.parknet.co.jp>,
+        Miklos Szeredi <miklos@szeredi.hu>,
+        Bob Peterson <rpeterso@redhat.com>,
+        Andreas Gruenbacher <agruenba@redhat.com>,
+        Richard Weinberger <richard@nod.at>,
+        Anton Ivanov <anton.ivanov@cambridgegreys.com>,
+        Johannes Berg <johannes@sipsolutions.net>,
+        Mikulas Patocka <mikulas@artax.karlin.mff.cuni.cz>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        Muchun Song <muchun.song@linux.dev>,
+        David Woodhouse <dwmw2@infradead.org>,
+        Dave Kleikamp <shaggy@kernel.org>, Tejun Heo <tj@kernel.org>,
+        Trond Myklebust <trond.myklebust@hammerspace.com>,
+        Anna Schumaker <anna@kernel.org>,
+        Chuck Lever <chuck.lever@oracle.com>,
+        Ryusuke Konishi <konishi.ryusuke@gmail.com>,
+        Anton Altaparmakov <anton@tuxera.com>,
+        Konstantin Komarov <almaz.alexandrovich@paragon-software.com>,
+        Mark Fasheh <mark@fasheh.com>,
+        Joseph Qi <joseph.qi@linux.alibaba.com>,
+        Bob Copeland <me@bobcopeland.com>,
+        Mike Marshall <hubcap@omnibond.com>,
+        Martin Brandenburg <martin@omnibond.com>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        Iurii Zaikin <yzaikin@google.com>,
+        Tony Luck <tony.luck@intel.com>,
+        "Guilherme G. Piccoli" <gpiccoli@igalia.com>,
+        Anders Larsen <al@alarsen.net>,
+        Steve French <sfrench@samba.org>,
+        Paulo Alcantara <pc@manguebit.com>,
+        Ronnie Sahlberg <lsahlber@redhat.com>,
+        Shyam Prasad N <sprasad@microsoft.com>,
+        Tom Talpey <tom@talpey.com>,
+        Sergey Senozhatsky <senozhatsky@chromium.org>,
+        Phillip Lougher <phillip@squashfs.org.uk>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Evgeniy Dushistov <dushistov@mail.ru>,
+        Hans de Goede <hdegoede@redhat.com>,
+        "Darrick J. Wong" <djwong@kernel.org>,
+        Damien Le Moal <dlemoal@kernel.org>,
+        Naohiro Aota <naohiro.aota@wdc.com>,
+        Johannes Thumshirn <jth@kernel.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Andrii Nakryiko <andrii@kernel.org>,
+        Martin KaFai Lau <martin.lau@linux.dev>,
+        Song Liu <song@kernel.org>, Yonghong Song <yhs@fb.com>,
+        John Fastabend <john.fastabend@gmail.com>,
+        KP Singh <kpsingh@kernel.org>,
+        Stanislav Fomichev <sdf@google.com>,
+        Hao Luo <haoluo@google.com>, Jiri Olsa <jolsa@kernel.org>,
+        Hugh Dickins <hughd@google.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Eric Dumazet <edumazet@google.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Paolo Abeni <pabeni@redhat.com>,
+        John Johansen <john.johansen@canonical.com>,
+        Paul Moore <paul@paul-moore.com>,
+        James Morris <jmorris@namei.org>,
+        "Serge E. Hallyn" <serge@hallyn.com>,
+        Stephen Smalley <stephen.smalley.work@gmail.com>,
+        Eric Paris <eparis@parisplace.org>,
+        Juergen Gross <jgross@suse.com>,
+        Ruihan Li <lrh2000@pku.edu.cn>,
+        Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>,
+        Wolfram Sang <wsa+renesas@sang-engineering.com>,
+        Udipto Goswami <quic_ugoswami@quicinc.com>,
+        Linyu Yuan <quic_linyyuan@quicinc.com>,
+        John Keeping <john@keeping.me.uk>,
+        Andrzej Pietrasiewicz <andrzej.p@collabora.com>,
+        Dan Carpenter <error27@gmail.com>,
+        Yuta Hayama <hayama@lineo.co.jp>,
+        Jozef Martiniak <jomajm@gmail.com>,
+        Jens Axboe <axboe@kernel.dk>,
+        Alan Stern <stern@rowland.harvard.edu>,
+        Sandeep Dhavale <dhavale@google.com>,
+        Dave Chinner <dchinner@redhat.com>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        ZhangPeng <zhangpeng362@huawei.com>,
+        Viacheslav Dubeyko <slava@dubeyko.com>,
+        Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>,
+        Aditya Garg <gargaditya08@live.com>,
+        Erez Zadok <ezk@cs.stonybrook.edu>,
+        Yifei Liu <yifeliu@cs.stonybrook.edu>,
+        Yu Zhe <yuzhe@nfschina.com>,
+        "Matthew Wilcox (Oracle)" <willy@infradead.org>,
+        Oleg Kanatov <okanatov@gmail.com>,
+        "Dr. David Alan Gilbert" <linux@treblig.org>,
+        Jiangshan Yi <yijiangshan@kylinos.cn>,
+        xu xin <cgel.zte@gmail.com>, Stefan Roesch <shr@devkernel.io>,
+        Zhihao Cheng <chengzhihao1@huawei.com>,
+        "Liam R. Howlett" <Liam.Howlett@Oracle.com>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        Minghao Chi <chi.minghao@zte.com.cn>,
+        Seth Forshee <sforshee@digitalocean.com>,
+        Zeng Jingxiang <linuszeng@tencent.com>,
+        Bart Van Assche <bvanassche@acm.org>,
+        Mimi Zohar <zohar@linux.ibm.com>,
+        Roberto Sassu <roberto.sassu@huawei.com>,
+        Zhang Yi <yi.zhang@huawei.com>, Tom Rix <trix@redhat.com>,
+        "Fabio M. De Francesco" <fmdefrancesco@gmail.com>,
+        Chen Zhongjin <chenzhongjin@huawei.com>,
+        Zhengchao Shao <shaozhengchao@huawei.com>,
+        Rik van Riel <riel@surriel.com>,
+        Jingyu Wang <jingyuwang_vip@163.com>,
+        Hangyu Hua <hbh25y@gmail.com>, linuxppc-dev@lists.ozlabs.org,
+        linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org,
+        linux-rdma@vger.kernel.org, linux-usb@vger.kernel.org,
+        v9fs@lists.linux.dev, linux-fsdevel@vger.kernel.org,
+        linux-afs@lists.infradead.org, autofs@vger.kernel.org,
+        linux-mm@kvack.org, linux-btrfs@vger.kernel.org,
+        ceph-devel@vger.kernel.org, codalist@coda.cs.cmu.edu,
+        ecryptfs@vger.kernel.org, linux-efi@vger.kernel.org,
+        linux-erofs@lists.ozlabs.org, linux-ext4@vger.kernel.org,
+        linux-f2fs-devel@lists.sourceforge.net, cluster-devel@redhat.com,
+        linux-um@lists.infradead.org, linux-mtd@lists.infradead.org,
+        jfs-discussion@lists.sourceforge.net, linux-nfs@vger.kernel.org,
+        linux-nilfs@vger.kernel.org, linux-ntfs-dev@lists.sourceforge.net,
+        ntfs3@lists.linux.dev, ocfs2-devel@oss.oracle.com,
+        linux-karma-devel@lists.sourceforge.net, devel@lists.orangefs.org,
+        linux-unionfs@vger.kernel.org, linux-hardening@vger.kernel.org,
+        reiserfs-devel@vger.kernel.org, linux-cifs@vger.kernel.org,
+        samba-technical@lists.samba.org,
+        linux-trace-kernel@vger.kernel.org, linux-xfs@vger.kernel.org,
+        bpf@vger.kernel.org, netdev@vger.kernel.org,
+        apparmor@lists.ubuntu.com, linux-security-module@vger.kernel.org,
+        selinux@vger.kernel.org
+Subject: Re: [PATCH 00/79] fs: new accessors for inode->i_ctime
+Message-ID: <20230623-wegelagerei-kanzlei-45cdcf5da157@brauner>
+References: <20230621144507.55591-1-jlayton@kernel.org>
+ <20230621152141.5961cf5f@gandalf.local.home>
+ <2a5a069572b46b59dd16fe8d54e549a9b5bbb6eb.camel@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20230615085920.7dadac74@gandalf.local.home>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <2a5a069572b46b59dd16fe8d54e549a9b5bbb6eb.camel@kernel.org>
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On Thu, Jun 15, 2023 at 08:59:20AM -0400, Steven Rostedt wrote:
+On Wed, Jun 21, 2023 at 03:52:27PM -0400, Jeff Layton wrote:
+> On Wed, 2023-06-21 at 15:21 -0400, Steven Rostedt wrote:
+> > On Wed, 21 Jun 2023 10:45:05 -0400
+> > Jeff Layton <jlayton@kernel.org> wrote:
+> > 
+> > > Most of this conversion was done via coccinelle, with a few of the more
+> > > non-standard accesses done by hand. There should be no behavioral
+> > > changes with this set. That will come later, as we convert individual
+> > > filesystems to use multigrain timestamps.
+> > 
+> > BTW, Linus has suggested to me that whenever a conccinelle script is used,
+> > it should be included in the change log.
+> > 
 > 
-> Masami,
+> Ok, here's what I have. I note again that my usage of coccinelle is
+> pretty primitive, so I ended up doing a fair bit of by-hand fixing after
+> applying these.
 > 
-> Want to take this via your probes/urgent branch and send it off to Linus?
+> Given the way that this change is broken up into 77 patches by
+> subsystem, to which changelogs should I add it? I could add it to the
+> "infrastructure" patch, but that's the one where I _didn't_ use it. 
+> 
+> Maybe to patch #79 (the one that renames i_ctime)?
 
-hi,
-did this one make it into some tree?
-
-thanks,
-jirka
-
-
-> 
-> -- Steve
-> 
-> 
-> On Thu, 15 Jun 2023 13:52:36 +0200
-> Jiri Olsa <jolsa@kernel.org> wrote:
-> 
-> > While running bpf selftests it's possible to get following fault:
-> > 
-> >   general protection fault, probably for non-canonical address \
-> >   0x6b6b6b6b6b6b6b6b: 0000 [#1] PREEMPT SMP DEBUG_PAGEALLOC NOPTI
-> >   ...
-> >   Call Trace:
-> >    <TASK>
-> >    fprobe_handler+0xc1/0x270
-> >    ? __pfx_bpf_testmod_init+0x10/0x10
-> >    ? __pfx_bpf_testmod_init+0x10/0x10
-> >    ? bpf_fentry_test1+0x5/0x10
-> >    ? bpf_fentry_test1+0x5/0x10
-> >    ? bpf_testmod_init+0x22/0x80
-> >    ? do_one_initcall+0x63/0x2e0
-> >    ? rcu_is_watching+0xd/0x40
-> >    ? kmalloc_trace+0xaf/0xc0
-> >    ? do_init_module+0x60/0x250
-> >    ? __do_sys_finit_module+0xac/0x120
-> >    ? do_syscall_64+0x37/0x90
-> >    ? entry_SYSCALL_64_after_hwframe+0x72/0xdc
-> >    </TASK>
-> > 
-> > In unregister_fprobe function we can't release fp->rethook while it's
-> > possible there are some of its users still running on another cpu.
-> > 
-> > Moving rethook_free call after fp->ops is unregistered with
-> > unregister_ftrace_function call.
-> > 
-> > Fixes: 5b0ab78998e3 ("fprobe: Add exit_handler support")
-> > Reviewed-by: Steven Rostedt (Google) <rostedt@goodmis.org>
-> > Signed-off-by: Jiri Olsa <jolsa@kernel.org>
-> > ---
-> >  kernel/trace/fprobe.c | 12 +++---------
-> >  1 file changed, 3 insertions(+), 9 deletions(-)
-> > 
-> > diff --git a/kernel/trace/fprobe.c b/kernel/trace/fprobe.c
-> > index 18d36842faf5..0121e8c0d54e 100644
-> > --- a/kernel/trace/fprobe.c
-> > +++ b/kernel/trace/fprobe.c
-> > @@ -364,19 +364,13 @@ int unregister_fprobe(struct fprobe *fp)
-> >  		    fp->ops.saved_func != fprobe_kprobe_handler))
-> >  		return -EINVAL;
-> >  
-> > -	/*
-> > -	 * rethook_free() starts disabling the rethook, but the rethook handlers
-> > -	 * may be running on other processors at this point. To make sure that all
-> > -	 * current running handlers are finished, call unregister_ftrace_function()
-> > -	 * after this.
-> > -	 */
-> > -	if (fp->rethook)
-> > -		rethook_free(fp->rethook);
-> > -
-> >  	ret = unregister_ftrace_function(&fp->ops);
-> >  	if (ret < 0)
-> >  		return ret;
-> >  
-> > +	if (fp->rethook)
-> > +		rethook_free(fp->rethook);
-> > +
-> >  	ftrace_free_filter(&fp->ops);
-> >  
-> >  	return ret;
-> 
+That works. I can also put this into a merge commit or pr message.
