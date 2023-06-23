@@ -2,462 +2,180 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 72898EB64D7
-	for <linux-trace-kernel@archiver.kernel.org>; Fri, 23 Jun 2023 14:16:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A375CEB64D7
+	for <linux-trace-kernel@archiver.kernel.org>; Fri, 23 Jun 2023 15:20:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231761AbjFWOQg (ORCPT
+        id S231755AbjFWPUj (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Fri, 23 Jun 2023 10:16:36 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49014 "EHLO
+        Fri, 23 Jun 2023 11:20:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38408 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231750AbjFWOQf (ORCPT
+        with ESMTP id S232747AbjFWPUb (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Fri, 23 Jun 2023 10:16:35 -0400
-Received: from mail-oa1-x36.google.com (mail-oa1-x36.google.com [IPv6:2001:4860:4864:20::36])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E58032135;
-        Fri, 23 Jun 2023 07:16:33 -0700 (PDT)
-Received: by mail-oa1-x36.google.com with SMTP id 586e51a60fabf-1ad10ad65f1so449397fac.1;
-        Fri, 23 Jun 2023 07:16:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1687529793; x=1690121793;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ZJ6T5kwycyurskhmS9zj3bwZSicgtrlBOojL4fycfgc=;
-        b=k/4ZxUlrglsqz73krpHvkxhCK5A/rz4XF1t9/Oqzh5EGBij/ZMkUwnN+N4nrIwydSu
-         3a9bh29R4glmmQzCIQMi29Pu70RHnSbr37sWyN/OCCq3RLnSkKo4QZOte0LQVP//fvX3
-         OSojQQcSFx3ZvOFbYEMnIzUL8Ofbsq1/FS6rk9W+6skYcyLtzwvyyofiQgkuB9TOeAjC
-         RRvjIe3JFq5nvpHJvF2iE0MbrsSZ1SaKm1AVd39OMlX1s1DAh2Jde101vhQB92eSz+u7
-         XuLffyd1/quAG23DjXD6CLI3pY51ZCAHhsJ88hTu3gqT5+Yg52iTj7LjWHlVRhreDqYD
-         8B6Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1687529793; x=1690121793;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=ZJ6T5kwycyurskhmS9zj3bwZSicgtrlBOojL4fycfgc=;
-        b=LWruusy64zC7wIEN3SSFmEbQG+vjImcr7K5qkM703Ti3rfel+3BPmqwYhv1Mtkc04k
-         qYSYu8EtNUo6SPZCOKVYznVCBGjkiylsJmJUb9f8+U99GUj6n7vdi3UAtM7oGRqStDJY
-         baJxQIvBca0klxmyG47uq/0lduuqkcQQ/oINPs7+3kbBlhPRC1OBNkoUiUvymvGVT+EF
-         LJe49HYc3f89rNDbcP1S0X00N6lvysKHFl+RO6XZNs62l4O1lHEClH1u2Gp6Em+sBa+M
-         cFWiQrxEr5V2O1RbMHI1jahb3ntG9U+dvJhU7qHkZkq4YaEWCpsCVZcV78GypNtTB4J6
-         13Ww==
-X-Gm-Message-State: AC+VfDzJ5oI0n9TZb9IwPH0qJ/WaQIvozWKNZszI2tojHI8ULyf+zFx8
-        bSbMCdV1IEHJE+nC68atk+0=
-X-Google-Smtp-Source: ACHHUZ5GJ+VVnmgFB9yXlUrABi2709l51cNIcBp9ZaCrWwJil7lcvcKzpN7RJi9ziYY+QmwRvNrDYA==
-X-Received: by 2002:a05:6870:9885:b0:19a:695:15a5 with SMTP id eg5-20020a056870988500b0019a069515a5mr13606405oab.25.1687529793063;
-        Fri, 23 Jun 2023 07:16:33 -0700 (PDT)
-Received: from vultr.guest ([2001:19f0:ac01:1058:5400:4ff:fe7c:972])
-        by smtp.gmail.com with ESMTPSA id p14-20020a63e64e000000b005533c53f550sm6505942pgj.45.2023.06.23.07.16.31
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 23 Jun 2023 07:16:32 -0700 (PDT)
-From:   Yafang Shao <laoar.shao@gmail.com>
-To:     ast@kernel.org, daniel@iogearbox.net, john.fastabend@gmail.com,
-        andrii@kernel.org, martin.lau@linux.dev, song@kernel.org,
-        yhs@fb.com, kpsingh@kernel.org, sdf@google.com, haoluo@google.com,
-        jolsa@kernel.org, quentin@isovalent.com, rostedt@goodmis.org,
-        mhiramat@kernel.org
-Cc:     bpf@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
-        Yafang Shao <laoar.shao@gmail.com>
-Subject: [PATCH v5 bpf-next 11/11] bpftool: Show perf link info
-Date:   Fri, 23 Jun 2023 14:15:46 +0000
-Message-Id: <20230623141546.3751-12-laoar.shao@gmail.com>
-X-Mailer: git-send-email 2.39.3
-In-Reply-To: <20230623141546.3751-1-laoar.shao@gmail.com>
-References: <20230623141546.3751-1-laoar.shao@gmail.com>
+        Fri, 23 Jun 2023 11:20:31 -0400
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.220.29])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 238FC10C1;
+        Fri, 23 Jun 2023 08:20:29 -0700 (PDT)
+Received: from relay2.suse.de (relay2.suse.de [149.44.160.134])
+        by smtp-out2.suse.de (Postfix) with ESMTP id D24151F45F;
+        Fri, 23 Jun 2023 15:20:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
+        t=1687533627; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=1mTZQB6E8gpW9xyv3IdX7kwRMApo1npl8Ta69cylcgI=;
+        b=cw+6g9R2o/Umv74/BGjs0HZFU73NXkDTjRhAwElwD9yLjkG2loVWkX98zsq+Jw9f7GWEbv
+        1LhcZAdPyuPlH6OaETf856CLkRN01mJSpFOO8X/jovaGWHnPkt2fDQYbq4M0K8/oavd3Ir
+        XsYDO2FS6i0HJDFn6EWyGK6+OhLducU=
+Received: from suse.cz (pmladek.udp.ovpn2.prg.suse.de [10.100.201.202])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by relay2.suse.de (Postfix) with ESMTPS id 1AE602C141;
+        Fri, 23 Jun 2023 15:20:22 +0000 (UTC)
+Date:   Fri, 23 Jun 2023 17:20:17 +0200
+From:   Petr Mladek <pmladek@suse.com>
+To:     Joel Granados <j.granados@samsung.com>
+Cc:     Jiri Slaby <jirislaby@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        mcgrof@kernel.org, Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+        Theodore Ts'o <tytso@mit.edu>,
+        "Jason A. Donenfeld" <Jason@zx2c4.com>,
+        Juergen Gross <jgross@suse.com>,
+        Stefano Stabellini <sstabellini@kernel.org>,
+        Benjamin LaHaise <bcrl@kvack.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Christian Brauner <brauner@kernel.org>,
+        Jeff Layton <jlayton@kernel.org>,
+        Chuck Lever <chuck.lever@oracle.com>, Jan Kara <jack@suse.cz>,
+        Kees Cook <keescook@chromium.org>,
+        Iurii Zaikin <yzaikin@google.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Andrii Nakryiko <andrii@kernel.org>,
+        Balbir Singh <bsingharora@gmail.com>,
+        Eric Biederman <ebiederm@xmission.com>,
+        "Naveen N. Rao" <naveen.n.rao@linux.ibm.com>,
+        Anil S Keshavamurthy <anil.s.keshavamurthy@intel.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Will Deacon <will@kernel.org>,
+        Sergey Senozhatsky <senozhatsky@chromium.org>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        Muchun Song <muchun.song@linux.dev>,
+        Naoya Horiguchi <naoya.horiguchi@nec.com>,
+        "Matthew Wilcox (Oracle)" <willy@infradead.org>,
+        David Howells <dhowells@redhat.com>,
+        Jarkko Sakkinen <jarkko@kernel.org>,
+        Paul Moore <paul@paul-moore.com>,
+        James Morris <jmorris@namei.org>,
+        "Serge E. Hallyn" <serge@hallyn.com>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Oleksandr Tyshchenko <oleksandr_tyshchenko@epam.com>,
+        Amir Goldstein <amir73il@gmail.com>,
+        John Fastabend <john.fastabend@gmail.com>,
+        Martin KaFai Lau <martin.lau@linux.dev>,
+        Song Liu <song@kernel.org>, Yonghong Song <yhs@fb.com>,
+        KP Singh <kpsingh@kernel.org>,
+        Stanislav Fomichev <sdf@google.com>,
+        Hao Luo <haoluo@google.com>, Jiri Olsa <jolsa@kernel.org>,
+        Waiman Long <longman@redhat.com>,
+        Boqun Feng <boqun.feng@gmail.com>,
+        John Ogness <john.ogness@linutronix.de>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
+        Daniel Bristot de Oliveira <bristot@redhat.com>,
+        Valentin Schneider <vschneid@redhat.com>,
+        Andy Lutomirski <luto@amacapital.net>,
+        Will Drewry <wad@chromium.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Miaohe Lin <linmiaohe@huawei.com>,
+        linux-kernel@vger.kernel.org, xen-devel@lists.xenproject.org,
+        linux-aio@kvack.org, linux-fsdevel@vger.kernel.org,
+        linux-mm@kvack.org, bpf@vger.kernel.org, kexec@lists.infradead.org,
+        linux-trace-kernel@vger.kernel.org, keyrings@vger.kernel.org,
+        linux-security-module@vger.kernel.org
+Subject: Re: [PATCH 08/11] sysctl: Add size to register_sysctl_init
+Message-ID: <ZJW4MdIvrWjbKtVy@alley>
+References: <20230621091000.424843-1-j.granados@samsung.com>
+ <CGME20230621091037eucas1p188e11d8064526a5a0549217d5a419647@eucas1p1.samsung.com>
+ <20230621091000.424843-9-j.granados@samsung.com>
+ <2023062150-outbound-quiet-2609@gregkh>
+ <20230621131552.pqsordxcjmiopciq@localhost>
+ <fc37eccc-b9b3-d888-6b57-78cd61986a11@kernel.org>
+ <20230622140021.g3odhui75ybwuai5@localhost>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230622140021.g3odhui75ybwuai5@localhost>
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-Enhance bpftool to display comprehensive information about exposed
-perf_event links, covering uprobe, kprobe, tracepoint, and generic perf
-event. The resulting output will include the following details:
+On Thu 2023-06-22 16:00:21, Joel Granados wrote:
+> On Thu, Jun 22, 2023 at 06:21:48AM +0200, Jiri Slaby wrote:
+> > On 21. 06. 23, 15:15, Joel Granados wrote:
+> > > On Wed, Jun 21, 2023 at 12:47:58PM +0200, Greg Kroah-Hartman wrote:
+> > > > On Wed, Jun 21, 2023 at 11:09:57AM +0200, Joel Granados wrote:
+> > > > >   static int __init random_sysctls_init(void)
+> > > > >   {
+> > > > > -	register_sysctl_init("kernel/random", random_table);
+> > > > > +	register_sysctl_init("kernel/random", random_table,
+> > > > > +			     ARRAY_SIZE(random_table));
+> > > > 
+> > > > As mentioned before, why not just do:
+> > > > 
+> > > > #define register_sysctl_init(string, table)	\
+> > > > 	__register_sysctl_init(string, table, ARRAY_SIZE(table);
+> > > Answered you in the original mail where you suggested it.
+> > 
+> > I am curious what that was, do you have a link?
+> of course. I think you will find it here https://lore.kernel.org/all/20230621123816.ufqbob6qthz4hujx@localhost/
 
-$ tools/bpf/bpftool/bpftool link show
-4: perf_event  prog 23
-        uprobe /home/dev/waken/bpf/uprobe/a.out+0x1338
-        bpf_cookie 0
-        pids uprobe(27503)
-5: perf_event  prog 24
-        uretprobe /home/dev/waken/bpf/uprobe/a.out+0x1338
-        bpf_cookie 0
-        pids uprobe(27503)
-6: perf_event  prog 31
-        kprobe ffffffffa90a9660 kernel_clone
-        bpf_cookie 0
-        pids kprobe(27777)
-7: perf_event  prog 30
-        kretprobe ffffffffa90a9660 kernel_clone
-        bpf_cookie 0
-        pids kprobe(27777)
-8: perf_event  prog 37
-        tracepoint sched_switch
-        bpf_cookie 0
-        pids tracepoint(28036)
-9: perf_event  prog 43
-        event software:cpu-clock
-        bpf_cookie 0
-        pids perf_event(28261)
-10: perf_event  prog 43
-        event hw-cache:LLC-load-misses
-        bpf_cookie 0
-        pids perf_event(28261)
-11: perf_event  prog 43
-        event hardware:cpu-cycles
-        bpf_cookie 0
-        pids perf_event(28261)
+Let me to copy the answer here:
 
-$ tools/bpf/bpftool/bpftool link show -j
-[{"id":4,"type":"perf_event","prog_id":23,"retprobe":false,"file":"/home/de=
-v/waken/bpf/uprobe/a.out","offset":4920,"bpf_cookie":0,"pids":[{"pid":27503=
-,"comm":"uprobe"}]},{"id":5,"type":"perf_event","prog_id":24,"retprobe":tru=
-e,"file":"/home/dev/waken/bpf/uprobe/a.out","offset":4920,"bpf_cookie":0,"p=
-ids":[{"pid":27503,"comm":"uprobe"}]},{"id":6,"type":"perf_event","prog_id"=
-:31,"retprobe":false,"addr":18446744072250627680,"func":"kernel_clone","off=
-set":0,"bpf_cookie":0,"pids":[{"pid":27777,"comm":"kprobe"}]},{"id":7,"type=
-":"perf_event","prog_id":30,"retprobe":true,"addr":18446744072250627680,"fu=
-nc":"kernel_clone","offset":0,"bpf_cookie":0,"pids":[{"pid":27777,"comm":"k=
-probe"}]},{"id":8,"type":"perf_event","prog_id":37,"tracepoint":"sched_swit=
-ch","bpf_cookie":0,"pids":[{"pid":28036,"comm":"tracepoint"}]},{"id":9,"typ=
-e":"perf_event","prog_id":43,"event_type":"software","event_config":"cpu-cl=
-ock","bpf_cookie":0,"pids":[{"pid":28261,"comm":"perf_event"}]},{"id":10,"t=
-ype":"perf_event","prog_id":43,"event_type":"hw-cache","event_config":"LLC-=
-load-misses","bpf_cookie":0,"pids":[{"pid":28261,"comm":"perf_event"}]},{"i=
-d":11,"type":"perf_event","prog_id":43,"event_type":"hardware","event_confi=
-g":"cpu-cycles","bpf_cookie":0,"pids":[{"pid":28261,"comm":"perf_event"}]}]
+<paste>
+I considered this at the outset, but it will not work with callers that
+use a pointer instead of the actual array.
+Additionally, we would not avoid big commits as we would have to go
+looking in all the files where register is called directly or indirectly
+and make sure the logic is sound.
+</paste>
 
-For generic perf events, the displayed information in bpftool is limited to
-the type and configuration, while other attributes such as sample_period,
-sample_freq, etc., are not included.
+For the callers using a pointer. A solution would be to create another
+wrapper which would take the array size, e.g.
 
-The kernel function address won't be exposed if it is not permitted by
-kptr_restrict. The result as follows when kptr_restrict is 2.
+#define register_sysctl_init_limited(string, table, size)	\
+	__register_sysctl_init(string, table, size);
 
-$ tools/bpf/bpftool/bpftool link show
-4: perf_event  prog 23
-        uprobe /home/dev/waken/bpf/uprobe/a.out+0x1338
-5: perf_event  prog 24
-        uretprobe /home/dev/waken/bpf/uprobe/a.out+0x1338
-6: perf_event  prog 31
-        kprobe kernel_clone
-7: perf_event  prog 30
-        kretprobe kernel_clone
-8: perf_event  prog 37
-        tracepoint sched_switch
-9: perf_event  prog 43
-        event software:cpu-clock
-10: perf_event  prog 43
-        event hw-cache:LLC-load-misses
-11: perf_event  prog 43
-        event hardware:cpu-cycles
 
-Signed-off-by: Yafang Shao <laoar.shao@gmail.com>
----
- tools/bpf/bpftool/link.c | 237 +++++++++++++++++++++++++++++++++++++++++++=
-+++-
- 1 file changed, 236 insertions(+), 1 deletion(-)
+And ARRAY_SIZE() is defined in include/linux/kernel.h as:
 
-diff --git a/tools/bpf/bpftool/link.c b/tools/bpf/bpftool/link.c
-index e5aeee3..31bee95 100644
---- a/tools/bpf/bpftool/link.c
-+++ b/tools/bpf/bpftool/link.c
-@@ -17,6 +17,8 @@
- #include "main.h"
- #include "xlated_dumper.h"
-=20
-+#define PERF_HW_CACHE_LEN 128
-+
- static struct hashmap *link_table;
- static struct dump_data dd =3D {};
-=20
-@@ -274,6 +276,110 @@ static int cmp_u64(const void *A, const void *B)
- 	jsonw_end_array(json_wtr);
- }
-=20
-+static void
-+show_perf_event_kprobe_json(struct bpf_link_info *info, json_writer_t *wtr)
-+{
-+	jsonw_bool_field(wtr, "retprobe", info->perf_event.kprobe.flags & 0x1);
-+	jsonw_uint_field(wtr, "addr", info->perf_event.kprobe.addr);
-+	jsonw_string_field(wtr, "func",
-+			   u64_to_ptr(info->perf_event.kprobe.func_name));
-+	jsonw_uint_field(wtr, "offset", info->perf_event.kprobe.offset);
-+}
-+
-+static void
-+show_perf_event_uprobe_json(struct bpf_link_info *info, json_writer_t *wtr)
-+{
-+	jsonw_bool_field(wtr, "retprobe", info->perf_event.uprobe.flags & 0x1);
-+	jsonw_string_field(wtr, "file",
-+			   u64_to_ptr(info->perf_event.uprobe.file_name));
-+	jsonw_uint_field(wtr, "offset", info->perf_event.uprobe.offset);
-+}
-+
-+static void
-+show_perf_event_tracepoint_json(struct bpf_link_info *info, json_writer_t =
-*wtr)
-+{
-+	jsonw_string_field(wtr, "tracepoint",
-+			   u64_to_ptr(info->perf_event.tracepoint.tp_name));
-+}
-+
-+static char *perf_config_hw_cache_str(__u64 config)
-+{
-+	const char *hw_cache, *result, *op;
-+	char *str =3D malloc(PERF_HW_CACHE_LEN);
-+
-+	if (!str) {
-+		p_err("mem alloc failed");
-+		return NULL;
-+	}
-+
-+	hw_cache =3D perf_event_name(evsel__hw_cache, config & 0xff);
-+	if (hw_cache)
-+		snprintf(str, PERF_HW_CACHE_LEN, "%s-", hw_cache);
-+	else
-+		snprintf(str, PERF_HW_CACHE_LEN, "%lld-", config & 0xff);
-+
-+	op =3D perf_event_name(evsel__hw_cache_op, (config >> 8) & 0xff);
-+	if (op)
-+		snprintf(str + strlen(str), PERF_HW_CACHE_LEN - strlen(str),
-+			 "%s-", op);
-+	else
-+		snprintf(str + strlen(str), PERF_HW_CACHE_LEN - strlen(str),
-+			 "%lld-", (config >> 8) & 0xff);
-+
-+	result =3D perf_event_name(evsel__hw_cache_result, config >> 16);
-+	if (result)
-+		snprintf(str + strlen(str), PERF_HW_CACHE_LEN - strlen(str),
-+			 "%s", result);
-+	else
-+		snprintf(str + strlen(str), PERF_HW_CACHE_LEN - strlen(str),
-+			 "%lld", config >> 16);
-+	return str;
-+}
-+
-+static const char *perf_config_str(__u32 type, __u64 config)
-+{
-+	const char *perf_config;
-+
-+	switch (type) {
-+	case PERF_TYPE_HARDWARE:
-+		perf_config =3D perf_event_name(event_symbols_hw, config);
-+		break;
-+	case PERF_TYPE_SOFTWARE:
-+		perf_config =3D perf_event_name(event_symbols_sw, config);
-+		break;
-+	case PERF_TYPE_HW_CACHE:
-+		perf_config =3D perf_config_hw_cache_str(config);
-+		break;
-+	default:
-+		perf_config =3D NULL;
-+		break;
-+	}
-+	return perf_config;
-+}
-+
-+static void
-+show_perf_event_event_json(struct bpf_link_info *info, json_writer_t *wtr)
-+{
-+	__u64 config =3D info->perf_event.event.config;
-+	__u32 type =3D info->perf_event.event.type;
-+	const char *perf_type, *perf_config;
-+
-+	perf_type =3D perf_event_name(perf_type_name, type);
-+	if (perf_type)
-+		jsonw_string_field(wtr, "event_type", perf_type);
-+	else
-+		jsonw_uint_field(wtr, "event_type", type);
-+
-+	perf_config =3D perf_config_str(type, config);
-+	if (perf_config)
-+		jsonw_string_field(wtr, "event_config", perf_config);
-+	else
-+		jsonw_uint_field(wtr, "event_config", config);
-+
-+	if (type =3D=3D PERF_TYPE_HW_CACHE && perf_config)
-+		free((void *)perf_config);
-+}
-+
- static int show_link_close_json(int fd, struct bpf_link_info *info)
- {
- 	struct bpf_prog_info prog_info;
-@@ -329,6 +435,24 @@ static int show_link_close_json(int fd, struct bpf_lin=
-k_info *info)
- 	case BPF_LINK_TYPE_KPROBE_MULTI:
- 		show_kprobe_multi_json(info, json_wtr);
- 		break;
-+	case BPF_LINK_TYPE_PERF_EVENT:
-+		switch (info->perf_event.type) {
-+		case BPF_PERF_EVENT_EVENT:
-+			show_perf_event_event_json(info, json_wtr);
-+			break;
-+		case BPF_PERF_EVENT_TRACEPOINT:
-+			show_perf_event_tracepoint_json(info, json_wtr);
-+			break;
-+		case BPF_PERF_EVENT_KPROBE:
-+			show_perf_event_kprobe_json(info, json_wtr);
-+			break;
-+		case BPF_PERF_EVENT_UPROBE:
-+			show_perf_event_uprobe_json(info, json_wtr);
-+			break;
-+		default:
-+			break;
-+		}
-+		break;
- 	default:
- 		break;
- 	}
-@@ -500,6 +624,75 @@ static void show_kprobe_multi_plain(struct bpf_link_in=
-fo *info)
- 	}
- }
-=20
-+static void show_perf_event_kprobe_plain(struct bpf_link_info *info)
-+{
-+	const char *buf;
-+
-+	buf =3D (const char *)u64_to_ptr(info->perf_event.kprobe.func_name);
-+	if (buf[0] =3D=3D '\0' && !info->perf_event.kprobe.addr)
-+		return;
-+
-+	if (info->perf_event.kprobe.flags & 0x1)
-+		printf("\n\tkretprobe ");
-+	else
-+		printf("\n\tkprobe ");
-+	if (info->perf_event.kprobe.addr)
-+		printf("%llx ", info->perf_event.kprobe.addr);
-+	printf("%s", buf);
-+	if (info->perf_event.kprobe.offset)
-+		printf("+%#x", info->perf_event.kprobe.offset);
-+	printf("  ");
-+}
-+
-+static void show_perf_event_uprobe_plain(struct bpf_link_info *info)
-+{
-+	const char *buf;
-+
-+	buf =3D (const char *)u64_to_ptr(info->perf_event.uprobe.file_name);
-+	if (buf[0] =3D=3D '\0')
-+		return;
-+
-+	if (info->perf_event.uprobe.flags & 0x1)
-+		printf("\n\turetprobe ");
-+	else
-+		printf("\n\tuprobe ");
-+	printf("%s+%#x  ", buf, info->perf_event.uprobe.offset);
-+}
-+
-+static void show_perf_event_tracepoint_plain(struct bpf_link_info *info)
-+{
-+	const char *buf;
-+
-+	buf =3D (const char *)u64_to_ptr(info->perf_event.tracepoint.tp_name);
-+	if (buf[0] =3D=3D '\0')
-+		return;
-+
-+	printf("\n\ttracepoint %s  ", buf);
-+}
-+
-+static void show_perf_event_event_plain(struct bpf_link_info *info)
-+{
-+	__u64 config =3D info->perf_event.event.config;
-+	__u32 type =3D info->perf_event.event.type;
-+	const char *perf_type, *perf_config;
-+
-+	printf("\n\tevent ");
-+	perf_type =3D perf_event_name(perf_type_name, type);
-+	if (perf_type)
-+		printf("%s:", perf_type);
-+	else
-+		printf("%u :", type);
-+
-+	perf_config =3D perf_config_str(type, config);
-+	if (perf_config)
-+		printf("%s  ", perf_config);
-+	else
-+		printf("%llu  ", config);
-+
-+	if (type =3D=3D PERF_TYPE_HW_CACHE && perf_config)
-+		free((void *)perf_config);
-+}
-+
- static int show_link_close_plain(int fd, struct bpf_link_info *info)
- {
- 	struct bpf_prog_info prog_info;
-@@ -548,6 +741,24 @@ static int show_link_close_plain(int fd, struct bpf_li=
-nk_info *info)
- 	case BPF_LINK_TYPE_KPROBE_MULTI:
- 		show_kprobe_multi_plain(info);
- 		break;
-+	case BPF_LINK_TYPE_PERF_EVENT:
-+		switch (info->perf_event.type) {
-+		case BPF_PERF_EVENT_EVENT:
-+			show_perf_event_event_plain(info);
-+			break;
-+		case BPF_PERF_EVENT_TRACEPOINT:
-+			show_perf_event_tracepoint_plain(info);
-+			break;
-+		case BPF_PERF_EVENT_KPROBE:
-+			show_perf_event_kprobe_plain(info);
-+			break;
-+		case BPF_PERF_EVENT_UPROBE:
-+			show_perf_event_uprobe_plain(info);
-+			break;
-+		default:
-+			break;
-+		}
-+		break;
- 	default:
- 		break;
- 	}
-@@ -570,11 +781,12 @@ static int do_show_link(int fd)
- 	struct bpf_link_info info;
- 	__u32 len =3D sizeof(info);
- 	__u64 *addrs =3D NULL;
--	char buf[256];
-+	char buf[PATH_MAX];
- 	int count;
- 	int err;
-=20
- 	memset(&info, 0, sizeof(info));
-+	buf[0] =3D '\0';
- again:
- 	err =3D bpf_link_get_info_by_fd(fd, &info, &len);
- 	if (err) {
-@@ -609,7 +821,30 @@ static int do_show_link(int fd)
- 			goto again;
- 		}
- 	}
-+	if (info.type =3D=3D BPF_LINK_TYPE_PERF_EVENT) {
-+		if (info.perf_event.type =3D=3D BPF_PERF_EVENT_EVENT)
-+			goto out;
-+		if (info.perf_event.type =3D=3D BPF_PERF_EVENT_TRACEPOINT &&
-+		    !info.perf_event.tracepoint.tp_name) {
-+			info.perf_event.tracepoint.tp_name =3D (unsigned long)&buf;
-+			info.perf_event.tracepoint.name_len =3D sizeof(buf);
-+			goto again;
-+		}
-+		if (info.perf_event.type =3D=3D BPF_PERF_EVENT_KPROBE &&
-+		    !info.perf_event.kprobe.func_name) {
-+			info.perf_event.kprobe.func_name =3D (unsigned long)&buf;
-+			info.perf_event.kprobe.name_len =3D sizeof(buf);
-+			goto again;
-+		}
-+		if (info.perf_event.type =3D=3D BPF_PERF_EVENT_UPROBE &&
-+		    !info.perf_event.uprobe.file_name) {
-+			info.perf_event.uprobe.file_name =3D (unsigned long)&buf;
-+			info.perf_event.uprobe.name_len =3D sizeof(buf);
-+			goto again;
-+		}
-+	}
-=20
-+out:
- 	if (json_output)
- 		show_link_close_json(fd, &info);
- 	else
---=20
-1.8.3.1
+#define ARRAY_SIZE(arr) (sizeof(arr) / sizeof((arr)[0]) + __must_be_array(arr))
 
+It will create a compiler error when either an array[] or *array is
+passed.
+
+When using this:
+
+1. The compiler will tell us where the other wrapper is needed.
+
+2. Some locations might need the @size parameter even when a static
+   array is passed. For example, neigh_sysctl_register() terminates
+   the array early.
+
+   But this will work when __register_sysctl_init() supports
+   both ways.I mean that it will stop either on @size or empty
+   element, as discussed in the other subthread.
+
+   This should be caught when the final "empty" is removed
+   from the particular caller.
+
+Best Regards,
+Petr
