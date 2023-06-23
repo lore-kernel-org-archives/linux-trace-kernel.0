@@ -2,73 +2,73 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EE5F9EB64D7
-	for <linux-trace-kernel@archiver.kernel.org>; Fri, 23 Jun 2023 16:50:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 180BBEB64D7
+	for <linux-trace-kernel@archiver.kernel.org>; Fri, 23 Jun 2023 16:50:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232439AbjFWQuS (ORCPT
+        id S232601AbjFWQue (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Fri, 23 Jun 2023 12:50:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56874 "EHLO
+        Fri, 23 Jun 2023 12:50:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56864 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232509AbjFWQtc (ORCPT
+        with ESMTP id S232745AbjFWQuM (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Fri, 23 Jun 2023 12:49:32 -0400
-Received: from mail-wr1-x42b.google.com (mail-wr1-x42b.google.com [IPv6:2a00:1450:4864:20::42b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CB3A13583
-        for <linux-trace-kernel@vger.kernel.org>; Fri, 23 Jun 2023 09:48:50 -0700 (PDT)
-Received: by mail-wr1-x42b.google.com with SMTP id ffacd0b85a97d-312863a983fso929761f8f.2
-        for <linux-trace-kernel@vger.kernel.org>; Fri, 23 Jun 2023 09:48:50 -0700 (PDT)
+        Fri, 23 Jun 2023 12:50:12 -0400
+Received: from mail-lf1-x134.google.com (mail-lf1-x134.google.com [IPv6:2a00:1450:4864:20::134])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BE6D63584
+        for <linux-trace-kernel@vger.kernel.org>; Fri, 23 Jun 2023 09:49:10 -0700 (PDT)
+Received: by mail-lf1-x134.google.com with SMTP id 2adb3069b0e04-4f4b2bc1565so1197924e87.2
+        for <linux-trace-kernel@vger.kernel.org>; Fri, 23 Jun 2023 09:49:10 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=isovalent.com; s=google; t=1687538929; x=1690130929;
+        d=isovalent.com; s=google; t=1687538949; x=1690130949;
         h=content-transfer-encoding:in-reply-to:from:references:cc:to
          :content-language:subject:user-agent:mime-version:date:message-id
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=em8e/YdhU6uGDSaxJVcqLoWFsW+6uVuPv5+TwUmAu9Q=;
-        b=ZpQOsUe0EGOAhpfXlLwq9xAiz1yWkubYRPrNtXLwc3NWChQvsEPU1IrDFAwfXmVCgj
-         j0dfPf0zausQCBd5OT5KUNg+XDus6AmbbmyQx80IPl4btZxt92ifswli6f7TXkLw3edP
-         XyAeQM2te5yM5wlY5TnVMROtdUKfCLDZQ0GHoyxcTiUdbpRFy7MzOv8hQJ/pjPUXhvU0
-         rRF1Y2CQv2o9N1uJIqqGbAQnOh0n76RyldkmYIyqMtvqUlSL3dEvlTbbZHrf88YgTfSC
-         w73/A8OVyZehxyGdQY6BEXhfcaR+Yk5vj863YXdEXKhaproJK9PR+ldWE+DF6rYsV/Tu
-         8vpA==
+        bh=x/PxY8tQdU97MOLVqoUfvdu4nBfQfQu+R5cDKKfJECE=;
+        b=E4/bpa3eloQI10LagVtXTw1L/3vtPtM+lrADhYSLrhyC2jL/v28lxNL8U/k0AgJHNo
+         SDYqeTFyf8gLF6hF7X44tRzAeNjb5D4kYmpCZrB0L5vtT4wGu2t8NNGamz/l726h0F4A
+         gL+GcekQeDGYERPgR+wpO0emY06JHpVlM7dHJ1jjuXdbZ1Dzx5tbj3YMgUanYMvqkcLi
+         90CJzSPBiRIuCkH8fTKsFNd+0Kg9p4ma3uVVpXyYSLQAFztY8+HuREb08DNvFvEAjZuC
+         vKWw4ncIv7+BWhJvx8828kI3DvYUmV7/Y5Kcy8O16nTxosdE/g0YkQxz2Aq1WySCCafc
+         5ugw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1687538929; x=1690130929;
+        d=1e100.net; s=20221208; t=1687538949; x=1690130949;
         h=content-transfer-encoding:in-reply-to:from:references:cc:to
          :content-language:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=em8e/YdhU6uGDSaxJVcqLoWFsW+6uVuPv5+TwUmAu9Q=;
-        b=RluCndsxvz7B3n7mI6Y1zpc7/+IW54Mw45AeURVJN/c6DRTwppnspnWRMLxpL1u65H
-         mca8w1gnjiQCplSz5A5Vuk9iJihjOJ6fIFFtFaV5VgBKF/i5hHxG0Fxw6why2NMlmCdE
-         oPFEB78VnYd8yJfHPMJjtOOv1epcm00KpEyT0Zy938MSjv0Xp0W81eveucjMZ2Yn/z+b
-         crtUvBFVf3TSyxYaqXddbwbTKUacmf7R+kZXUmmsnXPUmBQG4S/XjfkPW+BuIh2rtXFd
-         tlQI9xIh+0MSBj2BXhcFYU6Pv480OogFlT6WjHmjgsUw2LpWgF3QsaF7L2xWbCONVtF1
-         R6hA==
-X-Gm-Message-State: AC+VfDyfUcmMm+z9MycSgzIEoWG43eHY52JQ1K1DbOpbfthwv5MdH1iz
-        gBkSQIM5OozoPpIgGISkdMTUpQ==
-X-Google-Smtp-Source: ACHHUZ6FI5xT6Fucht1rSOdcV0HV0pBx4JEy4L1XUgEdYiFBYWHdoi0tA8nGnK+IEZbcvdRgCRqopg==
-X-Received: by 2002:a5d:43c2:0:b0:311:1cd8:b97a with SMTP id v2-20020a5d43c2000000b003111cd8b97amr4447081wrr.47.1687538929236;
-        Fri, 23 Jun 2023 09:48:49 -0700 (PDT)
+        bh=x/PxY8tQdU97MOLVqoUfvdu4nBfQfQu+R5cDKKfJECE=;
+        b=Ub6b09f3piGkSEJ2JXQ7HWpYnX9C59m8ZAJgEw6UxM5ULq8IPRFxPk5q+N20EBfi2X
+         pE75tf1DHaAXXfKNT0bNNh0qyRaTpZztZajkKXe0GliPL9sRbrJ+IgvkMZ07lm8rG5+n
+         pSPxEq7JU8bnZNb+lC6yk2QmbW0CKq6rsT7NmFoiQN7YVIKcOdUBQ6yfHzTRTzEzC1w9
+         E7dYA5lYI9c0huODmACHL8epOuxF9pVADqqpIYE6aSica6JJwX1gFdC5eluChcCF4B1p
+         cHl4I6p6TBZZ0RfaA1PnOCCfZ1RXODM9piYp+qSyrqeYKWsUeF2qvD4uQ+USgPV9Viy9
+         Medw==
+X-Gm-Message-State: AC+VfDz7IQ7b8py0z95aw0l2xWA10hX3vm+IOvBL+H0AvsCR6mn25h58
+        KrRIOjXA3vSL+tArZrRyls5r4g==
+X-Google-Smtp-Source: ACHHUZ7X2+xNVmFTyjh5Me4U/3iHEc+o+CUQiaa1cGfFaJpDx1mMN3TgiATBx/MkBX79wNu748XWgQ==
+X-Received: by 2002:a19:f201:0:b0:4f7:42de:3a8f with SMTP id q1-20020a19f201000000b004f742de3a8fmr12673193lfh.56.1687538948928;
+        Fri, 23 Jun 2023 09:49:08 -0700 (PDT)
 Received: from ?IPV6:2a02:8011:e80c:0:9cb8:f81f:3342:3b44? ([2a02:8011:e80c:0:9cb8:f81f:3342:3b44])
-        by smtp.gmail.com with ESMTPSA id j18-20020adff012000000b0030e56a9ff25sm9985240wro.31.2023.06.23.09.48.48
+        by smtp.gmail.com with ESMTPSA id v15-20020a05600c214f00b003fa78d1055esm2843808wml.21.2023.06.23.09.49.08
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 23 Jun 2023 09:48:49 -0700 (PDT)
-Message-ID: <a2835797-a0da-2c7f-5494-2edb820146e0@isovalent.com>
-Date:   Fri, 23 Jun 2023 17:48:48 +0100
+        Fri, 23 Jun 2023 09:49:08 -0700 (PDT)
+Message-ID: <74aab2b3-db85-abde-5361-f638c272c096@isovalent.com>
+Date:   Fri, 23 Jun 2023 17:49:08 +0100
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
  Thunderbird/102.12.0
-Subject: Re: [PATCH v5 bpf-next 02/11] bpftool: Dump the kernel symbol's
- module name
+Subject: Re: [PATCH v5 bpf-next 10/11] bpftool: Add perf event names
 Content-Language: en-GB
 To:     Yafang Shao <laoar.shao@gmail.com>, ast@kernel.org,
         daniel@iogearbox.net, john.fastabend@gmail.com, andrii@kernel.org,
         martin.lau@linux.dev, song@kernel.org, yhs@fb.com,
         kpsingh@kernel.org, sdf@google.com, haoluo@google.com,
         jolsa@kernel.org, rostedt@goodmis.org, mhiramat@kernel.org
-Cc:     bpf@vger.kernel.org, linux-trace-kernel@vger.kernel.org
+Cc:     bpf@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+        Jiri Olsa <olsajiri@gmail.com>
 References: <20230623141546.3751-1-laoar.shao@gmail.com>
- <20230623141546.3751-3-laoar.shao@gmail.com>
+ <20230623141546.3751-11-laoar.shao@gmail.com>
 From:   Quentin Monnet <quentin@isovalent.com>
-In-Reply-To: <20230623141546.3751-3-laoar.shao@gmail.com>
+In-Reply-To: <20230623141546.3751-11-laoar.shao@gmail.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 Precedence: bulk
@@ -76,52 +76,103 @@ List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
 2023-06-23 14:15 UTC+0000 ~ Yafang Shao <laoar.shao@gmail.com>
-> If the kernel symbol is in a module, we will dump the module name as
-> well. The square brackets around the module name are trimmed.
+> Add new functions and macros to get perf event names. These names are
+> copied from tool/perf/util/{parse-events,evsel}.c, so that in the future we
+> will have a good chance to use the same code.
 > 
+> Suggested-by: Jiri Olsa <olsajiri@gmail.com>
 > Signed-off-by: Yafang Shao <laoar.shao@gmail.com>
 > ---
->  tools/bpf/bpftool/xlated_dumper.c | 6 +++++-
->  tools/bpf/bpftool/xlated_dumper.h | 2 ++
->  2 files changed, 7 insertions(+), 1 deletion(-)
+>  tools/bpf/bpftool/link.c | 67 ++++++++++++++++++++++++++++++++++++++++++++++++
+>  1 file changed, 67 insertions(+)
 > 
-> diff --git a/tools/bpf/bpftool/xlated_dumper.c b/tools/bpf/bpftool/xlated_dumper.c
-> index da608e1..567f56d 100644
-> --- a/tools/bpf/bpftool/xlated_dumper.c
-> +++ b/tools/bpf/bpftool/xlated_dumper.c
-> @@ -46,7 +46,11 @@ void kernel_syms_load(struct dump_data *dd)
->  		}
->  		dd->sym_mapping = tmp;
->  		sym = &dd->sym_mapping[dd->sym_count];
-> -		if (sscanf(buff, "%p %*c %s", &address, sym->name) != 2)
+> diff --git a/tools/bpf/bpftool/link.c b/tools/bpf/bpftool/link.c
+> index 8461e6d..e5aeee3 100644
+> --- a/tools/bpf/bpftool/link.c
+> +++ b/tools/bpf/bpftool/link.c
+> @@ -5,6 +5,7 @@
+>  #include <linux/err.h>
+>  #include <linux/netfilter.h>
+>  #include <linux/netfilter_arp.h>
+> +#include <linux/perf_event.h>
+>  #include <net/if.h>
+>  #include <stdio.h>
+>  #include <unistd.h>
+> @@ -19,6 +20,72 @@
+>  static struct hashmap *link_table;
+>  static struct dump_data dd = {};
+>  
+> +static const char *perf_type_name[PERF_TYPE_MAX] = {
+> +	[PERF_TYPE_HARDWARE]			= "hardware",
+> +	[PERF_TYPE_SOFTWARE]			= "software",
+> +	[PERF_TYPE_TRACEPOINT]			= "tracepoint",
+> +	[PERF_TYPE_HW_CACHE]			= "hw-cache",
+> +	[PERF_TYPE_RAW]				= "raw",
+> +	[PERF_TYPE_BREAKPOINT]			= "breakpoint",
+> +};
+
+These ones (above) are not defined in perf, are they?
+
 > +
-> +		/* module is optional */
-> +		sym->module[0] = '\0';
-> +		/* trim the square brackets around the module name */
-> +		if (sscanf(buff, "%p %*c %s [%[^]]s", &address, sym->name, sym->module) < 2)
->  			continue;
->  		sym->address = (unsigned long)address;
->  		if (!strcmp(sym->name, "__bpf_call_base")) {
-> diff --git a/tools/bpf/bpftool/xlated_dumper.h b/tools/bpf/bpftool/xlated_dumper.h
-> index 9a94637..db3ba067 100644
-> --- a/tools/bpf/bpftool/xlated_dumper.h
-> +++ b/tools/bpf/bpftool/xlated_dumper.h
-> @@ -5,12 +5,14 @@
->  #define __BPF_TOOL_XLATED_DUMPER_H
->  
->  #define SYM_MAX_NAME	256
-> +#define MODULE_MAX_NAME	64
->  
->  struct bpf_prog_linfo;
->  
->  struct kernel_sym {
->  	unsigned long address;
->  	char name[SYM_MAX_NAME];
-> +	char module[MODULE_MAX_NAME];
->  };
->  
->  struct dump_data {
+> +const char *event_symbols_hw[PERF_COUNT_HW_MAX] = {
+> +	[PERF_COUNT_HW_CPU_CYCLES]		= "cpu-cycles",
+> +	[PERF_COUNT_HW_INSTRUCTIONS]		= "instructions",
+> +	[PERF_COUNT_HW_CACHE_REFERENCES]	= "cache-references",
+> +	[PERF_COUNT_HW_CACHE_MISSES]		= "cache-misses",
+> +	[PERF_COUNT_HW_BRANCH_INSTRUCTIONS]	= "branch-instructions",
+> +	[PERF_COUNT_HW_BRANCH_MISSES]		= "branch-misses",
+> +	[PERF_COUNT_HW_BUS_CYCLES]		= "bus-cycles",
+> +	[PERF_COUNT_HW_STALLED_CYCLES_FRONTEND]	= "stalled-cycles-frontend",
+> +	[PERF_COUNT_HW_STALLED_CYCLES_BACKEND]	= "stalled-cycles-backend",
+> +	[PERF_COUNT_HW_REF_CPU_CYCLES]		= "ref-cycles",
+> +};
+> +
+> +const char *event_symbols_sw[PERF_COUNT_SW_MAX] = {
+> +	[PERF_COUNT_SW_CPU_CLOCK]		= "cpu-clock",
+> +	[PERF_COUNT_SW_TASK_CLOCK]		= "task-clock",
+> +	[PERF_COUNT_SW_PAGE_FAULTS]		= "page-faults",
+> +	[PERF_COUNT_SW_CONTEXT_SWITCHES]	= "context-switches",
+> +	[PERF_COUNT_SW_CPU_MIGRATIONS]		= "cpu-migrations",
+> +	[PERF_COUNT_SW_PAGE_FAULTS_MIN]		= "minor-faults",
+> +	[PERF_COUNT_SW_PAGE_FAULTS_MAJ]		= "major-faults",
+> +	[PERF_COUNT_SW_ALIGNMENT_FAULTS]	= "alignment-faults",
+> +	[PERF_COUNT_SW_EMULATION_FAULTS]	= "emulation-faults",
+> +	[PERF_COUNT_SW_DUMMY]			= "dummy",
+> +	[PERF_COUNT_SW_BPF_OUTPUT]		= "bpf-output",
+> +	[PERF_COUNT_SW_CGROUP_SWITCHES]		= "cgroup-switches",
+> +};
+> +
+> +const char *evsel__hw_cache[PERF_COUNT_HW_CACHE_MAX] = {
+> +	[PERF_COUNT_HW_CACHE_L1D]		= "L1-dcache",
+> +	[PERF_COUNT_HW_CACHE_L1I]		= "L1-icache",
+> +	[PERF_COUNT_HW_CACHE_LL]		= "LLC",
+> +	[PERF_COUNT_HW_CACHE_DTLB]		= "dTLB",
+> +	[PERF_COUNT_HW_CACHE_ITLB]		= "iTLB",
+> +	[PERF_COUNT_HW_CACHE_BPU]		= "branch",
+> +	[PERF_COUNT_HW_CACHE_NODE]		= "node",
+> +};
+> +
+> +const char *evsel__hw_cache_op[PERF_COUNT_HW_CACHE_OP_MAX] = {
+> +	[PERF_COUNT_HW_CACHE_OP_READ]		= "load",
+> +	[PERF_COUNT_HW_CACHE_OP_WRITE]		= "store",
+> +	[PERF_COUNT_HW_CACHE_OP_PREFETCH]	= "prefetch",
+> +};
+> +
+> +const char *evsel__hw_cache_result[PERF_COUNT_HW_CACHE_RESULT_MAX] = {
+> +	[PERF_COUNT_HW_CACHE_RESULT_ACCESS]	= "refs",
+> +	[PERF_COUNT_HW_CACHE_RESULT_MISS]	= "misses",
+> +};
+> +
+> +#define perf_event_name(array, id) ({			\
+> +	const char *event_str = NULL;			\
+> +							\
+> +	if ((id) >= 0 && (id) < ARRAY_SIZE(array))	\
+> +		event_str = array[id];			\
+> +	event_str;					\
+> +})
+> +
+>  static int link_parse_fd(int *argc, char ***argv)
+>  {
+>  	int fd;
 
 Reviewed-by: Quentin Monnet <quentin@isovalent.com>
-
-Thanks!
