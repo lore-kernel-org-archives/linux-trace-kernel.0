@@ -2,84 +2,68 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 280AEEB64DA
-	for <linux-trace-kernel@archiver.kernel.org>; Thu, 22 Jun 2023 20:50:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B0BB4EB64D7
+	for <linux-trace-kernel@archiver.kernel.org>; Fri, 23 Jun 2023 09:17:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230100AbjFVUup (ORCPT
+        id S229561AbjFWJRZ (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Thu, 22 Jun 2023 16:50:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45736 "EHLO
+        Fri, 23 Jun 2023 05:17:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50158 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231287AbjFVUum (ORCPT
+        with ESMTP id S231178AbjFWJRQ (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Thu, 22 Jun 2023 16:50:42 -0400
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 0BB1D2133;
-        Thu, 22 Jun 2023 13:50:32 -0700 (PDT)
-Received: from CPC-beaub-VBQ1L.localdomain (unknown [4.155.48.121])
-        by linux.microsoft.com (Postfix) with ESMTPSA id 79F7A21C20B1;
-        Thu, 22 Jun 2023 13:50:32 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 79F7A21C20B1
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-        s=default; t=1687467032;
-        bh=PTggkHNckUu7CgoZ5GCLKrdt98eLD2Ch+hR6UTGKCy4=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=ZfT40bb4PhfdUo2AsTKUGo/NY8BzOomVqkTHztHvR99AbDIelwaFgchO7PeAx4Svt
-         955PAdgMHWl6n/blDfxCKUhVb3DqBbUea4MPN/U/EGnLVCRwT155G7OEwL6GCLwf4Y
-         72G4HqIdTFwtPlRW30LVzP1O0SHBI0l5hclBLs2g=
-Date:   Thu, 22 Jun 2023 20:50:27 +0000
-From:   Beau Belgrave <beaub@linux.microsoft.com>
-To:     Steven Rostedt <rostedt@goodmis.org>
-Cc:     sunliming <sunliming@kylinos.cn>, mhiramat@kernel.org,
-        kelulanainsley@gmail.com, linux-trace-kernel@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 3/3] selftests/user_events: Add test cases when event
- is diabled
-Message-ID: <ZJS0EyaneKuS9Rsh@CPC-beaub-VBQ1L.localdomain>
-References: <20230621063502.154378-1-sunliming@kylinos.cn>
- <ZJSuvC9bfcTQMWvI@CPC-beaub-VBQ1L.localdomain>
- <20230622163036.1e68d25b@gandalf.local.home>
+        Fri, 23 Jun 2023 05:17:16 -0400
+Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E106719BF;
+        Fri, 23 Jun 2023 02:17:10 -0700 (PDT)
+Received: from canpemm500007.china.huawei.com (unknown [172.30.72.55])
+        by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4QnWlS2rvGztQY2;
+        Fri, 23 Jun 2023 17:14:28 +0800 (CST)
+Received: from localhost (10.174.179.215) by canpemm500007.china.huawei.com
+ (7.192.104.62) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.27; Fri, 23 Jun
+ 2023 17:17:07 +0800
+From:   YueHaibing <yuehaibing@huawei.com>
+To:     <rostedt@goodmis.org>, <mhiramat@kernel.org>,
+        <mark.rutland@arm.com>, <tglx@linutronix.de>, <mingo@redhat.com>,
+        <bp@alien8.de>, <dave.hansen@linux.intel.com>, <x86@kernel.org>,
+        <hpa@zytor.com>, <peterz@infradead.org>
+CC:     <linux-kernel@vger.kernel.org>,
+        <linux-trace-kernel@vger.kernel.org>,
+        YueHaibing <yuehaibing@huawei.com>
+Subject: [PATCH -next] x86/ftrace: Remove unsued extern declaration ftrace_regs_caller_ret()
+Date:   Fri, 23 Jun 2023 17:16:40 +0800
+Message-ID: <20230623091640.21952-1-yuehaibing@huawei.com>
+X-Mailer: git-send-email 2.10.2.windows.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230622163036.1e68d25b@gandalf.local.home>
+Content-Type: text/plain
+X-Originating-IP: [10.174.179.215]
+X-ClientProxiedBy: dggems704-chm.china.huawei.com (10.3.19.181) To
+ canpemm500007.china.huawei.com (7.192.104.62)
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On Thu, Jun 22, 2023 at 04:30:36PM -0400, Steven Rostedt wrote:
-> On Thu, 22 Jun 2023 20:27:40 +0000
-> Beau Belgrave <beaub@linux.microsoft.com> wrote:
-> 
-> > On Wed, Jun 21, 2023 at 02:35:02PM +0800, sunliming wrote:
-> > > When user_events are disabled, it's write operation should return zero.
-> > > Add this test cases.
-> > > 
-> > > Signed-off-by: sunliming <sunliming@kylinos.cn>  
-> > 
-> > I don't have a problem with the chagne to the test, however, the patch
-> > title has a typo in it for "disabled" that should be corrected. I've
-> > ACK'd the other 2 patches, so you only need to resubmit this one with a
-> > correct title.
-> 
-> Ah, I misunderstood when we talked earlier today. I thought the typo was in
-> the text of the start selftest. That is, it was part of the patch.
-> 
-> For a typo in the subject, I can make that fix when I pulled it in. I just
-> avoid touching content of the patch itself.
-> 
+This is now unused, so can remove it.
 
-Great, thanks!
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+---
+ arch/x86/kernel/ftrace.c | 1 -
+ 1 file changed, 1 deletion(-)
 
-> Care to ack it?
-> 
+diff --git a/arch/x86/kernel/ftrace.c b/arch/x86/kernel/ftrace.c
+index 01e8f34daf22..12df54ff0e81 100644
+--- a/arch/x86/kernel/ftrace.c
++++ b/arch/x86/kernel/ftrace.c
+@@ -282,7 +282,6 @@ static inline void tramp_free(void *tramp) { }
+ 
+ /* Defined as markers to the end of the ftrace default trampolines */
+ extern void ftrace_regs_caller_end(void);
+-extern void ftrace_regs_caller_ret(void);
+ extern void ftrace_caller_end(void);
+ extern void ftrace_caller_op_ptr(void);
+ extern void ftrace_regs_caller_op_ptr(void);
+-- 
+2.34.1
 
-Sure thing:
-Acked-by: Beau Belgrave <beaub@linux.microsoft.com>
-
-Thanks,
--Beau
-
-> Thanks!
-> 
-> -- Steve
