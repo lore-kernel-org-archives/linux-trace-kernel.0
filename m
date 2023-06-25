@@ -2,209 +2,227 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C63BEB64DC
-	for <linux-trace-kernel@archiver.kernel.org>; Sun, 25 Jun 2023 14:36:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F121FC001DE
+	for <linux-trace-kernel@archiver.kernel.org>; Sun, 25 Jun 2023 16:15:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230487AbjFYOgJ (ORCPT
+        id S230487AbjFYQPT (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Sun, 25 Jun 2023 10:36:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56736 "EHLO
+        Sun, 25 Jun 2023 12:15:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51980 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229672AbjFYOgI (ORCPT
+        with ESMTP id S230434AbjFYQPR (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Sun, 25 Jun 2023 10:36:08 -0400
-Received: from mail-qk1-x72d.google.com (mail-qk1-x72d.google.com [IPv6:2607:f8b0:4864:20::72d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1BEA711A;
-        Sun, 25 Jun 2023 07:36:07 -0700 (PDT)
-Received: by mail-qk1-x72d.google.com with SMTP id af79cd13be357-7659cb9c42aso19450185a.3;
-        Sun, 25 Jun 2023 07:36:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1687703766; x=1690295766;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=q4aftoAe9ZFkdLQu9LOd7OH+M2fAovpAGenyTnid5wc=;
-        b=XCVhoVJP5jzRs9co5oTB/Mwk2YI2HkkhhGTlVXbT6LJ2721vH4u8zmgy2Yy18d3a5g
-         sNygwj67DcNn+ZHnRYanMzzsDN+VzAlJqkJ6P6jLaCBHHogspqBEDmjsXRiPcf9IEyeH
-         PsZrES+T6UaeqDzJQO9gpfJLdlouyOsEYlqQ3d7t9YSyXZL0tOwmkvx9HpymjCcNdWQA
-         8A53vX27yjy4fq7ElQEW3S9Fu2rlqOuB+CkO4kJAmVFjct06VB3lAPWRZH0xXkEJg2L2
-         zXAJ8FBYeQGCNayksxkA9NixnRIbajGOWo28YjnTqqIKfK/9j9iqGKTvzM1tP43YDbK3
-         Ba+Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1687703766; x=1690295766;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=q4aftoAe9ZFkdLQu9LOd7OH+M2fAovpAGenyTnid5wc=;
-        b=WeMFZ5jtE51OmKYb9pv8ZiK//rdxffTLBAPlXHAomKKfuuPnGRrCZE1i96tINNRQO/
-         aM27Z1ki097BrzBDfBac0z7PN6jG6L5DJWtepDRFX+s8y3/d52D0KJ73iMFdMgQ7PWrb
-         m309xr3Y6uPhTiTHwrfNz7TsnLX9STYLnKZ+IB2uxpbfQLyCfE3rC2EvT5EW80QCdbfU
-         jC97XMaRR18wYTuc1RT1tV5Q1eb4qwjZJu5AtVEvpBMrKxyVi3zmXZPnD7SHt5FgTm5G
-         j2+Z1IKJIunnl5m8+DzjXqdTNa9yg4hDP8VN3vXNMOMnnPPe5+bAuxfbY7rYJGfzXYvN
-         Rddw==
-X-Gm-Message-State: AC+VfDyqEf6xWXNOmuYgAJU/CJpaH2/Nc+DhqVgSWPlpA5/bB5uQRGLb
-        2dh3ez+YtC4C7m7hIOYDx892Hm62gnJN6bpy8SI=
-X-Google-Smtp-Source: ACHHUZ6D4sfG23ec9XO5cdBLq9MIT487ZuB27FwCy8DAolQu8FZa/fIwEQcu3reagBiGGI3CiFNGo1ivEaQA/DCohqU=
-X-Received: by 2002:a05:620a:4089:b0:765:5756:799d with SMTP id
- f9-20020a05620a408900b007655756799dmr7077983qko.29.1687703766141; Sun, 25 Jun
- 2023 07:36:06 -0700 (PDT)
+        Sun, 25 Jun 2023 12:15:17 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B1BB01A5;
+        Sun, 25 Jun 2023 09:15:15 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 0961B60C00;
+        Sun, 25 Jun 2023 16:15:15 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2E463C433C8;
+        Sun, 25 Jun 2023 16:15:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1687709714;
+        bh=4/ubcrsJvqhBH/vtuVerDOnT8cLh0Z8x9NdrY0vOnlQ=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=WstfenfqrQraRy6ufCoglL05809oMSEcRfUfndB4rQcusE2zI6TcMHkeBnayI84XA
+         LeozoS1GxcgX6ngSkoBmbS3qtRRxpB4XJfcJ0UBAlF7QFxeCg91BLDI10maMfpngYE
+         GUM0fRwCgV10clhNpI2PaQ4gob7CHex19G8gRldqPBuUpM78fGkBpM0UXT8ixelGSU
+         z1J5NhvB3QyMnCUu0HFkwD1i+NEXK0yL9AmrFlsQbZjM/QMXh/KkJhf0b8d0tCsjR9
+         O2Kt+FWy9X6r90AuucdbQ5DKiCYwwvRks6UN7t6Eai/BXzXsbKQsTn9de+dLQqBnA/
+         HFT91PEpPBRoA==
+Date:   Sun, 25 Jun 2023 19:14:17 +0300
+From:   Mike Rapoport <rppt@kernel.org>
+To:     Andy Lutomirski <luto@kernel.org>
+Cc:     Mark Rutland <mark.rutland@arm.com>,
+        Kees Cook <keescook@chromium.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Christophe Leroy <christophe.leroy@csgroup.eu>,
+        "David S. Miller" <davem@davemloft.net>,
+        Dinh Nguyen <dinguyen@kernel.org>,
+        Heiko Carstens <hca@linux.ibm.com>,
+        Helge Deller <deller@gmx.de>,
+        Huacai Chen <chenhuacai@kernel.org>,
+        Kent Overstreet <kent.overstreet@linux.dev>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Nadav Amit <nadav.amit@gmail.com>,
+        "Naveen N. Rao" <naveen.n.rao@linux.ibm.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Puranjay Mohan <puranjay12@gmail.com>,
+        Rick P Edgecombe <rick.p.edgecombe@intel.com>,
+        "Russell King (Oracle)" <linux@armlinux.org.uk>,
+        Song Liu <song@kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Will Deacon <will@kernel.org>, bpf@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-mips@vger.kernel.org,
+        linux-mm@kvack.org, linux-modules@vger.kernel.org,
+        linux-parisc@vger.kernel.org, linux-riscv@lists.infradead.org,
+        linux-s390@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, loongarch@lists.linux.dev,
+        netdev@vger.kernel.org, sparclinux@vger.kernel.org,
+        the arch/x86 maintainers <x86@kernel.org>
+Subject: Re: [PATCH v2 02/12] mm: introduce execmem_text_alloc() and
+ jit_text_alloc()
+Message-ID: <20230625161417.GK52412@kernel.org>
+References: <20230616085038.4121892-1-rppt@kernel.org>
+ <20230616085038.4121892-3-rppt@kernel.org>
+ <f9a7eebe-d36e-4587-b99d-35d4edefdd14@app.fastmail.com>
+ <20230618080027.GA52412@kernel.org>
+ <a17c65c6-863f-4026-9c6f-a04b659e9ab4@app.fastmail.com>
 MIME-Version: 1.0
-References: <20230623141546.3751-1-laoar.shao@gmail.com> <20230623141546.3751-10-laoar.shao@gmail.com>
- <CAEf4Bzadyzhncvqv85W=tF+EZLjnUww_ZRCAr6mf-aL5p9P1SA@mail.gmail.com>
-In-Reply-To: <CAEf4Bzadyzhncvqv85W=tF+EZLjnUww_ZRCAr6mf-aL5p9P1SA@mail.gmail.com>
-From:   Yafang Shao <laoar.shao@gmail.com>
-Date:   Sun, 25 Jun 2023 22:35:29 +0800
-Message-ID: <CALOAHbD3y9P6kXBNdU-zVsVtUDv138D+dJi2=Vn0ryxVYAMJ_g@mail.gmail.com>
-Subject: Re: [PATCH v5 bpf-next 09/11] bpf: Support ->fill_link_info for perf_event
-To:     Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Cc:     ast@kernel.org, daniel@iogearbox.net, john.fastabend@gmail.com,
-        andrii@kernel.org, martin.lau@linux.dev, song@kernel.org,
-        yhs@fb.com, kpsingh@kernel.org, sdf@google.com, haoluo@google.com,
-        jolsa@kernel.org, quentin@isovalent.com, rostedt@goodmis.org,
-        mhiramat@kernel.org, bpf@vger.kernel.org,
-        linux-trace-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <a17c65c6-863f-4026-9c6f-a04b659e9ab4@app.fastmail.com>
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On Sat, Jun 24, 2023 at 5:55=E2=80=AFAM Andrii Nakryiko
-<andrii.nakryiko@gmail.com> wrote:
->
-> On Fri, Jun 23, 2023 at 7:16=E2=80=AFAM Yafang Shao <laoar.shao@gmail.com=
-> wrote:
+On Mon, Jun 19, 2023 at 10:09:02AM -0700, Andy Lutomirski wrote:
+> 
+> On Sun, Jun 18, 2023, at 1:00 AM, Mike Rapoport wrote:
+> > On Sat, Jun 17, 2023 at 01:38:29PM -0700, Andy Lutomirski wrote:
+> >> On Fri, Jun 16, 2023, at 1:50 AM, Mike Rapoport wrote:
+> >> > From: "Mike Rapoport (IBM)" <rppt@kernel.org>
+> >> >
+> >> > module_alloc() is used everywhere as a mean to allocate memory for code.
+> >> >
+> >> > Beside being semantically wrong, this unnecessarily ties all subsystems
+> >> > that need to allocate code, such as ftrace, kprobes and BPF to modules
+> >> > and puts the burden of code allocation to the modules code.
+> >> >
+> >> > Several architectures override module_alloc() because of various
+> >> > constraints where the executable memory can be located and this causes
+> >> > additional obstacles for improvements of code allocation.
+> >> >
+> >> > Start splitting code allocation from modules by introducing
+> >> > execmem_text_alloc(), execmem_free(), jit_text_alloc(), jit_free() APIs.
+> >> >
+> >> > Initially, execmem_text_alloc() and jit_text_alloc() are wrappers for
+> >> > module_alloc() and execmem_free() and jit_free() are replacements of
+> >> > module_memfree() to allow updating all call sites to use the new APIs.
+> >> >
+> >> > The intention semantics for new allocation APIs:
+> >> >
+> >> > * execmem_text_alloc() should be used to allocate memory that must reside
+> >> >   close to the kernel image, like loadable kernel modules and generated
+> >> >   code that is restricted by relative addressing.
+> >> >
+> >> > * jit_text_alloc() should be used to allocate memory for generated code
+> >> >   when there are no restrictions for the code placement. For
+> >> >   architectures that require that any code is within certain distance
+> >> >   from the kernel image, jit_text_alloc() will be essentially aliased to
+> >> >   execmem_text_alloc().
+> >> >
+> >> 
+> >> Is there anything in this series to help users do the appropriate
+> >> synchronization when the actually populate the allocated memory with
+> >> code?  See here, for example:
 > >
-> > By introducing support for ->fill_link_info to the perf_event link, use=
-rs
-> > gain the ability to inspect it using `bpftool link show`. While the cur=
-rent
-> > approach involves accessing this information via `bpftool perf show`,
-> > consolidating link information for all link types in one place offers
-> > greater convenience. Additionally, this patch extends support to the
-> > generic perf event, which is not currently accommodated by
-> > `bpftool perf show`. While only the perf type and config are exposed to
-> > userspace, other attributes such as sample_period and sample_freq are
-> > ignored. It's important to note that if kptr_restrict is not permitted,=
- the
-> > probed address will not be exposed, maintaining security measures.
-> >
-> > A new enum bpf_perf_event_type is introduced to help the user understan=
-d
-> > which struct is relevant.
-> >
-> > Signed-off-by: Yafang Shao <laoar.shao@gmail.com>
-> > ---
-> >  include/uapi/linux/bpf.h       |  35 +++++++++++++
-> >  kernel/bpf/syscall.c           | 115 +++++++++++++++++++++++++++++++++=
-++++++++
-> >  tools/include/uapi/linux/bpf.h |  35 +++++++++++++
-> >  3 files changed, 185 insertions(+)
-> >
-> > diff --git a/include/uapi/linux/bpf.h b/include/uapi/linux/bpf.h
-> > index 23691ea..1c579d5 100644
-> > --- a/include/uapi/linux/bpf.h
-> > +++ b/include/uapi/linux/bpf.h
-> > @@ -1056,6 +1056,14 @@ enum bpf_link_type {
-> >         MAX_BPF_LINK_TYPE,
-> >  };
-> >
-> > +enum bpf_perf_event_type {
-> > +       BPF_PERF_EVENT_UNSPEC =3D 0,
-> > +       BPF_PERF_EVENT_UPROBE =3D 1,
-> > +       BPF_PERF_EVENT_KPROBE =3D 2,
-> > +       BPF_PERF_EVENT_TRACEPOINT =3D 3,
-> > +       BPF_PERF_EVENT_EVENT =3D 4,
-> > +};
-> > +
-> >  /* cgroup-bpf attach flags used in BPF_PROG_ATTACH command
-> >   *
-> >   * NONE(default): No further bpf programs allowed in the subtree.
-> > @@ -6443,6 +6451,33 @@ struct bpf_link_info {
-> >                         __u32 count;
-> >                         __u32 flags;
-> >                 } kprobe_multi;
-> > +               struct {
-> > +                       __u32 type; /* enum bpf_perf_event_type */
-> > +                       __u32 :32;
-> > +                       union {
-> > +                               struct {
-> > +                                       __aligned_u64 file_name; /* in/=
-out */
-> > +                                       __u32 name_len;
-> > +                                       __u32 offset;/* offset from fil=
-e_name */
-> > +                                       __u32 flags;
-> > +                               } uprobe; /* BPF_PERF_EVENT_UPROBE */
-> > +                               struct {
-> > +                                       __aligned_u64 func_name; /* in/=
-out */
-> > +                                       __u32 name_len;
-> > +                                       __u32 offset;/* offset from fun=
-c_name */
-> > +                                       __u64 addr;
-> > +                                       __u32 flags;
-> > +                               } kprobe; /* BPF_PERF_EVENT_KPROBE */
-> > +                               struct {
-> > +                                       __aligned_u64 tp_name;   /* in/=
-out */
-> > +                                       __u32 name_len;
-> > +                               } tracepoint; /* BPF_PERF_EVENT_TRACEPO=
-INT */
-> > +                               struct {
-> > +                                       __u64 config;
-> > +                                       __u32 type;
-> > +                               } event; /* BPF_PERF_EVENT_EVENT */
-> > +                       };
-> > +               } perf_event;
-> >         };
-> >  } __attribute__((aligned(8)));
-> >
-> > diff --git a/kernel/bpf/syscall.c b/kernel/bpf/syscall.c
-> > index c863d39..02dad3c 100644
-> > --- a/kernel/bpf/syscall.c
-> > +++ b/kernel/bpf/syscall.c
-> > @@ -3394,9 +3394,124 @@ static int bpf_perf_link_fill_common(const stru=
-ct perf_event *event,
-> >         return 0;
-> >  }
-> >
-> > +#ifdef CONFIG_KPROBE_EVENTS
-> > +static int bpf_perf_link_fill_kprobe(const struct perf_event *event,
-> > +                                    struct bpf_link_info *info)
-> > +{
-> > +       char __user *uname;
-> > +       u64 addr, offset;
-> > +       u32 ulen, type;
-> > +       int err;
-> > +
-> > +       uname =3D u64_to_user_ptr(info->perf_event.kprobe.func_name);
-> > +       ulen =3D info->perf_event.kprobe.name_len;
-> > +       info->perf_event.type =3D BPF_PERF_EVENT_KPROBE;
-> > +       err =3D bpf_perf_link_fill_common(event, uname, ulen, &offset, =
-&addr,
-> > +                                       &type);
-> > +       if (err)
-> > +               return err;
-> > +
-> > +       info->perf_event.kprobe.offset =3D offset;
-> > +       if (type =3D=3D BPF_FD_TYPE_KRETPROBE)
-> > +               info->perf_event.kprobe.flags =3D 1;
->
-> hm... ok, sorry, I didn't realize that these flags are not part of
-> UAPI. I don't think just randomly defining 1 to mean retprobe is a
-> good approach. Let's drop flags if there are actually no flags.
->
-> How about in addition to BPF_PERF_EVENT_UPROBE add
-> BPF_PERF_EVENT_URETPROBE, and for BPF_PERF_EVENT_KPROBE add also
-> BPF_PERF_EVENT_KRETPROBE. They will share respective perf_event.uprobe
-> and perf_event.kprobe sections in bpf_link_info.
->
-> It seems consistent with what we did for bpf_task_fd_type enum.
+> > This series only factors out the executable allocations from modules and
+> > puts them in a central place.
+> > Anything else would go on top after this lands.
+> 
+> Hmm.
+> 
+> On the one hand, there's nothing wrong with factoring out common code. On
+> the other hand, this is probably the right time to at least start
+> thinking about synchronization, at least to the extent that it might make
+> us want to change this API.  (I'm not at all saying that this series
+> should require changes -- I'm just saying that this is a good time to
+> think about how this should work.)
+> 
+> The current APIs, *and* the proposed jit_text_alloc() API, don't actually
+> look like the one think in the Linux ecosystem that actually
+> intelligently and efficiently maps new text into an address space:
+> mmap().
+> 
+> On x86, you can mmap() an existing file full of executable code PROT_EXEC
+> and jump to it with minimal synchronization (just the standard implicit
+> ordering in the kernel that populates the pages before setting up the
+> PTEs and whatever user synchronization is needed to avoid jumping into
+> the mapping before mmap() finishes).  It works across CPUs, and the only
+> possible way userspace can screw it up (for a read-only mapping of
+> read-only text, anyway) is to jump to the mapping too early, in which
+> case userspace gets a page fault.  Incoherence is impossible, and no one
+> needs to "serialize" (in the SDM sense).
+> 
+> I think the same sequence (from userspace's perspective) works on other
+> architectures, too, although I think more cache management is needed on
+> the kernel's end.  As far as I know, no Linux SMP architecture needs an
+> IPI to map executable text into usermode, but I could easily be wrong.
+> (IIRC RISC-V has very developer-unfriendly icache management, but I don't
+> remember the details.)
+> 
+> Of course, using ptrace or any other FOLL_FORCE to modify text on x86 is
+> rather fraught, and I bet many things do it wrong when userspace is
+> multithreaded.  But not in production because it's mostly not used in
+> production.)
+> 
+> But jit_text_alloc() can't do this, because the order of operations
+> doesn't match.  With jit_text_alloc(), the executable mapping shows up
+> before the text is populated, so there is no atomic change from not-there
+> to populated-and-executable.  Which means that there is an opportunity
+> for CPUs, speculatively or otherwise, to start filling various caches
+> with intermediate states of the text, which means that various
+> architectures (even x86!) may need serialization.
+> 
+> For eBPF- and module- like use cases, where JITting/code gen is quite
+> coarse-grained, perhaps something vaguely like:
+> 
+> jit_text_alloc() -> returns a handle and an executable virtual address,
+> but does *not* map it there
+> jit_text_write() -> write to that handle
+> jit_text_map() -> map it and synchronize if needed (no sync needed on
+> x86, I think)
+> 
+> could be more efficient and/or safer.
+> 
+> (Modules could use this too.  Getting alternatives right might take some
+> fiddling, because off the top of my head, this doesn't match how it works
+> now.)
+> 
+> To make alternatives easier, this could work, maybe (haven't fully
+> thought it through):
+> 
+> jit_text_alloc()
+> jit_text_map_rw_inplace() -> map at the target address, but RW, !X
+> 
+> write the text and apply alternatives
+> 
+> jit_text_finalize() -> change from RW to RX *and synchronize*
+> 
+> jit_text_finalize() would either need to wait for RCU (possibly extra
+> heavy weight RCU to get "serialization") or send an IPI.
 
-Good idea. Will do it.
+This essentially how modules work now. The memory is allocated RW, written
+and updated with alternatives and then made ROX in the end with set_memory
+APIs.
 
+The issue with not having the memory mapped X when it's written is that we
+cannot use large pages to map it. One of the goals is to have executable
+memory mapped with large pages and make code allocator able to divide that
+page among several callers.
 
---=20
-Regards
-Yafang
+So the idea was that jit_text_alloc() will have a cache of large pages
+mapped ROX, will allocate memory from those caches and there will be
+jit_update() that uses text poking for writing to that memory.
+
+Upon allocation of a large page to increase the cache, that large page will
+be "invalidated" by filling it with breakpoint instructions (e.g int3 on
+x86)
+
+To improve the performance of this process, we can write to !X copy and
+then text_poke it to the actual address in one go. This will require some
+changes to get the alternatives right.
+
+-- 
+Sincerely yours,
+Mike.
