@@ -2,92 +2,82 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4263FC0015E
-	for <linux-trace-kernel@archiver.kernel.org>; Sun, 25 Jun 2023 06:01:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F47CEB64DC
+	for <linux-trace-kernel@archiver.kernel.org>; Sun, 25 Jun 2023 12:11:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229611AbjFYGB5 (ORCPT
+        id S231962AbjFYML3 (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Sun, 25 Jun 2023 02:01:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35988 "EHLO
+        Sun, 25 Jun 2023 08:11:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47838 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230369AbjFYGBy (ORCPT
+        with ESMTP id S231152AbjFYML3 (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Sun, 25 Jun 2023 02:01:54 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B2360B5;
-        Sat, 24 Jun 2023 23:01:53 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id A963C60A20;
-        Sun, 25 Jun 2023 06:01:51 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3310DC433C8;
-        Sun, 25 Jun 2023 06:01:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1687672911;
-        bh=IBKoJp/+tM2p8hVcc5pJrPto183vA3oXy+x7gD5JnB8=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=qbdds3jGrvTlkwchHHxQ3n/cPPokP5pRyds4YDxBWcenHMxjYKq2wjjcnm5PPLZm7
-         N8vxlRtL3ApLDiZTycTdD3WW4ApTID0apqNGWmekexpNcebfON/RUS+XLzG0Dfh9jc
-         NAKnjPg1PUNH3rBTfRXvMuR/HPMI9BhjxewDQd+SgR2p1lzWmYfJacBP4kux46rTt1
-         06XjSUi43+BtLuTvHf4DzHVwxdEIJWSr3++YBAzdXW+gi1Jav123+kwcG0cck3AWhJ
-         yMgJGbR7OCWx9u+pvFX+k4quO8343073UIA1QqzONuIvDQZpVJFdLz0O+m+SFeT1e/
-         d0gjE1Y/hXyIQ==
-Date:   Sun, 25 Jun 2023 15:01:45 +0900
-From:   Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To:     YueHaibing <yuehaibing@huawei.com>
-Cc:     <rostedt@goodmis.org>, <mark.rutland@arm.com>,
-        <tglx@linutronix.de>, <mingo@redhat.com>, <bp@alien8.de>,
-        <dave.hansen@linux.intel.com>, <x86@kernel.org>, <hpa@zytor.com>,
-        <peterz@infradead.org>, <linux-kernel@vger.kernel.org>,
-        <linux-trace-kernel@vger.kernel.org>
-Subject: Re: [PATCH -next] x86/ftrace: Remove unsued extern declaration
- ftrace_regs_caller_ret()
-Message-Id: <20230625150145.8681fc80d19c3d7bc34f7abe@kernel.org>
-In-Reply-To: <20230623091640.21952-1-yuehaibing@huawei.com>
-References: <20230623091640.21952-1-yuehaibing@huawei.com>
-X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        Sun, 25 Jun 2023 08:11:29 -0400
+Received: from szxga03-in.huawei.com (szxga03-in.huawei.com [45.249.212.189])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 50FA8115;
+        Sun, 25 Jun 2023 05:11:27 -0700 (PDT)
+Received: from dggpeml500012.china.huawei.com (unknown [172.30.72.55])
+        by szxga03-in.huawei.com (SkyGuard) with ESMTP id 4QpqXL5vT4zLn4C;
+        Sun, 25 Jun 2023 20:09:22 +0800 (CST)
+Received: from localhost.localdomain (10.67.175.61) by
+ dggpeml500012.china.huawei.com (7.185.36.15) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.27; Sun, 25 Jun 2023 20:11:24 +0800
+From:   Zheng Yejian <zhengyejian1@huawei.com>
+To:     <rostedt@goodmis.org>, <mhiramat@kernel.org>, <shuah@kernel.org>
+CC:     <linux-kernel@vger.kernel.org>,
+        <linux-trace-kernel@vger.kernel.org>,
+        <linux-kselftest@vger.kernel.org>, <zhengyejian1@huawei.com>
+Subject: [PATCH] selftests/ftrace: Correctly enable event in instance-event.tc
+Date:   Mon, 26 Jun 2023 08:11:44 +0800
+Message-ID: <20230626001144.2635956-1-zhengyejian1@huawei.com>
+X-Mailer: git-send-email 2.25.1
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [10.67.175.61]
+X-ClientProxiedBy: dggems704-chm.china.huawei.com (10.3.19.181) To
+ dggpeml500012.china.huawei.com (7.185.36.15)
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On Fri, 23 Jun 2023 17:16:40 +0800
-YueHaibing <yuehaibing@huawei.com> wrote:
+Function instance_set() expects to enable event 'sched_switch', so we
+should set 1 to its 'enable' file.
 
-> This is now unused, so can remove it.
-> 
+Testcase passed after this patch:
+  # ./ftracetest test.d/instances/instance-event.tc
+  === Ftrace unit tests ===
+  [1] Test creation and deletion of trace instances while setting an event
+  [PASS]
 
-Looks good to me.
+  # of passed:  1
+  # of failed:  0
+  # of unresolved:  0
+  # of untested:  0
+  # of unsupported:  0
+  # of xfailed:  0
+  # of undefined(test bug):  0
 
-Acked-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+Signed-off-by: Zheng Yejian <zhengyejian1@huawei.com>
+---
+ .../testing/selftests/ftrace/test.d/instances/instance-event.tc | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Thanks!
-
-> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
-> ---
->  arch/x86/kernel/ftrace.c | 1 -
->  1 file changed, 1 deletion(-)
-> 
-> diff --git a/arch/x86/kernel/ftrace.c b/arch/x86/kernel/ftrace.c
-> index 01e8f34daf22..12df54ff0e81 100644
-> --- a/arch/x86/kernel/ftrace.c
-> +++ b/arch/x86/kernel/ftrace.c
-> @@ -282,7 +282,6 @@ static inline void tramp_free(void *tramp) { }
->  
->  /* Defined as markers to the end of the ftrace default trampolines */
->  extern void ftrace_regs_caller_end(void);
-> -extern void ftrace_regs_caller_ret(void);
->  extern void ftrace_caller_end(void);
->  extern void ftrace_caller_op_ptr(void);
->  extern void ftrace_regs_caller_op_ptr(void);
-> -- 
-> 2.34.1
-> 
-
-
+diff --git a/tools/testing/selftests/ftrace/test.d/instances/instance-event.tc b/tools/testing/selftests/ftrace/test.d/instances/instance-event.tc
+index 0eb47fbb3f44..42422e425107 100644
+--- a/tools/testing/selftests/ftrace/test.d/instances/instance-event.tc
++++ b/tools/testing/selftests/ftrace/test.d/instances/instance-event.tc
+@@ -39,7 +39,7 @@ instance_read() {
+ 
+ instance_set() {
+         while :; do
+-                echo 1 > foo/events/sched/sched_switch
++                echo 1 > foo/events/sched/sched_switch/enable
+         done 2> /dev/null
+ }
+ 
 -- 
-Masami Hiramatsu (Google) <mhiramat@kernel.org>
+2.25.1
+
