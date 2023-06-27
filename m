@@ -2,52 +2,53 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C9B8EB64D9
-	for <linux-trace-kernel@archiver.kernel.org>; Tue, 27 Jun 2023 16:23:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AB2C0EB64D9
+	for <linux-trace-kernel@archiver.kernel.org>; Tue, 27 Jun 2023 17:06:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229813AbjF0QXL (ORCPT
+        id S229898AbjF0RGO (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Tue, 27 Jun 2023 12:23:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45144 "EHLO
+        Tue, 27 Jun 2023 13:06:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41774 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229680AbjF0QXK (ORCPT
+        with ESMTP id S229719AbjF0RGN (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Tue, 27 Jun 2023 12:23:10 -0400
+        Tue, 27 Jun 2023 13:06:13 -0400
 Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9A2CE1FF0;
-        Tue, 27 Jun 2023 09:23:09 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4EF1C10FF
+        for <linux-trace-kernel@vger.kernel.org>; Tue, 27 Jun 2023 10:06:12 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange X25519 server-signature RSA-PSS (2048 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 2E743611D4;
-        Tue, 27 Jun 2023 16:23:09 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3CD1BC433C0;
-        Tue, 27 Jun 2023 16:23:07 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id CF2A4611EB
+        for <linux-trace-kernel@vger.kernel.org>; Tue, 27 Jun 2023 17:06:11 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7258DC433C8;
+        Tue, 27 Jun 2023 17:06:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1687882988;
-        bh=X7C7c+mN0VpeHK+Ecm9oxh43Gqr/gyJV3O7Y5jth8xA=;
+        s=k20201202; t=1687885571;
+        bh=BwR1nJT+erjmMBlmDftI263VFW/Cra8sC5xlQFXfiUo=;
         h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=tSPi7/uDtxqfHqRTF6IbAWQW8/3OiYU+wZWpSb0uiTAc+vMsUawt2XKn4Hp6EbklJ
-         1okL5JcYassR84iRuRkwC741bSR8W25HoTWBcUYgYoaMEhnLGwEF22tQNhCFX8bSHF
-         FjsX4JlAPveulCI5S4GXjzrrsBkedfdH34gXrFSvJrR804Tbmmg4tsOvLO87kpEZaN
-         ui0iclTiL4bRAqDa+J1BW5LcfIBPbRKAy9vQPLDtBdh+v2cDXZgRKYY2bjcuSkFGty
-         ZULNPOykMMaMTMMRC0jglcUoRQ0uZuV7P0O1PfLLLqA1kHqL9qZeTuY+jsugYkYhMJ
-         n7YOKmDVk2t0A==
-Date:   Wed, 28 Jun 2023 01:23:05 +0900
+        b=k2vR5AixuMi51aMwfwi+SCwf0V46abwsZ3EvxHE8CPaVxivFrFbgFBe2yLvNic0ag
+         YvIzt6yVhq+o02nNLwqfJ8odu03rOZxRal9z9mwEfvQkPZjka9U13VeYqvKR8aFq1A
+         Nn7kIen/aoKpRKQagrbF9G7hKcC76XcYDLCPc1C2we1U6CLFtAN1WuZBl4FaBWEcWH
+         +E7PQBRiajpmpbJzYRgsnQQZyzl1lEZTs5SRHt9QwuvvNOOaCPNQTdFT9DJ1sJmlti
+         e7fjol0YtOOjUwrqpu2bUw8U0/ibGotyirWKtDUH7CdcBw0mwK4tzLBdUSMEeR/ymS
+         kt7HNYASz/h7Q==
+Date:   Wed, 28 Jun 2023 02:06:06 +0900
 From:   Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To:     Masami Hiramatsu (Google) <mhiramat@kernel.org>
-Cc:     Jiri Olsa <jolsa@kernel.org>, Steven Rostedt <rostedt@goodmis.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        lkml <linux-kernel@vger.kernel.org>,
-        linux-trace-kernel@vger.kernel.org, bpf@vger.kernel.org
-Subject: Re: [PATCH] fprobe: Release rethook after the ftrace_ops is
- unregistered
-Message-Id: <20230628012305.978e34d44f1a53fe20327fde@kernel.org>
-In-Reply-To: <20230627233306.b9b04d75f86944466f6534c2@kernel.org>
-References: <20230615115236.3476617-1-jolsa@kernel.org>
-        <20230627233306.b9b04d75f86944466f6534c2@kernel.org>
-X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+To:     Jackie Liu <liu.yun@linux.dev>
+Cc:     Mark Rutland <mark.rutland@arm.com>,
+        linux-arm-kernel@lists.infradead.org,
+        "rostedt@goodmis.org >> Steven Rostedt" <rostedt@goodmis.org>,
+        Jiri Olsa <olsajiri@gmail.com>,
+        Linux Trace Kernel <linux-trace-kernel@vger.kernel.org>,
+        bpf@vger.kernel.org
+Subject: Re: Please help, I want kprobe.multi support on arm64, but regs is
+ replaced by args
+Message-Id: <20230628020606.b67d161c4d4f7e41bd466cd2@kernel.org>
+In-Reply-To: <0118f3b5-d13a-57f0-7a7f-41f59666d387@linux.dev>
+References: <0118f3b5-d13a-57f0-7a7f-41f59666d387@linux.dev>
+X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 Mime-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
@@ -55,68 +56,60 @@ Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On Tue, 27 Jun 2023 23:33:06 +0900
-Masami Hiramatsu (Google) <mhiramat@kernel.org> wrote:
+Hi Jackie,
 
-> > diff --git a/kernel/trace/fprobe.c b/kernel/trace/fprobe.c
-> > index 18d36842faf5..0121e8c0d54e 100644
-> > --- a/kernel/trace/fprobe.c
-> > +++ b/kernel/trace/fprobe.c
-> > @@ -364,19 +364,13 @@ int unregister_fprobe(struct fprobe *fp)
-> >  		    fp->ops.saved_func != fprobe_kprobe_handler))
-> >  		return -EINVAL;
-> >  
-> > -	/*
-> > -	 * rethook_free() starts disabling the rethook, but the rethook handlers
-> > -	 * may be running on other processors at this point. To make sure that all
-> > -	 * current running handlers are finished, call unregister_ftrace_function()
-> > -	 * after this.
-> > -	 */
+That is actiall what I'm working on now :)
 
-Oh, wait, here is an important comment. If a rethook handler is still running
-(because it hooks target function exit), returning from unregister_fprobe()
-right after rethook_free() may cause another issue.
+Here is my previous implementation (but not applicable because now we need to
+remove kretprobe trampoline with it.)
+https://lore.kernel.org/all/164735287344.1084943.9787335632585653418.stgit@devnote2/
 
-rethook_free() clears 'rh->handler', so after calling rethook_free(), we
-can ensure no NEW rethook handler (means fprobe_exit_handler()) is called.
-However, it doesn't mean there is no current running fprobe_exit_handler().
-Thus if unregister_fprobe() caller releases the 'fp' right after returning
-from unregister_fprobe(), current running fprobe_exit_handler() can access
-'fp' (use-after-free).
+Let me explain my idea. I would like to replace the kretprobe with fprobe
+exit handler so that we can intgrate the function return hook with fgraph tracer.
+Currently fprobe entry/exit handler uses pt_regs, but I will replace it with
+ftrace_regs. And this means rethook has to work with ftrace_regs and it can not
+support kretprobes anymore on some arch (HAVE_RETHOOK but
+ !HAVE_DYNAMIC_FTRACE_WITH_REGS).
 
-Thus we need to add below code with this patch;
-	/*
-	 * The rethook handlers may be running on other processors at this point.
-	 * To make sure that all current running handlers are finished, disable
-	 * rethook by clearing handler and call unregister_ftrace_function()
-	 * to ensure all running rethook handlers exit. And call rethook_free().
-	 */
-	if (fp->rethook)
-		WRITE_ONCE(fp->rethook->handler, NULL);
+There are many good reasons, like;
 
-> > -	if (fp->rethook)
-> > -		rethook_free(fp->rethook);
-> > -
-> >  	ret = unregister_ftrace_function(&fp->ops);
-> >  	if (ret < 0)
-> >  		return ret;
-> >  
-> > +	if (fp->rethook)
-> > +		rethook_free(fp->rethook);
-> > +
-> >  	ftrace_free_filter(&fp->ops);
-> >  
-> >  	return ret;
+- On some arch (e.g. arm64) can not emulate full pt_regs.
+- Saving full register on function entry/exit is not efficient.
+- Enabling both fgraph tracer and rethook are redundant.
+
+This requires some changes on kprobe users like BPF and SystemTap, so I need to
+talk with them about
+
+- Moving onto the fprobe to trace function entry/exit.
+- Using ftrace_regs API to access function argument and return value.
+
+Anyway, I'll add CONFIG_DYNAMIC_FTRACE_WITH_REGS dependency to them until
+in-kernel stuffs are ready. It ensures ftrace_regs can be converted to
+pt_regs.
+
+I also introduced fprobe events, so I will send a series of patches how to do
+that (fprobe entry side has been done, working on rethook side).
 
 Thank you,
 
-> > -- 
-> > 2.40.1
-> > 
+
+On Sun, 25 Jun 2023 16:27:44 +0800
+Jackie Liu <liu.yun@linux.dev> wrote:
+
+> Hi, Mark Rutland and other developers.
 > 
+> I am trying to implement the rethook of the arm64 platform, referring to
+> the code of other architectures, it can already run normally on the v6.1
+> branch, but after commit 26299b3f6ba2 ("ftrace: arm64: move from REGS to
+> ARGS"), regs is no longer supported, resulting in CONFIG_FPROBE is also
+> not supported (although RETHOOK is implemented). I try to revert the
+> patch, and kprobe.multi can be run correctly. Now, what should I do?
+> Should I roll back this patch or find a way to run fprobe without regs?
 > 
-> -- 
-> Masami Hiramatsu (Google) <mhiramat@kernel.org>
+> Any help is welcome.
+> 
+> --
+> Jackie Liu
 
 
 -- 
