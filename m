@@ -2,128 +2,135 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D1A74C001DD
-	for <linux-trace-kernel@archiver.kernel.org>; Mon, 26 Jun 2023 17:49:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4940DEB64D9
+	for <linux-trace-kernel@archiver.kernel.org>; Tue, 27 Jun 2023 04:43:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230311AbjFZRtZ (ORCPT
+        id S231292AbjF0EnU (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Mon, 26 Jun 2023 13:49:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46116 "EHLO
+        Tue, 27 Jun 2023 00:43:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38022 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230377AbjFZRtK (ORCPT
+        with ESMTP id S230465AbjF0EmV (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Mon, 26 Jun 2023 13:49:10 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 942EB26B3;
-        Mon, 26 Jun 2023 10:48:52 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 3025360F18;
-        Mon, 26 Jun 2023 17:48:52 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 86401C43397;
-        Mon, 26 Jun 2023 17:48:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1687801731;
-        bh=fFWuzhLLiGkinhaWeToFLkDX/dcx5OWER83aW8VgRow=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=Qn7TSH5fBy879Kn45s8a/YCOEx1oTS+0VCd/Q+kNmCB7uRTTg7TK3CW2K5FgKL5SO
-         RoBVKuhnNkjoWxoU5K2xmCMLOL3TePePVRvun87gj3KrTnQpXgAMXLWOX/L2U+vGMb
-         wy6CqBDWmWhCmphC6Q8EiBNziTaMXriaczMp6DJiN1Ej/WUjTzJ6N+lvXogj4eiJcj
-         PJKRTqLP+Zecd+1KGIrC38/JsFePpZ84jlJVtuUPeUpe+0KdJssjei1KlWQsAb8xqI
-         wX+VWs0F7zWSqHLgR+NZLp09+VOq+k1qPrGR83NuByW+4SQgicdeCKOv73ZNgnYywR
-         IXCdgqJe6fP2Q==
-Received: by mail-lf1-f43.google.com with SMTP id 2adb3069b0e04-4f8689fbf59so5765332e87.0;
-        Mon, 26 Jun 2023 10:48:51 -0700 (PDT)
-X-Gm-Message-State: AC+VfDwHOCXBDBdGd9b4lMdSKT8qVBasv78TzKVknxYGcI7OVT7Ygd8R
-        4MKUxER8LP9Ic52vOMgwJgoERu5KyoiNGxxH/7k=
-X-Google-Smtp-Source: ACHHUZ6w6e1OYy7QM9S+YTdK71Dx4cd9s642AcRaJSfPZb8UXF8n/hvi2zuHhdV8C7DcTgUpaxVtcUwpuH0YchvBFOg=
-X-Received: by 2002:a19:5f5d:0:b0:4f8:5e62:b94b with SMTP id
- a29-20020a195f5d000000b004f85e62b94bmr8655403lfj.9.1687801729333; Mon, 26 Jun
- 2023 10:48:49 -0700 (PDT)
+        Tue, 27 Jun 2023 00:42:21 -0400
+Received: from mail-qt1-x830.google.com (mail-qt1-x830.google.com [IPv6:2607:f8b0:4864:20::830])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 84D7E26A9;
+        Mon, 26 Jun 2023 21:39:35 -0700 (PDT)
+Received: by mail-qt1-x830.google.com with SMTP id d75a77b69052e-3fde9739e20so36206741cf.2;
+        Mon, 26 Jun 2023 21:39:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1687840774; x=1690432774;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=KHjpNQzC+Q2IL4RRpRsi47zUXLa6D+m3AFuxLIltpF8=;
+        b=CnVTrczLMg8QFVCBFHPfMRjMxrIASRqOLsER1JxRAinp3ld7kL0lTsyegx9oceTyIj
+         iY664TOITPnCHmFw6goWhzR5plg5jKQ+q9z/c1zXzwFXCUFrrP6cZCsmpuKW/sw0ZDLw
+         zGj6VCzhF1zSagoJevB/51wWSv8XS/doEm6uRdG+xUVLkjEu61kF0BTljM0yT8tAMwW1
+         IXmISC8Xmj/Lgo7BGtpFSSc8X0kEa6HJwXkvDw+3PBCB/np3l8uVxD8RpwY64Ftk1/wQ
+         hXczvr1GgfS0K4vPMwyPiP74dXrtxUCIU9ROIL98qIcj2zpq3gl+br3YGdYFHcoLlyCH
+         jP+A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1687840774; x=1690432774;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=KHjpNQzC+Q2IL4RRpRsi47zUXLa6D+m3AFuxLIltpF8=;
+        b=LYBtP4kPy1g1yyEx2MwM54VBkiluN79XlJCPE4b/C9W3YXe7Qhb+cCKvdbakprlf3d
+         ttDQ3x3t4rI7KZw17RYokZsdi9BS/C+9zXq4vAyKCLUENCXSZSXLbmM7hxqnCETizu39
+         Q2SAKp1cbmJa+nC8qHbfU+DSbBmS5U6Q7B6xlP+P8FPunNMMhPeN1jAB8BCzRH6/Xk6V
+         WaBMdv+41QTJ7HwXGpBmr+DcgqHKncRJIg3P0zwVl+rbFrUrOtbtyD+z+xAuzZCJqQfS
+         tIBTmzzio3gNy62jJOzZcwud3mIw0qZo4yJ9nbG+uyOilwVOfPHAZAxAuEqUIXaLt4zE
+         nBow==
+X-Gm-Message-State: AC+VfDw+S6T/4CdgyahroWGbODYLx9UOSrb2kvohm0MyKjl4+2pzazwa
+        4rZPHvILzY7W7hzONSznK+4oqTvlLnWYROOauOhSXSbO
+X-Google-Smtp-Source: ACHHUZ4GSlYEvU37ypfSllsBQwmEC/ZFbZttxU6BLxrKovFxHaP/9/t4wZHgV/0Su67X8dWbNZUnSbB48eH8jYBha8o=
+X-Received: by 2002:ac8:7f87:0:b0:3ff:21f1:93f with SMTP id
+ z7-20020ac87f87000000b003ff21f1093fmr21972608qtj.7.1687840774037; Mon, 26 Jun
+ 2023 21:39:34 -0700 (PDT)
 MIME-Version: 1.0
-References: <20230616085038.4121892-1-rppt@kernel.org> <20230616085038.4121892-3-rppt@kernel.org>
- <f9a7eebe-d36e-4587-b99d-35d4edefdd14@app.fastmail.com> <20230618080027.GA52412@kernel.org>
- <a17c65c6-863f-4026-9c6f-a04b659e9ab4@app.fastmail.com> <20230625161417.GK52412@kernel.org>
- <ZJmFFmexl_1GUhIL@FVFF77S0Q05N>
-In-Reply-To: <ZJmFFmexl_1GUhIL@FVFF77S0Q05N>
-From:   Song Liu <song@kernel.org>
-Date:   Mon, 26 Jun 2023 10:48:37 -0700
-X-Gmail-Original-Message-ID: <CAPhsuW4pDkd7rCWRM6938ve36rfhGxyu=8t1-GjcKnNajofpQA@mail.gmail.com>
-Message-ID: <CAPhsuW4pDkd7rCWRM6938ve36rfhGxyu=8t1-GjcKnNajofpQA@mail.gmail.com>
-Subject: Re: [PATCH v2 02/12] mm: introduce execmem_text_alloc() and jit_text_alloc()
-To:     Mark Rutland <mark.rutland@arm.com>
-Cc:     Mike Rapoport <rppt@kernel.org>, Andy Lutomirski <luto@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Christophe Leroy <christophe.leroy@csgroup.eu>,
-        "David S. Miller" <davem@davemloft.net>,
-        Dinh Nguyen <dinguyen@kernel.org>,
-        Heiko Carstens <hca@linux.ibm.com>,
-        Helge Deller <deller@gmx.de>,
-        Huacai Chen <chenhuacai@kernel.org>,
-        Kent Overstreet <kent.overstreet@linux.dev>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Nadav Amit <nadav.amit@gmail.com>,
-        "Naveen N. Rao" <naveen.n.rao@linux.ibm.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Puranjay Mohan <puranjay12@gmail.com>,
-        Rick P Edgecombe <rick.p.edgecombe@intel.com>,
-        "Russell King (Oracle)" <linux@armlinux.org.uk>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Will Deacon <will@kernel.org>, bpf@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-mips@vger.kernel.org,
-        linux-mm@kvack.org, linux-modules@vger.kernel.org,
-        linux-parisc@vger.kernel.org, linux-riscv@lists.infradead.org,
-        linux-s390@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, loongarch@lists.linux.dev,
-        netdev@vger.kernel.org, sparclinux@vger.kernel.org,
-        "the arch/x86 maintainers" <x86@kernel.org>
+References: <72b05526-4dda-430a-b4ca-2ee4f26f2185@moroto.mountain>
+In-Reply-To: <72b05526-4dda-430a-b4ca-2ee4f26f2185@moroto.mountain>
+From:   Tzvetomir Stoyanov <tz.stoyanov@gmail.com>
+Date:   Tue, 27 Jun 2023 07:39:17 +0300
+Message-ID: <CAPpZLN4ACVRrDXofO9jNQznEuF+CK6KNbCCz=5t93kMzESbZGg@mail.gmail.com>
+Subject: Re: [RFC] tracing: Cleanup the correct ep in enable_trace_eprobe()
+To:     Dan Carpenter <dan.carpenter@linaro.org>
+Cc:     Steven Rostedt <rostedt@goodmis.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        linux-trace-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On Mon, Jun 26, 2023 at 5:31=E2=80=AFAM Mark Rutland <mark.rutland@arm.com>=
- wrote:
+On Mon, Jun 26, 2023 at 4:35=E2=80=AFPM Dan Carpenter <dan.carpenter@linaro=
+.org> wrote:
 >
-[...]
-> >
-> > So the idea was that jit_text_alloc() will have a cache of large pages
-> > mapped ROX, will allocate memory from those caches and there will be
-> > jit_update() that uses text poking for writing to that memory.
-> >
-> > Upon allocation of a large page to increase the cache, that large page =
-will
-> > be "invalidated" by filling it with breakpoint instructions (e.g int3 o=
-n
-> > x86)
+> If enable_eprobe() function fails, then we call  disable_eprobe() on the
+> "ep" that failed.  That doesn't feel right.  Shouldn't we
+> call disable_eprobe() on the previous "ep" instead?  Or even better on
+> all the previous eps (but I don't know how to do that)...
+
+Hi Dan,
+There is no need to disable the eprobes which are already successfully
+registered to the given trace probe, as they will be disabled using
+the normal logic. The failed epropbe is not registered there, that's
+why it must be disabled explicitly.  Thanks for digging into that
+code!
+
 >
-> Does that work on x86?
+> This patch is not tested at all.  I'm mostly sending it as a kind of
+> bug report.  If this patch is correct or the fix is simple enough for
+> an absolute moron to fix it then I can probably do that.  But if it's
+> something I'm too stupid to handle then could you just give me reported
+> by credit?  (That is the solution I really would prefer).
 >
-> That is in no way gauranteed for other architectures; on arm64 you need
-> explicit cache maintenance (with I-cache maintenance at the VA to be exec=
-uted
-> from) followed by context-synchronization-events (e.g. via ISB instructio=
-ns, or
-> IPIs).
+> Fixes: 7491e2c44278 ("tracing: Add a probe that attaches to trace events"=
+)
+> Signed-off-by: Dan Carpenter <dan.carpenter@linaro.org>
+> ---
+>  kernel/trace/trace_eprobe.c | 8 ++++----
+>  1 file changed, 4 insertions(+), 4 deletions(-)
+>
+> diff --git a/kernel/trace/trace_eprobe.c b/kernel/trace/trace_eprobe.c
+> index b5181d690b4d..29de54347b8c 100644
+> --- a/kernel/trace/trace_eprobe.c
+> +++ b/kernel/trace/trace_eprobe.c
+> @@ -640,8 +640,8 @@ static int disable_eprobe(struct trace_eprobe *ep,
+>  static int enable_trace_eprobe(struct trace_event_call *call,
+>                                struct trace_event_file *file)
+>  {
+> +       struct trace_eprobe *ep, *prev =3D NULL;
+>         struct trace_probe *pos, *tp;
+> -       struct trace_eprobe *ep;
+>         bool enabled;
+>         int ret =3D 0;
+>
+> @@ -666,13 +666,13 @@ static int enable_trace_eprobe(struct trace_event_c=
+all *call,
+>                 ret =3D enable_eprobe(ep, file);
+>                 if (ret)
+>                         break;
+> -               enabled =3D true;
+> +               prev =3D ep;
+>         }
+>
+>         if (ret) {
+>                 /* Failed to enable one of them. Roll back all */
+> -               if (enabled)
+> -                       disable_eprobe(ep, file->tr);
+> +               if (prev)
+> +                       disable_eprobe(prev, file->tr);
+>                 if (file)
+>                         trace_probe_remove_file(tp, file);
+>                 else
+> --
+> 2.39.2
+>
 
-I guess we need:
-1) Invalidate unused part of the huge ROX pages;
-2) Do not put two jit users (including module text, bpf, etc.) in the
-same cache line;
-3) Explicit cache maintenance;
-4) context-synchronization-events.
 
-Would these (or a subset of them) be sufficient to protect us from torn rea=
-d?
-
-Thanks,
-Song
+--=20
+Tzvetomir (Ceco) Stoyanov
+VMware Open Source Technology Center
