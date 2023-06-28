@@ -2,118 +2,239 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B6EFEEB64D9
-	for <linux-trace-kernel@archiver.kernel.org>; Wed, 28 Jun 2023 00:51:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 21C33EB64DA
+	for <linux-trace-kernel@archiver.kernel.org>; Wed, 28 Jun 2023 08:33:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229599AbjF1AvM (ORCPT
+        id S234600AbjF1IdB (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Tue, 27 Jun 2023 20:51:12 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36758 "EHLO
+        Wed, 28 Jun 2023 04:33:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41386 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229459AbjF1AvL (ORCPT
+        with ESMTP id S235307AbjF1Iat (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Tue, 27 Jun 2023 20:51:11 -0400
-Received: from out-6.mta0.migadu.com (out-6.mta0.migadu.com [IPv6:2001:41d0:1004:224b::6])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 77B3A296D
-        for <linux-trace-kernel@vger.kernel.org>; Tue, 27 Jun 2023 17:51:09 -0700 (PDT)
-Message-ID: <282ad135-63c6-4094-5410-35982ae27c3b@linux.dev>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-        t=1687913467;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=pYrLOEInFHKQlhe8boNYza5GcYlIQbXwpAeQuauBDww=;
-        b=hHgvu2wfdVwgPEyrXd03GAEd37NnT8gEi8Xmq8NIhGmyxqJtRvIgl0YaRdcQu3et7KfOnK
-        mBaXhPrDQxv6FcMpLgTvphOh8Gf7OW5g6jFyEXeG34pcZNa3EBdfu4wBfnyRMBq1UKVheh
-        oy7JjrQJ6VZpZIehJyieBl0Ze/mvtWQ=
-Date:   Wed, 28 Jun 2023 08:50:58 +0800
+        Wed, 28 Jun 2023 04:30:49 -0400
+Received: from mail-qk1-x732.google.com (mail-qk1-x732.google.com [IPv6:2607:f8b0:4864:20::732])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3EB1D2D73;
+        Wed, 28 Jun 2023 01:22:58 -0700 (PDT)
+Received: by mail-qk1-x732.google.com with SMTP id af79cd13be357-7659dc74d91so364735385a.0;
+        Wed, 28 Jun 2023 01:22:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1687940577; x=1690532577;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=OPlJ3d55zkkCE0158NpdPdIacPtyKpxD+77cxWNgQn4=;
+        b=B/FZcfHwfA80FMXQD1r+by4GfJ0G7ym+e7/y8s8Dee0ja1UvDXu8hKfBtvH2b7omy4
+         iT2OS4wkVrFBsCEOfq2lPYFeWGMp25v0lOosQ2FsDX90HXA1RCJikhqpyOYR57VSWCYU
+         HUZkoJEPXkhwug4GOxIrQue/HFohjUSoIXllRFpNNsKQL73oNgrsqCPqjIbezwC8i8cz
+         hwQQYWWOBblL/zFLWntF32HtInNOxKnpqM5HAlqh5Rip8WXlQLddiQTz7HqF03uRQsJz
+         LC0xfiBf+i0vX0VrRdbjeFnHtWDtSe0L1JFNnd9Icg+eOK0964Pc+8KNOR5dv3Pqy1Dc
+         vfew==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1687940577; x=1690532577;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=OPlJ3d55zkkCE0158NpdPdIacPtyKpxD+77cxWNgQn4=;
+        b=MjWxZTrHLVlxW/2+31BV5YYgeh7oVR6QRM/zd/g/bIQ+UfSOIYMTIV39niaVN6XXVe
+         NWGyBT+c62OL+iMLLGWpxdK1hMD8rkvIMtUWCleKBUzpWqHADqgOqsgy8zK6UHTcti8o
+         4d2otioCSEu0g6YPvpl57iOTaFibLciu5nbH55Tvcu9wNdrZkOvxHbdULWO88bt8j3QG
+         xY8ba3h8/Gj694q+7nJm2MC/9ZzB2wDOgn2BqjatdIyLp52qMX7XhGbrvP8sQdflynnR
+         gOHUKsqjkx3CGoLQmY3dvya1h2WAesCM4OR7r2UZzq7E9auLXtyPHNpF2hGXYmMsHmXw
+         7lbA==
+X-Gm-Message-State: AC+VfDxgAqpqcbeVeYXKl8wLVUIXm6ndDily+hDmJyUDfkbRcha7HASc
+        uXMfeUsYiqFEJrWGOzhWWWBv9kcHvUyOCuONdZOcV19vzStasQ==
+X-Google-Smtp-Source: ACHHUZ4SZINxUDCT1VOxGKSGnyrORp5xMAlVWVYZ4VVr9D12NJWQpx1JwNxevKpURs5vLH73EZrUYAMXE2UkZpD5Us8=
+X-Received: by 2002:a05:6214:2524:b0:5f4:5af6:1304 with SMTP id
+ gg4-20020a056214252400b005f45af61304mr36084024qvb.16.1687936643694; Wed, 28
+ Jun 2023 00:17:23 -0700 (PDT)
 MIME-Version: 1.0
-Subject: Re: Please help, I want kprobe.multi support on arm64, but regs is
- replaced by args
-Content-Language: en-US
-To:     "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
-Cc:     Mark Rutland <mark.rutland@arm.com>,
-        linux-arm-kernel@lists.infradead.org,
-        "rostedt@goodmis.org >> Steven Rostedt" <rostedt@goodmis.org>,
-        Jiri Olsa <olsajiri@gmail.com>,
-        Linux Trace Kernel <linux-trace-kernel@vger.kernel.org>,
-        bpf@vger.kernel.org
-References: <0118f3b5-d13a-57f0-7a7f-41f59666d387@linux.dev>
- <20230628020606.b67d161c4d4f7e41bd466cd2@kernel.org>
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From:   Jackie Liu <liu.yun@linux.dev>
-In-Reply-To: <20230628020606.b67d161c4d4f7e41bd466cd2@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
+References: <20230517034510.15639-1-zegao@tencent.com> <20230517034510.15639-3-zegao@tencent.com>
+In-Reply-To: <20230517034510.15639-3-zegao@tencent.com>
+From:   Yafang Shao <laoar.shao@gmail.com>
+Date:   Wed, 28 Jun 2023 15:16:47 +0800
+Message-ID: <CALOAHbC6UpfFOOibdDiC7xFc5YFUgZnk3MZ=3Ny6we=AcrNbew@mail.gmail.com>
+Subject: Re: [PATCH v3 2/4] fprobe: make fprobe_kprobe_handler recursion free
+To:     Ze Gao <zegao2021@gmail.com>
+Cc:     Steven Rostedt <rostedt@goodmis.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        Alexander Gordeev <agordeev@linux.ibm.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Borislav Petkov <bp@alien8.de>,
+        Christian Borntraeger <borntraeger@linux.ibm.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Heiko Carstens <hca@linux.ibm.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Sven Schnelle <svens@linux.ibm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Vasily Gorbik <gor@linux.ibm.com>, x86@kernel.org,
+        bpf@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org,
+        linux-trace-kernel@vger.kernel.org,
+        Conor Dooley <conor@kernel.org>, Jiri Olsa <jolsa@kernel.org>,
+        Yonghong Song <yhs@fb.com>, Ze Gao <zegao@tencent.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-Hi, Masami.
+On Wed, May 17, 2023 at 11:45=E2=80=AFAM Ze Gao <zegao2021@gmail.com> wrote=
+:
+>
+> Current implementation calls kprobe related functions before doing
+> ftrace recursion check in fprobe_kprobe_handler, which opens door
+> to kernel crash due to stack recursion if preempt_count_{add, sub}
+> is traceable in kprobe_busy_{begin, end}.
+>
+> Things goes like this without this patch quoted from Steven:
+> "
+> fprobe_kprobe_handler() {
+>    kprobe_busy_begin() {
+>       preempt_disable() {
+>          preempt_count_add() {  <-- trace
+>             fprobe_kprobe_handler() {
+>                 [ wash, rinse, repeat, CRASH!!! ]
+> "
+>
+> By refactoring the common part out of fprobe_kprobe_handler and
+> fprobe_handler and call ftrace recursion detection at the very beginning,
+> the whole fprobe_kprobe_handler is free from recursion.
+>
+> Signed-off-by: Ze Gao <zegao@tencent.com>
+> Acked-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+> Link: https://lore.kernel.org/linux-trace-kernel/20230516071830.8190-3-ze=
+gao@tencent.com
+> ---
+>  kernel/trace/fprobe.c | 59 ++++++++++++++++++++++++++++++++-----------
+>  1 file changed, 44 insertions(+), 15 deletions(-)
+>
+> diff --git a/kernel/trace/fprobe.c b/kernel/trace/fprobe.c
+> index 9abb3905bc8e..097c740799ba 100644
+> --- a/kernel/trace/fprobe.c
+> +++ b/kernel/trace/fprobe.c
+> @@ -20,30 +20,22 @@ struct fprobe_rethook_node {
+>         char data[];
+>  };
+>
+> -static void fprobe_handler(unsigned long ip, unsigned long parent_ip,
+> -                          struct ftrace_ops *ops, struct ftrace_regs *fr=
+egs)
+> +static inline void __fprobe_handler(unsigned long ip, unsigned long
+> +               parent_ip, struct ftrace_ops *ops, struct ftrace_regs *fr=
+egs)
+>  {
+>         struct fprobe_rethook_node *fpr;
+>         struct rethook_node *rh =3D NULL;
+>         struct fprobe *fp;
+>         void *entry_data =3D NULL;
+> -       int bit, ret;
+> +       int ret;
+>
+>         fp =3D container_of(ops, struct fprobe, ops);
+> -       if (fprobe_disabled(fp))
+> -               return;
+> -
+> -       bit =3D ftrace_test_recursion_trylock(ip, parent_ip);
+> -       if (bit < 0) {
+> -               fp->nmissed++;
+> -               return;
+> -       }
+>
+>         if (fp->exit_handler) {
+>                 rh =3D rethook_try_get(fp->rethook);
+>                 if (!rh) {
+>                         fp->nmissed++;
+> -                       goto out;
+> +                       return;
+>                 }
+>                 fpr =3D container_of(rh, struct fprobe_rethook_node, node=
+);
+>                 fpr->entry_ip =3D ip;
+> @@ -61,23 +53,60 @@ static void fprobe_handler(unsigned long ip, unsigned=
+ long parent_ip,
+>                 else
+>                         rethook_hook(rh, ftrace_get_regs(fregs), true);
+>         }
+> -out:
+> +}
+> +
+> +static void fprobe_handler(unsigned long ip, unsigned long parent_ip,
+> +               struct ftrace_ops *ops, struct ftrace_regs *fregs)
+> +{
+> +       struct fprobe *fp;
+> +       int bit;
+> +
+> +       fp =3D container_of(ops, struct fprobe, ops);
+> +       if (fprobe_disabled(fp))
+> +               return;
+> +
+> +       /* recursion detection has to go before any traceable function an=
+d
+> +        * all functions before this point should be marked as notrace
+> +        */
+> +       bit =3D ftrace_test_recursion_trylock(ip, parent_ip);
+> +       if (bit < 0) {
+> +               fp->nmissed++;
+> +               return;
+> +       }
+> +       __fprobe_handler(ip, parent_ip, ops, fregs);
+>         ftrace_test_recursion_unlock(bit);
+> +
+>  }
+>  NOKPROBE_SYMBOL(fprobe_handler);
+>
+>  static void fprobe_kprobe_handler(unsigned long ip, unsigned long parent=
+_ip,
+>                                   struct ftrace_ops *ops, struct ftrace_r=
+egs *fregs)
+>  {
+> -       struct fprobe *fp =3D container_of(ops, struct fprobe, ops);
+> +       struct fprobe *fp;
+> +       int bit;
+> +
+> +       fp =3D container_of(ops, struct fprobe, ops);
+> +       if (fprobe_disabled(fp))
+> +               return;
+> +
+> +       /* recursion detection has to go before any traceable function an=
+d
+> +        * all functions called before this point should be marked as not=
+race
+> +        */
+> +       bit =3D ftrace_test_recursion_trylock(ip, parent_ip);
+> +       if (bit < 0) {
+> +               fp->nmissed++;
+> +               return;
+> +       }
+>
+>         if (unlikely(kprobe_running())) {
+>                 fp->nmissed++;
 
-在 2023/6/28 01:06, Masami Hiramatsu (Google) 写道:
-> Hi Jackie,
-> 
-> That is actiall what I'm working on now :)
-> 
-> Here is my previous implementation (but not applicable because now we need to
-> remove kretprobe trampoline with it.)
-> https://lore.kernel.org/all/164735287344.1084943.9787335632585653418.stgit@devnote2/
-> 
-> Let me explain my idea. I would like to replace the kretprobe with fprobe
-> exit handler so that we can intgrate the function return hook with fgraph tracer.
-> Currently fprobe entry/exit handler uses pt_regs, but I will replace it with
-> ftrace_regs. And this means rethook has to work with ftrace_regs and it can not
-> support kretprobes anymore on some arch (HAVE_RETHOOK but
->   !HAVE_DYNAMIC_FTRACE_WITH_REGS).
-> 
-> There are many good reasons, like;
-> 
-> - On some arch (e.g. arm64) can not emulate full pt_regs.
-> - Saving full register on function entry/exit is not efficient.
-> - Enabling both fgraph tracer and rethook are redundant.
-> 
-> This requires some changes on kprobe users like BPF and SystemTap, so I need to
-> talk with them about
-> 
-> - Moving onto the fprobe to trace function entry/exit.
-> - Using ftrace_regs API to access function argument and return value.
-> 
-> Anyway, I'll add CONFIG_DYNAMIC_FTRACE_WITH_REGS dependency to them until
-> in-kernel stuffs are ready. It ensures ftrace_regs can be converted to
-> pt_regs.
+I have just looked through this patchset, just out of curiosity,
+shouldn't we call ftrace_test_recursion_unlock(bit) here ?
+We have already locked it successfully, so why should we not unlock it?
 
-This is a great idea, thank you for your excellent work. We really need
-it on arm64.
+>                 return;
+>         }
+> +
+>         kprobe_busy_begin();
+> -       fprobe_handler(ip, parent_ip, ops, fregs);
+> +       __fprobe_handler(ip, parent_ip, ops, fregs);
+>         kprobe_busy_end();
+> +       ftrace_test_recursion_unlock(bit);
+>  }
+>
+>  static void fprobe_exit_handler(struct rethook_node *rh, void *data,
+> --
+> 2.40.1
+>
+>
 
--- 
-Jackie
 
-> 
-> I also introduced fprobe events, so I will send a series of patches how to do
-> that (fprobe entry side has been done, working on rethook side).
-> 
-> Thank you,
-> 
-> 
-> On Sun, 25 Jun 2023 16:27:44 +0800
-> Jackie Liu <liu.yun@linux.dev> wrote:
-> 
->> Hi, Mark Rutland and other developers.
->>
->> I am trying to implement the rethook of the arm64 platform, referring to
->> the code of other architectures, it can already run normally on the v6.1
->> branch, but after commit 26299b3f6ba2 ("ftrace: arm64: move from REGS to
->> ARGS"), regs is no longer supported, resulting in CONFIG_FPROBE is also
->> not supported (although RETHOOK is implemented). I try to revert the
->> patch, and kprobe.multi can be run correctly. Now, what should I do?
->> Should I roll back this patch or find a way to run fprobe without regs?
->>
->> Any help is welcome.
->>
->> --
->> Jackie Liu
-> 
-> 
+--=20
+Regards
+Yafang
