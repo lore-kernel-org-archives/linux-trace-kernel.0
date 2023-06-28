@@ -2,128 +2,88 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 151E5EB64DA
-	for <linux-trace-kernel@archiver.kernel.org>; Wed, 28 Jun 2023 14:44:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C111EB64D7
+	for <linux-trace-kernel@archiver.kernel.org>; Wed, 28 Jun 2023 15:04:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231303AbjF1OoN (ORCPT
+        id S231955AbjF1PED (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Wed, 28 Jun 2023 10:44:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55514 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229789AbjF1OoJ (ORCPT
+        Wed, 28 Jun 2023 11:04:03 -0400
+Received: from mga17.intel.com ([192.55.52.151]:32511 "EHLO mga17.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S231940AbjF1PEC (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Wed, 28 Jun 2023 10:44:09 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1920AA2;
-        Wed, 28 Jun 2023 07:44:08 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 984396134E;
-        Wed, 28 Jun 2023 14:44:07 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 29E79C433C0;
-        Wed, 28 Jun 2023 14:44:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1687963446;
-        bh=CftGqe7uSHGDIhGMtuKnY6LHqyYkAcjuQD1TCyu0PK0=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=JaKcEvpLCTUDffE/nH0JPp2K2Du1tThuKk5BM0oGygHn8wf+QK+vP6yssdtE5LrQQ
-         BfCRurBIscWWv+hzIgI6oVxccIse66uxbcdp/oJFz1Ryh+TfrcaR45b26LIbczo+UQ
-         nxqgPpKsl9Uy9VL2Mxl7+cl8Sgv01fdwHmTYpnCS4EbigCBFv9o8n8olJ/LtfmCjXH
-         GXzGbAQffGUbLDmk7wniU6Gwg5l9SBTaJ8rEfPkiCD4rc4HXWwMHcMr/1IEL2wWj/F
-         KdZX8/9b5rIILrUOI8mzMa6Un4sY5RVngrauCz4Ojju8FLEog8WnwgdbtJxsAS4asg
-         7K6YmX9KuwpQg==
-From:   "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
-To:     Jiri Olsa <jolsa@kernel.org>, Steven Rostedt <rostedt@goodmis.org>
-Cc:     Masami Hiramatsu <mhiramat@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        lkml <linux-kernel@vger.kernel.org>,
-        linux-trace-kernel@vger.kernel.org, bpf@vger.kernel.org
-Subject: [PATCH] fprobe: Ensure running fprobe_exit_handler() finished before calling rethook_free()
-Date:   Wed, 28 Jun 2023 23:44:02 +0900
-Message-Id: <168796344232.46347.7947681068822514750.stgit@devnote2>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20230628012305.978e34d44f1a53fe20327fde@kernel.org>
-References: <20230628012305.978e34d44f1a53fe20327fde@kernel.org>
-User-Agent: StGit/0.19
+        Wed, 28 Jun 2023 11:04:02 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1687964642; x=1719500642;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=1gfH1VI8rikXgJa4+jQmJEeCxlL86Kd/v1XPUYZdwvk=;
+  b=NVudJMnQQpNBXm1om++DAR4sS4WMQ8gE4efb/0CLFQM76Pk2ZJPOZyUd
+   gV05B/sGO606TeinZmruLvg+WHeBDKLQViRo9sjbX13+nw+EeuZ05+j1R
+   vjq2kcTNJZu7vjaG1KRAYXet2Zr+TzWSJl5MaK5VHEUCG1uMhD2mxdbxA
+   Rh82Rb9qOzcTns15KY8rcORNds/gjR9djm5swbbi2z46iy9FlfmhVngR6
+   vak63fITaSc9775wpcarZyNKJ2f5eogqgfQk9W4cDeYHS2aE8xlMqaN5m
+   ZanDOCcgK+PJ7OaXIY0a5oR6SuY7wafDLNvEKhGbMmoWe5rdz2A9TmSwj
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10755"; a="342206006"
+X-IronPort-AV: E=Sophos;i="6.01,165,1684825200"; 
+   d="scan'208";a="342206006"
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Jun 2023 08:02:50 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10755"; a="667159873"
+X-IronPort-AV: E=Sophos;i="6.01,165,1684825200"; 
+   d="scan'208";a="667159873"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by orsmga003.jf.intel.com with ESMTP; 28 Jun 2023 08:02:46 -0700
+Received: by black.fi.intel.com (Postfix, from userid 1003)
+        id 63569E1; Wed, 28 Jun 2023 18:02:47 +0300 (EEST)
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Jaegeuk Kim <jaegeuk@kernel.org>, Chao Yu <chao@kernel.org>,
+        linux-f2fs-devel@lists.sourceforge.net,
+        linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
+Cc:     Steven Rostedt <rostedt@goodmis.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Subject: [PATCH v1 1/1] f2fs: Use return value of strreplace()
+Date:   Wed, 28 Jun 2023 18:02:43 +0300
+Message-Id: <20230628150243.17771-1-andriy.shevchenko@linux.intel.com>
+X-Mailer: git-send-email 2.40.0.1.gaa8946217a0b
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+Since strreplace() returns the pointer to the string itself,
+we may use it directly in the code.
 
-Ensure running fprobe_exit_handler() has finished before
-calling rethook_free() in the unregister_fprobe() so that caller can free
-the fprobe right after unregister_fprobe().
-
-unregister_fprobe() ensured that all running fprobe_entry/exit_handler()
-have finished by calling unregister_ftrace_function() which synchronizes
-RCU. But commit 5f81018753df ("fprobe: Release rethook after the ftrace_ops
-is unregistered") changed to call rethook_free() after
-unregister_ftrace_function(). So call rethook_stop() to make rethook
-disabled before unregister_ftrace_function() and ensure it again.
-
-Fixes: 5f81018753df ("fprobe: Release rethook after the ftrace_ops is unregistered")
-Cc: stable@vger.kernel.org
-Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 ---
- include/linux/rethook.h |    1 +
- kernel/trace/fprobe.c   |    3 +++
- kernel/trace/rethook.c  |   13 +++++++++++++
- 3 files changed, 17 insertions(+)
+ include/trace/events/f2fs.h | 6 ++----
+ 1 file changed, 2 insertions(+), 4 deletions(-)
 
-diff --git a/include/linux/rethook.h b/include/linux/rethook.h
-index c8ac1e5afcd1..bdbe6717f45a 100644
---- a/include/linux/rethook.h
-+++ b/include/linux/rethook.h
-@@ -59,6 +59,7 @@ struct rethook_node {
- };
- 
- struct rethook *rethook_alloc(void *data, rethook_handler_t handler);
-+void rethook_stop(struct rethook *rh);
- void rethook_free(struct rethook *rh);
- void rethook_add_node(struct rethook *rh, struct rethook_node *node);
- struct rethook_node *rethook_try_get(struct rethook *rh);
-diff --git a/kernel/trace/fprobe.c b/kernel/trace/fprobe.c
-index 0121e8c0d54e..75517667b54f 100644
---- a/kernel/trace/fprobe.c
-+++ b/kernel/trace/fprobe.c
-@@ -364,6 +364,9 @@ int unregister_fprobe(struct fprobe *fp)
- 		    fp->ops.saved_func != fprobe_kprobe_handler))
- 		return -EINVAL;
- 
-+	if (fp->rethook)
-+		rethook_stop(fp->rethook);
-+
- 	ret = unregister_ftrace_function(&fp->ops);
- 	if (ret < 0)
- 		return ret;
-diff --git a/kernel/trace/rethook.c b/kernel/trace/rethook.c
-index 60f6cb2b486b..468006cce7ca 100644
---- a/kernel/trace/rethook.c
-+++ b/kernel/trace/rethook.c
-@@ -53,6 +53,19 @@ static void rethook_free_rcu(struct rcu_head *head)
- 		kfree(rh);
- }
- 
-+/**
-+ * rethook_stop() - Stop using a rethook.
-+ * @rh: the struct rethook to stop.
-+ *
-+ * Stop using a rethook to prepare for freeing it. If you want to wait for
-+ * all running rethook handler before calling rethook_free(), you need to
-+ * call this first and wait RCU, and call rethook_free().
-+ */
-+void rethook_stop(struct rethook *rh)
-+{
-+	WRITE_ONCE(rh->handler, NULL);
-+}
-+
- /**
-  * rethook_free() - Free struct rethook.
-  * @rh: the struct rethook to be freed.
+diff --git a/include/trace/events/f2fs.h b/include/trace/events/f2fs.h
+index 793f82cc1515..f5994515290c 100644
+--- a/include/trace/events/f2fs.h
++++ b/include/trace/events/f2fs.h
+@@ -2234,13 +2234,11 @@ DECLARE_EVENT_CLASS(f2fs__rw_start,
+ 		 * because this screws up the tooling that parses
+ 		 * the traces.
+ 		 */
+-		__assign_str(pathbuf, pathname);
+-		(void)strreplace(__get_str(pathbuf), ' ', '_');
++		__assign_str(pathbuf, strreplace(pathname, ' ', '_'));
+ 		__entry->offset = offset;
+ 		__entry->bytes = bytes;
+ 		__entry->i_size = i_size_read(inode);
+-		__assign_str(cmdline, command);
+-		(void)strreplace(__get_str(cmdline), ' ', '_');
++		__assign_str(cmdline, strreplace(command, ' ', '_'));
+ 		__entry->pid = pid;
+ 		__entry->ino = inode->i_ino;
+ 	),
+-- 
+2.40.0.1.gaa8946217a0b
 
