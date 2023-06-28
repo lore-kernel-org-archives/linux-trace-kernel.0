@@ -2,239 +2,104 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 21C33EB64DA
-	for <linux-trace-kernel@archiver.kernel.org>; Wed, 28 Jun 2023 08:33:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C7A15EB64D7
+	for <linux-trace-kernel@archiver.kernel.org>; Wed, 28 Jun 2023 11:03:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234600AbjF1IdB (ORCPT
+        id S231406AbjF1LDV (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Wed, 28 Jun 2023 04:33:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41386 "EHLO
+        Wed, 28 Jun 2023 07:03:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32962 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235307AbjF1Iat (ORCPT
+        with ESMTP id S231465AbjF1LDF (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Wed, 28 Jun 2023 04:30:49 -0400
-Received: from mail-qk1-x732.google.com (mail-qk1-x732.google.com [IPv6:2607:f8b0:4864:20::732])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3EB1D2D73;
-        Wed, 28 Jun 2023 01:22:58 -0700 (PDT)
-Received: by mail-qk1-x732.google.com with SMTP id af79cd13be357-7659dc74d91so364735385a.0;
-        Wed, 28 Jun 2023 01:22:58 -0700 (PDT)
+        Wed, 28 Jun 2023 07:03:05 -0400
+Received: from mail-qt1-x82e.google.com (mail-qt1-x82e.google.com [IPv6:2607:f8b0:4864:20::82e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 60F241FCD;
+        Wed, 28 Jun 2023 04:03:04 -0700 (PDT)
+Received: by mail-qt1-x82e.google.com with SMTP id d75a77b69052e-4021451a4a4so17251251cf.0;
+        Wed, 28 Jun 2023 04:03:04 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1687940577; x=1690532577;
+        d=gmail.com; s=20221208; t=1687950183; x=1690542183;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=OPlJ3d55zkkCE0158NpdPdIacPtyKpxD+77cxWNgQn4=;
-        b=B/FZcfHwfA80FMXQD1r+by4GfJ0G7ym+e7/y8s8Dee0ja1UvDXu8hKfBtvH2b7omy4
-         iT2OS4wkVrFBsCEOfq2lPYFeWGMp25v0lOosQ2FsDX90HXA1RCJikhqpyOYR57VSWCYU
-         HUZkoJEPXkhwug4GOxIrQue/HFohjUSoIXllRFpNNsKQL73oNgrsqCPqjIbezwC8i8cz
-         hwQQYWWOBblL/zFLWntF32HtInNOxKnpqM5HAlqh5Rip8WXlQLddiQTz7HqF03uRQsJz
-         LC0xfiBf+i0vX0VrRdbjeFnHtWDtSe0L1JFNnd9Icg+eOK0964Pc+8KNOR5dv3Pqy1Dc
-         vfew==
+        bh=rSIgXt+L+8jbFTtsKzhBTuecaRWvbcSpFDcoTapWtC8=;
+        b=pfmFPl4KAvd9rLO0RT54Jcl/Ifd8PlgcMtH9hVFPH0HBCqNLqocpAz6iuDxzrmRvC3
+         c43NI6cNIBjwBo8nWl4joctHJLzWRYk20uKh7DF3Yh4PQ2vSyJXMatrPbwjhIs4/cRMk
+         BwSz2WO/tLc/uuGeEpfNA/I7iyI9khWPXhJjjJHxhMqdBHKYaGSh6dBc7c0ypj9DKtk7
+         E+LmKWT0/ZlkdJEEdHdSoetYlVZNCCKIvI4QcDoGac1ExVBoefvmRc/k+jM69i8Y+QBy
+         dgd2qCS3V9sLQii+Nm58huaZOAhHmOUtacAVQr7XaASX6R6/17nHUXq9YKPpM85vj0+R
+         gcGA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1687940577; x=1690532577;
+        d=1e100.net; s=20221208; t=1687950183; x=1690542183;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=OPlJ3d55zkkCE0158NpdPdIacPtyKpxD+77cxWNgQn4=;
-        b=MjWxZTrHLVlxW/2+31BV5YYgeh7oVR6QRM/zd/g/bIQ+UfSOIYMTIV39niaVN6XXVe
-         NWGyBT+c62OL+iMLLGWpxdK1hMD8rkvIMtUWCleKBUzpWqHADqgOqsgy8zK6UHTcti8o
-         4d2otioCSEu0g6YPvpl57iOTaFibLciu5nbH55Tvcu9wNdrZkOvxHbdULWO88bt8j3QG
-         xY8ba3h8/Gj694q+7nJm2MC/9ZzB2wDOgn2BqjatdIyLp52qMX7XhGbrvP8sQdflynnR
-         gOHUKsqjkx3CGoLQmY3dvya1h2WAesCM4OR7r2UZzq7E9auLXtyPHNpF2hGXYmMsHmXw
-         7lbA==
-X-Gm-Message-State: AC+VfDxgAqpqcbeVeYXKl8wLVUIXm6ndDily+hDmJyUDfkbRcha7HASc
-        uXMfeUsYiqFEJrWGOzhWWWBv9kcHvUyOCuONdZOcV19vzStasQ==
-X-Google-Smtp-Source: ACHHUZ4SZINxUDCT1VOxGKSGnyrORp5xMAlVWVYZ4VVr9D12NJWQpx1JwNxevKpURs5vLH73EZrUYAMXE2UkZpD5Us8=
-X-Received: by 2002:a05:6214:2524:b0:5f4:5af6:1304 with SMTP id
- gg4-20020a056214252400b005f45af61304mr36084024qvb.16.1687936643694; Wed, 28
- Jun 2023 00:17:23 -0700 (PDT)
+        bh=rSIgXt+L+8jbFTtsKzhBTuecaRWvbcSpFDcoTapWtC8=;
+        b=ZyLYNileW2siesw+dm/YIBm1oOn/GQR95cNBP5eNV21t0j760cr+VnsxlPH96o++Lh
+         3HBmbj2KOHTYCKktDpIAwAIFtCJQPPU4wxSYU2/BLMbKp6lJwARAECofDsEj+cn+j3ry
+         WYxO4Fv8xZa79z8xudsh4mUUMciOkiyEVKF1ugtLWvfC3MbCdBfPjPnNTAdPSqP3vl3K
+         5/wngQ3IML0/OweAuZoClWw3JuC16e7gavVPYlziMxYKKlsvBOaG2BLBS6mNO3PNfKpZ
+         +1RYPhfAqqnsInn9eQ0RUCXErsz3uDUTt/T3PM9O0qxjAxvALadt241HUS1C40EQmB72
+         JbBg==
+X-Gm-Message-State: AC+VfDzzfwuS1FEcezFhPHNtSkr7bMEcoyguC62su9eBjhHYKNnXOZsd
+        hBPsjhb7jU4oInVGtvSkFYzj/JLOYppJYlN3lsk=
+X-Google-Smtp-Source: ACHHUZ7UfzFTKJq9y/a0p/EgPPwFgD/boO+5mAHdZbUciSgygzNf60TvwAOuEF2bxhke76Fs2ez08EaQzyIDk38iDCA=
+X-Received: by 2002:a05:622a:1454:b0:403:27e8:8842 with SMTP id
+ v20-20020a05622a145400b0040327e88842mr583192qtx.10.1687950183212; Wed, 28 Jun
+ 2023 04:03:03 -0700 (PDT)
 MIME-Version: 1.0
-References: <20230517034510.15639-1-zegao@tencent.com> <20230517034510.15639-3-zegao@tencent.com>
-In-Reply-To: <20230517034510.15639-3-zegao@tencent.com>
-From:   Yafang Shao <laoar.shao@gmail.com>
-Date:   Wed, 28 Jun 2023 15:16:47 +0800
-Message-ID: <CALOAHbC6UpfFOOibdDiC7xFc5YFUgZnk3MZ=3Ny6we=AcrNbew@mail.gmail.com>
-Subject: Re: [PATCH v3 2/4] fprobe: make fprobe_kprobe_handler recursion free
-To:     Ze Gao <zegao2021@gmail.com>
+References: <72b05526-4dda-430a-b4ca-2ee4f26f2185@moroto.mountain>
+ <CAPpZLN4ACVRrDXofO9jNQznEuF+CK6KNbCCz=5t93kMzESbZGg@mail.gmail.com> <d1397f75-1091-42e1-8038-b6844757de79@kadam.mountain>
+In-Reply-To: <d1397f75-1091-42e1-8038-b6844757de79@kadam.mountain>
+From:   Tzvetomir Stoyanov <tz.stoyanov@gmail.com>
+Date:   Wed, 28 Jun 2023 14:02:47 +0300
+Message-ID: <CAPpZLN4vNW8TJDwd+JeBD1YjdoPT6eoLj18kq5xbqsgcizCwoQ@mail.gmail.com>
+Subject: Re: [RFC] tracing: Cleanup the correct ep in enable_trace_eprobe()
+To:     Dan Carpenter <dan.carpenter@linaro.org>
 Cc:     Steven Rostedt <rostedt@goodmis.org>,
         Masami Hiramatsu <mhiramat@kernel.org>,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        Alexander Gordeev <agordeev@linux.ibm.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Borislav Petkov <bp@alien8.de>,
-        Christian Borntraeger <borntraeger@linux.ibm.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Heiko Carstens <hca@linux.ibm.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Sven Schnelle <svens@linux.ibm.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Vasily Gorbik <gor@linux.ibm.com>, x86@kernel.org,
-        bpf@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org,
-        linux-trace-kernel@vger.kernel.org,
-        Conor Dooley <conor@kernel.org>, Jiri Olsa <jolsa@kernel.org>,
-        Yonghong Song <yhs@fb.com>, Ze Gao <zegao@tencent.com>
+        linux-trace-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On Wed, May 17, 2023 at 11:45=E2=80=AFAM Ze Gao <zegao2021@gmail.com> wrote=
-:
+On Tue, Jun 27, 2023 at 8:21=E2=80=AFAM Dan Carpenter <dan.carpenter@linaro=
+.org> wrote:
 >
-> Current implementation calls kprobe related functions before doing
-> ftrace recursion check in fprobe_kprobe_handler, which opens door
-> to kernel crash due to stack recursion if preempt_count_{add, sub}
-> is traceable in kprobe_busy_{begin, end}.
+> On Tue, Jun 27, 2023 at 07:39:17AM +0300, Tzvetomir Stoyanov wrote:
+> > On Mon, Jun 26, 2023 at 4:35=E2=80=AFPM Dan Carpenter <dan.carpenter@li=
+naro.org> wrote:
+> > >
+> > > If enable_eprobe() function fails, then we call  disable_eprobe() on =
+the
+> > > "ep" that failed.  That doesn't feel right.  Shouldn't we
+> > > call disable_eprobe() on the previous "ep" instead?  Or even better o=
+n
+> > > all the previous eps (but I don't know how to do that)...
+> >
+> > Hi Dan,
+> > There is no need to disable the eprobes which are already successfully
+> > registered to the given trace probe, as they will be disabled using
+> > the normal logic. The failed epropbe is not registered there, that's
+> > why it must be disabled explicitly.  Thanks for digging into that
+> > code!
 >
-> Things goes like this without this patch quoted from Steven:
-> "
-> fprobe_kprobe_handler() {
->    kprobe_busy_begin() {
->       preempt_disable() {
->          preempt_count_add() {  <-- trace
->             fprobe_kprobe_handler() {
->                 [ wash, rinse, repeat, CRASH!!! ]
-> "
+> Okay, but if the loop fails on the first iteration then it won't disable
+> the first ep.  Is that an issue?
 >
-> By refactoring the common part out of fprobe_kprobe_handler and
-> fprobe_handler and call ftrace recursion detection at the very beginning,
-> the whole fprobe_kprobe_handler is free from recursion.
->
-> Signed-off-by: Ze Gao <zegao@tencent.com>
-> Acked-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-> Link: https://lore.kernel.org/linux-trace-kernel/20230516071830.8190-3-ze=
-gao@tencent.com
-> ---
->  kernel/trace/fprobe.c | 59 ++++++++++++++++++++++++++++++++-----------
->  1 file changed, 44 insertions(+), 15 deletions(-)
->
-> diff --git a/kernel/trace/fprobe.c b/kernel/trace/fprobe.c
-> index 9abb3905bc8e..097c740799ba 100644
-> --- a/kernel/trace/fprobe.c
-> +++ b/kernel/trace/fprobe.c
-> @@ -20,30 +20,22 @@ struct fprobe_rethook_node {
->         char data[];
->  };
->
-> -static void fprobe_handler(unsigned long ip, unsigned long parent_ip,
-> -                          struct ftrace_ops *ops, struct ftrace_regs *fr=
-egs)
-> +static inline void __fprobe_handler(unsigned long ip, unsigned long
-> +               parent_ip, struct ftrace_ops *ops, struct ftrace_regs *fr=
-egs)
->  {
->         struct fprobe_rethook_node *fpr;
->         struct rethook_node *rh =3D NULL;
->         struct fprobe *fp;
->         void *entry_data =3D NULL;
-> -       int bit, ret;
-> +       int ret;
->
->         fp =3D container_of(ops, struct fprobe, ops);
-> -       if (fprobe_disabled(fp))
-> -               return;
-> -
-> -       bit =3D ftrace_test_recursion_trylock(ip, parent_ip);
-> -       if (bit < 0) {
-> -               fp->nmissed++;
-> -               return;
-> -       }
->
->         if (fp->exit_handler) {
->                 rh =3D rethook_try_get(fp->rethook);
->                 if (!rh) {
->                         fp->nmissed++;
-> -                       goto out;
-> +                       return;
->                 }
->                 fpr =3D container_of(rh, struct fprobe_rethook_node, node=
-);
->                 fpr->entry_ip =3D ip;
-> @@ -61,23 +53,60 @@ static void fprobe_handler(unsigned long ip, unsigned=
- long parent_ip,
->                 else
->                         rethook_hook(rh, ftrace_get_regs(fregs), true);
->         }
-> -out:
-> +}
-> +
-> +static void fprobe_handler(unsigned long ip, unsigned long parent_ip,
-> +               struct ftrace_ops *ops, struct ftrace_regs *fregs)
-> +{
-> +       struct fprobe *fp;
-> +       int bit;
-> +
-> +       fp =3D container_of(ops, struct fprobe, ops);
-> +       if (fprobe_disabled(fp))
-> +               return;
-> +
-> +       /* recursion detection has to go before any traceable function an=
-d
-> +        * all functions before this point should be marked as notrace
-> +        */
-> +       bit =3D ftrace_test_recursion_trylock(ip, parent_ip);
-> +       if (bit < 0) {
-> +               fp->nmissed++;
-> +               return;
-> +       }
-> +       __fprobe_handler(ip, parent_ip, ops, fregs);
->         ftrace_test_recursion_unlock(bit);
-> +
->  }
->  NOKPROBE_SYMBOL(fprobe_handler);
->
->  static void fprobe_kprobe_handler(unsigned long ip, unsigned long parent=
-_ip,
->                                   struct ftrace_ops *ops, struct ftrace_r=
-egs *fregs)
->  {
-> -       struct fprobe *fp =3D container_of(ops, struct fprobe, ops);
-> +       struct fprobe *fp;
-> +       int bit;
-> +
-> +       fp =3D container_of(ops, struct fprobe, ops);
-> +       if (fprobe_disabled(fp))
-> +               return;
-> +
-> +       /* recursion detection has to go before any traceable function an=
-d
-> +        * all functions called before this point should be marked as not=
-race
-> +        */
-> +       bit =3D ftrace_test_recursion_trylock(ip, parent_ip);
-> +       if (bit < 0) {
-> +               fp->nmissed++;
-> +               return;
-> +       }
->
->         if (unlikely(kprobe_running())) {
->                 fp->nmissed++;
 
-I have just looked through this patchset, just out of curiosity,
-shouldn't we call ftrace_test_recursion_unlock(bit) here ?
-We have already locked it successfully, so why should we not unlock it?
+I looked at the code again, you are right - there is a problem.
+Indeed, that clean-up logic looks totally wrong, all eporbes must be
+disabled. I'll submit a patch. Thanks Dan.
 
->                 return;
->         }
-> +
->         kprobe_busy_begin();
-> -       fprobe_handler(ip, parent_ip, ops, fregs);
-> +       __fprobe_handler(ip, parent_ip, ops, fregs);
->         kprobe_busy_end();
-> +       ftrace_test_recursion_unlock(bit);
->  }
->
->  static void fprobe_exit_handler(struct rethook_node *rh, void *data,
-> --
-> 2.40.1
->
+> regards,
+> dan carpenter
 >
 
 
 --=20
-Regards
-Yafang
+Tzvetomir (Ceco) Stoyanov
+VMware Open Source Technology Center
