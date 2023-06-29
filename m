@@ -2,62 +2,80 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ECC80EB64D9
-	for <linux-trace-kernel@archiver.kernel.org>; Thu, 29 Jun 2023 23:50:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C8FB0C0015E
+	for <linux-trace-kernel@archiver.kernel.org>; Thu, 29 Jun 2023 23:50:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229522AbjF2Xu5 (ORCPT
+        id S230308AbjF2Xu5 (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
         Thu, 29 Jun 2023 19:50:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40418 "EHLO
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40422 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230241AbjF2Xu4 (ORCPT
+        with ESMTP id S230256AbjF2Xu4 (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
         Thu, 29 Jun 2023 19:50:56 -0400
 Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 96AA930DF;
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 966DA2D55;
         Thu, 29 Jun 2023 16:50:55 -0700 (PDT)
 Received: from CPC-beaub-VBQ1L.localdomain (unknown [4.155.48.123])
-        by linux.microsoft.com (Postfix) with ESMTPSA id 9185C208396A;
+        by linux.microsoft.com (Postfix) with ESMTPSA id C2F84208396C;
         Thu, 29 Jun 2023 16:50:54 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 9185C208396A
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com C2F84208396C
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
         s=default; t=1688082654;
-        bh=lgUdu2qp156h5P5sIiuRE2nkVehC4a1jKFyR45EG0Ec=;
-        h=From:To:Cc:Subject:Date:From;
-        b=CV8h5hcJQpMcjs7dt45hr2utnsklSL8xlDt3bCxw5+dvGSlnU60MsS8jUO3Wbgo/o
-         ILIU7MKrg8YBttpVFD+2m5I1A3PkqTBIryGBPDZZgikzzoxZ8vUvbEpAaWXhxUKDtw
-         9t4qpNk8P0W6LGKkOZ/5LfTj3M241DR5XQyq6Zcc=
+        bh=0aQD7w91qsRnUacHvqCqrLheZ0AfaxAuOy5KqQ12dw8=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=Y3trTN8upge61n68tUauMvmEglojh7Eu6kcf56/khalzgWsTsroZzvWzaUKgLrdN/
+         +VVBUDDdlaaVYvB3tXU7DJyJwwPzOQnF9N438SsZY3IExQpDlZuAbzECcByTb4VA84
+         hJOXprKkVX4WLa6kbaWfgUv9lPttAuHsGFfHA2R0=
 From:   Beau Belgrave <beaub@linux.microsoft.com>
 To:     rostedt@goodmis.org, mhiramat@kernel.org
 Cc:     linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
-Subject: [PATCH 0/2] tracing/user_events: Fix struct arg size match check
-Date:   Thu, 29 Jun 2023 23:50:47 +0000
-Message-Id: <20230629235049.581-1-beaub@linux.microsoft.com>
+Subject: [PATCH 2/2] selftests/user_events: Test struct size match cases
+Date:   Thu, 29 Jun 2023 23:50:49 +0000
+Message-Id: <20230629235049.581-3-beaub@linux.microsoft.com>
 X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20230629235049.581-1-beaub@linux.microsoft.com>
+References: <20230629235049.581-1-beaub@linux.microsoft.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-The edge case of struct fields having an extra size argument got missed
-when checking if events have the same name and arguments. This lead to
-events not being able to register if a matching event name was already
-created with a struct argument.
+The self tests for user_events currently does not ensure that the edge
+case for struct types work properly with size differences.
 
-This series simply fixes this and adds a self test to ensure we do not
-miss it again.
+Add cases for mis-matching struct names and sizes to ensure they work
+properly.
 
-Beau Belgrave (2):
-  tracing/user_events: Fix struct arg size match check
-  selftests/user_events: Test struct size match cases
-
- kernel/trace/trace_events_user.c               |  3 +++
+Signed-off-by: Beau Belgrave <beaub@linux.microsoft.com>
+---
  tools/testing/selftests/user_events/dyn_test.c | 12 ++++++++++++
- 2 files changed, 15 insertions(+)
+ 1 file changed, 12 insertions(+)
 
-
-base-commit: 6995e2de6891c724bfeb2db33d7b87775f913ad1
+diff --git a/tools/testing/selftests/user_events/dyn_test.c b/tools/testing/selftests/user_events/dyn_test.c
+index d6979a48478f..91a4444ad42b 100644
+--- a/tools/testing/selftests/user_events/dyn_test.c
++++ b/tools/testing/selftests/user_events/dyn_test.c
+@@ -217,6 +217,18 @@ TEST_F(user, matching) {
+ 	/* Types don't match */
+ 	TEST_NMATCH("__test_event u64 a; u64 b",
+ 		    "__test_event u32 a; u32 b");
++
++	/* Struct name and size matches */
++	TEST_MATCH("__test_event struct my_struct a 20",
++		   "__test_event struct my_struct a 20");
++
++	/* Struct name don't match */
++	TEST_NMATCH("__test_event struct my_struct a 20",
++		    "__test_event struct my_struct b 20");
++
++	/* Struct size don't match */
++	TEST_NMATCH("__test_event struct my_struct a 20",
++		    "__test_event struct my_struct a 21");
+ }
+ 
+ int main(int argc, char **argv)
 -- 
 2.34.1
 
