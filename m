@@ -2,88 +2,104 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C111EB64D7
-	for <linux-trace-kernel@archiver.kernel.org>; Wed, 28 Jun 2023 15:04:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EF3E6EB64D9
+	for <linux-trace-kernel@archiver.kernel.org>; Thu, 29 Jun 2023 13:29:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231955AbjF1PED (ORCPT
+        id S229920AbjF2N3W (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Wed, 28 Jun 2023 11:04:03 -0400
-Received: from mga17.intel.com ([192.55.52.151]:32511 "EHLO mga17.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S231940AbjF1PEC (ORCPT
+        Thu, 29 Jun 2023 09:29:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44370 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S229873AbjF2N3V (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Wed, 28 Jun 2023 11:04:02 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1687964642; x=1719500642;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=1gfH1VI8rikXgJa4+jQmJEeCxlL86Kd/v1XPUYZdwvk=;
-  b=NVudJMnQQpNBXm1om++DAR4sS4WMQ8gE4efb/0CLFQM76Pk2ZJPOZyUd
-   gV05B/sGO606TeinZmruLvg+WHeBDKLQViRo9sjbX13+nw+EeuZ05+j1R
-   vjq2kcTNJZu7vjaG1KRAYXet2Zr+TzWSJl5MaK5VHEUCG1uMhD2mxdbxA
-   Rh82Rb9qOzcTns15KY8rcORNds/gjR9djm5swbbi2z46iy9FlfmhVngR6
-   vak63fITaSc9775wpcarZyNKJ2f5eogqgfQk9W4cDeYHS2aE8xlMqaN5m
-   ZanDOCcgK+PJ7OaXIY0a5oR6SuY7wafDLNvEKhGbMmoWe5rdz2A9TmSwj
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10755"; a="342206006"
-X-IronPort-AV: E=Sophos;i="6.01,165,1684825200"; 
-   d="scan'208";a="342206006"
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Jun 2023 08:02:50 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10755"; a="667159873"
-X-IronPort-AV: E=Sophos;i="6.01,165,1684825200"; 
-   d="scan'208";a="667159873"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by orsmga003.jf.intel.com with ESMTP; 28 Jun 2023 08:02:46 -0700
-Received: by black.fi.intel.com (Postfix, from userid 1003)
-        id 63569E1; Wed, 28 Jun 2023 18:02:47 +0300 (EEST)
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Jaegeuk Kim <jaegeuk@kernel.org>, Chao Yu <chao@kernel.org>,
-        linux-f2fs-devel@lists.sourceforge.net,
-        linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
-Cc:     Steven Rostedt <rostedt@goodmis.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: [PATCH v1 1/1] f2fs: Use return value of strreplace()
-Date:   Wed, 28 Jun 2023 18:02:43 +0300
-Message-Id: <20230628150243.17771-1-andriy.shevchenko@linux.intel.com>
-X-Mailer: git-send-email 2.40.0.1.gaa8946217a0b
+        Thu, 29 Jun 2023 09:29:21 -0400
+Received: from mail-ed1-x52b.google.com (mail-ed1-x52b.google.com [IPv6:2a00:1450:4864:20::52b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 124F5CA;
+        Thu, 29 Jun 2023 06:29:20 -0700 (PDT)
+Received: by mail-ed1-x52b.google.com with SMTP id 4fb4d7f45d1cf-51d946d2634so804123a12.3;
+        Thu, 29 Jun 2023 06:29:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1688045358; x=1690637358;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=2itqLGizh3tF5cuip2yJLJb4xMID5GAfppBUpy2Xzpo=;
+        b=bMM52s7jmj6HouVxnUc/dTGVxY7T+JPhz4uXSyXVwwAOyy72ZdU4c2q+yBqSgexNcq
+         zVWiRldw0amYjiMVBj9Bv4h6AotTeYTqG5C+27wTd7Kax8hdyAw9aTrYUBSndvP0UYD/
+         5fc0TQlZCsIdDqPy9WrTC9gT+fir0ibnPQ8NUbffDPc4m7GIFffxxbFuOThyazuaw5Cz
+         7YK9W1epyhoiPNM3EsXtikeUJeRf6gE3zijDCxSojBgOwTgTnvZut+BIRCmeUKpuaXjd
+         zMfijIeonY3SIzpOhMDDloIz3k7j3Jq/mLKnGZ5o8knEmIRA96RdWsB5h227uNQ4IKko
+         oUqQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1688045358; x=1690637358;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=2itqLGizh3tF5cuip2yJLJb4xMID5GAfppBUpy2Xzpo=;
+        b=HHki9g1tVVD6AEzewEgypkNPWXpJznXrHIdPbpYkFPU6KrfWqpP+JBwgHjD/U+DTkF
+         pVm6N7Rz3yjmYBIDi7QYctWRKxpyoHyL1fBAF4TJX58IyBPamTeF/iyiezTgNZ+OBLtP
+         MU0IZ6QZPsiF2A/qt+8dXP4P43TjjstzOceChS7kgV/DfqwjxOq2ZTbJ1utO4OouZRWX
+         /reWc1vA19fe25dTLE7K9yESRvsLD+ekE6OopqnIgYKKgsUl6vtcChmYkpqXJP2bJz/7
+         exOWIRw1tHn3ChBWEzqiQwgy9nZMp1M24+WudkHK9Fo5EoaC2XsPsiGK2j3Qdt3Mv1bt
+         yebA==
+X-Gm-Message-State: AC+VfDwRuUL1eoXUSQmb7yigXetwbZGGpIUVmUlO8TIQ8lR1k+BFjx21
+        JBCGoueY8lkvT6hCmDeoc3M=
+X-Google-Smtp-Source: ACHHUZ5HlcPtG9BUj0FlQ6UH/5GwLq3zfBRGabGbZKmfXbNtBwYiMyoWyo19W1yVcBwjZ6JWFi12zQ==
+X-Received: by 2002:aa7:db8d:0:b0:515:3103:631e with SMTP id u13-20020aa7db8d000000b005153103631emr24260014edt.25.1688045358323;
+        Thu, 29 Jun 2023 06:29:18 -0700 (PDT)
+Received: from krava (net-93-65-241-219.cust.vodafonedsl.it. [93.65.241.219])
+        by smtp.gmail.com with ESMTPSA id b9-20020a05640202c900b0051de3e1323dsm405311edx.95.2023.06.29.06.29.16
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 29 Jun 2023 06:29:17 -0700 (PDT)
+From:   Jiri Olsa <olsajiri@gmail.com>
+X-Google-Original-From: Jiri Olsa <jolsa@kernel.org>
+Date:   Thu, 29 Jun 2023 15:29:14 +0200
+To:     Yafang Shao <laoar.shao@gmail.com>
+Cc:     ast@kernel.org, daniel@iogearbox.net, john.fastabend@gmail.com,
+        andrii@kernel.org, martin.lau@linux.dev, song@kernel.org,
+        yhs@fb.com, kpsingh@kernel.org, sdf@google.com, haoluo@google.com,
+        quentin@isovalent.com, rostedt@goodmis.org, mhiramat@kernel.org,
+        bpf@vger.kernel.org, linux-trace-kernel@vger.kernel.org
+Subject: Re: [PATCH v6 bpf-next 00/11] bpf: Support ->fill_link_info for
+ kprobe_multi and perf_event links
+Message-ID: <ZJ2HKgg5jsLxiwX6@krava>
+References: <20230628115329.248450-1-laoar.shao@gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230628115329.248450-1-laoar.shao@gmail.com>
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-Since strreplace() returns the pointer to the string itself,
-we may use it directly in the code.
+On Wed, Jun 28, 2023 at 11:53:18AM +0000, Yafang Shao wrote:
+> This patchset enhances the usability of kprobe_multi program by introducing
+> support for ->fill_link_info. This allows users to easily determine the
+> probed functions associated with a kprobe_multi program. While
+> `bpftool perf show` already provides information about functions probed by
+> perf_event programs, supporting ->fill_link_info ensures consistent access
+> to this information across all bpf links.
+> 
+> In addition, this patch extends support to generic perf events, which are
+> currently not covered by `bpftool perf show`. While userspace is exposed to
+> only the perf type and config, other attributes such as sample_period and
+> sample_freq are disregarded.
+> 
+> To ensure accurate identification of probed functions, it is preferable to
+> expose the address directly rather than relying solely on the symbol name.
+> However, this implementation respects the kptr_restrict setting and avoids
+> exposing the address if it is not permitted.
+> 
+> v5->v6:
+> - From Andrii
+>   - if ucount is too less, copy ucount items and return -E2BIG 
+>   - zero out kmulti_link->cnt elements if it is not permitted by kptr
+>   - avoid leaking information when ucount is greater than kmulti_link->cnt
+>   - drop the flags, and add BPF_PERF_EVENT_[UK]RETPROBE 
+> - From Quentin
+>   - use jsonw_null instead when we have no module name
+>   - add explanation on perf_type_name in the commit log
+>   - avoid the unnecessary out lable 
 
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
----
- include/trace/events/f2fs.h | 6 ++----
- 1 file changed, 2 insertions(+), 4 deletions(-)
+Acked-by: Jiri Olsa <jolsa@kernel.org>
 
-diff --git a/include/trace/events/f2fs.h b/include/trace/events/f2fs.h
-index 793f82cc1515..f5994515290c 100644
---- a/include/trace/events/f2fs.h
-+++ b/include/trace/events/f2fs.h
-@@ -2234,13 +2234,11 @@ DECLARE_EVENT_CLASS(f2fs__rw_start,
- 		 * because this screws up the tooling that parses
- 		 * the traces.
- 		 */
--		__assign_str(pathbuf, pathname);
--		(void)strreplace(__get_str(pathbuf), ' ', '_');
-+		__assign_str(pathbuf, strreplace(pathname, ' ', '_'));
- 		__entry->offset = offset;
- 		__entry->bytes = bytes;
- 		__entry->i_size = i_size_read(inode);
--		__assign_str(cmdline, command);
--		(void)strreplace(__get_str(cmdline), ' ', '_');
-+		__assign_str(cmdline, strreplace(command, ' ', '_'));
- 		__entry->pid = pid;
- 		__entry->ino = inode->i_ino;
- 	),
--- 
-2.40.0.1.gaa8946217a0b
-
+jirka
