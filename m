@@ -2,49 +2,50 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D53A1C001B1
-	for <linux-trace-kernel@archiver.kernel.org>; Thu, 29 Jun 2023 19:03:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CDDE6C001DE
+	for <linux-trace-kernel@archiver.kernel.org>; Thu, 29 Jun 2023 19:03:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233475AbjF2TDW (ORCPT
+        id S233056AbjF2TDY (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Thu, 29 Jun 2023 15:03:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37444 "EHLO
+        Thu, 29 Jun 2023 15:03:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37462 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233022AbjF2TBt (ORCPT
+        with ESMTP id S233057AbjF2TBu (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Thu, 29 Jun 2023 15:01:49 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6DABA3594;
-        Thu, 29 Jun 2023 12:01:41 -0700 (PDT)
+        Thu, 29 Jun 2023 15:01:50 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DDD3C3585;
+        Thu, 29 Jun 2023 12:01:40 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange X25519 server-signature RSA-PSS (2048 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id C730B615D8;
-        Thu, 29 Jun 2023 19:01:40 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D58E2C433CA;
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 7C4C061602;
         Thu, 29 Jun 2023 19:01:39 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6366AC433CA;
+        Thu, 29 Jun 2023 19:01:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1688065300;
-        bh=4yKJJVHut3d9Sly9KPcxcIqJNazp/tDpdtVbUNvd0Aw=;
+        s=k20201202; t=1688065298;
+        bh=ZY1idp9ydYLvERHUwYmAgHRcPhBlYiTuA7Tc90jpkUU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=gV+R6YO3IPe05kcRMQsrKYnOl7+7u2SOGEECyCmDdWjO6XC5hdQo+dH1X9XQ0qk3O
-         7aA+M1khkm6rsGZQhiN1xp2+0UkQ99hzcrbIiZEQkVuBL29PznCEd/aQ7jVKlb3m+8
-         mQ0DXokCSAl9tVgiwGRnOi6B/W1j/XyF6EMUE81kIDACL31Xlpg31YnEPVoczqnEcq
-         4zGMRXhqqajmdfX+xx9ZvtUmm99kHh+PJM7LIZpXwYDUNrosdSz1LQy8mlhct2TCDN
-         cuL3bbbY6coW5aUEVs804f9asG0zYML65AWEu/rFMyIBmY+WqMI8vy0REQP4aEhOUH
-         KTBnNzhngzpJA==
+        b=ZH6i9gGmxCt49EgfJTcYwmxvqvG1H+hcOwHhjzLPrDuJfroSy3/YKWjE6W+Ju/K23
+         CIWSNJuVZEFsF2nuENccS81lI3grU/GTx7fLunuF+AjS8k4PcwBvj1MnUbqpmNIDtu
+         1Wsa8xWBgCDW2zJpPg68VEeQhuRhIZ+hdZuTgtk7/0hbMqUqWSXRe0d0jN6ICeU107
+         j3I/gP+6Jg80SP7+cp3rRSxzUJWeOjl4xgWCVu2tCUAHvx50vGuJfB8kfTqBe7HIK2
+         UgSjhPAsEQaw0IcAej9o+1M+R2XslXfomT9Ajm3Ud1sF2Rut6pM/jLRY5xeSHukfgh
+         uyODETDybB/RQ==
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     sunliming <sunliming@kylinos.cn>,
-        Beau Belgrave <beaub@linux.microsoft.com>,
         Masami Hiramatsu <mhiramat@kernel.org>,
+        Beau Belgrave <beaub@linux.microsoft.com>,
         Steven Rostedt <rostedt@goodmis.org>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-trace-kernel@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.1 04/12] tracing/user_events: Fix the incorrect trace record for empty arguments events
-Date:   Thu, 29 Jun 2023 15:01:24 -0400
-Message-Id: <20230629190134.907949-4-sashal@kernel.org>
+        Sasha Levin <sashal@kernel.org>, shuah@kernel.org,
+        quic_mojha@quicinc.com, zwisler@google.com,
+        linux-trace-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org
+Subject: [PATCH AUTOSEL 6.1 02/12] tracing/user_events: Prevent same name but different args event
+Date:   Thu, 29 Jun 2023 15:01:22 -0400
+Message-Id: <20230629190134.907949-2-sashal@kernel.org>
 X-Mailer: git-send-email 2.39.2
 In-Reply-To: <20230629190134.907949-1-sashal@kernel.org>
 References: <20230629190134.907949-1-sashal@kernel.org>
@@ -59,45 +60,99 @@ X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
 From: sunliming <sunliming@kylinos.cn>
 
-[ Upstream commit 6f05dcabe5c241d066ec472cf38ac8b84f8c9c6f ]
+[ Upstream commit ba470eebc2f6c2f704872955a715b9555328e7d0 ]
 
-The user_events support events that has empty arguments. But the trace event
-is discarded and not really committed when the arguments is empty. Fix this
-by not attempting to copy in zero-length data.
+User processes register name_args for events. If the same name but different
+args event are registered. The trace outputs of second event are printed
+as the first event. This is incorrect.
 
-Link: https://lkml.kernel.org/r/20230606062027.1008398-2-sunliming@kylinos.cn
+Return EADDRINUSE back to the user process if the same name but different args
+event has being registered.
 
-Acked-by: Beau Belgrave <beaub@linux.microsoft.com>
-Acked-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+Link: https://lore.kernel.org/linux-trace-kernel/20230529032100.286534-1-sunliming@kylinos.cn
+
 Signed-off-by: sunliming <sunliming@kylinos.cn>
+Reviewed-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+Acked-by: Beau Belgrave <beaub@linux.microsoft.com>
 Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/trace/trace_events_user.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ kernel/trace/trace_events_user.c              | 36 +++++++++++++++----
+ .../selftests/user_events/ftrace_test.c       |  6 ++++
+ 2 files changed, 36 insertions(+), 6 deletions(-)
 
 diff --git a/kernel/trace/trace_events_user.c b/kernel/trace/trace_events_user.c
-index ad64da21c34aa..49e114d250136 100644
+index 625cab4b9d945..774d146c2c2ca 100644
 --- a/kernel/trace/trace_events_user.c
 +++ b/kernel/trace/trace_events_user.c
-@@ -916,7 +916,7 @@ static void user_event_ftrace(struct user_event *user, struct iov_iter *i,
- 	if (unlikely(!entry))
- 		return;
+@@ -1274,6 +1274,8 @@ static int user_event_parse(struct user_event_group *group, char *name,
+ 	int index;
+ 	u32 key;
+ 	struct user_event *user;
++	int argc = 0;
++	char **argv;
  
--	if (unlikely(!copy_nofault(entry + 1, i->count, i)))
-+	if (unlikely(i->count != 0 && !copy_nofault(entry + 1, i->count, i)))
- 		goto discard;
+ 	/* Prevent dyn_event from racing */
+ 	mutex_lock(&event_mutex);
+@@ -1281,13 +1283,35 @@ static int user_event_parse(struct user_event_group *group, char *name,
+ 	mutex_unlock(&event_mutex);
  
- 	if (!list_empty(&user->validators) &&
-@@ -957,7 +957,7 @@ static void user_event_perf(struct user_event *user, struct iov_iter *i,
+ 	if (user) {
+-		*newuser = user;
+-		/*
+-		 * Name is allocated by caller, free it since it already exists.
+-		 * Caller only worries about failure cases for freeing.
+-		 */
+-		kfree(name);
++		if (args) {
++			argv = argv_split(GFP_KERNEL, args, &argc);
++			if (!argv) {
++				ret = -ENOMEM;
++				goto error;
++			}
++
++			ret = user_fields_match(user, argc, (const char **)argv);
++			argv_free(argv);
++
++		} else
++			ret = list_empty(&user->fields);
++
++		if (ret) {
++			*newuser = user;
++			/*
++			 * Name is allocated by caller, free it since it already exists.
++			 * Caller only worries about failure cases for freeing.
++			 */
++			kfree(name);
++		} else {
++			ret = -EADDRINUSE;
++			goto error;
++		}
++
+ 		return 0;
++error:
++		refcount_dec(&user->refcnt);
++		return ret;
+ 	}
  
- 		perf_fetch_caller_regs(regs);
+ 	index = find_first_zero_bit(group->page_bitmap, MAX_EVENTS);
+diff --git a/tools/testing/selftests/user_events/ftrace_test.c b/tools/testing/selftests/user_events/ftrace_test.c
+index 1bc26e6476fc3..df0e776c2cc1b 100644
+--- a/tools/testing/selftests/user_events/ftrace_test.c
++++ b/tools/testing/selftests/user_events/ftrace_test.c
+@@ -209,6 +209,12 @@ TEST_F(user, register_events) {
+ 	ASSERT_EQ(0, reg.write_index);
+ 	ASSERT_NE(0, reg.status_bit);
  
--		if (unlikely(!copy_nofault(perf_entry + 1, i->count, i)))
-+		if (unlikely(i->count != 0 && !copy_nofault(perf_entry + 1, i->count, i)))
- 			goto discard;
- 
- 		if (!list_empty(&user->validators) &&
++	/* Multiple registers to same name but different args should fail */
++	reg.enable_bit = 29;
++	reg.name_args = (__u64)"__test_event u32 field1;";
++	ASSERT_EQ(-1, ioctl(self->data_fd, DIAG_IOCSREG, &reg));
++	ASSERT_EQ(EADDRINUSE, errno);
++
+ 	/* Ensure disabled */
+ 	self->enable_fd = open(enable_file, O_RDWR);
+ 	ASSERT_NE(-1, self->enable_fd);
 -- 
 2.39.2
 
