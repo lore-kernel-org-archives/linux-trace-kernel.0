@@ -2,157 +2,62 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CDDE6C001DE
-	for <linux-trace-kernel@archiver.kernel.org>; Thu, 29 Jun 2023 19:03:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ECC80EB64D9
+	for <linux-trace-kernel@archiver.kernel.org>; Thu, 29 Jun 2023 23:50:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233056AbjF2TDY (ORCPT
+        id S229522AbjF2Xu5 (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Thu, 29 Jun 2023 15:03:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37462 "EHLO
+        Thu, 29 Jun 2023 19:50:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40418 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233057AbjF2TBu (ORCPT
+        with ESMTP id S230241AbjF2Xu4 (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Thu, 29 Jun 2023 15:01:50 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DDD3C3585;
-        Thu, 29 Jun 2023 12:01:40 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 7C4C061602;
-        Thu, 29 Jun 2023 19:01:39 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6366AC433CA;
-        Thu, 29 Jun 2023 19:01:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1688065298;
-        bh=ZY1idp9ydYLvERHUwYmAgHRcPhBlYiTuA7Tc90jpkUU=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ZH6i9gGmxCt49EgfJTcYwmxvqvG1H+hcOwHhjzLPrDuJfroSy3/YKWjE6W+Ju/K23
-         CIWSNJuVZEFsF2nuENccS81lI3grU/GTx7fLunuF+AjS8k4PcwBvj1MnUbqpmNIDtu
-         1Wsa8xWBgCDW2zJpPg68VEeQhuRhIZ+hdZuTgtk7/0hbMqUqWSXRe0d0jN6ICeU107
-         j3I/gP+6Jg80SP7+cp3rRSxzUJWeOjl4xgWCVu2tCUAHvx50vGuJfB8kfTqBe7HIK2
-         UgSjhPAsEQaw0IcAej9o+1M+R2XslXfomT9Ajm3Ud1sF2Rut6pM/jLRY5xeSHukfgh
-         uyODETDybB/RQ==
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     sunliming <sunliming@kylinos.cn>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Beau Belgrave <beaub@linux.microsoft.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Sasha Levin <sashal@kernel.org>, shuah@kernel.org,
-        quic_mojha@quicinc.com, zwisler@google.com,
-        linux-trace-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.1 02/12] tracing/user_events: Prevent same name but different args event
-Date:   Thu, 29 Jun 2023 15:01:22 -0400
-Message-Id: <20230629190134.907949-2-sashal@kernel.org>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20230629190134.907949-1-sashal@kernel.org>
-References: <20230629190134.907949-1-sashal@kernel.org>
+        Thu, 29 Jun 2023 19:50:56 -0400
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 96AA930DF;
+        Thu, 29 Jun 2023 16:50:55 -0700 (PDT)
+Received: from CPC-beaub-VBQ1L.localdomain (unknown [4.155.48.123])
+        by linux.microsoft.com (Postfix) with ESMTPSA id 9185C208396A;
+        Thu, 29 Jun 2023 16:50:54 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 9185C208396A
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+        s=default; t=1688082654;
+        bh=lgUdu2qp156h5P5sIiuRE2nkVehC4a1jKFyR45EG0Ec=;
+        h=From:To:Cc:Subject:Date:From;
+        b=CV8h5hcJQpMcjs7dt45hr2utnsklSL8xlDt3bCxw5+dvGSlnU60MsS8jUO3Wbgo/o
+         ILIU7MKrg8YBttpVFD+2m5I1A3PkqTBIryGBPDZZgikzzoxZ8vUvbEpAaWXhxUKDtw
+         9t4qpNk8P0W6LGKkOZ/5LfTj3M241DR5XQyq6Zcc=
+From:   Beau Belgrave <beaub@linux.microsoft.com>
+To:     rostedt@goodmis.org, mhiramat@kernel.org
+Cc:     linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
+Subject: [PATCH 0/2] tracing/user_events: Fix struct arg size match check
+Date:   Thu, 29 Jun 2023 23:50:47 +0000
+Message-Id: <20230629235049.581-1-beaub@linux.microsoft.com>
+X-Mailer: git-send-email 2.34.1
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-X-stable-base: Linux 6.1.35
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-From: sunliming <sunliming@kylinos.cn>
+The edge case of struct fields having an extra size argument got missed
+when checking if events have the same name and arguments. This lead to
+events not being able to register if a matching event name was already
+created with a struct argument.
 
-[ Upstream commit ba470eebc2f6c2f704872955a715b9555328e7d0 ]
+This series simply fixes this and adds a self test to ensure we do not
+miss it again.
 
-User processes register name_args for events. If the same name but different
-args event are registered. The trace outputs of second event are printed
-as the first event. This is incorrect.
+Beau Belgrave (2):
+  tracing/user_events: Fix struct arg size match check
+  selftests/user_events: Test struct size match cases
 
-Return EADDRINUSE back to the user process if the same name but different args
-event has being registered.
+ kernel/trace/trace_events_user.c               |  3 +++
+ tools/testing/selftests/user_events/dyn_test.c | 12 ++++++++++++
+ 2 files changed, 15 insertions(+)
 
-Link: https://lore.kernel.org/linux-trace-kernel/20230529032100.286534-1-sunliming@kylinos.cn
 
-Signed-off-by: sunliming <sunliming@kylinos.cn>
-Reviewed-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-Acked-by: Beau Belgrave <beaub@linux.microsoft.com>
-Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- kernel/trace/trace_events_user.c              | 36 +++++++++++++++----
- .../selftests/user_events/ftrace_test.c       |  6 ++++
- 2 files changed, 36 insertions(+), 6 deletions(-)
-
-diff --git a/kernel/trace/trace_events_user.c b/kernel/trace/trace_events_user.c
-index 625cab4b9d945..774d146c2c2ca 100644
---- a/kernel/trace/trace_events_user.c
-+++ b/kernel/trace/trace_events_user.c
-@@ -1274,6 +1274,8 @@ static int user_event_parse(struct user_event_group *group, char *name,
- 	int index;
- 	u32 key;
- 	struct user_event *user;
-+	int argc = 0;
-+	char **argv;
- 
- 	/* Prevent dyn_event from racing */
- 	mutex_lock(&event_mutex);
-@@ -1281,13 +1283,35 @@ static int user_event_parse(struct user_event_group *group, char *name,
- 	mutex_unlock(&event_mutex);
- 
- 	if (user) {
--		*newuser = user;
--		/*
--		 * Name is allocated by caller, free it since it already exists.
--		 * Caller only worries about failure cases for freeing.
--		 */
--		kfree(name);
-+		if (args) {
-+			argv = argv_split(GFP_KERNEL, args, &argc);
-+			if (!argv) {
-+				ret = -ENOMEM;
-+				goto error;
-+			}
-+
-+			ret = user_fields_match(user, argc, (const char **)argv);
-+			argv_free(argv);
-+
-+		} else
-+			ret = list_empty(&user->fields);
-+
-+		if (ret) {
-+			*newuser = user;
-+			/*
-+			 * Name is allocated by caller, free it since it already exists.
-+			 * Caller only worries about failure cases for freeing.
-+			 */
-+			kfree(name);
-+		} else {
-+			ret = -EADDRINUSE;
-+			goto error;
-+		}
-+
- 		return 0;
-+error:
-+		refcount_dec(&user->refcnt);
-+		return ret;
- 	}
- 
- 	index = find_first_zero_bit(group->page_bitmap, MAX_EVENTS);
-diff --git a/tools/testing/selftests/user_events/ftrace_test.c b/tools/testing/selftests/user_events/ftrace_test.c
-index 1bc26e6476fc3..df0e776c2cc1b 100644
---- a/tools/testing/selftests/user_events/ftrace_test.c
-+++ b/tools/testing/selftests/user_events/ftrace_test.c
-@@ -209,6 +209,12 @@ TEST_F(user, register_events) {
- 	ASSERT_EQ(0, reg.write_index);
- 	ASSERT_NE(0, reg.status_bit);
- 
-+	/* Multiple registers to same name but different args should fail */
-+	reg.enable_bit = 29;
-+	reg.name_args = (__u64)"__test_event u32 field1;";
-+	ASSERT_EQ(-1, ioctl(self->data_fd, DIAG_IOCSREG, &reg));
-+	ASSERT_EQ(EADDRINUSE, errno);
-+
- 	/* Ensure disabled */
- 	self->enable_fd = open(enable_file, O_RDWR);
- 	ASSERT_NE(-1, self->enable_fd);
+base-commit: 6995e2de6891c724bfeb2db33d7b87775f913ad1
 -- 
-2.39.2
+2.34.1
 
