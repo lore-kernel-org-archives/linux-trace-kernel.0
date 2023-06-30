@@ -2,84 +2,115 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 204A8C001B3
-	for <linux-trace-kernel@archiver.kernel.org>; Thu, 29 Jun 2023 23:50:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 88360EB64D9
+	for <linux-trace-kernel@archiver.kernel.org>; Fri, 30 Jun 2023 02:23:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230385AbjF2Xu6 (ORCPT
+        id S231490AbjF3CXX (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Thu, 29 Jun 2023 19:50:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40424 "EHLO
+        Thu, 29 Jun 2023 22:23:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57528 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230286AbjF2Xu4 (ORCPT
+        with ESMTP id S231638AbjF3CXV (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Thu, 29 Jun 2023 19:50:56 -0400
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 973D430F1;
-        Thu, 29 Jun 2023 16:50:55 -0700 (PDT)
-Received: from CPC-beaub-VBQ1L.localdomain (unknown [4.155.48.123])
-        by linux.microsoft.com (Postfix) with ESMTPSA id AA4AD208396B;
-        Thu, 29 Jun 2023 16:50:54 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com AA4AD208396B
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-        s=default; t=1688082654;
-        bh=gCxckCcdhkcYSNpOGc+UHMmZw5sSgaEy+c0gjwxBW/Q=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=BZlKCwXeupqEmLSMFQsH4rfdDLmvfpxma01KBAaL01XCt0ehHvzVGlrOcbTYEuk9H
-         LIPTkaXf0toboei85ZVGoBtPtrwvrozJKh2jpCgntl0E+uNdwwS3M65B3Fg31U5eg5
-         B8zZddU70CKUl6TYMkQM3i1mqVL+h4vEGKqM0XqQ=
-From:   Beau Belgrave <beaub@linux.microsoft.com>
-To:     rostedt@goodmis.org, mhiramat@kernel.org
-Cc:     linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
-Subject: [PATCH 1/2] tracing/user_events: Fix struct arg size match check
-Date:   Thu, 29 Jun 2023 23:50:48 +0000
-Message-Id: <20230629235049.581-2-beaub@linux.microsoft.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20230629235049.581-1-beaub@linux.microsoft.com>
-References: <20230629235049.581-1-beaub@linux.microsoft.com>
+        Thu, 29 Jun 2023 22:23:21 -0400
+Received: from mail-qv1-xf31.google.com (mail-qv1-xf31.google.com [IPv6:2607:f8b0:4864:20::f31])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 396233585;
+        Thu, 29 Jun 2023 19:23:17 -0700 (PDT)
+Received: by mail-qv1-xf31.google.com with SMTP id 6a1803df08f44-635e0e6b829so9766856d6.0;
+        Thu, 29 Jun 2023 19:23:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1688091796; x=1690683796;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=rxtCAW/pigRB9UCYHu0wPmoTio+PyOcCXS///ptljlo=;
+        b=J4fBH17/k1RO98lxuTEK8Hr9dqoKKD3YeGMqltlVi8EDHlGJ/Y6/C13cWhXQTvArXG
+         VrMjzZyHYWwr4PGXQOYWSKVeF8V4OU93otYCW/Crs59qSiZivPku64t8q94xZYnbSAWA
+         nY4foY4wuHVQoX7anZbGFIuFBFSUFXHKnXVchadm1Y2Gf/eghCBK++o/sCZ+UEmygy1T
+         nnTEe+aUVMdX839o9kfN6B0OGAD0hcQXR0AeT5CQpLM84CzaicsqB6EIiH6LZzJS+uai
+         U8TEWfb59GgC4Ij67cq10UGJSt331aQritapOz6sKjX8rh4KCawjVzML3a2vbWwZ3cRE
+         O3sw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1688091796; x=1690683796;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=rxtCAW/pigRB9UCYHu0wPmoTio+PyOcCXS///ptljlo=;
+        b=Z81gndt6puVyspuzbjfmWNzSjGcYvsYGCBUeMuQZm7PHZZNiwJWeUajwqhsgp9zMiP
+         ubkGNbfwpRIlwlIdNtDSS1a8nKPuvfiXIYYBsON3ZXX1DO9LzYWjtiHoDjvI1Z2DdYYy
+         9gCc2KUN/viXXCpCvQgnA52J/iQ+RpmyR5Rr1/5ws6Gc5gZ59HepiBGVXH8zjqMvsDQR
+         N/1LT9VJePBaF9pL5f4lo4LUt3mXPM7ZprKwxyvWmkg6wt4MGT6+d9SUW979J95kYXAP
+         vBMHRuaU0BZgne6863qC/1ebS0J4VYoPTaJPbEVUQ0/etq0JDWhj5Q/q1PkLIwJ4Sb6C
+         0AgA==
+X-Gm-Message-State: ABy/qLb3Rivrq4cctqNfpBQ62CMWz7q0RyKq8CU0rPYriJ/XErlKGHlI
+        +Z2wTZSaPbIh95dezZ2XW95boFf/72eSrIgG+T4=
+X-Google-Smtp-Source: APBJJlHXypI2kHaZ0Fn5V977JSmzRMpKN58RC1CXMMdHsqv2vnk60q2aSis4AnWpK6194CzRDSoPQygCTUGxquhv0+8=
+X-Received: by 2002:a05:6214:629:b0:62d:f3a6:872f with SMTP id
+ a9-20020a056214062900b0062df3a6872fmr1767171qvx.5.1688091796249; Thu, 29 Jun
+ 2023 19:23:16 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20230628115329.248450-1-laoar.shao@gmail.com> <20230628115329.248450-3-laoar.shao@gmail.com>
+ <4892a56a-44f8-c45e-c119-503d63ce0fd2@isovalent.com>
+In-Reply-To: <4892a56a-44f8-c45e-c119-503d63ce0fd2@isovalent.com>
+From:   Yafang Shao <laoar.shao@gmail.com>
+Date:   Fri, 30 Jun 2023 10:22:40 +0800
+Message-ID: <CALOAHbAq1Yf0s=RkRsbJOHqOMkhBGRwGxk+zwJZ2p++q0=v4CA@mail.gmail.com>
+Subject: Re: [PATCH v6 bpf-next 02/11] bpftool: Dump the kernel symbol's
+ module name
+To:     Quentin Monnet <quentin@isovalent.com>
+Cc:     ast@kernel.org, daniel@iogearbox.net, john.fastabend@gmail.com,
+        andrii@kernel.org, martin.lau@linux.dev, song@kernel.org,
+        yhs@fb.com, kpsingh@kernel.org, sdf@google.com, haoluo@google.com,
+        jolsa@kernel.org, rostedt@goodmis.org, mhiramat@kernel.org,
+        bpf@vger.kernel.org, linux-trace-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-When users register an event the name of the event and it's argument are
-checked to ensure they match if the event already exists. Normally all
-arguments are in the form of "type name", except for when the type
-starts with "struct ". In those cases, the size of the struct is passed
-in addition to the name, IE: "struct my_struct a 20" for an argument
-that is of type "struct my_struct" with a field name of "a" and has the
-size of 20 bytes.
+On Thu, Jun 29, 2023 at 9:46=E2=80=AFPM Quentin Monnet <quentin@isovalent.c=
+om> wrote:
+>
+> 2023-06-28 11:53 UTC+0000 ~ Yafang Shao <laoar.shao@gmail.com>
+> > If the kernel symbol is in a module, we will dump the module name as
+> > well. The square brackets around the module name are trimmed.
+> >
+> > Signed-off-by: Yafang Shao <laoar.shao@gmail.com>
+> > Reviewed-by: Quentin Monnet <quentin@isovalent.com>
+> > ---
+> >  tools/bpf/bpftool/xlated_dumper.c | 6 +++++-
+> >  tools/bpf/bpftool/xlated_dumper.h | 2 ++
+> >  2 files changed, 7 insertions(+), 1 deletion(-)
+> >
+> > diff --git a/tools/bpf/bpftool/xlated_dumper.c b/tools/bpf/bpftool/xlat=
+ed_dumper.c
+> > index da608e10c843..567f56dfd9f1 100644
+> > --- a/tools/bpf/bpftool/xlated_dumper.c
+> > +++ b/tools/bpf/bpftool/xlated_dumper.c
+> > @@ -46,7 +46,11 @@ void kernel_syms_load(struct dump_data *dd)
+> >               }
+> >               dd->sym_mapping =3D tmp;
+> >               sym =3D &dd->sym_mapping[dd->sym_count];
+> > -             if (sscanf(buff, "%p %*c %s", &address, sym->name) !=3D 2=
+)
+> > +
+> > +             /* module is optional */
+> > +             sym->module[0] =3D '\0';
+> > +             /* trim the square brackets around the module name */
+> > +             if (sscanf(buff, "%p %*c %s [%[^]]s", &address, sym->name=
+, sym->module) < 2)
+>
+> Looking again at this patch, we should be good for parsing the module
+> name with the sscanf() because I don't expect a module name longer than
+> MODULE_MAX_NAME to show up, but I wonder what guarantee we have about
+> symbols names staying under SYM_MAX_NAME? Maybe we should specify the
+> max length to read, to remain on the safe side (or in case these limits
+> change in the future). But it doesn't have to be part of your set, I can
+> send a follow-up after that.
 
-The current code does not honor the above case properly when comparing
-a match. This causes the event register to fail even when the same
-string was used for events that contain a struct argument within them.
-The example above "struct my_struct a 20" generates a match string of
-"struct my_struct a" omitting the size field.
+Great, thanks for your work!
 
-Add the struct size of the existing field when generating a comparison
-string for a struct field to ensure proper match checking.
-
-Fixes: e6f89a149872 ("tracing/user_events: Ensure user provided strings are safely formatted")
-
-Signed-off-by: Beau Belgrave <beaub@linux.microsoft.com>
----
- kernel/trace/trace_events_user.c | 3 +++
- 1 file changed, 3 insertions(+)
-
-diff --git a/kernel/trace/trace_events_user.c b/kernel/trace/trace_events_user.c
-index 8df0550415e7..5c787fe48d53 100644
---- a/kernel/trace/trace_events_user.c
-+++ b/kernel/trace/trace_events_user.c
-@@ -1317,6 +1317,9 @@ static int user_field_set_string(struct ftrace_event_field *field,
- 	pos += snprintf(buf + pos, LEN_OR_ZERO, " ");
- 	pos += snprintf(buf + pos, LEN_OR_ZERO, "%s", field->name);
- 
-+	if (str_has_prefix(field->type, "struct "))
-+		pos += snprintf(buf + pos, LEN_OR_ZERO, " %d", field->size);
-+
- 	if (colon)
- 		pos += snprintf(buf + pos, LEN_OR_ZERO, ";");
- 
--- 
-2.34.1
-
+--=20
+Regards
+Yafang
