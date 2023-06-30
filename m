@@ -2,211 +2,241 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D29BEB64D7
-	for <linux-trace-kernel@archiver.kernel.org>; Fri, 30 Jun 2023 13:25:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 436F2C001DE
+	for <linux-trace-kernel@archiver.kernel.org>; Fri, 30 Jun 2023 22:16:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232414AbjF3NZY (ORCPT
+        id S231765AbjF3WQW (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Fri, 30 Jun 2023 09:25:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47810 "EHLO
+        Fri, 30 Jun 2023 18:16:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49770 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232285AbjF3NZX (ORCPT
+        with ESMTP id S232351AbjF3WQJ (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Fri, 30 Jun 2023 09:25:23 -0400
-Received: from mail-lf1-x136.google.com (mail-lf1-x136.google.com [IPv6:2a00:1450:4864:20::136])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D6DC93A99
-        for <linux-trace-kernel@vger.kernel.org>; Fri, 30 Jun 2023 06:25:13 -0700 (PDT)
-Received: by mail-lf1-x136.google.com with SMTP id 2adb3069b0e04-4f95bf5c493so2887081e87.3
-        for <linux-trace-kernel@vger.kernel.org>; Fri, 30 Jun 2023 06:25:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=layalina-io.20221208.gappssmtp.com; s=20221208; t=1688131512; x=1690723512;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=Qk/29pUWn0vGiMuP9Cfi3/EYqLftvL8xXi5fIA2JMrc=;
-        b=j+mHcNT0pkueAkNDWn7hm9eltY0NULS+J2NyiRE9ZLAh+KhRE7usnmg68+2I5JRgTy
-         0PL/HWtrOw/Pc3hhmE1FoYMWYkYKR13Wgy7vWcaqc0ujgZN5PwvXkbzgFhcZwpbUYrPa
-         JHZf4Otfur/p+BpVsSRlscKUY3dhWBuKbY0DIeoF1hb7TXh/48xIv3ygo+tbtHmo71b/
-         Sg1rEHUQvfI+3lI7DZX788Ln9+FIg2kfDisV06CoBI5zx3VKIIrLAKPA2BsK5rMz4buV
-         fzfvAztbyZjB9cpZOPwP6SYu2X7/UdDdloLWi+GoMOfFAm1GcOeyjdjf8dXtLyJiSyJn
-         a8kw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1688131512; x=1690723512;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Qk/29pUWn0vGiMuP9Cfi3/EYqLftvL8xXi5fIA2JMrc=;
-        b=fXvWWZZ3CdLpqeNjEbpPe/2VmPlh9prfC7atg5M9s7kHyUQ0xD89lqrY60ut4QZ33k
-         x6iPm1kQpsA9Lkg/Fb+EIKTSuDGb1EizsKCl4wbykgikyinhQpR4meU6JbYOrZFIQ6fh
-         pn7CDw6GcYouzuCRVdsGOKsc2a1qJoJkS60+CWaBHHsEJuPj6zoi7YIl8/fLFzQuI+oy
-         3fZLDK1dcTOHhJ8BMT7LrBFdJUoY+GwBrkLl1KIb26tiTyxMHB9T5H/JUvJ+2YyjpxBF
-         vnaShPDwurKLHqI0uYY1AqzdnhkaUcrReSYnmNnuIMgxLiVIbMvk+shyGTLVkRNunsNN
-         gHsA==
-X-Gm-Message-State: ABy/qLZ1GrrHo2wqbQAo7/XF04iyCWMLdC+xvtKr2+akfPoi3DLkpv0t
-        8wxSQtAQE1cywvmv4mhOtk35UQ==
-X-Google-Smtp-Source: APBJJlFAg/rPCVEk3WXaVAiwSdndbFcfE5OcjnvsY8jXMLH02zphj9zIfobyZothbq+hgt0ET9b+4A==
-X-Received: by 2002:a05:6512:455:b0:4fa:9dc3:1d41 with SMTP id y21-20020a056512045500b004fa9dc31d41mr2182003lfk.51.1688131511950;
-        Fri, 30 Jun 2023 06:25:11 -0700 (PDT)
-Received: from airbuntu (host86-163-217-97.range86-163.btcentralplus.com. [86.163.217.97])
-        by smtp.gmail.com with ESMTPSA id q20-20020a1cf314000000b003f90b9b2c31sm22251634wmq.28.2023.06.30.06.25.10
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 30 Jun 2023 06:25:11 -0700 (PDT)
-Date:   Fri, 30 Jun 2023 14:25:07 +0100
-From:   Qais Yousef <qyousef@layalina.io>
-To:     Lukasz Luba <lukasz.luba@arm.com>
-Cc:     linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
-        rafael@kernel.org, linux-pm@vger.kernel.org, rostedt@goodmis.org,
-        mhiramat@kernel.org, mingo@redhat.com, peterz@infradead.org,
-        juri.lelli@redhat.com, vincent.guittot@linaro.org,
-        dietmar.eggemann@arm.com, bsegall@google.com, mgorman@suse.de,
-        bristot@redhat.com, vschneid@redhat.com, delyank@fb.com,
-        qyousef@google.com, kernel test robot <lkp@intel.com>
-Subject: Re: [RESEND][PATCH v2 3/3] schedutil: trace: Add tracing to capture
- filter out requests
-Message-ID: <20230630132507.hggzz5g2odrabii6@airbuntu>
-References: <20230522145702.2419654-1-lukasz.luba@arm.com>
- <20230522145702.2419654-4-lukasz.luba@arm.com>
- <20230531183105.r5tqpdx5axoogkzp@airbuntu>
- <a0101269-1d8b-d4e1-52b4-250a99b395fa@arm.com>
- <20230630120122.oqy4q42bl5gy6bfd@airbuntu>
+        Fri, 30 Jun 2023 18:16:09 -0400
+Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:3::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B79FE3C34;
+        Fri, 30 Jun 2023 15:16:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20210309; h=Sender:In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=lAGAJ28n1AlcMoZYeCm9uRz7rvcCocSlQtZJp9kS4hM=; b=MDK5OMbWDIQ7k5BUsVfTTCeUKK
+        ykHg2ksytfiKty5DqeoojsJgI19pnpO3bU4G0Nu4GjG2hEs2ZxnYXR7D6/oVlp5Pe2D5JneqmFcdb
+        aqUSSmtLLmtBD1hqWecPq0g6kKIyzG4SS3mQ1IFdkZFT8q1yIbLznGNVCRFkmuvgVZewrQL+j94VD
+        WaM6JFD5ZLKSStA4y0A2mjB/5tQW5fCKp810bYosB6+mCMAVZBJndIY7cGkKy5/JBuK2Tl+F43Ugr
+        599NI5n1vZXoqkj6Re0aIa5xI5fj+j2Mg09LQQtRQAZLHqXoNHWcWfm/2CAipcBnuw9FG3zZ4Gpbp
+        XVBvS0Ww==;
+Received: from mcgrof by bombadil.infradead.org with local (Exim 4.96 #2 (Red Hat Linux))
+        id 1qFMM7-004egi-0d;
+        Fri, 30 Jun 2023 22:12:43 +0000
+Date:   Fri, 30 Jun 2023 15:12:43 -0700
+From:   Luis Chamberlain <mcgrof@kernel.org>
+To:     Jeff Layton <jlayton@kernel.org>
+Cc:     Jeremy Kerr <jk@ozlabs.org>, Arnd Bergmann <arnd@arndb.de>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        Christophe Leroy <christophe.leroy@csgroup.eu>,
+        Heiko Carstens <hca@linux.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Alexander Gordeev <agordeev@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@linux.ibm.com>,
+        Sven Schnelle <svens@linux.ibm.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Arve =?iso-8859-1?B?SGr4bm5lduVn?= <arve@android.com>,
+        Todd Kjos <tkjos@android.com>,
+        Martijn Coenen <maco@android.com>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Christian Brauner <brauner@kernel.org>,
+        Carlos Llamas <cmllamas@google.com>,
+        Suren Baghdasaryan <surenb@google.com>,
+        Dennis Dalessandro <dennis.dalessandro@cornelisnetworks.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Leon Romanovsky <leon@kernel.org>,
+        Brad Warrum <bwarrum@linux.ibm.com>,
+        Ritu Agarwal <rituagar@linux.ibm.com>,
+        Eric Van Hensbergen <ericvh@kernel.org>,
+        Latchesar Ionkov <lucho@ionkov.net>,
+        Dominique Martinet <asmadeus@codewreck.org>,
+        Christian Schoenebeck <linux_oss@crudebyte.com>,
+        David Sterba <dsterba@suse.com>,
+        David Howells <dhowells@redhat.com>,
+        Marc Dionne <marc.dionne@auristor.com>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Ian Kent <raven@themaw.net>,
+        Luis de Bethencourt <luisbg@kernel.org>,
+        Salah Triki <salah.triki@gmail.com>,
+        "Tigran A. Aivazian" <aivazian.tigran@gmail.com>,
+        Eric Biederman <ebiederm@xmission.com>,
+        Kees Cook <keescook@chromium.org>, Chris Mason <clm@fb.com>,
+        Josef Bacik <josef@toxicpanda.com>,
+        Xiubo Li <xiubli@redhat.com>,
+        Ilya Dryomov <idryomov@gmail.com>,
+        Jan Harkes <jaharkes@cs.cmu.edu>, coda@cs.cmu.edu,
+        Joel Becker <jlbec@evilplan.org>,
+        Christoph Hellwig <hch@lst.de>,
+        Nicolas Pitre <nico@fluxnic.net>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Tyler Hicks <code@tyhicks.com>,
+        Ard Biesheuvel <ardb@kernel.org>, Gao Xiang <xiang@kernel.org>,
+        Chao Yu <chao@kernel.org>, Yue Hu <huyue2@coolpad.com>,
+        Jeffle Xu <jefflexu@linux.alibaba.com>,
+        Namjae Jeon <linkinjeon@kernel.org>,
+        Sungjong Seo <sj1557.seo@samsung.com>,
+        Jan Kara <jack@suse.com>, Theodore Ts'o <tytso@mit.edu>,
+        Andreas Dilger <adilger.kernel@dilger.ca>,
+        Jaegeuk Kim <jaegeuk@kernel.org>,
+        OGAWA Hirofumi <hirofumi@mail.parknet.co.jp>,
+        Miklos Szeredi <miklos@szeredi.hu>,
+        Bob Peterson <rpeterso@redhat.com>,
+        Andreas Gruenbacher <agruenba@redhat.com>,
+        Richard Weinberger <richard@nod.at>,
+        Anton Ivanov <anton.ivanov@cambridgegreys.com>,
+        Johannes Berg <johannes@sipsolutions.net>,
+        Mikulas Patocka <mikulas@artax.karlin.mff.cuni.cz>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        Muchun Song <muchun.song@linux.dev>,
+        David Woodhouse <dwmw2@infradead.org>,
+        Dave Kleikamp <shaggy@kernel.org>, Tejun Heo <tj@kernel.org>,
+        Trond Myklebust <trond.myklebust@hammerspace.com>,
+        Anna Schumaker <anna@kernel.org>,
+        Chuck Lever <chuck.lever@oracle.com>,
+        Ryusuke Konishi <konishi.ryusuke@gmail.com>,
+        Anton Altaparmakov <anton@tuxera.com>,
+        Konstantin Komarov <almaz.alexandrovich@paragon-software.com>,
+        Mark Fasheh <mark@fasheh.com>,
+        Joseph Qi <joseph.qi@linux.alibaba.com>,
+        Bob Copeland <me@bobcopeland.com>,
+        Mike Marshall <hubcap@omnibond.com>,
+        Martin Brandenburg <martin@omnibond.com>,
+        Iurii Zaikin <yzaikin@google.com>,
+        Tony Luck <tony.luck@intel.com>,
+        "Guilherme G. Piccoli" <gpiccoli@igalia.com>,
+        Anders Larsen <al@alarsen.net>,
+        Steve French <sfrench@samba.org>,
+        Paulo Alcantara <pc@manguebit.com>,
+        Ronnie Sahlberg <lsahlber@redhat.com>,
+        Shyam Prasad N <sprasad@microsoft.com>,
+        Tom Talpey <tom@talpey.com>,
+        Sergey Senozhatsky <senozhatsky@chromium.org>,
+        Phillip Lougher <phillip@squashfs.org.uk>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Evgeniy Dushistov <dushistov@mail.ru>,
+        Hans de Goede <hdegoede@redhat.com>,
+        "Darrick J. Wong" <djwong@kernel.org>,
+        Damien Le Moal <dlemoal@kernel.org>,
+        Naohiro Aota <naohiro.aota@wdc.com>,
+        Johannes Thumshirn <jth@kernel.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Andrii Nakryiko <andrii@kernel.org>,
+        Martin KaFai Lau <martin.lau@linux.dev>,
+        Song Liu <song@kernel.org>, Yonghong Song <yhs@fb.com>,
+        John Fastabend <john.fastabend@gmail.com>,
+        KP Singh <kpsingh@kernel.org>,
+        Stanislav Fomichev <sdf@google.com>,
+        Hao Luo <haoluo@google.com>, Jiri Olsa <jolsa@kernel.org>,
+        Hugh Dickins <hughd@google.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Eric Dumazet <edumazet@google.com>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Paolo Abeni <pabeni@redhat.com>,
+        John Johansen <john.johansen@canonical.com>,
+        Paul Moore <paul@paul-moore.com>,
+        James Morris <jmorris@namei.org>,
+        "Serge E. Hallyn" <serge@hallyn.com>,
+        Stephen Smalley <stephen.smalley.work@gmail.com>,
+        Eric Paris <eparis@parisplace.org>,
+        Juergen Gross <jgross@suse.com>,
+        Ruihan Li <lrh2000@pku.edu.cn>,
+        Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>,
+        Wolfram Sang <wsa+renesas@sang-engineering.com>,
+        Udipto Goswami <quic_ugoswami@quicinc.com>,
+        Linyu Yuan <quic_linyyuan@quicinc.com>,
+        John Keeping <john@keeping.me.uk>,
+        Andrzej Pietrasiewicz <andrzej.p@collabora.com>,
+        Dan Carpenter <error27@gmail.com>,
+        Yuta Hayama <hayama@lineo.co.jp>,
+        Jozef Martiniak <jomajm@gmail.com>,
+        Jens Axboe <axboe@kernel.dk>,
+        Alan Stern <stern@rowland.harvard.edu>,
+        Sandeep Dhavale <dhavale@google.com>,
+        Dave Chinner <dchinner@redhat.com>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        ZhangPeng <zhangpeng362@huawei.com>,
+        Viacheslav Dubeyko <slava@dubeyko.com>,
+        Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
+        Aditya Garg <gargaditya08@live.com>,
+        Erez Zadok <ezk@cs.stonybrook.edu>,
+        Yifei Liu <yifeliu@cs.stonybrook.edu>,
+        Yu Zhe <yuzhe@nfschina.com>,
+        "Matthew Wilcox (Oracle)" <willy@infradead.org>,
+        Oleg Kanatov <okanatov@gmail.com>,
+        "Dr. David Alan Gilbert" <linux@treblig.org>,
+        Jiangshan Yi <yijiangshan@kylinos.cn>,
+        xu xin <cgel.zte@gmail.com>, Stefan Roesch <shr@devkernel.io>,
+        Zhihao Cheng <chengzhihao1@huawei.com>,
+        "Liam R. Howlett" <Liam.Howlett@oracle.com>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        Minghao Chi <chi.minghao@zte.com.cn>,
+        Seth Forshee <sforshee@digitalocean.com>,
+        Zeng Jingxiang <linuszeng@tencent.com>,
+        Bart Van Assche <bvanassche@acm.org>,
+        Mimi Zohar <zohar@linux.ibm.com>,
+        Roberto Sassu <roberto.sassu@huawei.com>,
+        Zhang Yi <yi.zhang@huawei.com>, Tom Rix <trix@redhat.com>,
+        "Fabio M. De Francesco" <fmdefrancesco@gmail.com>,
+        Chen Zhongjin <chenzhongjin@huawei.com>,
+        Zhengchao Shao <shaozhengchao@huawei.com>,
+        Rik van Riel <riel@surriel.com>,
+        Jingyu Wang <jingyuwang_vip@163.com>,
+        Hangyu Hua <hbh25y@gmail.com>, linuxppc-dev@lists.ozlabs.org,
+        linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org,
+        linux-rdma@vger.kernel.org, linux-usb@vger.kernel.org,
+        v9fs@lists.linux.dev, linux-fsdevel@vger.kernel.org,
+        linux-afs@lists.infradead.org, autofs@vger.kernel.org,
+        linux-mm@kvack.org, linux-btrfs@vger.kernel.org,
+        ceph-devel@vger.kernel.org, codalist@coda.cs.cmu.edu,
+        ecryptfs@vger.kernel.org, linux-efi@vger.kernel.org,
+        linux-erofs@lists.ozlabs.org, linux-ext4@vger.kernel.org,
+        linux-f2fs-devel@lists.sourceforge.net, cluster-devel@redhat.com,
+        linux-um@lists.infradead.org, linux-mtd@lists.infradead.org,
+        jfs-discussion@lists.sourceforge.net, linux-nfs@vger.kernel.org,
+        linux-nilfs@vger.kernel.org, linux-ntfs-dev@lists.sourceforge.net,
+        ntfs3@lists.linux.dev, ocfs2-devel@oss.oracle.com,
+        linux-karma-devel@lists.sourceforge.net, devel@lists.orangefs.org,
+        linux-unionfs@vger.kernel.org, linux-hardening@vger.kernel.org,
+        reiserfs-devel@vger.kernel.org, linux-cifs@vger.kernel.org,
+        samba-technical@lists.samba.org,
+        linux-trace-kernel@vger.kernel.org, linux-xfs@vger.kernel.org,
+        bpf@vger.kernel.org, netdev@vger.kernel.org,
+        apparmor@lists.ubuntu.com, linux-security-module@vger.kernel.org,
+        selinux@vger.kernel.org
+Subject: Re: [PATCH 01/79] fs: add ctime accessors infrastructure
+Message-ID: <ZJ9TW9MQmlqmbRU/@bombadil.infradead.org>
+References: <20230621144507.55591-1-jlayton@kernel.org>
+ <20230621144507.55591-2-jlayton@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20230630120122.oqy4q42bl5gy6bfd@airbuntu>
+In-Reply-To: <20230621144507.55591-2-jlayton@kernel.org>
+Sender: Luis Chamberlain <mcgrof@infradead.org>
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On 06/30/23 13:01, Qais Yousef wrote:
-> On 06/20/23 18:52, Lukasz Luba wrote:
-> > Hi Qais,
-> > 
-> > I have somehow missed your feedback on this series.
-> > 
-> > On 5/31/23 19:31, Qais Yousef wrote:
-> > > On 05/22/23 15:57, Lukasz Luba wrote:
-> > > > Some of the frequency update requests coming form the task scheduler
-> > > > might be filter out. It can happen when the previous request was served
-> > > > not that long ago (in a period smaller than provided by the cpufreq driver
-> > > > as minimum for frequency update). In such case, we want to know if some of
-> > > > the frequency updates cannot make through.
-> > > > Export the new tracepoint as well. That would allow to handle it by a
-> > > > toolkit for trace analyzes.
-> > > > 
-> > > > Reported-by: kernel test robot <lkp@intel.com> # solved tricky build
-> > > > Signed-off-by: Lukasz Luba <lukasz.luba@arm.com>
-> > > > ---
-> > > >   include/trace/events/sched.h     |  4 ++++
-> > > >   kernel/sched/cpufreq_schedutil.c | 10 ++++++++--
-> > > >   2 files changed, 12 insertions(+), 2 deletions(-)
-> > > > 
-> > > > diff --git a/include/trace/events/sched.h b/include/trace/events/sched.h
-> > > > index dbfb30809f15..e34b7cd5de73 100644
-> > > > --- a/include/trace/events/sched.h
-> > > > +++ b/include/trace/events/sched.h
-> > > > @@ -739,6 +739,10 @@ DECLARE_TRACE(uclamp_update_tsk_tp,
-> > > >   	TP_PROTO(struct task_struct *tsk, int uclamp_id,  unsigned int value),
-> > > >   	TP_ARGS(tsk, uclamp_id, value));
-> > > > +DECLARE_TRACE(schedutil_update_filtered_tp,
-> > > > +	TP_PROTO(int cpu),
-> > > > +	TP_ARGS(cpu));
-> > > > +
-> > > >   #endif /* _TRACE_SCHED_H */
-> > > >   /* This part must be outside protection */
-> > > > diff --git a/kernel/sched/cpufreq_schedutil.c b/kernel/sched/cpufreq_schedutil.c
-> > > > index f462496e5c07..4f9daf258a65 100644
-> > > > --- a/kernel/sched/cpufreq_schedutil.c
-> > > > +++ b/kernel/sched/cpufreq_schedutil.c
-> > > > @@ -6,6 +6,8 @@
-> > > >    * Author: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-> > > >    */
-> > > > +EXPORT_TRACEPOINT_SYMBOL_GPL(schedutil_update_filtered_tp);
-> > > > +
-> > > >   #define IOWAIT_BOOST_MIN	(SCHED_CAPACITY_SCALE / 8)
-> > > >   struct sugov_tunables {
-> > > > @@ -318,8 +320,10 @@ static inline bool sugov_update_single_common(struct sugov_cpu *sg_cpu,
-> > > >   	ignore_dl_rate_limit(sg_cpu);
-> > > > -	if (!sugov_should_update_freq(sg_cpu->sg_policy, time))
-> > > > +	if (!sugov_should_update_freq(sg_cpu->sg_policy, time)) {
-> > > > +		trace_schedutil_update_filtered_tp(sg_cpu->cpu);
-> > > >   		return false;
-> > > > +	}
-> > > 
-> > > Can't we have something more generic here too? Are you interested to count
-> > > these events? How do you plan to use it?
-> > 
-> > The plan is to record those events, count them and maybe adjust the FW
-> > if the frequency switching capabilities are too low, e.g. 4ms...
+On Wed, Jun 21, 2023 at 10:45:06AM -0400, Jeff Layton wrote:
+> struct timespec64 has unused bits in the tv_nsec field that can be used
+> for other purposes. In future patches, we're going to change how the
+> inode->i_ctime is accessed in certain inodes in order to make use of
+> them. In order to do that safely though, we'll need to eradicate raw
+> accesses of the inode->i_ctime field from the kernel.
 > 
-> You mean as part of tuning step for the system or at runtime? The latter seems
-> to indicate for a proper interface instead.
+> Add new accessor functions for the ctime that we can use to replace them.
 > 
-> IMHO I think the current filtering mechanism needs a bit of a massage.
-> 
-> One thing I think we must do is to ignore the filter if there's a big sudden
-> change in requested frequency. Like for instance if a big task migrates. Then
-> prev_cpu should go to lower freq sooner, and new_cpu should change to higher
-> frequency sooner too. The filtering makes sense only in steady state situation
-> where we are ramping up or down gradually.
-> 
-> If no one beats me to it, I'll propose something in that regard.
-> 
-> > 
-> > We need those numbers to point out that there is a need for faster
-> > FW micro-controller to serve those incoming requests.
-> 
-> I think there's a big assumption here that the filter is always set correctly
-> ;-)
-> 
-> > 
-> > > 
-> > > I think this will be a very noisy event by the way.
-> > 
-> > Could be, but on the other hand for those statistical analysis
-> > 'the more the better'. It will also depend on number of
-> > CPUs in the cluster, e.g. 4 CPUs vs 1 CPU.
-> > 
-> > I don't know when we will switch to this per-cpu cpufreq mode
-> > when all CPUs behave like independent DVFS. Juno mainline kernel and FW
-> > supports that mode. We would have to compare those two modes and
-> > measure how much we gain/loose when using one and not the other.
-> > 
-> > Furthermore, we already suspect some of our integration testing for
-> > EAS-mainline (on Juno) failing due to filtered out requests. How much
-> > that would impact other boards - it would be nice to see in traces.
-> 
-> Another problem I think we have is that the DVFS headroom value should be
-> a function of this filter. At the moment it is hardcoded to a random value
-> which causes power issue.
-> 
-> So to summarize I think there are two improvements required (and if anyone has
-> the time to try them out go ahead otherwise I'll get to it):
-> 
->  1. The filter should only be applied if the history hasn't changed. ie: we are
->     gradually increasing or decreasing PELT. Otherwise we should honour sudden
->     changes ASAP.
->  2. DVFS headroom should be a function of the filter. 25% is too high for
->     500us. It could be too low for 10ms (I don't know).
+> Signed-off-by: Jeff Layton <jlayton@kernel.org>
 
-To expand a bit more since it's related. Our  migration margins should depend
-on the tick value instead of random magic numbers they are today. More
-precisely the balance_interval. If there's a misfit task, then we should
-upmigrate it at wake up only if we think it'll become misfit before the load
-balancer kicks in. Otherwise the load balancer should do the correction if it
-becomes long running/misfit. If the sys admin wants to speed up/slow down
-migration it should be throw controlling PELT IMO and not these magic margin
-values - which are hardcoded to random values at the moment anyway that are not
-suitable for every system.
+Reviewed-by: Luis Chamberlain <mcgrof@kernel.org>
 
-And since we decoupled overutilized from misfit lb; I think our definition
-should improve to better detect when the system needs to disable packing and
-starts spreading. Current check for overutilized based on misfit is no longer
-adequate IMO. Especially when there's a single misfit task in the system.
-
-Again, just sharing thoughts in case someone interested to work on this before
-I get a chance to share any patches ;-)
-
-
-Cheers
-
---
-Qais Yousef
+  Luis
