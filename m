@@ -2,111 +2,76 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 916A6EB64D9
-	for <linux-trace-kernel@archiver.kernel.org>; Sun,  2 Jul 2023 13:47:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B9B9AEB64D9
+	for <linux-trace-kernel@archiver.kernel.org>; Sun,  2 Jul 2023 14:47:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229631AbjGBNrB (ORCPT
+        id S229819AbjGBOrS (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Sun, 2 Jul 2023 09:47:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43246 "EHLO
+        Sun, 2 Jul 2023 10:47:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48480 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229604AbjGBNq7 (ORCPT
+        with ESMTP id S229820AbjGBOrR (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Sun, 2 Jul 2023 09:46:59 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CBD59E55;
-        Sun,  2 Jul 2023 06:46:58 -0700 (PDT)
+        Sun, 2 Jul 2023 10:47:17 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2CE2BE69;
+        Sun,  2 Jul 2023 07:47:13 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits))
+         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 3D74F60C25;
-        Sun,  2 Jul 2023 13:46:58 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 98C73C433CB;
-        Sun,  2 Jul 2023 13:46:56 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id B4BE360C24;
+        Sun,  2 Jul 2023 14:47:12 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B2FEBC433C7;
+        Sun,  2 Jul 2023 14:47:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1688305617;
-        bh=32sB5x+MX8ZMp2xOTBFmVGZwfLZCYs96ggH76CMoVQM=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=Itaz14xRH2JlcNguM5VPnqwdwlbBTmM5nZ/LDCGYL25YN1g6NkydyRA374wbwex/U
-         AQ0aW58Lb0RqJXqv/Iu5/P6yji6adLGzWVUH3Gg9j+iuY6bM+uimzVw75ldDfMlwFN
-         T4y4X3/XUsc3lFcA7qs0BXluWB+LTQZsfz+LlWVctXlaTmcBMyPmRMibjhN4Tpd3WR
-         cdKDDSq/yyNTuguy7/mE6ikMIhKR3KFG8PJ7wWcXtNyRqz7rTvK/XhTqDLMNraqKs5
-         HD/FC7L85HxpQzuaqhpkhDC3PFwmq+ghhkcUETuGSdX87/VJ0xVoeTsljMIy4cGIG/
-         uVqOPtjImKVyQ==
-Date:   Sun, 2 Jul 2023 22:46:54 +0900
-From:   Masami Hiramatsu (Google) <mhiramat@kernel.org>
+        s=k20201202; t=1688309232;
+        bh=NE8PEQN12084oUP0Abj3l7PmrEJhGLdJ3PPpfuZyPXQ=;
+        h=From:To:Cc:Subject:Date:From;
+        b=o7VJaVVP+yFrou3rGDgyKtZxqDlIzMNgeodlGTQarzx4hfQ71NjwId+IwqTtbEeby
+         HfMeo6fEYVQKTFRVPIgoH1A30tmPBNelCKM550c/DokC/ZnEP8JPdSX6P2gms27xvO
+         t4ba2XQNPm6aggM1TdY8LhMx31h0YA8/nZ6jtbC9RUdVOrIwT+P+pWUpELphl2GkOH
+         6e58i7SlZdbvB/qJRwu+3zh+H+0wPumsCJe5yGhz/MTen/Yndvi1rwHAuRnbejhQcf
+         JefvG9uUZVMde7PrMyXsX46bSPh6DA4QfeqpUbKD00zJY+eCAdin7nm5a77PKsDKUy
+         bqz8lQ9p5ZLXA==
+From:   "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
 To:     Steven Rostedt <rostedt@goodmis.org>
 Cc:     Dan Carpenter <dan.carpenter@linaro.org>,
         linux-trace-kernel@vger.kernel.org,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 2/2] tracing/probes: Fix to exit fetching if an error is
- detected
-Message-Id: <20230702224654.154e491598712ed0f9504430@kernel.org>
-In-Reply-To: <20230701211617.401fbbd6@rorschach.local.home>
-References: <8819b154-2ba1-43c3-98a2-cbde20892023@moroto.mountain>
-        <168804802668.2028538.4634073314317984220.stgit@mhiramat.roam.corp.google.com>
-        <20230701211617.401fbbd6@rorschach.local.home>
-X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        LKML <linux-kernel@vger.kernel.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>
+Subject: [PATCH 0/3] tracing/probes: Fix bugs in process_fetch_insn
+Date:   Sun,  2 Jul 2023 23:47:08 +0900
+Message-ID:  <168830922841.2278819.9165254236027770818.stgit@mhiramat.roam.corp.google.com>
+X-Mailer: git-send-email 2.41.0.255.g8b1d071c50-goog
+User-Agent: StGit/0.19
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On Sat, 1 Jul 2023 21:16:17 -0400
-Steven Rostedt <rostedt@goodmis.org> wrote:
+Hi,
 
-> On Thu, 29 Jun 2023 23:13:46 +0900
-> "Masami Hiramatsu (Google)" <mhiramat@kernel.org> wrote:
-> 
-> > From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-> > 
-> > Fix to exit fetching arguments if an error is detected when storing
-> > strings. Without this fix, if an array is specified with string types
-> > it may point wrong address to store the data.
-> 
->   "it may store that data at the wrong address".
+Here are some patches to fix bugs in process_fetch_insn_*(). 
+First 2 fixes are already reviewed and updated the description.
+I added 1 new patch which I found while fixing previous one.
 
-Good catch! Yes, while updating the data location, the remaining length
-and offset becomes wrong and next array element (string) will be stored
-in wrong memory address.
+Thank you,
 
-> 
-> > 
-> > Reported-by: Dan Carpenter <dan.carpenter@linaro.org>
-> > Closes: https://lore.kernel.org/all/8819b154-2ba1-43c3-98a2-cbde20892023@moroto.mountain/
-> > Fixes: 9b960a38835f ("tracing: probeevent: Unify fetch_insn processing common part")
-> > Cc: stable@vger.kernel.org
-> > Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-> > ---
-> >  kernel/trace/trace_probe_tmpl.h |    2 ++
-> >  1 file changed, 2 insertions(+)
-> > 
-> > diff --git a/kernel/trace/trace_probe_tmpl.h b/kernel/trace/trace_probe_tmpl.h
-> > index 4735c5cb76fa..d6f2bf69f9bc 100644
-> > --- a/kernel/trace/trace_probe_tmpl.h
-> > +++ b/kernel/trace/trace_probe_tmpl.h
-> > @@ -193,6 +193,8 @@ process_fetch_insn_bottom(struct fetch_insn *code, unsigned long val,
-> >  	default:
-> >  		return -EILSEQ;
-> >  	}
-> > +	if (ret < 0)
-> > +		return ret;
-> 
-> Reviewed-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+---
 
-Thanks!
-
-> 
-> -- Steve
-> 
-> >  	code++;
-> >  
-> >  	/* 4th stage: modify stored value if needed */
-> 
+Masami Hiramatsu (Google) (3):
+      tracing/probes: Fix to avoid double count of the string length on the array
+      tracing/probes: Fix to exit fetching if an error is detected
+      tracing/probes: Fix return value when "(fault)" is injected
 
 
--- 
+ kernel/trace/trace_probe_kernel.h                  |   17 +++++++----------
+ kernel/trace/trace_probe_tmpl.h                    |    6 ++++--
+ .../ftrace/test.d/kprobe/kprobe_args_user.tc       |    2 +-
+ 3 files changed, 12 insertions(+), 13 deletions(-)
+
+--
 Masami Hiramatsu (Google) <mhiramat@kernel.org>
