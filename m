@@ -2,131 +2,219 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 413DAEB64D9
-	for <linux-trace-kernel@archiver.kernel.org>; Sun,  2 Jul 2023 14:47:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 11422EB64D9
+	for <linux-trace-kernel@archiver.kernel.org>; Sun,  2 Jul 2023 14:55:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229756AbjGBOrv (ORCPT
+        id S229704AbjGBOzb (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Sun, 2 Jul 2023 10:47:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49092 "EHLO
+        Sun, 2 Jul 2023 10:55:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51442 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229754AbjGBOru (ORCPT
+        with ESMTP id S229644AbjGBOzb (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Sun, 2 Jul 2023 10:47:50 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 50945E5E;
-        Sun,  2 Jul 2023 07:47:39 -0700 (PDT)
+        Sun, 2 Jul 2023 10:55:31 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D60FDC3;
+        Sun,  2 Jul 2023 07:55:29 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange X25519 server-signature RSA-PSS (2048 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id E0E2260C2C;
-        Sun,  2 Jul 2023 14:47:38 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 577A6C433CB;
-        Sun,  2 Jul 2023 14:47:37 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 64B7B60C22;
+        Sun,  2 Jul 2023 14:55:29 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CCCBDC433C8;
+        Sun,  2 Jul 2023 14:55:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1688309258;
-        bh=YM6t77hkrmL0BQ4fCrPPMAXrOgv5IQjPa1agd03fP70=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ZAJv7+bSjNkfj3L2nXyNjhcy/BxEBu9FTQlSatczbFtOg2/U4+IOT0Q5G+jZ7Gwp0
-         8br1UiPmexAvFkKepIeq+BHXRm34QM7uAcbDZLAXQzMPIUxXpVd3yz+FEDUP2D31uT
-         ifZRTotfXmdnv/oG8/vN3yht+H+v8cu+KY1afvHB7GjtCfZ1oLraoNvrmuNwACqveh
-         NcLqFAIQV7UWGD45KskndizDCZ007dQ+0Of/TvnX21oWBw95EimjBbDyghdPqgSy70
-         bEut4WLCgQG/xWwDWxv0xE0eipXo0txH/jUnc/A7T1rDZSR8BBPmaGUkpulMWAn0h8
-         1EqLwGQhISZjQ==
-From:   "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
-To:     Steven Rostedt <rostedt@goodmis.org>
-Cc:     Dan Carpenter <dan.carpenter@linaro.org>,
-        linux-trace-kernel@vger.kernel.org,
-        LKML <linux-kernel@vger.kernel.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>
-Subject: [PATCH 3/3] tracing/probes: Fix return value when "(fault)" is injected
-Date:   Sun,  2 Jul 2023 23:47:35 +0900
-Message-ID:  <168830925534.2278819.7237772177111801959.stgit@mhiramat.roam.corp.google.com>
-X-Mailer: git-send-email 2.41.0.255.g8b1d071c50-goog
-In-Reply-To:  <168830922841.2278819.9165254236027770818.stgit@mhiramat.roam.corp.google.com>
-References:  <168830922841.2278819.9165254236027770818.stgit@mhiramat.roam.corp.google.com>
-User-Agent: StGit/0.19
-MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+        s=k20201202; t=1688309728;
+        bh=MGjH3l9d9I31OC1IIH78AL+8mPZjBy34In2x4mOWC/Q=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=UzalQL3mmbeP0Cql3N5Q++UMTeIadoZDGivx2+WsP1IR0B7PthD8mTSWonndFvMpM
+         6+dv3ND11Ldu2TEiWfuqr/CQcyNteiIWC9CIAfAQCXlUDKRsUzZc0D2Y3t1zqtae27
+         U/mHFHBTXUGfQzClRxMCVlIDgrUI69YDGsirRoUNllSSXzVxdGbERkb+u7NSRNQLC2
+         LiK/R6ILoAMUpicCCQMW5CYVR4NLhY+SQBkfYjAcSRWoDZp7uiMiP0dvHkGL1JOBlg
+         UJXz6Rplx3VtphOCiK7x308CY8hNVuDcv/T9bDQomK0FZW7tPXsy4kJJX9z2skR9TP
+         sOWZ9clOaPfbA==
+Date:   Sun, 2 Jul 2023 23:55:23 +0900
+From:   Masami Hiramatsu (Google) <mhiramat@kernel.org>
+To:     Ajay Kaher <akaher@vmware.com>
+Cc:     rostedt@goodmis.org, shuah@kernel.org,
+        linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+        linux-kselftest@vger.kernel.org, chinglinyu@google.com,
+        namit@vmware.com, srivatsa@csail.mit.edu, amakhalov@vmware.com,
+        vsirnapalli@vmware.com, tkundu@vmware.com, er.ajay.kaher@gmail.com
+Subject: Re: [PATCH v3 02/10] eventfs: introducing struct tracefs_inode
+Message-Id: <20230702235523.c7078c72957d28163cfc1d1e@kernel.org>
+In-Reply-To: <1685610013-33478-3-git-send-email-akaher@vmware.com>
+References: <1685610013-33478-1-git-send-email-akaher@vmware.com>
+        <1685610013-33478-3-git-send-email-akaher@vmware.com>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+On Thu,  1 Jun 2023 14:30:05 +0530
+Ajay Kaher <akaher@vmware.com> wrote:
 
-When the "(fault)" is injected, the return value of fetch_store_string*()
-should be the length of the "(fault)", but an error code is returned.
-Fix it to return the correct length and update the data_loc according the
-updated length.
-This needs to update a ftracetest test case, which expects trace output
-to appear as '(fault)' instead of '"(fault)"'.
+> Introduce tracefs_inode structure, this will help eventfs
+> to keep track of inode, flags and pointer to private date.
+> 
+> Rename function names and remove the static qualifier for
+> functions that should be exposed.
 
-Fixes: 2e9906f84fc7 ("tracing: Add "(fault)" name injection to kernel probes")
-Cc: stable@vger.kernel.org
-Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
----
- kernel/trace/trace_probe_kernel.h                  |   17 +++++++----------
- .../ftrace/test.d/kprobe/kprobe_args_user.tc       |    2 +-
- 2 files changed, 8 insertions(+), 11 deletions(-)
+I think the removing static and renaming is OK, but please do not
+introduce new 'tracefs_inode' and 'get_tracefs()' which are not used.
+I think those should be merged with [3/10].
 
-diff --git a/kernel/trace/trace_probe_kernel.h b/kernel/trace/trace_probe_kernel.h
-index c4e1d4c03a85..63d90fe4eb87 100644
---- a/kernel/trace/trace_probe_kernel.h
-+++ b/kernel/trace/trace_probe_kernel.h
-@@ -48,14 +48,15 @@ fetch_store_strlen(unsigned long addr)
- 	return (ret < 0) ? strlen(FAULT_STRING) + 1 : len;
- }
- 
--static nokprobe_inline void set_data_loc(int ret, void *dest, void *__dest, void *base, int len)
-+static nokprobe_inline int set_data_loc(int ret, void *dest, void *__dest, void *base, int len)
- {
--	if (ret >= 0) {
--		*(u32 *)dest = make_data_loc(ret, __dest - base);
--	} else {
-+	if (ret < 0) {
- 		strscpy(__dest, FAULT_STRING, len);
- 		ret = strlen(__dest) + 1;
- 	}
-+
-+	*(u32 *)dest = make_data_loc(ret, __dest - base);
-+	return ret;
- }
- 
- /*
-@@ -76,9 +77,7 @@ fetch_store_string_user(unsigned long addr, void *dest, void *base)
- 	__dest = get_loc_data(dest, base);
- 
- 	ret = strncpy_from_user_nofault(__dest, uaddr, maxlen);
--	set_data_loc(ret, dest, __dest, base, maxlen);
--
--	return ret;
-+	return set_data_loc(ret, dest, __dest, base, maxlen);
- }
- 
- /*
-@@ -107,9 +106,7 @@ fetch_store_string(unsigned long addr, void *dest, void *base)
- 	 * probing.
- 	 */
- 	ret = strncpy_from_kernel_nofault(__dest, (void *)addr, maxlen);
--	set_data_loc(ret, dest, __dest, base, maxlen);
--
--	return ret;
-+	return set_data_loc(ret, dest, __dest, base, maxlen);
- }
- 
- static nokprobe_inline int
-diff --git a/tools/testing/selftests/ftrace/test.d/kprobe/kprobe_args_user.tc b/tools/testing/selftests/ftrace/test.d/kprobe/kprobe_args_user.tc
-index d25d01a19778..8dcc0b29bd36 100644
---- a/tools/testing/selftests/ftrace/test.d/kprobe/kprobe_args_user.tc
-+++ b/tools/testing/selftests/ftrace/test.d/kprobe/kprobe_args_user.tc
-@@ -29,6 +29,6 @@ echo 1 > events/kprobes/myevent/enable
- ln -s foo $TMPDIR/bar
- echo 0 > events/kprobes/myevent/enable
- 
--grep myevent trace | grep -q 'path=(fault) path2=(fault)'
-+grep myevent trace | grep -q 'path="*(fault)"* path2="*(fault)"*'
- 
- exit 0
+Thank you,
 
+> 
+> Signed-off-by: Ajay Kaher <akaher@vmware.com>
+> Co-developed-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+> Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+> Tested-by: Ching-lin Yu <chinglinyu@google.com>
+> ---
+>  fs/tracefs/inode.c    | 21 +++++++++++----------
+>  fs/tracefs/internal.h | 25 +++++++++++++++++++++++++
+>  2 files changed, 36 insertions(+), 10 deletions(-)
+>  create mode 100644 fs/tracefs/internal.h
+> 
+> diff --git a/fs/tracefs/inode.c b/fs/tracefs/inode.c
+> index 57ac8aa4a..7df1752e8 100644
+> --- a/fs/tracefs/inode.c
+> +++ b/fs/tracefs/inode.c
+> @@ -21,6 +21,7 @@
+>  #include <linux/parser.h>
+>  #include <linux/magic.h>
+>  #include <linux/slab.h>
+> +#include "internal.h"
+>  
+>  #define TRACEFS_DEFAULT_MODE	0700
+>  
+> @@ -127,7 +128,7 @@ static const struct inode_operations tracefs_dir_inode_operations = {
+>  	.rmdir		= tracefs_syscall_rmdir,
+>  };
+>  
+> -static struct inode *tracefs_get_inode(struct super_block *sb)
+> +struct inode *tracefs_get_inode(struct super_block *sb)
+>  {
+>  	struct inode *inode = new_inode(sb);
+>  	if (inode) {
+> @@ -399,7 +400,7 @@ static struct file_system_type trace_fs_type = {
+>  };
+>  MODULE_ALIAS_FS("tracefs");
+>  
+> -static struct dentry *start_creating(const char *name, struct dentry *parent)
+> +struct dentry *tracefs_start_creating(const char *name, struct dentry *parent)
+>  {
+>  	struct dentry *dentry;
+>  	int error;
+> @@ -437,7 +438,7 @@ static struct dentry *start_creating(const char *name, struct dentry *parent)
+>  	return dentry;
+>  }
+>  
+> -static struct dentry *failed_creating(struct dentry *dentry)
+> +struct dentry *tracefs_failed_creating(struct dentry *dentry)
+>  {
+>  	inode_unlock(d_inode(dentry->d_parent));
+>  	dput(dentry);
+> @@ -445,7 +446,7 @@ static struct dentry *failed_creating(struct dentry *dentry)
+>  	return NULL;
+>  }
+>  
+> -static struct dentry *end_creating(struct dentry *dentry)
+> +struct dentry *tracefs_end_creating(struct dentry *dentry)
+>  {
+>  	inode_unlock(d_inode(dentry->d_parent));
+>  	return dentry;
+> @@ -490,14 +491,14 @@ struct dentry *tracefs_create_file(const char *name, umode_t mode,
+>  	if (!(mode & S_IFMT))
+>  		mode |= S_IFREG;
+>  	BUG_ON(!S_ISREG(mode));
+> -	dentry = start_creating(name, parent);
+> +	dentry = tracefs_start_creating(name, parent);
+>  
+>  	if (IS_ERR(dentry))
+>  		return NULL;
+>  
+>  	inode = tracefs_get_inode(dentry->d_sb);
+>  	if (unlikely(!inode))
+> -		return failed_creating(dentry);
+> +		return tracefs_failed_creating(dentry);
+>  
+>  	inode->i_mode = mode;
+>  	inode->i_fop = fops ? fops : &tracefs_file_operations;
+> @@ -506,13 +507,13 @@ struct dentry *tracefs_create_file(const char *name, umode_t mode,
+>  	inode->i_gid = d_inode(dentry->d_parent)->i_gid;
+>  	d_instantiate(dentry, inode);
+>  	fsnotify_create(d_inode(dentry->d_parent), dentry);
+> -	return end_creating(dentry);
+> +	return tracefs_end_creating(dentry);
+>  }
+>  
+>  static struct dentry *__create_dir(const char *name, struct dentry *parent,
+>  				   const struct inode_operations *ops)
+>  {
+> -	struct dentry *dentry = start_creating(name, parent);
+> +	struct dentry *dentry = tracefs_start_creating(name, parent);
+>  	struct inode *inode;
+>  
+>  	if (IS_ERR(dentry))
+> @@ -520,7 +521,7 @@ static struct dentry *__create_dir(const char *name, struct dentry *parent,
+>  
+>  	inode = tracefs_get_inode(dentry->d_sb);
+>  	if (unlikely(!inode))
+> -		return failed_creating(dentry);
+> +		return tracefs_failed_creating(dentry);
+>  
+>  	/* Do not set bits for OTH */
+>  	inode->i_mode = S_IFDIR | S_IRWXU | S_IRUSR| S_IRGRP | S_IXUSR | S_IXGRP;
+> @@ -534,7 +535,7 @@ static struct dentry *__create_dir(const char *name, struct dentry *parent,
+>  	d_instantiate(dentry, inode);
+>  	inc_nlink(d_inode(dentry->d_parent));
+>  	fsnotify_mkdir(d_inode(dentry->d_parent), dentry);
+> -	return end_creating(dentry);
+> +	return tracefs_end_creating(dentry);
+>  }
+>  
+>  /**
+> diff --git a/fs/tracefs/internal.h b/fs/tracefs/internal.h
+> new file mode 100644
+> index 000000000..6776b4693
+> --- /dev/null
+> +++ b/fs/tracefs/internal.h
+> @@ -0,0 +1,25 @@
+> +#ifndef _TRACEFS_INTERNAL_H
+> +#define _TRACEFS_INTERNAL_H
+> +
+> +enum {
+> +	TRACEFS_EVENT_INODE     = BIT(1),
+> +};
+> +
+> +struct tracefs_inode {
+> +	unsigned long           flags;
+> +	void                    *private;
+> +	struct inode            vfs_inode;
+> +};
+> +
+> +static inline struct tracefs_inode *get_tracefs(const struct inode *inode)
+> +{
+> +	return container_of(inode, struct tracefs_inode, vfs_inode);
+> +}
+> +
+> +struct dentry *tracefs_start_creating(const char *name, struct dentry *parent);
+> +struct dentry *tracefs_end_creating(struct dentry *dentry);
+> +struct dentry *tracefs_failed_creating(struct dentry *dentry);
+> +struct inode *tracefs_get_inode(struct super_block *sb);
+> +
+> +#endif /* _TRACEFS_INTERNAL_H */
+> +
+> -- 
+> 2.40.0
+> 
+
+
+-- 
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
