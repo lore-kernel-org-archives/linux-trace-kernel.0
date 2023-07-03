@@ -2,147 +2,137 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C59FEB64DC
-	for <linux-trace-kernel@archiver.kernel.org>; Mon,  3 Jul 2023 15:52:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F55AEB64DC
+	for <linux-trace-kernel@archiver.kernel.org>; Mon,  3 Jul 2023 16:18:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230004AbjGCPwo (ORCPT
+        id S230242AbjGCQS2 (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Mon, 3 Jul 2023 11:52:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38480 "EHLO
+        Mon, 3 Jul 2023 12:18:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49132 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229901AbjGCPwn (ORCPT
+        with ESMTP id S229932AbjGCQS2 (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Mon, 3 Jul 2023 11:52:43 -0400
-Received: from mailout1.w1.samsung.com (mailout1.w1.samsung.com [210.118.77.11])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CD551E54
-        for <linux-trace-kernel@vger.kernel.org>; Mon,  3 Jul 2023 08:52:41 -0700 (PDT)
-Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
-        by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20230703155237euoutp01089c800f2b6f4d401e1a16482810b0b2~uZnPMpesq3218132181euoutp01R
-        for <linux-trace-kernel@vger.kernel.org>; Mon,  3 Jul 2023 15:52:37 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20230703155237euoutp01089c800f2b6f4d401e1a16482810b0b2~uZnPMpesq3218132181euoutp01R
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1688399557;
-        bh=jpSZ740BbRpOlPH0bgMbpPV5ohMlMtS4ynvmt2Pinu0=;
-        h=Subject:Reply-To:From:To:CC:Date:References:From;
-        b=dcb124aNnqSE/x5yfnJTmlZg/bOcs5Oum03YtYVOVpGC6uChadW3lKNgrlt+4nwAs
-         eYRKLcpidYfL7QTZ4TtBT7DT1x2tebYcjLRtb2lyEdsvs5yavTBg4o6SnnjQlt228H
-         JqW+0ZCyUZKIevLPSIyAslwUT1+5DyZj1Z3Sovhk=
-Received: from eusmges3new.samsung.com (unknown [203.254.199.245]) by
-        eucas1p1.samsung.com (KnoxPortal) with ESMTP id
-        20230703155237eucas1p13ba5e3125e5394e85d1dc577b16ddbb0~uZnO89aid2818528185eucas1p1J;
-        Mon,  3 Jul 2023 15:52:37 +0000 (GMT)
-X-AuditID: cbfec7f5-815ff7000002937e-6e-64a2eec59593
-Received: from eucas1p1.samsung.com ( [182.198.249.206]) by
-        eusmges3new.samsung.com (EUCPMTA) with SMTP id 98.50.37758.5CEE2A46; Mon,  3
-        Jul 2023 16:52:37 +0100 (BST)
-Mime-Version: 1.0
-Subject: [PATCH] trace: fix null pointer dereference in
- tracing_err_log_open()
-Reply-To: m.stachyra@samsung.com
-Sender: Mateusz Stachyra <m.stachyra@samsung.com>
-From:   Mateusz Stachyra <m.stachyra@samsung.com>
-To:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Mon, 3 Jul 2023 12:18:28 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 27AC6138;
+        Mon,  3 Jul 2023 09:18:27 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id AA12160F53;
+        Mon,  3 Jul 2023 16:18:26 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8D59DC433C7;
+        Mon,  3 Jul 2023 16:18:25 +0000 (UTC)
+Date:   Mon, 3 Jul 2023 12:18:23 -0400
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     Mateusz Stachyra <m.stachyra@samsung.com>
+Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
         "linux-trace-kernel@vger.kernel.org" 
-        <linux-trace-kernel@vger.kernel.org>
-CC:     "rostedt@goodmis.org" <rostedt@goodmis.org>,
+        <linux-trace-kernel@vger.kernel.org>,
         "mhiramat@kernel.org" <mhiramat@kernel.org>
-X-Priority: 3
-X-Content-Kind-Code: NORMAL
-X-Drm-Type: N,general
-X-Msg-Generator: Mail
-X-Msg-Type: PERSONAL
-X-Reply-Demand: N
-Message-ID: <20230703155237eucms1p4dfb6a19caa14c79eb6c823d127b39024@eucms1p4>
-Date:   Mon, 03 Jul 2023 17:52:37 +0200
-X-CMS-MailID: 20230703155237eucms1p4dfb6a19caa14c79eb6c823d127b39024
-Content-Transfer-Encoding: 7bit
-Content-Type: text/plain; charset="utf-8"
-X-RootMTR: 20230703155237eucms1p4dfb6a19caa14c79eb6c823d127b39024
-X-EPHeader: Mail
-X-ConfirmMail: N,general
-CMS-TYPE: 201P
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFvrIIsWRmVeSWpSXmKPExsWy7djPc7pH3y1KMZjWr2BxedccNosj68+y
-        WCxermaxr+MBkwOLR8u+W+wem1Z1snl83iQXwBzFZZOSmpNZllqkb5fAlTHj7V62gh2CFS9W
-        XmFuYDzP18XIySEhYCKx78t+li5GLg4hgRWMEhvf3WbtYuTg4BUQlPi7QxikRlggQGLF3yVg
-        YSEBBYktz9UhwoYSE3asYgax2QT0JRYv3McIMkZEoI9RYnffTkaQBLNAnMTO2cuZIXbxSsxo
-        f8oCYUtLbF++lRHCFpW4ufotO4z9/th8qLiIROu9s1C9ghIPfu6GiktK3L7ZB2VXS/zfsxDK
-        bmGUeLPGAsI2l/g5dyczxCu+EudvS4GEWQRUJZYcu8MKUeIiceV7GzPEmfIS29/OAStnFtCU
-        WL9LH6LEUeLfvgNQ5QISa07MgbpGQmJryxNWiFY+iUnbpsN9uGPeEyYIW0XiyIHLUF9JSZx8
-        1cQGYXtI7Hz/mW0Co+IsRDjPQnLELIQjFjAyr2IUTy0tzk1PLTbOSy3XK07MLS7NS9dLzs/d
-        xAhMFaf/Hf+6g3HFq496hxiZOBgPMUpwMCuJ8DY/nJ8ixJuSWFmVWpQfX1Sak1p8iFGag0VJ
-        nFfb9mSykEB6YklqdmpqQWoRTJaJg1OqganxM1NS1PPQa9pz5ls06nhlhbZmJC5atqZIOdDc
-        k/uzw4t7YXNaU7pnsRzz/Si1P8WlVPGmi/7WA9z1LR0LpI2F7rjWpEqcyJqf9Fh/8e3NZQwz
-        Cmy0Kr9oC3yVl2q/xlCv7/V4n5W6mQLrkqCAsENnQ1PaLp5e9XHuB/4dq3y2x3T2eDsefrOh
-        qu7XnES1iVOnSTnrn3jyr+br389v5G5/2Pad+a9PyVN+wdn7p11P/iDzIWLj7MU3vjm0uzf8
-        7d68w1Lwrt2ESy/L/nVdetV8fG7JynuJQXO1Ltn80H8Xw7LB+95qjorSj0+evplpVXZfjL11
-        4tUZzqadNcueNZZszZ7pnb/Gm8VEQCFpurUSS3FGoqEWc1FxIgDJefPYhAMAAA==
-X-CMS-RootMailID: 20230703155237eucms1p4dfb6a19caa14c79eb6c823d127b39024
+Subject: Re: [PATCH] trace: fix null pointer dereference in
+ tracing_err_log_open()
+Message-ID: <20230703121823.5d96c1cb@gandalf.local.home>
+In-Reply-To: <20230703155237eucms1p4dfb6a19caa14c79eb6c823d127b39024@eucms1p4>
 References: <CGME20230703155237eucms1p4dfb6a19caa14c79eb6c823d127b39024@eucms1p4>
+        <20230703155237eucms1p4dfb6a19caa14c79eb6c823d127b39024@eucms1p4>
+X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-From d6ef949d29b884dd77fe5e628dc71318de08868c Mon Sep 17 00:00:00 2001
-From: Mateusz Stachyra <m.stachyra@samsung.com>
-Date: Mon, 3 Jul 2023 17:48:40 +0200
-Subject: [PATCH] trace: fix null pointer dereference in tracing_err_log_open()
+On Mon, 03 Jul 2023 17:52:37 +0200
+Mateusz Stachyra <m.stachyra@samsung.com> wrote:
 
-Fix an issue in function 'tracing_err_log_open'.
-The function doesn't call 'seq_open' if file is opened only with
-write permissions, which results in 'file->private_data' being left at null.
-If we then use 'lseek' on that opened file, 'seq_lseek' dereferences
-'file->private_data' in 'mutex_lock(&m->lock)', resulting in a Kernel panic.
-Writing to this node requires root privilages, therefore this bug
-has very little security impact.
+> >From d6ef949d29b884dd77fe5e628dc71318de08868c Mon Sep 17 00:00:00 2001  
+> From: Mateusz Stachyra <m.stachyra@samsung.com>
+> Date: Mon, 3 Jul 2023 17:48:40 +0200
+> Subject: [PATCH] trace: fix null pointer dereference in tracing_err_log_open()
+> 
+> Fix an issue in function 'tracing_err_log_open'.
+> The function doesn't call 'seq_open' if file is opened only with
+> write permissions, which results in 'file->private_data' being left at null.
+> If we then use 'lseek' on that opened file, 'seq_lseek' dereferences
+> 'file->private_data' in 'mutex_lock(&m->lock)', resulting in a Kernel panic.
+> Writing to this node requires root privilages, therefore this bug
+> has very little security impact.
+> 
+> Tracefs node: /sys/kernel/tracing/error_log
+> 
 
-Tracefs node: /sys/kernel/tracing/error_log
+Nice catch, but I recommend a different solution.
 
-Example Kernel panic:
 
-Unable to handle kernel NULL pointer dereference at virtual address 0000000000000038
-Call trace:
- mutex_lock+0x30/0x110
- seq_lseek+0x34/0xb8
- __arm64_sys_lseek+0x6c/0xb8
- invoke_syscall+0x58/0x13c
- el0_svc_common+0xc4/0x10c
- do_el0_svc+0x24/0x98
- el0_svc+0x24/0x88
- el0t_64_sync_handler+0x84/0xe4
- el0t_64_sync+0x1b4/0x1b8
-Code: d503201f aa0803e0 aa1f03e1 aa0103e9 (c8e97d02)
----[ end trace 561d1b49c12cf8a5 ]---
-Kernel panic - not syncing: Oops: Fatal exception
+> Example Kernel panic:
+> 
+> Unable to handle kernel NULL pointer dereference at virtual address 0000000000000038
+> Call trace:
+>  mutex_lock+0x30/0x110
+>  seq_lseek+0x34/0xb8
+>  __arm64_sys_lseek+0x6c/0xb8
+>  invoke_syscall+0x58/0x13c
+>  el0_svc_common+0xc4/0x10c
+>  do_el0_svc+0x24/0x98
+>  el0_svc+0x24/0x88
+>  el0t_64_sync_handler+0x84/0xe4
+>  el0t_64_sync+0x1b4/0x1b8
+> Code: d503201f aa0803e0 aa1f03e1 aa0103e9 (c8e97d02)
+> ---[ end trace 561d1b49c12cf8a5 ]---
+> Kernel panic - not syncing: Oops: Fatal exception
+> 
+> Signed-off-by: Mateusz Stachyra <m.stachyra@samsung.com>
+> ---
+>  kernel/trace/trace.c | 10 +++++++++-
+>  1 file changed, 9 insertions(+), 1 deletion(-)
+> 
+> diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
+> index 5d2c5678b..bfa8e2d01 100644
+> --- a/kernel/trace/trace.c
+> +++ b/kernel/trace/trace.c
+> @@ -8097,8 +8097,16 @@ static int tracing_err_log_open(struct inode *inode, struct file *file)
+>  		return ret;
+>  
+>  	/* If this file was opened for write, then erase contents */
+> -	if ((file->f_mode & FMODE_WRITE) && (file->f_flags & O_TRUNC))
+> +	if ((file->f_mode & FMODE_WRITE) && (file->f_flags & O_TRUNC)) {
+>  		clear_tracing_err_log(tr);
+> +		ret = seq_open(file, &tracing_err_log_seq_ops);
+> +		if (!ret) {
+> +			struct seq_file *m = file->private_data;
+> +			m->private = tr;
+> +		} else {
+> +			trace_array_put(tr);
+> +		}
+> +	}
+>  
+>  	if (file->f_mode & FMODE_READ) {
+>  		ret = seq_open(file, &tracing_err_log_seq_ops);
+> 
+> base-commit: 1ef6663a587ba3e57dc5065a477db1c64481eedd
 
-Signed-off-by: Mateusz Stachyra <m.stachyra@samsung.com>
----
- kernel/trace/trace.c | 10 +++++++++-
- 1 file changed, 9 insertions(+), 1 deletion(-)
+I believe this can be better fixed by:
 
 diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
-index 5d2c5678b..bfa8e2d01 100644
+index 64a4dde073ef..999b7c73e324 100644
 --- a/kernel/trace/trace.c
 +++ b/kernel/trace/trace.c
-@@ -8097,8 +8097,16 @@ static int tracing_err_log_open(struct inode *inode, struct file *file)
- 		return ret;
- 
- 	/* If this file was opened for write, then erase contents */
--	if ((file->f_mode & FMODE_WRITE) && (file->f_flags & O_TRUNC))
-+	if ((file->f_mode & FMODE_WRITE) && (file->f_flags & O_TRUNC)) {
- 		clear_tracing_err_log(tr);
-+		ret = seq_open(file, &tracing_err_log_seq_ops);
-+		if (!ret) {
-+			struct seq_file *m = file->private_data;
-+			m->private = tr;
-+		} else {
-+			trace_array_put(tr);
-+		}
-+	}
- 
- 	if (file->f_mode & FMODE_READ) {
- 		ret = seq_open(file, &tracing_err_log_seq_ops);
+@@ -8135,7 +8135,7 @@ static const struct file_operations tracing_err_log_fops = {
+ 	.open           = tracing_err_log_open,
+ 	.write		= tracing_err_log_write,
+ 	.read           = seq_read,
+-	.llseek         = seq_lseek,
++	.llseek		= tracing_lseek,
+ 	.release        = tracing_err_log_release,
+ };
 
-base-commit: 1ef6663a587ba3e57dc5065a477db1c64481eedd
--- 
-2.25.1
+as that tracing_lseek() is for this exact scenario.
 
+Care to send a v2?
+
+Thanks,
+
+-- Steve
