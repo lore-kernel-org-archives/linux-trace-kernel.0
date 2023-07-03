@@ -2,101 +2,74 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DA016EB64DC
-	for <linux-trace-kernel@archiver.kernel.org>; Mon,  3 Jul 2023 08:19:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D770AEB64DC
+	for <linux-trace-kernel@archiver.kernel.org>; Mon,  3 Jul 2023 08:21:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230004AbjGCITS (ORCPT
+        id S230354AbjGCIVk (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Mon, 3 Jul 2023 04:19:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58200 "EHLO
+        Mon, 3 Jul 2023 04:21:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32782 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231396AbjGCITP (ORCPT
+        with ESMTP id S231281AbjGCIVi (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Mon, 3 Jul 2023 04:19:15 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AC2751BC;
-        Mon,  3 Jul 2023 01:19:09 -0700 (PDT)
+        Mon, 3 Jul 2023 04:21:38 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0F691E6A;
+        Mon,  3 Jul 2023 01:21:15 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange X25519 server-signature RSA-PSS (2048 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 4154C60E03;
-        Mon,  3 Jul 2023 08:19:09 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 753B2C433C7;
-        Mon,  3 Jul 2023 08:19:07 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 9A40860DDF;
+        Mon,  3 Jul 2023 08:21:14 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 896EFC433C7;
+        Mon,  3 Jul 2023 08:21:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1688372348;
-        bh=S6K5lbYba39Qtr6yqajXnkhBq5MftnwZTHANEwn50OU=;
+        s=k20201202; t=1688372474;
+        bh=W3MFlYlRTSCPoM2yPpfMueipjIB84ln3ga7EsulXzeY=;
         h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=YxwKUOyiwj2JWrtI4HkQ8chRNGbJZYVqAQLc170isvJdA41at3zf8JLdHNDCeTSF4
-         SG84RUYvLC1foPz7IHr+CPyUhHLQSQ9x4/J5BCNK+JvgnCr69/0BwrFfLNoIDrVQWd
-         lx2+4USKiENJ3DKmrb971MZ7TFvj9zT0Hix0XhLF8hAUcORaLwsDIV2GBS/e8HOFJH
-         oXIxdyApz2cGITzJCk7IX+6+E0T5YAxPadke81wJy78GCLpNvsK9QqK2Z7jZE2hRru
-         wTvmnW3tWJ816231stuf6uc4nXLmpbR1xi3F1n3FrrJOkasrpAjLIcmMA7Gf22vFSp
-         VRvlid3jrNxfQ==
-Date:   Mon, 3 Jul 2023 17:19:05 +0900
+        b=JFPppq8rDi7u0cnv2R2cF2+1oTPT2ahqINPWwu2EPOvpyUu4NZ+mT+NGDum1o1cDg
+         K+9IUvbcjtyydww/RPgBQun7JBhHaoAEfk4ViXp1aA41J2fi92BMqu/Ao+wrnaax49
+         7qsGhc+YraMhAD2vuGPVrJXh9UBbWPHsZgxs1RQkr0U8+XKnJYCHRzqlboXJ+3R2SR
+         qYWGq5XPQu/04e6Nr2Y1+kE28aKT9QzT5FzSheo1+gLOocdr6gG31FCWIxeFuwYtz2
+         O7lG1aMjQWaCWbkpA1rr5PZ4dmTV/Xoh3BZa0jFEkRXNFZG8lPLhERmI4Ax+pUB4w0
+         uC+IyO8CnsSNA==
+Date:   Mon, 3 Jul 2023 17:21:10 +0900
 From:   Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To:     Ze Gao <zegao2021@gmail.com>
-Cc:     Steven Rostedt <rostedt@goodmis.org>, linux-kernel@vger.kernel.org,
-        linux-trace-kernel@vger.kernel.org, Ze Gao <zegao@tencent.com>,
-        Yafang <laoar.shao@gmail.com>
-Subject: Re: [PATCH] fprobe: add unlock to match a succeeded
- ftrace_test_recursion_trylock
-Message-Id: <20230703171905.ef83b1a7f4db82012db471fc@kernel.org>
-In-Reply-To: <20230703071640.106204-1-zegao@tencent.com>
-References: <20230703071640.106204-1-zegao@tencent.com>
+To:     Markus Elfring <Markus.Elfring@web.de>
+Cc:     linux-trace-kernel@vger.kernel.org,
+        kernel-janitors@vger.kernel.org,
+        Steven Rostedt <rostedt@goodmis.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Dan Carpenter <dan.carpenter@linaro.org>
+Subject: Re: [PATCH 1/3] tracing/probes: Fix to avoid double count of the
+ string length on the array
+Message-Id: <20230703172110.6948481fb7e0254bc791d12b@kernel.org>
+In-Reply-To: <25bd757c-f929-0153-4c94-f0502c5d1005@web.de>
+References: <168830923752.2278819.12200306485001986374.stgit@mhiramat.roam.corp.google.com>
+        <25bd757c-f929-0153-4c94-f0502c5d1005@web.de>
 X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On Mon,  3 Jul 2023 15:16:40 +0800
-Ze Gao <zegao2021@gmail.com> wrote:
+On Sun, 2 Jul 2023 17:44:38 +0200
+Markus Elfring <Markus.Elfring@web.de> wrote:
 
-Good catch! but please add description here, something like;
-
-----
-Unlock ftrace recursion lock when fprobe_kprobe_handler() is failed
-because another kprobe is running.
-----
-
-The code itself is OK to me.
-
-
-> Fixes: 3cc4e2c5fbae ("fprobe: make fprobe_kprobe_handler recursion free")
-> Reported-by: Yafang <laoar.shao@gmail.com>
-> Closes: https://lore.kernel.org/linux-trace-kernel/CALOAHbC6UpfFOOibdDiC7xFc5YFUgZnk3MZ=3Ny6we=AcrNbew@mail.gmail.com/
-> Signed-off-by: Ze Gao <zegao@tencent.com>
-> ---
->  kernel/trace/fprobe.c | 4 +++-
->  1 file changed, 3 insertions(+), 1 deletion(-)
+> …
+> > Just set the length to the 'ret' value to aviod double count.
 > 
-> diff --git a/kernel/trace/fprobe.c b/kernel/trace/fprobe.c
-> index 18d36842faf5..93b3e361bb97 100644
-> --- a/kernel/trace/fprobe.c
-> +++ b/kernel/trace/fprobe.c
-> @@ -102,12 +102,14 @@ static void fprobe_kprobe_handler(unsigned long ip, unsigned long parent_ip,
->  
->  	if (unlikely(kprobe_running())) {
->  		fp->nmissed++;
-> -		return;
-> +		goto recursion_unlock;
->  	}
->  
->  	kprobe_busy_begin();
->  	__fprobe_handler(ip, parent_ip, ops, fregs);
->  	kprobe_busy_end();
-> +
-> +recursion_unlock:
->  	ftrace_test_recursion_unlock(bit);
->  }
->  
-> -- 
-> 2.40.1
+> Would the wording “… avoid double counting” be more appropriate
+> for a subsequent change description?
+
+Yeah, thanks!
+
 > 
+> Regards,
+> Markus
 
 
 -- 
