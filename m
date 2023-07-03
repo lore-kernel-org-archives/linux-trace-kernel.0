@@ -2,137 +2,87 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F55AEB64DC
-	for <linux-trace-kernel@archiver.kernel.org>; Mon,  3 Jul 2023 16:18:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 421EFC001B0
+	for <linux-trace-kernel@archiver.kernel.org>; Mon,  3 Jul 2023 17:22:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230242AbjGCQS2 (ORCPT
+        id S230258AbjGCRWa (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Mon, 3 Jul 2023 12:18:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49132 "EHLO
+        Mon, 3 Jul 2023 13:22:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43980 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229932AbjGCQS2 (ORCPT
+        with ESMTP id S229709AbjGCRWa (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Mon, 3 Jul 2023 12:18:28 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 27AC6138;
-        Mon,  3 Jul 2023 09:18:27 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id AA12160F53;
-        Mon,  3 Jul 2023 16:18:26 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8D59DC433C7;
-        Mon,  3 Jul 2023 16:18:25 +0000 (UTC)
-Date:   Mon, 3 Jul 2023 12:18:23 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Mateusz Stachyra <m.stachyra@samsung.com>
-Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-trace-kernel@vger.kernel.org" 
-        <linux-trace-kernel@vger.kernel.org>,
-        "mhiramat@kernel.org" <mhiramat@kernel.org>
-Subject: Re: [PATCH] trace: fix null pointer dereference in
- tracing_err_log_open()
-Message-ID: <20230703121823.5d96c1cb@gandalf.local.home>
-In-Reply-To: <20230703155237eucms1p4dfb6a19caa14c79eb6c823d127b39024@eucms1p4>
-References: <CGME20230703155237eucms1p4dfb6a19caa14c79eb6c823d127b39024@eucms1p4>
-        <20230703155237eucms1p4dfb6a19caa14c79eb6c823d127b39024@eucms1p4>
-X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+        Mon, 3 Jul 2023 13:22:30 -0400
+Received: from mail-il1-x12a.google.com (mail-il1-x12a.google.com [IPv6:2607:f8b0:4864:20::12a])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 82722E5D;
+        Mon,  3 Jul 2023 10:22:29 -0700 (PDT)
+Received: by mail-il1-x12a.google.com with SMTP id e9e14a558f8ab-34570ed4cb8so19598995ab.1;
+        Mon, 03 Jul 2023 10:22:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1688404949; x=1690996949;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=n+ZjGjSll49/jZeLYkpeh0rYqtB4VgUifEJvJI0PHuY=;
+        b=sG82R9IIfRC+r7VHJWyoYwzrsjdOAeHozBdMICRaGv4fPNi1oXuSy18AOsm2hqYjpK
+         jg1bnoDRgNSXA1hszhHWemoLtyfE4QZU3N688i5ClRS6es18D6LKso844bUiPPs9662Q
+         /21eCy3gHHQAM4KbaeyNrE+aZPxFLO9wC6MiE3TrXtgOP3Evlu1TxzkYAIjO6gSrb2PX
+         P0vZyP00cXJutjWBgyFY0d05IoTWpgU3QGGGGLRlLNtNAO19UxTwX7hZxCy7pWa2cZRu
+         EgWxXgO/8INyP1NHXgwcIXGrAFauDELaaOa3W7zSvYTZTBsmOJvd515kSMCPEzd0Cwi3
+         knQQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1688404949; x=1690996949;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=n+ZjGjSll49/jZeLYkpeh0rYqtB4VgUifEJvJI0PHuY=;
+        b=Ap6dovoUOx7d7EqCw1BgfY6SgOQziUmljp0QRsy5JpkOwg5uzQbr8ntUmb0V5EQOua
+         RysO4W0/dmVSxVK6cwl2DIsfErfrc0pRIgEPTYHucDh1duLUoRZIIaRSZYUASJYMo6Sf
+         dI4IiKq/H6oLCz8F2xQypsdt6xuxVkTPj1UKJZ/ZTE7DChyRsIaIRjOYE9RlfJ/Gn8tr
+         EizV7fs2COT+lNCNRSqunGJanulEWe8vcv4PWWTY7FTw0BdnPvs56XIAVPXnzN2IxLVF
+         iaHqjW+QqmX7k/CqWa+4Nbd/rJaL83F8XGtxyTGQ614S0vfhEowFodxRqeYb+nCeBVdZ
+         CwzA==
+X-Gm-Message-State: AC+VfDytqQxd7wtV95LNq17/+HyKN/cXzhv4L/x+5uTVtQyosZ34uLSO
+        /yzzlkNbUf0lhQ9gXIqFnzI=
+X-Google-Smtp-Source: ACHHUZ781J9cXqGVW9tjuylQx29kjih2s55K6UlGRS5TLBvfDm9HBUYQF3weel+frtIdPTko2fo0Aw==
+X-Received: by 2002:a05:6602:5a:b0:783:72b9:ed67 with SMTP id z26-20020a056602005a00b0078372b9ed67mr11193837ioz.10.1688404948785;
+        Mon, 03 Jul 2023 10:22:28 -0700 (PDT)
+Received: from azeems-kspp.c.googlers.com.com (54.70.188.35.bc.googleusercontent.com. [35.188.70.54])
+        by smtp.gmail.com with ESMTPSA id ed22-20020a056638291600b0042b3e2e5ca1sm1033860jab.122.2023.07.03.10.22.28
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 03 Jul 2023 10:22:28 -0700 (PDT)
+From:   Azeem Shaikh <azeemshaikh38@gmail.com>
+To:     Kees Cook <keescook@chromium.org>, Jens Axboe <axboe@kernel.dk>
+Cc:     linux-hardening@vger.kernel.org,
+        Azeem Shaikh <azeemshaikh38@gmail.com>,
+        linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+        Steven Rostedt <rostedt@goodmis.org>
+Subject: [PATCH 0/2] kyber, blk-wbt: Replace strlcpy with strscpy
+Date:   Mon,  3 Jul 2023 17:21:57 +0000
+Message-ID: <20230703172159.3668349-1-azeemshaikh38@gmail.com>
+X-Mailer: git-send-email 2.41.0.255.g8b1d071c50-goog
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On Mon, 03 Jul 2023 17:52:37 +0200
-Mateusz Stachyra <m.stachyra@samsung.com> wrote:
+This patch series replaces strlcpy in the kyber and blk-wbt tracing subsystems wherever trivial
+replacement is possible, i.e return value from strlcpy is unused. The patches
+themselves are independent of each other and are applied to different subsystems. They are
+included as a series for ease of review.
 
-> >From d6ef949d29b884dd77fe5e628dc71318de08868c Mon Sep 17 00:00:00 2001  
-> From: Mateusz Stachyra <m.stachyra@samsung.com>
-> Date: Mon, 3 Jul 2023 17:48:40 +0200
-> Subject: [PATCH] trace: fix null pointer dereference in tracing_err_log_open()
-> 
-> Fix an issue in function 'tracing_err_log_open'.
-> The function doesn't call 'seq_open' if file is opened only with
-> write permissions, which results in 'file->private_data' being left at null.
-> If we then use 'lseek' on that opened file, 'seq_lseek' dereferences
-> 'file->private_data' in 'mutex_lock(&m->lock)', resulting in a Kernel panic.
-> Writing to this node requires root privilages, therefore this bug
-> has very little security impact.
-> 
-> Tracefs node: /sys/kernel/tracing/error_log
-> 
+Note to reviewers: MAINTAINERS file does not specify clear ownership of
+these files so I have addressed these to the latest committer for these
+files: Jens Axboe <axboe@kernel.dk>.
 
-Nice catch, but I recommend a different solution.
+Azeem Shaikh (2):
+  kyber: Replace strlcpy with strscpy
+  blk-wbt: Replace strlcpy with strscpy
 
+ include/trace/events/kyber.h | 8 ++++----
+ include/trace/events/wbt.h   | 8 ++++----
+ 2 files changed, 8 insertions(+), 8 deletions(-)
 
-> Example Kernel panic:
-> 
-> Unable to handle kernel NULL pointer dereference at virtual address 0000000000000038
-> Call trace:
->  mutex_lock+0x30/0x110
->  seq_lseek+0x34/0xb8
->  __arm64_sys_lseek+0x6c/0xb8
->  invoke_syscall+0x58/0x13c
->  el0_svc_common+0xc4/0x10c
->  do_el0_svc+0x24/0x98
->  el0_svc+0x24/0x88
->  el0t_64_sync_handler+0x84/0xe4
->  el0t_64_sync+0x1b4/0x1b8
-> Code: d503201f aa0803e0 aa1f03e1 aa0103e9 (c8e97d02)
-> ---[ end trace 561d1b49c12cf8a5 ]---
-> Kernel panic - not syncing: Oops: Fatal exception
-> 
-> Signed-off-by: Mateusz Stachyra <m.stachyra@samsung.com>
-> ---
->  kernel/trace/trace.c | 10 +++++++++-
->  1 file changed, 9 insertions(+), 1 deletion(-)
-> 
-> diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
-> index 5d2c5678b..bfa8e2d01 100644
-> --- a/kernel/trace/trace.c
-> +++ b/kernel/trace/trace.c
-> @@ -8097,8 +8097,16 @@ static int tracing_err_log_open(struct inode *inode, struct file *file)
->  		return ret;
->  
->  	/* If this file was opened for write, then erase contents */
-> -	if ((file->f_mode & FMODE_WRITE) && (file->f_flags & O_TRUNC))
-> +	if ((file->f_mode & FMODE_WRITE) && (file->f_flags & O_TRUNC)) {
->  		clear_tracing_err_log(tr);
-> +		ret = seq_open(file, &tracing_err_log_seq_ops);
-> +		if (!ret) {
-> +			struct seq_file *m = file->private_data;
-> +			m->private = tr;
-> +		} else {
-> +			trace_array_put(tr);
-> +		}
-> +	}
->  
->  	if (file->f_mode & FMODE_READ) {
->  		ret = seq_open(file, &tracing_err_log_seq_ops);
-> 
-> base-commit: 1ef6663a587ba3e57dc5065a477db1c64481eedd
+-- 
+2.41.0.255.g8b1d071c50-goog
 
-I believe this can be better fixed by:
-
-diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
-index 64a4dde073ef..999b7c73e324 100644
---- a/kernel/trace/trace.c
-+++ b/kernel/trace/trace.c
-@@ -8135,7 +8135,7 @@ static const struct file_operations tracing_err_log_fops = {
- 	.open           = tracing_err_log_open,
- 	.write		= tracing_err_log_write,
- 	.read           = seq_read,
--	.llseek         = seq_lseek,
-+	.llseek		= tracing_lseek,
- 	.release        = tracing_err_log_release,
- };
-
-as that tracing_lseek() is for this exact scenario.
-
-Care to send a v2?
-
-Thanks,
-
--- Steve
