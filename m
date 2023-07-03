@@ -2,177 +2,147 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BBF66EB64DD
-	for <linux-trace-kernel@archiver.kernel.org>; Mon,  3 Jul 2023 15:09:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C59FEB64DC
+	for <linux-trace-kernel@archiver.kernel.org>; Mon,  3 Jul 2023 15:52:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231299AbjGCPJH convert rfc822-to-8bit (ORCPT
+        id S230004AbjGCPwo (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Mon, 3 Jul 2023 11:09:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48638 "EHLO
+        Mon, 3 Jul 2023 11:52:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38480 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231381AbjGCPJG (ORCPT
+        with ESMTP id S229901AbjGCPwn (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Mon, 3 Jul 2023 11:09:06 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D3AE5E44;
-        Mon,  3 Jul 2023 08:09:01 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 6004960F99;
-        Mon,  3 Jul 2023 15:09:01 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 595B7C433C8;
-        Mon,  3 Jul 2023 15:08:59 +0000 (UTC)
-Date:   Mon, 3 Jul 2023 11:08:57 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Ajay Kaher <akaher@vmware.com>
-Cc:     "mhiramat@kernel.org" <mhiramat@kernel.org>,
-        "shuah@kernel.org" <shuah@kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Mon, 3 Jul 2023 11:52:43 -0400
+Received: from mailout1.w1.samsung.com (mailout1.w1.samsung.com [210.118.77.11])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CD551E54
+        for <linux-trace-kernel@vger.kernel.org>; Mon,  3 Jul 2023 08:52:41 -0700 (PDT)
+Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
+        by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20230703155237euoutp01089c800f2b6f4d401e1a16482810b0b2~uZnPMpesq3218132181euoutp01R
+        for <linux-trace-kernel@vger.kernel.org>; Mon,  3 Jul 2023 15:52:37 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20230703155237euoutp01089c800f2b6f4d401e1a16482810b0b2~uZnPMpesq3218132181euoutp01R
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1688399557;
+        bh=jpSZ740BbRpOlPH0bgMbpPV5ohMlMtS4ynvmt2Pinu0=;
+        h=Subject:Reply-To:From:To:CC:Date:References:From;
+        b=dcb124aNnqSE/x5yfnJTmlZg/bOcs5Oum03YtYVOVpGC6uChadW3lKNgrlt+4nwAs
+         eYRKLcpidYfL7QTZ4TtBT7DT1x2tebYcjLRtb2lyEdsvs5yavTBg4o6SnnjQlt228H
+         JqW+0ZCyUZKIevLPSIyAslwUT1+5DyZj1Z3Sovhk=
+Received: from eusmges3new.samsung.com (unknown [203.254.199.245]) by
+        eucas1p1.samsung.com (KnoxPortal) with ESMTP id
+        20230703155237eucas1p13ba5e3125e5394e85d1dc577b16ddbb0~uZnO89aid2818528185eucas1p1J;
+        Mon,  3 Jul 2023 15:52:37 +0000 (GMT)
+X-AuditID: cbfec7f5-815ff7000002937e-6e-64a2eec59593
+Received: from eucas1p1.samsung.com ( [182.198.249.206]) by
+        eusmges3new.samsung.com (EUCPMTA) with SMTP id 98.50.37758.5CEE2A46; Mon,  3
+        Jul 2023 16:52:37 +0100 (BST)
+Mime-Version: 1.0
+Subject: [PATCH] trace: fix null pointer dereference in
+ tracing_err_log_open()
+Reply-To: m.stachyra@samsung.com
+Sender: Mateusz Stachyra <m.stachyra@samsung.com>
+From:   Mateusz Stachyra <m.stachyra@samsung.com>
+To:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
         "linux-trace-kernel@vger.kernel.org" 
-        <linux-trace-kernel@vger.kernel.org>,
-        "linux-kselftest@vger.kernel.org" <linux-kselftest@vger.kernel.org>,
-        Ching-lin Yu <chinglinyu@google.com>,
-        Nadav Amit <namit@vmware.com>,
-        "srivatsa@csail.mit.edu" <srivatsa@csail.mit.edu>,
-        Alexey Makhalov <amakhalov@vmware.com>,
-        Vasavi Sirnapalli <vsirnapalli@vmware.com>,
-        Tapas Kundu <tkundu@vmware.com>,
-        "er.ajay.kaher@gmail.com" <er.ajay.kaher@gmail.com>
-Subject: Re: [PATCH v3 03/10] eventfs: adding eventfs dir add functions
-Message-ID: <20230703110857.2d051af5@rorschach.local.home>
-In-Reply-To: <ECB0097D-A323-4CFC-9C9E-D4DA2AA6E662@vmware.com>
-References: <1685610013-33478-1-git-send-email-akaher@vmware.com>
-        <1685610013-33478-4-git-send-email-akaher@vmware.com>
-        <20230701095417.3de5baab@rorschach.local.home>
-        <ECB0097D-A323-4CFC-9C9E-D4DA2AA6E662@vmware.com>
-X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
+        <linux-trace-kernel@vger.kernel.org>
+CC:     "rostedt@goodmis.org" <rostedt@goodmis.org>,
+        "mhiramat@kernel.org" <mhiramat@kernel.org>
+X-Priority: 3
+X-Content-Kind-Code: NORMAL
+X-Drm-Type: N,general
+X-Msg-Generator: Mail
+X-Msg-Type: PERSONAL
+X-Reply-Demand: N
+Message-ID: <20230703155237eucms1p4dfb6a19caa14c79eb6c823d127b39024@eucms1p4>
+Date:   Mon, 03 Jul 2023 17:52:37 +0200
+X-CMS-MailID: 20230703155237eucms1p4dfb6a19caa14c79eb6c823d127b39024
+Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+X-RootMTR: 20230703155237eucms1p4dfb6a19caa14c79eb6c823d127b39024
+X-EPHeader: Mail
+X-ConfirmMail: N,general
+CMS-TYPE: 201P
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFvrIIsWRmVeSWpSXmKPExsWy7djPc7pH3y1KMZjWr2BxedccNosj68+y
+        WCxermaxr+MBkwOLR8u+W+wem1Z1snl83iQXwBzFZZOSmpNZllqkb5fAlTHj7V62gh2CFS9W
+        XmFuYDzP18XIySEhYCKx78t+li5GLg4hgRWMEhvf3WbtYuTg4BUQlPi7QxikRlggQGLF3yVg
+        YSEBBYktz9UhwoYSE3asYgax2QT0JRYv3McIMkZEoI9RYnffTkaQBLNAnMTO2cuZIXbxSsxo
+        f8oCYUtLbF++lRHCFpW4ufotO4z9/th8qLiIROu9s1C9ghIPfu6GiktK3L7ZB2VXS/zfsxDK
+        bmGUeLPGAsI2l/g5dyczxCu+EudvS4GEWQRUJZYcu8MKUeIiceV7GzPEmfIS29/OAStnFtCU
+        WL9LH6LEUeLfvgNQ5QISa07MgbpGQmJryxNWiFY+iUnbpsN9uGPeEyYIW0XiyIHLUF9JSZx8
+        1cQGYXtI7Hz/mW0Co+IsRDjPQnLELIQjFjAyr2IUTy0tzk1PLTbOSy3XK07MLS7NS9dLzs/d
+        xAhMFaf/Hf+6g3HFq496hxiZOBgPMUpwMCuJ8DY/nJ8ixJuSWFmVWpQfX1Sak1p8iFGag0VJ
+        nFfb9mSykEB6YklqdmpqQWoRTJaJg1OqganxM1NS1PPQa9pz5ls06nhlhbZmJC5atqZIOdDc
+        k/uzw4t7YXNaU7pnsRzz/Si1P8WlVPGmi/7WA9z1LR0LpI2F7rjWpEqcyJqf9Fh/8e3NZQwz
+        Cmy0Kr9oC3yVl2q/xlCv7/V4n5W6mQLrkqCAsENnQ1PaLp5e9XHuB/4dq3y2x3T2eDsefrOh
+        qu7XnES1iVOnSTnrn3jyr+br389v5G5/2Pad+a9PyVN+wdn7p11P/iDzIWLj7MU3vjm0uzf8
+        7d68w1Lwrt2ESy/L/nVdetV8fG7JynuJQXO1Ltn80H8Xw7LB+95qjorSj0+evplpVXZfjL11
+        4tUZzqadNcueNZZszZ7pnb/Gm8VEQCFpurUSS3FGoqEWc1FxIgDJefPYhAMAAA==
+X-CMS-RootMailID: 20230703155237eucms1p4dfb6a19caa14c79eb6c823d127b39024
+References: <CGME20230703155237eucms1p4dfb6a19caa14c79eb6c823d127b39024@eucms1p4>
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On Mon, 3 Jul 2023 10:13:22 +0000
-Ajay Kaher <akaher@vmware.com> wrote:
+From d6ef949d29b884dd77fe5e628dc71318de08868c Mon Sep 17 00:00:00 2001
+From: Mateusz Stachyra <m.stachyra@samsung.com>
+Date: Mon, 3 Jul 2023 17:48:40 +0200
+Subject: [PATCH] trace: fix null pointer dereference in tracing_err_log_open()
 
-> >> +/**
-> >> + * eventfs_down_write - acquire write lock function
-> >> + * @eventfs_rwsem: a pointer to rw_semaphore
-> >> + *
-> >> + * helper function to perform write lock on eventfs_rwsem
-> >> + */
-> >> +static void eventfs_down_write(struct rw_semaphore *eventfs_rwsem)
-> >> +{
-> >> +     while (!down_write_trylock(eventfs_rwsem))
-> >> +             msleep(10);  
-> >
-> > What's this loop for? Something like that needs a very good explanation
-> > in a comment. Loops like these are usually a sign of a workaround for a
-> > bug in the design, or worse, simply hides an existing bug.
-> >  
-> 
-> Yes correct, this logic is to solve deadlock:
-> 
-> Thread 1                             Thread 2
-> down_read_nested()                                 - read lock acquired
->                                          down_write()     - waiting for write lock to acquire
-> down_read_nested()                                  - deadlock
-> 
-> Deadlock is because rwlock wouldn’t allow read lock to be acquired if write lock is waiting.
-> down_write_trylock() wouldn’t add the write lock in waiting queue, hence helps to prevent
-> deadlock scenario.
-> 
-> I was stuck with this Deadlock, tried few methods and finally borrowed from cifs, as it’s
-> upstreamed, tested and working in cifs, please refer:
-> https://elixir.bootlin.com/linux/v6.3.1/source/fs/cifs/file.c#L438
+Fix an issue in function 'tracing_err_log_open'.
+The function doesn't call 'seq_open' if file is opened only with
+write permissions, which results in 'file->private_data' being left at null.
+If we then use 'lseek' on that opened file, 'seq_lseek' dereferences
+'file->private_data' in 'mutex_lock(&m->lock)', resulting in a Kernel panic.
+Writing to this node requires root privilages, therefore this bug
+has very little security impact.
 
-I just looked at that code and the commit, and I honestly believe that
-is a horrible hack, and very fragile. It's in the smb code, so it was
-unlikely reviewed by anyone outside that subsystem. I really do not
-want to prolificate that solution around the kernel. We need to come up
-with something else.
+Tracefs node: /sys/kernel/tracing/error_log
 
-I also think it's buggy (yes the cifs code is buggy!) because in the
-comment above the down_read_nested() it says:
+Example Kernel panic:
 
-/*
- * nested locking. NOTE: rwsems are not allowed to recurse
- * (which occurs if the same task tries to acquire the same
- * lock instance multiple times), but multiple locks of the
- * same lock class might be taken, if the order of the locks
- * is always the same. This ordering rule can be expressed
- * to lockdep via the _nested() APIs, but enumerating the
- * subclasses that are used. (If the nesting relationship is
- * static then another method for expressing nested locking is
- * the explicit definition of lock class keys and the use of
- * lockdep_set_class() at lock initialization time.
- * See Documentation/locking/lockdep-design.rst for more details.)
- */
+Unable to handle kernel NULL pointer dereference at virtual address 0000000000000038
+Call trace:
+ mutex_lock+0x30/0x110
+ seq_lseek+0x34/0xb8
+ __arm64_sys_lseek+0x6c/0xb8
+ invoke_syscall+0x58/0x13c
+ el0_svc_common+0xc4/0x10c
+ do_el0_svc+0x24/0x98
+ el0_svc+0x24/0x88
+ el0t_64_sync_handler+0x84/0xe4
+ el0t_64_sync+0x1b4/0x1b8
+Code: d503201f aa0803e0 aa1f03e1 aa0103e9 (c8e97d02)
+---[ end trace 561d1b49c12cf8a5 ]---
+Kernel panic - not syncing: Oops: Fatal exception
 
-So this is NOT a solution (and the cifs code should be fixed too!)
+Signed-off-by: Mateusz Stachyra <m.stachyra@samsung.com>
+---
+ kernel/trace/trace.c | 10 +++++++++-
+ 1 file changed, 9 insertions(+), 1 deletion(-)
 
-Can you show me the exact backtrace where the reader lock gets taken
-again? We will have to come up with a way to not take the same lock
-twice.
+diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
+index 5d2c5678b..bfa8e2d01 100644
+--- a/kernel/trace/trace.c
++++ b/kernel/trace/trace.c
+@@ -8097,8 +8097,16 @@ static int tracing_err_log_open(struct inode *inode, struct file *file)
+ 		return ret;
+ 
+ 	/* If this file was opened for write, then erase contents */
+-	if ((file->f_mode & FMODE_WRITE) && (file->f_flags & O_TRUNC))
++	if ((file->f_mode & FMODE_WRITE) && (file->f_flags & O_TRUNC)) {
+ 		clear_tracing_err_log(tr);
++		ret = seq_open(file, &tracing_err_log_seq_ops);
++		if (!ret) {
++			struct seq_file *m = file->private_data;
++			m->private = tr;
++		} else {
++			trace_array_put(tr);
++		}
++	}
+ 
+ 	if (file->f_mode & FMODE_READ) {
+ 		ret = seq_open(file, &tracing_err_log_seq_ops);
 
-We can also look to see if we can implement this with RCU. What exactly
-is this rwsem protecting?
+base-commit: 1ef6663a587ba3e57dc5065a477db1c64481eedd
+-- 
+2.25.1
 
-
-> 
-> Looking further for your input. I will add explanation in v4.
-> 
-> 
-> >> +}
-> >> +
-
-[..]
-
-> >> + *
-> >> + * This function creates the top of the trace event directory.
-> >> + */
-> >> +struct dentry *eventfs_create_events_dir(const char *name,
-> >> +                                      struct dentry *parent,
-> >> +                                      struct rw_semaphore *eventfs_rwsem)  
-> >
-> > OK, I'm going to have to really look at this. Passing in a lock to the
-> > API is just broken. We need to find a way to solve this another way.  
-> 
-> eventfs_rwsem is a member of struct trace_array, I guess we should
-> pass pointer to trace_array.
-
-No, it should not be part of the trace_array. If we can't do this with
-RCU, then we need to add a descriptor that contains the dentry that is
-returned above, and have the lock held there. The caller of the
-eventfs_create_events_dir() should not care about locking. That's an
-implementation detail that should *not* be part of the API.
-
-That is, if you need a lock:
-
-struct eventfs_dentry {
-	struct dentry		*dentry;
-	struct rwsem		*rwsem;
-};
-
-And then get to that lock by using the container_of() macro. All
-created eventfs dentry's could have this structure, where the rwsem
-points to the top one. Again, that's only if we can't do this with RCU.
-
--- Steve
-
-
-> 
-> 
-> > I'm about to board a plane to JFK shortly, I'm hoping to play with this
-> > while flying back.
-> >  
-> 
-> I have replied for major concerns. All other minor I will take care in v4.
-> 
-> Thanks a lot for giving time to eventfs patches.
-> 
-> - Ajay
-> 
