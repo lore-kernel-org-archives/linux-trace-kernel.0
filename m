@@ -2,128 +2,101 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 288F6EB64DC
-	for <linux-trace-kernel@archiver.kernel.org>; Mon,  3 Jul 2023 08:41:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 74F6DEB64DC
+	for <linux-trace-kernel@archiver.kernel.org>; Mon,  3 Jul 2023 09:23:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229591AbjGCIlV (ORCPT
+        id S230003AbjGCJX5 (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Mon, 3 Jul 2023 04:41:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40662 "EHLO
+        Mon, 3 Jul 2023 05:23:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34982 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229520AbjGCIlU (ORCPT
+        with ESMTP id S229516AbjGCJX4 (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Mon, 3 Jul 2023 04:41:20 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 163E3B6;
-        Mon,  3 Jul 2023 01:41:19 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 0F7D260DFC;
-        Mon,  3 Jul 2023 08:41:19 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0F9C9C433C8;
-        Mon,  3 Jul 2023 08:41:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1688373678;
-        bh=d5tEEoXis+6rNIIz2nfMllrQPz1AqmYDceP1A2JH4Cg=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=TnlwvVial1YwcI5iiIAKpYUZnDLCAyvnhnQqg3Slu0ti/JklkdeUar2hHbB4ZEvf/
-         kzhTy9CXSkl2s3q8qcnYhCif3SCjPYwX+Pqs5ZqBGMizJ/xxW8LkpDFqWbdEBqu0F6
-         c1Mz6BUeF86H/uoGlaLhdBzuvy7pth9eX5jdgl2UosPywmW9EtfygOrrtOCLkncPxK
-         yLbQSJDGaaa/IM3zn6NAYHDZ3N48e660yg+qFIZOo5Pm40yCpo5cZM9QCfJcW1OM8t
-         2leJqaa4LsVwAqgKUPA5z8e2uPBxmFdVDxunQ/XUYnLToqCx+f9y0rX8SnMfteln2O
-         Z/4zYKhhsapkw==
-Date:   Mon, 3 Jul 2023 17:41:14 +0900
-From:   Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To:     "Tzvetomir Stoyanov (VMware)" <tz.stoyanov@gmail.com>
-Cc:     rostedt@goodmis.org, mhiramat@kernel.org, dan.carpenter@linaro.org,
-        linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3] kernel/trace: Fix cleanup logic of
- enable_trace_eprobe
-Message-Id: <20230703174114.dd2a7c53b35ab4c3e25a4366@kernel.org>
-In-Reply-To: <20230703042853.1427493-1-tz.stoyanov@gmail.com>
-References: <20230703042853.1427493-1-tz.stoyanov@gmail.com>
-X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        Mon, 3 Jul 2023 05:23:56 -0400
+Received: from mail-ot1-x329.google.com (mail-ot1-x329.google.com [IPv6:2607:f8b0:4864:20::329])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BFBCFCE;
+        Mon,  3 Jul 2023 02:23:55 -0700 (PDT)
+Received: by mail-ot1-x329.google.com with SMTP id 46e09a7af769-6b5d57d7db9so3309675a34.3;
+        Mon, 03 Jul 2023 02:23:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1688376235; x=1690968235;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=BJb09g/OfHvshX7XoMoqUcNq7uvwhDrwlKeW8QFnp6M=;
+        b=KZOVsUZ92vWvIGav63Q7cazYeOZBueY1L5SJXbcWtjgbJGrPTF/XqwTg1ZCxeT7s0D
+         cW2dg/8C+f2vUK1Bgyl5Nc4igUUQlWaxe04FeBRvk47bNKiz3tm4TrWS+5LZJJJZa9No
+         MIVcEnHlM6dg5C/TCe3avjst/ziKUV+pZxnLjfX3RPWnxCP4zZuB1dSOsa+taF9Rxr0l
+         cB7rHBJ+cJeEqd/KXKJO7bk/ynQlHzkwMC+kePYX0UOTE+7aAaRs2O5fS12I8p6qb7Fj
+         jV2Hz9skwOydu7tcGOHGQHojswrmbDQB2RoPsRVapDKhO0PUpsTtu7PWL5HzbftLHbl4
+         7v0Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1688376235; x=1690968235;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=BJb09g/OfHvshX7XoMoqUcNq7uvwhDrwlKeW8QFnp6M=;
+        b=i4R0d6bvy9S4jY1Z8VqLxgop1B79rS/yBXwjwA40Pee835ZL/AD2kME8/VsPC52dOS
+         vwnMo6IndvN9ilX+ex0bBqKZZKvjDk2OouagB5/xrO0VZU9ybKJ6cgvKnHebxm4UrK49
+         0iZC5ePka9cJTuCtCEuoa4DG4hxFKUU8ry7G7e21p57cFHOwa+H6nYgNhQ+PYwXbqF7w
+         az9B6sp0yQr4MrmJ5Ugwehar04ldRDTSPMDyAiqi2kpVX+ASGa3XDPcnYQzGV5ak6YeO
+         fxwnY3djmUpG6Ap8sU1+Rt4gBZCpgkeI4s9/9W64WzUbirkZhdLxdVRDhOBA6U0xSpQF
+         jC7g==
+X-Gm-Message-State: AC+VfDykEoJXHZxN6e1ftxSuwJe02LxjBMwGUWcvbr/2FSl3Ka9krkUY
+        fgCmLLRkkv4KeBbPobuMP8I=
+X-Google-Smtp-Source: ACHHUZ435WUYlPE5HLQZD7t8XpiGSe9lLLNGSvsArLVKY/qHdDDTOmISEZ3HbJDb6FPw+7HtzOLB8Q==
+X-Received: by 2002:a9d:6d81:0:b0:6b7:26aa:dbb3 with SMTP id x1-20020a9d6d81000000b006b726aadbb3mr7839695otp.38.1688376234977;
+        Mon, 03 Jul 2023 02:23:54 -0700 (PDT)
+Received: from localhost.localdomain ([203.205.141.15])
+        by smtp.googlemail.com with ESMTPSA id p15-20020a63e64f000000b0051b0e564963sm14633495pgj.49.2023.07.03.02.23.52
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 03 Jul 2023 02:23:54 -0700 (PDT)
+From:   Ze Gao <zegao2021@gmail.com>
+X-Google-Original-From: Ze Gao <zegao@tencent.com>
+To:     Masami Hiramatsu <mhiramat@kernel.org>
+Cc:     Steven Rostedt <rostedt@goodmis.org>, Ze Gao <zegao2021@gmail.com>,
+        linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+        Ze Gao <zegao@tencent.com>, Yafang <laoar.shao@gmail.com>
+Subject: [PATCH v2] fprobe: add unlock to match a succeeded ftrace_test_recursion_trylock
+Date:   Mon,  3 Jul 2023 17:23:36 +0800
+Message-Id: <20230703092336.268371-1-zegao@tencent.com>
+X-Mailer: git-send-email 2.40.1
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On Mon,  3 Jul 2023 07:28:53 +0300
-"Tzvetomir Stoyanov (VMware)" <tz.stoyanov@gmail.com> wrote:
+Unlock ftrace recursion lock when fprobe_kprobe_handler() is failed
+because of some running kprobe.
 
-> The enable_trace_eprobe() function enables all event probes, attached
-> to given trace probe. If an error occurs in enabling one of the event
-> probes, all others should be roll backed. There is a bug in that roll
-> back logic - instead of all event probes, only the failed one is
-> disabled.
+Fixes: 3cc4e2c5fbae ("fprobe: make fprobe_kprobe_handler recursion free")
+Reported-by: Yafang <laoar.shao@gmail.com>
+Closes: https://lore.kernel.org/linux-trace-kernel/CALOAHbC6UpfFOOibdDiC7xFc5YFUgZnk3MZ=3Ny6we=AcrNbew@mail.gmail.com/
+Signed-off-by: Ze Gao <zegao@tencent.com>
+---
+ kernel/trace/fprobe.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-This looks good to me.
-
-Acked-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-
-Thank you,
-
-> 
-> Reported-by: Dan Carpenter <dan.carpenter@linaro.org>
-> Fixes: 7491e2c44278 ("tracing: Add a probe that attaches to trace events")
-> Signed-off-by: Tzvetomir Stoyanov (VMware) <tz.stoyanov@gmail.com>
-> ---
-> Changes since v1: https://lore.kernel.org/all/20230628121811.338655-1-tz.stoyanov@gmail.com/
->  - Added one-time warning, suggested by Steven Rostedt.
-> Changed since v2: https://lore.kernel.org/lkml/20230630121627.833560-1-tz.stoyanov@gmail.com/
->  - Added counter of successfully enabled eprobes, suggested by Steven Rostedt.
-> 
->  kernel/trace/trace_eprobe.c | 18 ++++++++++++++++--
->  1 file changed, 16 insertions(+), 2 deletions(-)
-> 
-> diff --git a/kernel/trace/trace_eprobe.c b/kernel/trace/trace_eprobe.c
-> index cb0077ba2b49..a0a704ba27db 100644
-> --- a/kernel/trace/trace_eprobe.c
-> +++ b/kernel/trace/trace_eprobe.c
-> @@ -644,6 +644,7 @@ static int enable_trace_eprobe(struct trace_event_call *call,
->  	struct trace_eprobe *ep;
->  	bool enabled;
->  	int ret = 0;
-> +	int cnt = 0;
->  
->  	tp = trace_probe_primary_from_call(call);
->  	if (WARN_ON_ONCE(!tp))
-> @@ -667,12 +668,25 @@ static int enable_trace_eprobe(struct trace_event_call *call,
->  		if (ret)
->  			break;
->  		enabled = true;
-> +		cnt++;
->  	}
->  
->  	if (ret) {
->  		/* Failed to enable one of them. Roll back all */
-> -		if (enabled)
-> -			disable_eprobe(ep, file->tr);
-> +		if (enabled) {
-> +			/*
-> +			 * It's a bug if one failed for something other than memory
-> +			 * not being available but another eprobe succeeded.
-> +			 */
-> +			WARN_ON_ONCE(ret != -ENOMEM);
-> +
-> +			list_for_each_entry(pos, trace_probe_probe_list(tp), list) {
-> +				ep = container_of(pos, struct trace_eprobe, tp);
-> +				disable_eprobe(ep, file->tr);
-> +				if (!--cnt)
-> +					break;
-> +			}
-> +		}
->  		if (file)
->  			trace_probe_remove_file(tp, file);
->  		else
-> -- 
-> 2.41.0
-> 
-
-
+diff --git a/kernel/trace/fprobe.c b/kernel/trace/fprobe.c
+index 18d36842faf5..93b3e361bb97 100644
+--- a/kernel/trace/fprobe.c
++++ b/kernel/trace/fprobe.c
+@@ -102,12 +102,14 @@ static void fprobe_kprobe_handler(unsigned long ip, unsigned long parent_ip,
+ 
+ 	if (unlikely(kprobe_running())) {
+ 		fp->nmissed++;
+-		return;
++		goto recursion_unlock;
+ 	}
+ 
+ 	kprobe_busy_begin();
+ 	__fprobe_handler(ip, parent_ip, ops, fregs);
+ 	kprobe_busy_end();
++
++recursion_unlock:
+ 	ftrace_test_recursion_unlock(bit);
+ }
+ 
 -- 
-Masami Hiramatsu (Google) <mhiramat@kernel.org>
+2.40.1
+
