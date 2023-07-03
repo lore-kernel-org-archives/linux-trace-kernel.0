@@ -2,67 +2,66 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E114FC30654
-	for <linux-trace-kernel@archiver.kernel.org>; Mon,  3 Jul 2023 17:22:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9900CC001B0
+	for <linux-trace-kernel@archiver.kernel.org>; Mon,  3 Jul 2023 17:59:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231218AbjGCRWs (ORCPT
+        id S229505AbjGCR7B (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Mon, 3 Jul 2023 13:22:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44312 "EHLO
+        Mon, 3 Jul 2023 13:59:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59428 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231215AbjGCRWr (ORCPT
+        with ESMTP id S229494AbjGCR7A (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Mon, 3 Jul 2023 13:22:47 -0400
-Received: from mail-io1-xd32.google.com (mail-io1-xd32.google.com [IPv6:2607:f8b0:4864:20::d32])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 09F76E60;
-        Mon,  3 Jul 2023 10:22:43 -0700 (PDT)
-Received: by mail-io1-xd32.google.com with SMTP id ca18e2360f4ac-777a6ebb542so183473939f.0;
-        Mon, 03 Jul 2023 10:22:42 -0700 (PDT)
+        Mon, 3 Jul 2023 13:59:00 -0400
+Received: from mail-il1-x132.google.com (mail-il1-x132.google.com [IPv6:2607:f8b0:4864:20::132])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B4BF0E66;
+        Mon,  3 Jul 2023 10:58:53 -0700 (PDT)
+Received: by mail-il1-x132.google.com with SMTP id e9e14a558f8ab-345a31bda6cso25663825ab.1;
+        Mon, 03 Jul 2023 10:58:53 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1688404962; x=1690996962;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=BnKwwBMUflpvArQ9dgNRUkrt++2jq7wbS1H/2FICAXE=;
-        b=gS57i0sYM8MpwaJcA9vfG5DIl4TCd5/sGeypkK2nA9HNLeX3cUJA8b9dI1EUWE0q3K
-         A4Nsotm5LWTJB5OcIXzQOSTqaICubkOnvulplKJ2VKgRU4jom151lbzidTnhEpnwxjGb
-         agrEWg3pfLAFCAA3cT1lGYP4AKdnSajm7ezIDPAk/6mhi1/yb/5iU18k6N5L6vvxeitd
-         oJKN1AlD3dIQPPo9EeMUMuoWpIGI2JWSNCmHkQfWqHseWADCbKlmtH/zAXnUZzLS6cCh
-         j9SEo1dF9Pjs5qj8/QwRC1ViOdxqxjytL0Dw2pR/3Zw/+Eg9c0rucACdrGp8ca6hK3to
-         N2Xg==
+        d=gmail.com; s=20221208; t=1688407133; x=1690999133;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=dLDpvUuDt1pSQ6XZf1EhYr02Va2+zEjOqRg+3qDMtro=;
+        b=hDaAixqAKj4dk/htPLAEJ9KdQiPhKmUvD0Hp88xsn8w62ORQttwJNDpAwL2akcx256
+         TdMTM8A9KAdpHCrqLkqJnmh0bKaXw2k1YSR28Jllu6HTZKBRT2tsCfIOdpwmRfJkL3nK
+         7h8lCVboOp8QxR5DeBBVLyPQ0aUt0LUNhy6LM5DuwU9RTyLkwAOrMUu8xPfX0rs8soeN
+         DJgcgAj7DCX5iIANJmD4NJgv7lJSU1VD4u/8zgTji2fGy5YhnKx3g6f1N0MDZLg+Nl6L
+         jnFYLbLCs9M9PUT7wGm/qEvuxpNGTL/DZRT49qinLaFulfQfgvV/E9jiz9Rbz15P7VYY
+         S/pw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1688404962; x=1690996962;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=BnKwwBMUflpvArQ9dgNRUkrt++2jq7wbS1H/2FICAXE=;
-        b=N7MiQnq7MSGxB84/Mo1624eM/qCY4rnwtKfr7SlhtNPM1Xi72Ytz+d5wwA4UAS9p/u
-         WJJ3FcPHtFkq5hv0qk9s8vPgWZPka+dknZLmpiISGqHQ6HElhQRo1ZaxYubDKZCHxI21
-         0e2ydMvNOkhqIHchhgsTRrf64zj0zvex01yxhHN4JbLJP/fqx8/WRon64yQfQqRCxM/L
-         we0WP/4bvTGt8141R/menPWmnQMaQfZl3/zxCQu428u1HBrddNTijQ2uUvCGJgJT8lQk
-         uup/AkCDn/GyROxDBbYOq+mqjBvEAcXScJ8M5czWDNWHIJy1fDy+pufJt2xRZTlmzNoQ
-         Nk0w==
-X-Gm-Message-State: AC+VfDxlD1NCq9qLA0gfPcbuFB+10cS60OZZLXzkUrtBhCXpz7muJLUt
-        oqMpqPTU0zpDQcXM2Q0SF6M=
-X-Google-Smtp-Source: ACHHUZ6XJi0K1PCW7k+QpZdwdcS6iMy4VV6gsMtUim2gW+bPLuVVGHN14vOsYfMttAOkK1skD74aNQ==
-X-Received: by 2002:a5e:c64c:0:b0:784:314f:8d5b with SMTP id s12-20020a5ec64c000000b00784314f8d5bmr11030969ioo.11.1688404962269;
-        Mon, 03 Jul 2023 10:22:42 -0700 (PDT)
+        d=1e100.net; s=20221208; t=1688407133; x=1690999133;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=dLDpvUuDt1pSQ6XZf1EhYr02Va2+zEjOqRg+3qDMtro=;
+        b=fWFA5AwswwCr5mlrROs4549r10VUO/sdry4oap4rSPu0ZiI5K2wZUOewO7uxcMMK4e
+         Vbw29xeLf7pF4yDHLVfReAk1gLL27ipLlrqp0/E0T36B9sMZ3yktJJmfg4biq0hvBMrt
+         EX6I7nUlfYlCKB4Pxhy4XBIq4tyZyCg7KeoVteMZzVI1Khtec74sf03yVeBLi99nIZ7g
+         BtvtYnTHNPg2C5cOxiGwYig5bFLHmqbQ91piSufCTQEBorkw77Lx3OXg0nFxUESYvsAK
+         mZJ5kbJtx/W/lVfCM35Jbn9fivsN1/h1iLoudyIWw4AqyCm488KP2a/4lfwc2AAUBonx
+         a4xA==
+X-Gm-Message-State: ABy/qLbQo6ZIxIKQLhR8H9C9pvoIqsajswSLBqdrLjYXvy/sd5JxBuwE
+        0DQktMHLmZ3OBP2oJWb/aXo=
+X-Google-Smtp-Source: APBJJlFfacAGKjTvY0YAohkxmzRehPWyKSU/NiK6UBBNJFnogIMmYKWfcRujyiXL1/QU+n/0RG/A1g==
+X-Received: by 2002:a92:d4c4:0:b0:340:b569:aec1 with SMTP id o4-20020a92d4c4000000b00340b569aec1mr10747253ilm.28.1688407132993;
+        Mon, 03 Jul 2023 10:58:52 -0700 (PDT)
 Received: from azeems-kspp.c.googlers.com.com (54.70.188.35.bc.googleusercontent.com. [35.188.70.54])
-        by smtp.gmail.com with ESMTPSA id ed22-20020a056638291600b0042b3e2e5ca1sm1033860jab.122.2023.07.03.10.22.41
+        by smtp.gmail.com with ESMTPSA id e5-20020a92d745000000b003424b3d6d37sm7004198ilq.24.2023.07.03.10.58.52
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 03 Jul 2023 10:22:42 -0700 (PDT)
+        Mon, 03 Jul 2023 10:58:52 -0700 (PDT)
 From:   Azeem Shaikh <azeemshaikh38@gmail.com>
-To:     Kees Cook <keescook@chromium.org>, Jens Axboe <axboe@kernel.dk>
+To:     "David S. Miller" <davem@davemloft.net>
 Cc:     linux-hardening@vger.kernel.org,
         Azeem Shaikh <azeemshaikh38@gmail.com>,
-        linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
-        Steven Rostedt <rostedt@goodmis.org>
-Subject: [PATCH 2/2] blk-wbt: Replace strlcpy with strscpy
-Date:   Mon,  3 Jul 2023 17:21:59 +0000
-Message-ID: <20230703172159.3668349-3-azeemshaikh38@gmail.com>
+        linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        David Ahern <dsahern@kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Kees Cook <keescook@chromium.org>, netdev@vger.kernel.org
+Subject: [PATCH] net: Replace strlcpy with strscpy
+Date:   Mon,  3 Jul 2023 17:58:40 +0000
+Message-ID: <20230703175840.3706231-1-azeemshaikh38@gmail.com>
 X-Mailer: git-send-email 2.41.0.255.g8b1d071c50-goog
-In-Reply-To: <20230703172159.3668349-1-azeemshaikh38@gmail.com>
-References: <20230703172159.3668349-1-azeemshaikh38@gmail.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
@@ -82,49 +81,37 @@ No return values were used, so direct replacement is safe.
 
 Signed-off-by: Azeem Shaikh <azeemshaikh38@gmail.com>
 ---
- include/trace/events/wbt.h | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ include/trace/events/fib.h  |    2 +-
+ include/trace/events/fib6.h |    2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/include/trace/events/wbt.h b/include/trace/events/wbt.h
-index 9c66e59d859c..4661f0d27062 100644
---- a/include/trace/events/wbt.h
-+++ b/include/trace/events/wbt.h
-@@ -33,7 +33,7 @@ TRACE_EVENT(wbt_stat,
- 	),
+diff --git a/include/trace/events/fib.h b/include/trace/events/fib.h
+index 76297ecd4935..20b914250ce9 100644
+--- a/include/trace/events/fib.h
++++ b/include/trace/events/fib.h
+@@ -65,7 +65,7 @@ TRACE_EVENT(fib_table_lookup,
+ 		}
  
- 	TP_fast_assign(
--		strlcpy(__entry->name, bdi_dev_name(bdi),
-+		strscpy(__entry->name, bdi_dev_name(bdi),
- 			ARRAY_SIZE(__entry->name));
- 		__entry->rmean		= stat[0].mean;
- 		__entry->rmin		= stat[0].min;
-@@ -68,7 +68,7 @@ TRACE_EVENT(wbt_lat,
- 	),
+ 		dev = nhc ? nhc->nhc_dev : NULL;
+-		strlcpy(__entry->name, dev ? dev->name : "-", IFNAMSIZ);
++		strscpy(__entry->name, dev ? dev->name : "-", IFNAMSIZ);
  
- 	TP_fast_assign(
--		strlcpy(__entry->name, bdi_dev_name(bdi),
-+		strscpy(__entry->name, bdi_dev_name(bdi),
- 			ARRAY_SIZE(__entry->name));
- 		__entry->lat = div_u64(lat, 1000);
- 	),
-@@ -105,7 +105,7 @@ TRACE_EVENT(wbt_step,
- 	),
+ 		if (nhc) {
+ 			if (nhc->nhc_gw_family == AF_INET) {
+diff --git a/include/trace/events/fib6.h b/include/trace/events/fib6.h
+index 4d3e607b3cde..5d7ee2610728 100644
+--- a/include/trace/events/fib6.h
++++ b/include/trace/events/fib6.h
+@@ -63,7 +63,7 @@ TRACE_EVENT(fib6_table_lookup,
+ 		}
  
- 	TP_fast_assign(
--		strlcpy(__entry->name, bdi_dev_name(bdi),
-+		strscpy(__entry->name, bdi_dev_name(bdi),
- 			ARRAY_SIZE(__entry->name));
- 		__entry->msg	= msg;
- 		__entry->step	= step;
-@@ -141,7 +141,7 @@ TRACE_EVENT(wbt_timer,
- 	),
- 
- 	TP_fast_assign(
--		strlcpy(__entry->name, bdi_dev_name(bdi),
-+		strscpy(__entry->name, bdi_dev_name(bdi),
- 			ARRAY_SIZE(__entry->name));
- 		__entry->status		= status;
- 		__entry->step		= step;
+ 		if (res->nh && res->nh->fib_nh_dev) {
+-			strlcpy(__entry->name, res->nh->fib_nh_dev->name, IFNAMSIZ);
++			strscpy(__entry->name, res->nh->fib_nh_dev->name, IFNAMSIZ);
+ 		} else {
+ 			strcpy(__entry->name, "-");
+ 		}
 -- 
 2.41.0.255.g8b1d071c50-goog
+
 
