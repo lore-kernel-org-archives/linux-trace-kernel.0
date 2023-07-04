@@ -2,124 +2,105 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 709CCEB64DA
-	for <linux-trace-kernel@archiver.kernel.org>; Tue,  4 Jul 2023 14:03:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 406D1EB64D9
+	for <linux-trace-kernel@archiver.kernel.org>; Tue,  4 Jul 2023 14:08:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229895AbjGDODJ (ORCPT
+        id S231439AbjGDOIP (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Tue, 4 Jul 2023 10:03:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36336 "EHLO
+        Tue, 4 Jul 2023 10:08:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37794 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229441AbjGDODI (ORCPT
+        with ESMTP id S231415AbjGDOIM (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Tue, 4 Jul 2023 10:03:08 -0400
-Received: from mail-wm1-x333.google.com (mail-wm1-x333.google.com [IPv6:2a00:1450:4864:20::333])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A7B5910A
-        for <linux-trace-kernel@vger.kernel.org>; Tue,  4 Jul 2023 07:03:06 -0700 (PDT)
-Received: by mail-wm1-x333.google.com with SMTP id 5b1f17b1804b1-3fbc5d5742eso56943185e9.3
-        for <linux-trace-kernel@vger.kernel.org>; Tue, 04 Jul 2023 07:03:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=layalina-io.20221208.gappssmtp.com; s=20221208; t=1688479385; x=1691071385;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=G7EhOSJt2DKose19cgkkEa+phWPe/FOTqdbgT2ux33Q=;
-        b=3McXv32dthR6tk13Qcg+VMJ/5ZO5DoprRbWVn1QolCYp0bw0ba3NdDAOQFT2us2q1R
-         Az3M1TOMSXtHNlXiYUCsjNYnM64enWNxc/nHHkolultE4tS7xwI0NmXIwT46Gr9FKT1o
-         idcQrPHTm/6UdCk4HvWIiBbYlPZCUtL50JV07Bon647gls3mYaW6TP+79LyT1FhEx1O3
-         BHXAbHu+8hoOZZAhqC5qxI4ucj3JRdvC8BzQFxMa9a6JCkeQ9E3nHsJiMHKx8y43LIEd
-         PYYhrT79Tf09bFwtpT/LDDKktIth392rm4ZLKfCRxeQlqDSMO91wv/E/Y9d0lRM+tAIF
-         FuiA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1688479385; x=1691071385;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=G7EhOSJt2DKose19cgkkEa+phWPe/FOTqdbgT2ux33Q=;
-        b=jgmSgWYLNt6hK3wi14wrbO9iZALLYR3l2sBqwh8PN4q93aAwzJGrwnlPhQhEkK4/5p
-         fAiGqeIb8xG2ZKgKxjMJMBP9MaK3AXfiktZdNLGHy/CUkvWGt+orhMH+rp/3OvZJnWyY
-         irKcJHaeMV1PmMwGV5C6M+OHtgqB02iO/yAKkFjZHvCwafpMzU6QecdKecS0zuFw60uG
-         8zZ+7d/IjUatqVIBbV5h5hLB2xCN6z/mQN6PvLcs1i+NkXUE4Sb+o6W09b3fxjRxrpsU
-         9cc4HfQcqm0E74sYl0UN772sxfbx+vxgOfs5HAJI+BMojkB1QlZf6nRD6Qbk6PRoJVqx
-         c+5w==
-X-Gm-Message-State: ABy/qLbYlCW2JFUygZCPUlCDhzOEGYVwyUsB8R+2NHutddNaYFxYTGRi
-        NB/eMWR1dsXA1M37OdUGm06aYg==
-X-Google-Smtp-Source: APBJJlGLxkjEACwFRdjd26xTjgu/yJhljm/LzrfDmC/LPv+4of4vKhPbrt4Vd7rpKxywAVWCs78pGg==
-X-Received: by 2002:a05:600c:2102:b0:3fb:e054:903f with SMTP id u2-20020a05600c210200b003fbe054903fmr2134386wml.36.1688479384966;
-        Tue, 04 Jul 2023 07:03:04 -0700 (PDT)
-Received: from airbuntu ([104.132.45.103])
-        by smtp.gmail.com with ESMTPSA id c17-20020a7bc851000000b003fbc89af035sm12290381wml.17.2023.07.04.07.03.03
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 04 Jul 2023 07:03:04 -0700 (PDT)
-Date:   Tue, 4 Jul 2023 15:02:59 +0100
-From:   Qais Yousef <qyousef@layalina.io>
-To:     Lukasz Luba <lukasz.luba@arm.com>
+        Tue, 4 Jul 2023 10:08:12 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DD90511D;
+        Tue,  4 Jul 2023 07:08:10 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 5B08F6114F;
+        Tue,  4 Jul 2023 14:08:10 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0B05FC433C7;
+        Tue,  4 Jul 2023 14:08:08 +0000 (UTC)
+Date:   Tue, 4 Jul 2023 10:08:07 -0400
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     LKML <linux-kernel@vger.kernel.org>,
+        Linux trace kernel <linux-trace-kernel@vger.kernel.org>
 Cc:     Masami Hiramatsu <mhiramat@kernel.org>,
-        linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
-        rafael@kernel.org, linux-pm@vger.kernel.org, rostedt@goodmis.org,
-        mingo@redhat.com, peterz@infradead.org, juri.lelli@redhat.com,
-        vincent.guittot@linaro.org, dietmar.eggemann@arm.com,
-        bsegall@google.com, mgorman@suse.de, bristot@redhat.com,
-        vschneid@redhat.com, delyank@fb.com, qyousef@google.com
-Subject: Re: [RESEND][PATCH v2 1/3] sched/tp: Add new tracepoint to track
- uclamp set from user-space
-Message-ID: <20230704140259.cb3g4us3u46iyegf@airbuntu>
-References: <20230522145702.2419654-1-lukasz.luba@arm.com>
- <20230522145702.2419654-2-lukasz.luba@arm.com>
- <20230531182629.nztie5rwhjl53v3d@airbuntu>
- <20230621122513.2aa3bc0d29321197e3d38441@kernel.org>
- <20230630114950.zoocytnpvdrxgnss@airbuntu>
- <c4bcff44-c306-73f5-7864-ef9551d5f5bf@arm.com>
+        Mark Rutland <mark.rutland@arm.com>,
+        Azeem Shaikh <azeemshaikh38@gmail.com>,
+        Kees Cook <keescook@chromium.org>
+Subject: [PATCH] tracing/boot: Test strscpy() against less than zero for
+ error
+Message-ID: <20230704100807.707d1605@rorschach.local.home>
+X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <c4bcff44-c306-73f5-7864-ef9551d5f5bf@arm.com>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On 07/04/23 08:49, Lukasz Luba wrote:
-> Hi Masami, Qais,
-> 
-> On 6/30/23 12:49, Qais Yousef wrote:
-> > On 06/21/23 12:25, Masami Hiramatsu wrote:
-> > > On Wed, 31 May 2023 19:26:29 +0100
-> > > Qais Yousef <qyousef@layalina.io> wrote:
-> > > 
-> > > > On 05/22/23 15:57, Lukasz Luba wrote:
-> > > > > The user-space can set uclamp value for a given task. It impacts task
-> > > > > placement decisions made by the scheduler. This is very useful information
-> > > > > and helps to understand the system behavior or track improvements in
-> > > > > middleware and applications which start using uclamp mechanisms and report
-> > > > > better performance in tests.
-> > > > 
-> > > > Do you mind adding a generic one instead please? And explain why we can't just
-> > > > attach to the syscall via kprobes? I think you want to bypass the permission
-> > > > checks, so maybe a generic tracepoint after that might be justifiable?
-> > > 
-> > > Could you tell me more about this point? I would like to know what kind of
-> > > permission checks can be bypassed with tracepoints.
-> > 
-> > Sorry bad usage of English from my end.
-> > 
-> > The syscall can fail if the caller doesn't have permission to change the
-> > attribute (some of them are protected with CAP_NICE) or if the boundary check
-> > fails. The desire here is to emit a tracepoint() when the user successfully
-> > changes an attribute of a task.
-> > 
-> > Lukasz would like to have this tracepoint to help debug and analyse workloads.
-> > We are not really bypassing anything. So to rephrase, emit the tracepointn if
-> > the syscall is successfully changing an attribute.
-> 
-> Sorry, but no. As I said, I don't want to add more dependencies in our
-> tooling and kernel configuration.
+From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
 
-Fair enough. But as I said before a dedicate uclamp only tracepoint doesn't
-make sense to me. If maintainers are convinced, then be it. My point of view is
-that We want generic tracepoints that scale to other use cases and it makes
-sense to go this way to accommodate all potential future users, not just you.
+Instead of checking for -E2BIG, it is better to just check for less than
+zero of strscpy() for error. Testing for -E2BIG is not very robust, and
+the calling code does not really care about the error code, just that
+there was an error.
 
+One of the updates to convert strlcpy() to strscpy() had a v2 version
+that changed the test from testing against -E2BIG to less than zero, but I
+took the v1 version that still tested for -E2BIG.
 
-Cheers
+Link: https://lore.kernel.org/linux-trace-kernel/20230615180420.400769-1-azeemshaikh38@gmail.com/
 
---
-Qais Yousef
+Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+---
+ kernel/trace/trace_boot.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
+
+diff --git a/kernel/trace/trace_boot.c b/kernel/trace/trace_boot.c
+index 5fe525f1b8cc..7ccc7a8e155b 100644
+--- a/kernel/trace/trace_boot.c
++++ b/kernel/trace/trace_boot.c
+@@ -31,7 +31,7 @@ trace_boot_set_instance_options(struct trace_array *tr, struct xbc_node *node)
+ 
+ 	/* Common ftrace options */
+ 	xbc_node_for_each_array_value(node, "options", anode, p) {
+-		if (strscpy(buf, p, ARRAY_SIZE(buf)) == -E2BIG) {
++		if (strscpy(buf, p, ARRAY_SIZE(buf)) < 0) {
+ 			pr_err("String is too long: %s\n", p);
+ 			continue;
+ 		}
+@@ -87,7 +87,7 @@ trace_boot_enable_events(struct trace_array *tr, struct xbc_node *node)
+ 	const char *p;
+ 
+ 	xbc_node_for_each_array_value(node, "events", anode, p) {
+-		if (strscpy(buf, p, ARRAY_SIZE(buf)) == -E2BIG) {
++		if (strscpy(buf, p, ARRAY_SIZE(buf)) < 0) {
+ 			pr_err("String is too long: %s\n", p);
+ 			continue;
+ 		}
+@@ -486,7 +486,7 @@ trace_boot_init_one_event(struct trace_array *tr, struct xbc_node *gnode,
+ 
+ 	p = xbc_node_find_value(enode, "filter", NULL);
+ 	if (p && *p != '\0') {
+-		if (strscpy(buf, p, ARRAY_SIZE(buf)) == -E2BIG)
++		if (strscpy(buf, p, ARRAY_SIZE(buf)) < 0)
+ 			pr_err("filter string is too long: %s\n", p);
+ 		else if (apply_event_filter(file, buf) < 0)
+ 			pr_err("Failed to apply filter: %s\n", buf);
+@@ -494,7 +494,7 @@ trace_boot_init_one_event(struct trace_array *tr, struct xbc_node *gnode,
+ 
+ 	if (IS_ENABLED(CONFIG_HIST_TRIGGERS)) {
+ 		xbc_node_for_each_array_value(enode, "actions", anode, p) {
+-			if (strscpy(buf, p, ARRAY_SIZE(buf)) == -E2BIG)
++			if (strscpy(buf, p, ARRAY_SIZE(buf)) < 0)
+ 				pr_err("action string is too long: %s\n", p);
+ 			else if (trigger_process_regex(file, buf) < 0)
+ 				pr_err("Failed to apply an action: %s\n", p);
+-- 
+2.39.2
+
