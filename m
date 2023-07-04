@@ -2,75 +2,131 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B2888C001DD
-	for <linux-trace-kernel@archiver.kernel.org>; Mon,  3 Jul 2023 19:52:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A6ED6EB64D9
+	for <linux-trace-kernel@archiver.kernel.org>; Tue,  4 Jul 2023 07:49:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230263AbjGCTwd (ORCPT
+        id S230382AbjGDHtN (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Mon, 3 Jul 2023 15:52:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54874 "EHLO
+        Tue, 4 Jul 2023 03:49:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59382 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229793AbjGCTwc (ORCPT
+        with ESMTP id S231577AbjGDHss (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Mon, 3 Jul 2023 15:52:32 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A2479E5F;
-        Mon,  3 Jul 2023 12:52:31 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 408D361027;
-        Mon,  3 Jul 2023 19:52:31 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 495FDC433C7;
-        Mon,  3 Jul 2023 19:52:28 +0000 (UTC)
-Date:   Mon, 3 Jul 2023 15:52:26 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Ajay Kaher <akaher@vmware.com>
-Cc:     "mhiramat@kernel.org" <mhiramat@kernel.org>,
-        "shuah@kernel.org" <shuah@kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-trace-kernel@vger.kernel.org" 
-        <linux-trace-kernel@vger.kernel.org>,
-        "linux-kselftest@vger.kernel.org" <linux-kselftest@vger.kernel.org>,
-        Ching-lin Yu <chinglinyu@google.com>,
-        Nadav Amit <namit@vmware.com>,
-        "srivatsa@csail.mit.edu" <srivatsa@csail.mit.edu>,
-        Alexey Makhalov <amakhalov@vmware.com>,
-        Vasavi Sirnapalli <vsirnapalli@vmware.com>,
-        Tapas Kundu <tkundu@vmware.com>,
-        "er.ajay.kaher@gmail.com" <er.ajay.kaher@gmail.com>
-Subject: Re: [PATCH v3 03/10] eventfs: adding eventfs dir add functions
-Message-ID: <20230703155226.1ab27bc1@gandalf.local.home>
-In-Reply-To: <84CA259A-8A99-471C-B44C-08D289972F43@vmware.com>
-References: <1685610013-33478-1-git-send-email-akaher@vmware.com>
-        <1685610013-33478-4-git-send-email-akaher@vmware.com>
-        <20230701095417.3de5baab@rorschach.local.home>
-        <ECB0097D-A323-4CFC-9C9E-D4DA2AA6E662@vmware.com>
-        <20230703110857.2d051af5@rorschach.local.home>
-        <84CA259A-8A99-471C-B44C-08D289972F43@vmware.com>
-X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+        Tue, 4 Jul 2023 03:48:48 -0400
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 81531E52;
+        Tue,  4 Jul 2023 00:48:46 -0700 (PDT)
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 79C4E2F4;
+        Tue,  4 Jul 2023 00:49:28 -0700 (PDT)
+Received: from [10.57.28.39] (unknown [10.57.28.39])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 46F833F73F;
+        Tue,  4 Jul 2023 00:48:43 -0700 (PDT)
+Message-ID: <c4bcff44-c306-73f5-7864-ef9551d5f5bf@arm.com>
+Date:   Tue, 4 Jul 2023 08:49:01 +0100
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.11.0
+Subject: Re: [RESEND][PATCH v2 1/3] sched/tp: Add new tracepoint to track
+ uclamp set from user-space
+Content-Language: en-US
+To:     Qais Yousef <qyousef@layalina.io>,
+        Masami Hiramatsu <mhiramat@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+        rafael@kernel.org, linux-pm@vger.kernel.org, rostedt@goodmis.org,
+        mingo@redhat.com, peterz@infradead.org, juri.lelli@redhat.com,
+        vincent.guittot@linaro.org, dietmar.eggemann@arm.com,
+        bsegall@google.com, mgorman@suse.de, bristot@redhat.com,
+        vschneid@redhat.com, delyank@fb.com, qyousef@google.com
+References: <20230522145702.2419654-1-lukasz.luba@arm.com>
+ <20230522145702.2419654-2-lukasz.luba@arm.com>
+ <20230531182629.nztie5rwhjl53v3d@airbuntu>
+ <20230621122513.2aa3bc0d29321197e3d38441@kernel.org>
+ <20230630114950.zoocytnpvdrxgnss@airbuntu>
+From:   Lukasz Luba <lukasz.luba@arm.com>
+In-Reply-To: <20230630114950.zoocytnpvdrxgnss@airbuntu>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On Mon, 3 Jul 2023 18:51:22 +0000
-Ajay Kaher <akaher@vmware.com> wrote:
+Hi Masami, Qais,
 
-> > 
-> > We can also look to see if we can implement this with RCU. What exactly
-> > is this rwsem protecting?
-> >   
+On 6/30/23 12:49, Qais Yousef wrote:
+> On 06/21/23 12:25, Masami Hiramatsu wrote:
+>> On Wed, 31 May 2023 19:26:29 +0100
+>> Qais Yousef <qyousef@layalina.io> wrote:
+>>
+>>> On 05/22/23 15:57, Lukasz Luba wrote:
+>>>> The user-space can set uclamp value for a given task. It impacts task
+>>>> placement decisions made by the scheduler. This is very useful information
+>>>> and helps to understand the system behavior or track improvements in
+>>>> middleware and applications which start using uclamp mechanisms and report
+>>>> better performance in tests.
+>>>
+>>> Do you mind adding a generic one instead please? And explain why we can't just
+>>> attach to the syscall via kprobes? I think you want to bypass the permission
+>>> checks, so maybe a generic tracepoint after that might be justifiable?
+>>
+>> Could you tell me more about this point? I would like to know what kind of
+>> permission checks can be bypassed with tracepoints.
 > 
-> - struct eventfs_file holds the meta-data for file or dir.
-> https://github.com/intel-lab-lkp/linux/blob/dfe0dc15a73261ed83cdc728e43f4b3d4e315aae/include/linux/tracefs.h#L28
-> - eventfs_rwsem is supposed to protect the 'link-list which is made of struct eventfs_file
-> ' and elements of struct eventfs_file.
+> Sorry bad usage of English from my end.
+> 
+> The syscall can fail if the caller doesn't have permission to change the
+> attribute (some of them are protected with CAP_NICE) or if the boundary check
+> fails. The desire here is to emit a tracepoint() when the user successfully
+> changes an attribute of a task.
+> 
+> Lukasz would like to have this tracepoint to help debug and analyse workloads.
+> We are not really bypassing anything. So to rephrase, emit the tracepointn if
+> the syscall is successfully changing an attribute.
 
-RCU is usually the perfect solution for protecting link lists though. I'll
-take a look at this when I get back to work.
+Sorry, but no. As I said, I don't want to add more dependencies in our
+tooling and kernel configuration.
 
--- Steve
+> 
+>>
+>>> Then anyone can use it to track how userspace has changed any attributes for
+>>> a task, not just uclamp.
+
+Is this a real-life use case?
+Is there a user-space SW that changes dynamically those attributes in a
+way which affects task scheduler decisions that we have hard time to
+understand it?
+
+This syscall is quite old and I haven't heard that there is a need to
+know what and how often it changes for apps.
+
+On the other hand (the real life).
+We started facing issues since some smart middle-ware very often
+(a few hundred times in a few minutes) changes the uclamp for apps.
+That daemon works autonomously and tries to figure out best values,
+To understand those decisions we need some tricky offline processing
+from trace. Since the uclamp affects a lot of mechanisms, we need to
+know exactly the time and value when it is set.
+
+If you don't point me to the SW which changes the other attributes
+that often that you need to record them and post process, then
+I would keep the current approach.
+
+
+>>
+>> I guess Uclamp is not controlled by syscall but from kernel internal
+>> sched_setattr/setscheduler() too. Anyway I agree that it can be more generic
+>> tracepoint, something like trace_sched_set_scheduer(task, attr).
+> 
+> Yes. Which is something worries me and I had a series in the past to hide it.
+> The uclamp range is abstracted and has no meaning in general and should be set
+> specifically to each system. e.g: 512 means half the system performance level,
+> but if the system is over powered this could be too fast, and if it's
+> underpowered it could be too slow. It must be set by userspace; though not sure
+> if kernel threads need to manage their performance level how this can be
+> achieved.
+
+In mainline kernel I don't see any place where uclamp is set for kernel
+threads. It's not use the use case and I hope it won't be anytime soon.
+
+Regards,
+Lukasz
