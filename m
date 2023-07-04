@@ -2,98 +2,67 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 66AF9EB64DA
-	for <linux-trace-kernel@archiver.kernel.org>; Tue,  4 Jul 2023 12:27:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0802BEB64D9
+	for <linux-trace-kernel@archiver.kernel.org>; Tue,  4 Jul 2023 13:43:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230252AbjGDM1X (ORCPT
+        id S231576AbjGDNnI (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Tue, 4 Jul 2023 08:27:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39968 "EHLO
+        Tue, 4 Jul 2023 09:43:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53566 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231159AbjGDM1E (ORCPT
+        with ESMTP id S229994AbjGDNnG (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Tue, 4 Jul 2023 08:27:04 -0400
-Received: from szxga03-in.huawei.com (szxga03-in.huawei.com [45.249.212.189])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6DA2410D8;
-        Tue,  4 Jul 2023 05:26:36 -0700 (PDT)
-Received: from dggpeml500012.china.huawei.com (unknown [172.30.72.57])
-        by szxga03-in.huawei.com (SkyGuard) with ESMTP id 4QwMRW0ZNszLnfY;
-        Tue,  4 Jul 2023 20:24:23 +0800 (CST)
-Received: from localhost.localdomain (10.67.175.61) by
- dggpeml500012.china.huawei.com (7.185.36.15) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.27; Tue, 4 Jul 2023 20:26:34 +0800
-From:   Zheng Yejian <zhengyejian1@huawei.com>
-To:     <rostedt@goodmis.org>, <mhiramat@kernel.org>
-CC:     <linux-kernel@vger.kernel.org>,
-        <linux-trace-kernel@vger.kernel.org>, <zhengyejian1@huawei.com>
-Subject: [PATCH] tracing: Set actual size after ring buffer resize
-Date:   Wed, 5 Jul 2023 08:27:05 +0800
-Message-ID: <20230705002705.576633-1-zhengyejian1@huawei.com>
-X-Mailer: git-send-email 2.25.1
+        Tue, 4 Jul 2023 09:43:06 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3D90511D;
+        Tue,  4 Jul 2023 06:43:02 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id C50276123A;
+        Tue,  4 Jul 2023 13:43:01 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 62808C433C7;
+        Tue,  4 Jul 2023 13:42:58 +0000 (UTC)
+Date:   Tue, 4 Jul 2023 09:42:48 -0400
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     Kees Cook <keescook@chromium.org>
+Cc:     mhiramat@kernel.org, ebiggers@kernel.org, azeemshaikh38@gmail.com,
+        linux-trace-kernel@vger.kernel.org,
+        linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] tracing/boot: Replace strlcpy with strscpy
+Message-ID: <20230704094248.1b36c3e7@rorschach.local.home>
+In-Reply-To: <202306201335.D6D772A@keescook>
+References: <20230615180420.400769-1-azeemshaikh38@gmail.com>
+        <168729290245.455922.11993639418267016143.b4-ty@chromium.org>
+        <20230620163325.35c9203c@gandalf.local.home>
+        <202306201335.D6D772A@keescook>
+X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [10.67.175.61]
-X-ClientProxiedBy: dggems704-chm.china.huawei.com (10.3.19.181) To
- dggpeml500012.china.huawei.com (7.185.36.15)
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-Currently we can resize trace ringbuffer by writing a value into file
-'buffer_size_kb', then by reading the file, we get the value that is
-usually what we wrote. However, this value may be not actual size of
-trace ring buffer because of the round up when doing resize in kernel,
-and the actual size would be more useful.
+On Tue, 20 Jun 2023 13:35:14 -0700
+Kees Cook <keescook@chromium.org> wrote:
 
-Signed-off-by: Zheng Yejian <zhengyejian1@huawei.com>
----
- kernel/trace/trace.c | 19 +++++++++++--------
- 1 file changed, 11 insertions(+), 8 deletions(-)
+> > > Applied to for-next/hardening, thanks!
+> > > 
+> > > [1/1] tracing/boot: Replace strlcpy with strscpy
+> > >       https://git.kernel.org/kees/c/b1c38314f756
+> > >   
+> > 
+> > I was going to add this to my queue.  
+> 
+> Ah, okay, no worries. I will drop it from mine.
 
-diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
-index b04f52e7cd28..37e0e0b5ff6d 100644
---- a/kernel/trace/trace.c
-+++ b/kernel/trace/trace.c
-@@ -6287,6 +6287,15 @@ static void set_buffer_entries(struct array_buffer *buf, unsigned long val)
- 		per_cpu_ptr(buf->data, cpu)->entries = val;
- }
- 
-+static void update_buffer_entries(struct array_buffer *buf, int cpu)
-+{
-+	if (cpu == RING_BUFFER_ALL_CPUS) {
-+		set_buffer_entries(buf, ring_buffer_size(buf->buffer, 0));
-+	} else {
-+		per_cpu_ptr(buf->data, cpu)->entries = ring_buffer_size(buf->buffer, cpu);
-+	}
-+}
-+
- #ifdef CONFIG_TRACER_MAX_TRACE
- /* resize @tr's buffer to the size of @size_tr's entries */
- static int resize_buffer_duplicate_size(struct array_buffer *trace_buf,
-@@ -6365,18 +6374,12 @@ static int __tracing_resize_ring_buffer(struct trace_array *tr,
- 		return ret;
- 	}
- 
--	if (cpu == RING_BUFFER_ALL_CPUS)
--		set_buffer_entries(&tr->max_buffer, size);
--	else
--		per_cpu_ptr(tr->max_buffer.data, cpu)->entries = size;
-+	update_buffer_entries(&tr->max_buffer, cpu);
- 
-  out:
- #endif /* CONFIG_TRACER_MAX_TRACE */
- 
--	if (cpu == RING_BUFFER_ALL_CPUS)
--		set_buffer_entries(&tr->array_buffer, size);
--	else
--		per_cpu_ptr(tr->array_buffer.data, cpu)->entries = size;
-+	update_buffer_entries(&tr->array_buffer, cpu);
- 
- 	return ret;
- }
--- 
-2.25.1
+Maybe I should have let you take it. I had v1 in my queue, and pushed
+that one :-p
 
+I'll fix it later.
+
+Thanks,
+
+-- Steve
