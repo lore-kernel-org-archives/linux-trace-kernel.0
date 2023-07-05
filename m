@@ -2,325 +2,109 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ECC99EB64DA
-	for <linux-trace-kernel@archiver.kernel.org>; Wed,  5 Jul 2023 10:13:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FA4AEB64DA
+	for <linux-trace-kernel@archiver.kernel.org>; Wed,  5 Jul 2023 12:30:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229812AbjGEKNj (ORCPT
+        id S231211AbjGEMa6 (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Wed, 5 Jul 2023 06:13:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41010 "EHLO
+        Wed, 5 Jul 2023 08:30:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44464 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229720AbjGEKNi (ORCPT
+        with ESMTP id S229903AbjGEMa5 (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Wed, 5 Jul 2023 06:13:38 -0400
-Received: from mail-ua1-x929.google.com (mail-ua1-x929.google.com [IPv6:2607:f8b0:4864:20::929])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5458E122;
-        Wed,  5 Jul 2023 03:13:37 -0700 (PDT)
-Received: by mail-ua1-x929.google.com with SMTP id a1e0cc1a2514c-784f7f7deddso2036136241.3;
-        Wed, 05 Jul 2023 03:13:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1688552016; x=1691144016;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=a3OXLV7670HYbFkf4+KB0EvSTXTvzi9vkrfOeJXtwk8=;
-        b=Xxek6sc/NJyTlF3gXjJlHpXbTOv5WDObTkrp1L72GHGwqCQ91s+iNu10nWq9pKcSd2
-         FI2VjP02cd4AOa4bT3zrpT+qs1534bpAOtl55hdo6yFT+8WWunbEQeFjux8Zzv83aOoX
-         73gvsaF5TSslUKpMquZKzg8KIYNGRGNysOy9Itl6Q0YhgsgaS3TNG5/lpy7blqIjcbqZ
-         NzCG44gJimCpT4dMwF5bHDVKsN+/rcZUXO76UHNraikPm3EbQwbtdGDuu3/8QGGfb8Fn
-         8SjUTRrSvtDLifbgdNmdi4Vh+3hv5QdHRk5SF4hdE3YKpYNg/0KSH6TVE1NVcAx9XHQL
-         8HlA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1688552016; x=1691144016;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=a3OXLV7670HYbFkf4+KB0EvSTXTvzi9vkrfOeJXtwk8=;
-        b=EX0wFVwT5WItrcjku7pdpPtCaKVVAh+/xu3WHv0ZiZDP+hMC57maV9RykbPDAWqTVl
-         opc1xhNCzHOwtpgwQJzJ2BvOCHVRdFBFkKp+fw4+ZS9d1rn/au9F4/Ruykp86CGhcQeR
-         aMFtNxa/V4dETdr6uB5ewQHE7kNGXe5sEGZVHNPItTd9K82nKVnDleqG5EYfjA7HeuG7
-         wcIwpZ8MgsljX6cINe2CBYRGNdOScJOFmpg+2M5NUYaIgV3niwKxiGAwz/0wDzriBKY/
-         3WtPxDT3OBRtnfYZc4VJyoQIDT+N3MRsjOVhPpybdCYiLpfbZMrggoTVT8HJJ5547nZr
-         uUiw==
-X-Gm-Message-State: ABy/qLasMrV6MxqLZ5ewSS/huIuQKHNYIe29lJMtJG2ozoQV5Cr5RbDn
-        gpCPPLwqFzuMT5ppO880h2D8vE7dZZ8ES+l4ehE=
-X-Google-Smtp-Source: APBJJlFgCcXjnb9qP5+oYGH9SmBsr5No45+Ih/zpINS+pNNgixyvKCgP6MFh2b/OAOqEy+8ofbZ76oGFqggYNqJLv7Q=
-X-Received: by 2002:a67:fe07:0:b0:440:dd8e:2aa3 with SMTP id
- l7-20020a67fe07000000b00440dd8e2aa3mr5265376vsr.35.1688552016369; Wed, 05 Jul
- 2023 03:13:36 -0700 (PDT)
-MIME-Version: 1.0
-References: <20230628115329.248450-1-laoar.shao@gmail.com> <20230628115329.248450-12-laoar.shao@gmail.com>
- <d991de64-ebdd-bb65-482a-aae64459c739@iogearbox.net>
-In-Reply-To: <d991de64-ebdd-bb65-482a-aae64459c739@iogearbox.net>
-From:   Yafang Shao <laoar.shao@gmail.com>
-Date:   Wed, 5 Jul 2023 18:13:00 +0800
-Message-ID: <CALOAHbBSjzaWrTRKh6fuxL-bpNWYAuojpfoYx4FGa8Lb1i9W+w@mail.gmail.com>
-Subject: Re: [PATCH v6 bpf-next 11/11] bpftool: Show perf link info
-To:     Daniel Borkmann <daniel@iogearbox.net>
+        Wed, 5 Jul 2023 08:30:57 -0400
+Received: from www62.your-server.de (www62.your-server.de [213.133.104.62])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B5059B0;
+        Wed,  5 Jul 2023 05:30:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=iogearbox.net; s=default2302; h=Content-Transfer-Encoding:Content-Type:
+        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
+        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID;
+        bh=GVi1TMS//j0R9x4YBSPDer5nc/raADNyI7IoydbL/fs=; b=M/Uy5L1o50GeUIq3U1CAOXU3ST
+        zebSjQq41yXqSiDy7W2y6tghGOak7DN6iJaq4lABzNwuzlHYGdMXY/mPe86XCpUAeZJAcTpUbrMT3
+        AZTe4kEN++xlrbSfXEaKJiWDi0B/E6CKJ0zaQWVs+iGnLKmrvNdHFPT/3Vzq3HIVClUGFu98c0R30
+        HI0qGBmYNc0/o7b+fITNPkZ/8onnfY42Tp6tt7WxjuBDrpowNXv0A3XxqVRvoDe5h1FdD1iuwFS1l
+        XBEaIogF7vWJAsKOGyVLnbIk8GdJiBtiHcYEWcuVTen+m+fEkQj1AmiN9FabeIkjG0VITTYgg56R9
+        QvP6whNA==;
+Received: from sslproxy06.your-server.de ([78.46.172.3])
+        by www62.your-server.de with esmtpsa  (TLS1.3) tls TLS_AES_256_GCM_SHA384
+        (Exim 4.94.2)
+        (envelope-from <daniel@iogearbox.net>)
+        id 1qH1ef-000IqT-HP; Wed, 05 Jul 2023 14:30:45 +0200
+Received: from [178.197.249.31] (helo=linux.home)
+        by sslproxy06.your-server.de with esmtpsa (TLSv1.3:TLS_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <daniel@iogearbox.net>)
+        id 1qH1ee-000VT9-UI; Wed, 05 Jul 2023 14:30:44 +0200
+Subject: Re: [PATCH v6 bpf-next 09/11] bpf: Support ->fill_link_info for
+ perf_event
+To:     Yafang Shao <laoar.shao@gmail.com>
 Cc:     ast@kernel.org, john.fastabend@gmail.com, andrii@kernel.org,
         martin.lau@linux.dev, song@kernel.org, yhs@fb.com,
         kpsingh@kernel.org, sdf@google.com, haoluo@google.com,
         jolsa@kernel.org, quentin@isovalent.com, rostedt@goodmis.org,
         mhiramat@kernel.org, bpf@vger.kernel.org,
         linux-trace-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+References: <20230628115329.248450-1-laoar.shao@gmail.com>
+ <20230628115329.248450-10-laoar.shao@gmail.com>
+ <e06b149e-2bcc-6a83-ef23-6216c7267632@iogearbox.net>
+ <CALOAHbBhxF8S2x8h1b-2otu31u-eg3BuUHyMW3VWBezy6AgMtg@mail.gmail.com>
+From:   Daniel Borkmann <daniel@iogearbox.net>
+Message-ID: <941cbfe1-3284-fdea-6920-fcb251ba1c84@iogearbox.net>
+Date:   Wed, 5 Jul 2023 14:30:44 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
+MIME-Version: 1.0
+In-Reply-To: <CALOAHbBhxF8S2x8h1b-2otu31u-eg3BuUHyMW3VWBezy6AgMtg@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-Authenticated-Sender: daniel@iogearbox.net
+X-Virus-Scanned: Clear (ClamAV 0.103.8/26960/Wed Jul  5 09:29:05 2023)
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On Wed, Jul 5, 2023 at 4:54=E2=80=AFPM Daniel Borkmann <daniel@iogearbox.ne=
-t> wrote:
->
-> On 6/28/23 1:53 PM, Yafang Shao wrote:
-> [...]
-> > +
-> > +static void
-> > +show_perf_event_event_json(struct bpf_link_info *info, json_writer_t *=
-wtr)
-> > +{
-> > +     __u64 config =3D info->perf_event.event.config;
-> > +     __u32 type =3D info->perf_event.event.type;
-> > +     const char *perf_type, *perf_config;
-> > +
-> > +     perf_type =3D perf_event_name(perf_type_name, type);
-> > +     if (perf_type)
-> > +             jsonw_string_field(wtr, "event_type", perf_type);
-> > +     else
-> > +             jsonw_uint_field(wtr, "event_type", type);
-> > +
-> > +     perf_config =3D perf_config_str(type, config);
-> > +     if (perf_config)
-> > +             jsonw_string_field(wtr, "event_config", perf_config);
-> > +     else
-> > +             jsonw_uint_field(wtr, "event_config", config);
-> > +
-> > +     if (type =3D=3D PERF_TYPE_HW_CACHE && perf_config)
-> > +             free((void *)perf_config);
->
-> nit no need to cast
+On 7/5/23 12:08 PM, Yafang Shao wrote:
+> On Wed, Jul 5, 2023 at 4:47 PM Daniel Borkmann <daniel@iogearbox.net> wrote:
+>> On 6/28/23 1:53 PM, Yafang Shao wrote:
+>>> By introducing support for ->fill_link_info to the perf_event link, users
+>>> gain the ability to inspect it using `bpftool link show`. While the current
+>>> approach involves accessing this information via `bpftool perf show`,
+>>> consolidating link information for all link types in one place offers
+>>> greater convenience. Additionally, this patch extends support to the
+>>> generic perf event, which is not currently accommodated by
+>>> `bpftool perf show`. While only the perf type and config are exposed to
+>>> userspace, other attributes such as sample_period and sample_freq are
+>>> ignored. It's important to note that if kptr_restrict is not permitted, the
+>>> probed address will not be exposed, maintaining security measures.
+>>>
+>>> A new enum bpf_perf_event_type is introduced to help the user understand
+>>> which struct is relevant.
+>>>
+>>> Signed-off-by: Yafang Shao <laoar.shao@gmail.com>
+[...]
+>>>
+>>> +enum bpf_perf_event_type {
+>>> +     BPF_PERF_EVENT_UNSPEC = 0,
+>>> +     BPF_PERF_EVENT_UPROBE = 1,
+>>> +     BPF_PERF_EVENT_URETPROBE = 2,
+>>> +     BPF_PERF_EVENT_KPROBE = 3,
+>>> +     BPF_PERF_EVENT_KRETPROBE = 4,
+>>> +     BPF_PERF_EVENT_TRACEPOINT = 5,
+>>> +     BPF_PERF_EVENT_EVENT = 6,
+>>
+>> Why explicitly defining the values of the enum?
+> 
+> With these newly introduced enums, the user can easily identify what
+> kind of perf_event link it is
+> See also the discussion:
+> https://lore.kernel.org/bpf/CAEf4BzYEwCZ3J51pFnUfGykEAHtdLwB8Kxi0utvUTVvewz4UCg@mail.gmail.com/
 
-It will discard the 'const', so we have to do the cast here, otherwise
-the compiler will complain.
+No objections to that. I was more wondering why explicitly stating the
+numbers here, but I presume it's for quick readability.. looks like in
+some of the uapi enums we do it, in some others we don't; fair enough.
 
->
-> > +}
-> > +
-> >   static int show_link_close_json(int fd, struct bpf_link_info *info)
-> >   {
-> >       struct bpf_prog_info prog_info;
-> > @@ -334,6 +440,26 @@ static int show_link_close_json(int fd, struct bpf=
-_link_info *info)
-> >       case BPF_LINK_TYPE_KPROBE_MULTI:
-> >               show_kprobe_multi_json(info, json_wtr);
-> >               break;
-> > +     case BPF_LINK_TYPE_PERF_EVENT:
-> > +             switch (info->perf_event.type) {
-> > +             case BPF_PERF_EVENT_EVENT:
-> > +                     show_perf_event_event_json(info, json_wtr);
-> > +                     break;
-> > +             case BPF_PERF_EVENT_TRACEPOINT:
-> > +                     show_perf_event_tracepoint_json(info, json_wtr);
-> > +                     break;
-> > +             case BPF_PERF_EVENT_KPROBE:
-> > +             case BPF_PERF_EVENT_KRETPROBE:
-> > +                     show_perf_event_kprobe_json(info, json_wtr);
-> > +                     break;
-> > +             case BPF_PERF_EVENT_UPROBE:
-> > +             case BPF_PERF_EVENT_URETPROBE:
-> > +                     show_perf_event_uprobe_json(info, json_wtr);
-> > +                     break;
-> > +             default:
-> > +                     break;
-> > +             }
-> > +             break;
-> >       default:
-> >               break;
-> >       }
-> > @@ -505,6 +631,75 @@ static void show_kprobe_multi_plain(struct bpf_lin=
-k_info *info)
-> >       }
-> >   }
-> >
-> > +static void show_perf_event_kprobe_plain(struct bpf_link_info *info)
-> > +{
-> > +     const char *buf;
-> > +
-> > +     buf =3D (const char *)u64_to_ptr(info->perf_event.kprobe.func_nam=
-e);
->
-> ditto, same for the other occurrences further below
-
-Agree.
-
->
-> > +     if (buf[0] =3D=3D '\0' && !info->perf_event.kprobe.addr)
-> > +             return;
-> > +
-> > +     if (info->perf_event.type =3D=3D BPF_PERF_EVENT_KRETPROBE)
-> > +             printf("\n\tkretprobe ");
-> > +     else
-> > +             printf("\n\tkprobe ");
-> > +     if (info->perf_event.kprobe.addr)
-> > +             printf("%llx ", info->perf_event.kprobe.addr);
-> > +     printf("%s", buf);
-> > +     if (info->perf_event.kprobe.offset)
-> > +             printf("+%#x", info->perf_event.kprobe.offset);
-> > +     printf("  ");
-> > +}
-> > +
-> > +static void show_perf_event_uprobe_plain(struct bpf_link_info *info)
-> > +{
-> > +     const char *buf;
-> > +
-> > +     buf =3D (const char *)u64_to_ptr(info->perf_event.uprobe.file_nam=
-e);
-> > +     if (buf[0] =3D=3D '\0')
-> > +             return;
-> > +
-> > +     if (info->perf_event.type =3D=3D BPF_PERF_EVENT_URETPROBE)
-> > +             printf("\n\turetprobe ");
-> > +     else
-> > +             printf("\n\tuprobe ");
-> > +     printf("%s+%#x  ", buf, info->perf_event.uprobe.offset);
-> > +}
-> > +
-> > +static void show_perf_event_tracepoint_plain(struct bpf_link_info *inf=
-o)
-> > +{
-> > +     const char *buf;
-> > +
-> > +     buf =3D (const char *)u64_to_ptr(info->perf_event.tracepoint.tp_n=
-ame);
-> > +     if (buf[0] =3D=3D '\0')
-> > +             return;
-> > +
-> > +     printf("\n\ttracepoint %s  ", buf);
-> > +}
-> > +
-> > +static void show_perf_event_event_plain(struct bpf_link_info *info)
-> > +{
-> > +     __u64 config =3D info->perf_event.event.config;
-> > +     __u32 type =3D info->perf_event.event.type;
-> > +     const char *perf_type, *perf_config;
-> > +
-> > +     printf("\n\tevent ");
-> > +     perf_type =3D perf_event_name(perf_type_name, type);
-> > +     if (perf_type)
-> > +             printf("%s:", perf_type);
-> > +     else
-> > +             printf("%u :", type);
-> > +
-> > +     perf_config =3D perf_config_str(type, config);
-> > +     if (perf_config)
-> > +             printf("%s  ", perf_config);
-> > +     else
-> > +             printf("%llu  ", config);
-> > +
-> > +     if (type =3D=3D PERF_TYPE_HW_CACHE && perf_config)
-> > +             free((void *)perf_config);
->
-> same
->
-> > +}
-> > +
-> >   static int show_link_close_plain(int fd, struct bpf_link_info *info)
-> >   {
-> >       struct bpf_prog_info prog_info;
-> > @@ -553,6 +748,26 @@ static int show_link_close_plain(int fd, struct bp=
-f_link_info *info)
-> >       case BPF_LINK_TYPE_KPROBE_MULTI:
-> >               show_kprobe_multi_plain(info);
-> >               break;
-> > +     case BPF_LINK_TYPE_PERF_EVENT:
-> > +             switch (info->perf_event.type) {
-> > +             case BPF_PERF_EVENT_EVENT:
-> > +                     show_perf_event_event_plain(info);
-> > +                     break;
-> > +             case BPF_PERF_EVENT_TRACEPOINT:
-> > +                     show_perf_event_tracepoint_plain(info);
-> > +                     break;
-> > +             case BPF_PERF_EVENT_KPROBE:
-> > +             case BPF_PERF_EVENT_KRETPROBE:
-> > +                     show_perf_event_kprobe_plain(info);
-> > +                     break;
-> > +             case BPF_PERF_EVENT_UPROBE:
-> > +             case BPF_PERF_EVENT_URETPROBE:
-> > +                     show_perf_event_uprobe_plain(info);
-> > +                     break;
-> > +             default:
-> > +                     break;
-> > +             }
-> > +             break;
-> >       default:
-> >               break;
-> >       }
-> > @@ -575,11 +790,12 @@ static int do_show_link(int fd)
-> >       struct bpf_link_info info;
-> >       __u32 len =3D sizeof(info);
-> >       __u64 *addrs =3D NULL;
-> > -     char buf[256];
-> > +     char buf[PATH_MAX];
-> >       int count;
-> >       int err;
-> >
-> >       memset(&info, 0, sizeof(info));
-> > +     buf[0] =3D '\0';
-> >   again:
-> >       err =3D bpf_link_get_info_by_fd(fd, &info, &len);
-> >       if (err) {
-> > @@ -614,6 +830,35 @@ static int do_show_link(int fd)
-> >                       goto again;
-> >               }
-> >       }
-> > +     if (info.type =3D=3D BPF_LINK_TYPE_PERF_EVENT) {
-> > +             switch (info.perf_event.type) {
-> > +             case BPF_PERF_EVENT_TRACEPOINT:
-> > +                     if (!info.perf_event.tracepoint.tp_name) {
-> > +                             info.perf_event.tracepoint.tp_name =3D (u=
-nsigned long)&buf;
->
-> lets use ptr_to_u64() in all these cases
-
-Agree.
-
->
-> > +                             info.perf_event.tracepoint.name_len =3D s=
-izeof(buf);
-> > +                             goto again;
-> > +                     }
-> > +                     break;
-> > +             case BPF_PERF_EVENT_KPROBE:
-> > +             case BPF_PERF_EVENT_KRETPROBE:
-> > +                     if (!info.perf_event.kprobe.func_name) {
-> > +                             info.perf_event.kprobe.func_name =3D (uns=
-igned long)&buf;
-> > +                             info.perf_event.kprobe.name_len =3D sizeo=
-f(buf);
-> > +                             goto again;
-> > +                     }
-> > +                     break;
-> > +             case BPF_PERF_EVENT_UPROBE:
-> > +             case BPF_PERF_EVENT_URETPROBE:
-> > +                     if (!info.perf_event.uprobe.file_name) {
-> > +                             info.perf_event.uprobe.file_name =3D (uns=
-igned long)&buf;
-> > +                             info.perf_event.uprobe.name_len =3D sizeo=
-f(buf);
-> > +                             goto again;
-> > +                     }
-> > +                     break;
-> > +             default:
-> > +                     break;
-> > +             }
-> > +     }
-> >
-> >       if (json_output)
-> >               show_link_close_json(fd, &info);
-> >
->
-
-
---=20
-Regards
-Yafang
+Thanks,
+Daniel
