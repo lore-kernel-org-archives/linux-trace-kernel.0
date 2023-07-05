@@ -2,140 +2,109 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 49060EB64DA
-	for <linux-trace-kernel@archiver.kernel.org>; Wed,  5 Jul 2023 14:40:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F201EB64DA
+	for <linux-trace-kernel@archiver.kernel.org>; Wed,  5 Jul 2023 14:50:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232525AbjGEOkk (ORCPT
+        id S232211AbjGEOuj (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Wed, 5 Jul 2023 10:40:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47986 "EHLO
+        Wed, 5 Jul 2023 10:50:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55508 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231565AbjGEOkk (ORCPT
+        with ESMTP id S231676AbjGEOui (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Wed, 5 Jul 2023 10:40:40 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 30607CE;
-        Wed,  5 Jul 2023 07:40:39 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        Wed, 5 Jul 2023 10:50:38 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 20A98CE;
+        Wed,  5 Jul 2023 07:50:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=VYEraWXOTwXpHX08kViCcw6mgtGGGRN9twNakSMbyfw=; b=jt6iNqxvKQ2q+v9qNnQo70qyB9
+        v2RbXHTP2ulOP2uawfD/i3PEhhnOL1/uhgCpCy6DPPudEYrQfbkd7snGg8RgNYZktPxyV276BsxLu
+        EoOiaxGEHQmBMetHd7sfCq6mrGB51Xxv+2tbPwudEZsfu1gfunH9Xw9V7qoNyMJM+cO+BEheCfCme
+        Lk77TyxlBwPoUE52nzqSPZ2gQfzII4W74erfoC//X2hg14e22E52GNJyF3fOCZMBkwXLhqAFgFIRU
+        lcGVLtQXtfqCpvx4g9LoUzk6/GS0hzp56820u+WydJfAWo86PEFVJdi4ENrRrRFbdaDpXhShXxO1R
+        r2ycMHew==;
+Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
+        by casper.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
+        id 1qH3pj-00AAK1-Oi; Wed, 05 Jul 2023 14:50:19 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id B9A08615CB;
-        Wed,  5 Jul 2023 14:40:38 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5379EC433C8;
-        Wed,  5 Jul 2023 14:40:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1688568038;
-        bh=8lOxVmG05F0ecJWHeVz8zcLl0eVMk/+f7NxbVDTmM5E=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=FUvE4++pU/R3wqyF2xYjVo21LAIkMLfnSeYF3fzPIqd9pQo1PnN6+mgRy9U39+dWh
-         c0NLq3ey/HlAB/j6u1cqiBFE8i2LyGrg2agO8Wq0HA9e5Fxq+kcnw1r9xbBmHa3xWV
-         TbBrmIncTK6ZtVYNoz4n10xWVrtnl/vJ8acDDhzTaNAdIoQ7ur1HIVKRy/V3mlNWDg
-         k/x8W/mmF7P71l1ssy9Ke+Edzn8U/R3zCOZCY+RG7qyphxzPsERdiS8N3BjvuqGZwm
-         IbWWypy7rLDS6mAi1w93mZw9LW4iuxNzXYNx4OYdWSay+nytXhq5ARXmYsIW4JyUeT
-         iizD+X2Znk4/w==
-Date:   Wed, 5 Jul 2023 23:40:32 +0900
-From:   Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To:     Petr Pavlu <petr.pavlu@suse.com>
-Cc:     tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
-        dave.hansen@linux.intel.com, hpa@zytor.com, peterz@infradead.org,
-        samitolvanen@google.com, x86@kernel.org,
+         key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 2460E300274;
+        Wed,  5 Jul 2023 16:50:18 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 038C52025BA45; Wed,  5 Jul 2023 16:50:17 +0200 (CEST)
+Date:   Wed, 5 Jul 2023 16:50:17 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Masami Hiramatsu <mhiramat@kernel.org>
+Cc:     Petr Pavlu <petr.pavlu@suse.com>, tglx@linutronix.de,
+        mingo@redhat.com, bp@alien8.de, dave.hansen@linux.intel.com,
+        hpa@zytor.com, samitolvanen@google.com, x86@kernel.org,
         linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org
 Subject: Re: [PATCH 2/2] x86/retpoline,kprobes: Avoid treating rethunk as an
  indirect jump
-Message-Id: <20230705234032.eb0758a3c3fa412169862fab@kernel.org>
-In-Reply-To: <20230705081547.25130-3-petr.pavlu@suse.com>
+Message-ID: <20230705145017.GC4253@hirez.programming.kicks-ass.net>
 References: <20230705081547.25130-1-petr.pavlu@suse.com>
-        <20230705081547.25130-3-petr.pavlu@suse.com>
-X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+ <20230705081547.25130-3-petr.pavlu@suse.com>
+ <20230705085857.GG462772@hirez.programming.kicks-ass.net>
+ <20230705232038.3a6d03e18f7bafb14cdfed42@kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230705232038.3a6d03e18f7bafb14cdfed42@kernel.org>
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On Wed,  5 Jul 2023 10:15:47 +0200
-Petr Pavlu <petr.pavlu@suse.com> wrote:
-
-> Functions can_optimize() and insn_is_indirect_jump() consider jumps to
-> the range [__indirect_thunk_start, __indirect_thunk_end] as indirect
-> jumps and prevent use of optprobes in functions containing them.
+On Wed, Jul 05, 2023 at 11:20:38PM +0900, Masami Hiramatsu wrote:
+> On Wed, 5 Jul 2023 10:58:57 +0200
+> Peter Zijlstra <peterz@infradead.org> wrote:
 > 
-> Linker script arch/x86/kernel/vmlinux.lds.S places into this range also
-> the special section .text.__x86.return_thunk which contains the return
-> thunk. It causes that machines which use the return thunk as
-> a mitigation and don't have it patched by any alternative then end up
-> not being able to use optprobes in any regular function.
-
-Ah, I got it. So with retpoline, the 'ret' instruction is replaced by
-'jmp __x86_return_thunk' and the "__x86_return_thunk" is also listed in
-the __indirect_thunk_start/end.
-Good catch!
-
-And I think Peter's suggestion is simpler and easier to understand.
-Can you update this?
-
-Thank you,
-
+> > On Wed, Jul 05, 2023 at 10:15:47AM +0200, Petr Pavlu wrote:
+> > > Functions can_optimize() and insn_is_indirect_jump() consider jumps to
+> > > the range [__indirect_thunk_start, __indirect_thunk_end] as indirect
+> > > jumps and prevent use of optprobes in functions containing them.
+> > 
+> > Why ?!? I mean, doing an opt-probe of an indirect jump/call instruction
+> > itself doesn't really make sense and I can see why you'd want to not do
+> > that. But why disallow an opt-probe if there's one in the function as a
+> > whole, but not the probe target?
 > 
-> The return thunk doesn't need to be treated as an indirect jump from the
-> perspective of insn_is_indirect_jump(). It returns to a caller and
-> cannot land into an optprobe jump operand which is the purpose of the
-> insn_is_indirect_jump() check.
+> Here we need to clarify the reason why functions which have indirect jumps
+> are not allowed to use opt-probe. Since optprobe can replace multiple 
+> instructions with a jump, if any jmp (is used for jump inside same function)
+> jumps to the second and subsequent instructions replaced by optprobe's jump,
+> that target instruction can not be optimized.
 > 
-> Fix the problem by defining the symbols __indirect_thunk_start and
-> __indirect_thunk_end directly in arch/x86/lib/retpoline.S. This is
-> possible because commit 9bc0bb50727c ("objtool/x86: Rewrite retpoline
-> thunk calls") made all indirect thunks present in a single section.
->
-> Fixes: 0b53c374b9ef ("x86/retpoline: Use -mfunction-return")
-> Signed-off-by: Petr Pavlu <petr.pavlu@suse.com>
-> ---
->  arch/x86/kernel/vmlinux.lds.S | 2 --
->  arch/x86/lib/retpoline.S      | 4 ++++
->  2 files changed, 4 insertions(+), 2 deletions(-)
-> 
-> diff --git a/arch/x86/kernel/vmlinux.lds.S b/arch/x86/kernel/vmlinux.lds.S
-> index a4cd04c458df..dd5b0a68cf84 100644
-> --- a/arch/x86/kernel/vmlinux.lds.S
-> +++ b/arch/x86/kernel/vmlinux.lds.S
-> @@ -133,9 +133,7 @@ SECTIONS
->  		KPROBES_TEXT
->  		SOFTIRQENTRY_TEXT
->  #ifdef CONFIG_RETPOLINE
-> -		__indirect_thunk_start = .;
->  		*(.text..__x86.*)
-> -		__indirect_thunk_end = .;
->  #endif
->  		STATIC_CALL_TEXT
->  
-> diff --git a/arch/x86/lib/retpoline.S b/arch/x86/lib/retpoline.S
-> index 3bea96341d00..f45a3e7f776f 100644
-> --- a/arch/x86/lib/retpoline.S
-> +++ b/arch/x86/lib/retpoline.S
-> @@ -14,6 +14,7 @@
->  
->  	.section .text..__x86.indirect_thunk
->  
-> +SYM_ENTRY(__indirect_thunk_start, SYM_L_GLOBAL, SYM_A_NONE)
->  
->  .macro POLINE reg
->  	ANNOTATE_INTRA_FUNCTION_CALL
-> @@ -125,6 +126,9 @@ SYM_CODE_END(__x86_indirect_jump_thunk_array)
->  #include <asm/GEN-for-each-reg.h>
->  #undef GEN
->  #endif
-> +
-> +SYM_ENTRY(__indirect_thunk_end, SYM_L_GLOBAL, SYM_A_NONE)
-> +
->  /*
->   * This function name is magical and is used by -mfunction-return=thunk-extern
->   * for the compiler to generate JMPs to it.
-> -- 
-> 2.35.3
-> 
+> The problem of indirect jump (which jumps to the same function) is that
+> we don't know which addresses will be the target of the indirect jump.
+> So, for safety, I disallow optprobe for such function. In that case, normal
+> kprobe is used because it replaces only one instruction.
 
+Ah, you're worried about jump-tables; you don't want to optimize across
+a jump-table target because then things go *boom*.
 
--- 
-Masami Hiramatsu (Google) <mhiramat@kernel.org>
+There's two things:
+
+ - when X86_KERNEL_IBT=y any indirect jump target should be an ENDBR
+   instruction, so jump-table targets can be easily detected.
+
+ - when RETPOLINE=y || X86_KERNEL_IBT=y we have jump-tables disabled,
+   search for -fno-jump-table in arch/x86/Makefile.
+
+At some point in the future we should be able to allow jump-tables for
+RETPOLINE=n && IBT=y builds (provided the compilers behave), but we
+currently don't bother to find out.
+
+Therefore, when either CONFIG option is found, you can assume that any
+indirect jump will be to another function.
+
+> If I understand correctly, all indirect jump will be replaced with JMP_NOSPEC.
+> If you read the insn_jump_into_range, I onlu jecks the jump code, not call.
+> So the functions only have indirect call still allow optprobe.
+
+With the introduction of kCFI JMP_NOSPEC is no longer an equivalent to a
+C indirect jump.
