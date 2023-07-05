@@ -2,42 +2,43 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1AFB9C001B1
-	for <linux-trace-kernel@archiver.kernel.org>; Wed,  5 Jul 2023 08:26:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 301B4EB64DA
+	for <linux-trace-kernel@archiver.kernel.org>; Wed,  5 Jul 2023 08:47:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231822AbjGEI0Q (ORCPT
+        id S231608AbjGEIrL (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Wed, 5 Jul 2023 04:26:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50030 "EHLO
+        Wed, 5 Jul 2023 04:47:11 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33094 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231768AbjGEI0O (ORCPT
+        with ESMTP id S231549AbjGEIrK (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Wed, 5 Jul 2023 04:26:14 -0400
+        Wed, 5 Jul 2023 04:47:10 -0400
 Received: from www62.your-server.de (www62.your-server.de [213.133.104.62])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2F13ACA;
-        Wed,  5 Jul 2023 01:26:13 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9516619B;
+        Wed,  5 Jul 2023 01:47:09 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=iogearbox.net; s=default2302; h=Content-Transfer-Encoding:Content-Type:
         In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
         :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
         Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID;
-        bh=lyqqJEhmF7h4jrFhQaGrt/1HLlCXldqjdpfuMALqFj4=; b=hGMjuGeyCmZ2/8EONhcVtWZIjb
-        I+C14465VimKCFw2KgfH4hzQZOORHZNxhvd0I3vbbx/zCesajDRVxL2RQ4jkz+bS0cCMWob/6Rjaw
-        KJI9s/qLH6X+2J21E9x1wH0e2VmXKfk5Taiaaz1DPsYjs2Yia2XTOgTV9+KeorWCUb//TIPiVRA2o
-        DCz08TztMEifxP+d3sJ330BPy5PsVUU90Gh5MOn574got87Ev0IVt5ztvJycBWdatdOOQExESK3yG
-        NLFoFf5rALvpm2Wee5dIbYcfGAa/61DfGAHYBrlHByEzk+f4hCPhMyzlOf5qmaaGr9JmBou8/i3Zu
-        ohNugPzg==;
-Received: from sslproxy02.your-server.de ([78.47.166.47])
+        bh=P42wwHonOeNmijkop+LjqtHf8Oqrn/eB1I3wK02DieA=; b=ZWvzb7exe2CcHIHzT56b0jcyFz
+        e8wMahmH3SwDVf0HI6+NBL0eqDGJVkvApPWClx6Lmo+KYpMkUZU1toKbjcRPDj5yamPAzt0qQKNCV
+        quRQ6sbQYFzeZoywAixt2QQg2udhjCb59lNxPn/zL44C/BdvpT4wIMxZNxvq5wQfdcWassMTsh3dF
+        hKEf6iOgzqaS4n/8Z5F9iwtVryhsisXdIhUryKMuGH4AxJ9uGOvnTU0e7Ib9n2DZmDD86jdtHGJjG
+        Z5X9ECxjm4GwmPJfbwrpGOEQ+2zEFqbj2/YOsl57UmMMNoe8gYILXjuX2wGAza9Dj6tfSuIE8PPqj
+        AYTAC2UQ==;
+Received: from sslproxy05.your-server.de ([78.46.172.2])
         by www62.your-server.de with esmtpsa  (TLS1.3) tls TLS_AES_256_GCM_SHA384
         (Exim 4.94.2)
         (envelope-from <daniel@iogearbox.net>)
-        id 1qGxpt-000CY7-QK; Wed, 05 Jul 2023 10:26:05 +0200
+        id 1qGyA8-000Oyo-J2; Wed, 05 Jul 2023 10:47:00 +0200
 Received: from [85.1.206.226] (helo=linux.home)
-        by sslproxy02.your-server.de with esmtpsa (TLSv1.3:TLS_AES_256_GCM_SHA384:256)
+        by sslproxy05.your-server.de with esmtpsa (TLSv1.3:TLS_AES_256_GCM_SHA384:256)
         (Exim 4.92)
         (envelope-from <daniel@iogearbox.net>)
-        id 1qGxps-000Wgb-KQ; Wed, 05 Jul 2023 10:26:04 +0200
-Subject: Re: [PATCH v6 bpf-next 06/11] bpf: Expose symbol's respective address
+        id 1qGyA8-00098z-11; Wed, 05 Jul 2023 10:47:00 +0200
+Subject: Re: [PATCH v6 bpf-next 09/11] bpf: Support ->fill_link_info for
+ perf_event
 To:     Yafang Shao <laoar.shao@gmail.com>, ast@kernel.org,
         john.fastabend@gmail.com, andrii@kernel.org, martin.lau@linux.dev,
         song@kernel.org, yhs@fb.com, kpsingh@kernel.org, sdf@google.com,
@@ -45,81 +46,298 @@ To:     Yafang Shao <laoar.shao@gmail.com>, ast@kernel.org,
         rostedt@goodmis.org, mhiramat@kernel.org
 Cc:     bpf@vger.kernel.org, linux-trace-kernel@vger.kernel.org
 References: <20230628115329.248450-1-laoar.shao@gmail.com>
- <20230628115329.248450-7-laoar.shao@gmail.com>
+ <20230628115329.248450-10-laoar.shao@gmail.com>
 From:   Daniel Borkmann <daniel@iogearbox.net>
-Message-ID: <a9170c05-4d32-beda-95a6-b8c4c39438ae@iogearbox.net>
-Date:   Wed, 5 Jul 2023 10:26:03 +0200
+Message-ID: <e06b149e-2bcc-6a83-ef23-6216c7267632@iogearbox.net>
+Date:   Wed, 5 Jul 2023 10:46:59 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.7.2
 MIME-Version: 1.0
-In-Reply-To: <20230628115329.248450-7-laoar.shao@gmail.com>
+In-Reply-To: <20230628115329.248450-10-laoar.shao@gmail.com>
 Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 X-Authenticated-Sender: daniel@iogearbox.net
-X-Virus-Scanned: Clear (ClamAV 0.103.8/26959/Tue Jul  4 09:29:23 2023)
+X-Virus-Scanned: Clear (ClamAV 0.103.8/26960/Wed Jul  5 09:29:05 2023)
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
 On 6/28/23 1:53 PM, Yafang Shao wrote:
-> Since different symbols can share the same name, it is insufficient to only
-> expose the symbol name. It is essential to also expose the symbol address
-> so that users can accurately identify which one is being probed.
+> By introducing support for ->fill_link_info to the perf_event link, users
+> gain the ability to inspect it using `bpftool link show`. While the current
+> approach involves accessing this information via `bpftool perf show`,
+> consolidating link information for all link types in one place offers
+> greater convenience. Additionally, this patch extends support to the
+> generic perf event, which is not currently accommodated by
+> `bpftool perf show`. While only the perf type and config are exposed to
+> userspace, other attributes such as sample_period and sample_freq are
+> ignored. It's important to note that if kptr_restrict is not permitted, the
+> probed address will not be exposed, maintaining security measures.
+> 
+> A new enum bpf_perf_event_type is introduced to help the user understand
+> which struct is relevant.
 > 
 > Signed-off-by: Yafang Shao <laoar.shao@gmail.com>
 > ---
->   kernel/trace/trace_kprobe.c | 10 +++++-----
->   1 file changed, 5 insertions(+), 5 deletions(-)
-> 
-> diff --git a/kernel/trace/trace_kprobe.c b/kernel/trace/trace_kprobe.c
-> index e4554dbfd113..17e17298e894 100644
-> --- a/kernel/trace/trace_kprobe.c
-> +++ b/kernel/trace/trace_kprobe.c
-> @@ -1547,15 +1547,15 @@ int bpf_get_kprobe_info(const struct perf_event *event, u32 *fd_type,
->   	if (tk->symbol) {
->   		*symbol = tk->symbol;
->   		*probe_offset = tk->rp.kp.offset;
-> -		*probe_addr = 0;
->   	} else {
->   		*symbol = NULL;
->   		*probe_offset = 0;
-> -		if (kallsyms_show_value(current_cred()))
-> -			*probe_addr = (unsigned long)tk->rp.kp.addr;
-> -		else
-> -			*probe_addr = 0;
->   	}
+>   include/uapi/linux/bpf.h       |  35 ++++++++++
+>   kernel/bpf/syscall.c           | 117 +++++++++++++++++++++++++++++++++
+>   tools/include/uapi/linux/bpf.h |  35 ++++++++++
+>   3 files changed, 187 insertions(+)
+
+For ease of review this should be squashed with the prior one which adds
+bpf_perf_link_fill_common().
+
+> diff --git a/include/uapi/linux/bpf.h b/include/uapi/linux/bpf.h
+> index 512ba3ba2ed3..7efe51672c15 100644
+> --- a/include/uapi/linux/bpf.h
+> +++ b/include/uapi/linux/bpf.h
+> @@ -1057,6 +1057,16 @@ enum bpf_link_type {
+>   	MAX_BPF_LINK_TYPE,
+>   };
+>   
+> +enum bpf_perf_event_type {
+> +	BPF_PERF_EVENT_UNSPEC = 0,
+> +	BPF_PERF_EVENT_UPROBE = 1,
+> +	BPF_PERF_EVENT_URETPROBE = 2,
+> +	BPF_PERF_EVENT_KPROBE = 3,
+> +	BPF_PERF_EVENT_KRETPROBE = 4,
+> +	BPF_PERF_EVENT_TRACEPOINT = 5,
+> +	BPF_PERF_EVENT_EVENT = 6,
+
+Why explicitly defining the values of the enum?
+
+> +};
 > +
-> +	if (kallsyms_show_value(current_cred()))
-> +		*probe_addr = (unsigned long)tk->rp.kp.addr;
-> +	else
-> +		*probe_addr = 0;
+>   /* cgroup-bpf attach flags used in BPF_PROG_ATTACH command
+>    *
+>    * NONE(default): No further bpf programs allowed in the subtree.
+> @@ -6444,6 +6454,31 @@ struct bpf_link_info {
+>   			__u32 count;
+>   			__u32 flags;
+>   		} kprobe_multi;
+> +		struct {
+> +			__u32 type; /* enum bpf_perf_event_type */
+> +			__u32 :32;
+> +			union {
+> +				struct {
+> +					__aligned_u64 file_name; /* in/out */
+> +					__u32 name_len;
+> +					__u32 offset;/* offset from file_name */
+
+nit: spacing wrt comment, also same further below
+
+> +				} uprobe; /* BPF_PERF_EVENT_UPROBE, BPF_PERF_EVENT_URETPROBE */
+> +				struct {
+> +					__aligned_u64 func_name; /* in/out */
+> +					__u32 name_len;
+> +					__u32 offset;/* offset from func_name */
+> +					__u64 addr;
+> +				} kprobe; /* BPF_PERF_EVENT_KPROBE, BPF_PERF_EVENT_KRETPROBE */
+> +				struct {
+> +					__aligned_u64 tp_name;   /* in/out */
+> +					__u32 name_len;
+> +				} tracepoint; /* BPF_PERF_EVENT_TRACEPOINT */
+> +				struct {
+> +					__u64 config;
+> +					__u32 type;
+> +				} event; /* BPF_PERF_EVENT_EVENT */
+> +			};
+> +		} perf_event;
+>   	};
+>   } __attribute__((aligned(8)));
+>   
+> diff --git a/kernel/bpf/syscall.c b/kernel/bpf/syscall.c
+> index 72de91beabbc..05ff0a560f1a 100644
+> --- a/kernel/bpf/syscall.c
+> +++ b/kernel/bpf/syscall.c
+> @@ -3398,9 +3398,126 @@ static int bpf_perf_link_fill_common(const struct perf_event *event,
 >   	return 0;
+>   }
+>   
+> +#ifdef CONFIG_KPROBE_EVENTS
+> +static int bpf_perf_link_fill_kprobe(const struct perf_event *event,
+> +				     struct bpf_link_info *info)
+> +{
+> +	char __user *uname;
+> +	u64 addr, offset;
+> +	u32 ulen, type;
+> +	int err;
+> +
+> +	uname = u64_to_user_ptr(info->perf_event.kprobe.func_name);
+> +	ulen = info->perf_event.kprobe.name_len;
+> +	err = bpf_perf_link_fill_common(event, uname, ulen, &offset, &addr,
+> +					&type);
+> +	if (err)
+> +		return err;
+> +	if (type == BPF_FD_TYPE_KRETPROBE)
+> +		info->perf_event.type = BPF_PERF_EVENT_KRETPROBE;
+> +	else
+> +		info->perf_event.type = BPF_PERF_EVENT_KPROBE;
+> +
+> +	info->perf_event.kprobe.offset = offset;
+> +	if (!kallsyms_show_value(current_cred()))
+> +		addr = 0;
+> +	info->perf_event.kprobe.addr = addr;
+> +	return 0;
+> +}
+> +#endif
+> +
+> +#ifdef CONFIG_UPROBE_EVENTS
+> +static int bpf_perf_link_fill_uprobe(const struct perf_event *event,
+> +				     struct bpf_link_info *info)
+> +{
+> +	char __user *uname;
+> +	u64 addr, offset;
+> +	u32 ulen, type;
+> +	int err;
+> +
+> +	uname = u64_to_user_ptr(info->perf_event.uprobe.file_name);
+> +	ulen = info->perf_event.uprobe.name_len;
+> +	err = bpf_perf_link_fill_common(event, uname, ulen, &offset, &addr,
+> +					&type);
+> +	if (err)
+> +		return err;
+> +
+> +	if (type == BPF_FD_TYPE_URETPROBE)
+> +		info->perf_event.type = BPF_PERF_EVENT_URETPROBE;
+> +	else
+> +		info->perf_event.type = BPF_PERF_EVENT_UPROBE;
+> +	info->perf_event.uprobe.offset = offset;
+> +	return 0;
+> +}
+> +#endif
+> +
+> +static int bpf_perf_link_fill_probe(const struct perf_event *event,
+> +				    struct bpf_link_info *info)
+> +{
+> +#ifdef CONFIG_KPROBE_EVENTS
+> +	if (event->tp_event->flags & TRACE_EVENT_FL_KPROBE)
+> +		return bpf_perf_link_fill_kprobe(event, info);
+> +#endif
+> +#ifdef CONFIG_UPROBE_EVENTS
+> +	if (event->tp_event->flags & TRACE_EVENT_FL_UPROBE)
+> +		return bpf_perf_link_fill_uprobe(event, info);
+> +#endif
+> +	return -EOPNOTSUPP;
+> +}
+> +
+> +static int bpf_perf_link_fill_tracepoint(const struct perf_event *event,
+> +					 struct bpf_link_info *info)
+> +{
+> +	char __user *uname;
+> +	u64 addr, offset;
+> +	u32 ulen, type;
+> +
+> +	uname = u64_to_user_ptr(info->perf_event.tracepoint.tp_name);
+> +	ulen = info->perf_event.tracepoint.name_len;
+> +	info->perf_event.type = BPF_PERF_EVENT_TRACEPOINT;
+> +	return bpf_perf_link_fill_common(event, uname, ulen, &offset, &addr,
+> +					 &type);
 
-Can't this be simplified further? If tk->symbol is NULL we assign NULL anyway:
+Perhaps for data we don't care about in these cases, passing NULL would be
+more obvious and letting bpf_perf_link_fill_common() handle NULL inputs.
 
-diff --git a/kernel/trace/trace_kprobe.c b/kernel/trace/trace_kprobe.c
-index 1b3fa7b854aa..bf2872ca5aaf 100644
---- a/kernel/trace/trace_kprobe.c
-+++ b/kernel/trace/trace_kprobe.c
-@@ -1544,15 +1544,10 @@ int bpf_get_kprobe_info(const struct perf_event *event, u32 *fd_type,
+> +}
+> +
+> +static int bpf_perf_link_fill_perf_event(const struct perf_event *event,
+> +					 struct bpf_link_info *info)
+> +{
+> +	info->perf_event.event.type = event->attr.type;
+> +	info->perf_event.event.config = event->attr.config;
+> +	info->perf_event.type = BPF_PERF_EVENT_EVENT;
+> +	return 0;
+> +}
+> +
+> +static int bpf_perf_link_fill_link_info(const struct bpf_link *link,
+> +					struct bpf_link_info *info)
+> +{
+> +	struct bpf_perf_link *perf_link;
+> +	const struct perf_event *event;
+> +
+> +	perf_link = container_of(link, struct bpf_perf_link, link);
+> +	event = perf_get_event(perf_link->perf_file);
+> +	if (IS_ERR(event))
+> +		return PTR_ERR(event);
+> +
+> +	if (!event->prog)
+> +		return -EINVAL;
 
-         *fd_type = trace_kprobe_is_return(tk) ? BPF_FD_TYPE_KRETPROBE
-                                               : BPF_FD_TYPE_KPROBE;
--       if (tk->symbol) {
--               *symbol = tk->symbol;
--               *probe_offset = tk->rp.kp.offset;
--               *probe_addr = 0;
--       } else {
--               *symbol = NULL;
--               *probe_offset = 0;
--               *probe_addr = (unsigned long)tk->rp.kp.addr;
--       }
-+       *probe_offset = tk->rp.kp.offset;
-+       *probe_addr = kallsyms_show_value(current_cred()) ?
-+                     (unsigned long)tk->rp.kp.addr : 0;
-+       *symbol = tk->symbol;
-         return 0;
-  }
-  #endif /* CONFIG_PERF_EVENTS */
+nit: In which situations do we run into this, would ENOENT be better error code
+here given it's not an invalid arg that user passed to kernel for filling link
+info.
+
+> +	switch (event->prog->type) {
+> +	case BPF_PROG_TYPE_PERF_EVENT:
+> +		return bpf_perf_link_fill_perf_event(event, info);
+> +	case BPF_PROG_TYPE_TRACEPOINT:
+> +		return bpf_perf_link_fill_tracepoint(event, info);
+> +	case BPF_PROG_TYPE_KPROBE:
+> +		return bpf_perf_link_fill_probe(event, info);
+> +	default:
+> +		return -EOPNOTSUPP;
+> +	}
+> +}
+> +
+>   static const struct bpf_link_ops bpf_perf_link_lops = {
+>   	.release = bpf_perf_link_release,
+>   	.dealloc = bpf_perf_link_dealloc,
+> +	.fill_link_info = bpf_perf_link_fill_link_info,
+>   };
+>   
+>   static int bpf_perf_link_attach(const union bpf_attr *attr, struct bpf_prog *prog)
+> diff --git a/tools/include/uapi/linux/bpf.h b/tools/include/uapi/linux/bpf.h
+> index 512ba3ba2ed3..7efe51672c15 100644
+> --- a/tools/include/uapi/linux/bpf.h
+> +++ b/tools/include/uapi/linux/bpf.h
+> @@ -1057,6 +1057,16 @@ enum bpf_link_type {
+>   	MAX_BPF_LINK_TYPE,
+>   };
+>   
+> +enum bpf_perf_event_type {
+> +	BPF_PERF_EVENT_UNSPEC = 0,
+> +	BPF_PERF_EVENT_UPROBE = 1,
+> +	BPF_PERF_EVENT_URETPROBE = 2,
+> +	BPF_PERF_EVENT_KPROBE = 3,
+> +	BPF_PERF_EVENT_KRETPROBE = 4,
+> +	BPF_PERF_EVENT_TRACEPOINT = 5,
+> +	BPF_PERF_EVENT_EVENT = 6,
+> +};
+> +
+>   /* cgroup-bpf attach flags used in BPF_PROG_ATTACH command
+>    *
+>    * NONE(default): No further bpf programs allowed in the subtree.
+> @@ -6444,6 +6454,31 @@ struct bpf_link_info {
+>   			__u32 count;
+>   			__u32 flags;
+>   		} kprobe_multi;
+> +		struct {
+> +			__u32 type; /* enum bpf_perf_event_type */
+> +			__u32 :32;
+> +			union {
+> +				struct {
+> +					__aligned_u64 file_name; /* in/out */
+> +					__u32 name_len;
+> +					__u32 offset;/* offset from file_name */
+> +				} uprobe; /* BPF_PERF_EVENT_UPROBE, BPF_PERF_EVENT_URETPROBE */
+> +				struct {
+> +					__aligned_u64 func_name; /* in/out */
+> +					__u32 name_len;
+> +					__u32 offset;/* offset from func_name */
+> +					__u64 addr;
+> +				} kprobe; /* BPF_PERF_EVENT_KPROBE, BPF_PERF_EVENT_KRETPROBE */
+> +				struct {
+> +					__aligned_u64 tp_name;   /* in/out */
+> +					__u32 name_len;
+> +				} tracepoint; /* BPF_PERF_EVENT_TRACEPOINT */
+> +				struct {
+> +					__u64 config;
+> +					__u32 type;
+> +				} event; /* BPF_PERF_EVENT_EVENT */
+> +			};
+> +		} perf_event;
+>   	};
+>   } __attribute__((aligned(8)));
+>   
+> 
 
