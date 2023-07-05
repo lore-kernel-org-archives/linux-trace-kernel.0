@@ -2,157 +2,143 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BDBE7C04FE0
-	for <linux-trace-kernel@archiver.kernel.org>; Wed,  5 Jul 2023 23:21:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8AA50EB64DA
+	for <linux-trace-kernel@archiver.kernel.org>; Wed,  5 Jul 2023 23:59:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232446AbjGEXUl (ORCPT
+        id S232164AbjGEX74 (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Wed, 5 Jul 2023 19:20:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39968 "EHLO
+        Wed, 5 Jul 2023 19:59:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52472 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232396AbjGEXUL (ORCPT
+        with ESMTP id S229793AbjGEX74 (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Wed, 5 Jul 2023 19:20:11 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DE0DE1997;
-        Wed,  5 Jul 2023 16:20:10 -0700 (PDT)
+        Wed, 5 Jul 2023 19:59:56 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 46355199F;
+        Wed,  5 Jul 2023 16:59:55 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange X25519 server-signature RSA-PSS (2048 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 72D1A6184D;
-        Wed,  5 Jul 2023 23:20:10 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 26476C433C8;
-        Wed,  5 Jul 2023 23:19:47 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id B293E617A4;
+        Wed,  5 Jul 2023 23:59:54 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E861FC433C7;
+        Wed,  5 Jul 2023 23:59:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1688599209;
-        bh=lKrue1sGsFTYklMQWRMbQ3My1e6nxD2ObDEGwR/VsF0=;
-        h=Date:Subject:To:References:From:In-Reply-To:From;
-        b=HLxmQwiZ1LmjUMMnuuRPPSyg4M265uTgwaRQNcugB9qBZelv5caqUlnlZ5FOkyCBO
-         LA9nfmoC3VcwDcNYXdLwyrAjpQ8qAvbq7SFByp4Q0d8VX6Iv9VyTpE94IU21bzQwq7
-         AXFUzX0mVEu7h6lf94UAW2WWe3aMpfRBaJ0VbFwIq54AZXBu03Eb370uSlX/QYxLnb
-         UXNpYhAvkUoamOq5NO810kR9phlIz2t2HqAG1QMsAKmqwo0IMtrDOTVHIlTnm36wsc
-         mJPYsNRjIZdhZzmDYmS/04VlnpppU6zobkiJuxMYBpvIxpIIrXPcePBFRLkFK603MQ
-         3zkknzFWV7lIQ==
-Message-ID: <a482ca9b-9621-7363-0233-1c0bec15aa6c@kernel.org>
-Date:   Thu, 6 Jul 2023 08:19:46 +0900
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.12.0
-Subject: Re: [PATCH v2 92/92] fs: rename i_ctime field to __i_ctime
-Content-Language: en-US
-To:     Jeff Layton <jlayton@kernel.org>, jk@ozlabs.org, arnd@arndb.de,
-        mpe@ellerman.id.au, npiggin@gmail.com, christophe.leroy@csgroup.eu,
-        hca@linux.ibm.com, gor@linux.ibm.com, agordeev@linux.ibm.com,
-        borntraeger@linux.ibm.com, svens@linux.ibm.com,
-        gregkh@linuxfoundation.org, arve@android.com, tkjos@android.com,
-        maco@android.com, joel@joelfernandes.org, brauner@kernel.org,
-        cmllamas@google.com, surenb@google.com,
-        dennis.dalessandro@cornelisnetworks.com, jgg@ziepe.ca,
-        leon@kernel.org, bwarrum@linux.ibm.com, rituagar@linux.ibm.com,
-        ericvh@kernel.org, lucho@ionkov.net, asmadeus@codewreck.org,
-        linux_oss@crudebyte.com, dsterba@suse.com, dhowells@redhat.com,
-        marc.dionne@auristor.com, viro@zeniv.linux.org.uk,
-        raven@themaw.net, luisbg@kernel.org, salah.triki@gmail.com,
-        aivazian.tigran@gmail.com, ebiederm@xmission.com,
-        keescook@chromium.org, clm@fb.com, josef@toxicpanda.com,
-        xiubli@redhat.com, idryomov@gmail.com, jaharkes@cs.cmu.edu,
-        coda@cs.cmu.edu, jlbec@evilplan.org, hch@lst.de, nico@fluxnic.net,
-        rafael@kernel.org, code@tyhicks.com, ardb@kernel.org,
-        xiang@kernel.org, chao@kernel.org, huyue2@coolpad.com,
-        jefflexu@linux.alibaba.com, linkinjeon@kernel.org,
-        sj1557.seo@samsung.com, jack@suse.com, tytso@mit.edu,
-        adilger.kernel@dilger.ca, jaegeuk@kernel.org,
-        hirofumi@mail.parknet.co.jp, miklos@szeredi.hu,
-        rpeterso@redhat.com, agruenba@redhat.com, richard@nod.at,
-        anton.ivanov@cambridgegreys.com, johannes@sipsolutions.net,
-        mikulas@artax.karlin.mff.cuni.cz, mike.kravetz@oracle.com,
-        muchun.song@linux.dev, dwmw2@infradead.org, shaggy@kernel.org,
-        tj@kernel.org, trond.myklebust@hammerspace.com, anna@kernel.org,
-        chuck.lever@oracle.com, neilb@suse.de, kolga@netapp.com,
-        Dai.Ngo@oracle.com, tom@talpey.com, konishi.ryusuke@gmail.com,
-        anton@tuxera.com, almaz.alexandrovich@paragon-software.com,
-        mark@fasheh.com, joseph.qi@linux.alibaba.com, me@bobcopeland.com,
-        hubcap@omnibond.com, martin@omnibond.com, amir73il@gmail.com,
-        mcgrof@kernel.org, yzaikin@google.com, tony.luck@intel.com,
-        gpiccoli@igalia.com, al@alarsen.net, sfrench@samba.org,
-        pc@manguebit.com, lsahlber@redhat.com, sprasad@microsoft.com,
-        senozhatsky@chromium.org, phillip@squashfs.org.uk,
-        rostedt@goodmis.org, mhiramat@kernel.org, dushistov@mail.ru,
-        hdegoede@redhat.com, djwong@kernel.org, naohiro.aota@wdc.com,
-        jth@kernel.org, ast@kernel.org, daniel@iogearbox.net,
-        andrii@kernel.org, martin.lau@linux.dev, song@kernel.org,
-        yhs@fb.com, john.fastabend@gmail.com, kpsingh@kernel.org,
-        sdf@google.com, haoluo@google.com, jolsa@kernel.org,
-        hughd@google.com, akpm@linux-foundation.org, davem@davemloft.net,
-        edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
-        john.johansen@canonical.com, paul@paul-moore.com,
-        jmorris@namei.org, serge@hallyn.com,
-        stephen.smalley.work@gmail.com, eparis@parisplace.org,
-        jgross@suse.com, stern@rowland.harvard.edu, lrh2000@pku.edu.cn,
-        sebastian.reichel@collabora.com, wsa+renesas@sang-engineering.com,
-        quic_ugoswami@quicinc.com, quic_linyyuan@quicinc.com,
-        john@keeping.me.uk, error27@gmail.com, quic_uaggarwa@quicinc.com,
-        hayama@lineo.co.jp, jomajm@gmail.com, axboe@kernel.dk,
-        dhavale@google.com, dchinner@redhat.com, hannes@cmpxchg.org,
-        zhangpeng362@huawei.com, slava@dubeyko.com, gargaditya08@live.com,
-        penguin-kernel@I-love.SAKURA.ne.jp, yifeliu@cs.stonybrook.edu,
-        madkar@cs.stonybrook.edu, ezk@cs.stonybrook.edu,
-        yuzhe@nfschina.com, willy@infradead.org, okanatov@gmail.com,
-        jeffxu@chromium.org, linux@treblig.org, mirimmad17@gmail.com,
-        yijiangshan@kylinos.cn, yang.yang29@zte.com.cn,
-        xu.xin16@zte.com.cn, chengzhihao1@huawei.com, shr@devkernel.io,
-        Liam.Howlett@Oracle.com, adobriyan@gmail.com,
-        chi.minghao@zte.com.cn, roberto.sassu@huawei.com,
-        linuszeng@tencent.com, bvanassche@acm.org, zohar@linux.ibm.com,
-        yi.zhang@huawei.com, trix@redhat.com, fmdefrancesco@gmail.com,
-        ebiggers@google.com, princekumarmaurya06@gmail.com,
-        chenzhongjin@huawei.com, riel@surriel.com,
-        shaozhengchao@huawei.com, jingyuwang_vip@163.com,
-        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
-        linux-s390@vger.kernel.org, linux-rdma@vger.kernel.org,
-        linux-usb@vger.kernel.org, v9fs@lists.linux.dev,
-        linux-fsdevel@vger.kernel.org, linux-afs@lists.infradead.org,
-        autofs@vger.kernel.org, linux-mm@kvack.org,
-        linux-btrfs@vger.kernel.org, ceph-devel@vger.kernel.org,
-        codalist@coda.cs.cmu.edu, ecryptfs@vger.kernel.org,
-        linux-efi@vger.kernel.org, linux-erofs@lists.ozlabs.org,
-        linux-ext4@vger.kernel.org, linux-f2fs-devel@lists.sourceforge.net,
-        cluster-devel@redhat.com, linux-um@lists.infradead.org,
-        linux-mtd@lists.infradead.org,
-        jfs-discussion@lists.sourceforge.net, linux-nfs@vger.kernel.org,
-        linux-nilfs@vger.kernel.org, linux-ntfs-dev@lists.sourceforge.net,
-        ntfs3@lists.linux.dev, ocfs2-devel@lists.linux.dev,
-        linux-karma-devel@lists.sourceforge.net, devel@lists.orangefs.org,
-        linux-unionfs@vger.kernel.org, linux-hardening@vger.kernel.org,
-        reiserfs-devel@vger.kernel.org, linux-cifs@vger.kernel.org,
-        samba-technical@lists.samba.org,
-        linux-trace-kernel@vger.kernel.org, linux-xfs@vger.kernel.org,
-        bpf@vger.kernel.org, netdev@vger.kernel.org,
-        apparmor@lists.ubuntu.com, linux-security-module@vger.kernel.org,
-        selinux@vger.kernel.org
-References: <20230705185812.579118-1-jlayton@kernel.org>
- <20230705185812.579118-4-jlayton@kernel.org>
-From:   Damien Le Moal <dlemoal@kernel.org>
-Organization: Western Digital Research
-In-Reply-To: <20230705185812.579118-4-jlayton@kernel.org>
-Content-Type: text/plain; charset=UTF-8
+        s=k20201202; t=1688601594;
+        bh=DHIRNBX13iCC8/JjXCLrk7kqMjmnnuGrMvA57hSWqdk=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=S/cz9482QyzQkAuO2a2zJcUHnEQGqRKHU0imYli7KuJk4ryX7yfsr8qiGQatoIrXR
+         jctKlQ9m0v9B2/j2Sv98stJdRAuuIN/lrEDjcF4gzcavRUUEZopfaUOnJl/oIKLGmv
+         aUuZr+R1ZMDFlDbSHAK94v7v1nELQHlJl85Q1cCbFRYRscu0D5JwRUns4beo4FKMl4
+         jsaWDkrZcpdgN4FGTnCsBK0pBmKRyiLXbudflpOy6aAoT+vrr7fprAtaFrJM6XGVLJ
+         zn/L54BYNszBCaI2/7UGF1MC0w3t75cxFFYXehbqi1UwQTDRI4IS/+3U43C+ICUPEC
+         jAwsLYPnFeyYg==
+Date:   Thu, 6 Jul 2023 08:59:49 +0900
+From:   Masami Hiramatsu (Google) <mhiramat@kernel.org>
+To:     "Masami Hiramatsu (Google)" <mhiramat@kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>
+Cc:     Jiri Olsa <jolsa@kernel.org>, Steven Rostedt <rostedt@goodmis.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        lkml <linux-kernel@vger.kernel.org>,
+        linux-trace-kernel@vger.kernel.org, bpf@vger.kernel.org
+Subject: Re: [PATCH] fprobe: Ensure running fprobe_exit_handler() finished
+ before calling rethook_free()
+Message-Id: <20230706085949.846329012c99057ef99ea8ef@kernel.org>
+In-Reply-To: <168796344232.46347.7947681068822514750.stgit@devnote2>
+References: <20230628012305.978e34d44f1a53fe20327fde@kernel.org>
+        <168796344232.46347.7947681068822514750.stgit@devnote2>
+X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On 7/6/23 03:58, Jeff Layton wrote:
-> Now that everything in-tree is converted to use the accessor functions,
-> rename the i_ctime field in the inode to discourage direct access.
+On Wed, 28 Jun 2023 23:44:02 +0900
+"Masami Hiramatsu (Google)" <mhiramat@kernel.org> wrote:
+
+> From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 > 
-> Signed-off-by: Jeff Layton <jlayton@kernel.org>
+> Ensure running fprobe_exit_handler() has finished before
+> calling rethook_free() in the unregister_fprobe() so that caller can free
+> the fprobe right after unregister_fprobe().
+> 
+> unregister_fprobe() ensured that all running fprobe_entry/exit_handler()
+> have finished by calling unregister_ftrace_function() which synchronizes
+> RCU. But commit 5f81018753df ("fprobe: Release rethook after the ftrace_ops
+> is unregistered") changed to call rethook_free() after
+> unregister_ftrace_function(). So call rethook_stop() to make rethook
+> disabled before unregister_ftrace_function() and ensure it again.
+>
 
-Looks OK to me.
+Steve, can you review this? without this fix, Jiri's patch may cause another
+timing issue.
 
-Reviewed-by: Damien Le Moal <dlemoal@kernel.org>
+Thanks, 
+ 
+> Fixes: 5f81018753df ("fprobe: Release rethook after the ftrace_ops is unregistered")
+> Cc: stable@vger.kernel.org
+> Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+> ---
+>  include/linux/rethook.h |    1 +
+>  kernel/trace/fprobe.c   |    3 +++
+>  kernel/trace/rethook.c  |   13 +++++++++++++
+>  3 files changed, 17 insertions(+)
+> 
+> diff --git a/include/linux/rethook.h b/include/linux/rethook.h
+> index c8ac1e5afcd1..bdbe6717f45a 100644
+> --- a/include/linux/rethook.h
+> +++ b/include/linux/rethook.h
+> @@ -59,6 +59,7 @@ struct rethook_node {
+>  };
+>  
+>  struct rethook *rethook_alloc(void *data, rethook_handler_t handler);
+> +void rethook_stop(struct rethook *rh);
+>  void rethook_free(struct rethook *rh);
+>  void rethook_add_node(struct rethook *rh, struct rethook_node *node);
+>  struct rethook_node *rethook_try_get(struct rethook *rh);
+> diff --git a/kernel/trace/fprobe.c b/kernel/trace/fprobe.c
+> index 0121e8c0d54e..75517667b54f 100644
+> --- a/kernel/trace/fprobe.c
+> +++ b/kernel/trace/fprobe.c
+> @@ -364,6 +364,9 @@ int unregister_fprobe(struct fprobe *fp)
+>  		    fp->ops.saved_func != fprobe_kprobe_handler))
+>  		return -EINVAL;
+>  
+> +	if (fp->rethook)
+> +		rethook_stop(fp->rethook);
+> +
+>  	ret = unregister_ftrace_function(&fp->ops);
+>  	if (ret < 0)
+>  		return ret;
+> diff --git a/kernel/trace/rethook.c b/kernel/trace/rethook.c
+> index 60f6cb2b486b..468006cce7ca 100644
+> --- a/kernel/trace/rethook.c
+> +++ b/kernel/trace/rethook.c
+> @@ -53,6 +53,19 @@ static void rethook_free_rcu(struct rcu_head *head)
+>  		kfree(rh);
+>  }
+>  
+> +/**
+> + * rethook_stop() - Stop using a rethook.
+> + * @rh: the struct rethook to stop.
+> + *
+> + * Stop using a rethook to prepare for freeing it. If you want to wait for
+> + * all running rethook handler before calling rethook_free(), you need to
+> + * call this first and wait RCU, and call rethook_free().
+> + */
+> +void rethook_stop(struct rethook *rh)
+> +{
+> +	WRITE_ONCE(rh->handler, NULL);
+> +}
+> +
+>  /**
+>   * rethook_free() - Free struct rethook.
+>   * @rh: the struct rethook to be freed.
+> 
+
 
 -- 
-Damien Le Moal
-Western Digital Research
-
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
