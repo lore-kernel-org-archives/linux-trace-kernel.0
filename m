@@ -2,43 +2,43 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B12ECC001DF
-	for <linux-trace-kernel@archiver.kernel.org>; Wed,  5 Jul 2023 18:18:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 927AAEB64DD
+	for <linux-trace-kernel@archiver.kernel.org>; Wed,  5 Jul 2023 18:18:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233416AbjGESSB (ORCPT
+        id S233451AbjGESSP (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Wed, 5 Jul 2023 14:18:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44198 "EHLO
+        Wed, 5 Jul 2023 14:18:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43452 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233444AbjGESRv (ORCPT
+        with ESMTP id S233456AbjGESSG (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Wed, 5 Jul 2023 14:17:51 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 86CEB19BD
-        for <linux-trace-kernel@vger.kernel.org>; Wed,  5 Jul 2023 11:16:52 -0700 (PDT)
+        Wed, 5 Jul 2023 14:18:06 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6FC611BF9
+        for <linux-trace-kernel@vger.kernel.org>; Wed,  5 Jul 2023 11:16:59 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1688581011;
+        s=mimecast20190719; t=1688581018;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=Rmsxmag8ZkUExVz48NdRE4bjGysGk4VVErYcJqwPIM4=;
-        b=AWK8d7z6mFMHw6US9ILqBYMeW/P9cE/bg421dFsnNLLYfHpPyR41npMqIZdhrx/oK8NH3j
-        ZDJ8n3scitJulg2jApL5wOF9zJBcOuUWVNoKdfRH76gxW1DEUyYvCX4RpjWP/hFwFQRcxG
-        tycUwOyjZC0gu+d/R57CvGtX6ZuqPvE=
+        bh=izi9UHkrSeZ4AHa49u6aA8W9HneeYs8L2V/Y70LmMpM=;
+        b=aK8mmgOZbP2nnH9iHE0N2/mOuS2xZWRC8g4jlmqb4m4D+Jm60Or+2a2FTt5HTB+imuEQvh
+        zAso7CV3piJEPUqBnZVjP1Yzuxw2y6tAp0TUv0xyB3Q4IKzPOXvzb74tPX2kCeEcZ4H4pQ
+        0vHl5ZNTdoTSW0/xVjV8I2J44mYVuoU=
 Received: from mimecast-mx02.redhat.com (mx3-rdu2.redhat.com
  [66.187.233.73]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-534-K-_lME6ZNbOFxO4KCoVoVw-1; Wed, 05 Jul 2023 14:16:49 -0400
-X-MC-Unique: K-_lME6ZNbOFxO4KCoVoVw-1
+ us-mta-197-m-BHSRQXMT2rSYl1-eA5hQ-1; Wed, 05 Jul 2023 14:16:54 -0400
+X-MC-Unique: m-BHSRQXMT2rSYl1-eA5hQ-1
 Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.rdu2.redhat.com [10.11.54.5])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 980F53815EF4;
-        Wed,  5 Jul 2023 18:16:46 +0000 (UTC)
+        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id B7B9F3815EF2;
+        Wed,  5 Jul 2023 18:16:52 +0000 (UTC)
 Received: from vschneid.remote.csb (unknown [10.42.28.164])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id D5B65F5CFA;
-        Wed,  5 Jul 2023 18:16:41 +0000 (UTC)
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id D1D60F5CFA;
+        Wed,  5 Jul 2023 18:16:46 +0000 (UTC)
 From:   Valentin Schneider <vschneid@redhat.com>
 To:     linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
         linux-doc@vger.kernel.org, kvm@vger.kernel.org, linux-mm@kvack.org,
@@ -83,9 +83,9 @@ Cc:     Steven Rostedt <rostedt@goodmis.org>,
         Daniel Bristot de Oliveira <bristot@redhat.com>,
         Marcelo Tosatti <mtosatti@redhat.com>,
         Yair Podemsky <ypodemsk@redhat.com>
-Subject: [RFC PATCH 08/14] BROKEN: context_tracking: Make context_tracking_key __ro_after_init
-Date:   Wed,  5 Jul 2023 19:12:50 +0100
-Message-Id: <20230705181256.3539027-9-vschneid@redhat.com>
+Subject: [RFC PATCH 09/14] x86/kvm: Make kvm_async_pf_enabled __ro_after_init
+Date:   Wed,  5 Jul 2023 19:12:51 +0100
+Message-Id: <20230705181256.3539027-10-vschneid@redhat.com>
 In-Reply-To: <20230705181256.3539027-1-vschneid@redhat.com>
 References: <20230705181256.3539027-1-vschneid@redhat.com>
 MIME-Version: 1.0
@@ -97,43 +97,29 @@ X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
 objtool now warns about it:
 
-  vmlinux.o: warning: objtool: enter_from_user_mode+0x4e: Non __ro_after_init static key "context_tracking_key" in .noinstr section
-  vmlinux.o: warning: objtool: enter_from_user_mode+0x50: Non __ro_after_init static key "context_tracking_key" in .noinstr section
-  vmlinux.o: warning: objtool: syscall_enter_from_user_mode+0x60: Non __ro_after_init static key "context_tracking_key" in .noinstr section
-  vmlinux.o: warning: objtool: syscall_enter_from_user_mode+0x62: Non __ro_after_init static key "context_tracking_key" in .noinstr section
-  [...]
+  vmlinux.o: warning: objtool: exc_page_fault+0x2a: Non __ro_after_init static key "kvm_async_pf_enabled" in .noinstr section
 
 The key can only be enabled (and not disabled) in the __init function
-ct_cpu_tracker_user(), so mark it as __ro_after_init.
-
-BROKEN: the struct static_key lives in a read-only mapping after
-mark_rodata_ro(), which falls apart when the KVM module is loaded after
-init and a write to the struct happens due to e.g. guest_state_exit_irqoff()
-relying on the static key:
-
-  jump_label_add_module()
-  `\
-    static_key_set_mod()
-    static_key_set_linked()
+kvm_guest_init(), so mark it as __ro_after_init.
 
 Signed-off-by: Valentin Schneider <vschneid@redhat.com>
 ---
- kernel/context_tracking.c | 2 +-
+ arch/x86/kernel/kvm.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/kernel/context_tracking.c b/kernel/context_tracking.c
-index a09f1c19336ae..4e6cb14272fcb 100644
---- a/kernel/context_tracking.c
-+++ b/kernel/context_tracking.c
-@@ -432,7 +432,7 @@ static __always_inline void ct_kernel_enter(bool user, int offset) { }
- #define CREATE_TRACE_POINTS
- #include <trace/events/context_tracking.h>
+diff --git a/arch/x86/kernel/kvm.c b/arch/x86/kernel/kvm.c
+index 1cceac5984daa..319460090a836 100644
+--- a/arch/x86/kernel/kvm.c
++++ b/arch/x86/kernel/kvm.c
+@@ -44,7 +44,7 @@
+ #include <asm/svm.h>
+ #include <asm/e820/api.h>
  
--DEFINE_STATIC_KEY_FALSE(context_tracking_key);
-+DEFINE_STATIC_KEY_FALSE_RO(context_tracking_key);
- EXPORT_SYMBOL_GPL(context_tracking_key);
+-DEFINE_STATIC_KEY_FALSE(kvm_async_pf_enabled);
++DEFINE_STATIC_KEY_FALSE_RO(kvm_async_pf_enabled);
  
- static noinstr bool context_tracking_recursion_enter(void)
+ static int kvmapf = 1;
+ 
 -- 
 2.31.1
 
