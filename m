@@ -2,87 +2,142 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 46BB3EB64DA
-	for <linux-trace-kernel@archiver.kernel.org>; Wed,  5 Jul 2023 09:04:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FC38C0015E
+	for <linux-trace-kernel@archiver.kernel.org>; Wed,  5 Jul 2023 10:00:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231650AbjGEJE4 (ORCPT
+        id S232069AbjGEKAf (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Wed, 5 Jul 2023 05:04:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41044 "EHLO
+        Wed, 5 Jul 2023 06:00:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36508 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231574AbjGEJE4 (ORCPT
+        with ESMTP id S232112AbjGEKAb (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Wed, 5 Jul 2023 05:04:56 -0400
-Received: from desiato.infradead.org (desiato.infradead.org [IPv6:2001:8b0:10b:1:d65d:64ff:fe57:4e05])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2F1B210E3;
-        Wed,  5 Jul 2023 02:04:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=po3pt2+JvDM3t8kMU662g0QnICdzZ8LSuXyQfthUCe0=; b=H+ZXcDGwt5XwMmRuvecxP2j2ms
-        r3QLBeF/6vnftXdiHdyNJfXxCJvWwioWrbdQr/2fdAvY7fpBYwwf+rj7iatUZTvyNVpbn2VbzvYE3
-        MsJataDuoheidY1wnWipmIqn0fI1+v+dRiXr7xhhKSS1d9VLMSRfGKvoqxJrYMBxenlGYFKY2TTli
-        SMAglfTs9oY/sP3GniecfCkvwQayD9L5Wx1KKoUSuzUEgQu2W312PMZ4adW30V4XXrWqAcvJ9WulP
-        Fg1IZJEmEG33taIjxTK3pqZt1aI951NKN9+QR2tYTJxbVe9YIGhXfIfxNGfAeitd9mOYNJZgqCV5f
-        fZaJydNg==;
-Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
-        by desiato.infradead.org with esmtpsa (Exim 4.96 #2 (Red Hat Linux))
-        id 1qGyPN-00C3EX-0v;
-        Wed, 05 Jul 2023 09:04:46 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (4096 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id C895C30036B;
-        Wed,  5 Jul 2023 11:02:44 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id B05452028F056; Wed,  5 Jul 2023 11:02:44 +0200 (CEST)
-Date:   Wed, 5 Jul 2023 11:02:44 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Petr Pavlu <petr.pavlu@suse.com>
-Cc:     tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
-        dave.hansen@linux.intel.com, hpa@zytor.com, mhiramat@kernel.org,
-        samitolvanen@google.com, x86@kernel.org,
-        linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/2] x86/retpoline,kprobes: Avoid treating rethunk as an
- indirect jump
-Message-ID: <20230705090244.GH462772@hirez.programming.kicks-ass.net>
-References: <20230705081547.25130-1-petr.pavlu@suse.com>
- <20230705081547.25130-3-petr.pavlu@suse.com>
+        Wed, 5 Jul 2023 06:00:31 -0400
+Received: from mail-qv1-xf2f.google.com (mail-qv1-xf2f.google.com [IPv6:2607:f8b0:4864:20::f2f])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5B8C01721;
+        Wed,  5 Jul 2023 03:00:28 -0700 (PDT)
+Received: by mail-qv1-xf2f.google.com with SMTP id 6a1803df08f44-635ee3baa14so35961766d6.3;
+        Wed, 05 Jul 2023 03:00:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1688551227; x=1691143227;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=58WibkHCpM1g4Xv7IPG2CbSP0uwlzOiSxeXSrtGZ2QI=;
+        b=jLmS3By4Uk8wvVrVR0iMC4JBN83wyfdOOZCirCNW452Ksx9aoieyV6Ow+TL9/IBv57
+         BThHpnwKgjKFNE+jevcHresT9SyCIIi98/hFffoyrxwNmnlelCWzIooVQBrKzKIuudUB
+         M/tUh/cO2mlDlSbmDM9Yu1EW9e7cffDaRk6h/rNPb7nUlaa98D5BG/E7XWV96xjpDutn
+         kcMjPoa3F2Qqg3uOUryu8wntP0+62vzjvBUH6uUa1Rga92XTm6gIvqIuPpsOrkJpmy51
+         GI46TLj25Mrb5O4O8J1oJidTHJuj8LvE0KAqIUyw2qNHH62adRWHeK5ZktWzQ6aaAQt4
+         +dOQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1688551227; x=1691143227;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=58WibkHCpM1g4Xv7IPG2CbSP0uwlzOiSxeXSrtGZ2QI=;
+        b=BD/aAvedXLmYvE/jFykNYxAeYQezqaThM5V4hZ46U/XJwNRnKYZ8rEvwZPNMUZUEjH
+         lrDX3I0WOWlEnqp+KwKR5W/CaF9wCI4ZKyR8x6fvV9IrxvqzdvxBcmzsz1zfGe5Pxv1+
+         /HtrrS8kotivX9UpKk7A0Dqp2EATQe9SrSrtf3wTJR5EfB+4dA9lNRbskpvoK1su3E3G
+         PQ2owbZx2dkl99kWGJJTaqKBrUa6C8juDyX88LshIfnwharoix4LMp9vwfKPD7ma6CA7
+         s56HoSkNgWPAipvHbh3cQCSd4teft3f5DWFeyt+P92t8ha5ie0W6YwPSU8oHS8Hym4u3
+         yEag==
+X-Gm-Message-State: ABy/qLbYDbom+QxINTPvASZaIJjZHOZF6rj+lI9Bmn6g1aFScB+GtsaH
+        F1olvsCOGA7G1DFjuOnFOu2iwrEg9UFRZV804JM=
+X-Google-Smtp-Source: APBJJlHbjJ0KtQnrRqix7O9o3Obrijhc4aClnXpFV3U73jGJ3dViep2SN2wyQ9+Islw9E6+1boQrYz1eNjxXwC3Ba8s=
+X-Received: by 2002:a0c:efc6:0:b0:635:e696:b322 with SMTP id
+ a6-20020a0cefc6000000b00635e696b322mr13179846qvt.35.1688551227338; Wed, 05
+ Jul 2023 03:00:27 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230705081547.25130-3-petr.pavlu@suse.com>
+References: <20230628115329.248450-1-laoar.shao@gmail.com> <20230628115329.248450-4-laoar.shao@gmail.com>
+ <0097aac1-c15c-8752-b087-32b2144e9d79@iogearbox.net>
+In-Reply-To: <0097aac1-c15c-8752-b087-32b2144e9d79@iogearbox.net>
+From:   Yafang Shao <laoar.shao@gmail.com>
+Date:   Wed, 5 Jul 2023 17:59:50 +0800
+Message-ID: <CALOAHbA12SX1j4H3BSObWtPtyLn5axuWiuO8Vp8ePuDpnmZ=9Q@mail.gmail.com>
+Subject: Re: [PATCH v6 bpf-next 03/11] bpftool: Show kprobe_multi link info
+To:     Daniel Borkmann <daniel@iogearbox.net>
+Cc:     ast@kernel.org, john.fastabend@gmail.com, andrii@kernel.org,
+        martin.lau@linux.dev, song@kernel.org, yhs@fb.com,
+        kpsingh@kernel.org, sdf@google.com, haoluo@google.com,
+        jolsa@kernel.org, quentin@isovalent.com, rostedt@goodmis.org,
+        mhiramat@kernel.org, bpf@vger.kernel.org,
+        linux-trace-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On Wed, Jul 05, 2023 at 10:15:47AM +0200, Petr Pavlu wrote:
+On Wed, Jul 5, 2023 at 4:09=E2=80=AFPM Daniel Borkmann <daniel@iogearbox.ne=
+t> wrote:
+>
+> On 6/28/23 1:53 PM, Yafang Shao wrote:
+> > Show the already expose kprobe_multi link info in bpftool. The result a=
+s
+> > follows,
+> >
+> > $ tools/bpf/bpftool/bpftool link show
+> > 91: kprobe_multi  prog 244
+> >          kprobe.multi  func_cnt 7
+> >          addr             func [module]
+> >          ffffffff98c44f20 schedule_timeout_interruptible
+> >          ffffffff98c44f60 schedule_timeout_killable
+> >          ffffffff98c44fa0 schedule_timeout_uninterruptible
+> >          ffffffff98c44fe0 schedule_timeout_idle
+> >          ffffffffc075b8d0 xfs_trans_get_efd [xfs]
+> >          ffffffffc0768a10 xfs_trans_get_buf_map [xfs]
+> >          ffffffffc076c320 xfs_trans_get_dqtrx [xfs]
+> >          pids kprobe_multi(188367)
+> > 92: kprobe_multi  prog 244
+> >          kretprobe.multi  func_cnt 7
+> >          addr             func [module]
+> >          ffffffff98c44f20 schedule_timeout_interruptible
+> >          ffffffff98c44f60 schedule_timeout_killable
+> >          ffffffff98c44fa0 schedule_timeout_uninterruptible
+> >          ffffffff98c44fe0 schedule_timeout_idle
+> >          ffffffffc075b8d0 xfs_trans_get_efd [xfs]
+> >          ffffffffc0768a10 xfs_trans_get_buf_map [xfs]
+> >          ffffffffc076c320 xfs_trans_get_dqtrx [xfs]
+> >          pids kprobe_multi(188367)
+> >
+> > $ tools/bpf/bpftool/bpftool link show -j
+> > [{"id":91,"type":"kprobe_multi","prog_id":244,"retprobe":false,"func_cn=
+t":7,"funcs":[{"addr":18446744071977586464,"func":"schedule_timeout_interru=
+ptible","module":null},{"addr":18446744071977586528,"func":"schedule_timeou=
+t_killable","module":null},{"addr":18446744071977586592,"func":"schedule_ti=
+meout_uninterruptible","module":null},{"addr":18446744071977586656,"func":"=
+schedule_timeout_idle","module":null},{"addr":18446744072643524816,"func":"=
+xfs_trans_get_efd","module":"xfs"},{"addr":18446744072643578384,"func":"xfs=
+_trans_get_buf_map","module":"xfs"},{"addr":18446744072643592992,"func":"xf=
+s_trans_get_dqtrx","module":"xfs"}],"pids":[{"pid":188367,"comm":"kprobe_mu=
+lti"}]},{"id":92,"type":"kprobe_multi","prog_id":244,"retprobe":true,"func_=
+cnt":7,"funcs":[{"addr":18446744071977586464,"func":"schedule_timeout_inter=
+ruptible","module":null},{"addr":18446744071977586528,"func":"schedule_time=
+out_killable","module":null},{"addr":18446744071977586592,"func":"schedule_=
+timeout_uninterruptible","module":null},{"addr":18446744071977586656,"func"=
+:"schedule_timeout_idle","module":null},{"addr":18446744072643524816,"func"=
+:"xfs_trans_get_efd","module":"xfs"},{"addr":18446744072643578384,"func":"x=
+fs_trans_get_buf_map","module":"xfs"},{"addr":18446744072643592992,"func":"=
+xfs_trans_get_dqtrx","module":"xfs"}],"pids":[{"pid":188367,"comm":"kprobe_=
+multi"}]}]
+> >
+> > When kptr_restrict is 2, the result is,
+> >
+> > $ tools/bpf/bpftool/bpftool link show
+> > 91: kprobe_multi  prog 244
+> >          kprobe.multi  func_cnt 7
+> > 92: kprobe_multi  prog 244
+> >          kretprobe.multi  func_cnt 7
+> >
+> > Signed-off-by: Yafang Shao <laoar.shao@gmail.com>
+> > Reviewed-by: Quentin Monnet <quentin@isovalent.com>
+>
+> Mainly small nits, but otherwise series lgtm, thanks for improving the vi=
+sibility!
 
-> ---
->  arch/x86/kernel/vmlinux.lds.S | 2 --
->  arch/x86/lib/retpoline.S      | 4 ++++
->  2 files changed, 4 insertions(+), 2 deletions(-)
-> 
-> diff --git a/arch/x86/kernel/vmlinux.lds.S b/arch/x86/kernel/vmlinux.lds.S
-> index a4cd04c458df..dd5b0a68cf84 100644
-> --- a/arch/x86/kernel/vmlinux.lds.S
-> +++ b/arch/x86/kernel/vmlinux.lds.S
-> @@ -133,9 +133,7 @@ SECTIONS
->  		KPROBES_TEXT
->  		SOFTIRQENTRY_TEXT
->  #ifdef CONFIG_RETPOLINE
-> -		__indirect_thunk_start = .;
->  		*(.text..__x86.*)
-> -		__indirect_thunk_end = .;
->  #endif
+Will change them in the next version. Thanks for your review.
 
-Arguably you could do:
-
-		__indirect_thunk_start = .;
-		*(.text..__x86.indirect_thunk)
-		__indirect_thunk_end = .;
-		*(.text..__x86.return_think)
-
-Or somesuch, seems simpler to me.
+--=20
+Regards
+Yafang
