@@ -2,126 +2,116 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BE050EB64DA
-	for <linux-trace-kernel@archiver.kernel.org>; Wed,  5 Jul 2023 08:16:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 97FD6C0015E
+	for <linux-trace-kernel@archiver.kernel.org>; Wed,  5 Jul 2023 08:20:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232468AbjGEIQW (ORCPT
+        id S232348AbjGEIUr (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Wed, 5 Jul 2023 04:16:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42420 "EHLO
+        Wed, 5 Jul 2023 04:20:47 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44684 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232462AbjGEIQV (ORCPT
+        with ESMTP id S231958AbjGEIUY (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Wed, 5 Jul 2023 04:16:21 -0400
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [IPv6:2001:67c:2178:6::1d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8ABD71713;
-        Wed,  5 Jul 2023 01:16:20 -0700 (PDT)
-Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
-        (No client certificate requested)
-        by smtp-out2.suse.de (Postfix) with ESMTPS id E347A1F889;
-        Wed,  5 Jul 2023 08:16:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
-        t=1688544978; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=0hOZkiaa9JnI0suGAuM3VsHzueMi03hVGM0FgOVv79Y=;
-        b=nM+FWWBATWfL2hWk4s7nl9bgt0kePDEsoiGbUXhKk9CFM/eYKnBdKBrs8aSKPQ9Xyo5pG5
-        YZ/zhzhVo7AHSK8+LgsO1KivA2aD2aoGDx1nExx8RhdsqnXNmiX0qmEfXxLCqUywVQrQYc
-        9/mzjKLIWsGmO6ITFENaPw/5Kou4Pbo=
-Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
-        (No client certificate requested)
-        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id AF7BC13460;
-        Wed,  5 Jul 2023 08:16:18 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([192.168.254.65])
-        by imap2.suse-dmz.suse.de with ESMTPSA
-        id 2CIcKtImpWRkRwAAMHmgww
-        (envelope-from <petr.pavlu@suse.com>); Wed, 05 Jul 2023 08:16:18 +0000
-From:   Petr Pavlu <petr.pavlu@suse.com>
-To:     tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
-        dave.hansen@linux.intel.com, hpa@zytor.com, mhiramat@kernel.org
-Cc:     peterz@infradead.org, samitolvanen@google.com, x86@kernel.org,
-        linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Petr Pavlu <petr.pavlu@suse.com>
-Subject: [PATCH 2/2] x86/retpoline,kprobes: Avoid treating rethunk as an indirect jump
-Date:   Wed,  5 Jul 2023 10:15:47 +0200
-Message-Id: <20230705081547.25130-3-petr.pavlu@suse.com>
-X-Mailer: git-send-email 2.35.3
-In-Reply-To: <20230705081547.25130-1-petr.pavlu@suse.com>
-References: <20230705081547.25130-1-petr.pavlu@suse.com>
+        Wed, 5 Jul 2023 04:20:24 -0400
+Received: from www62.your-server.de (www62.your-server.de [213.133.104.62])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AC0BC1FD0;
+        Wed,  5 Jul 2023 01:19:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=iogearbox.net; s=default2302; h=Content-Transfer-Encoding:Content-Type:
+        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
+        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID;
+        bh=6ZsMSb8LwF0LXoceKsU9Xs/64Pe4Vz3mMpchj4lt+Nk=; b=BYoKJFpTvonJPVz5i79XoW2b3g
+        63iV0yMLfGOUtdDr0UfM3sR7PAWxplsTfa0TMhct+mPs1j3HodHgayZ0I9C9O3mbv3CvHmGeRf0Ay
+        8ouLqSlDJWUCm9DOGZUNYf3hQ+VOYUojntyLf5qxfDAW2GC87RDHgp5TaG+adsXJPd/wuTZE8svQm
+        EEYPVoF9G9h9TQQQd4JE9nWZgTi78mwQkJLmoODIe9rohTF7xmNMNNdgPjJaHYJeP57OamjTNpAm4
+        9V1vizoZuybw5qP7KvJCiLewZRJQa4C+IsmPfRdWyGIZh2W3LrzbeOFfR9p88iTj3G3vzHLhdqBtn
+        2uxmwqUg==;
+Received: from sslproxy01.your-server.de ([78.46.139.224])
+        by www62.your-server.de with esmtpsa  (TLS1.3) tls TLS_AES_256_GCM_SHA384
+        (Exim 4.94.2)
+        (envelope-from <daniel@iogearbox.net>)
+        id 1qGxjD-0008g5-5Y; Wed, 05 Jul 2023 10:19:11 +0200
+Received: from [85.1.206.226] (helo=linux.home)
+        by sslproxy01.your-server.de with esmtpsa (TLSv1.3:TLS_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <daniel@iogearbox.net>)
+        id 1qGxjC-0005ac-Ji; Wed, 05 Jul 2023 10:19:10 +0200
+Subject: Re: [PATCH v6 bpf-next 05/11] bpf: Clear the probe_addr for uprobe
+To:     Yafang Shao <laoar.shao@gmail.com>, ast@kernel.org,
+        john.fastabend@gmail.com, andrii@kernel.org, martin.lau@linux.dev,
+        song@kernel.org, yhs@fb.com, kpsingh@kernel.org, sdf@google.com,
+        haoluo@google.com, jolsa@kernel.org, quentin@isovalent.com,
+        rostedt@goodmis.org, mhiramat@kernel.org
+Cc:     bpf@vger.kernel.org, linux-trace-kernel@vger.kernel.org
+References: <20230628115329.248450-1-laoar.shao@gmail.com>
+ <20230628115329.248450-6-laoar.shao@gmail.com>
+From:   Daniel Borkmann <daniel@iogearbox.net>
+Message-ID: <5ed6bc64-ab80-486b-fb13-207174d9ff2d@iogearbox.net>
+Date:   Wed, 5 Jul 2023 10:19:09 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20230628115329.248450-6-laoar.shao@gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Authenticated-Sender: daniel@iogearbox.net
+X-Virus-Scanned: Clear (ClamAV 0.103.8/26959/Tue Jul  4 09:29:23 2023)
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-Functions can_optimize() and insn_is_indirect_jump() consider jumps to
-the range [__indirect_thunk_start, __indirect_thunk_end] as indirect
-jumps and prevent use of optprobes in functions containing them.
+On 6/28/23 1:53 PM, Yafang Shao wrote:
+> To avoid returning uninitialized or random values when querying the file
+> descriptor (fd) and accessing probe_addr, it is necessary to clear the
+> variable prior to its use.
+> 
+> Fixes: 41bdc4b40ed6 ("bpf: introduce bpf subcommand BPF_TASK_FD_QUERY")
+> Signed-off-by: Yafang Shao <laoar.shao@gmail.com>
+> Acked-by: Yonghong Song <yhs@fb.com>
+> ---
+>   kernel/trace/bpf_trace.c | 4 +++-
+>   1 file changed, 3 insertions(+), 1 deletion(-)
+> 
+> diff --git a/kernel/trace/bpf_trace.c b/kernel/trace/bpf_trace.c
+> index 1f9f78e1992f..ac9958907a7c 100644
+> --- a/kernel/trace/bpf_trace.c
+> +++ b/kernel/trace/bpf_trace.c
+> @@ -2382,10 +2382,12 @@ int bpf_get_perf_event_info(const struct perf_event *event, u32 *prog_id,
+>   						  event->attr.type == PERF_TYPE_TRACEPOINT);
+>   #endif
+>   #ifdef CONFIG_UPROBE_EVENTS
+> -		if (flags & TRACE_EVENT_FL_UPROBE)
+> +		if (flags & TRACE_EVENT_FL_UPROBE) {
+>   			err = bpf_get_uprobe_info(event, fd_type, buf,
+>   						  probe_offset,
+>   						  event->attr.type == PERF_TYPE_TRACEPOINT);
+> +			*probe_addr = 0x0;
+> +		}
 
-Linker script arch/x86/kernel/vmlinux.lds.S places into this range also
-the special section .text.__x86.return_thunk which contains the return
-thunk. It causes that machines which use the return thunk as
-a mitigation and don't have it patched by any alternative then end up
-not being able to use optprobes in any regular function.
+Could we make this a bit more robust by just moving the zero'ing into the common path?
 
-The return thunk doesn't need to be treated as an indirect jump from the
-perspective of insn_is_indirect_jump(). It returns to a caller and
-cannot land into an optprobe jump operand which is the purpose of the
-insn_is_indirect_jump() check.
+diff --git a/kernel/trace/bpf_trace.c b/kernel/trace/bpf_trace.c
+index 03b7f6b8e4f0..795e16d5d2f7 100644
+--- a/kernel/trace/bpf_trace.c
++++ b/kernel/trace/bpf_trace.c
+@@ -2362,6 +2362,9 @@ int bpf_get_perf_event_info(const struct perf_event *event, u32 *prog_id,
+                 return -EOPNOTSUPP;
 
-Fix the problem by defining the symbols __indirect_thunk_start and
-__indirect_thunk_end directly in arch/x86/lib/retpoline.S. This is
-possible because commit 9bc0bb50727c ("objtool/x86: Rewrite retpoline
-thunk calls") made all indirect thunks present in a single section.
-
-Fixes: 0b53c374b9ef ("x86/retpoline: Use -mfunction-return")
-Signed-off-by: Petr Pavlu <petr.pavlu@suse.com>
----
- arch/x86/kernel/vmlinux.lds.S | 2 --
- arch/x86/lib/retpoline.S      | 4 ++++
- 2 files changed, 4 insertions(+), 2 deletions(-)
-
-diff --git a/arch/x86/kernel/vmlinux.lds.S b/arch/x86/kernel/vmlinux.lds.S
-index a4cd04c458df..dd5b0a68cf84 100644
---- a/arch/x86/kernel/vmlinux.lds.S
-+++ b/arch/x86/kernel/vmlinux.lds.S
-@@ -133,9 +133,7 @@ SECTIONS
- 		KPROBES_TEXT
- 		SOFTIRQENTRY_TEXT
- #ifdef CONFIG_RETPOLINE
--		__indirect_thunk_start = .;
- 		*(.text..__x86.*)
--		__indirect_thunk_end = .;
- #endif
- 		STATIC_CALL_TEXT
- 
-diff --git a/arch/x86/lib/retpoline.S b/arch/x86/lib/retpoline.S
-index 3bea96341d00..f45a3e7f776f 100644
---- a/arch/x86/lib/retpoline.S
-+++ b/arch/x86/lib/retpoline.S
-@@ -14,6 +14,7 @@
- 
- 	.section .text..__x86.indirect_thunk
- 
-+SYM_ENTRY(__indirect_thunk_start, SYM_L_GLOBAL, SYM_A_NONE)
- 
- .macro POLINE reg
- 	ANNOTATE_INTRA_FUNCTION_CALL
-@@ -125,6 +126,9 @@ SYM_CODE_END(__x86_indirect_jump_thunk_array)
- #include <asm/GEN-for-each-reg.h>
- #undef GEN
- #endif
+         *prog_id = prog->aux->id;
++       *probe_offset = 0x0;
++       *probe_addr = 0x0;
 +
-+SYM_ENTRY(__indirect_thunk_end, SYM_L_GLOBAL, SYM_A_NONE)
-+
- /*
-  * This function name is magical and is used by -mfunction-return=thunk-extern
-  * for the compiler to generate JMPs to it.
--- 
-2.35.3
-
+         flags = event->tp_event->flags;
+         is_tracepoint = flags & TRACE_EVENT_FL_TRACEPOINT;
+         is_syscall_tp = is_syscall_trace_event(event->tp_event);
+@@ -2370,8 +2373,6 @@ int bpf_get_perf_event_info(const struct perf_event *event, u32 *prog_id,
+                 *buf = is_tracepoint ? event->tp_event->tp->name
+                                      : event->tp_event->name;
+                 *fd_type = BPF_FD_TYPE_TRACEPOINT;
+-               *probe_offset = 0x0;
+-               *probe_addr = 0x0;
+         } else {
+                 /* kprobe/uprobe */
+                 err = -EOPNOTSUPP;
