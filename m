@@ -2,53 +2,52 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4855EEB64DA
-	for <linux-trace-kernel@archiver.kernel.org>; Wed,  5 Jul 2023 14:20:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 764E9EB64DA
+	for <linux-trace-kernel@archiver.kernel.org>; Wed,  5 Jul 2023 14:28:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232097AbjGEOU4 (ORCPT
+        id S230268AbjGEO2l (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Wed, 5 Jul 2023 10:20:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36590 "EHLO
+        Wed, 5 Jul 2023 10:28:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42544 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231147AbjGEOUq (ORCPT
+        with ESMTP id S229645AbjGEO2k (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Wed, 5 Jul 2023 10:20:46 -0400
+        Wed, 5 Jul 2023 10:28:40 -0400
 Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 05881CF;
-        Wed,  5 Jul 2023 07:20:46 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 79F80CF;
+        Wed,  5 Jul 2023 07:28:39 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange X25519 server-signature RSA-PSS (2048 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 95042615A6;
-        Wed,  5 Jul 2023 14:20:45 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 752BBC433C7;
-        Wed,  5 Jul 2023 14:20:41 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id EF4F86159F;
+        Wed,  5 Jul 2023 14:28:38 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A5545C433C8;
+        Wed,  5 Jul 2023 14:28:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1688566845;
-        bh=z/CWJ9bb+yjQolWWLOC4JS5f8lXSCPfPpbPQ2Xusczw=;
+        s=k20201202; t=1688567318;
+        bh=TFMultyCiWda4KqG2aspwa/c8KG/qnRXC4jDSPWHiV0=;
         h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=fYyYlYX+ZurP+YqyF3nn8q/OALGRjoa/2YbS0Ya0oyx2qNLvupJ9zrJhwsGH4xwD6
-         xavynTTYB/Ye4ptn8ajOPB7CItdKdx+gQF145LaxWDuceF+ezFun8iC+anudzrRLNx
-         B5WGYNJZ4s/WOo9NcwmDk7vkLOIYmgtkwkGCvDtcQUnG++/fKMlA+E1egMWPjoSet1
-         Ig31CopoGO+b/KNyBlRe9VJ0WM0hFB2OJ8F519nXFHtwIUcepNTexkcxwH7XqvOWFy
-         Nk14jAxvu1YYbdDFQ3P+pKu3lDzNpWAp9DY+0WUtmbO4gTyp3Bf6Cnbs/dXJxTvBxR
-         26lkyE2SfbJ2w==
-Date:   Wed, 5 Jul 2023 23:20:38 +0900
+        b=sqnYitwY9oor9zy9dQd4mn6pgHajKayzFd8zuSMZxLafAukkvKo5NwCiTT3xKDTbE
+         fR3tN7mbvFf4TY3QMc98egFELwbAGD2XuE4QgNE/1/KPNtEEukVHJiI19V5SZCH/MD
+         pIYJrBX6iX2vm3qBX7WUKDxuoNGOE4Rj18R+vOq3uNC4jVG7KvtRE8BgsoWDwFS7j9
+         Z6kQbceUYsq2q9zQYTg5KgmyFSt7PXBB7l8FbSNESlEpaUx33xEG0QmyQXw17nMdLy
+         gPXtrJkkzYJ88u1S4r5cHft37ilKk2Kqahs4EFILIsI8NbBoAlgBe5ocPP8xdX2uPo
+         fxhNFvViEUP5w==
+Date:   Wed, 5 Jul 2023 23:28:34 +0900
 From:   Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Petr Pavlu <petr.pavlu@suse.com>, tglx@linutronix.de,
-        mingo@redhat.com, bp@alien8.de, dave.hansen@linux.intel.com,
-        hpa@zytor.com, mhiramat@kernel.org, samitolvanen@google.com,
-        x86@kernel.org, linux-trace-kernel@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/2] x86/retpoline,kprobes: Avoid treating rethunk as an
- indirect jump
-Message-Id: <20230705232038.3a6d03e18f7bafb14cdfed42@kernel.org>
-In-Reply-To: <20230705085857.GG462772@hirez.programming.kicks-ass.net>
-References: <20230705081547.25130-1-petr.pavlu@suse.com>
-        <20230705081547.25130-3-petr.pavlu@suse.com>
-        <20230705085857.GG462772@hirez.programming.kicks-ass.net>
+To:     Steven Rostedt <rostedt@goodmis.org>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Linux trace kernel <linux-trace-kernel@vger.kernel.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Azeem Shaikh <azeemshaikh38@gmail.com>,
+        Kees Cook <keescook@chromium.org>
+Subject: Re: [PATCH] tracing/boot: Test strscpy() against less than zero for
+ error
+Message-Id: <20230705232834.f71d8602c3c9d9c56abd0b15@kernel.org>
+In-Reply-To: <20230704100807.707d1605@rorschach.local.home>
+References: <20230704100807.707d1605@rorschach.local.home>
 X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 Mime-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
@@ -57,35 +56,78 @@ Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On Wed, 5 Jul 2023 10:58:57 +0200
-Peter Zijlstra <peterz@infradead.org> wrote:
+On Tue, 4 Jul 2023 10:08:07 -0400
+Steven Rostedt <rostedt@goodmis.org> wrote:
 
-> On Wed, Jul 05, 2023 at 10:15:47AM +0200, Petr Pavlu wrote:
-> > Functions can_optimize() and insn_is_indirect_jump() consider jumps to
-> > the range [__indirect_thunk_start, __indirect_thunk_end] as indirect
-> > jumps and prevent use of optprobes in functions containing them.
+> From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
 > 
-> Why ?!? I mean, doing an opt-probe of an indirect jump/call instruction
-> itself doesn't really make sense and I can see why you'd want to not do
-> that. But why disallow an opt-probe if there's one in the function as a
-> whole, but not the probe target?
+> Instead of checking for -E2BIG, it is better to just check for less than
+> zero of strscpy() for error. Testing for -E2BIG is not very robust, and
+> the calling code does not really care about the error code, just that
+> there was an error.
+> 
+> One of the updates to convert strlcpy() to strscpy() had a v2 version
+> that changed the test from testing against -E2BIG to less than zero, but I
+> took the v1 version that still tested for -E2BIG.
 
-Here we need to clarify the reason why functions which have indirect jumps
-are not allowed to use opt-probe. Since optprobe can replace multiple 
-instructions with a jump, if any jmp (is used for jump inside same function)
-jumps to the second and subsequent instructions replaced by optprobe's jump,
-that target instruction can not be optimized.
+Indeed. This looks good to me.
 
-The problem of indirect jump (which jumps to the same function) is that
-we don't know which addresses will be the target of the indirect jump.
-So, for safety, I disallow optprobe for such function. In that case, normal
-kprobe is used because it replaces only one instruction.
-
-If I understand correctly, all indirect jump will be replaced with JMP_NOSPEC.
-If you read the insn_jump_into_range, I onlu jecks the jump code, not call.
-So the functions only have indirect call still allow optprobe.
+Acked-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 
 Thank you,
+
+> 
+> Link: https://lore.kernel.org/linux-trace-kernel/20230615180420.400769-1-azeemshaikh38@gmail.com/
+> 
+> Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+> ---
+>  kernel/trace/trace_boot.c | 8 ++++----
+>  1 file changed, 4 insertions(+), 4 deletions(-)
+> 
+> diff --git a/kernel/trace/trace_boot.c b/kernel/trace/trace_boot.c
+> index 5fe525f1b8cc..7ccc7a8e155b 100644
+> --- a/kernel/trace/trace_boot.c
+> +++ b/kernel/trace/trace_boot.c
+> @@ -31,7 +31,7 @@ trace_boot_set_instance_options(struct trace_array *tr, struct xbc_node *node)
+>  
+>  	/* Common ftrace options */
+>  	xbc_node_for_each_array_value(node, "options", anode, p) {
+> -		if (strscpy(buf, p, ARRAY_SIZE(buf)) == -E2BIG) {
+> +		if (strscpy(buf, p, ARRAY_SIZE(buf)) < 0) {
+>  			pr_err("String is too long: %s\n", p);
+>  			continue;
+>  		}
+> @@ -87,7 +87,7 @@ trace_boot_enable_events(struct trace_array *tr, struct xbc_node *node)
+>  	const char *p;
+>  
+>  	xbc_node_for_each_array_value(node, "events", anode, p) {
+> -		if (strscpy(buf, p, ARRAY_SIZE(buf)) == -E2BIG) {
+> +		if (strscpy(buf, p, ARRAY_SIZE(buf)) < 0) {
+>  			pr_err("String is too long: %s\n", p);
+>  			continue;
+>  		}
+> @@ -486,7 +486,7 @@ trace_boot_init_one_event(struct trace_array *tr, struct xbc_node *gnode,
+>  
+>  	p = xbc_node_find_value(enode, "filter", NULL);
+>  	if (p && *p != '\0') {
+> -		if (strscpy(buf, p, ARRAY_SIZE(buf)) == -E2BIG)
+> +		if (strscpy(buf, p, ARRAY_SIZE(buf)) < 0)
+>  			pr_err("filter string is too long: %s\n", p);
+>  		else if (apply_event_filter(file, buf) < 0)
+>  			pr_err("Failed to apply filter: %s\n", buf);
+> @@ -494,7 +494,7 @@ trace_boot_init_one_event(struct trace_array *tr, struct xbc_node *gnode,
+>  
+>  	if (IS_ENABLED(CONFIG_HIST_TRIGGERS)) {
+>  		xbc_node_for_each_array_value(enode, "actions", anode, p) {
+> -			if (strscpy(buf, p, ARRAY_SIZE(buf)) == -E2BIG)
+> +			if (strscpy(buf, p, ARRAY_SIZE(buf)) < 0)
+>  				pr_err("action string is too long: %s\n", p);
+>  			else if (trigger_process_regex(file, buf) < 0)
+>  				pr_err("Failed to apply an action: %s\n", p);
+> -- 
+> 2.39.2
+> 
+
 
 -- 
 Masami Hiramatsu (Google) <mhiramat@kernel.org>
