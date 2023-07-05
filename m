@@ -2,286 +2,68 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BBE63C3DA40
-	for <linux-trace-kernel@archiver.kernel.org>; Wed,  5 Jul 2023 08:55:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A6B9EB64DA
+	for <linux-trace-kernel@archiver.kernel.org>; Wed,  5 Jul 2023 09:01:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231479AbjGEIzL (ORCPT
+        id S231559AbjGEJBI (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Wed, 5 Jul 2023 04:55:11 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36508 "EHLO
+        Wed, 5 Jul 2023 05:01:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38832 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229776AbjGEIzK (ORCPT
+        with ESMTP id S229906AbjGEJBI (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Wed, 5 Jul 2023 04:55:10 -0400
-Received: from www62.your-server.de (www62.your-server.de [213.133.104.62])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CFA33171D;
-        Wed,  5 Jul 2023 01:55:07 -0700 (PDT)
+        Wed, 5 Jul 2023 05:01:08 -0400
+Received: from desiato.infradead.org (desiato.infradead.org [IPv6:2001:8b0:10b:1:d65d:64ff:fe57:4e05])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4A42611F;
+        Wed,  5 Jul 2023 02:01:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=iogearbox.net; s=default2302; h=Content-Transfer-Encoding:Content-Type:
-        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
-        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID;
-        bh=k+aNtxK2HcEksDu8tXRWO4vxzo2tYmq+QOVL0QIH2gQ=; b=S2PrZSmNtj+6G8XENDctH2m3ZJ
-        f6qajHfW0iI4LryOuIgTfOqlFYjdoNSc211xUnkxZcarCI4BvyV49l4wjCmiV8G6t0IaEC5Hrp6Jo
-        Eq6qNw4ultRyAHCouSJUifI2qiUyUZIKGE0Zzm6yE4McI0KfvZMiyWViaVrYt255lj0Djpji6KHiN
-        0pyMkzBMzf90xdT55lZTUye6874bOzXVtkODJo7ObFVc7WeN7prCE7wZAd94w8tsh77Y4JSro15ld
-        lHUT7OljcruUMB2urPmimMqPKSIhq/eyqAIu3eC+YPsh01nQY8ZIPrMmQ8g7DELeeRpH4pRfPGoIb
-        Kby0tkNA==;
-Received: from sslproxy03.your-server.de ([88.198.220.132])
-        by www62.your-server.de with esmtpsa  (TLS1.3) tls TLS_AES_256_GCM_SHA384
-        (Exim 4.94.2)
-        (envelope-from <daniel@iogearbox.net>)
-        id 1qGyHq-0002sJ-Lr; Wed, 05 Jul 2023 10:54:58 +0200
-Received: from [85.1.206.226] (helo=linux.home)
-        by sslproxy03.your-server.de with esmtpsa (TLSv1.3:TLS_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <daniel@iogearbox.net>)
-        id 1qGyHq-000FLL-3d; Wed, 05 Jul 2023 10:54:58 +0200
-Subject: Re: [PATCH v6 bpf-next 11/11] bpftool: Show perf link info
-To:     Yafang Shao <laoar.shao@gmail.com>, ast@kernel.org,
-        john.fastabend@gmail.com, andrii@kernel.org, martin.lau@linux.dev,
-        song@kernel.org, yhs@fb.com, kpsingh@kernel.org, sdf@google.com,
-        haoluo@google.com, jolsa@kernel.org, quentin@isovalent.com,
-        rostedt@goodmis.org, mhiramat@kernel.org
-Cc:     bpf@vger.kernel.org, linux-trace-kernel@vger.kernel.org
-References: <20230628115329.248450-1-laoar.shao@gmail.com>
- <20230628115329.248450-12-laoar.shao@gmail.com>
-From:   Daniel Borkmann <daniel@iogearbox.net>
-Message-ID: <d991de64-ebdd-bb65-482a-aae64459c739@iogearbox.net>
-Date:   Wed, 5 Jul 2023 10:54:57 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=hakQolOQjMnf+B++c/8vfOBnENC9wc+YeNh/Nom7T94=; b=S8aOPhEQBb4HZry+9oUF+BUGDo
+        uZeTyCJcuVwLai6Ic1+5GsRIwRpOS/lb5lxjxbqCJRZWqOaNDcnrQEJns2w5PjOydMKrdvjkXwRcb
+        vAj3bdrRPrumj03Rfb/J+t0pGx3RNajwJIk+IGBxlysGy3SVO5EJHr0XAsTBjPwQoLNF08rfNNXTi
+        SIyfwSOm06qhBlxQSRMvC4BTUPlGyR2Oh+AZpaDjAn4ZJyAHLP/GF+84DR0a5Hwc0LQZ5aU2hHJ9U
+        zOF5CLs0+Gd0DNx6SwkaNl+Eu8IX4BoZ+jrQV15L6+FWOX113ytAgi9qd5dC9Qnffaqyc/ayitBR4
+        3KsQmVeQ==;
+Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
+        by desiato.infradead.org with esmtpsa (Exim 4.96 #2 (Red Hat Linux))
+        id 1qGyLi-00C36Z-17;
+        Wed, 05 Jul 2023 09:00:58 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (4096 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 803B330012F;
+        Wed,  5 Jul 2023 10:58:57 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 6321A2028F056; Wed,  5 Jul 2023 10:58:57 +0200 (CEST)
+Date:   Wed, 5 Jul 2023 10:58:57 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Petr Pavlu <petr.pavlu@suse.com>
+Cc:     tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
+        dave.hansen@linux.intel.com, hpa@zytor.com, mhiramat@kernel.org,
+        samitolvanen@google.com, x86@kernel.org,
+        linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/2] x86/retpoline,kprobes: Avoid treating rethunk as an
+ indirect jump
+Message-ID: <20230705085857.GG462772@hirez.programming.kicks-ass.net>
+References: <20230705081547.25130-1-petr.pavlu@suse.com>
+ <20230705081547.25130-3-petr.pavlu@suse.com>
 MIME-Version: 1.0
-In-Reply-To: <20230628115329.248450-12-laoar.shao@gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Authenticated-Sender: daniel@iogearbox.net
-X-Virus-Scanned: Clear (ClamAV 0.103.8/26960/Wed Jul  5 09:29:05 2023)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230705081547.25130-3-petr.pavlu@suse.com>
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On 6/28/23 1:53 PM, Yafang Shao wrote:
-[...]
-> +
-> +static void
-> +show_perf_event_event_json(struct bpf_link_info *info, json_writer_t *wtr)
-> +{
-> +	__u64 config = info->perf_event.event.config;
-> +	__u32 type = info->perf_event.event.type;
-> +	const char *perf_type, *perf_config;
-> +
-> +	perf_type = perf_event_name(perf_type_name, type);
-> +	if (perf_type)
-> +		jsonw_string_field(wtr, "event_type", perf_type);
-> +	else
-> +		jsonw_uint_field(wtr, "event_type", type);
-> +
-> +	perf_config = perf_config_str(type, config);
-> +	if (perf_config)
-> +		jsonw_string_field(wtr, "event_config", perf_config);
-> +	else
-> +		jsonw_uint_field(wtr, "event_config", config);
-> +
-> +	if (type == PERF_TYPE_HW_CACHE && perf_config)
-> +		free((void *)perf_config);
+On Wed, Jul 05, 2023 at 10:15:47AM +0200, Petr Pavlu wrote:
+> Functions can_optimize() and insn_is_indirect_jump() consider jumps to
+> the range [__indirect_thunk_start, __indirect_thunk_end] as indirect
+> jumps and prevent use of optprobes in functions containing them.
 
-nit no need to cast
-
-> +}
-> +
->   static int show_link_close_json(int fd, struct bpf_link_info *info)
->   {
->   	struct bpf_prog_info prog_info;
-> @@ -334,6 +440,26 @@ static int show_link_close_json(int fd, struct bpf_link_info *info)
->   	case BPF_LINK_TYPE_KPROBE_MULTI:
->   		show_kprobe_multi_json(info, json_wtr);
->   		break;
-> +	case BPF_LINK_TYPE_PERF_EVENT:
-> +		switch (info->perf_event.type) {
-> +		case BPF_PERF_EVENT_EVENT:
-> +			show_perf_event_event_json(info, json_wtr);
-> +			break;
-> +		case BPF_PERF_EVENT_TRACEPOINT:
-> +			show_perf_event_tracepoint_json(info, json_wtr);
-> +			break;
-> +		case BPF_PERF_EVENT_KPROBE:
-> +		case BPF_PERF_EVENT_KRETPROBE:
-> +			show_perf_event_kprobe_json(info, json_wtr);
-> +			break;
-> +		case BPF_PERF_EVENT_UPROBE:
-> +		case BPF_PERF_EVENT_URETPROBE:
-> +			show_perf_event_uprobe_json(info, json_wtr);
-> +			break;
-> +		default:
-> +			break;
-> +		}
-> +		break;
->   	default:
->   		break;
->   	}
-> @@ -505,6 +631,75 @@ static void show_kprobe_multi_plain(struct bpf_link_info *info)
->   	}
->   }
->   
-> +static void show_perf_event_kprobe_plain(struct bpf_link_info *info)
-> +{
-> +	const char *buf;
-> +
-> +	buf = (const char *)u64_to_ptr(info->perf_event.kprobe.func_name);
-
-ditto, same for the other occurrences further below
-
-> +	if (buf[0] == '\0' && !info->perf_event.kprobe.addr)
-> +		return;
-> +
-> +	if (info->perf_event.type == BPF_PERF_EVENT_KRETPROBE)
-> +		printf("\n\tkretprobe ");
-> +	else
-> +		printf("\n\tkprobe ");
-> +	if (info->perf_event.kprobe.addr)
-> +		printf("%llx ", info->perf_event.kprobe.addr);
-> +	printf("%s", buf);
-> +	if (info->perf_event.kprobe.offset)
-> +		printf("+%#x", info->perf_event.kprobe.offset);
-> +	printf("  ");
-> +}
-> +
-> +static void show_perf_event_uprobe_plain(struct bpf_link_info *info)
-> +{
-> +	const char *buf;
-> +
-> +	buf = (const char *)u64_to_ptr(info->perf_event.uprobe.file_name);
-> +	if (buf[0] == '\0')
-> +		return;
-> +
-> +	if (info->perf_event.type == BPF_PERF_EVENT_URETPROBE)
-> +		printf("\n\turetprobe ");
-> +	else
-> +		printf("\n\tuprobe ");
-> +	printf("%s+%#x  ", buf, info->perf_event.uprobe.offset);
-> +}
-> +
-> +static void show_perf_event_tracepoint_plain(struct bpf_link_info *info)
-> +{
-> +	const char *buf;
-> +
-> +	buf = (const char *)u64_to_ptr(info->perf_event.tracepoint.tp_name);
-> +	if (buf[0] == '\0')
-> +		return;
-> +
-> +	printf("\n\ttracepoint %s  ", buf);
-> +}
-> +
-> +static void show_perf_event_event_plain(struct bpf_link_info *info)
-> +{
-> +	__u64 config = info->perf_event.event.config;
-> +	__u32 type = info->perf_event.event.type;
-> +	const char *perf_type, *perf_config;
-> +
-> +	printf("\n\tevent ");
-> +	perf_type = perf_event_name(perf_type_name, type);
-> +	if (perf_type)
-> +		printf("%s:", perf_type);
-> +	else
-> +		printf("%u :", type);
-> +
-> +	perf_config = perf_config_str(type, config);
-> +	if (perf_config)
-> +		printf("%s  ", perf_config);
-> +	else
-> +		printf("%llu  ", config);
-> +
-> +	if (type == PERF_TYPE_HW_CACHE && perf_config)
-> +		free((void *)perf_config);
-
-same
-
-> +}
-> +
->   static int show_link_close_plain(int fd, struct bpf_link_info *info)
->   {
->   	struct bpf_prog_info prog_info;
-> @@ -553,6 +748,26 @@ static int show_link_close_plain(int fd, struct bpf_link_info *info)
->   	case BPF_LINK_TYPE_KPROBE_MULTI:
->   		show_kprobe_multi_plain(info);
->   		break;
-> +	case BPF_LINK_TYPE_PERF_EVENT:
-> +		switch (info->perf_event.type) {
-> +		case BPF_PERF_EVENT_EVENT:
-> +			show_perf_event_event_plain(info);
-> +			break;
-> +		case BPF_PERF_EVENT_TRACEPOINT:
-> +			show_perf_event_tracepoint_plain(info);
-> +			break;
-> +		case BPF_PERF_EVENT_KPROBE:
-> +		case BPF_PERF_EVENT_KRETPROBE:
-> +			show_perf_event_kprobe_plain(info);
-> +			break;
-> +		case BPF_PERF_EVENT_UPROBE:
-> +		case BPF_PERF_EVENT_URETPROBE:
-> +			show_perf_event_uprobe_plain(info);
-> +			break;
-> +		default:
-> +			break;
-> +		}
-> +		break;
->   	default:
->   		break;
->   	}
-> @@ -575,11 +790,12 @@ static int do_show_link(int fd)
->   	struct bpf_link_info info;
->   	__u32 len = sizeof(info);
->   	__u64 *addrs = NULL;
-> -	char buf[256];
-> +	char buf[PATH_MAX];
->   	int count;
->   	int err;
->   
->   	memset(&info, 0, sizeof(info));
-> +	buf[0] = '\0';
->   again:
->   	err = bpf_link_get_info_by_fd(fd, &info, &len);
->   	if (err) {
-> @@ -614,6 +830,35 @@ static int do_show_link(int fd)
->   			goto again;
->   		}
->   	}
-> +	if (info.type == BPF_LINK_TYPE_PERF_EVENT) {
-> +		switch (info.perf_event.type) {
-> +		case BPF_PERF_EVENT_TRACEPOINT:
-> +			if (!info.perf_event.tracepoint.tp_name) {
-> +				info.perf_event.tracepoint.tp_name = (unsigned long)&buf;
-
-lets use ptr_to_u64() in all these cases
-
-> +				info.perf_event.tracepoint.name_len = sizeof(buf);
-> +				goto again;
-> +			}
-> +			break;
-> +		case BPF_PERF_EVENT_KPROBE:
-> +		case BPF_PERF_EVENT_KRETPROBE:
-> +			if (!info.perf_event.kprobe.func_name) {
-> +				info.perf_event.kprobe.func_name = (unsigned long)&buf;
-> +				info.perf_event.kprobe.name_len = sizeof(buf);
-> +				goto again;
-> +			}
-> +			break;
-> +		case BPF_PERF_EVENT_UPROBE:
-> +		case BPF_PERF_EVENT_URETPROBE:
-> +			if (!info.perf_event.uprobe.file_name) {
-> +				info.perf_event.uprobe.file_name = (unsigned long)&buf;
-> +				info.perf_event.uprobe.name_len = sizeof(buf);
-> +				goto again;
-> +			}
-> +			break;
-> +		default:
-> +			break;
-> +		}
-> +	}
->   
->   	if (json_output)
->   		show_link_close_json(fd, &info);
-> 
-
+Why ?!? I mean, doing an opt-probe of an indirect jump/call instruction
+itself doesn't really make sense and I can see why you'd want to not do
+that. But why disallow an opt-probe if there's one in the function as a
+whole, but not the probe target?
