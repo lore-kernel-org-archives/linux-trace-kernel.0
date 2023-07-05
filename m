@@ -2,132 +2,158 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 764E9EB64DA
-	for <linux-trace-kernel@archiver.kernel.org>; Wed,  5 Jul 2023 14:28:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 07BEAEB64DA
+	for <linux-trace-kernel@archiver.kernel.org>; Wed,  5 Jul 2023 14:34:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230268AbjGEO2l (ORCPT
+        id S231565AbjGEOeO (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Wed, 5 Jul 2023 10:28:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42544 "EHLO
+        Wed, 5 Jul 2023 10:34:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44566 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229645AbjGEO2k (ORCPT
+        with ESMTP id S231540AbjGEOeO (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Wed, 5 Jul 2023 10:28:40 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 79F80CF;
-        Wed,  5 Jul 2023 07:28:39 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id EF4F86159F;
-        Wed,  5 Jul 2023 14:28:38 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A5545C433C8;
-        Wed,  5 Jul 2023 14:28:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1688567318;
-        bh=TFMultyCiWda4KqG2aspwa/c8KG/qnRXC4jDSPWHiV0=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=sqnYitwY9oor9zy9dQd4mn6pgHajKayzFd8zuSMZxLafAukkvKo5NwCiTT3xKDTbE
-         fR3tN7mbvFf4TY3QMc98egFELwbAGD2XuE4QgNE/1/KPNtEEukVHJiI19V5SZCH/MD
-         pIYJrBX6iX2vm3qBX7WUKDxuoNGOE4Rj18R+vOq3uNC4jVG7KvtRE8BgsoWDwFS7j9
-         Z6kQbceUYsq2q9zQYTg5KgmyFSt7PXBB7l8FbSNESlEpaUx33xEG0QmyQXw17nMdLy
-         gPXtrJkkzYJ88u1S4r5cHft37ilKk2Kqahs4EFILIsI8NbBoAlgBe5ocPP8xdX2uPo
-         fxhNFvViEUP5w==
-Date:   Wed, 5 Jul 2023 23:28:34 +0900
-From:   Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To:     Steven Rostedt <rostedt@goodmis.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Linux trace kernel <linux-trace-kernel@vger.kernel.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Azeem Shaikh <azeemshaikh38@gmail.com>,
-        Kees Cook <keescook@chromium.org>
-Subject: Re: [PATCH] tracing/boot: Test strscpy() against less than zero for
- error
-Message-Id: <20230705232834.f71d8602c3c9d9c56abd0b15@kernel.org>
-In-Reply-To: <20230704100807.707d1605@rorschach.local.home>
-References: <20230704100807.707d1605@rorschach.local.home>
-X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        Wed, 5 Jul 2023 10:34:14 -0400
+Received: from mail-qv1-xf2c.google.com (mail-qv1-xf2c.google.com [IPv6:2607:f8b0:4864:20::f2c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 19B9C12A;
+        Wed,  5 Jul 2023 07:34:13 -0700 (PDT)
+Received: by mail-qv1-xf2c.google.com with SMTP id 6a1803df08f44-635dd1b52a2so43929846d6.3;
+        Wed, 05 Jul 2023 07:34:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1688567652; x=1691159652;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ZDeKMKFJALokCROCQuqvEHo8pC4cIA2g+6O+FK4XHZk=;
+        b=TzacOxCkL+Gdw+wJd7YoFfWv/kZHiWrp2q6GyrloLwe/ogbbzjMo55xfh3wCumNNxr
+         dHgxzy1uKQvzdMKj86tXEWi4AR008XNLByQemW2wCsTyO4AolqUCGXE2Fro/Lc+BJqDj
+         H6vozzmv3iCtPp1ux/xlmYYWgY0wPUps8xliUorl4fiOrcq+3WrqmgBh2OoE5iW7FpBr
+         HDUrMcAN5cUKQkvEXxvpA0M8SmYOH9B6E8gpVsbYTahnQzeSMacQDP19RvKh//NrSQsB
+         qURxuV8IX/5lZXHvuZuypJNjg3ukgl0xSFKBI44GJS4kKj+zCSYA6uHSJj5z7aCm0slg
+         F1hg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1688567652; x=1691159652;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=ZDeKMKFJALokCROCQuqvEHo8pC4cIA2g+6O+FK4XHZk=;
+        b=fO7DXoKQ7aoC/hd5rqS31hOVXZXVXJtqRD+EhvwD3XKLydXDmWVUOGTkCSXfXIyQbD
+         UEqBvbCelYxhC4g0Jyy43q+C5rv/he360CnulwDTY+qnPbSWkAQg5CQEsLsgYAcIAuz7
+         jgEzE9b2zSi3Ll6/QVL78mOQYPA7XZ1P3CIWauZ5KBQMFBfXOlYubONVaPvn4qnZ4FvS
+         rGAgBb+81gWmDxsNPlCtVAxLrwaYLsTqWGgD7eTSblRx/xFBceetJsG1rK7jpjcKi8tu
+         D7zZPaF2MidFXR5er+2aeCIkT68LIdbTQ/WwjnpOK8V1Fv56twEGLJKvmSBpOwE6wVeE
+         6Orw==
+X-Gm-Message-State: ABy/qLbsM5DWBIEogwy50QAD8eh8F3t8sZJIiFs0tm6M9EnI84DbC90Z
+        ULtwND0//X1bhXikhA3RMU08CPHASqN7eJotnHs=
+X-Google-Smtp-Source: APBJJlHLkb8lKKq0KfdKvlkkaH6RCMWT4ux66g7837Ku5Qf1li6dqX7vnKph42bWwHNGmEzbJevYJQnNHlctH+Gario=
+X-Received: by 2002:a0c:9c49:0:b0:625:b3a2:f637 with SMTP id
+ w9-20020a0c9c49000000b00625b3a2f637mr2228886qve.8.1688567652206; Wed, 05 Jul
+ 2023 07:34:12 -0700 (PDT)
+MIME-Version: 1.0
+References: <20230628115329.248450-1-laoar.shao@gmail.com> <20230628115329.248450-6-laoar.shao@gmail.com>
+ <5ed6bc64-ab80-486b-fb13-207174d9ff2d@iogearbox.net>
+In-Reply-To: <5ed6bc64-ab80-486b-fb13-207174d9ff2d@iogearbox.net>
+From:   Yafang Shao <laoar.shao@gmail.com>
+Date:   Wed, 5 Jul 2023 22:33:36 +0800
+Message-ID: <CALOAHbA_cu7Jn=3YyqHLYi8OX=CU5txRHWs3aZo1BHQGjtJ5ow@mail.gmail.com>
+Subject: Re: [PATCH v6 bpf-next 05/11] bpf: Clear the probe_addr for uprobe
+To:     Daniel Borkmann <daniel@iogearbox.net>
+Cc:     ast@kernel.org, john.fastabend@gmail.com, andrii@kernel.org,
+        martin.lau@linux.dev, song@kernel.org, yhs@fb.com,
+        kpsingh@kernel.org, sdf@google.com, haoluo@google.com,
+        jolsa@kernel.org, quentin@isovalent.com, rostedt@goodmis.org,
+        mhiramat@kernel.org, bpf@vger.kernel.org,
+        linux-trace-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On Tue, 4 Jul 2023 10:08:07 -0400
-Steven Rostedt <rostedt@goodmis.org> wrote:
+On Wed, Jul 5, 2023 at 4:19=E2=80=AFPM Daniel Borkmann <daniel@iogearbox.ne=
+t> wrote:
+>
+> On 6/28/23 1:53 PM, Yafang Shao wrote:
+> > To avoid returning uninitialized or random values when querying the fil=
+e
+> > descriptor (fd) and accessing probe_addr, it is necessary to clear the
+> > variable prior to its use.
+> >
+> > Fixes: 41bdc4b40ed6 ("bpf: introduce bpf subcommand BPF_TASK_FD_QUERY")
+> > Signed-off-by: Yafang Shao <laoar.shao@gmail.com>
+> > Acked-by: Yonghong Song <yhs@fb.com>
+> > ---
+> >   kernel/trace/bpf_trace.c | 4 +++-
+> >   1 file changed, 3 insertions(+), 1 deletion(-)
+> >
+> > diff --git a/kernel/trace/bpf_trace.c b/kernel/trace/bpf_trace.c
+> > index 1f9f78e1992f..ac9958907a7c 100644
+> > --- a/kernel/trace/bpf_trace.c
+> > +++ b/kernel/trace/bpf_trace.c
+> > @@ -2382,10 +2382,12 @@ int bpf_get_perf_event_info(const struct perf_e=
+vent *event, u32 *prog_id,
+> >                                                 event->attr.type =3D=3D=
+ PERF_TYPE_TRACEPOINT);
+> >   #endif
+> >   #ifdef CONFIG_UPROBE_EVENTS
+> > -             if (flags & TRACE_EVENT_FL_UPROBE)
+> > +             if (flags & TRACE_EVENT_FL_UPROBE) {
+> >                       err =3D bpf_get_uprobe_info(event, fd_type, buf,
+> >                                                 probe_offset,
+> >                                                 event->attr.type =3D=3D=
+ PERF_TYPE_TRACEPOINT);
+> > +                     *probe_addr =3D 0x0;
+> > +             }
+>
+> Could we make this a bit more robust by just moving the zero'ing into the=
+ common path?
 
-> From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
-> 
-> Instead of checking for -E2BIG, it is better to just check for less than
-> zero of strscpy() for error. Testing for -E2BIG is not very robust, and
-> the calling code does not really care about the error code, just that
-> there was an error.
-> 
-> One of the updates to convert strlcpy() to strscpy() had a v2 version
-> that changed the test from testing against -E2BIG to less than zero, but I
-> took the v1 version that still tested for -E2BIG.
+After a second thought, I prefer to clear it in bpf_get_uprobe_info().
+That way we can avoid setting them twice for kprobe.
 
-Indeed. This looks good to me.
-
-Acked-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-
-Thank you,
-
-> 
-> Link: https://lore.kernel.org/linux-trace-kernel/20230615180420.400769-1-azeemshaikh38@gmail.com/
-> 
-> Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
-> ---
->  kernel/trace/trace_boot.c | 8 ++++----
->  1 file changed, 4 insertions(+), 4 deletions(-)
-> 
-> diff --git a/kernel/trace/trace_boot.c b/kernel/trace/trace_boot.c
-> index 5fe525f1b8cc..7ccc7a8e155b 100644
-> --- a/kernel/trace/trace_boot.c
-> +++ b/kernel/trace/trace_boot.c
-> @@ -31,7 +31,7 @@ trace_boot_set_instance_options(struct trace_array *tr, struct xbc_node *node)
->  
->  	/* Common ftrace options */
->  	xbc_node_for_each_array_value(node, "options", anode, p) {
-> -		if (strscpy(buf, p, ARRAY_SIZE(buf)) == -E2BIG) {
-> +		if (strscpy(buf, p, ARRAY_SIZE(buf)) < 0) {
->  			pr_err("String is too long: %s\n", p);
->  			continue;
->  		}
-> @@ -87,7 +87,7 @@ trace_boot_enable_events(struct trace_array *tr, struct xbc_node *node)
->  	const char *p;
->  
->  	xbc_node_for_each_array_value(node, "events", anode, p) {
-> -		if (strscpy(buf, p, ARRAY_SIZE(buf)) == -E2BIG) {
-> +		if (strscpy(buf, p, ARRAY_SIZE(buf)) < 0) {
->  			pr_err("String is too long: %s\n", p);
->  			continue;
->  		}
-> @@ -486,7 +486,7 @@ trace_boot_init_one_event(struct trace_array *tr, struct xbc_node *gnode,
->  
->  	p = xbc_node_find_value(enode, "filter", NULL);
->  	if (p && *p != '\0') {
-> -		if (strscpy(buf, p, ARRAY_SIZE(buf)) == -E2BIG)
-> +		if (strscpy(buf, p, ARRAY_SIZE(buf)) < 0)
->  			pr_err("filter string is too long: %s\n", p);
->  		else if (apply_event_filter(file, buf) < 0)
->  			pr_err("Failed to apply filter: %s\n", buf);
-> @@ -494,7 +494,7 @@ trace_boot_init_one_event(struct trace_array *tr, struct xbc_node *gnode,
->  
->  	if (IS_ENABLED(CONFIG_HIST_TRIGGERS)) {
->  		xbc_node_for_each_array_value(enode, "actions", anode, p) {
-> -			if (strscpy(buf, p, ARRAY_SIZE(buf)) == -E2BIG)
-> +			if (strscpy(buf, p, ARRAY_SIZE(buf)) < 0)
->  				pr_err("action string is too long: %s\n", p);
->  			else if (trigger_process_regex(file, buf) < 0)
->  				pr_err("Failed to apply an action: %s\n", p);
-> -- 
-> 2.39.2
-> 
+diff --git a/kernel/trace/trace_uprobe.c b/kernel/trace/trace_uprobe.c
+index 8b92e34..015dbf2 100644
+--- a/kernel/trace/trace_uprobe.c
++++ b/kernel/trace/trace_uprobe.c
+@@ -1432,6 +1432,7 @@ int bpf_get_uprobe_info(const struct perf_event
+*event, u32 *fd_type,
+                                    : BPF_FD_TYPE_UPROBE;
+        *filename =3D tu->filename;
+        *probe_offset =3D tu->offset;
++       *probe_addr =3D 0;
+        return 0;
+ }
+ #endif /* CONFIG_PERF_EVENTS */
 
 
--- 
-Masami Hiramatsu (Google) <mhiramat@kernel.org>
+>
+> diff --git a/kernel/trace/bpf_trace.c b/kernel/trace/bpf_trace.c
+> index 03b7f6b8e4f0..795e16d5d2f7 100644
+> --- a/kernel/trace/bpf_trace.c
+> +++ b/kernel/trace/bpf_trace.c
+> @@ -2362,6 +2362,9 @@ int bpf_get_perf_event_info(const struct perf_event=
+ *event, u32 *prog_id,
+>                  return -EOPNOTSUPP;
+>
+>          *prog_id =3D prog->aux->id;
+> +       *probe_offset =3D 0x0;
+> +       *probe_addr =3D 0x0;
+> +
+>          flags =3D event->tp_event->flags;
+>          is_tracepoint =3D flags & TRACE_EVENT_FL_TRACEPOINT;
+>          is_syscall_tp =3D is_syscall_trace_event(event->tp_event);
+> @@ -2370,8 +2373,6 @@ int bpf_get_perf_event_info(const struct perf_event=
+ *event, u32 *prog_id,
+>                  *buf =3D is_tracepoint ? event->tp_event->tp->name
+>                                       : event->tp_event->name;
+>                  *fd_type =3D BPF_FD_TYPE_TRACEPOINT;
+> -               *probe_offset =3D 0x0;
+> -               *probe_addr =3D 0x0;
+>          } else {
+>                  /* kprobe/uprobe */
+>                  err =3D -EOPNOTSUPP;
+
+
+
+--=20
+Regards
+Yafang
