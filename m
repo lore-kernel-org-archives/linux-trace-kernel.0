@@ -2,52 +2,53 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 43A3DEB64DA
-	for <linux-trace-kernel@archiver.kernel.org>; Wed,  5 Jul 2023 12:52:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4855EEB64DA
+	for <linux-trace-kernel@archiver.kernel.org>; Wed,  5 Jul 2023 14:20:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230236AbjGEMwh (ORCPT
+        id S232097AbjGEOU4 (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Wed, 5 Jul 2023 08:52:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53350 "EHLO
+        Wed, 5 Jul 2023 10:20:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36590 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230100AbjGEMwh (ORCPT
+        with ESMTP id S231147AbjGEOUq (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Wed, 5 Jul 2023 08:52:37 -0400
+        Wed, 5 Jul 2023 10:20:46 -0400
 Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E1BEFDA;
-        Wed,  5 Jul 2023 05:52:35 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 05881CF;
+        Wed,  5 Jul 2023 07:20:46 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange X25519 server-signature RSA-PSS (2048 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 7F89261512;
-        Wed,  5 Jul 2023 12:52:35 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 815CDC433C7;
-        Wed,  5 Jul 2023 12:52:33 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 95042615A6;
+        Wed,  5 Jul 2023 14:20:45 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 752BBC433C7;
+        Wed,  5 Jul 2023 14:20:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1688561554;
-        bh=I3mgC95jaUMPNBZSpRVdhaB4W5ZRw3imLS94cfTIN9w=;
+        s=k20201202; t=1688566845;
+        bh=z/CWJ9bb+yjQolWWLOC4JS5f8lXSCPfPpbPQ2Xusczw=;
         h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=pM+mAx14x75F4hkkJXR6PkXiVnUWsGQC8FbnRxNGNykH2r9VOM3ZvgtyKiSM5NJJe
-         Q344nEKdB6H0KVtlyK2kjrObK2dedKZnRUoThVnRrHN303hr4aWxrsA7Xe5pOmNZ/+
-         rFht9StA4UYUF5TcuJM8l2AV09e1DNcVYuogmKaMxROJFi372o2XogJP8Pz9TLGsYL
-         3XiODM7vHVwGS7h815M9qFNW4nGTVfzG7sikJS1WY5vCPLPlgm7pQyYV7x+/u4+iBe
-         xUtL/KVl4xQt8ySYDtN8eJIELTv3YZQdmB23tT5hEtneSOslXja1NqJS9yPEf08Uss
-         Qy1yay7xQIrZQ==
-Date:   Wed, 5 Jul 2023 21:52:30 +0900
+        b=fYyYlYX+ZurP+YqyF3nn8q/OALGRjoa/2YbS0Ya0oyx2qNLvupJ9zrJhwsGH4xwD6
+         xavynTTYB/Ye4ptn8ajOPB7CItdKdx+gQF145LaxWDuceF+ezFun8iC+anudzrRLNx
+         B5WGYNJZ4s/WOo9NcwmDk7vkLOIYmgtkwkGCvDtcQUnG++/fKMlA+E1egMWPjoSet1
+         Ig31CopoGO+b/KNyBlRe9VJ0WM0hFB2OJ8F519nXFHtwIUcepNTexkcxwH7XqvOWFy
+         Nk14jAxvu1YYbdDFQ3P+pKu3lDzNpWAp9DY+0WUtmbO4gTyp3Bf6Cnbs/dXJxTvBxR
+         26lkyE2SfbJ2w==
+Date:   Wed, 5 Jul 2023 23:20:38 +0900
 From:   Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To:     m.stachyra@samsung.com
-Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-trace-kernel@vger.kernel.org" 
-        <linux-trace-kernel@vger.kernel.org>,
-        "rostedt@goodmis.org" <rostedt@goodmis.org>,
-        "mhiramat@kernel.org" <mhiramat@kernel.org>
-Subject: Re: [PATCH v2] trace: fix null pointer dereference in
- tracing_err_log_open()
-Message-Id: <20230705215230.9aafc44d8bd764b6416cf655@kernel.org>
-In-Reply-To: <20230704102706eucms1p30d7ecdcc287f46ad67679fc8491b2e0f@eucms1p3>
-References: <CGME20230704102706eucms1p30d7ecdcc287f46ad67679fc8491b2e0f@eucms1p3>
-        <20230704102706eucms1p30d7ecdcc287f46ad67679fc8491b2e0f@eucms1p3>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Petr Pavlu <petr.pavlu@suse.com>, tglx@linutronix.de,
+        mingo@redhat.com, bp@alien8.de, dave.hansen@linux.intel.com,
+        hpa@zytor.com, mhiramat@kernel.org, samitolvanen@google.com,
+        x86@kernel.org, linux-trace-kernel@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/2] x86/retpoline,kprobes: Avoid treating rethunk as an
+ indirect jump
+Message-Id: <20230705232038.3a6d03e18f7bafb14cdfed42@kernel.org>
+In-Reply-To: <20230705085857.GG462772@hirez.programming.kicks-ass.net>
+References: <20230705081547.25130-1-petr.pavlu@suse.com>
+        <20230705081547.25130-3-petr.pavlu@suse.com>
+        <20230705085857.GG462772@hirez.programming.kicks-ass.net>
 X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 Mime-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
@@ -56,65 +57,35 @@ Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On Tue, 04 Jul 2023 12:27:06 +0200
-Mateusz Stachyra <m.stachyra@samsung.com> wrote:
+On Wed, 5 Jul 2023 10:58:57 +0200
+Peter Zijlstra <peterz@infradead.org> wrote:
 
-> Fix an issue in function 'tracing_err_log_open'.
-> The function doesn't call 'seq_open' if file is opened only with
-> write permissions, which results in 'file->private_data' being left at null.
-> If we then use 'lseek' on that opened file, 'seq_lseek' dereferences
-> 'file->private_data' in 'mutex_lock(&m->lock)', resulting in a Kernel panic.
-> Writing to this node requires root privilages, therefore this bug
-> has very little security impact.
+> On Wed, Jul 05, 2023 at 10:15:47AM +0200, Petr Pavlu wrote:
+> > Functions can_optimize() and insn_is_indirect_jump() consider jumps to
+> > the range [__indirect_thunk_start, __indirect_thunk_end] as indirect
+> > jumps and prevent use of optprobes in functions containing them.
 > 
-> Tracefs node: /sys/kernel/tracing/error_log
-> 
-> Example Kernel panic:
-> 
-> Unable to handle kernel NULL pointer dereference at virtual address 0000000000000038
-> Call trace:
->  mutex_lock+0x30/0x110
->  seq_lseek+0x34/0xb8
->  __arm64_sys_lseek+0x6c/0xb8
->  invoke_syscall+0x58/0x13c
->  el0_svc_common+0xc4/0x10c
->  do_el0_svc+0x24/0x98
->  el0_svc+0x24/0x88
->  el0t_64_sync_handler+0x84/0xe4
->  el0t_64_sync+0x1b4/0x1b8
-> Code: d503201f aa0803e0 aa1f03e1 aa0103e9 (c8e97d02)
-> ---[ end trace 561d1b49c12cf8a5 ]---
-> Kernel panic - not syncing: Oops: Fatal exception
-> 
+> Why ?!? I mean, doing an opt-probe of an indirect jump/call instruction
+> itself doesn't really make sense and I can see why you'd want to not do
+> that. But why disallow an opt-probe if there's one in the function as a
+> whole, but not the probe target?
 
-Good catch! This looks good to me.
+Here we need to clarify the reason why functions which have indirect jumps
+are not allowed to use opt-probe. Since optprobe can replace multiple 
+instructions with a jump, if any jmp (is used for jump inside same function)
+jumps to the second and subsequent instructions replaced by optprobe's jump,
+that target instruction can not be optimized.
 
-Acked-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+The problem of indirect jump (which jumps to the same function) is that
+we don't know which addresses will be the target of the indirect jump.
+So, for safety, I disallow optprobe for such function. In that case, normal
+kprobe is used because it replaces only one instruction.
 
-Thanks!
+If I understand correctly, all indirect jump will be replaced with JMP_NOSPEC.
+If you read the insn_jump_into_range, I onlu jecks the jump code, not call.
+So the functions only have indirect call still allow optprobe.
 
-> Signed-off-by: Mateusz Stachyra <m.stachyra@samsung.com>
-> Suggested-by: Steven Rostedt <rostedt@goodmis.org>
-> ---
->  kernel/trace/trace.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
-> index b04f52e7c..4529e264c 100644
-> --- a/kernel/trace/trace.c
-> +++ b/kernel/trace/trace.c
-> @@ -8146,7 +8146,7 @@ static const struct file_operations tracing_err_log_fops = {
->  	.open           = tracing_err_log_open,
->  	.write		= tracing_err_log_write,
->  	.read           = seq_read,
-> -	.llseek         = seq_lseek,
-> +	.llseek         = tracing_lseek,
->  	.release        = tracing_err_log_release,
->  };
->  
-> -- 
-> 2.25.1
-
+Thank you,
 
 -- 
 Masami Hiramatsu (Google) <mhiramat@kernel.org>
