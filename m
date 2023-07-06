@@ -2,132 +2,100 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 02C69EB64D9
-	for <linux-trace-kernel@archiver.kernel.org>; Thu,  6 Jul 2023 11:55:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D7D6EB64DD
+	for <linux-trace-kernel@archiver.kernel.org>; Thu,  6 Jul 2023 13:37:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230290AbjGFLzp (ORCPT
+        id S232194AbjGFNhS (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Thu, 6 Jul 2023 07:55:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51204 "EHLO
+        Thu, 6 Jul 2023 09:37:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51908 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229721AbjGFLzo (ORCPT
+        with ESMTP id S229501AbjGFNhR (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Thu, 6 Jul 2023 07:55:44 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0288EE54;
-        Thu,  6 Jul 2023 04:55:44 -0700 (PDT)
+        Thu, 6 Jul 2023 09:37:17 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2FDF08F;
+        Thu,  6 Jul 2023 06:37:16 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange X25519 server-signature RSA-PSS (2048 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id D09606191D;
-        Thu,  6 Jul 2023 11:55:42 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A4006C433C7;
-        Thu,  6 Jul 2023 11:55:41 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id B18AE61927;
+        Thu,  6 Jul 2023 13:37:15 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5B445C433C7;
+        Thu,  6 Jul 2023 13:37:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1688644542;
-        bh=ZVX2FMUo6DUhnVIuypz+Mg6dxvARnYElPp//q0SE0qU=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=aeK1eaSynsCDDKxSD1F3WceQUwfJ0lwG8w7w2wvYdL8l4k+X4A4MkxqN9Y//Vwo8K
-         zduOA5Y4ba9Bt1DoD1eAV69H46QcjEHXBNfhl1fJo16ly2PKYxhvJgBqjZtCkuG45e
-         iegT1G25Wd2n64fjlSfxpmNd3wCSK3EaJU2BOyB8Gf/YNy8MkkgFxfBJMdPagVp6rj
-         8t9HxLcCMvfjFm8rSm46+m8ErvaSrux1gc0n1lYSeP9c+6z444zhcf+koQiZBP3dEF
-         hl8/yImExn67ElaNHSXK8bcXcY912fUYoh+gN9G2pSP32K7DEUstz7jhEa9uKKrWyh
-         xqF79eKz9qH/w==
-Date:   Thu, 6 Jul 2023 13:55:39 +0200
-From:   Frederic Weisbecker <frederic@kernel.org>
-To:     Valentin Schneider <vschneid@redhat.com>
-Cc:     linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
-        linux-doc@vger.kernel.org, kvm@vger.kernel.org, linux-mm@kvack.org,
-        bpf@vger.kernel.org, x86@kernel.org,
-        Nicolas Saenz Julienne <nsaenzju@redhat.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Uladzislau Rezki <urezki@gmail.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        Lorenzo Stoakes <lstoakes@gmail.com>,
-        Josh Poimboeuf <jpoimboe@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Sami Tolvanen <samitolvanen@google.com>,
-        Ard Biesheuvel <ardb@kernel.org>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        Juerg Haefliger <juerg.haefliger@canonical.com>,
-        Nicolas Saenz Julienne <nsaenz@kernel.org>,
-        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-        Nadav Amit <namit@vmware.com>,
-        Dan Carpenter <error27@gmail.com>,
-        Chuang Wang <nashuiliang@gmail.com>,
-        Yang Jihong <yangjihong1@huawei.com>,
-        Petr Mladek <pmladek@suse.com>,
-        "Jason A. Donenfeld" <Jason@zx2c4.com>, Song Liu <song@kernel.org>,
-        Julian Pidancet <julian.pidancet@oracle.com>,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        Dionna Glaze <dionnaglaze@google.com>,
-        Thomas =?iso-8859-1?Q?Wei=DFschuh?= <linux@weissschuh.net>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Daniel Bristot de Oliveira <bristot@redhat.com>,
-        Marcelo Tosatti <mtosatti@redhat.com>,
-        Yair Podemsky <ypodemsk@redhat.com>
-Subject: Re: [RFC PATCH 11/14] context-tracking: Introduce work deferral
- infrastructure
-Message-ID: <ZKaru+Ka5kmlwrs/@lothringen>
-References: <20230705181256.3539027-1-vschneid@redhat.com>
- <20230705181256.3539027-12-vschneid@redhat.com>
- <ZKXtfWZiM66dK5xC@localhost.localdomain>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <ZKXtfWZiM66dK5xC@localhost.localdomain>
+        s=k20201202; t=1688650635;
+        bh=5xsDFMqKiKcb2GYFWhTiN6rPXWfblS1mUzchy+w1xDg=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=RHrvdu5Uj7cAqAyDgp0i5NO1d8iIZP9KrKs2nGX87TOW7L5pO4fpt1/GpPgyTV6aI
+         GuNNMZZ5QP/NFhmWGJz9vC2vQnwH/aE5etRMn2rz+k29zxN7Jmrv/1n5JabfAimgwE
+         CblqGpIpi3ygL9ulgfcLzFP0fdwmUjQxIYkC7TLk5mhj86sm7GbDB6+xlYBglN7VXm
+         X/6qrbSTTZm+YBaRihpPMhj0wF2duhBvSLXqDcolrZoSOR2h2kKJXh1G7rPHXWgVOm
+         9jS6KILvLkbUyqkH2xqejWrAdh0ikBNpPl/5Z0DFxgXEUMHp/vDNO0XVe8BYjLweyY
+         xC91EDHU0UTDA==
+Date:   Thu, 6 Jul 2023 22:37:10 +0900
+From:   Masami Hiramatsu (Google) <mhiramat@kernel.org>
+To:     Li zeming <zeming@nfschina.com>
+Cc:     naveen.n.rao@linux.ibm.com, anil.s.keshavamurthy@intel.com,
+        davem@davemloft.net, linux-kernel@vger.kernel.org,
+        linux-trace-kernel@vger.kernel.org
+Subject: Re: [PATCH] kprobes: Remove unnecessary =?UTF-8?B?4oCYMOKAmQ==?=
+ values from ret
+Message-Id: <20230706223710.58284736311727766cee345a@kernel.org>
+In-Reply-To: <20230704192107.2944-1-zeming@nfschina.com>
+References: <20230704192107.2944-1-zeming@nfschina.com>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On Thu, Jul 06, 2023 at 12:23:57AM +0200, Frederic Weisbecker wrote:
-> Le Wed, Jul 05, 2023 at 07:12:53PM +0100, Valentin Schneider a écrit :
-> +bool ct_set_cpu_work(unsigned int cpu, unsigned int work)
-> +{
-> +	struct context_tracking *ct = per_cpu_ptr(&context_tracking, cpu);
-> +	unsigned int old, new, state;
-> +	bool ret = false;
-> +
-> +	preempt_disable();
-> +
-> +	work <<= CONTEXT_WORK;
-> +	state = atomic_read(&ct->state);
-> +	/*
-> +	 * Try setting the work until either
-> +	 * - the target CPU is on the kernel
-> +	 * - the work has been set
-> +	 */
-> +	for (;;) {
-> +		/* Only set if running in user/guest */
-> +		old = state;
-> +		old &= ~CONTEXT_MASK;
-> +		old |= CONTEXT_USER;
-> +
-> +		new = old | work;
-> +
-> +		state = atomic_cmpxchg(&ct->state, old, new);
-> +		if (state & work) {
+On Wed,  5 Jul 2023 03:21:07 +0800
+Li zeming <zeming@nfschina.com> wrote:
 
-And this should be "if (state == old)", otherwise there is
-a risk that someone else had set the work but atomic_cmpxchg()
-failed due to other modifications is the meantime. It's then
-dangerous in that case to defer the work because atomic_cmpxchg()
-failures don't imply full ordering. So there is a risk that the
-target executes the work but doesn't see the most recent data.
+> ret is assigned first, so it does not need to initialize the assignment.
+> 
+> Signed-off-by: Li zeming <zeming@nfschina.com>
 
-Thanks.
+Looks good to me.
+
+Acked-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+
+Thank you!
+
+> ---
+>  kernel/kprobes.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/kernel/kprobes.c b/kernel/kprobes.c
+> index 00e177de91cc..db8a3aa53cf6 100644
+> --- a/kernel/kprobes.c
+> +++ b/kernel/kprobes.c
+> @@ -1072,7 +1072,7 @@ static int kprobe_ftrace_enabled;
+>  static int __arm_kprobe_ftrace(struct kprobe *p, struct ftrace_ops *ops,
+>  			       int *cnt)
+>  {
+> -	int ret = 0;
+> +	int ret;
+>  
+>  	lockdep_assert_held(&kprobe_mutex);
+>  
+> @@ -1110,7 +1110,7 @@ static int arm_kprobe_ftrace(struct kprobe *p)
+>  static int __disarm_kprobe_ftrace(struct kprobe *p, struct ftrace_ops *ops,
+>  				  int *cnt)
+>  {
+> -	int ret = 0;
+> +	int ret;
+>  
+>  	lockdep_assert_held(&kprobe_mutex);
+>  
+> -- 
+> 2.18.2
+> 
+
+
+-- 
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
