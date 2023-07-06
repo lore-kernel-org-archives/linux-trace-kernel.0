@@ -2,99 +2,109 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 62F18EB64D9
-	for <linux-trace-kernel@archiver.kernel.org>; Thu,  6 Jul 2023 13:56:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D46B0EB64D9
+	for <linux-trace-kernel@archiver.kernel.org>; Thu,  6 Jul 2023 14:06:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231566AbjGFN43 (ORCPT
+        id S232965AbjGFOG5 (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Thu, 6 Jul 2023 09:56:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35632 "EHLO
+        Thu, 6 Jul 2023 10:06:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43734 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231366AbjGFN43 (ORCPT
+        with ESMTP id S232805AbjGFOGy (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Thu, 6 Jul 2023 09:56:29 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 349B81996;
-        Thu,  6 Jul 2023 06:56:28 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        Thu, 6 Jul 2023 10:06:54 -0400
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.220.28])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C0F9D1BD2;
+        Thu,  6 Jul 2023 07:06:34 -0700 (PDT)
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits))
+         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id C27C961973;
-        Thu,  6 Jul 2023 13:56:27 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7AC0AC433C8;
-        Thu,  6 Jul 2023 13:56:26 +0000 (UTC)
-Date:   Thu, 6 Jul 2023 09:56:24 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
-Cc:     Jiri Olsa <jolsa@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
-        lkml <linux-kernel@vger.kernel.org>,
-        linux-trace-kernel@vger.kernel.org, bpf@vger.kernel.org
-Subject: Re: [PATCH] fprobe: Ensure running fprobe_exit_handler() finished
- before calling rethook_free()
-Message-ID: <20230706095624.3a846b8e@gandalf.local.home>
-In-Reply-To: <20230706141012.c1a0ae0901e0fdec7b3078c7@kernel.org>
-References: <20230628012305.978e34d44f1a53fe20327fde@kernel.org>
-        <168796344232.46347.7947681068822514750.stgit@devnote2>
-        <20230705212657.5968daf7@gandalf.local.home>
-        <20230706141012.c1a0ae0901e0fdec7b3078c7@kernel.org>
-X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+        by smtp-out1.suse.de (Postfix) with ESMTPS id 6DE49228AD;
+        Thu,  6 Jul 2023 14:06:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+        t=1688652393; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=Uu4jxlXZN8L7Iwvf7kLgcAyxw4lB/q/GPbZQywpd7PY=;
+        b=Zl0iQRbZu6oktjjwtYUjw8nIKaTAF3LKE1mcNx53LHi4IijRY57FjTOd0k6WUea8qyXMeM
+        xXdhOPmSD635HfWazH9UoCOxl8IE6JAwWhPb3coxctrO82XKTe6us9IqlzZoNtN5OFQivb
+        2/rkSu9HHLwsqSbjEkPB6rKNNWJmuMM=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+        s=susede2_ed25519; t=1688652393;
+        h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+         mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=Uu4jxlXZN8L7Iwvf7kLgcAyxw4lB/q/GPbZQywpd7PY=;
+        b=hBUvMMaz3j1QuRcfRZYsqO7BQLGGbJNwVzwFPdgua7LgAMgBfZZYZHvzm3PtAgFD8xChsG
+        vlLHQoa+2ecBnKDA==
+Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
+        (No client certificate requested)
+        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id 60A7D138EE;
+        Thu,  6 Jul 2023 14:06:33 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([192.168.254.65])
+        by imap2.suse-dmz.suse.de with ESMTPSA
+        id u2aPF2nKpmTTagAAMHmgww
+        (envelope-from <jack@suse.cz>); Thu, 06 Jul 2023 14:06:33 +0000
+Received: by quack3.suse.cz (Postfix, from userid 1000)
+        id 007B0A0707; Thu,  6 Jul 2023 16:06:32 +0200 (CEST)
+Date:   Thu, 6 Jul 2023 16:06:32 +0200
+From:   Jan Kara <jack@suse.cz>
+To:     Jeff Layton <jlayton@kernel.org>
+Cc:     Christian Brauner <brauner@kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Al Viro <viro@zeniv.linux.org.uk>, Jan Kara <jack@suse.cz>,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-trace-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 77/92] tracefs: convert to ctime accessor functions
+Message-ID: <20230706140632.2wqxkgygalcgvjj4@quack3>
+References: <20230705185755.579053-1-jlayton@kernel.org>
+ <20230705190309.579783-1-jlayton@kernel.org>
+ <20230705190309.579783-75-jlayton@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230705190309.579783-75-jlayton@kernel.org>
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On Thu, 6 Jul 2023 14:10:12 +0900
-Masami Hiramatsu (Google) <mhiramat@kernel.org> wrote:
+On Wed 05-07-23 15:01:42, Jeff Layton wrote:
+> In later patches, we're going to change how the inode's ctime field is
+> used. Switch to using accessor functions instead of raw accesses of
+> inode->i_ctime.
+> 
+> Signed-off-by: Jeff Layton <jlayton@kernel.org>
 
-> With only Jiri's patch, following flow can happen;
-> 
-> ------
->  CPU1                              CPU2
->  call unregister_fprobe()
->  ...
->                                    __fprobe_handler()
->                                    rethook_hook() on probed function
->  unregister_ftrace_function()
->                                    return from probed function
->                                    rethook hooks
->                                    find rh->handler == fprobe_exit_handler
->                                    call fprobe_exit_handler()
->  rethook_free():
->    set rh->handler = NULL;
->  return from unreigster_fprobe;
->                                    call fp->exit_handler() <- (*)
-> 
-> (*) In this point, the exit handler is called after returning from 
-> unregister_fprobe().
-> ------
-> 
-> So, this patch changes it as following;
-> ------
->  CPU1                              CPU2
->  call unregister_fprobe()
->  ...
->  rethook_stop():
->    set rh->handler = NULL;
->                                    __fprobe_handler()
->                                    rethook_hook() on probed function
->  unregister_ftrace_function()
->                                    return from probed function
->                                    rethook hooks
->                                    find rh->handler == NULL
->                                    return from rethook
->  rethook_free()
->  return from unreigster_fprobe;
-> ------
-> 
-> I can also just put a synchronize_sched_rcu() right after rethook_free()
-> to wait for all running fprobe_exit_handler() too.
-> 
+Looks good. Feel free to add:
 
-This makes more sense. Can you please add the above to the change log.
+Reviewed-by: Jan Kara <jack@suse.cz>
 
-Thanks,
+								Honza
 
--- Steve
+> ---
+>  fs/tracefs/inode.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/fs/tracefs/inode.c b/fs/tracefs/inode.c
+> index 57ac8aa4a724..2feb6c58648c 100644
+> --- a/fs/tracefs/inode.c
+> +++ b/fs/tracefs/inode.c
+> @@ -132,7 +132,7 @@ static struct inode *tracefs_get_inode(struct super_block *sb)
+>  	struct inode *inode = new_inode(sb);
+>  	if (inode) {
+>  		inode->i_ino = get_next_ino();
+> -		inode->i_atime = inode->i_mtime = inode->i_ctime = current_time(inode);
+> +		inode->i_atime = inode->i_mtime = inode_set_ctime_current(inode);
+>  	}
+>  	return inode;
+>  }
+> -- 
+> 2.41.0
+> 
+-- 
+Jan Kara <jack@suse.com>
+SUSE Labs, CR
