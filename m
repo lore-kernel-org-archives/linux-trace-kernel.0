@@ -2,134 +2,156 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D17CEB64D9
-	for <linux-trace-kernel@archiver.kernel.org>; Thu,  6 Jul 2023 22:00:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2EBCDC001DF
+	for <linux-trace-kernel@archiver.kernel.org>; Thu,  6 Jul 2023 23:27:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231756AbjGFWAq (ORCPT
+        id S231407AbjGFX1y (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Thu, 6 Jul 2023 18:00:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37316 "EHLO
+        Thu, 6 Jul 2023 19:27:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39994 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231849AbjGFWAo (ORCPT
+        with ESMTP id S229555AbjGFX1w (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Thu, 6 Jul 2023 18:00:44 -0400
-Received: from mail-wm1-x333.google.com (mail-wm1-x333.google.com [IPv6:2a00:1450:4864:20::333])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 817DF1FC1;
-        Thu,  6 Jul 2023 15:00:40 -0700 (PDT)
-Received: by mail-wm1-x333.google.com with SMTP id 5b1f17b1804b1-3fbc5d5742bso13718895e9.2;
-        Thu, 06 Jul 2023 15:00:40 -0700 (PDT)
+        Thu, 6 Jul 2023 19:27:52 -0400
+Received: from mail-pj1-x1034.google.com (mail-pj1-x1034.google.com [IPv6:2607:f8b0:4864:20::1034])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9B9D42139;
+        Thu,  6 Jul 2023 16:27:29 -0700 (PDT)
+Received: by mail-pj1-x1034.google.com with SMTP id 98e67ed59e1d1-262e839647eso998832a91.2;
+        Thu, 06 Jul 2023 16:27:29 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1688680839; x=1691272839;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=bJMdyJkJ1mr8FBDXUnVbesfT+m0E5CU75mKK+JpWXZM=;
-        b=OUhtPgDl2e/XhW1R7zEMjRwTn3ZbTObDqgIPfzYXgC0Fn1FIqDn6Kxf7tChlcy/Aez
-         0u4any6LVIcSi8bUv7ZhOPbnF/QET8xKJyA8TTRHBRC46gF1LrBe4L/Vwp57qsoOPLrO
-         JBPh/LvQZz+BPO/lHvNLpF7G2bAOYSBVq4ZXr03gjxbHOZmhvoeDH/5oCN3aK4k7MjJp
-         kLZMb3ycrKx8zfYrViCUvf/BUD9qqtnXkZKvYrWf9EUkzqZv0lQ5OKpyxVlvlZw00A64
-         5L9N5126yiDBRAwJ3Ui5cnMampD/wNqSZl9RorEnsYbhPfqZoT2hm+1tKJ6XNxsaHRua
-         AcTQ==
+        d=gmail.com; s=20221208; t=1688686035; x=1691278035;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=bshFgcOle4AtCEA8BTrEZy72fJQG+YZaemfgC6JBXtM=;
+        b=IOWiwnyWZ8b/Gees9+bG/u0x39WWkdTCEFwE5s22SnFW0XqC5rvrUBYyTAMCmPKnJI
+         4qgrjSpARX+HgWz9r6G2mSEL12oNVjQzOzkJqh3SzPGRq+dOdz2w69HGJqAgtWs3B+FF
+         T6HW7smfo85Kiy1q9wyrh5thmF1HeIclKjwIH6EhYa02ctmARHBhKmOapagUI9oe+V7q
+         uoPvVu9uynFN4Sr5hgnBSuTuO3OcHkSwGSiZFHxXBsK82s4HjycRFyZstD5Yw4wGvRYw
+         1QoXQABJKLn0yVKHJ9xKaDeEnTkTKYmmzeS96+jpOAiqhUnv1SaL0yR9rZHub1JRR4EU
+         /sYQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1688680839; x=1691272839;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=bJMdyJkJ1mr8FBDXUnVbesfT+m0E5CU75mKK+JpWXZM=;
-        b=HqJgiH9VpoaLXTKQ+88MYng1/Y5t4ADW3D78s4Rl+6yJwv5f6QY6vsSKyl00tfXRV3
-         SeUJl7HrQJovPRtPn1OWG0vJLBDlWqSLn1QePhwSiqOQxV7TyElAMPmTvXnZl0jM4s51
-         xvVIj0+JGRsnTYmCKj7/x1SpIKW6Hf8HEb0/gzy0EfNnLA6LQBMugRrP0OtqaROG4j4e
-         WAwlbBG99GasNLb03kAtR+yWbWyWdRUoxX1PfUo3ADI841w8gD7jlBpKN3tQRRBr9Qdw
-         296Y0Wo8Q9ejGUl2e0iHP4fo3bkAJa7XzdEjnQFf2eNS7fkK79aHVDKi3nCZvrZEhYV1
-         XojQ==
-X-Gm-Message-State: ABy/qLZWFD/kzb4nzwIRKgrrQfcmICFxwPSwvTDzmBbf0PWuCHyuSLh+
-        7puiLIsVzEsGEoeF0uR7pItqWkh10s62Gj9RyxY=
-X-Google-Smtp-Source: APBJJlH1rJzs216rPJjjCDCxYxXYu6xV0enaNZ0w5EBsw/TR+Z7VCLylZxbjpjOdyXHQDX5KOdHaH1tCyd7/cRY6Zwc=
-X-Received: by 2002:a7b:c019:0:b0:3fa:973e:2995 with SMTP id
- c25-20020a7bc019000000b003fa973e2995mr2422304wmb.12.1688680838627; Thu, 06
- Jul 2023 15:00:38 -0700 (PDT)
+        d=1e100.net; s=20221208; t=1688686035; x=1691278035;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=bshFgcOle4AtCEA8BTrEZy72fJQG+YZaemfgC6JBXtM=;
+        b=MHWeUiwqxpYZcakCqf3PvdRNUg2pOpaY9zc2APg1NoPf24mmi9AqGRy1VHiNAPmZtO
+         ePgx1UUD7oAudjizDx0voVDY/zA5uTlRknqncr8F0THC9W8BUz08hPhUzotm+3p6sfjA
+         6oCjD9cZJT+/xfKVWQdSG490UQwXs6JvpyxnScyhqJugb7MSCDs74A1iX+aYPEmPk7OJ
+         HapNR2d6mGYJ4t6CnXJalznW48KQxkgYHMMWcl7dMXhlb2DXdMHFiru4jVcITms6jJYN
+         Tp1ttSmGRh4sSD/EJjlgHVvOSyrXcdiFcJVqk6p6Ug6RfGVH2TS1QP13QvQsnXdEY7mb
+         Z1QQ==
+X-Gm-Message-State: ABy/qLZRDiZ/qHwVbRXiF0Xg8NMMjNqaRGNNxKG4NuPgm1vmYgLE57n5
+        tHllK1GWlUMhiYDsPgRJH2s=
+X-Google-Smtp-Source: APBJJlFvuQWESuYnnmEsR9Q/RlJxwVOHx3CZ7iqj95A72EuTZBpzNQR7aSAdAsIzLqTLdZ3dQSY+iQ==
+X-Received: by 2002:a17:90a:bb84:b0:25b:e07f:4c43 with SMTP id v4-20020a17090abb8400b0025be07f4c43mr3123081pjr.10.1688686035098;
+        Thu, 06 Jul 2023 16:27:15 -0700 (PDT)
+Received: from macbook-pro-8.dhcp.thefacebook.com ([2620:10d:c090:400::5:9b44])
+        by smtp.gmail.com with ESMTPSA id bk15-20020a17090b080f00b0025bf1ea918asm270552pjb.55.2023.07.06.16.27.10
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 06 Jul 2023 16:27:14 -0700 (PDT)
+Date:   Thu, 6 Jul 2023 16:27:09 -0700
+From:   Alexei Starovoitov <alexei.starovoitov@gmail.com>
+To:     Roberto Sassu <roberto.sassu@huaweicloud.com>
+Cc:     dhowells@redhat.com, dwmw2@infradead.org,
+        herbert@gondor.apana.org.au, davem@davemloft.net,
+        jarkko@kernel.org, song@kernel.org, jolsa@kernel.org,
+        ast@kernel.org, daniel@iogearbox.net, andrii@kernel.org,
+        martin.lau@linux.dev, yhs@fb.com, john.fastabend@gmail.com,
+        kpsingh@kernel.org, sdf@google.com, haoluo@google.com,
+        rostedt@goodmis.org, mhiramat@kernel.org, mykolal@fb.com,
+        shuah@kernel.org, linux-kernel@vger.kernel.org,
+        keyrings@vger.kernel.org, linux-crypto@vger.kernel.org,
+        bpf@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+        linux-kselftest@vger.kernel.org, pbrobinson@gmail.com,
+        zbyszek@in.waw.pl, zohar@linux.ibm.com,
+        linux-integrity@vger.kernel.org, paul@paul-moore.com,
+        linux-security-module@vger.kernel.org, wiktor@metacode.biz,
+        devel@lists.sequoia-pgp.org, gnupg-devel@gnupg.org,
+        ebiggers@kernel.org, Jason@zx2c4.com, mail@maciej.szmigiero.name,
+        antony@vennard.ch, konstantin@linuxfoundation.org,
+        James.Bottomley@hansenpartnership.com,
+        Roberto Sassu <roberto.sassu@huawei.com>
+Subject: Re: [RFC][PATCH 00/10] KEYS: Introduce user asymmetric keys and
+ signatures
+Message-ID: <20230706232709.t6imkh3q234b3dlm@macbook-pro-8.dhcp.thefacebook.com>
+References: <20230706144225.1046544-1-roberto.sassu@huaweicloud.com>
 MIME-Version: 1.0
-References: <20230628115329.248450-1-laoar.shao@gmail.com> <20230628115329.248450-9-laoar.shao@gmail.com>
-In-Reply-To: <20230628115329.248450-9-laoar.shao@gmail.com>
-From:   Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Date:   Thu, 6 Jul 2023 15:00:26 -0700
-Message-ID: <CAEf4BzYOQQHFo6OwRb4ORsCq0iqYRp=MtVFNeGgSW9NCMrdnAw@mail.gmail.com>
-Subject: Re: [PATCH v6 bpf-next 08/11] bpf: Add bpf_perf_link_fill_common()
-To:     Yafang Shao <laoar.shao@gmail.com>
-Cc:     ast@kernel.org, daniel@iogearbox.net, john.fastabend@gmail.com,
-        andrii@kernel.org, martin.lau@linux.dev, song@kernel.org,
-        yhs@fb.com, kpsingh@kernel.org, sdf@google.com, haoluo@google.com,
-        jolsa@kernel.org, quentin@isovalent.com, rostedt@goodmis.org,
-        mhiramat@kernel.org, bpf@vger.kernel.org,
-        linux-trace-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230706144225.1046544-1-roberto.sassu@huaweicloud.com>
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On Wed, Jun 28, 2023 at 4:53=E2=80=AFAM Yafang Shao <laoar.shao@gmail.com> =
-wrote:
->
-> Add a new helper bpf_perf_link_fill_common(), which will be used by
-> perf_link based tracepoint, kprobe and uprobe.
->
-> Signed-off-by: Yafang Shao <laoar.shao@gmail.com>
-> ---
->  kernel/bpf/syscall.c | 34 ++++++++++++++++++++++++++++++++++
->  1 file changed, 34 insertions(+)
->
-> diff --git a/kernel/bpf/syscall.c b/kernel/bpf/syscall.c
-> index 4aa6e5776a04..72de91beabbc 100644
-> --- a/kernel/bpf/syscall.c
-> +++ b/kernel/bpf/syscall.c
-> @@ -3364,6 +3364,40 @@ static void bpf_perf_link_dealloc(struct bpf_link =
-*link)
->         kfree(perf_link);
->  }
->
-> +static int bpf_perf_link_fill_common(const struct perf_event *event,
-> +                                    char __user *uname, u32 ulen,
-> +                                    u64 *probe_offset, u64 *probe_addr,
-> +                                    u32 *fd_type)
-> +{
-> +       const char *buf;
-> +       u32 prog_id;
-> +       size_t len;
-> +       int err;
-> +
-> +       if (!ulen ^ !uname)
-> +               return -EINVAL;
-> +       if (!uname)
-> +               return 0;
-> +
-> +       err =3D bpf_get_perf_event_info(event, &prog_id, fd_type, &buf,
-> +                                     probe_offset, probe_addr);
-> +       if (err)
-> +               return err;
-> +
-> +       len =3D strlen(buf);
-> +       if (buf) {
+On Thu, Jul 06, 2023 at 04:42:13PM +0200, Roberto Sassu wrote:
+> From: Roberto Sassu <roberto.sassu@huawei.com>
+> 
+> Define a new TLV-based format for keys and signatures, aiming to store and
+> use in the kernel the crypto material from other unsupported formats
+> (e.g. PGP).
+> 
+> TLV fields have been defined to fill the corresponding kernel structures
+> public_key, public_key_signature and key_preparsed_payload.
+> 
+> Keys:
+>                 struct public_key {     struct key_preparsed_payload {
+> KEY_PUB       -->  void *key;
+>                    u32 keylen;         --> prep->payload.data[asym_crypto]
+> KEY_ALGO      -->  const char *pkey_algo;
+> KEY_KID0
+> KEY_KID1                               --> prep->payload.data[asym_key_ids]
+> KEY_KID2  
+> KEY_DESC                               --> prep->description
+> 
+> 
+> Signatures:
+>                 struct public_key_signature {
+> SIG_S         -->  u8 *s;
+>                    u32 s_size;
+> SIG_KEY_ALGO  -->  const char *pkey_algo;
+> SIG_HASH_ALGO -->  const char *hash_algo;
+>                    u32 digest_size;
+> SIG_ENC       -->  const char *encoding;   
+> SIG_KID0
+> SIG_KID1      -->  struct asymmetric_key_id *auth_ids[3];
+> SIG_KID2  
+> 
+> 
+> For keys, since the format conversion has to be done in user space, user
+> space is assumed to be trusted, in this proposal. Without this assumption,
+> a malicious conversion tool could make a user load to the kernel a
+> different key than the one expected.
+> 
+> That should not be a particular problem for keys that are embedded in the
+> kernel image and loaded at boot, since the conversion happens in a trusted
+> environment such as the building infrastructure of the Linux distribution
+> vendor.
+> 
+> In the other cases, such as enrolling a key through the Machine Owner Key
+> (MOK) mechanism, the user is responsible to ensure that the crypto material
+> carried in the original format remains the same after the conversion.
+> 
+> For signatures, assuming the strength of the crypto algorithms, altering
+> the crypto material is simply a Denial-of-Service (DoS), as data can be
+> validated only with the right signature.
+> 
+> 
+> This patch set also offers the following contributions:
+> 
+> - An API similar to the PKCS#7 one, to verify the authenticity of system
+>   data through user asymmetric keys and signatures
+> 
+> - A mechanism to store a keyring blob in the kernel image and to extract
+>   and load the keys at system boot
+>   
+> - eBPF binding, so that data authenticity verification with user asymmetric
+>   keys and signatures can be carried out also with eBPF programs
 
-if buf is NULL, strlen above will crash, so you need to calculate len
-inside this if branch
+Nack to bpf bits.
+You've convinced us that bpf_verify_pkcs7_signature() is what you need.
+Yet, 9 month later there are no users of it and you came back with this new
+bpf_verify_uasym_signature() helper that practically not much different.
 
-
-> +               err =3D bpf_copy_to_user(uname, buf, ulen, len);
-> +               if (err)
-> +                       return err;
-> +       } else {
-> +               char zero =3D '\0';
-> +
-> +               if (put_user(zero, uname))
-> +                       return -EFAULT;
-> +       }
-> +       return 0;
-> +}
-> +
->  static const struct bpf_link_ops bpf_perf_link_lops =3D {
->         .release =3D bpf_perf_link_release,
->         .dealloc =3D bpf_perf_link_dealloc,
-> --
-> 2.39.3
->
+Instead of brand new "public key info" format sign your rpms via
+existing pkcs7 mechanism and verify with bpf_verify_pkcs7_signature().
