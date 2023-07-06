@@ -2,149 +2,155 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D1D2CEB64DC
-	for <linux-trace-kernel@archiver.kernel.org>; Thu,  6 Jul 2023 11:34:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 48497EB64DC
+	for <linux-trace-kernel@archiver.kernel.org>; Thu,  6 Jul 2023 11:40:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231311AbjGFLe1 (ORCPT
+        id S232295AbjGFLkt (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Thu, 6 Jul 2023 07:34:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37840 "EHLO
+        Thu, 6 Jul 2023 07:40:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41154 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229514AbjGFLe0 (ORCPT
+        with ESMTP id S232160AbjGFLkr (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Thu, 6 Jul 2023 07:34:26 -0400
-Received: from desiato.infradead.org (desiato.infradead.org [IPv6:2001:8b0:10b:1:d65d:64ff:fe57:4e05])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 952511727;
-        Thu,  6 Jul 2023 04:34:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=eKY/Uo90bROTMojvs7v+DqKoFW8MQafmKj7nGaM0SMo=; b=DS4GEvci5dv0oamCOC8VOMsYPA
-        0qb9WGqNf7NESEYk7b1y7Osv20dwQHcCS9hxAUM9a0Kg3EyoKgjr3KtTEK6G00Kzk0Q0vpTsLFyu3
-        BnqDv6OmsoMjZezdt6+ARvuS8VWFYBy8hhY99/TqjRsBxVAPKXyxw5QrYt+f/Gh8aVePQFIEaJwYm
-        xQ7nHlpRYUm6VaGEyIMHBKNrUQiulWEXU6mPfZ/wG79dlNH3MHz92m0TJ45Q+8VYc4yfYhD5jeT50
-        vIyQPrxKgLiEk3tehEFDobHnfRFfJG6uorDiESVx8yce88JpLJkQpC4iv7kKFZPYabjgX1GjwuDSK
-        A4/bxYsg==;
-Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
-        by desiato.infradead.org with esmtpsa (Exim 4.96 #2 (Red Hat Linux))
-        id 1qHNFN-00DZN3-24;
-        Thu, 06 Jul 2023 11:34:05 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        Thu, 6 Jul 2023 07:40:47 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DA6482113;
+        Thu,  6 Jul 2023 04:40:19 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 936FC300095;
-        Thu,  6 Jul 2023 13:34:03 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 7C085200BDD20; Thu,  6 Jul 2023 13:34:03 +0200 (CEST)
-Date:   Thu, 6 Jul 2023 13:34:03 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Masami Hiramatsu <mhiramat@kernel.org>
-Cc:     Petr Pavlu <petr.pavlu@suse.com>, tglx@linutronix.de,
-        mingo@redhat.com, bp@alien8.de, dave.hansen@linux.intel.com,
-        hpa@zytor.com, samitolvanen@google.com, x86@kernel.org,
-        linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/2] x86/retpoline,kprobes: Avoid treating rethunk as an
- indirect jump
-Message-ID: <20230706113403.GI2833176@hirez.programming.kicks-ass.net>
-References: <20230705081547.25130-1-petr.pavlu@suse.com>
- <20230705081547.25130-3-petr.pavlu@suse.com>
- <20230705085857.GG462772@hirez.programming.kicks-ass.net>
- <20230705232038.3a6d03e18f7bafb14cdfed42@kernel.org>
- <20230705145017.GC4253@hirez.programming.kicks-ass.net>
- <20230706094723.6934105e03f652923796bf7e@kernel.org>
- <20230706071705.GD2833176@hirez.programming.kicks-ass.net>
- <20230706180014.06705096a594b71250ff3c94@kernel.org>
+         key-exchange X25519 server-signature RSA-PSS (2048 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 8145461886;
+        Thu,  6 Jul 2023 11:40:18 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 50F67C433C7;
+        Thu,  6 Jul 2023 11:40:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1688643617;
+        bh=h08GLHzvzPag2+5puOztYp01UnHlh2rRD22/d6waft8=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=jpkdlCXWe7GWqMfmwmsb2ud2sF5O4+fD2WXQSRpi2ETowI8YWAiKUY2wLjsaVNJpX
+         +RxS2fLk+ORVul2Nyn0W4KqpCYtF0uwRkzgfC1Th8q/05Gki9oc5hbhpOztdJmf1tc
+         dK/szrpOsSLV2AWvcUKZ5PIBfWIXCeUiDu8SVmx6qB7nXGA9312BveqiC/GGmrBff3
+         /YM1im7HcTF7G+laaX0i/fws9kOhYMTb9Wt4fSNCWYw7hFJE8UNr07UVKdCiPRmjj8
+         VL2y/hVlHIW1hO3bgyapVeY+dyvbFX4rWbKMljPZv2Y3v5ZMX+Y8ojxKKyrKJRxf+1
+         mwP544/PX36qw==
+Date:   Thu, 6 Jul 2023 13:40:14 +0200
+From:   Frederic Weisbecker <frederic@kernel.org>
+To:     Valentin Schneider <vschneid@redhat.com>
+Cc:     linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+        linux-doc@vger.kernel.org, kvm@vger.kernel.org, linux-mm@kvack.org,
+        bpf@vger.kernel.org, x86@kernel.org,
+        Nicolas Saenz Julienne <nsaenzju@redhat.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Uladzislau Rezki <urezki@gmail.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        Lorenzo Stoakes <lstoakes@gmail.com>,
+        Josh Poimboeuf <jpoimboe@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Sami Tolvanen <samitolvanen@google.com>,
+        Ard Biesheuvel <ardb@kernel.org>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        Juerg Haefliger <juerg.haefliger@canonical.com>,
+        Nicolas Saenz Julienne <nsaenz@kernel.org>,
+        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+        Nadav Amit <namit@vmware.com>,
+        Dan Carpenter <error27@gmail.com>,
+        Chuang Wang <nashuiliang@gmail.com>,
+        Yang Jihong <yangjihong1@huawei.com>,
+        Petr Mladek <pmladek@suse.com>,
+        "Jason A. Donenfeld" <Jason@zx2c4.com>, Song Liu <song@kernel.org>,
+        Julian Pidancet <julian.pidancet@oracle.com>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        Dionna Glaze <dionnaglaze@google.com>,
+        Thomas =?iso-8859-1?Q?Wei=DFschuh?= <linux@weissschuh.net>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Daniel Bristot de Oliveira <bristot@redhat.com>,
+        Marcelo Tosatti <mtosatti@redhat.com>,
+        Yair Podemsky <ypodemsk@redhat.com>
+Subject: Re: [RFC PATCH 11/14] context-tracking: Introduce work deferral
+ infrastructure
+Message-ID: <ZKaoHrm0Fejb7kAl@lothringen>
+References: <20230705181256.3539027-1-vschneid@redhat.com>
+ <20230705181256.3539027-12-vschneid@redhat.com>
+ <ZKXtfWZiM66dK5xC@localhost.localdomain>
+ <xhsmhttuhuvix.mognet@vschneid.remote.csb>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20230706180014.06705096a594b71250ff3c94@kernel.org>
+In-Reply-To: <xhsmhttuhuvix.mognet@vschneid.remote.csb>
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On Thu, Jul 06, 2023 at 06:00:14PM +0900, Masami Hiramatsu wrote:
-> On Thu, 6 Jul 2023 09:17:05 +0200
-> Peter Zijlstra <peterz@infradead.org> wrote:
+On Thu, Jul 06, 2023 at 12:30:46PM +0100, Valentin Schneider wrote:
+> >> +		ret = atomic_try_cmpxchg(&ct->work, &old_work, old_work | work);
+> >> +
+> >> +	preempt_enable();
+> >> +	return ret;
+> >> +}
+> > [...]
+> >> @@ -100,14 +158,19 @@ static noinstr void ct_kernel_exit_state(int offset)
+> >>   */
+> >>  static noinstr void ct_kernel_enter_state(int offset)
+> >>  {
+> >> +	struct context_tracking *ct = this_cpu_ptr(&context_tracking);
+> >>      int seq;
+> >> +	unsigned int work;
+> >>
+> >> +	work = ct_work_fetch(ct);
+> >
+> > So this adds another fully ordered operation on user <-> kernel transition.
+> > How many such IPIs can we expect?
+> >
 > 
-> > On Thu, Jul 06, 2023 at 09:47:23AM +0900, Masami Hiramatsu wrote:
-> > 
-> > > > > If I understand correctly, all indirect jump will be replaced with JMP_NOSPEC.
-> > > > > If you read the insn_jump_into_range, I onlu jecks the jump code, not call.
-> > > > > So the functions only have indirect call still allow optprobe.
-> > > > 
-> > > > With the introduction of kCFI JMP_NOSPEC is no longer an equivalent to a
-> > > > C indirect jump.
-> > > 
-> > > If I understand correctly, kCFI is enabled by CFI_CLANG, and clang is not
-> > > using jump-tables by default, so we can focus on gcc. In that case
-> > > current check still work, correct?
-> > 
-> > IIRC clang can use jump tables, but like GCC needs RETPOLINE=n and
-> > IBT=n, so effectively nobody has them.
+> Despite having spent quite a lot of time on that question, I think I still
+> only have a hunch.
 > 
-> So if it requires RETPOLINE=n, current __indirect_thunk_start/end checking
-> is not required, right? (that code is embraced with "#ifdef CONFIG_RETPOLINE")
-
-Correct.
-
-> > 
-> > The reason I did mention kCFI though is that kCFI has a larger 'indirect
-> > jump' sequence, and I'm not sure we've thought about what can go
-> > sideways if that's optprobed.
+> Poking around RHEL systems, I'd say 99% of the problematic IPIs are
+> instruction patching and TLB flushes.
 > 
-> If I understand correctly, kCFI checks only indirect function call (check
-> pointer), so no jump tables. Or does it use indirect 'jump' ?
-
-Yes, it's indirect function calls only.
-
-Imagine our function (bar) doing an indirect call, it will (as clang
-always does) have the function pointer in r11:
-
-bar:
-	...
-	movl	$(-0x12345678),%r10d
-	addl	-15(%r11), %r10d
-	je	1f
-	ud2
-1:	call	__x86_indirect_thunk_r11
-
-
-
-And then the function it calls (foo) looks like:
-
-__cfi_foo:
-	movl	$0x12345678, %eax
-	.skip	11, 0x90
-foo:
-	endbr
-	....
-
-
-
-So if the caller (in bar) and the callee (foo) have the same hash value
-(0x12345678 in this case) then it will be equal and we continue on our
-merry way.
-
-However, if they do not match, we'll trip that #UD and the
-handle_cfi_failure() will try and match the address to
-__{start,stop}__kcfi_traps[]. Additinoally decode_cfi_insn() will try
-and decode that whole call sequence in order to obtain the target
-address and typeid (hash).
-
-optprobes might disturb this code.
-
-> > I suspect the UD2 that's in there will go 'funny' if it's relocated into
-> > an optprobe, as in, it'll not be recognised as a CFI fail.
+> Staring at the code, there's quite a lot of smp_calls for which it's hard
+> to say whether the target CPUs can actually be isolated or not (e.g. the
+> CPU comes from a cpumask shoved in a struct that was built using data from
+> another struct of uncertain origins), but then again some of them don't
+> need to hook into context_tracking.
 > 
-> UD2 can't be optprobed (kprobe neither) because it can change the dumped
-> BUG address...
+> Long story short: I /think/ we can consider that number to be fairly small,
+> but there could be more lurking in the shadows.
 
-Right, same problem here. But could the movl/addl be opt-probed? That
-would wreck decode_cfi_insn(). Then again, if decode_cfi_insn() fails,
-we'll get report_cfi_failure_noaddr(), which is less informative.
+I guess it will still be time to reconsider the design if we ever reach such size.
 
-So it looks like nothing too horrible happens...
+> 
+> > If this is just about a dozen, can we stuff them in the state like in the
+> > following? We can potentially add more of them especially on 64 bits we could
+> > afford 30 different works, this is just shrinking the RCU extended quiescent
+> > state counter space. Worst case that can happen is that RCU misses 65535
+> > idle/user <-> kernel transitions and delays a grace period...
+> >
+> 
+> I'm trying to grok how this impacts RCU, IIUC most of RCU mostly cares about the
+> even/odd-ness of the thing, and rcu_gp_fqs() cares about the actual value
+> but only to check if it has changed over time (rcu_dynticks_in_eqs_since()
+> only does a !=).
+> 
+> I'm rephrasing here to make sure I get it - is it then that the worst case
+> here is 2^(dynticks_counter_size) transitions happen between saving the
+> dynticks snapshot and checking it again, so RCU waits some more?
 
+That's my understanding as well but I have to defer on Paul to make sure I'm
+not overlooking something.
 
+Thanks.
