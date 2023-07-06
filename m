@@ -2,42 +2,42 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F302EB64D9
-	for <linux-trace-kernel@archiver.kernel.org>; Thu,  6 Jul 2023 13:50:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 62F18EB64D9
+	for <linux-trace-kernel@archiver.kernel.org>; Thu,  6 Jul 2023 13:56:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229831AbjGFNuo (ORCPT
+        id S231566AbjGFN43 (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Thu, 6 Jul 2023 09:50:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59308 "EHLO
+        Thu, 6 Jul 2023 09:56:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35632 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231921AbjGFNun (ORCPT
+        with ESMTP id S231366AbjGFN43 (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Thu, 6 Jul 2023 09:50:43 -0400
+        Thu, 6 Jul 2023 09:56:29 -0400
 Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 964FE1990;
-        Thu,  6 Jul 2023 06:50:42 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 349B81996;
+        Thu,  6 Jul 2023 06:56:28 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange X25519 server-signature RSA-PSS (2048 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 2687561962;
-        Thu,  6 Jul 2023 13:50:42 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0CA9DC433C7;
-        Thu,  6 Jul 2023 13:50:40 +0000 (UTC)
-Date:   Thu, 6 Jul 2023 09:50:39 -0400
+        by dfw.source.kernel.org (Postfix) with ESMTPS id C27C961973;
+        Thu,  6 Jul 2023 13:56:27 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7AC0AC433C8;
+        Thu,  6 Jul 2023 13:56:26 +0000 (UTC)
+Date:   Thu, 6 Jul 2023 09:56:24 -0400
 From:   Steven Rostedt <rostedt@goodmis.org>
 To:     "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
-Cc:     Dan Carpenter <dan.carpenter@linaro.org>,
-        linux-trace-kernel@vger.kernel.org,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 3/3] tracing/probes: Fix return value when "(fault)" is
- injected
-Message-ID: <20230706095039.1cb9c9d1@gandalf.local.home>
-In-Reply-To: <20230706134036.5c074aa5fc6a55cdb5038660@kernel.org>
-References: <168830922841.2278819.9165254236027770818.stgit@mhiramat.roam.corp.google.com>
-        <168830925534.2278819.7237772177111801959.stgit@mhiramat.roam.corp.google.com>
-        <20230705224956.1c5213e6@gandalf.local.home>
-        <20230706134036.5c074aa5fc6a55cdb5038660@kernel.org>
+Cc:     Jiri Olsa <jolsa@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+        lkml <linux-kernel@vger.kernel.org>,
+        linux-trace-kernel@vger.kernel.org, bpf@vger.kernel.org
+Subject: Re: [PATCH] fprobe: Ensure running fprobe_exit_handler() finished
+ before calling rethook_free()
+Message-ID: <20230706095624.3a846b8e@gandalf.local.home>
+In-Reply-To: <20230706141012.c1a0ae0901e0fdec7b3078c7@kernel.org>
+References: <20230628012305.978e34d44f1a53fe20327fde@kernel.org>
+        <168796344232.46347.7947681068822514750.stgit@devnote2>
+        <20230705212657.5968daf7@gandalf.local.home>
+        <20230706141012.c1a0ae0901e0fdec7b3078c7@kernel.org>
 X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
@@ -46,111 +46,55 @@ Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On Thu, 6 Jul 2023 13:40:36 +0900
+On Thu, 6 Jul 2023 14:10:12 +0900
 Masami Hiramatsu (Google) <mhiramat@kernel.org> wrote:
 
-> On Wed, 5 Jul 2023 22:49:56 -0400
-> Steven Rostedt <rostedt@goodmis.org> wrote:
+> With only Jiri's patch, following flow can happen;
 > 
-> > On Sun,  2 Jul 2023 23:47:35 +0900
-> > "Masami Hiramatsu (Google)" <mhiramat@kernel.org> wrote:
-> >   
-> > > From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-> > > 
-> > > When the "(fault)" is injected, the return value of fetch_store_string*()
-> > > should be the length of the "(fault)", but an error code is returned.
-> > > Fix it to return the correct length and update the data_loc according the
-> > > updated length.
-> > > This needs to update a ftracetest test case, which expects trace output
-> > > to appear as '(fault)' instead of '"(fault)"'.
-> > >   
-> > 
-> > Ah, because of patch 2, the ret < 0 makes it return without printing the
-> > "fault"?  
+> ------
+>  CPU1                              CPU2
+>  call unregister_fprobe()
+>  ...
+>                                    __fprobe_handler()
+>                                    rethook_hook() on probed function
+>  unregister_ftrace_function()
+>                                    return from probed function
+>                                    rethook hooks
+>                                    find rh->handler == fprobe_exit_handler
+>                                    call fprobe_exit_handler()
+>  rethook_free():
+>    set rh->handler = NULL;
+>  return from unreigster_fprobe;
+>                                    call fp->exit_handler() <- (*)
 > 
-> No, actually set_data_loc() updates the 'ret' argument, but it is just
-> disposed... (not returned to the caller)
+> (*) In this point, the exit handler is called after returning from 
+> unregister_fprobe().
+> ------
+> 
+> So, this patch changes it as following;
+> ------
+>  CPU1                              CPU2
+>  call unregister_fprobe()
+>  ...
+>  rethook_stop():
+>    set rh->handler = NULL;
+>                                    __fprobe_handler()
+>                                    rethook_hook() on probed function
+>  unregister_ftrace_function()
+>                                    return from probed function
+>                                    rethook hooks
+>                                    find rh->handler == NULL
+>                                    return from rethook
+>  rethook_free()
+>  return from unreigster_fprobe;
+> ------
+> 
+> I can also just put a synchronize_sched_rcu() right after rethook_free()
+> to wait for all running fprobe_exit_handler() too.
+> 
 
-That's not what I was talking about.
+This makes more sense. Can you please add the above to the change log.
 
-We have:
-
-process_fetch_insn_bottom() {
-	[..]
-	case FETCH_OP_ST_STRING:
-		loc = *(u32 *)dest;
-		ret = fetch_store_string(val + code->offset, dest, base);
-		break;
-	[..]
-
-// And from patch 2 we have:
-
-@@ -193,6 +193,8 @@ process_fetch_insn_bottom(struct fetch_insn *code, unsigned long val,
- 	default:
- 		return -EILSEQ;
- 	}
-+	if (ret < 0)
-+		return ret;
- 	code++;
-
-And now that the return value of fetch_store_string() is being checked, and
-if it returns negative, it ends the function before being processed
-further. And if there's a fault, it happens to return negative!
-
-This patch now changes fetch_store_string() and fetch_store_string_user()
-to not return negative if there's a fault. As this patch has:
-
-@@ -107,9 +106,7 @@ fetch_store_string(unsigned long addr, void *dest, void *base)
- 	 * probing.
- 	 */
- 	ret = strncpy_from_kernel_nofault(__dest, (void *)addr, maxlen);
--	set_data_loc(ret, dest, __dest, base, maxlen);
--
--	return ret;
-+	return set_data_loc(ret, dest, __dest, base, maxlen);
- }
-
-But to do that, you needed to update set_data_loc() to return a value.
-
-*that's* what I meant by 
-
-'Ah, because of patch 2, the ret < 0 makes it return without printing the "fault"?'
-
+Thanks,
 
 -- Steve
-
-> 
-> -static nokprobe_inline void set_data_loc(int ret, void *dest, void *__dest, void *base, int len)
-> +static nokprobe_inline int set_data_loc(int ret, void *dest, void *__dest, void *base, int len)
->  {
-> -	if (ret >= 0) {
-> -		*(u32 *)dest = make_data_loc(ret, __dest - base);
-> -	} else {
-> +	if (ret < 0) {
->  		strscpy(__dest, FAULT_STRING, len);
->  		ret = strlen(__dest) + 1;
->  	}
-> +
-> +	*(u32 *)dest = make_data_loc(ret, __dest - base);
-> +	return ret;
->  }
-> 
-> So this returns updated 'ret', and also update data_loc to use the
-> updated 'ret' value (which is the length of the stored data).
-> 
-> > 
-> > Reviewed-by: Steven Rostedt (Google) <rostedt@goodmis.org>  
-> 
-> Thank you!
-> 
-> > 
-> > -- Steve
-> > 
-> >   
-> > > Fixes: 2e9906f84fc7 ("tracing: Add "(fault)" name injection to kernel probes")
-> > > Cc: stable@vger.kernel.org
-> > > Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-> > > ---  
-> 
-> 
-
