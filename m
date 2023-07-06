@@ -2,202 +2,105 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A0AE2EB64D9
-	for <linux-trace-kernel@archiver.kernel.org>; Thu,  6 Jul 2023 05:10:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 155B1EB64D9
+	for <linux-trace-kernel@archiver.kernel.org>; Thu,  6 Jul 2023 05:50:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229632AbjGFFKT (ORCPT
+        id S233140AbjGFFul (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Thu, 6 Jul 2023 01:10:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51318 "EHLO
+        Thu, 6 Jul 2023 01:50:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33424 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229589AbjGFFKS (ORCPT
+        with ESMTP id S229527AbjGFFuk (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Thu, 6 Jul 2023 01:10:18 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 32218B2;
-        Wed,  5 Jul 2023 22:10:17 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 828D3617E0;
-        Thu,  6 Jul 2023 05:10:16 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9F034C433C7;
-        Thu,  6 Jul 2023 05:10:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1688620215;
-        bh=UmRuzOJt+ryrnFuwX+ytQQxkA5mGM4cYrZAvC81+VW0=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=nOiFQFT1HxSRxmkGVv0BKxN1bSNrGkM9k0rrQi/q8xjFFDS+FbE4O7QswwAJPr33l
-         FONsFjjCfhtmpZYa+ePf2RdY8xMi6aQLoNroCJYDph2EOgj4mQsDEsqFsPZUVKlTOU
-         Z1CylwK/DH6fzlHN01+ycm9TbCXXv3diLuSAot3AHa4zbdRaXjB5ZmFHMSHMaOJTn3
-         +hUPxvdYxyOZ01DMH2QkNms8f70Gt+ZlzhYN9vuT+JG70RumgxZoapzWR9ZvqB4Ycp
-         VOoo8aHVc8sNWtYVUpNYtrecP94vjk8iKcJQX/VjqlbQ3o7tv+HBKzltzGA7aSroqr
-         HdtdTpL6AKBOw==
-Date:   Thu, 6 Jul 2023 14:10:12 +0900
-From:   Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To:     Steven Rostedt <rostedt@goodmis.org>
-Cc:     Jiri Olsa <jolsa@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
-        lkml <linux-kernel@vger.kernel.org>,
-        linux-trace-kernel@vger.kernel.org, bpf@vger.kernel.org
-Subject: Re: [PATCH] fprobe: Ensure running fprobe_exit_handler() finished
- before calling rethook_free()
-Message-Id: <20230706141012.c1a0ae0901e0fdec7b3078c7@kernel.org>
-In-Reply-To: <20230705212657.5968daf7@gandalf.local.home>
-References: <20230628012305.978e34d44f1a53fe20327fde@kernel.org>
-        <168796344232.46347.7947681068822514750.stgit@devnote2>
-        <20230705212657.5968daf7@gandalf.local.home>
-X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        Thu, 6 Jul 2023 01:50:40 -0400
+Received: from mail-wm1-x333.google.com (mail-wm1-x333.google.com [IPv6:2a00:1450:4864:20::333])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 45604E6E
+        for <linux-trace-kernel@vger.kernel.org>; Wed,  5 Jul 2023 22:50:39 -0700 (PDT)
+Received: by mail-wm1-x333.google.com with SMTP id 5b1f17b1804b1-3fbd33a573cso2813725e9.2
+        for <linux-trace-kernel@vger.kernel.org>; Wed, 05 Jul 2023 22:50:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1688622638; x=1691214638;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=gyEHwZJMKPpKnL4OmLe3gTQE6H1sBJKChjkNoj0yKM8=;
+        b=eqA4fdtSduT2vdL/YyH2FwLkF323QqPBw4ZxLuYvFvfbb/tWUGMl4IFirO0D1WUuAA
+         dCLuErnA2014Eheb0qwPht26N14Sl+ogKy0OJ/Ke+rh+s8e+z/LbuBCOGlgNSX4V55xM
+         eihLvaMgVLb/HeRPG99w7FmZyXxTNupTvQ9ynToe+3SXU87q9GnDq58RmrnW8YrRnGnS
+         FoUmCq8tROA7kVjmchjY4CJgklArNszxKC7G3+io+WsxpyAcA8QaqxE0nVPg+hY+mdGb
+         NPDgScqBMa7zSE9HHqsrVhpW7TRLiJQm/KyDZPExVgUvahdbx54FPkLphBLdt4OKbNp2
+         VQSg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1688622638; x=1691214638;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=gyEHwZJMKPpKnL4OmLe3gTQE6H1sBJKChjkNoj0yKM8=;
+        b=gyJ2wKMpfTdQekD+1yQJ3BwgEGJB7hxsGV/77nwzSKO291Huds+UFNlb+Q5Ibd3Zvu
+         elMR6tuDfj9cr410UWtNGtZWAQ4xCfJeIzRaji6XXJboK2oHHiPCodV8a/XrjZNvNugs
+         gi5rGl+hO4kOQNgdzJMHCInoya2Wx+Ly9jFUZ2Eg+fc35Y0EASNhIqPSvmdvU0dhuQRM
+         vQ5H05WjBAM9T31FUJB5TIRJkJGA0UUETHCMuvwNhO55dqJzAtxCAbJE9Fw/tHY6GJhR
+         vAxE72vjoXUkTbAU/T7aWmkLyYCBZbIM9v3G69uKvXt5uG2wOXyFq2atZParyscfZsP5
+         hl4g==
+X-Gm-Message-State: ABy/qLbjTAG8GmPtnV/buc5DkucwsSWqeIQ2cnPZB54jE1HS2YqzM4t2
+        2rsxQeWkFjcoj0tn1bnYM9ep0Q==
+X-Google-Smtp-Source: APBJJlEZNbEHxRY8Ap8LzIFF13T16PP6OMWcRhgbVLz4gpbheBhblDKf6DH2oLk6E2yX0jrC34RYGg==
+X-Received: by 2002:a05:600c:21c4:b0:3fb:ab7d:ad95 with SMTP id x4-20020a05600c21c400b003fbab7dad95mr517991wmj.4.1688622637698;
+        Wed, 05 Jul 2023 22:50:37 -0700 (PDT)
+Received: from localhost ([102.36.222.112])
+        by smtp.gmail.com with ESMTPSA id f15-20020a7bcd0f000000b003fbda7d2d41sm3956031wmj.48.2023.07.05.22.50.35
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 05 Jul 2023 22:50:35 -0700 (PDT)
+Date:   Thu, 6 Jul 2023 08:50:31 +0300
+From:   Dan Carpenter <dan.carpenter@linaro.org>
+To:     rostedt@goodmis.org
+Cc:     linux-trace-kernel@vger.kernel.org
+Subject: [bug report] x86/ftrace: Make function graph use ftrace directly
+Message-ID: <8d9bf4bb-693a-4368-8db1-9de1b80a33e1@moroto.mountain>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On Wed, 5 Jul 2023 21:26:57 -0400
-Steven Rostedt <rostedt@goodmis.org> wrote:
+Hello Steven Rostedt (VMware),
 
-> On Wed, 28 Jun 2023 23:44:02 +0900
-> "Masami Hiramatsu (Google)" <mhiramat@kernel.org> wrote:
-> 
-> > From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-> > 
-> > Ensure running fprobe_exit_handler() has finished before
-> > calling rethook_free() in the unregister_fprobe() so that caller can free
-> > the fprobe right after unregister_fprobe().
-> > 
-> > unregister_fprobe() ensured that all running fprobe_entry/exit_handler()
-> > have finished by calling unregister_ftrace_function() which synchronizes
-> > RCU. But commit 5f81018753df ("fprobe: Release rethook after the
-> > ftrace_ops is unregistered") changed to call rethook_free() after
-> > unregister_ftrace_function(). So call rethook_stop() to make rethook
-> > disabled before unregister_ftrace_function() and ensure it again.
-> 
-> I'm confused. I still don't understand why it is bad to call
-> unregister_ftrace_function() *before* rethook_free().
-> 
-> Can you show the race condition you are trying to avoid?
+The patch 0c0593b45c9b: "x86/ftrace: Make function graph use ftrace
+directly" from Oct 8, 2021, leads to the following Smatch static
+checker warning:
 
-Yes. This is ensuring all handlers exit when returning from
-unregister_fprobe() so that the caller can release the data which will be
-accessed from the handlers. The entry handler is safe because
-unregister_ftrace_function() waits for the ftrace handlers. But that is
-not enough for the exit handler.
+	kernel/trace/trace_selftest.c:769 trace_graph_entry_watchdog()
+	warn: sleeping in atomic context
 
-With only Jiri's patch, following flow can happen;
+kernel/trace/trace_selftest.c
+    765 static int trace_graph_entry_watchdog(struct ftrace_graph_ent *trace)
+    766 {
+    767         /* This is harmlessly racy, we want to approximately detect a hang */
+    768         if (unlikely(++graph_hang_thresh > GRAPH_MAX_FUNC_TEST)) {
+--> 769                 ftrace_graph_stop();
 
-------
- CPU1                              CPU2
- call unregister_fprobe()
- ...
-                                   __fprobe_handler()
-                                   rethook_hook() on probed function
- unregister_ftrace_function()
-                                   return from probed function
-                                   rethook hooks
-                                   find rh->handler == fprobe_exit_handler
-                                   call fprobe_exit_handler()
- rethook_free():
-   set rh->handler = NULL;
- return from unreigster_fprobe;
-                                   call fp->exit_handler() <- (*)
+This is a sleeping function.
 
-(*) In this point, the exit handler is called after returning from 
-unregister_fprobe().
-------
+    770                 printk(KERN_WARNING "BUG: Function graph tracer hang!\n");
+    771                 if (ftrace_dump_on_oops) {
+    772                         ftrace_dump(DUMP_ALL);
+    773                         /* ftrace_dump() disables tracing */
+    774                         tracing_on();
+    775                 }
+    776                 return 0;
+    777         }
+    778 
+    779         return trace_graph_entry(trace);
+    780 }
 
-So, this patch changes it as following;
-------
- CPU1                              CPU2
- call unregister_fprobe()
- ...
- rethook_stop():
-   set rh->handler = NULL;
-                                   __fprobe_handler()
-                                   rethook_hook() on probed function
- unregister_ftrace_function()
-                                   return from probed function
-                                   rethook hooks
-                                   find rh->handler == NULL
-                                   return from rethook
- rethook_free()
- return from unreigster_fprobe;
-------
+The call tree is:
 
-I can also just put a synchronize_sched_rcu() right after rethook_free()
-to wait for all running fprobe_exit_handler() too.
+prepare_ftrace_return() <- disables preempt
+-> function_graph_enter()
+   -> trace_graph_entry_watchdog()
 
-Thank you,
+The ftrace_test_recursion_trylock() function disables preemption.  The
+trace_graph_entry_watchdog() function is called as a pointer so it's
+the ftrace_graph_entry() call.
 
-> 
-> -- Steve
-> 
-> 
-> 
-> > 
-> > Fixes: 5f81018753df ("fprobe: Release rethook after the ftrace_ops is
-> > unregistered") Cc: stable@vger.kernel.org
-> > Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-> > ---
-> >  include/linux/rethook.h |    1 +
-> >  kernel/trace/fprobe.c   |    3 +++
-> >  kernel/trace/rethook.c  |   13 +++++++++++++
-> >  3 files changed, 17 insertions(+)
-> > 
-> > diff --git a/include/linux/rethook.h b/include/linux/rethook.h
-> > index c8ac1e5afcd1..bdbe6717f45a 100644
-> > --- a/include/linux/rethook.h
-> > +++ b/include/linux/rethook.h
-> > @@ -59,6 +59,7 @@ struct rethook_node {
-> >  };
-> >  
-> >  struct rethook *rethook_alloc(void *data, rethook_handler_t handler);
-> > +void rethook_stop(struct rethook *rh);
-> >  void rethook_free(struct rethook *rh);
-> >  void rethook_add_node(struct rethook *rh, struct rethook_node *node);
-> >  struct rethook_node *rethook_try_get(struct rethook *rh);
-> > diff --git a/kernel/trace/fprobe.c b/kernel/trace/fprobe.c
-> > index 0121e8c0d54e..75517667b54f 100644
-> > --- a/kernel/trace/fprobe.c
-> > +++ b/kernel/trace/fprobe.c
-> > @@ -364,6 +364,9 @@ int unregister_fprobe(struct fprobe *fp)
-> >  		    fp->ops.saved_func != fprobe_kprobe_handler))
-> >  		return -EINVAL;
-> >  
-> > +	if (fp->rethook)
-> > +		rethook_stop(fp->rethook);
-> > +
-> >  	ret = unregister_ftrace_function(&fp->ops);
-> >  	if (ret < 0)
-> >  		return ret;
-> > diff --git a/kernel/trace/rethook.c b/kernel/trace/rethook.c
-> > index 60f6cb2b486b..468006cce7ca 100644
-> > --- a/kernel/trace/rethook.c
-> > +++ b/kernel/trace/rethook.c
-> > @@ -53,6 +53,19 @@ static void rethook_free_rcu(struct rcu_head *head)
-> >  		kfree(rh);
-> >  }
-> >  
-> > +/**
-> > + * rethook_stop() - Stop using a rethook.
-> > + * @rh: the struct rethook to stop.
-> > + *
-> > + * Stop using a rethook to prepare for freeing it. If you want to wait
-> > for
-> > + * all running rethook handler before calling rethook_free(), you need to
-> > + * call this first and wait RCU, and call rethook_free().
-> > + */
-> > +void rethook_stop(struct rethook *rh)
-> > +{
-> > +	WRITE_ONCE(rh->handler, NULL);
-> > +}
-> > +
-> >  /**
-> >   * rethook_free() - Free struct rethook.
-> >   * @rh: the struct rethook to be freed.
-> 
-
-
--- 
-Masami Hiramatsu (Google) <mhiramat@kernel.org>
+regards,
+dan carpenter
