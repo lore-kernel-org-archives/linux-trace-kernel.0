@@ -2,40 +2,38 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 91A59EB64D9
-	for <linux-trace-kernel@archiver.kernel.org>; Thu,  6 Jul 2023 15:53:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 76BB2EB64DC
+	for <linux-trace-kernel@archiver.kernel.org>; Thu,  6 Jul 2023 16:00:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229519AbjGFPxT (ORCPT
+        id S232129AbjGFQAo (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Thu, 6 Jul 2023 11:53:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52090 "EHLO
+        Thu, 6 Jul 2023 12:00:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56186 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232555AbjGFPxS (ORCPT
+        with ESMTP id S229721AbjGFQAo (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Thu, 6 Jul 2023 11:53:18 -0400
+        Thu, 6 Jul 2023 12:00:44 -0400
 Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 383CF1FFD;
-        Thu,  6 Jul 2023 08:52:57 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 872C09D;
+        Thu,  6 Jul 2023 09:00:43 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange X25519 server-signature RSA-PSS (2048 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id F245B60CF4;
-        Thu,  6 Jul 2023 15:52:23 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E3372C433C9;
-        Thu,  6 Jul 2023 15:52:20 +0000 (UTC)
-Date:   Thu, 6 Jul 2023 11:52:16 -0400
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 2448660DD4;
+        Thu,  6 Jul 2023 16:00:43 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F2080C433C7;
+        Thu,  6 Jul 2023 16:00:41 +0000 (UTC)
+Date:   Thu, 6 Jul 2023 12:00:40 -0400
 From:   Steven Rostedt <rostedt@goodmis.org>
-To:     "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
-Cc:     Dan Carpenter <dan.carpenter@linaro.org>,
-        linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
-        kernel-janitors@vger.kernel.org
-Subject: Re: [PATCH] tracing/probes: Delete dead code in
- trace_eprobe_tp_update_arg()
-Message-ID: <20230706115216.72997ad5@gandalf.local.home>
-In-Reply-To: <20230702080238.1379c4fe777bf22e5b146af5@kernel.org>
-References: <f657e0c7-46c3-4e8f-a472-35ec98229660@moroto.mountain>
-        <20230702080238.1379c4fe777bf22e5b146af5@kernel.org>
+To:     "Tzvetomir Stoyanov (VMware)" <tz.stoyanov@gmail.com>
+Cc:     mhiramat@kernel.org, dan.carpenter@linaro.org,
+        linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3] kernel/trace: Fix cleanup logic of
+ enable_trace_eprobe
+Message-ID: <20230706120040.26a685cd@gandalf.local.home>
+In-Reply-To: <20230703042853.1427493-1-tz.stoyanov@gmail.com>
+References: <20230703042853.1427493-1-tz.stoyanov@gmail.com>
 X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
@@ -44,91 +42,72 @@ Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On Sun, 2 Jul 2023 08:02:38 +0900
-Masami Hiramatsu (Google) <mhiramat@kernel.org> wrote:
+On Mon,  3 Jul 2023 07:28:53 +0300
+"Tzvetomir Stoyanov (VMware)" <tz.stoyanov@gmail.com> wrote:
 
-> On Mon, 26 Jun 2023 16:35:06 +0300
-> Dan Carpenter <dan.carpenter@linaro.org> wrote:
+> The enable_trace_eprobe() function enables all event probes, attached
+> to given trace probe. If an error occurs in enabling one of the event
+> probes, all others should be roll backed. There is a bug in that roll
+> back logic - instead of all event probes, only the failed one is
+> disabled.
 > 
-> > This code was recently refactored and now the "ret" variable is always
-> > zero.  Delete the check for non-zero.
-> >   
-
-Yep! The code use to be:
-
-	if (ep->tp.args[i].code->op == FETCH_OP_TP_ARG) {
-		ret = trace_eprobe_tp_arg_update(ep, i);
-		if (ret)
-			trace_probe_log_err(0, BAD_ATTACH_ARG);
-	}
-
-	/* Handle symbols "@" */
-	if (!ret)
-		ret = traceprobe_update_arg(&ep->tp.args[i]);
-
-	return ret;
-}
-
-and is now:
-
-        ret = traceprobe_parse_probe_arg(&ep->tp, i, argv[i], &ctx);
-        if (ret)
-                return ret;
-
-        /* Handle symbols "@" */
-        if (!ret)
-                ret = traceprobe_update_arg(&ep->tp.args[i]);
-
-        return ret;
-}
-
-so that last ret check is redundant.
-
-> 
-> Good catch!
-> 
-> Acked-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+> Reported-by: Dan Carpenter <dan.carpenter@linaro.org>
+> Fixes: 7491e2c44278 ("tracing: Add a probe that attaches to trace events")
+> Signed-off-by: Tzvetomir Stoyanov (VMware) <tz.stoyanov@gmail.com>
 
 Reviewed-by: Steven Rostedt (Google) <rostedt@goodmis.org>
 
-> 
-> > Signed-off-by: Dan Carpenter <dan.carpenter@linaro.org>
-> > ---
-> > This code was changed in 1b8b0cd754cd (tracing/probes: Move event
-> > parameter fetching code to common parser)  
-> 
-> OK, this will be picked to the 6.5 fix.
-
-Thanks Masami and Dan,
+Thanks Tzvetomir!
 
 -- Steve
 
+> ---
+> Changes since v1: https://lore.kernel.org/all/20230628121811.338655-1-tz.stoyanov@gmail.com/
+>  - Added one-time warning, suggested by Steven Rostedt.
+> Changed since v2: https://lore.kernel.org/lkml/20230630121627.833560-1-tz.stoyanov@gmail.com/
+>  - Added counter of successfully enabled eprobes, suggested by Steven Rostedt.
 > 
-> Thank you!
+>  kernel/trace/trace_eprobe.c | 18 ++++++++++++++++--
+>  1 file changed, 16 insertions(+), 2 deletions(-)
 > 
-> > 
-> >  kernel/trace/trace_eprobe.c | 5 +----
-> >  1 file changed, 1 insertion(+), 4 deletions(-)
-> > 
-> > diff --git a/kernel/trace/trace_eprobe.c b/kernel/trace/trace_eprobe.c
-> > index cb0077ba2b49..b5181d690b4d 100644
-> > --- a/kernel/trace/trace_eprobe.c
-> > +++ b/kernel/trace/trace_eprobe.c
-> > @@ -797,10 +797,7 @@ static int trace_eprobe_tp_update_arg(struct trace_eprobe *ep, const char *argv[
-> >  		return ret;
-> >  
-> >  	/* Handle symbols "@" */
-> > -	if (!ret)
-> > -		ret = traceprobe_update_arg(&ep->tp.args[i]);
-> > -
-> > -	return ret;
-> > +	return traceprobe_update_arg(&ep->tp.args[i]);
-> >  }
-> >  
-> >  static int trace_eprobe_parse_filter(struct trace_eprobe *ep, int argc, const char *argv[])
-> > -- 
-> > 2.39.2
-> >   
-> 
-> 
+> diff --git a/kernel/trace/trace_eprobe.c b/kernel/trace/trace_eprobe.c
+> index cb0077ba2b49..a0a704ba27db 100644
+> --- a/kernel/trace/trace_eprobe.c
+> +++ b/kernel/trace/trace_eprobe.c
+> @@ -644,6 +644,7 @@ static int enable_trace_eprobe(struct trace_event_call *call,
+>  	struct trace_eprobe *ep;
+>  	bool enabled;
+>  	int ret = 0;
+> +	int cnt = 0;
+>  
+>  	tp = trace_probe_primary_from_call(call);
+>  	if (WARN_ON_ONCE(!tp))
+> @@ -667,12 +668,25 @@ static int enable_trace_eprobe(struct trace_event_call *call,
+>  		if (ret)
+>  			break;
+>  		enabled = true;
+> +		cnt++;
+>  	}
+>  
+>  	if (ret) {
+>  		/* Failed to enable one of them. Roll back all */
+> -		if (enabled)
+> -			disable_eprobe(ep, file->tr);
+> +		if (enabled) {
+> +			/*
+> +			 * It's a bug if one failed for something other than memory
+> +			 * not being available but another eprobe succeeded.
+> +			 */
+> +			WARN_ON_ONCE(ret != -ENOMEM);
+> +
+> +			list_for_each_entry(pos, trace_probe_probe_list(tp), list) {
+> +				ep = container_of(pos, struct trace_eprobe, tp);
+> +				disable_eprobe(ep, file->tr);
+> +				if (!--cnt)
+> +					break;
+> +			}
+> +		}
+>  		if (file)
+>  			trace_probe_remove_file(tp, file);
+>  		else
 
