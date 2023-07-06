@@ -2,124 +2,132 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A6E7EB64DA
-	for <linux-trace-kernel@archiver.kernel.org>; Thu,  6 Jul 2023 00:47:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 92267EB64DA
+	for <linux-trace-kernel@archiver.kernel.org>; Thu,  6 Jul 2023 01:27:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232259AbjGFArf (ORCPT
+        id S232319AbjGFB1E (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Wed, 5 Jul 2023 20:47:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35844 "EHLO
+        Wed, 5 Jul 2023 21:27:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44956 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232483AbjGFArf (ORCPT
+        with ESMTP id S230305AbjGFB1D (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Wed, 5 Jul 2023 20:47:35 -0400
+        Wed, 5 Jul 2023 21:27:03 -0400
 Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 31AA8171D;
-        Wed,  5 Jul 2023 17:47:30 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CB137102;
+        Wed,  5 Jul 2023 18:27:01 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange X25519 server-signature RSA-PSS (2048 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id C4491617D1;
-        Thu,  6 Jul 2023 00:47:29 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 767ECC433C7;
-        Thu,  6 Jul 2023 00:47:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1688604449;
-        bh=lQCNaknqsctPMwh5xkWdlQlbt6s32SgZ8UYnURcKZCI=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=hZcKKxeaPoG3PuRs06XSBFbd4rJPydqxtqdf4lYwf1diJLXcuY6dQaQCpGsT15gV/
-         5seM9FMnXK5j7ufmpvUR69zsDEZOBWP42gPwolTlZoYxhZpbjUPOQZ+G6VmyHTbJn6
-         ixetbr9rKUM7b1vn06K/UEqBlACKm/vnkscGhgcCe9J/zMPr0PluFHMLielLMFKpMk
-         8Avwn8m0L905PX4grCVms6QD88A1BfOT2sU80hYlTHKWDPkNecs3LsMT92fqVxFDSu
-         P3Mtn1GMRoPlyyjmgyrhDkbWTTLGHZZP3x4/PFzBbZhFJNuKY5VI0aXGl522bZ5hJg
-         9vM9a+hovUZuw==
-Date:   Thu, 6 Jul 2023 09:47:23 +0900
-From:   Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Petr Pavlu <petr.pavlu@suse.com>, tglx@linutronix.de,
-        mingo@redhat.com, bp@alien8.de, dave.hansen@linux.intel.com,
-        hpa@zytor.com, samitolvanen@google.com, x86@kernel.org,
-        linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/2] x86/retpoline,kprobes: Avoid treating rethunk as an
- indirect jump
-Message-Id: <20230706094723.6934105e03f652923796bf7e@kernel.org>
-In-Reply-To: <20230705145017.GC4253@hirez.programming.kicks-ass.net>
-References: <20230705081547.25130-1-petr.pavlu@suse.com>
-        <20230705081547.25130-3-petr.pavlu@suse.com>
-        <20230705085857.GG462772@hirez.programming.kicks-ass.net>
-        <20230705232038.3a6d03e18f7bafb14cdfed42@kernel.org>
-        <20230705145017.GC4253@hirez.programming.kicks-ass.net>
-X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 58823617F0;
+        Thu,  6 Jul 2023 01:27:01 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 07823C433C7;
+        Thu,  6 Jul 2023 01:26:59 +0000 (UTC)
+Date:   Wed, 5 Jul 2023 21:26:57 -0400
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
+Cc:     Jiri Olsa <jolsa@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+        lkml <linux-kernel@vger.kernel.org>,
+        linux-trace-kernel@vger.kernel.org, bpf@vger.kernel.org
+Subject: Re: [PATCH] fprobe: Ensure running fprobe_exit_handler() finished
+ before calling rethook_free()
+Message-ID: <20230705212657.5968daf7@gandalf.local.home>
+In-Reply-To: <168796344232.46347.7947681068822514750.stgit@devnote2>
+References: <20230628012305.978e34d44f1a53fe20327fde@kernel.org>
+        <168796344232.46347.7947681068822514750.stgit@devnote2>
+X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On Wed, 5 Jul 2023 16:50:17 +0200
-Peter Zijlstra <peterz@infradead.org> wrote:
+On Wed, 28 Jun 2023 23:44:02 +0900
+"Masami Hiramatsu (Google)" <mhiramat@kernel.org> wrote:
 
-> On Wed, Jul 05, 2023 at 11:20:38PM +0900, Masami Hiramatsu wrote:
-> > On Wed, 5 Jul 2023 10:58:57 +0200
-> > Peter Zijlstra <peterz@infradead.org> wrote:
-> > 
-> > > On Wed, Jul 05, 2023 at 10:15:47AM +0200, Petr Pavlu wrote:
-> > > > Functions can_optimize() and insn_is_indirect_jump() consider jumps to
-> > > > the range [__indirect_thunk_start, __indirect_thunk_end] as indirect
-> > > > jumps and prevent use of optprobes in functions containing them.
-> > > 
-> > > Why ?!? I mean, doing an opt-probe of an indirect jump/call instruction
-> > > itself doesn't really make sense and I can see why you'd want to not do
-> > > that. But why disallow an opt-probe if there's one in the function as a
-> > > whole, but not the probe target?
-> > 
-> > Here we need to clarify the reason why functions which have indirect jumps
-> > are not allowed to use opt-probe. Since optprobe can replace multiple 
-> > instructions with a jump, if any jmp (is used for jump inside same function)
-> > jumps to the second and subsequent instructions replaced by optprobe's jump,
-> > that target instruction can not be optimized.
-> > 
-> > The problem of indirect jump (which jumps to the same function) is that
-> > we don't know which addresses will be the target of the indirect jump.
-> > So, for safety, I disallow optprobe for such function. In that case, normal
-> > kprobe is used because it replaces only one instruction.
+> From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 > 
-> Ah, you're worried about jump-tables; you don't want to optimize across
-> a jump-table target because then things go *boom*.
+> Ensure running fprobe_exit_handler() has finished before
+> calling rethook_free() in the unregister_fprobe() so that caller can free
+> the fprobe right after unregister_fprobe().
 > 
-> There's two things:
-> 
->  - when X86_KERNEL_IBT=y any indirect jump target should be an ENDBR
->    instruction, so jump-table targets can be easily detected.
-> 
->  - when RETPOLINE=y || X86_KERNEL_IBT=y we have jump-tables disabled,
->    search for -fno-jump-table in arch/x86/Makefile.
-> 
-> At some point in the future we should be able to allow jump-tables for
-> RETPOLINE=n && IBT=y builds (provided the compilers behave), but we
-> currently don't bother to find out.
-> 
-> Therefore, when either CONFIG option is found, you can assume that any
-> indirect jump will be to another function.
+> unregister_fprobe() ensured that all running fprobe_entry/exit_handler()
+> have finished by calling unregister_ftrace_function() which synchronizes
+> RCU. But commit 5f81018753df ("fprobe: Release rethook after the
+> ftrace_ops is unregistered") changed to call rethook_free() after
+> unregister_ftrace_function(). So call rethook_stop() to make rethook
+> disabled before unregister_ftrace_function() and ensure it again.
 
-OK, I confirmed that '-fno-jump-tables' is set when X86_KERNEL_IBT=y || RETPOLINE=y
-so we can skip this indirect jump check. That makes things simpler.
+I'm confused. I still don't understand why it is bad to call
+unregister_ftrace_function() *before* rethook_free().
+
+Can you show the race condition you are trying to avoid?
+
+-- Steve
+
+
 
 > 
-> > If I understand correctly, all indirect jump will be replaced with JMP_NOSPEC.
-> > If you read the insn_jump_into_range, I onlu jecks the jump code, not call.
-> > So the functions only have indirect call still allow optprobe.
+> Fixes: 5f81018753df ("fprobe: Release rethook after the ftrace_ops is
+> unregistered") Cc: stable@vger.kernel.org
+> Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+> ---
+>  include/linux/rethook.h |    1 +
+>  kernel/trace/fprobe.c   |    3 +++
+>  kernel/trace/rethook.c  |   13 +++++++++++++
+>  3 files changed, 17 insertions(+)
 > 
-> With the introduction of kCFI JMP_NOSPEC is no longer an equivalent to a
-> C indirect jump.
+> diff --git a/include/linux/rethook.h b/include/linux/rethook.h
+> index c8ac1e5afcd1..bdbe6717f45a 100644
+> --- a/include/linux/rethook.h
+> +++ b/include/linux/rethook.h
+> @@ -59,6 +59,7 @@ struct rethook_node {
+>  };
+>  
+>  struct rethook *rethook_alloc(void *data, rethook_handler_t handler);
+> +void rethook_stop(struct rethook *rh);
+>  void rethook_free(struct rethook *rh);
+>  void rethook_add_node(struct rethook *rh, struct rethook_node *node);
+>  struct rethook_node *rethook_try_get(struct rethook *rh);
+> diff --git a/kernel/trace/fprobe.c b/kernel/trace/fprobe.c
+> index 0121e8c0d54e..75517667b54f 100644
+> --- a/kernel/trace/fprobe.c
+> +++ b/kernel/trace/fprobe.c
+> @@ -364,6 +364,9 @@ int unregister_fprobe(struct fprobe *fp)
+>  		    fp->ops.saved_func != fprobe_kprobe_handler))
+>  		return -EINVAL;
+>  
+> +	if (fp->rethook)
+> +		rethook_stop(fp->rethook);
+> +
+>  	ret = unregister_ftrace_function(&fp->ops);
+>  	if (ret < 0)
+>  		return ret;
+> diff --git a/kernel/trace/rethook.c b/kernel/trace/rethook.c
+> index 60f6cb2b486b..468006cce7ca 100644
+> --- a/kernel/trace/rethook.c
+> +++ b/kernel/trace/rethook.c
+> @@ -53,6 +53,19 @@ static void rethook_free_rcu(struct rcu_head *head)
+>  		kfree(rh);
+>  }
+>  
+> +/**
+> + * rethook_stop() - Stop using a rethook.
+> + * @rh: the struct rethook to stop.
+> + *
+> + * Stop using a rethook to prepare for freeing it. If you want to wait
+> for
+> + * all running rethook handler before calling rethook_free(), you need to
+> + * call this first and wait RCU, and call rethook_free().
+> + */
+> +void rethook_stop(struct rethook *rh)
+> +{
+> +	WRITE_ONCE(rh->handler, NULL);
+> +}
+> +
+>  /**
+>   * rethook_free() - Free struct rethook.
+>   * @rh: the struct rethook to be freed.
 
-If I understand correctly, kCFI is enabled by CFI_CLANG, and clang is not
-using jump-tables by default, so we can focus on gcc. In that case
-current check still work, correct?
-
-Thank you,
-
--- 
-Masami Hiramatsu (Google) <mhiramat@kernel.org>
