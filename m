@@ -2,105 +2,84 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 155B1EB64D9
-	for <linux-trace-kernel@archiver.kernel.org>; Thu,  6 Jul 2023 05:50:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DF4ACEB64DC
+	for <linux-trace-kernel@archiver.kernel.org>; Thu,  6 Jul 2023 07:17:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233140AbjGFFul (ORCPT
+        id S230321AbjGFHRV (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Thu, 6 Jul 2023 01:50:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33424 "EHLO
+        Thu, 6 Jul 2023 03:17:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40208 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229527AbjGFFuk (ORCPT
+        with ESMTP id S230115AbjGFHRU (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Thu, 6 Jul 2023 01:50:40 -0400
-Received: from mail-wm1-x333.google.com (mail-wm1-x333.google.com [IPv6:2a00:1450:4864:20::333])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 45604E6E
-        for <linux-trace-kernel@vger.kernel.org>; Wed,  5 Jul 2023 22:50:39 -0700 (PDT)
-Received: by mail-wm1-x333.google.com with SMTP id 5b1f17b1804b1-3fbd33a573cso2813725e9.2
-        for <linux-trace-kernel@vger.kernel.org>; Wed, 05 Jul 2023 22:50:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1688622638; x=1691214638;
-        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=gyEHwZJMKPpKnL4OmLe3gTQE6H1sBJKChjkNoj0yKM8=;
-        b=eqA4fdtSduT2vdL/YyH2FwLkF323QqPBw4ZxLuYvFvfbb/tWUGMl4IFirO0D1WUuAA
-         dCLuErnA2014Eheb0qwPht26N14Sl+ogKy0OJ/Ke+rh+s8e+z/LbuBCOGlgNSX4V55xM
-         eihLvaMgVLb/HeRPG99w7FmZyXxTNupTvQ9ynToe+3SXU87q9GnDq58RmrnW8YrRnGnS
-         FoUmCq8tROA7kVjmchjY4CJgklArNszxKC7G3+io+WsxpyAcA8QaqxE0nVPg+hY+mdGb
-         NPDgScqBMa7zSE9HHqsrVhpW7TRLiJQm/KyDZPExVgUvahdbx54FPkLphBLdt4OKbNp2
-         VQSg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1688622638; x=1691214638;
-        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=gyEHwZJMKPpKnL4OmLe3gTQE6H1sBJKChjkNoj0yKM8=;
-        b=gyJ2wKMpfTdQekD+1yQJ3BwgEGJB7hxsGV/77nwzSKO291Huds+UFNlb+Q5Ibd3Zvu
-         elMR6tuDfj9cr410UWtNGtZWAQ4xCfJeIzRaji6XXJboK2oHHiPCodV8a/XrjZNvNugs
-         gi5rGl+hO4kOQNgdzJMHCInoya2Wx+Ly9jFUZ2Eg+fc35Y0EASNhIqPSvmdvU0dhuQRM
-         vQ5H05WjBAM9T31FUJB5TIRJkJGA0UUETHCMuvwNhO55dqJzAtxCAbJE9Fw/tHY6GJhR
-         vAxE72vjoXUkTbAU/T7aWmkLyYCBZbIM9v3G69uKvXt5uG2wOXyFq2atZParyscfZsP5
-         hl4g==
-X-Gm-Message-State: ABy/qLbjTAG8GmPtnV/buc5DkucwsSWqeIQ2cnPZB54jE1HS2YqzM4t2
-        2rsxQeWkFjcoj0tn1bnYM9ep0Q==
-X-Google-Smtp-Source: APBJJlEZNbEHxRY8Ap8LzIFF13T16PP6OMWcRhgbVLz4gpbheBhblDKf6DH2oLk6E2yX0jrC34RYGg==
-X-Received: by 2002:a05:600c:21c4:b0:3fb:ab7d:ad95 with SMTP id x4-20020a05600c21c400b003fbab7dad95mr517991wmj.4.1688622637698;
-        Wed, 05 Jul 2023 22:50:37 -0700 (PDT)
-Received: from localhost ([102.36.222.112])
-        by smtp.gmail.com with ESMTPSA id f15-20020a7bcd0f000000b003fbda7d2d41sm3956031wmj.48.2023.07.05.22.50.35
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 05 Jul 2023 22:50:35 -0700 (PDT)
-Date:   Thu, 6 Jul 2023 08:50:31 +0300
-From:   Dan Carpenter <dan.carpenter@linaro.org>
-To:     rostedt@goodmis.org
-Cc:     linux-trace-kernel@vger.kernel.org
-Subject: [bug report] x86/ftrace: Make function graph use ftrace directly
-Message-ID: <8d9bf4bb-693a-4368-8db1-9de1b80a33e1@moroto.mountain>
+        Thu, 6 Jul 2023 03:17:20 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 74685DA;
+        Thu,  6 Jul 2023 00:17:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=/N9m/RBB0QGzQkwDbP4GCT1KFtzjUK9VRs7KqannIP8=; b=g08gj94rfjIcMPuK9eTk2813+K
+        betHSkguZs0j12mlpX1Rp4T1YyhlvNTbG1w/l/DpFwXi8mi3SNOE1eeQOS7rc7os5rWYDn4Hi2c5+
+        4o9R4kwphxjXXNYCKHiBkXn8qzx5/IJSA7V/53gyA6OFVmUB81d1tOoJN5fL24DP4Z223ZZXB0QIe
+        FtQQ2uyZ/UiwfYdcwxerKkD0ghL25mnPsyXSl/JIOu7VsMhnFSMq6cvkjcqyiA1/OOknowqHwwff8
+        /rjnfplFww/6dSiqIYJKEi9ui0H3tYaC7qllRJGv248B0KG+iqHOWDone0ApVVfFUKfj7p5DJus9R
+        UoC6WClg==;
+Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
+        by casper.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
+        id 1qHJEh-00Aq7c-75; Thu, 06 Jul 2023 07:17:07 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (4096 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 1272B300222;
+        Thu,  6 Jul 2023 09:17:06 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id EBB7F2007F070; Thu,  6 Jul 2023 09:17:05 +0200 (CEST)
+Date:   Thu, 6 Jul 2023 09:17:05 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Masami Hiramatsu <mhiramat@kernel.org>
+Cc:     Petr Pavlu <petr.pavlu@suse.com>, tglx@linutronix.de,
+        mingo@redhat.com, bp@alien8.de, dave.hansen@linux.intel.com,
+        hpa@zytor.com, samitolvanen@google.com, x86@kernel.org,
+        linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/2] x86/retpoline,kprobes: Avoid treating rethunk as an
+ indirect jump
+Message-ID: <20230706071705.GD2833176@hirez.programming.kicks-ass.net>
+References: <20230705081547.25130-1-petr.pavlu@suse.com>
+ <20230705081547.25130-3-petr.pavlu@suse.com>
+ <20230705085857.GG462772@hirez.programming.kicks-ass.net>
+ <20230705232038.3a6d03e18f7bafb14cdfed42@kernel.org>
+ <20230705145017.GC4253@hirez.programming.kicks-ass.net>
+ <20230706094723.6934105e03f652923796bf7e@kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+In-Reply-To: <20230706094723.6934105e03f652923796bf7e@kernel.org>
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-Hello Steven Rostedt (VMware),
+On Thu, Jul 06, 2023 at 09:47:23AM +0900, Masami Hiramatsu wrote:
 
-The patch 0c0593b45c9b: "x86/ftrace: Make function graph use ftrace
-directly" from Oct 8, 2021, leads to the following Smatch static
-checker warning:
+> > > If I understand correctly, all indirect jump will be replaced with JMP_NOSPEC.
+> > > If you read the insn_jump_into_range, I onlu jecks the jump code, not call.
+> > > So the functions only have indirect call still allow optprobe.
+> > 
+> > With the introduction of kCFI JMP_NOSPEC is no longer an equivalent to a
+> > C indirect jump.
+> 
+> If I understand correctly, kCFI is enabled by CFI_CLANG, and clang is not
+> using jump-tables by default, so we can focus on gcc. In that case
+> current check still work, correct?
 
-	kernel/trace/trace_selftest.c:769 trace_graph_entry_watchdog()
-	warn: sleeping in atomic context
+IIRC clang can use jump tables, but like GCC needs RETPOLINE=n and
+IBT=n, so effectively nobody has them.
 
-kernel/trace/trace_selftest.c
-    765 static int trace_graph_entry_watchdog(struct ftrace_graph_ent *trace)
-    766 {
-    767         /* This is harmlessly racy, we want to approximately detect a hang */
-    768         if (unlikely(++graph_hang_thresh > GRAPH_MAX_FUNC_TEST)) {
---> 769                 ftrace_graph_stop();
+The reason I did mention kCFI though is that kCFI has a larger 'indirect
+jump' sequence, and I'm not sure we've thought about what can go
+sideways if that's optprobed.
 
-This is a sleeping function.
-
-    770                 printk(KERN_WARNING "BUG: Function graph tracer hang!\n");
-    771                 if (ftrace_dump_on_oops) {
-    772                         ftrace_dump(DUMP_ALL);
-    773                         /* ftrace_dump() disables tracing */
-    774                         tracing_on();
-    775                 }
-    776                 return 0;
-    777         }
-    778 
-    779         return trace_graph_entry(trace);
-    780 }
-
-The call tree is:
-
-prepare_ftrace_return() <- disables preempt
--> function_graph_enter()
-   -> trace_graph_entry_watchdog()
-
-The ftrace_test_recursion_trylock() function disables preemption.  The
-trace_graph_entry_watchdog() function is called as a pointer so it's
-the ftrace_graph_entry() call.
-
-regards,
-dan carpenter
+I suspect the UD2 that's in there will go 'funny' if it's relocated into
+an optprobe, as in, it'll not be recognised as a CFI fail.
