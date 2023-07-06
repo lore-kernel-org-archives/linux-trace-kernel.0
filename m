@@ -2,177 +2,149 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 57534C0015E
-	for <linux-trace-kernel@archiver.kernel.org>; Thu,  6 Jul 2023 11:32:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D1D2CEB64DC
+	for <linux-trace-kernel@archiver.kernel.org>; Thu,  6 Jul 2023 11:34:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232418AbjGFLcX (ORCPT
+        id S231311AbjGFLe1 (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Thu, 6 Jul 2023 07:32:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35638 "EHLO
+        Thu, 6 Jul 2023 07:34:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37840 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232488AbjGFLcN (ORCPT
+        with ESMTP id S229514AbjGFLe0 (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Thu, 6 Jul 2023 07:32:13 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D0BC91BE4
-        for <linux-trace-kernel@vger.kernel.org>; Thu,  6 Jul 2023 04:31:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1688643080;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=YUOZEoZh3tniSwu0Lc1VH/leg3NuusrIfXtvdOdkp+U=;
-        b=GAP+5qy64HiGUi/Yu5pzuSNUHxUdy2i1KEhlFHSa2K6iIvdSUDWtwUtVlRRPZ+r/7DFCGg
-        g/8n3HaOrYserd6z5k3RRT+9Kz5AWCCG/1XXdqNUevIu1omw3T43Ckr+7EfBcyj8Hj8BVE
-        yaaO4LkKDIIT4Y7OdRWsYc4f26pBl9E=
-Received: from mail-qv1-f71.google.com (mail-qv1-f71.google.com
- [209.85.219.71]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-183-4OGzebDyMLG6R0YlBelb8Q-1; Thu, 06 Jul 2023 07:31:19 -0400
-X-MC-Unique: 4OGzebDyMLG6R0YlBelb8Q-1
-Received: by mail-qv1-f71.google.com with SMTP id 6a1803df08f44-62de65b3a5bso8368086d6.2
-        for <linux-trace-kernel@vger.kernel.org>; Thu, 06 Jul 2023 04:31:19 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1688643079; x=1691235079;
-        h=mime-version:message-id:date:references:in-reply-to:subject:cc:to
-         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=YUOZEoZh3tniSwu0Lc1VH/leg3NuusrIfXtvdOdkp+U=;
-        b=X6kJZmq1lvWfck9FehB0JsJQvX2Cewm5Q8jRN1vw4cH7EsgYC+dAzrVW/v7o+JIoYR
-         axgWr7ZdWJHxBYD/sHw3i1YUy669EnPSxMQkTizr4DEYEaPNNpam2JzBgZzSmyv7WR14
-         KgQiZyfH/PmoCfE7axI+Q0pDftt3vJE1dBlLGm/5sY6cJZbQrcfpnYm7Vnuxb2kwyg4c
-         w/cLdYWJl8lNdSUHRmOcUAhqO3sr8Y8IrKPs4iUJOQCZ/lVdmFgy3tMRabEBX/R6dvVw
-         AmjV+X4gKLFSiv0BUoPgNd8Eop0nkf37Qd55ZtwJCHep8xoMM6UnoIjJMFnI+R9Y3boY
-         U8ww==
-X-Gm-Message-State: ABy/qLZH9XBIlSTsD1sFJ+GIqwHyrzNrN7pfO1Bue5m/ikMAxKMEv+Uc
-        3OYPU9G+DqsLAV3GEHIwUglSNE8hDLlllnU7j6ogNVDJrQHr8GuxtnNAn5QRcBBFSwm6wJ57Yfj
-        Q2RGDLeurCWN4XhM5uDF2SWxpwJtoN8cv
-X-Received: by 2002:a0c:f014:0:b0:636:e56c:eedb with SMTP id z20-20020a0cf014000000b00636e56ceedbmr1572770qvk.34.1688643079066;
-        Thu, 06 Jul 2023 04:31:19 -0700 (PDT)
-X-Google-Smtp-Source: APBJJlEBNT72yhfIkKfRmJowXJfm9QDc9/aizAtdc3cEmmOmAM0nOogaJ0lzClntXieI3e1t66iJTw==
-X-Received: by 2002:a0c:f014:0:b0:636:e56c:eedb with SMTP id z20-20020a0cf014000000b00636e56ceedbmr1572731qvk.34.1688643078801;
-        Thu, 06 Jul 2023 04:31:18 -0700 (PDT)
-Received: from vschneid.remote.csb ([154.57.232.159])
-        by smtp.gmail.com with ESMTPSA id oo23-20020a05620a531700b007673f8803c3sm624918qkn.96.2023.07.06.04.31.12
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 06 Jul 2023 04:31:18 -0700 (PDT)
-From:   Valentin Schneider <vschneid@redhat.com>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
-        linux-doc@vger.kernel.org, kvm@vger.kernel.org, linux-mm@kvack.org,
-        bpf@vger.kernel.org, x86@kernel.org,
-        Nicolas Saenz Julienne <nsaenzju@redhat.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Frederic Weisbecker <frederic@kernel.org>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Uladzislau Rezki <urezki@gmail.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        Lorenzo Stoakes <lstoakes@gmail.com>,
-        Josh Poimboeuf <jpoimboe@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Sami Tolvanen <samitolvanen@google.com>,
-        Ard Biesheuvel <ardb@kernel.org>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        Juerg Haefliger <juerg.haefliger@canonical.com>,
-        Nicolas Saenz Julienne <nsaenz@kernel.org>,
-        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-        Nadav Amit <namit@vmware.com>,
-        Dan Carpenter <error27@gmail.com>,
-        Chuang Wang <nashuiliang@gmail.com>,
-        Yang Jihong <yangjihong1@huawei.com>,
-        Petr Mladek <pmladek@suse.com>,
-        "Jason A. Donenfeld" <Jason@zx2c4.com>, Song Liu <song@kernel.org>,
-        Julian Pidancet <julian.pidancet@oracle.com>,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        Dionna Glaze <dionnaglaze@google.com>,
-        Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <linux@weissschuh.net>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Daniel Bristot de Oliveira <bristot@redhat.com>,
-        Marcelo Tosatti <mtosatti@redhat.com>,
-        Yair Podemsky <ypodemsk@redhat.com>
-Subject: Re: [RFC PATCH 11/14] context-tracking: Introduce work deferral
- infrastructure
-In-Reply-To: <20230705223956.GD2813335@hirez.programming.kicks-ass.net>
-References: <20230705181256.3539027-1-vschneid@redhat.com>
- <20230705181256.3539027-12-vschneid@redhat.com>
- <20230705223956.GD2813335@hirez.programming.kicks-ass.net>
-Date:   Thu, 06 Jul 2023 12:31:11 +0100
-Message-ID: <xhsmhsfa1uvi8.mognet@vschneid.remote.csb>
+        Thu, 6 Jul 2023 07:34:26 -0400
+Received: from desiato.infradead.org (desiato.infradead.org [IPv6:2001:8b0:10b:1:d65d:64ff:fe57:4e05])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 952511727;
+        Thu,  6 Jul 2023 04:34:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=eKY/Uo90bROTMojvs7v+DqKoFW8MQafmKj7nGaM0SMo=; b=DS4GEvci5dv0oamCOC8VOMsYPA
+        0qb9WGqNf7NESEYk7b1y7Osv20dwQHcCS9hxAUM9a0Kg3EyoKgjr3KtTEK6G00Kzk0Q0vpTsLFyu3
+        BnqDv6OmsoMjZezdt6+ARvuS8VWFYBy8hhY99/TqjRsBxVAPKXyxw5QrYt+f/Gh8aVePQFIEaJwYm
+        xQ7nHlpRYUm6VaGEyIMHBKNrUQiulWEXU6mPfZ/wG79dlNH3MHz92m0TJ45Q+8VYc4yfYhD5jeT50
+        vIyQPrxKgLiEk3tehEFDobHnfRFfJG6uorDiESVx8yce88JpLJkQpC4iv7kKFZPYabjgX1GjwuDSK
+        A4/bxYsg==;
+Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
+        by desiato.infradead.org with esmtpsa (Exim 4.96 #2 (Red Hat Linux))
+        id 1qHNFN-00DZN3-24;
+        Thu, 06 Jul 2023 11:34:05 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 936FC300095;
+        Thu,  6 Jul 2023 13:34:03 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 7C085200BDD20; Thu,  6 Jul 2023 13:34:03 +0200 (CEST)
+Date:   Thu, 6 Jul 2023 13:34:03 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Masami Hiramatsu <mhiramat@kernel.org>
+Cc:     Petr Pavlu <petr.pavlu@suse.com>, tglx@linutronix.de,
+        mingo@redhat.com, bp@alien8.de, dave.hansen@linux.intel.com,
+        hpa@zytor.com, samitolvanen@google.com, x86@kernel.org,
+        linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/2] x86/retpoline,kprobes: Avoid treating rethunk as an
+ indirect jump
+Message-ID: <20230706113403.GI2833176@hirez.programming.kicks-ass.net>
+References: <20230705081547.25130-1-petr.pavlu@suse.com>
+ <20230705081547.25130-3-petr.pavlu@suse.com>
+ <20230705085857.GG462772@hirez.programming.kicks-ass.net>
+ <20230705232038.3a6d03e18f7bafb14cdfed42@kernel.org>
+ <20230705145017.GC4253@hirez.programming.kicks-ass.net>
+ <20230706094723.6934105e03f652923796bf7e@kernel.org>
+ <20230706071705.GD2833176@hirez.programming.kicks-ass.net>
+ <20230706180014.06705096a594b71250ff3c94@kernel.org>
 MIME-Version: 1.0
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230706180014.06705096a594b71250ff3c94@kernel.org>
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On 06/07/23 00:39, Peter Zijlstra wrote:
-> On Wed, Jul 05, 2023 at 07:12:53PM +0100, Valentin Schneider wrote:
->
->> Note: A previous approach by PeterZ [1] used an extra bit in
->> context_tracking.state to flag the presence of deferred callbacks to
->> execute, and the actual callbacks were stored in a separate atomic
->> variable.
->>
->> This meant that the atomic read of context_tracking.state was sufficient to
->> determine whether there are any deferred callbacks to execute.
->> Unfortunately, it presents a race window. Consider the work setting
->> function as:
->>
->>   preempt_disable();
->>   seq = atomic_read(&ct->seq);
->>   if (__context_tracking_seq_in_user(seq)) {
->>        /* ctrl-dep */
->>        atomic_or(work, &ct->work);
->>        ret = atomic_try_cmpxchg(&ct->seq, &seq, seq|CT_SEQ_WORK);
->>   }
->>   preempt_enable();
->>
->>   return ret;
->>
->> Then the following can happen:
->>
->>   CPUx                                             CPUy
->>                                                   CT_SEQ_WORK \in context_tracking.state
->>     atomic_or(WORK_N, &ct->work);
->>                                                    ct_kernel_enter()
->>                                                      ct_state_inc();
->>     atomic_try_cmpxchg(&ct->seq, &seq, seq|CT_SEQ_WORK);
->>
->> The cmpxchg() would fail, ultimately causing an IPI for WORK_N to be
->> sent. Unfortunately, the work bit would remain set, and it can't be sanely
->> cleared in case another CPU set it concurrently - this would ultimately
->> lead to a double execution of the callback, one as a deferred callback and
->> one in the IPI. As not all IPI callbacks are idempotent, this is
->> undesirable.
->
-> So adding another atomic is arguably worse.
->
-> The thing is, if the NOHZ_FULL CPU is actually doing context transitions
-> (SYSCALLs etc..) then everything is fundamentally racy, there is no
-> winning that game, we could find the remote CPU is in-kernel, send an
-> IPI, the remote CPU does return-to-user and receives the IPI.
->
-> And then the USER is upset... because he got an IPI.
->
+On Thu, Jul 06, 2023 at 06:00:14PM +0900, Masami Hiramatsu wrote:
+> On Thu, 6 Jul 2023 09:17:05 +0200
+> Peter Zijlstra <peterz@infradead.org> wrote:
+> 
+> > On Thu, Jul 06, 2023 at 09:47:23AM +0900, Masami Hiramatsu wrote:
+> > 
+> > > > > If I understand correctly, all indirect jump will be replaced with JMP_NOSPEC.
+> > > > > If you read the insn_jump_into_range, I onlu jecks the jump code, not call.
+> > > > > So the functions only have indirect call still allow optprobe.
+> > > > 
+> > > > With the introduction of kCFI JMP_NOSPEC is no longer an equivalent to a
+> > > > C indirect jump.
+> > > 
+> > > If I understand correctly, kCFI is enabled by CFI_CLANG, and clang is not
+> > > using jump-tables by default, so we can focus on gcc. In that case
+> > > current check still work, correct?
+> > 
+> > IIRC clang can use jump tables, but like GCC needs RETPOLINE=n and
+> > IBT=n, so effectively nobody has them.
+> 
+> So if it requires RETPOLINE=n, current __indirect_thunk_start/end checking
+> is not required, right? (that code is embraced with "#ifdef CONFIG_RETPOLINE")
 
-Yeah, that part is inevitably racy.
+Correct.
 
-The thing I was especially worried about was the potential double
-executions (once in IPI, again in deferred work). It's not /too/ bad as the
-only two deferred callbacks I'm introducing here are costly-but-stateless,
-but IMO is a bad foundation.
+> > 
+> > The reason I did mention kCFI though is that kCFI has a larger 'indirect
+> > jump' sequence, and I'm not sure we've thought about what can go
+> > sideways if that's optprobed.
+> 
+> If I understand correctly, kCFI checks only indirect function call (check
+> pointer), so no jump tables. Or does it use indirect 'jump' ?
 
-But it seems like we can reuse the existing atomic and squeeze some bits in
-there, so let's see how that goes :-)
+Yes, it's indirect function calls only.
+
+Imagine our function (bar) doing an indirect call, it will (as clang
+always does) have the function pointer in r11:
+
+bar:
+	...
+	movl	$(-0x12345678),%r10d
+	addl	-15(%r11), %r10d
+	je	1f
+	ud2
+1:	call	__x86_indirect_thunk_r11
+
+
+
+And then the function it calls (foo) looks like:
+
+__cfi_foo:
+	movl	$0x12345678, %eax
+	.skip	11, 0x90
+foo:
+	endbr
+	....
+
+
+
+So if the caller (in bar) and the callee (foo) have the same hash value
+(0x12345678 in this case) then it will be equal and we continue on our
+merry way.
+
+However, if they do not match, we'll trip that #UD and the
+handle_cfi_failure() will try and match the address to
+__{start,stop}__kcfi_traps[]. Additinoally decode_cfi_insn() will try
+and decode that whole call sequence in order to obtain the target
+address and typeid (hash).
+
+optprobes might disturb this code.
+
+> > I suspect the UD2 that's in there will go 'funny' if it's relocated into
+> > an optprobe, as in, it'll not be recognised as a CFI fail.
+> 
+> UD2 can't be optprobed (kprobe neither) because it can change the dumped
+> BUG address...
+
+Right, same problem here. But could the movl/addl be opt-probed? That
+would wreck decode_cfi_insn(). Then again, if decode_cfi_insn() fails,
+we'll get report_cfi_failure_noaddr(), which is less informative.
+
+So it looks like nothing too horrible happens...
+
 
