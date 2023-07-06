@@ -2,90 +2,155 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C358FEB64D9
-	for <linux-trace-kernel@archiver.kernel.org>; Thu,  6 Jul 2023 13:40:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F302EB64D9
+	for <linux-trace-kernel@archiver.kernel.org>; Thu,  6 Jul 2023 13:50:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231954AbjGFNkd (ORCPT
+        id S229831AbjGFNuo (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Thu, 6 Jul 2023 09:40:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54206 "EHLO
+        Thu, 6 Jul 2023 09:50:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59308 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229693AbjGFNkc (ORCPT
+        with ESMTP id S231921AbjGFNun (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Thu, 6 Jul 2023 09:40:32 -0400
+        Thu, 6 Jul 2023 09:50:43 -0400
 Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A0083131;
-        Thu,  6 Jul 2023 06:40:31 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 964FE1990;
+        Thu,  6 Jul 2023 06:50:42 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange X25519 server-signature RSA-PSS (2048 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 3E4676192C;
-        Thu,  6 Jul 2023 13:40:31 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D0614C433C7;
-        Thu,  6 Jul 2023 13:40:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1688650830;
-        bh=++e4KEfyGa8uNa5HRMomjPJxKC/zgtp/avpeQHuft60=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=nqP5sEaHUeJpJeFtAh65LAPbnt5cYSBKQpW1QuuKQIVWJuUqxDtdCxSlflCpY5VTF
-         9f/wvg2Jv6x7idkLzly83vrRNXsg74Yi5k49rzF4OmKdGpzLpvVaGA4xoxEKBD+LPj
-         LdGrcIjaNDiXwyqKh0dv7TBD+fRmU5CoV6dWiSr1/zE4NIXPvBxEhmCwJd5zI6UboF
-         4jQ9oCCKmCo5nxQw5Hi3rxLPyPa8FxpbHRC4+iWCJD3Khc/QBaCuD0K15/TJ61mENL
-         2ffEMVlwtnjGfAqQ2YpvXxewDTZOj4cy4Du01w1hbHVYHVXd00A4crm7rPl9TYN6wJ
-         +obaiAJbw+XYA==
-Date:   Thu, 6 Jul 2023 22:40:26 +0900
-From:   Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To:     Li zeming <zeming@nfschina.com>
-Cc:     naveen.n.rao@linux.ibm.com, anil.s.keshavamurthy@intel.com,
-        davem@davemloft.net, linux-kernel@vger.kernel.org,
-        linux-trace-kernel@vger.kernel.org
-Subject: Re: [PATCH] kernel: kprobes: Remove unnecessary =?UTF-8?B?4oCY?=
- =?UTF-8?B?MOKAmQ==?= values from ret
-Message-Id: <20230706224026.9a29f4f4deb9da74a83bb848@kernel.org>
-In-Reply-To: <20230704201056.3352-1-zeming@nfschina.com>
-References: <20230704201056.3352-1-zeming@nfschina.com>
-X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 2687561962;
+        Thu,  6 Jul 2023 13:50:42 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0CA9DC433C7;
+        Thu,  6 Jul 2023 13:50:40 +0000 (UTC)
+Date:   Thu, 6 Jul 2023 09:50:39 -0400
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
+Cc:     Dan Carpenter <dan.carpenter@linaro.org>,
+        linux-trace-kernel@vger.kernel.org,
+        LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 3/3] tracing/probes: Fix return value when "(fault)" is
+ injected
+Message-ID: <20230706095039.1cb9c9d1@gandalf.local.home>
+In-Reply-To: <20230706134036.5c074aa5fc6a55cdb5038660@kernel.org>
+References: <168830922841.2278819.9165254236027770818.stgit@mhiramat.roam.corp.google.com>
+        <168830925534.2278819.7237772177111801959.stgit@mhiramat.roam.corp.google.com>
+        <20230705224956.1c5213e6@gandalf.local.home>
+        <20230706134036.5c074aa5fc6a55cdb5038660@kernel.org>
+X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On Wed,  5 Jul 2023 04:10:56 +0800
-Li zeming <zeming@nfschina.com> wrote:
+On Thu, 6 Jul 2023 13:40:36 +0900
+Masami Hiramatsu (Google) <mhiramat@kernel.org> wrote:
 
-> ret is assigned first, so it does not need to initialize the assignment.
+> On Wed, 5 Jul 2023 22:49:56 -0400
+> Steven Rostedt <rostedt@goodmis.org> wrote:
 > 
-
-OK, but can you merge this to the first one?
-https://lore.kernel.org/all/20230704192107.2944-1-zeming@nfschina.com/
-
-Thank you,
-
-> Signed-off-by: Li zeming <zeming@nfschina.com>
-> ---
->  kernel/kprobes.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+> > On Sun,  2 Jul 2023 23:47:35 +0900
+> > "Masami Hiramatsu (Google)" <mhiramat@kernel.org> wrote:
+> >   
+> > > From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+> > > 
+> > > When the "(fault)" is injected, the return value of fetch_store_string*()
+> > > should be the length of the "(fault)", but an error code is returned.
+> > > Fix it to return the correct length and update the data_loc according the
+> > > updated length.
+> > > This needs to update a ftracetest test case, which expects trace output
+> > > to appear as '(fault)' instead of '"(fault)"'.
+> > >   
+> > 
+> > Ah, because of patch 2, the ret < 0 makes it return without printing the
+> > "fault"?  
 > 
-> diff --git a/kernel/kprobes.c b/kernel/kprobes.c
-> index ec50f9f380c1..a009c8ccd8ea 100644
-> --- a/kernel/kprobes.c
-> +++ b/kernel/kprobes.c
-> @@ -2692,7 +2692,7 @@ void kprobe_free_init_mem(void)
->  
->  static int __init init_kprobes(void)
+> No, actually set_data_loc() updates the 'ret' argument, but it is just
+> disposed... (not returned to the caller)
+
+That's not what I was talking about.
+
+We have:
+
+process_fetch_insn_bottom() {
+	[..]
+	case FETCH_OP_ST_STRING:
+		loc = *(u32 *)dest;
+		ret = fetch_store_string(val + code->offset, dest, base);
+		break;
+	[..]
+
+// And from patch 2 we have:
+
+@@ -193,6 +193,8 @@ process_fetch_insn_bottom(struct fetch_insn *code, unsigned long val,
+ 	default:
+ 		return -EILSEQ;
+ 	}
++	if (ret < 0)
++		return ret;
+ 	code++;
+
+And now that the return value of fetch_store_string() is being checked, and
+if it returns negative, it ends the function before being processed
+further. And if there's a fault, it happens to return negative!
+
+This patch now changes fetch_store_string() and fetch_store_string_user()
+to not return negative if there's a fault. As this patch has:
+
+@@ -107,9 +106,7 @@ fetch_store_string(unsigned long addr, void *dest, void *base)
+ 	 * probing.
+ 	 */
+ 	ret = strncpy_from_kernel_nofault(__dest, (void *)addr, maxlen);
+-	set_data_loc(ret, dest, __dest, base, maxlen);
+-
+-	return ret;
++	return set_data_loc(ret, dest, __dest, base, maxlen);
+ }
+
+But to do that, you needed to update set_data_loc() to return a value.
+
+*that's* what I meant by 
+
+'Ah, because of patch 2, the ret < 0 makes it return without printing the "fault"?'
+
+
+-- Steve
+
+> 
+> -static nokprobe_inline void set_data_loc(int ret, void *dest, void *__dest, void *base, int len)
+> +static nokprobe_inline int set_data_loc(int ret, void *dest, void *__dest, void *base, int len)
 >  {
-> -	int i, err = 0;
-> +	int i, err;
->  
->  	/* FIXME allocate the probe table, currently defined statically */
->  	/* initialize all list heads */
-> -- 
-> 2.18.2
+> -	if (ret >= 0) {
+> -		*(u32 *)dest = make_data_loc(ret, __dest - base);
+> -	} else {
+> +	if (ret < 0) {
+>  		strscpy(__dest, FAULT_STRING, len);
+>  		ret = strlen(__dest) + 1;
+>  	}
+> +
+> +	*(u32 *)dest = make_data_loc(ret, __dest - base);
+> +	return ret;
+>  }
+> 
+> So this returns updated 'ret', and also update data_loc to use the
+> updated 'ret' value (which is the length of the stored data).
+> 
+> > 
+> > Reviewed-by: Steven Rostedt (Google) <rostedt@goodmis.org>  
+> 
+> Thank you!
+> 
+> > 
+> > -- Steve
+> > 
+> >   
+> > > Fixes: 2e9906f84fc7 ("tracing: Add "(fault)" name injection to kernel probes")
+> > > Cc: stable@vger.kernel.org
+> > > Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+> > > ---  
+> 
 > 
 
-
--- 
-Masami Hiramatsu (Google) <mhiramat@kernel.org>
