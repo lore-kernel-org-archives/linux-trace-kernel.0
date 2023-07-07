@@ -2,54 +2,58 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 93320EB64DA
-	for <linux-trace-kernel@archiver.kernel.org>; Fri,  7 Jul 2023 14:17:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E21BEB64D9
+	for <linux-trace-kernel@archiver.kernel.org>; Fri,  7 Jul 2023 14:39:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229677AbjGGORo (ORCPT
+        id S231245AbjGGOjV (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Fri, 7 Jul 2023 10:17:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53146 "EHLO
+        Fri, 7 Jul 2023 10:39:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60552 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231249AbjGGORn (ORCPT
+        with ESMTP id S230414AbjGGOjU (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Fri, 7 Jul 2023 10:17:43 -0400
+        Fri, 7 Jul 2023 10:39:20 -0400
 Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3A8DD125;
-        Fri,  7 Jul 2023 07:17:42 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E9ECC1FC4;
+        Fri,  7 Jul 2023 07:39:19 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange X25519 server-signature RSA-PSS (2048 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 8EA77619D3;
-        Fri,  7 Jul 2023 14:17:41 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A61B6C433C7;
-        Fri,  7 Jul 2023 14:17:38 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 6DB7F619C4;
+        Fri,  7 Jul 2023 14:39:19 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E802AC433C8;
+        Fri,  7 Jul 2023 14:39:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1688739461;
-        bh=74TZJ8DeE44QYRS49fC72fWhJ1prqaoZEaYSRbQGNqs=;
+        s=k20201202; t=1688740758;
+        bh=NI7RBLeyQ5xQGmyWwqLDZomiDo2pHyAV8zW7+8DEiZA=;
         h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=R/zk6E3JYbftUInhMFoZYTLJTS9Ver38FrAGJYGDLg48/1nqGS/SziwjqaI0uQ8mF
-         9uLLO7Cp94P6wOdloklj2Y/7wrSRJt7CEE0DXPQ2KSBBrbXG+mYq6wLslX/vTfI+1W
-         pgq6NN6xNIFIcguJ639U3T/ObwuslPK5zEjXdlTFPNrJMc+jdRCDoMCiT4GP4oMufr
-         x6Cim/0DLMaOFwwTK3vOt8fmQO3/TnbVISve1eyccMtkGCkMoKGsy5ufum64rvMcyu
-         0KyIrk7yPq+zWMhYfRTNEs5ovJGutkCRmo8w8bkGnE8D5Q8BUg4Vq2a/jG8QT6c535
-         LnQlVdhJcw2rA==
-Date:   Fri, 7 Jul 2023 23:17:30 +0900
+        b=RCFGi+BIYCM+8/xBFPEBpeiZjLRAEMBCUQsMysFT/3wOugpYZHGTDlRZxS+Co6WyH
+         7+ZRrnw6hB8uf1XJ3p7IBpaKSHc+g1Im89OST48r58zG+VdPtvlwYa9iLVDvlBXr9T
+         q0SFGDsplQWu1qmlobnCehaQ3kIE2Cka+aSaLi0MJHQVmydG+exkIYXM2dPH/qGtNZ
+         biKcV4OXb7p+7U8ykud2HnxqkrXmNdOTrit70dU44ciQugWbRzS8Gxwx4r8/MN1Ez8
+         Vjfxu0FCvndbjrl9nFAFzq9SGwc843LdpuMUzRIEfwFEKeLUV2GAFq07RzOc07fjTb
+         BcKQ4hxku/j8w==
+Date:   Fri, 7 Jul 2023 23:39:13 +0900
 From:   Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To:     Steven Rostedt <rostedt@goodmis.org>
-Cc:     linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Florent Revest <revest@chromium.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Martin KaFai Lau <martin.lau@linux.dev>, bpf@vger.kernel.org
-Subject: Re: [PATCH v11 02/11] tracing/probes: Add fprobe events for tracing
- function entry and exit.
-Message-Id: <20230707231730.7e2d176d729718a9ba51255a@kernel.org>
-In-Reply-To: <20230608165234.0c00c146@gandalf.local.home>
-References: <168432112492.1351929.9265172785506392923.stgit@mhiramat.roam.corp.google.com>
-        <168432114441.1351929.4695419422051966931.stgit@mhiramat.roam.corp.google.com>
-        <20230608165234.0c00c146@gandalf.local.home>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Petr Pavlu <petr.pavlu@suse.com>, tglx@linutronix.de,
+        mingo@redhat.com, bp@alien8.de, dave.hansen@linux.intel.com,
+        hpa@zytor.com, samitolvanen@google.com, x86@kernel.org,
+        linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/2] x86/retpoline,kprobes: Avoid treating rethunk as an
+ indirect jump
+Message-Id: <20230707233913.976ecfb1a312d03f9b07a2b2@kernel.org>
+In-Reply-To: <20230706113403.GI2833176@hirez.programming.kicks-ass.net>
+References: <20230705081547.25130-1-petr.pavlu@suse.com>
+        <20230705081547.25130-3-petr.pavlu@suse.com>
+        <20230705085857.GG462772@hirez.programming.kicks-ass.net>
+        <20230705232038.3a6d03e18f7bafb14cdfed42@kernel.org>
+        <20230705145017.GC4253@hirez.programming.kicks-ass.net>
+        <20230706094723.6934105e03f652923796bf7e@kernel.org>
+        <20230706071705.GD2833176@hirez.programming.kicks-ass.net>
+        <20230706180014.06705096a594b71250ff3c94@kernel.org>
+        <20230706113403.GI2833176@hirez.programming.kicks-ass.net>
 X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 Mime-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
@@ -58,75 +62,109 @@ Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On Thu, 8 Jun 2023 16:52:34 -0400
-Steven Rostedt <rostedt@goodmis.org> wrote:
+On Thu, 6 Jul 2023 13:34:03 +0200
+Peter Zijlstra <peterz@infradead.org> wrote:
 
-> On Wed, 17 May 2023 19:59:04 +0900
-> "Masami Hiramatsu (Google)" <mhiramat@kernel.org> wrote:
-> 
-> > Add fprobe events for tracing function entry and exit instead of kprobe
-> > events. With this change, we can continue to trace function entry/exit
-> > even if the CONFIG_KPROBES_ON_FTRACE is not available. Since
-> > CONFIG_KPROBES_ON_FTRACE requires the CONFIG_DYNAMIC_FTRACE_WITH_REGS,
-> > it is not available if the architecture only supports
-> > CONFIG_DYNAMIC_FTRACE_WITH_ARGS. And that means kprobe events can not
-> > probe function entry/exit effectively on such architecture.
-> > But this can be solved if the dynamic events supports fprobe events.
+> On Thu, Jul 06, 2023 at 06:00:14PM +0900, Masami Hiramatsu wrote:
+> > On Thu, 6 Jul 2023 09:17:05 +0200
+> > Peter Zijlstra <peterz@infradead.org> wrote:
 > > 
-> > The fprobe event is a new dynamic events which is only for the function
-> > (symbol) entry and exit. This event accepts non register fetch arguments
-> > so that user can trace the function arguments and return values.
+> > > On Thu, Jul 06, 2023 at 09:47:23AM +0900, Masami Hiramatsu wrote:
+> > > 
+> > > > > > If I understand correctly, all indirect jump will be replaced with JMP_NOSPEC.
+> > > > > > If you read the insn_jump_into_range, I onlu jecks the jump code, not call.
+> > > > > > So the functions only have indirect call still allow optprobe.
+> > > > > 
+> > > > > With the introduction of kCFI JMP_NOSPEC is no longer an equivalent to a
+> > > > > C indirect jump.
+> > > > 
+> > > > If I understand correctly, kCFI is enabled by CFI_CLANG, and clang is not
+> > > > using jump-tables by default, so we can focus on gcc. In that case
+> > > > current check still work, correct?
+> > > 
+> > > IIRC clang can use jump tables, but like GCC needs RETPOLINE=n and
+> > > IBT=n, so effectively nobody has them.
 > > 
-> > The fprobe events syntax is here;
+> > So if it requires RETPOLINE=n, current __indirect_thunk_start/end checking
+> > is not required, right? (that code is embraced with "#ifdef CONFIG_RETPOLINE")
+> 
+> Correct.
+> 
+> > > 
+> > > The reason I did mention kCFI though is that kCFI has a larger 'indirect
+> > > jump' sequence, and I'm not sure we've thought about what can go
+> > > sideways if that's optprobed.
 > > 
-> >  f[:[GRP/][EVENT]] FUNCTION [FETCHARGS]
-> >  f[MAXACTIVE][:[GRP/][EVENT]] FUNCTION%return [FETCHARGS]
+> > If I understand correctly, kCFI checks only indirect function call (check
+> > pointer), so no jump tables. Or does it use indirect 'jump' ?
 > 
-> I finally got around to look at these (I know you already queued them), but
-> looking at the above, the "%return" is redundant.
+> Yes, it's indirect function calls only.
 > 
-> > 
-> > E.g.
-> > 
-> >  # echo 'f vfs_read $arg1'  >> dynamic_events
-> >  # echo 'f vfs_read%return $retval'  >> dynamic_events
-> >  # cat dynamic_events
-> >  f:fprobes/vfs_read__entry vfs_read arg1=$arg1
-> >  f:fprobes/vfs_read__exit vfs_read%return arg1=$retval
+> Imagine our function (bar) doing an indirect call, it will (as clang
+> always does) have the function pointer in r11:
 > 
-> Can't we just have:
+> bar:
+> 	...
+> 	movl	$(-0x12345678),%r10d
+> 	addl	-15(%r11), %r10d
+> 	je	1f
+> 	ud2
+> 1:	call	__x86_indirect_thunk_r11
 > 
->   f:fprobes/vfs_read__entry vfs_read arg1=$arg1
->   f:fprobes/vfs_read__exit vfs_read arg1=$retval
 > 
-> Where if "$retval" is specified, it automatically becomes a return? If
-> anything else is specified, it errors out. That is, if $retval is
-> specified, it becomes a return probe, as a return probe can only have
-> $retval. If anything else is specified, it errors out if $retval is also
-> specified.
+> 
+> And then the function it calls (foo) looks like:
+> 
+> __cfi_foo:
+> 	movl	$0x12345678, %eax
+> 	.skip	11, 0x90
+> foo:
+> 	endbr
+> 	....
+> 
+> 
+> 
+> So if the caller (in bar) and the callee (foo) have the same hash value
+> (0x12345678 in this case) then it will be equal and we continue on our
+> merry way.
+> 
+> However, if they do not match, we'll trip that #UD and the
+> handle_cfi_failure() will try and match the address to
+> __{start,stop}__kcfi_traps[]. Additinoally decode_cfi_insn() will try
+> and decode that whole call sequence in order to obtain the target
+> address and typeid (hash).
 
-Hmm, current implementation design doesn't allow that.
-It parses the 'place' and 'args' sequencially because what 'args' is
-available depends on the place.
+Thank you for the explanation! This helps me!
 
 > 
-> Now if it's a void function, and you just want to make it a return then we
-> can have your:
-> 
->   f:fprobes/vfs_read__exit vfs_read%return
-> 
-> Thoughts?
+> optprobes might disturb this code.
 
-But this sounds useful. Let me try to scan the argument to find $retval.
+So either optprobe or kprobes (any text instrumentation) do not touch
+__cfi_FUNC symbols light before FUNC.
+
+> 
+> > > I suspect the UD2 that's in there will go 'funny' if it's relocated into
+> > > an optprobe, as in, it'll not be recognised as a CFI fail.
+> > 
+> > UD2 can't be optprobed (kprobe neither) because it can change the dumped
+> > BUG address...
+> 
+> Right, same problem here. But could the movl/addl be opt-probed? That
+> would wreck decode_cfi_insn(). Then again, if decode_cfi_insn() fails,
+> we'll get report_cfi_failure_noaddr(), which is less informative.
+
+Ok, so if that sequence is always expected, I can also prohibit probing it.
+Or, maybe it is better to generalize the API to access original instruction
+which is used from kprobes, so that decode_cfi_insn() can get the original
+(non-probed) insn.
+
+> 
+> So it looks like nothing too horrible happens...
+> 
+> 
+
 
 Thank you,
-
-> 
-> -- Steve
-> 
-> 
-> 
-
 
 -- 
 Masami Hiramatsu (Google) <mhiramat@kernel.org>
