@@ -2,122 +2,125 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FAABEB64D9
-	for <linux-trace-kernel@archiver.kernel.org>; Fri,  7 Jul 2023 00:17:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 76E40EB64D9
+	for <linux-trace-kernel@archiver.kernel.org>; Fri,  7 Jul 2023 01:50:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232181AbjGGARU (ORCPT
+        id S231421AbjGGBuP (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Thu, 6 Jul 2023 20:17:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53134 "EHLO
+        Thu, 6 Jul 2023 21:50:15 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47344 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231912AbjGGARS (ORCPT
+        with ESMTP id S229829AbjGGBuO (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Thu, 6 Jul 2023 20:17:18 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8664619A5;
-        Thu,  6 Jul 2023 17:17:17 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 1C2DC614D5;
-        Fri,  7 Jul 2023 00:17:17 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DD925C433C7;
-        Fri,  7 Jul 2023 00:17:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1688689036;
-        bh=ymAymf4FHdvPplfqSDcRK8uyKvH11GL8w4/ZdkYCmgY=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=t02yP5f9rk25XZLZpImqy243RZTgUUKufHS4sJg0w/slPICynml3SV3qvyJaOnJqn
-         VFEMSV5RObHJxO18LvaTbmC6WoiTe/tLex0osTRbXjEgBGFflSakhO/5svwwGg5Dax
-         2jNk2SVszEriENOYIhfEXmCmsuXzqj/2LT1sPHZUkF9wJdxSXR/KELNt/Z/M2cZocr
-         Q4k2BrU2hnG2u9uoNTvjBdm7VHpMqsridPMqhq5FiD76G5/wC8yOeIuoglL0ja7S72
-         DUwzUQ6wp88qbX91ano7F8FA8dUXhdr77u94lBiXkI5S7n2HnpNoz0DcZ1oniddLeu
-         Qy9S5RrAVpYJA==
-Date:   Fri, 7 Jul 2023 09:17:12 +0900
-From:   Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To:     Steven Rostedt <rostedt@goodmis.org>
-Cc:     Jiri Olsa <jolsa@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
-        lkml <linux-kernel@vger.kernel.org>,
-        linux-trace-kernel@vger.kernel.org, bpf@vger.kernel.org
-Subject: Re: [PATCH] fprobe: Ensure running fprobe_exit_handler() finished
- before calling rethook_free()
-Message-Id: <20230707091712.e478e0b6e8f5c1ab0802a510@kernel.org>
-In-Reply-To: <20230706095624.3a846b8e@gandalf.local.home>
-References: <20230628012305.978e34d44f1a53fe20327fde@kernel.org>
-        <168796344232.46347.7947681068822514750.stgit@devnote2>
-        <20230705212657.5968daf7@gandalf.local.home>
-        <20230706141012.c1a0ae0901e0fdec7b3078c7@kernel.org>
-        <20230706095624.3a846b8e@gandalf.local.home>
-X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        Thu, 6 Jul 2023 21:50:14 -0400
+Received: from mail-qt1-x835.google.com (mail-qt1-x835.google.com [IPv6:2607:f8b0:4864:20::835])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 61EE71BFC;
+        Thu,  6 Jul 2023 18:50:13 -0700 (PDT)
+Received: by mail-qt1-x835.google.com with SMTP id d75a77b69052e-4039a42467fso690161cf.3;
+        Thu, 06 Jul 2023 18:50:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1688694612; x=1691286612;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Xkwwxsjnj6O7GN890m3K1TW36EBzEJUTmiZuak1j/OQ=;
+        b=NLCgH94I79YHekZmvGafQoaSn/+lUJBQWYNBsQvVoXYGlUC8c8xHBeCioWYDjZUr52
+         oLPCFvEHPPW05yDdsQikFfdifcIcO9gBq0gl7JBKxkqGT0K3bItvhlaF0RVBMimxbKU0
+         UEYlBiCCYEFvMMiWC8Jkq69vppIbcujTrJtI7C0UkEN0BogPzsv8yNmjaauVahqjx6Ck
+         H/pPshz6ldA+zZVLAZ7VlzK9PM16XWQP19N6lM6MHwhba+bqITXXRn1QrF8CDqOdoH55
+         wIIMSxFBG347mh3hSmw/hcK3osYRghg0qEVU7evTMdztYBcV4T4ORlyT7vcV78G4LETT
+         a6rA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1688694612; x=1691286612;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Xkwwxsjnj6O7GN890m3K1TW36EBzEJUTmiZuak1j/OQ=;
+        b=bUjVVUZvdYqp2wIjekEvGCf6XtpLdaNcm7zmVxurxViisxkeFhT6HxVbdjx/avTby1
+         y8cbvYP3RdqsEb4u9aJ56tWifBwuwLzpDwtJXVl699Ot2DElHZo1Ffd5JE5Cyn7tYPSE
+         Jv/jOZZUh0erdgrJ1QXW90QGbVrQEigC/DHiqB0+bdubtlQ6CXadcoRTa0qgAqFt9I3Z
+         JNDjljn1YL9c3+vd3XT52rD2Sr2W3CWhaOld+1GDqvLTtrNNMJWI7E1yMwLIN+QuKOcN
+         4QmYeaKobsMJwvhJV1QHl0G78B93U1O06PW/zgXvzzv4VEMZ/3RZIjFHvsHKKfuibJGr
+         kvuQ==
+X-Gm-Message-State: ABy/qLZEFl0G+TZas+pNvoiCv9zVvhaCvDUMpQdqCwZNc5FBZIlF5hbQ
+        v7Tm7XzTempEpJmxUJ/7sd3/oCxQS37wKkm9Ivo=
+X-Google-Smtp-Source: APBJJlF1MZ/wrCEMRWL6Rxpy2SCH4BuT8kP9EMglQF/uVWtzJZ14MiFS0bXHWLyiH+PitmcVH7AVrJb9CxAZM478tFA=
+X-Received: by 2002:a05:622a:1a10:b0:400:ab3a:1714 with SMTP id
+ f16-20020a05622a1a1000b00400ab3a1714mr5055466qtb.11.1688694612438; Thu, 06
+ Jul 2023 18:50:12 -0700 (PDT)
+MIME-Version: 1.0
+References: <20230628115329.248450-1-laoar.shao@gmail.com> <20230628115329.248450-9-laoar.shao@gmail.com>
+ <CAEf4BzYOQQHFo6OwRb4ORsCq0iqYRp=MtVFNeGgSW9NCMrdnAw@mail.gmail.com>
+In-Reply-To: <CAEf4BzYOQQHFo6OwRb4ORsCq0iqYRp=MtVFNeGgSW9NCMrdnAw@mail.gmail.com>
+From:   Yafang Shao <laoar.shao@gmail.com>
+Date:   Fri, 7 Jul 2023 09:49:35 +0800
+Message-ID: <CALOAHbC93w3ECSed+9q9rANnGg=C1m+3+_Hp38+Su1+Bbz-W-A@mail.gmail.com>
+Subject: Re: [PATCH v6 bpf-next 08/11] bpf: Add bpf_perf_link_fill_common()
+To:     Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Cc:     ast@kernel.org, daniel@iogearbox.net, john.fastabend@gmail.com,
+        andrii@kernel.org, martin.lau@linux.dev, song@kernel.org,
+        yhs@fb.com, kpsingh@kernel.org, sdf@google.com, haoluo@google.com,
+        jolsa@kernel.org, quentin@isovalent.com, rostedt@goodmis.org,
+        mhiramat@kernel.org, bpf@vger.kernel.org,
+        linux-trace-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On Thu, 6 Jul 2023 09:56:24 -0400
-Steven Rostedt <rostedt@goodmis.org> wrote:
+On Fri, Jul 7, 2023 at 6:00=E2=80=AFAM Andrii Nakryiko
+<andrii.nakryiko@gmail.com> wrote:
+>
+> On Wed, Jun 28, 2023 at 4:53=E2=80=AFAM Yafang Shao <laoar.shao@gmail.com=
+> wrote:
+> >
+> > Add a new helper bpf_perf_link_fill_common(), which will be used by
+> > perf_link based tracepoint, kprobe and uprobe.
+> >
+> > Signed-off-by: Yafang Shao <laoar.shao@gmail.com>
+> > ---
+> >  kernel/bpf/syscall.c | 34 ++++++++++++++++++++++++++++++++++
+> >  1 file changed, 34 insertions(+)
+> >
+> > diff --git a/kernel/bpf/syscall.c b/kernel/bpf/syscall.c
+> > index 4aa6e5776a04..72de91beabbc 100644
+> > --- a/kernel/bpf/syscall.c
+> > +++ b/kernel/bpf/syscall.c
+> > @@ -3364,6 +3364,40 @@ static void bpf_perf_link_dealloc(struct bpf_lin=
+k *link)
+> >         kfree(perf_link);
+> >  }
+> >
+> > +static int bpf_perf_link_fill_common(const struct perf_event *event,
+> > +                                    char __user *uname, u32 ulen,
+> > +                                    u64 *probe_offset, u64 *probe_addr=
+,
+> > +                                    u32 *fd_type)
+> > +{
+> > +       const char *buf;
+> > +       u32 prog_id;
+> > +       size_t len;
+> > +       int err;
+> > +
+> > +       if (!ulen ^ !uname)
+> > +               return -EINVAL;
+> > +       if (!uname)
+> > +               return 0;
+> > +
+> > +       err =3D bpf_get_perf_event_info(event, &prog_id, fd_type, &buf,
+> > +                                     probe_offset, probe_addr);
+> > +       if (err)
+> > +               return err;
+> > +
+> > +       len =3D strlen(buf);
+> > +       if (buf) {
+>
+> if buf is NULL, strlen above will crash, so you need to calculate len
+> inside this if branch
 
-> On Thu, 6 Jul 2023 14:10:12 +0900
-> Masami Hiramatsu (Google) <mhiramat@kernel.org> wrote:
-> 
-> > With only Jiri's patch, following flow can happen;
-> > 
-> > ------
-> >  CPU1                              CPU2
-> >  call unregister_fprobe()
-> >  ...
-> >                                    __fprobe_handler()
-> >                                    rethook_hook() on probed function
-> >  unregister_ftrace_function()
-> >                                    return from probed function
-> >                                    rethook hooks
-> >                                    find rh->handler == fprobe_exit_handler
-> >                                    call fprobe_exit_handler()
-> >  rethook_free():
-> >    set rh->handler = NULL;
-> >  return from unreigster_fprobe;
-> >                                    call fp->exit_handler() <- (*)
-> > 
-> > (*) In this point, the exit handler is called after returning from 
-> > unregister_fprobe().
-> > ------
-> > 
-> > So, this patch changes it as following;
-> > ------
-> >  CPU1                              CPU2
-> >  call unregister_fprobe()
-> >  ...
-> >  rethook_stop():
-> >    set rh->handler = NULL;
-> >                                    __fprobe_handler()
-> >                                    rethook_hook() on probed function
-> >  unregister_ftrace_function()
-> >                                    return from probed function
-> >                                    rethook hooks
-> >                                    find rh->handler == NULL
-> >                                    return from rethook
-> >  rethook_free()
-> >  return from unreigster_fprobe;
-> > ------
-> > 
-> > I can also just put a synchronize_sched_rcu() right after rethook_free()
-> > to wait for all running fprobe_exit_handler() too.
-> > 
-> 
-> This makes more sense. Can you please add the above to the change log.
+Nice catch. Will fix it.
 
-OK, let me update it.
-
-Thanks!
-
-> 
-> Thanks,
-> 
-> -- Steve
-
-
--- 
-Masami Hiramatsu (Google) <mhiramat@kernel.org>
+--=20
+Regards
+Yafang
