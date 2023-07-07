@@ -2,94 +2,163 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CD2EEB64D9
-	for <linux-trace-kernel@archiver.kernel.org>; Fri,  7 Jul 2023 06:55:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 806F3C001DE
+	for <linux-trace-kernel@archiver.kernel.org>; Fri,  7 Jul 2023 07:04:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229506AbjGGGzD (ORCPT
+        id S232298AbjGGHEX convert rfc822-to-8bit (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Fri, 7 Jul 2023 02:55:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46990 "EHLO
+        Fri, 7 Jul 2023 03:04:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49294 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229458AbjGGGzC (ORCPT
+        with ESMTP id S232097AbjGGHEQ (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Fri, 7 Jul 2023 02:55:02 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CD3EC130;
-        Thu,  6 Jul 2023 23:55:01 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 55478617AF;
-        Fri,  7 Jul 2023 06:55:01 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B475DC433C8;
-        Fri,  7 Jul 2023 06:54:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1688712900;
-        bh=InXyUWtqFrBQuH6612+y4sxM0GiKAB/YG+tM8Ire5QI=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=gQwS3GvLCWjhWaa+EK/zx6BAomvZG0Ct8xlSevrE5+39vWutLn+VOjZuFSI3YLCtJ
-         p2fUsrHHY/R1LEqpBKC6iDHY5OUxdgDyWkUovI+EGpxPmF0xjj3dIuDmTxvBUlJ8Pd
-         tG5lWHqlvM5kaU3RcFalPX12dXJ5l4Va5XkT0AZwwWorAz6PuMRbBq4jZYHuE2X9Ka
-         fE9tjLnyeGUfv1A/fhmdiBBLVKyGeVLrPWv1gFGjKu67kng9RuVMtzkA2gWf6cmHKe
-         nHpwbWbdOBRcpy4GXmQRcJherDo9+QScpkTFdEWc4W8By7iSGRu3M6o+MmWXriQFiT
-         8XBAGz3jk/B7g==
-Date:   Fri, 7 Jul 2023 15:54:57 +0900
-From:   Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To:     Steven Rostedt <rostedt@goodmis.org>
-Cc:     Dan Carpenter <dan.carpenter@linaro.org>,
-        linux-trace-kernel@vger.kernel.org,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 3/3] tracing/probes: Fix return value when "(fault)" is
- injected
-Message-Id: <20230707155457.1ec90d8b14e66fe0efbb3699@kernel.org>
-In-Reply-To: <20230706230642.3793a593@rorschach.local.home>
-References: <168830922841.2278819.9165254236027770818.stgit@mhiramat.roam.corp.google.com>
-        <168830925534.2278819.7237772177111801959.stgit@mhiramat.roam.corp.google.com>
-        <20230705224956.1c5213e6@gandalf.local.home>
-        <20230706134036.5c074aa5fc6a55cdb5038660@kernel.org>
-        <20230706095039.1cb9c9d1@gandalf.local.home>
-        <20230707110210.06e81e182c775454ce86280d@kernel.org>
-        <20230706222020.6e5c8e89@rorschach.local.home>
-        <20230707115128.80b6acf06f4bfa996d9d0808@kernel.org>
-        <20230706230642.3793a593@rorschach.local.home>
-X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        Fri, 7 Jul 2023 03:04:16 -0400
+Received: from frasgout11.his.huawei.com (ecs-14-137-139-23.compute.hwclouds-dns.com [14.137.139.23])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 269401709;
+        Fri,  7 Jul 2023 00:04:13 -0700 (PDT)
+Received: from mail02.huawei.com (unknown [172.18.147.228])
+        by frasgout11.his.huawei.com (SkyGuard) with ESMTP id 4Qy3xy4Zzrz9xqdN;
+        Fri,  7 Jul 2023 14:53:10 +0800 (CST)
+Received: from [127.0.0.1] (unknown [10.204.63.22])
+        by APP1 (Coremail) with SMTP id LxC2BwBHrumsuKdkc9w3BA--.59443S2;
+        Fri, 07 Jul 2023 08:03:29 +0100 (CET)
+Message-ID: <46a2328ab35907970dcd9a7240cd9072abeb66b2.camel@huaweicloud.com>
+Subject: Re: [RFC][PATCH 00/10] KEYS: Introduce user asymmetric keys and
+ signatures
+From:   Roberto Sassu <roberto.sassu@huaweicloud.com>
+To:     Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Cc:     dhowells@redhat.com, dwmw2@infradead.org,
+        herbert@gondor.apana.org.au, davem@davemloft.net,
+        jarkko@kernel.org, song@kernel.org, jolsa@kernel.org,
+        ast@kernel.org, daniel@iogearbox.net, andrii@kernel.org,
+        martin.lau@linux.dev, yhs@fb.com, john.fastabend@gmail.com,
+        kpsingh@kernel.org, sdf@google.com, haoluo@google.com,
+        rostedt@goodmis.org, mhiramat@kernel.org, mykolal@fb.com,
+        shuah@kernel.org, linux-kernel@vger.kernel.org,
+        keyrings@vger.kernel.org, linux-crypto@vger.kernel.org,
+        bpf@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+        linux-kselftest@vger.kernel.org, pbrobinson@gmail.com,
+        zbyszek@in.waw.pl, zohar@linux.ibm.com,
+        linux-integrity@vger.kernel.org, paul@paul-moore.com,
+        linux-security-module@vger.kernel.org, wiktor@metacode.biz,
+        devel@lists.sequoia-pgp.org, gnupg-devel@gnupg.org,
+        ebiggers@kernel.org, Jason@zx2c4.com, mail@maciej.szmigiero.name,
+        antony@vennard.ch, konstantin@linuxfoundation.org,
+        James.Bottomley@hansenpartnership.com,
+        Roberto Sassu <roberto.sassu@huawei.com>
+Date:   Fri, 07 Jul 2023 09:03:05 +0200
+In-Reply-To: <20230706232709.t6imkh3q234b3dlm@macbook-pro-8.dhcp.thefacebook.com>
+References: <20230706144225.1046544-1-roberto.sassu@huaweicloud.com>
+         <20230706232709.t6imkh3q234b3dlm@macbook-pro-8.dhcp.thefacebook.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
+User-Agent: Evolution 3.44.4-0ubuntu1 
+MIME-Version: 1.0
+X-CM-TRANSID: LxC2BwBHrumsuKdkc9w3BA--.59443S2
+X-Coremail-Antispam: 1UD129KBjvJXoWxArW5Jr48KFWrWw43tw17Awb_yoW5ZFWrpF
+        WrKayrArykJwnxJa4ktw40gayft3y8J3W3KwnxKrWrCwn0gryayr4xKF4rur9akr1kWr10
+        vrZ5A343Gwn5AaDanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+        9KBjDU0xBIdaVrnRJUUUk0b4IE77IF4wAFF20E14v26rWj6s0DM7CY07I20VC2zVCF04k2
+        6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4
+        vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Jr0_JF4l84ACjcxK6xIIjxv20xvEc7Cj
+        xVAFwI0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVWUJVW8JwA2z4x0Y4vEx4A2jsIEc7CjxV
+        AFwI0_Gr0_Gr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40E
+        x7xfMcIj6xIIjxv20xvE14v26r1j6r18McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x
+        0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lFIxGxcIEc7CjxVA2Y2ka0xkIwI1l42xK82IYc2Ij
+        64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x
+        8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26rWY6r4UJwCIc40Y0x0EwIxGrwCI42IY
+        6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwCI42IY6x
+        AIw20EY4v20xvaj40_WFyUJVCq3wCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv
+        6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjxUFYFCUUUUU
+X-CM-SenderInfo: purev21wro2thvvxqx5xdzvxpfor3voofrz/1tbiAQALBF1jj4-hwgAAsT
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On Thu, 6 Jul 2023 23:06:42 -0400
-Steven Rostedt <rostedt@goodmis.org> wrote:
-
-> On Fri, 7 Jul 2023 11:51:28 +0900
-> Masami Hiramatsu (Google) <mhiramat@kernel.org> wrote:
-> 
-> > Ah, I meant that your commit 2e9906f84fc7 ("tracing: Add "(fault)" name injection
-> >  to kernel probes") tries to make it '"(fault)"', So it makes 
+On Thu, 2023-07-06 at 16:27 -0700, Alexei Starovoitov wrote:
+> On Thu, Jul 06, 2023 at 04:42:13PM +0200, Roberto Sassu wrote:
+> > From: Roberto Sassu <roberto.sassu@huawei.com>
 > > 
-> >        trace-cmd-4688    [000] ...1. 466968.015879: myopen: (syscalls.sys_enter_openat) file="(fault)"
+> > Define a new TLV-based format for keys and signatures, aiming to store and
+> > use in the kernel the crypto material from other unsupported formats
+> > (e.g. PGP).
 > > 
-> > Keeping it current '(fault)' makes easy to identify which one is failed to fetch,
-> > but it may require user to parse both "some string" and (fault). I thought that
-> > was the reason why you added that commit.
+> > TLV fields have been defined to fill the corresponding kernel structures
+> > public_key, public_key_signature and key_preparsed_payload.
+> > 
+> > Keys:
+> >                 struct public_key {     struct key_preparsed_payload {
+> > KEY_PUB       -->  void *key;
+> >                    u32 keylen;         --> prep->payload.data[asym_crypto]
+> > KEY_ALGO      -->  const char *pkey_algo;
+> > KEY_KID0
+> > KEY_KID1                               --> prep->payload.data[asym_key_ids]
+> > KEY_KID2  
+> > KEY_DESC                               --> prep->description
+> > 
+> > 
+> > Signatures:
+> >                 struct public_key_signature {
+> > SIG_S         -->  u8 *s;
+> >                    u32 s_size;
+> > SIG_KEY_ALGO  -->  const char *pkey_algo;
+> > SIG_HASH_ALGO -->  const char *hash_algo;
+> >                    u32 digest_size;
+> > SIG_ENC       -->  const char *encoding;   
+> > SIG_KID0
+> > SIG_KID1      -->  struct asymmetric_key_id *auth_ids[3];
+> > SIG_KID2  
+> > 
+> > 
+> > For keys, since the format conversion has to be done in user space, user
+> > space is assumed to be trusted, in this proposal. Without this assumption,
+> > a malicious conversion tool could make a user load to the kernel a
+> > different key than the one expected.
+> > 
+> > That should not be a particular problem for keys that are embedded in the
+> > kernel image and loaded at boot, since the conversion happens in a trusted
+> > environment such as the building infrastructure of the Linux distribution
+> > vendor.
+> > 
+> > In the other cases, such as enrolling a key through the Machine Owner Key
+> > (MOK) mechanism, the user is responsible to ensure that the crypto material
+> > carried in the original format remains the same after the conversion.
+> > 
+> > For signatures, assuming the strength of the crypto algorithms, altering
+> > the crypto material is simply a Denial-of-Service (DoS), as data can be
+> > validated only with the right signature.
+> > 
+> > 
+> > This patch set also offers the following contributions:
+> > 
+> > - An API similar to the PKCS#7 one, to verify the authenticity of system
+> >   data through user asymmetric keys and signatures
+> > 
+> > - A mechanism to store a keyring blob in the kernel image and to extract
+> >   and load the keys at system boot
+> >   
+> > - eBPF binding, so that data authenticity verification with user asymmetric
+> >   keys and signatures can be carried out also with eBPF programs
 > 
-> Hmm, That commit didn't explicitly add the double quotes. That may just
-> have been a side effect of passing back the string?
+> Nack to bpf bits.
+
+Sure, no problem. Will remove them in the next iteration.
+
+> You've convinced us that bpf_verify_pkcs7_signature() is what you need.
+> Yet, 9 month later there are no users of it and you came back with this new
+> bpf_verify_uasym_signature() helper that practically not much different.
 > 
-> But I agree, just (fault) instead of "(fault)" is more explicit that it
-> faulted.
+> Instead of brand new "public key info" format sign your rpms via
+> existing pkcs7 mechanism and verify with bpf_verify_pkcs7_signature().
 
-OK, let me revert that commit and clarify what the data_loc data should be
-with fault case.
+Asking Linux distribution vendors to execute gpg in their kernel build,
+or asking them to revisit their PKI, rebuild all their packages, and
+adapting all their tools dealing with the current mechanism?
 
-Thank you,
+Which solution do you think it is better?
 
-> 
-> -- Steve
+Thanks
 
+Roberto
 
--- 
-Masami Hiramatsu (Google) <mhiramat@kernel.org>
