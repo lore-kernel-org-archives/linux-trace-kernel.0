@@ -2,99 +2,74 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 65761EB64D9
-	for <linux-trace-kernel@archiver.kernel.org>; Fri,  7 Jul 2023 17:24:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E4D44EB64D9
+	for <linux-trace-kernel@archiver.kernel.org>; Fri,  7 Jul 2023 22:32:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232836AbjGGRYm (ORCPT
+        id S230245AbjGGWcc (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Fri, 7 Jul 2023 13:24:42 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45092 "EHLO
+        Fri, 7 Jul 2023 18:32:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54470 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232946AbjGGRY2 (ORCPT
+        with ESMTP id S229914AbjGGWcb (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Fri, 7 Jul 2023 13:24:28 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B89EA2699
-        for <linux-trace-kernel@vger.kernel.org>; Fri,  7 Jul 2023 10:22:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1688750554;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=thuwuWrD51j/PCw+xxhEtLF5o2/5RQb/+JUh6XwKh6w=;
-        b=AYbPz8m+/5r5XlQxuV4Zrr+P+eEWdnZsNgtCtDVsyzJyiB+SRYkX6iPbMe9S8NN5wvzKFn
-        /0kQGKD8s7OjY81sAdAOLWElyAb8YXIhXJEivMM9AL2Bk06AGsnvJYRaI0spbd9sC9cYzN
-        +4+lS9T02soHRGO+fhwDwUxrJFiW+ec=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-148-QkjpcIHqOhKLMUo-kwZLvA-1; Fri, 07 Jul 2023 13:22:28 -0400
-X-MC-Unique: QkjpcIHqOhKLMUo-kwZLvA-1
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.rdu2.redhat.com [10.11.54.7])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 47760858EED;
-        Fri,  7 Jul 2023 17:22:28 +0000 (UTC)
-Received: from vschneid.remote.csb (unknown [10.42.28.164])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 03FA11454142;
-        Fri,  7 Jul 2023 17:22:26 +0000 (UTC)
-From:   Valentin Schneider <vschneid@redhat.com>
-To:     linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
-        linux-doc@vger.kernel.org
-Cc:     Steven Rostedt <rostedt@goodmis.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Daniel Bristot de Oliveira <bristot@redhat.com>,
-        Marcelo Tosatti <mtosatti@redhat.com>,
-        Leonardo Bras <leobras@redhat.com>,
-        Frederic Weisbecker <frederic@kernel.org>
-Subject: [PATCH v2 9/9] tracing/filters: Document cpumask filtering
-Date:   Fri,  7 Jul 2023 18:21:55 +0100
-Message-Id: <20230707172155.70873-10-vschneid@redhat.com>
-In-Reply-To: <20230707172155.70873-1-vschneid@redhat.com>
-References: <20230707172155.70873-1-vschneid@redhat.com>
+        Fri, 7 Jul 2023 18:32:31 -0400
+Received: from mail-pg1-f199.google.com (mail-pg1-f199.google.com [209.85.215.199])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C5AAD2125
+        for <linux-trace-kernel@vger.kernel.org>; Fri,  7 Jul 2023 15:32:29 -0700 (PDT)
+Received: by mail-pg1-f199.google.com with SMTP id 41be03b00d2f7-55bf5cd4e75so3183799a12.2
+        for <linux-trace-kernel@vger.kernel.org>; Fri, 07 Jul 2023 15:32:29 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1688769149; x=1691361149;
+        h=to:from:subject:message-id:in-reply-to:date:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=JrBZCM2sZbAEtmzMwiNkMKBUDefOdEVG2GINkQd/o2I=;
+        b=PAT4i9agWTVHa9ssjZ9RBjb6jhaidGSpfy0dnK5PgBnyxdVjaQfFpJligUGCtycv5M
+         0BBSFGKBppZdIUoEvjgMVVRFxOnhF8AVxVHZDq1AH0eLkAQJ+6/4PFa1dQoUBRnDAH55
+         YVwbxdNdXTIlyabJTUu1WRkxaEad734RlSlI/UKMVhXS4Ah9/tnww2cy3BNJVdaUdL0L
+         9DjZEUMBh1X5FXWRgjGJ4PILL/gxFvPTt4uiMkRkjTRnVLCht7e6W5WEqNobgE5T1gFb
+         c3UzL5C6wLvb/+GsWl361bADJJy3LMmPh9PY0yO0F12x8i9O3jrESBqq/9QWiyByIX7b
+         g8dQ==
+X-Gm-Message-State: ABy/qLbObzKEYLTcga7397SWtwXNDJzzWB4/U7ujrbEIjXsTiyuwUI84
+        6o8kzpOwLNFkTfKP6Udbw5nZrth+H9Z/mCKK61EcZKK2V8ex
+X-Google-Smtp-Source: APBJJlHIN2tTYXymcCUfXVwsV+PDUVJ2fikgqRYkjrV4CjneUIezMffsOm9xPaios13wH8u6jIYhec5vLxheC5G5bAqo82SGxkqg
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.1 on 10.11.54.7
+X-Received: by 2002:a63:4b10:0:b0:557:7f87:e5fb with SMTP id
+ y16-20020a634b10000000b005577f87e5fbmr4278933pga.8.1688769149292; Fri, 07 Jul
+ 2023 15:32:29 -0700 (PDT)
+Date:   Fri, 07 Jul 2023 15:32:29 -0700
+In-Reply-To: <000000000000ae0f7b05d77b27b5@google.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <00000000000040576405ffed3547@google.com>
+Subject: Re: [syzbot] [block?] [trace?] WARNING in blk_register_tracepoints
+From:   syzbot <syzbot+c54ded83396afee31eb1@syzkaller.appspotmail.com>
+To:     axboe@kernel.dk, hch@lst.de, linux-block@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+        mhiramat@kernel.org, mingo@redhat.com, rostedt@goodmis.org,
+        syzkaller-bugs@googlegroups.com, yukuai3@huawei.com
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-Cpumask, scalar and CPU fields can now be filtered by a user-provided
-cpumask, document the syntax.
+syzbot suspects this issue was fixed by commit:
 
-Signed-off-by: Valentin Schneider <vschneid@redhat.com>
----
- Documentation/trace/events.rst | 14 ++++++++++++++
- 1 file changed, 14 insertions(+)
+commit fcaa174a9c995cf0af3967e55644a1543ea07e36
+Author: Yu Kuai <yukuai3@huawei.com>
+Date:   Wed Jun 21 16:01:11 2023 +0000
 
-diff --git a/Documentation/trace/events.rst b/Documentation/trace/events.rst
-index f5fcb8e1218f6..34108d5a55b41 100644
---- a/Documentation/trace/events.rst
-+++ b/Documentation/trace/events.rst
-@@ -219,6 +219,20 @@ the function "security_prepare_creds" and less than the end of that function.
- The ".function" postfix can only be attached to values of size long, and can only
- be compared with "==" or "!=".
- 
-+Cpumask fields or scalar fields that encode a CPU number can be filtered using
-+a user-provided cpumask in cpulist format. The format is as follows::
-+
-+  CPUS{$cpulist}
-+
-+Operators available to cpumask filtering are:
-+
-+& (intersection), ==, !=
-+
-+For example, this will filter events that have their .target_cpu field present
-+in the given cpumask::
-+
-+  target_cpu & CPUS{17-42}
-+
- 5.2 Setting filters
- -------------------
- 
--- 
-2.31.1
+    scsi/sg: don't grab scsi host module reference
 
+bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=13470f02a80000
+start commit:   c8451c141e07 Merge tag 'acpi-6.2-rc2' of git://git.kernel...
+git tree:       upstream
+kernel config:  https://syzkaller.appspot.com/x/.config?x=2651619a26b4d687
+dashboard link: https://syzkaller.appspot.com/bug?extid=c54ded83396afee31eb1
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=1655b82a480000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=11ef7348480000
+
+If the result looks correct, please mark the issue as fixed by replying with:
+
+#syz fix: scsi/sg: don't grab scsi host module reference
+
+For information about bisection process see: https://goo.gl/tpsmEJ#bisection
