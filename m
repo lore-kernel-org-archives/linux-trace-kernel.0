@@ -2,163 +2,100 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 806F3C001DE
-	for <linux-trace-kernel@archiver.kernel.org>; Fri,  7 Jul 2023 07:04:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 00806EB64D9
+	for <linux-trace-kernel@archiver.kernel.org>; Fri,  7 Jul 2023 07:07:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232298AbjGGHEX convert rfc822-to-8bit (ORCPT
+        id S232177AbjGGHH5 (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Fri, 7 Jul 2023 03:04:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49294 "EHLO
+        Fri, 7 Jul 2023 03:07:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50744 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232097AbjGGHEQ (ORCPT
+        with ESMTP id S231367AbjGGHHy (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Fri, 7 Jul 2023 03:04:16 -0400
-Received: from frasgout11.his.huawei.com (ecs-14-137-139-23.compute.hwclouds-dns.com [14.137.139.23])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 269401709;
-        Fri,  7 Jul 2023 00:04:13 -0700 (PDT)
-Received: from mail02.huawei.com (unknown [172.18.147.228])
-        by frasgout11.his.huawei.com (SkyGuard) with ESMTP id 4Qy3xy4Zzrz9xqdN;
-        Fri,  7 Jul 2023 14:53:10 +0800 (CST)
-Received: from [127.0.0.1] (unknown [10.204.63.22])
-        by APP1 (Coremail) with SMTP id LxC2BwBHrumsuKdkc9w3BA--.59443S2;
-        Fri, 07 Jul 2023 08:03:29 +0100 (CET)
-Message-ID: <46a2328ab35907970dcd9a7240cd9072abeb66b2.camel@huaweicloud.com>
-Subject: Re: [RFC][PATCH 00/10] KEYS: Introduce user asymmetric keys and
- signatures
-From:   Roberto Sassu <roberto.sassu@huaweicloud.com>
-To:     Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Cc:     dhowells@redhat.com, dwmw2@infradead.org,
-        herbert@gondor.apana.org.au, davem@davemloft.net,
-        jarkko@kernel.org, song@kernel.org, jolsa@kernel.org,
-        ast@kernel.org, daniel@iogearbox.net, andrii@kernel.org,
-        martin.lau@linux.dev, yhs@fb.com, john.fastabend@gmail.com,
-        kpsingh@kernel.org, sdf@google.com, haoluo@google.com,
-        rostedt@goodmis.org, mhiramat@kernel.org, mykolal@fb.com,
-        shuah@kernel.org, linux-kernel@vger.kernel.org,
-        keyrings@vger.kernel.org, linux-crypto@vger.kernel.org,
-        bpf@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
-        linux-kselftest@vger.kernel.org, pbrobinson@gmail.com,
-        zbyszek@in.waw.pl, zohar@linux.ibm.com,
-        linux-integrity@vger.kernel.org, paul@paul-moore.com,
-        linux-security-module@vger.kernel.org, wiktor@metacode.biz,
-        devel@lists.sequoia-pgp.org, gnupg-devel@gnupg.org,
-        ebiggers@kernel.org, Jason@zx2c4.com, mail@maciej.szmigiero.name,
-        antony@vennard.ch, konstantin@linuxfoundation.org,
-        James.Bottomley@hansenpartnership.com,
-        Roberto Sassu <roberto.sassu@huawei.com>
-Date:   Fri, 07 Jul 2023 09:03:05 +0200
-In-Reply-To: <20230706232709.t6imkh3q234b3dlm@macbook-pro-8.dhcp.thefacebook.com>
-References: <20230706144225.1046544-1-roberto.sassu@huaweicloud.com>
-         <20230706232709.t6imkh3q234b3dlm@macbook-pro-8.dhcp.thefacebook.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
-User-Agent: Evolution 3.44.4-0ubuntu1 
-MIME-Version: 1.0
-X-CM-TRANSID: LxC2BwBHrumsuKdkc9w3BA--.59443S2
-X-Coremail-Antispam: 1UD129KBjvJXoWxArW5Jr48KFWrWw43tw17Awb_yoW5ZFWrpF
-        WrKayrArykJwnxJa4ktw40gayft3y8J3W3KwnxKrWrCwn0gryayr4xKF4rur9akr1kWr10
-        vrZ5A343Gwn5AaDanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-        9KBjDU0xBIdaVrnRJUUUk0b4IE77IF4wAFF20E14v26rWj6s0DM7CY07I20VC2zVCF04k2
-        6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4
-        vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Jr0_JF4l84ACjcxK6xIIjxv20xvEc7Cj
-        xVAFwI0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVWUJVW8JwA2z4x0Y4vEx4A2jsIEc7CjxV
-        AFwI0_Gr0_Gr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40E
-        x7xfMcIj6xIIjxv20xvE14v26r1j6r18McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x
-        0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lFIxGxcIEc7CjxVA2Y2ka0xkIwI1l42xK82IYc2Ij
-        64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x
-        8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26rWY6r4UJwCIc40Y0x0EwIxGrwCI42IY
-        6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwCI42IY6x
-        AIw20EY4v20xvaj40_WFyUJVCq3wCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv
-        6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjxUFYFCUUUUU
-X-CM-SenderInfo: purev21wro2thvvxqx5xdzvxpfor3voofrz/1tbiAQALBF1jj4-hwgAAsT
-X-CFilter-Loop: Reflected
+        Fri, 7 Jul 2023 03:07:54 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2396C1BF4;
+        Fri,  7 Jul 2023 00:07:53 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 7AE39617BC;
+        Fri,  7 Jul 2023 07:07:53 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 75569C433C9;
+        Fri,  7 Jul 2023 07:07:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1688713672;
+        bh=3UTkCpBwK2iQHAtoeNbf/AKfzPq8aQb03fC1G6e4X5c=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=vGLlCf3CCce1n1q1ujTHKwBviDH77kuZGTiWiTVLtd6VIM31Ifaxd6YmENJ0xQfCM
+         CtTWwfryWM3AHwPd3mCFpkzoZegxWqXLIeHHu7akXoUV2PQYGRaF64rertbsYUEJzT
+         7JC8OFPk8l/svUiam94JYHMkCZQr+oLsr1u52s4HyXjkqggC0dFPCUnD5uTZuv2qfj
+         Uv3JV/uyo5F6qfbctfXPaqFyjE05ZeEXoDfd8fEEYOSEBOECQiKHkBgF93jLjFuW4r
+         sp3Hr0P/oBjbfYg8Qvjhw/zhuG++7KMyOrFDXvxthWLyA+2ARB/py9BGqjVnDq7ELp
+         6sClYzJubnwiA==
+Date:   Fri, 7 Jul 2023 16:07:49 +0900
+From:   Masami Hiramatsu (Google) <mhiramat@kernel.org>
+To:     "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
+Cc:     Steven Rostedt <rostedt@goodmis.org>,
+        Dan Carpenter <dan.carpenter@linaro.org>,
+        linux-trace-kernel@vger.kernel.org,
+        LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 2/3] tracing/probes: Fix to exit fetching if an error is
+ detected
+Message-Id: <20230707160749.0dcf02cf0b7ee9e0ded2816e@kernel.org>
+In-Reply-To: <168830924625.2278819.7022958622963157629.stgit@mhiramat.roam.corp.google.com>
+References: <168830922841.2278819.9165254236027770818.stgit@mhiramat.roam.corp.google.com>
+        <168830924625.2278819.7022958622963157629.stgit@mhiramat.roam.corp.google.com>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On Thu, 2023-07-06 at 16:27 -0700, Alexei Starovoitov wrote:
-> On Thu, Jul 06, 2023 at 04:42:13PM +0200, Roberto Sassu wrote:
-> > From: Roberto Sassu <roberto.sassu@huawei.com>
-> > 
-> > Define a new TLV-based format for keys and signatures, aiming to store and
-> > use in the kernel the crypto material from other unsupported formats
-> > (e.g. PGP).
-> > 
-> > TLV fields have been defined to fill the corresponding kernel structures
-> > public_key, public_key_signature and key_preparsed_payload.
-> > 
-> > Keys:
-> >                 struct public_key {     struct key_preparsed_payload {
-> > KEY_PUB       -->  void *key;
-> >                    u32 keylen;         --> prep->payload.data[asym_crypto]
-> > KEY_ALGO      -->  const char *pkey_algo;
-> > KEY_KID0
-> > KEY_KID1                               --> prep->payload.data[asym_key_ids]
-> > KEY_KID2  
-> > KEY_DESC                               --> prep->description
-> > 
-> > 
-> > Signatures:
-> >                 struct public_key_signature {
-> > SIG_S         -->  u8 *s;
-> >                    u32 s_size;
-> > SIG_KEY_ALGO  -->  const char *pkey_algo;
-> > SIG_HASH_ALGO -->  const char *hash_algo;
-> >                    u32 digest_size;
-> > SIG_ENC       -->  const char *encoding;   
-> > SIG_KID0
-> > SIG_KID1      -->  struct asymmetric_key_id *auth_ids[3];
-> > SIG_KID2  
-> > 
-> > 
-> > For keys, since the format conversion has to be done in user space, user
-> > space is assumed to be trusted, in this proposal. Without this assumption,
-> > a malicious conversion tool could make a user load to the kernel a
-> > different key than the one expected.
-> > 
-> > That should not be a particular problem for keys that are embedded in the
-> > kernel image and loaded at boot, since the conversion happens in a trusted
-> > environment such as the building infrastructure of the Linux distribution
-> > vendor.
-> > 
-> > In the other cases, such as enrolling a key through the Machine Owner Key
-> > (MOK) mechanism, the user is responsible to ensure that the crypto material
-> > carried in the original format remains the same after the conversion.
-> > 
-> > For signatures, assuming the strength of the crypto algorithms, altering
-> > the crypto material is simply a Denial-of-Service (DoS), as data can be
-> > validated only with the right signature.
-> > 
-> > 
-> > This patch set also offers the following contributions:
-> > 
-> > - An API similar to the PKCS#7 one, to verify the authenticity of system
-> >   data through user asymmetric keys and signatures
-> > 
-> > - A mechanism to store a keyring blob in the kernel image and to extract
-> >   and load the keys at system boot
-> >   
-> > - eBPF binding, so that data authenticity verification with user asymmetric
-> >   keys and signatures can be carried out also with eBPF programs
+On Sun,  2 Jul 2023 23:47:26 +0900
+"Masami Hiramatsu (Google)" <mhiramat@kernel.org> wrote:
+
+> From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 > 
-> Nack to bpf bits.
-
-Sure, no problem. Will remove them in the next iteration.
-
-> You've convinced us that bpf_verify_pkcs7_signature() is what you need.
-> Yet, 9 month later there are no users of it and you came back with this new
-> bpf_verify_uasym_signature() helper that practically not much different.
+> Fix to exit fetching arguments if an error is detected when storing
+> strings. Without this fix, if an array is specified with string types
+> it may store the data at the wrong address.
 > 
-> Instead of brand new "public key info" format sign your rpms via
-> existing pkcs7 mechanism and verify with bpf_verify_pkcs7_signature().
+> Reported-by: Dan Carpenter <dan.carpenter@linaro.org>
+> Closes: https://lore.kernel.org/all/8819b154-2ba1-43c3-98a2-cbde20892023@moroto.mountain/
+> Fixes: 9b960a38835f ("tracing: probeevent: Unify fetch_insn processing common part")
+> Cc: stable@vger.kernel.org
+> Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+> Reviewed-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+> ---
+>  kernel/trace/trace_probe_tmpl.h |    2 ++
+>  1 file changed, 2 insertions(+)
+> 
+> diff --git a/kernel/trace/trace_probe_tmpl.h b/kernel/trace/trace_probe_tmpl.h
+> index 4735c5cb76fa..d6f2bf69f9bc 100644
+> --- a/kernel/trace/trace_probe_tmpl.h
+> +++ b/kernel/trace/trace_probe_tmpl.h
+> @@ -193,6 +193,8 @@ process_fetch_insn_bottom(struct fetch_insn *code, unsigned long val,
+>  	default:
+>  		return -EILSEQ;
+>  	}
+> +	if (ret < 0)
+> +		return ret;
 
-Asking Linux distribution vendors to execute gpg in their kernel build,
-or asking them to revisit their PKI, rebuild all their packages, and
-adapting all their tools dealing with the current mechanism?
+I found this will leave a garbage data on the trace data if we are in the array.
+Let me fix this issue.
+(-EILSEQ case has another issue. I think it should not be recorded)
 
-Which solution do you think it is better?
+Thank you,
 
-Thanks
+>  	code++;
+>  
+>  	/* 4th stage: modify stored value if needed */
+> 
 
-Roberto
 
+-- 
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
