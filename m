@@ -2,43 +2,43 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BE76CC00528
-	for <linux-trace-kernel@archiver.kernel.org>; Fri,  7 Jul 2023 17:23:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 95A39EB64DA
+	for <linux-trace-kernel@archiver.kernel.org>; Fri,  7 Jul 2023 17:23:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229822AbjGGRXG (ORCPT
+        id S229902AbjGGRXp (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Fri, 7 Jul 2023 13:23:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44952 "EHLO
+        Fri, 7 Jul 2023 13:23:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44974 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232607AbjGGRXD (ORCPT
+        with ESMTP id S232676AbjGGRXo (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Fri, 7 Jul 2023 13:23:03 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EFDC9212C
-        for <linux-trace-kernel@vger.kernel.org>; Fri,  7 Jul 2023 10:22:19 -0700 (PDT)
+        Fri, 7 Jul 2023 13:23:44 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F3AAC2680
+        for <linux-trace-kernel@vger.kernel.org>; Fri,  7 Jul 2023 10:22:24 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1688750539;
+        s=mimecast20190719; t=1688750544;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=FgooZspr4TQIjuc/tHX/XT4D8n/wo2nwvhkclMi4+iU=;
-        b=EKMUIlJ0/MI7EbdYQrhuuBDJIjUUiDDT+rOfsL9tJcZ2T12x5NI/00RgCBPo7Gcd20/7z0
-        r0dtNIfDbnPqmhUovQX1OgiFEDC2HoSBq6ceXkWK8nvbZmFpsXQrcjM+FIn5BibWasjVy2
-        9ARc3QC9mwuDF2GVCFRXyybSRzSUEc8=
-Received: from mimecast-mx02.redhat.com (mx3-rdu2.redhat.com
- [66.187.233.73]) by relay.mimecast.com with ESMTP with STARTTLS
+        bh=Ru1xpHoly8RVJpDGIBIPQWc2v6Ebq5LepRuPaIIUDyE=;
+        b=f1efYvoOLK1zweEZalMvdu904jhFtO6GgSv0U7ZWoa0ddiycj4mGTY5840G7baBiQJyprT
+        SJh1BOTLjl3kklhMmHnUtbm+I2q/WWOElBkmzwa6cfvdR4ve/uHwsOeTHcdDdIFm04meIw
+        NfCQhbDVm7VE7SMBe5QbYeXssyuRETg=
+Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
+ [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-479-GbNEmwGlNT2NKK7pZGPa7A-1; Fri, 07 Jul 2023 13:22:15 -0400
-X-MC-Unique: GbNEmwGlNT2NKK7pZGPa7A-1
+ us-mta-352-MItPMPKePTeia_LL4MNj8g-1; Fri, 07 Jul 2023 13:22:21 -0400
+X-MC-Unique: MItPMPKePTeia_LL4MNj8g-1
 Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.rdu2.redhat.com [10.11.54.7])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 48BBE3811801;
-        Fri,  7 Jul 2023 17:22:15 +0000 (UTC)
+        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 7C4A8185A794;
+        Fri,  7 Jul 2023 17:22:20 +0000 (UTC)
 Received: from vschneid.remote.csb (unknown [10.42.28.164])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 07E3F1454142;
-        Fri,  7 Jul 2023 17:22:13 +0000 (UTC)
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 2D9611454142;
+        Fri,  7 Jul 2023 17:22:19 +0000 (UTC)
 From:   Valentin Schneider <vschneid@redhat.com>
 To:     linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
         linux-doc@vger.kernel.org
@@ -50,9 +50,9 @@ Cc:     Steven Rostedt <rostedt@goodmis.org>,
         Marcelo Tosatti <mtosatti@redhat.com>,
         Leonardo Bras <leobras@redhat.com>,
         Frederic Weisbecker <frederic@kernel.org>
-Subject: [PATCH v2 1/9] tracing/filters: Dynamically allocate filter_pred.regex
-Date:   Fri,  7 Jul 2023 18:21:47 +0100
-Message-Id: <20230707172155.70873-2-vschneid@redhat.com>
+Subject: [PATCH v2 4/9] tracing/filters: Enable filtering the CPU common field by a cpumask
+Date:   Fri,  7 Jul 2023 18:21:50 +0100
+Message-Id: <20230707172155.70873-5-vschneid@redhat.com>
 In-Reply-To: <20230707172155.70873-1-vschneid@redhat.com>
 References: <20230707172155.70873-1-vschneid@redhat.com>
 MIME-Version: 1.0
@@ -62,209 +62,76 @@ Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-Every predicate allocation includes a MAX_FILTER_STR_VAL (256) char array
-in the regex field, even if the predicate function does not use the field.
+The tracing_cpumask lets us specify which CPUs are traced in a buffer
+instance, but doesn't let us do this on a per-event basis (unless one
+creates an instance per event).
 
-A later commit will introduce a dynamically allocated cpumask to struct
-filter_pred, which will require a dedicated freeing function. Bite the
-bullet and make filter_pred.regex dynamically allocated.
+A previous commit added filtering scalar fields by a user-given cpumask,
+make this work with the CPU common field as well.
 
-While at it, reorder the fields of filter_pred to fill in the byte
-holes. The struct now fits on a single cacheline.
+This enables doing things like
 
-No change in behaviour intended.
-
-The kfree()'s were patched via Coccinelle:
-  @@
-  struct filter_pred *pred;
-  @@
-
-  -kfree(pred);
-  +free_predicate(pred);
+$ trace-cmd record -e 'sched_switch' -f 'CPU & CPUS{12-52}' \
+		   -e 'sched_wakeup' -f 'target_cpu & CPUS{12-52}'
 
 Signed-off-by: Valentin Schneider <vschneid@redhat.com>
 ---
- kernel/trace/trace_events_filter.c | 64 ++++++++++++++++++------------
- 1 file changed, 39 insertions(+), 25 deletions(-)
+ kernel/trace/trace_events_filter.c | 14 ++++++++++++++
+ 1 file changed, 14 insertions(+)
 
 diff --git a/kernel/trace/trace_events_filter.c b/kernel/trace/trace_events_filter.c
-index 1dad64267878c..91fc9990107f1 100644
+index 1e14f801685a8..3009d0c61b532 100644
 --- a/kernel/trace/trace_events_filter.c
 +++ b/kernel/trace/trace_events_filter.c
-@@ -70,15 +70,15 @@ enum filter_pred_fn {
- };
+@@ -68,6 +68,7 @@ enum filter_pred_fn {
+ 	FILTER_PRED_FN_PCHAR_USER,
+ 	FILTER_PRED_FN_PCHAR,
+ 	FILTER_PRED_FN_CPU,
++	FILTER_PRED_FN_CPU_CPUMASK,
+ 	FILTER_PRED_FN_CPUMASK,
+ 	FILTER_PRED_FN_FUNCTION,
+ 	FILTER_PRED_FN_,
+@@ -937,6 +938,14 @@ static int filter_pred_cpu(struct filter_pred *pred, void *event)
+ 	}
+ }
  
- struct filter_pred {
--	enum filter_pred_fn 	fn_num;
--	u64 			val;
--	u64 			val2;
--	struct regex		regex;
-+	struct regex		*regex;
- 	unsigned short		*ops;
- 	struct ftrace_event_field *field;
--	int 			offset;
-+	u64			val;
-+	u64			val2;
-+	enum filter_pred_fn	fn_num;
-+	int			offset;
- 	int			not;
--	int 			op;
-+	int			op;
- };
- 
- /*
-@@ -186,6 +186,14 @@ enum {
- 	PROCESS_OR	= 4,
- };
- 
-+static void free_predicate(struct filter_pred *pred)
++/* Filter predicate for current CPU vs user-provided cpumask */
++static int filter_pred_cpu_cpumask(struct filter_pred *pred, void *event)
 +{
-+	if (pred) {
-+		kfree(pred->regex);
-+		kfree(pred);
-+	}
++	int cpu = raw_smp_processor_id();
++
++	return do_filter_scalar_cpumask(pred->op, cpu, pred->mask);
 +}
 +
- /*
-  * Without going into a formal proof, this explains the method that is used in
-  * parsing the logical expressions.
-@@ -623,7 +631,7 @@ predicate_parse(const char *str, int nr_parens, int nr_preds,
- 	kfree(inverts);
- 	if (prog_stack) {
- 		for (i = 0; prog_stack[i].pred; i++)
--			kfree(prog_stack[i].pred);
-+			free_predicate(prog_stack[i].pred);
- 		kfree(prog_stack);
- 	}
- 	return ERR_PTR(ret);
-@@ -750,7 +758,7 @@ static int filter_pred_string(struct filter_pred *pred, void *event)
- 	char *addr = (char *)(event + pred->offset);
- 	int cmp, match;
- 
--	cmp = pred->regex.match(addr, &pred->regex, pred->regex.field_len);
-+	cmp = pred->regex->match(addr, pred->regex, pred->regex->field_len);
- 
- 	match = cmp ^ pred->not;
- 
-@@ -763,7 +771,7 @@ static __always_inline int filter_pchar(struct filter_pred *pred, char *str)
- 	int len;
- 
- 	len = strlen(str) + 1;	/* including tailing '\0' */
--	cmp = pred->regex.match(str, &pred->regex, len);
-+	cmp = pred->regex->match(str, pred->regex, len);
- 
- 	match = cmp ^ pred->not;
- 
-@@ -813,7 +821,7 @@ static int filter_pred_strloc(struct filter_pred *pred, void *event)
- 	char *addr = (char *)(event + str_loc);
- 	int cmp, match;
- 
--	cmp = pred->regex.match(addr, &pred->regex, str_len);
-+	cmp = pred->regex->match(addr, pred->regex, str_len);
- 
- 	match = cmp ^ pred->not;
- 
-@@ -836,7 +844,7 @@ static int filter_pred_strrelloc(struct filter_pred *pred, void *event)
- 	char *addr = (char *)(&item[1]) + str_loc;
- 	int cmp, match;
- 
--	cmp = pred->regex.match(addr, &pred->regex, str_len);
-+	cmp = pred->regex->match(addr, pred->regex, str_len);
- 
- 	match = cmp ^ pred->not;
- 
-@@ -874,7 +882,7 @@ static int filter_pred_comm(struct filter_pred *pred, void *event)
+ /* Filter predicate for cpumask field vs user-provided cpumask */
+ static int filter_pred_cpumask(struct filter_pred *pred, void *event)
  {
- 	int cmp;
+@@ -1440,6 +1449,8 @@ static int filter_pred_fn_call(struct filter_pred *pred, void *event)
+ 		return filter_pred_pchar(pred, event);
+ 	case FILTER_PRED_FN_CPU:
+ 		return filter_pred_cpu(pred, event);
++	case FILTER_PRED_FN_CPU_CPUMASK:
++		return filter_pred_cpu_cpumask(pred, event);
+ 	case FILTER_PRED_FN_CPUMASK:
+ 		return filter_pred_cpumask(pred, event);
+ 	case FILTER_PRED_FN_FUNCTION:
+@@ -1659,6 +1670,7 @@ static int parse_pred(const char *str, void *data,
  
--	cmp = pred->regex.match(current->comm, &pred->regex,
-+	cmp = pred->regex->match(current->comm, pred->regex,
- 				TASK_COMM_LEN);
- 	return cmp ^ pred->not;
- }
-@@ -1004,7 +1012,7 @@ enum regex_type filter_parse_regex(char *buff, int len, char **search, int *not)
- 
- static void filter_build_regex(struct filter_pred *pred)
- {
--	struct regex *r = &pred->regex;
-+	struct regex *r = pred->regex;
- 	char *search;
- 	enum regex_type type = MATCH_FULL;
- 
-@@ -1169,7 +1177,7 @@ static void free_prog(struct event_filter *filter)
- 		return;
- 
- 	for (i = 0; prog[i].pred; i++)
--		kfree(prog[i].pred);
-+		free_predicate(prog[i].pred);
- 	kfree(prog);
- }
- 
-@@ -1553,9 +1561,12 @@ static int parse_pred(const char *str, void *data,
- 			goto err_free;
- 		}
- 
--		pred->regex.len = len;
--		strncpy(pred->regex.pattern, str + s, len);
--		pred->regex.pattern[len] = 0;
-+		pred->regex = kzalloc(sizeof(*pred->regex), GFP_KERNEL);
-+		if (!pred->regex)
-+			goto err_mem;
-+		pred->regex->len = len;
-+		strncpy(pred->regex->pattern, str + s, len);
-+		pred->regex->pattern[len] = 0;
- 
- 	/* This is either a string, or an integer */
- 	} else if (str[i] == '\'' || str[i] == '"') {
-@@ -1597,9 +1608,12 @@ static int parse_pred(const char *str, void *data,
- 			goto err_free;
- 		}
- 
--		pred->regex.len = len;
--		strncpy(pred->regex.pattern, str + s, len);
--		pred->regex.pattern[len] = 0;
-+		pred->regex = kzalloc(sizeof(*pred->regex), GFP_KERNEL);
-+		if (!pred->regex)
-+			goto err_mem;
-+		pred->regex->len = len;
-+		strncpy(pred->regex->pattern, str + s, len);
-+		pred->regex->pattern[len] = 0;
- 
- 		filter_build_regex(pred);
- 
-@@ -1608,7 +1622,7 @@ static int parse_pred(const char *str, void *data,
- 
- 		} else if (field->filter_type == FILTER_STATIC_STRING) {
- 			pred->fn_num = FILTER_PRED_FN_STRING;
--			pred->regex.field_len = field->size;
-+			pred->regex->field_len = field->size;
- 
- 		} else if (field->filter_type == FILTER_DYN_STRING) {
- 			pred->fn_num = FILTER_PRED_FN_STRLOC;
-@@ -1691,10 +1705,10 @@ static int parse_pred(const char *str, void *data,
- 	return i;
- 
- err_free:
--	kfree(pred);
-+	free_predicate(pred);
- 	return -EINVAL;
- err_mem:
--	kfree(pred);
-+	free_predicate(pred);
- 	return -ENOMEM;
- }
- 
-@@ -2287,8 +2301,8 @@ static int ftrace_function_set_filter_pred(struct filter_pred *pred,
- 		return ret;
- 
- 	return __ftrace_function_set_filter(pred->op == OP_EQ,
--					    pred->regex.pattern,
--					    pred->regex.len,
-+					    pred->regex->pattern,
-+					    pred->regex->len,
- 					    data);
- }
- 
+ 		switch (field->filter_type) {
+ 		case FILTER_CPUMASK:
++		case FILTER_CPU:
+ 		case FILTER_OTHER:
+ 			break;
+ 		default:
+@@ -1714,6 +1726,8 @@ static int parse_pred(const char *str, void *data,
+ 		i++;
+ 		if (field->filter_type == FILTER_CPUMASK) {
+ 			pred->fn_num = FILTER_PRED_FN_CPUMASK;
++		} else if (field->filter_type == FILTER_CPU) {
++			pred->fn_num = FILTER_PRED_FN_CPU_CPUMASK;
+ 		} else {
+ 			switch (field->size) {
+ 			case 8:
 -- 
 2.31.1
 
