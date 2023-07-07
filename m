@@ -2,43 +2,42 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BE9EC001B0
-	for <linux-trace-kernel@archiver.kernel.org>; Fri,  7 Jul 2023 17:23:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 454C1EB64DA
+	for <linux-trace-kernel@archiver.kernel.org>; Fri,  7 Jul 2023 17:23:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232617AbjGGRXD (ORCPT
+        id S232562AbjGGRXE (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Fri, 7 Jul 2023 13:23:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44956 "EHLO
+        Fri, 7 Jul 2023 13:23:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44936 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232593AbjGGRXD (ORCPT
+        with ESMTP id S232589AbjGGRXD (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
         Fri, 7 Jul 2023 13:23:03 -0400
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8BB92125
-        for <linux-trace-kernel@vger.kernel.org>; Fri,  7 Jul 2023 10:22:21 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 46CA01FE0
+        for <linux-trace-kernel@vger.kernel.org>; Fri,  7 Jul 2023 10:22:18 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1688750540;
+        s=mimecast20190719; t=1688750537;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=MztT6zopkdxP15yr7fLnq4htUTcbRI9GOo9ppcHk5OI=;
-        b=AWBhngT1A0o9jk6BbJrPL8meKmLn5CQnZqRUl0iWE14eSvkaGH7ZBZmb0cliBCkg5c1SH0
-        WzbS5wQnia5bzRppwhpALMmutJb7O+hXxmbpRtrwzfiZOnrQsFHO6jxpw3X0X9Iq7CMAPB
-        /qJ294t4LL9W88qFeibBouFMHgjCSIo=
+         content-transfer-encoding:content-transfer-encoding;
+        bh=v7pyF21heKJh3mBhLokhUiDCcEZ8kjM9chhOnSIUlG0=;
+        b=NrhEjHjeiLE4WgwWJM1OU8RJzv3VREijoIui0roLDEktR+tIxOvdi6Ve2+4NEA7NnCXTYg
+        VuWqzTGBRZnvzpcuciCqqJ9FjnuSd4i7usUqBvY4+Txf4wJ+dnjvPsdBmOC2k1R8xO7U4X
+        /sMkFzVi2DNT9ahC4kun7T8HbWaFMCU=
 Received: from mimecast-mx02.redhat.com (mx3-rdu2.redhat.com
  [66.187.233.73]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-484-mYEs5dQ8PBGTkyd4WdhfUQ-1; Fri, 07 Jul 2023 13:22:17 -0400
-X-MC-Unique: mYEs5dQ8PBGTkyd4WdhfUQ-1
+ us-mta-624-X8x1lUeyOoq5SatT4cDWqQ-1; Fri, 07 Jul 2023 13:22:14 -0400
+X-MC-Unique: X8x1lUeyOoq5SatT4cDWqQ-1
 Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.rdu2.redhat.com [10.11.54.7])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id E3ABD3811801;
-        Fri,  7 Jul 2023 17:22:16 +0000 (UTC)
+        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id CD17B2815E37;
+        Fri,  7 Jul 2023 17:22:13 +0000 (UTC)
 Received: from vschneid.remote.csb (unknown [10.42.28.164])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 754921454142;
-        Fri,  7 Jul 2023 17:22:15 +0000 (UTC)
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id D0FB81454142;
+        Fri,  7 Jul 2023 17:22:10 +0000 (UTC)
 From:   Valentin Schneider <vschneid@redhat.com>
 To:     linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
         linux-doc@vger.kernel.org
@@ -50,11 +49,9 @@ Cc:     Steven Rostedt <rostedt@goodmis.org>,
         Marcelo Tosatti <mtosatti@redhat.com>,
         Leonardo Bras <leobras@redhat.com>,
         Frederic Weisbecker <frederic@kernel.org>
-Subject: [PATCH v2 2/9] tracing/filters: Enable filtering a cpumask field by another cpumask
-Date:   Fri,  7 Jul 2023 18:21:48 +0100
-Message-Id: <20230707172155.70873-3-vschneid@redhat.com>
-In-Reply-To: <20230707172155.70873-1-vschneid@redhat.com>
-References: <20230707172155.70873-1-vschneid@redhat.com>
+Subject: [PATCH v2 0/9] tracing/filters: filtering event fields with a cpumask
+Date:   Fri,  7 Jul 2023 18:21:46 +0100
+Message-Id: <20230707172155.70873-1-vschneid@redhat.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Scanned-By: MIMEDefang 3.1 on 10.11.54.7
@@ -62,203 +59,85 @@ Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-The recently introduced ipi_send_cpumask trace event contains a cpumask
-field, but it currently cannot be used in filter expressions.
+Hi folks,
 
-Make event filtering aware of cpumask fields, and allow these to be
-filtered by a user-provided cpumask.
+In the context of CPU isolation / NOHZ_FULL interference investigation, we now
+have the ipi_send_cpu and ipi_send_cpumask events. However, enabling these
+events without any filtering can yield pretty massive traces with a lot of
+uninteresting or irrelevant data (e.g. everything targeting housekeeping CPUs).
 
-The user-provided cpumask is to be given in cpulist format and wrapped as:
-"CPUS{$cpulist}". The use of curly braces instead of parentheses is to
-prevent predicate_parse() from parsing the contents of CPUS{...} as a
-full-fledged predicate subexpression.
+This series is about adding event filtering via a user-provided cpumask. This
+enables filtering using cpumask fields (e.g. ipi_send_cpumask) and extends this
+to scalar and the local CPU common fields.
 
-This enables e.g.:
+With this, it becomes fairly easy to trace events both happening on and
+targeting CPUs of interest, e.g.:
 
-$ trace-cmd record -e 'ipi_send_cpumask' -f 'cpumask & CPUS{2,4,6,8-32}'
+  trace-cmd record -e 'sched_switch' -f "CPU & CPUS{$ISOLATED_CPUS}"         \
+		   -e 'sched_wakeup' -f "target_cpu & CPUS{$ISOLATED_CPUS}"  \
+		   -e 'ipi_send_cpu' -f "cpu & CPUS{$ISOLATED_CPUS}"         \
+		   -e 'ipi_send_cpumask' -f "cpumask & CPUS{$ISOLATED_CPUS}" \
+		   hackbench
 
-Signed-off-by: Valentin Schneider <vschneid@redhat.com>
----
- include/linux/trace_events.h       |  1 +
- kernel/trace/trace_events_filter.c | 97 +++++++++++++++++++++++++++++-
- 2 files changed, 96 insertions(+), 2 deletions(-)
+The CPUS{} thing is a bit crude but seems to work well enough without break^C
+overhauling the predicate parsing logic.
 
-diff --git a/include/linux/trace_events.h b/include/linux/trace_events.h
-index 7c4a0b72334eb..974ef37a06c83 100644
---- a/include/linux/trace_events.h
-+++ b/include/linux/trace_events.h
-@@ -804,6 +804,7 @@ enum {
- 	FILTER_RDYN_STRING,
- 	FILTER_PTR_STRING,
- 	FILTER_TRACE_FN,
-+	FILTER_CPUMASK,
- 	FILTER_COMM,
- 	FILTER_CPU,
- 	FILTER_STACKTRACE,
-diff --git a/kernel/trace/trace_events_filter.c b/kernel/trace/trace_events_filter.c
-index 91fc9990107f1..cb1863dfa280b 100644
---- a/kernel/trace/trace_events_filter.c
-+++ b/kernel/trace/trace_events_filter.c
-@@ -64,6 +64,7 @@ enum filter_pred_fn {
- 	FILTER_PRED_FN_PCHAR_USER,
- 	FILTER_PRED_FN_PCHAR,
- 	FILTER_PRED_FN_CPU,
-+	FILTER_PRED_FN_CPUMASK,
- 	FILTER_PRED_FN_FUNCTION,
- 	FILTER_PRED_FN_,
- 	FILTER_PRED_TEST_VISITED,
-@@ -71,6 +72,7 @@ enum filter_pred_fn {
- 
- struct filter_pred {
- 	struct regex		*regex;
-+	struct cpumask          *mask;
- 	unsigned short		*ops;
- 	struct ftrace_event_field *field;
- 	u64			val;
-@@ -94,6 +96,8 @@ struct filter_pred {
- 	C(TOO_MANY_OPEN,	"Too many '('"),			\
- 	C(TOO_MANY_CLOSE,	"Too few '('"),				\
- 	C(MISSING_QUOTE,	"Missing matching quote"),		\
-+	C(MISSING_BRACE_OPEN,   "Missing '{'"),				\
-+	C(MISSING_BRACE_CLOSE,  "Missing '}'"),				\
- 	C(OPERAND_TOO_LONG,	"Operand too long"),			\
- 	C(EXPECT_STRING,	"Expecting string field"),		\
- 	C(EXPECT_DIGIT,		"Expecting numeric field"),		\
-@@ -103,6 +107,7 @@ struct filter_pred {
- 	C(BAD_SUBSYS_FILTER,	"Couldn't find or set field in one of a subsystem's events"), \
- 	C(TOO_MANY_PREDS,	"Too many terms in predicate expression"), \
- 	C(INVALID_FILTER,	"Meaningless filter expression"),	\
-+	C(INVALID_CPULIST,	"Invalid cpulist"),	\
- 	C(IP_FIELD_ONLY,	"Only 'ip' field is supported for function trace"), \
- 	C(INVALID_VALUE,	"Invalid value (did you forget quotes)?"), \
- 	C(NO_FUNCTION,		"Function not found"),			\
-@@ -190,6 +195,7 @@ static void free_predicate(struct filter_pred *pred)
- {
- 	if (pred) {
- 		kfree(pred->regex);
-+		kfree(pred->mask);
- 		kfree(pred);
- 	}
- }
-@@ -877,6 +883,26 @@ static int filter_pred_cpu(struct filter_pred *pred, void *event)
- 	}
- }
- 
-+/* Filter predicate for cpumask field vs user-provided cpumask */
-+static int filter_pred_cpumask(struct filter_pred *pred, void *event)
-+{
-+	u32 item = *(u32 *)(event + pred->offset);
-+	int loc = item & 0xffff;
-+	const struct cpumask *mask = (event + loc);
-+	const struct cpumask *cmp = pred->mask;
-+
-+	switch (pred->op) {
-+	case OP_EQ:
-+		return cpumask_equal(mask, cmp);
-+	case OP_NE:
-+		return !cpumask_equal(mask, cmp);
-+	case OP_BAND:
-+		return cpumask_intersects(mask, cmp);
-+	default:
-+		return 0;
-+	}
-+}
-+
- /* Filter predicate for COMM. */
- static int filter_pred_comm(struct filter_pred *pred, void *event)
- {
-@@ -1244,8 +1270,12 @@ static void filter_free_subsystem_filters(struct trace_subsystem_dir *dir,
- 
- int filter_assign_type(const char *type)
- {
--	if (strstr(type, "__data_loc") && strstr(type, "char"))
--		return FILTER_DYN_STRING;
-+	if (strstr(type, "__data_loc")) {
-+		if (strstr(type, "char"))
-+			return FILTER_DYN_STRING;
-+		if (strstr(type, "cpumask_t"))
-+			return FILTER_CPUMASK;
-+		}
- 
- 	if (strstr(type, "__rel_loc") && strstr(type, "char"))
- 		return FILTER_RDYN_STRING;
-@@ -1357,6 +1387,8 @@ static int filter_pred_fn_call(struct filter_pred *pred, void *event)
- 		return filter_pred_pchar(pred, event);
- 	case FILTER_PRED_FN_CPU:
- 		return filter_pred_cpu(pred, event);
-+	case FILTER_PRED_FN_CPUMASK:
-+		return filter_pred_cpumask(pred, event);
- 	case FILTER_PRED_FN_FUNCTION:
- 		return filter_pred_function(pred, event);
- 	case FILTER_PRED_TEST_VISITED:
-@@ -1568,6 +1600,67 @@ static int parse_pred(const char *str, void *data,
- 		strncpy(pred->regex->pattern, str + s, len);
- 		pred->regex->pattern[len] = 0;
- 
-+	} else if (!strncmp(str + i, "CPUS", 4)) {
-+		unsigned int maskstart;
-+		char *tmp;
-+
-+		switch (field->filter_type) {
-+		case FILTER_CPUMASK:
-+			break;
-+		default:
-+			parse_error(pe, FILT_ERR_ILLEGAL_FIELD_OP, pos + i);
-+			goto err_free;
-+		}
-+
-+		switch (op) {
-+		case OP_EQ:
-+		case OP_NE:
-+		case OP_BAND:
-+			break;
-+		default:
-+			parse_error(pe, FILT_ERR_ILLEGAL_FIELD_OP, pos + i);
-+			goto err_free;
-+		}
-+
-+		/* Skip CPUS */
-+		i += 4;
-+		if (str[i++] != '{') {
-+			parse_error(pe, FILT_ERR_MISSING_BRACE_OPEN, pos + i);
-+			goto err_free;
-+		}
-+		maskstart = i;
-+
-+		/* Walk the cpulist until closing } */
-+		for (; str[i] && str[i] != '}'; i++);
-+		if (str[i] != '}') {
-+			parse_error(pe, FILT_ERR_MISSING_BRACE_CLOSE, pos + i);
-+			goto err_free;
-+		}
-+
-+		if (maskstart == i) {
-+			parse_error(pe, FILT_ERR_INVALID_CPULIST, pos + i);
-+			goto err_free;
-+		}
-+
-+		/* Copy the cpulist between { and } */
-+		tmp = kmalloc((i - maskstart) + 1, GFP_KERNEL);
-+		strscpy(tmp, str + maskstart, (i - maskstart) + 1);
-+
-+		pred->mask = kzalloc(cpumask_size(), GFP_KERNEL);
-+		if (!pred->mask)
-+			goto err_mem;
-+
-+		/* Now parse it */
-+		if (cpulist_parse(tmp, pred->mask)) {
-+			parse_error(pe, FILT_ERR_INVALID_CPULIST, pos + i);
-+			goto err_free;
-+		}
-+
-+		/* Move along */
-+		i++;
-+		if (field->filter_type == FILTER_CPUMASK)
-+			pred->fn_num = FILTER_PRED_FN_CPUMASK;
-+
- 	/* This is either a string, or an integer */
- 	} else if (str[i] == '\'' || str[i] == '"') {
- 		char q = str[i];
--- 
+Cheers,
+Valentin
+
+Revisions
+=========
+
+v1 -> v2
+++++++++
+
+Context for the changes:
+https://lore.kernel.org/lkml/20230705181256.3539027-1-vschneid@redhat.com/
+
+o Added check for NULL filter_pred in free_predicate()
+o Changed filter_type and op checks to be switch cases.
+
+o Swiched from strncpy() to strscpy() (Steven)
+o Changed from "MASK{}" to "CPUS{}"
+
+  This is slightly more explicit IMO, and leaves MASK{} available if/when we
+  decide to add bitmask filtering for other events.
+
+o Optimised cpumask vs scalar filtering
+
+  Rather than doing full-fledged cpumask operations using cpumask_of(scalar), I'm
+  using cpumask_nth(1, mask) as a way to check the mask's weight is one - the
+  reasoning here is we don't need to compute the full weight of the mask, we 
+  just need to know if there's more than one bit set.
+
+o Added scalar vs scalar optimisation (Steven)
+
+  In case the user-provided cpumask has a weight of one, Steven pointed out we
+  could use cheaper scalar-based filter functions.
+
+  I *may* have gone a bit overboard here, but given the mask is stable for the
+  duration of the filter, it felt silly to check its weight every time we enter
+  the filter function.
+
+Valentin Schneider (9):
+  tracing/filters: Dynamically allocate filter_pred.regex
+  tracing/filters: Enable filtering a cpumask field by another cpumask
+  tracing/filters: Enable filtering a scalar field by a cpumask
+  tracing/filters: Enable filtering the CPU common field by a cpumask
+  tracing/filters: Optimise cpumask vs cpumask filtering when user mask
+    is a single CPU
+  tracing/filters: Optimise scalar vs cpumask filtering when the user
+    mask is a single CPU
+  tracing/filters: Optimise CPU vs cpumask filtering when the user mask
+    is a single CPU
+  tracing/filters: Further optimise scalar vs cpumask comparison
+  tracing/filters: Document cpumask filtering
+
+ Documentation/trace/events.rst     |  14 ++
+ include/linux/trace_events.h       |   1 +
+ kernel/trace/trace_events_filter.c | 302 ++++++++++++++++++++++++++---
+ 3 files changed, 290 insertions(+), 27 deletions(-)
+
+--
 2.31.1
 
