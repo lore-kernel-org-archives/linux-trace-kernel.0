@@ -2,197 +2,93 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A4673EB64D9
-	for <linux-trace-kernel@archiver.kernel.org>; Fri,  7 Jul 2023 02:02:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 665F7EB64D9
+	for <linux-trace-kernel@archiver.kernel.org>; Fri,  7 Jul 2023 02:20:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229829AbjGGCCQ (ORCPT
+        id S231334AbjGGCU3 (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Thu, 6 Jul 2023 22:02:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49878 "EHLO
+        Thu, 6 Jul 2023 22:20:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54248 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229575AbjGGCCP (ORCPT
+        with ESMTP id S231732AbjGGCU2 (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Thu, 6 Jul 2023 22:02:15 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9535B19B7;
-        Thu,  6 Jul 2023 19:02:14 -0700 (PDT)
+        Thu, 6 Jul 2023 22:20:28 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D8230170C;
+        Thu,  6 Jul 2023 19:20:24 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange X25519 server-signature RSA-PSS (2048 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 1082B61522;
-        Fri,  7 Jul 2023 02:02:14 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 571EEC433C7;
-        Fri,  7 Jul 2023 02:02:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1688695333;
-        bh=vxF176pHmUyvE88xtKXjwBevErLO4fJiS2ZYNuJq54Y=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=YzwjyV3LF6lqxl7gBFOu5QoBEdBTmZEtIHGujqAeoUKxJG8/VCp1kFQ08MgCKBxGk
-         Sp7SOgJpYxGejSUzF/hkNTAix4II+wxv0Ua9bNoftDrb4iBWHSRmolJSzHw5Vpp3/I
-         09jglmL8cDEDG8t3U82xjXSlnvi6ccyao+jfg4IW5u3cNQIDr1mgYDM76A27Q5gZAg
-         MQ08OisB62XsNyEgyczbaWlABg1Khh1EITrhBmIhJC7QEajaeZ05svFs9SmBl9TyqX
-         vvSm2qEkwrmHRQsuSVvrpgRCJJn8KJU3jzv1PrzEKYsks0J7RnhWr8bPWwBgZRdL4q
-         L5AB9cMfoJqOA==
-Date:   Fri, 7 Jul 2023 11:02:10 +0900
-From:   Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To:     Steven Rostedt <rostedt@goodmis.org>
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 6CBD7614D4;
+        Fri,  7 Jul 2023 02:20:24 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 65888C433C8;
+        Fri,  7 Jul 2023 02:20:23 +0000 (UTC)
+Date:   Thu, 6 Jul 2023 22:20:20 -0400
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
 Cc:     Dan Carpenter <dan.carpenter@linaro.org>,
         linux-trace-kernel@vger.kernel.org,
         LKML <linux-kernel@vger.kernel.org>
 Subject: Re: [PATCH 3/3] tracing/probes: Fix return value when "(fault)" is
  injected
-Message-Id: <20230707110210.06e81e182c775454ce86280d@kernel.org>
-In-Reply-To: <20230706095039.1cb9c9d1@gandalf.local.home>
+Message-ID: <20230706222020.6e5c8e89@rorschach.local.home>
+In-Reply-To: <20230707110210.06e81e182c775454ce86280d@kernel.org>
 References: <168830922841.2278819.9165254236027770818.stgit@mhiramat.roam.corp.google.com>
         <168830925534.2278819.7237772177111801959.stgit@mhiramat.roam.corp.google.com>
         <20230705224956.1c5213e6@gandalf.local.home>
         <20230706134036.5c074aa5fc6a55cdb5038660@kernel.org>
         <20230706095039.1cb9c9d1@gandalf.local.home>
-X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
+        <20230707110210.06e81e182c775454ce86280d@kernel.org>
+X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On Thu, 6 Jul 2023 09:50:39 -0400
-Steven Rostedt <rostedt@goodmis.org> wrote:
+On Fri, 7 Jul 2023 11:02:10 +0900
+Masami Hiramatsu (Google) <mhiramat@kernel.org> wrote:
 
-> On Thu, 6 Jul 2023 13:40:36 +0900
-> Masami Hiramatsu (Google) <mhiramat@kernel.org> wrote:
+> /* Print type function for string type */
+> int PRINT_TYPE_FUNC_NAME(string)(struct trace_seq *s, void *data, void *ent)
+> {
+>         int len = *(u32 *)data >> 16;
 > 
-> > On Wed, 5 Jul 2023 22:49:56 -0400
-> > Steven Rostedt <rostedt@goodmis.org> wrote:
-> > 
-> > > On Sun,  2 Jul 2023 23:47:35 +0900
-> > > "Masami Hiramatsu (Google)" <mhiramat@kernel.org> wrote:
-> > >   
-> > > > From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-> > > > 
-> > > > When the "(fault)" is injected, the return value of fetch_store_string*()
-> > > > should be the length of the "(fault)", but an error code is returned.
-> > > > Fix it to return the correct length and update the data_loc according the
-> > > > updated length.
-> > > > This needs to update a ftracetest test case, which expects trace output
-> > > > to appear as '(fault)' instead of '"(fault)"'.
-> > > >   
-> > > 
-> > > Ah, because of patch 2, the ret < 0 makes it return without printing the
-> > > "fault"?  
-> > 
-> > No, actually set_data_loc() updates the 'ret' argument, but it is just
-> > disposed... (not returned to the caller)
+>         if (!len)
+>                 trace_seq_puts(s, "(fault)");
+>         else
+> ----
 > 
-> That's not what I was talking about.
+> In this case, what we need is to set data_loc length = 0 if ret < 0.
 > 
-> We have:
-> 
-> process_fetch_insn_bottom() {
-> 	[..]
-> 	case FETCH_OP_ST_STRING:
-> 		loc = *(u32 *)dest;
-> 		ret = fetch_store_string(val + code->offset, dest, base);
-> 		break;
-> 	[..]
-> 
-> // And from patch 2 we have:
-> 
-> @@ -193,6 +193,8 @@ process_fetch_insn_bottom(struct fetch_insn *code, unsigned long val,
->  	default:
->  		return -EILSEQ;
->  	}
-> +	if (ret < 0)
-> +		return ret;
->  	code++;
-> 
-> And now that the return value of fetch_store_string() is being checked, and
-> if it returns negative, it ends the function before being processed
-> further. And if there's a fault, it happens to return negative!
-> 
-> This patch now changes fetch_store_string() and fetch_store_string_user()
-> to not return negative if there's a fault. As this patch has:
-> 
-> @@ -107,9 +106,7 @@ fetch_store_string(unsigned long addr, void *dest, void *base)
->  	 * probing.
->  	 */
->  	ret = strncpy_from_kernel_nofault(__dest, (void *)addr, maxlen);
-> -	set_data_loc(ret, dest, __dest, base, maxlen);
-> -
-> -	return ret;
-> +	return set_data_loc(ret, dest, __dest, base, maxlen);
->  }
-> 
-> But to do that, you needed to update set_data_loc() to return a value.
-> 
-> *that's* what I meant by 
-> 
-> 'Ah, because of patch 2, the ret < 0 makes it return without printing the "fault"?'
+> Do you really need to get '"(fault)"' (with double quotation) or
+> just '(fault)' (no double quotation) is OK?
 
-Yes, that's correct. Actually, the data ("(fault)") is stored, but ignored
-because data_loc is not updated.
-
-But wait, it seems that the print function shows (fault), so commit 2e9906f84fc7
-("tracing: Add "(fault)" name injection to kernel probes") may not needed?
-
-----
-/* Print type function for string type */
-int PRINT_TYPE_FUNC_NAME(string)(struct trace_seq *s, void *data, void *ent)
-{
-        int len = *(u32 *)data >> 16;
-
-        if (!len)
-                trace_seq_puts(s, "(fault)");
-        else
-----
-
-In this case, what we need is to set data_loc length = 0 if ret < 0.
-
-Do you really need to get '"(fault)"' (with double quotation) or
-just '(fault)' (no double quotation) is OK?
-
-Thank you,
-> 
-> 
-> -- Steve
-> 
-> > 
-> > -static nokprobe_inline void set_data_loc(int ret, void *dest, void *__dest, void *base, int len)
-> > +static nokprobe_inline int set_data_loc(int ret, void *dest, void *__dest, void *base, int len)
-> >  {
-> > -	if (ret >= 0) {
-> > -		*(u32 *)dest = make_data_loc(ret, __dest - base);
-> > -	} else {
-> > +	if (ret < 0) {
-> >  		strscpy(__dest, FAULT_STRING, len);
-> >  		ret = strlen(__dest) + 1;
-> >  	}
-> > +
-> > +	*(u32 *)dest = make_data_loc(ret, __dest - base);
-> > +	return ret;
-> >  }
-> > 
-> > So this returns updated 'ret', and also update data_loc to use the
-> > updated 'ret' value (which is the length of the stored data).
-> > 
-> > > 
-> > > Reviewed-by: Steven Rostedt (Google) <rostedt@goodmis.org>  
-> > 
-> > Thank you!
-> > 
-> > > 
-> > > -- Steve
-> > > 
-> > >   
-> > > > Fixes: 2e9906f84fc7 ("tracing: Add "(fault)" name injection to kernel probes")
-> > > > Cc: stable@vger.kernel.org
-> > > > Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-> > > > ---  
-> > 
-> > 
-> 
+ ># echo 'e:myopen syscalls/sys_enter_openat file=+0($filename):ustring' >> /sys/kernel/tracing/dynamic_events
+ ># trace-cmd start -e myopen
+ ># trace-cmd show
+# tracer: nop
+#
+# entries-in-buffer/entries-written: 19/19   #P:4
+#
+#                                _-----=> irqs-off/BH-disabled
+#                               / _----=> need-resched
+#                              | / _---=> hardirq/softirq
+#                              || / _--=> preempt-depth
+#                              ||| / _-=> migrate-disable
+#                              |||| /     delay
+#           TASK-PID     CPU#  |||||  TIMESTAMP  FUNCTION
+#              | |         |   |||||     |         |
+       trace-cmd-4688    [000] ...1. 466968.015784: myopen: (syscalls.sys_enter_openat) file=(fault)
+       trace-cmd-4688    [000] ...1. 466968.015816: myopen: (syscalls.sys_enter_openat) file=(fault)
+       trace-cmd-4688    [000] ...1. 466968.015833: myopen: (syscalls.sys_enter_openat) file=(fault)
+       trace-cmd-4688    [000] ...1. 466968.015849: myopen: (syscalls.sys_enter_openat) file=(fault)
+       trace-cmd-4688    [000] ...1. 466968.015864: myopen: (syscalls.sys_enter_openat) file=(fault)
+       trace-cmd-4688    [000] ...1. 466968.015879: myopen: (syscalls.sys_enter_openat) file=(fault)
 
 
--- 
-Masami Hiramatsu (Google) <mhiramat@kernel.org>
+Does that answer your question? ;-)
+
+-- Steve
