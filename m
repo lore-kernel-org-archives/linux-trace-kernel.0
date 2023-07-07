@@ -2,50 +2,48 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 347CEC0015E
-	for <linux-trace-kernel@archiver.kernel.org>; Fri,  7 Jul 2023 13:41:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A5693EB64DA
+	for <linux-trace-kernel@archiver.kernel.org>; Fri,  7 Jul 2023 14:03:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232199AbjGGNlt (ORCPT
+        id S229550AbjGGOD3 (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Fri, 7 Jul 2023 09:41:49 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54692 "EHLO
+        Fri, 7 Jul 2023 10:03:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38262 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232478AbjGGNli (ORCPT
+        with ESMTP id S229663AbjGGOD0 (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Fri, 7 Jul 2023 09:41:38 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D3F0926AC;
-        Fri,  7 Jul 2023 06:41:25 -0700 (PDT)
+        Fri, 7 Jul 2023 10:03:26 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E13211B6;
+        Fri,  7 Jul 2023 07:03:25 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange X25519 server-signature RSA-PSS (2048 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 60959619A0;
-        Fri,  7 Jul 2023 13:41:25 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9CBE4C433C8;
-        Fri,  7 Jul 2023 13:41:23 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 77B61619BD;
+        Fri,  7 Jul 2023 14:03:25 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D7BA9C433C7;
+        Fri,  7 Jul 2023 14:03:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1688737284;
-        bh=jw6d8p0evmmLgL+3c21Ikyeph2z5FEfOBl7kFpuv2U0=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=eLHO4WNRDixHbTt5uvtKqOR4/ipQeshtWMJ7pgUkiX8ZHGrvM8BCKpJJanHs/OC52
-         JzUXKgeG9i22eWxAeg29BHKM4kAiGEr9kGDIvx0+AqQUwvAaWZN5Bubq1jRdneOAaz
-         Y577uxPLpreJWRmERnt/k8l9IEDn8K41ZQZ0OcT0Z1Z5FTj+dIqjb5DxG3r543+zxl
-         4UXSvoSUeIBOHj/Fa31UdsECn/GCGQOF+G6iNG2FF/Kuv8kUhRU9lWeXAC52l8ugs6
-         +tKKiBw6vFqoZJA8HncCjoBkd1V8r81qAIPmRYhD4yDAEzgX1F7jft35M5lIruCUoR
-         LTYVlhYrjUQ4g==
+        s=k20201202; t=1688738604;
+        bh=SLinMWnZAVI3P22sgqB7gSLnrZlUscYV51apQlD/gUg=;
+        h=From:To:Cc:Subject:Date:From;
+        b=BAvfZI7nJdF1ulD+736MGEirlLTD8Q8+190AmkBIeKfjbjfnWiaAAXKVTji8RTkxc
+         hFZlcXSoIeZ2NHv0jtJWfqu9p0//gZ5AuXpbqRxik3C6a64ejLnTsmYTJRDz8R6bfw
+         b6Mat4LeSRyk/LqCZX/BzZmPhIEr2FOg9CHzULyFF8m1Cb4mv6VdLDocbSDtFUqsGc
+         K3z2yRlGtYvG+A/1F+/RsZywqhE1h97j4l/0ztTQReGwkynq6PV+CPUHZz5+vGNGxb
+         csIZHj2UStT9nip8BBTszHIFSGbVOY7dTTKosSHoASK43wbOygSIzhQhNWox7jpytS
+         9dtiab1DLKb+A==
 From:   "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
-To:     Steven Rostedt <rostedt@goodmis.org>
-Cc:     Dan Carpenter <dan.carpenter@linaro.org>,
-        linux-trace-kernel@vger.kernel.org,
-        LKML <linux-kernel@vger.kernel.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>
-Subject: [PATCH v2 4/4] tracing/probes: Fix to record 0-length data_loc in fetch_store_string*() if fails
-Date:   Fri,  7 Jul 2023 22:41:21 +0900
-Message-ID:  <168873728100.2687993.818241227929882555.stgit@mhiramat.roam.corp.google.com>
-X-Mailer: git-send-email 2.41.0.255.g8b1d071c50-goog
-In-Reply-To:  <168873724526.2687993.15242662075324919195.stgit@mhiramat.roam.corp.google.com>
-References:  <168873724526.2687993.15242662075324919195.stgit@mhiramat.roam.corp.google.com>
+To:     Jiri Olsa <jolsa@kernel.org>, Steven Rostedt <rostedt@goodmis.org>
+Cc:     Masami Hiramatsu <mhiramat@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        lkml <linux-kernel@vger.kernel.org>,
+        linux-trace-kernel@vger.kernel.org, bpf@vger.kernel.org
+Subject: [PATCH v2] fprobe: Ensure running fprobe_exit_handler() finished before calling rethook_free()
+Date:   Fri,  7 Jul 2023 23:03:19 +0900
+Message-Id: <168873859949.156157.13039240432299335849.stgit@devnote2>
+X-Mailer: git-send-email 2.25.1
 User-Agent: StGit/0.19
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
@@ -56,76 +54,119 @@ X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
 From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 
-Fix to record 0-length data to data_loc in fetch_store_string*() if it fails
-to get the string data.
-Currently those expect that the data_loc is updated by store_trace_args() if
-it returns the error code. However, that does not work correctly if the
-argument is an array of strings. In that case, store_trace_args() only clears
-the first entry of the array (which may have no error) and leaves other
-entries. So it should be cleared by fetch_store_string*() itself.
-Also, 'dyndata' and 'maxlen' in store_trace_args() should be updated
-only if it is used (ret > 0 and argument is a dynamic data.)
+Ensure running fprobe_exit_handler() has finished before
+calling rethook_free() in the unregister_fprobe() so that caller can free
+the fprobe right after unregister_fprobe().
 
-Fixes: 40b53b771806 ("tracing: probeevent: Add array type support")
+unregister_fprobe() ensured that all running fprobe_entry/exit_handler()
+have finished by calling unregister_ftrace_function() which synchronizes
+RCU. But commit 5f81018753df ("fprobe: Release rethook after the ftrace_ops
+is unregistered") changed to call rethook_free() after
+unregister_ftrace_function(). So call rethook_stop() to make rethook
+disabled before unregister_ftrace_function() and ensure it again.
+
+Here is the possible code flow that can call the exit handler after
+unregister_fprobe().
+
+------
+ CPU1                              CPU2
+ call unregister_fprobe(fp)
+ ...
+                                   __fprobe_handler()
+                                   rethook_hook() on probed function
+ unregister_ftrace_function()
+                                   return from probed function
+                                   rethook hooks
+                                   find rh->handler == fprobe_exit_handler
+                                   call fprobe_exit_handler()
+ rethook_free():
+   set rh->handler = NULL;
+ return from unreigster_fprobe;
+                                   call fp->exit_handler() <- (*)
+------
+
+(*) At this point, the exit handler is called after returning from
+unregister_fprobe().
+
+This fixes it as following;
+------
+ CPU1                              CPU2
+ call unregister_fprobe()
+ ...
+ rethook_stop():
+   set rh->handler = NULL;
+                                   __fprobe_handler()
+                                   rethook_hook() on probed function
+ unregister_ftrace_function()
+                                   return from probed function
+                                   rethook hooks
+                                   find rh->handler == NULL
+                                   return from rethook
+ rethook_free()
+ return from unreigster_fprobe;
+------
+
+
+Fixes: 5f81018753df ("fprobe: Release rethook after the ftrace_ops is unregistered")
 Cc: stable@vger.kernel.org
 Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 ---
- kernel/trace/trace_probe_kernel.h |    6 ++----
- kernel/trace/trace_probe_tmpl.h   |    4 +---
- kernel/trace/trace_uprobe.c       |    3 ++-
- 3 files changed, 5 insertions(+), 8 deletions(-)
+ Changes in v2:
+ - Update changelog to add a problematic code flow.
+---
+ include/linux/rethook.h |    1 +
+ kernel/trace/fprobe.c   |    3 +++
+ kernel/trace/rethook.c  |   13 +++++++++++++
+ 3 files changed, 17 insertions(+)
 
-diff --git a/kernel/trace/trace_probe_kernel.h b/kernel/trace/trace_probe_kernel.h
-index 6deae2ce34f8..37d5696ed768 100644
---- a/kernel/trace/trace_probe_kernel.h
-+++ b/kernel/trace/trace_probe_kernel.h
-@@ -55,8 +55,7 @@ fetch_store_string_user(unsigned long addr, void *dest, void *base)
- 	__dest = get_loc_data(dest, base);
+diff --git a/include/linux/rethook.h b/include/linux/rethook.h
+index c8ac1e5afcd1..bdbe6717f45a 100644
+--- a/include/linux/rethook.h
++++ b/include/linux/rethook.h
+@@ -59,6 +59,7 @@ struct rethook_node {
+ };
  
- 	ret = strncpy_from_user_nofault(__dest, uaddr, maxlen);
--	if (ret >= 0)
--		*(u32 *)dest = make_data_loc(ret, __dest - base);
-+	*(u32 *)dest = make_data_loc((ret >= 0) ? ret : 0, __dest - base);
+ struct rethook *rethook_alloc(void *data, rethook_handler_t handler);
++void rethook_stop(struct rethook *rh);
+ void rethook_free(struct rethook *rh);
+ void rethook_add_node(struct rethook *rh, struct rethook_node *node);
+ struct rethook_node *rethook_try_get(struct rethook *rh);
+diff --git a/kernel/trace/fprobe.c b/kernel/trace/fprobe.c
+index 0121e8c0d54e..75517667b54f 100644
+--- a/kernel/trace/fprobe.c
++++ b/kernel/trace/fprobe.c
+@@ -364,6 +364,9 @@ int unregister_fprobe(struct fprobe *fp)
+ 		    fp->ops.saved_func != fprobe_kprobe_handler))
+ 		return -EINVAL;
  
- 	return ret;
++	if (fp->rethook)
++		rethook_stop(fp->rethook);
++
+ 	ret = unregister_ftrace_function(&fp->ops);
+ 	if (ret < 0)
+ 		return ret;
+diff --git a/kernel/trace/rethook.c b/kernel/trace/rethook.c
+index 60f6cb2b486b..468006cce7ca 100644
+--- a/kernel/trace/rethook.c
++++ b/kernel/trace/rethook.c
+@@ -53,6 +53,19 @@ static void rethook_free_rcu(struct rcu_head *head)
+ 		kfree(rh);
  }
-@@ -87,8 +86,7 @@ fetch_store_string(unsigned long addr, void *dest, void *base)
- 	 * probing.
- 	 */
- 	ret = strncpy_from_kernel_nofault(__dest, (void *)addr, maxlen);
--	if (ret >= 0)
--		*(u32 *)dest = make_data_loc(ret, __dest - base);
-+	*(u32 *)dest = make_data_loc((ret >= 0) ? ret : 0, __dest - base);
  
- 	return ret;
- }
-diff --git a/kernel/trace/trace_probe_tmpl.h b/kernel/trace/trace_probe_tmpl.h
-index ed9d57c6b041..bbad0503f166 100644
---- a/kernel/trace/trace_probe_tmpl.h
-+++ b/kernel/trace/trace_probe_tmpl.h
-@@ -267,9 +267,7 @@ store_trace_args(void *data, struct trace_probe *tp, void *rec,
- 		if (unlikely(arg->dynamic))
- 			*dl = make_data_loc(maxlen, dyndata - base);
- 		ret = process_fetch_insn(arg->code, rec, dl, base);
--		if (unlikely(ret < 0 && arg->dynamic)) {
--			*dl = make_data_loc(0, dyndata - base);
--		} else {
-+		if (unlikely(ret > 0 && arg->dynamic)) {
- 			dyndata += ret;
- 			maxlen -= ret;
- 		}
-diff --git a/kernel/trace/trace_uprobe.c b/kernel/trace/trace_uprobe.c
-index 8b92e34ff0c8..7b47e9a2c010 100644
---- a/kernel/trace/trace_uprobe.c
-+++ b/kernel/trace/trace_uprobe.c
-@@ -170,7 +170,8 @@ fetch_store_string(unsigned long addr, void *dest, void *base)
- 			 */
- 			ret++;
- 		*(u32 *)dest = make_data_loc(ret, (void *)dst - base);
--	}
-+	} else
-+		*(u32 *)dest = make_data_loc(0, (void *)dst - base);
- 
- 	return ret;
- }
++/**
++ * rethook_stop() - Stop using a rethook.
++ * @rh: the struct rethook to stop.
++ *
++ * Stop using a rethook to prepare for freeing it. If you want to wait for
++ * all running rethook handler before calling rethook_free(), you need to
++ * call this first and wait RCU, and call rethook_free().
++ */
++void rethook_stop(struct rethook *rh)
++{
++	WRITE_ONCE(rh->handler, NULL);
++}
++
+ /**
+  * rethook_free() - Free struct rethook.
+  * @rh: the struct rethook to be freed.
 
