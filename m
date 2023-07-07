@@ -2,139 +2,197 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CF29EB64D9
-	for <linux-trace-kernel@archiver.kernel.org>; Fri,  7 Jul 2023 01:53:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A4673EB64D9
+	for <linux-trace-kernel@archiver.kernel.org>; Fri,  7 Jul 2023 02:02:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229829AbjGGBxb (ORCPT
+        id S229829AbjGGCCQ (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Thu, 6 Jul 2023 21:53:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47702 "EHLO
+        Thu, 6 Jul 2023 22:02:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49878 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229781AbjGGBxa (ORCPT
+        with ESMTP id S229575AbjGGCCP (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Thu, 6 Jul 2023 21:53:30 -0400
-Received: from mail-qv1-xf35.google.com (mail-qv1-xf35.google.com [IPv6:2607:f8b0:4864:20::f35])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B76CD19B7;
-        Thu,  6 Jul 2023 18:53:29 -0700 (PDT)
-Received: by mail-qv1-xf35.google.com with SMTP id 6a1803df08f44-6378cec43ddso8790976d6.2;
-        Thu, 06 Jul 2023 18:53:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1688694809; x=1691286809;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=bhYfiKKAyu4MadU/WX1P82AGfCr6L53Sij3ZmkQLwO8=;
-        b=QQbyqt0Ud4FFN+iv/NSRwhIxdcQjs3vsIHFrKtJpF9ZnMjL/Jou1EsuOiy3c82I0Zb
-         lqJhSBFu6IicwnPI+bL8GOD2o5Dc+f9Oyf/rWj08Vtrmeo9FnBL1l2WftrhEY4HFEKuB
-         0i62Vc0x98YWoctyRCghjdrJdMzHYk7BtbpsHln3nUArskM/AUglJQfVMBtMCF3WegZC
-         hp8ErhY5acCt2D4QNS9DckODdgU2JkA9C5xnN3sHzQlVtyzyYeov9W9CAj/pxqTDkvBL
-         yvYqW+9/n/VW2ApZlM1iDktoEJgZQVgZ7rdkQ/x4WKulh8tefmY/HKs3bbCea5mFo+ZZ
-         Fjkg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1688694809; x=1691286809;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=bhYfiKKAyu4MadU/WX1P82AGfCr6L53Sij3ZmkQLwO8=;
-        b=a9VQPUvTmyjaxf0dip5V/pEGDn7hcD9HUU3TI+uZq7Rke4AJyCyTTs4vfWrNfiFDJj
-         S1jDPWTFgLsuiJFemIsvLp8mzfDcKzBKRR0goJSCPejQNbjSD7b55cprCHwbp2GA29If
-         CVc62x9XOTPmXItpjotDY/W8ltQKzJQ4yikrjwkfnLdjEsDsPRDy47uwZD2m9Q8hxzvf
-         UeEGrqt1u+zS3MNRRrMTdl8mWuizPCPX9/Ggr1WFGzd4dVlbW6xUsSb9H8FFVIJzCAH4
-         RDatX48KpGFYfhCR2YlznMEzbwrYkNECpTLGMYM4I0LRW4KUf71aRCDke7IJXCDWp8rD
-         PKXA==
-X-Gm-Message-State: ABy/qLZqs6xiKj3nRebpmQvcb6x2wQYZhyYfqoENER2Mm7eZXgwZ2UWy
-        YQKm64mBgtGNFHXu6dmPn+CvFxI7mIjKAzOqzCo=
-X-Google-Smtp-Source: APBJJlHqHT4ih9tuWs/9Zxr9APFTY4bWqr0JomaaRyTPDLqCKWFZVQ0pbS9QLeKDGKGAyJHK+xMlWUf/ywbV95lVLa4=
-X-Received: by 2002:a0c:cc84:0:b0:62f:ff00:f8fa with SMTP id
- f4-20020a0ccc84000000b0062fff00f8famr3185208qvl.63.1688694808845; Thu, 06 Jul
- 2023 18:53:28 -0700 (PDT)
-MIME-Version: 1.0
-References: <20230628115329.248450-1-laoar.shao@gmail.com> <20230628115329.248450-2-laoar.shao@gmail.com>
- <CAEf4BzZzuPvyhUPnq8eGugRhCAbQVyQ7wfDDe4sUpUQa4cKFWw@mail.gmail.com>
-In-Reply-To: <CAEf4BzZzuPvyhUPnq8eGugRhCAbQVyQ7wfDDe4sUpUQa4cKFWw@mail.gmail.com>
-From:   Yafang Shao <laoar.shao@gmail.com>
-Date:   Fri, 7 Jul 2023 09:52:52 +0800
-Message-ID: <CALOAHbDQsPZNbUOOa-8q6_WdpcazR-GXAvjwAwDc2Yj+55JAjA@mail.gmail.com>
-Subject: Re: [PATCH v6 bpf-next 01/11] bpf: Support ->fill_link_info for kprobe_multi
-To:     Andrii Nakryiko <andrii.nakryiko@gmail.com>
-Cc:     ast@kernel.org, daniel@iogearbox.net, john.fastabend@gmail.com,
-        andrii@kernel.org, martin.lau@linux.dev, song@kernel.org,
-        yhs@fb.com, kpsingh@kernel.org, sdf@google.com, haoluo@google.com,
-        jolsa@kernel.org, quentin@isovalent.com, rostedt@goodmis.org,
-        mhiramat@kernel.org, bpf@vger.kernel.org,
-        linux-trace-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+        Thu, 6 Jul 2023 22:02:15 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9535B19B7;
+        Thu,  6 Jul 2023 19:02:14 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 1082B61522;
+        Fri,  7 Jul 2023 02:02:14 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 571EEC433C7;
+        Fri,  7 Jul 2023 02:02:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1688695333;
+        bh=vxF176pHmUyvE88xtKXjwBevErLO4fJiS2ZYNuJq54Y=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=YzwjyV3LF6lqxl7gBFOu5QoBEdBTmZEtIHGujqAeoUKxJG8/VCp1kFQ08MgCKBxGk
+         Sp7SOgJpYxGejSUzF/hkNTAix4II+wxv0Ua9bNoftDrb4iBWHSRmolJSzHw5Vpp3/I
+         09jglmL8cDEDG8t3U82xjXSlnvi6ccyao+jfg4IW5u3cNQIDr1mgYDM76A27Q5gZAg
+         MQ08OisB62XsNyEgyczbaWlABg1Khh1EITrhBmIhJC7QEajaeZ05svFs9SmBl9TyqX
+         vvSm2qEkwrmHRQsuSVvrpgRCJJn8KJU3jzv1PrzEKYsks0J7RnhWr8bPWwBgZRdL4q
+         L5AB9cMfoJqOA==
+Date:   Fri, 7 Jul 2023 11:02:10 +0900
+From:   Masami Hiramatsu (Google) <mhiramat@kernel.org>
+To:     Steven Rostedt <rostedt@goodmis.org>
+Cc:     Dan Carpenter <dan.carpenter@linaro.org>,
+        linux-trace-kernel@vger.kernel.org,
+        LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 3/3] tracing/probes: Fix return value when "(fault)" is
+ injected
+Message-Id: <20230707110210.06e81e182c775454ce86280d@kernel.org>
+In-Reply-To: <20230706095039.1cb9c9d1@gandalf.local.home>
+References: <168830922841.2278819.9165254236027770818.stgit@mhiramat.roam.corp.google.com>
+        <168830925534.2278819.7237772177111801959.stgit@mhiramat.roam.corp.google.com>
+        <20230705224956.1c5213e6@gandalf.local.home>
+        <20230706134036.5c074aa5fc6a55cdb5038660@kernel.org>
+        <20230706095039.1cb9c9d1@gandalf.local.home>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On Fri, Jul 7, 2023 at 6:00=E2=80=AFAM Andrii Nakryiko
-<andrii.nakryiko@gmail.com> wrote:
->
-> On Wed, Jun 28, 2023 at 4:53=E2=80=AFAM Yafang Shao <laoar.shao@gmail.com=
-> wrote:
-> >
-> > With the addition of support for fill_link_info to the kprobe_multi lin=
-k,
-> > users will gain the ability to inspect it conveniently using the
-> > `bpftool link show`. This enhancement provides valuable information to =
-the
-> > user, including the count of probed functions and their respective
-> > addresses. It's important to note that if the kptr_restrict setting is =
-not
-> > permitted, the probed address will not be exposed, ensuring security.
-> >
-> > Signed-off-by: Yafang Shao <laoar.shao@gmail.com>
-> > ---
->
-> documentation nit, but otherwise LGTM
->
-> Also, looking at other patch where you introduce bpf_copy_user(),
-> seems like we return -ENOSPC when user-provided memory is not big
-> enough. So let's change E2BIG in this patch to ENOSPC?
+On Thu, 6 Jul 2023 09:50:39 -0400
+Steven Rostedt <rostedt@goodmis.org> wrote:
 
-Sure. Will change it.
+> On Thu, 6 Jul 2023 13:40:36 +0900
+> Masami Hiramatsu (Google) <mhiramat@kernel.org> wrote:
+> 
+> > On Wed, 5 Jul 2023 22:49:56 -0400
+> > Steven Rostedt <rostedt@goodmis.org> wrote:
+> > 
+> > > On Sun,  2 Jul 2023 23:47:35 +0900
+> > > "Masami Hiramatsu (Google)" <mhiramat@kernel.org> wrote:
+> > >   
+> > > > From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+> > > > 
+> > > > When the "(fault)" is injected, the return value of fetch_store_string*()
+> > > > should be the length of the "(fault)", but an error code is returned.
+> > > > Fix it to return the correct length and update the data_loc according the
+> > > > updated length.
+> > > > This needs to update a ftracetest test case, which expects trace output
+> > > > to appear as '(fault)' instead of '"(fault)"'.
+> > > >   
+> > > 
+> > > Ah, because of patch 2, the ret < 0 makes it return without printing the
+> > > "fault"?  
+> > 
+> > No, actually set_data_loc() updates the 'ret' argument, but it is just
+> > disposed... (not returned to the caller)
+> 
+> That's not what I was talking about.
+> 
+> We have:
+> 
+> process_fetch_insn_bottom() {
+> 	[..]
+> 	case FETCH_OP_ST_STRING:
+> 		loc = *(u32 *)dest;
+> 		ret = fetch_store_string(val + code->offset, dest, base);
+> 		break;
+> 	[..]
+> 
+> // And from patch 2 we have:
+> 
+> @@ -193,6 +193,8 @@ process_fetch_insn_bottom(struct fetch_insn *code, unsigned long val,
+>  	default:
+>  		return -EILSEQ;
+>  	}
+> +	if (ret < 0)
+> +		return ret;
+>  	code++;
+> 
+> And now that the return value of fetch_store_string() is being checked, and
+> if it returns negative, it ends the function before being processed
+> further. And if there's a fault, it happens to return negative!
+> 
+> This patch now changes fetch_store_string() and fetch_store_string_user()
+> to not return negative if there's a fault. As this patch has:
+> 
+> @@ -107,9 +106,7 @@ fetch_store_string(unsigned long addr, void *dest, void *base)
+>  	 * probing.
+>  	 */
+>  	ret = strncpy_from_kernel_nofault(__dest, (void *)addr, maxlen);
+> -	set_data_loc(ret, dest, __dest, base, maxlen);
+> -
+> -	return ret;
+> +	return set_data_loc(ret, dest, __dest, base, maxlen);
+>  }
+> 
+> But to do that, you needed to update set_data_loc() to return a value.
+> 
+> *that's* what I meant by 
+> 
+> 'Ah, because of patch 2, the ret < 0 makes it return without printing the "fault"?'
 
->
->
-> Acked-by: Andrii Nakryiko <andrii@kernel.org>
+Yes, that's correct. Actually, the data ("(fault)") is stored, but ignored
+because data_loc is not updated.
 
-Thanks for your review.
+But wait, it seems that the print function shows (fault), so commit 2e9906f84fc7
+("tracing: Add "(fault)" name injection to kernel probes") may not needed?
 
->
-> >  include/uapi/linux/bpf.h       |  5 +++++
-> >  kernel/trace/bpf_trace.c       | 37 ++++++++++++++++++++++++++++++++++
-> >  tools/include/uapi/linux/bpf.h |  5 +++++
-> >  3 files changed, 47 insertions(+)
-> >
-> > diff --git a/include/uapi/linux/bpf.h b/include/uapi/linux/bpf.h
-> > index 60a9d59beeab..512ba3ba2ed3 100644
-> > --- a/include/uapi/linux/bpf.h
-> > +++ b/include/uapi/linux/bpf.h
-> > @@ -6439,6 +6439,11 @@ struct bpf_link_info {
-> >                         __s32 priority;
-> >                         __u32 flags;
-> >                 } netfilter;
-> > +               struct {
-> > +                       __aligned_u64 addrs; /* in/out: addresses buffe=
-r ptr */
->
-> addrs field itself is not modified, the memory it points to is
-> modified, so it's not really in/out per se, it is just a pointer to
-> memory where kernel stores output data
+----
+/* Print type function for string type */
+int PRINT_TYPE_FUNC_NAME(string)(struct trace_seq *s, void *data, void *ent)
+{
+        int len = *(u32 *)data >> 16;
 
-Thanks for the explanation. Will change it.
+        if (!len)
+                trace_seq_puts(s, "(fault)");
+        else
+----
 
->
-> > +                       __u32 count;
->
-> but count field itself is in/out, so please add a comment explicitly
-> stating this
+In this case, what we need is to set data_loc length = 0 if ret < 0.
 
-Will do it.
+Do you really need to get '"(fault)"' (with double quotation) or
+just '(fault)' (no double quotation) is OK?
+
+Thank you,
+> 
+> 
+> -- Steve
+> 
+> > 
+> > -static nokprobe_inline void set_data_loc(int ret, void *dest, void *__dest, void *base, int len)
+> > +static nokprobe_inline int set_data_loc(int ret, void *dest, void *__dest, void *base, int len)
+> >  {
+> > -	if (ret >= 0) {
+> > -		*(u32 *)dest = make_data_loc(ret, __dest - base);
+> > -	} else {
+> > +	if (ret < 0) {
+> >  		strscpy(__dest, FAULT_STRING, len);
+> >  		ret = strlen(__dest) + 1;
+> >  	}
+> > +
+> > +	*(u32 *)dest = make_data_loc(ret, __dest - base);
+> > +	return ret;
+> >  }
+> > 
+> > So this returns updated 'ret', and also update data_loc to use the
+> > updated 'ret' value (which is the length of the stored data).
+> > 
+> > > 
+> > > Reviewed-by: Steven Rostedt (Google) <rostedt@goodmis.org>  
+> > 
+> > Thank you!
+> > 
+> > > 
+> > > -- Steve
+> > > 
+> > >   
+> > > > Fixes: 2e9906f84fc7 ("tracing: Add "(fault)" name injection to kernel probes")
+> > > > Cc: stable@vger.kernel.org
+> > > > Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+> > > > ---  
+> > 
+> > 
+> 
 
 
---=20
-Regards
-Yafang
+-- 
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
