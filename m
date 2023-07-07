@@ -2,51 +2,53 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A6165EB64D9
-	for <linux-trace-kernel@archiver.kernel.org>; Fri,  7 Jul 2023 00:15:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FAABEB64D9
+	for <linux-trace-kernel@archiver.kernel.org>; Fri,  7 Jul 2023 00:17:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229802AbjGGAPW (ORCPT
+        id S232181AbjGGARU (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Thu, 6 Jul 2023 20:15:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52624 "EHLO
+        Thu, 6 Jul 2023 20:17:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53134 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231688AbjGGAPV (ORCPT
+        with ESMTP id S231912AbjGGARS (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Thu, 6 Jul 2023 20:15:21 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6232F19A7;
-        Thu,  6 Jul 2023 17:15:19 -0700 (PDT)
+        Thu, 6 Jul 2023 20:17:18 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8664619A5;
+        Thu,  6 Jul 2023 17:17:17 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange X25519 server-signature RSA-PSS (2048 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id AA76A60D2E;
-        Fri,  7 Jul 2023 00:15:18 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 70709C433C9;
-        Fri,  7 Jul 2023 00:15:16 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 1C2DC614D5;
+        Fri,  7 Jul 2023 00:17:17 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DD925C433C7;
+        Fri,  7 Jul 2023 00:17:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1688688918;
-        bh=rpSZSrfeOyTrCZMQuvLO9nZWV0sJ3Q8D+Q+vMcmRWXY=;
+        s=k20201202; t=1688689036;
+        bh=ymAymf4FHdvPplfqSDcRK8uyKvH11GL8w4/ZdkYCmgY=;
         h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=b+rbgkYxKL7z1snC8uyDjlKk+JX84O7lk+YCZ4Hfa0ZcCJ6wNG2CTfjs7IvfR8GuC
-         fGdHH7MK+d5EOxOXvgIHu3SbMBzmF3EEENg2L7ABq40hJUCD+gI9TIRi9fniT0deMG
-         CG6R8iodZkbMPiZeGvCi55/oeKnGJ9oRLz4XF87mqkzLO7ZPcRZ5PKDdhhZ0PzoscE
-         rI4pdRE6ZR1sk0P+xNfUfUIpBGomQ3P9ZYuuO2IWmpzL182pu+YYTnVJoiRcfxAi55
-         0FQPANq2Joxjk8OIZDKcZM2D7WgveuTSXmRlrswHAQ0G0yKFDmX7BxfV1PY80Nwviu
-         vDCEsCAU1FFnw==
-Date:   Fri, 7 Jul 2023 09:15:13 +0900
+        b=t02yP5f9rk25XZLZpImqy243RZTgUUKufHS4sJg0w/slPICynml3SV3qvyJaOnJqn
+         VFEMSV5RObHJxO18LvaTbmC6WoiTe/tLex0osTRbXjEgBGFflSakhO/5svwwGg5Dax
+         2jNk2SVszEriENOYIhfEXmCmsuXzqj/2LT1sPHZUkF9wJdxSXR/KELNt/Z/M2cZocr
+         Q4k2BrU2hnG2u9uoNTvjBdm7VHpMqsridPMqhq5FiD76G5/wC8yOeIuoglL0ja7S72
+         DUwzUQ6wp88qbX91ano7F8FA8dUXhdr77u94lBiXkI5S7n2HnpNoz0DcZ1oniddLeu
+         Qy9S5RrAVpYJA==
+Date:   Fri, 7 Jul 2023 09:17:12 +0900
 From:   Masami Hiramatsu (Google) <mhiramat@kernel.org>
 To:     Steven Rostedt <rostedt@goodmis.org>
-Cc:     Ze Gao <zegao2021@gmail.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
-        Ze Gao <zegao@tencent.com>, Yafang <laoar.shao@gmail.com>
-Subject: Re: [PATCH v2] fprobe: add unlock to match a succeeded
- ftrace_test_recursion_trylock
-Message-Id: <20230707091513.b0bbdf38dd276e054e293185@kernel.org>
-In-Reply-To: <20230706120916.3c6abf15@gandalf.local.home>
-References: <20230703092336.268371-1-zegao@tencent.com>
-        <20230706120916.3c6abf15@gandalf.local.home>
+Cc:     Jiri Olsa <jolsa@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+        lkml <linux-kernel@vger.kernel.org>,
+        linux-trace-kernel@vger.kernel.org, bpf@vger.kernel.org
+Subject: Re: [PATCH] fprobe: Ensure running fprobe_exit_handler() finished
+ before calling rethook_free()
+Message-Id: <20230707091712.e478e0b6e8f5c1ab0802a510@kernel.org>
+In-Reply-To: <20230706095624.3a846b8e@gandalf.local.home>
+References: <20230628012305.978e34d44f1a53fe20327fde@kernel.org>
+        <168796344232.46347.7947681068822514750.stgit@devnote2>
+        <20230705212657.5968daf7@gandalf.local.home>
+        <20230706141012.c1a0ae0901e0fdec7b3078c7@kernel.org>
+        <20230706095624.3a846b8e@gandalf.local.home>
 X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Mime-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
@@ -55,68 +57,66 @@ Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On Thu, 6 Jul 2023 12:09:16 -0400
+On Thu, 6 Jul 2023 09:56:24 -0400
 Steven Rostedt <rostedt@goodmis.org> wrote:
 
-> On Mon,  3 Jul 2023 17:23:36 +0800
-> Ze Gao <zegao2021@gmail.com> wrote:
+> On Thu, 6 Jul 2023 14:10:12 +0900
+> Masami Hiramatsu (Google) <mhiramat@kernel.org> wrote:
 > 
-> > Unlock ftrace recursion lock when fprobe_kprobe_handler() is failed
-> > because of some running kprobe.
+> > With only Jiri's patch, following flow can happen;
 > > 
-> > Fixes: 3cc4e2c5fbae ("fprobe: make fprobe_kprobe_handler recursion free")
-> > Reported-by: Yafang <laoar.shao@gmail.com>
-> > Closes: https://lore.kernel.org/linux-trace-kernel/CALOAHbC6UpfFOOibdDiC7xFc5YFUgZnk3MZ=3Ny6we=AcrNbew@mail.gmail.com/
-> > Signed-off-by: Ze Gao <zegao@tencent.com>
-> 
-> Reviewed-by: Steven Rostedt (Google) <rostedt@goodmis.org>
-> 
-> > ---
-> >  kernel/trace/fprobe.c | 4 +++-
-> >  1 file changed, 3 insertions(+), 1 deletion(-)
+> > ------
+> >  CPU1                              CPU2
+> >  call unregister_fprobe()
+> >  ...
+> >                                    __fprobe_handler()
+> >                                    rethook_hook() on probed function
+> >  unregister_ftrace_function()
+> >                                    return from probed function
+> >                                    rethook hooks
+> >                                    find rh->handler == fprobe_exit_handler
+> >                                    call fprobe_exit_handler()
+> >  rethook_free():
+> >    set rh->handler = NULL;
+> >  return from unreigster_fprobe;
+> >                                    call fp->exit_handler() <- (*)
 > > 
-> > diff --git a/kernel/trace/fprobe.c b/kernel/trace/fprobe.c
-> > index 18d36842faf5..93b3e361bb97 100644
-> > --- a/kernel/trace/fprobe.c
-> > +++ b/kernel/trace/fprobe.c
-> > @@ -102,12 +102,14 @@ static void fprobe_kprobe_handler(unsigned long ip, unsigned long parent_ip,
-> >  
-> >  	if (unlikely(kprobe_running())) {
+> > (*) In this point, the exit handler is called after returning from 
+> > unregister_fprobe().
+> > ------
+> > 
+> > So, this patch changes it as following;
+> > ------
+> >  CPU1                              CPU2
+> >  call unregister_fprobe()
+> >  ...
+> >  rethook_stop():
+> >    set rh->handler = NULL;
+> >                                    __fprobe_handler()
+> >                                    rethook_hook() on probed function
+> >  unregister_ftrace_function()
+> >                                    return from probed function
+> >                                    rethook hooks
+> >                                    find rh->handler == NULL
+> >                                    return from rethook
+> >  rethook_free()
+> >  return from unreigster_fprobe;
+> > ------
+> > 
+> > I can also just put a synchronize_sched_rcu() right after rethook_free()
+> > to wait for all running fprobe_exit_handler() too.
+> > 
 > 
-> Off topic for this patch, but Masami, what's the purpose of not calling the
-> fprobe when a kprobe is running? Does that mean it has probed another kprobe?
+> This makes more sense. Can you please add the above to the change log.
 
-This is for the user who is sharing their handler with kprobes (like eBPF),
-which may expect that the handler is not called recursively. (e.g. an interrupt
-happens while kprobe handler is running and that interrupt calls a function
-which is fprobed)
+OK, let me update it.
+
+Thanks!
 
 > 
-> Probably could add a comment here to explain the issue.
-
-OK, it is also documented in Documentation/trace/fprobe.rst, but it is better
-to comment in the code too.
-
-Thanks,
-
+> Thanks,
 > 
 > -- Steve
-> 
-> 
-> >  		fp->nmissed++;
-> > -		return;
-> > +		goto recursion_unlock;
-> >  	}
-> >  
-> >  	kprobe_busy_begin();
-> >  	__fprobe_handler(ip, parent_ip, ops, fregs);
-> >  	kprobe_busy_end();
-> > +
-> > +recursion_unlock:
-> >  	ftrace_test_recursion_unlock(bit);
-> >  }
-> >  
-> 
 
 
 -- 
