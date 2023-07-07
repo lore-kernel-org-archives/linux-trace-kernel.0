@@ -2,169 +2,262 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E21BEB64D9
-	for <linux-trace-kernel@archiver.kernel.org>; Fri,  7 Jul 2023 14:39:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C2ECC001B0
+	for <linux-trace-kernel@archiver.kernel.org>; Fri,  7 Jul 2023 15:12:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231245AbjGGOjV (ORCPT
+        id S233376AbjGGPMe (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Fri, 7 Jul 2023 10:39:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60552 "EHLO
+        Fri, 7 Jul 2023 11:12:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51832 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230414AbjGGOjU (ORCPT
+        with ESMTP id S229822AbjGGPM0 (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Fri, 7 Jul 2023 10:39:20 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E9ECC1FC4;
-        Fri,  7 Jul 2023 07:39:19 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 6DB7F619C4;
-        Fri,  7 Jul 2023 14:39:19 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E802AC433C8;
-        Fri,  7 Jul 2023 14:39:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1688740758;
-        bh=NI7RBLeyQ5xQGmyWwqLDZomiDo2pHyAV8zW7+8DEiZA=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=RCFGi+BIYCM+8/xBFPEBpeiZjLRAEMBCUQsMysFT/3wOugpYZHGTDlRZxS+Co6WyH
-         7+ZRrnw6hB8uf1XJ3p7IBpaKSHc+g1Im89OST48r58zG+VdPtvlwYa9iLVDvlBXr9T
-         q0SFGDsplQWu1qmlobnCehaQ3kIE2Cka+aSaLi0MJHQVmydG+exkIYXM2dPH/qGtNZ
-         biKcV4OXb7p+7U8ykud2HnxqkrXmNdOTrit70dU44ciQugWbRzS8Gxwx4r8/MN1Ez8
-         Vjfxu0FCvndbjrl9nFAFzq9SGwc843LdpuMUzRIEfwFEKeLUV2GAFq07RzOc07fjTb
-         BcKQ4hxku/j8w==
-Date:   Fri, 7 Jul 2023 23:39:13 +0900
-From:   Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Petr Pavlu <petr.pavlu@suse.com>, tglx@linutronix.de,
-        mingo@redhat.com, bp@alien8.de, dave.hansen@linux.intel.com,
-        hpa@zytor.com, samitolvanen@google.com, x86@kernel.org,
-        linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/2] x86/retpoline,kprobes: Avoid treating rethunk as an
- indirect jump
-Message-Id: <20230707233913.976ecfb1a312d03f9b07a2b2@kernel.org>
-In-Reply-To: <20230706113403.GI2833176@hirez.programming.kicks-ass.net>
-References: <20230705081547.25130-1-petr.pavlu@suse.com>
-        <20230705081547.25130-3-petr.pavlu@suse.com>
-        <20230705085857.GG462772@hirez.programming.kicks-ass.net>
-        <20230705232038.3a6d03e18f7bafb14cdfed42@kernel.org>
-        <20230705145017.GC4253@hirez.programming.kicks-ass.net>
-        <20230706094723.6934105e03f652923796bf7e@kernel.org>
-        <20230706071705.GD2833176@hirez.programming.kicks-ass.net>
-        <20230706180014.06705096a594b71250ff3c94@kernel.org>
-        <20230706113403.GI2833176@hirez.programming.kicks-ass.net>
-X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        Fri, 7 Jul 2023 11:12:26 -0400
+Received: from mga04.intel.com (mga04.intel.com [192.55.52.120])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A2F1C2123;
+        Fri,  7 Jul 2023 08:12:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1688742735; x=1720278735;
+  h=date:from:to:cc:subject:message-id;
+  bh=jn3qdIaoQnAQpWPE9kq0rlginNfQvB8QhEeTHfRq8NQ=;
+  b=LlBZQwBjUbfPDI3FtIwiqbgznF4YJVIzroaBUzOfICgFhZgc5N8WJLGe
+   6npvSo/qcaIkzWb1Ca69EpOAZHG0Dw1aXmL62bUKu6BMZRD3+QyDJ/wL5
+   XRrKFhMlaVhBvBTpZlsFPDRU031NOC/0mPAbfZydePNOPfI46gJ6JxoFo
+   FCjs86VMqE4qr66jIGARVDBtleRbqH+oYnIQWKnOGHATCoAKlMNgHAUa0
+   nSjAfdZLKZvNk5wo3uTu1M7uPSTHj8rBxaoW5bt/1dPuWDzE7AtMhLMEK
+   0RFtGxMw7Bb7T8VBDV4FBPeQEPQSmkameBNPcnG4dNETwtfAtwgAqOh4Y
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10764"; a="362775482"
+X-IronPort-AV: E=Sophos;i="6.01,189,1684825200"; 
+   d="scan'208";a="362775482"
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Jul 2023 08:12:04 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10764"; a="864584020"
+X-IronPort-AV: E=Sophos;i="6.01,189,1684825200"; 
+   d="scan'208";a="864584020"
+Received: from lkp-server01.sh.intel.com (HELO c544d7fc5005) ([10.239.97.150])
+  by fmsmga001.fm.intel.com with ESMTP; 07 Jul 2023 08:12:01 -0700
+Received: from kbuild by c544d7fc5005 with local (Exim 4.96)
+        (envelope-from <lkp@intel.com>)
+        id 1qHn7o-00023A-2q;
+        Fri, 07 Jul 2023 15:12:00 +0000
+Date:   Fri, 07 Jul 2023 23:11:41 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     Andrew Morton <akpm@linux-foundation.org>
+Cc:     Linux Memory Management List <linux-mm@kvack.org>,
+        kunit-dev@googlegroups.com, linux-kselftest@vger.kernel.org,
+        linux-parisc@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+        netdev@vger.kernel.org
+Subject: [linux-next:master] BUILD REGRESSION
+ 123212f53f3e394c1ae69a58c05dfdda56fec8c6
+Message-ID: <202307072334.fuhKXXFM-lkp@intel.com>
+User-Agent: s-nail v14.9.24
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On Thu, 6 Jul 2023 13:34:03 +0200
-Peter Zijlstra <peterz@infradead.org> wrote:
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git master
+branch HEAD: 123212f53f3e394c1ae69a58c05dfdda56fec8c6  Add linux-next specific files for 20230707
 
-> On Thu, Jul 06, 2023 at 06:00:14PM +0900, Masami Hiramatsu wrote:
-> > On Thu, 6 Jul 2023 09:17:05 +0200
-> > Peter Zijlstra <peterz@infradead.org> wrote:
-> > 
-> > > On Thu, Jul 06, 2023 at 09:47:23AM +0900, Masami Hiramatsu wrote:
-> > > 
-> > > > > > If I understand correctly, all indirect jump will be replaced with JMP_NOSPEC.
-> > > > > > If you read the insn_jump_into_range, I onlu jecks the jump code, not call.
-> > > > > > So the functions only have indirect call still allow optprobe.
-> > > > > 
-> > > > > With the introduction of kCFI JMP_NOSPEC is no longer an equivalent to a
-> > > > > C indirect jump.
-> > > > 
-> > > > If I understand correctly, kCFI is enabled by CFI_CLANG, and clang is not
-> > > > using jump-tables by default, so we can focus on gcc. In that case
-> > > > current check still work, correct?
-> > > 
-> > > IIRC clang can use jump tables, but like GCC needs RETPOLINE=n and
-> > > IBT=n, so effectively nobody has them.
-> > 
-> > So if it requires RETPOLINE=n, current __indirect_thunk_start/end checking
-> > is not required, right? (that code is embraced with "#ifdef CONFIG_RETPOLINE")
-> 
-> Correct.
-> 
-> > > 
-> > > The reason I did mention kCFI though is that kCFI has a larger 'indirect
-> > > jump' sequence, and I'm not sure we've thought about what can go
-> > > sideways if that's optprobed.
-> > 
-> > If I understand correctly, kCFI checks only indirect function call (check
-> > pointer), so no jump tables. Or does it use indirect 'jump' ?
-> 
-> Yes, it's indirect function calls only.
-> 
-> Imagine our function (bar) doing an indirect call, it will (as clang
-> always does) have the function pointer in r11:
-> 
-> bar:
-> 	...
-> 	movl	$(-0x12345678),%r10d
-> 	addl	-15(%r11), %r10d
-> 	je	1f
-> 	ud2
-> 1:	call	__x86_indirect_thunk_r11
-> 
-> 
-> 
-> And then the function it calls (foo) looks like:
-> 
-> __cfi_foo:
-> 	movl	$0x12345678, %eax
-> 	.skip	11, 0x90
-> foo:
-> 	endbr
-> 	....
-> 
-> 
-> 
-> So if the caller (in bar) and the callee (foo) have the same hash value
-> (0x12345678 in this case) then it will be equal and we continue on our
-> merry way.
-> 
-> However, if they do not match, we'll trip that #UD and the
-> handle_cfi_failure() will try and match the address to
-> __{start,stop}__kcfi_traps[]. Additinoally decode_cfi_insn() will try
-> and decode that whole call sequence in order to obtain the target
-> address and typeid (hash).
+Error/Warning reports:
 
-Thank you for the explanation! This helps me!
+https://lore.kernel.org/oe-kbuild-all/202306122223.HHER4zOo-lkp@intel.com
+https://lore.kernel.org/oe-kbuild-all/202306240021.qNRc4iHW-lkp@intel.com
 
-> 
-> optprobes might disturb this code.
+Error/Warning: (recently discovered and may have been fixed)
 
-So either optprobe or kprobes (any text instrumentation) do not touch
-__cfi_FUNC symbols light before FUNC.
+arch/arm64/kernel/entry-ftrace.S:59: Error: undefined symbol FTRACE_OPS_DIRECT_CALL used as an immediate value
+arch/parisc/kernel/pdt.c:67:6: warning: no previous prototype for 'arch_report_meminfo' [-Wmissing-prototypes]
+drivers/net/arcnet/arc-rimi.c:107:4: error: incompatible integer to pointer conversion assigning to 'void *' from 'int' [-Wint-conversion]
+drivers/net/arcnet/arc-rimi.c:107:6: error: call to undeclared function 'ioremap'; ISO C99 and later do not support implicit function declarations [-Wimplicit-function-declaration]
+drivers/net/arcnet/arc-rimi.c:113:3: error: call to undeclared function 'iounmap'; ISO C99 and later do not support implicit function declarations [-Wimplicit-function-declaration]
+drivers/pcmcia/cistpl.c:103:15: error: incompatible integer to pointer conversion assigning to 'void *' from 'int' [-Wint-conversion]
+drivers/pcmcia/cistpl.c:103:17: error: call to undeclared function 'ioremap'; ISO C99 and later do not support implicit function declarations [-Wimplicit-function-declaration]
+drivers/pcmcia/cistpl.c:72:3: error: call to undeclared function 'iounmap'; ISO C99 and later do not support implicit function declarations [-Wimplicit-function-declaration]
+drivers/tty/ipwireless/main.c:115:21: error: incompatible integer to pointer conversion assigning to 'void *' from 'int' [-Wint-conversion]
+drivers/tty/ipwireless/main.c:115:23: error: call to undeclared function 'ioremap'; ISO C99 and later do not support implicit function declarations [-Wimplicit-function-declaration]
+drivers/tty/ipwireless/main.c:155:2: error: call to undeclared function 'iounmap'; ISO C99 and later do not support implicit function declarations [-Wimplicit-function-declaration]
+lib/kunit/executor_test.c:138:4: warning: cast from 'void (*)(const void *)' to 'kunit_action_t *' (aka 'void (*)(void *)') converts to incompatible function type [-Wcast-function-type-strict]
+lib/kunit/test.c:775:38: warning: cast from 'void (*)(const void *)' to 'kunit_action_t *' (aka 'void (*)(void *)') converts to incompatible function type [-Wcast-function-type-strict]
 
-> 
-> > > I suspect the UD2 that's in there will go 'funny' if it's relocated into
-> > > an optprobe, as in, it'll not be recognised as a CFI fail.
-> > 
-> > UD2 can't be optprobed (kprobe neither) because it can change the dumped
-> > BUG address...
-> 
-> Right, same problem here. But could the movl/addl be opt-probed? That
-> would wreck decode_cfi_insn(). Then again, if decode_cfi_insn() fails,
-> we'll get report_cfi_failure_noaddr(), which is less informative.
+Unverified Error/Warning (likely false positive, please contact us if interested):
 
-Ok, so if that sequence is always expected, I can also prohibit probing it.
-Or, maybe it is better to generalize the API to access original instruction
-which is used from kprobes, so that decode_cfi_insn() can get the original
-(non-probed) insn.
+{standard input}: Error: local label `"2" (instance number 9 of a fb label)' is not defined
 
-> 
-> So it looks like nothing too horrible happens...
-> 
-> 
+Error/Warning ids grouped by kconfigs:
 
+gcc_recent_errors
+|-- arm64-randconfig-r034-20230707
+|   `-- arch-arm64-kernel-entry-ftrace.S:Error:undefined-symbol-FTRACE_OPS_DIRECT_CALL-used-as-an-immediate-value
+|-- parisc-randconfig-r034-20230707
+|   `-- arch-parisc-kernel-pdt.c:warning:no-previous-prototype-for-arch_report_meminfo
+|-- parisc-randconfig-r081-20230703
+|   `-- arch-parisc-kernel-pdt.c:warning:no-previous-prototype-for-arch_report_meminfo
+`-- sh-allmodconfig
+    `-- standard-input:Error:local-label-(instance-number-of-a-fb-label)-is-not-defined
+clang_recent_errors
+|-- arm-randconfig-r036-20230707
+|   `-- lib-kunit-test.c:warning:cast-from-void-(-)(const-void-)-to-kunit_action_t-(aka-void-(-)(void-)-)-converts-to-incompatible-function-type
+|-- hexagon-randconfig-r041-20230707
+|   |-- lib-kunit-executor_test.c:warning:cast-from-void-(-)(const-void-)-to-kunit_action_t-(aka-void-(-)(void-)-)-converts-to-incompatible-function-type
+|   `-- lib-kunit-test.c:warning:cast-from-void-(-)(const-void-)-to-kunit_action_t-(aka-void-(-)(void-)-)-converts-to-incompatible-function-type
+`-- s390-randconfig-r013-20230707
+    |-- drivers-net-arcnet-arc-rimi.c:error:call-to-undeclared-function-ioremap-ISO-C99-and-later-do-not-support-implicit-function-declarations
+    |-- drivers-net-arcnet-arc-rimi.c:error:call-to-undeclared-function-iounmap-ISO-C99-and-later-do-not-support-implicit-function-declarations
+    |-- drivers-net-arcnet-arc-rimi.c:error:incompatible-integer-to-pointer-conversion-assigning-to-void-from-int
+    |-- drivers-pcmcia-cistpl.c:error:call-to-undeclared-function-ioremap-ISO-C99-and-later-do-not-support-implicit-function-declarations
+    |-- drivers-pcmcia-cistpl.c:error:call-to-undeclared-function-iounmap-ISO-C99-and-later-do-not-support-implicit-function-declarations
+    |-- drivers-pcmcia-cistpl.c:error:incompatible-integer-to-pointer-conversion-assigning-to-void-from-int
+    |-- drivers-tty-ipwireless-main.c:error:call-to-undeclared-function-ioremap-ISO-C99-and-later-do-not-support-implicit-function-declarations
+    |-- drivers-tty-ipwireless-main.c:error:call-to-undeclared-function-iounmap-ISO-C99-and-later-do-not-support-implicit-function-declarations
+    `-- drivers-tty-ipwireless-main.c:error:incompatible-integer-to-pointer-conversion-assigning-to-void-from-int
 
-Thank you,
+elapsed time: 737m
+
+configs tested: 137
+configs skipped: 5
+
+tested configs:
+alpha                            alldefconfig   gcc  
+alpha                            allyesconfig   gcc  
+alpha                               defconfig   gcc  
+alpha                randconfig-r036-20230707   gcc  
+arc                              allyesconfig   gcc  
+arc                          axs103_defconfig   gcc  
+arc                                 defconfig   gcc  
+arc                  randconfig-r035-20230707   gcc  
+arc                  randconfig-r043-20230707   gcc  
+arm                              allmodconfig   gcc  
+arm                              allyesconfig   gcc  
+arm                         assabet_defconfig   gcc  
+arm                                 defconfig   gcc  
+arm                           h3600_defconfig   gcc  
+arm                      integrator_defconfig   gcc  
+arm                  randconfig-r021-20230707   gcc  
+arm                  randconfig-r036-20230707   clang
+arm                  randconfig-r046-20230707   gcc  
+arm64                            allyesconfig   gcc  
+arm64                               defconfig   gcc  
+arm64                randconfig-r023-20230707   clang
+arm64                randconfig-r034-20230707   gcc  
+csky                                defconfig   gcc  
+csky                 randconfig-r002-20230707   gcc  
+csky                 randconfig-r003-20230707   gcc  
+csky                 randconfig-r032-20230707   gcc  
+csky                 randconfig-r033-20230707   gcc  
+hexagon              randconfig-r041-20230707   clang
+hexagon              randconfig-r045-20230707   clang
+i386                             allyesconfig   gcc  
+i386         buildonly-randconfig-r004-20230707   gcc  
+i386         buildonly-randconfig-r005-20230707   gcc  
+i386         buildonly-randconfig-r006-20230707   gcc  
+i386                              debian-10.3   gcc  
+i386                                defconfig   gcc  
+i386                 randconfig-i001-20230707   gcc  
+i386                 randconfig-i002-20230707   gcc  
+i386                 randconfig-i003-20230707   gcc  
+i386                 randconfig-i004-20230707   gcc  
+i386                 randconfig-i005-20230707   gcc  
+i386                 randconfig-i006-20230707   gcc  
+i386                 randconfig-i011-20230707   clang
+i386                 randconfig-i012-20230707   clang
+i386                 randconfig-i013-20230707   clang
+i386                 randconfig-i014-20230707   clang
+i386                 randconfig-i015-20230707   clang
+i386                 randconfig-i016-20230707   clang
+loongarch                        allmodconfig   gcc  
+loongarch                         allnoconfig   gcc  
+loongarch                           defconfig   gcc  
+loongarch                 loongson3_defconfig   gcc  
+m68k                             allmodconfig   gcc  
+m68k                             allyesconfig   gcc  
+m68k                         amcore_defconfig   gcc  
+m68k                                defconfig   gcc  
+m68k                 randconfig-r015-20230707   gcc  
+microblaze           randconfig-r024-20230707   gcc  
+mips                             allmodconfig   gcc  
+mips                             allyesconfig   gcc  
+mips                            ar7_defconfig   gcc  
+mips                           ip22_defconfig   clang
+mips                           ip28_defconfig   clang
+mips                          malta_defconfig   clang
+mips                       rbtx49xx_defconfig   clang
+nios2                               defconfig   gcc  
+openrisc                            defconfig   gcc  
+openrisc             randconfig-r011-20230707   gcc  
+openrisc             randconfig-r035-20230707   gcc  
+parisc                           allyesconfig   gcc  
+parisc                              defconfig   gcc  
+parisc               randconfig-r034-20230707   gcc  
+parisc64                            defconfig   gcc  
+powerpc                          allmodconfig   gcc  
+powerpc                           allnoconfig   gcc  
+powerpc                      chrp32_defconfig   gcc  
+powerpc                      ep88xc_defconfig   gcc  
+powerpc                        fsp2_defconfig   clang
+powerpc                   motionpro_defconfig   gcc  
+powerpc                     ppa8548_defconfig   clang
+powerpc              randconfig-r031-20230707   gcc  
+powerpc                  storcenter_defconfig   gcc  
+powerpc                        warp_defconfig   gcc  
+riscv                            allmodconfig   gcc  
+riscv                             allnoconfig   gcc  
+riscv                            allyesconfig   gcc  
+riscv                               defconfig   gcc  
+riscv                randconfig-r005-20230707   gcc  
+riscv                randconfig-r042-20230707   clang
+riscv                          rv32_defconfig   gcc  
+s390                             allmodconfig   gcc  
+s390                             allyesconfig   gcc  
+s390                                defconfig   gcc  
+s390                 randconfig-r013-20230707   clang
+s390                 randconfig-r014-20230707   clang
+s390                 randconfig-r022-20230707   clang
+s390                 randconfig-r033-20230707   gcc  
+s390                 randconfig-r044-20230707   clang
+sh                               allmodconfig   gcc  
+sh                                  defconfig   gcc  
+sh                   randconfig-r006-20230707   gcc  
+sh                   randconfig-r026-20230707   gcc  
+sh                   randconfig-r031-20230707   gcc  
+sparc                            allyesconfig   gcc  
+sparc                               defconfig   gcc  
+sparc                randconfig-r001-20230707   gcc  
+sparc                       sparc32_defconfig   gcc  
+sparc64              randconfig-r025-20230707   gcc  
+um                               allmodconfig   clang
+um                                allnoconfig   clang
+um                               allyesconfig   clang
+um                                  defconfig   gcc  
+um                             i386_defconfig   gcc  
+um                   randconfig-r032-20230707   clang
+um                           x86_64_defconfig   gcc  
+x86_64                           allyesconfig   gcc  
+x86_64       buildonly-randconfig-r001-20230707   gcc  
+x86_64       buildonly-randconfig-r002-20230707   gcc  
+x86_64       buildonly-randconfig-r003-20230707   gcc  
+x86_64                              defconfig   gcc  
+x86_64                                  kexec   gcc  
+x86_64               randconfig-x001-20230707   clang
+x86_64               randconfig-x002-20230707   clang
+x86_64               randconfig-x003-20230707   clang
+x86_64               randconfig-x004-20230707   clang
+x86_64               randconfig-x005-20230707   clang
+x86_64               randconfig-x006-20230707   clang
+x86_64               randconfig-x011-20230707   gcc  
+x86_64               randconfig-x012-20230707   gcc  
+x86_64               randconfig-x013-20230707   gcc  
+x86_64               randconfig-x014-20230707   gcc  
+x86_64               randconfig-x015-20230707   gcc  
+x86_64               randconfig-x016-20230707   gcc  
+x86_64                          rhel-8.3-rust   clang
+x86_64                               rhel-8.3   gcc  
+xtensa                           alldefconfig   gcc  
+xtensa               randconfig-r016-20230707   gcc  
+xtensa                    smp_lx200_defconfig   gcc  
 
 -- 
-Masami Hiramatsu (Google) <mhiramat@kernel.org>
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
