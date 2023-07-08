@@ -2,86 +2,170 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E390EB64DA
-	for <linux-trace-kernel@archiver.kernel.org>; Sat,  8 Jul 2023 13:49:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B797EEB64DA
+	for <linux-trace-kernel@archiver.kernel.org>; Sat,  8 Jul 2023 14:18:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229658AbjGHNtD (ORCPT
+        id S230039AbjGHOSh (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Sat, 8 Jul 2023 09:49:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43202 "EHLO
+        Sat, 8 Jul 2023 10:18:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46288 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229458AbjGHNtC (ORCPT
+        with ESMTP id S229496AbjGHOSg (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Sat, 8 Jul 2023 09:49:02 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 57C8318F
-        for <linux-trace-kernel@vger.kernel.org>; Sat,  8 Jul 2023 06:49:01 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id CC5CF60C6D
-        for <linux-trace-kernel@vger.kernel.org>; Sat,  8 Jul 2023 13:49:00 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BFB9CC433C7;
-        Sat,  8 Jul 2023 13:48:59 +0000 (UTC)
-Date:   Sat, 8 Jul 2023 09:48:58 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Dan Carpenter <dan.carpenter@linaro.org>
-Cc:     linux-trace-kernel@vger.kernel.org
-Subject: Re: [bug report] x86/ftrace: Make function graph use ftrace
- directly
-Message-ID: <20230708094858.51bbba51@rorschach.local.home>
-In-Reply-To: <2344e517-cdce-42ef-868e-6b9ae8b4ea2c@kadam.mountain>
-References: <8d9bf4bb-693a-4368-8db1-9de1b80a33e1@moroto.mountain>
-        <20230706133734.499e9cbe@gandalf.local.home>
-        <2344e517-cdce-42ef-868e-6b9ae8b4ea2c@kadam.mountain>
-X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+        Sat, 8 Jul 2023 10:18:36 -0400
+Received: from EUR04-VI1-obe.outbound.protection.outlook.com (mail-vi1eur04on2079.outbound.protection.outlook.com [40.107.8.79])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5D48F183;
+        Sat,  8 Jul 2023 07:18:35 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=HojFrq2xJJ3eoagPmc8mJ6b3CtM9fH3nFw5v0Wo1eHanj1nnOmBDNEU+uCMHWmi5yQdP+tfo+4zLs1eOf96p8GURvIOAiaGIvgirByjF83oRSlNv6YMBNe3CTJdu6C/6TPdIusM35TnHnQAf9tTqz+n7q0tqDyu6asNRTsYpiPYsQWLyF0gYIQFbn1dJ83n0WUq152JenDW+SUHwbpWmbx8FFlCCb8YvLPXYuqGU/VNgK4/DuwQ1Fyo9uASfllpmeafH9Dlc9xooYKCjOzrh/w4q7W5Y8NkKD2uxO0BcHMMpCsKqhbVnPdXJ5KuMCfWp/chmc1eJPglG+yVXVfM3ew==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=4bmxntlbqHaOC9BfMfdOJ8wPYK0L5P6UuBfaQwOCkTA=;
+ b=YarGUrN82SmwQep9JGPvJYrcVaI3TMFP0gKTsU7C/whqmsSxUAj3RDF+8VmuHJmdA6XyVjjs/tQjtcUtqZA4zNe0dcPZJp+YSHzDy60wrzElgZnihmSsgPPsSPi6AA4h5/nwjU4hT7AiuU/FELG8ufYqITC5unjz5VH1vrVXWsliaJIrqQ6q/NSnprD1VomkR9tm4ZcokkWCP+qahNrMyxBG4F1X4HIUE4FMu8uhWDrwCr0vlW4XHzw5QpMB8jsQ+HCfCgFHrdIQT4+z7+HPNVYxAr9a8Nw64A9metQTNcUNVWTmqUdS2mMWKsdcefAYCQ8nzao69hZ94UbyDVDWnA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=suse.com; dmarc=pass action=none header.from=suse.com;
+ dkim=pass header.d=suse.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=4bmxntlbqHaOC9BfMfdOJ8wPYK0L5P6UuBfaQwOCkTA=;
+ b=mFgqKVG0URVVqH7Ik0UaM9VMyhjuYtynpIZaYeHbVi9MKHohm92gPxGeEluqNzsk7BAYYDojtPpIf/Dpe7VAShgPMNg3bFJNehXs+GwzynxqgKfBAauPD1zw5GaGFHBh3hw/67qQeYQJd/cE1XKHTNUwm2v+09A31XpQqHdO/B2yDn6IWRvq+HgPLErQ77q1LD5Jk32uXx5sFka+kitfddSlE9ZvJcEuDeKmA2t6+HU4Xf7j4B0Gjzt+mgCuB2m/qV7Wz6RnE7MIw5Pi3HZprQ52ppN9305m1VZxwNyGVYxhKgEioAyUu9MibOrcFAjC3UKiuk5ij0r8HZt1WV8o7w==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=suse.com;
+Received: from AM0PR0402MB3395.eurprd04.prod.outlook.com
+ (2603:10a6:208:1a::16) by VE1PR04MB7375.eurprd04.prod.outlook.com
+ (2603:10a6:800:1a8::13) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6565.26; Sat, 8 Jul
+ 2023 14:18:31 +0000
+Received: from AM0PR0402MB3395.eurprd04.prod.outlook.com
+ ([fe80::551e:9fcf:5b65:ca5b]) by AM0PR0402MB3395.eurprd04.prod.outlook.com
+ ([fe80::551e:9fcf:5b65:ca5b%2]) with mapi id 15.20.6565.026; Sat, 8 Jul 2023
+ 14:18:31 +0000
+Message-ID: <9dabd1fc-7445-a305-6632-04f64e012648@suse.com>
+Date:   Sat, 8 Jul 2023 16:18:29 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.12.0
+Subject: Re: [PATCH 2/2] x86/retpoline,kprobes: Avoid treating rethunk as an
+ indirect jump
+Content-Language: en-US
+To:     Peter Zijlstra <peterz@infradead.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>
+Cc:     tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
+        dave.hansen@linux.intel.com, hpa@zytor.com,
+        samitolvanen@google.com, x86@kernel.org,
+        linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20230705081547.25130-1-petr.pavlu@suse.com>
+ <20230705081547.25130-3-petr.pavlu@suse.com>
+ <20230705085857.GG462772@hirez.programming.kicks-ass.net>
+ <20230705232038.3a6d03e18f7bafb14cdfed42@kernel.org>
+ <20230705145017.GC4253@hirez.programming.kicks-ass.net>
+ <20230706094723.6934105e03f652923796bf7e@kernel.org>
+ <20230706071705.GD2833176@hirez.programming.kicks-ass.net>
+ <20230706180014.06705096a594b71250ff3c94@kernel.org>
+ <20230706113403.GI2833176@hirez.programming.kicks-ass.net>
+From:   Petr Pavlu <petr.pavlu@suse.com>
+In-Reply-To: <20230706113403.GI2833176@hirez.programming.kicks-ass.net>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: FR2P281CA0035.DEUP281.PROD.OUTLOOK.COM
+ (2603:10a6:d10:14::22) To AM0PR0402MB3395.eurprd04.prod.outlook.com
+ (2603:10a6:208:1a::16)
+MIME-Version: 1.0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: AM0PR0402MB3395:EE_|VE1PR04MB7375:EE_
+X-MS-Office365-Filtering-Correlation-Id: 6defc7e9-50e7-4c89-4475-08db7fbe3498
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: /1hyE+KcHy0L+v1Y+UsP/Ht/KYFh5iKTwY9ElAiziSKzfjEDkQ1h8xyXqkBcnDPXEGv7wZtrIadimxTw5iZv1SiacSVSEtMvKyTCXBAjgDh58mD06f1rnzaT54uaiU4mOaJ/145j9g8BWKXfw/F2nQyxSk7x/9YSy+ftxLGWGXA2QAesrdjsUbnLRFO4wYx4ExK0rZfrx/8I796MlgC5xuLWwsb7nqTiGplxJolqDJbPTRNMJRLY4EPO3dbH4oIMoZwhqEnnlLN008LpoGoYcvzRfnu1LcPzf2snt/4TgjUoHfjm4EpvloqyhWA8omiQEyYWt8sO3QJ8uMZqlD32CjYQE+QSWhXcQ3QZ4XOfdcpt4U/rW8d3tBUDkmRM0bcTyGbuqjZm/ZxQeFKhVDkBwKkuFf+Hc50wBKg9EArI/Pzq+IONbsUv417ZDwwO7Gbv0sGoMHadT9OmpCrPTPkRokEhNboTib63xAsSxMK9cGoyMyKOKPZ8ZCoL4bdpdsU6M/QXK2h3oJ9im9ZeUlfsWcuvzrd4EnFbG0F6NJYdldKBQi15+mm9BvdByeS5BapAlAPhvpS8h961IicKEyxQhZbfl//M1RtxYalcntDoBPkCLjg+XpQWGNz/XN+BAC2CTnslazW7HZPH1k51FK+HIQ==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM0PR0402MB3395.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230028)(39860400002)(346002)(366004)(376002)(396003)(136003)(451199021)(110136005)(478600001)(6486002)(55236004)(53546011)(6506007)(26005)(6512007)(186003)(2906002)(41300700001)(316002)(66476007)(4326008)(66556008)(44832011)(5660300002)(7416002)(8936002)(8676002)(38100700002)(66946007)(31696002)(86362001)(36756003)(83380400001)(2616005)(31686004)(43740500002)(45980500001);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?OHhFdkd1OEZIUEhaSGM5K1RrYzhpcThsWXhSTHlsRmt4dVRWb0hJYkJSc21k?=
+ =?utf-8?B?R3NQbVFobGx5Vk45YUd1ODFGVVNqZjlqeE5JUkk1S2MyczVUNlR5ZTdMYk9N?=
+ =?utf-8?B?WHA0Ym9Xam1IbnE2Zms4Nkw0VkRTK2hsY1I3Wi9XTW1nRnBJZHZMUWxhNWxB?=
+ =?utf-8?B?OHdaTllMWXZaSERqcERsb1JqYkpQR2E2NUlIc3VjS1FuNmVkeUpONkpsMXRu?=
+ =?utf-8?B?dCtWNGNLTkRoY0xNeCtLUm1VSDBOQXgrd0NyVkxpU1E5bVcvWThZRlJ3SG1L?=
+ =?utf-8?B?L29xbFpvblNWNEZFb0JoVmZMVTBBc09sNGNpd0hWTEROMUtQZFVRWHpVaWNW?=
+ =?utf-8?B?aUFFZ016bkNhT1VvUzk2a3dvOXJOc0ZhZWw0NlVTcjNxVEZKUEJsQTlyMEpp?=
+ =?utf-8?B?NXJEYWRNVm9uY3RIbkYxam5ZWDNKRFlkM3RHRHIyd0JzT3RBUGJMSXZOeXBr?=
+ =?utf-8?B?T29aYnRxYmlXUzJsclVhMnozSjAzZ1p0dTY4WFJzMXZkdEYzaEo1VStwOUd4?=
+ =?utf-8?B?TDhoMi9XT3BxaDJGQ0lzSUUrY2RmckhxcDJ6VEhYZFBIUmR2VkRkNzRqRlFI?=
+ =?utf-8?B?NHo5Mjd3Yk9PVE9rOVRCLzNkOVAxRG5UbGpKdXBpRUs5R0dHcklQZS9aY2oz?=
+ =?utf-8?B?bmY1cHpEcDFKUHJVSTk5UG9MZng1UDVGZ1p1OFNDK04vdWpwRnd5Y1g2cnd6?=
+ =?utf-8?B?aFpqb2p5M0FaYzd6a1g3bHBzU3kwLzlFNUMyaWFEdWpkMHV2VW1YM0JuWjMr?=
+ =?utf-8?B?NVFubjc0SGRKSUlvRDJFYmZpVlByRTR3cWUrTEpZTzV1YUlEbzI5alR0ZUVu?=
+ =?utf-8?B?NVlGb2ZJSXlpVkRvUmR2V1ErN2lhc2UxZWxTNkI2ckwwOCtDeVo1ckhyYU4w?=
+ =?utf-8?B?MXN1VEU4L1BUanVrQmNSb0w5bUtQYys5WGxtWnRRRkFhY0dQbWEwYUJrVkRy?=
+ =?utf-8?B?ME1kZG1NQUtsRkl0bVBNbTlvaVRQM1lXT2swMDhWNVRXYmExUTdPQktXbFNP?=
+ =?utf-8?B?V2RwSnNVT1ZXYUFZcEtFTmJLNCs1SXk1MHRrbzJseVVjaGNDQUR1aWtiNVRE?=
+ =?utf-8?B?WTVYOGRDMGJ3dXoxUFhKMTQ2dGQ5MjIrbjZkTnoyb1J1YmdYOU5sZnF1dDBy?=
+ =?utf-8?B?ZWlualhUUnhKT20xZnFmS29SNllnUXNmQW4zeE83Qlh2QmgrOUNRdW9Nbzdn?=
+ =?utf-8?B?TXF3YTZHQ1UxeVdTMG83WmJCbk5GbUFQaEhTUldzUTFUVkgwUmNNcUtxS01P?=
+ =?utf-8?B?aUJnZzlFVVc2TFh5bjhvMC9sYWZrY0w4U05UMXkzdEQwdVdVZmVrMUtFdmRp?=
+ =?utf-8?B?Nzd4VUlRRjNPY1pFcE51ZmZOWFdrYWg0VmxBTkNqb2pvcEI1U3pTMHcvbzJO?=
+ =?utf-8?B?eCt4TXI2TGthL3NKSE1JOGZlcmgwQ2NncnRoSVY1MjgxcExKaFBXQW9CNllN?=
+ =?utf-8?B?WHVxNzNsVXkrRWpyMjIyd002VXZ2eEVPK0ptQ1hQSk1WRnBFSW9IL2dpa1Vj?=
+ =?utf-8?B?UGpkK3VFdTY0THhrNVRrS2hwTGJvZzRFNysxWktLOGU1bGZ0ckdJZ043R3Rj?=
+ =?utf-8?B?S0xwRFc2QUtuSmRkVUhYUlRONjFtTFZLZ3ZVSnN1d1hHVDVZNFhtV0s4c28w?=
+ =?utf-8?B?dHlZN1JFSW1QTDF2cEZtUzRzYmR0TlQ1UzZwdEZkc0lObEdwSnk2OUpGQ0hX?=
+ =?utf-8?B?dkdaVThmMFR6RVJISzdrODlQZXJpZUZYNitnL3BueFp4enlxUjgrZ0hHUUN2?=
+ =?utf-8?B?UHNIRm1mVURQbUdsUzcvd2NCWUNNMUR1ZTJoWVdUY2l5dVVVbDdLcmNCa3JL?=
+ =?utf-8?B?NFh1cmIxZ3pGWjFhNmNRRVludkxBWlE2VlVSNjUyRmRJSk5UWXdIczRFRkZm?=
+ =?utf-8?B?TktZWTdqcjY5UmVYN2d6UitybHR5bFhQSHFNMTdDZ2tRdHNqbmlxZjg3SHZh?=
+ =?utf-8?B?eTY4bHFPTlMzR2N1c1RnS2hBNFNhQUpOSHdjQ3ZVUGpVWXhOSkxIMjUzeWJz?=
+ =?utf-8?B?M3RaVENIQXU1Z2NIQ3MvNko5VWpwMFA5dC82OWxVeWcrTnR4OW9wY1ZENm9u?=
+ =?utf-8?B?V2dUVnY3QTUrSlV3U2VBbm9uMnJmSFEzSmk4MFYwZm5aNDA1bFptRHVmY0ZL?=
+ =?utf-8?Q?R/63vwKtmYTyv3WgtL1/1j8WZ?=
+X-OriginatorOrg: suse.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 6defc7e9-50e7-4c89-4475-08db7fbe3498
+X-MS-Exchange-CrossTenant-AuthSource: AM0PR0402MB3395.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 08 Jul 2023 14:18:30.8958
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: f7a17af6-1c5c-4a36-aa8b-f5be247aa4ba
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: zfJx/d7GM94am7YNT53A4EDLGWhYR7mtzf8G+vmyNOt+neRlQu3SSN715+YTNsgZoPrpw9JH8Qwqtl8WXz9zOw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VE1PR04MB7375
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On Fri, 7 Jul 2023 08:37:29 +0300
-Dan Carpenter <dan.carpenter@linaro.org> wrote:
-
-> > > This is a sleeping function.  
-> > 
-> > Hmm, this is an interesting scenario. If this triggers, it means that the
-> > system is likely locked up by the function graph tracer. The only way to
-> > stop the hang, is via calling ftrace_graph_stop(). But you are correct,
-> > that's calling something that can crash the system as well.
-> > 
-> > If anything, it should be called after the dump_on_oops output, with a
-> > warning to reboot the machine.
-> > 
-> > IOW, yes, it's doing something buggy, but pretty much the only other
-> > alternative is to call panic(). Not sure that's better :-/
-> > 
-> > Perhaps the solution is simply to move it to after the dump, with a warning
-> > saying: "Dazed and confused, and trying to continue, but please reboot the machine!"
-> > 
-> > ??  
+On 7/6/23 13:34, Peter Zijlstra wrote:
+> On Thu, Jul 06, 2023 at 06:00:14PM +0900, Masami Hiramatsu wrote:
+>> On Thu, 6 Jul 2023 09:17:05 +0200
+>> Peter Zijlstra <peterz@infradead.org> wrote:
+>>
+>>> On Thu, Jul 06, 2023 at 09:47:23AM +0900, Masami Hiramatsu wrote:
+>>>
+>>>>>> If I understand correctly, all indirect jump will be replaced with JMP_NOSPEC.
+>>>>>> If you read the insn_jump_into_range, I onlu jecks the jump code, not call.
+>>>>>> So the functions only have indirect call still allow optprobe.
+>>>>>
+>>>>> With the introduction of kCFI JMP_NOSPEC is no longer an equivalent to a
+>>>>> C indirect jump.
+>>>>
+>>>> If I understand correctly, kCFI is enabled by CFI_CLANG, and clang is not
+>>>> using jump-tables by default, so we can focus on gcc. In that case
+>>>> current check still work, correct?
+>>>
+>>> IIRC clang can use jump tables, but like GCC needs RETPOLINE=n and
+>>> IBT=n, so effectively nobody has them.
+>>
+>> So if it requires RETPOLINE=n, current __indirect_thunk_start/end checking
+>> is not required, right? (that code is embraced with "#ifdef CONFIG_RETPOLINE")
 > 
-> I feel like sleeping in atomic bugs used to be more of a big deal back
-> in the day when systems only had one CPU.  In those days it was way more
-> common for it to lead to a hang, but these days we quite often
-> re-schedule the sleeping process on a different CPU and recover.  (I
-> haven't actually looked at how processes are moved to different CPUs
-> but this is just my theory of why we see fewer real life hangs from this
-> bug today).
+> Correct.
 
-Sleeping while atomic is still a bug. It's just this particular code
-path is where I don't know the best way to solve it. It's a start up
-test (only enabled on development machines), and when it gets to where
-it calls that function that sleeps in atomic, the system is already
-hung. That code path detected that the function graph tracer is in some
-kind of dead loop (which it may have caused), and it tries to stop that
-dead loop by disabling it. But unfortunately, to disable it, it calls a
-sleeping function!
+Thank you both for the explanation.
 
-Perhaps we just comment it and say, "Yes this is is buggy, but if we
-are here, we already hit a bug". ;-)
+If I understand correctly, it means this second patch can be dropped and
+I can instead replace it with a removal of the mentioned check. That
+will also void the main motivation for the first patch but that one
+should be still at least useful to make the LTO_CLANG=y build lay out
+the code in the same way as with other configurations.
 
--- Steve
+I will post an updated series with these changes.
+
+-- Petr
+
