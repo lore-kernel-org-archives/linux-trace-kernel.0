@@ -2,170 +2,199 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B797EEB64DA
-	for <linux-trace-kernel@archiver.kernel.org>; Sat,  8 Jul 2023 14:18:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 557E9EB64DA
+	for <linux-trace-kernel@archiver.kernel.org>; Sun,  9 Jul 2023 02:56:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230039AbjGHOSh (ORCPT
+        id S229657AbjGIC4q (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Sat, 8 Jul 2023 10:18:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46288 "EHLO
+        Sat, 8 Jul 2023 22:56:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33726 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229496AbjGHOSg (ORCPT
+        with ESMTP id S229458AbjGIC4q (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Sat, 8 Jul 2023 10:18:36 -0400
-Received: from EUR04-VI1-obe.outbound.protection.outlook.com (mail-vi1eur04on2079.outbound.protection.outlook.com [40.107.8.79])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5D48F183;
-        Sat,  8 Jul 2023 07:18:35 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=HojFrq2xJJ3eoagPmc8mJ6b3CtM9fH3nFw5v0Wo1eHanj1nnOmBDNEU+uCMHWmi5yQdP+tfo+4zLs1eOf96p8GURvIOAiaGIvgirByjF83oRSlNv6YMBNe3CTJdu6C/6TPdIusM35TnHnQAf9tTqz+n7q0tqDyu6asNRTsYpiPYsQWLyF0gYIQFbn1dJ83n0WUq152JenDW+SUHwbpWmbx8FFlCCb8YvLPXYuqGU/VNgK4/DuwQ1Fyo9uASfllpmeafH9Dlc9xooYKCjOzrh/w4q7W5Y8NkKD2uxO0BcHMMpCsKqhbVnPdXJ5KuMCfWp/chmc1eJPglG+yVXVfM3ew==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=4bmxntlbqHaOC9BfMfdOJ8wPYK0L5P6UuBfaQwOCkTA=;
- b=YarGUrN82SmwQep9JGPvJYrcVaI3TMFP0gKTsU7C/whqmsSxUAj3RDF+8VmuHJmdA6XyVjjs/tQjtcUtqZA4zNe0dcPZJp+YSHzDy60wrzElgZnihmSsgPPsSPi6AA4h5/nwjU4hT7AiuU/FELG8ufYqITC5unjz5VH1vrVXWsliaJIrqQ6q/NSnprD1VomkR9tm4ZcokkWCP+qahNrMyxBG4F1X4HIUE4FMu8uhWDrwCr0vlW4XHzw5QpMB8jsQ+HCfCgFHrdIQT4+z7+HPNVYxAr9a8Nw64A9metQTNcUNVWTmqUdS2mMWKsdcefAYCQ8nzao69hZ94UbyDVDWnA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=suse.com; dmarc=pass action=none header.from=suse.com;
- dkim=pass header.d=suse.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=4bmxntlbqHaOC9BfMfdOJ8wPYK0L5P6UuBfaQwOCkTA=;
- b=mFgqKVG0URVVqH7Ik0UaM9VMyhjuYtynpIZaYeHbVi9MKHohm92gPxGeEluqNzsk7BAYYDojtPpIf/Dpe7VAShgPMNg3bFJNehXs+GwzynxqgKfBAauPD1zw5GaGFHBh3hw/67qQeYQJd/cE1XKHTNUwm2v+09A31XpQqHdO/B2yDn6IWRvq+HgPLErQ77q1LD5Jk32uXx5sFka+kitfddSlE9ZvJcEuDeKmA2t6+HU4Xf7j4B0Gjzt+mgCuB2m/qV7Wz6RnE7MIw5Pi3HZprQ52ppN9305m1VZxwNyGVYxhKgEioAyUu9MibOrcFAjC3UKiuk5ij0r8HZt1WV8o7w==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=suse.com;
-Received: from AM0PR0402MB3395.eurprd04.prod.outlook.com
- (2603:10a6:208:1a::16) by VE1PR04MB7375.eurprd04.prod.outlook.com
- (2603:10a6:800:1a8::13) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6565.26; Sat, 8 Jul
- 2023 14:18:31 +0000
-Received: from AM0PR0402MB3395.eurprd04.prod.outlook.com
- ([fe80::551e:9fcf:5b65:ca5b]) by AM0PR0402MB3395.eurprd04.prod.outlook.com
- ([fe80::551e:9fcf:5b65:ca5b%2]) with mapi id 15.20.6565.026; Sat, 8 Jul 2023
- 14:18:31 +0000
-Message-ID: <9dabd1fc-7445-a305-6632-04f64e012648@suse.com>
-Date:   Sat, 8 Jul 2023 16:18:29 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.12.0
-Subject: Re: [PATCH 2/2] x86/retpoline,kprobes: Avoid treating rethunk as an
- indirect jump
-Content-Language: en-US
-To:     Peter Zijlstra <peterz@infradead.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>
-Cc:     tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
-        dave.hansen@linux.intel.com, hpa@zytor.com,
-        samitolvanen@google.com, x86@kernel.org,
-        linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20230705081547.25130-1-petr.pavlu@suse.com>
- <20230705081547.25130-3-petr.pavlu@suse.com>
- <20230705085857.GG462772@hirez.programming.kicks-ass.net>
- <20230705232038.3a6d03e18f7bafb14cdfed42@kernel.org>
- <20230705145017.GC4253@hirez.programming.kicks-ass.net>
- <20230706094723.6934105e03f652923796bf7e@kernel.org>
- <20230706071705.GD2833176@hirez.programming.kicks-ass.net>
- <20230706180014.06705096a594b71250ff3c94@kernel.org>
- <20230706113403.GI2833176@hirez.programming.kicks-ass.net>
-From:   Petr Pavlu <petr.pavlu@suse.com>
-In-Reply-To: <20230706113403.GI2833176@hirez.programming.kicks-ass.net>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: FR2P281CA0035.DEUP281.PROD.OUTLOOK.COM
- (2603:10a6:d10:14::22) To AM0PR0402MB3395.eurprd04.prod.outlook.com
- (2603:10a6:208:1a::16)
+        Sat, 8 Jul 2023 22:56:46 -0400
+Received: from mail-pf1-x436.google.com (mail-pf1-x436.google.com [IPv6:2607:f8b0:4864:20::436])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CDC15E45;
+        Sat,  8 Jul 2023 19:56:44 -0700 (PDT)
+Received: by mail-pf1-x436.google.com with SMTP id d2e1a72fcca58-6687446eaccso2779800b3a.3;
+        Sat, 08 Jul 2023 19:56:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1688871404; x=1691463404;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=2iAnkpzLogI2LXanWo888CbURkFu1KKEAFkxyuV92gg=;
+        b=PXggkjQRdINPjjOrt4/ZVg1Gd1dvR2yQjiaicbjWv+rOu5FN5Fw+Np8BDuFjXBu2zD
+         F/7PWpG8PDcXVpz94aEcYlZb/jE1EhCFgEAqnSig2C41bcbmdKUylkY8ul6MUVQuPZ2x
+         9u32YdAv+E793zeudJWNZcv8J0MH0zwKKXPQJdB0Fs7JR+wbM49UUB8zROZfFedtvNJV
+         SqVwulULf3iRSQdhJ1jq6yyXrFhI4BvMhtrcxi0kr3Do2ta6zJA10szzMzhkzp2PUJIN
+         4UeOubt35Jy3Lva6iu8qGbaxLy8Bwur5bs1hqYOM6GtHBzRxBP+PsOOol1mOrO295gaP
+         HivQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1688871404; x=1691463404;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=2iAnkpzLogI2LXanWo888CbURkFu1KKEAFkxyuV92gg=;
+        b=bGZ+Tjut/thDVkyXZFV1rSth685udzPgEMRnrDyxg7a5QGa816h5ut4WrQQx0R+B/X
+         oLlobJ33HCcOSwHqBKYBR+GRZpQuOxKpIk4clZub2LJMCOUzHgpfT73Iy347s6V8BR4E
+         s/WD0iP4iFVJFwRs7H0kWdWpmY/dFnQFcn1hWP+GNLORJpTmXd/AADWGNl8Bzk1My9vl
+         Gj/EB52mj5No15izeXKd4v0PJO75fL8Futc9AS9N1ijfGK8F4FtwOaU4hTrKXNAnFk2c
+         a1wx9vC2J+zmjGLx/cPzQA7aOY4ZH2X8IEkWSCK8lVRIfMRUVUyYwfqyN/XUjQ0Ab/Vo
+         tZZg==
+X-Gm-Message-State: ABy/qLZLcYVWqUIp1mzNtPOAXkgfMDZsXQBC+SwTr6TQWxAr9S4qX3/P
+        mRsiNb9QvWflqSUvAc45ZM4=
+X-Google-Smtp-Source: APBJJlGBZVM8YBaVkA8uaK6Sk8WIcsfCchjh4msqTXjqwtAHrUPENvbH6aehIksEM07KlgOAxJtihg==
+X-Received: by 2002:a05:6a00:2d20:b0:67a:a906:9edb with SMTP id fa32-20020a056a002d2000b0067aa9069edbmr12418558pfb.30.1688871404132;
+        Sat, 08 Jul 2023 19:56:44 -0700 (PDT)
+Received: from vultr.guest ([2001:19f0:ac01:14bb:5400:4ff:fe80:41df])
+        by smtp.gmail.com with ESMTPSA id e9-20020aa78249000000b00682ad247e5fsm5043421pfn.179.2023.07.08.19.56.42
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 08 Jul 2023 19:56:43 -0700 (PDT)
+From:   Yafang Shao <laoar.shao@gmail.com>
+To:     ast@kernel.org, daniel@iogearbox.net, john.fastabend@gmail.com,
+        andrii@kernel.org, martin.lau@linux.dev, song@kernel.org,
+        yhs@fb.com, kpsingh@kernel.org, sdf@google.com, haoluo@google.com,
+        jolsa@kernel.org, quentin@isovalent.com, rostedt@goodmis.org,
+        mhiramat@kernel.org
+Cc:     bpf@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+        Yafang Shao <laoar.shao@gmail.com>
+Subject: [PATCH v7 bpf-next 00/11] bpf: Support ->fill_link_info for kprobe_multi and perf_event links 
+Date:   Sun,  9 Jul 2023 02:56:20 +0000
+Message-Id: <20230709025630.3735-1-laoar.shao@gmail.com>
+X-Mailer: git-send-email 2.39.3
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: AM0PR0402MB3395:EE_|VE1PR04MB7375:EE_
-X-MS-Office365-Filtering-Correlation-Id: 6defc7e9-50e7-4c89-4475-08db7fbe3498
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: /1hyE+KcHy0L+v1Y+UsP/Ht/KYFh5iKTwY9ElAiziSKzfjEDkQ1h8xyXqkBcnDPXEGv7wZtrIadimxTw5iZv1SiacSVSEtMvKyTCXBAjgDh58mD06f1rnzaT54uaiU4mOaJ/145j9g8BWKXfw/F2nQyxSk7x/9YSy+ftxLGWGXA2QAesrdjsUbnLRFO4wYx4ExK0rZfrx/8I796MlgC5xuLWwsb7nqTiGplxJolqDJbPTRNMJRLY4EPO3dbH4oIMoZwhqEnnlLN008LpoGoYcvzRfnu1LcPzf2snt/4TgjUoHfjm4EpvloqyhWA8omiQEyYWt8sO3QJ8uMZqlD32CjYQE+QSWhXcQ3QZ4XOfdcpt4U/rW8d3tBUDkmRM0bcTyGbuqjZm/ZxQeFKhVDkBwKkuFf+Hc50wBKg9EArI/Pzq+IONbsUv417ZDwwO7Gbv0sGoMHadT9OmpCrPTPkRokEhNboTib63xAsSxMK9cGoyMyKOKPZ8ZCoL4bdpdsU6M/QXK2h3oJ9im9ZeUlfsWcuvzrd4EnFbG0F6NJYdldKBQi15+mm9BvdByeS5BapAlAPhvpS8h961IicKEyxQhZbfl//M1RtxYalcntDoBPkCLjg+XpQWGNz/XN+BAC2CTnslazW7HZPH1k51FK+HIQ==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:AM0PR0402MB3395.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230028)(39860400002)(346002)(366004)(376002)(396003)(136003)(451199021)(110136005)(478600001)(6486002)(55236004)(53546011)(6506007)(26005)(6512007)(186003)(2906002)(41300700001)(316002)(66476007)(4326008)(66556008)(44832011)(5660300002)(7416002)(8936002)(8676002)(38100700002)(66946007)(31696002)(86362001)(36756003)(83380400001)(2616005)(31686004)(43740500002)(45980500001);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?OHhFdkd1OEZIUEhaSGM5K1RrYzhpcThsWXhSTHlsRmt4dVRWb0hJYkJSc21k?=
- =?utf-8?B?R3NQbVFobGx5Vk45YUd1ODFGVVNqZjlqeE5JUkk1S2MyczVUNlR5ZTdMYk9N?=
- =?utf-8?B?WHA0Ym9Xam1IbnE2Zms4Nkw0VkRTK2hsY1I3Wi9XTW1nRnBJZHZMUWxhNWxB?=
- =?utf-8?B?OHdaTllMWXZaSERqcERsb1JqYkpQR2E2NUlIc3VjS1FuNmVkeUpONkpsMXRu?=
- =?utf-8?B?dCtWNGNLTkRoY0xNeCtLUm1VSDBOQXgrd0NyVkxpU1E5bVcvWThZRlJ3SG1L?=
- =?utf-8?B?L29xbFpvblNWNEZFb0JoVmZMVTBBc09sNGNpd0hWTEROMUtQZFVRWHpVaWNW?=
- =?utf-8?B?aUFFZ016bkNhT1VvUzk2a3dvOXJOc0ZhZWw0NlVTcjNxVEZKUEJsQTlyMEpp?=
- =?utf-8?B?NXJEYWRNVm9uY3RIbkYxam5ZWDNKRFlkM3RHRHIyd0JzT3RBUGJMSXZOeXBr?=
- =?utf-8?B?T29aYnRxYmlXUzJsclVhMnozSjAzZ1p0dTY4WFJzMXZkdEYzaEo1VStwOUd4?=
- =?utf-8?B?TDhoMi9XT3BxaDJGQ0lzSUUrY2RmckhxcDJ6VEhYZFBIUmR2VkRkNzRqRlFI?=
- =?utf-8?B?NHo5Mjd3Yk9PVE9rOVRCLzNkOVAxRG5UbGpKdXBpRUs5R0dHcklQZS9aY2oz?=
- =?utf-8?B?bmY1cHpEcDFKUHJVSTk5UG9MZng1UDVGZ1p1OFNDK04vdWpwRnd5Y1g2cnd6?=
- =?utf-8?B?aFpqb2p5M0FaYzd6a1g3bHBzU3kwLzlFNUMyaWFEdWpkMHV2VW1YM0JuWjMr?=
- =?utf-8?B?NVFubjc0SGRKSUlvRDJFYmZpVlByRTR3cWUrTEpZTzV1YUlEbzI5alR0ZUVu?=
- =?utf-8?B?NVlGb2ZJSXlpVkRvUmR2V1ErN2lhc2UxZWxTNkI2ckwwOCtDeVo1ckhyYU4w?=
- =?utf-8?B?MXN1VEU4L1BUanVrQmNSb0w5bUtQYys5WGxtWnRRRkFhY0dQbWEwYUJrVkRy?=
- =?utf-8?B?ME1kZG1NQUtsRkl0bVBNbTlvaVRQM1lXT2swMDhWNVRXYmExUTdPQktXbFNP?=
- =?utf-8?B?V2RwSnNVT1ZXYUFZcEtFTmJLNCs1SXk1MHRrbzJseVVjaGNDQUR1aWtiNVRE?=
- =?utf-8?B?WTVYOGRDMGJ3dXoxUFhKMTQ2dGQ5MjIrbjZkTnoyb1J1YmdYOU5sZnF1dDBy?=
- =?utf-8?B?ZWlualhUUnhKT20xZnFmS29SNllnUXNmQW4zeE83Qlh2QmgrOUNRdW9Nbzdn?=
- =?utf-8?B?TXF3YTZHQ1UxeVdTMG83WmJCbk5GbUFQaEhTUldzUTFUVkgwUmNNcUtxS01P?=
- =?utf-8?B?aUJnZzlFVVc2TFh5bjhvMC9sYWZrY0w4U05UMXkzdEQwdVdVZmVrMUtFdmRp?=
- =?utf-8?B?Nzd4VUlRRjNPY1pFcE51ZmZOWFdrYWg0VmxBTkNqb2pvcEI1U3pTMHcvbzJO?=
- =?utf-8?B?eCt4TXI2TGthL3NKSE1JOGZlcmgwQ2NncnRoSVY1MjgxcExKaFBXQW9CNllN?=
- =?utf-8?B?WHVxNzNsVXkrRWpyMjIyd002VXZ2eEVPK0ptQ1hQSk1WRnBFSW9IL2dpa1Vj?=
- =?utf-8?B?UGpkK3VFdTY0THhrNVRrS2hwTGJvZzRFNysxWktLOGU1bGZ0ckdJZ043R3Rj?=
- =?utf-8?B?S0xwRFc2QUtuSmRkVUhYUlRONjFtTFZLZ3ZVSnN1d1hHVDVZNFhtV0s4c28w?=
- =?utf-8?B?dHlZN1JFSW1QTDF2cEZtUzRzYmR0TlQ1UzZwdEZkc0lObEdwSnk2OUpGQ0hX?=
- =?utf-8?B?dkdaVThmMFR6RVJISzdrODlQZXJpZUZYNitnL3BueFp4enlxUjgrZ0hHUUN2?=
- =?utf-8?B?UHNIRm1mVURQbUdsUzcvd2NCWUNNMUR1ZTJoWVdUY2l5dVVVbDdLcmNCa3JL?=
- =?utf-8?B?NFh1cmIxZ3pGWjFhNmNRRVludkxBWlE2VlVSNjUyRmRJSk5UWXdIczRFRkZm?=
- =?utf-8?B?TktZWTdqcjY5UmVYN2d6UitybHR5bFhQSHFNMTdDZ2tRdHNqbmlxZjg3SHZh?=
- =?utf-8?B?eTY4bHFPTlMzR2N1c1RnS2hBNFNhQUpOSHdjQ3ZVUGpVWXhOSkxIMjUzeWJz?=
- =?utf-8?B?M3RaVENIQXU1Z2NIQ3MvNko5VWpwMFA5dC82OWxVeWcrTnR4OW9wY1ZENm9u?=
- =?utf-8?B?V2dUVnY3QTUrSlV3U2VBbm9uMnJmSFEzSmk4MFYwZm5aNDA1bFptRHVmY0ZL?=
- =?utf-8?Q?R/63vwKtmYTyv3WgtL1/1j8WZ?=
-X-OriginatorOrg: suse.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 6defc7e9-50e7-4c89-4475-08db7fbe3498
-X-MS-Exchange-CrossTenant-AuthSource: AM0PR0402MB3395.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 08 Jul 2023 14:18:30.8958
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: f7a17af6-1c5c-4a36-aa8b-f5be247aa4ba
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: zfJx/d7GM94am7YNT53A4EDLGWhYR7mtzf8G+vmyNOt+neRlQu3SSN715+YTNsgZoPrpw9JH8Qwqtl8WXz9zOw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VE1PR04MB7375
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On 7/6/23 13:34, Peter Zijlstra wrote:
-> On Thu, Jul 06, 2023 at 06:00:14PM +0900, Masami Hiramatsu wrote:
->> On Thu, 6 Jul 2023 09:17:05 +0200
->> Peter Zijlstra <peterz@infradead.org> wrote:
->>
->>> On Thu, Jul 06, 2023 at 09:47:23AM +0900, Masami Hiramatsu wrote:
->>>
->>>>>> If I understand correctly, all indirect jump will be replaced with JMP_NOSPEC.
->>>>>> If you read the insn_jump_into_range, I onlu jecks the jump code, not call.
->>>>>> So the functions only have indirect call still allow optprobe.
->>>>>
->>>>> With the introduction of kCFI JMP_NOSPEC is no longer an equivalent to a
->>>>> C indirect jump.
->>>>
->>>> If I understand correctly, kCFI is enabled by CFI_CLANG, and clang is not
->>>> using jump-tables by default, so we can focus on gcc. In that case
->>>> current check still work, correct?
->>>
->>> IIRC clang can use jump tables, but like GCC needs RETPOLINE=n and
->>> IBT=n, so effectively nobody has them.
->>
->> So if it requires RETPOLINE=n, current __indirect_thunk_start/end checking
->> is not required, right? (that code is embraced with "#ifdef CONFIG_RETPOLINE")
-> 
-> Correct.
+This patchset enhances the usability of kprobe_multi program by introducing
+support for ->fill_link_info. This allows users to easily determine the
+probed functions associated with a kprobe_multi program. While
+`bpftool perf show` already provides information about functions probed by
+perf_event programs, supporting ->fill_link_info ensures consistent access
+to this information across all bpf links.
 
-Thank you both for the explanation.
+In addition, this patch extends support to generic perf events, which are
+currently not covered by `bpftool perf show`. While userspace is exposed to
+only the perf type and config, other attributes such as sample_period and
+sample_freq are disregarded.
 
-If I understand correctly, it means this second patch can be dropped and
-I can instead replace it with a removal of the mentioned check. That
-will also void the main motivation for the first patch but that one
-should be still at least useful to make the LTO_CLANG=y build lay out
-the code in the same way as with other configurations.
+To ensure accurate identification of probed functions, it is preferable to
+expose the address directly rather than relying solely on the symbol name.
+However, this implementation respects the kptr_restrict setting and avoids
+exposing the address if it is not permitted.
 
-I will post an updated series with these changes.
+v6->v7:
+- From Daniel
+  - No need to explicitly cast in many places
+  - Use ptr_to_u64() instead of the cast
+  - return -ENOMEM when calloc fails 
+  - Simplify the code in bpf_get_kprobe_info() further
+  - Squash #9 with #8
+  - And other coding style improvement
+- From Andrii
+  - Comment improvement
+  - Use ENOSPC instead of E2BIG
+  - Use strlen only when buf in not NULL
+- Clear probe_addr in bpf_get_uprobe_info()
 
--- Petr
+v5->v6:
+- From Andrii
+  - if ucount is too less, copy ucount items and return -E2BIG 
+  - zero out kmulti_link->cnt elements if it is not permitted by kptr
+  - avoid leaking information when ucount is greater than kmulti_link->cnt
+  - drop the flags, and add BPF_PERF_EVENT_[UK]RETPROBE 
+- From Quentin
+  - use jsonw_null instead when we have no module name
+  - add explanation on perf_type_name in the commit log
+  - avoid the unnecessary out lable 
+
+v4->v5:
+- Print "func [module]" in the kprobe_multi header (Andrii)
+- Remove MAX_BPF_PERF_EVENT_TYPE (Alexei)
+- Add padding field for future reuse (Yonghong)
+
+v3->v4:
+- From Quentin
+  - Rename MODULE_NAME_LEN to MODULE_MAX_NAME
+  - Convert retprobe to boolean for json output
+  - Trim the square brackets around module names for json output
+  - Move perf names into link.c
+  - Use a generic helper to get perf names
+  - Show address before func name, for consistency
+  - Use switch-case instead of if-else
+  - Increase the buff len to PATH_MAX
+  - Move macros to the top of the file
+- From Andrii
+  - kprobe_multi flags should always be returned
+  - Keep it single line if it fits in under 100 characters
+  - Change the output format when showing kprobe_multi
+  - Imporve the format of perf_event names
+  - Rename struct perf_link to struct perf_event, and change the names of
+    the enum consequently
+- From Yonghong
+  - Avoid disallowing extensions for all structs in the big union
+- From Jiri
+  - Add flags to bpf_kprobe_multi_link
+  - Report kprobe_multi selftests errors
+  - Rename bpf_perf_link_fill_name and make it a separate patch
+  - Avoid breaking compilation when CONFIG_KPROBE_EVENTS or
+    CONFIG_UPROBE_EVENTS options are not defined
+
+v2->v3:
+- Expose flags instead of retporbe (Andrii)
+- Simplify the check on kmulti_link->cnt (Andrii)
+- Use kallsyms_show_value() instead (Andrii)
+- Show also the module name for kprobe_multi (Andrii)
+- Add new enum bpf_perf_link_type (Andrii)
+- Move perf event names into bpftool (Andrii, Quentin, Jiri)
+- Keep perf event names in sync with perf tools (Jiri) 
+
+v1->v2:
+- Fix sparse warning (Stanislav, lkp@intel.com)
+- Fix BPF CI build error
+- Reuse kernel_syms_load() (Alexei)
+- Print 'name' instead of 'func' (Alexei)
+- Show whether the probe is retprobe or not (Andrii)
+- Add comment for the meaning of perf_event name (Andrii)
+- Add support for generic perf event
+- Adhere to the kptr_restrict setting
+
+RFC->v1:
+- Use a single copy_to_user() instead (Jiri)
+- Show also the symbol name in bpftool (Quentin, Alexei)
+- Use calloc() instead of malloc() in bpftool (Quentin)
+- Avoid having conditional entries in the JSON output (Quentin)
+- Drop ->show_fdinfo (Alexei)
+- Use __u64 instead of __aligned_u64 for the field addr (Alexei)
+- Avoid the contradiction in perf_event name length (Alexei) 
+- Address a build warning reported by kernel test robot <lkp@intel.com>
+
+Yafang Shao (10):
+  bpf: Support ->fill_link_info for kprobe_multi
+  bpftool: Dump the kernel symbol's module name
+  bpftool: Show kprobe_multi link info
+  bpf: Protect probed address based on kptr_restrict setting
+  bpf: Clear the probe_addr for uprobe
+  bpf: Expose symbol's respective address
+  bpf: Add a common helper bpf_copy_to_user()
+  bpf: Support ->fill_link_info for perf_event
+  bpftool: Add perf event names
+  bpftool: Show perf link info
+
+ include/linux/trace_events.h      |   3 +-
+ include/uapi/linux/bpf.h          |  40 +++
+ kernel/bpf/syscall.c              | 180 ++++++++++++-
+ kernel/trace/bpf_trace.c          |  49 +++-
+ kernel/trace/trace_kprobe.c       |  13 +-
+ kernel/trace/trace_uprobe.c       |   3 +-
+ tools/bpf/bpftool/link.c          | 432 +++++++++++++++++++++++++++++-
+ tools/bpf/bpftool/xlated_dumper.c |   6 +-
+ tools/bpf/bpftool/xlated_dumper.h |   2 +
+ tools/include/uapi/linux/bpf.h    |  40 +++
+ 10 files changed, 734 insertions(+), 34 deletions(-)
+
+-- 
+2.30.1 (Apple Git-130)
 
