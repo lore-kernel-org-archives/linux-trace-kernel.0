@@ -2,198 +2,146 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CE00DEB64DD
-	for <linux-trace-kernel@archiver.kernel.org>; Mon, 10 Jul 2023 01:38:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 905BDEB64DC
+	for <linux-trace-kernel@archiver.kernel.org>; Mon, 10 Jul 2023 02:17:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229739AbjGJBiS (ORCPT
+        id S230162AbjGJCRG (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Sun, 9 Jul 2023 21:38:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32800 "EHLO
+        Sun, 9 Jul 2023 22:17:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38906 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229862AbjGJBiR (ORCPT
+        with ESMTP id S229451AbjGJCRF (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Sun, 9 Jul 2023 21:38:17 -0400
-Received: from szxga08-in.huawei.com (szxga08-in.huawei.com [45.249.212.255])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2C9C4138;
-        Sun,  9 Jul 2023 18:37:55 -0700 (PDT)
-Received: from dggpeml500012.china.huawei.com (unknown [172.30.72.54])
-        by szxga08-in.huawei.com (SkyGuard) with ESMTP id 4Qzmp95V50z1FDfP;
-        Mon, 10 Jul 2023 09:37:21 +0800 (CST)
-Received: from [10.67.110.218] (10.67.110.218) by
- dggpeml500012.china.huawei.com (7.185.36.15) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.27; Mon, 10 Jul 2023 09:37:53 +0800
-Message-ID: <63ff741f-b781-37da-3f47-15d1a8ff76a4@huawei.com>
-Date:   Mon, 10 Jul 2023 09:37:52 +0800
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.6.0
-Subject: Re: [PATCH] ring-buffer: Fix deadloop issue on reading trace_pipe
-Content-Language: en-US
+        Sun, 9 Jul 2023 22:17:05 -0400
+Received: from DM4PR02CU002.outbound.protection.outlook.com (mail-centralusazon11013008.outbound.protection.outlook.com [52.101.64.8])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A1E37103;
+        Sun,  9 Jul 2023 19:17:04 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=H/hcAL02ZvgwC6dC8NwGuSYvbG5g86JRPpDY1kYS7p9iqOcOx9cmD8fKc9uzQMIRtNZs2xeSYgUOh9n6F1RXHwrd9U/ZLzXdZQoNu24rbmj3FcYSDZHH0ZoJOeav1+J7DJATItPwM/f94xxJ3HfjDJ2AKXglK/HZTc8yK2OASMShnxK6nf1hLK+eb+AG7p5P1rVIqAZ41x5j7spr3Ms/6V8DxWF9Fj36BwJzhtz/dvIXEwE+Dd/NXILtiAmrgbB6y5X5Fe8NFrEBKtRmqePb11LVkByazDfh/mIxkZdXVyQJA5PJ5asm88t09cG15YgRfJybUBmOsT8H9gLPH9KPcQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=oCKafXkL268b78Amzvt/Pp/jDLp0lkSd6+dUuhzhyyM=;
+ b=Vraiyk4tuC21Z89DKNSs0Vabwtw3MIyIhbrALc1kqA1M/PyX2Z6jHGVq3QNKSjKwCteqdUwsnlTNPmj7J2EkCAx1nEDBB4wv567Ti9Z7ffHiG/Kdhg1PXHnIDbuiO5fPMW6k2lQSMEimORzMEqqh97XRmSnrkztRMPRFJov79XDaBv8UtjpCwxh3HgA42ZkS7k/T+NBZ5QaO/q7FAI8SUmXa4zS3l8vJG4UxyAN1I9t9mJRr/lzrGk3OFT5Qik0nCARkdwxD0+RPLfJy8OzPFIigSiuv8TRjA4PD+Dv9MW/CAVgZnpVwCqBGPyRnfRMJrsieZf0+NBRLd+x1xsdBJg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=vmware.com; dmarc=pass action=none header.from=vmware.com;
+ dkim=pass header.d=vmware.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=vmware.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=oCKafXkL268b78Amzvt/Pp/jDLp0lkSd6+dUuhzhyyM=;
+ b=yasE+D09W7Ck6wnnh4ApGN/+grDgMs3jbPnsKV7JxNj085gPUBzUeADmtVrGUp8TVh1MMDUtpfJqTIrhcJ4qS8/XH7s1U0bGDAZpKXCdvd05+87OivoUynlrkcTvm/pgjU9t78NAc9t/4qVLog7CcsP7EmtJB29JXovWAbnLnxs=
+Received: from BY3PR05MB8531.namprd05.prod.outlook.com (2603:10b6:a03:3ce::6)
+ by SJ0PR05MB8616.namprd05.prod.outlook.com (2603:10b6:a03:38e::18) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6565.30; Mon, 10 Jul
+ 2023 02:17:02 +0000
+Received: from BY3PR05MB8531.namprd05.prod.outlook.com
+ ([fe80::45c9:cdc8:ff01:5e8a]) by BY3PR05MB8531.namprd05.prod.outlook.com
+ ([fe80::45c9:cdc8:ff01:5e8a%6]) with mapi id 15.20.6565.028; Mon, 10 Jul 2023
+ 02:17:02 +0000
+From:   Nadav Amit <namit@vmware.com>
 To:     Steven Rostedt <rostedt@goodmis.org>
-CC:     <mhiramat@kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-trace-kernel@vger.kernel.org>
-References: <20230708225144.3785600-1-zhengyejian1@huawei.com>
- <20230709154523.32dc89c2@rorschach.local.home>
-From:   Zheng Yejian <zhengyejian1@huawei.com>
-In-Reply-To: <20230709154523.32dc89c2@rorschach.local.home>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.67.110.218]
-X-ClientProxiedBy: dggems701-chm.china.huawei.com (10.3.19.178) To
- dggpeml500012.china.huawei.com (7.185.36.15)
-X-CFilter-Loop: Reflected
+CC:     Ajay Kaher <akaher@vmware.com>,
+        "mhiramat@kernel.org" <mhiramat@kernel.org>,
+        "shuah@kernel.org" <shuah@kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-trace-kernel@vger.kernel.org" 
+        <linux-trace-kernel@vger.kernel.org>,
+        "linux-kselftest@vger.kernel.org <linux-kselftest@vger.kernel.org> ,
+        Ching-lin Yu <chinglinyu@google.com> , Nadav Amit <namit@vmware.com> ,
+        srivatsa@csail.mit.edu <srivatsa@csail.mit.edu> , Alexey Makhalov
+        <amakhalov@vmware.com> , Vasavi Sirnapalli <vsirnapalli@vmware.com>,
+        Tapas Kundu <tkundu@vmware.com>, er.ajay.kaher@gmail.com
+        <linux-trace-kernel@vger.kernel.org> , linux-kselftest@vger.kernel.org
+        <linux-kselftest@vger.kernel.org> , Ching-lin Yu <chinglinyu@google.com>
+        , Nadav Amit <namit@vmware.com> , sri" <er.ajay.kaher@gmail.com>
+Subject: Re: [PATCH v3 03/10] eventfs: adding eventfs dir add functions
+Thread-Topic: [PATCH v3 03/10] eventfs: adding eventfs dir add functions
+Thread-Index: AQHZlGebsT+aXAuaRUetlt5BX1Xcmq+lHj6AgALm8ACAAFKWgIAAPiUAgAARDwCACdM7gIAABikA
+Date:   Mon, 10 Jul 2023 02:17:01 +0000
+Message-ID: <1C0CB205-B56F-44AE-B9B4-3668E06C840E@vmware.com>
+References: <1685610013-33478-1-git-send-email-akaher@vmware.com>
+ <1685610013-33478-4-git-send-email-akaher@vmware.com>
+ <20230701095417.3de5baab@rorschach.local.home>
+ <ECB0097D-A323-4CFC-9C9E-D4DA2AA6E662@vmware.com>
+ <20230703110857.2d051af5@rorschach.local.home>
+ <84CA259A-8A99-471C-B44C-08D289972F43@vmware.com>
+ <20230703155226.1ab27bc1@gandalf.local.home>
+ <20230709215447.536defa6@rorschach.local.home>
+In-Reply-To: <20230709215447.536defa6@rorschach.local.home>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-mailer: Apple Mail (2.3731.600.7)
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=vmware.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: BY3PR05MB8531:EE_|SJ0PR05MB8616:EE_
+x-ms-office365-filtering-correlation-id: 4571942b-e33b-4256-18ca-08db80ebbf53
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: In7jGNMm6BoDOTUvMM+OWiu6P1og2MJvPfJZfJd7IqqZcY1Jz6eLC7RL2kMOS8En6z0aZqUe12jJ5tS6VFi0OcCFfJbINdbQ9PSts/DIDEZh5vwlloF7jXHlgSVdvIsU2vXd3kQy+yK8Y/cEuAw0z2W+xrgaMqTndcsEF4wQu4IIbGdofBjnQo+rqFgLsp9MBT2UPsTFe/lGpUUCnfif/FTV1G8hFxWd3oQJPT4qsYGsFBlSNd9ncDzbjXDFef8GdYcNE+wlrwrXXvMeWpou/t4g6q9497/yr527sFlgKspVn2qxCcI+ilI6T8NjPYmXFgV0lhQHRh5b/5fUftTmFBVRCk5vAw+KTnzo8dxlAv/UYen1Ev9zwXYf/gvN8d8ddMaPXUX4msojQM0iQau8Dt/Eh5qfmd2lQKFI3xZKHawV4sbLUOn2nPWsCrEHQX16Ah7cmFOiXfTnKYwiI6U+9VJ4HDmIqW15HSYl1aivZB2ASRBGEyAdVkaO3XyP5Ybo7cokN3Ash/OicbrKUXUJjfzALOKZOp2Sz7K9VI8VnurwcdqWD3hS9liofMR2fROD3A/dYCjq+TpMboHeNFBb7LCEEZg7iNfbGs9lYdfMAcWniqddE9478UREaNsi7tkLMOHo1QPQay47+GW07IJ96WIXsB4ekpKi05dQEC5rvV3OV9pHTgsgmjm7yCY6RokFK6GvhwnURCYM3tfqRGFm/w==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BY3PR05MB8531.namprd05.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230028)(4636009)(346002)(376002)(136003)(366004)(39860400002)(396003)(451199021)(186003)(53546011)(6506007)(26005)(41300700001)(6512007)(2616005)(6486002)(478600001)(122000001)(54906003)(71200400001)(6916009)(4326008)(66446008)(66476007)(66556008)(66946007)(64756008)(76116006)(38100700002)(316002)(558084003)(86362001)(33656002)(38070700005)(8676002)(8936002)(5660300002)(2906002)(36756003)(45980500001);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0: =?us-ascii?Q?KawEVWT88ul37xZOmueeZzl3fImQdZY6KFNp6OlD4/gvS8WEpWjNxiIbjCOM?=
+ =?us-ascii?Q?CT5jpJ5VDYREWqIKjGvW9PnxcDXwTYvhPV8JCyrlqHURzbcsHw/Rto5TR6Kr?=
+ =?us-ascii?Q?1Mvc9ElDjv9c1D2M0sBtfLM7xM7xtee98OFsTsjwBUa3aH38OJwTHmM+yvBA?=
+ =?us-ascii?Q?nqnEqXuFKPEZuGKsiiDClu8nHny+DUUcBDBgdK6r28i34v7FVpo9l9ZVfZee?=
+ =?us-ascii?Q?19V7IElsGHVevENSORcqkMdoRxqu1Vby/CKjpIEsnDAMv40apW7UbqMuzl6y?=
+ =?us-ascii?Q?Ty6eKPsWBXHJ1atDVCePe9ZwLoTz5cbLYwOlDVCcr+wYtuP00Dnlu4OiKC0p?=
+ =?us-ascii?Q?QFNichcpUt7fZrFbgQumqBfjQtSGv8StrVSgv+Xm3KqAZ3COqzBMmpdQAqlu?=
+ =?us-ascii?Q?gUclAk8v6YDvozjT/8ssubi/jaEe41mAjj1ji74ojRF9w534Vv5kIfXzuW5j?=
+ =?us-ascii?Q?yMMP4BGlFhY4CZkfwXbXY/u8UAhDYAZWqbHaVaAApuTqVZfc7urrJm2S8m7n?=
+ =?us-ascii?Q?SrziTuWSZWUJ/BsOwgo6/IirtjjwnV5XUlxAB2HILRmtVzQqOo3HOVmJGdGm?=
+ =?us-ascii?Q?yYvrzxaItLRdnIZIsn6q0WhDSeKNxVYKt7a9qAuQk3hkthuQ0PoFHHZT51hU?=
+ =?us-ascii?Q?cim26b6lEG+1qRrr2WqctX27RyO+ksLiA2bgdKnDxL4BscfFjykBya5Wxjb8?=
+ =?us-ascii?Q?4XECMsngu7jSExuINGt1+w+nlyhvipOhOkABWf5SDyBDncEz/kvPWSNMmYJ1?=
+ =?us-ascii?Q?kwL2eYjAz2PWaIIDU5ofQT8A6vs9259rph4cx2NpOfLsV7O0CSE4LpTkuDQc?=
+ =?us-ascii?Q?b98PTGlUeeFkkDnWSUDTwlRQOkf0BNrGbqOnjQlM/nfOZ4bT2NHQnxh3T4OW?=
+ =?us-ascii?Q?V2Y4dpjSfDqWAxgjGkl4hSvY6VmwtdjOP1pHjhaMZkAJdesrZWThIzWRS/jW?=
+ =?us-ascii?Q?VQllqbPkyC5vL58es/cAxvxYVbYTdiJ7eCspVzKz53DnrBs+xTqysY2EG6AB?=
+ =?us-ascii?Q?Sn1Y+bw3vBB9QghTE0pm8VWF0QTUyiTZf4W5Uoblrsi9wvaBffTzh/+ujTNT?=
+ =?us-ascii?Q?zeJ6sAbCXLB9Khrq3kk7/rkfVwgmdFxnZRwmhRRDcv6t92/yZ+yEB82wPrKr?=
+ =?us-ascii?Q?5INQdHulRM2sMhOTmPC66ihg7p/NKkIiuvX7gl09676LvmoXndvoku5OOgEz?=
+ =?us-ascii?Q?SoYN21xNz+9fnruGZdsZ+0/E/U/yHNJKexr4JpFzFVaI0UhwFjeb7rrjm8kB?=
+ =?us-ascii?Q?wQ/T7TNLkGN45e6p15qplkAHm4+zUR/7Vk6FS1rkjg1Urw+8dLZqyoRHsEIy?=
+ =?us-ascii?Q?mN6mUNEmuC6gEcpL2cwaLySEj2PmzY54vldlHYPbMbo1PqXIuzP0Sssr1lH+?=
+ =?us-ascii?Q?gu0on66w39wo38TJen3LWvmEl90UDK5z9aiWeRSjzGKj48YJk1Bz7E+TcFup?=
+ =?us-ascii?Q?LjMG+1EE52HjiyBjEeFAD+e4flmGCup+zBO9E1eXsyV8zDkDPzrlR2sT3qC8?=
+ =?us-ascii?Q?QX1QDr48hugQaK08RUIt3ffNte5IWgbdTEK8q9JwMq7MkKV2ctJieP6331VE?=
+ =?us-ascii?Q?08ub1aSHucgVdOucZs5Tcs8K2N2sjRQT2iszfjYs?=
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <9D1DE22E64886044A31E46A8397B0014@namprd05.prod.outlook.com>
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-OriginatorOrg: vmware.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: BY3PR05MB8531.namprd05.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 4571942b-e33b-4256-18ca-08db80ebbf53
+X-MS-Exchange-CrossTenant-originalarrivaltime: 10 Jul 2023 02:17:01.8555
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: b39138ca-3cee-4b4a-a4d6-cd83d9dd62f0
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: q9ZyF5fDjL6qaezPleqfzxqfgXFEAtyyNLuU8Z5sVgQjzG457lndhnuiIcnymZAFWvHiidUX7iFJ7833g5ZAyg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ0PR05MB8616
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On 2023/7/10 03:45, Steven Rostedt wrote:
-> On Sun, 9 Jul 2023 06:51:44 +0800
-> Zheng Yejian <zhengyejian1@huawei.com> wrote:
-> 
->> Soft lockup occurs when reading file 'trace_pipe':
->>
->>    watchdog: BUG: soft lockup - CPU#6 stuck for 22s! [cat:4488]
->>    [...]
->>    RIP: 0010:ring_buffer_empty_cpu+0xed/0x170
->>    RSP: 0018:ffff88810dd6fc48 EFLAGS: 00000246
->>    RAX: 0000000000000000 RBX: 0000000000000246 RCX: ffffffff93d1aaeb
->>    RDX: ffff88810a280040 RSI: 0000000000000008 RDI: ffff88811164b218
->>    RBP: ffff88811164b218 R08: 0000000000000000 R09: ffff88815156600f
->>    R10: ffffed102a2acc01 R11: 0000000000000001 R12: 0000000051651901
->>    R13: 0000000000000000 R14: ffff888115e49500 R15: 0000000000000000
->>    [...]
->>    CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
->>    CR2: 00007f8d853c2000 CR3: 000000010dcd8000 CR4: 00000000000006e0
->>    DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
->>    DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
->>    Call Trace:
->>     __find_next_entry+0x1a8/0x4b0
->>     ? peek_next_entry+0x250/0x250
->>     ? down_write+0xa5/0x120
->>     ? down_write_killable+0x130/0x130
->>     trace_find_next_entry_inc+0x3b/0x1d0
->>     tracing_read_pipe+0x423/0xae0
->>     ? tracing_splice_read_pipe+0xcb0/0xcb0
->>     vfs_read+0x16b/0x490
->>     ksys_read+0x105/0x210
->>     ? __ia32_sys_pwrite64+0x200/0x200
->>     ? switch_fpu_return+0x108/0x220
->>     do_syscall_64+0x33/0x40
->>     entry_SYSCALL_64_after_hwframe+0x61/0xc6
->>
->> Through the vmcore, I found it's because in tracing_read_pipe(),
->> ring_buffer_empty_cpu() found some buffer is not empty but then it
->> cannot read anything due to "rb_num_of_entries() == 0" always true,
->> Then it infinitely loop the procedure due to user buffer not been
->> filled, see following code path:
->>
->>    tracing_read_pipe() {
->>      ... ...
->>      waitagain:
->>        tracing_wait_pipe() // 1. find non-empty buffer here
->>        trace_find_next_entry_inc()  // 2. loop here try to find an entry
->>          __find_next_entry()
->>            ring_buffer_empty_cpu();  // 3. find non-empty buffer
->>            peek_next_entry()  // 4. but peek always return NULL
->>              ring_buffer_peek()
->>                rb_buffer_peek()
->>                  rb_get_reader_page()
->>                    // 5. because rb_num_of_entries() == 0 always true here
->>                    //    then return NULL
->>        // 6. user buffer not been filled so goto 'waitgain'
->>        //    and eventually leads to an deadloop in kernel!!!
->>    }
->>
->> By some analyzing, I found that when resetting ringbuffer, the 'entries'
->> of its pages are not all cleared (see rb_reset_cpu()). Then when reducing
->> the ringbuffer, and if some reduced pages exist dirty 'entries' data, they
->> will be added into 'cpu_buffer->overrun' (see rb_remove_pages()), which
->> cause wrong 'overrun' count and eventually cause the deadloop issue.
->>
->> To fix it, we need to clear every pages in rb_reset_cpu().
-> 
-> Nice catch and analysis!
-> 
 
-Thanks!
+> On Jul 9, 2023, at 6:54 PM, Steven Rostedt <rostedt@goodmis.org> wrote:
+>=20
+> +       union {
+> +               struct rcu_head         rcu;
+> +               struct llist_node       llist;  /* For freeing after RCU =
+*/
+> +       };
 
-Steve, IIUC, following tags should be added?
-
-Cc: stable@vger.kernel.org
-Fixes: 48fdc72f23ad ("ring-buffer: Fix accounting of entries when 
-removing pages")
-Fixes: 83f40318dab0 ("ring-buffer: Make removal of ring buffer pages 
-atomic")
-
----
-
-Thanks,
-Zheng Yejian
-
->>
->> Signed-off-by: Zheng Yejian <zhengyejian1@huawei.com>
->> ---
->>   kernel/trace/ring_buffer.c | 24 +++++++++++++++---------
->>   1 file changed, 15 insertions(+), 9 deletions(-)
->>
->> diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
->> index 834b361a4a66..14d8001140c8 100644
->> --- a/kernel/trace/ring_buffer.c
->> +++ b/kernel/trace/ring_buffer.c
->> @@ -5242,28 +5242,34 @@ unsigned long ring_buffer_size(struct trace_buffer *buffer, int cpu)
->>   }
->>   EXPORT_SYMBOL_GPL(ring_buffer_size);
->>   
->> +static void rb_clear_buffer_page(struct buffer_page *page)
->> +{
->> +	local_set(&page->write, 0);
->> +	local_set(&page->entries, 0);
->> +	rb_init_page(page->page);
->> +	page->read = 0;
->> +}
->> +
->>   static void
->>   rb_reset_cpu(struct ring_buffer_per_cpu *cpu_buffer)
->>   {
->> +	struct buffer_page *page;
->> +
->>   	rb_head_page_deactivate(cpu_buffer);
->>   
->>   	cpu_buffer->head_page
->>   		= list_entry(cpu_buffer->pages, struct buffer_page, list);
->> -	local_set(&cpu_buffer->head_page->write, 0);
->> -	local_set(&cpu_buffer->head_page->entries, 0);
->> -	local_set(&cpu_buffer->head_page->page->commit, 0);
->> -
->> -	cpu_buffer->head_page->read = 0;
->> +	rb_clear_buffer_page(cpu_buffer->head_page);
->> +	list_for_each_entry(page, cpu_buffer->pages, list) {
->> +		rb_clear_buffer_page(page);
->> +	}
->>   
->>   	cpu_buffer->tail_page = cpu_buffer->head_page;
->>   	cpu_buffer->commit_page = cpu_buffer->head_page;
->>   
->>   	INIT_LIST_HEAD(&cpu_buffer->reader_page->list);
->>   	INIT_LIST_HEAD(&cpu_buffer->new_pages);
->> -	local_set(&cpu_buffer->reader_page->write, 0);
->> -	local_set(&cpu_buffer->reader_page->entries, 0);
->> -	local_set(&cpu_buffer->reader_page->page->commit, 0);
->> -	cpu_buffer->reader_page->read = 0;
->> +	rb_clear_buffer_page(cpu_buffer->reader_page);
-> 
-> Looks good. I'll apply it shortly and start running it through my tests. >
-
-Thanks!
-
-> Thanks!
-> 
-> -- Steve
-> 
->>   
->>   	local_set(&cpu_buffer->entries_bytes, 0);
->>   	local_set(&cpu_buffer->overrun, 0);
-> 
-> 
+The memory savings from using a union might not be worth the potential impa=
+ct
+of type confusion and bugs.
 
