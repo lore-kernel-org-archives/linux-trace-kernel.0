@@ -2,79 +2,81 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CBB83EB64DC
-	for <linux-trace-kernel@archiver.kernel.org>; Mon, 10 Jul 2023 02:23:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D108EB64DC
+	for <linux-trace-kernel@archiver.kernel.org>; Mon, 10 Jul 2023 02:53:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229732AbjGJCXj (ORCPT
+        id S230237AbjGJCxd (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Sun, 9 Jul 2023 22:23:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40148 "EHLO
+        Sun, 9 Jul 2023 22:53:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48192 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229451AbjGJCXi (ORCPT
+        with ESMTP id S229918AbjGJCxd (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Sun, 9 Jul 2023 22:23:38 -0400
-Received: from mail.nfschina.com (unknown [42.101.60.195])
-        by lindbergh.monkeyblade.net (Postfix) with SMTP id 47256103;
-        Sun,  9 Jul 2023 19:23:37 -0700 (PDT)
-Received: from localhost.localdomain (unknown [219.141.250.2])
-        by mail.nfschina.com (Maildata Gateway V2.8.8) with ESMTPA id 1DE22602824AF;
-        Mon, 10 Jul 2023 10:23:16 +0800 (CST)
-X-MD-Sfrom: zeming@nfschina.com
-X-MD-SrcIP: 219.141.250.2
-From:   Li zeming <zeming@nfschina.com>
-To:     naveen.n.rao@linux.ibm.com, anil.s.keshavamurthy@intel.com,
-        davem@davemloft.net, mhiramat@kernel.org
-Cc:     linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
-        Li zeming <zeming@nfschina.com>
-Subject: [PATCH] =?UTF-8?q?kernel:=20kprobes:=20Remove=20unnecessary=20?= =?UTF-8?q?=E2=80=980=E2=80=99=20values?=
-Date:   Wed, 12 Jul 2023 02:53:53 +0800
-Message-Id: <20230711185353.3218-1-zeming@nfschina.com>
-X-Mailer: git-send-email 2.18.2
+        Sun, 9 Jul 2023 22:53:33 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4A492FB;
+        Sun,  9 Jul 2023 19:53:32 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id DD45A60DBC;
+        Mon, 10 Jul 2023 02:53:31 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 43C7DC433C7;
+        Mon, 10 Jul 2023 02:53:29 +0000 (UTC)
+Date:   Sun, 9 Jul 2023 22:53:27 -0400
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     Nadav Amit <namit@vmware.com>
+Cc:     Ajay Kaher <akaher@vmware.com>,
+        "mhiramat@kernel.org" <mhiramat@kernel.org>,
+        "shuah@kernel.org" <shuah@kernel.org>,
+        linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+        linux-kselftest@vger.kernel.org,
+        Ching-lin Yu <chinglinyu@google.com>,
+        Nadav Amit <namit@vmware.com>,
+        "srivatsa@csail.mit.edu" <srivatsa@csail.mit.edu>,
+        Alexey Makhalov <amakhalov@vmware.com>,
+        Vasavi Sirnapalli <vsirnapalli@vmware.com>,
+        Tapas Kundu <tkundu@vmware.com>,
+        "er.ajay.kaher@gmail.com" <linux-trace-kernel@vger.kernel.org>,
+        "linux-kselftest@vger.kernel.org" <linux-kselftest@vger.kernel.org>,
+        Ching-lin Yu <chinglinyu@google.com>,
+        Nadav Amit <namit@vmware.com>,
+        "sri\"" <er.ajay.kaher@gmail.com>
+Subject: Re: [PATCH v3 03/10] eventfs: adding eventfs dir add functions
+Message-ID: <20230709225327.777ea466@rorschach.local.home>
+In-Reply-To: <1C0CB205-B56F-44AE-B9B4-3668E06C840E@vmware.com>
+References: <1685610013-33478-1-git-send-email-akaher@vmware.com>
+        <1685610013-33478-4-git-send-email-akaher@vmware.com>
+        <20230701095417.3de5baab@rorschach.local.home>
+        <ECB0097D-A323-4CFC-9C9E-D4DA2AA6E662@vmware.com>
+        <20230703110857.2d051af5@rorschach.local.home>
+        <84CA259A-8A99-471C-B44C-08D289972F43@vmware.com>
+        <20230703155226.1ab27bc1@gandalf.local.home>
+        <20230709215447.536defa6@rorschach.local.home>
+        <1C0CB205-B56F-44AE-B9B4-3668E06C840E@vmware.com>
+X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-it is assigned first, so it does not need to initialize the assignment.
+On Mon, 10 Jul 2023 02:17:01 +0000
+Nadav Amit <namit@vmware.com> wrote:
 
-Signed-off-by: Li zeming <zeming@nfschina.com>
----
- kernel/kprobes.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+> > On Jul 9, 2023, at 6:54 PM, Steven Rostedt <rostedt@goodmis.org> wrote:
+> > 
+> > +       union {
+> > +               struct rcu_head         rcu;
+> > +               struct llist_node       llist;  /* For freeing after RCU */
+> > +       };  
+> 
+> The memory savings from using a union might not be worth the potential impact
+> of type confusion and bugs.
 
-diff --git a/kernel/kprobes.c b/kernel/kprobes.c
-index 00e177de91cc..83e6f76fca04 100644
---- a/kernel/kprobes.c
-+++ b/kernel/kprobes.c
-@@ -1072,7 +1072,7 @@ static int kprobe_ftrace_enabled;
- static int __arm_kprobe_ftrace(struct kprobe *p, struct ftrace_ops *ops,
- 			       int *cnt)
- {
--	int ret = 0;
-+	int ret;
- 
- 	lockdep_assert_held(&kprobe_mutex);
- 
-@@ -1110,7 +1110,7 @@ static int arm_kprobe_ftrace(struct kprobe *p)
- static int __disarm_kprobe_ftrace(struct kprobe *p, struct ftrace_ops *ops,
- 				  int *cnt)
- {
--	int ret = 0;
-+	int ret;
- 
- 	lockdep_assert_held(&kprobe_mutex);
- 
-@@ -2692,7 +2692,7 @@ void kprobe_free_init_mem(void)
- 
- static int __init init_kprobes(void)
- {
--	int i, err = 0;
-+	int i, err;
- 
- 	/* FIXME allocate the probe table, currently defined statically */
- 	/* initialize all list heads */
--- 
-2.18.2
+It's also documentation. The two are related, as one is the hand off to
+the other. It's not a random union, and I'd like to leave it that way.
 
+-- Steve
