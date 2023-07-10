@@ -2,41 +2,39 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 36E12EB64DA
-	for <linux-trace-kernel@archiver.kernel.org>; Mon, 10 Jul 2023 21:54:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CC2F8EB64D9
+	for <linux-trace-kernel@archiver.kernel.org>; Mon, 10 Jul 2023 22:04:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229970AbjGJVyl (ORCPT
+        id S230119AbjGJWE1 (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Mon, 10 Jul 2023 17:54:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48044 "EHLO
+        Mon, 10 Jul 2023 18:04:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50720 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229954AbjGJVyl (ORCPT
+        with ESMTP id S230016AbjGJWE1 (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Mon, 10 Jul 2023 17:54:41 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A0F9412F;
-        Mon, 10 Jul 2023 14:54:39 -0700 (PDT)
+        Mon, 10 Jul 2023 18:04:27 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 608E5197;
+        Mon, 10 Jul 2023 15:04:26 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange X25519 server-signature RSA-PSS (2048 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 3702C6121C;
-        Mon, 10 Jul 2023 21:54:39 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C7294C433C8;
-        Mon, 10 Jul 2023 21:54:37 +0000 (UTC)
-Date:   Mon, 10 Jul 2023 17:54:36 -0400
+        by dfw.source.kernel.org (Postfix) with ESMTPS id F332A6113E;
+        Mon, 10 Jul 2023 22:04:25 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AA644C433C7;
+        Mon, 10 Jul 2023 22:04:24 +0000 (UTC)
+Date:   Mon, 10 Jul 2023 18:04:22 -0400
 From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Zheng Yejian <zhengyejian1@huawei.com>
-Cc:     <mhiramat@kernel.org>, <shuah@kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-trace-kernel@vger.kernel.org>,
-        <linux-kselftest@vger.kernel.org>,
-        Shuah Khan <skhan@linuxfoundation.org>
-Subject: Re: [PATCH] selftests/ftrace: Test toplevel-enable for instance
-Message-ID: <20230710175415.2ec0061f@gandalf.local.home>
-In-Reply-To: <20230609174626.66659892@gandalf.local.home>
-References: <20230509203659.1173917-1-zhengyejian1@huawei.com>
-        <20230609174626.66659892@gandalf.local.home>
+To:     "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
+Cc:     Jiri Olsa <jolsa@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+        lkml <linux-kernel@vger.kernel.org>,
+        linux-trace-kernel@vger.kernel.org, bpf@vger.kernel.org
+Subject: Re: [PATCH v2] fprobe: Ensure running fprobe_exit_handler()
+ finished before calling rethook_free()
+Message-ID: <20230710180422.572d7c21@gandalf.local.home>
+In-Reply-To: <168873859949.156157.13039240432299335849.stgit@devnote2>
+References: <168873859949.156157.13039240432299335849.stgit@devnote2>
 X-Mailer: Claws Mail 3.19.1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
@@ -45,63 +43,89 @@ Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
+On Fri,  7 Jul 2023 23:03:19 +0900
+"Masami Hiramatsu (Google)" <mhiramat@kernel.org> wrote:
 
-Hi Shuah,
+> From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+> 
+> Ensure running fprobe_exit_handler() has finished before
+> calling rethook_free() in the unregister_fprobe() so that caller can free
+> the fprobe right after unregister_fprobe().
+> 
+> unregister_fprobe() ensured that all running fprobe_entry/exit_handler()
+> have finished by calling unregister_ftrace_function() which synchronizes
+> RCU. But commit 5f81018753df ("fprobe: Release rethook after the ftrace_ops
+> is unregistered") changed to call rethook_free() after
+> unregister_ftrace_function(). So call rethook_stop() to make rethook
+> disabled before unregister_ftrace_function() and ensure it again.
+> 
+> Here is the possible code flow that can call the exit handler after
+> unregister_fprobe().
+> 
+> ------
+>  CPU1                              CPU2
+>  call unregister_fprobe(fp)
+>  ...
+>                                    __fprobe_handler()
+>                                    rethook_hook() on probed function
+>  unregister_ftrace_function()
+>                                    return from probed function
+>                                    rethook hooks
+>                                    find rh->handler == fprobe_exit_handler
+>                                    call fprobe_exit_handler()
+>  rethook_free():
+>    set rh->handler = NULL;
+>  return from unreigster_fprobe;
+>                                    call fp->exit_handler() <- (*)
+> ------
+> 
+> (*) At this point, the exit handler is called after returning from
+> unregister_fprobe().
+> 
+> This fixes it as following;
+> ------
+>  CPU1                              CPU2
+>  call unregister_fprobe()
+>  ...
+>  rethook_stop():
+>    set rh->handler = NULL;
+>                                    __fprobe_handler()
+>                                    rethook_hook() on probed function
+>  unregister_ftrace_function()
+>                                    return from probed function
+>                                    rethook hooks
+>                                    find rh->handler == NULL
+>                                    return from rethook
+>  rethook_free()
+>  return from unreigster_fprobe;
+> ------
+> 
+> 
+> Fixes: 5f81018753df ("fprobe: Release rethook after the ftrace_ops is unregistered")
+> Cc: stable@vger.kernel.org
+> Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 
-I think this dropped through the cracks. Can you take this through your
-tree?
+Looks good.
+
+Reviewed-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+
+
+> ---
+>  Changes in v2:
+>  - Update changelog to add a problematic code flow.
+
+Nit, for making forensic analysis easier in the future, I now always add a
+link to the previous version. That is:
+
+Changes since v1: https://lore.kernel.org/linux-trace-kernel/168796344232.46347.7947681068822514750.stgit@devnote2/
+- Update changelog to add a problematic code flow.
 
 -- Steve
 
-On Fri, 9 Jun 2023 17:46:26 -0400
-Steven Rostedt <rostedt@goodmis.org> wrote:
 
-> On Wed, 10 May 2023 04:36:59 +0800
-> Zheng Yejian <zhengyejian1@huawei.com> wrote:
+> ---
+>  include/linux/rethook.h |    1 +
+>  kernel/trace/fprobe.c   |    3 +++
+>  kernel/trace/rethook.c  |   13 +++++++++++++
+>  3 files changed, 17 insertions(+)
 > 
-> > 'available_events' is actually not required by
-> > 'test.d/event/toplevel-enable.tc' and its Existence has been tested in
-> > 'test.d/00basic/basic4.tc'.
-> > 
-> > So the require of 'available_events' can be dropped and then we can add
-> > 'instance' flag to test 'test.d/event/toplevel-enable.tc' for instance.
-> > 
-> > Test result show as below:
-> >  # ./ftracetest test.d/event/toplevel-enable.tc
-> >  === Ftrace unit tests ===
-> >  [1] event tracing - enable/disable with top level files [PASS]
-> >  [2] (instance)  event tracing - enable/disable with top level files [PASS]
-> > 
-> >  # of passed:  2
-> >  # of failed:  0
-> >  # of unresolved:  0
-> >  # of untested:  0
-> >  # of unsupported:  0
-> >  # of xfailed:  0
-> >  # of undefined(test bug):  0
-> > 
-> > Signed-off-by: Zheng Yejian <zhengyejian1@huawei.com>  
-> 
-> Acked-by: Steven Rostedt (Google) <rostedt@goodmis.org>
-> 
-> -- Steve
-> 
-> > ---
-> >  tools/testing/selftests/ftrace/test.d/event/toplevel-enable.tc | 3 ++-
-> >  1 file changed, 2 insertions(+), 1 deletion(-)
-> > 
-> > diff --git a/tools/testing/selftests/ftrace/test.d/event/toplevel-enable.tc b/tools/testing/selftests/ftrace/test.d/event/toplevel-enable.tc
-> > index 93c10ea42a68..8b8e1aea985b 100644
-> > --- a/tools/testing/selftests/ftrace/test.d/event/toplevel-enable.tc
-> > +++ b/tools/testing/selftests/ftrace/test.d/event/toplevel-enable.tc
-> > @@ -1,7 +1,8 @@
-> >  #!/bin/sh
-> >  # SPDX-License-Identifier: GPL-2.0
-> >  # description: event tracing - enable/disable with top level files
-> > -# requires: available_events set_event events/enable
-> > +# requires: set_event events/enable
-> > +# flags: instance
-> >  
-> >  do_reset() {
-> >      echo > set_event  
-
