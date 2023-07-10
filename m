@@ -2,87 +2,170 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 12111EB64D9
-	for <linux-trace-kernel@archiver.kernel.org>; Mon, 10 Jul 2023 15:57:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D09CEB64D9
+	for <linux-trace-kernel@archiver.kernel.org>; Mon, 10 Jul 2023 16:00:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232139AbjGJP5I (ORCPT
+        id S233683AbjGJQAB (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Mon, 10 Jul 2023 11:57:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55206 "EHLO
+        Mon, 10 Jul 2023 12:00:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56474 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231528AbjGJP5I (ORCPT
+        with ESMTP id S231299AbjGJQAB (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Mon, 10 Jul 2023 11:57:08 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 59F08CA;
-        Mon, 10 Jul 2023 08:57:07 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        Mon, 10 Jul 2023 12:00:01 -0400
+Received: from metis.ext.pengutronix.de (metis.ext.pengutronix.de [IPv6:2001:67c:670:201:290:27ff:fe1d:cc33])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E9745CA
+        for <linux-trace-kernel@vger.kernel.org>; Mon, 10 Jul 2023 08:59:59 -0700 (PDT)
+Received: from moin.white.stw.pengutronix.de ([2a0a:edc0:0:b01:1d::7b] helo=bjornoya.blackshift.org)
+        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <mkl@pengutronix.de>)
+        id 1qItIs-0006h8-Cf; Mon, 10 Jul 2023 17:59:58 +0200
+Received: from pengutronix.de (unknown [172.20.34.65])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id E17D86108F;
-        Mon, 10 Jul 2023 15:57:06 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 88298C433C7;
-        Mon, 10 Jul 2023 15:57:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1689004626;
-        bh=cjUuxk+1R+kE/sabu0x+hlim8jDG+lWBNIP3U+KRE90=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=qHeHMfqfjS84xZahsak2u7jiavteo+asrstiqP0Augi1U2xA4JM2wADU3/C/Su7O7
-         c27Oow1qgRHJbZBjdGd/1gW2i+RWs42ovixJD4beYM4oijG3q1JeQXOC9Q+7sMlHX3
-         l3akdQ9KiPQkFCKzkw13qC4s4oPM8OhwhjWoNeE1zvz//QzpMytC9tYxT0Ixs9bo3u
-         vAwJ6+CTJ/7TPTbzSoz2gPVwPYi6FLP+zTxz+dI9M28deShT0MlMyMnnzvO+pTHsX2
-         MtezhKM7Q/8K5uCwH4OBfLW8kRofpX1Ng5l6+IYB7xxoxndPEhXQjiUsW2ezTGzeQS
-         Ts0Wpe671LGxw==
-Date:   Mon, 10 Jul 2023 08:57:03 -0700
-From:   Nathan Chancellor <nathan@kernel.org>
-To:     "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Petr Pavlu <petr.pavlu@suse.com>, tglx@linutronix.de,
-        mingo@redhat.com, bp@alien8.de, dave.hansen@linux.intel.com,
-        hpa@zytor.com, samitolvanen@google.com, x86@kernel.org,
-        linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        llvm@lists.linux.dev, ndesaulniers@google.com
-Subject: Re: [RFC PATCH 0/2] x86: kprobes: Fix CFI_CLANG related issues
-Message-ID: <20230710155703.GA4021842@dev-arch.thelio-3990X>
-References: <168899125356.80889.17967397360941194229.stgit@devnote2>
+         key-exchange ECDHE (prime256v1) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (Client did not present a certificate)
+        (Authenticated sender: mkl-all@blackshift.org)
+        by smtp.blackshift.org (Postfix) with ESMTPSA id 0B1351ED16C;
+        Mon, 10 Jul 2023 15:59:56 +0000 (UTC)
+Date:   Mon, 10 Jul 2023 17:59:55 +0200
+From:   Marc Kleine-Budde <mkl@pengutronix.de>
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc:     Mark Brown <broonie@kernel.org>,
+        Cristian Ciocaltea <cristian.ciocaltea@collabora.com>,
+        Yang Yingliang <yangyingliang@huawei.com>,
+        Amit Kumar Mahapatra via Alsa-devel 
+        <alsa-devel@alsa-project.org>,
+        Neil Armstrong <neil.armstrong@linaro.org>,
+        Tharun Kumar P <tharunkumar.pasumarthi@microchip.com>,
+        Vijaya Krishna Nivarthi <quic_vnivarth@quicinc.com>,
+        Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>, linux-spi@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-amlogic@lists.infradead.org,
+        linux-mediatek@lists.infradead.org, linux-arm-msm@vger.kernel.org,
+        linux-rockchip@lists.infradead.org,
+        linux-riscv@lists.infradead.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-trace-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        Richard Cochran <richardcochran@gmail.com>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Alexandre Torgue <alexandre.torgue@foss.st.com>,
+        Max Filippov <jcmvbkbc@gmail.com>,
+        Fabio Estevam <festevam@gmail.com>,
+        Jerome Brunet <jbrunet@baylibre.com>,
+        Kevin Hilman <khilman@baylibre.com>,
+        Tudor Ambarus <tudor.ambarus@linaro.org>,
+        Andy Gross <agross@kernel.org>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Alain Volmat <alain.volmat@foss.st.com>,
+        Orson Zhai <orsonzhai@gmail.com>,
+        Radu Pirea <radu_nicolae.pirea@upb.ro>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Sanjay R Mehta <sanju.mehta@amd.com>,
+        Baolin Wang <baolin.wang@linux.alibaba.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        AngeloGioacchino Del Regno 
+        <angelogioacchino.delregno@collabora.com>,
+        Bjorn Andersson <andersson@kernel.org>,
+        Nicolas Ferre <nicolas.ferre@microchip.com>,
+        Serge Semin <fancer.lancer@gmail.com>,
+        Konrad Dybcio <konrad.dybcio@linaro.org>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Chunyan Zhang <zhang.lyra@gmail.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Claudiu Beznea <claudiu.beznea@microchip.com>
+Subject: Re: [PATCH v2 09/15] spi: Use struct_size() helper
+Message-ID: <20230710-doze-scared-9f0a2e1a9125-mkl@pengutronix.de>
+References: <20230710154932.68377-1-andriy.shevchenko@linux.intel.com>
+ <20230710154932.68377-10-andriy.shevchenko@linux.intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="fkfcsps3yw5kjzrk"
 Content-Disposition: inline
-In-Reply-To: <168899125356.80889.17967397360941194229.stgit@devnote2>
+In-Reply-To: <20230710154932.68377-10-andriy.shevchenko@linux.intel.com>
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:b01:1d::7b
+X-SA-Exim-Mail-From: mkl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-trace-kernel@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On Mon, Jul 10, 2023 at 09:14:13PM +0900, Masami Hiramatsu (Google) wrote:
-> I just build tested, since I could not boot the kernel with CFI_CLANG=y.
-> Would anyone know something about this error?
-> 
-> [    0.141030] MMIO Stale Data: Unknown: No mitigations
-> [    0.153511] SMP alternatives: Using kCFI
-> [    0.164593] Freeing SMP alternatives memory: 36K
-> [    0.165053] Kernel panic - not syncing: stack-protector: Kernel stack is corrupted in: start_kernel+0x472/0x48b
-> [    0.166028] CPU: 0 PID: 0 Comm: swapper/0 Not tainted 6.4.2-00002-g12b1b2fca8ef #126
-> [    0.166028] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.13.0-1ubuntu1.1 04/01/2014
-> [    0.166028] Call Trace:
-> [    0.166028]  <TASK>
-> [    0.166028]  dump_stack_lvl+0x6e/0xb0
-> [    0.166028]  panic+0x146/0x2f0
-> [    0.166028]  ? start_kernel+0x472/0x48b
-> [    0.166028]  __stack_chk_fail+0x14/0x20
-> [    0.166028]  start_kernel+0x472/0x48b
-> [    0.166028]  x86_64_start_reservations+0x24/0x30
-> [    0.166028]  x86_64_start_kernel+0xa6/0xbb
-> [    0.166028]  secondary_startup_64_no_verify+0x106/0x11b
-> [    0.166028]  </TASK>
-> [    0.166028] ---[ end Kernel panic - not syncing: stack-protector: Kernel stack is corrupted in: start_kernel+0x472/0x48b ]---
 
-This looks like https://github.com/ClangBuiltLinux/linux/issues/1815 to
-me. What version of LLVM are you using? This was fixed in 16.0.4. Commit
-514ca14ed544 ("start_kernel: Add __no_stack_protector function
-attribute") should resolve it on the Linux side, it looks like that is
-in 6.5-rc1. Not sure if we should backport it or just let people upgrade
-their toolchains on older releases.
+--fkfcsps3yw5kjzrk
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Cheers,
-Nathan
+On 10.07.2023 18:49:26, Andy Shevchenko wrote:
+> Prefer struct_size() over open-coded versions.
+>=20
+> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> ---
+>  include/linux/spi/spi.h | 15 +++++++++------
+>  1 file changed, 9 insertions(+), 6 deletions(-)
+>=20
+> diff --git a/include/linux/spi/spi.h b/include/linux/spi/spi.h
+> index c9479badf38c..9fb8efb068c6 100644
+> --- a/include/linux/spi/spi.h
+> +++ b/include/linux/spi/spi.h
+> @@ -17,6 +17,7 @@
+>  #include <linux/minmax.h>
+>  #include <linux/mod_devicetable.h>
+>  #include <linux/mutex.h>
+> +#include <linux/overflow.h>
+>  #include <linux/scatterlist.h>
+>  #include <linux/slab.h>
+>  #include <linux/smp.h>
+> @@ -1095,6 +1096,8 @@ struct spi_transfer {
+>   * @state: for use by whichever driver currently owns the message
+>   * @resources: for resource management when the spi message is processed
+>   * @prepared: spi_prepare_message was called for the this message
+> + * @t: for use with spi_message_alloc() when message and transfers have
+> + *	been allocated together
+>   *
+>   * A @spi_message is used to execute an atomic sequence of data transfer=
+s,
+>   * each represented by a struct spi_transfer.  The sequence is "atomic"
+> @@ -1147,6 +1150,9 @@ struct spi_message {
+> =20
+>  	/* List of spi_res reources when the spi message is processed */
+>  	struct list_head        resources;
+> +
+> +	/* For embedding transfers into the memory of the message */
+> +	struct spi_transfer	t[];
+
+You might want to use the DECLARE_FLEX_ARRAY helper here.
+
+Marc
+
+--=20
+Pengutronix e.K.                 | Marc Kleine-Budde          |
+Embedded Linux                   | https://www.pengutronix.de |
+Vertretung N=C3=BCrnberg              | Phone: +49-5121-206917-129 |
+Amtsgericht Hildesheim, HRA 2686 | Fax:   +49-5121-206917-9   |
+
+--fkfcsps3yw5kjzrk
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEDs2BvajyNKlf9TJQvlAcSiqKBOgFAmSsKvgACgkQvlAcSiqK
+BOgtxwf/Yz15ymm8GOJJtFmUerpE4jpOZcNfOw1mDTpDDgDH+8CXkQfj2uE13kRU
+xmZmpKSAMlsxxmOIGsv8VL18I9YKzWY9wk4vu5oovzx44NHON+6ivyODkaJdH2w9
+kOVb4XiHGF0bhFsC3TJ4HZSUlG3EbFNnc0nuj/IvF6VEoldwbjSR6R5ZR6+EX47u
+h77RsJnmXXbOKbOseq0nlPxZYkFSR03Hzey7BMzmHYQ93COdGDhQqI0kNbwrkD5F
+qpdpYHa26+CLsV+iBftiTk/C49nxRM0cvs4xqUDaZU1rzd2tlbhN28dsuGJ8zQL1
+T+7Bl7/j5IRqJUJiKB8YUQNVj2KrOg==
+=a9WN
+-----END PGP SIGNATURE-----
+
+--fkfcsps3yw5kjzrk--
