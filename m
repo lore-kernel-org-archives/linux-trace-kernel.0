@@ -2,82 +2,142 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CE87EB64D9
-	for <linux-trace-kernel@archiver.kernel.org>; Mon, 10 Jul 2023 15:37:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 910F6EB64D9
+	for <linux-trace-kernel@archiver.kernel.org>; Mon, 10 Jul 2023 15:49:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229983AbjGJPhl (ORCPT
+        id S231452AbjGJPtd (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Mon, 10 Jul 2023 11:37:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44324 "EHLO
+        Mon, 10 Jul 2023 11:49:33 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47430 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233313AbjGJPhk (ORCPT
+        with ESMTP id S230386AbjGJPtc (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Mon, 10 Jul 2023 11:37:40 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 87C76129;
-        Mon, 10 Jul 2023 08:37:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=fBHMLUIRsBctfnOcEvVXM28ONXqkgcr6sBN2BdpcQ3A=; b=t/Q29L37ndFcJ11/WkGAVTQihD
-        t/6qyFm+419RijcKBYmxxPgG3ByKZ2o65laA+mYtk3SkfmbBVa4E8+V7n3PzVaEehNZvd8JiAtZUi
-        XMsrokmf+frorzkEkf39PqGbeBtNsPCaTWoDfZp2+DF2Oh9VyQoQtv8yzEiSAChZJu6sabqwnv2lu
-        /y2o01BwVv3Rml5lUGRWhwUmgPXY+qShDndgOqz14q4AOfFgVuVWu5JN7s3eN3nso2kjDmwo8U6VR
-        RKk4IyH9rdqyPE98ImcE7e+igk6gglhZDFZl1oZ6EDOB6YLM0W56Rk/6WXr2YfEzrumTQG61jZHKe
-        gOL1GlfA==;
-Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
-        by casper.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
-        id 1qIsx4-00EidV-0F; Mon, 10 Jul 2023 15:37:26 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 8958130014A;
-        Mon, 10 Jul 2023 17:37:24 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 70EBA26716928; Mon, 10 Jul 2023 17:37:24 +0200 (CEST)
-Date:   Mon, 10 Jul 2023 17:37:24 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
-Cc:     Petr Pavlu <petr.pavlu@suse.com>, tglx@linutronix.de,
-        mingo@redhat.com, bp@alien8.de, dave.hansen@linux.intel.com,
-        hpa@zytor.com, samitolvanen@google.com, x86@kernel.org,
-        linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [RFC PATCH 1/2] kprobes: Prohibit probing on CFI preamble symbol
-Message-ID: <20230710153724.GA3040258@hirez.programming.kicks-ass.net>
-References: <168899125356.80889.17967397360941194229.stgit@devnote2>
- <168899126450.80889.16200438320430187434.stgit@devnote2>
+        Mon, 10 Jul 2023 11:49:32 -0400
+Received: from mga11.intel.com (mga11.intel.com [192.55.52.93])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2BD5511B;
+        Mon, 10 Jul 2023 08:49:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1689004171; x=1720540171;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=1YMEKoH26Jvs8dKIC6vdH9uSV/g2LDeyMP+ZqFMU56I=;
+  b=aW/Xdm+LKZRZpjo1mQHKu3b6CaxK2sBFzk3ElyX5NzSVJZUzeoRZvTdi
+   /jHfwVG4pasTwGEtSAM7eSyGyrQ5qWiFv00V02yL0m4Dc0AtYM2uB9/Au
+   4wyGwUYo+0MnjxY4KWioGNOzg9O8Rwgf17FGVDs3xN/Xn+plkpIq83/AQ
+   mMQHO48pRbJouWPJaNEaY7ADYG05uQ6CXeaTe5DPFFGUdHsKiEsMgzcG0
+   rBLI0DSDRAcqx1UbZY8lMKjZOfN7t6GoC2/H2Vrvhfa5432yHQqE1BRfb
+   qKxjLCrELIvCyClujlV26kR0J9o2K6N3iEZu8Lnf6rtXDRdswnYnPSAcp
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10767"; a="361842380"
+X-IronPort-AV: E=Sophos;i="6.01,194,1684825200"; 
+   d="scan'208";a="361842380"
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Jul 2023 08:49:30 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10767"; a="720743950"
+X-IronPort-AV: E=Sophos;i="6.01,194,1684825200"; 
+   d="scan'208";a="720743950"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by orsmga002.jf.intel.com with ESMTP; 10 Jul 2023 08:49:29 -0700
+Received: by black.fi.intel.com (Postfix, from userid 1003)
+        id 1E05F1D9; Mon, 10 Jul 2023 18:49:34 +0300 (EEST)
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Mark Brown <broonie@kernel.org>,
+        Cristian Ciocaltea <cristian.ciocaltea@collabora.com>,
+        Yang Yingliang <yangyingliang@huawei.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Amit Kumar Mahapatra via Alsa-devel 
+        <alsa-devel@alsa-project.org>,
+        Neil Armstrong <neil.armstrong@linaro.org>,
+        Tharun Kumar P <tharunkumar.pasumarthi@microchip.com>,
+        Vijaya Krishna Nivarthi <quic_vnivarth@quicinc.com>,
+        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>, linux-spi@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-amlogic@lists.infradead.org,
+        linux-mediatek@lists.infradead.org, linux-arm-msm@vger.kernel.org,
+        linux-rockchip@lists.infradead.org,
+        linux-riscv@lists.infradead.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-trace-kernel@vger.kernel.org, netdev@vger.kernel.org
+Cc:     Sanjay R Mehta <sanju.mehta@amd.com>,
+        Radu Pirea <radu_nicolae.pirea@upb.ro>,
+        Nicolas Ferre <nicolas.ferre@microchip.com>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Claudiu Beznea <claudiu.beznea@microchip.com>,
+        Tudor Ambarus <tudor.ambarus@linaro.org>,
+        Serge Semin <fancer.lancer@gmail.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Kevin Hilman <khilman@baylibre.com>,
+        Jerome Brunet <jbrunet@baylibre.com>,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        AngeloGioacchino Del Regno 
+        <angelogioacchino.delregno@collabora.com>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <andersson@kernel.org>,
+        Konrad Dybcio <konrad.dybcio@linaro.org>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Orson Zhai <orsonzhai@gmail.com>,
+        Baolin Wang <baolin.wang@linux.alibaba.com>,
+        Chunyan Zhang <zhang.lyra@gmail.com>,
+        Alain Volmat <alain.volmat@foss.st.com>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue <alexandre.torgue@foss.st.com>,
+        Max Filippov <jcmvbkbc@gmail.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Richard Cochran <richardcochran@gmail.com>
+Subject: [PATCH v2 01/15] spi: Remove unneeded OF node NULL checks
+Date:   Mon, 10 Jul 2023 18:49:18 +0300
+Message-Id: <20230710154932.68377-2-andriy.shevchenko@linux.intel.com>
+X-Mailer: git-send-email 2.40.0.1.gaa8946217a0b
+In-Reply-To: <20230710154932.68377-1-andriy.shevchenko@linux.intel.com>
+References: <20230710154932.68377-1-andriy.shevchenko@linux.intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <168899126450.80889.16200438320430187434.stgit@devnote2>
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On Mon, Jul 10, 2023 at 09:14:24PM +0900, Masami Hiramatsu (Google) wrote:
+In the couple of places the NULL check of OF node is implied by the call
+that takes it as a parameter. Drop the respective duplicate checks.
 
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+---
+ drivers/spi/spi.c | 5 +----
+ 1 file changed, 1 insertion(+), 4 deletions(-)
 
-> +#ifdef CONFIG_CFI_CLANG
-> +static bool is_cfi_preamble_symbol(unsigned long addr)
-> +{
-> +	char symbuf[KSYM_NAME_LEN];
-> +
-> +	if (lookup_symbol_name(addr, symbuf))
-> +		return false;
-> +
-> +	return str_has_prefix("__cfi_", symbuf)
-		|| str_has_prefix("__pfx_", symbol);
-
-The __pfx_ symbols can happen when !CFI_CLANG but still having
-FUNCTION_PADDING_BYTES.
-
-> +}
-> +#else
-> +#define is_cfi_preamble_symbol(addr)	(0)
-> +#endif
-
-As such I think we can do the above unconditionally, without either
-there should not be any matching symbols.
+diff --git a/drivers/spi/spi.c b/drivers/spi/spi.c
+index 9291b2a0e887..8f3282a71c63 100644
+--- a/drivers/spi/spi.c
++++ b/drivers/spi/spi.c
+@@ -2399,9 +2399,6 @@ static void of_register_spi_devices(struct spi_controller *ctlr)
+ 	struct spi_device *spi;
+ 	struct device_node *nc;
+ 
+-	if (!ctlr->dev.of_node)
+-		return;
+-
+ 	for_each_available_child_of_node(ctlr->dev.of_node, nc) {
+ 		if (of_node_test_and_set_flag(nc, OF_POPULATED))
+ 			continue;
+@@ -3134,7 +3131,7 @@ int spi_register_controller(struct spi_controller *ctlr)
+ 		if (WARN(id < 0, "couldn't get idr"))
+ 			return id == -ENOSPC ? -EBUSY : id;
+ 		ctlr->bus_num = id;
+-	} else if (ctlr->dev.of_node) {
++	} else {
+ 		/* Allocate dynamic bus number using Linux idr */
+ 		id = of_alias_get_id(ctlr->dev.of_node, "spi");
+ 		if (id >= 0) {
+-- 
+2.40.0.1.gaa8946217a0b
 
