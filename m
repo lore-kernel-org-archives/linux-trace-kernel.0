@@ -2,46 +2,46 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 17E56C001DF
-	for <linux-trace-kernel@archiver.kernel.org>; Mon, 10 Jul 2023 15:49:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A8A07C04E69
+	for <linux-trace-kernel@archiver.kernel.org>; Mon, 10 Jul 2023 15:49:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233352AbjGJPti (ORCPT
+        id S233540AbjGJPtk (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Mon, 10 Jul 2023 11:49:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47490 "EHLO
+        Mon, 10 Jul 2023 11:49:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47510 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230386AbjGJPth (ORCPT
+        with ESMTP id S233496AbjGJPtj (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Mon, 10 Jul 2023 11:49:37 -0400
-Received: from mga09.intel.com (mga09.intel.com [134.134.136.24])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4CCD6120;
-        Mon, 10 Jul 2023 08:49:36 -0700 (PDT)
+        Mon, 10 Jul 2023 11:49:39 -0400
+Received: from mga18.intel.com (mga18.intel.com [134.134.136.126])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8427A11B;
+        Mon, 10 Jul 2023 08:49:38 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1689004175; x=1720540175;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=qyXZ9l/eDXJvwNtej9Cq3pKS54WfQZS0AfJJYPgySOQ=;
-  b=YD034t0iWhNNRDSR5CNWBLBVZqqkLiHq0H9nmZsm0SeXKdYZJBYwIQdN
-   6UUf3gzcqyoHjy2BbpSI15PZxt5963grIkQnwyGHYsBZKINgib9vXNSHD
-   0GEOPkv+spm9aIsFuTgpk9FrgX4XvYOWGsPHbHy7qtYhV8380oCOkDu2v
-   RY44WJNMv3CzWTak46NNAjccZSqilXugKCW2HXFaPpPqFrPo6hKuFOPH7
-   8ZhjZXnwIsSdhLYY9mljLwhrKON5vAdoQrjEL2z8m5cxN+wFpNZE3S2PL
-   kI+7gimYbri54DwRPfOkX0ePgWJfN8e46pP7YtwGuqYmhI9aDyFnKn9h4
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10767"; a="366955196"
+  t=1689004178; x=1720540178;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=eCA4jmpHdK4tCQy+WYVaMHkZ61alyGNaPi2evxW0e9A=;
+  b=TW8bhZ2/YU0tXHvrewa13TF9ysBkfsnpXX5Z+Ih09L1Zw3AiZvNGZz+g
+   BB01KLpIVFBCnOeFx2fv8J4tqj5GbV+TnxaO9y2I2cW6g+rVnGCep1ynR
+   5Ix1H2S8LKt61MtAF9p7qm3K4VApqe68gifLDMhCoXo0anQ7RURwzuo5g
+   KDgHIq32Gh6hVVmkOs6k3CwzkDRJ05VypapFLuXAfF0Qf3ZgYTFSRVxD8
+   C5V1EgTkMGIwYL1DHvgg/kgviCWrm6TYEyoKJDuVFundCHtgt/Ia8j9FW
+   BCXUyTqmD59RfytwM5wRflgYnnEWiWZQVM/UR9fA4k4jpXYZRPxi0cAo6
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10767"; a="349185306"
 X-IronPort-AV: E=Sophos;i="6.01,194,1684825200"; 
-   d="scan'208";a="366955196"
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Jul 2023 08:49:29 -0700
+   d="scan'208";a="349185306"
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Jul 2023 08:49:38 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10767"; a="671015610"
+X-IronPort-AV: E=McAfee;i="6600,9927,10767"; a="844921891"
 X-IronPort-AV: E=Sophos;i="6.01,194,1684825200"; 
-   d="scan'208";a="671015610"
+   d="scan'208";a="844921891"
 Received: from black.fi.intel.com ([10.237.72.28])
-  by orsmga003.jf.intel.com with ESMTP; 10 Jul 2023 08:49:29 -0700
+  by orsmga004.jf.intel.com with ESMTP; 10 Jul 2023 08:49:37 -0700
 Received: by black.fi.intel.com (Postfix, from userid 1003)
-        id 115861FC; Mon, 10 Jul 2023 18:49:33 +0300 (EEST)
+        id 9C17069F; Mon, 10 Jul 2023 18:49:34 +0300 (EEST)
 From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 To:     Mark Brown <broonie@kernel.org>,
         Cristian Ciocaltea <cristian.ciocaltea@collabora.com>,
@@ -95,85 +95,80 @@ Cc:     Sanjay R Mehta <sanju.mehta@amd.com>,
         Steven Rostedt <rostedt@goodmis.org>,
         Masami Hiramatsu <mhiramat@kernel.org>,
         Richard Cochran <richardcochran@gmail.com>
-Subject: [PATCH v2 00/15] spi: Header and core clean up and refactoring
-Date:   Mon, 10 Jul 2023 18:49:17 +0300
-Message-Id: <20230710154932.68377-1-andriy.shevchenko@linux.intel.com>
+Subject: [PATCH v2 08/15] spi: Clean up headers
+Date:   Mon, 10 Jul 2023 18:49:25 +0300
+Message-Id: <20230710154932.68377-9-andriy.shevchenko@linux.intel.com>
 X-Mailer: git-send-email 2.40.0.1.gaa8946217a0b
+In-Reply-To: <20230710154932.68377-1-andriy.shevchenko@linux.intel.com>
+References: <20230710154932.68377-1-andriy.shevchenko@linux.intel.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-Various cleanups and refactorings of the SPI header and core parts
-united in a single series. It also touches drivers under SPI subsystem
-folder on the pure renaming purposes of some constants.
+There is a few things done:
+- include only the headers we are direct user of
+- when pointer is in use, provide a forward declaration
+- add missing headers
+- group generic headers and subsystem headers
+- sort each group alphabetically
 
-No functional change intended.
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+---
+ include/linux/spi/spi.h | 22 ++++++++++++++++++----
+ 1 file changed, 18 insertions(+), 4 deletions(-)
 
-Changelog v2:
-- added new patches 3,4,5,10,13,14
-- massaged comment and kernel doc in patch 9
-- split used to be patch 4 to patches 11,12
-- covered a few things in SPI core in patch 15
-- amended commit message for above (Mark)
-- reshuffled patches in the series for better logical grouping
-
-Andy Shevchenko (15):
-  spi: Remove unneeded OF node NULL checks
-  spi: Drop duplicate IDR allocation code in spi_register_controller()
-  spi: Replace if-else-if by bitops and multiplications
-  spi: Replace open coded spi_controller_xfer_timeout()
-  spi: Remove code duplication in spi_add_device_locked()
-  spi: Use sysfs_emit() to instead of s*printf()
-  spi: Sort headers alphabetically
-  spi: Clean up headers
-  spi: Use struct_size() helper
-  spi: Use predefined constants from bits.h and units.h
-  spi: Get rid of old SPI_MASTER_NO_TX & SPI_MASTER_NO_RX
-  spi: Get rid of old SPI_MASTER_MUST_TX & SPI_MASTER_MUST_RX
-  spi: Rename SPI_MASTER_GPIO_SS to SPI_CONTROLLER_GPIO_SS
-  spi: Convert to SPI_CONTROLLER_HALF_DUPLEX
-  spi: Fix spelling typos and acronyms capitalization
-
- drivers/spi/spi-amd.c             |   2 +-
- drivers/spi/spi-at91-usart.c      |   2 +-
- drivers/spi/spi-ath79.c           |   2 +-
- drivers/spi/spi-atmel.c           |   4 +-
- drivers/spi/spi-bitbang-txrx.h    |  16 +--
- drivers/spi/spi-bitbang.c         |   8 +-
- drivers/spi/spi-cavium-thunderx.c |   2 +-
- drivers/spi/spi-davinci.c         |   2 +-
- drivers/spi/spi-dw-core.c         |   2 +-
- drivers/spi/spi-falcon.c          |   2 +-
- drivers/spi/spi-fsl-lpspi.c       |   2 +-
- drivers/spi/spi-gpio.c            |  10 +-
- drivers/spi/spi-imx.c             |   2 +-
- drivers/spi/spi-lp8841-rtc.c      |  10 +-
- drivers/spi/spi-meson-spicc.c     |   2 +-
- drivers/spi/spi-mt65xx.c          |   2 +-
- drivers/spi/spi-mxs.c             |   2 +-
- drivers/spi/spi-omap-uwire.c      |   2 +-
- drivers/spi/spi-orion.c           |   2 +-
- drivers/spi/spi-pci1xxxx.c        |   2 +-
- drivers/spi/spi-pic32-sqi.c       |   2 +-
- drivers/spi/spi-pic32.c           |   2 +-
- drivers/spi/spi-qcom-qspi.c       |   2 +-
- drivers/spi/spi-rb4xx.c           |   2 +-
- drivers/spi/spi-rockchip-sfc.c    |   2 +-
- drivers/spi/spi-rockchip.c        |   2 +-
- drivers/spi/spi-sifive.c          |   2 +-
- drivers/spi/spi-slave-mt27xx.c    |   2 +-
- drivers/spi/spi-sprd-adi.c        |   2 +-
- drivers/spi/spi-stm32.c           |   2 +-
- drivers/spi/spi-ti-qspi.c         |   2 +-
- drivers/spi/spi-xcomm.c           |   2 +-
- drivers/spi/spi-xtensa-xtfpga.c   |   2 +-
- drivers/spi/spi.c                 | 204 ++++++++++++------------------
- include/linux/spi/spi.h           | 198 +++++++++++++++++------------
- include/trace/events/spi.h        |   2 +-
- 36 files changed, 247 insertions(+), 261 deletions(-)
-
+diff --git a/include/linux/spi/spi.h b/include/linux/spi/spi.h
+index 2026eae97329..c9479badf38c 100644
+--- a/include/linux/spi/spi.h
++++ b/include/linux/spi/spi.h
+@@ -6,27 +6,41 @@
+ #ifndef __LINUX_SPI_H
+ #define __LINUX_SPI_H
+ 
+-#include <linux/acpi.h>
+ #include <linux/bits.h>
+ #include <linux/completion.h>
++#include <linux/container_of.h>
+ #include <linux/device.h>
+-#include <linux/gpio/consumer.h>
++#include <linux/export.h>
+ #include <linux/kthread.h>
++#include <linux/limits.h>
++#include <linux/list.h>
++#include <linux/minmax.h>
+ #include <linux/mod_devicetable.h>
++#include <linux/mutex.h>
+ #include <linux/scatterlist.h>
+ #include <linux/slab.h>
++#include <linux/smp.h>
++#include <linux/spinlock_types.h>
++#include <linux/string.h>
++#include <linux/types.h>
+ #include <linux/u64_stats_sync.h>
+ 
++#include <asm/byteorder.h>
++
+ #include <uapi/linux/spi/spi.h>
+ 
++struct acpi_device;
+ struct dma_chan;
+-struct software_node;
++struct gpio_desc;
+ struct ptp_system_timestamp;
++struct software_node;
++
+ struct spi_controller;
+-struct spi_transfer;
+ struct spi_controller_mem_ops;
+ struct spi_controller_mem_caps;
++struct spi_device_id;
+ struct spi_message;
++struct spi_transfer;
+ 
+ /*
+  * INTERFACES between SPI master-side drivers and SPI slave protocol handlers,
 -- 
 2.40.0.1.gaa8946217a0b
 
