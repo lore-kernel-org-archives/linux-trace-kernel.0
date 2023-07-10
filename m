@@ -2,87 +2,153 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E444EB64D9
-	for <linux-trace-kernel@archiver.kernel.org>; Mon, 10 Jul 2023 13:46:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D75EAEB64D9
+	for <linux-trace-kernel@archiver.kernel.org>; Mon, 10 Jul 2023 14:46:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232429AbjGJNq6 (ORCPT
+        id S231438AbjGJOqb (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Mon, 10 Jul 2023 09:46:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52174 "EHLO
+        Mon, 10 Jul 2023 10:46:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53504 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230407AbjGJNq5 (ORCPT
+        with ESMTP id S229469AbjGJOqb (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Mon, 10 Jul 2023 09:46:57 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9D68C1B3;
-        Mon, 10 Jul 2023 06:46:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=MttSIBFDzxo+w4PFW3J7ZDj+Lub8j7ffKGXirDBsatA=; b=UYobBqUdV751cNMlhoG7PQe8Wf
-        VgghfAe2GDPkENOs6/OBmeZwI3a1JHQPudBFW849/wJh2Str9PC0rEoAtKf93kqmaX/PZ96ZcwFKf
-        x3iHKezvRBU1GeZsJfqyESrNX0kMji3hMiXVi2x9lrHybRAwdvcpsecOt3ULqPw71EFpUYOz/SaR/
-        xvus7ag9nr7PhkAIHjbmZeV4bWQg/qBbnq7b87sU/qy9clQZjRo7NnV3kbUhUcxj2wY15StSHutJc
-        dkV0utIhHfvpI2F4IqcLO/zA0JrGfFXWXFUJLMreck7WuzJIVLHfBdNtmeu0TisAkpH6Lh6rVXrDO
-        bOIXHE3Q==;
-Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
-        by casper.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
-        id 1qIrDa-00EeDT-QW; Mon, 10 Jul 2023 13:46:22 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        Mon, 10 Jul 2023 10:46:31 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7AA6F114;
+        Mon, 10 Jul 2023 07:46:28 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (4096 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 7C67630017D;
-        Mon, 10 Jul 2023 15:46:21 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 664DE29984D3B; Mon, 10 Jul 2023 15:46:21 +0200 (CEST)
-Date:   Mon, 10 Jul 2023 15:46:21 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
-Cc:     Petr Pavlu <petr.pavlu@suse.com>, tglx@linutronix.de,
-        mingo@redhat.com, bp@alien8.de, dave.hansen@linux.intel.com,
-        hpa@zytor.com, samitolvanen@google.com, x86@kernel.org,
-        linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [RFC PATCH 0/2] x86: kprobes: Fix CFI_CLANG related issues
-Message-ID: <20230710134621.GC3034907@hirez.programming.kicks-ass.net>
-References: <168899125356.80889.17967397360941194229.stgit@devnote2>
+         key-exchange X25519 server-signature RSA-PSS (2048 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 0FFC061048;
+        Mon, 10 Jul 2023 14:46:28 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DE65BC433C8;
+        Mon, 10 Jul 2023 14:46:26 +0000 (UTC)
+Date:   Mon, 10 Jul 2023 10:46:25 -0400
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     Zheng Yejian <zhengyejian1@huawei.com>
+Cc:     <mhiramat@kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-trace-kernel@vger.kernel.org>
+Subject: Re: [PATCH] ftrace: Fix possible warning on checking all pages used
+ in ftrace_process_locs()
+Message-ID: <20230710104625.421c851a@gandalf.local.home>
+In-Reply-To: <20230710212958.274126-1-zhengyejian1@huawei.com>
+References: <20230710212958.274126-1-zhengyejian1@huawei.com>
+X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <168899125356.80889.17967397360941194229.stgit@devnote2>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On Mon, Jul 10, 2023 at 09:14:13PM +0900, Masami Hiramatsu (Google) wrote:
+On Tue, 11 Jul 2023 05:29:58 +0800
+Zheng Yejian <zhengyejian1@huawei.com> wrote:
 
-> I just build tested, since I could not boot the kernel with CFI_CLANG=y.
-> Would anyone know something about this error?
+> As comments in ftrace_process_locs(), there may be NULL pointers in
+> mcount_loc section:
+>  > Some architecture linkers will pad between
+>  > the different mcount_loc sections of different
+>  > object files to satisfy alignments.
+>  > Skip any NULL pointers.  
 > 
-> [    0.141030] MMIO Stale Data: Unknown: No mitigations
-> [    0.153511] SMP alternatives: Using kCFI
-> [    0.164593] Freeing SMP alternatives memory: 36K
-> [    0.165053] Kernel panic - not syncing: stack-protector: Kernel stack is corrupted in: start_kernel+0x472/0x48b
-> [    0.166028] CPU: 0 PID: 0 Comm: swapper/0 Not tainted 6.4.2-00002-g12b1b2fca8ef #126
-> [    0.166028] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.13.0-1ubuntu1.1 04/01/2014
-> [    0.166028] Call Trace:
-> [    0.166028]  <TASK>
-> [    0.166028]  dump_stack_lvl+0x6e/0xb0
-> [    0.166028]  panic+0x146/0x2f0
-> [    0.166028]  ? start_kernel+0x472/0x48b
-> [    0.166028]  __stack_chk_fail+0x14/0x20
-> [    0.166028]  start_kernel+0x472/0x48b
-> [    0.166028]  x86_64_start_reservations+0x24/0x30
-> [    0.166028]  x86_64_start_kernel+0xa6/0xbb
-> [    0.166028]  secondary_startup_64_no_verify+0x106/0x11b
-> [    0.166028]  </TASK>
-> [    0.166028] ---[ end Kernel panic - not syncing: stack-protector: Kernel stack is corrupted in: start_kernel+0x472/0x48b ]---
+> After 20e5227e9f55 ("ftrace: allow NULL pointers in mcount_loc"),
+> NULL pointers will be accounted when allocating ftrace pages but
+> skipped before adding into ftrace pages, this may result in some
+> pages not being used. Then after 706c81f87f84 ("ftrace: Remove extra
+> helper functions"), warning may occur at:
+>   WARN_ON(pg->next);
 > 
+> So we may need to skip NULL pointers before allocating ftrace pages.
 > 
+> Fixes: 706c81f87f84 ("ftrace: Remove extra helper functions")
+> Signed-off-by: Zheng Yejian <zhengyejian1@huawei.com>
+> ---
+>  kernel/trace/ftrace.c | 10 ++++++++++
+>  1 file changed, 10 insertions(+)
+> 
+> diff --git a/kernel/trace/ftrace.c b/kernel/trace/ftrace.c
+> index 3740aca79fe7..5b474165df31 100644
+> --- a/kernel/trace/ftrace.c
+> +++ b/kernel/trace/ftrace.c
+> @@ -6485,6 +6485,16 @@ static int ftrace_process_locs(struct module *mod,
+>  	if (!count)
+>  		return 0;
+>  
+> +	p = start;
+> +	while (p < end) {
+> +		/*
+> +		 * Refer to conments below, there may be NULL pointers,
+> +		 * skip them before allocating pages
+> +		 */
+> +		addr = ftrace_call_adjust(*p++);
+> +		if (!addr)
+> +			count--;
+> +	}
 
-Hmm, I just build v6.4 using defconfig+kvm_guest.config+CFI_CLANG using
-clang-16 and that boots using kvm... (on my IVB, and the thing also
-boots natively on my ADL).
+My main concern about this is the added overhead during boot to process
+this. There's 10s of thousands of functions, so this loop will be 10s of
+thousands. I also don't like that this is an unconditional loop (meaning it
+executes even when it is unnecessary to do so).
 
-I'll go have a look at your patches shortly.
+
+>  	/*
+>  	 * Sorting mcount in vmlinux at build time depend on
+>  	 * CONFIG_BUILDTIME_MCOUNT_SORT, while mcount loc in
+
+How about something like this?
+
+-- Steve
+
+diff --git a/kernel/trace/ftrace.c b/kernel/trace/ftrace.c
+index b24c573934af..acd033371721 100644
+--- a/kernel/trace/ftrace.c
++++ b/kernel/trace/ftrace.c
+@@ -6474,6 +6474,7 @@ static int ftrace_process_locs(struct module *mod,
+ 	struct ftrace_page *start_pg;
+ 	struct ftrace_page *pg;
+ 	struct dyn_ftrace *rec;
++	unsigned long skipped = 0;
+ 	unsigned long count;
+ 	unsigned long *p;
+ 	unsigned long addr;
+@@ -6536,8 +6537,10 @@ static int ftrace_process_locs(struct module *mod,
+ 		 * object files to satisfy alignments.
+ 		 * Skip any NULL pointers.
+ 		 */
+-		if (!addr)
++		if (!addr) {
++			skipped++;
+ 			continue;
++		}
+ 
+ 		end_offset = (pg->index+1) * sizeof(pg->records[0]);
+ 		if (end_offset > PAGE_SIZE << pg->order) {
+@@ -6551,12 +6554,24 @@ static int ftrace_process_locs(struct module *mod,
+ 		rec->ip = addr;
+ 	}
+ 
+-	/* We should have used all pages */
+-	WARN_ON(pg->next);
+-
+ 	/* Assign the last page to ftrace_pages */
+ 	ftrace_pages = pg;
+ 
++	/* We should have used all pages unless we skipped some */
++	if (pg->next) {
++		WARN_ON(!skipped);
++		while (ftrace_pages->next) {
++			pg = ftrace_pages->next;
++			ftrace_pages->next = pg->next;
++			if (pg->records) {
++				free_pages((unsigned long)pg->records, pg->order);
++				ftrace_number_of_pages -= 1 << pg->order;
++			}
++			kfree(pg);
++			ftrace_number_of_groups--;
++		}
++	}
++
+ 	/*
+ 	 * We only need to disable interrupts on start up
+ 	 * because we are modifying code that an interrupt
