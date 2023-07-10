@@ -2,46 +2,46 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 771F7EB64DA
-	for <linux-trace-kernel@archiver.kernel.org>; Mon, 10 Jul 2023 15:49:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 36B1DC04A6A
+	for <linux-trace-kernel@archiver.kernel.org>; Mon, 10 Jul 2023 15:49:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233554AbjGJPtp (ORCPT
+        id S233577AbjGJPtq (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Mon, 10 Jul 2023 11:49:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47578 "EHLO
+        Mon, 10 Jul 2023 11:49:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47572 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233568AbjGJPto (ORCPT
+        with ESMTP id S233562AbjGJPto (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
         Mon, 10 Jul 2023 11:49:44 -0400
-Received: from mga11.intel.com (mga11.intel.com [192.55.52.93])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 392A6127;
-        Mon, 10 Jul 2023 08:49:43 -0700 (PDT)
+Received: from mga18.intel.com (mga18.intel.com [134.134.136.126])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C972911F;
+        Mon, 10 Jul 2023 08:49:42 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1689004183; x=1720540183;
+  t=1689004182; x=1720540182;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=8Fi7Z+SejqB8FmLnWihYsJBZfmhjua3hB69p3/WVjRY=;
-  b=PvhqdxQfA0shJtL/pJPXSYBMd8RMF9OnPYZcZsVyl7vp1RYlwzOTXTid
-   kNm3m+dPxlGuGHBKcSccjcStMVleWbJHjfU4FQeCcxXX+jdLmujeUKkgn
-   XE4X+LqiH0iBz1/F4eZioyFSqe+l95l+5/a0aL6HaWo+3z2ugeTJJbBoF
-   ao1/mUwm/ZavaahQ+DPrjGxZtntkGcOZIIvYMl+JH03sYLI8ZqAlzjNte
-   GFzgMLq7bhP3c4MbYzIv3luo1lE6GBJJRckuSJYCz8HV3Mbn3NbnaMtui
-   TyrPQIF4JJz7JuTBq5tSKfSn10orWwIA0c9PRonbBbw0fapK+4jCbRwcB
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10767"; a="361842470"
+  bh=X4L2zj0s8AySDlJPOTwB53/1Cp1xNye7i+ww1MhojGE=;
+  b=BvG02ZBJ2l8ghBG3WBHYhPMHhdyWtIylFxgzFimwcfnDu2u3hK9lt/YM
+   e6M0JV0Wc95snpG9T8/Tni5qNUqe1Wlo2q++/KPGAzSA8xVjuI1TvI1vw
+   H7o2GEcyVJhbAuDgpOTGFroYleFuLWv49mNgKtkKd6anBGb/OoO+v6MSH
+   tOw84evuDXmetsVU4vI0Eup+ThqZo8NOlXglv+K2/dXQD57l67YXtW4zc
+   Fsm61nfWcmHQbWFWs/y4qW5bSrtKZn6iM5WsQY2kg+PBOsPuJXKqUhUPJ
+   MQpNsCtCot4ji8sQgPZEwX2xHHXtAhmbgEhveFKOdx01Bls+OUqXsju3s
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10767"; a="349185320"
 X-IronPort-AV: E=Sophos;i="6.01,194,1684825200"; 
-   d="scan'208";a="361842470"
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Jul 2023 08:49:42 -0700
+   d="scan'208";a="349185320"
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Jul 2023 08:49:42 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10767"; a="720743966"
+X-IronPort-AV: E=McAfee;i="6600,9927,10767"; a="844921920"
 X-IronPort-AV: E=Sophos;i="6.01,194,1684825200"; 
-   d="scan'208";a="720743966"
+   d="scan'208";a="844921920"
 Received: from black.fi.intel.com ([10.237.72.28])
-  by orsmga002.jf.intel.com with ESMTP; 10 Jul 2023 08:49:41 -0700
+  by orsmga004.jf.intel.com with ESMTP; 10 Jul 2023 08:49:41 -0700
 Received: by black.fi.intel.com (Postfix, from userid 1003)
-        id E9B59854; Mon, 10 Jul 2023 18:49:34 +0300 (EEST)
+        id D2DB477B; Mon, 10 Jul 2023 18:49:34 +0300 (EEST)
 From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 To:     Mark Brown <broonie@kernel.org>,
         Cristian Ciocaltea <cristian.ciocaltea@collabora.com>,
@@ -95,9 +95,9 @@ Cc:     Sanjay R Mehta <sanju.mehta@amd.com>,
         Steven Rostedt <rostedt@goodmis.org>,
         Masami Hiramatsu <mhiramat@kernel.org>,
         Richard Cochran <richardcochran@gmail.com>
-Subject: [PATCH v2 14/15] spi: Convert to SPI_CONTROLLER_HALF_DUPLEX
-Date:   Mon, 10 Jul 2023 18:49:31 +0300
-Message-Id: <20230710154932.68377-15-andriy.shevchenko@linux.intel.com>
+Subject: [PATCH v2 12/15] spi: Get rid of old SPI_MASTER_MUST_TX & SPI_MASTER_MUST_RX
+Date:   Mon, 10 Jul 2023 18:49:29 +0300
+Message-Id: <20230710154932.68377-13-andriy.shevchenko@linux.intel.com>
 X-Mailer: git-send-email 2.40.0.1.gaa8946217a0b
 In-Reply-To: <20230710154932.68377-1-andriy.shevchenko@linux.intel.com>
 References: <20230710154932.68377-1-andriy.shevchenko@linux.intel.com>
@@ -107,180 +107,182 @@ Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-Convert the users under SPI subsystem to SPI_CONTROLLER_HALF_DUPLEX.
+Convert the users from SPI_MASTER_MUST_TX and/or SPI_MASTER_MUST_RX
+to SPI_CONTROLLER_MUST_TX and/or SPI_CONTROLLER_MUST_RX respectively
+and kill the not used anymore definitions.
 
 Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 ---
- drivers/spi/spi-amd.c             | 2 +-
- drivers/spi/spi-cavium-thunderx.c | 2 +-
- drivers/spi/spi-falcon.c          | 2 +-
- drivers/spi/spi-lp8841-rtc.c      | 2 +-
- drivers/spi/spi-mxs.c             | 2 +-
- drivers/spi/spi-omap-uwire.c      | 2 +-
- drivers/spi/spi-pic32-sqi.c       | 2 +-
- drivers/spi/spi-qcom-qspi.c       | 2 +-
- drivers/spi/spi-rockchip-sfc.c    | 2 +-
- drivers/spi/spi-sprd-adi.c        | 2 +-
- drivers/spi/spi-ti-qspi.c         | 2 +-
- drivers/spi/spi-xcomm.c           | 2 +-
- 12 files changed, 12 insertions(+), 12 deletions(-)
+ drivers/spi/spi-at91-usart.c   | 2 +-
+ drivers/spi/spi-atmel.c        | 2 +-
+ drivers/spi/spi-davinci.c      | 2 +-
+ drivers/spi/spi-fsl-lpspi.c    | 2 +-
+ drivers/spi/spi-meson-spicc.c  | 2 +-
+ drivers/spi/spi-mt65xx.c       | 2 +-
+ drivers/spi/spi-pci1xxxx.c     | 2 +-
+ drivers/spi/spi-pic32.c        | 2 +-
+ drivers/spi/spi-rb4xx.c        | 2 +-
+ drivers/spi/spi-slave-mt27xx.c | 2 +-
+ drivers/spi/spi-stm32.c        | 2 +-
+ include/linux/spi/spi.h        | 2 --
+ 12 files changed, 11 insertions(+), 13 deletions(-)
 
-diff --git a/drivers/spi/spi-amd.c b/drivers/spi/spi-amd.c
-index fecead757a3c..b19766571f28 100644
---- a/drivers/spi/spi-amd.c
-+++ b/drivers/spi/spi-amd.c
-@@ -404,7 +404,7 @@ static int amd_spi_probe(struct platform_device *pdev)
- 	master->bus_num = 0;
- 	master->num_chipselect = 4;
- 	master->mode_bits = 0;
--	master->flags = SPI_MASTER_HALF_DUPLEX;
-+	master->flags = SPI_CONTROLLER_HALF_DUPLEX;
- 	master->max_speed_hz = AMD_SPI_MAX_HZ;
- 	master->min_speed_hz = AMD_SPI_MIN_HZ;
- 	master->setup = amd_spi_master_setup;
-diff --git a/drivers/spi/spi-cavium-thunderx.c b/drivers/spi/spi-cavium-thunderx.c
-index 60c0d6934654..535f7eb9fa69 100644
---- a/drivers/spi/spi-cavium-thunderx.c
-+++ b/drivers/spi/spi-cavium-thunderx.c
-@@ -64,7 +64,7 @@ static int thunderx_spi_probe(struct pci_dev *pdev,
- 		p->sys_freq = SYS_FREQ_DEFAULT;
- 	dev_info(dev, "Set system clock to %u\n", p->sys_freq);
- 
--	master->flags = SPI_MASTER_HALF_DUPLEX;
-+	master->flags = SPI_CONTROLLER_HALF_DUPLEX;
- 	master->num_chipselect = 4;
- 	master->mode_bits = SPI_CPHA | SPI_CPOL | SPI_CS_HIGH |
- 			    SPI_LSB_FIRST | SPI_3WIRE;
-diff --git a/drivers/spi/spi-falcon.c b/drivers/spi/spi-falcon.c
-index 4c103dff0d44..8a8414cbb400 100644
---- a/drivers/spi/spi-falcon.c
-+++ b/drivers/spi/spi-falcon.c
-@@ -401,7 +401,7 @@ static int falcon_sflash_probe(struct platform_device *pdev)
- 	priv->master = master;
- 
- 	master->mode_bits = SPI_MODE_3;
--	master->flags = SPI_MASTER_HALF_DUPLEX;
-+	master->flags = SPI_CONTROLLER_HALF_DUPLEX;
- 	master->setup = falcon_sflash_setup;
- 	master->transfer_one_message = falcon_sflash_xfer_one;
- 	master->dev.of_node = pdev->dev.of_node;
-diff --git a/drivers/spi/spi-lp8841-rtc.c b/drivers/spi/spi-lp8841-rtc.c
-index ccaa7a946359..c6810720b3b5 100644
---- a/drivers/spi/spi-lp8841-rtc.c
-+++ b/drivers/spi/spi-lp8841-rtc.c
-@@ -191,7 +191,7 @@ spi_lp8841_rtc_probe(struct platform_device *pdev)
- 		return -ENOMEM;
- 	platform_set_drvdata(pdev, master);
- 
--	master->flags = SPI_MASTER_HALF_DUPLEX;
-+	master->flags = SPI_CONTROLLER_HALF_DUPLEX;
- 	master->mode_bits = SPI_CS_HIGH | SPI_3WIRE | SPI_LSB_FIRST;
- 
+diff --git a/drivers/spi/spi-at91-usart.c b/drivers/spi/spi-at91-usart.c
+index 7854d9790fe9..7dfe2b6c2990 100644
+--- a/drivers/spi/spi-at91-usart.c
++++ b/drivers/spi/spi-at91-usart.c
+@@ -527,7 +527,7 @@ static int at91_usart_spi_probe(struct platform_device *pdev)
+ 	controller->dev.of_node = pdev->dev.parent->of_node;
+ 	controller->bits_per_word_mask = SPI_BPW_MASK(8);
+ 	controller->setup = at91_usart_spi_setup;
+-	controller->flags = SPI_MASTER_MUST_RX | SPI_MASTER_MUST_TX;
++	controller->flags = SPI_CONTROLLER_MUST_RX | SPI_CONTROLLER_MUST_TX;
+ 	controller->transfer_one = at91_usart_spi_transfer_one;
+ 	controller->prepare_message = at91_usart_spi_prepare_message;
+ 	controller->unprepare_message = at91_usart_spi_unprepare_message;
+diff --git a/drivers/spi/spi-atmel.c b/drivers/spi/spi-atmel.c
+index 152cd6773403..0865993005b2 100644
+--- a/drivers/spi/spi-atmel.c
++++ b/drivers/spi/spi-atmel.c
+@@ -1475,7 +1475,7 @@ static int atmel_spi_probe(struct platform_device *pdev)
+ 	host->bus_num = pdev->id;
+ 	host->num_chipselect = 4;
+ 	host->setup = atmel_spi_setup;
+-	host->flags = (SPI_MASTER_MUST_RX | SPI_MASTER_MUST_TX |
++	host->flags = (SPI_CONTROLLER_MUST_RX | SPI_CONTROLLER_MUST_TX |
+ 			SPI_MASTER_GPIO_SS);
+ 	host->transfer_one = atmel_spi_one_transfer;
+ 	host->set_cs = atmel_spi_set_cs;
+diff --git a/drivers/spi/spi-davinci.c b/drivers/spi/spi-davinci.c
+index b04811c911e2..014392459d5e 100644
+--- a/drivers/spi/spi-davinci.c
++++ b/drivers/spi/spi-davinci.c
+@@ -939,7 +939,7 @@ static int davinci_spi_probe(struct platform_device *pdev)
  	master->bus_num = pdev->id;
-diff --git a/drivers/spi/spi-mxs.c b/drivers/spi/spi-mxs.c
-index 963a53dd680b..cd0e7ae07162 100644
---- a/drivers/spi/spi-mxs.c
-+++ b/drivers/spi/spi-mxs.c
-@@ -572,7 +572,7 @@ static int mxs_spi_probe(struct platform_device *pdev)
- 	master->mode_bits = SPI_CPOL | SPI_CPHA;
+ 	master->num_chipselect = pdata->num_chipselect;
+ 	master->bits_per_word_mask = SPI_BPW_RANGE_MASK(2, 16);
+-	master->flags = SPI_MASTER_MUST_RX | SPI_MASTER_GPIO_SS;
++	master->flags = SPI_CONTROLLER_MUST_RX | SPI_MASTER_GPIO_SS;
+ 	master->setup = davinci_spi_setup;
+ 	master->cleanup = davinci_spi_cleanup;
+ 	master->can_dma = davinci_spi_can_dma;
+diff --git a/drivers/spi/spi-fsl-lpspi.c b/drivers/spi/spi-fsl-lpspi.c
+index fb68c72df171..1c907d5d5bb3 100644
+--- a/drivers/spi/spi-fsl-lpspi.c
++++ b/drivers/spi/spi-fsl-lpspi.c
+@@ -856,7 +856,7 @@ static int fsl_lpspi_probe(struct platform_device *pdev)
+ 	controller->prepare_transfer_hardware = lpspi_prepare_xfer_hardware;
+ 	controller->unprepare_transfer_hardware = lpspi_unprepare_xfer_hardware;
+ 	controller->mode_bits = SPI_CPOL | SPI_CPHA | SPI_CS_HIGH;
+-	controller->flags = SPI_MASTER_MUST_RX | SPI_MASTER_MUST_TX;
++	controller->flags = SPI_CONTROLLER_MUST_RX | SPI_CONTROLLER_MUST_TX;
+ 	controller->dev.of_node = pdev->dev.of_node;
+ 	controller->bus_num = pdev->id;
+ 	controller->num_chipselect = fsl_lpspi->num_cs;
+diff --git a/drivers/spi/spi-meson-spicc.c b/drivers/spi/spi-meson-spicc.c
+index 141562c882f1..7a9eba35ac38 100644
+--- a/drivers/spi/spi-meson-spicc.c
++++ b/drivers/spi/spi-meson-spicc.c
+@@ -864,7 +864,7 @@ static int meson_spicc_probe(struct platform_device *pdev)
+ 				     SPI_BPW_MASK(24) |
+ 				     SPI_BPW_MASK(16) |
+ 				     SPI_BPW_MASK(8);
+-	master->flags = (SPI_MASTER_MUST_RX | SPI_MASTER_MUST_TX);
++	master->flags = (SPI_CONTROLLER_MUST_RX | SPI_CONTROLLER_MUST_TX);
+ 	master->min_speed_hz = spicc->data->min_speed_hz;
+ 	master->max_speed_hz = spicc->data->max_speed_hz;
+ 	master->setup = meson_spicc_setup;
+diff --git a/drivers/spi/spi-mt65xx.c b/drivers/spi/spi-mt65xx.c
+index 39272ad6641b..0757985947dd 100644
+--- a/drivers/spi/spi-mt65xx.c
++++ b/drivers/spi/spi-mt65xx.c
+@@ -1142,7 +1142,7 @@ static int mtk_spi_probe(struct platform_device *pdev)
+ 		master->mode_bits |= SPI_CS_HIGH;
+ 
+ 	if (mdata->dev_comp->must_tx)
+-		master->flags = SPI_MASTER_MUST_TX;
++		master->flags = SPI_CONTROLLER_MUST_TX;
+ 	if (mdata->dev_comp->ipm_design)
+ 		master->mode_bits |= SPI_LOOP | SPI_RX_DUAL | SPI_TX_DUAL |
+ 				     SPI_RX_QUAD | SPI_TX_QUAD;
+diff --git a/drivers/spi/spi-pci1xxxx.c b/drivers/spi/spi-pci1xxxx.c
+index 4445d82409d6..d23c42839da1 100644
+--- a/drivers/spi/spi-pci1xxxx.c
++++ b/drivers/spi/spi-pci1xxxx.c
+@@ -365,7 +365,7 @@ static int pci1xxxx_spi_probe(struct pci_dev *pdev, const struct pci_device_id *
+ 		spi_host->bits_per_word_mask = SPI_BPW_MASK(8);
+ 		spi_host->max_speed_hz = PCI1XXXX_SPI_MAX_CLOCK_HZ;
+ 		spi_host->min_speed_hz = PCI1XXXX_SPI_MIN_CLOCK_HZ;
+-		spi_host->flags = SPI_MASTER_MUST_TX;
++		spi_host->flags = SPI_CONTROLLER_MUST_TX;
+ 		spi_master_set_devdata(spi_host, spi_sub_ptr);
+ 		ret = devm_spi_register_master(dev, spi_host);
+ 		if (ret)
+diff --git a/drivers/spi/spi-pic32.c b/drivers/spi/spi-pic32.c
+index f2af5e653f3d..e9b4c9cb97fb 100644
+--- a/drivers/spi/spi-pic32.c
++++ b/drivers/spi/spi-pic32.c
+@@ -773,7 +773,7 @@ static int pic32_spi_probe(struct platform_device *pdev)
+ 	master->max_speed_hz	= clk_get_rate(pic32s->clk);
+ 	master->setup		= pic32_spi_setup;
+ 	master->cleanup		= pic32_spi_cleanup;
+-	master->flags		= SPI_MASTER_MUST_TX | SPI_MASTER_MUST_RX;
++	master->flags		= SPI_CONTROLLER_MUST_TX | SPI_CONTROLLER_MUST_RX;
+ 	master->bits_per_word_mask	= SPI_BPW_MASK(8) | SPI_BPW_MASK(16) |
+ 					  SPI_BPW_MASK(32);
+ 	master->transfer_one		= pic32_spi_one_transfer;
+diff --git a/drivers/spi/spi-rb4xx.c b/drivers/spi/spi-rb4xx.c
+index 5073736d3d1f..c817889a7797 100644
+--- a/drivers/spi/spi-rb4xx.c
++++ b/drivers/spi/spi-rb4xx.c
+@@ -156,7 +156,7 @@ static int rb4xx_spi_probe(struct platform_device *pdev)
  	master->num_chipselect = 3;
- 	master->dev.of_node = np;
--	master->flags = SPI_MASTER_HALF_DUPLEX;
-+	master->flags = SPI_CONTROLLER_HALF_DUPLEX;
- 	master->auto_runtime_pm = true;
- 
- 	spi = spi_master_get_devdata(master);
-diff --git a/drivers/spi/spi-omap-uwire.c b/drivers/spi/spi-omap-uwire.c
-index 902d2e0c1f2f..f89aa9e52c23 100644
---- a/drivers/spi/spi-omap-uwire.c
-+++ b/drivers/spi/spi-omap-uwire.c
-@@ -486,7 +486,7 @@ static int uwire_probe(struct platform_device *pdev)
- 	/* the spi->mode bits understood by this driver: */
- 	master->mode_bits = SPI_CPOL | SPI_CPHA | SPI_CS_HIGH;
- 	master->bits_per_word_mask = SPI_BPW_RANGE_MASK(1, 16);
--	master->flags = SPI_MASTER_HALF_DUPLEX;
-+	master->flags = SPI_CONTROLLER_HALF_DUPLEX;
- 
- 	master->bus_num = 2;	/* "official" */
- 	master->num_chipselect = 4;
-diff --git a/drivers/spi/spi-pic32-sqi.c b/drivers/spi/spi-pic32-sqi.c
-index 51dfb49523f3..5cbebcf26a2a 100644
---- a/drivers/spi/spi-pic32-sqi.c
-+++ b/drivers/spi/spi-pic32-sqi.c
-@@ -648,7 +648,7 @@ static int pic32_sqi_probe(struct platform_device *pdev)
- 	master->dev.of_node	= pdev->dev.of_node;
- 	master->mode_bits	= SPI_MODE_3 | SPI_MODE_0 | SPI_TX_DUAL |
- 				  SPI_RX_DUAL | SPI_TX_QUAD | SPI_RX_QUAD;
--	master->flags		= SPI_MASTER_HALF_DUPLEX;
-+	master->flags		= SPI_CONTROLLER_HALF_DUPLEX;
- 	master->can_dma		= pic32_sqi_can_dma;
- 	master->bits_per_word_mask	= SPI_BPW_RANGE_MASK(8, 32);
- 	master->transfer_one_message	= pic32_sqi_one_message;
-diff --git a/drivers/spi/spi-qcom-qspi.c b/drivers/spi/spi-qcom-qspi.c
-index a8a683d6145c..5a98c52bad32 100644
---- a/drivers/spi/spi-qcom-qspi.c
-+++ b/drivers/spi/spi-qcom-qspi.c
-@@ -724,7 +724,7 @@ static int qcom_qspi_probe(struct platform_device *pdev)
- 	master->mode_bits = SPI_MODE_0 |
- 			    SPI_TX_DUAL | SPI_RX_DUAL |
- 			    SPI_TX_QUAD | SPI_RX_QUAD;
--	master->flags = SPI_MASTER_HALF_DUPLEX;
-+	master->flags = SPI_CONTROLLER_HALF_DUPLEX;
- 	master->prepare_message = qcom_qspi_prepare_message;
- 	master->transfer_one = qcom_qspi_transfer_one;
- 	master->handle_err = qcom_qspi_handle_err;
-diff --git a/drivers/spi/spi-rockchip-sfc.c b/drivers/spi/spi-rockchip-sfc.c
-index 583f4187f030..bd550e76ab3d 100644
---- a/drivers/spi/spi-rockchip-sfc.c
-+++ b/drivers/spi/spi-rockchip-sfc.c
-@@ -565,7 +565,7 @@ static int rockchip_sfc_probe(struct platform_device *pdev)
- 	if (!master)
- 		return -ENOMEM;
- 
--	master->flags = SPI_MASTER_HALF_DUPLEX;
-+	master->flags = SPI_CONTROLLER_HALF_DUPLEX;
- 	master->mem_ops = &rockchip_sfc_mem_ops;
- 	master->dev.of_node = pdev->dev.of_node;
- 	master->mode_bits = SPI_TX_QUAD | SPI_TX_DUAL | SPI_RX_QUAD | SPI_RX_DUAL;
-diff --git a/drivers/spi/spi-sprd-adi.c b/drivers/spi/spi-sprd-adi.c
-index 22e39c4c12c4..94d16aadfa44 100644
---- a/drivers/spi/spi-sprd-adi.c
-+++ b/drivers/spi/spi-sprd-adi.c
-@@ -580,7 +580,7 @@ static int sprd_adi_probe(struct platform_device *pdev)
- 	ctlr->dev.of_node = pdev->dev.of_node;
- 	ctlr->bus_num = pdev->id;
- 	ctlr->num_chipselect = num_chipselect;
--	ctlr->flags = SPI_MASTER_HALF_DUPLEX;
-+	ctlr->flags = SPI_CONTROLLER_HALF_DUPLEX;
- 	ctlr->bits_per_word_mask = 0;
- 	ctlr->transfer_one = sprd_adi_transfer_one;
- 
-diff --git a/drivers/spi/spi-ti-qspi.c b/drivers/spi/spi-ti-qspi.c
-index 5914335ff63d..bf4b40289bee 100644
---- a/drivers/spi/spi-ti-qspi.c
-+++ b/drivers/spi/spi-ti-qspi.c
-@@ -770,7 +770,7 @@ static int ti_qspi_probe(struct platform_device *pdev)
- 
- 	master->mode_bits = SPI_CPOL | SPI_CPHA | SPI_RX_DUAL | SPI_RX_QUAD;
- 
--	master->flags = SPI_MASTER_HALF_DUPLEX;
-+	master->flags = SPI_CONTROLLER_HALF_DUPLEX;
- 	master->setup = ti_qspi_setup;
- 	master->auto_runtime_pm = true;
- 	master->transfer_one_message = ti_qspi_start_transfer_one;
-diff --git a/drivers/spi/spi-xcomm.c b/drivers/spi/spi-xcomm.c
-index ae6218bcd02a..a3d57554f5ba 100644
---- a/drivers/spi/spi-xcomm.c
-+++ b/drivers/spi/spi-xcomm.c
-@@ -218,7 +218,7 @@ static int spi_xcomm_probe(struct i2c_client *i2c)
- 	master->num_chipselect = 16;
- 	master->mode_bits = SPI_CPHA | SPI_CPOL | SPI_3WIRE;
+ 	master->mode_bits = SPI_TX_DUAL;
  	master->bits_per_word_mask = SPI_BPW_MASK(8);
--	master->flags = SPI_MASTER_HALF_DUPLEX;
-+	master->flags = SPI_CONTROLLER_HALF_DUPLEX;
- 	master->transfer_one_message = spi_xcomm_transfer_one;
- 	master->dev.of_node = i2c->dev.of_node;
- 	i2c_set_clientdata(i2c, master);
+-	master->flags = SPI_MASTER_MUST_TX;
++	master->flags = SPI_CONTROLLER_MUST_TX;
+ 	master->transfer_one = rb4xx_transfer_one;
+ 	master->set_cs = rb4xx_set_cs;
+ 
+diff --git a/drivers/spi/spi-slave-mt27xx.c b/drivers/spi/spi-slave-mt27xx.c
+index 4e4d426bfb43..6d6772974783 100644
+--- a/drivers/spi/spi-slave-mt27xx.c
++++ b/drivers/spi/spi-slave-mt27xx.c
+@@ -414,7 +414,7 @@ static int mtk_spi_slave_probe(struct platform_device *pdev)
+ 	mdata->dev_comp = of_id->data;
+ 
+ 	if (mdata->dev_comp->must_rx)
+-		ctlr->flags = SPI_MASTER_MUST_RX;
++		ctlr->flags = SPI_CONTROLLER_MUST_RX;
+ 
+ 	platform_set_drvdata(pdev, ctlr);
+ 
+diff --git a/drivers/spi/spi-stm32.c b/drivers/spi/spi-stm32.c
+index 6d10fa4ab783..423212bd0675 100644
+--- a/drivers/spi/spi-stm32.c
++++ b/drivers/spi/spi-stm32.c
+@@ -1750,7 +1750,7 @@ static const struct stm32_spi_cfg stm32f4_spi_cfg = {
+ 	.baud_rate_div_min = STM32F4_SPI_BR_DIV_MIN,
+ 	.baud_rate_div_max = STM32F4_SPI_BR_DIV_MAX,
+ 	.has_fifo = false,
+-	.flags = SPI_MASTER_MUST_TX,
++	.flags = SPI_CONTROLLER_MUST_TX,
+ };
+ 
+ static const struct stm32_spi_cfg stm32h7_spi_cfg = {
+diff --git a/include/linux/spi/spi.h b/include/linux/spi/spi.h
+index ce77dcf47b96..cdc3addfe117 100644
+--- a/include/linux/spi/spi.h
++++ b/include/linux/spi/spi.h
+@@ -1645,8 +1645,6 @@ spi_transfer_is_last(struct spi_controller *ctlr, struct spi_transfer *xfer)
+ #define spi_master			spi_controller
+ 
+ #define SPI_MASTER_HALF_DUPLEX		SPI_CONTROLLER_HALF_DUPLEX
+-#define SPI_MASTER_MUST_RX		SPI_CONTROLLER_MUST_RX
+-#define SPI_MASTER_MUST_TX		SPI_CONTROLLER_MUST_TX
+ 
+ #define spi_master_get_devdata(_ctlr)	spi_controller_get_devdata(_ctlr)
+ #define spi_master_set_devdata(_ctlr, _data)	\
 -- 
 2.40.0.1.gaa8946217a0b
 
