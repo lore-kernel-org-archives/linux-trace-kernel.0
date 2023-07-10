@@ -2,89 +2,109 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B4911EB64D9
-	for <linux-trace-kernel@archiver.kernel.org>; Mon, 10 Jul 2023 09:32:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E8034EB64DA
+	for <linux-trace-kernel@archiver.kernel.org>; Mon, 10 Jul 2023 09:52:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231917AbjGJJc3 (ORCPT
+        id S232432AbjGJJwU (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Mon, 10 Jul 2023 05:32:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51004 "EHLO
+        Mon, 10 Jul 2023 05:52:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38254 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232797AbjGJJbz (ORCPT
+        with ESMTP id S231450AbjGJJvn (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Mon, 10 Jul 2023 05:31:55 -0400
-Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0DF692D45;
-        Mon, 10 Jul 2023 02:30:20 -0700 (PDT)
-Received: from dggpeml500012.china.huawei.com (unknown [172.30.72.53])
-        by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4QzzFR1QR2zTmRB;
-        Mon, 10 Jul 2023 17:28:11 +0800 (CST)
-Received: from localhost.localdomain (10.67.175.61) by
- dggpeml500012.china.huawei.com (7.185.36.15) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.27; Mon, 10 Jul 2023 17:29:21 +0800
-From:   Zheng Yejian <zhengyejian1@huawei.com>
-To:     <rostedt@goodmis.org>, <mhiramat@kernel.org>
-CC:     <linux-kernel@vger.kernel.org>,
-        <linux-trace-kernel@vger.kernel.org>, <zhengyejian1@huawei.com>
-Subject: [PATCH] ftrace: Fix possible warning on checking all pages used in ftrace_process_locs()
-Date:   Tue, 11 Jul 2023 05:29:58 +0800
-Message-ID: <20230710212958.274126-1-zhengyejian1@huawei.com>
-X-Mailer: git-send-email 2.25.1
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [10.67.175.61]
-X-ClientProxiedBy: dggems701-chm.china.huawei.com (10.3.19.178) To
- dggpeml500012.china.huawei.com (7.185.36.15)
-X-CFilter-Loop: Reflected
+        Mon, 10 Jul 2023 05:51:43 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AA6C5E71;
+        Mon, 10 Jul 2023 02:48:44 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 3FB8560F7A;
+        Mon, 10 Jul 2023 09:48:44 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 13AD1C433C8;
+        Mon, 10 Jul 2023 09:48:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1688982523;
+        bh=smMst04IepMxRJUPoOQzmJ/MhSVOSpAQTL9lqbIyrAI=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=XSXtss5+su/HP1ycJhTCUrcQYIlsIkn6IQ2AqTnNU4wEgpM2hnyEPWHalP3XhLcOP
+         qEkfikeyTjovMXVzDSlutxgdOBA/EdKgepbEQADDJWXcrGMlBgC7bMpVR9K+3cyaO5
+         b7RKYSYnotEf/RXLgcJgPNPG+ctwmVZFq5kkvuhICTzFhqmckQfzOFlTmL1eiwcdO6
+         1bysVRISQNCKiU90rV4d9Igk8l1wsS415IkPlICYm6Tga1ZoZtk7QocyF+8+WI10Xa
+         sN9YwQZXGFqPwEakt1DZtyzog9y+BlayCOlTgd+cqEoWOdetdpFlYCue7dhZySWrDh
+         f9wS7DrOiRC4w==
+Date:   Mon, 10 Jul 2023 18:48:39 +0900
+From:   Masami Hiramatsu (Google) <mhiramat@kernel.org>
+To:     Li zeming <zeming@nfschina.com>
+Cc:     naveen.n.rao@linux.ibm.com, anil.s.keshavamurthy@intel.com,
+        davem@davemloft.net, linux-kernel@vger.kernel.org,
+        linux-trace-kernel@vger.kernel.org
+Subject: Re: [PATCH] kernel: kprobes: Remove unnecessary =?UTF-8?B?4oCY?=
+ =?UTF-8?B?MOKAmQ==?= values
+Message-Id: <20230710184839.4680f3e7983470c650cc24ad@kernel.org>
+In-Reply-To: <20230711185353.3218-1-zeming@nfschina.com>
+References: <20230711185353.3218-1-zeming@nfschina.com>
+X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-As comments in ftrace_process_locs(), there may be NULL pointers in
-mcount_loc section:
- > Some architecture linkers will pad between
- > the different mcount_loc sections of different
- > object files to satisfy alignments.
- > Skip any NULL pointers.
+On Wed, 12 Jul 2023 02:53:53 +0800
+Li zeming <zeming@nfschina.com> wrote:
 
-After 20e5227e9f55 ("ftrace: allow NULL pointers in mcount_loc"),
-NULL pointers will be accounted when allocating ftrace pages but
-skipped before adding into ftrace pages, this may result in some
-pages not being used. Then after 706c81f87f84 ("ftrace: Remove extra
-helper functions"), warning may occur at:
-  WARN_ON(pg->next);
+> it is assigned first, so it does not need to initialize the assignment.
+> 
 
-So we may need to skip NULL pointers before allocating ftrace pages.
+Looks good to me.
 
-Fixes: 706c81f87f84 ("ftrace: Remove extra helper functions")
-Signed-off-by: Zheng Yejian <zhengyejian1@huawei.com>
----
- kernel/trace/ftrace.c | 10 ++++++++++
- 1 file changed, 10 insertions(+)
+Acked-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 
-diff --git a/kernel/trace/ftrace.c b/kernel/trace/ftrace.c
-index 3740aca79fe7..5b474165df31 100644
---- a/kernel/trace/ftrace.c
-+++ b/kernel/trace/ftrace.c
-@@ -6485,6 +6485,16 @@ static int ftrace_process_locs(struct module *mod,
- 	if (!count)
- 		return 0;
- 
-+	p = start;
-+	while (p < end) {
-+		/*
-+		 * Refer to conments below, there may be NULL pointers,
-+		 * skip them before allocating pages
-+		 */
-+		addr = ftrace_call_adjust(*p++);
-+		if (!addr)
-+			count--;
-+	}
- 	/*
- 	 * Sorting mcount in vmlinux at build time depend on
- 	 * CONFIG_BUILDTIME_MCOUNT_SORT, while mcount loc in
+Thanks!
+
+> Signed-off-by: Li zeming <zeming@nfschina.com>
+> ---
+>  kernel/kprobes.c | 6 +++---
+>  1 file changed, 3 insertions(+), 3 deletions(-)
+> 
+> diff --git a/kernel/kprobes.c b/kernel/kprobes.c
+> index 00e177de91cc..83e6f76fca04 100644
+> --- a/kernel/kprobes.c
+> +++ b/kernel/kprobes.c
+> @@ -1072,7 +1072,7 @@ static int kprobe_ftrace_enabled;
+>  static int __arm_kprobe_ftrace(struct kprobe *p, struct ftrace_ops *ops,
+>  			       int *cnt)
+>  {
+> -	int ret = 0;
+> +	int ret;
+>  
+>  	lockdep_assert_held(&kprobe_mutex);
+>  
+> @@ -1110,7 +1110,7 @@ static int arm_kprobe_ftrace(struct kprobe *p)
+>  static int __disarm_kprobe_ftrace(struct kprobe *p, struct ftrace_ops *ops,
+>  				  int *cnt)
+>  {
+> -	int ret = 0;
+> +	int ret;
+>  
+>  	lockdep_assert_held(&kprobe_mutex);
+>  
+> @@ -2692,7 +2692,7 @@ void kprobe_free_init_mem(void)
+>  
+>  static int __init init_kprobes(void)
+>  {
+> -	int i, err = 0;
+> +	int i, err;
+>  
+>  	/* FIXME allocate the probe table, currently defined statically */
+>  	/* initialize all list heads */
+> -- 
+> 2.18.2
+> 
+
+
 -- 
-2.25.1
-
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
