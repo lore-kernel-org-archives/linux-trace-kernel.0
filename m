@@ -2,139 +2,222 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A0CFEB64DA
-	for <linux-trace-kernel@archiver.kernel.org>; Mon, 10 Jul 2023 16:13:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 92818EB64D9
+	for <linux-trace-kernel@archiver.kernel.org>; Mon, 10 Jul 2023 16:16:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232067AbjGJQN3 (ORCPT
+        id S229801AbjGJQQ5 (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Mon, 10 Jul 2023 12:13:29 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34252 "EHLO
+        Mon, 10 Jul 2023 12:16:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35652 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231307AbjGJQN2 (ORCPT
+        with ESMTP id S229449AbjGJQQ4 (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Mon, 10 Jul 2023 12:13:28 -0400
-Received: from mga02.intel.com (mga02.intel.com [134.134.136.20])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2723618D;
-        Mon, 10 Jul 2023 09:13:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1689005604; x=1720541604;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=hcRhvsNpzCZm3Sd7nNPgrDaCtucecy1QPHYWw64ui6o=;
-  b=gNhFXiXfjwNq5lgOn1LfATXCkYjrkUiekdloO+VlxgQAGwAowpuqnero
-   LqwzCM58mwnIEo6x/vxNUY2goK7aOXUgMv0fr7tkztR6hfBI1DnMgLE9q
-   +Jpx4d2Uyv67chiRtr0ioR8ixqTjMXI9XWukYXc1cBgoJowFte1TAeoNM
-   FlAybTb6Hr4INO6T8ZDJ3joMZNvW8dugQm9OqLbOzuE5+MQiSBmZUOJD/
-   pNOTl3oz/wHthzgZ3zrrrmlXXKNUQe6/uNM0QNkhpRV0ZDF71heDNUJMA
-   0aDyyYGf6IoE9nWwExq8QuAYseXWicb+7ZNPpwqeDAyiGeTCigvmEXSgY
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10767"; a="354244117"
-X-IronPort-AV: E=Sophos;i="6.01,195,1684825200"; 
-   d="scan'208";a="354244117"
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Jul 2023 09:12:38 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10767"; a="790844445"
-X-IronPort-AV: E=Sophos;i="6.01,195,1684825200"; 
-   d="scan'208";a="790844445"
-Received: from smile.fi.intel.com ([10.237.72.54])
-  by fmsmga004.fm.intel.com with ESMTP; 10 Jul 2023 09:12:26 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.96)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1qItUs-001bGm-39;
-        Mon, 10 Jul 2023 19:12:22 +0300
-Date:   Mon, 10 Jul 2023 19:12:22 +0300
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Marc Kleine-Budde <mkl@pengutronix.de>
-Cc:     Mark Brown <broonie@kernel.org>,
-        Cristian Ciocaltea <cristian.ciocaltea@collabora.com>,
-        Yang Yingliang <yangyingliang@huawei.com>,
-        Amit Kumar Mahapatra via Alsa-devel 
-        <alsa-devel@alsa-project.org>,
-        Neil Armstrong <neil.armstrong@linaro.org>,
-        Tharun Kumar P <tharunkumar.pasumarthi@microchip.com>,
-        Vijaya Krishna Nivarthi <quic_vnivarth@quicinc.com>,
-        Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>, linux-spi@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-amlogic@lists.infradead.org,
-        linux-mediatek@lists.infradead.org, linux-arm-msm@vger.kernel.org,
-        linux-rockchip@lists.infradead.org,
-        linux-riscv@lists.infradead.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-trace-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        Richard Cochran <richardcochran@gmail.com>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Alexandre Torgue <alexandre.torgue@foss.st.com>,
-        Max Filippov <jcmvbkbc@gmail.com>,
-        Fabio Estevam <festevam@gmail.com>,
-        Jerome Brunet <jbrunet@baylibre.com>,
-        Kevin Hilman <khilman@baylibre.com>,
-        Tudor Ambarus <tudor.ambarus@linaro.org>,
-        Andy Gross <agross@kernel.org>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Alain Volmat <alain.volmat@foss.st.com>,
-        Orson Zhai <orsonzhai@gmail.com>,
-        Radu Pirea <radu_nicolae.pirea@upb.ro>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Sanjay R Mehta <sanju.mehta@amd.com>,
-        Baolin Wang <baolin.wang@linux.alibaba.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        AngeloGioacchino Del Regno 
-        <angelogioacchino.delregno@collabora.com>,
-        Bjorn Andersson <andersson@kernel.org>,
-        Nicolas Ferre <nicolas.ferre@microchip.com>,
-        Serge Semin <fancer.lancer@gmail.com>,
-        Konrad Dybcio <konrad.dybcio@linaro.org>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Chunyan Zhang <zhang.lyra@gmail.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Claudiu Beznea <claudiu.beznea@microchip.com>
-Subject: Re: [PATCH v2 09/15] spi: Use struct_size() helper
-Message-ID: <ZKwt5utuGaCf5nmT@smile.fi.intel.com>
-References: <20230710154932.68377-1-andriy.shevchenko@linux.intel.com>
- <20230710154932.68377-10-andriy.shevchenko@linux.intel.com>
- <20230710-doze-scared-9f0a2e1a9125-mkl@pengutronix.de>
- <ZKwtgwZtUUHGC+S3@smile.fi.intel.com>
+        Mon, 10 Jul 2023 12:16:56 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2BAEE106;
+        Mon, 10 Jul 2023 09:16:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Transfer-Encoding:
+        Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:
+        Sender:Reply-To:Content-ID:Content-Description;
+        bh=/LswZXyKDM4slxIskQwFHult6e/+CLn3LiQS3znqeWE=; b=b4MaOaqmUjhOXC9c1pp8Xr8sBy
+        r9mrPU9jeziMDj8ghbfvjEDteV7Q7yJqV/j/vIykfiKriI0RMDCrRzBi2DUv6JGslSnBYTPLiU2Md
+        JjM7fLPBLE+0vcLpJmh5CD3QqbeSWn3058sjO9lo/YEVbj4TMyroFsH2xtrRlyTfRqF+8TuTCc7Uq
+        rCk0ADDSyE7fbsgxjQgc0lYXteKg4T/92o9bslsIQVbatzw6pMiodvLtwKpLG7axCxrl4Kwu9KoS5
+        VpIbhL1hGB/rdG6xaVb7nrdTPpNv8CSNb8e28aL7/VYKj2tifWQOTrSUSFIxC1/K7jyd3Ui4kQ/PD
+        /yknlwaw==;
+Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
+        by casper.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
+        id 1qItZ6-00EkAx-VI; Mon, 10 Jul 2023 16:16:45 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (4096 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 1ACFC3002B1;
+        Mon, 10 Jul 2023 18:16:44 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 01A8E2B3B25DF; Mon, 10 Jul 2023 18:16:43 +0200 (CEST)
+Date:   Mon, 10 Jul 2023 18:16:43 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
+Cc:     Petr Pavlu <petr.pavlu@suse.com>, tglx@linutronix.de,
+        mingo@redhat.com, bp@alien8.de, dave.hansen@linux.intel.com,
+        hpa@zytor.com, samitolvanen@google.com, x86@kernel.org,
+        linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [RFC PATCH 2/2] x86/kprobes: Prohibit probing on compiler
+ generated CFI checking code
+Message-ID: <20230710161643.GB3040258@hirez.programming.kicks-ass.net>
+References: <168899125356.80889.17967397360941194229.stgit@devnote2>
+ <168899127520.80889.15418363018799407058.stgit@devnote2>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <ZKwtgwZtUUHGC+S3@smile.fi.intel.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <168899127520.80889.15418363018799407058.stgit@devnote2>
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On Mon, Jul 10, 2023 at 07:10:43PM +0300, Andy Shevchenko wrote:
-> On Mon, Jul 10, 2023 at 05:59:55PM +0200, Marc Kleine-Budde wrote:
-> > On 10.07.2023 18:49:26, Andy Shevchenko wrote:
+On Mon, Jul 10, 2023 at 09:14:35PM +0900, Masami Hiramatsu (Google) wrote:
+> +	if (IS_ENABLED(CONFIG_CFI_CLANG)) {
+> +		/*
+> +		 * The compiler generates the following instruction sequence
+> +		 * for indirect call checks and cfi.c decodes this;
+> +		 *
+> +		 *   movl    -<id>, %r10d       ; 6 bytes
+> +		 *   addl    -4(%reg), %r10d    ; 4 bytes
+> +		 *   je      .Ltmp1             ; 2 bytes
+> +		 *   ud2                        ; <- regs->ip
+> +		 *   .Ltmp1:
+> +		 *
+> +		 * Also, these movl and addl are used for showing expected
+> +		 * type. So those must not be touched.
+> +		 */
+> +		__addr = recover_probed_instruction(buf, addr);
+> +		if (!__addr)
+> +			return 0;
+> +
+> +		if (insn_decode_kernel(&insn, (void *)__addr) < 0)
+> +			return 0;
+> +
+> +		if (insn.opcode.value == 0xBA)
+> +			offset = 12;
+> +		else if (insn.opcode.value == 0x3)
+> +			offset = 6;
+> +		else
+> +			goto out;
 
-...
+Notably, the JE will already be avoided?
 
-> > > +	struct spi_transfer	t[];
-> > 
-> > You might want to use the DECLARE_FLEX_ARRAY helper here.
-> 
-> Technically, yes, semantically documentation [1] disagrees with
+> +
+> +		/* This movl/addl is used for decoding CFI. */
+> +		if (is_cfi_trap(addr + offset))
+> +			return 0;
+> +	}
+>  
+> +out:
+>  	return (addr == paddr);
+>  }
 
-"and [2]"
+Hmm, so I was thinking something like the below, which also catches
+things when we rewrite kCFI to FineIBT, except I don't think we care if
+the FineIBT callsite gets re-written. FineIBT only relies on the __cfi_
+symbol not getting poked at (which the previous patches should ensure).
 
-> you, so I leave it as is.
-> 
-> [1]: Documentation/process/deprecated.rst:269
+Additionally is_cfi_trap() is horrifically slow -- it's a full linear
+search of the entire kcfi_traps array, it doesn't have any smarts on
+(#UD can hardly be considered a fast path).
 
-[2]: Documentation/process/deprecated.rst:350
-
--- 
-With Best Regards,
-Andy Shevchenko
+So I tihnk I'm ok with the above, just adding the below for reference
+(completely untested and everything).
 
 
+Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+
+
+---
+diff --git a/arch/x86/kernel/kprobes/core.c b/arch/x86/kernel/kprobes/core.c
+index f7f6042eb7e6..b812dee76909 100644
+--- a/arch/x86/kernel/kprobes/core.c
++++ b/arch/x86/kernel/kprobes/core.c
+@@ -293,6 +293,11 @@ static int can_probe(unsigned long paddr)
+ #endif
+ 		addr += insn.length;
+ 	}
++	/*
++	 * Don't allow poking the kCFI/FineIBT callsites.
++	 */
++	if (IS_ENABLED(CONFIG_CFI_CLANG) && cfi_call_site(addr))
++		return 0;
+ 
+ 	return (addr == paddr);
+ }
+diff --git a/kernel/cfi.c b/kernel/cfi.c
+index 08caad776717..2656e6ffa013 100644
+--- a/kernel/cfi.c
++++ b/kernel/cfi.c
+@@ -31,16 +31,22 @@ static inline unsigned long trap_address(s32 *p)
+ 	return (unsigned long)((long)p + (long)*p);
+ }
+ 
+-static bool is_trap(unsigned long addr, s32 *start, s32 *end)
++static long cfi_trap_distance(unsigned long addr, s32 *start, s32 *end)
+ {
++	long dist = LONG_MAX;
+ 	s32 *p;
+ 
+ 	for (p = start; p < end; ++p) {
+-		if (trap_address(p) == addr)
+-			return true;
++		long d = trap_address(p) - addr;
++
++		if (abs(dist) < abs(d)) {
++			dist = d;
++			if (dist == 0)
++				return 0;
++		}
+ 	}
+ 
+-	return false;
++	return dist;
+ }
+ 
+ #ifdef CONFIG_MODULES
+@@ -66,25 +72,25 @@ void module_cfi_finalize(const Elf_Ehdr *hdr, const Elf_Shdr *sechdrs,
+ 	}
+ }
+ 
+-static bool is_module_cfi_trap(unsigned long addr)
++static long module_cfi_trap_distance(unsigned long addr)
+ {
+ 	struct module *mod;
+-	bool found = false;
++	long dist = LONG_MAX;
+ 
+ 	rcu_read_lock_sched_notrace();
+ 
+ 	mod = __module_address(addr);
+ 	if (mod)
+-		found = is_trap(addr, mod->kcfi_traps, mod->kcfi_traps_end);
++		dist = cfi_trap_distance(addr, mod->kcfi_traps, mod->kcfi_traps_end);
+ 
+ 	rcu_read_unlock_sched_notrace();
+ 
+ 	return found;
+ }
+ #else /* CONFIG_MODULES */
+-static inline bool is_module_cfi_trap(unsigned long addr)
++static long module_cfi_trap_distance(unsigned long addr)
+ {
+-	return false;
++	return LONG_MAX;
+ }
+ #endif /* CONFIG_MODULES */
+ 
+@@ -93,9 +99,24 @@ extern s32 __stop___kcfi_traps[];
+ 
+ bool is_cfi_trap(unsigned long addr)
+ {
+-	if (is_trap(addr, __start___kcfi_traps, __stop___kcfi_traps))
++	long dist = cfi_trap_distance(addr, __start___kcfi_traps, __stop___kcfi_traps);
++	if (!dist)
++		return true;
++
++	return module_cfi_trap_distance(addr) == 0;
++}
++
++bool cfi_call_site(unsigned long addr)
++{
++	long dist = cfi_trap_distance(addr, __start___kcfi_traps, __stop___kcfi_traps);
++	if (dist >= -12 && dist <= 0)
++		return true;
++
++	dist = module_cfi_trap_distance(addr);
++	if (dist >= -12 && dist <= 0)
+ 		return true;
+ 
+-	return is_module_cfi_trap(addr);
++	return false;
+ }
++
+ #endif /* CONFIG_ARCH_USES_CFI_TRAPS */
