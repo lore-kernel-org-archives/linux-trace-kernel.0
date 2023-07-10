@@ -2,38 +2,39 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D75EAEB64D9
-	for <linux-trace-kernel@archiver.kernel.org>; Mon, 10 Jul 2023 14:46:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 948A2EB64D9
+	for <linux-trace-kernel@archiver.kernel.org>; Mon, 10 Jul 2023 15:17:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231438AbjGJOqb (ORCPT
+        id S230035AbjGJPRI (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Mon, 10 Jul 2023 10:46:31 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53504 "EHLO
+        Mon, 10 Jul 2023 11:17:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39582 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229469AbjGJOqb (ORCPT
+        with ESMTP id S230300AbjGJPRH (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Mon, 10 Jul 2023 10:46:31 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7AA6F114;
-        Mon, 10 Jul 2023 07:46:28 -0700 (PDT)
+        Mon, 10 Jul 2023 11:17:07 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 90001B7;
+        Mon, 10 Jul 2023 08:17:06 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange X25519 server-signature RSA-PSS (2048 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 0FFC061048;
-        Mon, 10 Jul 2023 14:46:28 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DE65BC433C8;
-        Mon, 10 Jul 2023 14:46:26 +0000 (UTC)
-Date:   Mon, 10 Jul 2023 10:46:25 -0400
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 2EEB96105C;
+        Mon, 10 Jul 2023 15:17:06 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B1879C433C8;
+        Mon, 10 Jul 2023 15:17:04 +0000 (UTC)
+Date:   Mon, 10 Jul 2023 11:17:03 -0400
 From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Zheng Yejian <zhengyejian1@huawei.com>
-Cc:     <mhiramat@kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-trace-kernel@vger.kernel.org>
-Subject: Re: [PATCH] ftrace: Fix possible warning on checking all pages used
- in ftrace_process_locs()
-Message-ID: <20230710104625.421c851a@gandalf.local.home>
-In-Reply-To: <20230710212958.274126-1-zhengyejian1@huawei.com>
-References: <20230710212958.274126-1-zhengyejian1@huawei.com>
+To:     Zehao Zhang <zhangzehao@vivo.com>
+Cc:     linkinjeon@kernel.org, sj1557.seo@samsung.com, mhiramat@kernel.org,
+        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-trace-kernel@vger.kernel.org
+Subject: Re: [PATCH] exfat: Add ftrace support for exfat and add some
+ tracepoints
+Message-ID: <20230710111703.33bb48c5@gandalf.local.home>
+In-Reply-To: <20230710092559.19087-1-zhangzehao@vivo.com>
+References: <20230710092559.19087-1-zhangzehao@vivo.com>
 X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
@@ -42,113 +43,127 @@ Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On Tue, 11 Jul 2023 05:29:58 +0800
-Zheng Yejian <zhengyejian1@huawei.com> wrote:
+On Mon, 10 Jul 2023 17:25:59 +0800
+Zehao Zhang <zhangzehao@vivo.com> wrote:
 
-> As comments in ftrace_process_locs(), there may be NULL pointers in
-> mcount_loc section:
->  > Some architecture linkers will pad between
->  > the different mcount_loc sections of different
->  > object files to satisfy alignments.
->  > Skip any NULL pointers.  
+> Add ftrace support for exFAT file system,
+> and add some tracepoints:
+> exfat_read_folio(), exfat_writepages(), exfat_write_begin(),
+> exfat_write_end(), exfat_lookup_start(), exfat_lookup_end()
 > 
-> After 20e5227e9f55 ("ftrace: allow NULL pointers in mcount_loc"),
-> NULL pointers will be accounted when allocating ftrace pages but
-> skipped before adding into ftrace pages, this may result in some
-> pages not being used. Then after 706c81f87f84 ("ftrace: Remove extra
-> helper functions"), warning may occur at:
->   WARN_ON(pg->next);
+> exfat_read_folio():
+> shows the dev number, inode and the folio index.
 > 
-> So we may need to skip NULL pointers before allocating ftrace pages.
+> exfat_writepages():
+> shows the inode and fields in struct writeback_control.
 > 
-> Fixes: 706c81f87f84 ("ftrace: Remove extra helper functions")
-> Signed-off-by: Zheng Yejian <zhengyejian1@huawei.com>
+> exfat_write_begin():
+> shows the inode, file position offset and length.
+> 
+> exfat_write_end():
+> shows the inode, file position offset, bytes write to page
+> and bytes copied from user.
+> 
+> exfat_lookup_start():
+> shows the target inode, dentry and flags.
+> 
+> exfat_lookup_end():
+> shows the target inode, dentry and err code.
+> 
+> Signed-off-by: Zehao Zhang <zhangzehao@vivo.com>
 > ---
->  kernel/trace/ftrace.c | 10 ++++++++++
->  1 file changed, 10 insertions(+)
+>  MAINTAINERS                  |   1 +
+>  fs/exfat/inode.c             |  16 +++
+>  fs/exfat/namei.c             |  10 +-
+>  include/trace/events/exfat.h | 192 +++++++++++++++++++++++++++++++++++
+>  4 files changed, 218 insertions(+), 1 deletion(-)
+>  create mode 100644 include/trace/events/exfat.h
 > 
-> diff --git a/kernel/trace/ftrace.c b/kernel/trace/ftrace.c
-> index 3740aca79fe7..5b474165df31 100644
-> --- a/kernel/trace/ftrace.c
-> +++ b/kernel/trace/ftrace.c
-> @@ -6485,6 +6485,16 @@ static int ftrace_process_locs(struct module *mod,
->  	if (!count)
->  		return 0;
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index 4f115c355a41..fbe1caa61a38 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -7752,6 +7752,7 @@ L:	linux-fsdevel@vger.kernel.org
+>  S:	Maintained
+>  T:	git git://git.kernel.org/pub/scm/linux/kernel/git/linkinjeon/exfat.git
+>  F:	fs/exfat/
+> +F:	include/trace/events/exfat.h
 >  
-> +	p = start;
-> +	while (p < end) {
-> +		/*
-> +		 * Refer to conments below, there may be NULL pointers,
-> +		 * skip them before allocating pages
-> +		 */
-> +		addr = ftrace_call_adjust(*p++);
-> +		if (!addr)
-> +			count--;
-> +	}
+>  EXT2 FILE SYSTEM
+>  M:	Jan Kara <jack@suse.com>
+> diff --git a/fs/exfat/inode.c b/fs/exfat/inode.c
+> index 481dd338f2b8..48fec3fa10af 100644
+> --- a/fs/exfat/inode.c
+> +++ b/fs/exfat/inode.c
+> @@ -17,6 +17,9 @@
+>  #include "exfat_raw.h"
+>  #include "exfat_fs.h"
+>  
+> +#define CREATE_TRACE_POINTS
+> +#include <trace/events/exfat.h>
+> +
+>  int __exfat_write_inode(struct inode *inode, int sync)
+>  {
+>  	unsigned long long on_disk_size;
+> @@ -335,6 +338,10 @@ static int exfat_get_block(struct inode *inode, sector_t iblock,
+>  
+>  static int exfat_read_folio(struct file *file, struct folio *folio)
+>  {
+> +	struct inode *inode = folio->mapping->host;
 
-My main concern about this is the added overhead during boot to process
-this. There's 10s of thousands of functions, so this loop will be 10s of
-thousands. I also don't like that this is an unconditional loop (meaning it
-executes even when it is unnecessary to do so).
+Why dereference here and not just use the folio that is passed in?
 
+That will keep the dereferencing logic out of the code path and only happen
+when the trace event is enabled.
 
->  	/*
->  	 * Sorting mcount in vmlinux at build time depend on
->  	 * CONFIG_BUILDTIME_MCOUNT_SORT, while mcount loc in
+> +
+> +	trace_exfat_read_folio(inode, folio);
+> +
+>  	return mpage_read_folio(folio, exfat_get_block);
+>  }
+>  
+> @@ -346,6 +353,10 @@ static void exfat_readahead(struct readahead_control *rac)
+>  static int exfat_writepages(struct address_space *mapping,
+>  		struct writeback_control *wbc)
+>  {
+> +	struct inode *inode = mapping->host;
+> +
+> +	trace_exfat_writepages(inode, wbc);
 
-How about something like this?
+Here you could just pass in mapping and do the dereference in the TP_fast_assign().
+
+> +
+>  	return mpage_writepages(mapping, wbc, exfat_get_block);
+>  }
+>  
+> @@ -364,6 +375,7 @@ static int exfat_write_begin(struct file *file, struct address_space *mapping,
+>  		loff_t pos, unsigned int len,
+>  		struct page **pagep, void **fsdata)
+>  {
+> +	struct inode *inode = mapping->host;
+
+And here too.
 
 -- Steve
 
-diff --git a/kernel/trace/ftrace.c b/kernel/trace/ftrace.c
-index b24c573934af..acd033371721 100644
---- a/kernel/trace/ftrace.c
-+++ b/kernel/trace/ftrace.c
-@@ -6474,6 +6474,7 @@ static int ftrace_process_locs(struct module *mod,
- 	struct ftrace_page *start_pg;
- 	struct ftrace_page *pg;
- 	struct dyn_ftrace *rec;
-+	unsigned long skipped = 0;
- 	unsigned long count;
- 	unsigned long *p;
- 	unsigned long addr;
-@@ -6536,8 +6537,10 @@ static int ftrace_process_locs(struct module *mod,
- 		 * object files to satisfy alignments.
- 		 * Skip any NULL pointers.
- 		 */
--		if (!addr)
-+		if (!addr) {
-+			skipped++;
- 			continue;
-+		}
- 
- 		end_offset = (pg->index+1) * sizeof(pg->records[0]);
- 		if (end_offset > PAGE_SIZE << pg->order) {
-@@ -6551,12 +6554,24 @@ static int ftrace_process_locs(struct module *mod,
- 		rec->ip = addr;
- 	}
- 
--	/* We should have used all pages */
--	WARN_ON(pg->next);
--
- 	/* Assign the last page to ftrace_pages */
- 	ftrace_pages = pg;
- 
-+	/* We should have used all pages unless we skipped some */
-+	if (pg->next) {
-+		WARN_ON(!skipped);
-+		while (ftrace_pages->next) {
-+			pg = ftrace_pages->next;
-+			ftrace_pages->next = pg->next;
-+			if (pg->records) {
-+				free_pages((unsigned long)pg->records, pg->order);
-+				ftrace_number_of_pages -= 1 << pg->order;
-+			}
-+			kfree(pg);
-+			ftrace_number_of_groups--;
-+		}
-+	}
-+
- 	/*
- 	 * We only need to disable interrupts on start up
- 	 * because we are modifying code that an interrupt
+>  	int ret;
+>  
+>  	*pagep = NULL;
+> @@ -371,6 +383,8 @@ static int exfat_write_begin(struct file *file, struct address_space *mapping,
+>  			       exfat_get_block,
+>  			       &EXFAT_I(mapping->host)->i_size_ondisk);
+>  
+> +	trace_exfat_write_begin(inode, pos, len);
+> +
+>  	if (ret < 0)
+>  		exfat_write_failed(mapping, pos+len);
+>  
+> @@ -394,6 +408,8 @@ static int exfat_write_end(struct file *file, struct address_space *mapping,
+>  		return -EIO;
+>  	}
+>  
+> +	trace_exfat_write_end(inode, pos, len, copied);
+> +
+>  	if (err < len)
+>  		exfat_write_failed(mapping, pos+len);
+>  
