@@ -2,696 +2,145 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 59CDFC001DC
-	for <linux-trace-kernel@archiver.kernel.org>; Tue, 11 Jul 2023 15:20:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EEBD8EB64DC
+	for <linux-trace-kernel@archiver.kernel.org>; Tue, 11 Jul 2023 15:30:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229634AbjGKPU1 (ORCPT
+        id S232190AbjGKPa1 (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Tue, 11 Jul 2023 11:20:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39390 "EHLO
+        Tue, 11 Jul 2023 11:30:27 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46238 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229890AbjGKPU0 (ORCPT
+        with ESMTP id S232179AbjGKPaZ (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Tue, 11 Jul 2023 11:20:26 -0400
-Received: from mail-ej1-x632.google.com (mail-ej1-x632.google.com [IPv6:2a00:1450:4864:20::632])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C516FE54;
-        Tue, 11 Jul 2023 08:20:22 -0700 (PDT)
-Received: by mail-ej1-x632.google.com with SMTP id a640c23a62f3a-9891c73e0fbso1169813666b.1;
-        Tue, 11 Jul 2023 08:20:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1689088821; x=1691680821;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=7huTybfTEF13yXu4HtntZri2hfP7iL8FYJnFCnMvJWg=;
-        b=NgGnNEcVV2Q6rHyzM8AmQVBmml0EPmsrO6qPrzsnaTQ63Q9nVducdVK4I9vqP89hUV
-         oXiolIJy4cCI3VkOWbdL76pGziMmeEFOrMEwscT0Nl498XDWFfyUV7wXdkcAp3IViyjK
-         3b474JDSl06l0U1EgYSHNj3Zh5eI2Cx8x+BYlurXavFGYQewIl4FNvDsIIFt0QXLFB/t
-         IT28+sCpOYCqr6elRcpxhge/HVJrOGDWN2U4SaKbWtxJpYkLlM6bHkN2Wcwl4KS5A13N
-         J0r28Js2s+mVqXVZwRezxfeq7ejpawYLleXexxS8mrDtUoO/PjKr0ueSxvrSr7obcUNv
-         gpCg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1689088821; x=1691680821;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=7huTybfTEF13yXu4HtntZri2hfP7iL8FYJnFCnMvJWg=;
-        b=j7sLOdFRn67YACr8NsSpYVSkfKbFn3pOL5RO7I+OPj9FxmoPOFSnKUPNlLoUgjbyo3
-         i9wmucUDw9YTPhk8f4u6wWUAAe6uDI6G3Jxw4ma6wPqA5xjIfPnGXK1GFyrKeDu8bCxg
-         wZxpSPvUgRtKnSFQX1z6TryXVPJcTNf4Hm/9fDFsWnnwXkjS47F8kslp1QPDfwC3ZtGn
-         TMeG+55R9VcKSbjPSPsCgvyHmJHzrxbfC0JcNh5zbxT1WD9JxjpZ435PaMk5ushfPbzT
-         JsBpJijq1gkND3rHRAqQ1/nA2Cqc4dqOzuhPCDZnTrVFRjq1O/bQqW9awd6jyfNoSXPh
-         fMNg==
-X-Gm-Message-State: ABy/qLbAawm/Vqr5ZkF8OZaT5dHX5bfJ90wsePY4cpa8LoUWvO4cji+M
-        /XP7p7l24PSCO0zfM16yXgE=
-X-Google-Smtp-Source: APBJJlFkNgtBqYCWMzFhchQbiSeyIpF0xPpdZHyNdl5F+xss992Kvdoo7qyiMOt9r/HuzKbX9HD5iQ==
-X-Received: by 2002:a17:906:d54b:b0:98e:48cc:4cbf with SMTP id cr11-20020a170906d54b00b0098e48cc4cbfmr24143570ejc.26.1689088820617;
-        Tue, 11 Jul 2023 08:20:20 -0700 (PDT)
-Received: from lab.hqhome163.com ([194.183.10.152])
-        by smtp.googlemail.com with ESMTPSA id h14-20020aa7de0e000000b0051e0cb4692esm1384031edv.17.2023.07.11.08.20.19
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 11 Jul 2023 08:20:20 -0700 (PDT)
-From:   Alessandro Carminati <alessandro.carminati@gmail.com>
-Cc:     rostedt@goodmis.org, mhiramat@kernel.org,
-        linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
-        bristot@kernel.org, vmalik@redhat.com,
-        Alessandro Carminati <alessandro.carminati@gmail.com>
-Subject: [PATCH] scripts/link-vmlinux.sh: Add alias to duplicate symbols for kallsyms
-Date:   Tue, 11 Jul 2023 15:19:25 +0000
-Message-Id: <20230711151925.1092080-1-alessandro.carminati@gmail.com>
-X-Mailer: git-send-email 2.34.1
+        Tue, 11 Jul 2023 11:30:25 -0400
+Received: from mga06.intel.com (mga06b.intel.com [134.134.136.31])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 54E0D136;
+        Tue, 11 Jul 2023 08:30:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1689089424; x=1720625424;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=WtKHEzd9TLb1fy9g0AvI3P/4wH5wHUCXn6+ARbR9U1s=;
+  b=hBr5izgDJD/+xQBRT3DHHo56zIVWGr+PwRKeYslY6byoAX8dVJKP/IlP
+   XY2wrXphIylhXd4071LpUGpDRQMvcVoheqR2xYz/VGZeg1ocw+At12Ode
+   PTC74t9K5YYezReTYPdi0oDkc/r4Djo/4nZ5gRCaOUN1m4d3t/zLJe6Xq
+   ptVaXtDqdCnfmUoyRk80WfAin8VYCXMblITX/1QZeF3sZhL4mF4qsSzh9
+   LDYiFacjAfODc99/FRomUQEFDlayLL1LDWMqsytLRRHjVZhB0ff9c6TOl
+   QyJW3PUvicDt5m4ta+3WiJMbTZ535Wn09jYYEWE781W+LtuVQ9dAC9WKE
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10768"; a="428346794"
+X-IronPort-AV: E=Sophos;i="6.01,196,1684825200"; 
+   d="scan'208";a="428346794"
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jul 2023 08:30:23 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10768"; a="698462660"
+X-IronPort-AV: E=Sophos;i="6.01,196,1684825200"; 
+   d="scan'208";a="698462660"
+Received: from smile.fi.intel.com ([10.237.72.54])
+  by orsmga006.jf.intel.com with ESMTP; 11 Jul 2023 08:30:10 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.96)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1qJFJX-001swf-0G;
+        Tue, 11 Jul 2023 18:30:07 +0300
+Date:   Tue, 11 Jul 2023 18:30:06 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Mark Brown <broonie@kernel.org>
+Cc:     Cristian Ciocaltea <cristian.ciocaltea@collabora.com>,
+        Yang Yingliang <yangyingliang@huawei.com>,
+        Amit Kumar Mahapatra via Alsa-devel 
+        <alsa-devel@alsa-project.org>,
+        Neil Armstrong <neil.armstrong@linaro.org>,
+        Tharun Kumar P <tharunkumar.pasumarthi@microchip.com>,
+        Vijaya Krishna Nivarthi <quic_vnivarth@quicinc.com>,
+        Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>, linux-spi@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-amlogic@lists.infradead.org,
+        linux-mediatek@lists.infradead.org, linux-arm-msm@vger.kernel.org,
+        linux-rockchip@lists.infradead.org,
+        linux-riscv@lists.infradead.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-trace-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        Sanjay R Mehta <sanju.mehta@amd.com>,
+        Radu Pirea <radu_nicolae.pirea@upb.ro>,
+        Nicolas Ferre <nicolas.ferre@microchip.com>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Claudiu Beznea <claudiu.beznea@microchip.com>,
+        Tudor Ambarus <tudor.ambarus@linaro.org>,
+        Serge Semin <fancer.lancer@gmail.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Kevin Hilman <khilman@baylibre.com>,
+        Jerome Brunet <jbrunet@baylibre.com>,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        AngeloGioacchino Del Regno 
+        <angelogioacchino.delregno@collabora.com>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <andersson@kernel.org>,
+        Konrad Dybcio <konrad.dybcio@linaro.org>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Orson Zhai <orsonzhai@gmail.com>,
+        Baolin Wang <baolin.wang@linux.alibaba.com>,
+        Chunyan Zhang <zhang.lyra@gmail.com>,
+        Alain Volmat <alain.volmat@foss.st.com>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue <alexandre.torgue@foss.st.com>,
+        Max Filippov <jcmvbkbc@gmail.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Richard Cochran <richardcochran@gmail.com>
+Subject: Re: [PATCH v2 04/15] spi: Replace open coded
+ spi_controller_xfer_timeout()
+Message-ID: <ZK11flZf/1grJ1Bd@smile.fi.intel.com>
+References: <20230710154932.68377-1-andriy.shevchenko@linux.intel.com>
+ <20230710154932.68377-5-andriy.shevchenko@linux.intel.com>
+ <cfaffa00-4b61-4d81-8675-70295844513b@sirena.org.uk>
+ <ZK02efTYxV3czigr@smile.fi.intel.com>
+ <5959b123-09e3-474b-9ab0-68d71cfdd9a2@sirena.org.uk>
 MIME-Version: 1.0
-Content-type: text/plain
-Content-Transfer-Encoding: 8bit
-To:     unlisted-recipients:; (no To-header on input)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <5959b123-09e3-474b-9ab0-68d71cfdd9a2@sirena.org.uk>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-It is not uncommon for drivers or modules related to similar peripherals
-to have symbols with the exact same name.
-While this is not a problem for the kernel's binary itself, it becomes an
-issue when attempting to trace or probe specific functions using
-infrastructure like ftrace or kprobe.
+On Tue, Jul 11, 2023 at 03:14:54PM +0100, Mark Brown wrote:
+> On Tue, Jul 11, 2023 at 02:01:13PM +0300, Andy Shevchenko wrote:
+> > On Mon, Jul 10, 2023 at 06:30:32PM +0100, Mark Brown wrote:
+> > > On Mon, Jul 10, 2023 at 06:49:21PM +0300, Andy Shevchenko wrote:
+> 
+> > > > + * Assume speed to be 100 kHz if it's not defined at the time of invocation.
+> 
+> > > You didn't mention this bit in the changelog, and I'm not 100% convinced
+> > > it was the best idea in the first place.  It's going to result in some
+> > > very big timeouts if it goes off, and we really should be doing
+> > > validation much earlier in the process.
+> 
+> > Okay, let's drop this change.
+> 
+> Like I say we *should* be fine with the refactoring without this, or at
+> least if it's an issue we should improve the validation.
 
-The tracing subsystem relies on the `nm -n vmlinux` output, which provides
-symbol information from the kernel's ELF binary. However, when multiple
-symbols share the same name, the standard nm output does not differentiate
-between them. This can lead to confusion and difficulty when trying to
-probe the intended symbol.
+For the speeds < 1000 Hz, this change will lead to the div by 0 crash.
+It seems that the current code which this one removes is better than
+the spi_controller_xfer_timeout() provides.
 
-~ # cat /proc/kallsyms | grep " name_show"
-ffffffff8c4f76d0 t name_show
-ffffffff8c9cccb0 t name_show
-ffffffff8cb0ac20 t name_show
-ffffffff8cc728c0 t name_show
-ffffffff8ce0efd0 t name_show
-ffffffff8ce126c0 t name_show
-ffffffff8ce1dd20 t name_show
-ffffffff8ce24e70 t name_show
-ffffffff8d1104c0 t name_show
-ffffffff8d1fe480 t name_show
+If anything, the spi_controller_xfer_timeout() should be improved first.
+So, for now I drop this for sure. Maybe in the future we can come back
+to it.
 
-**kas_alias** addresses this challenge by extending the symbol names with
-unique suffixes during the kernel build process.
-The newly created aliases for these duplicated symbols are unique names
-that can be fed to the tracefs interface. By doing so, it enables
-previously unreachable symbols to be probed.
-
-~ # cat /proc/kallsyms | grep " name_show"
-ffffffff974f76d0 t name_show
-ffffffff974f76d0 t name_show__alias__6340
-ffffffff979cccb0 t name_show
-ffffffff979cccb0 t name_show__alias__6341
-ffffffff97b0ac20 t name_show
-ffffffff97b0ac20 t name_show__alias__6342
-ffffffff97c728c0 t name_show
-ffffffff97c728c0 t name_show__alias__6343
-ffffffff97e0efd0 t name_show
-ffffffff97e0efd0 t name_show__alias__6344
-ffffffff97e126c0 t name_show
-ffffffff97e126c0 t name_show__alias__6345
-ffffffff97e1dd20 t name_show
-ffffffff97e1dd20 t name_show__alias__6346
-ffffffff97e24e70 t name_show
-ffffffff97e24e70 t name_show__alias__6347
-ffffffff981104c0 t name_show
-ffffffff981104c0 t name_show__alias__6348
-ffffffff981fe480 t name_show
-ffffffff981fe480 t name_show__alias__6349
-~ # echo "p:kprobes/evnt1 name_show__alias__6349" \
-> >/sys/kernel/tracing/kprobe_events
-~ # cat /sys/kernel/tracing/kprobe_events
-p:kprobes/evnt1 name_show__alias__6349
-
-Signed-off-by: Alessandro Carminati (Red Hat) <alessandro.carminati@gmail.com>
----
- init/Kconfig                        |  17 ++
- scripts/Makefile                    |   4 +
- scripts/kas_alias/Makefile          |   4 +
- scripts/kas_alias/duplicates_list.c |  70 +++++++++
- scripts/kas_alias/duplicates_list.h |  15 ++
- scripts/kas_alias/item_list.c       | 230 ++++++++++++++++++++++++++++
- scripts/kas_alias/item_list.h       |  26 ++++
- scripts/kas_alias/kas_alias.c       | 112 ++++++++++++++
- scripts/link-vmlinux.sh             |   6 +-
- 9 files changed, 483 insertions(+), 1 deletion(-)
- create mode 100644 scripts/kas_alias/Makefile
- create mode 100644 scripts/kas_alias/duplicates_list.c
- create mode 100644 scripts/kas_alias/duplicates_list.h
- create mode 100644 scripts/kas_alias/item_list.c
- create mode 100644 scripts/kas_alias/item_list.h
- create mode 100644 scripts/kas_alias/kas_alias.c
-
-diff --git a/init/Kconfig b/init/Kconfig
-index f7f65af4ee12..a67b7b1c604b 100644
---- a/init/Kconfig
-+++ b/init/Kconfig
-@@ -1737,6 +1737,23 @@ config KALLSYMS_BASE_RELATIVE
- 	  time constants, and no relocation pass is required at runtime to fix
- 	  up the entries based on the runtime load address of the kernel.
- 
-+config KALLSYMS_ALIAS
-+	bool "Produces alias for duplicated symbols" if EXPERT
-+	depends on KALLSYMS
-+	help
-+	  It is not uncommon for drivers or modules related to similar
-+	  peripherals to have symbols with the exact same name.
-+	  While this is not a problem for the kernel's binary itself, it
-+	  becomes an issue when attempting to trace or probe specific
-+	  functions using infrastructure like ftrace or kprobe.
-+
-+	  This option addresses this challenge by extending the symbol names
-+	  with unique suffixes during the kernel build process.
-+	  The newly created aliases for these duplicated symbols are unique
-+	  names that can be fed to the ftrace sysfs interface. By doing so, it
-+	  enables previously unreachable symbols to be probed.
-+
-+
- # end of the "standard kernel features (expert users)" menu
- 
- # syscall, maps, verifier
-diff --git a/scripts/Makefile b/scripts/Makefile
-index 32b6ba722728..65fafe17cfe5 100644
---- a/scripts/Makefile
-+++ b/scripts/Makefile
-@@ -49,3 +49,7 @@ subdir-$(CONFIG_SECURITY_SELINUX) += selinux
- 
- # Let clean descend into subdirs
- subdir-	+= basic dtc gdb kconfig mod
-+
-+# KALLSyms alias
-+subdir-$(CONFIG_KALLSYMS_ALIAS) += kas_alias
-+
-diff --git a/scripts/kas_alias/Makefile b/scripts/kas_alias/Makefile
-new file mode 100644
-index 000000000000..523fa3441013
---- /dev/null
-+++ b/scripts/kas_alias/Makefile
-@@ -0,0 +1,4 @@
-+# SPDX-License-Identifier: GPL-2.0
-+hostprogs-always-$(CONFIG_KALLSYMS_ALIAS)    += kas_alias
-+
-+kas_alias-objs        := duplicates_list.o item_list.o kas_alias.o
-diff --git a/scripts/kas_alias/duplicates_list.c b/scripts/kas_alias/duplicates_list.c
-new file mode 100644
-index 000000000000..e7a3d2917937
---- /dev/null
-+++ b/scripts/kas_alias/duplicates_list.c
-@@ -0,0 +1,70 @@
-+// SPDX-License-Identifier: GPL-2.0-or-later
-+#include <stdint.h>
-+#include <stdio.h>
-+#include <string.h>
-+#include <stdlib.h>
-+#include <stdbool.h>
-+
-+#include "item_list.h"
-+#include "duplicates_list.h"
-+
-+struct duplicate_item *find_duplicates(struct item *list)
-+{
-+	struct duplicate_item *current_duplicate = NULL;
-+	struct duplicate_item *duplicates = NULL;
-+	struct duplicate_item *new_duplicate;
-+	struct item *current_item = list;
-+	bool prev_was_duplicate = false;
-+	struct item *prev_item = NULL;
-+
-+	while (current_item) {
-+		if ((prev_item && (strcmp(current_item->symb_name, prev_item->symb_name) == 0)) ||
-+		    prev_was_duplicate) {
-+			if (!duplicates) {
-+				duplicates = malloc(sizeof(struct duplicate_item));
-+				if (!duplicates)
-+					return NULL;
-+
-+				duplicates->original_item = prev_item;
-+				duplicates->next = NULL;
-+				current_duplicate = duplicates;
-+			} else {
-+				new_duplicate = malloc(sizeof(struct duplicate_item));
-+				if (!new_duplicate) {
-+					free_duplicates(&duplicates);
-+					return NULL;
-+				}
-+
-+				new_duplicate->original_item = prev_item;
-+				new_duplicate->next = NULL;
-+				current_duplicate->next = new_duplicate;
-+				current_duplicate = new_duplicate;
-+
-+				if ((strcmp(current_item->symb_name, prev_item->symb_name) != 0) &&
-+				    (prev_was_duplicate))
-+					prev_was_duplicate = false;
-+				else
-+					prev_was_duplicate = true;
-+			}
-+		}
-+
-+		prev_item = current_item;
-+		current_item = current_item->next;
-+	}
-+
-+	return duplicates;
-+}
-+
-+void free_duplicates(struct duplicate_item **duplicates)
-+{
-+	struct duplicate_item *duplicates_iterator = *duplicates;
-+	struct duplicate_item *app;
-+
-+	while (duplicates_iterator) {
-+		app = duplicates_iterator;
-+		duplicates_iterator = duplicates_iterator->next;
-+		free(app);
-+	}
-+
-+	*duplicates = NULL;
-+}
-diff --git a/scripts/kas_alias/duplicates_list.h b/scripts/kas_alias/duplicates_list.h
-new file mode 100644
-index 000000000000..76aa73e584bc
---- /dev/null
-+++ b/scripts/kas_alias/duplicates_list.h
-@@ -0,0 +1,15 @@
-+/* SPDX-License-Identifier: GPL-2.0-or-later */
-+#ifndef DUPLICATES_LIST_H
-+#define DUPLICATES_LIST_H
-+
-+#include "item_list.h"
-+
-+struct duplicate_item {
-+	struct item *original_item;
-+	struct duplicate_item *next;
-+};
-+
-+struct duplicate_item *find_duplicates(struct item *list);
-+void free_duplicates(struct duplicate_item **duplicates);
-+
-+#endif
-diff --git a/scripts/kas_alias/item_list.c b/scripts/kas_alias/item_list.c
-new file mode 100644
-index 000000000000..7c9d5aecca9a
---- /dev/null
-+++ b/scripts/kas_alias/item_list.c
-@@ -0,0 +1,230 @@
-+// SPDX-License-Identifier: GPL-2.0-or-later
-+#include <stdio.h>
-+#include <stdlib.h>
-+#include <stdint.h>
-+#include <string.h>
-+#include <stdbool.h>
-+#include <assert.h>
-+#include "item_list.h"
-+
-+#define CHECK_ORDER_BY_ADDRESS(sort_by, current, temp, op) \
-+	((sort_by) == BY_ADDRESS && (current)->addr op (temp)->addr)
-+#define CHECK_ORDER_BY_NAME(sort_by, current, temp, op) \
-+	((sort_by) == BY_NAME && strcmp((current)->symb_name, (temp)->symb_name) op 0)
-+
-+struct item *list_index[96] = {0};
-+
-+void build_index(struct item *list)
-+{
-+	char current_first_letter = ' ';
-+	struct item *current = list;
-+
-+	while (current) {
-+		if (current->symb_name[0] != current_first_letter) {
-+			current_first_letter = current->symb_name[0];
-+			list_index[current_first_letter - 32] = current;
-+		}
-+		current = current->next;
-+	}
-+}
-+
-+struct item *add_item(struct item **list, const char *name, char stype, uint64_t addr)
-+{
-+	struct item *new_item;
-+	struct item *current;
-+
-+	new_item = malloc(sizeof(struct item));
-+	if (!new_item)
-+		return NULL;
-+
-+	strncpy(new_item->symb_name, name, MAX_NAME_SIZE);
-+	new_item->symb_name[MAX_NAME_SIZE - 1] = '\0';
-+	new_item->addr = addr;
-+	new_item->stype = stype;
-+	new_item->next = NULL;
-+
-+	if (!(*list)) {
-+		*list = new_item;
-+	} else {
-+		current = *list;
-+		while (current->next)
-+			current = current->next;
-+
-+		current->next = new_item;
-+	}
-+	return new_item;
-+}
-+
-+void sort_list(struct item **list, int sort_by)
-+{
-+	struct item *current = *list;
-+	struct item *sorted = NULL;
-+	struct item *next_item;
-+	struct item *temp;
-+
-+	if (!(*list) || !((*list)->next))
-+		return;
-+
-+	while (current) {
-+		next_item = current->next;
-+		if (!sorted ||
-+		   (CHECK_ORDER_BY_ADDRESS(sort_by, current, sorted, <) ||
-+		    CHECK_ORDER_BY_NAME(sort_by, current, sorted, >=))) {
-+			current->next = sorted;
-+			sorted = current;
-+		} else {
-+			temp = sorted;
-+			while (temp->next &&
-+			      (CHECK_ORDER_BY_ADDRESS(sort_by, current, temp->next, >=) ||
-+			       CHECK_ORDER_BY_NAME(sort_by, current, temp->next, >=)))
-+				temp = temp->next;
-+
-+			current->next = temp->next;
-+			temp->next = current;
-+		}
-+		current = next_item;
-+	}
-+
-+	*list = sorted;
-+}
-+
-+struct item *merge(struct item *left, struct item *right, int sort_by)
-+{
-+	struct item *current = NULL;
-+	struct item *result = NULL;
-+
-+	if (!left)
-+		return right;
-+	if (!right)
-+		return left;
-+
-+	if (sort_by == BY_NAME) {
-+		if (strcmp(left->symb_name, right->symb_name) <= 0) {
-+			result = left;
-+			left = left->next;
-+		} else {
-+			result = right;
-+			right = right->next;
-+		}
-+	} else {
-+		if (sort_by == BY_ADDRESS) {
-+			if (left->addr <= right->addr) {
-+				result = left;
-+				left = left->next;
-+			} else {
-+				result = right;
-+				right = right->next;
-+			}
-+		}
-+	}
-+
-+	current = result;
-+
-+	while (left && right) {
-+		if (sort_by == BY_NAME) {
-+			if (strcmp(left->symb_name, right->symb_name) <= 0) {
-+				current->next = left;
-+				left = left->next;
-+			} else {
-+				current->next = right;
-+				right = right->next;
-+			}
-+		} else {
-+			if (sort_by == BY_ADDRESS) {
-+				if (left->addr <= right->addr) {
-+					current->next = left;
-+					left = left->next;
-+				} else {
-+					current->next = right;
-+					right = right->next;
-+				}
-+			}
-+		}
-+
-+		current = current->next;
-+	}
-+
-+	if (left) {
-+		current->next = left;
-+	} else {
-+		if (right)
-+			current->next = right;
-+	}
-+
-+	return result;
-+}
-+
-+struct item *merge_sort(struct item *head, int sort_by)
-+{
-+	struct item *right;
-+	struct item *slow;
-+	struct item *fast;
-+	struct item *left;
-+
-+	if (!head || !head->next)
-+		return head;
-+
-+	slow = head;
-+	fast = head->next;
-+
-+	while (fast && fast->next) {
-+		slow = slow->next;
-+		fast = fast->next->next;
-+	}
-+
-+	left = head;
-+	right = slow->next;
-+	slow->next = NULL;
-+
-+	left = merge_sort(left, sort_by);
-+	right = merge_sort(right, sort_by);
-+
-+	return merge(left, right, sort_by);
-+}
-+
-+void sort_list_m(struct item **head, int sort_by)
-+{
-+	if (!(*head) || !((*head)->next))
-+		return;
-+
-+	*head = merge_sort(*head, sort_by);
-+}
-+
-+int insert_after(struct item *list, const uint64_t search_addr,
-+		 const char *name, uint64_t addr, char stype)
-+{
-+	struct item *new_item;
-+	struct item *current;
-+	int ret = 0;
-+
-+	current = (list_index[name[0] - 32]) ? list_index[name[0] - 32] : list;
-+	while (current) {
-+		if (current->addr == search_addr) {
-+			new_item = malloc(sizeof(struct item));
-+			if (!new_item)
-+				return ret;
-+			strncpy(new_item->symb_name, name, MAX_NAME_SIZE);
-+			new_item->symb_name[MAX_NAME_SIZE - 1] = '\0';
-+			new_item->addr = addr;
-+			new_item->stype = stype;
-+			new_item->next = current->next;
-+			current->next = new_item;
-+			ret = 1;
-+			break;
-+		}
-+		current = current->next;
-+	}
-+	return ret;
-+}
-+
-+void free_items(struct item **head)
-+{
-+	struct item *app, *item_iterator = *head;
-+
-+	while (item_iterator) {
-+		app = item_iterator;
-+		item_iterator = item_iterator->next;
-+		free(app);
-+	}
-+	*head = NULL;
-+}
-diff --git a/scripts/kas_alias/item_list.h b/scripts/kas_alias/item_list.h
-new file mode 100644
-index 000000000000..b4891cb088ee
---- /dev/null
-+++ b/scripts/kas_alias/item_list.h
-@@ -0,0 +1,26 @@
-+/* SPDX-License-Identifier: GPL-2.0-or-later */
-+#ifndef ITEM_LIST_H
-+#define ITEM_LIST_H
-+#include <stdint.h>
-+
-+#define MAX_NAME_SIZE 256
-+#define BY_ADDRESS 1
-+#define BY_NAME 2
-+
-+struct item {
-+	char		symb_name[MAX_NAME_SIZE];
-+	uint64_t	addr;
-+	char		stype;
-+	struct item	*next;
-+};
-+
-+void build_index(struct item *list);
-+struct item *add_item(struct item **list, const char *name, char stype, uint64_t addr);
-+void sort_list(struct item **list, int sort_by);
-+struct item *merge(struct item *left, struct item *right, int sort_by);
-+struct item *merge_sort(struct item *head, int sort_by);
-+void sort_list_m(struct item **head, int sort_by);
-+int insert_after(struct item *list, const uint64_t search_addr,
-+		 const char *name, uint64_t addr, char stype);
-+void free_items(struct item **head);
-+#endif
-diff --git a/scripts/kas_alias/kas_alias.c b/scripts/kas_alias/kas_alias.c
-new file mode 100644
-index 000000000000..d47cfec9f1f3
---- /dev/null
-+++ b/scripts/kas_alias/kas_alias.c
-@@ -0,0 +1,112 @@
-+// SPDX-License-Identifier: GPL-2.0-or-later
-+#include <stdio.h>
-+#include <stdlib.h>
-+#include <stdint.h>
-+#include <string.h>
-+#include <stdbool.h>
-+#include <stdarg.h>
-+
-+#include "item_list.h"
-+#include "duplicates_list.h"
-+
-+int suffix_serial;
-+
-+static inline void verbose_msg(bool verbose, const char *fmt, ...)
-+{
-+	va_list args;
-+
-+	va_start(args, fmt);
-+	if (verbose)
-+		printf(fmt, args);
-+
-+	va_end(args);
-+}
-+
-+static void create_suffix(const char *name, char *output_suffix)
-+{
-+	sprintf(output_suffix, "%s__alias__%d", name, suffix_serial++);
-+}
-+
-+int main(int argc, char *argv[])
-+{
-+	char t, sym_name[MAX_NAME_SIZE], new_name[MAX_NAME_SIZE + 15];
-+	struct duplicate_item  *duplicate_iterator;
-+	struct duplicate_item *duplicate;
-+	struct item *head = {NULL};
-+	bool need_2_process = true;
-+	struct item *last = {NULL};
-+	struct item  *current;
-+	int verbose_mode = 0;
-+	uint64_t address;
-+	FILE *fp;
-+
-+	if (argc < 2 || argc > 3) {
-+		printf("Usage: %s <nmfile> [-verbose]\n", argv[0]);
-+		return 1;
-+	}
-+
-+	if (argc == 3 && strcmp(argv[2], "-verbose") == 0)
-+		verbose_mode = 1;
-+
-+	verbose_msg(verbose_mode, "Scanning nm data(%s)\n", argv[1]);
-+
-+	fp = fopen(argv[1], "r");
-+	if (!fp) {
-+		printf("Can't open input file.\n");
-+		return 1;
-+	}
-+
-+	while (fscanf(fp, "%lx %c %99s\n", &address, &t, sym_name) == 3) {
-+		if (strstr(sym_name, "__alias__1") != NULL) {
-+			if (verbose_mode && need_2_process)
-+				printf("Already processed\n");
-+			need_2_process = false;
-+			}
-+		last = add_item(&last, sym_name, t, address);
-+		if (!last) {
-+			printf("Error in allocate memory\n");
-+			free_items(&head);
-+			return 1;
-+		}
-+
-+		if (!head)
-+			head = last;
-+	}
-+
-+	fclose(fp);
-+
-+	if (need_2_process) {
-+		verbose_msg(verbose_mode, "Sorting nm data\n");
-+		sort_list_m(&head, BY_NAME);
-+		verbose_msg(verbose_mode, "Scanning nm data for duplicates\n");
-+		duplicate = find_duplicates(head);
-+		if (!duplicate) {
-+			printf("Error in duplicates list\n");
-+			return 1;
-+		}
-+
-+		verbose_msg(verbose_mode, "Applying suffixes\n");
-+		build_index(head);
-+		duplicate_iterator = duplicate;
-+		while (duplicate_iterator) {
-+			create_suffix(duplicate_iterator->original_item->symb_name, new_name);
-+			if (!insert_after(head, duplicate_iterator->original_item->addr, new_name,
-+					  duplicate_iterator->original_item->addr,
-+					  duplicate_iterator->original_item->stype))
-+				return 1;
-+			duplicate_iterator = duplicate_iterator->next;
-+		}
-+
-+		sort_list_m(&head, BY_ADDRESS);
-+	}
-+	current = head;
-+	while (current) {
-+		printf("%08lx %c %s\n", current->addr, current->stype, current->symb_name);
-+		current = current->next;
-+	}
-+
-+	free_items(&head);
-+	free_duplicates(&duplicate);
-+
-+	return 0;
-+}
-diff --git a/scripts/link-vmlinux.sh b/scripts/link-vmlinux.sh
-index a432b171be82..4e3dea3ac2df 100755
---- a/scripts/link-vmlinux.sh
-+++ b/scripts/link-vmlinux.sh
-@@ -161,7 +161,11 @@ kallsyms()
- 	fi
- 
- 	info KSYMS ${2}
--	scripts/kallsyms ${kallsymopt} ${1} > ${2}
-+	if is_enabled CONFIG_KALLSYMS_ALIAS; then
-+		ALIAS=".alias"
-+		scripts/kas_alias/kas_alias ${1} >${1}${ALIAS}
-+		fi
-+	scripts/kallsyms ${kallsymopt} ${1}${ALIAS} > ${2}
- }
- 
- # Perform one step in kallsyms generation, including temporary linking of
 -- 
-2.34.1
+With Best Regards,
+Andy Shevchenko
+
 
