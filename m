@@ -2,46 +2,46 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 49940C04E69
-	for <linux-trace-kernel@archiver.kernel.org>; Tue, 11 Jul 2023 17:20:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5841DC001DF
+	for <linux-trace-kernel@archiver.kernel.org>; Tue, 11 Jul 2023 17:20:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232254AbjGKRUT (ORCPT
+        id S232389AbjGKRUU (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Tue, 11 Jul 2023 13:20:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33510 "EHLO
+        Tue, 11 Jul 2023 13:20:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33290 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232558AbjGKRUJ (ORCPT
+        with ESMTP id S232224AbjGKRUM (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Tue, 11 Jul 2023 13:20:09 -0400
+        Tue, 11 Jul 2023 13:20:12 -0400
 Received: from mga11.intel.com (mga11.intel.com [192.55.52.93])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 49CC6173C;
-        Tue, 11 Jul 2023 10:19:50 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1D91F1998;
+        Tue, 11 Jul 2023 10:19:54 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1689095990; x=1720631990;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=dWz/cu97liJBUQbHnYgLle48DwvZm+4+fW9Lp2y1SMU=;
-  b=aNTsF+2FZbbDWFzDhzWVH71vtI4WgWBnhPzWa6GMiXDVmOaIz86IHHlX
-   Hy2G7QA10iOgoxX2df1lOYiyE5SyLoC1b7KP4icycIsqTdKaDgvi0A8/H
-   bB6U5jTPKbK56LY155YXUIlXkdFm9B7beuXTi6MpCVsRhpQ1NTbB24WmW
-   YDSCkS2OCFMjhdijoX4inSvtvZfFBX2Tokk9A6acQkpOeEricI7O5LstN
-   O5kh2VBdfaNM4jw6AyUBgGEcagDehNH9d7zPHt5eFjv+Hu2n7onrpeMEP
-   KQg+MlFH8zQiLtQXeg4OdLZiWUBkVl67Gh92WrrLquxuC3U9jetKf19l7
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10768"; a="362148707"
+  t=1689095994; x=1720631994;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=i6xTQM/M83VGl5L40MPme6/MD9lIrLsXxW1pfo9MYv4=;
+  b=JaStsnYzeTg9oBfhx467Zmd/FHYV1dzltl25Ux6hq1+gU5PSdnER42jw
+   Mi7SZBFIV/rA3bO1h32I1eZrOly6nE6WhuxA3BTj3Fc07UONhBU8tgpOA
+   8AkhXeQsLNNoS2p+6KCS1pQN0IHW4NnfL6IxMsb7ikBcec52R9a67gegq
+   snxhkOVSbwYwkhLVn/eO53FqgP8dJSPSEuLVYRNiYwPhyn+GLmU1lMGd2
+   2J7qFwXgg+NTm8dndbB1HshS6H9cN1HY8OG1eUxQpN08dlXdXaPhS13iM
+   BL6g89tnh/ugOYxgfxM865lKrVD4xhKJxe6Pd743qh3qN7O4yBFmKf21z
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10768"; a="362148714"
 X-IronPort-AV: E=Sophos;i="6.01,197,1684825200"; 
-   d="scan'208";a="362148707"
+   d="scan'208";a="362148714"
 Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jul 2023 10:19:12 -0700
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jul 2023 10:19:13 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10768"; a="715240814"
+X-IronPort-AV: E=McAfee;i="6600,9927,10768"; a="715240870"
 X-IronPort-AV: E=Sophos;i="6.01,197,1684825200"; 
-   d="scan'208";a="715240814"
+   d="scan'208";a="715240870"
 Received: from black.fi.intel.com ([10.237.72.28])
-  by orsmga007.jf.intel.com with ESMTP; 11 Jul 2023 10:17:53 -0700
+  by orsmga007.jf.intel.com with ESMTP; 11 Jul 2023 10:17:58 -0700
 Received: by black.fi.intel.com (Postfix, from userid 1003)
-        id F1E3A128; Tue, 11 Jul 2023 20:17:58 +0300 (EEST)
+        id 5C3475FC; Tue, 11 Jul 2023 20:17:59 +0300 (EEST)
 From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 To:     Mark Brown <broonie@kernel.org>,
         Cristian Ciocaltea <cristian.ciocaltea@collabora.com>,
@@ -96,96 +96,72 @@ Cc:     Sanjay R Mehta <sanju.mehta@amd.com>,
         Masami Hiramatsu <mhiramat@kernel.org>,
         Richard Cochran <richardcochran@gmail.com>,
         Sebastian Reichel <sebastian.reichel@collabora.com>
-Subject: [PATCH v3 00/14] spi: Header and core clean up and refactoring
-Date:   Tue, 11 Jul 2023 20:17:42 +0300
-Message-Id: <20230711171756.86736-1-andriy.shevchenko@linux.intel.com>
+Subject: [PATCH v3 05/14] spi: Kill spi_add_device_locked()
+Date:   Tue, 11 Jul 2023 20:17:47 +0300
+Message-Id: <20230711171756.86736-6-andriy.shevchenko@linux.intel.com>
 X-Mailer: git-send-email 2.40.0.1.gaa8946217a0b
+In-Reply-To: <20230711171756.86736-1-andriy.shevchenko@linux.intel.com>
+References: <20230711171756.86736-1-andriy.shevchenko@linux.intel.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-Various cleanups and refactorings of the SPI header and core parts
-united in a single series. It also touches drivers under SPI subsystem
-folder on the pure renaming purposes of some constants.
+Now, spi_add_device_locked() has just a line on top of __spi_add_device().
+Besides that, it has a single caller. So, just kill it and embed its parts
+into the caller.
 
-No functional change intended (with some subtle shortcuts which are
-explained in the respective commit messages).
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+---
+ drivers/spi/spi.c | 15 +++++----------
+ 1 file changed, 5 insertions(+), 10 deletions(-)
 
-Changelog v3:
-- dropped controversial used to be patches 3,4,8,10 (Mark)
-- amended many commit messages (Mark)
-- added tag to patch 1 (AngeloGioacchino)
-- split used to be patch 2 to patches 2 & 3 for better review (Mark)
-- rewritten used to be patch 5 to patches 4 & 5 (Mark, Sebastian)
-- added new patch 7
-- fixed typos and added tag to patch 12 (Serge)
-
-v2: 20230710154932.68377-1-andriy.shevchenko@linux.intel.com
-
-Changelog v2:
-- added new patches 3,4,5,10,13,14
-- massaged comment and kernel doc in patch 9
-- split used to be patch 4 to patches 11,12
-- covered a few things in SPI core in patch 15
-- amended commit message for above (Mark)
-- reshuffled patches in the series for better logical grouping
-
-Andy Shevchenko (14):
-  spi: Remove unneeded OF node NULL checks
-  spi: Deduplicate IDR allocation code in spi_register_controller()
-  spi: Refactor bus number assigning code in spi_register_controller()
-  spi: Remove code duplication in spi_add_device*()
-  spi: Kill spi_add_device_locked()
-  spi: Use sysfs_emit() to instead of s*printf()
-  spi: Use BITS_TO_BYTES()
-  spi: Sort headers alphabetically
-  spi: Use struct_size() helper
-  spi: Get rid of old SPI_MASTER_NO_TX & SPI_MASTER_NO_RX
-  spi: Get rid of old SPI_MASTER_MUST_TX & SPI_MASTER_MUST_RX
-  spi: Rename SPI_MASTER_GPIO_SS to SPI_CONTROLLER_GPIO_SS
-  spi: Convert to SPI_CONTROLLER_HALF_DUPLEX
-  spi: Fix spelling typos and acronyms capitalization
-
- drivers/spi/spi-amd.c             |   2 +-
- drivers/spi/spi-at91-usart.c      |   2 +-
- drivers/spi/spi-ath79.c           |   2 +-
- drivers/spi/spi-atmel.c           |   4 +-
- drivers/spi/spi-bitbang-txrx.h    |  16 +--
- drivers/spi/spi-bitbang.c         |   8 +-
- drivers/spi/spi-cavium-thunderx.c |   2 +-
- drivers/spi/spi-davinci.c         |   2 +-
- drivers/spi/spi-dw-core.c         |   2 +-
- drivers/spi/spi-falcon.c          |   2 +-
- drivers/spi/spi-fsl-lpspi.c       |   2 +-
- drivers/spi/spi-gpio.c            |  10 +-
- drivers/spi/spi-imx.c             |   2 +-
- drivers/spi/spi-lp8841-rtc.c      |  10 +-
- drivers/spi/spi-meson-spicc.c     |   2 +-
- drivers/spi/spi-mt65xx.c          |   2 +-
- drivers/spi/spi-mxs.c             |   2 +-
- drivers/spi/spi-omap-uwire.c      |   2 +-
- drivers/spi/spi-orion.c           |   2 +-
- drivers/spi/spi-pci1xxxx.c        |   2 +-
- drivers/spi/spi-pic32-sqi.c       |   2 +-
- drivers/spi/spi-pic32.c           |   2 +-
- drivers/spi/spi-qcom-qspi.c       |   2 +-
- drivers/spi/spi-rb4xx.c           |   2 +-
- drivers/spi/spi-rockchip-sfc.c    |   2 +-
- drivers/spi/spi-rockchip.c        |   2 +-
- drivers/spi/spi-sifive.c          |   2 +-
- drivers/spi/spi-slave-mt27xx.c    |   2 +-
- drivers/spi/spi-sprd-adi.c        |   2 +-
- drivers/spi/spi-stm32.c           |   2 +-
- drivers/spi/spi-ti-qspi.c         |   2 +-
- drivers/spi/spi-xcomm.c           |   2 +-
- drivers/spi/spi-xtensa-xtfpga.c   |   2 +-
- drivers/spi/spi.c                 | 211 +++++++++++++-----------------
- include/linux/spi/spi.h           | 173 ++++++++++++------------
- include/trace/events/spi.h        |   2 +-
- 36 files changed, 238 insertions(+), 252 deletions(-)
-
+diff --git a/drivers/spi/spi.c b/drivers/spi/spi.c
+index 876d40d2c708..57b5e4488416 100644
+--- a/drivers/spi/spi.c
++++ b/drivers/spi/spi.c
+@@ -708,14 +708,6 @@ int spi_add_device(struct spi_device *spi)
+ }
+ EXPORT_SYMBOL_GPL(spi_add_device);
+ 
+-static int spi_add_device_locked(struct spi_device *spi)
+-{
+-	struct spi_controller *ctlr = spi->controller;
+-
+-	WARN_ON(!mutex_is_locked(&ctlr->add_lock));
+-	return __spi_add_device(spi);
+-}
+-
+ /**
+  * spi_new_device - instantiate one new SPI device
+  * @ctlr: Controller to which device is connected
+@@ -2417,11 +2409,12 @@ static void of_register_spi_devices(struct spi_controller *ctlr) { }
+ struct spi_device *spi_new_ancillary_device(struct spi_device *spi,
+ 					     u8 chip_select)
+ {
++	struct spi_controller *ctlr = spi->controller;
+ 	struct spi_device *ancillary;
+ 	int rc = 0;
+ 
+ 	/* Alloc an spi_device */
+-	ancillary = spi_alloc_device(spi->controller);
++	ancillary = spi_alloc_device(ctlr);
+ 	if (!ancillary) {
+ 		rc = -ENOMEM;
+ 		goto err_out;
+@@ -2436,8 +2429,10 @@ struct spi_device *spi_new_ancillary_device(struct spi_device *spi,
+ 	ancillary->max_speed_hz = spi->max_speed_hz;
+ 	ancillary->mode = spi->mode;
+ 
++	WARN_ON(!mutex_is_locked(&ctlr->add_lock));
++
+ 	/* Register the new device */
+-	rc = spi_add_device_locked(ancillary);
++	rc = __spi_add_device(ancillary);
+ 	if (rc) {
+ 		dev_err(&spi->dev, "failed to register ancillary device\n");
+ 		goto err_out;
 -- 
 2.40.0.1.gaa8946217a0b
 
