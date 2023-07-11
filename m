@@ -2,140 +2,415 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 98BBAEB64DC
-	for <linux-trace-kernel@archiver.kernel.org>; Tue, 11 Jul 2023 13:05:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ABD29EB64DC
+	for <linux-trace-kernel@archiver.kernel.org>; Tue, 11 Jul 2023 13:13:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231213AbjGKNFe (ORCPT
+        id S232901AbjGKNNK (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Tue, 11 Jul 2023 09:05:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36622 "EHLO
+        Tue, 11 Jul 2023 09:13:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40846 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231190AbjGKNFe (ORCPT
+        with ESMTP id S231403AbjGKNNJ (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Tue, 11 Jul 2023 09:05:34 -0400
+        Tue, 11 Jul 2023 09:13:09 -0400
 Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6240393;
-        Tue, 11 Jul 2023 06:05:33 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7540518D;
+        Tue, 11 Jul 2023 06:13:07 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange X25519 server-signature RSA-PSS (2048 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id E3617614BF;
-        Tue, 11 Jul 2023 13:05:32 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DE23AC433C8;
-        Tue, 11 Jul 2023 13:05:21 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id DD438614E2;
+        Tue, 11 Jul 2023 13:13:06 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8D794C433C7;
+        Tue, 11 Jul 2023 13:13:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1689080732;
-        bh=HnVEva2jdOLXu3EN/cKYarAoyETVmcXrgG0CY9KCvZQ=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=BO5Sf+xL4FaASSNsNdM5EGXByrv4WeTUxRBoPW2QNejIwlELvXTu5gKKqv4hkKhGg
-         oi3ZfR9Shzo5QwnSHTFndf8ZIVkqpTClpssosTOBH6/4HIjVrlXO3KdynsW5+Pg7kp
-         pbkKvKQx6ir3yg7CLJDoLHQzo0ewO66SzIeDifz9SCJzdBAZAn9RpEQzQEGNZHOmt+
-         6tOI/PPlmxZBFom+gGGjOjy+qrSc5cI26iueLs1Gv6DR2sYD26rubxcFZS48+8Dw/G
-         5SSyFU8wEM4MuZLWsQU4tXLcKI+0ehoZc3/OitBA10N/7/7vB38b2KMdMwG1AhcrlN
-         +CUurb7ZrrwoQ==
-Date:   Tue, 11 Jul 2023 14:05:18 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     AngeloGioacchino Del Regno 
-        <angelogioacchino.delregno@collabora.com>
-Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Cristian Ciocaltea <cristian.ciocaltea@collabora.com>,
-        Yang Yingliang <yangyingliang@huawei.com>,
-        Amit Kumar Mahapatra via Alsa-devel 
-        <alsa-devel@alsa-project.org>,
-        Neil Armstrong <neil.armstrong@linaro.org>,
-        Tharun Kumar P <tharunkumar.pasumarthi@microchip.com>,
-        Vijaya Krishna Nivarthi <quic_vnivarth@quicinc.com>,
-        Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>, linux-spi@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-amlogic@lists.infradead.org,
-        linux-mediatek@lists.infradead.org, linux-arm-msm@vger.kernel.org,
-        linux-rockchip@lists.infradead.org,
-        linux-riscv@lists.infradead.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-trace-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        Sanjay R Mehta <sanju.mehta@amd.com>,
-        Radu Pirea <radu_nicolae.pirea@upb.ro>,
-        Nicolas Ferre <nicolas.ferre@microchip.com>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Claudiu Beznea <claudiu.beznea@microchip.com>,
-        Tudor Ambarus <tudor.ambarus@linaro.org>,
-        Serge Semin <fancer.lancer@gmail.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Kevin Hilman <khilman@baylibre.com>,
-        Jerome Brunet <jbrunet@baylibre.com>,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <andersson@kernel.org>,
-        Konrad Dybcio <konrad.dybcio@linaro.org>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Orson Zhai <orsonzhai@gmail.com>,
-        Baolin Wang <baolin.wang@linux.alibaba.com>,
-        Chunyan Zhang <zhang.lyra@gmail.com>,
-        Alain Volmat <alain.volmat@foss.st.com>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue <alexandre.torgue@foss.st.com>,
-        Max Filippov <jcmvbkbc@gmail.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Richard Cochran <richardcochran@gmail.com>
-Subject: Re: [PATCH v2 04/15] spi: Replace open coded
- spi_controller_xfer_timeout()
-Message-ID: <e3688ce5-616a-4399-a4e3-c410a09f6a45@sirena.org.uk>
-References: <20230710154932.68377-1-andriy.shevchenko@linux.intel.com>
- <20230710154932.68377-5-andriy.shevchenko@linux.intel.com>
- <83c4b75a-06d7-9fca-ffa0-f2e6a6ae7aed@collabora.com>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="925w7TTgRoHZtFsT"
-Content-Disposition: inline
-In-Reply-To: <83c4b75a-06d7-9fca-ffa0-f2e6a6ae7aed@collabora.com>
-X-Cookie: marriage, n.:
+        s=k20201202; t=1689081186;
+        bh=CDiITJi0TzBDerA5pWdZRvyrcN76IEn7mHYE+hfx6C0=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=WuW6qI3/sCz7cPrPEc/CVZ6sHawnIzRYXSo/HS/QN6cUc0VMEvh9JghArjjCKxkhv
+         IRS9CSWqxXva+Nbq5YIzDWo+L0800zIiDzGmb5umHplm5hcs3ricVfMHD8uRP5ugE6
+         qVGHY5F3O91nKfMCTB/umEXABebWxYIYuH5kshhoWthZFIpEtpSE+RbN1aDWNMlcXL
+         nI2PjHasOg3GffJiw2UBrsDP5yQTRYPef36NL4l0JWt+pCC4zEMxTBsdp9xExrDEys
+         cujJiw/hsH1JHP9AaKq1zqVB9ex+22bD3pf3AUK7qf/rnNjotF1sj7MkqnMl+dht65
+         FbxWudf49a+mw==
+Date:   Tue, 11 Jul 2023 22:13:02 +0900
+From:   Masami Hiramatsu (Google) <mhiramat@kernel.org>
+To:     Zehao Zhang <zhangzehao@vivo.com>
+Cc:     linkinjeon@kernel.org, sj1557.seo@samsung.com, rostedt@goodmis.org,
+        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-trace-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] exfat: Add ftrace support for exfat and add some
+ tracepoints
+Message-Id: <20230711221302.f046a5e42db5f822669059d1@kernel.org>
+In-Reply-To: <20230711122208.65020-1-zhangzehao@vivo.com>
+References: <20230711122208.65020-1-zhangzehao@vivo.com>
+X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
+Hi,
 
---925w7TTgRoHZtFsT
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+On Tue, 11 Jul 2023 20:22:08 +0800
+Zehao Zhang <zhangzehao@vivo.com> wrote:
 
-On Tue, Jul 11, 2023 at 10:28:13AM +0200, AngeloGioacchino Del Regno wrote:
-> Il 10/07/23 17:49, Andy Shevchenko ha scritto:
+> Add ftrace support for exFAT file system,
+> and add some tracepoints:
+> exfat_read_folio(), exfat_writepages(), exfat_write_begin(),
+> exfat_write_end(), exfat_lookup_start(), exfat_lookup_end()
+> 
+> exfat_read_folio():
+> shows the dev number, inode and the folio index.
+> 
+> exfat_writepages():
+> shows the inode and fields in struct writeback_control.
+> 
+> exfat_write_begin():
+> shows the inode, file position offset and length.
+> 
+> exfat_write_end():
+> shows the inode, file position offset, bytes write to page
+> and bytes copied from user.
+> 
+> exfat_lookup_start():
+> shows the target inode, dentry and flags.
+> 
+> exfat_lookup_end():
+> shows the target inode, dentry and err code.
+> 
 
-> > +		ms = spi_controller_xfer_timeout(ctlr, xfer);
+I still doubt including these. If VFS layer maintainer rejects the generic
+events, that means they expect to change the VFS layer in the future.
 
-> I agree on using helpers, but the logic is slightly changing here: yes it is
-> unlikely (and also probably useless) to get ms == UINT_MAX, but the helper is
-> limiting the maximum timeout value to 500mS, which may not work for some slow
-> controllers/devices.
+If so, is that good to expose the trace event which is visible to users
+from exFAT? If VFS layer changes the interface in the future, these events
+can be out-of-dated.
 
-The helper is limiting the *minimum* timeout value to 500ms - it's using
-max() not min().  The idea is the other way around, that for a very fast
-transfer we don't want to end up with such a short timeout that it false
-triggers due to scheduling issues.
+I think some of events looks good because those are enough , like
+exfat_write_begin/end, exfat_lookup_start/end (BTW, why one is 'begin' and
+another is 'start'?) But I think exfat_read_folio and exfat_writepages
+expose some implement depending parameters.
 
---925w7TTgRoHZtFsT
-Content-Type: application/pgp-signature; name="signature.asc"
+Zehao, could you tell me what you really want to do with these?
+Maybe you can expose tracepoint instead of traceevent for tracing such
+implement depending parameters.
 
------BEGIN PGP SIGNATURE-----
+Thank you,
 
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmStU40ACgkQJNaLcl1U
-h9B+yQf+KBYXJ7506wC0Am0zY2LnPrpwi7/uhVWQsN9GzhBVU0RGwam2xuqmpCeo
-A3o92lqKSQPkQGllTlnuM3r4jp2qDy1/U/QJJxak+i/i8NjuVxIQQIKtnM/nRQxh
-yRpIp6WbVt+HJsdFgPS6j6r/3m1qS4eTbso7/ciwLzdRc2Yxk9SLXFteOErlAEoq
-hhR7VxhID4BE72a+1NbyuALEVGjSMYBdpddD//Qa1UsJVw1yK5HuM51CaQd9bTlo
-EtrmXMgaG9FB+lQeu2zedT6HTQQH/hOB77luYq4zGm849tw2sfBPIhqVgQtkkutv
-4hpXSMiuD+iL32PThXfathhu4xvFiQ==
-=l6sR
------END PGP SIGNATURE-----
+> Signed-off-by: Zehao Zhang <zhangzehao@vivo.com>
+> ---
+> v2:
+> - Keep the dereferencing logic out of the code path,
+>   only happens in the trace event functions.
+> 
+> Thanks for Steve's advice.
+> 
+>  MAINTAINERS                  |   1 +
+>  fs/exfat/inode.c             |   9 ++
+>  fs/exfat/namei.c             |  10 +-
+>  include/trace/events/exfat.h | 190 +++++++++++++++++++++++++++++++++++
+>  4 files changed, 209 insertions(+), 1 deletion(-)
+>  create mode 100644 include/trace/events/exfat.h
+> 
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index 4f115c355a41..fbe1caa61a38 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -7752,6 +7752,7 @@ L:	linux-fsdevel@vger.kernel.org
+>  S:	Maintained
+>  T:	git git://git.kernel.org/pub/scm/linux/kernel/git/linkinjeon/exfat.git
+>  F:	fs/exfat/
+> +F:	include/trace/events/exfat.h
+>  
+>  EXT2 FILE SYSTEM
+>  M:	Jan Kara <jack@suse.com>
+> diff --git a/fs/exfat/inode.c b/fs/exfat/inode.c
+> index 481dd338f2b8..81fe715baab0 100644
+> --- a/fs/exfat/inode.c
+> +++ b/fs/exfat/inode.c
+> @@ -17,6 +17,9 @@
+>  #include "exfat_raw.h"
+>  #include "exfat_fs.h"
+>  
+> +#define CREATE_TRACE_POINTS
+> +#include <trace/events/exfat.h>
+> +
+>  int __exfat_write_inode(struct inode *inode, int sync)
+>  {
+>  	unsigned long long on_disk_size;
+> @@ -335,6 +338,7 @@ static int exfat_get_block(struct inode *inode, sector_t iblock,
+>  
+>  static int exfat_read_folio(struct file *file, struct folio *folio)
+>  {
+> +	trace_exfat_read_folio(folio);
+>  	return mpage_read_folio(folio, exfat_get_block);
+>  }
+>  
+> @@ -346,6 +350,7 @@ static void exfat_readahead(struct readahead_control *rac)
+>  static int exfat_writepages(struct address_space *mapping,
+>  		struct writeback_control *wbc)
+>  {
+> +	trace_exfat_writepages(mapping, wbc);
+>  	return mpage_writepages(mapping, wbc, exfat_get_block);
+>  }
+>  
+> @@ -371,6 +376,8 @@ static int exfat_write_begin(struct file *file, struct address_space *mapping,
+>  			       exfat_get_block,
+>  			       &EXFAT_I(mapping->host)->i_size_ondisk);
+>  
+> +	trace_exfat_write_begin(mapping, pos, len);
+> +
+>  	if (ret < 0)
+>  		exfat_write_failed(mapping, pos+len);
+>  
+> @@ -394,6 +401,8 @@ static int exfat_write_end(struct file *file, struct address_space *mapping,
+>  		return -EIO;
+>  	}
+>  
+> +	trace_exfat_write_end(inode, pos, len, copied);
+> +
+>  	if (err < len)
+>  		exfat_write_failed(mapping, pos+len);
+>  
+> diff --git a/fs/exfat/namei.c b/fs/exfat/namei.c
+> index e0ff9d156f6f..f4f36de4ca0d 100644
+> --- a/fs/exfat/namei.c
+> +++ b/fs/exfat/namei.c
+> @@ -12,6 +12,8 @@
+>  #include "exfat_raw.h"
+>  #include "exfat_fs.h"
+>  
+> +#include <trace/events/exfat.h>
+> +
+>  static inline unsigned long exfat_d_version(struct dentry *dentry)
+>  {
+>  	return (unsigned long) dentry->d_fsdata;
+> @@ -707,6 +709,8 @@ static struct dentry *exfat_lookup(struct inode *dir, struct dentry *dentry,
+>  	loff_t i_pos;
+>  	mode_t i_mode;
+>  
+> +	trace_exfat_lookup_start(dir, dentry, flags);
+> +
+>  	mutex_lock(&EXFAT_SB(sb)->s_lock);
+>  	err = exfat_find(dir, &dentry->d_name, &info);
+>  	if (err) {
+> @@ -766,7 +770,11 @@ static struct dentry *exfat_lookup(struct inode *dir, struct dentry *dentry,
+>  	if (!inode)
+>  		exfat_d_version_set(dentry, inode_query_iversion(dir));
+>  
+> -	return d_splice_alias(inode, dentry);
+> +	alias = d_splice_alias(inode, dentry);
+> +	trace_exfat_lookup_end(dir, !IS_ERR_OR_NULL(alias) ? alias : dentry,
+> +			IS_ERR(alias) ? PTR_ERR(alias) : err);
+> +
+> +	return alias;
+>  unlock:
+>  	mutex_unlock(&EXFAT_SB(sb)->s_lock);
+>  	return ERR_PTR(err);
+> diff --git a/include/trace/events/exfat.h b/include/trace/events/exfat.h
+> new file mode 100644
+> index 000000000000..782dae6e2e42
+> --- /dev/null
+> +++ b/include/trace/events/exfat.h
+> @@ -0,0 +1,190 @@
+> +/* SPDX-License-Identifier: GPL-2.0 */
+> +#undef TRACE_SYSTEM
+> +#define TRACE_SYSTEM exfat
+> +
+> +#if !defined(_TRACE_EXFAT_H) || defined(TRACE_HEADER_MULTI_READ)
+> +#define _TRACE_EXFAT_H
+> +
+> +#include <linux/tracepoint.h>
+> +
+> +#define EXFAT_I(inode)	(container_of(inode, struct exfat_inode_info, vfs_inode))
+> +
+> +
+> +TRACE_EVENT(exfat_write_begin,
+> +	TP_PROTO(struct address_space *mapping, loff_t pos, unsigned int len),
+> +
+> +	TP_ARGS(mapping, pos, len),
+> +
+> +	TP_STRUCT__entry(
+> +		__field(dev_t,        dev)
+> +		__field(ino_t,        ino)
+> +		__field(loff_t,       pos)
+> +		__field(unsigned int, len)
+> +	),
+> +
+> +	TP_fast_assign(
+> +		__entry->dev    = mapping->host->i_sb->s_dev;
+> +		__entry->ino    = mapping->host->i_ino;
+> +		__entry->pos    = pos;
+> +		__entry->len    = len;
+> +	),
+> +
+> +	TP_printk("dev (%d,%d) ino %lu pos %lld len %u",
+> +		MAJOR(__entry->dev), MINOR(__entry->dev),
+> +		(unsigned long) __entry->ino,
+> +		__entry->pos, __entry->len)
+> +
+> +);
+> +
+> +TRACE_EVENT(exfat_write_end,
+> +	TP_PROTO(struct inode *inode, loff_t pos, unsigned int len,
+> +			unsigned int copied),
+> +
+> +	TP_ARGS(inode, pos, len, copied),
+> +
+> +	TP_STRUCT__entry(
+> +		__field(dev_t,	dev)
+> +		__field(ino_t,	ino)
+> +		__field(loff_t,	pos)
+> +		__field(unsigned int, len)
+> +		__field(unsigned int, copied)
+> +	),
+> +
+> +	TP_fast_assign(
+> +		__entry->dev	= inode->i_sb->s_dev;
+> +		__entry->ino	= inode->i_ino;
+> +		__entry->pos	= pos;
+> +		__entry->len	= len;
+> +		__entry->copied	= copied;
+> +	),
+> +
+> +	TP_printk("dev (%d,%d) ino %lu pos %lld len %u copied %u",
+> +		MAJOR(__entry->dev), MINOR(__entry->dev),
+> +		(unsigned long) __entry->ino,
+> +		__entry->pos, __entry->len, __entry->copied)
+> +);
+> +
+> +TRACE_EVENT(exfat_read_folio,
+> +	TP_PROTO(struct folio *folio),
+> +
+> +	TP_ARGS(folio),
+> +
+> +	TP_STRUCT__entry(
+> +		__field(dev_t,	dev)
+> +		__field(ino_t,	ino)
+> +		__field(pgoff_t, index)
+> +
+> +	),
+> +
+> +	TP_fast_assign(
+> +		__entry->dev	= folio->mapping->host->i_sb->s_dev;
+> +		__entry->ino	= folio->mapping->host->i_ino;
+> +		__entry->index	= folio->index;
+> +	),
+> +
+> +	TP_printk("dev (%d,%d) ino %lu folio_index %lu",
+> +		MAJOR(__entry->dev), MINOR(__entry->dev),
+> +		(unsigned long) __entry->ino,
+> +		(unsigned long) __entry->index)
+> +);
+> +
+> +TRACE_EVENT(exfat_writepages,
+> +	TP_PROTO(struct address_space *mapping, struct writeback_control *wbc),
+> +
+> +	TP_ARGS(mapping, wbc),
+> +
+> +	TP_STRUCT__entry(
+> +		__field(dev_t,	dev)
+> +		__field(ino_t,	ino)
+> +		__field(long,	nr_to_write)
+> +		__field(long,	pages_skipped)
+> +		__field(loff_t,		range_start)
+> +		__field(loff_t,		range_end)
+> +		__field(pgoff_t,	writeback_index)
+> +		__field(int,	sync_mode)
+> +		__field(char,	for_kupdate)
+> +		__field(char,	range_cyclic)
+> +	),
+> +
+> +	TP_fast_assign(
+> +		__entry->dev		= mapping->host->i_sb->s_dev;
+> +		__entry->ino		= mapping->host->i_ino;
+> +		__entry->nr_to_write	= wbc->nr_to_write;
+> +		__entry->pages_skipped	= wbc->pages_skipped;
+> +		__entry->range_start	= wbc->range_start;
+> +		__entry->range_end	= wbc->range_end;
+> +		__entry->writeback_index = mapping->host->i_mapping->writeback_index;
+> +		__entry->sync_mode	= wbc->sync_mode;
+> +		__entry->for_kupdate	= wbc->for_kupdate;
+> +		__entry->range_cyclic	= wbc->range_cyclic;
+> +	),
+> +
+> +	TP_printk("dev (%d,%d) ino %lu nr_to_write %ld pages_skipped %ld "
+> +		"range_start %lld range_end %lld sync_mode %d "
+> +		"for_kupdate %d range_cyclic %d writeback_index %lu",
+> +		MAJOR(__entry->dev), MINOR(__entry->dev),
+> +		(unsigned long) __entry->ino, __entry->nr_to_write,
+> +		__entry->pages_skipped, __entry->range_start,
+> +		__entry->range_end, __entry->sync_mode,
+> +		__entry->for_kupdate, __entry->range_cyclic,
+> +		(unsigned long) __entry->writeback_index)
+> +);
+> +
+> +TRACE_EVENT(exfat_lookup_start,
+> +
+> +	TP_PROTO(struct inode *dir, struct dentry *dentry, unsigned int flags),
+> +
+> +	TP_ARGS(dir, dentry, flags),
+> +
+> +	TP_STRUCT__entry(
+> +		__field(dev_t,	dev)
+> +		__field(ino_t,	ino)
+> +		__string(name,	dentry->d_name.name)
+> +		__field(unsigned int, flags)
+> +	),
+> +
+> +	TP_fast_assign(
+> +		__entry->dev	= dir->i_sb->s_dev;
+> +		__entry->ino	= dir->i_ino;
+> +		__assign_str(name, dentry->d_name.name);
+> +		__entry->flags	= flags;
+> +	),
+> +
+> +	TP_printk("dev = (%d,%d), pino = %lu, name:%s, flags:%u",
+> +		MAJOR(__entry->dev), MINOR(__entry->dev),
+> +		(unsigned long)__entry->ino,
+> +		__get_str(name),
+> +		__entry->flags)
+> +);
+> +
+> +TRACE_EVENT(exfat_lookup_end,
+> +
+> +	TP_PROTO(struct inode *dir, struct dentry *dentry, int err),
+> +
+> +	TP_ARGS(dir, dentry, err),
+> +
+> +	TP_STRUCT__entry(
+> +		__field(dev_t,	dev)
+> +		__field(ino_t,	ino)
+> +		__string(name,	dentry->d_name.name)
+> +		__field(int,	err)
+> +	),
+> +
+> +	TP_fast_assign(
+> +		__entry->dev	= dir->i_sb->s_dev;
+> +		__entry->ino	= dir->i_ino;
+> +		__assign_str(name, dentry->d_name.name);
+> +		__entry->err	= err;
+> +	),
+> +
+> +	TP_printk("dev = (%d,%d), pino = %lu, name:%s, err:%d",
+> +		MAJOR(__entry->dev), MINOR(__entry->dev),
+> +		(unsigned long)__entry->ino,
+> +		__get_str(name),
+> +		__entry->err)
+> +);
+> +
+> +#endif /* _TRACE_EXFAT_H */
+> +
+> +/* This part must be outside protection */
+> +#include <trace/define_trace.h>
+> -- 
+> 2.35.3
+> 
 
---925w7TTgRoHZtFsT--
+
+-- 
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
