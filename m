@@ -2,207 +2,149 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AC98EEB64DD
-	for <linux-trace-kernel@archiver.kernel.org>; Tue, 11 Jul 2023 09:25:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CF6B8EB64DC
+	for <linux-trace-kernel@archiver.kernel.org>; Tue, 11 Jul 2023 10:58:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232181AbjGKJZP (ORCPT
+        id S230257AbjGKK6b (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Tue, 11 Jul 2023 05:25:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48856 "EHLO
+        Tue, 11 Jul 2023 06:58:31 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37342 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232008AbjGKJYt (ORCPT
+        with ESMTP id S229468AbjGKK6a (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Tue, 11 Jul 2023 05:24:49 -0400
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [IPv6:2001:67c:2178:6::1d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 99E6619B6;
-        Tue, 11 Jul 2023 02:20:18 -0700 (PDT)
-Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
-        (No client certificate requested)
-        by smtp-out2.suse.de (Postfix) with ESMTPS id 1B6162059E;
-        Tue, 11 Jul 2023 09:20:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
-        t=1689067217; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-         mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=0yrG6a18vPr19xyMGpiJuE+vcoBpKkcNTahmnTLig8g=;
-        b=rpL5rSN1pJLDNzdiNLUjhLqlFyP+X8UZNy66kSagfNJjHVQQY7SNsS2Ozow9DOtqayqOlL
-        9r8hmGgUwgwAlx0L3VkrR80gCQI4yzZS4bioZuNaYrSG2rHzEN6TzRu4NGic6X+dXj6zJp
-        1IKBGvW55F6H+TSCK29XOwcokX4JiuE=
-Received: from imap2.suse-dmz.suse.de (imap2.suse-dmz.suse.de [192.168.254.74])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature ECDSA (P-521) server-digest SHA512)
-        (No client certificate requested)
-        by imap2.suse-dmz.suse.de (Postfix) with ESMTPS id DE14E1390F;
-        Tue, 11 Jul 2023 09:20:16 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([192.168.254.65])
-        by imap2.suse-dmz.suse.de with ESMTPSA
-        id 4D11NdAerWSiVwAAMHmgww
-        (envelope-from <petr.pavlu@suse.com>); Tue, 11 Jul 2023 09:20:16 +0000
-From:   Petr Pavlu <petr.pavlu@suse.com>
-To:     tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
-        dave.hansen@linux.intel.com, hpa@zytor.com, mhiramat@kernel.org,
-        peterz@infradead.org
-Cc:     samitolvanen@google.com, x86@kernel.org,
-        linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Petr Pavlu <petr.pavlu@suse.com>
-Subject: [PATCH v2 2/2] x86/retpoline,kprobes: Skip optprobe check for indirect jumps with retpolines and IBT
-Date:   Tue, 11 Jul 2023 11:19:52 +0200
-Message-Id: <20230711091952.27944-3-petr.pavlu@suse.com>
-X-Mailer: git-send-email 2.35.3
-In-Reply-To: <20230711091952.27944-1-petr.pavlu@suse.com>
-References: <20230711091952.27944-1-petr.pavlu@suse.com>
+        Tue, 11 Jul 2023 06:58:30 -0400
+Received: from mga03.intel.com (mga03.intel.com [134.134.136.65])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 20DF19B;
+        Tue, 11 Jul 2023 03:58:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1689073109; x=1720609109;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=lIHyBeHEaNenp9Q/l2JAcaQuyI3ymSNUAckdiFell2M=;
+  b=aSDhIFMueOPnwVS7Ho6a6OIntXPb4+TbR8av8tsm7N95ZF0HZvBNOrjE
+   6IYDKI8Noo4KEC9bjea4tOfDBZw7+Is1haF4dzE/Lhk/AH2xCsqUR7RhD
+   rw9HxOXIUWPylC8POOQphS1jmQDGgYb/JL1I3v44IvjCMzks+Q/feoNi2
+   32RjOfZWWZ5qO9zM3XX0FbQGqD3n7QxD8Zwoh/76qRnViLx8ducan/skg
+   gjgorJxdWER81EIUlIqRCqhk48WACRer5ZCZeCCnGT2JMwI370n4lDlCU
+   O2aCNRtbAJDyaNdfxwQMN+cFvv4UzNPiDwnJiAY7sDzLgZ2y6CEOfedZU
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10767"; a="368087275"
+X-IronPort-AV: E=Sophos;i="6.01,196,1684825200"; 
+   d="scan'208";a="368087275"
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jul 2023 03:58:28 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10767"; a="724404293"
+X-IronPort-AV: E=Sophos;i="6.01,196,1684825200"; 
+   d="scan'208";a="724404293"
+Received: from smile.fi.intel.com ([10.237.72.54])
+  by fmsmga007.fm.intel.com with ESMTP; 11 Jul 2023 03:58:16 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.96)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1qJB4O-001p51-1q;
+        Tue, 11 Jul 2023 13:58:12 +0300
+Date:   Tue, 11 Jul 2023 13:58:12 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Mark Brown <broonie@kernel.org>
+Cc:     Cristian Ciocaltea <cristian.ciocaltea@collabora.com>,
+        Yang Yingliang <yangyingliang@huawei.com>,
+        Amit Kumar Mahapatra via Alsa-devel 
+        <alsa-devel@alsa-project.org>,
+        Neil Armstrong <neil.armstrong@linaro.org>,
+        Tharun Kumar P <tharunkumar.pasumarthi@microchip.com>,
+        Vijaya Krishna Nivarthi <quic_vnivarth@quicinc.com>,
+        Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>, linux-spi@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-amlogic@lists.infradead.org,
+        linux-mediatek@lists.infradead.org, linux-arm-msm@vger.kernel.org,
+        linux-rockchip@lists.infradead.org,
+        linux-riscv@lists.infradead.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-trace-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        Sanjay R Mehta <sanju.mehta@amd.com>,
+        Radu Pirea <radu_nicolae.pirea@upb.ro>,
+        Nicolas Ferre <nicolas.ferre@microchip.com>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Claudiu Beznea <claudiu.beznea@microchip.com>,
+        Tudor Ambarus <tudor.ambarus@linaro.org>,
+        Serge Semin <fancer.lancer@gmail.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Kevin Hilman <khilman@baylibre.com>,
+        Jerome Brunet <jbrunet@baylibre.com>,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        AngeloGioacchino Del Regno 
+        <angelogioacchino.delregno@collabora.com>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <andersson@kernel.org>,
+        Konrad Dybcio <konrad.dybcio@linaro.org>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Orson Zhai <orsonzhai@gmail.com>,
+        Baolin Wang <baolin.wang@linux.alibaba.com>,
+        Chunyan Zhang <zhang.lyra@gmail.com>,
+        Alain Volmat <alain.volmat@foss.st.com>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue <alexandre.torgue@foss.st.com>,
+        Max Filippov <jcmvbkbc@gmail.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Richard Cochran <richardcochran@gmail.com>
+Subject: Re: [PATCH v2 02/15] spi: Drop duplicate IDR allocation code in
+ spi_register_controller()
+Message-ID: <ZK01xAqLc8AGFDo/@smile.fi.intel.com>
+References: <20230710154932.68377-1-andriy.shevchenko@linux.intel.com>
+ <20230710154932.68377-3-andriy.shevchenko@linux.intel.com>
+ <97f3436a-78ca-4a94-a409-ef04bd3b593f@sirena.org.uk>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <97f3436a-78ca-4a94-a409-ef04bd3b593f@sirena.org.uk>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-The kprobes optimization check can_optimize() calls
-insn_is_indirect_jump() to detect indirect jump instructions in
-a target function. If any is found, creating an optprobe is disallowed
-in the function because the jump could be from a jump table and could
-potentially land in the middle of the target optprobe.
+On Mon, Jul 10, 2023 at 06:09:00PM +0100, Mark Brown wrote:
+> On Mon, Jul 10, 2023 at 06:49:19PM +0300, Andy Shevchenko wrote:
+> 
+> > Refactor spi_register_controller() to drop duplicate IDR allocation.
+> > Instead of if-else-if branching use two sequential if:s, which allows
+> > to re-use the logic of IDR allocation in all cases.
+> 
+> For legibility this should have been split into a separate factoring out
+> of the shared code and rewriting of the logic, that'd make it trivial to
+> review.
 
-With retpolines, insn_is_indirect_jump() additionally looks for calls to
-indirect thunks which the compiler potentially used to replace original
-jumps. This extra check is however unnecessary because jump tables are
-disabled when the kernel is built with retpolines. The same is currently
-the case with IBT.
+Should I do that for v3?
 
-Based on this observation, remove the logic to look for calls to
-indirect thunks and skip the check for indirect jumps altogether if the
-kernel is built with retpolines or IBT. Remove subsequently the symbols
-__indirect_thunk_start and __indirect_thunk_end which are no longer
-needed.
+> > -		mutex_lock(&board_lock);
+> > -		id = idr_alloc(&spi_master_idr, ctlr, first_dynamic,
+> > -			       0, GFP_KERNEL);
+> > -		mutex_unlock(&board_lock);
+> > -		if (WARN(id < 0, "couldn't get idr"))
+> > -			return id;
+> > -		ctlr->bus_num = id;
+> > +		status = spi_controller_id_alloc(ctlr, first_dynamic, 0);
+> > +		if (status)
+> > +			return status;
+> 
+> The original does not do the remapping of return codes that the previous
+> two copies do...
 
-Dropping this logic indirectly fixes a problem where the range
-[__indirect_thunk_start, __indirect_thunk_end] wrongly included also the
-return thunk. It caused that machines which used the return thunk as
-a mitigation and didn't have it patched by any alternative ended up not
-being able to use optprobes in any regular function.
+Yes, I had to mention this in the commit message that in my opinion this makes
+no difference. With the dynamically allocated aliases the absence of the slot
+has the same effect as in the other cases.
 
-Fixes: 0b53c374b9ef ("x86/retpoline: Use -mfunction-return")
-Suggested-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Suggested-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-Signed-off-by: Petr Pavlu <petr.pavlu@suse.com>
----
- arch/x86/include/asm/nospec-branch.h |  3 ---
- arch/x86/kernel/kprobes/opt.c        | 40 +++++++++++-----------------
- arch/x86/kernel/vmlinux.lds.S        |  2 --
- tools/perf/util/thread-stack.c       |  4 +--
- 4 files changed, 17 insertions(+), 32 deletions(-)
-
-diff --git a/arch/x86/include/asm/nospec-branch.h b/arch/x86/include/asm/nospec-branch.h
-index 55388c9f7601..c5460be93fa7 100644
---- a/arch/x86/include/asm/nospec-branch.h
-+++ b/arch/x86/include/asm/nospec-branch.h
-@@ -461,9 +461,6 @@ enum ssb_mitigation {
- 	SPEC_STORE_BYPASS_SECCOMP,
- };
- 
--extern char __indirect_thunk_start[];
--extern char __indirect_thunk_end[];
--
- static __always_inline
- void alternative_msr_write(unsigned int msr, u64 val, unsigned int feature)
- {
-diff --git a/arch/x86/kernel/kprobes/opt.c b/arch/x86/kernel/kprobes/opt.c
-index 57b0037d0a99..517821b48391 100644
---- a/arch/x86/kernel/kprobes/opt.c
-+++ b/arch/x86/kernel/kprobes/opt.c
-@@ -226,7 +226,7 @@ static int copy_optimized_instructions(u8 *dest, u8 *src, u8 *real)
- }
- 
- /* Check whether insn is indirect jump */
--static int __insn_is_indirect_jump(struct insn *insn)
-+static int insn_is_indirect_jump(struct insn *insn)
- {
- 	return ((insn->opcode.bytes[0] == 0xff &&
- 		(X86_MODRM_REG(insn->modrm.value) & 6) == 4) || /* Jump */
-@@ -260,26 +260,6 @@ static int insn_jump_into_range(struct insn *insn, unsigned long start, int len)
- 	return (start <= target && target <= start + len);
- }
- 
--static int insn_is_indirect_jump(struct insn *insn)
--{
--	int ret = __insn_is_indirect_jump(insn);
--
--#ifdef CONFIG_RETPOLINE
--	/*
--	 * Jump to x86_indirect_thunk_* is treated as an indirect jump.
--	 * Note that even with CONFIG_RETPOLINE=y, the kernel compiled with
--	 * older gcc may use indirect jump. So we add this check instead of
--	 * replace indirect-jump check.
--	 */
--	if (!ret)
--		ret = insn_jump_into_range(insn,
--				(unsigned long)__indirect_thunk_start,
--				(unsigned long)__indirect_thunk_end -
--				(unsigned long)__indirect_thunk_start);
--#endif
--	return ret;
--}
--
- /* Decode whole function to ensure any instructions don't jump into target */
- static int can_optimize(unsigned long paddr)
- {
-@@ -334,9 +314,21 @@ static int can_optimize(unsigned long paddr)
- 		/* Recover address */
- 		insn.kaddr = (void *)addr;
- 		insn.next_byte = (void *)(addr + insn.length);
--		/* Check any instructions don't jump into target */
--		if (insn_is_indirect_jump(&insn) ||
--		    insn_jump_into_range(&insn, paddr + INT3_INSN_SIZE,
-+		/*
-+		 * Check any instructions don't jump into target, indirectly or
-+		 * directly.
-+		 *
-+		 * The indirect case is present to handle a code with jump
-+		 * tables. When the kernel uses retpolines, the check should in
-+		 * theory additionally look for jumps to indirect thunks.
-+		 * However, the kernel built with retpolines or IBT has jump
-+		 * tables disabled so the check can be skipped altogether.
-+		 */
-+		if (!IS_ENABLED(CONFIG_RETPOLINE) &&
-+		    !IS_ENABLED(CONFIG_X86_KERNEL_IBT) &&
-+		    insn_is_indirect_jump(&insn))
-+			return 0;
-+		if (insn_jump_into_range(&insn, paddr + INT3_INSN_SIZE,
- 					 DISP32_SIZE))
- 			return 0;
- 		addr += insn.length;
-diff --git a/arch/x86/kernel/vmlinux.lds.S b/arch/x86/kernel/vmlinux.lds.S
-index a4cd04c458df..dd5b0a68cf84 100644
---- a/arch/x86/kernel/vmlinux.lds.S
-+++ b/arch/x86/kernel/vmlinux.lds.S
-@@ -133,9 +133,7 @@ SECTIONS
- 		KPROBES_TEXT
- 		SOFTIRQENTRY_TEXT
- #ifdef CONFIG_RETPOLINE
--		__indirect_thunk_start = .;
- 		*(.text..__x86.*)
--		__indirect_thunk_end = .;
- #endif
- 		STATIC_CALL_TEXT
- 
-diff --git a/tools/perf/util/thread-stack.c b/tools/perf/util/thread-stack.c
-index 374d142e7390..c6a0a27b12c2 100644
---- a/tools/perf/util/thread-stack.c
-+++ b/tools/perf/util/thread-stack.c
-@@ -1038,9 +1038,7 @@ static int thread_stack__trace_end(struct thread_stack *ts,
- 
- static bool is_x86_retpoline(const char *name)
- {
--	const char *p = strstr(name, "__x86_indirect_thunk_");
--
--	return p == name || !strcmp(name, "__indirect_thunk_start");
-+	return strstr(name, "__x86_indirect_thunk_") == name;
- }
- 
- /*
 -- 
-2.35.3
+With Best Regards,
+Andy Shevchenko
+
 
