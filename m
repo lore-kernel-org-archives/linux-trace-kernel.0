@@ -2,46 +2,46 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BB651C001DE
-	for <linux-trace-kernel@archiver.kernel.org>; Tue, 11 Jul 2023 17:18:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 86B4CC04A94
+	for <linux-trace-kernel@archiver.kernel.org>; Tue, 11 Jul 2023 17:18:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231947AbjGKRSD (ORCPT
+        id S231970AbjGKRSD (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
         Tue, 11 Jul 2023 13:18:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60822 "EHLO
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60836 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232014AbjGKRSA (ORCPT
+        with ESMTP id S231898AbjGKRSC (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Tue, 11 Jul 2023 13:18:00 -0400
+        Tue, 11 Jul 2023 13:18:02 -0400
 Received: from mga05.intel.com (mga05.intel.com [192.55.52.43])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EB80EA1;
-        Tue, 11 Jul 2023 10:17:59 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0BE23A1;
+        Tue, 11 Jul 2023 10:18:02 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1689095879; x=1720631879;
+  t=1689095882; x=1720631882;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=AaJS6i6oBeO9EHp15z+Qk/kBsYr58o4Zqaz8k2QQyPM=;
-  b=kUhHkmwZtXGl5qK/QySrElLdCefUlHjBGSj57ajA6UXCgagYG41Mo9im
-   hVCFU1dW7dbu585GZtRnbY0PkYkQn7RNeWrp+uzWAZ0ApSl6aPIq9ESpo
-   fcqeYx99OmmA/M/S9iDjb/T6dPrWGG/tjjl9/3yMk36hGVGz1p8hkdTkj
-   zgTxe0+2v/e55+z39hGQKYMQchiJ9srOdaOF4/qGAr0GiOarHjGZ+4jrk
-   6T8+zQmQonMkBH2YFcsyvvSBspqAKf/OAkoOpV6XaX7OlVvm54T5+lLHk
-   3gDIZgKAy/KxkgIgLuZllblqojOT59Y+whWVsgr8a4Z6t/zdnRqmwGy+1
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10768"; a="451044983"
+  bh=o/4VXNjwZTK0uzfbC0etPekf1RU0/kTIzMnJkGS3e1w=;
+  b=DeP9nZb804WKeiY9ILNGLT3kUVd/GDV/VmgcS3F+SgdyJSZe/qeGQq5Y
+   7F4I1CeWp05WO8utbioPsOY1TGP1uYYZFF0cUw8LAQTgmgitJGMKwbLe7
+   ap4Qn6uQv6g5eF0XaqMoGb0JYtBzfLivGoj2R80z5trwiMRqacXox1POC
+   9e0ljFALJZDnGfugZg1y2gt5kF7JP2+c3oVRReVTOdP9ByUXkXfiVaILq
+   7L/3J555LIqTzZTyTr1+9Lo2w1TW2XBzo6mfh7xc0xgSRpnFYWAWlDV/G
+   Ib7gx4rpk9xNy9T4SlYDBQ7PVT+IiEm1Y6cwiaWKXtcoLqpxKHlWhnnfm
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10768"; a="451044990"
 X-IronPort-AV: E=Sophos;i="6.01,197,1684825200"; 
-   d="scan'208";a="451044983"
+   d="scan'208";a="451044990"
 Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jul 2023 10:17:59 -0700
+  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 11 Jul 2023 10:18:01 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10768"; a="698501352"
+X-IronPort-AV: E=McAfee;i="6600,9927,10768"; a="698501362"
 X-IronPort-AV: E=Sophos;i="6.01,197,1684825200"; 
-   d="scan'208";a="698501352"
+   d="scan'208";a="698501362"
 Received: from black.fi.intel.com ([10.237.72.28])
-  by orsmga006.jf.intel.com with ESMTP; 11 Jul 2023 10:17:58 -0700
+  by orsmga006.jf.intel.com with ESMTP; 11 Jul 2023 10:18:00 -0700
 Received: by black.fi.intel.com (Postfix, from userid 1003)
-        id 4C9884BD; Tue, 11 Jul 2023 20:17:59 +0300 (EEST)
+        id 6B702604; Tue, 11 Jul 2023 20:17:59 +0300 (EEST)
 From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 To:     Mark Brown <broonie@kernel.org>,
         Cristian Ciocaltea <cristian.ciocaltea@collabora.com>,
@@ -96,9 +96,9 @@ Cc:     Sanjay R Mehta <sanju.mehta@amd.com>,
         Masami Hiramatsu <mhiramat@kernel.org>,
         Richard Cochran <richardcochran@gmail.com>,
         Sebastian Reichel <sebastian.reichel@collabora.com>
-Subject: [PATCH v3 04/14] spi: Remove code duplication in spi_add_device*()
-Date:   Tue, 11 Jul 2023 20:17:46 +0300
-Message-Id: <20230711171756.86736-5-andriy.shevchenko@linux.intel.com>
+Subject: [PATCH v3 06/14] spi: Use sysfs_emit() to instead of s*printf()
+Date:   Tue, 11 Jul 2023 20:17:48 +0300
+Message-Id: <20230711171756.86736-7-andriy.shevchenko@linux.intel.com>
 X-Mailer: git-send-email 2.40.0.1.gaa8946217a0b
 In-Reply-To: <20230711171756.86736-1-andriy.shevchenko@linux.intel.com>
 References: <20230711171756.86736-1-andriy.shevchenko@linux.intel.com>
@@ -108,75 +108,47 @@ Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-The commit 0c79378c0199 ("spi: add ancillary device support")
-added a dozen of duplicating lines of code. We may move them
-to the __spi_add_device(). Note, that the code may be called
-under the mutex.
+Follow the advice of the Documentation/filesystems/sysfs.rst and show()
+should only use sysfs_emit() or sysfs_emit_at() when formatting the
+value to be returned to user space.
 
 Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 ---
- drivers/spi/spi.c | 32 ++++++++++----------------------
- 1 file changed, 10 insertions(+), 22 deletions(-)
+ drivers/spi/spi.c | 7 +++----
+ 1 file changed, 3 insertions(+), 4 deletions(-)
 
 diff --git a/drivers/spi/spi.c b/drivers/spi/spi.c
-index 6d74218cf38e..876d40d2c708 100644
+index 57b5e4488416..19846fe4c4d5 100644
 --- a/drivers/spi/spi.c
 +++ b/drivers/spi/spi.c
-@@ -631,6 +631,16 @@ static int __spi_add_device(struct spi_device *spi)
- 	struct device *dev = ctlr->dev.parent;
- 	int status;
+@@ -64,7 +64,7 @@ modalias_show(struct device *dev, struct device_attribute *a, char *buf)
+ 	if (len != -ENODEV)
+ 		return len;
  
-+	/* Chipselects are numbered 0..max; validate. */
-+	if (spi_get_chipselect(spi, 0) >= ctlr->num_chipselect) {
-+		dev_err(dev, "cs%d >= max %d\n", spi_get_chipselect(spi, 0),
-+			ctlr->num_chipselect);
-+		return -EINVAL;
-+	}
-+
-+	/* Set the bus ID string */
-+	spi_dev_set_name(spi);
-+
- 	/*
- 	 * We need to make sure there's no other device with this
- 	 * chipselect **BEFORE** we call setup(), else we'll trash
-@@ -689,19 +699,8 @@ static int __spi_add_device(struct spi_device *spi)
- int spi_add_device(struct spi_device *spi)
- {
- 	struct spi_controller *ctlr = spi->controller;
--	struct device *dev = ctlr->dev.parent;
- 	int status;
+-	return sprintf(buf, "%s%s\n", SPI_MODULE_PREFIX, spi->modalias);
++	return sysfs_emit(buf, "%s%s\n", SPI_MODULE_PREFIX, spi->modalias);
+ }
+ static DEVICE_ATTR_RO(modalias);
  
--	/* Chipselects are numbered 0..max; validate. */
--	if (spi_get_chipselect(spi, 0) >= ctlr->num_chipselect) {
--		dev_err(dev, "cs%d >= max %d\n", spi_get_chipselect(spi, 0),
--			ctlr->num_chipselect);
--		return -EINVAL;
--	}
--
--	/* Set the bus ID string */
--	spi_dev_set_name(spi);
--
- 	mutex_lock(&ctlr->add_lock);
- 	status = __spi_add_device(spi);
- 	mutex_unlock(&ctlr->add_lock);
-@@ -712,17 +711,6 @@ EXPORT_SYMBOL_GPL(spi_add_device);
- static int spi_add_device_locked(struct spi_device *spi)
- {
- 	struct spi_controller *ctlr = spi->controller;
--	struct device *dev = ctlr->dev.parent;
--
--	/* Chipselects are numbered 0..max; validate. */
--	if (spi_get_chipselect(spi, 0) >= ctlr->num_chipselect) {
--		dev_err(dev, "cs%d >= max %d\n", spi_get_chipselect(spi, 0),
--			ctlr->num_chipselect);
--		return -EINVAL;
--	}
--
--	/* Set the bus ID string */
--	spi_dev_set_name(spi);
+@@ -89,7 +89,7 @@ static ssize_t driver_override_show(struct device *dev,
+ 	ssize_t len;
  
- 	WARN_ON(!mutex_is_locked(&ctlr->add_lock));
- 	return __spi_add_device(spi);
+ 	device_lock(dev);
+-	len = snprintf(buf, PAGE_SIZE, "%s\n", spi->driver_override ? : "");
++	len = sysfs_emit(buf, "%s\n", spi->driver_override ? : "");
+ 	device_unlock(dev);
+ 	return len;
+ }
+@@ -2797,8 +2797,7 @@ static ssize_t slave_show(struct device *dev, struct device_attribute *attr,
+ 	struct device *child;
+ 
+ 	child = device_find_any_child(&ctlr->dev);
+-	return sprintf(buf, "%s\n",
+-		       child ? to_spi_device(child)->modalias : NULL);
++	return sysfs_emit(buf, "%s\n", child ? to_spi_device(child)->modalias : NULL);
+ }
+ 
+ static ssize_t slave_store(struct device *dev, struct device_attribute *attr,
 -- 
 2.40.0.1.gaa8946217a0b
 
