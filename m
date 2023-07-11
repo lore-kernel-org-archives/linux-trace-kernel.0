@@ -2,212 +2,131 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EC090EB64DD
-	for <linux-trace-kernel@archiver.kernel.org>; Tue, 11 Jul 2023 17:34:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 22688EB64DC
+	for <linux-trace-kernel@archiver.kernel.org>; Tue, 11 Jul 2023 18:37:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229964AbjGKReH (ORCPT
+        id S231766AbjGKShK (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Tue, 11 Jul 2023 13:34:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42488 "EHLO
+        Tue, 11 Jul 2023 14:37:10 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40956 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231544AbjGKReG (ORCPT
+        with ESMTP id S229509AbjGKShJ (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Tue, 11 Jul 2023 13:34:06 -0400
-Received: from madras.collabora.co.uk (madras.collabora.co.uk [IPv6:2a00:1098:0:82:1000:25:2eeb:e5ab])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4BE95E6C;
-        Tue, 11 Jul 2023 10:34:05 -0700 (PDT)
-Received: from mercury (dyndsl-091-248-213-212.ewe-ip-backbone.de [91.248.213.212])
+        Tue, 11 Jul 2023 14:37:09 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 525BA1704;
+        Tue, 11 Jul 2023 11:37:08 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
         (No client certificate requested)
-        (Authenticated sender: sre)
-        by madras.collabora.co.uk (Postfix) with ESMTPSA id 0EC6C6606FD7;
-        Tue, 11 Jul 2023 18:34:04 +0100 (BST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-        s=mail; t=1689096844;
-        bh=xTQ0mmZSKT6xaRW2cSSnwsyXZRn21W+fLOIKOFiv5HU=;
+        by dfw.source.kernel.org (Postfix) with ESMTPS id C3F6A615C4;
+        Tue, 11 Jul 2023 18:37:07 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1DE95C433C8;
+        Tue, 11 Jul 2023 18:37:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1689100627;
+        bh=+7N/u0itsnpJvxJot3J+mrw9E2b+Ml2TEPrpwLxs3tA=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=H4apaSnHRDvSkpSCkk+wyU65Ngqr9P5JyDBeie6RLPAeIF/a84cxGH59ddGSbX5qw
-         63kfAbpaiUnhKnAjL7v46VWmzE4FkX9fEEyauEpMkG3DYbKmfvZvGjPGtA+xeI6swf
-         kjXbLmO76/FOA8FnaeGqaVHoSCSKZ347Op8QNSbAV1AHFtd/woPULZ7cp0Xe7t6lvK
-         j+oEiKCypr4OaNiLGZi4zRujwMiEhT9wkldDGMRFDyKdZJ0dEmjL8X+4AzL1KA1Sn6
-         6BSpra8CwZ37kLECStDWmCD4Br675HzuR2KsJ6ZFQzDp7r6efy1uSO15+pqJdv0f+r
-         Or4DZYoJuC/iQ==
-Received: by mercury (Postfix, from userid 1000)
-        id B8CBE106765E; Tue, 11 Jul 2023 19:34:01 +0200 (CEST)
-Date:   Tue, 11 Jul 2023 19:34:01 +0200
-From:   Sebastian Reichel <sebastian.reichel@collabora.com>
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     Mark Brown <broonie@kernel.org>,
-        Cristian Ciocaltea <cristian.ciocaltea@collabora.com>,
-        Yang Yingliang <yangyingliang@huawei.com>,
-        Amit Kumar Mahapatra via Alsa-devel 
-        <alsa-devel@alsa-project.org>,
-        Serge Semin <fancer.lancer@gmail.com>,
-        Neil Armstrong <neil.armstrong@linaro.org>,
-        Tharun Kumar P <tharunkumar.pasumarthi@microchip.com>,
-        Vijaya Krishna Nivarthi <quic_vnivarth@quicinc.com>,
-        Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>, linux-spi@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-amlogic@lists.infradead.org,
-        linux-mediatek@lists.infradead.org, linux-arm-msm@vger.kernel.org,
-        linux-rockchip@lists.infradead.org,
-        linux-riscv@lists.infradead.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-trace-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        Sanjay R Mehta <sanju.mehta@amd.com>,
-        Radu Pirea <radu_nicolae.pirea@upb.ro>,
-        Nicolas Ferre <nicolas.ferre@microchip.com>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Claudiu Beznea <claudiu.beznea@microchip.com>,
-        Tudor Ambarus <tudor.ambarus@linaro.org>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Kevin Hilman <khilman@baylibre.com>,
-        Jerome Brunet <jbrunet@baylibre.com>,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        AngeloGioacchino Del Regno 
-        <angelogioacchino.delregno@collabora.com>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <andersson@kernel.org>,
-        Konrad Dybcio <konrad.dybcio@linaro.org>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Orson Zhai <orsonzhai@gmail.com>,
-        Baolin Wang <baolin.wang@linux.alibaba.com>,
-        Chunyan Zhang <zhang.lyra@gmail.com>,
-        Alain Volmat <alain.volmat@foss.st.com>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue <alexandre.torgue@foss.st.com>,
-        Max Filippov <jcmvbkbc@gmail.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Richard Cochran <richardcochran@gmail.com>
-Subject: Re: [PATCH v3 04/14] spi: Remove code duplication in
- spi_add_device*()
-Message-ID: <20230711173401.kz7or6ucurhoe4er@mercury.elektranox.org>
-References: <20230711171756.86736-1-andriy.shevchenko@linux.intel.com>
- <20230711171756.86736-5-andriy.shevchenko@linux.intel.com>
+        b=k+ovQQ75Ckii/VxurhsOretNZWMrjk6GuHTTBvArCWPTS2VFmSb/FVl+vQv6uJB92
+         swV3OBfggRv76Yw6Qu9xJG9v372D3Qwl72ySK45ISafBBgXqYHBzo2ZxgYJNMsvVjw
+         4EjyNWYz/eIzbQJeGWi1Zzmete9XvbkcaRQMLtKaepFJpytVxGRHUIGJnXq+LeHXUt
+         MdcpTCZiC7CUBwc90ZdnY4U0G2A+Z8QahEx3eDXDnubUvp5kMG3sANlodISWysGZnU
+         8wOzYpBCjyYvlDulWchrVXJenLxVTYb7CUqwwyjtFQXy9YY/pp8dZBwKrKaXw0PjmE
+         yW2/kYlCq9KtA==
+Date:   Tue, 11 Jul 2023 11:37:04 -0700
+From:   Nathan Chancellor <nathan@kernel.org>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Sasha Levin <sashal@kernel.org>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Petr Pavlu <petr.pavlu@suse.com>, tglx@linutronix.de,
+        mingo@redhat.com, bp@alien8.de, dave.hansen@linux.intel.com,
+        hpa@zytor.com, samitolvanen@google.com, x86@kernel.org,
+        linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        llvm@lists.linux.dev, ndesaulniers@google.com,
+        Masami Hiramatsu <mhiramat@kernel.org>, stable@vger.kernel.org
+Subject: Re: [RFC PATCH 0/2] x86: kprobes: Fix CFI_CLANG related issues
+Message-ID: <20230711183704.GA2758126@dev-arch.thelio-3990X>
+References: <168899125356.80889.17967397360941194229.stgit@devnote2>
+ <20230710155703.GA4021842@dev-arch.thelio-3990X>
+ <20230711103303.287af608cc47dcf70d709070@kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="nr4764lrwkknwz4l"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20230711171756.86736-5-andriy.shevchenko@linux.intel.com>
+In-Reply-To: <20230711103303.287af608cc47dcf70d709070@kernel.org>
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
+Masami, thanks for verifying!
 
---nr4764lrwkknwz4l
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Hi Greg and Sasha,
 
-Hi,
+On Tue, Jul 11, 2023 at 10:33:03AM +0900, Masami Hiramatsu wrote:
+> On Mon, 10 Jul 2023 08:57:03 -0700
+> Nathan Chancellor <nathan@kernel.org> wrote:
+> 
+> > On Mon, Jul 10, 2023 at 09:14:13PM +0900, Masami Hiramatsu (Google) wrote:
+> > > I just build tested, since I could not boot the kernel with CFI_CLANG=y.
+> > > Would anyone know something about this error?
+> > > 
+> > > [    0.141030] MMIO Stale Data: Unknown: No mitigations
+> > > [    0.153511] SMP alternatives: Using kCFI
+> > > [    0.164593] Freeing SMP alternatives memory: 36K
+> > > [    0.165053] Kernel panic - not syncing: stack-protector: Kernel stack is corrupted in: start_kernel+0x472/0x48b
+> > > [    0.166028] CPU: 0 PID: 0 Comm: swapper/0 Not tainted 6.4.2-00002-g12b1b2fca8ef #126
+> > > [    0.166028] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.13.0-1ubuntu1.1 04/01/2014
+> > > [    0.166028] Call Trace:
+> > > [    0.166028]  <TASK>
+> > > [    0.166028]  dump_stack_lvl+0x6e/0xb0
+> > > [    0.166028]  panic+0x146/0x2f0
+> > > [    0.166028]  ? start_kernel+0x472/0x48b
+> > > [    0.166028]  __stack_chk_fail+0x14/0x20
+> > > [    0.166028]  start_kernel+0x472/0x48b
+> > > [    0.166028]  x86_64_start_reservations+0x24/0x30
+> > > [    0.166028]  x86_64_start_kernel+0xa6/0xbb
+> > > [    0.166028]  secondary_startup_64_no_verify+0x106/0x11b
+> > > [    0.166028]  </TASK>
+> > > [    0.166028] ---[ end Kernel panic - not syncing: stack-protector: Kernel stack is corrupted in: start_kernel+0x472/0x48b ]---
+> > 
+> > This looks like https://github.com/ClangBuiltLinux/linux/issues/1815 to
+> > me. What version of LLVM are you using? This was fixed in 16.0.4. Commit
+> > 514ca14ed544 ("start_kernel: Add __no_stack_protector function
+> > attribute") should resolve it on the Linux side, it looks like that is
+> > in 6.5-rc1. Not sure if we should backport it or just let people upgrade
+> > their toolchains on older releases.
+> 
+> Thanks for the info. I confirmed that the commit fixed the boot issue.
+> So I think it should be backported to the stable tree.
 
-On Tue, Jul 11, 2023 at 08:17:46PM +0300, Andy Shevchenko wrote:
-> The commit 0c79378c0199 ("spi: add ancillary device support")
-> added a dozen of duplicating lines of code. We may move them
-> to the __spi_add_device(). Note, that the code may be called
-> under the mutex.
->=20
-> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Would you please apply commit 514ca14ed544 ("start_kernel: Add
+__no_stack_protector function attribute") to linux-6.4.y? The series
+ending with commit 611d4c716db0 ("x86/hyperv: Mark hv_ghcb_terminate()
+as noreturn") that shipped in 6.4 exposes an LLVM issue that affected
+16.0.0 and 16.0.1, which was resolved in 16.0.2. When using those
+affected LLVM releases, the following crash at boot occurs:
 
-Reviewed-by: Sebastian Reichel <sebastian.reichel@collabora.com>
+  [    0.181667] Kernel panic - not syncing: stack-protector: Kernel stack is corrupted in: start_kernel+0x3cf/0x3d0
+  [    0.182621] CPU: 0 PID: 0 Comm: swapper/0 Not tainted 6.4.3 #1
+  [    0.182621] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS rel-1.16.2-0-gea1b7a073390-prebuilt.qemu.org 04/01/2014
+  [    0.182621] Call Trace:
+  [    0.182621]  <TASK>
+  [    0.182621]  dump_stack_lvl+0x6a/0xa0
+  [    0.182621]  panic+0x124/0x2f0
+  [    0.182621]  ? start_kernel+0x3cf/0x3d0
+  [    0.182621]  ? acpi_enable+0x64/0xc0
+  [    0.182621]  __stack_chk_fail+0x14/0x20
+  [    0.182621]  start_kernel+0x3cf/0x3d0
+  [    0.182621]  x86_64_start_reservations+0x24/0x30
+  [    0.182621]  x86_64_start_kernel+0xab/0xb0
+  [    0.182621]  secondary_startup_64_no_verify+0x107/0x10b
+  [    0.182621]  </TASK>
+  [    0.182621] ---[ end Kernel panic - not syncing: stack-protector: Kernel stack is corrupted in: start_kernel+0x3cf/0x3d0 ]---
 
--- Sebastian
+514ca14ed544 aims to avoid this on the Linux side. I have verified that
+it applies to 6.4.3 cleanly and resolves the issue there, as has Masami.
 
-> ---
->  drivers/spi/spi.c | 32 ++++++++++----------------------
->  1 file changed, 10 insertions(+), 22 deletions(-)
->=20
-> diff --git a/drivers/spi/spi.c b/drivers/spi/spi.c
-> index 6d74218cf38e..876d40d2c708 100644
-> --- a/drivers/spi/spi.c
-> +++ b/drivers/spi/spi.c
-> @@ -631,6 +631,16 @@ static int __spi_add_device(struct spi_device *spi)
->  	struct device *dev =3D ctlr->dev.parent;
->  	int status;
-> =20
-> +	/* Chipselects are numbered 0..max; validate. */
-> +	if (spi_get_chipselect(spi, 0) >=3D ctlr->num_chipselect) {
-> +		dev_err(dev, "cs%d >=3D max %d\n", spi_get_chipselect(spi, 0),
-> +			ctlr->num_chipselect);
-> +		return -EINVAL;
-> +	}
-> +
-> +	/* Set the bus ID string */
-> +	spi_dev_set_name(spi);
-> +
->  	/*
->  	 * We need to make sure there's no other device with this
->  	 * chipselect **BEFORE** we call setup(), else we'll trash
-> @@ -689,19 +699,8 @@ static int __spi_add_device(struct spi_device *spi)
->  int spi_add_device(struct spi_device *spi)
->  {
->  	struct spi_controller *ctlr =3D spi->controller;
-> -	struct device *dev =3D ctlr->dev.parent;
->  	int status;
-> =20
-> -	/* Chipselects are numbered 0..max; validate. */
-> -	if (spi_get_chipselect(spi, 0) >=3D ctlr->num_chipselect) {
-> -		dev_err(dev, "cs%d >=3D max %d\n", spi_get_chipselect(spi, 0),
-> -			ctlr->num_chipselect);
-> -		return -EINVAL;
-> -	}
-> -
-> -	/* Set the bus ID string */
-> -	spi_dev_set_name(spi);
-> -
->  	mutex_lock(&ctlr->add_lock);
->  	status =3D __spi_add_device(spi);
->  	mutex_unlock(&ctlr->add_lock);
-> @@ -712,17 +711,6 @@ EXPORT_SYMBOL_GPL(spi_add_device);
->  static int spi_add_device_locked(struct spi_device *spi)
->  {
->  	struct spi_controller *ctlr =3D spi->controller;
-> -	struct device *dev =3D ctlr->dev.parent;
-> -
-> -	/* Chipselects are numbered 0..max; validate. */
-> -	if (spi_get_chipselect(spi, 0) >=3D ctlr->num_chipselect) {
-> -		dev_err(dev, "cs%d >=3D max %d\n", spi_get_chipselect(spi, 0),
-> -			ctlr->num_chipselect);
-> -		return -EINVAL;
-> -	}
-> -
-> -	/* Set the bus ID string */
-> -	spi_dev_set_name(spi);
-> =20
->  	WARN_ON(!mutex_is_locked(&ctlr->add_lock));
->  	return __spi_add_device(spi);
-> --=20
-> 2.40.0.1.gaa8946217a0b
->=20
+If there are any issues or questions, please let me know.
 
---nr4764lrwkknwz4l
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAmStkn4ACgkQ2O7X88g7
-+pormhAAnK4ipkeSKHu0xl8agX+r1Ks97iOFEMGG8+gzX4xY/hXNKVPfgpoWdNZa
-rN+CMPEFa2M5kKdm7v6s7wv2A/R0bRMIwUrHhMxAVBKQSNlp47s2N/PBkCgghK7x
-dOCmH/DDN17c1ODn8FJUD/WO5p1/grLRg1mUoNQvVqLVz7jQBx+oOZxG1Fm2e5pb
-suAySbAqDtYVper0iqZhu1BwDjFxj7l/+kXhJWt+mtgFq1shfCwdfK+gm9Z1hJ4B
-kDa1PZSzlIbs8znfYFu8n7gPJIN/nplWGmWgFAbwex3GxdZbSrO58X4m2B0fooFg
-xQ3w3b710ONolovhZktxkx7nibXjJiVFQwgS7BPRquCjCEok5jNmuyVJmu9Pud0s
-nRDWYic0TKErHny9NYCTwdJQX5ZkDIV9QpjVyp5FR7e/ylT8chmX1LwnsKZSd91j
-TN9+lh3yU6BjbjopIAFAhP5BvYeYMI2tvbXpCC3iiqGno53AZUyP5dXBupB/zri7
-bwN6fXNXsuVX0JJH3CHCm13ZK9IFY8GHGqLJBUulYVyaXSLOimXhi/l6bkkhvzxN
-IKpuSWUPTxAVu9q5LxsOWS45GXR0oWiiKL7tOcaX1yJypn+5lKy+4yStvF0cER9d
-NdLreesrYaGS2zSH4qIA7m8dd2oaqPtYCa1VHzxRfLcNsnyCoXY=
-=zPs/
------END PGP SIGNATURE-----
-
---nr4764lrwkknwz4l--
+Cheers,
+Nathan
