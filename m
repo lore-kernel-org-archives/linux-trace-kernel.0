@@ -2,47 +2,47 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 82D92EB64DD
-	for <linux-trace-kernel@archiver.kernel.org>; Tue, 11 Jul 2023 14:15:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 33718EB64DD
+	for <linux-trace-kernel@archiver.kernel.org>; Tue, 11 Jul 2023 14:15:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233395AbjGKOPi (ORCPT
+        id S233327AbjGKOPp (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Tue, 11 Jul 2023 10:15:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52660 "EHLO
+        Tue, 11 Jul 2023 10:15:45 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52712 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233436AbjGKOPf (ORCPT
+        with ESMTP id S233445AbjGKOPo (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Tue, 11 Jul 2023 10:15:35 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0083F1705;
-        Tue, 11 Jul 2023 07:15:33 -0700 (PDT)
+        Tue, 11 Jul 2023 10:15:44 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 79870B0;
+        Tue, 11 Jul 2023 07:15:43 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange X25519 server-signature RSA-PSS (2048 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 8BF106150D;
-        Tue, 11 Jul 2023 14:15:33 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C2FA8C433C7;
-        Tue, 11 Jul 2023 14:15:31 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 16C1D6150D;
+        Tue, 11 Jul 2023 14:15:43 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0848FC433C8;
+        Tue, 11 Jul 2023 14:15:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1689084933;
-        bh=77y8W85i7xf9qeyXJXcSDIyy5bcBOPvmg0r6OCuWIr4=;
+        s=k20201202; t=1689084942;
+        bh=B/xbZAcfESero9MbnK8hn07jc1YnxzqHt+73/OKFhoI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=jHrQijNug8+1yMpULTBzLmTy8i0AMW+NL0U/e2Us3ej9u//1v3DYXBC7a4V8tCFRo
-         pzyk4QOXnXIYS7Bbe4mk4QRqcUlMaa0mUxgwgesOQjGgCP+i9LxMUl2QKtlAgxgeZp
-         czdq6gFzuItu72NyNQ8nwMqKroV3rkPQS80FELKMeO1gsrb7mMElll388oU+banh8E
-         ANvyuKqU4cNSmb3D0OBDToFcoi9pIkFOsG/nFvNWs+Knv3eMrV4qXdtYk+lLBoKv4m
-         n+aG6k8FuzW23nRTIHmxPLKrV3lKpqabhjuZeMw+g+dcg9wMepidCyIK/6JluZHKCD
-         EpqRXj++kRvqw==
+        b=tsqVZDBrt4sxiMKWtpCFTvByTQZFO7mAdGegliLhzJXs15V7YqWsqgnHerRcec5U+
+         Q/aaehktA8TSQGy3P2IRj2d9B6EYVTJ+OCKfI/Tfo17m6Rqe1hWpQQW6gLX9r7YOzV
+         VeakEbJVbz9A5ixmsRtkWbHgzaYCL5u/Y7fFK/4vK2ugWUfhC94NjpyxXdz0df++TV
+         6Zqq6oeZmITh9QUwuYUDk8+gH+gny3tsYjFJqtLbbAFf99Us4d5y94mShmPB1DbFXl
+         ggzQkydSW+OAFgriURtQRzGL9eaRhw2gcBBwwp+58HckLCUKp+XJm+/88Uiegq+3y2
+         vRhEWB1Io84fA==
 From:   "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
 To:     Steven Rostedt <rostedt@goodmis.org>
 Cc:     Dan Carpenter <dan.carpenter@linaro.org>,
         linux-trace-kernel@vger.kernel.org,
         LKML <linux-kernel@vger.kernel.org>,
         Masami Hiramatsu <mhiramat@kernel.org>
-Subject: [PATCH v5 1/5] tracing/probes: Fix to avoid double count of the string length on the array
-Date:   Tue, 11 Jul 2023 23:15:29 +0900
-Message-Id: <168908492917.123124.15076463491122036025.stgit@devnote2>
+Subject: [PATCH v5 2/5] tracing/probes: Fix not to count error code to total length
+Date:   Tue, 11 Jul 2023 23:15:38 +0900
+Message-Id: <168908493827.123124.2175257289106364229.stgit@devnote2>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <168908491977.123124.16583481716284477889.stgit@devnote2>
 References: <168908491977.123124.16583481716284477889.stgit@devnote2>
@@ -56,37 +56,32 @@ X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
 From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 
-If an array is specified with the ustring or symstr, the length of the
-strings are accumlated on both of 'ret' and 'total', which means the
-length is double counted.
-Just set the length to the 'ret' value for avoiding double counting.
+Fix not to count the error code (which is minus value) to the total
+used length of array, because it can mess up the return code of
+process_fetch_insn_bottom(). Also clear the 'ret' value because it
+will be used for calculating next data_loc entry.
 
 Reported-by: Dan Carpenter <dan.carpenter@linaro.org>
 Closes: https://lore.kernel.org/all/8819b154-2ba1-43c3-98a2-cbde20892023@moroto.mountain/
-Fixes: 88903c464321 ("tracing/probe: Add ustring type for user-space string")
+Fixes: 9b960a38835f ("tracing: probeevent: Unify fetch_insn processing common part")
 Cc: stable@vger.kernel.org
 Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 Reviewed-by: Steven Rostedt (Google) <rostedt@goodmis.org>
 ---
- kernel/trace/trace_probe_tmpl.h |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ kernel/trace/trace_probe_tmpl.h |    2 ++
+ 1 file changed, 2 insertions(+)
 
 diff --git a/kernel/trace/trace_probe_tmpl.h b/kernel/trace/trace_probe_tmpl.h
-index 00707630788d..4735c5cb76fa 100644
+index 4735c5cb76fa..ed9d57c6b041 100644
 --- a/kernel/trace/trace_probe_tmpl.h
 +++ b/kernel/trace/trace_probe_tmpl.h
-@@ -156,11 +156,11 @@ process_fetch_insn_bottom(struct fetch_insn *code, unsigned long val,
- 			code++;
- 			goto array;
- 		case FETCH_OP_ST_USTRING:
--			ret += fetch_store_strlen_user(val + code->offset);
-+			ret = fetch_store_strlen_user(val + code->offset);
- 			code++;
- 			goto array;
- 		case FETCH_OP_ST_SYMSTR:
--			ret += fetch_store_symstrlen(val + code->offset);
-+			ret = fetch_store_symstrlen(val + code->offset);
- 			code++;
- 			goto array;
- 		default:
+@@ -204,6 +204,8 @@ process_fetch_insn_bottom(struct fetch_insn *code, unsigned long val,
+ array:
+ 	/* the last stage: Loop on array */
+ 	if (code->op == FETCH_OP_LP_ARRAY) {
++		if (ret < 0)
++			ret = 0;
+ 		total += ret;
+ 		if (++i < code->param) {
+ 			code = s3;
 
