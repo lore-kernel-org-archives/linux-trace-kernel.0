@@ -2,135 +2,104 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 34D5EEB64DA
-	for <linux-trace-kernel@archiver.kernel.org>; Tue, 11 Jul 2023 01:51:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DECD1EB64D9
+	for <linux-trace-kernel@archiver.kernel.org>; Tue, 11 Jul 2023 01:58:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229936AbjGKBv1 (ORCPT
+        id S229936AbjGKB6N (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Mon, 10 Jul 2023 21:51:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51082 "EHLO
+        Mon, 10 Jul 2023 21:58:13 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53556 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230182AbjGKBvW (ORCPT
+        with ESMTP id S229532AbjGKB6N (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Mon, 10 Jul 2023 21:51:22 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7A955136;
-        Mon, 10 Jul 2023 18:51:04 -0700 (PDT)
+        Mon, 10 Jul 2023 21:58:13 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3660D94;
+        Mon, 10 Jul 2023 18:58:12 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange X25519 server-signature RSA-PSS (2048 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 03C81612AB;
-        Tue, 11 Jul 2023 01:51:04 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7DCB6C433C7;
-        Tue, 11 Jul 2023 01:51:00 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id C788F612A3;
+        Tue, 11 Jul 2023 01:58:11 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EF2ADC433C8;
+        Tue, 11 Jul 2023 01:58:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1689040263;
-        bh=DyLifkE+mWkAJUWftPR5lGeD6sKueyYzATZh59IvHwA=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=hoJ0l1uO1SG+a0wjcEMYnieBeWbRZEPyqQUJaeEcVX3zfM8X8IpzK2aG0G/3KCs4E
-         30Q2WG56TYfXxP96eJ+QjIgVk4cA5Evomj7TK0ebhyIj8BNRHtdrr0r1Ku44lSUgKZ
-         6/2qNGxfZEe31jVAP9TyUyoAVOi8q70izu8rQ2z2JMNbFCviz+k/6MmEDY3pIlOm9D
-         /BuNnB5ozUhlZmRjh4zZZwQft4iEouEfYe1IiqKukeWFLzLeIg2AtxV7cpGeEoYLdy
-         1OK+0/EiiFDPfZttGzRLqBD2p8NGplr49H0VK/qk111g7ywuJLfyF3RCyJQnFoOaOj
-         vkHXND+BsUMDg==
-From:   "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Petr Pavlu <petr.pavlu@suse.com>, tglx@linutronix.de,
-        mingo@redhat.com, bp@alien8.de, dave.hansen@linux.intel.com,
-        hpa@zytor.com, samitolvanen@google.com, x86@kernel.org,
-        linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        s=k20201202; t=1689040691;
+        bh=5NFSp/Ms8MiLdis39kMTeTKdirOZ67rP66yVZppz8bY=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=Oopqct5uK2y1SEE/uat6lKmyr5e+bCqvqQO1VmUsaGnoEm5oYfe8+xJgiMeHNn1eQ
+         nB7PjcEtqeGxySR9AgM0ZoBF7gjJhCKTxmEfbVLxh92SWGi3RZ6pPqO/izAGuJ5KCr
+         A4qJ0YD+1nEIl5j30PdEafC8q8BbvBe/kQzXj+X/MQLWGIr6q8xS0bubDDFjTyh/+X
+         vRB7u4G/31EJtu24CysP+t/LGSRd6jR/0awyl512zkk7lJxUHE8GXB4ks8lW99dmuB
+         nZdQDVCIUGQtoRcQZQPl8V/ABmB5V7zf20IrmU7E/GQAIYC7Pf0s0yLFsWSqyjcA+S
+         s3tDfj4u+/X7Q==
+Date:   Mon, 10 Jul 2023 18:58:09 -0700
+From:   Jaegeuk Kim <jaegeuk@kernel.org>
+To:     Steven Rostedt <rostedt@goodmis.org>
+Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Chao Yu <chao@kernel.org>,
+        linux-f2fs-devel@lists.sourceforge.net,
+        linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
         Masami Hiramatsu <mhiramat@kernel.org>
-Subject: [PATCH v2 2/2] x86/kprobes: Prohibit probing on compiler generated CFI checking code
-Date:   Tue, 11 Jul 2023 10:50:58 +0900
-Message-Id: <168904025785.116016.12766408611437534723.stgit@devnote2>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <168904023542.116016.10540228903086100726.stgit@devnote2>
-References: <168904023542.116016.10540228903086100726.stgit@devnote2>
-User-Agent: StGit/0.19
+Subject: Re: [PATCH v1 1/1] f2fs: Use return value of strreplace()
+Message-ID: <ZKy3MQ4zRlvLwE1D@google.com>
+References: <20230628150243.17771-1-andriy.shevchenko@linux.intel.com>
+ <20230710184353.09640aee@gandalf.local.home>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230710184353.09640aee@gandalf.local.home>
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+On 07/10, Steven Rostedt wrote:
+> On Wed, 28 Jun 2023 18:02:43 +0300
+> Andy Shevchenko <andriy.shevchenko@linux.intel.com> wrote:
+> 
+> > Since strreplace() returns the pointer to the string itself,
+> > we may use it directly in the code.
+> > 
+> > Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> > ---
+> >  include/trace/events/f2fs.h | 6 ++----
+> >  1 file changed, 2 insertions(+), 4 deletions(-)
+> > 
+> > diff --git a/include/trace/events/f2fs.h b/include/trace/events/f2fs.h
+> > index 793f82cc1515..f5994515290c 100644
+> > --- a/include/trace/events/f2fs.h
+> > +++ b/include/trace/events/f2fs.h
+> > @@ -2234,13 +2234,11 @@ DECLARE_EVENT_CLASS(f2fs__rw_start,
+> >  		 * because this screws up the tooling that parses
+> >  		 * the traces.
+> >  		 */
+> > -		__assign_str(pathbuf, pathname);
+> > -		(void)strreplace(__get_str(pathbuf), ' ', '_');
+> > +		__assign_str(pathbuf, strreplace(pathname, ' ', '_'));
+> 
+> But this modifies the pathname that is passed into the trace event, which
+> is something that a trace point should never do! In fact, the char
+> *pathname, really should be a const char * (for which this would fail to
+> build).
+> 
+> Note, I went to look for these events and I can not find where they are
+> used. Should these events just be deleted?
 
-Prohibit probing on the compiler generated CFI typeid checking code
-because it is used for decoding typeid when CFI error happens.
+Hmm, this was a part of upstream effort to replace the previous android_fs
+tracepoints like:
+https://android-review.git.corp.google.com/c/platform/system/extras/+/2223339
 
-The compiler generates the following instruction sequence for indirect
-call checks on x86;
-
-   movl    -<id>, %r10d       ; 6 bytes
-   addl    -4(%reg), %r10d    ; 4 bytes
-   je      .Ltmp1             ; 2 bytes
-   ud2                        ; <- regs->ip
-
-And handle_cfi_failure() decodes these instructions (movl and addl)
-for the typeid and the target address. Thus if we put a kprobe on
-those instructions, the decode will fail and report a wrong typeid
-and target address.
-
-
-Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
----
- arch/x86/kernel/kprobes/core.c |   34 ++++++++++++++++++++++++++++++++++
- 1 file changed, 34 insertions(+)
-
-diff --git a/arch/x86/kernel/kprobes/core.c b/arch/x86/kernel/kprobes/core.c
-index f7f6042eb7e6..fa8c2b41cbaf 100644
---- a/arch/x86/kernel/kprobes/core.c
-+++ b/arch/x86/kernel/kprobes/core.c
-@@ -54,6 +54,7 @@
- #include <asm/insn.h>
- #include <asm/debugreg.h>
- #include <asm/ibt.h>
-+#include <asm/cfi.h>
- 
- #include "common.h"
- 
-@@ -293,7 +294,40 @@ static int can_probe(unsigned long paddr)
- #endif
- 		addr += insn.length;
- 	}
-+	if (IS_ENABLED(CONFIG_CFI_CLANG)) {
-+		/*
-+		 * The compiler generates the following instruction sequence
-+		 * for indirect call checks and cfi.c decodes this;
-+		 *
-+		 *   movl    -<id>, %r10d       ; 6 bytes
-+		 *   addl    -4(%reg), %r10d    ; 4 bytes
-+		 *   je      .Ltmp1             ; 2 bytes
-+		 *   ud2                        ; <- regs->ip
-+		 *   .Ltmp1:
-+		 *
-+		 * Also, these movl and addl are used for showing expected
-+		 * type. So those must not be touched.
-+		 */
-+		__addr = recover_probed_instruction(buf, addr);
-+		if (!__addr)
-+			return 0;
-+
-+		if (insn_decode_kernel(&insn, (void *)__addr) < 0)
-+			return 0;
-+
-+		if (insn.opcode.value == 0xBA)
-+			offset = 12;
-+		else if (insn.opcode.value == 0x3)
-+			offset = 6;
-+		else
-+			goto out;
-+
-+		/* This movl/addl is used for decoding CFI. */
-+		if (is_cfi_trap(addr + offset))
-+			return 0;
-+	}
- 
-+out:
- 	return (addr == paddr);
- }
- 
-
+> 
+> -- Steve
+> 
+> 
+> >  		__entry->offset = offset;
+> >  		__entry->bytes = bytes;
+> >  		__entry->i_size = i_size_read(inode);
+> > -		__assign_str(cmdline, command);
+> > -		(void)strreplace(__get_str(cmdline), ' ', '_');
+> > +		__assign_str(cmdline, strreplace(command, ' ', '_'));
+> >  		__entry->pid = pid;
+> >  		__entry->ino = inode->i_ino;
+> >  	),
