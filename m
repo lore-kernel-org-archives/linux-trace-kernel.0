@@ -2,141 +2,197 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F480C001DF
-	for <linux-trace-kernel@archiver.kernel.org>; Tue, 11 Jul 2023 11:28:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E8E90EB64DC
+	for <linux-trace-kernel@archiver.kernel.org>; Tue, 11 Jul 2023 12:01:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231888AbjGKL2I (ORCPT
+        id S231381AbjGKMBk (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Tue, 11 Jul 2023 07:28:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52802 "EHLO
+        Tue, 11 Jul 2023 08:01:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41720 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231706AbjGKL2D (ORCPT
+        with ESMTP id S229583AbjGKMBj (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Tue, 11 Jul 2023 07:28:03 -0400
-Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 175C411D;
-        Tue, 11 Jul 2023 04:28:00 -0700 (PDT)
-Received: from dggpeml500012.china.huawei.com (unknown [172.30.72.53])
-        by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4R0drX2DJDzqVrV;
-        Tue, 11 Jul 2023 19:27:24 +0800 (CST)
-Received: from localhost.localdomain (10.67.175.61) by
- dggpeml500012.china.huawei.com (7.185.36.15) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.27; Tue, 11 Jul 2023 19:27:58 +0800
-From:   Zheng Yejian <zhengyejian1@huawei.com>
-To:     <rostedt@goodmis.org>
-CC:     <linux-kernel@vger.kernel.org>,
-        <linux-trace-kernel@vger.kernel.org>, <mhiramat@kernel.org>,
-        <zhengyejian1@huawei.com>
-Subject: [PATCH v3] ftrace: Fix possible warning on checking all pages used in ftrace_process_locs()
-Date:   Tue, 11 Jul 2023 19:27:52 +0800
-Message-ID: <20230711112752.2595316-1-zhengyejian1@huawei.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20230710104625.421c851a@gandalf.local.home>
-References: <20230710104625.421c851a@gandalf.local.home>
+        Tue, 11 Jul 2023 08:01:39 -0400
+Received: from madras.collabora.co.uk (madras.collabora.co.uk [IPv6:2a00:1098:0:82:1000:25:2eeb:e5ab])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C48F110EF;
+        Tue, 11 Jul 2023 05:01:36 -0700 (PDT)
+Received: from mercury (dyndsl-091-248-213-212.ewe-ip-backbone.de [91.248.213.212])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        (Authenticated sender: sre)
+        by madras.collabora.co.uk (Postfix) with ESMTPSA id 3D3D5660700F;
+        Tue, 11 Jul 2023 13:01:35 +0100 (BST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+        s=mail; t=1689076895;
+        bh=VpEG3ri1MmPk1vvBqKyVzFd1wmdbrZrML5Y0FqY4wUg=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=HQDJgxlTR8vo1RaEsB3D+nH2+IRG9QN4tbrCrAaA85UTPwMmgGSzMeLBmp8bq8Ej6
+         pgwZP23sqCYBHYEmhmfwkK6ZwddZDGY5nvAyjCHRxCLhh+PU1kHLVi4qEYii04KpmG
+         cZIBzK40pXQjgo62B5RaZ5YhAs3eAX9lyz/b27cO1rLw+fmbUEzB/bIkdWz6tNdnsD
+         l37m5GS8joB/wsoJ81rU7USdQhqBwTSytws8Gf8fo6kkpx4AITWu33A+o3yUYXuRI2
+         WpJS6erpP2P9LRQMv/o3BmpdZLgyRs0csbkK1sM9hkgaBX9fGW0SBkbzX/Ag+Cs0tn
+         nvbJMMzvoOh0A==
+Received: by mercury (Postfix, from userid 1000)
+        id 34BCD106765E; Tue, 11 Jul 2023 14:01:33 +0200 (CEST)
+Date:   Tue, 11 Jul 2023 14:01:33 +0200
+From:   Sebastian Reichel <sebastian.reichel@collabora.com>
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc:     Mark Brown <broonie@kernel.org>,
+        Cristian Ciocaltea <cristian.ciocaltea@collabora.com>,
+        Yang Yingliang <yangyingliang@huawei.com>,
+        Amit Kumar Mahapatra via Alsa-devel 
+        <alsa-devel@alsa-project.org>,
+        Neil Armstrong <neil.armstrong@linaro.org>,
+        Tharun Kumar P <tharunkumar.pasumarthi@microchip.com>,
+        Vijaya Krishna Nivarthi <quic_vnivarth@quicinc.com>,
+        Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>, linux-spi@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-amlogic@lists.infradead.org,
+        linux-mediatek@lists.infradead.org, linux-arm-msm@vger.kernel.org,
+        linux-rockchip@lists.infradead.org,
+        linux-riscv@lists.infradead.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-trace-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        Sanjay R Mehta <sanju.mehta@amd.com>,
+        Radu Pirea <radu_nicolae.pirea@upb.ro>,
+        Nicolas Ferre <nicolas.ferre@microchip.com>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Claudiu Beznea <claudiu.beznea@microchip.com>,
+        Tudor Ambarus <tudor.ambarus@linaro.org>,
+        Serge Semin <fancer.lancer@gmail.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Kevin Hilman <khilman@baylibre.com>,
+        Jerome Brunet <jbrunet@baylibre.com>,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        AngeloGioacchino Del Regno 
+        <angelogioacchino.delregno@collabora.com>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <andersson@kernel.org>,
+        Konrad Dybcio <konrad.dybcio@linaro.org>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Orson Zhai <orsonzhai@gmail.com>,
+        Baolin Wang <baolin.wang@linux.alibaba.com>,
+        Chunyan Zhang <zhang.lyra@gmail.com>,
+        Alain Volmat <alain.volmat@foss.st.com>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue <alexandre.torgue@foss.st.com>,
+        Max Filippov <jcmvbkbc@gmail.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Richard Cochran <richardcochran@gmail.com>
+Subject: Re: [PATCH v2 05/15] spi: Remove code duplication in
+ spi_add_device_locked()
+Message-ID: <20230711120133.45drgk46y4cz7aut@mercury.elektranox.org>
+References: <20230710154932.68377-1-andriy.shevchenko@linux.intel.com>
+ <20230710154932.68377-6-andriy.shevchenko@linux.intel.com>
+ <7557bada-3076-4d6e-a5c5-d368433706e2@sirena.org.uk>
+ <ZK03rBqoQ0IZz617@smile.fi.intel.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [10.67.175.61]
-X-ClientProxiedBy: dggems703-chm.china.huawei.com (10.3.19.180) To
- dggpeml500012.china.huawei.com (7.185.36.15)
-X-CFilter-Loop: Reflected
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="fcthwhge3iyvg2gl"
+Content-Disposition: inline
+In-Reply-To: <ZK03rBqoQ0IZz617@smile.fi.intel.com>
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-As comments in ftrace_process_locs(), there may be NULL pointers in
-mcount_loc section:
- > Some architecture linkers will pad between
- > the different mcount_loc sections of different
- > object files to satisfy alignments.
- > Skip any NULL pointers.
 
-After commit 20e5227e9f55 ("ftrace: allow NULL pointers in mcount_loc"),
-NULL pointers will be accounted when allocating ftrace pages but skipped
-before adding into ftrace pages, this may result in some pages not being
-used. Then after commit 706c81f87f84 ("ftrace: Remove extra helper
-functions"), warning may occur at:
-  WARN_ON(pg->next);
+--fcthwhge3iyvg2gl
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-To fix it, only warn for case that no pointers skipped but pages not used
-up, then free those unused pages after releasing ftrace_lock.
+Hi,
 
-Fixes: 706c81f87f84 ("ftrace: Remove extra helper functions")
-Suggested-by: Steven Rostedt <rostedt@goodmis.org>
-Signed-off-by: Zheng Yejian <zhengyejian1@huawei.com>
----
-Changes v2 -> v3: https://lore.kernel.org/all/20230711201630.1837109-1-zhengyejian1@huawei.com/
-  - Check NULL for 'pg->next' before assigning it to variable 'pg_unuse'
+On Tue, Jul 11, 2023 at 02:06:20PM +0300, Andy Shevchenko wrote:
+> On Mon, Jul 10, 2023 at 06:16:22PM +0100, Mark Brown wrote:
+> > On Mon, Jul 10, 2023 at 06:49:22PM +0300, Andy Shevchenko wrote:
+> > > Seems by unknown reason, probably some kind of mis-rebase,
+> > > the commit 0c79378c0199 ("spi: add ancillary device support")
+> > > adds a dozen of duplicating lines of code. Drop them.
+> > >=20
+> > > Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> > > ---
+> > >  drivers/spi/spi.c | 11 -----------
+> > >  1 file changed, 11 deletions(-)
+> > >=20
+> > > diff --git a/drivers/spi/spi.c b/drivers/spi/spi.c
+> > > index c99ee4164f11..46cbda383228 100644
+> > > --- a/drivers/spi/spi.c
+> > > +++ b/drivers/spi/spi.c
+> > > @@ -712,17 +712,6 @@ EXPORT_SYMBOL_GPL(spi_add_device);
+> > >  static int spi_add_device_locked(struct spi_device *spi)
+> > >  {
+> > >  	struct spi_controller *ctlr =3D spi->controller;
+> > > -	struct device *dev =3D ctlr->dev.parent;
+> > > -
+> > > -	/* Chipselects are numbered 0..max; validate. */
+> > > -	if (spi_get_chipselect(spi, 0) >=3D ctlr->num_chipselect) {
+> > > -		dev_err(dev, "cs%d >=3D max %d\n", spi_get_chipselect(spi, 0),
+> > > -			ctlr->num_chipselect);
+> > > -		return -EINVAL;
+> > > -	}
+> > > -
+> > > -	/* Set the bus ID string */
+> > > -	spi_dev_set_name(spi);
+> >=20
+> > I see that this is duplicating spi_add_device() (and we really could do
+> > better with code sharing there I think) but I can't immediately see
+> > where the duplication that's intended to be elimiated is here - where
+> > else in the one call path that spi_add_device_locked() has would we do
+> > the above?  Based on the changelog I was expecting to see some
+> > duplicated code in the function itself.
+>=20
+> Oh, by some reason Sebastian wasn't in this rather long Cc list.
+> Added him.
+>=20
+> Reading again I don't see any useful explanation why that piece of code h=
+as to
+> be duplicated among these two functions. It's 100% a copy.
+>=20
+> Sebastian, can you shed some light here?
 
-Changes v1 -> v2: https://lore.kernel.org/all/20230710104625.421c851a@gandalf.local.home/
-  - As suggested by Steve, only warn for case that no pointers skipped
-    but pages not used up then free those unused pages. But I move the
-    free process after releasing ftrace_lock.
+The patch in this thread is obviously wrong. It results in the
+checks never beeing called for spi_add_device_locked(). The copy is
+in spi_add_device() and those two are not calling into each other.
 
- kernel/trace/ftrace.c | 26 +++++++++++++++++++++++---
- 1 file changed, 23 insertions(+), 3 deletions(-)
+But it should be fine to move the code to the start of
+__spi_add_device(), which allows removing the duplication. In that
+case the code will be run with the add_lock held, which is probably
+what I was worried about two years ago. Looking at it again, the
+lock is held anyways in case of spi_add_device_locked().
 
-diff --git a/kernel/trace/ftrace.c b/kernel/trace/ftrace.c
-index 3740aca79fe7..e43e21a3d5fd 100644
---- a/kernel/trace/ftrace.c
-+++ b/kernel/trace/ftrace.c
-@@ -6473,7 +6473,9 @@ static int ftrace_process_locs(struct module *mod,
- {
- 	struct ftrace_page *start_pg;
- 	struct ftrace_page *pg;
-+	struct ftrace_page *pg_unuse = NULL;
- 	struct dyn_ftrace *rec;
-+	unsigned long skipped = 0;
- 	unsigned long count;
- 	unsigned long *p;
- 	unsigned long addr;
-@@ -6536,8 +6538,10 @@ static int ftrace_process_locs(struct module *mod,
- 		 * object files to satisfy alignments.
- 		 * Skip any NULL pointers.
- 		 */
--		if (!addr)
-+		if (!addr) {
-+			skipped++;
- 			continue;
-+		}
- 
- 		end_offset = (pg->index+1) * sizeof(pg->records[0]);
- 		if (end_offset > PAGE_SIZE << pg->order) {
-@@ -6551,8 +6555,10 @@ static int ftrace_process_locs(struct module *mod,
- 		rec->ip = addr;
- 	}
- 
--	/* We should have used all pages */
--	WARN_ON(pg->next);
-+	if (pg->next) {
-+		pg_unuse = pg->next;
-+		pg->next = NULL;
-+	}
- 
- 	/* Assign the last page to ftrace_pages */
- 	ftrace_pages = pg;
-@@ -6574,6 +6580,20 @@ static int ftrace_process_locs(struct module *mod,
-  out:
- 	mutex_unlock(&ftrace_lock);
- 
-+	/* We should have used all pages unless we skipped some */
-+	if (pg_unuse) {
-+		WARN_ON(!skipped);
-+		while (pg_unuse) {
-+			pg = pg_unuse;
-+			pg_unuse = pg->next;
-+			if (pg->records) {
-+				free_pages((unsigned long)pg->records, pg->order);
-+				ftrace_number_of_pages -= 1 << pg->order;
-+			}
-+			kfree(pg);
-+			ftrace_number_of_groups--;
-+		}
-+	}
- 	return ret;
- }
- 
--- 
-2.25.1
+Greetings,
 
+-- Sebastian
+
+--fcthwhge3iyvg2gl
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAmStRJIACgkQ2O7X88g7
++pp6dQ//QWqSMddfA8JIA4/cd4pYKRoojbIso2JQaAhIWBB48KjH/GX7xoNCH4Ig
+MRloAncuXxqH1quGGpphBRJL2bAKVRcinKKtYdwCyM6P422hjD5GqVDKOr2H1u2f
+4+wWcKeKNk5ect4iYj/kRZYYpdlJzxK1hsd7bCwBCz3I0k7rlxqIg5td7e/7Q7CC
+4bvNEtL0Ub1iB+vzDNoqNKN48Bp87xr+kM1wSDsDhPqf1TrTmxgOFIYNmy2x+XuV
+20ZRE4olEfUMFlPNNCaAurOPVZmclVstzBUwRhU7uVBH4/ZnbY02wsklP0D8SbV8
+inFOurRiLtWaRSQfkwMEF2DAp4l5a6eWVyuy5Rf0mdVmgq9bgeXFycbiYkOM6Gsz
+aQ0g5SV64PYZSwPljucB28GrWfLdDNlp693elljAeDElhbF1bqhbVozqhkyfH5Ih
+J4wpwr/DgZaW31B0V/sQVlJTIRtjAmIRgydid81aaSOzXmW0B+Pu74EU/cMNcy0f
+iSGRdSPX+eA5OPNHQWPz1RQvJOHMVrMBXTdSCeVzZdV4VSTZSv9/LL922e9qK2DB
+yGQTeUox+5d2hdcQlSmo+LQGhiZiiJ9qoVWPsWjhNwbb3fh3HCSP9X/BJHNNGzqr
+WU6SN8gRjCaL3/i5pT08DOL6WdKhn/qo8EzCnOBxloSjD2uF1Ic=
+=v6T3
+-----END PGP SIGNATURE-----
+
+--fcthwhge3iyvg2gl--
