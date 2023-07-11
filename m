@@ -2,126 +2,168 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BDBBEB64DC
-	for <linux-trace-kernel@archiver.kernel.org>; Tue, 11 Jul 2023 04:56:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 78050EB64DC
+	for <linux-trace-kernel@archiver.kernel.org>; Tue, 11 Jul 2023 06:21:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230259AbjGKE4J (ORCPT
+        id S229591AbjGKGVa (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Tue, 11 Jul 2023 00:56:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50352 "EHLO
+        Tue, 11 Jul 2023 02:21:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51544 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230018AbjGKE4I (ORCPT
+        with ESMTP id S229589AbjGKGV2 (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Tue, 11 Jul 2023 00:56:08 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 77023FB;
-        Mon, 10 Jul 2023 21:56:07 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 15BFB61305;
-        Tue, 11 Jul 2023 04:56:07 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 92838C433C8;
-        Tue, 11 Jul 2023 04:56:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1689051366;
-        bh=chk4w71SLL7ARWSfWIOfGyVEKHJpKgqbRxpzOCYROjE=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=iHNxonMGPpYnEeoXRFGMUQX+9las/kq+zqzQrdMcsS++d2/3fHlc6RKnLv2U0L7mh
-         IXWxymf9y3mnyKHFbAwaf+z9uoJSKWmzJZXRH+E7xNoAvLpKLegreg3eGjN8qotS6M
-         L6MAQGuGpfr1PFV/0tKG2dvk4IkCHAkc6M/4JdomCIajGNjQSW0OGeoupruUsWmeUn
-         3vUXZGXbVUUYjDPc2wBMCs7qKCRt+TTIZOcG0bSfQ5Ol/GtNsHLl4IYaJlxseRG3fi
-         8/ov8nkewivTx73J9CcijwNwFePae72xlGFLnEGOZz2zst5r0bsDweqp7LhBqnXaE8
-         5wfxf9uS3qapw==
-Date:   Tue, 11 Jul 2023 13:56:03 +0900
-From:   Masami Hiramatsu (Google) <mhiramat@kernel.org>
+        Tue, 11 Jul 2023 02:21:28 -0400
+Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3FD54E4B;
+        Mon, 10 Jul 2023 23:21:26 -0700 (PDT)
+Received: from dggpeml500012.china.huawei.com (unknown [172.30.72.54])
+        by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4R0Vzd5N9WzMqVh;
+        Tue, 11 Jul 2023 14:18:05 +0800 (CST)
+Received: from [10.67.110.218] (10.67.110.218) by
+ dggpeml500012.china.huawei.com (7.185.36.15) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.27; Tue, 11 Jul 2023 14:21:22 +0800
+Message-ID: <d18f553b-079f-e0a8-4127-ae55e8cd0e42@huawei.com>
+Date:   Tue, 11 Jul 2023 14:21:21 +0800
+MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.6.0
+Subject: Re: [PATCH] ftrace: Fix possible warning on checking all pages used
+ in ftrace_process_locs()
+Content-Language: en-US
 To:     Steven Rostedt <rostedt@goodmis.org>
-Cc:     Dan Carpenter <dan.carpenter@linaro.org>,
-        linux-trace-kernel@vger.kernel.org,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v4 4/4] tracing/probes: Fix to record 0-length data_loc
- in fetch_store_string*() if fails
-Message-Id: <20230711135603.5c3724a57f1c064c672d99e1@kernel.org>
-In-Reply-To: <20230710233400.5aaf024e@gandalf.local.home>
-References: <168904147563.2908673.18054267804278861545.stgit@mhiramat.roam.corp.google.com>
-        <168904151104.2908673.8401909922292791503.stgit@mhiramat.roam.corp.google.com>
-        <20230710233400.5aaf024e@gandalf.local.home>
-X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+CC:     <mhiramat@kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-trace-kernel@vger.kernel.org>
+References: <20230710212958.274126-1-zhengyejian1@huawei.com>
+ <20230710104625.421c851a@gandalf.local.home>
+From:   Zheng Yejian <zhengyejian1@huawei.com>
+In-Reply-To: <20230710104625.421c851a@gandalf.local.home>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
 Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.67.110.218]
+X-ClientProxiedBy: dggems706-chm.china.huawei.com (10.3.19.183) To
+ dggpeml500012.china.huawei.com (7.185.36.15)
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On Mon, 10 Jul 2023 23:34:00 -0400
-Steven Rostedt <rostedt@goodmis.org> wrote:
+On 2023/7/10 22:46, Steven Rostedt wrote:
+> On Tue, 11 Jul 2023 05:29:58 +0800
+> Zheng Yejian <zhengyejian1@huawei.com> wrote:
+> 
+>> As comments in ftrace_process_locs(), there may be NULL pointers in
+>> mcount_loc section:
+>>   > Some architecture linkers will pad between
+>>   > the different mcount_loc sections of different
+>>   > object files to satisfy alignments.
+>>   > Skip any NULL pointers.
+>>
+>> After 20e5227e9f55 ("ftrace: allow NULL pointers in mcount_loc"),
+>> NULL pointers will be accounted when allocating ftrace pages but
+>> skipped before adding into ftrace pages, this may result in some
+>> pages not being used. Then after 706c81f87f84 ("ftrace: Remove extra
+>> helper functions"), warning may occur at:
+>>    WARN_ON(pg->next);
+>>
+>> So we may need to skip NULL pointers before allocating ftrace pages.
+>>
+>> Fixes: 706c81f87f84 ("ftrace: Remove extra helper functions")
+>> Signed-off-by: Zheng Yejian <zhengyejian1@huawei.com>
+>> ---
+>>   kernel/trace/ftrace.c | 10 ++++++++++
+>>   1 file changed, 10 insertions(+)
+>>
+>> diff --git a/kernel/trace/ftrace.c b/kernel/trace/ftrace.c
+>> index 3740aca79fe7..5b474165df31 100644
+>> --- a/kernel/trace/ftrace.c
+>> +++ b/kernel/trace/ftrace.c
+>> @@ -6485,6 +6485,16 @@ static int ftrace_process_locs(struct module *mod,
+>>   	if (!count)
+>>   		return 0;
+>>   
+>> +	p = start;
+>> +	while (p < end) {
+>> +		/*
+>> +		 * Refer to conments below, there may be NULL pointers,
+>> +		 * skip them before allocating pages
+>> +		 */
+>> +		addr = ftrace_call_adjust(*p++);
+>> +		if (!addr)
+>> +			count--;
+>> +	}
+> 
+> My main concern about this is the added overhead during boot to process
+> this. There's 10s of thousands of functions, so this loop will be 10s of
+> thousands. I also don't like that this is an unconditional loop (meaning it
+> executes even when it is unnecessary to do so).
+> 
 
-> On Tue, 11 Jul 2023 11:11:51 +0900
-> "Masami Hiramatsu (Google)" <mhiramat@kernel.org> wrote:
-> 
-> > --- a/kernel/trace/trace_probe_tmpl.h
-> > +++ b/kernel/trace/trace_probe_tmpl.h
-> > @@ -267,9 +267,7 @@ store_trace_args(void *data, struct trace_probe *tp, void *rec,
-> >  		if (unlikely(arg->dynamic))
-> >  			*dl = make_data_loc(maxlen, dyndata - base);
-> >  		ret = process_fetch_insn(arg->code, rec, dl, base);
-> > -		if (unlikely(ret < 0 && arg->dynamic)) {
-> > -			*dl = make_data_loc(0, dyndata - base);
-> > -		} else {
-> > +		if (unlikely(ret > 0 && arg->dynamic)) {
-> 
-> To match the current code, that should be:
-> 
-> 		if (likely(ret >= 0 || !arg->dynamic)) {
-> 
-> But I'm guessing that the original code was buggy, as the else block should
-> only have been processed if arg->dynamic was set?
-
-Good point, yes, that's right. Since dyndata and maxlen is only used when
-arg->dynamic == true, we don't have to care about that.
-
-> That is, it should have been:
-> 
-> 	if (arg->dynamic) {
-> 		if (unlikely(ret < 0)) {
-> 			*dl = make_data_loc(0, dyndata - base);
-> 		} else {
->   			dyndata += ret;
->   			maxlen -= ret;
->   		}
-> 	}
-> 
-> 
-> I guess you only want to update if arg->dynamic is true (even though that
-> wasn't the case before :-/) But in any case, I think you want likely() and
-> not unlikely().
-> 
-> 		if (arg->dynamic && likely(ret > 0)) {
-> 
-> That is, if we only want to updated this if the arg is dynamic.
-
-Indeed.
+Agreed! The added overhead probably superfluousin in most cases.
 
 > 
-> And I don't think that the arg->dynamic() should have likely/unlikely
-> around it, as that's determined by user space, and the kernel should not be
-> adding assumptions about what user space wants.
-
-OK.
-
-Let me fix that with a new patch because it is another bug.
-
-Thanks,
-
+>>   	/*
+>>   	 * Sorting mcount in vmlinux at build time depend on
+>>   	 * CONFIG_BUILDTIME_MCOUNT_SORT, while mcount loc in
+> 
+> How about something like this?
 > 
 > -- Steve
 > 
-> >  			dyndata += ret;
-> >  			maxlen -= ret;
-> >  		}
+> diff --git a/kernel/trace/ftrace.c b/kernel/trace/ftrace.c
+> index b24c573934af..acd033371721 100644
+> --- a/kernel/trace/ftrace.c
+> +++ b/kernel/trace/ftrace.c
+> @@ -6474,6 +6474,7 @@ static int ftrace_process_locs(struct module *mod,
+>   	struct ftrace_page *start_pg;
+>   	struct ftrace_page *pg;
+>   	struct dyn_ftrace *rec;
+> +	unsigned long skipped = 0;
+>   	unsigned long count;
+>   	unsigned long *p;
+>   	unsigned long addr;
+> @@ -6536,8 +6537,10 @@ static int ftrace_process_locs(struct module *mod,
+>   		 * object files to satisfy alignments.
+>   		 * Skip any NULL pointers.
+>   		 */
+> -		if (!addr)
+> +		if (!addr) {
+> +			skipped++;
+>   			continue;
+> +		}
+>   
+>   		end_offset = (pg->index+1) * sizeof(pg->records[0]);
+>   		if (end_offset > PAGE_SIZE << pg->order) {
+> @@ -6551,12 +6554,24 @@ static int ftrace_process_locs(struct module *mod,
+>   		rec->ip = addr;
+>   	}
+>   
+> -	/* We should have used all pages */
+> -	WARN_ON(pg->next);
+> -
+>   	/* Assign the last page to ftrace_pages */
+>   	ftrace_pages = pg;
+>   
+> +	/* We should have used all pages unless we skipped some */
+> +	if (pg->next) {
+> +		WARN_ON(!skipped);
+> +		while (ftrace_pages->next) {
+> +			pg = ftrace_pages->next;
+> +			ftrace_pages->next = pg->next;
+> +			if (pg->records) {
+> +				free_pages((unsigned long)pg->records, pg->order);
+> +				ftrace_number_of_pages -= 1 << pg->order;
+> +			}
+> +			kfree(pg);
+> +			ftrace_number_of_groups--;
+> +		}
 
+Do we only need to free the pages that not being used?
 
--- 
-Masami Hiramatsu (Google) <mhiramat@kernel.org>
+> +	}
+> +
+>   	/*
+>   	 * We only need to disable interrupts on start up
+>   	 * because we are modifying code that an interrupt
+> 
+
