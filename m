@@ -2,147 +2,93 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A5727EB64DA
-	for <linux-trace-kernel@archiver.kernel.org>; Tue, 11 Jul 2023 02:12:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA10CEB64DC
+	for <linux-trace-kernel@archiver.kernel.org>; Tue, 11 Jul 2023 03:34:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231585AbjGKCME (ORCPT
+        id S230017AbjGKDeH (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Mon, 10 Jul 2023 22:12:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58762 "EHLO
+        Mon, 10 Jul 2023 23:34:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57434 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231509AbjGKCL6 (ORCPT
+        with ESMTP id S229744AbjGKDeG (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Mon, 10 Jul 2023 22:11:58 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5E805E56;
-        Mon, 10 Jul 2023 19:11:55 -0700 (PDT)
+        Mon, 10 Jul 2023 23:34:06 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 79D72E8;
+        Mon, 10 Jul 2023 20:34:05 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange X25519 server-signature RSA-PSS (2048 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id E836A612A3;
-        Tue, 11 Jul 2023 02:11:54 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5C505C433C8;
-        Tue, 11 Jul 2023 02:11:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1689041514;
-        bh=gUegrzHhvvaBqWHNN20WA8icpvNMacfxlYx9KW3dn5w=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=QsSDko6g7gXMiaV8SwdrbId5bgscD6LT08/kHZsDdhOIyawbnzY6UGEdcilZnU9Qr
-         jdmUxhZU+ufl6FFI3aXbd8Rr6A0yQe/CbRH1PerMPm9WgrbYuxF3QQuWe8r1AJ43RF
-         4uKHn6QI1O1Rh5yQyayERFBoCxi0H++Hidst6g1J4LsxFCFnylU16IMlnCUu2Jc+H0
-         cMJoieOoIPWDxMN3KtxiBWxTFSxA4mj7kgYGocYZhZGlp5o4/HQkVtkKQSPRi0BPXo
-         hEdWIsu0L7fxV1HrKX2eSxF4FpSHe/DdVaSR0foONNkS4BGFJP+bs1p3WPUQAPfivp
-         ewWW5ho1W349A==
-From:   "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
-To:     Steven Rostedt <rostedt@goodmis.org>
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 18037612D5;
+        Tue, 11 Jul 2023 03:34:05 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F1523C433C7;
+        Tue, 11 Jul 2023 03:34:03 +0000 (UTC)
+Date:   Mon, 10 Jul 2023 23:34:00 -0400
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
 Cc:     Dan Carpenter <dan.carpenter@linaro.org>,
         linux-trace-kernel@vger.kernel.org,
-        LKML <linux-kernel@vger.kernel.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>
-Subject: [PATCH v4 4/4] tracing/probes: Fix to record 0-length data_loc in fetch_store_string*() if fails
-Date:   Tue, 11 Jul 2023 11:11:51 +0900
-Message-ID:  <168904151104.2908673.8401909922292791503.stgit@mhiramat.roam.corp.google.com>
-X-Mailer: git-send-email 2.41.0.255.g8b1d071c50-goog
-In-Reply-To:  <168904147563.2908673.18054267804278861545.stgit@mhiramat.roam.corp.google.com>
-References:  <168904147563.2908673.18054267804278861545.stgit@mhiramat.roam.corp.google.com>
-User-Agent: StGit/0.19
+        LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v4 4/4] tracing/probes: Fix to record 0-length data_loc
+ in fetch_store_string*() if fails
+Message-ID: <20230710233400.5aaf024e@gandalf.local.home>
+In-Reply-To: <168904151104.2908673.8401909922292791503.stgit@mhiramat.roam.corp.google.com>
+References: <168904147563.2908673.18054267804278861545.stgit@mhiramat.roam.corp.google.com>
+        <168904151104.2908673.8401909922292791503.stgit@mhiramat.roam.corp.google.com>
+X-Mailer: Claws Mail 3.19.1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+On Tue, 11 Jul 2023 11:11:51 +0900
+"Masami Hiramatsu (Google)" <mhiramat@kernel.org> wrote:
 
-Fix to record 0-length data to data_loc in fetch_store_string*() if it fails
-to get the string data.
-Currently those expect that the data_loc is updated by store_trace_args() if
-it returns the error code. However, that does not work correctly if the
-argument is an array of strings. In that case, store_trace_args() only clears
-the first entry of the array (which may have no error) and leaves other
-entries. So it should be cleared by fetch_store_string*() itself.
-Also, 'dyndata' and 'maxlen' in store_trace_args() should be updated
-only if it is used (ret > 0 and argument is a dynamic data.)
+> --- a/kernel/trace/trace_probe_tmpl.h
+> +++ b/kernel/trace/trace_probe_tmpl.h
+> @@ -267,9 +267,7 @@ store_trace_args(void *data, struct trace_probe *tp, void *rec,
+>  		if (unlikely(arg->dynamic))
+>  			*dl = make_data_loc(maxlen, dyndata - base);
+>  		ret = process_fetch_insn(arg->code, rec, dl, base);
+> -		if (unlikely(ret < 0 && arg->dynamic)) {
+> -			*dl = make_data_loc(0, dyndata - base);
+> -		} else {
+> +		if (unlikely(ret > 0 && arg->dynamic)) {
 
-Fixes: 40b53b771806 ("tracing: probeevent: Add array type support")
-Cc: stable@vger.kernel.org
-Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
----
- Changes in v4:
-  - Simplify the updating data_loc code with set_data_loc().
----
- kernel/trace/trace_probe_kernel.h |   13 +++++++++----
- kernel/trace/trace_probe_tmpl.h   |    4 +---
- kernel/trace/trace_uprobe.c       |    3 ++-
- 3 files changed, 12 insertions(+), 8 deletions(-)
+To match the current code, that should be:
 
-diff --git a/kernel/trace/trace_probe_kernel.h b/kernel/trace/trace_probe_kernel.h
-index 6deae2ce34f8..bb723eefd7b7 100644
---- a/kernel/trace/trace_probe_kernel.h
-+++ b/kernel/trace/trace_probe_kernel.h
-@@ -37,6 +37,13 @@ fetch_store_strlen(unsigned long addr)
- 	return (ret < 0) ? ret : len;
- }
- 
-+static nokprobe_inline void set_data_loc(int ret, void *dest, void *__dest, void *base)
-+{
-+	if (ret < 0)
-+		ret = 0;
-+	*(u32 *)dest = make_data_loc(ret, __dest - base);
-+}
-+
- /*
-  * Fetch a null-terminated string from user. Caller MUST set *(u32 *)buf
-  * with max length and relative data location.
-@@ -55,8 +62,7 @@ fetch_store_string_user(unsigned long addr, void *dest, void *base)
- 	__dest = get_loc_data(dest, base);
- 
- 	ret = strncpy_from_user_nofault(__dest, uaddr, maxlen);
--	if (ret >= 0)
--		*(u32 *)dest = make_data_loc(ret, __dest - base);
-+	set_data_loc(ret, dest, __dest, base);
- 
- 	return ret;
- }
-@@ -87,8 +93,7 @@ fetch_store_string(unsigned long addr, void *dest, void *base)
- 	 * probing.
- 	 */
- 	ret = strncpy_from_kernel_nofault(__dest, (void *)addr, maxlen);
--	if (ret >= 0)
--		*(u32 *)dest = make_data_loc(ret, __dest - base);
-+	set_data_loc(ret, dest, __dest, base);
- 
- 	return ret;
- }
-diff --git a/kernel/trace/trace_probe_tmpl.h b/kernel/trace/trace_probe_tmpl.h
-index ed9d57c6b041..bbad0503f166 100644
---- a/kernel/trace/trace_probe_tmpl.h
-+++ b/kernel/trace/trace_probe_tmpl.h
-@@ -267,9 +267,7 @@ store_trace_args(void *data, struct trace_probe *tp, void *rec,
- 		if (unlikely(arg->dynamic))
- 			*dl = make_data_loc(maxlen, dyndata - base);
- 		ret = process_fetch_insn(arg->code, rec, dl, base);
--		if (unlikely(ret < 0 && arg->dynamic)) {
--			*dl = make_data_loc(0, dyndata - base);
--		} else {
-+		if (unlikely(ret > 0 && arg->dynamic)) {
- 			dyndata += ret;
- 			maxlen -= ret;
- 		}
-diff --git a/kernel/trace/trace_uprobe.c b/kernel/trace/trace_uprobe.c
-index 8b92e34ff0c8..7b47e9a2c010 100644
---- a/kernel/trace/trace_uprobe.c
-+++ b/kernel/trace/trace_uprobe.c
-@@ -170,7 +170,8 @@ fetch_store_string(unsigned long addr, void *dest, void *base)
- 			 */
- 			ret++;
- 		*(u32 *)dest = make_data_loc(ret, (void *)dst - base);
--	}
-+	} else
-+		*(u32 *)dest = make_data_loc(0, (void *)dst - base);
- 
- 	return ret;
- }
+		if (likely(ret >= 0 || !arg->dynamic)) {
 
+But I'm guessing that the original code was buggy, as the else block should
+only have been processed if arg->dynamic was set? That is, it should have been:
+
+	if (arg->dynamic) {
+		if (unlikely(ret < 0)) {
+			*dl = make_data_loc(0, dyndata - base);
+		} else {
+  			dyndata += ret;
+  			maxlen -= ret;
+  		}
+	}
+
+
+I guess you only want to update if arg->dynamic is true (even though that
+wasn't the case before :-/) But in any case, I think you want likely() and
+not unlikely().
+
+		if (arg->dynamic && likely(ret > 0)) {
+
+That is, if we only want to updated this if the arg is dynamic.
+
+And I don't think that the arg->dynamic() should have likely/unlikely
+around it, as that's determined by user space, and the kernel should not be
+adding assumptions about what user space wants.
+
+-- Steve
+
+>  			dyndata += ret;
+>  			maxlen -= ret;
+>  		}
