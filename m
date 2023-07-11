@@ -2,155 +2,132 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D0F3EB64DC
-	for <linux-trace-kernel@archiver.kernel.org>; Tue, 11 Jul 2023 14:16:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B85E9EB64DC
+	for <linux-trace-kernel@archiver.kernel.org>; Tue, 11 Jul 2023 14:25:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233358AbjGKOQX (ORCPT
+        id S233647AbjGKOZa convert rfc822-to-8bit (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Tue, 11 Jul 2023 10:16:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53268 "EHLO
+        Tue, 11 Jul 2023 10:25:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60242 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231344AbjGKOQP (ORCPT
+        with ESMTP id S233718AbjGKOY5 (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Tue, 11 Jul 2023 10:16:15 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 36795170C;
-        Tue, 11 Jul 2023 07:16:12 -0700 (PDT)
+        Tue, 11 Jul 2023 10:24:57 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E208A1713;
+        Tue, 11 Jul 2023 07:24:19 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange X25519 server-signature RSA-PSS (2048 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 9E32B61360;
-        Tue, 11 Jul 2023 14:16:11 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D971EC433C7;
-        Tue, 11 Jul 2023 14:16:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1689084971;
-        bh=/AcWrvIXlV70CD4DdIzY6zl/jRyB0t5UfH4qkA2Xy84=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=HzBtSrQ0OIc31FCAGpYEiDxSYZ9C7gi2brxAmdhKAjQzFnWncfRIkqSFPwCj/gDiH
-         YyQf+yI7ZnoFasEbnIQS8hkl2puowcYyNIdEniwzrsfvMfRrq6y2Xvu/gSXo0sMCVY
-         Up85DELswwwq+gR6Q8C5RRdXjsEp7ME6tkvLfR/8YCA9pr4KwGeFnF+cfZYdYuzeZL
-         d8W6oLO8uFC8PWIaCYK7wmqVOCuDf0m7kgkFOdgS90shxLRAUnxVDKXbOXySLMXyi2
-         GDRiUMmEcHEES66mWtk0Lu2PcrnRT8w8c9kJrKGnrFaI146XD5GGJWxfw0BvEV9wKg
-         I9NvDkmTPNK5g==
-From:   "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
-To:     Steven Rostedt <rostedt@goodmis.org>
-Cc:     Dan Carpenter <dan.carpenter@linaro.org>,
-        linux-trace-kernel@vger.kernel.org,
-        LKML <linux-kernel@vger.kernel.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>
-Subject: [PATCH v5 5/5] tracing/probes: Fix to record 0-length data_loc in fetch_store_string*() if fails
-Date:   Tue, 11 Jul 2023 23:16:07 +0900
-Message-Id: <168908496683.123124.4761206188794205601.stgit@devnote2>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <168908491977.123124.16583481716284477889.stgit@devnote2>
-References: <168908491977.123124.16583481716284477889.stgit@devnote2>
-User-Agent: StGit/0.19
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 2461C614E2;
+        Tue, 11 Jul 2023 14:24:07 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 21EC0C433C7;
+        Tue, 11 Jul 2023 14:24:05 +0000 (UTC)
+Date:   Tue, 11 Jul 2023 10:24:03 -0400
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     Ajay Kaher <akaher@vmware.com>
+Cc:     "mhiramat@kernel.org" <mhiramat@kernel.org>,
+        "shuah@kernel.org" <shuah@kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-trace-kernel@vger.kernel.org" 
+        <linux-trace-kernel@vger.kernel.org>,
+        "linux-kselftest@vger.kernel.org" <linux-kselftest@vger.kernel.org>,
+        Ching-lin Yu <chinglinyu@google.com>,
+        Nadav Amit <namit@vmware.com>,
+        "srivatsa@csail.mit.edu" <srivatsa@csail.mit.edu>,
+        Alexey Makhalov <amakhalov@vmware.com>,
+        Vasavi Sirnapalli <vsirnapalli@vmware.com>,
+        Tapas Kundu <tkundu@vmware.com>,
+        "er.ajay.kaher@gmail.com" <er.ajay.kaher@gmail.com>
+Subject: Re: [PATCH v3 03/10] eventfs: adding eventfs dir add functions
+Message-ID: <20230711102403.3e65d1ec@gandalf.local.home>
+In-Reply-To: <285B9992-4DFB-4343-BD64-DAE9CCEFEE6B@vmware.com>
+References: <1685610013-33478-1-git-send-email-akaher@vmware.com>
+        <1685610013-33478-4-git-send-email-akaher@vmware.com>
+        <20230701095417.3de5baab@rorschach.local.home>
+        <ECB0097D-A323-4CFC-9C9E-D4DA2AA6E662@vmware.com>
+        <20230703110857.2d051af5@rorschach.local.home>
+        <84CA259A-8A99-471C-B44C-08D289972F43@vmware.com>
+        <20230703155226.1ab27bc1@gandalf.local.home>
+        <20230709215447.536defa6@rorschach.local.home>
+        <285B9992-4DFB-4343-BD64-DAE9CCEFEE6B@vmware.com>
+X-Mailer: Claws Mail 3.19.1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+On Mon, 10 Jul 2023 18:53:53 +0000
+Ajay Kaher <akaher@vmware.com> wrote:
 
-Fix to record 0-length data to data_loc in fetch_store_string*() if it fails
-to get the string data.
-Currently those expect that the data_loc is updated by store_trace_args() if
-it returns the error code. However, that does not work correctly if the
-argument is an array of strings. In that case, store_trace_args() only clears
-the first entry of the array (which may have no error) and leaves other
-entries. So it should be cleared by fetch_store_string*() itself.
-Also, 'dyndata' and 'maxlen' in store_trace_args() should be updated
-only if it is used (ret > 0 and argument is a dynamic data.)
+> Something was broken in your mail (I guess cc list) and couldn’t reach to lkml or
+> ignored by lkml. I just wanted to track the auto test results from linux-kselftest.
 
-Fixes: 40b53b771806 ("tracing: probeevent: Add array type support")
-Cc: stable@vger.kernel.org
-Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
----
- Changes in v4:
-  - Simplify the updating data_loc code with set_data_loc().
- Changes in v5:
-  - Move out arg->dynamic check from unlikely() and use likely().
----
- kernel/trace/trace_probe_kernel.h |   13 +++++++++----
- kernel/trace/trace_probe_tmpl.h   |   10 +++-------
- kernel/trace/trace_uprobe.c       |    3 ++-
- 3 files changed, 14 insertions(+), 12 deletions(-)
+Below is the report from the tree I pushed. I guess I forgot to remove an
+"idx" variable, and it also caught the unused functions you mentioned.
 
-diff --git a/kernel/trace/trace_probe_kernel.h b/kernel/trace/trace_probe_kernel.h
-index 6deae2ce34f8..bb723eefd7b7 100644
---- a/kernel/trace/trace_probe_kernel.h
-+++ b/kernel/trace/trace_probe_kernel.h
-@@ -37,6 +37,13 @@ fetch_store_strlen(unsigned long addr)
- 	return (ret < 0) ? ret : len;
- }
- 
-+static nokprobe_inline void set_data_loc(int ret, void *dest, void *__dest, void *base)
-+{
-+	if (ret < 0)
-+		ret = 0;
-+	*(u32 *)dest = make_data_loc(ret, __dest - base);
-+}
-+
- /*
-  * Fetch a null-terminated string from user. Caller MUST set *(u32 *)buf
-  * with max length and relative data location.
-@@ -55,8 +62,7 @@ fetch_store_string_user(unsigned long addr, void *dest, void *base)
- 	__dest = get_loc_data(dest, base);
- 
- 	ret = strncpy_from_user_nofault(__dest, uaddr, maxlen);
--	if (ret >= 0)
--		*(u32 *)dest = make_data_loc(ret, __dest - base);
-+	set_data_loc(ret, dest, __dest, base);
- 
- 	return ret;
- }
-@@ -87,8 +93,7 @@ fetch_store_string(unsigned long addr, void *dest, void *base)
- 	 * probing.
- 	 */
- 	ret = strncpy_from_kernel_nofault(__dest, (void *)addr, maxlen);
--	if (ret >= 0)
--		*(u32 *)dest = make_data_loc(ret, __dest - base);
-+	set_data_loc(ret, dest, __dest, base);
- 
- 	return ret;
- }
-diff --git a/kernel/trace/trace_probe_tmpl.h b/kernel/trace/trace_probe_tmpl.h
-index 185da001f4c3..3935b347f874 100644
---- a/kernel/trace/trace_probe_tmpl.h
-+++ b/kernel/trace/trace_probe_tmpl.h
-@@ -267,13 +267,9 @@ store_trace_args(void *data, struct trace_probe *tp, void *rec,
- 		if (unlikely(arg->dynamic))
- 			*dl = make_data_loc(maxlen, dyndata - base);
- 		ret = process_fetch_insn(arg->code, rec, dl, base);
--		if (arg->dynamic) {
--			if (unlikely(ret < 0)) {
--				*dl = make_data_loc(0, dyndata - base);
--			} else {
--				dyndata += ret;
--				maxlen -= ret;
--			}
-+		if (arg->dynamic && likely(ret > 0)) {
-+			dyndata += ret;
-+			maxlen -= ret;
- 		}
- 	}
- }
-diff --git a/kernel/trace/trace_uprobe.c b/kernel/trace/trace_uprobe.c
-index 8b92e34ff0c8..7b47e9a2c010 100644
---- a/kernel/trace/trace_uprobe.c
-+++ b/kernel/trace/trace_uprobe.c
-@@ -170,7 +170,8 @@ fetch_store_string(unsigned long addr, void *dest, void *base)
- 			 */
- 			ret++;
- 		*(u32 *)dest = make_data_loc(ret, (void *)dst - base);
--	}
-+	} else
-+		*(u32 *)dest = make_data_loc(0, (void *)dst - base);
- 
- 	return ret;
- }
+-- Steve
 
+
+tree:   git://git.kernel.org/pub/scm/linux/kernel/git/trace/linux-trace trace/rfc/eventfs
+head:   1dc48374bb8ad8aec6d7244267f9b36e0512d3bb
+commit: 1dc48374bb8ad8aec6d7244267f9b36e0512d3bb [28/28] tracefs: Add RCU and global mutex for eventfs
+config: x86_64-kexec (https://download.01.org/0day-ci/archive/20230711/202307111415.tc8g7M63-lkp@intel.com/config)
+compiler: gcc-12 (Debian 12.2.0-14) 12.2.0
+reproduce: (https://download.01.org/0day-ci/archive/20230711/202307111415.tc8g7M63-lkp@intel.com/reproduce)
+
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202307111415.tc8g7M63-lkp@intel.com/
+
+All warnings (new ones prefixed by >>):
+
+   fs/tracefs/event_inode.c: In function 'eventfs_post_create_dir':
+>> fs/tracefs/event_inode.c:236:13: warning: unused variable 'idx' [-Wunused-variable]  
+     236 |         int idx;
+         |             ^~~
+   fs/tracefs/event_inode.c: At top level:
+   fs/tracefs/event_inode.c:184:23: warning: 'eventfs_create_dir' defined but not used [-Wunused-function]
+     184 | static struct dentry *eventfs_create_dir(const char *name, umode_t mode,
+         |                       ^~~~~~~~~~~~~~~~~~
+   fs/tracefs/event_inode.c:108:23: warning: 'eventfs_create_file' defined but not used [-Wunused-function]
+     108 | static struct dentry *eventfs_create_file(const char *name, umode_t mode,
+         |                       ^~~~~~~~~~~~~~~~~~~
+
+
+vim +/idx +236 fs/tracefs/event_inode.c
+
+   225	
+   226	/**
+   227	 * eventfs_post_create_dir - post create dir routine
+   228	 * @ef: eventfs_file of recently created dir
+   229	 *
+   230	 * Files with-in eventfs dir should know dentry of parent dir
+   231	 */
+   232	static void eventfs_post_create_dir(struct eventfs_file *ef)
+   233	{
+   234		struct eventfs_file *ef_child;
+   235		struct tracefs_inode *ti;
+ > 236		int idx;  
+   237	
+   238		/* srcu lock already held */
+   239		/* fill parent-child relation */
+   240		list_for_each_entry_srcu(ef_child, &ef->ei->e_top_files, list,
+   241					 srcu_read_lock_held(&eventfs_srcu)) {
+   242			ef_child->d_parent = ef->dentry;
+   243		}
+   244	
+   245		ti = get_tracefs(ef->dentry->d_inode);
+   246		ti->private = ef->ei;
+   247	}
+   248	
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
+
+-- Steve
