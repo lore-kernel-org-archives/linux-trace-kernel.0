@@ -2,94 +2,143 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B7BBEB64DC
-	for <linux-trace-kernel@archiver.kernel.org>; Tue, 11 Jul 2023 07:16:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 16FE8EB64DC
+	for <linux-trace-kernel@archiver.kernel.org>; Tue, 11 Jul 2023 08:13:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230360AbjGKHQC (ORCPT
+        id S231382AbjGKINF (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Tue, 11 Jul 2023 03:16:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39916 "EHLO
+        Tue, 11 Jul 2023 04:13:05 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38144 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229990AbjGKHQB (ORCPT
+        with ESMTP id S229635AbjGKINE (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Tue, 11 Jul 2023 03:16:01 -0400
-Received: from desiato.infradead.org (desiato.infradead.org [IPv6:2001:8b0:10b:1:d65d:64ff:fe57:4e05])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 378B0CE;
-        Tue, 11 Jul 2023 00:15:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=D1feG0Fl8Ee5zOZsG9SoHYFaCih6ELEpGN3iRZJVOFg=; b=gDZT9RmLvSO1CvAo1lU3Xb9avP
-        wN6Fj+1OypxPuebGwVQuLwC86cK8TdM0Qfe2uEFlAj8tOasF1fbRN55NP0KGuJ7eBbZrT2+tRjfwO
-        bUl98gyWzzynSouQLcbY8ST95PAKZZuufV/AaetCK4pfzEOR7+11xFsjiNg1d/PuSMjKR4Bn2LvX/
-        PhSRb5jXGsgclFfWntShP/WeATSfFPJg93HLvePV8wlEyYmMtVyj0dNbEi0/dLpQAZDrNn14g8U4H
-        uT5jFaViHz5D7kTxelj4zp0z2IYZoK7lQGBdbiMtbxiaAPoWjmOE+JSgcIgIswWJ4N+pMu0oCG1Ov
-        Yd8yYyOA==;
-Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
-        by desiato.infradead.org with esmtpsa (Exim 4.96 #2 (Red Hat Linux))
-        id 1qJ7b4-002How-0E;
-        Tue, 11 Jul 2023 07:15:43 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+        Tue, 11 Jul 2023 04:13:04 -0400
+Received: from madras.collabora.co.uk (madras.collabora.co.uk [46.235.227.172])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F378FE3;
+        Tue, 11 Jul 2023 01:13:02 -0700 (PDT)
+Received: from [192.168.1.100] (2-237-20-237.ip236.fastwebnet.it [2.237.20.237])
+        (using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
          key-exchange X25519 server-signature RSA-PSS (4096 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id BDBF23002B1;
-        Tue, 11 Jul 2023 09:15:40 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id A67B6240EBDA9; Tue, 11 Jul 2023 09:15:40 +0200 (CEST)
-Date:   Tue, 11 Jul 2023 09:15:40 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Masami Hiramatsu <mhiramat@kernel.org>
-Cc:     Petr Pavlu <petr.pavlu@suse.com>, tglx@linutronix.de,
-        mingo@redhat.com, bp@alien8.de, dave.hansen@linux.intel.com,
-        hpa@zytor.com, samitolvanen@google.com, x86@kernel.org,
-        linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [RFC PATCH 2/2] x86/kprobes: Prohibit probing on compiler
- generated CFI checking code
-Message-ID: <20230711071540.GC3062772@hirez.programming.kicks-ass.net>
-References: <168899125356.80889.17967397360941194229.stgit@devnote2>
- <168899127520.80889.15418363018799407058.stgit@devnote2>
- <20230710161643.GB3040258@hirez.programming.kicks-ass.net>
- <20230711085837.fac80c964ea7667cb75bd6e5@kernel.org>
+        (No client certificate requested)
+        (Authenticated sender: kholk11)
+        by madras.collabora.co.uk (Postfix) with ESMTPSA id 6971C660700A;
+        Tue, 11 Jul 2023 09:12:58 +0100 (BST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+        s=mail; t=1689063180;
+        bh=2+yn6FDwMd8voKMx1WPt05JiOyMTQxbLsZaEtvbtNN4=;
+        h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+        b=Fx8WIExUEuJPaY5MFu8knfLP/k0C26AMfNb/AvH/Fmm0WSmwyzjbdouviC0vRIt5c
+         MKvJLE8w0cLrlZEwxmbFWfOjjLGUQZgFi0o1pLWqgdMYxBGlFBGIjiNaupLZ6FnB33
+         j1HPiXlommzYaYv6ce4cvKcTdjN1ewdnVTlkRjRRehst4X7XEwQxnR9ySh21JtPk6b
+         7KLhT/OtiV9F5v6WVi5j7pxhtZflk0tkK/vKZu9Q314nRK+CtbZPcevQ7M0A64UCcq
+         2GUJjcluoW7Hk+VgSk0dx0uk8kgwhRiKCYyXOMoe3dlhEE5DcTiXTswvygvLYV31mr
+         rt/T478FT4VDw==
+Message-ID: <f0b9e2e4-b2c0-4336-0ec4-5afd9f1b6c72@collabora.com>
+Date:   Tue, 11 Jul 2023 10:12:55 +0200
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230711085837.fac80c964ea7667cb75bd6e5@kernel.org>
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.12.0
+Subject: Re: [PATCH v2 01/15] spi: Remove unneeded OF node NULL checks
+Content-Language: en-US
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Mark Brown <broonie@kernel.org>,
+        Cristian Ciocaltea <cristian.ciocaltea@collabora.com>,
+        Yang Yingliang <yangyingliang@huawei.com>,
+        Amit Kumar Mahapatra via Alsa-devel 
+        <alsa-devel@alsa-project.org>,
+        Neil Armstrong <neil.armstrong@linaro.org>,
+        Tharun Kumar P <tharunkumar.pasumarthi@microchip.com>,
+        Vijaya Krishna Nivarthi <quic_vnivarth@quicinc.com>,
+        =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig@pengutronix.de>,
+        linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-amlogic@lists.infradead.org,
+        linux-mediatek@lists.infradead.org, linux-arm-msm@vger.kernel.org,
+        linux-rockchip@lists.infradead.org,
+        linux-riscv@lists.infradead.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-trace-kernel@vger.kernel.org, netdev@vger.kernel.org
+Cc:     Sanjay R Mehta <sanju.mehta@amd.com>,
+        Radu Pirea <radu_nicolae.pirea@upb.ro>,
+        Nicolas Ferre <nicolas.ferre@microchip.com>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Claudiu Beznea <claudiu.beznea@microchip.com>,
+        Tudor Ambarus <tudor.ambarus@linaro.org>,
+        Serge Semin <fancer.lancer@gmail.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Kevin Hilman <khilman@baylibre.com>,
+        Jerome Brunet <jbrunet@baylibre.com>,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <andersson@kernel.org>,
+        Konrad Dybcio <konrad.dybcio@linaro.org>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Orson Zhai <orsonzhai@gmail.com>,
+        Baolin Wang <baolin.wang@linux.alibaba.com>,
+        Chunyan Zhang <zhang.lyra@gmail.com>,
+        Alain Volmat <alain.volmat@foss.st.com>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue <alexandre.torgue@foss.st.com>,
+        Max Filippov <jcmvbkbc@gmail.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Richard Cochran <richardcochran@gmail.com>
+References: <20230710154932.68377-1-andriy.shevchenko@linux.intel.com>
+ <20230710154932.68377-2-andriy.shevchenko@linux.intel.com>
+From:   AngeloGioacchino Del Regno 
+        <angelogioacchino.delregno@collabora.com>
+In-Reply-To: <20230710154932.68377-2-andriy.shevchenko@linux.intel.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On Tue, Jul 11, 2023 at 08:58:37AM +0900, Masami Hiramatsu wrote:
-
-> > Hmm, so I was thinking something like the below, which also catches
-> > things when we rewrite kCFI to FineIBT, except I don't think we care if
-> > the FineIBT callsite gets re-written. FineIBT only relies on the __cfi_
-> > symbol not getting poked at (which the previous patches should ensure).
+Il 10/07/23 17:49, Andy Shevchenko ha scritto:
+> In the couple of places the NULL check of OF node is implied by the call
+> that takes it as a parameter. Drop the respective duplicate checks.
 > 
-> Oh, is FineIBT different from kCFI? I thought those are same. But anyway
-> for kCFI=y && FineIBT=n case, I think this code still needed.
+> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 
-Ah, I forgot to answer your other question; FineIBT is dynamically
-patched since it relies on optional hardware features, only if the
-hardware has IBT support can FineIBT work.
+Validated against spi-mt65xx, spi-mt7621, spi-mtk-nor, spi-mtk-snfi;
 
-So yeah, your check is definitely needed. And I think it'll 'gracefully'
-fail when FineIBT is patched in because the instructions aren't exactly
-the same.
+Reviewed-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com> # 
+MediaTek
 
-And since FineIBT has most of the magic in the __cfi_ prefix, which
-isn't patched per the previous patch, I think we're good on the call-site.
-
-> > So I tihnk I'm ok with the above, just adding the below for reference
-> > (completely untested and everything).
+> ---
+>   drivers/spi/spi.c | 5 +----
+>   1 file changed, 1 insertion(+), 4 deletions(-)
 > 
-> I wonder the distance can be used outside of x86. CFI implementation
-> depends on the arch?
+> diff --git a/drivers/spi/spi.c b/drivers/spi/spi.c
+> index 9291b2a0e887..8f3282a71c63 100644
+> --- a/drivers/spi/spi.c
+> +++ b/drivers/spi/spi.c
+> @@ -2399,9 +2399,6 @@ static void of_register_spi_devices(struct spi_controller *ctlr)
+>   	struct spi_device *spi;
+>   	struct device_node *nc;
+>   
+> -	if (!ctlr->dev.of_node)
+> -		return;
+> -
+>   	for_each_available_child_of_node(ctlr->dev.of_node, nc) {
+>   		if (of_node_test_and_set_flag(nc, OF_POPULATED))
+>   			continue;
+> @@ -3134,7 +3131,7 @@ int spi_register_controller(struct spi_controller *ctlr)
+>   		if (WARN(id < 0, "couldn't get idr"))
+>   			return id == -ENOSPC ? -EBUSY : id;
+>   		ctlr->bus_num = id;
+> -	} else if (ctlr->dev.of_node) {
+> +	} else {
+>   		/* Allocate dynamic bus number using Linux idr */
+>   		id = of_alias_get_id(ctlr->dev.of_node, "spi");
+>   		if (id >= 0) {
 
-Currently only arm64 and x86_64 have CFI, and while the particulars are a
-little different, they do have a lot in common, including the reporting.
-IIRC the arm64 variant is a little simpler because of fixed instruction
-size. There is no worry someone will jump in the middle of an
-instruction stream.
+
 
