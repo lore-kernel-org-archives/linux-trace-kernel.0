@@ -2,86 +2,89 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C88D4EB64DA
-	for <linux-trace-kernel@archiver.kernel.org>; Wed, 12 Jul 2023 23:40:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 83421EB64DD
+	for <linux-trace-kernel@archiver.kernel.org>; Wed, 12 Jul 2023 23:45:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231359AbjGLXky (ORCPT
+        id S233297AbjGLXo7 (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Wed, 12 Jul 2023 19:40:54 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48768 "EHLO
+        Wed, 12 Jul 2023 19:44:59 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50458 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230434AbjGLXkx (ORCPT
+        with ESMTP id S233281AbjGLXo4 (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Wed, 12 Jul 2023 19:40:53 -0400
-Received: from mail-oa1-x2c.google.com (mail-oa1-x2c.google.com [IPv6:2001:4860:4864:20::2c])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3D7F219B4
-        for <linux-trace-kernel@vger.kernel.org>; Wed, 12 Jul 2023 16:40:51 -0700 (PDT)
-Received: by mail-oa1-x2c.google.com with SMTP id 586e51a60fabf-1b3f281c4e1so58005fac.3
-        for <linux-trace-kernel@vger.kernel.org>; Wed, 12 Jul 2023 16:40:51 -0700 (PDT)
+        Wed, 12 Jul 2023 19:44:56 -0400
+Received: from mail-pf1-x435.google.com (mail-pf1-x435.google.com [IPv6:2607:f8b0:4864:20::435])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 43577213F
+        for <linux-trace-kernel@vger.kernel.org>; Wed, 12 Jul 2023 16:44:46 -0700 (PDT)
+Received: by mail-pf1-x435.google.com with SMTP id d2e1a72fcca58-666eb03457cso112438b3a.1
+        for <linux-trace-kernel@vger.kernel.org>; Wed, 12 Jul 2023 16:44:46 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=purestorage.com; s=google2022; t=1689205250; x=1691797250;
+        d=chromium.org; s=google; t=1689205485; x=1691797485;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=gX10h/u2AgEKQyI33m5MeDdClug4BRazkNImVUptCuk=;
-        b=fwTU2bLGr7Sk+sKJD1ewW671eMhXay4oAa1T3Er6P0BwrI6gCXNWhwwv9QOMBVCLFI
-         TFlkISyQzRlJU9ur4/mXxQ38KDlNXjPb0G+/1cD2zdTUAYP5FNtGeGzmRG7SJXzbaEt+
-         pVJAKZ6IHsRtL0ndsNj2ASJ1X47/D8wGeTiDYhxBUQt9Z9ooyIlIkGYN0AipJodyxsP/
-         48TElYA+FrnP9A3Bikz32B9SxHqfIQb4MvooCpNfdqgZGOIv3H4ySmZjCqEJGfqyPAi/
-         mgaPYbQLsFBE79LUdZcsIQH4c5uDSDf9J6+MJ4ghjyhEP+zXlpRp6qMjiZ0aj10mvUUh
-         Q9MQ==
+        bh=e2x+ltqpxVqFqamIdgfkuygPfrt3KBuJFxkfy8ylBDE=;
+        b=eWnFNe7SQNBtWjNYtEgRxZP1V7Dwz6vm7srAxhyEqqJg5ytAHwWaCWq8C9dsq0CR9B
+         kZ40nSCLfac/qsKtXdaSt7YsfLPJ9Zyz66vVoyukagRMJwAfXiq0Fzz6FnPHjsyPItuE
+         B1/N2dHSOwEw7xphHwoLAwAixm9PlGQm789PQ=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1689205250; x=1691797250;
+        d=1e100.net; s=20221208; t=1689205485; x=1691797485;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=gX10h/u2AgEKQyI33m5MeDdClug4BRazkNImVUptCuk=;
-        b=iIGlXh328nGxZd86/036qVueMEvDt3hQ0WeIeoC0Mqgp6K3K2SmD4oE/zkVu7M+RiW
-         xrNUEkS8bXUI3v08zK5npZQJHoiuZhE91IWlSS3/907WSiKRfX/qVlEto6USejrdwjmW
-         AgSS6YcMKxQQIN+34S1mjuh7WAsUnk2gFkDhLqXXa+0MD2hy3CmcZJCoUNgZti4/RQUJ
-         xkY9v3np5usV27aJH4jSDqyBhQkgCEZ44kRm63uE6Y3LvTQPMfIu92L54RSwbf83NzAI
-         YR4/jKTFtumN8Ymy5SPYDbPSARfqckYPl5noc/LT1jGFcncSQqIukMDyLQ8/4mEDIvf4
-         gKNQ==
-X-Gm-Message-State: ABy/qLZQKKZVeo72huQjUTNm9nLuoD9crdCMxCt7vvP3nde8jx9/A0b2
-        BhQ1NDQo0PbOZoNH3r/f1jSB6Q==
-X-Google-Smtp-Source: APBJJlEPB6IkUH0IphZLgS++VMmg/0wihL5I3IzhQWj/WdLcmXqOlQ68mI8W/UKLavpRhWSGy69Hbw==
-X-Received: by 2002:a05:6871:20f:b0:1b0:5fc0:e2b5 with SMTP id t15-20020a056871020f00b001b05fc0e2b5mr170509oad.53.1689205250432;
-        Wed, 12 Jul 2023 16:40:50 -0700 (PDT)
-Received: from medusa.lab.kspace.sh (c-98-207-191-243.hsd1.ca.comcast.net. [98.207.191.243])
-        by smtp.googlemail.com with ESMTPSA id t5-20020a17090a3b4500b0023fcece8067sm4559014pjf.2.2023.07.12.16.40.49
+        bh=e2x+ltqpxVqFqamIdgfkuygPfrt3KBuJFxkfy8ylBDE=;
+        b=XqYkyRehweMKOQxDYJq1Q+uYNFvgYlyMGWLmXbmU5jWZaTODocHFdkc0pC9BcnE0dZ
+         dFd0XB2I0WWQ8EeIr712zDujjrdFvBY85xhil3syWVQi3Y2iGwbwvkv/gBaY53H1wAUp
+         /+fuvgpzhEy9ry8HnJowv3TwoDCRyjdgXlPctqhIt/BAr2JuWq02QChlP86562qJXBvg
+         LmUYcmGcvbk9RxkFdgtte1nP72Bmm464HpTr9hy61kygthrBJsjrwZfIpE0KOPhv2do2
+         9C7QA4YK4uSs4WiM6ReutxPoQfenoBf0l1jnf7EezFImaAEdxZIM6ca/CBuobuKaDUE9
+         hsRg==
+X-Gm-Message-State: ABy/qLbqT8+VvYMYrC1agxa++Id6jA3OCUmoCBIJsWy1/oV4yJdP+JLm
+        wmEbXorHlr1U9RkEBgXGLHu8qw==
+X-Google-Smtp-Source: APBJJlHKXFXT+3vQO6u1MtO+fd+vDgoN5oWHpeMsy44Y47+W6SCldG9VCty9uD8GsegZWrC3T4Gi8w==
+X-Received: by 2002:a05:6a21:6d9b:b0:12e:f6e6:882a with SMTP id wl27-20020a056a216d9b00b0012ef6e6882amr20160956pzb.32.1689205485375;
+        Wed, 12 Jul 2023 16:44:45 -0700 (PDT)
+Received: from www.outflux.net (198-0-35-241-static.hfc.comcastbusiness.net. [198.0.35.241])
+        by smtp.gmail.com with ESMTPSA id n16-20020a170902e55000b001b89891bfc4sm4461515plf.199.2023.07.12.16.44.44
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 12 Jul 2023 16:40:50 -0700 (PDT)
-Date:   Wed, 12 Jul 2023 16:40:47 -0700
-From:   Mohamed Khalfella <mkhalfella@purestorage.com>
-To:     Steven Rostedt <rostedt@goodmis.org>
-Cc:     stable@vger.kernel.org, Masami Hiramatsu <mhiramat@kernel.org>,
-        "open list:TRACING" <linux-kernel@vger.kernel.org>,
-        "open list:TRACING" <linux-trace-kernel@vger.kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Tom Zanussi <zanussi@kernel.org>
-Subject: Re: [PATCH] tracing/histograms: Add histograms to hist_vars if they
- have referenced variables
-Message-ID: <20230712234047.GA3521501@medusa>
-References: <20230712223021.636335-1-mkhalfella@purestorage.com>
- <20230712190723.26ebadea@gandalf.local.home>
+        Wed, 12 Jul 2023 16:44:44 -0700 (PDT)
+Date:   Wed, 12 Jul 2023 16:44:44 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     Azeem Shaikh <azeemshaikh38@gmail.com>
+Cc:     Jens Axboe <axboe@kernel.dk>, linux-hardening@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+        Steven Rostedt <rostedt@goodmis.org>
+Subject: Re: [PATCH 0/2] kyber, blk-wbt: Replace strlcpy with strscpy
+Message-ID: <202307121644.75BD707@keescook>
+References: <20230703172159.3668349-1-azeemshaikh38@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20230712190723.26ebadea@gandalf.local.home>
+In-Reply-To: <20230703172159.3668349-1-azeemshaikh38@gmail.com>
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On 2023-07-12 19:07:23 -0400, Steven Rostedt wrote:
-> And Of course you send this to me right after I send a pull request with
-> fixes to Linus :-p
+On Mon, Jul 03, 2023 at 05:21:57PM +0000, Azeem Shaikh wrote:
+> This patch series replaces strlcpy in the kyber and blk-wbt tracing subsystems wherever trivial
+> replacement is possible, i.e return value from strlcpy is unused. The patches
+> themselves are independent of each other and are applied to different subsystems. They are
+> included as a series for ease of review.
 > 
-> Thanks for the patch. I just did a quick test, and sure enough I can
-> reproduce the bug, and your patch makes the bug go away.
+> Note to reviewers: MAINTAINERS file does not specify clear ownership of
+> these files so I have addressed these to the latest committer for these
+> files: Jens Axboe <axboe@kernel.dk>.
 > 
-> I run this through my full test suite, and then send Linus another pull
-> request.
-Thanks for the quick response!
+> Azeem Shaikh (2):
+>   kyber: Replace strlcpy with strscpy
+>   blk-wbt: Replace strlcpy with strscpy
 > 
-> Thanks!
-> 
-> -- Steve
+>  include/trace/events/kyber.h | 8 ++++----
+>  include/trace/events/wbt.h   | 8 ++++----
+>  2 files changed, 8 insertions(+), 8 deletions(-)
+
+These looks correct to me. I can take them if no one else wants them.
+
+Reviewed-by: Kees Cook <keescook@chromium.org>
+
+-- 
+Kees Cook
