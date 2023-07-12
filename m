@@ -2,147 +2,185 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CF698EB64DA
-	for <linux-trace-kernel@archiver.kernel.org>; Wed, 12 Jul 2023 18:26:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F2B03EB64DA
+	for <linux-trace-kernel@archiver.kernel.org>; Wed, 12 Jul 2023 22:31:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232565AbjGLS0O (ORCPT
+        id S229904AbjGLWbD (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Wed, 12 Jul 2023 14:26:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37324 "EHLO
+        Wed, 12 Jul 2023 18:31:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38074 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232558AbjGLS0N (ORCPT
+        with ESMTP id S229480AbjGLWbB (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Wed, 12 Jul 2023 14:26:13 -0400
-Received: from mail-pf1-x436.google.com (mail-pf1-x436.google.com [IPv6:2607:f8b0:4864:20::436])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E6A501FD6
-        for <linux-trace-kernel@vger.kernel.org>; Wed, 12 Jul 2023 11:26:10 -0700 (PDT)
-Received: by mail-pf1-x436.google.com with SMTP id d2e1a72fcca58-668704a5b5bso6528812b3a.0
-        for <linux-trace-kernel@vger.kernel.org>; Wed, 12 Jul 2023 11:26:10 -0700 (PDT)
+        Wed, 12 Jul 2023 18:31:01 -0400
+Received: from mail-pf1-x42c.google.com (mail-pf1-x42c.google.com [IPv6:2607:f8b0:4864:20::42c])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DC9921FD4
+        for <linux-trace-kernel@vger.kernel.org>; Wed, 12 Jul 2023 15:30:59 -0700 (PDT)
+Received: by mail-pf1-x42c.google.com with SMTP id d2e1a72fcca58-66f5faba829so71290b3a.3
+        for <linux-trace-kernel@vger.kernel.org>; Wed, 12 Jul 2023 15:30:59 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=rivosinc-com.20221208.gappssmtp.com; s=20221208; t=1689186370; x=1691778370;
-        h=content-transfer-encoding:mime-version:message-id:to:from:cc
-         :in-reply-to:subject:date:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=swX/Btqe9SwlapTlO/DIwSPMFx8s3wfg5niuyYAHqCU=;
-        b=t+rGeMqK4FQu3U7IWvo5hWBuuEiCmmtx6poL/uG/sChia7xNUk3OjXe/eY0quvdn3z
-         J123/5f5oYO/dxIPHh21icK7IG4SZCsW7TDCaFEh6ePd5h+7zV6VrHLvNvZ6HjgB0Rfk
-         pHOSJxec/EaLIYDDUUx2eomAS7CkrSFMGdSkIaQ/NARpCUrZ3kyuLxWk8C4gSvBGzf5e
-         jdQbwdsup+JK10w1xzMP8CDroJIDpy439nDIwXhUfaTYVLJE2wO4xW8/mjUDID4cmm4+
-         gSpw7xE+Mm/fQD0dLPdLrV1xLGdywWVEpYLaWqapHsrYVpGo2y6iBuQFoGOgRilvg6Q3
-         WylQ==
+        d=purestorage.com; s=google2022; t=1689201059; x=1691793059;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=W2qLW+xWqeaBsuAVO/VoywBcaG7QxYi7fmeCIr0WMwc=;
+        b=TbQFUtFLbwU7TDPC8QxhPhGpJi0BPb1ijwjnED4ENxZrQK0QcvRhzSXO1UBIRb+cbc
+         iBeZHfOYaGwQvwgNRk92icFO3THYf9uL3lDy2herG3jIqW6ysLTRNxoygV2F1cP9L+HU
+         Adks0CR7uNndBox8FZ0v1Gcm3uFiEfW2ejnCnB0I7+wvCFNqAicCbkKMtwLjRQ/UHY4Q
+         XoHkPW7Pcu96brvv/+Ex5coZFgFGvNrOF+tE2V1HJOaPe/x0sXo4Z/cbXE7Wc+1nz0RH
+         qzS4UfZ9PPaJIFyTJjMSbvregi/NwMCyTBmQRJ8ZnFSnPKtLysY9djTmbn7fHTSgoPay
+         VOlA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1689186370; x=1691778370;
-        h=content-transfer-encoding:mime-version:message-id:to:from:cc
-         :in-reply-to:subject:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=swX/Btqe9SwlapTlO/DIwSPMFx8s3wfg5niuyYAHqCU=;
-        b=YMQ20VWJZd9j7RDZ2lWJn5tndiXDBPvgxkZYXIgX5uzSsp2MjeLFobpBuyPESBHLpD
-         CLl0Ih95btZxEs53Jk9y6R1mp1ZjDE9SktKUaRJAJ8JhCv8ZrcxgGJLgB1dIL9oyPWGG
-         0q1pQb33c8y+ss4RmjXv22NuC/3fKC4Wo3rjaOmqTewXlQ9dZfDa2WbKZ9X3jdVI1L72
-         6fxnloa9/nQ0dJqRXHy1HZKjDeoXREhJRIcrcvdreZ3RcH6l+3DNVp3WaEVg/9/NUI0G
-         UTehDDfH5I7767l/GLgm6dU9Fah7KSmNM1SRMUaQsX62hRggSd7DgZdGEQW0IdlQzBaH
-         8hvw==
-X-Gm-Message-State: ABy/qLYYzPxaUc1Cw1/SdWmQVP+MyXNMJcu3xxdcShBpL75OCjzI1a/T
-        1aZgaaU2DxxduwdauR5Ab0XpDA==
-X-Google-Smtp-Source: APBJJlHAxMXSUIbZXiuDm3AUa5MRO5PMewMy62zRT6aZ+RDrwQLncLwIngEG+ozHai+hqvZIUWsP4Q==
-X-Received: by 2002:a17:902:ce81:b0:1b8:3e15:40e8 with SMTP id f1-20020a170902ce8100b001b83e1540e8mr5333784plg.56.1689186370368;
-        Wed, 12 Jul 2023 11:26:10 -0700 (PDT)
-Received: from localhost ([50.38.6.230])
-        by smtp.gmail.com with ESMTPSA id q15-20020a170902b10f00b001b9da7ae98bsm4291752plr.122.2023.07.12.11.26.09
+        d=1e100.net; s=20221208; t=1689201059; x=1691793059;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=W2qLW+xWqeaBsuAVO/VoywBcaG7QxYi7fmeCIr0WMwc=;
+        b=K0P0Bj6PxjrN279sAQG8N5Mz5jsCYNNAWmGHhsS/d+6srNwiESrW/UqJ180YqCoZ+e
+         LO4LLuqtWC8IXskPDSG8Jan256m77oomepzvn0uGBq8alh7b8DpkrJI8PT5N4/7sQSb0
+         bGtF9uRsNItEdFPM7JY/JqyrsGNaKl7LF1bFNXneoCRlWu7sN8hubfDu8MLtHG8kkF5F
+         30qVgLjauF+tQsUSz0wGY8cZsZYgjzcvSAr6+xbETxsisnt57rcS3qPZQfuTprM8XK28
+         +hk8vV+pVk6Gihg0cOCJH75s/+se9CBxckjp6ssRKDt2BH0v/+FSgAudeZVUyuP5CoWl
+         T1tQ==
+X-Gm-Message-State: ABy/qLa+tmWKGsbqCePzZJptX6QPNeILmBQnlRFW15sr7IP/L73cutIO
+        qacAhouTe9z8/EYZALOEy6uV/g==
+X-Google-Smtp-Source: APBJJlFfCtb8Ua3vLi2bAFf5ko/mxmUMbaSJkh1sMI0yr5Q4addHn/tSt0rMeTlSvqNpd835KjomSA==
+X-Received: by 2002:a05:6a00:24ca:b0:67d:22a6:2f54 with SMTP id d10-20020a056a0024ca00b0067d22a62f54mr19804032pfv.31.1689201059241;
+        Wed, 12 Jul 2023 15:30:59 -0700 (PDT)
+Received: from gaia.lab.kspace.sh (c-98-207-191-243.hsd1.ca.comcast.net. [98.207.191.243])
+        by smtp.googlemail.com with ESMTPSA id d7-20020aa78147000000b0067ea048cf83sm4045714pfn.186.2023.07.12.15.30.58
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 12 Jul 2023 11:26:09 -0700 (PDT)
-Date:   Wed, 12 Jul 2023 11:26:09 -0700 (PDT)
-X-Google-Original-Date: Wed, 12 Jul 2023 11:25:23 PDT (-0700)
-Subject:     Re: [PATCH V11 0/5] riscv: Optimize function trace
-In-Reply-To: <87jzv5q9tv.fsf@all.your.base.are.belong.to.us>
-CC:     suagrfillet@gmail.com, Paul Walmsley <paul.walmsley@sifive.com>,
-        aou@eecs.berkeley.edu, rostedt@goodmis.org, mhiramat@kernel.org,
-        Mark Rutland <mark.rutland@arm.com>, guoren@kernel.org,
-        suagrfillet@gmail.com, Bjorn Topel <bjorn@rivosinc.com>,
-        jszhang@kernel.org, Conor Dooley <conor.dooley@microchip.com>,
-        pulehui@huawei.com, linux-riscv@lists.infradead.org,
-        linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
-        songshuaishuai@tinylab.org, bpf@vger.kernel.org
-From:   Palmer Dabbelt <palmer@rivosinc.com>
-To:     bjorn@kernel.org
-Message-ID: <mhng-a2c88f43-3cf7-4caa-8e4a-b0fc9d7e4628@palmer-ri-x1c9a>
-Mime-Version: 1.0 (MHng)
-Content-Type: text/plain; charset=utf-8; format=flowed
+        Wed, 12 Jul 2023 15:30:58 -0700 (PDT)
+From:   Mohamed Khalfella <mkhalfella@purestorage.com>
+To:     mkhalfella@purestorage.com
+Cc:     stable@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        linux-kernel@vger.kernel.org (open list:TRACING),
+        linux-trace-kernel@vger.kernel.org (open list:TRACING)
+Subject: [PATCH] tracing/histograms: Add histograms to hist_vars if they have referenced variables
+Date:   Wed, 12 Jul 2023 22:30:21 +0000
+Message-Id: <20230712223021.636335-1-mkhalfella@purestorage.com>
+X-Mailer: git-send-email 2.34.1
+MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On Wed, 12 Jul 2023 11:11:08 PDT (-0700), bjorn@kernel.org wrote:
-> Song Shuai <suagrfillet@gmail.com> writes:
->
-> [...]
->
->> Add WITH_DIRECT_CALLS support [3] (patch 3, 4)
->> ==============================================
->
-> We've had some offlist discussions, so here's some input for a wider
-> audience! Most importantly, this is for Palmer, so that this series is
-> not merged until a proper BPF trampoline fix is in place.
->
-> Note that what's currently usable from BPF trampoline *works*. It's
-> when this series is added that it breaks.
->
-> TL;DR This series adds DYNAMIC_FTRACE_WITH_DIRECT_CALLS, which enables
-> fentry/fexit BPF trampoline support. Unfortunately the
-> fexit/BPF_TRAMP_F_SKIP_FRAME parts of the RV BPF trampoline breaks
-> with this addition, and need to be addressed *prior* merging this
-> series. An easy way to reproduce, is just calling any of the kselftest
-> tests that uses fexit patching.
->
-> The issue is around the nop seld, and how a call is done; The nop sled
-> (patchable-function-entry) size changed from 16B to 8B in commit
-> 6724a76cff85 ("riscv: ftrace: Reduce the detour code size to half"), but
-> BPF code still uses the old 16B. So it'll work for BPF programs, but not
-> for regular kernel functions.
->
-> An example:
->
->   | ffffffff80fa4150 <bpf_fentry_test1>:
->   | ffffffff80fa4150:       0001                    nop
->   | ffffffff80fa4152:       0001                    nop
->   | ffffffff80fa4154:       0001                    nop
->   | ffffffff80fa4156:       0001                    nop
->   | ffffffff80fa4158:       1141                    add     sp,sp,-16
->   | ffffffff80fa415a:       e422                    sd      s0,8(sp)
->   | ffffffff80fa415c:       0800                    add     s0,sp,16
->   | ffffffff80fa415e:       6422                    ld      s0,8(sp)
->   | ffffffff80fa4160:       2505                    addw    a0,a0,1
->   | ffffffff80fa4162:       0141                    add     sp,sp,16
->   | ffffffff80fa4164:       8082                    ret
->
-> is patched to:
->
->   | ffffffff80fa4150:  f70c0297                     auipc   t0,-150208512
->   | ffffffff80fa4154:  eb0282e7                     jalr    t0,t0,-336
->
-> The return address to bpf_fentry_test1 is stored in t0 at BPF
-> trampoline entry. Return to the *parent* is in ra. The trampline has
-> to deal with this.
->
-> For BPF_TRAMP_F_SKIP_FRAME/CALL_ORIG, the BPF trampoline will skip too
-> many bytes, and not correctly handle parent calls.
->
-> Further; The BPF trampoline currently has a different way of patching
-> the nops for BPF programs, than what ftrace does. That should be changed
-> to match what ftrace does (auipc/jalr t0).
->
-> To summarize:
->  * Align BPF nop sled with patchable-function-entry: 8B.
->  * Adapt BPF trampoline for 8B nop sleds.
->  * Adapt BPF trampoline t0 return, ra parent scheme.
+Hist triggers can have referenced variables without having direct
+variables fields. This can be the case if referenced variables are added
+for trigger actions. In this case the newly added references will not
+have field variables. Not taking such referenced variables into
+consideration can result in a bug where it would be possible to remove
+hist trigger with variables being refenced. This will result in a bug
+that is easily reproducable like so
 
-Thanks for digging into this one, I agree we need to sort out the BPF 
-breakages before we merge this.  Sounds like there's a rabbit hole here, 
-but hopefully we can get it sorted out.
+$ cd /sys/kernel/tracing
+$ echo 'synthetic_sys_enter char[] comm; long id' >> synthetic_events
+$ echo 'hist:keys=common_pid.execname,id.syscall:vals=hitcount:comm=common_pid.execname' >> events/raw_syscalls/sys_enter/trigger
+$ echo 'hist:keys=common_pid.execname,id.syscall:onmatch(raw_syscalls.sys_enter).synthetic_sys_enter($comm, id)' >> events/raw_syscalls/sys_enter/trigger
+$ echo '!hist:keys=common_pid.execname,id.syscall:vals=hitcount:comm=common_pid.execname' >> events/raw_syscalls/sys_enter/trigger
 
-I've dropped this from patchwork and such, as we'll need at least 
-another spin.
+[  100.263533] ==================================================================
+[  100.264634] BUG: KASAN: slab-use-after-free in resolve_var_refs+0xc7/0x180
+[  100.265520] Read of size 8 at addr ffff88810375d0f0 by task bash/439
+[  100.266320]
+[  100.266533] CPU: 2 PID: 439 Comm: bash Not tainted 6.5.0-rc1 #4
+[  100.267277] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.16.0-20220807_005459-localhost 04/01/2014
+[  100.268561] Call Trace:
+[  100.268902]  <TASK>
+[  100.269189]  dump_stack_lvl+0x4c/0x70
+[  100.269680]  print_report+0xc5/0x600
+[  100.270165]  ? resolve_var_refs+0xc7/0x180
+[  100.270697]  ? kasan_complete_mode_report_info+0x80/0x1f0
+[  100.271389]  ? resolve_var_refs+0xc7/0x180
+[  100.271913]  kasan_report+0xbd/0x100
+[  100.272380]  ? resolve_var_refs+0xc7/0x180
+[  100.272920]  __asan_load8+0x71/0xa0
+[  100.273377]  resolve_var_refs+0xc7/0x180
+[  100.273888]  event_hist_trigger+0x749/0x860
+[  100.274505]  ? kasan_save_stack+0x2a/0x50
+[  100.275024]  ? kasan_set_track+0x29/0x40
+[  100.275536]  ? __pfx_event_hist_trigger+0x10/0x10
+[  100.276138]  ? ksys_write+0xd1/0x170
+[  100.276607]  ? do_syscall_64+0x3c/0x90
+[  100.277099]  ? entry_SYSCALL_64_after_hwframe+0x6e/0xd8
+[  100.277771]  ? destroy_hist_data+0x446/0x470
+[  100.278324]  ? event_hist_trigger_parse+0xa6c/0x3860
+[  100.278962]  ? __pfx_event_hist_trigger_parse+0x10/0x10
+[  100.279627]  ? __kasan_check_write+0x18/0x20
+[  100.280177]  ? mutex_unlock+0x85/0xd0
+[  100.280660]  ? __pfx_mutex_unlock+0x10/0x10
+[  100.281200]  ? kfree+0x7b/0x120
+[  100.281619]  ? ____kasan_slab_free+0x15d/0x1d0
+[  100.282197]  ? event_trigger_write+0xac/0x100
+[  100.282764]  ? __kasan_slab_free+0x16/0x20
+[  100.283293]  ? __kmem_cache_free+0x153/0x2f0
+[  100.283844]  ? sched_mm_cid_remote_clear+0xb1/0x250
+[  100.284550]  ? __pfx_sched_mm_cid_remote_clear+0x10/0x10
+[  100.285221]  ? event_trigger_write+0xbc/0x100
+[  100.285781]  ? __kasan_check_read+0x15/0x20
+[  100.286321]  ? __bitmap_weight+0x66/0xa0
+[  100.286833]  ? _find_next_bit+0x46/0xe0
+[  100.287334]  ? task_mm_cid_work+0x37f/0x450
+[  100.287872]  event_triggers_call+0x84/0x150
+[  100.288408]  trace_event_buffer_commit+0x339/0x430
+[  100.289073]  ? ring_buffer_event_data+0x3f/0x60
+[  100.292189]  trace_event_raw_event_sys_enter+0x8b/0xe0
+[  100.295434]  syscall_trace_enter.constprop.0+0x18f/0x1b0
+[  100.298653]  syscall_enter_from_user_mode+0x32/0x40
+[  100.301808]  do_syscall_64+0x1a/0x90
+[  100.304748]  entry_SYSCALL_64_after_hwframe+0x6e/0xd8
+[  100.307775] RIP: 0033:0x7f686c75c1cb
+[  100.310617] Code: 73 01 c3 48 8b 0d 65 3c 10 00 f7 d8 64 89 01 48 83 c8 ff c3 66 2e 0f 1f 84 00 00 00 00 00 90 f3 0f 1e fa b8 21 00 00 00 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 8b 0d 35 3c 10 00 f7 d8 64 89 01 48
+[  100.317847] RSP: 002b:00007ffc60137a38 EFLAGS: 00000246 ORIG_RAX: 0000000000000021
+[  100.321200] RAX: ffffffffffffffda RBX: 000055f566469ea0 RCX: 00007f686c75c1cb
+[  100.324631] RDX: 0000000000000001 RSI: 0000000000000001 RDI: 000000000000000a
+[  100.328104] RBP: 00007ffc60137ac0 R08: 00007f686c818460 R09: 000000000000000a
+[  100.331509] R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000009
+[  100.334992] R13: 0000000000000007 R14: 000000000000000a R15: 0000000000000007
+[  100.338381]  </TASK>
 
-> Cheers,
-> Björn
+We hit the bug because when second hist trigger has was created
+has_hist_vars() returned false because hist trigger did not have
+variables. As a result of that save_hist_vars() was not called to add
+the trigger to trace_array->hist_vars. Later on when we attempted to
+remove the first histogram find_any_var_ref() failed to detect it is
+being used because it did not find the second trigger in hist_vars list.
+
+With this change we wait until trigger actions are created so we can take
+into consideration if hist trigger has variable references. Also, now we
+check the return value of save_hist_vars() and fail trigger creation if
+save_hist_vars() fails.
+
+Signed-off-by: Mohamed Khalfella <mkhalfella@purestorage.com>
+Cc: stable@vger.kernel.org
+---
+ kernel/trace/trace_events_hist.c | 8 +++++---
+ 1 file changed, 5 insertions(+), 3 deletions(-)
+
+diff --git a/kernel/trace/trace_events_hist.c b/kernel/trace/trace_events_hist.c
+index b97d3ad832f1..c8c61381eba4 100644
+--- a/kernel/trace/trace_events_hist.c
++++ b/kernel/trace/trace_events_hist.c
+@@ -6663,13 +6663,15 @@ static int event_hist_trigger_parse(struct event_command *cmd_ops,
+ 	if (get_named_trigger_data(trigger_data))
+ 		goto enable;
+ 
+-	if (has_hist_vars(hist_data))
+-		save_hist_vars(hist_data);
+-
+ 	ret = create_actions(hist_data);
+ 	if (ret)
+ 		goto out_unreg;
+ 
++	if (has_hist_vars(hist_data) || hist_data->n_var_refs) {
++		if (save_hist_vars(hist_data))
++			goto out_unreg;
++	}
++
+ 	ret = tracing_map_init(hist_data->map);
+ 	if (ret)
+ 		goto out_unreg;
+-- 
+2.34.1
+
