@@ -2,60 +2,126 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 81323C001DC
-	for <linux-trace-kernel@archiver.kernel.org>; Wed, 12 Jul 2023 16:15:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DA99EB64DD
+	for <linux-trace-kernel@archiver.kernel.org>; Wed, 12 Jul 2023 18:11:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232210AbjGLQPT (ORCPT
+        id S233027AbjGLSLO (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Wed, 12 Jul 2023 12:15:19 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50080 "EHLO
+        Wed, 12 Jul 2023 14:11:14 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60030 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231774AbjGLQPK (ORCPT
+        with ESMTP id S232720AbjGLSLN (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Wed, 12 Jul 2023 12:15:10 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A9DA22100;
-        Wed, 12 Jul 2023 09:14:51 -0700 (PDT)
+        Wed, 12 Jul 2023 14:11:13 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3DA181BF6;
+        Wed, 12 Jul 2023 11:11:12 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange X25519 server-signature RSA-PSS (2048 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 0A87F6182F;
-        Wed, 12 Jul 2023 16:14:51 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BCC67C433C8;
-        Wed, 12 Jul 2023 16:14:49 +0000 (UTC)
-Date:   Wed, 12 Jul 2023 12:14:48 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Zheng Yejian <zhengyejian1@huawei.com>
-Cc:     <mhiramat@kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-trace-kernel@vger.kernel.org>
-Subject: Re: [PATCH] ring-buffer: Fix deadloop issue on reading trace_pipe
-Message-ID: <20230712121448.628ad188@gandalf.local.home>
-In-Reply-To: <63ff741f-b781-37da-3f47-15d1a8ff76a4@huawei.com>
-References: <20230708225144.3785600-1-zhengyejian1@huawei.com>
-        <20230709154523.32dc89c2@rorschach.local.home>
-        <63ff741f-b781-37da-3f47-15d1a8ff76a4@huawei.com>
-X-Mailer: Claws Mail 3.19.1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 900F8618BF;
+        Wed, 12 Jul 2023 18:11:11 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A8820C433CC;
+        Wed, 12 Jul 2023 18:11:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1689185471;
+        bh=md16UXiz1GpqNsTJoRJ0ef7Vy1yKmHuNjtAKI4WEaXA=;
+        h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+        b=mhFFHJgPREKia8kCFwCEiKafU251CX5GYE5LqijBDg+dm+e72t5vAmLdYnHsl9XKc
+         SFQlLgzU8RWnx/4PoEjdq6iSLFjYHHDR3SLRXQ/stR2bVu4CihWqET20bWwiVb4alP
+         rKZfvOdQMmDyEiSqEaVSAewxP93NSMZ4Dr4DAXd8mZrYMpgSf38vtiQwgNj3g/5LGD
+         Rb8OgSZvyJr7yreNyql42EjQ9YqGu+zEAjUtvdlSfdBPGgRzLrXNnyOX5M/s86l6W7
+         5w8yW3OeqXI8FaD1ZEx6sgthc2drs4aS7AWR5gtTAe8S525qiMVA071l/kXAh3ng1x
+         gkbtcsPXVyMFw==
+From:   =?utf-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn@kernel.org>
+To:     Song Shuai <suagrfillet@gmail.com>, paul.walmsley@sifive.com,
+        palmer@dabbelt.com, aou@eecs.berkeley.edu, rostedt@goodmis.org,
+        mhiramat@kernel.org, mark.rutland@arm.com, guoren@kernel.org,
+        suagrfillet@gmail.com, bjorn@rivosinc.com, jszhang@kernel.org,
+        conor.dooley@microchip.com, Pu Lehui <pulehui@huawei.com>,
+        palmer@rivosinc.com
+Cc:     linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-trace-kernel@vger.kernel.org, songshuaishuai@tinylab.org,
+        bpf@vger.kernel.org
+Subject: Re: [PATCH V11 0/5] riscv: Optimize function trace
+In-Reply-To: <20230627111612.761164-1-suagrfillet@gmail.com>
+References: <20230627111612.761164-1-suagrfillet@gmail.com>
+Date:   Wed, 12 Jul 2023 20:11:08 +0200
+Message-ID: <87jzv5q9tv.fsf@all.your.base.are.belong.to.us>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On Mon, 10 Jul 2023 09:37:52 +0800
-Zheng Yejian <zhengyejian1@huawei.com> wrote:
+Song Shuai <suagrfillet@gmail.com> writes:
 
-> teve, IIUC, following tags should be added?
-> 
-> Cc: stable@vger.kernel.org
-> Fixes: 48fdc72f23ad ("ring-buffer: Fix accounting of entries when 
-> removing pages")
-> Fixes: 83f40318dab0 ("ring-buffer: Make removal of ring buffer pages 
-> atomic")
+[...]
 
-I actually added:
+> Add WITH_DIRECT_CALLS support [3] (patch 3, 4)
+> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
 
-Fixes: a5fb833172eca ("ring-buffer: Fix uninitialized read_stamp")
+We've had some offlist discussions, so here's some input for a wider
+audience! Most importantly, this is for Palmer, so that this series is
+not merged until a proper BPF trampoline fix is in place.
 
--- Steve
+Note that what's currently usable from BPF trampoline *works*. It's
+when this series is added that it breaks.
+
+TL;DR This series adds DYNAMIC_FTRACE_WITH_DIRECT_CALLS, which enables
+fentry/fexit BPF trampoline support. Unfortunately the
+fexit/BPF_TRAMP_F_SKIP_FRAME parts of the RV BPF trampoline breaks
+with this addition, and need to be addressed *prior* merging this
+series. An easy way to reproduce, is just calling any of the kselftest
+tests that uses fexit patching.
+
+The issue is around the nop seld, and how a call is done; The nop sled
+(patchable-function-entry) size changed from 16B to 8B in commit
+6724a76cff85 ("riscv: ftrace: Reduce the detour code size to half"), but
+BPF code still uses the old 16B. So it'll work for BPF programs, but not
+for regular kernel functions.
+
+An example:
+
+  | ffffffff80fa4150 <bpf_fentry_test1>:
+  | ffffffff80fa4150:       0001                    nop
+  | ffffffff80fa4152:       0001                    nop
+  | ffffffff80fa4154:       0001                    nop
+  | ffffffff80fa4156:       0001                    nop
+  | ffffffff80fa4158:       1141                    add     sp,sp,-16
+  | ffffffff80fa415a:       e422                    sd      s0,8(sp)
+  | ffffffff80fa415c:       0800                    add     s0,sp,16
+  | ffffffff80fa415e:       6422                    ld      s0,8(sp)
+  | ffffffff80fa4160:       2505                    addw    a0,a0,1
+  | ffffffff80fa4162:       0141                    add     sp,sp,16
+  | ffffffff80fa4164:       8082                    ret
+
+is patched to:
+
+  | ffffffff80fa4150:  f70c0297                     auipc   t0,-150208512
+  | ffffffff80fa4154:  eb0282e7                     jalr    t0,t0,-336
+
+The return address to bpf_fentry_test1 is stored in t0 at BPF
+trampoline entry. Return to the *parent* is in ra. The trampline has
+to deal with this.
+
+For BPF_TRAMP_F_SKIP_FRAME/CALL_ORIG, the BPF trampoline will skip too
+many bytes, and not correctly handle parent calls.
+
+Further; The BPF trampoline currently has a different way of patching
+the nops for BPF programs, than what ftrace does. That should be changed
+to match what ftrace does (auipc/jalr t0).
+
+To summarize:
+ * Align BPF nop sled with patchable-function-entry: 8B.
+ * Adapt BPF trampoline for 8B nop sleds.
+ * Adapt BPF trampoline t0 return, ra parent scheme.
+=20
+
+Cheers,
+Bj=C3=B6rn
+
+
