@@ -2,39 +2,38 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 66B91EB64D9
-	for <linux-trace-kernel@archiver.kernel.org>; Wed, 12 Jul 2023 12:37:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 87283EB64D9
+	for <linux-trace-kernel@archiver.kernel.org>; Wed, 12 Jul 2023 14:52:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232119AbjGLMhe (ORCPT
+        id S229536AbjGLOwl (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Wed, 12 Jul 2023 08:37:34 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53182 "EHLO
+        Wed, 12 Jul 2023 10:52:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45714 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231608AbjGLMhc (ORCPT
+        with ESMTP id S229473AbjGLOwk (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Wed, 12 Jul 2023 08:37:32 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 555FF1718;
-        Wed, 12 Jul 2023 05:37:31 -0700 (PDT)
+        Wed, 12 Jul 2023 10:52:40 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2025E19A0;
+        Wed, 12 Jul 2023 07:52:39 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange X25519 server-signature RSA-PSS (2048 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id E7C21617BF;
-        Wed, 12 Jul 2023 12:37:30 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C5E45C433C7;
-        Wed, 12 Jul 2023 12:37:29 +0000 (UTC)
-Date:   Wed, 12 Jul 2023 08:37:27 -0400
+        by dfw.source.kernel.org (Postfix) with ESMTPS id A95E4617F2;
+        Wed, 12 Jul 2023 14:52:38 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5C6BAC433C8;
+        Wed, 12 Jul 2023 14:52:37 +0000 (UTC)
+Date:   Wed, 12 Jul 2023 10:52:35 -0400
 From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Zheng Yejian <zhengyejian1@huawei.com>
-Cc:     <linux-kernel@vger.kernel.org>,
-        <linux-trace-kernel@vger.kernel.org>, <mhiramat@kernel.org>
-Subject: Re: [PATCH v5] ftrace: Fix possible warning on checking all pages
- used in ftrace_process_locs()
-Message-ID: <20230712083727.405920c4@gandalf.local.home>
-In-Reply-To: <20230712060452.3175675-1-zhengyejian1@huawei.com>
-References: <20230711095802.71406422@gandalf.local.home>
-        <20230712060452.3175675-1-zhengyejian1@huawei.com>
+To:     LKML <linux-kernel@vger.kernel.org>,
+        Linux Trace Kernel <linux-trace-kernel@vger.kernel.org>
+Cc:     Masami Hiramatsu <mhiramat@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Sven Schnelle <svens@linux.ibm.com>
+Subject: [PATCH] tracing: Stop FORTIFY_SOURCE complaining about stack trace
+ caller
+Message-ID: <20230712105235.5fc441aa@gandalf.local.home>
 X-Mailer: Claws Mail 3.19.1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
@@ -43,60 +42,107 @@ Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On Wed, 12 Jul 2023 14:04:52 +0800
-Zheng Yejian <zhengyejian1@huawei.com> wrote:
+From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
 
-> --- a/kernel/trace/ftrace.c
-> +++ b/kernel/trace/ftrace.c
-> @@ -3305,6 +3305,22 @@ static int ftrace_allocate_records(struct ftrace_page *pg, int count)
->  	return cnt;
->  }
->  
-> +static void ftrace_free_pages(struct ftrace_page *pages)
-> +{
-> +	struct ftrace_page *pg = pages;
-> +
-> +	while (pg) {
-> +		if (pg->records) {
-> +			free_pages((unsigned long)pg->records, pg->order);
-> +			ftrace_number_of_pages -= 1 << pg->order;
-> +		}
-> +		pages = pg->next;
-> +		kfree(pg);
-> +		pg = pages;
-> +		ftrace_number_of_groups--;
-> +	}
-> +}
-> +
->  static struct ftrace_page *
->  ftrace_allocate_pages(unsigned long num_to_init)
->  {
-> @@ -3343,17 +3359,7 @@ ftrace_allocate_pages(unsigned long num_to_init)
->  	return start_pg;
->  
->   free_pages:
-> -	pg = start_pg;
-> -	while (pg) {
-> -		if (pg->records) {
-> -			free_pages((unsigned long)pg->records, pg->order);
-> -			ftrace_number_of_pages -= 1 << pg->order;
-> -		}
-> -		start_pg = pg->next;
-> -		kfree(pg);
-> -		pg = start_pg;
-> -		ftrace_number_of_groups--;
-> -	}
-> +	ftrace_free_pages(start_pg);
->  	pr_info("ftrace: FAILED to allocate memory for functions\n");
->  	return NULL;
->  }
+The stack_trace event is an event created by the tracing subsystem to
+store stack traces. It originally just contained a hard coded array of 8
+words to hold the stack, and a "size" to know how many entries are there.
+This is exported to user space as:
 
-Nice little clean up. I had already started testing your previous patch,
-but due to my test machine running out of disk space (perf doesn't clean up
-its .debug directory :-p), I have to rerun it.
+name: kernel_stack
+ID: 4
+format:
+	field:unsigned short common_type;	offset:0;	size:2;	signed:0;
+	field:unsigned char common_flags;	offset:2;	size:1;	signed:0;
+	field:unsigned char common_preempt_count;	offset:3;	size:1;	signed:0;
+	field:int common_pid;	offset:4;	size:4;	signed:1;
 
-I'll apply this one for the new testing.
+	field:int size;	offset:8;	size:4;	signed:1;
+	field:unsigned long caller[8];	offset:16;	size:64;	signed:0;
 
-Thanks!
+print fmt: "\t=> %ps\n\t=> %ps\n\t=> %ps\n" "\t=> %ps\n\t=> %ps\n\t=> %ps\n" "\t=> %ps\n\t=> %ps\n",i
+ (void *)REC->caller[0], (void *)REC->caller[1], (void *)REC->caller[2],
+ (void *)REC->caller[3], (void *)REC->caller[4], (void *)REC->caller[5],
+ (void *)REC->caller[6], (void *)REC->caller[7]
 
--- Steve
+Where the user space tracers could parse the stack. The library was
+updated for this specific event to only look at the size, and not the
+array. But some older users still look at the array (note, the older code
+still checks to make sure the array fits inside the event that it read.
+That is, if only 4 words were saved, the parser would not read the fifth
+word because it will see that it was outside of the event size).
+
+This event was changed a while ago to be more dynamic, and would save a
+full stack even if it was greater than 8 words. It does this by simply
+allocating more ring buffer to hold the extra words. Then it copies in the
+stack via:
+
+	memcpy(&entry->caller, fstack->calls, size);
+
+As the entry is struct stack_entry, that is created by a macro to both
+create the structure and export this to user space, it still had the caller
+field of entry defined as: unsigned long caller[8].
+
+When the stack is greater than 8, the FORTIFY_SOURCE code notices that the
+amount being copied is greater than the source array and complains about
+it. It has no idea that the source is pointing to the ring buffer with the
+required allocation.
+
+To hide this from the FORTIFY_SOURCE logic, pointer arithmetic is used:
+
+	ptr = ring_buffer_event_data(event);
+	entry = ptr;
+	ptr += offsetof(typeof(*entry), caller);
+	memcpy(ptr, fstack->calls, size);
+
+Link: https://lore.kernel.org/all/20230612160748.4082850-1-svens@linux.ibm.com/
+
+Reported-by: Sven Schnelle <svens@linux.ibm.com>
+Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+---
+ kernel/trace/trace.c | 21 +++++++++++++++++++--
+ 1 file changed, 19 insertions(+), 2 deletions(-)
+
+diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
+index 4529e264cb86..20122eeccf97 100644
+--- a/kernel/trace/trace.c
++++ b/kernel/trace/trace.c
+@@ -3118,6 +3118,7 @@ static void __ftrace_trace_stack(struct trace_buffer *buffer,
+ 	struct ftrace_stack *fstack;
+ 	struct stack_entry *entry;
+ 	int stackidx;
++	void *ptr;
+ 
+ 	/*
+ 	 * Add one, for this function and the call to save_stack_trace()
+@@ -3161,9 +3162,25 @@ static void __ftrace_trace_stack(struct trace_buffer *buffer,
+ 				    trace_ctx);
+ 	if (!event)
+ 		goto out;
+-	entry = ring_buffer_event_data(event);
++	ptr = ring_buffer_event_data(event);
++	entry = ptr;
++
++	/*
++	 * For backward compatibility reasons, the entry->caller is an
++	 * array of 8 slots to store the stack. This is also exported
++	 * to user space. The amount allocated on the ring buffer actually
++	 * holds enough for the stack specified by nr_entries. This will
++	 * go into the location of entry->caller. Due to string fortifiers
++	 * checking the size of the destination of memcpy() it triggers
++	 * when it detects that size is greater than 8. To hide this from
++	 * the fortifiers, we use "ptr" and pointer arithmetic to assign caller.
++	 *
++	 * The below is really just:
++	 *   memcpy(&entry->caller, fstack->calls, size);
++	 */
++	ptr += offsetof(typeof(*entry), caller);
++	memcpy(ptr, fstack->calls, size);
+ 
+-	memcpy(&entry->caller, fstack->calls, size);
+ 	entry->size = nr_entries;
+ 
+ 	if (!call_filter_check_discard(call, entry, buffer, event))
+-- 
+2.40.1
+
