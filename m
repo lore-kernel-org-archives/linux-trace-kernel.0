@@ -2,241 +2,60 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 02D58EB64DD
-	for <linux-trace-kernel@archiver.kernel.org>; Wed, 12 Jul 2023 15:55:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 81323C001DC
+	for <linux-trace-kernel@archiver.kernel.org>; Wed, 12 Jul 2023 16:15:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233208AbjGLPzQ (ORCPT
+        id S232210AbjGLQPT (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Wed, 12 Jul 2023 11:55:16 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35912 "EHLO
+        Wed, 12 Jul 2023 12:15:19 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50080 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231359AbjGLPzM (ORCPT
+        with ESMTP id S231774AbjGLQPK (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Wed, 12 Jul 2023 11:55:12 -0400
-Received: from mga06.intel.com (mga06b.intel.com [134.134.136.31])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E9610A2;
-        Wed, 12 Jul 2023 08:55:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1689177311; x=1720713311;
-  h=date:from:to:cc:subject:message-id;
-  bh=aeg5HCRgPYDSE0YNO6fC7Ggphbri8o6L/nfZbG5eYwY=;
-  b=ChlPUDv7rYDu/obaUP2jZIQ7e0hh7pK/Z0wbKIUdzvmdiUT7JP00AQ6C
-   yObecEx41IPmjrx9tOGLAAJPrwAXxRsrauDF/fzd42TxeAy77GuINs2L7
-   D+2RrokF8Clqujep6/dotjSn/qnaGfbJXRATVPwyDYHvPltcyN55lH1R6
-   fjcA6bIntsJB5o04Wi6JCojXz3Gqz7jGsR7Ul9G5Hpd0GWVFD4S6eaUBO
-   TQde/+yCNdfgkoV/1dkB1j5l0AcFF6UPfHvjj35fYRmFP8Ecdb7wMnhdM
-   hcA/ebGYSgCx0v6Uvunr2ux9lFgZ63TqltmbDPdcffLx9AlBtZjtODxo6
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10769"; a="428664142"
-X-IronPort-AV: E=Sophos;i="6.01,200,1684825200"; 
-   d="scan'208";a="428664142"
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Jul 2023 08:55:03 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10769"; a="698908470"
-X-IronPort-AV: E=Sophos;i="6.01,200,1684825200"; 
-   d="scan'208";a="698908470"
-Received: from lkp-server01.sh.intel.com (HELO c544d7fc5005) ([10.239.97.150])
-  by orsmga006.jf.intel.com with ESMTP; 12 Jul 2023 08:54:58 -0700
-Received: from kbuild by c544d7fc5005 with local (Exim 4.96)
-        (envelope-from <lkp@intel.com>)
-        id 1qJcB7-0005nL-2z;
-        Wed, 12 Jul 2023 15:54:57 +0000
-Date:   Wed, 12 Jul 2023 23:54:38 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     Andrew Morton <akpm@linux-foundation.org>
-Cc:     Linux Memory Management List <linux-mm@kvack.org>,
-        bpf@vger.kernel.org, kunit-dev@googlegroups.com,
-        linux-kselftest@vger.kernel.org, linux-parisc@vger.kernel.org,
-        linux-rdma@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
-Subject: [linux-next:master] BUILD REGRESSION
- 40b055fe7f276cf2c1da47316c52f2ff9255a68a
-Message-ID: <202307122332.FSootrdK-lkp@intel.com>
-User-Agent: s-nail v14.9.24
+        Wed, 12 Jul 2023 12:15:10 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A9DA22100;
+        Wed, 12 Jul 2023 09:14:51 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 0A87F6182F;
+        Wed, 12 Jul 2023 16:14:51 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BCC67C433C8;
+        Wed, 12 Jul 2023 16:14:49 +0000 (UTC)
+Date:   Wed, 12 Jul 2023 12:14:48 -0400
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     Zheng Yejian <zhengyejian1@huawei.com>
+Cc:     <mhiramat@kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-trace-kernel@vger.kernel.org>
+Subject: Re: [PATCH] ring-buffer: Fix deadloop issue on reading trace_pipe
+Message-ID: <20230712121448.628ad188@gandalf.local.home>
+In-Reply-To: <63ff741f-b781-37da-3f47-15d1a8ff76a4@huawei.com>
+References: <20230708225144.3785600-1-zhengyejian1@huawei.com>
+        <20230709154523.32dc89c2@rorschach.local.home>
+        <63ff741f-b781-37da-3f47-15d1a8ff76a4@huawei.com>
+X-Mailer: Claws Mail 3.19.1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git master
-branch HEAD: 40b055fe7f276cf2c1da47316c52f2ff9255a68a  Add linux-next specific files for 20230712
+On Mon, 10 Jul 2023 09:37:52 +0800
+Zheng Yejian <zhengyejian1@huawei.com> wrote:
 
-Error/Warning reports:
+> teve, IIUC, following tags should be added?
+> 
+> Cc: stable@vger.kernel.org
+> Fixes: 48fdc72f23ad ("ring-buffer: Fix accounting of entries when 
+> removing pages")
+> Fixes: 83f40318dab0 ("ring-buffer: Make removal of ring buffer pages 
+> atomic")
 
-https://lore.kernel.org/oe-kbuild-all/202306122223.HHER4zOo-lkp@intel.com
-https://lore.kernel.org/oe-kbuild-all/202306210212.N0BipYQd-lkp@intel.com
+I actually added:
 
-Error/Warning: (recently discovered and may have been fixed)
+Fixes: a5fb833172eca ("ring-buffer: Fix uninitialized read_stamp")
 
-arch/parisc/kernel/pdt.c:67:6: warning: no previous prototype for 'arch_report_meminfo' [-Wmissing-prototypes]
-kernel/bpf/verifier.c:3959:12: warning: stack frame size (2064) exceeds limit (2048) in '__mark_chain_precision' [-Wframe-larger-than]
-lib/kunit/executor_test.c:138:4: warning: cast from 'void (*)(const void *)' to 'kunit_action_t *' (aka 'void (*)(void *)') converts to incompatible function type [-Wcast-function-type-strict]
-lib/kunit/test.c:775:38: warning: cast from 'void (*)(const void *)' to 'kunit_action_t *' (aka 'void (*)(void *)') converts to incompatible function type [-Wcast-function-type-strict]
-
-Unverified Error/Warning (likely false positive, please contact us if interested):
-
-drivers/net/ethernet/mellanox/mlx5/core/lib/devcom.c:98 mlx5_devcom_register_device() error: uninitialized symbol 'tmp_dev'.
-kernel/trace/trace_functions_graph.c:1012 print_graph_return() warn: bitwise AND condition is false here
-kernel/trace/trace_functions_graph.c:726 print_graph_entry_leaf() warn: bitwise AND condition is false here
-net/wireless/scan.c:373 cfg80211_gen_new_ie() warn: potential spectre issue 'sub->data' [r]
-net/wireless/scan.c:397 cfg80211_gen_new_ie() warn: possible spectre second half.  'ext_id'
-{standard input}: Error: local label `"2" (instance number 9 of a fb label)' is not defined
-
-Error/Warning ids grouped by kconfigs:
-
-gcc_recent_errors
-|-- microblaze-randconfig-m041-20230710
-|   |-- drivers-net-ethernet-mellanox-mlx5-core-lib-devcom.c-mlx5_devcom_register_device()-error:uninitialized-symbol-tmp_dev-.
-|   |-- net-wireless-scan.c-cfg80211_gen_new_ie()-warn:possible-spectre-second-half.-ext_id
-|   `-- net-wireless-scan.c-cfg80211_gen_new_ie()-warn:potential-spectre-issue-sub-data-r
-|-- mips-randconfig-m031-20230710
-|   |-- kernel-trace-trace_functions_graph.c-print_graph_entry_leaf()-warn:bitwise-AND-condition-is-false-here
-|   `-- kernel-trace-trace_functions_graph.c-print_graph_return()-warn:bitwise-AND-condition-is-false-here
-|-- parisc-randconfig-r082-20230710
-|   `-- arch-parisc-kernel-pdt.c:warning:no-previous-prototype-for-arch_report_meminfo
-`-- sh-allmodconfig
-    `-- standard-input:Error:local-label-(instance-number-of-a-fb-label)-is-not-defined
-clang_recent_errors
-|-- hexagon-randconfig-r013-20230712
-|   |-- lib-kunit-executor_test.c:warning:cast-from-void-(-)(const-void-)-to-kunit_action_t-(aka-void-(-)(void-)-)-converts-to-incompatible-function-type
-|   `-- lib-kunit-test.c:warning:cast-from-void-(-)(const-void-)-to-kunit_action_t-(aka-void-(-)(void-)-)-converts-to-incompatible-function-type
-|-- riscv-randconfig-r023-20230712
-|   `-- kernel-bpf-verifier.c:warning:stack-frame-size-()-exceeds-limit-()-in-__mark_chain_precision
-`-- s390-randconfig-r044-20230712
-    |-- lib-kunit-executor_test.c:warning:cast-from-void-(-)(const-void-)-to-kunit_action_t-(aka-void-(-)(void-)-)-converts-to-incompatible-function-type
-    `-- lib-kunit-test.c:warning:cast-from-void-(-)(const-void-)-to-kunit_action_t-(aka-void-(-)(void-)-)-converts-to-incompatible-function-type
-
-elapsed time: 798m
-
-configs tested: 123
-configs skipped: 8
-
-tested configs:
-alpha                            allyesconfig   gcc  
-alpha                               defconfig   gcc  
-alpha                randconfig-r003-20230712   gcc  
-alpha                randconfig-r015-20230712   gcc  
-alpha                randconfig-r025-20230712   gcc  
-arc                              allyesconfig   gcc  
-arc                                 defconfig   gcc  
-arc                     haps_hs_smp_defconfig   gcc  
-arc                  randconfig-r043-20230712   gcc  
-arc                    vdk_hs38_smp_defconfig   gcc  
-arm                              allmodconfig   gcc  
-arm                              allyesconfig   gcc  
-arm                     am200epdkit_defconfig   clang
-arm                     davinci_all_defconfig   clang
-arm                                 defconfig   gcc  
-arm                   milbeaut_m10v_defconfig   clang
-arm                        multi_v7_defconfig   gcc  
-arm                  randconfig-r046-20230712   gcc  
-arm                             rpc_defconfig   gcc  
-arm                       spear13xx_defconfig   clang
-arm64                            allyesconfig   gcc  
-arm64                               defconfig   gcc  
-csky                                defconfig   gcc  
-csky                 randconfig-r034-20230712   gcc  
-hexagon              randconfig-r013-20230712   clang
-hexagon              randconfig-r035-20230712   clang
-hexagon              randconfig-r041-20230712   clang
-hexagon              randconfig-r045-20230712   clang
-i386                             allyesconfig   gcc  
-i386         buildonly-randconfig-r004-20230712   gcc  
-i386         buildonly-randconfig-r005-20230712   gcc  
-i386         buildonly-randconfig-r006-20230712   gcc  
-i386                              debian-10.3   gcc  
-i386                                defconfig   gcc  
-i386                 randconfig-i001-20230712   gcc  
-i386                 randconfig-i002-20230712   gcc  
-i386                 randconfig-i003-20230712   gcc  
-i386                 randconfig-i004-20230712   gcc  
-i386                 randconfig-i005-20230712   gcc  
-i386                 randconfig-i006-20230712   gcc  
-i386                 randconfig-i011-20230712   clang
-i386                 randconfig-i012-20230712   clang
-i386                 randconfig-i013-20230712   clang
-i386                 randconfig-i014-20230712   clang
-i386                 randconfig-i015-20230712   clang
-i386                 randconfig-i016-20230712   clang
-loongarch                        allmodconfig   gcc  
-loongarch                         allnoconfig   gcc  
-loongarch                           defconfig   gcc  
-m68k                             allmodconfig   gcc  
-m68k                             allyesconfig   gcc  
-m68k                                defconfig   gcc  
-microblaze           randconfig-r021-20230712   gcc  
-mips                             allmodconfig   gcc  
-mips                             allyesconfig   gcc  
-mips                 randconfig-r031-20230712   clang
-mips                 randconfig-r032-20230712   clang
-nios2                            alldefconfig   gcc  
-nios2                               defconfig   gcc  
-nios2                randconfig-r001-20230712   gcc  
-parisc                           allyesconfig   gcc  
-parisc                              defconfig   gcc  
-parisc               randconfig-r036-20230712   gcc  
-parisc64                            defconfig   gcc  
-powerpc                          allmodconfig   gcc  
-powerpc                           allnoconfig   gcc  
-powerpc                      bamboo_defconfig   gcc  
-powerpc                      cm5200_defconfig   gcc  
-powerpc                     powernv_defconfig   clang
-powerpc                  storcenter_defconfig   gcc  
-riscv                            allmodconfig   gcc  
-riscv                             allnoconfig   gcc  
-riscv                            allyesconfig   gcc  
-riscv                               defconfig   gcc  
-riscv                randconfig-r023-20230712   clang
-riscv                randconfig-r042-20230712   clang
-riscv                          rv32_defconfig   gcc  
-s390                             allmodconfig   gcc  
-s390                             allyesconfig   gcc  
-s390                                defconfig   gcc  
-s390                 randconfig-r044-20230712   clang
-sh                               allmodconfig   gcc  
-sh                ecovec24-romimage_defconfig   gcc  
-sh                          landisk_defconfig   gcc  
-sh                   randconfig-r033-20230712   gcc  
-sh                        sh7757lcr_defconfig   gcc  
-sh                          urquell_defconfig   gcc  
-sparc                            allyesconfig   gcc  
-sparc                               defconfig   gcc  
-sparc64                          alldefconfig   gcc  
-sparc64              randconfig-r011-20230712   gcc  
-sparc64              randconfig-r014-20230712   gcc  
-um                               allmodconfig   clang
-um                                allnoconfig   clang
-um                               allyesconfig   clang
-um                                  defconfig   gcc  
-um                             i386_defconfig   gcc  
-um                   randconfig-r012-20230712   gcc  
-um                           x86_64_defconfig   gcc  
-x86_64                           allyesconfig   gcc  
-x86_64       buildonly-randconfig-r001-20230712   gcc  
-x86_64       buildonly-randconfig-r002-20230712   gcc  
-x86_64       buildonly-randconfig-r003-20230712   gcc  
-x86_64                              defconfig   gcc  
-x86_64                                  kexec   gcc  
-x86_64               randconfig-r026-20230712   clang
-x86_64               randconfig-x001-20230712   clang
-x86_64               randconfig-x002-20230712   clang
-x86_64               randconfig-x003-20230712   clang
-x86_64               randconfig-x004-20230712   clang
-x86_64               randconfig-x005-20230712   clang
-x86_64               randconfig-x006-20230712   clang
-x86_64               randconfig-x011-20230712   gcc  
-x86_64               randconfig-x012-20230712   gcc  
-x86_64               randconfig-x013-20230712   gcc  
-x86_64               randconfig-x014-20230712   gcc  
-x86_64               randconfig-x015-20230712   gcc  
-x86_64               randconfig-x016-20230712   gcc  
-x86_64                          rhel-8.3-rust   clang
-x86_64                               rhel-8.3   gcc  
-xtensa                              defconfig   gcc  
-xtensa               randconfig-r006-20230712   gcc  
-xtensa               randconfig-r016-20230712   gcc  
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+-- Steve
