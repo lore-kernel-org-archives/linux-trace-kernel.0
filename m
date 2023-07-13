@@ -2,94 +2,114 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DB37BC001DD
-	for <linux-trace-kernel@archiver.kernel.org>; Thu, 13 Jul 2023 14:34:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EADFCC001DE
+	for <linux-trace-kernel@archiver.kernel.org>; Thu, 13 Jul 2023 14:34:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231129AbjGMOeD (ORCPT
+        id S230511AbjGMOeU (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Thu, 13 Jul 2023 10:34:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47192 "EHLO
+        Thu, 13 Jul 2023 10:34:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47514 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230512AbjGMOeA (ORCPT
+        with ESMTP id S231157AbjGMOeT (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Thu, 13 Jul 2023 10:34:00 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 382E02702;
-        Thu, 13 Jul 2023 07:33:57 -0700 (PDT)
+        Thu, 13 Jul 2023 10:34:19 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3E41426AF;
+        Thu, 13 Jul 2023 07:34:18 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange X25519 server-signature RSA-PSS (2048 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 84081612FB;
-        Thu, 13 Jul 2023 14:33:56 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 56B13C433C7;
-        Thu, 13 Jul 2023 14:33:55 +0000 (UTC)
-Date:   Thu, 13 Jul 2023 10:33:53 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Zheng Yejian <zhengyejian1@huawei.com>
-Cc:     <mhiramat@kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-trace-kernel@vger.kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: Re: [PATCH] traing: Fix memory leak of iter->temp when reading
- trace_pipe
-Message-ID: <20230713103353.29cae218@gandalf.local.home>
-In-Reply-To: <20230713141435.1133021-1-zhengyejian1@huawei.com>
-References: <20230713141435.1133021-1-zhengyejian1@huawei.com>
-X-Mailer: Claws Mail 3.19.1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
-MIME-Version: 1.0
+        by dfw.source.kernel.org (Postfix) with ESMTPS id D0E89612FB;
+        Thu, 13 Jul 2023 14:34:17 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 48387C433C7;
+        Thu, 13 Jul 2023 14:34:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1689258857;
+        bh=VvRbrk8bzF6109xHYWtz9ezHyRLP7zONTWaQbd9M5+4=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=qAzSsJGWCo8M/UTeczkxEqABOWcuExVLij5rg1JFd9aP9lB0oCPJzGsXxxVIFD9av
+         uqHktUuAgnhr2cor/YRx1JQv2qGC4yOvZqDXRgcpuyizI2MA/aB4oRIdEZKzeEy0cU
+         K702mrMtLVHXbZ0MBFJ8tEACV34J1WxImIqk43MCcKG7ISZ0WPsP0xUPRuqUYh80Su
+         /H9SAQmLM1K/8s+M7c6/hI1+41xRMAcfxe7ziFKOmWvCuTM4LGTOgVPTUABuwqhdAY
+         LrvRe39QX3dH9HzuYEQObeacvZR+e+x4uSIXCar+BcBe22I0RdwuCf2omav3EtUYNT
+         +5F1fmMtgtIUg==
+Date:   Thu, 13 Jul 2023 23:34:13 +0900
+From:   Masami Hiramatsu (Google) <mhiramat@kernel.org>
+To:     Steven Rostedt <rostedt@goodmis.org>
+Cc:     Dan Carpenter <dan.carpenter@linaro.org>,
+        linux-trace-kernel@vger.kernel.org,
+        LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v5 3/5] tracing/probes: Fix to update dynamic data
+ counter if fetcharg uses it
+Message-Id: <20230713233413.2a54de15175527e12984ff6e@kernel.org>
+In-Reply-To: <20230713093436.0241ed77@gandalf.local.home>
+References: <168908491977.123124.16583481716284477889.stgit@devnote2>
+        <168908494781.123124.8160245359962103684.stgit@devnote2>
+        <20230713093436.0241ed77@gandalf.local.home>
+X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On Thu, 13 Jul 2023 22:14:35 +0800
-Zheng Yejian <zhengyejian1@huawei.com> wrote:
+On Thu, 13 Jul 2023 09:34:36 -0400
+Steven Rostedt <rostedt@goodmis.org> wrote:
 
-> kmemleak reports:
->   unreferenced object 0xffff88814d14e200 (size 256):
->     comm "cat", pid 336, jiffies 4294871818 (age 779.490s)
->     hex dump (first 32 bytes):
->       04 00 01 03 00 00 00 00 08 00 00 00 00 00 00 00  ................
->       0c d8 c8 9b ff ff ff ff 04 5a ca 9b ff ff ff ff  .........Z......
->     backtrace:
->       [<ffffffff9bdff18f>] __kmalloc+0x4f/0x140
->       [<ffffffff9bc9238b>] trace_find_next_entry+0xbb/0x1d0
->       [<ffffffff9bc9caef>] trace_print_lat_context+0xaf/0x4e0
->       [<ffffffff9bc94490>] print_trace_line+0x3e0/0x950
->       [<ffffffff9bc95499>] tracing_read_pipe+0x2d9/0x5a0
->       [<ffffffff9bf03a43>] vfs_read+0x143/0x520
->       [<ffffffff9bf04c2d>] ksys_read+0xbd/0x160
->       [<ffffffff9d0f0edf>] do_syscall_64+0x3f/0x90
->       [<ffffffff9d2000aa>] entry_SYSCALL_64_after_hwframe+0x6e/0xd8
+> On Tue, 11 Jul 2023 23:15:48 +0900
+> "Masami Hiramatsu (Google)" <mhiramat@kernel.org> wrote:
 > 
-> when reading file 'trace_pipe', 'iter->temp' is allocated or relocated
-> in trace_find_next_entry() but not freed before 'trace_pipe' is closed.
+> > From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+> > 
+> > Fix to update dynamic data counter ('dyndata') and max length ('maxlen')
+> > only if the fetcharg uses the dynamic data. Also get out arg->dynamic
+> > from unlikely(). This makes dynamic data address wrong if
+> > process_fetch_insn() returns error on !arg->dynamic case.
+> > 
+> > Suggested-by: Steven Rostedt <rostedt@goodmis.org>
+> > Link: https://lore.kernel.org/all/20230710233400.5aaf024e@gandalf.local.home/
+> > Fixes: 9178412ddf5a ("tracing: probeevent: Return consumed bytes of dynamic area")
+> > Cc: stable@vger.kernel.org
+> > Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 > 
-> To fix it, free 'iter->temp' in tracing_release_pipe().
+> Reviewed-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+
+Thank you! I'll pull this series. 
+
 > 
-> Signed-off-by: Zheng Yejian <zhengyejian1@huawei.com>
-
-Why is it that every time I send a pull request to Linus, I get another fix???
-
-Anyway, Linus, hold off. I'll send a v3 with this included as well.
-
--- Steve
-
-> ---
->  kernel/trace/trace.c | 1 +
->  1 file changed, 1 insertion(+)
+> -- Steve
 > 
-> diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
-> index 4529e264cb86..94cfaa884578 100644
-> --- a/kernel/trace/trace.c
-> +++ b/kernel/trace/trace.c
-> @@ -6764,6 +6764,7 @@ static int tracing_release_pipe(struct inode *inode, struct file *file)
->  
->  	free_cpumask_var(iter->started);
->  	kfree(iter->fmt);
-> +	kfree(iter->temp);
->  	mutex_destroy(&iter->mutex);
->  	kfree(iter);
->  
+> > ---
+> >  kernel/trace/trace_probe_tmpl.h |   12 +++++++-----
+> >  1 file changed, 7 insertions(+), 5 deletions(-)
+> > 
+> > diff --git a/kernel/trace/trace_probe_tmpl.h b/kernel/trace/trace_probe_tmpl.h
+> > index ed9d57c6b041..185da001f4c3 100644
+> > --- a/kernel/trace/trace_probe_tmpl.h
+> > +++ b/kernel/trace/trace_probe_tmpl.h
+> > @@ -267,11 +267,13 @@ store_trace_args(void *data, struct trace_probe *tp, void *rec,
+> >  		if (unlikely(arg->dynamic))
+> >  			*dl = make_data_loc(maxlen, dyndata - base);
+> >  		ret = process_fetch_insn(arg->code, rec, dl, base);
+> > -		if (unlikely(ret < 0 && arg->dynamic)) {
+> > -			*dl = make_data_loc(0, dyndata - base);
+> > -		} else {
+> > -			dyndata += ret;
+> > -			maxlen -= ret;
+> > +		if (arg->dynamic) {
+> > +			if (unlikely(ret < 0)) {
+> > +				*dl = make_data_loc(0, dyndata - base);
+> > +			} else {
+> > +				dyndata += ret;
+> > +				maxlen -= ret;
+> > +			}
+> >  		}
+> >  	}
+> >  }
+> 
 
+
+-- 
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
