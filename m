@@ -2,46 +2,40 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 47F9FC0015E
-	for <linux-trace-kernel@archiver.kernel.org>; Thu, 13 Jul 2023 12:18:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 62FCBEB64DD
+	for <linux-trace-kernel@archiver.kernel.org>; Thu, 13 Jul 2023 13:26:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234314AbjGMMSr (ORCPT
+        id S235337AbjGMN05 (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Thu, 13 Jul 2023 08:18:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41746 "EHLO
+        Thu, 13 Jul 2023 09:26:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59806 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234645AbjGMMSm (ORCPT
+        with ESMTP id S235314AbjGMN0j (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Thu, 13 Jul 2023 08:18:42 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 09D14269D;
-        Thu, 13 Jul 2023 05:18:38 -0700 (PDT)
+        Thu, 13 Jul 2023 09:26:39 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 54F68359E;
+        Thu, 13 Jul 2023 06:26:12 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange X25519 server-signature RSA-PSS (2048 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 5E658610A6;
-        Thu, 13 Jul 2023 12:18:38 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CE9BAC433C7;
-        Thu, 13 Jul 2023 12:18:35 +0000 (UTC)
-Date:   Thu, 13 Jul 2023 08:18:32 -0400
+        by dfw.source.kernel.org (Postfix) with ESMTPS id CEACA61087;
+        Thu, 13 Jul 2023 13:26:11 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 45409C433C7;
+        Thu, 13 Jul 2023 13:26:10 +0000 (UTC)
+Date:   Thu, 13 Jul 2023 09:26:05 -0400
 From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Kees Cook <keescook@chromium.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Linux Trace Kernel <linux-trace-kernel@vger.kernel.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
+To:     LKML <linux-kernel@vger.kernel.org>,
+        Linux trace kernel <linux-trace-kernel@vger.kernel.org>,
+        linux-hardening@vger.kernel.org
+Cc:     Masami Hiramatsu <mhiramat@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
         Sven Schnelle <svens@linux.ibm.com>,
-        linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] tracing: Stop FORTIFY_SOURCE complaining about stack
- trace caller
-Message-ID: <20230713081832.4df9e699@rorschach.local.home>
-In-Reply-To: <202307122305.029E76A@keescook>
-References: <20230712105235.5fc441aa@gandalf.local.home>
-        <202307121618.17C50DA9A@keescook>
-        <20230712204358.756d0018@gandalf.local.home>
-        <202307122118.F4DD6200@keescook>
-        <202307122305.029E76A@keescook>
+        Kees Cook <keescook@chromium.org>
+Subject: [PATCH] tracing: Add back FORTIFY_SOURCE logic to kernel_stack
+ event structure
+Message-ID: <20230713092605.2ddb9788@rorschach.local.home>
 X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
@@ -50,44 +44,81 @@ Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On Wed, 12 Jul 2023 23:08:37 -0700
-Kees Cook <keescook@chromium.org> wrote:
+From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
 
-> On Wed, Jul 12, 2023 at 10:22:35PM -0700, Kees Cook wrote:
-> > But anyway, I think we can still do better. :)  
-> 
-> Okay, what about this? I'm really not sure how to test this
-> appropriately, but it does appear to build. (famous last words)
-> 
-> This creates the union, but I think it ends up only being visible for
-> trace.c; everything else thinks it's just __array.
-> 
-> Anyway, maybe I'm closer, but trace internals are hurting my head right
-> now...
+For backward compatibility, older tooling expects to see the kernel_stack
+event with a "caller" field that is a fixed size array of 8 addresses. The
+code now supports more than 8 with an added "size" field that states the
+real number of entries. But the "caller" field still just looks like a
+fixed size to user space.
 
-You need to wear your Macro Wizard hat to protect from brain hurt.
+Since the tracing macros that create the user space format files also
+creates the structures that those files represent, the kernel_stack event
+structure had its "caller" field a fixed size of 8, but in reality, when
+it is allocated on the ring buffer, it can hold more if the stack trace is
+bigger that 8 functions. The copying of these entries was simply done with
+a memcpy():
 
-Anyway, I was thinking about this too, and the correct approach is this
-patch. But this is something I don't want to push into the -rc release,
-and instead will wait till the next merge window. I rather have the
-simple pointer arithmetic for now.
+  size = nr_entries * sizeof(unsigned long);
+  memcpy(entry->caller, fstack->calls, size);
 
-But you were close. But instead of doing a union, what I did was to
-expose something different to user space and for the kernel make the
-dynamic array struct.
+The FORTIFY_SOURCE logic noticed at runtime that when the nr_entries was
+larger than 8, that the memcpy() was writing more than what the structure
+stated it can hold and it complained about it. This is because the
+FORTIFY_SOURCE code is unaware that the amount allocated is actually
+enough to hold the size. It does not expect that a fixed size field will
+hold more than the fixed size.
 
-This patch is on top of the current code, but the real patch is on top
-of my pointer arithmetic change. (I did a "git diff HEAD~1")
+This was originally solved by hiding the caller assignment with some
+pointer arithmetic.
 
-But simple testing shows that this does work.
+  ptr = ring_buffer_data();
+  entry = ptr;
 
--- Steve
+  ptr += offsetof(typeof(*entry), caller);
+  memcpy(ptr, fstack->calls, size);
+
+But it is considered bad form to hide from kernel hardening. Instead, make
+it work nicely with FORTIFY_SOURCE by adding a new __stack_array() macro
+that is specific for this one special use case. The macro will take 4
+arguments: type, item, len, field (whereas the __array() macro takes just
+the first three). This macro will act just like the __array() macro when
+creating the code to deal with the format file that is exposed to user
+space. But for the kernel, it will turn the caller field into:
+
+  type item[] __counted_by(field);
+
+or for this instance:
+
+  unsigned long caller[] __counted_by(size);
+
+Now the kernel code can expose the assignment of the caller to the
+FORTIFY_SOURCE and everyone is happy!
+
+Link: https://lore.kernel.org/linux-trace-kernel/20230712105235.5fc441aa@gandalf.local.home/
+
+Suggested-by: Kees Cook <keescook@chromium.org>
+Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+---
+ kernel/trace/trace.c         | 25 ++++---------------------
+ kernel/trace/trace.h         | 10 ++++++++++
+ kernel/trace/trace_entries.h |  2 +-
+ kernel/trace/trace_export.c  |  9 +++++++++
+ 4 files changed, 24 insertions(+), 22 deletions(-)
 
 diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
-index 4529e264cb86..ca8d3aa1058a 100644
+index 20122eeccf97..ca8d3aa1058a 100644
 --- a/kernel/trace/trace.c
 +++ b/kernel/trace/trace.c
-@@ -3155,16 +3155,16 @@ static void __ftrace_trace_stack(struct trace_buffer *buffer,
+@@ -3118,7 +3118,6 @@ static void __ftrace_trace_stack(struct trace_buffer *buffer,
+ 	struct ftrace_stack *fstack;
+ 	struct stack_entry *entry;
+ 	int stackidx;
+-	void *ptr;
+ 
+ 	/*
+ 	 * Add one, for this function and the call to save_stack_trace()
+@@ -3156,32 +3155,16 @@ static void __ftrace_trace_stack(struct trace_buffer *buffer,
  		nr_entries = stack_trace_save(fstack->calls, size, skip);
  	}
  
@@ -98,9 +129,26 @@ index 4529e264cb86..ca8d3aa1058a 100644
  				    trace_ctx);
  	if (!event)
  		goto out;
- 	entry = ring_buffer_event_data(event);
+-	ptr = ring_buffer_event_data(event);
+-	entry = ptr;
+-
+-	/*
+-	 * For backward compatibility reasons, the entry->caller is an
+-	 * array of 8 slots to store the stack. This is also exported
+-	 * to user space. The amount allocated on the ring buffer actually
+-	 * holds enough for the stack specified by nr_entries. This will
+-	 * go into the location of entry->caller. Due to string fortifiers
+-	 * checking the size of the destination of memcpy() it triggers
+-	 * when it detects that size is greater than 8. To hide this from
+-	 * the fortifiers, we use "ptr" and pointer arithmetic to assign caller.
+-	 *
+-	 * The below is really just:
+-	 *   memcpy(&entry->caller, fstack->calls, size);
+-	 */
+-	ptr += offsetof(typeof(*entry), caller);
+-	memcpy(ptr, fstack->calls, size);
++	entry = ring_buffer_event_data(event);
  
--	memcpy(&entry->caller, fstack->calls, size);
  	entry->size = nr_entries;
 +	memcpy(&entry->caller, fstack->calls,
 +	       flex_array_size(entry, caller, nr_entries));
@@ -108,7 +156,7 @@ index 4529e264cb86..ca8d3aa1058a 100644
  	if (!call_filter_check_discard(call, entry, buffer, event))
  		__buffer_unlock_commit(buffer, event);
 diff --git a/kernel/trace/trace.h b/kernel/trace/trace.h
-index ed7906b13f09..6f09cf3888c3 100644
+index ed7906b13f09..f0bf0467bc0e 100644
 --- a/kernel/trace/trace.h
 +++ b/kernel/trace/trace.h
 @@ -77,6 +77,16 @@ enum trace_type {
@@ -175,3 +223,6 @@ index 58f3946081e2..1698fc22afa0 100644
  #undef __array_desc
  #define __array_desc(type, container, item, len)
  
+-- 
+2.40.1
+
