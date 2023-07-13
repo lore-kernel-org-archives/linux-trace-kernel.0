@@ -2,214 +2,97 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F9B6EB64DA
-	for <linux-trace-kernel@archiver.kernel.org>; Thu, 13 Jul 2023 00:44:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 70669C0015E
+	for <linux-trace-kernel@archiver.kernel.org>; Thu, 13 Jul 2023 01:43:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232935AbjGMAoG convert rfc822-to-8bit (ORCPT
+        id S233267AbjGMBnQ (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Wed, 12 Jul 2023 20:44:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44724 "EHLO
+        Wed, 12 Jul 2023 21:43:16 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34636 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232784AbjGMAoG (ORCPT
+        with ESMTP id S232625AbjGMBnP (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Wed, 12 Jul 2023 20:44:06 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A71871FF7;
-        Wed, 12 Jul 2023 17:44:04 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 39404619E0;
-        Thu, 13 Jul 2023 00:44:04 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BCCEBC433C8;
-        Thu, 13 Jul 2023 00:44:02 +0000 (UTC)
-Date:   Wed, 12 Jul 2023 20:43:58 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Kees Cook <keescook@chromium.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Linux Trace Kernel <linux-trace-kernel@vger.kernel.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Sven Schnelle <svens@linux.ibm.com>,
-        linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] tracing: Stop FORTIFY_SOURCE complaining about stack
- trace caller
-Message-ID: <20230712204358.756d0018@gandalf.local.home>
-In-Reply-To: <202307121618.17C50DA9A@keescook>
-References: <20230712105235.5fc441aa@gandalf.local.home>
-        <202307121618.17C50DA9A@keescook>
-X-Mailer: Claws Mail 3.19.1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+        Wed, 12 Jul 2023 21:43:15 -0400
+Received: from mail-pl1-x634.google.com (mail-pl1-x634.google.com [IPv6:2607:f8b0:4864:20::634])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C2C571FC9
+        for <linux-trace-kernel@vger.kernel.org>; Wed, 12 Jul 2023 18:43:14 -0700 (PDT)
+Received: by mail-pl1-x634.google.com with SMTP id d9443c01a7336-1b89b0c73d7so300665ad.1
+        for <linux-trace-kernel@vger.kernel.org>; Wed, 12 Jul 2023 18:43:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20221208.gappssmtp.com; s=20221208; t=1689212594; x=1689817394;
+        h=content-transfer-encoding:mime-version:date:message-id:subject
+         :references:in-reply-to:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=5RQRuIqZ5NVi7QJufPT6Q4wx/18CXySRzZCJ6Iw5j0s=;
+        b=dMQUrbfnmydZo0MkmBFR1PAx8JTnYgHAc3yLB/K29hYjM8mQeTLhmB4Jpi5P4hofXS
+         eOh6lRBcoWgKh07yvb3rmf9GjwaTk48kvmT/KwJ2Y6a3mY0tiPFQfrx5D9nNrvwiZr4O
+         UfxbgstG8oX5Qo+pKb/crnPWDwvlrizdPBIfxha5Rg8xcaIt6+ODVB0ysHe8YYALamx6
+         3oyY3r/0k0UQ9BDsfT2ZaW68nqxTeJWJ4XCBtLi6DgjuoLx6Cg/sGsTjt2iX7W6wm0KV
+         I31ojrFVAATSZIoSA3jPYavxQymIpOIzJxoqtpObhIPVoJOEQUdfZQLTNPwF7DVULv9z
+         kayA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1689212594; x=1689817394;
+        h=content-transfer-encoding:mime-version:date:message-id:subject
+         :references:in-reply-to:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=5RQRuIqZ5NVi7QJufPT6Q4wx/18CXySRzZCJ6Iw5j0s=;
+        b=epSFR4f+C/VWjuN4bQhrym0wxvu3XXEaou1isjG0WkjMeI3LzmSvfxZjsRh6xW0+44
+         wZh7jOVabO+xflD48ZWPV3bMqKaxDG0rJrpIGoi/zqUmJRGPatg7EpLV85HqpBfANBzg
+         0C0r/+XLS5y1pz0bOA3pzm9LGTvMua2Scskl3C84lcQLKcMDxNw5q6KPuq9nCPpdlO6x
+         zCtHqSdN6HCM+ckeMcClOsEL2ydlBr5aa4y4xorvSFvUvgUrky03Q/hsiml6P8wbBwx0
+         9ii7AeocyY1o9Oju0X+UmJGXifIDGil8i1ikGg0KOk+X1Sto5Epp1i1QcC4HDribavQP
+         Jq4Q==
+X-Gm-Message-State: ABy/qLYIpJetkmqfo6gyQgPbk4xThXFg4EMVxjg2gNWIcCWn3g8Rk2AF
+        PfRmXKUE2zqv/TZZHGtWUAnAqG9ja5lvB2ge8UM=
+X-Google-Smtp-Source: APBJJlH3eINFi58kLpyTeLA96uAiPaoKtgYsKnAKwx9PMsu+CNcnyU7BB3Ze66LtdWTzZif9wQN+OQ==
+X-Received: by 2002:a17:902:e752:b0:1b8:bb6c:9ecb with SMTP id p18-20020a170902e75200b001b8bb6c9ecbmr403479plf.4.1689212593740;
+        Wed, 12 Jul 2023 18:43:13 -0700 (PDT)
+Received: from [127.0.0.1] ([198.8.77.157])
+        by smtp.gmail.com with ESMTPSA id p16-20020a170902b09000b001b8422f1000sm4617080plr.201.2023.07.12.18.43.12
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 12 Jul 2023 18:43:12 -0700 (PDT)
+From:   Jens Axboe <axboe@kernel.dk>
+To:     Kees Cook <keescook@chromium.org>,
+        Azeem Shaikh <azeemshaikh38@gmail.com>
+Cc:     linux-hardening@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-trace-kernel@vger.kernel.org,
+        Steven Rostedt <rostedt@goodmis.org>
+In-Reply-To: <20230703172159.3668349-1-azeemshaikh38@gmail.com>
+References: <20230703172159.3668349-1-azeemshaikh38@gmail.com>
+Subject: Re: [PATCH 0/2] kyber, blk-wbt: Replace strlcpy with strscpy
+Message-Id: <168921259242.435341.16221170585643217037.b4-ty@kernel.dk>
+Date:   Wed, 12 Jul 2023 19:43:12 -0600
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Mailer: b4 0.13-dev-099c9
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On Wed, 12 Jul 2023 16:36:30 -0700
-Kees Cook <keescook@chromium.org> wrote:
 
-> > 
-> > To hide this from the FORTIFY_SOURCE logic, pointer arithmetic is used:
-> > 
-> > 	ptr = ring_buffer_event_data(event);
-> > 	entry = ptr;
-> > 	ptr += offsetof(typeof(*entry), caller);
-> > 	memcpy(ptr, fstack->calls, size);  
+On Mon, 03 Jul 2023 17:21:57 +0000, Azeem Shaikh wrote:
+> This patch series replaces strlcpy in the kyber and blk-wbt tracing subsystems wherever trivial
+> replacement is possible, i.e return value from strlcpy is unused. The patches
+> themselves are independent of each other and are applied to different subsystems. They are
+> included as a series for ease of review.
 > 
-> But... Why are you lying to the compiler? Why not just make this
-> dynamically sized for real? It's not a "struct stack_entry" if it might
-> be bigger.
-
-I was waiting for some controversy from this patch ;-)
-
+> Note to reviewers: MAINTAINERS file does not specify clear ownership of
+> these files so I have addressed these to the latest committer for these
+> files: Jens Axboe <axboe@kernel.dk>.
 > 
-> Just create a new struct that isn't lying? (Dealing with the "minimum
-> size" issue for a dynamic array is usually done with unions, but
-> ftrace's structs are ... different. As such, I just added a one-off
-> union.) Here, and you can be the first user of __counted_by too:
-> 
-> diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
-> index 4529e264cb86..40935578c365 100644
-> --- a/kernel/trace/trace.c
-> +++ b/kernel/trace/trace.c
-> @@ -3108,6 +3108,14 @@ struct ftrace_stacks {
->  static DEFINE_PER_CPU(struct ftrace_stacks, ftrace_stacks);
->  static DEFINE_PER_CPU(int, ftrace_stack_reserve);
->  
-> +union stack_entry_dynamic {
-> +	struct stack_entry entry;
-> +	struct {
-> +		int size;
-> +		unsigned long caller[] __counted_by(size);
-> +	};
-> +};
+> [...]
 
-This actually makes it more likely to cause a bug in the future (and the
-present!). Now we need to know that if stack_entry were to ever change, we
-have to change this too. And it can change (although highly unlikely).
+Applied, thanks!
 
-The problem comes with this structure being created by a macro that creates
-the structure and what it exports to user space.
+[1/2] kyber: Replace strlcpy with strscpy
+      commit: 150b5f497df6bdb4730cae1eb98f13017b2eef6c
+[2/2] blk-wbt: Replace strlcpy with strscpy
+      commit: 3abf6029341f2fd2ea6e48289662e8e4e3e96945
 
-From kernel/trace/trace_entries.h: The macro that creates this structure.
-
-FTRACE_ENTRY(kernel_stack, stack_entry,
-
-	TRACE_STACK,
-
-	F_STRUCT(
-		__field(	int,		size	)
-		__array(	unsigned long,	caller,	FTRACE_STACK_ENTRIES	)
-	),
-
-	F_printk("\t=> %ps\n\t=> %ps\n\t=> %ps\n"
-		 "\t=> %ps\n\t=> %ps\n\t=> %ps\n"
-		 "\t=> %ps\n\t=> %ps\n",
-		 (void *)__entry->caller[0], (void *)__entry->caller[1],
-		 (void *)__entry->caller[2], (void *)__entry->caller[3],
-		 (void *)__entry->caller[4], (void *)__entry->caller[5],
-		 (void *)__entry->caller[6], (void *)__entry->caller[7])
-);
-
-Now, this event is unique, as it's the only event that has a dynamic array
-that is not done by the way other dynamic arrays are done. Which is to
-insert a field that has an offset and length to it. That is, other events
-would look like this:
-
-struct stack_entry {
-	int		size;
-	short		offset; length;
-	[ more fields ]
-	int		dynamic[];
-}
-
-Where offset would be the ((void *)(struct stack_entry *)data) + offset. As
-all the dynamic size portions of an event are at the end of the event, with
-these offset/length tuples to tell user space and the kernel where to look
-in the event binary data for those fields.
-
-But to keep backward compatibility, as this event had code specific for
-parsing it in libtraceevent that doesn't expect that offset/length tuple,
-and instead just looked at the "caller[8]" portion to see that it had 8
-fields (this is static for all events). New code uses the size to know, and
-ignores the [8]. The event meta data gives the actual size of the stored
-data so the parser knows not to go beyond that.
-
-Note, this event existed before normal trace events that had the dynamic
-arrays, which is why it didn't do the same.
-
-The only thing this code is doing is filling in the ring buffer. The entry
-structure is just a helper to know where to place the data in the ring
-buffer.
-
-So my question to you is, what's the purpose of hardening? To prevent
-future bugs, right? By making a shadow struct, we are now burdened to
-remember to modify the shadow stack if we ever modify this current
-structure.
-
-Oh, to further my point, your change is buggy too (and I almost didn't even
-notice it!)
-
-> +
->  static void __ftrace_trace_stack(struct trace_buffer *buffer,
->  				 unsigned int trace_ctx,
->  				 int skip, struct pt_regs *regs)
-> @@ -3116,7 +3124,7 @@ static void __ftrace_trace_stack(struct trace_buffer *buffer,
->  	struct ring_buffer_event *event;
->  	unsigned int size, nr_entries;
->  	struct ftrace_stack *fstack;
-> -	struct stack_entry *entry;
-> +	union stack_entry_dynamic *entry;
->  	int stackidx;
->  
->  	/*
-> @@ -3155,16 +3163,15 @@ static void __ftrace_trace_stack(struct trace_buffer *buffer,
->  		nr_entries = stack_trace_save(fstack->calls, size, skip);
->  	}
->  
-> -	size = nr_entries * sizeof(unsigned long);
->  	event = __trace_buffer_lock_reserve(buffer, TRACE_STACK,
-> -				    (sizeof(*entry) - sizeof(entry->caller)) + size,
-> +				    struct_size(entry, caller, nr_entries),
->  				    trace_ctx);
-
-Your definition of stack_entry_dynamic is wrong, because stack_entry is
-really (as created by the macro, hence why this is error prone):
-
-struct stack_entry {
-	struct trace_entry	ent;
-	int			size;
-	long			caller[8];
-};
-
-So you didn't allocate enough, and are writing into the wrong part of the
-data, corrupting it.
-
-This is why I much rather prefer the simple:
-
- 	ptr += offsetof(typeof(*entry), caller);
- 	memcpy(ptr, fstack->calls, size);
-
-Which doesn't need to care about synchronizing with the macro magic of the
-structure, which may change in the future, and this will lead to one more
-location that would need to be updated, but likely forgotten.
-
-C is fun, let's go shopping!
-
--- Steve
+Best regards,
+-- 
+Jens Axboe
 
 
->  	if (!event)
->  		goto out;
->  	entry = ring_buffer_event_data(event);
->  
-> -	memcpy(&entry->caller, fstack->calls, size);
->  	entry->size = nr_entries;
-> +	memcpy(entry->caller, fstack->calls, flex_array_size(entry, caller, nr_entries));
->  
->  	if (!call_filter_check_discard(call, entry, buffer, event))
->  		__buffer_unlock_commit(buffer, event);
-> 
 
