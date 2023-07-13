@@ -2,138 +2,132 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 87111C001DD
-	for <linux-trace-kernel@archiver.kernel.org>; Thu, 13 Jul 2023 15:47:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F8E7C0015E
+	for <linux-trace-kernel@archiver.kernel.org>; Thu, 13 Jul 2023 16:53:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231377AbjGMPrI (ORCPT
+        id S235063AbjGMQxf (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Thu, 13 Jul 2023 11:47:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48598 "EHLO
+        Thu, 13 Jul 2023 12:53:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33938 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232700AbjGMPrF (ORCPT
+        with ESMTP id S232012AbjGMQxf (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Thu, 13 Jul 2023 11:47:05 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6F2F826AE;
-        Thu, 13 Jul 2023 08:47:03 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 0504561087;
-        Thu, 13 Jul 2023 15:47:03 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E2B4AC433C8;
-        Thu, 13 Jul 2023 15:47:01 +0000 (UTC)
-Date:   Thu, 13 Jul 2023 11:47:00 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     LKML <linux-kernel@vger.kernel.org>,
-        Linux Trace Kernel <linux-trace-kernel@vger.kernel.org>
-Cc:     Masami Hiramatsu <mhiramat@kernel.org>,
+        Thu, 13 Jul 2023 12:53:35 -0400
+Received: from mail-pg1-x52b.google.com (mail-pg1-x52b.google.com [IPv6:2607:f8b0:4864:20::52b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C248E2D50
+        for <linux-trace-kernel@vger.kernel.org>; Thu, 13 Jul 2023 09:53:22 -0700 (PDT)
+Received: by mail-pg1-x52b.google.com with SMTP id 41be03b00d2f7-55af0a816e4so569589a12.1
+        for <linux-trace-kernel@vger.kernel.org>; Thu, 13 Jul 2023 09:53:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1689267202; x=1691859202;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=NoNGGvzPoC+CfmJaMdzXCn37KFGOyeGfI/UvmRM+Do0=;
+        b=G9AtbbPvATaVSbvSLJQJamXs5udACD6yAYKkKVVbhuaLC65+5LQidnKuoPpjeWgaYV
+         Kkq8yIQGtzi7ifWRea8+yytsz/kAGVCRcxsJZdCBkiGqZ9K4yKEPdGjomttT8OLr5UOB
+         H4rvrN3juTFhitd2ZgQHx5oFthRgOwbJqCdV4=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1689267202; x=1691859202;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=NoNGGvzPoC+CfmJaMdzXCn37KFGOyeGfI/UvmRM+Do0=;
+        b=IMqMHuGwPRkHWaHMER7VsO+TDumCuC9cacN6zWaiQtG/5kKjWxn6AURc2ffvAbG3MF
+         ka2fLjeSx5pEKQoVWwmPoDjpdaYcg/abz4DJbE+1AF8gcRDGuyM7adcQ8gXbjHa48mPU
+         qHvAKStxdgNsT1RjaGrvEsqoid88bacNJjf1gNlf67MS9035jQ7Y9cRBDP2UVPWLXOj7
+         IKQBYJjZBZFsQD8CNRgIDXbDaawL8w4CsEj81L5XqGH94O6CuQBOxAptANejtTNR4uFH
+         mJGh3RHEtOfbDIdDF8+8t5n0axMWvfJA9VQ4/+6gLhdS5DlMFhaM/AtZbxxF475PxJ6a
+         IfaA==
+X-Gm-Message-State: ABy/qLYOsk9HaIli6EjvfR+NGekDa/GZHgeKFt7MKstkjLOCpvRPSLx3
+        30YhzkSWDw04reNvWF0lowjiHQ==
+X-Google-Smtp-Source: APBJJlHkhNi7qzNBIMq9ENOHZGdML1MCvQrdLivOAcrVfd4jNxyTp4Ll/r2OE+3aX72+qVOTZosNkQ==
+X-Received: by 2002:a17:903:482:b0:1b8:a2af:fe23 with SMTP id jj2-20020a170903048200b001b8a2affe23mr1383903plb.2.1689267202150;
+        Thu, 13 Jul 2023 09:53:22 -0700 (PDT)
+Received: from www.outflux.net (198-0-35-241-static.hfc.comcastbusiness.net. [198.0.35.241])
+        by smtp.gmail.com with ESMTPSA id f11-20020a17090274cb00b001b077301a58sm6134977plt.79.2023.07.13.09.53.20
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 13 Jul 2023 09:53:21 -0700 (PDT)
+Date:   Thu, 13 Jul 2023 09:53:20 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     Steven Rostedt <rostedt@goodmis.org>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Linux trace kernel <linux-trace-kernel@vger.kernel.org>,
+        linux-hardening@vger.kernel.org,
+        Masami Hiramatsu <mhiramat@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        Zheng Yejian <zhengyejian1@huawei.com>
-Subject: [PATCH 2/2] tracing: Add free_trace_iter_content() helper function
-Message-ID: <20230713114700.450e7a17@gandalf.local.home>
-In-Reply-To: <20230713114510.04c452ca@gandalf.local.home>
-References: <20230713114510.04c452ca@gandalf.local.home>
-X-Mailer: Claws Mail 3.19.1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+        Sven Schnelle <svens@linux.ibm.com>
+Subject: Re: [PATCH] tracing: Add back FORTIFY_SOURCE logic to kernel_stack
+ event structure
+Message-ID: <202307130953.B54C43B@keescook>
+References: <20230713092605.2ddb9788@rorschach.local.home>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230713092605.2ddb9788@rorschach.local.home>
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
+On Thu, Jul 13, 2023 at 09:26:05AM -0400, Steven Rostedt wrote:
+> From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
+> 
+> For backward compatibility, older tooling expects to see the kernel_stack
+> event with a "caller" field that is a fixed size array of 8 addresses. The
+> code now supports more than 8 with an added "size" field that states the
+> real number of entries. But the "caller" field still just looks like a
+> fixed size to user space.
+> 
+> Since the tracing macros that create the user space format files also
+> creates the structures that those files represent, the kernel_stack event
+> structure had its "caller" field a fixed size of 8, but in reality, when
+> it is allocated on the ring buffer, it can hold more if the stack trace is
+> bigger that 8 functions. The copying of these entries was simply done with
+> a memcpy():
+> 
+>   size = nr_entries * sizeof(unsigned long);
+>   memcpy(entry->caller, fstack->calls, size);
+> 
+> The FORTIFY_SOURCE logic noticed at runtime that when the nr_entries was
+> larger than 8, that the memcpy() was writing more than what the structure
+> stated it can hold and it complained about it. This is because the
+> FORTIFY_SOURCE code is unaware that the amount allocated is actually
+> enough to hold the size. It does not expect that a fixed size field will
+> hold more than the fixed size.
+> 
+> This was originally solved by hiding the caller assignment with some
+> pointer arithmetic.
+> 
+>   ptr = ring_buffer_data();
+>   entry = ptr;
+> 
+>   ptr += offsetof(typeof(*entry), caller);
+>   memcpy(ptr, fstack->calls, size);
+> 
+> But it is considered bad form to hide from kernel hardening. Instead, make
+> it work nicely with FORTIFY_SOURCE by adding a new __stack_array() macro
+> that is specific for this one special use case. The macro will take 4
+> arguments: type, item, len, field (whereas the __array() macro takes just
+> the first three). This macro will act just like the __array() macro when
+> creating the code to deal with the format file that is exposed to user
+> space. But for the kernel, it will turn the caller field into:
+> 
+>   type item[] __counted_by(field);
+> 
+> or for this instance:
+> 
+>   unsigned long caller[] __counted_by(size);
+> 
+> Now the kernel code can expose the assignment of the caller to the
+> FORTIFY_SOURCE and everyone is happy!
+> 
+> Link: https://lore.kernel.org/linux-trace-kernel/20230712105235.5fc441aa@gandalf.local.home/
+> 
+> Suggested-by: Kees Cook <keescook@chromium.org>
+> Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
 
-As the trace iterator is created and used by various interfaces, the clean
-up of it needs to be consistent. Create a free_trace_iter_content() helper
-function that frees the content of the iterator and use that to clean it
-up in all places that it is used.
+Yay! This looks good. :)
 
-Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
----
- kernel/trace/trace.c | 40 ++++++++++++++++++++++++++++------------
- 1 file changed, 28 insertions(+), 12 deletions(-)
+Reviewed-by: Kees Cook <keescook@chromium.org>
 
-diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
-index 1c370ffbe062..3f38250637e2 100644
---- a/kernel/trace/trace.c
-+++ b/kernel/trace/trace.c
-@@ -4815,6 +4815,25 @@ static const struct seq_operations tracer_seq_ops = {
- 	.show		= s_show,
- };
- 
-+/*
-+ * Note, as iter itself can be allocated and freed in different
-+ * ways, this function is only used to free its content, and not
-+ * the iterator itself. The only requirement to all the allocations
-+ * is that it must zero all fields (kzalloc), as freeing works with
-+ * ethier allocated content or NULL.
-+ */
-+static void free_trace_iter_content(struct trace_iterator *iter)
-+{
-+	/* The fmt is either NULL, allocated or points to static_fmt_buf */
-+	if (iter->fmt != static_fmt_buf)
-+		kfree(iter->fmt);
-+
-+	kfree(iter->temp);
-+	kfree(iter->buffer_iter);
-+	mutex_destroy(&iter->mutex);
-+	free_cpumask_var(iter->started);
-+}
-+
- static struct trace_iterator *
- __tracing_open(struct inode *inode, struct file *file, bool snapshot)
- {
-@@ -4922,8 +4941,7 @@ __tracing_open(struct inode *inode, struct file *file, bool snapshot)
- 
-  fail:
- 	mutex_unlock(&trace_types_lock);
--	kfree(iter->temp);
--	kfree(iter->buffer_iter);
-+	free_trace_iter_content(iter);
- release:
- 	seq_release_private(inode, file);
- 	return ERR_PTR(-ENOMEM);
-@@ -5002,11 +5020,7 @@ static int tracing_release(struct inode *inode, struct file *file)
- 
- 	mutex_unlock(&trace_types_lock);
- 
--	mutex_destroy(&iter->mutex);
--	free_cpumask_var(iter->started);
--	kfree(iter->fmt);
--	kfree(iter->temp);
--	kfree(iter->buffer_iter);
-+	free_trace_iter_content(iter);
- 	seq_release_private(inode, file);
- 
- 	return 0;
-@@ -6709,7 +6723,12 @@ static int tracing_open_pipe(struct inode *inode, struct file *filp)
- 	}
- 
- 	trace_seq_init(&iter->seq);
--	iter->trace = tr->current_trace;
-+
-+	iter->trace = kzalloc(sizeof(*iter->trace), GFP_KERNEL);
-+	if (!iter->trace)
-+		goto fail;
-+
-+	*iter->trace = *tr->current_trace;
- 
- 	if (!alloc_cpumask_var(&iter->started, GFP_KERNEL)) {
- 		ret = -ENOMEM;
-@@ -6763,10 +6782,7 @@ static int tracing_release_pipe(struct inode *inode, struct file *file)
- 
- 	mutex_unlock(&trace_types_lock);
- 
--	free_cpumask_var(iter->started);
--	kfree(iter->fmt);
--	kfree(iter->temp);
--	mutex_destroy(&iter->mutex);
-+	free_trace_iter_content(iter);
- 	kfree(iter);
- 
- 	trace_array_put(tr);
 -- 
-2.40.1
-
+Kees Cook
