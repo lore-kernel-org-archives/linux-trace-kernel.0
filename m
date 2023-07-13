@@ -2,95 +2,94 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BE59CC001DD
-	for <linux-trace-kernel@archiver.kernel.org>; Thu, 13 Jul 2023 14:23:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DB37BC001DD
+	for <linux-trace-kernel@archiver.kernel.org>; Thu, 13 Jul 2023 14:34:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229523AbjGMOXZ (ORCPT
+        id S231129AbjGMOeD (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Thu, 13 Jul 2023 10:23:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39358 "EHLO
+        Thu, 13 Jul 2023 10:34:03 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47192 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229472AbjGMOXY (ORCPT
+        with ESMTP id S230512AbjGMOeA (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Thu, 13 Jul 2023 10:23:24 -0400
-Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9E18526AF;
-        Thu, 13 Jul 2023 07:23:23 -0700 (PDT)
-Received: from dggpeml500012.china.huawei.com (unknown [172.30.72.56])
-        by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4R1xd94V56zVjbZ;
-        Thu, 13 Jul 2023 22:22:05 +0800 (CST)
-Received: from [10.67.110.218] (10.67.110.218) by
- dggpeml500012.china.huawei.com (7.185.36.15) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.27; Thu, 13 Jul 2023 22:23:20 +0800
-Message-ID: <bae57723-50f4-a497-3691-33c4f1234896@huawei.com>
-Date:   Thu, 13 Jul 2023 22:23:20 +0800
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.6.0
+        Thu, 13 Jul 2023 10:34:00 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 382E02702;
+        Thu, 13 Jul 2023 07:33:57 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 84081612FB;
+        Thu, 13 Jul 2023 14:33:56 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 56B13C433C7;
+        Thu, 13 Jul 2023 14:33:55 +0000 (UTC)
+Date:   Thu, 13 Jul 2023 10:33:53 -0400
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     Zheng Yejian <zhengyejian1@huawei.com>
+Cc:     <mhiramat@kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-trace-kernel@vger.kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>
 Subject: Re: [PATCH] traing: Fix memory leak of iter->temp when reading
  trace_pipe
-Content-Language: en-US
-To:     <rostedt@goodmis.org>, <mhiramat@kernel.org>
-CC:     <linux-kernel@vger.kernel.org>,
-        <linux-trace-kernel@vger.kernel.org>
-References: <20230713141435.1133021-1-zhengyejian1@huawei.com>
-From:   Zheng Yejian <zhengyejian1@huawei.com>
+Message-ID: <20230713103353.29cae218@gandalf.local.home>
 In-Reply-To: <20230713141435.1133021-1-zhengyejian1@huawei.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
+References: <20230713141435.1133021-1-zhengyejian1@huawei.com>
+X-Mailer: Claws Mail 3.19.1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.67.110.218]
-X-ClientProxiedBy: dggems705-chm.china.huawei.com (10.3.19.182) To
- dggpeml500012.china.huawei.com (7.185.36.15)
-X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On 2023/7/13 22:14, Zheng Yejian wrote:
+On Thu, 13 Jul 2023 22:14:35 +0800
+Zheng Yejian <zhengyejian1@huawei.com> wrote:
+
 > kmemleak reports:
->    unreferenced object 0xffff88814d14e200 (size 256):
->      comm "cat", pid 336, jiffies 4294871818 (age 779.490s)
->      hex dump (first 32 bytes):
->        04 00 01 03 00 00 00 00 08 00 00 00 00 00 00 00  ................
->        0c d8 c8 9b ff ff ff ff 04 5a ca 9b ff ff ff ff  .........Z......
->      backtrace:
->        [<ffffffff9bdff18f>] __kmalloc+0x4f/0x140
->        [<ffffffff9bc9238b>] trace_find_next_entry+0xbb/0x1d0
->        [<ffffffff9bc9caef>] trace_print_lat_context+0xaf/0x4e0
->        [<ffffffff9bc94490>] print_trace_line+0x3e0/0x950
->        [<ffffffff9bc95499>] tracing_read_pipe+0x2d9/0x5a0
->        [<ffffffff9bf03a43>] vfs_read+0x143/0x520
->        [<ffffffff9bf04c2d>] ksys_read+0xbd/0x160
->        [<ffffffff9d0f0edf>] do_syscall_64+0x3f/0x90
->        [<ffffffff9d2000aa>] entry_SYSCALL_64_after_hwframe+0x6e/0xd8
+>   unreferenced object 0xffff88814d14e200 (size 256):
+>     comm "cat", pid 336, jiffies 4294871818 (age 779.490s)
+>     hex dump (first 32 bytes):
+>       04 00 01 03 00 00 00 00 08 00 00 00 00 00 00 00  ................
+>       0c d8 c8 9b ff ff ff ff 04 5a ca 9b ff ff ff ff  .........Z......
+>     backtrace:
+>       [<ffffffff9bdff18f>] __kmalloc+0x4f/0x140
+>       [<ffffffff9bc9238b>] trace_find_next_entry+0xbb/0x1d0
+>       [<ffffffff9bc9caef>] trace_print_lat_context+0xaf/0x4e0
+>       [<ffffffff9bc94490>] print_trace_line+0x3e0/0x950
+>       [<ffffffff9bc95499>] tracing_read_pipe+0x2d9/0x5a0
+>       [<ffffffff9bf03a43>] vfs_read+0x143/0x520
+>       [<ffffffff9bf04c2d>] ksys_read+0xbd/0x160
+>       [<ffffffff9d0f0edf>] do_syscall_64+0x3f/0x90
+>       [<ffffffff9d2000aa>] entry_SYSCALL_64_after_hwframe+0x6e/0xd8
 > 
 > when reading file 'trace_pipe', 'iter->temp' is allocated or relocated
 > in trace_find_next_entry() but not freed before 'trace_pipe' is closed.
 > 
 > To fix it, free 'iter->temp' in tracing_release_pipe().
 > 
-
-Sorry, forget the Fixes tag:(
-
-Is following Fixes right?
-Fixes: ff895103a84a ("tracing: Save off entry when peeking at next entry")
-
 > Signed-off-by: Zheng Yejian <zhengyejian1@huawei.com>
+
+Why is it that every time I send a pull request to Linus, I get another fix???
+
+Anyway, Linus, hold off. I'll send a v3 with this included as well.
+
+-- Steve
+
 > ---
->   kernel/trace/trace.c | 1 +
->   1 file changed, 1 insertion(+)
+>  kernel/trace/trace.c | 1 +
+>  1 file changed, 1 insertion(+)
 > 
 > diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
 > index 4529e264cb86..94cfaa884578 100644
 > --- a/kernel/trace/trace.c
 > +++ b/kernel/trace/trace.c
 > @@ -6764,6 +6764,7 @@ static int tracing_release_pipe(struct inode *inode, struct file *file)
->   
->   	free_cpumask_var(iter->started);
->   	kfree(iter->fmt);
+>  
+>  	free_cpumask_var(iter->started);
+>  	kfree(iter->fmt);
 > +	kfree(iter->temp);
->   	mutex_destroy(&iter->mutex);
->   	kfree(iter);
->   
+>  	mutex_destroy(&iter->mutex);
+>  	kfree(iter);
+>  
 
