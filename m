@@ -2,39 +2,40 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 28592C0015E
-	for <linux-trace-kernel@archiver.kernel.org>; Thu, 13 Jul 2023 14:48:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 97AF3C0015E
+	for <linux-trace-kernel@archiver.kernel.org>; Thu, 13 Jul 2023 14:51:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231794AbjGMOsD (ORCPT
+        id S229494AbjGMOvV (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Thu, 13 Jul 2023 10:48:03 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54030 "EHLO
+        Thu, 13 Jul 2023 10:51:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56540 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231126AbjGMOr6 (ORCPT
+        with ESMTP id S229721AbjGMOvU (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Thu, 13 Jul 2023 10:47:58 -0400
+        Thu, 13 Jul 2023 10:51:20 -0400
 Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A443D19A6;
-        Thu, 13 Jul 2023 07:47:57 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 96D2A2707;
+        Thu, 13 Jul 2023 07:51:19 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange X25519 server-signature RSA-PSS (2048 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 40477615BE;
-        Thu, 13 Jul 2023 14:47:57 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2CAF6C433C8;
-        Thu, 13 Jul 2023 14:47:56 +0000 (UTC)
-Date:   Thu, 13 Jul 2023 10:47:54 -0400
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 34CAD61087;
+        Thu, 13 Jul 2023 14:51:19 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EE755C433C8;
+        Thu, 13 Jul 2023 14:51:17 +0000 (UTC)
+Date:   Thu, 13 Jul 2023 10:51:16 -0400
 From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Zheng Yejian <zhengyejian1@huawei.com>
-Cc:     <mhiramat@kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-trace-kernel@vger.kernel.org>
+To:     "Zhengyejian (Zetta)" <zhengyejian1@huawei.com>
+Cc:     mhiramat <mhiramat@kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        linux-trace-kernel <linux-trace-kernel@vger.kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>
 Subject: Re: [PATCH] traing: Fix memory leak of iter->temp when reading
  trace_pipe
-Message-ID: <20230713104754.6cf4696c@gandalf.local.home>
-In-Reply-To: <bae57723-50f4-a497-3691-33c4f1234896@huawei.com>
+Message-ID: <20230713105029.6a160f43@gandalf.local.home>
 References: <20230713141435.1133021-1-zhengyejian1@huawei.com>
-        <bae57723-50f4-a497-3691-33c4f1234896@huawei.com>
+        <20230713103353.29cae218@gandalf.local.home>
 X-Mailer: Claws Mail 3.19.1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
@@ -43,61 +44,22 @@ Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On Thu, 13 Jul 2023 22:23:20 +0800
-Zheng Yejian <zhengyejian1@huawei.com> wrote:
+On Thu, 13 Jul 2023 14:44:04 +0000
+"Zhengyejian (Zetta)" <zhengyejian1@huawei.com> wrote:
 
-> On 2023/7/13 22:14, Zheng Yejian wrote:
-> > kmemleak reports:
-> >    unreferenced object 0xffff88814d14e200 (size 256):
-> >      comm "cat", pid 336, jiffies 4294871818 (age 779.490s)
-> >      hex dump (first 32 bytes):
-> >        04 00 01 03 00 00 00 00 08 00 00 00 00 00 00 00  ................
-> >        0c d8 c8 9b ff ff ff ff 04 5a ca 9b ff ff ff ff  .........Z......
-> >      backtrace:
-> >        [<ffffffff9bdff18f>] __kmalloc+0x4f/0x140
-> >        [<ffffffff9bc9238b>] trace_find_next_entry+0xbb/0x1d0
-> >        [<ffffffff9bc9caef>] trace_print_lat_context+0xaf/0x4e0
-> >        [<ffffffff9bc94490>] print_trace_line+0x3e0/0x950
-> >        [<ffffffff9bc95499>] tracing_read_pipe+0x2d9/0x5a0
-> >        [<ffffffff9bf03a43>] vfs_read+0x143/0x520
-> >        [<ffffffff9bf04c2d>] ksys_read+0xbd/0x160
-> >        [<ffffffff9d0f0edf>] do_syscall_64+0x3f/0x90
-> >        [<ffffffff9d2000aa>] entry_SYSCALL_64_after_hwframe+0x6e/0xd8
-> > 
-> > when reading file 'trace_pipe', 'iter->temp' is allocated or relocated
-> > in trace_find_next_entry() but not freed before 'trace_pipe' is closed.
-> > 
-> > To fix it, free 'iter->temp' in tracing_release_pipe().
-> >   
+> Hi, Steve,
 > 
-> Sorry, forget the Fixes tag:(
+> Please correct a typo in title: trainy -> tracing
+
+ traing -> tracing ;-)
+
 > 
-> Is following Fixes right?
-> Fixes: ff895103a84a ("tracing: Save off entry when peeking at next entry")
+> I'm a little hurry home from work :(
+> I'll pay attention to it next time.
 
-That's the one I already added ;-)
+No problem. I made the fix.
 
-Don't worry too much about adding fixes, I will always analyze a fix patch
-to find out what it actually fixes. If you add one, I'll still confirm it.
+But seriously, thanks for all the fixes you are sending my way!
 
 -- Steve
-
-> 
-> > Signed-off-by: Zheng Yejian <zhengyejian1@huawei.com>
-> > ---
-> >   kernel/trace/trace.c | 1 +
-> >   1 file changed, 1 insertion(+)
-> > 
-> > diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
-> > index 4529e264cb86..94cfaa884578 100644
-> > --- a/kernel/trace/trace.c
-> > +++ b/kernel/trace/trace.c
-> > @@ -6764,6 +6764,7 @@ static int tracing_release_pipe(struct inode *inode, struct file *file)
-> >   
-> >   	free_cpumask_var(iter->started);
-> >   	kfree(iter->fmt);
-> > +	kfree(iter->temp);
-> >   	mutex_destroy(&iter->mutex);
-> >   	kfree(iter);
-> >     
 
