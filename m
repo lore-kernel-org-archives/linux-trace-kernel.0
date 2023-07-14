@@ -2,165 +2,145 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7043BC001DC
-	for <linux-trace-kernel@archiver.kernel.org>; Fri, 14 Jul 2023 02:38:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BA05EB64DA
+	for <linux-trace-kernel@archiver.kernel.org>; Fri, 14 Jul 2023 08:38:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234364AbjGNCiG (ORCPT
+        id S234819AbjGNIia (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Thu, 13 Jul 2023 22:38:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54850 "EHLO
+        Fri, 14 Jul 2023 04:38:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48568 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234464AbjGNCiE (ORCPT
+        with ESMTP id S234789AbjGNIi3 (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Thu, 13 Jul 2023 22:38:04 -0400
+        Fri, 14 Jul 2023 04:38:29 -0400
 Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8D2312D4B;
-        Thu, 13 Jul 2023 19:38:02 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0F7E2A7;
+        Fri, 14 Jul 2023 01:38:29 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange X25519 server-signature RSA-PSS (2048 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 22C4261BCD;
-        Fri, 14 Jul 2023 02:38:02 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F3470C433C7;
-        Fri, 14 Jul 2023 02:37:59 +0000 (UTC)
-Date:   Thu, 13 Jul 2023 22:37:58 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Ajay Kaher <akaher@vmware.com>
-Cc:     shuah@kernel.org, mhiramat@kernel.org, chinglinyu@google.com,
-        linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
-        linux-trace-kernel@vger.kernel.org, lkp@intel.com,
-        namit@vmware.com, oe-lkp@lists.linux.dev, amakhalov@vmware.com,
-        er.ajay.kaher@gmail.com, srivatsa@csail.mit.edu, tkundu@vmware.com,
-        vsirnapalli@vmware.com
-Subject: Re: [PATCH v4 10/10] test: ftrace: Fix kprobe test for eventfs
-Message-ID: <20230713223758.31a1e391@rorschach.local.home>
-In-Reply-To: <1689248004-8158-11-git-send-email-akaher@vmware.com>
-References: <1689248004-8158-1-git-send-email-akaher@vmware.com>
-        <1689248004-8158-11-git-send-email-akaher@vmware.com>
-X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
-MIME-Version: 1.0
+        by dfw.source.kernel.org (Postfix) with ESMTPS id A218961C7A;
+        Fri, 14 Jul 2023 08:38:28 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2479EC433C8;
+        Fri, 14 Jul 2023 08:38:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1689323908;
+        bh=PcQa7IpyoQwWODY5Hl5RtYLF7GSMP5/Gqkr/Pf+UMEo=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=azlEJREmqWQJSER1ysmZz4gaEEAjynfdZKkkVotHzjYf6WfKHOLXeH7LRzp/JUaZJ
+         yFNU/MIqDT2SnfDG8Q4V5pFd4Wp+x9Ikte91ZAqZfrMPbHtoF/XbET5adsHN40FR5A
+         5bzTR47+VkkrQqZLDfbAlM7dRyKtfTzW6MfVTNf85yxoLzHJeCp8i3CyxMZFLT2jPC
+         loWv0JXqmkZR5Kkhxxns/HVGnQMGehD2BOM5hWv5N0eL83y3kEy3cVPwI0pfGGwbQs
+         UFIUC8mTHcB/BAktdQDjNyTI9kKuVfqw0IJgA4hsi0CSVbMna/Xm1ynNEuPVEwO21Q
+         lPgBY4oUKkM7Q==
+Date:   Fri, 14 Jul 2023 17:38:24 +0900
+From:   Masami Hiramatsu (Google) <mhiramat@kernel.org>
+To:     Steven Rostedt <rostedt@goodmis.org>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Linux Trace Kernel <linux-trace-kernel@vger.kernel.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Zheng Yejian <zhengyejian1@huawei.com>
+Subject: Re: [PATCH 1/2] tracing: Remove unnecessary copying of
+ tr->current_trace
+Message-Id: <20230714173824.6fd0302c6d1e60770af77ea4@kernel.org>
+In-Reply-To: <20230713114626.704ebe8e@gandalf.local.home>
+References: <20230713114510.04c452ca@gandalf.local.home>
+        <20230713114626.704ebe8e@gandalf.local.home>
+X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On Thu, 13 Jul 2023 17:03:24 +0530
-Ajay Kaher <akaher@vmware.com> wrote:
+On Thu, 13 Jul 2023 11:46:26 -0400
+Steven Rostedt <rostedt@goodmis.org> wrote:
 
-> kprobe_args_char.tc, kprobe_args_string.tc has validation check
-> for tracefs_create_dir, for eventfs it should be eventfs_create_dir.
+> From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
 > 
-> Signed-off-by: Ajay Kaher <akaher@vmware.com>
-> Co-developed-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
-> Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
-> Tested-by: Ching-lin Yu <chinglinyu@google.com>
-> Acked-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+> I have no idea why the iterator had to allocate a descriptor to make a
+> copy of "current_trace" (now "tr->current_trace"). The content of that
+> pointer never changes, so it's sufficient to just copy the pointer to
+> maintain integrity with reading it.
+> 
+> This is more of a clean up than a fix.
 
-As this patch as is will break when running on older kernels, I was
-wondering if we should do this instead?
+Interesting bug. Anyway looks good to me.
 
-diff --git a/tools/testing/selftests/ftrace/test.d/kprobe/kprobe_args_char.tc b/tools/testing/selftests/ftrace/test.d/kprobe/kprobe_args_char.tc
-index 285b4770efad..ff7499eb98d6 100644
---- a/tools/testing/selftests/ftrace/test.d/kprobe/kprobe_args_char.tc
-+++ b/tools/testing/selftests/ftrace/test.d/kprobe/kprobe_args_char.tc
-@@ -34,14 +34,19 @@ mips*)
- esac
- 
- : "Test get argument (1)"
--echo "p:testprobe tracefs_create_dir arg1=+0(${ARG1}):char" > kprobe_events
-+if grep -q eventfs_add_dir available_filter_functions; then
-+  DIR_NAME="eventfs_add_dir"
-+else
-+  DIR_NAME="tracefs_create_dir"
-+fi
-+echo "p:testprobe ${DIR_NAME} arg1=+0(${ARG1}):char" > kprobe_events
- echo 1 > events/kprobes/testprobe/enable
- echo "p:test $FUNCTION_FORK" >> kprobe_events
- grep -qe "testprobe.* arg1='t'" trace
- 
- echo 0 > events/kprobes/testprobe/enable
- : "Test get argument (2)"
--echo "p:testprobe tracefs_create_dir arg1=+0(${ARG1}):char arg2=+0(${ARG1}):char[4]" > kprobe_events
-+echo "p:testprobe ${DIR_NAME} arg1=+0(${ARG1}):char arg2=+0(${ARG1}):char[4]" > kprobe_events
- echo 1 > events/kprobes/testprobe/enable
- echo "p:test $FUNCTION_FORK" >> kprobe_events
- grep -qe "testprobe.* arg1='t' arg2={'t','e','s','t'}" trace
-diff --git a/tools/testing/selftests/ftrace/test.d/kprobe/kprobe_args_string.tc b/tools/testing/selftests/ftrace/test.d/kprobe/kprobe_args_string.tc
-index a4f8e7c53c1f..a202b2ea4baf 100644
---- a/tools/testing/selftests/ftrace/test.d/kprobe/kprobe_args_string.tc
-+++ b/tools/testing/selftests/ftrace/test.d/kprobe/kprobe_args_string.tc
-@@ -37,14 +37,19 @@ loongarch*)
- esac
- 
- : "Test get argument (1)"
--echo "p:testprobe tracefs_create_dir arg1=+0(${ARG1}):string" > kprobe_events
-+if grep -q eventfs_add_dir available_filter_functions; then
-+  DIR_NAME="eventfs_add_dir"
-+else
-+  DIR_NAME="tracefs_create_dir"
-+fi
-+echo "p:testprobe ${DIR_NAME} arg1=+0(${ARG1}):string" > kprobe_events
- echo 1 > events/kprobes/testprobe/enable
- echo "p:test $FUNCTION_FORK" >> kprobe_events
- grep -qe "testprobe.* arg1=\"test\"" trace
- 
- echo 0 > events/kprobes/testprobe/enable
- : "Test get argument (2)"
--echo "p:testprobe tracefs_create_dir arg1=+0(${ARG1}):string arg2=+0(${ARG1}):string" > kprobe_events
-+echo "p:testprobe ${DIR_NAME} arg1=+0(${ARG1}):string arg2=+0(${ARG1}):string" > kprobe_events
- echo 1 > events/kprobes/testprobe/enable
- echo "p:test $FUNCTION_FORK" >> kprobe_events
- grep -qe "testprobe.* arg1=\"test\" arg2=\"test\"" trace
+Reviewed-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 
--- Steve
+Thank you,
 
+> 
+> Fixes: d7350c3f45694 ("tracing/core: make the read callbacks reentrants")
+> Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
 > ---
->  .../selftests/ftrace/test.d/kprobe/kprobe_args_char.tc        | 4 ++--
->  .../selftests/ftrace/test.d/kprobe/kprobe_args_string.tc      | 4 ++--
->  2 files changed, 4 insertions(+), 4 deletions(-)
+>  kernel/trace/trace.c | 22 +++-------------------
+>  1 file changed, 3 insertions(+), 19 deletions(-)
 > 
-> diff --git a/tools/testing/selftests/ftrace/test.d/kprobe/kprobe_args_char.tc b/tools/testing/selftests/ftrace/test.d/kprobe/kprobe_args_char.tc
-> index 285b4770efad..523cfb64539f 100644
-> --- a/tools/testing/selftests/ftrace/test.d/kprobe/kprobe_args_char.tc
-> +++ b/tools/testing/selftests/ftrace/test.d/kprobe/kprobe_args_char.tc
-> @@ -34,14 +34,14 @@ mips*)
->  esac
+> diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
+> index be847d45d81c..1c370ffbe062 100644
+> --- a/kernel/trace/trace.c
+> +++ b/kernel/trace/trace.c
+> @@ -4205,15 +4205,9 @@ static void *s_start(struct seq_file *m, loff_t *pos)
+>  	loff_t l = 0;
+>  	int cpu;
 >  
->  : "Test get argument (1)"
-> -echo "p:testprobe tracefs_create_dir arg1=+0(${ARG1}):char" > kprobe_events
-> +echo "p:testprobe eventfs_add_dir arg1=+0(${ARG1}):char" > kprobe_events
->  echo 1 > events/kprobes/testprobe/enable
->  echo "p:test $FUNCTION_FORK" >> kprobe_events
->  grep -qe "testprobe.* arg1='t'" trace
+> -	/*
+> -	 * copy the tracer to avoid using a global lock all around.
+> -	 * iter->trace is a copy of current_trace, the pointer to the
+> -	 * name may be used instead of a strcmp(), as iter->trace->name
+> -	 * will point to the same string as current_trace->name.
+> -	 */
+>  	mutex_lock(&trace_types_lock);
+> -	if (unlikely(tr->current_trace && iter->trace->name != tr->current_trace->name))
+> -		*iter->trace = *tr->current_trace;
+> +	if (unlikely(tr->current_trace != iter->trace))
+> +		iter->trace = tr->current_trace;
+>  	mutex_unlock(&trace_types_lock);
 >  
->  echo 0 > events/kprobes/testprobe/enable
->  : "Test get argument (2)"
-> -echo "p:testprobe tracefs_create_dir arg1=+0(${ARG1}):char arg2=+0(${ARG1}):char[4]" > kprobe_events
-> +echo "p:testprobe eventfs_add_dir arg1=+0(${ARG1}):char arg2=+0(${ARG1}):char[4]" > kprobe_events
->  echo 1 > events/kprobes/testprobe/enable
->  echo "p:test $FUNCTION_FORK" >> kprobe_events
->  grep -qe "testprobe.* arg1='t' arg2={'t','e','s','t'}" trace
-> diff --git a/tools/testing/selftests/ftrace/test.d/kprobe/kprobe_args_string.tc b/tools/testing/selftests/ftrace/test.d/kprobe/kprobe_args_string.tc
-> index a4f8e7c53c1f..b9f8c3f8bae8 100644
-> --- a/tools/testing/selftests/ftrace/test.d/kprobe/kprobe_args_string.tc
-> +++ b/tools/testing/selftests/ftrace/test.d/kprobe/kprobe_args_string.tc
-> @@ -37,14 +37,14 @@ loongarch*)
->  esac
+>  #ifdef CONFIG_TRACER_MAX_TRACE
+> @@ -4862,16 +4856,8 @@ __tracing_open(struct inode *inode, struct file *file, bool snapshot)
+>  	iter->fmt = NULL;
+>  	iter->fmt_size = 0;
 >  
->  : "Test get argument (1)"
-> -echo "p:testprobe tracefs_create_dir arg1=+0(${ARG1}):string" > kprobe_events
-> +echo "p:testprobe eventfs_add_dir arg1=+0(${ARG1}):string" > kprobe_events
->  echo 1 > events/kprobes/testprobe/enable
->  echo "p:test $FUNCTION_FORK" >> kprobe_events
->  grep -qe "testprobe.* arg1=\"test\"" trace
+> -	/*
+> -	 * We make a copy of the current tracer to avoid concurrent
+> -	 * changes on it while we are reading.
+> -	 */
+>  	mutex_lock(&trace_types_lock);
+> -	iter->trace = kzalloc(sizeof(*iter->trace), GFP_KERNEL);
+> -	if (!iter->trace)
+> -		goto fail;
+> -
+> -	*iter->trace = *tr->current_trace;
+> +	iter->trace = tr->current_trace;
 >  
->  echo 0 > events/kprobes/testprobe/enable
->  : "Test get argument (2)"
-> -echo "p:testprobe tracefs_create_dir arg1=+0(${ARG1}):string arg2=+0(${ARG1}):string" > kprobe_events
-> +echo "p:testprobe eventfs_add_dir arg1=+0(${ARG1}):string arg2=+0(${ARG1}):string" > kprobe_events
->  echo 1 > events/kprobes/testprobe/enable
->  echo "p:test $FUNCTION_FORK" >> kprobe_events
->  grep -qe "testprobe.* arg1=\"test\" arg2=\"test\"" trace
+>  	if (!zalloc_cpumask_var(&iter->started, GFP_KERNEL))
+>  		goto fail;
+> @@ -4936,7 +4922,6 @@ __tracing_open(struct inode *inode, struct file *file, bool snapshot)
+>  
+>   fail:
+>  	mutex_unlock(&trace_types_lock);
+> -	kfree(iter->trace);
+>  	kfree(iter->temp);
+>  	kfree(iter->buffer_iter);
+>  release:
+> @@ -5021,7 +5006,6 @@ static int tracing_release(struct inode *inode, struct file *file)
+>  	free_cpumask_var(iter->started);
+>  	kfree(iter->fmt);
+>  	kfree(iter->temp);
+> -	kfree(iter->trace);
+>  	kfree(iter->buffer_iter);
+>  	seq_release_private(inode, file);
+>  
+> -- 
+> 2.40.1
+> 
 
+
+-- 
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
