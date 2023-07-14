@@ -2,94 +2,94 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 00382EB64DC
-	for <linux-trace-kernel@archiver.kernel.org>; Fri, 14 Jul 2023 18:55:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 30745EB64DC
+	for <linux-trace-kernel@archiver.kernel.org>; Fri, 14 Jul 2023 19:22:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235811AbjGNSzq (ORCPT
+        id S235576AbjGNTWX (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Fri, 14 Jul 2023 14:55:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56900 "EHLO
+        Fri, 14 Jul 2023 15:22:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38458 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235999AbjGNSzq (ORCPT
+        with ESMTP id S235247AbjGNTWW (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Fri, 14 Jul 2023 14:55:46 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CE1EB3586;
-        Fri, 14 Jul 2023 11:55:44 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 6670561DD7;
-        Fri, 14 Jul 2023 18:55:44 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EB384C433C7;
-        Fri, 14 Jul 2023 18:55:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linux-foundation.org;
-        s=korg; t=1689360943;
-        bh=KgsFiG5i/f94+WDrQrUG1IaMGJEiJyBBRwspPPnTsJA=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=pTWKUsw4htC64FOKSPZK+JYYig6e8a53zQ/zQgd9R027K38gj1I2EwFtJQJhHegKz
-         Y2DXrkon40FKOy8HJw9TYsjLnoDhE7bAZnmz3qeRL1eUWFk45ryJ5j634jcESIBg2Q
-         YCK4C9RgGp4v4lvYYVmiycgxXL/lSRdD6SwaScvM=
-Date:   Fri, 14 Jul 2023 11:55:42 -0700
-From:   Andrew Morton <akpm@linux-foundation.org>
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     Shuah Khan <skhan@linuxfoundation.org>,
-        David Gow <davidgow@google.com>,
-        Daniel Latypov <dlatypov@google.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        "Steven Rostedt (Google)" <rostedt@goodmis.org>,
-        linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
-        kunit-dev@googlegroups.com, linux-arm-kernel@lists.infradead.org,
-        linux-pci@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Brendan Higgins <brendan.higgins@linux.dev>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Lorenzo Pieralisi <lpieralisi@kernel.org>,
-        Sudeep Holla <sudeep.holla@arm.com>,
+        Fri, 14 Jul 2023 15:22:22 -0400
+Received: from mail-pg1-x536.google.com (mail-pg1-x536.google.com [IPv6:2607:f8b0:4864:20::536])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8D1681FC0
+        for <linux-trace-kernel@vger.kernel.org>; Fri, 14 Jul 2023 12:22:20 -0700 (PDT)
+Received: by mail-pg1-x536.google.com with SMTP id 41be03b00d2f7-55b22f82ac8so2303387a12.1
+        for <linux-trace-kernel@vger.kernel.org>; Fri, 14 Jul 2023 12:22:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=purestorage.com; s=google2022; t=1689362540; x=1691954540;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=MAy1Nmg9Ap1Qe0UwHvT/6xtuWqD4pHgiKYUbjAYyU40=;
+        b=WKnOfHWdVmhkN7isgvYOXqKox4Cd1GAlUg7TbK46LrTxhFBYsUk2PsvxTqbrJF1Ff5
+         XohvYMV2xNdZma3khBnSe4bvrxmxBp8PDZtZyJiMmv388jnhJh4d6vtfgUso1yxTFXuo
+         HQdxTU43e71ouoVt5V45Q694F3sdAVn9Tv26recHjyLmxCp3XDUHSZP3DFDSqXELFtOT
+         9F9kae8R2iyfvLFnajADd66G8hiB1E66qKA4ZjHQZZeIe4Z3GtG5zsM6pNxP5vPXNZ/Q
+         18laIQw0NlAfhBmUg13pNWWZN2JCa8p1cGdhWld5u9Oq1BrFKU8zYFQYRuAcwoItbLSr
+         oYGA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1689362540; x=1691954540;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=MAy1Nmg9Ap1Qe0UwHvT/6xtuWqD4pHgiKYUbjAYyU40=;
+        b=OYhbENBzlGiHEcBSBcmea/8U3k4AI61jH9fWulznXcnVH9cU5gD9QnDonwWrvhmUSQ
+         64gRyYgEKHUqliGnd78xlPGWwHtkWiE2PuGGV1xgvd57iwf0c3067py9pxFGHNIkNsrR
+         BLnVmDbsZ/WkdML3nCtgL+4lDmKC7LJXJxr+DAT54WwGRIvSUTOcEd2JT0aU43WCCwQu
+         AqoiTHEPC1NLZvD/Fetet5bgSJkHoNE/c5DB+llfle4LUKUYlMaR5gyiGKZIaaQlkjcg
+         fT76hpHdAu+T9a6obJr1pdyI0c8eFn/oCQ9z8pmghKonjnQZBHGgMNvGb6oXS7QUUJbi
+         z81A==
+X-Gm-Message-State: ABy/qLb0KoEPKEKKMl+alZ9GqfG6FV6WCB9zE8D8LD21mekJIpku+5PY
+        r399H4pXZrZG2ljBgblb8UYaCA==
+X-Google-Smtp-Source: APBJJlFHW1hxE0Y+jKVjsjwsoL2NoUjnUmgyrdOBUsowtg6aP6QU8U85OoEZ7AvpE/BQV8qu1bgn/w==
+X-Received: by 2002:a17:90a:43c6:b0:265:780e:5edc with SMTP id r64-20020a17090a43c600b00265780e5edcmr4957528pjg.10.1689362539885;
+        Fri, 14 Jul 2023 12:22:19 -0700 (PDT)
+Received: from gaia.lab.kspace.sh (c-98-207-191-243.hsd1.ca.comcast.net. [98.207.191.243])
+        by smtp.googlemail.com with ESMTPSA id 20-20020a17090a199400b00263ba6a248bsm1520537pji.1.2023.07.14.12.22.19
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 14 Jul 2023 12:22:19 -0700 (PDT)
+From:   Mohamed Khalfella <mkhalfella@purestorage.com>
+To:     mkhalfella@purestorage.com
+Cc:     stable@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>,
         Masami Hiramatsu <mhiramat@kernel.org>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>
-Subject: Re: [PATCH v2 1/1] kernel.h: Split out COUNT_ARGS() and
- CONCATENATE() to args.h
-Message-Id: <20230714115542.b5373a8dc80ba996338ee753@linux-foundation.org>
-In-Reply-To: <20230714142237.21836-1-andriy.shevchenko@linux.intel.com>
-References: <20230714142237.21836-1-andriy.shevchenko@linux.intel.com>
-X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        linux-kernel@vger.kernel.org (open list:TRACING),
+        linux-trace-kernel@vger.kernel.org (open list:TRACING)
+Subject: [PATCH] tracing/histograms: Return an error if we fail to add histogram to hist_vars list
+Date:   Fri, 14 Jul 2023 19:21:43 +0000
+Message-Id: <20230714192143.3656-1-mkhalfella@purestorage.com>
+X-Mailer: git-send-email 2.34.1
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On Fri, 14 Jul 2023 17:22:37 +0300 Andy Shevchenko <andriy.shevchenko@linux.intel.com> wrote:
+If the code fails to add histogram to hist_vars list, then ret should
+contain error code before jumping to unregister histogram.
 
-> kernel.h is being used as a dump for all kinds of stuff for a long time.
-> The COUNT_ARGS() and CONCATENATE() macros may be used in some places
-> without need of the full kernel.h dependency train with it.
-> 
-> Here is the attempt on cleaning it up by splitting out these macros().
-> 
-> While at it, include new header where it's being used and drop custom
-> implementation of these macros and document how it works.
+Cc: stable@vger.kernel.org
+Fixes: 6018b585e8c6 ("tracing/histograms: Add histograms to hist_vars if they have referenced variables")
+Signed-off-by: Mohamed Khalfella <mkhalfella@purestorage.com>
+---
+ kernel/trace/trace_events_hist.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-This blows up my x86_64 allmodconfig build, starting with
+diff --git a/kernel/trace/trace_events_hist.c b/kernel/trace/trace_events_hist.c
+index c8c61381eba4..d06938ae0717 100644
+--- a/kernel/trace/trace_events_hist.c
++++ b/kernel/trace/trace_events_hist.c
+@@ -6668,7 +6668,8 @@ static int event_hist_trigger_parse(struct event_command *cmd_ops,
+ 		goto out_unreg;
+ 
+ 	if (has_hist_vars(hist_data) || hist_data->n_var_refs) {
+-		if (save_hist_vars(hist_data))
++		ret = save_hist_vars(hist_data);
++		if (ret)
+ 			goto out_unreg;
+ 	}
+ 
+-- 
+2.34.1
 
-In file included from drivers/block/drbd/drbd_nl.c:78:
-./include/linux/genl_magic_func.h:26:26: error: 'CONCAT_' declared as function returning an array
-   26 | static struct nla_policy CONCAT_(GENL_MAGIC_FAMILY, _tla_nl_policy)[] = {
-      |                          ^~~~~~~
-./include/linux/genl_magic_func.h:26:15: error: parameter names (without types) in function declaration [-Werror]
-   26 | static struct nla_policy CONCAT_(GENL_MAGIC_FAMILY, _tla_nl_policy)[] = {
-      |               ^~~~~~~~~~
-./include/linux/genl_magic_func.h:26:15: error: function 'CONCAT_' is initialized like a variable
-./include/linux/drbd_genl.h:88:13: error: array index in non-array initializer
-   88 | GENL_struct(DRBD_NLA_CFG_REPLY, 1, drbd_cfg_reply,
-      |             ^~~~~~~~~~~~~~~~~~
-./include/linux/genl_magic_func.h:24:10: note: in definition of macro 'GENL_struct'
-   24 |         [tag_name] = { .type = NLA_NESTED },
-      |          ^~~~~~~~
-...
