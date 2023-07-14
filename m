@@ -2,240 +2,318 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FFECEB64DC
-	for <linux-trace-kernel@archiver.kernel.org>; Fri, 14 Jul 2023 16:45:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5142AEB64DC
+	for <linux-trace-kernel@archiver.kernel.org>; Fri, 14 Jul 2023 16:47:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235873AbjGNQpo (ORCPT
+        id S235199AbjGNQri (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Fri, 14 Jul 2023 12:45:44 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59106 "EHLO
+        Fri, 14 Jul 2023 12:47:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59518 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236044AbjGNQpn (ORCPT
+        with ESMTP id S230470AbjGNQri (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Fri, 14 Jul 2023 12:45:43 -0400
-Received: from mga06.intel.com (mga06b.intel.com [134.134.136.31])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1A56E30FD
-        for <linux-trace-kernel@vger.kernel.org>; Fri, 14 Jul 2023 09:45:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1689353142; x=1720889142;
-  h=date:from:to:cc:subject:message-id;
-  bh=xcVGswnD6I+8T/ksdeDJeVxVJFRlkTbHkPcxLWQ61zU=;
-  b=a4imnQwPjUjUGU60Q/VJv8bu4IGx1X3v2kkKZXH2yj508N4qT7RcjIAO
-   2cwn5uhIBALkrOKk8X+Z03ID5VwU/WntdjR18CM+tYjuJLMma6bq88flp
-   gVcOtNVC1LNvL3iD9/6kj2e2pQfnMsSXvpSamiuFy249Zy7nUgzPcgsPk
-   fjz26RElzu1DJZL6ze2w7u87wgNf1kbUbTxdH9wrSqeEvXkN29X99SIQV
-   FKz46SB40OfSw1+UQEoZPwN2xMOXXBo2hnn8Pry6XJigTru1F8C9Af3V0
-   agsvYdvrvjwWbGCv05CFgnel/udktfSfr2xkleNnlT4sg7NbGYlHKhX1z
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10771"; a="429278955"
-X-IronPort-AV: E=Sophos;i="6.01,206,1684825200"; 
-   d="scan'208";a="429278955"
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Jul 2023 09:45:41 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10771"; a="699737595"
-X-IronPort-AV: E=Sophos;i="6.01,206,1684825200"; 
-   d="scan'208";a="699737595"
-Received: from lkp-server01.sh.intel.com (HELO c544d7fc5005) ([10.239.97.150])
-  by orsmga006.jf.intel.com with ESMTP; 14 Jul 2023 09:45:39 -0700
-Received: from kbuild by c544d7fc5005 with local (Exim 4.96)
-        (envelope-from <lkp@intel.com>)
-        id 1qKLvH-0007ZG-0T;
-        Fri, 14 Jul 2023 16:45:39 +0000
-Date:   Sat, 15 Jul 2023 00:44:50 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     Andrew Morton <akpm@linux-foundation.org>
-Cc:     Linux Memory Management List <linux-mm@kvack.org>,
-        linux-trace-kernel@vger.kernel.org
-Subject: [linux-next:master] BUILD REGRESSION
- 7c2878be573282a9961c359b806ccf70afe1a6b6
-Message-ID: <202307150046.Yvsvcm5y-lkp@intel.com>
-User-Agent: s-nail v14.9.24
+        Fri, 14 Jul 2023 12:47:38 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E5236358C;
+        Fri, 14 Jul 2023 09:47:36 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 7F15661D64;
+        Fri, 14 Jul 2023 16:47:36 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3B39AC433C8;
+        Fri, 14 Jul 2023 16:47:34 +0000 (UTC)
+Date:   Fri, 14 Jul 2023 12:47:32 -0400
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     Ajay Kaher <akaher@vmware.com>
+Cc:     shuah@kernel.org, mhiramat@kernel.org, chinglinyu@google.com,
+        linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
+        linux-trace-kernel@vger.kernel.org, lkp@intel.com,
+        namit@vmware.com, oe-lkp@lists.linux.dev, amakhalov@vmware.com,
+        er.ajay.kaher@gmail.com, srivatsa@csail.mit.edu, tkundu@vmware.com,
+        vsirnapalli@vmware.com
+Subject: Re: [PATCH v4 06/10] eventfs: Implement functions to create eventfs
+ files and directories
+Message-ID: <20230714124732.63452948@gandalf.local.home>
+In-Reply-To: <1689248004-8158-7-git-send-email-akaher@vmware.com>
+References: <1689248004-8158-1-git-send-email-akaher@vmware.com>
+        <1689248004-8158-7-git-send-email-akaher@vmware.com>
+X-Mailer: Claws Mail 3.19.1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git master
-branch HEAD: 7c2878be573282a9961c359b806ccf70afe1a6b6  Add linux-next specific files for 20230714
 
-Error/Warning reports:
+Some more nits.
 
-https://lore.kernel.org/oe-kbuild-all/202306260401.qZlYQpV2-lkp@intel.com
+Subject: eventfs: Implement functions to create files and dirs when accessed
 
-Error/Warning: (recently discovered and may have been fixed)
+On Thu, 13 Jul 2023 17:03:20 +0530
+Ajay Kaher <akaher@vmware.com> wrote:
 
-drivers/mfd/max77541.c:176:18: warning: cast to smaller integer type 'enum max7754x_ids' from 'const void *' [-Wvoid-pointer-to-enum-cast]
+> Adding create_file(), create_dir() to create file, dir
+> at runtime when they are accessed.
+> 
+> These function will be called either from lookup
+> of inode_operations or open of file_operations.
 
-Unverified Error/Warning (likely false positive, please contact us if interested):
+Add create_file() and create_dir() functions to create the files and
+directories respectively when they are accessed. The functions will be
+called from the lookup operation of the inode_operations or from the open
+function of file_operations.
 
-kernel/trace/trace_functions_graph.c:1012 print_graph_return() warn: bitwise AND condition is false here
-kernel/trace/trace_functions_graph.c:726 print_graph_entry_leaf() warn: bitwise AND condition is false here
-{standard input}: Error: local label `"2" (instance number 9 of a fb label)' is not defined
 
-Error/Warning ids grouped by kconfigs:
+> 
+> Signed-off-by: Ajay Kaher <akaher@vmware.com>
+> Co-developed-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+> Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+> Tested-by: Ching-lin Yu <chinglinyu@google.com>
+> ---
+>  fs/tracefs/event_inode.c | 110 +++++++++++++++++++++++++++++++++++++++
+>  fs/tracefs/inode.c       |  47 +++++++++++++++++
+>  include/linux/tracefs.h  |   7 +++
+>  3 files changed, 164 insertions(+)
+> 
+> diff --git a/fs/tracefs/event_inode.c b/fs/tracefs/event_inode.c
+> index 322a77be5a56..34b5d3d8005b 100644
+> --- a/fs/tracefs/event_inode.c
+> +++ b/fs/tracefs/event_inode.c
+> @@ -46,6 +46,116 @@ struct eventfs_file {
+>  
+>  static DEFINE_MUTEX(eventfs_mutex);
+>  DEFINE_STATIC_SRCU(eventfs_srcu);
+> +/**
+> + * create_file - create a file in the tracefs filesystem
+> + * @name: the name of the file to create.
+> + * @mode: the permission that the file should have.
+> + * @parent: parent dentry for this file.
+> + * @data: something that the caller will want to get to later on.
+> + *        The inode.i_private pointer will point to this value on
+> + *        the open() call.
 
-gcc_recent_errors
-|-- i386-randconfig-m021-20230713
-|   |-- kernel-trace-trace_functions_graph.c-print_graph_entry_leaf()-warn:bitwise-AND-condition-is-false-here
-|   `-- kernel-trace-trace_functions_graph.c-print_graph_return()-warn:bitwise-AND-condition-is-false-here
-`-- sh-allmodconfig
-    `-- standard-input:Error:local-label-(instance-number-of-a-fb-label)-is-not-defined
-clang_recent_errors
-|-- x86_64-randconfig-x001-20230714
-|   `-- drivers-mfd-max77541.c:warning:cast-to-smaller-integer-type-enum-max7754x_ids-from-const-void
-|-- x86_64-randconfig-x002-20230714
-|   `-- drivers-mfd-max77541.c:warning:cast-to-smaller-integer-type-enum-max7754x_ids-from-const-void
-`-- x86_64-randconfig-x004-20230714
-    `-- drivers-mfd-max77541.c:warning:cast-to-smaller-integer-type-enum-max7754x_ids-from-const-void
+Again, should move the extra lines into the description.
 
-elapsed time: 722m
+> + * @fop: struct file_operations that should be used for this file.
+> + *
+> + * This is the basic "create a file" function for tracefs.  It allows for a
+> + * wide range of flexibility in creating a file.
+> + *
+> + * This function will return a pointer to a dentry if it succeeds.  This
+> + * pointer must be passed to the tracefs_remove() function when the file is
+> + * to be removed (no automatic cleanup happens if your module is unloaded,
+> + * you are responsible here.)  If an error occurs, %NULL will be returned.
+> + *
+> + * If tracefs is not enabled in the kernel, the value -%ENODEV will be
+> + * returned.
+> + */
+> +struct dentry *create_file(const char *name, umode_t mode,
+> +				  struct dentry *parent, void *data,
+> +				  const struct file_operations *fop)
+> +{
+> +	struct tracefs_inode *ti;
+> +	struct dentry *dentry;
+> +	struct inode *inode;
+> +
+> +	if (!(mode & S_IFMT))
+> +		mode |= S_IFREG;
+> +
+> +	if (WARN_ON_ONCE(!S_ISREG(mode)))
+> +		return NULL;
+> +
+> +	dentry = eventfs_start_creating(name, parent);
+> +
+> +	if (IS_ERR(dentry))
+> +		return dentry;
+> +
+> +	inode = tracefs_get_inode(dentry->d_sb);
+> +	if (unlikely(!inode))
+> +		return eventfs_failed_creating(dentry);
+> +
+> +	inode->i_mode = mode;
+> +	inode->i_fop = fop;
+> +	inode->i_private = data;
+> +
+> +	ti = get_tracefs(inode);
+> +	ti->flags |= TRACEFS_EVENT_INODE;
+> +	d_instantiate(dentry, inode);
+> +	fsnotify_create(dentry->d_parent->d_inode, dentry);
+> +	return eventfs_end_creating(dentry);
+> +}
+> +
+> +/**
+> + * create_dir - create a dir in the tracefs filesystem
+> + * @name: the name of the file to create.
+> + * @mode: the permission that the file should have.
+> + * @parent: parent dentry for this file.
+> + * @data: something that the caller will want to get to later on.
+> + *        The inode.i_private pointer will point to this value on
+> + *        the open() call.
 
-configs tested: 140
-configs skipped: 8
+Move the extra lines down into the description here too.
 
-tested configs:
-alpha                            allyesconfig   gcc  
-alpha                               defconfig   gcc  
-arc                              allyesconfig   gcc  
-arc                                 defconfig   gcc  
-arc                        nsimosci_defconfig   gcc  
-arc                  randconfig-r004-20230714   gcc  
-arc                  randconfig-r043-20230714   gcc  
-arc                        vdk_hs38_defconfig   gcc  
-arm                              allmodconfig   gcc  
-arm                              allyesconfig   gcc  
-arm                       aspeed_g5_defconfig   gcc  
-arm                        clps711x_defconfig   gcc  
-arm                     davinci_all_defconfig   clang
-arm                                 defconfig   gcc  
-arm                            mmp2_defconfig   clang
-arm                            qcom_defconfig   gcc  
-arm                  randconfig-r001-20230714   clang
-arm                  randconfig-r046-20230714   gcc  
-arm64                            allyesconfig   gcc  
-arm64                               defconfig   gcc  
-csky                                defconfig   gcc  
-csky                 randconfig-r013-20230714   gcc  
-hexagon              randconfig-r021-20230714   clang
-hexagon              randconfig-r041-20230714   clang
-hexagon              randconfig-r045-20230714   clang
-i386                             allyesconfig   gcc  
-i386         buildonly-randconfig-r004-20230714   gcc  
-i386         buildonly-randconfig-r005-20230714   gcc  
-i386         buildonly-randconfig-r006-20230714   gcc  
-i386                              debian-10.3   gcc  
-i386                                defconfig   gcc  
-i386                 randconfig-i001-20230714   gcc  
-i386                 randconfig-i002-20230714   gcc  
-i386                 randconfig-i003-20230714   gcc  
-i386                 randconfig-i004-20230714   gcc  
-i386                 randconfig-i005-20230714   gcc  
-i386                 randconfig-i006-20230714   gcc  
-i386                 randconfig-i011-20230714   clang
-i386                 randconfig-i012-20230714   clang
-i386                 randconfig-i013-20230714   clang
-i386                 randconfig-i014-20230714   clang
-i386                 randconfig-i015-20230714   clang
-i386                 randconfig-i016-20230714   clang
-i386                 randconfig-r003-20230714   gcc  
-i386                 randconfig-r005-20230714   gcc  
-loongarch                        allmodconfig   gcc  
-loongarch                         allnoconfig   gcc  
-loongarch                           defconfig   gcc  
-loongarch            randconfig-r011-20230714   gcc  
-loongarch            randconfig-r025-20230714   gcc  
-m68k                             allmodconfig   gcc  
-m68k                             allyesconfig   gcc  
-m68k                                defconfig   gcc  
-m68k                 randconfig-r014-20230714   gcc  
-mips                             allmodconfig   gcc  
-mips                             allyesconfig   gcc  
-mips                         bigsur_defconfig   gcc  
-mips                           ip28_defconfig   clang
-mips                malta_qemu_32r6_defconfig   clang
-mips                 randconfig-r006-20230714   clang
-mips                 randconfig-r023-20230714   gcc  
-mips                          rm200_defconfig   clang
-mips                           rs90_defconfig   clang
-mips                   sb1250_swarm_defconfig   clang
-nios2                               defconfig   gcc  
-openrisc             randconfig-r036-20230714   gcc  
-parisc                           allyesconfig   gcc  
-parisc                              defconfig   gcc  
-parisc64                            defconfig   gcc  
-powerpc                     akebono_defconfig   clang
-powerpc                          allmodconfig   gcc  
-powerpc                           allnoconfig   gcc  
-powerpc                     asp8347_defconfig   gcc  
-powerpc                      bamboo_defconfig   gcc  
-powerpc                          g5_defconfig   clang
-powerpc                      makalu_defconfig   gcc  
-powerpc                 mpc8313_rdb_defconfig   clang
-powerpc                     ppa8548_defconfig   clang
-powerpc              randconfig-r004-20230714   gcc  
-powerpc              randconfig-r012-20230714   clang
-riscv                            allmodconfig   gcc  
-riscv                             allnoconfig   gcc  
-riscv                            allyesconfig   gcc  
-riscv                               defconfig   gcc  
-riscv             nommu_k210_sdcard_defconfig   gcc  
-riscv                randconfig-r006-20230714   gcc  
-riscv                randconfig-r042-20230714   clang
-riscv                          rv32_defconfig   gcc  
-s390                             allmodconfig   gcc  
-s390                             allyesconfig   gcc  
-s390                                defconfig   gcc  
-s390                 randconfig-r002-20230714   gcc  
-s390                 randconfig-r044-20230714   clang
-s390                       zfcpdump_defconfig   gcc  
-sh                               allmodconfig   gcc  
-sh                                  defconfig   gcc  
-sh                 kfr2r09-romimage_defconfig   gcc  
-sh                   randconfig-r001-20230714   gcc  
-sh                      rts7751r2d1_defconfig   gcc  
-sh                           se7343_defconfig   gcc  
-sh                           se7705_defconfig   gcc  
-sh                   sh7724_generic_defconfig   gcc  
-sh                        sh7763rdp_defconfig   gcc  
-sh                        sh7785lcr_defconfig   gcc  
-sh                             shx3_defconfig   gcc  
-sparc                            allyesconfig   gcc  
-sparc                               defconfig   gcc  
-sparc                randconfig-r034-20230714   gcc  
-sparc64              randconfig-r003-20230714   gcc  
-sparc64              randconfig-r033-20230714   gcc  
-sparc64              randconfig-r035-20230714   gcc  
-um                               allmodconfig   clang
-um                                allnoconfig   clang
-um                               allyesconfig   clang
-um                                  defconfig   gcc  
-um                             i386_defconfig   gcc  
-um                   randconfig-r015-20230714   gcc  
-um                   randconfig-r032-20230714   clang
-um                           x86_64_defconfig   gcc  
-x86_64                           allyesconfig   gcc  
-x86_64       buildonly-randconfig-r001-20230714   gcc  
-x86_64       buildonly-randconfig-r002-20230714   gcc  
-x86_64       buildonly-randconfig-r003-20230714   gcc  
-x86_64                              defconfig   gcc  
-x86_64                                  kexec   gcc  
-x86_64               randconfig-x001-20230714   clang
-x86_64               randconfig-x002-20230714   clang
-x86_64               randconfig-x003-20230714   clang
-x86_64               randconfig-x004-20230714   clang
-x86_64               randconfig-x005-20230714   clang
-x86_64               randconfig-x006-20230714   clang
-x86_64               randconfig-x011-20230714   gcc  
-x86_64               randconfig-x012-20230714   gcc  
-x86_64               randconfig-x013-20230714   gcc  
-x86_64               randconfig-x014-20230714   gcc  
-x86_64               randconfig-x015-20230714   gcc  
-x86_64               randconfig-x016-20230714   gcc  
-x86_64                          rhel-8.3-rust   clang
-x86_64                               rhel-8.3   gcc  
-xtensa               randconfig-r024-20230714   gcc  
+> + * @fop: struct file_operations that should be used for this dir.
+> + * @iop: struct inode_operations that should be used for this dir.
+> + *
+> + * This is the basic "create a dir" function for eventfs.  It allows for a
+> + * wide range of flexibility in creating a dir.
+> + *
+> + * This function will return a pointer to a dentry if it succeeds.  This
+> + * pointer must be passed to the tracefs_remove() function when the file is
+> + * to be removed (no automatic cleanup happens if your module is unloaded,
+> + * you are responsible here.)  If an error occurs, %NULL will be returned.
+> + *
+> + * If tracefs is not enabled in the kernel, the value -%ENODEV will be
+> + * returned.
+> + */
+> +struct dentry *create_dir(const char *name, umode_t mode,
+> +				 struct dentry *parent, void *data,
+> +				 const struct file_operations *fop,
+> +				 const struct inode_operations *iop)
+> +{
+> +	struct tracefs_inode *ti;
+> +	struct dentry *dentry;
+> +	struct inode *inode;
+> +
+> +	WARN_ON(!S_ISDIR(mode));
+> +
+> +	dentry = eventfs_start_creating(name, parent);
+> +	if (IS_ERR(dentry))
+> +		return dentry;
+> +
+> +	inode = tracefs_get_inode(dentry->d_sb);
+> +	if (unlikely(!inode))
+> +		return eventfs_failed_creating(dentry);
+> +
+> +	inode->i_mode = mode;
+> +	inode->i_op = iop;
+> +	inode->i_fop = fop;
+> +	inode->i_private = data;
+> +
+> +	ti = get_tracefs(inode);
+> +	ti->flags |= TRACEFS_EVENT_INODE;
+> +
+> +	inc_nlink(inode);
+> +	d_instantiate(dentry, inode);
+> +	inc_nlink(dentry->d_parent->d_inode);
+> +	fsnotify_mkdir(dentry->d_parent->d_inode, dentry);
+> +	return eventfs_end_creating(dentry);
+> +}
+>  
+>  static const struct file_operations eventfs_file_operations = {
+>  };
+> diff --git a/fs/tracefs/inode.c b/fs/tracefs/inode.c
+> index 7ef3a02766f5..7dc692a5fee1 100644
+> --- a/fs/tracefs/inode.c
+> +++ b/fs/tracefs/inode.c
+> @@ -451,6 +451,53 @@ struct dentry *tracefs_end_creating(struct dentry *dentry)
+>  	return dentry;
+>  }
+>  
 
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+This needs to be documented. What about:
+
+/**
+ * eventfs_start_creating - start the process of creating a dentry
+ * @name: Name of the file created for the dentry
+ * @parent: The parent dentry where this dentry will be created
+ *
+ * This is a simple helper function for the dynamically created eventfs
+ * files. When the directory of the eventfs files are accessed, their
+ * dentries are created on the fly. This function is used to start that
+ * process.
+ */
+> +struct dentry *eventfs_start_creating(const char *name, struct dentry
+>    *parent) +{
+> +	struct dentry *dentry;
+> +	int error;
+> +
+> +	error = simple_pin_fs(&trace_fs_type, &tracefs_mount,
+> +			      &tracefs_mount_count);
+> +	if (error)
+> +		return ERR_PTR(error);
+> +
+> +	/*
+> +	 * If the parent is not specified, we create it in the root.
+> +	 * We need the root dentry to do this, which is in the super
+> +	 * block. A pointer to that is in the struct vfsmount that we
+> +	 * have around.
+> +	 */
+> +	if (!parent)
+> +		parent = tracefs_mount->mnt_root;
+> +
+> +	if (unlikely(IS_DEADDIR(parent->d_inode)))
+> +		dentry = ERR_PTR(-ENOENT);
+> +	else
+> +		dentry = lookup_one_len(name, parent, strlen(name));
+> +
+> +	if (!IS_ERR(dentry) && dentry->d_inode) {
+> +		dput(dentry);
+> +		dentry = ERR_PTR(-EEXIST);
+> +	}
+> +
+> +	if (IS_ERR(dentry))
+> +		simple_release_fs(&tracefs_mount, &tracefs_mount_count);
+> +
+> +	return dentry;
+> +}
+> +
+
+/**
+ * eventfs_failed_creating - clean up a failed eventfs dentry creation
+ * @dentry: The dentry to clean up
+ *
+ * If after calling eventfs_start_creating(), a failure is detected, the
+ * resources created by eventfs_start_creating() needs to be cleaned up. In
+ * that case, this function should be called to perform that clean up.
+ */
+> +struct dentry *eventfs_failed_creating(struct dentry *dentry)
+> +{
+> +	dput(dentry);
+> +	simple_release_fs(&tracefs_mount, &tracefs_mount_count);
+> +	return NULL;
+> +}
+> +
+
+/**
+ * eventfs_end_creating - Finish the process of creating a eventfs dentry
+ * @dentry: The dentry that has successfully been created.
+ *
+ * This function is currently just a place holder to match
+ * eventfs_start_creating(). In case any synchronization needs to be added,
+ * this function will be used to implement that without having to modify
+ * the callers of eventfs_start_creating().
+ */
+> +struct dentry *eventfs_end_creating(struct dentry *dentry)
+> +{
+> +	return dentry;
+> +}
+
+-- Steve
+
+> +
+>  /**
+>   * tracefs_create_file - create a file in the tracefs filesystem
+>   * @name: a pointer to a string containing the name of the file to
+>    create. diff --git a/include/linux/tracefs.h b/include/linux/tracefs.h
+> index 2c08edd4a739..47c1b4d21735 100644
+> --- a/include/linux/tracefs.h
+> +++ b/include/linux/tracefs.h
+> @@ -23,6 +23,13 @@ struct file_operations;
+>  
+>  struct eventfs_file;
+>  
+> +struct dentry *eventfs_start_creating(const char *name,
+> +				      struct dentry *parent);
+> +
+> +struct dentry *eventfs_failed_creating(struct dentry *dentry);
+> +
+> +struct dentry *eventfs_end_creating(struct dentry *dentry);
+> +
+>  struct dentry *eventfs_create_events_dir(const char *name,
+>  					 struct dentry *parent);
+>  
+
