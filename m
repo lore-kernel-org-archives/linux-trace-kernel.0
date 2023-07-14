@@ -2,29 +2,29 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 452B0EB64DC
-	for <linux-trace-kernel@archiver.kernel.org>; Fri, 14 Jul 2023 16:23:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D164EEB64DC
+	for <linux-trace-kernel@archiver.kernel.org>; Fri, 14 Jul 2023 16:35:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236301AbjGNQXU (ORCPT
+        id S233758AbjGNQfn (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Fri, 14 Jul 2023 12:23:20 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51748 "EHLO
+        Fri, 14 Jul 2023 12:35:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55828 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235894AbjGNQXT (ORCPT
+        with ESMTP id S229557AbjGNQfm (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Fri, 14 Jul 2023 12:23:19 -0400
+        Fri, 14 Jul 2023 12:35:42 -0400
 Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 169532724;
-        Fri, 14 Jul 2023 09:23:18 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 66917273F;
+        Fri, 14 Jul 2023 09:35:41 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange X25519 server-signature RSA-PSS (2048 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 97B6261D66;
-        Fri, 14 Jul 2023 16:23:17 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5F259C433C9;
-        Fri, 14 Jul 2023 16:23:15 +0000 (UTC)
-Date:   Fri, 14 Jul 2023 12:23:13 -0400
+        by dfw.source.kernel.org (Postfix) with ESMTPS id F27FD61D60;
+        Fri, 14 Jul 2023 16:35:40 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C0B6EC433C7;
+        Fri, 14 Jul 2023 16:35:38 +0000 (UTC)
+Date:   Fri, 14 Jul 2023 12:35:37 -0400
 From:   Steven Rostedt <rostedt@goodmis.org>
 To:     Ajay Kaher <akaher@vmware.com>
 Cc:     shuah@kernel.org, mhiramat@kernel.org, chinglinyu@google.com,
@@ -33,11 +33,12 @@ Cc:     shuah@kernel.org, mhiramat@kernel.org, chinglinyu@google.com,
         namit@vmware.com, oe-lkp@lists.linux.dev, amakhalov@vmware.com,
         er.ajay.kaher@gmail.com, srivatsa@csail.mit.edu, tkundu@vmware.com,
         vsirnapalli@vmware.com
-Subject: Re: [PATCH v4 04/10] eventfs: Implement eventfs file add functions
-Message-ID: <20230714122313.486990ea@gandalf.local.home>
-In-Reply-To: <1689248004-8158-5-git-send-email-akaher@vmware.com>
+Subject: Re: [PATCH v4 05/10] eventfs: Implement eventfs file, directory
+ remove function
+Message-ID: <20230714123537.3c397d83@gandalf.local.home>
+In-Reply-To: <1689248004-8158-6-git-send-email-akaher@vmware.com>
 References: <1689248004-8158-1-git-send-email-akaher@vmware.com>
-        <1689248004-8158-5-git-send-email-akaher@vmware.com>
+        <1689248004-8158-6-git-send-email-akaher@vmware.com>
 X-Mailer: Claws Mail 3.19.1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
@@ -46,36 +47,68 @@ Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
+Some more nits:
 
-More nits.
+Subject:
 
-On Thu, 13 Jul 2023 17:03:18 +0530
+ eventfs: Implement removal of meta data from eventfs
+
+
+On Thu, 13 Jul 2023 17:03:19 +0530
 Ajay Kaher <akaher@vmware.com> wrote:
 
-> Adding following function to eventfs to add files:
+> Adding eventfs_remove(), this function will recursively remove
+> dir or file info from eventfs.
 
-Add the following functions to add files to evenfs:
+ When events are removed from tracefs, the eventfs must be aware of this.
+ The eventfs_remove() removes the meta data from eventfs so that it will no
+ longer create the files associated with that event.
 
-> 
-> eventfs_add_top_file() adds the info of top file to
-> eventfs and dynamically create these files when they
-> are accessed.
+ When an instance is removed from tracefs, eventfs_remove_events_dir() will
+ remove and clean up the entire "events" directory.
 
-I wonder if we should rename this, because I didn't really know what "top"
-meant. Perhaps:
-
- eventfs_add_events_file() to add the data needed to create a specific file
- located at the top level events directory. The dentry/inode will be
- created when the events directory is scanned.
 
 > 
-> eventfs_add_file() adds the info of nested files
-> to eventfs and dynamically create these files when
-> they are accessed.
+> added a recursion check to eventfs_remove_rec() as it is really
+> dangerous to have unchecked recursion in the kernel (we do have
+> a fixed size stack).
 
- eventfs_add_file() to add the data needed for files within the directories
- below the top level events directory. The dentry/inode of the file will be
- created when the directory that the file is in is scanned.
+The above doesn't need to be in the change log. It's an update from the
+previous version. The eventfs_remove_rec() is added here, so the recursion
+check was not.
+
+> 
+> have the free use srcu callbacks. After the srcu grace periods
+> are done, it adds the eventfs_file onto a llist (lockless link
+> list) and wakes up a work queue. Then the work queue does the
+> freeing (this needs to be done in task/workqueue context, as
+> srcu callbacks are done in softirq context).
+
+If you want to document the above, we can say:
+
+ The helper function eventfs_remove_rec() is used to clean up and free the
+ associated data from eventfs for both of the added functions. SRCU is used
+ to protect the lists of meta data stored in the eventfs. The eventfs_mutex
+ is used to protect the content of the items in the list.
+
+ As lookups may be happening as deletions of events are made, the freeing
+ of of dentry/inodes and relative information is done after the SRCU grace
+ period has passed. As the callback of SRCU is in a softirq context, a work
+ queue is added to perform the cleanups in a task context.
+
+ The struct evenfs_file is given a union of an rcu_head and a llist_node.
+ The SRCU callback uses the rcu_head from this structure to insert it into
+ the SRCU queue. When the SRCU grace periods are complete, the callback
+ will then insert the eventfs_file struct onto a lockless llist using the
+ llist_node of the structure. A union is used as this process is just a
+ hand off from SRCU to workqueue, and only one field is necessary for this
+ to work.
+
+You can also add the above as a comment in the code (and keep it in the
+change log as well).
+
+-- Steve
+
 
 > 
 > Signed-off-by: Ajay Kaher <akaher@vmware.com>
@@ -83,161 +116,148 @@ meant. Perhaps:
 > Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
 > Tested-by: Ching-lin Yu <chinglinyu@google.com>
 > Reported-by: kernel test robot <lkp@intel.com>
-> Closes: https://lore.kernel.org/oe-lkp/202305051619.9a469a9a-yujie.liu@intel.com
+> Closes: https://lore.kernel.org/oe-kbuild-all/202305030611.Kas747Ev-lkp@intel.com/
 > ---
->  fs/tracefs/event_inode.c | 84 ++++++++++++++++++++++++++++++++++++++++
->  include/linux/tracefs.h  |  8 ++++
->  2 files changed, 92 insertions(+)
+>  fs/tracefs/event_inode.c | 110 +++++++++++++++++++++++++++++++++++++++
+>  include/linux/tracefs.h  |   4 ++
+>  2 files changed, 114 insertions(+)
 > 
 > diff --git a/fs/tracefs/event_inode.c b/fs/tracefs/event_inode.c
-> index 4e7a8eccaa0b..75dc8953d813 100644
+> index 75dc8953d813..322a77be5a56 100644
 > --- a/fs/tracefs/event_inode.c
 > +++ b/fs/tracefs/event_inode.c
-> @@ -215,3 +215,87 @@ struct eventfs_file *eventfs_add_dir(const char *name,
+> @@ -45,6 +45,7 @@ struct eventfs_file {
+>  };
+>  
+>  static DEFINE_MUTEX(eventfs_mutex);
+> +DEFINE_STATIC_SRCU(eventfs_srcu);
+>  
+>  static const struct file_operations eventfs_file_operations = {
+>  };
+> @@ -299,3 +300,112 @@ int eventfs_add_file(const char *name, umode_t mode,
 >  	mutex_unlock(&eventfs_mutex);
->  	return ef;
+>  	return 0;
 >  }
 > +
+> +static LLIST_HEAD(free_list);
+> +
+> +static void eventfs_workfn(struct work_struct *work)
+> +{
+> +	struct eventfs_file *ef, *tmp;
+> +	struct llist_node *llnode;
+> +
+> +	llnode = llist_del_all(&free_list);
+> +	llist_for_each_entry_safe(ef, tmp, llnode, llist) {
+> +		if (ef->created && ef->dentry)
+> +			dput(ef->dentry);
+> +		kfree(ef->name);
+> +		kfree(ef->ei);
+> +		kfree(ef);
+> +	}
+> +}
+> +
+> +DECLARE_WORK(eventfs_work, eventfs_workfn);
+> +
+> +static void free_ef(struct rcu_head *head)
+> +{
+> +	struct eventfs_file *ef = container_of(head, struct eventfs_file, rcu);
+> +
+> +	if (!llist_add(&ef->llist, &free_list))
+> +		return;
+> +
+> +	queue_work(system_unbound_wq, &eventfs_work);
+> +}
+> +
+> +
+> +
 > +/**
-> + * eventfs_add_top_file - add event top file to list to create later
-
-I'm still thinking we should rename this to eventfs_add_events_file() to
-match the "eventfs_create_events_dir()".
-
- eventfs_add_events_file - add the data needed to create file in events dir
-
-
-> + * @name: the name of the file to create.
-> + * @mode: the permission that the file should have.
-> + * @parent: parent dentry for this file.
-> + * @data: something that the caller will want to get to later on. The
-> + *        inode.i_private pointer will point to this value on the open() call.
-
-Note, for kerneldoc, it's best to have the above be one line, and then add
-anything else below it.
- * @data: something that the caller will want to get to later on.
-
-> + * @fop: struct file_operations that should be used for this file.
+> + * eventfs_remove_rec - remove eventfs dir or file from list
+> + * @ef: eventfs_file to be removed.
 > + *
-> + * This function adds top files of event dir to list.
-> + * And all these files are created on the fly when they are looked up,
-> + * and the dentry and inodes will be removed when they are done.
-
- * This function is used to add the information needed to create a
- * dentry/inode within the top level events directory. The file created
- * will have the @mode permissions. The @data will be used to fill the
- * inode.i_private when the open() call is done. The dentry and inodes are
- * all created when they are referenced, and removed when they are no
- * longer referenced.
-
-
+> + * This function recursively remove eventfs_file which
+> + * contains info of file or dir.
 > + */
-> +int eventfs_add_top_file(const char *name, umode_t mode,
-> +			 struct dentry *parent, void *data,
-> +			 const struct file_operations *fop)
+> +static void eventfs_remove_rec(struct eventfs_file *ef, int level)
+> +{
+> +	struct eventfs_file *ef_child;
+> +
+> +	if (!ef)
+> +		return;
+> +	/*
+> +	 * Check recursion depth. It should never be greater than 3:
+> +	 * 0 - events/
+> +	 * 1 - events/group/
+> +	 * 2 - events/group/event/
+> +	 * 3 - events/group/event/file
+> +	 */
+> +	if (WARN_ON_ONCE(level > 3))
+> +		return;
+> +
+> +	if (ef->ei) {
+> +		/* search for nested folders or files */
+> +		list_for_each_entry_srcu(ef_child, &ef->ei->e_top_files, list,
+> +					 lockdep_is_held(&eventfs_mutex)) {
+> +			eventfs_remove_rec(ef_child, level + 1);
+> +		}
+> +	}
+> +
+> +	if (ef->created && ef->dentry)
+> +		d_invalidate(ef->dentry);
+> +
+> +	list_del_rcu(&ef->list);
+> +	call_srcu(&eventfs_srcu, &ef->rcu, free_ef);
+> +}
+> +
+> +/**
+> + * eventfs_remove - remove eventfs dir or file from list
+> + * @ef: eventfs_file to be removed.
+> + *
+> + * This function acquire the eventfs_mutex lock and call eventfs_remove_rec()
+> + */
+> +void eventfs_remove(struct eventfs_file *ef)
+> +{
+> +	if (!ef)
+> +		return;
+> +
+> +	mutex_lock(&eventfs_mutex);
+> +	eventfs_remove_rec(ef, 0);
+> +	mutex_unlock(&eventfs_mutex);
+> +}
+> +
+> +/**
+> + * eventfs_remove_events_dir - remove eventfs dir or file from list
+> + * @dentry: events's dentry to be removed.
+> + *
+> + * This function remove events main directory
+> + */
+> +void eventfs_remove_events_dir(struct dentry *dentry)
 > +{
 > +	struct tracefs_inode *ti;
 > +	struct eventfs_inode *ei;
-> +	struct eventfs_file *ef;
 > +
-> +	if (!parent)
-> +		return -EINVAL;
+> +	if (!dentry || !dentry->d_inode)
+> +		return;
 > +
-> +	if (!(mode & S_IFMT))
-> +		mode |= S_IFREG;
-> +
-> +	if (!parent->d_inode)
-> +		return -EINVAL;
-> +
-> +	ti = get_tracefs(parent->d_inode);
-> +	if (!(ti->flags & TRACEFS_EVENT_INODE))
-> +		return -EINVAL;
+> +	ti = get_tracefs(dentry->d_inode);
+> +	if (!ti || !(ti->flags & TRACEFS_EVENT_INODE))
+> +		return;
 > +
 > +	ei = ti->private;
-> +	ef = eventfs_prepare_ef(name, mode, fop, NULL, data);
-> +
-> +	if (IS_ERR(ef))
-> +		return -ENOMEM;
-> +
-> +	mutex_lock(&eventfs_mutex);
-> +	list_add_tail(&ef->list, &ei->e_top_files);
-> +	ef->d_parent = parent;
-> +	mutex_unlock(&eventfs_mutex);
-> +	return 0;
-> +}
-> +
-> +/**
-> + * eventfs_add_file - add eventfs file to list to create later
-
-Same idea here.
-
- eventfs_add_file - add the data needed to create a file for later reference
-
-> + * @name: the name of the file to create.
-> + * @mode: the permission that the file should have.
-> + * @ef_parent: parent eventfs_file for this file.
-> + * @data: something that the caller will want to get to later on. The
-> + *        inode.i_private pointer will point to this value on the open() call.
-
-And same note about the line.
-
-> + * @fop: struct file_operations that should be used for this file.
-> + *
-> + * This function adds top files of event dir to list.
-
-Seems you have a cut and paste error here.
-
-> + * And all these files are created on the fly when they are looked up,
-> + * and the dentry and inodes will be removed when they are done.
-
- * This function is used to add the information needed to create a
- * file within a subdirectory of the events directory. The file created
- * will have the @mode permissions. The @data will be used to fill the
- * inode.i_private when the open() call is done. The dentry and inodes are
- * all created when they are referenced, and removed when they are no
- * longer referenced.
-
--- Steve
-
-> + */
-> +int eventfs_add_file(const char *name, umode_t mode,
-> +		     struct eventfs_file *ef_parent,
-> +		     void *data,
-> +		     const struct file_operations *fop)
-> +{
-> +	struct eventfs_file *ef;
-> +
-> +	if (!ef_parent)
-> +		return -EINVAL;
-> +
-> +	if (!(mode & S_IFMT))
-> +		mode |= S_IFREG;
-> +
-> +	ef = eventfs_prepare_ef(name, mode, fop, NULL, data);
-> +	if (IS_ERR(ef))
-> +		return -ENOMEM;
-> +
-> +	mutex_lock(&eventfs_mutex);
-> +	list_add_tail(&ef->list, &ef_parent->ei->e_top_files);
-> +	ef->d_parent = ef_parent->dentry;
-> +	mutex_unlock(&eventfs_mutex);
-> +	return 0;
+> +	d_invalidate(dentry);
+> +	dput(dentry);
+> +	kfree(ei);
 > +}
 > diff --git a/include/linux/tracefs.h b/include/linux/tracefs.h
-> index 432e5e6f7901..a51312ff803c 100644
+> index a51312ff803c..2c08edd4a739 100644
 > --- a/include/linux/tracefs.h
 > +++ b/include/linux/tracefs.h
-> @@ -32,6 +32,14 @@ struct eventfs_file *eventfs_add_subsystem_dir(const char *name,
->  struct eventfs_file *eventfs_add_dir(const char *name,
->  				     struct eventfs_file *ef_parent);
+> @@ -40,6 +40,10 @@ int eventfs_add_top_file(const char *name, umode_t mode,
+>  			 struct dentry *parent, void *data,
+>  			 const struct file_operations *fops);
 >  
-> +int eventfs_add_file(const char *name, umode_t mode,
-> +		     struct eventfs_file *ef_parent, void *data,
-> +		     const struct file_operations *fops);
+> +void eventfs_remove(struct eventfs_file *ef);
 > +
-> +int eventfs_add_top_file(const char *name, umode_t mode,
-> +			 struct dentry *parent, void *data,
-> +			 const struct file_operations *fops);
+> +void eventfs_remove_events_dir(struct dentry *dentry);
 > +
 >  struct dentry *tracefs_create_file(const char *name, umode_t mode,
 >  				   struct dentry *parent, void *data,
