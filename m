@@ -2,132 +2,84 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F8E7C0015E
-	for <linux-trace-kernel@archiver.kernel.org>; Thu, 13 Jul 2023 16:53:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B6E97C0015E
+	for <linux-trace-kernel@archiver.kernel.org>; Fri, 14 Jul 2023 01:42:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235063AbjGMQxf (ORCPT
+        id S232297AbjGNBm0 (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Thu, 13 Jul 2023 12:53:35 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33938 "EHLO
+        Thu, 13 Jul 2023 21:42:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35070 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232012AbjGMQxf (ORCPT
+        with ESMTP id S232624AbjGNBmX (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Thu, 13 Jul 2023 12:53:35 -0400
-Received: from mail-pg1-x52b.google.com (mail-pg1-x52b.google.com [IPv6:2607:f8b0:4864:20::52b])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C248E2D50
-        for <linux-trace-kernel@vger.kernel.org>; Thu, 13 Jul 2023 09:53:22 -0700 (PDT)
-Received: by mail-pg1-x52b.google.com with SMTP id 41be03b00d2f7-55af0a816e4so569589a12.1
-        for <linux-trace-kernel@vger.kernel.org>; Thu, 13 Jul 2023 09:53:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1689267202; x=1691859202;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=NoNGGvzPoC+CfmJaMdzXCn37KFGOyeGfI/UvmRM+Do0=;
-        b=G9AtbbPvATaVSbvSLJQJamXs5udACD6yAYKkKVVbhuaLC65+5LQidnKuoPpjeWgaYV
-         Kkq8yIQGtzi7ifWRea8+yytsz/kAGVCRcxsJZdCBkiGqZ9K4yKEPdGjomttT8OLr5UOB
-         H4rvrN3juTFhitd2ZgQHx5oFthRgOwbJqCdV4=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1689267202; x=1691859202;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=NoNGGvzPoC+CfmJaMdzXCn37KFGOyeGfI/UvmRM+Do0=;
-        b=IMqMHuGwPRkHWaHMER7VsO+TDumCuC9cacN6zWaiQtG/5kKjWxn6AURc2ffvAbG3MF
-         ka2fLjeSx5pEKQoVWwmPoDjpdaYcg/abz4DJbE+1AF8gcRDGuyM7adcQ8gXbjHa48mPU
-         qHvAKStxdgNsT1RjaGrvEsqoid88bacNJjf1gNlf67MS9035jQ7Y9cRBDP2UVPWLXOj7
-         IKQBYJjZBZFsQD8CNRgIDXbDaawL8w4CsEj81L5XqGH94O6CuQBOxAptANejtTNR4uFH
-         mJGh3RHEtOfbDIdDF8+8t5n0axMWvfJA9VQ4/+6gLhdS5DlMFhaM/AtZbxxF475PxJ6a
-         IfaA==
-X-Gm-Message-State: ABy/qLYOsk9HaIli6EjvfR+NGekDa/GZHgeKFt7MKstkjLOCpvRPSLx3
-        30YhzkSWDw04reNvWF0lowjiHQ==
-X-Google-Smtp-Source: APBJJlHkhNi7qzNBIMq9ENOHZGdML1MCvQrdLivOAcrVfd4jNxyTp4Ll/r2OE+3aX72+qVOTZosNkQ==
-X-Received: by 2002:a17:903:482:b0:1b8:a2af:fe23 with SMTP id jj2-20020a170903048200b001b8a2affe23mr1383903plb.2.1689267202150;
-        Thu, 13 Jul 2023 09:53:22 -0700 (PDT)
-Received: from www.outflux.net (198-0-35-241-static.hfc.comcastbusiness.net. [198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id f11-20020a17090274cb00b001b077301a58sm6134977plt.79.2023.07.13.09.53.20
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 13 Jul 2023 09:53:21 -0700 (PDT)
-Date:   Thu, 13 Jul 2023 09:53:20 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     Steven Rostedt <rostedt@goodmis.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Linux trace kernel <linux-trace-kernel@vger.kernel.org>,
-        linux-hardening@vger.kernel.org,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Sven Schnelle <svens@linux.ibm.com>
-Subject: Re: [PATCH] tracing: Add back FORTIFY_SOURCE logic to kernel_stack
- event structure
-Message-ID: <202307130953.B54C43B@keescook>
-References: <20230713092605.2ddb9788@rorschach.local.home>
+        Thu, 13 Jul 2023 21:42:23 -0400
+Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9D8E030E5;
+        Thu, 13 Jul 2023 18:41:45 -0700 (PDT)
+Received: from dggpeml500012.china.huawei.com (unknown [172.30.72.53])
+        by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4R2DcX5F6rztRL5;
+        Fri, 14 Jul 2023 09:37:32 +0800 (CST)
+Received: from [10.67.110.218] (10.67.110.218) by
+ dggpeml500012.china.huawei.com (7.185.36.15) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.27; Fri, 14 Jul 2023 09:40:33 +0800
+Message-ID: <2b0b9cf0-19c9-e741-3413-bdc1f43f62be@huawei.com>
+Date:   Fri, 14 Jul 2023 09:40:33 +0800
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230713092605.2ddb9788@rorschach.local.home>
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.6.0
+Subject: Re: [PATCH] traing: Fix memory leak of iter->temp when reading
+ trace_pipe
+Content-Language: en-US
+To:     Steven Rostedt <rostedt@goodmis.org>
+CC:     mhiramat <mhiramat@kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        linux-trace-kernel <linux-trace-kernel@vger.kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+References: <20230713141435.1133021-1-zhengyejian1@huawei.com>
+ <20230713103353.29cae218@gandalf.local.home>
+ <20230713105029.6a160f43@gandalf.local.home>
+From:   Zheng Yejian <zhengyejian1@huawei.com>
+In-Reply-To: <20230713105029.6a160f43@gandalf.local.home>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.67.110.218]
+X-ClientProxiedBy: dggems701-chm.china.huawei.com (10.3.19.178) To
+ dggpeml500012.china.huawei.com (7.185.36.15)
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On Thu, Jul 13, 2023 at 09:26:05AM -0400, Steven Rostedt wrote:
-> From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
+On 2023/7/13 22:51, Steven Rostedt wrote:
+> On Thu, 13 Jul 2023 14:44:04 +0000
+> "Zhengyejian (Zetta)" <zhengyejian1@huawei.com> wrote:
 > 
-> For backward compatibility, older tooling expects to see the kernel_stack
-> event with a "caller" field that is a fixed size array of 8 addresses. The
-> code now supports more than 8 with an added "size" field that states the
-> real number of entries. But the "caller" field still just looks like a
-> fixed size to user space.
+>> Hi, Steve,
+>>
+>> Please correct a typo in title: trainy -> tracing
 > 
-> Since the tracing macros that create the user space format files also
-> creates the structures that those files represent, the kernel_stack event
-> structure had its "caller" field a fixed size of 8, but in reality, when
-> it is allocated on the ring buffer, it can hold more if the stack trace is
-> bigger that 8 functions. The copying of these entries was simply done with
-> a memcpy():
-> 
->   size = nr_entries * sizeof(unsigned long);
->   memcpy(entry->caller, fstack->calls, size);
-> 
-> The FORTIFY_SOURCE logic noticed at runtime that when the nr_entries was
-> larger than 8, that the memcpy() was writing more than what the structure
-> stated it can hold and it complained about it. This is because the
-> FORTIFY_SOURCE code is unaware that the amount allocated is actually
-> enough to hold the size. It does not expect that a fixed size field will
-> hold more than the fixed size.
-> 
-> This was originally solved by hiding the caller assignment with some
-> pointer arithmetic.
-> 
->   ptr = ring_buffer_data();
->   entry = ptr;
-> 
->   ptr += offsetof(typeof(*entry), caller);
->   memcpy(ptr, fstack->calls, size);
-> 
-> But it is considered bad form to hide from kernel hardening. Instead, make
-> it work nicely with FORTIFY_SOURCE by adding a new __stack_array() macro
-> that is specific for this one special use case. The macro will take 4
-> arguments: type, item, len, field (whereas the __array() macro takes just
-> the first three). This macro will act just like the __array() macro when
-> creating the code to deal with the format file that is exposed to user
-> space. But for the kernel, it will turn the caller field into:
-> 
->   type item[] __counted_by(field);
-> 
-> or for this instance:
-> 
->   unsigned long caller[] __counted_by(size);
-> 
-> Now the kernel code can expose the assignment of the caller to the
-> FORTIFY_SOURCE and everyone is happy!
-> 
-> Link: https://lore.kernel.org/linux-trace-kernel/20230712105235.5fc441aa@gandalf.local.home/
-> 
-> Suggested-by: Kees Cook <keescook@chromium.org>
-> Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+>   traing -> tracing ;-)
 
-Yay! This looks good. :)
+Emm, my anothor typo 'trainy'. Phone's keyboard is hard to use :)
 
-Reviewed-by: Kees Cook <keescook@chromium.org>
+> 
+>>
+>> I'm a little hurry home from work :(
+>> I'll pay attention to it next time.
+> 
+> No problem. I made the fix.
+> 
+> But seriously, thanks for all the fixes you are sending my way!
+> 
 
--- 
-Kees Cook
+You're welcome! I am happy to do it and have learned a lot :)
+
+> -- Steve
+> 
+> 
+--
+Thanks,
+Zheng Yejian
+
+
