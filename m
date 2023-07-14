@@ -2,264 +2,240 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D164EEB64DC
-	for <linux-trace-kernel@archiver.kernel.org>; Fri, 14 Jul 2023 16:35:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FFECEB64DC
+	for <linux-trace-kernel@archiver.kernel.org>; Fri, 14 Jul 2023 16:45:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233758AbjGNQfn (ORCPT
+        id S235873AbjGNQpo (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Fri, 14 Jul 2023 12:35:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55828 "EHLO
+        Fri, 14 Jul 2023 12:45:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59106 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229557AbjGNQfm (ORCPT
+        with ESMTP id S236044AbjGNQpn (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Fri, 14 Jul 2023 12:35:42 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 66917273F;
-        Fri, 14 Jul 2023 09:35:41 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id F27FD61D60;
-        Fri, 14 Jul 2023 16:35:40 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C0B6EC433C7;
-        Fri, 14 Jul 2023 16:35:38 +0000 (UTC)
-Date:   Fri, 14 Jul 2023 12:35:37 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Ajay Kaher <akaher@vmware.com>
-Cc:     shuah@kernel.org, mhiramat@kernel.org, chinglinyu@google.com,
-        linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
-        linux-trace-kernel@vger.kernel.org, lkp@intel.com,
-        namit@vmware.com, oe-lkp@lists.linux.dev, amakhalov@vmware.com,
-        er.ajay.kaher@gmail.com, srivatsa@csail.mit.edu, tkundu@vmware.com,
-        vsirnapalli@vmware.com
-Subject: Re: [PATCH v4 05/10] eventfs: Implement eventfs file, directory
- remove function
-Message-ID: <20230714123537.3c397d83@gandalf.local.home>
-In-Reply-To: <1689248004-8158-6-git-send-email-akaher@vmware.com>
-References: <1689248004-8158-1-git-send-email-akaher@vmware.com>
-        <1689248004-8158-6-git-send-email-akaher@vmware.com>
-X-Mailer: Claws Mail 3.19.1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        Fri, 14 Jul 2023 12:45:43 -0400
+Received: from mga06.intel.com (mga06b.intel.com [134.134.136.31])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1A56E30FD
+        for <linux-trace-kernel@vger.kernel.org>; Fri, 14 Jul 2023 09:45:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1689353142; x=1720889142;
+  h=date:from:to:cc:subject:message-id;
+  bh=xcVGswnD6I+8T/ksdeDJeVxVJFRlkTbHkPcxLWQ61zU=;
+  b=a4imnQwPjUjUGU60Q/VJv8bu4IGx1X3v2kkKZXH2yj508N4qT7RcjIAO
+   2cwn5uhIBALkrOKk8X+Z03ID5VwU/WntdjR18CM+tYjuJLMma6bq88flp
+   gVcOtNVC1LNvL3iD9/6kj2e2pQfnMsSXvpSamiuFy249Zy7nUgzPcgsPk
+   fjz26RElzu1DJZL6ze2w7u87wgNf1kbUbTxdH9wrSqeEvXkN29X99SIQV
+   FKz46SB40OfSw1+UQEoZPwN2xMOXXBo2hnn8Pry6XJigTru1F8C9Af3V0
+   agsvYdvrvjwWbGCv05CFgnel/udktfSfr2xkleNnlT4sg7NbGYlHKhX1z
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10771"; a="429278955"
+X-IronPort-AV: E=Sophos;i="6.01,206,1684825200"; 
+   d="scan'208";a="429278955"
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Jul 2023 09:45:41 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10771"; a="699737595"
+X-IronPort-AV: E=Sophos;i="6.01,206,1684825200"; 
+   d="scan'208";a="699737595"
+Received: from lkp-server01.sh.intel.com (HELO c544d7fc5005) ([10.239.97.150])
+  by orsmga006.jf.intel.com with ESMTP; 14 Jul 2023 09:45:39 -0700
+Received: from kbuild by c544d7fc5005 with local (Exim 4.96)
+        (envelope-from <lkp@intel.com>)
+        id 1qKLvH-0007ZG-0T;
+        Fri, 14 Jul 2023 16:45:39 +0000
+Date:   Sat, 15 Jul 2023 00:44:50 +0800
+From:   kernel test robot <lkp@intel.com>
+To:     Andrew Morton <akpm@linux-foundation.org>
+Cc:     Linux Memory Management List <linux-mm@kvack.org>,
+        linux-trace-kernel@vger.kernel.org
+Subject: [linux-next:master] BUILD REGRESSION
+ 7c2878be573282a9961c359b806ccf70afe1a6b6
+Message-ID: <202307150046.Yvsvcm5y-lkp@intel.com>
+User-Agent: s-nail v14.9.24
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-Some more nits:
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git master
+branch HEAD: 7c2878be573282a9961c359b806ccf70afe1a6b6  Add linux-next specific files for 20230714
 
-Subject:
+Error/Warning reports:
 
- eventfs: Implement removal of meta data from eventfs
+https://lore.kernel.org/oe-kbuild-all/202306260401.qZlYQpV2-lkp@intel.com
 
+Error/Warning: (recently discovered and may have been fixed)
 
-On Thu, 13 Jul 2023 17:03:19 +0530
-Ajay Kaher <akaher@vmware.com> wrote:
+drivers/mfd/max77541.c:176:18: warning: cast to smaller integer type 'enum max7754x_ids' from 'const void *' [-Wvoid-pointer-to-enum-cast]
 
-> Adding eventfs_remove(), this function will recursively remove
-> dir or file info from eventfs.
+Unverified Error/Warning (likely false positive, please contact us if interested):
 
- When events are removed from tracefs, the eventfs must be aware of this.
- The eventfs_remove() removes the meta data from eventfs so that it will no
- longer create the files associated with that event.
+kernel/trace/trace_functions_graph.c:1012 print_graph_return() warn: bitwise AND condition is false here
+kernel/trace/trace_functions_graph.c:726 print_graph_entry_leaf() warn: bitwise AND condition is false here
+{standard input}: Error: local label `"2" (instance number 9 of a fb label)' is not defined
 
- When an instance is removed from tracefs, eventfs_remove_events_dir() will
- remove and clean up the entire "events" directory.
+Error/Warning ids grouped by kconfigs:
 
+gcc_recent_errors
+|-- i386-randconfig-m021-20230713
+|   |-- kernel-trace-trace_functions_graph.c-print_graph_entry_leaf()-warn:bitwise-AND-condition-is-false-here
+|   `-- kernel-trace-trace_functions_graph.c-print_graph_return()-warn:bitwise-AND-condition-is-false-here
+`-- sh-allmodconfig
+    `-- standard-input:Error:local-label-(instance-number-of-a-fb-label)-is-not-defined
+clang_recent_errors
+|-- x86_64-randconfig-x001-20230714
+|   `-- drivers-mfd-max77541.c:warning:cast-to-smaller-integer-type-enum-max7754x_ids-from-const-void
+|-- x86_64-randconfig-x002-20230714
+|   `-- drivers-mfd-max77541.c:warning:cast-to-smaller-integer-type-enum-max7754x_ids-from-const-void
+`-- x86_64-randconfig-x004-20230714
+    `-- drivers-mfd-max77541.c:warning:cast-to-smaller-integer-type-enum-max7754x_ids-from-const-void
 
-> 
-> added a recursion check to eventfs_remove_rec() as it is really
-> dangerous to have unchecked recursion in the kernel (we do have
-> a fixed size stack).
+elapsed time: 722m
 
-The above doesn't need to be in the change log. It's an update from the
-previous version. The eventfs_remove_rec() is added here, so the recursion
-check was not.
+configs tested: 140
+configs skipped: 8
 
-> 
-> have the free use srcu callbacks. After the srcu grace periods
-> are done, it adds the eventfs_file onto a llist (lockless link
-> list) and wakes up a work queue. Then the work queue does the
-> freeing (this needs to be done in task/workqueue context, as
-> srcu callbacks are done in softirq context).
+tested configs:
+alpha                            allyesconfig   gcc  
+alpha                               defconfig   gcc  
+arc                              allyesconfig   gcc  
+arc                                 defconfig   gcc  
+arc                        nsimosci_defconfig   gcc  
+arc                  randconfig-r004-20230714   gcc  
+arc                  randconfig-r043-20230714   gcc  
+arc                        vdk_hs38_defconfig   gcc  
+arm                              allmodconfig   gcc  
+arm                              allyesconfig   gcc  
+arm                       aspeed_g5_defconfig   gcc  
+arm                        clps711x_defconfig   gcc  
+arm                     davinci_all_defconfig   clang
+arm                                 defconfig   gcc  
+arm                            mmp2_defconfig   clang
+arm                            qcom_defconfig   gcc  
+arm                  randconfig-r001-20230714   clang
+arm                  randconfig-r046-20230714   gcc  
+arm64                            allyesconfig   gcc  
+arm64                               defconfig   gcc  
+csky                                defconfig   gcc  
+csky                 randconfig-r013-20230714   gcc  
+hexagon              randconfig-r021-20230714   clang
+hexagon              randconfig-r041-20230714   clang
+hexagon              randconfig-r045-20230714   clang
+i386                             allyesconfig   gcc  
+i386         buildonly-randconfig-r004-20230714   gcc  
+i386         buildonly-randconfig-r005-20230714   gcc  
+i386         buildonly-randconfig-r006-20230714   gcc  
+i386                              debian-10.3   gcc  
+i386                                defconfig   gcc  
+i386                 randconfig-i001-20230714   gcc  
+i386                 randconfig-i002-20230714   gcc  
+i386                 randconfig-i003-20230714   gcc  
+i386                 randconfig-i004-20230714   gcc  
+i386                 randconfig-i005-20230714   gcc  
+i386                 randconfig-i006-20230714   gcc  
+i386                 randconfig-i011-20230714   clang
+i386                 randconfig-i012-20230714   clang
+i386                 randconfig-i013-20230714   clang
+i386                 randconfig-i014-20230714   clang
+i386                 randconfig-i015-20230714   clang
+i386                 randconfig-i016-20230714   clang
+i386                 randconfig-r003-20230714   gcc  
+i386                 randconfig-r005-20230714   gcc  
+loongarch                        allmodconfig   gcc  
+loongarch                         allnoconfig   gcc  
+loongarch                           defconfig   gcc  
+loongarch            randconfig-r011-20230714   gcc  
+loongarch            randconfig-r025-20230714   gcc  
+m68k                             allmodconfig   gcc  
+m68k                             allyesconfig   gcc  
+m68k                                defconfig   gcc  
+m68k                 randconfig-r014-20230714   gcc  
+mips                             allmodconfig   gcc  
+mips                             allyesconfig   gcc  
+mips                         bigsur_defconfig   gcc  
+mips                           ip28_defconfig   clang
+mips                malta_qemu_32r6_defconfig   clang
+mips                 randconfig-r006-20230714   clang
+mips                 randconfig-r023-20230714   gcc  
+mips                          rm200_defconfig   clang
+mips                           rs90_defconfig   clang
+mips                   sb1250_swarm_defconfig   clang
+nios2                               defconfig   gcc  
+openrisc             randconfig-r036-20230714   gcc  
+parisc                           allyesconfig   gcc  
+parisc                              defconfig   gcc  
+parisc64                            defconfig   gcc  
+powerpc                     akebono_defconfig   clang
+powerpc                          allmodconfig   gcc  
+powerpc                           allnoconfig   gcc  
+powerpc                     asp8347_defconfig   gcc  
+powerpc                      bamboo_defconfig   gcc  
+powerpc                          g5_defconfig   clang
+powerpc                      makalu_defconfig   gcc  
+powerpc                 mpc8313_rdb_defconfig   clang
+powerpc                     ppa8548_defconfig   clang
+powerpc              randconfig-r004-20230714   gcc  
+powerpc              randconfig-r012-20230714   clang
+riscv                            allmodconfig   gcc  
+riscv                             allnoconfig   gcc  
+riscv                            allyesconfig   gcc  
+riscv                               defconfig   gcc  
+riscv             nommu_k210_sdcard_defconfig   gcc  
+riscv                randconfig-r006-20230714   gcc  
+riscv                randconfig-r042-20230714   clang
+riscv                          rv32_defconfig   gcc  
+s390                             allmodconfig   gcc  
+s390                             allyesconfig   gcc  
+s390                                defconfig   gcc  
+s390                 randconfig-r002-20230714   gcc  
+s390                 randconfig-r044-20230714   clang
+s390                       zfcpdump_defconfig   gcc  
+sh                               allmodconfig   gcc  
+sh                                  defconfig   gcc  
+sh                 kfr2r09-romimage_defconfig   gcc  
+sh                   randconfig-r001-20230714   gcc  
+sh                      rts7751r2d1_defconfig   gcc  
+sh                           se7343_defconfig   gcc  
+sh                           se7705_defconfig   gcc  
+sh                   sh7724_generic_defconfig   gcc  
+sh                        sh7763rdp_defconfig   gcc  
+sh                        sh7785lcr_defconfig   gcc  
+sh                             shx3_defconfig   gcc  
+sparc                            allyesconfig   gcc  
+sparc                               defconfig   gcc  
+sparc                randconfig-r034-20230714   gcc  
+sparc64              randconfig-r003-20230714   gcc  
+sparc64              randconfig-r033-20230714   gcc  
+sparc64              randconfig-r035-20230714   gcc  
+um                               allmodconfig   clang
+um                                allnoconfig   clang
+um                               allyesconfig   clang
+um                                  defconfig   gcc  
+um                             i386_defconfig   gcc  
+um                   randconfig-r015-20230714   gcc  
+um                   randconfig-r032-20230714   clang
+um                           x86_64_defconfig   gcc  
+x86_64                           allyesconfig   gcc  
+x86_64       buildonly-randconfig-r001-20230714   gcc  
+x86_64       buildonly-randconfig-r002-20230714   gcc  
+x86_64       buildonly-randconfig-r003-20230714   gcc  
+x86_64                              defconfig   gcc  
+x86_64                                  kexec   gcc  
+x86_64               randconfig-x001-20230714   clang
+x86_64               randconfig-x002-20230714   clang
+x86_64               randconfig-x003-20230714   clang
+x86_64               randconfig-x004-20230714   clang
+x86_64               randconfig-x005-20230714   clang
+x86_64               randconfig-x006-20230714   clang
+x86_64               randconfig-x011-20230714   gcc  
+x86_64               randconfig-x012-20230714   gcc  
+x86_64               randconfig-x013-20230714   gcc  
+x86_64               randconfig-x014-20230714   gcc  
+x86_64               randconfig-x015-20230714   gcc  
+x86_64               randconfig-x016-20230714   gcc  
+x86_64                          rhel-8.3-rust   clang
+x86_64                               rhel-8.3   gcc  
+xtensa               randconfig-r024-20230714   gcc  
 
-If you want to document the above, we can say:
-
- The helper function eventfs_remove_rec() is used to clean up and free the
- associated data from eventfs for both of the added functions. SRCU is used
- to protect the lists of meta data stored in the eventfs. The eventfs_mutex
- is used to protect the content of the items in the list.
-
- As lookups may be happening as deletions of events are made, the freeing
- of of dentry/inodes and relative information is done after the SRCU grace
- period has passed. As the callback of SRCU is in a softirq context, a work
- queue is added to perform the cleanups in a task context.
-
- The struct evenfs_file is given a union of an rcu_head and a llist_node.
- The SRCU callback uses the rcu_head from this structure to insert it into
- the SRCU queue. When the SRCU grace periods are complete, the callback
- will then insert the eventfs_file struct onto a lockless llist using the
- llist_node of the structure. A union is used as this process is just a
- hand off from SRCU to workqueue, and only one field is necessary for this
- to work.
-
-You can also add the above as a comment in the code (and keep it in the
-change log as well).
-
--- Steve
-
-
-> 
-> Signed-off-by: Ajay Kaher <akaher@vmware.com>
-> Co-developed-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
-> Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
-> Tested-by: Ching-lin Yu <chinglinyu@google.com>
-> Reported-by: kernel test robot <lkp@intel.com>
-> Closes: https://lore.kernel.org/oe-kbuild-all/202305030611.Kas747Ev-lkp@intel.com/
-> ---
->  fs/tracefs/event_inode.c | 110 +++++++++++++++++++++++++++++++++++++++
->  include/linux/tracefs.h  |   4 ++
->  2 files changed, 114 insertions(+)
-> 
-> diff --git a/fs/tracefs/event_inode.c b/fs/tracefs/event_inode.c
-> index 75dc8953d813..322a77be5a56 100644
-> --- a/fs/tracefs/event_inode.c
-> +++ b/fs/tracefs/event_inode.c
-> @@ -45,6 +45,7 @@ struct eventfs_file {
->  };
->  
->  static DEFINE_MUTEX(eventfs_mutex);
-> +DEFINE_STATIC_SRCU(eventfs_srcu);
->  
->  static const struct file_operations eventfs_file_operations = {
->  };
-> @@ -299,3 +300,112 @@ int eventfs_add_file(const char *name, umode_t mode,
->  	mutex_unlock(&eventfs_mutex);
->  	return 0;
->  }
-> +
-> +static LLIST_HEAD(free_list);
-> +
-> +static void eventfs_workfn(struct work_struct *work)
-> +{
-> +	struct eventfs_file *ef, *tmp;
-> +	struct llist_node *llnode;
-> +
-> +	llnode = llist_del_all(&free_list);
-> +	llist_for_each_entry_safe(ef, tmp, llnode, llist) {
-> +		if (ef->created && ef->dentry)
-> +			dput(ef->dentry);
-> +		kfree(ef->name);
-> +		kfree(ef->ei);
-> +		kfree(ef);
-> +	}
-> +}
-> +
-> +DECLARE_WORK(eventfs_work, eventfs_workfn);
-> +
-> +static void free_ef(struct rcu_head *head)
-> +{
-> +	struct eventfs_file *ef = container_of(head, struct eventfs_file, rcu);
-> +
-> +	if (!llist_add(&ef->llist, &free_list))
-> +		return;
-> +
-> +	queue_work(system_unbound_wq, &eventfs_work);
-> +}
-> +
-> +
-> +
-> +/**
-> + * eventfs_remove_rec - remove eventfs dir or file from list
-> + * @ef: eventfs_file to be removed.
-> + *
-> + * This function recursively remove eventfs_file which
-> + * contains info of file or dir.
-> + */
-> +static void eventfs_remove_rec(struct eventfs_file *ef, int level)
-> +{
-> +	struct eventfs_file *ef_child;
-> +
-> +	if (!ef)
-> +		return;
-> +	/*
-> +	 * Check recursion depth. It should never be greater than 3:
-> +	 * 0 - events/
-> +	 * 1 - events/group/
-> +	 * 2 - events/group/event/
-> +	 * 3 - events/group/event/file
-> +	 */
-> +	if (WARN_ON_ONCE(level > 3))
-> +		return;
-> +
-> +	if (ef->ei) {
-> +		/* search for nested folders or files */
-> +		list_for_each_entry_srcu(ef_child, &ef->ei->e_top_files, list,
-> +					 lockdep_is_held(&eventfs_mutex)) {
-> +			eventfs_remove_rec(ef_child, level + 1);
-> +		}
-> +	}
-> +
-> +	if (ef->created && ef->dentry)
-> +		d_invalidate(ef->dentry);
-> +
-> +	list_del_rcu(&ef->list);
-> +	call_srcu(&eventfs_srcu, &ef->rcu, free_ef);
-> +}
-> +
-> +/**
-> + * eventfs_remove - remove eventfs dir or file from list
-> + * @ef: eventfs_file to be removed.
-> + *
-> + * This function acquire the eventfs_mutex lock and call eventfs_remove_rec()
-> + */
-> +void eventfs_remove(struct eventfs_file *ef)
-> +{
-> +	if (!ef)
-> +		return;
-> +
-> +	mutex_lock(&eventfs_mutex);
-> +	eventfs_remove_rec(ef, 0);
-> +	mutex_unlock(&eventfs_mutex);
-> +}
-> +
-> +/**
-> + * eventfs_remove_events_dir - remove eventfs dir or file from list
-> + * @dentry: events's dentry to be removed.
-> + *
-> + * This function remove events main directory
-> + */
-> +void eventfs_remove_events_dir(struct dentry *dentry)
-> +{
-> +	struct tracefs_inode *ti;
-> +	struct eventfs_inode *ei;
-> +
-> +	if (!dentry || !dentry->d_inode)
-> +		return;
-> +
-> +	ti = get_tracefs(dentry->d_inode);
-> +	if (!ti || !(ti->flags & TRACEFS_EVENT_INODE))
-> +		return;
-> +
-> +	ei = ti->private;
-> +	d_invalidate(dentry);
-> +	dput(dentry);
-> +	kfree(ei);
-> +}
-> diff --git a/include/linux/tracefs.h b/include/linux/tracefs.h
-> index a51312ff803c..2c08edd4a739 100644
-> --- a/include/linux/tracefs.h
-> +++ b/include/linux/tracefs.h
-> @@ -40,6 +40,10 @@ int eventfs_add_top_file(const char *name, umode_t mode,
->  			 struct dentry *parent, void *data,
->  			 const struct file_operations *fops);
->  
-> +void eventfs_remove(struct eventfs_file *ef);
-> +
-> +void eventfs_remove_events_dir(struct dentry *dentry);
-> +
->  struct dentry *tracefs_create_file(const char *name, umode_t mode,
->  				   struct dentry *parent, void *data,
->  				   const struct file_operations *fops);
-
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
