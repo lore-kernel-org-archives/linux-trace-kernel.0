@@ -2,84 +2,165 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B6E97C0015E
-	for <linux-trace-kernel@archiver.kernel.org>; Fri, 14 Jul 2023 01:42:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7043BC001DC
+	for <linux-trace-kernel@archiver.kernel.org>; Fri, 14 Jul 2023 02:38:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232297AbjGNBm0 (ORCPT
+        id S234364AbjGNCiG (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Thu, 13 Jul 2023 21:42:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35070 "EHLO
+        Thu, 13 Jul 2023 22:38:06 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54850 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232624AbjGNBmX (ORCPT
+        with ESMTP id S234464AbjGNCiE (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Thu, 13 Jul 2023 21:42:23 -0400
-Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9D8E030E5;
-        Thu, 13 Jul 2023 18:41:45 -0700 (PDT)
-Received: from dggpeml500012.china.huawei.com (unknown [172.30.72.53])
-        by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4R2DcX5F6rztRL5;
-        Fri, 14 Jul 2023 09:37:32 +0800 (CST)
-Received: from [10.67.110.218] (10.67.110.218) by
- dggpeml500012.china.huawei.com (7.185.36.15) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.27; Fri, 14 Jul 2023 09:40:33 +0800
-Message-ID: <2b0b9cf0-19c9-e741-3413-bdc1f43f62be@huawei.com>
-Date:   Fri, 14 Jul 2023 09:40:33 +0800
+        Thu, 13 Jul 2023 22:38:04 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8D2312D4B;
+        Thu, 13 Jul 2023 19:38:02 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 22C4261BCD;
+        Fri, 14 Jul 2023 02:38:02 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F3470C433C7;
+        Fri, 14 Jul 2023 02:37:59 +0000 (UTC)
+Date:   Thu, 13 Jul 2023 22:37:58 -0400
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     Ajay Kaher <akaher@vmware.com>
+Cc:     shuah@kernel.org, mhiramat@kernel.org, chinglinyu@google.com,
+        linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
+        linux-trace-kernel@vger.kernel.org, lkp@intel.com,
+        namit@vmware.com, oe-lkp@lists.linux.dev, amakhalov@vmware.com,
+        er.ajay.kaher@gmail.com, srivatsa@csail.mit.edu, tkundu@vmware.com,
+        vsirnapalli@vmware.com
+Subject: Re: [PATCH v4 10/10] test: ftrace: Fix kprobe test for eventfs
+Message-ID: <20230713223758.31a1e391@rorschach.local.home>
+In-Reply-To: <1689248004-8158-11-git-send-email-akaher@vmware.com>
+References: <1689248004-8158-1-git-send-email-akaher@vmware.com>
+        <1689248004-8158-11-git-send-email-akaher@vmware.com>
+X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.6.0
-Subject: Re: [PATCH] traing: Fix memory leak of iter->temp when reading
- trace_pipe
-Content-Language: en-US
-To:     Steven Rostedt <rostedt@goodmis.org>
-CC:     mhiramat <mhiramat@kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        linux-trace-kernel <linux-trace-kernel@vger.kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-References: <20230713141435.1133021-1-zhengyejian1@huawei.com>
- <20230713103353.29cae218@gandalf.local.home>
- <20230713105029.6a160f43@gandalf.local.home>
-From:   Zheng Yejian <zhengyejian1@huawei.com>
-In-Reply-To: <20230713105029.6a160f43@gandalf.local.home>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.67.110.218]
-X-ClientProxiedBy: dggems701-chm.china.huawei.com (10.3.19.178) To
- dggpeml500012.china.huawei.com (7.185.36.15)
-X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On 2023/7/13 22:51, Steven Rostedt wrote:
-> On Thu, 13 Jul 2023 14:44:04 +0000
-> "Zhengyejian (Zetta)" <zhengyejian1@huawei.com> wrote:
-> 
->> Hi, Steve,
->>
->> Please correct a typo in title: trainy -> tracing
-> 
->   traing -> tracing ;-)
+On Thu, 13 Jul 2023 17:03:24 +0530
+Ajay Kaher <akaher@vmware.com> wrote:
 
-Emm, my anothor typo 'trainy'. Phone's keyboard is hard to use :)
+> kprobe_args_char.tc, kprobe_args_string.tc has validation check
+> for tracefs_create_dir, for eventfs it should be eventfs_create_dir.
+> 
+> Signed-off-by: Ajay Kaher <akaher@vmware.com>
+> Co-developed-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+> Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+> Tested-by: Ching-lin Yu <chinglinyu@google.com>
+> Acked-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 
-> 
->>
->> I'm a little hurry home from work :(
->> I'll pay attention to it next time.
-> 
-> No problem. I made the fix.
-> 
-> But seriously, thanks for all the fixes you are sending my way!
-> 
+As this patch as is will break when running on older kernels, I was
+wondering if we should do this instead?
 
-You're welcome! I am happy to do it and have learned a lot :)
+diff --git a/tools/testing/selftests/ftrace/test.d/kprobe/kprobe_args_char.tc b/tools/testing/selftests/ftrace/test.d/kprobe/kprobe_args_char.tc
+index 285b4770efad..ff7499eb98d6 100644
+--- a/tools/testing/selftests/ftrace/test.d/kprobe/kprobe_args_char.tc
++++ b/tools/testing/selftests/ftrace/test.d/kprobe/kprobe_args_char.tc
+@@ -34,14 +34,19 @@ mips*)
+ esac
+ 
+ : "Test get argument (1)"
+-echo "p:testprobe tracefs_create_dir arg1=+0(${ARG1}):char" > kprobe_events
++if grep -q eventfs_add_dir available_filter_functions; then
++  DIR_NAME="eventfs_add_dir"
++else
++  DIR_NAME="tracefs_create_dir"
++fi
++echo "p:testprobe ${DIR_NAME} arg1=+0(${ARG1}):char" > kprobe_events
+ echo 1 > events/kprobes/testprobe/enable
+ echo "p:test $FUNCTION_FORK" >> kprobe_events
+ grep -qe "testprobe.* arg1='t'" trace
+ 
+ echo 0 > events/kprobes/testprobe/enable
+ : "Test get argument (2)"
+-echo "p:testprobe tracefs_create_dir arg1=+0(${ARG1}):char arg2=+0(${ARG1}):char[4]" > kprobe_events
++echo "p:testprobe ${DIR_NAME} arg1=+0(${ARG1}):char arg2=+0(${ARG1}):char[4]" > kprobe_events
+ echo 1 > events/kprobes/testprobe/enable
+ echo "p:test $FUNCTION_FORK" >> kprobe_events
+ grep -qe "testprobe.* arg1='t' arg2={'t','e','s','t'}" trace
+diff --git a/tools/testing/selftests/ftrace/test.d/kprobe/kprobe_args_string.tc b/tools/testing/selftests/ftrace/test.d/kprobe/kprobe_args_string.tc
+index a4f8e7c53c1f..a202b2ea4baf 100644
+--- a/tools/testing/selftests/ftrace/test.d/kprobe/kprobe_args_string.tc
++++ b/tools/testing/selftests/ftrace/test.d/kprobe/kprobe_args_string.tc
+@@ -37,14 +37,19 @@ loongarch*)
+ esac
+ 
+ : "Test get argument (1)"
+-echo "p:testprobe tracefs_create_dir arg1=+0(${ARG1}):string" > kprobe_events
++if grep -q eventfs_add_dir available_filter_functions; then
++  DIR_NAME="eventfs_add_dir"
++else
++  DIR_NAME="tracefs_create_dir"
++fi
++echo "p:testprobe ${DIR_NAME} arg1=+0(${ARG1}):string" > kprobe_events
+ echo 1 > events/kprobes/testprobe/enable
+ echo "p:test $FUNCTION_FORK" >> kprobe_events
+ grep -qe "testprobe.* arg1=\"test\"" trace
+ 
+ echo 0 > events/kprobes/testprobe/enable
+ : "Test get argument (2)"
+-echo "p:testprobe tracefs_create_dir arg1=+0(${ARG1}):string arg2=+0(${ARG1}):string" > kprobe_events
++echo "p:testprobe ${DIR_NAME} arg1=+0(${ARG1}):string arg2=+0(${ARG1}):string" > kprobe_events
+ echo 1 > events/kprobes/testprobe/enable
+ echo "p:test $FUNCTION_FORK" >> kprobe_events
+ grep -qe "testprobe.* arg1=\"test\" arg2=\"test\"" trace
 
-> -- Steve
-> 
-> 
---
-Thanks,
-Zheng Yejian
+-- Steve
 
+> ---
+>  .../selftests/ftrace/test.d/kprobe/kprobe_args_char.tc        | 4 ++--
+>  .../selftests/ftrace/test.d/kprobe/kprobe_args_string.tc      | 4 ++--
+>  2 files changed, 4 insertions(+), 4 deletions(-)
+> 
+> diff --git a/tools/testing/selftests/ftrace/test.d/kprobe/kprobe_args_char.tc b/tools/testing/selftests/ftrace/test.d/kprobe/kprobe_args_char.tc
+> index 285b4770efad..523cfb64539f 100644
+> --- a/tools/testing/selftests/ftrace/test.d/kprobe/kprobe_args_char.tc
+> +++ b/tools/testing/selftests/ftrace/test.d/kprobe/kprobe_args_char.tc
+> @@ -34,14 +34,14 @@ mips*)
+>  esac
+>  
+>  : "Test get argument (1)"
+> -echo "p:testprobe tracefs_create_dir arg1=+0(${ARG1}):char" > kprobe_events
+> +echo "p:testprobe eventfs_add_dir arg1=+0(${ARG1}):char" > kprobe_events
+>  echo 1 > events/kprobes/testprobe/enable
+>  echo "p:test $FUNCTION_FORK" >> kprobe_events
+>  grep -qe "testprobe.* arg1='t'" trace
+>  
+>  echo 0 > events/kprobes/testprobe/enable
+>  : "Test get argument (2)"
+> -echo "p:testprobe tracefs_create_dir arg1=+0(${ARG1}):char arg2=+0(${ARG1}):char[4]" > kprobe_events
+> +echo "p:testprobe eventfs_add_dir arg1=+0(${ARG1}):char arg2=+0(${ARG1}):char[4]" > kprobe_events
+>  echo 1 > events/kprobes/testprobe/enable
+>  echo "p:test $FUNCTION_FORK" >> kprobe_events
+>  grep -qe "testprobe.* arg1='t' arg2={'t','e','s','t'}" trace
+> diff --git a/tools/testing/selftests/ftrace/test.d/kprobe/kprobe_args_string.tc b/tools/testing/selftests/ftrace/test.d/kprobe/kprobe_args_string.tc
+> index a4f8e7c53c1f..b9f8c3f8bae8 100644
+> --- a/tools/testing/selftests/ftrace/test.d/kprobe/kprobe_args_string.tc
+> +++ b/tools/testing/selftests/ftrace/test.d/kprobe/kprobe_args_string.tc
+> @@ -37,14 +37,14 @@ loongarch*)
+>  esac
+>  
+>  : "Test get argument (1)"
+> -echo "p:testprobe tracefs_create_dir arg1=+0(${ARG1}):string" > kprobe_events
+> +echo "p:testprobe eventfs_add_dir arg1=+0(${ARG1}):string" > kprobe_events
+>  echo 1 > events/kprobes/testprobe/enable
+>  echo "p:test $FUNCTION_FORK" >> kprobe_events
+>  grep -qe "testprobe.* arg1=\"test\"" trace
+>  
+>  echo 0 > events/kprobes/testprobe/enable
+>  : "Test get argument (2)"
+> -echo "p:testprobe tracefs_create_dir arg1=+0(${ARG1}):string arg2=+0(${ARG1}):string" > kprobe_events
+> +echo "p:testprobe eventfs_add_dir arg1=+0(${ARG1}):string arg2=+0(${ARG1}):string" > kprobe_events
+>  echo 1 > events/kprobes/testprobe/enable
+>  echo "p:test $FUNCTION_FORK" >> kprobe_events
+>  grep -qe "testprobe.* arg1=\"test\" arg2=\"test\"" trace
 
