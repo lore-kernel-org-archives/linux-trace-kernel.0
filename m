@@ -2,81 +2,69 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4EAA0EB64DC
-	for <linux-trace-kernel@archiver.kernel.org>; Sat, 15 Jul 2023 13:54:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 57DD0C001DE
+	for <linux-trace-kernel@archiver.kernel.org>; Sat, 15 Jul 2023 14:13:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229494AbjGONy0 (ORCPT
+        id S230141AbjGOONy (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Sat, 15 Jul 2023 09:54:26 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36660 "EHLO
+        Sat, 15 Jul 2023 10:13:54 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41454 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229472AbjGONy0 (ORCPT
+        with ESMTP id S229494AbjGOONv (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Sat, 15 Jul 2023 09:54:26 -0400
+        Sat, 15 Jul 2023 10:13:51 -0400
 Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5DCDC10DC;
-        Sat, 15 Jul 2023 06:54:25 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 50B66C0;
+        Sat, 15 Jul 2023 07:13:50 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange X25519 server-signature RSA-PSS (2048 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id F0EC360B98;
-        Sat, 15 Jul 2023 13:54:24 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 50C3FC433C8;
-        Sat, 15 Jul 2023 13:54:23 +0000 (UTC)
-Date:   Sat, 15 Jul 2023 09:54:19 -0400
+        by dfw.source.kernel.org (Postfix) with ESMTPS id E2AD460BB1;
+        Sat, 15 Jul 2023 14:13:49 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4EAE6C433C8;
+        Sat, 15 Jul 2023 14:13:49 +0000 (UTC)
+Received: from rostedt by gandalf with local (Exim 4.96)
+        (envelope-from <rostedt@goodmis.org>)
+        id 1qKg1s-00102r-0L;
+        Sat, 15 Jul 2023 10:13:48 -0400
+Message-ID: <20230715141213.970003974@goodmis.org>
+User-Agent: quilt/0.66
+Date:   Sat, 15 Jul 2023 10:12:13 -0400
 From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Zheng Yejian <zhengyejian1@huawei.com>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Linux Trace Kernel <linux-trace-kernel@vger.kernel.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCH 2/2] tracing: Add free_trace_iter_content() helper
- function
-Message-ID: <20230715095419.3af9ec19@rorschach.local.home>
-In-Reply-To: <20230715094201.34a41f17@rorschach.local.home>
-References: <20230713114510.04c452ca@gandalf.local.home>
-        <20230713114700.450e7a17@gandalf.local.home>
-        <d8aeab6c-338e-dcdd-75c6-7ae4eb9c9887@huawei.com>
-        <20230715094201.34a41f17@rorschach.local.home>
-X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+To:     linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
+Cc:     Masami Hiramatsu <mhiramat@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Andrew Morton <akpm@linux-foundation.org>
+Subject: [PATCH v2 0/2] tracing: Clean up how iter is freed
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On Sat, 15 Jul 2023 09:42:01 -0400
-Steven Rostedt <rostedt@goodmis.org> wrote:
+The trace iterator is used in various interfaces and needs to be consistent
+in how it is cleaned up. Add a helper function to clean up its content. But
+before doing so, I noticed that iter->trace is allocated then the content
+of tr->current_trace is copied to it. There's no reason for this, so the
+first patch removes that allocation and just points to the content of
+tr->current_trace, as tr->current_trace can change, but the content should
+not.
 
-> On Sat, 15 Jul 2023 13:15:32 +0800
-> Zheng Yejian <zhengyejian1@huawei.com> wrote:
-> 
-> > > @@ -6709,7 +6723,12 @@ static int tracing_open_pipe(struct inode *inode, struct file *filp)
-> > >   	}
-> > >   
-> > >   	trace_seq_init(&iter->seq);
-> > > -	iter->trace = tr->current_trace;
-> > > +
-> > > +	iter->trace = kzalloc(sizeof(*iter->trace), GFP_KERNEL);
-> > > +	if (!iter->trace)
-> > > +		goto fail;  
-> > 
-> > Hi, Steve, 'ret' may need to be set before `goto fail`:
-> >    ret = -ENOMEM;
-> > 
-> 
-> As I mentioned to Masami, this hunk of the patch didn't belong.
-> Something got mixed up in the commit. This patch even depends on the
-> previous patch to remove the allocation completely.
-> 
+Changes since v1: https://lore.kernel.org/linux-trace-kernel/20230713114510.04c452ca@gandalf.local.home/
 
-I know what I did now. I first started writing this patch and saw that
-the iter->trace was inconsistent and in one place allocated a copy and
-here it did not. I started to make the copy here, when I realized that
-there was no reason to make that copy. Then I wrote the first patch to
-remove the copying, but forgot to remove the copying I added in this
-patch! :-p
+ - Updated the change log of patch 1, as I remembered why the copy was done.
 
--- Steve
+ - Remove the allocation and copy of the second patch. I started with the
+   second patch and noticed that there was an inconsistency with the
+   iter->trace. Where in one place it was allocated and copied and the second
+   place it was just pointing to the tr->current_trace. I first started to make it
+   be a copy as well, but then realized that the copy wasn't needed. I created
+   the first patch but forgot to remove the copy and it ended up in the second
+   patch.
+
+Steven Rostedt (Google) (2):
+      tracing: Remove unnecessary copying of tr->current_trace
+      tracing: Add free_trace_iter_content() helper function
+
+----
+ kernel/trace/trace.c | 55 ++++++++++++++++++++++++----------------------------
+ 1 file changed, 25 insertions(+), 30 deletions(-)
