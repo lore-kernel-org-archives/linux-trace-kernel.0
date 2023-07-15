@@ -2,132 +2,69 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 255D4EB64DC
-	for <linux-trace-kernel@archiver.kernel.org>; Sat, 15 Jul 2023 09:10:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F3AA8EB64DC
+	for <linux-trace-kernel@archiver.kernel.org>; Sat, 15 Jul 2023 13:42:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229708AbjGOJKi (ORCPT
+        id S229919AbjGONmH (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Sat, 15 Jul 2023 05:10:38 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48942 "EHLO
+        Sat, 15 Jul 2023 09:42:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33730 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229487AbjGOJKe (ORCPT
+        with ESMTP id S229549AbjGONmG (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Sat, 15 Jul 2023 05:10:34 -0400
-Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 59A0D268B;
-        Sat, 15 Jul 2023 02:10:31 -0700 (PDT)
-Received: from kwepemi500020.china.huawei.com (unknown [172.30.72.54])
-        by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4R32Y96HpxztR8t;
-        Sat, 15 Jul 2023 17:07:25 +0800 (CST)
-Received: from [10.67.109.184] (10.67.109.184) by
- kwepemi500020.china.huawei.com (7.221.188.8) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.27; Sat, 15 Jul 2023 17:10:27 +0800
-Message-ID: <56a6a35c-7320-4569-71e3-c4daffee78f3@huawei.com>
-Date:   Sat, 15 Jul 2023 17:10:26 +0800
+        Sat, 15 Jul 2023 09:42:06 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8DC092700;
+        Sat, 15 Jul 2023 06:42:05 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 2AD8D60B86;
+        Sat, 15 Jul 2023 13:42:05 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 418A1C433C8;
+        Sat, 15 Jul 2023 13:42:03 +0000 (UTC)
+Date:   Sat, 15 Jul 2023 09:42:01 -0400
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     Zheng Yejian <zhengyejian1@huawei.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Linux Trace Kernel <linux-trace-kernel@vger.kernel.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>
+Subject: Re: [PATCH 2/2] tracing: Add free_trace_iter_content() helper
+ function
+Message-ID: <20230715094201.34a41f17@rorschach.local.home>
+In-Reply-To: <d8aeab6c-338e-dcdd-75c6-7ae4eb9c9887@huawei.com>
+References: <20230713114510.04c452ca@gandalf.local.home>
+        <20230713114700.450e7a17@gandalf.local.home>
+        <d8aeab6c-338e-dcdd-75c6-7ae4eb9c9887@huawei.com>
+X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.3.0
-Subject: Re: [PATCH V11 0/5] riscv: Optimize function trace
-Content-Language: en-US
-To:     =?UTF-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn@kernel.org>,
-        Song Shuai <suagrfillet@gmail.com>, <paul.walmsley@sifive.com>,
-        <palmer@dabbelt.com>, <aou@eecs.berkeley.edu>,
-        <rostedt@goodmis.org>, <mhiramat@kernel.org>,
-        <mark.rutland@arm.com>, <guoren@kernel.org>, <bjorn@rivosinc.com>,
-        <jszhang@kernel.org>, <conor.dooley@microchip.com>,
-        <palmer@rivosinc.com>
-CC:     <linux-riscv@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
-        <linux-trace-kernel@vger.kernel.org>, <songshuaishuai@tinylab.org>,
-        <bpf@vger.kernel.org>
-References: <20230627111612.761164-1-suagrfillet@gmail.com>
- <87jzv5q9tv.fsf@all.your.base.are.belong.to.us>
-From:   Pu Lehui <pulehui@huawei.com>
-In-Reply-To: <87jzv5q9tv.fsf@all.your.base.are.belong.to.us>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.67.109.184]
-X-ClientProxiedBy: dggems701-chm.china.huawei.com (10.3.19.178) To
- kwepemi500020.china.huawei.com (7.221.188.8)
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
+On Sat, 15 Jul 2023 13:15:32 +0800
+Zheng Yejian <zhengyejian1@huawei.com> wrote:
 
-
-On 2023/7/13 2:11, Björn Töpel wrote:
-> Song Shuai <suagrfillet@gmail.com> writes:
+> > @@ -6709,7 +6723,12 @@ static int tracing_open_pipe(struct inode *inode, struct file *filp)
+> >   	}
+> >   
+> >   	trace_seq_init(&iter->seq);
+> > -	iter->trace = tr->current_trace;
+> > +
+> > +	iter->trace = kzalloc(sizeof(*iter->trace), GFP_KERNEL);
+> > +	if (!iter->trace)
+> > +		goto fail;  
 > 
-> [...]
-> 
->> Add WITH_DIRECT_CALLS support [3] (patch 3, 4)
->> ==============================================
-> 
-> We've had some offlist discussions, so here's some input for a wider
-> audience! Most importantly, this is for Palmer, so that this series is
-> not merged until a proper BPF trampoline fix is in place.
-> 
-> Note that what's currently usable from BPF trampoline *works*. It's
-> when this series is added that it breaks.
-> 
-> TL;DR This series adds DYNAMIC_FTRACE_WITH_DIRECT_CALLS, which enables
-> fentry/fexit BPF trampoline support. Unfortunately the
-> fexit/BPF_TRAMP_F_SKIP_FRAME parts of the RV BPF trampoline breaks
-> with this addition, and need to be addressed *prior* merging this
-> series. An easy way to reproduce, is just calling any of the kselftest
-> tests that uses fexit patching.
-> 
-> The issue is around the nop seld, and how a call is done; The nop sled
-> (patchable-function-entry) size changed from 16B to 8B in commit
-> 6724a76cff85 ("riscv: ftrace: Reduce the detour code size to half"), but
-> BPF code still uses the old 16B. So it'll work for BPF programs, but not
-> for regular kernel functions.
-> 
-> An example:
-> 
->    | ffffffff80fa4150 <bpf_fentry_test1>:
->    | ffffffff80fa4150:       0001                    nop
->    | ffffffff80fa4152:       0001                    nop
->    | ffffffff80fa4154:       0001                    nop
->    | ffffffff80fa4156:       0001                    nop
->    | ffffffff80fa4158:       1141                    add     sp,sp,-16
->    | ffffffff80fa415a:       e422                    sd      s0,8(sp)
->    | ffffffff80fa415c:       0800                    add     s0,sp,16
->    | ffffffff80fa415e:       6422                    ld      s0,8(sp)
->    | ffffffff80fa4160:       2505                    addw    a0,a0,1
->    | ffffffff80fa4162:       0141                    add     sp,sp,16
->    | ffffffff80fa4164:       8082                    ret
-> 
-> is patched to:
-> 
->    | ffffffff80fa4150:  f70c0297                     auipc   t0,-150208512
->    | ffffffff80fa4154:  eb0282e7                     jalr    t0,t0,-336
-> 
-> The return address to bpf_fentry_test1 is stored in t0 at BPF
-> trampoline entry. Return to the *parent* is in ra. The trampline has
-> to deal with this.
-> 
-> For BPF_TRAMP_F_SKIP_FRAME/CALL_ORIG, the BPF trampoline will skip too
-> many bytes, and not correctly handle parent calls.
-> 
-> Further; The BPF trampoline currently has a different way of patching
-> the nops for BPF programs, than what ftrace does. That should be changed
-> to match what ftrace does (auipc/jalr t0).
-> 
-> To summarize:
->   * Align BPF nop sled with patchable-function-entry: 8B.
->   * Adapt BPF trampoline for 8B nop sleds.
->   * Adapt BPF trampoline t0 return, ra parent scheme.
+> Hi, Steve, 'ret' may need to be set before `goto fail`:
+>    ret = -ENOMEM;
 > 
 
-Thanks Björn, I make a adaptation as follows, looking forward to your 
-review.
+As I mentioned to Masami, this hunk of the patch didn't belong.
+Something got mixed up in the commit. This patch even depends on the
+previous patch to remove the allocation completely.
 
-https://lore.kernel.org/bpf/20230715090137.2141358-1-pulehui@huaweicloud.com/
-
-> 
-> Cheers,
-> Björn
-> 
-> 
+-- Steve
