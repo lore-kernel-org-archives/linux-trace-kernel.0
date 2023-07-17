@@ -2,41 +2,37 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 410BAC001DC
-	for <linux-trace-kernel@archiver.kernel.org>; Mon, 17 Jul 2023 18:39:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D27C6EB64DC
+	for <linux-trace-kernel@archiver.kernel.org>; Mon, 17 Jul 2023 20:39:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229831AbjGQSjX (ORCPT
+        id S229674AbjGQUjw (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Mon, 17 Jul 2023 14:39:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39484 "EHLO
+        Mon, 17 Jul 2023 16:39:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38552 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230413AbjGQSjS (ORCPT
+        with ESMTP id S229634AbjGQUjv (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Mon, 17 Jul 2023 14:39:18 -0400
+        Mon, 17 Jul 2023 16:39:51 -0400
 Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 91B4BA1;
-        Mon, 17 Jul 2023 11:39:17 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 81302103;
+        Mon, 17 Jul 2023 13:39:50 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange X25519 server-signature RSA-PSS (2048 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 2C8A7611EB;
-        Mon, 17 Jul 2023 18:39:17 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C7012C433C7;
-        Mon, 17 Jul 2023 18:39:15 +0000 (UTC)
-Date:   Mon, 17 Jul 2023 14:39:14 -0400
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 204666125F;
+        Mon, 17 Jul 2023 20:39:50 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1518EC433C7;
+        Mon, 17 Jul 2023 20:39:48 +0000 (UTC)
+Date:   Mon, 17 Jul 2023 16:39:47 -0400
 From:   Steven Rostedt <rostedt@goodmis.org>
-To:     "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
-Cc:     linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Martin KaFai Lau <martin.lau@linux.dev>, bpf@vger.kernel.org,
-        Sven Schnelle <svens@linux.ibm.com>,
-        Alexei Starovoitov <ast@kernel.org>
-Subject: Re: [PATCH v2 2/9] bpf/btf: tracing: Move finding func-proto API
- and getting func-param API to BTF
-Message-ID: <20230717143914.5399a8e4@gandalf.local.home>
-In-Reply-To: <168960741686.34107.6330273416064011062.stgit@devnote2>
-References: <168960739768.34107.15145201749042174448.stgit@devnote2>
-        <168960741686.34107.6330273416064011062.stgit@devnote2>
+To:     Linux Trace Kernel <linux-trace-kernel@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Cc:     Masami Hiramatsu <mhiramat@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>
+Subject: [PATCH] tracing/probes: Differentiate BTF support from start of
+ function
+Message-ID: <20230717163947.4969316a@gandalf.local.home>
 X-Mailer: Claws Mail 3.19.1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
@@ -45,190 +41,65 @@ Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On Tue, 18 Jul 2023 00:23:37 +0900
-"Masami Hiramatsu (Google)" <mhiramat@kernel.org> wrote:
+From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
 
-> From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-> 
-> Move generic function-proto find API and getting function parameter API
-> to BTF library code from trace_probe.c. This will avoid redundant efforts
-> on different feature.
+Having a typo in the function name to trace one of the arguments using
+BTF, gave me an error message that BTF was not supported by this kernel:
 
- "different features."
+~# echo 'p:lock __raw_spin_lock lock=lock' > /sys/kernel/tracing/kprobe_events
+-bash: echo: write error: Invalid argument
+~# cat /sys/kernel/tracing/error_log
+[   34.382149] trace_kprobe: error: BTF is not available or not supported
+  Command: p:lock __raw_spin_lock lock=lock
+                                       ^
 
-> 
-> Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-> ---
->  include/linux/btf.h        |    4 ++++
->  kernel/bpf/btf.c           |   45 ++++++++++++++++++++++++++++++++++++++++
->  kernel/trace/trace_probe.c |   50 +++++++++++++-------------------------------
->  3 files changed, 64 insertions(+), 35 deletions(-)
-> 
-> diff --git a/include/linux/btf.h b/include/linux/btf.h
-> index cac9f304e27a..98fbbcdd72ec 100644
-> --- a/include/linux/btf.h
-> +++ b/include/linux/btf.h
-> @@ -221,6 +221,10 @@ const struct btf_type *
->  btf_resolve_size(const struct btf *btf, const struct btf_type *type,
->  		 u32 *type_size);
->  const char *btf_type_str(const struct btf_type *t);
-> +const struct btf_type *btf_find_func_proto(struct btf *btf,
-> +					   const char *func_name);
-> +const struct btf_param *btf_get_func_param(const struct btf_type *func_proto,
-> +					   s32 *nr);
->  
->  #define for_each_member(i, struct_type, member)			\
->  	for (i = 0, member = btf_type_member(struct_type);	\
-> diff --git a/kernel/bpf/btf.c b/kernel/bpf/btf.c
-> index 817204d53372..e015b52956cb 100644
-> --- a/kernel/bpf/btf.c
-> +++ b/kernel/bpf/btf.c
-> @@ -1947,6 +1947,51 @@ btf_resolve_size(const struct btf *btf, const struct btf_type *type,
->  	return __btf_resolve_size(btf, type, type_size, NULL, NULL, NULL, NULL);
->  }
->  
-> +/*
-> + * Find a functio proto type by name, and return it.
+I added two underscores instead of one underscore for the function
+_raw_spin_lock(). But I spent too much time trying to figure out why BTF
+was not supported, because in reality it was! The problem was that the
+function wasn't found (this could happen if a function offset is used as
+well).
 
-  "function"
+Instead, add a new error message that gives a better description of the
+problem.
 
-> + * Return NULL if not found, or return -EINVAL if parameter is invalid.
-> + */
-> +const struct btf_type *btf_find_func_proto(struct btf *btf, const char *func_name)
-> +{
-> +	const struct btf_type *t;
-> +	s32 id;
-> +
-> +	if (!btf || !func_name)
-> +		return ERR_PTR(-EINVAL);
-> +
-> +	id = btf_find_by_name_kind(btf, func_name, BTF_KIND_FUNC);
-> +	if (id <= 0)
-> +		return NULL;
-> +
-> +	/* Get BTF_KIND_FUNC type */
-> +	t = btf_type_by_id(btf, id);
-> +	if (!t || !btf_type_is_func(t))
-> +		return NULL;
-> +
-> +	/* The type of BTF_KIND_FUNC is BTF_KIND_FUNC_PROTO */
-> +	t = btf_type_by_id(btf, t->type);
-> +	if (!t || !btf_type_is_func_proto(t))
-> +		return NULL;
-> +
-> +	return t;
-> +}
-> +
-> +/*
-> + * Get function parameter with the number of parameters.
-> + * This can return NULL if the function has no parameters.
+~# echo 'p:lock __raw_spin_lock lock=lock' > /sys/kernel/tracing/kprobe_events
+-bash: echo: write error: Invalid argument
+~# cat /sys/kernel/tracing/error_log
+[   45.922742] trace_kprobe: error: BTF arg can be used only on function entry
+  Command: p:lock __raw_spin_lock lock=lock
+                                       ^
+Fixes: b576e09701c7d ("tracing/probes: Support function parameters if BTF is available")
+Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+---
+ kernel/trace/trace_probe.c | 2 +-
+ kernel/trace/trace_probe.h | 1 +
+ 2 files changed, 2 insertions(+), 1 deletion(-)
 
-  " It can return EINVAL if this function's parameters are NULL."
-
--- Steve
-
-
-> + */
-> +const struct btf_param *btf_get_func_param(const struct btf_type *func_proto, s32 *nr)
-> +{
-> +	if (!func_proto || !nr)
-> +		return ERR_PTR(-EINVAL);
-> +
-> +	*nr = btf_type_vlen(func_proto);
-> +	if (*nr > 0)
-> +		return (const struct btf_param *)(func_proto + 1);
-> +	else
-> +		return NULL;
-> +}
-> +
->  static u32 btf_resolved_type_id(const struct btf *btf, u32 type_id)
->  {
->  	while (type_id < btf->start_id)
-> diff --git a/kernel/trace/trace_probe.c b/kernel/trace/trace_probe.c
-> index c68a72707852..cd89fc1ebb42 100644
-> --- a/kernel/trace/trace_probe.c
-> +++ b/kernel/trace/trace_probe.c
-> @@ -371,47 +371,23 @@ static const char *type_from_btf_id(struct btf *btf, s32 id)
->  	return NULL;
->  }
->  
-> -static const struct btf_type *find_btf_func_proto(const char *funcname)
-> -{
-> -	struct btf *btf = traceprobe_get_btf();
-> -	const struct btf_type *t;
-> -	s32 id;
-> -
-> -	if (!btf || !funcname)
-> -		return ERR_PTR(-EINVAL);
-> -
-> -	id = btf_find_by_name_kind(btf, funcname, BTF_KIND_FUNC);
-> -	if (id <= 0)
-> -		return ERR_PTR(-ENOENT);
-> -
-> -	/* Get BTF_KIND_FUNC type */
-> -	t = btf_type_by_id(btf, id);
-> -	if (!t || !btf_type_is_func(t))
-> -		return ERR_PTR(-ENOENT);
-> -
-> -	/* The type of BTF_KIND_FUNC is BTF_KIND_FUNC_PROTO */
-> -	t = btf_type_by_id(btf, t->type);
-> -	if (!t || !btf_type_is_func_proto(t))
-> -		return ERR_PTR(-ENOENT);
-> -
-> -	return t;
-> -}
-> -
->  static const struct btf_param *find_btf_func_param(const char *funcname, s32 *nr,
->  						   bool tracepoint)
->  {
-> +	struct btf *btf = traceprobe_get_btf();
->  	const struct btf_param *param;
->  	const struct btf_type *t;
->  
-> -	if (!funcname || !nr)
-> +	if (!funcname || !nr || !btf)
->  		return ERR_PTR(-EINVAL);
->  
-> -	t = find_btf_func_proto(funcname);
-> -	if (IS_ERR(t))
-> +	t = btf_find_func_proto(btf, funcname);
-> +	if (IS_ERR_OR_NULL(t))
->  		return (const struct btf_param *)t;
->  
-> -	*nr = btf_type_vlen(t);
-> -	param = (const struct btf_param *)(t + 1);
-> +	param = btf_get_func_param(t, nr);
-> +	if (IS_ERR_OR_NULL(param))
-> +		return param;
->  
->  	/* Hide the first 'data' argument of tracepoint */
->  	if (tracepoint) {
-> @@ -490,8 +466,8 @@ static const struct fetch_type *parse_btf_retval_type(
->  	const struct btf_type *t;
->  
->  	if (btf && ctx->funcname) {
-> -		t = find_btf_func_proto(ctx->funcname);
-> -		if (!IS_ERR(t))
-> +		t = btf_find_func_proto(btf, ctx->funcname);
-> +		if (!IS_ERR_OR_NULL(t))
->  			typestr = type_from_btf_id(btf, t->type);
->  	}
->  
-> @@ -500,10 +476,14 @@ static const struct fetch_type *parse_btf_retval_type(
->  
->  static bool is_btf_retval_void(const char *funcname)
->  {
-> +	struct btf *btf = traceprobe_get_btf();
->  	const struct btf_type *t;
->  
-> -	t = find_btf_func_proto(funcname);
-> -	if (IS_ERR(t))
-> +	if (!btf)
-> +		return false;
-> +
-> +	t = btf_find_func_proto(btf, funcname);
-> +	if (IS_ERR_OR_NULL(t))
->  		return false;
->  
->  	return t->type == 0;
+diff --git a/kernel/trace/trace_probe.c b/kernel/trace/trace_probe.c
+index cf504efd0694..328a51b1d068 100644
+--- a/kernel/trace/trace_probe.c
++++ b/kernel/trace/trace_probe.c
+@@ -1023,7 +1023,7 @@ parse_probe_arg(char *arg, const struct fetch_type *type,
+ 	default:
+ 		if (isalpha(arg[0]) || arg[0] == '_') {	/* BTF variable */
+ 			if (!tparg_is_function_entry(ctx->flags)) {
+-				trace_probe_log_err(ctx->offset, NOSUP_BTFARG);
++				trace_probe_log_err(ctx->offset, NOFENTRY_BTFARG);
+ 				return -EINVAL;
+ 			}
+ 			ret = parse_btf_arg(arg, pcode, end, ctx);
+diff --git a/kernel/trace/trace_probe.h b/kernel/trace/trace_probe.h
+index 604d6fb9c5ff..554fe2995ca1 100644
+--- a/kernel/trace/trace_probe.h
++++ b/kernel/trace/trace_probe.h
+@@ -493,6 +493,7 @@ extern int traceprobe_define_arg_fields(struct trace_event_call *event_call,
+ 	C(BAD_ATTACH_ARG,	"Attached event does not have this field"),\
+ 	C(NO_EP_FILTER,		"No filter rule after 'if'"),		\
+ 	C(NOSUP_BTFARG,		"BTF is not available or not supported"),	\
++	C(NOFENTRY_BTFARG,	"BTF arg can be used only on function entry"),	\
+ 	C(NO_BTFARG,		"This variable is not found at this probe point"),\
+ 	C(NO_BTF_ENTRY,		"No BTF entry for this probe point"),	\
+ 	C(BAD_VAR_ARGS,		"$arg* must be an independent parameter without name etc."),\
+-- 
+2.40.1
 
