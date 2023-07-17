@@ -2,47 +2,47 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 94C8EC001B0
-	for <linux-trace-kernel@archiver.kernel.org>; Mon, 17 Jul 2023 15:25:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BA0D8C001B0
+	for <linux-trace-kernel@archiver.kernel.org>; Mon, 17 Jul 2023 15:25:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232010AbjGQPZR (ORCPT
+        id S231743AbjGQPZk (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Mon, 17 Jul 2023 11:25:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57724 "EHLO
+        Mon, 17 Jul 2023 11:25:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57376 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231861AbjGQPYx (ORCPT
+        with ESMTP id S231753AbjGQPZQ (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Mon, 17 Jul 2023 11:24:53 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 57B8E1735;
-        Mon, 17 Jul 2023 08:24:34 -0700 (PDT)
+        Mon, 17 Jul 2023 11:25:16 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A06C719B0;
+        Mon, 17 Jul 2023 08:24:45 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange X25519 server-signature RSA-PSS (2048 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 893F0610F4;
-        Mon, 17 Jul 2023 15:24:12 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id ECED0C433C8;
-        Mon, 17 Jul 2023 15:24:09 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id BBDA86104A;
+        Mon, 17 Jul 2023 15:24:42 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2B870C433C7;
+        Mon, 17 Jul 2023 15:24:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1689607452;
-        bh=HNw7NmAJWJoLfuOb7lcwr0tG/Yg91E6W1MXYrCfkES8=;
+        s=k20201202; t=1689607482;
+        bh=ApAG9WsE51kt31Nr613fs76Un6BDs5WAbX0BxsdpAn8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=BUWZzB8ih/Pn17MNMbs4bLT6F3qq7F/IIIg66MNQnM/DH93rG0K9UG221F0zupoZZ
-         O8oW/qK3mGyNFuNNcZkDuie4iQeVW++xBPymTfa82sLjllXjEsGcNw5l2PsHu/PRvx
-         wF05Fc0Ew3ZII0weMaCacrFY2FKt74DBReB0ND1/u87o8reC3fXiDsXcraOkeRYLGK
-         GqGnDPhFHYD1elbCbub6fi9URBamkp6az5E8dpcjqCzL+r13FIzSxRRUbdxMHXsKyJ
-         QnfxwukYukf9m52v9zeqdsOAM7niAy1zWZ0hxrqZEeaI5gtH3xyW8K9mb1kbkFMScI
-         VYQVMZlWdIX6w==
+        b=CXPeI9Olpd2PQ2cSmU1m8gegxcK4xVk5lVci7yDw8I96t9olXP89EYoBZyaYneToh
+         76Ytj785hrK0Fc6BmJ9QWoFW4K1kDH4qVftLjgxKIEyfv98xxZbrHxCmPjFLY6i/r7
+         +4z8fO2yZJAwyiHRz/wuVWBDq3EGn/O0a3aoCzPoOvYyjPuTR5ZSfWj2fhbJ/F/4ux
+         gDZRWt0hxpyGAcAtgkcFG30czTMmtbibdjIQI7zFNi13neGJ1DSfl15vJMzzlaIqnb
+         xIUgJO7bxp18mG797lKvbjacfit1O9feYVfWPGeeC99spMmBTzExUyriXbeMaobdVe
+         FfTbZdcpoUcVw==
 From:   "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
 To:     linux-trace-kernel@vger.kernel.org
 Cc:     linux-kernel@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>,
         mhiramat@kernel.org, Martin KaFai Lau <martin.lau@linux.dev>,
         bpf@vger.kernel.org, Sven Schnelle <svens@linux.ibm.com>,
         Alexei Starovoitov <ast@kernel.org>
-Subject: [PATCH v2 5/9] tracing/probes: Support BTF field access from $retval
-Date:   Tue, 18 Jul 2023 00:24:07 +0900
-Message-Id: <168960744719.34107.443329109565685838.stgit@devnote2>
+Subject: [PATCH v2 8/9] selftests/ftrace: Add BTF fields access testcases
+Date:   Tue, 18 Jul 2023 00:24:37 +0900
+Message-Id: <168960747750.34107.6104527579648222887.stgit@devnote2>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <168960739768.34107.15145201749042174448.stgit@devnote2>
 References: <168960739768.34107.15145201749042174448.stgit@devnote2>
@@ -56,212 +56,69 @@ X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
 From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 
-Support BTF argument on '$retval' for function return events including
-kretprobe and fprobe for accessing the return value.
-This also allows user to access its fields if the return value is a
-pointer of a data structure.
-
-E.g.
- # echo 'f getname_flags%return +0($retval->name):string' \
-   > dynamic_events
- # echo 1 > events/fprobes/getname_flags__exit/enable
- # ls > /dev/null
- # head -n 40 trace | tail
-              ls-87      [000] ...1.  8067.616101: getname_flags__exit: (vfs_fstatat+0x3c/0x70 <- getname_flags) arg1="./function_profile_enabled"
-              ls-87      [000] ...1.  8067.616108: getname_flags__exit: (vfs_fstatat+0x3c/0x70 <- getname_flags) arg1="./trace_stat"
-              ls-87      [000] ...1.  8067.616115: getname_flags__exit: (vfs_fstatat+0x3c/0x70 <- getname_flags) arg1="./set_graph_notrace"
-              ls-87      [000] ...1.  8067.616122: getname_flags__exit: (vfs_fstatat+0x3c/0x70 <- getname_flags) arg1="./set_graph_function"
-              ls-87      [000] ...1.  8067.616129: getname_flags__exit: (vfs_fstatat+0x3c/0x70 <- getname_flags) arg1="./set_ftrace_notrace"
-              ls-87      [000] ...1.  8067.616135: getname_flags__exit: (vfs_fstatat+0x3c/0x70 <- getname_flags) arg1="./set_ftrace_filter"
-              ls-87      [000] ...1.  8067.616143: getname_flags__exit: (vfs_fstatat+0x3c/0x70 <- getname_flags) arg1="./touched_functions"
-              ls-87      [000] ...1.  8067.616237: getname_flags__exit: (vfs_fstatat+0x3c/0x70 <- getname_flags) arg1="./enabled_functions"
-              ls-87      [000] ...1.  8067.616245: getname_flags__exit: (vfs_fstatat+0x3c/0x70 <- getname_flags) arg1="./available_filter_functions"
-              ls-87      [000] ...1.  8067.616253: getname_flags__exit: (vfs_fstatat+0x3c/0x70 <- getname_flags) arg1="./set_ftrace_notrace_pid"
-
+Add test cases for accessing the data structure fields using BTF info.
+This includes the field access from parameters and retval, and accessing
+string information.
 
 Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 ---
- Changes in v2:
-  - Use '$retval' instead of 'retval' because it is confusing.
+Changes in v2:
+ - Use '$retval' instead of 'retval'.
+ - Add a test that use both '$retval' and '$arg1' for fprobe.
 ---
- kernel/trace/trace_probe.c |   98 +++++++++++++++++---------------------------
- 1 file changed, 37 insertions(+), 61 deletions(-)
+ .../ftrace/test.d/dynevent/add_remove_btfarg.tc    |   11 +++++++++++
+ .../ftrace/test.d/dynevent/fprobe_syntax_errors.tc |    4 ++++
+ 2 files changed, 15 insertions(+)
 
-diff --git a/kernel/trace/trace_probe.c b/kernel/trace/trace_probe.c
-index dd646d35637d..4442ff9c2728 100644
---- a/kernel/trace/trace_probe.c
-+++ b/kernel/trace/trace_probe.c
-@@ -536,6 +536,22 @@ static int parse_btf_arg(char *varname,
- 		return -EOPNOTSUPP;
- 	}
+diff --git a/tools/testing/selftests/ftrace/test.d/dynevent/add_remove_btfarg.tc b/tools/testing/selftests/ftrace/test.d/dynevent/add_remove_btfarg.tc
+index b89de1771655..93b94468967b 100644
+--- a/tools/testing/selftests/ftrace/test.d/dynevent/add_remove_btfarg.tc
++++ b/tools/testing/selftests/ftrace/test.d/dynevent/add_remove_btfarg.tc
+@@ -21,6 +21,8 @@ echo 0 > events/enable
+ echo > dynamic_events
  
-+	if (ctx->flags & TPARG_FL_RETURN) {
-+		if (strcmp(varname, "$retval") != 0) {
-+			trace_probe_log_err(ctx->offset, NO_BTFARG);
-+			return -ENOENT;
-+		}
-+		/* Check whether the function return type is not void */
-+		type = btf_find_func_proto(btf, ctx->funcname);
-+		if (!IS_ERR_OR_NULL(type) && type->type == 0) {
-+			trace_probe_log_err(ctx->offset, NO_RETVAL);
-+			return -ENOENT;
-+		}
-+		code->op = FETCH_OP_RETVAL;
-+		tid = type->type;
-+		goto found;
-+	}
+ TP=kfree
++TP2=kmem_cache_alloc
++TP3=getname_flags
+ 
+ if [ "$FPROBES" ] ; then
+ echo "f:fpevent $TP object" >> dynamic_events
+@@ -33,6 +35,7 @@ echo > dynamic_events
+ 
+ echo "f:fpevent $TP "'$arg1' >> dynamic_events
+ grep -q "fpevent.*object=object" dynamic_events
 +
- 	if (!ctx->params) {
- 		params = find_btf_func_param(ctx->funcname, &ctx->nr_params,
- 					     ctx->flags & TPARG_FL_TPOINT);
-@@ -556,7 +572,6 @@ static int parse_btf_arg(char *varname,
- 				code->param = i + 1;
- 			else
- 				code->param = i;
--
- 			tid = params[i].type;
- 			goto found;
- 		}
-@@ -581,7 +596,7 @@ static int parse_btf_arg(char *varname,
- 	return 0;
- }
+ echo > dynamic_events
  
--static const struct fetch_type *parse_btf_arg_type(
-+static const struct fetch_type *find_fetch_type_from_btf_type(
- 					struct traceprobe_parse_context *ctx)
- {
- 	struct btf *btf = traceprobe_get_btf();
-@@ -593,26 +608,6 @@ static const struct fetch_type *parse_btf_arg_type(
- 	return find_fetch_type(typestr, ctx->flags);
- }
+ echo "f:fpevent $TP "'$arg*' >> dynamic_events
+@@ -45,6 +48,14 @@ fi
  
--static const struct fetch_type *parse_btf_retval_type(
--					struct traceprobe_parse_context *ctx)
--{
--	struct btf *btf = traceprobe_get_btf();
--	const char *typestr = NULL;
--	const struct btf_type *type;
--	s32 tid;
--
--	if (btf && ctx->funcname) {
--		type = btf_find_func_proto(btf, ctx->funcname);
--		if (!IS_ERR_OR_NULL(type)) {
--			type = btf_type_skip_modifiers(btf, type->type, &tid);
--			if (!IS_ERR_OR_NULL(type))
--				typestr = fetch_type_from_btf_type(btf, type, ctx);
--		}
--	}
--
--	return find_fetch_type(typestr, ctx->flags);
--}
--
- static int parse_btf_bitfield(struct fetch_insn **pcode,
- 			      struct traceprobe_parse_context *ctx)
- {
-@@ -635,20 +630,6 @@ static int parse_btf_bitfield(struct fetch_insn **pcode,
- 	return 0;
- }
+ echo > dynamic_events
  
--static bool is_btf_retval_void(const char *funcname)
--{
--	struct btf *btf = traceprobe_get_btf();
--	const struct btf_type *t;
--
--	if (!btf)
--		return false;
--
--	t = btf_find_func_proto(btf, funcname);
--	if (IS_ERR_OR_NULL(t))
--		return false;
--
--	return t->type == 0;
--}
- #else
- static struct btf *traceprobe_get_btf(void)
- {
-@@ -676,24 +657,23 @@ static int parse_btf_bitfield(struct fetch_insn **pcode,
- 	return -EOPNOTSUPP;
- }
- 
--#define parse_btf_arg_type(ctx)		\
--	find_fetch_type(NULL, ctx->flags)
--
--#define parse_btf_retval_type(ctx)		\
-+#define find_fetch_type_from_btf_type(ctx)		\
- 	find_fetch_type(NULL, ctx->flags)
- 
--#define is_btf_retval_void(funcname)	(false)
--
- #endif
- 
- #define PARAM_MAX_STACK (THREAD_SIZE / sizeof(unsigned long))
- 
--static int parse_probe_vars(char *arg, const struct fetch_type *t,
--			    struct fetch_insn *code,
-+/* Parse $vars. @orig_arg points '$', which syncs to @ctx->offset */
-+static int parse_probe_vars(char *orig_arg, const struct fetch_type *t,
-+			    struct fetch_insn **pcode,
-+			    struct fetch_insn *end,
- 			    struct traceprobe_parse_context *ctx)
- {
--	unsigned long param;
-+	struct fetch_insn *code = *pcode;
- 	int err = TP_ERR_BAD_VAR;
-+	char *arg = orig_arg + 1;
-+	unsigned long param;
- 	int ret = 0;
- 	int len;
- 
-@@ -712,18 +692,17 @@ static int parse_probe_vars(char *arg, const struct fetch_type *t,
- 		goto inval;
- 	}
- 
--	if (strcmp(arg, "retval") == 0) {
--		if (ctx->flags & TPARG_FL_RETURN) {
--			if ((ctx->flags & TPARG_FL_KERNEL) &&
--			    is_btf_retval_void(ctx->funcname)) {
--				err = TP_ERR_NO_RETVAL;
--				goto inval;
--			}
-+	if (str_has_prefix(arg, "retval")) {
-+		if (!(ctx->flags & TPARG_FL_RETURN)) {
-+			err = TP_ERR_RETVAL_ON_PROBE;
-+			goto inval;
-+		}
-+		if (!(ctx->flags & TPARG_FL_KERNEL) ||
-+		    !IS_ENABLED(CONFIG_PROBE_EVENTS_BTF_ARGS)) {
- 			code->op = FETCH_OP_RETVAL;
- 			return 0;
- 		}
--		err = TP_ERR_RETVAL_ON_PROBE;
--		goto inval;
-+		return parse_btf_arg(orig_arg, pcode, end, ctx);
- 	}
- 
- 	len = str_has_prefix(arg, "stack");
-@@ -825,7 +804,7 @@ parse_probe_arg(char *arg, const struct fetch_type *type,
- 
- 	switch (arg[0]) {
- 	case '$':
--		ret = parse_probe_vars(arg + 1, type, code, ctx);
-+		ret = parse_probe_vars(arg, type, pcode, end, ctx);
- 		break;
- 
- 	case '%':	/* named register */
-@@ -1122,12 +1101,9 @@ static int traceprobe_parse_probe_arg_body(const char *argv, ssize_t *size,
- 		goto fail;
- 
- 	/* Update storing type if BTF is available */
--	if (IS_ENABLED(CONFIG_PROBE_EVENTS_BTF_ARGS) && !t) {
--		if (ctx->last_type)
--			parg->type = parse_btf_arg_type(ctx);
--		else if (ctx->flags & TPARG_FL_RETURN)
--			parg->type = parse_btf_retval_type(ctx);
--	}
-+	if (IS_ENABLED(CONFIG_PROBE_EVENTS_BTF_ARGS) &&
-+	    !t && ctx->last_type)
-+		parg->type = find_fetch_type_from_btf_type(ctx);
- 
- 	ret = -EINVAL;
- 	/* Store operation */
++echo "t:tpevent $TP2 name=s->name:string" >> dynamic_events
++echo "f:fpevent ${TP3}%return path=\$retval->name:string" >> dynamic_events
++
++grep -q "tpevent.*name=s->name:string" dynamic_events
++grep -q "fpevent.*path=\$retval->name:string" dynamic_events
++
++echo > dynamic_events
++
+ if [ "$KPROBES" ] ; then
+ echo "p:kpevent $TP object" >> dynamic_events
+ grep -q "kpevent.*object=object" dynamic_events
+diff --git a/tools/testing/selftests/ftrace/test.d/dynevent/fprobe_syntax_errors.tc b/tools/testing/selftests/ftrace/test.d/dynevent/fprobe_syntax_errors.tc
+index 72563b2e0812..49758f77c923 100644
+--- a/tools/testing/selftests/ftrace/test.d/dynevent/fprobe_syntax_errors.tc
++++ b/tools/testing/selftests/ftrace/test.d/dynevent/fprobe_syntax_errors.tc
+@@ -103,6 +103,10 @@ check_error 'f vfs_read%return ^$arg*'		# NOFENTRY_ARGS
+ check_error 'f vfs_read ^hoge'			# NO_BTFARG
+ check_error 'f kfree ^$arg10'			# NO_BTFARG (exceed the number of parameters)
+ check_error 'f kfree%return ^$retval'		# NO_RETVAL
++check_error 'f vfs_read%return $retval->^foo'	# NO_PTR_STRCT
++check_error 'f vfs_read file->^foo'		# NO_BTF_FIELD
++check_error 'f vfs_read file^-.foo'		# BAD_HYPHEN
++check_error 'f vfs_read ^file:string'		# BAD_TYPE4STR
+ else
+ check_error 'f vfs_read ^$arg*'			# NOSUP_BTFARG
+ check_error 't kfree ^$arg*'			# NOSUP_BTFARG
 
