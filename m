@@ -2,47 +2,47 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 83124C001B0
-	for <linux-trace-kernel@archiver.kernel.org>; Mon, 17 Jul 2023 15:25:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 87BA3EB64DC
+	for <linux-trace-kernel@archiver.kernel.org>; Mon, 17 Jul 2023 15:26:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230386AbjGQPZ4 (ORCPT
+        id S231653AbjGQP0E (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Mon, 17 Jul 2023 11:25:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57774 "EHLO
+        Mon, 17 Jul 2023 11:26:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57694 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232077AbjGQPZW (ORCPT
+        with ESMTP id S231343AbjGQPZe (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Mon, 17 Jul 2023 11:25:22 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8137E1709;
-        Mon, 17 Jul 2023 08:24:53 -0700 (PDT)
+        Mon, 17 Jul 2023 11:25:34 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8A75F2704;
+        Mon, 17 Jul 2023 08:24:59 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange X25519 server-signature RSA-PSS (2048 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id C343E6111E;
-        Mon, 17 Jul 2023 15:24:52 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4DF3FC433C7;
-        Mon, 17 Jul 2023 15:24:50 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id B3F5C61123;
+        Mon, 17 Jul 2023 15:24:32 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 239C4C433C7;
+        Mon, 17 Jul 2023 15:24:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1689607492;
-        bh=jfsyJNrolIUjYdnOxE9K/vaKVHqekN0muXVvxqmYTwY=;
+        s=k20201202; t=1689607472;
+        bh=Ud+/WgVDgP+xcku85SFsEC4AToiKRsKLRxeToviMbLw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=M0QIKRYqbqOunmlZej0c6MOtavCWOma/HQor1eBeB5aUhCj9cCes5zRUs0EzehPsd
-         3ZQHFe7jGl3p7a+a3jCxwpZ1wPwGEbCfbGPrbda3oKZ6unysYT6coxbgWNCz8Pu3Ev
-         m7xu4WRWzCaZdRD6Xbu4CqWPgLT5W6Qkx6xKTU23PXgASD0YLan0E/Y0SqyGl4V0a0
-         3K05gn6FEy626Qhjtkjz6vgioW2Q+tqYg5U2rKLVPVFsyL3umvYBDhRx38B5Bfy7q+
-         zbFByA7C0PZRE3oU+dhZM/9Uhuzwak/bmBU0KHEQkGAQhwyN3GFck1UY8t8wRkLlm9
-         7LKpuJFjpofPA==
+        b=dRLWgmFjqOYNpjJ7uT98XQf53pRsqoJ4KmYQWSnI4dydNJiKY+NUpsytf0n08osMl
+         bVICQQ33luLAfE1ZmrCsyk8Xbu2GIQanzzFIlTnoi/YVyASFCwDX2OlrfAAp/RNGcu
+         s3JUM/jYOhZyt7JPBTY9K/c48UNAEr9Xz80nb6FVW4FP3ftIqkTyLym+QUvSSs+HMo
+         w6odgw62hH6rmuzXxgGnwOHMUm+GDEWTEf1bQPB7ro8WMzecBIVVoxPZXUSrCQn92U
+         4inLw+VzOJrEaOP5xrkXWOnF69dfEcUyq34fSbGX4UXG8Na9YBu9YTlqld0wQo1jq/
+         wX4MzPAn06RvA==
 From:   "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
 To:     linux-trace-kernel@vger.kernel.org
 Cc:     linux-kernel@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>,
         mhiramat@kernel.org, Martin KaFai Lau <martin.lau@linux.dev>,
         bpf@vger.kernel.org, Sven Schnelle <svens@linux.ibm.com>,
         Alexei Starovoitov <ast@kernel.org>
-Subject: [PATCH v2 9/9] Documentation: tracing: Update fprobe event example with BTF field
-Date:   Tue, 18 Jul 2023 00:24:47 +0900
-Message-Id: <168960748753.34107.1941635032108706544.stgit@devnote2>
+Subject: [PATCH v2 7/9] tracing/fprobe-event: Assume fprobe is a return event by $retval
+Date:   Tue, 18 Jul 2023 00:24:27 +0900
+Message-Id: <168960746736.34107.3486065330592238119.stgit@devnote2>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <168960739768.34107.15145201749042174448.stgit@devnote2>
 References: <168960739768.34107.15145201749042174448.stgit@devnote2>
@@ -56,95 +56,118 @@ X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
 From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 
-Update fprobe event example with BTF data structure field specification.
+Assume the fprobe event is a return event if there is $retval is
+used in the probe's argument without %return. e.g.
+
+echo 'f:myevent vfs_read $retval' >> dynamic_events
+
+then 'myevent' is a return probe event.
 
 Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 ---
- Changes in v2:
-  - Remove 'retval' and use '$retval'.
----
- Documentation/trace/fprobetrace.rst |   50 ++++++++++++++++++++++-------------
- 1 file changed, 32 insertions(+), 18 deletions(-)
+ kernel/trace/trace_fprobe.c                        |   58 +++++++++++++++-----
+ .../ftrace/test.d/dynevent/fprobe_syntax_errors.tc |    2 -
+ 2 files changed, 45 insertions(+), 15 deletions(-)
 
-diff --git a/Documentation/trace/fprobetrace.rst b/Documentation/trace/fprobetrace.rst
-index 7297f9478459..e9e764fadf14 100644
---- a/Documentation/trace/fprobetrace.rst
-+++ b/Documentation/trace/fprobetrace.rst
-@@ -79,9 +79,9 @@ automatically set by the given name. ::
-  f:fprobes/myprobe vfs_read count=count pos=pos
+diff --git a/kernel/trace/trace_fprobe.c b/kernel/trace/trace_fprobe.c
+index dfe2e546acdc..3ac0e04071aa 100644
+--- a/kernel/trace/trace_fprobe.c
++++ b/kernel/trace/trace_fprobe.c
+@@ -898,6 +898,46 @@ static struct tracepoint *find_tracepoint(const char *tp_name)
+ 	return data.tpoint;
+ }
  
- It also chooses the fetch type from BTF information. For example, in the above
--example, the ``count`` is unsigned long, and the ``pos`` is a pointer. Thus, both
--are converted to 64bit unsigned long, but only ``pos`` has "%Lx" print-format as
--below ::
-+example, the ``count`` is unsigned long, and the ``pos`` is a pointer. Thus,
-+both are converted to 64bit unsigned long, but only ``pos`` has "%Lx"
-+print-format as below ::
++static int parse_symbol_and_return(int argc, const char *argv[],
++				   char **symbol, bool *is_return,
++				   bool is_tracepoint)
++{
++	char *tmp = strchr(argv[1], '%');
++	int i;
++
++	if (tmp) {
++		int len = tmp - argv[1];
++
++		if (!is_tracepoint && !strcmp(tmp, "%return")) {
++			*is_return = true;
++		} else {
++			trace_probe_log_err(len, BAD_ADDR_SUFFIX);
++			return -EINVAL;
++		}
++		*symbol = kmemdup_nul(argv[1], len, GFP_KERNEL);
++	} else
++		*symbol = kstrdup(argv[1], GFP_KERNEL);
++	if (!*symbol)
++		return -ENOMEM;
++
++	if (*is_return)
++		return 0;
++
++	/* If there is $retval, this should be a return fprobe. */
++	for (i = 2; i < argc; i++) {
++		tmp = strstr(argv[i], "$retval");
++		if (tmp && !isalnum(tmp[7]) && tmp[7] != '_') {
++			*is_return = true;
++			/*
++			 * NOTE: Don't check is_tracepoint here, because it will
++			 * be checked when the argument is parsed.
++			 */
++			break;
++		}
++	}
++	return 0;
++}
++
+ static int __trace_fprobe_create(int argc, const char *argv[])
+ {
+ 	/*
+@@ -927,7 +967,7 @@ static int __trace_fprobe_create(int argc, const char *argv[])
+ 	struct trace_fprobe *tf = NULL;
+ 	int i, len, new_argc = 0, ret = 0;
+ 	bool is_return = false;
+-	char *symbol = NULL, *tmp = NULL;
++	char *symbol = NULL;
+ 	const char *event = NULL, *group = FPROBE_EVENT_SYSTEM;
+ 	const char **new_argv = NULL;
+ 	int maxactive = 0;
+@@ -983,20 +1023,10 @@ static int __trace_fprobe_create(int argc, const char *argv[])
+ 	trace_probe_log_set_index(1);
  
-  # cat events/fprobes/myprobe/format
-  name: myprobe
-@@ -105,9 +105,33 @@ is expanded to all function arguments of the function or the tracepoint. ::
-  # cat dynamic_events
-  f:fprobes/myprobe vfs_read file=file buf=buf count=count pos=pos
+ 	/* a symbol(or tracepoint) must be specified */
+-	symbol = kstrdup(argv[1], GFP_KERNEL);
+-	if (!symbol)
+-		return -ENOMEM;
++	ret = parse_symbol_and_return(argc, argv, &symbol, &is_return, is_tracepoint);
++	if (ret < 0)
++		goto parse_error;
  
--BTF also affects the ``$retval``. If user doesn't set any type, the retval type is
--automatically picked from the BTF. If the function returns ``void``, ``$retval``
--is rejected.
-+BTF also affects the ``$retval``. If user doesn't set any type, the retval
-+type is automatically picked from the BTF. If the function returns ``void``,
-+``$retval`` is rejected.
-+
-+You can access the data fields of a data structure using allow operator ``->``
-+(for pointer type) and dot operator ``.`` (for data structure type.)::
-+
-+# echo 't sched_switch preempt prev_pid=prev->pid next_pid=next->pid' >> dynamic_events
-+
-+This data field access is available for the return value via ``$retval``,
-+e.g. ``$retval->name``.
-+
-+For these BTF arguments and fields, ``:string`` and ``:ustring`` change the
-+behavior. If these are used for BTF argument or field, it checks whether
-+the BTF type of the argument or the data field is ``char *`` or ``char []``,
-+or not.  If not, it rejects applying the string types. Also, with the BTF
-+support, you don't need a memory dereference operator (``+0(PTR)``) for
-+accessing the string pointed by a ``PTR``. It automatically adds the memory
-+dereference operator according to the BTF type. e.g. ::
-+
-+# echo 't sched_switch prev->comm:string' >> dynamic_events
-+# echo 'f getname_flags%return $retval->name:string' >> dynamic_events
-+
-+The ``prev->comm`` is an embedded char array in the data structure, and
-+``$retval->name`` is a char pointer in the data structure. But in both
-+cases, you can use ``:string`` type to get the string.
-+
+-	tmp = strchr(symbol, '%');
+-	if (tmp) {
+-		if (!is_tracepoint && !strcmp(tmp, "%return")) {
+-			*tmp = '\0';
+-			is_return = true;
+-		} else {
+-			trace_probe_log_err(tmp - symbol, BAD_ADDR_SUFFIX);
+-			goto parse_error;
+-		}
+-	}
+ 	if (!is_return && maxactive) {
+ 		trace_probe_log_set_index(0);
+ 		trace_probe_log_err(1, BAD_MAXACT_TYPE);
+diff --git a/tools/testing/selftests/ftrace/test.d/dynevent/fprobe_syntax_errors.tc b/tools/testing/selftests/ftrace/test.d/dynevent/fprobe_syntax_errors.tc
+index 812f5b3f6055..72563b2e0812 100644
+--- a/tools/testing/selftests/ftrace/test.d/dynevent/fprobe_syntax_errors.tc
++++ b/tools/testing/selftests/ftrace/test.d/dynevent/fprobe_syntax_errors.tc
+@@ -30,11 +30,11 @@ check_error 'f:^ vfs_read'		# NO_EVENT_NAME
+ check_error 'f:foo/^12345678901234567890123456789012345678901234567890123456789012345 vfs_read'	# EVENT_TOO_LONG
+ check_error 'f:foo/^bar.1 vfs_read'	# BAD_EVENT_NAME
  
- Usage examples
- --------------
-@@ -161,10 +185,10 @@ parameters. This means you can access any field values in the task
- structure pointed by the ``prev`` and ``next`` arguments.
+-check_error 'f vfs_read ^$retval'	# RETVAL_ON_PROBE
+ check_error 'f vfs_read ^$stack10000'	# BAD_STACK_NUM
  
- For example, usually ``task_struct::start_time`` is not traced, but with this
--traceprobe event, you can trace it as below.
-+traceprobe event, you can trace that field as below.
- ::
+ check_error 'f vfs_read ^$arg10000'	# BAD_ARG_NUM
  
--  # echo 't sched_switch comm=+1896(next):string start_time=+1728(next):u64' > dynamic_events
-+  # echo 't sched_switch comm=next->comm:string next->start_time' > dynamic_events
-   # head -n 20 trace | tail
-  #           TASK-PID     CPU#  |||||  TIMESTAMP  FUNCTION
-  #              | |         |   |||||     |         |
-@@ -176,13 +200,3 @@ traceprobe event, you can trace it as below.
-            <idle>-0       [000] d..3.  5606.690317: sched_switch: (__probestub_sched_switch+0x4/0x10) comm="kworker/0:1" usage=1 start_time=137000000
-       kworker/0:1-14      [000] d..3.  5606.690339: sched_switch: (__probestub_sched_switch+0x4/0x10) comm="swapper/0" usage=2 start_time=0
-            <idle>-0       [000] d..3.  5606.692368: sched_switch: (__probestub_sched_switch+0x4/0x10) comm="kworker/0:1" usage=1 start_time=137000000
--
--Currently, to find the offset of a specific field in the data structure,
--you need to build kernel with debuginfo and run `perf probe` command with
--`-D` option. e.g.
--::
--
-- # perf probe -D "__probestub_sched_switch next->comm:string next->start_time"
-- p:probe/__probestub_sched_switch __probestub_sched_switch+0 comm=+1896(%cx):string start_time=+1728(%cx):u64
--
--And replace the ``%cx`` with the ``next``.
++check_error 'f vfs_read $retval ^$arg1' # BAD_VAR
+ check_error 'f vfs_read ^$none_var'	# BAD_VAR
+ check_error 'f vfs_read ^'$REG		# BAD_VAR
+ 
 
