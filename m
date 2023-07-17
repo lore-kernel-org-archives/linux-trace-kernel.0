@@ -2,48 +2,50 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 80E42EB64DC
-	for <linux-trace-kernel@archiver.kernel.org>; Mon, 17 Jul 2023 15:24:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E0D0C001B0
+	for <linux-trace-kernel@archiver.kernel.org>; Mon, 17 Jul 2023 15:24:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230512AbjGQPYC (ORCPT
+        id S231560AbjGQPYM (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Mon, 17 Jul 2023 11:24:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56806 "EHLO
+        Mon, 17 Jul 2023 11:24:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56674 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231403AbjGQPYB (ORCPT
+        with ESMTP id S231779AbjGQPYE (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Mon, 17 Jul 2023 11:24:01 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 00FE019B1;
-        Mon, 17 Jul 2023 08:23:43 -0700 (PDT)
+        Mon, 17 Jul 2023 11:24:04 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E55CB10D3;
+        Mon, 17 Jul 2023 08:23:47 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange X25519 server-signature RSA-PSS (2048 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id D082B60FE9;
-        Mon, 17 Jul 2023 15:23:22 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9639AC433C8;
-        Mon, 17 Jul 2023 15:23:20 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 59BC16112C;
+        Mon, 17 Jul 2023 15:23:42 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2FC70C433C8;
+        Mon, 17 Jul 2023 15:23:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1689607402;
-        bh=gHIJLgbVp3IPB3gkGkxy/IvawUhhWSjYF4p1wpvRtLU=;
-        h=From:To:Cc:Subject:Date:From;
-        b=fqXZ5t4I+z6d4b3GWRKAdh2i6bGmPXXT/2vJMQTEpeT7hjsTxU+8QV9HJS0cQbT1A
-         RbscXA8m+dEco03gEfPnVgQSbTbMrxAukoOy+008DndMQz4HqGAsSFCp7voeuytUhy
-         MYQSAhu7EB7Pv7F4UTIaiInLZXAUmiZm1rS3iqnRpirRbEUEK7vvmJyB737eYJpjI6
-         4IrF7TEByeiIWHET1Vtrd2LK9ZJoAhPXfRdcStA7fcpRpVIbNAvmDSlv4tCXK1s+Gi
-         jhNUfvREWP3N4lvl8zkVwDMgto29ttQrybvz/kmw4d5Duc5Xah9gfUkKIdke+ugdwZ
-         4pPMNoRjeC4Fg==
+        s=k20201202; t=1689607421;
+        bh=BWbI9yDKpcKn7YyhyFkObG82wGckmUlkttodK+RJwNE=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=JazJuJxIrqcELqrY8aqDYDkCX3z/7enpoNbNDNmbCPPL/49Sj0j4RZ80+cClSQGTx
+         mLZb3QLIx/htHp2zBmnnoLg9zk0iWMTfx61wjzK9tm0qM0ddGuTHaAH9XrGfTDJEyx
+         Wp20YIntLt6HSR6uxMGXRf/GYsjNjrIjlkUnxi23J1deUBCmdwvRu29nnJgMn2cG56
+         IDLI0XeMZkesBuAacvkEIFUUNw/TgDaeIF2kmj279DFe4FukOlfHgSkCKM7m29fBGZ
+         Khp+fBAVjVjNL/xibMBlNNnvS2pmJRl8edyZNrZ0bOAieh6YHv0LD+Dcb6BpN8VdxG
+         yCza+MzlUFcug==
 From:   "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
 To:     linux-trace-kernel@vger.kernel.org
 Cc:     linux-kernel@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>,
         mhiramat@kernel.org, Martin KaFai Lau <martin.lau@linux.dev>,
         bpf@vger.kernel.org, Sven Schnelle <svens@linux.ibm.com>,
         Alexei Starovoitov <ast@kernel.org>
-Subject: [PATCH v2 0/9] tracing: Improbe BTF support on probe events
-Date:   Tue, 18 Jul 2023 00:23:17 +0900
-Message-Id: <168960739768.34107.15145201749042174448.stgit@devnote2>
+Subject: [PATCH v2 2/9] bpf/btf: tracing: Move finding func-proto API and getting func-param API to BTF
+Date:   Tue, 18 Jul 2023 00:23:37 +0900
+Message-Id: <168960741686.34107.6330273416064011062.stgit@devnote2>
 X-Mailer: git-send-email 2.25.1
+In-Reply-To: <168960739768.34107.15145201749042174448.stgit@devnote2>
+References: <168960739768.34107.15145201749042174448.stgit@devnote2>
 User-Agent: StGit/0.19
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
@@ -52,56 +54,175 @@ Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-Hi,
+From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 
-Here is the 2nd version of series to improve the BTF support on probe events.
-The previous series is here:
+Move generic function-proto find API and getting function parameter API
+to BTF library code from trace_probe.c. This will avoid redundant efforts
+on different feature.
 
-https://lore.kernel.org/linux-trace-kernel/168699521817.528797.13179901018528120324.stgit@mhiramat.roam.corp.google.com/
-
-In this version, I added a NULL check fix patch [1/9] (which will go to
-fixes branch) and move BTF related API to kernel/bpf/btf.c [2/9] and add
-a new BTF API [3/9] so that anyone can reuse it.
-Also I decided to use '$retval' directly instead of 'retval' pseudo BTF
-variable for field access at [5/9] because I introduced an idea to choose
-function 'exit' event automatically if '$retval' is used [7/9]. With that
-change, we can not use 'retval' because if a function has 'retval'
-argument, we can not decide 'f func retval' is function exit or entry.
-Selftest test case [8/9] and document [9/9] are also updated according to
-those changes.
-
-This series can be applied on top of "v6.5-rc2" kernel.
-
-You can also get this series from:
-
-git://git.kernel.org/pub/scm/linux/kernel/git/mhiramat/linux.git topic/fprobe-event-ext
-
-
-Thank you,
-
+Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 ---
+ include/linux/btf.h        |    4 ++++
+ kernel/bpf/btf.c           |   45 ++++++++++++++++++++++++++++++++++++++++
+ kernel/trace/trace_probe.c |   50 +++++++++++++-------------------------------
+ 3 files changed, 64 insertions(+), 35 deletions(-)
 
-Masami Hiramatsu (Google) (9):
-      tracing/probes: Fix to add NULL check for BTF APIs
-      bpf/btf: tracing: Move finding func-proto API and getting func-param API to BTF
-      bpf/btf: Add a function to search a member of a struct/union
-      tracing/probes: Support BTF based data structure field access
-      tracing/probes: Support BTF field access from $retval
-      tracing/probes: Add string type check with BTF
-      tracing/fprobe-event: Assume fprobe is a return event by $retval
-      selftests/ftrace: Add BTF fields access testcases
-      Documentation: tracing: Update fprobe event example with BTF field
+diff --git a/include/linux/btf.h b/include/linux/btf.h
+index cac9f304e27a..98fbbcdd72ec 100644
+--- a/include/linux/btf.h
++++ b/include/linux/btf.h
+@@ -221,6 +221,10 @@ const struct btf_type *
+ btf_resolve_size(const struct btf *btf, const struct btf_type *type,
+ 		 u32 *type_size);
+ const char *btf_type_str(const struct btf_type *t);
++const struct btf_type *btf_find_func_proto(struct btf *btf,
++					   const char *func_name);
++const struct btf_param *btf_get_func_param(const struct btf_type *func_proto,
++					   s32 *nr);
+ 
+ #define for_each_member(i, struct_type, member)			\
+ 	for (i = 0, member = btf_type_member(struct_type);	\
+diff --git a/kernel/bpf/btf.c b/kernel/bpf/btf.c
+index 817204d53372..e015b52956cb 100644
+--- a/kernel/bpf/btf.c
++++ b/kernel/bpf/btf.c
+@@ -1947,6 +1947,51 @@ btf_resolve_size(const struct btf *btf, const struct btf_type *type,
+ 	return __btf_resolve_size(btf, type, type_size, NULL, NULL, NULL, NULL);
+ }
+ 
++/*
++ * Find a functio proto type by name, and return it.
++ * Return NULL if not found, or return -EINVAL if parameter is invalid.
++ */
++const struct btf_type *btf_find_func_proto(struct btf *btf, const char *func_name)
++{
++	const struct btf_type *t;
++	s32 id;
++
++	if (!btf || !func_name)
++		return ERR_PTR(-EINVAL);
++
++	id = btf_find_by_name_kind(btf, func_name, BTF_KIND_FUNC);
++	if (id <= 0)
++		return NULL;
++
++	/* Get BTF_KIND_FUNC type */
++	t = btf_type_by_id(btf, id);
++	if (!t || !btf_type_is_func(t))
++		return NULL;
++
++	/* The type of BTF_KIND_FUNC is BTF_KIND_FUNC_PROTO */
++	t = btf_type_by_id(btf, t->type);
++	if (!t || !btf_type_is_func_proto(t))
++		return NULL;
++
++	return t;
++}
++
++/*
++ * Get function parameter with the number of parameters.
++ * This can return NULL if the function has no parameters.
++ */
++const struct btf_param *btf_get_func_param(const struct btf_type *func_proto, s32 *nr)
++{
++	if (!func_proto || !nr)
++		return ERR_PTR(-EINVAL);
++
++	*nr = btf_type_vlen(func_proto);
++	if (*nr > 0)
++		return (const struct btf_param *)(func_proto + 1);
++	else
++		return NULL;
++}
++
+ static u32 btf_resolved_type_id(const struct btf *btf, u32 type_id)
+ {
+ 	while (type_id < btf->start_id)
+diff --git a/kernel/trace/trace_probe.c b/kernel/trace/trace_probe.c
+index c68a72707852..cd89fc1ebb42 100644
+--- a/kernel/trace/trace_probe.c
++++ b/kernel/trace/trace_probe.c
+@@ -371,47 +371,23 @@ static const char *type_from_btf_id(struct btf *btf, s32 id)
+ 	return NULL;
+ }
+ 
+-static const struct btf_type *find_btf_func_proto(const char *funcname)
+-{
+-	struct btf *btf = traceprobe_get_btf();
+-	const struct btf_type *t;
+-	s32 id;
+-
+-	if (!btf || !funcname)
+-		return ERR_PTR(-EINVAL);
+-
+-	id = btf_find_by_name_kind(btf, funcname, BTF_KIND_FUNC);
+-	if (id <= 0)
+-		return ERR_PTR(-ENOENT);
+-
+-	/* Get BTF_KIND_FUNC type */
+-	t = btf_type_by_id(btf, id);
+-	if (!t || !btf_type_is_func(t))
+-		return ERR_PTR(-ENOENT);
+-
+-	/* The type of BTF_KIND_FUNC is BTF_KIND_FUNC_PROTO */
+-	t = btf_type_by_id(btf, t->type);
+-	if (!t || !btf_type_is_func_proto(t))
+-		return ERR_PTR(-ENOENT);
+-
+-	return t;
+-}
+-
+ static const struct btf_param *find_btf_func_param(const char *funcname, s32 *nr,
+ 						   bool tracepoint)
+ {
++	struct btf *btf = traceprobe_get_btf();
+ 	const struct btf_param *param;
+ 	const struct btf_type *t;
+ 
+-	if (!funcname || !nr)
++	if (!funcname || !nr || !btf)
+ 		return ERR_PTR(-EINVAL);
+ 
+-	t = find_btf_func_proto(funcname);
+-	if (IS_ERR(t))
++	t = btf_find_func_proto(btf, funcname);
++	if (IS_ERR_OR_NULL(t))
+ 		return (const struct btf_param *)t;
+ 
+-	*nr = btf_type_vlen(t);
+-	param = (const struct btf_param *)(t + 1);
++	param = btf_get_func_param(t, nr);
++	if (IS_ERR_OR_NULL(param))
++		return param;
+ 
+ 	/* Hide the first 'data' argument of tracepoint */
+ 	if (tracepoint) {
+@@ -490,8 +466,8 @@ static const struct fetch_type *parse_btf_retval_type(
+ 	const struct btf_type *t;
+ 
+ 	if (btf && ctx->funcname) {
+-		t = find_btf_func_proto(ctx->funcname);
+-		if (!IS_ERR(t))
++		t = btf_find_func_proto(btf, ctx->funcname);
++		if (!IS_ERR_OR_NULL(t))
+ 			typestr = type_from_btf_id(btf, t->type);
+ 	}
+ 
+@@ -500,10 +476,14 @@ static const struct fetch_type *parse_btf_retval_type(
+ 
+ static bool is_btf_retval_void(const char *funcname)
+ {
++	struct btf *btf = traceprobe_get_btf();
+ 	const struct btf_type *t;
+ 
+-	t = find_btf_func_proto(funcname);
+-	if (IS_ERR(t))
++	if (!btf)
++		return false;
++
++	t = btf_find_func_proto(btf, funcname);
++	if (IS_ERR_OR_NULL(t))
+ 		return false;
+ 
+ 	return t->type == 0;
 
-
- Documentation/trace/fprobetrace.rst                |   50 ++
- include/linux/btf.h                                |    7 
- kernel/bpf/btf.c                                   |   83 ++++
- kernel/trace/trace_fprobe.c                        |   58 ++-
- kernel/trace/trace_probe.c                         |  402 +++++++++++++++-----
- kernel/trace/trace_probe.h                         |   12 +
- .../ftrace/test.d/dynevent/add_remove_btfarg.tc    |   11 +
- .../ftrace/test.d/dynevent/fprobe_syntax_errors.tc |    6 
- 8 files changed, 503 insertions(+), 126 deletions(-)
-
---
-Masami Hiramatsu (Google) <mhiramat@kernel.org>
