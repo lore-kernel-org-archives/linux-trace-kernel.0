@@ -2,178 +2,80 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DAA04C001DC
-	for <linux-trace-kernel@archiver.kernel.org>; Mon, 17 Jul 2023 15:36:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 496ABC001DC
+	for <linux-trace-kernel@archiver.kernel.org>; Mon, 17 Jul 2023 16:50:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230058AbjGQPgH (ORCPT
+        id S231178AbjGQQun (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Mon, 17 Jul 2023 11:36:07 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39680 "EHLO
+        Mon, 17 Jul 2023 12:50:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52658 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230033AbjGQPgG (ORCPT
+        with ESMTP id S230156AbjGQQum (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Mon, 17 Jul 2023 11:36:06 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A2F83FA;
-        Mon, 17 Jul 2023 08:36:05 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 2E3236112B;
-        Mon, 17 Jul 2023 15:36:05 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B1921C433C7;
-        Mon, 17 Jul 2023 15:36:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1689608164;
-        bh=0KH5QZtva041A6q7/f5OP+yi5SzktuvZ1Reqbp3ZKbY=;
-        h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-        b=JNynSVfFOXQtpLLV2T55ySh4UwU/qNfGCss1eZBxmRCgoefhlXiH39pvQsTZS/WTQ
-         X9iZpTLnnA9cYONCEHUJqXr9DAWX9vBTOjiv/vOWLxwy6lm8GFzmCDp4lpiRf48Q99
-         rIKNZNBI/a2IzlIEZvfK9MePH239Ydv7qY/dCMpxnYHFyq0UlIzqcuo6/yr4cD2m94
-         PNnVLy/uKsVpSJeUGnc1yAWtUYaknmaMZRglJEV4SHwItbSidsalQlkZzaiscyWVB+
-         3cYOkLlP+X4AArc7Figug4vChnieHQUjVQfgOnTMqAD6VzRTCcYjj2LDQiuSAvhy67
-         +Hm5JRNvHZf+w==
-Message-ID: <9b212c49-ab51-0cd9-5871-c145c5f41b48@kernel.org>
-Date:   Mon, 17 Jul 2023 17:36:00 +0200
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.12.0
-Subject: Re: [PATCH] tracing/timerlat: Add latency threshold
-Content-Language: en-US, pt-BR, it-IT
-To:     Costa Shulyupin <costa.shul@redhat.com>,
-        linux-rt-users@vger.kernel.org
-Cc:     Steven Rostedt <rostedt@goodmis.org>,
+        Mon, 17 Jul 2023 12:50:42 -0400
+Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:3::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 61C15FA;
+        Mon, 17 Jul 2023 09:50:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20210309; h=Sender:In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=J0V5hV3Q+TS5tLVW5XW3ouizk5qxGr8MqtaRegwhqZc=; b=Z8mq/QYAjoh0dqYla8C9CtAFzt
+        bwLmfk75nM/6hQubJHdZxiixAVS6fndkY2oLmBQ1Cs5X9uGJ7kerjsZnKlTUz4NX+exOVlRoMyYd+
+        xBWNIoc7kz3cT4xZCzuFgTkYIJrXF/OFUzvXowH6x0AvoOpfr+86How26Wvqyy3T1G4Pf1lqmutXN
+        7MDUEn4x0UBrExFVTTeRiDL+LAW4KF5VX5N/ydgLzPc9iiFL8uFF8QkURp99AA0veMm0OHJPTtWQd
+        n2uE5mjgsxSwlQZ8uqbyKvECkdrO0YrtLazppU6eIQoJ1N3Ny9lv2crLlv9tP67fWnn4mU4tEMMVT
+        zopy598Q==;
+Received: from mcgrof by bombadil.infradead.org with local (Exim 4.96 #2 (Red Hat Linux))
+        id 1qLRQX-004aby-0S;
+        Mon, 17 Jul 2023 16:50:25 +0000
+Date:   Mon, 17 Jul 2023 09:50:25 -0700
+From:   Luis Chamberlain <mcgrof@kernel.org>
+To:     Steven Rostedt <rostedt@goodmis.org>
+Cc:     Alessandro Carminati <alessandro.carminati@gmail.com>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Nathan Chancellor <nathan@kernel.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Nicolas Schier <nicolas@fjasle.eu>,
         Masami Hiramatsu <mhiramat@kernel.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        "open list:TRACING" <linux-kernel@vger.kernel.org>,
-        "open list:TRACING" <linux-trace-kernel@vger.kernel.org>,
-        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>
-References: <20230716193000.231406-1-costa.shul@redhat.com>
-From:   Daniel Bristot de Oliveira <bristot@kernel.org>
-In-Reply-To: <20230716193000.231406-1-costa.shul@redhat.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+        Daniel Bristot de Oliveira <bristot@kernel.org>,
+        Viktor Malik <vmalik@redhat.com>, linux-kernel@vger.kernel.org,
+        linux-kbuild@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+        Nick Alcock <nick.alcock@oracle.com>, eugene.loh@oracle.com,
+        kris.van.hees@oracle.com, live-patching@vger.kernel.org
+Subject: Re: [PATCH v2] scripts/link-vmlinux.sh: Add alias to duplicate
+ symbols for kallsyms
+Message-ID: <ZLVxUQiC5iF+xTPQ@bombadil.infradead.org>
+References: <20230714150326.1152359-1-alessandro.carminati@gmail.com>
+ <20230717105240.3d986331@gandalf.local.home>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230717105240.3d986331@gandalf.local.home>
+Sender: Luis Chamberlain <mcgrof@infradead.org>
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-Hi Costa,
+On Mon, Jul 17, 2023 at 10:52:40AM -0400, Steven Rostedt wrote:
+> Honestly, I think the "_alias_<some-random-number>" is useless. It doesn't
+> give you any clue to what function you are actually attaching to. 
 
-On 7/16/23 21:30, Costa Shulyupin wrote:
-> The timerlat tracer generates a huge amount of traces.
-> This affects the performance of the system and
-> the delays we are trying to measure with timerlat.
+Agreed.
 
-More explanations in the code, but that is not the dominant factor,
-neither relevant for large spikes.
-
-> However, we are often interested in spikes of delay
-> rather than small values.
-
-That is why the stop tracing exists. One can set stop tracing,
-ignore the trace buffer while tracing is on. Once tracing
-turns off, tail the trace.
-
-rtla timerlat has the --aa-only that ignores the trace until
-the tracing stops, and then do the auto-analysis based on the
-tail of the trace.
-
+> There's
+> been other approaches that show module and/or file names. I know there's
+> still some issues with getting those accepted, but I much rather have them
+> than this!
 > 
-> The patch effectively filters out irrelevant traces
-> before they are generated and produces more reliable
-> data.
+> See: https://lore.kernel.org/all/20221205163157.269335-1-nick.alcock@oracle.com/
 
-More in the code, but it is not more reliable data... did
-you mean human-readable data?
+Yes, please coordinate with Nick and review each other's work, now we
+have two separate efforts with different reasons but hopefully we'll
+come back with one unified solution.
 
-> 
-> This patch helped to debug a very big problem
-> and find this solution:
-> https://lore.kernel.org/lkml/20221208075604.811710-1-junxiao.chang@intel.com/
+Please Cc live-patching also, as they had suggested before just to
+provide the file filename + line number, that'll make it even more
+valuable.
 
-Can you explain more about this? Because AFAICT, the patch above is
-dealing with a SOFT timer. timerlat uses a HARD timer, so timerlat
-is not affected by that bug... so I might be missing a point here.
-
-> 
-> Signed-off-by: Costa Shulyupin <costa.shul@redhat.com>
-> ---
->  Documentation/trace/timerlat-tracer.rst |  1 +
->  kernel/trace/trace_osnoise.c            | 17 +++++++++++++++++
->  2 files changed, 18 insertions(+)
-> 
-> diff --git a/Documentation/trace/timerlat-tracer.rst b/Documentation/trace/timerlat-tracer.rst
-> index 53a56823e903..71b1c63ca403 100644
-> --- a/Documentation/trace/timerlat-tracer.rst
-> +++ b/Documentation/trace/timerlat-tracer.rst
-> @@ -68,6 +68,7 @@ directory. The timerlat configs are:
->  
->   - cpus: CPUs at which a timerlat thread will execute.
->   - timerlat_period_us: the period of the timerlat thread.
-> + - timerlat_threshold_ns: filter out timer latencies below the threshold
-
-All the interface is in us....
-
->   - stop_tracing_us: stop the system tracing if a
->     timer latency at the *irq* context higher than the configured
->     value happens. Writing 0 disables this option.
-> diff --git a/kernel/trace/trace_osnoise.c b/kernel/trace/trace_osnoise.c
-> index bd0d01d00fb9..43284a1e8bea 100644
-> --- a/kernel/trace/trace_osnoise.c
-> +++ b/kernel/trace/trace_osnoise.c
-> @@ -346,6 +346,7 @@ static struct osnoise_data {
->  	u64	stop_tracing_total;	/* stop trace in the final operation (report/thread) */
->  #ifdef CONFIG_TIMERLAT_TRACER
->  	u64	timerlat_period;	/* timerlat period */
-> +	u64	timerlat_threshold_ns;
-
-comment....
-
->  	u64	print_stack;		/* print IRQ stack if total > */
->  	int	timerlat_tracer;	/* timerlat tracer */
->  #endif
-> @@ -358,6 +359,7 @@ static struct osnoise_data {
->  #ifdef CONFIG_TIMERLAT_TRACER
->  	.print_stack			= 0,
->  	.timerlat_period		= DEFAULT_TIMERLAT_PERIOD,
-> +	.timerlat_threshold_ns		= 0,
->  	.timerlat_tracer		= 0,
->  #endif
->  };
-> @@ -597,6 +599,10 @@ static void trace_timerlat_sample(struct timerlat_sample *sample)
->  	struct osnoise_instance *inst;
->  	struct trace_buffer *buffer;
->  
-> +	if (osnoise_data.timerlat_threshold_ns &&
-> +	    sample->timer_latency < osnoise_data.timerlat_threshold_ns)
-> +		return;
-> +
-
-From the entire timerlat machinery, skipping the print is not the
-dominant factor. It can save a few nanoseconds, but the values are already
-produced at this point... so why not?
-
-You mentioned that this is useful for large spikes, so... it will not be the few
-ns to cause problems.
-
-And I'm not convinced that it produces more reliable results.
-For example, if you find a large latency in the thread context, but skip
-the IRQ context trace, you will lose useful data.... so your analysis is
-prone to be less reliable.
-
-Did you mean readable? improve the readability... That I can see.
-
-Also, for debugging purposes, one needs to enable more events... at least
-the osnoise: ones. These events happen more frequently than the timerlat
-ones... and they are not being filtered here... Filtering them using the
-event filtering interface will not help either, e.g., hiding 1k one us
-interrupts bomb will mask you a 1ms delay...
-
-So, as I said, I am not convinced that adding this interface file is
-better than setting the stop-tracing option... and then waiting for
-the trace to stop... parsing only the tail of the buffer.
-
-Thoughts?
-
--- Daniel
+  Luis
