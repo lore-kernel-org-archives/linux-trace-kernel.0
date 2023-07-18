@@ -2,46 +2,46 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 198B2C001E0
-	for <linux-trace-kernel@archiver.kernel.org>; Tue, 18 Jul 2023 21:11:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A7EDC04E69
+	for <linux-trace-kernel@archiver.kernel.org>; Tue, 18 Jul 2023 21:11:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230136AbjGRVLw (ORCPT
+        id S231210AbjGRVL5 (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Tue, 18 Jul 2023 17:11:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35614 "EHLO
+        Tue, 18 Jul 2023 17:11:57 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35634 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229571AbjGRVLv (ORCPT
+        with ESMTP id S230350AbjGRVLx (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Tue, 18 Jul 2023 17:11:51 -0400
-Received: from mga01.intel.com (mga01.intel.com [192.55.52.88])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B4F3F198D;
-        Tue, 18 Jul 2023 14:11:50 -0700 (PDT)
+        Tue, 18 Jul 2023 17:11:53 -0400
+Received: from mga07.intel.com (mga07.intel.com [134.134.136.100])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D7122C0;
+        Tue, 18 Jul 2023 14:11:51 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1689714710; x=1721250710;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=FPgZmHzfOQSFBvALoW8Nw2W4wODG+ZtfXhQLXfu+fy0=;
-  b=Zl6+l9ixZitftDfYGzSTl+cLtMpvD0OO7lZDjdsJfXWqJMYSYAbPaHlk
-   MzN54RwaP8rn7G6xvBIucxQifsmhiz9dzJQLHIJoxHc8ID2HlJNr6EeEO
-   ZjCfN0MesHmZWtdEjZ8njFHyBGi1tJKgazTo6KpN3OEC02u+fnL+n5AcW
-   qaq6FYnIOnZqgRH+4NruerGFj1MyUTlkHG0uvOyFad9t6yuSC3mQUX2xJ
-   ozUDPd5Tn+GztRmkuTsE1cjUeBhj5+Q+YzTnHKyB5ohshV4r8BKHGVGvD
-   1R5nw4NUVCMG2TsOwJmpnkNkxUrR6vlG1mSyfpsKesJ95eN97mjL52bhq
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10775"; a="397161871"
+  t=1689714712; x=1721250712;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=A6YP9TxD6vGbHE6fwGQXgx3yzQNMpeHCGRM/JjRREbQ=;
+  b=UdkMCd7y3tNZhLv7jh27jr52I/CGQM+ldsNmlu/q79i/9sv0TMyZAsqB
+   o/PNpaoujr+ifwsMbo8AQWPwTq6netWF89YEJ1MpEB7FQlCsMPu8S1Em5
+   BkPvh9+eLn2cFiTyzDb2O8ghnBTmeYhR5dcP2JFqWABM12ProPkf74j4m
+   +Zghajdwv57+o8JFoz5gKroYdy9Xeq33l31sEla6kJgSP3I0T/etAAn/1
+   NaNscLJ7vwmlP29iyOx3bFG73YkOwh0u2QDLSHWJKkHsTnZgLtfWWmWOP
+   uD/7nn+A+Knae6BQ1C0eOF4YZu0fZElxOg5CYpKLLG9tDsqQSvF6AEbl9
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10775"; a="432495824"
 X-IronPort-AV: E=Sophos;i="6.01,215,1684825200"; 
-   d="scan'208";a="397161871"
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Jul 2023 14:11:49 -0700
+   d="scan'208";a="432495824"
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Jul 2023 14:11:50 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10775"; a="789205999"
+X-IronPort-AV: E=McAfee;i="6600,9927,10775"; a="753469038"
 X-IronPort-AV: E=Sophos;i="6.01,215,1684825200"; 
-   d="scan'208";a="789205999"
+   d="scan'208";a="753469038"
 Received: from black.fi.intel.com ([10.237.72.28])
-  by fmsmga008.fm.intel.com with ESMTP; 18 Jul 2023 14:11:42 -0700
+  by orsmga008.jf.intel.com with ESMTP; 18 Jul 2023 14:11:42 -0700
 Received: by black.fi.intel.com (Postfix, from userid 1003)
-        id 9ADD216E; Wed, 19 Jul 2023 00:11:49 +0300 (EEST)
+        id CEA58370; Wed, 19 Jul 2023 00:11:49 +0300 (EEST)
 From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
         Shuah Khan <skhan@linuxfoundation.org>,
@@ -62,55 +62,164 @@ Cc:     Thomas Gleixner <tglx@linutronix.de>,
         Sudeep Holla <sudeep.holla@arm.com>,
         Masami Hiramatsu <mhiramat@kernel.org>,
         Andrew Morton <akpm@linux-foundation.org>
-Subject: [PATCH v4 0/4] kernel.h: Split out a couple of macros to args.h
-Date:   Wed, 19 Jul 2023 00:11:43 +0300
-Message-Id: <20230718211147.18647-1-andriy.shevchenko@linux.intel.com>
+Subject: [PATCH v4 3/4] arm64: smccc: Replace custom COUNT_ARGS() & CONCATENATE() implementations
+Date:   Wed, 19 Jul 2023 00:11:46 +0300
+Message-Id: <20230718211147.18647-4-andriy.shevchenko@linux.intel.com>
 X-Mailer: git-send-email 2.40.0.1.gaa8946217a0b
+In-Reply-To: <20230718211147.18647-1-andriy.shevchenko@linux.intel.com>
+References: <20230718211147.18647-1-andriy.shevchenko@linux.intel.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-There are macros in kernel.h that can be used outside of that header.
-Split them to args.h and replace open coded variants.
+Replace custom implementation of the macros from args.h.
 
-Test compiled with `make allmodconfig` for x86_64.
-Test cross-compiled with `make multi_v7_defconfig` for arm.
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+---
+ include/linux/arm-smccc.h | 69 ++++++++++++++++++---------------------
+ 1 file changed, 32 insertions(+), 37 deletions(-)
 
-(Note that positive diff statistics is due to documentation being
-updated.)
-
-In v4:
-- fixed compilation error on arm (LKP, Stephen)
-
-In v3:
-- split to a series of patches
-- fixed build issue on `make allmodconfig` for x86_64 (Andrew)
-
-In v2:
-- converted existing users at the same time (Andrew, Rasmus)
-- documented how it does work (Andrew, Rasmus)
-
-Andy Shevchenko (4):
-  kernel.h: Split out COUNT_ARGS() and CONCATENATE() to args.h
-  x86/asm: Replace custom COUNT_ARGS() & CONCATENATE() implementations
-  arm64: smccc: Replace custom COUNT_ARGS() & CONCATENATE()
-    implementations
-  genetlink: Replace custom CONCATENATE() implementation
-
- arch/x86/include/asm/rmwcc.h      | 11 ++---
- include/kunit/test.h              |  1 +
- include/linux/args.h              | 28 +++++++++++++
- include/linux/arm-smccc.h         | 69 ++++++++++++++-----------------
- include/linux/genl_magic_func.h   | 27 ++++++------
- include/linux/genl_magic_struct.h |  8 ++--
- include/linux/kernel.h            |  7 ----
- include/linux/pci.h               |  2 +-
- include/trace/bpf_probe.h         |  2 +
- 9 files changed, 84 insertions(+), 71 deletions(-)
- create mode 100644 include/linux/args.h
-
+diff --git a/include/linux/arm-smccc.h b/include/linux/arm-smccc.h
+index f196c19f8e55..7c67c17321d4 100644
+--- a/include/linux/arm-smccc.h
++++ b/include/linux/arm-smccc.h
+@@ -5,6 +5,7 @@
+ #ifndef __LINUX_ARM_SMCCC_H
+ #define __LINUX_ARM_SMCCC_H
+ 
++#include <linux/args.h>
+ #include <linux/init.h>
+ #include <uapi/linux/const.h>
+ 
+@@ -413,31 +414,26 @@ asmlinkage void __arm_smccc_hvc(unsigned long a0, unsigned long a1,
+ 
+ #endif
+ 
+-#define ___count_args(_0, _1, _2, _3, _4, _5, _6, _7, _8, x, ...) x
++#define __constraint_read_2	"r" (arg0)
++#define __constraint_read_3	__constraint_read_2, "r" (arg1)
++#define __constraint_read_4	__constraint_read_3, "r" (arg2)
++#define __constraint_read_5	__constraint_read_4, "r" (arg3)
++#define __constraint_read_6	__constraint_read_5, "r" (arg4)
++#define __constraint_read_7	__constraint_read_6, "r" (arg5)
++#define __constraint_read_8	__constraint_read_7, "r" (arg6)
++#define __constraint_read_9	__constraint_read_8, "r" (arg7)
+ 
+-#define __count_args(...)						\
+-	___count_args(__VA_ARGS__, 7, 6, 5, 4, 3, 2, 1, 0)
+-
+-#define __constraint_read_0	"r" (arg0)
+-#define __constraint_read_1	__constraint_read_0, "r" (arg1)
+-#define __constraint_read_2	__constraint_read_1, "r" (arg2)
+-#define __constraint_read_3	__constraint_read_2, "r" (arg3)
+-#define __constraint_read_4	__constraint_read_3, "r" (arg4)
+-#define __constraint_read_5	__constraint_read_4, "r" (arg5)
+-#define __constraint_read_6	__constraint_read_5, "r" (arg6)
+-#define __constraint_read_7	__constraint_read_6, "r" (arg7)
+-
+-#define __declare_arg_0(a0, res)					\
++#define __declare_arg_2(a0, res)					\
+ 	struct arm_smccc_res   *___res = res;				\
+ 	register unsigned long arg0 asm("r0") = (u32)a0
+ 
+-#define __declare_arg_1(a0, a1, res)					\
++#define __declare_arg_3(a0, a1, res)					\
+ 	typeof(a1) __a1 = a1;						\
+ 	struct arm_smccc_res   *___res = res;				\
+ 	register unsigned long arg0 asm("r0") = (u32)a0;			\
+ 	register typeof(a1) arg1 asm("r1") = __a1
+ 
+-#define __declare_arg_2(a0, a1, a2, res)				\
++#define __declare_arg_4(a0, a1, a2, res)				\
+ 	typeof(a1) __a1 = a1;						\
+ 	typeof(a2) __a2 = a2;						\
+ 	struct arm_smccc_res   *___res = res;				\
+@@ -445,7 +441,7 @@ asmlinkage void __arm_smccc_hvc(unsigned long a0, unsigned long a1,
+ 	register typeof(a1) arg1 asm("r1") = __a1;			\
+ 	register typeof(a2) arg2 asm("r2") = __a2
+ 
+-#define __declare_arg_3(a0, a1, a2, a3, res)				\
++#define __declare_arg_5(a0, a1, a2, a3, res)				\
+ 	typeof(a1) __a1 = a1;						\
+ 	typeof(a2) __a2 = a2;						\
+ 	typeof(a3) __a3 = a3;						\
+@@ -455,34 +451,26 @@ asmlinkage void __arm_smccc_hvc(unsigned long a0, unsigned long a1,
+ 	register typeof(a2) arg2 asm("r2") = __a2;			\
+ 	register typeof(a3) arg3 asm("r3") = __a3
+ 
+-#define __declare_arg_4(a0, a1, a2, a3, a4, res)			\
++#define __declare_arg_6(a0, a1, a2, a3, a4, res)			\
+ 	typeof(a4) __a4 = a4;						\
+-	__declare_arg_3(a0, a1, a2, a3, res);				\
++	__declare_arg_5(a0, a1, a2, a3, res);				\
+ 	register typeof(a4) arg4 asm("r4") = __a4
+ 
+-#define __declare_arg_5(a0, a1, a2, a3, a4, a5, res)			\
++#define __declare_arg_7(a0, a1, a2, a3, a4, a5, res)			\
+ 	typeof(a5) __a5 = a5;						\
+-	__declare_arg_4(a0, a1, a2, a3, a4, res);			\
++	__declare_arg_6(a0, a1, a2, a3, a4, res);			\
+ 	register typeof(a5) arg5 asm("r5") = __a5
+ 
+-#define __declare_arg_6(a0, a1, a2, a3, a4, a5, a6, res)		\
++#define __declare_arg_8(a0, a1, a2, a3, a4, a5, a6, res)		\
+ 	typeof(a6) __a6 = a6;						\
+-	__declare_arg_5(a0, a1, a2, a3, a4, a5, res);			\
++	__declare_arg_7(a0, a1, a2, a3, a4, a5, res);			\
+ 	register typeof(a6) arg6 asm("r6") = __a6
+ 
+-#define __declare_arg_7(a0, a1, a2, a3, a4, a5, a6, a7, res)		\
++#define __declare_arg_9(a0, a1, a2, a3, a4, a5, a6, a7, res)		\
+ 	typeof(a7) __a7 = a7;						\
+-	__declare_arg_6(a0, a1, a2, a3, a4, a5, a6, res);		\
++	__declare_arg_8(a0, a1, a2, a3, a4, a5, a6, res);		\
+ 	register typeof(a7) arg7 asm("r7") = __a7
+ 
+-#define ___declare_args(count, ...) __declare_arg_ ## count(__VA_ARGS__)
+-#define __declare_args(count, ...)  ___declare_args(count, __VA_ARGS__)
+-
+-#define ___constraints(count)						\
+-	: __constraint_read_ ## count					\
+-	: smccc_sve_clobbers "memory"
+-#define __constraints(count)	___constraints(count)
+-
+ /*
+  * We have an output list that is not necessarily used, and GCC feels
+  * entitled to optimise the whole sequence away. "volatile" is what
+@@ -494,11 +482,14 @@ asmlinkage void __arm_smccc_hvc(unsigned long a0, unsigned long a1,
+ 		register unsigned long r1 asm("r1");			\
+ 		register unsigned long r2 asm("r2");			\
+ 		register unsigned long r3 asm("r3"); 			\
+-		__declare_args(__count_args(__VA_ARGS__), __VA_ARGS__);	\
++		CONCATENATE(__declare_arg_,				\
++			    COUNT_ARGS(__VA_ARGS__))(__VA_ARGS__);	\
+ 		asm volatile(SMCCC_SVE_CHECK				\
+ 			     inst "\n" :				\
+ 			     "=r" (r0), "=r" (r1), "=r" (r2), "=r" (r3)	\
+-			     __constraints(__count_args(__VA_ARGS__)));	\
++			     : CONCATENATE(__constraint_read_,		\
++					   COUNT_ARGS(__VA_ARGS__))	\
++			     : smccc_sve_clobbers "memory");		\
+ 		if (___res)						\
+ 			*___res = (typeof(*___res)){r0, r1, r2, r3};	\
+ 	} while (0)
+@@ -542,8 +533,12 @@ asmlinkage void __arm_smccc_hvc(unsigned long a0, unsigned long a1,
+  */
+ #define __fail_smccc_1_1(...)						\
+ 	do {								\
+-		__declare_args(__count_args(__VA_ARGS__), __VA_ARGS__);	\
+-		asm ("" : __constraints(__count_args(__VA_ARGS__)));	\
++		CONCATENATE(__declare_arg_,				\
++			    COUNT_ARGS(__VA_ARGS__))(__VA_ARGS__);	\
++		asm ("" :						\
++		     : CONCATENATE(__constraint_read_,			\
++				   COUNT_ARGS(__VA_ARGS__))		\
++		     : smccc_sve_clobbers "memory");			\
+ 		if (___res)						\
+ 			___res->a0 = SMCCC_RET_NOT_SUPPORTED;		\
+ 	} while (0)
 -- 
 2.40.0.1.gaa8946217a0b
 
