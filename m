@@ -2,50 +2,61 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 67DCDEB64DC
-	for <linux-trace-kernel@archiver.kernel.org>; Tue, 18 Jul 2023 00:00:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A1C9C001DE
+	for <linux-trace-kernel@archiver.kernel.org>; Tue, 18 Jul 2023 01:01:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229655AbjGRAAj (ORCPT
+        id S229827AbjGRBBW (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Mon, 17 Jul 2023 20:00:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35502 "EHLO
+        Mon, 17 Jul 2023 21:01:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50638 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230159AbjGRAAi (ORCPT
+        with ESMTP id S229481AbjGRBBW (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Mon, 17 Jul 2023 20:00:38 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DD506EC;
-        Mon, 17 Jul 2023 17:00:36 -0700 (PDT)
+        Mon, 17 Jul 2023 21:01:22 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 295E3A6;
+        Mon, 17 Jul 2023 18:01:21 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange X25519 server-signature RSA-PSS (2048 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 732D16135C;
-        Tue, 18 Jul 2023 00:00:36 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E5D72C433C8;
-        Tue, 18 Jul 2023 00:00:34 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id A6C3C6134B;
+        Tue, 18 Jul 2023 01:01:20 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 446A2C433C7;
+        Tue, 18 Jul 2023 01:01:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1689638435;
-        bh=qcUEcDK6AXqP07t5ytqWFHjiJgDcpFUrQBIZzSKb7T8=;
+        s=k20201202; t=1689642080;
+        bh=sYoB8EsYHp3bPyDDl82q/NWRIoZwpXBQ2TK6HH5fWxE=;
         h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=TUIFBBNxwYgVURjg535s2o1fErHH/q+Ig56Bb9E+GJ8H8bPrCtcvtFIDe/M9dU2mg
-         6ITNePUfFTvCVJL0UmOE6hX3kF0LUR2iiveh7H/mE0/crh/4Y3zzhBCSGVUGl/V8Xb
-         dseXrP5zHr7HMpQbJ/D4Aw4yg5ElIZjX2ckhQm46+nuI6t6Q9fBhv0ZA+uSaJ6NRhD
-         2R9YyEP2xiq3K6CPV9Ks+UIFgt/w3pHxJ17rNHSYbECUf4y2REFFrqlmBZxTxNyq7O
-         76hvgC6I7Yzvy/3PXsemqk/gUUA8Rkl31AtGwsZt1inZ3o/DeCYQcnk9GszZcyYtT3
-         kXtSLEFqTY0qQ==
-Date:   Tue, 18 Jul 2023 09:00:33 +0900
+        b=h+bztgsYFyCfwn61V/O/SSstG4emcnkd0rwEz3blGoOfaPLw//fwTx2kINkVanA0Z
+         S9vdvl5X5WKhhrI/Nkqnj6PaybZZ0tmAHYJtt3aFNEvzuoqKuRWjeXVK7waOuYpBWj
+         6DiJD1FVcy8t7Lme8Fh+iPYILfgmE18VRQdB3dbTJSFJYYCyKyPed9N/wQw1wp72py
+         sYyn01wXYbvUtgS0jgxlOqvTh1TQvrrWLHc7j9c/g2xDGENKnOZzKZ4wGfgoMuKwiJ
+         r7dVLPstrM5Q4tdfxoRgoHW7+rBztor6eCp9xiPnCAckGaCW335Hcyt6OlIDHYv5lh
+         zphcDbo8Zuntg==
+Date:   Tue, 18 Jul 2023 10:01:15 +0900
 From:   Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To:     Steven Rostedt <rostedt@goodmis.org>
-Cc:     Linux Trace Kernel <linux-trace-kernel@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
+To:     Luis Chamberlain <mcgrof@kernel.org>
+Cc:     Steven Rostedt <rostedt@goodmis.org>,
+        Alessandro Carminati <alessandro.carminati@gmail.com>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Nathan Chancellor <nathan@kernel.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Nicolas Schier <nicolas@fjasle.eu>,
         Masami Hiramatsu <mhiramat@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCH] tracing/probes: Differentiate BTF support from start of
- function
-Message-Id: <20230718090033.5f4d0a7df2657b0cc71f9219@kernel.org>
-In-Reply-To: <20230717163947.4969316a@gandalf.local.home>
-References: <20230717163947.4969316a@gandalf.local.home>
+        Daniel Bristot de Oliveira <bristot@kernel.org>,
+        Viktor Malik <vmalik@redhat.com>, linux-kernel@vger.kernel.org,
+        linux-kbuild@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+        Nick Alcock <nick.alcock@oracle.com>, eugene.loh@oracle.com,
+        kris.van.hees@oracle.com, live-patching@vger.kernel.org,
+        bpf@vger.kernel.org
+Subject: Re: [PATCH v2] scripts/link-vmlinux.sh: Add alias to duplicate
+ symbols for kallsyms
+Message-Id: <20230718100115.ac5038d243105a46d279b664@kernel.org>
+In-Reply-To: <ZLVxUQiC5iF+xTPQ@bombadil.infradead.org>
+References: <20230714150326.1152359-1-alessandro.carminati@gmail.com>
+        <20230717105240.3d986331@gandalf.local.home>
+        <ZLVxUQiC5iF+xTPQ@bombadil.infradead.org>
 X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Mime-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
@@ -54,82 +65,37 @@ Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On Mon, 17 Jul 2023 16:39:47 -0400
-Steven Rostedt <rostedt@goodmis.org> wrote:
+On Mon, 17 Jul 2023 09:50:25 -0700
+Luis Chamberlain <mcgrof@kernel.org> wrote:
 
-> From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
+> On Mon, Jul 17, 2023 at 10:52:40AM -0400, Steven Rostedt wrote:
+> > Honestly, I think the "_alias_<some-random-number>" is useless. It doesn't
+> > give you any clue to what function you are actually attaching to. 
 > 
-> Having a typo in the function name to trace one of the arguments using
-> BTF, gave me an error message that BTF was not supported by this kernel:
+> Agreed.
+
++1 :)
+
+> > There's
+> > been other approaches that show module and/or file names. I know there's
+> > still some issues with getting those accepted, but I much rather have them
+> > than this!
+> > 
+> > See: https://lore.kernel.org/all/20221205163157.269335-1-nick.alcock@oracle.com/
 > 
-> ~# echo 'p:lock __raw_spin_lock lock=lock' > /sys/kernel/tracing/kprobe_events
-> -bash: echo: write error: Invalid argument
-> ~# cat /sys/kernel/tracing/error_log
-> [   34.382149] trace_kprobe: error: BTF is not available or not supported
->   Command: p:lock __raw_spin_lock lock=lock
->                                        ^
+> Yes, please coordinate with Nick and review each other's work, now we
+> have two separate efforts with different reasons but hopefully we'll
+> come back with one unified solution.
 > 
-> I added two underscores instead of one underscore for the function
-> _raw_spin_lock(). But I spent too much time trying to figure out why BTF
-> was not supported, because in reality it was! The problem was that the
-> function wasn't found (this could happen if a function offset is used as
-> well).
+> Please Cc live-patching also, as they had suggested before just to
+> provide the file filename + line number, that'll make it even more
+> valuable.
 
-Thanks for reporting!
+I want to involve BTF, that is currently only support looking up function
+by name. This alias is currently decouple from the BTF, but BTF name is
+also need to be updated so that we can lookup BTF from the alias name.
 
-> 
-> Instead, add a new error message that gives a better description of the
-> problem.
-> 
-> ~# echo 'p:lock __raw_spin_lock lock=lock' > /sys/kernel/tracing/kprobe_events
-> -bash: echo: write error: Invalid argument
-> ~# cat /sys/kernel/tracing/error_log
-> [   45.922742] trace_kprobe: error: BTF arg can be used only on function entry
->   Command: p:lock __raw_spin_lock lock=lock
->                                        ^
-
-This looks good to me.
-
-Acked-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-
-Thank you!
-
-
-> Fixes: b576e09701c7d ("tracing/probes: Support function parameters if BTF is available")
-> Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
-> ---
->  kernel/trace/trace_probe.c | 2 +-
->  kernel/trace/trace_probe.h | 1 +
->  2 files changed, 2 insertions(+), 1 deletion(-)
-> 
-> diff --git a/kernel/trace/trace_probe.c b/kernel/trace/trace_probe.c
-> index cf504efd0694..328a51b1d068 100644
-> --- a/kernel/trace/trace_probe.c
-> +++ b/kernel/trace/trace_probe.c
-> @@ -1023,7 +1023,7 @@ parse_probe_arg(char *arg, const struct fetch_type *type,
->  	default:
->  		if (isalpha(arg[0]) || arg[0] == '_') {	/* BTF variable */
->  			if (!tparg_is_function_entry(ctx->flags)) {
-> -				trace_probe_log_err(ctx->offset, NOSUP_BTFARG);
-> +				trace_probe_log_err(ctx->offset, NOFENTRY_BTFARG);
->  				return -EINVAL;
->  			}
->  			ret = parse_btf_arg(arg, pcode, end, ctx);
-> diff --git a/kernel/trace/trace_probe.h b/kernel/trace/trace_probe.h
-> index 604d6fb9c5ff..554fe2995ca1 100644
-> --- a/kernel/trace/trace_probe.h
-> +++ b/kernel/trace/trace_probe.h
-> @@ -493,6 +493,7 @@ extern int traceprobe_define_arg_fields(struct trace_event_call *event_call,
->  	C(BAD_ATTACH_ARG,	"Attached event does not have this field"),\
->  	C(NO_EP_FILTER,		"No filter rule after 'if'"),		\
->  	C(NOSUP_BTFARG,		"BTF is not available or not supported"),	\
-> +	C(NOFENTRY_BTFARG,	"BTF arg can be used only on function entry"),	\
->  	C(NO_BTFARG,		"This variable is not found at this probe point"),\
->  	C(NO_BTF_ENTRY,		"No BTF entry for this probe point"),	\
->  	C(BAD_VAR_ARGS,		"$arg* must be an independent parameter without name etc."),\
-> -- 
-> 2.40.1
-> 
+Thank you,
 
 
 -- 
