@@ -2,93 +2,255 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44935EB64DC
-	for <linux-trace-kernel@archiver.kernel.org>; Tue, 18 Jul 2023 08:49:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EF3FFEB64DA
+	for <linux-trace-kernel@archiver.kernel.org>; Tue, 18 Jul 2023 10:44:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231489AbjGRItI (ORCPT
+        id S230260AbjGRKoj (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Tue, 18 Jul 2023 04:49:08 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35508 "EHLO
+        Tue, 18 Jul 2023 06:44:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46436 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230322AbjGRItH (ORCPT
+        with ESMTP id S229820AbjGRKoh (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Tue, 18 Jul 2023 04:49:07 -0400
-Received: from mail.208.org (unknown [183.242.55.162])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 03972E4F
-        for <linux-trace-kernel@vger.kernel.org>; Tue, 18 Jul 2023 01:49:05 -0700 (PDT)
-Received: from mail.208.org (email.208.org [127.0.0.1])
-        by mail.208.org (Postfix) with ESMTP id 4R4t0V6y1XzBR9sk
-        for <linux-trace-kernel@vger.kernel.org>; Tue, 18 Jul 2023 16:48:58 +0800 (CST)
-Authentication-Results: mail.208.org (amavisd-new); dkim=pass
-        reason="pass (just generated, assumed good)" header.d=208.org
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=208.org; h=
-        content-transfer-encoding:content-type:message-id:user-agent
-        :references:in-reply-to:subject:to:from:date:mime-version; s=
-        dkim; t=1689670138; x=1692262139; bh=ZmsCnoE/TNdGMu1ZrbDsT2jx8Zy
-        AM7rGQ51xY8N+IW8=; b=uytp9GPa4Ej/t60Q3jfDErwfevA2JTIe9cwO1jYyrIP
-        e0AieGGtZnaGAp6E/2WzxtMPrMkTqn5TaZoK/2K1xBMVuyQ9TxtE9itRx5cKX/Cx
-        fDAbOaJBdCIl4RciTflzRRjn+5WXOPT6N9DNqA3AwV9wuJHGEGffmWIKGRlTWEM3
-        6TchjS/BrCNVV+rU0s6lmpQfDm4lyTC9b5d0cBxHUB18QitcFzvTSdB+S1PeCew5
-        mY9BlPBqI3HFNpg1bGPucHV7j7uG25TemC3zGVLm0epnAmjw3CoB/B5sZ6S4UmtR
-        DxKE5ubi9IpBB1Wtr+AyYKemtYpHyeCKTM5MgMKqs4A==
-X-Virus-Scanned: amavisd-new at mail.208.org
-Received: from mail.208.org ([127.0.0.1])
-        by mail.208.org (mail.208.org [127.0.0.1]) (amavisd-new, port 10026)
-        with ESMTP id biHEs2_fqgKe for <linux-trace-kernel@vger.kernel.org>;
-        Tue, 18 Jul 2023 16:48:58 +0800 (CST)
-Received: from localhost (email.208.org [127.0.0.1])
-        by mail.208.org (Postfix) with ESMTPSA id 4R4t0V4y0rzBR7bp;
-        Tue, 18 Jul 2023 16:48:58 +0800 (CST)
-MIME-Version: 1.0
-Date:   Tue, 18 Jul 2023 16:48:58 +0800
-From:   sunran001@208suo.com
-To:     rostedt@goodmis.org, mhiramat@kernel.org
-Cc:     linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
-Subject: [PATCH] writeback: add missing spaces after ','
-In-Reply-To: <20230718084743.17293-1-xujianghui@cdjrlc.com>
-References: <20230718084743.17293-1-xujianghui@cdjrlc.com>
-User-Agent: Roundcube Webmail
-Message-ID: <87543d97fbdac210ccf3ba75eb9ce9fc@208suo.com>
-X-Sender: sunran001@208suo.com
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
+        Tue, 18 Jul 2023 06:44:37 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9DA51189;
+        Tue, 18 Jul 2023 03:44:36 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 3402B61515;
+        Tue, 18 Jul 2023 10:44:36 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 97B2BC433C7;
+        Tue, 18 Jul 2023 10:44:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1689677075;
+        bh=dMzMI/JnxcHYJTwsjOqQbNyK+pozjyREgGe46cU2NNI=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=MgjC6VJ5sAYS+oSORjgUh9YepB0JGIkTeEKgIWtcxbB9DGWytKWy7yM6a09PjWzI0
+         uwHhzZat1oihdWx165iawCEuQZ6G1IzgU+MmxtqtkYxsCfdrz+nd7nohVYiHYXFItI
+         25LHIe0wx7Fbt3v/G/OZh9MfNRsf/UJpEz5CfWNpu6D1mXVJNiw816Z8QcGlMzttOE
+         U86DmeJeR5/hcitGKpm5Vjur7PjwbXHyLwzoqvoEofykvFx1yI5PcYSPhdkxLYzkbd
+         tf+S5A8q8DJqMm3XrJj6q+B5jvQzxlPvI+Xo8aXJY35NMbD5EWLXeDS1BrNM3Owzci
+         2QZxrTJ+5aOeA==
+Date:   Tue, 18 Jul 2023 19:44:31 +0900
+From:   Masami Hiramatsu (Google) <mhiramat@kernel.org>
+To:     Donglin Peng <dolinux.peng@gmail.com>
+Cc:     linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Martin KaFai Lau <martin.lau@linux.dev>, bpf@vger.kernel.org,
+        Sven Schnelle <svens@linux.ibm.com>,
+        Alexei Starovoitov <ast@kernel.org>
+Subject: Re: [PATCH v2 2/9] bpf/btf: tracing: Move finding func-proto API
+ and getting func-param API to BTF
+Message-Id: <20230718194431.5653b1e89841e6abd9742ede@kernel.org>
+In-Reply-To: <CAErzpmuvhrj0HhTpH2m-C-=pFV=Q_mxYC59Hw=dm0pqUvtPm0g@mail.gmail.com>
+References: <168960739768.34107.15145201749042174448.stgit@devnote2>
+        <168960741686.34107.6330273416064011062.stgit@devnote2>
+        <CAErzpmuvhrj0HhTpH2m-C-=pFV=Q_mxYC59Hw=dm0pqUvtPm0g@mail.gmail.com>
+X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-Remove spaces to clear checkpatch errors.
+On Tue, 18 Jul 2023 10:40:09 +0800
+Donglin Peng <dolinux.peng@gmail.com> wrote:
 
-ERROR: space required after that ',' (ctx:VxV)
+> On Mon, Jul 17, 2023 at 11:24 PM Masami Hiramatsu (Google)
+> <mhiramat@kernel.org> wrote:
+> >
+> > From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+> >
+> > Move generic function-proto find API and getting function parameter API
+> > to BTF library code from trace_probe.c. This will avoid redundant efforts
+> > on different feature.
+> >
+> > Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+> > ---
+> >  include/linux/btf.h        |    4 ++++
+> >  kernel/bpf/btf.c           |   45 ++++++++++++++++++++++++++++++++++++++++
+> >  kernel/trace/trace_probe.c |   50 +++++++++++++-------------------------------
+> >  3 files changed, 64 insertions(+), 35 deletions(-)
+> >
+> > diff --git a/include/linux/btf.h b/include/linux/btf.h
+> > index cac9f304e27a..98fbbcdd72ec 100644
+> > --- a/include/linux/btf.h
+> > +++ b/include/linux/btf.h
+> > @@ -221,6 +221,10 @@ const struct btf_type *
+> >  btf_resolve_size(const struct btf *btf, const struct btf_type *type,
+> >                  u32 *type_size);
+> >  const char *btf_type_str(const struct btf_type *t);
+> > +const struct btf_type *btf_find_func_proto(struct btf *btf,
+> > +                                          const char *func_name);
+> > +const struct btf_param *btf_get_func_param(const struct btf_type *func_proto,
+> > +                                          s32 *nr);
+> >
+> >  #define for_each_member(i, struct_type, member)                        \
+> >         for (i = 0, member = btf_type_member(struct_type);      \
+> > diff --git a/kernel/bpf/btf.c b/kernel/bpf/btf.c
+> > index 817204d53372..e015b52956cb 100644
+> > --- a/kernel/bpf/btf.c
+> > +++ b/kernel/bpf/btf.c
+> > @@ -1947,6 +1947,51 @@ btf_resolve_size(const struct btf *btf, const struct btf_type *type,
+> >         return __btf_resolve_size(btf, type, type_size, NULL, NULL, NULL, NULL);
+> >  }
+> >
+> > +/*
+> > + * Find a functio proto type by name, and return it.
+> > + * Return NULL if not found, or return -EINVAL if parameter is invalid.
+> > + */
+> > +const struct btf_type *btf_find_func_proto(struct btf *btf, const char *func_name)
+> > +{
+> > +       const struct btf_type *t;
+> > +       s32 id;
+> > +
+> > +       if (!btf || !func_name)
+> > +               return ERR_PTR(-EINVAL);
+> > +
+> > +       id = btf_find_by_name_kind(btf, func_name, BTF_KIND_FUNC);
+> > +       if (id <= 0)
+> > +               return NULL;
+> > +
+> > +       /* Get BTF_KIND_FUNC type */
+> > +       t = btf_type_by_id(btf, id);
+> > +       if (!t || !btf_type_is_func(t))
+> > +               return NULL;
+> > +
+> > +       /* The type of BTF_KIND_FUNC is BTF_KIND_FUNC_PROTO */
+> > +       t = btf_type_by_id(btf, t->type);
+> > +       if (!t || !btf_type_is_func_proto(t))
+> > +               return NULL;
+> > +
+> > +       return t;
+> > +}
+> > +
+> > +/*
+> > + * Get function parameter with the number of parameters.
+> > + * This can return NULL if the function has no parameters.
+> > + */
+> > +const struct btf_param *btf_get_func_param(const struct btf_type *func_proto, s32 *nr)
+> > +{
+> > +       if (!func_proto || !nr)
+> > +               return ERR_PTR(-EINVAL);
+> > +
+> > +       *nr = btf_type_vlen(func_proto);
+> > +       if (*nr > 0)
+> > +               return (const struct btf_param *)(func_proto + 1);
+> > +       else
+> > +               return NULL;
+> > +}
+> > +
+> >  static u32 btf_resolved_type_id(const struct btf *btf, u32 type_id)
+> >  {
+> >         while (type_id < btf->start_id)
+> > diff --git a/kernel/trace/trace_probe.c b/kernel/trace/trace_probe.c
+> > index c68a72707852..cd89fc1ebb42 100644
+> > --- a/kernel/trace/trace_probe.c
+> > +++ b/kernel/trace/trace_probe.c
+> > @@ -371,47 +371,23 @@ static const char *type_from_btf_id(struct btf *btf, s32 id)
+> >         return NULL;
+> >  }
+> >
+> > -static const struct btf_type *find_btf_func_proto(const char *funcname)
+> > -{
+> > -       struct btf *btf = traceprobe_get_btf();
+> > -       const struct btf_type *t;
+> > -       s32 id;
+> > -
+> > -       if (!btf || !funcname)
+> > -               return ERR_PTR(-EINVAL);
+> > -
+> > -       id = btf_find_by_name_kind(btf, funcname, BTF_KIND_FUNC);
+> > -       if (id <= 0)
+> > -               return ERR_PTR(-ENOENT);
+> > -
+> > -       /* Get BTF_KIND_FUNC type */
+> > -       t = btf_type_by_id(btf, id);
+> > -       if (!t || !btf_type_is_func(t))
+> > -               return ERR_PTR(-ENOENT);
+> > -
+> > -       /* The type of BTF_KIND_FUNC is BTF_KIND_FUNC_PROTO */
+> > -       t = btf_type_by_id(btf, t->type);
+> > -       if (!t || !btf_type_is_func_proto(t))
+> > -               return ERR_PTR(-ENOENT);
+> > -
+> > -       return t;
+> > -}
+> > -
+> >  static const struct btf_param *find_btf_func_param(const char *funcname, s32 *nr,
+> >                                                    bool tracepoint)
+> >  {
+> > +       struct btf *btf = traceprobe_get_btf();
+> 
+> I found that traceprobe_get_btf() only returns the vmlinux's btf. But
+> if the function is
+> defined in a kernel module, we should get the module's btf.
+> 
 
-Signed-off-by: Ran Sun <sunran001@208suo.com>
----
-  include/trace/events/writeback.h | 8 ++++----
-  1 file changed, 4 insertions(+), 4 deletions(-)
+Good catch! That should be a separated fix (or improvement?)
+I think it's better to use btf_get() and btf_put(), and pass btf via
+traceprobe_parse_context.
 
-diff --git a/include/trace/events/writeback.h 
-b/include/trace/events/writeback.h
-index 54e353c9f919..43cdecf362e3 100644
---- a/include/trace/events/writeback.h
-+++ b/include/trace/events/writeback.h
-@@ -26,8 +26,8 @@
-  /* enums need to be exported to user space */
-  #undef EM
-  #undef EMe
--#define EM(a,b)     TRACE_DEFINE_ENUM(a);
--#define EMe(a,b)    TRACE_DEFINE_ENUM(a);
-+#define EM(a, b)     TRACE_DEFINE_ENUM(a);
-+#define EMe(a, b)    TRACE_DEFINE_ENUM(a);
+Thank you! 
 
-  #define WB_WORK_REASON                            \
-      EM( WB_REASON_BACKGROUND,        "background")        \
-@@ -47,8 +47,8 @@ WB_WORK_REASON
-   */
-  #undef EM
-  #undef EMe
--#define EM(a,b)        { a, b },
--#define EMe(a,b)    { a, b }
-+#define EM(a, b)    { a, b },
-+#define EMe(a, b)    { a, b }
+> -- Donglin
+> 
+> >         const struct btf_param *param;
+> >         const struct btf_type *t;
+> >
+> > -       if (!funcname || !nr)
+> > +       if (!funcname || !nr || !btf)
+> >                 return ERR_PTR(-EINVAL);
+> >
+> > -       t = find_btf_func_proto(funcname);
+> > -       if (IS_ERR(t))
+> > +       t = btf_find_func_proto(btf, funcname);
+> > +       if (IS_ERR_OR_NULL(t))
+> >                 return (const struct btf_param *)t;
+> >
+> > -       *nr = btf_type_vlen(t);
+> > -       param = (const struct btf_param *)(t + 1);
+> > +       param = btf_get_func_param(t, nr);
+> > +       if (IS_ERR_OR_NULL(param))
+> > +               return param;
+> >
+> >         /* Hide the first 'data' argument of tracepoint */
+> >         if (tracepoint) {
+> > @@ -490,8 +466,8 @@ static const struct fetch_type *parse_btf_retval_type(
+> >         const struct btf_type *t;
+> >
+> >         if (btf && ctx->funcname) {
+> > -               t = find_btf_func_proto(ctx->funcname);
+> > -               if (!IS_ERR(t))
+> > +               t = btf_find_func_proto(btf, ctx->funcname);
+> > +               if (!IS_ERR_OR_NULL(t))
+> >                         typestr = type_from_btf_id(btf, t->type);
+> >         }
+> >
+> > @@ -500,10 +476,14 @@ static const struct fetch_type *parse_btf_retval_type(
+> >
+> >  static bool is_btf_retval_void(const char *funcname)
+> >  {
+> > +       struct btf *btf = traceprobe_get_btf();
+> >         const struct btf_type *t;
+> >
+> > -       t = find_btf_func_proto(funcname);
+> > -       if (IS_ERR(t))
+> > +       if (!btf)
+> > +               return false;
+> > +
+> > +       t = btf_find_func_proto(btf, funcname);
+> > +       if (IS_ERR_OR_NULL(t))
+> >                 return false;
+> >
+> >         return t->type == 0;
+> >
+> >
 
-  struct wb_writeback_work;
+
+-- 
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
