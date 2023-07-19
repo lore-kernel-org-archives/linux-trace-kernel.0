@@ -2,261 +2,211 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 43EA1EB64DA
-	for <linux-trace-kernel@archiver.kernel.org>; Wed, 19 Jul 2023 09:03:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 88E96C0015E
+	for <linux-trace-kernel@archiver.kernel.org>; Wed, 19 Jul 2023 10:27:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229635AbjGSJDE (ORCPT
+        id S231372AbjGSK1X (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Wed, 19 Jul 2023 05:03:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50410 "EHLO
+        Wed, 19 Jul 2023 06:27:23 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:48326 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229626AbjGSJCc (ORCPT
+        with ESMTP id S231303AbjGSK1K (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Wed, 19 Jul 2023 05:02:32 -0400
-Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 60D1A269E;
-        Wed, 19 Jul 2023 02:02:24 -0700 (PDT)
-Received: from pps.filterd (m0333521.ppops.net [127.0.0.1])
-        by mx0b-00069f02.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 36ILeoWl013661;
-        Wed, 19 Jul 2023 09:02:16 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=message-id : date :
- subject : to : cc : references : from : in-reply-to : content-type :
- content-transfer-encoding : mime-version; s=corp-2023-03-30;
- bh=vf7bUkoUoM2nMz5xvFUMQh4daCGcRCFxaPNuOSR9sME=;
- b=J5ZPgLtCGNl4Ps6oFT1X3DN5/SweYFOq5U99nAid+t0UuqazcxfSMvEU8g9aaH9Xdj/M
- f1epMVm54coSCgftKntaUc91opMQJWrOx67RqcQ7cu54B7KIpslsfnEB70yOeLtHwKGG
- alrFrZbtYCSw5V2to/SDm+aOfs+rrIq1anyiHBhhlh+rQGhJD73m9E2nhcZxMLiDdJnw
- HA4UlApcQXFOnUKJyjNjWL707Fx2KzjUFZaLOkH3n4OIAmoQG96pTnhXpTGkqyPnhWZA
- PNoEBWNw8y8gkwSxs4CW8ru+adwkh8gIKiRi3lWCKQmrjf4lLgqBgzYxWpPtTukvi6ZU ZQ== 
-Received: from phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta03.appoci.oracle.com [138.1.37.129])
-        by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3run89y2se-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 19 Jul 2023 09:02:16 +0000
-Received: from pps.filterd (phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
-        by phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (8.17.1.19/8.17.1.19) with ESMTP id 36J7XSYV019258;
-        Wed, 19 Jul 2023 09:02:15 GMT
-Received: from nam12-mw2-obe.outbound.protection.outlook.com (mail-mw2nam12lp2045.outbound.protection.outlook.com [104.47.66.45])
-        by phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 3ruhw6yvub-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 19 Jul 2023 09:02:15 +0000
+        Wed, 19 Jul 2023 06:27:10 -0400
+Received: from MW2PR02CU001.outbound.protection.outlook.com (mail-westus2azon11012008.outbound.protection.outlook.com [52.101.48.8])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A180C2D5B;
+        Wed, 19 Jul 2023 03:26:03 -0700 (PDT)
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=XFS4E2vaGyEXKp22SgL+mZpQYICtlDeT6okNcH5oXAxv4DSYGubcDvYTXWThmMaH6VnNEEoEvj6ICssA7BercnTkz2W92eAYg8uhFBMSdQxpJt13yF5ASuZX/R/paSZ8Ns2taKH8MoooeRKuIhM/gM5GQMqAhpR10dXz0UdCAhHFjcnZXbICWIYw53+FCJgTRyylnM4Zz8lkBh+bQlXg2zdqd9nR8tr7PfM4wdyLcmSfdIt+AR0SdaRNO2G8Qyj/w83zBTqX5LecZTzwArIYQ2AvQq/yKomSylI46KcRi28uE//6tTccQspI/0MYpbZ8/4hGi61M8aW0qVHoj64MSw==
+ b=aBcq4wLJxRy3rOBJo+Q1lBuwSN1LRWjOMSmvfrGUarXZq/AxKoIN4fMp0rtqXkgSb4mQsWLUH+BzNfA/cQJq8DmlfOh1a8pilly44urTzNse/nEtgC75gFbXaboHpzUF3MFnfWfVUi49+xPvFDdXlqVWdju+J3MM0rA5D9qNGMu2E9grHA2Tdfj9oUIs9bM3CWc0/WfMD2jh8x1qmjwGGHpPJIMBlD4wFUr3ebtVy6TNZEXNpNwzdzz9qjk4Llt9Et4Ow8zVSr0BphlSt3PEUBytIy7+COxyPXOV8iWEFFeHnGDZwoBaexYozBvYyxbrHlevKqYgCQ0zbt8VQ6L6Vg==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=vf7bUkoUoM2nMz5xvFUMQh4daCGcRCFxaPNuOSR9sME=;
- b=dgHTS2VjTr61t+IN1jt6poj7cZQdTg06qcmbb99CCt4tprEdQDol1Cr5CKV5TFitYpAgUtWtzCmuL2XZ/vsw30btYH0j0szr4CFliUfIaknrfw3RcdfceHmyzJaLi1e7u5VuQVHL9T2eN8fBk3AA3KgFD9dJOerSW+Iq+GgsciQOYyMymKRfZYzxRXwbiY00FzRpxyE/iOVtK0cRj/mRwJHCaLR+pYT+1SzfdWQi8GHL9R3X1ZsQ5W0F+OnlQFRWpWPOCPr+08xC1Ai/FWAcqrPhG1TkXUFL2HishVHGGQHu98YmNFtgXgmtRReaEoVjYZEcjbydGWBA36HnBl2FAA==
+ bh=7yPrChISRNW+Qm8QNzq6bn+bgezqafyaUhIcATtgFdE=;
+ b=c2dRX8SVUxOsLjVDjfarzcidNpwbh7FIfikYgSMf+cibjjOZJsoiHA0XaIdezv97QaK3NxZDkoKGUKEysXMK3w0Kz1lk9T+jGsA9ZXFOF5NXHgqrX3XzDtmtrQhxXdP8OznhLwZ2VTFi83nlVVojHrm8E83gzRyV0F2m7Bl5vMGc0IxkIkNhCTPTo2sK2S8BmIYQuH/snGi2vkLEDmw9Mys4arUnhMPB9tX4s4WByXdB8n15RPT3b7FmWj/a8ft1DH+KeDJtZWYmzzNZ8V0uaGNNt6SPuJKsyYTPJmI7+yQFa/s9s72nnaSjjR498cUxAptWBYh/wiNVvdN9zU24Gg==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
- dkim=pass header.d=oracle.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
+ smtp.mailfrom=vmware.com; dmarc=pass action=none header.from=vmware.com;
+ dkim=pass header.d=vmware.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=vmware.com;
+ s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=vf7bUkoUoM2nMz5xvFUMQh4daCGcRCFxaPNuOSR9sME=;
- b=kHFTZ+12ApZcr1/atZgSU7K507aByDTKWyI6mUxMQpNvoibrS+rIWj1GkWfD3gD7Yt/yJlEQYpNZcTdgQE0MQmjzNy0asZBvXnn/Y5updqgJTB8jxUKSDL25NLPEhiDS82iVI1lrnlnG8XCX2QnVSlDbkLjQW4X4OLC8/W5uDBk=
-Received: from BLAPR10MB5267.namprd10.prod.outlook.com (2603:10b6:208:30e::22)
- by SJ0PR10MB5648.namprd10.prod.outlook.com (2603:10b6:a03:3e0::10) with
+ bh=7yPrChISRNW+Qm8QNzq6bn+bgezqafyaUhIcATtgFdE=;
+ b=JvdJc6cEEj7KQ+Xh9XV3iTsMzl3hfucHR8mohlMuTKjs1uaMNj+ak5UJb1+YAoWWNMnUOg/UZ10FjRUQnTa6M7TdDhdA6i8BFnYwO3/n3fTq54w3EWKTczWyLVz0VOrrE1wu5nMjQTH4lT8iAZlNPK8QN/UJw2r63oTczYttpLM=
+Received: from PH0PR05MB8703.namprd05.prod.outlook.com (2603:10b6:510:bd::5)
+ by SN6PR05MB6637.namprd05.prod.outlook.com (2603:10b6:805:107::11) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6609.23; Wed, 19 Jul
- 2023 09:02:12 +0000
-Received: from BLAPR10MB5267.namprd10.prod.outlook.com
- ([fe80::97e0:4c4b:17bb:a90f]) by BLAPR10MB5267.namprd10.prod.outlook.com
- ([fe80::97e0:4c4b:17bb:a90f%4]) with mapi id 15.20.6609.024; Wed, 19 Jul 2023
- 09:02:12 +0000
-Message-ID: <e002b414-0e12-0ee8-08a9-2a2b2f21c7bc@oracle.com>
-Date:   Wed, 19 Jul 2023 10:02:06 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.12.0
-Subject: Re: [PATCH v2 0/9] tracing: Improbe BTF support on probe events
-Content-Language: en-GB
-To:     "Masami Hiramatsu (Google)" <mhiramat@kernel.org>,
-        linux-trace-kernel@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>,
-        Martin KaFai Lau <martin.lau@linux.dev>, bpf@vger.kernel.org,
-        Sven Schnelle <svens@linux.ibm.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Jiri Olsa <jolsa@kernel.org>
-References: <168960739768.34107.15145201749042174448.stgit@devnote2>
-From:   Alan Maguire <alan.maguire@oracle.com>
-In-Reply-To: <168960739768.34107.15145201749042174448.stgit@devnote2>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: LO4P123CA0679.GBRP123.PROD.OUTLOOK.COM
- (2603:10a6:600:351::12) To BLAPR10MB5267.namprd10.prod.outlook.com
- (2603:10b6:208:30e::22)
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6588.32; Wed, 19 Jul
+ 2023 10:25:28 +0000
+Received: from PH0PR05MB8703.namprd05.prod.outlook.com
+ ([fe80::b5d8:98b9:6ca7:94f0]) by PH0PR05MB8703.namprd05.prod.outlook.com
+ ([fe80::b5d8:98b9:6ca7:94f0%6]) with mapi id 15.20.6609.024; Wed, 19 Jul 2023
+ 10:25:28 +0000
+From:   Ajay Kaher <akaher@vmware.com>
+To:     Steven Rostedt <rostedt@goodmis.org>
+CC:     "shuah@kernel.org" <shuah@kernel.org>,
+        "mhiramat@kernel.org" <mhiramat@kernel.org>,
+        Ching-lin Yu <chinglinyu@google.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-kselftest@vger.kernel.org" <linux-kselftest@vger.kernel.org>,
+        "linux-trace-kernel@vger.kernel.org" 
+        <linux-trace-kernel@vger.kernel.org>,
+        "lkp@intel.com" <lkp@intel.com>, Nadav Amit <namit@vmware.com>,
+        "oe-lkp@lists.linux.dev" <oe-lkp@lists.linux.dev>,
+        Alexey Makhalov <amakhalov@vmware.com>,
+        "er.ajay.kaher@gmail.com" <er.ajay.kaher@gmail.com>,
+        "srivatsa@csail.mit.edu" <srivatsa@csail.mit.edu>,
+        Tapas Kundu <tkundu@vmware.com>,
+        Vasavi Sirnapalli <vsirnapalli@vmware.com>
+Subject: Re: [PATCH v4 00/10] tracing: introducing eventfs
+Thread-Topic: [PATCH v4 00/10] tracing: introducing eventfs
+Thread-Index: AQHZtX3ozc4V8XrumUqju4s3WlXUgK+54mYAgALJloCAAuPAgIABWruA
+Date:   Wed, 19 Jul 2023 10:25:28 +0000
+Message-ID: <2CD72098-08E2-4CAA-B74D-D8C44D318117@vmware.com>
+References: <1689248004-8158-1-git-send-email-akaher@vmware.com>
+ <20230714185824.62556254@gandalf.local.home>
+ <883F9774-3E76-4346-9988-2788FAF0D55E@vmware.com>
+ <20230718094005.32516161@gandalf.local.home>
+In-Reply-To: <20230718094005.32516161@gandalf.local.home>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-mailer: Apple Mail (2.3731.600.7)
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=vmware.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: PH0PR05MB8703:EE_|SN6PR05MB6637:EE_
+x-ms-office365-filtering-correlation-id: 2810e40c-b065-47d6-c7fd-08db88427925
+x-ld-processed: b39138ca-3cee-4b4a-a4d6-cd83d9dd62f0,ExtAddr
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: TEFzleaPrKsVAMBo4UG78NWrMgZ94mLQn0+NumLSU99UW0c5ejGnz2w4efmD4lTt6TgyA92NdVWFG1+/fGV+7M0+4PwrNVIj/hO6utITZ2eIM3I1dm3CmzG1o9VQuyT7yzVGaGXoJaU29FATOf548D0KzAHET9x2FmE6P0vrO2gBkOTSz4bHyoiAucMu/4xTHYsFZuZ/oJAaK1/PWW/YpZU7PVDGcPIygO0TMEPLBk0VHF/ZM2h3gKnpxaRfufks4OnoaHNiyH+CI5eVtYp2p/gsE3ORcUq9bCbPt7V6EuPCMhD3FlZx2RSOhsb6HZgmvZfhkXIEujZxBoxnLMUDlteWJ38jfFOhJewqiBe40n+Aw6j1xehZpRRROvhfCTwFOevDN5D/LOS08NDl4tFan509TXwULP1KbDx5rdCHx8H7vnM609jjFti9AVlk19TtP2QQqUAEfacT0Tf6Qws4zWLMT2ZAcutDjSlNkxCjUSoAaL1Lddw6YxZcShxTKSLEOlL7quaLDaoPuGuruGvrl3Qc265OC7aYsbAqsOkvTFu/aoiNPueIKMvpEtozC5hkvETT3krEkyw6ePKmCWYAhHev6n3zuPPwnrpavZSEvp2pr6ttQfhN48O+8zvCZ85HlcE7jnERBRH5EJQtKtXfbdLWUwJb2nkO/MssJkrI4QMQ6s7JIg2VCGYEPrQE5af5dS1Xr82DQ++rjQIX7P7N5A==
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH0PR05MB8703.namprd05.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230028)(4636009)(39860400002)(136003)(376002)(346002)(366004)(396003)(451199021)(6512007)(41300700001)(7416002)(8676002)(66446008)(66476007)(66946007)(8936002)(66556008)(6916009)(2906002)(6486002)(54906003)(91956017)(76116006)(122000001)(86362001)(4326008)(316002)(64756008)(36756003)(5660300002)(2616005)(38100700002)(83380400001)(186003)(26005)(6506007)(71200400001)(53546011)(107886003)(33656002)(45080400002)(38070700005)(478600001)(45980500001);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0: =?us-ascii?Q?kHrp7R6S4xpfFUaTxe0TTNcSkim1MS5crYPsIRLGxmNr29aIDk9Qf5PUu0gy?=
+ =?us-ascii?Q?Yx9scxQ5w+viGVTd3wI1Zia8WS3dO5SJ4vfe0LnJJkhjAmBuhNHtb5bZYwM/?=
+ =?us-ascii?Q?4xtU8GyVueE4upRIwJHVLpvCicZZ/YtT/7dS8lIslxIQsPGCr0ifzDjQmxPQ?=
+ =?us-ascii?Q?Ll0TXyNcXDpxbEAUCsjc1o634v36mrzi6kvRictBsEpd4Euw2k5A5UReGv23?=
+ =?us-ascii?Q?we1n+mhafMDbHCW4BURKymQmnBZ1sHjVm8dkGVdOjyoso3veMDu28OiGmCjd?=
+ =?us-ascii?Q?PQZU+MUJlIkJ6DZgIP9KheFCGHhyb2Ofz7yj1Z9Gmh2pepAMGAnP6rzUf2Q4?=
+ =?us-ascii?Q?Qgt2ilFR1QZE1TcNtmdpuz84OSH71g7deW4QcDzRB7xSDKY0dpDJDhRZfWfh?=
+ =?us-ascii?Q?CEVrw8Royo5QFZ+YuTmvCxKUh5+XT9mkUlTOCNU25N+o254ex4M70X6WHkbz?=
+ =?us-ascii?Q?t2YMQfm2CTOScqgvgrpjx96by+IFCx9ZPG1GwsTyUo7/c+/U3MFEJDuGTUc1?=
+ =?us-ascii?Q?WIOdHTA5KfgaEi+TnhCXuJQl3z+LCk5ou+IabqnVP4XFTiXB/exOIfyRBJbr?=
+ =?us-ascii?Q?D29t1u9YtX5YgL+e0szTRmL3nCRdu/BCD6WzUy9m9gviEN0bO2eQIaFTNA6k?=
+ =?us-ascii?Q?4Lu/axVTvvQTroLkn+2fZ0uw2VA6cvincTnZiEimChqRmfCyHQbIJ1nk7Z5b?=
+ =?us-ascii?Q?/7K6Gm5SngnMr603KnPhkOKgc1wdeis5OIJFZ8URXPHizeDymdkjnuBceX9q?=
+ =?us-ascii?Q?AMljCM5cEfJ6bJMiweZpl2PJf0AY/zV0Vn/rDLEHTap4waF0tEfPdxZDSt4I?=
+ =?us-ascii?Q?f7UWmLywZ/ZTJWsrDpnr/dxlTTbtMUcYwlJW6dweLeYn6X9asOFl6G0oWZt7?=
+ =?us-ascii?Q?b1BI7khcmkeQV/y60Np3guLTmLycI2K9WsXfxGoZNAM5DTgfgTnMQCgjfyOV?=
+ =?us-ascii?Q?rGdc2ttVi85v4W3IqQCmfYrF9ZsYoByZY5wuPf1GUbZtAJT5ZwxsoNjCP1Bj?=
+ =?us-ascii?Q?2Y0y5K0o+cfbL45zV1sAWXw86s1TX707FpLZqUDludRGgv6CjuyOSL2OzJfn?=
+ =?us-ascii?Q?AZPG9ewoyl/Tz8VJPUeV0uqR6Be9RW/yJtDuB1XbXyVfmr1bwz2r9osulmEf?=
+ =?us-ascii?Q?wiQnYxwHYNpqNX2Hlq/m5vAvUBnCESQN9EjMn52uO4J1TeNmgGTIK1lArQsz?=
+ =?us-ascii?Q?fdggRFvdsSkEvU/CV4Y1BhIREo7XI68pjA9T2cUmRW+0dBIA5/BC8zeSeIxn?=
+ =?us-ascii?Q?eVbhZJqdAOvJONtGnRFNwkbI3JyfvfK3kz1/EG4YPX67oaXfpYq7b+9Jay9w?=
+ =?us-ascii?Q?MfKxc+7n6aVW01LKv4hmsW15hxyoVIGj+MytVU/qoUTUGjqfd61JzPPja/TD?=
+ =?us-ascii?Q?O7wZYBQJwamiTk/lLv5u5DcaFmWyXufkXT/yWuCFLnSQs2cwPrS2TyqRCach?=
+ =?us-ascii?Q?LKGSISrECKszzmU04cFc2w3n2JxfTOtapehV5fL+/eqVENuSmRt05+sulW3J?=
+ =?us-ascii?Q?ieOuD7dsHi2QRuGOqwHsR2+ppjQm4S+qXhCTElxJvAK+K4mxn6o/COWHMGAY?=
+ =?us-ascii?Q?ULS/XdunLgExsyamNrpEJi76RnNQdufOT/i3vQYC?=
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <5035C001F5EC8241BFC13DA418A171BE@namprd05.prod.outlook.com>
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BLAPR10MB5267:EE_|SJ0PR10MB5648:EE_
-X-MS-Office365-Filtering-Correlation-Id: 4b3f8816-a9fa-43a7-5c73-08db8836d69a
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: k24F7f1o0hAULFyG6BiP+/N81e1qinKh69dNfJxOgsHxJaFO43jPlzGqOhS01NS/2PbDXJpaTqS6aWTRtXWqEBnuLdJZi49znxLo4Zvdqhq8k5Hjg2X52kIX0XR1+WpBwCxqXuv0i3fsr6dYKdCALkmk7wEGEW6BCTSf3tREzld2pklCBnc/b8/TKl9H26/HvuDdEbqmK02KML+CRjqftq43nZd9ci1fTR21KVkSeLtEHrcbdqK53PkO5GK8MFoSxVsLtmArUS359ShU7maGlUrFlTBvOOpcPjaRZXaZnb96esa06Gp/NzWMUZWIM2hXY0rpmvm4ZR40fIsyS8XpIqou7hTPwLBSeLPf12ggo8Duqj9B5WV07CoUxnMKqXMuvaSKHRkL5tmazMoGe5d3HN5ZNGHZUl1NIih9hTTZp6iaZqKCuHOPCzaiEQ7ObdCkk/OPtgvhgfArrYts7CdMcKIzQOhVuY97Izi44AZKDJOXk3TinlKAxcWCI+YBHRuP4S4gTFVRn9v9QvwPi6MC/2ytMry0hXHDPO791X75XBuGOEWBsaOU4bUXR5xfglxUDKUhiotMR4x/UeGQu9Ctpvj2yx/zef6sobisiKEYHWBg/uDLFNq+6nRRsiWeueERSXltNj+n+drLMMiG8PnXn/0KB+3WUoDnxK+gC6aBbuHsBpuKxiY4Xv+rY4ujOyKS
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BLAPR10MB5267.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230028)(366004)(376002)(136003)(396003)(346002)(39860400002)(451199021)(53546011)(6506007)(41300700001)(316002)(31686004)(186003)(966005)(6512007)(2616005)(83380400001)(6486002)(478600001)(54906003)(6666004)(66556008)(66476007)(4326008)(44832011)(66946007)(38100700002)(86362001)(31696002)(8936002)(5660300002)(36756003)(8676002)(2906002)(45980500001)(43740500002);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?TGpaR3NNQXM4SDRhcWxnVnAxTzFFeHFZWEhCZmNrVmR5Y2QxdFY5SDZ1YzF1?=
- =?utf-8?B?bkZGSFdzcnphNUl0UUVLb0I2UG1qRHlmR25nV1JZdlI2cnZ4SDlLZWJyREw5?=
- =?utf-8?B?Y1FIMFp6VmgxdlBKN3dIOFpDakF0V0FVN2cvZGlEVTYyUlRpWW0yQnZCNXlv?=
- =?utf-8?B?eVJOSjlETW9NaUhkZ3FEOEhLUFFRUFVZL0k3NDl1NEtPbm9oSWJlYlk3Y0Vh?=
- =?utf-8?B?UXRaazVVTGpVQ2pSdWNrWk52MmNtV08vbEV4N2lwaExiSHpod2FIM3BHQTFE?=
- =?utf-8?B?UzlrTGY0ejRONVpqR1JNZVZBRVIyY3VCaHAwTjdWWklEVjBZQUdKSWo2ell3?=
- =?utf-8?B?NS9aOWd5VisrL1Z2NTBGNjNrM2ViK0dVdVh5VU5Wa3BORnVwYXgrOWZ0NDBK?=
- =?utf-8?B?L3NsRmQ2TGc4czBPSHB5aWN1eXk3Tk9pTmNWRW0zVTk4MUhBVWRPbnhHdk45?=
- =?utf-8?B?MGdmZUs5UU45alpwdGk3akRnb0tMMGJzMzZXSnZZUUE5RnNJWFRLUk16Zysv?=
- =?utf-8?B?NHNiR2Q2a2NROHNrRVlWZFk0M1J4TDMweE1vMXR3azd4bW81L3Rybjh5Z2FX?=
- =?utf-8?B?a2gxQWV1K0RoUWNNczZKRXgvRUlCRzJRL2hZTXRZM0hEaHoyS1NmRDFtc0lW?=
- =?utf-8?B?TW55blU5NU94M0ZBcE1VbE9DUWNCWXBuV0UrakhoRGlWL29XSjRjY3JOQnM3?=
- =?utf-8?B?azNXYkE4TkJtcGRVQmFFN1BGUzdzQ0ErQ1lFOTBSWXVaa1cvcDRpN0RCOENi?=
- =?utf-8?B?VHc4U1lUL0c4TExMUWlwY0pIdDlSWXhRcjZGMWhZVU1GNkNOcmU3MWl5cGEw?=
- =?utf-8?B?eGhYNDZGblN6R2U3YlFRSGt1bzlvZzllMzFMLzk4b0Z1ZGcxbFVmOGVxT0g0?=
- =?utf-8?B?ZUZrTnU3bDlmclhrQjM3cmtRRWxSQWJkTFhOcTExWHc4cWRVSUJ5OThCTTha?=
- =?utf-8?B?UEhqOUZvUzBBc1BhdjFWUE44amVoaE5mbkNjOFRLbDJQYTlpK0pBQ3pKSHY1?=
- =?utf-8?B?a0VXM3ZMQlNJd25BQ2hjWVFpTmZsaEZ3Q3YvaU1abVJUejY0WUw3ckRDQzVC?=
- =?utf-8?B?VFZWSUw2YTVVaTRVVW5tc1ptOHFYM3VzL1d0ZWswWXBlZ3JwL21iY3JFSk1K?=
- =?utf-8?B?OEJIeWJCT0JQZzZlTHUrVFFYeDJlazNJejdJUXdmd2tQV2dYNjJFUEN6OG5y?=
- =?utf-8?B?SGRmSi9lOFo3VEpraElTRzlvVWFVZ2I1T1R0ZWxJL2RvRVFDSmRXTDBHMzVU?=
- =?utf-8?B?R2xuVmI0N3V5M0g1a2xFVVB3OUpsWUQva2QzN2ZPWG1UaUlOOTE5RkNtWGtG?=
- =?utf-8?B?RE12YmpVV1pYT3JCWjZDeWw2VmhjS244a1BabnlxaDB0NXJERnRoV3QyNGNQ?=
- =?utf-8?B?TEFyZUNleDFMRDZUemtzZkNyUXRHTXUxM1d0ZFBsNktmeENWRWkvc2t3Q1kx?=
- =?utf-8?B?Mzl2cnpLSlZsNElsZ2hYeE00TkhGU2RZREI3VWVjYmhBMFRKanRZNE11ZWZ6?=
- =?utf-8?B?VWxlM2o3dEdsTEp3Z2c4Vm83MGI3ZE55WWsrNW1TNTJ2SlRuck1vTFpvb1g0?=
- =?utf-8?B?WnpSTmFaajF2VkxFTFRYcjA5MEJtS3pLNjlPZnZMOVVDRmRZdWJPbEFNcU1B?=
- =?utf-8?B?RzBVV3RFWGhyNERoeGkrbGxvVjc3a3Z1L3Q5MDJON3VXVGtURzJHTTRoaENR?=
- =?utf-8?B?QVBEUVQrNnFab3hYUUVxS2xTT1hFMHFIc052b0x5c0pnUWJpeW9OcGxMemRv?=
- =?utf-8?B?cnlpL0dIMThyWUJTR3ZLZEtHOUNBQitEQ2p5WW0yVlh6S1U4SXp3TUdzcXM0?=
- =?utf-8?B?ZXZCeHJ6bDRpV3NDZzRabm1TNmltUEFtanY3alVZdHRjMGROKzExSHBnMzVz?=
- =?utf-8?B?cmh0TnF0Kzk0UXpGcE9JREc0TnE0SzBSakhTdnY2KytRcnVuUlQ4ZmJWTTU4?=
- =?utf-8?B?dmdwNWMrQ2RqeTlZU3FmeDlNRmRCQ2YyZDgwWVpBdTNJZHhkOWtYMG5WQlY1?=
- =?utf-8?B?b2duSEdBMTlNZGNJY21wMHJzSWw4NWNxTEVsSXlnSTVYMmRrdkt4Zk1PSFNq?=
- =?utf-8?B?cXJhYnJ0K1JJakdpcC82YU9KWmdXUHl5M3JwK215RXZEazVuYTdCVkZKaENB?=
- =?utf-8?B?RGh3aDhoa1NTNnRlTURPSzFzMy93L3N1c0E2SWRhKzhiNXNjNEZGaUJpY0xZ?=
- =?utf-8?Q?C8T1mLExbT6ZiQvzuR2dr/g=3D?=
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0: 4h1lbUV7aoxP8VLwpM40MSDpQImFNdIcZUBs9ZK20hjUjT5Hs0a5yw1FfN/NTx8Slb1pUUSUmKOjiqgP9MkrgZZ9rKhG8NdaGKEcbH7NXZPfvXzBPYaUJrESwJogJtD/6XTX+YKgsRRdSfpkzl2bU1zjiHvCFoCCesBhbt8w/zWIkPCBi+PnLOpprv9eu2byuyT8BGxPEEdnDBdGDe60cl8M4wbNGUf6dARPfHHrZgRy1wKT91JCdH3hOR1v80WEu4CwiCT6iuFIm7ERMaM6Py2VDofFgnHezcRqXRWE39gURSOaiC91tp+agyvtZcH+YYY0FAU0m7dmiCH0A8TqegFW0j27ELWUEJ3NJ9c/5XDry0MN7SIgAht2yTZtEN7aEKw45HdSOLwG/8EcMwY+aYOyiyiuu+dXTn0JKWXjr2trdMO8u+Q54qD0vKfirtnBfioX5YSZG4YDPfKHAIZt71U22aokEiLBS1f06n7ubX+ZlBg7Pb5sdkf61uP3a680ze8BDl9YVDs0kvBeJBp01uS9Cou7bvauLQWyRlKcAgTZmFHgfSUrHWJ0YphTPpRiV0fwMdWN4jfYpXTurx/OJg/EV4ucGzzOWHyL8qxVnXCkt5UEUOZHaCK8myCfPNMN6EuqAZ5uw0lwlcF50iNXT+xRMAFA2yc8sKg62WsARRnKKObS7Rltz4VqhE1h1wtuHMAPctTl3op6/wUAyWWq5YIMD2+JOrE54rNZIphOkiuJxg81L/Jl6ump4GUkuFKe5zN5f3u4lQMdV9Z913a1nqMEzAOMdyZoNwaWWp2uSQGDUQpVYfLgO4IvSs387E18EYQMbkpeuXnfjSVL5nbq38lYRMF+z5vfPSeAr79xZmyZhUeqmjzkpInbgUII1oTr
-X-OriginatorOrg: oracle.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 4b3f8816-a9fa-43a7-5c73-08db8836d69a
-X-MS-Exchange-CrossTenant-AuthSource: BLAPR10MB5267.namprd10.prod.outlook.com
+X-OriginatorOrg: vmware.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 19 Jul 2023 09:02:11.4995
+X-MS-Exchange-CrossTenant-AuthSource: PH0PR05MB8703.namprd05.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 2810e40c-b065-47d6-c7fd-08db88427925
+X-MS-Exchange-CrossTenant-originalarrivaltime: 19 Jul 2023 10:25:28.4760
  (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: R58+0v3oGJRCxq+Z9K2r/QPOcLDb9b1SJb0ZOcF0oh1hu3/8hpY2fal+lfV04jf9wFIQZy7SQBPcyPP2DTzq1A==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ0PR10MB5648
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.254,Aquarius:18.0.957,Hydra:6.0.591,FMLib:17.11.176.26
- definitions=2023-07-19_05,2023-07-18_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- mlxscore=0 adultscore=0 spamscore=0 phishscore=0 bulkscore=0
- mlxlogscore=999 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2306200000 definitions=main-2307190082
-X-Proofpoint-ORIG-GUID: UUipyJw9d919Rp3F14AXo28CSEO5Qg7G
-X-Proofpoint-GUID: UUipyJw9d919Rp3F14AXo28CSEO5Qg7G
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: b39138ca-3cee-4b4a-a4d6-cd83d9dd62f0
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: G8iLMTAVKUHiNuqdk5YyynhbXBXPr0B72n9SGAMis2OhBk3pY7YMT/94cvXvM80NhZNwFNlKWBYvCdMlDN9WrQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN6PR05MB6637
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On 17/07/2023 16:23, Masami Hiramatsu (Google) wrote:
-> Hi,
-> 
-> Here is the 2nd version of series to improve the BTF support on probe events.
-> The previous series is here:
-> 
-> https://lore.kernel.org/linux-trace-kernel/168699521817.528797.13179901018528120324.stgit@mhiramat.roam.corp.google.com/
-> 
-> In this version, I added a NULL check fix patch [1/9] (which will go to
-> fixes branch) and move BTF related API to kernel/bpf/btf.c [2/9] and add
-> a new BTF API [3/9] so that anyone can reuse it.
-> Also I decided to use '$retval' directly instead of 'retval' pseudo BTF
-> variable for field access at [5/9] because I introduced an idea to choose
-> function 'exit' event automatically if '$retval' is used [7/9]. With that
-> change, we can not use 'retval' because if a function has 'retval'
-> argument, we can not decide 'f func retval' is function exit or entry.
 
-this is fantastic work! (FWIW I ran into the retval argument issue with
-ksnoop as well; I got around it by using "return" to signify the return
-value since as a reserved word it won't clash with a variable name.
-However in the trace subsystem context retval is used extensively so
-makes sense to stick with that).
 
-One thing we should probably figure out is a common approach to handling
-ambiguous static functions that will work across ftrace and BPF.  A few
-edge cases that are worth figuring out:
+> On 18-Jul-2023, at 7:10 PM, Steven Rostedt <rostedt@goodmis.org> wrote:
+>=20
+> !! External Email
+>=20
+> On Sun, 16 Jul 2023 17:32:35 +0000
+> Ajay Kaher <akaher@vmware.com> wrote:
+>=20
+>> Thanks Steve, hopefully I will fix all the pending nits in v5.
+>> Here is the checkpatch.pl report:
+>=20
+> Hold off on v5. I hit the following on v4:
 
-1. a static function with the same name exists in multiple modules,
-either with different or identical function signatures
-2. a static function has .isra.0 and other gcc suffixes applied to
-static functions during optimization
+OK.
 
-As Alexei mentioned, we're still working on 1, so it would be good
-to figure out a naming scheme that works well in both ftrace and BPF
-contexts. There are a few hundred of these ambiguous functions. My
-reading of the fprobe docs seems to suggest that there is no mechanism
-to specify a specific module for a given symbol (as in ftrace filters),
-is that right?
+>=20
+> [  220.170527] BUG: unable to handle page fault for address: ffffffffffff=
+fff0
+> [  220.172792] #PF: supervisor read access in kernel mode
+> [  220.174618] #PF: error_code(0x0000) - not-present page
+> [  220.176516] PGD 13104d067 P4D 13104d067 PUD 13104f067 PMD 0
+> [  220.178559] Oops: 0000 [#1] PREEMPT SMP PTI
+> [  220.180087] CPU: 3 PID: 35 Comm: kworker/u8:1 Not tainted 6.5.0-rc1-te=
+st-00021-gdd6e7af33766-dirty #15
+> [  220.183441] Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1=
+.16.2-debian-1.16.2-1 04/01/2014
+> [  220.186629] Workqueue: events_unbound eventfs_workfn
+> [  220.188286] RIP: 0010:eventfs_set_ef_status_free+0x17/0x40
+> [  220.190091] Code: 00 00 00 90 90 90 90 90 90 90 90 90 90 90 90 90 90 9=
+0 90 66 0f 1f 00 0f 1f 44 00 00 48 8b 47 18 48 8b 40 30 48 83 f8 10 74 1b <=
+f6> 40 f0 02 74 15 48 8b 47 78 48 85 c0 74 0c c6 40 5a 00 48 c7 40
+> [  220.195360] RSP: 0018:ffffa731c0147e20 EFLAGS: 00010287
+> [  220.196802] RAX: 0000000000000000 RBX: ffff97ca512ca000 RCX: 000000000=
+0000000
+> [  220.198703] RDX: 0000000000000001 RSI: ffff97ca52d18010 RDI: ffff97ca5=
+12ca000
+> [  220.200540] RBP: ffff97ca52cb3780 R08: 0000000000000064 R09: 000000008=
+02a0022
+> [  220.202324] R10: 0000000000039e80 R11: ffff97cabffd5000 R12: ffff97ca5=
+12ca058
+> [  220.204012] R13: ffff97ca52cb3780 R14: ffff97ca40153705 R15: ffffffffa=
+d5c1848
+> [  220.205685] FS:  0000000000000000(0000) GS:ffff97cabbd80000(0000) knlG=
+S:0000000000000000
+> [  220.207476] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> [  220.208764] CR2: fffffffffffffff0 CR3: 000000010a01a001 CR4: 000000000=
+0170ee0
+> [  220.210342] Call Trace:
+> [  220.210879]  <TASK>
+> [  220.211359]  ? __die+0x23/0x70
+> [  220.212036]  ? page_fault_oops+0xa4/0x180
+> [  220.212904]  ? exc_page_fault+0xf6/0x190
+> [  220.213738]  ? asm_exc_page_fault+0x26/0x30
+> [  220.214586]  ? eventfs_set_ef_status_free+0x17/0x40
+> [  220.216081]  tracefs_dentry_iput+0x39/0x50
+> [  220.217370]  __dentry_kill+0xdc/0x170
+> [  220.218581]  dput+0x142/0x310
+> [  220.219647]  eventfs_workfn+0x42/0x70
+> [  220.220805]  process_one_work+0x1e2/0x3e0
+> [  220.222031]  worker_thread+0x1da/0x390
+> [  220.223204]  ? __pfx_worker_thread+0x10/0x10
+> [  220.224476]  kthread+0xf7/0x130
+> [  220.225543]  ? __pfx_kthread+0x10/0x10
+> [  220.226735]  ret_from_fork+0x2c/0x50
+> [  220.227898]  </TASK>
+> [  220.228792] Modules linked in:
+> [  220.229860] CR2: fffffffffffffff0
+> [  220.230960] ---[ end trace 0000000000000000 ]---
+>=20
+>=20
+> I think I know the issue, and looking to see if I can fix it.
 
-Jiri led a session on this topic at LSF/MM/BPF ; perhaps we should
-carve out some time at Plumbers to discuss this?
 
-With respect to 2, pahole v1.25 will generate representations for these
-"."-suffixed functions in BTF via --btf_gen_optimized [1]. (BTF
-representation is skipped if the optimizations impact on the registers
-used for function arguments; if these don't match calling conventions
-due to optimized-out params, we don't represent the function in BTF,
-as the tracing expectations are violated).
+- Is it also reproducible on v3?
+- Is it manually reproducible or reproducible using any specific script?
 
-However the BTF function name - in line with DWARF representation -
-will not have the .isra suffix. So the thing to bear in mind is if
-you use the function name with suffix as the fprobe function name,
-a BTF lookup of that exact ("foo.isra.0") name will not find anything,
-while a lookup of "foo" will succeed. I'll add some specifics in your
-patch doing the lookups, but just wanted to highlight the issue at
-the top-level.
+Let me know if I can help.
 
-Thanks!
+-Ajay
 
-Alan
-
-[1]
-https://lore.kernel.org/bpf/1675790102-23037-1-git-send-email-alan.maguire@oracle.com/
-
-> Selftest test case [8/9] and document [9/9] are also updated according to
-> those changes.
-> 
-> This series can be applied on top of "v6.5-rc2" kernel.
-> 
-> You can also get this series from:
-> 
-> git://git.kernel.org/pub/scm/linux/kernel/git/mhiramat/linux.git topic/fprobe-event-ext
-> 
-> 
-> Thank you,
-> 
-> ---
-> 
-> Masami Hiramatsu (Google) (9):
->       tracing/probes: Fix to add NULL check for BTF APIs
->       bpf/btf: tracing: Move finding func-proto API and getting func-param API to BTF
->       bpf/btf: Add a function to search a member of a struct/union
->       tracing/probes: Support BTF based data structure field access
->       tracing/probes: Support BTF field access from $retval
->       tracing/probes: Add string type check with BTF
->       tracing/fprobe-event: Assume fprobe is a return event by $retval
->       selftests/ftrace: Add BTF fields access testcases
->       Documentation: tracing: Update fprobe event example with BTF field
-> 
-> 
->  Documentation/trace/fprobetrace.rst                |   50 ++
->  include/linux/btf.h                                |    7 
->  kernel/bpf/btf.c                                   |   83 ++++
->  kernel/trace/trace_fprobe.c                        |   58 ++-
->  kernel/trace/trace_probe.c                         |  402 +++++++++++++++-----
->  kernel/trace/trace_probe.h                         |   12 +
->  .../ftrace/test.d/dynevent/add_remove_btfarg.tc    |   11 +
->  .../ftrace/test.d/dynevent/fprobe_syntax_errors.tc |    6 
->  8 files changed, 503 insertions(+), 126 deletions(-)
-> 
-> --
-> Masami Hiramatsu (Google) <mhiramat@kernel.org>
-> 
