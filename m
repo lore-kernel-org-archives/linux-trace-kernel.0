@@ -2,285 +2,297 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A306C001DC
-	for <linux-trace-kernel@archiver.kernel.org>; Wed, 19 Jul 2023 06:16:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D613EB64DA
+	for <linux-trace-kernel@archiver.kernel.org>; Wed, 19 Jul 2023 07:59:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230429AbjGSGQA (ORCPT
+        id S229771AbjGSH7V (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Wed, 19 Jul 2023 02:16:00 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47942 "EHLO
+        Wed, 19 Jul 2023 03:59:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49332 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230453AbjGSGP5 (ORCPT
+        with ESMTP id S229536AbjGSH7U (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Wed, 19 Jul 2023 02:15:57 -0400
-Received: from mail-ed1-x531.google.com (mail-ed1-x531.google.com [IPv6:2a00:1450:4864:20::531])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 11BB52128
-        for <linux-trace-kernel@vger.kernel.org>; Tue, 18 Jul 2023 23:15:35 -0700 (PDT)
-Received: by mail-ed1-x531.google.com with SMTP id 4fb4d7f45d1cf-51e24210395so23962a12.0
-        for <linux-trace-kernel@vger.kernel.org>; Tue, 18 Jul 2023 23:15:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20221208; t=1689747328; x=1692339328;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=ca5165pOBQ5S68A9Z/Kb+BvhPrhaqdm8vfWPLzrKE7w=;
-        b=P+ncUN+smasAaAX58vGIBa37/EcdCBz+b/t5mevLSz/nMlqnW6n5Etj2xHL5iZ2gkm
-         Dc+BtbeiS8fMPNihaasSSsHUg6H+wBfsXq+lztDGPJ7idW3cYnWQD8NzGvRo0lc4HGLk
-         8vL9OrdDc/KKZcNsJ8Ztqmno0hlHIw2DC/TYSxlFenqSfzF+208PLURRDYgeCCtC/h3h
-         79tWo6jP+nrIIjhnvILFNNCWs9+tz/OatR0iFsMe8EW46ALsvEMGlyXlILmUxWel7gCI
-         SXbXgkrAnOUDcEBk//u3q/6lqkXYPP8JXzpRR4A+HSuKxCZDMzsoYYPEaxeQ4fPY70km
-         UD2w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1689747328; x=1692339328;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=ca5165pOBQ5S68A9Z/Kb+BvhPrhaqdm8vfWPLzrKE7w=;
-        b=QrMu489nSZYqQaU0MrO5F3LNYYGFu0QrPTNICrOfKsLv9SN747G592ZzQdCd2z3bUE
-         3K+uQtnoepg1QZuCRiK3ikL4a5lvlBdRKFa3zW5MaqQL9qI9/RZcuMa1MUSRLL/eRftf
-         /IVWc1bULGFtCkFBhW8kMFEI25qh3K+qg86uyIZXYFcQPEzKI6yRAHQaNSFPAkoKncoh
-         Q1uNBlcvv7UpCYnZpAhfJ75o//eN2GtItB9XjiuH9jkFB2kXZpENW3PNfCuZXSRHzk7q
-         K13cPRNtiIGyFhB1uuTLeUoOaalpSEGxlXvW5AyE8CykdSegOpR6Enm19+80d8A5Kt85
-         8Mug==
-X-Gm-Message-State: ABy/qLbDWzP4sNpm29mMTScl1COQB5WdXjrS38E4pH5sgeZtZphuDJ6U
-        Hjrfp66uzRMLolcyQzSVGWw9ddX5ADLk5DzYo2/dCQ==
-X-Google-Smtp-Source: APBJJlH133wUxgyrdA/7qJZWYjm2Xbv2xO8/WlsRZE6rxJK9taCvIhXePuAkjEI8bFr5+PI2/WozZ6iYQjRND2XJBnw=
-X-Received: by 2002:a50:8e02:0:b0:51e:5773:891d with SMTP id
- 2-20020a508e02000000b0051e5773891dmr223126edw.4.1689747328290; Tue, 18 Jul
- 2023 23:15:28 -0700 (PDT)
-MIME-Version: 1.0
-References: <20230718211147.18647-1-andriy.shevchenko@linux.intel.com> <20230718211147.18647-2-andriy.shevchenko@linux.intel.com>
-In-Reply-To: <20230718211147.18647-2-andriy.shevchenko@linux.intel.com>
-From:   David Gow <davidgow@google.com>
-Date:   Wed, 19 Jul 2023 14:15:15 +0800
-Message-ID: <CABVgOS=3F07Qdu2oc9UWgqqVEYeEFW5dHv+g6_FKafpxAnZjjA@mail.gmail.com>
-Subject: Re: [PATCH v4 1/4] kernel.h: Split out COUNT_ARGS() and CONCATENATE()
- to args.h
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     Shuah Khan <skhan@linuxfoundation.org>,
-        Daniel Latypov <dlatypov@google.com>,
-        "Steven Rostedt (Google)" <rostedt@goodmis.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
-        kunit-dev@googlegroups.com, linux-arm-kernel@lists.infradead.org,
-        linux-pci@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Brendan Higgins <brendan.higgins@linux.dev>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Lorenzo Pieralisi <lpieralisi@kernel.org>,
-        Sudeep Holla <sudeep.holla@arm.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>
-Content-Type: multipart/signed; protocol="application/pkcs7-signature"; micalg=sha-256;
-        boundary="0000000000004a49700600d0f5c0"
+        Wed, 19 Jul 2023 03:59:20 -0400
+Received: from mxct.zte.com.cn (mxct.zte.com.cn [58.251.27.85])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5C5AD1BDC;
+        Wed, 19 Jul 2023 00:59:16 -0700 (PDT)
+Received: from mxde.zte.com.cn (unknown [10.35.20.165])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mxct.zte.com.cn (FangMail) with ESMTPS id 4R5Srb0tY3zZK6h;
+        Wed, 19 Jul 2023 15:59:11 +0800 (CST)
+Received: from mxhk.zte.com.cn (unknown [192.168.250.137])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mxde.zte.com.cn (FangMail) with ESMTPS id 4R5SrN2CdCz6MLGN;
+        Wed, 19 Jul 2023 15:59:00 +0800 (CST)
+Received: from mxct.zte.com.cn (unknown [192.168.251.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mxhk.zte.com.cn (FangMail) with ESMTPS id 4R5SrH5LtVz7dFGB;
+        Wed, 19 Jul 2023 15:58:55 +0800 (CST)
+Received: from mse-fl2.zte.com.cn (unknown [10.5.228.133])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mxct.zte.com.cn (FangMail) with ESMTPS id 4R5SrB4LtQz4xxgj;
+        Wed, 19 Jul 2023 15:58:50 +0800 (CST)
+Received: from xaxapp02.zte.com.cn ([10.88.97.241])
+        by mse-fl2.zte.com.cn with SMTP id 36J7wj65031580;
+        Wed, 19 Jul 2023 15:58:45 +0800 (+08)
+        (envelope-from guo.ziliang@zte.com.cn)
+Received: from mapi (xaxapp03[null])
+        by mapi (Zmail) with MAPI id mid32;
+        Wed, 19 Jul 2023 15:58:47 +0800 (CST)
+Date:   Wed, 19 Jul 2023 15:58:47 +0800 (CST)
+X-Zmail-TransId: 2afb64b797b75f9-42dfa
+X-Mailer: Zmail v1.0
+Message-ID: <202307191558478409990@zte.com.cn>
+Mime-Version: 1.0
+From:   <guo.ziliang@zte.com.cn>
+To:     <rostedt@goodmis.org>, <linux-trace-kernel@vger.kernel.org>
+Cc:     <linux-kernel@vger.kernel.org>, <mhiramat@kernel.org>,
+        <chen.lin5@zte.com.cn>
+Subject: =?UTF-8?B?wqBbUEFUQ0hdIHJpbmctYnVmZmVyOiBEbyBub3Qgc3dhcCBjcHVfYnVmZmVyIGR1cmluZyByZXNpemUgcHJvY2Vzcw==?=
+Content-Type: text/plain;
+        charset="UTF-8"
+X-MAIL: mse-fl2.zte.com.cn 36J7wj65031580
+X-Fangmail-Gw-Spam-Type: 0
+X-Fangmail-Anti-Spam-Filtered: true
+X-Fangmail-MID-QID: 64B797CE.000/4R5Srb0tY3zZK6h
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
---0000000000004a49700600d0f5c0
-Content-Type: text/plain; charset="UTF-8"
+From: Chen Lin <chen.lin5@zte.com.cn>
 
-On Wed, 19 Jul 2023 at 05:11, Andy Shevchenko
-<andriy.shevchenko@linux.intel.com> wrote:
->
-> kernel.h is being used as a dump for all kinds of stuff for a long time.
-> The COUNT_ARGS() and CONCATENATE() macros may be used in some places
-> without need of the full kernel.h dependency train with it.
->
-> Here is the attempt on cleaning it up by splitting out these macros().
->
-> While at it, include new header where it's being used.
->
-> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> Acked-by: Steven Rostedt (Google) <rostedt@goodmis.org>
-> ---
+When ring_buffer_swap_cpu was called during resize process,
+the cpu buffer was swapped in the middle, resulting in incorrect state.
+Continuing to run in the wrong state will result in oops.
 
-Works fine here.
+This issue can be easily reproduced using the following two scripts:
+/tmp # cat test1.sh
+//#! /bin/sh
+for i in `seq 0 100000`
+do
+         echo 2000 > /sys/kernel/debug/tracing/buffer_size_kb
+         sleep 0.5
+         echo 5000 > /sys/kernel/debug/tracing/buffer_size_kb
+         sleep 0.5
+done
+/tmp # cat test2.sh
+//#! /bin/sh
+for i in `seq 0 100000`
+do
+        echo irqsoff > /sys/kernel/debug/tracing/current_tracer
+        sleep 1
+        echo nop > /sys/kernel/debug/tracing/current_tracer
+        sleep 1
+done
+/tmp # ./test1.sh &
+/tmp # ./test2.sh &
 
-Acked-by: David Gow <davidgow@google.com> # KUnit
+A typical oops log is as follows, sometimes with other different oops logs.
 
-Cheers,
--- David
+[  231.711293] WARNING: CPU: 0 PID: 9 at kernel/trace/ring_buffer.c:2026 rb_update_pages+0x378/0x3f8
+[  231.713375] Modules linked in:
+[  231.714735] CPU: 0 PID: 9 Comm: kworker/0:1 Tainted: G        W          6.5.0-rc1-00276-g20edcec23f92 #15
+[  231.716750] Hardware name: linux,dummy-virt (DT)
+[  231.718152] Workqueue: events update_pages_handler
+[  231.719714] pstate: 60000005 (nZCv daif -PAN -UAO -TCO -DIT -SSBS BTYPE=--)
+[  231.721171] pc : rb_update_pages+0x378/0x3f8
+[  231.722212] lr : rb_update_pages+0x25c/0x3f8
+[  231.723248] sp : ffff800082b9bd50
+[  231.724169] x29: ffff800082b9bd50 x28: ffff8000825f7000 x27: 0000000000000000
+[  231.726102] x26: 0000000000000001 x25: fffffffffffff010 x24: 0000000000000ff0
+[  231.728122] x23: ffff0000c3a0b600 x22: ffff0000c3a0b5c0 x21: fffffffffffffe0a
+[  231.730203] x20: ffff0000c3a0b600 x19: ffff0000c0102400 x18: 0000000000000000
+[  231.732329] x17: 0000000000000000 x16: 0000000000000000 x15: 0000ffffe7aa8510
+[  231.734212] x14: 0000000000000000 x13: 0000000000000000 x12: 0000000000000002
+[  231.736291] x11: ffff8000826998a8 x10: ffff800082b9baf0 x9 : ffff800081137558
+[  231.738195] x8 : fffffc00030e82c8 x7 : 0000000000000000 x6 : 0000000000000001
+[  231.740192] x5 : ffff0000ffbafe00 x4 : 0000000000000000 x3 : 0000000000000000
+[  231.742118] x2 : 00000000000006aa x1 : 0000000000000001 x0 : ffff0000c0007208
+[  231.744196] Call trace:
+[  231.744892]  rb_update_pages+0x378/0x3f8
+[  231.745893]  update_pages_handler+0x1c/0x38
+[  231.746893]  process_one_work+0x1f0/0x468
+[  231.747852]  worker_thread+0x54/0x410
+[  231.748737]  kthread+0x124/0x138
+[  231.749549]  ret_from_fork+0x10/0x20
+[  231.750434] ---[ end trace 0000000000000000 ]---
+[  233.720486] Unable to handle kernel NULL pointer dereference at virtual address 0000000000000000
+[  233.721696] Mem abort info:
+[  233.721935]   ESR = 0x0000000096000004
+[  233.722283]   EC = 0x25: DABT (current EL), IL = 32 bits
+[  233.722596]   SET = 0, FnV = 0
+[  233.722805]   EA = 0, S1PTW = 0
+[  233.723026]   FSC = 0x04: level 0 translation fault
+[  233.723458] Data abort info:
+[  233.723734]   ISV = 0, ISS = 0x00000004, ISS2 = 0x00000000
+[  233.724176]   CM = 0, WnR = 0, TnD = 0, TagAccess = 0
+[  233.724589]   GCS = 0, Overlay = 0, DirtyBit = 0, Xs = 0
+[  233.725075] user pgtable: 4k pages, 48-bit VAs, pgdp=0000000104943000
+[  233.725592] [0000000000000000] pgd=0000000000000000, p4d=0000000000000000
+[  233.726231] Internal error: Oops: 0000000096000004 [#1] PREEMPT SMP
+[  233.726720] Modules linked in:
+[  233.727007] CPU: 0 PID: 9 Comm: kworker/0:1 Tainted: G        W          6.5.0-rc1-00276-g20edcec23f92 #15
+[  233.727777] Hardware name: linux,dummy-virt (DT)
+[  233.728225] Workqueue: events update_pages_handler
+[  233.728655] pstate: 200000c5 (nzCv daIF -PAN -UAO -TCO -DIT -SSBS BTYPE=--)
+[  233.729054] pc : rb_update_pages+0x1a8/0x3f8
+[  233.729334] lr : rb_update_pages+0x154/0x3f8
+[  233.729592] sp : ffff800082b9bd50
+[  233.729792] x29: ffff800082b9bd50 x28: ffff8000825f7000 x27: 0000000000000000
+[  233.730220] x26: 0000000000000000 x25: ffff800082a8b840 x24: ffff0000c0102418
+[  233.730653] x23: 0000000000000000 x22: fffffc000304c880 x21: 0000000000000003
+[  233.731105] x20: 00000000000001f4 x19: ffff0000c0102400 x18: ffff800082fcbc58
+[  233.731727] x17: 0000000000000000 x16: 0000000000000001 x15: 0000000000000001
+[  233.732282] x14: ffff8000825fe0c8 x13: 0000000000000001 x12: 0000000000000000
+[  233.732709] x11: ffff8000826998a8 x10: 0000000000000ae0 x9 : ffff8000801b760c
+[  233.733148] x8 : fefefefefefefeff x7 : 0000000000000018 x6 : ffff0000c03298c0
+[  233.733553] x5 : 0000000000000002 x4 : 0000000000000000 x3 : 0000000000000000
+[  233.733972] x2 : ffff0000c3a0b600 x1 : 0000000000000000 x0 : 0000000000000000
+[  233.734418] Call trace:
+[  233.734593]  rb_update_pages+0x1a8/0x3f8
+[  233.734853]  update_pages_handler+0x1c/0x38
+[  233.735148]  process_one_work+0x1f0/0x468
+[  233.735525]  worker_thread+0x54/0x410
+[  233.735852]  kthread+0x124/0x138
+[  233.736064]  ret_from_fork+0x10/0x20
+[  233.736387] Code: 92400000 910006b5 aa000021 aa0303f7 (f9400060)
+[  233.736959] ---[ end trace 0000000000000000 ]---
 
->  include/kunit/test.h      |  1 +
->  include/linux/args.h      | 28 ++++++++++++++++++++++++++++
->  include/linux/kernel.h    |  7 -------
->  include/linux/pci.h       |  2 +-
->  include/trace/bpf_probe.h |  2 ++
->  5 files changed, 32 insertions(+), 8 deletions(-)
->  create mode 100644 include/linux/args.h
->
-> diff --git a/include/kunit/test.h b/include/kunit/test.h
-> index 23120d50499e..107c81431634 100644
-> --- a/include/kunit/test.h
-> +++ b/include/kunit/test.h
-> @@ -12,6 +12,7 @@
->  #include <kunit/assert.h>
->  #include <kunit/try-catch.h>
->
-> +#include <linux/args.h>
->  #include <linux/compiler.h>
->  #include <linux/container_of.h>
->  #include <linux/err.h>
-> diff --git a/include/linux/args.h b/include/linux/args.h
-> new file mode 100644
-> index 000000000000..8ff60a54eb7d
-> --- /dev/null
-> +++ b/include/linux/args.h
-> @@ -0,0 +1,28 @@
-> +/* SPDX-License-Identifier: GPL-2.0 */
-> +
-> +#ifndef _LINUX_ARGS_H
-> +#define _LINUX_ARGS_H
-> +
-> +/*
-> + * How do these macros work?
-> + *
-> + * In __COUNT_ARGS() _0 to _12 are just placeholders from the start
-> + * in order to make sure _n is positioned over the correct number
-> + * from 12 to 0 (depending on X, which is a variadic argument list).
-> + * They serve no purpose other than occupying a position. Since each
-> + * macro parameter must have a distinct identifier, those identifiers
-> + * are as good as any.
-> + *
-> + * In COUNT_ARGS() we use actual integers, so __COUNT_ARGS() returns
-> + * that as _n.
-> + */
-> +
-> +/* This counts to 12. Any more, it will return 13th argument. */
-> +#define __COUNT_ARGS(_0, _1, _2, _3, _4, _5, _6, _7, _8, _9, _10, _11, _12, _n, X...) _n
-> +#define COUNT_ARGS(X...) __COUNT_ARGS(, ##X, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1, 0)
-> +
-> +/* Concatenate two parameters, but allow them to be expanded beforehand. */
-> +#define __CONCAT(a, b) a ## b
-> +#define CONCATENATE(a, b) __CONCAT(a, b)
-> +
-> +#endif /* _LINUX_ARGS_H */
-> diff --git a/include/linux/kernel.h b/include/linux/kernel.h
-> index 0b00e1aef33d..15d9496db169 100644
-> --- a/include/linux/kernel.h
-> +++ b/include/linux/kernel.h
-> @@ -419,13 +419,6 @@ ftrace_vprintk(const char *fmt, va_list ap)
->  static inline void ftrace_dump(enum ftrace_dump_mode oops_dump_mode) { }
->  #endif /* CONFIG_TRACING */
->
-> -/* This counts to 12. Any more, it will return 13th argument. */
-> -#define __COUNT_ARGS(_0, _1, _2, _3, _4, _5, _6, _7, _8, _9, _10, _11, _12, _n, X...) _n
-> -#define COUNT_ARGS(X...) __COUNT_ARGS(, ##X, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1, 0)
-> -
-> -#define __CONCAT(a, b) a ## b
-> -#define CONCATENATE(a, b) __CONCAT(a, b)
-> -
->  /* Rebuild everything on CONFIG_FTRACE_MCOUNT_RECORD */
->  #ifdef CONFIG_FTRACE_MCOUNT_RECORD
->  # define REBUILD_DUE_TO_FTRACE_MCOUNT_RECORD
-> diff --git a/include/linux/pci.h b/include/linux/pci.h
-> index 0ff7500772e6..eeb2e6f6130f 100644
-> --- a/include/linux/pci.h
-> +++ b/include/linux/pci.h
-> @@ -23,7 +23,7 @@
->  #ifndef LINUX_PCI_H
->  #define LINUX_PCI_H
->
-> -
-> +#include <linux/args.h>
->  #include <linux/mod_devicetable.h>
->
->  #include <linux/types.h>
-> diff --git a/include/trace/bpf_probe.h b/include/trace/bpf_probe.h
-> index 1f7fc1fc590c..e609cd7da47e 100644
-> --- a/include/trace/bpf_probe.h
-> +++ b/include/trace/bpf_probe.h
-> @@ -12,6 +12,8 @@
->  #undef __perf_task
->  #define __perf_task(t) (t)
->
-> +#include <linux/args.h>
-> +
->  /* cast any integer, pointer, or small struct to u64 */
->  #define UINTTYPE(size) \
->         __typeof__(__builtin_choose_expr(size == 1,  (u8)1, \
-> --
-> 2.40.0.1.gaa8946217a0b
->
+After analysis, the seq of the error is as follows [1-5]:
 
---0000000000004a49700600d0f5c0
-Content-Type: application/pkcs7-signature; name="smime.p7s"
-Content-Transfer-Encoding: base64
-Content-Disposition: attachment; filename="smime.p7s"
-Content-Description: S/MIME Cryptographic Signature
+int ring_buffer_resize(struct trace_buffer *buffer, unsigned long size,
+			int cpu_id)
+{
+	for_each_buffer_cpu(buffer, cpu) {
+		cpu_buffer = buffer->buffers[cpu];   
+		//1. get cpu_buffer, aka cpu_buffer(A) 
+		...
+		...
+		schedule_work_on(cpu,   
+		 &cpu_buffer->update_pages_work);  
+		//2. 'update_pages_work' is queue on 'cpu', cpu_buffer(A) is passed to
+		// update_pages_handler, do the update process, set 'update_done' in
+		// complete(&cpu_buffer->update_done) and to wakeup resize process.
+	//---->
+		//3. Just at this moment, ring_buffer_swap_cpu is triggered, 
+		//cpu_buffer(A) be swaped to cpu_buffer(B), the max_buffer. 
+		//ring_buffer_swap_cpu is called as the 'Call trace' below.
+		
+		Call trace:
+		 dump_backtrace+0x0/0x2f8
+		 show_stack+0x18/0x28
+		 dump_stack+0x12c/0x188
+		 ring_buffer_swap_cpu+0x2f8/0x328
+		 update_max_tr_single+0x180/0x210
+		 check_critical_timing+0x2b4/0x2c8
+		 tracer_hardirqs_on+0x1c0/0x200
+		 trace_hardirqs_on+0xec/0x378
+		 el0_svc_common+0x64/0x260
+		 do_el0_svc+0x90/0xf8
+		 el0_svc+0x20/0x30
+		 el0_sync_handler+0xb0/0xb8
+		 el0_sync+0x180/0x1c0
+	//<----
+	
+	
+	/* wait for all the updates to complete */
+	for_each_buffer_cpu(buffer, cpu) {
+		cpu_buffer = buffer->buffers[cpu]; 
+		//4. get cpu_buffer, cpu_buffer(B) is used in the following process, 
+		//the state of cpu_buffer(A) and cpu_buffer(B) is totally wrong.
+		//for example, cpu_buffer(A)->update_done will leave be set 1, and will
+		//not 'wait_for_completion' at the next resize round. 
+		  if (!cpu_buffer->nr_pages_to_update)  
+			continue;                            
+												 
+									
+		if (cpu_online(cpu))
+			wait_for_completion(&cpu_buffer->update_done);
+		cpu_buffer->nr_pages_to_update = 0;
+	}
+	...
+}
+	//5. the state of cpu_buffer(A) and cpu_buffer(B) is totally wrong, 
+	//Continuing to run in the wrong state, then oops occurs.
 
-MIIPnwYJKoZIhvcNAQcCoIIPkDCCD4wCAQExDzANBglghkgBZQMEAgEFADALBgkqhkiG9w0BBwGg
-ggz5MIIEtjCCA56gAwIBAgIQeAMYYHb81ngUVR0WyMTzqzANBgkqhkiG9w0BAQsFADBMMSAwHgYD
-VQQLExdHbG9iYWxTaWduIFJvb3QgQ0EgLSBSMzETMBEGA1UEChMKR2xvYmFsU2lnbjETMBEGA1UE
-AxMKR2xvYmFsU2lnbjAeFw0yMDA3MjgwMDAwMDBaFw0yOTAzMTgwMDAwMDBaMFQxCzAJBgNVBAYT
-AkJFMRkwFwYDVQQKExBHbG9iYWxTaWduIG52LXNhMSowKAYDVQQDEyFHbG9iYWxTaWduIEF0bGFz
-IFIzIFNNSU1FIENBIDIwMjAwggEiMA0GCSqGSIb3DQEBAQUAA4IBDwAwggEKAoIBAQCvLe9xPU9W
-dpiHLAvX7kFnaFZPuJLey7LYaMO8P/xSngB9IN73mVc7YiLov12Fekdtn5kL8PjmDBEvTYmWsuQS
-6VBo3vdlqqXZ0M9eMkjcKqijrmDRleudEoPDzTumwQ18VB/3I+vbN039HIaRQ5x+NHGiPHVfk6Rx
-c6KAbYceyeqqfuJEcq23vhTdium/Bf5hHqYUhuJwnBQ+dAUcFndUKMJrth6lHeoifkbw2bv81zxJ
-I9cvIy516+oUekqiSFGfzAqByv41OrgLV4fLGCDH3yRh1tj7EtV3l2TngqtrDLUs5R+sWIItPa/4
-AJXB1Q3nGNl2tNjVpcSn0uJ7aFPbAgMBAAGjggGKMIIBhjAOBgNVHQ8BAf8EBAMCAYYwHQYDVR0l
-BBYwFAYIKwYBBQUHAwIGCCsGAQUFBwMEMBIGA1UdEwEB/wQIMAYBAf8CAQAwHQYDVR0OBBYEFHzM
-CmjXouseLHIb0c1dlW+N+/JjMB8GA1UdIwQYMBaAFI/wS3+oLkUkrk1Q+mOai97i3Ru8MHsGCCsG
-AQUFBwEBBG8wbTAuBggrBgEFBQcwAYYiaHR0cDovL29jc3AyLmdsb2JhbHNpZ24uY29tL3Jvb3Ry
-MzA7BggrBgEFBQcwAoYvaHR0cDovL3NlY3VyZS5nbG9iYWxzaWduLmNvbS9jYWNlcnQvcm9vdC1y
-My5jcnQwNgYDVR0fBC8wLTAroCmgJ4YlaHR0cDovL2NybC5nbG9iYWxzaWduLmNvbS9yb290LXIz
-LmNybDBMBgNVHSAERTBDMEEGCSsGAQQBoDIBKDA0MDIGCCsGAQUFBwIBFiZodHRwczovL3d3dy5n
-bG9iYWxzaWduLmNvbS9yZXBvc2l0b3J5LzANBgkqhkiG9w0BAQsFAAOCAQEANyYcO+9JZYyqQt41
-TMwvFWAw3vLoLOQIfIn48/yea/ekOcParTb0mbhsvVSZ6sGn+txYAZb33wIb1f4wK4xQ7+RUYBfI
-TuTPL7olF9hDpojC2F6Eu8nuEf1XD9qNI8zFd4kfjg4rb+AME0L81WaCL/WhP2kDCnRU4jm6TryB
-CHhZqtxkIvXGPGHjwJJazJBnX5NayIce4fGuUEJ7HkuCthVZ3Rws0UyHSAXesT/0tXATND4mNr1X
-El6adiSQy619ybVERnRi5aDe1PTwE+qNiotEEaeujz1a/+yYaaTY+k+qJcVxi7tbyQ0hi0UB3myM
-A/z2HmGEwO8hx7hDjKmKbDCCA18wggJHoAMCAQICCwQAAAAAASFYUwiiMA0GCSqGSIb3DQEBCwUA
-MEwxIDAeBgNVBAsTF0dsb2JhbFNpZ24gUm9vdCBDQSAtIFIzMRMwEQYDVQQKEwpHbG9iYWxTaWdu
-MRMwEQYDVQQDEwpHbG9iYWxTaWduMB4XDTA5MDMxODEwMDAwMFoXDTI5MDMxODEwMDAwMFowTDEg
-MB4GA1UECxMXR2xvYmFsU2lnbiBSb290IENBIC0gUjMxEzARBgNVBAoTCkdsb2JhbFNpZ24xEzAR
-BgNVBAMTCkdsb2JhbFNpZ24wggEiMA0GCSqGSIb3DQEBAQUAA4IBDwAwggEKAoIBAQDMJXaQeQZ4
-Ihb1wIO2hMoonv0FdhHFrYhy/EYCQ8eyip0EXyTLLkvhYIJG4VKrDIFHcGzdZNHr9SyjD4I9DCuu
-l9e2FIYQebs7E4B3jAjhSdJqYi8fXvqWaN+JJ5U4nwbXPsnLJlkNc96wyOkmDoMVxu9bi9IEYMpJ
-pij2aTv2y8gokeWdimFXN6x0FNx04Druci8unPvQu7/1PQDhBjPogiuuU6Y6FnOM3UEOIDrAtKeh
-6bJPkC4yYOlXy7kEkmho5TgmYHWyn3f/kRTvriBJ/K1AFUjRAjFhGV64l++td7dkmnq/X8ET75ti
-+w1s4FRpFqkD2m7pg5NxdsZphYIXAgMBAAGjQjBAMA4GA1UdDwEB/wQEAwIBBjAPBgNVHRMBAf8E
-BTADAQH/MB0GA1UdDgQWBBSP8Et/qC5FJK5NUPpjmove4t0bvDANBgkqhkiG9w0BAQsFAAOCAQEA
-S0DbwFCq/sgM7/eWVEVJu5YACUGssxOGhigHM8pr5nS5ugAtrqQK0/Xx8Q+Kv3NnSoPHRHt44K9u
-bG8DKY4zOUXDjuS5V2yq/BKW7FPGLeQkbLmUY/vcU2hnVj6DuM81IcPJaP7O2sJTqsyQiunwXUaM
-ld16WCgaLx3ezQA3QY/tRG3XUyiXfvNnBB4V14qWtNPeTCekTBtzc3b0F5nCH3oO4y0IrQocLP88
-q1UOD5F+NuvDV0m+4S4tfGCLw0FREyOdzvcya5QBqJnnLDMfOjsl0oZAzjsshnjJYS8Uuu7bVW/f
-hO4FCU29KNhyztNiUGUe65KXgzHZs7XKR1g/XzCCBNgwggPAoAMCAQICEAEDPnEOWzT2vYIrJhGq
-c1swDQYJKoZIhvcNAQELBQAwVDELMAkGA1UEBhMCQkUxGTAXBgNVBAoTEEdsb2JhbFNpZ24gbnYt
-c2ExKjAoBgNVBAMTIUdsb2JhbFNpZ24gQXRsYXMgUjMgU01JTUUgQ0EgMjAyMDAeFw0yMzA1MTIx
-NjMzMjlaFw0yMzExMDgxNjMzMjlaMCQxIjAgBgkqhkiG9w0BCQEWE2RhdmlkZ293QGdvb2dsZS5j
-b20wggEiMA0GCSqGSIb3DQEBAQUAA4IBDwAwggEKAoIBAQCfIQuFV9ECjSKrnHc+/gEoEHeMu29G
-hkC9x5KA7Tgm7ZISSdxxP+b9Q23vqKKYcaXlXzxDUweAEa7KrhRdZMpcF1p14/qI6AG7rBn8otbO
-t6QSE9nwXQRL5ITEHtPRcQzLU5H9Yyq4b9MmEZAq+ByKX1t6FrXw461kqV8I/oCueKmD0p6mU/4k
-xzQWik4ZqST0MXkJiZenSKDDN+U1qGgHKC3HAzsIlWpNh/WsWcD4RRcEtwfW1h9DwRfGFp78OFQg
-65qXbeub4G7ELSIdjGygCzVG+g1jo6we5uqPep3iRCzn92KROEVxP5lG9FlwQ2YWMt+dNiGrJdKy
-Kw4TK7CrAgMBAAGjggHUMIIB0DAeBgNVHREEFzAVgRNkYXZpZGdvd0Bnb29nbGUuY29tMA4GA1Ud
-DwEB/wQEAwIFoDAdBgNVHSUEFjAUBggrBgEFBQcDBAYIKwYBBQUHAwIwHQYDVR0OBBYEFG/UTu3x
-9IGQSBx2i4m+hGXJpET+MEwGA1UdIARFMEMwQQYJKwYBBAGgMgEoMDQwMgYIKwYBBQUHAgEWJmh0
-dHBzOi8vd3d3Lmdsb2JhbHNpZ24uY29tL3JlcG9zaXRvcnkvMAwGA1UdEwEB/wQCMAAwgZoGCCsG
-AQUFBwEBBIGNMIGKMD4GCCsGAQUFBzABhjJodHRwOi8vb2NzcC5nbG9iYWxzaWduLmNvbS9jYS9n
-c2F0bGFzcjNzbWltZWNhMjAyMDBIBggrBgEFBQcwAoY8aHR0cDovL3NlY3VyZS5nbG9iYWxzaWdu
-LmNvbS9jYWNlcnQvZ3NhdGxhc3Izc21pbWVjYTIwMjAuY3J0MB8GA1UdIwQYMBaAFHzMCmjXouse
-LHIb0c1dlW+N+/JjMEYGA1UdHwQ/MD0wO6A5oDeGNWh0dHA6Ly9jcmwuZ2xvYmFsc2lnbi5jb20v
-Y2EvZ3NhdGxhc3Izc21pbWVjYTIwMjAuY3JsMA0GCSqGSIb3DQEBCwUAA4IBAQCRI3Z4cAidgFcv
-Usqdz765x6KMZSfg/WtFrYg8ewsP2NpCxVM2+EhPyyEQ0k0DhtzdtGoI/Ug+jdFDyCKB9P2+EPLh
-iMjMnFILp7Zs4r18ECHlvZuDZfH9m0BchXIxu5jLIuQyKUWrCRDZZEDNr510ZhhVfYSFPA8ms1nk
-jyzYFOHYQyv5IfML/3IBFKlON5OZa+V8EZYULYcNkp03DdWglafj7SXZ1/XgAbVYrC381UvrsYN8
-jndVvoa1GWwe+NVlIIK7Q3uAjV3qLEDQpaNPg1rr0oAn6YmvTccjVMqj2YNwN+RHhKNzgRGxY5ct
-FaN+8fXZhRhpv3bVbAWuPZXoMYICajCCAmYCAQEwaDBUMQswCQYDVQQGEwJCRTEZMBcGA1UEChMQ
-R2xvYmFsU2lnbiBudi1zYTEqMCgGA1UEAxMhR2xvYmFsU2lnbiBBdGxhcyBSMyBTTUlNRSBDQSAy
-MDIwAhABAz5xDls09r2CKyYRqnNbMA0GCWCGSAFlAwQCAQUAoIHUMC8GCSqGSIb3DQEJBDEiBCBq
-1IFw7fjOO6YIiKAH1Rz9noBlchDrBvRQSZ8hleSQ3DAYBgkqhkiG9w0BCQMxCwYJKoZIhvcNAQcB
-MBwGCSqGSIb3DQEJBTEPFw0yMzA3MTkwNjE1MjhaMGkGCSqGSIb3DQEJDzFcMFowCwYJYIZIAWUD
-BAEqMAsGCWCGSAFlAwQBFjALBglghkgBZQMEAQIwCgYIKoZIhvcNAwcwCwYJKoZIhvcNAQEKMAsG
-CSqGSIb3DQEBBzALBglghkgBZQMEAgEwDQYJKoZIhvcNAQEBBQAEggEAEDvGSVZByFw9TfVPGfXg
-YDGwdM3z9OptBUTjYAsjgg0DdNEHAFJlKIArezNZDZOcO+s305lTBoun4qBa7nIWMZDwZHxhpzRl
-q9YFQt3WwuqBT763XPwajNtyYUq9Wpd+328GUWzdaOuYhCBlhvQEazkHmXnUl6tsIHV3zkxic67t
-I+QyyzVUfndZMV2EtCHdDOV4ztJYdlxCj4YiV3eQn3jW7D3N5tV3ac2sKa1C0vK+RoOxu0ZjSc6y
-d5Upi7l1Dz8/zyFXCfEgCGQK3WHNaQPiclC1AslaMHmzVdGd09T9Ixk+loVIYSkD0q6lqBg/UWve
-TKKA+sjgLIO0q7X9EA==
---0000000000004a49700600d0f5c0--
+Signed-off-by: Chen Lin <chen.lin5@zte.com.cn>
+---
+ kernel/trace/ring_buffer.c | 14 +++++++++++++-
+ kernel/trace/trace.c       |  3 ++-
+ 2 files changed, 15 insertions(+), 2 deletions(-)
+
+diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
+index 14d8001140c8..de061dd47313 100644
+--- a/kernel/trace/ring_buffer.c
++++ b/kernel/trace/ring_buffer.c
+@@ -536,6 +536,7 @@ struct trace_buffer {
+ 	unsigned			flags;
+ 	int				cpus;
+ 	atomic_t			record_disabled;
++	atomic_t			resizing;
+ 	cpumask_var_t			cpumask;
+
+ 	struct lock_class_key		*reader_lock_key;
+@@ -2167,7 +2168,7 @@ int ring_buffer_resize(struct trace_buffer *buffer, unsigned long size,
+
+ 	/* prevent another thread from changing buffer sizes */
+ 	mutex_lock(&buffer->mutex);
+-
++	atomic_inc(&buffer->resizing);
+
+ 	if (cpu_id == RING_BUFFER_ALL_CPUS) {
+ 		/*
+@@ -2322,6 +2323,7 @@ int ring_buffer_resize(struct trace_buffer *buffer, unsigned long size,
+ 		atomic_dec(&buffer->record_disabled);
+ 	}
+
++	atomic_dec(&buffer->resizing);
+ 	mutex_unlock(&buffer->mutex);
+ 	return 0;
+
+@@ -2342,6 +2344,7 @@ int ring_buffer_resize(struct trace_buffer *buffer, unsigned long size,
+ 		}
+ 	}
+  out_err_unlock:
++	atomic_dec(&buffer->resizing);
+ 	mutex_unlock(&buffer->mutex);
+ 	return err;
+ }
+@@ -5541,6 +5544,15 @@ int ring_buffer_swap_cpu(struct trace_buffer *buffer_a,
+ 	if (local_read(&cpu_buffer_b->committing))
+ 		goto out_dec;
+
++	/*
++	 * When resize is in progress, we cannot swap it because
++	 * it will mess the state of the cpu buffer.
++	 */
++	if (atomic_read(&buffer_a->resizing))
++		goto out_dec;
++	if (atomic_read(&buffer_b->resizing))
++		goto out_dec;
++
+ 	buffer_a->buffers[cpu] = cpu_buffer_b;
+ 	buffer_b->buffers[cpu] = cpu_buffer_a;
+
+diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
+index be847d45d81c..b8870078ef58 100644
+--- a/kernel/trace/trace.c
++++ b/kernel/trace/trace.c
+@@ -1928,9 +1928,10 @@ update_max_tr_single(struct trace_array *tr, struct task_struct *tsk, int cpu)
+ 		 * place on this CPU. We fail to record, but we reset
+ 		 * the max trace buffer (no one writes directly to it)
+ 		 * and flag that it failed.
++		 * Another reason is resize is in progress.
+ 		 */
+ 		trace_array_printk_buf(tr->max_buffer.buffer, _THIS_IP_,
+-			"Failed to swap buffers due to commit in progress\n");
++			"Failed to swap buffers due to commit or resize in progress\n");
+ 	}
+
+ 	WARN_ON_ONCE(ret && ret != -EAGAIN && ret != -EBUSY);
+-- 
+2.15.2
