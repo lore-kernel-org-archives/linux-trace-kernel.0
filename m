@@ -2,65 +2,65 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 22574EB64DC
-	for <linux-trace-kernel@archiver.kernel.org>; Tue, 18 Jul 2023 23:13:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E9105EB64DD
+	for <linux-trace-kernel@archiver.kernel.org>; Wed, 19 Jul 2023 02:10:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229644AbjGRXNN (ORCPT
+        id S229835AbjGSCKI (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Tue, 18 Jul 2023 19:13:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39208 "EHLO
+        Tue, 18 Jul 2023 22:10:08 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46408 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229458AbjGRXNM (ORCPT
+        with ESMTP id S229824AbjGSCKH (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Tue, 18 Jul 2023 19:13:12 -0400
-Received: from mail-lj1-x22a.google.com (mail-lj1-x22a.google.com [IPv6:2a00:1450:4864:20::22a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 45849ED;
-        Tue, 18 Jul 2023 16:13:09 -0700 (PDT)
-Received: by mail-lj1-x22a.google.com with SMTP id 38308e7fff4ca-2b743161832so96829141fa.1;
-        Tue, 18 Jul 2023 16:13:09 -0700 (PDT)
+        Tue, 18 Jul 2023 22:10:07 -0400
+Received: from mail-lf1-x134.google.com (mail-lf1-x134.google.com [IPv6:2a00:1450:4864:20::134])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D385919AF;
+        Tue, 18 Jul 2023 19:10:05 -0700 (PDT)
+Received: by mail-lf1-x134.google.com with SMTP id 2adb3069b0e04-4f95bf5c493so10420440e87.3;
+        Tue, 18 Jul 2023 19:10:05 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1689721987; x=1692313987;
+        d=gmail.com; s=20221208; t=1689732604; x=1692324604;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=1NQfBVXDdJBauiDRZhAmRRYJqr7LclnAThyEWYFadCc=;
-        b=b1A78LJBt6GeKcjIel5xGf2nrJ1kcal3jaIcMyCrNrFBd2QzaFoaGdEx4XMZDf8En5
-         dN2BByGDzYfgOY83IL1Uz9WOibbRkj97iSZWD1XUW6xJtNgUNeIAx76gTF5IFKUIaMGz
-         cA6f1HYXlQsqCf2T911C8g3U0dC/W8ym7c8m6UqsNVP2QBJyMtU0k0MkQS3QFnbx1svE
-         tpO3azyX8V297OnfaGCEu+S42Ad4DgZsihGwLSjO24FfQpWWNy0nG/TbEWLLY6OtqOD+
-         nidrtbDAUuKO9hTYzR3WIvP4jtViOxbrCj3j2Ylruk+6Tqwn6P1D8GsvEoAnq9ZRg7Zu
-         okPg==
+        bh=zWXZjAuDZ5feV/10kVxl5QUKhgl3CYoFjxPM3tLNDek=;
+        b=YZGj2TqAigLS9gVX3/oQv4ypHCGxUHuSWVyP1A9xC7iDkYJdvi5b/qwqpDMn7LjuDi
+         2GshvvD0I89VK3MVl5Vlmt529yNHy+27c6atxbkgO40IMEvMqmTZiqOuDJkczno07L6q
+         cMuQq/T9+1Z3mYMH24DKBECjb5BEhAMKDoYI8nTiGacAOpFTCXWj4Jt64s0l2Dkk/T8v
+         tZidh8JDHr4pFdJ9FSCmRvE95UUH4IITiq6CGJ0SIkDD4PCNhslXMPgJ/cB1y3Gzcnt7
+         jxRw/Rv5Pb4oiq7c2hSCecz/Pt4BZmqiP0eiaNotJYDXfL4Mz1VyKLrxDAoEqhcx2Tiu
+         9lRQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1689721987; x=1692313987;
+        d=1e100.net; s=20221208; t=1689732604; x=1692324604;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=1NQfBVXDdJBauiDRZhAmRRYJqr7LclnAThyEWYFadCc=;
-        b=JPBF2zS+2VSavuWS7uITPFqthnrt1GsReO4CXDaH4CGjJU8781lTv3KH0f55SNb+p/
-         57Gm+JvnwbZYSaNChA+yVuaQU/F8HH+DddBGyzKQ+uDLpl5PeoXp+rPmG7WU1S2pLzOi
-         TzPTGef9XMmaHvcikpf8sofBbmNHZ3lhkTNd6jOyx6G9BmbCfwBK4fb7MXlgTamR8SjQ
-         DI7xxjrlZoy5j/4uyG5aUhW42PMUATPU/9WKGqWR31NHC/qXbVJ9aGZr3ZtcQr9jKt7Z
-         0ZanuCJaervtw/bWO8ED0mU5k5kgCDFH3DK0Vt8hHUUe1549uK2GVLhwaXqh5HXVw3CG
-         elQQ==
-X-Gm-Message-State: ABy/qLbmGBNqyXdQ19Mt6AriTa88YJgg0MexsXGx2geRwSgd4vvStpf3
-        doS/p5RtTSKa4zxoUSlhkdCLKocBPLAlLDNiZs8=
-X-Google-Smtp-Source: APBJJlHcskr7dGBo1hyJ2V2TgmSn/6riRb+xxRHJkjhaiOubd2mRACSAjhQFk4IeQdNS9z8xoJn+GoOhScojrsO1bZ4=
-X-Received: by 2002:a2e:7403:0:b0:2b6:fa71:5bae with SMTP id
- p3-20020a2e7403000000b002b6fa715baemr507830ljc.12.1689721987346; Tue, 18 Jul
- 2023 16:13:07 -0700 (PDT)
+        bh=zWXZjAuDZ5feV/10kVxl5QUKhgl3CYoFjxPM3tLNDek=;
+        b=TDF4YSU6X7FiGbx0LTsJnKuLmnfZpWDQ2bKSSBIiWlsivrYjMw7JtwiotavWqhz7Z3
+         iMRuETbW6rJFWFqvlj3tp4SMs/oeaO48qXe0DLst7OivnRW8LQqAODDE1cjBW9bcZikr
+         sKe9AyY/ksIWsIUNcmV2qK7KSJmmuoSXfdv/aitRUwfX/R+16APLmbEf1NUs5RqwSyvV
+         P4vT2nXM8981MN4LrExh0dcSh85gPjzU5vT52ItkbyMQeK9e2ShOR4KyHiDmRtIXg9+/
+         DJI47BKNVQP49fVENHQ8+oQ+ROQg8+1CAsOTkr5u8jmbcx05UIMq23ibJhD8JWtr+iMY
+         E2Xw==
+X-Gm-Message-State: ABy/qLa/45sfMhPNkLmGGeqSiDnswFkz4JrkTrSi4kDs/VOFBPR6MiPH
+        M8PDvU9AIUn1C0LvsG0zizKS33iRgbjFvn8SU6fMTBGfK2eYzQ13btY=
+X-Google-Smtp-Source: APBJJlEOMCn868MC4GK6BKZADcUyesZCadL6Md/hcHc7RhsHn0zpsG0YaJgVCxPXyBg+p1Q28zkWaYX7eIRhKDZhpBU=
+X-Received: by 2002:a05:6512:2038:b0:4f8:67f0:7253 with SMTP id
+ s24-20020a056512203800b004f867f07253mr725859lfs.49.1689732603526; Tue, 18 Jul
+ 2023 19:10:03 -0700 (PDT)
 MIME-Version: 1.0
 References: <168960739768.34107.15145201749042174448.stgit@devnote2>
  <168960741686.34107.6330273416064011062.stgit@devnote2> <CAErzpmuvhrj0HhTpH2m-C-=pFV=Q_mxYC59Hw=dm0pqUvtPm0g@mail.gmail.com>
  <20230718194431.5653b1e89841e6abd9742ede@kernel.org> <20230718225606.926222723cdd8c2c37294e41@kernel.org>
  <CAADnVQ+8PuT5tC4q1spefzzCZG9r1UszFv0jenK5+Ed+QNqtsw@mail.gmail.com> <20230719080337.0955a6e77d799daad4c44350@kernel.org>
 In-Reply-To: <20230719080337.0955a6e77d799daad4c44350@kernel.org>
-From:   Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Date:   Tue, 18 Jul 2023 16:12:55 -0700
-Message-ID: <CAADnVQJNk=3nKk=1U4iGEQ7jQQD4xhObsEthESsMXiLt8Jz0fA@mail.gmail.com>
+From:   Donglin Peng <dolinux.peng@gmail.com>
+Date:   Wed, 19 Jul 2023 10:09:48 +0800
+Message-ID: <CAErzpmtJF4tjHCyYdHgiX_-vp39tdc=3iNmMhQ6SnFVicqZWrg@mail.gmail.com>
 Subject: Re: [PATCH v2 2/9] bpf/btf: tracing: Move finding func-proto API and
  getting func-param API to BTF
 To:     Masami Hiramatsu <mhiramat@kernel.org>
-Cc:     Donglin Peng <dolinux.peng@gmail.com>,
+Cc:     Alexei Starovoitov <alexei.starovoitov@gmail.com>,
         linux-trace-kernel@vger.kernel.org,
         LKML <linux-kernel@vger.kernel.org>,
         Steven Rostedt <rostedt@goodmis.org>,
@@ -73,7 +73,7 @@ Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On Tue, Jul 18, 2023 at 4:03=E2=80=AFPM Masami Hiramatsu <mhiramat@kernel.o=
+On Wed, Jul 19, 2023 at 7:03=E2=80=AFAM Masami Hiramatsu <mhiramat@kernel.o=
 rg> wrote:
 >
 > On Tue, 18 Jul 2023 10:11:01 -0700
@@ -117,15 +117,10 @@ ing
 arse
 > a module name in given name?)
 
-We can allow users specify module name, but how would it help?
-Do you want to allow static func names ?
-But module name won't help. There can be many statics with the same name
-in the module. Currently pahole filters out all ambiguous things in BTF.
-Alan is working on better representation of statics in BTF.
-The work is still in progress.
+btf_get_module_btf can be used to get a module's btf, but we have to use
+find_module to get the module by its name firstly.
 
-For now I don't see a need for an api to specify module, since it's not
-a modifier that can be relied upon to disambiguate.
-Hence bpf_find_btf_id that transparently searches across all should be enou=
-gh.
-At least it was enough for all of bpf use cases.
+>
+> Thank you,
+> --
+> Masami Hiramatsu (Google) <mhiramat@kernel.org>
