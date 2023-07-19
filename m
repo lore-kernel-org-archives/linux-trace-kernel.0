@@ -2,297 +2,261 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D613EB64DA
-	for <linux-trace-kernel@archiver.kernel.org>; Wed, 19 Jul 2023 07:59:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 43EA1EB64DA
+	for <linux-trace-kernel@archiver.kernel.org>; Wed, 19 Jul 2023 09:03:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229771AbjGSH7V (ORCPT
+        id S229635AbjGSJDE (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Wed, 19 Jul 2023 03:59:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49332 "EHLO
+        Wed, 19 Jul 2023 05:03:04 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50410 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229536AbjGSH7U (ORCPT
+        with ESMTP id S229626AbjGSJCc (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Wed, 19 Jul 2023 03:59:20 -0400
-Received: from mxct.zte.com.cn (mxct.zte.com.cn [58.251.27.85])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5C5AD1BDC;
-        Wed, 19 Jul 2023 00:59:16 -0700 (PDT)
-Received: from mxde.zte.com.cn (unknown [10.35.20.165])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mxct.zte.com.cn (FangMail) with ESMTPS id 4R5Srb0tY3zZK6h;
-        Wed, 19 Jul 2023 15:59:11 +0800 (CST)
-Received: from mxhk.zte.com.cn (unknown [192.168.250.137])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mxde.zte.com.cn (FangMail) with ESMTPS id 4R5SrN2CdCz6MLGN;
-        Wed, 19 Jul 2023 15:59:00 +0800 (CST)
-Received: from mxct.zte.com.cn (unknown [192.168.251.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mxhk.zte.com.cn (FangMail) with ESMTPS id 4R5SrH5LtVz7dFGB;
-        Wed, 19 Jul 2023 15:58:55 +0800 (CST)
-Received: from mse-fl2.zte.com.cn (unknown [10.5.228.133])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mxct.zte.com.cn (FangMail) with ESMTPS id 4R5SrB4LtQz4xxgj;
-        Wed, 19 Jul 2023 15:58:50 +0800 (CST)
-Received: from xaxapp02.zte.com.cn ([10.88.97.241])
-        by mse-fl2.zte.com.cn with SMTP id 36J7wj65031580;
-        Wed, 19 Jul 2023 15:58:45 +0800 (+08)
-        (envelope-from guo.ziliang@zte.com.cn)
-Received: from mapi (xaxapp03[null])
-        by mapi (Zmail) with MAPI id mid32;
-        Wed, 19 Jul 2023 15:58:47 +0800 (CST)
-Date:   Wed, 19 Jul 2023 15:58:47 +0800 (CST)
-X-Zmail-TransId: 2afb64b797b75f9-42dfa
-X-Mailer: Zmail v1.0
-Message-ID: <202307191558478409990@zte.com.cn>
-Mime-Version: 1.0
-From:   <guo.ziliang@zte.com.cn>
-To:     <rostedt@goodmis.org>, <linux-trace-kernel@vger.kernel.org>
-Cc:     <linux-kernel@vger.kernel.org>, <mhiramat@kernel.org>,
-        <chen.lin5@zte.com.cn>
-Subject: =?UTF-8?B?wqBbUEFUQ0hdIHJpbmctYnVmZmVyOiBEbyBub3Qgc3dhcCBjcHVfYnVmZmVyIGR1cmluZyByZXNpemUgcHJvY2Vzcw==?=
-Content-Type: text/plain;
-        charset="UTF-8"
-X-MAIL: mse-fl2.zte.com.cn 36J7wj65031580
-X-Fangmail-Gw-Spam-Type: 0
-X-Fangmail-Anti-Spam-Filtered: true
-X-Fangmail-MID-QID: 64B797CE.000/4R5Srb0tY3zZK6h
+        Wed, 19 Jul 2023 05:02:32 -0400
+Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 60D1A269E;
+        Wed, 19 Jul 2023 02:02:24 -0700 (PDT)
+Received: from pps.filterd (m0333521.ppops.net [127.0.0.1])
+        by mx0b-00069f02.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 36ILeoWl013661;
+        Wed, 19 Jul 2023 09:02:16 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=message-id : date :
+ subject : to : cc : references : from : in-reply-to : content-type :
+ content-transfer-encoding : mime-version; s=corp-2023-03-30;
+ bh=vf7bUkoUoM2nMz5xvFUMQh4daCGcRCFxaPNuOSR9sME=;
+ b=J5ZPgLtCGNl4Ps6oFT1X3DN5/SweYFOq5U99nAid+t0UuqazcxfSMvEU8g9aaH9Xdj/M
+ f1epMVm54coSCgftKntaUc91opMQJWrOx67RqcQ7cu54B7KIpslsfnEB70yOeLtHwKGG
+ alrFrZbtYCSw5V2to/SDm+aOfs+rrIq1anyiHBhhlh+rQGhJD73m9E2nhcZxMLiDdJnw
+ HA4UlApcQXFOnUKJyjNjWL707Fx2KzjUFZaLOkH3n4OIAmoQG96pTnhXpTGkqyPnhWZA
+ PNoEBWNw8y8gkwSxs4CW8ru+adwkh8gIKiRi3lWCKQmrjf4lLgqBgzYxWpPtTukvi6ZU ZQ== 
+Received: from phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta03.appoci.oracle.com [138.1.37.129])
+        by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3run89y2se-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 19 Jul 2023 09:02:16 +0000
+Received: from pps.filterd (phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
+        by phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (8.17.1.19/8.17.1.19) with ESMTP id 36J7XSYV019258;
+        Wed, 19 Jul 2023 09:02:15 GMT
+Received: from nam12-mw2-obe.outbound.protection.outlook.com (mail-mw2nam12lp2045.outbound.protection.outlook.com [104.47.66.45])
+        by phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 3ruhw6yvub-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 19 Jul 2023 09:02:15 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=XFS4E2vaGyEXKp22SgL+mZpQYICtlDeT6okNcH5oXAxv4DSYGubcDvYTXWThmMaH6VnNEEoEvj6ICssA7BercnTkz2W92eAYg8uhFBMSdQxpJt13yF5ASuZX/R/paSZ8Ns2taKH8MoooeRKuIhM/gM5GQMqAhpR10dXz0UdCAhHFjcnZXbICWIYw53+FCJgTRyylnM4Zz8lkBh+bQlXg2zdqd9nR8tr7PfM4wdyLcmSfdIt+AR0SdaRNO2G8Qyj/w83zBTqX5LecZTzwArIYQ2AvQq/yKomSylI46KcRi28uE//6tTccQspI/0MYpbZ8/4hGi61M8aW0qVHoj64MSw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=vf7bUkoUoM2nMz5xvFUMQh4daCGcRCFxaPNuOSR9sME=;
+ b=dgHTS2VjTr61t+IN1jt6poj7cZQdTg06qcmbb99CCt4tprEdQDol1Cr5CKV5TFitYpAgUtWtzCmuL2XZ/vsw30btYH0j0szr4CFliUfIaknrfw3RcdfceHmyzJaLi1e7u5VuQVHL9T2eN8fBk3AA3KgFD9dJOerSW+Iq+GgsciQOYyMymKRfZYzxRXwbiY00FzRpxyE/iOVtK0cRj/mRwJHCaLR+pYT+1SzfdWQi8GHL9R3X1ZsQ5W0F+OnlQFRWpWPOCPr+08xC1Ai/FWAcqrPhG1TkXUFL2HishVHGGQHu98YmNFtgXgmtRReaEoVjYZEcjbydGWBA36HnBl2FAA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
+ dkim=pass header.d=oracle.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=vf7bUkoUoM2nMz5xvFUMQh4daCGcRCFxaPNuOSR9sME=;
+ b=kHFTZ+12ApZcr1/atZgSU7K507aByDTKWyI6mUxMQpNvoibrS+rIWj1GkWfD3gD7Yt/yJlEQYpNZcTdgQE0MQmjzNy0asZBvXnn/Y5updqgJTB8jxUKSDL25NLPEhiDS82iVI1lrnlnG8XCX2QnVSlDbkLjQW4X4OLC8/W5uDBk=
+Received: from BLAPR10MB5267.namprd10.prod.outlook.com (2603:10b6:208:30e::22)
+ by SJ0PR10MB5648.namprd10.prod.outlook.com (2603:10b6:a03:3e0::10) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6609.23; Wed, 19 Jul
+ 2023 09:02:12 +0000
+Received: from BLAPR10MB5267.namprd10.prod.outlook.com
+ ([fe80::97e0:4c4b:17bb:a90f]) by BLAPR10MB5267.namprd10.prod.outlook.com
+ ([fe80::97e0:4c4b:17bb:a90f%4]) with mapi id 15.20.6609.024; Wed, 19 Jul 2023
+ 09:02:12 +0000
+Message-ID: <e002b414-0e12-0ee8-08a9-2a2b2f21c7bc@oracle.com>
+Date:   Wed, 19 Jul 2023 10:02:06 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.12.0
+Subject: Re: [PATCH v2 0/9] tracing: Improbe BTF support on probe events
+Content-Language: en-GB
+To:     "Masami Hiramatsu (Google)" <mhiramat@kernel.org>,
+        linux-trace-kernel@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>,
+        Martin KaFai Lau <martin.lau@linux.dev>, bpf@vger.kernel.org,
+        Sven Schnelle <svens@linux.ibm.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Jiri Olsa <jolsa@kernel.org>
+References: <168960739768.34107.15145201749042174448.stgit@devnote2>
+From:   Alan Maguire <alan.maguire@oracle.com>
+In-Reply-To: <168960739768.34107.15145201749042174448.stgit@devnote2>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: LO4P123CA0679.GBRP123.PROD.OUTLOOK.COM
+ (2603:10a6:600:351::12) To BLAPR10MB5267.namprd10.prod.outlook.com
+ (2603:10b6:208:30e::22)
+MIME-Version: 1.0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: BLAPR10MB5267:EE_|SJ0PR10MB5648:EE_
+X-MS-Office365-Filtering-Correlation-Id: 4b3f8816-a9fa-43a7-5c73-08db8836d69a
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: k24F7f1o0hAULFyG6BiP+/N81e1qinKh69dNfJxOgsHxJaFO43jPlzGqOhS01NS/2PbDXJpaTqS6aWTRtXWqEBnuLdJZi49znxLo4Zvdqhq8k5Hjg2X52kIX0XR1+WpBwCxqXuv0i3fsr6dYKdCALkmk7wEGEW6BCTSf3tREzld2pklCBnc/b8/TKl9H26/HvuDdEbqmK02KML+CRjqftq43nZd9ci1fTR21KVkSeLtEHrcbdqK53PkO5GK8MFoSxVsLtmArUS359ShU7maGlUrFlTBvOOpcPjaRZXaZnb96esa06Gp/NzWMUZWIM2hXY0rpmvm4ZR40fIsyS8XpIqou7hTPwLBSeLPf12ggo8Duqj9B5WV07CoUxnMKqXMuvaSKHRkL5tmazMoGe5d3HN5ZNGHZUl1NIih9hTTZp6iaZqKCuHOPCzaiEQ7ObdCkk/OPtgvhgfArrYts7CdMcKIzQOhVuY97Izi44AZKDJOXk3TinlKAxcWCI+YBHRuP4S4gTFVRn9v9QvwPi6MC/2ytMry0hXHDPO791X75XBuGOEWBsaOU4bUXR5xfglxUDKUhiotMR4x/UeGQu9Ctpvj2yx/zef6sobisiKEYHWBg/uDLFNq+6nRRsiWeueERSXltNj+n+drLMMiG8PnXn/0KB+3WUoDnxK+gC6aBbuHsBpuKxiY4Xv+rY4ujOyKS
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BLAPR10MB5267.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230028)(366004)(376002)(136003)(396003)(346002)(39860400002)(451199021)(53546011)(6506007)(41300700001)(316002)(31686004)(186003)(966005)(6512007)(2616005)(83380400001)(6486002)(478600001)(54906003)(6666004)(66556008)(66476007)(4326008)(44832011)(66946007)(38100700002)(86362001)(31696002)(8936002)(5660300002)(36756003)(8676002)(2906002)(45980500001)(43740500002);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?TGpaR3NNQXM4SDRhcWxnVnAxTzFFeHFZWEhCZmNrVmR5Y2QxdFY5SDZ1YzF1?=
+ =?utf-8?B?bkZGSFdzcnphNUl0UUVLb0I2UG1qRHlmR25nV1JZdlI2cnZ4SDlLZWJyREw5?=
+ =?utf-8?B?Y1FIMFp6VmgxdlBKN3dIOFpDakF0V0FVN2cvZGlEVTYyUlRpWW0yQnZCNXlv?=
+ =?utf-8?B?eVJOSjlETW9NaUhkZ3FEOEhLUFFRUFVZL0k3NDl1NEtPbm9oSWJlYlk3Y0Vh?=
+ =?utf-8?B?UXRaazVVTGpVQ2pSdWNrWk52MmNtV08vbEV4N2lwaExiSHpod2FIM3BHQTFE?=
+ =?utf-8?B?UzlrTGY0ejRONVpqR1JNZVZBRVIyY3VCaHAwTjdWWklEVjBZQUdKSWo2ell3?=
+ =?utf-8?B?NS9aOWd5VisrL1Z2NTBGNjNrM2ViK0dVdVh5VU5Wa3BORnVwYXgrOWZ0NDBK?=
+ =?utf-8?B?L3NsRmQ2TGc4czBPSHB5aWN1eXk3Tk9pTmNWRW0zVTk4MUhBVWRPbnhHdk45?=
+ =?utf-8?B?MGdmZUs5UU45alpwdGk3akRnb0tMMGJzMzZXSnZZUUE5RnNJWFRLUk16Zysv?=
+ =?utf-8?B?NHNiR2Q2a2NROHNrRVlWZFk0M1J4TDMweE1vMXR3azd4bW81L3Rybjh5Z2FX?=
+ =?utf-8?B?a2gxQWV1K0RoUWNNczZKRXgvRUlCRzJRL2hZTXRZM0hEaHoyS1NmRDFtc0lW?=
+ =?utf-8?B?TW55blU5NU94M0ZBcE1VbE9DUWNCWXBuV0UrakhoRGlWL29XSjRjY3JOQnM3?=
+ =?utf-8?B?azNXYkE4TkJtcGRVQmFFN1BGUzdzQ0ErQ1lFOTBSWXVaa1cvcDRpN0RCOENi?=
+ =?utf-8?B?VHc4U1lUL0c4TExMUWlwY0pIdDlSWXhRcjZGMWhZVU1GNkNOcmU3MWl5cGEw?=
+ =?utf-8?B?eGhYNDZGblN6R2U3YlFRSGt1bzlvZzllMzFMLzk4b0Z1ZGcxbFVmOGVxT0g0?=
+ =?utf-8?B?ZUZrTnU3bDlmclhrQjM3cmtRRWxSQWJkTFhOcTExWHc4cWRVSUJ5OThCTTha?=
+ =?utf-8?B?UEhqOUZvUzBBc1BhdjFWUE44amVoaE5mbkNjOFRLbDJQYTlpK0pBQ3pKSHY1?=
+ =?utf-8?B?a0VXM3ZMQlNJd25BQ2hjWVFpTmZsaEZ3Q3YvaU1abVJUejY0WUw3ckRDQzVC?=
+ =?utf-8?B?VFZWSUw2YTVVaTRVVW5tc1ptOHFYM3VzL1d0ZWswWXBlZ3JwL21iY3JFSk1K?=
+ =?utf-8?B?OEJIeWJCT0JQZzZlTHUrVFFYeDJlazNJejdJUXdmd2tQV2dYNjJFUEN6OG5y?=
+ =?utf-8?B?SGRmSi9lOFo3VEpraElTRzlvVWFVZ2I1T1R0ZWxJL2RvRVFDSmRXTDBHMzVU?=
+ =?utf-8?B?R2xuVmI0N3V5M0g1a2xFVVB3OUpsWUQva2QzN2ZPWG1UaUlOOTE5RkNtWGtG?=
+ =?utf-8?B?RE12YmpVV1pYT3JCWjZDeWw2VmhjS244a1BabnlxaDB0NXJERnRoV3QyNGNQ?=
+ =?utf-8?B?TEFyZUNleDFMRDZUemtzZkNyUXRHTXUxM1d0ZFBsNktmeENWRWkvc2t3Q1kx?=
+ =?utf-8?B?Mzl2cnpLSlZsNElsZ2hYeE00TkhGU2RZREI3VWVjYmhBMFRKanRZNE11ZWZ6?=
+ =?utf-8?B?VWxlM2o3dEdsTEp3Z2c4Vm83MGI3ZE55WWsrNW1TNTJ2SlRuck1vTFpvb1g0?=
+ =?utf-8?B?WnpSTmFaajF2VkxFTFRYcjA5MEJtS3pLNjlPZnZMOVVDRmRZdWJPbEFNcU1B?=
+ =?utf-8?B?RzBVV3RFWGhyNERoeGkrbGxvVjc3a3Z1L3Q5MDJON3VXVGtURzJHTTRoaENR?=
+ =?utf-8?B?QVBEUVQrNnFab3hYUUVxS2xTT1hFMHFIc052b0x5c0pnUWJpeW9OcGxMemRv?=
+ =?utf-8?B?cnlpL0dIMThyWUJTR3ZLZEtHOUNBQitEQ2p5WW0yVlh6S1U4SXp3TUdzcXM0?=
+ =?utf-8?B?ZXZCeHJ6bDRpV3NDZzRabm1TNmltUEFtanY3alVZdHRjMGROKzExSHBnMzVz?=
+ =?utf-8?B?cmh0TnF0Kzk0UXpGcE9JREc0TnE0SzBSakhTdnY2KytRcnVuUlQ4ZmJWTTU4?=
+ =?utf-8?B?dmdwNWMrQ2RqeTlZU3FmeDlNRmRCQ2YyZDgwWVpBdTNJZHhkOWtYMG5WQlY1?=
+ =?utf-8?B?b2duSEdBMTlNZGNJY21wMHJzSWw4NWNxTEVsSXlnSTVYMmRrdkt4Zk1PSFNq?=
+ =?utf-8?B?cXJhYnJ0K1JJakdpcC82YU9KWmdXUHl5M3JwK215RXZEazVuYTdCVkZKaENB?=
+ =?utf-8?B?RGh3aDhoa1NTNnRlTURPSzFzMy93L3N1c0E2SWRhKzhiNXNjNEZGaUJpY0xZ?=
+ =?utf-8?Q?C8T1mLExbT6ZiQvzuR2dr/g=3D?=
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0: 4h1lbUV7aoxP8VLwpM40MSDpQImFNdIcZUBs9ZK20hjUjT5Hs0a5yw1FfN/NTx8Slb1pUUSUmKOjiqgP9MkrgZZ9rKhG8NdaGKEcbH7NXZPfvXzBPYaUJrESwJogJtD/6XTX+YKgsRRdSfpkzl2bU1zjiHvCFoCCesBhbt8w/zWIkPCBi+PnLOpprv9eu2byuyT8BGxPEEdnDBdGDe60cl8M4wbNGUf6dARPfHHrZgRy1wKT91JCdH3hOR1v80WEu4CwiCT6iuFIm7ERMaM6Py2VDofFgnHezcRqXRWE39gURSOaiC91tp+agyvtZcH+YYY0FAU0m7dmiCH0A8TqegFW0j27ELWUEJ3NJ9c/5XDry0MN7SIgAht2yTZtEN7aEKw45HdSOLwG/8EcMwY+aYOyiyiuu+dXTn0JKWXjr2trdMO8u+Q54qD0vKfirtnBfioX5YSZG4YDPfKHAIZt71U22aokEiLBS1f06n7ubX+ZlBg7Pb5sdkf61uP3a680ze8BDl9YVDs0kvBeJBp01uS9Cou7bvauLQWyRlKcAgTZmFHgfSUrHWJ0YphTPpRiV0fwMdWN4jfYpXTurx/OJg/EV4ucGzzOWHyL8qxVnXCkt5UEUOZHaCK8myCfPNMN6EuqAZ5uw0lwlcF50iNXT+xRMAFA2yc8sKg62WsARRnKKObS7Rltz4VqhE1h1wtuHMAPctTl3op6/wUAyWWq5YIMD2+JOrE54rNZIphOkiuJxg81L/Jl6ump4GUkuFKe5zN5f3u4lQMdV9Z913a1nqMEzAOMdyZoNwaWWp2uSQGDUQpVYfLgO4IvSs387E18EYQMbkpeuXnfjSVL5nbq38lYRMF+z5vfPSeAr79xZmyZhUeqmjzkpInbgUII1oTr
+X-OriginatorOrg: oracle.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 4b3f8816-a9fa-43a7-5c73-08db8836d69a
+X-MS-Exchange-CrossTenant-AuthSource: BLAPR10MB5267.namprd10.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 19 Jul 2023 09:02:11.4995
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: R58+0v3oGJRCxq+Z9K2r/QPOcLDb9b1SJb0ZOcF0oh1hu3/8hpY2fal+lfV04jf9wFIQZy7SQBPcyPP2DTzq1A==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ0PR10MB5648
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.254,Aquarius:18.0.957,Hydra:6.0.591,FMLib:17.11.176.26
+ definitions=2023-07-19_05,2023-07-18_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ mlxscore=0 adultscore=0 spamscore=0 phishscore=0 bulkscore=0
+ mlxlogscore=999 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2306200000 definitions=main-2307190082
+X-Proofpoint-ORIG-GUID: UUipyJw9d919Rp3F14AXo28CSEO5Qg7G
+X-Proofpoint-GUID: UUipyJw9d919Rp3F14AXo28CSEO5Qg7G
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-From: Chen Lin <chen.lin5@zte.com.cn>
+On 17/07/2023 16:23, Masami Hiramatsu (Google) wrote:
+> Hi,
+> 
+> Here is the 2nd version of series to improve the BTF support on probe events.
+> The previous series is here:
+> 
+> https://lore.kernel.org/linux-trace-kernel/168699521817.528797.13179901018528120324.stgit@mhiramat.roam.corp.google.com/
+> 
+> In this version, I added a NULL check fix patch [1/9] (which will go to
+> fixes branch) and move BTF related API to kernel/bpf/btf.c [2/9] and add
+> a new BTF API [3/9] so that anyone can reuse it.
+> Also I decided to use '$retval' directly instead of 'retval' pseudo BTF
+> variable for field access at [5/9] because I introduced an idea to choose
+> function 'exit' event automatically if '$retval' is used [7/9]. With that
+> change, we can not use 'retval' because if a function has 'retval'
+> argument, we can not decide 'f func retval' is function exit or entry.
 
-When ring_buffer_swap_cpu was called during resize process,
-the cpu buffer was swapped in the middle, resulting in incorrect state.
-Continuing to run in the wrong state will result in oops.
+this is fantastic work! (FWIW I ran into the retval argument issue with
+ksnoop as well; I got around it by using "return" to signify the return
+value since as a reserved word it won't clash with a variable name.
+However in the trace subsystem context retval is used extensively so
+makes sense to stick with that).
 
-This issue can be easily reproduced using the following two scripts:
-/tmp # cat test1.sh
-//#! /bin/sh
-for i in `seq 0 100000`
-do
-         echo 2000 > /sys/kernel/debug/tracing/buffer_size_kb
-         sleep 0.5
-         echo 5000 > /sys/kernel/debug/tracing/buffer_size_kb
-         sleep 0.5
-done
-/tmp # cat test2.sh
-//#! /bin/sh
-for i in `seq 0 100000`
-do
-        echo irqsoff > /sys/kernel/debug/tracing/current_tracer
-        sleep 1
-        echo nop > /sys/kernel/debug/tracing/current_tracer
-        sleep 1
-done
-/tmp # ./test1.sh &
-/tmp # ./test2.sh &
+One thing we should probably figure out is a common approach to handling
+ambiguous static functions that will work across ftrace and BPF.  A few
+edge cases that are worth figuring out:
 
-A typical oops log is as follows, sometimes with other different oops logs.
+1. a static function with the same name exists in multiple modules,
+either with different or identical function signatures
+2. a static function has .isra.0 and other gcc suffixes applied to
+static functions during optimization
 
-[  231.711293] WARNING: CPU: 0 PID: 9 at kernel/trace/ring_buffer.c:2026 rb_update_pages+0x378/0x3f8
-[  231.713375] Modules linked in:
-[  231.714735] CPU: 0 PID: 9 Comm: kworker/0:1 Tainted: G        W          6.5.0-rc1-00276-g20edcec23f92 #15
-[  231.716750] Hardware name: linux,dummy-virt (DT)
-[  231.718152] Workqueue: events update_pages_handler
-[  231.719714] pstate: 60000005 (nZCv daif -PAN -UAO -TCO -DIT -SSBS BTYPE=--)
-[  231.721171] pc : rb_update_pages+0x378/0x3f8
-[  231.722212] lr : rb_update_pages+0x25c/0x3f8
-[  231.723248] sp : ffff800082b9bd50
-[  231.724169] x29: ffff800082b9bd50 x28: ffff8000825f7000 x27: 0000000000000000
-[  231.726102] x26: 0000000000000001 x25: fffffffffffff010 x24: 0000000000000ff0
-[  231.728122] x23: ffff0000c3a0b600 x22: ffff0000c3a0b5c0 x21: fffffffffffffe0a
-[  231.730203] x20: ffff0000c3a0b600 x19: ffff0000c0102400 x18: 0000000000000000
-[  231.732329] x17: 0000000000000000 x16: 0000000000000000 x15: 0000ffffe7aa8510
-[  231.734212] x14: 0000000000000000 x13: 0000000000000000 x12: 0000000000000002
-[  231.736291] x11: ffff8000826998a8 x10: ffff800082b9baf0 x9 : ffff800081137558
-[  231.738195] x8 : fffffc00030e82c8 x7 : 0000000000000000 x6 : 0000000000000001
-[  231.740192] x5 : ffff0000ffbafe00 x4 : 0000000000000000 x3 : 0000000000000000
-[  231.742118] x2 : 00000000000006aa x1 : 0000000000000001 x0 : ffff0000c0007208
-[  231.744196] Call trace:
-[  231.744892]  rb_update_pages+0x378/0x3f8
-[  231.745893]  update_pages_handler+0x1c/0x38
-[  231.746893]  process_one_work+0x1f0/0x468
-[  231.747852]  worker_thread+0x54/0x410
-[  231.748737]  kthread+0x124/0x138
-[  231.749549]  ret_from_fork+0x10/0x20
-[  231.750434] ---[ end trace 0000000000000000 ]---
-[  233.720486] Unable to handle kernel NULL pointer dereference at virtual address 0000000000000000
-[  233.721696] Mem abort info:
-[  233.721935]   ESR = 0x0000000096000004
-[  233.722283]   EC = 0x25: DABT (current EL), IL = 32 bits
-[  233.722596]   SET = 0, FnV = 0
-[  233.722805]   EA = 0, S1PTW = 0
-[  233.723026]   FSC = 0x04: level 0 translation fault
-[  233.723458] Data abort info:
-[  233.723734]   ISV = 0, ISS = 0x00000004, ISS2 = 0x00000000
-[  233.724176]   CM = 0, WnR = 0, TnD = 0, TagAccess = 0
-[  233.724589]   GCS = 0, Overlay = 0, DirtyBit = 0, Xs = 0
-[  233.725075] user pgtable: 4k pages, 48-bit VAs, pgdp=0000000104943000
-[  233.725592] [0000000000000000] pgd=0000000000000000, p4d=0000000000000000
-[  233.726231] Internal error: Oops: 0000000096000004 [#1] PREEMPT SMP
-[  233.726720] Modules linked in:
-[  233.727007] CPU: 0 PID: 9 Comm: kworker/0:1 Tainted: G        W          6.5.0-rc1-00276-g20edcec23f92 #15
-[  233.727777] Hardware name: linux,dummy-virt (DT)
-[  233.728225] Workqueue: events update_pages_handler
-[  233.728655] pstate: 200000c5 (nzCv daIF -PAN -UAO -TCO -DIT -SSBS BTYPE=--)
-[  233.729054] pc : rb_update_pages+0x1a8/0x3f8
-[  233.729334] lr : rb_update_pages+0x154/0x3f8
-[  233.729592] sp : ffff800082b9bd50
-[  233.729792] x29: ffff800082b9bd50 x28: ffff8000825f7000 x27: 0000000000000000
-[  233.730220] x26: 0000000000000000 x25: ffff800082a8b840 x24: ffff0000c0102418
-[  233.730653] x23: 0000000000000000 x22: fffffc000304c880 x21: 0000000000000003
-[  233.731105] x20: 00000000000001f4 x19: ffff0000c0102400 x18: ffff800082fcbc58
-[  233.731727] x17: 0000000000000000 x16: 0000000000000001 x15: 0000000000000001
-[  233.732282] x14: ffff8000825fe0c8 x13: 0000000000000001 x12: 0000000000000000
-[  233.732709] x11: ffff8000826998a8 x10: 0000000000000ae0 x9 : ffff8000801b760c
-[  233.733148] x8 : fefefefefefefeff x7 : 0000000000000018 x6 : ffff0000c03298c0
-[  233.733553] x5 : 0000000000000002 x4 : 0000000000000000 x3 : 0000000000000000
-[  233.733972] x2 : ffff0000c3a0b600 x1 : 0000000000000000 x0 : 0000000000000000
-[  233.734418] Call trace:
-[  233.734593]  rb_update_pages+0x1a8/0x3f8
-[  233.734853]  update_pages_handler+0x1c/0x38
-[  233.735148]  process_one_work+0x1f0/0x468
-[  233.735525]  worker_thread+0x54/0x410
-[  233.735852]  kthread+0x124/0x138
-[  233.736064]  ret_from_fork+0x10/0x20
-[  233.736387] Code: 92400000 910006b5 aa000021 aa0303f7 (f9400060)
-[  233.736959] ---[ end trace 0000000000000000 ]---
+As Alexei mentioned, we're still working on 1, so it would be good
+to figure out a naming scheme that works well in both ftrace and BPF
+contexts. There are a few hundred of these ambiguous functions. My
+reading of the fprobe docs seems to suggest that there is no mechanism
+to specify a specific module for a given symbol (as in ftrace filters),
+is that right?
 
-After analysis, the seq of the error is as follows [1-5]:
+Jiri led a session on this topic at LSF/MM/BPF ; perhaps we should
+carve out some time at Plumbers to discuss this?
 
-int ring_buffer_resize(struct trace_buffer *buffer, unsigned long size,
-			int cpu_id)
-{
-	for_each_buffer_cpu(buffer, cpu) {
-		cpu_buffer = buffer->buffers[cpu];   
-		//1. get cpu_buffer, aka cpu_buffer(A) 
-		...
-		...
-		schedule_work_on(cpu,   
-		 &cpu_buffer->update_pages_work);  
-		//2. 'update_pages_work' is queue on 'cpu', cpu_buffer(A) is passed to
-		// update_pages_handler, do the update process, set 'update_done' in
-		// complete(&cpu_buffer->update_done) and to wakeup resize process.
-	//---->
-		//3. Just at this moment, ring_buffer_swap_cpu is triggered, 
-		//cpu_buffer(A) be swaped to cpu_buffer(B), the max_buffer. 
-		//ring_buffer_swap_cpu is called as the 'Call trace' below.
-		
-		Call trace:
-		 dump_backtrace+0x0/0x2f8
-		 show_stack+0x18/0x28
-		 dump_stack+0x12c/0x188
-		 ring_buffer_swap_cpu+0x2f8/0x328
-		 update_max_tr_single+0x180/0x210
-		 check_critical_timing+0x2b4/0x2c8
-		 tracer_hardirqs_on+0x1c0/0x200
-		 trace_hardirqs_on+0xec/0x378
-		 el0_svc_common+0x64/0x260
-		 do_el0_svc+0x90/0xf8
-		 el0_svc+0x20/0x30
-		 el0_sync_handler+0xb0/0xb8
-		 el0_sync+0x180/0x1c0
-	//<----
-	
-	
-	/* wait for all the updates to complete */
-	for_each_buffer_cpu(buffer, cpu) {
-		cpu_buffer = buffer->buffers[cpu]; 
-		//4. get cpu_buffer, cpu_buffer(B) is used in the following process, 
-		//the state of cpu_buffer(A) and cpu_buffer(B) is totally wrong.
-		//for example, cpu_buffer(A)->update_done will leave be set 1, and will
-		//not 'wait_for_completion' at the next resize round. 
-		  if (!cpu_buffer->nr_pages_to_update)  
-			continue;                            
-												 
-									
-		if (cpu_online(cpu))
-			wait_for_completion(&cpu_buffer->update_done);
-		cpu_buffer->nr_pages_to_update = 0;
-	}
-	...
-}
-	//5. the state of cpu_buffer(A) and cpu_buffer(B) is totally wrong, 
-	//Continuing to run in the wrong state, then oops occurs.
+With respect to 2, pahole v1.25 will generate representations for these
+"."-suffixed functions in BTF via --btf_gen_optimized [1]. (BTF
+representation is skipped if the optimizations impact on the registers
+used for function arguments; if these don't match calling conventions
+due to optimized-out params, we don't represent the function in BTF,
+as the tracing expectations are violated).
 
-Signed-off-by: Chen Lin <chen.lin5@zte.com.cn>
----
- kernel/trace/ring_buffer.c | 14 +++++++++++++-
- kernel/trace/trace.c       |  3 ++-
- 2 files changed, 15 insertions(+), 2 deletions(-)
+However the BTF function name - in line with DWARF representation -
+will not have the .isra suffix. So the thing to bear in mind is if
+you use the function name with suffix as the fprobe function name,
+a BTF lookup of that exact ("foo.isra.0") name will not find anything,
+while a lookup of "foo" will succeed. I'll add some specifics in your
+patch doing the lookups, but just wanted to highlight the issue at
+the top-level.
 
-diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
-index 14d8001140c8..de061dd47313 100644
---- a/kernel/trace/ring_buffer.c
-+++ b/kernel/trace/ring_buffer.c
-@@ -536,6 +536,7 @@ struct trace_buffer {
- 	unsigned			flags;
- 	int				cpus;
- 	atomic_t			record_disabled;
-+	atomic_t			resizing;
- 	cpumask_var_t			cpumask;
+Thanks!
 
- 	struct lock_class_key		*reader_lock_key;
-@@ -2167,7 +2168,7 @@ int ring_buffer_resize(struct trace_buffer *buffer, unsigned long size,
+Alan
 
- 	/* prevent another thread from changing buffer sizes */
- 	mutex_lock(&buffer->mutex);
--
-+	atomic_inc(&buffer->resizing);
+[1]
+https://lore.kernel.org/bpf/1675790102-23037-1-git-send-email-alan.maguire@oracle.com/
 
- 	if (cpu_id == RING_BUFFER_ALL_CPUS) {
- 		/*
-@@ -2322,6 +2323,7 @@ int ring_buffer_resize(struct trace_buffer *buffer, unsigned long size,
- 		atomic_dec(&buffer->record_disabled);
- 	}
-
-+	atomic_dec(&buffer->resizing);
- 	mutex_unlock(&buffer->mutex);
- 	return 0;
-
-@@ -2342,6 +2344,7 @@ int ring_buffer_resize(struct trace_buffer *buffer, unsigned long size,
- 		}
- 	}
-  out_err_unlock:
-+	atomic_dec(&buffer->resizing);
- 	mutex_unlock(&buffer->mutex);
- 	return err;
- }
-@@ -5541,6 +5544,15 @@ int ring_buffer_swap_cpu(struct trace_buffer *buffer_a,
- 	if (local_read(&cpu_buffer_b->committing))
- 		goto out_dec;
-
-+	/*
-+	 * When resize is in progress, we cannot swap it because
-+	 * it will mess the state of the cpu buffer.
-+	 */
-+	if (atomic_read(&buffer_a->resizing))
-+		goto out_dec;
-+	if (atomic_read(&buffer_b->resizing))
-+		goto out_dec;
-+
- 	buffer_a->buffers[cpu] = cpu_buffer_b;
- 	buffer_b->buffers[cpu] = cpu_buffer_a;
-
-diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
-index be847d45d81c..b8870078ef58 100644
---- a/kernel/trace/trace.c
-+++ b/kernel/trace/trace.c
-@@ -1928,9 +1928,10 @@ update_max_tr_single(struct trace_array *tr, struct task_struct *tsk, int cpu)
- 		 * place on this CPU. We fail to record, but we reset
- 		 * the max trace buffer (no one writes directly to it)
- 		 * and flag that it failed.
-+		 * Another reason is resize is in progress.
- 		 */
- 		trace_array_printk_buf(tr->max_buffer.buffer, _THIS_IP_,
--			"Failed to swap buffers due to commit in progress\n");
-+			"Failed to swap buffers due to commit or resize in progress\n");
- 	}
-
- 	WARN_ON_ONCE(ret && ret != -EAGAIN && ret != -EBUSY);
--- 
-2.15.2
+> Selftest test case [8/9] and document [9/9] are also updated according to
+> those changes.
+> 
+> This series can be applied on top of "v6.5-rc2" kernel.
+> 
+> You can also get this series from:
+> 
+> git://git.kernel.org/pub/scm/linux/kernel/git/mhiramat/linux.git topic/fprobe-event-ext
+> 
+> 
+> Thank you,
+> 
+> ---
+> 
+> Masami Hiramatsu (Google) (9):
+>       tracing/probes: Fix to add NULL check for BTF APIs
+>       bpf/btf: tracing: Move finding func-proto API and getting func-param API to BTF
+>       bpf/btf: Add a function to search a member of a struct/union
+>       tracing/probes: Support BTF based data structure field access
+>       tracing/probes: Support BTF field access from $retval
+>       tracing/probes: Add string type check with BTF
+>       tracing/fprobe-event: Assume fprobe is a return event by $retval
+>       selftests/ftrace: Add BTF fields access testcases
+>       Documentation: tracing: Update fprobe event example with BTF field
+> 
+> 
+>  Documentation/trace/fprobetrace.rst                |   50 ++
+>  include/linux/btf.h                                |    7 
+>  kernel/bpf/btf.c                                   |   83 ++++
+>  kernel/trace/trace_fprobe.c                        |   58 ++-
+>  kernel/trace/trace_probe.c                         |  402 +++++++++++++++-----
+>  kernel/trace/trace_probe.h                         |   12 +
+>  .../ftrace/test.d/dynevent/add_remove_btfarg.tc    |   11 +
+>  .../ftrace/test.d/dynevent/fprobe_syntax_errors.tc |    6 
+>  8 files changed, 503 insertions(+), 126 deletions(-)
+> 
+> --
+> Masami Hiramatsu (Google) <mhiramat@kernel.org>
+> 
