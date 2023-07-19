@@ -2,81 +2,179 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C033CEB64DA
-	for <linux-trace-kernel@archiver.kernel.org>; Wed, 19 Jul 2023 13:18:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 069A7C001B0
+	for <linux-trace-kernel@archiver.kernel.org>; Wed, 19 Jul 2023 14:24:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230076AbjGSNSB (ORCPT
+        id S231538AbjGSOYS (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Wed, 19 Jul 2023 09:18:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44702 "EHLO
+        Wed, 19 Jul 2023 10:24:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55302 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231145AbjGSNR6 (ORCPT
+        with ESMTP id S231560AbjGSOYM (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Wed, 19 Jul 2023 09:17:58 -0400
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTP id 57BAC172A;
-        Wed, 19 Jul 2023 06:17:51 -0700 (PDT)
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 3486B2F4;
-        Wed, 19 Jul 2023 06:18:34 -0700 (PDT)
-Received: from [10.57.31.26] (unknown [10.57.31.26])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id D3C2A3F6C4;
-        Wed, 19 Jul 2023 06:17:47 -0700 (PDT)
-Message-ID: <42118979-5f86-75df-72a5-e5fc8592eb82@arm.com>
-Date:   Wed, 19 Jul 2023 14:18:17 +0100
+        Wed, 19 Jul 2023 10:24:12 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 75E222126;
+        Wed, 19 Jul 2023 07:23:51 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id A249F6163F;
+        Wed, 19 Jul 2023 14:23:14 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3EF2CC433C8;
+        Wed, 19 Jul 2023 14:23:12 +0000 (UTC)
+Date:   Wed, 19 Jul 2023 10:23:10 -0400
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     Ajay Kaher <akaher@vmware.com>
+Cc:     "shuah@kernel.org" <shuah@kernel.org>,
+        "mhiramat@kernel.org" <mhiramat@kernel.org>,
+        Ching-lin Yu <chinglinyu@google.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-kselftest@vger.kernel.org" <linux-kselftest@vger.kernel.org>,
+        "linux-trace-kernel@vger.kernel.org" 
+        <linux-trace-kernel@vger.kernel.org>,
+        "lkp@intel.com" <lkp@intel.com>, Nadav Amit <namit@vmware.com>,
+        "oe-lkp@lists.linux.dev" <oe-lkp@lists.linux.dev>,
+        Alexey Makhalov <amakhalov@vmware.com>,
+        "er.ajay.kaher@gmail.com" <er.ajay.kaher@gmail.com>,
+        "srivatsa@csail.mit.edu" <srivatsa@csail.mit.edu>,
+        Tapas Kundu <tkundu@vmware.com>,
+        Vasavi Sirnapalli <vsirnapalli@vmware.com>
+Subject: Re: [PATCH v4 00/10] tracing: introducing eventfs
+Message-ID: <20230719102310.552d3356@gandalf.local.home>
+In-Reply-To: <2CD72098-08E2-4CAA-B74D-D8C44D318117@vmware.com>
+References: <1689248004-8158-1-git-send-email-akaher@vmware.com>
+        <20230714185824.62556254@gandalf.local.home>
+        <883F9774-3E76-4346-9988-2788FAF0D55E@vmware.com>
+        <20230718094005.32516161@gandalf.local.home>
+        <2CD72098-08E2-4CAA-B74D-D8C44D318117@vmware.com>
+X-Mailer: Claws Mail 3.19.1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.11.0
-Subject: Re: [RESEND][PATCH v2 1/3] sched/tp: Add new tracepoint to track
- uclamp set from user-space
-Content-Language: en-US
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
-        rafael@kernel.org, linux-pm@vger.kernel.org, rostedt@goodmis.org,
-        mhiramat@kernel.org, mingo@redhat.com, juri.lelli@redhat.com,
-        vincent.guittot@linaro.org, dietmar.eggemann@arm.com,
-        bsegall@google.com, mgorman@suse.de, bristot@redhat.com,
-        vschneid@redhat.com, delyank@fb.com, qyousef@google.com,
-        Qais Yousef <qyousef@layalina.io>
-References: <20230522145702.2419654-1-lukasz.luba@arm.com>
- <20230522145702.2419654-2-lukasz.luba@arm.com>
- <20230531182629.nztie5rwhjl53v3d@airbuntu>
- <20230706111443.GH2833176@hirez.programming.kicks-ass.net>
-From:   Lukasz Luba <lukasz.luba@arm.com>
-In-Reply-To: <20230706111443.GH2833176@hirez.programming.kicks-ass.net>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
+On Wed, 19 Jul 2023 10:25:28 +0000
+Ajay Kaher <akaher@vmware.com> wrote:
+
+> - Is it also reproducible on v3?
+> - Is it manually reproducible or reproducible using any specific script?
+> 
+> Let me know if I can help.
+
+Just tried it against v3, and it gave me the splat that I originally had
+and starting to fix, which now gives me another splat. I'll spend a couple
+more days on it and start sharing code and seeing if we can work together
+on this.
+
+Here's the reproducer (of both v3 splat and the bug I'm hitting now).
+
+ ~# echo 'p:sock_getattr 0xffffffff9b55cef0 sk=%di' > /sys/kernel/tracing/kprobe_events
+ ~# ls /sys/kernel/debug/tracing/events/kprobes/sock_getattr/
+ ~# echo '-:sock_getattr 0xffffffff9b55cef0 sk=%di' > /sys/kernel/tracing/kprobe_events
+
+v3 gives me (and my updates too)
+
+======================================================
+ WARNING: possible circular locking dependency detected
+ 6.5.0-rc1-test+ #576 Not tainted
+ ------------------------------------------------------
+ trace-cmd/840 is trying to acquire lock:
+ ffff8881007e5de0 (&sb->s_type->i_mutex_key#5){++++}-{3:3}, at: dcache_dir_open_wrapper+0xc1/0x1b0
+ 
+ but task is already holding lock:
+ ffff888103ad7e70 (eventfs_rwsem/1){.+.+}-{3:3}, at: dcache_dir_open_wrapper+0x6f/0x1b0
+ 
+ which lock already depends on the new lock.
+
+ 
+ the existing dependency chain (in reverse order) is:
+ 
+ -> #1 (eventfs_rwsem/1){.+.+}-{3:3}:
+        down_read_nested+0x41/0x180
+        eventfs_root_lookup+0x42/0x120
+        __lookup_slow+0xff/0x1b0
+        walk_component+0xdb/0x150
+        path_lookupat+0x67/0x1a0
+        filename_lookup+0xe4/0x1f0
+        vfs_statx+0x9e/0x180
+        vfs_fstatat+0x51/0x70
+        __do_sys_newfstatat+0x3f/0x80
+        do_syscall_64+0x3a/0xc0
+        entry_SYSCALL_64_after_hwframe+0x6e/0xd8
+ 
+ -> #0 (&sb->s_type->i_mutex_key#5){++++}-{3:3}:
+        __lock_acquire+0x165d/0x2390
+        lock_acquire+0xd4/0x2d0
+        down_write+0x3b/0xd0
+        dcache_dir_open_wrapper+0xc1/0x1b0
+        do_dentry_open+0x20c/0x510
+        path_openat+0x7ad/0xc60
+        do_filp_open+0xaf/0x160
+        do_sys_openat2+0xab/0xe0
+        __x64_sys_openat+0x6a/0xa0
+        do_syscall_64+0x3a/0xc0
+        entry_SYSCALL_64_after_hwframe+0x6e/0xd8
+ 
+ other info that might help us debug this:
+
+  Possible unsafe locking scenario:
+
+        CPU0                    CPU1
+        ----                    ----
+   rlock(eventfs_rwsem/1);
+                                lock(&sb->s_type->i_mutex_key#5);
+                                lock(eventfs_rwsem/1);
+   lock(&sb->s_type->i_mutex_key#5);
+ 
+  *** DEADLOCK ***
+
+ 1 lock held by trace-cmd/840:
+  #0: ffff888103ad7e70 (eventfs_rwsem/1){.+.+}-{3:3}, at: dcache_dir_open_wrapper+0x6f/0x1b0
+ 
+ stack backtrace:
+ CPU: 7 PID: 840 Comm: trace-cmd Not tainted 6.5.0-rc1-test+ #576
+ Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.2-debian-1.16.2-1 04/01/2014
+ Call Trace:
+  <TASK>
+  dump_stack_lvl+0x57/0x90
+  check_noncircular+0x14b/0x160
+  __lock_acquire+0x165d/0x2390
+  lock_acquire+0xd4/0x2d0
+  ? dcache_dir_open_wrapper+0xc1/0x1b0
+  down_write+0x3b/0xd0
+  ? dcache_dir_open_wrapper+0xc1/0x1b0
+  dcache_dir_open_wrapper+0xc1/0x1b0
+  ? __pfx_dcache_dir_open_wrapper+0x10/0x10
+  do_dentry_open+0x20c/0x510
+  path_openat+0x7ad/0xc60
+  do_filp_open+0xaf/0x160
+  do_sys_openat2+0xab/0xe0
+  __x64_sys_openat+0x6a/0xa0
+  do_syscall_64+0x3a/0xc0
+  entry_SYSCALL_64_after_hwframe+0x6e/0xd8
+ RIP: 0033:0x7f1743267e41
+ Code: 44 24 18 31 c0 41 83 e2 40 75 3e 89 f0 25 00 00 41 00 3d 00 00 41 00 74 30 89 f2 b8 01 01 00 00 48 89 fe bf 9c ff ff ff 0f 05 <48> 3d 00 f0 ff ff 77 3f 48 8b 54 24 18 64 48 2b 14 25 28 00 00 00
+ RSP: 002b:00007ffec10ff5d0 EFLAGS: 00000287 ORIG_RAX: 0000000000000101
+ RAX: ffffffffffffffda RBX: 0000000000000000 RCX: 00007f1743267e41
+ RDX: 0000000000090800 RSI: 00007ffec10ffdb0 RDI: 00000000ffffff9c
+ RBP: 00007ffec10ffda0 R08: 00007ffec11003e0 R09: 0000000000000040
+ R10: 0000000000000000 R11: 0000000000000287 R12: 00007ffec11003e0
+ R13: 0000000000000040 R14: 0000000000000000 R15: 00007ffec110034b
+  </TASK>
 
 
-On 7/6/23 12:14, Peter Zijlstra wrote:
-> On Wed, May 31, 2023 at 07:26:29PM +0100, Qais Yousef wrote:
->> On 05/22/23 15:57, Lukasz Luba wrote:
->>> The user-space can set uclamp value for a given task. It impacts task
->>> placement decisions made by the scheduler. This is very useful information
->>> and helps to understand the system behavior or track improvements in
->>> middleware and applications which start using uclamp mechanisms and report
->>> better performance in tests.
->>
->> Do you mind adding a generic one instead please? And explain why we can't just
->> attach to the syscall via kprobes? I think you want to bypass the permission
->> checks, so maybe a generic tracepoint after that might be justifiable?
->> Then anyone can use it to track how userspace has changed any attributes for
->> a task, not just uclamp.
-> 
-> Yeah, so I'm leaning towards the same, if you want to put a tracepoint
-> in __sched_setscheduler(), just trace the whole attr and leave it at
-> that:
-> 
-> 	trace_update_sched_attr_tp(p, attr);
-> 
-> or somesuch.
-> 
+I moved the code around a bit, and it appears that kprobes is getting
+dput() more than once.
 
-OK, fair enough, I'll do that. Thanks Peter!
-(I'm sorry for the delay, I was on vacation)
+I moved the d_invalidate() and dput() into the workqueue function, and on
+kprobes going away, d_invalidate() frees it, and dput() is now corrupted.
 
-Lukasz
+Still investigating. The VFS layer is a magic box that needs the right
+wizard hat to deal with, but I unfortunately am waiting on back order to
+retrieve that specific hat :-p
+
+-- Steve
