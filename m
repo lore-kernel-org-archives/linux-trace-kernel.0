@@ -2,234 +2,231 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FF83EB64DD
-	for <linux-trace-kernel@archiver.kernel.org>; Thu, 20 Jul 2023 08:58:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 45E0DEB64DA
+	for <linux-trace-kernel@archiver.kernel.org>; Thu, 20 Jul 2023 13:01:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231179AbjGTI6s (ORCPT
+        id S231199AbjGTNBW (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Thu, 20 Jul 2023 04:58:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38348 "EHLO
+        Thu, 20 Jul 2023 09:01:22 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57100 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231428AbjGTIy1 (ORCPT
+        with ESMTP id S229983AbjGTNBV (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Thu, 20 Jul 2023 04:54:27 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7985D26A2;
-        Thu, 20 Jul 2023 01:54:25 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 03E4E61900;
-        Thu, 20 Jul 2023 08:54:25 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C7CBDC433C8;
-        Thu, 20 Jul 2023 08:54:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1689843264;
-        bh=nLUVvJJOl4QJGI6Kn3sQ8QCjl89R0J5mJFa8dm5XKOw=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=PuKy3faF1XLn+PHZ7cjaF0uhzIpt8UmxXHlCkcxcysHntuAtgxenMOR0jiqzOaym1
-         WMWgGa+uRvXPjZrWBFBGv038GXrBCyQv80gd0Hc45CQIyyzeMQ82Xaq3ITNm+SYtxo
-         7gvtuugiUYygCScpbVFonOTqCAun5VzD6KVdXP8kD65xKrylzVr11GmSFEDCzkxtVT
-         Q5YLU8AzeJyj7oiLMJZZJ6aCwC/Qi2kX+Q8rqNd9QgbjenTCySbXtXzS2WeAv6NkFU
-         XQgNFCeQsS6eP/C71+pUsdXl355/AKUAswk/sIPsN/gxf6FufuEDrrFaYRAvJ0ZCdI
-         ibNd7XIk2nm/g==
-Date:   Thu, 20 Jul 2023 11:53:52 +0300
-From:   Mike Rapoport <rppt@kernel.org>
-To:     Mark Rutland <mark.rutland@arm.com>
-Cc:     Kent Overstreet <kent.overstreet@linux.dev>,
-        linux-kernel@vger.kernel.org,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Christophe Leroy <christophe.leroy@csgroup.eu>,
-        "David S. Miller" <davem@davemloft.net>,
-        Dinh Nguyen <dinguyen@kernel.org>,
-        Heiko Carstens <hca@linux.ibm.com>,
-        Helge Deller <deller@gmx.de>,
-        Huacai Chen <chenhuacai@kernel.org>,
+        Thu, 20 Jul 2023 09:01:21 -0400
+Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 486B110D2;
+        Thu, 20 Jul 2023 06:01:20 -0700 (PDT)
+Received: from pps.filterd (m0246631.ppops.net [127.0.0.1])
+        by mx0b-00069f02.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 36K94GGN032453;
+        Thu, 20 Jul 2023 13:01:01 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
+ subject : references : date : in-reply-to : message-id : content-type :
+ mime-version; s=corp-2023-03-30;
+ bh=mSqTuZr1ONTscDvmcV4YoKIJ9qZJCYFEkfNTx9lEBRw=;
+ b=jBh6oIPKz4y5R4CvKlp3G80aG+GJkJj2OsTSDXH4xP3swlTiyaCTRFiHudg5yD2Rjpsq
+ b+gMOOZczAFvtlEs35yaRG+UeKbwieetgrR2MYGtdSXn1UScfWmFMLZvIAVXDnWJlIRp
+ QGvUOoeLNrUBHkPL6V/E/tS27EVUwzgE/IQdkx9rwltpNVKI7OXjRj3Ajy94ijZdq+Yr
+ yE1EmEa2NaPJTqkWBfsf2AlRonJW7lygSZGM5vK8HmuWASis+G+Mo2U3pqueKB/UlwrR
+ msjbyHVwdXovQjqw3YC8eJijyqzIGPBOXis55MV+MW93oat2eTP5L3XsW+yoIHbDpJXz Qw== 
+Received: from phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta01.appoci.oracle.com [138.1.114.2])
+        by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3run8a9q7w-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 20 Jul 2023 13:01:00 +0000
+Received: from pps.filterd (phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
+        by phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (8.17.1.19/8.17.1.19) with ESMTP id 36KBQRF6038227;
+        Thu, 20 Jul 2023 13:00:59 GMT
+Received: from nam11-bn8-obe.outbound.protection.outlook.com (mail-bn8nam11lp2168.outbound.protection.outlook.com [104.47.58.168])
+        by phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 3ruhw8ma58-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 20 Jul 2023 13:00:59 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=L1WhzPsfvXgRx4bO19a16BQyhR+a8OxRDkB1Cm6kXDUEA1uoxcWCN3DSuhnsws2vcGlK1IAqez+5B3LDSY5hlFjFHyxt6jgf7CoyzDczugEM24gcleBO4dA76j6anFRftuVxhMz7Ifyj1tTdMLDv+texfu+nTKOmb5NQltJ93DzsjdtJwYRUdpj5PUxPVZIhwokALJ9Qd2C47M8ReNF+vzZNeHhIW3aDudAmOqs//NiXqUeHC1BVvUbnmB3aSkGMZFhWj0Nr2LapoHasQp9pUdfGuAfdf0ns2oqyQdycwASG8noMkJLoeRVlDXJF2VF4f+Dk+uI9FQdNRmKnFN/J/g==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=mSqTuZr1ONTscDvmcV4YoKIJ9qZJCYFEkfNTx9lEBRw=;
+ b=AxPxXFVfwbURZxi+XUNaxopwi3rF2JlJLMdMcd2RVXxNrH1aOng/VhIO7yWYDWdHdo6V4QF3mPNnQyLDlseDyLxhNiULDLKYPOLp/5bId4Pb0XCPcrC3qbLR+AvCahwHNi4WVPxUBGJ7QLPGMR8EXQ3A/+ivhS27w5PXegMFM5Z5Xba+oFt0i0Pt1AU1dZUVq91vkNu7/lf9LP4gDqKWX/nGjU6NKIfi512AT/hEw+DAGrhjvyHDaFJff0nKptDleeRXJDRK8AbL3x9ClwIOCT5doFdk7Km9MYjPu93h/1UHWJXSRLQ106n8P2CgIDmwnaGp2J8X2mODr+t1m0gInA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
+ dkim=pass header.d=oracle.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=mSqTuZr1ONTscDvmcV4YoKIJ9qZJCYFEkfNTx9lEBRw=;
+ b=iX2lVNngUbvTvGJ6g/RiP1ZPIixGM+EAvgoSOfu1Iyd3DNwlUV16TAR5/Hsg9UjE5KOkSatvBCkh2PtJOEp8lkzLm6gSpztws9QfaQ1xj8YePTri/STdxJT9I02ChCixvJi38hPlCvkemN/sFtdKFUPs290J/Yr6jYUAAhSuWe8=
+Received: from DS0PR10MB6798.namprd10.prod.outlook.com (2603:10b6:8:13c::20)
+ by SJ0PR10MB5767.namprd10.prod.outlook.com (2603:10b6:a03:3ef::6) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6588.28; Thu, 20 Jul
+ 2023 13:00:54 +0000
+Received: from DS0PR10MB6798.namprd10.prod.outlook.com
+ ([fe80::d301:aff1:6e01:417d]) by DS0PR10MB6798.namprd10.prod.outlook.com
+ ([fe80::d301:aff1:6e01:417d%5]) with mapi id 15.20.6588.031; Thu, 20 Jul 2023
+ 13:00:54 +0000
+From:   Nick Alcock <nick.alcock@oracle.com>
+To:     Alexander Lobakin <aleksander.lobakin@intel.com>
+Cc:     Alessandro Carminati <alessandro.carminati@gmail.com>,
         Luis Chamberlain <mcgrof@kernel.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        "Naveen N. Rao" <naveen.n.rao@linux.ibm.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Russell King <linux@armlinux.org.uk>,
-        Song Liu <song@kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Will Deacon <will@kernel.org>, bpf@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-mips@vger.kernel.org,
-        linux-mm@kvack.org, linux-modules@vger.kernel.org,
-        linux-parisc@vger.kernel.org, linux-riscv@lists.infradead.org,
-        linux-s390@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, loongarch@lists.linux.dev,
-        netdev@vger.kernel.org, sparclinux@vger.kernel.org, x86@kernel.org
-Subject: Re: [PATCH 00/13] mm: jit/text allocator
-Message-ID: <20230720085352.GN1901145@kernel.org>
-References: <20230601101257.530867-1-rppt@kernel.org>
- <ZHjDU/mxE+cugpLj@FVFF77S0Q05N.cambridge.arm.com>
- <ZHjgIH3aX9dCvVZc@moria.home.lan>
- <ZHm3zUUbwqlsZBBF@FVFF77S0Q05N>
- <20230605092040.GB3460@kernel.org>
- <ZH20XkD74prrdN4u@FVFF77S0Q05N>
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Nathan Chancellor <nathan@kernel.org>,
+        "Nick Desaulniers" <ndesaulniers@google.com>,
+        Nicolas Schier <nicolas@fjasle.eu>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Daniel Bristot de Oliveira <bristot@kernel.org>,
+        Viktor Malik <vmalik@redhat.com>,
+        <linux-kernel@vger.kernel.org>, <linux-kbuild@vger.kernel.org>,
+        <linux-trace-kernel@vger.kernel.org>, <eugene.loh@oracle.com>,
+        <kris.van.hees@oracle.com>, <live-patching@vger.kernel.org>
+Subject: Re: [PATCH v2] scripts/link-vmlinux.sh: Add alias to duplicate
+ symbols for kallsyms
+References: <ZLVxUQiC5iF+xTPQ@bombadil.infradead.org>
+        <20230714150326.1152359-1-alessandro.carminati@gmail.com>
+        <20230717105240.3d986331@gandalf.local.home>
+        <874jm088ah.fsf@esperi.org.uk>
+        <6edbfe7b-aec4-2b3c-2f85-42e418ab3d99@intel.com>
+Emacs:  because extension languages should come with the editor built in.
+Date:   Thu, 20 Jul 2023 14:00:46 +0100
+In-Reply-To: <6edbfe7b-aec4-2b3c-2f85-42e418ab3d99@intel.com> (Alexander
+        Lobakin's message of "Wed, 19 Jul 2023 17:12:33 +0200")
+Message-ID: <87wmyu7n5t.fsf@esperi.org.uk>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/28.3 (gnu/linux)
+Content-Type: text/plain
+X-ClientProxiedBy: LO4P123CA0450.GBRP123.PROD.OUTLOOK.COM
+ (2603:10a6:600:1a9::23) To DS0PR10MB6798.namprd10.prod.outlook.com
+ (2603:10b6:8:13c::20)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ZH20XkD74prrdN4u@FVFF77S0Q05N>
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DS0PR10MB6798:EE_|SJ0PR10MB5767:EE_
+X-MS-Office365-Filtering-Correlation-Id: d8ec4dc5-14c7-4ef0-d5c7-08db892159c9
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: bXMMsjilORCnruVXS/bhqP1WcIvqEdzC6qQRQJJs5KIc2iOr9NpQMSfKtB3gY/bUq4YEUkzJANqfCBU/ThLDvw5l2jvC9g/cM9ILnh1HJwbXPkiP+PKC/3LfdVqtNPx0eMFGIjl+yywTkbJKlQTCf5dJ24YRwBHroXpx5FoL473xQOwPY7gidXxQwcwKzsRC9V5yTwNHs5W2N9zcsiLGx0ajo/EsouzFRe6FRvdIb71qCJdX4e+PF2jJdKl7S6b3RxzsRLfgquR/557Eb54s/xoxpDWFpfwHjz5TM1yGzROGBBhg/bQVA1ABZR8aKdi3M61Eta6faGPFHsrBFjNlT2cgnjPJYijrwe9mSY053hvqMflsWadqutN6rqq6wuYAyFgjOoEJmWeRWe2k/0kMGB0DtVlwN7gaFe8Al+v0usRxhzNOUDqlEU4VIEoEGk7uVMTA+m1eUf+M5p2BrodfdojztxgXW30UG0Zo/2kPfY/IDsDbupZsrEpqyKHMX9X+Ux6eD9oJVrFYE17eeBpYIe8PdTjUQSaNnICGty1Z1tGWXK+kGovdSVY5QnlObzap
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS0PR10MB6798.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230028)(396003)(136003)(366004)(39860400002)(376002)(346002)(451199021)(8936002)(2906002)(36756003)(44832011)(6666004)(186003)(83380400001)(6506007)(6512007)(9686003)(6486002)(5660300002)(54906003)(38100700002)(7416002)(478600001)(86362001)(8676002)(66556008)(316002)(6916009)(66476007)(66946007)(41300700001)(4326008);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?YTaVD0EhR0d1VRn/wwDYNUqlyfnAAQheIeEWIBg3cKlidxE98qUSLrEi1CvB?=
+ =?us-ascii?Q?TVv7uFfXd3BkPXI5qTDq2uFWj+A2sdMlrXaE/6QFDc31Ddhd3sl1q7EbEtr5?=
+ =?us-ascii?Q?QxUAlWsr3+UtEkiA+DXvMAmYosZCTlcOaaA8OBHK6VTu5m6sc85kc6TxYu6B?=
+ =?us-ascii?Q?ILpcXx1ke0ulxvS7MGhc+tomu1Tw+l4h8R+pswgVVTLjEpWIRqgdOEg8m+BJ?=
+ =?us-ascii?Q?RJU+t6GA1P8Wbwp1RYsZouLYbJmsqx1a48EBOci4QpXiQ3Da3oLUrlg2IbdI?=
+ =?us-ascii?Q?+LfRmrXW2AS1ORM79IthWnt1i0D1iWPrf0Dk+3EW6gmzV3aKnZR9rVIp3zWh?=
+ =?us-ascii?Q?CwInZp9vreL+V24bJ6oyHfkjzduiAs1Edgc2+/QgxDvWA0XcjKBkt+aMShIn?=
+ =?us-ascii?Q?WYFlomuZ4nBkRQlTOrL9f1EnjuDH1dsYjrNv6cLmlMA6g2OmgFYAo/VRoRHX?=
+ =?us-ascii?Q?H5oJitA7qoYE7inwBARyhtlst0bxIOhV1yDh91jiaJAQOnWzXyVz/sagHjwM?=
+ =?us-ascii?Q?GQkgzif279OKaTqacGD/6ARuglli4fxJSy1b0TLOaC5+aKmPOTRBCAvyQgKw?=
+ =?us-ascii?Q?x/wtCJ8O4WNKc9FXGTafYoPWexIx8eloaEqSb/77mQEuKsvZKmfhlrrGbuBZ?=
+ =?us-ascii?Q?8ykZZ0hrUg83noxEstyypJ4atSCaQp8S9jt1LsbkWoJCDmZ7A3xH3eEWTTK5?=
+ =?us-ascii?Q?JXifBoCVT8aL84cGRt49Kj78qzzGJSpZaoICQGqrU1qfMmbIayXF1cX242Mi?=
+ =?us-ascii?Q?7POUK6kiJLbPI7KKS9DFamZCgIJ1enkJ7zb2DST1JKcQgmmngjyHVuB4InM5?=
+ =?us-ascii?Q?UFZDFBUUE0UDOZ26EGKUU/iXN5FfB8698/OT9RRVKqm93Sc7J1uFjFIfwrfX?=
+ =?us-ascii?Q?N3k9mCfxlEHKowz6ML2o8kZwioZzjiQAWCopGhkDMDKGv/AJjx7Z7nEHo9V8?=
+ =?us-ascii?Q?24il9xKBjf/tp8VYznUR0MB3Gp2hCelfWA5nuP3b7ISWJiO7bakjy+kCKqbF?=
+ =?us-ascii?Q?MOYC2gRZWpbfbHbY9+p2skx2uGMI+pynv7q2r6+tmpnexqzoIlafU35J260J?=
+ =?us-ascii?Q?gLJM7FUFa9cNVUO5RraFjQEBIqW2l4ImxesPhGJd3PPviN6N2Vnkqsoype4d?=
+ =?us-ascii?Q?OvJ0tG64w+qyPfFsX4C4lQUHQXUSDZRmGnVsbDrX5fYA467iMzbyshCAn68i?=
+ =?us-ascii?Q?xO+psWBFU+JEBQSthMe0COovMxfmMGsAnjmCb/r+BmMqcwOBUerqxz69W6yz?=
+ =?us-ascii?Q?ObesMq8SqReVGy9mqvt1ed0CcC0p9h43RAK7x3acZ2SrXYHLOcMparCovcyR?=
+ =?us-ascii?Q?kEqyH5+frCN59Xb5nkDAhtPNW9xr9I8+PqCto8WZdbIoBqyvf0MbjsoC9vgx?=
+ =?us-ascii?Q?Hcn+KttNqjouqAvhX/PcZO3CNCdwavvwNdHFPaBJzwVzOsGGjVDINZIWJGlM?=
+ =?us-ascii?Q?uQC3St8CS2JG+jVjjbhgz89viQS3iJntHouS3Wtoodae9u5qkQ2ZT4rYSa+y?=
+ =?us-ascii?Q?TbDd1Aiqb1tZ380gCctrFuihEviMC3irTcY7Z7cHE+rSIQe5r3vvt4zKu8Bc?=
+ =?us-ascii?Q?mc/ATFLVVNzAIirRVoWNZ+WMJE6QeQjD6hY8Nr2/UEfg8TgGUIJrSP8XnoRo?=
+ =?us-ascii?Q?MQ=3D=3D?=
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0: =?us-ascii?Q?3Jw6fZy5NSjdG1balrfXhv0c35I/4zRlo45IiYshXTWIrZMtzKUBXAEUKlpK?=
+ =?us-ascii?Q?f2jzkHZMJE3tRBQOo+5mKcCLMlWztCYhw2k3Y6lK/LfW4TtdG/DdDRGo5GUE?=
+ =?us-ascii?Q?/uSCB1AuGrGCHY340xdbYhSMLmv7M3BjX91QQ1JtLRQPdxoaSgUajURPgCts?=
+ =?us-ascii?Q?c3VD1tw7KKoWQu+rpnbBj78qRlWEvxGlYJ3gPdfPSo2MFdKHEhYAXjZTIg0E?=
+ =?us-ascii?Q?l+Qq3jk6PCplzeouaOyrzttiLjpiQ1jCBgR7uAoFK9jBknrzaGVowhjI78CR?=
+ =?us-ascii?Q?8x/WoH+iHTC9z7Ymfopq6YZc01hXuIg2UkiBFYaCzqWadxkwfKVb4c2XlKxR?=
+ =?us-ascii?Q?QeIwgvrgzvKnMNiKc69sVscc1Mj9C4Dbs3yEBlPi1w/MOD36CjA0uUw022hi?=
+ =?us-ascii?Q?2t6gQUU/8s5eSdKGmaUA4ANa20F6Zkzvs7gSaE0NAugh8MhhnstoCz2GGOc6?=
+ =?us-ascii?Q?u9fARxjNOSGk6jgmfHe7iYMfj/WNHYaPa++JLR4jEJPE3RFiQrcUJ7IJjOAY?=
+ =?us-ascii?Q?7pyBijpwjHHnSqdfphVm5R+0oU1luDEa4FMIMDeYaHaXLbctGk0CWM1UpHfC?=
+ =?us-ascii?Q?Jcr+WGNmwAMPAPlsrGRHJ8ZDZ6itcMWOvOmrSrzzQhBagrWyUf16F532nryA?=
+ =?us-ascii?Q?f0CPlGUmcapB2y8B5eCiJEsNDugRBLpQQf5IO/jsIVKOCsFTSFLMvtMzYF1E?=
+ =?us-ascii?Q?dsUsr5uZXGx18xnOu7+O0kcMHv+T1xCz7jHBMOBDSWbg4NXqtatwhK8fJW8B?=
+ =?us-ascii?Q?RUqFYh6Ckwf2TM1Wh1PpyoY0Kaq01YCHbF1Jhb66YLleQ6llDzL4/CP+1xXx?=
+ =?us-ascii?Q?bGuvGFD3Y4ZAB3B1ZMkrc8GxSEUnUEALfsmjIctlbJRGG6TzFGJCNuMI3Hlm?=
+ =?us-ascii?Q?72AqAL8WmM/TwPWR4+tmN8g0kYWR6DoEC5y4csbaROqrCAc3XJNMLSZWUeM6?=
+X-OriginatorOrg: oracle.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: d8ec4dc5-14c7-4ef0-d5c7-08db892159c9
+X-MS-Exchange-CrossTenant-AuthSource: DS0PR10MB6798.namprd10.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 20 Jul 2023 13:00:54.1793
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: ILZ7RxmU6lR+ziX//0RusUmLiIspHCTIgch3t4FFZMVOEXpG2Uuqnp8XSz4IiL9/wvcKmYfVmXRB8DOGRut1PA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ0PR10MB5767
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.254,Aquarius:18.0.957,Hydra:6.0.591,FMLib:17.11.176.26
+ definitions=2023-07-20_06,2023-07-20_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 mlxscore=0 phishscore=0
+ adultscore=0 spamscore=0 bulkscore=0 malwarescore=0 mlxlogscore=999
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2306200000
+ definitions=main-2307200109
+X-Proofpoint-ORIG-GUID: 1xmZyaoXs1i1-qQKlSWS_jku6kc1nWhR
+X-Proofpoint-GUID: 1xmZyaoXs1i1-qQKlSWS_jku6kc1nWhR
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On Mon, Jun 05, 2023 at 11:09:34AM +0100, Mark Rutland wrote:
-> On Mon, Jun 05, 2023 at 12:20:40PM +0300, Mike Rapoport wrote:
-> > On Fri, Jun 02, 2023 at 10:35:09AM +0100, Mark Rutland wrote:
-> > > On Thu, Jun 01, 2023 at 02:14:56PM -0400, Kent Overstreet wrote:
-> > > > On Thu, Jun 01, 2023 at 05:12:03PM +0100, Mark Rutland wrote:
-> > > > > For a while I have wanted to give kprobes its own allocator so that it can work
-> > > > > even with CONFIG_MODULES=n, and so that it doesn't have to waste VA space in
-> > > > > the modules area.
-> > > > > 
-> > > > > Given that, I think these should have their own allocator functions that can be
-> > > > > provided independently, even if those happen to use common infrastructure.
-> > > > 
-> > > > How much memory can kprobes conceivably use? I think we also want to try
-> > > > to push back on combinatorial new allocators, if we can.
-> > > 
-> > > That depends on who's using it, and how (e.g. via BPF).
-> > > 
-> > > To be clear, I'm not necessarily asking for entirely different allocators, but
-> > > I do thinkg that we want wrappers that can at least pass distinct start+end
-> > > parameters to a common allocator, and for arm64's modules code I'd expect that
-> > > we'd keep the range falblack logic out of the common allcoator, and just call
-> > > it twice.
-> > > 
-> > > > > > Several architectures override module_alloc() because of various
-> > > > > > constraints where the executable memory can be located and this causes
-> > > > > > additional obstacles for improvements of code allocation.
-> > > > > > 
-> > > > > > This set splits code allocation from modules by introducing
-> > > > > > jit_text_alloc(), jit_data_alloc() and jit_free() APIs, replaces call
-> > > > > > sites of module_alloc() and module_memfree() with the new APIs and
-> > > > > > implements core text and related allocation in a central place.
-> > > > > > 
-> > > > > > Instead of architecture specific overrides for module_alloc(), the
-> > > > > > architectures that require non-default behaviour for text allocation must
-> > > > > > fill jit_alloc_params structure and implement jit_alloc_arch_params() that
-> > > > > > returns a pointer to that structure. If an architecture does not implement
-> > > > > > jit_alloc_arch_params(), the defaults compatible with the current
-> > > > > > modules::module_alloc() are used.
-> > > > > 
-> > > > > As above, I suspect that each of the callsites should probably be using common
-> > > > > infrastructure, but I don't think that a single jit_alloc_arch_params() makes
-> > > > > sense, since the parameters for each case may need to be distinct.
-> > > > 
-> > > > I don't see how that follows. The whole point of function parameters is
-> > > > that they may be different :)
-> > > 
-> > > What I mean is that jit_alloc_arch_params() tries to aggregate common
-> > > parameters, but they aren't actually common (e.g. the actual start+end range
-> > > for allocation).
-> > 
-> > jit_alloc_arch_params() tries to aggregate architecture constraints and
-> > requirements for allocations of executable memory and this exactly what
-> > the first 6 patches of this set do.
-> > 
-> > A while ago Thomas suggested to use a structure that parametrizes
-> > architecture constraints by the memory type used in modules [1] and Song
-> > implemented the infrastructure for it and x86 part [2].
-> > 
-> > I liked the idea of defining parameters in a single structure, but I
-> > thought that approaching the problem from the arch side rather than from
-> > modules perspective will be better starting point, hence these patches.
-> > 
-> > I don't see a fundamental reason why a single structure cannot describe
-> > what is needed for different code allocation cases, be it modules, kprobes
-> > or bpf. There is of course an assumption that the core allocations will be
-> > the same for all the users, and it seems to me that something like 
-> > 
-> > * allocate physical memory if allocator caches are empty
-> > * map it in vmalloc or modules address space
-> > * return memory from the allocator cache to the caller
-> > 
-> > will work for all usecases.
-> > 
-> > We might need separate caches for different cases on different
-> > architectures, and a way to specify what cache should be used in the
-> > allocator API, but that does not contradict a single structure for arch
-> > specific parameters, but only makes it more elaborate, e.g. something like
-> > 
-> > enum jit_type {
-> > 	JIT_MODULES_TEXT,
-> > 	JIT_MODULES_DATA,
-> > 	JIT_KPROBES,
-> > 	JIT_FTRACE,
-> > 	JIT_BPF,
-> > 	JIT_TYPE_MAX,
-> > };
-> > 
-> > struct jit_alloc_params {
-> > 	struct jit_range	ranges[JIT_TYPE_MAX];
-> > 	/* ... */
-> > };
-> > 
-> > > > Can you give more detail on what parameters you need? If the only extra
-> > > > parameter is just "does this allocation need to live close to kernel
-> > > > text", that's not that big of a deal.
-> > > 
-> > > My thinking was that we at least need the start + end for each caller. That
-> > > might be it, tbh.
-> > 
-> > Do you mean that modules will have something like
-> > 
-> > 	jit_text_alloc(size, MODULES_START, MODULES_END);
-> > 
-> > and kprobes will have
-> > 
-> > 	jit_text_alloc(size, KPROBES_START, KPROBES_END);
-> > ?
-> 
-> Yes.
-> 
-> > It sill can be achieved with a single jit_alloc_arch_params(), just by
-> > adding enum jit_type parameter to jit_text_alloc().
-> 
-> That feels backwards to me; it centralizes a bunch of information about
-> distinct users to be able to shove that into a static array, when the callsites
-> can pass that information. 
-> 
-> What's *actually* common after separating out the ranges? Is it just the
-> permissions?
+On 19 Jul 2023, Alexander Lobakin verbalised:
 
-Even if for some architecture the only common thing are the permissions,
-having a definition for code allocations in a single place an improvement.
-The diffstat of the patches is indeed positive (even without comments), but
-having a single structure that specifies how the code should be allocated
-would IMHO actually reduce the maintenance burden.
+> From: Nick Alcock <nick.alcock@oracle.com>
+> Date: Wed, 19 Jul 2023 12:12:06 +0100
+>>> Yes, please coordinate with Nick and review each other's work, now we
+>>> have two separate efforts with different reasons but hopefully we'll
+>
+> Three efforts[0] :D Mine went unnoticed unfortunately, so I switched to
+> other projects then.
 
-And features like caching of large pages and sub-page size allocations are
-surely will be easier to opt-in this way.
- 
-> If we want this to be able to share allocations and so on, why can't we do this
-> like a kmem_cache, and have the callsite pass a pointer to the allocator data?
-> That would make it easy for callsites to share an allocator or use a distinct
-> one.
+It's odd, nobody seems to have noticed these until recently and now
+suddenly people are crawling out of the woodwork wanting unique
+addresses :) maybe the ambiguous ones are just getting commonplace
+enough that they're biting people more often?
 
-I've looked into doing this like a kmem_cache with call sites passing the
-allocator data, and this gets really hairy. For each user we need to pass
-the arch specific parameters to that user, create a cache there and only
-then the cache can be used. Since we don't have hooks to setup any of the
-users in the arch code, the initialization gets more complex than shoving
-everything into an array.
+> My idea was to give relative path from the kernel root to the objfile,
+> as we have a good bunch of non-unique "filename + symbol name" pairs.
 
-I think that jit_alloc(type, size) is the best way to move forward to let
-different users choose their ranges and potentially caches. Differentiation
-by the API name will explode even now and it'll get worse if/when new users
-will show up and we can't even force users to avoid using PC-relative
-addressing because, e.g. RISC-V explicitly switched their BPF JIT to use
-that.
- 
-> Thanks,
-> Mark.
+I considered that, but unfortunately that has two problems to a raging
+perfectionist like me:
 
--- 
-Sincerely yours,
-Mike.
+ - the objfile probably won't exist except if you're actually doing
+   kernel development, since kernel build trees are big enough that a
+   lot of people delete them after building or ship kernels to other
+   machines: if someone else built your kernel (overwhelmingly common
+   among non-kernel-devs) the objfiles are sure to be absent. (But an
+   option to not truncate the names when you know they won't be absent
+   might be a good idea, though this pushes space requirements up by
+   hundreds of kilobytes so it should probably be off by default.)
+
+ - even giving a path to the kernel module on disk (much lower
+   resolution and vulnerable to ambiguity again) is unreliable because
+   there's absolutely no guarantee that any given process can see any of
+   them: they might be in a different fs namespace or the modules might
+   only be present in an initramfs (hell, I even know setups which
+   *compile* the modules needed for rootfs mounting in the initramfs!
+   Yes this is borderline insane, yes it happens). More commonly, they
+   might be compressed using any of a number of compressors, changing
+   the name, and the kernel has no idea which compressor might have been
+   used (not unless you want it to go and look, and, well, wandering
+   around over the fs hunting down .ko.* files from kernelspace to get
+   their names right is *not* my idea of a good time! It's hard enough
+   to get that right from userspace, honestly, even with kmod helping.)
+
+   The most you could do would be to provide a key you could use with
+   kmod to dig the real modules out from userspace. Partial names are as
+   good as anything for that :)
+
+So all the objfile names are, when it comes down to it, is names with no
+intrinsic meaning: even if they're filenames of some kind, tools can't
+rely on being able to access those files. (For my most common use case,
+using a tracer on an enterprise-built production kernel, they'd almost
+never be able to.)
+
+So you might as well treat the objfile names as arbitrary string keys
+that might be a memory-jogger for humans, which means you can chop
+boring bits off them to save space :)
