@@ -2,49 +2,50 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 57B22EB64DC
-	for <linux-trace-kernel@archiver.kernel.org>; Thu, 20 Jul 2023 16:37:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 289C2EB64DA
+	for <linux-trace-kernel@archiver.kernel.org>; Thu, 20 Jul 2023 16:40:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231702AbjGTQhZ (ORCPT
+        id S229503AbjGTQkU (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Thu, 20 Jul 2023 12:37:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58002 "EHLO
+        Thu, 20 Jul 2023 12:40:20 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34624 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230526AbjGTQhO (ORCPT
+        with ESMTP id S231552AbjGTQkE (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Thu, 20 Jul 2023 12:37:14 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BEC0B30DB
-        for <linux-trace-kernel@vger.kernel.org>; Thu, 20 Jul 2023 09:35:37 -0700 (PDT)
+        Thu, 20 Jul 2023 12:40:04 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8DB2526A5
+        for <linux-trace-kernel@vger.kernel.org>; Thu, 20 Jul 2023 09:38:48 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1689870884;
+        s=mimecast20190719; t=1689871082;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=amrP88Jqmb7M02bSDE9mFh1MFKi+V3yBx6dizqUgPII=;
-        b=cNmar/vH31uaxvxK2evpomJ1CEvAriMCk6gynm704Wavx5wpx3R9g4z/UY/uWQOOGTEHem
-        b/IQvP0b+o7znfJRjgat7URBKhXAvbCBSBBxTSNDp20+IfpItaqy+IE6kwwXckv+lqG+6S
-        YwDr1HLLf985WwljOc8ZJbg1Rv4XFGQ=
+        bh=D+WoXJvLSOgt+Kve5Q+fkVLRoN9HdK3x6VSzpxIN5vU=;
+        b=N0N3S4BrI6ewibq0g7IofA8z40aKKra/Je/vl2HFEGe0r3FBnOwwhDcE+8xtiae+vPEpjM
+        t4gtBKW8eLdYyo1Z/0FVoTDkpmiY7eW8ZdHOnlDP6LDsBabPrMJ549WdgSgSJJRk9KONZJ
+        naP6dCbk1rK9ad7+vvc0w2ceGbiO1kg=
 Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
  [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-613-tiaKu1LnPgWKO7yNg3Rgug-1; Thu, 20 Jul 2023 12:34:43 -0400
-X-MC-Unique: tiaKu1LnPgWKO7yNg3Rgug-1
+ us-mta-225-n6Pvv7lTMfCgsmkY3ui-qw-1; Thu, 20 Jul 2023 12:34:19 -0400
+X-MC-Unique: n6Pvv7lTMfCgsmkY3ui-qw-1
 Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.rdu2.redhat.com [10.11.54.1])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id BF946800B35;
-        Thu, 20 Jul 2023 16:34:40 +0000 (UTC)
+        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 5937B185A78F;
+        Thu, 20 Jul 2023 16:34:16 +0000 (UTC)
 Received: from vschneid.remote.csb (unknown [10.42.28.48])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id C55AF40C206F;
-        Thu, 20 Jul 2023 16:34:32 +0000 (UTC)
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 8D32A40C2070;
+        Thu, 20 Jul 2023 16:34:08 +0000 (UTC)
 From:   Valentin Schneider <vschneid@redhat.com>
 To:     linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
         linux-doc@vger.kernel.org, kvm@vger.kernel.org, linux-mm@kvack.org,
         bpf@vger.kernel.org, x86@kernel.org, rcu@vger.kernel.org,
         linux-kselftest@vger.kernel.org
-Cc:     Steven Rostedt <rostedt@goodmis.org>,
+Cc:     "Paul E . McKenney" <paulmck@kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
         Masami Hiramatsu <mhiramat@kernel.org>,
         Jonathan Corbet <corbet@lwn.net>,
         Thomas Gleixner <tglx@linutronix.de>,
@@ -57,7 +58,6 @@ Cc:     Steven Rostedt <rostedt@goodmis.org>,
         Andy Lutomirski <luto@kernel.org>,
         Peter Zijlstra <peterz@infradead.org>,
         Frederic Weisbecker <frederic@kernel.org>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
         Neeraj Upadhyay <quic_neeraju@quicinc.com>,
         Joel Fernandes <joel@joelfernandes.org>,
         Josh Triplett <josh@joshtriplett.org>,
@@ -92,9 +92,9 @@ Cc:     Steven Rostedt <rostedt@goodmis.org>,
         Daniel Bristot de Oliveira <bristot@redhat.com>,
         Marcelo Tosatti <mtosatti@redhat.com>,
         Yair Podemsky <ypodemsk@redhat.com>
-Subject: [RFC PATCH v2 20/20] x86/mm, mm/vmalloc: Defer flush_tlb_kernel_range() targeting NOHZ_FULL CPUs
-Date:   Thu, 20 Jul 2023 17:30:56 +0100
-Message-Id: <20230720163056.2564824-21-vschneid@redhat.com>
+Subject: [RFC PATCH v2 17/20] rcutorture: Add a test config to torture test low RCU_DYNTICKS width
+Date:   Thu, 20 Jul 2023 17:30:53 +0100
+Message-Id: <20230720163056.2564824-18-vschneid@redhat.com>
 In-Reply-To: <20230720163056.2564824-1-vschneid@redhat.com>
 References: <20230720163056.2564824-1-vschneid@redhat.com>
 MIME-Version: 1.0
@@ -104,181 +104,54 @@ Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-vunmap()'s issued from housekeeping CPUs are a relatively common source of
-interference for isolated NOHZ_FULL CPUs, as they are hit by the
-flush_tlb_kernel_range() IPIs.
+We now have an RCU_EXPORT knob for configuring the size of the dynticks
+counter: CONFIG_RCU_DYNTICKS_BITS.
 
-Given that CPUs executing in userspace do not access data in the vmalloc
-range, these IPIs could be deferred until their next kernel entry.
+Add a torture config for a ridiculously small counter (2 bits). This is ac
+opy of TREE4 with the added counter size restriction.
 
-This does require a guarantee that nothing in the vmalloc range can be
-accessed in early entry code. vmalloc'd kernel stacks (VMAP_STACK) are
-AFAICT a safe exception, as a task running in userspace needs to enter
-kernelspace to execute do_exit() before its stack can be vfree'd.
-
-XXX: Validation that nothing in the vmalloc range is accessed in .noinstr or
-  somesuch?
-
-Blindly deferring any and all flush of the kernel mappings is a risky move,
-so introduce a variant of flush_tlb_kernel_range() that explicitly allows
-deferral. Use it for vunmap flushes.
-
-Note that while flush_tlb_kernel_range() may end up issuing a full
-flush (including user mappings), this only happens when reaching a
-invalidation range threshold where it is cheaper to do a full flush than to
-individually invalidate each page in the range via INVLPG. IOW, it doesn't
-*require* invalidating user mappings, and thus remains safe to defer until
-a later kernel entry.
-
+Link: http://lore.kernel.org/r/4c2cb573-168f-4806-b1d9-164e8276e66a@paulmck-laptop
+Suggested-by: Paul E. McKenney <paulmck@kernel.org>
 Signed-off-by: Valentin Schneider <vschneid@redhat.com>
 ---
- arch/x86/include/asm/tlbflush.h |  1 +
- arch/x86/mm/tlb.c               | 23 ++++++++++++++++++++---
- mm/vmalloc.c                    | 19 ++++++++++++++-----
- 3 files changed, 35 insertions(+), 8 deletions(-)
+ .../selftests/rcutorture/configs/rcu/TREE11   | 19 +++++++++++++++++++
+ .../rcutorture/configs/rcu/TREE11.boot        |  1 +
+ 2 files changed, 20 insertions(+)
+ create mode 100644 tools/testing/selftests/rcutorture/configs/rcu/TREE11
+ create mode 100644 tools/testing/selftests/rcutorture/configs/rcu/TREE11.boot
 
-diff --git a/arch/x86/include/asm/tlbflush.h b/arch/x86/include/asm/tlbflush.h
-index 323b971987af7..0b9b1f040c476 100644
---- a/arch/x86/include/asm/tlbflush.h
-+++ b/arch/x86/include/asm/tlbflush.h
-@@ -248,6 +248,7 @@ extern void flush_tlb_mm_range(struct mm_struct *mm, unsigned long start,
- 				unsigned long end, unsigned int stride_shift,
- 				bool freed_tables);
- extern void flush_tlb_kernel_range(unsigned long start, unsigned long end);
-+extern void flush_tlb_kernel_range_deferrable(unsigned long start, unsigned long end);
- 
- static inline void flush_tlb_page(struct vm_area_struct *vma, unsigned long a)
- {
-diff --git a/arch/x86/mm/tlb.c b/arch/x86/mm/tlb.c
-index 631df9189ded4..bb18b35e61b4a 100644
---- a/arch/x86/mm/tlb.c
-+++ b/arch/x86/mm/tlb.c
-@@ -10,6 +10,7 @@
- #include <linux/debugfs.h>
- #include <linux/sched/smt.h>
- #include <linux/task_work.h>
-+#include <linux/context_tracking.h>
- 
- #include <asm/tlbflush.h>
- #include <asm/mmu_context.h>
-@@ -1045,6 +1046,11 @@ static void do_flush_tlb_all(void *info)
- 	__flush_tlb_all();
- }
- 
-+static bool do_kernel_flush_defer_cond(int cpu, void *info)
-+{
-+	return !ct_set_cpu_work(cpu, CONTEXT_WORK_TLBI);
-+}
-+
- void flush_tlb_all(void)
- {
- 	count_vm_tlb_event(NR_TLB_REMOTE_FLUSH);
-@@ -1061,12 +1067,13 @@ static void do_kernel_range_flush(void *info)
- 		flush_tlb_one_kernel(addr);
- }
- 
--void flush_tlb_kernel_range(unsigned long start, unsigned long end)
-+static inline void
-+__flush_tlb_kernel_range(smp_cond_func_t cond_func, unsigned long start, unsigned long end)
- {
- 	/* Balance as user space task's flush, a bit conservative */
- 	if (end == TLB_FLUSH_ALL ||
- 	    (end - start) > tlb_single_page_flush_ceiling << PAGE_SHIFT) {
--		on_each_cpu(do_flush_tlb_all, NULL, 1);
-+		on_each_cpu_cond(cond_func, do_flush_tlb_all, NULL, 1);
- 	} else {
- 		struct flush_tlb_info *info;
- 
-@@ -1074,13 +1081,23 @@ void flush_tlb_kernel_range(unsigned long start, unsigned long end)
- 		info = get_flush_tlb_info(NULL, start, end, 0, false,
- 					  TLB_GENERATION_INVALID);
- 
--		on_each_cpu(do_kernel_range_flush, info, 1);
-+		on_each_cpu_cond(cond_func, do_kernel_range_flush, info, 1);
- 
- 		put_flush_tlb_info();
- 		preempt_enable();
- 	}
- }
- 
-+void flush_tlb_kernel_range(unsigned long start, unsigned long end)
-+{
-+	__flush_tlb_kernel_range(NULL, start, end);
-+}
-+
-+void flush_tlb_kernel_range_deferrable(unsigned long start, unsigned long end)
-+{
-+	__flush_tlb_kernel_range(do_kernel_flush_defer_cond, start, end);
-+}
-+
- /*
-  * This can be used from process context to figure out what the value of
-  * CR3 is without needing to do a (slow) __read_cr3().
-diff --git a/mm/vmalloc.c b/mm/vmalloc.c
-index 93cf99aba335b..e08b6c7d22fb6 100644
---- a/mm/vmalloc.c
-+++ b/mm/vmalloc.c
-@@ -439,6 +439,15 @@ void vunmap_range_noflush(unsigned long start, unsigned long end)
- 	__vunmap_range_noflush(start, end);
- }
- 
-+#ifdef CONFIG_CONTEXT_TRACKING_WORK
-+void __weak flush_tlb_kernel_range_deferrable(unsigned long start, unsigned long end)
-+{
-+	flush_tlb_kernel_range(start, end);
-+}
-+#else
-+#define flush_tlb_kernel_range_deferrable(start, end) flush_tlb_kernel_range(start, end)
-+#endif
-+
- /**
-  * vunmap_range - unmap kernel virtual addresses
-  * @addr: start of the VM area to unmap
-@@ -452,7 +461,7 @@ void vunmap_range(unsigned long addr, unsigned long end)
- {
- 	flush_cache_vunmap(addr, end);
- 	vunmap_range_noflush(addr, end);
--	flush_tlb_kernel_range(addr, end);
-+	flush_tlb_kernel_range_deferrable(addr, end);
- }
- 
- static int vmap_pages_pte_range(pmd_t *pmd, unsigned long addr,
-@@ -1746,7 +1755,7 @@ static bool __purge_vmap_area_lazy(unsigned long start, unsigned long end)
- 		list_last_entry(&local_purge_list,
- 			struct vmap_area, list)->va_end);
- 
--	flush_tlb_kernel_range(start, end);
-+	flush_tlb_kernel_range_deferrable(start, end);
- 	resched_threshold = lazy_max_pages() << 1;
- 
- 	spin_lock(&free_vmap_area_lock);
-@@ -1849,7 +1858,7 @@ static void free_unmap_vmap_area(struct vmap_area *va)
- 	flush_cache_vunmap(va->va_start, va->va_end);
- 	vunmap_range_noflush(va->va_start, va->va_end);
- 	if (debug_pagealloc_enabled_static())
--		flush_tlb_kernel_range(va->va_start, va->va_end);
-+		flush_tlb_kernel_range_deferrable(va->va_start, va->va_end);
- 
- 	free_vmap_area_noflush(va);
- }
-@@ -2239,7 +2248,7 @@ static void vb_free(unsigned long addr, unsigned long size)
- 	vunmap_range_noflush(addr, addr + size);
- 
- 	if (debug_pagealloc_enabled_static())
--		flush_tlb_kernel_range(addr, addr + size);
-+		flush_tlb_kernel_range_deferrable(addr, addr + size);
- 
- 	spin_lock(&vb->lock);
- 
-@@ -2304,7 +2313,7 @@ static void _vm_unmap_aliases(unsigned long start, unsigned long end, int flush)
- 	free_purged_blocks(&purge_list);
- 
- 	if (!__purge_vmap_area_lazy(start, end) && flush)
--		flush_tlb_kernel_range(start, end);
-+		flush_tlb_kernel_range_deferrable(start, end);
- 	mutex_unlock(&vmap_purge_lock);
- }
- 
+diff --git a/tools/testing/selftests/rcutorture/configs/rcu/TREE11 b/tools/testing/selftests/rcutorture/configs/rcu/TREE11
+new file mode 100644
+index 0000000000000..aa7274efd9819
+--- /dev/null
++++ b/tools/testing/selftests/rcutorture/configs/rcu/TREE11
+@@ -0,0 +1,19 @@
++CONFIG_SMP=y
++CONFIG_NR_CPUS=8
++CONFIG_PREEMPT_NONE=n
++CONFIG_PREEMPT_VOLUNTARY=y
++CONFIG_PREEMPT=n
++CONFIG_PREEMPT_DYNAMIC=n
++#CHECK#CONFIG_TREE_RCU=y
++CONFIG_HZ_PERIODIC=n
++CONFIG_NO_HZ_IDLE=n
++CONFIG_NO_HZ_FULL=y
++CONFIG_RCU_TRACE=y
++CONFIG_RCU_FANOUT=4
++CONFIG_RCU_FANOUT_LEAF=3
++CONFIG_DEBUG_LOCK_ALLOC=n
++CONFIG_DEBUG_OBJECTS_RCU_HEAD=n
++CONFIG_RCU_EXPERT=y
++CONFIG_RCU_EQS_DEBUG=y
++CONFIG_RCU_LAZY=y
++CONFIG_RCU_DYNTICKS_BITS=2
+diff --git a/tools/testing/selftests/rcutorture/configs/rcu/TREE11.boot b/tools/testing/selftests/rcutorture/configs/rcu/TREE11.boot
+new file mode 100644
+index 0000000000000..a8d94caf7d2fd
+--- /dev/null
++++ b/tools/testing/selftests/rcutorture/configs/rcu/TREE11.boot
+@@ -0,0 +1 @@
++rcutree.rcu_fanout_leaf=4 nohz_full=1-N
 -- 
 2.31.1
 
