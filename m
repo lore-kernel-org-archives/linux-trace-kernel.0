@@ -2,231 +2,356 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 45E0DEB64DA
-	for <linux-trace-kernel@archiver.kernel.org>; Thu, 20 Jul 2023 13:01:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C75AAEB64DC
+	for <linux-trace-kernel@archiver.kernel.org>; Thu, 20 Jul 2023 16:32:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231199AbjGTNBW (ORCPT
+        id S230317AbjGTQcf (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Thu, 20 Jul 2023 09:01:22 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57100 "EHLO
+        Thu, 20 Jul 2023 12:32:35 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56160 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229983AbjGTNBV (ORCPT
+        with ESMTP id S229731AbjGTQce (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Thu, 20 Jul 2023 09:01:21 -0400
-Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 486B110D2;
-        Thu, 20 Jul 2023 06:01:20 -0700 (PDT)
-Received: from pps.filterd (m0246631.ppops.net [127.0.0.1])
-        by mx0b-00069f02.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 36K94GGN032453;
-        Thu, 20 Jul 2023 13:01:01 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
- subject : references : date : in-reply-to : message-id : content-type :
- mime-version; s=corp-2023-03-30;
- bh=mSqTuZr1ONTscDvmcV4YoKIJ9qZJCYFEkfNTx9lEBRw=;
- b=jBh6oIPKz4y5R4CvKlp3G80aG+GJkJj2OsTSDXH4xP3swlTiyaCTRFiHudg5yD2Rjpsq
- b+gMOOZczAFvtlEs35yaRG+UeKbwieetgrR2MYGtdSXn1UScfWmFMLZvIAVXDnWJlIRp
- QGvUOoeLNrUBHkPL6V/E/tS27EVUwzgE/IQdkx9rwltpNVKI7OXjRj3Ajy94ijZdq+Yr
- yE1EmEa2NaPJTqkWBfsf2AlRonJW7lygSZGM5vK8HmuWASis+G+Mo2U3pqueKB/UlwrR
- msjbyHVwdXovQjqw3YC8eJijyqzIGPBOXis55MV+MW93oat2eTP5L3XsW+yoIHbDpJXz Qw== 
-Received: from phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta01.appoci.oracle.com [138.1.114.2])
-        by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3run8a9q7w-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 20 Jul 2023 13:01:00 +0000
-Received: from pps.filterd (phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
-        by phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (8.17.1.19/8.17.1.19) with ESMTP id 36KBQRF6038227;
-        Thu, 20 Jul 2023 13:00:59 GMT
-Received: from nam11-bn8-obe.outbound.protection.outlook.com (mail-bn8nam11lp2168.outbound.protection.outlook.com [104.47.58.168])
-        by phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 3ruhw8ma58-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 20 Jul 2023 13:00:59 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=L1WhzPsfvXgRx4bO19a16BQyhR+a8OxRDkB1Cm6kXDUEA1uoxcWCN3DSuhnsws2vcGlK1IAqez+5B3LDSY5hlFjFHyxt6jgf7CoyzDczugEM24gcleBO4dA76j6anFRftuVxhMz7Ifyj1tTdMLDv+texfu+nTKOmb5NQltJ93DzsjdtJwYRUdpj5PUxPVZIhwokALJ9Qd2C47M8ReNF+vzZNeHhIW3aDudAmOqs//NiXqUeHC1BVvUbnmB3aSkGMZFhWj0Nr2LapoHasQp9pUdfGuAfdf0ns2oqyQdycwASG8noMkJLoeRVlDXJF2VF4f+Dk+uI9FQdNRmKnFN/J/g==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=mSqTuZr1ONTscDvmcV4YoKIJ9qZJCYFEkfNTx9lEBRw=;
- b=AxPxXFVfwbURZxi+XUNaxopwi3rF2JlJLMdMcd2RVXxNrH1aOng/VhIO7yWYDWdHdo6V4QF3mPNnQyLDlseDyLxhNiULDLKYPOLp/5bId4Pb0XCPcrC3qbLR+AvCahwHNi4WVPxUBGJ7QLPGMR8EXQ3A/+ivhS27w5PXegMFM5Z5Xba+oFt0i0Pt1AU1dZUVq91vkNu7/lf9LP4gDqKWX/nGjU6NKIfi512AT/hEw+DAGrhjvyHDaFJff0nKptDleeRXJDRK8AbL3x9ClwIOCT5doFdk7Km9MYjPu93h/1UHWJXSRLQ106n8P2CgIDmwnaGp2J8X2mODr+t1m0gInA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
- dkim=pass header.d=oracle.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=mSqTuZr1ONTscDvmcV4YoKIJ9qZJCYFEkfNTx9lEBRw=;
- b=iX2lVNngUbvTvGJ6g/RiP1ZPIixGM+EAvgoSOfu1Iyd3DNwlUV16TAR5/Hsg9UjE5KOkSatvBCkh2PtJOEp8lkzLm6gSpztws9QfaQ1xj8YePTri/STdxJT9I02ChCixvJi38hPlCvkemN/sFtdKFUPs290J/Yr6jYUAAhSuWe8=
-Received: from DS0PR10MB6798.namprd10.prod.outlook.com (2603:10b6:8:13c::20)
- by SJ0PR10MB5767.namprd10.prod.outlook.com (2603:10b6:a03:3ef::6) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6588.28; Thu, 20 Jul
- 2023 13:00:54 +0000
-Received: from DS0PR10MB6798.namprd10.prod.outlook.com
- ([fe80::d301:aff1:6e01:417d]) by DS0PR10MB6798.namprd10.prod.outlook.com
- ([fe80::d301:aff1:6e01:417d%5]) with mapi id 15.20.6588.031; Thu, 20 Jul 2023
- 13:00:54 +0000
-From:   Nick Alcock <nick.alcock@oracle.com>
-To:     Alexander Lobakin <aleksander.lobakin@intel.com>
-Cc:     Alessandro Carminati <alessandro.carminati@gmail.com>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Nathan Chancellor <nathan@kernel.org>,
-        "Nick Desaulniers" <ndesaulniers@google.com>,
-        Nicolas Schier <nicolas@fjasle.eu>,
+        Thu, 20 Jul 2023 12:32:34 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BC8D41986
+        for <linux-trace-kernel@vger.kernel.org>; Thu, 20 Jul 2023 09:31:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1689870705;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=itPzsUWzfa/0r+cdUWVW66YAXwbafCm93m3nlhq1CyM=;
+        b=ecaKSYpepi+8t59FPze02b7OuwrAeK0EwY41Z4HxJITytbhHnc8PyroNK5Qj4VU+7NA934
+        grjO7rDaXrywz3ig2dgUn3ONoqQvcBWKviWJkyY35QYqwmYoF3Rqs7HtjfU6hL0dpEA+Ly
+        Cxs9utJ0NjrmOxH8xYG1FvaaurHYPLA=
+Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
+ [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-668-S2s6ay7gNwe_HYPF87xsVQ-1; Thu, 20 Jul 2023 12:31:44 -0400
+X-MC-Unique: S2s6ay7gNwe_HYPF87xsVQ-1
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.rdu2.redhat.com [10.11.54.1])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 3CF61101A54E;
+        Thu, 20 Jul 2023 16:31:40 +0000 (UTC)
+Received: from vschneid.remote.csb (unknown [10.42.28.48])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 8B00840C206F;
+        Thu, 20 Jul 2023 16:31:29 +0000 (UTC)
+From:   Valentin Schneider <vschneid@redhat.com>
+To:     linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+        linux-doc@vger.kernel.org, kvm@vger.kernel.org, linux-mm@kvack.org,
+        bpf@vger.kernel.org, x86@kernel.org, rcu@vger.kernel.org,
+        linux-kselftest@vger.kernel.org
+Cc:     Steven Rostedt <rostedt@goodmis.org>,
         Masami Hiramatsu <mhiramat@kernel.org>,
-        Daniel Bristot de Oliveira <bristot@kernel.org>,
-        Viktor Malik <vmalik@redhat.com>,
-        <linux-kernel@vger.kernel.org>, <linux-kbuild@vger.kernel.org>,
-        <linux-trace-kernel@vger.kernel.org>, <eugene.loh@oracle.com>,
-        <kris.van.hees@oracle.com>, <live-patching@vger.kernel.org>
-Subject: Re: [PATCH v2] scripts/link-vmlinux.sh: Add alias to duplicate
- symbols for kallsyms
-References: <ZLVxUQiC5iF+xTPQ@bombadil.infradead.org>
-        <20230714150326.1152359-1-alessandro.carminati@gmail.com>
-        <20230717105240.3d986331@gandalf.local.home>
-        <874jm088ah.fsf@esperi.org.uk>
-        <6edbfe7b-aec4-2b3c-2f85-42e418ab3d99@intel.com>
-Emacs:  because extension languages should come with the editor built in.
-Date:   Thu, 20 Jul 2023 14:00:46 +0100
-In-Reply-To: <6edbfe7b-aec4-2b3c-2f85-42e418ab3d99@intel.com> (Alexander
-        Lobakin's message of "Wed, 19 Jul 2023 17:12:33 +0200")
-Message-ID: <87wmyu7n5t.fsf@esperi.org.uk>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/28.3 (gnu/linux)
-Content-Type: text/plain
-X-ClientProxiedBy: LO4P123CA0450.GBRP123.PROD.OUTLOOK.COM
- (2603:10a6:600:1a9::23) To DS0PR10MB6798.namprd10.prod.outlook.com
- (2603:10b6:8:13c::20)
+        Jonathan Corbet <corbet@lwn.net>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Frederic Weisbecker <frederic@kernel.org>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        Neeraj Upadhyay <quic_neeraju@quicinc.com>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Josh Triplett <josh@joshtriplett.org>,
+        Boqun Feng <boqun.feng@gmail.com>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Lai Jiangshan <jiangshanlai@gmail.com>,
+        Zqiang <qiang.zhang1211@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Uladzislau Rezki <urezki@gmail.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        Lorenzo Stoakes <lstoakes@gmail.com>,
+        Josh Poimboeuf <jpoimboe@kernel.org>,
+        Jason Baron <jbaron@akamai.com>,
+        Kees Cook <keescook@chromium.org>,
+        Sami Tolvanen <samitolvanen@google.com>,
+        Ard Biesheuvel <ardb@kernel.org>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        Juerg Haefliger <juerg.haefliger@canonical.com>,
+        Nicolas Saenz Julienne <nsaenz@kernel.org>,
+        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+        Nadav Amit <namit@vmware.com>,
+        Dan Carpenter <error27@gmail.com>,
+        Chuang Wang <nashuiliang@gmail.com>,
+        Yang Jihong <yangjihong1@huawei.com>,
+        Petr Mladek <pmladek@suse.com>,
+        "Jason A. Donenfeld" <Jason@zx2c4.com>, Song Liu <song@kernel.org>,
+        Julian Pidancet <julian.pidancet@oracle.com>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        Dionna Glaze <dionnaglaze@google.com>,
+        =?UTF-8?q?Thomas=20Wei=C3=9Fschuh?= <linux@weissschuh.net>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Daniel Bristot de Oliveira <bristot@redhat.com>,
+        Marcelo Tosatti <mtosatti@redhat.com>,
+        Yair Podemsky <ypodemsk@redhat.com>
+Subject: [RFC PATCH v2 00/20] context_tracking,x86: Defer some IPIs until a user->kernel transition
+Date:   Thu, 20 Jul 2023 17:30:36 +0100
+Message-Id: <20230720163056.2564824-1-vschneid@redhat.com>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DS0PR10MB6798:EE_|SJ0PR10MB5767:EE_
-X-MS-Office365-Filtering-Correlation-Id: d8ec4dc5-14c7-4ef0-d5c7-08db892159c9
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: bXMMsjilORCnruVXS/bhqP1WcIvqEdzC6qQRQJJs5KIc2iOr9NpQMSfKtB3gY/bUq4YEUkzJANqfCBU/ThLDvw5l2jvC9g/cM9ILnh1HJwbXPkiP+PKC/3LfdVqtNPx0eMFGIjl+yywTkbJKlQTCf5dJ24YRwBHroXpx5FoL473xQOwPY7gidXxQwcwKzsRC9V5yTwNHs5W2N9zcsiLGx0ajo/EsouzFRe6FRvdIb71qCJdX4e+PF2jJdKl7S6b3RxzsRLfgquR/557Eb54s/xoxpDWFpfwHjz5TM1yGzROGBBhg/bQVA1ABZR8aKdi3M61Eta6faGPFHsrBFjNlT2cgnjPJYijrwe9mSY053hvqMflsWadqutN6rqq6wuYAyFgjOoEJmWeRWe2k/0kMGB0DtVlwN7gaFe8Al+v0usRxhzNOUDqlEU4VIEoEGk7uVMTA+m1eUf+M5p2BrodfdojztxgXW30UG0Zo/2kPfY/IDsDbupZsrEpqyKHMX9X+Ux6eD9oJVrFYE17eeBpYIe8PdTjUQSaNnICGty1Z1tGWXK+kGovdSVY5QnlObzap
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS0PR10MB6798.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230028)(396003)(136003)(366004)(39860400002)(376002)(346002)(451199021)(8936002)(2906002)(36756003)(44832011)(6666004)(186003)(83380400001)(6506007)(6512007)(9686003)(6486002)(5660300002)(54906003)(38100700002)(7416002)(478600001)(86362001)(8676002)(66556008)(316002)(6916009)(66476007)(66946007)(41300700001)(4326008);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?YTaVD0EhR0d1VRn/wwDYNUqlyfnAAQheIeEWIBg3cKlidxE98qUSLrEi1CvB?=
- =?us-ascii?Q?TVv7uFfXd3BkPXI5qTDq2uFWj+A2sdMlrXaE/6QFDc31Ddhd3sl1q7EbEtr5?=
- =?us-ascii?Q?QxUAlWsr3+UtEkiA+DXvMAmYosZCTlcOaaA8OBHK6VTu5m6sc85kc6TxYu6B?=
- =?us-ascii?Q?ILpcXx1ke0ulxvS7MGhc+tomu1Tw+l4h8R+pswgVVTLjEpWIRqgdOEg8m+BJ?=
- =?us-ascii?Q?RJU+t6GA1P8Wbwp1RYsZouLYbJmsqx1a48EBOci4QpXiQ3Da3oLUrlg2IbdI?=
- =?us-ascii?Q?+LfRmrXW2AS1ORM79IthWnt1i0D1iWPrf0Dk+3EW6gmzV3aKnZR9rVIp3zWh?=
- =?us-ascii?Q?CwInZp9vreL+V24bJ6oyHfkjzduiAs1Edgc2+/QgxDvWA0XcjKBkt+aMShIn?=
- =?us-ascii?Q?WYFlomuZ4nBkRQlTOrL9f1EnjuDH1dsYjrNv6cLmlMA6g2OmgFYAo/VRoRHX?=
- =?us-ascii?Q?H5oJitA7qoYE7inwBARyhtlst0bxIOhV1yDh91jiaJAQOnWzXyVz/sagHjwM?=
- =?us-ascii?Q?GQkgzif279OKaTqacGD/6ARuglli4fxJSy1b0TLOaC5+aKmPOTRBCAvyQgKw?=
- =?us-ascii?Q?x/wtCJ8O4WNKc9FXGTafYoPWexIx8eloaEqSb/77mQEuKsvZKmfhlrrGbuBZ?=
- =?us-ascii?Q?8ykZZ0hrUg83noxEstyypJ4atSCaQp8S9jt1LsbkWoJCDmZ7A3xH3eEWTTK5?=
- =?us-ascii?Q?JXifBoCVT8aL84cGRt49Kj78qzzGJSpZaoICQGqrU1qfMmbIayXF1cX242Mi?=
- =?us-ascii?Q?7POUK6kiJLbPI7KKS9DFamZCgIJ1enkJ7zb2DST1JKcQgmmngjyHVuB4InM5?=
- =?us-ascii?Q?UFZDFBUUE0UDOZ26EGKUU/iXN5FfB8698/OT9RRVKqm93Sc7J1uFjFIfwrfX?=
- =?us-ascii?Q?N3k9mCfxlEHKowz6ML2o8kZwioZzjiQAWCopGhkDMDKGv/AJjx7Z7nEHo9V8?=
- =?us-ascii?Q?24il9xKBjf/tp8VYznUR0MB3Gp2hCelfWA5nuP3b7ISWJiO7bakjy+kCKqbF?=
- =?us-ascii?Q?MOYC2gRZWpbfbHbY9+p2skx2uGMI+pynv7q2r6+tmpnexqzoIlafU35J260J?=
- =?us-ascii?Q?gLJM7FUFa9cNVUO5RraFjQEBIqW2l4ImxesPhGJd3PPviN6N2Vnkqsoype4d?=
- =?us-ascii?Q?OvJ0tG64w+qyPfFsX4C4lQUHQXUSDZRmGnVsbDrX5fYA467iMzbyshCAn68i?=
- =?us-ascii?Q?xO+psWBFU+JEBQSthMe0COovMxfmMGsAnjmCb/r+BmMqcwOBUerqxz69W6yz?=
- =?us-ascii?Q?ObesMq8SqReVGy9mqvt1ed0CcC0p9h43RAK7x3acZ2SrXYHLOcMparCovcyR?=
- =?us-ascii?Q?kEqyH5+frCN59Xb5nkDAhtPNW9xr9I8+PqCto8WZdbIoBqyvf0MbjsoC9vgx?=
- =?us-ascii?Q?Hcn+KttNqjouqAvhX/PcZO3CNCdwavvwNdHFPaBJzwVzOsGGjVDINZIWJGlM?=
- =?us-ascii?Q?uQC3St8CS2JG+jVjjbhgz89viQS3iJntHouS3Wtoodae9u5qkQ2ZT4rYSa+y?=
- =?us-ascii?Q?TbDd1Aiqb1tZ380gCctrFuihEviMC3irTcY7Z7cHE+rSIQe5r3vvt4zKu8Bc?=
- =?us-ascii?Q?mc/ATFLVVNzAIirRVoWNZ+WMJE6QeQjD6hY8Nr2/UEfg8TgGUIJrSP8XnoRo?=
- =?us-ascii?Q?MQ=3D=3D?=
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0: =?us-ascii?Q?3Jw6fZy5NSjdG1balrfXhv0c35I/4zRlo45IiYshXTWIrZMtzKUBXAEUKlpK?=
- =?us-ascii?Q?f2jzkHZMJE3tRBQOo+5mKcCLMlWztCYhw2k3Y6lK/LfW4TtdG/DdDRGo5GUE?=
- =?us-ascii?Q?/uSCB1AuGrGCHY340xdbYhSMLmv7M3BjX91QQ1JtLRQPdxoaSgUajURPgCts?=
- =?us-ascii?Q?c3VD1tw7KKoWQu+rpnbBj78qRlWEvxGlYJ3gPdfPSo2MFdKHEhYAXjZTIg0E?=
- =?us-ascii?Q?l+Qq3jk6PCplzeouaOyrzttiLjpiQ1jCBgR7uAoFK9jBknrzaGVowhjI78CR?=
- =?us-ascii?Q?8x/WoH+iHTC9z7Ymfopq6YZc01hXuIg2UkiBFYaCzqWadxkwfKVb4c2XlKxR?=
- =?us-ascii?Q?QeIwgvrgzvKnMNiKc69sVscc1Mj9C4Dbs3yEBlPi1w/MOD36CjA0uUw022hi?=
- =?us-ascii?Q?2t6gQUU/8s5eSdKGmaUA4ANa20F6Zkzvs7gSaE0NAugh8MhhnstoCz2GGOc6?=
- =?us-ascii?Q?u9fARxjNOSGk6jgmfHe7iYMfj/WNHYaPa++JLR4jEJPE3RFiQrcUJ7IJjOAY?=
- =?us-ascii?Q?7pyBijpwjHHnSqdfphVm5R+0oU1luDEa4FMIMDeYaHaXLbctGk0CWM1UpHfC?=
- =?us-ascii?Q?Jcr+WGNmwAMPAPlsrGRHJ8ZDZ6itcMWOvOmrSrzzQhBagrWyUf16F532nryA?=
- =?us-ascii?Q?f0CPlGUmcapB2y8B5eCiJEsNDugRBLpQQf5IO/jsIVKOCsFTSFLMvtMzYF1E?=
- =?us-ascii?Q?dsUsr5uZXGx18xnOu7+O0kcMHv+T1xCz7jHBMOBDSWbg4NXqtatwhK8fJW8B?=
- =?us-ascii?Q?RUqFYh6Ckwf2TM1Wh1PpyoY0Kaq01YCHbF1Jhb66YLleQ6llDzL4/CP+1xXx?=
- =?us-ascii?Q?bGuvGFD3Y4ZAB3B1ZMkrc8GxSEUnUEALfsmjIctlbJRGG6TzFGJCNuMI3Hlm?=
- =?us-ascii?Q?72AqAL8WmM/TwPWR4+tmN8g0kYWR6DoEC5y4csbaROqrCAc3XJNMLSZWUeM6?=
-X-OriginatorOrg: oracle.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: d8ec4dc5-14c7-4ef0-d5c7-08db892159c9
-X-MS-Exchange-CrossTenant-AuthSource: DS0PR10MB6798.namprd10.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 20 Jul 2023 13:00:54.1793
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: ILZ7RxmU6lR+ziX//0RusUmLiIspHCTIgch3t4FFZMVOEXpG2Uuqnp8XSz4IiL9/wvcKmYfVmXRB8DOGRut1PA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ0PR10MB5767
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.254,Aquarius:18.0.957,Hydra:6.0.591,FMLib:17.11.176.26
- definitions=2023-07-20_06,2023-07-20_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 mlxscore=0 phishscore=0
- adultscore=0 spamscore=0 bulkscore=0 malwarescore=0 mlxlogscore=999
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2306200000
- definitions=main-2307200109
-X-Proofpoint-ORIG-GUID: 1xmZyaoXs1i1-qQKlSWS_jku6kc1nWhR
-X-Proofpoint-GUID: 1xmZyaoXs1i1-qQKlSWS_jku6kc1nWhR
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.1 on 10.11.54.1
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On 19 Jul 2023, Alexander Lobakin verbalised:
+Context
+=======
 
-> From: Nick Alcock <nick.alcock@oracle.com>
-> Date: Wed, 19 Jul 2023 12:12:06 +0100
->>> Yes, please coordinate with Nick and review each other's work, now we
->>> have two separate efforts with different reasons but hopefully we'll
->
-> Three efforts[0] :D Mine went unnoticed unfortunately, so I switched to
-> other projects then.
+We've observed within Red Hat that isolated, NOHZ_FULL CPUs running a
+pure-userspace application get regularly interrupted by IPIs sent from
+housekeeping CPUs. Those IPIs are caused by activity on the housekeeping CPUs
+leading to various on_each_cpu() calls, e.g.:
 
-It's odd, nobody seems to have noticed these until recently and now
-suddenly people are crawling out of the woodwork wanting unique
-addresses :) maybe the ambiguous ones are just getting commonplace
-enough that they're biting people more often?
+  64359.052209596    NetworkManager       0    1405     smp_call_function_many_cond (cpu=0, func=do_kernel_range_flush)
+    smp_call_function_many_cond+0x1
+    smp_call_function+0x39
+    on_each_cpu+0x2a
+    flush_tlb_kernel_range+0x7b
+    __purge_vmap_area_lazy+0x70
+    _vm_unmap_aliases.part.42+0xdf
+    change_page_attr_set_clr+0x16a
+    set_memory_ro+0x26
+    bpf_int_jit_compile+0x2f9
+    bpf_prog_select_runtime+0xc6
+    bpf_prepare_filter+0x523
+    sk_attach_filter+0x13
+    sock_setsockopt+0x92c
+    __sys_setsockopt+0x16a
+    __x64_sys_setsockopt+0x20
+    do_syscall_64+0x87
+    entry_SYSCALL_64_after_hwframe+0x65
 
-> My idea was to give relative path from the kernel root to the objfile,
-> as we have a good bunch of non-unique "filename + symbol name" pairs.
+The heart of this series is the thought that while we cannot remove NOHZ_FULL
+CPUs from the list of CPUs targeted by these IPIs, they may not have to execute
+the callbacks immediately. Anything that only affects kernelspace can wait
+until the next user->kernel transition, providing it can be executed "early
+enough" in the entry code.
 
-I considered that, but unfortunately that has two problems to a raging
-perfectionist like me:
+The original implementation is from Peter [1]. Nicolas then added kernel TLB
+invalidation deferral to that [2], and I picked it up from there.
 
- - the objfile probably won't exist except if you're actually doing
-   kernel development, since kernel build trees are big enough that a
-   lot of people delete them after building or ship kernels to other
-   machines: if someone else built your kernel (overwhelmingly common
-   among non-kernel-devs) the objfiles are sure to be absent. (But an
-   option to not truncate the names when you know they won't be absent
-   might be a good idea, though this pushes space requirements up by
-   hundreds of kilobytes so it should probably be off by default.)
+Deferral approach
+=================
 
- - even giving a path to the kernel module on disk (much lower
-   resolution and vulnerable to ambiguity again) is unreliable because
-   there's absolutely no guarantee that any given process can see any of
-   them: they might be in a different fs namespace or the modules might
-   only be present in an initramfs (hell, I even know setups which
-   *compile* the modules needed for rootfs mounting in the initramfs!
-   Yes this is borderline insane, yes it happens). More commonly, they
-   might be compressed using any of a number of compressors, changing
-   the name, and the kernel has no idea which compressor might have been
-   used (not unless you want it to go and look, and, well, wandering
-   around over the fs hunting down .ko.* files from kernelspace to get
-   their names right is *not* my idea of a good time! It's hard enough
-   to get that right from userspace, honestly, even with kmod helping.)
+Storing each and every callback, like a secondary call_single_queue turned out
+to be a no-go: the whole point of deferral is to keep NOHZ_FULL CPUs in
+userspace for as long as possible - no signal of any form would be sent when
+deferring an IPI. This means that any form of queuing for deferred callbacks
+would end up as a convoluted memory leak.
 
-   The most you could do would be to provide a key you could use with
-   kmod to dig the real modules out from userspace. Partial names are as
-   good as anything for that :)
+Deferred IPIs must thus be coalesced, which this series achieves by assigning
+IPIs a "type" and having a mapping of IPI type to callback, leveraged upon
+kernel entry.
 
-So all the objfile names are, when it comes down to it, is names with no
-intrinsic meaning: even if they're filenames of some kind, tools can't
-rely on being able to access those files. (For my most common use case,
-using a tracer on an enterprise-built production kernel, they'd almost
-never be able to.)
+What about IPIs whose callback take a parameter, you may ask?
 
-So you might as well treat the objfile names as arbitrary string keys
-that might be a memory-jogger for humans, which means you can chop
-boring bits off them to save space :)
+Peter suggested during OSPM23 [3] that since on_each_cpu() targets
+housekeeping CPUs *and* isolated CPUs, isolated CPUs can access either global or
+housekeeping-CPU-local state to "reconstruct" the data that would have been sent
+via the IPI.
+
+This series does not affect any IPI callback that requires an argument, but the
+approach would remain the same (one coalescable callback executed on kernel
+entry).
+
+Kernel entry vs execution of the deferred operation
+===================================================
+
+There is a non-zero length of code that is executed upon kernel entry before the
+deferred operation can be itself executed (i.e. before we start getting into
+context_tracking.c proper).
+
+This means one must take extra care to what can happen in the early entry code,
+and that <bad things> cannot happen. For instance, we really don't want to hit
+instructions that have been modified by a remote text_poke() while we're on our
+way to execute a deferred sync_core().
+
+Patches
+=======
+
+o Patches 1-9 have been submitted separately and are included for the sake of
+  testing 
+
+o Patches 10-14 focus on having objtool detect problematic static key usage in
+  early entry
+  
+o Patch 15 adds the infrastructure for IPI deferral.
+o Patches 16-17 add some RCU testing infrastructure
+o Patch 18 adds text_poke() IPI deferral.
+
+o Patches 19-20 add vunmap() flush_tlb_kernel_range() IPI deferral
+
+  These ones I'm a lot less confident about, mostly due to lacking
+  instrumentation/verification.
+  
+  The actual deferred callback is also incomplete as it's not properly noinstr:
+    vmlinux.o: warning: objtool: __flush_tlb_all_noinstr+0x19: call to native_write_cr4() leaves .noinstr.text section
+  and it doesn't support PARAVIRT - it's going to need a pv_ops.mmu entry, but I
+  have *no idea* what a sane implementation would be for Xen so I haven't
+  touched that yet.
+
+Patches are also available at:
+
+https://gitlab.com/vschneid/linux.git -b redhat/isolirq/defer/v2
+
+Testing
+=======
+
+Note: this is a different machine than used for v1, because that machine decided
+to act difficult.
+
+Xeon E5-2699 system with SMToff, NOHZ_FULL, isolated CPUs.
+RHEL9 userspace.
+
+Workload is using rteval (kernel compilation + hackbench) on housekeeping CPUs
+and a dummy stay-in-userspace loop on the isolated CPUs. The main invocation is:
+
+$ trace-cmd record -e "csd_queue_cpu" -f "cpu & CPUS{$ISOL_CPUS}" \
+ 	           -e "ipi_send_cpumask" -f "cpumask & CPUS{$ISOL_CPUS}" \
+	           -e "ipi_send_cpu"     -f "cpu & CPUS{$ISOL_CPUS}" \
+		   rteval --onlyload --loads-cpulist=$HK_CPUS \
+		   --hackbench-runlowmem=True --duration=$DURATION
+
+This only records IPIs sent to isolated CPUs, so any event there is interference
+(with a bit of fuzz at the start/end of the workload when spawning the
+processes). All tests were done with a duration of 30 minutes.
+
+v6.5-rc1 (+ cpumask filtering patches):
+# This is the actual IPI count
+$ trace-cmd report | grep callback | awk '{ print $(NF) }' | sort | uniq -c | sort -nr
+    338 callback=generic_smp_call_function_single_interrupt+0x0
+
+# These are the different CSD's that caused IPIs    
+$ trace-cmd report | grep csd_queue | awk '{ print $(NF-1) }' | sort | uniq -c | sort -nr
+   9207 func=do_flush_tlb_all
+   1116 func=do_sync_core
+     62 func=do_kernel_range_flush
+      3 func=nohz_full_kick_func
+
+v6.5-rc1 + patches:
+# This is the actual IPI count
+$ trace-cmd report | grep callback | awk '{ print $(NF) }' | sort | uniq -c | sort -nr
+      2 callback=generic_smp_call_function_single_interrupt+0x0
+
+# These are the different CSD's that caused IPIs          
+$ trace-cmd report | grep csd_queue | awk '{ print $(NF-1) }' | sort | uniq -c | sort -nr
+      2 func=nohz_full_kick_func
+
+The incriminating IPIs are all gone, but note that on the machine I used to test
+v1 there were still some do_flush_tlb_all() IPIs caused by
+pcpu_balance_workfn(), since only vmalloc is affected by the deferral
+mechanism.
+
+
+Acknowledgements
+================
+
+Special thanks to:
+o Clark Williams for listening to my ramblings about this and throwing ideas my way
+o Josh Poimboeuf for his guidance regarding objtool and hinting at the
+  .data..ro_after_init section.
+
+Links
+=====
+
+[1]: https://lore.kernel.org/all/20210929151723.162004989@infradead.org/
+[2]: https://github.com/vianpl/linux.git -b ct-work-defer-wip
+[3]: https://youtu.be/0vjE6fjoVVE
+
+Revisions
+=========
+
+RFCv1 -> RFCv2
+++++++++++++++
+
+o Rebased onto v6.5-rc1
+
+o Updated the trace filter patches (Steven)
+
+o Fixed __ro_after_init keys used in modules (Peter)
+o Dropped the extra context_tracking atomic, squashed the new bits in the
+  existing .state field (Peter, Frederic)
+  
+o Added an RCU_EXPERT config for the RCU dynticks counter size, and added an
+  rcutorture case for a low-size counter (Paul)
+
+  The new TREE11 case with a 2-bit dynticks counter seems to pass when ran
+  against this series.
+
+o Fixed flush_tlb_kernel_range_deferrable() definition
+
+Peter Zijlstra (1):
+  jump_label,module: Don't alloc static_key_mod for __ro_after_init keys
+
+Valentin Schneider (19):
+  tracing/filters: Dynamically allocate filter_pred.regex
+  tracing/filters: Enable filtering a cpumask field by another cpumask
+  tracing/filters: Enable filtering a scalar field by a cpumask
+  tracing/filters: Enable filtering the CPU common field by a cpumask
+  tracing/filters: Optimise cpumask vs cpumask filtering when user mask
+    is a single CPU
+  tracing/filters: Optimise scalar vs cpumask filtering when the user
+    mask is a single CPU
+  tracing/filters: Optimise CPU vs cpumask filtering when the user mask
+    is a single CPU
+  tracing/filters: Further optimise scalar vs cpumask comparison
+  tracing/filters: Document cpumask filtering
+  objtool: Flesh out warning related to pv_ops[] calls
+  objtool: Warn about non __ro_after_init static key usage in .noinstr
+  context_tracking: Make context_tracking_key __ro_after_init
+  x86/kvm: Make kvm_async_pf_enabled __ro_after_init
+  context-tracking: Introduce work deferral infrastructure
+  rcu: Make RCU dynticks counter size configurable
+  rcutorture: Add a test config to torture test low RCU_DYNTICKS width
+  context_tracking,x86: Defer kernel text patching IPIs
+  context_tracking,x86: Add infrastructure to defer kernel TLBI
+  x86/mm, mm/vmalloc: Defer flush_tlb_kernel_range() targeting NOHZ_FULL
+    CPUs
+
+ Documentation/trace/events.rst                |  14 +
+ arch/Kconfig                                  |   9 +
+ arch/x86/Kconfig                              |   1 +
+ arch/x86/include/asm/context_tracking_work.h  |  20 ++
+ arch/x86/include/asm/text-patching.h          |   1 +
+ arch/x86/include/asm/tlbflush.h               |   2 +
+ arch/x86/kernel/alternative.c                 |  24 +-
+ arch/x86/kernel/kprobes/core.c                |   4 +-
+ arch/x86/kernel/kprobes/opt.c                 |   4 +-
+ arch/x86/kernel/kvm.c                         |   2 +-
+ arch/x86/kernel/module.c                      |   2 +-
+ arch/x86/mm/tlb.c                             |  40 ++-
+ include/asm-generic/sections.h                |   5 +
+ include/linux/context_tracking.h              |  26 ++
+ include/linux/context_tracking_state.h        |  65 +++-
+ include/linux/context_tracking_work.h         |  28 ++
+ include/linux/jump_label.h                    |   1 +
+ include/linux/trace_events.h                  |   1 +
+ init/main.c                                   |   1 +
+ kernel/context_tracking.c                     |  53 ++-
+ kernel/jump_label.c                           |  49 +++
+ kernel/rcu/Kconfig                            |  33 ++
+ kernel/time/Kconfig                           |   5 +
+ kernel/trace/trace_events_filter.c            | 302 ++++++++++++++++--
+ mm/vmalloc.c                                  |  19 +-
+ tools/objtool/check.c                         |  22 +-
+ tools/objtool/include/objtool/check.h         |   1 +
+ tools/objtool/include/objtool/special.h       |   2 +
+ tools/objtool/special.c                       |   3 +
+ .../selftests/rcutorture/configs/rcu/TREE11   |  19 ++
+ .../rcutorture/configs/rcu/TREE11.boot        |   1 +
+ 31 files changed, 695 insertions(+), 64 deletions(-)
+ create mode 100644 arch/x86/include/asm/context_tracking_work.h
+ create mode 100644 include/linux/context_tracking_work.h
+ create mode 100644 tools/testing/selftests/rcutorture/configs/rcu/TREE11
+ create mode 100644 tools/testing/selftests/rcutorture/configs/rcu/TREE11.boot
+
+--
+2.31.1
+
