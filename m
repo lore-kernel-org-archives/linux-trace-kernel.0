@@ -2,186 +2,81 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7EEEFC001DE
-	for <linux-trace-kernel@archiver.kernel.org>; Wed, 19 Jul 2023 18:40:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2AA5FC001B0
+	for <linux-trace-kernel@archiver.kernel.org>; Thu, 20 Jul 2023 02:30:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229571AbjGSSkx convert rfc822-to-8bit (ORCPT
+        id S229804AbjGTCam (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Wed, 19 Jul 2023 14:40:53 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59972 "EHLO
+        Wed, 19 Jul 2023 22:30:42 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:58590 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229492AbjGSSkv (ORCPT
+        with ESMTP id S229540AbjGTCal (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Wed, 19 Jul 2023 14:40:51 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 935C0B6;
-        Wed, 19 Jul 2023 11:40:50 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 27D8D617E0;
-        Wed, 19 Jul 2023 18:40:50 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EA141C433C7;
-        Wed, 19 Jul 2023 18:40:47 +0000 (UTC)
-Date:   Wed, 19 Jul 2023 14:40:46 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Ajay Kaher <akaher@vmware.com>
-Cc:     "shuah@kernel.org" <shuah@kernel.org>,
-        "mhiramat@kernel.org" <mhiramat@kernel.org>,
-        Ching-lin Yu <chinglinyu@google.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-kselftest@vger.kernel.org" <linux-kselftest@vger.kernel.org>,
-        "linux-trace-kernel@vger.kernel.org" 
-        <linux-trace-kernel@vger.kernel.org>,
-        "lkp@intel.com" <lkp@intel.com>, Nadav Amit <namit@vmware.com>,
-        "oe-lkp@lists.linux.dev" <oe-lkp@lists.linux.dev>,
-        Alexey Makhalov <amakhalov@vmware.com>,
-        "er.ajay.kaher@gmail.com" <er.ajay.kaher@gmail.com>,
-        "srivatsa@csail.mit.edu" <srivatsa@csail.mit.edu>,
-        Tapas Kundu <tkundu@vmware.com>,
-        Vasavi Sirnapalli <vsirnapalli@vmware.com>
-Subject: Re: [PATCH v4 00/10] tracing: introducing eventfs
-Message-ID: <20230719144046.746af82e@gandalf.local.home>
-In-Reply-To: <899D0823-A1B2-4A6F-A5BA-0D707F41C3D4@vmware.com>
-References: <1689248004-8158-1-git-send-email-akaher@vmware.com>
-        <20230714185824.62556254@gandalf.local.home>
-        <883F9774-3E76-4346-9988-2788FAF0D55E@vmware.com>
-        <20230718094005.32516161@gandalf.local.home>
-        <2CD72098-08E2-4CAA-B74D-D8C44D318117@vmware.com>
-        <20230719102310.552d3356@gandalf.local.home>
-        <899D0823-A1B2-4A6F-A5BA-0D707F41C3D4@vmware.com>
-X-Mailer: Claws Mail 3.19.1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+        Wed, 19 Jul 2023 22:30:41 -0400
+Received: from mail.208.org (unknown [183.242.55.162])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A52C62106
+        for <linux-trace-kernel@vger.kernel.org>; Wed, 19 Jul 2023 19:30:39 -0700 (PDT)
+Received: from mail.208.org (email.208.org [127.0.0.1])
+        by mail.208.org (Postfix) with ESMTP id 4R5xW10vWtzBRDrS
+        for <linux-trace-kernel@vger.kernel.org>; Thu, 20 Jul 2023 10:30:37 +0800 (CST)
+Authentication-Results: mail.208.org (amavisd-new); dkim=pass
+        reason="pass (just generated, assumed good)" header.d=208.org
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=208.org; h=
+        content-transfer-encoding:content-type:message-id:user-agent
+        :references:in-reply-to:subject:to:from:date:mime-version; s=
+        dkim; t=1689820236; x=1692412237; bh=LgGf9G+dE6aOo+jbUjeBLHSt/8/
+        h1kBlS9EWXwngvDc=; b=s5DLPsfHGKxG96Vh5IFGXvXZjP36fOrZUm5d5KfMEwa
+        Kgyc+GpKSSa7ZQG7S+a0qeEWO88o9tmGSfx3chKtBbfNlgDq+qneNHkE+pNNiLtt
+        ikUuv7XT2Nna2cvcNhPfTiKN+8UbUqQu2HmkANTk6IIdMZonZH7yLh6Pn+p2uElM
+        SZwI3MbowoENj2yxLO7xybe5hRVWbcdre7Z93Pbv3+e+b10wvpEdYeZLO/QIFDU+
+        Jak8n7+5KwLUos+ri984XTmnCjdYfuyHm4gOvAwo5Zs2zDjeoJoBaGW3JMrJ9Qa0
+        MX39vioE3lTcxfiVEL/fwP0UD2+xZe1OUVsQNPuqODQ==
+X-Virus-Scanned: amavisd-new at mail.208.org
+Received: from mail.208.org ([127.0.0.1])
+        by mail.208.org (mail.208.org [127.0.0.1]) (amavisd-new, port 10026)
+        with ESMTP id LXVxDtSa_hVE for <linux-trace-kernel@vger.kernel.org>;
+        Thu, 20 Jul 2023 10:30:36 +0800 (CST)
+Received: from localhost (email.208.org [127.0.0.1])
+        by mail.208.org (Postfix) with ESMTPSA id 4R5xW05DKRzBRDrD;
+        Thu, 20 Jul 2023 10:30:36 +0800 (CST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
+Date:   Thu, 20 Jul 2023 10:30:36 +0800
+From:   wuyonggang001@208suo.com
+To:     rostedt@goodmis.org, mhiramat@kernel.org
+Cc:     linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
+Subject: [PATCH] tracing: add missing spaces after ';'
+In-Reply-To: <20230719064321.19047-1-xujianghui@cdjrlc.com>
+References: <20230719064321.19047-1-xujianghui@cdjrlc.com>
+User-Agent: Roundcube Webmail
+Message-ID: <74685bd017411f96c8a846ebd5e3916a@208suo.com>
+X-Sender: wuyonggang001@208suo.com
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On Wed, 19 Jul 2023 18:37:12 +0000
-Ajay Kaher <akaher@vmware.com> wrote:
+Remove spaces to clear checkpatch errors.
 
-> > Here's the reproducer (of both v3 splat and the bug I'm hitting now).
-> > 
-> > ~# echo 'p:sock_getattr 0xffffffff9b55cef0 sk=%di' > /sys/kernel/tracing/kprobe_events
-> > ~# ls /sys/kernel/debug/tracing/events/kprobes/sock_getattr/
-> > ~# echo '-:sock_getattr 0xffffffff9b55cef0 sk=%di' > /sys/kernel/tracing/kprobe_events  
-> 
-> I tried above steps on v4 but couldn’t reproduce:
-> 
-> root@photon-6 [ ~/sdb/linux ]# echo 'p:sock_getattr 0xffffffff9b55cef0 sk=%di' > /sys/kernel/tracing/kprobe_events
-> root@photon-6 [ ~/sdb/linux ]# ls /sys/kernel/debug/tracing/events/kprobes/sock_getattr/
-> enable  filter  format  id  trigger
-> root@photon-6 [ ~/sdb/linux ]# echo '-:sock_getattr 0xffffffff9b55cef0 sk=%di' > /sys/kernel/tracing/kprobe_events
-> -bash: echo: write error: No such file or directory
-> 
-> I have doubt on call_srcu(), it may first end the grace period for parent then for child. If this is true then free_list
-> will have unordered list and could cause problem.
+ERROR: space required after that ';' (ctx:VxV)
 
-I modified the srcu portion a bit. Will post soon. I think I got something
-working.
+Signed-off-by: Yonggang Wu <wuyonggang001@208suo.com>
+---
+  include/trace/stages/stage4_event_fields.h | 2 +-
+  1 file changed, 1 insertion(+), 1 deletion(-)
 
-I'm having doubt that the dput()s were needed in the eventfs_remove_rec(),
-as the d_invalidate() appears to be enough. I'm still testing.
+diff --git a/include/trace/stages/stage4_event_fields.h 
+b/include/trace/stages/stage4_event_fields.h
+index b6f679ae21aa..9627e081a990 100644
+--- a/include/trace/stages/stage4_event_fields.h
++++ b/include/trace/stages/stage4_event_fields.h
+@@ -2,7 +2,7 @@
 
->  
-> 
-> > 
-> > v3 gives me (and my updates too)
-> > 
-> > ======================================================
-> > WARNING: possible circular locking dependency detected
-> > 6.5.0-rc1-test+ #576 Not tainted
-> > ------------------------------------------------------
-> > trace-cmd/840 is trying to acquire lock:
-> > ffff8881007e5de0 (&sb->s_type->i_mutex_key#5){++++}-{3:3}, at: dcache_dir_open_wrapper+0xc1/0x1b0
-> > 
-> > but task is already holding lock:
-> > ffff888103ad7e70 (eventfs_rwsem/1){.+.+}-{3:3}, at: dcache_dir_open_wrapper+0x6f/0x1b0
-> > 
-> > which lock already depends on the new lock.
-> > 
-> > 
-> > the existing dependency chain (in reverse order) is:
-> >   
-> > -> #1 (eventfs_rwsem/1){.+.+}-{3:3}:  
-> >        down_read_nested+0x41/0x180
-> >        eventfs_root_lookup+0x42/0x120
-> >        __lookup_slow+0xff/0x1b0
-> >        walk_component+0xdb/0x150
-> >        path_lookupat+0x67/0x1a0
-> >        filename_lookup+0xe4/0x1f0
-> >        vfs_statx+0x9e/0x180
-> >        vfs_fstatat+0x51/0x70
-> >        __do_sys_newfstatat+0x3f/0x80
-> >        do_syscall_64+0x3a/0xc0
-> >        entry_SYSCALL_64_after_hwframe+0x6e/0xd8
-> >   
-> > -> #0 (&sb->s_type->i_mutex_key#5){++++}-{3:3}:  
-> >        __lock_acquire+0x165d/0x2390
-> >        lock_acquire+0xd4/0x2d0
-> >        down_write+0x3b/0xd0
-> >        dcache_dir_open_wrapper+0xc1/0x1b0
-> >        do_dentry_open+0x20c/0x510
-> >        path_openat+0x7ad/0xc60
-> >        do_filp_open+0xaf/0x160
-> >        do_sys_openat2+0xab/0xe0
-> >        __x64_sys_openat+0x6a/0xa0
-> >        do_syscall_64+0x3a/0xc0
-> >        entry_SYSCALL_64_after_hwframe+0x6e/0xd8
-> > 
-> > other info that might help us debug this:
-> > 
-> >  Possible unsafe locking scenario:
-> > 
-> >        CPU0                    CPU1
-> >        ----                    ----
-> >   rlock(eventfs_rwsem/1);
-> >                                lock(&sb->s_type->i_mutex_key#5);
-> >                                lock(eventfs_rwsem/1);
-> >   lock(&sb->s_type->i_mutex_key#5);
-> > 
-> >  *** DEADLOCK ***
-> > 
-> > 1 lock held by trace-cmd/840:
-> >  #0: ffff888103ad7e70 (eventfs_rwsem/1){.+.+}-{3:3}, at: dcache_dir_open_wrapper+0x6f/0x1b0
-> > 
-> > stack backtrace:
-> > CPU: 7 PID: 840 Comm: trace-cmd Not tainted 6.5.0-rc1-test+ #576
-> > Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.2-debian-1.16.2-1 04/01/2014
-> > Call Trace:
-> >  <TASK>
-> >  dump_stack_lvl+0x57/0x90
-> >  check_noncircular+0x14b/0x160
-> >  __lock_acquire+0x165d/0x2390
-> >  lock_acquire+0xd4/0x2d0
-> >  ? dcache_dir_open_wrapper+0xc1/0x1b0
-> >  down_write+0x3b/0xd0
-> >  ? dcache_dir_open_wrapper+0xc1/0x1b0
-> >  dcache_dir_open_wrapper+0xc1/0x1b0
-> >  ? __pfx_dcache_dir_open_wrapper+0x10/0x10
-> >  do_dentry_open+0x20c/0x510
-> >  path_openat+0x7ad/0xc60
-> >  do_filp_open+0xaf/0x160
-> >  do_sys_openat2+0xab/0xe0
-> >  __x64_sys_openat+0x6a/0xa0
-> >  do_syscall_64+0x3a/0xc0
-> >  entry_SYSCALL_64_after_hwframe+0x6e/0xd8
-> > RIP: 0033:0x7f1743267e41
-> > Code: 44 24 18 31 c0 41 83 e2 40 75 3e 89 f0 25 00 00 41 00 3d 00 00 41 00 74 30 89 f2 b8 01 01 00 00 48 89 fe bf 9c ff ff ff 0f 05 <48> 3d 00 f0 ff ff 77 3f 48 8b 54 24 18 64 48 2b 14 25 28 00 00 00
-> > RSP: 002b:00007ffec10ff5d0 EFLAGS: 00000287 ORIG_RAX: 0000000000000101
-> > RAX: ffffffffffffffda RBX: 0000000000000000 RCX: 00007f1743267e41
-> > RDX: 0000000000090800 RSI: 00007ffec10ffdb0 RDI: 00000000ffffff9c
-> > RBP: 00007ffec10ffda0 R08: 00007ffec11003e0 R09: 0000000000000040
-> > R10: 0000000000000000 R11: 0000000000000287 R12: 00007ffec11003e0
-> > R13: 0000000000000040 R14: 0000000000000000 R15: 00007ffec110034b
-> >  </TASK>
-> >   
-> 
-> This is expected from v3 (just ignore as of now), if eventfs_set_ef_status_free crash not
-> reproduced on v3 then it’s v4 issue.
+  /* Stage 4 definitions for creating trace events */
 
-The issue comes from fixing the above ;-)
+-#define ALIGN_STRUCTFIELD(type) ((int)(__alignof__(struct {type b;})))
++#define ALIGN_STRUCTFIELD(type) ((int)(__alignof__(struct {type b; })))
 
--- Steve
+  #undef __field_ext
+  #define __field_ext(_type, _item, _filter_type) {            \
