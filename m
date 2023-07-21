@@ -2,152 +2,187 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 59B01EB64DA
-	for <linux-trace-kernel@archiver.kernel.org>; Fri, 21 Jul 2023 01:42:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 57435C00528
+	for <linux-trace-kernel@archiver.kernel.org>; Fri, 21 Jul 2023 04:01:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229786AbjGUBmJ (ORCPT
+        id S229898AbjGUEBC (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Thu, 20 Jul 2023 21:42:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50196 "EHLO
+        Fri, 21 Jul 2023 00:01:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37534 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229450AbjGUBmH (ORCPT
+        with ESMTP id S229579AbjGUEBB (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Thu, 20 Jul 2023 21:42:07 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 801EE2106;
-        Thu, 20 Jul 2023 18:42:06 -0700 (PDT)
+        Fri, 21 Jul 2023 00:01:01 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 246161BC1;
+        Thu, 20 Jul 2023 21:01:00 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange X25519 server-signature RSA-PSS (2048 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 13D3461CD3;
-        Fri, 21 Jul 2023 01:42:06 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 458C4C433C9;
-        Fri, 21 Jul 2023 01:42:03 +0000 (UTC)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id A340F60F75;
+        Fri, 21 Jul 2023 04:00:59 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 05771C433C7;
+        Fri, 21 Jul 2023 04:00:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1689903725;
-        bh=dw1xMty5sUx55lKWIHCKf4qU6fRTTDgNxFDurgYRD1o=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=LTGUIWNwZCt1pvkrukTY07XnEQ3xswAAwgdRew4atcUyeBGtLAvFf5Umec9wZj+AI
-         JdPeGtUCroBGjn0H/wVOegulnEJOYmNBACd1LCKdDO3sf8z+Ag/79dQhp2bt194Qvk
-         g2G2A+JNUE6yNltck6xY/Dj2RORG584hKY3IghbWUoThzBjUtzjLGR00BCLycUD42Z
-         jm4lqjPX5e3D+SiQMc5RQTWLhvt/3gDo2q8LbHYqgFt6nOkEdESWgRV7AFga1HufWR
-         6vhlgA/YSc959/OcEykI0a6cgsJ4/rKmb68/tS+knEIwFuRXjH56we7ZwINrbxJdNS
-         ++IxAlVxujtGQ==
-Date:   Fri, 21 Jul 2023 10:42:00 +0900
-From:   Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To:     Alan Maguire <alan.maguire@oracle.com>
-Cc:     linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        s=k20201202; t=1689912059;
+        bh=PEby7A9sVGRdb+oOMy8/Qs/8RcDGVrpFztRuZoH+h3A=;
+        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+        b=B7y4CM4CPm5gM42FGswqGfa2Uf3gGEvcmWfb/lcUgej8juYNphZ5h/4slJxmUO6Gt
+         gPLWhO3/2a/Z5ljESsclOKvZTJIJOSduYTMFu/bi8VluSExtItl5Bx6f5J8d7nVlMO
+         386lWVphJER+giXAPgEbqoDg8/z2BzDHRuZaKsWGvMjJzXP4oGz0sHvbrcNKNac2aB
+         6b10sJbP5U+dNDZkFt2BRK/emYxq/A3mQYI4bhXdtCIylrNcmrAGgl/1Vr3Ns03hCe
+         Jz8PEOLvwIAHLjilOZtAYhiIeTclmiXt69+/n70rKS+IRv+tb0Ru+fwiPtWla8PHZk
+         BmazTVkFzm+ZA==
+Received: by paulmck-ThinkPad-P17-Gen-1.home (Postfix, from userid 1000)
+        id 92D25CE09F7; Thu, 20 Jul 2023 21:00:58 -0700 (PDT)
+Date:   Thu, 20 Jul 2023 21:00:58 -0700
+From:   "Paul E. McKenney" <paulmck@kernel.org>
+To:     Valentin Schneider <vschneid@redhat.com>
+Cc:     linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+        linux-doc@vger.kernel.org, kvm@vger.kernel.org, linux-mm@kvack.org,
+        bpf@vger.kernel.org, x86@kernel.org, rcu@vger.kernel.org,
+        linux-kselftest@vger.kernel.org,
         Steven Rostedt <rostedt@goodmis.org>,
-        Martin KaFai Lau <martin.lau@linux.dev>, bpf@vger.kernel.org,
-        Sven Schnelle <svens@linux.ibm.com>,
-        Alexei Starovoitov <ast@kernel.org>
-Subject: Re: [PATCH v2 8/9] selftests/ftrace: Add BTF fields access
- testcases
-Message-Id: <20230721104200.92655ae661532475134cf004@kernel.org>
-In-Reply-To: <18605821-d4f1-c8e2-74eb-a91fc06d53b7@oracle.com>
-References: <168960739768.34107.15145201749042174448.stgit@devnote2>
-        <168960747750.34107.6104527579648222887.stgit@devnote2>
-        <18605821-d4f1-c8e2-74eb-a91fc06d53b7@oracle.com>
-X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Frederic Weisbecker <frederic@kernel.org>,
+        Neeraj Upadhyay <quic_neeraju@quicinc.com>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Josh Triplett <josh@joshtriplett.org>,
+        Boqun Feng <boqun.feng@gmail.com>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Lai Jiangshan <jiangshanlai@gmail.com>,
+        Zqiang <qiang.zhang1211@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Uladzislau Rezki <urezki@gmail.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        Lorenzo Stoakes <lstoakes@gmail.com>,
+        Josh Poimboeuf <jpoimboe@kernel.org>,
+        Jason Baron <jbaron@akamai.com>,
+        Kees Cook <keescook@chromium.org>,
+        Sami Tolvanen <samitolvanen@google.com>,
+        Ard Biesheuvel <ardb@kernel.org>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        Juerg Haefliger <juerg.haefliger@canonical.com>,
+        Nicolas Saenz Julienne <nsaenz@kernel.org>,
+        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+        Nadav Amit <namit@vmware.com>,
+        Dan Carpenter <error27@gmail.com>,
+        Chuang Wang <nashuiliang@gmail.com>,
+        Yang Jihong <yangjihong1@huawei.com>,
+        Petr Mladek <pmladek@suse.com>,
+        "Jason A. Donenfeld" <Jason@zx2c4.com>, Song Liu <song@kernel.org>,
+        Julian Pidancet <julian.pidancet@oracle.com>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        Dionna Glaze <dionnaglaze@google.com>,
+        Thomas =?iso-8859-1?Q?Wei=DFschuh?= <linux@weissschuh.net>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Daniel Bristot de Oliveira <bristot@redhat.com>,
+        Marcelo Tosatti <mtosatti@redhat.com>,
+        Yair Podemsky <ypodemsk@redhat.com>
+Subject: Re: [RFC PATCH v2 17/20] rcutorture: Add a test config to torture
+ test low RCU_DYNTICKS width
+Message-ID: <5143d0a9-bc02-4b9a-8613-2383bfdee35c@paulmck-laptop>
+Reply-To: paulmck@kernel.org
+References: <20230720163056.2564824-1-vschneid@redhat.com>
+ <20230720163056.2564824-18-vschneid@redhat.com>
+ <24b55289-1c35-41cc-9ad3-baa957f1c9cb@paulmck-laptop>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <24b55289-1c35-41cc-9ad3-baa957f1c9cb@paulmck-laptop>
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On Fri, 21 Jul 2023 00:00:32 +0100
-Alan Maguire <alan.maguire@oracle.com> wrote:
-
-> 
-> On 17/07/2023 16:24, Masami Hiramatsu (Google) wrote:
-> > From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+On Thu, Jul 20, 2023 at 12:53:05PM -0700, Paul E. McKenney wrote:
+> On Thu, Jul 20, 2023 at 05:30:53PM +0100, Valentin Schneider wrote:
+> > We now have an RCU_EXPORT knob for configuring the size of the dynticks
+> > counter: CONFIG_RCU_DYNTICKS_BITS.
 > > 
-> > Add test cases for accessing the data structure fields using BTF info.
-> > This includes the field access from parameters and retval, and accessing
-> > string information.
+> > Add a torture config for a ridiculously small counter (2 bits). This is ac
+> > opy of TREE4 with the added counter size restriction.
 > > 
-> > Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-> 
-> One suggestion below, but
-> 
-> Reviewed-by: Alan Maguire <alan.maguire@oracle.com>
-
-Thanks
-
-> 
+> > Link: http://lore.kernel.org/r/4c2cb573-168f-4806-b1d9-164e8276e66a@paulmck-laptop
+> > Suggested-by: Paul E. McKenney <paulmck@kernel.org>
+> > Signed-off-by: Valentin Schneider <vschneid@redhat.com>
 > > ---
-> > Changes in v2:
-> >  - Use '$retval' instead of 'retval'.
-> >  - Add a test that use both '$retval' and '$arg1' for fprobe.
-> > ---
-> >  .../ftrace/test.d/dynevent/add_remove_btfarg.tc    |   11 +++++++++++
-> >  .../ftrace/test.d/dynevent/fprobe_syntax_errors.tc |    4 ++++
-> >  2 files changed, 15 insertions(+)
+> >  .../selftests/rcutorture/configs/rcu/TREE11   | 19 +++++++++++++++++++
+> >  .../rcutorture/configs/rcu/TREE11.boot        |  1 +
+> >  2 files changed, 20 insertions(+)
+> >  create mode 100644 tools/testing/selftests/rcutorture/configs/rcu/TREE11
+> >  create mode 100644 tools/testing/selftests/rcutorture/configs/rcu/TREE11.boot
 > > 
-> > diff --git a/tools/testing/selftests/ftrace/test.d/dynevent/add_remove_btfarg.tc b/tools/testing/selftests/ftrace/test.d/dynevent/add_remove_btfarg.tc
-> > index b89de1771655..93b94468967b 100644
-> > --- a/tools/testing/selftests/ftrace/test.d/dynevent/add_remove_btfarg.tc
-> > +++ b/tools/testing/selftests/ftrace/test.d/dynevent/add_remove_btfarg.tc
-> > @@ -21,6 +21,8 @@ echo 0 > events/enable
-> >  echo > dynamic_events
-> >  
-> >  TP=kfree
-> > +TP2=kmem_cache_alloc
-> > +TP3=getname_flags
-> >  
-> >  if [ "$FPROBES" ] ; then
-> >  echo "f:fpevent $TP object" >> dynamic_events
-> > @@ -33,6 +35,7 @@ echo > dynamic_events
-> >  
-> >  echo "f:fpevent $TP "'$arg1' >> dynamic_events
-> >  grep -q "fpevent.*object=object" dynamic_events
-> > +
-> >  echo > dynamic_events
-> >  
-> >  echo "f:fpevent $TP "'$arg*' >> dynamic_events
-> > @@ -45,6 +48,14 @@ fi
-> >  
-> >  echo > dynamic_events
-> >  
-> > +echo "t:tpevent $TP2 name=s->name:string" >> dynamic_events
-> > +echo "f:fpevent ${TP3}%return path=\$retval->name:string" >> dynamic_events
-> > +
+> > diff --git a/tools/testing/selftests/rcutorture/configs/rcu/TREE11 b/tools/testing/selftests/rcutorture/configs/rcu/TREE11
+> > new file mode 100644
+> > index 0000000000000..aa7274efd9819
+> > --- /dev/null
+> > +++ b/tools/testing/selftests/rcutorture/configs/rcu/TREE11
+> > @@ -0,0 +1,19 @@
+> > +CONFIG_SMP=y
+> > +CONFIG_NR_CPUS=8
+> > +CONFIG_PREEMPT_NONE=n
+> > +CONFIG_PREEMPT_VOLUNTARY=y
+> > +CONFIG_PREEMPT=n
+> > +CONFIG_PREEMPT_DYNAMIC=n
+> > +#CHECK#CONFIG_TREE_RCU=y
+> > +CONFIG_HZ_PERIODIC=n
+> > +CONFIG_NO_HZ_IDLE=n
+> > +CONFIG_NO_HZ_FULL=y
+> > +CONFIG_RCU_TRACE=y
+> > +CONFIG_RCU_FANOUT=4
+> > +CONFIG_RCU_FANOUT_LEAF=3
+> > +CONFIG_DEBUG_LOCK_ALLOC=n
+> > +CONFIG_DEBUG_OBJECTS_RCU_HEAD=n
+> > +CONFIG_RCU_EXPERT=y
+> > +CONFIG_RCU_EQS_DEBUG=y
+> > +CONFIG_RCU_LAZY=y
+> > +CONFIG_RCU_DYNTICKS_BITS=2
 > 
-> could we test a numeric value like kmem_cache_alloc object size?
-> also if combos of -> and . are allowed, would be good to test one of
-> those too.
+> Why not just add this last line to the existing TREE04 scenario?
+> That would ensure that it gets tested regularly without extending the
+> time required to run a full set of rcutorture tests.
 
-OK, that's a good point! I'll add it.
+Please see below for the version of this patch that I am running overnight
+tests with.  Does this one work for you?
 
-> 
-> > +grep -q "tpevent.*name=s->name:string" dynamic_events
-> > +grep -q "fpevent.*path=\$retval->name:string" dynamic_events
-> > +
-> > +echo > dynamic_events
-> > +
-> >  if [ "$KPROBES" ] ; then
-> >  echo "p:kpevent $TP object" >> dynamic_events
-> >  grep -q "kpevent.*object=object" dynamic_events
-> > diff --git a/tools/testing/selftests/ftrace/test.d/dynevent/fprobe_syntax_errors.tc b/tools/testing/selftests/ftrace/test.d/dynevent/fprobe_syntax_errors.tc
-> > index 72563b2e0812..49758f77c923 100644
-> > --- a/tools/testing/selftests/ftrace/test.d/dynevent/fprobe_syntax_errors.tc
-> > +++ b/tools/testing/selftests/ftrace/test.d/dynevent/fprobe_syntax_errors.tc
-> > @@ -103,6 +103,10 @@ check_error 'f vfs_read%return ^$arg*'		# NOFENTRY_ARGS
-> >  check_error 'f vfs_read ^hoge'			# NO_BTFARG
-> >  check_error 'f kfree ^$arg10'			# NO_BTFARG (exceed the number of parameters)
-> >  check_error 'f kfree%return ^$retval'		# NO_RETVAL
-> > +check_error 'f vfs_read%return $retval->^foo'	# NO_PTR_STRCT
-> > +check_error 'f vfs_read file->^foo'		# NO_BTF_FIELD
-> > +check_error 'f vfs_read file^-.foo'		# BAD_HYPHEN
-> > +check_error 'f vfs_read ^file:string'		# BAD_TYPE4STR
-> >  else
-> >  check_error 'f vfs_read ^$arg*'			# NOSUP_BTFARG
-> >  check_error 't kfree ^$arg*'			# NOSUP_BTFARG
-> > 
-> > 
+							Thanx, Paul
 
+------------------------------------------------------------------------
 
--- 
-Masami Hiramatsu (Google) <mhiramat@kernel.org>
+commit 1aa13731e665193cd833edac5ebc86a9c3fea2b7
+Author: Valentin Schneider <vschneid@redhat.com>
+Date:   Thu Jul 20 20:58:41 2023 -0700
+
+    rcutorture: Add a test config to torture test low RCU_DYNTICKS width
+    
+    We now have an RCU_EXPORT knob for configuring the size of the dynticks
+    counter: CONFIG_RCU_DYNTICKS_BITS.
+    
+    Modify scenario TREE04 to exercise a a ridiculously small counter
+    (2 bits).
+    
+    Link: http://lore.kernel.org/r/4c2cb573-168f-4806-b1d9-164e8276e66a@paulmck-laptop
+    Suggested-by: Paul E. McKenney <paulmck@kernel.org>
+    Signed-off-by: Valentin Schneider <vschneid@redhat.com>
+    Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
+
+diff --git a/tools/testing/selftests/rcutorture/configs/rcu/TREE04 b/tools/testing/selftests/rcutorture/configs/rcu/TREE04
+index dc4985064b3a..aa7274efd981 100644
+--- a/tools/testing/selftests/rcutorture/configs/rcu/TREE04
++++ b/tools/testing/selftests/rcutorture/configs/rcu/TREE04
+@@ -16,3 +16,4 @@ CONFIG_DEBUG_OBJECTS_RCU_HEAD=n
+ CONFIG_RCU_EXPERT=y
+ CONFIG_RCU_EQS_DEBUG=y
+ CONFIG_RCU_LAZY=y
++CONFIG_RCU_DYNTICKS_BITS=2
