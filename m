@@ -2,194 +2,152 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CBE7EB64DA
-	for <linux-trace-kernel@archiver.kernel.org>; Fri, 21 Jul 2023 01:40:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 59B01EB64DA
+	for <linux-trace-kernel@archiver.kernel.org>; Fri, 21 Jul 2023 01:42:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229766AbjGUBkO (ORCPT
+        id S229786AbjGUBmJ (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Thu, 20 Jul 2023 21:40:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49642 "EHLO
+        Thu, 20 Jul 2023 21:42:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50196 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229560AbjGUBkN (ORCPT
+        with ESMTP id S229450AbjGUBmH (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Thu, 20 Jul 2023 21:40:13 -0400
-Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C94691FED;
-        Thu, 20 Jul 2023 18:40:12 -0700 (PDT)
-Received: from pps.filterd (m0246627.ppops.net [127.0.0.1])
-        by mx0b-00069f02.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 36KLMV1c001984;
-        Fri, 21 Jul 2023 01:39:59 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2023-03-30;
- bh=BZtX119c1YAIW4RFyhUCK+LylpeHQwScyIa+t9kt638=;
- b=Ic87I25sg9XBPQmhQWzwVBvT2W32kjiLfCI+Nh+KBGq+nmiDlPqrSXw4eA2N95h3AVY1
- V2MJzLBD1kjfHfLu7+OybiDl/u+XPaRcfgvhFJHmq0MV/Tvb9910uWc1Zb8TYnbjyq2N
- lytLuAz33MwVVgQkc69qK+ARDLr0Tc+MKxvdzHa9Qq1w01XJscNX19naOj1einDqNPdP
- FZ31ncrV78JR8R7jIdRpuEcNVv9v3odwFEzBWlOJOF+xzLQszfCP7A8Ecz6UwQwlcgsy
- hbId5HXdezZB6CHnnbmLqj6XEb6YvD4kw90LRI92IeEFdqlxxX8k2iDvTj7ndZs6RErs gQ== 
-Received: from phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta03.appoci.oracle.com [138.1.37.129])
-        by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3run7731an-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 21 Jul 2023 01:39:59 +0000
-Received: from pps.filterd (phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
-        by phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (8.17.1.19/8.17.1.19) with ESMTP id 36KN7Prx019211;
-        Fri, 21 Jul 2023 01:39:58 GMT
-Received: from pps.reinject (localhost [127.0.0.1])
-        by phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 3ruhw9vyr3-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NO);
-        Fri, 21 Jul 2023 01:39:58 +0000
-Received: from phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
-        by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 36L1dwwc040835;
-        Fri, 21 Jul 2023 01:39:58 GMT
-Received: from oracle.com (dhcp-10-154-141-208.vpn.oracle.com [10.154.141.208])
-        by phxpaimrmta03.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 3ruhw9vyq3-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NO);
-        Fri, 21 Jul 2023 01:39:57 +0000
-Date:   Thu, 20 Jul 2023 21:39:54 -0400
-From:   Kris Van Hees <kris.van.hees@oracle.com>
-To:     Masami Hiramatsu <mhiramat@kernel.org>
-Cc:     Nick Alcock <nick.alcock@oracle.com>,
-        Alexander Lobakin <aleksander.lobakin@intel.com>,
-        Alessandro Carminati <alessandro.carminati@gmail.com>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Nathan Chancellor <nathan@kernel.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Nicolas Schier <nicolas@fjasle.eu>,
-        Daniel Bristot de Oliveira <bristot@kernel.org>,
-        Viktor Malik <vmalik@redhat.com>, linux-kernel@vger.kernel.org,
-        linux-kbuild@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
-        eugene.loh@oracle.com, kris.van.hees@oracle.com,
-        live-patching@vger.kernel.org
-Subject: Re: [PATCH v2] scripts/link-vmlinux.sh: Add alias to duplicate
- symbols for kallsyms
-Message-ID: <ZLnh3bxQCRZ7564w@oracle.com>
-References: <ZLVxUQiC5iF+xTPQ@bombadil.infradead.org>
- <20230714150326.1152359-1-alessandro.carminati@gmail.com>
- <20230717105240.3d986331@gandalf.local.home>
- <874jm088ah.fsf@esperi.org.uk>
- <6edbfe7b-aec4-2b3c-2f85-42e418ab3d99@intel.com>
- <87wmyu7n5t.fsf@esperi.org.uk>
- <20230721100931.b366ecfbeb09cba01c73d47a@kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230721100931.b366ecfbeb09cba01c73d47a@kernel.org>
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.254,Aquarius:18.0.957,Hydra:6.0.591,FMLib:17.11.176.26
- definitions=2023-07-20_12,2023-07-20_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- mlxscore=0 adultscore=0 spamscore=0 phishscore=0 bulkscore=0
- mlxlogscore=999 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2306200000 definitions=main-2307210014
-X-Proofpoint-GUID: foimvApiqjguQfiOtuStkh9xqDh9tkq-
-X-Proofpoint-ORIG-GUID: foimvApiqjguQfiOtuStkh9xqDh9tkq-
+        Thu, 20 Jul 2023 21:42:07 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 801EE2106;
+        Thu, 20 Jul 2023 18:42:06 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 13D3461CD3;
+        Fri, 21 Jul 2023 01:42:06 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 458C4C433C9;
+        Fri, 21 Jul 2023 01:42:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1689903725;
+        bh=dw1xMty5sUx55lKWIHCKf4qU6fRTTDgNxFDurgYRD1o=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=LTGUIWNwZCt1pvkrukTY07XnEQ3xswAAwgdRew4atcUyeBGtLAvFf5Umec9wZj+AI
+         JdPeGtUCroBGjn0H/wVOegulnEJOYmNBACd1LCKdDO3sf8z+Ag/79dQhp2bt194Qvk
+         g2G2A+JNUE6yNltck6xY/Dj2RORG584hKY3IghbWUoThzBjUtzjLGR00BCLycUD42Z
+         jm4lqjPX5e3D+SiQMc5RQTWLhvt/3gDo2q8LbHYqgFt6nOkEdESWgRV7AFga1HufWR
+         6vhlgA/YSc959/OcEykI0a6cgsJ4/rKmb68/tS+knEIwFuRXjH56we7ZwINrbxJdNS
+         ++IxAlVxujtGQ==
+Date:   Fri, 21 Jul 2023 10:42:00 +0900
+From:   Masami Hiramatsu (Google) <mhiramat@kernel.org>
+To:     Alan Maguire <alan.maguire@oracle.com>
+Cc:     linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Martin KaFai Lau <martin.lau@linux.dev>, bpf@vger.kernel.org,
+        Sven Schnelle <svens@linux.ibm.com>,
+        Alexei Starovoitov <ast@kernel.org>
+Subject: Re: [PATCH v2 8/9] selftests/ftrace: Add BTF fields access
+ testcases
+Message-Id: <20230721104200.92655ae661532475134cf004@kernel.org>
+In-Reply-To: <18605821-d4f1-c8e2-74eb-a91fc06d53b7@oracle.com>
+References: <168960739768.34107.15145201749042174448.stgit@devnote2>
+        <168960747750.34107.6104527579648222887.stgit@devnote2>
+        <18605821-d4f1-c8e2-74eb-a91fc06d53b7@oracle.com>
+X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On Fri, Jul 21, 2023 at 10:09:31AM +0900, Masami Hiramatsu wrote:
-> On Thu, 20 Jul 2023 14:00:46 +0100
-> Nick Alcock <nick.alcock@oracle.com> wrote:
-> 
-> > On 19 Jul 2023, Alexander Lobakin verbalised:
-> > 
-> > > From: Nick Alcock <nick.alcock@oracle.com>
-> > > Date: Wed, 19 Jul 2023 12:12:06 +0100
-> > >>> Yes, please coordinate with Nick and review each other's work, now we
-> > >>> have two separate efforts with different reasons but hopefully we'll
-> > >
-> > > Three efforts[0] :D Mine went unnoticed unfortunately, so I switched to
-> > > other projects then.
-> > 
-> > It's odd, nobody seems to have noticed these until recently and now
-> > suddenly people are crawling out of the woodwork wanting unique
-> > addresses :) maybe the ambiguous ones are just getting commonplace
-> > enough that they're biting people more often?
-> 
-> Usually, the ambiguous symbols are used as internal functions and
-> are easily changed by kernel update. Thus it is only used for debugging.
-> On the other hand, exposed symbols are considered as more stable (It's
-> not really that stable.) so users tend to use that.
+On Fri, 21 Jul 2023 00:00:32 +0100
+Alan Maguire <alan.maguire@oracle.com> wrote:
 
-In the use case of DTrace, tracing internal functions is certainly something
-that is used, be it for debugging/performance analysis, for gaining better
-understanding what internal operations are triggerd by userspace actions, etc.
+> 
+> On 17/07/2023 16:24, Masami Hiramatsu (Google) wrote:
+> > From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+> > 
+> > Add test cases for accessing the data structure fields using BTF info.
+> > This includes the field access from parameters and retval, and accessing
+> > string information.
+> > 
+> > Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+> 
+> One suggestion below, but
+> 
+> Reviewed-by: Alan Maguire <alan.maguire@oracle.com>
 
-> BTW, note that `perf probe` and kprobe-events already supported that by
-> '_text+OFFSET' style to point those functions (`perf probe` convert the
-> given 'function@file-path' place to '_text+OFFSET' using DWARF and ELF).
-> BPF doesn't because it only supports "function name". (I'm not sure how
-> Dtrace support it)
+Thanks
 
-DTrace supports arbitrary address probing based on an offset from a symbol.
+> 
+> > ---
+> > Changes in v2:
+> >  - Use '$retval' instead of 'retval'.
+> >  - Add a test that use both '$retval' and '$arg1' for fprobe.
+> > ---
+> >  .../ftrace/test.d/dynevent/add_remove_btfarg.tc    |   11 +++++++++++
+> >  .../ftrace/test.d/dynevent/fprobe_syntax_errors.tc |    4 ++++
+> >  2 files changed, 15 insertions(+)
+> > 
+> > diff --git a/tools/testing/selftests/ftrace/test.d/dynevent/add_remove_btfarg.tc b/tools/testing/selftests/ftrace/test.d/dynevent/add_remove_btfarg.tc
+> > index b89de1771655..93b94468967b 100644
+> > --- a/tools/testing/selftests/ftrace/test.d/dynevent/add_remove_btfarg.tc
+> > +++ b/tools/testing/selftests/ftrace/test.d/dynevent/add_remove_btfarg.tc
+> > @@ -21,6 +21,8 @@ echo 0 > events/enable
+> >  echo > dynamic_events
+> >  
+> >  TP=kfree
+> > +TP2=kmem_cache_alloc
+> > +TP3=getname_flags
+> >  
+> >  if [ "$FPROBES" ] ; then
+> >  echo "f:fpevent $TP object" >> dynamic_events
+> > @@ -33,6 +35,7 @@ echo > dynamic_events
+> >  
+> >  echo "f:fpevent $TP "'$arg1' >> dynamic_events
+> >  grep -q "fpevent.*object=object" dynamic_events
+> > +
+> >  echo > dynamic_events
+> >  
+> >  echo "f:fpevent $TP "'$arg*' >> dynamic_events
+> > @@ -45,6 +48,14 @@ fi
+> >  
+> >  echo > dynamic_events
+> >  
+> > +echo "t:tpevent $TP2 name=s->name:string" >> dynamic_events
+> > +echo "f:fpevent ${TP3}%return path=\$retval->name:string" >> dynamic_events
+> > +
+> 
+> could we test a numeric value like kmem_cache_alloc object size?
+> also if combos of -> and . are allowed, would be good to test one of
+> those too.
 
-> If we really consider to improve BPF trace to trace such internal functions,
-> I think you should consider to reuse perf-probe's code to find actual
-> address and convert it to '_text+OFFSET' style to specify the probe point.
-> 
-> I think this still useful if user can identify the traced symbol from the
-> source code line, easily without DWARF analysis. And BPF also need to
-> support "SYMBOL+OFFSET" style probe points.
+OK, that's a good point! I'll add it.
 
-While identifying a traced symbol is important, the use cases I am seeing are
-the other way around... being able to specify a symbol name (with whatever
-additional elements needed to make it unique) as target for placing a probe.
-And doing so without needing to depend on DWARF data or other rather large
-collection of debug data.  Especially on production systems, requiring the
-typically very large debuginfo style data to be installed is not acceptable
-for the use cases I encounter.
+> 
+> > +grep -q "tpevent.*name=s->name:string" dynamic_events
+> > +grep -q "fpevent.*path=\$retval->name:string" dynamic_events
+> > +
+> > +echo > dynamic_events
+> > +
+> >  if [ "$KPROBES" ] ; then
+> >  echo "p:kpevent $TP object" >> dynamic_events
+> >  grep -q "kpevent.*object=object" dynamic_events
+> > diff --git a/tools/testing/selftests/ftrace/test.d/dynevent/fprobe_syntax_errors.tc b/tools/testing/selftests/ftrace/test.d/dynevent/fprobe_syntax_errors.tc
+> > index 72563b2e0812..49758f77c923 100644
+> > --- a/tools/testing/selftests/ftrace/test.d/dynevent/fprobe_syntax_errors.tc
+> > +++ b/tools/testing/selftests/ftrace/test.d/dynevent/fprobe_syntax_errors.tc
+> > @@ -103,6 +103,10 @@ check_error 'f vfs_read%return ^$arg*'		# NOFENTRY_ARGS
+> >  check_error 'f vfs_read ^hoge'			# NO_BTFARG
+> >  check_error 'f kfree ^$arg10'			# NO_BTFARG (exceed the number of parameters)
+> >  check_error 'f kfree%return ^$retval'		# NO_RETVAL
+> > +check_error 'f vfs_read%return $retval->^foo'	# NO_PTR_STRCT
+> > +check_error 'f vfs_read file->^foo'		# NO_BTF_FIELD
+> > +check_error 'f vfs_read file^-.foo'		# BAD_HYPHEN
+> > +check_error 'f vfs_read ^file:string'		# BAD_TYPE4STR
+> >  else
+> >  check_error 'f vfs_read ^$arg*'			# NOSUP_BTFARG
+> >  check_error 't kfree ^$arg*'			# NOSUP_BTFARG
+> > 
+> > 
 
-> > > My idea was to give relative path from the kernel root to the objfile,
-> > > as we have a good bunch of non-unique "filename + symbol name" pairs.
-> > 
-> > I considered that, but unfortunately that has two problems to a raging
-> > perfectionist like me:
-> > 
-> >  - the objfile probably won't exist except if you're actually doing
-> >    kernel development, since kernel build trees are big enough that a
-> >    lot of people delete them after building or ship kernels to other
-> >    machines: if someone else built your kernel (overwhelmingly common
-> >    among non-kernel-devs) the objfiles are sure to be absent. (But an
-> >    option to not truncate the names when you know they won't be absent
-> >    might be a good idea, though this pushes space requirements up by
-> >    hundreds of kilobytes so it should probably be off by default.)
-> 
-> As I said, these internal symbol tracing is usually only for debugging
-> the kernel. So I think this is not so problematic.
-> 
-> Thank you,
-> 
-> > 
-> >  - even giving a path to the kernel module on disk (much lower
-> >    resolution and vulnerable to ambiguity again) is unreliable because
-> >    there's absolutely no guarantee that any given process can see any of
-> >    them: they might be in a different fs namespace or the modules might
-> >    only be present in an initramfs (hell, I even know setups which
-> >    *compile* the modules needed for rootfs mounting in the initramfs!
-> >    Yes this is borderline insane, yes it happens). More commonly, they
-> >    might be compressed using any of a number of compressors, changing
-> >    the name, and the kernel has no idea which compressor might have been
-> >    used (not unless you want it to go and look, and, well, wandering
-> >    around over the fs hunting down .ko.* files from kernelspace to get
-> >    their names right is *not* my idea of a good time! It's hard enough
-> >    to get that right from userspace, honestly, even with kmod helping.)
-> > 
-> >    The most you could do would be to provide a key you could use with
-> >    kmod to dig the real modules out from userspace. Partial names are as
-> >    good as anything for that :)
-> > 
-> > So all the objfile names are, when it comes down to it, is names with no
-> > intrinsic meaning: even if they're filenames of some kind, tools can't
-> > rely on being able to access those files. (For my most common use case,
-> > using a tracer on an enterprise-built production kernel, they'd almost
-> > never be able to.)
-> > 
-> > So you might as well treat the objfile names as arbitrary string keys
-> > that might be a memory-jogger for humans, which means you can chop
-> > boring bits off them to save space :)
-> 
-> 
-> -- 
-> Masami Hiramatsu (Google) <mhiramat@kernel.org>
+
+-- 
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
