@@ -2,43 +2,61 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 57435C00528
-	for <linux-trace-kernel@archiver.kernel.org>; Fri, 21 Jul 2023 04:01:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CCAC2EB64DC
+	for <linux-trace-kernel@archiver.kernel.org>; Fri, 21 Jul 2023 07:59:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229898AbjGUEBC (ORCPT
+        id S230451AbjGUH7q (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Fri, 21 Jul 2023 00:01:02 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37534 "EHLO
+        Fri, 21 Jul 2023 03:59:46 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47610 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229579AbjGUEBB (ORCPT
+        with ESMTP id S229518AbjGUH7o (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Fri, 21 Jul 2023 00:01:01 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 246161BC1;
-        Thu, 20 Jul 2023 21:01:00 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id A340F60F75;
-        Fri, 21 Jul 2023 04:00:59 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 05771C433C7;
-        Fri, 21 Jul 2023 04:00:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1689912059;
-        bh=PEby7A9sVGRdb+oOMy8/Qs/8RcDGVrpFztRuZoH+h3A=;
-        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-        b=B7y4CM4CPm5gM42FGswqGfa2Uf3gGEvcmWfb/lcUgej8juYNphZ5h/4slJxmUO6Gt
-         gPLWhO3/2a/Z5ljESsclOKvZTJIJOSduYTMFu/bi8VluSExtItl5Bx6f5J8d7nVlMO
-         386lWVphJER+giXAPgEbqoDg8/z2BzDHRuZaKsWGvMjJzXP4oGz0sHvbrcNKNac2aB
-         6b10sJbP5U+dNDZkFt2BRK/emYxq/A3mQYI4bhXdtCIylrNcmrAGgl/1Vr3Ns03hCe
-         Jz8PEOLvwIAHLjilOZtAYhiIeTclmiXt69+/n70rKS+IRv+tb0Ru+fwiPtWla8PHZk
-         BmazTVkFzm+ZA==
-Received: by paulmck-ThinkPad-P17-Gen-1.home (Postfix, from userid 1000)
-        id 92D25CE09F7; Thu, 20 Jul 2023 21:00:58 -0700 (PDT)
-Date:   Thu, 20 Jul 2023 21:00:58 -0700
-From:   "Paul E. McKenney" <paulmck@kernel.org>
-To:     Valentin Schneider <vschneid@redhat.com>
+        Fri, 21 Jul 2023 03:59:44 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AC8062701
+        for <linux-trace-kernel@vger.kernel.org>; Fri, 21 Jul 2023 00:58:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1689926338;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=OMiNfezuDp8QZVlAhLlbiIMuGymmCNYB2I4q0EEFUSk=;
+        b=es9VMHsiDg2kuJVCMyTCvHzFaAuKoWL4QN9LjBQxFyxYc2fjsb2ogQ78VCKuGxIJAwnq9u
+        u3eXDF1fgpsBDz13/yue0Z+cwF00LhcZnXJYCXZZky1FsICn2cuMzs7vHFE+EhMfimzW4p
+        xEMc+hIL3o4dp33wXsBxVpL70l3Saic=
+Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
+ [209.85.221.70]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-626-8uZ1BF8kMOqqwTn7Zx_SlQ-1; Fri, 21 Jul 2023 03:58:57 -0400
+X-MC-Unique: 8uZ1BF8kMOqqwTn7Zx_SlQ-1
+Received: by mail-wr1-f70.google.com with SMTP id ffacd0b85a97d-31400956ce8so873205f8f.3
+        for <linux-trace-kernel@vger.kernel.org>; Fri, 21 Jul 2023 00:58:57 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1689926336; x=1690531136;
+        h=mime-version:message-id:date:references:in-reply-to:subject:cc:to
+         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=OMiNfezuDp8QZVlAhLlbiIMuGymmCNYB2I4q0EEFUSk=;
+        b=LBfOHxlqKAAuHI0oNI+MF6/3DuxkjZPInap0gsFyYNwx9I0tPCTo8dYI6AxnWWIBVe
+         Vw/GyJtq24Ea0HmnIBuD8buVwXMu04j78N0Z8gR4ycQaQ5w2g65VAtbM7bJAC5cjUqXp
+         c1kVG6UiQNkatv7nlRUxM4XTliR/8r6w8F4OEvHMo9+McZaiFdSobb0xRQ/zYTzEYW20
+         hXdet7mpKe1u5Dn2y0kHApS0/t4YfjNsE9gOLs+4O+cIRN92lssx7/Kd95J+mC+1vFAv
+         H5egKp1e2Jy6N7pVn5oefZiioFZyLiZVru0jWuEXs7RkmTCqBleARGrE/IIV2SVOCJNi
+         HoLw==
+X-Gm-Message-State: ABy/qLZK7ZW790ZW5tmzuLKRvIwA/ewjuieIVl2FCM+9Vkc0y64GjYu6
+        Zy7UEvkYKrVgDHmFXISNF1LKfy4YYoCJFfGVTkp5sYLaJFshbP19eK/6JSjn2uNW4mmg7V0HFUh
+        QVFvYdvyxBjswNeQNhUEJzH+qTR3POLt3
+X-Received: by 2002:a5d:6103:0:b0:313:e559:2d4c with SMTP id v3-20020a5d6103000000b00313e5592d4cmr798841wrt.45.1689926336424;
+        Fri, 21 Jul 2023 00:58:56 -0700 (PDT)
+X-Google-Smtp-Source: APBJJlHidrlV6ut/P6AGZyG//+hfTFRQfLD41RE3t6gFtW0P8dq2RF0fuunZIegUj7e2SS5Snlr4dg==
+X-Received: by 2002:a5d:6103:0:b0:313:e559:2d4c with SMTP id v3-20020a5d6103000000b00313e5592d4cmr798794wrt.45.1689926336070;
+        Fri, 21 Jul 2023 00:58:56 -0700 (PDT)
+Received: from vschneid.remote.csb ([149.12.7.81])
+        by smtp.gmail.com with ESMTPSA id i7-20020a05600011c700b00313fd294d6csm3510472wrx.7.2023.07.21.00.58.54
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 21 Jul 2023 00:58:55 -0700 (PDT)
+From:   Valentin Schneider <vschneid@redhat.com>
+To:     paulmck@kernel.org
 Cc:     linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
         linux-doc@vger.kernel.org, kvm@vger.kernel.org, linux-mm@kvack.org,
         bpf@vger.kernel.org, x86@kernel.org, rcu@vger.kernel.org,
@@ -85,104 +103,70 @@ Cc:     linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
         Julian Pidancet <julian.pidancet@oracle.com>,
         Tom Lendacky <thomas.lendacky@amd.com>,
         Dionna Glaze <dionnaglaze@google.com>,
-        Thomas =?iso-8859-1?Q?Wei=DFschuh?= <linux@weissschuh.net>,
+        Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <linux@weissschuh.net>,
         Juri Lelli <juri.lelli@redhat.com>,
         Daniel Bristot de Oliveira <bristot@redhat.com>,
         Marcelo Tosatti <mtosatti@redhat.com>,
         Yair Podemsky <ypodemsk@redhat.com>
 Subject: Re: [RFC PATCH v2 17/20] rcutorture: Add a test config to torture
  test low RCU_DYNTICKS width
-Message-ID: <5143d0a9-bc02-4b9a-8613-2383bfdee35c@paulmck-laptop>
-Reply-To: paulmck@kernel.org
+In-Reply-To: <5143d0a9-bc02-4b9a-8613-2383bfdee35c@paulmck-laptop>
 References: <20230720163056.2564824-1-vschneid@redhat.com>
  <20230720163056.2564824-18-vschneid@redhat.com>
  <24b55289-1c35-41cc-9ad3-baa957f1c9cb@paulmck-laptop>
+ <5143d0a9-bc02-4b9a-8613-2383bfdee35c@paulmck-laptop>
+Date:   Fri, 21 Jul 2023 08:58:53 +0100
+Message-ID: <xhsmhmszpu24i.mognet@vschneid.remote.csb>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <24b55289-1c35-41cc-9ad3-baa957f1c9cb@paulmck-laptop>
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: redhat.com
+Content-Type: text/plain
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On Thu, Jul 20, 2023 at 12:53:05PM -0700, Paul E. McKenney wrote:
-> On Thu, Jul 20, 2023 at 05:30:53PM +0100, Valentin Schneider wrote:
-> > We now have an RCU_EXPORT knob for configuring the size of the dynticks
-> > counter: CONFIG_RCU_DYNTICKS_BITS.
-> > 
-> > Add a torture config for a ridiculously small counter (2 bits). This is ac
-> > opy of TREE4 with the added counter size restriction.
-> > 
-> > Link: http://lore.kernel.org/r/4c2cb573-168f-4806-b1d9-164e8276e66a@paulmck-laptop
-> > Suggested-by: Paul E. McKenney <paulmck@kernel.org>
-> > Signed-off-by: Valentin Schneider <vschneid@redhat.com>
-> > ---
-> >  .../selftests/rcutorture/configs/rcu/TREE11   | 19 +++++++++++++++++++
-> >  .../rcutorture/configs/rcu/TREE11.boot        |  1 +
-> >  2 files changed, 20 insertions(+)
-> >  create mode 100644 tools/testing/selftests/rcutorture/configs/rcu/TREE11
-> >  create mode 100644 tools/testing/selftests/rcutorture/configs/rcu/TREE11.boot
-> > 
-> > diff --git a/tools/testing/selftests/rcutorture/configs/rcu/TREE11 b/tools/testing/selftests/rcutorture/configs/rcu/TREE11
-> > new file mode 100644
-> > index 0000000000000..aa7274efd9819
-> > --- /dev/null
-> > +++ b/tools/testing/selftests/rcutorture/configs/rcu/TREE11
-> > @@ -0,0 +1,19 @@
-> > +CONFIG_SMP=y
-> > +CONFIG_NR_CPUS=8
-> > +CONFIG_PREEMPT_NONE=n
-> > +CONFIG_PREEMPT_VOLUNTARY=y
-> > +CONFIG_PREEMPT=n
-> > +CONFIG_PREEMPT_DYNAMIC=n
-> > +#CHECK#CONFIG_TREE_RCU=y
-> > +CONFIG_HZ_PERIODIC=n
-> > +CONFIG_NO_HZ_IDLE=n
-> > +CONFIG_NO_HZ_FULL=y
-> > +CONFIG_RCU_TRACE=y
-> > +CONFIG_RCU_FANOUT=4
-> > +CONFIG_RCU_FANOUT_LEAF=3
-> > +CONFIG_DEBUG_LOCK_ALLOC=n
-> > +CONFIG_DEBUG_OBJECTS_RCU_HEAD=n
-> > +CONFIG_RCU_EXPERT=y
-> > +CONFIG_RCU_EQS_DEBUG=y
-> > +CONFIG_RCU_LAZY=y
-> > +CONFIG_RCU_DYNTICKS_BITS=2
-> 
-> Why not just add this last line to the existing TREE04 scenario?
-> That would ensure that it gets tested regularly without extending the
-> time required to run a full set of rcutorture tests.
+On 20/07/23 21:00, Paul E. McKenney wrote:
+> On Thu, Jul 20, 2023 at 12:53:05PM -0700, Paul E. McKenney wrote:
+>> On Thu, Jul 20, 2023 at 05:30:53PM +0100, Valentin Schneider wrote:
+>> > diff --git a/tools/testing/selftests/rcutorture/configs/rcu/TREE11 b/tools/testing/selftests/rcutorture/configs/rcu/TREE11
+>> > new file mode 100644
+>> > index 0000000000000..aa7274efd9819
+>> > --- /dev/null
+>> > +++ b/tools/testing/selftests/rcutorture/configs/rcu/TREE11
+>> > @@ -0,0 +1,19 @@
+>> > +CONFIG_SMP=y
+>> > +CONFIG_NR_CPUS=8
+>> > +CONFIG_PREEMPT_NONE=n
+>> > +CONFIG_PREEMPT_VOLUNTARY=y
+>> > +CONFIG_PREEMPT=n
+>> > +CONFIG_PREEMPT_DYNAMIC=n
+>> > +#CHECK#CONFIG_TREE_RCU=y
+>> > +CONFIG_HZ_PERIODIC=n
+>> > +CONFIG_NO_HZ_IDLE=n
+>> > +CONFIG_NO_HZ_FULL=y
+>> > +CONFIG_RCU_TRACE=y
+>> > +CONFIG_RCU_FANOUT=4
+>> > +CONFIG_RCU_FANOUT_LEAF=3
+>> > +CONFIG_DEBUG_LOCK_ALLOC=n
+>> > +CONFIG_DEBUG_OBJECTS_RCU_HEAD=n
+>> > +CONFIG_RCU_EXPERT=y
+>> > +CONFIG_RCU_EQS_DEBUG=y
+>> > +CONFIG_RCU_LAZY=y
+>> > +CONFIG_RCU_DYNTICKS_BITS=2
+>>
+>> Why not just add this last line to the existing TREE04 scenario?
+>> That would ensure that it gets tested regularly without extending the
+>> time required to run a full set of rcutorture tests.
+>
+> Please see below for the version of this patch that I am running overnight
+> tests with.  Does this one work for you?
+>
 
-Please see below for the version of this patch that I am running overnight
-tests with.  Does this one work for you?
+Yep that's fine with me. I only went with a separate test file as wasn't
+sure how new test options should be handled (merged into existing tests vs
+new tests created), and didn't want to negatively impact TREE04 or
+TREE06. If merging into TREE04 is preferred, then I'll do just that and
+carry this path moving forwards.
 
-							Thanx, Paul
+Thanks!
 
-------------------------------------------------------------------------
-
-commit 1aa13731e665193cd833edac5ebc86a9c3fea2b7
-Author: Valentin Schneider <vschneid@redhat.com>
-Date:   Thu Jul 20 20:58:41 2023 -0700
-
-    rcutorture: Add a test config to torture test low RCU_DYNTICKS width
-    
-    We now have an RCU_EXPORT knob for configuring the size of the dynticks
-    counter: CONFIG_RCU_DYNTICKS_BITS.
-    
-    Modify scenario TREE04 to exercise a a ridiculously small counter
-    (2 bits).
-    
-    Link: http://lore.kernel.org/r/4c2cb573-168f-4806-b1d9-164e8276e66a@paulmck-laptop
-    Suggested-by: Paul E. McKenney <paulmck@kernel.org>
-    Signed-off-by: Valentin Schneider <vschneid@redhat.com>
-    Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
-
-diff --git a/tools/testing/selftests/rcutorture/configs/rcu/TREE04 b/tools/testing/selftests/rcutorture/configs/rcu/TREE04
-index dc4985064b3a..aa7274efd981 100644
---- a/tools/testing/selftests/rcutorture/configs/rcu/TREE04
-+++ b/tools/testing/selftests/rcutorture/configs/rcu/TREE04
-@@ -16,3 +16,4 @@ CONFIG_DEBUG_OBJECTS_RCU_HEAD=n
- CONFIG_RCU_EXPERT=y
- CONFIG_RCU_EQS_DEBUG=y
- CONFIG_RCU_LAZY=y
-+CONFIG_RCU_DYNTICKS_BITS=2
