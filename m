@@ -2,61 +2,43 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 66A51C04FE0
-	for <linux-trace-kernel@archiver.kernel.org>; Fri, 21 Jul 2023 15:09:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 687CDEB64DC
+	for <linux-trace-kernel@archiver.kernel.org>; Fri, 21 Jul 2023 16:09:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231801AbjGUPJS (ORCPT
+        id S232033AbjGUQJS (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Fri, 21 Jul 2023 11:09:18 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44586 "EHLO
+        Fri, 21 Jul 2023 12:09:18 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:37484 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231829AbjGUPJH (ORCPT
+        with ESMTP id S232344AbjGUQJQ (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Fri, 21 Jul 2023 11:09:07 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4A90F272E
-        for <linux-trace-kernel@vger.kernel.org>; Fri, 21 Jul 2023 08:08:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1689952098;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=SD81e7NZBdmvFs/0moOEoRHsNzw2ypppSDOfYt+K9oA=;
-        b=M+lv7dXzGR1DA2bh/bJ3lVvlZn78YmOe4ED8trQ5aLvl5sbQDuGMezYb5NcUh8Vy903zLX
-        OAVTW7M3gKzLNAkgQKj2IQZrDgCily2lBYIhsQfXlmFgSr2XvIugFz6Fbxi8JeVQ2oIR5K
-        KPZDOx+EkI20/jLi8JPNkBW7RTIONXk=
-Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
- [209.85.128.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-482-U0g8TpW5OJCKr6-IqOOXMw-1; Fri, 21 Jul 2023 11:08:15 -0400
-X-MC-Unique: U0g8TpW5OJCKr6-IqOOXMw-1
-Received: by mail-wm1-f69.google.com with SMTP id 5b1f17b1804b1-3fbe4cecd66so10678325e9.1
-        for <linux-trace-kernel@vger.kernel.org>; Fri, 21 Jul 2023 08:08:15 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1689952094; x=1690556894;
-        h=mime-version:message-id:date:references:in-reply-to:subject:cc:to
-         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=SD81e7NZBdmvFs/0moOEoRHsNzw2ypppSDOfYt+K9oA=;
-        b=UMqujZGoCGM1LRKvPdgOMm9YQzMVXKk4aLHlpHdR5UBb0fukomNAPA0dpvqjzI1MSC
-         eIayE+ADmuPNEogz6CTXWpa5mWisoedchW8WpbpB5WsCCTdndEJhAga9r39ynflUsRrn
-         k3xHliSpkJTOSgZTxgDavQI/x3EodGLbITlsC9B8qD56/usm5hWG2ftRkWDKS6+slxe5
-         B1B4NQ5CnT7rwHG5KCLE85H0z4TMoD5jObwpdbhra/Hl+Eg4pXJFj6s7cHRp1mNPFCRQ
-         NT3SovQwn05K8hahRcdOIwPzbIp/cAZNi86xTTOzKOVJP9QuKWL9wdUtl8GAzQ0v5lCj
-         dERA==
-X-Gm-Message-State: ABy/qLZ6DscTwyRnhTOua3jVuPbW8BD59CJQqwFiGuVqMlnMY1wMv3AJ
-        FFCTHrc4vKlRftD2Fum2XBza2xA6acKIcqAjXEjLaI+2iVj60iww7gPWWrH2bl1sRcT2xurIgll
-        OI7yJZ2hooy8RVhuK7mKSVffpxgiEjlOq
-X-Received: by 2002:a7b:c455:0:b0:3fc:627:ea31 with SMTP id l21-20020a7bc455000000b003fc0627ea31mr1714661wmi.38.1689952094108;
-        Fri, 21 Jul 2023 08:08:14 -0700 (PDT)
-X-Google-Smtp-Source: APBJJlF9fiPWFBcIAw2j2QV4lTYmt4mtAVTwBGD8BbL2O21cgVm0IYBel5tSTfnfWuFcEvQp7qgXww==
-X-Received: by 2002:a7b:c455:0:b0:3fc:627:ea31 with SMTP id l21-20020a7bc455000000b003fc0627ea31mr1714619wmi.38.1689952093765;
-        Fri, 21 Jul 2023 08:08:13 -0700 (PDT)
-Received: from vschneid.remote.csb ([149.12.7.81])
-        by smtp.gmail.com with ESMTPSA id q7-20020a5d5747000000b0031434936f0dsm4459951wrw.68.2023.07.21.08.08.11
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 21 Jul 2023 08:08:12 -0700 (PDT)
-From:   Valentin Schneider <vschneid@redhat.com>
-To:     paulmck@kernel.org
+        Fri, 21 Jul 2023 12:09:16 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 712E22D50;
+        Fri, 21 Jul 2023 09:09:15 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 018EF61D2F;
+        Fri, 21 Jul 2023 16:09:15 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 689E4C433CD;
+        Fri, 21 Jul 2023 16:09:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1689955754;
+        bh=BlEi7p0BDMKhiEwXg1jOq/zD4Xedk5tjgloH9k5cDxI=;
+        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+        b=OFTQ6DuOnqrG6CVGHgozLdOfqNJoDAb4DdM10deIzFIcuAksLBrn/okq4ws1Ur9lw
+         vnsF0PAylGPOwrvzqd8MD7OI6RQvWiDFcruohc1T27dsQlVcsq24OAk01Uc8ndiK4V
+         53gusbrsSeE7IS4F3aXX11DrNumr93rNPkzbgk6BqkWkpecmtxIc1RCSwyiRuReBW/
+         IcFeyllltS2xScVQstI79rpDOfa4H6ZPHQWUsAuDPJvk1Dq9LsQE2p69D0x+BcaX1W
+         VlHj29+EmuuFk1Q1AOo/Ojy8Ijv1Fva0Kmm6Sj3z4ngf26Cy0NypimaJ5plEn9OvV7
+         JbudTDJwiSXEQ==
+Received: by paulmck-ThinkPad-P17-Gen-1.home (Postfix, from userid 1000)
+        id 0571ACE092F; Fri, 21 Jul 2023 09:09:14 -0700 (PDT)
+Date:   Fri, 21 Jul 2023 09:09:13 -0700
+From:   "Paul E. McKenney" <paulmck@kernel.org>
+To:     Valentin Schneider <vschneid@redhat.com>
 Cc:     linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
         linux-doc@vger.kernel.org, kvm@vger.kernel.org, linux-mm@kvack.org,
         bpf@vger.kernel.org, x86@kernel.org, rcu@vger.kernel.org,
@@ -103,71 +85,75 @@ Cc:     linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
         Julian Pidancet <julian.pidancet@oracle.com>,
         Tom Lendacky <thomas.lendacky@amd.com>,
         Dionna Glaze <dionnaglaze@google.com>,
-        Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <linux@weissschuh.net>,
+        Thomas =?iso-8859-1?Q?Wei=DFschuh?= <linux@weissschuh.net>,
         Juri Lelli <juri.lelli@redhat.com>,
         Daniel Bristot de Oliveira <bristot@redhat.com>,
         Marcelo Tosatti <mtosatti@redhat.com>,
         Yair Podemsky <ypodemsk@redhat.com>
 Subject: Re: [RFC PATCH v2 16/20] rcu: Make RCU dynticks counter size
  configurable
-In-Reply-To: <28d4abb7-8496-45ec-b270-ea2b6164537b@paulmck-laptop>
+Message-ID: <ac2ec330-191e-43e6-817d-ca4a22207d98@paulmck-laptop>
+Reply-To: paulmck@kernel.org
 References: <20230720163056.2564824-1-vschneid@redhat.com>
  <20230720163056.2564824-17-vschneid@redhat.com>
  <xhsmhjzutu18u.mognet@vschneid.remote.csb>
  <28d4abb7-8496-45ec-b270-ea2b6164537b@paulmck-laptop>
-Date:   Fri, 21 Jul 2023 16:08:10 +0100
-Message-ID: <xhsmhbkg5ti91.mognet@vschneid.remote.csb>
+ <xhsmhbkg5ti91.mognet@vschneid.remote.csb>
 MIME-Version: 1.0
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <xhsmhbkg5ti91.mognet@vschneid.remote.csb>
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On 21/07/23 07:10, Paul E. McKenney wrote:
-> On Fri, Jul 21, 2023 at 09:17:53AM +0100, Valentin Schneider wrote:
->> On 20/07/23 17:30, Valentin Schneider wrote:
->> > index bdd7eadb33d8f..1ff2aab24e964 100644
->> > --- a/kernel/rcu/Kconfig
->> > +++ b/kernel/rcu/Kconfig
->> > @@ -332,4 +332,37 @@ config RCU_DOUBLE_CHECK_CB_TIME
->> >         Say Y here if you need tighter callback-limit enforcement.
->> >         Say N here if you are unsure.
->> >
->> > +config RCU_DYNTICKS_RANGE_BEGIN
->> > +	int
->> > +	depends on !RCU_EXPERT
->> > +	default 31 if !CONTEXT_TRACKING_WORK
->>
->> You'll note that this should be 30 really, because the lower *2* bits are
->> taken by the context state (CONTEXT_GUEST has a value of 3).
->>
->> This highlights the fragile part of this: the Kconfig values are hardcoded,
->> but they depend on CT_STATE_SIZE, CONTEXT_MASK and CONTEXT_WORK_MAX. The
->> static_assert() will at least capture any misconfiguration, but having that
->> enforced by the actual Kconfig ranges would be less awkward.
->>
->> Do we currently have a way of e.g. making a Kconfig file depend on and use
->> values generated by a C header?
->
-> Why not just have something like a boolean RCU_DYNTICKS_TORTURE Kconfig
-> option and let the C code work out what the number of bits should be?
->
-> I suppose that there might be a failure whose frequency depended on
-> the number of bits, which might be an argument for keeping something
-> like RCU_DYNTICKS_RANGE_BEGIN for fault isolation.  But still using
-> RCU_DYNTICKS_TORTURE for normal testing.
->
-> Thoughts?
->
+On Fri, Jul 21, 2023 at 04:08:10PM +0100, Valentin Schneider wrote:
+> On 21/07/23 07:10, Paul E. McKenney wrote:
+> > On Fri, Jul 21, 2023 at 09:17:53AM +0100, Valentin Schneider wrote:
+> >> On 20/07/23 17:30, Valentin Schneider wrote:
+> >> > index bdd7eadb33d8f..1ff2aab24e964 100644
+> >> > --- a/kernel/rcu/Kconfig
+> >> > +++ b/kernel/rcu/Kconfig
+> >> > @@ -332,4 +332,37 @@ config RCU_DOUBLE_CHECK_CB_TIME
+> >> >         Say Y here if you need tighter callback-limit enforcement.
+> >> >         Say N here if you are unsure.
+> >> >
+> >> > +config RCU_DYNTICKS_RANGE_BEGIN
+> >> > +	int
+> >> > +	depends on !RCU_EXPERT
+> >> > +	default 31 if !CONTEXT_TRACKING_WORK
+> >>
+> >> You'll note that this should be 30 really, because the lower *2* bits are
+> >> taken by the context state (CONTEXT_GUEST has a value of 3).
+> >>
+> >> This highlights the fragile part of this: the Kconfig values are hardcoded,
+> >> but they depend on CT_STATE_SIZE, CONTEXT_MASK and CONTEXT_WORK_MAX. The
+> >> static_assert() will at least capture any misconfiguration, but having that
+> >> enforced by the actual Kconfig ranges would be less awkward.
+> >>
+> >> Do we currently have a way of e.g. making a Kconfig file depend on and use
+> >> values generated by a C header?
+> >
+> > Why not just have something like a boolean RCU_DYNTICKS_TORTURE Kconfig
+> > option and let the C code work out what the number of bits should be?
+> >
+> > I suppose that there might be a failure whose frequency depended on
+> > the number of bits, which might be an argument for keeping something
+> > like RCU_DYNTICKS_RANGE_BEGIN for fault isolation.  But still using
+> > RCU_DYNTICKS_TORTURE for normal testing.
+> >
+> > Thoughts?
+> >
+> 
+> AFAICT if we run tests with the minimum possible width, then intermediate
+> values shouldn't have much value.
+> 
+> Your RCU_DYNTICKS_TORTURE suggestion sounds like a saner option than what I
+> came up with, as we can let the context tracking code figure out the widths
+> itself and not expose any of that to Kconfig.
 
-AFAICT if we run tests with the minimum possible width, then intermediate
-values shouldn't have much value.
+Agreed.  If a need for variable numbers of bits ever does arise, we can
+worry about it at that time.  And then we would have more information
+on what a variable-bit facility should look like.
 
-Your RCU_DYNTICKS_TORTURE suggestion sounds like a saner option than what I
-came up with, as we can let the context tracking code figure out the widths
-itself and not expose any of that to Kconfig.
-
->                                                       Thanx, Paul
-
+							Thanx, Paul
