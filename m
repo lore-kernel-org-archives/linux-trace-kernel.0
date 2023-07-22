@@ -2,89 +2,69 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F4C1EB64DD
-	for <linux-trace-kernel@archiver.kernel.org>; Fri, 21 Jul 2023 20:40:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C4279EB64DA
+	for <linux-trace-kernel@archiver.kernel.org>; Sat, 22 Jul 2023 03:21:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230040AbjGUUkY (ORCPT
+        id S229534AbjGVDVx (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Fri, 21 Jul 2023 16:40:24 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53108 "EHLO
+        Fri, 21 Jul 2023 23:21:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40482 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229566AbjGUUkV (ORCPT
+        with ESMTP id S229503AbjGVDVw (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Fri, 21 Jul 2023 16:40:21 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F3AAD30CD;
-        Fri, 21 Jul 2023 13:40:20 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 8937261D6D;
-        Fri, 21 Jul 2023 20:40:20 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6FD62C433CA;
-        Fri, 21 Jul 2023 20:40:18 +0000 (UTC)
-Date:   Fri, 21 Jul 2023 16:40:16 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Ajay Kaher <akaher@vmware.com>
-Cc:     "shuah@kernel.org" <shuah@kernel.org>,
-        "mhiramat@kernel.org" <mhiramat@kernel.org>,
-        Ching-lin Yu <chinglinyu@google.com>,
-        linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
-        linux-trace-kernel@vger.kernel.org, lkp@intel.com,
-        Nadav Amit <namit@vmware.com>, oe-lkp@lists.linux.dev,
-        Alexey Makhalov <amakhalov@vmware.com>,
-        "er.ajay.kaher@gmail.com" <er.ajay.kaher@gmail.com>,
-        "srivatsa@csail.mit.edu" <srivatsa@csail.mit.edu>,
-        Tapas Kundu <tkundu@vmware.com>,
-        Vasavi Sirnapalli <vsirnapalli@vmware.com>
-Subject: Re: [PATCH v4 00/10] tracing: introducing eventfs
-Message-ID: <20230721164016.68bbe69a@gandalf.local.home>
-In-Reply-To: <20230721091947.0df9fd73@gandalf.local.home>
-References: <1689248004-8158-1-git-send-email-akaher@vmware.com>
-        <20230714185824.62556254@gandalf.local.home>
-        <883F9774-3E76-4346-9988-2788FAF0D55E@vmware.com>
-        <20230718094005.32516161@gandalf.local.home>
-        <2CD72098-08E2-4CAA-B74D-D8C44D318117@vmware.com>
-        <20230719102310.552d3356@gandalf.local.home>
-        <899D0823-A1B2-4A6F-A5BA-0D707F41C3D4@vmware.com>
-        <20230719144046.746af82e@gandalf.local.home>
-        <20230721084839.4a97a595@gandalf.local.home>
-        <20230721091947.0df9fd73@gandalf.local.home>
-X-Mailer: Claws Mail 3.19.1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+        Fri, 21 Jul 2023 23:21:52 -0400
+Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4675C3A9C;
+        Fri, 21 Jul 2023 20:21:51 -0700 (PDT)
+Received: from canpemm500007.china.huawei.com (unknown [172.30.72.54])
+        by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4R7BTT5lrVztQr4;
+        Sat, 22 Jul 2023 11:18:37 +0800 (CST)
+Received: from localhost (10.174.179.215) by canpemm500007.china.huawei.com
+ (7.192.104.62) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.27; Sat, 22 Jul
+ 2023 11:21:47 +0800
+From:   YueHaibing <yuehaibing@huawei.com>
+To:     <rostedt@goodmis.org>, <mhiramat@kernel.org>,
+        <yuehaibing@huawei.com>
+CC:     <linux-kernel@vger.kernel.org>,
+        <linux-trace-kernel@vger.kernel.org>
+Subject: [PATCH -next] tracing: Remove unused extern declaration tracing_map_set_field_descr()
+Date:   Sat, 22 Jul 2023 11:21:23 +0800
+Message-ID: <20230722032123.24664-1-yuehaibing@huawei.com>
+X-Mailer: git-send-email 2.10.2.windows.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
+X-Originating-IP: [10.174.179.215]
+X-ClientProxiedBy: dggems701-chm.china.huawei.com (10.3.19.178) To
+ canpemm500007.china.huawei.com (7.192.104.62)
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On Fri, 21 Jul 2023 09:19:47 -0400
-Steven Rostedt <rostedt@goodmis.org> wrote:
+Since commit 08d43a5fa063 ("tracing: Add lock-free tracing_map"),
+this is never used, so can be removed.
 
-> > +	} else {
-> > +		/* A race here, should try again (unless freed) */
-> > +		invalidate = true;  
-> 
-> I had a WARN_ON() once here. Probably could add a:
-> 
-> 		WARN_ON_ONCE(!ef->is_freed);
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+---
+ kernel/trace/tracing_map.h | 4 ----
+ 1 file changed, 4 deletions(-)
 
-Yeah this should have a WARN_ON_ONCE() because the only way to get here
-with having a dentry and the ef->dentry being set is if we have two
-dentries with the same name in the same directory. Which should never
-happen.
+diff --git a/kernel/trace/tracing_map.h b/kernel/trace/tracing_map.h
+index 2c765ee2a4d4..99c37eeebc16 100644
+--- a/kernel/trace/tracing_map.h
++++ b/kernel/trace/tracing_map.h
+@@ -272,10 +272,6 @@ extern u64 tracing_map_read_sum(struct tracing_map_elt *elt, unsigned int i);
+ extern u64 tracing_map_read_var(struct tracing_map_elt *elt, unsigned int i);
+ extern u64 tracing_map_read_var_once(struct tracing_map_elt *elt, unsigned int i);
+ 
+-extern void tracing_map_set_field_descr(struct tracing_map *map,
+-					unsigned int i,
+-					unsigned int key_offset,
+-					tracing_map_cmp_fn_t cmp_fn);
+ extern int
+ tracing_map_sort_entries(struct tracing_map *map,
+ 			 struct tracing_map_sort_key *sort_keys,
+-- 
+2.34.1
 
-I think we can add:
-
-		/*
-		 * Should never happen unless we get here due to being freed.
-		 * Otherwise it means two dentries exist with the same name.
-		 */
-		WARN_ON_ONCE(!ef->is_freed);
-
-> 
-> > +	}
-
-
--- Steve
