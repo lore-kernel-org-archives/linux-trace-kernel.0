@@ -2,197 +2,184 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FDEEC001DF
-	for <linux-trace-kernel@archiver.kernel.org>; Mon, 24 Jul 2023 11:35:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E65D0C001B0
+	for <linux-trace-kernel@archiver.kernel.org>; Mon, 24 Jul 2023 12:29:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229661AbjGXLen (ORCPT
+        id S230264AbjGXM3Z (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Mon, 24 Jul 2023 07:34:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53014 "EHLO
+        Mon, 24 Jul 2023 08:29:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56284 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230049AbjGXLed (ORCPT
+        with ESMTP id S229847AbjGXM3W (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Mon, 24 Jul 2023 07:34:33 -0400
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B8A342719
-        for <linux-trace-kernel@vger.kernel.org>; Mon, 24 Jul 2023 04:33:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1690198366;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=q9NPDCcBt89I6QlMBvo89JajwtVPnFPWg7ziLiggEtw=;
-        b=EWwH1fdkhUIrS5BYcohs9YZdSoQ11PLGCFGAYo+2jeSWP5ZVEv3wPHXyTwudaOsbRO4hW0
-        O88oCuSynH/KGDPmGo/ut2FFK6Teq2KmFsfoFiJu9WyAXvbDfEN7to3WeCKH1sh1KYiEw8
-        D37sBzBXtU9axQJQpmq4IJ0nKcvWHgc=
-Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
- [209.85.221.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-228-Xrg6S4S8OKyK3mQidY4Y1g-1; Mon, 24 Jul 2023 07:32:43 -0400
-X-MC-Unique: Xrg6S4S8OKyK3mQidY4Y1g-1
-Received: by mail-wr1-f72.google.com with SMTP id ffacd0b85a97d-315a03cae87so2539304f8f.0
-        for <linux-trace-kernel@vger.kernel.org>; Mon, 24 Jul 2023 04:32:42 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1690198362; x=1690803162;
-        h=content-transfer-encoding:mime-version:message-id:date:references
-         :in-reply-to:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=EXJhrkLdNOLUHGZbbc+F0hjfqb3hPCsrY6WTn8MVyN8=;
-        b=VSm+L0qdqnQKFvL5m4eS3CRcviCIgFmW2H5kVHnie1j3pqt8IhOQSvEZufyMfHc2W8
-         axPKfXoZJwMd5+DaL9bD5tAoAgryWM+hVULD9AmvTtJ8Jq80C9FfsSS1R4jVZttukk4n
-         3tWhIeEa1SSEQlLNa63Hij2xDqEQRsCr1DcZYOleykQUfvDIw32++C0HBklW6rgXjJMs
-         uCGhWk26kUzU15vq+8UsnP3A1fTBn04DItqi9tr5B5AsmNgir2W0PaR2ymdo2r2AdyA8
-         YdFX8HbCQFTE/iCXqxG/NpVFocSc07zq8qZTKoD9gpwdvY0TzM5/PNkwJfnVQt26LRpg
-         bw9A==
-X-Gm-Message-State: ABy/qLb6yUVVIM2QZlN6cHZ6mdn7X8wILeUC+cFSy1ydOt+AIBZ7Wsn+
-        6RiyNr3+YZ9e5X9O841jrTKhGc0/ZQRKmLp48h1YuJ2c/HEGii/KvyIzMAExmhTlYBEsBkuabiN
-        OSl6kHZpNMl6fy/WsIYNCS7MNA20EMWXb
-X-Received: by 2002:a5d:4ec5:0:b0:314:98f:2495 with SMTP id s5-20020a5d4ec5000000b00314098f2495mr7489847wrv.12.1690198362014;
-        Mon, 24 Jul 2023 04:32:42 -0700 (PDT)
-X-Google-Smtp-Source: APBJJlEI60yM7OEQYltk8pZJRHHkHj4AM6BZ+3LNkwODYxQy3aj86Uaqvq9RfiI7soFJIBmCEAmJvQ==
-X-Received: by 2002:a5d:4ec5:0:b0:314:98f:2495 with SMTP id s5-20020a5d4ec5000000b00314098f2495mr7489803wrv.12.1690198361680;
-        Mon, 24 Jul 2023 04:32:41 -0700 (PDT)
-Received: from vschneid.remote.csb ([149.12.7.81])
-        by smtp.gmail.com with ESMTPSA id w7-20020a5d4047000000b00313f61889ecsm12615302wrp.66.2023.07.24.04.32.39
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 24 Jul 2023 04:32:41 -0700 (PDT)
-From:   Valentin Schneider <vschneid@redhat.com>
-To:     Nadav Amit <namit@vmware.com>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "linux-trace-kernel@vger.kernel.org" 
-        <linux-trace-kernel@vger.kernel.org>,
-        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        linux-mm <linux-mm@kvack.org>, bpf <bpf@vger.kernel.org>,
-        the arch/x86 maintainers <x86@kernel.org>,
-        "rcu@vger.kernel.org" <rcu@vger.kernel.org>,
-        "linux-kselftest@vger.kernel.org" <linux-kselftest@vger.kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Frederic Weisbecker <frederic@kernel.org>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        Neeraj Upadhyay <quic_neeraju@quicinc.com>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Josh Triplett <josh@joshtriplett.org>,
-        Boqun Feng <boqun.feng@gmail.com>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Lai Jiangshan <jiangshanlai@gmail.com>,
-        Zqiang <qiang.zhang1211@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Uladzislau Rezki <urezki@gmail.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        Lorenzo Stoakes <lstoakes@gmail.com>,
-        Josh Poimboeuf <jpoimboe@kernel.org>,
-        Jason Baron <jbaron@akamai.com>,
-        Kees Cook <keescook@chromium.org>,
-        Sami Tolvanen <samitolvanen@google.com>,
-        Ard Biesheuvel <ardb@kernel.org>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        Juerg Haefliger <juerg.haefliger@canonical.com>,
-        Nicolas Saenz Julienne <nsaenz@kernel.org>,
-        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-        Dan Carpenter <error27@gmail.com>,
-        Chuang Wang <nashuiliang@gmail.com>,
-        Yang Jihong <yangjihong1@huawei.com>,
-        Petr Mladek <pmladek@suse.com>,
-        "Jason A. Donenfeld" <Jason@zx2c4.com>, Song Liu <song@kernel.org>,
-        Julian Pidancet <julian.pidancet@oracle.com>,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        Dionna Glaze <dionnaglaze@google.com>,
-        Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <linux@weissschuh.net>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Daniel Bristot de Oliveira <bristot@redhat.com>,
-        Marcelo Tosatti <mtosatti@redhat.com>,
-        Yair Podemsky <ypodemsk@redhat.com>
-Subject: Re: [RFC PATCH v2 20/20] x86/mm, mm/vmalloc: Defer
- flush_tlb_kernel_range() targeting NOHZ_FULL CPUs
-In-Reply-To: <188AEA79-10E6-4DFF-86F4-FE624FD1880F@vmware.com>
-References: <20230720163056.2564824-1-vschneid@redhat.com>
- <20230720163056.2564824-21-vschneid@redhat.com>
- <188AEA79-10E6-4DFF-86F4-FE624FD1880F@vmware.com>
-Date:   Mon, 24 Jul 2023 12:32:38 +0100
-Message-ID: <xhsmh8rb5tui1.mognet@vschneid.remote.csb>
+        Mon, 24 Jul 2023 08:29:22 -0400
+Received: from szxga03-in.huawei.com (szxga03-in.huawei.com [45.249.212.189])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4674710EF;
+        Mon, 24 Jul 2023 05:29:11 -0700 (PDT)
+Received: from dggpeml500012.china.huawei.com (unknown [172.30.72.53])
+        by szxga03-in.huawei.com (SkyGuard) with ESMTP id 4R8fXq2Qw4zHqcG;
+        Mon, 24 Jul 2023 20:26:35 +0800 (CST)
+Received: from [10.67.110.218] (10.67.110.218) by
+ dggpeml500012.china.huawei.com (7.185.36.15) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.27; Mon, 24 Jul 2023 20:29:08 +0800
+Message-ID: <d1259a3a-fbab-439f-7983-bb19aebecd5f@huawei.com>
+Date:   Mon, 24 Jul 2023 20:29:08 +0800
 MIME-Version: 1.0
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.6.0
+Subject: Re: [PATCH] ring-buffer: Fix wrong stat of cpu_buffer->read
+Content-Language: en-US
+To:     Steven Rostedt <rostedt@goodmis.org>
+CC:     <mhiramat@kernel.org>, <vnagarnaik@google.com>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-trace-kernel@vger.kernel.org>
+References: <20230724054040.3489499-1-zhengyejian1@huawei.com>
+ <20230724044304.5a93a266@rorschach.local.home>
+From:   Zheng Yejian <zhengyejian1@huawei.com>
+In-Reply-To: <20230724044304.5a93a266@rorschach.local.home>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.67.110.218]
+X-ClientProxiedBy: dggems706-chm.china.huawei.com (10.3.19.183) To
+ dggpeml500012.china.huawei.com (7.185.36.15)
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On 21/07/23 18:15, Nadav Amit wrote:
->> On Jul 20, 2023, at 9:30 AM, Valentin Schneider <vschneid@redhat.com> wr=
-ote:
+On 2023/7/24 16:43, Steven Rostedt wrote:
+> Do you folks find it fun to post a fix right after I send Linus a pull request? ;-)
+
+It's always so coincidental :-)
+
+> 
+> Thanks, I'll queue it up (but I will wait a bit before posting in case
+> more fixes trickle in)
+
+Thanks!
+
+-- Zheng Yejian
+
+> 
+> -- Steve
+> 
+> 
+> On Mon, 24 Jul 2023 13:40:40 +0800
+> Zheng Yejian <zhengyejian1@huawei.com> wrote:
+> 
+>> When pages are removed in rb_remove_pages(), 'cpu_buffer->read' is set
+>> to 0 in order to make sure any read iterators reset themselves. However,
+>> this will mess 'entries' stating, see following steps:
 >>
->> vunmap()'s issued from housekeeping CPUs are a relatively common source =
-of
->> interference for isolated NOHZ_FULL CPUs, as they are hit by the
->> flush_tlb_kernel_range() IPIs.
+>>    # cd /sys/kernel/tracing/
+>>    # 1. Enlarge ring buffer prepare for later reducing:
+>>    # echo 20 > per_cpu/cpu0/buffer_size_kb
+>>    # 2. Write a log into ring buffer of cpu0:
+>>    # taskset -c 0 echo "hello1" > trace_marker
+>>    # 3. Read the log:
+>>    # cat per_cpu/cpu0/trace_pipe
+>>         <...>-332     [000] .....    62.406844: tracing_mark_write: hello1
+>>    # 4. Stop reading and see the stats, now 0 entries, and 1 event readed:
+>>    # cat per_cpu/cpu0/stats
+>>     entries: 0
+>>     [...]
+>>     read events: 1
+>>    # 5. Reduce the ring buffer
+>>    # echo 7 > per_cpu/cpu0/buffer_size_kb
+>>    # 6. Now entries became unexpected 1 because actually no entries!!!
+>>    # cat per_cpu/cpu0/stats
+>>     entries: 1
+>>     [...]
+>>     read events: 0
 >>
->> Given that CPUs executing in userspace do not access data in the vmalloc
->> range, these IPIs could be deferred until their next kernel entry.
->
-> So I think there are a few assumptions here that it seems suitable to con=
-firm
-> and acknowledge the major one in the commit log (assuming they hold).
->
-> There is an assumption that VMAP page-tables are not freed. I actually
-> never paid attention to that, but skimming the code it does seem so. To
-> clarify the issue: if page-tables were freed and their pages were reused,
-> there would be a problem that page-walk caches for instance would be used
-> and =E2=80=9Cjunk=E2=80=9D entries from the reused pages would be used. S=
-ee [1].
->
-
-Thanks for looking into this and sharing context. This is an area I don't
-have much experience with, so help is much appreciated!
-
-Indeed, accessing addresses that should be impacted by a TLB flush *before*
-executing the deferred flush is an issue. Deferring sync_core() for
-instruction patching is a similar problem - it's all in the shape of
-"access @addr impacted by @operation during kernel entry, before actually
-executing @operation".
-
-AFAICT the only reasonable way to go about the deferral is to prove that no
-such access happens before the deferred @operation is done. We got to prove
-that for sync_core() deferral, cf. PATCH 18.
-
-I'd like to reason about it for deferring vunmap TLB flushes:
-
-What addresses in VMAP range, other than the stack, can early entry code
-access? Yes, the ranges can be checked at runtime, but is there any chance
-of figuring this out e.g. at build-time?
-
-> I would also assume the memory-hot-unplug of some sorts is not an issue,
-> (i.e., you cannot have a stale TLB entry pointing to memory that was
-> unplugged).
->
-> I also think that there might be speculative code execution using stale
-> TLB entries that would point to memory that has been reused and perhaps
-> controllable by the user. If somehow the CPU/OS is tricked to use the
-> stale executable TLB entries early enough on kernel entry that might be
-> an issue. I guess it is probably theoretical issue, but it would be helpf=
-ul
-> to confirm.
->
-> In general, deferring TLB flushes can be done safely. This patch, I think=
-,
-> takes it one step forward and allows the reuse of the memory before the T=
-LB
-> flush is actually done. This is more dangerous.
->
-> [1] https://lore.kernel.org/lkml/tip-b956575bed91ecfb136a8300742ecbbf4514=
-71ab@git.kernel.org/
+>> To fix it, introduce 'page_removed' field to count total removed pages
+>> since last reset, then use it to let read iterators reset themselves
+>> instead of changing the 'read' pointer.
+>>
+>> Fixes: 83f40318dab0 ("ring-buffer: Make removal of ring buffer pages atomic")
+>> Signed-off-by: Zheng Yejian <zhengyejian1@huawei.com>
+>> ---
+>>   kernel/trace/ring_buffer.c | 22 ++++++++++++----------
+>>   1 file changed, 12 insertions(+), 10 deletions(-)
+>>
+>> diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
+>> index de061dd47313..46b4a3c7c3bf 100644
+>> --- a/kernel/trace/ring_buffer.c
+>> +++ b/kernel/trace/ring_buffer.c
+>> @@ -523,6 +523,8 @@ struct ring_buffer_per_cpu {
+>>   	rb_time_t			before_stamp;
+>>   	u64				event_stamp[MAX_NEST];
+>>   	u64				read_stamp;
+>> +	/* pages removed since last reset */
+>> +	unsigned long			pages_removed;
+>>   	/* ring buffer pages to update, > 0 to add, < 0 to remove */
+>>   	long				nr_pages_to_update;
+>>   	struct list_head		new_pages; /* new pages to add */
+>> @@ -559,6 +561,7 @@ struct ring_buffer_iter {
+>>   	struct buffer_page		*head_page;
+>>   	struct buffer_page		*cache_reader_page;
+>>   	unsigned long			cache_read;
+>> +	unsigned long			cache_pages_removed;
+>>   	u64				read_stamp;
+>>   	u64				page_stamp;
+>>   	struct ring_buffer_event	*event;
+>> @@ -1957,6 +1960,8 @@ rb_remove_pages(struct ring_buffer_per_cpu *cpu_buffer, unsigned long nr_pages)
+>>   		to_remove = rb_list_head(to_remove)->next;
+>>   		head_bit |= (unsigned long)to_remove & RB_PAGE_HEAD;
+>>   	}
+>> +	/* Read iterators need to reset themselves when some pages removed */
+>> +	cpu_buffer->pages_removed += nr_removed;
+>>   
+>>   	next_page = rb_list_head(to_remove)->next;
+>>   
+>> @@ -1978,12 +1983,6 @@ rb_remove_pages(struct ring_buffer_per_cpu *cpu_buffer, unsigned long nr_pages)
+>>   		cpu_buffer->head_page = list_entry(next_page,
+>>   						struct buffer_page, list);
+>>   
+>> -	/*
+>> -	 * change read pointer to make sure any read iterators reset
+>> -	 * themselves
+>> -	 */
+>> -	cpu_buffer->read = 0;
+>> -
+>>   	/* pages are removed, resume tracing and then free the pages */
+>>   	atomic_dec(&cpu_buffer->record_disabled);
+>>   	raw_spin_unlock_irq(&cpu_buffer->reader_lock);
+>> @@ -4395,6 +4394,7 @@ static void rb_iter_reset(struct ring_buffer_iter *iter)
+>>   
+>>   	iter->cache_reader_page = iter->head_page;
+>>   	iter->cache_read = cpu_buffer->read;
+>> +	iter->cache_pages_removed = cpu_buffer->pages_removed;
+>>   
+>>   	if (iter->head) {
+>>   		iter->read_stamp = cpu_buffer->read_stamp;
+>> @@ -4849,12 +4849,13 @@ rb_iter_peek(struct ring_buffer_iter *iter, u64 *ts)
+>>   	buffer = cpu_buffer->buffer;
+>>   
+>>   	/*
+>> -	 * Check if someone performed a consuming read to
+>> -	 * the buffer. A consuming read invalidates the iterator
+>> -	 * and we need to reset the iterator in this case.
+>> +	 * Check if someone performed a consuming read to the buffer
+>> +	 * or removed some pages from the buffer. In these cases,
+>> +	 * iterator was invalidated and we need to reset it.
+>>   	 */
+>>   	if (unlikely(iter->cache_read != cpu_buffer->read ||
+>> -		     iter->cache_reader_page != cpu_buffer->reader_page))
+>> +		     iter->cache_reader_page != cpu_buffer->reader_page ||
+>> +		     iter->cache_pages_removed != cpu_buffer->pages_removed))
+>>   		rb_iter_reset(iter);
+>>   
+>>    again:
+>> @@ -5298,6 +5299,7 @@ rb_reset_cpu(struct ring_buffer_per_cpu *cpu_buffer)
+>>   	cpu_buffer->last_overrun = 0;
+>>   
+>>   	rb_head_page_activate(cpu_buffer);
+>> +	cpu_buffer->pages_removed = 0;
+>>   }
+>>   
+>>   /* Must have disabled the cpu buffer then done a synchronize_rcu */
+> 
+> 
 
