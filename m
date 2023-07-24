@@ -2,239 +2,197 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 87224C001B0
-	for <linux-trace-kernel@archiver.kernel.org>; Mon, 24 Jul 2023 10:32:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FDEEC001DF
+	for <linux-trace-kernel@archiver.kernel.org>; Mon, 24 Jul 2023 11:35:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229811AbjGXKcZ (ORCPT
+        id S229661AbjGXLen (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Mon, 24 Jul 2023 06:32:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33288 "EHLO
+        Mon, 24 Jul 2023 07:34:43 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53014 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229732AbjGXKcX (ORCPT
+        with ESMTP id S230049AbjGXLed (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Mon, 24 Jul 2023 06:32:23 -0400
-Received: from mga01.intel.com (mga01.intel.com [192.55.52.88])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0ED38A8;
-        Mon, 24 Jul 2023 03:32:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1690194743; x=1721730743;
-  h=message-id:date:subject:to:cc:references:from:
-   in-reply-to:content-transfer-encoding:mime-version;
-  bh=Lt4RYDKYShWvY/DNvMQR4dkw+fjyykoYTrkZnSyjjeE=;
-  b=dSCgcCsZIl6tDrfrZPiZkrxVeAEGlKBeeJBSsy6jZE1Xih/Q7IzEvqCg
-   AbFnfUdeQm8QIWJmSpgrtCPQc9TzXsRGfAv7a8Id/FQYPQV8QUNIpTJrA
-   Mg5xgdVQeM1h3wM8lf0+ri6MK0FNO0Jv1mngovf+FIKdfBYMTPaB//qhV
-   rKWVdP5q5oMYekpLg+DzsVSVrIAf0nMc0s8CY8aOpU2UOcfrK2y/vysKF
-   1o0182LXgwlpmku7BJlzasj+MB3pWCpYKLdqLlT9qhQ4Cynx8pl8Y4Exl
-   MyvbrttiM/W998L86CoN2Yxcg8hY8jWVQA3C2f1VBMg86NhjL/mbaFRma
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10780"; a="398307013"
-X-IronPort-AV: E=Sophos;i="6.01,228,1684825200"; 
-   d="scan'208";a="398307013"
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Jul 2023 03:32:22 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10780"; a="675782640"
-X-IronPort-AV: E=Sophos;i="6.01,228,1684825200"; 
-   d="scan'208";a="675782640"
-Received: from fmsmsx601.amr.corp.intel.com ([10.18.126.81])
-  by orsmga003.jf.intel.com with ESMTP; 24 Jul 2023 03:32:21 -0700
-Received: from fmsmsx611.amr.corp.intel.com (10.18.126.91) by
- fmsmsx601.amr.corp.intel.com (10.18.126.81) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.27; Mon, 24 Jul 2023 03:32:21 -0700
-Received: from fmsmsx610.amr.corp.intel.com (10.18.126.90) by
- fmsmsx611.amr.corp.intel.com (10.18.126.91) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.27; Mon, 24 Jul 2023 03:32:21 -0700
-Received: from fmsedg601.ED.cps.intel.com (10.1.192.135) by
- fmsmsx610.amr.corp.intel.com (10.18.126.90) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.27 via Frontend Transport; Mon, 24 Jul 2023 03:32:21 -0700
-Received: from NAM12-BN8-obe.outbound.protection.outlook.com (104.47.55.170)
- by edgegateway.intel.com (192.55.55.70) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.27; Mon, 24 Jul 2023 03:32:20 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=H+KqF0M1olahAHbkULDHkWN7ONBMv9C38hR+ewxsjCJ6AS7jHzlAvj3o2+hBPx/MlmFBXMsDlod4jADluc23zRfGSGfMttVpJ5xPwtrAME37ugQd4hq9V71QlQpYEs9B3RQSGIeTGI/0yswmfo2XFZCDyrzaIeZua4c6/Yo7mE5gJB8C4L6xM7LVU8FVwm7fx2yMkeBQnJb8JqmWtsONFGHsW+bklUsCa3HJTBhHKdi5mpA13iRwb9QRgPDisjrDFymmGLOGdn3r9XBni7IeFFkQjJA6cNVyxPKBuYyAtSQta1mmITWJMAmDjjE2sqqh1TPpDo0EE62dyqM5rfr+Hg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=7T+xG1CgvbTtCIf1LC52917utqo6/df/qVTk76XO38A=;
- b=lX+rf2/aQ5lMSlJq8AN9MavgoRDwtPw5Mh1iLunbpM0KqGa81E0j92Ad1Zk+YKI603tauK4p31N4mEL9ypBckJieicv0sPOFwLqqxJ9JrnNoAXg2ARPvytx4AqcJ/ecTowMfjV/1pra272txWKoAuNNFpix8etdA3HnYbgXQ9YUY1rcEsRhkpCkBpbuqyRzpPUG5vepidu9gnXyu5vsWbb/d8HpN4RJt91B0cEA1LiNPypjj+Fkgu7CRFEEH7YFh1l9HjZFTxPO9OLLVPg8MhR2KeDN94S8KHFA8yf5n9xxynHOR2pq64WTzhGjMCXyn/BgboL5FGHoSrl0wsP94vA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from DM6PR11MB3625.namprd11.prod.outlook.com (2603:10b6:5:13a::21)
- by PH0PR11MB5928.namprd11.prod.outlook.com (2603:10b6:510:144::16) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6609.30; Mon, 24 Jul
- 2023 10:32:18 +0000
-Received: from DM6PR11MB3625.namprd11.prod.outlook.com
- ([fe80::44ff:6a5:9aa4:124a]) by DM6PR11MB3625.namprd11.prod.outlook.com
- ([fe80::44ff:6a5:9aa4:124a%7]) with mapi id 15.20.6609.031; Mon, 24 Jul 2023
- 10:32:17 +0000
-Message-ID: <6ce978c1-825f-c1fd-41e3-eba2324cfd56@intel.com>
-Date:   Mon, 24 Jul 2023 12:30:43 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.12.0
-Subject: Re: [PATCH v2] scripts/link-vmlinux.sh: Add alias to duplicate
- symbols for kallsyms
-Content-Language: en-US
-To:     Alessandro Carminati <alessandro.carminati@gmail.com>,
+        Mon, 24 Jul 2023 07:34:33 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B8A342719
+        for <linux-trace-kernel@vger.kernel.org>; Mon, 24 Jul 2023 04:33:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1690198366;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=q9NPDCcBt89I6QlMBvo89JajwtVPnFPWg7ziLiggEtw=;
+        b=EWwH1fdkhUIrS5BYcohs9YZdSoQ11PLGCFGAYo+2jeSWP5ZVEv3wPHXyTwudaOsbRO4hW0
+        O88oCuSynH/KGDPmGo/ut2FFK6Teq2KmFsfoFiJu9WyAXvbDfEN7to3WeCKH1sh1KYiEw8
+        D37sBzBXtU9axQJQpmq4IJ0nKcvWHgc=
+Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
+ [209.85.221.72]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-228-Xrg6S4S8OKyK3mQidY4Y1g-1; Mon, 24 Jul 2023 07:32:43 -0400
+X-MC-Unique: Xrg6S4S8OKyK3mQidY4Y1g-1
+Received: by mail-wr1-f72.google.com with SMTP id ffacd0b85a97d-315a03cae87so2539304f8f.0
+        for <linux-trace-kernel@vger.kernel.org>; Mon, 24 Jul 2023 04:32:42 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1690198362; x=1690803162;
+        h=content-transfer-encoding:mime-version:message-id:date:references
+         :in-reply-to:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=EXJhrkLdNOLUHGZbbc+F0hjfqb3hPCsrY6WTn8MVyN8=;
+        b=VSm+L0qdqnQKFvL5m4eS3CRcviCIgFmW2H5kVHnie1j3pqt8IhOQSvEZufyMfHc2W8
+         axPKfXoZJwMd5+DaL9bD5tAoAgryWM+hVULD9AmvTtJ8Jq80C9FfsSS1R4jVZttukk4n
+         3tWhIeEa1SSEQlLNa63Hij2xDqEQRsCr1DcZYOleykQUfvDIw32++C0HBklW6rgXjJMs
+         uCGhWk26kUzU15vq+8UsnP3A1fTBn04DItqi9tr5B5AsmNgir2W0PaR2ymdo2r2AdyA8
+         YdFX8HbCQFTE/iCXqxG/NpVFocSc07zq8qZTKoD9gpwdvY0TzM5/PNkwJfnVQt26LRpg
+         bw9A==
+X-Gm-Message-State: ABy/qLb6yUVVIM2QZlN6cHZ6mdn7X8wILeUC+cFSy1ydOt+AIBZ7Wsn+
+        6RiyNr3+YZ9e5X9O841jrTKhGc0/ZQRKmLp48h1YuJ2c/HEGii/KvyIzMAExmhTlYBEsBkuabiN
+        OSl6kHZpNMl6fy/WsIYNCS7MNA20EMWXb
+X-Received: by 2002:a5d:4ec5:0:b0:314:98f:2495 with SMTP id s5-20020a5d4ec5000000b00314098f2495mr7489847wrv.12.1690198362014;
+        Mon, 24 Jul 2023 04:32:42 -0700 (PDT)
+X-Google-Smtp-Source: APBJJlEI60yM7OEQYltk8pZJRHHkHj4AM6BZ+3LNkwODYxQy3aj86Uaqvq9RfiI7soFJIBmCEAmJvQ==
+X-Received: by 2002:a5d:4ec5:0:b0:314:98f:2495 with SMTP id s5-20020a5d4ec5000000b00314098f2495mr7489803wrv.12.1690198361680;
+        Mon, 24 Jul 2023 04:32:41 -0700 (PDT)
+Received: from vschneid.remote.csb ([149.12.7.81])
+        by smtp.gmail.com with ESMTPSA id w7-20020a5d4047000000b00313f61889ecsm12615302wrp.66.2023.07.24.04.32.39
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 24 Jul 2023 04:32:41 -0700 (PDT)
+From:   Valentin Schneider <vschneid@redhat.com>
+To:     Nadav Amit <namit@vmware.com>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "linux-trace-kernel@vger.kernel.org" 
+        <linux-trace-kernel@vger.kernel.org>,
+        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        linux-mm <linux-mm@kvack.org>, bpf <bpf@vger.kernel.org>,
+        the arch/x86 maintainers <x86@kernel.org>,
+        "rcu@vger.kernel.org" <rcu@vger.kernel.org>,
+        "linux-kselftest@vger.kernel.org" <linux-kselftest@vger.kernel.org>,
         Steven Rostedt <rostedt@goodmis.org>,
-        Nick Alcock <nick.alcock@oracle.com>
-CC:     Masahiro Yamada <masahiroy@kernel.org>,
-        Nathan Chancellor <nathan@kernel.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        "Nicolas Schier" <nicolas@fjasle.eu>,
         Masami Hiramatsu <mhiramat@kernel.org>,
-        "Daniel Bristot de Oliveira" <bristot@kernel.org>,
-        Viktor Malik <vmalik@redhat.com>,
-        Kris Van Hees <kris.van.hees@oracle.com>,
-        Luis Chamberlain <mcgrof@kernel.org>, <eugene.loh@oracle.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Frederic Weisbecker <frederic@kernel.org>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        Neeraj Upadhyay <quic_neeraju@quicinc.com>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Josh Triplett <josh@joshtriplett.org>,
+        Boqun Feng <boqun.feng@gmail.com>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Lai Jiangshan <jiangshanlai@gmail.com>,
+        Zqiang <qiang.zhang1211@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Uladzislau Rezki <urezki@gmail.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        Lorenzo Stoakes <lstoakes@gmail.com>,
         Josh Poimboeuf <jpoimboe@kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-kbuild@vger.kernel.org>,
-        <live-patching@vger.kernel.org>,
-        <linux-trace-kernel@vger.kernel.org>
-References: <20230718125523.2fc05491@gandalf.local.home>
- <20230721092127.1931028-1-alessandro.carminati@gmail.com>
- <CAPp5cGRBW6WDm9ku3nsr0x=rhEOGAUx==BctCo+DJ+498Tz2Sw@mail.gmail.com>
-From:   Alexander Lobakin <aleksander.lobakin@intel.com>
-In-Reply-To: <CAPp5cGRBW6WDm9ku3nsr0x=rhEOGAUx==BctCo+DJ+498Tz2Sw@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: DB8PR03CA0010.eurprd03.prod.outlook.com
- (2603:10a6:10:be::23) To DM6PR11MB3625.namprd11.prod.outlook.com
- (2603:10b6:5:13a::21)
+        Jason Baron <jbaron@akamai.com>,
+        Kees Cook <keescook@chromium.org>,
+        Sami Tolvanen <samitolvanen@google.com>,
+        Ard Biesheuvel <ardb@kernel.org>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        Juerg Haefliger <juerg.haefliger@canonical.com>,
+        Nicolas Saenz Julienne <nsaenz@kernel.org>,
+        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+        Dan Carpenter <error27@gmail.com>,
+        Chuang Wang <nashuiliang@gmail.com>,
+        Yang Jihong <yangjihong1@huawei.com>,
+        Petr Mladek <pmladek@suse.com>,
+        "Jason A. Donenfeld" <Jason@zx2c4.com>, Song Liu <song@kernel.org>,
+        Julian Pidancet <julian.pidancet@oracle.com>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        Dionna Glaze <dionnaglaze@google.com>,
+        Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <linux@weissschuh.net>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Daniel Bristot de Oliveira <bristot@redhat.com>,
+        Marcelo Tosatti <mtosatti@redhat.com>,
+        Yair Podemsky <ypodemsk@redhat.com>
+Subject: Re: [RFC PATCH v2 20/20] x86/mm, mm/vmalloc: Defer
+ flush_tlb_kernel_range() targeting NOHZ_FULL CPUs
+In-Reply-To: <188AEA79-10E6-4DFF-86F4-FE624FD1880F@vmware.com>
+References: <20230720163056.2564824-1-vschneid@redhat.com>
+ <20230720163056.2564824-21-vschneid@redhat.com>
+ <188AEA79-10E6-4DFF-86F4-FE624FD1880F@vmware.com>
+Date:   Mon, 24 Jul 2023 12:32:38 +0100
+Message-ID: <xhsmh8rb5tui1.mognet@vschneid.remote.csb>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DM6PR11MB3625:EE_|PH0PR11MB5928:EE_
-X-MS-Office365-Filtering-Correlation-Id: ae45dcff-5f3f-4217-a3f0-08db8c314103
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: Hs04UAFAs6xaYJM/v0skeRLZEPv1rhmQlUSng3euU2UP9bLqWG23+7/KZ3vFPr3KxizPLXTAEnp+BwFEIeKFFgQqVUtf7LXIcfeg1HKc6sz/EWjLkMFbM4JWRZk8eCewjXlCr/sn+8+BSnTJFJjCoXxH9rZUK7mdon5Dfieu7AwkadVv3qsXo2fknF3i630Z/UHa8btouNvOmxHjjnJpXorsKysnVUtP8+aUZNfI3h1uktHiAqaSuR2oJ/GZFSpN3ehbwLj/i9+QTb8ws8aufzjyaBzPQHnjBynt6IYNUYPTqeisxNdOD9sHctQ7dbDpjkXBu1XE0sHN9Y+0GgJrI7X3mBrFXiVr2pjkbO8V4pTDEHNYWG86XMt5/H4rTASiJajpOyrsMz6IB5P9F9Gjv59+38LXk7GOXhMaNbrhEYDrF35/ciKaFD/m7ZHWUCU1VSXkq6awXvX0qgA4ye9daleu+WGzJFnCksqeAEIL5AfiZhp7FFbnSa1jHM5nQ3K+oiGURXa58amTougARFOqElthaqhRX0euIiENW9d8G34cwuOK1O5rIrP/zc31Cp+L/w20Hr4hBDFr5wee/hAgPirOyurQakuZMY4f1CGJzRsEYuUEGXHIRiQ0df2/jC/lUkH9znCcqdIzC1dfAtEILA==
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR11MB3625.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230028)(396003)(346002)(376002)(39860400002)(136003)(366004)(451199021)(2906002)(66946007)(66556008)(66476007)(6666004)(478600001)(6486002)(31696002)(6512007)(966005)(110136005)(86362001)(54906003)(83380400001)(36756003)(186003)(82960400001)(2616005)(6506007)(38100700002)(26005)(4326008)(41300700001)(8936002)(7416002)(31686004)(8676002)(5660300002)(316002)(45980500001)(43740500002);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?U1NYUHI1cnAzR25zSjBGQ0ZIbnBaMElhWFdxN3RuQjJGVzQxWk4zSVkrTzBr?=
- =?utf-8?B?ZFhQdElLS2szckpNUWF6SmZ4MG1XNEI3M1FnNXBVZC93YlFlRnVnNDB3Q2NM?=
- =?utf-8?B?VHJRQm1qMkdhUnRkbUFXQ2lpSUc1Ym1QamZLS0lEZElWVGwwNVBhZXYyYUlB?=
- =?utf-8?B?SFd1TjNrS01uSVFqQjU1OFcwdUE3S1dBa2NZTzNRUVJkWitHTzU3Ri8vaTNB?=
- =?utf-8?B?a2x2WVdVZVk4WnNUNWFPb3liRkNSQ1dMT3puUkV4Y3MyWGlyU0g4Z043VE94?=
- =?utf-8?B?V0xKSEE2QmE2VDVPOURCWDVoV0lwS2NrVUs0ZFdFQWEzSkViQ2lPb2JXSmp2?=
- =?utf-8?B?aWNWNmI1NFdaYUpaVHV0MDFhWk5uWEtmenhSTVlFOWQzUVVHYXAwZTVZS1Fr?=
- =?utf-8?B?c3RZSysxdUhvVG1LQWpFMmJENU1TaytUV2xaeFdSbjAxYWpTa3dEc1cwR0Np?=
- =?utf-8?B?dDdUbGFHMC83NjFJY0hoVHZNVXBKbGF6ZTBDeFFhY0VqRlloSUI4b0VieXVL?=
- =?utf-8?B?V3AxUmhqVnlSTDBKTUdFUzhad0NZcXlrb0R6bUtCZit4MmJhVWJEeW1QYjRU?=
- =?utf-8?B?TVZVbGNQbUZIR3dBZmpnWUc1TW1XRVd3cGZZNlVGWE1hcnpoTnpaZzlXN1Rx?=
- =?utf-8?B?aG5ndldlTm5qQmpQZWQ5em9KVEFDZlhxZmhyanFkbExwVXl0dHFhN08wbjll?=
- =?utf-8?B?WjhORDRTbmVicDBOTFk5RDhITkxzS3lldm4rVmliUUU2L0FIUStMNVJzRU0v?=
- =?utf-8?B?Z016MStXZitIREQ3aGlSeU1oTG1JeWIvTkI0RXROeExEbVRVWmxybTJwZUtz?=
- =?utf-8?B?Ylg3anZXeFY1bndjWUhCZjFBcEN2ckhzY3ZJWm1PbnRwdzlKcE1ibW5ySnM5?=
- =?utf-8?B?ZFQyVHF4SEQ5MkMwTysyZG1Udmc3WS9Ba1A3disrVk43TGV0WVhaYVZtU1ZO?=
- =?utf-8?B?ZEs1Wmg1eFRnZ0ZJdC9oM25qQWh0ZDdCalUraExFZkRsdzdYYnNRbndHRUtk?=
- =?utf-8?B?TW5OSk1VVnNOem5SaU5ORDNSaU1welJFRHRmTC9vbEpHZU9aMjFYZ0NQTzlV?=
- =?utf-8?B?VENURjEybjZBM0NRRVFLUWFzZElPb1FHUDhjaGNQbUtvaitIdjdGSnVaMEg0?=
- =?utf-8?B?NzRBYWMzUjBodkcxL3BMRkVmUFg1NFNxYlYrSUJWZWlYcEJsdTdjYTRpdkZG?=
- =?utf-8?B?alhsVXE0Z0JONGg2L3doYzB6RlF3L2d5VDhMT3RSejFqVWJydE0rWnlGRTd1?=
- =?utf-8?B?bEttSTNaTm9KR2NIRGVKU0QrdWwrNEZpd25JMnRIcGhhVWNnNkpJUjU3cjhC?=
- =?utf-8?B?aStzNTFlTFlwRVpvdWRuVHA4RnhMUXh4QzhFUWtTWmI5RDYzY0ZFVWpSd2FC?=
- =?utf-8?B?NmZqbUdPUHVBWFMwTFlqeDJCYk05WUUxaWJpanB0Yk1WKzVHT2RFcDdIY1FG?=
- =?utf-8?B?Y0lEQ0Q0eGQ3MkptQ2NvUmJuVm5sSEFkSVVwZXd1SWFDVGRDelV4Z0lnUlZs?=
- =?utf-8?B?MEpSeFRZdjJtaUNSRDdHMmlCeENQcVVheXNxNmtuU0xtZXBtZE9NbS9wR0Nm?=
- =?utf-8?B?eUJaU2R4THk3MjE1MkxTKzNBTHNSdGhOTFovRjZsTm5oQ1RTUW9qbk5ha3N5?=
- =?utf-8?B?dWFlN3QxWDlqT3lLV1ZBWkhzeGJqLzgwWjZaUG9SWDRtNk5oVEsrRFZ4K2FR?=
- =?utf-8?B?ZW03Rlc4V0NxemxpZ1BpYjRIVDljZ0ZkaUYzdFZvQWVPUVV5TFU5WFFTd2hT?=
- =?utf-8?B?NnJuK1VXd3BiN0NnQUFuclA5bEh0STI1VFhOTUJucmQ2bWxPTzVtbURJSEJ5?=
- =?utf-8?B?U3FEV3NhUlJCanA2MzhMSGxSd0JONlBYSmRzbnAzRDhWV0Z2dk94eDBiTUc1?=
- =?utf-8?B?TTBzb1ZaTG9UNHBiT1hBaUxrTVpIeHZtQUtVSDgreWdyZ3hYOEdaRGF3V2Fl?=
- =?utf-8?B?L1ZOQWhGRERtSmEzbGdzWFQ1UC9veDArd0JqdllrcUswc3ZJdmRBLzhsNzVT?=
- =?utf-8?B?ZzJnVklQTHhScjlIam5rZnNZenFNQ0lVY3hEQ2ZtTVY1MHNFZWM4cW93YmZH?=
- =?utf-8?B?RFNWWGFGdjBEMG03cGN6ZlQzUHhydkNqK0ZPaGpYSGFMSW1RaTdTeW9JQkdL?=
- =?utf-8?B?ai9Jelg2cS9yekNGb1lnelV3a3dTSWcxaktxMHFYbEJaSDU0ZUQvYVRMak9w?=
- =?utf-8?B?T2c9PQ==?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: ae45dcff-5f3f-4217-a3f0-08db8c314103
-X-MS-Exchange-CrossTenant-AuthSource: DM6PR11MB3625.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 24 Jul 2023 10:32:17.7463
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: zTxfY+5TP21iBL7F3Uz5jtgI0Iej6H0ZkDfUxq2m4szVepT3g+NuZe27Q6dtZj+CtezFZtyi21DXHqoZRYVKy3+kraatnriy9DORbnVb95M=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH0PR11MB5928
-X-OriginatorOrg: intel.com
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: redhat.com
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-From: Alessandro Carminati <alessandro.carminati@gmail.com>
-Date: Fri, 21 Jul 2023 14:40:54 +0200
+On 21/07/23 18:15, Nadav Amit wrote:
+>> On Jul 20, 2023, at 9:30 AM, Valentin Schneider <vschneid@redhat.com> wr=
+ote:
+>>
+>> vunmap()'s issued from housekeeping CPUs are a relatively common source =
+of
+>> interference for isolated NOHZ_FULL CPUs, as they are hit by the
+>> flush_tlb_kernel_range() IPIs.
+>>
+>> Given that CPUs executing in userspace do not access data in the vmalloc
+>> range, these IPIs could be deferred until their next kernel entry.
+>
+> So I think there are a few assumptions here that it seems suitable to con=
+firm
+> and acknowledge the major one in the commit log (assuming they hold).
+>
+> There is an assumption that VMAP page-tables are not freed. I actually
+> never paid attention to that, but skimming the code it does seem so. To
+> clarify the issue: if page-tables were freed and their pages were reused,
+> there would be a problem that page-walk caches for instance would be used
+> and =E2=80=9Cjunk=E2=80=9D entries from the reused pages would be used. S=
+ee [1].
+>
 
-> Hello,
-> 
-> I apologize for being noisy today.
-> 
-> In an effort to be collaborative, I would like to share my thoughts on why I
-> see duplicate symbols in fs/binfmt_elf.c.
+Thanks for looking into this and sharing context. This is an area I don't
+have much experience with, so help is much appreciated!
 
-[...]
+Indeed, accessing addresses that should be impacted by a TLB flush *before*
+executing the deferred flush is an issue. Deferring sync_core() for
+instruction patching is a similar problem - it's all in the shape of
+"access @addr impacted by @operation during kernel entry, before actually
+executing @operation".
 
-> ~ $ nm -n built-in.a | grep set_brk -B100| egrep "set_brk|\.o:$"
-> fs/binfmt_elf.o:
-> 00000000000000d4 t set_brk
-> fs/compat_binfmt_elf.o:
-> 00000000000000d4 t set_brk
-> ```
-> 
-> These two symbols come from fs/binfmt_elf.o and fs/compat_binfmt_elf.o, and
-> they are just two symbols that happen to share the same name, as is common
-> in the kernel.
-> 
-> at the same time, addr2line reports symbols to be generated from the same file.
-> 
-> ```
-> ~ $ llvm-addr2line-14 -fe vmlinux ffff8000082f1d2c ffff8000082f4454
-> set_brk
-> /home/alessandro/src/lka64/linux-6.4/fs/binfmt_elf.c:114
-> set_brk
-> /home/alessandro/src/lka64/linux-6.4/fs/binfmt_elf.c:114
-> ~ $
-> ~ $ addr2line -fe vmlinux ffff8000082f1d2c ffff8000082f4454
-> set_brk
-> /home/alessandro/src/lka64/linux-6.4/fs/binfmt_elf.c:114
-> set_brk
-> /home/alessandro/src/lka64/linux-6.4/fs/binfmt_elf.c:114
-> ```
-> looking at the source code:
-> https://elixir.bootlin.com/linux/v6.4/source/fs/compat_binfmt_elf.c#L144
-> the cause of this behavior, which is unexpected but correct.
+AFAICT the only reasonable way to go about the deferral is to prove that no
+such access happens before the deferred @operation is done. We got to prove
+that for sync_core() deferral, cf. PATCH 18.
 
-Oh man, that's some deep investigation!
-Let me go back to my old tree I was sending RFC from and check that
-particular case there...
+I'd like to reason about it for deferring vunmap TLB flushes:
 
-$ grep set_brk test_ksyms
-ffffffff814b46c0 t fs/binfmt_elf.c:set_brk
-ffffffff814b7040 t fs/compat_binfmt_elf.c:set_brk
+What addresses in VMAP range, other than the stack, can early entry code
+access? Yes, the ranges can be checked at runtime, but is there any chance
+of figuring this out e.g. at build-time?
 
-Looks a bit better :D
+> I would also assume the memory-hot-unplug of some sorts is not an issue,
+> (i.e., you cannot have a stale TLB entry pointing to memory that was
+> unplugged).
+>
+> I also think that there might be speculative code execution using stale
+> TLB entries that would point to memory that has been reused and perhaps
+> controllable by the user. If somehow the CPU/OS is tricked to use the
+> stale executable TLB entries early enough on kernel entry that might be
+> an issue. I guess it is probably theoretical issue, but it would be helpf=
+ul
+> to confirm.
+>
+> In general, deferring TLB flushes can be done safely. This patch, I think=
+,
+> takes it one step forward and allows the reuse of the memory before the T=
+LB
+> flush is actually done. This is more dangerous.
+>
+> [1] https://lore.kernel.org/lkml/tip-b956575bed91ecfb136a8300742ecbbf4514=
+71ab@git.kernel.org/
 
-> 
-> The rationale is that using source file + line number iproduces better kallsyms
-> table, but it is still do not produce unique names.
-> 
-> BR
-> Alessandro
->> As a final note, please understand that my patch was not intended to undermine
->> anyone's work. I simply encountered a problem that I wanted to help solve.
->> Attached to this message is my code, in case anyone wants to replicate it.
->> I would appreciate being kept in the loop, as I genuinely want to assist in
->> fixing this problem.
-
-Thanks,
-Olek
