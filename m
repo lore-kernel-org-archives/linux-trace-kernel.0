@@ -2,184 +2,411 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E65D0C001B0
-	for <linux-trace-kernel@archiver.kernel.org>; Mon, 24 Jul 2023 12:29:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E5DEBC0015E
+	for <linux-trace-kernel@archiver.kernel.org>; Mon, 24 Jul 2023 13:56:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230264AbjGXM3Z (ORCPT
+        id S231266AbjGXN4M (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Mon, 24 Jul 2023 08:29:25 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56284 "EHLO
+        Mon, 24 Jul 2023 09:56:12 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59206 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229847AbjGXM3W (ORCPT
+        with ESMTP id S231322AbjGXNz7 (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Mon, 24 Jul 2023 08:29:22 -0400
-Received: from szxga03-in.huawei.com (szxga03-in.huawei.com [45.249.212.189])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4674710EF;
-        Mon, 24 Jul 2023 05:29:11 -0700 (PDT)
-Received: from dggpeml500012.china.huawei.com (unknown [172.30.72.53])
-        by szxga03-in.huawei.com (SkyGuard) with ESMTP id 4R8fXq2Qw4zHqcG;
-        Mon, 24 Jul 2023 20:26:35 +0800 (CST)
-Received: from [10.67.110.218] (10.67.110.218) by
- dggpeml500012.china.huawei.com (7.185.36.15) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.27; Mon, 24 Jul 2023 20:29:08 +0800
-Message-ID: <d1259a3a-fbab-439f-7983-bb19aebecd5f@huawei.com>
-Date:   Mon, 24 Jul 2023 20:29:08 +0800
+        Mon, 24 Jul 2023 09:55:59 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A943410D5;
+        Mon, 24 Jul 2023 06:54:51 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 465F36120E;
+        Mon, 24 Jul 2023 13:54:51 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 106DAC433C7;
+        Mon, 24 Jul 2023 13:54:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1690206890;
+        bh=a1wN85+Gd+JyogSZr/tth24jJCm/lVJ1Lu6mj4sOmj0=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=fORFCHjHk3LSeiuui1EjwFUzRLCKW9kuEOSTQv/rFt/wPGuoITwdSuGwvpWB/83fL
+         bDqYICdWA9L3DJ12lI7lxiZPSJn6obSnVttFW8HUMIzZy4h2KqWWsw0ca2Bj85m2Ae
+         riU4253RvBy3TeJwNdWc/5oIm9TsUmE8xi+WV6ckohCag0AiWHzsMpiq3Q8t5Us3Kp
+         gZ4FJW9uSfWUFkXkrvp15kqNPFrsH3DFAM1ulBNBG8OsS37O4d70j+nKDgJMfKw+8v
+         U7v26WXDoYs/1vOOHgTSH6/x/op/hX7upfxriZ4Ac6ztRxGwfxPZzZ3sLiHPNUXiz0
+         4Z2YAFNh4K54Q==
+From:   Arnd Bergmann <arnd@kernel.org>
+To:     Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Andrii Nakryiko <andrii@kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Luis Chamberlain <mcgrof@kernel.org>
+Cc:     Arnd Bergmann <arnd@arndb.de>,
+        Martin KaFai Lau <martin.lau@linux.dev>,
+        Song Liu <song@kernel.org>, Yonghong Song <yhs@fb.com>,
+        KP Singh <kpsingh@kernel.org>,
+        Stanislav Fomichev <sdf@google.com>,
+        Hao Luo <haoluo@google.com>, Jiri Olsa <jolsa@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Kees Cook <keescook@chromium.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Miguel Ojeda <ojeda@kernel.org>,
+        Palmer Dabbelt <palmer@rivosinc.com>, bpf@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+        linux-modules@vger.kernel.org
+Subject: [PATCH 2/2] [v2] kallsyms: rework symbol lookup return codes
+Date:   Mon, 24 Jul 2023 15:53:02 +0200
+Message-Id: <20230724135327.1173309-2-arnd@kernel.org>
+X-Mailer: git-send-email 2.39.2
+In-Reply-To: <20230724135327.1173309-1-arnd@kernel.org>
+References: <20230724135327.1173309-1-arnd@kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.6.0
-Subject: Re: [PATCH] ring-buffer: Fix wrong stat of cpu_buffer->read
-Content-Language: en-US
-To:     Steven Rostedt <rostedt@goodmis.org>
-CC:     <mhiramat@kernel.org>, <vnagarnaik@google.com>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-trace-kernel@vger.kernel.org>
-References: <20230724054040.3489499-1-zhengyejian1@huawei.com>
- <20230724044304.5a93a266@rorschach.local.home>
-From:   Zheng Yejian <zhengyejian1@huawei.com>
-In-Reply-To: <20230724044304.5a93a266@rorschach.local.home>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.67.110.218]
-X-ClientProxiedBy: dggems706-chm.china.huawei.com (10.3.19.183) To
- dggpeml500012.china.huawei.com (7.185.36.15)
-X-CFilter-Loop: Reflected
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On 2023/7/24 16:43, Steven Rostedt wrote:
-> Do you folks find it fun to post a fix right after I send Linus a pull request? ;-)
+From: Arnd Bergmann <arnd@arndb.de>
 
-It's always so coincidental :-)
+Building with W=1 in some configurations produces a false positive
+warning for kallsyms:
 
-> 
-> Thanks, I'll queue it up (but I will wait a bit before posting in case
-> more fixes trickle in)
+kernel/kallsyms.c: In function '__sprint_symbol.isra':
+kernel/kallsyms.c:503:17: error: 'strcpy' source argument is the same as destination [-Werror=restrict]
+  503 |                 strcpy(buffer, name);
+      |                 ^~~~~~~~~~~~~~~~~~~~
 
-Thanks!
+This originally showed up while building with -O3, but later started
+happening in other configurations as well, depending on inlining
+decisions. The underlying issue is that the local 'name' variable is
+always initialized to the be the same as 'buffer' in the called functions
+that fill the buffer, which gcc notices while inlining, though it could
+see that the address check always skips the copy.
 
--- Zheng Yejian
+The calling conventions here are rather unusual, as all of the internal
+lookup functions (bpf_address_lookup, ftrace_mod_address_lookup,
+ftrace_func_address_lookup, module_address_lookup and
+kallsyms_lookup_buildid) already use the provided buffer and either return
+the address of that buffer to indicate success, or NULL for failure,
+but the callers are written to also expect an arbitrary other buffer
+to be returned.
 
-> 
-> -- Steve
-> 
-> 
-> On Mon, 24 Jul 2023 13:40:40 +0800
-> Zheng Yejian <zhengyejian1@huawei.com> wrote:
-> 
->> When pages are removed in rb_remove_pages(), 'cpu_buffer->read' is set
->> to 0 in order to make sure any read iterators reset themselves. However,
->> this will mess 'entries' stating, see following steps:
->>
->>    # cd /sys/kernel/tracing/
->>    # 1. Enlarge ring buffer prepare for later reducing:
->>    # echo 20 > per_cpu/cpu0/buffer_size_kb
->>    # 2. Write a log into ring buffer of cpu0:
->>    # taskset -c 0 echo "hello1" > trace_marker
->>    # 3. Read the log:
->>    # cat per_cpu/cpu0/trace_pipe
->>         <...>-332     [000] .....    62.406844: tracing_mark_write: hello1
->>    # 4. Stop reading and see the stats, now 0 entries, and 1 event readed:
->>    # cat per_cpu/cpu0/stats
->>     entries: 0
->>     [...]
->>     read events: 1
->>    # 5. Reduce the ring buffer
->>    # echo 7 > per_cpu/cpu0/buffer_size_kb
->>    # 6. Now entries became unexpected 1 because actually no entries!!!
->>    # cat per_cpu/cpu0/stats
->>     entries: 1
->>     [...]
->>     read events: 0
->>
->> To fix it, introduce 'page_removed' field to count total removed pages
->> since last reset, then use it to let read iterators reset themselves
->> instead of changing the 'read' pointer.
->>
->> Fixes: 83f40318dab0 ("ring-buffer: Make removal of ring buffer pages atomic")
->> Signed-off-by: Zheng Yejian <zhengyejian1@huawei.com>
->> ---
->>   kernel/trace/ring_buffer.c | 22 ++++++++++++----------
->>   1 file changed, 12 insertions(+), 10 deletions(-)
->>
->> diff --git a/kernel/trace/ring_buffer.c b/kernel/trace/ring_buffer.c
->> index de061dd47313..46b4a3c7c3bf 100644
->> --- a/kernel/trace/ring_buffer.c
->> +++ b/kernel/trace/ring_buffer.c
->> @@ -523,6 +523,8 @@ struct ring_buffer_per_cpu {
->>   	rb_time_t			before_stamp;
->>   	u64				event_stamp[MAX_NEST];
->>   	u64				read_stamp;
->> +	/* pages removed since last reset */
->> +	unsigned long			pages_removed;
->>   	/* ring buffer pages to update, > 0 to add, < 0 to remove */
->>   	long				nr_pages_to_update;
->>   	struct list_head		new_pages; /* new pages to add */
->> @@ -559,6 +561,7 @@ struct ring_buffer_iter {
->>   	struct buffer_page		*head_page;
->>   	struct buffer_page		*cache_reader_page;
->>   	unsigned long			cache_read;
->> +	unsigned long			cache_pages_removed;
->>   	u64				read_stamp;
->>   	u64				page_stamp;
->>   	struct ring_buffer_event	*event;
->> @@ -1957,6 +1960,8 @@ rb_remove_pages(struct ring_buffer_per_cpu *cpu_buffer, unsigned long nr_pages)
->>   		to_remove = rb_list_head(to_remove)->next;
->>   		head_bit |= (unsigned long)to_remove & RB_PAGE_HEAD;
->>   	}
->> +	/* Read iterators need to reset themselves when some pages removed */
->> +	cpu_buffer->pages_removed += nr_removed;
->>   
->>   	next_page = rb_list_head(to_remove)->next;
->>   
->> @@ -1978,12 +1983,6 @@ rb_remove_pages(struct ring_buffer_per_cpu *cpu_buffer, unsigned long nr_pages)
->>   		cpu_buffer->head_page = list_entry(next_page,
->>   						struct buffer_page, list);
->>   
->> -	/*
->> -	 * change read pointer to make sure any read iterators reset
->> -	 * themselves
->> -	 */
->> -	cpu_buffer->read = 0;
->> -
->>   	/* pages are removed, resume tracing and then free the pages */
->>   	atomic_dec(&cpu_buffer->record_disabled);
->>   	raw_spin_unlock_irq(&cpu_buffer->reader_lock);
->> @@ -4395,6 +4394,7 @@ static void rb_iter_reset(struct ring_buffer_iter *iter)
->>   
->>   	iter->cache_reader_page = iter->head_page;
->>   	iter->cache_read = cpu_buffer->read;
->> +	iter->cache_pages_removed = cpu_buffer->pages_removed;
->>   
->>   	if (iter->head) {
->>   		iter->read_stamp = cpu_buffer->read_stamp;
->> @@ -4849,12 +4849,13 @@ rb_iter_peek(struct ring_buffer_iter *iter, u64 *ts)
->>   	buffer = cpu_buffer->buffer;
->>   
->>   	/*
->> -	 * Check if someone performed a consuming read to
->> -	 * the buffer. A consuming read invalidates the iterator
->> -	 * and we need to reset the iterator in this case.
->> +	 * Check if someone performed a consuming read to the buffer
->> +	 * or removed some pages from the buffer. In these cases,
->> +	 * iterator was invalidated and we need to reset it.
->>   	 */
->>   	if (unlikely(iter->cache_read != cpu_buffer->read ||
->> -		     iter->cache_reader_page != cpu_buffer->reader_page))
->> +		     iter->cache_reader_page != cpu_buffer->reader_page ||
->> +		     iter->cache_pages_removed != cpu_buffer->pages_removed))
->>   		rb_iter_reset(iter);
->>   
->>    again:
->> @@ -5298,6 +5299,7 @@ rb_reset_cpu(struct ring_buffer_per_cpu *cpu_buffer)
->>   	cpu_buffer->last_overrun = 0;
->>   
->>   	rb_head_page_activate(cpu_buffer);
->> +	cpu_buffer->pages_removed = 0;
->>   }
->>   
->>   /* Must have disabled the cpu buffer then done a synchronize_rcu */
-> 
-> 
+Rework the calling conventions to return the length of the filled buffer
+instead of its address, which is simpler and easier to follow as well
+as avoiding the warning. Leave only the kallsyms_lookup() calling conventions
+unchanged, since that is called from 16 different functions and
+adapting this would be a much bigger change.
+
+Link: https://lore.kernel.org/all/20200107214042.855757-1-arnd@arndb.de/
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+---
+v2: complete rewrite after the first patch was rejected (in 2020). This
+    is now one of only two warnings that are in the way of enabling
+    -Wextra/-Wrestrict by default.
+---
+ include/linux/filter.h   | 14 +++++++-------
+ include/linux/ftrace.h   |  6 +++---
+ include/linux/module.h   | 14 +++++++-------
+ kernel/bpf/core.c        |  7 +++----
+ kernel/kallsyms.c        | 23 ++++++++++++-----------
+ kernel/module/kallsyms.c | 26 +++++++++++++-------------
+ kernel/trace/ftrace.c    | 13 +++++--------
+ 7 files changed, 50 insertions(+), 53 deletions(-)
+
+diff --git a/include/linux/filter.h b/include/linux/filter.h
+index f69114083ec71..10f2b1acb138b 100644
+--- a/include/linux/filter.h
++++ b/include/linux/filter.h
+@@ -1130,17 +1130,17 @@ static inline bool bpf_jit_kallsyms_enabled(void)
+ 	return false;
+ }
+ 
+-const char *__bpf_address_lookup(unsigned long addr, unsigned long *size,
++int __bpf_address_lookup(unsigned long addr, unsigned long *size,
+ 				 unsigned long *off, char *sym);
+ bool is_bpf_text_address(unsigned long addr);
+ int bpf_get_kallsym(unsigned int symnum, unsigned long *value, char *type,
+ 		    char *sym);
+ 
+-static inline const char *
++static inline int
+ bpf_address_lookup(unsigned long addr, unsigned long *size,
+ 		   unsigned long *off, char **modname, char *sym)
+ {
+-	const char *ret = __bpf_address_lookup(addr, size, off, sym);
++	int ret = __bpf_address_lookup(addr, size, off, sym);
+ 
+ 	if (ret && modname)
+ 		*modname = NULL;
+@@ -1184,11 +1184,11 @@ static inline bool bpf_jit_kallsyms_enabled(void)
+ 	return false;
+ }
+ 
+-static inline const char *
++static inline int
+ __bpf_address_lookup(unsigned long addr, unsigned long *size,
+ 		     unsigned long *off, char *sym)
+ {
+-	return NULL;
++	return 0;
+ }
+ 
+ static inline bool is_bpf_text_address(unsigned long addr)
+@@ -1202,11 +1202,11 @@ static inline int bpf_get_kallsym(unsigned int symnum, unsigned long *value,
+ 	return -ERANGE;
+ }
+ 
+-static inline const char *
++static inline int
+ bpf_address_lookup(unsigned long addr, unsigned long *size,
+ 		   unsigned long *off, char **modname, char *sym)
+ {
+-	return NULL;
++	return 0;
+ }
+ 
+ static inline void bpf_prog_kallsyms_add(struct bpf_prog *fp)
+diff --git a/include/linux/ftrace.h b/include/linux/ftrace.h
+index ce156c7704ee5..50c7ca7125caa 100644
+--- a/include/linux/ftrace.h
++++ b/include/linux/ftrace.h
+@@ -87,15 +87,15 @@ struct ftrace_direct_func;
+ 
+ #if defined(CONFIG_FUNCTION_TRACER) && defined(CONFIG_MODULES) && \
+ 	defined(CONFIG_DYNAMIC_FTRACE)
+-const char *
++int
+ ftrace_mod_address_lookup(unsigned long addr, unsigned long *size,
+ 		   unsigned long *off, char **modname, char *sym);
+ #else
+-static inline const char *
++static inline int
+ ftrace_mod_address_lookup(unsigned long addr, unsigned long *size,
+ 		   unsigned long *off, char **modname, char *sym)
+ {
+-	return NULL;
++	return 0;
+ }
+ #endif
+ 
+diff --git a/include/linux/module.h b/include/linux/module.h
+index a98e188cf37b8..76e6104d41ba5 100644
+--- a/include/linux/module.h
++++ b/include/linux/module.h
+@@ -920,11 +920,11 @@ int module_kallsyms_on_each_symbol(const char *modname,
+  * least KSYM_NAME_LEN long: a pointer to namebuf is returned if
+  * found, otherwise NULL.
+  */
+-const char *module_address_lookup(unsigned long addr,
+-				  unsigned long *symbolsize,
+-				  unsigned long *offset,
+-				  char **modname, const unsigned char **modbuildid,
+-				  char *namebuf);
++int module_address_lookup(unsigned long addr,
++			  unsigned long *symbolsize,
++			  unsigned long *offset,
++			  char **modname, const unsigned char **modbuildid,
++			  char *namebuf);
+ int lookup_module_symbol_name(unsigned long addr, char *symname);
+ int lookup_module_symbol_attrs(unsigned long addr,
+ 			       unsigned long *size,
+@@ -953,14 +953,14 @@ static inline int module_kallsyms_on_each_symbol(const char *modname,
+ }
+ 
+ /* For kallsyms to ask for address resolution.  NULL means not found. */
+-static inline const char *module_address_lookup(unsigned long addr,
++static inline int module_address_lookup(unsigned long addr,
+ 						unsigned long *symbolsize,
+ 						unsigned long *offset,
+ 						char **modname,
+ 						const unsigned char **modbuildid,
+ 						char *namebuf)
+ {
+-	return NULL;
++	return 0;
+ }
+ 
+ static inline int lookup_module_symbol_name(unsigned long addr, char *symname)
+diff --git a/kernel/bpf/core.c b/kernel/bpf/core.c
+index ea371f790f47c..da0590e5c87e1 100644
+--- a/kernel/bpf/core.c
++++ b/kernel/bpf/core.c
+@@ -688,11 +688,11 @@ static struct bpf_ksym *bpf_ksym_find(unsigned long addr)
+ 	return n ? container_of(n, struct bpf_ksym, tnode) : NULL;
+ }
+ 
+-const char *__bpf_address_lookup(unsigned long addr, unsigned long *size,
++int __bpf_address_lookup(unsigned long addr, unsigned long *size,
+ 				 unsigned long *off, char *sym)
+ {
+ 	struct bpf_ksym *ksym;
+-	char *ret = NULL;
++	int ret = 0;
+ 
+ 	rcu_read_lock();
+ 	ksym = bpf_ksym_find(addr);
+@@ -700,9 +700,8 @@ const char *__bpf_address_lookup(unsigned long addr, unsigned long *size,
+ 		unsigned long symbol_start = ksym->start;
+ 		unsigned long symbol_end = ksym->end;
+ 
+-		strncpy(sym, ksym->name, KSYM_NAME_LEN);
++		ret = strlcpy(sym, ksym->name, KSYM_NAME_LEN);
+ 
+-		ret = sym;
+ 		if (size)
+ 			*size = symbol_end - symbol_start;
+ 		if (off)
+diff --git a/kernel/kallsyms.c b/kernel/kallsyms.c
+index 016d997131d43..cd216ebb14cc3 100644
+--- a/kernel/kallsyms.c
++++ b/kernel/kallsyms.c
+@@ -399,12 +399,12 @@ int kallsyms_lookup_size_offset(unsigned long addr, unsigned long *symbolsize,
+ 	       !!__bpf_address_lookup(addr, symbolsize, offset, namebuf);
+ }
+ 
+-static const char *kallsyms_lookup_buildid(unsigned long addr,
++static int kallsyms_lookup_buildid(unsigned long addr,
+ 			unsigned long *symbolsize,
+ 			unsigned long *offset, char **modname,
+ 			const unsigned char **modbuildid, char *namebuf)
+ {
+-	const char *ret;
++	int ret;
+ 
+ 	namebuf[KSYM_NAME_LEN - 1] = 0;
+ 	namebuf[0] = 0;
+@@ -421,7 +421,7 @@ static const char *kallsyms_lookup_buildid(unsigned long addr,
+ 		if (modbuildid)
+ 			*modbuildid = NULL;
+ 
+-		ret = namebuf;
++		ret = strlen(namebuf);
+ 		goto found;
+ 	}
+ 
+@@ -453,8 +453,13 @@ const char *kallsyms_lookup(unsigned long addr,
+ 			    unsigned long *offset,
+ 			    char **modname, char *namebuf)
+ {
+-	return kallsyms_lookup_buildid(addr, symbolsize, offset, modname,
+-				       NULL, namebuf);
++	int ret = kallsyms_lookup_buildid(addr, symbolsize, offset, modname,
++					  NULL, namebuf);
++
++	if (!ret)
++		return NULL;
++
++	return namebuf;
+ }
+ 
+ int lookup_symbol_name(unsigned long addr, char *symname)
+@@ -489,19 +494,15 @@ static int __sprint_symbol(char *buffer, unsigned long address,
+ {
+ 	char *modname;
+ 	const unsigned char *buildid;
+-	const char *name;
+ 	unsigned long offset, size;
+ 	int len;
+ 
+ 	address += symbol_offset;
+-	name = kallsyms_lookup_buildid(address, &size, &offset, &modname, &buildid,
++	len = kallsyms_lookup_buildid(address, &size, &offset, &modname, &buildid,
+ 				       buffer);
+-	if (!name)
++	if (!len)
+ 		return sprintf(buffer, "0x%lx", address - symbol_offset);
+ 
+-	if (name != buffer)
+-		strcpy(buffer, name);
+-	len = strlen(buffer);
+ 	offset -= symbol_offset;
+ 
+ 	if (add_offset)
+diff --git a/kernel/module/kallsyms.c b/kernel/module/kallsyms.c
+index ef73ae7c89094..d6a74a5e1604f 100644
+--- a/kernel/module/kallsyms.c
++++ b/kernel/module/kallsyms.c
+@@ -321,14 +321,15 @@ void * __weak dereference_module_function_descriptor(struct module *mod,
+  * For kallsyms to ask for address resolution.  NULL means not found.  Careful
+  * not to lock to avoid deadlock on oopses, simply disable preemption.
+  */
+-const char *module_address_lookup(unsigned long addr,
+-				  unsigned long *size,
+-			    unsigned long *offset,
+-			    char **modname,
+-			    const unsigned char **modbuildid,
+-			    char *namebuf)
++int module_address_lookup(unsigned long addr,
++			  unsigned long *size,
++			  unsigned long *offset,
++			  char **modname,
++			  const unsigned char **modbuildid,
++			  char *namebuf)
+ {
+-	const char *ret = NULL;
++	const char *sym;
++	int ret = 0;
+ 	struct module *mod;
+ 
+ 	preempt_disable();
+@@ -344,13 +345,12 @@ const char *module_address_lookup(unsigned long addr,
+ #endif
+ 		}
+ 
+-		ret = find_kallsyms_symbol(mod, addr, size, offset);
+-	}
+-	/* Make a copy in here where it's safe */
+-	if (ret) {
+-		strncpy(namebuf, ret, KSYM_NAME_LEN - 1);
+-		ret = namebuf;
++		sym = find_kallsyms_symbol(mod, addr, size, offset);
++
++		if (sym)
++			ret = strlcpy(namebuf, sym, KSYM_NAME_LEN - 1);
+ 	}
++
+ 	preempt_enable();
+ 
+ 	return ret;
+diff --git a/kernel/trace/ftrace.c b/kernel/trace/ftrace.c
+index 05c0024815bf9..bc0eed24a5873 100644
+--- a/kernel/trace/ftrace.c
++++ b/kernel/trace/ftrace.c
+@@ -6965,7 +6965,7 @@ allocate_ftrace_mod_map(struct module *mod,
+ 	return mod_map;
+ }
+ 
+-static const char *
++static int
+ ftrace_func_address_lookup(struct ftrace_mod_map *mod_map,
+ 			   unsigned long addr, unsigned long *size,
+ 			   unsigned long *off, char *sym)
+@@ -6986,21 +6986,18 @@ ftrace_func_address_lookup(struct ftrace_mod_map *mod_map,
+ 			*size = found_func->size;
+ 		if (off)
+ 			*off = addr - found_func->ip;
+-		if (sym)
+-			strscpy(sym, found_func->name, KSYM_NAME_LEN);
+-
+-		return found_func->name;
++		return strlcpy(sym, found_func->name, KSYM_NAME_LEN);
+ 	}
+ 
+-	return NULL;
++	return 0;
+ }
+ 
+-const char *
++int
+ ftrace_mod_address_lookup(unsigned long addr, unsigned long *size,
+ 		   unsigned long *off, char **modname, char *sym)
+ {
+ 	struct ftrace_mod_map *mod_map;
+-	const char *ret = NULL;
++	int ret;
+ 
+ 	/* mod_map is freed via call_rcu() */
+ 	preempt_disable();
+-- 
+2.39.2
 
