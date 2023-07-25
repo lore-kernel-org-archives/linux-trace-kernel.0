@@ -2,63 +2,49 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 92792C04A6A
-	for <linux-trace-kernel@archiver.kernel.org>; Tue, 25 Jul 2023 14:04:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BF01C00528
+	for <linux-trace-kernel@archiver.kernel.org>; Tue, 25 Jul 2023 16:38:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232166AbjGYOEK (ORCPT
+        id S231622AbjGYQix (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Tue, 25 Jul 2023 10:04:10 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53196 "EHLO
+        Tue, 25 Jul 2023 12:38:53 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34804 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232140AbjGYOEJ (ORCPT
+        with ESMTP id S231584AbjGYQiw (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Tue, 25 Jul 2023 10:04:09 -0400
+        Tue, 25 Jul 2023 12:38:52 -0400
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4A8341FCB
-        for <linux-trace-kernel@vger.kernel.org>; Tue, 25 Jul 2023 07:03:27 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 804E310EC
+        for <linux-trace-kernel@vger.kernel.org>; Tue, 25 Jul 2023 09:38:05 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1690293806;
+        s=mimecast20190719; t=1690303084;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          in-reply-to:in-reply-to:references:references;
-        bh=uGwtpv4sQ6tMlJnBprHpZy+A2shb5owm6FTDMaQEmXQ=;
-        b=SbtymiZf/X49gw+/cpirh+aBFqtKtN5LdBS/J/Ta26vifRyi5h1hug3CdZS3mTzNryaNNc
-        QOHKa0yQF+iIKXR+S+bI7iVvmPhBHV9T6MO0duOqAPlWMOTDubMXIdFsvq0J1rGSLMJfoC
-        D0WJmeSDCaMshQxbv9qxZNuwX3ve9V0=
-Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
- [209.85.128.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-516-w5uo_kw0NM6BJU8vuF1D_g-1; Tue, 25 Jul 2023 10:03:25 -0400
-X-MC-Unique: w5uo_kw0NM6BJU8vuF1D_g-1
-Received: by mail-wm1-f70.google.com with SMTP id 5b1f17b1804b1-3fc08d6a40cso27664725e9.0
-        for <linux-trace-kernel@vger.kernel.org>; Tue, 25 Jul 2023 07:03:20 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1690293799; x=1690898599;
-        h=mime-version:message-id:date:references:in-reply-to:subject:cc:to
-         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=uGwtpv4sQ6tMlJnBprHpZy+A2shb5owm6FTDMaQEmXQ=;
-        b=HBR+R3eNqjsr5dZ5IhYG/w4doVfKLZwN/zcsvy1hdycBoX4aPtSj43Z2oSoKCmBab3
-         XjQmLFNxLEowVjbdbSr2YKAW2x40t49XsNWSKXUTDl4CiNs+mF2Qxm6kTAC1vGh1Fpwt
-         x37dn5OLBn/HsXS01onHLJiL+HLpw0FqRIOHpG2BFaOFxzk6nnBHd3sThYT6TpdgVW1b
-         62qqB9mC7lHUtN77Xt6JUanGZ8Wd6lWGFnumSUL5+nf9KumXofRlbSh/9acCd7nEv0qQ
-         FB2klGIamJir/l2+M7/TNHjXSYH/V5uTD1x4msG2j4I03NUmJnRIbwxSk9bh0r4vcBRd
-         074w==
-X-Gm-Message-State: ABy/qLb5Jw4s4JSJ5l3i0IerLnnElts76DVvKEX+x8I8CC6Be10Znce8
-        xVpANOgXvlU87KPMMncXQDpqn3cvl3B/C2TFdDiVjzH5nrn93gCX1RJyfvveaiLKPpqgp4ZbxRf
-        YWCp2vgdzRgnfWEMjmFeACdD0pbuOeB3j
-X-Received: by 2002:a05:600c:2981:b0:3fb:b890:128b with SMTP id r1-20020a05600c298100b003fbb890128bmr9613845wmd.27.1690293798862;
-        Tue, 25 Jul 2023 07:03:18 -0700 (PDT)
-X-Google-Smtp-Source: APBJJlGWt7E0uSkTs/ryo2PFkVv/T+3yWUu9tffF3NSN1ZjOzS6i3uoLFxbI/VM6mSJfkjz65gbRPQ==
-X-Received: by 2002:a05:600c:2981:b0:3fb:b890:128b with SMTP id r1-20020a05600c298100b003fbb890128bmr9613787wmd.27.1690293798543;
-        Tue, 25 Jul 2023 07:03:18 -0700 (PDT)
-Received: from vschneid.remote.csb ([149.12.7.81])
-        by smtp.gmail.com with ESMTPSA id s15-20020a05600c044f00b003fbc89af035sm13424142wmb.17.2023.07.25.07.03.16
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 25 Jul 2023 07:03:18 -0700 (PDT)
-From:   Valentin Schneider <vschneid@redhat.com>
-To:     Peter Zijlstra <peterz@infradead.org>,
-        Dave Hansen <dave.hansen@intel.com>
-Cc:     Nadav Amit <namit@vmware.com>,
+        bh=jLj18oLOp3KH/CAHpxuqfsfjyo2yWkCl10MaSaKRkoU=;
+        b=fvYEHmW/pzhUUC/yffxXyc9zUuOUQv/2UjrDCqvD5hlFHcxS6YnpvFTeI/97GphyrCiSoM
+        x/56fFy5W+u+6Cc+iHZBhAxr5iKJfswZqTsbJ0kjV0TWi/hL2P54PcZmUhxYMLaf5RwRIT
+        AegqVcPu89q+a39lhAePLiSe2C9ANew=
+Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
+ [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-130-1Gk68m60OaugU8loWBg99g-1; Tue, 25 Jul 2023 12:38:00 -0400
+X-MC-Unique: 1Gk68m60OaugU8loWBg99g-1
+Received: from smtp.corp.redhat.com (int-mx09.intmail.prod.int.rdu2.redhat.com [10.11.54.9])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 27C681044597;
+        Tue, 25 Jul 2023 16:38:00 +0000 (UTC)
+Received: from tpad.localdomain (ovpn-112-3.gru2.redhat.com [10.97.112.3])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 8D021492B01;
+        Tue, 25 Jul 2023 16:37:59 +0000 (UTC)
+Received: by tpad.localdomain (Postfix, from userid 1000)
+        id B479B4018E672; Tue, 25 Jul 2023 13:37:32 -0300 (-03)
+Date:   Tue, 25 Jul 2023 13:37:32 -0300
+From:   Marcelo Tosatti <mtosatti@redhat.com>
+To:     Dave Hansen <dave.hansen@intel.com>
+Cc:     Valentin Schneider <vschneid@redhat.com>,
+        Nadav Amit <namit@vmware.com>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
         "linux-trace-kernel@vger.kernel.org" 
         <linux-trace-kernel@vger.kernel.org>,
@@ -79,6 +65,7 @@ Cc:     Nadav Amit <namit@vmware.com>,
         Wanpeng Li <wanpengli@tencent.com>,
         Vitaly Kuznetsov <vkuznets@redhat.com>,
         Andy Lutomirski <luto@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
         Frederic Weisbecker <frederic@kernel.org>,
         "Paul E. McKenney" <paulmck@kernel.org>,
         Neeraj Upadhyay <quic_neeraju@quicinc.com>,
@@ -109,80 +96,66 @@ Cc:     Nadav Amit <namit@vmware.com>,
         Julian Pidancet <julian.pidancet@oracle.com>,
         Tom Lendacky <thomas.lendacky@amd.com>,
         Dionna Glaze <dionnaglaze@google.com>,
-        Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <linux@weissschuh.net>,
+        Thomas =?iso-8859-1?Q?Wei=DFschuh?= <linux@weissschuh.net>,
         Juri Lelli <juri.lelli@redhat.com>,
         Daniel Bristot de Oliveira <bristot@redhat.com>,
-        Marcelo Tosatti <mtosatti@redhat.com>,
         Yair Podemsky <ypodemsk@redhat.com>
 Subject: Re: [RFC PATCH v2 20/20] x86/mm, mm/vmalloc: Defer
  flush_tlb_kernel_range() targeting NOHZ_FULL CPUs
-In-Reply-To: <20230725132155.GJ3765278@hirez.programming.kicks-ass.net>
+Message-ID: <ZL/6THDvmC5mVyBI@tpad>
 References: <20230720163056.2564824-1-vschneid@redhat.com>
  <20230720163056.2564824-21-vschneid@redhat.com>
  <188AEA79-10E6-4DFF-86F4-FE624FD1880F@vmware.com>
  <xhsmh8rb5tui1.mognet@vschneid.remote.csb>
  <2284d0db-f94a-e059-7bd0-bab4f112ed35@intel.com>
- <20230725132155.GJ3765278@hirez.programming.kicks-ass.net>
-Date:   Tue, 25 Jul 2023 15:03:15 +0100
-Message-ID: <xhsmhr0owrsv0.mognet@vschneid.remote.csb>
 MIME-Version: 1.0
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <2284d0db-f94a-e059-7bd0-bab4f112ed35@intel.com>
+X-Scanned-By: MIMEDefang 3.1 on 10.11.54.9
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
+On Mon, Jul 24, 2023 at 10:40:04AM -0700, Dave Hansen wrote:
+> On 7/24/23 04:32, Valentin Schneider wrote:
+> > AFAICT the only reasonable way to go about the deferral is to prove that no
+> > such access happens before the deferred @operation is done. We got to prove
+> > that for sync_core() deferral, cf. PATCH 18.
+> > 
+> > I'd like to reason about it for deferring vunmap TLB flushes:
+> > 
+> > What addresses in VMAP range, other than the stack, can early entry code
+> > access? Yes, the ranges can be checked at runtime, but is there any chance
+> > of figuring this out e.g. at build-time?
+> 
+> Nadav was touching on a very important point: TLB flushes for addresses
+> are relatively easy to defer.  You just need to ensure that the CPU
+> deferring the flush does an actual flush before it might architecturally
+> consume the contents of the flushed entry.
+> 
+> TLB flushes for freed page tables are another game entirely.  The CPU is
+> free to cache any part of the paging hierarchy it wants at any time.
 
-Sorry, I missed out Dave's email, so now I'm taking my time to page (hah!)
-all of this.
+Depend on CONFIG_PAGE_TABLE_ISOLATION=y, which flushes TLB (and page
+table caches) on user->kernel and kernel->user context switches ?
 
-On 25/07/23 15:21, Peter Zijlstra wrote:
-> On Mon, Jul 24, 2023 at 10:40:04AM -0700, Dave Hansen wrote:
->
->> TLB flushes for freed page tables are another game entirely.  The CPU is
->> free to cache any part of the paging hierarchy it wants at any time.
->> It's also free to set accessed and dirty bits at any time, even for
->> instructions that may never execute architecturally.
->>
->> That basically means that if you have *ANY* freed page table page
->> *ANYWHERE* in the page table hierarchy of any CPU at any time ... you're
->> screwed.
->>
->> There's no reasoning about accesses or ordering.  As soon as the CPU
->> does *anything*, it's out to get you.
->>
+So freeing a kernel pagetable page does not require interrupting a CPU 
+which is in userspace (therefore does not have visibility into kernel
+pagetables).
 
-OK, I feel like I need to go back do some more reading now, but I think I
-get the difference. Thanks for spelling it out.
+> It's also free to set accessed and dirty bits at any time, even for
+> instructions that may never execute architecturally.
+> 
+> That basically means that if you have *ANY* freed page table page
+> *ANYWHERE* in the page table hierarchy of any CPU at any time ... you're
+> screwed.
+> 
+> There's no reasoning about accesses or ordering.  As soon as the CPU
+> does *anything*, it's out to get you.
+> 
+> You're going to need to do something a lot more radical to deal with
+> free page table pages.
 
->> You're going to need to do something a lot more radical to deal with
->> free page table pages.
->
-> Ha! IIRC the only thing we can reasonably do there is to have strict
-> per-cpu page-tables such that NOHZ_FULL CPUs can be isolated. That is,
-> as long we the per-cpu tables do not contain -- and have never contained
-> -- a particular table page, we can avoid flushing it. Because if it
-> never was there, it also couldn't have speculatively loaded it.
->
-> Now, x86 doesn't really do per-cpu page tables easily (otherwise we'd
-> have done them ages ago) and doing them is going to be *major* surgery
-> and pain.
->
-> Other than that, we must take the TLBI-IPI when freeing
-> page-table-pages.
->
->
-> But yeah, I think Nadav is right, vmalloc.c never frees page-tables (or
-> at least, I couldn't find it in a hurry either), but if we're going to
-> be doing this, then that file must include a very prominent comment
-> explaining it must never actually do so either.
->
 
-I also couldn't find any freeing of the page-table-pages, I'll do another
-pass and sharpen my quill for a big fat comment.
-
-> Not being able to free page-tables might be a 'problem' if we're going
-> to be doing more of HUGE_VMALLOC, because that means it becomes rather
-> hard to swizzle from small to large pages.
 
