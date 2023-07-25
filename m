@@ -2,79 +2,71 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D6FFC001B0
-	for <linux-trace-kernel@archiver.kernel.org>; Tue, 25 Jul 2023 01:37:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C654C0015E
+	for <linux-trace-kernel@archiver.kernel.org>; Tue, 25 Jul 2023 02:42:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229459AbjGYBhr (ORCPT
+        id S230335AbjGYCmC (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Mon, 24 Jul 2023 21:37:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:50868 "EHLO
+        Mon, 24 Jul 2023 22:42:02 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40660 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229998AbjGYBho (ORCPT
+        with ESMTP id S230523AbjGYCl7 (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Mon, 24 Jul 2023 21:37:44 -0400
+        Mon, 24 Jul 2023 22:41:59 -0400
 Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 633341737;
-        Mon, 24 Jul 2023 18:37:34 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 32B7B1BE9;
+        Mon, 24 Jul 2023 19:41:23 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange X25519 server-signature RSA-PSS (2048 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id ABECB614A0;
-        Tue, 25 Jul 2023 01:37:33 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D2A2BC433C7;
-        Tue, 25 Jul 2023 01:37:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1690249052;
-        bh=56b5kXnejQjCHe2JxyM6/FN8IqjBfg03Kg+93ShB/SM=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=MkywLUpT5IUmYfg5rewkx3z978JM7HselXR+8lyXsG/PnXfRLEAmSjTM1hReDqYZQ
-         9dc3lkl/WKKd6WKw5jvvQHfroBXPP0VWBeP/n5KHyYhfAT+8NyDOih24HtUswm6RUc
-         4UHlOBcJwEK3KMC/rg9lyU0stJB9AV8H0JL0Rymb8cB9PPAa1cGl61kZ5SLwbKH0Ry
-         z+lBBTxgA/T82UAxeEO73nf6VH53eXWplyYJMxxd1hH7HjTq45jyX5A/j679LyR0oH
-         6qeTw8CMFjoUauN4IXMytDNyGxbOAyXNFU1fS2FDVrXm5uGb3snWMRUMSdcgB5uH6h
-         9ptCSgLHOeLqg==
-From:   "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
-To:     linux-trace-kernel@vger.kernel.org,
-        Steven Rostedt <rostedt@goodmis.org>
-Cc:     linux-kernel@vger.kernel.org, mhiramat@kernel.org
-Subject: [PATCH 2/2] selftests/ftrace: Fix to check fprobe event eneblement
-Date:   Tue, 25 Jul 2023 10:37:29 +0900
-Message-Id: <169024904889.395371.17998733386857387118.stgit@devnote2>
-X-Mailer: git-send-email 2.34.1
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 20D3261468;
+        Tue, 25 Jul 2023 02:40:20 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3C1CBC433C7;
+        Tue, 25 Jul 2023 02:40:19 +0000 (UTC)
+Date:   Mon, 24 Jul 2023 22:40:17 -0400
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
+Cc:     linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 0/2] tracing/probes: Fixes for v6.5-rc2
+Message-ID: <20230724224017.76d5b0e9@rorschach.local.home>
 In-Reply-To: <169024903018.395371.1006584451160707296.stgit@devnote2>
 References: <169024903018.395371.1006584451160707296.stgit@devnote2>
-User-Agent: StGit/0.19
+X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+On Tue, 25 Jul 2023 10:37:10 +0900
+"Masami Hiramatsu (Google)" <mhiramat@kernel.org> wrote:
 
-Fix to check the availability of fprobe and kprobes for
-add_remove_btfarg.tc.
-Only if both kprobe and fprobe are not supported, it should return
-"unsupported".
+> These two patches are probe-events fixes for v6.5-rc2.
+> One is to fix btf_type_by_id() return value check and the other is fixing
+> selftest.
+> 
+> Thank you,
+> 
+> ---
+> 
+> Masami Hiramatsu (Google) (2):
+>       tracing/probes: Fix to add NULL check for BTF APIs
+>       selftests/ftrace: Fix to check fprobe event eneblement
 
-Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
----
- .../ftrace/test.d/dynevent/add_remove_btfarg.tc    |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+For both patches:
 
-diff --git a/tools/testing/selftests/ftrace/test.d/dynevent/add_remove_btfarg.tc b/tools/testing/selftests/ftrace/test.d/dynevent/add_remove_btfarg.tc
-index b89de1771655..f34b14ef9781 100644
---- a/tools/testing/selftests/ftrace/test.d/dynevent/add_remove_btfarg.tc
-+++ b/tools/testing/selftests/ftrace/test.d/dynevent/add_remove_btfarg.tc
-@@ -13,7 +13,7 @@ if grep -qF "f[:[<group>/][<event>]] <func-name>[%return] [<args>]" README ; the
-   FPROBES=yes
- fi
- 
--if [ -z "$KPROBES" -a "$FPROBES" ] ; then
-+if [ -z "$KPROBES" -a -z "$FPROBES" ] ; then
-   exit_unsupported
- fi
- 
+Reviewed-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+
+-- Steve
+
+> 
+> 
+>  kernel/trace/trace_probe.c                         |    8 ++++----
+>  .../ftrace/test.d/dynevent/add_remove_btfarg.tc    |    2 +-
+>  2 files changed, 5 insertions(+), 5 deletions(-)
+> 
+> --
+> Masami Hiramatsu (Google) <mhiramat@kernel.org>
 
