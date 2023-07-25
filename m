@@ -2,88 +2,179 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 228B6C0015E
-	for <linux-trace-kernel@archiver.kernel.org>; Tue, 25 Jul 2023 20:17:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 145C4C001DF
+	for <linux-trace-kernel@archiver.kernel.org>; Tue, 25 Jul 2023 20:42:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230005AbjGYURJ (ORCPT
+        id S229705AbjGYUmV (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Tue, 25 Jul 2023 16:17:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53810 "EHLO
+        Tue, 25 Jul 2023 16:42:21 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40100 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229437AbjGYURI (ORCPT
+        with ESMTP id S231550AbjGYUmE (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Tue, 25 Jul 2023 16:17:08 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5ADAF2118;
-        Tue, 25 Jul 2023 13:17:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=KgbnKQVKozyRRVh5Hy+ZdlwSXnYvtcdueZ7WwcU9Xdw=; b=r9TPHFyS3h8bLc5zSBRg+fO5xh
-        H7DPDph8cfJg3Tvu5W/fqGfid8VvholxPTXWMCqbFAs0pOqPWSzoK+SXHfd0x2XUhCTviSrIwRjw7
-        C5GWEUf3Jk0n++0DzORPa1P35LcK7U5RXElpJxV5Ti2fYOGA3j/Dwx+fY6JmQU36oxLh678czKQOw
-        mjlX8vGTi4TZ9cw9sviWatC2TryJ4ABPYmfZgX71lfE9eEI5bbyjOffLuO29S8BVSs7H3nwesBBJk
-        GDcTGMHYLtj7KjUBU8Cg23+VqmPJ7yahLAJaiJ26fu8ojU+wHC9IkiAv8phD/9/GOLyNdAUeJyG7t
-        gP/naydw==;
-Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
-        by casper.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
-        id 1qOORx-005qN5-Qs; Tue, 25 Jul 2023 20:16:06 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        Tue, 25 Jul 2023 16:42:04 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2E4C61BC8;
+        Tue, 25 Jul 2023 13:42:02 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (4096 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 772F830049D;
-        Tue, 25 Jul 2023 22:16:03 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 359002B5A0648; Tue, 25 Jul 2023 22:16:03 +0200 (CEST)
-Date:   Tue, 25 Jul 2023 22:16:03 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Steven Rostedt <rostedt@goodmis.org>
-Cc:     Ze Gao <zegao2021@gmail.com>, Ingo Molnar <mingo@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Ian Rogers <irogers@google.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        linux-trace-kernel@vger.kernel.org, Ze Gao <zegao@tencent.com>
-Subject: Re: [RFC PATCH 1/3] sched, tracing: report task state in symbolic
- chars instead
-Message-ID: <20230725201603.GB3784071@hirez.programming.kicks-ass.net>
-References: <20230725072254.32045-1-zegao@tencent.com>
- <20230725072254.32045-2-zegao@tencent.com>
- <20230725135938.1e056a02@rorschach.local.home>
+         key-exchange X25519 server-signature RSA-PSS (2048 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 67ACF6187D;
+        Tue, 25 Jul 2023 20:42:01 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 58D5FC433C7;
+        Tue, 25 Jul 2023 20:41:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1690317720;
+        bh=O/gvRDbAo1+qfKzhqxHNd4QCmaOLg095hAsSaLBvB7A=;
+        h=From:To:Cc:Subject:Date:From;
+        b=U96/uUjVNsF5ZPDGSmjhAi26ndBRdrgmoQUvoxGViq/F45bF6m/0ghSMSUlD3rsyH
+         SuIdyXiKVU3xtfMkbawyJa8Dc7JX2Z8BSukRNX0olo4fK01QMrP13nvgAQyqO6zWrY
+         il9tCMbFbgVhzSawQ6AxivfEkOJYU7/f3RgXs7gomFRGoTOjBnMTUtKjY+GM6hAxxB
+         qLfaHj1zxDlC5z7ghFeTZxLrVaxFbJpuBXH3AG2CYEu2JaK4hBQb91+UCT3sY+S+sw
+         QLF98JAaL1/BD+kNNjXGNc1XKB9nTGw/t65+Rg6+MtGp744za8emZA6qMpelK7Gd40
+         joGdvGkdGhBBA==
+From:   Arnd Bergmann <arnd@kernel.org>
+To:     Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Andrii Nakryiko <andrii@kernel.org>,
+        Song Liu <song@kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>
+Cc:     Arnd Bergmann <arnd@arndb.de>, stable@vger.kernel.org,
+        John Fastabend <john.fastabend@gmail.com>,
+        Martin KaFai Lau <martin.lau@linux.dev>,
+        Yonghong Song <yhs@fb.com>, KP Singh <kpsingh@kernel.org>,
+        Stanislav Fomichev <sdf@google.com>,
+        Hao Luo <haoluo@google.com>, Jiri Olsa <jolsa@kernel.org>,
+        Kumar Kartikeya Dwivedi <memxor@gmail.com>,
+        Dave Marchevsky <davemarchevsky@fb.com>,
+        David Vernet <void@manifault.com>,
+        Kees Cook <keescook@chromium.org>, bpf@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
+Subject: [PATCH] [v4] bpf: fix bpf_probe_read_kernel prototype mismatch
+Date:   Tue, 25 Jul 2023 22:41:12 +0200
+Message-Id: <20230725204149.3411961-1-arnd@kernel.org>
+X-Mailer: git-send-email 2.39.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230725135938.1e056a02@rorschach.local.home>
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On Tue, Jul 25, 2023 at 01:59:38PM -0400, Steven Rostedt wrote:
-> > @@ -232,7 +235,7 @@ TRACE_EVENT(sched_switch,
-> >  		__array(	char,	prev_comm,	TASK_COMM_LEN	)
-> >  		__field(	pid_t,	prev_pid			)
-> >  		__field(	int,	prev_prio			)
-> > -		__field(	long,	prev_state			)
-> > +		__field(	char,	prev_state			)
-> >  		__array(	char,	next_comm,	TASK_COMM_LEN	)
-> >  		__field(	pid_t,	next_pid			)
-> >  		__field(	int,	next_prio			)
-> 
-> This will break userspace. Just because you update libtraceevent
-> doesn't mean that it will get to all the users of it. There's still
-> tools that have the old method hard coded and doesn't use the library.
-> 
-> Now, because the old tools still do the parsing of this format, we can
-> add a new field called prev_state_char that will give you this. Now to
-> save space, we should change prev_state to int (can't make it short as
-> there's that test for "+" which does sometimes happen). I believe we
-> can make prev_prio and next prio into shorts (and possibly chars!).
+From: Arnd Bergmann <arnd@arndb.de>
 
-Or just leave the thing alone?
+bpf_probe_read_kernel() has a __weak definition in core.c and another
+definition with an incompatible prototype in kernel/trace/bpf_trace.c,
+when CONFIG_BPF_EVENTS is enabled.
+
+Since the two are incompatible, there cannot be a shared declaration in
+a header file, but the lack of a prototype causes a W=1 warning:
+
+kernel/bpf/core.c:1638:12: error: no previous prototype for 'bpf_probe_read_kernel' [-Werror=missing-prototypes]
+
+On 32-bit architectures, the local prototype
+
+u64 __weak bpf_probe_read_kernel(void *dst, u32 size, const void *unsafe_ptr)
+
+passes arguments in other registers as the one in bpf_trace.c
+
+BPF_CALL_3(bpf_probe_read_kernel, void *, dst, u32, size,
+            const void *, unsafe_ptr)
+
+which uses 64-bit arguments in pairs of registers.
+
+As both versions of the function are fairly simple and only really
+differ in one line, just move them into a header file as an inline
+function that does not add any overhead for the bpf_trace.c callers
+and actually avoids a function call for the other one.
+
+Cc: stable@vger.kernel.org
+Link: https://lore.kernel.org/all/ac25cb0f-b804-1649-3afb-1dc6138c2716@iogearbox.net/
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+--
+v4: rewrite again to use a shared inline helper
+v3: clarify changelog text further.
+v2: rewrite completely to fix the mismatch.
+---
+ include/linux/bpf.h      | 12 ++++++++++++
+ kernel/bpf/core.c        | 10 ++--------
+ kernel/trace/bpf_trace.c | 11 -----------
+ 3 files changed, 14 insertions(+), 19 deletions(-)
+
+diff --git a/include/linux/bpf.h b/include/linux/bpf.h
+index ceaa8c23287fc..abe75063630b8 100644
+--- a/include/linux/bpf.h
++++ b/include/linux/bpf.h
+@@ -2661,6 +2661,18 @@ static inline void bpf_dynptr_set_rdonly(struct bpf_dynptr_kern *ptr)
+ }
+ #endif /* CONFIG_BPF_SYSCALL */
+ 
++static __always_inline int
++bpf_probe_read_kernel_common(void *dst, u32 size, const void *unsafe_ptr)
++{
++	int ret = -EFAULT;
++
++	if (IS_ENABLED(CONFIG_BPF_EVENTS))
++		ret = copy_from_kernel_nofault(dst, unsafe_ptr, size);
++	if (unlikely(ret < 0))
++		memset(dst, 0, size);
++	return ret;
++}
++
+ void __bpf_free_used_btfs(struct bpf_prog_aux *aux,
+ 			  struct btf_mod_pair *used_btfs, u32 len);
+ 
+diff --git a/kernel/bpf/core.c b/kernel/bpf/core.c
+index dd70c58c9d3a3..9cdf53bfb8bd3 100644
+--- a/kernel/bpf/core.c
++++ b/kernel/bpf/core.c
+@@ -1634,12 +1634,6 @@ bool bpf_opcode_in_insntable(u8 code)
+ }
+ 
+ #ifndef CONFIG_BPF_JIT_ALWAYS_ON
+-u64 __weak bpf_probe_read_kernel(void *dst, u32 size, const void *unsafe_ptr)
+-{
+-	memset(dst, 0, size);
+-	return -EFAULT;
+-}
+-
+ /**
+  *	___bpf_prog_run - run eBPF program on a given context
+  *	@regs: is the array of MAX_BPF_EXT_REG eBPF pseudo-registers
+@@ -1930,8 +1924,8 @@ static u64 ___bpf_prog_run(u64 *regs, const struct bpf_insn *insn)
+ 		DST = *(SIZE *)(unsigned long) (SRC + insn->off);	\
+ 		CONT;							\
+ 	LDX_PROBE_MEM_##SIZEOP:						\
+-		bpf_probe_read_kernel(&DST, sizeof(SIZE),		\
+-				      (const void *)(long) (SRC + insn->off));	\
++		bpf_probe_read_kernel_common(&DST, sizeof(SIZE),	\
++			      (const void *)(long) (SRC + insn->off));	\
+ 		DST = *((SIZE *)&DST);					\
+ 		CONT;
+ 
+diff --git a/kernel/trace/bpf_trace.c b/kernel/trace/bpf_trace.c
+index c92eb8c6ff08d..83bde2475ae54 100644
+--- a/kernel/trace/bpf_trace.c
++++ b/kernel/trace/bpf_trace.c
+@@ -223,17 +223,6 @@ const struct bpf_func_proto bpf_probe_read_user_str_proto = {
+ 	.arg3_type	= ARG_ANYTHING,
+ };
+ 
+-static __always_inline int
+-bpf_probe_read_kernel_common(void *dst, u32 size, const void *unsafe_ptr)
+-{
+-	int ret;
+-
+-	ret = copy_from_kernel_nofault(dst, unsafe_ptr, size);
+-	if (unlikely(ret < 0))
+-		memset(dst, 0, size);
+-	return ret;
+-}
+-
+ BPF_CALL_3(bpf_probe_read_kernel, void *, dst, u32, size,
+ 	   const void *, unsafe_ptr)
+ {
+-- 
+2.39.2
+
