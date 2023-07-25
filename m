@@ -2,94 +2,177 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EDC94C001DF
-	for <linux-trace-kernel@archiver.kernel.org>; Tue, 25 Jul 2023 13:32:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F1FA2C0015E
+	for <linux-trace-kernel@archiver.kernel.org>; Tue, 25 Jul 2023 13:38:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230211AbjGYNcP (ORCPT
+        id S231185AbjGYNiH (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Tue, 25 Jul 2023 09:32:15 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59148 "EHLO
+        Tue, 25 Jul 2023 09:38:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33954 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230265AbjGYNcO (ORCPT
+        with ESMTP id S229541AbjGYNiG (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Tue, 25 Jul 2023 09:32:14 -0400
-Received: from desiato.infradead.org (desiato.infradead.org [IPv6:2001:8b0:10b:1:d65d:64ff:fe57:4e05])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 062811BC2;
-        Tue, 25 Jul 2023 06:32:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=cJS9hWdS3WIM11d6kg/J2cpVY/K0AghRcBxdtWBel3E=; b=fu+uGT2qcg8H3XiKFVWP5UKtUq
-        lKTdMja9KLM/RBM3EcVilsF1p6x9bJYZyEu8mCJq15cab7zWZYLSH8YhSJkaxEU9CifjHcmYyyEZO
-        Cf53hw9g1ptZIAbpS3kVqcJxy5W6LlO+BIHvpK8CEjL57HhwzJxe5xBN1J5V/aFKGzgONGBUkldOd
-        ahHKi1y7acZIY4uAlNt/Kf784xjSInYAkfOjQ8OgNI//f0XwDKkMx9yjgysj7/lfDfPTogfHM5+tA
-        NdyAbLHorlLqctEgX4rPYQT901Yl7uMHDgFYn16OELr/frraKQpiR1ToCCuHV5//3Y8ce15wO9r5E
-        OJZUQz4Q==;
-Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
-        by desiato.infradead.org with esmtpsa (Exim 4.96 #2 (Red Hat Linux))
-        id 1qOI7x-004A0r-0c;
-        Tue, 25 Jul 2023 13:31:01 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (4096 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 42AC4300095;
-        Tue, 25 Jul 2023 15:31:00 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 265B52CCD6AC0; Tue, 25 Jul 2023 15:31:00 +0200 (CEST)
-Date:   Tue, 25 Jul 2023 15:31:00 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Ze Gao <zegao2021@gmail.com>
-Cc:     Ingo Molnar <mingo@redhat.com>,
+        Tue, 25 Jul 2023 09:38:06 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9D3061FD0
+        for <linux-trace-kernel@vger.kernel.org>; Tue, 25 Jul 2023 06:37:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1690292228;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=eDdtOP85xg33Pcp/dWSfNuetVHqsDidnGvcRgt3shrs=;
+        b=Yu0Bb9iHB62EZpCQzKohpB7ZVloR3kfDvTLeOdM7B9Eu6Py9CrH86WYMC18OzdPd+OHZNA
+        TyGVKEkSTfSAoqXRSnbDEbchRSbUNVXAick7RsKGIXcYlEYVwKWcRyhjzpRVt7kpfR7uzU
+        gELQMjm2CpZRsgPurZpiTCCUqiblXZg=
+Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
+ [209.85.221.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-350-iorf-9X4P_ezc9iDeaxdXg-1; Tue, 25 Jul 2023 09:37:04 -0400
+X-MC-Unique: iorf-9X4P_ezc9iDeaxdXg-1
+Received: by mail-wr1-f69.google.com with SMTP id ffacd0b85a97d-31444df0fafso3261973f8f.2
+        for <linux-trace-kernel@vger.kernel.org>; Tue, 25 Jul 2023 06:37:04 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1690292223; x=1690897023;
+        h=content-transfer-encoding:mime-version:message-id:date:references
+         :in-reply-to:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=YuHDDSh+hqntXfEBDTeZy9lkclJmyfPYzRYLt1ff+f8=;
+        b=Ji2fRDdU54vDzNLijhGyck0BJk8baCSCZ4SterzFhIMhw8V5rpRxGvVrxXZcCPkmVx
+         UKKPYsHsAchzPT5SaNdkPipKQ07aHnGcwDLxNUjB+JaOZu2Y1+e02TIKDGuMpQwEpB4A
+         jjU6tAD/VLWwVbAa6C5zf3MM0jz4Uf90m1J+ImRAG098AAISOrZeL/nGvZ568P+IwNs4
+         lSnOQGTlg53+Ce3JbxMIuJHvDD5VYDeCHszajkcnK5qRNpog1cGRSr1ykD07QZBNlqgN
+         l6qBi0lBWdnpskXEs+SEKKL98oWdfEMtKyvFB+e8JYvxNGtumt4lW2l9pxYrwmKt2Vs3
+         3RFg==
+X-Gm-Message-State: ABy/qLbxpKkuVV/wIfaBAjIB92cH/b1vL9dHTO0OzQu664i3pNgqQTfL
+        n8z8jpAgAuxj8a68JhfgccKBivaE9s46MIM2Cw+TWnVQbshpWQglQJdGZoZyi6VqV/toeLZIad5
+        +wKhgVrPBK+4ZE5uRnzhUP8PEwibxShGU
+X-Received: by 2002:adf:edd1:0:b0:313:df09:ad04 with SMTP id v17-20020adfedd1000000b00313df09ad04mr11718267wro.57.1690292223009;
+        Tue, 25 Jul 2023 06:37:03 -0700 (PDT)
+X-Google-Smtp-Source: APBJJlEu1q96uzpYLmrQ6ZyLxOIliHI6bjUjLVOksOKXP2KWpblMNlkbQak2J3cKJncV5JGWmoXhZA==
+X-Received: by 2002:adf:edd1:0:b0:313:df09:ad04 with SMTP id v17-20020adfedd1000000b00313df09ad04mr11718201wro.57.1690292222669;
+        Tue, 25 Jul 2023 06:37:02 -0700 (PDT)
+Received: from vschneid.remote.csb ([149.12.7.81])
+        by smtp.gmail.com with ESMTPSA id h3-20020a5d4fc3000000b00314329f7d8asm16390715wrw.29.2023.07.25.06.36.59
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 25 Jul 2023 06:37:01 -0700 (PDT)
+From:   Valentin Schneider <vschneid@redhat.com>
+To:     Joel Fernandes <joel@joelfernandes.org>
+Cc:     linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+        linux-doc@vger.kernel.org, kvm@vger.kernel.org, linux-mm@kvack.org,
+        bpf@vger.kernel.org, x86@kernel.org, rcu@vger.kernel.org,
+        linux-kselftest@vger.kernel.org,
+        Peter Zijlstra <peterz@infradead.org>,
+        Nicolas Saenz Julienne <nsaenzju@redhat.com>,
         Steven Rostedt <rostedt@goodmis.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Ian Rogers <irogers@google.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
         Masami Hiramatsu <mhiramat@kernel.org>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        linux-trace-kernel@vger.kernel.org, Ze Gao <zegao@tencent.com>
-Subject: Re: [RFC PATCH 1/3] sched, tracing: report task state in symbolic
- chars instead
-Message-ID: <20230725133100.GL3765278@hirez.programming.kicks-ass.net>
-References: <20230725072254.32045-1-zegao@tencent.com>
- <20230725072254.32045-2-zegao@tencent.com>
- <20230725083357.GA3765278@hirez.programming.kicks-ass.net>
- <CAD8CoPAdRUxk3FWdNX6g0V6Kdr3+sXv8fdQ9NhgKUR29-ZLaug@mail.gmail.com>
+        Jonathan Corbet <corbet@lwn.net>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Frederic Weisbecker <frederic@kernel.org>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        Neeraj Upadhyay <quic_neeraju@quicinc.com>,
+        Josh Triplett <josh@joshtriplett.org>,
+        Boqun Feng <boqun.feng@gmail.com>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Lai Jiangshan <jiangshanlai@gmail.com>,
+        Zqiang <qiang.zhang1211@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Uladzislau Rezki <urezki@gmail.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        Lorenzo Stoakes <lstoakes@gmail.com>,
+        Josh Poimboeuf <jpoimboe@kernel.org>,
+        Jason Baron <jbaron@akamai.com>,
+        Kees Cook <keescook@chromium.org>,
+        Sami Tolvanen <samitolvanen@google.com>,
+        Ard Biesheuvel <ardb@kernel.org>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        Juerg Haefliger <juerg.haefliger@canonical.com>,
+        Nicolas Saenz Julienne <nsaenz@kernel.org>,
+        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+        Nadav Amit <namit@vmware.com>,
+        Dan Carpenter <error27@gmail.com>,
+        Chuang Wang <nashuiliang@gmail.com>,
+        Yang Jihong <yangjihong1@huawei.com>,
+        Petr Mladek <pmladek@suse.com>,
+        "Jason A. Donenfeld" <Jason@zx2c4.com>, Song Liu <song@kernel.org>,
+        Julian Pidancet <julian.pidancet@oracle.com>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        Dionna Glaze <dionnaglaze@google.com>,
+        Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <linux@weissschuh.net>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Daniel Bristot de Oliveira <bristot@redhat.com>,
+        Marcelo Tosatti <mtosatti@redhat.com>,
+        Yair Podemsky <ypodemsk@redhat.com>
+Subject: Re: [RFC PATCH v2 18/20] context_tracking,x86: Defer kernel text
+ patching IPIs
+In-Reply-To: <6EBAEEED-6F38-472D-BA31-9C61179EFA2F@joelfernandes.org>
+References: <20230720163056.2564824-19-vschneid@redhat.com>
+ <6EBAEEED-6F38-472D-BA31-9C61179EFA2F@joelfernandes.org>
+Date:   Tue, 25 Jul 2023 14:36:59 +0100
+Message-ID: <xhsmhtttsru2s.mognet@vschneid.remote.csb>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAD8CoPAdRUxk3FWdNX6g0V6Kdr3+sXv8fdQ9NhgKUR29-ZLaug@mail.gmail.com>
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: redhat.com
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On Tue, Jul 25, 2023 at 06:53:07PM +0800, Ze Gao wrote:
+On 25/07/23 06:49, Joel Fernandes wrote:
+> Interesting series Valentin. Some high-level question/comments on this on=
+e:
+>
+>> On Jul 20, 2023, at 12:34 PM, Valentin Schneider <vschneid@redhat.com> w=
+rote:
+>>
+>> =EF=BB=BFtext_poke_bp_batch() sends IPIs to all online CPUs to synchroni=
+ze
+>> them vs the newly patched instruction. CPUs that are executing in usersp=
+ace
+>> do not need this synchronization to happen immediately, and this is
+>> actually harmful interference for NOHZ_FULL CPUs.
+>
+> Does the amount of harm not correspond to practical frequency of text_pok=
+e?
+> How often does instruction patching really happen? If it is very infreque=
+nt
+> then I am not sure if it is that harmful.
+>
 
-> > > @@ -232,7 +235,7 @@ TRACE_EVENT(sched_switch,
-> > >               __array(        char,   prev_comm,      TASK_COMM_LEN   )
-> > >               __field(        pid_t,  prev_pid                        )
-> > >               __field(        int,    prev_prio                       )
-> > > -             __field(        long,   prev_state                      )
-> > > +             __field(        char,   prev_state                      )
-> > >               __array(        char,   next_comm,      TASK_COMM_LEN   )
-> > >               __field(        pid_t,  next_pid                        )
-> > >               __field(        int,    next_prio                       )
-> >
-> > This is a format change and will likely break a ton of programs :/
-> 
+Being pushed over a latency threshold *once* is enough to impact the
+latency evaluation of your given system/application.
 
-> BTW, could you help to point to any possible tools/programs that would
-> break other than perf/libtraceevent, because these two are the only
-> users I run into so far.
+It's mainly about shielding the isolated, NOHZ_FULL CPUs from whatever the
+housekeeping CPUs may be up to (flipping static keys, loading kprobes,
+using ftrace...) - frequency of the interference isn't such a big part of
+the reasoning.
 
-Latencytop was the one breaking a few years ago, but there's a metric
-ton of sched_switch users out there, this is bound to generate pain.
+>>
+>> As the synchronization IPIs are sent using a blocking call, returning fr=
+om
+>> text_poke_bp_batch() implies all CPUs will observe the patched
+>> instruction(s), and this should be preserved even if the IPI is deferred=
+.
+>> In other words, to safely defer this synchronization, any kernel
+>> instruction leading to the execution of the deferred instruction
+>> sync (ct_work_flush()) must *not* be mutable (patchable) at runtime.
+>
+> If it is not infrequent, then are you handling the case where userland
+> spends multiple seconds before entering the kernel, and all this while
+> the blocking call waits? Perhaps in such situation you want the real IPI
+> to be sent out instead of the deferred one?
+>
 
-Steve, you remember what the status of all this was? at the time
-breaking this was considered on par with ABI breakage and we reverted or
-something. Is this still so?
+The blocking call only waits for CPUs for which it queued a CSD. Deferred
+calls do not queue a CSD thus do not impact the waiting at all. See
+smp_call_function_many_cond().
+
