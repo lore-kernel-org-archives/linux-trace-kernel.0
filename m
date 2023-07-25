@@ -2,82 +2,162 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BEB7C0015E
-	for <linux-trace-kernel@archiver.kernel.org>; Tue, 25 Jul 2023 11:54:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BA73EC001E0
+	for <linux-trace-kernel@archiver.kernel.org>; Tue, 25 Jul 2023 13:06:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230161AbjGYLx7 (ORCPT
+        id S233443AbjGYNGh (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Tue, 25 Jul 2023 07:53:59 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33204 "EHLO
+        Tue, 25 Jul 2023 09:06:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41416 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S235186AbjGYLxr (ORCPT
+        with ESMTP id S229463AbjGYNGg (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Tue, 25 Jul 2023 07:53:47 -0400
-Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 31B82E7B;
-        Tue, 25 Jul 2023 04:53:46 -0700 (PDT)
-Received: from kwepemi500008.china.huawei.com (unknown [172.30.72.54])
-        by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4R9FhX5X33zCrMs;
-        Tue, 25 Jul 2023 19:50:20 +0800 (CST)
-Received: from huawei.com (10.90.53.73) by kwepemi500008.china.huawei.com
- (7.221.188.139) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.27; Tue, 25 Jul
- 2023 19:53:42 +0800
-From:   Ruan Jinjie <ruanjinjie@huawei.com>
-To:     <naveen.n.rao@linux.ibm.com>, <anil.s.keshavamurthy@intel.com>,
-        <davem@davemloft.net>, <mhiramat@kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-trace-kernel@vger.kernel.org>
-CC:     <ruanjinjie@huawei.com>
-Subject: [PATCH -next] kernel: kprobes: Use struct_size()
-Date:   Tue, 25 Jul 2023 19:54:24 +0000
-Message-ID: <20230725195424.3469242-1-ruanjinjie@huawei.com>
-X-Mailer: git-send-email 2.34.1
+        Tue, 25 Jul 2023 09:06:36 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E3BE5E4F
+        for <linux-trace-kernel@vger.kernel.org>; Tue, 25 Jul 2023 06:05:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1690290354;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=Sjst0ANUHPkhmyS9EMxljg+0hKTtA2LkvoCccenEaWc=;
+        b=F7+xFVN/UTPtioUDXmny4WuOauzeqiMr3GZY7z4ZN3NSNic3rnB+YM9YlvrM4oJIRcpCBR
+        EUZkTCN/IFwszgRPwQqPwmuiuHakAykTSIQ66vIQqAu2TWbA+DLVAG6WUkHPt+sDmTvotf
+        yFAjlzdpsTNHhc69ehl4uvxwy8/lHq0=
+Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
+ [209.85.221.70]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-36-kzDFZIjEOLeJCNAS2hrW3g-1; Tue, 25 Jul 2023 09:05:52 -0400
+X-MC-Unique: kzDFZIjEOLeJCNAS2hrW3g-1
+Received: by mail-wr1-f70.google.com with SMTP id ffacd0b85a97d-3143ac4a562so2696805f8f.2
+        for <linux-trace-kernel@vger.kernel.org>; Tue, 25 Jul 2023 06:05:52 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1690290351; x=1690895151;
+        h=mime-version:message-id:date:references:in-reply-to:subject:cc:to
+         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=Sjst0ANUHPkhmyS9EMxljg+0hKTtA2LkvoCccenEaWc=;
+        b=glm6d4vDW/qSC+93tvk2wmk3T7gGYrEFVttQgiGGgamKLdL1K0GuBWxNJtgT456b8W
+         NFExPF6HUUnOewDBnxiozWRzTXfJ32HaqimckkxFDEFZHlMQN8X8LAq20+PzMYpPlOSD
+         5aUA/VnA/b7R+8N+J6pXSp5VfZyg8WCI6uhScOE+GqBGEYcBjqoO6+fkPAoYWefQOQBL
+         rwnXJp2rUXUuO4zoKXB88Xt9jgZswQ0Pif07mSIAZ8dSIRxppw5pyklq8/UzoqhpgngU
+         8ReCh50vyKOE8iCOx5rME3ewUxHgAAw/G59yNKSdpPxVmEz1/kQ8Kmn0Jfg6fONZ+YA5
+         CLBQ==
+X-Gm-Message-State: ABy/qLbeYyHDM9lG7e3Zsf4dMXbKGjNWugRc11UX+6zvT2iRsoH3zGAY
+        VAG/rt3dHnbJsSR8TYhES2vOibj1oLa+XmQWArKUSdXbRkQAWa8TMe28Oedl0VNov2RzdQSrzBF
+        NhSZMhCDUV0Dl5hPhRFamUKF4KgV2uSUB
+X-Received: by 2002:a05:6000:4c3:b0:314:3f98:a788 with SMTP id h3-20020a05600004c300b003143f98a788mr9662077wri.7.1690290351826;
+        Tue, 25 Jul 2023 06:05:51 -0700 (PDT)
+X-Google-Smtp-Source: APBJJlF3IfiPQXJmTRIbnVDIkRhO1QGeOmJQGB2V7Ax+LFUYp7XQ/uOSm8c19TiPQx/PfreNkIV1Uw==
+X-Received: by 2002:a05:6000:4c3:b0:314:3f98:a788 with SMTP id h3-20020a05600004c300b003143f98a788mr9662062wri.7.1690290351507;
+        Tue, 25 Jul 2023 06:05:51 -0700 (PDT)
+Received: from vschneid.remote.csb ([149.12.7.81])
+        by smtp.gmail.com with ESMTPSA id a15-20020adfeecf000000b00311d8c2561bsm16238717wrp.60.2023.07.25.06.05.48
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 25 Jul 2023 06:05:51 -0700 (PDT)
+From:   Valentin Schneider <vschneid@redhat.com>
+To:     Frederic Weisbecker <frederic@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+        linux-doc@vger.kernel.org, kvm@vger.kernel.org, linux-mm@kvack.org,
+        bpf@vger.kernel.org, x86@kernel.org, rcu@vger.kernel.org,
+        linux-kselftest@vger.kernel.org,
+        Nicolas Saenz Julienne <nsaenzju@redhat.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        Neeraj Upadhyay <quic_neeraju@quicinc.com>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Josh Triplett <josh@joshtriplett.org>,
+        Boqun Feng <boqun.feng@gmail.com>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Lai Jiangshan <jiangshanlai@gmail.com>,
+        Zqiang <qiang.zhang1211@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Uladzislau Rezki <urezki@gmail.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        Lorenzo Stoakes <lstoakes@gmail.com>,
+        Josh Poimboeuf <jpoimboe@kernel.org>,
+        Jason Baron <jbaron@akamai.com>,
+        Kees Cook <keescook@chromium.org>,
+        Sami Tolvanen <samitolvanen@google.com>,
+        Ard Biesheuvel <ardb@kernel.org>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        Juerg Haefliger <juerg.haefliger@canonical.com>,
+        Nicolas Saenz Julienne <nsaenz@kernel.org>,
+        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+        Nadav Amit <namit@vmware.com>,
+        Dan Carpenter <error27@gmail.com>,
+        Chuang Wang <nashuiliang@gmail.com>,
+        Yang Jihong <yangjihong1@huawei.com>,
+        Petr Mladek <pmladek@suse.com>,
+        "Jason A. Donenfeld" <Jason@zx2c4.com>, Song Liu <song@kernel.org>,
+        Julian Pidancet <julian.pidancet@oracle.com>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        Dionna Glaze <dionnaglaze@google.com>,
+        Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <linux@weissschuh.net>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Daniel Bristot de Oliveira <bristot@redhat.com>,
+        Marcelo Tosatti <mtosatti@redhat.com>,
+        Yair Podemsky <ypodemsk@redhat.com>
+Subject: Re: [RFC PATCH v2 15/20] context-tracking: Introduce work deferral
+ infrastructure
+In-Reply-To: <ZL+wgn76H1em9hZU@lothringen>
+References: <20230720163056.2564824-1-vschneid@redhat.com>
+ <20230720163056.2564824-16-vschneid@redhat.com>
+ <ZL6QI4mV-NKlh4Ox@localhost.localdomain>
+ <xhsmh351dtfjj.mognet@vschneid.remote.csb> <ZL7OoUMLZwfUttjV@lothringen>
+ <xhsmhzg3ks3mw.mognet@vschneid.remote.csb> <ZL+wgn76H1em9hZU@lothringen>
+Date:   Tue, 25 Jul 2023 14:05:47 +0100
+Message-ID: <xhsmhwmyorvis.mognet@vschneid.remote.csb>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [10.90.53.73]
-X-ClientProxiedBy: dggems705-chm.china.huawei.com (10.3.19.182) To
- kwepemi500008.china.huawei.com (7.221.188.139)
-X-CFilter-Loop: Reflected
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: redhat.com
+Content-Type: text/plain
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-Use struct_size() instead of hand-writing it, when allocating a structure
-with a flex array.
+On 25/07/23 13:22, Frederic Weisbecker wrote:
+> On Tue, Jul 25, 2023 at 11:10:31AM +0100, Valentin Schneider wrote:
+>> I have reasons! I just swept them under the rug and didn't mention them :D
+>> Also looking at the config dependencies again I got it wrong, but
+>> nevertheless that means I get to ramble about it.
+>>
+>> With NO_HZ_IDLE, we get CONTEXT_TRACKING_IDLE, so we get these
+>> transitions:
+>>
+>>   ct_idle_enter()
+>>     ct_kernel_exit()
+>>       ct_state_inc_clear_work()
+>>
+>>   ct_idle_exit()
+>>     ct_kernel_enter()
+>>       ct_work_flush()
+>>
+>> Now, if we just make CONTEXT_TRACKING_WORK depend on CONTEXT_TRACKING_IDLE
+>> rather than CONTEXT_TRACKING_USER, we get to leverage the IPI deferral for
+>> NO_HZ_IDLE kernels - in other words, we get to keep idle CPUs idle longer.
+>>
+>> It's a completely different argument than reducing interference for
+>> NOHZ_FULL userspace applications and I should have at the very least
+>> mentioned it in the cover letter, but it's the exact same backing
+>> mechanism.
+>>
+>> Looking at it again, I'll probably make the CONTEXT_IDLE thing a separate
+>> patch with a proper changelog.
+>
+> Ok should that be a seperate Kconfig? This indeed can bring power improvement
+> but at the cost of more overhead from the sender. A balance to be measured...
 
-This is less verbose.
-
-Signed-off-by: Ruan Jinjie <ruanjinjie@huawei.com>
----
- kernel/kprobes.c | 6 ++----
- 1 file changed, 2 insertions(+), 4 deletions(-)
-
-diff --git a/kernel/kprobes.c b/kernel/kprobes.c
-index 1fc6095d502d..1d749a917b59 100644
---- a/kernel/kprobes.c
-+++ b/kernel/kprobes.c
-@@ -2220,8 +2220,7 @@ int register_kretprobe(struct kretprobe *rp)
- 		return -ENOMEM;
- 
- 	for (i = 0; i < rp->maxactive; i++) {
--		inst = kzalloc(sizeof(struct kretprobe_instance) +
--			       rp->data_size, GFP_KERNEL);
-+		inst = kzalloc(struct_size(inst, data, rp->data_size), GFP_KERNEL);
- 		if (inst == NULL) {
- 			rethook_free(rp->rh);
- 			rp->rh = NULL;
-@@ -2244,8 +2243,7 @@ int register_kretprobe(struct kretprobe *rp)
- 
- 	rp->rph->rp = rp;
- 	for (i = 0; i < rp->maxactive; i++) {
--		inst = kzalloc(sizeof(struct kretprobe_instance) +
--			       rp->data_size, GFP_KERNEL);
-+		inst = kzalloc(struct_size(inst, data, rp->data_size), GFP_KERNEL);
- 		if (inst == NULL) {
- 			refcount_set(&rp->rph->ref, i);
- 			free_rp_inst(rp);
--- 
-2.34.1
+Yep agreed, I'll make that an optional config.
 
