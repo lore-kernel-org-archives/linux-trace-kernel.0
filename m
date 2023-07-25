@@ -2,171 +2,144 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 82BDFC001DF
-	for <linux-trace-kernel@archiver.kernel.org>; Tue, 25 Jul 2023 17:47:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 23504C001DE
+	for <linux-trace-kernel@archiver.kernel.org>; Tue, 25 Jul 2023 17:59:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230123AbjGYRrR (ORCPT
+        id S232032AbjGYR7o (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Tue, 25 Jul 2023 13:47:17 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44916 "EHLO
+        Tue, 25 Jul 2023 13:59:44 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51850 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229694AbjGYRrO (ORCPT
+        with ESMTP id S231953AbjGYR7n (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Tue, 25 Jul 2023 13:47:14 -0400
-Received: from mail-ua1-x935.google.com (mail-ua1-x935.google.com [IPv6:2607:f8b0:4864:20::935])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B94D71BE2
-        for <linux-trace-kernel@vger.kernel.org>; Tue, 25 Jul 2023 10:47:12 -0700 (PDT)
-Received: by mail-ua1-x935.google.com with SMTP id a1e0cc1a2514c-78f36f37e36so1868877241.3
-        for <linux-trace-kernel@vger.kernel.org>; Tue, 25 Jul 2023 10:47:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=joelfernandes.org; s=google; t=1690307232; x=1690912032;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=tjxGQ97jdZy+msttaE6/InGye12w/eRXu8aDXNaXRhA=;
-        b=mJItfjJo0J8vq8ZI7eQRqgBugJTE/Qjls8F9j5zJT4/6drjQg4QRDl54H4s/m4+/B6
-         OdBZ9Wq1QAC//eamW92We5bVMlBhbiRysXzmrEde6b6WilxsOOxfPGb41E5gLvLxIRQd
-         mG8WW9RKwkhn1rvhmTvmgDcKKzEniO9bQreDA=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1690307232; x=1690912032;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=tjxGQ97jdZy+msttaE6/InGye12w/eRXu8aDXNaXRhA=;
-        b=Daw+gkGy7GLcZUBs/Zsu5/DDuhTMWsZbceavlnY+b+bdNk/BrlBG+NbngokdhCtZPP
-         q1PQYKKcGHpioHrTTVbdCsBl9W2oHV0PvgKaj/J6CvfxAaqeM6eOKVDlbI1xjULrI2d3
-         snjSea3SIpUyu2oOHK9+9kYjwqGybA3gHNu5MR8UVx+ihGNgabScAj83LPmJ/7/zkboT
-         FqC/48+0+Rp9NaNomnkt4t1nR/71/U1UXLlishqXMMlqeUGje5VXP+mYAO+Jly7GocMf
-         KmR2ui6VE/rPzAdrgdM5R/p+oqoDRFLw27e/LoFjzwweg0miGyc0HBVxtb+R29BwXZTp
-         iKXg==
-X-Gm-Message-State: ABy/qLYh30hGaEvNAbXBjiAtkoFWR7ytXiY965scGdlqP+6gL6ph/S0W
-        iROC46nKXv0ipyTl8HkpCBcpZA==
-X-Google-Smtp-Source: APBJJlFxF234D/M5tS2Q+/KCUeJ8ymhGYnmYBO9RSoGjcR24zk88rZomSukAB6JnjgPjlb4vStmdHw==
-X-Received: by 2002:a67:b106:0:b0:443:60d7:3925 with SMTP id w6-20020a67b106000000b0044360d73925mr5444114vsl.20.1690307231746;
-        Tue, 25 Jul 2023 10:47:11 -0700 (PDT)
-Received: from [192.168.0.198] (c-98-249-43-138.hsd1.va.comcast.net. [98.249.43.138])
-        by smtp.gmail.com with ESMTPSA id c11-20020a0cf2cb000000b0063d1f967268sm404045qvm.111.2023.07.25.10.47.09
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 25 Jul 2023 10:47:11 -0700 (PDT)
-Message-ID: <c72c1089-f5ac-9ed2-3412-cdb310cf5b51@joelfernandes.org>
-Date:   Tue, 25 Jul 2023 13:47:09 -0400
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.12.0
-Subject: Re: [RFC PATCH v2 18/20] context_tracking,x86: Defer kernel text
- patching IPIs
-Content-Language: en-US
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Valentin Schneider <vschneid@redhat.com>,
-        linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
-        linux-doc@vger.kernel.org, kvm@vger.kernel.org, linux-mm@kvack.org,
-        bpf@vger.kernel.org, x86@kernel.org, rcu@vger.kernel.org,
-        linux-kselftest@vger.kernel.org,
-        Nicolas Saenz Julienne <nsaenzju@redhat.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
+        Tue, 25 Jul 2023 13:59:43 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C44A9BB;
+        Tue, 25 Jul 2023 10:59:42 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 5976661851;
+        Tue, 25 Jul 2023 17:59:42 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B66C2C433C7;
+        Tue, 25 Jul 2023 17:59:40 +0000 (UTC)
+Date:   Tue, 25 Jul 2023 13:59:38 -0400
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     Ze Gao <zegao2021@gmail.com>
+Cc:     Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Ian Rogers <irogers@google.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
         Masami Hiramatsu <mhiramat@kernel.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Frederic Weisbecker <frederic@kernel.org>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        Neeraj Upadhyay <quic_neeraju@quicinc.com>,
-        Josh Triplett <josh@joshtriplett.org>,
-        Boqun Feng <boqun.feng@gmail.com>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Lai Jiangshan <jiangshanlai@gmail.com>,
-        Zqiang <qiang.zhang1211@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Uladzislau Rezki <urezki@gmail.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        Lorenzo Stoakes <lstoakes@gmail.com>,
-        Josh Poimboeuf <jpoimboe@kernel.org>,
-        Jason Baron <jbaron@akamai.com>,
-        Kees Cook <keescook@chromium.org>,
-        Sami Tolvanen <samitolvanen@google.com>,
-        Ard Biesheuvel <ardb@kernel.org>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        Juerg Haefliger <juerg.haefliger@canonical.com>,
-        Nicolas Saenz Julienne <nsaenz@kernel.org>,
-        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-        Nadav Amit <namit@vmware.com>,
-        Dan Carpenter <error27@gmail.com>,
-        Chuang Wang <nashuiliang@gmail.com>,
-        Yang Jihong <yangjihong1@huawei.com>,
-        Petr Mladek <pmladek@suse.com>,
-        "Jason A. Donenfeld" <Jason@zx2c4.com>, Song Liu <song@kernel.org>,
-        Julian Pidancet <julian.pidancet@oracle.com>,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        Dionna Glaze <dionnaglaze@google.com>,
-        =?UTF-8?Q?Thomas_Wei=c3=9fschuh?= <linux@weissschuh.net>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Daniel Bristot de Oliveira <bristot@redhat.com>,
-        Marcelo Tosatti <mtosatti@redhat.com>,
-        Yair Podemsky <ypodemsk@redhat.com>
-References: <20230720163056.2564824-19-vschneid@redhat.com>
- <6EBAEEED-6F38-472D-BA31-9C61179EFA2F@joelfernandes.org>
- <20230725133936.GM3765278@hirez.programming.kicks-ass.net>
-From:   Joel Fernandes <joel@joelfernandes.org>
-In-Reply-To: <20230725133936.GM3765278@hirez.programming.kicks-ass.net>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        linux-trace-kernel@vger.kernel.org, Ze Gao <zegao@tencent.com>
+Subject: Re: [RFC PATCH 1/3] sched, tracing: report task state in symbolic
+ chars instead
+Message-ID: <20230725135938.1e056a02@rorschach.local.home>
+In-Reply-To: <20230725072254.32045-2-zegao@tencent.com>
+References: <20230725072254.32045-1-zegao@tencent.com>
+        <20230725072254.32045-2-zegao@tencent.com>
+X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
+On Tue, 25 Jul 2023 15:22:52 +0800
+Ze Gao <zegao2021@gmail.com> wrote:
+
+>  #ifdef CREATE_TRACE_POINTS
+> -static inline long __trace_sched_switch_state(bool preempt,
+> +static inline const char __trace_sched_switch_state(bool preempt,
+
+Does it really need to be "const"?
+
+>  					      unsigned int prev_state,
+>  					      struct task_struct *p)
+>  {
+> @@ -197,13 +198,6 @@ static inline long __trace_sched_switch_state(bool preempt,
+>  	BUG_ON(p != current);
+>  #endif /* CONFIG_SCHED_DEBUG */
+>  
+> -	/*
+> -	 * Preemption ignores task state, therefore preempted tasks are always
+> -	 * RUNNING (we will not have dequeued if state != RUNNING).
+> -	 */
+> -	if (preempt)
+> -		return TASK_REPORT_MAX;
+> -
+>  	/*
+>  	 * task_state_index() uses fls() and returns a value from 0-8 range.
+>  	 * Decrement it by 1 (except TASK_RUNNING state i.e 0) before using
+> @@ -212,7 +206,16 @@ static inline long __trace_sched_switch_state(bool preempt,
+>  	 */
+>  	state = __task_state_index(prev_state, p->exit_state);
+>  
+> -	return state ? (1 << (state - 1)) : state;
+> +	/*
+> +	 * Preemption ignores task state, therefore preempted tasks are always
+> +	 * RUNNING (we will not have dequeued if state != RUNNING).
+> +	 * Here, we use 'p' to denote this case and only for this case.
+> +	 */
+> +	if (preempt)
+> +		return 'p';
+> +
+> +
+> +	return task_index_to_char(state);
+>  }
+>  #endif /* CREATE_TRACE_POINTS */
+>  
+> @@ -232,7 +235,7 @@ TRACE_EVENT(sched_switch,
+>  		__array(	char,	prev_comm,	TASK_COMM_LEN	)
+>  		__field(	pid_t,	prev_pid			)
+>  		__field(	int,	prev_prio			)
+> -		__field(	long,	prev_state			)
+> +		__field(	char,	prev_state			)
+>  		__array(	char,	next_comm,	TASK_COMM_LEN	)
+>  		__field(	pid_t,	next_pid			)
+>  		__field(	int,	next_prio			)
+
+This will break userspace. Just because you update libtraceevent
+doesn't mean that it will get to all the users of it. There's still
+tools that have the old method hard coded and doesn't use the library.
+
+Now, because the old tools still do the parsing of this format, we can
+add a new field called prev_state_char that will give you this. Now to
+save space, we should change prev_state to int (can't make it short as
+there's that test for "+" which does sometimes happen). I believe we
+can make prev_prio and next prio into shorts (and possibly chars!).
+
+-- Steve
 
 
-On 7/25/23 09:39, Peter Zijlstra wrote:
-> On Tue, Jul 25, 2023 at 06:49:45AM -0400, Joel Fernandes wrote:
->> Interesting series Valentin. Some high-level question/comments on this one:
->>
->>> On Jul 20, 2023, at 12:34 PM, Valentin Schneider <vschneid@redhat.com> wrote:
->>>
->>> ﻿text_poke_bp_batch() sends IPIs to all online CPUs to synchronize
->>> them vs the newly patched instruction. CPUs that are executing in userspace
->>> do not need this synchronization to happen immediately, and this is
->>> actually harmful interference for NOHZ_FULL CPUs.
->>
->> Does the amount of harm not correspond to practical frequency of text_poke? 
->> How often does instruction patching really happen? If it is very infrequent
->> then I am not sure if it is that harmful.
-> 
-> Well, it can happen quite a bit, also from things people would not
-> typically 'expect' it.
-> 
-> For instance, the moment you create the first per-task perf event we
-> frob some jump-labels (and again some second after the last one goes
-> away).
-> 
-> The same for a bunch of runtime network configurations.
-
-Ok cool. I guess I still have memories of that old ARM device I had
-where modifications to kernel text was forbidden by hardware (was a
-security feature). That was making kprobes unusable...
-
->>> As the synchronization IPIs are sent using a blocking call, returning from
->>> text_poke_bp_batch() implies all CPUs will observe the patched
->>> instruction(s), and this should be preserved even if the IPI is deferred.
->>> In other words, to safely defer this synchronization, any kernel
->>> instruction leading to the execution of the deferred instruction
->>> sync (ct_work_flush()) must *not* be mutable (patchable) at runtime.
->>
->> If it is not infrequent, then are you handling the case where userland
->> spends multiple seconds before entering the kernel, and all this while
->> the blocking call waits? Perhaps in such situation you want the real IPI
->> to be sent out instead of the deferred one?
-> 
-> Please re-read what Valentin wrote -- nobody is waiting on anything.
-
-Makes sense. To be fair I received his email 3 minutes before yours ;-).
-But thank you both for clarifying!
-
- - Joel
-
-
+> @@ -249,22 +252,8 @@ TRACE_EVENT(sched_switch,
+>  		/* XXX SCHED_DEADLINE */
+>  	),
+>  
+> -	TP_printk("prev_comm=%s prev_pid=%d prev_prio=%d prev_state=%s%s ==> next_comm=%s next_pid=%d next_prio=%d",
+> -		__entry->prev_comm, __entry->prev_pid, __entry->prev_prio,
+> -
+> -		(__entry->prev_state & (TASK_REPORT_MAX - 1)) ?
+> -		  __print_flags(__entry->prev_state & (TASK_REPORT_MAX - 1), "|",
+> -				{ TASK_INTERRUPTIBLE, "S" },
+> -				{ TASK_UNINTERRUPTIBLE, "D" },
+> -				{ __TASK_STOPPED, "T" },
+> -				{ __TASK_TRACED, "t" },
+> -				{ EXIT_DEAD, "X" },
+> -				{ EXIT_ZOMBIE, "Z" },
+> -				{ TASK_PARKED, "P" },
+> -				{ TASK_DEAD, "I" }) :
+> -		  "R",
+> -
+> -		__entry->prev_state & TASK_REPORT_MAX ? "+" : "",
+> +	TP_printk("prev_comm=%s prev_pid=%d prev_prio=%d prev_state=%c ==> next_comm=%s next_pid=%d next_prio=%d",
+> +		__entry->prev_comm, __entry->prev_pid, __entry->prev_prio, __entry->prev_state,
+>  		__entry->next_comm, __entry->next_pid, __entry->next_prio)
