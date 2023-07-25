@@ -2,59 +2,45 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0EF03C0015E
-	for <linux-trace-kernel@archiver.kernel.org>; Tue, 25 Jul 2023 07:27:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D657CC0015E
+	for <linux-trace-kernel@archiver.kernel.org>; Tue, 25 Jul 2023 08:34:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232630AbjGYH1X (ORCPT
+        id S232465AbjGYIeh (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Tue, 25 Jul 2023 03:27:23 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45412 "EHLO
+        Tue, 25 Jul 2023 04:34:37 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54176 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232528AbjGYH03 (ORCPT
+        with ESMTP id S229745AbjGYIeg (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Tue, 25 Jul 2023 03:26:29 -0400
-Received: from mail-oi1-x230.google.com (mail-oi1-x230.google.com [IPv6:2607:f8b0:4864:20::230])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 81A0519A2;
-        Tue, 25 Jul 2023 00:23:17 -0700 (PDT)
-Received: by mail-oi1-x230.google.com with SMTP id 5614622812f47-3a04e5baffcso3613766b6e.3;
-        Tue, 25 Jul 2023 00:23:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1690269797; x=1690874597;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=MBwG97iRZO4tN6Fiy1txLbQFfSCq1pL4Ni9ia1DF4dY=;
-        b=fDWP8pJgo8CFkH9+IiKqXOh4RtqqEqQ/6GGY3V8azRSvvGfKhpE6KDe1fbUdl7Zpy9
-         dBPsirxsiAz3pCvshqbdZtlUoRX8zx94wFRpw/Rdz6WXWg55bEmRlH1nzm5WhMFxW3yK
-         +Ke1E46i/28HQOvfoSUM9Px7LQmVoho9ggOfEY9VRGW4uJtXYJ/Y6kSPVcjhprdkyzRt
-         npvN/d2+2vqMXt8ZrsBjvErj8cwmHSdq7trsZcyu3egVacU7Iapvo7nlSx2ktw5EK53N
-         r3uUvOnVlQ4Cgqf663FAU4bcLckT8RLyDkN48g/uoNFZqfoL31bgX7TbV9sgpVfJkzEO
-         32uA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1690269797; x=1690874597;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=MBwG97iRZO4tN6Fiy1txLbQFfSCq1pL4Ni9ia1DF4dY=;
-        b=FyHoHqt1sDm4gQk8u9Q+OaYQrMurSMuPKKp+1SE2uKH7q5+xG912NU/j/W5mach9wt
-         PedHAP1US8h4P30JvCGwG0TM3sjnOomw7jilozumbLeBbhUYbqkxIOzmtZq19ZU3gcCR
-         KyHONoMWXqS3GB9ZfEW6aqD6Czy2APn01KJrOn6duCV+KgqTTXdlMAMUDJ6rONsWTMY0
-         LIOBRspRYmH0N7t9VMqxNmxR40EBvRKtPi0vz9vVH0a9ETjXCRW28NwVMIpm8YxxEeCd
-         kMlvPZiKn/5ogoaQsJ/0Jcec/CxqAiiZ3iPBGlwcm8uXcuiIWxrf/4891lNrlE4IKr6j
-         9yTg==
-X-Gm-Message-State: ABy/qLYrTNZ6eKfSGTmg+Pqgop9gcWhuGOEeKIHyeLSuSBkGGKYQWFuP
-        ZWCJ6w3YRdzoDCLrQijK/LMU7HtEO4zDww==
-X-Google-Smtp-Source: APBJJlHnIYS2k4Gg3AdFfZruHgZ+iKMA1v+pyeYPD0a8D7QDa26/ZFtZvc1UNRqVWGF2vN6yqtP/aA==
-X-Received: by 2002:a54:4703:0:b0:3a1:eb15:5ec4 with SMTP id k3-20020a544703000000b003a1eb155ec4mr9832357oik.42.1690269796838;
-        Tue, 25 Jul 2023 00:23:16 -0700 (PDT)
-Received: from localhost.localdomain ([203.205.141.82])
-        by smtp.googlemail.com with ESMTPSA id d12-20020a63734c000000b0055acfd94c20sm9863908pgn.35.2023.07.25.00.23.13
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 25 Jul 2023 00:23:16 -0700 (PDT)
-From:   Ze Gao <zegao2021@gmail.com>
-X-Google-Original-From: Ze Gao <zegao@tencent.com>
-To:     Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
+        Tue, 25 Jul 2023 04:34:36 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5793DA9;
+        Tue, 25 Jul 2023 01:34:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=RgsZVExLjelcR9ibhfRjGswW/e5CUDzPHTBrRqoBktM=; b=T6OmFuB4rZZfXzAIl2KR55THUP
+        Y1423xj9m+tcZI4sTWu8eWW9VXgtNIuDWBLp2iCgUeANXAFtXsj/ceIkvJwYBMVIFZvLrwjvqXwCI
+        B4uZ5lrSzOMYhH5ZNf6Ok6G+VFsxSrq+GYiHO5dk1h+sNIAhdfb7ybHY1MZBx6Kqk+PezHGSHgPIr
+        xKpd293A7jyVpOAuTxJ3ygq66Exf2YEVH0ubWHFKrmaeoEJH2hrO6e23ph5/ZnI743McDs/4qjWwL
+        l0i/FaVe/AZtSwq9Kpe8a9oBP327gt/8KaqsF0nGmoPAZz/piHxjNNescVDb7VsOMDnWm3eNwP8sE
+        JhF2HekQ==;
+Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
+        by casper.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
+        id 1qODUW-005HyA-OO; Tue, 25 Jul 2023 08:34:01 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id EA90D3001FD;
+        Tue, 25 Jul 2023 10:33:57 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id CEC992B59FE01; Tue, 25 Jul 2023 10:33:57 +0200 (CEST)
+Date:   Tue, 25 Jul 2023 10:33:57 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Ze Gao <zegao2021@gmail.com>
+Cc:     Ingo Molnar <mingo@redhat.com>,
         Steven Rostedt <rostedt@goodmis.org>,
         Namhyung Kim <namhyung@kernel.org>,
         Ian Rogers <irogers@google.com>,
@@ -63,70 +49,68 @@ To:     Ingo Molnar <mingo@redhat.com>,
         Mark Rutland <mark.rutland@arm.com>,
         Masami Hiramatsu <mhiramat@kernel.org>,
         Adrian Hunter <adrian.hunter@intel.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc:     linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
         linux-trace-kernel@vger.kernel.org, Ze Gao <zegao@tencent.com>
-Subject: [RFC PATCH 3/3] libtraceevent: sync with latest sched_switch tracepoint definition
-Date:   Tue, 25 Jul 2023 15:22:54 +0800
-Message-Id: <20230725072254.32045-4-zegao@tencent.com>
-X-Mailer: git-send-email 2.40.1
-In-Reply-To: <20230725072254.32045-1-zegao@tencent.com>
+Subject: Re: [RFC PATCH 1/3] sched, tracing: report task state in symbolic
+ chars instead
+Message-ID: <20230725083357.GA3765278@hirez.programming.kicks-ass.net>
 References: <20230725072254.32045-1-zegao@tencent.com>
+ <20230725072254.32045-2-zegao@tencent.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230725072254.32045-2-zegao@tencent.com>
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-Since tracepoint sched_switch changes its reported task state type,
-update the parsing logic accordingly.
+On Tue, Jul 25, 2023 at 03:22:52PM +0800, Ze Gao wrote:
 
-Signed-off-by: Ze Gao <zegao@tencent.com>
----
- plugins/plugin_sched_switch.c | 23 +----------------------
- 1 file changed, 1 insertion(+), 22 deletions(-)
+> @@ -197,13 +198,6 @@ static inline long __trace_sched_switch_state(bool preempt,
+>  	BUG_ON(p != current);
+>  #endif /* CONFIG_SCHED_DEBUG */
+>  
+> -	/*
+> -	 * Preemption ignores task state, therefore preempted tasks are always
+> -	 * RUNNING (we will not have dequeued if state != RUNNING).
+> -	 */
+> -	if (preempt)
+> -		return TASK_REPORT_MAX;
+> -
+>  	/*
+>  	 * task_state_index() uses fls() and returns a value from 0-8 range.
+>  	 * Decrement it by 1 (except TASK_RUNNING state i.e 0) before using
+> @@ -212,7 +206,16 @@ static inline long __trace_sched_switch_state(bool preempt,
+>  	 */
+>  	state = __task_state_index(prev_state, p->exit_state);
+>  
+> -	return state ? (1 << (state - 1)) : state;
+> +	/*
+> +	 * Preemption ignores task state, therefore preempted tasks are always
+> +	 * RUNNING (we will not have dequeued if state != RUNNING).
+> +	 * Here, we use 'p' to denote this case and only for this case.
+> +	 */
+> +	if (preempt)
+> +		return 'p';
+> +
 
-diff --git a/plugins/plugin_sched_switch.c b/plugins/plugin_sched_switch.c
-index 8752cae..37c1be2 100644
---- a/plugins/plugin_sched_switch.c
-+++ b/plugins/plugin_sched_switch.c
-@@ -9,27 +9,6 @@
- #include "event-parse.h"
- #include "trace-seq.h"
- 
--static void write_state(struct trace_seq *s, int val)
--{
--	const char states[] = "SDTtZXxW";
--	int found = 0;
--	int i;
--
--	for (i = 0; i < (sizeof(states) - 1); i++) {
--		if (!(val & (1 << i)))
--			continue;
--
--		if (found)
--			trace_seq_putc(s, '|');
--
--		found = 1;
--		trace_seq_putc(s, states[i]);
--	}
--
--	if (!found)
--		trace_seq_putc(s, 'R');
--}
--
- static void write_and_save_comm(struct tep_format_field *field,
- 				struct tep_record *record,
- 				struct trace_seq *s, int pid)
-@@ -100,7 +79,7 @@ static int sched_switch_handler(struct trace_seq *s,
- 		trace_seq_printf(s, "[%d] ", (int) val);
- 
- 	if (tep_get_field_val(s,  event, "prev_state", record, &val, 1) == 0)
--		write_state(s, val);
-+		trace_seq_putc(s, (char) val);
- 
- 	trace_seq_puts(s, " ==> ");
- 
--- 
-2.40.1
+I don't get this move, why compute state before this return?
+
+> +
+> +	return task_index_to_char(state);
+>  }
+>  #endif /* CREATE_TRACE_POINTS */
+>  
+> @@ -232,7 +235,7 @@ TRACE_EVENT(sched_switch,
+>  		__array(	char,	prev_comm,	TASK_COMM_LEN	)
+>  		__field(	pid_t,	prev_pid			)
+>  		__field(	int,	prev_prio			)
+> -		__field(	long,	prev_state			)
+> +		__field(	char,	prev_state			)
+>  		__array(	char,	next_comm,	TASK_COMM_LEN	)
+>  		__field(	pid_t,	next_pid			)
+>  		__field(	int,	next_prio			)
+
+This is a format change and will likely break a ton of programs :/
 
