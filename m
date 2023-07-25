@@ -2,115 +2,172 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D657CC0015E
-	for <linux-trace-kernel@archiver.kernel.org>; Tue, 25 Jul 2023 08:34:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B9ADBC001DE
+	for <linux-trace-kernel@archiver.kernel.org>; Tue, 25 Jul 2023 10:12:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232465AbjGYIeh (ORCPT
+        id S229541AbjGYKMJ (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Tue, 25 Jul 2023 04:34:37 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:54176 "EHLO
+        Tue, 25 Jul 2023 06:12:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38430 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229745AbjGYIeg (ORCPT
+        with ESMTP id S229496AbjGYKMI (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Tue, 25 Jul 2023 04:34:36 -0400
-Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5793DA9;
-        Tue, 25 Jul 2023 01:34:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=RgsZVExLjelcR9ibhfRjGswW/e5CUDzPHTBrRqoBktM=; b=T6OmFuB4rZZfXzAIl2KR55THUP
-        Y1423xj9m+tcZI4sTWu8eWW9VXgtNIuDWBLp2iCgUeANXAFtXsj/ceIkvJwYBMVIFZvLrwjvqXwCI
-        B4uZ5lrSzOMYhH5ZNf6Ok6G+VFsxSrq+GYiHO5dk1h+sNIAhdfb7ybHY1MZBx6Kqk+PezHGSHgPIr
-        xKpd293A7jyVpOAuTxJ3ygq66Exf2YEVH0ubWHFKrmaeoEJH2hrO6e23ph5/ZnI743McDs/4qjWwL
-        l0i/FaVe/AZtSwq9Kpe8a9oBP327gt/8KaqsF0nGmoPAZz/piHxjNNescVDb7VsOMDnWm3eNwP8sE
-        JhF2HekQ==;
-Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
-        by casper.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
-        id 1qODUW-005HyA-OO; Tue, 25 Jul 2023 08:34:01 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id EA90D3001FD;
-        Tue, 25 Jul 2023 10:33:57 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id CEC992B59FE01; Tue, 25 Jul 2023 10:33:57 +0200 (CEST)
-Date:   Tue, 25 Jul 2023 10:33:57 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Ze Gao <zegao2021@gmail.com>
-Cc:     Ingo Molnar <mingo@redhat.com>,
+        Tue, 25 Jul 2023 06:12:08 -0400
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3185110DC
+        for <linux-trace-kernel@vger.kernel.org>; Tue, 25 Jul 2023 03:10:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1690279839;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=qHJHNAQ/EaLrVgiClukNB6YD2cCwQOLa9+8g/RD5pIg=;
+        b=AcaYPfHJ16TGfLNjf66r6cHTGb4PzGrZqR1pIY0MyfiGbf2e2Zo0O+ndGaILzMD4+meh9e
+        hZazaQM+KeFl6CI3CphrFJafCHs3/a8aYJt/IGt8zY7pbNa0EmNWQBGeu/uzDXR8MBZ62t
+        jDB0pSyIBK13gy8ZoNROt7kKhHVvHnA=
+Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
+ [209.85.128.70]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-189-bl1ri7QHNwmYQJA2DqT-7A-1; Tue, 25 Jul 2023 06:10:36 -0400
+X-MC-Unique: bl1ri7QHNwmYQJA2DqT-7A-1
+Received: by mail-wm1-f70.google.com with SMTP id 5b1f17b1804b1-3fbe590234aso31742625e9.1
+        for <linux-trace-kernel@vger.kernel.org>; Tue, 25 Jul 2023 03:10:35 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1690279835; x=1690884635;
+        h=mime-version:message-id:date:references:in-reply-to:subject:cc:to
+         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=qHJHNAQ/EaLrVgiClukNB6YD2cCwQOLa9+8g/RD5pIg=;
+        b=IkVJ+DREV1o33BN/SSZWaKAmIGhm2LobXF1wMytX9KF5ztBY8DzKR4ZJtQ4v+rNRjV
+         X5T6DoTV6M6BeQAAUYWzJGR9YfIkmbwnF/PJ+iAMX4itd98oF8GvNMTSSC9EcDnlMtvL
+         tm7/tNEvB1iQlINVaul1VLTGIRf495/Va1SnOLsRDkXNZg6MJGr1Al9fiMWKplrND/NB
+         vrVtrT5w4AvYLDFJ/uie5AzK88C60jICOXB/86gBW2M7shv8EbpjnuH0uqL8DtFPCAEk
+         +HjNw9PuRNHhrtdBeDF3ycfGSr831X60rLvGwtm0+/g/Bdf7vgyEPDZDh3cxwDF9QV97
+         2i1Q==
+X-Gm-Message-State: ABy/qLZuoGVxv5WkAEo7yUhTNb15emdoUTYzd2Q80wbcxRGtyBiMjMgx
+        IWudC7cXK3/tf0azKxoVHaY30XVl5ZJry+io7twBaQbUr1DkTVzrglMO5dRgaZh7FBLkl+IqJMy
+        4IalstuiJRww8ht5Y5UtW4+EIz6HKz5WC
+X-Received: by 2002:a7b:c3c8:0:b0:3fc:182:7eac with SMTP id t8-20020a7bc3c8000000b003fc01827eacmr9484390wmj.33.1690279835124;
+        Tue, 25 Jul 2023 03:10:35 -0700 (PDT)
+X-Google-Smtp-Source: APBJJlEBwe5grVle2BJoQfU1CdlrA5E008mXbdTKHKW2tEfZga9rph2myp9KegOF9DFTCjiBwJ8J/Q==
+X-Received: by 2002:a7b:c3c8:0:b0:3fc:182:7eac with SMTP id t8-20020a7bc3c8000000b003fc01827eacmr9484330wmj.33.1690279834786;
+        Tue, 25 Jul 2023 03:10:34 -0700 (PDT)
+Received: from vschneid.remote.csb ([149.12.7.81])
+        by smtp.gmail.com with ESMTPSA id p1-20020a05600c204100b003fc17e8a1efsm15201059wmg.45.2023.07.25.03.10.32
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 25 Jul 2023 03:10:34 -0700 (PDT)
+From:   Valentin Schneider <vschneid@redhat.com>
+To:     Frederic Weisbecker <frederic@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+        linux-doc@vger.kernel.org, kvm@vger.kernel.org, linux-mm@kvack.org,
+        bpf@vger.kernel.org, x86@kernel.org, rcu@vger.kernel.org,
+        linux-kselftest@vger.kernel.org,
+        Nicolas Saenz Julienne <nsaenzju@redhat.com>,
         Steven Rostedt <rostedt@goodmis.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Ian Rogers <irogers@google.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
         Masami Hiramatsu <mhiramat@kernel.org>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        linux-trace-kernel@vger.kernel.org, Ze Gao <zegao@tencent.com>
-Subject: Re: [RFC PATCH 1/3] sched, tracing: report task state in symbolic
- chars instead
-Message-ID: <20230725083357.GA3765278@hirez.programming.kicks-ass.net>
-References: <20230725072254.32045-1-zegao@tencent.com>
- <20230725072254.32045-2-zegao@tencent.com>
+        Jonathan Corbet <corbet@lwn.net>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        Neeraj Upadhyay <quic_neeraju@quicinc.com>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Josh Triplett <josh@joshtriplett.org>,
+        Boqun Feng <boqun.feng@gmail.com>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Lai Jiangshan <jiangshanlai@gmail.com>,
+        Zqiang <qiang.zhang1211@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Uladzislau Rezki <urezki@gmail.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        Lorenzo Stoakes <lstoakes@gmail.com>,
+        Josh Poimboeuf <jpoimboe@kernel.org>,
+        Jason Baron <jbaron@akamai.com>,
+        Kees Cook <keescook@chromium.org>,
+        Sami Tolvanen <samitolvanen@google.com>,
+        Ard Biesheuvel <ardb@kernel.org>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        Juerg Haefliger <juerg.haefliger@canonical.com>,
+        Nicolas Saenz Julienne <nsaenz@kernel.org>,
+        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+        Nadav Amit <namit@vmware.com>,
+        Dan Carpenter <error27@gmail.com>,
+        Chuang Wang <nashuiliang@gmail.com>,
+        Yang Jihong <yangjihong1@huawei.com>,
+        Petr Mladek <pmladek@suse.com>,
+        "Jason A. Donenfeld" <Jason@zx2c4.com>, Song Liu <song@kernel.org>,
+        Julian Pidancet <julian.pidancet@oracle.com>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        Dionna Glaze <dionnaglaze@google.com>,
+        Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <linux@weissschuh.net>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Daniel Bristot de Oliveira <bristot@redhat.com>,
+        Marcelo Tosatti <mtosatti@redhat.com>,
+        Yair Podemsky <ypodemsk@redhat.com>
+Subject: Re: [RFC PATCH v2 15/20] context-tracking: Introduce work deferral
+ infrastructure
+In-Reply-To: <ZL7OoUMLZwfUttjV@lothringen>
+References: <20230720163056.2564824-1-vschneid@redhat.com>
+ <20230720163056.2564824-16-vschneid@redhat.com>
+ <ZL6QI4mV-NKlh4Ox@localhost.localdomain>
+ <xhsmh351dtfjj.mognet@vschneid.remote.csb> <ZL7OoUMLZwfUttjV@lothringen>
+Date:   Tue, 25 Jul 2023 11:10:31 +0100
+Message-ID: <xhsmhzg3ks3mw.mognet@vschneid.remote.csb>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230725072254.32045-2-zegao@tencent.com>
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: redhat.com
+Content-Type: text/plain
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On Tue, Jul 25, 2023 at 03:22:52PM +0800, Ze Gao wrote:
+On 24/07/23 21:18, Frederic Weisbecker wrote:
+> On Mon, Jul 24, 2023 at 05:55:44PM +0100, Valentin Schneider wrote:
+>> I can make that a 'do {} while ()' instead to force at least one execution
+>> of the cmpxchg().
+>>
+>> This is only about reducing the race window, right? If we're executing this
+>> just as the target CPU is about to enter userspace, we're going to be in
+>> racy territory anyway. Regardless, I'm happy to do that change.
+>
+> Right, it's only about narrowing down the race window. It probably don't matter
+> in practice, but it's one less thing to consider for the brain :-)
+>
 
-> @@ -197,13 +198,6 @@ static inline long __trace_sched_switch_state(bool preempt,
->  	BUG_ON(p != current);
->  #endif /* CONFIG_SCHED_DEBUG */
->  
-> -	/*
-> -	 * Preemption ignores task state, therefore preempted tasks are always
-> -	 * RUNNING (we will not have dequeued if state != RUNNING).
-> -	 */
-> -	if (preempt)
-> -		return TASK_REPORT_MAX;
-> -
->  	/*
->  	 * task_state_index() uses fls() and returns a value from 0-8 range.
->  	 * Decrement it by 1 (except TASK_RUNNING state i.e 0) before using
-> @@ -212,7 +206,16 @@ static inline long __trace_sched_switch_state(bool preempt,
->  	 */
->  	state = __task_state_index(prev_state, p->exit_state);
->  
-> -	return state ? (1 << (state - 1)) : state;
-> +	/*
-> +	 * Preemption ignores task state, therefore preempted tasks are always
-> +	 * RUNNING (we will not have dequeued if state != RUNNING).
-> +	 * Here, we use 'p' to denote this case and only for this case.
-> +	 */
-> +	if (preempt)
-> +		return 'p';
-> +
+Ack
 
-I don't get this move, why compute state before this return?
+> Also, why bothering with handling CONTEXT_IDLE?
+>
 
-> +
-> +	return task_index_to_char(state);
->  }
->  #endif /* CREATE_TRACE_POINTS */
->  
-> @@ -232,7 +235,7 @@ TRACE_EVENT(sched_switch,
->  		__array(	char,	prev_comm,	TASK_COMM_LEN	)
->  		__field(	pid_t,	prev_pid			)
->  		__field(	int,	prev_prio			)
-> -		__field(	long,	prev_state			)
-> +		__field(	char,	prev_state			)
->  		__array(	char,	next_comm,	TASK_COMM_LEN	)
->  		__field(	pid_t,	next_pid			)
->  		__field(	int,	next_prio			)
+I have reasons! I just swept them under the rug and didn't mention them :D
+Also looking at the config dependencies again I got it wrong, but
+nevertheless that means I get to ramble about it.
 
-This is a format change and will likely break a ton of programs :/
+With NO_HZ_IDLE, we get CONTEXT_TRACKING_IDLE, so we get these
+transitions:
+
+  ct_idle_enter()
+    ct_kernel_exit()
+      ct_state_inc_clear_work()
+
+  ct_idle_exit()
+    ct_kernel_enter()
+      ct_work_flush()
+
+Now, if we just make CONTEXT_TRACKING_WORK depend on CONTEXT_TRACKING_IDLE
+rather than CONTEXT_TRACKING_USER, we get to leverage the IPI deferral for
+NO_HZ_IDLE kernels - in other words, we get to keep idle CPUs idle longer.
+
+It's a completely different argument than reducing interference for
+NOHZ_FULL userspace applications and I should have at the very least
+mentioned it in the cover letter, but it's the exact same backing
+mechanism.
+
+Looking at it again, I'll probably make the CONTEXT_IDLE thing a separate
+patch with a proper changelog.
 
