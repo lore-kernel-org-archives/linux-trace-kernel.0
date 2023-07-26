@@ -2,92 +2,175 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A2EDEEB64DD
-	for <linux-trace-kernel@archiver.kernel.org>; Wed, 26 Jul 2023 01:44:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 131FBC41513
+	for <linux-trace-kernel@archiver.kernel.org>; Wed, 26 Jul 2023 02:41:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229777AbjGZBoa (ORCPT
+        id S229755AbjGZCls (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Tue, 25 Jul 2023 21:44:30 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44300 "EHLO
+        Tue, 25 Jul 2023 22:41:48 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:59080 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229498AbjGZBo3 (ORCPT
+        with ESMTP id S229478AbjGZClp (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Tue, 25 Jul 2023 21:44:29 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9DCC126A5;
-        Tue, 25 Jul 2023 18:44:28 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 3ADEB61454;
-        Wed, 26 Jul 2023 01:44:28 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9AF1BC433C7;
-        Wed, 26 Jul 2023 01:44:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1690335867;
-        bh=LBEGyWUuDk8taOlI+/DUHwmzAVtgRIEuDlE5OeddHlg=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=Iy7LdoOLZLD7w0AoBF/XnKlIAHKZiLxtQyDjkXEywbWpjC7xb3/HyxXRKWXWWzGCU
-         SgK9FOVu6l+pJiizsnWgok11vHPqFSKyEpN/HHXhnCiCizC1rTw8uWBQZTrM7Ru8iH
-         wpOlLjHxRleYjIGFZkiqGduTRIT8xVzT/HfrSEOxLdTYQepW4eeHmO5xbFRmDM9zrj
-         FVDTpan5odvlb2wnMoZR2o0+KepgBDiiSn+cidSzCTKf2E6ZnagVhnI4EavjKFaiqc
-         5ROgiejuTpax7O4EMbzHPeX7XlBo8s2I1/ZBj1Mmx14vnpNB99OuygdMni/O6Bhd2j
-         T2cLQY4Spnxeg==
-Date:   Wed, 26 Jul 2023 10:44:24 +0900
-From:   Masami Hiramatsu (Google) <mhiramat@kernel.org>
+        Tue, 25 Jul 2023 22:41:45 -0400
+Received: from mail-ed1-x536.google.com (mail-ed1-x536.google.com [IPv6:2a00:1450:4864:20::536])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AC8B02689;
+        Tue, 25 Jul 2023 19:41:43 -0700 (PDT)
+Received: by mail-ed1-x536.google.com with SMTP id 4fb4d7f45d1cf-5221c6a2d3dso5735896a12.3;
+        Tue, 25 Jul 2023 19:41:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1690339302; x=1690944102;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=xSLpwcJW0NoDcK6EkMge5mYYmHzQy4bHqxuoYI2wbjk=;
+        b=qURn5MDKRxJhqki06Bwi7yrC2fL2pPst5wmSDU7FmnnzGrM4jYZFxPevobW+gZtxtm
+         9G9Wo0Fz+jGD0p0FwWSQAZIrfxGIeqW2GER1QUOKS2PPwaIUKQLzhDqa8ipJFe2VIel6
+         MI2aPOgPI8oHqiO+GwsxHgM8FBzeWAU9S6N91hCYV4j+zo8HuEgejEqqbLTF4A7snQQc
+         39V76Xmrerm7TZPDclHakmMVNVoWmgsO4AdnE9oJ13ZuIGiC8+PAbGKGuKL+wzI9BDo1
+         D217WSzz7CZHs1qLIUytXHCrgnZnOhIYCZo9NUGeEIZVssvpyzXcXxKapQsMnY+emNvk
+         gacQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1690339302; x=1690944102;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=xSLpwcJW0NoDcK6EkMge5mYYmHzQy4bHqxuoYI2wbjk=;
+        b=JHsZgir6o0aebEI8pCGfVSKeK4MweBhFH10tLbRMfoEKxmF2dK9TszHN6z4585Cp92
+         A44LxmpVTUqnskkdrHNimOawyMImomMOLTe0enwLvYIAB5CcfAiFgaknragAJABqB1q9
+         YZWVfbD6gBky5eQLPDyjB1PH42B0ABt75880yf9omQy+23+rKiLhGbuJJeH21+KoJkA/
+         jUwGDLBu3lpTytDSva3ryY4DHmy4q1QxfUIKTipqqLZ/8y18tNrE+qf4z+bb+7ANH4uE
+         0kyAYnXdXz2rRVtJlxjOIFFn1dksKxQj5o57R85dQOMn1P18amu+cU73xVTE6wLlj79d
+         e94w==
+X-Gm-Message-State: ABy/qLZysXyqB2lU/tLhiPIGse2f1Y/PljQhjPKET3Zt9hYge0mQCl6g
+        YsdlPYnKdWAzMk7jlrQtmDrfs7PA93k1/eDW2Y2eYBNOZLketA==
+X-Google-Smtp-Source: APBJJlGCO5PThD5Tryyg4XrXHFuTJAaBCGI7int3GhA3atEonWO4yWvavbVPAfeTolbvWP/UDmrm/pd+74tj+2CwjUE=
+X-Received: by 2002:aa7:c50c:0:b0:51d:7fa6:62ca with SMTP id
+ o12-20020aa7c50c000000b0051d7fa662camr530063edq.14.1690339301927; Tue, 25 Jul
+ 2023 19:41:41 -0700 (PDT)
+MIME-Version: 1.0
+References: <20230725072254.32045-1-zegao@tencent.com> <20230725072254.32045-2-zegao@tencent.com>
+ <20230725135938.1e056a02@rorschach.local.home>
+In-Reply-To: <20230725135938.1e056a02@rorschach.local.home>
+From:   Ze Gao <zegao2021@gmail.com>
+Date:   Wed, 26 Jul 2023 10:41:30 +0800
+Message-ID: <CAD8CoPBTCXiusUGNTEwcm9WJ+MEfrX01xsCWYAtA7MCpfaeqmQ@mail.gmail.com>
+Subject: Re: [RFC PATCH 1/3] sched, tracing: report task state in symbolic
+ chars instead
 To:     Steven Rostedt <rostedt@goodmis.org>
-Cc:     linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 0/2] tracing/probes: Fixes for v6.5-rc2
-Message-Id: <20230726104424.37124ea07d8cd9f41666f043@kernel.org>
-In-Reply-To: <20230724224017.76d5b0e9@rorschach.local.home>
-References: <169024903018.395371.1006584451160707296.stgit@devnote2>
-        <20230724224017.76d5b0e9@rorschach.local.home>
-X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Cc:     Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Ian Rogers <irogers@google.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        linux-trace-kernel@vger.kernel.org, Ze Gao <zegao@tencent.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On Mon, 24 Jul 2023 22:40:17 -0400
-Steven Rostedt <rostedt@goodmis.org> wrote:
+On Wed, Jul 26, 2023 at 1:59=E2=80=AFAM Steven Rostedt <rostedt@goodmis.org=
+> wrote:
+>
+> On Tue, 25 Jul 2023 15:22:52 +0800
+> Ze Gao <zegao2021@gmail.com> wrote:
+>
+> >  #ifdef CREATE_TRACE_POINTS
+> > -static inline long __trace_sched_switch_state(bool preempt,
+> > +static inline const char __trace_sched_switch_state(bool preempt,
+>
+> Does it really need to be "const"?
 
-> On Tue, 25 Jul 2023 10:37:10 +0900
-> "Masami Hiramatsu (Google)" <mhiramat@kernel.org> wrote:
-> 
-> > These two patches are probe-events fixes for v6.5-rc2.
-> > One is to fix btf_type_by_id() return value check and the other is fixing
-> > selftest.
-> > 
-> > Thank you,
-> > 
-> > ---
-> > 
-> > Masami Hiramatsu (Google) (2):
-> >       tracing/probes: Fix to add NULL check for BTF APIs
-> >       selftests/ftrace: Fix to check fprobe event eneblement
-> 
-> For both patches:
-> 
-> Reviewed-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+Not really since it's rvalue after all, will remove this.
 
-Thanks!
-
-> 
+> >                                             unsigned int prev_state,
+> >                                             struct task_struct *p)
+> >  {
+> > @@ -197,13 +198,6 @@ static inline long __trace_sched_switch_state(bool=
+ preempt,
+> >       BUG_ON(p !=3D current);
+> >  #endif /* CONFIG_SCHED_DEBUG */
+> >
+> > -     /*
+> > -      * Preemption ignores task state, therefore preempted tasks are a=
+lways
+> > -      * RUNNING (we will not have dequeued if state !=3D RUNNING).
+> > -      */
+> > -     if (preempt)
+> > -             return TASK_REPORT_MAX;
+> > -
+> >       /*
+> >        * task_state_index() uses fls() and returns a value from 0-8 ran=
+ge.
+> >        * Decrement it by 1 (except TASK_RUNNING state i.e 0) before usi=
+ng
+> > @@ -212,7 +206,16 @@ static inline long __trace_sched_switch_state(bool=
+ preempt,
+> >        */
+> >       state =3D __task_state_index(prev_state, p->exit_state);
+> >
+> > -     return state ? (1 << (state - 1)) : state;
+> > +     /*
+> > +      * Preemption ignores task state, therefore preempted tasks are a=
+lways
+> > +      * RUNNING (we will not have dequeued if state !=3D RUNNING).
+> > +      * Here, we use 'p' to denote this case and only for this case.
+> > +      */
+> > +     if (preempt)
+> > +             return 'p';
+> > +
+> > +
+> > +     return task_index_to_char(state);
+> >  }
+> >  #endif /* CREATE_TRACE_POINTS */
+> >
+> > @@ -232,7 +235,7 @@ TRACE_EVENT(sched_switch,
+> >               __array(        char,   prev_comm,      TASK_COMM_LEN   )
+> >               __field(        pid_t,  prev_pid                        )
+> >               __field(        int,    prev_prio                       )
+> > -             __field(        long,   prev_state                      )
+> > +             __field(        char,   prev_state                      )
+> >               __array(        char,   next_comm,      TASK_COMM_LEN   )
+> >               __field(        pid_t,  next_pid                        )
+> >               __field(        int,    next_prio                       )
+>
+> This will break userspace. Just because you update libtraceevent
+> doesn't mean that it will get to all the users of it. There's still
+> tools that have the old method hard coded and doesn't use the library.
+>
+> Now, because the old tools still do the parsing of this format, we can
+> add a new field called prev_state_char that will give you this. Now to
+> save space, we should change prev_state to int (can't make it short as
+> there's that test for "+" which does sometimes happen). I believe we
+> can make prev_prio and next prio into shorts (and possibly chars!).
+>
 > -- Steve
-> 
-> > 
-> > 
-> >  kernel/trace/trace_probe.c                         |    8 ++++----
-> >  .../ftrace/test.d/dynevent/add_remove_btfarg.tc    |    2 +-
-> >  2 files changed, 5 insertions(+), 5 deletions(-)
-> > 
-> > --
-> > Masami Hiramatsu (Google) <mhiramat@kernel.org>
-> 
+>
 
+Agreed, and my first attempt was to not break anything here by
+introducing a new "char",  which is kinda redundant, but is a good way
+for smooth transition to decouple userspace from kernel on this weird
+design(of ABI).
 
--- 
-Masami Hiramatsu (Google) <mhiramat@kernel.org>
+However, given the fact the in-tree perf still suffers this, I doubt many
+other tools could spare from it. And the best guess is that they are
+still partially broken silently and reports wrong and confusing states.
+And this is basically why I came up with this RFC and deliberately
+let them fail loudly to do a painful but quick recovery.
+
+Anyway, if we want to keep status quo, I can send over another two
+patches to fix perf and libtraceevent specifically and leave the tracepoint
+alone. But seriously, imho we might have no chance to correct this.
+and without a formal abi, the raw value (let alone the masqueraded ones)
+is just meaningless for userspace and that leaves it intended for kernel
+developers only.
+
+Thanks,
+Ze
