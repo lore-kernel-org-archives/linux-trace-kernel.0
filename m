@@ -2,138 +2,148 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ED285C41513
-	for <linux-trace-kernel@archiver.kernel.org>; Wed, 26 Jul 2023 08:10:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B9F6C001B0
+	for <linux-trace-kernel@archiver.kernel.org>; Wed, 26 Jul 2023 09:58:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232195AbjGZIKE (ORCPT
+        id S232593AbjGZJ6w (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Wed, 26 Jul 2023 04:10:04 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53916 "EHLO
+        Wed, 26 Jul 2023 05:58:52 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39562 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232177AbjGZIJf (ORCPT
+        with ESMTP id S233744AbjGZJ6c (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Wed, 26 Jul 2023 04:09:35 -0400
-Received: from mail-ej1-x62d.google.com (mail-ej1-x62d.google.com [IPv6:2a00:1450:4864:20::62d])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0F20C6E82;
-        Wed, 26 Jul 2023 01:02:06 -0700 (PDT)
-Received: by mail-ej1-x62d.google.com with SMTP id a640c23a62f3a-986d8332f50so995466466b.0;
-        Wed, 26 Jul 2023 01:02:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1690358525; x=1690963325;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=uxYHfTTWC0VbYCKBrhIb3PnqWpEpbOJPVI+cSJ6lXqM=;
-        b=XdoFUAw4biFlh1aW9Tx8YK5TjLabaDk3jclus9v8TlRqMpnmddMDVaohw3/vXv2Ili
-         1GQpj46+WdIQ8EP74ir6gi8o1fAereonW5jeNJdztHcyKygh+HbgXqIcusFT7QMCsXRc
-         FOaZiZrgnG+oTe5dC+Dz/008dsk9vkCMRDN9gz+Q7HgXqzLljN5oohw4x8ZrMcDhwveS
-         jhTJBioXifHwn9xyNmUHnvU52uC6DheA96xWi8rdeK5XxNZtD4AT39gH59/Q5rr6UF8F
-         PkP2mm7W+/NO/6h+WIo0REDSbwwaKN7PVR+bVaRO7Nu0mOw4GrpsaFlNCPukWgpenD0E
-         2tuQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1690358525; x=1690963325;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=uxYHfTTWC0VbYCKBrhIb3PnqWpEpbOJPVI+cSJ6lXqM=;
-        b=hRAdltGW+HhlcSc3+zvzQon6UXMQxt02Cvh0bsygHMraXxTLwAT9Wy1I5+JvfuB0Xm
-         lsLqR8QVRCzqR0wQ7yed4v7Mm5qAt6p3eIyhY4BdsH4p58EYhj39XH9T8UYZLaavTfPs
-         P66uJuYkElajLdUEHzlYdqk5g7WyV4C/t5eLXeCIW9KGGSegExm0hNkT26pv+Cjpnl82
-         IaVWHDn/BfK2j2erGbmz7MCNs8A2yQsvr1GpbJ1VXxUquJqqbMvhjPKh0aWDFhCQatmP
-         s+qRT2s677byKSahudsi5QuZXtM2Nsg79S7LwEVdfMn4wDeBsUzjHfeg9WSEcOGiq9mu
-         T/iw==
-X-Gm-Message-State: ABy/qLbFTvppYnmundEe6vizcP3Ag2vorDINAWG+y1oUHkQGFuiAbaG9
-        naDj7GTS40qOp3zJvpAwkSc=
-X-Google-Smtp-Source: APBJJlH5CXkcSv884ZCnEtxbnf11x/Lo3BDZrMn4lSL1x/rqyUTcQXo4W3Zx/wkfE/GJRI2vqxbPhA==
-X-Received: by 2002:a17:906:5396:b0:993:f6c8:300f with SMTP id g22-20020a170906539600b00993f6c8300fmr1010800ejo.15.1690358524845;
-        Wed, 26 Jul 2023 01:02:04 -0700 (PDT)
-Received: from krava (2001-1ae9-1c2-4c00-726e-c10f-8833-ff22.ip6.tmcz.cz. [2001:1ae9:1c2:4c00:726e:c10f:8833:ff22])
-        by smtp.gmail.com with ESMTPSA id lg23-20020a170906f89700b0098733a40bb7sm9314330ejb.155.2023.07.26.01.02.03
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 26 Jul 2023 01:02:04 -0700 (PDT)
-From:   Jiri Olsa <olsajiri@gmail.com>
-X-Google-Original-From: Jiri Olsa <jolsa@kernel.org>
-Date:   Wed, 26 Jul 2023 10:02:02 +0200
-To:     Arnd Bergmann <arnd@kernel.org>
-Cc:     Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Andrii Nakryiko <andrii@kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Martin KaFai Lau <martin.lau@linux.dev>,
-        Song Liu <song@kernel.org>, Yonghong Song <yhs@fb.com>,
-        KP Singh <kpsingh@kernel.org>,
-        Stanislav Fomichev <sdf@google.com>,
-        Hao Luo <haoluo@google.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Kees Cook <keescook@chromium.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Miguel Ojeda <ojeda@kernel.org>,
-        Palmer Dabbelt <palmer@rivosinc.com>, bpf@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
-        linux-modules@vger.kernel.org
-Subject: Re: [PATCH 2/2] [v2] kallsyms: rework symbol lookup return codes
-Message-ID: <ZMDS+lM/V5t1qD0D@krava>
-References: <20230724135327.1173309-1-arnd@kernel.org>
- <20230724135327.1173309-2-arnd@kernel.org>
+        Wed, 26 Jul 2023 05:58:32 -0400
+Received: from szxga03-in.huawei.com (szxga03-in.huawei.com [45.249.212.189])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4A84130DE;
+        Wed, 26 Jul 2023 02:57:55 -0700 (PDT)
+Received: from dggpeml500012.china.huawei.com (unknown [172.30.72.56])
+        by szxga03-in.huawei.com (SkyGuard) with ESMTP id 4R9q5L3stVzLnrf;
+        Wed, 26 Jul 2023 17:55:18 +0800 (CST)
+Received: from localhost.localdomain (10.67.175.61) by
+ dggpeml500012.china.huawei.com (7.185.36.15) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.27; Wed, 26 Jul 2023 17:57:53 +0800
+From:   Zheng Yejian <zhengyejian1@huawei.com>
+To:     <rostedt@goodmis.org>, <mhiramat@kernel.org>
+CC:     <linux-kernel@vger.kernel.org>,
+        <linux-trace-kernel@vger.kernel.org>, <zhengyejian1@huawei.com>
+Subject: [PATCH] tracing: Fix warning in trace_buffered_event_disable()
+Date:   Wed, 26 Jul 2023 17:58:04 +0800
+Message-ID: <20230726095804.920457-1-zhengyejian1@huawei.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230724135327.1173309-2-arnd@kernel.org>
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [10.67.175.61]
+X-ClientProxiedBy: dggems701-chm.china.huawei.com (10.3.19.178) To
+ dggpeml500012.china.huawei.com (7.185.36.15)
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On Mon, Jul 24, 2023 at 03:53:02PM +0200, Arnd Bergmann wrote:
+Warning happened in trace_buffered_event_disable() at
+  WARN_ON_ONCE(!trace_buffered_event_ref)
 
-SNIP
+  Call Trace:
+   ? __warn+0xa5/0x1b0
+   ? trace_buffered_event_disable+0x189/0x1b0
+   __ftrace_event_enable_disable+0x19e/0x3e0
+   free_probe_data+0x3b/0xa0
+   unregister_ftrace_function_probe_func+0x6b8/0x800
+   event_enable_func+0x2f0/0x3d0
+   ftrace_process_regex.isra.0+0x12d/0x1b0
+   ftrace_filter_write+0xe6/0x140
+   vfs_write+0x1c9/0x6f0
+   [...]
 
-> diff --git a/kernel/trace/ftrace.c b/kernel/trace/ftrace.c
-> index 05c0024815bf9..bc0eed24a5873 100644
-> --- a/kernel/trace/ftrace.c
-> +++ b/kernel/trace/ftrace.c
-> @@ -6965,7 +6965,7 @@ allocate_ftrace_mod_map(struct module *mod,
->  	return mod_map;
->  }
->  
-> -static const char *
-> +static int
->  ftrace_func_address_lookup(struct ftrace_mod_map *mod_map,
->  			   unsigned long addr, unsigned long *size,
->  			   unsigned long *off, char *sym)
-> @@ -6986,21 +6986,18 @@ ftrace_func_address_lookup(struct ftrace_mod_map *mod_map,
->  			*size = found_func->size;
->  		if (off)
->  			*off = addr - found_func->ip;
-> -		if (sym)
-> -			strscpy(sym, found_func->name, KSYM_NAME_LEN);
-> -
-> -		return found_func->name;
-> +		return strlcpy(sym, found_func->name, KSYM_NAME_LEN);
+The cause of the warning is in __ftrace_event_enable_disable(),
+trace_buffered_event_enable() was called once while
+trace_buffered_event_disable() was called twice.
+Reproduction script show as below, for analysis, see the comments:
+ ```
+ #!/bin/bash
 
-hi,
-any reason not to call the original strscpy in here?
+ cd /sys/kernel/tracing/
 
-jirka
+ # 1. Register a 'disable_event' command, then:
+ #    1) SOFT_DISABLED_BIT was set;
+ #    2) trace_buffered_event_enable() was called first time;
+ echo 'cmdline_proc_show:disable_event:initcall:initcall_finish' > \
+     set_ftrace_filter
 
->  	}
->  
-> -	return NULL;
-> +	return 0;
->  }
->  
-> -const char *
-> +int
->  ftrace_mod_address_lookup(unsigned long addr, unsigned long *size,
->  		   unsigned long *off, char **modname, char *sym)
->  {
->  	struct ftrace_mod_map *mod_map;
-> -	const char *ret = NULL;
-> +	int ret;
->  
->  	/* mod_map is freed via call_rcu() */
->  	preempt_disable();
-> -- 
-> 2.39.2
-> 
+ # 2. Enable the event registered, then:
+ #    1) SOFT_DISABLED_BIT was cleared;
+ #    2) trace_buffered_event_disable() was called first time;
+ echo 1 > events/initcall/initcall_finish/enable
+
+ # 3. Try to call into cmdline_proc_show(), then SOFT_DISABLED_BIT was
+ #    set again!!!
+ cat /proc/cmdline
+
+ # 4. Unregister the 'disable_event' command, then:
+ #    1) SOFT_DISABLED_BIT was cleared again;
+ #    2) trace_buffered_event_disable() was called second time!!!
+ echo '!cmdline_proc_show:disable_event:initcall:initcall_finish' > \
+     set_ftrace_filter
+ ```
+
+To fix it, IIUC, we can change to call trace_buffered_event_enable() at
+fist time soft-mode enabled, and call trace_buffered_event_disable() at
+last time soft-mode disabled.
+
+Fixes: 0fc1b09ff1ff ("tracing: Use temp buffer when filtering events")
+Signed-off-by: Zheng Yejian <zhengyejian1@huawei.com>
+---
+ kernel/trace/trace_events.c | 14 ++++----------
+ 1 file changed, 4 insertions(+), 10 deletions(-)
+
+diff --git a/kernel/trace/trace_events.c b/kernel/trace/trace_events.c
+index 5d6ae4eae510..578f1f7d49a6 100644
+--- a/kernel/trace/trace_events.c
++++ b/kernel/trace/trace_events.c
+@@ -611,7 +611,6 @@ static int __ftrace_event_enable_disable(struct trace_event_file *file,
+ {
+ 	struct trace_event_call *call = file->event_call;
+ 	struct trace_array *tr = file->tr;
+-	unsigned long file_flags = file->flags;
+ 	int ret = 0;
+ 	int disable;
+ 
+@@ -635,6 +634,8 @@ static int __ftrace_event_enable_disable(struct trace_event_file *file,
+ 				break;
+ 			disable = file->flags & EVENT_FILE_FL_SOFT_DISABLED;
+ 			clear_bit(EVENT_FILE_FL_SOFT_MODE_BIT, &file->flags);
++			/* Disable use of trace_buffered_event */
++			trace_buffered_event_disable();
+ 		} else
+ 			disable = !(file->flags & EVENT_FILE_FL_SOFT_MODE);
+ 
+@@ -673,6 +674,8 @@ static int __ftrace_event_enable_disable(struct trace_event_file *file,
+ 			if (atomic_inc_return(&file->sm_ref) > 1)
+ 				break;
+ 			set_bit(EVENT_FILE_FL_SOFT_MODE_BIT, &file->flags);
++			/* Enable use of trace_buffered_event */
++			trace_buffered_event_enable();
+ 		}
+ 
+ 		if (!(file->flags & EVENT_FILE_FL_ENABLED)) {
+@@ -712,15 +715,6 @@ static int __ftrace_event_enable_disable(struct trace_event_file *file,
+ 		break;
+ 	}
+ 
+-	/* Enable or disable use of trace_buffered_event */
+-	if ((file_flags & EVENT_FILE_FL_SOFT_DISABLED) !=
+-	    (file->flags & EVENT_FILE_FL_SOFT_DISABLED)) {
+-		if (file->flags & EVENT_FILE_FL_SOFT_DISABLED)
+-			trace_buffered_event_enable();
+-		else
+-			trace_buffered_event_disable();
+-	}
+-
+ 	return ret;
+ }
+ 
+-- 
+2.25.1
+
