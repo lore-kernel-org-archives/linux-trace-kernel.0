@@ -2,150 +2,76 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 73E4CC001DE
-	for <linux-trace-kernel@archiver.kernel.org>; Wed, 26 Jul 2023 22:43:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 651FFC001DF
+	for <linux-trace-kernel@archiver.kernel.org>; Wed, 26 Jul 2023 22:53:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230369AbjGZWnV (ORCPT
+        id S229582AbjGZWxt (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Wed, 26 Jul 2023 18:43:21 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:38556 "EHLO
+        Wed, 26 Jul 2023 18:53:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41052 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230221AbjGZWnU (ORCPT
+        with ESMTP id S229519AbjGZWxt (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Wed, 26 Jul 2023 18:43:20 -0400
-Received: from mail-pl1-x632.google.com (mail-pl1-x632.google.com [IPv6:2607:f8b0:4864:20::632])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2B28F2717
-        for <linux-trace-kernel@vger.kernel.org>; Wed, 26 Jul 2023 15:43:19 -0700 (PDT)
-Received: by mail-pl1-x632.google.com with SMTP id d9443c01a7336-1b8ad9eede0so2530525ad.1
-        for <linux-trace-kernel@vger.kernel.org>; Wed, 26 Jul 2023 15:43:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1690411398; x=1691016198;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=MaG/2UBeePq8inaENT+NwKjpjU5MiahEk7iN9th9S0Y=;
-        b=ko8WGR+/taNUp8J6OqypMcS4PobhQCefoY9ZnAMyqN+swRHLtYzA3J3I6EFZHH5JLf
-         2ScAKum79L0DXHoNKzy90xTh8rpFYEVm3NZAzExvQsBq6s4uVgOCVHJVgTmMPpxSLI4p
-         6/R7YD7r11qvwTQRy55tAwQB/oLhjaO8JkmQA=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1690411398; x=1691016198;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=MaG/2UBeePq8inaENT+NwKjpjU5MiahEk7iN9th9S0Y=;
-        b=d8btUEmxAGOgEvE9ci9H4KPNwbO4b2MEFmPIboAUp1sf8PWWsSgU2WsrsmDj50AgUi
-         2f7Sa+PPqscx7KnJcWqf1OJd+8VNpkS/tcAgNolCZbIU5i58M7Phq3JzbwEDMxnIKswL
-         NZ+9uMuQO9768ocvtl62cgxnY0zVO3tjqTMIlRZUD8gvrLVpaXeHbjEHxpEQerCbKu5n
-         Zv0VOv32LGcJOQIh8rsU21S3d1AlYtKouYswSIK0Xy/NSAHjGqrThHuh7W0flEdZ5lM4
-         Rx2bsOisHRRfVAgywdRMurFY9XOH22IuSC6EJruz2Pux+K/0vgc6GTHmPJKarRGp4wd4
-         SiLQ==
-X-Gm-Message-State: ABy/qLaRGzISRYUCm47gBOEEBS6fM135aYpswOt83KsNM9x+Yd+dCwLo
-        QS8vyqtA61mwxPCdZqj0jDOyyg==
-X-Google-Smtp-Source: APBJJlGmY/8Zc8HCO/n+aNXSXQHmPYUwpxTdy/8NUuT8Ni2Oa94ClFZfeWl7lqC5TYAI00z5wRGgcQ==
-X-Received: by 2002:a17:903:442:b0:1bb:98de:251e with SMTP id iw2-20020a170903044200b001bb98de251emr3120883plb.56.1690411398639;
-        Wed, 26 Jul 2023 15:43:18 -0700 (PDT)
-Received: from www.outflux.net (198-0-35-241-static.hfc.comcastbusiness.net. [198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id n15-20020a170902d2cf00b001b54a88e6adsm39153plc.309.2023.07.26.15.43.17
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 26 Jul 2023 15:43:18 -0700 (PDT)
-Date:   Wed, 26 Jul 2023 15:43:17 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     Arnd Bergmann <arnd@kernel.org>
-Cc:     Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Andrii Nakryiko <andrii@kernel.org>,
+        Wed, 26 Jul 2023 18:53:49 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 662422719;
+        Wed, 26 Jul 2023 15:53:48 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (2048 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id EA40961BAF;
+        Wed, 26 Jul 2023 22:53:47 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2C0C6C433C7;
+        Wed, 26 Jul 2023 22:53:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1690412027;
+        bh=Gc0MdxE9TJLVJnxGVdhAqK+Fa1GdL+sEgIBIAagN3WI=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=oEBJXlrReZWTXlTFcPvCxDjoBxAqHNi8Z04tDXBU62cESYZGcTVYn7pVunAmoPiVE
+         kY8YsvtXo3hJNgxD5EDAZQW5D1EL3fdBPccEpMWpdohKA71/dPySkAEeEIAQ3rjxul
+         vqrLzxe+kCSaA5Z/5r2Y01XBZkGWTLIenin/9+5sB/K+o5U3wrNhm8HWaETVQ2qRnY
+         BTUHqs0HjJZS8NpXNMDCymr6Z1hY3UugpxeLt1FqxfKxu2lb0v6UeRgnrv4bf361Xf
+         rSUUEY4f9zTTXpfUiqNL/DQQzBeKkJC3RzV65LBNXARVru0PAlIr/caAX4cJwQV4g2
+         9SKNEy6XWwU6A==
+Date:   Thu, 27 Jul 2023 07:53:42 +0900
+From:   Masami Hiramatsu (Google) <mhiramat@kernel.org>
+To:     "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
+Cc:     linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org,
         Steven Rostedt <rostedt@goodmis.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        John Fastabend <john.fastabend@gmail.com>,
-        Martin KaFai Lau <martin.lau@linux.dev>,
-        Song Liu <song@kernel.org>,
-        Yonghong Song <yonghong.song@linux.dev>,
-        KP Singh <kpsingh@kernel.org>,
-        Stanislav Fomichev <sdf@google.com>,
-        Hao Luo <haoluo@google.com>, Jiri Olsa <jolsa@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Petr Mladek <pmladek@suse.com>, bpf@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
-        linux-modules@vger.kernel.org
-Subject: Re: [PATCH] [v3] kallsyms: rework symbol lookup return codes
-Message-ID: <202307261536.797610DC@keescook>
-References: <20230726141333.3992790-1-arnd@kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230726141333.3992790-1-arnd@kernel.org>
+        Martin KaFai Lau <martin.lau@linux.dev>, bpf@vger.kernel.org,
+        Sven Schnelle <svens@linux.ibm.com>,
+        Alexei Starovoitov <ast@kernel.org>
+Subject: Re: [PATCH v3 5/9] tracing/probes: Support BTF field access from
+ $retval
+Message-Id: <20230727075342.43f600a1850810f6e1dd6c2e@kernel.org>
+In-Reply-To: <169037644255.607919.6218637643155663128.stgit@devnote2>
+References: <169037639315.607919.2613476171148037242.stgit@devnote2>
+        <169037644255.607919.6218637643155663128.stgit@devnote2>
+X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On Wed, Jul 26, 2023 at 04:12:23PM +0200, Arnd Bergmann wrote:
-> From: Arnd Bergmann <arnd@arndb.de>
-> 
-> Building with W=1 in some configurations produces a false positive
-> warning for kallsyms:
-> 
-> kernel/kallsyms.c: In function '__sprint_symbol.isra':
-> kernel/kallsyms.c:503:17: error: 'strcpy' source argument is the same as destination [-Werror=restrict]
->   503 |                 strcpy(buffer, name);
->       |                 ^~~~~~~~~~~~~~~~~~~~
-> 
-> This originally showed up while building with -O3, but later started
-> happening in other configurations as well, depending on inlining
-> decisions. The underlying issue is that the local 'name' variable is
-> always initialized to the be the same as 'buffer' in the called functions
-> that fill the buffer, which gcc notices while inlining, though it could
-> see that the address check always skips the copy.
-> 
-> The calling conventions here are rather unusual, as all of the internal
-> lookup functions (bpf_address_lookup, ftrace_mod_address_lookup,
-> ftrace_func_address_lookup, module_address_lookup and
-> kallsyms_lookup_buildid) already use the provided buffer and either return
-> the address of that buffer to indicate success, or NULL for failure,
-> but the callers are written to also expect an arbitrary other buffer
-> to be returned.
-> 
-> Rework the calling conventions to return the length of the filled buffer
-> instead of its address, which is simpler and easier to follow as well
-> as avoiding the warning. Leave only the kallsyms_lookup() calling conventions
-> unchanged, since that is called from 16 different functions and
-> adapting this would be a much bigger change.
-> 
-> Link: https://lore.kernel.org/all/20200107214042.855757-1-arnd@arndb.de/
-> Reviewed-by: Luis Chamberlain <mcgrof@kernel.org>
-> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-> ---
-> v3: use strscpy() instead of strlcpy()
+On Wed, 26 Jul 2023 22:00:42 +0900
+"Masami Hiramatsu (Google)" <mhiramat@kernel.org> wrote:
 
-Thank you! :) (Though see my notes below...)
 
-> [...]
-> @@ -344,13 +345,12 @@ const char *module_address_lookup(unsigned long addr,
->  #endif
->  		}
 >  
-> -		ret = find_kallsyms_symbol(mod, addr, size, offset);
-> -	}
-> -	/* Make a copy in here where it's safe */
-> -	if (ret) {
-> -		strncpy(namebuf, ret, KSYM_NAME_LEN - 1);
+> -static const struct btf_param *find_btf_func_param(const char *funcname, s32 *nr,
+> -						   struct btf **btf_p, bool tracepoint)
+> +static int query_btf_context(struct traceprobe_parse_context *ctx)
+>  {
+>  	return ERR_PTR(-EOPNOTSUPP);
 
-This -1 was to keep the buffer NUL-terminated.
+Oops, kernel test bot reported this is wrong. I have to remove ERR_PTR().
 
-> -		ret = namebuf;
-> +		sym = find_kallsyms_symbol(mod, addr, size, offset);
-> +
-> +		if (sym)
-> +			ret = strscpy(namebuf, sym, KSYM_NAME_LEN - 1);
+Thanks,
 
-This strscpy should use KSYM_NAME_LEN without the "- 1".
-
->  	}
-> +
->  	preempt_enable();
->  
-
--Kees
+>  }
 
 -- 
-Kees Cook
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
