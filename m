@@ -2,411 +2,229 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 63096C001B0
-	for <linux-trace-kernel@archiver.kernel.org>; Wed, 26 Jul 2023 14:15:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E579FC001DF
+	for <linux-trace-kernel@archiver.kernel.org>; Wed, 26 Jul 2023 18:45:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233306AbjGZOPj (ORCPT
+        id S231378AbjGZSpk (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Wed, 26 Jul 2023 10:15:39 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:41418 "EHLO
+        Wed, 26 Jul 2023 14:45:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42542 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231925AbjGZOPY (ORCPT
+        with ESMTP id S231147AbjGZSpj (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Wed, 26 Jul 2023 10:15:24 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BB3AC3C34;
-        Wed, 26 Jul 2023 07:14:10 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id C038261B0D;
-        Wed, 26 Jul 2023 14:13:43 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A4C0BC433C9;
-        Wed, 26 Jul 2023 14:13:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1690380823;
-        bh=GzxbVUUTlhh89frSeSpipg9l76r/LLT+KqHhHPh7XDo=;
-        h=From:To:Cc:Subject:Date:From;
-        b=scq0wUo8rx3wen1XIXjVQmBdLMRebFkL6gkitjKb5i5KRfQq59Uan3I6df6BAkYjn
-         hnN0Chzk2EivsgSOGezgFksPlOoTj/8PymvLv/zvqvHiBHUUFBXq7ZtYNqhgGkiD+0
-         /6S5lA7iQp3DdxdcFU6JeS0+8e0OPUwy//+dpkjdbcC34/2/FdvuELkZ8V2jnjlCFI
-         6jOVcgK8iEfjyTjfVW1WwfS976IPkWyL7ofVXaLyG6MfSmoIV+mxuWraYynBHv5mWD
-         lauvMbpA4nlUvXpXIAfb3om6g05YD+Urv3sfmPS50RzNBwv/A/hhemTKGZhaMU0e7h
-         rMeVMSuWOPEEA==
-From:   Arnd Bergmann <arnd@kernel.org>
-To:     Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Andrii Nakryiko <andrii@kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Luis Chamberlain <mcgrof@kernel.org>
-Cc:     Arnd Bergmann <arnd@arndb.de>,
-        John Fastabend <john.fastabend@gmail.com>,
-        Martin KaFai Lau <martin.lau@linux.dev>,
-        Song Liu <song@kernel.org>,
-        Yonghong Song <yonghong.song@linux.dev>,
-        KP Singh <kpsingh@kernel.org>,
-        Stanislav Fomichev <sdf@google.com>,
-        Hao Luo <haoluo@google.com>, Jiri Olsa <jolsa@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Kees Cook <keescook@chromium.org>,
-        Petr Mladek <pmladek@suse.com>, bpf@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
-        linux-modules@vger.kernel.org
-Subject: [PATCH] [v3] kallsyms: rework symbol lookup return codes
-Date:   Wed, 26 Jul 2023 16:12:23 +0200
-Message-Id: <20230726141333.3992790-1-arnd@kernel.org>
-X-Mailer: git-send-email 2.39.2
+        Wed, 26 Jul 2023 14:45:39 -0400
+Received: from DM4PR02CU002.outbound.protection.outlook.com (mail-centralusazon11013002.outbound.protection.outlook.com [52.101.64.2])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A98DE1710;
+        Wed, 26 Jul 2023 11:45:37 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=LyZBOy8h4uhOFbdYADwMC/j5qMkHtEpgSOzv2IJ7JYVtmN21hT95/oUa0CjzP/iRiZ2EfpnsxBA+hpBMFvQLc8QQedAgYPpB5OqZQpBm61SIHSCydIu4WoidheMtZ8UsdS1BreMjHvmWgAdNtMzCAki6Rz9XJSI3uvZrurkT21foj2TODkjvuIyCAqXY1OQSRNowpOAf5eyCK4gyhNWCMFQ9xEkwfip3n+D6OEma4zwEWCHzc5MTOoaSQIzxrsczd1djcRhxI3zGpnsy5Y4K4LTNBErutQOTTrJXB+nvDjrxC5x+MNoU6bxHT1XxoFIpNUhTm6FvmvQnYH/q9qNAUQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=+z9N24JrafxDX1ux/tLxpu93EHW2WXX6K0FDP7HzjAs=;
+ b=HwpiE/AML16tP9aMfcKpHuzGfEXb1CnbYK6qrfqlwPELPN61Xy4qlz46lpx4glC05G6yMRLxKXSgQMfeP6cPSpqFM8X0Gq/AOppwv+lw8qd+U2lS+BSRE9v5rs8rUEVxyHPA2El+Qrad6bRl7N+3Kt3hK0zaulwtIcUWe+LQTmhjrwZafioySqscuuQNHm1R1nDmNiduOVCqHt7TECQdEjb+xNYWKjWDOaERR9RpaAv1o7h3jm7GvHSJ4ehhm9bGW9l6IdAc+66ZEdbA6NS7fywkLqx6M68GYNO8rBlsyiCYfxGeT32aDXr/Cm9lJUDrcyfObFdGDQPIkWtIl+My8A==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=vmware.com; dmarc=pass action=none header.from=vmware.com;
+ dkim=pass header.d=vmware.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=vmware.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=+z9N24JrafxDX1ux/tLxpu93EHW2WXX6K0FDP7HzjAs=;
+ b=Vq5q2rajtzlZqVz4/jJfjpoCGjNmwTIGwJRf482P2ix8Aa5cpJ7w0RSaYcU3thNXbSj1OBgYOgFRHkH8WllPvco8bYJnwd5iq3R5NsRx7P82BwU5rKWpLftvsCfulg6t+TkIc5bku5chFGm5vaF9z/zdC5L7mfTkFrDkPB8LCeg=
+Received: from PH0PR05MB8703.namprd05.prod.outlook.com (2603:10b6:510:bd::5)
+ by BLAPR05MB7428.namprd05.prod.outlook.com (2603:10b6:208:295::9) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6631.29; Wed, 26 Jul
+ 2023 18:45:35 +0000
+Received: from PH0PR05MB8703.namprd05.prod.outlook.com
+ ([fe80::b5d8:98b9:6ca7:94f0]) by PH0PR05MB8703.namprd05.prod.outlook.com
+ ([fe80::b5d8:98b9:6ca7:94f0%6]) with mapi id 15.20.6631.026; Wed, 26 Jul 2023
+ 18:45:34 +0000
+From:   Ajay Kaher <akaher@vmware.com>
+To:     Steven Rostedt <rostedt@goodmis.org>
+CC:     "shuah@kernel.org" <shuah@kernel.org>,
+        "mhiramat@kernel.org" <mhiramat@kernel.org>,
+        Ching-lin Yu <chinglinyu@google.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-kselftest@vger.kernel.org" <linux-kselftest@vger.kernel.org>,
+        "linux-trace-kernel@vger.kernel.org" 
+        <linux-trace-kernel@vger.kernel.org>,
+        "lkp@intel.com" <lkp@intel.com>, Nadav Amit <namit@vmware.com>,
+        "oe-lkp@lists.linux.dev" <oe-lkp@lists.linux.dev>,
+        Alexey Makhalov <amakhalov@vmware.com>,
+        "er.ajay.kaher@gmail.com" <er.ajay.kaher@gmail.com>,
+        "srivatsa@csail.mit.edu" <srivatsa@csail.mit.edu>,
+        Tapas Kundu <tkundu@vmware.com>,
+        Vasavi Sirnapalli <vsirnapalli@vmware.com>
+Subject: Re: [PATCH v5 02/10] eventfs: Implement tracefs_inode_cache
+Thread-Topic: [PATCH v5 02/10] eventfs: Implement tracefs_inode_cache
+Thread-Index: AQHZvNQKHw/Q6Fj22kO7XI2K5rFska/LH5OAgAFJcQA=
+Date:   Wed, 26 Jul 2023 18:45:34 +0000
+Message-ID: <0FE7065F-6536-4311-AF41-4ABBD8E3ECF8@vmware.com>
+References: <1690054625-31939-1-git-send-email-akaher@vmware.com>
+ <1690054625-31939-3-git-send-email-akaher@vmware.com>
+ <20230725190617.14c85997@rorschach.local.home>
+In-Reply-To: <20230725190617.14c85997@rorschach.local.home>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-mailer: Apple Mail (2.3731.600.7)
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=vmware.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: PH0PR05MB8703:EE_|BLAPR05MB7428:EE_
+x-ms-office365-filtering-correlation-id: f5c1c82b-beb4-46f6-2c1a-08db8e087f39
+x-ld-processed: b39138ca-3cee-4b4a-a4d6-cd83d9dd62f0,ExtAddr
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: TFqJK2ovuDiLSae8E6YdKaGDPypbsREm8WAIpNSVP807391GGwbwJw8lK/EkmH69qmVJ7R8xRPVity5ZWebHwUrrDEJbOrswB2GE38aRMOiw0ogUVmDlI/KP8NrwVLU0SlkNlBF7PjORa9gXyif499lyR4HMMRlh/3DR3cglEG4VHd+HhJws5AWZcpvdmS+qaZCOg4WVYe5VZWPAsaVWyu5UUm3nu1o+qAWwLf8VNtTIHOoJ4eczWTwuPnqswexo8Oz+Pnt76o7OG2qV20HutBCS0CexrFxoH8ViIvSY6UmFHF1j+XHy5qI7I5FAH1pnMn7NzR+ICj+TSZsxrHsPYwbtfZphwspCtO1n8EcCxuuISCBAMZB1nJgNAp9pzhk2O4khxV+hZ2Co7MRbLumzoBBWCV3IbyLcUqsOzdhe0w3yYxAqRuspe/Q3AFNnwxRpZuO8urmF6TOxmgGgGXimERT8RJXjVFQWr4xmc/NTPhqpq8px1TvsKhhXINxH+GH7mhs4lXuvocHu/YmmpPkmslwkQR2NuGPgoaNH11hYVJoWZx2cwlqDsGyjFxxhNoII0HPt5DOfGsUpEclJWeYdIcIIJZZ/pJ6+sprW/uVvg9+kUU+6N8UAZCEulY/Ba5vFzTsTVszak0S3K5/cQV+BbcvrPKz9HYqo5XTUuRJGEMG6FUfq7oSAc2fou/6NYYXS
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH0PR05MB8703.namprd05.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230028)(4636009)(39860400002)(366004)(396003)(136003)(376002)(346002)(451199021)(71200400001)(6486002)(478600001)(83380400001)(107886003)(26005)(6506007)(6512007)(6916009)(4326008)(122000001)(66446008)(54906003)(64756008)(91956017)(76116006)(66556008)(66946007)(66476007)(186003)(38100700002)(2616005)(5660300002)(7416002)(8676002)(8936002)(33656002)(41300700001)(316002)(2906002)(86362001)(38070700005)(36756003)(45980500001);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0: =?us-ascii?Q?tzCl7LcGI2W1oTq/aE4j33F1oTcqL934eqvVC/Q2+gWexVG8YfAio7R2N00I?=
+ =?us-ascii?Q?0TOLyuRnRltOc8VWrVxXEfjjj3Wg6wubYUCCncp22Oom9MlrxFHxTbkWX2vo?=
+ =?us-ascii?Q?d+VREnlSCNVll7ABUBBr4AJvphPn+zSBP6ESgoJwEVG1AFexE6iB5yufXdCt?=
+ =?us-ascii?Q?S/oOYfc+LlZfh4UsnwiyH/ISl4Y4AehkjO19/2uyeNnhzHxQqBnmjmZ0TZq/?=
+ =?us-ascii?Q?nn45VvEoIQqTWF3OZE0X3QGnI4vgnB5wESlSEwNLoZPEctfuIogGmr+CUO83?=
+ =?us-ascii?Q?T962XJ8qE62Pa9h7NZyTGGvEzkTvTofo3hZdEaYnQ7LOg6dbwV530c/nWj8K?=
+ =?us-ascii?Q?bF3pEFWaTTrVEIpm+nvL5XIXcc/OBKY5M8MPiwyqxZ4AkNaug1Dnad9dak10?=
+ =?us-ascii?Q?qZ6j4CLHxDz8veV4T+nkpJr238IwrKjAI/zKwaCL95PwwlZNVBnHV4sG162q?=
+ =?us-ascii?Q?bQsGMMoSJ5ZJZmFCAV4Lu4Yx7CpPfAe7OcaYdpEUaK4B7ewm6ifswqOlhvVT?=
+ =?us-ascii?Q?YTaKloSU0IRDRQD91ap9O3jwY5c+toT1u+LZ4f7d/zK8h/7uxOEpmNMYpcm2?=
+ =?us-ascii?Q?REqYB0Mp1pSkhJcFOnK+D9vtoPmJ8Luzh/lwVlDPoizbkPirrl8dcbPDSWVY?=
+ =?us-ascii?Q?GIKUkrXycVtxkP+scyvtHl1M/urS7mP0MMP8AuIeLxDCDGTNYZwbDH0ewf1b?=
+ =?us-ascii?Q?f6JzrKoXaatSowxNjeKva/gqkv1nafmoPvBnVsiKITsfQxt6gVWy3M6SyyG/?=
+ =?us-ascii?Q?2RJQt3ehwqW1eiqOuXwe1xxxDpHyCThfJdSwX3Hp6gmdc9zfa5CQGMVvXtBS?=
+ =?us-ascii?Q?cGHM1/R9h/GuQ6yT6t0Aw6MFhwaUx26YjWrg6IIrXLhPXFuCrGwbm+745Dow?=
+ =?us-ascii?Q?wUo6S3Ua97p4FkWjCdx57rppqer9HtjJHsWCBfo3Jvn1tOHvD8DW8i39aeK9?=
+ =?us-ascii?Q?+lywnDk5ueAUow0w69ojnVUAx3+8ADnH3oaare6nqf8snrYdxjb2g9TYyK6T?=
+ =?us-ascii?Q?6NTKuW9tNncvr2Eefq/fBmlhp6iCwo5XR2ghjr2ik2mYOyHhknRJ2ryuI/07?=
+ =?us-ascii?Q?6tZfWQhmPU0q/98bcK83WKF2owQH3jAa3l9Y4KSV1ORwTjtkQL5sLm8ROG8Y?=
+ =?us-ascii?Q?42K2Chp9R4VzKZw96/Lz1tgVm8xP1DDJMXMJqVoTV45Oz6QZ0CHmtGpQVWzo?=
+ =?us-ascii?Q?ULkPpfTSywyyEr0+0fVdHmSz3qoruUWH/jTZjMEXaEtO3On/vuPfihK6B6w1?=
+ =?us-ascii?Q?VMzxpRrdKN6O9Q/JjCkCTqPrKux5MEvGVaojPkIxucYtCKTOftwqIJIWgJzf?=
+ =?us-ascii?Q?voDkMey0YQwGupQZpqB/xZiaWsTjrttTr5tk8FAAovVWCNB/DvjqPPYxvZ8L?=
+ =?us-ascii?Q?xRLkFAxQmMnoE9dZZHcr8oUGjlLQ/YVY1dsgXoWUVbytoUQU3uchC4YOyYiR?=
+ =?us-ascii?Q?g3pwXkoSOdU1O8LoUF7vUQXKp++SPIqW0W4j4NfAEoE0Xvp7vY+WLjpNYK/7?=
+ =?us-ascii?Q?zB0fPywVYRz9OhvfwF5LGqlY0XsWnI8sposaxdT4HYhzrry3yh5DYMMhsXks?=
+ =?us-ascii?Q?etMvwlgeZ8Si7fUzOubzauJrMBVyaKYki33bAOD1?=
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <D439C1FB6769CE48B24CD7F9CE9BB7E1@namprd05.prod.outlook.com>
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-OriginatorOrg: vmware.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: PH0PR05MB8703.namprd05.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: f5c1c82b-beb4-46f6-2c1a-08db8e087f39
+X-MS-Exchange-CrossTenant-originalarrivaltime: 26 Jul 2023 18:45:34.8231
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: b39138ca-3cee-4b4a-a4d6-cd83d9dd62f0
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: Wr+tm+0wYKcIoMrgyVbQuVDIAOInGA+JPemCltCmqIjSWN3m2PgRjSmPdW+2WoCpa7bMgy/sHP7//m4UCes7ig==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BLAPR05MB7428
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-From: Arnd Bergmann <arnd@arndb.de>
 
-Building with W=1 in some configurations produces a false positive
-warning for kallsyms:
+>> diff --git a/fs/tracefs/inode.c b/fs/tracefs/inode.c
+>> index 57ac8aa4a724..2508944cc4d8 100644
+>> --- a/fs/tracefs/inode.c
+>> +++ b/fs/tracefs/inode.c
+>> @@ -21,13 +21,33 @@
+>> #include <linux/parser.h>
+>> #include <linux/magic.h>
+>> #include <linux/slab.h>
+>> +#include "internal.h"
+>>=20
+>> #define TRACEFS_DEFAULT_MODE 0700
+>> +static struct kmem_cache *tracefs_inode_cachep __ro_after_init;
+>>=20
+>> static struct vfsmount *tracefs_mount;
+>> static int tracefs_mount_count;
+>> static bool tracefs_registered;
+>>=20
+>> +static struct inode *tracefs_alloc_inode(struct super_block *sb)
+>> +{
+>> +     struct tracefs_inode *ti;
+>> +
+>> +     ti =3D kmem_cache_alloc(tracefs_inode_cachep, GFP_KERNEL);
+>> +     if (!ti)
+>> +             return NULL;
+>> +
+>> +     ti->flags =3D 0;
+>> +
+>> +     return &ti->vfs_inode;
+>> +}
+>> +
+>> +static void tracefs_free_inode(struct inode *inode)
+>> +{
+>> +     kmem_cache_free(tracefs_inode_cachep, get_tracefs(inode));
+>> +}
+>> +
+>> static ssize_t default_read_file(struct file *file, char __user *buf,
+>>                               size_t count, loff_t *ppos)
+>> {
+>> @@ -346,6 +366,9 @@ static int tracefs_show_options(struct seq_file *m, =
+struct dentry *root)
+>> }
+>>=20
+>> static const struct super_operations tracefs_super_operations =3D {
+>> +     .alloc_inode    =3D tracefs_alloc_inode,
+>> +     .free_inode     =3D tracefs_free_inode,
+>> +     .drop_inode     =3D generic_delete_inode,
+>>      .statfs         =3D simple_statfs,
+>>      .remount_fs     =3D tracefs_remount,
+>>      .show_options   =3D tracefs_show_options,
+>> @@ -628,10 +651,26 @@ bool tracefs_initialized(void)
+>>      return tracefs_registered;
+>> }
+>>=20
+>> +static void init_once(void *foo)
+>> +{
+>> +     struct tracefs_inode *ti =3D (struct tracefs_inode *) foo;
+>> +
+>> +     inode_init_once(&ti->vfs_inode);
+>> +}
+>> +
+>> static int __init tracefs_init(void)
+>> {
+>>      int retval;
+>>=20
+>> +     tracefs_inode_cachep =3D kmem_cache_create("tracefs_inode_cache",
+>> +                                              sizeof(struct tracefs_ino=
+de),
+>> +                                              0, (SLAB_RECLAIM_ACCOUNT|
+>> +                                                  SLAB_MEM_SPREAD|
+>> +                                                  SLAB_ACCOUNT),
+>> +                                              init_once);
+>> +     if (!tracefs_inode_cachep)
+>> +             return -ENOMEM;
+>> +
+>>      retval =3D sysfs_create_mount_point(kernel_kobj, "tracing");
+>>      if (retval)
+>>              return -EINVAL;
+>> diff --git a/fs/tracefs/internal.h b/fs/tracefs/internal.h
+>> new file mode 100644
+>> index 000000000000..49b5e8949e1c
+>> --- /dev/null
+>> +++ b/fs/tracefs/internal.h
+>> @@ -0,0 +1,19 @@
+>> +/* SPDX-License-Identifier: GPL-2.0 */
+>> +#ifndef _TRACEFS_INTERNAL_H
+>> +#define _TRACEFS_INTERNAL_H
+>> +
+>> +enum {
+>> +     TRACEFS_EVENT_INODE     =3D BIT(1),
+>> +};
+>=20
+> Let's not introduce the enum until it is used.
 
-kernel/kallsyms.c: In function '__sprint_symbol.isra':
-kernel/kallsyms.c:503:17: error: 'strcpy' source argument is the same as destination [-Werror=restrict]
-  503 |                 strcpy(buffer, name);
-      |                 ^~~~~~~~~~~~~~~~~~~~
 
-This originally showed up while building with -O3, but later started
-happening in other configurations as well, depending on inlining
-decisions. The underlying issue is that the local 'name' variable is
-always initialized to the be the same as 'buffer' in the called functions
-that fill the buffer, which gcc notices while inlining, though it could
-see that the address check always skips the copy.
+Ok, I will move this to v6 04/10.
+Let me know once you will complete the review of v5.
 
-The calling conventions here are rather unusual, as all of the internal
-lookup functions (bpf_address_lookup, ftrace_mod_address_lookup,
-ftrace_func_address_lookup, module_address_lookup and
-kallsyms_lookup_buildid) already use the provided buffer and either return
-the address of that buffer to indicate success, or NULL for failure,
-but the callers are written to also expect an arbitrary other buffer
-to be returned.
-
-Rework the calling conventions to return the length of the filled buffer
-instead of its address, which is simpler and easier to follow as well
-as avoiding the warning. Leave only the kallsyms_lookup() calling conventions
-unchanged, since that is called from 16 different functions and
-adapting this would be a much bigger change.
-
-Link: https://lore.kernel.org/all/20200107214042.855757-1-arnd@arndb.de/
-Reviewed-by: Luis Chamberlain <mcgrof@kernel.org>
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
----
-v3: use strscpy() instead of strlcpy()
-v2: complete rewrite after the first patch was rejected (in 2020). This
-    is now one of only two warnings that are in the way of enabling
-    -Wextra/-Wrestrict by default.
----
- include/linux/filter.h   | 14 +++++++-------
- include/linux/ftrace.h   |  6 +++---
- include/linux/module.h   | 14 +++++++-------
- kernel/bpf/core.c        |  7 +++----
- kernel/kallsyms.c        | 23 ++++++++++++-----------
- kernel/module/kallsyms.c | 26 +++++++++++++-------------
- kernel/trace/ftrace.c    | 13 +++++--------
- 7 files changed, 50 insertions(+), 53 deletions(-)
-
-diff --git a/include/linux/filter.h b/include/linux/filter.h
-index f69114083ec71..10f2b1acb138b 100644
---- a/include/linux/filter.h
-+++ b/include/linux/filter.h
-@@ -1130,17 +1130,17 @@ static inline bool bpf_jit_kallsyms_enabled(void)
- 	return false;
- }
- 
--const char *__bpf_address_lookup(unsigned long addr, unsigned long *size,
-+int __bpf_address_lookup(unsigned long addr, unsigned long *size,
- 				 unsigned long *off, char *sym);
- bool is_bpf_text_address(unsigned long addr);
- int bpf_get_kallsym(unsigned int symnum, unsigned long *value, char *type,
- 		    char *sym);
- 
--static inline const char *
-+static inline int
- bpf_address_lookup(unsigned long addr, unsigned long *size,
- 		   unsigned long *off, char **modname, char *sym)
- {
--	const char *ret = __bpf_address_lookup(addr, size, off, sym);
-+	int ret = __bpf_address_lookup(addr, size, off, sym);
- 
- 	if (ret && modname)
- 		*modname = NULL;
-@@ -1184,11 +1184,11 @@ static inline bool bpf_jit_kallsyms_enabled(void)
- 	return false;
- }
- 
--static inline const char *
-+static inline int
- __bpf_address_lookup(unsigned long addr, unsigned long *size,
- 		     unsigned long *off, char *sym)
- {
--	return NULL;
-+	return 0;
- }
- 
- static inline bool is_bpf_text_address(unsigned long addr)
-@@ -1202,11 +1202,11 @@ static inline int bpf_get_kallsym(unsigned int symnum, unsigned long *value,
- 	return -ERANGE;
- }
- 
--static inline const char *
-+static inline int
- bpf_address_lookup(unsigned long addr, unsigned long *size,
- 		   unsigned long *off, char **modname, char *sym)
- {
--	return NULL;
-+	return 0;
- }
- 
- static inline void bpf_prog_kallsyms_add(struct bpf_prog *fp)
-diff --git a/include/linux/ftrace.h b/include/linux/ftrace.h
-index ce156c7704ee5..50c7ca7125caa 100644
---- a/include/linux/ftrace.h
-+++ b/include/linux/ftrace.h
-@@ -87,15 +87,15 @@ struct ftrace_direct_func;
- 
- #if defined(CONFIG_FUNCTION_TRACER) && defined(CONFIG_MODULES) && \
- 	defined(CONFIG_DYNAMIC_FTRACE)
--const char *
-+int
- ftrace_mod_address_lookup(unsigned long addr, unsigned long *size,
- 		   unsigned long *off, char **modname, char *sym);
- #else
--static inline const char *
-+static inline int
- ftrace_mod_address_lookup(unsigned long addr, unsigned long *size,
- 		   unsigned long *off, char **modname, char *sym)
- {
--	return NULL;
-+	return 0;
- }
- #endif
- 
-diff --git a/include/linux/module.h b/include/linux/module.h
-index a98e188cf37b8..76e6104d41ba5 100644
---- a/include/linux/module.h
-+++ b/include/linux/module.h
-@@ -920,11 +920,11 @@ int module_kallsyms_on_each_symbol(const char *modname,
-  * least KSYM_NAME_LEN long: a pointer to namebuf is returned if
-  * found, otherwise NULL.
-  */
--const char *module_address_lookup(unsigned long addr,
--				  unsigned long *symbolsize,
--				  unsigned long *offset,
--				  char **modname, const unsigned char **modbuildid,
--				  char *namebuf);
-+int module_address_lookup(unsigned long addr,
-+			  unsigned long *symbolsize,
-+			  unsigned long *offset,
-+			  char **modname, const unsigned char **modbuildid,
-+			  char *namebuf);
- int lookup_module_symbol_name(unsigned long addr, char *symname);
- int lookup_module_symbol_attrs(unsigned long addr,
- 			       unsigned long *size,
-@@ -953,14 +953,14 @@ static inline int module_kallsyms_on_each_symbol(const char *modname,
- }
- 
- /* For kallsyms to ask for address resolution.  NULL means not found. */
--static inline const char *module_address_lookup(unsigned long addr,
-+static inline int module_address_lookup(unsigned long addr,
- 						unsigned long *symbolsize,
- 						unsigned long *offset,
- 						char **modname,
- 						const unsigned char **modbuildid,
- 						char *namebuf)
- {
--	return NULL;
-+	return 0;
- }
- 
- static inline int lookup_module_symbol_name(unsigned long addr, char *symname)
-diff --git a/kernel/bpf/core.c b/kernel/bpf/core.c
-index e3e45b651cd40..bbf1d92f36bd1 100644
---- a/kernel/bpf/core.c
-+++ b/kernel/bpf/core.c
-@@ -687,11 +687,11 @@ static struct bpf_ksym *bpf_ksym_find(unsigned long addr)
- 	return n ? container_of(n, struct bpf_ksym, tnode) : NULL;
- }
- 
--const char *__bpf_address_lookup(unsigned long addr, unsigned long *size,
-+int __bpf_address_lookup(unsigned long addr, unsigned long *size,
- 				 unsigned long *off, char *sym)
- {
- 	struct bpf_ksym *ksym;
--	char *ret = NULL;
-+	int ret = 0;
- 
- 	rcu_read_lock();
- 	ksym = bpf_ksym_find(addr);
-@@ -699,9 +699,8 @@ const char *__bpf_address_lookup(unsigned long addr, unsigned long *size,
- 		unsigned long symbol_start = ksym->start;
- 		unsigned long symbol_end = ksym->end;
- 
--		strncpy(sym, ksym->name, KSYM_NAME_LEN);
-+		ret = strscpy(sym, ksym->name, KSYM_NAME_LEN);
- 
--		ret = sym;
- 		if (size)
- 			*size = symbol_end - symbol_start;
- 		if (off)
-diff --git a/kernel/kallsyms.c b/kernel/kallsyms.c
-index 016d997131d43..cd216ebb14cc3 100644
---- a/kernel/kallsyms.c
-+++ b/kernel/kallsyms.c
-@@ -399,12 +399,12 @@ int kallsyms_lookup_size_offset(unsigned long addr, unsigned long *symbolsize,
- 	       !!__bpf_address_lookup(addr, symbolsize, offset, namebuf);
- }
- 
--static const char *kallsyms_lookup_buildid(unsigned long addr,
-+static int kallsyms_lookup_buildid(unsigned long addr,
- 			unsigned long *symbolsize,
- 			unsigned long *offset, char **modname,
- 			const unsigned char **modbuildid, char *namebuf)
- {
--	const char *ret;
-+	int ret;
- 
- 	namebuf[KSYM_NAME_LEN - 1] = 0;
- 	namebuf[0] = 0;
-@@ -421,7 +421,7 @@ static const char *kallsyms_lookup_buildid(unsigned long addr,
- 		if (modbuildid)
- 			*modbuildid = NULL;
- 
--		ret = namebuf;
-+		ret = strlen(namebuf);
- 		goto found;
- 	}
- 
-@@ -453,8 +453,13 @@ const char *kallsyms_lookup(unsigned long addr,
- 			    unsigned long *offset,
- 			    char **modname, char *namebuf)
- {
--	return kallsyms_lookup_buildid(addr, symbolsize, offset, modname,
--				       NULL, namebuf);
-+	int ret = kallsyms_lookup_buildid(addr, symbolsize, offset, modname,
-+					  NULL, namebuf);
-+
-+	if (!ret)
-+		return NULL;
-+
-+	return namebuf;
- }
- 
- int lookup_symbol_name(unsigned long addr, char *symname)
-@@ -489,19 +494,15 @@ static int __sprint_symbol(char *buffer, unsigned long address,
- {
- 	char *modname;
- 	const unsigned char *buildid;
--	const char *name;
- 	unsigned long offset, size;
- 	int len;
- 
- 	address += symbol_offset;
--	name = kallsyms_lookup_buildid(address, &size, &offset, &modname, &buildid,
-+	len = kallsyms_lookup_buildid(address, &size, &offset, &modname, &buildid,
- 				       buffer);
--	if (!name)
-+	if (!len)
- 		return sprintf(buffer, "0x%lx", address - symbol_offset);
- 
--	if (name != buffer)
--		strcpy(buffer, name);
--	len = strlen(buffer);
- 	offset -= symbol_offset;
- 
- 	if (add_offset)
-diff --git a/kernel/module/kallsyms.c b/kernel/module/kallsyms.c
-index ef73ae7c89094..c0f0480ec59da 100644
---- a/kernel/module/kallsyms.c
-+++ b/kernel/module/kallsyms.c
-@@ -321,14 +321,15 @@ void * __weak dereference_module_function_descriptor(struct module *mod,
-  * For kallsyms to ask for address resolution.  NULL means not found.  Careful
-  * not to lock to avoid deadlock on oopses, simply disable preemption.
-  */
--const char *module_address_lookup(unsigned long addr,
--				  unsigned long *size,
--			    unsigned long *offset,
--			    char **modname,
--			    const unsigned char **modbuildid,
--			    char *namebuf)
-+int module_address_lookup(unsigned long addr,
-+			  unsigned long *size,
-+			  unsigned long *offset,
-+			  char **modname,
-+			  const unsigned char **modbuildid,
-+			  char *namebuf)
- {
--	const char *ret = NULL;
-+	const char *sym;
-+	int ret = 0;
- 	struct module *mod;
- 
- 	preempt_disable();
-@@ -344,13 +345,12 @@ const char *module_address_lookup(unsigned long addr,
- #endif
- 		}
- 
--		ret = find_kallsyms_symbol(mod, addr, size, offset);
--	}
--	/* Make a copy in here where it's safe */
--	if (ret) {
--		strncpy(namebuf, ret, KSYM_NAME_LEN - 1);
--		ret = namebuf;
-+		sym = find_kallsyms_symbol(mod, addr, size, offset);
-+
-+		if (sym)
-+			ret = strscpy(namebuf, sym, KSYM_NAME_LEN - 1);
- 	}
-+
- 	preempt_enable();
- 
- 	return ret;
-diff --git a/kernel/trace/ftrace.c b/kernel/trace/ftrace.c
-index 05c0024815bf9..a949f903c9e66 100644
---- a/kernel/trace/ftrace.c
-+++ b/kernel/trace/ftrace.c
-@@ -6965,7 +6965,7 @@ allocate_ftrace_mod_map(struct module *mod,
- 	return mod_map;
- }
- 
--static const char *
-+static int
- ftrace_func_address_lookup(struct ftrace_mod_map *mod_map,
- 			   unsigned long addr, unsigned long *size,
- 			   unsigned long *off, char *sym)
-@@ -6986,21 +6986,18 @@ ftrace_func_address_lookup(struct ftrace_mod_map *mod_map,
- 			*size = found_func->size;
- 		if (off)
- 			*off = addr - found_func->ip;
--		if (sym)
--			strscpy(sym, found_func->name, KSYM_NAME_LEN);
--
--		return found_func->name;
-+		return strscpy(sym, found_func->name, KSYM_NAME_LEN);
- 	}
- 
--	return NULL;
-+	return 0;
- }
- 
--const char *
-+int
- ftrace_mod_address_lookup(unsigned long addr, unsigned long *size,
- 		   unsigned long *off, char **modname, char *sym)
- {
- 	struct ftrace_mod_map *mod_map;
--	const char *ret = NULL;
-+	int ret;
- 
- 	/* mod_map is freed via call_rcu() */
- 	preempt_disable();
--- 
-2.39.2
+-Ajay
 
