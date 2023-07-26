@@ -2,141 +2,90 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 56472C41513
-	for <linux-trace-kernel@archiver.kernel.org>; Wed, 26 Jul 2023 19:42:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AB19AC001E0
+	for <linux-trace-kernel@archiver.kernel.org>; Wed, 26 Jul 2023 19:55:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232062AbjGZTmG (ORCPT
+        id S231234AbjGZTzB (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Wed, 26 Jul 2023 15:42:06 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:40312 "EHLO
+        Wed, 26 Jul 2023 15:55:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44070 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230484AbjGZTmE (ORCPT
+        with ESMTP id S229781AbjGZTy6 (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Wed, 26 Jul 2023 15:42:04 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C1F1B1BE3;
-        Wed, 26 Jul 2023 12:42:03 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        Wed, 26 Jul 2023 15:54:58 -0400
+Received: from desiato.infradead.org (desiato.infradead.org [IPv6:2001:8b0:10b:1:d65d:64ff:fe57:4e05])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 89F381FCF;
+        Wed, 26 Jul 2023 12:54:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Transfer-Encoding:
+        Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:
+        Sender:Reply-To:Content-ID:Content-Description;
+        bh=ggP5H7w1XXe6Pn8tc5ubVLnfADMh2YM5dZyPh1DYnJM=; b=PqDLDw1H/IErVhXbabxAJAa84v
+        UD6UGwGqEjkU3+nOAlA3+4uF4Y5mJM1iIqsncKuw77gGHlWMPp1RRQanxXM3m5BBm0C4d9vzM+yCL
+        kdHGThtRV3fbmAqjhsozF8DzPDzVZ33f+M9MNVFUdjm1VZdtwg0/kWuyZD0E09MWjg38EZ4wWuq1a
+        fqM5dZpJRrJB4VQneACewPslZNN1DJdJ/ilsBCbMdN9QknzX/VIMkCXzhfdAvZ5BpfOjOLqpLm1RD
+        Jd4HxHH2TCc+56JRyLoGqB6/SkH/NgQFgpITylm3E46ko0oHHK6C/yIpdoKhAaB933PXB0LVbRHa8
+        R+XGnmYQ==;
+Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
+        by desiato.infradead.org with esmtpsa (Exim 4.96 #2 (Red Hat Linux))
+        id 1qOkan-005ynR-0I;
+        Wed, 26 Jul 2023 19:54:41 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 6014861CBB;
-        Wed, 26 Jul 2023 19:42:03 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0408AC433C7;
-        Wed, 26 Jul 2023 19:41:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1690400522;
-        bh=6e6cReriYF7em75Hf0iAxdRhfTIt48diinTa2LCaE+U=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=sLyIAGyV6TUHuowqKx/5JfDcmeo0WhbUg1yCQ8GAUu2bA1CHQXElka+Q1GRT7V1yv
-         R0EddtJuV1su72lOKWDmqPZkTqr3rjqushe4n3Y0JyPwiujSaR6lzMnBE/bXB37uce
-         8O1V4aPEPJ7CtaWT6N1qd3sf2g3qg1GZ/ysRkHn0W2duBIi4pMtC3lDu6nsoC6Pt3/
-         swHIlZLsRsV+7qlwiW9MPLzwOhahR6eIG7+fvoyQ2iGsIvPP2A61lMuC8l5VN12v0v
-         2zw+8Jdxg6lE+m401O76ze1xAH8enmcSNQ3pjVXumpOLBXI9Yvybgks7Mc9qIvNX4N
-         FrlfiSoNf+zHg==
-Date:   Wed, 26 Jul 2023 12:41:48 -0700
-From:   Josh Poimboeuf <jpoimboe@kernel.org>
-To:     Valentin Schneider <vschneid@redhat.com>
-Cc:     linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
-        linux-doc@vger.kernel.org, kvm@vger.kernel.org, linux-mm@kvack.org,
-        bpf@vger.kernel.org, x86@kernel.org, rcu@vger.kernel.org,
-        linux-kselftest@vger.kernel.org,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Frederic Weisbecker <frederic@kernel.org>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        Neeraj Upadhyay <quic_neeraju@quicinc.com>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Josh Triplett <josh@joshtriplett.org>,
-        Boqun Feng <boqun.feng@gmail.com>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Lai Jiangshan <jiangshanlai@gmail.com>,
-        Zqiang <qiang.zhang1211@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Uladzislau Rezki <urezki@gmail.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        Lorenzo Stoakes <lstoakes@gmail.com>,
-        Jason Baron <jbaron@akamai.com>,
-        Kees Cook <keescook@chromium.org>,
-        Sami Tolvanen <samitolvanen@google.com>,
-        Ard Biesheuvel <ardb@kernel.org>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        Juerg Haefliger <juerg.haefliger@canonical.com>,
-        Nicolas Saenz Julienne <nsaenz@kernel.org>,
-        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-        Nadav Amit <namit@vmware.com>,
-        Dan Carpenter <error27@gmail.com>,
-        Chuang Wang <nashuiliang@gmail.com>,
-        Yang Jihong <yangjihong1@huawei.com>,
-        Petr Mladek <pmladek@suse.com>,
-        "Jason A. Donenfeld" <Jason@zx2c4.com>, Song Liu <song@kernel.org>,
-        Julian Pidancet <julian.pidancet@oracle.com>,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        Dionna Glaze <dionnaglaze@google.com>,
-        Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <linux@weissschuh.net>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Daniel Bristot de Oliveira <bristot@redhat.com>,
-        Marcelo Tosatti <mtosatti@redhat.com>,
-        Yair Podemsky <ypodemsk@redhat.com>
-Subject: Re: [RFC PATCH v2 02/20] tracing/filters: Enable filtering a cpumask
- field by another cpumask
-Message-ID: <20230726194148.4jhyqqbtn3qqqqsq@treble>
-References: <20230720163056.2564824-1-vschneid@redhat.com>
- <20230720163056.2564824-3-vschneid@redhat.com>
+         key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 44A0E30036B;
+        Wed, 26 Jul 2023 21:54:39 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id EEA9F2029F9EC; Wed, 26 Jul 2023 11:29:17 +0200 (CEST)
+Date:   Wed, 26 Jul 2023 11:29:17 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Masami Hiramatsu <mhiramat@kernel.org>
+Cc:     Petr Pavlu <petr.pavlu@suse.com>, tglx@linutronix.de,
+        mingo@redhat.com, bp@alien8.de, dave.hansen@linux.intel.com,
+        hpa@zytor.com, samitolvanen@google.com, x86@kernel.org,
+        linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 2/2] x86/kprobes: Prohibit probing on compiler
+ generated CFI checking code
+Message-ID: <20230726092917.GB3802077@hirez.programming.kicks-ass.net>
+References: <168904023542.116016.10540228903086100726.stgit@devnote2>
+ <168904025785.116016.12766408611437534723.stgit@devnote2>
+ <20230726122317.9058a6bed272835f0c1a3b29@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <20230720163056.2564824-3-vschneid@redhat.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20230726122317.9058a6bed272835f0c1a3b29@kernel.org>
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On Thu, Jul 20, 2023 at 05:30:38PM +0100, Valentin Schneider wrote:
->  int filter_assign_type(const char *type)
->  {
-> -	if (strstr(type, "__data_loc") && strstr(type, "char"))
-> -		return FILTER_DYN_STRING;
-> +	if (strstr(type, "__data_loc")) {
-> +		if (strstr(type, "char"))
-> +			return FILTER_DYN_STRING;
-> +		if (strstr(type, "cpumask_t"))
-> +			return FILTER_CPUMASK;
-> +		}
+On Wed, Jul 26, 2023 at 12:23:17PM +0900, Masami Hiramatsu wrote:
+> On Tue, 11 Jul 2023 10:50:58 +0900
+> "Masami Hiramatsu (Google)" <mhiramat@kernel.org> wrote:
+> 
+> > From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+> > 
+> > Prohibit probing on the compiler generated CFI typeid checking code
+> > because it is used for decoding typeid when CFI error happens.
+> > 
+> > The compiler generates the following instruction sequence for indirect
+> > call checks on x86;
+> > 
+> >    movl    -<id>, %r10d       ; 6 bytes
+> >    addl    -4(%reg), %r10d    ; 4 bytes
+> >    je      .Ltmp1             ; 2 bytes
+> >    ud2                        ; <- regs->ip
+> > 
+> > And handle_cfi_failure() decodes these instructions (movl and addl)
+> > for the typeid and the target address. Thus if we put a kprobe on
+> > those instructions, the decode will fail and report a wrong typeid
+> > and target address.
+> > 
+> > 
+> 
+> Hi Peter,
+> 
+> Can I pick this to probes/fixes branch ?
 
-The closing bracket has the wrong indentation.
-
-> +		/* Copy the cpulist between { and } */
-> +		tmp = kmalloc((i - maskstart) + 1, GFP_KERNEL);
-> +		strscpy(tmp, str + maskstart, (i - maskstart) + 1);
-
-Need to check kmalloc() failure?  And also free tmp?
-
-> +
-> +		pred->mask = kzalloc(cpumask_size(), GFP_KERNEL);
-> +		if (!pred->mask)
-> +			goto err_mem;
-> +
-> +		/* Now parse it */
-> +		if (cpulist_parse(tmp, pred->mask)) {
-> +			parse_error(pe, FILT_ERR_INVALID_CPULIST, pos + i);
-> +			goto err_free;
-> +		}
-> +
-> +		/* Move along */
-> +		i++;
-> +		if (field->filter_type == FILTER_CPUMASK)
-> +			pred->fn_num = FILTER_PRED_FN_CPUMASK;
-> +
-
--- 
-Josh
+I'll stick them in tip/x86/core, that ok?
