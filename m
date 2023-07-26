@@ -2,148 +2,136 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B9F6C001B0
-	for <linux-trace-kernel@archiver.kernel.org>; Wed, 26 Jul 2023 09:58:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7ECC5C001B0
+	for <linux-trace-kernel@archiver.kernel.org>; Wed, 26 Jul 2023 12:16:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S232593AbjGZJ6w (ORCPT
+        id S230491AbjGZMQ3 (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Wed, 26 Jul 2023 05:58:52 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39562 "EHLO
+        Wed, 26 Jul 2023 08:16:29 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32782 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233744AbjGZJ6c (ORCPT
+        with ESMTP id S229715AbjGZMQ2 (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Wed, 26 Jul 2023 05:58:32 -0400
-Received: from szxga03-in.huawei.com (szxga03-in.huawei.com [45.249.212.189])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4A84130DE;
-        Wed, 26 Jul 2023 02:57:55 -0700 (PDT)
-Received: from dggpeml500012.china.huawei.com (unknown [172.30.72.56])
-        by szxga03-in.huawei.com (SkyGuard) with ESMTP id 4R9q5L3stVzLnrf;
-        Wed, 26 Jul 2023 17:55:18 +0800 (CST)
-Received: from localhost.localdomain (10.67.175.61) by
- dggpeml500012.china.huawei.com (7.185.36.15) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.27; Wed, 26 Jul 2023 17:57:53 +0800
-From:   Zheng Yejian <zhengyejian1@huawei.com>
-To:     <rostedt@goodmis.org>, <mhiramat@kernel.org>
-CC:     <linux-kernel@vger.kernel.org>,
-        <linux-trace-kernel@vger.kernel.org>, <zhengyejian1@huawei.com>
-Subject: [PATCH] tracing: Fix warning in trace_buffered_event_disable()
-Date:   Wed, 26 Jul 2023 17:58:04 +0800
-Message-ID: <20230726095804.920457-1-zhengyejian1@huawei.com>
-X-Mailer: git-send-email 2.25.1
+        Wed, 26 Jul 2023 08:16:28 -0400
+Received: from mail-pg1-x52d.google.com (mail-pg1-x52d.google.com [IPv6:2607:f8b0:4864:20::52d])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0C4D819A7;
+        Wed, 26 Jul 2023 05:16:28 -0700 (PDT)
+Received: by mail-pg1-x52d.google.com with SMTP id 41be03b00d2f7-55ae2075990so3578900a12.0;
+        Wed, 26 Jul 2023 05:16:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1690373787; x=1690978587;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=P/SfUH6qagd9RztYevRFo2Q3j6jWs29w7wHJ0ZcNrWE=;
+        b=GmigUXHNKivEF+qJWOpYMSidwpXidWB/BVuh8qbB8lwRsTqUReNT9UUAdrL9YB5pff
+         ASxe6g2NoBplCcNWZUumZT20q+Ood/JVVApgHUyhnz37V7fKpZCDWAMyGQ6xkyspP/Pz
+         yEJw8sCXmFLiSZnQs2uw09KO3AFO5rF33dHntIqg/Ci56bl8fnnbltducGEWhBrMKdnz
+         OvbdgPl/6Jt4P9Ok2arH86Zo3k4a0rY/IJQVvmpB+YY9t6IcFnz4u3oln39B0xIQcLrz
+         rxHx8zAcLMx+GRSP1Gpu2oNzGjkTAUFNRhU8DLDvhHPehy5+ZE6zKkcpEQzdQKJd4yKH
+         7+MA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1690373787; x=1690978587;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=P/SfUH6qagd9RztYevRFo2Q3j6jWs29w7wHJ0ZcNrWE=;
+        b=ByouSNpscg6VNGH4TjPaAnw4pjQkGd4B7U55Vm4GuP230h1x/8VE0YKORo0NjpN+4N
+         dfQmw2njFixVa8NlUVonRqN3flaFw2jtOVEj7MxSGhde6Nr7+XCc8JbFmPwPlOOghQHP
+         f/0KQGoDR5YdRmAwk8bJeMLzn4lckAAM17+kCkuBTWX9l7V8sFJfMxRF17oVe0SHK619
+         ZHIiJ2Hk7zJgGyaFm5uQSuMU2hpG4bUiUsaW6A1K58+tBCvzjc8DFIQSijwV0MFcza0M
+         quu4Du3iGRzxBrHsmN5N4jxpL+O9AgQ8dYNFcXe08mlaBNjTlxqOMFBPSagjYanov8Ja
+         7nDQ==
+X-Gm-Message-State: ABy/qLb5aGfbEiZM+HOXomQ5ghqfvm79RdsaqTsxvI1Nk5c2AS2oeTy1
+        DnydbJd9GXM6kjY/Kyc5BbY=
+X-Google-Smtp-Source: APBJJlGE0q1zijcsm7so+mrQdJMlrjbBFw0rQBqydLkJfjQS/xtrxblvyRxdlJYD/eaC3oi36/W6iA==
+X-Received: by 2002:a17:90a:408f:b0:263:3386:9da8 with SMTP id l15-20020a17090a408f00b0026333869da8mr1155414pjg.49.1690373787347;
+        Wed, 26 Jul 2023 05:16:27 -0700 (PDT)
+Received: from localhost.localdomain ([203.205.141.25])
+        by smtp.googlemail.com with ESMTPSA id ms19-20020a17090b235300b00263f446d432sm1172880pjb.43.2023.07.26.05.16.23
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 26 Jul 2023 05:16:26 -0700 (PDT)
+From:   Ze Gao <zegao2021@gmail.com>
+X-Google-Original-From: Ze Gao <zegao@tencent.com>
+To:     Peter Zijlstra <peterz@infradead.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Namhyung Kim <namhyung@kernel.org>
+Cc:     Adrian Hunter <adrian.hunter@intel.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Ian Rogers <irogers@google.com>,
+        Ingo Molnar <mingo@redhat.com>, Jiri Olsa <jolsa@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        linux-trace-kernel@vger.kernel.org,
+        linux-trace-devel@vger.kernel.org, Ze Gao <zegao@tencent.com>
+Subject: [RFC PATCH v2 0/3] report task state in symbolic chars from sched tracepoint
+Date:   Wed, 26 Jul 2023 20:16:15 +0800
+Message-Id: <20230726121618.19198-1-zegao@tencent.com>
+X-Mailer: git-send-email 2.40.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [10.67.175.61]
-X-ClientProxiedBy: dggems701-chm.china.huawei.com (10.3.19.178) To
- dggpeml500012.china.huawei.com (7.185.36.15)
-X-CFilter-Loop: Reflected
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-Warning happened in trace_buffered_event_disable() at
-  WARN_ON_ONCE(!trace_buffered_event_ref)
 
-  Call Trace:
-   ? __warn+0xa5/0x1b0
-   ? trace_buffered_event_disable+0x189/0x1b0
-   __ftrace_event_enable_disable+0x19e/0x3e0
-   free_probe_data+0x3b/0xa0
-   unregister_ftrace_function_probe_func+0x6b8/0x800
-   event_enable_func+0x2f0/0x3d0
-   ftrace_process_regex.isra.0+0x12d/0x1b0
-   ftrace_filter_write+0xe6/0x140
-   vfs_write+0x1c9/0x6f0
-   [...]
+This is the 2nd attempt to fix the report task state issue in sched
+tracepint, here is the first version:
 
-The cause of the warning is in __ftrace_event_enable_disable(),
-trace_buffered_event_enable() was called once while
-trace_buffered_event_disable() was called twice.
-Reproduction script show as below, for analysis, see the comments:
- ```
- #!/bin/bash
+https://lore.kernel.org/linux-trace-kernel/20230725072254.32045-1-zegao@tencent.com
 
- cd /sys/kernel/tracing/
+Against v1, add a new var to report task state in symbolic char instead
+of replacing the old one and to not to break anything.
 
- # 1. Register a 'disable_event' command, then:
- #    1) SOFT_DISABLED_BIT was set;
- #    2) trace_buffered_event_enable() was called first time;
- echo 'cmdline_proc_show:disable_event:initcall:initcall_finish' > \
-     set_ftrace_filter
+--
 
- # 2. Enable the event registered, then:
- #    1) SOFT_DISABLED_BIT was cleared;
- #    2) trace_buffered_event_disable() was called first time;
- echo 1 > events/initcall/initcall_finish/enable
+In the status quo, we should see three different outcomes of the reported
+sched-out task state from perf-script, perf-sched-timehist, and Tp_printk
+of tracepoint sched_switch.  And it's not hard to figure out that the
+former two are built upon the third one, and the reason why we see this
+inconsistency is that the former two does not catch up with the internal
+change of reported task state definitions as the kernel evolves.
 
- # 3. Try to call into cmdline_proc_show(), then SOFT_DISABLED_BIT was
- #    set again!!!
- cat /proc/cmdline
+IMHO, exporting internal representations of task state in the tracepoint
+sched_switch is not a good practice and not encouraged at all, which can
+easily break userspace tools that relies on it. Especially when tracepoints
+are massively used in many observability tools nowadays due to its stable
+nature, which makes them no longer used for debug only purpose and we
+should be careful to decide what ought to be reported to userspace and what
+ought not.
 
- # 4. Unregister the 'disable_event' command, then:
- #    1) SOFT_DISABLED_BIT was cleared again;
- #    2) trace_buffered_event_disable() was called second time!!!
- echo '!cmdline_proc_show:disable_event:initcall:initcall_finish' > \
-     set_ftrace_filter
- ```
+Therefore, to fix the issues mentioned above for good, instead of choosing
+I proposed to add a new variable to report task state in sched_switch with
+a symbolic character along with the old hardcoded value, and save the
+further processing of userspace tools and spare them from knowing
+implementation details in the kernel.
 
-To fix it, IIUC, we can change to call trace_buffered_event_enable() at
-fist time soft-mode enabled, and call trace_buffered_event_disable() at
-last time soft-mode disabled.
+After this patch seires, we report 'RSDTtXZPI' the same as in procfs, plus
+a 'p' which denotes PREEMP_ACTIVE and is used for sched_switch tracepoint only.
 
-Fixes: 0fc1b09ff1ff ("tracing: Use temp buffer when filtering events")
-Signed-off-by: Zheng Yejian <zhengyejian1@huawei.com>
----
- kernel/trace/trace_events.c | 14 ++++----------
- 1 file changed, 4 insertions(+), 10 deletions(-)
+Reviews welcome!
 
-diff --git a/kernel/trace/trace_events.c b/kernel/trace/trace_events.c
-index 5d6ae4eae510..578f1f7d49a6 100644
---- a/kernel/trace/trace_events.c
-+++ b/kernel/trace/trace_events.c
-@@ -611,7 +611,6 @@ static int __ftrace_event_enable_disable(struct trace_event_file *file,
- {
- 	struct trace_event_call *call = file->event_call;
- 	struct trace_array *tr = file->tr;
--	unsigned long file_flags = file->flags;
- 	int ret = 0;
- 	int disable;
- 
-@@ -635,6 +634,8 @@ static int __ftrace_event_enable_disable(struct trace_event_file *file,
- 				break;
- 			disable = file->flags & EVENT_FILE_FL_SOFT_DISABLED;
- 			clear_bit(EVENT_FILE_FL_SOFT_MODE_BIT, &file->flags);
-+			/* Disable use of trace_buffered_event */
-+			trace_buffered_event_disable();
- 		} else
- 			disable = !(file->flags & EVENT_FILE_FL_SOFT_MODE);
- 
-@@ -673,6 +674,8 @@ static int __ftrace_event_enable_disable(struct trace_event_file *file,
- 			if (atomic_inc_return(&file->sm_ref) > 1)
- 				break;
- 			set_bit(EVENT_FILE_FL_SOFT_MODE_BIT, &file->flags);
-+			/* Enable use of trace_buffered_event */
-+			trace_buffered_event_enable();
- 		}
- 
- 		if (!(file->flags & EVENT_FILE_FL_ENABLED)) {
-@@ -712,15 +715,6 @@ static int __ftrace_event_enable_disable(struct trace_event_file *file,
- 		break;
- 	}
- 
--	/* Enable or disable use of trace_buffered_event */
--	if ((file_flags & EVENT_FILE_FL_SOFT_DISABLED) !=
--	    (file->flags & EVENT_FILE_FL_SOFT_DISABLED)) {
--		if (file->flags & EVENT_FILE_FL_SOFT_DISABLED)
--			trace_buffered_event_enable();
--		else
--			trace_buffered_event_disable();
--	}
--
- 	return ret;
- }
- 
+Regards,
+
+Ze
+
+Ze Gao (2):
+  sched, tracing: add to report task state in symbolic chars
+  perf sched: use the new prev_state_char instead in tracepoint
+    sched_switch
+
+ include/trace/events/sched.h | 60 +++++++++++++++++++++---------------
+ tools/perf/builtin-sched.c   | 57 ++++++----------------------------
+ 2 files changed, 45 insertions(+), 72 deletions(-)
+
+Ze Gao (1):
+  libtraceevent: use the new prev_state_char instead in tracepoint
+    sched_switch
+
+ plugins/plugin_sched_switch.c | 29 ++++-------------------------
+ 1 file changed, 4 insertions(+), 25 deletions(-)
+
 -- 
-2.25.1
+2.40.1
 
