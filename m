@@ -2,43 +2,52 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 23FB6C0015E
-	for <linux-trace-kernel@archiver.kernel.org>; Wed, 26 Jul 2023 20:51:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 717CAC0015E
+	for <linux-trace-kernel@archiver.kernel.org>; Wed, 26 Jul 2023 21:39:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230229AbjGZUvk (ORCPT
+        id S229621AbjGZVj2 (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Wed, 26 Jul 2023 16:51:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:34666 "EHLO
+        Wed, 26 Jul 2023 17:39:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47892 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230154AbjGZUvi (ORCPT
+        with ESMTP id S229505AbjGZVj1 (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Wed, 26 Jul 2023 16:51:38 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 043822736;
-        Wed, 26 Jul 2023 13:51:23 -0700 (PDT)
+        Wed, 26 Jul 2023 17:39:27 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 07D3F268B;
+        Wed, 26 Jul 2023 14:39:25 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits))
+         key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 8F9EB61CC1;
-        Wed, 26 Jul 2023 20:51:22 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5CF61C433C7;
-        Wed, 26 Jul 2023 20:51:19 +0000 (UTC)
-Date:   Wed, 26 Jul 2023 16:51:16 -0400
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 8A28A61CCD;
+        Wed, 26 Jul 2023 21:39:25 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D242DC433C7;
+        Wed, 26 Jul 2023 21:39:21 +0000 (UTC)
+Date:   Wed, 26 Jul 2023 17:39:18 -0400
 From:   Steven Rostedt <rostedt@goodmis.org>
 To:     Ajay Kaher <akaher@vmware.com>
-Cc:     shuah@kernel.org, mhiramat@kernel.org, chinglinyu@google.com,
-        linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
-        linux-trace-kernel@vger.kernel.org, lkp@intel.com,
-        namit@vmware.com, oe-lkp@lists.linux.dev, amakhalov@vmware.com,
-        er.ajay.kaher@gmail.com, srivatsa@csail.mit.edu, tkundu@vmware.com,
-        vsirnapalli@vmware.com
-Subject: Re: [PATCH v5 06/10] eventfs: Implement eventfs lookup, read, open
- functions
-Message-ID: <20230726165116.64664689@rorschach.local.home>
-In-Reply-To: <1690054625-31939-7-git-send-email-akaher@vmware.com>
+Cc:     "shuah@kernel.org" <shuah@kernel.org>,
+        "mhiramat@kernel.org" <mhiramat@kernel.org>,
+        Ching-lin Yu <chinglinyu@google.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-kselftest@vger.kernel.org" <linux-kselftest@vger.kernel.org>,
+        "linux-trace-kernel@vger.kernel.org" 
+        <linux-trace-kernel@vger.kernel.org>,
+        "lkp@intel.com" <lkp@intel.com>, Nadav Amit <namit@vmware.com>,
+        "oe-lkp@lists.linux.dev" <oe-lkp@lists.linux.dev>,
+        Alexey Makhalov <amakhalov@vmware.com>,
+        "er.ajay.kaher@gmail.com" <er.ajay.kaher@gmail.com>,
+        "srivatsa@csail.mit.edu" <srivatsa@csail.mit.edu>,
+        Tapas Kundu <tkundu@vmware.com>,
+        Vasavi Sirnapalli <vsirnapalli@vmware.com>
+Subject: Re: [PATCH v5 02/10] eventfs: Implement tracefs_inode_cache
+Message-ID: <20230726173918.107908a3@rorschach.local.home>
+In-Reply-To: <0FE7065F-6536-4311-AF41-4ABBD8E3ECF8@vmware.com>
 References: <1690054625-31939-1-git-send-email-akaher@vmware.com>
-        <1690054625-31939-7-git-send-email-akaher@vmware.com>
+        <1690054625-31939-3-git-send-email-akaher@vmware.com>
+        <20230725190617.14c85997@rorschach.local.home>
+        <0FE7065F-6536-4311-AF41-4ABBD8E3ECF8@vmware.com>
 X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
@@ -47,44 +56,13 @@ Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On Sun, 23 Jul 2023 01:07:01 +0530
+On Wed, 26 Jul 2023 18:45:34 +0000
 Ajay Kaher <akaher@vmware.com> wrote:
 
-> +void eventfs_set_ef_status_free(struct dentry *dentry)
-> +{
-> +	struct tracefs_inode *ti_parent;
-> +	struct eventfs_file *ef;
-> +
-> +	mutex_lock(&eventfs_mutex);
-> +	ti_parent = get_tracefs(dentry->d_parent->d_inode);
-> +	if (!ti_parent || !(ti_parent->flags & TRACEFS_EVENT_INODE))
-> +		goto out;
-> +
-> +	ef = dentry->d_fsdata;
-> +	if (!ef)
-> +		goto out;
-> +
+> Ok, I will move this to v6 04/10.
+> Let me know once you will complete the review of v5.
 
-
-> +	/*
-> +	 * If ef was freed, then the LSB bit is set for d_fsdata.
-> +	 * But this should not happen, as it should still have a
-> +	 * ref count that prevents it. Warn in case it does.
-> +	 */
-> +	if (WARN_ON_ONCE((unsigned long)ef & 1))
-> +		goto out;
-
-Can you add this part to Patch 8: eventfs: Implement removal of meta data from eventfs ?
-
-That way the pointer logic is all added together.
+OK, I finished my review. Mostly more nits. Hopefully v6 will be what I
+pull into linux-next.
 
 -- Steve
-
-
-> +
-> +	dentry->d_fsdata = NULL;
-> +	ef->dentry = NULL;
-> +out:
-> +	mutex_unlock(&eventfs_mutex);
-> +}
-> +
