@@ -2,90 +2,78 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AB19AC001E0
-	for <linux-trace-kernel@archiver.kernel.org>; Wed, 26 Jul 2023 19:55:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BCAF0C0015E
+	for <linux-trace-kernel@archiver.kernel.org>; Wed, 26 Jul 2023 20:28:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S231234AbjGZTzB (ORCPT
+        id S229926AbjGZU2a (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Wed, 26 Jul 2023 15:55:01 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:44070 "EHLO
+        Wed, 26 Jul 2023 16:28:30 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55558 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229781AbjGZTy6 (ORCPT
+        with ESMTP id S229873AbjGZU23 (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Wed, 26 Jul 2023 15:54:58 -0400
-Received: from desiato.infradead.org (desiato.infradead.org [IPv6:2001:8b0:10b:1:d65d:64ff:fe57:4e05])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 89F381FCF;
-        Wed, 26 Jul 2023 12:54:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Transfer-Encoding:
-        Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:
-        Sender:Reply-To:Content-ID:Content-Description;
-        bh=ggP5H7w1XXe6Pn8tc5ubVLnfADMh2YM5dZyPh1DYnJM=; b=PqDLDw1H/IErVhXbabxAJAa84v
-        UD6UGwGqEjkU3+nOAlA3+4uF4Y5mJM1iIqsncKuw77gGHlWMPp1RRQanxXM3m5BBm0C4d9vzM+yCL
-        kdHGThtRV3fbmAqjhsozF8DzPDzVZ33f+M9MNVFUdjm1VZdtwg0/kWuyZD0E09MWjg38EZ4wWuq1a
-        fqM5dZpJRrJB4VQneACewPslZNN1DJdJ/ilsBCbMdN9QknzX/VIMkCXzhfdAvZ5BpfOjOLqpLm1RD
-        Jd4HxHH2TCc+56JRyLoGqB6/SkH/NgQFgpITylm3E46ko0oHHK6C/yIpdoKhAaB933PXB0LVbRHa8
-        R+XGnmYQ==;
-Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
-        by desiato.infradead.org with esmtpsa (Exim 4.96 #2 (Red Hat Linux))
-        id 1qOkan-005ynR-0I;
-        Wed, 26 Jul 2023 19:54:41 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        Wed, 26 Jul 2023 16:28:29 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CF8EF211C;
+        Wed, 26 Jul 2023 13:28:28 -0700 (PDT)
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 44A0E30036B;
-        Wed, 26 Jul 2023 21:54:39 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id EEA9F2029F9EC; Wed, 26 Jul 2023 11:29:17 +0200 (CEST)
-Date:   Wed, 26 Jul 2023 11:29:17 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Masami Hiramatsu <mhiramat@kernel.org>
-Cc:     Petr Pavlu <petr.pavlu@suse.com>, tglx@linutronix.de,
-        mingo@redhat.com, bp@alien8.de, dave.hansen@linux.intel.com,
-        hpa@zytor.com, samitolvanen@google.com, x86@kernel.org,
-        linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 2/2] x86/kprobes: Prohibit probing on compiler
- generated CFI checking code
-Message-ID: <20230726092917.GB3802077@hirez.programming.kicks-ass.net>
-References: <168904023542.116016.10540228903086100726.stgit@devnote2>
- <168904025785.116016.12766408611437534723.stgit@devnote2>
- <20230726122317.9058a6bed272835f0c1a3b29@kernel.org>
+         key-exchange X25519 server-signature RSA-PSS (2048 bits))
+        (No client certificate requested)
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 6C07D61C9C;
+        Wed, 26 Jul 2023 20:28:28 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 144D0C433C8;
+        Wed, 26 Jul 2023 20:28:23 +0000 (UTC)
+Date:   Wed, 26 Jul 2023 16:28:20 -0400
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     Ajay Kaher <akaher@vmware.com>
+Cc:     shuah@kernel.org, mhiramat@kernel.org, chinglinyu@google.com,
+        linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
+        linux-trace-kernel@vger.kernel.org, lkp@intel.com,
+        namit@vmware.com, oe-lkp@lists.linux.dev, amakhalov@vmware.com,
+        er.ajay.kaher@gmail.com, srivatsa@csail.mit.edu, tkundu@vmware.com,
+        vsirnapalli@vmware.com
+Subject: Re: [PATCH v5 06/10] eventfs: Implement eventfs lookup, read, open
+ functions
+Message-ID: <20230726162820.28e3a492@rorschach.local.home>
+In-Reply-To: <1690054625-31939-7-git-send-email-akaher@vmware.com>
+References: <1690054625-31939-1-git-send-email-akaher@vmware.com>
+        <1690054625-31939-7-git-send-email-akaher@vmware.com>
+X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20230726122317.9058a6bed272835f0c1a3b29@kernel.org>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On Wed, Jul 26, 2023 at 12:23:17PM +0900, Masami Hiramatsu wrote:
-> On Tue, 11 Jul 2023 10:50:58 +0900
-> "Masami Hiramatsu (Google)" <mhiramat@kernel.org> wrote:
-> 
-> > From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-> > 
-> > Prohibit probing on the compiler generated CFI typeid checking code
-> > because it is used for decoding typeid when CFI error happens.
-> > 
-> > The compiler generates the following instruction sequence for indirect
-> > call checks on x86;
-> > 
-> >    movl    -<id>, %r10d       ; 6 bytes
-> >    addl    -4(%reg), %r10d    ; 4 bytes
-> >    je      .Ltmp1             ; 2 bytes
-> >    ud2                        ; <- regs->ip
-> > 
-> > And handle_cfi_failure() decodes these instructions (movl and addl)
-> > for the typeid and the target address. Thus if we put a kprobe on
-> > those instructions, the decode will fail and report a wrong typeid
-> > and target address.
-> > 
-> > 
-> 
-> Hi Peter,
-> 
-> Can I pick this to probes/fixes branch ?
+On Sun, 23 Jul 2023 01:07:01 +0530
+Ajay Kaher <akaher@vmware.com> wrote:
 
-I'll stick them in tip/x86/core, that ok?
+> Add the inode_operations, file_operations, and helper functions to eventfs:
+> dcache_dir_open_wrapper()
+> eventfs_root_lookup()
+> eventfs_release()
+> eventfs_set_ef_status_free()
+> eventfs_post_create_dir()
+> 
+> The inode_operations and file_operations functions will be called from the
+> VFS layer.
+> 
+
+I would add in this change log:
+
+  create_file() and create_dir() are added as stub functions and will
+  be filled in later.
+
+> Signed-off-by: Ajay Kaher <akaher@vmware.com>
+> Co-developed-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+> Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+> Tested-by: Ching-lin Yu <chinglinyu@google.com>
+> ---
+>  fs/tracefs/event_inode.c | 312 +++++++++++++++++++++++++++++++++++++++
+>  fs/tracefs/internal.h    |   2 +
+>  2 files changed, 314 insertions(+)
+> 
+
+-- Steve
