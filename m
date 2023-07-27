@@ -2,94 +2,165 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 615C6C001E0
-	for <linux-trace-kernel@archiver.kernel.org>; Thu, 27 Jul 2023 15:01:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 77872C001DC
+	for <linux-trace-kernel@archiver.kernel.org>; Thu, 27 Jul 2023 15:39:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233635AbjG0PBq (ORCPT
+        id S232996AbjG0PjR (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Thu, 27 Jul 2023 11:01:46 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46830 "EHLO
+        Thu, 27 Jul 2023 11:39:17 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:46256 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S233921AbjG0PBb (ORCPT
+        with ESMTP id S232997AbjG0PjR (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Thu, 27 Jul 2023 11:01:31 -0400
-Received: from mail-wr1-x42a.google.com (mail-wr1-x42a.google.com [IPv6:2a00:1450:4864:20::42a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D19453A8D;
-        Thu, 27 Jul 2023 08:01:20 -0700 (PDT)
-Received: by mail-wr1-x42a.google.com with SMTP id ffacd0b85a97d-3177f520802so650511f8f.1;
-        Thu, 27 Jul 2023 08:01:20 -0700 (PDT)
+        Thu, 27 Jul 2023 11:39:17 -0400
+Received: from mail-lj1-x233.google.com (mail-lj1-x233.google.com [IPv6:2a00:1450:4864:20::233])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 901FF2122;
+        Thu, 27 Jul 2023 08:39:15 -0700 (PDT)
+Received: by mail-lj1-x233.google.com with SMTP id 38308e7fff4ca-2b95d5ee18dso16825151fa.1;
+        Thu, 27 Jul 2023 08:39:15 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1690470079; x=1691074879;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=RvCF/eVSd9hmC6XYT4T1ezXatK3iLtpGtg715fOf/58=;
-        b=k/z3jAdPty8pr9RV96/kIt05tsIb/2SPKBH9mAzqzaRfV9MPcKGLKBafnlPqZSR39w
-         OEx99Gybqta70dIZrmZVYVmqe/xlIQMgtiwufYvjIhyFL+/wX74CkwpI7FlI27c0e49J
-         f+ZqfM7sbc4UpartBigQf0/+AQaj9Wt+/FI9zBWDzKLQqJM4b5c/QOyqUcIl7e+mHIei
-         M20V2oR9bBtjSPrl+ReDNM/Bgm8tLf40OJQiDhPnQ4hovaOileJKCxFq2fSJ4MGobcjI
-         jbZP0J+wpxWElP8XSyWkXeAE0Qmr0yidt4TXZbF9TpHjDTVRfM9wJKhlAhB8ZPhaIeEJ
-         t6cg==
+        d=gmail.com; s=20221208; t=1690472354; x=1691077154;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=e+lkkF+CLVMT4BhNE7E5cz+wEvXfUMd8e9OamCGK4HU=;
+        b=F6j8OCqcwyXUBtmVT65R8NJsFMHmPiWy6i9WOipPq1JUReuJwpp7aO5NpFmwsAR2Bj
+         CJsCu4ELCKvHF6Buf+HIqoBv1aHEZRzFmiYnY12OVJWMAQc3pKkjRFzkCEydeheZhyt7
+         655vh5dN+OSj6B90HrfVerPLGyIkLsuB8bRpc0VZ5MY8eoS1SY8BMK97RksKA/3jqBB2
+         HvFMgnXzruA7ExqfCWlPjGThQW7hoVWSqFEyAjlpmwWQVZ63nTxXDARLt03BdH+hNbsH
+         0uva1GVN1nm8Q5p97DFv+VhppdMZWgwz8cu8qnpoOLrSaxRMW6Rf6LxY/aSTEelVvfHP
+         rNCw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1690470079; x=1691074879;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=RvCF/eVSd9hmC6XYT4T1ezXatK3iLtpGtg715fOf/58=;
-        b=Uh70v7P9+s0mh5rREm7YbOU7xdCFSWIXQi2eIZpZppi4pBOJg8sygLqgJ/I7aWng20
-         s8E/OnbPkg12Gf/j1VRbcgaQ80fJx1uONHnM+Ch7yLkuOUGlpLCibXE0OzK+O/wf0EMB
-         zUPfHkj5z9z/HQyH41rUsH20/E+dekTiOxjpaywOtBnvzNnjQ9f1KVb2l+PJLTgwtvt0
-         7u3Vsp0+oW79j+8sR+4a7/f+TyuURoEQ+y3utY1Gmi37Kn4fuh50bNcPyP/OBagMe8oC
-         SYdIDy3twcZEepoNSSdZahKxTSyUKMR90nSjE9PaG2kxxvWTg1kjju/CGAdMwRnKlGg+
-         cv+w==
-X-Gm-Message-State: ABy/qLY6gpFlr63j3Hv87Ubn0YdFRfFGWzroGBbRps4DGNd8O5ZxeGNV
-        YQinTuWK/MpC+Zevl1w7knE=
-X-Google-Smtp-Source: APBJJlGU86bx5VqRAOWDKiY5phwY7+ucGmhvWfqzAJmocNr9VtQu4SXGlFXWERSQXKnGtxkMe5+ADw==
-X-Received: by 2002:a05:6000:108e:b0:313:e20c:b90b with SMTP id y14-20020a056000108e00b00313e20cb90bmr2071747wrw.26.1690470078949;
-        Thu, 27 Jul 2023 08:01:18 -0700 (PDT)
-Received: from localhost (cpc154979-craw9-2-0-cust193.16-3.cable.virginm.net. [80.193.200.194])
-        by smtp.gmail.com with ESMTPSA id d4-20020adfe884000000b003144b95e1ecsm2280938wrm.93.2023.07.27.08.01.18
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 27 Jul 2023 08:01:18 -0700 (PDT)
-From:   Colin Ian King <colin.i.king@gmail.com>
-To:     Daniel Bristot de Oliveira <bristot@kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Andreas Schwab <schwab@suse.de>,
-        linux-trace-kernel@vger.kernel.org
-Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH][next] rtla: Fix uninitialized variable found
-Date:   Thu, 27 Jul 2023 16:01:17 +0100
-Message-Id: <20230727150117.627730-1-colin.i.king@gmail.com>
-X-Mailer: git-send-email 2.39.2
+        d=1e100.net; s=20221208; t=1690472354; x=1691077154;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=e+lkkF+CLVMT4BhNE7E5cz+wEvXfUMd8e9OamCGK4HU=;
+        b=f3rjp5b04tu9ncrFt5+SZ843ydDSIPEgxjuQrNUM7DCuK6vpyJrNKoGlKBuOlfdO88
+         LfGAIt8rrlM4dVpqXg5py6Nwm/AFeP00L7jJVSP532KFHYkBP2CTXk53Q07tySJjmQ1l
+         VcYY+Hp51yibnIpYr5u5JpveyY9I9X9UHN82JKI+pIVVy5iAl2XFRVY4w2syPG4hl1+K
+         kgTSBnx0BKtu46yOAEOY1EdyUVn9JvwStt/hFAz1yrX/NqCvOJx+/p9diV0e1CaRc31A
+         AVN2Rnqf34YOfoNi+wIoPZ1ECGH/auOg31DkZYn5jeVJoh5vYEKT9yoXZojWNwEjWPTj
+         YAXQ==
+X-Gm-Message-State: ABy/qLbq0md90o4yKFYLCl5feGLeuIHLIpPebBuEPUEYntZrXQZug8ur
+        l1jxU3dB821RCG4kYU+y3syRKpnzmYVnlgEi+YDerJ1e
+X-Google-Smtp-Source: APBJJlHA2LryZdAFZw27OCE9QuUIMumteqO47AfYJLgL+VdWfhBqstNeXHkJEEr8D5zw7EBJt//GSIIFwIGvSWZJgLs=
+X-Received: by 2002:a2e:9842:0:b0:2b6:cf31:5e81 with SMTP id
+ e2-20020a2e9842000000b002b6cf315e81mr2080102ljj.20.1690472353501; Thu, 27 Jul
+ 2023 08:39:13 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+References: <169037639315.607919.2613476171148037242.stgit@devnote2> <169037642351.607919.10234149030120807556.stgit@devnote2>
+In-Reply-To: <169037642351.607919.10234149030120807556.stgit@devnote2>
+From:   Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Date:   Thu, 27 Jul 2023 08:39:02 -0700
+Message-ID: <CAADnVQJjZt=e-nSOmrxGJa59DLEQfaJupyx3RfwQhqXx8Vghmw@mail.gmail.com>
+Subject: Re: [PATCH v3 3/9] bpf/btf: Add a function to search a member of a struct/union
+To:     "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
+Cc:     linux-trace-kernel@vger.kernel.org,
+        LKML <linux-kernel@vger.kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Martin KaFai Lau <martin.lau@linux.dev>,
+        bpf <bpf@vger.kernel.org>, Sven Schnelle <svens@linux.ibm.com>,
+        Alexei Starovoitov <ast@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-Variable found is not being initialized, in the case where the desired
-mount is not found the variable contains garbage. Fix this by initializing
-it to zero.
+On Wed, Jul 26, 2023 at 6:00=E2=80=AFAM Masami Hiramatsu (Google)
+<mhiramat@kernel.org> wrote:
+>
+> From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+>
+> Add btf_find_struct_member() API to search a member of a given data struc=
+ture
+> or union from the member's name.
+>
+> Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+> Reviewed-by: Alan Maguire <alan.maguire@oracle.com>
+> ---
+>  Changes in v3:
+>   - Remove simple input check.
+>   - Fix unneeded IS_ERR_OR_NULL() check for btf_type_by_id().
+>   - Move the code next to btf_get_func_param().
+>   - Use for_each_member() macro instead of for-loop.
+>   - Use btf_type_skip_modifiers() instead of btf_type_by_id().
+> ---
+>  include/linux/btf.h |    3 +++
+>  kernel/bpf/btf.c    |   35 +++++++++++++++++++++++++++++++++++
+>  2 files changed, 38 insertions(+)
+>
+> diff --git a/include/linux/btf.h b/include/linux/btf.h
+> index 20e3a07eef8f..4b10d57ceee0 100644
+> --- a/include/linux/btf.h
+> +++ b/include/linux/btf.h
+> @@ -226,6 +226,9 @@ const struct btf_type *btf_find_func_proto(const char=
+ *func_name,
+>                                            struct btf **btf_p);
+>  const struct btf_param *btf_get_func_param(const struct btf_type *func_p=
+roto,
+>                                            s32 *nr);
+> +const struct btf_member *btf_find_struct_member(struct btf *btf,
+> +                                               const struct btf_type *ty=
+pe,
+> +                                               const char *member_name);
+>
+>  #define for_each_member(i, struct_type, member)                        \
+>         for (i =3D 0, member =3D btf_type_member(struct_type);      \
+> diff --git a/kernel/bpf/btf.c b/kernel/bpf/btf.c
+> index f7b25c615269..5258870030fc 100644
+> --- a/kernel/bpf/btf.c
+> +++ b/kernel/bpf/btf.c
+> @@ -958,6 +958,41 @@ const struct btf_param *btf_get_func_param(const str=
+uct btf_type *func_proto, s3
+>                 return NULL;
+>  }
+>
+> +/*
+> + * Find a member of data structure/union by name and return it.
+> + * Return NULL if not found, or -EINVAL if parameter is invalid.
+> + */
+> +const struct btf_member *btf_find_struct_member(struct btf *btf,
+> +                                               const struct btf_type *ty=
+pe,
+> +                                               const char *member_name)
+> +{
+> +       const struct btf_member *member, *ret;
+> +       const char *name;
+> +       int i;
+> +
+> +       if (!btf_type_is_struct(type))
+> +               return ERR_PTR(-EINVAL);
+> +
+> +       for_each_member(i, type, member) {
+> +               if (!member->name_off) {
+> +                       /* unnamed member: dig deeper */
+> +                       type =3D btf_type_skip_modifiers(btf, member->typ=
+e, NULL);
+> +                       if (type) {
+> +                               ret =3D btf_find_struct_member(btf, type,
+> +                                                            member_name)=
+;
 
-Fixes: a957cbc02531 ("rtla: Add -C cgroup support")
-Signed-off-by: Colin Ian King <colin.i.king@gmail.com>
----
- tools/tracing/rtla/src/utils.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Unbounded recursion in the kernel? Ouch. That might cause issues.
+Please convert it to a loop. It doesn't have to be recursive.
 
-diff --git a/tools/tracing/rtla/src/utils.c b/tools/tracing/rtla/src/utils.c
-index 623a38908ed5..c769d7b3842c 100644
---- a/tools/tracing/rtla/src/utils.c
-+++ b/tools/tracing/rtla/src/utils.c
-@@ -538,7 +538,7 @@ static const int find_mount(const char *fs, char *mp, int sizeof_mp)
- {
- 	char mount_point[MAX_PATH];
- 	char type[100];
--	int found;
-+	int found = 0;
- 	FILE *fp;
- 
- 	fp = fopen("/proc/mounts", "r");
--- 
-2.39.2
-
+> +                               if (!IS_ERR_OR_NULL(ret))
+> +                                       return ret;
+> +                       }
+> +               } else {
+> +                       name =3D btf_name_by_offset(btf, member->name_off=
+);
+> +                       if (name && !strcmp(member_name, name))
+> +                               return member;
+> +               }
+> +       }
+> +
+> +       return NULL;
+> +}
+> +
+>  #define BTF_SHOW_MAX_ITER      10
+>
+>  #define BTF_KIND_BIT(kind)     (1ULL << kind)
+>
