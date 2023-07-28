@@ -2,41 +2,41 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3221BEB64DD
-	for <linux-trace-kernel@archiver.kernel.org>; Fri, 28 Jul 2023 22:55:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B3B03EB64DD
+	for <linux-trace-kernel@archiver.kernel.org>; Fri, 28 Jul 2023 23:08:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229500AbjG1Wzl (ORCPT
+        id S231540AbjG1XIZ (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Fri, 28 Jul 2023 18:55:41 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56020 "EHLO
+        Fri, 28 Jul 2023 19:08:25 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:60470 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229463AbjG1Wzk (ORCPT
+        with ESMTP id S230274AbjG1XIY (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Fri, 28 Jul 2023 18:55:40 -0400
+        Fri, 28 Jul 2023 19:08:24 -0400
 Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CB9A43C34;
-        Fri, 28 Jul 2023 15:55:39 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 45EC7269E;
+        Fri, 28 Jul 2023 16:08:23 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange X25519 server-signature RSA-PSS (2048 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 5FE586219A;
-        Fri, 28 Jul 2023 22:55:39 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E6F7DC433C7;
-        Fri, 28 Jul 2023 22:55:37 +0000 (UTC)
-Date:   Fri, 28 Jul 2023 18:49:13 -0400
+        by dfw.source.kernel.org (Postfix) with ESMTPS id D64D36220B;
+        Fri, 28 Jul 2023 23:08:21 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E4F85C433C8;
+        Fri, 28 Jul 2023 23:08:20 +0000 (UTC)
+Date:   Fri, 28 Jul 2023 19:08:19 -0400
 From:   Steven Rostedt <rostedt@goodmis.org>
 To:     "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Petr Pavlu <petr.pavlu@suse.com>, tglx@linutronix.de,
-        mingo@redhat.com, bp@alien8.de, dave.hansen@linux.intel.com,
-        hpa@zytor.com, samitolvanen@google.com, x86@kernel.org,
-        linux-trace-kernel@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 1/2] kprobes: Prohibit probing on CFI preamble symbol
-Message-ID: <20230728184913.27bb666f@rorschach.local.home>
-In-Reply-To: <168904024679.116016.18089228029322008512.stgit@devnote2>
-References: <168904023542.116016.10540228903086100726.stgit@devnote2>
-        <168904024679.116016.18089228029322008512.stgit@devnote2>
+Cc:     linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+        Mark Rutland <mark.rutland@arm.com>,
+        Andrew Morton <akpm@linux-foundation.org>
+Subject: Re: [PATCH v2 2/2] tracing: Add free_trace_iter_content() helper
+ function
+Message-ID: <20230728190819.544a48eb@rorschach.local.home>
+In-Reply-To: <20230726224213.f5f3a23d207ffedeee291d22@kernel.org>
+References: <20230715141213.970003974@goodmis.org>
+        <20230715141348.341887497@goodmis.org>
+        <20230726224213.f5f3a23d207ffedeee291d22@kernel.org>
 X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
@@ -45,25 +45,111 @@ Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On Tue, 11 Jul 2023 10:50:47 +0900
-"Masami Hiramatsu (Google)" <mhiramat@kernel.org> wrote:
+On Wed, 26 Jul 2023 22:42:13 +0900
+Masami Hiramatsu (Google) <mhiramat@kernel.org> wrote:
 
-> From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+> On Sat, 15 Jul 2023 10:12:15 -0400
+> Steven Rostedt <rostedt@goodmis.org> wrote:
 > 
-> Do not allow to probe on "__cfi_" or "__pfx_" started symbol, because those
-> are used for CFI and not executed. Probing it will break the CFI.
+> > From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
+> > 
+> > As the trace iterator is created and used by various interfaces, the clean
+> > up of it needs to be consistent. Create a free_trace_iter_content() helper
+> > function that frees the content of the iterator and use that to clean it
+> > up in all places that it is used.
+> > 
+> > Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>  
 > 
-> Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+> Looks good to me.
+> 
+> Reviewed-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+> 
+> BTW, this adds iter->fmt != static_fmt_buf check. Is it a kind of fix?
 
-Reviewed-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+No, because all of the callers shouldn't actually set it to that. I
+added the if statement in case one of the places that do set it does
+call this.
+
+In other words, I added the if statement to make it more robust and
+prevent a bug in the future ;-)
 
 -- Steve
 
-> ---
->  Changes in v2:
->   - Check "__pfx_" prefix functions too.
->   - Make the check unconditional.
-> ---
->  kernel/kprobes.c |   14 +++++++++++++-
->  1 file changed, 13 insertions(+), 1 deletion(-)
+
 > 
+> Thank you,
+> 
+> > ---
+> >  kernel/trace/trace.c | 33 ++++++++++++++++++++++-----------
+> >  1 file changed, 22 insertions(+), 11 deletions(-)
+> > 
+> > diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
+> > index 1c370ffbe062..8775930aa545 100644
+> > --- a/kernel/trace/trace.c
+> > +++ b/kernel/trace/trace.c
+> > @@ -4815,6 +4815,25 @@ static const struct seq_operations tracer_seq_ops = {
+> >  	.show		= s_show,
+> >  };
+> >  
+> > +/*
+> > + * Note, as iter itself can be allocated and freed in different
+> > + * ways, this function is only used to free its content, and not
+> > + * the iterator itself. The only requirement to all the allocations
+> > + * is that it must zero all fields (kzalloc), as freeing works with
+> > + * ethier allocated content or NULL.
+> > + */
+> > +static void free_trace_iter_content(struct trace_iterator *iter)
+> > +{
+> > +	/* The fmt is either NULL, allocated or points to static_fmt_buf */
+> > +	if (iter->fmt != static_fmt_buf)
+> > +		kfree(iter->fmt);
+> > +
+> > +	kfree(iter->temp);
+> > +	kfree(iter->buffer_iter);
+> > +	mutex_destroy(&iter->mutex);
+> > +	free_cpumask_var(iter->started);
+> > +}
+> > +
+> >  static struct trace_iterator *
+> >  __tracing_open(struct inode *inode, struct file *file, bool snapshot)
+> >  {
+> > @@ -4922,8 +4941,7 @@ __tracing_open(struct inode *inode, struct file *file, bool snapshot)
+> >  
+> >   fail:
+> >  	mutex_unlock(&trace_types_lock);
+> > -	kfree(iter->temp);
+> > -	kfree(iter->buffer_iter);
+> > +	free_trace_iter_content(iter);
+> >  release:
+> >  	seq_release_private(inode, file);
+> >  	return ERR_PTR(-ENOMEM);
+> > @@ -5002,11 +5020,7 @@ static int tracing_release(struct inode *inode, struct file *file)
+> >  
+> >  	mutex_unlock(&trace_types_lock);
+> >  
+> > -	mutex_destroy(&iter->mutex);
+> > -	free_cpumask_var(iter->started);
+> > -	kfree(iter->fmt);
+> > -	kfree(iter->temp);
+> > -	kfree(iter->buffer_iter);
+> > +	free_trace_iter_content(iter);
+> >  	seq_release_private(inode, file);
+> >  
+> >  	return 0;
+> > @@ -6763,10 +6777,7 @@ static int tracing_release_pipe(struct inode *inode, struct file *file)
+> >  
+> >  	mutex_unlock(&trace_types_lock);
+> >  
+> > -	free_cpumask_var(iter->started);
+> > -	kfree(iter->fmt);
+> > -	kfree(iter->temp);
+> > -	mutex_destroy(&iter->mutex);
+> > +	free_trace_iter_content(iter);
+> >  	kfree(iter);
+> >  
+> >  	trace_array_put(tr);
+> > -- 
+> > 2.40.1  
+> 
+> 
+
