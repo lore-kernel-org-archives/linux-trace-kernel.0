@@ -2,117 +2,338 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8851FC001DF
-	for <linux-trace-kernel@archiver.kernel.org>; Fri, 28 Jul 2023 16:03:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A3F0C001E0
+	for <linux-trace-kernel@archiver.kernel.org>; Fri, 28 Jul 2023 16:50:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236023AbjG1QDd (ORCPT
+        id S233708AbjG1Qu0 (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Fri, 28 Jul 2023 12:03:33 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49156 "EHLO
+        Fri, 28 Jul 2023 12:50:26 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53256 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236783AbjG1QC5 (ORCPT
+        with ESMTP id S233559AbjG1QuM (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Fri, 28 Jul 2023 12:02:57 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AF32F2109;
-        Fri, 28 Jul 2023 09:02:56 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 4BC6162199;
-        Fri, 28 Jul 2023 16:02:56 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CE414C433C7;
-        Fri, 28 Jul 2023 16:02:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1690560175;
-        bh=5+J+83TIFs9lZ6wTmxsZgXtKL3q38n2yCo3y8qTZ7N8=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=jvO9hazSNAGUk8tEio79eCKsYssfSy0geDTTQuH3rVlrLBw9BRzr2W8FKEp1g6GE7
-         xyyV6wG+/gEhhnojSaYN0xZGYJ7TNz41xrH/5namT+MasnVI6q+netdOigN1p2F8Xs
-         UiajqzXuIHzaW/VQWNXZVjdeHLaWRINZKoWv20D+yd69SZLrcXxn7/VhnVnC6azcV0
-         uakFy04j7DDn+wgdzr/6qhCxnzBm56Z8AETjHGHt12OebNyGVCIjmiqGlIPoZKq+mE
-         Ysaqt3HMjsRuQ585YU8rA70URXv7n98gIUhFEAPZW6v4toNlPHr90hL3YQ7Jn0OGn5
-         bbUw1+uTfxHCg==
-Date:   Fri, 28 Jul 2023 11:02:47 -0500
-From:   Josh Poimboeuf <jpoimboe@kernel.org>
-To:     Valentin Schneider <vschneid@redhat.com>
-Cc:     linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
-        linux-doc@vger.kernel.org, kvm@vger.kernel.org, linux-mm@kvack.org,
-        bpf@vger.kernel.org, x86@kernel.org, rcu@vger.kernel.org,
-        linux-kselftest@vger.kernel.org,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Frederic Weisbecker <frederic@kernel.org>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        Neeraj Upadhyay <quic_neeraju@quicinc.com>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Josh Triplett <josh@joshtriplett.org>,
-        Boqun Feng <boqun.feng@gmail.com>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Lai Jiangshan <jiangshanlai@gmail.com>,
-        Zqiang <qiang.zhang1211@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Uladzislau Rezki <urezki@gmail.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        Lorenzo Stoakes <lstoakes@gmail.com>,
-        Jason Baron <jbaron@akamai.com>,
-        Kees Cook <keescook@chromium.org>,
-        Sami Tolvanen <samitolvanen@google.com>,
-        Ard Biesheuvel <ardb@kernel.org>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        Juerg Haefliger <juerg.haefliger@canonical.com>,
-        Nicolas Saenz Julienne <nsaenz@kernel.org>,
-        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-        Nadav Amit <namit@vmware.com>,
-        Dan Carpenter <error27@gmail.com>,
-        Chuang Wang <nashuiliang@gmail.com>,
-        Yang Jihong <yangjihong1@huawei.com>,
-        Petr Mladek <pmladek@suse.com>,
-        "Jason A. Donenfeld" <Jason@zx2c4.com>, Song Liu <song@kernel.org>,
-        Julian Pidancet <julian.pidancet@oracle.com>,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        Dionna Glaze <dionnaglaze@google.com>,
-        Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <linux@weissschuh.net>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Daniel Bristot de Oliveira <bristot@redhat.com>,
-        Marcelo Tosatti <mtosatti@redhat.com>,
-        Yair Podemsky <ypodemsk@redhat.com>
-Subject: Re: [RFC PATCH v2 12/20] objtool: Warn about non __ro_after_init
- static key usage in .noinstr
-Message-ID: <20230728160247.multb2csnpa22fgx@treble>
-References: <20230720163056.2564824-1-vschneid@redhat.com>
- <20230720163056.2564824-13-vschneid@redhat.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20230720163056.2564824-13-vschneid@redhat.com>
+        Fri, 28 Jul 2023 12:50:12 -0400
+Received: from mail-wr1-x449.google.com (mail-wr1-x449.google.com [IPv6:2a00:1450:4864:20::449])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 98A9555A4
+        for <linux-trace-kernel@vger.kernel.org>; Fri, 28 Jul 2023 09:48:46 -0700 (PDT)
+Received: by mail-wr1-x449.google.com with SMTP id ffacd0b85a97d-3175bf07953so1194238f8f.2
+        for <linux-trace-kernel@vger.kernel.org>; Fri, 28 Jul 2023 09:48:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20221208; t=1690562888; x=1691167688;
+        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=avARk3fa9ZELyujgb1UvNOZt31pNPsphbQQkoVBUi0A=;
+        b=ljjI+drPdZ/Zh/tAMD1D94Nr2P9jFfai5+4hDApoVkuFZP7Ejq1lzBAVqEjOlcdmI2
+         gnDnsi1hz/MymJ+L5Wta5hkoe2CQcAeQwFe4PLsW80p116skH8c/59NJ+ltGZ/eLnyNL
+         i37gLVrMSxJiYVdxfw2o3eK18qlLJpAazunXjMO+HjnV/6hLhnXJPJ2qDAksBR3WNsoL
+         jk3T8HOKzyIB27d6TKL0DPY7tCAXIDz1OZzMM+5UHT9i6+N0IAWe9w4HrXL5uq47P8nQ
+         w0NB1ARuLHGDVFaybrUOzZfMqdIRK1/h5h4HsxGvElbAHbnXeQs/eyylolqwmI5Wb4N+
+         ypFw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1690562888; x=1691167688;
+        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=avARk3fa9ZELyujgb1UvNOZt31pNPsphbQQkoVBUi0A=;
+        b=T7iSPMbFpIcUeFGUeBKqOpM57kGSm0G9TiT7FW9Glf6OPYCTTN799iTZZzsnbkBD0c
+         WrHY/j3XyjA/k8V/yTnn8THCKtEq2X3w5jupZREKz2huJYXUYDR6g6bXN1thoYyNHfWv
+         vaf38ObY4IOOVIsN60OICyoWSQNwP3p2eMxAI1Rp4DMKHcL2tQ8UK7M9BDdFamwFPadn
+         m5ka9w3vJlbSCgmrknGi2Cxht0SWNPMz9Ta5EUQzXsCFNK0BE05iTY4JWMlcdZEnwdQf
+         J9BGgeZg2H61mXjWPZ9l9FvD2GZvbqU346ewhk1XbBsl20i2kigPcXQ0P4pq/wzh7dvz
+         NA2A==
+X-Gm-Message-State: ABy/qLaQBHyBYY5nVMR1JTMfWtm5x+r27O6/yMTefWRlYrFNZzOSPpAy
+        5JLTjpx1VadMTTlWZ4WczLJE2VXIqZTGygcj
+X-Google-Smtp-Source: APBJJlH40yj7aXbucYrGjegm9OEvlK80UD61iGeHX2l0F19wrcD9QpIEMSkwQg3U1twvlfaHTXJgyokhl2hkV7I/
+X-Received: from vdonnefort.c.googlers.com ([fda3:e722:ac3:cc00:28:9cb1:c0a8:2eea])
+ (user=vdonnefort job=sendgmr) by 2002:a5d:5007:0:b0:317:43de:e206 with SMTP
+ id e7-20020a5d5007000000b0031743dee206mr19383wrt.3.1690562888098; Fri, 28 Jul
+ 2023 09:48:08 -0700 (PDT)
+Date:   Fri, 28 Jul 2023 17:47:52 +0100
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.41.0.487.g6d72f3e995-goog
+Message-ID: <20230728164754.460767-1-vdonnefort@google.com>
+Subject: [PATCH v5 0/2] Introducing trace buffer mapping by user-space
+From:   Vincent Donnefort <vdonnefort@google.com>
+To:     rostedt@goodmis.org, mhiramat@kernel.org,
+        linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
+Cc:     kernel-team@android.com, Vincent Donnefort <vdonnefort@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On Thu, Jul 20, 2023 at 05:30:48PM +0100, Valentin Schneider wrote:
-> Later commits will depend on having no runtime-mutable text in early entry
-> code. (ab)use the .noinstr section as a marker of early entry code and warn
-> about static keys used in it that can be flipped at runtime.
+The tracing ring-buffers can be stored on disk or sent to network without any
+copy via splice. However the later doesn't allow real time processing of the
+traces. A solution is to give access to userspace to the ring-buffer pages
+directly via a mapping. A piece of software can now become a reader of the
+ring-buffer, and drive a consuming or non-consuming read in a similar fashion to
+what trace and trace_pipe offer.
 
-Similar to my comment on patch 13, this could also use a short
-justification for adding the feature, i.e. why runtime-mutable text
-isn't going to be allowed in .noinstr.
+Attached to this cover letter an example of consuming read for a ring-buffer,
+using libtracefs.
 
-Also, please add a short description of the warning (and why it exists)
-to tools/objtool/Documentation/objtool.txt.
+Vincent
+
+v4 -> v5:
+  * Trivial rebase onto 6.5-rc3 (previously 6.4-rc3)
+
+v3 -> v4:
+  * Add to the meta-page:
+       - pages_lost / pages_read (allow to compute how full is the
+	 ring-buffer)
+       - read (allow to compute how many entries can be read)
+       - A reader_page struct.
+  * Rename ring_buffer_meta_header -> ring_buffer_meta
+  * Rename ring_buffer_get_reader_page -> ring_buffer_map_get_reader_page
+  * Properly consume events on ring_buffer_map_get_reader_page() with
+    rb_advance_reader().
+
+v2 -> v3:
+  * Remove data page list (for non-consuming read)
+    ** Implies removing order > 0 meta-page
+  * Add a new meta page field ->read
+  * Rename ring_buffer_meta_page_header into ring_buffer_meta_header
+
+v1 -> v2:
+  * Hide data_pages from the userspace struct
+  * Fix META_PAGE_MAX_PAGES
+  * Support for order > 0 meta-page
+  * Add missing page->mapping.
+
+Vincent Donnefort (2):
+  ring-buffer: Introducing ring-buffer mapping functions
+  tracing: Allow user-space mapping of the ring-buffer
+
+ include/linux/ring_buffer.h     |   7 +
+ include/uapi/linux/trace_mmap.h |  28 +++
+ kernel/trace/ring_buffer.c      | 321 +++++++++++++++++++++++++++++++-
+ kernel/trace/trace.c            |  72 ++++++-
+ 4 files changed, 422 insertions(+), 6 deletions(-)
+ create mode 100644 include/uapi/linux/trace_mmap.h
 
 -- 
-Josh
+2.41.0.487.g6d72f3e995-goog
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <stdarg.h>
+#include <signal.h>
+#include <errno.h>
+#include <unistd.h>
+#include <tracefs.h>
+#include <kbuffer.h>
+#include <event-parse.h>
+
+#include <asm/types.h>
+#include <sys/mman.h>
+#include <sys/ioctl.h>
+
+#define TRACE_MMAP_IOCTL_GET_READER_PAGE	_IO('T', 0x1)
+
+/* Need to access private struct to save counters */
+struct kbuffer {
+	unsigned long long      timestamp;
+	long long               lost_events;
+	unsigned long           flags;
+	void                    *subbuffer;
+	void                    *data;
+	unsigned int            index;
+	unsigned int            curr;
+	unsigned int            next;
+	unsigned int            size;
+	unsigned int            start;
+	unsigned int            first;
+
+	unsigned int (*read_4)(void *ptr);
+	unsigned long long (*read_8)(void *ptr);
+	unsigned long long (*read_long)(struct kbuffer *kbuf, void *ptr);
+	int (*next_event)(struct kbuffer *kbuf);
+};
+
+struct ring_buffer_meta {
+        unsigned long   entries;
+        unsigned long   overrun;
+        unsigned long   read;
+
+        unsigned long   pages_touched;
+        unsigned long   pages_lost;
+        unsigned long   pages_read;
+
+        __u32           meta_page_size;
+        __u32           nr_data_pages;  /* Number of pages in the ring-buffer */
+
+        struct reader_page {
+                __u32   id;             /* Reader page ID from 0 to nr_data_pages - 1 */
+                __u32   read;           /* Number of bytes read on the reader page */
+                unsigned long   lost_events; /* Events lost at the time of the reader swap */
+        } reader_page;
+};
+
+static char *argv0;
+static bool exit_requested;
+
+static char *get_this_name(void)
+{
+	static char *this_name;
+	char *arg;
+	char *p;
+
+	if (this_name)
+		return this_name;
+
+	arg = argv0;
+	p = arg+strlen(arg);
+
+	while (p >= arg && *p != '/')
+		p--;
+	p++;
+
+	this_name = p;
+	return p;
+}
+
+static void __vdie(const char *fmt, va_list ap, int err)
+{
+	int ret = errno;
+	char *p = get_this_name();
+
+	if (err && errno)
+		perror(p);
+	else
+		ret = -1;
+
+	fprintf(stderr, "  ");
+	vfprintf(stderr, fmt, ap);
+
+	fprintf(stderr, "\n");
+	exit(ret);
+}
+
+void pdie(const char *fmt, ...)
+{
+	va_list ap;
+
+	va_start(ap, fmt);
+	__vdie(fmt, ap, 1);
+	va_end(ap);
+}
+
+#define READ_ONCE(x) (*(volatile typeof(x) *)&(x))
+
+static unsigned long number_entries(struct ring_buffer_meta *meta)
+{
+	return READ_ONCE(meta->entries) - (READ_ONCE(meta->overrun) +
+					   READ_ONCE(meta->read));
+}
+
+static void read_page(struct tep_handle *tep, struct kbuffer *kbuf)
+{
+	static struct trace_seq seq;
+	struct tep_record record;
+
+	if (seq.buffer)
+		trace_seq_reset(&seq);
+	else
+		trace_seq_init(&seq);
+
+	while ((record.data = kbuffer_read_event(kbuf, &record.ts))) {
+		kbuffer_next_event(kbuf, NULL);
+		tep_print_event(tep, &seq, &record,
+				"%s-%d %9d\t%s\n", TEP_PRINT_COMM,
+				TEP_PRINT_PID, TEP_PRINT_TIME, TEP_PRINT_NAME);
+		trace_seq_do_printf(&seq);
+		trace_seq_reset(&seq);
+	}
+}
+
+static int next_reader_page(int fd, struct ring_buffer_meta *meta, unsigned long *read)
+{
+	__u32 prev_reader, new_reader;
+	unsigned long prev_read;
+
+	prev_read = READ_ONCE(meta->reader_page.read);
+	prev_reader = READ_ONCE(meta->reader_page.id);
+	if (ioctl(fd, TRACE_MMAP_IOCTL_GET_READER_PAGE) < 0)
+		pdie("ioctl");
+	new_reader = READ_ONCE(meta->reader_page.id);
+
+	if (prev_reader != new_reader)
+		*read = 0;
+	else
+		*read = prev_read;
+
+	return new_reader;
+}
+
+static void signal_handler(int unused)
+{
+	printf("Exit!\n");
+	exit_requested = true;
+}
+
+int main(int argc, char **argv)
+{
+	int page_size, meta_len, data_len, page, fd;
+	struct ring_buffer_meta *map;
+	struct tep_handle *tep;
+	struct kbuffer *kbuf;
+	unsigned long read;
+	void *meta, *data;
+	char path[32];
+	int cpu;
+
+	if (argc != 2)
+		return -EINVAL;
+
+	argv0 = argv[0];
+	cpu = atoi(argv[1]);
+	snprintf(path, 32, "per_cpu/cpu%d/trace_pipe_raw", cpu);
+
+	tep = tracefs_local_events(NULL);
+	kbuf = tep_kbuffer(tep);
+	page_size = getpagesize();
+
+	fd = tracefs_instance_file_open(NULL, path, O_RDONLY);
+	if (fd < 0)
+		pdie("raw");
+
+	meta = mmap(NULL, page_size, PROT_READ, MAP_SHARED, fd, 0);
+	if (meta == MAP_FAILED)
+		pdie("mmap");
+	map = (struct ring_buffer_meta *)meta;
+	meta_len = map->meta_page_size;
+
+	printf("entries:	%lu\n", map->entries);
+	printf("overrun:	%lu\n", map->overrun);
+	printf("read:		%lu\n", map->read);
+	printf("pages_touched:	%lu\n", map->pages_touched);
+	printf("pages_lost:	%lu\n", map->pages_lost);
+	printf("pages_read:	%lu\n", map->pages_read);
+
+	data_len = page_size * map->nr_data_pages;
+	data = mmap(NULL, data_len, PROT_READ, MAP_SHARED, fd, meta_len);
+	if (data == MAP_FAILED)
+		pdie("mmap data");
+
+	signal(SIGINT, signal_handler);
+
+	while (!exit_requested) {
+		if (!number_entries(map)) {
+			usleep(100000);
+			continue;
+		}
+
+		page = next_reader_page(fd, map, &read);
+		kbuffer_load_subbuffer(kbuf, data + page_size * page);
+		while (kbuf->curr < read)
+			kbuffer_next_event(kbuf, NULL);
+
+		read_page(tep, kbuf);
+	}
+
+	munmap(data, data_len);
+	munmap(meta, page_size);
+	close(fd);
+
+	return 0;
+}
