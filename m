@@ -2,211 +2,155 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 506C5C001E0
-	for <linux-trace-kernel@archiver.kernel.org>; Fri, 28 Jul 2023 16:50:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8286EC001E0
+	for <linux-trace-kernel@archiver.kernel.org>; Fri, 28 Jul 2023 17:30:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234687AbjG1Quv (ORCPT
+        id S234453AbjG1RaH (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Fri, 28 Jul 2023 12:50:51 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53338 "EHLO
+        Fri, 28 Jul 2023 13:30:07 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55296 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234704AbjG1QuS (ORCPT
+        with ESMTP id S234203AbjG1R3p (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Fri, 28 Jul 2023 12:50:18 -0400
-Received: from mail-wr1-x44a.google.com (mail-wr1-x44a.google.com [IPv6:2a00:1450:4864:20::44a])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2DD5759C1
-        for <linux-trace-kernel@vger.kernel.org>; Fri, 28 Jul 2023 09:48:53 -0700 (PDT)
-Received: by mail-wr1-x44a.google.com with SMTP id ffacd0b85a97d-3175efd89e4so1195728f8f.1
-        for <linux-trace-kernel@vger.kernel.org>; Fri, 28 Jul 2023 09:48:52 -0700 (PDT)
+        Fri, 28 Jul 2023 13:29:45 -0400
+Received: from mail-qt1-x836.google.com (mail-qt1-x836.google.com [IPv6:2607:f8b0:4864:20::836])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 223743A9C
+        for <linux-trace-kernel@vger.kernel.org>; Fri, 28 Jul 2023 10:29:34 -0700 (PDT)
+Received: by mail-qt1-x836.google.com with SMTP id d75a77b69052e-4036bd4fff1so16961cf.0
+        for <linux-trace-kernel@vger.kernel.org>; Fri, 28 Jul 2023 10:29:34 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20221208; t=1690562893; x=1691167693;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=ss9MUA3Tr56YAsWyllu6HM14rw2I4XzRyajq/SbgYxY=;
-        b=4c5l0dRm/bFC3tsehp6MrNkqMUm+BOvSlEM5xvMAprLXVe3P7IyU3LOlmODS/ChG0l
-         BHw3u9pjVmhR21N7+TXS2DdTz2M4Kyu7sm5xonA6y5RjqQLU3N2wNle1/fBkSBMSq4aI
-         budE9554Zm4Fj2UPe2sG4I5MXtx9tQC2gIyzeE0Vi8BLBB27ADgqzuR8m+CN1vf5jce4
-         4UV5BCnEHTFzyT4JPcqo8IfBJgtO11Wxx5Kq6bx1hoV2FfVF8s8qKsIDCoghNn8ZdCDV
-         Fwnd8NgicwZn1bx8Cp119wPidRYOxQlWWs8z/ZmeGTCG/oxjlIXdkTpDuLOGvSYY4Lze
-         tiIg==
+        d=google.com; s=20221208; t=1690565373; x=1691170173;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=RFPU8SbvYweWy/0B9ZVn/iGNrEhN7Hrca5mOWZOVSiU=;
+        b=nEit5NaFSV+d69VnhyIMyDi7ZFOro3SqVLWfk35Rsp2LrpqqOYa11gQbZ1dGhFYZjO
+         Afh6VozNEL0ks6qP/Uq8h5Dbc5eJaKnFb2AZhHCKwngdd7KYq+MJkjoFkeFaaGBiJX3H
+         4EjbTVeBBlsTq62ugO4uQCYA3Tr7JW7a8emgyx9YqxPfgmqlbfNcj2KNfflSsUMRgYkL
+         yENQ2Re/UG/e1i7YlvnWuUuGrDiAmxZGLGbv0tHqm/CWX8cbI016jCyDNP49GxfIfG35
+         3x2v1Aq4lLl1ktCUyWnf4NS43oOYW4M4IkVzX91LeYkdN9cWDWMbMsPeOhMqiyHVICPr
+         iDIA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1690562893; x=1691167693;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=ss9MUA3Tr56YAsWyllu6HM14rw2I4XzRyajq/SbgYxY=;
-        b=ElNNhW0rcDOAnFfLwKXoZ1k0/a2Ks2/ZZ3N1JP7ob1/WCKoHsuOir81GS7GXa8TurI
-         qc71ph6Wmw6DEHRdcR5i9wOpjI17RMLP+PiKtpLrODN82N97l87tkrIR+aQTJwGhUnq4
-         XaBM45Ogb4UqkLWFV5qhOfCPgi20JBaN9mz/pS2dEXh6kdylALXeMZWKtRGJP1THe3jB
-         sCeL4fYH7JDd+O+JvSThsT8tOoURMmtMo5n/5CoycNW/AfP0Zk98hpAzuqXynnNg8O84
-         U2tArvCwXQVs+yzaOLABmn/Zh5yTMG/HXiFapJqM1AEbSR9E1Z+4HyI3t2fKQyUb98sK
-         z4pQ==
-X-Gm-Message-State: ABy/qLa2on94mceBLufYPJudZJFYOdsDikN7gLTXBOhZSTgBvQYO9GHH
-        zegoc+ebubMy8bT73EfODHwM7xMzTIbjlqFp
-X-Google-Smtp-Source: APBJJlE4iRbPMO0jdJvQOOvJEL7qN8hQVRczTqoiowzZ3DLigKFhhjDYpkpMbm9tFqX4bbDGpvqqXtMfjpRuEYZE
-X-Received: from vdonnefort.c.googlers.com ([fda3:e722:ac3:cc00:28:9cb1:c0a8:2eea])
- (user=vdonnefort job=sendgmr) by 2002:a5d:43ce:0:b0:317:7514:100a with SMTP
- id v14-20020a5d43ce000000b003177514100amr23308wrr.6.1690562892607; Fri, 28
- Jul 2023 09:48:12 -0700 (PDT)
-Date:   Fri, 28 Jul 2023 17:47:54 +0100
-In-Reply-To: <20230728164754.460767-1-vdonnefort@google.com>
-Mime-Version: 1.0
-References: <20230728164754.460767-1-vdonnefort@google.com>
-X-Mailer: git-send-email 2.41.0.487.g6d72f3e995-goog
-Message-ID: <20230728164754.460767-3-vdonnefort@google.com>
-Subject: [PATCH v5 2/2] tracing: Allow user-space mapping of the ring-buffer
-From:   Vincent Donnefort <vdonnefort@google.com>
-To:     rostedt@goodmis.org, mhiramat@kernel.org,
-        linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
-Cc:     kernel-team@android.com, Vincent Donnefort <vdonnefort@google.com>
+        d=1e100.net; s=20221208; t=1690565373; x=1691170173;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=RFPU8SbvYweWy/0B9ZVn/iGNrEhN7Hrca5mOWZOVSiU=;
+        b=IzWgQVvs46cqEpppjAU4Amra7b4fYTfbnYZJdg5aCx7CR80s9Jnv1iddNJZ/oTRwBJ
+         2B4y+8/CamEeSC8GfAb8DWrtQclXlaL1Ob2BJNduyWALCs5WCjJ7aEiowtq40qEqL+IH
+         qMScpCPO/74lsxKBiXMQN7yo1oQEEIlVBrQqieV6zP2N7gne6o2BG3c4Nvy0RVtWeW47
+         ytLJzJl2fA6xMgPKdTOlfLW/qevUFp00rbVIzCS18mMMBjls28msjAx08ROmN+k/6g9a
+         DrcvBqcx9mSwT6zQ9T/H2K5RC7p6lHZT1im9lwqpvYxtPrygZzfrty8xEy7QuZTrgvAI
+         sBAQ==
+X-Gm-Message-State: ABy/qLaumQa/GYL4Y4xx/ZhPvlE1GZh+FTsPmFRTZDyCeRsOT1HNNW+D
+        Db22UzfFlXcCibTd7xT182npuwohREVX8BeIn3D7rA==
+X-Google-Smtp-Source: APBJJlG3vkdSXwaK+QDwCWAi4fCSKVsG1lcjeI6l+A0NqIBc3JZ3ilJG1lR+n3Zlckmgqy8iCgjf90vwAh2UPBOumC4=
+X-Received: by 2002:a05:622a:1301:b0:403:dcd4:b9b1 with SMTP id
+ v1-20020a05622a130100b00403dcd4b9b1mr7450qtk.18.1690565373022; Fri, 28 Jul
+ 2023 10:29:33 -0700 (PDT)
+MIME-Version: 1.0
+References: <20230726121618.19198-1-zegao@tencent.com>
+In-Reply-To: <20230726121618.19198-1-zegao@tencent.com>
+From:   Ian Rogers <irogers@google.com>
+Date:   Fri, 28 Jul 2023 10:29:21 -0700
+Message-ID: <CAP-5=fVJ_RL9Md92R4nWBKvZcF9iovL07-=dJ7bqN3LWwufVGw@mail.gmail.com>
+Subject: Re: [RFC PATCH v2 0/3] report task state in symbolic chars from sched tracepoint
+To:     Ze Gao <zegao2021@gmail.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Ingo Molnar <mingo@redhat.com>, Jiri Olsa <jolsa@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        linux-trace-kernel@vger.kernel.org,
+        linux-trace-devel@vger.kernel.org, Ze Gao <zegao@tencent.com>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-Currently, user-space extracts data from the ring-buffer via splice,
-which is handy for storage or network sharing. However, due to splice
-limitations, it is imposible to do real-time analysis without a copy.
+On Wed, Jul 26, 2023 at 5:16=E2=80=AFAM Ze Gao <zegao2021@gmail.com> wrote:
+>
+>
+> This is the 2nd attempt to fix the report task state issue in sched
+> tracepint, here is the first version:
+>
+> https://lore.kernel.org/linux-trace-kernel/20230725072254.32045-1-zegao@t=
+encent.com
+>
+> Against v1, add a new var to report task state in symbolic char instead
+> of replacing the old one and to not to break anything.
+>
+> --
+>
+> In the status quo, we should see three different outcomes of the reported
+> sched-out task state from perf-script, perf-sched-timehist, and Tp_printk
+> of tracepoint sched_switch.  And it's not hard to figure out that the
+> former two are built upon the third one, and the reason why we see this
+> inconsistency is that the former two does not catch up with the internal
+> change of reported task state definitions as the kernel evolves.
+>
+> IMHO, exporting internal representations of task state in the tracepoint
+> sched_switch is not a good practice and not encouraged at all, which can
+> easily break userspace tools that relies on it. Especially when tracepoin=
+ts
+> are massively used in many observability tools nowadays due to its stable
+> nature, which makes them no longer used for debug only purpose and we
+> should be careful to decide what ought to be reported to userspace and wh=
+at
+> ought not.
+>
+> Therefore, to fix the issues mentioned above for good, instead of choosin=
+g
+> I proposed to add a new variable to report task state in sched_switch wit=
+h
+> a symbolic character along with the old hardcoded value, and save the
+> further processing of userspace tools and spare them from knowing
+> implementation details in the kernel.
+>
+> After this patch seires, we report 'RSDTtXZPI' the same as in procfs, plu=
+s
+> a 'p' which denotes PREEMP_ACTIVE and is used for sched_switch tracepoint=
+ only.
+>
+> Reviews welcome!
 
-A solution for that problem is to let the user-space map the ring-buffer
-directly.
+Thanks Ze,
 
-The mapping exposed via the per-CPU file trace_pipe_raw. The first page
-is the meta-page and is followed by each page of the ring-buffer,
-ordered by their unique page ID. It is therefore easy to translate a
-page-ID to an offset in the mapping.
+I think this is worthwhile cleanup and makes the code overall simpler.
+I don't know if others have strong opinions, I don't often work in
+this code, but I think the patches are worth landing this.
 
-  * Meta-page -- include/uapi/linux/trace_mmap.h for a description
-  * Page ID 0
-  * Page ID 1
-     ...
+Acked-by: Ian Rogers <irogers@google.com>
 
-The mapper must then do what use to be the kernel job: swap the reader
-with the head. This is done with a newly introduced ioctl:
-TRACE_MMAP_IOCTL_GET_READER_PAGE.
+Thanks,
+Ian
 
-Signed-off-by: Vincent Donnefort <vdonnefort@google.com>
-
-diff --git a/include/uapi/linux/trace_mmap.h b/include/uapi/linux/trace_mmap.h
-index 653176cc50bc..fd323a92cf78 100644
---- a/include/uapi/linux/trace_mmap.h
-+++ b/include/uapi/linux/trace_mmap.h
-@@ -23,4 +23,6 @@ struct ring_buffer_meta {
- 	} reader_page;
- };
- 
-+#define TRACE_MMAP_IOCTL_GET_READER_PAGE	_IO('T', 0x1)
-+
- #endif /* _UAPI_TRACE_MMAP_H_ */
-diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
-index b8870078ef58..849d2d1c73fe 100644
---- a/kernel/trace/trace.c
-+++ b/kernel/trace/trace.c
-@@ -6461,7 +6461,7 @@ static void tracing_set_nop(struct trace_array *tr)
- {
- 	if (tr->current_trace == &nop_trace)
- 		return;
--	
-+
- 	tr->current_trace->enabled--;
- 
- 	if (tr->current_trace->reset)
-@@ -8495,15 +8495,21 @@ tracing_buffers_splice_read(struct file *file, loff_t *ppos,
- 	return ret;
- }
- 
--/* An ioctl call with cmd 0 to the ring buffer file will wake up all waiters */
- static long tracing_buffers_ioctl(struct file *file, unsigned int cmd, unsigned long arg)
- {
- 	struct ftrace_buffer_info *info = file->private_data;
- 	struct trace_iterator *iter = &info->iter;
- 
--	if (cmd)
--		return -ENOIOCTLCMD;
-+	if (cmd == TRACE_MMAP_IOCTL_GET_READER_PAGE)
-+		return ring_buffer_map_get_reader_page(iter->array_buffer->buffer,
-+						       iter->cpu_file);
-+	else if (cmd)
-+		return -ENOTTY;
- 
-+	/*
-+	 * An ioctl call with cmd 0 to the ring buffer file will wake up all
-+	 * waiters
-+	 */
- 	mutex_lock(&trace_types_lock);
- 
- 	iter->wait_index++;
-@@ -8516,6 +8522,63 @@ static long tracing_buffers_ioctl(struct file *file, unsigned int cmd, unsigned
- 	return 0;
- }
- 
-+static vm_fault_t tracing_buffers_mmap_fault(struct vm_fault *vmf)
-+{
-+	struct ftrace_buffer_info *info = vmf->vma->vm_file->private_data;
-+	struct trace_iterator *iter = &info->iter;
-+	vm_fault_t ret = VM_FAULT_SIGBUS;
-+	struct page *page;
-+
-+	page = ring_buffer_map_fault(iter->array_buffer->buffer, iter->cpu_file,
-+				     vmf->pgoff);
-+	if (!page)
-+		return ret;
-+
-+	vmf->page = page;
-+
-+	get_page(vmf->page);
-+	vmf->page->mapping = vmf->vma->vm_file->f_mapping;
-+	vmf->page->index   = vmf->pgoff;
-+
-+	return 0;
-+}
-+
-+static void tracing_buffers_mmap_close(struct vm_area_struct *vma)
-+{
-+	struct ftrace_buffer_info *info = vma->vm_file->private_data;
-+	struct trace_iterator *iter = &info->iter;
-+
-+	ring_buffer_unmap(iter->array_buffer->buffer, iter->cpu_file);
-+}
-+
-+static void tracing_buffers_mmap_open(struct vm_area_struct *vma)
-+{
-+	struct ftrace_buffer_info *info = vma->vm_file->private_data;
-+	struct trace_iterator *iter = &info->iter;
-+
-+	WARN_ON(ring_buffer_map(iter->array_buffer->buffer, iter->cpu_file));
-+}
-+
-+static const struct vm_operations_struct tracing_buffers_vmops = {
-+	.open		= tracing_buffers_mmap_open,
-+	.close		= tracing_buffers_mmap_close,
-+	.fault		= tracing_buffers_mmap_fault,
-+};
-+
-+static int tracing_buffers_mmap(struct file *filp, struct vm_area_struct *vma)
-+{
-+	struct ftrace_buffer_info *info = filp->private_data;
-+	struct trace_iterator *iter = &info->iter;
-+
-+	if (vma->vm_flags & VM_WRITE)
-+		return -EPERM;
-+
-+	vm_flags_mod(vma, VM_DONTCOPY | VM_DONTDUMP, VM_MAYWRITE);
-+	vma->vm_ops = &tracing_buffers_vmops;
-+
-+	return ring_buffer_map(iter->array_buffer->buffer, iter->cpu_file);
-+}
-+
- static const struct file_operations tracing_buffers_fops = {
- 	.open		= tracing_buffers_open,
- 	.read		= tracing_buffers_read,
-@@ -8524,6 +8587,7 @@ static const struct file_operations tracing_buffers_fops = {
- 	.splice_read	= tracing_buffers_splice_read,
- 	.unlocked_ioctl = tracing_buffers_ioctl,
- 	.llseek		= no_llseek,
-+	.mmap		= tracing_buffers_mmap,
- };
- 
- static ssize_t
--- 
-2.41.0.487.g6d72f3e995-goog
-
+> Regards,
+>
+> Ze
+>
+> Ze Gao (2):
+>   sched, tracing: add to report task state in symbolic chars
+>   perf sched: use the new prev_state_char instead in tracepoint
+>     sched_switch
+>
+>  include/trace/events/sched.h | 60 +++++++++++++++++++++---------------
+>  tools/perf/builtin-sched.c   | 57 ++++++----------------------------
+>  2 files changed, 45 insertions(+), 72 deletions(-)
+>
+> Ze Gao (1):
+>   libtraceevent: use the new prev_state_char instead in tracepoint
+>     sched_switch
+>
+>  plugins/plugin_sched_switch.c | 29 ++++-------------------------
+>  1 file changed, 4 insertions(+), 25 deletions(-)
+>
+> --
+> 2.40.1
+>
