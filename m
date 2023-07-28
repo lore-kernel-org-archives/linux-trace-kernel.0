@@ -2,46 +2,46 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EBB70C001DF
-	for <linux-trace-kernel@archiver.kernel.org>; Fri, 28 Jul 2023 18:21:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BAAFEC001E0
+	for <linux-trace-kernel@archiver.kernel.org>; Fri, 28 Jul 2023 18:21:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S235989AbjG1SVr (ORCPT
+        id S231221AbjG1SVt (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Fri, 28 Jul 2023 14:21:47 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32774 "EHLO
+        Fri, 28 Jul 2023 14:21:49 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33170 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236068AbjG1SV2 (ORCPT
+        with ESMTP id S236158AbjG1SVq (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Fri, 28 Jul 2023 14:21:28 -0400
-Received: from CY4PR02CU008.outbound.protection.outlook.com (mail-westcentralusazon11012009.outbound.protection.outlook.com [40.93.200.9])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C15F2423B;
-        Fri, 28 Jul 2023 11:21:26 -0700 (PDT)
+        Fri, 28 Jul 2023 14:21:46 -0400
+Received: from CY4PR02CU008.outbound.protection.outlook.com (mail-westcentralusazon11012003.outbound.protection.outlook.com [40.93.200.3])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EB2B64487;
+        Fri, 28 Jul 2023 11:21:28 -0700 (PDT)
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=j5se+9Jx2nFhvZYj2H9dllrNcGjDFYwjtnSy5foRXsujs2Aehfgl8MtUkXassmy9HYdRn6HyL8XsSQDoLQ7s0nCk5eZE8AFHbzcE+oHnUEj8aJPQP9JuHvQVPImIQRQ89ujoGJxQf+hk9qNvkEbLE7Y6v7vmWvv8/WbxOG+33Y75HDjkT4USEN0PwWPrmWgedvgHvUHa7I0P7K3pCGvOylAnmVCqwYIxaZH+VpYK8NchtNeBMnjbtAJGzLP8TQXdwi/DhDUot74O6B2X8F79TNw4A7audgel7h2Vdk8VldIH7EW8rcsyD3jV9g13hMj6Ai2PEtqGIzvOiHbShWC7FA==
+ b=QrCQoll6/bElj4a5Ba42tyl4sonBNWt7iU0tbBbHvmVxAho//JkAv2bSAa+OhIV/w88D9XA1B2Y59SS8Sg49ORFmX9LB989BRn6jXAJCAkXnGQn57V/E5j4AYD/IPDB2VLkpoBRtOD9NQ0Ja1vNo98e369ra36oaEwptDdKt4N/9JxYQ28WAjdgtc6EAk24UHVHksI4+bzmR3SCnG959OQb6Vi4xBouDQS/VVEg1KPAAehxVsTOP2NZf0UMkE5/R5vCXk0hOEgqLg68kn/TN/0BYLKMQ5nnoYXQpQtFe27kb3r9sjAqCvNfyN2PIXPXookuzxUFWs8VLtGTsNUa/HA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=+j2ECXuIFgkHJbjiZKpVjXM9BCd/BAVHq0XLry5FGY4=;
- b=V/Zv47yjS9IRgzr2ihnG/+kpN+IgNqFmJgALcrrihkIfAC4vx2WtReKIAo72lsdFNw/FW298rVCmprBelo877wcm9ycd6PjE8xf5tWARJhk26VCZ8Q/4lQYl0MY2eSTklDQ6C8wCy19E/hJ10yH+v2aQPET/RhykENJ3HLiIjA/P4LPLBJAc1x1TU3TDaSF2QG8fLdv3ctPwVKDrCvQ15VaujGfMsSuk9Yw3vr2+3x6ULhaHceHxUQT/4PqpghMA/b4Gmy/1/VEBdvjbDZCmmnurDtNS8DRHJOURmbUNrIIxc/dW+J7XONMUyceyKzqTLrXllV3RDKeXjbXXa9PUrQ==
+ bh=t0W9SYDTExcnlkYMizbDBRWmEhwytQWhcrs/5sFtal4=;
+ b=C+S+Pxv6ftdG2eATJUy9184ub2MqeYV8hZMO2bWHK4gecovrcnDkvEQyUrmVAl0/pSrdJDWb+U2SSu3TL87VqYq4FLG2gWA1ZCp7dmpOaRl55SVu6He7SZjwI2BtrC3U5/oHH5St8r4EeSapA6WDJsl+/nUIv2nRgkaBQxoHBVDDqALQUQDeWbj1ZlE2tGT7tVBMfeJ1GCbgRG98D96WPlNpodAasNJaGTopAHwfBROjm+B49Tx5T4ovmO1LfTxCdPC/sSdun3Nr1KJkVt1yfg87DkI3D9gdNMsm7m+A4/BjeqrWKY4V/wVB0zONFET4f9RVqr22VZAp+6HI3fSBvw==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=vmware.com; dmarc=pass action=none header.from=vmware.com;
  dkim=pass header.d=vmware.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=vmware.com;
  s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=+j2ECXuIFgkHJbjiZKpVjXM9BCd/BAVHq0XLry5FGY4=;
- b=JPsfjpYjPjdalwVh07Hblyg6m1iwkqs4ksPdG5AQO5lbhCC2ewV7yPezOzZjvptOf6W/6rMEH+7S68BsSA/3eK3eSs6wyXTtPUmIcirxJiFggilvcCysBLLvQ2Usg3vWZejqWbXVmwDah2G1Z66oDu5TeYAan4nkRhoxXUx3sGs=
+ bh=t0W9SYDTExcnlkYMizbDBRWmEhwytQWhcrs/5sFtal4=;
+ b=ypeP2DxzVnPYQttIvPCVgSASOixsT+9V5/yCSpwRXcSBNt3gphLhM/TCTidjurS+0+DDZKYjf3U+gXSocJPCmrcbPASIckRfISTfRWn7ixjf5JMGyglHYUPCXRJ5yq9k+UH+dGgupbjQdttheVr74K+S3B+iO6YGX9AUVnaW0HU=
 Authentication-Results: dkim=none (message not signed)
  header.d=none;dmarc=none action=none header.from=vmware.com;
 Received: from PH0PR05MB8703.namprd05.prod.outlook.com (2603:10b6:510:bd::5)
- by SN7PR05MB9264.namprd05.prod.outlook.com (2603:10b6:806:26c::9) with
+ by CH3PR05MB10004.namprd05.prod.outlook.com (2603:10b6:610:123::6) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6631.29; Fri, 28 Jul
- 2023 18:21:23 +0000
+ 2023 18:21:26 +0000
 Received: from PH0PR05MB8703.namprd05.prod.outlook.com
  ([fe80::b5d8:98b9:6ca7:94f0]) by PH0PR05MB8703.namprd05.prod.outlook.com
  ([fe80::b5d8:98b9:6ca7:94f0%6]) with mapi id 15.20.6631.026; Fri, 28 Jul 2023
- 18:21:23 +0000
+ 18:21:25 +0000
 From:   Ajay Kaher <akaher@vmware.com>
 To:     rostedt@goodmis.org, shuah@kernel.org, mhiramat@kernel.org
 Cc:     chinglinyu@google.com, linux-kernel@vger.kernel.org,
@@ -50,9 +50,9 @@ Cc:     chinglinyu@google.com, linux-kernel@vger.kernel.org,
         namit@vmware.com, oe-lkp@lists.linux.dev, akaher@vmware.com,
         amakhalov@vmware.com, er.ajay.kaher@gmail.com,
         srivatsa@csail.mit.edu, tkundu@vmware.com, vsirnapalli@vmware.com
-Subject: [PATCH v6 06/10] eventfs: Implement eventfs lookup, read, open functions
-Date:   Fri, 28 Jul 2023 23:50:48 +0530
-Message-Id: <1690568452-46553-7-git-send-email-akaher@vmware.com>
+Subject: [PATCH v6 08/10] eventfs: Implement removal of meta data from eventfs
+Date:   Fri, 28 Jul 2023 23:50:50 +0530
+Message-Id: <1690568452-46553-9-git-send-email-akaher@vmware.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1690568452-46553-1-git-send-email-akaher@vmware.com>
 References: <1690568452-46553-1-git-send-email-akaher@vmware.com>
@@ -62,456 +62,257 @@ X-ClientProxiedBy: BYAPR11CA0090.namprd11.prod.outlook.com
  (2603:10b6:510:bd::5)
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PH0PR05MB8703:EE_|SN7PR05MB9264:EE_
-X-MS-Office365-Filtering-Correlation-Id: cf4bb05a-5850-43e7-e9ec-08db8f9772b6
+X-MS-TrafficTypeDiagnostic: PH0PR05MB8703:EE_|CH3PR05MB10004:EE_
+X-MS-Office365-Filtering-Correlation-Id: d8500d61-cdc5-42db-062d-08db8f977407
 X-LD-Processed: b39138ca-3cee-4b4a-a4d6-cd83d9dd62f0,ExtAddr
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: CzckxtOfM6/N62vvwWXevr8yNLHfYj4MjUzvRKaP5dEZZ4AAxHHGP7nNkRLjDP0Tqcbal8qCINwz/8+IbtThqmDl397e6b/yaXL/306nHE1+TXLDCwOknCKJwAN9xeihouoNt00afwXuY7bjCpKvXHdug37CCxz3O+7QzotshOORJc06gUkwvGEzIIEAyVgKE3s5TPz/G/W+xDwRscTYBIM+Xg3AkKmA+buPQouYBfh+qbgNtHCtD8R5IHhNyyQ6sVtmZomcxkrIU7RVERFxMkD/lKhxMxMaq/jx7Tv9q2nnDwzqhMomLYxdKHOC6hrcoH8UG/xIeecX4cn4UaiM/WACmvGF+oI00YQQuiifjyCXeqbqY89leS2eQgESv49CJVHZ9fckxDmIMPX8cS2VVlifiobLDeCaR86Aw7QDWvEQsl06/pxsFxlq/KtNLVF0lQc7GbiY0r0ndyHVK/b2pzzZzuPopyygvtyGlc0JiHTiQunNF9BMHjMfJ4UQfBj2MA1E9IwpbqII4Se+O1d91aB0pED7AWt8QGQaf8A+qpMver4fquIwZ5w39hyR7zrd/fSME8Bhu7Vlrtib6IGaXLCwe9vNWejTpHoVGCGRO8dkcc74asArAWeqq/d4UawuEYYZ/hK5KTZmJSCCDZZfyd33gM3LfyL1WDtk6aqnok4=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH0PR05MB8703.namprd05.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230028)(4636009)(39860400002)(376002)(396003)(346002)(136003)(366004)(451199021)(2906002)(316002)(7416002)(8676002)(86362001)(8936002)(30864003)(41300700001)(36756003)(6512007)(5660300002)(107886003)(26005)(6506007)(6666004)(6486002)(52116002)(83380400001)(478600001)(38350700002)(186003)(38100700002)(4326008)(66556008)(66946007)(66476007)(2616005);DIR:OUT;SFP:1101;
+X-Microsoft-Antispam-Message-Info: F7UT7B8vcCB89BRlJGDefuTW9t9a0vhTwqDcUdHr/iC99vm1h9/PaSKuberxOCp5hh5zXuc3k/6WUnajyONrPyIWcvPDx1s+2ONs7GySKSe+OJKdbOhIfVapLn6MI37RCJhqWEyUUYCYdNQhLgadzWS7N0Xn+mJrGgG5hWtwG38U8IiFqINPfi/j/AcSYVw+M4LLf+Flh7ACc1Pbds5qoZ/4PRYGii7/LopXyKN8XKCEt05OHABzdb/K3aIb+wb6IrvuvqZS2uHWmz4rWBgkmPTLX7oH8REpyM+ArRqqKJ9HJWOGrLEMVSzah22PdbAKFAhQ0KeEba2VZaTkOY8/0TgfGm/DVP574M8xBi3yvP6516TnDdwILDh1H6pgaIfNjsa8YLbaeD1bTHSDC0S4oMuifha9Yx9xZDekjE6s3jYCij68QpUppshH8aLJYtWWGgwIz0fHWby0v8+Ys0G7gLdDMiZhW8EF2oklf1ijXpoO7PiA2xBgsF28gS3zGcJ7NpQGq6v/XWvOEaKf0MsYQ/z7RGmskXgIP51UZU+jMq5KeZuUzsespy6xJqtcKOlxNX6+ag58MVgvczgeJRj+WBg6FJoFHcwsT2DShn2Tb/ylVsewFMLdOc+dPJbQBaF18s4qyc/Ff03N4/sHT0YE/93/cGXNra7R2yLAJ+Zn3z2qx73B7zImymwaOqkVVu3TuDPImmIFKorsRmN8r/IMXA==
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH0PR05MB8703.namprd05.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230028)(4636009)(39860400002)(396003)(366004)(376002)(136003)(346002)(451199021)(83380400001)(66476007)(4326008)(316002)(6486002)(966005)(52116002)(6512007)(38350700002)(478600001)(38100700002)(66556008)(2616005)(8936002)(8676002)(66946007)(41300700001)(5660300002)(186003)(6506007)(107886003)(6666004)(26005)(86362001)(7416002)(2906002)(36756003);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?UoxCbgPLM5eSJU9QFXpLF1kauc137RZW9mVNPypDdGIFT3v/YYLUp4Y26Guq?=
- =?us-ascii?Q?QukgcOX0+aQoLiEEG3f8+9D8hcmRC9ZXEdtyVdUXPrA3Ds7M0uf3ZBZg10zY?=
- =?us-ascii?Q?plwZlI334Aq7EnQKKPldzhfgZOvXcPd17Lr6s2MC3/fTAtWAW1kosK7SgcSP?=
- =?us-ascii?Q?CuDboX1+Oz+561TP5svRT7Y2MqBUVqKxQf6cW4Jq3pY7tJGZG67jVOcbnvhw?=
- =?us-ascii?Q?r4jX0Go84dt9z6Mb2zdHIT9WuvQaStMn6p9uy3TvQdFXYi35vBINGiAYmj3H?=
- =?us-ascii?Q?iUnwwLqoRkQPJzm4NKIW1nW8ejqbppofnLHe7Oojt4OQii6fjMqo0HtKcMp/?=
- =?us-ascii?Q?57884cVUk9XJ7oMbJQHiMQS7yWCDNAfnS39WQNmYbpnXu3eTuqwC9POKhZkx?=
- =?us-ascii?Q?5Z+oLveAsN3hO9yYs69DhpdISnm5dfNWLKeW9lQSYossO9zhSkZsxtpK2xDL?=
- =?us-ascii?Q?0V/2HtRSzWQeVtrNJ96QJS7wBQHGwx2IYwhlFjKT1T+MK4U3begqIQaq6Gt8?=
- =?us-ascii?Q?FPKinJKS2e9qHSFa2Oo7moPD+p9AZJKTLDfIQbE9GJD2dFC9cEcvaIHOMWBi?=
- =?us-ascii?Q?Ia7zEVcC3/9AULNiDo2GmAdPAHryJuM7MK0792l1bSThNE7V3vqBmYAEFUAi?=
- =?us-ascii?Q?hpOQYB6DKa3G4jhScE6h8ARigYEn4qjBjXjyNTUlIv8qb2ee1APcxbuCfp66?=
- =?us-ascii?Q?Ql5Ai0Q1iKQdqzBCH/XnmUkPkbKlLKUpPm8t3xmhNB7sN15kh9GFsdHqZcjO?=
- =?us-ascii?Q?kcpOtNOhaE1S8awqiVufC1upg0k07RKBN7/SciCuaGoD9EPjGWS6VGVyhTjB?=
- =?us-ascii?Q?zK0RHFZoT/GmWGVHhXfZ+R4ScNCgkYAiFiqgm0hjK6Tw2aaFVItd85lqJU7/?=
- =?us-ascii?Q?WsEf3GhavF4QVbqn+okwGN4aKLSryMUV+AB9RrF8Mm+ApLpL6GGohDX0XBJ+?=
- =?us-ascii?Q?BoA6VnpcJlVNPlzQKEmDyiGBNLInfZkv4n3uEsYvfuSE1J2DeONpYKt67cDB?=
- =?us-ascii?Q?7TXSo4x9e53Pu5MLeSAD9Lx0tjvVW9i4CqF3tWnqFwIVr+S4LhHJbt/Rczvn?=
- =?us-ascii?Q?eirhTAliltwsdOhhdg7oNN9ScINc5VxZKrHhm9UCq4vcpIO14pPIAx1hCtRM?=
- =?us-ascii?Q?dd/QO89bOUwxMA+bB0gk7Cy8fQ0Cz0RTlrdxNUbWJpVJ1J+lZXvhavzC339T?=
- =?us-ascii?Q?j+Q2LwNx6BH+3I78uvNMWyo4sB6hddR78ARq4TvCUq42LiiwChpjzbMlsxpo?=
- =?us-ascii?Q?vPzwtWqiNXazkaFP/0Uv+qaML4ePbtKJCiLv7EE4h8F6z2UK0bv2HtHRHhkj?=
- =?us-ascii?Q?UVFxUxXpE/uLF3pqkkuNZXAE3LwycwgfOZoYfULOY6VJ8aa68HD40oMvbXP/?=
- =?us-ascii?Q?4AApnijPG2cfUy5hH0PWhN9rkzhXmMcynPWQP6B3UQy8x+xaevJ34dDhnFD3?=
- =?us-ascii?Q?FA99PrLCSxt9rncjUOYKTpsNpT/uYV2a3ISX6i20zxeZaS6pHKkV23bW8IKs?=
- =?us-ascii?Q?r+mqecLpqRmsEebyZd9kAeZ8veLvbnFphvxOrIfZLd6c4Ef8z+ovdF6izTU3?=
- =?us-ascii?Q?h3F5KxPNrl74yaNI8cSx1gsx9zCOxI7APobPkaD4?=
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?6xoGTtsQwoNyVMYAodRdpeDcFs0e2lp7KaibXzvgUGqaJMQkSRUy8AAlMCxF?=
+ =?us-ascii?Q?RnlHwLAovHxWgOmBHKTe6EEPr0e8OnLlE5mA4hM/CEwMRShjkYLbNIlyq4ap?=
+ =?us-ascii?Q?4CVFRGTvbOrjWS67m1MFWYqma5Yx9/h6H8vjPYmcbVm4bIrTgJtBNoypL+Qt?=
+ =?us-ascii?Q?MHMrcy1m2TMQdpZ9nBdFwehufRpuRL66qUkqc6CTMAo6ywH79XwmdRLsMkgm?=
+ =?us-ascii?Q?lqgM5jlFDIZbmWwd3w2wHHbOr873htDjC+T+rD+rof5NZ8ymUVntEz3Gyw0i?=
+ =?us-ascii?Q?+nYPWkOW9wBwIAxuut07IDNM9hzbbdNSAQZhSgCObDsw9FVAtbeVzJsT7y9F?=
+ =?us-ascii?Q?c2cwaXRoAA5HaOZfZ2iBSMX2on1NuixrFLg9VjABPPEVTvS0tpNVA6BAkMPf?=
+ =?us-ascii?Q?Fs4/N906wOaKnWh6TsxhTdy53ZrBqQnB7+GAIvfc8/HAudPdgnQEpgw0xugd?=
+ =?us-ascii?Q?5a6av0HsndEMBKVLxyCSO+eihz8ehPPPCdtc/j2xfa/QwAEqo1sssir4Bt1B?=
+ =?us-ascii?Q?aODd9BT7pUpl5qpWSUjztgHXHOJ2mUFbPp15nBr55LXHbxbybRiVNn0lYk7+?=
+ =?us-ascii?Q?m17Vq6Mn6opEGeFprELt6NouI646+zP97RJNWUsVs8paGNMxloNcpStx/pXM?=
+ =?us-ascii?Q?mYIhP+llPzolA7T5nSGe5Xkmn0mUlil4e//CdGy6F7g0Kb44h0Lac6pPK9V2?=
+ =?us-ascii?Q?aVi9pseU0AFkkmQVRZ1zmG7aPezqPo9p9QsqLgkYHnQdBooMxxsFnBH62wGb?=
+ =?us-ascii?Q?iIEPq5LlO/rRLfGRw6NrL+/DNLL01d3vn9C8mqDz9Avh5qnLEAiPMfKWuaO5?=
+ =?us-ascii?Q?VRvpGJIPzW/S36JOI7n6zuI5YKXYJ/wLZuEA+bLTcb9FJRvLxIiDLm9R5tRq?=
+ =?us-ascii?Q?v29Ow0y3TOKFtIEp8IWWULR4W+NZh0CYJcA3XPDo4EN0VC3pZiUsurfcOR4T?=
+ =?us-ascii?Q?iECCLK9oH1TXOobRDCic2cmM3byYKrSHFB4eXvMNq5jOyIXrGq9GE4tpzUjV?=
+ =?us-ascii?Q?LQyLFKjF6gYoBebsmf4WDoGlGXt/OdmYpB86R46p+QfyHUNby2rHX+FSllbx?=
+ =?us-ascii?Q?RMfYmH2CKA50QWjEYdXZcS4Ni4mGLRU44PSpV7xoYtveJ9oSEWNKbu3Auo1s?=
+ =?us-ascii?Q?xaAqTq4zpkJVa6LbXHohYoWQI9KeNPb2g09yfvt8AhFRX3WiWu6PAx+WSTuN?=
+ =?us-ascii?Q?N4RCXKDFMT0Vic5/7m95RHie7pPBXMDLCMapkqPwbh17luSZTk6pTo21UULM?=
+ =?us-ascii?Q?XtolxnBOB6ZeVD96NVIysplmR0zhSTMgIYvSce5C6ARpb9VcEog9xSs65szn?=
+ =?us-ascii?Q?p3jJCr24m63udQgUBunFHRYnmZ1hkIv98PYD7qL0ryDMW1BNu7qWV7fi4i2Q?=
+ =?us-ascii?Q?4hZNFEmXSIH7GUBPgB6Pyq4/WjA4rTCdxzrvBFySY3Vuj5lsVD6jw797WZ63?=
+ =?us-ascii?Q?gsXkWtelrDls75Z5erN+jOcarZqseFzLZG7xzlGR4YDvaoQ9+Cj59ywfESTO?=
+ =?us-ascii?Q?L8E77Zao0U8YMYg4YNKhWHPW66wVQUgXaaZde7R5oxEClyVev3252dO0g0tP?=
+ =?us-ascii?Q?Ob1t1fVn83YLFYIJfKuE5mfvALObOZXOap1Y0YYg?=
 X-OriginatorOrg: vmware.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: cf4bb05a-5850-43e7-e9ec-08db8f9772b6
+X-MS-Exchange-CrossTenant-Network-Message-Id: d8500d61-cdc5-42db-062d-08db8f977407
 X-MS-Exchange-CrossTenant-AuthSource: PH0PR05MB8703.namprd05.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 28 Jul 2023 18:21:23.2154
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 28 Jul 2023 18:21:25.3990
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: b39138ca-3cee-4b4a-a4d6-cd83d9dd62f0
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: wFxjxJYruT5vWzIwHiUxYrnlYJiEQkGDT+a2YREBKX2H6v2CJq8TBMw7A5Wv8E2JYV710fTtd81uSkLzfqftWw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN7PR05MB9264
+X-MS-Exchange-CrossTenant-UserPrincipalName: qBQlJFTcUoJh9Eh9wK4WrDiPpGU54aMJqzYNxr8o6Y980Lw/5ScF3lYR19kyWu4sozxIY+SQWbCTRuFrPhaRHA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH3PR05MB10004
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-Add the inode_operations, file_operations, and helper functions to eventfs:
-dcache_dir_open_wrapper()
-eventfs_root_lookup()
-eventfs_release()
-eventfs_set_ef_status_free()
-eventfs_post_create_dir()
+When events are removed from tracefs, the eventfs must be aware of this.
+The eventfs_remove() removes the meta data from eventfs so that it will no
+longer create the files associated with that event.
 
-The inode_operations and file_operations functions will be called from the
-VFS layer.
+When an instance is removed from tracefs, eventfs_remove_events_dir() will
+remove and clean up the entire "events" directory.
 
-create_file() and create_dir() are added as stub functions and will be
-filled in later.
+The helper function eventfs_remove_rec() is used to clean up and free the
+associated data from eventfs for both of the added functions. SRCU is used
+to protect the lists of meta data stored in the eventfs. The eventfs_mutex
+is used to protect the content of the items in the list.
+
+As lookups may be happening as deletions of events are made, the freeing
+of dentry/inodes and relative information is done after the SRCU grace
+period has passed.
 
 Signed-off-by: Ajay Kaher <akaher@vmware.com>
 Co-developed-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
 Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
 Tested-by: Ching-lin Yu <chinglinyu@google.com>
+Reported-by: kernel test robot <lkp@intel.com>
+Closes: https://lore.kernel.org/oe-kbuild-all/202305030611.Kas747Ev-lkp@intel.com/
 ---
- fs/tracefs/event_inode.c | 304 +++++++++++++++++++++++++++++++++++++++
- fs/tracefs/internal.h    |   2 +
- 2 files changed, 306 insertions(+)
+ fs/tracefs/event_inode.c | 143 +++++++++++++++++++++++++++++++++++++++
+ include/linux/tracefs.h  |   4 ++
+ 2 files changed, 147 insertions(+)
 
 diff --git a/fs/tracefs/event_inode.c b/fs/tracefs/event_inode.c
-index 9e4843be9dc9..24d645c61029 100644
+index 5240bd2c81e7..2db7f1028f75 100644
 --- a/fs/tracefs/event_inode.c
 +++ b/fs/tracefs/event_inode.c
-@@ -31,6 +31,8 @@ struct eventfs_inode {
-  * struct eventfs_file - hold the properties of the eventfs files and
-  *                       directories.
-  * @name:	the name of the file or directory to create
-+ * @d_parent:   holds parent's dentry
-+ * @dentry:     once accessed holds dentry
-  * @list:	file or directory to be added to parent directory
-  * @ei:		list of files and directories within directory
-  * @fop:	file_operations for file or directory
-@@ -40,22 +42,320 @@ struct eventfs_inode {
-  */
- struct eventfs_file {
- 	const char			*name;
-+	struct dentry			*d_parent;
-+	struct dentry			*dentry;
- 	struct list_head		list;
- 	struct eventfs_inode		*ei;
- 	const struct file_operations	*fop;
- 	const struct inode_operations	*iop;
-+	union {
-+		struct list_head	del_list; /* list of eventfs_file to delete */
-+		struct rcu_head		rcu; /* eventfs_file to delete */
-+		unsigned long		is_freed; /* Freed if one of the above is set */
-+	};
- 	void				*data;
- 	umode_t				mode;
- };
+@@ -198,6 +198,14 @@ void eventfs_set_ef_status_free(struct dentry *dentry)
+ 	if (!ef)
+ 		goto out;
  
- static DEFINE_MUTEX(eventfs_mutex);
-+DEFINE_STATIC_SRCU(eventfs_srcu);
++	/*
++	 * If ef was freed, then the LSB bit is set for d_fsdata.
++	 * But this should not happen, as it should still have a
++	 * ref count that prevents it. Warn in case it does.
++	 */
++	if (WARN_ON_ONCE((unsigned long)ef & 1))
++		goto out;
 +
-+static struct dentry *eventfs_root_lookup(struct inode *dir,
-+					  struct dentry *dentry,
-+					  unsigned int flags);
-+static int dcache_dir_open_wrapper(struct inode *inode, struct file *file);
-+static int eventfs_release(struct inode *inode, struct file *file);
- 
- static const struct inode_operations eventfs_root_dir_inode_operations = {
-+	.lookup		= eventfs_root_lookup,
- };
- 
- static const struct file_operations eventfs_file_operations = {
-+	.open		= dcache_dir_open_wrapper,
-+	.read		= generic_read_dir,
-+	.iterate_shared	= dcache_readdir,
-+	.llseek		= generic_file_llseek,
-+	.release	= eventfs_release,
-+};
+ 	dentry->d_fsdata = NULL;
+ 	ef->dentry = NULL;
+ out:
+@@ -656,3 +664,138 @@ int eventfs_add_file(const char *name, umode_t mode,
+ 	mutex_unlock(&eventfs_mutex);
+ 	return 0;
+ }
 +
-+/**
-+ * create_file - create a file in the tracefs filesystem
-+ * @name: the name of the file to create.
-+ * @mode: the permission that the file should have.
-+ * @parent: parent dentry for this file.
-+ * @data: something that the caller will want to get to later on.
-+ * @fop: struct file_operations that should be used for this file.
-+ *
-+ * This is the basic "create a file" function for tracefs.  It allows for a
-+ * wide range of flexibility in creating a file.
-+ *
-+ * This function will return a pointer to a dentry if it succeeds.  This
-+ * pointer must be passed to the tracefs_remove() function when the file is
-+ * to be removed (no automatic cleanup happens if your module is unloaded,
-+ * you are responsible here.)  If an error occurs, %NULL will be returned.
-+ *
-+ * If tracefs is not enabled in the kernel, the value -%ENODEV will be
-+ * returned.
-+ */
-+static struct dentry *create_file(const char *name, umode_t mode,
-+				  struct dentry *parent, void *data,
-+				  const struct file_operations *fop)
++static void free_ef(struct rcu_head *head)
 +{
-+	return NULL;
- };
- 
-+/**
-+ * create_dir - create a dir in the tracefs filesystem
-+ * @name: the name of the file to create.
-+ * @parent: parent dentry for this file.
-+ * @data: something that the caller will want to get to later on.
-+ *
-+ * This is the basic "create a dir" function for eventfs.  It allows for a
-+ * wide range of flexibility in creating a dir.
-+ *
-+ * This function will return a pointer to a dentry if it succeeds.  This
-+ * pointer must be passed to the tracefs_remove() function when the file is
-+ * to be removed (no automatic cleanup happens if your module is unloaded,
-+ * you are responsible here.)  If an error occurs, %NULL will be returned.
-+ *
-+ * If tracefs is not enabled in the kernel, the value -%ENODEV will be
-+ * returned.
-+ */
-+static struct dentry *create_dir(const char *name, struct dentry *parent, void *data)
-+{
-+	return NULL;
++	struct eventfs_file *ef = container_of(head, struct eventfs_file, rcu);
++
++	kfree(ef->name);
++	kfree(ef->ei);
++	kfree(ef);
 +}
 +
 +/**
-+ * eventfs_set_ef_status_free - set the ef->status to free
-+ * @dentry: dentry who's status to be freed
++ * eventfs_remove_rec - remove eventfs dir or file from list
++ * @ef: eventfs_file to be removed.
++ * @head: to create list of eventfs_file to be deleted
++ * @level: to check recursion depth
 + *
-+ * eventfs_set_ef_status_free will be called if no more
-+ * references remain
++ * The helper function eventfs_remove_rec() is used to clean up and free the
++ * associated data from eventfs for both of the added functions.
 + */
-+void eventfs_set_ef_status_free(struct dentry *dentry)
-+{
-+	struct tracefs_inode *ti_parent;
-+	struct eventfs_file *ef;
-+
-+	mutex_lock(&eventfs_mutex);
-+	ti_parent = get_tracefs(dentry->d_parent->d_inode);
-+	if (!ti_parent || !(ti_parent->flags & TRACEFS_EVENT_INODE))
-+		goto out;
-+
-+	ef = dentry->d_fsdata;
-+	if (!ef)
-+		goto out;
-+
-+	dentry->d_fsdata = NULL;
-+	ef->dentry = NULL;
-+out:
-+	mutex_unlock(&eventfs_mutex);
-+}
-+
-+/**
-+ * eventfs_post_create_dir - post create dir routine
-+ * @ef: eventfs_file of recently created dir
-+ *
-+ * Map the meta-data of files within an eventfs dir to their parent dentry
-+ */
-+static void eventfs_post_create_dir(struct eventfs_file *ef)
++static void eventfs_remove_rec(struct eventfs_file *ef, struct list_head *head, int level)
 +{
 +	struct eventfs_file *ef_child;
-+	struct tracefs_inode *ti;
 +
-+	/* srcu lock already held */
-+	/* fill parent-child relation */
-+	list_for_each_entry_srcu(ef_child, &ef->ei->e_top_files, list,
-+				 srcu_read_lock_held(&eventfs_srcu)) {
-+		ef_child->d_parent = ef->dentry;
++	if (!ef)
++		return;
++	/*
++	 * Check recursion depth. It should never be greater than 3:
++	 * 0 - events/
++	 * 1 - events/group/
++	 * 2 - events/group/event/
++	 * 3 - events/group/event/file
++	 */
++	if (WARN_ON_ONCE(level > 3))
++		return;
++
++	if (ef->ei) {
++		/* search for nested folders or files */
++		list_for_each_entry_srcu(ef_child, &ef->ei->e_top_files, list,
++					 lockdep_is_held(&eventfs_mutex)) {
++			eventfs_remove_rec(ef_child, head, level + 1);
++		}
 +	}
 +
-+	ti = get_tracefs(ef->dentry->d_inode);
-+	ti->private = ef->ei;
++	list_del_rcu(&ef->list);
++	list_add_tail(&ef->del_list, head);
 +}
 +
 +/**
-+ * create_dentry - helper function to create dentry
-+ * @ef: eventfs_file of file or directory to create
-+ * @parent: parent dentry
-+ * @lookup: true if called from lookup routine
++ * eventfs_remove - remove eventfs dir or file from list
++ * @ef: eventfs_file to be removed.
 + *
-+ * Used to create a dentry for file/dir, executes post dentry creation routine
++ * This function acquire the eventfs_mutex lock and call eventfs_remove_rec()
 + */
-+static struct dentry *
-+create_dentry(struct eventfs_file *ef, struct dentry *parent, bool lookup)
++void eventfs_remove(struct eventfs_file *ef)
 +{
-+	bool invalidate = false;
++	struct eventfs_file *tmp;
++	LIST_HEAD(ef_del_list);
++	struct dentry *dentry_list = NULL;
 +	struct dentry *dentry;
 +
++	if (!ef)
++		return;
++
 +	mutex_lock(&eventfs_mutex);
-+	if (ef->is_freed) {
-+		mutex_unlock(&eventfs_mutex);
-+		return NULL;
-+	}
-+	if (ef->dentry) {
-+		dentry = ef->dentry;
-+		/* On dir open, up the ref count */
-+		if (!lookup)
-+			dget(dentry);
-+		mutex_unlock(&eventfs_mutex);
-+		return dentry;
++	eventfs_remove_rec(ef, &ef_del_list, 0);
++	list_for_each_entry_safe(ef, tmp, &ef_del_list, del_list) {
++		if (ef->dentry) {
++			unsigned long ptr = (unsigned long)dentry_list;
++
++			/* Keep the dentry from being freed yet */
++			dget(ef->dentry);
++
++			/*
++			 * Paranoid: The dget() above should prevent the dentry
++			 * from being freed and calling eventfs_set_ef_status_free().
++			 * But just in case, set the link list LSB pointer to 1
++			 * and have eventfs_set_ef_status_free() check that to
++			 * make sure that if it does happen, it will not think
++			 * the d_fsdata is an event_file.
++			 *
++			 * For this to work, no event_file should be allocated
++			 * on a odd space, as the ef should always be allocated
++			 * to be at least word aligned. Check for that too.
++			 */
++			WARN_ON_ONCE(ptr & 1);
++
++			ef->dentry->d_fsdata = (void *)(ptr | 1);
++			dentry_list = ef->dentry;
++			ef->dentry = NULL;
++		}
++		call_srcu(&eventfs_srcu, &ef->rcu, free_ef);
 +	}
 +	mutex_unlock(&eventfs_mutex);
 +
-+	if (!lookup)
-+		inode_lock(parent->d_inode);
++	while (dentry_list) {
++		unsigned long ptr;
 +
-+	if (ef->ei)
-+		dentry = create_dir(ef->name, parent, ef->data);
-+	else
-+		dentry = create_file(ef->name, ef->mode, parent,
-+				     ef->data, ef->fop);
-+
-+	if (!lookup)
-+		inode_unlock(parent->d_inode);
-+
-+	mutex_lock(&eventfs_mutex);
-+	if (IS_ERR_OR_NULL(dentry)) {
-+		/* If the ef was already updated get it */
-+		dentry = ef->dentry;
-+		if (dentry && !lookup)
-+			dget(dentry);
-+		mutex_unlock(&eventfs_mutex);
-+		return dentry;
-+	}
-+
-+	if (!ef->dentry && !ef->is_freed) {
-+		ef->dentry = dentry;
-+		if (ef->ei)
-+			eventfs_post_create_dir(ef);
-+		dentry->d_fsdata = ef;
-+	} else {
-+		/* A race here, should try again (unless freed) */
-+		invalidate = true;
-+	}
-+	mutex_unlock(&eventfs_mutex);
-+	if (invalidate)
++		dentry = dentry_list;
++		ptr = (unsigned long)dentry->d_fsdata & ~1UL;
++		dentry_list = (struct dentry *)ptr;
++		dentry->d_fsdata = NULL;
 +		d_invalidate(dentry);
-+
-+	if (lookup || invalidate)
-+		dput(dentry);
-+
-+	return invalidate ? NULL : dentry;
-+}
-+
-+static bool match_event_file(struct eventfs_file *ef, const char *name)
-+{
-+	bool ret;
-+
-+	mutex_lock(&eventfs_mutex);
-+	ret = !ef->is_freed && strcmp(ef->name, name) == 0;
-+	mutex_unlock(&eventfs_mutex);
-+
-+	return ret;
-+}
-+
-+/**
-+ * eventfs_root_lookup - lookup routine to create file/dir
-+ * @dir: in which a lookup is being done
-+ * @dentry: file/dir dentry
-+ * @flags: to pass as flags parameter to simple lookup
-+ *
-+ * Used to create a dynamic file/dir within @dir. Use the eventfs_inode
-+ * list of meta data to find the information needed to create the file/dir.
-+ */
-+static struct dentry *eventfs_root_lookup(struct inode *dir,
-+					  struct dentry *dentry,
-+					  unsigned int flags)
-+{
-+	struct tracefs_inode *ti;
-+	struct eventfs_inode *ei;
-+	struct eventfs_file *ef;
-+	struct dentry *ret = NULL;
-+	int idx;
-+
-+	ti = get_tracefs(dir);
-+	if (!(ti->flags & TRACEFS_EVENT_INODE))
-+		return NULL;
-+
-+	ei = ti->private;
-+	idx = srcu_read_lock(&eventfs_srcu);
-+	list_for_each_entry_srcu(ef, &ei->e_top_files, list,
-+				 srcu_read_lock_held(&eventfs_srcu)) {
-+		if (!match_event_file(ef, dentry->d_name.name))
-+			continue;
-+		ret = simple_lookup(dir, dentry, flags);
-+		create_dentry(ef, ef->d_parent, true);
-+		break;
-+	}
-+	srcu_read_unlock(&eventfs_srcu, idx);
-+	return ret;
-+}
-+
-+/**
-+ * eventfs_release - called to release eventfs file/dir
-+ * @inode: inode to be released
-+ * @file: file to be released (not used)
-+ */
-+static int eventfs_release(struct inode *inode, struct file *file)
-+{
-+	struct tracefs_inode *ti;
-+	struct eventfs_inode *ei;
-+	struct eventfs_file *ef;
-+	struct dentry *dentry;
-+	int idx;
-+
-+	ti = get_tracefs(inode);
-+	if (!(ti->flags & TRACEFS_EVENT_INODE))
-+		return -EINVAL;
-+
-+	ei = ti->private;
-+	idx = srcu_read_lock(&eventfs_srcu);
-+	list_for_each_entry_srcu(ef, &ei->e_top_files, list,
-+				 srcu_read_lock_held(&eventfs_srcu)) {
 +		mutex_lock(&eventfs_mutex);
-+		dentry = ef->dentry;
++		/* dentry should now have at least a single reference */
++		WARN_ONCE((int)d_count(dentry) < 1,
++			  "dentry %p less than one reference (%d) after invalidate\n",
++			  dentry, d_count(dentry));
 +		mutex_unlock(&eventfs_mutex);
-+		if (dentry)
-+			dput(dentry);
++		dput(dentry);
 +	}
-+	srcu_read_unlock(&eventfs_srcu, idx);
-+	return dcache_dir_close(inode, file);
 +}
 +
 +/**
-+ * dcache_dir_open_wrapper - eventfs open wrapper
-+ * @inode: not used
-+ * @file: dir to be opened (to create its child)
++ * eventfs_remove_events_dir - remove eventfs dir or file from list
++ * @dentry: events's dentry to be removed.
 + *
-+ * Used to dynamically create the file/dir within @file. @file is really a
-+ * directory and all the files/dirs of the children within @file will be
-+ * created. If any of the files/dirs have already been created, their
-+ * reference count will be incremented.
++ * This function remove events main directory
 + */
-+static int dcache_dir_open_wrapper(struct inode *inode, struct file *file)
++void eventfs_remove_events_dir(struct dentry *dentry)
 +{
 +	struct tracefs_inode *ti;
 +	struct eventfs_inode *ei;
-+	struct eventfs_file *ef;
-+	struct dentry *dentry = file_dentry(file);
-+	struct inode *f_inode = file_inode(file);
-+	int idx;
 +
-+	ti = get_tracefs(f_inode);
-+	if (!(ti->flags & TRACEFS_EVENT_INODE))
-+		return -EINVAL;
++	if (!dentry || !dentry->d_inode)
++		return;
++
++	ti = get_tracefs(dentry->d_inode);
++	if (!ti || !(ti->flags & TRACEFS_EVENT_INODE))
++		return;
 +
 +	ei = ti->private;
-+	idx = srcu_read_lock(&eventfs_srcu);
-+	list_for_each_entry_rcu(ef, &ei->e_top_files, list) {
-+		create_dentry(ef, dentry, false);
-+	}
-+	srcu_read_unlock(&eventfs_srcu, idx);
-+	return dcache_dir_open(inode, file);
++	d_invalidate(dentry);
++	dput(dentry);
++	kfree(ei);
 +}
+diff --git a/include/linux/tracefs.h b/include/linux/tracefs.h
+index 54c9cbd0389b..009072792fa3 100644
+--- a/include/linux/tracefs.h
++++ b/include/linux/tracefs.h
+@@ -40,6 +40,10 @@ int eventfs_add_events_file(const char *name, umode_t mode,
+ 			 struct dentry *parent, void *data,
+ 			 const struct file_operations *fops);
+ 
++void eventfs_remove(struct eventfs_file *ef);
 +
- /**
-  * eventfs_prepare_ef - helper function to prepare eventfs_file
-  * @name: the name of the file/directory to create.
-@@ -179,6 +479,7 @@ struct eventfs_file *eventfs_add_subsystem_dir(const char *name,
- 
- 	mutex_lock(&eventfs_mutex);
- 	list_add_tail(&ef->list, &ei_parent->e_top_files);
-+	ef->d_parent = parent;
- 	mutex_unlock(&eventfs_mutex);
- 	return ef;
- }
-@@ -206,6 +507,7 @@ struct eventfs_file *eventfs_add_dir(const char *name,
- 
- 	mutex_lock(&eventfs_mutex);
- 	list_add_tail(&ef->list, &ef_parent->ei->e_top_files);
-+	ef->d_parent = ef_parent->dentry;
- 	mutex_unlock(&eventfs_mutex);
- 	return ef;
- }
-@@ -254,6 +556,7 @@ int eventfs_add_events_file(const char *name, umode_t mode,
- 
- 	mutex_lock(&eventfs_mutex);
- 	list_add_tail(&ef->list, &ei->e_top_files);
-+	ef->d_parent = parent;
- 	mutex_unlock(&eventfs_mutex);
- 	return 0;
- }
-@@ -292,6 +595,7 @@ int eventfs_add_file(const char *name, umode_t mode,
- 
- 	mutex_lock(&eventfs_mutex);
- 	list_add_tail(&ef->list, &ef_parent->ei->e_top_files);
-+	ef->d_parent = ef_parent->dentry;
- 	mutex_unlock(&eventfs_mutex);
- 	return 0;
- }
-diff --git a/fs/tracefs/internal.h b/fs/tracefs/internal.h
-index f0fd565d59ec..9bfad9d95a4a 100644
---- a/fs/tracefs/internal.h
-+++ b/fs/tracefs/internal.h
-@@ -21,4 +21,6 @@ struct dentry *tracefs_start_creating(const char *name, struct dentry *parent);
- struct dentry *tracefs_end_creating(struct dentry *dentry);
- struct dentry *tracefs_failed_creating(struct dentry *dentry);
- struct inode *tracefs_get_inode(struct super_block *sb);
-+void eventfs_set_ef_status_free(struct dentry *dentry);
++void eventfs_remove_events_dir(struct dentry *dentry);
 +
- #endif /* _TRACEFS_INTERNAL_H */
+ struct dentry *tracefs_create_file(const char *name, umode_t mode,
+ 				   struct dentry *parent, void *data,
+ 				   const struct file_operations *fops);
 -- 
 2.39.0
 
