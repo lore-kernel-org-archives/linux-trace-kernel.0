@@ -2,182 +2,128 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B4557C0015E
-	for <linux-trace-kernel@archiver.kernel.org>; Fri, 28 Jul 2023 18:22:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CFB1EB64DD
+	for <linux-trace-kernel@archiver.kernel.org>; Fri, 28 Jul 2023 22:04:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S236427AbjG1SWJ (ORCPT
+        id S230270AbjG1WEc (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Fri, 28 Jul 2023 14:22:09 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33214 "EHLO
+        Fri, 28 Jul 2023 18:04:32 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42140 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S236289AbjG1SVr (ORCPT
+        with ESMTP id S229847AbjG1WEb (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Fri, 28 Jul 2023 14:21:47 -0400
-Received: from CY4PR02CU008.outbound.protection.outlook.com (mail-westcentralusazon11012003.outbound.protection.outlook.com [40.93.200.3])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 22432449E;
-        Fri, 28 Jul 2023 11:21:32 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=bK+MaAOySfGSCciXUTt1JLQOPNbFNsLlG5fmWdQqam0xbslQ8egftyEKs4/6DlKTahE4DT31HqQWl+FnjEg7iqzh8ietR6LrSXxuJ1a04ZBWkOWQMc/nJwj2VsN7eutIPp/NMUjkkdylTTqaWGpNfYp+uZDvyDliR5oXmMXDreGywuCrNDdwEL+v9W7H1KzVTwE2qrfIcqXDCSpmI4ZdzGpG6XJTaGpwgpiBO9C5oYT0V9Bp946VY+ZBjlLagVnFLc3M80FbB9fwZ1muVDZJdBmkisW3ZPNMVYeGoA55gnIJxR+ZYqcAvzHC4RV/r5qNzuZM7ubmHrNbaGzHKhmB3w==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=RD4e/LRWicfReGBTq2PmuuNab6VTlR+NonQSH7Pjua4=;
- b=iWFvEeMiri/Sgg2f42bl9B/Jk0JN3ywmmbNJdn0Yr0WlANeFoggHFhoqoPxAghjQLQRtkkxtvpj9XEMd9b4jZKTShFYUDqhz2TrGyVCaV65dMpBSGlKHv56lNC38b988MV9GREem/vnFU7qM9jZVNMxhc+LHzZej+GGVoIfWqmsG6QqOkTV7tlLrZWrvmslMOW7Uyi8W6DWwNaHFBfkQH55bJtt7B5+Hy2ZEu82Aw4OP9Nz07Ngjz3v60JFVuLOvP3qkJqZEsc6EKIyGBe0SKL6gPZq86Q0jxF19qSe9RjdSQDNNxzVEPiR6BkAvgRxuVbeGNK5Aog40cVQvUA0LyQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=vmware.com; dmarc=pass action=none header.from=vmware.com;
- dkim=pass header.d=vmware.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=vmware.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=RD4e/LRWicfReGBTq2PmuuNab6VTlR+NonQSH7Pjua4=;
- b=PtQBvSxG3QPb6XlUjGkieI2ZD8EfdqDRAtn9RUyABNGfoBhL1xEPeCJsljBCGt3okwAx7ZiZLTkqURJGW8ooUPrXrgIdWmpjpLlV51llhn4XCM2sv7qgJ1j/yfK7kjS0xWbcC8bM17o81geZBYVPKvoQmZgeXyErBgFJ/fivWs0=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=vmware.com;
-Received: from PH0PR05MB8703.namprd05.prod.outlook.com (2603:10b6:510:bd::5)
- by CH3PR05MB10004.namprd05.prod.outlook.com (2603:10b6:610:123::6) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.6631.29; Fri, 28 Jul
- 2023 18:21:27 +0000
-Received: from PH0PR05MB8703.namprd05.prod.outlook.com
- ([fe80::b5d8:98b9:6ca7:94f0]) by PH0PR05MB8703.namprd05.prod.outlook.com
- ([fe80::b5d8:98b9:6ca7:94f0%6]) with mapi id 15.20.6631.026; Fri, 28 Jul 2023
- 18:21:27 +0000
-From:   Ajay Kaher <akaher@vmware.com>
-To:     rostedt@goodmis.org, shuah@kernel.org, mhiramat@kernel.org
-Cc:     chinglinyu@google.com, linux-kernel@vger.kernel.org,
+        Fri, 28 Jul 2023 18:04:31 -0400
+Received: from desiato.infradead.org (desiato.infradead.org [IPv6:2001:8b0:10b:1:d65d:64ff:fe57:4e05])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7EDC72D5F;
+        Fri, 28 Jul 2023 15:04:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=desiato.20200630; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=hdyXHCNmm6/5wN+6xDZf0F3DJhdGMtE6XIr7LH2nzps=; b=az3KeLxLnSrbQBwqv9/MzZharB
+        XC/CzNA7Lp/jBX3ELKZoMfPLCFD8prlAFh1YU6kTTR2u17rl3JCqKw+pZowYM57qF6CPwb00aYwbX
+        eBlOmmPr3eFJZvJ3MNy7wcBD1eLVBS3i3DtUJ6AGEt73k06W+rlctva3nopCF/GRvmg/r8r5tbF7O
+        C32CVvNlLVubSVgvWVqJMelwfY8fE7Qt5yAo/bwDQe3SH7hyQ8VuLBLRIOfhU9Y5qwznNbklKqYBC
+        W2pdV/Qoi7PugEUAq/+LeaTyGX125ueR/+JE2wvqq6Ku1Y6Jh+zFpOm1GQ5vj30Dzwphepn9MNOWV
+        SueCznBA==;
+Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
+        by desiato.infradead.org with esmtpsa (Exim 4.96 #2 (Red Hat Linux))
+        id 1qPVZS-008Veg-2p;
+        Fri, 28 Jul 2023 22:04:27 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange X25519 server-signature RSA-PSS (4096 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 6A18030039F;
+        Sat, 29 Jul 2023 00:04:26 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 5144C2C973624; Sat, 29 Jul 2023 00:04:26 +0200 (CEST)
+Date:   Sat, 29 Jul 2023 00:04:26 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Valentin Schneider <vschneid@redhat.com>
+Cc:     linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+        linux-doc@vger.kernel.org, kvm@vger.kernel.org, linux-mm@kvack.org,
+        bpf@vger.kernel.org, x86@kernel.org, rcu@vger.kernel.org,
         linux-kselftest@vger.kernel.org,
-        linux-trace-kernel@vger.kernel.org, lkp@intel.com,
-        namit@vmware.com, oe-lkp@lists.linux.dev, akaher@vmware.com,
-        amakhalov@vmware.com, er.ajay.kaher@gmail.com,
-        srivatsa@csail.mit.edu, tkundu@vmware.com, vsirnapalli@vmware.com
-Subject: [PATCH v6 10/10] test: ftrace: Fix kprobe test for eventfs
-Date:   Fri, 28 Jul 2023 23:50:52 +0530
-Message-Id: <1690568452-46553-11-git-send-email-akaher@vmware.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1690568452-46553-1-git-send-email-akaher@vmware.com>
-References: <1690568452-46553-1-git-send-email-akaher@vmware.com>
-Content-Type: text/plain
-X-ClientProxiedBy: BYAPR11CA0090.namprd11.prod.outlook.com
- (2603:10b6:a03:f4::31) To PH0PR05MB8703.namprd05.prod.outlook.com
- (2603:10b6:510:bd::5)
+        Steven Rostedt <rostedt@goodmis.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Frederic Weisbecker <frederic@kernel.org>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        Neeraj Upadhyay <quic_neeraju@quicinc.com>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Josh Triplett <josh@joshtriplett.org>,
+        Boqun Feng <boqun.feng@gmail.com>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Lai Jiangshan <jiangshanlai@gmail.com>,
+        Zqiang <qiang.zhang1211@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Uladzislau Rezki <urezki@gmail.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        Lorenzo Stoakes <lstoakes@gmail.com>,
+        Josh Poimboeuf <jpoimboe@kernel.org>,
+        Jason Baron <jbaron@akamai.com>,
+        Kees Cook <keescook@chromium.org>,
+        Sami Tolvanen <samitolvanen@google.com>,
+        Ard Biesheuvel <ardb@kernel.org>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        Juerg Haefliger <juerg.haefliger@canonical.com>,
+        Nicolas Saenz Julienne <nsaenz@kernel.org>,
+        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+        Nadav Amit <namit@vmware.com>,
+        Dan Carpenter <error27@gmail.com>,
+        Chuang Wang <nashuiliang@gmail.com>,
+        Yang Jihong <yangjihong1@huawei.com>,
+        Petr Mladek <pmladek@suse.com>,
+        "Jason A. Donenfeld" <Jason@zx2c4.com>, Song Liu <song@kernel.org>,
+        Julian Pidancet <julian.pidancet@oracle.com>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        Dionna Glaze <dionnaglaze@google.com>,
+        Thomas =?iso-8859-1?Q?Wei=DFschuh?= <linux@weissschuh.net>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Daniel Bristot de Oliveira <bristot@redhat.com>,
+        Marcelo Tosatti <mtosatti@redhat.com>,
+        Yair Podemsky <ypodemsk@redhat.com>
+Subject: Re: [RFC PATCH v2 10/20] jump_label,module: Don't alloc
+ static_key_mod for __ro_after_init keys
+Message-ID: <20230728220426.GB3934165@hirez.programming.kicks-ass.net>
+References: <20230720163056.2564824-1-vschneid@redhat.com>
+ <20230720163056.2564824-11-vschneid@redhat.com>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PH0PR05MB8703:EE_|CH3PR05MB10004:EE_
-X-MS-Office365-Filtering-Correlation-Id: 7c23c12e-33f0-4f27-995b-08db8f97754d
-X-LD-Processed: b39138ca-3cee-4b4a-a4d6-cd83d9dd62f0,ExtAddr
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: 9Cx0OD1gnshYb+MH28H6wbcb0IOB2gW6ZJmYg/ssTouclIvuv+25T90VLhq1IJDXarkjUdJ1vqEgqZc7gNCzbUDV7jqXCC2iXjFRkhE7GEgCBXHWhHQvs9tNJ6V1xSWxE5X0A7L7E9onvkTw9WfqDsde4lNHq1IgyX5jmVj01jN99L1doXLjcmyTtlWSJTvfLt/uzulVkq1wlw63wt7VhSEXIlU367LhrJWHPJ3KmFXF+KM7gU0L5WKo9cwu0cvwNMl1lxhB6I6O3UVIkDp6k0Mxe0vShB3/PVqPGYZ5muef5TdOVgteSaI3fXdfmCdKu0WOppFCLD3o6HydTeOrAKWpokmX9p8tfqLSx5qzU7OgBc3XTgbfb/1fwoSOMIPUB5RDrviG5fZsXMN/AU5piWwel3XVhobYw0KfBjO6F0wzZ7qr7wqWvw7VoqpeSVqd+dhuA9I/oQiRmgk2s0Cm/kSpE6Su9URUImSmowb2LOskC6ldvRJNFPFBVPRiaQusn1i5VUmO7W2xKEZJchn2bIKtQ4mvPpspxdrGWdtMm6nqHHYK+WnNhp1yeuPT/By9kpTK/V9J9uyPXoltprM6LZZovouNtgk/ZsvCSCxxbs051slFjHC1xaG5qdIs9swTQWgsxKfELasNBhKYuhIT7i0CL4rjVY80//FCGS8KYvQ=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH0PR05MB8703.namprd05.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230028)(4636009)(39860400002)(396003)(366004)(376002)(136003)(346002)(451199021)(83380400001)(66476007)(4326008)(316002)(6486002)(52116002)(6512007)(38350700002)(478600001)(38100700002)(66556008)(2616005)(8936002)(8676002)(66946007)(41300700001)(5660300002)(186003)(6506007)(107886003)(6666004)(26005)(86362001)(7416002)(2906002)(36756003);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?fm6cEnzwFEGTRRo5xfjGZxwESvYZ5snQhqfeLnT2YJhztqv9V/Ab4d2FhnlA?=
- =?us-ascii?Q?TaNl3B1ZFdOtn/mSLNESGTQOn2h1ZKLiMrwJzeEDgjKCvmpL/Oiy+eDzMcKE?=
- =?us-ascii?Q?xaVeMyfc1IXowJNj/7XhcFoUpjnLijYnJFLQzPokKeKUHv04r+fDUvxzLfto?=
- =?us-ascii?Q?+pL1QmDN+1+TL6m3gN+YfPF54IPrvPC3BxX7dvoGIdwJa1RZwZpAKx03IMOE?=
- =?us-ascii?Q?2YPBs5HFbkv5z3KEh2sx9hj+y3GZGUtz5NUhM4ii8Djy1LoywkDZFCnofGCL?=
- =?us-ascii?Q?o2X57Y+qrgadeIuR4MsWOxgl/JITaMCfPkNDidMGjtp2jm7kjgrkFVnQcq9n?=
- =?us-ascii?Q?vG4c2TomV1Upr0nj2fBFu34Zi1QANxcUC/d3C95x4d0ECvIahYbOL2v0LrOI?=
- =?us-ascii?Q?OQDdIj0XxN9GP+G0zeyp1HuegrI6/5V3Cl8oQWI4bfUGlKdaepxtdHQm0Nkn?=
- =?us-ascii?Q?hC8exhnOkhjueKUlZu3Nm6i+A20cvDmG0hocnY4vBNQzgIqXqcTuyGBNfuou?=
- =?us-ascii?Q?wDMcFntU/d7IfWe4PaHenW7kzeYxK6I8RZR4tIAVuD84Cocia+EWanUaN9AR?=
- =?us-ascii?Q?LA9335bomqcyZvVH53765w05n3/CPau5/CrOny3vJRbUV7gAfqeyifSwxb6D?=
- =?us-ascii?Q?fYWTFyzfUGs0YUXt6o65z+cswbywg3EzORcvUsjSZrLUcJAxuzmlhlpRhcQN?=
- =?us-ascii?Q?HNpy5WM7ep9vWK4rBUEE7sX6lbQjZFb3Q7TSOe9vOEuicFulscpvRSZ3CAVG?=
- =?us-ascii?Q?JLrMbo1aAZ5ctxN/Pcv09ct7ao96A/Oufj6G/ezfORqLkk/urnpmK1AEnVEd?=
- =?us-ascii?Q?/ZemNsbeL6DYLM7LVlPiGG116baKwVS5P8EgxJXSF9a4IfdMrihzp516VZT7?=
- =?us-ascii?Q?lcZsXzlteTj/s81/aTBbhb/JG9U8Z0/B47zA8icdPOyfBwHka0u65XR5vU2g?=
- =?us-ascii?Q?vvCt2WwcBV+cCNAQEbjBXfuXTu7vHKn+M4UxPDxjKfrV8U1hMgqMgfnw8KVy?=
- =?us-ascii?Q?ziHwcqnlKX4dF1i4qdZ/AYtTpN2DKMYSjJ9i/LgN2+B/FX+R0FOHwMEvhQdW?=
- =?us-ascii?Q?Gnz8/ymzRylosgnL8xZ8XfHEZuImOdqdFjWn+JvA1jfSvkvCdW8elN3rJKAP?=
- =?us-ascii?Q?BJ2WsADsJNOC4hql2mAJc4VCmCV7ebNW1dqCN7KN6SdOqmcLCSuADOKHKL+P?=
- =?us-ascii?Q?+HEK3D7Z9I2U7w4eUiCxTNLhr3aQsfxPpWuMRqFIkyWKJs5auNMJW5MfNmdU?=
- =?us-ascii?Q?pNA81y5HI81MiFrOzbtaxTX+x5sW0YrK0nV+EDHZT5nv9alOHzsoi4ADYbCK?=
- =?us-ascii?Q?e5+WTXTs4PgJA9RPeur2elb7t+bAN7vyyJ2yVDqRzcn+rS8foBnMce40Y+qx?=
- =?us-ascii?Q?K64Ba+Z9/NyNydSGiumIdaqs9hrWozGvs7f1AufqMF0kgdYNPh74mKwq1PVa?=
- =?us-ascii?Q?JBU+heMM7ipHEDIyLDGll1xQa68T87ZW8nfEKsMo5vNTFHb90CA4n5E+ANwK?=
- =?us-ascii?Q?0PermoapTDQouiWbzRhND5UWJWxqFZMqu34C+giyAd+lRS6NYw5y2r2oyVlT?=
- =?us-ascii?Q?38xqSV7eDupA6JBCOwYtNoEJvsR2iwyrr/qwnIWS?=
-X-OriginatorOrg: vmware.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 7c23c12e-33f0-4f27-995b-08db8f97754d
-X-MS-Exchange-CrossTenant-AuthSource: PH0PR05MB8703.namprd05.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 28 Jul 2023 18:21:27.5461
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: b39138ca-3cee-4b4a-a4d6-cd83d9dd62f0
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 5klzU3tdRr96XM8Oj63Z/4njnIlRFeMsHwAGYSmmwiYu2EpcZwx4nFiRtuyOo7vPJH3TnzmE2umBDLZn0td/6A==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH3PR05MB10004
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230720163056.2564824-11-vschneid@redhat.com>
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-kprobe_args_char.tc, kprobe_args_string.tc has validation check
-for tracefs_create_dir, for eventfs it should be eventfs_create_dir.
+On Thu, Jul 20, 2023 at 05:30:46PM +0100, Valentin Schneider wrote:
+> From: Peter Zijlstra <peterz@infradead.org>
+> 
+> When a static_key is marked ro_after_init, its state will never change
+> (after init), therefore jump_label_update() will never need to iterate
+> the entries, and thus module load won't actually need to track this --
+> avoiding the static_key::next write.
+> 
+> Therefore, mark these keys such that jump_label_add_module() might
+> recognise them and avoid the modification.
+> 
+> Use the special state: 'static_key_linked(key) && !static_key_mod(key)'
+> to denote such keys.
+> 
+> Link: http://lore.kernel.org/r/20230705204142.GB2813335@hirez.programming.kicks-ass.net
+> NOT-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+> Signed-off-by: Valentin Schneider <vschneid@redhat.com>
+> ---
+> @Peter: I've barely touched this patch, it's just been writing a comment
+> and fixing benign compilation issues, so credit's all yours really!
 
-Signed-off-by: Ajay Kaher <akaher@vmware.com>
-Co-developed-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
-Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
-Tested-by: Ching-lin Yu <chinglinyu@google.com>
-Acked-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
----
- .../selftests/ftrace/test.d/kprobe/kprobe_args_char.tc   | 9 +++++++--
- .../selftests/ftrace/test.d/kprobe/kprobe_args_string.tc | 9 +++++++--
- 2 files changed, 14 insertions(+), 4 deletions(-)
-
-diff --git a/tools/testing/selftests/ftrace/test.d/kprobe/kprobe_args_char.tc b/tools/testing/selftests/ftrace/test.d/kprobe/kprobe_args_char.tc
-index 285b4770efad..ff7499eb98d6 100644
---- a/tools/testing/selftests/ftrace/test.d/kprobe/kprobe_args_char.tc
-+++ b/tools/testing/selftests/ftrace/test.d/kprobe/kprobe_args_char.tc
-@@ -34,14 +34,19 @@ mips*)
- esac
- 
- : "Test get argument (1)"
--echo "p:testprobe tracefs_create_dir arg1=+0(${ARG1}):char" > kprobe_events
-+if grep -q eventfs_add_dir available_filter_functions; then
-+  DIR_NAME="eventfs_add_dir"
-+else
-+  DIR_NAME="tracefs_create_dir"
-+fi
-+echo "p:testprobe ${DIR_NAME} arg1=+0(${ARG1}):char" > kprobe_events
- echo 1 > events/kprobes/testprobe/enable
- echo "p:test $FUNCTION_FORK" >> kprobe_events
- grep -qe "testprobe.* arg1='t'" trace
- 
- echo 0 > events/kprobes/testprobe/enable
- : "Test get argument (2)"
--echo "p:testprobe tracefs_create_dir arg1=+0(${ARG1}):char arg2=+0(${ARG1}):char[4]" > kprobe_events
-+echo "p:testprobe ${DIR_NAME} arg1=+0(${ARG1}):char arg2=+0(${ARG1}):char[4]" > kprobe_events
- echo 1 > events/kprobes/testprobe/enable
- echo "p:test $FUNCTION_FORK" >> kprobe_events
- grep -qe "testprobe.* arg1='t' arg2={'t','e','s','t'}" trace
-diff --git a/tools/testing/selftests/ftrace/test.d/kprobe/kprobe_args_string.tc b/tools/testing/selftests/ftrace/test.d/kprobe/kprobe_args_string.tc
-index a4f8e7c53c1f..a202b2ea4baf 100644
---- a/tools/testing/selftests/ftrace/test.d/kprobe/kprobe_args_string.tc
-+++ b/tools/testing/selftests/ftrace/test.d/kprobe/kprobe_args_string.tc
-@@ -37,14 +37,19 @@ loongarch*)
- esac
- 
- : "Test get argument (1)"
--echo "p:testprobe tracefs_create_dir arg1=+0(${ARG1}):string" > kprobe_events
-+if grep -q eventfs_add_dir available_filter_functions; then
-+  DIR_NAME="eventfs_add_dir"
-+else
-+  DIR_NAME="tracefs_create_dir"
-+fi
-+echo "p:testprobe ${DIR_NAME} arg1=+0(${ARG1}):string" > kprobe_events
- echo 1 > events/kprobes/testprobe/enable
- echo "p:test $FUNCTION_FORK" >> kprobe_events
- grep -qe "testprobe.* arg1=\"test\"" trace
- 
- echo 0 > events/kprobes/testprobe/enable
- : "Test get argument (2)"
--echo "p:testprobe tracefs_create_dir arg1=+0(${ARG1}):string arg2=+0(${ARG1}):string" > kprobe_events
-+echo "p:testprobe ${DIR_NAME} arg1=+0(${ARG1}):string arg2=+0(${ARG1}):string" > kprobe_events
- echo 1 > events/kprobes/testprobe/enable
- echo "p:test $FUNCTION_FORK" >> kprobe_events
- grep -qe "testprobe.* arg1=\"test\" arg2=\"test\"" trace
--- 
-2.39.0
-
+Ah, it works? Excellent! You can remove the NOT from the SoB then ;-)
