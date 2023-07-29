@@ -2,146 +2,76 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4719CEB64DD
-	for <linux-trace-kernel@archiver.kernel.org>; Sat, 29 Jul 2023 01:10:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 885C0EB64DD
+	for <linux-trace-kernel@archiver.kernel.org>; Sat, 29 Jul 2023 01:28:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S237027AbjG2BK5 (ORCPT
+        id S234818AbjG2B2A (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Fri, 28 Jul 2023 21:10:57 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33580 "EHLO
+        Fri, 28 Jul 2023 21:28:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:45650 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S231659AbjG2BKz (ORCPT
+        with ESMTP id S231842AbjG2B1v (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Fri, 28 Jul 2023 21:10:55 -0400
-Received: from mgamail.intel.com (unknown [192.55.52.136])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D1B5135A3;
-        Fri, 28 Jul 2023 18:10:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1690593054; x=1722129054;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=kzv2DGYsKbOYbLPt0TVO3KWubHCvzAMQu7xqNYXbC1s=;
-  b=gN0ogzVjtsYTbvNblAmZbYuac9u9pDUSu8PXhKnQN1wwm2AMDz+sWd7M
-   sWszDbOuw27SofO+RUM0mqSxW0wfLp4kFNSrcHAYBf5OZPzJPu6cUjzoH
-   xoWi16Pq3O+FAJ1cRqr0xy+BQScMvflmwgCNH2nq+jxCGT49qP6NBGkgC
-   zKJ1705K1RGdM0jURgxmDorKHZgORBiWd7jZc3nZEgtM5jkVLDCP+NMsv
-   FyQpVqfQAFG13HUB8fZT3t0b3/lcj0F2/Lg60ENrzOGCWSr5YFvfkLB+6
-   9g06ArlsGkbK8Giiah+q75oQFTzrO5rYgmVrbxfNsI410k2RMmR/7uK+w
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10785"; a="348321380"
-X-IronPort-AV: E=Sophos;i="6.01,238,1684825200"; 
-   d="scan'208";a="348321380"
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Jul 2023 18:10:54 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10785"; a="841517173"
-X-IronPort-AV: E=Sophos;i="6.01,238,1684825200"; 
-   d="scan'208";a="841517173"
-Received: from lkp-server02.sh.intel.com (HELO 953e8cd98f7d) ([10.239.97.151])
-  by fmsmga002.fm.intel.com with ESMTP; 28 Jul 2023 18:10:52 -0700
-Received: from kbuild by 953e8cd98f7d with local (Exim 4.96)
-        (envelope-from <lkp@intel.com>)
-        id 1qPYTQ-0003j1-11;
-        Sat, 29 Jul 2023 01:10:32 +0000
-Date:   Sat, 29 Jul 2023 09:09:44 +0800
-From:   kernel test robot <lkp@intel.com>
-To:     Vincent Donnefort <vdonnefort@google.com>, rostedt@goodmis.org,
-        mhiramat@kernel.org, linux-kernel@vger.kernel.org,
-        linux-trace-kernel@vger.kernel.org
-Cc:     llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
-        kernel-team@android.com, Vincent Donnefort <vdonnefort@google.com>
-Subject: Re: [PATCH v5 1/2] ring-buffer: Introducing ring-buffer mapping
- functions
-Message-ID: <202307290828.WNBmhbTA-lkp@intel.com>
-References: <20230728164754.460767-2-vdonnefort@google.com>
+        Fri, 28 Jul 2023 21:27:51 -0400
+Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CC084AB
+        for <linux-trace-kernel@vger.kernel.org>; Fri, 28 Jul 2023 18:27:49 -0700 (PDT)
+Received: from kwepemi500012.china.huawei.com (unknown [172.30.72.54])
+        by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4RCRfT6dVyzVjgC;
+        Sat, 29 Jul 2023 09:26:09 +0800 (CST)
+Received: from cgs.huawei.com (10.244.148.83) by
+ kwepemi500012.china.huawei.com (7.221.188.12) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.27; Sat, 29 Jul 2023 09:27:47 +0800
+From:   Gaosheng Cui <cuigaosheng1@huawei.com>
+To:     <rostedt@goodmis.org>, <mhiramat@kernel.org>,
+        <mark.rutland@arm.com>, <linux@armlinux.org.uk>,
+        <cuigaosheng1@huawei.com>
+CC:     <linux-trace-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>
+Subject: [PATCH v3] ARM: ftrace: remove unused ftrace_graph_caller_old() declaration
+Date:   Sat, 29 Jul 2023 09:27:46 +0800
+Message-ID: <20230729012746.2714282-1-cuigaosheng1@huawei.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20230728164754.460767-2-vdonnefort@google.com>
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [10.244.148.83]
+X-ClientProxiedBy: dggems705-chm.china.huawei.com (10.3.19.182) To
+ kwepemi500012.china.huawei.com (7.221.188.12)
+X-CFilter-Loop: Reflected
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-Hi Vincent,
+All uses of ftrace_graph_caller_old() were removed by
+commit d3c61619568c ("ARM: 8788/1: ftrace: remove old
+mcount support"), so remove the declaration, too.
 
-kernel test robot noticed the following build errors:
+Signed-off-by: Gaosheng Cui <cuigaosheng1@huawei.com>
+Acked-by: Linus Walleij <linus.walleij@linaro.org>
+---
+v3:
+- linus.walleij@xxxxxxxxxx -> linus.walleij@linaro.org, thanks!
+v2:
+- Nothing change, resend, thanks!
+v1:
+- links: https://www.spinics.net/lists/linux-usb/msg231303.html
+ arch/arm/kernel/ftrace.c | 1 -
+ 1 file changed, 1 deletion(-)
 
-[auto build test ERROR on linus/master]
-[cannot apply to rostedt-trace/for-next rostedt-trace/for-next-urgent]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
-
-url:    https://github.com/intel-lab-lkp/linux/commits/Vincent-Donnefort/ring-buffer-Introducing-ring-buffer-mapping-functions/20230729-005300
-base:   linus/master
-patch link:    https://lore.kernel.org/r/20230728164754.460767-2-vdonnefort%40google.com
-patch subject: [PATCH v5 1/2] ring-buffer: Introducing ring-buffer mapping functions
-config: arm-randconfig-r033-20230728 (https://download.01.org/0day-ci/archive/20230729/202307290828.WNBmhbTA-lkp@intel.com/config)
-compiler: clang version 17.0.0 (https://github.com/llvm/llvm-project.git 4a5ac14ee968ff0ad5d2cc1ffa0299048db4c88a)
-reproduce: (https://download.01.org/0day-ci/archive/20230729/202307290828.WNBmhbTA-lkp@intel.com/reproduce)
-
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202307290828.WNBmhbTA-lkp@intel.com/
-
-All errors (new ones prefixed by >>):
-
->> kernel/trace/ring_buffer.c:5946:16: error: incompatible integer to pointer conversion passing 'unsigned long' to parameter of type 'const void *' [-Wint-conversion]
-    5946 |                 virt_to_page(cpu_buffer->page_ids[i])->mapping = NULL;
-         |                              ^~~~~~~~~~~~~~~~~~~~~~~
-   arch/arm/include/asm/memory.h:390:53: note: expanded from macro 'virt_to_page'
-     390 | #define virt_to_page(kaddr)     pfn_to_page(virt_to_pfn(kaddr))
-         |                                                         ^~~~~
-   include/asm-generic/memory_model.h:18:41: note: expanded from macro '__pfn_to_page'
-      18 | #define __pfn_to_page(pfn)      (mem_map + ((pfn) - ARCH_PFN_OFFSET))
-         |                                              ^~~
-   arch/arm/include/asm/memory.h:296:53: note: passing argument to parameter 'p' here
-     296 | static inline unsigned long virt_to_pfn(const void *p)
-         |                                                     ^
-   kernel/trace/ring_buffer.c:5968:15: error: incompatible integer to pointer conversion passing 'unsigned long' to parameter of type 'const void *' [-Wint-conversion]
-    5968 |         virt_to_page(addr)->mapping = NULL;
-         |                      ^~~~
-   arch/arm/include/asm/memory.h:390:53: note: expanded from macro 'virt_to_page'
-     390 | #define virt_to_page(kaddr)     pfn_to_page(virt_to_pfn(kaddr))
-         |                                                         ^~~~~
-   include/asm-generic/memory_model.h:18:41: note: expanded from macro '__pfn_to_page'
-      18 | #define __pfn_to_page(pfn)      (mem_map + ((pfn) - ARCH_PFN_OFFSET))
-         |                                              ^~~
-   arch/arm/include/asm/memory.h:296:53: note: passing argument to parameter 'p' here
-     296 | static inline unsigned long virt_to_pfn(const void *p)
-         |                                                     ^
-   kernel/trace/ring_buffer.c:6156:22: error: incompatible integer to pointer conversion passing 'unsigned long' to parameter of type 'const void *' [-Wint-conversion]
-    6156 |         return virt_to_page(cpu_buffer->page_ids[pgoff]);
-         |                             ^~~~~~~~~~~~~~~~~~~~~~~~~~~
-   arch/arm/include/asm/memory.h:390:53: note: expanded from macro 'virt_to_page'
-     390 | #define virt_to_page(kaddr)     pfn_to_page(virt_to_pfn(kaddr))
-         |                                                         ^~~~~
-   include/asm-generic/memory_model.h:18:41: note: expanded from macro '__pfn_to_page'
-      18 | #define __pfn_to_page(pfn)      (mem_map + ((pfn) - ARCH_PFN_OFFSET))
-         |                                              ^~~
-   arch/arm/include/asm/memory.h:296:53: note: passing argument to parameter 'p' here
-     296 | static inline unsigned long virt_to_pfn(const void *p)
-         |                                                     ^
-   3 errors generated.
-
-
-vim +5946 kernel/trace/ring_buffer.c
-
-  5940	
-  5941	static void rb_free_page_ids(struct ring_buffer_per_cpu *cpu_buffer)
-  5942	{
-  5943		int i;
-  5944	
-  5945		for (i = 0; i < cpu_buffer->nr_pages + 1; i++)
-> 5946			virt_to_page(cpu_buffer->page_ids[i])->mapping = NULL;
-  5947	
-  5948		kfree(cpu_buffer->page_ids);
-  5949		cpu_buffer->page_ids = NULL;
-  5950	}
-  5951	
-
+diff --git a/arch/arm/kernel/ftrace.c b/arch/arm/kernel/ftrace.c
+index a0b6d1e3812f..0320cfba5b74 100644
+--- a/arch/arm/kernel/ftrace.c
++++ b/arch/arm/kernel/ftrace.c
+@@ -261,7 +261,6 @@ void prepare_ftrace_return(unsigned long *parent, unsigned long self_addr,
+ #ifdef CONFIG_DYNAMIC_FTRACE
+ extern unsigned long ftrace_graph_call;
+ extern unsigned long ftrace_graph_call_old;
+-extern void ftrace_graph_caller_old(void);
+ extern unsigned long ftrace_graph_regs_call;
+ extern void ftrace_graph_regs_caller(void);
+ 
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+2.25.1
+
