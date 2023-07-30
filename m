@@ -2,143 +2,211 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F3FB5C001DC
-	for <linux-trace-kernel@archiver.kernel.org>; Sat, 29 Jul 2023 19:55:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 609E0C001DC
+	for <linux-trace-kernel@archiver.kernel.org>; Sun, 30 Jul 2023 01:43:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229627AbjG2Tz6 (ORCPT
+        id S229472AbjG3Bn2 (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Sat, 29 Jul 2023 15:55:58 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57656 "EHLO
+        Sat, 29 Jul 2023 21:43:28 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56710 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229448AbjG2Tz5 (ORCPT
+        with ESMTP id S229448AbjG3Bn2 (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Sat, 29 Jul 2023 15:55:57 -0400
+        Sat, 29 Jul 2023 21:43:28 -0400
 Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3343730DC;
-        Sat, 29 Jul 2023 12:55:54 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9206719A6;
+        Sat, 29 Jul 2023 18:43:26 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange X25519 server-signature RSA-PSS (2048 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id A52AE6066F;
-        Sat, 29 Jul 2023 19:55:53 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EA441C433C7;
-        Sat, 29 Jul 2023 19:55:48 +0000 (UTC)
-Date:   Sat, 29 Jul 2023 15:55:47 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Valentin Schneider <vschneid@redhat.com>
-Cc:     linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
-        linux-doc@vger.kernel.org, kvm@vger.kernel.org, linux-mm@kvack.org,
-        bpf@vger.kernel.org, x86@kernel.org, rcu@vger.kernel.org,
-        linux-kselftest@vger.kernel.org,
+        by dfw.source.kernel.org (Postfix) with ESMTPS id 1E93A602F9;
+        Sun, 30 Jul 2023 01:43:26 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1D560C433C7;
+        Sun, 30 Jul 2023 01:43:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1690681405;
+        bh=Ag230mRf2+HwCCUnZ4geqgBWQuE+1+mw9qgMRZoQDac=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=EAmSjQQDgMFDY9cSqSiiuVKSMF2Slo7SyqhSqJSmq/OLEhqc6sQ16hUVlhO901w6Q
+         VaVR2xMP4TD7Qm2keYjL+8+CajOyUNijqvuX5LDN9K6Pq4TGx1cwXEAgI65ucIoxt4
+         FqfeAnypH3+YXoCzP/MsvKfuPTGMgPp53PafwOfkaSmo0TFyTje7g+lk/+F+QGQGjE
+         aIK1P4SGxVw+VjQafykesIg5uZ8oKf5wSO3xhdlOw3YdsHWM7XuuBD3LtUwWbMyhc7
+         /1LTrieBKHjmgJzL93BGhGktHtNdEqTW/azsrjh4gWGWv6wDzzdYzYlUl3alrYYqdm
+         mqMeMGQAbZ2ZA==
+Date:   Sun, 30 Jul 2023 10:43:21 +0900
+From:   Masami Hiramatsu (Google) <mhiramat@kernel.org>
+To:     Steven Rostedt <rostedt@goodmis.org>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Linux Trace Kernel <linux-trace-kernel@vger.kernel.org>,
         Masami Hiramatsu <mhiramat@kernel.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Frederic Weisbecker <frederic@kernel.org>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        Neeraj Upadhyay <quic_neeraju@quicinc.com>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Josh Triplett <josh@joshtriplett.org>,
-        Boqun Feng <boqun.feng@gmail.com>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Lai Jiangshan <jiangshanlai@gmail.com>,
-        Zqiang <qiang.zhang1211@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Uladzislau Rezki <urezki@gmail.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        Lorenzo Stoakes <lstoakes@gmail.com>,
-        Josh Poimboeuf <jpoimboe@kernel.org>,
-        Jason Baron <jbaron@akamai.com>,
-        Kees Cook <keescook@chromium.org>,
-        Sami Tolvanen <samitolvanen@google.com>,
-        Ard Biesheuvel <ardb@kernel.org>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        Juerg Haefliger <juerg.haefliger@canonical.com>,
-        Nicolas Saenz Julienne <nsaenz@kernel.org>,
-        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-        Nadav Amit <namit@vmware.com>,
-        Dan Carpenter <error27@gmail.com>,
-        Chuang Wang <nashuiliang@gmail.com>,
-        Yang Jihong <yangjihong1@huawei.com>,
-        Petr Mladek <pmladek@suse.com>,
-        "Jason A. Donenfeld" <Jason@zx2c4.com>, Song Liu <song@kernel.org>,
-        Julian Pidancet <julian.pidancet@oracle.com>,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        Dionna Glaze <dionnaglaze@google.com>,
-        Thomas =?UTF-8?B?V2Vpw59zY2h1aA==?= <linux@weissschuh.net>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Daniel Bristot de Oliveira <bristot@redhat.com>,
-        Marcelo Tosatti <mtosatti@redhat.com>,
-        Yair Podemsky <ypodemsk@redhat.com>
-Subject: Re: [RFC PATCH v2 06/20] tracing/filters: Optimise scalar vs
- cpumask filtering when the user mask is a single CPU
-Message-ID: <20230729155547.35719a1f@rorschach.local.home>
-In-Reply-To: <20230720163056.2564824-7-vschneid@redhat.com>
-References: <20230720163056.2564824-1-vschneid@redhat.com>
-        <20230720163056.2564824-7-vschneid@redhat.com>
-X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
-MIME-Version: 1.0
+        Mark Rutland <mark.rutland@arm.com>
+Subject: Re: [PATCH v2] tracing: Add a debug_trace_printk() function
+Message-Id: <20230730104321.f30784d6397b65636ac5f2cd@kernel.org>
+In-Reply-To: <20230613095537.0ecf2459@gandalf.local.home>
+References: <20230613095537.0ecf2459@gandalf.local.home>
+X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On Thu, 20 Jul 2023 17:30:42 +0100
-Valentin Schneider <vschneid@redhat.com> wrote:
+On Tue, 13 Jun 2023 09:55:37 -0400
+Steven Rostedt <rostedt@goodmis.org> wrote:
 
-> Steven noted that when the user-provided cpumask contains a single CPU,
-> then the filtering function can use a scalar as input instead of a
-> full-fledged cpumask.
+> From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
 > 
-> When the mask contains a single CPU, directly re-use the unsigned field
-> predicate functions. Transform '&' into '==' beforehand.
+> While doing some tracing and kernel debugging, I found that some of my
+> trace_printk()s were being lost in the noise of the other code that was
+> being traced. Having a way to write trace_printk() not in the top level
+> trace buffer would have been useful.
 > 
-> Suggested-by: Steven Rostedt <rostedt@goodmis.org>
-> Signed-off-by: Valentin Schneider <vschneid@redhat.com>
+> There was also a time I needed to debug ftrace itself, where
+> trace_printk() did not hit the paths that were being debugged. But because
+> the trace that was being debugged, was going into the top level ring
+> buffer, it was causing issues for seeing what is to be traced.
+> 
+> To solve both of the above, add a debug_trace_printk() that can be used
+> just like trace_printk() except that it goes into a "debug" instance
+> buffer instead. This can be used at boot up as well.
+> 
+> Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+
+Sorry, I missed this patch.
+As far as it depends CONFIG_FTRACE_DEBUG_PRINT, this looks good to me.
+
+Reviewed-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+
+BTW, what about adding generic trace_loglvl_printk(loglvl, fmt, ...)?
+
+This is a macro that will be expanded to 'trace_loglvl_<N>_printk(fmt, ...)'
+where N is 0-9. Then we can filter the trace_loglvl_N_printk event to a
+specific instance.
+
+Thank you,
+
 > ---
->  kernel/trace/trace_events_filter.c | 7 ++++++-
->  1 file changed, 6 insertions(+), 1 deletion(-)
+> Changes since v1: https://lore.kernel.org/linux-trace-kernel/20230612193337.0fb0d3ca@gandalf.local.home/
 > 
-> diff --git a/kernel/trace/trace_events_filter.c b/kernel/trace/trace_events_filter.c
-> index 2fe65ddeb34ef..54d642fabb7f1 100644
-> --- a/kernel/trace/trace_events_filter.c
-> +++ b/kernel/trace/trace_events_filter.c
-> @@ -1750,7 +1750,7 @@ static int parse_pred(const char *str, void *data,
->  		 * then we can treat it as a scalar input.
->  		 */
->  		single = cpumask_weight(pred->mask) == 1;
-> -		if (single && field->filter_type == FILTER_CPUMASK) {
-> +		if (single && field->filter_type != FILTER_CPU) {
->  			pred->val = cpumask_first(pred->mask);
->  			kfree(pred->mask);
->  		}
-> @@ -1761,6 +1761,11 @@ static int parse_pred(const char *str, void *data,
->  				FILTER_PRED_FN_CPUMASK;
->  		} else if (field->filter_type == FILTER_CPU) {
->  			pred->fn_num = FILTER_PRED_FN_CPU_CPUMASK;
-> +		} else if (single) {
-> +			pred->op = pred->op == OP_BAND ? OP_EQ : pred->op;
+>   - I had added a prompt to the kconfig but never committed it.
+>     It's now part of the patch.
+> 
+>  include/linux/kernel.h | 14 ++++++++++++++
+>  kernel/trace/Kconfig   | 20 ++++++++++++++++++++
+>  kernel/trace/trace.c   | 29 +++++++++++++++++++++++++++++
+>  3 files changed, 63 insertions(+)
+> 
+> diff --git a/include/linux/kernel.h b/include/linux/kernel.h
+> index 0d91e0af0125..594c9ba17fd4 100644
+> --- a/include/linux/kernel.h
+> +++ b/include/linux/kernel.h
+> @@ -432,6 +432,20 @@ __ftrace_vbprintk(unsigned long ip, const char *fmt, va_list ap);
+>  extern __printf(2, 0) int
+>  __ftrace_vprintk(unsigned long ip, const char *fmt, va_list ap);
+>  
+> +#ifdef CONFIG_FTRACE_DEBUG_PRINT
+> +extern __printf(2,0) void do_debug_trace_printk(unsigned long ip, const char *fmt, ...);
+> +#define debug_trace_printk(fmt, ...) \
+> +do {							\
+> +	do_debug_trace_printk(_THIS_IP_, fmt, ##__VA_ARGS__);	\
+> +} while (0)
+> +
+> +extern void debug_tracing_stop(void);
+> +#else
+> +#define debug_trace_printk(fmt, ...) do { } while (0)
+> +static inline void debug_tracing_stop(void) { }
+> +#endif
+> +
+> +
+>  extern void ftrace_dump(enum ftrace_dump_mode oops_dump_mode);
+>  #else
+>  static inline void tracing_start(void) { }
+> diff --git a/kernel/trace/Kconfig b/kernel/trace/Kconfig
+> index abe5c583bd59..e07bca39dec9 100644
+> --- a/kernel/trace/Kconfig
+> +++ b/kernel/trace/Kconfig
+> @@ -974,6 +974,26 @@ config GCOV_PROFILE_FTRACE
+>  	  Note that on a kernel compiled with this config, ftrace will
+>  	  run significantly slower.
+>  
+> +config FTRACE_DEBUG_PRINT
+> +	bool "Enable debug_trace_printk()"
+> +	depends on TRACING
+> +	help
+> +	  This option enables the use of debug_trace_printk() instead of
+> +	  using trace_printk(). The difference between the two is that
+> +	  debug_trace_printk() traces are visible in the "debug" instance
+> +	  found in:
+> +
+> +	  /sys/kernel/tracing/instances/debug
+> +
+> +	  This is useful when the trace printks should not interfere with
+> +	  the normal top level tracing. It is also useful if the top level
+> +	  tracing is very noisy and critical trace printks are dropped.
+> +	  By using debug_trace_printk() the traces goes into as separate
+> +	  ring buffer that will not be overridden by other trace events.
+> +
+> +	  If unsure say N (In fact, only say Y if you are debugging a
+> +	                   kernel and require this)
+> +
+>  config FTRACE_SELFTEST
+>  	bool
+>  
+> diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
+> index 64a4dde073ef..c21a93cf5fd8 100644
+> --- a/kernel/trace/trace.c
+> +++ b/kernel/trace/trace.c
+> @@ -490,6 +490,10 @@ static struct trace_array global_trace = {
+>  	.trace_flags = TRACE_DEFAULT_FLAGS,
+>  };
+>  
+> +#ifdef CONFIG_FTRACE_DEBUG_PRINT
+> +static struct trace_array *debug_trace;
+> +#endif
+> +
+>  LIST_HEAD(ftrace_trace_arrays);
+>  
+>  int trace_array_get(struct trace_array *this_tr)
+> @@ -10455,8 +10459,33 @@ void __init early_trace_init(void)
+>  	tracer_alloc_buffers();
+>  
+>  	init_events();
+> +
+> +#ifdef CONFIG_FTRACE_DEBUG_PRINT
+> +	debug_trace = trace_array_get_by_name("debug");
+> +	if (WARN_ON(!debug_trace))
+> +		return;
+> +	trace_array_init_printk(debug_trace);
+> +#endif
+>  }
+>  
+> +#ifdef CONFIG_FTRACE_DEBUG_PRINT
+> +__printf(2, 0)
+> +void do_debug_trace_printk(unsigned long ip, const char *fmt, ...)
+> +{
+> +	va_list ap;
+> +
+> +	va_start(ap, fmt);
+> +	trace_array_vprintk(debug_trace, ip, fmt, ap);
+> +	va_end(ap);
+> +}
+> +
+> +void debug_tracing_stop(void)
+> +{
+> +	debug_trace_printk("Stopping debug tracing\n");
+> +	tracing_stop_tr(debug_trace);
+> +}
+> +#endif
+> +
+>  void __init trace_init(void)
+>  {
+>  	trace_event_init();
+> -- 
+> 2.39.2
+> 
 
-Nit, the above can be written as:
 
-			pred->op = pret->op != OP_BAND ? : OP_EQ;
-
--- Steve
-
-
-> +			pred->fn_num = select_comparison_fn(pred->op, field->size, false);
-> +			if (pred->op == OP_NE)
-> +				pred->not = 1;
->  		} else {
->  			switch (field->size) {
->  			case 8:
-
+-- 
+Masami Hiramatsu (Google) <mhiramat@kernel.org>
