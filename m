@@ -2,211 +2,96 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 609E0C001DC
-	for <linux-trace-kernel@archiver.kernel.org>; Sun, 30 Jul 2023 01:43:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 56E64C001DC
+	for <linux-trace-kernel@archiver.kernel.org>; Sun, 30 Jul 2023 11:50:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229472AbjG3Bn2 (ORCPT
+        id S230012AbjG3LuJ (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Sat, 29 Jul 2023 21:43:28 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56710 "EHLO
+        Sun, 30 Jul 2023 07:50:09 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:39626 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229448AbjG3Bn2 (ORCPT
+        with ESMTP id S229483AbjG3LuJ (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Sat, 29 Jul 2023 21:43:28 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9206719A6;
-        Sat, 29 Jul 2023 18:43:26 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 1E93A602F9;
-        Sun, 30 Jul 2023 01:43:26 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1D560C433C7;
-        Sun, 30 Jul 2023 01:43:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1690681405;
-        bh=Ag230mRf2+HwCCUnZ4geqgBWQuE+1+mw9qgMRZoQDac=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=EAmSjQQDgMFDY9cSqSiiuVKSMF2Slo7SyqhSqJSmq/OLEhqc6sQ16hUVlhO901w6Q
-         VaVR2xMP4TD7Qm2keYjL+8+CajOyUNijqvuX5LDN9K6Pq4TGx1cwXEAgI65ucIoxt4
-         FqfeAnypH3+YXoCzP/MsvKfuPTGMgPp53PafwOfkaSmo0TFyTje7g+lk/+F+QGQGjE
-         aIK1P4SGxVw+VjQafykesIg5uZ8oKf5wSO3xhdlOw3YdsHWM7XuuBD3LtUwWbMyhc7
-         /1LTrieBKHjmgJzL93BGhGktHtNdEqTW/azsrjh4gWGWv6wDzzdYzYlUl3alrYYqdm
-         mqMeMGQAbZ2ZA==
-Date:   Sun, 30 Jul 2023 10:43:21 +0900
-From:   Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To:     Steven Rostedt <rostedt@goodmis.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Linux Trace Kernel <linux-trace-kernel@vger.kernel.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCH v2] tracing: Add a debug_trace_printk() function
-Message-Id: <20230730104321.f30784d6397b65636ac5f2cd@kernel.org>
-In-Reply-To: <20230613095537.0ecf2459@gandalf.local.home>
-References: <20230613095537.0ecf2459@gandalf.local.home>
-X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        Sun, 30 Jul 2023 07:50:09 -0400
+Received: from mail-pf1-x431.google.com (mail-pf1-x431.google.com [IPv6:2607:f8b0:4864:20::431])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 40F4AE56;
+        Sun, 30 Jul 2023 04:50:08 -0700 (PDT)
+Received: by mail-pf1-x431.google.com with SMTP id d2e1a72fcca58-686f94328a4so1912395b3a.0;
+        Sun, 30 Jul 2023 04:50:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1690717807; x=1691322607;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=QXMNG5KhGrsbUgPfHcOBiTZt0wLBsT6SAu3Br3/v/W0=;
+        b=BCvSEboVSk+AknIepB4Ps+glROPh/oy3j1jp2b89RO5VyzSmWRvafPyC/NNQ7vJEHZ
+         mON+yn02TNOPCVUhCYVSG2ySw2eJbgljefRftzgR1NAR70X3WECyEOnY/qt6CUTaPCHt
+         H9oYxJey6S55kILjYEVJ75AsgPK9RmBcz/mJO2w9KGvUNRnxeER1ZcRM1tOZG+TTJZ/V
+         OQMFm9858NnNjyWqOVsfT6qKwGD9ljNYVkNKoI54Fve13MwtJZ2I0GCjAQ7sGGTXdm9x
+         ECH3nm7n4708KetFRXX2WFsTn+zCr75MKmxTsw/B3BOz/M0TQZYHty02eCWvU/RYyiOa
+         R2UQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1690717807; x=1691322607;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=QXMNG5KhGrsbUgPfHcOBiTZt0wLBsT6SAu3Br3/v/W0=;
+        b=hjTibidZfEQNM30lN6/hGq5ju+887gg02XDchjelpipyOAI4jTIlgLg4Wqej3S7O+g
+         FjuYH9CtvuKAUwcbAXAjo4k69UwP6WSUsiUewvFSre3wpsTec4GFxy+GludkH8Ry1L6A
+         xMOCPySp5fXj9WmO2ai5iKvOARmcGbDNTefnGLkItfHUJW8AEbZ8DyaFm14GRYT4M8eF
+         dcl1QnDiFrCr2Bi1fx31ik2K5yUVyQ7TchUiTQQ0hP2/mxC6OfbdpaAFOiuHFHgTn8Uw
+         QGfrOM9ykQCYqewxqVDHI7ZrLTF/Xt6wpSoHKlnb2M4lM6FsXD6lsKjdSNzLdAEY9F/W
+         uLQw==
+X-Gm-Message-State: ABy/qLY+yiTpfFsDRsonzAb44dIdnDgZME6xy+U8x8hKadakskbqMEZ6
+        ufZ9DxnTVcKURMuI4kuWErkEj75uTAo/IoQ+
+X-Google-Smtp-Source: APBJJlGY1O/ykplV1Y1HoNzXM24EQES/iWQKlcnCzovsku32YZdV3AMYYDHM7jTsWr6PvX/t0jmn/g==
+X-Received: by 2002:a05:6a00:4193:b0:678:11d6:2ad6 with SMTP id ca19-20020a056a00419300b0067811d62ad6mr7003694pfb.9.1690717806912;
+        Sun, 30 Jul 2023 04:50:06 -0700 (PDT)
+Received: from localhost.localdomain (bb219-74-209-211.singnet.com.sg. [219.74.209.211])
+        by smtp.gmail.com with ESMTPSA id z9-20020aa791c9000000b00640dbbd7830sm6044479pfa.18.2023.07.30.04.50.01
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 30 Jul 2023 04:50:06 -0700 (PDT)
+From:   Leon Hwang <hffilwlqm@gmail.com>
+To:     ast@kernel.org
+Cc:     daniel@iogearbox.net, john.fastabend@gmail.com, andrii@kernel.org,
+        martin.lau@linux.dev, song@kernel.org, yonghong.song@linux.dev,
+        kpsingh@kernel.org, sdf@google.com, haoluo@google.com,
+        jolsa@kernel.org, davem@davemloft.net, edumazet@google.com,
+        kuba@kernel.org, pabeni@redhat.com, hawk@kernel.org,
+        rostedt@goodmis.org, mhiramat@kernel.org, mykolal@fb.com,
+        shuah@kernel.org, hffilwlqm@gmail.com, tangyeechou@gmail.com,
+        kernel-patches-bot@fb.com, bpf@vger.kernel.org,
+        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        linux-trace-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org
+Subject: [PATCH bpf-next v4 0/2] bpf, xdp: Add tracepoint to xdp attaching failure
+Date:   Sun, 30 Jul 2023 19:49:49 +0800
+Message-ID: <20230730114951.74067-1-hffilwlqm@gmail.com>
+X-Mailer: git-send-email 2.41.0
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On Tue, 13 Jun 2023 09:55:37 -0400
-Steven Rostedt <rostedt@goodmis.org> wrote:
+This series introduces a new tracepoint in bpf_xdp_link_attach(). By
+this tracepoint, error message will be captured when error happens in
+dev_xdp_attach(), e.g. invalid attaching flags.
 
-> From: "Steven Rostedt (Google)" <rostedt@goodmis.org>
-> 
-> While doing some tracing and kernel debugging, I found that some of my
-> trace_printk()s were being lost in the noise of the other code that was
-> being traced. Having a way to write trace_printk() not in the top level
-> trace buffer would have been useful.
-> 
-> There was also a time I needed to debug ftrace itself, where
-> trace_printk() did not hit the paths that were being debugged. But because
-> the trace that was being debugged, was going into the top level ring
-> buffer, it was causing issues for seeing what is to be traced.
-> 
-> To solve both of the above, add a debug_trace_printk() that can be used
-> just like trace_printk() except that it goes into a "debug" instance
-> buffer instead. This can be used at boot up as well.
-> 
-> Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+v3 -> v4:
+* Fix selftest-crashed issue.
 
-Sorry, I missed this patch.
-As far as it depends CONFIG_FTRACE_DEBUG_PRINT, this looks good to me.
+Leon Hwang (2):
+  bpf, xdp: Add tracepoint to xdp attaching failure
+  selftests/bpf: Add testcase for xdp attaching failure tracepoint
 
-Reviewed-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-
-BTW, what about adding generic trace_loglvl_printk(loglvl, fmt, ...)?
-
-This is a macro that will be expanded to 'trace_loglvl_<N>_printk(fmt, ...)'
-where N is 0-9. Then we can filter the trace_loglvl_N_printk event to a
-specific instance.
-
-Thank you,
-
-> ---
-> Changes since v1: https://lore.kernel.org/linux-trace-kernel/20230612193337.0fb0d3ca@gandalf.local.home/
-> 
->   - I had added a prompt to the kconfig but never committed it.
->     It's now part of the patch.
-> 
->  include/linux/kernel.h | 14 ++++++++++++++
->  kernel/trace/Kconfig   | 20 ++++++++++++++++++++
->  kernel/trace/trace.c   | 29 +++++++++++++++++++++++++++++
->  3 files changed, 63 insertions(+)
-> 
-> diff --git a/include/linux/kernel.h b/include/linux/kernel.h
-> index 0d91e0af0125..594c9ba17fd4 100644
-> --- a/include/linux/kernel.h
-> +++ b/include/linux/kernel.h
-> @@ -432,6 +432,20 @@ __ftrace_vbprintk(unsigned long ip, const char *fmt, va_list ap);
->  extern __printf(2, 0) int
->  __ftrace_vprintk(unsigned long ip, const char *fmt, va_list ap);
->  
-> +#ifdef CONFIG_FTRACE_DEBUG_PRINT
-> +extern __printf(2,0) void do_debug_trace_printk(unsigned long ip, const char *fmt, ...);
-> +#define debug_trace_printk(fmt, ...) \
-> +do {							\
-> +	do_debug_trace_printk(_THIS_IP_, fmt, ##__VA_ARGS__);	\
-> +} while (0)
-> +
-> +extern void debug_tracing_stop(void);
-> +#else
-> +#define debug_trace_printk(fmt, ...) do { } while (0)
-> +static inline void debug_tracing_stop(void) { }
-> +#endif
-> +
-> +
->  extern void ftrace_dump(enum ftrace_dump_mode oops_dump_mode);
->  #else
->  static inline void tracing_start(void) { }
-> diff --git a/kernel/trace/Kconfig b/kernel/trace/Kconfig
-> index abe5c583bd59..e07bca39dec9 100644
-> --- a/kernel/trace/Kconfig
-> +++ b/kernel/trace/Kconfig
-> @@ -974,6 +974,26 @@ config GCOV_PROFILE_FTRACE
->  	  Note that on a kernel compiled with this config, ftrace will
->  	  run significantly slower.
->  
-> +config FTRACE_DEBUG_PRINT
-> +	bool "Enable debug_trace_printk()"
-> +	depends on TRACING
-> +	help
-> +	  This option enables the use of debug_trace_printk() instead of
-> +	  using trace_printk(). The difference between the two is that
-> +	  debug_trace_printk() traces are visible in the "debug" instance
-> +	  found in:
-> +
-> +	  /sys/kernel/tracing/instances/debug
-> +
-> +	  This is useful when the trace printks should not interfere with
-> +	  the normal top level tracing. It is also useful if the top level
-> +	  tracing is very noisy and critical trace printks are dropped.
-> +	  By using debug_trace_printk() the traces goes into as separate
-> +	  ring buffer that will not be overridden by other trace events.
-> +
-> +	  If unsure say N (In fact, only say Y if you are debugging a
-> +	                   kernel and require this)
-> +
->  config FTRACE_SELFTEST
->  	bool
->  
-> diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
-> index 64a4dde073ef..c21a93cf5fd8 100644
-> --- a/kernel/trace/trace.c
-> +++ b/kernel/trace/trace.c
-> @@ -490,6 +490,10 @@ static struct trace_array global_trace = {
->  	.trace_flags = TRACE_DEFAULT_FLAGS,
->  };
->  
-> +#ifdef CONFIG_FTRACE_DEBUG_PRINT
-> +static struct trace_array *debug_trace;
-> +#endif
-> +
->  LIST_HEAD(ftrace_trace_arrays);
->  
->  int trace_array_get(struct trace_array *this_tr)
-> @@ -10455,8 +10459,33 @@ void __init early_trace_init(void)
->  	tracer_alloc_buffers();
->  
->  	init_events();
-> +
-> +#ifdef CONFIG_FTRACE_DEBUG_PRINT
-> +	debug_trace = trace_array_get_by_name("debug");
-> +	if (WARN_ON(!debug_trace))
-> +		return;
-> +	trace_array_init_printk(debug_trace);
-> +#endif
->  }
->  
-> +#ifdef CONFIG_FTRACE_DEBUG_PRINT
-> +__printf(2, 0)
-> +void do_debug_trace_printk(unsigned long ip, const char *fmt, ...)
-> +{
-> +	va_list ap;
-> +
-> +	va_start(ap, fmt);
-> +	trace_array_vprintk(debug_trace, ip, fmt, ap);
-> +	va_end(ap);
-> +}
-> +
-> +void debug_tracing_stop(void)
-> +{
-> +	debug_trace_printk("Stopping debug tracing\n");
-> +	tracing_stop_tr(debug_trace);
-> +}
-> +#endif
-> +
->  void __init trace_init(void)
->  {
->  	trace_event_init();
-> -- 
-> 2.39.2
-> 
+ include/trace/events/xdp.h                    | 17 +++++
+ net/core/dev.c                                |  5 +-
+ .../selftests/bpf/prog_tests/xdp_attach.c     | 65 +++++++++++++++++++
+ .../bpf/progs/test_xdp_attach_fail.c          | 54 +++++++++++++++
+ 4 files changed, 140 insertions(+), 1 deletion(-)
+ create mode 100644 tools/testing/selftests/bpf/progs/test_xdp_attach_fail.c
 
 
+base-commit: a33d978500acd8fb67efac9773ba0a8502c1ff06
 -- 
-Masami Hiramatsu (Google) <mhiramat@kernel.org>
+2.41.0
+
