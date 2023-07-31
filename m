@@ -2,36 +2,46 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C56CEC41513
-	for <linux-trace-kernel@archiver.kernel.org>; Mon, 31 Jul 2023 18:17:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6EA5EC04A94
+	for <linux-trace-kernel@archiver.kernel.org>; Mon, 31 Jul 2023 21:37:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229862AbjGaSRp (ORCPT
+        id S229541AbjGaVhA (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Mon, 31 Jul 2023 14:17:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47816 "EHLO
+        Mon, 31 Jul 2023 17:37:00 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:51016 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229744AbjGaSRo (ORCPT
+        with ESMTP id S230130AbjGaVg7 (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Mon, 31 Jul 2023 14:17:44 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [IPv6:2604:1380:4641:c500::1])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2C6EC93;
-        Mon, 31 Jul 2023 11:17:42 -0700 (PDT)
+        Mon, 31 Jul 2023 17:36:59 -0400
+Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 78A4B1FC7;
+        Mon, 31 Jul 2023 14:36:38 -0700 (PDT)
 Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange X25519 server-signature RSA-PSS (2048 bits))
         (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 6695B6127C;
-        Mon, 31 Jul 2023 18:17:41 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 51B5FC433C7;
-        Mon, 31 Jul 2023 18:16:55 +0000 (UTC)
-Date:   Mon, 31 Jul 2023 14:16:26 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Dan Carpenter <dan.carpenter@linaro.org>
-Cc:     Valentin Schneider <vschneid@redhat.com>,
-        linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
+        by dfw.source.kernel.org (Postfix) with ESMTPS id F2C2D612E8;
+        Mon, 31 Jul 2023 21:36:37 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C3F96C433C8;
+        Mon, 31 Jul 2023 21:36:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=k20201202; t=1690839397;
+        bh=O6qxnqR2UAHIQWX1X+EfPZX7oeDEWTWYBmPMSon4/nE=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=MEMWPQTNbSMkn+e0CZ1BGodCS5gupvgQ6CLcver682e8pWcF72x1wyA/dPjWgo/2k
+         V5AGy4Tch89afNrbmK4+iF3BTc5+7qoZTzKd35MBSdq3cqbe/9929MwUR2dmqfXi4q
+         qZt/WxnDvxbJKx5pXnfdCBDINSxWC+cdsa0cc1DueOrkGjIjeWW1phpArFKEX8WBGf
+         U7Fa1RRvj1RODi0dYgbzik4qgX6k1DYeilEQJT+wCDYpDeAniKHTPhhA4v1HN6P2xW
+         DNQvcQezBxRziM73g8DIm/9dxwX+vfzzYKXg5f0bC0qbkunq9N2+aAqoqhNUYWkGII
+         GLsq7mH2CGTUg==
+Date:   Mon, 31 Jul 2023 16:36:31 -0500
+From:   Josh Poimboeuf <jpoimboe@kernel.org>
+To:     Valentin Schneider <vschneid@redhat.com>
+Cc:     linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
         linux-doc@vger.kernel.org, kvm@vger.kernel.org, linux-mm@kvack.org,
         bpf@vger.kernel.org, x86@kernel.org, rcu@vger.kernel.org,
         linux-kselftest@vger.kernel.org,
+        Steven Rostedt <rostedt@goodmis.org>,
         Masami Hiramatsu <mhiramat@kernel.org>,
         Jonathan Corbet <corbet@lwn.net>,
         Thomas Gleixner <tglx@linutronix.de>,
@@ -56,7 +66,6 @@ Cc:     Valentin Schneider <vschneid@redhat.com>,
         Uladzislau Rezki <urezki@gmail.com>,
         Christoph Hellwig <hch@infradead.org>,
         Lorenzo Stoakes <lstoakes@gmail.com>,
-        Josh Poimboeuf <jpoimboe@kernel.org>,
         Jason Baron <jbaron@akamai.com>,
         Kees Cook <keescook@chromium.org>,
         Sami Tolvanen <samitolvanen@google.com>,
@@ -74,55 +83,68 @@ Cc:     Valentin Schneider <vschneid@redhat.com>,
         Julian Pidancet <julian.pidancet@oracle.com>,
         Tom Lendacky <thomas.lendacky@amd.com>,
         Dionna Glaze <dionnaglaze@google.com>,
-        Thomas =?UTF-8?B?V2Vpw59zY2h1aA==?= <linux@weissschuh.net>,
+        Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <linux@weissschuh.net>,
         Juri Lelli <juri.lelli@redhat.com>,
         Daniel Bristot de Oliveira <bristot@redhat.com>,
         Marcelo Tosatti <mtosatti@redhat.com>,
         Yair Podemsky <ypodemsk@redhat.com>
-Subject: Re: [RFC PATCH v2 06/20] tracing/filters: Optimise scalar vs
- cpumask filtering when the user mask is a single CPU
-Message-ID: <20230731141626.1b180ab1@gandalf.local.home>
-In-Reply-To: <b7cf996a-f443-402c-8e13-c5f25a964184@kadam.mountain>
+Subject: Re: [RFC PATCH v2 11/20] objtool: Flesh out warning related to
+ pv_ops[] calls
+Message-ID: <20230731213631.pywytiwdqgtgx4ps@treble>
 References: <20230720163056.2564824-1-vschneid@redhat.com>
-        <20230720163056.2564824-7-vschneid@redhat.com>
-        <20230729155547.35719a1f@rorschach.local.home>
-        <04f20e58-6b24-4f44-94e2-0d12324a30e4@kadam.mountain>
-        <20230731115453.395d20c6@gandalf.local.home>
-        <b7cf996a-f443-402c-8e13-c5f25a964184@kadam.mountain>
-X-Mailer: Claws Mail 3.19.1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+ <20230720163056.2564824-12-vschneid@redhat.com>
+ <20230728153334.myvh5sxppvjzd3oz@treble>
+ <xhsmh8raws53o.mognet@vschneid.remote.csb>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <xhsmh8raws53o.mognet@vschneid.remote.csb>
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On Mon, 31 Jul 2023 19:03:04 +0300
-Dan Carpenter <dan.carpenter@linaro.org> wrote:
-
-> > > > Nit, the above can be written as:
-> > > > 
-> > > > 			pred->op = pret->op != OP_BAND ? : OP_EQ;
-> > > >     
-> > > 
-> > > Heh.  Those are not equivalent.  The right way to write this is:  
-> > 
-> > You mean because of my typo?  
+On Mon, Jul 31, 2023 at 12:16:59PM +0100, Valentin Schneider wrote:
+> You're quite right - fabricating an artificial warning with a call to __flush_tlb_local():
 > 
-> No, I hadn't seen the s/pred/pret/ typo.  Your code does:
+>   vmlinux.o: warning: objtool: pv_ops[1]: indirect call to native_flush_tlb_local() leaves .noinstr.text section
+>   vmlinux.o: warning: objtool: __flush_tlb_all_noinstr+0x4: call to {dynamic}() leaves .noinstr.text section
 > 
-> 	if (pred->op != OP_BAND)
-> 		pred->op = true;
-> 	else
-> 		pred->op OP_EQ;
+> Interestingly the second one doesn't seem to have triggered the "pv_ops"
+> bit of call_dest_name. Seems like any call to insn_reloc(NULL, x) will
+> return NULL.
 
-Ah, for some reason I was thinking the ? : just was just a nop, but I guess
-it is to assign the cond value :-/
+Yeah, that's weird.
 
-But of course every place I've done that, it was the condition value I
-wanted, which was the same as the value being assigned.
+> Trickling down the file yields:
+> 
+>   vmlinux.o: warning: objtool: pv_ops[1]: indirect call to native_flush_tlb_local() leaves .noinstr.text section
+>   vmlinux.o: warning: objtool: __flush_tlb_all_noinstr+0x4: call to pv_ops[0]() leaves .noinstr.text section
+> 
+> In my case (!PARAVIRT_XXL) pv_ops should look like:
+>   [0]: .cpu.io_delay
+>   [1]: .mmu.flush_tlb_user()
+> 
+> so pv_ops[1] looks right. Seems like pv_call_dest() gets it right because
+> it uses arch_dest_reloc_offset().
+> 
+> If I use the above to fix up validate_call(), would we still need
+> pv_call_dest() & co?
 
-Thanks,
+The functionality in pv_call_dest() is still needed because it goes
+through all the possible targets for the .mmu.flush_tlb_user() pointer
+-- xen_flush_tlb() and native_flush_tlb_local() -- and makes sure
+they're noinstr.
 
--- Steve
+Ideally it would only print a single warning for this case, something
+like:
 
+  vmlinux.o: warning: objtool: __flush_tlb_all_noinstr+0x4: indirect call to native_flush_tlb_local() leaves .noinstr.text section
+
+I left out "pv_ops[1]" because it's already long enough :-)
+
+It would need a little bit of code shuffling.  But it's really a
+preexisting problem so don't feel compelled to fix it with this patch
+set.
+
+-- 
+Josh
