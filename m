@@ -2,59 +2,59 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C8CCEC41513
-	for <linux-trace-kernel@archiver.kernel.org>; Mon, 31 Jul 2023 11:19:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 44BCCC001DC
+	for <linux-trace-kernel@archiver.kernel.org>; Mon, 31 Jul 2023 11:19:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S230363AbjGaLTp (ORCPT
+        id S230002AbjGaLT6 (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Mon, 31 Jul 2023 07:19:45 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33164 "EHLO
+        Mon, 31 Jul 2023 07:19:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:33168 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S230002AbjGaLTn (ORCPT
+        with ESMTP id S229537AbjGaLT4 (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Mon, 31 Jul 2023 07:19:43 -0400
+        Mon, 31 Jul 2023 07:19:56 -0400
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 87AC8171A
-        for <linux-trace-kernel@vger.kernel.org>; Mon, 31 Jul 2023 04:18:39 -0700 (PDT)
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D66F6E4A
+        for <linux-trace-kernel@vger.kernel.org>; Mon, 31 Jul 2023 04:19:08 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1690802318;
+        s=mimecast20190719; t=1690802348;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          in-reply-to:in-reply-to:references:references;
-        bh=Feb3SbI628V0M+Xl6cXNHTwh1emqN1pCsroF1cMMhXw=;
-        b=DkoSD4M4j0SVdH6bDKkPMS+u5i9MD6sz33fSdRvQpOqvOHdBV8g67wAGV4vgZI4xuMpaJC
-        s3MoizijuMWMdxrAAv44NVx6/MBZqQX2hpNkiGqLw6aFGdg3KHmVrf0rhPkqBHYzr3TzLf
-        uk2UUhd45t6JM0ZNxdyj40MED3JuSr4=
-Received: from mail-qt1-f199.google.com (mail-qt1-f199.google.com
- [209.85.160.199]) by relay.mimecast.com with ESMTP with STARTTLS
+        bh=liRJKw+opNrXfUwr+Bq4QbRM7UJXeuw3tZj+4BJUEBU=;
+        b=SHuY2zU4BUpamVxGw/r7pnJuyKm8LyP1WTnrkDe+P30+qsHN8DQDvknKa59Aew3t9Sj7FU
+        QWSk40s3e9SwlK82ygQLfy5Pzp/pheJpMfEdxEBay0/KjTy/q9U2KBb/bcC4oRPeQCrm8O
+        M9hCORDcLWDs+iCWCziIEjizFe+MS1I=
+Received: from mail-qk1-f199.google.com (mail-qk1-f199.google.com
+ [209.85.222.199]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-230-Mt-nzKkYNISK4WyBw2Pg4w-1; Mon, 31 Jul 2023 07:18:35 -0400
-X-MC-Unique: Mt-nzKkYNISK4WyBw2Pg4w-1
-Received: by mail-qt1-f199.google.com with SMTP id d75a77b69052e-406afc93066so39029801cf.0
-        for <linux-trace-kernel@vger.kernel.org>; Mon, 31 Jul 2023 04:18:35 -0700 (PDT)
+ us-mta-112-0yR5NsFZMYGid7uFPnIJqQ-1; Mon, 31 Jul 2023 07:19:07 -0400
+X-MC-Unique: 0yR5NsFZMYGid7uFPnIJqQ-1
+Received: by mail-qk1-f199.google.com with SMTP id af79cd13be357-76cbb1e9420so16387185a.0
+        for <linux-trace-kernel@vger.kernel.org>; Mon, 31 Jul 2023 04:19:06 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1690802315; x=1691407115;
+        d=1e100.net; s=20221208; t=1690802346; x=1691407146;
         h=mime-version:message-id:date:references:in-reply-to:subject:cc:to
          :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Feb3SbI628V0M+Xl6cXNHTwh1emqN1pCsroF1cMMhXw=;
-        b=TTRcGa8CNHGQN/OD/ZV/CsQz7Q44/OZrIF+g4bbxg+EmzEETocDAr/GS8iKrmpZolq
-         aIsD2u3xZ1Hy0XXu1VAiQ7N1Zss/zJBlE21k9t6s26V4jROvhft/N5i7i1okuqD6pNFh
-         htTwQ0GKA/nn76TnzfXklWApBtSYt1h62qH0I67cOt1jw+bDhVhzhUiEjosinw7JGBbo
-         SIf97+nAo27dVL+PHE2+d3Lbk0EGe5At2pvuWCcofjekpeQyJ/xJa7hUiXaXq1taASOH
-         LfgSK6TZlPWlQtJ5PC7nnD5KFSOSFqxc7XLaUN6d0sa9hy/SFmj6zYfB5r24b3zJf5nh
-         t+pQ==
-X-Gm-Message-State: ABy/qLaN/wykSsVebfV6Qo97I8hH9pd0qNfJYPQ8+gJoY+tWxwBqYGFQ
-        shyDtgaL/q54O82XUa512CHfDsbupVOI3B4eZ3u8bjPx9w94gF5AoNZp+1h3wv2AnH0td9crAz+
-        CYx501UrBOptaEDtGtTGJouW/rKFtEN6r
-X-Received: by 2002:a05:622a:1806:b0:403:b23f:9e16 with SMTP id t6-20020a05622a180600b00403b23f9e16mr13377211qtc.2.1690802314883;
-        Mon, 31 Jul 2023 04:18:34 -0700 (PDT)
-X-Google-Smtp-Source: APBJJlEehrZuAEoVbTnlaVgIfddlc4rg89Sd70WHq1FBXragdFZy0TviERBFx02bWZYfpI2p+8TwzA==
-X-Received: by 2002:a05:622a:1806:b0:403:b23f:9e16 with SMTP id t6-20020a05622a180600b00403b23f9e16mr13377176qtc.2.1690802314653;
-        Mon, 31 Jul 2023 04:18:34 -0700 (PDT)
+        bh=liRJKw+opNrXfUwr+Bq4QbRM7UJXeuw3tZj+4BJUEBU=;
+        b=IajDeTiaOqv6Ho4q1z7ZxfUQDpoYI4ihrbPMaeCCAar9J0xBrTs8eNMhN1fF1vPWoq
+         63i/ep58SYM9B2iQ0JeOKuvEHWaJCjTkzN2kfN8Mvs76Vq+ORjOcBfANN7zP40fPY+OA
+         rVRGBi+jzbhEELT78ySDzR6Uiy8D7E8TxKDoPe62AfVyXq4CCVa6wBpFbbWFBUXcxhPW
+         NeI3ffImJa7IuW6oTTKHVCOK7FdLFBWjD4It/z/Pkbs9+EfoSM5o8wsfMwD07MeWUAXr
+         vMnqurhMzO7ycMleaQaM5+Wqe2LEZtQM76X+FgNlW1XCtTHKSU56yReXstM1EhtqTGZR
+         +izw==
+X-Gm-Message-State: ABy/qLYHV1jKQTp4oqjKhGRru9ng841JHgVNWdpoyewjqYnX1H1/VXQq
+        Od1priVN1RkOFsLPyHTEZsOXqftsmhNFgsLObZRdkfi8Cb1VqzJ6+Kvy6AkZUdzH6ISbNVxyu2u
+        MUlioZ1oRX2YPbLEzzh6WJODT7eOBT0Xh
+X-Received: by 2002:a05:620a:4083:b0:766:68cd:d9dc with SMTP id f3-20020a05620a408300b0076668cdd9dcmr8634449qko.19.1690802346559;
+        Mon, 31 Jul 2023 04:19:06 -0700 (PDT)
+X-Google-Smtp-Source: APBJJlHxRoj22fts1ZRiVdo7BaEAZi0l1tMUruIOv4Nb34gy9lu7KljXIlDPd8x8zhbGrKa5lC+fNA==
+X-Received: by 2002:a05:620a:4083:b0:766:68cd:d9dc with SMTP id f3-20020a05620a408300b0076668cdd9dcmr8634382qko.19.1690802346102;
+        Mon, 31 Jul 2023 04:19:06 -0700 (PDT)
 Received: from vschneid.remote.csb ([149.12.7.81])
-        by smtp.gmail.com with ESMTPSA id e21-20020ac85995000000b003fde3d63d22sm3385798qte.69.2023.07.31.04.18.13
+        by smtp.gmail.com with ESMTPSA id f7-20020a05620a15a700b007682634ac20sm3177128qkk.115.2023.07.31.04.18.49
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 31 Jul 2023 04:18:33 -0700 (PDT)
+        Mon, 31 Jul 2023 04:19:05 -0700 (PDT)
 From:   Valentin Schneider <vschneid@redhat.com>
 To:     Josh Poimboeuf <jpoimboe@kernel.org>
 Cc:     linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
@@ -111,12 +111,12 @@ Cc:     linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org,
         Yair Podemsky <ypodemsk@redhat.com>
 Subject: Re: [RFC PATCH v2 12/20] objtool: Warn about non __ro_after_init
  static key usage in .noinstr
-In-Reply-To: <20230728160247.multb2csnpa22fgx@treble>
+In-Reply-To: <20230728153557.frzmaayyy3auibx3@treble>
 References: <20230720163056.2564824-1-vschneid@redhat.com>
  <20230720163056.2564824-13-vschneid@redhat.com>
- <20230728160247.multb2csnpa22fgx@treble>
-Date:   Mon, 31 Jul 2023 12:18:10 +0100
-Message-ID: <xhsmh7cqgs51p.mognet@vschneid.remote.csb>
+ <20230728153557.frzmaayyy3auibx3@treble>
+Date:   Mon, 31 Jul 2023 12:18:40 +0100
+Message-ID: <xhsmh5y60s50v.mognet@vschneid.remote.csb>
 MIME-Version: 1.0
 X-Mimecast-Spam-Score: 0
 X-Mimecast-Originator: redhat.com
@@ -125,21 +125,38 @@ Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On 28/07/23 11:02, Josh Poimboeuf wrote:
+On 28/07/23 10:35, Josh Poimboeuf wrote:
 > On Thu, Jul 20, 2023 at 05:30:48PM +0100, Valentin Schneider wrote:
->> Later commits will depend on having no runtime-mutable text in early entry
->> code. (ab)use the .noinstr section as a marker of early entry code and warn
->> about static keys used in it that can be flipped at runtime.
+>> +static int validate_static_key(struct instruction *insn, struct insn_state *state)
+>> +{
+>> +	if (state->noinstr && state->instr <= 0) {
+>> +		if ((strcmp(insn->key_sym->sec->name, ".data..ro_after_init"))) {
+>> +			WARN_INSN(insn,
+>> +				  "Non __ro_after_init static key \"%s\" in .noinstr section",
 >
-> Similar to my comment on patch 13, this could also use a short
-> justification for adding the feature, i.e. why runtime-mutable text
-> isn't going to be allowed in .noinstr.
+> For consistency with other warnings, this should start with a lowercase
+> "n" and the string literal should be on the same line as the WARN_INSN,
+> like
 >
-> Also, please add a short description of the warning (and why it exists)
-> to tools/objtool/Documentation/objtool.txt.
+>                       WARN_INSN(insn, "non __ro_after_init static key \"%s\" in .noinstr section",
+>                                 ...
+>
+>> diff --git a/tools/objtool/special.c b/tools/objtool/special.c
+>> index 91b1950f5bd8a..1f76cfd815bf3 100644
+>> --- a/tools/objtool/special.c
+>> +++ b/tools/objtool/special.c
+>> @@ -127,6 +127,9 @@ static int get_alt_entry(struct elf *elf, const struct special_entry *entry,
+>>                      return -1;
+>>              }
+>>              alt->key_addend = reloc_addend(key_reloc);
+>> +
+>> +		reloc_to_sec_off(key_reloc, &sec, &offset);
+>> +		alt->key_sym = find_symbol_by_offset(sec, offset & ~2);
+>
+> Bits 0 and 1 can both store data, should be ~3?
 >
 
-I had missed this, thanks for the pointer.
+Quite so, that needs to be the same as jump_entry_key().
 
 > --
 > Josh
