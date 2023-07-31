@@ -2,111 +2,173 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5137CC001DC
-	for <linux-trace-kernel@archiver.kernel.org>; Sun, 30 Jul 2023 13:49:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F3998EB64DD
+	for <linux-trace-kernel@archiver.kernel.org>; Mon, 31 Jul 2023 02:09:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S229597AbjG3Nt1 (ORCPT
+        id S229469AbjGaCJj (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Sun, 30 Jul 2023 09:49:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36398 "EHLO
+        Sun, 30 Jul 2023 22:09:39 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57446 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S229449AbjG3Nt0 (ORCPT
+        with ESMTP id S229437AbjGaCJi (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Sun, 30 Jul 2023 09:49:26 -0400
-Received: from mail-qt1-x836.google.com (mail-qt1-x836.google.com [IPv6:2607:f8b0:4864:20::836])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6E6BC10C1;
-        Sun, 30 Jul 2023 06:49:25 -0700 (PDT)
-Received: by mail-qt1-x836.google.com with SMTP id d75a77b69052e-403b36a4226so16579761cf.0;
-        Sun, 30 Jul 2023 06:49:25 -0700 (PDT)
+        Sun, 30 Jul 2023 22:09:38 -0400
+Received: from mail-wm1-x32b.google.com (mail-wm1-x32b.google.com [IPv6:2a00:1450:4864:20::32b])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4C817A4;
+        Sun, 30 Jul 2023 19:09:37 -0700 (PDT)
+Received: by mail-wm1-x32b.google.com with SMTP id 5b1f17b1804b1-3fe1e1142caso8396475e9.0;
+        Sun, 30 Jul 2023 19:09:37 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20221208; t=1690724964; x=1691329764;
+        d=gmail.com; s=20221208; t=1690769375; x=1691374175;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=FlliIXo6uvrh08ojtOL3l75jp+3FAUoZdbrhJ9gY36E=;
-        b=qEe/zN7auL/09nK5d8mKb1+/OjEMFoMxKz8xc6T/ntSdzi8G+npmr55x3t1SxgXuMx
-         +VukRHmefryMS0onazV7SximRLqYA8oa8Rj0dUlD3Z6no2jvnsOc6lF4Cxb2i8up01S1
-         etk9hJvHq+hOKAlQgVk0Adox4LTETi171kcFiy6IB1l1qZzMrE9dYjIS2uv+TsF4WTcq
-         V+m4NPnuWIg/5OxtWLX5uSQ0qsmtvGx5Xjj+/V74cPcLDhWYEqxDv2RgkO4M6qJPipgw
-         3zhqkU8eUtO3Phz2it6QzkiunhjTnxtBKH8SWZRSEsLAEoTZs4SK9MC5zN2KOqBkuZZv
-         9eEw==
+        bh=3nqjr596pMoOTR0MHkgpKhNB8FMr2abG/11cQfPMno8=;
+        b=fPLYv/WQnpLXi50r0B0N1uytjAp7sO9fq3+e62vHH1UBfRfZUcdI5FvWgANg8GnJY5
+         j+zS3EWFge0nCvlDL61R9yujmcfDdCLJ6FXERsSTqNxDWSttH/DElTzVaTx8KV7MW/ZP
+         7pKa5x7DKcd8hGOEFxdzTDRuvkH3iiUCzFfAbafDFf2CK+gUDn6iQE8Fltd80vNEpmKb
+         LPeESzuT6T0MFy2AGIv9hvtC5/LcUw5M0AoIn3BzMxzwWldcOdDjRmX5tVQ9Z7eUp6U9
+         M71Y3xbr6A8K+mndwCEl/IFhA6SI+HDVfctPTIge/ONoMHttQMDZj2WUrV885qA/FmDt
+         ulWw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20221208; t=1690724964; x=1691329764;
+        d=1e100.net; s=20221208; t=1690769375; x=1691374175;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=FlliIXo6uvrh08ojtOL3l75jp+3FAUoZdbrhJ9gY36E=;
-        b=ijkFFWXswG9d5CBxtKTvNIyGrFJnKATxwpHzdd1+rmRjJ1YXVFx0oXv9JKhj+pjgIf
-         raLISYXt3hn+Tv6rWSaTi1BxVT266qNe/cErqmOgjV02Zr8V1SQ80wFhCtB8dZFGZKag
-         iFpbn2tnmaiqzeD8UYnQUA24FIo/JSC3RsvlYkdnAk7MtanqAuG/8dGL99qkTYlCo6bu
-         TtGth35OoeH6Lx7NSUjvHtNJpCt2vElvTi9aLjw+NDr9lPsa7N+/5OcXUiBZcbgZ4/2m
-         siAtMfrS8Qv+FffB5hd3I1Ma/d4QqCrjM6Yo1Lr4Ao8qcTerQMwIFGy8egc2Ve74ALaZ
-         892w==
-X-Gm-Message-State: ABy/qLZiReVMVA+0Ml9JfuLr04T5Ur8/zdQggn0Hesoz5lyFozDUUqxZ
-        l05Oc3JlkzBP8mBocq1LkwyeXQQJvuaE+6B9oiIMHjJZEc+Pbyg9
-X-Google-Smtp-Source: APBJJlE8m37sRUm45VC3Dw3ekTbcowEPlAHwCfE8/e5sWDKU9fPzGQnSEePTwCLFkzQcghx6XQHPt+51Ako5OsdBuy8=
-X-Received: by 2002:a05:622a:1212:b0:403:c2dc:929d with SMTP id
- y18-20020a05622a121200b00403c2dc929dmr7268810qtx.48.1690724964385; Sun, 30
- Jul 2023 06:49:24 -0700 (PDT)
+        bh=3nqjr596pMoOTR0MHkgpKhNB8FMr2abG/11cQfPMno8=;
+        b=gPHSD+/+0ZoPui+BKQ0TJv+ZWR7NYkF7+iZwTpt68ln3IHBpXiytmPK5glNklaD8f1
+         19jm+KI664e+kMX7Zs+dIFTPF50fBuZzDm5bjWtyA0WmBoNfobXeNg27taPK9tt5un2/
+         ni3IisfZQ9Z9Q9rCbxRRT8Ef+Rc1XQaZS7ykSnj59F+Btshqm3y1Tgv0HiY3I5Y9xvDk
+         A+dOzxroCREO1AnlUvBgoEoaT0zGMi48ImNUL6hgyg1qikPwr5+Ygpb9CD1n7KnbFkNj
+         GN0YA1LLY8T8pSj7nZzPhC5k4xGkmFcaULFD99Ngg8ps0q43omnPTYoDGJE3zQ0zX2F1
+         AjoA==
+X-Gm-Message-State: ABy/qLbc5xegQ2ajAXcOfMBGNd2gHKdEE/z/jc5jbAQaTFhjIhecMZWQ
+        s2c9GUa9NsB/B5rI7xCTRlYjdFixjyBzJ9vk329Oyl883ms=
+X-Google-Smtp-Source: APBJJlFkd4zDhULgADlEQsYZLK6qTtbOsuVRrqiKOiBn362F7WJxSlCt4mgWd495AlQzBHS72tiuC60CShZ6MPNGmh4=
+X-Received: by 2002:adf:df02:0:b0:316:f3cf:6f12 with SMTP id
+ y2-20020adfdf02000000b00316f3cf6f12mr6913491wrl.48.1690769374958; Sun, 30 Jul
+ 2023 19:09:34 -0700 (PDT)
 MIME-Version: 1.0
-References: <20230730114951.74067-1-hffilwlqm@gmail.com>
-In-Reply-To: <20230730114951.74067-1-hffilwlqm@gmail.com>
-From:   Manjusaka <lizheao940510@gmail.com>
-Date:   Sun, 30 Jul 2023 21:49:13 +0800
-Message-ID: <CAFYRFEw98BhpcLyFdwivLcy5M6hk3fDRcWZVtUytSw7kNUQXRQ@mail.gmail.com>
-Subject: Re: [PATCH bpf-next v4 0/2] bpf, xdp: Add tracepoint to xdp attaching failure
-To:     Leon Hwang <hffilwlqm@gmail.com>
-Cc:     ast@kernel.org, daniel@iogearbox.net, john.fastabend@gmail.com,
-        andrii@kernel.org, martin.lau@linux.dev, song@kernel.org,
-        yonghong.song@linux.dev, kpsingh@kernel.org, sdf@google.com,
-        haoluo@google.com, jolsa@kernel.org, davem@davemloft.net,
-        edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
-        hawk@kernel.org, rostedt@goodmis.org, mhiramat@kernel.org,
-        mykolal@fb.com, shuah@kernel.org, tangyeechou@gmail.com,
-        kernel-patches-bot@fb.com, bpf@vger.kernel.org,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        linux-trace-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org
+References: <20230726121618.19198-1-zegao@tencent.com> <CAP-5=fVJ_RL9Md92R4nWBKvZcF9iovL07-=dJ7bqN3LWwufVGw@mail.gmail.com>
+In-Reply-To: <CAP-5=fVJ_RL9Md92R4nWBKvZcF9iovL07-=dJ7bqN3LWwufVGw@mail.gmail.com>
+From:   Ze Gao <zegao2021@gmail.com>
+Date:   Mon, 31 Jul 2023 10:09:23 +0800
+Message-ID: <CAD8CoPBC-OT+EWp_Gfqg31p8S91hbReR1nEnVWBzsUmtmKtZKw@mail.gmail.com>
+Subject: Re: [RFC PATCH v2 0/3] report task state in symbolic chars from sched tracepoint
+To:     Ian Rogers <irogers@google.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Ingo Molnar <mingo@redhat.com>, Jiri Olsa <jolsa@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        linux-trace-kernel@vger.kernel.org,
+        linux-trace-devel@vger.kernel.org, Ze Gao <zegao@tencent.com>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-This patch is very important to help us to debug the xdp program. At
-the same time, we can make some monitoring tools to observe the kernel
-status by using this trace event
+Thanks Ian,
 
-=E6=9D=8E=E8=80=85=E7=92=88 & Zheaoli
+In regard to ABI, symbolic chars are much more stable and I think
+we can benefit from this in the long run.
 
-Email: lizheao940510@gmail.com
-Github: https://github.com/Zheaoli
+Regards,
+Ze
 
-
-Leon Hwang <hffilwlqm@gmail.com> =E4=BA=8E2023=E5=B9=B47=E6=9C=8830=E6=97=
-=A5=E5=91=A8=E6=97=A5 19:50=E5=86=99=E9=81=93=EF=BC=9A
+On Sat, Jul 29, 2023 at 1:29=E2=80=AFAM Ian Rogers <irogers@google.com> wro=
+te:
 >
-> This series introduces a new tracepoint in bpf_xdp_link_attach(). By
-> this tracepoint, error message will be captured when error happens in
-> dev_xdp_attach(), e.g. invalid attaching flags.
+> On Wed, Jul 26, 2023 at 5:16=E2=80=AFAM Ze Gao <zegao2021@gmail.com> wrot=
+e:
+> >
+> >
+> > This is the 2nd attempt to fix the report task state issue in sched
+> > tracepint, here is the first version:
+> >
+> > https://lore.kernel.org/linux-trace-kernel/20230725072254.32045-1-zegao=
+@tencent.com
+> >
+> > Against v1, add a new var to report task state in symbolic char instead
+> > of replacing the old one and to not to break anything.
+> >
+> > --
+> >
+> > In the status quo, we should see three different outcomes of the report=
+ed
+> > sched-out task state from perf-script, perf-sched-timehist, and Tp_prin=
+tk
+> > of tracepoint sched_switch.  And it's not hard to figure out that the
+> > former two are built upon the third one, and the reason why we see this
+> > inconsistency is that the former two does not catch up with the interna=
+l
+> > change of reported task state definitions as the kernel evolves.
+> >
+> > IMHO, exporting internal representations of task state in the tracepoin=
+t
+> > sched_switch is not a good practice and not encouraged at all, which ca=
+n
+> > easily break userspace tools that relies on it. Especially when tracepo=
+ints
+> > are massively used in many observability tools nowadays due to its stab=
+le
+> > nature, which makes them no longer used for debug only purpose and we
+> > should be careful to decide what ought to be reported to userspace and =
+what
+> > ought not.
+> >
+> > Therefore, to fix the issues mentioned above for good, instead of choos=
+ing
+> > I proposed to add a new variable to report task state in sched_switch w=
+ith
+> > a symbolic character along with the old hardcoded value, and save the
+> > further processing of userspace tools and spare them from knowing
+> > implementation details in the kernel.
+> >
+> > After this patch seires, we report 'RSDTtXZPI' the same as in procfs, p=
+lus
+> > a 'p' which denotes PREEMP_ACTIVE and is used for sched_switch tracepoi=
+nt only.
+> >
+> > Reviews welcome!
 >
-> v3 -> v4:
-> * Fix selftest-crashed issue.
+> Thanks Ze,
 >
-> Leon Hwang (2):
->   bpf, xdp: Add tracepoint to xdp attaching failure
->   selftests/bpf: Add testcase for xdp attaching failure tracepoint
+> I think this is worthwhile cleanup and makes the code overall simpler.
+> I don't know if others have strong opinions, I don't often work in
+> this code, but I think the patches are worth landing this.
 >
->  include/trace/events/xdp.h                    | 17 +++++
->  net/core/dev.c                                |  5 +-
->  .../selftests/bpf/prog_tests/xdp_attach.c     | 65 +++++++++++++++++++
->  .../bpf/progs/test_xdp_attach_fail.c          | 54 +++++++++++++++
->  4 files changed, 140 insertions(+), 1 deletion(-)
->  create mode 100644 tools/testing/selftests/bpf/progs/test_xdp_attach_fai=
-l.c
+> Acked-by: Ian Rogers <irogers@google.com>
 >
+> Thanks,
+> Ian
 >
-> base-commit: a33d978500acd8fb67efac9773ba0a8502c1ff06
-> --
-> 2.41.0
->
->
+> > Regards,
+> >
+> > Ze
+> >
+> > Ze Gao (2):
+> >   sched, tracing: add to report task state in symbolic chars
+> >   perf sched: use the new prev_state_char instead in tracepoint
+> >     sched_switch
+> >
+> >  include/trace/events/sched.h | 60 +++++++++++++++++++++---------------
+> >  tools/perf/builtin-sched.c   | 57 ++++++----------------------------
+> >  2 files changed, 45 insertions(+), 72 deletions(-)
+> >
+> > Ze Gao (1):
+> >   libtraceevent: use the new prev_state_char instead in tracepoint
+> >     sched_switch
+> >
+> >  plugins/plugin_sched_switch.c | 29 ++++-------------------------
+> >  1 file changed, 4 insertions(+), 25 deletions(-)
+> >
+> > --
+> > 2.40.1
+> >
