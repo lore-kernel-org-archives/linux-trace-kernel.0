@@ -2,86 +2,97 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A87ADC001DF
-	for <linux-trace-kernel@archiver.kernel.org>; Tue,  1 Aug 2023 14:33:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 088AEC001DF
+	for <linux-trace-kernel@archiver.kernel.org>; Tue,  1 Aug 2023 14:41:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234202AbjHAOds (ORCPT
+        id S233969AbjHAOli (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Tue, 1 Aug 2023 10:33:48 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:53476 "EHLO
+        Tue, 1 Aug 2023 10:41:38 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:57984 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S232198AbjHAOdq (ORCPT
+        with ESMTP id S233807AbjHAOlh (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Tue, 1 Aug 2023 10:33:46 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D245AE5C;
-        Tue,  1 Aug 2023 07:33:45 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 5CE10615C9;
-        Tue,  1 Aug 2023 14:33:45 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 06F9AC433C8;
-        Tue,  1 Aug 2023 14:33:42 +0000 (UTC)
-Date:   Tue, 1 Aug 2023 10:33:40 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Ze Gao <zegao2021@gmail.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Ian Rogers <irogers@google.com>,
-        Ingo Molnar <mingo@redhat.com>, Jiri Olsa <jolsa@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        linux-trace-kernel@vger.kernel.org,
-        linux-trace-devel@vger.kernel.org, Ze Gao <zegao@tencent.com>
-Subject: Re: [RFC PATCH v3 4/6] sched, tracing: reorganize fields of switch
- event struct
-Message-ID: <20230801103340.5dfa7133@gandalf.local.home>
-In-Reply-To: <20230801114650.GE79828@hirez.programming.kicks-ass.net>
-References: <20230801090124.8050-1-zegao@tencent.com>
-        <20230801090124.8050-5-zegao@tencent.com>
-        <20230801114650.GE79828@hirez.programming.kicks-ass.net>
-X-Mailer: Claws Mail 3.19.1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+        Tue, 1 Aug 2023 10:41:37 -0400
+Received: from out-76.mta0.migadu.com (out-76.mta0.migadu.com [91.218.175.76])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9207DE9
+        for <linux-trace-kernel@vger.kernel.org>; Tue,  1 Aug 2023 07:41:36 -0700 (PDT)
+Message-ID: <c643db9c-c9fb-9e8d-f35c-e5c9316f657d@linux.dev>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+        t=1690900894; h=from:from:reply-to:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+         content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=V4lu9rl80wnpynbxYMmCvM9Rbb29PtC/a1L2v3oqVO0=;
+        b=qVaXNcLloEZwQ2po8bFkXfXrg349uHQUgN8d/XBrekpVlt+0SSC30kHjxtrIdeMT1gDnTR
+        CkVGzp5+BONOjUUfdt7ukfJMwMQ35o+ByfUy8Mhv0SsUFyiBPNK7tP+0UdeW2t38BnZefB
+        8Gck6qbJnSiJKaq139e4ecgImIX7OUo=
+Date:   Tue, 1 Aug 2023 07:41:26 -0700
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Reply-To: yonghong.song@linux.dev
+Subject: Re: [PATCH] [v5] bpf: fix bpf_probe_read_kernel prototype mismatch
+Content-Language: en-US
+To:     Arnd Bergmann <arnd@kernel.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Andrii Nakryiko <andrii@kernel.org>,
+        Song Liu <song@kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>
+Cc:     Arnd Bergmann <arnd@arndb.de>, stable@vger.kernel.org,
+        John Fastabend <john.fastabend@gmail.com>,
+        Martin KaFai Lau <martin.lau@linux.dev>,
+        KP Singh <kpsingh@kernel.org>,
+        Stanislav Fomichev <sdf@google.com>,
+        Hao Luo <haoluo@google.com>, Jiri Olsa <jolsa@kernel.org>,
+        Kumar Kartikeya Dwivedi <memxor@gmail.com>,
+        Dave Marchevsky <davemarchevsky@fb.com>,
+        David Vernet <void@manifault.com>,
+        Peter Zijlstra <peterz@infradead.org>, bpf@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
+References: <20230801111449.185301-1-arnd@kernel.org>
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From:   Yonghong Song <yonghong.song@linux.dev>
+In-Reply-To: <20230801111449.185301-1-arnd@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
+X-Migadu-Flow: FLOW_OUT
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On Tue, 1 Aug 2023 13:46:50 +0200
-Peter Zijlstra <peterz@infradead.org> wrote:
 
-> On Tue, Aug 01, 2023 at 05:01:22PM +0800, Ze Gao wrote:
-> > Report priorities in 'short' and prev_state in 'int' to save
-> > some buffer space. And also reorder the fields so that we take
-> > struct alignment into consideration to make the record compact.
-> > 
-> > Suggested-by: Steven Rostedt (Google) <rostedt@goodmis.org>  
+
+On 8/1/23 4:13 AM, Arnd Bergmann wrote:
+> From: Arnd Bergmann <arnd@arndb.de>
 > 
-> I don't see a single line describing the effort you've done to audit
-> consumers of this tracepoint.
+> bpf_probe_read_kernel() has a __weak definition in core.c and another
+> definition with an incompatible prototype in kernel/trace/bpf_trace.c,
+> when CONFIG_BPF_EVENTS is enabled.
 > 
-> *IF* you're wanting to break this tracepoint ABI, because seriously
-> that's what it is, then you get to invest the time and effort to audit
-> the users.
+> Since the two are incompatible, there cannot be a shared declaration in
+> a header file, but the lack of a prototype causes a W=1 warning:
+> 
+> kernel/bpf/core.c:1638:12: error: no previous prototype for 'bpf_probe_read_kernel' [-Werror=missing-prototypes]
+> 
+> On 32-bit architectures, the local prototype
+> 
+> u64 __weak bpf_probe_read_kernel(void *dst, u32 size, const void *unsafe_ptr)
+> 
+> passes arguments in other registers as the one in bpf_trace.c
+> 
+> BPF_CALL_3(bpf_probe_read_kernel, void *, dst, u32, size,
+>              const void *, unsafe_ptr)
+> 
+> which uses 64-bit arguments in pairs of registers.
+> 
+> As both versions of the function are fairly simple and only really
+> differ in one line, just move them into a header file as an inline
+> function that does not add any overhead for the bpf_trace.c callers
+> and actually avoids a function call for the other one.
+> 
+> Cc: stable@vger.kernel.org
+> Link: https://lore.kernel.org/all/ac25cb0f-b804-1649-3afb-1dc6138c2716@iogearbox.net/
+> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 
-The known major users that I am aware of is raesdaemon,
-powertop/latencytop, perf, trace-cmd and some bpf tools. The bpf tooling is
-known to update per kernel. The others all use libtraceevent that can
-handle this change.
-
-What other tools are there? There's Perfetto, but it also looks at tracefs
-to examine where the values are. There's LTTng, but I believe it uses the
-raw tracepoint directly and doesn't look at the layout of the ftrace/perf
-buffers.
-
-All other tooling I am slightly aware of uses libtracefs and libtraceveent,
-as I've been giving many talks on how to use those libraries.
-
--- Steve
+Acked-by: Yonghong Song <yonghong.song@linux.dev>
