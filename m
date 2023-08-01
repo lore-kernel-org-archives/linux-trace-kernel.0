@@ -2,190 +2,92 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3626AC41513
-	for <linux-trace-kernel@archiver.kernel.org>; Tue,  1 Aug 2023 11:18:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 243A2C001E0
+	for <linux-trace-kernel@archiver.kernel.org>; Tue,  1 Aug 2023 11:34:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S233780AbjHALS1 (ORCPT
+        id S232283AbjHALee (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Tue, 1 Aug 2023 07:18:27 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:49956 "EHLO
+        Tue, 1 Aug 2023 07:34:34 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:36338 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234351AbjHALR6 (ORCPT
+        with ESMTP id S233774AbjHALed (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Tue, 1 Aug 2023 07:17:58 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4D42235BD;
-        Tue,  1 Aug 2023 04:15:07 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+        Tue, 1 Aug 2023 07:34:33 -0400
+Received: from casper.infradead.org (casper.infradead.org [IPv6:2001:8b0:10b:1236::1])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 38536D3;
+        Tue,  1 Aug 2023 04:34:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=m1F9HPkA3rCfG5++ie5WawGo0UTj2vVNhV/5rI+7dho=; b=mB9lQRj8ne7QFWU/SvSHLBtwb6
+        h8xkNxWTv4f5uznh/z9xyszKEHyfllEKko5I05DM439vdurXjN3Ng5UlhclOvPdYJlzKN75ic1PuZ
+        MkQx7FVcynX8dz8FJWvDGDtTmTY6w2TLbbQbh1NXLy0plifn86o+u0GEsiobPMM55N+aULATCl7o5
+        IdlMhHYGS/bCJUhVDMRtgJ0e44vX5wwj0q4PNb9Z8iad4ngKUWtCkhUbkQ5tg+F1QUWm/fiUrNvg3
+        EPHixlaFooaWC4Zv49H6rXFD2n+pHXC40U/U929HsM7rOoe7LlXEaVvwd+4uv5LM1aBGZQGY/RYTp
+        2VqoqZEA==;
+Received: from j130084.upc-j.chello.nl ([24.132.130.84] helo=noisy.programming.kicks-ass.net)
+        by casper.infradead.org with esmtpsa (Exim 4.94.2 #2 (Red Hat Linux))
+        id 1qQndb-008R8A-MR; Tue, 01 Aug 2023 11:34:03 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id BF52761558;
-        Tue,  1 Aug 2023 11:15:06 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id ED0A1C433C8;
-        Tue,  1 Aug 2023 11:15:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=k20201202; t=1690888506;
-        bh=SUPU4JElphjAc9d7Elce3inE9nizslZjaxVDu35xOCQ=;
-        h=From:To:Cc:Subject:Date:From;
-        b=jtNNO4yO9pwcm5ECHjZSleO0iX8XIPoXHc1TFvNEteISUvS4aXCRCOlWYHm0jtuY4
-         vSRaDjuxQIoNtxRHV4nFQ+ZXNHCXhxgIc71dJte4Oo6RGWgZ9sYcdrH1/nlqJwWWCR
-         EpjGhgogu1s3sotPQzFhuDpYk+Qkz9BntV7gExVMYeKeEkqDmoyochYjCqZ/kC3ICv
-         nkqEIwHErz5Q8p66IjtdreGP5RBueqNzI4bSbt9SolGx52Oe7i5GrgpPa8PJyaVkjz
-         nbhKn33aAdeLjEfF3i6nkYQXbn3Fjj5nblrQ0jubU41xrYbXfpj1L1EiI5jqS6OfvU
-         /1GrQTN22TAGg==
-From:   Arnd Bergmann <arnd@kernel.org>
-To:     Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Andrii Nakryiko <andrii@kernel.org>,
-        Song Liu <song@kernel.org>,
+         key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 3184E300134;
+        Tue,  1 Aug 2023 13:34:02 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id EDD41200C570F; Tue,  1 Aug 2023 13:34:01 +0200 (CEST)
+Date:   Tue, 1 Aug 2023 13:34:01 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Ze Gao <zegao2021@gmail.com>
+Cc:     Adrian Hunter <adrian.hunter@intel.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Ian Rogers <irogers@google.com>,
+        Ingo Molnar <mingo@redhat.com>, Jiri Olsa <jolsa@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
         Steven Rostedt <rostedt@goodmis.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>
-Cc:     Arnd Bergmann <arnd@arndb.de>, stable@vger.kernel.org,
-        John Fastabend <john.fastabend@gmail.com>,
-        Martin KaFai Lau <martin.lau@linux.dev>,
-        Yonghong Song <yonghong.song@linux.dev>,
-        KP Singh <kpsingh@kernel.org>,
-        Stanislav Fomichev <sdf@google.com>,
-        Hao Luo <haoluo@google.com>, Jiri Olsa <jolsa@kernel.org>,
-        Kumar Kartikeya Dwivedi <memxor@gmail.com>,
-        Dave Marchevsky <davemarchevsky@fb.com>,
-        David Vernet <void@manifault.com>,
-        Peter Zijlstra <peterz@infradead.org>, bpf@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
-Subject: [PATCH] [v5] bpf: fix bpf_probe_read_kernel prototype mismatch
-Date:   Tue,  1 Aug 2023 13:13:58 +0200
-Message-Id: <20230801111449.185301-1-arnd@kernel.org>
-X-Mailer: git-send-email 2.39.2
+        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        linux-trace-kernel@vger.kernel.org,
+        linux-trace-devel@vger.kernel.org, Ze Gao <zegao@tencent.com>
+Subject: Re: [RFC PATCH v3 3/6] sched, tracing: add to report task state in
+ symbolic chars
+Message-ID: <20230801113401.GC79828@hirez.programming.kicks-ass.net>
+References: <20230801090124.8050-1-zegao@tencent.com>
+ <20230801090124.8050-4-zegao@tencent.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20230801090124.8050-4-zegao@tencent.com>
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-From: Arnd Bergmann <arnd@arndb.de>
+On Tue, Aug 01, 2023 at 05:01:21PM +0800, Ze Gao wrote:
+> Internal representations of task state are likely to be changed
+> or ordered, and reporting them to userspace without exporting
+> them as part of API is basically wrong, which can easily break
+> a userspace observability tool as kernel evolves. For example,
+> perf suffers from this and still reports wrong states as of this
+> writing.
+> 
+> OTOH, some masqueraded states like TASK_REPORT_IDLE and
+> TASK_REPORT_MAX are also reported inadvertently, which confuses
+> things even more and most userspace tools do not even take them
+> into consideration.
+> 
+> So add a new variable in company with the old raw value to
+> report task state in symbolic chars, which are self-explaining
+> and no further translation is needed. Of course this does not
+> break any userspace tool.
+> 
+> Note for PREEMPT_ACTIVE, we introduce 'p' to report it and use
+> the old conventions for the rest.
 
-bpf_probe_read_kernel() has a __weak definition in core.c and another
-definition with an incompatible prototype in kernel/trace/bpf_trace.c,
-when CONFIG_BPF_EVENTS is enabled.
+*sigh*... just because userspace if daft, we need to change the kernel?
 
-Since the two are incompatible, there cannot be a shared declaration in
-a header file, but the lack of a prototype causes a W=1 warning:
-
-kernel/bpf/core.c:1638:12: error: no previous prototype for 'bpf_probe_read_kernel' [-Werror=missing-prototypes]
-
-On 32-bit architectures, the local prototype
-
-u64 __weak bpf_probe_read_kernel(void *dst, u32 size, const void *unsafe_ptr)
-
-passes arguments in other registers as the one in bpf_trace.c
-
-BPF_CALL_3(bpf_probe_read_kernel, void *, dst, u32, size,
-            const void *, unsafe_ptr)
-
-which uses 64-bit arguments in pairs of registers.
-
-As both versions of the function are fairly simple and only really
-differ in one line, just move them into a header file as an inline
-function that does not add any overhead for the bpf_trace.c callers
-and actually avoids a function call for the other one.
-
-Cc: stable@vger.kernel.org
-Link: https://lore.kernel.org/all/ac25cb0f-b804-1649-3afb-1dc6138c2716@iogearbox.net/
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
---
-v5: rebase on top of 1f9a1ea821ff2 ("bpf: Support new sign-extension load insns")
-v4: rewrite again to use a shared inline helper
-v3: clarify changelog text further.
-v2: rewrite completely to fix the mismatch.
----
- include/linux/bpf.h      | 12 ++++++++++++
- kernel/bpf/core.c        | 12 +++---------
- kernel/trace/bpf_trace.c | 11 -----------
- 3 files changed, 15 insertions(+), 20 deletions(-)
-
-diff --git a/include/linux/bpf.h b/include/linux/bpf.h
-index ceaa8c23287fc..abe75063630b8 100644
---- a/include/linux/bpf.h
-+++ b/include/linux/bpf.h
-@@ -2661,6 +2661,18 @@ static inline void bpf_dynptr_set_rdonly(struct bpf_dynptr_kern *ptr)
- }
- #endif /* CONFIG_BPF_SYSCALL */
- 
-+static __always_inline int
-+bpf_probe_read_kernel_common(void *dst, u32 size, const void *unsafe_ptr)
-+{
-+	int ret = -EFAULT;
-+
-+	if (IS_ENABLED(CONFIG_BPF_EVENTS))
-+		ret = copy_from_kernel_nofault(dst, unsafe_ptr, size);
-+	if (unlikely(ret < 0))
-+		memset(dst, 0, size);
-+	return ret;
-+}
-+
- void __bpf_free_used_btfs(struct bpf_prog_aux *aux,
- 			  struct btf_mod_pair *used_btfs, u32 len);
- 
-diff --git a/kernel/bpf/core.c b/kernel/bpf/core.c
-index 245402e2229da..52b2a01d74721 100644
---- a/kernel/bpf/core.c
-+++ b/kernel/bpf/core.c
-@@ -1649,12 +1649,6 @@ bool bpf_opcode_in_insntable(u8 code)
- }
- 
- #ifndef CONFIG_BPF_JIT_ALWAYS_ON
--u64 __weak bpf_probe_read_kernel(void *dst, u32 size, const void *unsafe_ptr)
--{
--	memset(dst, 0, size);
--	return -EFAULT;
--}
--
- /**
-  *	___bpf_prog_run - run eBPF program on a given context
-  *	@regs: is the array of MAX_BPF_EXT_REG eBPF pseudo-registers
-@@ -2065,8 +2059,8 @@ static u64 ___bpf_prog_run(u64 *regs, const struct bpf_insn *insn)
- 		DST = *(SIZE *)(unsigned long) (SRC + insn->off);	\
- 		CONT;							\
- 	LDX_PROBE_MEM_##SIZEOP:						\
--		bpf_probe_read_kernel(&DST, sizeof(SIZE),		\
--				      (const void *)(long) (SRC + insn->off));	\
-+		bpf_probe_read_kernel_common(&DST, sizeof(SIZE),	\
-+			      (const void *)(long) (SRC + insn->off));	\
- 		DST = *((SIZE *)&DST);					\
- 		CONT;
- 
-@@ -2081,7 +2075,7 @@ static u64 ___bpf_prog_run(u64 *regs, const struct bpf_insn *insn)
- 		DST = *(SIZE *)(unsigned long) (SRC + insn->off);	\
- 		CONT;							\
- 	LDX_PROBE_MEMSX_##SIZEOP:					\
--		bpf_probe_read_kernel(&DST, sizeof(SIZE),		\
-+		bpf_probe_read_kernel_common(&DST, sizeof(SIZE),		\
- 				      (const void *)(long) (SRC + insn->off));	\
- 		DST = *((SIZE *)&DST);					\
- 		CONT;
-diff --git a/kernel/trace/bpf_trace.c b/kernel/trace/bpf_trace.c
-index 79719979a6355..d6296d51a826a 100644
---- a/kernel/trace/bpf_trace.c
-+++ b/kernel/trace/bpf_trace.c
-@@ -223,17 +223,6 @@ const struct bpf_func_proto bpf_probe_read_user_str_proto = {
- 	.arg3_type	= ARG_ANYTHING,
- };
- 
--static __always_inline int
--bpf_probe_read_kernel_common(void *dst, u32 size, const void *unsafe_ptr)
--{
--	int ret;
--
--	ret = copy_from_kernel_nofault(dst, unsafe_ptr, size);
--	if (unlikely(ret < 0))
--		memset(dst, 0, size);
--	return ret;
--}
--
- BPF_CALL_3(bpf_probe_read_kernel, void *, dst, u32, size,
- 	   const void *, unsafe_ptr)
- {
--- 
-2.39.2
-
+Why do we need this character anyway, why not just print the state in
+hex and leave it at that? These single character state things are a
+relic, please just let them die.
