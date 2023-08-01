@@ -2,105 +2,100 @@ Return-Path: <linux-trace-kernel-owner@vger.kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 54A40C0015E
-	for <linux-trace-kernel@archiver.kernel.org>; Tue,  1 Aug 2023 14:19:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D2F6C00528
+	for <linux-trace-kernel@archiver.kernel.org>; Tue,  1 Aug 2023 14:26:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S234425AbjHAOTO (ORCPT
+        id S234073AbjHAO0k (ORCPT
         <rfc822;linux-trace-kernel@archiver.kernel.org>);
-        Tue, 1 Aug 2023 10:19:14 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:42818 "EHLO
+        Tue, 1 Aug 2023 10:26:40 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47902 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S234562AbjHAOTN (ORCPT
+        with ESMTP id S232272AbjHAO0j (ORCPT
         <rfc822;linux-trace-kernel@vger.kernel.org>);
-        Tue, 1 Aug 2023 10:19:13 -0400
-Received: from dfw.source.kernel.org (dfw.source.kernel.org [139.178.84.217])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A83E5BF;
-        Tue,  1 Aug 2023 07:19:12 -0700 (PDT)
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange X25519 server-signature RSA-PSS (2048 bits))
-        (No client certificate requested)
-        by dfw.source.kernel.org (Postfix) with ESMTPS id 45935615CD;
-        Tue,  1 Aug 2023 14:19:12 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 01565C433C9;
-        Tue,  1 Aug 2023 14:19:09 +0000 (UTC)
-Date:   Tue, 1 Aug 2023 10:19:08 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Ze Gao <zegao2021@gmail.com>
-Cc:     Adrian Hunter <adrian.hunter@intel.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Ian Rogers <irogers@google.com>,
-        Ingo Molnar <mingo@redhat.com>, Jiri Olsa <jolsa@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        linux-trace-kernel@vger.kernel.org,
-        linux-trace-devel@vger.kernel.org, Ze Gao <zegao@tencent.com>
-Subject: Re: [RFC PATCH v3 6/6] libtraceevent: prefer to use prev_state_char
- introduced in sched_switch
-Message-ID: <20230801101908.4ccc81c8@gandalf.local.home>
-In-Reply-To: <20230801090124.8050-7-zegao@tencent.com>
-References: <20230801090124.8050-1-zegao@tencent.com>
-        <20230801090124.8050-7-zegao@tencent.com>
-X-Mailer: Claws Mail 3.19.1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+        Tue, 1 Aug 2023 10:26:39 -0400
+Received: from mail-pl1-x629.google.com (mail-pl1-x629.google.com [IPv6:2607:f8b0:4864:20::629])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 36BE010FA;
+        Tue,  1 Aug 2023 07:26:38 -0700 (PDT)
+Received: by mail-pl1-x629.google.com with SMTP id d9443c01a7336-1b9c5e07c1bso48567045ad.2;
+        Tue, 01 Aug 2023 07:26:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20221208; t=1690899997; x=1691504797;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=/p1iV8LRIobQrwk48Wu7X//d2jaCoMI2Cn450sEjblk=;
+        b=Dt1fTNWNFgET8qgImIooUfsHT0/C2kQgOHAES6nYzrPZ9Vd5663YprCHBAwOA36aNx
+         K8eNQtgIrAP5bwG93cLks8zYGDpNDpqRHXvSSCGm9GKQHqvqkHAl6XgvG6GLxjrmWrlV
+         RygQX6CN0NrDKLtfjqUk8LAsNhrIi6lBHrGFgPFySIBLthvT3uBhEIxVfyO99YknFYAK
+         qtJavW5oaRGrZDHjggZx+l3XjojQbCo5VxU4Z2wySllMKnIyoCSaVtwMaQNLx7m1eEjG
+         V1yj8Uc0uv1gwMoCTgH6H2DwTcvjGw2S9v6aASSJR+dGq0orsRtXkoselJW06lF8A3sc
+         wG5w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20221208; t=1690899997; x=1691504797;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=/p1iV8LRIobQrwk48Wu7X//d2jaCoMI2Cn450sEjblk=;
+        b=G7pq5at2RFL97Rn3d9kPsX8lp6fTtzFXFt2BFrbdvDR1vLjvYjh32URKikXv+D7LtN
+         wlGfdL+jub/WH8Oh+6p2Lc9M0hidcz573BFpB/RhybYs0/X6BrRlZW3UzYkrvOKqTJRQ
+         cMAXgGF1eiB0nl3oG0jxFDy+qi3lLiYs/5ZdPptxCHgTyjZbiAi4LZkvHLptgSjBqcZN
+         u2g2+DLsnOdpwUUsVXg4PSACynO0EJup1SMJ6kFTtwMSYS4/36xk2as7Ev150RHj4Fsi
+         Rsn8nGUNNNJEGbztowA4N51UlLKpYrQRJ/D3iqww5V4epeH3f2Tduco11otDqkZ7yh7y
+         SeFg==
+X-Gm-Message-State: ABy/qLbOAvVj0ynY9aZGijYbzAoedtAofD2q8wMdkZxEiDJBhacftWSr
+        m0zyYj3s6I9C/rLghoT13GvcXqDhDHIMrrTn
+X-Google-Smtp-Source: APBJJlFs6bTG0tOfzdrqqhxX1PPnAorUhSKFUH9Au3k7b7zUcZEPN0+zY5JsjrFax3hh4Am/xZN4aA==
+X-Received: by 2002:a17:902:d50a:b0:1b8:2c2a:962e with SMTP id b10-20020a170902d50a00b001b82c2a962emr15514951plg.33.1690899997283;
+        Tue, 01 Aug 2023 07:26:37 -0700 (PDT)
+Received: from localhost.localdomain (bb219-74-209-211.singnet.com.sg. [219.74.209.211])
+        by smtp.gmail.com with ESMTPSA id 6-20020a170902c10600b001b8a00d4f7asm10565100pli.9.2023.08.01.07.26.30
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 01 Aug 2023 07:26:36 -0700 (PDT)
+From:   Leon Hwang <hffilwlqm@gmail.com>
+To:     bpf@vger.kernel.org
+Cc:     ast@kernel.org, daniel@iogearbox.net, john.fastabend@gmail.com,
+        andrii@kernel.org, martin.lau@linux.dev, song@kernel.org,
+        yonghong.song@linux.dev, kpsingh@kernel.org, sdf@google.com,
+        haoluo@google.com, jolsa@kernel.org, davem@davemloft.net,
+        edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
+        hawk@kernel.org, rostedt@goodmis.org, mhiramat@kernel.org,
+        mykolal@fb.com, shuah@kernel.org, hffilwlqm@gmail.com,
+        tangyeechou@gmail.com, kernel-patches-bot@fb.com,
+        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        linux-trace-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org
+Subject: [PATCH bpf-next v5 0/2] bpf, xdp: Add tracepoint to xdp attaching failure
+Date:   Tue,  1 Aug 2023 22:26:19 +0800
+Message-ID: <20230801142621.7925-1-hffilwlqm@gmail.com>
+X-Mailer: git-send-email 2.41.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 List-ID: <linux-trace-kernel.vger.kernel.org>
 X-Mailing-List: linux-trace-kernel@vger.kernel.org
 
-On Tue,  1 Aug 2023 17:01:24 +0800
-Ze Gao <zegao2021@gmail.com> wrote:
+This series introduces a new tracepoint in bpf_xdp_link_attach(). By
+this tracepoint, error message will be captured when error happens in
+dev_xdp_attach(), e.g. invalid attaching flags.
 
-> Since the sched_switch tracepoint introduces a new variable to
-> report sched-out task state in symbolic char, we prefer to use
-> it to spare from knowing internal implementations in kernel.
-> 
-> Also we keep the old parsing logic intact but sync the state char
-> array with the latest kernel.
+v4 -> v5:
+* Initialise the extack variable.
+* Fix code style issue of variable declaration lines.
 
-This should be two patches. First sync the state char array and then add
-your state_char change. The two changes are agnostic to each other, and
-should be separate commits. Same goes for the perf changes.
+v3 -> v4:
+* Fix selftest-crashed issue.
 
--- Steve
+Leon Hwang (2):
+  bpf, xdp: add tracepoint to xdp attaching failure
+  selftests/bpf: Add testcase for xdp attaching failure tracepoint
+
+ include/trace/events/xdp.h                    | 17 +++++
+ net/core/dev.c                                |  5 +-
+ .../selftests/bpf/prog_tests/xdp_attach.c     | 65 +++++++++++++++++++
+ .../bpf/progs/test_xdp_attach_fail.c          | 54 +++++++++++++++
+ 4 files changed, 140 insertions(+), 1 deletion(-)
+ create mode 100644 tools/testing/selftests/bpf/progs/test_xdp_attach_fail.c
 
 
-> 
-> Signed-off-by: Ze Gao <zegao@tencent.com>
-> ---
->  plugins/plugin_sched_switch.c | 9 +++++++--
->  1 file changed, 7 insertions(+), 2 deletions(-)
-> 
-> diff --git a/plugins/plugin_sched_switch.c b/plugins/plugin_sched_switch.c
-> index 8752cae..4c57322 100644
-> --- a/plugins/plugin_sched_switch.c
-> +++ b/plugins/plugin_sched_switch.c
-> @@ -11,7 +11,7 @@
->  
->  static void write_state(struct trace_seq *s, int val)
->  {
-> -	const char states[] = "SDTtZXxW";
-> +	const char states[] = "SDTtXZPIp";
->  	int found = 0;
->  	int i;
->  
-> @@ -99,7 +99,12 @@ static int sched_switch_handler(struct trace_seq *s,
->  	if (tep_get_field_val(s, event, "prev_prio", record, &val, 1) == 0)
->  		trace_seq_printf(s, "[%d] ", (int) val);
->  
-> -	if (tep_get_field_val(s,  event, "prev_state", record, &val, 1) == 0)
-> +	//find if has prev_state_char, otherwise fallback to prev_state
-> +	if (tep_find_field(event, "prev_state_char")) {
-> +		if (tep_get_field_val(s,  event, "prev_state_char", record, &val, 1) == 0)
-> +			trace_seq_putc(s, (char) val);
-> +	}
-> +	else if (tep_get_field_val(s,  event, "prev_state", record, &val, 1) == 0)
->  		write_state(s, val);
->  
->  	trace_seq_puts(s, " ==> ");
+base-commit: a33d978500acd8fb67efac9773ba0a8502c1ff06
+-- 
+2.41.0
 
